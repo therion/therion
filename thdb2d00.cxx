@@ -120,6 +120,18 @@ int thdb2d_compxm(const void * ee1, const void * ee2)
 }
 
 
+int thdb2d_compscrap(const void * ee1, const void * ee2)
+{
+  thscrap * e1 = (thscrap *) ee1, * e2 = (thscrap *) ee2;
+  if (e1->z < e2->z) {
+    return -1;
+  } else if (e1->z == e2->z)
+    return 0;
+  else
+    return 1;
+}
+
+
 thdb2dxm * thdb2d::insert_maps(thdb2dxm * selection,thdb2dxm * insert_after,thmap * map, 
     unsigned long selection_level, int level, int title_level, int map_level) {
   thdb2dxm * cxm = NULL;
@@ -247,7 +259,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
   // najde vsetky mapy ktore mame oznacene, resp. vyberie vsetky zakladne  
   thdb2dxm * selection = NULL, * cxm, * lxm = NULL, * * new_selection, **nsi;
   thdb2dxs * pcxs;
-  unsigned long nmaps = 0, imap;
+  unsigned long nmaps = 0, imap, nscraps = 0, iscr;
 //  bool chapters = false, onemap = false;
 //  thmap * pmap, * prev_pmap;
 //  thdb2dmi * pmapitem;
@@ -301,7 +313,8 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
         }
       }
       obi++;
-    }
+    }    
+    
 
     if ((selection == NULL) && (
         (prj->type == TT_2DPROJ_PLAN) || 
@@ -332,6 +345,52 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       xcitem->object = scrapp;
       mapp->first_item = xcitem;
       mapp->last_item = xcitem;
+      
+      // do tej mapy povkladame vsetky scrapy, ktore
+      // v danej projekcii mame zoradene podla Ztka a kazde
+      // na novom levely
+      nscraps = 0;
+      obi = this->db->object_list.begin();
+      while (obi != this->db->object_list.end()) {
+        if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
+            (((thscrap*)(*obi))->proj->id == prj->id) &&
+            (((thscrap*)(*obi))->fsptr != NULL) &&
+            (((thscrap*)(*obi))->fsptr->is_selected())) {
+          xcitem = thdb.db2d.insert_map_item();
+          mapp->last_item->next_item = xcitem;
+          xcitem->prev_item = mapp->last_item;
+          mapp->last_item = xcitem;
+          xcitem->itm_level = ++mapp->last_level;
+          xcitem->source = thdb.csrc;
+          xcitem->psurvey = NULL;
+          xcitem->type = TT_MAPITEM_NORMAL;
+          xcitem->object = (thscrap*)(*obi);
+          nscraps++;
+        }
+        obi++;
+      }  
+      
+      if (nscraps > 0) {
+
+        // zoradime scrapy podla z-ka
+        thscrap ** sss = new thscrap* [nscraps];
+        xcitem = mapp->first_item->next_item;
+        for(iscr = 0; iscr < nscraps; iscr++) {
+          sss[iscr] = (thscrap *) xcitem->object;
+          xcitem = xcitem->next_item;
+        }
+        qsort(sss, nscraps, sizeof(thscrap*), thdb2d_compscrap);
+        xcitem = mapp->first_item->next_item;
+        for(iscr = 0; iscr < nscraps; iscr++) {
+          xcitem->object = sss[iscr];
+          xcitem = xcitem->next_item;
+        }
+        delete [] sss;
+        
+        // vyhodime z mapy prvy scrap
+        // mapp->first_item = mapp->first_item->next_item;
+        // mapp->first_item->prev_item = NULL;
+      }
       
       cxm = this->insert_xm();
       cxm->title = false;

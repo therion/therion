@@ -220,7 +220,7 @@ endlayout|
   * |exclude-pages <on/off> <list>| = exclude specified pages from cave
     atlas. The list may contain page numbers separated by a comma or dash 
     (for intervals) e.g.~|2,4-7,9,23| means, that pages 2, 4, 5, 6, 7, 9 and 23 
-    should be omited. Only the map pages should be counted. (Set |own-pages 0| 
+    should be omitted. Only the map pages should be counted. (Set |own-pages 0| 
     and |title-pages off| to get the correct page numbers to be excluded.) 
     Changes of |own-pages| or |title-pages| options don't affect page 
     excluding. (A)
@@ -366,9 +366,14 @@ endlayout|
   {\it map/atlas:}
   
   * |projection <id>| = unique identifier that specifies the map projection type.
-    (See the |scrap| command for details.) If there are no scraps with 
+    (See the |scrap| command for details.) 
+    
+    If there is no map defined, all scraps in the given projection are 
+    exported.
+    
+    If there are no scraps with 
     the specified projection then Therion will display centreline from selected
-    surveys. 
+    surveys.
   * |layout <id>| = use predefined map or atlas layout.
   * |layout-xxx| = where |xxx| stands for other layout options. Using this
     you can change some layout properties directly within the export command.
@@ -482,6 +487,10 @@ or
 XTherion makes it easier to run Therion especially on systems without a command 
 line prompt. Compiler window is the default window of XTherion. To run Therion 
 it's enough to open a configuration file and press `F9' or `Compile' button. 
+
+XTherion displays messages from Therion in the lower part of the screen.
+Each error message is highlited and is hyperlinked to the source file
+where the error occured.
 
 After a first run there are activated additional menus {\it Survey 
 structure} and {\it Map structure}. User may comfortably select a survey or map 

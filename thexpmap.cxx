@@ -58,6 +58,7 @@
 #include <set>
 #include "thmapstat.h"
 #include "thsurface.h"
+#include <stdlib.h>
 
 #ifdef THWIN32
 #define snprintf _snprintf
@@ -952,6 +953,44 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   print_fonts_setup();
   
   int retcode;
+  
+#ifdef THWIN32
+  if (!thini.tex_env) {
+    putenv("TEXMFCNF=");
+    putenv("DVIPSHEADERS=");
+    putenv("GFFONTS=");
+    putenv("GLYPHFONTS=");
+    putenv("MFBASES=");
+    putenv("MFINPUTS=");
+    putenv("MFPOOL=");
+    putenv("MPINPUTS=");
+    putenv("MPMEMS=");
+    putenv("MPPOOL=");
+    putenv("MPSUPPORT=");
+    putenv("PKFONTS=");
+    putenv("PSHEADERS=");
+    putenv("T1FONTS=");
+    putenv("T1INPUTS=");
+    putenv("T42FONTS=");
+    putenv("TEXCONFIG=");
+    putenv("TEXDOCS=");
+    putenv("TEXFONTMAPS=");
+    putenv("TEXFONTS=");
+    putenv("TEXFORMATS=");
+    putenv("TEXINPUTS=");
+    putenv("TEXMFDBS=");
+    putenv("TEXMFINI=");
+    putenv("TEXPICTS=");
+    putenv("TEXPKS=");
+    putenv("TEXPOOL=");
+    putenv("TEXPSHEADERS=");
+    putenv("TEXSOURCES=");
+    putenv("TFMFONTS=");
+    putenv("TTFONTS=");
+    putenv("VFFONTS=");
+    putenv("WEB2C=");
+  }
+#endif  
   
   if (!quick_map_exp) {
     com = "\"";

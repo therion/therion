@@ -941,6 +941,13 @@ proc xth_me_cmds_create_scrap {ix mode name opts} {
 
   global xth
   xth_me_cmds_update {}
+
+  set undoselect {}
+  if {[string length $ix] == 0} {
+    set undoselect "; xth_me_cmds_select $xth(me,cmds,selid)"
+    xth_me_cmds_select [lindex $xth(me,cmds,xlist) 0]
+  }
+  
   set id [xth_me_cmds_create 4 {} $ix]
 
   if {[string length $name] > 0} {
@@ -1013,7 +1020,7 @@ proc xth_me_cmds_create_scrap {ix mode name opts} {
   xth_me_cmds_update_list $id
   xth_me_cmds_update_scrap_data $id
   if {$mode} {
-    xth_me_unredo_action "creating scrap" "xth_me_cmds_delete $id" \
+    xth_me_unredo_action "creating scrap" "xth_me_cmds_delete $id$undoselect" \
       "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]"  
     xth_me_cmds_create_endscrap $ix $mode {}
   }

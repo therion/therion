@@ -397,7 +397,6 @@ proc xth_me_cmds_hide_linept_xctrl {} {
   xth_me_cmds_configure_linept_size_xctrl {} 0
 }
 
-
 proc xth_me_cmds_update_linept_ctrl {id pid} {
 
   global xth
@@ -407,7 +406,7 @@ proc xth_me_cmds_update_linept_ctrl {id pid} {
   } else {
     xth_me_cmds_hide_line_xctrl
   }
-  
+
   if {([string length $id] > 0) && ($pid > 0)} {
 
     $xth(ctrl,me,linept).posl configure -state normal
@@ -592,6 +591,11 @@ proc xth_me_cmds_delete_linept {id pid} {
   }
   xth_me_cmds_update_line_data $id
   xth_me_prev_cmd $xth(me,cmds,$id,data)
+  
+  # BUG FIX when deleting last point
+  if {$nwpid == 0} {
+    set xth(me,cmds,selpid) $nwpid
+  }
   xth_me_cmds_select_linept $id $nwpid
     
   xth_me_unredo_action "deleting line point" "xth_me_cmds_undelete_linept $id $pid $ix\n$closeaddstr" \
@@ -1502,8 +1506,25 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
   if {[string length $ntype] < 1} {
     set ntype $otype
   }
+
+  set optsredo {}
+  set optsundo {}
+
   if {(![string equal $ntype $otype]) && [string equal $nopts $oopts]} {
     set nopts {}
+    set nrs {}
+    set nls {}
+    set nrot {} 
+    foreach xpid $xth(me,cmds,$id,xplist) {
+      if {$xpid > 0} {
+        foreach item {rs ls rotation} {
+          if {[string length $xth(me,cmds,$id,$xpid,$item)] > 0} {
+            set optsredo "$optsredo set xth(me,cmds,$id,$xpid,$item) {}; "
+            set optsundo "$optsundo set xth(me,cmds,$id,$xpid,$item) [list $xth(me,cmds,$id,$xpid,$item)]; "
+          }
+        }
+      }
+    }
   }
 
   # uprav options
@@ -1612,13 +1633,17 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
   if {![string equal "$nline $nlinept" "$oline $olinept"]} {
     #puts "new\n{$nline}\n===\n{$nlinept}\n===\nold\n{$oline}\n===\n{$olinept}\n===\n"
     xth_me_unredo_action "line changes" \
-      "xth_me_cmds_update_line $id $pid $otype [list $oname] [list $oopts] $orev {$ox} {$oy} {$oxp} {$oyp} {$oxn} {$oyn} {$osmth} {$orot} {$ors} {$ols} [list $optopts] {$optoptpos}; xth_me_cmds_select {$id $pid}" \
-      "xth_me_cmds_update_line $id $pid $ntype [list $nname] [list $nopts] $nrev {$nx} {$ny} {$nxp} {$nyp} {$nxn} {$nyn} {$nsmth} {$nrot} {$nrs} {$nls} [list $nptopts] {$nptoptpos}; xth_me_cmds_select {$id $pid}"    
+      "xth_me_cmds_update_line $id $pid $otype [list $oname] [list $oopts] $orev {$ox} {$oy} {$oxp} {$oyp} {$oxn} {$oyn} {$osmth} {$orot} {$ors} {$ols} [list $optopts] {$optoptpos}; $optsundo xth_me_cmds_select {$id $pid}" \
+      "xth_me_cmds_update_line $id $pid $ntype [list $nname] [list $nopts] $nrev {$nx} {$ny} {$nxp} {$nyp} {$nxn} {$nyn} {$nsmth} {$nrot} {$nrs} {$nls} [list $nptopts] {$nptoptpos}; $optsredo xth_me_cmds_select {$id $pid}"    
 
     set xth(me,cmds,$id,type) $ntype
     set xth(me,cmds,$id,name) $nname 
     set xth(me,cmds,$id,options) $nopts 
     set xth(me,cmds,$id,reverse) $nrev 
+  
+    if {[string length $optsredo] > 0} {
+      eval $optsredo
+    }
   
     if {$pid > 0} {
       set xth(me,cmds,$id,$pid,x) $nx

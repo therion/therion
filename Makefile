@@ -395,7 +395,7 @@ thexpmodel.o: thexpmodel.cxx thexpmodel.h thexport.h thparse.h thbuffer.h \
   thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h \
   thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
   thdata.h thtfangle.h thtf.h thtflength.h thtfpwf.h thsurvey.h \
-  extern/img.h thchenc.h thchencdata.h thscrap.h
+  extern/img.h thchenc.h thchencdata.h thscrap.h thsurface.h
 thexport.o: thexport.cxx thexport.h thparse.h thbuffer.h thmbuffer.h \
   thobjectsrc.h thexception.h therion.h thconfig.h thinput.h thexporter.h \
   thselector.h thdatabase.h thdataobject.h thperson.h thdate.h \

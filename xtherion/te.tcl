@@ -685,9 +685,13 @@ proc xth_te_open_file {dialogid fname fline} {
     $xth(te,$cfid,frame).txt edit reset
   }
   set xth(te,$cfid,otext) [$xth(te,$cfid,frame).txt get 1.0 end]
-  xth_te_show_file $xth(te,fcurr)
+  xth_te_show_file $xth(te,fcurr) 
   $xth(te,$cfid,frame).txt mark set insert "$fline.0"
   $xth(te,$cfid,frame).txt see insert
+  if {$fline > 0} {
+    $xth(te,$cfid,frame).txt tag remove sel 1.0 end
+    $xth(te,$cfid,frame).txt tag add sel "$fline.0" "$fline.0 lineend"
+  }
   
   xth_status_bar_pop te
   return 1

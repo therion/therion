@@ -64,7 +64,7 @@ much has each of them surveyed:}
   (select SURVEY_ID from CENTRELINE 
   where TOPO_DATE between '1998-01-01' and '1998-12-31');|
 
-{\it How long are pasages lying between 1500 and 1550 m a.s.l.?}
+{\it How long are passages lying between 1500 and 1550 m a.s.l.?}
 
 |select sum(LENGTH) from SHOT, STATION S1, STATION S2 
   where (S1.Z+S2.Z)/2 between 1500 and 1550 and 

@@ -566,7 +566,10 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
   double xc = 0, yc = 0;
   
   if (LAYOUT.OCG) {
-    PAGEDEF << "\\setbox\\xxx=\\hbox to \\adjustedHS{%" << endl;
+    if (mode == MAP)
+      PAGEDEF << "\\setbox\\xxx=\\hbox to \\adjustedHS{%" << endl;
+    else 
+      PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
   }
 
 //  PAGEDEF << (up ? "\\PL{q .1 w}%" : "\\PL{q .8 g}%") << endl;
@@ -610,7 +613,7 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
             if (K->B != "" && K->sect == 0) {
               xc = K->B1; yc = K->B2;
               xc -= HSHIFT; yc -= VSHIFT;
-              PAGEDEF << (LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
+              PAGEDEF << (mode == MAP && LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
                       xc << "}{" << yc << "}{\\" << 
                       tex_Xname("B"+(K->name)) << "}%" << endl;
             }
@@ -619,7 +622,7 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
             if (K->I != "" && K->sect == 0) {
               xc = K->I1; yc = K->I2;
               xc -= HSHIFT; yc -= VSHIFT;
-              PAGEDEF << (LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
+              PAGEDEF << (mode == MAP && LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
                       xc << "}{" << yc << "}{\\" << 
                       tex_Xname("I"+(K->name)) << "}%" << endl;
             }
@@ -630,11 +633,16 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
   }
   PAGEDEF << "\\PL{Q}%" << endl;
   if (LAYOUT.OCG) {
-    PAGEDEF << "\\hfill}\\ht\\xxx=\\adjustedVS\\dp\\xxx=0bp" << endl;
+    if (mode==MAP)
+      PAGEDEF << "\\hfill}\\ht\\xxx=\\adjustedVS\\dp\\xxx=0bp" << endl;
+    else 
+      PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
     PAGEDEF << "\\immediate\\pdfxform ";
     PAGEDEF << "attr{/OC \\the\\" << (up ? "ocU" : "ocD") << "\\space 0 R} ";
-    PAGEDEF << "\\xxx\\PB{-\\adjustedX}{-\\adjustedY}{\\pdflastxform}%" << endl;
-    
+    if (mode == MAP)
+      PAGEDEF << "\\xxx\\PB{-\\adjustedX}{-\\adjustedY}{\\pdflastxform}%" << endl;
+    else 
+      PAGEDEF << "\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
   }
 }
 
@@ -814,14 +822,17 @@ void print_page_bg_scraps(int layer, ofstream& PAGEDEF,
 
 void print_surface_bitmaps (ofstream &PAGEDEF, double shiftx, double shifty) {
   if (LAYOUT.transparency || LAYOUT.OCG) {
-    PAGEDEF << "\\setbox\\xxx=\\hbox to\\adjustedHS{%" << endl;
+    if (mode == MAP)
+      PAGEDEF << "\\setbox\\xxx=\\hbox to\\adjustedHS{%" << endl;
+    else
+      PAGEDEF << "\\setbox\\xxx=\\hbox to" << HS << "bp{%" << endl;
     PAGEDEF << "\\PL{/GS2 gs}%" << endl;
   }
   int i = 1;
   PAGEDEF.precision(6);
   for (list<surfpictrecord>::iterator I = SURFPICTLIST.begin();
                                       I != SURFPICTLIST.end(); I++) {
-    if (LAYOUT.transparency || LAYOUT.OCG) {
+    if (mode == MAP && LAYOUT.transparency || LAYOUT.OCG) {
       PAGEDEF << "\\bitmapcorr{";
     } else {
       PAGEDEF << "\\bitmap{";
@@ -834,14 +845,20 @@ void print_surface_bitmaps (ofstream &PAGEDEF, double shiftx, double shifty) {
   };
   PAGEDEF.precision(2);
   if (LAYOUT.transparency || LAYOUT.OCG) {
-    PAGEDEF << "\\hfill}\\ht\\xxx=\\adjustedVS\\dp\\xxx=0bp" << endl;
+    if (mode == MAP)
+      PAGEDEF << "\\hfill}\\ht\\xxx=\\adjustedVS\\dp\\xxx=0bp" << endl;
+    else
+      PAGEDEF << "\\hfill}\\ht\\xxx="<< VS << "bp\\dp\\xxx=0bp" << endl;
     PAGEDEF << "\\immediate\\pdfxform ";
     PAGEDEF << "attr{";
     if (LAYOUT.transparency) PAGEDEF << "/Group \\the\\attrid\\space 0 R ";
     if (LAYOUT.OCG) PAGEDEF << "/OC \\the\\ocSUR\\space 0 R ";
     PAGEDEF << "} ";
     PAGEDEF << "resources{/ExtGState \\the\\resid\\space 0 R}";
-    PAGEDEF << "\\xxx\\PB{-\\adjustedX}{-\\adjustedY}{\\pdflastxform}%" << endl;
+    if (mode == MAP)
+      PAGEDEF << "\\xxx\\PB{-\\adjustedX}{-\\adjustedY}{\\pdflastxform}%" << endl;
+    else
+      PAGEDEF << "\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
   }
 }
 

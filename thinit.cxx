@@ -48,7 +48,8 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# pdftex-path  \"pdfetex\"\n\n"
 "### Search paths for source and configuration files ###\n"
 "# source-path  \"\"\n\n"
-"### Tex fonts initialization ###\n"
+"### Tex initialization ###\n"
+"# tex-env off\n"
 "# tex-fonts <encoding> <roman> <italic> <bold> <sansserif> <sansserifoblique>\n"
 "# tex-fonts raw cmr10 cmti10 cmbx10 cmss10 cmssi10\n"
 "# tex-fonts xl2 csr10 csti10 csbx10 csss10 csssi10\n\n"
@@ -59,6 +60,7 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 
 thinit::thinit()
 {
+  this->tex_env = false;
 }
 
 
@@ -78,6 +80,7 @@ enum {
   TTIC_TMP_REMOVE_SCRIPT,
   TTIC_LANG,
   TTIC_TEX_FONTS,
+  TTIC_TEX_ENV,
   TTIC_UNKNOWN,
 };
 
@@ -96,6 +99,7 @@ static const thstok thtt_initcmd[] = {
   {"mpost-path", TTIC_PATH_MPOST},
   {"pdftex-path", TTIC_PATH_PDFTEX},
   {"source-path", TTIC_PATH_SOURCE},
+  {"tex-env",TTIC_TEX_ENV},
   {"tex-fonts",TTIC_TEX_FONTS},
   {"tmp-path",TTIC_TMP_PATH},
   {"tmp-remove",TTIC_TMP_REMOVE_SCRIPT},
@@ -169,7 +173,7 @@ void thinit::load()
   
   char * cmdln;
   char ** args;
-  int nargs, argid; //, argid2;
+  int nargs, argid, sv; //, argid2;
   fontrecord frec;
   bool some_tex_fonts = false, started = false;
   this->ini_file.set_search_path(thcfg.get_initialization_path());
@@ -195,6 +199,7 @@ void thinit::load()
         case TTIC_PATH_MPOST:
         case TTIC_PATH_PDFTEX:
         case TTIC_PATH_SOURCE:
+        case TTIC_TEX_ENV:
           if (nargs != 2)
             ththrow(("invalid number of command arguments"));
           break;
@@ -263,6 +268,13 @@ void thinit::load()
           frec.si = args[6];
           FONTS.push_back(frec);
           some_tex_fonts = true;
+          break;
+          
+        case TTIC_TEX_ENV:
+          sv = thmatch_token(args[1], thtt_bool);
+          if (sv == TT_UNKNOWN_BOOL)
+            ththrow(("invalid tex-env switch -- %s", args[1]))
+          this->tex_env = (sv == TT_TRUE);
           break;
           
         default:

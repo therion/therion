@@ -63,6 +63,8 @@ enum {
   TT_DATA_GRADE = 2016,
   TT_DATA_DISCOVERY_DATE = 2017,
   TT_DATA_DISCOVERY_TEAM = 2018,
+  TT_DATA_GROUP = 2019,
+  TT_DATA_ENDGROUP = 2020,
 };
 
 
@@ -76,12 +78,14 @@ static const thstok thtt_data_opt[] = {
   {"data", TT_DATA_DATA},
   {"date", TT_DATA_DATE},
   {"declination", TT_DATA_DECLINATION},
+  {"endgroup", TT_DATA_ENDGROUP},
   {"equate", TT_DATA_EQUATE},
   {"explo-date", TT_DATA_DISCOVERY_DATE},
   {"explo-team", TT_DATA_DISCOVERY_TEAM},
   {"fix", TT_DATA_FIX},
   {"flags", TT_DATA_FLAGS},
   {"grade", TT_DATA_GRADE},
+  {"group", TT_DATA_GROUP},
   {"infer", TT_DATA_INFER},
   {"instrument", TT_DATA_INSTRUMENT},
   {"mark", TT_DATA_MARK},
@@ -114,6 +118,8 @@ typedef std::set <thperson> thdata_team_set_type;
 class thdata : public thdataobject {
 
   public:
+  
+  thdata * cgroup, * ugroup;
   
   // dlu - data leg units
   thtflength dlu_length, dlu_counter, dlu_depth, dlu_dx, dlu_dy, dlu_dz,
@@ -192,6 +198,10 @@ class thdata : public thdataobject {
   void set_data_mark(int nargs, char ** args);  ///< Set type of station mark.
 
   void set_survey_declination();  ///< Set survey declination.
+  
+  void start_group();
+  
+  void end_group();
 
   public:
 

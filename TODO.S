@@ -1,10 +1,19 @@
 HNED:
++ xtherion: vkladanie objektov mimo scrapu
++ vytahovat typy bodov do mapy z centerline-u
++ mark <station1> .. <stationN> <type>
++ point snow
++ area blocks, snow, ice
++ line ceiling/floor-meander, rope (aj s kotveniami)
++ therion --protractor <options>
++ pozriet sa co by obnasal DXF export
++ vytvorit novy 3D prehliadac aj 3D export type - loch
++ export vsetkych znackovych klucov
 + komplet navrhnut a zmenit sposob 3D exportu (layout, thm uplne inak)
 + vyber povrchov na zaklade toho co exportujeme 
-  2D: vsetky co pokryvaju, zoradene podla pokrytia a velkosti (orezany
-      bboxom + okraj)
-  3D: najmensi s tych co pokryvaju najviac, orezany bboxom + okraj
-      (nastavitelnych???)
+  2D: vsetky co pokryvaju, zoradene podla pokrytia a velkosti
+  3D: najmensi z tych co pokryvaju najviac, orezany bboxom + okraj
+      (10%)
 + povrch do 3Dcka ako surface (s priehladnostou)
 + xtherion: switch na perspektivu
 + xtherion: switche na viditelnost, zobrazenie a priehladnost povrchu
@@ -20,8 +29,6 @@ HNED:
 + export model: -wall-source map:projection|centerline|none|all
 + 2d: vymysliet a spravit ako dat survey do mapy aj s LRUD obalkou
 + vymysliet a spravit point camera/picture
-+ pridat nove symboly:
-  ciary - ceiling/floor-meander, rope (aj s kotveniami)
 + 3d: vyskusat nacitavanie chybajucich LRUD zo scrapov + automaticke 
       dogenerovanie neexistujucich dat
 + 3d: interpolovanie Z na zaklade triangulacie (treba rychle priesecniky)
@@ -35,10 +42,8 @@ HNED:
 + SQL: exportovat uzavrete okruhy (chyby, zoznam shotov a zoznam bodov)
 + export database: format text|txt
 + layout: [...] oznacovanie texovskych textov
-* SVG - cvicna verzia (aspon outlines)
 + 2d: pospajat zoznamy na joinovanie, prv ako sa zacne joinovat
 + exportovat grid do mapy/atlasu a aj jeho styl
-+ posuvanie map pri oznacovani pomocou selectu + spajacie sipky
   
 LRUD:
 + nove flagove data v centerline:
@@ -71,8 +76,20 @@ LRUD:
 
 
 HOTOVO:
++ tex-env on|(off) (therion.ini - puziva sa iba pri win32)
++ centerline: mozna zmena nastaveni medzi group-endgroup
+  plati skoro pre vsetko calibrate, units, sd, data, flags etc...
++ ked scrapy a ziadna mapa v projekcii - exportuje vsetky scrapy
+  pod seba (mapa nie je potrebna)
++ xtherion: zvacseny tick na zaciatku ciary
++ xtherion: vkladanie noveho scrapu na zaciatok suboru
++ xtherion: error sources like hyperlinks (jumps to open file, or
+  open file in text editor)
++ xtherion: opraveny bug ked sa maze posledny bod na ciare
++ xtherion: ked zmena typu ciray - mazu sa aj rotacie a velkosti
 
 POTOM:
++ posuvanie map pri oznacovani pomocou selectu + spajacie sipky
 + x: nezobrazuje encoding pre thconfig
 + x: kontrolovat ci subor nebol modifikovany vonku. Ak hej, zavriet 
   - nacitat - znova otvorit v tom istom pohlade (2D)
@@ -82,6 +99,7 @@ POTOM:
 + preview beside
 + rychly mod pre kompilaciu - bez spustania MPostu a bez konverzie
 + rozsirit cislovanie suborov pre metapost na podadresare
++ SVG - cvicna verzia (aspon outlines)
 
 
 KED TO BUDE TREBA:

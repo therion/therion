@@ -435,6 +435,7 @@ proc xth_cp_compile {} {
 
   $xth(cp,log).txt configure -state normal
   $xth(cp,editor).txt configure -state normal
+  xth_cp_show_errors
 
   # update configuration file if required
   set xth(cp,cursor) [$xth(cp,editor).txt index insert]
@@ -690,6 +691,96 @@ proc xth_cp_map_tree_double_click {node} {
   if {[string length [lindex $d 1]] > 0} {
     $xth(cp,editor).txt insert $cln.0 [format "select %s\n" [lindex $d 1]]
   }
+}
+
+
+proc xth_cp_show_errors {} {
+  
+  global xth
+  
+  set w $xth(cp,log).txt
+  $w tag remove xtherr 1.0 end
+
+  set rx {\S*[^\]\s]\s+\[\d+\]}
+  set fnd [$w search -regexp -count cnt $rx 1.0 end]
+  
+  set i 0
+  while {([string length $fnd] > 0) && ($i < 10000)} {
+    
+    set enx [$w index "$fnd + $cnt chars"]
+    set ctext [$w get $fnd "$fnd lineend"]
+    set cfnm {}
+    regexp {\S+} $ctext cfnm
+    if {![string equal $cfnm "(data.mp"]} {
+      $w tag add xtherr $fnd $enx
+    }
+
+    set fnd [$w search -regexp -count cnt $rx $enx end]
+    incr i    
+    
+  }
+  
+  $w tag configure xtherr -foreground red
+  set prevcur [$xth(cp,log).txt cget -cursor]
+  $w tag bind xtherr <Enter> "$w configure -cursor hand2"
+  $w tag bind xtherr <Leave> "$w configure -cursor $prevcur"
+  $w tag bind xtherr <1> "xth_cp_goto_error %x %y"
+ 
+}
+
+
+
+proc xth_cp_goto_error {x y} {
+  global xth
+
+  set epos [$xth(cp,log).txt get "@$x,$y wordstart" "@$x,$y lineend"]
+  
+  # skusime najst source error
+  set fnm {}
+  set fln {}
+  if {(![regexp {\s*(\S+)\s+\[(\d+)\]} $epos dum fnm fln]) || [string equal $fnm "th"] || [string equal $fnm "th2"] || [string equal $fnm ".th"] || [string equal $fnm ".th2"]} {
+    set epos [$xth(cp,log).txt get "@$x,$y linestart" "@$x,$y lineend"]
+    regexp {\s*(\S+)\s+\[(\d+)\]} $epos dum fnm fln
+  }
+  
+  if {([string length $fnm] == 0) || ([string length $fln] == 0)} {
+    return
+  }  
+  
+  if {[catch {set fln [expr $fln - 1]}]} {
+    return
+  }
+  
+  # potom sa pozrieme ci subor nemame otvoreny v kompilatore,
+  # mapovom alebo textovom editore a skocime tam
+  
+  if $xth(cp,fopen) {
+  
+    set fullfnm [file join $xth(cp,fpath) $fnm]
+
+    if {[string equal $fullfnm $xth(cp,ffull)]} {
+      after idle "focus $xth(cp,editor).txt; $xth(cp,editor).txt see $fln.0; $xth(cp,editor).txt mark set insert $fln.0; $xth(cp,editor).txt tag remove sel 1.0 end; $xth(cp,editor).txt tag add sel $fln.0 \"$fln.0 lineend\""
+      return
+    }
+    
+    if {$xth(me,fopen) && [string equal $fullfnm $xth(me,ffull)]} {
+      after idle "xth_app_show me; xth_me_goto_line [expr $fln + 1]"
+      return
+    }
+  
+    # skusime textovy editor, ci to mame otvorene
+    foreach fx $xth(te,flist) {
+      if {[string equal $fullfnm $xth(te,$fx,path)]} {
+        after idle "xth_app_show te; xth_te_show_file $fx; $xth(te,$fx,frame).txt see $fln.0; $xth(te,$fx,frame).txt mark set insert $fln.0; $xth(te,$fx,frame).txt tag remove sel 1.0 end; $xth(te,$fx,frame).txt tag add sel $fln.0 \"$fln.0 lineend\""
+        return
+      }
+    }
+    
+    after idle "xth_app_show te; xth_te_open_file 0 [list $fullfnm] $fln"
+  
+  }
+  
+  
 }
 
 

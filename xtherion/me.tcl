@@ -283,7 +283,7 @@ proc xth_me_create_file {} {
     
   $xth(me,menu,file) entryconfigure "New" -state disabled
   $xth(me,menu,file) entryconfigure "Open" -state disabled
-  $xth(me,menu,file) entryconfigure "Open XP" -state disabled
+  $xth(me,menu,file) entryconfigure "Open (no pics)" -state disabled
   $xth(me,menu,file) entryconfigure "Save" -state normal
   $xth(me,menu,file) entryconfigure "Save as" -state normal
   $xth(me,menu,file) entryconfigure "Close" -state normal
@@ -362,7 +362,7 @@ proc xth_me_destroy_file {} {
     $xth(ctrl,me,area).zb configure -state disabled
     $xth(me,menu,file) entryconfigure "New" -state normal
     $xth(me,menu,file) entryconfigure "Open" -state normal
-    $xth(me,menu,file) entryconfigure "Open XP" -state normal
+    $xth(me,menu,file) entryconfigure "Open (no pics)" -state normal
     $xth(me,menu,file) entryconfigure "Save" -state disabled
     $xth(me,menu,file) entryconfigure "Save as" -state disabled
     $xth(me,menu,file) entryconfigure "Close" -state disabled
@@ -1079,6 +1079,7 @@ xth_ctrl_add me images "Background images"
 xth_ctrl_finish me
 
 # global variables initialization
+set xth(me,ffull) {}
 set xth(me,fltid) 0
 set xth(me,fnewf) 0
 set xth(me,fopen) 0
@@ -2138,7 +2139,7 @@ $xth(me,menu,file) add command -label "Open" -underline 0 \
 			set xth(gui,openxp) 0
 			xth_me_open_file 1 {} 1
 	}
-$xth(me,menu,file) add command -label "Open XP" -underline 5 \
+$xth(me,menu,file) add command -label "Open (no pics)" -underline 10 \
   -state normal -font $xth(gui,lfont) -command {
 	    set xth(gui,openxp) 1
 			xth_me_open_file 1 {} 1
@@ -2156,6 +2157,7 @@ $xth(me,menu,file) add command -label "Close" -underline 0 \
 
 set xth(me,menu,edit) $xth(me,menu).edit
 menu $xth(me,menu,edit) -tearoff 0
+menu $xth(me,menu,edit).ins -tearoff 0
 bind $xth(me,menu,edit) <FocusIn> {xth_me_cmds_update {}}
 $xth(me,menu) add cascade -label "Edit" -state disabled \
   -font $xth(gui,lfont) -menu $xth(me,menu,edit) -underline 0
@@ -2174,14 +2176,21 @@ $xth(me,menu,edit) add command -label "Paste" -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-v" -command "xth_app_clipboard paste"
 $xth(me,menu,edit) add separator
 $xth(me,menu,edit) add command -label "Select" -accelerator "Esc" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_set_mode 0}
-$xth(me,menu,edit) add command -label "Insert point" -accelerator "$xth(gui,controlk)-p" -underline 7 -font $xth(gui,lfont) -command {xth_me_cmds_set_mode 1}
-$xth(me,menu,edit) add command -label "Insert line" -accelerator "$xth(gui,controlk)-l" -underline 7 -font $xth(gui,lfont) -command {
+$xth(me,menu,edit) add cascade -label "Insert ..." -menu $xth(me,menu,edit).ins -underline 0 -font $xth(gui,lfont)
+$xth(me,menu,edit).ins add command -label "point" -accelerator "$xth(gui,controlk)-p" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_set_mode 1}
+$xth(me,menu,edit).ins add command -label "line" -accelerator "$xth(gui,controlk)-l" -underline 0 -font $xth(gui,lfont) -command {
   xth_me_cmds_create_line {} 1 "" "" ""
   xth_ctrl_scroll_to me line
 }
-$xth(me,menu,edit) add command -label "Insert area" -font $xth(gui,lfont) -command {
+$xth(me,menu,edit).ins add command -label "area" -font $xth(gui,lfont) -underline 0 -command {
   xth_me_cmds_create_area {} 1 "" "" ""
   xth_ctrl_scroll_to me ac
+}
+$xth(me,menu,edit).ins add command -label "scrap" -font $xth(gui,lfont) -underline 0 -command {
+  xth_me_cmds_create_scrap {} 1 "" ""
+}
+$xth(me,menu,edit).ins add command -label "text" -font $xth(gui,lfont) -underline 0 -command {
+  xth_me_cmds_create_text {} 1 "\n" "1.0"
 }
 $xth(me,menu,edit) add command -label "Delete" -accelerator "$xth(gui,controlk)-d" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_delete {}}
 $xth(me,menu,edit) add separator

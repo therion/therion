@@ -195,6 +195,17 @@ supported initialization commands follow.
 
   System command to delete files from the temporary directory.
 
+* |tex-env <on/off>| 
+
+  [Works on Windows only.]
+  When set to |off| (default), Therion temporarily clears all environment 
+  variables related to \TeX. Useful if there is other \TeX distribution
+  installed on your system which had set-up any environment variables,
+  which could confuse \TeX\ and \MP\ programs supplied in Therion for Windows
+  distribution. 
+  
+  Set to |on| if you use other \TeX\ distribution for maps processing.
+
 * |tex-fonts <encoding> <rm> <it> <bf> <ss> <si>|
         
   Set-up fonts used for given encoding. The list of currently supported 

@@ -86,6 +86,7 @@ overhang: SKBB
 pit: UIS 
 rockborder: UIS 
 rockedge: UIS 
+rope: SKBB 
 section: SKBB 
 slope: SKBB 
 survey_cave: SKBB UIS 

@@ -184,3 +184,102 @@ proc xth_me_ss_show {} {
   xth_status_bar_pop me
   xth_me_progbar_hide
 }
+
+
+proc xth_me_goto_line {ln} {
+
+  global xth
+  if {!$xth(me,fopen)} {
+    return
+  }
+  
+  # najprv preskoci zaciatocne prikazy
+  set cln [expr [llength $xth(me,imgs,xlist)] + 4]
+  
+  # potom poojde prikaz za prikazom az najde taky,
+  # ktory lezi na danej, alebo je mensi ako dana
+  # pozicia a nasledujuci prikaz je uz zase vacsi
+  set previd [lindex $xth(me,cmds,xlist) 0]
+  set prevln $cln
+  foreach cid $xth(me,cmds,xlist) {
+    if {$xth(me,cmds,$cid,ct) == 4} {
+      incr cln 2
+    }
+    incr cln 1
+    
+    # skontrolujeme ci to nebol predchadzajuci
+    if {$cln > $ln} {
+      xth_me_cmds_select $previd
+      return
+    }    
+    # resp. ci to nie je tento
+    set prevln $cln
+    incr cln [expr 1 + [regexp -all {\n} $xth(me,cmds,$cid,data)]]
+    #puts "$prevln - $cln:\n$xth(me,cmds,$cid,data)"
+
+    if {($ln >= $prevln) && ($ln < $cln)} {
+      set posttry 0
+      switch $xth(me,cmds,$cid,ct) {
+        1 {
+          xth_ctrl_scroll_to me text
+          set posttry 1
+        }
+        2 {xth_ctrl_scroll_to me point}
+        3 {xth_ctrl_scroll_to me line}
+        4 {xth_ctrl_scroll_to me scrap}
+        6 {xth_ctrl_scroll_to me area}
+      }
+      xth_me_cmds_select $cid
+      if {($ln > $prevln) || $posttry} {
+        # skusime sa trafit presnejsie
+        switch $xth(me,cmds,$cid,ct) {
+          1 {
+            set txln [expr $ln - $prevln + 1]
+            focus $xth(ctrl,me,text).txt
+            $xth(ctrl,me,text).txt mark set insert $txln.0
+            $xth(ctrl,me,text).txt tag remove sel 1.0 end
+            $xth(ctrl,me,text).txt tag add sel $txln.0 "$txln.0 lineend"
+          }
+          3 {
+            # skusime najst bod na ciare
+            set txln [expr $ln - $prevln + 1]
+            if {$txln > 1} {
+              set tmpxpl $xth(me,cmds,$cid,xplist)
+              #puts $tmpxpl
+              set cxpl {}
+              set cpix [lindex $tmpxpl]
+              foreach pix [lrange $tmpxpl 0 [expr [llength $tmpxpl] - 2]] {
+                lappend cxpl $pix
+                catch {
+                  set xth(me,cmds,$cid,xplist) "$cxpl 0"
+                  xth_me_cmds_update_line_data $cid
+                }
+                set clnln [regexp -all {\n} $xth(me,cmds,$cid,data)]
+                set xth(me,cmds,$cid,xplist) $tmpxpl
+                #puts "$clnln -> $txln:\n$xth(me,cmds,$cid,data)"
+                if {$clnln >= $txln} {
+                  set cpix $pix
+                  #puts $pix
+                  break
+                }
+              }
+              set xth(me,cmds,$cid,xplist) $tmpxpl
+              xth_me_cmds_update_line_data $cid
+              xth_me_cmds_select "$cid $pix"
+              xth_ctrl_scroll_to me linept
+            }
+          }
+        }
+      }
+      return
+    }
+    
+    set previd $cid
+    
+  }
+  
+  xth_me_cmds_select [lindex $xth(me,cmds,xlist) 0]
+  
+}
+
+

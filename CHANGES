@@ -1,4 +1,30 @@
 --------------------------------------------------------------------------------
+Therion 0.3.4 (2004-10-22):
+
+therion:
+
+ * MetaPost and TeX supplied in Therion for Windows installer
+   work even if there is other TeX(Live) installation present in the system
+   (see the tex-env initialization file option)
+ * if there are no maps defined and map is exported,
+   all scraps in given projection are exported
+ * input language changes:
+   - centreline command: group/endgroup
+ * initialization file: 
+   - new option: tex-env
+ * fixed bug in atlas export introduced in 0.3.3
+ * fixed minor MetaPost bugs
+
+xtherion:
+
+ * Compiler: hyperlinked error messages
+ * Map editor: larger tick at the line symbol beginning
+ * Map editor: new scrap is inserted in the beginning of the file
+ * Map editor: fixed bug when deleting last line point
+ * Map editor: line symbol type change resets rotations and lengths
+   set-up in the line points
+
+--------------------------------------------------------------------------------
 Therion 0.3.3 (2004-09-10):
 
 therion:

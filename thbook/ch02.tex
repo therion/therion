@@ -148,7 +148,7 @@ the command may be used anywhere.
 
 \description
   inserts the contents of a file in place of 
-  the command. Default extension is `.th' and may be ommited. For greatest 
+  the command. Default extension is `.th' and may be omitted. For greatest 
   portability use relative paths and Unix slashes `|/|', not Windows 
   backslashes `|\|', as 
   directory separators.
@@ -262,6 +262,8 @@ the command may be used anywhere.
           equate <station list>
           data <style> <readings order>
           break
+          group
+          endgroup
           ...
           [SURVEY DATA]
           ...
@@ -274,7 +276,7 @@ the command may be used anywhere.
 
 \options
   * |id <ext_keyword>| = id of the object
-  * |author <date> <person>| = author of the data and it's creation date
+  * |author <date> <person>| = author of the data and its creation date
   * |copyright <date> <string>| = copyright date and name
   * |title <string>| = description of the object
 \endoptions
@@ -350,6 +352,11 @@ the command may be used anywhere.
     are supported. If backward and forward compass or clino
     reading are given, the average of them is computed.
     See Survex manual for details.
+  * |group| 
+  * |endgroup| = |group/endgroup| pair enables the user to make 
+    temporary changes
+    in almost any setting (calibrate, units, sd, data, flags...)
+    
 \endcomopt
 
 
@@ -368,11 +375,11 @@ the command may be used anywhere.
   separately by \MP; scraps which are too large may exceed \MP's memory and 
   cause errors.
   
-  Scrap consits of point, line and area map symbols. See chapter {\it How 
+  Scrap consists of point, line and area map symbols. See chapter {\it How 
   the map is put together} for explanation how and in which order are they
   displayed.
   
-  Scrap border consits of lines with the |-outline out| or |-outline in| 
+  Scrap border consists of lines with the |-outline out| or |-outline in| 
   options (passage walls have |-outline out| by default). These line shouldn't
   intersect---otherwise Therion (\MP) can't detemine the interior of the scrap 
   and \MP\ issues a warning message ``|scrap outline intersects itself|''.
@@ -462,7 +469,7 @@ the command may be used anywhere.
   * |3d <on/off/auto>| = specify if the scrap should be used in 3D model 
     reconstruction
 
-  * |author <date> <person>| = author of the data and it's creation date
+  * |author <date> <person>| = author of the data and its creation date
   * |copyright <date> <string>| = copyright date and name
   * |title <string>| = description of the object
 \endoptions
@@ -1107,7 +1114,7 @@ So, the first step is defining the {\bf scrap} by a |scrap ... endscrap|
 multi-line command.  In the {\it File commands} menu click on the {\it Action} 
 submenu and select {\it Insert scrap}. This changes the {\it Action button} to
 {\it Insert scrap} if it had any other value. After pressing this button a 
-new scrap will be inserted. You should see lines
+new scrap will be inserted in the beginning of the file. You should see lines
 
 |scrap - scrap1
 endscrap

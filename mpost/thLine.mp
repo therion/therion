@@ -123,7 +123,7 @@ enddef;
 def l_wall_underlying_UIS (expr P) = 
   T:=identity;
   pickup PenA;
-  thdraw P dashed evenly;
+  thdraw P dashed evenly scaled optical_zoom;
 enddef;
 
 def l_wall_unsurveyed_SKBB (expr P) = 
@@ -135,7 +135,7 @@ enddef;
 def l_wall_presumed_UIS (expr P) = 
   T:=identity;
   pickup PenA;
-  thdraw P dashed evenly scaled 2;
+  thdraw P dashed evenly scaled (2*optical_zoom);
 enddef;
 
 % other line symbols
@@ -182,7 +182,7 @@ enddef;
 def l_chimney_UIS (expr P) = 
   T:=identity;
   pickup PenC;
-  thdraw P dashed evenly;
+  thdraw P dashed evenly scaled optical_zoom;
 enddef;
 
 def l_ceilingstep_SKBB (expr P) =
@@ -384,7 +384,7 @@ enddef;
 def l_border_temporary_SKBB (expr Path) =
   T:=identity;
   pickup PenC;
-  draw Path dashed evenly;
+  draw Path dashed evenly scaled optical_zoom;
 enddef;
 
 def l_flowstone_UIS (expr P) = 
@@ -465,17 +465,24 @@ def l_waterflow_permanent_UIS (expr Path) =
         cas := cas + mojkrok;
         exitif cas > dlzka + mojkrok/3;     % for rounding errors
     endfor;
-    drawarrow ppp;
+%    drawarrow ppp;
+    thdraw ppp;
+    thdrawoptions();
+    oldahlength:=ahlength;
+    ahlength:=ahlength*optical_zoom;
+    thdraw arrowhead ppp;
+    thfill arrowhead ppp;
+    ahlength:=oldahlength;
 enddef;
 
 def l_waterflow_intermittent_SKBB (expr Path) =
-  thdrawoptions(dashed evenly);
+  thdrawoptions(dashed evenly scaled optical_zoom);
   l_waterflow_permanent_UIS (Path);
   thdrawoptions();
 enddef;
 
 def l_waterflow_conjectural_SKBB (expr Path) =
-  thdrawoptions(dashed withdots scaled .5 withpen PenB);
+  thdrawoptions(dashed withdots scaled (0.5 * optical_zoom) withpen PenB);
   l_waterflow_permanent_UIS (Path);
   thdrawoptions();
 enddef;
@@ -567,4 +574,35 @@ def l_gradient_UIS (expr P) =
          shifted (point infinity of P));
 enddef;
 
-
+def l_rope_SKBB (expr P) =
+  T:=identity;
+  pickup PenX;
+%  for i:=0 upto (length P):
+%    thdraw point i of P withcolor red;
+%  endfor;
+  pickup PenC;
+  d:=0.2cm;
+  for i:=0 upto (length P - 1):
+%    clearxy;
+    x1 := xpart point i of P;
+    y1 := ypart point i of P;
+    x2 := xpart point i+1 of P;
+    y2 := ypart point i+1 of P;
+    if y2 > y1:
+      y3 := y1 - d;
+      x3 := x1 + (x2-x1)*sqrt(d)/(sqrt(d)+sqrt(y2-y1+d));
+    else:
+      y3 := y2 - d;
+      x3 := x1 + (x2-x1)*sqrt(y1-y2+d)/(sqrt(d)+sqrt(y1-y2+d));
+    fi;
+%    thdraw (x3,y3) withcolor green withpen PenX;
+    numeric a,b,c;
+    a*x1*x1 + b*x1 + c = y1;
+    a*x2*x2 + b*x2 + c = y2;
+    a*x3*x3 + b*x3 + c = y3;
+    draw (x1,y1)
+    for t = x1 step (x2-x1)/20 until x2+10*epsilon:
+      -- (t,a*t*t+b*t+c)
+    endfor;
+  endfor;
+enddef;

@@ -52,6 +52,8 @@ class thinit {
     path_pdftex, path_mpost,  ///< PDF tex and metapost path
     tmp_path, tmp_remove_script;
     //path_3dtopos, 
+  
+  bool tex_env;
     
   int lang;
   

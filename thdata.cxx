@@ -74,6 +74,9 @@ thdata::thdata()
   this->stat_st_top = NULL;
   this->stat_st_bottom = NULL;
   
+  this->ugroup = NULL;
+  this->cgroup = this;
+  
 }
 
 void thdata::reset_data_sd()
@@ -205,6 +208,8 @@ thcmd_option_desc thdata::get_cmd_option_desc(char * opts)
       default:
         return thcmd_option_desc(id,1);
       case TT_DATA_BREAK:
+      case TT_DATA_GROUP:
+      case TT_DATA_ENDGROUP:
         return thcmd_option_desc(id,0);
     }
 }
@@ -220,36 +225,36 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case 0:
       // let's split the line
       thsplit_args(& this->db->mbuff_tmp, *args);
-      this->insert_data_leg(this->db->mbuff_tmp.get_size(),
+      this->cgroup->insert_data_leg(this->db->mbuff_tmp.get_size(),
         this->db->mbuff_tmp.get_buffer());
       break;
       
     case TT_DATA_FIX:
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- fix"))
-      this->set_data_fix(cod.nargs, args);
+      this->cgroup->set_data_fix(cod.nargs, args);
       break;
       
     case TT_DATA_EQUATE:
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- equate"))
-      this->set_data_equate(cod.nargs, args);
+      this->cgroup->set_data_equate(cod.nargs, args);
       break;
       
     case TT_DATA_FLAGS:
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- flags"))
-      this->set_data_flags(cod.nargs, args);
+      this->cgroup->set_data_flags(cod.nargs, args);
       break;
       
     case TT_DATA_STATION:
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- station"))
-      this->set_data_station(cod.nargs, args, argenc);
+      this->cgroup->set_data_station(cod.nargs, args, argenc);
       break;
       
     case TT_DATA_MARK:
-      this->set_data_mark(cod.nargs, args);
+      this->cgroup->set_data_mark(cod.nargs, args);
       break;
 
     case TT_DATA_DATE:
@@ -272,47 +277,47 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_DATA_SD:
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- sd"))
-      this->set_data_sd(cod.nargs, args);
+      this->cgroup->set_data_sd(cod.nargs, args);
       break;
       
     case TT_DATA_DATA:
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- data"))
-      this->set_data_data(cod.nargs, args);
+      this->cgroup->set_data_data(cod.nargs, args);
       break;
       
     case TT_DATA_INFER:
-      this->set_data_infer(cod.nargs, args);
+      this->cgroup->set_data_infer(cod.nargs, args);
       break;
       
     case TT_DATA_DECLINATION:
-      this->set_data_declination(cod.nargs, args);
+      this->cgroup->set_data_declination(cod.nargs, args);
       break;
       
     case TT_DATA_UNITS:
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- units"))
-      this->set_data_units(cod.nargs, args);
+      this->cgroup->set_data_units(cod.nargs, args);
       break;
       
     case TT_DATA_GRADE:
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- grade"))
-      this->set_data_grade(cod.nargs, args);
+      this->cgroup->set_data_grade(cod.nargs, args);
       break;
         
     case TT_DATA_BREAK:
       if (cod.nargs > 0)
         ththrow(("no arguments allowed after break"))
-      this->complete_interleaved_data();
-      this->cd_leg_def = false;
-      this->d_current = 0;
+      this->cgroup->complete_interleaved_data();
+      this->cgroup->cd_leg_def = false;
+      this->cgroup->d_current = 0;
       break;
     
     case TT_DATA_CALIBRATE:
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- calibrate"))
-      this->set_data_calibration(cod.nargs, args);
+      this->cgroup->set_data_calibration(cod.nargs, args);
       break;
     
     case TT_DATA_TEAM:
@@ -356,6 +361,14 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       this->discovery_team_set.insert(temp_person);
       break;
 
+    case TT_DATA_GROUP:
+      this->start_group();
+      break;
+      
+    case TT_DATA_ENDGROUP:
+      this->end_group();
+      break;
+      
     // if not found, try to set fathers properties  
     default:
       thdataobject::set(cod, args, argenc, indataline);
@@ -1756,10 +1769,13 @@ void thdata::complete_interleaved_data()
   
   this->pd_leg->topofil = (this->di_count || this->di_fromcount || this->di_tocount);
   this->pd_leg->is_valid = true;
+  
 }
 
 void thdata::start_insert()
 {
+  if (this->cgroup->ugroup != NULL)
+    ththrow(("missing endgroup"))
   this->complete_interleaved_data();
 }
 
@@ -2036,4 +2052,142 @@ void thdata::set_survey_declination()
     this->dl_survey_declination = thnan;
   dl_survey_declination_on = true;
 }
+
+void thdata::start_group() {
+  thdata * tmp = new thdata;
+
+  tmp->ugroup = this->cgroup;
+  this->cgroup->complete_interleaved_data();
+  this->cgroup->cd_leg_def = false;
+  this->cgroup->d_current = 0;
+  
+  tmp->db = this->db;
+
+  // nastavi secko tak, ako to mame nastavene teraz
+  tmp->dlu_length = this->cgroup->dlu_length;
+  tmp->dlu_counter = this->cgroup->dlu_counter; 
+  tmp->dlu_depth = this->cgroup->dlu_depth; 
+  tmp->dlu_dx = this->cgroup->dlu_dx; 
+  tmp->dlu_dy = this->cgroup->dlu_dy; 
+  tmp->dlu_dz = this->cgroup->dlu_dz;
+  tmp->dlu_x = this->cgroup->dlu_x; 
+  tmp->dlu_y = this->cgroup->dlu_y; 
+  tmp->dlu_z = this->cgroup->dlu_z; 
+  tmp->dlu_sdlength = this->cgroup->dlu_sdlength;
+  
+  tmp->dlu_bearing = this->cgroup->dlu_bearing; 
+  tmp->dlu_gradient = this->cgroup->dlu_gradient; 
+  tmp->dlu_declination = this->cgroup->dlu_declination; 
+  tmp->dlu_sdangle = this->cgroup->dlu_sdangle;
+  
+  tmp->dlc_length = this->cgroup->dlc_length; 
+  tmp->dlc_gradient = this->cgroup->dlc_gradient; 
+  tmp->dlc_bearing = this->cgroup->dlc_bearing; 
+  tmp->dlc_counter = this->cgroup->dlc_counter; 
+  tmp->dlc_depth = this->cgroup->dlc_depth;
+  tmp->dlc_dx = this->cgroup->dlc_dx; 
+  tmp->dlc_dy = this->cgroup->dlc_dy; 
+  tmp->dlc_dz = this->cgroup->dlc_dz; 
+  tmp->dlc_x = this->cgroup->dlc_x; 
+  tmp->dlc_y = this->cgroup->dlc_y; 
+  tmp->dlc_z = this->cgroup->dlc_z; 
+  tmp->dlc_default = this->cgroup->dlc_default;
+    
+  // dls - data standard deviation and declination
+  tmp->dls_length = this->cgroup->dls_length; 
+  tmp->dls_gradient = this->cgroup->dls_gradient; 
+  tmp->dls_bearing = this->cgroup->dls_bearing; 
+  tmp->dls_counter = this->cgroup->dls_counter; 
+  tmp->dls_depth = this->cgroup->dls_depth;
+  tmp->dls_dx = this->cgroup->dls_dx; 
+  tmp->dls_dy = this->cgroup->dls_dy; 
+  tmp->dls_dz = this->cgroup->dls_dz; 
+  tmp->dls_x = this->cgroup->dls_x; 
+  tmp->dls_y = this->cgroup->dls_y; 
+  tmp->dls_z = this->cgroup->dls_z; 
+  tmp->dl_declination = this->cgroup->dl_declination;
+  tmp->dl_survey_declination = this->cgroup->dl_survey_declination;
+    
+  tmp->dli_plumbs = this->cgroup->dli_plumbs; 
+  tmp->dli_equates = this->cgroup->dli_equates; 
+  tmp->dl_direction = this->cgroup->dl_direction;
+
+  // what is inserted
+  tmp->di_station = this->cgroup->di_station; 
+  tmp->di_from = this->cgroup->di_from; 
+  tmp->di_to = this->cgroup->di_to; 
+  tmp->di_length = this->cgroup->di_length; 
+  tmp->di_bearing = this->cgroup->di_bearing; 
+  tmp->di_gradient = this->cgroup->di_gradient;
+  tmp->di_backbearing = this->cgroup->di_backbearing; 
+  tmp->di_backgradient = this->cgroup->di_backgradient;
+  tmp->di_depth = this->cgroup->di_depth; 
+  tmp->di_fromdepth = this->cgroup->di_fromdepth; 
+  tmp->di_todepth = this->cgroup->di_todepth; 
+  tmp->di_depthchange = this->cgroup->di_depthchange; 
+  tmp->di_count = this->cgroup->di_count; 
+  tmp->di_fromcount = this->cgroup->di_fromcount;
+  tmp->di_tocount = this->cgroup->di_tocount; 
+  tmp->di_dx = this->cgroup->di_dx; 
+  tmp->di_dy = this->cgroup->di_dy; 
+  tmp->di_dz = this->cgroup->di_dz; 
+  tmp->di_direction = this->cgroup->di_direction; 
+  tmp->di_newline = this->cgroup->di_newline; 
+  tmp->di_interleaved = this->cgroup->di_interleaved;
+  tmp->di_up = this->cgroup->di_up; 
+  tmp->di_down = this->cgroup->di_down; 
+  tmp->di_left = this->cgroup->di_left; 
+  tmp->di_right = this->cgroup->di_right;
+  
+  tmp->dl_survey_declination_on = this->cgroup->dl_survey_declination_on;
+  
+  tmp->d_type = this->cgroup->d_type;
+  for (int i = 0; i < THDATA_MAX_ITEMS; i++)
+    tmp->d_order[i] = this->cgroup->d_order[i];
+  tmp->d_nitems = this->cgroup->d_nitems;
+  tmp->d_mark = this->cgroup->d_mark;
+  tmp->d_flags = this->cgroup->d_flags;
+  tmp->d_last_equate = this->cgroup->d_last_equate;
+
+  this->cgroup = tmp;
+}
+
+
+void thdata::end_group() {
+  if (this->cgroup->ugroup == NULL) {
+    ththrow(("endgroup without startgroup"))
+  }
+  thdata * tmp = this->cgroup;
+  this->cgroup = this->cgroup->ugroup;
+  tmp->complete_interleaved_data();
+  
+  // do cgroupu prida vsetky zoznamy ktore existuju
+  // teda stations, fixes, equates a legs
+  // survey data
+  for(thdataleg_list::iterator li = tmp->leg_list.begin();
+    li != tmp->leg_list.end(); li++)
+    if (li->is_valid) {
+      this->cgroup->leg_list.insert(this->cgroup->leg_list.end(), (*li));
+    }
+  // fixed stations
+  for(thdatafix_list::iterator fxi = tmp->fix_list.begin();
+    fxi != tmp->fix_list.end(); fxi++) {
+    this->cgroup->fix_list.insert(this->cgroup->fix_list.end(), (*fxi));
+  }
+  // equates
+  for(thdataequate_list::iterator ei = tmp->equate_list.begin();
+    ei != tmp->equate_list.end(); ei++) {
+    this->cgroup->equate_list.insert(this->cgroup->equate_list.end(), (*ei));
+  }
+  // stations
+  for(thdatass_list::iterator si = tmp->ss_list.begin();
+    si != tmp->ss_list.end(); si++) {
+    this->cgroup->ss_list.insert(this->cgroup->ss_list.end(), (*si));
+  }
+  
+  tmp->self_delete();
+}
+
+
+
 

@@ -463,13 +463,15 @@ def p_waterflow_permanent_UIS (expr pos,theta,sc,al)=
         (-.08u,-.2u)..{down}(0,-.5u);
     p:=p rotated 180;
     thdraw p;
-    oldahlength:=ahlength; ahlength:=2.5pt;
+    thdrawoptions();
+    oldahlength:=ahlength; ahlength:=2.5pt*optical_zoom;
+    thdraw arrowhead p;
     thfill arrowhead p;
     ahlength:=oldahlength;
 enddef;
 
 def p_waterflow_intermittent_UIS (expr pos,theta,sc,al)=
-  thdrawoptions(dashed evenly scaled .5);
+  thdrawoptions(dashed evenly scaled (.5 * optical_zoom));
   p_waterflow_permanent_UIS (pos,theta,sc,al);
   thdrawoptions();
 enddef;

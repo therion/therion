@@ -179,7 +179,7 @@ set xth(gui,me,line,cpsize) 4
 # width of line between point and control point
 set xth(gui,me,line,clwidth) 2
 # size of start line tick
-set xth(gui,me,line,ticksize) 10
+set xth(gui,me,line,ticksize) 15
 # width of start line tick
 set xth(gui,me,line,tickwidth) 3
 
