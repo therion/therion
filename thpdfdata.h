@@ -50,6 +50,7 @@ struct layerrecord {
   set<int> U,D;
   string N,T;
   int Z;
+  int AltJump;
   int minx, maxx, miny, maxy;
   bool bookmark;
   map< int,set<string> > scraps;

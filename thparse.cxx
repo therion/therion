@@ -33,6 +33,10 @@
 #include "thdatabase.h"
 #include "thtflength.h"
 #include "thexception.h"
+#include <errno.h>
+#include <stdlib.h>
+
+thmbuffer thparse_mbuff;
 
 int thmatch_stok(char *buffer, const thstok *tab, int tab_size)
 {
@@ -420,6 +424,7 @@ bool th_is_extkeyword(char * str)
 
 void thparse_double(int & sv, double & dv, char * src)
 {
+  char * endptr;
   sv = thmatch_token(src, thtt_special_val);
   switch (sv) {
     case TT_SV_NAN:
@@ -434,11 +439,64 @@ void thparse_double(int & sv, double & dv, char * src)
       dv = - thinf;
       break;
     default:
-      if(sscanf(src,"%lf", &dv) > 0)
+      errno = 0;
+      dv = strtod(src,&endptr);
+      if ((*endptr == 0) && (errno == 0))
         sv = TT_SV_NUMBER;
       else
         dv = 0.0;
   }
+}
+
+
+void thparse_double_dms(int & sv, double & dv, char * src)
+{
+  int ssv;
+  double dms;
+  thsplit_strings(&thparse_mbuff,src,':');
+  if (thparse_mbuff.get_size() > 0) {
+    thparse_double(sv, dv, thparse_mbuff.get_buffer()[0]);
+//    thprintf("DEG:%lf\n", dv);
+    if (sv == TT_SV_NUMBER) {
+      // ok, mame stupne
+      if (thparse_mbuff.get_size() > 1) {
+        thparse_double(ssv, dms, thparse_mbuff.get_buffer()[1]);
+//        thprintf("MIN:%lf\n", dms);
+        if ((ssv == TT_SV_NUMBER) && (dms == double(int(dms))) && (dms >= 0.0) && (dv == double(int(dv)))) {
+          // ok, mame minuty
+          if (dv > 0.0) {
+            dv += dms / 60.0;
+          } else {
+            dv -= dms / 60.0;
+          }
+          if (thparse_mbuff.get_size() == 3) {
+            thparse_double(ssv, dms, thparse_mbuff.get_buffer()[2]);
+//            thprintf("SEC:%lf\n", dms);
+            if ((ssv == TT_SV_NUMBER) && (dms >= 0.0)) {
+              if (dv > 0.0) {
+                dv += dms / 3600.0;
+              } else {
+                dv -= dms / 3600.0;
+              }
+            } else {
+              // error
+              sv = TT_SV_UNKNOWN;
+            }
+          } else if (thparse_mbuff.get_size() > 3) {
+            // error
+            sv = TT_SV_UNKNOWN;
+          }
+        } else {
+          // nemame nic
+          sv = TT_SV_UNKNOWN;
+        }
+      }
+    }
+  } else {
+    sv = TT_SV_UNKNOWN;
+    dv = 0.0;
+  }
+//  thprintf("\n%s -> %lf\n", src, dv);
 }
 
 void thdecode_c(thbuffer * dest, const char * src)

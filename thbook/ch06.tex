@@ -22,17 +22,66 @@ It's a distribution of GNU utilities with GNU make and GCC.
 * |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows, 
   respectively
 * |make|
+* |make install|
 \endlist
 
 \subsubchapter Hacker's guide.
 
-[Make parameters]
+\penalty-20
+{\it Make parameters}
 
-[Adding new encodings]
+Therion's {\it makefile} may take some optional parameters.
 
-[Adding new \TeX\ encodings]
+\list
+* |config-linux|, |config-macosx|, |config-win32| = configure Therion for a 
+  specific platform. Linux is a default.
+* |config-release|, |config-oxygen|, |config-ozone| = set optimization level 
+  for C++ compiler (none, |-O2| and |-O3|)  
+* |config-debug| = useful before debugging the program  
+* |depend| = find dependencies for include files
+* |install| = install Therion
+* |clean| = delete all temporary files
+\endlist
 
-[Generating new \TeX\ and \MP\ headers]
+\penalty-20
+{\it Adding new encodings}
+
+Although UTF-8 Unicode encoding covers all characters which Therion is able to 
+process, it may be inconveniet to use it. In that case it's possible to add 
+support for any 8-bit encoding for text input files. Copy a translation file to 
+the |thchencdata| directory; add its name to `ifiles' hash in the beginning of 
+the Perl script |generate.pl|; run it and recompile Therion.
+
+The translation file should contain two hexadecimal values of a character 
+(first one in the 8-bit encoding, second one in Unicode) in each line. Possible 
+comments follow the `|#|' character. 
+
+\penalty-20
+{\it Adding new \TeX\ encodings}
+
+It's easy to add new encodings for 2D map output. Copy an appropriate encoding 
+mapping file with an |*.enc| extension to the |texenc/encodings|, run the Perl 
+script |mktexenc.pl| located in the |texenc| directory and compile Therion.
+
+Therion uses the same encoding files as |afm2tfm| program from the \TeX\ 
+distribution, which has the same format as an encoding vector in a PostScript 
+font. You may find more details in the chapter {\it 6.3.1.5 Encoding file 
+format} in the documentation to Dvips program.
+
+
+\penalty-20
+{\it Generating new \TeX\ and \MP\ headers}
+
+Therion uses \TeX\ and \MP\ for 2D map visualization and typesetting. 
+Predefined macros are compiled into the Therion executable and are copied to 
+the working directory just before running \MP\ and \TeX\ (unless the 
+|--use-extern-libs| option is used). Layout command makes it possible to modify 
+some macros in the configuration file at the run-time. 
+
+However, it's possible to make permanent changes to the macro files. After 
+modifying the files in the |mpost| and |tex| directories it's necessary to run 
+Perl scripts |genmpost.pl| and |gentex.pl|, which generate C++ header files, 
+and compile Therion executable again.
 
 \subchapter Environment variables.
 
@@ -43,9 +92,9 @@ Therion reads following environment variables:
 * |HOME| (|HOMEDRIVE| + |HOMEPATH| on WinXP) = 
   [not required, but usually present on your system] search path 
   for (x)therion.ini file(s)
-* |TEMP|, |TMP| = temporary directory named |th$PID$| (where |$PID$| is a 
-  process id) is created in the system temporary directory, which is
-  read from the |TEMP| or |TMP| environment variable. 
+* |TEMP|, |TMP| = system temporary directory, where Therion stores temporary 
+  files (in a directory named |th$PID$|, where |$PID$| is a process ID),
+  unless |tmp-path| is specified in the initialization file.
 \endlist
 
 Consult the documentation of your OS how to set them.
@@ -94,6 +143,14 @@ supported initialization commands follow.
   Path to data and configuration files. Used mostly for system-wide grades and 
   layout definitions.
 
+* |tmp-path <directory>| 
+
+  Path to temporary directory.
+  
+* |tmp-remove <OS command>| 
+
+  System command to delete files from the temporary directory.
+
 * |tex-fonts <encoding> <rm> <it> <bf> <ss> <si>|
         
   Set-up fonts used for given encoding. The list of currently supported 
@@ -108,7 +165,7 @@ supported initialization commands follow.
   bold, sans-serif and sans-serif oblique styles.
   Default setting is |tex-fonts raw cmr10 cmti10 cmbx10 cmss10 cmssi10|
   
-  Example how to use other fonts (e.g TrueType Palatino in xl2 (an encoding 
+  Example how to use other fonts (e.g.~TrueType Palatino in xl2 (an encoding 
   derived from ISO8859-2) encoding). Run:
   
   |ttf2afm -e xl2.enc -o palatino.afm palatino.ttf|
@@ -148,9 +205,9 @@ XTherion starts. The file is commented; see the comments for details.
 %[Optionally creating \MP\ and \TeX\ format files.]
 
 
-\subchapter Map symbols library.
-
-[Gallery of map symbols predefined by Therion.]
+%\subchapter Map symbols library.
+%
+%[Gallery of map symbols predefined by Therion.]
 
 
 \subchapter History.
@@ -176,7 +233,7 @@ XTherion starts. The file is commented; see the comments for details.
 
   Apr 1: first hyperlinked PDF cave map 
 
-  Aug: experiments with PDF, pdf\TeX and \MP
+  Aug: experiments with PDF, pdf\TeX\ and \MP
 
 * {\bf 2001}
 
@@ -189,7 +246,7 @@ XTherion starts. The file is commented; see the comments for details.
 * {\bf 2002}
 
   Mar: Therion 0.1 ---
-       Therion is able to process survey data (centerline) of Dead Bats Cave.
+       Therion is able to process survey data (centreline) of Dead Bats Cave.
        XTherion, text editor designed for Therion (Tcl/Tk).
 
   Jul 27: Therion 0.2 ---
@@ -211,6 +268,8 @@ XTherion starts. The file is commented; see the comments for details.
 
   Jun: all Perl scripts rewritten in C++, Therion is one executable program
        now (although using Survex and TeX)
+       
+%  Nov 10: ...
 \endlist
 
 
@@ -222,13 +281,12 @@ new features to be implemented:
 \subsubchapter General.
 
 \list
-* comprehensive information on centerline processing and loop closure
+* comprehensive information on centreline processing and loop closure
 \endlist
 
 \subsubchapter 2D maps.
 
 \list
-% * real font selection for PDF output
 * map symbol sets
 * debugging mode
 * SVG support

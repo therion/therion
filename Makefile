@@ -56,12 +56,12 @@ THXTHMKCMD = ./therion
 ##CXXBFLAGS = -O3
 
 # BUILD OXYGEN
-CCBFLAGS = -O2
-CXXBFLAGS = -O2
+##CCBFLAGS = -O2
+##CXXBFLAGS = -O2
 
 # BUILD RELEASE
-##CCBFLAGS = 
-##CXXBFLAGS = 
+CCBFLAGS = 
+CXXBFLAGS = 
 
 # BUILD DEBUG
 ##CCBFLAGS = 
@@ -142,7 +142,7 @@ clean:
 	perl makefile.pl rm -q core
 	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
 	perl makefile.pl rm -q cave.3d cave.pdf cave.svg therion.tcl cave_a.pdf cave_m.pdf
-	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
+	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
 	perl makefile.pl rmdir -q doc thTMPDIR
 
 thmpost.h: mpost/*.mp

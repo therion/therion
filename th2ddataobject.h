@@ -74,6 +74,7 @@ enum {
   TT_2DOBJ_SCALE = 2001,
   TT_2DOBJ_CLIP = 2002,
   TT_2DOBJ_PLACE = 2003,
+  TT_2DOBJ_VISIBILITY = 2004,
 };
 
 
@@ -85,6 +86,7 @@ enum {
   TT_2DOBJ_TAG_NONE = 0,
   TT_2DOBJ_TAG_CLIP_AUTO = 1024,
   TT_2DOBJ_TAG_CLIP_ON = 2048,
+  TT_2DOBJ_TAG_VISIBILITY_ON = 4096,
 };
 
 enum {
@@ -103,6 +105,8 @@ static const thstok thtt_2ddataobject_opt[] = {
   {"clip", TT_2DOBJ_CLIP},
   {"place", TT_2DOBJ_PLACE},
   {"scale", TT_2DOBJ_SCALE},
+  {"visibility", TT_2DOBJ_VISIBILITY},
+  {"visible", TT_2DOBJ_VISIBILITY},
   {NULL, TT_2DOBJ_UNKNOWN},
 };
 

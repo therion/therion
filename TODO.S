@@ -1,14 +1,4 @@
 HNED:
-+ pre vstupny subor zadavat stupne:minuty:sekundy (12:23:23.123123)
-+ nefunguje preview above pri savoltovych priestoroch pri -map-level basic
-+ pokial je preview - tak je nastaveny na posledne
-  aby isla cela mapa hore, len nieco dole :)))
-+ nefunguje preview cez komplikovane mapy
-+ pridat pre 2D data object option -visibility on|off
-+ error ked iba jeden kontrolny bod ???
-+ beside - aby sa zobrazovalo normalne, len by sa orezavalo a dalo
-  by sa na neho skakat
-+ navrhnut kroky pre 3D
 
 HOTOVO:
 + v therion.ini
@@ -19,12 +9,18 @@ HOTOVO:
 + pridane teamove ulohy: instruments (insts), assistant (dog)
 + centerline/centreline je podporovane
 + v centreline nove data: up ceiling down floor left right ignore
++ preview funguje po novom - nastavuje sa podla poradia zadania
++ v preview len previews z 0-tej urovne
++ DEG:MIM:SEC syntax povolena pri degrees
++ instalacny skript pre binarnu verziu
++ 2d objekty: -visibility on|off
 
-TROCHU NESKOOR:
-+ spisat ovladanie xtheriona (mys a pod.)
+POTOM:
++ navrhnut kroky pre 3D
++ skusit odprasit cavern
++ preview beside
 + do section line pridat moznost head (begin,end,none,both) - ked to
   budu podporovat MP makra
-+ urobit Linuxovske RPMka
 + rychly mod pre kompilaciu - bez spustania MPostu a bez konverzie
 + vypustenie priecnych rezov pre mapu aj atlas do layoutu
   * vypustit section scrapy a section lines
@@ -43,8 +39,6 @@ TROCHU NESKOOR:
   * v ktorom ku kazdej projekcii pouzite znacky
   * a jeho export do MPostu a TeXu - kombinacie znaciek
   * zakompilovane lokalne nazvy
-  
-POTOM:
 * SVG - cvicna verzia
 * rozsirena statistika (zakladna statistika
   + thstat (pre vybrane surveys resp. vsetky) 
@@ -54,13 +48,10 @@ POTOM:
   + uzavrete okruhy a chyby na nich
   + pocitame len pri exporte v ???
 * debugovacie mody
-* skusit odprasit cavern
 * 3D
 
-V BUDUCNOSTI:
+KED TO BUDE TREBA:
 + pridat do mapy moznost dat survey -> vtedy da len jeho polygon
 + pridat -map-level scrap -> rozvijanie na samotne scrapy
-
-KED TO BUDE TREBA:
 + rozsirene make install 
   * odstranit z perlu co sa da - aby nebol potrebny na kompilaciu (ani tclko)

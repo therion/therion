@@ -1,5 +1,5 @@
-* namiesto "cout <<" pouzivat thprintf - aby to slo aj do log suboru
-* pri vypisoch medzery " ... "
+  * namiesto "cout <<" pouzivat thprintf - aby to slo aj do log suboru
+  * pri vypisoch medzery " ... "
 * pri definovani globalnych funkcii, typov a premennych pouzivat prefix "th" 
   resp. "TH" (napr. thprint_tex_encodings, THFONTS)
 
@@ -53,6 +53,8 @@ mpost:
  * sectionline cez kontrolne body -> inak
  * dorobit aby fungovalo predefinovanie u,v,w - pri polygone, nadm.vyskach, 
    presumed wall, patternoch
+ * upravit znacku polyline na jednosmernu (aby v mapach nehadzalo druhy
+   koniec, ked tam neni bod)
 
 
 ----- prezitky dob minulych -----

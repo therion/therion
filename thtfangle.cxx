@@ -30,28 +30,21 @@
 #include "thexception.h"
 
 
-enum {TT_TFU_DEG, TT_TFU_GRAD, TT_TFU_MIN, TT_TFU_UNKNOWN};
+thtfangle::thtfangle() {
 
-
-static const thstok thtt_tfunits_angle[] = {
-  {"deg", TT_TFU_DEG},
-  {"degree", TT_TFU_DEG},
-  {"degrees", TT_TFU_DEG},
-  {"grad", TT_TFU_GRAD},
-  {"grads", TT_TFU_GRAD},
-  {"mil",TT_TFU_GRAD},
-  {"mils", TT_TFU_GRAD},
-  {"min", TT_TFU_MIN},
-  {"minute", TT_TFU_MIN},
-  {"minutes", TT_TFU_MIN},
-  {NULL, TT_TFU_UNKNOWN},
-};
+  this->units = TT_TFU_DEG;
+  
+}
 
 
 void thtfangle::parse_units(char * ustr)
 {
-  switch (thmatch_token(ustr, thtt_tfunits_angle)) {
+
+  this->units = thmatch_token(ustr, thtt_tfunits_angle);
+
+  switch (this->units) {
     case TT_TFU_DEG:
+    case TT_TFU_DMS:
       this->ufactor = 1.0;
       break;
     case TT_TFU_MIN:
@@ -60,7 +53,7 @@ void thtfangle::parse_units(char * ustr)
     case TT_TFU_GRAD:
       this->ufactor = 0.9;
       break;
-    case TT_TFU_UNKNOWN:
+    case TT_TFU_UNKNOWN_ANGLE:
       ththrow(("unknown angle unit -- %s", ustr))
       break;
   }

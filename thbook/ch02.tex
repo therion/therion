@@ -70,19 +70,23 @@ in the first line) and the last line contains some more data.
 Therion uses following data types:
 
 \list
-* {\it boolean}---logical value (|on|/|off|)
-* {\it keyword}---a sequence of |A-Z|, |a-z|, |0-9| and |[_-]| characters 
+* {\it boolean} = logical value (|on|/|off|)
+* {\it keyword} = a sequence of |A-Z|, |a-z|, |0-9| and |[_-]| characters 
              (not starting with `|-|').
-* {\it ext\_keyword}---keyword that can also contain |[+-*/.,']| characters, but not
+* {\it ext\_keyword} = keyword that can also contain |[+-*/.,']| characters, but not
                  on the first position.
-* {\it date}---a date (or a time interval) specification in a format\hfil\break
+* {\it date} = a date (or a time interval) specification in a format\hfil\break
           |YYYY.MM.DD@HH:MM:SS.SS - YYYY.MM.DD@HH:MM:SS.SS|
-* {\it person}---a person's first name and surname separated by whitespace characters.
+* {\it person} = a person's first name and surname separated by whitespace characters.
             Use `|/|' where there are more names.
-* {\it string}---a sequence of any charaters.
-* {\it units}---length units supported: meters, centimeters, inches, feets, yards
+* {\it string} = a sequence of any charaters.
+* {\it units} = length units supported: 
+           meter[s], centimeter[s], inch[es], feet[s], yard[s]
            (also m, cm, in, ft, yd).
-           Angle units supported: degrees, minutes, grads (also deg, min)
+           Angle units supported: degree[s], minute[s] (also deg, min), 
+	   grad[s]. mil[s]. A degree value may be entered in decimal notation
+	   ($x.y$) or in a special notation for degrees, minutes and seconds
+	   ($deg[{:}min[{:}sec]]$).
 \endlist
 
 
@@ -237,22 +241,22 @@ the command may be used anywhere.
 |survey main -declination [3 deg]
 
   survey a
-    centerline
+    centreline
       data normal from to compass clino length
       1 2 100 -10 10
-    endcenterline
+    endcentreline
   endsurvey
 
   survey b
-    centerline
+    centreline
       data normal from to compass length clino
       1 2 0 10 10
-    endcenterline
+    endcentreline
   endsurvey
 
-  centerline
+  centreline
     equate 2@a 1@b
-  endcenterline
+  endcentreline
 
 endsurvey|
 \endexample      
@@ -260,16 +264,16 @@ endsurvey|
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsubchapter `centerline'.
+\subsubchapter `centreline'.
 
 \description
-  Survey data (centerline) specification. The syntax is borrowed from Survex 
+  Survey data (centreline) specification. The syntax is borrowed from Survex 
   with minor modifications; the Survex manual may be useful as an additional
-  reference for the user.
+  reference for the user. A synonym term `centerline' may be used.
 \enddescription
 
 \syntax
-      |centerline [OPTIONS]
+      |centreline [OPTIONS]
           date <date>
           team <person> [<roles>]
           discovery-date <date>
@@ -292,7 +296,7 @@ endsurvey|
           ...
           [SURVEY DATA]
           ...
-        endcenterline|
+        endcentreline|
 \endsyntax
 
 \context
@@ -314,9 +318,10 @@ endsurvey|
     a time interval is created.
   * |team <person> [<roles>]| = a survey team member. The first argument
     is his/her name, the others describe the roles of the person in
-    the team (optional---not currently used). The following role keywords are
+    the team (optional---currently not used). The following role keywords are
     supported: station, length, tape, compass, bearing, clino,
-    gradient, counter, depth, station, position, notes and pictures.
+    gradient, counter, depth, station, position, notes, pictures, 
+    instruments (insts), assistant (dog).
   * |discovery-team <person>| = a discovery team member. 
   * |instrument <quantity list> <description>| = description
     of the instrument that was used to survey the given quantities (same
@@ -356,7 +361,8 @@ endsurvey|
     is one of the following keywords: station, from, to, tape/length, 
     [back]compass/[back]bearing, [back]clino/[back]gradient, 
     depth, fromdepth, todepth, depthchange, counter, 
-    fromcount, tocount, northing, easting, altitude. 
+    fromcount, tocount, northing, easting, altitude,
+    up/ceiling, down/floor, left, right, ignore. 
     For interleaved data both newline and direction keywords
     are supported. If backward and forward compass or clino
     reading are given, the average of them is computed.
@@ -400,7 +406,7 @@ endsurvey|
   symbols by hand) or pixels of the scanned image (if you use XTherion).
   Therion does the transformation from this local coordinate system to the 
   real coordinates using the positions of survey stations, which are 
-  specified both in the scrap as point map symbols and in centerline data.
+  specified both in the scrap as point map symbols and in centreline data.
   If the scrap doesn't contain at least two survey stations, you have
   to use the |-scale| option for calibrating the scrap. (This is usual for
   cross sections.)
@@ -516,7 +522,7 @@ Point is a command for drawing a point map symbol.
     option gives the reference to the real survey station.
   * |extend <specification>| = if the point type is station and scrap
     projection is extended elevation, you can
-    adjust the extension of the centerline using this option. The |<specification>| is a list
+    adjust the extension of the centreline using this option. The |<specification>| is a list
     of one or more followig keywords:
 
     1. |left| = indicates extension to the left
@@ -555,6 +561,7 @@ Point is a command for drawing a point map symbol.
     You cannot specify this option in the following symbols: station,
     station-name, label, remark, date, altitude, height, passage-height.
   * |scrap <reference>| = reference to a section scrap
+  * |visibility <on/off>| = displays/hides an object
   * |id <ext_keyword>| = id of the object
   * |author <date> <person>| = author of the data and it's creation date
   * |copyright <date> <string>| = copyright date and name
@@ -697,6 +704,7 @@ Line is a command for drawing a line symbol on the map.
        * |place <bottom/none/top>| = where to place the symbol relative
          to other objects (none by default).
        * |clip <bool>| = specify whether a symbol is clipped by the scrap border.
+       * |visibility <on/off>| = displays/hides an object
 \endcomopt
 
 \options
@@ -747,6 +755,7 @@ Area is a command for drawing an area on the map.
   * |place <bottom/none/top>| = where to place the symbol relative
     to other objects (none by default).
   * |clip <bool>| = specify whether a symbol is clipped by the scrap border.
+  * |visibility <on/off>| = displays/hides an object
 \endcomopt
 
 \options
@@ -769,7 +778,7 @@ Area is a command for drawing an area on the map.
         ... scrap or other map references ...
         break
         ... next level scrap or other map references ...
-        preview <above/beside/below> <other map id>
+        preview <above/below> <other map id>
       endmap|
 \endsyntax
 
@@ -785,10 +794,15 @@ Area is a command for drawing an area on the map.
   * the data lines consist of scrap or map references. Note that
     you can not mix them together.
   * scraps following the |break| will be placed on another level
-  * |preview <above/beside/below> <other map id>| will put the outline of
+  * |preview <above/below> <other map id>| will put the outline of
     the other map in the specified preview position relative to the
-    current map. Use the revise command if you want to add maps
-    from higher levels.
+    current map. 
+
+    Preview is displayed only if the map is in the |map-level| level as
+    specified by the |select| command.
+    
+    Use the revise command if you want to add maps from higher levels to the
+    preview.
 \endcomopt
 
 \options
@@ -813,18 +827,18 @@ Area is a command for drawing an area on the map.
 \endcontext
 
 \arguments
-   * |<pointX>| can be an id of a point symbol or an id of a line,
+   * |<pointX>| can be an ID of a point symbol or an ID of a line,
      optionally followed by a line point mark |[<id>:<mark>]|.
      |<mark>| can be also `|end|' (end of the line) or line point index
      (where 0 is the first point). A special case is when |<point1>|
-     and |<point2>| are scrap ids---than the closest scrap ends are
+     and |<point2>| are scrap IDs---than the closest scrap ends are
      joined together.
 \endarguments
 
 \options
   * |smooth <bool>| indicates whether two lines are to be connected 
     smoothly.
-  * |count <N>| (when used with scraps) therion will try to find more 
+  * |count <N>| (when used with scraps) = Therion will try to find more 
     connections of given two scraps  
 \endoptions
 
@@ -832,8 +846,8 @@ Area is a command for drawing an area on the map.
 \subsubchapter `grade'.
 
 \description
-   This command is used to store predefined precisions of centerline data.
-   See |sd| option description for |centerline| command. 
+   This command is used to store predefined precisions of centreline data.
+   See |sd| option description for |centreline| command. 
 \enddescription
 
 \syntax:
@@ -892,7 +906,7 @@ endrevise|
 
 \subchapter XTherion.
 
-XTherion is an IDE (Integrated Development Environment) for Therion. 
+XTherion is an GUI (Graphical User Interface) for Therion. 
 It helps a lot with creating input data files. Currently it works in 
 three main modes: text editor, map editor and compiler. (Here we're concerned 
 with creating data, so only the two first modes are described in this section. For compiler 
@@ -900,7 +914,7 @@ features see the chapter {\it Processing data}.)
 
 It's not necessary for Therion itself---you may edit input files in your 
 favourite text editor and run Therion from the command line. XTherion is also 
-not the only IDE which may be used with Therion. It's possible to 
+not the only GUI which may be used with Therion. It's possible to 
 write a better one, which would be more user friendly, more WYSIWYG, faster, 
 more robust and easier to use. Any volunteers?
 
@@ -919,7 +933,16 @@ be swapped with.
 
 \subsubchapter XTherion---text editor.
 
-[Unicode, tables, multiple files]
+XTherion's text editor offers some interesting features which may help with 
+creating text input files: support for Unicode encoding and ability to open 
+multiple files. 
+
+To make entering data easy, it supports table formatting of centreline data. 
+There is a menu {\it Data table} for typing the data. It may be customized to 
+user's data order by pressing a {\it Scan data format} button when the cursor 
+is below the data order specification (`data' option in the `centreline' 
+command).
+
 
 \subsubchapter XTherion---map editor.
 
@@ -974,7 +997,7 @@ After these preparation steps, you're ready for drawing, or, more
 precisely, for {\bf creating a map data file}. It's important to remember, 
 that you're actually creating a text file which should conform to the syntax 
 described in the chapter {\it Data format}. Actually, only a subset of the 
-Therion commands are used in the Map editor---multi-line |scrap ... endscrap|
+Therion commands are used in the Map editor: multi-line |scrap ... endscrap|
 commands which may contain |point|, |line| and |area| commands. (Cf.~chapter 
 {\it Data format}). This corresponds with a section of hand-drawn map, which is 
 built up from points, lines and filled areas.
@@ -1061,6 +1084,82 @@ set their attributes in the corresponding menus, move them, or delete them (Ctrl
 XTherion doesn't do any syntax checking; it only writes drawn objects with their 
 attributes to a text file. Any errors are detected only when you process these 
 files with Therion.
+
+
+\subsubchapter Keyboard and mouse shortcuts in the Map editor.
+
+{\it Drawing area and background images}
+\list
+ * RightClick = scroll drawing area
+ * Double RightClick on the image = move the image
+\endlist
+
+{\it Inserting line}
+\list
+ * Crtl+L = insert new line and enter an `insert line point' mode
+ * LeftClick = insert line point (without control points)
+ * Shift+LeftClick = insert line point very close to existing point 
+    (normally it's inserted right above closest existing point)
+ * LeftClick + drag = insert line point (with control points)
+ * hold Ctrl while dragging = fix the distance of previous control point
+ * LeftClick + drag on the control point = move its position
+ * RightClick on previous points = selects the previous point while in
+    insert mode (useful if you want to change also the direction of
+    previous control point)
+ * Esc or LeftClick on the last point = end the line insertion
+ * LeftClick on the first line point = close the line and end line insertion
+ * Ctrl+Z = undo
+ * Ctrl+Y = redo
+\endlist
+
+{\it Editing line}
+\list
+ * LeftClick + drag = move line point
+ * Shift + LeftClick + drag = move line point close to the existing
+    point (normally it is moved right above closest existing point)
+ * LeftClick on control point + drag = move control point
+\endlist
+
+{\it Adding line point}
+\list
+  * select the point before which you want to insert points;
+    insert required points;
+    press Esc or left-click on the point you selected at the begining
+\endlist
+  
+{\it Deleting line point}
+\list
+  * select the point you want to delete;
+    press {\it Edit line} $\to$ {\it Delete point} in the {\it Line control} 
+    panel
+\endlist
+
+{\it Inserting point}
+\list
+ * Ctrl+P = switch to `insert point' mode
+ * LeftClick = insert point at given position
+ * Shift+LeftClick = insert point very close to existing point (normally it
+    will be inserted right above the closest point)
+ * Esc = escape from the `inset point' mode
+\endlist
+
+{\it Editing point}
+\list
+ * LeftClick + drag = move point
+ * Shift + LeftClick + drag = move point close to the existing
+    point (normally it is moved right above closest existing point)
+ * LeftClick + drag on point arrows = change point orientation or
+    sizes (according to given switches in Point cotrol panel)
+\endlist
+
+{\it Selecting an existing object}
+\list
+ * RightClick = select object on the top
+ * LeftClick = select object right below the top object (useful when several
+    points lie above each other)
+\endlist
+
+
 
 
 \endinput

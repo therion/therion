@@ -57,7 +57,7 @@ enum {
 static const thstok thtt_2dmi[] = {
   {"above", TT_MAPITEM_ABOVE},
   {"below", TT_MAPITEM_BELOW},
-  {"beside", TT_MAPITEM_BESIDE},
+//  {"beside", TT_MAPITEM_BESIDE},
   {NULL, TT_MAPITEM_UNKNOWN}
 };
 

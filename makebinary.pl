@@ -20,10 +20,9 @@ $dd = "therion-temp";
 $d = "../$dd";
 system("mkdir $d");
 system("cp ./therion $d");
-system("cp ./therion.exe $d");
+system("cp ./install $d");
 system("cp ./therion.ini $d");
 system("cp ./xtherion/xtherion $d");
-system("cp ./xtherion/xtherion.tcl $d");
 system("cp ./xtherion/xtherion.ini $d");
 system("cp ./thbook/thbook.pdf $d");
 system("cp ./man/therion.1 $d");
@@ -33,7 +32,7 @@ system("cp ./COPYING $d");
 if ($platform eq "win32") {
     system("zip -jr ../therion-$platform-$v1.$v2.$v3.zip $d");
 } else {
-    system("tar -cvf ../therion-linux-$v1.$v2.$v3.tar -C $d therion therion.ini xtherion xtherion.ini thbook.pdf therion.1 xtherion.1 README COPYING");
-    system("bzip2 -f ../therion-linux-$v1.$v2.$v3.tar");
+    system("tar -cvf ../therion-linux.i386-$v1.$v2.$v3.tar -C $d install therion therion.ini xtherion xtherion.ini thbook.pdf therion.1 xtherion.1 README COPYING");
+    system("gzip -f ../therion-linux.i386-$v1.$v2.$v3.tar");
 }
 system("rm -R $d");

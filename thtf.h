@@ -42,6 +42,8 @@ class thtf {
 
   double ufactor,  ///< Units factor.
     sfactor;  ///< Scale factor.
+ 
+  int units;
 
   public:
   
@@ -57,6 +59,14 @@ class thtf {
    */
    
   virtual void parse_units(char * ustr) = 0;
+
+
+
+  /**
+   * Return units.
+   */
+   
+  virtual int get_units();  
   
   
   /**

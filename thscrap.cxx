@@ -626,9 +626,15 @@ thscrapen * thscrap::get_ends() {
   thdb2dlp * first_point, * clp;
   thscrapen * res = NULL, * cres;
   thscraplo * lo = this->get_outline(), * lo2, * nextlo;
+#ifdef THDEBUG
+      thprintf("\nscaning ends: %s\n", this->name);
+#endif
   while (lo != NULL) {
-    if (lo->line->outline == TT_LINE_OUTLINE_OUT) {
+    if (lo->line->outline != TT_LINE_OUTLINE_NONE) {
       lo2 = lo;
+#ifdef THDEBUG
+      thprintf("\toutline from: %d -- mode %d\n", lo->line->id, lo->line->outline);
+#endif
       search_inv = true;
       cont = true;
       first_point = NULL;

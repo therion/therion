@@ -1,5 +1,26 @@
 --------------------------------------------------------------------------------
-Therion 0.2.15 (????-??-??):
+Therion 0.2.16 (2003-11-24):
+
+therion:
+
+ * input language changes:
+   - centerline command has new team roles: instruments (insts), assistant (dog)
+   - centerline command has new data readings: 
+       up/ceiling, down/floor, left, right, ignore
+   - centerline may be spelled as centreline
+   - deg:min:sec syntax allowed for degree values
+   - point, line and area commands have new option: visibility on/off
+ * new rules for displaying map previews
+ * new initialization file items: tmp-path, tmp-remove
+ * error if no source files are specified
+ * if error occures under Win32, Therion waits until RETURN is pressed
+
+xtherion:
+
+ * Help/BAC Calculator dialog added
+
+--------------------------------------------------------------------------------
+Therion 0.2.15:
 
 therion:
 
@@ -7,19 +28,10 @@ therion:
    - layout command has new option: code <metapost|tex-map|tex-atlas>
    - join command has new option: count <N>
  * therion checks validity of UTF-8 encoded input files
- * new therion.ini items:
-   - tmp-path <PATH> -- path to temporary directory
-   - tmp-remove <COMMAND> -- system command to remove temporary directory
- * error if no source files are specified
- * if error occures under Win32, waits until RETURN is pressed
- * new team roles: instruments (insts), assistant (dog)
- * centerline/centreline syntax allowed
- * new centerline data items: up ceiling down floor left right ignore
    
 xtherion:
 
  * bug fixed -- compiler does not add empty lines to config files
- * Help/BAC Calculator dialog added
 
 --------------------------------------------------------------------------------
 Therion 0.2.14 (2003-07-16):

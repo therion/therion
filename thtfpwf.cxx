@@ -84,16 +84,19 @@ void thtfpwf::set(size_t nv, double * pv)
 
 void thtfpwf::parse(int nfact, char ** sfact)
 {
-//  double dbltmp;
+  int sv;
   switch (nfact) {
     case 1:
-      if (sscanf(*sfact,"%lf",&this->b) == 0)
+      thparse_double(sv, this->b, *sfact);
+      if (sv != TT_SV_NUMBER)
         ththrow(("invalid number -- %s", *sfact))
       break;
     case 2:
-      if (sscanf(sfact[0],"%lf",&this->b) == 0)
+      thparse_double(sv, this->b, sfact[0]);
+      if (sv != TT_SV_NUMBER)
         ththrow(("invalid number -- %s", sfact[0]))
-      if (sscanf(sfact[1],"%lf",&this->a) == 0)
+      thparse_double(sv, this->a, sfact[1]);
+      if (sv != TT_SV_NUMBER)
         ththrow(("invalid number -- %s", sfact[1]))
       break;
     default:

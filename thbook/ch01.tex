@@ -11,8 +11,8 @@ Therion is a tool for cave surveying. Its purpose is to help
 
 It runs on Unix, Linux, MacOS X and Win32 operating systems. 
 Source code and precompiled binaries for Linux and Win32 
-systems are available on the Therion homepage (\www{|http://www.therion.sk|}%
-{http://www.therion.sk}).
+systems are available on the Therion web page (\www{|http://therion.speleo.sk|}%
+{http://therion.speleo.sk}).
 
 Therion is distributed under the \www{GNU General Public License}%
 {http://www.gnu.org/}.
@@ -23,7 +23,7 @@ In the 1990s we've done a lot of caving and cave surveying. Some computer
 programs existed which displayed survey shots and stations after loop closure and 
 error elimination. These were a great help, especially for large and complicated 
 cave systems. We used the output of one of them---TJIKPR---as a background 
-layer with survey stations for hand-drawn maps. After finishing a huge 160 
+layer with survey stations for hand\discretionary{-}{-}{-}drawn maps. After finishing a huge 166 
 page Atlas of Dead Bats Cave, we soon had a problem: we found new passages
 connecting between known passages and surveyed them. After processing in TJIKPR, 
 the new loops influenced the position of the old surveys;
@@ -57,10 +57,13 @@ introduce the first really usable version of Therion, which met our requirements
 
 \subchapter Features.
 
-All input files---including 2D maps---for Therion are in text format, which is 
-described in detail in later chapters. You may create these files in an arbitrary plain 
-text editor like {\it ed} or {\it vi}. They contain instructions for Therion 
-like 
+Therion is a command-line application. It processess input files, which 
+are---including 2D maps---in text format, and creates files with 2D maps or 
+3D model as the output.
+
+The syntax of input files is described in detail in later chapters. 
+You may create these files in an arbitrary plain text editor like 
+{\it ed} or {\it vi}. They contain instructions for Therion like 
 
 |point 1303 1004 pillar| 
 
@@ -68,34 +71,40 @@ where {\tt point} is a keyword for point symbol
 followed by its coordinates and a symbol type specification.
 
 Hand-editing of such files is not easy---especially when you draw maps, you 
-need to think in spatial (Cartesian coordinate) terms. Thus there is a special IDE 
-for Therion called XTherion. XTherion works as an advanced text editor, map 
-editor (where maps are drawn fully interactively), and compiler.
-
-Compiler? Yes, Therion works like other compilers---it reads its input
-text files and translates them to other formats, suitable for viewing or 
-printing a map or cave model.
+need to think in spatial (Cartesian coordinate) terms. Thus there is a special 
+GUI for Therion called XTherion. XTherion works as an advanced text editor, map 
+editor (where maps are drawn fully interactively), and compiler (which runs
+Therion on the data).
 
 It may look quite complicated, but this approach has a lot of advantages:
 
 \list
 * There is strict separation of data and visualization. The data files specify 
-  only what is where, not what it looks like. The visual 
-  representation is added by \MP\ in later phases of data processing. (It's very 
+  only what is where, not what it looks like. The visual representation 
+  is added by \MP\ in later phases of data processing. (It's very 
   similar concept to XML data representation.) 
   
   This makes it possible to change map symbols used without changing the 
   input data, or merge more maps created by different persons in different 
   styles into one map with unified map symbols set.
+
+  2D maps are adopted for particular output scale (level of abstraction,
+  non-linear scaling of symbols and texts)
   
 * All data are relative to survey station positions. If the coordinates
   of survey stations are changed in the process of loop closure, then all relevant
   data is moved correspondingly, so the map is always up-to-date.
 
 * Therion is not dependent on particular operating system, character encoding
-  or input files editor.
+  or input files editor; input files will remain human readable
 
-%* ...
+* It's possible to add new output formats
+
+* 3D model will be generated from 2D plan, elevation and 
+  cross-sections data to get a realistic 3D model without entering
+  too much data
+
+* although the support for WYSIWYG is limited, you get what you want (WYWIWYG)
 \endlist
 
 \subchapter Software requirements.
@@ -141,12 +150,7 @@ Windows.
 
 {\bf Installation on Linux (*.tar.gz package):}
 
-Copy the binary files `therion' and `xtherion' to `/usr/bin'; initialization 
-files `therion.ini' and `xtherion.ini' to `/etc'.
-
-{\bf Installation on Linux (*.rpm package):}
-
-[Not distributed yet]
+Unpack the archive and run the installation script `install.'
 
 {\bf Installation on Windows:}
 
@@ -185,7 +189,7 @@ Meaning of colors:
 \list
 * black---Therion programs and macros (XTherion is written in Tcl/Tk,
   so it needs this interpreter to run)
-* blue---Survex programs
+* blue---Survex program
 * red---\TeX\ package
 * green---input files created by the user and output files created by Therion
 \endlist
@@ -211,8 +215,26 @@ For displaying the results you need:
 [Complex 3D in the future]
 
 
-% \subchapter Thinking in Therion.
+\subchapter First run.
 
+After explaining the basic principles of Therion it's a good idea to try it
+on the example data.
 
+\list
+* Download the sample data from Therion web page and unpack it somewhere on
+  your computer's hard drive.
+* Run XTherion (under Unix and MacOS\,X by typing `xtherion' in the command 
+  line, under Windows there is a shortcut in the {\it Start} menu).
+* Open the file `thconfig' from the sample data directory in the `Compiler'
+  window of XTherion
+* Press `F9' or `compile' in the menu to run Therion on the data---you'll get
+  some messages from Therion, Survex, \MP\ and \TeX.  
+* PDF maps and 3D model are created in the data directory.  
+\endlist
+
+Additionally, you may open survey data files (*.th) in the `Text editor' window 
+and map data files (*.th2) in the `Map editor' window of XTherion. Although the 
+data format may look confusing for the first time, it will be explained in the 
+following chapters.
 
 \endinput

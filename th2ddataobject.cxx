@@ -35,7 +35,7 @@ th2ddataobject::th2ddataobject()
   this->nscrapoptr = NULL;
   this->fscrapptr = NULL;
   this->scale = TT_2DOBJ_SCALE_M;
-  this->tags = TT_2DOBJ_TAG_CLIP_AUTO;
+  this->tags = TT_2DOBJ_TAG_CLIP_AUTO | TT_2DOBJ_TAG_VISIBILITY_ON;
   this->place = TT_2DOBJ_PLACE_NONE;
 }
 
@@ -96,6 +96,20 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
           break;
         default:
           ththrow(("invalid clip -- %s",*args))
+      }
+      break;    
+
+    case TT_2DOBJ_VISIBILITY:
+      i = thmatch_token(*args, thtt_bool);
+      this->tags &= ~TT_2DOBJ_TAG_VISIBILITY_ON;
+      switch (i) {
+        case TT_TRUE:
+          this->tags |= TT_2DOBJ_TAG_VISIBILITY_ON;
+          break;
+        case TT_FALSE:
+          break;
+        default:
+          ththrow(("invalid visibility switch -- %s",*args))
       }
       break;    
 

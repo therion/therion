@@ -14,11 +14,11 @@ supported commands follow.
 
 \subsubchapter `encoding'.
 
-Works like the |encoding| command in data files - specifies character sets.
+Works like the |encoding| command in data files---specifies character sets.
 
 \subsubchapter `input'.
 
-Works like |input| command in data files  - includes other files.
+Works like |input| command in data files---includes other files.
 
 \subsubchapter `source'.
 
@@ -61,8 +61,10 @@ Works like |input| command in data files  - includes other files.
   
   * |map-level <number>| = valid only when a map is selected. Determines
     the level at which map expansion for atlas export is stopped. 
-    By default 0 is used, if ``|-|'' or ``|.|'' is specified, 
-    expansion is done up to basic maps.
+    By default 0 is used; if ``basic'' is specified, 
+    expansion is done up to the basic maps.
+    {\it Note:} Map previews are displayed only as specified in maps in the 
+    current |map-level|.
 
   * |chapter-level <number>| = valid only when a map is selected. Determines
     the level at which chapter expansion for atlas export is stopped. 
@@ -123,7 +125,6 @@ Works like |input| command in data files  - includes other files.
           scale <picture length> <real length>
           size <width> <height> <units>
           title-pages <on/off>
-          ... [atlas tex macros] ...
         endlayout|
 \endsyntax
 
@@ -138,6 +139,7 @@ Works like |input| command in data files  - includes other files.
   * |code <metapost/tex-map/tex-atlas>| = Add/redefine \TeX\ and \MP\
     macros here. This allows user to configure various things 
     (like user defined symbols, map and atlas layout at one place \&c.)
+    See the chapter {\it Changing layout} for details.
   * |copy <source layout id>| = set properties here that are not
     modified based on the given source layout.
   * |doc-author <string>| = set document author (M, A)
@@ -145,14 +147,12 @@ Works like |input| command in data files  - includes other files.
   * |doc-subject <string>| = set document subject (M, A)
   * |doc-title <string>| = set document title (M, A)
   * |exclude-pages <on/off> <list>| = exclude specified pages from cave
-    atlas. The list may contain page numbers separated by a comma or dash (for intervals) 
-    e.g.~|2,4-7,9,23| means, that pages 2, 4, 5, 6, 7, 9 and 23 should be 
-    omited. (Note: this applies only to the map and title pages. Set 
-    |own-pages| to 0 to get the correct page numbers to be excluded.) 
-    If you change |title-pages| setting, you have to
-    adjust this list accordingly. (In the future there will be another form
-    of the specification of which pages to omit, which won't require
-    this redefinition.) (A)
+    atlas. The list may contain page numbers separated by a comma or dash 
+    (for intervals) e.g.~|2,4-7,9,23| means, that pages 2, 4, 5, 6, 7, 9 and 23 
+    should be omited. Only the map pages should be counted. (Set |own-pages 0| 
+    and |title-pages off| to get the correct page numbers to be excluded.) 
+    Changes of |own-pages| or |title-pages| options don't affect page 
+    excluding. (A)
   * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
     origin (M, A)
   * |grid-size <width> <height> <units>| = set grid size in real
@@ -184,10 +184,6 @@ Works like |input| command in data files  - includes other files.
   * |title-pages <on/off>| = turn on/off atlas title pages (A; default: |off|)
   * |transparency <on/off>| = set transparency for the passages (underlying 
     passages are also visible) (M, A; default: |on|)
-  * all other lines can contain \TeX\ macros, which will produce
-    the cave atlas. Here the page layout may be adjusted (positions
-    of elements in the area framed by dashed blue line in the picture).
-    See the chapter {\it Page layout} for details.
 \endcomopt
 
 \midinsert
@@ -238,8 +234,8 @@ Works like |input| command in data files  - includes other files.
   {\it model:}
 
   * |format/fmt <format>| = set model output format. Currently the following
-    output formats are supported: Therion (native format), Compass 
-    (plt file) and Survex (3d file).
+    output formats are supported: therion (native format), compass 
+    (plt file) and survex (3d file).
 
   {\it map/atlas:}
   
@@ -259,7 +255,7 @@ Works like |input| command in data files  - includes other files.
 \subchapter Running Therion.
 
 Now, after mastering data and configuration files, we're ready to run Therion. 
-Usually this is done from the command line as follows
+Usually this is done from the command line in the data directory as follows
 
 |therion|
 
@@ -295,7 +291,7 @@ therion [-h/--help]
 %  If |cfg-file| is not specified therion will use the |thconfig|
 %  file. If the destination file exists, it'll be overwritten.
   Generate a new configuration file. This will be the given 
-  <cfg-file> if specified, or |thconfig| in the current directory if not. 
+  |<cfg-file>| if specified, or |thconfig| in the current directory if not. 
   If the file already exists, it will be overwritten.
         
 * |-h, --help|
@@ -358,12 +354,19 @@ therion [-h/--help]
         
 * |-x|
 
-  Generate file `.xth-config' with additional informations for XTherion.
+  Generate file `.xth-thconfig' with additional informations for XTherion.
 \endoptions
 
 \subsubchapter XTherion---compiler.
 
-[Compiler mode F3 and compilation F9]
+XTherion makes it easier to run Therion especially on systems without a command 
+line prompt. Compiler window is the default window of XTherion. To run Therion 
+it's enough to open a configuration file and press `F9' or `Compile' button. 
 
+After a first run there are activated additional menus {\it Survey 
+structure} and {\it Map structure}. User may comfortably select a survey or map 
+for export by double clicking on some of the items in the tree. Simple click in 
+the {\it Survey structure} tree displays some basic informations about the 
+survey in the {\it Survey info} menu.
 
 \endinput

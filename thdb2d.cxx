@@ -1993,11 +1993,19 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             fse1 = sc1->get_ends();
             fse2 = sc2->get_ends();
             
+#ifdef THDEBUG
+            thprintf("\nsearching for join %d of %s and %s:\n\t%% OCTAVE CODE\n\thold on;\n",ccount+1,sc1->name,sc2->name);
+#endif
+
             if (ccount == 0) {
               se1 = fse1;
               while (se1 != NULL) {
                 se1->cxt = (se1->lp1->point->xt + se1->lp2->point->xt) / 2.0;
                 se1->cyt = (se1->lp1->point->yt + se1->lp2->point->yt) / 2.0;
+#ifdef THDEBUG
+                thprintf("\tplot([%.2f,%.2f],[%.2f,%.2f],\"r;;\");hold on;\n",se1->lp1->point->xt,se1->lp2->point->xt,se1->lp1->point->yt,se1->lp2->point->yt);
+                thprintf("\tplot([%.2f],[%.2f],\"xm;;\");hold on;\n",se1->cxt,se1->cyt);
+#endif                
                 se1->active = true;
                 se1 = se1->next_end;
               }
@@ -2006,6 +2014,10 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
               while (se2 != NULL) {
                 se2->cxt = (se2->lp1->point->xt + se2->lp2->point->xt) / 2.0;
                 se2->cyt = (se2->lp1->point->yt + se2->lp2->point->yt) / 2.0;
+#ifdef THDEBUG
+                thprintf("\tplot([%.2f,%.2f],[%.2f,%.2f],\"b;;\");hold on;\n",se2->lp1->point->xt,se2->lp2->point->xt,se2->lp1->point->yt,se2->lp2->point->yt);
+                thprintf("\tplot([%.2f],[%.2f],\"xc;;\");hold on;\n",se2->cxt,se2->cyt);
+#endif                
                 se2->active = true;
                 se2 = se2->next_end;
               }
@@ -2038,6 +2050,9 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
               se2 = sc2->get_ends();
               while (se2 != NULL) {
                 cdst = hypot(se1->cxt - se2->cxt, se1->cyt - se2->cyt);
+//#ifdef THDEBUG
+//  thprintf("trying (%.2f,%.2f) - (%.2f,%.2f) = %.2f (MIN: %.2f)\n",se1->cxt,se1->cyt,se2->cxt,se2->cyt,cdst,mindst);
+//#endif
                 if (cdst < mindst) {
                   fse1 = se1;
                   fse2 = se2;

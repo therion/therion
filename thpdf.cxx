@@ -382,7 +382,9 @@ void find_jumps() {
     sheet_it->jumpS = 0;
 
     list<sheetrecord>::iterator I;
-                                   
+    
+    int jump;    
+                               
     string W = xyz2str(sheet_it->layer,sheet_it->namex-1,sheet_it->namey);
     string E = xyz2str(sheet_it->layer,sheet_it->namex+1,sheet_it->namey);
     string N = xyz2str(sheet_it->layer,sheet_it->namex,sheet_it->namey+1);
@@ -414,10 +416,13 @@ void find_jumps() {
     if (!lay_it->second.U.empty()) {
       for (set<int>::iterator l_it = lay_it->second.U.begin(); 
                               l_it != lay_it->second.U.end(); l_it++) {
-        string U = xyz2str(*l_it,sheet_it->namex,sheet_it->namey);
+        map<int,layerrecord>::iterator alt_lay_it = LAYERHASH.find(*l_it);
+        if (alt_lay_it == LAYERHASH.end()) therror(("This can't happen!"));
+        jump = (alt_lay_it->second.Z == 0) ? *l_it : alt_lay_it->second.AltJump;
+        string U = xyz2str(jump,sheet_it->namex,sheet_it->namey);
         if (SHEET_JMP.count(U) > 0) {
           I = SHEET_JMP.find(U)->second;
-          sheet_it->jumpU.insert(*l_it);
+          sheet_it->jumpU.insert(jump);
           I->dest = true;
         }
       }
@@ -425,10 +430,13 @@ void find_jumps() {
     if (!lay_it->second.D.empty()) {
       for (set<int>::iterator l_it = lay_it->second.D.begin(); 
                               l_it != lay_it->second.D.end(); l_it++) {
-        string D = xyz2str(*l_it,sheet_it->namex,sheet_it->namey);
+        map<int,layerrecord>::iterator alt_lay_it = LAYERHASH.find(*l_it);
+        if (alt_lay_it == LAYERHASH.end()) therror(("This can't happen!"));
+        jump = (alt_lay_it->second.Z == 0) ? *l_it : alt_lay_it->second.AltJump;
+        string D = xyz2str(jump,sheet_it->namex,sheet_it->namey);
         if (SHEET_JMP.count(D) > 0) {
           I = SHEET_JMP.find(D)->second;
-          sheet_it->jumpD.insert(*l_it);
+          sheet_it->jumpD.insert(jump);
           I->dest = true;
         }
       }
@@ -1203,9 +1211,9 @@ int thpdf(int m) {
 #ifdef NOTHERION
   init_encodings();
   print_fonts_setup();
-  cout << "making " << ((mode == ATLAS) ? "atlas" : "map") << "... " << flush;
+  cout << "making " << ((mode == ATLAS) ? "atlas" : "map") << " ... " << flush;
 #else
-  thprintf("making %s... ", (mode == ATLAS) ? "atlas" : "map");
+  thprintf("making %s ... ", (mode == ATLAS) ? "atlas" : "map");
 #endif
 
 #ifdef NOTHERION

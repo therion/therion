@@ -53,6 +53,7 @@ scraprecord::scraprecord() {
 
 layerrecord::layerrecord() {
   Z=0;
+  AltJump = 0;
   minx=0; maxx=0; miny=0; maxy=0;
   bookmark = false;
 }

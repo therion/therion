@@ -21,6 +21,15 @@ encoding  utf-8
          fix 0 0 0 1500   
       
     endcentreline
+    
+    centreline
+      data normal from to bearing clino length
+      units bearing clino degrees
+      0 0.1   90  -20:30  15
+      0.1 0.2  - down  10
+      0.2 0.3 90  -20.5   6
+      0.3 0.4  -   up   5
+    endcentreline
        
     input map_plan.th2
     
@@ -29,6 +38,8 @@ encoding  utf-8
     join horny dolny
     
     map hmap -title "Horna mapa"
+      test
+      break
       horny
       preview below dmap
     endmap
@@ -39,4 +50,4 @@ encoding  utf-8
     endmap
       
   endsurvey
-  
+

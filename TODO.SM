@@ -1,8 +1,0 @@
-+ v manualy -> map-level basic a nie ". alebo -"
-+ upravit znacku polyline na jednosmernu (aby v mapach nehadzalo druhy
-  koniec, ked tam neni bod)
-+ pri vypisoch medzery " ... "  
-+ zle interpolovanie slopov !!!
-+ align pri continuation
-+ dorobit aby fungovalo predefinovanie u,v,w - pri polygone, nadm.vyskach, 
-  presumed wall, patternoch

@@ -28,37 +28,17 @@
 
 #include "thtflength.h"
 #include "thexception.h"
-#include "thparse.h"
 
-
-enum {TT_TFU_YD, TT_TFU_FT, TT_TFU_IN, TT_TFU_M, TT_TFU_CM, TT_TFU_UNKNOWN};
-
-static const thstok thtt_tfunits_length[] = {
-  {"centimeter", TT_TFU_CM},
-  {"centimeters", TT_TFU_CM},
-  {"centimetres", TT_TFU_CM},
-  {"cm", TT_TFU_CM},
-  {"feet", TT_TFU_FT},
-  {"feets", TT_TFU_FT},
-  {"ft", TT_TFU_FT},
-  {"in", TT_TFU_IN},
-  {"inch", TT_TFU_IN},
-  {"inches", TT_TFU_IN},
-  {"m", TT_TFU_M},
-  {"meter", TT_TFU_M},
-  {"meters", TT_TFU_M},
-  {"metres", TT_TFU_M},
-  {"metric", TT_TFU_M},
-  {"yard", TT_TFU_YD},
-  {"yards", TT_TFU_YD},
-  {"yd", TT_TFU_YD},
-	{NULL, TT_TFU_UNKNOWN},
-};
+thtflength::thtflength() {
+  this->units = TT_TFU_M;
+}
 
 
 void thtflength::parse_units(char * ustr) {
 
-  switch (thmatch_token(ustr, thtt_tfunits_length)) {
+  this->units = thmatch_token(ustr, thtt_tfunits_length);
+
+  switch (this->units) {
     case TT_TFU_CM:
       this->ufactor = 0.01;
       break;
@@ -74,7 +54,7 @@ void thtflength::parse_units(char * ustr) {
     case TT_TFU_YD:
       this->ufactor = 0.9144;
       break;
-    case TT_TFU_UNKNOWN:
+    case TT_TFU_UNKNOWN_LENGTH:
       ththrow(("unknown length unit -- %s", ustr))
       break;
   }

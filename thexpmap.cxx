@@ -544,6 +544,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                 exps = this->export_mp(& out, cs, sfig, export_outlines_only);
                 // naozaj ho exportujeme
                 if (exps != TT_XMPS_NONE) {
+                  fprintf(plf,"\t# scrap: %s\n",cs->name);
                   fprintf(plf,"\t%s => {\n",thexpmap_u2string(sfig));
                   SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
                   SCRAPITEM->sect = 0;
@@ -616,7 +617,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   
                   if ((!export_outlines_only) && (!export_sections) &&
                       (cbm->bm->selection_xs->fmap->output_number != cbm->bm->selection_xs->preview_output_number)
+	              && (!cbm->bm->selection_xs->previewed)		      
                       && ((exps & TT_XMPS_B) != TT_XMPS_NONE)) {
+		    fprintf(plf,"\t# scrap: %s\n",cs->name);
                     fprintf(plf,"\t%s => {\n",thexpmap_u2string(sfig + TT_XMPS_COUNT));
                     SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
                     SCRAPITEM->sect = 0;
@@ -698,6 +701,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       chtitle = (strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name);
     if (cmap->expand) {      
     
+      fprintf(plf,"\t# expanded map: %s\n",cmap->map->name);
       fprintf(plf,"\t%ld => {\n",cmap->output_number);
       LAYERHASH.insert(make_pair(cmap->output_number,L));
       LAYER_ITER = LAYERHASH.find(cmap->output_number);
@@ -757,13 +761,16 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
         if ((! cbm->bm->selection_xs->previewed) && 
             (cbm->bm->selection_xs->fmap->output_number != cbm->bm->selection_xs->preview_output_number)) {
           cbm->bm->selection_xs->previewed = true;
+          fprintf(plf,"\t# basic map: %s\n",cbm->bm->name);
           fprintf(plf,"\t%ld => {\n",cbm->bm->selection_xs->preview_output_number);
           fprintf(plf,"\t\tZ => 1,\n");
+      	  fprintf(plf,"\t\tA => %ld,\n",cbm->bm->selection_xs->fmap->output_number);
           fprintf(plf,"\t},\n");
 
           LAYERHASH.insert(make_pair(cbm->bm->selection_xs->preview_output_number,L));
           LAYER_ITER = LAYERHASH.find(cbm->bm->selection_xs->preview_output_number);
           LAYER_ITER->second.Z = 1;
+          LAYER_ITER->second.AltJump = cbm->bm->selection_xs->fmap->output_number;
 
           switch (cbm->bm->selection_mode) {
             case TT_MAPITEM_BELOW:
@@ -959,13 +966,14 @@ unsigned thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 #define thexpmap_export_mp_bgif if (!somex) \
   fprintf(out->file,"beginfig(%d);\n",startnum + TT_XMPS_COUNT_F); \
   somex = true
-  
+
+#define thxmempiov ((obj->tags & TT_2DOBJ_TAG_VISIBILITY_ON) > 0)
   // najprv vyplne
   for (placeid = TT_2DOBJ_PLACE_BOTTOM; placeid <= TT_2DOBJ_PLACE_TOP; placeid++) {
     obj = scrap->ls2doptr;
     if (outline_mode) obj = NULL;
     while (obj != NULL) {
-      if (((obj->tags & TT_2DOBJ_TAG_CLIP_ON) > 0) && (obj->place == placeid)) {
+      if (thxmempiov && ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) > 0) && (obj->place == placeid)) {
         thexpmap_export_mp_bgif;
         obj->export_mp(out);
       }
@@ -1118,7 +1126,7 @@ unsigned thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     obj = scrap->ls2doptr;
     if (outline_mode) obj = NULL;
     while (obj != NULL) {
-      if (((obj->tags & TT_2DOBJ_TAG_CLIP_ON) == 0) && (obj->place == placeid)) {
+      if (thxmempiov && ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) == 0) && (obj->place == placeid)) {
         switch (obj->get_class_id()) {
           case TT_LINE_CMD:
             switch (((thline*)obj)->type) {
@@ -1189,7 +1197,7 @@ unsigned thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   obj = scrap->ls2doptr;
   if (outline_mode) obj = NULL;
   while (obj != NULL) {
-    if ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) == 0) {
+    if (thxmempiov && ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) == 0)) {
       switch (obj->get_class_id()) {
         case TT_POINT_CMD:
           if (((thpoint*)obj)->type == TT_POINT_TYPE_STATION) {
@@ -1217,6 +1225,7 @@ unsigned thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   obj = scrap->ls2doptr;
   if (outline_mode) obj = NULL;
   while (obj != NULL) {
+    if (!thxmempiov) goto DO_NOT_EXPORT_LABEL;
     switch (obj->get_class_id()) {
     
       // altitude labels zo steny
@@ -1264,6 +1273,7 @@ unsigned thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         }
         break;
     }
+    DO_NOT_EXPORT_LABEL:
     obj = obj->pscrapoptr;
   }
   

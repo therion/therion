@@ -1406,7 +1406,10 @@ void thdata::insert_data_leg(int nargs, char ** args)
         break;
         
       case TT_DATALEG_BEARING:
-        thparse_double(val_id, val, args[carg]);
+        if (this->dlu_bearing.get_units() == TT_TFU_DEG)
+          thparse_double_dms(val_id, val, args[carg]);
+        else
+          thparse_double(val_id, val, args[carg]);
         switch (val_id) {
           case TT_SV_NUMBER:
             val = this->dlc_bearing.evaluate(val);
@@ -1425,7 +1428,10 @@ void thdata::insert_data_leg(int nargs, char ** args)
         break;
         
       case TT_DATALEG_BACKBEARING:
-        thparse_double(val_id, val, args[carg]);
+        if (this->dlu_bearing.get_units() == TT_TFU_DEG)
+          thparse_double_dms(val_id, val, args[carg]);
+        else
+          thparse_double(val_id, val, args[carg]);
         switch (val_id) {
           case TT_SV_NUMBER:
             val = this->dlc_bearing.evaluate(val);
@@ -1444,7 +1450,10 @@ void thdata::insert_data_leg(int nargs, char ** args)
         break;
         
       case TT_DATALEG_GRADIENT:
-        thparse_double(val_id, val, args[carg]);
+        if (this->dlu_gradient.get_units() == TT_TFU_DEG)
+          thparse_double_dms(val_id, val, args[carg]);
+        else
+          thparse_double(val_id, val, args[carg]);
         switch (val_id) {
           case TT_SV_NUMBER:
             val = this->dlc_gradient.evaluate(val);
@@ -1465,7 +1474,10 @@ void thdata::insert_data_leg(int nargs, char ** args)
         break;
         
       case TT_DATALEG_BACKGRADIENT:
-        thparse_double(val_id, val, args[carg]);
+        if (this->dlu_gradient.get_units() == TT_TFU_DEG)
+          thparse_double_dms(val_id, val, args[carg]);
+        else
+          thparse_double(val_id, val, args[carg]);
         switch (val_id) {
           case TT_SV_NUMBER:
             val = this->dlc_gradient.evaluate(val);

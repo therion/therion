@@ -44,7 +44,7 @@
 #include <list>
 
 
-void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode) {
+void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level) {
   thdb2dxs * xs, * txs = NULL;
   thdb2dmi * mi;
   bool found = false;
@@ -72,10 +72,12 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode) {
         fmap->last_bm = xs;
       }
     }
-    if (txs->mode < mode) {
+//    if (txs->mode < mode) {
+    if (txs->mode != TT_MAPITEM_NORMAL) {
       txs->mode = mode;
       mi = map->first_item;
-      if (map->selection_mode < mode) {
+//      if (map->selection_mode < mode) {
+      if (map->selection_mode != TT_MAPITEM_NORMAL) {
         map->selection_mode = mode;
         map->selection_xs = txs;
       }
@@ -93,11 +95,12 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode) {
   mi = map->first_item;
   while (mi != NULL) {
     if (mode == TT_MAPITEM_NORMAL) {
-      if ((mi->type != TT_MAPITEM_NORMAL) || (!map->is_basic))
-        this->insert_basic_maps(fmap,(thmap *)mi->object,mi->type);
+      if (((mi->type != TT_MAPITEM_NORMAL) || (!map->is_basic)) && 
+          ((mi->type == TT_MAPITEM_NORMAL) || (level == 0)))
+        this->insert_basic_maps(fmap,(thmap *)mi->object,mi->type,level+1);
     } else {
       if ((mi->type == TT_MAPITEM_NORMAL) && (!map->is_basic))
-        this->insert_basic_maps(fmap,(thmap *)mi->object,mode);
+        this->insert_basic_maps(fmap,(thmap *)mi->object,mode,level+1);
     }
     mi = mi->next_item;
   }
@@ -328,7 +331,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
     cxm = selection;
     while (cxm != NULL) {
       if (cxm->expand) {
-        this->insert_basic_maps(cxm,cxm->map,TT_MAPITEM_NORMAL);
+        this->insert_basic_maps(cxm,cxm->map,TT_MAPITEM_NORMAL,0);
         cxm->output_number = ++on;
       }
       cxm = cxm->next_item;

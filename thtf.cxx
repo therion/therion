@@ -27,12 +27,15 @@
  
 #include "thtf.h"
 #include "thexception.h"
+#include "thparse.h"
 #include <stdio.h>
 
 
 void thtf::parse_scale(char * sstr)
 {
-  if (sscanf(sstr,"%lf",&this->sfactor) == 0)
+  int sv;
+  thparse_double(sv,this->sfactor,sstr);
+  if (sv != TT_SV_NUMBER)
     ththrow(("invalid scale factor -- %s", sstr))
   if (this->sfactor == 0.0)
     ththrow(("invalid scale factor -- 0.0"))
@@ -43,6 +46,10 @@ double thtf::transform(double value)
   return value * this->sfactor * this->ufactor;
 }
 
+
+int thtf::get_units() {
+  return this->units;
+}
 
 
 

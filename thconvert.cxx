@@ -689,9 +689,9 @@ void read_rgb() {
 int thconvert() { 
 
 #ifdef NOTHERION
-  cout << "converting scraps... " << flush;
+  cout << "converting scraps ... " << flush;
 #else
-  thprintf("converting scraps... ");
+  thprintf("converting scraps ... ");
 #endif
 
 #ifdef NOTHERION

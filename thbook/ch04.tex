@@ -2,8 +2,14 @@
 
 \subchapter Information files.
 
-Therion currently doesn't provide any information about centerlines (such as 
-length or depth of the cave). This should be implemented in the near future.
+Therion provides some basic facts about each survey (length, vertical range,
+N--S range, E--W range, number of shots and stations) if |-x| option is given. 
+This information is dispayed in XTherion, {\it Compiler} window,
+{\it Survey info} menu, when some survey from the {\it Survey structure} menu
+is selected.
+
+More advanced statistics should be implemented in the near future.
+
 
 \subchapter 2D maps.
 
@@ -18,6 +24,10 @@ directions, as well as in upper and lower levels. There are also hyperlinks at
 the border of the map if the cave continues on the next page and on the 
 appropriate cells of the Navigator.
 
+PDF files are highly optimized---scraps are stored in XObject forms only once 
+in the document and than referenced on appropriate pages. 
+Therion uses most advanced PDF features like transparency and layers.
+
 Created PDF files may be optionally post-processed in applications like 
 pdf\TeX\ or Adobe Acrobat---it's possible to extract or change some pages, add 
 comments or encryption, etc.
@@ -25,7 +35,7 @@ comments or encryption, etc.
 
 \subchapter 3D models.
 
-Therion exports centerline 3D models in Survex and Compass formats, which may 
+Therion exports centreline 3D models in Survex and Compass formats, which may 
 be viewed in these programs. (Aven, xcaverot, or caverot for *.3d Survex files.)
 You may also use |print*| programs from the Survex distribution to print the 
 3D model.
