@@ -309,6 +309,28 @@ void thdataobject::self_print_properties(FILE * outf)
 }
 
 
+bool thdataobject::is_in_survey(thsurvey * psearch)
+{
+  if (psearch == NULL)
+    return false;
+    
+  thsurvey * tmp;
+  if (this->get_class_id() == TT_SURVEY_CMD) {
+    tmp = (thsurvey *) this;
+  } else {
+    tmp = this->fsptr;
+  }
+  
+  while (tmp != NULL) {
+    if (tmp->id == psearch->id)
+      return true;
+    tmp = tmp->fsptr;
+  }
+  
+  return false;
+}
+
+
 void thdataobject::start_insert()
 {
 }

@@ -107,6 +107,7 @@ class thdb2d {
   void pp_adjust_points(thdb2dprj * prj);  ///< ???
   void pp_shift_points(thdb2dprj * prj, bool calc_az = false);  ///< ???
   void pp_process_joins(thdb2dprj * prj); ///< ???
+  bool pp_process_adjustments(thdb2dprj * prj);
   void pp_smooth_lines(thdb2dprj * prj);  ///< ???
   void pp_smooth_joins(thdb2dprj * prj);  ///< ???
   void pp_calc_distortion(thdb2dprj * prj);  ///< ???
@@ -279,6 +280,8 @@ class thdb2d {
   char * get_projection_title(thdb2dprj * prj);
   
   void log_distortions();
+  
+  thdb2dprj * get_projection(int id);
   
 };
 

@@ -35,7 +35,7 @@
 tharea::tharea()
 {
   this->type = TT_AREA_TYPE_UNKNOWN;
-  this->place = TT_2DOBJ_PLACE_BOTTOM;
+  this->place = TT_2DOBJ_PLACE_DEFAULT_BOTTOM;
   this->first_line = NULL;
   this->last_line = NULL;
 }
@@ -172,6 +172,8 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_WATER, SYMA_WATER)
   }
   
+  if (this->context >= 0) 
+    macroid = this->context;
   if (!out->symset->assigned[macroid])
     return(false);
   if (this->first_line == NULL)

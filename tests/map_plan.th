@@ -1,5 +1,9 @@
 encoding  utf-8
   survey tp -title "test survey" -person-rename "Erika Kovacova" "Erika Mudrakova"
+
+    surface
+      bitmap xx.jpg [0 0 0 500 500 2]
+    endsurface
     
     centerline -id 19920112
     
@@ -10,7 +14,7 @@ encoding  utf-8
       explo-date 1990.12.1
       explo-team "Milan Stec"
       explo-team "Milan/Stec jr."
-      
+            
       
       data cartesian from to dx dy dz
         
@@ -22,34 +26,53 @@ encoding  utf-8
       
     endcentreline
     
-    centerline
-      data normal station up down left right newline bearing clino length
-        0 1 1 1 1
-          1 2 3
-        1 2 3 4 5
-        fix 5 20 20 20
-    endcenterline
+#    centerline
+#      data normal station up down left right newline bearing clino length
+#        0 1 1 1 1
+#          1 2 3
+#        1 2 3 4 5
+#        fix 5 20 20 1520
+#    endcenterline
     
+#    centerline
+#      data dimensions station up down left right
+#      0 2 3 2 4
+#      1 2 3 3 3
+#    endcenterline
+    
+    survey xtp
     centreline
       data normal from to bearing clino length
       units bearing clino degrees
+      flags surface
       0 0.1   90  -20:30  15
       0.1 0.2  - down  10
       0.2 0.3 90  -20.5   6
       0.3 0.4  -   up   5
     endcentreline
-       
+    endsurvey
+    
+    centerline
+      equate 0 0@xtp
+    endcenterline
+    
     input map_plan.th2
     
   #  join hrw drw
   #  join hlw dlw
     join horny dolny
+
     
     map hmap -title "Horna mapa"
       test
       break
       horny
       preview below dmap
+    endmap
+
+    map xhmap -title "Pokus" -proj plan
+      xtp
+      hmap
     endmap
     
     map dmap -title "Dolna mapa"

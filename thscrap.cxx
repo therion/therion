@@ -37,6 +37,8 @@
 #include "thline.h"
 #include "thpoint.h"
 #include "thscrapis.h"
+#include "thsurvey.h"
+#include "thsymbolset.h"
 
 #define EXPORT3D_INVISIBLE true
 
@@ -83,6 +85,9 @@ thscrap::thscrap()
   this->avdist = 0.0;
   this->maxdistp1 = NULL;
   this->maxdistp2 = NULL;
+  
+  this->centerline_survey = NULL;
+  this->centerline_io = false;
 }
 
 
@@ -482,6 +487,7 @@ void thscrap::parse_stations(char * ss) {
 }
 
 
+
 thscraplp * thscrap::get_polygon() {
 
   if (this->polygon_parsed)
@@ -500,8 +506,22 @@ thscraplp * thscrap::get_polygon() {
   thdb2dcp * cp;
   thscraplp * lp, * nlp;
   thdb1ds * st, * st1, * st2;
+  unsigned long i, ni = this->db->db1d.station_vec.size();
   thdb1d_tree_arrow * arrow;
   thdb1d_tree_node * nodes = this->db->db1d.get_tree_nodes();
+  
+  if (this->centerline_io) {
+    // povkladame vsetky meracske body
+    for(i = 0; i < ni; i++) {
+      st = &(this->db->db1d.station_vec[i]);
+      if (((this->centerline_survey != NULL) && (st->survey->is_in_survey(this->centerline_survey))) || 
+          ((this->centerline_survey == NULL) && (st->survey->selected))) {
+        lp = this->polygon_insert();
+        lp->station = st;
+        lp->ustation = st;
+      }
+    }
+  }
 
   switch (this->proj->type) {
     case TT_2DPROJ_PLAN:
@@ -532,6 +552,7 @@ thscraplp * thscrap::get_polygon() {
                             + cosa * (st->y - this->proj->shift_y);
                   break;
               }
+              this->update_limits(lp->stx, lp->sty);
             }
           } else
             st = cp->st;
@@ -540,32 +561,38 @@ thscraplp * thscrap::get_polygon() {
             // let's process each arrow from this point
             arrow = nodes[st->uid - 1].first_arrow;
             while (arrow != NULL) {
-              // process arrow here
-              nlp = this->polygon_insert();
-              nlp->lnio = true;
-              st1 = &(this->db->db1d.station_vec[arrow->start_node->uid - 1]);
-              st2 = &(this->db->db1d.station_vec[arrow->end_node->uid - 1]);
-              switch (this->proj->type) {
-                case TT_2DPROJ_PLAN:
-                  nlp->lnx1 = st1->x - this->proj->shift_x;
-                  nlp->lny1 = st1->y - this->proj->shift_y;
-                  nlp->lnz1 = st1->z - this->proj->shift_z;
-                  nlp->lnx2 = st2->x - this->proj->shift_x;
-                  nlp->lny2 = st2->y - this->proj->shift_y;
-                  nlp->lnz2 = st2->z - this->proj->shift_z;
-                  break;
-                case TT_2DPROJ_ELEV:
-                  nlp->lnx1 = cosa * (st1->x - this->proj->shift_x) 
-                            - sina * (st1->y - this->proj->shift_y);
-                  nlp->lny1 = st1->z - this->proj->shift_z;
-                  nlp->lnz1 = sina * (st1->x - this->proj->shift_x) 
-                            + cosa * (st1->y - this->proj->shift_y);
-                  nlp->lnx2 = cosa * (st2->x - this->proj->shift_x) 
-                            - sina * (st2->y - this->proj->shift_y);
-                  nlp->lny2 = st2->z - this->proj->shift_z;
-                  nlp->lnz2 = sina * (st2->x - this->proj->shift_x) 
-                            + cosa * (st2->y - this->proj->shift_y);
-                  break;
+            
+              if (((this->centerline_survey != NULL) && (arrow->leg->survey->is_in_survey(this->centerline_survey))) || 
+                  ((this->centerline_survey == NULL) && (arrow->leg->survey->selected))) {
+
+                // process arrow here
+                nlp = this->polygon_insert();
+                nlp->lnio = true;
+                nlp->type = (arrow->leg->leg->flags & TT_LEGFLAG_SURFACE != 0 ? SYML_SURVEY_SURFACE : SYML_SURVEY_CAVE);
+                st1 = &(this->db->db1d.station_vec[arrow->start_node->uid - 1]);
+                st2 = &(this->db->db1d.station_vec[arrow->end_node->uid - 1]);
+                switch (this->proj->type) {
+                  case TT_2DPROJ_PLAN:
+                    nlp->lnx1 = st1->x - this->proj->shift_x;
+                    nlp->lny1 = st1->y - this->proj->shift_y;
+                    nlp->lnz1 = st1->z - this->proj->shift_z;
+                    nlp->lnx2 = st2->x - this->proj->shift_x;
+                    nlp->lny2 = st2->y - this->proj->shift_y;
+                    nlp->lnz2 = st2->z - this->proj->shift_z;
+                    break;
+                  case TT_2DPROJ_ELEV:
+                    nlp->lnx1 = cosa * (st1->x - this->proj->shift_x) 
+                              - sina * (st1->y - this->proj->shift_y);
+                    nlp->lny1 = st1->z - this->proj->shift_z;
+                    nlp->lnz1 = sina * (st1->x - this->proj->shift_x) 
+                              + cosa * (st1->y - this->proj->shift_y);
+                    nlp->lnx2 = cosa * (st2->x - this->proj->shift_x) 
+                              - sina * (st2->y - this->proj->shift_y);
+                    nlp->lny2 = st2->z - this->proj->shift_z;
+                    nlp->lnz2 = sina * (st2->x - this->proj->shift_x) 
+                              + cosa * (st2->y - this->proj->shift_y);
+                    break;
+                }
               }
               arrow = arrow->next_arrow;
             }
@@ -1088,4 +1115,25 @@ thdb3ddata * thscrap::get_3d_outline() {
   this->process_3d();
   return &(this->d3_outline);
 }
+
+
+void thscrap::update_limits(double x, double y)
+{
+  if (thisnan(this->lxmin)) {
+    this->lxmin = x;
+    this->lxmax = x;
+  } else {
+    if (x < this->lxmin) this->lxmin = x;
+    if (x > this->lxmax) this->lxmax = x;
+  }
+  if (thisnan(this->lymin)) {
+    this->lymin = y;
+    this->lymax = y;
+  } else {
+    if (y < this->lymin) this->lymin = y;
+    if (y > this->lymax) this->lymax = y;
+  }
+  
+}
+
 

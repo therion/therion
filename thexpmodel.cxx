@@ -36,15 +36,18 @@
 #include "thchenc.h"
 #include "thscrap.h"
 #include <map>
+#include "thsurface.h"
 
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_THERION;
+  this->items = TT_EXPMODEL_ITEM_ALL;
 }
 
 
 void thexpmodel::parse_options(int & argx, int nargs, char ** args)
 {
   int optid = thmatch_token(args[argx], thtt_expmodel_opt);
+  unsigned utmp;
   int optx = argx;
   switch (optid) {
     case TT_EXPMODEL_OPT_FORMAT:  
@@ -54,6 +57,21 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
       this->format = thmatch_token(args[argx], thtt_expmodel_fmt);
       if (this->format == TT_EXPMODEL_FMT_UNKNOWN)
         ththrow(("unknown format -- \"%s\"", args[argx]))
+      argx++;
+      break;
+    case TT_EXPMODEL_OPT_ENABLE:
+    case TT_EXPMODEL_OPT_DISABLE:
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing model entity -- \"%s\"",args[optx]))
+      utmp = thmatch_token(args[argx], thtt_expmodel_items);
+      if (utmp == TT_EXPMODEL_ITEM_UNKNOWN)
+        ththrow(("unknown model entity -- \"%s\"", args[argx]))
+      if (optid == TT_EXPMODEL_OPT_ENABLE) {
+        this->items |= utmp;
+      } else {
+        this->items &= (~utmp);
+      }
       argx++;
       break;
     default:
@@ -338,16 +356,33 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   }
 
   double avx, avy, avz;
-  
-  thdb3ddata * pgn = dbp->db1d.get_3d();
-  avx = (pgn->limits.minx + pgn->limits.maxx) / 2.0;
-  avy = (pgn->limits.miny + pgn->limits.maxy) / 2.0;
-  avz = (pgn->limits.minz + pgn->limits.maxz) / 2.0;
+  thdb_object_list_type::iterator obi;
+  thdb3ddata * pgn = dbp->db1d.get_3d(), 
+    * surf_pgn = dbp->db1d.get_3d_surface(),
+    * tmp3d;
+  thdb3dlim pgnlimits, finlim;
+  switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
+    case TT_EXPMODEL_ITEM_SURFACECENTERLINE:
+      pgnlimits.update(&(surf_pgn->limits));
+      break;
+    case TT_EXPMODEL_ITEM_CENTERLINE:
+      pgnlimits.update(&(surf_pgn->limits));
+      pgnlimits.update(&(pgn->limits));
+      break;
+    default:    
+      pgnlimits.update(&(pgn->limits));
+  }
+  finlim.update(&(pgnlimits));
+  avx = (pgnlimits.minx + pgnlimits.maxx) / 2.0;
+  avy = (pgnlimits.miny + pgnlimits.maxy) / 2.0;
+  avz = (pgnlimits.minz + pgnlimits.maxz) / 2.0;
   pgn->exp_shift_x = avx;
   pgn->exp_shift_y = avy;
   pgn->exp_shift_z = avz;
-  thdb3dlim finlim;
-  finlim.update(&(pgn->limits));
+  surf_pgn->exp_shift_x = avx;
+  surf_pgn->exp_shift_y = avy;
+  surf_pgn->exp_shift_z = avz;
+
   // now let's print header
 //  thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 
 //          finlim.minx, finlim.maxx, 
@@ -358,36 +393,66 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   fprintf(pltf,"glDeleteLists $xthmvv(list,model) 1\n");
   fprintf(pltf,"glNewList $xthmvv(list,model) $GL::GL_COMPILE\n");
   fprintf(pltf,"xth_mv_gl_wireframe\n");
-  fprintf(pltf,"glColor3f 1.0 1.0 1.0\n");
-  pgn->export_thm(pltf);
 
-  
-  // 3D DATA 
-  fprintf(pltf,"\n\n\n");
-  fprintf(pltf,"xth_mv_gl_surface\n");
-  thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
-  thscrap * cs;
-  thdb3ddata * d3d;
-  if (!prjid.newprj) {
-    thdb.db2d.process_projection(prjid.prj);
-    cs = prjid.prj->first_scrap;
-    while(cs != NULL) {
-      if (cs->fsptr->is_selected() && (cs->d3 != TT_FALSE)) {
-        d3d = cs->get_3d_outline();
-//        thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 
-//          d3d->limits.minx, d3d->limits.maxx, 
-//          d3d->limits.miny, d3d->limits.maxy, 
-//          d3d->limits.minz, d3d->limits.maxz);
-        finlim.update(&(d3d->limits));
-        d3d->exp_shift_x = avx;
-        d3d->exp_shift_y = avy;
-        d3d->exp_shift_z = avz;
-        d3d->export_thm(pltf);
+  if ((this->items & TT_EXPMODEL_ITEM_CAVECENTERLINE) != 0) {
+    fprintf(pltf,"glColor3f 0.0 1.0 0.0\n");
+    pgn->export_thm(pltf);
+  }
+  if ((this->items & TT_EXPMODEL_ITEM_SURFACECENTERLINE) != 0) {
+    fprintf(pltf,"glColor3f 0.5 0.5 0.5\n");
+    surf_pgn->export_thm(pltf);
+  }
+  if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
+    fprintf(pltf,"glColor3f 0.5 0.5 0.5\n");
+    // prejde secky surfaces a exportuje z nich povrchy
+    obi = dbp->object_list.begin();
+    while (obi != dbp->object_list.end()) {
+      switch ((*obi)->get_class_id()) {
+        case TT_SURFACE_CMD:
+          tmp3d = ((thsurface*)(*obi))->get_3d();
+          if (tmp3d != NULL) {
+            tmp3d->exp_shift_x = avx;
+            tmp3d->exp_shift_y = avy;
+            tmp3d->exp_shift_z = avz;
+            tmp3d->export_thm(pltf);
+          }
+          break;
       }
-      cs = cs->proj_next_scrap;
+      obi++;
     }
   }
 
+  
+  // WALLS
+  fprintf(pltf,"\n\n\n");
+  fprintf(pltf,"xth_mv_gl_surface\n");
+  if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
+
+    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+    thscrap * cs;
+    thdb3ddata * d3d;
+    if (!prjid.newprj) {
+      thdb.db2d.process_projection(prjid.prj);
+      cs = prjid.prj->first_scrap;
+      while(cs != NULL) {
+        if (cs->fsptr->is_selected() && (cs->d3 != TT_FALSE)) {
+          d3d = cs->get_3d_outline();
+  //        thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 
+  //          d3d->limits.minx, d3d->limits.maxx, 
+  //          d3d->limits.miny, d3d->limits.maxy, 
+  //          d3d->limits.minz, d3d->limits.maxz);
+          finlim.update(&(d3d->limits));
+          d3d->exp_shift_x = avx;
+          d3d->exp_shift_y = avy;
+          d3d->exp_shift_z = avz;
+          d3d->export_thm(pltf);
+        }
+        cs = cs->proj_next_scrap;
+      }
+    }
+  
+  } // WALLS
+  
   fprintf(pltf,"set xthmvv(model,maxx) %.2f\n",finlim.maxx - avx);
   fprintf(pltf,"set xthmvv(model,maxy) %.2f\n",finlim.maxy - avy);
   fprintf(pltf,"set xthmvv(model,maxz) %.2f\n",finlim.maxz - avz);
@@ -434,45 +499,70 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
     return;
   }
 
+
+
+
   double avx, avy, avz;
-  
-  thdb3ddata * pgn = dbp->db1d.get_3d();
-  avx = (pgn->limits.minx + pgn->limits.maxx) / 2.0;
-  avy = (pgn->limits.miny + pgn->limits.maxy) / 2.0;
-  avz = (pgn->limits.minz + pgn->limits.maxz) / 2.0;
+  thdb3ddata * pgn = dbp->db1d.get_3d(), 
+    * surf_pgn = dbp->db1d.get_3d_surface();
+  thdb3dlim pgnlimits, finlim;
+  switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
+    case TT_EXPMODEL_ITEM_SURFACECENTERLINE:
+      pgnlimits.update(&(surf_pgn->limits));
+      break;
+    case TT_EXPMODEL_ITEM_CENTERLINE:
+      pgnlimits.update(&(surf_pgn->limits));
+      pgnlimits.update(&(pgn->limits));
+      break;
+    default:    
+      pgnlimits.update(&(pgn->limits));
+  }
+  finlim.update(&(pgnlimits));
+  avx = (pgnlimits.minx + pgnlimits.maxx) / 2.0;
+  avy = (pgnlimits.miny + pgnlimits.maxy) / 2.0;
+  avz = (pgnlimits.minz + pgnlimits.maxz) / 2.0;
   pgn->exp_shift_x = avx;
   pgn->exp_shift_y = avy;
   pgn->exp_shift_z = avz;
+  surf_pgn->exp_shift_x = avx;
+  surf_pgn->exp_shift_y = avy;
+  surf_pgn->exp_shift_z = avz;
+
+
+
 
   // now let's print header
   fprintf(pltf,"#VRML V2.0 utf8\n\nNavigationInfo {\n\theadlight TRUE\n}\nBackground {\n\tskyColor 0 0 0\n}\n");
   //pgn->export_vrml(pltf);
 
+  if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
   
-  // 3D DATA 
-  thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
-  thscrap * cs;
-  thdb3ddata * d3d;
-  if (!prjid.newprj) {
-    thdb.db2d.process_projection(prjid.prj);
-    cs = prjid.prj->first_scrap;
-    while(cs != NULL) {
-      if (cs->fsptr->is_selected()) {
-        d3d = cs->get_3d_outline();
-        d3d->exp_shift_x = avx;
-        d3d->exp_shift_y = avy;
-        d3d->exp_shift_z = avz;
-        fprintf(pltf,
-          "Shape {\nappearance Appearance {\n" \
-          "\tmaterial Material {\n\t\tdiffuseColor 1.0 1.0 1.0\n\t}" \
-          "\n}\ngeometry IndexedFaceSet {\n");
-        d3d->export_vrml(pltf);
-        fprintf(pltf,"creaseAngle 3.0\n}\n}\n");
+    // 3D DATA 
+    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+    thscrap * cs;
+    thdb3ddata * d3d;
+    if (!prjid.newprj) {
+      thdb.db2d.process_projection(prjid.prj);
+      cs = prjid.prj->first_scrap;
+      while(cs != NULL) {
+        if (cs->fsptr->is_selected()) {
+          d3d = cs->get_3d_outline();
+          d3d->exp_shift_x = avx;
+          d3d->exp_shift_y = avy;
+          d3d->exp_shift_z = avz;
+          fprintf(pltf,
+            "Shape {\nappearance Appearance {\n" \
+            "\tmaterial Material {\n\t\tdiffuseColor 1.0 1.0 1.0\n\t}" \
+            "\n}\ngeometry IndexedFaceSet {\n");
+            d3d->export_vrml(pltf);
+          fprintf(pltf,"creaseAngle 3.0\n}\n}\n");
+        }
+        cs = cs->proj_next_scrap;
       }
-      cs = cs->proj_next_scrap;
     }
-  }
-
+    
+  } // WALLS
+  
   fprintf(pltf,"\n");
   fclose(pltf);
   
@@ -508,14 +598,30 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   }
 
   double avx, avy, avz;
-  
-  thdb3ddata * pgn = dbp->db1d.get_3d();
-  avx = (pgn->limits.minx + pgn->limits.maxx) / 2.0;
-  avy = (pgn->limits.miny + pgn->limits.maxy) / 2.0;
-  avz = (pgn->limits.minz + pgn->limits.maxz) / 2.0;
+  thdb3ddata * pgn = dbp->db1d.get_3d(), 
+    * surf_pgn = dbp->db1d.get_3d_surface();
+  thdb3dlim pgnlimits, finlim;
+  switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
+    case TT_EXPMODEL_ITEM_SURFACECENTERLINE:
+      pgnlimits.update(&(surf_pgn->limits));
+      break;
+    case TT_EXPMODEL_ITEM_CENTERLINE:
+      pgnlimits.update(&(surf_pgn->limits));
+      pgnlimits.update(&(pgn->limits));
+      break;
+    default:    
+      pgnlimits.update(&(pgn->limits));
+  }
+  finlim.update(&(pgnlimits));
+  avx = (pgnlimits.minx + pgnlimits.maxx) / 2.0;
+  avy = (pgnlimits.miny + pgnlimits.maxy) / 2.0;
+  avz = (pgnlimits.minz + pgnlimits.maxz) / 2.0;
   pgn->exp_shift_x = avx;
   pgn->exp_shift_y = avy;
   pgn->exp_shift_z = avz;
+  surf_pgn->exp_shift_x = avx;
+  surf_pgn->exp_shift_y = avy;
+  surf_pgn->exp_shift_z = avz;
 
   // now let's print header
   
@@ -524,27 +630,32 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
 
   
   // 3D DATA 
-  thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
-  thscrap * cs;
-  thdb3ddata * d3d;
-  if (!prjid.newprj) {
-    thdb.db2d.process_projection(prjid.prj);
-    cs = prjid.prj->first_scrap;
-    while(cs != NULL) {
-      if (cs->fsptr->is_selected()) {
-        d3d = cs->get_3d_outline();
-        d3d->exp_shift_x = avx;
-        d3d->exp_shift_y = avy;
-        d3d->exp_shift_z = avz;
-        fprintf(pltf,"BeginGroup ( \n\tDisplayGroup ( ) \n) \n"
-          "Container ( \n\tMesh ( \n");
-        d3d->export_3dmf(pltf);
-        fprintf(pltf,"\t) \nContainer ( \n\tAttributeSet ( ) \n"
-          "\tDiffuseColor ( 1 1 1 ) \n) \n) \nEndGroup ( ) \n");
+  if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
+
+    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+    thscrap * cs;
+    thdb3ddata * d3d;
+    if (!prjid.newprj) {
+      thdb.db2d.process_projection(prjid.prj);
+      cs = prjid.prj->first_scrap;
+      while(cs != NULL) {
+        if (cs->fsptr->is_selected()) {
+          d3d = cs->get_3d_outline();
+          d3d->exp_shift_x = avx;
+          d3d->exp_shift_y = avy;
+          d3d->exp_shift_z = avz;
+          fprintf(pltf,"BeginGroup ( \n\tDisplayGroup ( ) \n) \n"
+            "Container ( \n\tMesh ( \n");
+          d3d->export_3dmf(pltf);
+          fprintf(pltf,"\t) \nContainer ( \n\tAttributeSet ( ) \n"
+            "\tDiffuseColor ( 1 1 1 ) \n) \n) \nEndGroup ( ) \n");
+        }
+        cs = cs->proj_next_scrap;
       }
-      cs = cs->proj_next_scrap;
     }
-  }
+  
+  } // WALLS
+  
   fprintf(pltf,"\n");
   fclose(pltf);
   

@@ -45,6 +45,7 @@
 #include "tharea.h"
 #include "thjoin.h"
 #include "thmap.h"
+#include "thsurface.h"
 #include "thendscrap.h"
 
 
@@ -439,6 +440,10 @@ class thdataobject * thdatabase::create(char * oclass,
       
     case TT_MAP_CMD:
       ret = new thmap;
+      break;
+      
+    case TT_SURFACE_CMD:
+      ret = new thsurface;
       break;
       
     default:

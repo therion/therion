@@ -57,6 +57,7 @@
 #include <map>
 #include <set>
 #include "thmapstat.h"
+#include "thsurface.h"
 
 #ifdef THWIN32
 #define snprintf _snprintf
@@ -241,12 +242,12 @@ void thexpmap::dump_body(FILE * xf)
 
 void thexpmap::parse_projection(class thdatabase * dbp) {
 
-  thdb2dprjpr prjid = dbp->db2d.parse_projection(this->projstr,false);
-  if (prjid.newprj) {
+  thdb2dprjpr prjid = dbp->db2d.parse_projection(this->projstr,true);
+/*  if (prjid.newprj) {
     thwarning(("%s [%d] -- no projection data -- %s",
       this->src.name, this->src.line, this->projstr))
     return;
-  }
+  }*/
   this->projptr = prjid.prj;
   
 }
@@ -263,11 +264,11 @@ void thexpmap::process_db(class thdatabase * dbp)
     this->format = this->get_default_format();
 
   thdb.db2d.process_projection(this->projptr);
-  if (this->projptr->first_scrap == NULL) {
+/*  if (this->projptr->first_scrap == NULL) {
     thwarning(("%s [%d] -- no projection data -- %s",
       this->src.name, this->src.line, this->projstr))
     return;
-  }
+  }*/
   
   // parse layout
   // thlayout * tmp = NULL;
@@ -408,12 +409,12 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   fclose(tf);
   
 
-
-  if (thexporter_quick_map_export && 
-      (thexpmap_quick_map_export_scale == this->layout->scale)) {
-    quick_map_exp = true;
-    goto QUICK_MAP_EXPORT;
-  }
+  // mooze byt zmena v definovanych symboloch, natoceni atd... :(((
+  //if (thexporter_quick_map_export && 
+  //    (thexpmap_quick_map_export_scale == this->layout->scale)) {
+  //  quick_map_exp = true;
+  //  goto QUICK_MAP_EXPORT;
+  //}
 
   plf = fopen(thtmp.get_file_name("data.pl"),"w");
 
@@ -501,6 +502,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
               if (export_sections) {
                 if ((op2->get_class_id() == TT_POINT_CMD) &&
                   (((thpoint *)op2)->type == TT_POINT_TYPE_SECTION) &&
+                  (((((thpoint *)op2)->context < 0) && this->symset.assigned[SYMP_SECTION]) || ((((thpoint *)op2)->context > -1) && this->symset.assigned[((thpoint *)op2)->context])) &&
                   (((thpoint *)op2)->text != NULL)) {
                     cs = (thscrap *)((thpoint *)op2)->text;
                     thdb.db2d.process_projection(cs->proj);
@@ -509,9 +511,15 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   cs = NULL;
               }
               if (cs != NULL) {
+                cs->get_polygon();
                 if (export_sections) {
-                  out.mx = (cs->lxmax + cs->lxmin) / 2.0;
-                  out.my = (cs->lymax + cs->lymin) / 2.0;
+                  if (thisnan(cs->lxmin)) {
+                    out.mx = 0.0;
+                    out.my = 0.0;
+                  } else {
+                    out.mx = (cs->lxmax + cs->lxmin) / 2.0;
+                    out.my = (cs->lymax + cs->lymin) / 2.0;
+                  }
                   shx = ((thpoint *)op2)->point->xt;
                   shy = ((thpoint *)op2)->point->yt;
                   switch (((thpoint *)op2)->align) {
@@ -547,8 +555,13 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   shx *= out.ms;
                   shy *= out.ms;
                 } else {
-                  out.mx = (cs->lxmax + cs->lxmin) / 2.0;
-                  out.my = (cs->lymax + cs->lymin) / 2.0;
+                  if (thisnan(cs->lxmin)) {
+                    out.mx = 0.0;
+                    out.my = 0.0;
+                  } else {
+                    out.mx = (cs->lxmax + cs->lxmin) / 2.0;
+                    out.my = (cs->lymax + cs->lymin) / 2.0;
+                  }
                   shx = out.mx * out.ms;
                   shy = out.my * out.ms;
                   if (!export_outlines_only) {
@@ -668,7 +681,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
               } // if cs != NULL
               if (!export_sections) {
                 export_sections = true;
-                if ((export_outlines_only) || (!this->symset.assigned[SYMP_SECTION]))
+//                if ((export_outlines_only) || (!this->symset.assigned[SYMP_SECTION]))
+                if (export_outlines_only)
                   // rezy sa neexportuju
                   op2 = NULL;
                 else
@@ -719,6 +733,40 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   if ((this->layout->legend != TT_LAYOUT_LEGEND_OFF) && 
       ((this->export_mode == TT_EXP_ATLAS) || (this->layout->map_header != TT_LAYOUT_MAP_HEADER_OFF))) {
     this->symset.export_pdf(this->layout,mpf,sfig);
+  }
+  
+  
+  // export all surface pictures
+  SURFPICTLIST.clear();
+  surfpictrecord srfpr;
+  thsurface * surf;
+  double surfscl = this->layout->scale * 11811.023622472446117783;
+  thdb_object_list_type::iterator obi;
+  if ((prj->type == TT_2DPROJ_PLAN) && (this->layout->surface != TT_LAYOUT_SURFACE_OFF)) {
+    // prejde vsetky objekty a exportuje vsetku surveye
+    obi = thdb.object_list.begin();
+    while (obi != thdb.object_list.end()) {
+      if ((*obi)->get_class_id() == TT_SURFACE_CMD) {
+        surf = (thsurface *)(*obi);
+        if (surf->pict_name != NULL) {
+          surf->calibrate();
+          srfpr.filename = surf->pict_name;
+          srfpr.dx = (surf->calib_x - prj->shift_x) * out.ms + origin_shx;
+          srfpr.dy = (surf->calib_y - prj->shift_y) * out.ms + origin_shy;
+          srfpr.xx = surf->calib_xx * surfscl * surf->pict_dpi / 300.0;
+          srfpr.xy = surf->calib_xy * surfscl * surf->pict_dpi / 300.0;
+          srfpr.yx = surf->calib_yx * surfscl * surf->pict_dpi / 300.0;
+          srfpr.yy = surf->calib_yy * surfscl * surf->pict_dpi / 300.0;
+          SURFPICTLIST.insert(SURFPICTLIST.end(), srfpr);
+          fprintf(plf,"\n\n# PICTURE: %s\n", srfpr.filename);
+          fprintf(plf,    "#  origin: %g %g\n", srfpr.dx, srfpr.dy);
+          //fprintf(plf,    "#   scale: %g\n", srfpr.ss);
+          //fprintf(plf,    "#  rotate: %g\n", srfpr.rr);
+          fprintf(plf,    "#  matrix: %g %g %g %g\n\n", srfpr.xx, srfpr.xy, srfpr.yx, srfpr.yy);
+        }
+      }
+    obi++;
+    }
   }
   
   fprintf(mpf,"end;\n");
@@ -866,7 +914,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   
   delete [] prevbf;
 
-  QUICK_MAP_EXPORT:
+  //QUICK_MAP_EXPORT:
 
   //if (strlen(this->layout->doc_title) == 0) {
   tit.strcpy(thdb.db2d.get_projection_title(prj));
@@ -1006,9 +1054,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   bool somex, first, vis;
   thscraplp * slp;
   thdb2dlp * lp;
-  
-  fprintf(out->file, "current_scrap := \"%s@%s\";\n", scrap->name, 
-    scrap->fsptr->full_name);
+  if (scrap->fsptr != NULL) {  
+    fprintf(out->file, "current_scrap := \"%s@%s\";\n", scrap->name, 
+      scrap->fsptr->full_name);
+  }
 
   // preskuma vsetky objekty a ponastavuje im clip tagy
   obj = scrap->ls2doptr;
@@ -1079,20 +1128,23 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   }
 
   // a polygon
-  slp = scrap->get_polygon();
-  if (outline_mode) slp = NULL;
-  if (!(out->symset->assigned[SYML_SURVEY])) slp = NULL;
-  while (slp != NULL) {
-    if (slp->lnio) {
-      thexpmap_export_mp_bgif;
-      fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
-          out->symset->get_mp_macro(SYML_SURVEY),
-          (slp->lnx1 - out->mx) * out->ms,
-          (slp->lny1 - out->my) * out->ms,
-          (slp->lnx2 - out->mx) * out->ms,
-          (slp->lny2 - out->my) * out->ms);
+  if (!scrap->centerline_io) {
+    slp = scrap->get_polygon();
+    if (outline_mode) slp = NULL;
+    while (slp != NULL) {
+      if (slp->lnio) {
+        if (out->symset->assigned[slp->type]) {
+          thexpmap_export_mp_bgif;
+          fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
+              out->symset->get_mp_macro(slp->type),
+            (slp->lnx1 - out->mx) * out->ms,
+            (slp->lny1 - out->my) * out->ms,
+            (slp->lnx2 - out->mx) * out->ms,
+            (slp->lny2 - out->my) * out->ms);
+        }
+      }
+      slp = slp->next_item;
     }
-    slp = slp->next_item;
   }
 
 
@@ -1271,10 +1323,31 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
       obj = obj->pscrapoptr;
     }
   }
+
+  // a polygon
+  if (scrap->centerline_io) {
+    slp = scrap->get_polygon();
+    if (outline_mode) slp = NULL;
+    while (slp != NULL) {
+      if (slp->lnio) {
+        if (out->symset->assigned[slp->type]) {
+          thexpmap_export_mp_bgif;
+          fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
+              out->symset->get_mp_macro(slp->type),
+            (slp->lnx1 - out->mx) * out->ms,
+            (slp->lny1 - out->my) * out->ms,
+            (slp->lnx2 - out->mx) * out->ms,
+            (slp->lny2 - out->my) * out->ms);
+        }
+      }
+      slp = slp->next_item;
+    }
+  }
+
     
   // nakoniec meracske body
   // najprv z polygonu
-  int macroid;
+  int macroid, typid;
   slp = scrap->get_polygon();
   if (outline_mode) slp = NULL;
   while (slp != NULL) {
@@ -1288,7 +1361,11 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         thexpmat_station_type_export_mp(TT_DATAMARK_NATURAL,SYMP_STATION_NATURAL)
         thexpmat_station_type_export_mp(TT_DATAMARK_PAINTED,SYMP_STATION_PAINTED)
       }
-      if (out->symset->assigned[macroid]) {
+      if (slp->station->flags & TT_STATIONFLAG_UNDERGROUND)
+        typid = SYMP_CAVESTATION;
+      else
+        typid = SYMP_SURFACESTATION;
+      if (out->symset->assigned[macroid] && out->symset->assigned[typid]) {
         thexpmap_export_mp_bgif;
         fprintf(out->file,"%s((%.2f,%.2f));\n",
           out->symset->get_mp_macro(macroid),

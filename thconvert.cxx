@@ -32,10 +32,12 @@
 #include <deque>
 #include <map>
 #include <set>
+#include <vector>
 #include <string>
 
 #include <cstring>
 #include <cstdio>
+#include <cmath>
 
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
@@ -156,7 +158,7 @@ list<scraprecord>::iterator find_scrap(string name) {
     return (I);
 }
 
-void print_queue(deque<string>& thstack, float llx, float lly, 
+void print_queue(deque<string>& thstack, double llx, double lly, 
                 string command, ofstream& TEX) {
   if (convert_mode>0) {TEX << "\\PL{";}
   for(unsigned i=0; i<thstack.size(); i=i+2) {
@@ -240,8 +242,8 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
   string font, patt, fntmatr;
   bool comment = true, concat = false, 
        already_transp = false, transp_used = false;
-  float llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
-  float dx, dy;
+  double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
+  double dx, dy;
   char x[20],y[20];
   deque<string> thstack;
   set<string> FORM_FONTS, FORM_PATTERNS;
@@ -601,7 +603,7 @@ void convert_scraps() {
   ofstream TEX("th_formdef.tex");
   if(!TEX) therror(("???"));
   TEX.setf(ios::fixed, ios::floatfield);
-  TEX.precision(1);
+  TEX.precision(2);
   
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
@@ -688,14 +690,38 @@ void convert_scraps() {
   }
   P.close();
   F.close();
-  
+
+  vector<string> legend_arr_n, legend_arr_d;
+  for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
+                                   I != LEGENDLIST.end(); I++) {
+    legend_arr_n.push_back(I->name);
+    legend_arr_d.push_back(I->descr);
+  }
   ofstream LEG("th_legend.tex");
   if(!LEG) therror(("Can't write a file!"));
-  for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
+/*  for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
                                    I != LEGENDLIST.end(); I++) {
     LEG << "\\legendsymbolbox{\\" << tex_Lname(I->name) << "}{" <<
                                utf2tex(I->descr) << "}" << endl;
+  } */
+  int legendbox_num = LEGENDLIST.size();
+  int columns = LAYOUT.legend_columns; 
+  int rows = (int) ceil(double(legendbox_num) / columns);
+  int pos = 0;
+  
+  LEG << "\\legendcolumns" << columns << endl;
+
+  for (int i = 0; i < rows; i++) {
+    LEG << "\\line{%" << endl;
+    for (int j = 0; j < columns; j++) {
+      pos = i + j * rows;
+      if (pos < legendbox_num) 
+        LEG << "  \\legendsymbolbox{\\" << tex_Lname(legend_arr_n[pos]) << 
+               "}{" << utf2tex(legend_arr_d[pos]) << "}\\hskip1em" << endl;
+    }
+    LEG << "\\hss}" << endl;
   }
+
   LEG.close();
 }
 

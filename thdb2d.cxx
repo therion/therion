@@ -241,6 +241,8 @@ thdb2dprjpr thdb2d::parse_projection(char * prjstr,bool insnew)
         }
         if ((par < 0.0) || (par >= 360.0))
           ththrow(("elevation orientation out of range -- %s", pars[1]))
+      } else {
+        par = 0.0;
       }
       break;
     default:
@@ -391,21 +393,23 @@ void thdb2d::process_references()
   
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
-    switch ((*obi)->get_class_id()) {
-      case TT_AREA_CMD:
-        this->process_area_references((tharea *) *obi);
-        break;
-      case TT_POINT_CMD:
-        this->process_point_references((thpoint *) *obi);
-        break;
-      case TT_MAP_CMD:
-        this->process_map_references((thmap *) *obi);
-        break;
-      case TT_JOIN_CMD:
-        this->process_join_references((thjoin *) *obi);
-        break;
-      case TT_SCRAP_CMD:
-        this->process_scrap_references((thscrap *) *obi);
+    if ((*obi)->fsptr != NULL) {
+      switch ((*obi)->get_class_id()) {
+        case TT_AREA_CMD:
+          this->process_area_references((tharea *) *obi);
+          break;
+        case TT_POINT_CMD:
+          this->process_point_references((thpoint *) *obi);
+          break;
+        case TT_MAP_CMD:
+          this->process_map_references((thmap *) *obi);
+          break;
+        case TT_JOIN_CMD:
+          this->process_join_references((thjoin *) *obi);
+          break;
+        case TT_SCRAP_CMD:
+          this->process_scrap_references((thscrap *) *obi);
+      }
     }
     obi++;
   }
@@ -413,10 +417,12 @@ void thdb2d::process_references()
 
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
-    switch ((*obi)->get_class_id()) {
-      case TT_MAP_CMD:
-        this->postprocess_map_references((thmap *) *obi);
-        break;
+    if ((*obi)->fsptr != NULL) {
+      switch ((*obi)->get_class_id()) {
+        case TT_MAP_CMD:
+          this->postprocess_map_references((thmap *) *obi);
+          break;
+      }
     }
     obi++;
   }
@@ -482,7 +488,7 @@ void thdb2d::process_map_references(thmap * mptr)
     ththrow(("recursive map reference"))
   // let's lock the current map
   mptr->projection_id = -1;
-  thdb2dmi * citem = mptr->first_item;
+  thdb2dmi * citem = mptr->first_item, * xcitem;
   thdataobject * optr;
   int proj_id = -1;
   while (citem != NULL) {
@@ -504,7 +510,53 @@ void thdb2d::process_map_references(thmap * mptr)
     
     thmap * mapp;
     thscrap * scrapp;
+    thsurvey * survp;
     switch (optr->get_class_id()) {
+      case TT_SURVEY_CMD:
+
+        if (proj_id == -1) {
+          if (mptr->expl_projection == NULL)
+            ththrow(("%s [%d] -- no projection for survey", citem->source.name, citem->source.line))
+          proj_id = mptr->expl_projection->id;
+          mptr->is_basic = false;
+        }
+
+        // skontroluje ci nie sme v extended projekcii
+        switch (this->get_projection(proj_id)->type) {
+          case TT_2DPROJ_PLAN:
+          case TT_2DPROJ_ELEV:
+            break;          
+          default:
+            ththrow(("%s [%d] -- unsupported projection for survey", citem->source.name, citem->source.line))
+            break;
+        }
+        survp = (thsurvey*) optr;
+        
+        // vytvorime specialnu mapu s jednym scrapom,
+        // ktoremu nastavime centerline io a survey
+        scrapp = new thscrap;
+        scrapp->centerline_io = true;
+        scrapp->centerline_survey = survp;
+        scrapp->fsptr = NULL;
+        scrapp->db = this->db;
+        scrapp->proj = this->get_projection(proj_id);
+        thdb.object_list.push_back(scrapp);
+
+        mapp = new thmap;
+        mapp->db = this->db;
+        mapp->fsptr = NULL;
+        thdb.object_list.push_back(mapp);
+
+        xcitem = this->db->db2d.insert_map_item();
+        xcitem->itm_level = mapp->last_level;
+        xcitem->source = thdb.csrc;
+        xcitem->psurvey = NULL;
+        xcitem->type = TT_MAPITEM_NORMAL;
+        xcitem->object = scrapp;
+        mapp->first_item = xcitem;
+        mapp->last_item = xcitem;
+        citem->object = mapp;
+        break;
       case TT_MAP_CMD:
         mapp = (thmap *) optr;
         // if not defined - process recursively
@@ -550,6 +602,16 @@ void thdb2d::process_map_references(thmap * mptr)
                 citem->name.name))
           }
         }
+        if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
+          if (citem->name.survey != NULL)
+            ththrow(("%s [%d] -- incompatible map projection -- %s@%s",
+              citem->source.name, citem->source.line, 
+              citem->name.name,citem->name.survey))
+          else
+            ththrow(("%s [%d] -- incompatible map projection -- %s",
+              citem->source.name, citem->source.line, 
+              citem->name.name))
+        }
         citem->object = mapp;
         break;
 
@@ -583,6 +645,16 @@ void thdb2d::process_map_references(thmap * mptr)
                 citem->source.name, citem->source.line, 
                 citem->name.name))
           }
+        }
+        if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
+          if (citem->name.survey != NULL)
+            ththrow(("%s [%d] -- incompatible scrap projection -- %s@%s",
+              citem->source.name, citem->source.line, 
+              citem->name.name,citem->name.survey))
+          else
+            ththrow(("%s [%d] -- incompatible scrap projection -- %s",
+              citem->source.name, citem->source.line, 
+              citem->name.name))
         }
         citem->object = scrapp;
         break;
@@ -962,7 +1034,7 @@ void thdb2d::log_distortions() {
       ns++;
     }
     if ((ns > 0) && (prj->processed) && (prj->type != TT_2DPROJ_NONE)) {
-      ss = new (thscrap*)[ns];
+      ss = new thscrap* [ns];
       ps = prj->first_scrap;
       i = 0;
       while(ps != NULL) {
@@ -1042,6 +1114,9 @@ void thdb2d::process_projection(thdb2dprj * prj)
     this->pp_shift_points(prj, true);
   }
   this->pp_process_joins(prj);
+  this->pp_shift_points(prj);
+  if (this->pp_process_adjustments(prj))
+    this->pp_shift_points(prj);
   this->pp_smooth_lines(prj);
   this->pp_smooth_joins(prj);
   this->pp_calc_limits(prj);
@@ -1695,7 +1770,7 @@ void thdb2d::pp_find_scraps_and_joins(thdb2dprj * prj)
   thjoin * pjoin = NULL, * cjoin;
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
-    if ((*obi)->get_class_id() == TT_SCRAP_CMD) {
+    if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_SCRAP_CMD)) {
       if (((thscrap *)(*obi))->proj->id == prj->id) {
         cscrap = (thscrap *)(*obi);
         if (pscrap != NULL)
@@ -2518,7 +2593,6 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
     jlist = jlist->next_list;
   }
 
-  this->pp_shift_points(prj);
 }
 
 
@@ -2828,5 +2902,212 @@ void thdb2d::pp_calc_distortion(thdb2dprj * prj) {
   else
     prj->amaxdist = 0;
 }
+
+bool thdb2d::pp_process_adjustments(thdb2dprj * prj)
+{
+  bool anycp = false;
+  thscrap * ps;
+  th2ddataobject * so;
+  thline * ln;
+  thdb2dlp * lp, * lastlp;
+  thdb2dcp * cp;
+  int Vadj, Hadj;
+  unsigned nlp;
+  double aver;
+  bool lastlpin = false;
+
+  // scrap za scrapom
+  ps = prj->first_scrap;
+  while (ps != NULL) {
+
+    // ciara za ciarou
+    so = ps->fs2doptr;
+    while (so != NULL) {
+      if (so->get_class_id() == TT_LINE_CMD) {
+        
+        ln = (thline*) so;
+        
+        // vertical adjustment
+        // 1. skusi ci je nejaky adjustment
+        Vadj = -1; Hadj = -1;
+        lp = ln->first_point;
+        nlp = 0;
+        while (lp != NULL) {
+          nlp++;
+          switch (lp->adjust) {
+            case TT_LINE_ADJUST_HORIZONTAL:
+              if (Hadj < 0)
+                Hadj = 2;
+              else if (Hadj == 0)
+                Hadj = 1;
+              if (Vadj > 0)
+                Vadj = 1;
+              break;
+            case TT_LINE_ADJUST_VERTICAL:
+              if (Vadj < 0)
+                Vadj = 2;
+              else if (Vadj == 0)
+                Vadj = 1;
+              if (Hadj > 0)
+                Hadj = 1;
+              break;
+            default:
+              if (Vadj > 0)
+                Vadj = 1;
+              if (Hadj > 0)
+                Hadj = 1;
+              break;
+          }
+          if (Vadj < 0)
+            Vadj = 0;
+          if (Hadj < 0)
+            Hadj = 0;
+          lp = lp->nextlp;
+        }
+        
+        // adj mame 0 (ziadny), 1 (nejaky), 2 (vsetky)
+        if (nlp > 1) {
+          // horizontalne
+          switch (Hadj) {
+            case 2:
+              // zratame priemer a vlozime vsetky
+              aver = 0.0;
+              lp = ln->first_point;
+              while (lp != NULL) {
+                aver += lp->point->yt;
+                lp = lp->nextlp;
+              }
+              aver /= (double) nlp;
+              lp = ln->first_point;
+              while (lp != NULL) {
+                cp = ln->fscrapptr->insert_control_point();
+                cp->pt = lp->point;
+                cp->tx = lp->point->xt;
+                cp->ty = aver;
+                lp = lp->nextlp;
+              }
+              anycp = true;
+              break;
+            case 1:
+              // poojdeme bod za bodom, najdeme najblizsi predchadzajuci
+              // ak nie tak nasledujuci a pouzijeme jeho yt
+              lp = ln->first_point;
+              lastlp = NULL;
+              while (lp != NULL) {
+                if (lp->adjust != TT_LINE_ADJUST_HORIZONTAL) {
+                  lastlpin = false;
+                  lastlp = lp;
+                  break;
+                }
+                lp = lp->nextlp;
+              }
+              if (lastlp == NULL)
+                break;
+              lp = ln->first_point;
+              while (lp != NULL) {
+                if (lp->adjust == TT_LINE_ADJUST_HORIZONTAL) {
+                  if (!lastlpin) {
+                    lastlpin = true;
+                    cp = ln->fscrapptr->insert_control_point();
+                    cp->pt = lastlp->point;
+                    cp->tx = lastlp->point->xt;
+                    cp->ty = lastlp->point->yt;
+                  }
+                  cp = ln->fscrapptr->insert_control_point();
+                  cp->pt = lp->point;
+                  cp->tx = lp->point->xt;
+                  cp->ty = lastlp->point->yt;
+                  anycp = true;
+                } else {
+                  lastlpin = false;
+                  lastlp = lp;
+                }
+                lp = lp->nextlp;
+              }
+              break;
+          }
+          switch (Vadj) {
+            case 2:
+              // zratame priemer a vlozime vsetky
+              aver = 0.0;
+              lp = ln->first_point;
+              while (lp != NULL) {
+                aver += lp->point->xt;
+                lp = lp->nextlp;
+              }
+              aver /= (double) nlp;
+              lp = ln->first_point;
+              while (lp != NULL) {
+                cp = ln->fscrapptr->insert_control_point();
+                cp->pt = lp->point;
+                cp->ty = lp->point->yt;
+                cp->tx = aver;
+                lp = lp->nextlp;
+              }
+              anycp = true;
+              break;
+            case 1:
+              // poojdeme bod za bodom, najdeme najblizsi predchadzajuci
+              // ak nie tak nasledujuci a pouzijeme jeho yt
+              lp = ln->first_point;
+              lastlp = NULL;
+              while (lp != NULL) {
+                if (lp->adjust != TT_LINE_ADJUST_VERTICAL) {
+                  lastlpin = false;
+                  lastlp = lp;
+                  break;
+                }
+                lp = lp->nextlp;
+              }
+              if (lastlp == NULL)
+                break;
+              lp = ln->first_point;
+              while (lp != NULL) {
+                if (lp->adjust == TT_LINE_ADJUST_VERTICAL) {
+                  if (!lastlpin) {
+                    lastlpin = true;
+                    cp = ln->fscrapptr->insert_control_point();
+                    cp->pt = lastlp->point;
+                    cp->tx = lastlp->point->xt;
+                    cp->ty = lastlp->point->yt;
+                  }
+                  cp = ln->fscrapptr->insert_control_point();
+                  cp->pt = lp->point;
+                  cp->tx = lastlp->point->xt;
+                  cp->ty = lp->point->yt;
+                  anycp = true;
+                } else {
+                  lastlpin = false;
+                  lastlp = lp;
+                }
+                lp = lp->nextlp;
+              }
+              break;
+          }
+        }
+        
+        
+      }
+      so = so->nscrapoptr;
+    } // ciara za ciarou
+
+    ps = ps->proj_next_scrap;
+  } // scrap za scrapom
+  
+  return anycp;
+  
+}
+
+thdb2dprj * thdb2d::get_projection(int id) {
+  thdb2dprj_list::iterator pi;
+  for(pi = this->prj_list.begin(); pi != this->prj_list.end(); pi++) {
+    if (pi->id == id)
+      return &(*pi);
+  }
+  return NULL;
+}
+
+
+
 
 

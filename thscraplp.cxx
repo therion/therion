@@ -37,5 +37,6 @@ thscraplp::thscraplp() {
   this->ustation = NULL;
 
   this->lnio = false;
+  this->type = 0;
 }
   

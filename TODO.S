@@ -1,18 +1,35 @@
 HNED:
-+ k 2d objektu pridat typ objektu, na ktory sa vztahuje 
-  -context point label
--------------------------------------------------------------------------------
++ komplet navrhnut a zmenit sposob 3D exportu (layout, thm uplne inak)
++ vyber povrchov na zaklade toho co exportujeme 
+  2D: vsetky co pokryvaju, zoradene podla pokrytia a velkosti (orezany
+      bboxom + okraj)
+  3D: najmensi s tych co pokryvaju najviac, orezany bboxom + okraj
+      (nastavitelnych???)
++ povrch do 3Dcka ako surface (s priehladnostou)
++ xtherion: switch na perspektivu
++ xtherion: switche na viditelnost, zobrazenie a priehladnost povrchu
++ xtherion: roozne vyfarbovanie jaskyne (podla hlbky alebo zelenou)
++ 2d: otacanie vystupnej mapy aj sipky na sever v layoute
++ upravit definiciu sipky a mierky
++ LRUD
++ spravit LRUD outline do 3D exportu 
+  -> kazdej zamere priradi zoznam bodov na zaciatku a na konci a
+     z nich hladke rury
+  -> urobi convex hull pre vsetky spojnicove body a vytvori z nich
+     dalsie hladke telesa
++ export model: -wall-source map:projection|centerline|none|all
++ 2d: vymysliet a spravit ako dat survey do mapy aj s LRUD obalkou
++ vymysliet a spravit point camera/picture
 + pridat nove symboly:
   ciary - ceiling/floor-meander, rope (aj s kotveniami)
-+ 2d: -adjust horizontal|vertical pre line point (zakazat v projection plan)
-+ 2d: pridat do mapy moznost dat survey -> vtedy da len jeho polygon
++ 3d: vyskusat nacitavanie chybajucich LRUD zo scrapov + automaticke 
+      dogenerovanie neexistujucich dat
++ 3d: interpolovanie Z na zaklade triangulacie (treba rychle priesecniky)
 + 3d: zjednodusovat outlines
-+ 3d: interpolovanie Z na zaklade triangulacie
 + 3d: interpolovanie U a D na zaklade sietovych algoritmov
 + 3d: point dimensions
 + 3d: up, down, left, right
 + 3d: model export aj centerline, walls, bbox
-+ export model: -enable|disable [walls, centerline, bbox]
 + x: prerobit ovladanie xtheriona
 + x: vytiahnut co sa da do xtherion.ini
 + SQL: exportovat uzavrete okruhy (chyby, zoznam shotov a zoznam bodov)
@@ -20,17 +37,40 @@ HNED:
 + layout: [...] oznacovanie texovskych textov
 * SVG - cvicna verzia (aspon outlines)
 + 2d: pospajat zoznamy na joinovanie, prv ako sa zacne joinovat
-+ 2d: otacanie vystupnej mapy aj sipky na sever
 + exportovat grid do mapy/atlasu a aj jeho styl
-
++ posuvanie map pri oznacovani pomocou selectu + spajacie sipky
   
+LRUD:
++ nove flagove data v centerline:
+  - shape: oval, rectangle, diamond, triangle, tunnel
+  - vertical-treshold (kedy sa LRUD na zmeni na WENS): 0 - 90
++ do datalegu pridu nasledujuce data:
+  from-UDLR, to-UDLR, sklon-rezu (najprv uhol kedy sa to meni,
+  v postprocessingu na presny sklon), smer-up-u v postprocessingu,
+  section-type, walls-on
++ novy data type dimensions [station up down left right] 
+  len na vytvaranie lokalneho station listu
++ vytvaranie UDLR obalky v thdb1d:
+  -najvyssiu prioritu ma to co je zadane
+  -potom udaj z dimension listu v data objekte (ten je 
+   specifikovany najprv explicitne, potom implicitne
+  -nakoniec udaj z centralneho dimension listu
+  => algoritmus:
+   -vytvorit lokalne dimension listy (zo shotov)
+   -vytvorit globalny dimension list
+   -prejst vsetky zamery a doplnit tam kde existuju lokalne
+    najprv z lokalnych a potom z globalnych (suradnicu po suradnici)
+   -ak ani jeden - walls-on na false. Ak aspon jeden - walls-on na true 
+    a ostatne vymysliet:
+    ->ak iba jeden => vsetky rovnake
+    ->ak dva protilahle => ostatne dva v priemere
+    ->ak dva vedla seba => ostatne dva rovnake
+    ->vyska max 1.75 metra -> inak v zlatom reze
++ vysledok - pre kazdy data leg bude nastaveny walls-on atribut a ak 
+  ak bude true, tak musia existovat vsetky udaje ohladne rezu
+
+
 HOTOVO:
-+ francuzky preklad (Eric Madelaine)
-+ BUG pri line splite odstraneny
-+ odstranit seg-fault pri vlozeni dat bez surveya
-+ invalid command context -> missing xxx command before yyy command
-+ x: reload v 3D prehliadaci (Ctrl+R)
-+ x: outline pocitat pre walls
 
 POTOM:
 + x: nezobrazuje encoding pre thconfig
@@ -42,6 +82,7 @@ POTOM:
 + preview beside
 + rychly mod pre kompilaciu - bez spustania MPostu a bez konverzie
 + rozsirit cislovanie suborov pre metapost na podadresare
+
 
 KED TO BUDE TREBA:
 + pridat -map-level scrap -> rozvijanie na samotne scrapy

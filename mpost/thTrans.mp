@@ -98,7 +98,8 @@ let l_rockborder = l_rockborder_UIS;
 let l_rockedge = l_rockedge_UIS;
 let l_flowstone = l_flowstone_UIS;
 let l_section = l_section_SKBB;
-let l_survey = l_survey_SKBB;
+let l_survey_cave = l_survey_cave_SKBB;
+let l_survey_surface = l_survey_surface_SKBB;
 let l_arrow = l_arrow_SKBB;
 let l_gradient = l_gradient_UIS;
 

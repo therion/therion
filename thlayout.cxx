@@ -150,19 +150,28 @@ thlayout::thlayout()
   this->def_opacity = false;
   this->opacity = 0.7;
 
+  this->def_surface = false;
+  this->surface = TT_LAYOUT_SURFACE_OFF;
+  this->def_surface_opacity = false;
+  this->surface_opacity = 0.7;
+
   this->def_transparency = false;
   this->transparency = true;
 
   this->def_legend = false;
   this->legend = TT_LAYOUT_LEGEND_OFF;
+  this->def_legend_width = false;
+  this->legend_width = 0.14;
+  this->def_legend_columns = false;
+  this->legend_columns = 2;
   
   this->def_scale_bar = false;
   this->scale_bar = -1.0;
 
   this->def_map_header = false;
-  this->map_header = TT_LAYOUT_MAP_HEADER_NW;
-  this->map_header_x = 0.0;
-  this->map_header_y = 100.0;
+  this->map_header = TT_LAYOUT_MAP_HEADER_NE;
+  this->map_header_x = 100.0;
+  this->map_header_y = 0.0;
 
   this->def_debug = false;
   this->debug = TT_LAYOUT_DEBUG_UNKNOWN;
@@ -267,6 +276,7 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
     case TT_LAYOUT_SYMBOL_SHOW:
     case TT_LAYOUT_MAP_ITEM:
     case TT_LAYOUT_COLOR:
+    case TT_LAYOUT_LEGEND_WIDTH:
       return thcmd_option_desc(id,2);
     case TT_LAYOUT_SYMBOL_ASSIGN:
     case TT_LAYOUT_GRID_SIZE:
@@ -495,6 +505,26 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->def_overlap = true;
       break;
 
+    case TT_LAYOUT_LEGEND_WIDTH:
+      this->parse_len(this->legend_width, dum, dum, 1, args, 0);
+      this->def_legend_width = true;
+      break;
+
+    case TT_LAYOUT_LEGEND_COLUMNS:
+      thparse_double(sv,dum,args[0]);
+      switch (sv) {
+        case TT_SV_NUMBER:
+          dum_int = int(dum);
+          if ((double(dum_int) != dum) || (dum_int < 0))
+            ththrow(("not a non-negative integer -- %s", args[0]))
+          break;
+        default:
+          ththrow(("invalid number -- %s", args[0]))
+      }
+      this->legend_columns = (unsigned) dum_int;
+      this->def_legend_columns = true;
+      break;
+
     case TT_LAYOUT_SIZE:
       this->parse_len(this->hsize, this->vsize, dum, 2, args, 1);
       this->def_size = true;
@@ -567,13 +597,13 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       thparse_double(sv,this->map_header_x,args[0]);
       if (sv != TT_SV_NUMBER)
         ththrow(("invalid number -- %s",args[0]))
-      if ((this->map_header_x < 0.0) || (this->map_header_x > 100.0))
+      if ((this->map_header_x < -100.0) || (this->map_header_x > 200.0))
         ththrow(("number between 0.0 - 100.0 expected -- %s",args[0]))
 
       thparse_double(sv,this->map_header_y,args[1]);
       if (sv != TT_SV_NUMBER)
         ththrow(("invalid number -- %s",args[1]))
-      if ((this->map_header_y < 0.0) || (this->map_header_y > 100.0))
+      if ((this->map_header_y < -100.0) || (this->map_header_y > 200.0))
         ththrow(("number between 0.0 - 100.0 expected -- %s",args[1]))
 
       sv = thmatch_token(args[2],thtt_layout_map_header);
@@ -615,6 +645,22 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->def_opacity = true;
       break;
     
+    case TT_LAYOUT_SURFACE_OPACITY:
+      thparse_double(sv,dum,args[0]);        
+      if ((sv != TT_SV_NUMBER) || (dum < 0.0) || (dum > 100.0))
+        ththrow(("invalid opacity value -- %s", args[0]))
+      this->surface_opacity = dum / 100.0;
+      this->def_surface_opacity = true;
+      break;
+    
+    case TT_LAYOUT_SURFACE:
+      sv = thmatch_token(args[0],thtt_layout_surface);
+      if (sv == TT_LAYOUT_SURFACE_UNKNOWN)
+        ththrow(("invalid surface switch -- %s",args[0]))
+      this->surface = sv;
+      this->def_surface = true;
+      break;
+      
     case TT_LAYOUT_GRID:
       sv = thmatch_token(args[0],thtt_layout_grid);
       if (sv == TT_LAYOUT_GRID_UNKNOWN)
@@ -873,6 +919,12 @@ void thlayout::self_print_library() {
     this->legend == TT_LAYOUT_LEGEND_ON ? "TT_LAYOUT_LEGEND_ON" : "TT_LAYOUT_LEGEND_ALL"
     )));
 
+  thprintf("\tplayout->def_legend_width = %s;\n",(this->def_legend_width ? "true" : "false"));
+  thprintf("\tplayout->legend_width = %lg;\n",this->legend_width);
+
+  thprintf("\tplayout->def_legend_columns = %s;\n",(this->def_legend_columns ? "true" : "false"));
+  thprintf("\tplayout->legend_columns = %d;\n",this->legend_columns);
+
   thprintf("\tplayout->def_map_header = %s;\n",(this->def_map_header ? "true" : "false"));
   thprintf("\tplayout->map_header = %d;\n",this->map_header);
   thprintf("\tplayout->map_header_x = %lg;\n",this->map_header_x);
@@ -903,6 +955,11 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_opacity = %s;\n",(this->def_opacity ? "true" : "false"));
   thprintf("\tplayout->opacity = %lg;\n",this->opacity);
+
+  thprintf("\tplayout->def_surface_opacity = %s;\n", (this->def_surface_opacity ? "true" : "false"));
+  thprintf("\tplayout->surface_opacity = %lg;\n", this->surface_opacity);
+  thprintf("\tplayout->def_surface= %s;\n", (this->def_surface ? "true" : "false"));
+  thprintf("\tplayout->surface = %d;\n", this->surface);
 
   thprintf("\tplayout->def_grid = %s;\n",(this->def_grid ? "true" : "false"));
   thprintf("\tplayout->grid = %d;\n",this->grid);
@@ -1434,12 +1491,24 @@ void thlayout::process_copy() {
         
       if has_srcl(def_opacity)
         this->opacity = srcl->opacity;
+
+      if has_srcl(def_surface)
+        this->surface = srcl->surface;
+
+      if has_srcl(def_surface_opacity)
+        this->surface_opacity = srcl->surface_opacity;
   
       if has_srcl(def_transparency)
         this->transparency = srcl->transparency;
 
       if has_srcl(def_legend)
         this->legend = srcl->legend;
+
+      if has_srcl(def_legend_width)
+        this->legend_width = srcl->legend_width;
+
+      if has_srcl(def_legend_columns)
+        this->legend_columns = srcl->legend_columns;
 
       if has_srcl(def_map_header) {
         this->map_header = srcl->map_header;
@@ -1541,9 +1610,24 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.map_grid = this->page_grid;
   LAYOUT.hsize = this->hsize * THM2PT;
   LAYOUT.vsize = this->vsize * THM2PT;
+  LAYOUT.legend_width = this->legend_width * THM2PT;
+  LAYOUT.legend_columns = (int) this->legend_columns;
   LAYOUT.overlap = this->overlap * THM2PT;
   LAYOUT.hgrid = this->gxs * THM2PT;
   LAYOUT.vgrid = this->gys * THM2PT;
+  
+  switch (this->surface) {
+    case TT_LAYOUT_SURFACE_OFF:
+      LAYOUT.surface = 0;
+      break;
+    case TT_LAYOUT_SURFACE_TOP:
+      LAYOUT.surface = 2;
+      break;
+    default:
+      LAYOUT.surface = 1;
+      break;
+  }
+  LAYOUT.surface_opacity = this->surface_opacity;
 
   switch (prj->type) {
     case TT_2DPROJ_EXTEND:

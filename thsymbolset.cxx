@@ -85,14 +85,20 @@ static const thstok thtt_symbol_class[] = {
 
 static const thstok thtt_symbol_group[] = {
   {"all", SYMX_ALL},
+  {"cave-centerline", SYMX_CAVECENTERLINE},
+  {"cave-centreline", SYMX_CAVECENTERLINE},
   {"centerline", SYMX_CENTERLINE},
   {"centreline", SYMX_CENTERLINE},
   {"sections", SYMX_SECTIONS},
+  {"surface-centreline", SYMX_SURFACECENTERLINE},
+  {"surface-centreline", SYMX_SURFACECENTERLINE},
   {NULL, SYMX_}
 };
 
 
 static const thstok thtt_symbol_point_spec[] = {
+  {"cave-station", SYMP_CAVESTATION},
+  {"surface-station", SYMP_SURFACESTATION},
   {"wall-altitude", SYMP_WALLALTITUDE},
   {NULL, SYMX_}
 };
@@ -191,6 +197,13 @@ int thsymbolset__get_id(char * symclass, char * symbol)
             c2(TT_LINE_SUBTYPE_VISIBLE,SYML_BORDER_VISIBLE)
           }
           break;
+        case TT_LINE_TYPE_SURVEY:
+          sgroup(SYMX_LINE_SURVEY)
+          switch (subtype) {
+            c2(TT_LINE_SUBTYPE_CAVE,SYML_SURVEY_CAVE)
+            c2(TT_LINE_SUBTYPE_SURFACE,SYML_SURVEY_SURFACE)
+          }
+          break;
         case TT_LINE_TYPE_WATER_FLOW:
           sgroup(SYMX_LINE_WATERFLOW)
           switch (subtype) {
@@ -213,7 +226,6 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         cl3(TT_LINE_TYPE_ROCK_EDGE,SYML_ROCKEDGE);
         cl3(TT_LINE_TYPE_SECTION,SYML_SECTION);
         cl3(TT_LINE_TYPE_SLOPE,SYML_SLOPE);
-        cl3(TT_LINE_TYPE_SURVEY,SYML_SURVEY);
       }
       break;
     case TT_SYMBOL_POINT:
@@ -417,8 +429,19 @@ int thsymbolset__get_group(int group_id, int cid) {
 
     bgroup(SYMX_CENTERLINE)
     group(0,SYMX_POINT_STATION)
-    group(1,SYML_SURVEY)
-    group(2,SYMP_STATIONNAME)
+    group(1,SYML_SURVEY_SURFACE)
+    group(2,SYML_SURVEY_CAVE)
+    group(3,SYMP_STATIONNAME)
+    egroup  
+
+    bgroup(SYMX_SURFACECENTERLINE)
+    group(0,SYMP_SURFACESTATION)
+    group(1,SYML_SURVEY_SURFACE)
+    egroup  
+
+    bgroup(SYMX_CAVECENTERLINE)
+    group(0,SYMP_CAVESTATION)
+    group(1,SYML_SURVEY_CAVE)
     egroup  
 
     bgroup(SYMX_LINE_WALL)
@@ -445,11 +468,18 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(1,SYML_BORDER_VISIBLE)
     egroup    
     
+    bgroup(SYMX_LINE_SURVEY)
+    group(0,SYML_SURVEY_CAVE)
+    group(1,SYML_SURVEY_SURFACE)
+    egroup    
+    
     bgroup(SYMX_POINT_STATION)
     group(0,SYMP_STATION_FIXED)
     group(1,SYMP_STATION_NATURAL)
     group(2,SYMP_STATION_PAINTED)
     group(3,SYMP_STATION_TEMPORARY)
+    group(4,SYMP_SURFACESTATION)
+    group(5,SYMP_CAVESTATION)
     egroup
 
     bgroup(SYMX_POINT_WATERFLOW)
@@ -558,8 +588,8 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     fprintf(mpf,"%s((%g,%g) inscale);\n",thsymbolset__mp[SYMP_STATION_FIXED],x,y); \
   endhelpsymbol;  
   
-  insfig(SYML_SURVEY,thT("line survey",layout->lang));
-  fprintf(mpf,"%s(((-1,1) -- (0.8,0.6) -- (0,-1)) inscale);\n", thsymbolset__mp[SYML_SURVEY]);
+  insfig(SYML_SURVEY_CAVE,thT("line survey",layout->lang));
+  fprintf(mpf,"%s(((-1,1) -- (0.8,0.6) -- (0,-1)) inscale);\n", thsymbolset__mp[SYML_SURVEY_CAVE]);
   insert_station(0.8,0.6);
   endfig;
 

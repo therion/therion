@@ -79,6 +79,10 @@ enum {
   TT_LAYOUT_MAP_ITEM = 2036,
   TT_LAYOUT_SCALE_BAR = 2037,
   TT_LAYOUT_DEBUG = 2038,
+  TT_LAYOUT_LEGEND_WIDTH = 2039,
+  TT_LAYOUT_LEGEND_COLUMNS = 2040,
+  TT_LAYOUT_SURFACE = 2041,
+  TT_LAYOUT_SURFACE_OPACITY = 2042,
 };
 
 
@@ -167,6 +171,33 @@ static const thstok thtt_layout_debug[] = {
   {"second", TT_LAYOUT_DEBUG_JOINS},
   {NULL, TT_LAYOUT_DEBUG_UNKNOWN},
 };
+
+
+/**
+ * Layout surface tokens.
+ */
+
+enum {
+  TT_LAYOUT_SURFACE_OFF,
+  TT_LAYOUT_SURFACE_TOP,
+  TT_LAYOUT_SURFACE_BOTTOM,
+  TT_LAYOUT_SURFACE_UNKNOWN,
+};
+
+
+/**
+ * Layout legend token table.
+ */
+ 
+static const thstok thtt_layout_surface[] = {
+  {"bottom", TT_LAYOUT_SURFACE_BOTTOM},
+  {"off", TT_LAYOUT_SURFACE_OFF},
+  {"top", TT_LAYOUT_SURFACE_TOP},
+  {NULL, TT_LAYOUT_SURFACE_UNKNOWN},
+};
+
+
+
 
 
 
@@ -304,6 +335,8 @@ static const thstok thtt_layout_opt[] = {
   {"language",TT_LAYOUT_LANG},
   {"layers",TT_LAYOUT_LAYERS},
   {"legend",TT_LAYOUT_LEGEND},
+  {"legend-columns",TT_LAYOUT_LEGEND_COLUMNS},
+  {"legend-width",TT_LAYOUT_LEGEND_WIDTH},
   {"map-comment",TT_LAYOUT_DOC_COMMENT},
   {"map-header",TT_LAYOUT_MAP_HEADER},
   {"nav-factor",TT_LAYOUT_NAV_FACTOR},
@@ -320,6 +353,8 @@ static const thstok thtt_layout_opt[] = {
   {"scale-bar", TT_LAYOUT_SCALE_BAR},
   {"size", TT_LAYOUT_SIZE},
   {"statistics",TT_LAYOUT_MAP_ITEM},
+  {"surface",TT_LAYOUT_SURFACE},
+  {"surface-opacity",TT_LAYOUT_SURFACE_OPACITY},
   {"symbol-assign", TT_LAYOUT_SYMBOL_ASSIGN},
   {"symbol-hide", TT_LAYOUT_SYMBOL_HIDE},
   {"symbol-set", TT_LAYOUT_SYMBOL_DEFAULTS},
@@ -351,17 +386,17 @@ class thlayout : public thdataobject {
   public:
     
   double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gox, goy, goz, navf, overlap, opacity,
-    map_header_x, map_header_y;
+    map_header_x, map_header_y, legend_width, surface_opacity;
   
   char * olx, * oly, 
     * doc_title, * doc_comment, * doc_author, * doc_subject, * doc_keywords, * excl_list;
   
-  unsigned navsx, navsy, ownp;
+  unsigned navsx, navsy, ownp, legend_columns;
   
   char grid, ccode;
   
   int legend, map_header, lang, max_explos, max_topos, max_cartos, max_copys,
-    debug;
+    debug, surface;
   
   thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
   
@@ -376,9 +411,11 @@ class thlayout : public thdataobject {
     def_page_numbers, def_page_setup, def_scale, def_size, def_title_pages,
     def_tex_lines, def_doc_title, def_doc_comment, def_doc_author, def_doc_subject,
     def_doc_keywords, def_excl_pages, def_grid, def_page_grid,
-    def_legend, def_map_header, def_lang, def_scale_bar, 
+    def_legend, def_legend_width, def_legend_columns, 
+    def_map_header, def_lang, def_scale_bar, 
     redef_base_scale, def_max_explos, def_max_topos, def_max_cartos,
-    def_max_copys, def_explo_lens, def_topo_lens, def_debug;
+    def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_surface,
+    def_surface_opacity;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;

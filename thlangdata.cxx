@@ -43,7 +43,7 @@ static const int thlang__alternatives [] = {
 
 
 
-static const thstok thtt__texts [120] = {
+static const thstok thtt__texts [121] = {
   {"area debris",0},
   {"area sand",1},
   {"area sump",2},
@@ -160,15 +160,16 @@ static const thstok thtt__texts [120] = {
   {"title legend",113},
   {"title preview above",114},
   {"title preview below",115},
-  {"title topo",116},
-  {"title topo (plural)",117},
-  {"units m",118},
+  {"title surface bitmap",116},
+  {"title topo",117},
+  {"title topo (plural)",118},
+  {"units m",119},
   {NULL, -1},
 };
 
 
 
-static const thlang_pchar thlang__translations [119][6] = {
+static const thlang_pchar thlang__translations [120][6] = {
   {
     "štěrk",
     "debris",
@@ -1096,6 +1097,14 @@ static const thlang_pchar thlang__translations [119][6] = {
     NULL,
     "[Prévisualisation au-dessous]",
     "[Náhľad spodných vrstiev]",
+  },
+  {
+    "[Povrchová mapa]",
+    "[Surface map]",
+    NULL,
+    NULL,
+    "[Carte extérieure]",
+    "[Povrchová mapa]",
   },
   {
     "Měřil",

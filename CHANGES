@@ -1,7 +1,33 @@
 --------------------------------------------------------------------------------
+Therion 0.3.3 (2004-09-10):
+
+therion:
+  
+ * surface (topographical) map supported in 2D maps
+ * surface grid supported in 3D models (therion format)
+ * typesetting of legend symbols in multiple columns fixed 
+ * input language changes:
+   - new command surface
+   - point, line and area commands have new option: context
+   - line command: survey has new subtypes: cave, surface
+   - line command has new option: adjust
+   - map command: ability to draw centreline from specified survey without
+       drawing a scrap; 
+       new option: projection
+ * configuration file changes:
+   - layout command has new options: legend-width, legend-columns, 
+       surface, surface-opacity
+   - export model has new options: enable, disable
+
+xtherion:
+
+ * Model viewer: mouse wheel supported
+
+--------------------------------------------------------------------------------
 Therion 0.3.2 (2004-07-22):
 
 therion:
+
  * configuration file changes:
    - layout command: scale 1 50 upto 1 100000 allowed and supported
  * Therion constructs accented characters if the character is not present

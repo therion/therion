@@ -75,7 +75,7 @@ Therion uses following data types:
 * {\it ext\_keyword} = keyword that can also contain |+*/.,'| characters, 
             but not on the first position.
 * {\it date} = a date (or a time interval) specification in a format\hfil\break
-          |YYYY.MM.DD@HH:MM:SS.SS - YYYY.MM.DD@HH:MM:SS.SS| or |-|
+          |YYYY.MM.DD@HH:MM:SS.SS - YYYY.MM.DD@HH:MM:SS.SS| or `|-|'
           to leave a date unspecified.
 * {\it person} = a person's first name and surname separated by whitespace characters.
             Use `|/|' to separate first name and surname if there are 
@@ -329,8 +329,8 @@ the command may be used anywhere.
   * |mark <type>| = set the type of the station. |<type>| is one of: fixed, 
     painted and temporary (default).
   * |flags <shot flags>| = set flags for following shots. The supported
-    flags are: surface (for surface measurements), duplicate (for
-    duplicate surveys). Both are excluded from length calculations.
+    flags are: |surface| (for surface measurements), |duplicate| (for
+    duplicated surveys). Both are excluded from length calculations.
     Also ``|not|'' is allowed before a flag.
   * |station <station> <comment> [<flags>]| = set the station comment
     and flags: entrance or continuation. If |""| is specified as a
@@ -367,6 +367,10 @@ the command may be used anywhere.
   Ideally, a scrap contains about 100~m of the cave. Each scrap is processed 
   separately by \MP; scraps which are too large may exceed \MP's memory and 
   cause errors.
+  
+  Scrap consits of point, line and area map symbols. See chapter {\it How 
+  the map is put together} for explanation how and in which order are they
+  displayed.
   
   Scrap border consits of lines with the |-outline out| or |-outline in| 
   options (passage walls have |-outline out| by default). These line shouldn't
@@ -494,13 +498,19 @@ Point is a command for drawing a point map symbol.
       must be in the separate scrap with `none' projection specified. 
       You can specify it through the |-scrap| option.];
 
-    {\it labels:} |label|, |remark|, |altitude|, |height|, |passage-height|, 
+    {\it labels:} |label|, |remark|, 
+    |altitude|\[General altitude label. To display altitude on the passage 
+    wall, use |altitude| option for any line point of the passage wall], 
+    |height|\[Height of formations inside of the passage (like pit etc.);
+    see below for details.], 
+    |passage-height|\[Height of the passage; see below for details.], 
     |station-name|\[If no text is specified, the name of the nearest
       station is used.], 
     |date|;
 
-    {\it symbolic passage fills:}\[Unlike other symbols, these are
-      clipped by the scrap border]
+    {\it symbolic passage fills:}\[Unlike other point symbols, these are
+      clipped by the scrap border. See the chapter {\it How the map is 
+      put together}.]
     |bedrock|, |sand|, |raft|, |clay|, |pebbles|,
     |debris|, |blocks|, |water|, |ice|, |guano|;
 
@@ -542,13 +552,18 @@ Point is a command for drawing a point map symbol.
     top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br.
   * |scale| = symbol scale, can be: 
     tiny (xs), small (s), normal (m), large (l), huge (xl). Normal is default.
-  * |place <bottom/default/top>| = where to place the symbol relatively
-    to other objects.
+  * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-    You cannot specify this option in the following symbols: station,
+    You cannot specify this option for the following symbols: station,
     station-name, label, remark, date, altitude, height, passage-height.
-  * |visibility <on/off>| = displays/hides an object
-  * |id <ext_keyword>| = id of the object
+  * |visibility <on/off>| = displays/hides the symbol.
+  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide| 
+    and |symbol-show| layout options) symbol will be hidden/shown according 
+    to rules for specified |<symbol-type>|.\[Example: if you specify 
+    |-context point air-draught| to a label which displays the observation 
+    date, the |symbol-hide point air-draught| command would hide both 
+    air-draught arrow and the corresponding label.]
+  * |id <ext_keyword>| = ID of the symbol.
 
     {\it Type-specific options:}\Nobreak
 
@@ -621,24 +636,11 @@ respectively.
 
 \syntax
   |line <type> [OPTIONS]
-         altitude <value>
-         border <on/off>
-         clip <on/off>
-         close <on/off/auto>
-         direction <begin/end/both/none/point>
-         gradient <none/center/point>
-         head <begin/end/both/none>
-         mark <keyword>
-         orientation/orient <number>
-         outline <in/out/none>
-         place <bottom/default/top>
-         reverse <on/off>
-         size <number>
-         r-size <number>
-         l-size <number>
-         smooth <on/off/auto>
-         subtype <keyword>
-         text <string>
+         [OPTIONS]
+         ...
+         [LINE DATA]
+         ...
+         [OPTIONS]
          ...
          [LINE DATA]
          ...
@@ -690,7 +692,10 @@ respectively.
 
          {\it border:} |visible| (default), |invisible|, |temporary|;
          
-         {\it water-flow:} |permanent| (default), |conjectural|, |intermittent|.
+         {\it water-flow:} |permanent| (default), |conjectural|, |intermittent|;
+	 
+	 {\it survey:} |cave| (default), |surface| (default if centreline has 
+	    surface flag).
          
        * |[LINE DATA]| specify either the coordinates of a line segment
          |<x> <y>|, or coordinates of a B\'ezier curve arc 
@@ -714,10 +719,18 @@ respectively.
        * |l-size <number>| = same to the left. Required for |slope| type.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
          Auto is default.
-       * |place <bottom/default/top>| = where to place the symbol relative
-         to other objects.
-       * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-       * |visibility <on/off>| = displays/hides an object
+  * |adjust <horizontal/vertical>| = shifts the line point to be aligned
+    horizontaly/ver\-ti\-caly with the previous point (or next point if there is 
+    no previous point). The result is horizontal/vertical line segment). 
+    If all line points have this option, they are aligned to the
+    average $y$ or $x$ coordinate, respectively. This option is not allowed 
+    in the |plan| projection.
+  * |place <bottom/default/top>| = changes displaying order in the map.
+  * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
+  * |visibility <on/off>| = displays/hides the symbol.
+  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide| 
+    and |symbol-show| layout options) symbol will be hidden/shown according 
+    to rules for specified |<symbol-type>|.
 
     {\it Type-specific options:}\Nobreak
 
@@ -745,7 +758,7 @@ respectively.
 \endcomopt
 
 \options
-  * |id <ext_keyword>| = id of the object
+  * |id <ext_keyword>| = ID of the symbol.
 \endoptions
 
 
@@ -781,58 +794,16 @@ You may use invisible border to achieve this inside of the passage.
 
 \comopt
   * the data lines consist of border line references (IDs)
-  * |place <bottom/default/top>| = where to place the symbol relative
-    to other objects (bottom by default).
+  * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-  * |visibility <on/off>| = displays/hides an object
+  * |visibility <on/off>| = displays/hides the symbol.
+  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide| 
+    and |symbol-show| layout options) symbol will be hidden/shown according 
+    to rules for specified |<symbol-type>|.
 \endcomopt
 
 \options
-  * |id <ext_keyword>| = id of the object
-\endoptions
-
-
-\subsubchapter `map'.
-
-\description
-  A map is a collection of either scraps or other maps of the same projection type.
-  It simplifies the data management when selecting data for output.
-\enddescription
-
-\syntax
-  |map <id>
-        ... scrap or other map references ...
-        break
-        ... next level scrap or other map references ...
-        preview <above/below> <other map id>
-      endmap|
-\endsyntax
-
-\context
-  survey
-\endcontext
-
-\arguments
-  *|<id>| = scrap identifier
-\endarguments
-
-\comopt
-  * the data lines consist of scrap or map references. Note that
-    you can not mix them together.
-  * scraps following the |break| will be placed on another level
-  * |preview <above/below> <other map id>| will put the outline of
-    the other map in the specified preview position relative to the
-    current map. 
-
-    Preview is displayed only if the map is in the |map-level| level as
-    specified by the |select| command.
-    
-    Use the revise command if you want to add maps from higher levels to the
-    preview.
-\endcomopt
-
-\options
-  * |title <string>| = description of the object
+  * |id <ext_keyword>| = ID of the symbol.
 \endoptions
 
 
@@ -874,6 +845,111 @@ You may use invisible border to achieve this inside of the passage.
   * |count <N>| (when used with scraps) = Therion will try to find more 
     connections of given two scraps  
 \endoptions
+
+
+\subsubchapter `map'.
+
+\description
+  A map is a collection of either scraps or other maps of the same projection 
+  type. It's possible to include survey in the map---this will display 
+  centreline in the map.
+  Map object simplifies the data management when selecting data for output.
+  See the chapter {\it How the map is put together} for more thorough 
+  explanation.
+\enddescription
+
+\syntax
+  |map <id> [OPTIONS]
+        ... scrap, survey or other map references ...
+        break
+        ... next level scrap, survey or other map references ...
+        preview <above/below> <other map id>
+      endmap|
+\endsyntax
+
+\context
+  survey
+\endcontext
+
+\arguments
+  *|<id>| = scrap identifier
+\endarguments
+
+\comopt
+  * the data lines consist of scrap or map references. Note that
+    you can not mix them together.
+  * scraps following the |break| will be placed on another level
+  * |preview <above/below> <other map id>| will put the outline of
+    the other map in the specified preview position relative to the
+    current map. 
+
+    Preview is displayed only if the map is in the |map-level| level as
+    specified by the |select| command.
+    
+    Use the revise command if you want to add maps from higher levels to the
+    preview.
+\endcomopt
+
+\options
+  * |projection/proj <plan/elevation/extended/none>| = required if the map 
+    contains survey. 
+  * |title <string>| = description of the object
+\endoptions
+
+\subsubchapter `surface'.
+
+\description
+Surface (terrain) specification. It's possible to display it in two ways: as a 
+scanned topographical map (currently in 2D maps only) or surface grid 
+(3D model).
+\enddescription
+
+\syntax
+
+|surface [<name>]
+   bitmap <filename> <calibration>
+   grid-units <units>
+   grid <origin x> <origin y> <x spacing> <y spacing> <x count> <y count>
+   [grid data]
+endsurface|
+\endsyntax
+
+\context
+  survey
+\endcontext
+
+\comopt
+* |bitmap <filename> <calibration>| = scanned topographical map.
+
+  |calibration| may have two forms:
+  
+  1. |[X1 Y1 x1 y1 X2 Y2 x2 y2 [units]]|, where upper case X/Y variables
+  are picture coordinates (pixels; lower-left corner is |0 0|), lower-case
+  x/y variables are real coordinates. Optional units apply to real coordinates 
+  (metres by default).
+  
+  2. |[X1 Y1 station1 X2 Y2 station2]|, where upper case X/Y variables
+  are picture coordinates and |station1| and |station2| are survey
+  stations names.
+  
+* |grid-units <units>| = units in which grid is specified. Metres by default.
+
+* |grid <origin x> <origin y> <x spacing> <y spacing> <x count> <y count>| 
+  
+  |<origin x> <origin y>| = specify coordinates of the lower-left (S-W) 
+  corner of the grid
+  
+  |<x spacing> <y spacing>| = distance between grid nodes in W-E and S-N 
+  directions
+  
+  |<x count> <y count>| = number of nodes in the row and number of rows
+  which form the grid (see below).
+  
+* |[grid data]| = a stream of numbers giving the altitude a.s.l.~in grid nodes.
+  It starts in the grid-origin and fills the grid in rows 
+  (in the row from W to E; rows from S to N).
+
+\endcomopt
 
 
 \subsubchapter `grade'.
@@ -1094,17 +1170,16 @@ check-boxes).
 {\bf Areas} are specified by their surrounding lines. Click on {\it Insert area}
 and then click on the lines surrounding the desired area. They are 
 automatically inserted in the {\it Area control} and named (if not already 
-named). An alternate way is to insert them as a |text| 
-command which contents (entered in the {\it Text editor} menu of the Map editor) 
-is usual |area ... endarea| multi-line command (see the chapter {\it Data 
-format}.) 
-
-CAUTION! The command |text| is not a Therion command! It's only a nickname for a 
+named). An alternate way is to insert them as a |text|%
+\[CAUTION! The command |text| is not a Therion command! It's only a nickname for a 
 block of an arbitrary text in 
 XTherion. In the file saved by XTherion, there'll only be 
 whatever you type into the {\it Text editor} or see in the {\it Command preview}.
 It may be an area definition or whatever you want, such as a comment beginning 
-with a `|#|' character.
+with a `|\#|' character.]
+command which contents (entered in the {\it Text editor} menu of the Map editor) 
+is usual |area ... endarea| multi-line command (see the chapter {\it Data 
+format}.) 
 
 If you draw some scraps with |none| projection, it's necessary to 
 {\bf calibrate} the 
@@ -1348,6 +1423,87 @@ The model is created from scrap outlines. The height and depth of the passage
 are computed from |passage-height| point map symbols. In the future, there will 
 be |point dimensions| map symbol which will allow more precise floor and 
 ceiling specification.
+
+
+\subchapter Therion in depth.
+
+\subsubchapter How the map is put together.
+
+This chapter explains how |-clip|, |-place|, |-visibility| and |-context| 
+options of |point|, |line| and |area| commands exactly work. It gives also 
+explanation of |color|, |transparency|, |symbol-hide| and |symbol-show| options 
+of the |layout| command.
+
+While exporting the map, Therion has to determine three attributes for each 
+point, line or area symbol: visibility, clipping and ordering.
+
+(1) Symbol is visible if all of the following is true:
+
+\list
+* it has |-visibility| option set |on| (all symbols by default), 
+* it hasn't been hidden by the |-symbol-hide| option in layout,
+* if its |-context| option is set, the corresponding symbol hasn't been 
+  hidden by the |-symbol-hide| option in layout.
+\endlist
+
+Only visible symbols are exported.
+
+(2) Some symbols are clipped by the scrap outline. These are by default all the 
+following:
+\list
+* {\it point symbols:} symbolic passage fills (bedrock\dots guano),
+* {\it line symbols:} all line symbols which don't have |-outline| option set 
+  with the exception of |section|, |arrow| and |label|,
+* {\it area symbols:} all.
+\endlist
+
+The default setting may be changed using the |-clip option|, if this is allowed 
+for particular symbol. All other symbols are not clipped by the scrap boundary.
+
+(3) Ordering: Each symbol belongs to one of the following groups which are 
+drawn consecutively:
+
+\list
+* bottom = all symbols with |-place bottom| option set
+* default-bottom = all |area| symbols by default
+* default = symbols which don't belong to any other group
+* default-top = |ceiling-step| and |chimney| by default
+* top = all symbols with |-place top| option set
+\endlist
+
+Ordering of symbols inside of each group follows the order of commands in the 
+input file\[Or {\it File commands} menu in XTherion]: symbols which come first 
+are drawn last (i.e.~they are displayed at the top of each group).
+
+Now we are ready to describe how the map (or atlas chapter) is constructed:
+
+\list\obeyspaces\obeylines
+*map area is filled with |color map-bg|
+*FOR each scrap: outline is filled white
+*preview below\[As specified using the |preview| option in the |map| command]%
+ is filled with |color preview-below|
+*FOR each level\[Level is a collection of scraps not separated by a |break|%
+ in the |map| command]:
+  BEGIN of transparency
+    FOR each scrap: outline is filled with |color map-fg|
+    FOR each scrap: |area| symbols are filled and clipped to scrap boundary
+  END of transparency
+  BEGIN of clipping by text labels (for all labels in this and upper levels)
+    FOR each scrap: 
+      draw all symbols to be clipped (with the exception of |line survey|) 
+        ordered from bottom to top
+      draw |line survey| symbols
+      clip to scrap boundary
+    FOR each scrap:
+      draw all symbols not to be clipped (with the exception of |point station|
+        and all labels) ordered from bottom to top
+      draw |point station| symbols
+  END of clipping by text labels
+  FOR each scrap: draw all (point and line) labels (including |wall-altitude|)
+*preview above is drawn with |color preview-above|
+\endlist
+
+
 
 
 \endinput

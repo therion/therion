@@ -94,19 +94,14 @@ endscrap
 
 scrap ts1 -projection none -scale [900.0 414.0 1280.0 418.0 0 0.0 10 0.0 m]
 
-line wall -reverse on
-  919.5 280.5
-  919.5 280.5 950.0 288.16 980.5 279.5
-  smooth off
-endline
-
-line wall -reverse on
-  980.5 279.5
-  979.5 308.5 985.0 333.5 970.0 327.0
+line wall -close on -reverse on
+  1019.0 161.0
+  1092.72 228.16 979.0 189.0 980.5 279.5
+  980.98 308.52 985.0 333.5 970.0 327.0
   955.0 320.5 966.0 309.0 957.0 307.0
   948.0 305.0 947.0 313.0 932.5 301.5
-  925.83 296.21 924.5 293.5 919.5 280.5
-  smooth off
+  925.83 296.21 905.59 280.09 894.0 224.0
+  869.0 103.0 929.0 79.0 1019.0 161.0
 endline
 
 line border
@@ -115,6 +110,19 @@ line border
   974.5 295.75 971.0 295.75 971.0 300.5
   smooth off
   971.0 332.5
+endline
+
+area water
+  l115-1018-241
+endarea
+
+line border -id l115-1018-241 -close on
+  872.0 248.0
+  1062.0 237.0
+  adjust horizontal
+  1086.0 93.0
+  876.0 97.0
+  872.0 248.0
 endline
 
 endscrap
@@ -214,6 +222,8 @@ endline
 
 point 1557.0 421.0 pillar
 
+point 1657.0 410.0 label -text "REZ 1" -align r -context point section
+
 line section -reverse on -direction end
   1500.0 424.0
   1524.5 422.0 1629.0 411.0 1640.0 410.0
@@ -281,7 +291,7 @@ endline
 
 point 890.0 468.0 stalactite
 
-point 922.5 365.5 section -align bl -scrap ts1
+point 1138.5 284.5 section -align bl -scrap ts1
 
 line wall -id dlw -reverse on
   1276.0 649.0
@@ -320,6 +330,12 @@ point 1227.0 271.0 passage-height -value 3.2
 line wall
   764.0 402.0
   736.0 402.5 739.05 437.75 767.0 436.0
+  smooth off
+endline
+
+line ceiling-step -place top
+  1232.0 292.0
+  1300.0 343.0 1334.0 359.0 1375.0 372.0
   smooth off
 endline
 

@@ -713,3 +713,9 @@ en: [Preview below]
 fr: [Prévisualisation au-dessous]
 sk: [Náhľad spodných vrstiev]
 
+therion: title surface bitmap
+cz: [Povrchová mapa]
+en: [Surface map]
+fr: [Carte extérieure]
+sk: [Povrchová mapa]
+

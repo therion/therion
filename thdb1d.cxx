@@ -39,6 +39,7 @@
 #include <math.h>
 #include <set>
 #include "thlogfile.h"
+#include "thsurface.h"
 
 //#define THUSESVX
 
@@ -107,6 +108,12 @@ void thdb1d::scan_data()
               tsp1->mark = lei->s_mark;
             if (lei->s_mark > tsp2->mark)
               tsp2->mark = lei->s_mark;
+            
+            // set underground station flag
+            if ((lei->flags & TT_LEGFLAG_SURFACE) == 0) {
+              tsp1->flags |= TT_STATIONFLAG_UNDERGROUND;
+              tsp2->flags |= TT_STATIONFLAG_UNDERGROUND;
+            }
             
 
             // check the length            
@@ -336,6 +343,7 @@ void thdb1d::process_data()
   survex.process_survey_data(this->db);
 #endif
   this->process_survey_stat();
+  this->postprocess_objects();
 }
 
 
@@ -406,6 +414,8 @@ void thdb1d::self_print(FILE * outf)
       fprintf(outf,"C");
     if (sp->flags & TT_STATIONFLAG_FIXED)
       fprintf(outf,"F");
+    if (sp->flags & TT_STATIONFLAG_UNDERGROUND)
+      fprintf(outf,"U");
     fprintf(outf,"\tmark:");
     switch (sp->mark) {
       case TT_DATAMARK_FIXED:
@@ -621,7 +631,7 @@ void thdb1d::process_tree()
   
   unsigned long series = 0, component = 0, tarrows = 0, last_series = 0;
   bool component_break = true;
-  this->tree_legs = new (thdb1dl *) [tn_legs];
+  this->tree_legs = new thdb1dl* [tn_legs];
   thdb1dl ** current_leg = this->tree_legs;
 
   while (tarrows < tn_legs) {
@@ -2077,6 +2087,11 @@ void thdb1d::print_loops() {
   delete [] lpr;
 }
 
+thdb3ddata * thdb1d::get_3d_surface() {
+  this->get_3d();
+  return &(this->d3_surface);
+}
+
 thdb3ddata * thdb1d::get_3d() {
   // vrati 3D data - ale len tie, ktore su oznacene
   if (this->d3_data_parsed)
@@ -2089,9 +2104,13 @@ thdb3ddata * thdb1d::get_3d() {
     return &(this->d3_data);
     
   // najprv tam vlozi meracske bodiky
-  thdb3dvx ** station_in = new (thdb3dvx *) [nstat];
+  
+  thdb3dvx ** station_in = new thdb3dvx* [nstat];
+
+  // najprv podzemne data
   for (i = 0; i < nstat; i++) 
     station_in[i] = NULL;
+
 #define get_3d_check_station(id) { \
       if (station_in[id] == NULL) { \
         station_in[id] = this->d3_data.insert_vertex( \
@@ -2107,11 +2126,43 @@ thdb3ddata * thdb1d::get_3d() {
   thdb3dfc * fc = NULL;
   thdb1dl ** tlegs = this->get_tree_legs();  
   for(i = 0; i < nlegs; i++, tlegs++) {
-    if ((*tlegs)->survey->is_selected()) {
+    if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) == 0)) {
       cur_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
         fc = this->d3_data.insert_face(THDB3DFC_LINE_STRIP);
+        fc->insert_vertex(station_in[cur_st], (void *) *tlegs);
+      }
+      last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
+      get_3d_check_station(last_st);
+      fc->insert_vertex(station_in[last_st], (void *) *tlegs);
+    }
+  }
+  
+  // potom povrchove data
+  for (i = 0; i < nstat; i++) 
+    station_in[i] = NULL;
+#undef get_3d_check_station
+#define get_3d_check_station(id) { \
+      if (station_in[id] == NULL) { \
+        station_in[id] = this->d3_surface.insert_vertex( \
+          this->station_vec[id].x, \
+          this->station_vec[id].y, \
+          this->station_vec[id].z, \
+          (void *) &(this->station_vec[id])); \
+      } \
+    }
+  
+  // polygony tam vlozi ako linestripy (data poojdu na thdb1dl)
+  last_st = nstat;
+  fc = NULL;
+  tlegs = this->get_tree_legs();  
+  for(i = 0; i < nlegs; i++, tlegs++) {
+    if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0)) {
+      cur_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
+      get_3d_check_station(cur_st);
+      if (cur_st != last_st) {
+        fc = this->d3_surface.insert_face(THDB3DFC_LINE_STRIP);
         fc->insert_vertex(station_in[cur_st], (void *) *tlegs);
       }
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
@@ -2125,6 +2176,24 @@ thdb3ddata * thdb1d::get_3d() {
   return &(this->d3_data);
   
 }
+
+
+void thdb1d::postprocess_objects() 
+{
+  thdb_object_list_type::iterator obi = this->db->object_list.begin();
+  while (obi != this->db->object_list.end()) {
+    switch ((*obi)->get_class_id()) {
+      case TT_SURFACE_CMD:
+        ((thsurface*)(*obi))->check_stations();
+        break;
+    }
+    obi++;
+  }
+}
+
+
+
+
 
 
 

@@ -223,7 +223,7 @@ class thdb1d {
   
   thdb1d_tree_node  * tree_nodes;
   
-  thdb3ddata d3_data;
+  thdb3ddata d3_data, d3_surface;
   
   bool d3_data_parsed;
   
@@ -256,6 +256,8 @@ class thdb1d {
    */
    
   void process_survey_stat();
+  
+  void postprocess_objects();
 
   public:
   
@@ -343,6 +345,7 @@ class thdb1d {
   void print_loops();
   
   thdb3ddata * get_3d();
+  thdb3ddata * get_3d_surface();
     
 };
 

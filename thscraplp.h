@@ -50,6 +50,7 @@ class thscraplp {
   
   double stx, sty, stz, lnx1, lnx2, lny1, lny2, lnz1, lnz2;
   bool lnio;
+  int type;
   
 };
 

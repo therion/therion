@@ -416,6 +416,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
             macroid = SYMP_STATIONNAME;
             break;
         }
+        if (this->context >= 0) 
+          macroid = this->context;
         if (!out->symset->assigned[macroid])
           return(false);
         if (out->file == NULL)
@@ -456,6 +458,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         default:
           macroid = SYMP_STATION_TEMPORARY;
       }
+      if (this->context >= 0) 
+        macroid = this->context;
       if (out->symset->assigned[macroid]) {
         if (out->file == NULL)
           return(true);
@@ -472,7 +476,10 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       break;
 
     case TT_POINT_TYPE_ALTITUDE:
-      if ((!thisnan(this->xsize)) && (out->symset->assigned[SYMP_ALTITUDE])) {          
+      macroid = SYMP_ALTITUDE;
+      if (this->context >= 0) 
+        macroid = this->context;
+      if ((!thisnan(this->xsize)) && (out->symset->assigned[macroid])) {          
         sprintf(buff,"%.0f",this->xsize);
         if (out->file == NULL)
           return(true);
@@ -502,9 +509,10 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
             return(false);
         }
         
+        if (this->context >= 0) 
+          macroid = this->context;
         if (!out->symset->assigned[macroid])
           return(false);
-
         if (out->file == NULL)
           return(true);
 
@@ -535,7 +543,10 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
 
     case TT_POINT_TYPE_DATE:
-      if  ((out->symset->assigned[SYMP_DATE]) &&
+      macroid = SYMP_DATE;
+      if (this->context >= 0) 
+        macroid = this->context;
+      if  ((out->symset->assigned[macroid]) &&
           ((this->tags & TT_POINT_TAG_DATE) > 0)) {
 //        ((thdate *)this->text)->print_export_str();
 //        fprintf(out->file,"Datelabel%s(\"%s\",",
@@ -574,6 +585,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
             return(false);
         }
         
+        if (this->context >= 0) 
+          macroid = this->context;
         if (!out->symset->assigned[macroid])
           return(false);
         if (out->file == NULL)
@@ -719,6 +732,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     fprintf(out->file,",%.1f,%d);\n",(thisnan(this->orient) ? 0 : 360 - this->orient), postprocess_label);
   }
   
+  if (this->context >= 0) 
+    macroid = this->context;
   if ((macroid > 0) && postprocess) {
     if (out->symset->assigned[macroid]) {
       if (out->file == NULL)

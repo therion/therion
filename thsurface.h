@@ -1,6 +1,6 @@
 /**
- * @file thmap.h
- * 2D map module.
+ * @file thsurface.h
+ * surface module.
  */
   
 /* Copyright (C) 2000 Stacho Mudrak
@@ -26,77 +26,79 @@
  * --------------------------------------------------------------------
  */
  
-#ifndef thmap_h
-#define thmap_h
+#ifndef thsurface_h
+#define thsurface_h
 
-
+#include "thdb3d.h"
 #include "thdataobject.h"
-#include "thmapstat.h"
+#include "thobjectname.h"
+#include "thtflength.h"
 
 /**
- * map command options tokens.
+ * surface command options tokens.
  */
  
 enum {
-  TT_MAP_UNKNOWN = 2000,
-  TT_MAP_PREVIEW = 2001,
-  TT_MAP_BREAK = 2002,
-  TT_MAP_PROJECTION = 2003,
+  TT_SURFACE_UNKNOWN = 2000,
+  TT_SURFACE_PICTURE = 2001,
+  TT_SURFACE_GRID = 2002,
+  TT_SURFACE_GRID_UNITS = 2003,
 };
 
 
 /**
- * map command options parsing table.
+ * surface command options parsing table.
  */
  
-static const thstok thtt_map_opt[] = {
-  {"break", TT_MAP_BREAK},
-  {"preview", TT_MAP_PREVIEW},
-  {"proj", TT_MAP_PROJECTION},
-  {"projection", TT_MAP_PROJECTION},
-  {NULL, TT_MAP_UNKNOWN},
+static const thstok thtt_surface_opt[] = {
+  {"bitmap", TT_SURFACE_PICTURE},
+  {"grid", TT_SURFACE_GRID},
+  {"grid-units", TT_SURFACE_GRID_UNITS},
+  {NULL, TT_SURFACE_UNKNOWN},
 };
 
 
 /**
- * map class.
+ * surface class.
  */
 
-class thmap : public thdataobject {
+class thsurface : public thdataobject {
 
   public:
 
-  class thdb2dmi * first_item,  ///< First map item.
-    * last_item;  ///< Last map item.
-  class thdb2dprj * expl_projection;
-  int projection_id;  ///< ID of map projection.
-  bool is_basic;  ///< Whether map is basic.
-  int selection_mode;  ///< How map is maximally selected.
-  class thdb2dxs * selection_xs; ///< Maximal ....
-    
-  void parse_item(int npar, char ** pars);  ///< Parse map item.
-  void parse_preview(char ** pars);  ///< Parse preview.
-  
-  void calc_z();
-  
-  double z;
-  long nz;
-  unsigned last_level;
-  
-  thmapstat stat;
+  // insert here real properties
+  char * pict_name;
+  bool pict_stations;
+  thobjectname s1, s2;
+  class thsurvey * ssurvey;
+  double pict_X1, pict_Y1, pict_X2, pict_Y2,
+    pict_x1, pict_y1, pict_x2, pict_y2,
+    grid_ox, grid_oy, grid_dx, grid_dy,
+    calib_x, calib_y, calib_s, calib_r, calib_xx, calib_yy, calib_xy, calib_yx,
+    pict_dpi, pict_height, pict_width;
+  long grid_nx, grid_ny, grid_counter, grid_size;
+  thtflength grid_units;
+  double * grid;
+  thdb3ddata d3d;
+  bool d3dok;
+
+  void parse_grid(char * spec);
+  void parse_grid_setup(char ** args);
+  void parse_picture(char ** args);
+  void calibrate();  
 
   /**
    * Standard constructor.
    */
   
-  thmap();
+  thsurface();
   
   
   /**
    * Standard destructor.
    */
    
-  virtual ~thmap();
+  virtual ~thsurface();
   
   
   /**
@@ -110,7 +112,7 @@ class thmap : public thdataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "thmap";};
+  virtual char * get_class_name() {return "thsurface";};
   
   
   /**
@@ -157,13 +159,6 @@ class thmap : public thdataobject {
    */
    
   virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
-  
-
-  /**
-   * Get context for object.
-   */
-   
-  virtual int get_context();
 
 
   /**
@@ -181,6 +176,16 @@ class thmap : public thdataobject {
    
   virtual void self_print_properties(FILE * outf); 
   
+  
+  /**
+   * check stations.
+   */
+ 
+  void check_stations();
+
+  virtual void start_insert();
+  
+  thdb3ddata * get_3d();
 
 };
 

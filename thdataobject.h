@@ -49,7 +49,7 @@ enum {
   TT_GRADE_CMD, TT_LAYOUT_CMD,
   TT_SCRAP_CMD, TT_ENDSCRAP_CMD,
   TT_POINT_CMD, TT_LINE_CMD, TT_AREA_CMD,
-  TT_JOIN_CMD, TT_MAP_CMD,
+  TT_JOIN_CMD, TT_MAP_CMD, TT_SURFACE_CMD,
   TT_DATA_CMD,
 };
 
@@ -71,6 +71,7 @@ static const thstok thtt_commands[] = {
   {"map", TT_MAP_CMD},
   {"point", TT_POINT_CMD},
   {"scrap", TT_SCRAP_CMD},
+  {"surface", TT_SURFACE_CMD},
   {"survey", TT_SURVEY_CMD},
 	{NULL, TT_UNKNOWN_CMD},
 };
@@ -437,6 +438,11 @@ class thdataobject {
    
   bool is_selected() {return this->selected;}
   
+  /**
+   * Is inside other survey.
+   */
+ 
+  bool is_in_survey(thsurvey * psearch);
 };
 
 

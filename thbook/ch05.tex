@@ -258,12 +258,11 @@ For legend displaying there are
   was set to |on| or |all| values
 * |\legendtitle| = token register containing translated legend title
 * |\insertlegend| = macro for inserting legend symbols pictures with translated
-  descriptions
-* |\begmulti <i>|, |\endmulti| = text between these macros is typeset in
-  |<i>| columns
-* |\formattedlegend| = combines all four above commands to get
-  preformatted legend with header and symbols typeset in two   (default; 
-  adjust the count register |\legendcolumns| to get them more or less)
+  descriptions in the specified number of columns (according to |legend-columns|
+  layout option)
+* |\formattedlegend| = combines all three above commands to get
+  preformatted legend with header and symbols typeset in two\[Default; 
+  adjust the |legend-columns| layout option to get them more or less]
   columns if |legend| option is set |on|
 \endlist
 
@@ -275,6 +274,14 @@ North arrow and scale bar may be displayed using
 * |\ifscalebar| = conditional; true if scalebar is not hidden
 * |\northarrow| = PDF form with the north arrow
 * |\scalebar| = PDF form with the scale bar
+\endlist
+
+There is a general-purpose macro for typesetting in multiple columns\[Not to be 
+used with map legend, where multiple columns are to be adjusted by 
+|legend-columns| layout option]:
+\list
+* |\begmulti <i>|, |\endmulti| = text between these macros is typeset in
+  |<i>| columns
 \endlist
 
 Example how to create atlas with lists of surveyors etc.\ followed by map pages 

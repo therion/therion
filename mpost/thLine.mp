@@ -404,7 +404,13 @@ def l_flowstone_UIS (expr P) =
   endfor;
 enddef;
 
-def l_survey_SKBB (expr P) =
+def l_survey_surface_SKBB (expr P) =
+  T:=identity;
+  pickup PenC;
+  thdraw P;
+enddef;
+
+def l_survey_cave_SKBB (expr P) =
   T:=identity;
   PolygonLine:=.8u;
   pair zz[];
@@ -421,7 +427,7 @@ def l_survey_SKBB (expr P) =
   endfor;
 enddef;
 
-def l_survey_UIS (expr P) =
+def l_survey_cave_UIS (expr P) =
   T:=identity;
   pair zz[];
   pickup PenC;

@@ -33,6 +33,8 @@ $SYMHASH{p_passageheight_positive} = "noassign";
 $SYMHASH{p_passageheight_negative} = "noassign";
 $SYMHASH{p_passageheight_both} = "noassign";
 $SYMHASH{p_passageheight_unsigned} = "noassign";
+$SYMHASH{p_surfacestation} = "noassign";
+$SYMHASH{p_cavestation} = "noassign";
 $SYMHASH{p_} = "noassign hidden";
 $SYMHASH{p_zzz} = "noassign hidden";
 
@@ -43,9 +45,13 @@ $SYMHASH{x_} = "noassign hidden";
 $SYMHASH{x_all} = "hidden";
 $SYMHASH{x_centerline} = "hidden";
 $SYMHASH{x_sections} = "hidden";
+$SYMHASH{x_surfacecenterline} = "noassign hidden";
+$SYMHASH{x_cavecenterline} = "noassign hidden";
+
 $SYMHASH{x_line_wall} = "hidden";
 $SYMHASH{x_line_border} = "hidden";
 $SYMHASH{x_line_waterflow} = "hidden";
+$SYMHASH{x_line_survey} = "hidden";
 $SYMHASH{x_point_waterflow} = "hidden";
 $SYMHASH{x_point_station} = "hidden";
 $SYMHASH{x_point_height} = "hidden";

@@ -80,6 +80,7 @@ enum {
   TT_2DOBJ_CLIP = 2002,
   TT_2DOBJ_PLACE = 2003,
   TT_2DOBJ_VISIBILITY = 2004,
+  TT_2DOBJ_CONTEXT = 2005,
 };
 
 
@@ -96,9 +97,11 @@ enum {
 
 enum {
   TT_2DOBJ_PLACE_BOTTOM = 0,
-  TT_2DOBJ_PLACE_DEFAULT = 1,
-  TT_2DOBJ_PLACE_TOP = 2,
-  TT_2DOBJ_PLACE_UNKNOWN = 3,
+  TT_2DOBJ_PLACE_DEFAULT_BOTTOM = 1,
+  TT_2DOBJ_PLACE_DEFAULT = 3,
+  TT_2DOBJ_PLACE_DEFAULT_TOP = 4,
+  TT_2DOBJ_PLACE_TOP = 5,
+  TT_2DOBJ_PLACE_UNKNOWN = 6,
 };
 
 
@@ -108,6 +111,7 @@ enum {
  
 static const thstok thtt_2ddataobject_opt[] = {
   {"clip", TT_2DOBJ_CLIP},
+  {"context", TT_2DOBJ_CONTEXT},
   {"place", TT_2DOBJ_PLACE},
   {"scale", TT_2DOBJ_SCALE},
   {"visibility", TT_2DOBJ_VISIBILITY},
@@ -143,7 +147,7 @@ class th2ddataobject : public thdataobject {
   
   int scale;  ///< 2D map object scaling.
   unsigned tags;  ///< 2D map object tags.
-  int place;
+  int place, context;
 
   /**
    * Standard constructor.

@@ -44,6 +44,8 @@ Works like |input| command in data files---includes other files.
   selects objects (surveys and maps) for export. By default, all survey objects 
   are selected. If there is no map selected, all maps belonging to
   selected surveys are selected by default for map export.
+  If there are no such maps, centreline from the selected surveys is 
+  exported in the map.
 \enddescription
 
 \syntax
@@ -121,6 +123,8 @@ Works like |input| command in data files---includes other files.
     nav-size <x-size> <y-size>
     transparency <on/off>
     opacity <value>
+    surface <top/bottom/off>
+    surface-opacity <value>
     layers <on/off>
     grid-origin <x> <y> <x> <units>
     grid-size <width> <height> <units>
@@ -129,6 +133,8 @@ Works like |input| command in data files---includes other files.
     own-pages <number>
     page-grid <on/off>
     legend <on/off/all>
+    legend-columns <number>
+    legend-width <n> <units>
     map-comment <string>
     map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>
     statistics <explo/topo/carto/copyright all/off/number>
@@ -193,9 +199,13 @@ endlayout|
 
   * |symbol-hide <point/line/area/group/special>  <symbol-type>| = don't display 
     particular symbol or group of symbols. 
+    You may use |group cave-centerline|, |group surface-centerline|, 
+    |point cave-station| and |point surface-station|
+    in |symbol-hide| and |symbol-show| commands.
     May be combined with |symbol-show|.(M, A)
   * |symbol-show <point/line/area/group/special> <symbol-type>| = display particular 
     symbol or group of symbols. May be combined with |symbol-hide|. (M, A)
+
 
   {\it page layout related:}
 
@@ -223,6 +233,10 @@ endlayout|
     passages are also visible) (M, A; default: |on|)
   * |opacity <value>| = set opacity value (used if |transparency| is |on|). 
     Value range is 0--100. (M, A; default: |70|)
+  * |surface-opacity <value>| = set the surface bitmap opacity (used if 
+    |transparency| is |on|).  Value range is 0--100. (M, A; default: |70|)
+  * |surface <top/bottom/off>| = set the position of the surface bitmap
+    above/below the map. (M, A; default: |off|)
   * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
   * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
     origin (M, A) [Grid is currently not supported.]
@@ -244,21 +258,25 @@ endlayout|
     Predefined map header contains some basic informations about
     cave: name, scale, north arrow, list of surveyors etc. It is fully 
     customizable (see the chapter {\it Changing layout} for details).
-    Ranges for |<x>| and |<y>| are 0--100. Lower-left corner of the map 
+    Ranges for |<x>| and |<y>| are -100--200. Lower-left corner of the map 
     is |0 0|, 
     upper-right corner is |100 100|. The header is aligned with the specified 
     corner or side to this anchor point.
     (M; default: |0 100 nw|)
+  * |legend-width <n> <units>| = legend width (M, A; default: |14 cm|)
   * |legend <on/off/all>| = display list of used map symbols in the map header. 
     If set to |all|, all symbols from the current symbol set are displayed. 
     (M, A; default: |off|)
+  * |legend-columns <number>| = adjusts the number of legend columns 
+    (M, A; default: |2|)
   * |map-comment <string>| = optional comment displayed at the map header (M)
   * |statistics <explo/topo/carto/copyright all/off/number>| or 
   * |statistics <explo/topo-length on/off>| = display some basic 
     statistics (M, A; default: |off|)
   * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
   * |language <xx[_YY]>| = set output language. Currently supported languages are
-    |sk| (Slovak), |en| (English) and |cz| (Czech). See the {\it Appendix} if 
+    |sk| (Slovak), |en| (English), |cz| (Czech) and |fr| (French). 
+    See the {\it Appendix} if 
     you want to  add or customize translations. (M, A)
   * |colour/color <item> <colour>| = customize colour for special map
     items (map-fg, map-bg, preview-above, preview-below). 
@@ -334,21 +352,27 @@ endlayout|
     given the prefix ``|cave.|'' is used with an extension corresponding to
     output format.
 
-  {\it model:}
+  {\it model:}\Nobreak
 
   * |format/fmt <format>| = set model output format. Currently the following
     output formats are supported: |therion| (native format; default),
-    |compass| (plt file), |survex| (3d file), |vrml| and |3dmf| (walls only).
+    |compass| (plt file), |survex| (3d file), |vrml| and |3dmf|.
+  * |enable <walls/[cave/surface-]centerline/surface/all>| and
+  * |disable <walls/[cave/surface-]centerline/surface/all>| = 
+     \hfil\break
+     selects which features to export, if the format supports it. Surface
+     is currently exported in |therion| format only.
 
   {\it map/atlas:}
   
   * |projection <id>| = unique identifier that specifies the map projection type.
     (See the |scrap| command for details.) If there are no scraps with 
-    the specified projection then Therion will give an error. 
-  * |layout <id>| = map or atlas layout---see layout command for details.
+    the specified projection then Therion will display centreline from selected
+    surveys. 
+  * |layout <id>| = use predefined map or atlas layout.
   * |layout-xxx| = where |xxx| stands for other layout options. Using this
     you can change some layout properties directly within the export command.
-  * |format/fmt <format>| = set map format. Currently only PDF format
+  * |format/fmt <format>| = set map format. Currently only |pdf| format
     is supported.
 
   {\it database:}
@@ -381,10 +405,13 @@ or
         [--print-init-file]
         [--print-environment]|
 
+\penalty-200
 \arguments
   |<cfg-file>| 
   Therion takes only one optional argument: the name of a configuration
   file. If no name is specified |thconfig| in the current directory is used. 
+  If there is no |thconfig| file (e.g.~current directory is not a data 
+  directory), Therion exits with an error message.
 \endarguments
 
 \options

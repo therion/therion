@@ -64,7 +64,8 @@ class thdb2dlp {
     * cp2; ///< Control point 2.
     
   int subtype,  ///< Line subtype.
-    smooth;  ///< Whether line is smooth in given point.
+    smooth,  ///< Whether line is smooth in given point.
+    adjust;  ///< line point adjustment
     
   char * mark;  ///< Line point mark.
   unsigned tags;  ///< Line point tags.

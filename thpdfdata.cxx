@@ -42,6 +42,8 @@ map<int,layerrecord> LAYERHASH;
 set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
 layout LAYOUT;
 
+list<surfpictrecord> SURFPICTLIST;
+
 scraprecord::scraprecord() {
   S1=0.0; S2=0.0;
   layer=0; level=0; sect=0;
@@ -91,4 +93,8 @@ layout::layout() {
   own_pages = 0;
   OCG = true;
   lang = THLANG_UNKNOWN;
+  legend_width = 200;
+  legend_columns = 2;
+  surface = 0;
+  surface_opacity = 0.7;
 }

@@ -103,6 +103,7 @@ double HS,VS;
 
 string tex_Sname(string s) {return("THS"+s);}
 string tex_Nname(string s) {return("THN"+s);}
+string tex_BMPname(string s) {return("THBMP"+s);} // bitmap
 
 void read_settings() {
   ifstream F("scraps.dat");
@@ -301,7 +302,7 @@ void make_sheets() {
       if (I->X3 > urx) urx = I->X3;
       if (I->X4 > ury) ury = I->X4;
     }
-    
+
     if (llx == DBL_MAX || lly == DBL_MAX || urx == -DBL_MAX || ury == -DBL_MAX) 
       therror(("This can't happen -- no data for a scrap!"));
     
@@ -565,7 +566,7 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
   double xc = 0, yc = 0;
   
   if (LAYOUT.OCG) {
-    PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
+    PAGEDEF << "\\setbox\\xxx=\\hbox to \\adjustedHS{%" << endl;
   }
 
 //  PAGEDEF << (up ? "\\PL{q .1 w}%" : "\\PL{q .8 g}%") << endl;
@@ -609,7 +610,8 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
             if (K->B != "" && K->sect == 0) {
               xc = K->B1; yc = K->B2;
               xc -= HSHIFT; yc -= VSHIFT;
-              PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
+              PAGEDEF << (LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
+                      xc << "}{" << yc << "}{\\" << 
                       tex_Xname("B"+(K->name)) << "}%" << endl;
             }
           }
@@ -617,7 +619,8 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
             if (K->I != "" && K->sect == 0) {
               xc = K->I1; yc = K->I2;
               xc -= HSHIFT; yc -= VSHIFT;
-              PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
+              PAGEDEF << (LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
+                      xc << "}{" << yc << "}{\\" << 
                       tex_Xname("I"+(K->name)) << "}%" << endl;
             }
           }
@@ -627,10 +630,10 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
   }
   PAGEDEF << "\\PL{Q}%" << endl;
   if (LAYOUT.OCG) {
-    PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
+    PAGEDEF << "\\hfill}\\ht\\xxx=\\adjustedVS\\dp\\xxx=0bp" << endl;
     PAGEDEF << "\\immediate\\pdfxform ";
     PAGEDEF << "attr{/OC \\the\\" << (up ? "ocU" : "ocD") << "\\space 0 R} ";
-    PAGEDEF << "\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
+    PAGEDEF << "\\xxx\\PB{-\\adjustedX}{-\\adjustedY}{\\pdflastxform}%" << endl;
     
   }
 }
@@ -656,7 +659,7 @@ void compose_page(list<sheetrecord>::iterator sheet_it, ofstream& PAGE) {
   }
   PAGE.precision(6);
   PAGE << "\\setbox\\mapbox=\\hbox to " << HS << "bp{%" << endl;
-  PAGE.precision(1);
+  PAGE.precision(2);
   PAGE << "\\rlap{\\pdfrefxform\\" << tex_Sname(u2str(sheet_it->id)) << 
           "}%" << endl;
 
@@ -676,7 +679,7 @@ void compose_page(list<sheetrecord>::iterator sheet_it, ofstream& PAGE) {
 
   PAGE.precision(6);
   PAGE << "\\hfil}\\ht\\mapbox=" << VS << "bp%" << endl;
-  PAGE.precision(1);
+  PAGE.precision(2);
 
   PAGE << "\\pagelabel={" << grid_name(LAYOUT.labely,-sheet_it->namey) << 
                         " " << grid_name(LAYOUT.labelx,sheet_it->namex) <<
@@ -809,6 +812,39 @@ void print_page_bg_scraps(int layer, ofstream& PAGEDEF,
   }
 }
 
+void print_surface_bitmaps (ofstream &PAGEDEF, double shiftx, double shifty) {
+  if (LAYOUT.transparency || LAYOUT.OCG) {
+    PAGEDEF << "\\setbox\\xxx=\\hbox to\\adjustedHS{%" << endl;
+    PAGEDEF << "\\PL{/GS2 gs}%" << endl;
+  }
+  int i = 1;
+  PAGEDEF.precision(6);
+  for (list<surfpictrecord>::iterator I = SURFPICTLIST.begin();
+                                      I != SURFPICTLIST.end(); I++) {
+    if (LAYOUT.transparency || LAYOUT.OCG) {
+      PAGEDEF << "\\bitmapcorr{";
+    } else {
+      PAGEDEF << "\\bitmap{";
+    }
+    PAGEDEF << 
+          I->xx << "}{" << I->yx << "}{" << I->xy << "}{" << I->yy << "}{" << 
+          I->dx - shiftx << "}{" << I->dy - shifty << 
+          "}{\\" << tex_BMPname(u2str(i)) << "}%" << endl;
+    i++;
+  };
+  PAGEDEF.precision(2);
+  if (LAYOUT.transparency || LAYOUT.OCG) {
+    PAGEDEF << "\\hfill}\\ht\\xxx=\\adjustedVS\\dp\\xxx=0bp" << endl;
+    PAGEDEF << "\\immediate\\pdfxform ";
+    PAGEDEF << "attr{";
+    if (LAYOUT.transparency) PAGEDEF << "/Group \\the\\attrid\\space 0 R ";
+    if (LAYOUT.OCG) PAGEDEF << "/OC \\the\\ocSUR\\space 0 R ";
+    PAGEDEF << "} ";
+    PAGEDEF << "resources{/ExtGState \\the\\resid\\space 0 R}";
+    PAGEDEF << "\\xxx\\PB{-\\adjustedX}{-\\adjustedY}{\\pdflastxform}%" << endl;
+  }
+}
+
 void print_map(int layer, ofstream& PAGEDEF, 
                list<sheetrecord>::iterator sheet_it){
   double HSHIFT=0, VSHIFT=0, xc = 0, yc = 0;
@@ -839,6 +875,7 @@ void print_map(int layer, ofstream& PAGEDEF,
   
   if (mode == ATLAS) {
     print_page_bg(PAGEDEF);
+    if (LAYOUT.surface == 1) print_surface_bitmaps(PAGEDEF,HSHIFT,VSHIFT);
     print_page_bg_scraps(layer, PAGEDEF, sheet_it);
   }
 
@@ -954,6 +991,10 @@ void print_map(int layer, ofstream& PAGEDEF,
   if (mode == ATLAS && !LAYERHASH.find(layer)->second.U.empty()) {
     print_preview(1,PAGEDEF,HSHIFT,VSHIFT,sheet_it);
   }
+
+  if (mode == ATLAS && LAYOUT.surface == 2) {
+    print_surface_bitmaps(PAGEDEF,HSHIFT,VSHIFT);
+  }
 }
 
 void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
@@ -969,7 +1010,7 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
   P << "%\n\\setbox\\xxx=\\hbox to " << HSN << "bp{%\n\\PL{q ";
   P.precision(6);
   P << 1/LAYOUT.nav_factor << " 0 0 " << 1/LAYOUT.nav_factor << " 0 0 cm}%\n";
-  P.precision(1);
+  P.precision(2);
 
   map<int,layerrecord>::iterator lay_it = LAYERHASH.find(sheet_it->layer);
   if (lay_it == LAYERHASH.end()) therror (("This can't happen!"));
@@ -1109,12 +1150,12 @@ void build_pages() {
   ofstream PAGEDEF("th_pagedef.tex");
   if(!PAGEDEF) therror(("Can't write file"));
   PAGEDEF.setf(ios::fixed, ios::floatfield);
-  PAGEDEF.precision(1);
+  PAGEDEF.precision(2);
 
   ofstream PAGE("th_pages.tex");
   if(!PAGE) therror(("Can't write file"));
   PAGE.setf(ios::fixed, ios::floatfield);
-  PAGE.precision(1);
+  PAGE.precision(2);
 
   ofstream PDFRES("th_resources.tex");
   if(!PDFRES) therror(("Can't write file"));
@@ -1125,9 +1166,11 @@ void build_pages() {
   }
 
   if (LAYOUT.transparency) {
+    PDFRES << "\\surfaceopacity{" << LAYOUT.surface_opacity << "}%" << endl;
     PDFRES << "\\immediate\\pdfobj{ << /GS0 " <<
                  "<< /Type /ExtGState /ca 1 /BM /Normal >> " <<
-           " /GS1 << /Type /ExtGState /ca \\the\\opacity\\space /BM /Normal >> >> }" << endl;
+           " /GS1 << /Type /ExtGState /ca \\the\\opacity\\space /BM /Normal >> " <<
+           " /GS2 << /Type /ExtGState /ca \\the\\surfaceopacity\\space /BM /Normal >> >> }" << endl;
     PDFRES << "\\newcount\\resid\\resid=\\pdflastobj" << endl;
     PDFRES << "\\immediate\\pdfobj{ << /S /Transparency /K true >> }" << endl;
     PDFRES << "\\newcount\\attrid\\attrid=\\pdflastobj" << endl;
@@ -1135,7 +1178,8 @@ void build_pages() {
   else {
     PDFRES << "\\immediate\\pdfobj{ << /GS0 " <<
                  "<< /Type /ExtGState >> " <<
-           " /GS1 << /Type /ExtGState >> >> }" << endl;
+           " /GS1 << /Type /ExtGState >> " <<
+           " /GS2 << /Type /ExtGState >> >> }" << endl;
     PDFRES << "\\newcount\\resid\\resid=\\pdflastobj" << endl;
   }
 
@@ -1148,6 +1192,10 @@ void build_pages() {
       utf2texhex(string(thT("title preview below",LAYOUT.lang))) << 
       "> >> }" << endl;
     PDFRES << "\\newcount\\ocD\\ocD=\\pdflastobj" << endl;
+    PDFRES << "\\immediate\\pdfobj{ << /Type /OCG /Name <feff" <<
+      utf2texhex(string(thT("title surface bitmap",LAYOUT.lang))) << 
+      "> >> }" << endl;
+    PDFRES << "\\newcount\\ocSUR\\ocSUR=\\pdflastobj" << endl;
     if (mode == MAP) {
       for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                           I != LAYERHASH.end(); I++) {
@@ -1160,7 +1208,9 @@ void build_pages() {
       }
     }
     PDFRES << "\\pdfcatalog{ /OCProperties <<" << endl <<
-              "  /OCGs [\\the\\ocU\\space0 R ";
+              "  /OCGs [";
+    if (LAYOUT.surface == 2) PDFRES << "\\the\\ocSUR\\space0 R "; 
+    PDFRES << "\\the\\ocU\\space0 R ";
     if (mode == MAP) {
       for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                           I != LAYERHASH.end(); I++) {
@@ -1168,9 +1218,13 @@ void build_pages() {
           PDFRES << "\\the\\oc" << u2str(I->first) << "\\space 0 R ";
       }
     }
-    PDFRES << "\\the\\ocD\\space0 R]" << endl <<
+    PDFRES << "\\the\\ocD\\space0 R ";
+    if (LAYOUT.surface == 1) PDFRES << "\\the\\ocSUR\\space0 R "; 
+    PDFRES << "]" << endl <<
               "  /D << /Name (Map layers) /ListMode /VisiblePages" << 
-                     " /Order [\\the\\ocU\\space0 R ";
+                     " /Order [";
+    if (LAYOUT.surface == 2) PDFRES << "\\the\\ocSUR\\space0 R "; 
+    PDFRES << "\\the\\ocU\\space0 R ";
     if (mode == MAP) {
       for (map<int,layerrecord>::reverse_iterator I = LAYERHASH.rbegin();
                                           I != LAYERHASH.rend(); I++) {
@@ -1178,7 +1232,9 @@ void build_pages() {
           PDFRES << "\\the\\oc" << u2str(I->first) << "\\space 0 R ";
       }
     }
-    PDFRES << "\\the\\ocD\\space0 R] >>" << endl << ">> }" << endl;
+    PDFRES << "\\the\\ocD\\space0 R ";
+    if (LAYOUT.surface == 1) PDFRES << "\\the\\ocSUR\\space0 R "; 
+    PDFRES << "] >>" << endl << ">> }" << endl;
   }
 
   if (LAYOUT.doc_author != "") 
@@ -1203,9 +1259,20 @@ void build_pages() {
   else {
     PDFRES << "\\legendfalse" << endl;
   }
-
+  
+  PDFRES << "\\legendwidth=" << LAYOUT.legend_width << "bp" << endl;
 
   PDFRES.close();
+
+  // jednorazove vlozenie povrchovych obrazkov
+  int i = 1;
+  for (list<surfpictrecord>::iterator I = SURFPICTLIST.begin();
+                                      I != SURFPICTLIST.end(); I++) {
+    PAGEDEF << "\\pdfximage{" << (string) I->filename << "}%" << endl;
+    PAGEDEF << "\\newcount\\" << tex_BMPname(u2str(i)) << "\\" <<
+               tex_BMPname(u2str(i)) << "=\\pdflastximage%" << endl;
+    i++;
+  }
 
   if (mode == ATLAS) {
     HS = LAYOUT.hsize + 2*LAYOUT.overlap;
@@ -1291,6 +1358,23 @@ void build_pages() {
     PAGEDEF << "\\x=\\extraW\\advance\\x by \\overlap" << endl;
     PAGEDEF << "\\dimtobp{\\the\\x}\\edef\\wsize{\\tmpdef}%" << endl;
 
+    PAGEDEF << "\\adjustedHS=" << HS << "bp" <<
+      "\\advance\\adjustedHS by \\extraE" << 
+      "\\advance\\adjustedHS by \\extraW" <<
+      "\\advance\\adjustedHS by \\overlap" << 
+      "\\advance\\adjustedHS by \\overlap" <<  endl;
+
+    PAGEDEF << "\\adjustedVS=" << VS << "bp" << 
+      "\\advance\\adjustedVS by \\extraN" << 
+      "\\advance\\adjustedVS by \\extraS" << 
+      "\\advance\\adjustedVS by \\overlap" << 
+      "\\advance\\adjustedVS by \\overlap" << endl;
+
+    PAGEDEF << "\\tmpdimen=\\extraW\\advance\\tmpdimen by \\overlap" << endl;
+    PAGEDEF << "\\dimtobp{\\tmpdimen}\\edef\\adjustedX{\\tmpdef}%" << endl;
+    PAGEDEF << "\\tmpdimen=\\extraS\\advance\\tmpdimen by \\overlap" << endl;
+    PAGEDEF << "\\dimtobp{\\tmpdimen}\\edef\\adjustedY{\\tmpdef}%" << endl;
+
     PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
                             LAYOUT.background_g << " " << 
                             LAYOUT.background_b << " rg -" << 
@@ -1300,7 +1384,13 @@ void build_pages() {
 			    "\\ysize\\space" << 
                             " re f Q}%" << endl;
 
-    PAGEDEF << "\\leavevmode\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
+//    PAGEDEF << "\\leavevmode\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
+    PAGEDEF << "\\leavevmode\\setbox\\xxx=\\hbox to 0bp{%" << endl;
+
+    if (LAYOUT.surface == 1) {
+      print_surface_bitmaps(PAGEDEF,MINX,MINY);
+    }
+
 //    print_page_bg(PAGEDEF);
     for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                         I != LAYERHASH.end(); I++) {
@@ -1327,6 +1417,11 @@ void build_pages() {
       }
     }
     if (!MAP_PREVIEW_UP.empty()) print_preview(1,PAGEDEF,MINX,MINY,NULL);
+
+    if (LAYOUT.surface == 2) {
+      print_surface_bitmaps(PAGEDEF,MINX,MINY);
+    }
+
     if (LAYOUT.map_grid) {
       PAGEDEF << "\\PL{q .4 w}%" << endl;
       PAGEDEF << "\\PL{0 0 " << HS << " " << VS << " re S}%" << endl;
@@ -1339,12 +1434,13 @@ void build_pages() {
       PAGEDEF << "\\PL{Q}%" << endl;
 
     }
-//    PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{";      // map legend
-//    PAGEDEF << "\\maplayout\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
-//    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
+////    PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{";      // map legend
+////    PAGEDEF << "\\maplayout\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
+////    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
 
     PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
-    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
+//    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
+    PAGEDEF << "\\box\\xxx%" << endl;
     
     PAGEDEF << "\\smash{\\rlap{\\kern-\\extraW\\raise-\\extraS" << 
                "\\hbox{\\pdfrefxform\\THmaplegend}}}" << endl;

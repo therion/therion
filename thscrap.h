@@ -84,7 +84,10 @@ class thscrap : public thdataobject {
     
   thdb2dcp * fcpp, * lcpp; ///< Scrap control points.
   unsigned int ncp; ///< Number of control points.
-    
+
+  class thsurvey * centerline_survey;
+  bool centerline_io;
+      
   thdb2dprj * proj; ///< Scrap projection.
   class thprjx_scrap * xscrap;  ///< Extended scrap link.
   thscrap * proj_next_scrap, ///< Next scrap in projection.
@@ -269,6 +272,8 @@ class thscrap : public thdataobject {
   */
   
  thdb3ddata * get_3d_outline();
+ 
+ void update_limits(double x, double y);
 
 };
 

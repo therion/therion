@@ -38,6 +38,7 @@ thmap::thmap()
   this->first_item = NULL;
   this->last_item = NULL;
   
+  this->expl_projection = NULL;
   this->projection_id = 0;
   this->last_level = 1;
   this->is_basic = true;
@@ -107,6 +108,7 @@ thcmd_option_desc thmap::get_cmd_option_desc(char * opts)
 
 void thmap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
+  thdb2dprjpr projection;
 
   if (cod.id == 1)
     cod.id = TT_DATAOBJECT_NAME;
@@ -119,6 +121,12 @@ void thmap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long i
         this->db->db2d.mbf.get_buffer());
       break;
     
+    case TT_MAP_PROJECTION:
+      projection = this->db->db2d.parse_projection(*args);
+      if (!projection.parok)
+        ththrow(("invalid parameters of projection"));
+      this->expl_projection = projection.prj;
+      break;
     
     case TT_MAP_BREAK:
       this->last_level++;

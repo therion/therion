@@ -55,6 +55,7 @@ enum {
   TT_LINE_DIRECTION = 3015,
   TT_LINE_HEAD = 3016,
   TT_LINE_TEXT = 3017,
+  TT_LINE_ADJUST = 3018,
 };
 
 
@@ -81,6 +82,7 @@ enum {
  */
 
 static const thstok thtt_line_opt[] = {
+  {"adjust", TT_LINE_ADJUST},
   {"altitude", TT_LINE_ALTITUDE},
   {"border", TT_LINE_BORDER},
   {"close", TT_LINE_CLOSED},
@@ -122,6 +124,29 @@ static const thstok thtt_line_outlines[] = {
   {"none", TT_LINE_OUTLINE_NONE},
   {"out", TT_LINE_OUTLINE_OUT},
   {NULL, TT_LINE_OUTLINE_UNKNOWN},
+};
+
+
+/**
+ * Line point adjustments.
+ */
+ 
+enum {
+  TT_LINE_ADJUST_UNKNOWN,
+  TT_LINE_ADJUST_HORIZONTAL,
+  TT_LINE_ADJUST_VERTICAL,
+  TT_LINE_ADJUST_NONE,
+};
+
+/**
+ * line adjusts parsing table.
+ */
+ 
+static const thstok thtt_line_adjusts[] = {
+  {"horizontal", TT_LINE_ADJUST_HORIZONTAL},
+  {"none", TT_LINE_ADJUST_NONE},
+  {"vertical", TT_LINE_ADJUST_VERTICAL},
+  {NULL, TT_LINE_ADJUST_UNKNOWN},
 };
 
 
@@ -201,6 +226,8 @@ enum {
   TT_LINE_SUBTYPE_PERMANENT,
   TT_LINE_SUBTYPE_INTERMITTENT,
   TT_LINE_SUBTYPE_CONJECTURAL,
+  TT_LINE_SUBTYPE_CAVE,
+  TT_LINE_SUBTYPE_SURFACE,
 };
 
 /**
@@ -210,6 +237,7 @@ enum {
 static const thstok thtt_line_subtypes[] = {
   {"bedrock", TT_LINE_SUBTYPE_BEDROCK},
   {"blocks",TT_LINE_SUBTYPE_BLOCKS},
+  {"cave",TT_LINE_SUBTYPE_CAVE},
   {"clay",TT_LINE_SUBTYPE_CLAY},
   {"conjectural",TT_LINE_SUBTYPE_CONJECTURAL},
   {"debris",TT_LINE_SUBTYPE_DEBRIS},
@@ -220,6 +248,7 @@ static const thstok thtt_line_subtypes[] = {
   {"permanent",TT_LINE_SUBTYPE_PERMANENT},
   {"presumed",TT_LINE_SUBTYPE_PRESUMED},
   {"sand",TT_LINE_SUBTYPE_SAND},
+  {"surface",TT_LINE_SUBTYPE_SURFACE},
   {"temporary",TT_LINE_SUBTYPE_TEMPORARY},
   {"underlying",TT_LINE_SUBTYPE_UNDERLYING},
   {"unsurveyed",TT_LINE_SUBTYPE_UNSURVEYED},
@@ -260,6 +289,7 @@ class thline : public th2ddataobject {
   void parse_direction(char * ss);  ///< Parse line direction.
   void parse_altitude(char * ss);  ///< Parse wall altitude
   void parse_head(char * ss);  ///< Parse line head.
+  void parse_adjust(char * ss);  ///< Parse line head.
   void parse_text(char * ss);  ///< Parse line text.
   void insert_line_point(int nargs, char ** args);  ///< Insert line point.
   void insert_point_mark(char * ss);  ///< Insert line point mark.

@@ -27,6 +27,7 @@
  
 #include "th2ddataobject.h"
 #include "thexception.h"
+#include "thsymbolset.h"
 #include "thchenc.h"
 
 th2ddataobject::th2ddataobject()
@@ -37,6 +38,7 @@ th2ddataobject::th2ddataobject()
   this->scale = TT_2DOBJ_SCALE_M;
   this->tags = TT_2DOBJ_TAG_CLIP_AUTO | TT_2DOBJ_TAG_VISIBILITY_ON;
   this->place = TT_2DOBJ_PLACE_DEFAULT;
+  this->context = -1;
 }
 
 
@@ -66,8 +68,12 @@ thcmd_option_desc th2ddataobject::get_cmd_option_desc(char * opts)
   int id = thmatch_token(opts, thtt_2ddataobject_opt);
   if (id == TT_2DOBJ_UNKNOWN)
     return thdataobject::get_cmd_option_desc(opts);
-  else
-    return thcmd_option_desc(id);
+  else switch(id) {
+    case TT_2DOBJ_CONTEXT:
+      return thcmd_option_desc(id,2);
+    default:
+      return thcmd_option_desc(id);
+  }
 }
 
 
@@ -120,6 +126,14 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
       if (this->place == TT_2DOBJ_PLACE_UNKNOWN)
         ththrow(("invalid place value -- %s",*args))
       break;    
+      
+    case TT_2DOBJ_CONTEXT:
+      this->context = thsymbolset__get_id(args[0], args[1]);
+      if (this->context < 0)
+        ththrow(("invalid object context -- %s %s", args[0], args[1]))
+      if (this->context > SYMP_ZZZ)
+        ththrow(("object context not allowed -- %s %s", args[0], args[1]))
+      break;
 
     default:
       thdataobject::set(cod, args, argenc, indataline);

@@ -40,6 +40,8 @@
 enum {
   TT_EXPMODEL_OPT_UNKNOWN = 0,  ///< Unknown option
   TT_EXPMODEL_OPT_FORMAT,  ///< Output option.
+  TT_EXPMODEL_OPT_ENABLE,  ///< Output option.
+  TT_EXPMODEL_OPT_DISABLE,  ///< Output option.
 };
 
 
@@ -48,9 +50,42 @@ enum {
  */
  
 static const thstok thtt_expmodel_opt[] = {
+  {"-disable", TT_EXPMODEL_OPT_DISABLE},
+  {"-enable", TT_EXPMODEL_OPT_ENABLE},
   {"-fmt", TT_EXPMODEL_OPT_FORMAT},
   {"-format", TT_EXPMODEL_OPT_FORMAT},
   {NULL, TT_EXPMODEL_OPT_UNKNOWN}
+};
+
+/**
+ * Model export item options.
+ */
+
+enum {
+  TT_EXPMODEL_ITEM_UNKNOWN = 0, 
+  TT_EXPMODEL_ITEM_WALLS = 1,  
+  TT_EXPMODEL_ITEM_CAVECENTERLINE = 2,  
+  TT_EXPMODEL_ITEM_SURFACECENTERLINE = 4,  
+  TT_EXPMODEL_ITEM_CENTERLINE = 6,  
+  TT_EXPMODEL_ITEM_SURFACE = 8,
+  TT_EXPMODEL_ITEM_ALL = 255,  
+};
+
+/**
+ * Options parsing table.
+ */
+ 
+static const thstok thtt_expmodel_items[] = {
+  {"all", TT_EXPMODEL_ITEM_ALL},
+  {"cave-centerline", TT_EXPMODEL_ITEM_CAVECENTERLINE},
+  {"cave-centreline", TT_EXPMODEL_ITEM_CAVECENTERLINE},
+  {"centerline", TT_EXPMODEL_ITEM_CENTERLINE},
+  {"centreline", TT_EXPMODEL_ITEM_CENTERLINE},
+  {"surface", TT_EXPMODEL_ITEM_SURFACE},
+  {"surface-centerline", TT_EXPMODEL_ITEM_SURFACECENTERLINE},
+  {"surface-centreline", TT_EXPMODEL_ITEM_SURFACECENTERLINE},
+  {"walls", TT_EXPMODEL_ITEM_WALLS},
+  {NULL, TT_EXPMODEL_ITEM_UNKNOWN}
 };
 
 
@@ -92,6 +127,7 @@ class thexpmodel : public thexport {
   public:
 
   int format;  ///< Output format.
+  unsigned items;
   
   void export_3d_file(class thdatabase * dbp);  ///< Export survex 3d file.
   

@@ -36,7 +36,7 @@ struct scraprecord {
   string name,F,B,I,E,X,G,C,P;      // name + files
   double S1,S2;                      // shift
   int layer,level,sect;             // Y, V, Z
-  float F1,F2,F3,F4,                // bounding boxes
+  double F1,F2,F3,F4,                // bounding boxes
         G1,G2,G3,G4,
         B1,B2,B3,B4,
         I1,I2,I3,I4,
@@ -71,12 +71,15 @@ struct layout {
         transparency,map_grid,OCG; 
   double hsize,vsize,overlap,
         hgrid,vgrid,hgridoffset,vgridoffset,nav_factor;
-  int nav_right,nav_up,own_pages,lang;
-  double hoffset, voffset,opacity;
+  int nav_right,nav_up,own_pages,lang,legend_columns;
+  double hoffset, voffset, opacity, legend_width;
   double background_r, background_g, background_b;
   double foreground_r, foreground_g, foreground_b;
   double preview_below_r, preview_below_g, preview_below_b;
   double preview_above_r, preview_above_g, preview_above_b;
+  
+  int surface;
+  double surface_opacity;
   
   layout();
 };
@@ -86,5 +89,13 @@ extern set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
 extern list<scraprecord> SCRAPLIST;
 extern list<legendrecord> LEGENDLIST;
 extern layout LAYOUT;
+
+
+struct surfpictrecord {
+  char * filename;
+  double dx, dy, xx, xy, yx, yy;
+};
+
+extern list<surfpictrecord> SURFPICTLIST;
 
 #endif

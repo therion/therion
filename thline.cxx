@@ -157,6 +157,10 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       this->parse_head(*args);
       break;
     
+    case TT_LINE_ADJUST:
+      this->parse_adjust(*args);
+      break;
+    
     case TT_LINE_ALTITUDE:
       this->parse_altitude(*args);
       break;
@@ -261,8 +265,17 @@ void thline::parse_type(char * ss)
     case TT_LINE_TYPE_WATER_FLOW:
       this->csubtype = TT_LINE_SUBTYPE_PERMANENT;  
       break;
+    case TT_LINE_TYPE_SURVEY:
+      this->csubtype = TT_LINE_SUBTYPE_CAVE;  
+      break;
     case TT_LINE_TYPE_ARROW:
       this->tags |= TT_LINE_TAG_HEAD_END;
+      break;
+    case TT_LINE_TYPE_CHIMNEY:
+      this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
+      break;
+    case TT_LINE_TYPE_CEILING_STEP:
+      this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
       break;
   }
 }
@@ -302,6 +315,13 @@ void thline::parse_subtype(char * ss)
         case TT_LINE_SUBTYPE_INVISIBLE:
         case TT_LINE_SUBTYPE_TEMPORARY:
         case TT_LINE_SUBTYPE_VISIBLE:
+          tsok = true;
+      }
+      break;
+    case TT_LINE_TYPE_SURVEY:
+      switch (this->csubtype) {
+        case TT_LINE_SUBTYPE_CAVE:
+        case TT_LINE_SUBTYPE_SURFACE:
           tsok = true;
       }
       break;
@@ -619,6 +639,8 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_UNSURVEYED, SYML_WALL_UNSURVEYED)
             thline_type_export_mp(TT_LINE_SUBTYPE_PRESUMED, SYML_WALL_PRESUMED)
           }
+          if (this->context >= 0) 
+            macroid = this->context;
           if (out->symset->assigned[macroid]) {
             if (out->file == NULL)
               return(true);
@@ -641,8 +663,12 @@ bool thline::export_mp(class thexpmapmpxs * out)
       }
       postprocess = false;  
       break;
+
     case TT_LINE_TYPE_LABEL:
-      if ((this->text == NULL) || (!out->symset->assigned[SYML_LABEL])) {
+      macroid = SYML_LABEL;
+      if (this->context >= 0) 
+        macroid = this->context;
+      if ((this->text == NULL) || (!out->symset->assigned[macroid])) {
         postprocess = false;
         break;
       } 
@@ -672,7 +698,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
       postprocess = false;
       break;
     case TT_LINE_TYPE_CONTOUR:
-      if (!out->symset->assigned[SYML_CONTOUR]) {
+      macroid = SYML_CONTOUR;
+      if (this->context >= 0) 
+        macroid = this->context;
+      if (!out->symset->assigned[macroid]) {
         postprocess = false;  
         break;
       }
@@ -700,7 +729,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
       postprocess = false;  
       break;
     case TT_LINE_TYPE_SLOPE:
-      if (!out->symset->assigned[SYML_SLOPE]) {
+      macroid = SYML_SLOPE;
+      if (this->context >= 0) 
+        macroid = this->context;
+      if (!out->symset->assigned[macroid]) {
         postprocess = false;  
         break;
       }
@@ -784,9 +816,11 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_BORDER, SYML_ROCKBORDER)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_EDGE, SYML_ROCKEDGE)
     thline_type_export_mp(TT_LINE_TYPE_GRADIENT, SYML_GRADIENT)
-    thline_type_export_mp(TT_LINE_TYPE_SURVEY, SYML_SURVEY)
     case TT_LINE_TYPE_ARROW:
-      if (!out->symset->assigned[SYML_ARROW]) {
+      macroid = SYML_ARROW;
+      if (this->context >= 0) 
+        macroid = this->context;
+      if (!out->symset->assigned[macroid]) {
         postprocess = false;  
         break;
       }
@@ -804,7 +838,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
       break;
 
     case TT_LINE_TYPE_SECTION:
-      if (!out->symset->assigned[SYML_SECTION]) {
+      macroid = SYML_SECTION;
+      if (this->context >= 0) 
+        macroid = this->context;
+      if (!out->symset->assigned[macroid]) {
         postprocess = false;  
         break;
       }
@@ -856,6 +893,8 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_TEMPORARY, SYML_BORDER_TEMPORARY)
             thline_type_export_mp(TT_LINE_SUBTYPE_INVISIBLE, SYML_BORDER_INVISIBLE)
           }
+          if (this->context >= 0) 
+            macroid = this->context;
           if (out->symset->assigned[macroid]) {
             if (out->file == NULL)
               return(true);
@@ -896,6 +935,39 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_INTERMITTENT, SYML_WATERFLOW_INTERMITTENT)
             thline_type_export_mp(TT_LINE_SUBTYPE_CONJECTURAL, SYML_WATERFLOW_CONJECTURAL)
           }
+          if (this->context >= 0) 
+            macroid = this->context;
+          if (out->symset->assigned[macroid]) {
+            if (out->file == NULL)
+              return(true);
+            fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+            this->export_path_mp(out,from,to);
+            fprintf(out->file,");\n");
+          }
+        }
+        from = to;
+      }
+      postprocess = false;  
+      break;    
+
+    case TT_LINE_TYPE_SURVEY:
+      from = 0;
+      to = 0;
+      lp = this->first_point;
+      while (lp != NULL) {
+        cs = lp->subtype;
+        todraw = (lp->nextlp != NULL);
+        while ((lp != NULL) && (lp->subtype == cs)) {
+          to++;
+          lp = lp->nextlp;
+        }
+        if (todraw) {
+          macroid = SYML_SURVEY_CAVE;
+          switch (cs) {
+            thline_type_export_mp(TT_LINE_SUBTYPE_SURFACE, SYML_SURVEY_SURFACE)
+          }
+          if (this->context >= 0) 
+            macroid = this->context;
           if (out->symset->assigned[macroid]) {
             if (out->file == NULL)
               return(true);
@@ -919,6 +991,8 @@ bool thline::export_mp(class thexpmapmpxs * out)
       this->export_path_mp(out);
       fprintf(out->file,");\n");
     } else {
+      if (this->context >= 0) 
+        macroid = this->context;
       if (out->symset->assigned[macroid]) {
         if (out->file == NULL)
           return(true);
@@ -1115,6 +1189,19 @@ void thline::parse_head(char * ss) {
       ththrow(("invalid head specification -- %s",ss))
       break;
   }
+}
+
+
+void thline::parse_adjust(char * ss) {
+  if (this->last_point != NULL)
+    this->last_point->adjust = thmatch_token(ss,thtt_line_adjusts);
+  else 
+    ththrow(("no line point specified"))
+  if (this->last_point->adjust == TT_LINE_ADJUST_UNKNOWN)
+    ththrow(("invalid adjust specification -- %s",ss))
+  if ((thdb.cscrapptr->proj->type == TT_2DPROJ_PLAN) && 
+      (this->last_point->adjust != TT_LINE_ADJUST_NONE)) 
+    ththrow(("adjustment and projection not compatible -- %s",ss))
 }
 
 

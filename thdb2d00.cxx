@@ -281,6 +281,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       if (((*obi)->get_class_id() == TT_MAP_CMD) &&
           (((thmap*)(*obi))->projection_id == prj->id) &&
           (((thmap*)(*obi))->is_basic) &&
+          (((thmap*)(*obi))->fsptr != NULL) &&
           (((thmap*)(*obi))->fsptr->is_selected())) {
         prj->stat.scanmap((thmap*)(*obi));  
         prj->stat.addstat(&(((thmap*)(*obi))->stat));
@@ -301,11 +302,48 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       }
       obi++;
     }
+
+    if ((selection == NULL) && (
+        (prj->type == TT_2DPROJ_PLAN) || 
+        (prj->type == TT_2DPROJ_ELEV))) {
+      // podme vytvorit jednu mapu a vlozit do nej
+      // vsetky surveye
+      thscrap * scrapp;
+      thmap * mapp;
+      thdb2dmi * xcitem;
+
+      scrapp = new thscrap;
+      scrapp->centerline_io = true;
+      scrapp->fsptr = NULL;
+      scrapp->db = &(thdb);
+      scrapp->proj = prj;
+      thdb.object_list.push_back(scrapp);
+
+      mapp = new thmap;
+      mapp->db = &(thdb);
+      mapp->fsptr = NULL;
+      thdb.object_list.push_back(mapp);
+
+      xcitem = thdb.db2d.insert_map_item();
+      xcitem->itm_level = mapp->last_level;
+      xcitem->source = thdb.csrc;
+      xcitem->psurvey = NULL;
+      xcitem->type = TT_MAPITEM_NORMAL;
+      xcitem->object = scrapp;
+      mapp->first_item = xcitem;
+      mapp->last_item = xcitem;
+      
+      cxm = this->insert_xm();
+      cxm->title = false;
+      cxm->expand = true;
+      cxm->map = mapp;
+      selection = cxm;
+    }
     
     
     if (nmaps > 1) {
       // zoradi mapy
-      new_selection = new (thdb2dxm*) [nmaps];
+      new_selection = new thdb2dxm* [nmaps];
       for (imap = 0, cxm = selection, nsi = new_selection; imap < nmaps; imap++, cxm = cxm->next_item, nsi++) {
         *nsi = cxm;
       }
@@ -329,6 +367,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       delete [] new_selection;
     }
   }
+  
   
 //  thdb2dxs cxs, cxs2, cxs3;
   unsigned long on = 0;
@@ -467,7 +506,7 @@ char * thdb2d::get_projection_title(thdb2dprj * prj) {
   
   // prescanuje vsetky objekty a surveyom priradi pocet scrapov, ktore
   // sa z nich exportovali
-  thdb_object_list_type::iterator obi = this->db->object_list.begin();
+  thdb_object_list_type::iterator obi = this->db->object_list.begin(), obi2;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
       ((thsurvey*)(*obi))->num1 = 0;
@@ -480,7 +519,20 @@ char * thdb2d::get_projection_title(thdb2dprj * prj) {
     if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
         (((thscrap*)(*obi))->proj->id == prj->id) && 
         (((thscrap*)(*obi))->exported)) {
-      ((thscrap*)(*obi))->fsptr->num1++;
+      if (((thscrap*)(*obi))->fsptr != NULL) {
+        ((thscrap*)(*obi))->fsptr->num1++;
+      } else if (((thscrap*)(*obi))->centerline_survey != NULL) {
+        ((thscrap*)(*obi))->centerline_survey->num1++;
+      } else {
+        // prejde vsetky oznacene a da im num1 = 1
+        obi2 = this->db->object_list.begin();
+        while (obi2 != this->db->object_list.end()) {
+          if (((*obi2)->get_class_id() == TT_SURVEY_CMD) && ((*obi2)->selected)) {
+            ((thsurvey*)(*obi2))->num1 = 1;
+          }
+          obi2++;
+        }
+      }
     }
     obi++;
   }

@@ -427,6 +427,29 @@ bind $xthmvw <2> {xth_mv_start_walk %x %y}
 bind $xthmvw <B2-Motion> {xth_mv_continue_walk %x %y}
 bind $xthmvw <B2-ButtonRelease> {xth_mv_continue_walk %x %y}
 
+case $xth(gui,platform) {
+  unix {
+    bind $xthmvw <4> {
+      set xthmvv(cam,profile) [expr $xthmvv(cam,profile) - 10.0]
+      xth_mv_update
+    }
+    bind $xthmvw <5> {
+      set xthmvv(cam,profile) [expr $xthmvv(cam,profile) + 10.0]
+      xth_mv_update
+    }
+  }
+  windows {
+    bind $xth(gui,main) <MouseWheel> {
+      switch $xth(app,active) {
+        mv {
+          set xthmvv(cam,profile) [expr $xthmvv(cam,profile) - double(%D)/12.0]
+          xth_mv_update
+        }
+      }
+    }
+  }
+}
+
 $f.pscale configure -command xth_mv_change_profile
 
 xth_mv_init

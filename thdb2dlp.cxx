@@ -49,6 +49,7 @@ thdb2dlp::thdb2dlp () {
   this->rsize = thnan;
   this->lsize = thnan;
   this->tags = TT_LINEPT_TAG_NONE;
+  this->adjust = TT_LINE_ADJUST_NONE;
 }
 
 void thdb2dlp::export_prevcp_mp(class thexpmapmpxs * out) {

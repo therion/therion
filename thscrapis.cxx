@@ -717,7 +717,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
   if (numpts > 2) {
 
     thcdtpoly.clear();
-    this->tri_opts = new (thscrapisolpt *) [numpts];
+    this->tri_opts = new thscrapisolpt* [numpts];
     oline = this->firstolseg;
     numpts = 0;
     while (oline != NULL) {    

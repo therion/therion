@@ -730,6 +730,92 @@ void thparse_altitude(char * src, double & altv, double & fixv)
   }
 }
 
+void thparse_image(char * fname, double & width, double & height, double & dpi)
+{
+
+  FILE * pictf = fopen(fname, "r");
+#define picths 2048
+  size_t phsize;
+  double xdpi, ydpi;
+  unsigned char picth [picths], * scan;
+  size_t sx;
+  width = 0.0;
+  height = 0.0;
+  dpi = 300.0;
+  if (pictf != NULL) {
+    phsize = fread(&(picth[0]), 1, picths, pictf);
+    fclose(pictf);
+    // najde si format a vytiahne informacie
+    if ((picth[0] == 0xFF) && (picth[1] == 0xD8) &&
+        (picth[2] == 0xFF) && (picth[3] == 0xE0)) {
+      // JPEG
+      xdpi = 300.0;
+      ydpi = 300.0;
+      switch (picth[13]) {
+        case 1:
+          xdpi = round(double(picth[14] * 256.0 + picth[15]));
+          ydpi = round(double(picth[16] * 256.0 + picth[17]));
+          break;
+        case 2:
+          xdpi = round(double(picth[14] * 256 + picth[15]) * 2.54);
+          ydpi = round(double(picth[16] * 256 + picth[17]) * 2.54);
+          break;
+      }
+      if (xdpi != ydpi) {
+        ththrow(("X and Y image resolution not equal -- %s", fname));
+      }
+      dpi = xdpi;
+      if (dpi < 1.0) {
+        dpi = 300.0;
+      }      
+      for(sx = 0, scan = &(picth[0]); sx < (phsize - 10); sx++, scan++) {
+        if ((scan[0] == 0xFF) && ((scan[1] == 0xC0) || (scan[1] == 0xC1))) {
+          height = round(double(scan[5] * 256.0 + scan[6]));
+          width = round(double(scan[7] * 256.0 + scan[8]));
+          break;
+        }
+      }
+    } else if (
+      (picth[0] == 0x89) && (picth[1] == 0x50) &&
+      (picth[2] == 0x4E) && (picth[3] == 0x47) &&
+      (picth[4] == 0x0D) && (picth[5] == 0x0A) &&
+      (picth[6] == 0x1A) && (picth[7] == 0x0A)) {
+      // PNG
+      // najde pHYs za nim 4(x), 4(y), 1(units) = 01-meters, 00-unspec
+      for(sx = 0, scan = &(picth[0]); sx < (phsize - 12); sx++, scan++) {
+        if (strncmp((char *) scan,"pHYs",4) == 0) {
+          xdpi = double(scan[4] * 0x1000000 + scan[5] * 0x10000 + scan[6] * 0x100 + scan[7]);
+          ydpi = double(scan[8] * 0x1000000 + scan[9] * 0x10000 + scan[10] * 0x100 + scan[11]);
+          if (xdpi != ydpi) {
+            ththrow(("X and Y image resolution not equal -- %s", fname));
+          }
+          switch (scan[12]) {
+            case 1:
+              xdpi = round(xdpi * 0.0254);
+              break;
+            default:
+              xdpi = 300.0;
+              break;
+          }
+          dpi = xdpi;
+          break;
+        }
+      }      
+      width = round(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
+      height = round(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
+    } else {
+      ththrow(("file format not supported -- %s", fname))
+    }
+  } else {
+    ththrow(("file not found -- %s", fname))
+  }
+
+#ifdef THDEBUG
+  thprintf("\nIMAGE FILE:%s\n", fname);
+  thprintf(  "       DPI:%.0f\n", dpi);
+  thprintf(  "      SIZE:%.0f x %.0f\n\n", width, height);
+#endif
+}
 
 
 

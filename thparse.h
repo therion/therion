@@ -317,6 +317,11 @@ void thdecode_arg(thbuffer * dest, const char * src);
 void thparse_altitude(char * src, double & altv, double & fixv);
 
 
+/**
+ * Check image.
+ */
+
+void thparse_image(char * fname, double & width, double & height, double & dpi);
 
 #endif
 

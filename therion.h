@@ -79,8 +79,38 @@
   thtext_inline = false;\
 }
 
+
+
 /**
- * Rewarning macro.
+ * Rewarning macro
+ */
+
+#ifdef THDEBUG
+#define threwarning(P) {\
+  if (*(thexc.get_buffer()) == 0)\
+    thexc.strcpy("unknown exception");\
+  thexc.insspf(" -- ");\
+  thexc.insspf P;\
+  thexc.insspf("("__FILE__":%d): ", __LINE__);\
+  thwarning((thexc.get_desc()));\
+  thexc.strcpy("");\
+  }
+#else
+#define threwarning(P) {\
+  if (*(thexc.get_buffer()) == 0)\
+    thexc.strcpy("unknown exception");\
+  thexc.insspf(" -- ");\
+  thexc.insspf P;\
+  thwarning((thexc.get_desc()));\
+  thexc.strcpy("");\
+  }
+#endif
+
+
+
+
+/**
+ * Rewarning macro 2.
  */
 
 #ifdef THDEBUG

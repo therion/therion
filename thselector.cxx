@@ -288,7 +288,7 @@ void thselector__prepare_map_tree_export (thdatabase * db) {
   thdb2dmi * mi;
   obi = db->object_list.begin();
   while (obi != db->object_list.end()) {
-    if ((*obi)->get_class_id() == TT_MAP_CMD) {
+    if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_MAP_CMD)) {
       mi = ((thmap*)(*obi))->first_item;
       while (mi != NULL) {
         if (mi->type == TT_MAPITEM_NORMAL) {
@@ -305,6 +305,8 @@ void thselector__prepare_map_tree_export (thdatabase * db) {
 void thselector__export_map_tree_node (FILE * cf, unsigned long level, unsigned long pass, thdataobject * optr, thmap * fmap) {
   if (optr->tmp_ulong == pass)
     return;
+  if (optr->fsptr == NULL)
+    return;
   optr->tmp_ulong = pass;
   thmap * mptr = NULL;
   int subtype = 0;
@@ -316,19 +318,21 @@ void thselector__export_map_tree_node (FILE * cf, unsigned long level, unsigned 
       if (mptr->is_basic)
         subtype = 1;
       break;
-    case TT_SCRAP_CMD:
+    default:
+      //case TT_SCRAP_CMD:
       //types = "scrap";
       //do not export scraps
       return;
       break;
-    default:
-      break;
+    //default:
+    //  break;
   }
-  fprintf(cf,"xth_cp_map_tree_insert %s %d %lu",types,subtype,optr->id);
+  ((thmap*)optr)->nz++;
+  fprintf(cf,"xth_cp_map_tree_insert %s %d %luX%lu",types,subtype,optr->id,((thmap*)optr)->nz);
   if (fmap == NULL)
     fprintf(cf," p%d %lu",((thmap*)optr)->projection_id,level);
   else
-    fprintf(cf," %lu %lu",fmap->id,level);
+    fprintf(cf," %luX%lu %lu",fmap->id,fmap->nz,level);
 
   fprintf(cf," %s %s@%s",optr->get_name(),optr->get_name(),optr->fsptr->full_name);
   if (strlen(optr->get_title()) > 0) {
@@ -378,10 +382,15 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
   // exportuje vsetky mapy a scrapy
   thselector__prepare_map_tree_export(db);
   thdb_object_list_type::iterator obi = db->object_list.begin();
-  bool expobj;
   while (obi != db->object_list.end()) {
-    expobj = false;
-    if (((*obi)->get_class_id() == TT_MAP_CMD) && (((thmap*)(*obi))->tmp_bool))
+    if ((*obi)->get_class_id() == TT_MAP_CMD)
+      ((thmap*)(*obi))->nz = 0;
+    obi++;
+  }
+
+  obi = db->object_list.begin();
+  while (obi != db->object_list.end()) {
+    if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_MAP_CMD) && (((thmap*)(*obi))->tmp_bool))
       thselector__export_map_tree_node(cf,1,(*obi)->id,(*obi),NULL);
     obi++;
   }

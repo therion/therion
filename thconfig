@@ -1,12 +1,10 @@
 encoding  utf-8
-source tests/velka_ch.th
-export model -fmt vrml
-export model -fmt 3dmf
-
-layout ll
-  code tex-map
-  \legendwidth=8cm
-  map-header 100 100 ne
-endlayout
-
-export map -layout ll
+#source tests/velka_ch.th
+source tests/map_plan.th
+#select xhmap@tp
+#export map -proj elevation:0 -layout-scale 1 200
+export model -fmt survex
+export map -layout-surface top \
+  -layout-symbol-hide group all \
+  -layout-symbol-show group centerline \
+  -layout-color map-fg 0

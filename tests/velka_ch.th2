@@ -3,7 +3,23 @@ encoding  utf-8
 ##XTHERION## xth_me_area_zoom_to 200
 ##XTHERION## xth_me_image_insert {0 1 1.0} 1200 img/velka.gif 0 {}
 
+
+
 scrap velka_scr -scale [-128 688 1014 688 0.0 0.0 29.0068 0.0 m]
+
+line rock-border
+  630.0 903.0
+  644.0 899.5
+  631.0 878.5
+  644.0 899.5
+  650.5 908.0
+  649.5 922.5
+  650.5 908.0
+  663.5 909.0
+  674.5 910.5
+  663.5 909.0
+  669.0 902.0
+endline
 
 line wall -close on -outline in
   770.0 993.0
@@ -159,11 +175,13 @@ endline
 line wall -id dc1
   482.5 1065.0
   464.5 1065.5 458.5 1073.5 466.0 1087.0
+  smooth off
 endline
 
 line wall -id dc6
   625.0 1071.0
   663.0 1077.5 687.5 1096.0 691.5 1129.0
+  smooth off
 endline
 
 line wall -subtype invisible

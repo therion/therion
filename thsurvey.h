@@ -266,6 +266,7 @@ class thsurvey : public thdataobject {
    
   thdataobject * get_last_survey_object() {return this->loptr;}
   
+  
 };
 
 
