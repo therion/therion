@@ -125,6 +125,7 @@ class thdb1ds {
   
   unsigned char flags,  ///< Station flags.
     mark;  ///< Mark type.
+  bool mark_station;
   
   bool adjusted, placed;
   double sdx, sdy, sdz;
@@ -147,7 +148,7 @@ class thdb1ds {
     comment(NULL), survey(ps), 
     data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE), 
-    mark(TT_DATAMARK_TEMP),
+    mark(TT_DATAMARK_TEMP), mark_station(false), 
     adjusted(false), placed(false), sdx(0.0), sdy(0.0), sdz(0.0) {}
     
   
@@ -223,7 +224,7 @@ class thdb1d {
   
   thdb1d_tree_node  * tree_nodes;
   
-  thdb3ddata d3_data, d3_surface;
+  thdb3ddata d3_data, d3_surface, d3_walls;
   
   bool d3_data_parsed;
   
@@ -346,6 +347,7 @@ class thdb1d {
   
   thdb3ddata * get_3d();
   thdb3ddata * get_3d_surface();
+  thdb3ddata * get_3d_walls();
     
 };
 

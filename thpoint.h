@@ -175,6 +175,7 @@ enum {
   TT_POINT_TYPE_BLOCKS,
   TT_POINT_TYPE_WATER,
   TT_POINT_TYPE_ICE,
+  TT_POINT_TYPE_SNOW,
   TT_POINT_TYPE_GUANO,
 
 // ina vypln
@@ -245,6 +246,7 @@ static const thstok thtt_point_types[] = {
   {"scallop",TT_POINT_TYPE_SCALLOP},
   {"section",TT_POINT_TYPE_SECTION},
   {"sink",TT_POINT_TYPE_SINK},
+  {"snow",TT_POINT_TYPE_SNOW},
   {"soda-straw",TT_POINT_TYPE_SODA_STRAW},
   {"spring",TT_POINT_TYPE_SPRING},
   {"stalactite",TT_POINT_TYPE_STALACTITE},

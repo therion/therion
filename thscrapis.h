@@ -33,9 +33,6 @@
 #include <list>
 #include "thdb3d.h"
 #define THSCRAPISRES 0.001
-#define THSCRAPISSMP 1.0
-#define THSCRAPISWALLSMP 1.0
-#define THSCRAPISMAXDIMD 5.0
 
 struct thscrapisloc {
   double x, y;

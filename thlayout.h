@@ -84,6 +84,8 @@ enum {
   TT_LAYOUT_SURFACE = 2041,
   TT_LAYOUT_SURFACE_OPACITY = 2042,
   TT_LAYOUT_ROTATE = 2043,
+  TT_LAYOUT_ENDCODE = 2044,
+  TT_LAYOUT_COLOR_LEGEND = 2045,
 };
 
 
@@ -93,9 +95,9 @@ enum {
 
 enum {
   TT_LAYOUT_GRID_UNKNOWN = 0,
-  TT_LAYOUT_GRID_NONE,
-  TT_LAYOUT_GRID_CROSS,
-  TT_LAYOUT_GRID_LINE,
+  TT_LAYOUT_GRID_OFF,
+  TT_LAYOUT_GRID_TOP,
+  TT_LAYOUT_GRID_BOTTOM,
 };
 
 
@@ -104,11 +106,9 @@ enum {
  */
  
 static const thstok thtt_layout_grid[] = {
-  {"cross", TT_LAYOUT_GRID_CROSS},
-  {"line", TT_LAYOUT_GRID_LINE},
-  {"none", TT_LAYOUT_GRID_NONE},
-  {"off", TT_LAYOUT_GRID_NONE},
-  {"on", TT_LAYOUT_GRID_LINE},
+  {"bottom", TT_LAYOUT_GRID_BOTTOM},
+  {"off", TT_LAYOUT_GRID_OFF},
+  {"top", TT_LAYOUT_GRID_TOP},
   {NULL, TT_LAYOUT_GRID_UNKNOWN}
 };
 
@@ -300,6 +300,47 @@ static const thstok thtt_layout_color[] = {
 };
 
 
+/**
+ * Layout color criterion tokens.
+ */
+
+enum {
+  TT_LAYOUT_CCRIT_UNKNOWN = 0,
+  TT_LAYOUT_CCRIT_ALTITUDE,
+  TT_LAYOUT_CCRIT_TOPODATE,
+  TT_LAYOUT_CCRIT_EXPLODATE,
+  TT_LAYOUT_CCRIT_MAP,
+};
+
+static const thstok thtt_layout_ccrit[] = {
+  {"altitude", TT_LAYOUT_CCRIT_ALTITUDE},
+//  {"topo-date", TT_LAYOUT_CCRIT_TOPODATE},
+//  {"explo-date", TT_LAYOUT_CCRIT_EXPLODATE},
+  {"map", TT_LAYOUT_CCRIT_MAP},
+  {NULL, TT_LAYOUT_CCRIT_UNKNOWN}
+};
+
+
+/**
+ * Layout color tables.
+ */
+
+enum {
+  TT_LAYOUT_CTABLE_UNKNOWN = 0,
+  TT_LAYOUT_CTABLE_HSV,
+};
+
+static const thstok thtt_layout_ctable[] = {
+  {"hsv", TT_LAYOUT_CTABLE_HSV},
+  {NULL, TT_LAYOUT_CTABLE_UNKNOWN}
+};
+
+enum {
+  TT_LAYOUT_CMODE_AUTO,
+  TT_LAYOUT_CMODE_TABLE,
+  TT_LAYOUT_CMODE_MANUAL,
+};
+
 
 
 class thlayout_copy_src {
@@ -322,13 +363,16 @@ static const thstok thtt_layout_opt[] = {
   {"base-scale",TT_LAYOUT_BASE_SCALE},
   {"code",TT_LAYOUT_CODE},
   {"color",TT_LAYOUT_COLOR},
+  {"color-legend",TT_LAYOUT_COLOR_LEGEND},
   {"colour",TT_LAYOUT_COLOR},
+  {"colour-legend",TT_LAYOUT_COLOR_LEGEND},
   {"copy",TT_LAYOUT_COPY},
   {"debug",TT_LAYOUT_DEBUG},
   {"doc-author",TT_LAYOUT_DOC_AUTHOR},
   {"doc-keywords",TT_LAYOUT_DOC_KEYWORDS},
   {"doc-subject",TT_LAYOUT_DOC_SUBJECT},
   {"doc-title",TT_LAYOUT_DOC_TITLE},
+  {"endcode",TT_LAYOUT_ENDCODE},
   {"exclude-pages",TT_LAYOUT_EXCLUDE_PAGES},
   {"grid",TT_LAYOUT_GRID},
   {"grid-origin",TT_LAYOUT_GRID_ORIGIN},
@@ -380,6 +424,20 @@ struct thlayout_color {
 
 
 /**
+ * layout color value class
+ */
+
+struct thlayout_color_value {
+  thlayout_color color;
+  double vdbl;
+  thdate vdate;
+  char * vname;
+};
+
+typedef std::list<thlayout_color_value> thlayout_ct;
+
+
+/**
  * layout class.
  */
 
@@ -387,7 +445,7 @@ class thlayout : public thdataobject {
 
   public:
     
-  double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gox, goy, goz, navf, overlap, opacity,
+  double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gzs, gox, goy, goz, navf, overlap, opacity,
     map_header_x, map_header_y, legend_width, surface_opacity, rotate;
   
   char * olx, * oly, 
@@ -397,10 +455,14 @@ class thlayout : public thdataobject {
   
   char grid, ccode;
   
-  int legend, map_header, lang, max_explos, max_topos, max_cartos, max_copys,
+  int legend, color_legend, map_header, lang, max_explos, max_topos, max_cartos, max_copys,
     debug, surface;
   
   thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
+  int color_crit, // none, altitude, ...
+   color_mode, // auto - values and colors, table - colors, manual
+   color_table; // hsv, cool, hot ...
+  thlayout_ct color_values; // color table
   
   thlayoutln * first_line, * last_line;
   
@@ -414,7 +476,7 @@ class thlayout : public thdataobject {
     def_page_numbers, def_page_setup, def_scale, def_size, def_title_pages,
     def_tex_lines, def_doc_title, def_doc_comment, def_doc_author, def_doc_subject,
     def_doc_keywords, def_excl_pages, def_grid, def_page_grid,
-    def_legend, def_legend_width, def_legend_columns, 
+    def_legend, def_color_legend, def_legend_width, def_legend_columns, 
     def_map_header, def_lang, def_scale_bar, 
     redef_base_scale, def_max_explos, def_max_topos, def_max_cartos,
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_surface,

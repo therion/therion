@@ -2,8 +2,10 @@
 
 [Special symbols]
 
+hgrid: SM 
 northarrow: SKBB 
-scalebar: SKBB STACHO 
+scalebar: SKBB SM 
+vgrid: SM 
 
 [Point symbols]
 
@@ -18,7 +20,7 @@ breakdownchoke: CCNP
 bridge: SKBB 
 camp: SKBB 
 cavepearl: SKBB 
-clay: UIS 
+clay: SKBB 
 continuation: UIS 
 crystal: UIS 
 curtain: UIS 
@@ -54,6 +56,7 @@ ropeladder: SKBB
 sand: UIS 
 scallop: UIS 
 sink: SKBB 
+snow: SKBB 
 sodastraw: UIS 
 spring: SKBB 
 stalactite: UIS 
@@ -74,11 +77,14 @@ waterflow_permanent: UIS
 [Line symbols]
 
 arrow: SKBB 
+border_presumed: SKBB 
 border_temporary: SKBB 
 border_visible: SKBB 
+ceilingmeander: SM 
 ceilingstep: SKBB 
 chimney: UIS 
 contour: SKBB UIS 
+floormeander: SM 
 floorstep: UIS 
 flowstone: UIS 
 gradient: UIS 
@@ -107,7 +113,12 @@ waterflow_permanent: UIS
 
 [Area symbols]
 
+blocks: SKBB 
+clay: SKBB 
 debris: SKBB UIS 
+ice: SKBB 
+pebbles: SKBB 
 sand: UIS 
+snow: SKBB 
 sump: UIS 
 water: UIS 

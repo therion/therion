@@ -335,6 +335,7 @@ proc xth_te_show_file {fidx} {
     $xth(te,menu,file) entryconfigure "Save" -state normal
     $xth(te,menu,file) entryconfigure "Save as" -state normal
     $xth(te,menu,file) entryconfigure "Save all" -state normal
+    $xth(te,menu,file) entryconfigure "Auto save" -state normal
     $xth(te,menu,file) entryconfigure "Close" -state normal
     $xth(ctrl,te,sr).seal configure -state normal
     $xth(ctrl,te,sr).seae configure -state normal
@@ -361,6 +362,7 @@ proc xth_te_show_file {fidx} {
     $xth(te,menu,file) entryconfigure "Save" -state disabled
     $xth(te,menu,file) entryconfigure "Save as" -state disabled
     $xth(te,menu,file) entryconfigure "Save all" -state disabled
+    $xth(te,menu,file) entryconfigure "Auto save" -state disabled
     $xth(te,menu,file) entryconfigure "Close" -state disabled
     $xth(te,menu,file) entryconfigure "Next" -state disabled
     $xth(te,menu,file) entryconfigure "Previous" -state disabled
@@ -431,9 +433,11 @@ proc xth_te_create_file {} {
   # create file variables
   incr xth(te,fltid)
   set cfid $xth(te,fltid)
-  set xth(te,$cfid,name) [format "noname%02d$xth(app,te,fileext)" $cfid]
+  #set xth(te,$cfid,name) [format "noname%d$xth(app,te,fileext)" $cfid]
+  set xth(te,$cfid,name) [format "(new file)" $cfid]
   set xth(te,$cfid,path) [file join $xth(gui,initdir) $xth(te,$cfid,name)]
   set xth(te,$cfid,newf) 1
+  set xth(te,$cfid,mtime) 0
   set xth(te,$cfid,encoding) $xth(app,fencoding)
   set xth(te,$cfid,frame) $xth(gui,te).af.apps.ff.file$cfid
   set cfr $xth(te,$cfid,frame)
@@ -463,36 +467,36 @@ proc xth_te_create_file {} {
   bind $cfr.txt <<xthPositionChange>> "xth_te_update_position $cfr.txt"
   bind $cfr.txt <Key> "+ $iac {event generate $cfr.txt <<xthPositionChange>> -when tail}"
   bind $cfr.txt <Button-1> "+ $iac {event generate $cfr.txt <<xthPositionChange>> -when tail}"
-  bind $cfr.txt <Control-Key-1> "$iac {xth_te_show_file 0}"
-  bind $cfr.txt <Control-Key-2> "$iac {xth_te_show_file 1}"
-  bind $cfr.txt <Control-Key-3> "$iac {xth_te_show_file 2}"
-  bind $cfr.txt <Control-Key-4> "$iac {xth_te_show_file 3}"
-  bind $cfr.txt <Control-Key-5> "$iac {xth_te_show_file 4}"
-  bind $cfr.txt <Control-Key-6> "$iac {xth_te_show_file 5}"
-  bind $cfr.txt <Control-Key-7> "$iac {xth_te_show_file 6}"
-  bind $cfr.txt <Control-Key-8> "$iac {xth_te_show_file 7}"
-  bind $cfr.txt <Control-Key-9> "$iac {xth_te_show_file 8}"
-  bind $cfr.txt <Control-Key-0> "$iac {xth_te_show_file 9}"
-  bind $cfr.txt <Control-Key-n> "$iac {xth_te_switch_file 1}"
-  bind $cfr.txt <Control-Key-p> "$iac {xth_te_switch_file -1}"
-  bind $cfr.txt <Control-Key-w> "$iac {xth_te_close_file}"
-  bind $cfr.txt <Control-Key-a> "$iac {xth_te_select_all}"
-  bind $cfr.txt <Control-Key-i> "$iac {xth_te_auto_indent}"
-  bind $cfr.txt <Control-Key-s> "$iac {xth_te_save_file 0 $cfid}"
+  bind $cfr.txt <$xth(kb_control)-Key-1> "$iac {xth_te_show_file 0}"
+  bind $cfr.txt <$xth(kb_control)-Key-2> "$iac {xth_te_show_file 1}"
+  bind $cfr.txt <$xth(kb_control)-Key-3> "$iac {xth_te_show_file 2}"
+  bind $cfr.txt <$xth(kb_control)-Key-4> "$iac {xth_te_show_file 3}"
+  bind $cfr.txt <$xth(kb_control)-Key-5> "$iac {xth_te_show_file 4}"
+  bind $cfr.txt <$xth(kb_control)-Key-6> "$iac {xth_te_show_file 5}"
+  bind $cfr.txt <$xth(kb_control)-Key-7> "$iac {xth_te_show_file 6}"
+  bind $cfr.txt <$xth(kb_control)-Key-8> "$iac {xth_te_show_file 7}"
+  bind $cfr.txt <$xth(kb_control)-Key-9> "$iac {xth_te_show_file 8}"
+  bind $cfr.txt <$xth(kb_control)-Key-0> "$iac {xth_te_show_file 9}"
+  bind $cfr.txt <$xth(kb_control)-Key-n> "$iac {xth_te_switch_file 1}"
+  bind $cfr.txt <$xth(kb_control)-Key-p> "$iac {xth_te_switch_file -1}"
+  bind $cfr.txt <$xth(kb_control)-Key-w> "$iac {xth_te_close_file}"
+  bind $cfr.txt <$xth(kb_control)-Key-a> "$iac {xth_te_select_all}"
+  bind $cfr.txt <$xth(kb_control)-Key-i> "$iac {xth_te_auto_indent}"
+  bind $cfr.txt <$xth(kb_control)-Key-s> "$iac {xth_te_save_file 0 $cfid}"
   bind $cfr.txt <Destroy> "xth_te_before_close_file $cfid yesno"  
 #  if {$xth(gui,bindclip) == 1} {
-    bind $cfr.txt <Control-Key-x> "$iac {tk_textCut $cfr.txt}"
-    bind $cfr.txt <Control-Key-c> "$iac {tk_textCopy $cfr.txt}"
-    bind $cfr.txt <Control-Key-v> "$iac {tk_textPaste $cfr.txt}"
-    bind $cfr.txt <Control-Key-z> "$iac {catch {$cfr.txt edit undo}}"
-    bind $cfr.txt <Control-Key-y> "$iac {catch {$cfr.txt edit redo}}"
+    bind $cfr.txt <$xth(kb_control)-Key-x> "$iac {tk_textCut $cfr.txt}"
+    bind $cfr.txt <$xth(kb_control)-Key-c> "$iac {tk_textCopy $cfr.txt}"
+    bind $cfr.txt <$xth(kb_control)-Key-v> "$iac {tk_textPaste $cfr.txt}"
+    bind $cfr.txt <$xth(kb_control)-Key-z> "$iac {catch {$cfr.txt edit undo}}"
+    bind $cfr.txt <$xth(kb_control)-Key-y> "$iac {catch {$cfr.txt edit redo}}"
   if {$xth(gui,bindinsdel)} {
     bind $cfr.txt <Shift-Key-Delete> "$iac {tk_textCut $cfr.txt}"
-    bind $cfr.txt <Control-Key-Insert> "$iac {tk_textCopy $cfr.txt}"
+    bind $cfr.txt <$xth(kb_control)-Key-Insert> "$iac {tk_textCopy $cfr.txt}"
     bind $cfr.txt <Shift-Key-Insert> "$iac {tk_textPaste $cfr.txt}"
 #    catch {
 #      bind $cfr.txt <Shift-Key-KP_Decimal> "$iac {tk_textCut $cfr.txt}"
-#      bind $cfr.txt <Control-Key-KP_Insert> "$iac {tk_textCopy $cfr.txt}"
+#      bind $cfr.txt <$xth(kb_control)-Key-KP_Insert> "$iac {tk_textCopy $cfr.txt}"
 #      bind $cfr.txt <Shift-Key-KP_0> "$iac {tk_textPaste $cfr.txt}"
 #    }
   }
@@ -677,6 +681,7 @@ proc xth_te_open_file {dialogid fname fline} {
   set xth(te,$cfid,name) [lindex $fdata 1]
   set xth(te,$cfid,path) $fname
   set xth(te,$cfid,newf) 0
+  set xth(te,$cfid,mtime) [file mtime $fname]
   set xth(te,$cfid,encoding) [lindex $fdata 2]
   $xth(ctrl,te,files).ef.cel configure -text [lindex $fdata 2]
   regsub -all {\s*$} [lindex $fdata 3] "" ftext
@@ -778,6 +783,17 @@ proc xth_te_save_file {dialogid cfid} {
       -defaultextension $xth(app,te,fileext)]
   }
   
+  if {($xth(te,$cfid,mtime) > 0) && [file exists $fname] && \
+    ([file mtime $fname] > $xth(te,$cfid,mtime))} {
+    set forcesave [MessageDlg $xth(gui,message) -parent $xth(gui,main) \
+      -icon warning -type yesno -default 1 \
+      -message "File $fname was modified outside xtherion. Save it anyway?" \
+      -font $xth(gui,lfont)]
+    if {$forcesave != 0} {
+      return 0
+    }
+  }
+  
   if {[string length $fname] == 0} {
     return 0
   } else {
@@ -793,9 +809,10 @@ proc xth_te_save_file {dialogid cfid} {
         -message [lindex $fdata 1] \
         -font $xth(gui,lfont)
       xth_status_bar_pop te
-      return
+      return 0
   }
   
+  set xth(te,$cfid,mtime) [file mtime $fname]
   set xth(te,$cfid,otext) $ftext
   set xth(te,$cfid,newf) 0
   
@@ -866,6 +883,9 @@ $xth(te,menu,file) add command -label "Save as" -underline 5 \
   }
 $xth(te,menu,file) add command -label "Save all" -underline 6 \
   -font $xth(gui,lfont) -state disabled -command xth_te_save_all
+$xth(te,menu,file) add checkbutton -label "Auto save" -underline 1 \
+  -variable xth(gui,auto_save) -font $xth(gui,lfont) \
+  -state disabled -command xth_app_autosave_schedule
 $xth(te,menu,file) add command -state disabled -label "Close" -underline 0 \
   -accelerator "$xth(gui,controlk)-w" \
   -font $xth(gui,lfont) \

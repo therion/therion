@@ -38,6 +38,7 @@ using namespace std;
 
 list<scraprecord> SCRAPLIST;
 list<legendrecord> LEGENDLIST;
+list<colorlegendrecord> COLORLEGENDLIST;
 map<int,layerrecord> LAYERHASH;
 set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
 layout LAYOUT;
@@ -53,6 +54,7 @@ scraprecord::scraprecord() {
   I1=0.0; I2=0.0; I3=0.0; I4=0.0; 
   E1=0.0; E2=0.0; E3=0.0; E4=0.0; 
   X1=0.0; X2=0.0; X3=0.0; X4=0.0; 
+  r=-1; g=-1; b=-1;
 }
 
 layerrecord::layerrecord() {
@@ -97,4 +99,11 @@ layout::layout() {
   legend_columns = 2;
   surface = 0;
   surface_opacity = 0.7;
+  hgridorigin = 0;
+  vgridorigin = 0;
+}
+
+paired::paired() {
+  x = 0;
+  y = 0;
 }

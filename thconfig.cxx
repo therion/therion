@@ -41,12 +41,13 @@
 #endif
 
 
-enum {TT_UNKNOWN_CFG, TT_SOURCE, TT_SELECT, TT_UNSELECT, TT_EXPORT};
+enum {TT_UNKNOWN_CFG, TT_SOURCE, TT_SELECT, TT_UNSELECT, TT_EXPORT, TT_SETUP3D};
 
 
 static const thstok thtt_cfg[] = {
   {"export", TT_EXPORT},
   {"select", TT_SELECT},
+  {"setup3d", TT_SETUP3D},
   {"source", TT_SOURCE},
   {"unselect", TT_UNSELECT},
   {NULL, TT_UNKNOWN_CFG}
@@ -64,6 +65,10 @@ thconfig::thconfig()
   this->install_path.strcpy("");
   this->install_tex = false;
   this->install_tcltk = false;
+
+  this->tmp3dSMP = 1.0;
+  this->tmp3dWALLSMP = 1.0;
+  this->tmp3dMAXDIMD = 5.0;
 
 #ifdef THWIN32
   thbuffer * tmpbf = &(this->bf1);
@@ -212,6 +217,7 @@ thconfig::~thconfig()
 void thconfig::set_file_name(char * fn)
 {
   this->fname = fn;
+  this->cfg_file.report_missing = true;
 }
 
    
@@ -300,6 +306,7 @@ void thconfig__pifo(char * s) {
 void thconfig::load() 
 {
   thmbuffer valuemb;
+  int sv;
   bool fstarted  = false;
   if ((this->fstate == THCFG_UPDATE) || (this->fstate == THCFG_READ)) {
     this->cfg_file.cmd_sensitivity_on();
@@ -318,6 +325,26 @@ void thconfig::load()
             if (valuemb.get_size() != 1)
               ththrow(("one file name expected"))            
             this->src_fnames.append(valuemb.get_buffer()[0]);
+            break;
+            
+            
+          case TT_SETUP3D:
+            if (valuemb.get_size() > 0) {
+              thparse_double(sv, this->tmp3dSMP, valuemb.get_buffer()[0]);
+              if ((sv != TT_SV_NUMBER) || (this->tmp3dSMP <= 0.0))
+                ththrow(("invalid number -- %s", valuemb.get_buffer()[0]))
+              this->tmp3dWALLSMP = this->tmp3dSMP;
+            }
+            if (valuemb.get_size() > 1) {
+              thparse_double(sv, this->tmp3dWALLSMP, valuemb.get_buffer()[1]);
+              if ((sv != TT_SV_NUMBER) || (this->tmp3dWALLSMP <= 0.0))
+                ththrow(("invalid number -- %s", valuemb.get_buffer()[1]))
+            }
+            if (valuemb.get_size() > 2) {
+              thparse_double(sv, this->tmp3dMAXDIMD, valuemb.get_buffer()[2]);
+              if ((sv != TT_SV_NUMBER) || (this->tmp3dMAXDIMD <= 0.0))
+                ththrow(("invalid number -- %s", valuemb.get_buffer()[2]))
+            }
             break;
   
           case TT_SELECT:

@@ -58,7 +58,7 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
   char * ln, * endlnopt = NULL, * opt, ** opts;
   int ai, ait, ant;
   
-
+  this->inp.report_missing = true;
   this->inp.set_file_name(ifname);
   this->inp.cmd_sensitivity_on();
   this->inp.set_search_path(spath);
@@ -122,10 +122,20 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
       }
       else {
         
+        
+        // first, let's parse arguments
+        thsplit_args(&this->mbf1, this->inp.get_value());
+        ant = this->mbf1.get_size();
+        opts = this->mbf1.get_buffer();
+        
         // check if command
-        // if no => throw exception
+        // if no => throw exception        
         if (strcmp(this->inp.get_cmd(),"revise") == 0)
           configure_cmd = true;
+        else if (strcmp(this->inp.get_cmd(),"equate") == 0) {
+          dbptr->insert_equate(ant, opts);
+          continue;
+        } 
         else {
           objptr = dbptr->create(this->inp.get_cmd(), osrc);
           if (objptr == NULL)
@@ -142,10 +152,6 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
 
         // analyze the commands options
 
-        // first, let's parse arguments
-        thsplit_args(&this->mbf1, this->inp.get_value());
-        ant = this->mbf1.get_size();
-        opts = this->mbf1.get_buffer();
         if (configure_cmd) {
           // let's find an object
           objptr = dbptr->revise(*opts, dbptr->get_current_survey(), osrc);

@@ -2,11 +2,19 @@ encoding  utf-8
 #source tests/velka_ch.th
 source tests/map_plan.th
 #select xhmap@tp
+#select hmap@tp
+
+export model
+
 #export map -proj elevation:0 -layout-scale 1 200
-export model -fmt survex
-export map -layout-surface top \
-  -layout-color map-fg 50 \
-  -layout-rotate 90
-  
+#export model -fmt survex
+#export map -layout-surface top \
+  -layout-scale 1 200 \
+  -layout-color map-fg altitude \
+  -layout-grid top \
+  -layout-rotate 90 \
+  -layout-transparency on \
+  -layout-legend on
+ 
 #  -layout-symbol-hide group all \
 #  -layout-symbol-show group centerline \

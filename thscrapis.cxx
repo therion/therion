@@ -30,10 +30,14 @@
 #include "thdb2dlp.h"
 #include "thscraplo.h"
 #include "thline.h"
+#include "thconfig.h"
 #include "thcdt.h"
 #include <math.h>
 
 #define ONLY_INVISIBLE_LINE 1
+#define THSCRAPISSMP thcfg.tmp3dSMP
+#define THSCRAPISWALLSMP thcfg.tmp3dWALLSMP
+#define THSCRAPISMAXDIMD thcfg.tmp3dMAXDIMD
 
 thscrapis::thscrapis() {
   this->track_bottom = true;

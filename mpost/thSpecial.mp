@@ -24,17 +24,23 @@
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% --------------------------------------------------------------------
 
-def s_northarrow_SKBB (expr rot) = 
+def s_northarrow_SKBB_old (expr rot) = 
   T:=identity;
   picture tmp_pic;
   tmp_pic = image (
     begingroup
       interim defaultscale:=3;
-      label(if lang="sk": "S" else: "N" fi, origin);
+      label(if (lang="sk") or (lang="cz"): "S" else: "N" fi, origin);
     endgroup;
     drawarrow (0,-1cm)--(0,1cm);
   );
   draw tmp_pic rotatedaround(origin, -rot);
+enddef;
+
+def s_northarrow_SKBB (expr rot) =
+  T:=identity scaled 0.7 rotated -rot;
+  thdraw (-.5cm,-1cm)--(0,1.5cm)--(.5cm,-1cm)--(0,-.5cm)--cycle;
+  thfill (-.5cm,-1cm)--(0,1.5cm)--(0,-.5cm)--cycle;
 enddef;
 
 def s_scalebar_SKBB (expr l, units, txt) = 
@@ -52,7 +58,7 @@ def s_scalebar_SKBB (expr l, units, txt) =
   endgroup
 enddef;
 
-def s_scalebar_STACHO (expr l, units, txt) = 
+def s_scalebar_SM (expr l, units, txt) = 
   begingroup
     interim warningcheck:=0;
     tmpl:=l / Scale * cm * units / 2;
@@ -69,3 +75,29 @@ def s_scalebar_STACHO (expr l, units, txt) =
     label.top(thTEX(decimal (l) & "\thinspace" & txt),(tmpl,0));
   endgroup
 enddef;
+
+
+def s_hgrid_SM (expr xpos, ypos, xsize, ysize) =
+  pickup PenD;
+  draw (
+    if xpos < 0: 0 else: -5mm fi, 0
+  ) -- (
+    if xpos > 0: 0 else: 5mm fi, 0
+  );
+  draw (
+    0, if ypos < 0: 0 else: -5mm fi
+  ) -- (
+    0, if ypos > 0: 0 else: 5mm fi
+  );
+enddef;
+
+
+def s_vgrid_SM (expr xpos, ypos, xsize, ysize) =
+  pickup PenD;
+  draw (
+    if xpos < 0: 0 else: -xsize/2 fi, 0
+  ) -- (
+    if xpos > 0: 0 else: xsize/2 fi, 0
+  ) dashed evenly;
+enddef;
+

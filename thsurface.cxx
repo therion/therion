@@ -378,7 +378,11 @@ void thsurface::parse_grid_setup(char ** args)
   if (this->grid_dy == 0.0)
     ththrow(("non-zero number expected -- %s", args[3]));
   parsenum(this->grid_nx,4);
+  if (this->grid_nx < 2)
+    ththrow(("number > 1 expected -- %s", args[4]));
   parsenum(this->grid_ny,5);
+  if (this->grid_ny < 2)
+    ththrow(("number > 1 expected -- %s", args[5]));
 }
 
 void thsurface::parse_grid(char * spec)
@@ -423,7 +427,9 @@ thdb3ddata * thsurface::get_3d() {
 
   // vytvorime 3d data
   long i, j;
-  thdb3dvx ** surfvx = new thdb3dvx* [this->grid_size];
+  double nx, ny, nz, nl, nt;
+  thdb3dvx ** surfvx = new thdb3dvx* [this->grid_size],
+   * pvx, * cvx;
   
 #define grd(I, J) (this->grid_nx * (J) + (I))
   for(i = 0; i < this->grid_nx; i++)
@@ -434,23 +440,69 @@ thdb3ddata * thsurface::get_3d() {
         this->grid[grd(i,j)]
         );
 
-  // povklada ciary (TODO trojuholniky)
+  // zratame normaly
+  for(i = 0; i < this->grid_nx; i++)
+    for(j = 0; j < this->grid_ny; j++) {
+      // TODO - vlozit vsetky prilahle
+      if (i > 0) {
+        pvx = surfvx[grd(i-1,j)];
+        cvx = surfvx[grd(i,j)];
+        nx = pvx->x - cvx->x;
+        ny = pvx->y - cvx->y;
+        nz = pvx->z - cvx->z;
+        nl = hypot(nz, hypot(nx, ny));
+        nx /= nl; ny /= nl; nz /= nl;
+        nt = nx; nx = nz; nz = -nt;
+        cvx->insert_normal(nx, ny, nz);
+      }
+      if (i < (this->grid_nx - 1)) {
+        pvx = surfvx[grd(i+1,j)];
+        cvx = surfvx[grd(i,j)];
+        nx = - pvx->x + cvx->x;
+        ny = - pvx->y + cvx->y;
+        nz = - pvx->z + cvx->z;
+        nl = hypot(nz, hypot(nx, ny));
+        nx /= nl; ny /= nl; nz /= nl;
+        nt = nx; nx = nz; nz = -nt;
+        cvx->insert_normal(nx, ny, nz);
+      }
+      if (j > 0) {
+        pvx = surfvx[grd(i,j-1)];
+        cvx = surfvx[grd(i,j)];
+        nx = pvx->x - cvx->x;
+        ny = pvx->y - cvx->y;
+        nz = pvx->z - cvx->z;
+        nl = hypot(nz, hypot(nx, ny));
+        nx /= nl; ny /= nl; nz /= nl;
+        nt = ny; ny = nz; nz = -nt;
+        cvx->insert_normal(nx, ny, nz);
+      }
+      if (j < (this->grid_ny - 1)) {
+        pvx = surfvx[grd(i,j+1)];
+        cvx = surfvx[grd(i,j)];
+        nx = - pvx->x + cvx->x;
+        ny = - pvx->y + cvx->y;
+        nz = - pvx->z + cvx->z;
+        nl = hypot(nz, hypot(nx, ny));
+        nx /= nl; ny /= nl; nz /= nl;
+        nt = ny; ny = nz; nz = -nt;
+        cvx->insert_normal(nx, ny, nz);
+      }
+    }
+
+  // povklada trojuholniky
   thdb3dfc * fc;
-  for(i = 0; i < this->grid_nx; i++) {
-    fc = this->d3d.insert_face(THDB3DFC_LINE_STRIP);
+  for(i = 0; i < (this->grid_nx - 1); i++) {
+    fc = this->d3d.insert_face(THDB3DFC_TRIANGLE_STRIP);
     for(j = 0; j < this->grid_ny; j++) {
       fc->insert_vertex(surfvx[grd(i,j)]);
-    }
-  }
-  for(j = 0; j < this->grid_ny; j++) {
-    fc = this->d3d.insert_face(THDB3DFC_LINE_STRIP);
-    for(i = 0; i < this->grid_nx; i++) {
-      fc->insert_vertex(surfvx[grd(i,j)]);
+      fc->insert_vertex(surfvx[grd(i+1,j)]);
     }
   }
   
   delete [] surfvx;
   this->d3dok = true;
+  this->d3d.postprocess();
   return &(this->d3d);    
 
 }

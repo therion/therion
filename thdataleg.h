@@ -32,6 +32,7 @@
 #include "thparse.h"
 #include "thobjectname.h"
 #include "thobjectsrc.h"
+#include "thinfnan.h"
 #include <list>
 
 /**
@@ -72,7 +73,9 @@ enum {
   TT_DATALEG_DOWN,
   TT_DATALEG_LEFT,
   TT_DATALEG_RIGHT,
+  TT_DATALEG_DIMS,
   TT_DATALEG_IGNORE,
+  TT_DATALEG_IGNOREALL,
 };
 
 
@@ -96,6 +99,7 @@ static const thstok thtt_dataleg_comp[] = {
   {"counter", TT_DATALEG_COUNT},
   {"depth", TT_DATALEG_DEPTH},
   {"depthchange", TT_DATALEG_DEPTHCHANGE},
+  {"dimensions", TT_DATALEG_DIMS},
   {"direction", TT_DATALEG_DIRECTION},
   {"dog", TT_DATALEG_ASSISTANT},
   {"down", TT_DATALEG_DOWN},
@@ -110,6 +114,7 @@ static const thstok thtt_dataleg_comp[] = {
   {"fromdepth", TT_DATALEG_FROMDEPTH},
   {"gradient", TT_DATALEG_GRADIENT},
   {"ignore", TT_DATALEG_IGNORE},
+  {"ignoreall", TT_DATALEG_IGNOREALL},
   {"instruments", TT_DATALEG_INSTRUMENTS},
   {"insts", TT_DATALEG_INSTRUMENTS},
   {"left", TT_DATALEG_LEFT},
@@ -118,6 +123,7 @@ static const thstok thtt_dataleg_comp[] = {
   {"northing", TT_DATALEG_NORTHING},
   {"notebook", TT_DATALEG_NOTES},
   {"notes", TT_DATALEG_NOTES},
+  {"pics", TT_DATALEG_PICTURES},
   {"pictures", TT_DATALEG_PICTURES},
   {"position", TT_DATALEG_POSITION},
   {"right", TT_DATALEG_RIGHT},
@@ -158,6 +164,30 @@ static const thstok thtt_dataleg_infer[] = {
 
 
 /**
+ * Shape components.
+ */
+ 
+enum {
+  TT_DATALEG_SHAPE_DIAMOND,
+  TT_DATALEG_SHAPE_OCTAGON,
+  TT_DATALEG_SHAPE_RECTANGLE,
+  TT_DATALEG_SHAPE_TRIANGLE,
+  TT_DATALEG_SHAPE_TUNNEL,
+  TT_DATALEG_SHAPE_UNKNOWN,
+};
+
+static const thstok thtt_dataleg_shape[] = {
+  {"diamond", TT_DATALEG_SHAPE_DIAMOND},
+  {"octagon", TT_DATALEG_SHAPE_OCTAGON},
+  {"rect", TT_DATALEG_SHAPE_RECTANGLE},
+  {"rectangle", TT_DATALEG_SHAPE_RECTANGLE},
+  {"triangle", TT_DATALEG_SHAPE_TRIANGLE},
+  {"tunnel", TT_DATALEG_SHAPE_TUNNEL},
+  {NULL, TT_DATALEG_SHAPE_UNKNOWN},
+};
+
+
+/**
  * Data types.
  */
  
@@ -167,6 +197,7 @@ enum {
   TT_DATATYPE_CARTESIAN,
   TT_DATATYPE_CYLPOLAR,
   TT_DATATYPE_NOSURVEY,
+  TT_DATATYPE_DIMS,
   TT_DATATYPE_UNKNOWN,
 };
 
@@ -178,6 +209,7 @@ enum {
 static const thstok thtt_datatype[] = {
   {"cartesian", TT_DATATYPE_CARTESIAN},
   {"cylpolar", TT_DATATYPE_CYLPOLAR},
+  {"dimensions", TT_DATATYPE_DIMS},
   {"diving", TT_DATATYPE_DIVING},
   {"normal", TT_DATATYPE_NORMAL},
   {"nosurvey", TT_DATATYPE_NOSURVEY},
@@ -299,13 +331,17 @@ class thdataleg {
       
   unsigned char s_mark;  ///< Type of the station mark
   
+  int walls, shape;
+  
   thobjectname station, from, to;
   class thsurvey * psurvey;  ///< parent survey
   
   double length, counter, fromcounter, tocounter, depth, fromdepth,
     todepth, depthchange, bearing, gradient, dx, dy, dz,
     backbearing, backgradient, total_length, total_bearing, total_gradient,
-    total_dx, total_dy, total_dz, adj_dx, adj_dy, adj_dz;
+    total_dx, total_dy, total_dz, adj_dx, adj_dy, adj_dz,
+    from_up, from_down, from_left, from_right,
+    to_up, to_down, to_left, to_right, vtresh;
     
   double length_sd, counter_sd, depth_sd, bearing_sd, gradient_sd,
     dx_sd, dy_sd, dz_sd, x_sd, y_sd, z_sd, declination, 
@@ -404,6 +440,41 @@ class thdataequate {
 };
 
 
+class thdatamark {
+	
+	public:
+	
+	thobjectname station;
+
+  class thsurvey * psurvey;  ///< parent survey
+
+  thobjectsrc srcf;  ///< Source file.
+	
+	unsigned char mark;
+	
+	thdatamark() : mark(TT_DATAMARK_TEMP) {}
+	
+};
+
+
+
+class thstdims {
+  
+  public:
+  
+	thobjectname station;
+
+  class thsurvey * psurvey;  ///< parent survey
+
+  thobjectsrc srcf;  ///< Source file.
+  
+  double up, down, left, right;
+  
+  thstdims() : up(thnan), down(thnan), left(thnan), right(thnan) {}
+  
+};
+
+
 typedef std::list < thdataleg > thdataleg_list;  ///< Data leg list.
 
 typedef std::list < thdatafix > thdatafix_list;  ///< Data fix list.
@@ -411,6 +482,10 @@ typedef std::list < thdatafix > thdatafix_list;  ///< Data fix list.
 typedef std::list < thdatass > thdatass_list;  ///< Data stations list.
 
 typedef std::list < thdataequate > thdataequate_list;  ///< Data equates list.
+
+typedef std::list < thdatamark > thdatamark_list;  ///< Universal object name list.
+
+typedef std::list < thstdims > thstdims_list;  ///< Station dimensions.
 
 #endif
 

@@ -129,12 +129,7 @@ proc xth_te_sdata_buid {qts indc} {
 
 
 proc xth_te_sdata_incr_station {ss} {
-  set rv $ss
-  if {[regexp {\d+$} $ss xx]} {
-    regsub {\d+$} $ss [expr $xx + 1] rv
-    return $rv
-  }
-  return $rv
+  return [xth_incr_station_name $ss 1]
 }
 
 proc xth_te_sdata_incr {} {

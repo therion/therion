@@ -19,6 +19,13 @@ if ($platform eq 'WIN32') {
   $xthsrc =~ s/\\/\\\\/g;
   print OUTPT $xthsrc;
   close OUTPT;
+} elsif ($platform eq 'MACOSX') {
+  $cdir = `pwd`;
+  $cdir =~ s/\s*$//;
+  `rm --force /usr/bin/therion`;
+  `rm --force /usr/bin/xtherion`;
+  `cp --force $cdir/therion /usr/bin/therion`;
+  `cp --force $cdir/xtherion/xtherion /usr/bin/xtherion`;
 } else {
   $cdir = `pwd`;
   $cdir =~ s/\s*$//;

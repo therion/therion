@@ -162,8 +162,8 @@ proc xth_me_cmds_update_area_ctrl {id} {
   
     set xth(ctrl,me,ac,name) {}
     set xth(ctrl,me,ac,insid) {}
-    set xth(ctrl,me,ac,type) $xth(me,dflt,line,type)
-    set xth(ctrl,me,ac,opts) $xth(me,dflt,line,options)
+    set xth(ctrl,me,ac,type) $xth(me,dflt,area,type)
+    set xth(ctrl,me,ac,opts) $xth(me,dflt,area,options)
 
     $xth(ctrl,me,ac).typl configure -state disabled    
     $xth(ctrl,me,ac).typ configure -state disabled    
@@ -1172,13 +1172,13 @@ proc xth_me_cmds_update_area_data {id} {
   set lix [expr [llength $xl] - 2]
 
   set d "area $xth(me,cmds,$id,type)"
-  set xth(me,dflt,line,type) $xth(me,cmds,$id,type)
+  set xth(me,dflt,area,type) $xth(me,cmds,$id,type)
 
   # options
   if {[string length $xth(me,cmds,$id,options)] > 0} {
     set d "$d $xth(me,cmds,$id,options)"
   }
-  set xth(me,dflt,line,options) $xth(me,cmds,$id,options)
+  set xth(me,dflt,area,options) $xth(me,cmds,$id,options)
 
   for {set ix 0} {$ix <= $lix} {incr ix} {
     set lid [lindex $xl $ix]
@@ -2147,7 +2147,7 @@ proc xth_me_cmds_draw_linept {id pid} {
   $xth(me,can) bind pt$id.$pid <1> "xth_me_cmds_click {$id $pid} pt$id.$pid \$xth(me,cmds,$id,$pid,x) \$xth(me,cmds,$id,$pid,y) %x %y"
   $xth(me,can) bind pt$id.$pid <3> "xth_me_cmds_special_select {$id $pid} %x %y"  
   $xth(me,can) bind pt$id.$pid <Shift-1> "xth_me_cmds_special_select {$id $pid} %x %y"  
-  $xth(me,can) bind pt$id.$pid <Control-1> "xth_me_cmds_click_area pt$id.$pid %x %y"
+  $xth(me,can) bind pt$id.$pid <$xth(kb_control)-1> "xth_me_cmds_click_area pt$id.$pid %x %y"
 }
 
 
@@ -2284,9 +2284,9 @@ proc xth_me_cmds_start_create_linept {tagOrId x y mx my} {
   set xth(me,lptc,oldr) [$xth(me,can) bind $tagOrId <B1-ButtonRelease>]
   $xth(me,can) itemconfigure $xth(me,canid,linept,ncp) -fill yellow
   $xth(me,can) bind $tagOrId <B1-Motion> "xth_me_cmds_continue_linept_creation %x %y 1"
-  $xth(me,can) bind $tagOrId <Control-B1-Motion> "xth_me_cmds_continue_linept_creation %x %y 0"
+  $xth(me,can) bind $tagOrId <$xth(kb_control)-B1-Motion> "xth_me_cmds_continue_linept_creation %x %y 0"
   $xth(me,can) bind $tagOrId <B1-ButtonRelease> "xth_me_cmds_end_create_linept %x %y 1"
-  $xth(me,can) bind $tagOrId <Control-B1-ButtonRelease> "xth_me_cmds_end_create_linept %x %y 0"
+  $xth(me,can) bind $tagOrId <$xth(kb_control)-B1-ButtonRelease> "xth_me_cmds_end_create_linept %x %y 0"
   xth_me_cmds_continue_linept_creation $mx $my 1
   xth_me_unredo_action "inserting line point" "xth_me_cmds_delete_linept $id $pid\n$unclosecmd\nxth_me_cmds_select_linept $id $oldpid" \
     "$reclosecmd\nxth_me_cmds_undelete_linept $id $pid $ix"
@@ -2368,8 +2368,8 @@ proc xth_me_cmds_end_create_linept {x y motionID} {
   set pid $xth(me,lptc,pid)
   $xth(me,can) bind $tagOrId <B1-Motion> $xth(me,lptc,oldm)
   $xth(me,can) bind $tagOrId <B1-ButtonRelease> $xth(me,lptc,oldr)
-  $xth(me,can) bind $tagOrId <Control-B1-Motion> ""
-  $xth(me,can) bind $tagOrId <Control-B1-ButtonRelease> ""
+  $xth(me,can) bind $tagOrId <$xth(kb_control)-B1-Motion> ""
+  $xth(me,can) bind $tagOrId <$xth(kb_control)-B1-ButtonRelease> ""
   xth_me_cmds_hide_linept_xctrl  
   set ook $xth(me,unredook)
   set xth(me,unredook) 0
@@ -2494,8 +2494,8 @@ proc xth_me_cmds_start_linecp_drag {tagOrId id ppid pid npid which x y} {
       set dragto 1
       $xth(me,can) bind $tagOrId <B1-Motion> "xth_me_cmds_continue_linecp_drag %x %y 1"
       $xth(me,can) bind $tagOrId <B1-ButtonRelease> "xth_me_cmds_end_linecp_drag %x %y 1"
-      $xth(me,can) bind $tagOrId <Control-B1-Motion> "xth_me_cmds_continue_linecp_drag %x %y 0"
-      $xth(me,can) bind $tagOrId <Control-B1-ButtonRelease> "xth_me_cmds_end_linecp_drag %x %y 0"
+      $xth(me,can) bind $tagOrId <$xth(kb_control)-B1-Motion> "xth_me_cmds_continue_linecp_drag %x %y 0"
+      $xth(me,can) bind $tagOrId <$xth(kb_control)-B1-ButtonRelease> "xth_me_cmds_end_linecp_drag %x %y 0"
       set xth(me,lcpd,oldmove,pcplstate) [$xth(me,can) itemcget $xth(me,canid,linept,pcpl) -state]
       $xth(me,can) itemconfigure $xth(me,canid,linept,pcpl) -state hidden
       set xth(me,lcpd,oldmove,ncplstate) [$xth(me,can) itemcget $xth(me,canid,linept,ncpl) -state]
@@ -2797,8 +2797,8 @@ proc xth_me_cmds_end_linecp_drag {x y dragto} {
   $xth(me,can) itemconfigure $tagOrId -fill $xth(me,lcpd,oldfill)
   $xth(me,can) bind $tagOrId <B1-Motion> ""
   $xth(me,can) bind $tagOrId <B1-ButtonRelease> ""
-  $xth(me,can) bind $tagOrId <Control-B1-Motion> ""
-  $xth(me,can) bind $tagOrId <Control-B1-ButtonRelease> ""
+  $xth(me,can) bind $tagOrId <$xth(kb_control)-B1-Motion> ""
+  $xth(me,can) bind $tagOrId <$xth(kb_control)-B1-ButtonRelease> ""
   $xth(me,can) configure -cursor crosshair
   xth_me_cmds_update_line_data $id
   xth_me_prev_cmd $xth(me,cmds,$id,data)  
@@ -3037,6 +3037,11 @@ proc xth_me_cmds_set_colors {} {
       4 - 5 {
         if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
           set xth(me,curscrap) $xth(me,cmds,$id,name)
+	  if {[string equal $xth(me,cmds,$id,projection) extended]} {
+	    set xth(me,snai) -1
+	  } else {
+	    set xth(me,snai) 1
+          }
         }
         if {$cid != $xid} {
           set col $dcol

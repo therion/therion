@@ -45,6 +45,7 @@
 #include "tharea.h"
 #include "thjoin.h"
 #include "thmap.h"
+#include "thimport.h"
 #include "thsurface.h"
 #include "thendscrap.h"
 
@@ -163,7 +164,7 @@ void thdatabase::check_context(class thdataobject * optr) {
         break;
     }
     optr->self_delete();
-    ththrow(("missing %s command before %s command", misscmd, cmdname));
+    ththrow(("missing %s before %s command", misscmd, cmdname));
   }
 }
 
@@ -325,10 +326,31 @@ void thdatabase::insert(thdataobject * optr)
       
   }  // end of other objects
   
+  // insert sub-objects
+  switch(optr_class_id) {
+    case TT_SURVEY_CMD:
+      this->insert(((thsurvey*)(optr))->data);
+      break;
+    case TT_IMPORT_CMD:
+      this->insert(((thimport*)(optr))->data);
+      break;
+  }
+  
 }  // end of object inserion
 
 
 thsurvey * thdatabase::get_survey(char * sn, thsurvey * ps)
+{
+  thsurvey * xxx = this->get_survey_noexc(sn, ps);
+  if (xxx != NULL)
+    return xxx;
+  else
+    ththrow(("survey does not exist -- %s", sn))
+}
+
+
+
+thsurvey * thdatabase::get_survey_noexc(char * sn, thsurvey * ps)
 {
   thdb_survey_map_type::iterator si;
   
@@ -342,7 +364,7 @@ thsurvey * thdatabase::get_survey(char * sn, thsurvey * ps)
     if (si != this->survey_map.end())
       return si->second;
     else
-      ththrow(("survey does not exist -- %s", sn))
+      return NULL;
   }
   else
     return ps;
@@ -392,10 +414,13 @@ class thdataobject * thdatabase::create(char * oclass,
 {
   int tclass = thmatch_token(oclass, thtt_commands);
   thdataobject * ret;
+  thdata * retdata;
+  retdata = NULL;
   switch (tclass) {
   
     case TT_SURVEY_CMD:
       ret = new thsurvey;
+      retdata = new thdata;
       break;
       
     case TT_ENDSURVEY_CMD:
@@ -442,6 +467,11 @@ class thdataobject * thdatabase::create(char * oclass,
       ret = new thmap;
       break;
       
+    case TT_IMPORT_CMD:
+      ret = new thimport;
+      retdata = new thdata;
+      break;
+      
     case TT_SURFACE_CMD:
       ret = new thsurface;
       break;
@@ -452,12 +482,27 @@ class thdataobject * thdatabase::create(char * oclass,
   
   if (ret != NULL) {
     ret->assigndb(this);
-    
     // set object id and mark revision
     ret->id = ++this->objid;
     this->revision_set.insert(threvision(ret->id, 0, osrc));
-
   }
+  
+  if (retdata != NULL) {
+    retdata->assigndb(this);    
+    // set object id and mark revision
+    retdata->id = ++this->objid;
+    this->revision_set.insert(threvision(retdata->id, 0, osrc));
+  }
+
+  switch (tclass) {
+    case TT_SURVEY_CMD:
+      ((thsurvey*)(ret))->data = retdata;
+      break;
+    case TT_IMPORT_CMD:
+      ((thimport*)(ret))->data = retdata;
+      break;
+  }
+  
   return ret;
 }
 
@@ -728,12 +773,36 @@ void thdatabase::preprocess() {
   thprintf("preprocessing database ... ");
   thtext_inline = true;
 #endif
+
+
+  thdb_object_list_type::iterator obi = this->object_list.begin();
+  while (obi != this->object_list.end()) {
+    try {
+      switch ((*obi)->get_class_id()) {
+        case TT_IMPORT_CMD:
+          ((thimport*)(*obi))->import_file();
+          break;
+      }
+    } catch (...) {
+      (*obi)->throw_source();
+      switch ((*obi)->get_class_id()) {
+        case TT_IMPORT_CMD:
+          threthrow(("file import"));
+        break;
+      }
+    }
+    obi++;
+  }
   
+
+
   thsurvey * cs = this->fsurveyptr;
   while (cs != NULL) {
     thdb_survey_rename_persons(cs, NULL);
     cs = (thsurvey*)(cs->nsptr);
   }
+
+  
   
 
 #ifdef THDEBUG
@@ -743,6 +812,17 @@ void thdatabase::preprocess() {
 #endif
 
 }
+
+
+
+void thdatabase::insert_equate(int nargs, char ** args)
+{
+  if (this->csurveyptr == NULL)
+    ththrow(("missing survey before equate command"));
+  this->csurveyptr->data->set_data_equate(nargs, args);
+}
+
+
 
 
 thdatabase thdb;

@@ -53,6 +53,7 @@ set xth(point_types) {
 	scallop
 	section
 	sink
+	snow
 	soda-straw
 	spring
 	stalactite
@@ -70,9 +71,11 @@ set xth(point_types) {
 set xth(line_types) {
 	arrow
 	border
+	ceiling-meander
 	ceiling-step
 	chimney
 	contour
+	floor-meander
 	floor-step
 	flowstone
 	gradient
@@ -89,8 +92,13 @@ set xth(line_types) {
 }
 
 set xth(area_types) {
+	blocks
+	clay
 	debris
+	ice
+	pebbles
 	sand
+	snow
 	sump
 	water
 }

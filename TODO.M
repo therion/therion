@@ -20,8 +20,6 @@ thpdf:
                              - z vrstiev
  * vrstvy pod aktualnou: odlisit hlbku odtienmi sedej (?)
  * zhrnutie udajov o listoch na konci
- * ramik a stvorcova siet (kriziky): vylepsit alebo cez MetaPost 
-   (do uvahy aj convergence)
  * mody pre preview (ziadne, linkovane, vsetky)
  * vrstva `pri' pre atlas
 
@@ -43,7 +41,6 @@ thtexfonts:
  
 tex:
 
-   * doladit viacstlpcove makra
  * sipka na sever je zbytocna pri priecnom a rozvinutom reze. V ich pripade
    by tam mal byt nejaky identifikator projekcie  
  * northarrow do atlasu?
@@ -51,10 +48,12 @@ tex:
 
 mpost:
 
+ * point stalctites,stalagmites, via-ferrata
+ * gradientny prechod pre areas
  * poriesit odsadenie bodovych znaciek a najma labelov
- * alignment pri continuation a equipement -- prekreslit
  * dorobit aby fungovalo predefinovanie u,v,w - pri presumed wall, patternoch
  * initialize(Scale) nepomaha na lejble v legende -- prepisovanie mptexpre.tex?
+ * color map-bg do legendboxov (hadam fg; co ak je fg farbene rozne?)
 
 thbook:
 
@@ -66,3 +65,13 @@ thbook:
  * mod pre _velke_ mapy (>10MB): scrapy vysadzat do samostatneho suboru a z 
    dalsieho na ne odkazovat pomocou Reference XObject forms -> nefunguje v AR5
 
+---------------------------------
+hotovo: 
+
+* point snow
+* line rope
+* area snow, ice, clay
+* opr. area debris, sand, line debris; dopln. ostatne nedef, equipment, sipka 
+  na sever
+ * ramik a stvorcova siet (kriziky): vylepsit alebo cez MetaPost 
+   (do uvahy aj convergence)

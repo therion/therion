@@ -71,6 +71,8 @@ void thlibrary_init_layouts()
 	playout->def_base_scale = false;
 	playout->redef_base_scale = false;
 	playout->base_scale = 0.005;
+	playout->def_rotate = false;
+	playout->rotate = 0;
 	playout->def_page_setup = true;
 	playout->hsize = 0.24;
 	playout->vsize = 0.1399;
@@ -85,6 +87,7 @@ void thlibrary_init_layouts()
 	playout->color_map_bg.G = 1;
 	playout->color_map_bg.B = 1;
 	playout->color_map_fg.defined = false;
+	playout->color_crit = 0;
 	playout->color_map_fg.R = 1;
 	playout->color_map_fg.G = 1;
 	playout->color_map_fg.B = 1;
@@ -104,8 +107,14 @@ void thlibrary_init_layouts()
 	playout->transparency = true;
 	playout->def_legend = false;
 	playout->legend = TT_LAYOUT_LEGEND_OFF;
+	playout->def_legend_width = false;
+	playout->legend_width = 0.14;
+	playout->def_legend_columns = false;
+	playout->legend_columns = 2;
 	playout->def_map_header = false;
-	playout->map_header = 2;
+	playout->map_header = 3;
+	playout->map_header_x = 100;
+	playout->map_header_y = 0;
 	playout->def_debug = false;
 	playout->debug = 4;
 	playout->def_max_explos = false;
@@ -126,8 +135,12 @@ void thlibrary_init_layouts()
 	playout->layers = true;
 	playout->def_opacity = false;
 	playout->opacity = 0.7;
+	playout->def_surface_opacity = false;
+	playout->surface_opacity = 0.7;
+	playout->def_surface= false;
+	playout->surface = 0;
 	playout->def_grid = false;
-	playout->grid = 3;
+	playout->grid = 1;
 	playout->def_page_grid = false;
 	playout->page_grid = false;
 	playout->def_origin = false;
@@ -150,6 +163,7 @@ void thlibrary_init_layouts()
 	playout->def_grid_size = true;
 	playout->gxs = 10;
 	playout->gys = 10;
+	playout->gzs = 10;
 	playout->def_grid_origin = false;
 	playout->def_nav_factor = true;
 	playout->navf = 25;
@@ -162,12 +176,8 @@ void thlibrary_init_layouts()
 	playout->titlep = false;
 	playout->def_page_numbers = false;
 	playout->pgsnum = true;
-	playout->ccode = TT_LAYOUT_CODE_TEX_ATLAS;
-	oname = "symbol-defaults SKBB";
-	playout->set(thcmd_option_desc(0,1),&oname,TT_UTF_8,0);
-	playout->ccode = TT_LAYOUT_CODE_TEX_ATLAS;
-	oname = "lang sk";
-	playout->set(thcmd_option_desc(0,1),&oname,TT_UTF_8,0);
+	oname = "SKBB";
+	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),&oname,TT_UTF_8,0);
 	playout->def_tex_lines = true;
 	thdb.insert(playout);
 }

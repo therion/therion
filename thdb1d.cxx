@@ -2,7 +2,7 @@
  * @file thdb1d.cxx
  */
   
-/* Copyright (C) 2000 Stacho Mudrak
+/* Copyright (C) 2004 Stacho Mudrak
  * 
  * $Date: $
  * $RCSfile: $
@@ -40,6 +40,7 @@
 #include <set>
 #include "thlogfile.h"
 #include "thsurface.h"
+#include "extern/lxMath.h"
 
 //#define THUSESVX
 
@@ -80,17 +81,18 @@ void thdb1d::scan_data()
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   thdataleg_list::iterator lei;
   thdatafix_list::iterator fii;
+  thdatamark_list::iterator mii;
   thdatass_list::iterator ssi;
   thdataequate_list::iterator eqi;
+  thstdims_list::iterator di;
   thdata * dp;
   double dcc, sindecl, cosdecl, tmpx, tmpy;
   thdb1ds * tsp1, * tsp2;  // Temporary stations.
   while (obi != this->db->object_list.end()) {
   
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      
       dp = (thdata *)(*obi);
-      
+        
       // scan data shots
       lei = dp->leg_list.begin();
       try {
@@ -300,11 +302,15 @@ void thdb1d::scan_data()
     obi++;
   }
 
-  // scan data stations
+
+  // after scanning
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
+
       dp = (thdata *)(*obi);
+
+      // scan data stations
       ssi = dp->ss_list.begin();
       try {
         while(ssi != dp->ss_list.end()) {
@@ -326,6 +332,50 @@ void thdb1d::scan_data()
       }
       catch (...)
         threthrow(("%s [%d]", ssi->srcf.name, ssi->srcf.line));
+
+      // scan data marks
+      mii = dp->mark_list.begin();
+      try {
+        while(mii != dp->mark_list.end()) {
+          mii->station.id = this->get_station_id(mii->station, mii->psurvey);
+          if (mii->station.id == 0) {
+            if (mii->station.survey == NULL)
+              ththrow(("station doesn't exist -- %s", mii->station.name))
+            else
+              ththrow(("station doesn't exist -- %s@%s", mii->station.name, mii->station.survey))
+          }
+          // set station flags and comment
+          else {
+            thdb1ds * markst = &(this->station_vec[mii->station.id - 1]);
+            markst->mark_station = true;
+            if (markst->mark < mii->mark)
+              markst->mark = mii->mark;
+          }
+          mii++;
+        }
+      }
+      catch (...)
+        threthrow(("%s [%d]", mii->srcf.name, mii->srcf.line));
+
+      // scan dimensions
+      di = dp->dims_list.begin();
+      try {
+        while(di != dp->dims_list.end()) {
+          di->station.id = this->get_station_id(di->station, di->psurvey);
+          if (di->station.id == 0) {
+            if (di->station.survey == NULL)
+              ththrow(("station doesn't exist -- %s", di->station.name))
+            else
+              ththrow(("station doesn't exist -- %s@%s", di->station.name, di->station.survey))
+          }
+          di++;
+        }
+      }
+      catch (...)
+        threthrow(("%s [%d]", di->srcf.name, di->srcf.line));
+        
+      dp->complete_dimensions();
+
     }  
     obi++;
   }
@@ -590,7 +640,7 @@ void thdb1d::process_tree()
     this->station_vec[i].uid = n1->uid;
   }
   
-  // go leg by leg and fill arrows
+  // go leg by leg and fill arrows  
   for(iil = this->leg_vec.begin(), a1 = arrows; iil != this->leg_vec.end(); iil++) {
     
     if (iil->leg->infer_equates)
@@ -603,6 +653,13 @@ void thdb1d::process_tree()
     a1->start_node = nodes + (nodes[iil->leg->from.id - 1].uid - 1);
     a1->end_node = nodes + (nodes[iil->leg->to.id - 1].uid - 1);
     
+    if ((iil->leg->data_type == TT_DATATYPE_NOSURVEY) &&
+      ((!a1->start_node->is_fixed) || (!a1->end_node->is_fixed))) {
+        ththrow(("unsurveyed shot between unfixed stations -- %s [%d]",
+          iil->leg->srcf.name, iil->leg->srcf.line
+        ));
+    }
+    
     a2->negative = a1;
     a2->leg = a1->leg;
     a2->start_node = a1->end_node;
@@ -612,9 +669,9 @@ void thdb1d::process_tree()
     // assign nodes
     a1->next_arrow = a1->start_node->first_arrow;
     a1->start_node->first_arrow = a1;
-    a1->start_node->narrows++;
     a2->next_arrow = a2->start_node->first_arrow;
     a2->start_node->first_arrow = a2;
+    a1->start_node->narrows++;
     a2->start_node->narrows++;
 
     a1 += 2;
@@ -1253,10 +1310,23 @@ void thdb1d::find_loops()
   numseries = 0;
   clcleg = lclegs;
 
+
+  while ((nlegs > 0) && ((*curleg)->leg->data_type == TT_DATATYPE_NOSURVEY)) {
+    nlegs--;
+    curleg++;
+  }
   if (nlegs == 0)
     goto LC_COORD_CALC;
 
   while (i < nlegs) {
+  
+    while ((nlegs > i) && ((*curleg)->leg->data_type == TT_DATATYPE_NOSURVEY)) {
+      nlegs--;
+      curleg++;
+    }    
+    if (nlegs == i)
+      break;
+      
     // nastavi clcleg
     cleg = (*curleg);
     clcleg->dbleg = cleg;
@@ -1910,8 +1980,9 @@ void thdb1d::close_loops()
   thdb1ds * froms, * tos;
   thdb1dl ** legs = this->get_tree_legs(), * cleg;
   for (i = 0; i < nlegs; i++) {
-  
+
     cleg = legs[i];
+
     if (cleg->reverse) {
       froms = &(this->station_vec[this->station_vec[cleg->leg->to.id - 1].uid - 1]);
       tos = &(this->station_vec[this->station_vec[cleg->leg->from.id - 1].uid - 1]);
@@ -1919,6 +1990,25 @@ void thdb1d::close_loops()
       froms = &(this->station_vec[this->station_vec[cleg->leg->from.id - 1].uid - 1]);
       tos = &(this->station_vec[this->station_vec[cleg->leg->to.id - 1].uid - 1]);
     }
+
+
+    if (cleg->leg->data_type == TT_DATATYPE_NOSURVEY) {
+      // ak je no-survey, nastavi mu total statistiku
+      cleg->leg->total_dx = tos->x - froms->x;
+      cleg->leg->total_dy = tos->y - froms->y;
+      cleg->leg->total_dz = tos->z - froms->z;
+      // najprv horizontalnu dlzku
+      cleg->leg->total_length = hypot(cleg->leg->total_dx, cleg->leg->total_dy);
+      cleg->leg->total_bearing = atan2(cleg->leg->total_dx, cleg->leg->total_dy) / THPI * 180.0;
+      if (cleg->leg->total_bearing < 0.0)
+        cleg->leg->total_bearing += 360.0;
+      cleg->leg->total_gradient = atan2(cleg->leg->total_dz, cleg->leg->total_length) / THPI * 180.0;
+      // potom celkovu dlzku
+      cleg->leg->total_length = hypot(cleg->leg->total_length, cleg->leg->total_dz);
+      continue;
+    }
+    
+    
     if ((i == 0) && (!anyfixed)) {
       froms->placed = true;
       froms->x = 0.0;
@@ -2092,6 +2182,13 @@ thdb3ddata * thdb1d::get_3d_surface() {
   return &(this->d3_surface);
 }
 
+
+thdb3ddata * thdb1d::get_3d_walls() {
+  this->get_3d();
+  return &(this->d3_walls);
+}
+
+
 thdb3ddata * thdb1d::get_3d() {
   // vrati 3D data - ale len tie, ktore su oznacene
   if (this->d3_data_parsed)
@@ -2123,8 +2220,13 @@ thdb3ddata * thdb1d::get_3d() {
   
   // polygony tam vlozi ako linestripy (data poojdu na thdb1dl)
   last_st = nstat;
-  thdb3dfc * fc = NULL;
+  thdb3dfc * fc = NULL, * secfc = NULL, * endsfc = NULL;
+  thdb3dvx * fsecvx[10], * tsecvx[10];
   thdb1dl ** tlegs = this->get_tree_legs();  
+  double secx[10], secy[10], secXx, secXy, secXz,
+    secYx, secYy, secYz;
+  thdb1ds * fromst, * tost;
+  int secn, j, prevj, nextj;
   for(i = 0; i < nlegs; i++, tlegs++) {
     if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) == 0)) {
       cur_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
@@ -2136,6 +2238,186 @@ thdb3ddata * thdb1d::get_3d() {
       last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       get_3d_check_station(last_st);
       fc->insert_vertex(station_in[last_st], (void *) *tlegs);
+      
+      // tu vygeneruje LRUD obalku
+      
+      if ((*tlegs)->leg->walls == TT_FALSE) goto SKIP_WALLS;
+      
+#define secpt(N,X,Y) secx[N] = X; secy[N] = Y;      
+      switch ((*tlegs)->leg->shape) {
+        case TT_DATALEG_SHAPE_DIAMOND:
+          secpt(0,0.5,0.0);
+          secpt(1,1.0,0.5);
+          secpt(2,0.5,1.0);
+          secpt(3,0.0,0.5);
+          secn = 4;
+          break;
+        case TT_DATALEG_SHAPE_OCTAGON:
+          secpt(0,0.292893218813,0.0);
+          secpt(1,0.707106781167,0.0);
+          secpt(2,1.0,0.292893218813);
+          secpt(3,1.0,0.707106781167);
+          secpt(4,0.707106781167,1.0);
+          secpt(5,0.292893218813,1.0);
+          secpt(6,0.0,0.707106781167);
+          secpt(7,0.0,0.292893218813);
+          secn = 8;
+          break;
+        case TT_DATALEG_SHAPE_TRIANGLE:
+          secpt(0,0.0,0.0);
+          secpt(1,1.0,0.0);
+          secpt(2,0.5,1.0);
+          secn = 3;
+          break;
+        case TT_DATALEG_SHAPE_TUNNEL:
+          secpt(0,0.0,0.0);
+          secpt(1,1.0,0.0);
+          secpt(2,0.904508497187,0.61803398875);
+          secpt(3,0.654508497187,1.0);
+          secpt(4,0.345491502823,1.0);
+          secpt(5,0.095491502823,0.61803398875);
+          secn = 6;
+          break;
+        case TT_DATALEG_SHAPE_RECTANGLE:
+        default:
+          secpt(0,0.0,0.0);
+          secpt(1,1.0,0.0);
+          secpt(2,1.0,1.0);
+          secpt(3,0.0,1.0);
+          secn = 4;
+          break;
+      }
+      
+      // spocitame si X a Y section vectors
+      secXx = cos((*tlegs)->leg->total_bearing / 180.0 * THPI);
+      secXy = -sin((*tlegs)->leg->total_bearing / 180.0 * THPI);
+      secXz = 0;
+      if (fabs((*tlegs)->leg->total_gradient) < (*tlegs)->leg->vtresh) {
+        secYx = 0.0;
+        secYy = 0.0;
+        secYz = 1.0;
+      } else {
+        secYx = -sin((*tlegs)->leg->total_gradient / 180.0 * THPI) * sin((*tlegs)->leg->total_bearing / 180.0 * THPI);
+        secYy = -sin((*tlegs)->leg->total_gradient / 180.0 * THPI) * cos((*tlegs)->leg->total_bearing / 180.0 * THPI);
+        secYz = cos((*tlegs)->leg->total_gradient / 180.0 * THPI);
+      }
+      
+      secfc = this->d3_walls.insert_face(THDB3DFC_TRIANGLE_STRIP);
+      endsfc = this->d3_walls.insert_face(THDB3DFC_TRIANGLES);
+      // vypocitame a vlozime body aj s normalami
+      fromst = &(this->station_vec[(*tlegs)->leg->from.id - 1]);
+      tost = &(this->station_vec[(*tlegs)->leg->to.id - 1]);
+
+//#define SYMPASSAGES
+      for(j = 0; j < secn; j++) {
+
+        fsecvx[j] = this->d3_walls.insert_vertex(
+#ifdef SYMPASSAGES
+          fromst->x - 
+          (*tlegs)->leg->from_left * secXx -
+          (*tlegs)->leg->from_down * secYx + 
+          secx[j] * ((*tlegs)->leg->from_left + (*tlegs)->leg->from_right) * secXx +
+          secy[j] * ((*tlegs)->leg->from_up + (*tlegs)->leg->from_down) * secYx,
+          fromst->y - 
+          (*tlegs)->leg->from_left * secXy -
+          (*tlegs)->leg->from_down * secYy + 
+          secx[j] * ((*tlegs)->leg->from_left + (*tlegs)->leg->from_right) * secXy +
+          secy[j] * ((*tlegs)->leg->from_up + (*tlegs)->leg->from_down) * secYy,
+          fromst->z - 
+          (*tlegs)->leg->from_left * secXz -
+          (*tlegs)->leg->from_down * secYz + 
+          secx[j] * ((*tlegs)->leg->from_left + (*tlegs)->leg->from_right) * secXz +
+          secy[j] * ((*tlegs)->leg->from_up + (*tlegs)->leg->from_down) * secYz,
+#else
+          fromst->x + 
+          (secx[j] < 0.5 ? (*tlegs)->leg->from_left : (*tlegs)->leg->from_right) * (secx[j] - 0.5) / 0.5 * secXx +
+          (secy[j] < 0.5 ? (*tlegs)->leg->from_down : (*tlegs)->leg->from_up) * (secy[j] - 0.5) / 0.5 * secYx,
+          fromst->y + 
+          (secx[j] < 0.5 ? (*tlegs)->leg->from_left : (*tlegs)->leg->from_right) * (secx[j] - 0.5) / 0.5 * secXy +
+          (secy[j] < 0.5 ? (*tlegs)->leg->from_down : (*tlegs)->leg->from_up) * (secy[j] - 0.5) / 0.5 * secYy,
+          fromst->z + 
+          (secx[j] < 0.5 ? (*tlegs)->leg->from_left : (*tlegs)->leg->from_right) * (secx[j] - 0.5) / 0.5 * secXz +
+          (secy[j] < 0.5 ? (*tlegs)->leg->from_down : (*tlegs)->leg->from_up) * (secy[j] - 0.5) / 0.5 * secYz,
+#endif          
+          NULL);
+
+        tsecvx[j] = this->d3_walls.insert_vertex(
+#ifdef SYMPASSAGES
+          tost->x - 
+          (*tlegs)->leg->to_left * secXx -
+          (*tlegs)->leg->to_down * secYx + 
+          secx[j] * ((*tlegs)->leg->to_left + (*tlegs)->leg->to_right) * secXx +
+          secy[j] * ((*tlegs)->leg->to_up + (*tlegs)->leg->to_down) * secYx,
+          tost->y - 
+          (*tlegs)->leg->to_left * secXy -
+          (*tlegs)->leg->to_down * secYy + 
+          secx[j] * ((*tlegs)->leg->to_left + (*tlegs)->leg->to_right) * secXy +
+          secy[j] * ((*tlegs)->leg->to_up + (*tlegs)->leg->to_down) * secYy,
+          tost->z - 
+          (*tlegs)->leg->to_left * secXz -
+          (*tlegs)->leg->to_down * secYz + 
+          secx[j] * ((*tlegs)->leg->to_left + (*tlegs)->leg->to_right) * secXz +
+          secy[j] * ((*tlegs)->leg->to_up + (*tlegs)->leg->to_down) * secYz,
+#else
+          tost->x + 
+          (secx[j] < 0.5 ? (*tlegs)->leg->to_left : (*tlegs)->leg->to_right) * (secx[j] - 0.5) / 0.5 * secXx +
+          (secy[j] < 0.5 ? (*tlegs)->leg->to_down : (*tlegs)->leg->to_up) * (secy[j] - 0.5) / 0.5 * secYx,
+          tost->y + 
+          (secx[j] < 0.5 ? (*tlegs)->leg->to_left : (*tlegs)->leg->to_right) * (secx[j] - 0.5) / 0.5 * secXy +
+          (secy[j] < 0.5 ? (*tlegs)->leg->to_down : (*tlegs)->leg->to_up) * (secy[j] - 0.5) / 0.5 * secYy,
+          tost->z + 
+          (secx[j] < 0.5 ? (*tlegs)->leg->to_left : (*tlegs)->leg->to_right) * (secx[j] - 0.5) / 0.5 * secXz +
+          (secy[j] < 0.5 ? (*tlegs)->leg->to_down : (*tlegs)->leg->to_up) * (secy[j] - 0.5) / 0.5 * secYz,
+#endif          
+          NULL);
+
+      }
+
+      // spocitame normaly na vrcholoch
+      prevj = secn - 1;
+      for(j = 0; j < secn; j++) {
+       nextj = j + 1;
+       if (nextj == secn) nextj = 0;
+       
+       // zrata normalu medzi vrcholmi prevj - j - nextj
+       lxVec v1, v2, v3;
+       v1 = lxVec(fsecvx[j]->x - fsecvx[prevj]->x, fsecvx[j]->y - fsecvx[prevj]->y, fsecvx[j]->z - fsecvx[prevj]->z);
+       v2 = lxVec(fsecvx[j]->x - fsecvx[nextj]->x, fsecvx[j]->y - fsecvx[nextj]->y, fsecvx[j]->z - fsecvx[nextj]->z);
+       v3 = lxVec(fsecvx[j]->x - tsecvx[j]->x, fsecvx[j]->y - tsecvx[j]->y, fsecvx[j]->z - tsecvx[j]->z);
+       v1 = v1 ^ v3; v1.Normalize();
+       v2 = v2 ^ v3; v2.Normalize();
+       v3 = v1 - v2; v3.Normalize();
+       fsecvx[j]->insert_normal(v3.x, v3.y, v3.z);
+
+       v1 = lxVec(tsecvx[j]->x - tsecvx[prevj]->x, tsecvx[j]->y - tsecvx[prevj]->y, tsecvx[j]->z - tsecvx[prevj]->z);
+       v2 = lxVec(tsecvx[j]->x - tsecvx[nextj]->x, tsecvx[j]->y - tsecvx[nextj]->y, tsecvx[j]->z - tsecvx[nextj]->z);
+       v3 = lxVec(tsecvx[j]->x - fsecvx[j]->x, tsecvx[j]->y - fsecvx[j]->y, tsecvx[j]->z - fsecvx[j]->z);
+       v1 = v1 ^ v3; v1.Normalize();
+       v2 = v2 ^ v3; v2.Normalize();
+       v3 = v2 - v1; v3.Normalize();
+       tsecvx[j]->insert_normal(v3.x, v3.y, v3.z);
+       
+       if (j > 1) {
+         endsfc->insert_vertex(fsecvx[0],NULL);
+         endsfc->insert_vertex(fsecvx[j - 1],NULL);
+         endsfc->insert_vertex(fsecvx[j],NULL);
+         endsfc->insert_vertex(tsecvx[0],NULL);
+         endsfc->insert_vertex(tsecvx[j],NULL);
+         endsfc->insert_vertex(tsecvx[j - 1],NULL);
+       }
+       
+       prevj = j;
+      }      
+      // vlozime triangle strip
+      for(j = 0; j < secn; j++) {
+        secfc->insert_vertex(fsecvx[j],NULL);
+        secfc->insert_vertex(tsecvx[j],NULL);
+      }
+      secfc->insert_vertex(fsecvx[0],NULL);
+      secfc->insert_vertex(tsecvx[0],NULL);
+      
+      // koniec generovania LRUD obalky
+      SKIP_WALLS:;
     }
   }
   

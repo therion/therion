@@ -47,6 +47,9 @@ thdata::thdata()
   this->dli_equates = false;
   this->d_mark = TT_DATAMARK_TEMP;
   this->d_flags = TT_LEGFLAG_NONE;
+  this->d_vtresh = 67.5;
+  this->d_shape = TT_DATALEG_SHAPE_OCTAGON;
+  this->d_walls = TT_AUTO;
   this->d_last_equate = 0;
   
   this->reset_data_sd();
@@ -202,9 +205,11 @@ thcmd_option_desc thdata::get_cmd_option_desc(char * opts)
       case TT_DATA_INSTRUMENT:
       case TT_DATA_CALIBRATE:
       case TT_DATA_INFER:
-      case TT_DATA_DATA:
       case TT_DATA_STATION:
       case TT_DATA_EQUATE:
+      case TT_DATA_DATA:
+      case TT_DATA_DECLINATION:
+      case TT_DATA_VTRESH:
         return thcmd_option_desc(id,2);
       default:
         return thcmd_option_desc(id,1);
@@ -267,6 +272,26 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_DATA_DISCOVERY_DATE:
       temp_date.parse(*args);
       this->discovery_date.join(temp_date);
+      break;
+      
+    case TT_DATA_WALLS:
+      if (cod.nargs != 1)
+    	  ththrow(("invalid number of option arguments -- walls"));
+      this->cgroup->d_walls = thmatch_token(*args, thtt_onoffauto);
+      if (this->cgroup->d_walls == TT_UNKNOWN_BOOL)
+    	  ththrow(("invalid walls switch -- %s", *args));
+      break;
+      
+    case TT_DATA_SHAPE:
+      if (cod.nargs != 1)
+    	  ththrow(("invalid number of option arguments -- shape"));
+      this->cgroup->d_shape = thmatch_token(*args, thtt_dataleg_shape);
+      if (this->cgroup->d_shape == TT_DATALEG_SHAPE_UNKNOWN)
+    	  ththrow(("unknown shape type -- %s", *args));
+      break;
+      
+    case TT_DATA_VTRESH:
+      this->cgroup->set_data_vtresh(cod.nargs, args);
       break;
       
     case TT_DATA_INSTRUMENT:
@@ -437,6 +462,9 @@ void thdata::self_print_properties(FILE * outf)
           fprintf(outf," (nosurvey)\n");
           break;
       }
+      fprintf(outf,"\t\tUDLR: (%g,%g,%g,%g) - (%g,%g,%g,%g)\n",
+        thinn(li->from_up),thinn(li->from_down),thinn(li->from_left),thinn(li->from_right),
+        thinn(li->to_up),thinn(li->to_down),thinn(li->to_left),thinn(li->to_right));
       fprintf(outf,"\t\tdecination: %f deg\n", thinn(li->declination));
       fprintf(outf,"\t\tmark: %d\n", li->s_mark);
       fprintf(outf,"\t\tflags: %d\n", li->flags);
@@ -492,6 +520,16 @@ void thdata::self_print_properties(FILE * outf)
     fprintf(outf," \"%s\" %d (%s [%ld])\n", (si->comment == NULL ? "" : si->comment),
       si->flags, si->srcf.name, si->srcf.line);
   }
+
+  // print dimension lists
+  for(thstdims_list::iterator di = this->dims_list.begin();
+    di != this->dims_list.end(); di++) {
+    fprintf(outf,"\tUDLR: ");
+    fprintf(outf,di->station);
+    fprintf(outf," %g,%g,%g,%g\n", thinn(di->up), thinn(di->down), thinn(di->left), thinn(di->right));
+  }
+
+
 }
 
 
@@ -525,6 +563,7 @@ void thdata::set_data_calibration(int nargs, char ** args)
       case TT_DATALEG_Y:
       case TT_DATALEG_NORTHING:
       case TT_DATALEG_Z:
+      case TT_DATALEG_DIMS:
       case TT_DATALEG_ALTITUDE:
       case TT_DATALEG_BEARING:
       case TT_DATALEG_GRADIENT:
@@ -588,6 +627,24 @@ void thdata::set_data_calibration(int nargs, char ** args)
       case TT_DATALEG_GRADIENT:
         this->dlc_gradient = this->dlc_default;
         break;
+      case TT_DATALEG_DIMS:
+        this->dlc_up = this->dlc_default;
+        this->dlc_down = this->dlc_default;
+        this->dlc_left = this->dlc_default;
+        this->dlc_right = this->dlc_default;
+        break;
+      case TT_DATALEG_UP:
+        this->dlc_up = this->dlc_default;
+        break;
+      case TT_DATALEG_DOWN:
+        this->dlc_down = this->dlc_default;
+        break;
+      case TT_DATALEG_LEFT:
+        this->dlc_left = this->dlc_default;
+        break;
+      case TT_DATALEG_RIGHT:
+        this->dlc_right = this->dlc_default;
+        break;
     }
   }
 }  // data calibration
@@ -613,6 +670,7 @@ void thdata::set_data_units(int nargs, char ** args)
       case TT_DATALEG_LENGTH:
       case TT_DATALEG_COUNT:
       case TT_DATALEG_DEPTH:
+      case TT_DATALEG_DEPTHCHANGE:
       case TT_DATALEG_POSITION:
       case TT_DATALEG_X:
       case TT_DATALEG_EASTING:
@@ -620,6 +678,7 @@ void thdata::set_data_units(int nargs, char ** args)
       case TT_DATALEG_NORTHING:
       case TT_DATALEG_Z:
       case TT_DATALEG_ALTITUDE:
+      case TT_DATALEG_DIMS:
       case TT_DATALEG_UP:
       case TT_DATALEG_DOWN:
       case TT_DATALEG_LEFT:
@@ -677,6 +736,7 @@ void thdata::set_data_units(int nargs, char ** args)
         this->dlu_counter = this->dlu_sdlength;
         break;
       case TT_DATALEG_DEPTH:
+      case TT_DATALEG_DEPTHCHANGE:
         this->dlu_depth = this->dlu_sdlength;
         break;
       case TT_DATALEG_X:
@@ -710,12 +770,50 @@ void thdata::set_data_units(int nargs, char ** args)
       case TT_DATALEG_GRADIENT:
         this->dlu_gradient = this->dlu_sdangle;
         break;
+      case TT_DATALEG_DIMS:
+        this->dlu_up = this->dlu_sdlength;
+        this->dlu_down = this->dlu_sdlength;
+        this->dlu_left = this->dlu_sdlength;
+        this->dlu_right = this->dlu_sdlength;
+        break;
+      case TT_DATALEG_UP:
+        this->dlu_up = this->dlu_sdlength;
+        break;
+      case TT_DATALEG_DOWN:
+        this->dlu_down = this->dlu_sdlength;
+        break;
+      case TT_DATALEG_LEFT:
+        this->dlu_left = this->dlu_sdlength;
+        break;
+      case TT_DATALEG_RIGHT:
+        this->dlu_right = this->dlu_sdlength;
+        break;
     }
   }
 
 	this->dlu_sdangle.allow_percentage = false;
 }  // data units
   
+
+void thdata::set_data_vtresh(int nargs, char ** args)
+{
+
+  if ((nargs < 1) || (nargs > 2))
+    ththrow(("invalid number of option arguments -- vtreshold"))
+  int nid;
+  thtfangle dlu;
+  thparse_double(nid, this->d_vtresh, args[0]);
+  if (nid != TT_SV_NUMBER)
+    ththrow(("invalid vtreshold -- %s", args[0]))
+  if (nargs > 1) {
+    dlu.parse_units(args[1]);
+    this->d_vtresh = dlu.transform(this->d_vtresh);
+  }
+  if ((this->d_vtresh < 0.0) || (this->d_vtresh > 90.0))
+    ththrow(("vtreshold out of range -- %s", args[0]))
+  
+}
+
 
 void thdata::set_data_declination(int nargs, char ** args)
 {
@@ -928,6 +1026,7 @@ void thdata::set_data_data(int nargs, char ** args)
   for(dix = 1; dix < nargs; dix++) {
     idd = thmatch_token(args[dix], thtt_dataleg_comp);
     switch (idd) {
+
       case TT_DATALEG_STATION:
         if (this->di_station) {
           err_duplicate = true;
@@ -954,6 +1053,10 @@ void thdata::set_data_data(int nargs, char ** args)
           err_inimm = true;
           break;
         }
+        if (this->d_type == TT_DATATYPE_DIMS) {
+          err_itype = true;
+          break;
+        }
         this->di_from = true;
         break;        
      
@@ -964,6 +1067,10 @@ void thdata::set_data_data(int nargs, char ** args)
         }
         if (this->di_station) {
           err_inimm = true;
+          break;
+        }
+        if (this->d_type == TT_DATATYPE_DIMS) {
+          err_itype = true;
           break;
         }
         this->di_to = true;
@@ -1242,12 +1349,20 @@ void thdata::set_data_data(int nargs, char ** args)
           err_duplicate = true;
           break;
         }
+        if (this->d_type == TT_DATATYPE_DIMS) {
+          err_itype = true;
+          break;
+        }
         this->di_direction = true;
         break;
         
       case TT_DATALEG_NEWLINE:
         if (this->di_newline) {
           err_duplicate = true;
+          break;
+        }
+        if (this->d_type == TT_DATATYPE_DIMS) {
+          err_itype = true;
           break;
         }
         if ((dix == 1) || (dix == nargs - 1))
@@ -1305,7 +1420,9 @@ void thdata::set_data_data(int nargs, char ** args)
 
       case TT_DATALEG_IGNORE:
         break;
-        
+
+      case TT_DATALEG_IGNOREALL:
+        break;        
         
       default:
         ththrow(("invalid identifier -- %s", args[dix]))
@@ -1320,9 +1437,13 @@ void thdata::set_data_data(int nargs, char ** args)
       ththrow(("invalid reading for this style -- %s", args[dix]))
     if (err_idanl)
       ththrow(("interleaved reading after newline -- %s", args[dix]))
-    // if no errors, set order  
+   
+    // if no errors, no ignoreall - set order  
     this->d_order[dix - 1] = idd;
     this->d_nitems++;
+    if (idd == TT_DATALEG_IGNOREALL)
+      break;
+      
   }
   
   // check if all the data specified
@@ -1347,6 +1468,9 @@ void thdata::set_data_data(int nargs, char ** args)
     case TT_DATATYPE_NOSURVEY:
       all_data = true;
       break;
+    case TT_DATATYPE_DIMS:
+      all_data = this->di_up || this->di_down || this->di_left || this->di_right;
+      break;
   }
   all_data = all_data &&
       ((this->di_from && this->di_to) || this->di_station);
@@ -1356,15 +1480,74 @@ void thdata::set_data_data(int nargs, char ** args)
 } // data data
 
 
+void thdata_parse_dim(char * src, double & d1, double & d2, 
+  bool & d2ok, char * item, thtfpwf * ctran, thtflength * utran) {
+
+  int sv;  
+  d1 = thnan;
+  d2 = thnan;
+  
+  if (!d2ok) {
+    thparse_double(sv, d1, src);
+    if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
+      ththrow(("invalid %s reading -- %s", item, src))
+  } else {
+    char ** args;
+    long nargs;
+    thsplit_args(& thdb.mbuff_tmp2, src);
+    args = thdb.mbuff_tmp2.get_buffer();
+    nargs = thdb.mbuff_tmp2.get_size();    
+    d2ok = false;
+    if ((nargs < 1) || (nargs > 2))
+      ththrow(("invalid %s reading -- %s", item, src))
+    if (nargs > 1) {
+      d2ok = true;
+      thparse_double(sv, d2, args[1]);
+      if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
+        ththrow(("invalid %s reading -- %s", item, args[1]))
+    }
+    thparse_double(sv, d1, args[0]);
+    if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
+      ththrow(("invalid %s reading -- %s", item, args[0]))
+  }
+  
+  if (!thisnan(d1)) {
+    d1 = ctran->evaluate(d1);
+    d1 = utran->transform(d1);
+    if (d1 < 0.0)
+      ththrow(("negative %s reading -- %s", item, src))
+  }
+  if (!thisnan(d2)) {
+    d2 = ctran->evaluate(d2);
+    d2 = utran->transform(d2);
+    if (d2 < 0.0)
+      ththrow(("negative %s reading -- %s", item, src))
+  }
+  
+}
+
+
 void thdata::insert_data_leg(int nargs, char ** args)
 {
-  bool to_clear = true;
+  bool to_clear = true, ftgiven = false, ftorder = false;
   thdataleg dumm;
+  thstdims * cdims = NULL;
+  
+#ifdef THDEBUG
+  thdataleg * cdleg;
+#endif
+
   int carg;
-  if (this->d_current == 0) {
+  
+  if ((this->d_current == 0) && (this->d_type != TT_DATATYPE_DIMS)) {
+  
     this->pd_leg = this->cd_leg;
     this->pd_leg_def = this->cd_leg_def;
     this->cd_leg = this->leg_list.insert(this->leg_list.end(),dumm);
+
+#ifdef THDEBUG
+    cdleg = &(*this->cd_leg);
+#endif
     
     // set all the data
     this->cd_leg->srcf = this->db->csrc;
@@ -1373,6 +1556,10 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->cd_leg->s_mark = this->d_mark;
     this->cd_leg->flags = this->d_flags;
     this->cd_leg->psurvey = this->db->get_current_survey();
+    
+    this->cd_leg->walls = this->d_walls;
+    this->cd_leg->vtresh = this->d_vtresh;
+    this->cd_leg->shape = this->d_shape;
     
     this->cd_leg->length_sd = this->dls_length;
     this->cd_leg->bearing_sd = this->dls_bearing;
@@ -1400,21 +1587,49 @@ void thdata::insert_data_leg(int nargs, char ** args)
       to_clear = false;
   }
   
+  if (this->d_type == TT_DATATYPE_DIMS) {
+    // vlozi novu dimension a nastavi pointer na nu
+    cdims = &(*(this->dims_list.insert(this->dims_list.end(), thstdims())));
+    cdims->psurvey = this->db->get_current_survey();
+    cdims->srcf = this->db->csrc;
+    to_clear = false;
+  }
+  
   // now set the data
   bool exit_new_line = false;
   int val_id;
   double val;
+  
+  ftgiven = this->di_from && this->di_to;
+  if (ftgiven) {
+    for(carg = 0; carg < this->d_nitems; carg++) {
+      if (this->d_order[carg] == TT_DATALEG_FROM) {
+        ftorder = true;
+        break;
+      } else if (this->d_order[carg] == TT_DATALEG_TO) {
+        ftorder = false;
+        break;
+      }
+    }
+  }
+  
   for(carg = 0;this->d_current < this->d_nitems;this->d_current++, carg++) {
   
     if ((carg == nargs) && 
-        (this->d_order[this->d_current] != TT_DATALEG_NEWLINE))
+        ((this->d_order[this->d_current] != TT_DATALEG_NEWLINE)
+         && (this->d_order[this->d_current] != TT_DATALEG_IGNOREALL)))
       ththrow(("not enough data readings"))
   
     switch(this->d_order[this->d_current]) {
     
       case TT_DATALEG_STATION:
-        thparse_objectname(this->cd_leg->station, &(this->db->buff_stations),
-          args[carg]);
+        if (this->d_type == TT_DATATYPE_DIMS) {
+          thparse_objectname(cdims->station, &(this->db->buff_stations),
+            args[carg]);
+        } else {
+          thparse_objectname(this->cd_leg->station, &(this->db->buff_stations),
+            args[carg]);
+        }
         break;
         
       case TT_DATALEG_FROM:
@@ -1462,6 +1677,10 @@ void thdata::insert_data_leg(int nargs, char ** args)
           case TT_SV_NUMBER:
             val = this->dlc_bearing.evaluate(val);
             val = this->dlu_bearing.transform(val);
+            if (val < 0.0)
+              val += 360.0;
+            if (val >= 360.0)
+              val -= 360.0;
             if ((val < 0.0) || (val >= 360.0))
               ththrow(("bearing reading out of range -- %s", args[carg]))
             else
@@ -1484,6 +1703,10 @@ void thdata::insert_data_leg(int nargs, char ** args)
           case TT_SV_NUMBER:
             val = this->dlc_bearing.evaluate(val);
             val = this->dlu_bearing.transform(val);
+            if (val < 0.0)
+              val += 360.0;
+            if (val >= 360.0)
+              val -= 360.0;
             if ((val < 0.0) || (val >= 360.0))
               ththrow(("backwards bearing reading out of range -- %s", args[carg]))
             else
@@ -1708,14 +1931,94 @@ void thdata::insert_data_leg(int nargs, char ** args)
         }
         break;
         
+      case TT_DATALEG_IGNOREALL:
+        carg = nargs;
+        to_clear = true;
       case TT_DATALEG_NEWLINE:
         this->d_current++;
         exit_new_line = true;
         break;
+
+      // iba ak specifikovane from a to, tak moozu byt dve
+      // hodnoty - inak nacitavame do to
+        
+      case TT_DATALEG_UP:
+        if (this->d_type == TT_DATATYPE_DIMS) {
+          ftgiven = false;
+          thdata_parse_dim(args[carg], cdims->up, val, ftgiven, "up", 
+            &this->dlc_up, &this->dlu_up);
+        } else {
+          ftgiven = this->di_from && this->di_to;
+          thdata_parse_dim(args[carg], 
+            this->cd_leg->to_up, this->cd_leg->from_up, ftgiven, "up", 
+            &this->dlc_up, &this->dlu_up);
+          if (ftgiven && ftorder) {
+            val = this->cd_leg->to_up;
+            this->cd_leg->to_up = this->cd_leg->from_up;
+            this->cd_leg->from_up = val;
+          }
+        }
+        break;
+        
+      case TT_DATALEG_DOWN:
+        if (this->d_type == TT_DATATYPE_DIMS) {
+          ftgiven = false;
+          thdata_parse_dim(args[carg], cdims->down, val, ftgiven, "down", 
+            &this->dlc_down, &this->dlu_down);
+        } else {
+          ftgiven = this->di_from && this->di_to;
+          thdata_parse_dim(args[carg], 
+            this->cd_leg->to_down, this->cd_leg->from_down, ftgiven, "down", 
+            &this->dlc_down, &this->dlu_down);
+          if (ftgiven && ftorder) {
+            val = this->cd_leg->to_down;
+            this->cd_leg->to_down = this->cd_leg->from_down;
+            this->cd_leg->from_down = val;
+          }
+        }
+        break;
+        
+      case TT_DATALEG_LEFT:
+        if (this->d_type == TT_DATATYPE_DIMS) {
+          ftgiven = false;
+          thdata_parse_dim(args[carg], cdims->left, val, ftgiven, "left", 
+            &this->dlc_left, &this->dlu_left);
+        } else {
+          ftgiven = this->di_from && this->di_to;
+          thdata_parse_dim(args[carg], 
+            this->cd_leg->to_left, this->cd_leg->from_left, ftgiven, "left", 
+            &this->dlc_left, &this->dlu_left);
+          if (ftgiven && ftorder) {
+            val = this->cd_leg->to_left;
+            this->cd_leg->to_left = this->cd_leg->from_left;
+            this->cd_leg->from_left = val;
+          }
+        }
+        break;
+        
+      case TT_DATALEG_RIGHT:
+        if (this->d_type == TT_DATATYPE_DIMS) {
+          ftgiven = false;
+          thdata_parse_dim(args[carg], cdims->right, val, ftgiven, "right", 
+            &this->dlc_right, &this->dlu_right);
+        } else {
+          ftgiven = this->di_from && this->di_to;
+          thdata_parse_dim(args[carg], 
+            this->cd_leg->to_right, this->cd_leg->from_right, ftgiven, "right", 
+            &this->dlc_right, &this->dlu_right);
+          if (ftgiven && ftorder) {
+            val = this->cd_leg->to_right;
+            this->cd_leg->to_right = this->cd_leg->from_right;
+            this->cd_leg->from_right = val;
+          }
+        }
+        break;
         
     }
+    
     if (exit_new_line)
       break;
+      
   }  // end of data setting
   
   if (carg < nargs)
@@ -1725,12 +2028,12 @@ void thdata::insert_data_leg(int nargs, char ** args)
     if (this->di_fromcount && this->di_tocount && 
       (this->cd_leg->fromcounter > this->cd_leg->tocounter))
       ththrow(("negative counter difference"))
-    if ((this->di_gradient || this->di_backgradient) && (this->di_bearing || this->di_backbearing) &&
-      (!(thisnan(this->cd_leg->bearing) 
-      && thisnan(this->cd_leg->backbearing))) &&
-      (((thisinf(this->cd_leg->gradient) != 0) || 
-      (thisinf(this->cd_leg->backgradient) != 0))))
-      ththrow(("compass reading given on plumbed shot"))
+//    if ((this->di_gradient || this->di_backgradient) && (this->di_bearing || this->di_backbearing) &&
+//      (!(thisnan(this->cd_leg->bearing) 
+//      && thisnan(this->cd_leg->backbearing))) &&
+//      (((thisinf(this->cd_leg->gradient) != 0) || 
+//      (thisinf(this->cd_leg->backgradient) != 0))))
+//      ththrow(("compass reading given on plumbed shot"))
     if ((this->di_gradient && this->di_backgradient) && 
       (((thisinf(this->cd_leg->gradient) != 0) &&
       (thisinf(this->cd_leg->backgradient) == 0)) ||
@@ -1740,6 +2043,11 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->d_current = 0;
     this->complete_interleaved_data();
   }
+
+  if (this->d_type == TT_DATATYPE_DIMS) {
+    this->d_current = 0;
+  }
+  
 }
 
 
@@ -1756,6 +2064,23 @@ void thdata::complete_interleaved_data()
   if (this->di_station) {
     this->pd_leg->from = this->pd_leg->station;
     this->pd_leg->to = this->cd_leg->station;
+  }
+  
+  if (this->di_up) {
+    this->pd_leg->from_up = this->pd_leg->to_up;
+    this->pd_leg->to_up = this->cd_leg->to_up;
+  }
+  if (this->di_down) {
+    this->pd_leg->from_down = this->pd_leg->to_down;
+    this->pd_leg->to_down = this->cd_leg->to_down;
+  }
+  if (this->di_left) {
+    this->pd_leg->from_left = this->pd_leg->to_left;
+    this->pd_leg->to_left = this->cd_leg->to_left;
+  }
+  if (this->di_right) {
+    this->pd_leg->from_right = this->pd_leg->to_right;
+    this->pd_leg->to_right = this->cd_leg->to_right;
   }
 
   // set the counter
@@ -1961,11 +2286,27 @@ void thdata::set_data_flags(int nargs, char ** args)
   
 void thdata::set_data_mark(int nargs, char ** args)
 {
-  if (nargs > 1)
-    ththrow(("too many option arguments -- mark"))
-  this->d_mark = thmatch_token(args[0], thtt_datamark);
-  if (this->d_mark == TT_DATAMARK_UNKNOWN)
-    ththrow(("unknown type of station mark -- %s", args[0]))
+  if (nargs < 1)
+	  ththrow(("missing option arguments -- mark"));
+
+  int tmp_mark = thmatch_token(args[nargs - 1], thtt_datamark);
+	if (tmp_mark == TT_DATAMARK_UNKNOWN) {
+	  ththrow(("unknown type of station mark -- %s", args[nargs - 1]))
+	}
+		
+  if (nargs > 1) {
+		thdatamark dumm;
+		thdatamark_list::iterator it;
+		int mi;
+	  for(mi = 0; mi < (nargs - 1); mi++) {
+    	it = this->mark_list.insert(this->mark_list.end(),dumm);
+      it->mark = tmp_mark;
+	    thparse_objectname(it->station, & this->db->buff_stations, args[mi]);
+      it->srcf = this->db->csrc;
+      it->psurvey = this->db->get_current_survey();
+    } 
+	} else
+	  this->d_mark = tmp_mark;
 }
 
 
@@ -2155,6 +2496,10 @@ void thdata::start_group() {
   tmp->d_mark = this->cgroup->d_mark;
   tmp->d_flags = this->cgroup->d_flags;
   tmp->d_last_equate = this->cgroup->d_last_equate;
+  
+  tmp->d_vtresh = this->cgroup->d_vtresh;
+  tmp->d_walls = this->cgroup->d_walls;
+  tmp->d_shape = this->cgroup->d_shape;
 
   this->cgroup = tmp;
 }
@@ -2181,6 +2526,11 @@ void thdata::end_group() {
     fxi != tmp->fix_list.end(); fxi++) {
     this->cgroup->fix_list.insert(this->cgroup->fix_list.end(), (*fxi));
   }
+	// marks
+	for(thdatamark_list::iterator mi = tmp->mark_list.begin();
+		mi != tmp->mark_list.end(); mi++) {
+    this->cgroup->mark_list.insert(this->cgroup->mark_list.end(), (*mi));
+  }
   // equates
   for(thdataequate_list::iterator ei = tmp->equate_list.begin();
     ei != tmp->equate_list.end(); ei++) {
@@ -2191,9 +2541,128 @@ void thdata::end_group() {
     si != tmp->ss_list.end(); si++) {
     this->cgroup->ss_list.insert(this->cgroup->ss_list.end(), (*si));
   }
+  // dimensions
+  for(thstdims_list::iterator di = tmp->dims_list.begin();
+    di != tmp->dims_list.end(); di++) {
+    this->cgroup->dims_list.insert(this->cgroup->dims_list.end(), (*di));
+  }
   
   tmp->self_delete();
 }
+
+
+struct thdatadimrec {
+  double u,d,l,r;
+  thdatadimrec() : u(thnan), d(thnan), l(thnan), r(thnan) {}
+};
+
+
+typedef std::map<long, thdatadimrec> thdatadimmap;
+
+
+#define setdims(sU,sD,sL,sR,tU,tD,tL,tR) {\
+  if (!thisnan(sU)) tU = sU; \
+  if (!thisnan(sD)) tD = sD; \
+  if (!thisnan(sL)) tL = sL; \
+  if (!thisnan(sR)) tR = sR; \
+  }
+
+#define adddims(sU,sD,sL,sR,tU,tD,tL,tR) {\
+  if (thisnan(tU)) tU = sU; \
+  if (thisnan(tD)) tD = sD; \
+  if (thisnan(tL)) tL = sL; \
+  if (thisnan(tR)) tR = sR; \
+  }
+
+
+void thdata::complete_dimensions()
+{
+
+  thdatadimmap dm, idm;
+  thdatadimmap::iterator dmi;
+  thdatadimrec dr;
+  thdataleg_list::iterator li, pli, nli;
+
+  // vytvori explicitny dim map
+  for(thstdims_list::iterator di = this->dims_list.begin();
+    di != this->dims_list.end(); di++) {
+    dr = dm[di->station.id];
+    setdims(di->up,di->down,di->left,di->right,dr.u,dr.d,dr.l,dr.r);
+    dm[di->station.id] = dr;
+  }
+
+#define start_leg_cycle \
+    for(li = this->leg_list.begin(); li != this->leg_list.end(); li++) \
+      if (li->is_valid) {
+
+#define end_leg_cycle }
+  
+  // vytvori implicitny dim map
+  start_leg_cycle
+    dr = idm[li->from.id];
+    setdims(li->from_up, li->from_down, li->from_left, li->from_right, dr.u, dr.d, dr.l, dr.r)
+    idm[li->from.id] = dr;
+    dr = idm[li->to.id];
+    setdims(li->to_up, li->to_down, li->to_left, li->to_right, dr.u, dr.d, dr.l, dr.r)
+    idm[li->to.id] = dr;
+  end_leg_cycle
+  
+
+  // priradi explicitny dim map
+  if (this->dims_list.size() > 0) {
+    start_leg_cycle  
+      dmi = dm.find(li->from.id);
+      if (dmi != dm.end()) adddims(dmi->second.u, dmi->second.d, dmi->second.l, dmi->second.r, li->from_up, li->from_down, li->from_left, li->from_right);
+      dmi = dm.find(li->to.id);
+      if (dmi != dm.end()) adddims(dmi->second.u, dmi->second.d, dmi->second.l, dmi->second.r, li->to_up, li->to_down, li->to_left, li->to_right);
+    end_leg_cycle
+  }
+
+  pli = this->leg_list.end();
+  start_leg_cycle
+    // ak je zadany aspon jeden udaj
+    if ((!thisnan(li->from_up)) || (!thisnan(li->from_down)) ||
+        (!thisnan(li->from_left)) || (!thisnan(li->from_right)) ||
+        (!thisnan(li->to_up)) || (!thisnan(li->to_down)) ||
+        (!thisnan(li->to_left)) || (!thisnan(li->to_right))) {
+      nli = li++;
+      
+      // predchadzajuca zamera
+      if ((pli != this->leg_list.end()) && (pli->to.id == li->from.id))
+        adddims(pli->to_up, pli->to_down, pli->to_left, pli->to_right, li->from_up, li->from_down, li->from_left, li->from_right);
+      if ((pli != this->leg_list.end()) && (pli->from.id == li->from.id))
+        adddims(pli->from_up, pli->from_down, pli->from_left, pli->from_right, li->from_up, li->from_down, li->from_left, li->from_right);
+
+      // impl. dim map        
+      dmi = idm.find(li->from.id);
+      if (dmi != idm.end()) adddims(dmi->second.u, dmi->second.d, dmi->second.l, dmi->second.r, li->from_up, li->from_down, li->from_left, li->from_right);
+      dmi = idm.find(li->to.id);
+      if (dmi != idm.end()) adddims(dmi->second.u, dmi->second.d, dmi->second.l, dmi->second.r, li->to_up, li->to_down, li->to_left, li->to_right);
+      
+      // prev station/next station
+      adddims(li->to_up, li->to_down, li->to_left, li->to_right, li->from_up, li->from_down, li->from_left, li->from_right);
+      adddims(li->from_up, li->from_down, li->from_left, li->from_right, li->to_up, li->to_down, li->to_left, li->to_right);
+      
+      pli = li;
+    }
+  end_leg_cycle
+  
+  // TODO: pre kazdy rez, kde aspon niekde nieco - podoplna chybajuce
+  // a nastavi walls na off kde nic nenajde
+  start_leg_cycle
+    adddims(li->to_down, li->to_up, li->to_right, li->to_left, li->to_up, li->to_down, li->to_left, li->to_right);
+    adddims(li->to_left, li->to_left, li->to_up, li->to_up, li->to_up, li->to_down, li->to_left, li->to_right);
+    adddims(li->from_down, li->from_up, li->from_right, li->from_left, li->from_up, li->from_down, li->from_left, li->from_right);
+    adddims(li->from_left, li->from_left, li->from_up, li->from_up, li->from_up, li->from_down, li->from_left, li->from_right);
+    if ((thisnan(li->to_up)) || (thisnan(li->from_up)))
+      li->walls = TT_FALSE;
+  end_leg_cycle
+  
+
+}
+
+
+
 
 
 

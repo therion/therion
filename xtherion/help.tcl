@@ -129,6 +129,10 @@ General shortcuts
 Drawing area and background images
  * RightClick = scroll drawing area
  * Double RightClick on the image = move the image
+ 
+Inserting scrap
+ * press "Ctrl-r" or "Edit" > "Insert" > "scrap" to insert new scrap
+ * new scrap is inserted just after the current one
 
 Inserting point
  * Ctrl+P = switch to `insert point' mode
@@ -178,7 +182,8 @@ Splitting line
     press "Edit line" > "Split line" in the Line control panel
     
 Inserting area
- * press "Edit" > "Insert area" to switch to the "insert area border" mode
+ * press "Ctrl-a" or "Edit" > "Insert" > "area" to switch to 
+    the "insert area border" mode
  * RightClick on the lines, that suround desired area
  * Esc to finish area border lines insertion
 
@@ -192,7 +197,9 @@ Editing area
 Selecting an existing object
  * LeftClick = select object on the top
  * RightClick = select object right below the top object (useful when several
-    points lie above each other)} 
+    points lie above each other)
+
+} 
     
      
   $txb.txt configure -state disabled

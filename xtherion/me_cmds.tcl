@@ -460,13 +460,20 @@ proc xth_me_cmds_select {id} {
     if {$xth(me,cmds,$id,ct) == 2} {
       set center_to 1
     }
-    set pid 0
+    set pid -1
   } elseif {[llength $id] < 2} {
     set id [lindex $id 0]
-    set pid 0
+    set pid -1
   } else {
     set pid [lindex $id 1]
     set id [lindex $id 0]
+  }  
+
+  if {$pid == -1} {
+    set pid 0
+    if {($xth(me,cmds,$id,ct) == 3) && ([llength $xth(me,cmds,$id,xplist)] > 1)} {
+      set center_to [lindex $xth(me,cmds,$id,xplist) [expr [llength $xth(me,cmds,$id,xplist)] - 2]]
+    }
   }
   
   set newx [lsearch $xth(me,cmds,xlist) $id]
@@ -513,8 +520,15 @@ proc xth_me_cmds_select {id} {
     default {xth_me_prev_cmd $xth(me,cmds,$id,data)}
   }
   
-  if {$center_to} {
-    xth_me_center_to [list $xth(me,cmds,$id,x) $xth(me,cmds,$id,y)]
+  if {$center_to > 0} {
+    switch $xth(me,cmds,$id,ct) {
+      2 { xth_me_center_to [list $xth(me,cmds,$id,x) $xth(me,cmds,$id,y)]
+        }
+      3 { xth_me_center_to [list \
+          $xth(me,cmds,$xth(me,cmds,selid),$center_to,x) \
+          $xth(me,cmds,$xth(me,cmds,selid),$center_to,y)]
+        }
+    }
   }
   update idletasks
 }
@@ -684,6 +698,7 @@ proc xth_me_cmds_create_endscrap {ix mode name} {
   xth_me_cmds_update_list $id
   if {$mode} {
     xth_me_cmds_select $id
+    xth_me_cmds_select [expr $id - 1]
     xth_me_unredo_action "creating endscrap" "xth_me_cmds_delete $id" \
       "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]"  
   }
@@ -955,7 +970,21 @@ proc xth_me_cmds_create_scrap {ix mode name opts} {
   set undoselect {}
   if {[string length $ix] == 0} {
     set undoselect "; xth_me_cmds_select $xth(me,cmds,selid)"
-    xth_me_cmds_select [lindex $xth(me,cmds,xlist) 0]
+
+    #xth_me_cmds_select [lindex $xth(me,cmds,xlist) 0]
+    set newselid 0
+    set cx [lsearch -exact $xth(me,cmds,xlist) $xth(me,cmds,selid)]
+    if {$cx > -1} {
+      for {set cc [expr $cx + 1]} {$cc < [llength $xth(me,cmds,xlist)]} {incr cc} {
+        set cselid [lindex $xth(me,cmds,xlist) $cc]
+        if {$xth(me,cmds,$cselid,ct) == 4} {
+          set newselid $cselid
+          break
+        }
+      }
+    }
+    xth_me_cmds_select $newselid
+    
   }
   
   set id [xth_me_cmds_create 4 {} $ix]
@@ -1073,15 +1102,22 @@ proc xth_me_cmds_action {} {
     0 {
       xth_me_cmds_create_line {} 1 "" "" ""
       xth_ctrl_scroll_to me line
+      xth_ctrl_maximize me line
+      xth_ctrl_maximize me linept
     }
     1 {
       xth_me_cmds_set_mode 1    
     }
     2 {
       xth_me_cmds_create_scrap {} 1 "" ""
+      xth_ctrl_scroll_to me scrap
+      xth_ctrl_maximize me scrap
     }
     3 {
       xth_me_cmds_create_text {} 1 "\n" "1.0"
+      xth_ctrl_scroll_to me text
+      xth_ctrl_maximize me text
+      focus $xth(ctrl,me,text).txt
     }
     4 {
       xth_me_cmds_delete {}
@@ -1089,6 +1125,7 @@ proc xth_me_cmds_action {} {
     5 {
       xth_me_cmds_create_area {} 1 "" "" ""
       xth_ctrl_scroll_to me ac
+      xth_ctrl_maximize me ac
     }
   }
 }
@@ -1181,8 +1218,11 @@ proc xth_me_cmds_click {id tagOrId x y mx my} {
           xth_me_cmds_select "$id $pid"
           if {$pid == 0} {
             xth_ctrl_scroll_to me point
+            xth_ctrl_maximize me point
           } else {
             xth_ctrl_scroll_to me line
+            xth_ctrl_maximize me line
+            xth_ctrl_maximize me linept
           }
         } else {
           switch $xth(me,cmds,$id,ct) {
@@ -1200,10 +1240,17 @@ proc xth_me_cmds_click {id tagOrId x y mx my} {
     }
     1 {
       xth_ctrl_scroll_to me point
-      xth_me_cmds_create_point {} 1 $x $y {} {}
+      xth_ctrl_maximize me point
+      if {$id == ($xth(me,cmds,cmdln) - 1)} {
+        xth_me_cmds_end_point 
+      } else {
+        xth_me_cmds_create_point {} 1 $x $y {} {}
+      }
     }
     2 {
       xth_ctrl_scroll_to me line
+      xth_ctrl_maximize me line
+      xth_ctrl_maximize me linept
       set fpid -1
       set lpid -1
       if {($id == $xth(me,cmds,selid)) && ([string length $id] > 0) && ($pid > 0)} {
@@ -1226,12 +1273,22 @@ proc xth_me_cmds_click {id tagOrId x y mx my} {
       }      
     }
     3 {
-      if {$xth(me,cmds,$id,ct) == 3} {
+      if {([string length $id] > 0) && ($xth(me,cmds,$id,ct) == 3)} {
         xth_me_cmds_insert_area_lineid $id $mx $my
       }
     }
   }
 }
+
+
+proc xth_me_cmds_end_point {} {
+  set recmds "xth_me_cmds_set_mode 0"
+  set uncmds "xth_me_cmds_set_mode 1"
+  eval $recmds
+  xth_me_unredo_action "end point insertion" $uncmds $recmds
+}
+
+
 
 
 proc xth_me_cmds_click_lineln {id tagOrId mx my} {
@@ -1310,6 +1367,11 @@ proc xth_me_cmds_create_point {ix mode x y type opts} {
   set xth(me,cmds,$id,y) $y
   
   if {$mode && ([string length $opts] < 1)} {
+    if {([string length $type] < 1) && \
+        [string equal $xth(me,dflt,point,type) station] && \
+        [regexp {\-name\s+(\S+)} $xth(me,dflt,point,options) dum stname]} {
+      regsub {\-name\s+(\S+)} $xth(me,dflt,point,options) "-name [xth_incr_station_name $stname $xth(me,snai)]" xth(me,dflt,point,options)
+    }
     set opts $xth(me,dflt,point,options)
   }
 
@@ -1750,7 +1812,7 @@ proc xth_me_cmds_draw_point {id} {
   $xth(me,can) bind pt$id <1> "xth_me_cmds_click $id pt$id \$xth(me,cmds,$id,x) \$xth(me,cmds,$id,y) %x %y"
   $xth(me,can) bind pt$id <3> "xth_me_cmds_special_select $id %x %y"  
   $xth(me,can) bind pt$id <Shift-1> "xth_me_cmds_special_select $id %x %y"  
-  $xth(me,can) bind pt$id <Control-1> "xth_me_cmds_click_area pt$id %x %y"
+  $xth(me,can) bind pt$id <$xth(kb_control)-1> "xth_me_cmds_click_area pt$id %x %y"
 }
 
 
@@ -1767,12 +1829,18 @@ proc xth_me_cmds_special_select {id x y} {
     xth_me_cmds_select "$id $pid"
     if {$pid != 0} {
       xth_ctrl_scroll_to me line
+      xth_ctrl_maximize me line
+      xth_ctrl_maximize me linept
     } else {
       xth_ctrl_scroll_to me point
+      xth_ctrl_maximize me point
+
     }
   } elseif {($xth(me,cmds,$id,ct) == 3) && ($xth(me,cmds,selpid) != $pid)} {
     xth_me_cmds_select_linept $id $pid
     xth_ctrl_scroll_to me line
+    xth_ctrl_maximize me line
+    xth_ctrl_maximize me linept
   } else {
     $xth(me,can) dtag all nearest
     if {$pid != 0} {
@@ -1787,6 +1855,7 @@ proc xth_me_cmds_special_select {id x y} {
       #puts "select $nid"
       xth_me_cmds_select $nid
       xth_ctrl_scroll_to me point
+      xth_ctrl_maximize me point
       catch {$xth(me,can) lower $utag point}
       catch {$xth(me,can) raise $utag line}
     } elseif {[regexp "(^|\\s)pt(\\d+)\.(\\d+)($|\\s)" $tgs d1 d2 nid npid]} {
@@ -1794,8 +1863,11 @@ proc xth_me_cmds_special_select {id x y} {
       xth_me_cmds_select "$nid $npid"
       if {$npid != 0} {
         xth_ctrl_scroll_to me line
+        xth_ctrl_maximize me line
+        xth_ctrl_maximize me linept
       } else {
         xth_ctrl_scroll_to me point
+        xth_ctrl_maximize me point
       }
       catch {$xth(me,can) lower $utag point}
       catch {$xth(me,can) raise $utag line}
@@ -1819,8 +1891,8 @@ proc xth_me_cmds_start_point_drag {id x y} {
   $xth(me,can) itemconfigure pt$id -fill {}
   $xth(me,can) bind pt$id <B1-Motion> "xth_me_cmds_point_drag $id %x %y 1"
   $xth(me,can) bind pt$id <B1-ButtonRelease> "xth_me_cmds_end_point_drag $id %x %y 1"
-  $xth(me,can) bind pt$id <Control-B1-Motion> "xth_me_cmds_point_drag $id %x %y 0"
-  $xth(me,can) bind pt$id <Control-B1-ButtonRelease> "xth_me_cmds_end_point_drag $id %x %y 0"
+  $xth(me,can) bind pt$id <$xth(kb_control)-B1-Motion> "xth_me_cmds_point_drag $id %x %y 0"
+  $xth(me,can) bind pt$id <$xth(kb_control)-B1-ButtonRelease> "xth_me_cmds_end_point_drag $id %x %y 0"
   $xth(me,can) configure -cursor {}
 }
 
@@ -1887,8 +1959,8 @@ proc xth_me_cmds_end_point_drag {id x y dragto} {
   set xth(me,cmds,$id,y) $xth(me,point,drag_py)
   $xth(me,can) bind pt$id <B1-Motion> ""
   $xth(me,can) bind pt$id <B1-ButtonRelease> ""
-  $xth(me,can) bind pt$id <Control-B1-Motion> ""
-  $xth(me,can) bind pt$id <Control-B1-ButtonRelease> ""
+  $xth(me,can) bind pt$id <$xth(kb_control)-B1-Motion> ""
+  $xth(me,can) bind pt$id <$xth(kb_control)-B1-ButtonRelease> ""
   $xth(me,can) bind pt$id <Enter> $xth(me,point,drag_benter)
   $xth(me,can) bind pt$id <Leave> $xth(me,point,drag_bleave)
   $xth(me,can) itemconfigure pt$id -fill cyan
@@ -1902,7 +1974,8 @@ proc xth_me_cmds_end_point_drag {id x y dragto} {
 proc xth_me_cmds_configure_point_fill_xctrl {id sid} {
   global xth
   if {[string length $id] > 0} {
-    $xth(me,can) itemconfigure $xth(me,canid,point,fx) -state normal
+    ## DISABLED
+    # $xth(me,can) itemconfigure $xth(me,canid,point,fx) -state normal
     $xth(me,can) bind $xth(me,canid,point,fx) <1> \
       "xth_me_cmds_start_point_fdrag $xth(me,canid,point,fx) $id x %x %y"
     $xth(me,can) bind $xth(me,canid,point,fx) <Enter> \

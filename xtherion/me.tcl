@@ -245,7 +245,8 @@ proc xth_me_create_file {} {
   set xth(me,unredook) 0
   incr xth(me,fltid)
   set cfid $xth(me,fltid)
-  set xth(me,fname) [format "noname%02d.th2" $cfid]
+  #set xth(me,fname) [format "noname%02d.th2" $cfid]
+  set xth(me,fname) [format "(new file)" $cfid]
   set xth(me,open_file) $xth(me,fname)
   set xth(me,fpath) $xth(gui,initdir)
   set xth(me,ffull) [file join $xth(gui,initdir) $xth(me,fname)]
@@ -253,6 +254,7 @@ proc xth_me_create_file {} {
   set xth(me,fnewf) 1
   set xth(me,fopen) 1
   set xth(me,fsave) 0
+  set xth(me,mtime) 0
 
   set xth(me,nimgs) 0
   set xth(me,imgln) 0
@@ -286,6 +288,7 @@ proc xth_me_create_file {} {
   $xth(me,menu,file) entryconfigure "Open (no pics)" -state disabled
   $xth(me,menu,file) entryconfigure "Save" -state normal
   $xth(me,menu,file) entryconfigure "Save as" -state normal
+  $xth(me,menu,file) entryconfigure "Auto save" -state normal
   $xth(me,menu,file) entryconfigure "Close" -state normal
   
   $xth(me,menu) entryconfigure "Edit" -state normal
@@ -365,6 +368,7 @@ proc xth_me_destroy_file {} {
     $xth(me,menu,file) entryconfigure "Open (no pics)" -state normal
     $xth(me,menu,file) entryconfigure "Save" -state disabled
     $xth(me,menu,file) entryconfigure "Save as" -state disabled
+    $xth(me,menu,file) entryconfigure "Auto save" -state disabled
     $xth(me,menu,file) entryconfigure "Close" -state disabled
 
     $xth(me,menu) entryconfigure "Edit" -state disabled
@@ -593,6 +597,7 @@ proc xth_me_open_file {dialogid fname fline} {
   set xth(me,open_file) [lindex $fdata 1]
   set xth(me,fpath) [file dirname $fname]
   set xth(me,ffull) $fname
+  set xth(me,mtime) [file mtime $fname]
   
   foreach cmd [lindex $fdata 2] {
     catch {eval $cmd}
@@ -655,7 +660,18 @@ proc xth_me_save_file {dialogid} {
   } else {
     set xth(gui,initdir) [file dirname $fname]
   }
-  
+
+  if {($xth(me,mtime) > 0) && [file exists $fname] && \
+    ([file mtime $fname] > $xth(me,mtime))} {
+    set forcesave [MessageDlg $xth(gui,message) -parent $xth(gui,main) \
+      -icon warning -type yesno -default 1 \
+      -message "File $fname was modified outside xtherion. Save it anyway?" \
+      -font $xth(gui,lfont)]
+    if {$forcesave != 0} {
+      return 0
+    }
+  }
+ 
   # save the file
   xth_status_bar_status me "Saving $fname ..."
   set fdata [xth_me_write_file $fname]
@@ -668,6 +684,7 @@ proc xth_me_save_file {dialogid} {
       return 0
   }
   
+  set xth(me,mtime) [file mtime $fname]
   set xth(me,fnewf) 0
   set xth(me,fsave) 0
   
@@ -1095,6 +1112,7 @@ set xth(me,redolist) {}
 set xth(me,unredook) 0
 set xth(me,unredola) {}
 set xth(me,curscrap) {}
+set xth(me,snai) 1
 
 set xth(ctrl,me,images,posx) ""
 set xth(ctrl,me,images,posy) ""
@@ -1255,7 +1273,8 @@ xth_me_bind_area_drag $xth(me,canid,linept,ncpl) {}
 xth_me_bind_area_drag $xth(me,canid,linept,ppcpl) {}
 xth_me_bind_area_drag $xth(me,canid,linept,nncpl) {}
 xth_me_bind_area_drag $xth(me,canid,linept,selector) {}
-  
+xth_me_bind_area_drag $xth(me,canid,line,tick) {}
+
 grid columnconf $canfm 0 -weight 1
 grid rowconf $canfm 0 -weight 1
 grid $xth(me,can) -column 0 -row 0 -sticky news
@@ -1413,24 +1432,24 @@ grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
 grid $txb.upd -column 0 -row 2 -columnspan 2 -sticky news
 xth_status_bar me $txb.txt "Editor for free text in therion 2D file."
-bind $txb.txt <Control-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <Control-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <Control-Key-v> "tk_textPaste $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
 
 if {$xth(gui,bindinsdel)} {
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <Control-Key-Insert> "tk_textCopy $txb.txt"
+  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
 #  catch {
 #    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <Control-Key-KP_Insert> "tk_textCopy $txb.txt"
+#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
 #    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
 #  }
 }
 
 if {[info exists xth(gui,te)]} {
-  bind $txb.txt <Control-Key-a> "xth_te_text_select_all %W"
-  bind $txb.txt <Control-Key-i> "xth_te_text_auto_indent %W"
+  bind $txb.txt <$xth(kb_control)-Key-a> "xth_te_text_select_all %W"
+  bind $txb.txt <$xth(kb_control)-Key-i> "xth_te_text_auto_indent %W"
   bind $txb.txt <Tab> $xth(te,bind,text_tab)
   bind $txb.txt <Return> $xth(te,bind,text_return)
 } else {
@@ -1636,7 +1655,7 @@ Label $sfm.scl -text scale -anchor sw -font $xth(gui,lfont) -state disabled
 xth_status_bar me $sfm.scl "Scrap scale definition."
 Button $sfm.scpb -text "Update scrap" -anchor center -font $xth(gui,lfont) \
   -state disabled -width 4 -command {xth_me_cmds_update {}}
-xth_status_bar me $sfm.scpb "Click twice on the drawing area to set picture scale points."
+xth_status_bar me $sfm.scpb "."
 Label $sfm.scpp -text "picture scale points" -anchor w -font $xth(gui,lfont) -state disabled
 xth_status_bar me $sfm.scpp "Calibration points on the picture (X1:Y1 - X2:Y2)."
 Entry $sfm.scx1p -font $xth(gui,lfont) -state disabled -width 4 \
@@ -1716,7 +1735,7 @@ xth_status_bar me $ptc.upd "Update point data."
 Label $ptc.typl -text "type" -anchor e -font $xth(gui,lfont) -state disabled -width 8
 xth_status_bar me $ptc.typl "Point type."
 ComboBox $ptc.typ -values $xth(point_types) \
-  -font $xth(gui,lfont) -height 8 -state disabled -width 4 \
+  -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
   -textvariable xth(ctrl,me,point,type) -command {xth_me_cmds_update {}}
 xth_status_bar me $ptc.typ "Point type." 
 
@@ -1775,10 +1794,11 @@ grid $ptc.opt -row 3 -column 2 -columnspan 2 -sticky news -padx 1
 grid $ptc.s1 -row 4 -column 0 -columnspan 4 -sticky news -pady 3
 grid $ptc.rotc -row 5 -column 0 -columnspan 2 -sticky news
 grid $ptc.rot -row 5 -column 2 -columnspan 2 -sticky news -padx 1
-grid $ptc.xszc -row 6 -column 0 -columnspan 2 -sticky news
-grid $ptc.xsz -row 6 -column 2 -columnspan 2 -sticky news -padx 1
-grid $ptc.yszc -row 7 -column 0 -columnspan 2 -sticky news
-grid $ptc.ysz -row 7 -column 2 -columnspan 2 -sticky news -padx 1
+## DISABLED
+#grid $ptc.xszc -row 6 -column 0 -columnspan 2 -sticky news
+#grid $ptc.xsz -row 6 -column 2 -columnspan 2 -sticky news -padx 1
+#grid $ptc.yszc -row 7 -column 0 -columnspan 2 -sticky news
+#grid $ptc.ysz -row 7 -column 2 -columnspan 2 -sticky news -padx 1
 grid $ptc.upd -row 8 -column 0 -columnspan 4 -sticky news
 
 
@@ -1790,7 +1810,7 @@ set lnc $xth(ctrl,me,line)
 Label $lnc.typl -text "type" -anchor e -font $xth(gui,lfont) -state disabled
 xth_status_bar me $lnc.typl "Line type."
 ComboBox $lnc.typ -values $xth(line_types) \
-  -font $xth(gui,lfont) -height 8 -state disabled -width 4 \
+  -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
   -textvariable xth(ctrl,me,line,type) \
   -command {xth_me_cmds_update {}}
 xth_status_bar me $lnc.typ "Line type." 
@@ -1983,17 +2003,17 @@ grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
 xth_status_bar me $txb "Editor for line point options."
-bind $txb.txt <Control-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <Control-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <Control-Key-v> "tk_textPaste $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
 
 if {$xth(gui,bindinsdel)} {
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <Control-Key-Insert> "tk_textCopy $txb.txt"
+  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
 #  catch {
 #    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <Control-Key-KP_Insert> "tk_textCopy $txb.txt"
+#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
 #    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
 #  }
 }
@@ -2031,8 +2051,9 @@ grid $lpc.rot -row 3 -column 2 -columnspan 2 -sticky news
 grid $lpc.lszc -row 4 -column 0 -columnspan 2 -sticky news
 grid $lpc.lsz -row 4 -column 2 -columnspan 2 -sticky news
 
-grid $lpc.rszc -row 5 -column 0 -columnspan 2 -sticky news
-grid $lpc.rsz -row 5 -column 2 -columnspan 2 -sticky news
+## DISABLED
+#grid $lpc.rszc -row 5 -column 0 -columnspan 2 -sticky news
+#grid $lpc.rsz -row 5 -column 2 -columnspan 2 -sticky news
 
 grid $lpc.optl -row 6 -column 0 -columnspan 2 -sticky news
 grid $lpc.upd -row 6 -column 2 -columnspan 2 -sticky news
@@ -2054,7 +2075,7 @@ set lnc $xth(ctrl,me,ac)
 Label $lnc.typl -text "type" -anchor e -font $xth(gui,lfont) -state disabled
 xth_status_bar me $lnc.typl "Area type."
 ComboBox $lnc.typ -values $xth(area_types) \
-  -font $xth(gui,lfont) -height 8 -state disabled -width 4 \
+  -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
   -textvariable xth(ctrl,me,ac,type) \
   -command {xth_me_cmds_update {}}
 xth_status_bar me $lnc.typ "Area type." 
@@ -2150,6 +2171,9 @@ $xth(me,menu,file) add command -label "Save" -underline 0 \
   -font $xth(gui,lfont) -command {xth_me_save_file 0}
 $xth(me,menu,file) add command -label "Save as" -underline 5 \
   -font $xth(gui,lfont) -command {xth_me_save_file 1} -state disabled 
+$xth(me,menu,file) add checkbutton -label "Auto save" -underline 1 \
+  -variable xth(gui,auto_save) -font $xth(gui,lfont) \
+  -state disabled -command xth_app_autosave_schedule
 $xth(me,menu,file) add command -label "Close" -underline 0 \
   -accelerator "$xth(gui,controlk)-w"  -state disabled \
   -font $xth(gui,lfont) \
@@ -2176,22 +2200,34 @@ $xth(me,menu,edit) add command -label "Paste" -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-v" -command "xth_app_clipboard paste"
 $xth(me,menu,edit) add separator
 $xth(me,menu,edit) add command -label "Select" -accelerator "Esc" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_set_mode 0}
-$xth(me,menu,edit) add cascade -label "Insert ..." -menu $xth(me,menu,edit).ins -underline 0 -font $xth(gui,lfont)
+$xth(me,menu,edit) add cascade -label "Insert ..." -accelerator "$xth(gui,controlk)-i" -menu $xth(me,menu,edit).ins -underline 0 -font $xth(gui,lfont)
 $xth(me,menu,edit).ins add command -label "point" -accelerator "$xth(gui,controlk)-p" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_set_mode 1}
 $xth(me,menu,edit).ins add command -label "line" -accelerator "$xth(gui,controlk)-l" -underline 0 -font $xth(gui,lfont) -command {
   xth_me_cmds_create_line {} 1 "" "" ""
   xth_ctrl_scroll_to me line
+  xth_ctrl_maximize me line
+  xth_ctrl_maximize me linept
 }
-$xth(me,menu,edit).ins add command -label "area" -font $xth(gui,lfont) -underline 0 -command {
+
+$xth(me,menu,edit).ins add command -label "area" -accelerator "$xth(gui,controlk)-a" -font $xth(gui,lfont) -underline 0 -command {
   xth_me_cmds_create_area {} 1 "" "" ""
   xth_ctrl_scroll_to me ac
+  xth_ctrl_maximize me ac
 }
-$xth(me,menu,edit).ins add command -label "scrap" -font $xth(gui,lfont) -underline 0 -command {
+
+$xth(me,menu,edit).ins add command -label "scrap" -accelerator "$xth(gui,controlk)-r" -font $xth(gui,lfont) -underline 0 -command {
   xth_me_cmds_create_scrap {} 1 "" ""
+  xth_ctrl_scroll_to me scrap
+  xth_ctrl_maximize me scrap
 }
+
 $xth(me,menu,edit).ins add command -label "text" -font $xth(gui,lfont) -underline 0 -command {
   xth_me_cmds_create_text {} 1 "\n" "1.0"
+  xth_ctrl_scroll_to me text
+  xth_ctrl_maximize me text
+  focus $xth(ctrl,me,text).txt
 }
+
 $xth(me,menu,edit) add command -label "Delete" -accelerator "$xth(gui,controlk)-d" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_delete {}}
 $xth(me,menu,edit) add separator
 $xth(me,menu,edit) add cascade -label "Zoom 100 %" -font $xth(gui,lfont) \

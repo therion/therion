@@ -26,7 +26,6 @@
  */
  
 #include "thdataleg.h"
-#include "thinfnan.h"
 
 
 thdataleg::thdataleg()
@@ -91,6 +90,20 @@ void thdataleg::clear()
   this->y_sd = thnan;
   this->z_sd = thnan;
   this->declination = thnan;
+  
+  this->from_up = thnan;
+  this->from_down = thnan;
+  this->from_left = thnan;
+  this->from_right = thnan;
+  
+  this->to_up = thnan;
+  this->to_down = thnan;
+  this->to_left = thnan;
+  this->to_right = thnan;
+  
+  this->walls = TT_AUTO;
+  this->shape = TT_DATALEG_SHAPE_UNKNOWN;
+  this->vtresh = thnan;
     
   this->infer_plumbs = false;
   this->infer_equates = false;

@@ -60,27 +60,27 @@ grid rowconf $txb 0 -weight 1
 grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
-bind $txb.txt <Control-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <Control-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <Control-Key-v> "tk_textPaste $txb.txt"
-bind $txb.txt <Control-Key-z> "catch {$txb.txt edit undo}"
-bind $txb.txt <Control-Key-y> "catch {$txb.txt edit redo}"
+bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-z> "catch {$txb.txt edit undo}"
+bind $txb.txt <$xth(kb_control)-Key-y> "catch {$txb.txt edit redo}"
 
 if {$xth(gui,bindinsdel)} {
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <Control-Key-Insert> "tk_textCopy $txb.txt"
+  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
 #  catch {
 #    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <Control-Key-KP_Insert> "tk_textCopy $txb.txt"
+#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
 #    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
 #  }
 }
 
 # nechame tab, return originalny
 #if {[info exists xth(gui,te)]} {
-#  bind $txb.txt <Control-Key-a> "xth_te_text_select_all %W"
-#  bind $txb.txt <Control-Key-i> "xth_te_text_auto_indent %W"
+#  bind $txb.txt <$xth(kb_control)-Key-a> "xth_te_text_select_all %W"
+#  bind $txb.txt <$xth(kb_control)-Key-i> "xth_te_text_auto_indent %W"
   bind $txb.txt <Tab> $xth(te,bind,text_tab)
 #  bind $txb.txt <Return> $xth(te,bind,text_return)
 #} else {
@@ -111,17 +111,17 @@ grid rowconf $txb 0 -weight 1
 grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
-bind $txb.txt <Control-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <Control-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <Control-Key-v> "tk_textPaste $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
 
 if {$xth(gui,bindinsdel)} {
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <Control-Key-Insert> "tk_textCopy $txb.txt"
+  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
 #  catch {
 #    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <Control-Key-KP_Insert> "tk_textCopy $txb.txt"
+#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
 #    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
 #  }
 }
@@ -223,17 +223,17 @@ grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
 xth_status_bar me $txb.txt "Survey informations."
-bind $txb.txt <Control-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <Control-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <Control-Key-v> "tk_textPaste $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
+bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
 
 if {$xth(gui,bindinsdel)} {
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <Control-Key-Insert> "tk_textCopy $txb.txt"
+  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
 #  catch {
 #    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <Control-Key-KP_Insert> "tk_textCopy $txb.txt"
+#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
 #    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
 #  }
 }

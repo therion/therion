@@ -4,7 +4,7 @@ encoding  utf-8
 
 
 
-scrap test -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+scrap test -walls off -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
 
 line contour -gradient none
   709.0 729.0
@@ -24,7 +24,11 @@ line contour
   smooth off
 endline
 
-line wall -close on
+area blocks
+  l5-920-560
+endarea
+
+line wall -id l5-920-560 -close on
   830.0 786.0
   608.0 730.0 407.0 573.0 842.0 550.0
   altitude -
@@ -33,12 +37,12 @@ endline
 
 line slope
   966.0 614.0
-  orientation 284.9
-  l-size 161.5
+  orientation 268.3
+  l-size 87.5
   988.0 718.0 920.0 782.0 834.0 758.0
-  orientation 193.1
+  orientation 192.4
   smooth off
-  l-size 108.2
+  l-size 107.8
 endline
 
 point 916.0 584.0 stalactite -scale xl
@@ -129,13 +133,15 @@ endscrap
 
 
 
-scrap dolny -stations 3 -author 2003.12.10 "Stacho Mudrak"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+scrap dolny  -walls off -stations 3 -author 2003.12.10 "Stacho Mudrak"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
 
 point 1549.0 476.0 passage-height -value 1.2 -align br
 
 point 1640.0 306.0 section -align bottom -scrap ts2
 
-point 900.0 414.0 station -name 4 -subtype natural
+point 900.0 414.0 station -name 4
+
+point 1266.0 381.0 station -name 3
 
 point 1278.0 610.0 station -name 2
 
@@ -343,7 +349,7 @@ endscrap
 
 
 
-scrap horny -author 2001.12.10 "Martin Budaj"  -author 2002.12.10 "Erika Kovacova"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+scrap horny  -walls off -author 2001.12.10 "Martin Budaj"  -author 2002.12.10 "Erika Kovacova"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
 
 point 502.0 720.0 water-flow -orientation 271.8
 
@@ -365,11 +371,11 @@ point 463.5 532.0 stalactite -orientation 184.2
 
 point 475.0 581.5 pillar
 
-point 546.0 604.0 station -name 2 -subtype fixed
+point 546.0 604.0 station -name 2
 
-point 334.0 596.0 station -name 1 -subtype painted
+point 334.0 596.0 station -name 1
 
-point 346.0 216.0 station -name 0 -subtype temporary
+point 346.0 216.0 station -name 0
 
 line border -id s3
   268.5 334.0
@@ -456,9 +462,8 @@ endline
 
 line border -id debris_b -subtype invisible
   307.0 634.5
-  345.0 623.5 380.5 642.5 397.5 638.5
-  414.5 634.5 415.5 614.5 410.0 606.5
-  404.5 598.5 449.47 613.02 455.0 621.0
+  345.0 623.5 369.6 592.59 409.0 589.0
+  418.67 588.12 449.47 613.02 455.0 621.0
   464.0 634.0 467.0 661.5 467.0 661.5
   smooth off
 endline
@@ -530,5 +535,4 @@ point 214.5 214.0 height -value -5
 point 309.0 261.5 altitude -align r
 
 endscrap
-
 

@@ -48,6 +48,7 @@
 #include "thpdfdata.h"
 #include "thtexfonts.h"
 #include "thlang.h"
+#include "thversion.h"
 
 #ifndef NOTHERION
 #include "thchenc.h"
@@ -862,6 +863,117 @@ void print_surface_bitmaps (ofstream &PAGEDEF, double shiftx, double shifty) {
   }
 }
 
+paired rotatedaround(paired x,paired o, double th) {
+  double theta = -th * 3.14159265358979 / 180;
+  paired z, tmp;
+  tmp.x = x.x - o.x;
+  tmp.y = x.y - o.y;
+  z.x = tmp.x * cos(theta) - tmp.y * sin(theta) + o.x;
+  z.y = tmp.x * sin(theta) + tmp.y * cos(theta) + o.y;
+  return z;
+}
+
+
+void print_grid(ofstream& PAGEDEF, double LLX,double LLY) {
+  if (LAYOUT.grid == 0) return;
+  PAGEDEF << "\\PL{q}";
+  
+  paired ll, ur, lr, ul, llrot, urrot, ulrot, lrrot, llnew, urnew, origin;
+  ll.x = LLX;
+  ll.y = LLY; 
+  ur.x = LLX + HS;
+  ur.y = LLY + VS; 
+  lr.x = ur.x;
+  lr.y = ll.y;
+  ul.x = ll.x;
+  ul.y = ur.y;
+  origin.x = LAYOUT.hgridorigin;
+  origin.y = LAYOUT.vgridorigin;
+  
+  llrot = rotatedaround(ll,origin,-LAYOUT.gridrot);
+  urrot = rotatedaround(ur,origin,-LAYOUT.gridrot);
+  lrrot = rotatedaround(lr,origin,-LAYOUT.gridrot);
+  ulrot = rotatedaround(ul,origin,-LAYOUT.gridrot);
+  
+  llnew.x = min(min(llrot.x, urrot.x), min(lrrot.x, ulrot.x));
+  llnew.y = min(min(llrot.y, urrot.y), min(lrrot.y, ulrot.y));
+  urnew.x = max(max(llrot.x, urrot.x), max(lrrot.x, ulrot.x));
+  urnew.y = max(max(llrot.y, urrot.y), max(lrrot.y, ulrot.y));
+  
+/*  na odladenie
+PAGEDEF << "\\PL{ " << llrot.x-LLX << " " << llrot.y-LLY << " m " << lrrot.x-LLX << " " << lrrot.y-LLY << " l S}";
+PAGEDEF << "\\PL{ " << ulrot.x-LLX << " " << ulrot.y-LLY << " m " << urrot.x-LLX << " " << urrot.y-LLY << " l S}";
+PAGEDEF << "\\PL{2 w " << ll.x-LLX << " " << ll.y-LLY << " m " << lr.x-LLX << " " << lr.y-LLY << " l S}";
+PAGEDEF << "\\PL{ " << ul.x-LLX << " " << ul.y-LLY << " m " << ur.x-LLX << " " << ur.y-LLY << " l S}";
+PAGEDEF << "\\PL{10 w 1 J " << llnew.x-LLX << " " << llnew.y-LLY << " m " << llnew.x-LLX << " " << llnew.y-LLY << " l S}";
+PAGEDEF << "\\PL{ " << urnew.x-LLX << " " << urnew.y-LLY << " m " << urnew.x-LLX << " " << urnew.y-LLY << " l S}";
+PAGEDEF << "\\PL{20 w 1 J " << origin.x-LLX << " " << origin.y-LLY << " m " << origin.x-LLX << " " << origin.y-LLY << " l S}";
+PAGEDEF << "\\PL{15 w 1 J " << rotatedaround(llnew,origin,LAYOUT.gridrot).x-LLX << " " 
+        << rotatedaround(llnew,origin,LAYOUT.gridrot).y-LLY << " m " << 
+	   rotatedaround(llnew,origin,LAYOUT.gridrot).x-LLX << " " << 
+	   rotatedaround(llnew,origin,LAYOUT.gridrot).y-LLY << " l S}";
+PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " << 
+       rotatedaround(urnew,origin,LAYOUT.gridrot).y-LLY << " m " << 
+       rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " << 
+       rotatedaround(urnew,origin,LAYOUT.gridrot).y-LLY << " l S}";
+*/
+  
+//cout << "***" << LAYOUT.hgridsize << endl;
+
+  double grid_init_x = LAYOUT.hgridsize * floor ((llnew.x-origin.x)/LAYOUT.hgridsize) + origin.x;
+  double grid_init_y = LAYOUT.vgridsize * floor ((llnew.y-origin.y)/LAYOUT.vgridsize) + origin.y;
+  
+  double cosr = cos(-LAYOUT.gridrot * 3.14159265 / 180);
+  double sinr = sin(-LAYOUT.gridrot * 3.14159265 / 180);
+
+  int row, col, elem;
+
+  if (LAYOUT.proj == 0) {
+    paired out,tmp;
+    for (double i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
+      for (double j = grid_init_y; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize) {
+        row = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
+        col = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
+	elem = row + 3*col;
+/*        tmp.x = i;
+        tmp.y = j;
+        out = rotatedaround(tmp,origin,LAYOUT.gridrot);
+        out.x -= LLX;
+        out.y -= LLY;
+        PAGEDEF << "\\PL{q 5 w 1 J 0 0 1 RG " << out.x << " " << out.y << " m " << out.x << " " << out.y << " l S Q}";
+*/
+        tmp.x = i+LAYOUT.gridcell[elem].x;
+        tmp.y = j+LAYOUT.gridcell[elem].y;
+        out = rotatedaround(tmp,origin,LAYOUT.gridrot);
+        out.x -= LLX;
+        out.y -= LLY;
+        PAGEDEF << "\\PL{q}";
+	PAGEDEF << "\\PL{" << cosr << " " << sinr << " " << -sinr << " " << cosr << " " << out.x << " " << out.y << " cm}";
+	PAGEDEF << "\\PB{0}{0}{\\" << tex_Wname("grid") << u2str(elem+1) << "}%" << endl;
+        PAGEDEF << "\\PL{Q}";
+      }
+    }
+  }
+  else {
+    grid_init_x = LLX;
+    for (double j = grid_init_y; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize) {
+//      PAGEDEF << "\\PL{q 3 w 0 0 1 RG 0 " << j-LLY << "  m " << HS << " " << j-LLY << " l S Q}";
+      for (double i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
+        row = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
+        col = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
+	elem = row + 3*col;
+	PAGEDEF << "\\PB{" << i-LLX+LAYOUT.gridcell[elem].x << "}{" << 
+	                      j-LLY+LAYOUT.gridcell[elem].y << "}{\\" << 
+			      tex_Wname("grid") << u2str(elem+1) << "}%" << endl;
+      }
+    }
+  } 
+
+  PAGEDEF << "\\PL{Q}%" << endl;
+}
+
+
+
 void print_map(int layer, ofstream& PAGEDEF, 
                list<sheetrecord>::iterator sheet_it){
   double HSHIFT=0, VSHIFT=0, xc = 0, yc = 0;
@@ -894,6 +1006,7 @@ void print_map(int layer, ofstream& PAGEDEF,
     print_page_bg(PAGEDEF);
     if (LAYOUT.surface == 1) print_surface_bitmaps(PAGEDEF,HSHIFT,VSHIFT);
     print_page_bg_scraps(layer, PAGEDEF, sheet_it);
+    if (LAYOUT.grid == 1) print_grid(PAGEDEF,HSHIFT,VSHIFT);
   }
 
   if (mode == ATLAS && !LAYERHASH.find(layer)->second.D.empty()) {
@@ -910,19 +1023,27 @@ void print_map(int layer, ofstream& PAGEDEF,
     }
 
 //    PAGEDEF << "\\PL{q 1 g}%" << endl;         // white background of the scrap
-    PAGEDEF << "\\PL{q " << LAYOUT.foreground_r << " " <<   // background of the scrap
-                            LAYOUT.foreground_g << " " << 
-                            LAYOUT.foreground_b << " rg}%" << endl;
-
     for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
       if (used_scraps.count(K->name) > 0 && K->I != "") {
+        PAGEDEF << "\\PL{q ";
+        if (K->r < 0 || K->g < 0 || K->b < 0) {
+          PAGEDEF << LAYOUT.foreground_r << " " <<   // background of the scrap
+                     LAYOUT.foreground_g << " " << 
+                     LAYOUT.foreground_b << " rg}%" << endl;
+        }
+        else {
+          PAGEDEF << K->r << " " <<   // background of the scrap
+                     K->g << " " << 
+                     K->b << " rg}%" << endl;
+        }
         xc = K->I1; yc = K->I2;
         xc -= HSHIFT; yc -= VSHIFT;
         PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
                 tex_Xname("I"+(K->name)) << "}%" << endl;
+
+        PAGEDEF << "\\PL{Q}%" << endl;            // end of white color for filled bg
       }
     }
-    PAGEDEF << "\\PL{Q}%" << endl;            // end of white color for filled bg
 
     for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
       if (used_scraps.count(K->name) > 0 && K->G != "") {
@@ -1009,8 +1130,9 @@ void print_map(int layer, ofstream& PAGEDEF,
     print_preview(1,PAGEDEF,HSHIFT,VSHIFT,sheet_it);
   }
 
-  if (mode == ATLAS && LAYOUT.surface == 2) {
-    print_surface_bitmaps(PAGEDEF,HSHIFT,VSHIFT);
+  if (mode == ATLAS) {
+    if (LAYOUT.surface == 2) print_surface_bitmaps(PAGEDEF,HSHIFT,VSHIFT);
+    if (LAYOUT.grid == 2) print_grid(PAGEDEF,HSHIFT,VSHIFT);
   }
 }
 
@@ -1143,7 +1265,8 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
        tex_Nname(u2str(sheet_it->id)) << "=\\pdflastxform" << endl;
 }
 
-void print_grid(ofstream& PAGEDEF) {
+
+void print_margins(ofstream& PAGEDEF) {
   PAGEDEF << "\\PL{q}";
 //  PAGEDEF << "\\PL{3 w 0 0 " << HS << " " << VS << " re S}";
   if (LAYOUT.overlap > 0) {
@@ -1157,9 +1280,9 @@ void print_grid(ofstream& PAGEDEF) {
                " " << VS << " l S}";
     PAGEDEF << "\\PL{" << i << " 0 m " << i << " " << VS << " l S}";
   }
-  // add actual grid here  
   PAGEDEF << "\\PL{Q}%" << endl;
 }
+
 
 
 void build_pages() {
@@ -1181,8 +1304,13 @@ void build_pages() {
       (LAYOUT.OCG ? "1.5" : "1.4") << " }" << 
       (LAYOUT.OCG ? "\\else\\pdfoptionpdfminorversion=5" : "") << "\\fi" << endl;
   }
+  
+  PDFRES << "\\pdfinfo{/Creator (Therion " << THVERSION << ", MetaPost, TeX)}%" << endl;
+  PDFRES << "\\pdfcatalog{ /ViewerPreferences << /DisplayDocTitle true >> }" << endl;
+  
 
   if (LAYOUT.transparency) {
+    PDFRES << "\\opacity{" << LAYOUT.opacity << "}%" << endl;
     PDFRES << "\\surfaceopacity{" << LAYOUT.surface_opacity << "}%" << endl;
     PDFRES << "\\immediate\\pdfobj{ << /GS0 " <<
                  "<< /Type /ExtGState /ca 1 /BM /Normal >> " <<
@@ -1268,13 +1396,20 @@ void build_pages() {
 //    PDFRES << "\\legendcomment={" << utf2tex(LAYOUT.doc_comment) << "}" << endl;
 //  }
 
-  PDFRES << "\\pdfcatalog { /TeXsetup /" << pdf_info() << " }" << endl;
+  PDFRES << "\\pdfcatalog { /TeXsetup <" << pdf_info() << "> }" << endl;
 
   if (!LEGENDLIST.empty()) {  // zmenit test na LAYOUT.legend???
     PDFRES << "\\legendtrue" << endl;
   }
   else {
     PDFRES << "\\legendfalse" << endl;
+  }
+  
+  if (!COLORLEGENDLIST.empty()) {  
+    PDFRES << "\\colorlegendtrue" << endl;
+  }
+  else {
+    PDFRES << "\\colorlegendfalse" << endl;
   }
   
   PDFRES << "\\legendwidth=" << LAYOUT.legend_width << "bp" << endl;
@@ -1299,6 +1434,10 @@ void build_pages() {
     }
   }
   else {
+    if (LAYOUT.proj > 0 && LAYOUT.grid > 0) {  // natiahnutie vysky aby sa zobrazil grid pod aj nad jaskynou
+      MINY = LAYOUT.vgridsize * floor ((MINY-LAYOUT.vgridorigin)/LAYOUT.vgridsize) + LAYOUT.vgridorigin;
+      MAXY = LAYOUT.vgridsize * ceil  ((MAXY-LAYOUT.vgridorigin)/LAYOUT.vgridsize) + LAYOUT.vgridorigin;
+    }
     if (LAYOUT.map_grid) {
       MINX = LAYOUT.hsize * floor (MINX/LAYOUT.hsize);
       MINY = LAYOUT.vsize * floor (MINY/LAYOUT.vsize);
@@ -1323,6 +1462,7 @@ void build_pages() {
   }
   
   if (mode == ATLAS) {
+    PAGEDEF << "\\newdimen\\overlap\\overlap=" << LAYOUT.overlap << "bp" << endl;
     for (list<sheetrecord>::iterator I = SHEET.begin(); 
                                      I != SHEET.end(); I++) {
 
@@ -1334,7 +1474,7 @@ void build_pages() {
       PAGEDEF << "\\setbox\\xxx=\\hbox to "<< HS << "bp{%" << endl;
 
       print_map(I->layer, PAGEDEF, I);
-      print_grid(PAGEDEF);
+      print_margins(PAGEDEF);
 
       PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
       PAGEDEF << "\\immediate\\pdfxform";
@@ -1404,17 +1544,24 @@ void build_pages() {
 //    PAGEDEF << "\\leavevmode\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
     PAGEDEF << "\\leavevmode\\setbox\\xxx=\\hbox to 0bp{%" << endl;
 
-    if (LAYOUT.surface == 1) {
-      print_surface_bitmaps(PAGEDEF,MINX,MINY);
-    }
+    if (LAYOUT.surface == 1) print_surface_bitmaps(PAGEDEF,MINX,MINY);
 
 //    print_page_bg(PAGEDEF);
     for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                         I != LAYERHASH.end(); I++) {
       if (I->second.Z == 0) {
+//        if (LAYOUT.OCG) {
+//          PAGEDEF << "\\PL{/OC /oc\\the\\oc" << u2str(I->first) << "\\space BDC}%" << endl;
+//        }
         print_page_bg_scraps(I->first,PAGEDEF,NULL);
+//        if (LAYOUT.OCG) {
+//          PAGEDEF << "\\PL{EMC}%" << endl;
+//        }
       }
     }
+
+    if (LAYOUT.grid == 1) print_grid(PAGEDEF,MINX,MINY);
+
     if (!MAP_PREVIEW_DOWN.empty()) print_preview(0,PAGEDEF,MINX,MINY,NULL);
     for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                         I != LAYERHASH.end(); I++) {
@@ -1435,9 +1582,8 @@ void build_pages() {
     }
     if (!MAP_PREVIEW_UP.empty()) print_preview(1,PAGEDEF,MINX,MINY,NULL);
 
-    if (LAYOUT.surface == 2) {
-      print_surface_bitmaps(PAGEDEF,MINX,MINY);
-    }
+    if (LAYOUT.surface == 2) print_surface_bitmaps(PAGEDEF,MINX,MINY);
+    if (LAYOUT.grid == 2) print_grid(PAGEDEF,MINX,MINY);
 
     if (LAYOUT.map_grid) {
       PAGEDEF << "\\PL{q .4 w}%" << endl;

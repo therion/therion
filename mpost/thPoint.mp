@@ -322,7 +322,12 @@ def p_sand_UIS (expr pos,theta,sc,al)=
     thdraw (0,.2u) rotated 240;
 enddef;
 
-let p_clay_UIS = p_sand_UIS;
+def p_clay_SKBB (expr pos,theta,sc,al) =
+    U:=(.3u,.3u);
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    pickup PenC;
+    thdraw (-.3u,0){up}..origin{down}..{up}(0.3u,0);
+enddef;
 
 def p_pebbles_UIS (expr pos,theta,sc,al)=
     U:=(.45u,.35u);
@@ -370,15 +375,37 @@ enddef;
 def p_ice_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.35u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenD;
-    thdraw (-.4u,-.1u)--(.4u,-.1u) dashed evenly;
-    thdraw (-.2u,.2u)--(.2u,.2u) dashed evenly;
     pickup PenC;
     p := (0,.05u)--(0,.35u);
     thdraw p;
-    thdraw p shifted (-.2u,-.3u);
-    thdraw p shifted (.2u,-.3u);
+    thdraw p shifted (-.25u,-.3u);
+    thdraw p shifted (.25u,-.3u);
+    p := (-0.15u,.2u)--(0.15u,.2u);
+    thdraw p;
+    thdraw p shifted (-.25u,-.3u);
+    thdraw p shifted (.25u,-.3u);
 enddef;
+
+def p_snow_SKBB (expr pos,theta,sc,al)=
+    U:=(.35u,.35u);
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    pickup PenC;
+    p := origin--(0,.25*u);
+    q := ((0,.35u)--(0,0.25u)--(0.1u,0.25u)) rotatedaround ((0,0.25u),45);
+    thdraw p;
+    thdraw p rotated (60);
+    thdraw p rotated (120);
+    thdraw p rotated (180);
+    thdraw p rotated (240);
+    thdraw p rotated (300);
+    thdraw q;
+    thdraw q rotated (60);
+    thdraw q rotated (120);
+    thdraw q rotated (180);
+    thdraw q rotated (240);
+    thdraw q rotated (300);
+enddef;
+
 
 def p_archeomaterial_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.4u);
@@ -527,62 +554,106 @@ enddef;
 
 let p_station_temporary_SKBB = p_station_painted_SKBB;
 
-def p_rope_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,1) enddef;          
-def p_fixedladder_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,2) enddef;   
-def p_ropeladder_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,3) enddef;    
-def p_steps_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,4) enddef;         
-def p_bridge_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,5) enddef;        
-def p_traverse_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,6) enddef;
-def p_anchor_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,7) enddef;
-def p_camp_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,8) enddef;
-def p_noequipment_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,9) enddef;
-
-def thp_equipment_SKBB(expr pos,type) =
-  begingroup
-%  interim defaultscale:=0.8;
-  p_label(
-  if lang="fr":
-    if type=1: "C"        % rope
-  	elseif type=2: "Ef"   % fixed ladder
-  	elseif type=3: "Ec"   % rope ladder
-  	elseif type=4: "M"    % steps
-  	elseif type=5: "P"    % bridge
-  	elseif type=6: "T"    % traverse
-  	elseif type=7: "A"    % anchor
-  	elseif type=8: "B"    % camp
-  	elseif type=9: "!"    % not equipped
-  	fi
-  elseif (lang="sk") or (lang="cz"):
-    if type=1: "L"
-  	elseif type=2: "R"
-  	elseif type=3: "Rl"
-  	elseif type=4: "S"
-  	elseif type=5: "M"
-  	elseif type=6: "T"
-  	elseif type=7: "K"
-  	elseif type=8: "B" % bivak
-  	elseif type=9: "!"
-  	fi
-  else:
-    if type=1: "R"        % rope
-  	elseif type=2: "Lf"   % fixed ladder
-  	elseif type=3: "Lr"   % rope ladder
-  	elseif type=4: "S"    % steps
-  	elseif type=5: "B"    % bridge
-  	elseif type=6: "T"    % traverse
-  	elseif type=7: "A"    % anchor
-  	elseif type=8: "C"    % camp
-  	elseif type=9: "!"    % not equipped
-  	fi
-  fi
-    ,pos,0,5);
-  endgroup;
+def p_steps_SKBB (expr pos,r,s,al) = 
+    U:=(.4u, .4u);
+    T:=identity aligned al shifted pos;
+    thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
+    pickup PenC;
+    thdraw (-.3u,.3u)--(-.3u,.1u)--(-.1u,.1u)--(-.1u,-.1u)--
+           (.1u,-.1u)--(.1u,-.3u)--(.3u,-.3u);
 enddef;
 
-% doesn't call process_label();
+def p_fixedladder_SKBB (expr pos,r,s,al) = 
+    U:=(.4u, .4u);
+    T:=identity aligned al shifted pos;
+    thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
+    pickup PenC;
+    thdraw (-.15u,-.4u)--(-.15u,.4u);
+    thdraw (.15u,-.4u)--(.15u,.4u);
+    thdraw (-.15u,0)--(.15u,0);
+    thdraw (-.15u,.2u)--(.15u,.2u);
+    thdraw (-.15u,-.2u)--(.15u,-.2u);
+enddef;
+
+def p_ropeladder_SKBB (expr pos,r,s,al) = 
+    U:=(.4u, .4u);
+    T:=identity aligned al shifted pos;
+    thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
+    pickup PenC;
+    thdraw (.1u,-.4u)..(.2u,-.2u)..(.1u,.2u)..(.2u,.4u);
+    thdraw (-.2u,-.4u)..(-.1u,-.2u)..(-.2u,.2u)..(-.1u,.4u);
+    thdraw (-.2u,.2u)--(.1u,.2u);
+    thdraw (-.15u,0)--(.15u,0);
+    thdraw (-.1u,-.2u)--(.2u,-.2u);
+enddef;
+
+def p_bridge_SKBB (expr pos,r,s,al) = 
+    U:=(.4u, .4u);
+    T:=identity aligned al shifted pos;
+    thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
+    pickup PenC;
+    thdraw (-.3u,.2u)--(-.2u,.1u)--(.2u,.1u)--(.3u,.2u);
+    thdraw (-.3u,-.2u)--(-.2u,-.1u)--(.2u,-.1u)--(.3u,-.2u);
+enddef;
+
+def p_noequipment_SKBB (expr pos,r,s,al) = 
+    U:=(.4u, .4u);
+    T:=identity aligned al shifted pos;
+    thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
+    thfill (0,-.1u)--(-.05u,.3u)--(.05u,.3u)--cycle;
+    thdraw (0,-.2u) withpen PenX;
+enddef;
+
+def p_anchor_SKBB (expr pos,r,s,al) = 
+    U:=(.4u, .4u);
+    T:=identity aligned al shifted pos;
+    thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
+    thdraw fullcircle scaled .2u shifted (0.2u,0) withpen PenC;
+    begingroup;
+      interim linecap:=butt;
+      thdraw (-.3u,0)--(.1u,0) withpen PenA;
+    endgroup;
+    thdraw (.1u,-.4u)--(.1u,.4u) withpen PenD;
+enddef;
+
+def p_traverse_SKBB (expr pos,r,s,al) = 
+    U:=(.4u, .4u);
+    T:=identity aligned al shifted pos;
+    thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
+    pickup PenC;
+    thdraw (-.25u,.05u)..(0,-.08u)..(.25u,.05u);
+    pickup pencircle scaled .18u;
+    thdraw (-.25u,.05u);
+    thdraw (.25u,.05u);
+enddef;
+
+def p_rope_SKBB (expr pos,r,s,al) = 
+    U:=(.4u, .4u);
+    T:=identity aligned al shifted pos;
+    thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
+    pickup PenC;
+    thdraw (-.2u,.2u)..origin..(.1u,.1u)--(.1u,-.4u);
+    pickup pencircle scaled .18u;
+    thdraw (-.2u,.2u);
+    thdraw (.1u,.1u);
+enddef;
+
+def p_camp_SKBB (expr pos,r,s,al) = 
+    U:=(.4u, .5u);
+    T:=identity aligned al shifted pos;
+    pickup PenC;
+    thdraw (-.4u,-.4u)--(0,.5u)--(.4u,-.4u)--cycle;
+    pickup PenD;
+    thdraw (0,-.4u)--(0,.5u);
+enddef;
 
 def p_continuation_UIS(expr pos,theta,sc,al) =
-   draw thelabel("?", pos);
+  U:=(.15u,.3u);
+  T:=identity aligned al shifted pos;
+  pickup PenC;
+  thdraw (-.1u,.2u){up}..{down}(.1u,.2u)..{down}(0,-.05u);
+  pickup PenX;
+  thdraw (0,-.2u);
 enddef;
 
 def p_debug (expr col, pen, pos)=

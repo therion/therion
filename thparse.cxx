@@ -35,6 +35,19 @@
 #include "thexception.h"
 #include <errno.h>
 #include <stdlib.h>
+#include <math.h>
+
+#ifdef HAVE_ROUND
+extern double round(double); /* prototype is often missing... */
+# define thround round
+#else
+static double
+thround(double x) {
+   if (x >= 0.0) return floor(x + 0.5);
+   return ceil(x - 0.5);
+}
+#endif
+
 
 thmbuffer thparse_mbuff;
 
@@ -157,7 +170,7 @@ void thsplit_words(thmbuffer * dest, char * src)
 }
 
 
-void thsplit_strings(thmbuffer * dest, char * src, char separator)
+void thsplit_strings(thmbuffer * dest, const char * src, const char separator)
 {
   long srcl = strlen(src),
     idx = 0,
@@ -248,7 +261,7 @@ void thsplit_args(thmbuffer * dest, char * src)
     idx = 0,
     idx0 = 0;
   dest->clear();
-  short state = 0; // 0 before, 1 in word, 2 in "", 3 in []
+  short state = 0, qlevel = 0; // 0 before, 1 in word, 2 in "", 3 in []
   unsigned char * s1 = NULL, * s2 = (unsigned char *) src;
   bool postp_quotes = false;
   char * postp_ptr = NULL;
@@ -266,6 +279,7 @@ void thsplit_args(thmbuffer * dest, char * src)
               break;
             case '[':
               state = 3;
+              qlevel = 1;
               break;
             default:
               state = 1;
@@ -281,12 +295,20 @@ void thsplit_args(thmbuffer * dest, char * src)
         }
         break;
       case 3:
-        if (*s2 == ']') {
-          state = 0;
-          if (idx > (idx0 + 1))
-            dest->appendn((char *) s1 + 1, idx - idx0 - 1);
-          else
-            dest->appendn("",0);
+        switch (*s2) {
+          case ']':
+            qlevel--;
+            if (qlevel <= 0) {
+              state = 0;
+              if (idx > (idx0 + 1))
+                dest->appendn((char *) s1 + 1, idx - idx0 - 1);
+              else
+                dest->appendn("",0);
+            }
+            break;
+          case '[':
+            qlevel++;
+            break;
         }
         break;
       case 2:
@@ -753,12 +775,12 @@ void thparse_image(char * fname, double & width, double & height, double & dpi)
       ydpi = 300.0;
       switch (picth[13]) {
         case 1:
-          xdpi = round(double(picth[14] * 256.0 + picth[15]));
-          ydpi = round(double(picth[16] * 256.0 + picth[17]));
+          xdpi = thround(double(picth[14] * 256.0 + picth[15]));
+          ydpi = thround(double(picth[16] * 256.0 + picth[17]));
           break;
         case 2:
-          xdpi = round(double(picth[14] * 256 + picth[15]) * 2.54);
-          ydpi = round(double(picth[16] * 256 + picth[17]) * 2.54);
+          xdpi = thround(double(picth[14] * 256 + picth[15]) * 2.54);
+          ydpi = thround(double(picth[16] * 256 + picth[17]) * 2.54);
           break;
       }
       if (xdpi != ydpi) {
@@ -770,8 +792,8 @@ void thparse_image(char * fname, double & width, double & height, double & dpi)
       }      
       for(sx = 0, scan = &(picth[0]); sx < (phsize - 10); sx++, scan++) {
         if ((scan[0] == 0xFF) && ((scan[1] == 0xC0) || (scan[1] == 0xC1))) {
-          height = round(double(scan[5] * 256.0 + scan[6]));
-          width = round(double(scan[7] * 256.0 + scan[8]));
+          height = thround(double(scan[5] * 256.0 + scan[6]));
+          width = thround(double(scan[7] * 256.0 + scan[8]));
           break;
         }
       }
@@ -791,7 +813,7 @@ void thparse_image(char * fname, double & width, double & height, double & dpi)
           }
           switch (scan[12]) {
             case 1:
-              xdpi = round(xdpi * 0.0254);
+              xdpi = thround(xdpi * 0.0254);
               break;
             default:
               xdpi = 300.0;
@@ -801,8 +823,8 @@ void thparse_image(char * fname, double & width, double & height, double & dpi)
           break;
         }
       }      
-      width = round(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
-      height = round(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
+      width = thround(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
+      height = thround(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
     } else {
       ththrow(("file format not supported -- %s", fname))
     }
@@ -815,6 +837,60 @@ void thparse_image(char * fname, double & width, double & height, double & dpi)
   thprintf(  "       DPI:%.0f\n", dpi);
   thprintf(  "      SIZE:%.0f x %.0f\n\n", width, height);
 #endif
+}
+
+
+void thHSV2RGB(double H, double S, double V, double & R, double & G, double & B) {
+  if (S == 0.0) {
+    R = V;
+    G = V;
+    B = V;
+  } else {
+    double var_h = H * 6;
+    int var_i = (int) floor( var_h );
+    double var_1 = V * ( 1 - S );
+    double var_2 = V * ( 1 - S * ( var_h - var_i ) );
+    double var_3 = V * ( 1 - S * ( 1 - ( var_h - var_i ) ) );
+    switch (var_i) {
+       case 0: R = V     ; G = var_3 ; B = var_1 ; break;
+       case 1: R = var_2 ; G = V     ; B = var_1 ; break; 
+       case 2: R = var_1 ; G = V     ; B = var_3 ; break;
+       case 3: R = var_1 ; G = var_2 ; B = V     ; break;
+       case 4: R = var_3 ; G = var_1 ; B = V     ; break;
+      default: R = V     ; G = var_1 ; B = var_2 ; break;
+    }
+  }
+}
+
+
+void thset_color(int color_map, double index, double total, double & R, double & G, double & B) {
+  switch (color_map) {
+    default:
+      if (total > 0)
+        thHSV2RGB(index / total * 0.833333, 1.0, 1.0, R, G, B);
+      else {
+        R = 1.0;
+        G = 1.0;
+        B = 1.0;
+      }
+  }
+  R = double(int(100 * R)) / 100.0;
+  G = double(int(100 * G)) / 100.0;
+  B = double(int(100 * B)) / 100.0;
+}
+
+
+void thset_grid(
+  double gorigin, double gsize, 
+  double min, double max, 
+  double & qstart, long & nquads)
+{
+  // treba nam najst origin start a quads aby
+  if (min < gorigin)
+    qstart = gorigin - gsize * ceil((gorigin - min) / gsize);
+  else
+    qstart = gorigin + gsize * floor((min - gorigin) / gsize);    
+  nquads = long(ceil(max - qstart) / gsize);
 }
 
 

@@ -68,6 +68,9 @@ fill_only := false;
 horiz_labels:=true;
 transparency:=false;
 
+numeric area_border_errors;
+area_border_errors = 0;
+
 % @VARIABLE
 % last_write --
 %
@@ -99,7 +102,7 @@ last_write = -1;
 % <I>string</I>, temporary string/char variables
 
 string s, ch, file_name, bg_name, clip_name, lang, diff_pos, diff_neg,
-     current_scrap;
+     current_scrap, current_src;
 
 % @VARIABLE
 % u v w --
@@ -591,8 +594,9 @@ def draw_upscrap (expr isout)(text t) =
     fi;
   endfor;
   if not cycle q: q:=q -- cycle; fi;
-  if turningnumber q = 0: message("[Warning: scrap outline intersects itself in " & 
-          current_scrap & "]"); fi;
+  if turningnumber q = 0: 
+      thwarning("scrap outline intersects itself"); 
+  fi;
   if isout=1:
     if turningnumber q > 0: q := reverse q; fi;
   else:
@@ -642,6 +646,46 @@ def draw_downscrap =
   write EOF to bg_name;
   write EOF to clip_name;
   bgfill:=nullpicture;
+enddef;
+
+
+
+vardef buildcycle(text ll) =
+  save ta_, tb_, k_, i_, pp_; path pp_[];
+  k_=0;
+  for q=ll: pp_[incr k_]=q; endfor
+  i_=k_;
+  for i=1 upto k_:
+    (ta_[i], length pp_[i_]-tb_[i_]) =
+      pp_[i] intersectiontimes reverse pp_[i_];
+    if ta_[i]<0:
+      message("[Error: area borders "& area_border[i] &" and "& 
+         area_border[i_] &" don't intersect in scrap " & current_scrap &
+         " (file " & current_src & ")]");
+      area_border_errors := area_border_errors + 1;
+    fi
+    i_ := i;
+  endfor
+  for i=1 upto k_: subpath (ta_[i],tb_[i]) of pp_[i] .. endfor
+    cycle
+enddef;
+
+vardef unitvector primary z = 
+  if (z<>(0,0)):
+    z/abs z 
+  else:
+    hide(thwarning("strange path"))
+    (0,epsilon)
+  fi
+enddef;
+
+def thwarning (expr m) = 
+  message("[Warning: " & m & " in scrap " & current_scrap & "]");
+enddef;
+
+def check_area_borders = 
+  if area_border_errors > 0:
+  fi;
 enddef;
 
 %%%%%%%%%%%% Map symbols management %%%%%%%%%%%%%%%%%%%
@@ -813,7 +857,7 @@ def def_transparent_rgb (suffix name)(expr r, g, b) =
     & decimal g & " "
     & decimal b 
   to "rgbcolors.dat";
-  scantokens(RGBname & "=RGBnum;");
+  scantokens(RGBname & ":=RGBnum;");
 enddef;
 
 primarydef p withtransparentcolor s=

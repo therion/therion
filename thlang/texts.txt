@@ -1,721 +1,887 @@
 therion: point station:temporary
 cz: měřičský bod (nestabilizovaný)
 en: temporary survey station
+es: estación topo temporal
 fr: station topo temporaire
 sk: meračský bod (nestabilizovaný)
 
 therion: point station:painted
 cz: měřičský bod (zabarvený)
 en: painted survey station
+es: estación topo pintada
 fr: station topo, peinte
 sk: meračský bod (zafarbený)
 
 therion: point station:natural
 cz: měřičský bod (přírodní)
 en: natural survey station
+es: estación topo natural
 fr: station topo, naturelle
 sk: meračský bod (prírodný)
 
 therion: point station:fixed
 cz: měřičský bod (stabilizovaný)
 en: fixed survey station
+es: estación topo fija
 fr: station topo, fixe
 sk: meračský bod (stabilizovaný)
 
 therion: line survey
 cz: polygonový tah
 en: survey lines
+es: poligonal
 fr: visée topo
 sk: polygónový ťah
 
 therion: point station-name
 cz: číslo měřičského bodu
 en: survey station name
+es: nombre estacion topo
 fr: station topo, nom
 sk: číslo meračského bodu
 
 therion: point entrance
 cz: vchod
 en: entrance
+es: boca
 fr: entrée
 sk: vchod
 
 therion: line arrow
 cz: pomocná šipka
 en: arrow
+es: flecha
 fr: flèche
 sk: pomocná šípka
 
 therion: line wall:bedrock
 cz: stěna
 en: wall
+es: pared
 fr: mur
 sk: stena
 
 therion: line wall:underlying
 cz: stěna nižší úrovně
 en: underlying wall
+es: pared subyacente
 fr: mur sousjacent
 sk: stena nižšej úrovne
 
 therion: line wall:unsurveyed
 cz: nezaměřená stěna
 en: unsurveyed wall
+es: pared no topografiada
 fr: mur non topographié
 sk: nezameraná stena
 
 therion: line wall:presumed
 cz: předpokládaná stěna
 en: presumed wall
+es: pared supuesta
 fr: mur supposé
 sk: predpokladaná stena
 
 therion: line wall:blocks
 cz: zával
 en: breakdown
+es: bloques
 fr: effrondrement
 sk: stena tvorená závalom
 
 therion: line wall:debris
 cz: štěrk
 en: debris
+es: derrubios
 fr: débris de roche
 sk: stena tvorená štrkom
 
 therion: line wall:pebbles
 cz: valouny
 en: pebbles
+es: cantos rodados
 fr: cailloux
 sk: stena tvorená okruhliakmi
 
 therion: line wall:sand
 cz: písek
 en: sand
+es: arena
 fr: sable
 sk: stena tvorená pieskom
 
 therion: line wall:clay
 cz: jíl
 en: clay
+es: arcilla
 fr: argile
 sk: stena tvorená bahnom
 
 therion: line wall:ice
 cz: led
 en: ice
+es: hielo
 fr: glace
 sk: stena tvorená ľadom
 
 therion: point wall-altitude
 cz: nadmořská výška bodu na stěně
 en: altitude
+es: altura pared
 fr: altitude
 sk: nadmorská výška bodu na stene
 
 therion: point altitude
 cz: nadmořská výška bodu v chodbě
 en: altitude
+es: altura
 fr: altitude
 sk: nadmorská výška bodu v chodbe
 
 therion: line section
 cz: příčný řez
 en: cross-section
+es: sección
 fr: section
 sk: priečny rez
 
 therion: point passage-height:unsigned
 cz: výška chodby
 en: passage height
+es: altura
 fr: hauteur du passage
 sk: výška chodby
 
 therion: point passage-height:positive
 cz: výška chodby nad hladinou
 en: height above water level
+es: altura sobre nivel del mar
 fr: hauteur au-dessus de l’eau
 sk: výška nad hladinou
 
 therion: point passage-height:negative
 cz: výška chodby pod hladinou
 en: depth below water level
+es: profundidad bajo nivel del mar
 fr: hauteur en dessous de l’eau
 sk: hĺbka pod hladinou
 
 therion: point passage-height:both
 cz: výška nad i pod hladinou
 en: height above and depth below water level
+es: altura y profundidad respecto nivel del mar
 fr: hauteur au dessous et au dessus de l’eau
 sk: výška nad a hĺbka pod hladinou
 
 therion: point air-draught
 cz: průvan
 en: air draught
+es: corriente aire
 fr: courant d’air
 sk: prievan
 
 therion: point date
 cz: datum pozorování
 en: date of observation
+es: fecha
 fr: date
 sk: dátum pozorovania
 
 therion: point continuation
 cz: možné pokračování
 en: possible continuation
+es: continuación
 fr: suite possible
 sk: možné pokračovanie
 
 therion: point narrow-end
 cz: neprůlezné zúžení
 en: passage narrow end
+es: final estrecho
 fr: passage impénétrable
 sk: neprielezné zúženie
 
 therion: point low-end
 cz: neprůlezné snížení
 en: passage low end
+es: final bajo
 fr: passage bas
 sk: neprielezné zníženie
 
 therion: point flowstone-choke
 cz: zasintrovaný konec
 en: flowstone choke
+es: colmatado por concreción
 fr: trémie calcifiée
 sk: zasintrený koniec
 
 therion: point breakdown-choke
 cz: zavalený konec
 en: breakdown choke
+es: colmatado por derrumbe
 fr: trémie
 sk: zavalený koniec
 
 therion: line floor-step
 cz: stupeň
 en: floor step
+es: resalte
 fr: marche
 sk: stupeň
 
 therion: line overhang
 cz: převis
 en: overhang
+es: extraplomo
 fr: surplomb
 sk: previs
+
+therion: line floor-meander
+en: floor meander
+sk: meander v dne
 
 therion: line pit
 cz: propast
 en_UK: pitch
 en_US: pit
+es: pozo
 fr: puits
 sk: priepasť
 
 therion: line ceiling-step
 cz: změna výšky stropu
 en: step on the ceiling
+es: resalte (techo)
 fr: marche de plafond
 sk: zmena výšky stropu
+
+therion: line ceiling-meander
+en: ceiling meander
+sk: stropný meander
 
 therion: line chimney
 cz: komín
 en: chimney
+es: chimenea
 fr: cheminée
 sk: komín
 
 therion: line gradient
 cz: sklon chodby
 en: passage gradient
+es: gradiente galería
 fr: pente
 sk: sklon chodby
 
 therion: point gradient
 cz: sklon chodby
 en: passage gradient
+es: gradiente galería
 fr: pente
 sk: sklon chodby
 
 therion: point height:unsigned
 cz: výška stupně
 en: the height of floor step
+es: altura resalte
 fr: hauteur d’une marche
 sk: výška stupňa
 
 therion: point height:positive
 cz: výška komínu
 en: chimney height
+es: altura chimenea
 fr: hauteur d’une cheminée
 sk: výška komínu
 
 therion: point height:negative
 cz: hloubka propasti
 en: pit depth
+es: profundidad pozo
 fr: profondeur
 sk: hĺbka priepasti
 
 therion: line contour
 cz: vrstevnice
 en: contour
+es: contorno
 fr: contour
 sk: vrstevnica
 
 therion: line slope
 cz: svah
 en: slope
+es: pendiente
 fr: pente
 sk: šikmá plocha
 
 therion: line rock-border
 cz: kameny
 en: rock border
+es: límite roca
 fr: bord d’un rocher
 sk: ohraničenie kameňov
 
 therion: line rock-edge
 cz: hrany kamenů
 en: rock edges
+es: arista
 fr: arête d’un rocher
 sk: hrany kameňov
 
 therion: point bedrock
 cz: pevná skála
 en: bedrock
+es: roca madre
 fr: roche
 sk: pevná skala
 
 therion: point blocks
 cz: kamenné bloky
 en: blocks, breakdown
+es: bloques
 fr: blocs
 sk: kamenné bloky
 
 therion: point debris
 cz: štěrk
 en: debris
+es: derrubios
 fr: débris
 sk: štrk
 
 therion: point sand
 cz: písek
 en: sand
+es: arena
 fr: sable
 sk: piesok
 
 therion: point clay
 cz: jíl
 en: clay
+es: arcilla
 fr: argile
 sk: blato
 
 therion: point water
 cz: voda
 en: water
+es: agua
 fr: eau
 sk: voda
 
 therion: point ice
 cz: led
 en: ice
+es: hielo
 fr: glace
 sk: ľad
+
+therion: point snow
+en: snow
+sk: sneh
 
 therion: point pebbles
 cz: valouny
 en: pebbles
+es: cantos rodados
 fr: galets
 sk: okruhliaky
 
 therion: point raft
 cz: náplav
 en: raft
+es: calcita flotante
 fr: calcite flottante
 sk: náplav
 
 therion: point guano
 cz: guano
 en: guano
+es: guano
 fr: guano
 sk: guáno
 
 therion: line border:visible
 cz: ohraničení
 en: border
+es: límite
 fr: bord
 sk: ohraničenie
 
 therion: line border:temporary
 cz: nestálé ohraničení
 en: temporary border
+es: límite temporal
 fr: bord, temporaire
 sk: nestále ohraničenie
+
+therion: line border:presumed
+cz: předpokládané ohraničení
+en: presumed border
+fr: bord, supposé
+sk: predpokladané ohraničenie
 
 therion: area water
 cz: vodní plocha
 en: water
+es: agua
 fr: eau
 sk: vodná plocha
 
 therion: area sump
 cz: sifon
 en: sump
+es: sifón
 fr: siphon
 sk: zatopená plocha (sifón)
 
-therion: area debris
-cz: štěrk
-en: debris
-fr: débris
-sk: štrk
+therion: area snow
+en: snow
+sk: sneh
+
+therion: area ice
+en: ice
+sk: ľad
 
 therion: area sand
 cz: písek
 en: sand
+es: arena
 fr: sable
 sk: piesok
+
+therion: area clay
+en: clay
+sk: blato
+
+therion: area pebbles
+en: pebbles
+sk: okrúhliaky
+
+therion: area debris
+cz: štěrk
+en: debris
+es: derrubios
+fr: débris
+sk: štrk
+
+therion: area blocks
+en: blocks
+sk: skalné bloky
 
 therion: point waterflow:permanent
 cz: vodní tok
 en: waterflow
+es: curso agua
 fr: rivière, permanente
 sk: vodný tok
 
 therion: point waterflow:intermittent
 cz: občasný vodní tok
 en: intermittent waterflow
+es: curso agua intermitente
 fr: rivière, intermittente
 sk: občasný vodný tok
 
 therion: point waterflow:paleo
 cz: paleořečiště
 en: paleo waterflow
+es: paleocurso agua
 fr: rivière fossile
 sk: paleoriečisko
 
 therion: line waterflow:permanent
 cz: vodní tok
 en: waterflow
+es: curso agua
 fr: rivière, permanente
 sk: vodný tok
 
 therion: line waterflow:intermittent
 cz: občasný vodní tok
 en: intermittent waterflow
+es: curso agua intermitente
 fr: rivière, intermittente
 sk: občasný vodný tok
 
 therion: line waterflow:conjectural
 cz: předpokládaný vodní tok
 en: conjectural waterflow
+es: curso agua supuesto
 fr: rivière, conjoncturelle
 sk: predpokladaný vodný tok
 
 therion: point spring
 cz: vývěr
 en: spring
+es: surgencia
 fr: source
 sk: výver
 
 therion: point sink
 cz: ponor
 en: sink
+es: sumidero
 fr: perte
 sk: ponor
 
 therion: point flowstone
 cz: sintr
 en: flowstone
+es: concreción
 fr: concrétions
 sk: sinter
 
 therion: line flowstone
 cz: sintrové náteky
 en: flowstone
+es: concreción
 fr: concrétion
 sk: sintrové náteky
 
 therion: point moonmilk
 cz: nickamínek
 en: moonmilk
+es: mondmilch
 fr: mondmilch
 sk: mäkký sinter
 
 therion: point stalactite
 cz: stalaktit
 en: stalactite
+es: estalactita
 fr: stalactite
 sk: stalaktit
 
 therion: point stalagmite
 cz: stalagmit
 en: stalagmite
+es: estalagmita
 fr: stalagmite
 sk: stalagmit
 
 therion: point pillar
 cz: stalagnát
 en: pillar
+es: pilar
 fr: pillier
 sk: stalagnát
 
 therion: point curtain
 cz: sintrové záclony
 en: curtain
+es: cortina
 fr: rideau
 sk: sintrové záclony
 
 therion: point soda-straw
 cz: brčka
 en: soda straw
+es: fistulosa
 fr: fistuleuse
 sk: brčká
 
 therion: point popcorn
 cz: pizolity
 en: popcorn
+es: coliflor
 fr: choux-fleur
 sk: pizolity
 
 therion: point cave-pearl
 cz: jeskynní perly
 en: cave pearl
+es: perla de caverna
 fr: perle des cavernes
 sk: jaskynné perly
 
 therion: point disk
 cz: disk
 en: disk
+es: disco
 fr: disque
 sk: disk
 
 therion: point helictite
 cz: heliktit
 en: helictite
+es: excéntrica
 fr: excentrique/hélictite
 sk: helektit
 
 therion: point aragonite
 cz: aragonit
 en: aragonite
+es: aragonito
 fr: aragonite
 sk: aragonit
 
 therion: point crystal
 cz: krystal
 en: crystal
+es: cristal
 fr: cristaux
 sk: kryštál
 
 therion: point wall-calcite
 cz: vápencový povlak
 en: wall calcite
+es: calcita
 fr: mur, calcite
 sk: vápencový povlak
 
 therion: point gypsum
 cz: sádrovec
 en: gypsum
+es: yeso
 fr: gypse
 sk: sádrovec
 
 therion: point gypsum-flower
 cz: sádrovcový květ
 en: gypsum flower
+es: flor yeso
 fr: fleur de gypse
 sk: sádrovcový kvet
 
 therion: point rimstone-dam
 cz: sintrová hrázka
 en: rimstone dam
+es: gour-presa
 fr: gours
 sk: sintrová hrádza
 
 therion: point rimstone-pool
 cz: sintrové jezírko
 en: rimstone pool
+es: gour-poza
 fr: gour
 sk: sintrové jazierko
 
 therion: point anastomosis
 cz: anastomóza
 en: anastomosis
+es: anastomosis
 fr: anastomose
 sk: anastomóza
 
 therion: point karren
 cz: škrapy
 en: karren
+es: lapiaz
 fr: lapiez
 sk: škrapy
 
 therion: point scallop
 cz: erozní útvary
 en: scallop
+es: golpes gubia
 fr: vagues d’érosion (coups de gouge)
 sk: erózne útvary
 
 therion: point flute
 cz: píšťaly
 en: flute
+es: canaleta
 fr: flute (?)
 sk: píšťaly
 
 therion: point raft-cone
 cz: náplavový kužel
 en: raft cone
+es: conos
 fr: cone
 sk: náplavový kužeľ
 
 therion: point archeo-material
 cz: archeologické nálezy
 en: archeo material
+es: yacimiento arq
 fr: matériel archéo
 sk: archeologické nálezy
 
 therion: point paleo-material
 cz: paleontologické nálezy
 en: paleo material
+es: yacimiento pal
 fr: matériel paléo
 sk: paleontologické nálezy
 
 therion: point vegetable-debris
 cz: zbytky rostlin
 en: vegetable debris
+es: detritus
 fr: débris végétaux
 sk: zvyšky rastlín
 
 therion: point root
 cz: kořeny
 en: root
+es: raíz
 fr: racine
 sk: korene
 
 therion: point no-equipment
 cz: nevystrojené místo
 en: place without equipement
+es: sin equipar
 fr: pas d’équipement
 sk: nevystrojené miesto
 
 therion: point anchor
 cz: kotvení
 en: anchor
+es: anclaje
 fr: ancrage
 sk: kotvenie
 
 therion: point rope
 cz: lano
 en: rope
+es: cuerda
 fr: corde
 sk: lano
 
 therion: point rope-ladder
 cz: lanový žebřík
 en: rope ladder
+es: escala
 fr: échelle de corde
 sk: lanový rebrík
 
 therion: point fixed-ladder
 cz: pevný žebřík
 en: fixed ladder
+es: escala fija
 fr: échelle fixe
 sk: fixný rebrík
 
 therion: point steps
 cz: schody
 en: steps
+es: escalones
 fr: marches
 sk: schody
 
 therion: point traverse
 cz: traverz
 en: traverse
+es: pasamanos
 fr: traversée
 sk: traverz
 
 therion: point bridge
 cz: most
 en: bridge
+es: puente roca
 fr: pont
 sk: most
 
 therion: point camp
 cz: bivak
 en: camp
+es: campamento
 fr: camp
 sk: bivak
 
 therion: title legend
 cz: Legenda
 en: Legend
+es: Leyenda
 fr: Légende
 sk: Legenda
+
+therion: title color-legend-altitude
+en: Altitudes
+sk: Nadmorské výšky
+
+therion: title color-legend-map
+en: Maps
+sk: Mapy
 
 therion: title cave length
 cz: Délka
 en: Length
+es: Desarrollo
 fr: Longueur
 sk: Dĺžka
 
 therion: units m
 cz: m
 en: m
+es: m
 fr: m
 sk: m
 
 therion: title cave depth
 cz: Převýšení
 en: Depth
+es: Desnivel
 fr: Profondeur
 sk: Prevýšenie
 
 therion: title explo (plural)
 cz: Objevili
 en: Explored by
+es: Exploración
 fr: Explorateurs
 sk: Objavili
 
 therion: title explo
 cz: Objevil
 en: Explored by
+es: Exploración
 fr: Explorateur
 sk: Objavil
 
 therion: title topo (plural)
 cz: Měřili
 en: Surveyed by
+es: Espeleometría
 fr: Topographes
 sk: Zamerali
 
 therion: title topo
 cz: Měřil
 en: Surveyed by
+es: Espeleometría
 fr: Topographe
 sk: Zameral
 
 therion: title carto (plural)
 cz: Kreslili
 en: Drawn by
+es: Espeleografía
 fr: Dessinateurs
 sk: Kreslili
 
 therion: title carto
 cz: Kreslil
 en: Drawn by
+es: Espeleografía
 fr: Dessinateur
 sk: Kreslil
 
 therion: title preview above
 cz: [Náhled horních vrstev]
 en: [Preview above]
+es: [Vista previa superior]
 fr: [Prévisualisation au-dessus]
 sk: [Náhľad horných vrstiev]
 
 therion: title preview below
 cz: [Náhled dolních vrstev]
 en: [Preview below]
+es: [Vista previa inferior]
 fr: [Prévisualisation au-dessous]
 sk: [Náhľad spodných vrstiev]
 
 therion: title surface bitmap
 cz: [Povrchová mapa]
 en: [Surface map]
+es: [Mapa superficie]
 fr: [Carte extérieure]
 sk: [Povrchová mapa]
 

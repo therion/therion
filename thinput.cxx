@@ -93,6 +93,7 @@ thinput::thinput()
   this->pifo = false;
   this->pifoid = NULL;
   this->pifoproc = NULL;
+  this->report_missing = false;
 }
 
 
@@ -265,7 +266,7 @@ void thinput::open_file(char * fname)
   unsigned int n_rec = 0;
   
   if (!ifptr->sh.is_open()) {
-    if (srcfile != NULL) {
+    if ((srcfile != NULL) || (this->report_missing)) {
       ththrow(("can't open file for input -- %s", \
         fname));
     }

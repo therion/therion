@@ -167,6 +167,11 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         c2(TT_AREA_TYPE_SAND, SYMA_SAND);
         c2(TT_AREA_TYPE_SUMP, SYMA_SUMP);
         c2(TT_AREA_TYPE_WATER, SYMA_WATER);
+        c2(TT_AREA_TYPE_ICE, SYMA_ICE);
+        c2(TT_AREA_TYPE_SNOW, SYMA_SNOW);
+        c2(TT_AREA_TYPE_BLOCKS, SYMA_BLOCKS);
+        c2(TT_AREA_TYPE_CLAY, SYMA_CLAY);
+        c2(TT_AREA_TYPE_PEBBLES, SYMA_PEBBLES);
       }
       break;
     case TT_SYMBOL_LINE:
@@ -215,9 +220,11 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         cl3(TT_LINE_TYPE_ARROW,SYML_ARROW);
         cl3(TT_LINE_TYPE_GRADIENT,SYML_GRADIENT);
         cl3(TT_LINE_TYPE_CEILING_STEP,SYML_CEILINGSTEP);
+        cl3(TT_LINE_TYPE_CEILING_MEANDER,SYML_CEILINGMEANDER);
         cl3(TT_LINE_TYPE_CHIMNEY,SYML_CHIMNEY);
         cl3(TT_LINE_TYPE_CONTOUR,SYML_CONTOUR);
         cl3(TT_LINE_TYPE_FLOOR_STEP,SYML_FLOORSTEP);
+        cl3(TT_LINE_TYPE_FLOOR_MEANDER,SYML_FLOORMEANDER);
         cl3(TT_LINE_TYPE_FLOWSTONE,SYML_FLOWSTONE);
         cl3(TT_LINE_TYPE_LABEL,SYML_LABEL);
         cl3(TT_LINE_TYPE_OVERHANG,SYML_OVERHANG);
@@ -302,6 +309,7 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         cp3(TT_POINT_TYPE_GYPSUM_FLOWER,SYMP_GYPSUMFLOWER);
         cp3(TT_POINT_TYPE_HELICTITE,SYMP_HELICTITE);
         cp3(TT_POINT_TYPE_ICE,SYMP_ICE);
+        cp3(TT_POINT_TYPE_SNOW,SYMP_SNOW);
         cp3(TT_POINT_TYPE_KARREN,SYMP_KARREN);
         cp3(TT_POINT_TYPE_LABEL,SYMP_LABEL);
         cp3(TT_POINT_TYPE_LOW_END,SYMP_LOWEND);
@@ -740,8 +748,10 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   // zrazy + kominy + priepasti + gradient
   legend_step(SYML_FLOORSTEP,thT("line floor-step",layout->lang));
   legend_step(SYML_OVERHANG,thT("line overhang",layout->lang));
+  legend_step(SYML_FLOORMEANDER,thT("line floor-meander",layout->lang));
   legend_cycle(SYML_PIT,thT("line pit",layout->lang));
   legend_step(SYML_CEILINGSTEP,thT("line ceiling-step",layout->lang));
+  legend_step(SYML_CEILINGMEANDER,thT("line ceiling-meander",layout->lang));
   legend_cycle(SYML_CHIMNEY,thT("line chimney",layout->lang));
   if isused(SYML_GRADIENT) {
     insfig(SYML_GRADIENT,thT("line gradient",layout->lang));
@@ -810,6 +820,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_CLAY,thT("point clay",layout->lang));
   legend_point(SYMP_WATER,thT("point water",layout->lang));
   legend_point(SYMP_ICE,thT("point ice",layout->lang));
+  legend_point(SYMP_SNOW,thT("point snow",layout->lang));
   legend_point(SYMP_PEBBLES,thT("point pebbles",layout->lang));
   legend_point(SYMP_RAFT,thT("point raft",layout->lang));
   legend_point(SYMP_GUANO,thT("point guano",layout->lang));
@@ -817,16 +828,26 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   // okraje
   legend_cycle(SYML_BORDER_VISIBLE,thT("line border:visible",layout->lang));
   legend_cycle(SYML_BORDER_TEMPORARY,thT("line border:temporary",layout->lang));
+  legend_cycle(SYML_BORDER_PRESUMED,thT("line border:presumed",layout->lang));
 
   // vypln plosna
 #define legend_area(mid,txt) \
   insfig(mid,txt); \
   fprintf(mpf,"%s(buildcycle((((-1,0) -- (1,0) -- (1,1) -- (0,1) -- (0,-1))  inscale)));\n",thsymbolset__mp[mid]); \
   endfig;
+#define legend_nocliparea(mid,txt) \
+  insfig(mid,txt); \
+  fprintf(mpf,"%s(buildcycle((((-4,-4) -- (4,-4) -- (4,4) -- (-4,4) -- (-4,-4))  inscale)));\n",thsymbolset__mp[mid]); \
+  endfig;
   legend_area(SYMA_WATER,thT("area water",layout->lang));  
   legend_area(SYMA_SUMP,thT("area sump",layout->lang));  
-  legend_area(SYMA_DEBRIS,thT("area debris",layout->lang));  
+  legend_area(SYMA_SNOW,thT("area snow",layout->lang));  
+  legend_area(SYMA_ICE,thT("area ice",layout->lang));  
   legend_area(SYMA_SAND,thT("area sand",layout->lang));  
+  legend_area(SYMA_CLAY,thT("area clay",layout->lang));  
+  legend_area(SYMA_PEBBLES,thT("area pebbles",layout->lang));  
+  legend_area(SYMA_DEBRIS,thT("area debris",layout->lang));  
+  legend_nocliparea(SYMA_BLOCKS,thT("area blocks",layout->lang));  
   
   // vodne toky (ciary, body)
 #define legend_waterflow(mid,txt) \

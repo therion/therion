@@ -517,7 +517,9 @@ void thdb2d::process_map_references(thmap * mptr)
     thmap * mapp;
     thscrap * scrapp;
     thsurvey * survp;
+
     switch (optr->get_class_id()) {
+    
       case TT_SURVEY_CMD:
 
         if (proj_id == -1) {
@@ -525,6 +527,17 @@ void thdb2d::process_map_references(thmap * mptr)
             ththrow(("%s [%d] -- no projection for survey", citem->source.name, citem->source.line))
           proj_id = mptr->expl_projection->id;
           mptr->is_basic = false;
+        } else {
+          if (mptr->is_basic) {
+            if (citem->name.survey != NULL)
+              ththrow(("%s [%d] -- not a scrap reference -- %s@%s",
+                citem->source.name, citem->source.line, 
+                citem->name.name,citem->name.survey))
+            else
+              ththrow(("%s [%d] -- not a scrap reference -- %s",
+                citem->source.name, citem->source.line, 
+                citem->name.name))
+          }
         }
 
         // skontroluje ci nie sme v extended projekcii
@@ -543,6 +556,10 @@ void thdb2d::process_map_references(thmap * mptr)
         scrapp = new thscrap;
         scrapp->centerline_io = true;
         scrapp->centerline_survey = survp;
+        scrapp->z = thnan;
+        if ((survp->stat.station_top != NULL) && (survp->stat.station_bottom != NULL)) {
+          scrapp->z = (survp->stat.station_top->z + survp->stat.station_bottom->z) / 2.0;
+        }
         scrapp->fsptr = NULL;
         scrapp->db = this->db;
         scrapp->proj = this->get_projection(proj_id);
@@ -550,6 +567,7 @@ void thdb2d::process_map_references(thmap * mptr)
 
         mapp = new thmap;
         mapp->db = this->db;
+        mapp->z = scrapp->z;
         mapp->fsptr = NULL;
         thdb.object_list.push_back(mapp);
 
@@ -563,6 +581,7 @@ void thdb2d::process_map_references(thmap * mptr)
         mapp->last_item = xcitem;
         citem->object = mapp;
         break;
+
       case TT_MAP_CMD:
         mapp = (thmap *) optr;
         // if not defined - process recursively
@@ -1150,6 +1169,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
   thscrap * pps;
   thpoint * ppp;
   thdb2dcp * cp, * scancp, * rootcp;
+	int max_mark;
   bool has_root = false, some_attached;
   unsigned long nattached, numcps = 0, numscraps = 0;
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
@@ -1164,7 +1184,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
         cp->point->cpoint = cp;
         cp->pt = ppp->point;
         thdb1ds * st = & (this->db->db1d.station_vec[ppp->station_name.id - 1]);
-        thdb1ds * uidst = & (this->db->db1d.station_vec[st->uid - 1]);;
+        thdb1ds * uidst = & (this->db->db1d.station_vec[st->uid - 1]);
         numcps++;
         cp->st = st;
         // let's update station type
@@ -1187,6 +1207,23 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
               uidst->mark = TT_DATAMARK_NATURAL;
             }
             break;
+					case TT_POINT_SUBTYPE_UNKNOWN:
+					  max_mark = st->mark;
+						if (st->mark > uidst->mark) {
+							max_mark = st->mark;
+						}
+						switch (max_mark) {
+							case TT_DATAMARK_FIXED:
+							  ppp->subtype = TT_POINT_SUBTYPE_FIXED;
+							  break;
+							case TT_DATAMARK_PAINTED:
+							  ppp->subtype = TT_POINT_SUBTYPE_PAINTED;
+							  break;
+							case TT_DATAMARK_NATURAL:
+							  ppp->subtype = TT_POINT_SUBTYPE_NATURAL;
+							  break;
+						}
+					  break;
         }
         // let's check projection station limits
         if (thisnan(minx)) {
@@ -1233,7 +1270,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
       threthrow(("no reference station found in scrap -- %s@%s",
         pps->name,pps->fsptr->get_full_name()))
     }
-
+    
     switch (prj->type) {
 
       case TT_2DPROJ_PLAN:

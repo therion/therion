@@ -241,16 +241,21 @@ proc xth_app_finish {} {
       -command "wm withdraw $xth(gui,dbg)" -font $xth(gui,lfont)
   }
 
-  bind $xth(gui,main) <Control-Key-q> "xth_exit"
-  bind $xth(gui,main) <Control-Key-o> xth_app_control_o 
-  bind $xth(gui,main) <Control-Key-r> xth_app_control_r 
-  bind $xth(gui,main) <Control-Key-w> xth_app_control_w
-  bind $xth(gui,main) <Control-Key-s> xth_app_control_s 
-  bind $xth(gui,main) <Control-Key-z> xth_app_control_z
-  bind $xth(gui,main) <Control-Key-y> xth_app_control_y 
-  bind $xth(gui,main) <Control-Key-p> xth_app_control_p 
-  bind $xth(gui,main) <Control-Key-l> xth_app_control_l 
-  bind $xth(gui,main) <Control-Key-d> xth_app_control_d
+  bind $xth(gui,main) <$xth(kb_control)-Key-q> "xth_exit"
+  bind $xth(gui,main) <$xth(kb_control)-Key-o> xth_app_control_o 
+  bind $xth(gui,main) <$xth(kb_control)-Key-r> xth_app_control_r 
+  bind $xth(gui,main) <$xth(kb_control)-Key-w> xth_app_control_w
+  bind $xth(gui,main) <$xth(kb_control)-Key-s> xth_app_control_s 
+  bind $xth(gui,main) <$xth(kb_control)-Key-z> xth_app_control_z
+  bind $xth(gui,main) <$xth(kb_control)-Key-y> xth_app_control_y 
+  bind $xth(gui,main) <$xth(kb_control)-Key-p> xth_app_control_p 
+  bind $xth(gui,main) <$xth(kb_control)-Key-l> xth_app_control_l 
+  bind $xth(gui,main) <$xth(kb_control)-Key-d> xth_app_control_d
+  bind $xth(gui,main) <$xth(kb_control)-Key-a> xth_app_control_a
+  bind $xth(gui,main) <Prior> xth_app_pgup
+  bind $xth(gui,main) <Next> xth_app_pgdn
+  bind $xth(gui,main) <Shift-Prior> xth_app_shift_pgup
+  bind $xth(gui,main) <Shift-Next> xth_app_shift_pgdn
   bind $xth(gui,main) <Key-Escape> xth_app_escape 
   bind $xth(gui,main) <F9> xth_app_make
   foreach aname $xth(app,list) {
@@ -316,6 +321,74 @@ proc xth_app_control_o {} {
 }  
 
 
+proc xth_app_pgup {} {
+  global xth
+  switch $xth(app,active) {
+    te  {}
+    me  {
+      $xth(gui,main).me.af.ctrl.c yview scroll -1 pages
+    }
+    cp  {}
+    mv {}
+  }
+}
+
+proc xth_app_pgdn {} {
+  global xth
+  switch $xth(app,active) {
+    te  {}
+    me  {
+      $xth(gui,main).me.af.ctrl.c yview scroll 1 pages
+    }
+    cp  {}
+    mv {}
+  }
+}
+
+proc xth_app_shift_pgup {} {
+  global xth
+  switch $xth(app,active) {
+    te  {}
+    me  {
+      $xth(ctrl,me,cmds).cl.l yview scroll -1 pages
+    }
+    cp  {}
+    mv {}
+  }
+}
+
+
+proc xth_app_shift_pgdn {} {
+  global xth
+  switch $xth(app,active) {
+    te  {}
+    me  {
+      $xth(ctrl,me,cmds).cl.l yview scroll 1 pages
+    }
+    cp  {}
+    mv {}
+  }
+}
+
+
+proc xth_app_control_a {} {
+
+  global xth
+
+  # puts $xth(app,active)  
+  switch $xth(app,active) {
+    te  {}
+    me  {
+      xth_me_cmds_create_area {} 1 "" "" ""
+      xth_ctrl_scroll_to me ac
+      xth_ctrl_maximize me ac
+    }
+    cp  {}
+    mv {}
+  }
+}  
+
+
 proc xth_app_control_r {} {
 
   global xth
@@ -323,7 +396,12 @@ proc xth_app_control_r {} {
   # puts $xth(app,active)  
   switch $xth(app,active) {
     te  {}
-    me  {}
+    me  {
+      xth_me_cmds_create_scrap {} 1 "" ""
+      xth_ctrl_scroll_to me scrap
+      xth_ctrl_maximize me scrap
+    }
+    
     cp  {}
     mv {xth_mv_reload_file}
   }
@@ -395,6 +473,8 @@ proc xth_app_control_l {} {
     me  {
       xth_me_cmds_create_line {} 1 "" "" ""
       xth_ctrl_scroll_to me line
+      xth_ctrl_maximize me line
+      xth_ctrl_maximize me linept
     }
   }
 }  
@@ -581,6 +661,27 @@ proc xth_app_make {} {
       xth_app_show $oactive
     }
   }
+}
+
+
+proc xth_app_autosave_schedule {} {
+  global xth
+  if $xth(gui,auto_save) {
+    set xth(gui,auto_save,id) [after 60000 xth_app_autosave]
+  } else {
+    catch {
+      after cancel $xth(gui,auto_save,id)
+    }
+  }
+}
+
+proc xth_app_autosave {} {
+  global xth
+  switch $xth(app,active) {
+    me {xth_me_save_file 0}
+    te {xth_te_save_all}
+  }
+  xth_app_autosave_schedule
 }
 
 

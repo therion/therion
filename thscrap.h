@@ -57,11 +57,11 @@ enum {
  */
  
 static const thstok thtt_scrap_opt[] = {
-  {"3d", TT_SCRAP_3D},
   {"proj", TT_SCRAP_PROJECTION},
   {"projection", TT_SCRAP_PROJECTION},
   {"scale", TT_SCRAP_SCALE},
   {"stations", TT_SCRAP_STATIONS},
+  {"walls", TT_SCRAP_3D},
   {NULL, TT_SCRAP_UNKNOWN},
 };
 
@@ -80,7 +80,8 @@ class thscrap : public thdataobject {
   class th2ddataobject * fs2doptr,  ///< First scrap 2D object.
     * ls2doptr;  ///< Last scrap 2D object.
     
-  double lxmin, lxmax, lymin, lymax; ///< Coordinate limits.
+  double lxmin, lxmax, lymin, lymax, ///< Coordinate limits.
+    R, G, B; ///< Scrap color.
     
   thdb2dcp * fcpp, * lcpp; ///< Scrap control points.
   unsigned int ncp; ///< Number of control points.

@@ -65,6 +65,9 @@ enum {
   TT_DATA_DISCOVERY_TEAM = 2018,
   TT_DATA_GROUP = 2019,
   TT_DATA_ENDGROUP = 2020,
+  TT_DATA_SHAPE = 2021,
+  TT_DATA_VTRESH = 2022,
+  TT_DATA_WALLS = 2023,
 };
 
 
@@ -90,9 +93,12 @@ static const thstok thtt_data_opt[] = {
   {"instrument", TT_DATA_INSTRUMENT},
   {"mark", TT_DATA_MARK},
   {"sd", TT_DATA_SD},
+//  {"shape", TT_DATA_SHAPE},
   {"station", TT_DATA_STATION},
   {"team", TT_DATA_TEAM},
   {"units", TT_DATA_UNITS},
+  {"vtreshold", TT_DATA_VTRESH},
+  {"walls", TT_DATA_WALLS},
   {NULL, TT_DATA_UNKNOWN},
 };
 
@@ -108,7 +114,7 @@ typedef std::set <thperson> thdata_team_set_type;
  * Maximal number of various data items.
  */
  
-#define THDATA_MAX_ITEMS 18
+#define THDATA_MAX_ITEMS 22
 
 
 /**
@@ -123,12 +129,13 @@ class thdata : public thdataobject {
   
   // dlu - data leg units
   thtflength dlu_length, dlu_counter, dlu_depth, dlu_dx, dlu_dy, dlu_dz,
-    dlu_x, dlu_y, dlu_z, dlu_sdlength;
+    dlu_x, dlu_y, dlu_z, dlu_sdlength, dlu_up, dlu_down, dlu_left, dlu_right;
   thtfangle dlu_bearing, dlu_gradient, dlu_declination, dlu_sdangle;
   
   // dlc - data calibration
   thtfpwf dlc_length, dlc_gradient, dlc_bearing, dlc_counter, dlc_depth,
-    dlc_dx, dlc_dy, dlc_dz, dlc_x, dlc_y, dlc_z, dlc_default;
+    dlc_dx, dlc_dy, dlc_dz, dlc_x, dlc_y, dlc_z, dlc_default,
+    dlc_up, dlc_down, dlc_left, dlc_right;
     
   // dls - data standard deviation and declination
   double dls_length, dls_gradient, dls_bearing, dls_counter, dls_depth,
@@ -157,8 +164,12 @@ class thdata : public thdataobject {
     d_nitems,  ///< Number of items.
     d_current,  ///< Currently inserted item.
     d_mark,  ///< Station mark type.
+    d_shape, ///< Walls shape.
+    d_walls, ///< Walls switch.
     d_flags,  ///< Leg flags.
     d_last_equate;  ///< Last data equate.
+    
+  double d_vtresh; ///< Vertical treshold.
     
   void reset_data_sd();  ///< Reset data sd
   
@@ -194,8 +205,10 @@ class thdata : public thdataobject {
   void set_data_flags(int nargs, char ** args);  ///< Set data leg flags.
   
   void set_data_station(int nargs, char ** args, int argenc);  ///< Set station comment and flags.
-  
+	  
   void set_data_mark(int nargs, char ** args);  ///< Set type of station mark.
+
+  void set_data_vtresh(int nargs, char ** args);  ///< Set vertical treshold
 
   void set_survey_declination();  ///< Set survey declination.
   
@@ -212,12 +225,16 @@ class thdata : public thdataobject {
     discovery_team_set;  ///< Discovery team person set.
   
   thdataleg_list leg_list;  ///< Main data structure.
-  
+
   thdatafix_list fix_list;  ///< Fix list.
+  
+	thdatamark_list mark_list; ///< List of station marks.
   
   thdataequate_list equate_list;  ///< Equate list.
   
   thdatass_list ss_list;  ///< Stations list.
+  
+  thstdims_list dims_list; ///< Dimensions list.
   
   /**
    * Standard constructor.
@@ -329,6 +346,12 @@ class thdata : public thdataobject {
    
   virtual void start_insert();
     
+  
+  /**
+   * Complete dimensions.
+   */
+   
+  void complete_dimensions();
   
 };
 

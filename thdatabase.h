@@ -179,7 +179,7 @@ class thdatabase {
   
   thbuffer buff_enc;   ///< Encoding buffer.  
   thbuffer buff_tmp;  ///< Temporary buffer.
-  thmbuffer mbuff_tmp;  ///< Temporary mbuffer.
+  thmbuffer mbuff_tmp, mbuff_tmp2;  ///< Temporary mbuffer.
   thmbuffer buff_stations;  ///< Stations storage buffer.
   thdb_revision_set_type revision_set;  ///< Object revisions.
   thdb1d db1d;  ///< Survey data part of database.
@@ -323,6 +323,7 @@ class thdatabase {
    */
    
   thsurvey * get_survey(char * sn, thsurvey * ps);
+  thsurvey * get_survey_noexc(char * sn, thsurvey * ps);
 
 
   /**
@@ -343,6 +344,8 @@ class thdatabase {
    */
    
   void preprocess();
+  
+  void insert_equate(int nargs, char ** args);
 
 };
 

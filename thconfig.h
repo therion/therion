@@ -72,6 +72,8 @@ class thconfig {
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.
   int cfg_fenc;  ///< Configuration file encoding.
+  
+  double tmp3dSMP, tmp3dWALLSMP, tmp3dMAXDIMD;
 
   class thdatabase * dbptr;  ///< Associated db.
   thexporter exporter;  ///< Data exporter.

@@ -104,6 +104,8 @@ class thsurvey : public thdataobject {
   
   thdataobject * foptr,  ///< First object in survey.
     * loptr;  ///< Last object in survey.
+    
+  class thdata * data;
   
   void parse_declination(char * str);
   
@@ -265,7 +267,6 @@ class thsurvey : public thdataobject {
    */
    
   thdataobject * get_last_survey_object() {return this->loptr;}
-  
   
 };
 

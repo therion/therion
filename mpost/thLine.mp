@@ -38,7 +38,8 @@ enddef;
 
 vardef thdir (expr p,t) =    % 1 * epsilon caused problems in scales < 1:1000
                              % n * epsilon is enough for scale 1:(n*1000)
-  ((direction t-100*epsilon of p) + (direction t+100*epsilon of p)) / 2
+%  ((direction t-100*epsilon of p) + (direction t+100*epsilon of p)) / 2
+   postcontrol (t+1000*epsilon) of p - precontrol (t-1000*epsilon) of p
 %  direction t of p
 enddef;
 
@@ -67,26 +68,48 @@ def l_wall_sand_SKBB (expr P) =
   thdraw P;
 enddef;
 
-def l_wall_clay_SKBB (expr P) = 
-  T:=identity;
-  l_undefined(P);
-enddef;
-
 def l_wall_pebbles_SKBB (expr P) = 
   T:=identity;
-  l_undefined(P);
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, .35u);
+  pickup PenC;
+  q:=superellipse((.2u,0),(0,.1u),(-.2u,0),(0,.-.1u),.75);
+  forever:
+    t := arctime (cas + mojkrok/2) of P;
+    thdraw q randomized (u/20) rotated (angle(thdir(P,t)) + (normaldeviate*40)) shifted point t of P;
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+  endfor;
+enddef;
+
+def l_wall_clay_SKBB (expr P) = 
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, .5u);
+  pickup PenC;
+  q := (-0.15u,0){up}..{down}origin..{up}(0.15u,0);
+  forever:
+    t := arctime (cas + mojkrok/2) of P;
+    thdraw q shifted (point t of P + .25u * unitvector(thdir(P,t) rotated -90));
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+  endfor;
+  thdraw P;
 enddef;
 
 def l_wall_debris_SKBB (expr P) = 
   T:=identity;
   cas := 0;
   dlzka := arclength P;
-  mojkrok:=adjust_step(dlzka, .35u);
+  mojkrok:=adjust_step(dlzka, .4u);
   pickup PenC;
-  q := ((-.1u,-.15u)--(.2,.03u)--(-.2u,.15u)--cycle) scaled 1.5;
+%  q := ((-.1u,-.15u)--(.2,.03u)--(-.2u,.15u)--cycle) scaled 1.5;
+  q := ((-.2u,-.1u)--(.2u,-.1u)--(0,.2u)--cycle) scaled 1.1;
   forever:
     t := arctime (cas + mojkrok/2) of P;
-    thdraw q randomized (u/15) rotated uniformdeviate (360) shifted point t of P;
+    thdraw q randomized (u/10) rotated uniformdeviate (360) shifted point t of P;
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
   endfor;
@@ -108,7 +131,7 @@ if dlzka > 0:
     q := ((point t1 of P) + .4u * unitvector(thdir(P,t1) rotated -90)) --
          (subpath (t1,t2) of P) --
          ((point t2 of P) + .4u * unitvector(thdir(P,t2) rotated -90));
-    thdraw q randomized (u/3);
+    thdraw q randomized (u/6);
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
   endfor;
@@ -117,7 +140,20 @@ enddef;
 
 def l_wall_ice_SKBB (expr P) = 
   T:=identity;
-  l_undefined(P);
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, .5u);
+  pickup PenC;
+  p := (-.1u,0)--(.1u,0);
+  q := (0,-.1u)--(0,.1u);
+  forever:
+    t := arctime (cas + mojkrok/2) of P;
+    thdraw p shifted (point t of P + .25u * unitvector(thdir(P,t) rotated -90));
+    thdraw q shifted (point t of P + .25u * unitvector(thdir(P,t) rotated -90));
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+  endfor;
+  thdraw P;
 enddef;
 
 def l_wall_underlying_UIS (expr P) = 
@@ -157,6 +193,11 @@ def l_pit_UIS (expr P) =
 enddef;
 
 let l_floorstep_UIS = l_pit_UIS;
+
+def l_floormeander_SM (expr P) =
+  l_floorstep_UIS (P);
+  l_floorstep_UIS (reverse P);
+enddef;
 
 def l_overhang_SKBB (expr P) =
   T:=identity;
@@ -200,6 +241,11 @@ def l_ceilingstep_SKBB (expr P) =
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
   endfor;
+enddef;
+
+def l_ceilingmeander_SM (expr P) =
+  l_ceilingstep_SKBB (P);
+  l_ceilingstep_SKBB (reverse P);
 enddef;
 
 boolean alw_perpendicular;
@@ -271,7 +317,7 @@ def l_slope_SKBB (expr P,S)(text Q) =
     if l=-1:
       if (i=0) or (i=li):
         lengths[i] := 1cm; % should never happen!
-	message("Warning: slope width at the end point not specified!");
+	thwarning("slope width at the end point not specified");
 	pi:=i;
       else:
         if ni<=i:
@@ -494,7 +540,7 @@ def l_undefined (expr P) =
   T:=identity;
   pickup PenC;
   thdraw P withcolor red;
-  message("[Warning: undefined line symbol used]");
+  thwarning("undefined line symbol used");
 enddef;
 
 % Q = 0 -- no arrows
@@ -508,10 +554,10 @@ def l_arrow_SKBB (expr P, Q) =
   thdraw P;
   p := (-.1u,-.25u)--(0,0)--(.1u,-.25u);
   if odd Q:
-    draw p rotated (angle(direction 0 of P)+90) shifted (point 0 of P);
+    draw p rotated (angle(thdir(P,0))+90) shifted (point 0 of P);
   fi;
   if Q>1:
-    draw p rotated (angle(direction infinity of P)-90) 
+    draw p rotated (angle(thdir(P,length P))-90) 
          shifted (point infinity of P);
   fi;
 enddef;
@@ -568,41 +614,55 @@ def l_gradient_UIS (expr P) =
   pickup PenC;
   thdraw P;
   p:=(-.15u,-.4u)--(0,0)--(.15u,-.4u)--cycle;
-  thfill (p rotated (angle(direction infinity of P)-90) 
+  thfill (p rotated (angle(thdir(P,length P))-90) 
          shifted (point infinity of P));
-  thdraw (p rotated (angle(direction infinity of P)-90) 
+  thdraw (p rotated (angle(thdir(P,length P))-90) 
          shifted (point infinity of P));
 enddef;
 
-def l_rope_SKBB (expr P) =
+def l_rope_SKBB (expr P,exact) =
   T:=identity;
-  pickup PenX;
-%  for i:=0 upto (length P):
-%    thdraw point i of P withcolor red;
-%  endfor;
   pickup PenC;
-  d:=0.2cm;
-  for i:=0 upto (length P - 1):
-%    clearxy;
-    x1 := xpart point i of P;
-    y1 := ypart point i of P;
-    x2 := xpart point i+1 of P;
-    y2 := ypart point i+1 of P;
-    if y2 > y1:
-      y3 := y1 - d;
-      x3 := x1 + (x2-x1)*sqrt(d)/(sqrt(d)+sqrt(y2-y1+d));
-    else:
-      y3 := y2 - d;
-      x3 := x1 + (x2-x1)*sqrt(y1-y2+d)/(sqrt(d)+sqrt(y1-y2+d));
-    fi;
-%    thdraw (x3,y3) withcolor green withpen PenX;
-    numeric a,b,c;
-    a*x1*x1 + b*x1 + c = y1;
-    a*x2*x2 + b*x2 + c = y2;
-    a*x3*x3 + b*x3 + c = y3;
-    draw (x1,y1)
-    for t = x1 step (x2-x1)/20 until x2+10*epsilon:
-      -- (t,a*t*t+b*t+c)
+  if exact:
+    draw P;
+  else:
+    d:=0.5u;
+    for i:=0 upto (length P - 2):
+      x1 := xpart point i of P;
+      y1 := ypart point i of P;
+      x2 := xpart point i+1 of P;
+      y2 := ypart point i+1 of P;
+    
+      dx1:=x1; dy1:=y1; x1:=0; y1:=0; x2:=x2-dx1; y2:=y2-dy1;
+      if y2 > y1:
+        y3 := y1 - d;
+        x3 := x1 + (x2-x1)*sqrt(d)/(sqrt(d)+sqrt(y2-y1+d));
+      else:
+        y3 := y2 - d;
+        x3 := x1 + (x2-x1)*sqrt(y1-y2+d)/(sqrt(d)+sqrt(y1-y2+d));
+      fi;
+      numeric a,b,c;
+      a*x1/10*x1 + b/10*x1 + c/10 = y1/10;
+      a*x2/10*x2 + b/10*x2 + c/10 = y2/10;
+      a*x3/10*x3 + b/10*x3 + c/10 = y3/10;
+      draw (x1+dx1,y1+dy1)
+      for t = x1 step (x2-x1)/20 until x2+10*epsilon:
+        -- (t+dx1,a*t*t+b*t+c+dy1)
+      endfor;
     endfor;
+    pair x;
+    x = point (length P)-1 of P + whatewer * down;
+    x = point (length P) of P + whatever * right;
+    draw point (length P)-1 of P -- x;
+%    thdraw point length P of P withpen pencircle scaled 0.3u withcolor red;
+  fi;
+  for i:=0 upto length P if not exact: -1 fi:
+    thdraw point i of P withpen pencircle scaled 0.3u;
   endfor;
+enddef;
+
+def l_border_presumed_SKBB (expr Path) =
+  T:=identity;
+  pickup PenC;
+  draw Path dashed evenly scaled (0.25 * optical_zoom);
 enddef;

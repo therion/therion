@@ -277,6 +277,9 @@ void thline::parse_type(char * ss)
     case TT_LINE_TYPE_CEILING_STEP:
       this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
       break;
+    case TT_LINE_TYPE_CEILING_MEANDER:
+      this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
+      break;
   }
 }
 
@@ -315,6 +318,7 @@ void thline::parse_subtype(char * ss)
         case TT_LINE_SUBTYPE_INVISIBLE:
         case TT_LINE_SUBTYPE_TEMPORARY:
         case TT_LINE_SUBTYPE_VISIBLE:
+        case TT_LINE_SUBTYPE_PRESUMED:
           tsok = true;
       }
       break;
@@ -809,7 +813,9 @@ bool thline::export_mp(class thexpmapmpxs * out)
 
     thline_type_export_mp(TT_LINE_TYPE_PIT, SYML_PIT)
     thline_type_export_mp(TT_LINE_TYPE_CEILING_STEP, SYML_CEILINGSTEP)
+    thline_type_export_mp(TT_LINE_TYPE_CEILING_MEANDER, SYML_CEILINGMEANDER)
     thline_type_export_mp(TT_LINE_TYPE_FLOOR_STEP, SYML_FLOORSTEP)
+    thline_type_export_mp(TT_LINE_TYPE_FLOOR_MEANDER, SYML_FLOORMEANDER)
     thline_type_export_mp(TT_LINE_TYPE_OVERHANG, SYML_OVERHANG)
     thline_type_export_mp(TT_LINE_TYPE_CHIMNEY, SYML_CHIMNEY)
     thline_type_export_mp(TT_LINE_TYPE_FLOWSTONE, SYML_FLOWSTONE)
@@ -891,6 +897,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           macroid = SYML_BORDER_VISIBLE;
           switch (cs) {
             thline_type_export_mp(TT_LINE_SUBTYPE_TEMPORARY, SYML_BORDER_TEMPORARY)
+            thline_type_export_mp(TT_LINE_SUBTYPE_PRESUMED, SYML_BORDER_PRESUMED)
             thline_type_export_mp(TT_LINE_SUBTYPE_INVISIBLE, SYML_BORDER_INVISIBLE)
           }
           if (this->context >= 0) 
@@ -1021,7 +1028,7 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
       int from, int to, int dbglevel)
 {
   thdb2dlp * lp = this->first_point;
-  thdb2dpt * prev_pt;
+  thdb2dpt * prev_pt = NULL;
 //  double xt, yt, d;
   unsigned last = 0;
   bool dnu = false;

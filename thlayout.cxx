@@ -73,7 +73,7 @@ void thlayout_color::parse(char * str) {
 thlayout::thlayout()
 {
 
-  this->ccode = TT_LAYOUT_CODE_TEX_ATLAS;
+  this->ccode = TT_LAYOUT_CODE_UNKNOWN;
 
   this->def_scale = false;
   this->scale = 0.005;
@@ -111,8 +111,9 @@ thlayout::thlayout()
   this->goz = thnan;
   
   this->def_grid_size = false;
-  this->gxs = 10.0;
-  this->gys = 10.0;
+  this->gxs = thnan;
+  this->gys = thnan;
+  this->gzs = thnan;
   
   this->def_origin_label = false;
   this->olx = "0";
@@ -167,6 +168,9 @@ thlayout::thlayout()
   this->legend_width = 0.14;
   this->def_legend_columns = false;
   this->legend_columns = 2;
+
+  this->def_color_legend = false;
+  this->color_legend = TT_TRUE;
   
   this->def_scale_bar = false;
   this->scale_bar = -1.0;
@@ -201,7 +205,7 @@ thlayout::thlayout()
   this->layers = true;
 
   this->def_grid = false;
-  this->grid = TT_LAYOUT_GRID_LINE;
+  this->grid = TT_LAYOUT_GRID_OFF;
   
   this->def_page_grid = false;
   this->page_grid = false;
@@ -224,6 +228,10 @@ thlayout::thlayout()
   this->color_preview_above.R = 0;
   this->color_preview_above.G = 0;
   this->color_preview_above.B = 0;
+  
+  this->color_crit = TT_LAYOUT_CCRIT_UNKNOWN;
+  this->color_mode = TT_LAYOUT_CMODE_AUTO;
+  this->color_table = TT_LAYOUT_CTABLE_HSV;  
   
 }
 
@@ -268,6 +276,8 @@ char * thlayout::get_cmd_name()
 
 thcmd_option_desc thlayout::get_default_cod(int id) {
   switch (id) {
+    case TT_LAYOUT_ENDCODE:
+      return thcmd_option_desc(id,0);
     case TT_LAYOUT_NAV_SIZE:
     case TT_LAYOUT_OVERLAP:
     case TT_LAYOUT_SCALE:
@@ -282,11 +292,11 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
     case TT_LAYOUT_LEGEND_WIDTH:
       return thcmd_option_desc(id,2);
     case TT_LAYOUT_SYMBOL_ASSIGN:
-    case TT_LAYOUT_GRID_SIZE:
     case TT_LAYOUT_SIZE:
     case TT_LAYOUT_MAP_HEADER:
       return thcmd_option_desc(id,3);
     case TT_LAYOUT_ORIGIN:
+    case TT_LAYOUT_GRID_SIZE:
     case TT_LAYOUT_GRID_ORIGIN:
       return thcmd_option_desc(id,4);
     case TT_LAYOUT_PAGE_SETUP:
@@ -400,6 +410,9 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       }
       switch(cod.id) {
         case 0:
+          if (this->ccode == TT_LAYOUT_CODE_UNKNOWN) {
+            ththrow(("unknown option -- %s", *args));
+          }
           thencode(&(this->db->buff_enc), *args, argenc);
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           this->last_line->code = this->ccode;
@@ -568,7 +581,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       break;
 
     case TT_LAYOUT_GRID_SIZE:
-      this->parse_len(this->gxs, this->gys, dum, 2, args, 1);
+      this->parse_len(this->gxs, this->gys, this->gzs, 3, args, 1);
       this->def_grid_size = true;
       break;
 
@@ -576,7 +589,11 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       sv = thmatch_token(args[0],thtt_layout_color);
       switch (sv) {
         case TT_LAYOUT_COLOR_MAP_FG:
-          this->color_map_fg.parse(args[1]);
+          this->color_crit = thmatch_token(args[1], thtt_layout_ccrit);
+          if (this->color_crit == TT_LAYOUT_CCRIT_UNKNOWN)
+            this->color_map_fg.parse(args[1]);
+          else
+            this->color_map_fg.defined = true;
           break;
         case TT_LAYOUT_COLOR_MAP_BG:
           this->color_map_bg.parse(args[1]);
@@ -612,6 +629,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid legend switch -- %s",args[0]))
       this->legend = sv;
       this->def_legend = true;
+      break;
+    
+    case TT_LAYOUT_COLOR_LEGEND:
+      sv = thmatch_token(args[0],thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        ththrow(("invalid color-legend switch -- %s",args[0]))
+      this->color_legend = sv;
+      this->def_color_legend = true;
       break;
     
     case TT_LAYOUT_SCALE_BAR:
@@ -694,6 +719,10 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid grid switch -- %s",args[0]))
       this->grid = (char) sv;
       this->def_grid = true;
+      break;
+      
+    case TT_LAYOUT_ENDCODE:
+      this->ccode = TT_LAYOUT_CODE_UNKNOWN;
       break;
       
     case TT_LAYOUT_CODE:
@@ -921,6 +950,7 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->color_map_bg.B = %lg;\n",this->color_map_bg.B);
 
   thprintf("\tplayout->color_map_fg.defined = %s;\n",(this->color_map_fg.defined ? "true" : "false"));
+  thprintf("\tplayout->color_crit = %d;\n", this->color_crit);
   thprintf("\tplayout->color_map_fg.R = %lg;\n",this->color_map_fg.R);
   thprintf("\tplayout->color_map_fg.G = %lg;\n",this->color_map_fg.G);
   thprintf("\tplayout->color_map_fg.B = %lg;\n",this->color_map_fg.B);
@@ -949,6 +979,9 @@ void thlayout::self_print_library() {
     this->legend == TT_LAYOUT_LEGEND_OFF ? "TT_LAYOUT_LEGEND_OFF" : (
     this->legend == TT_LAYOUT_LEGEND_ON ? "TT_LAYOUT_LEGEND_ON" : "TT_LAYOUT_LEGEND_ALL"
     )));
+
+  thprintf("\tplayout->def_color_legend = %s;\n",(this->def_color_legend ? "true" : "false"));
+  thprintf("\tplayout->legend = %d;\n", this->color_legend);
 
   thprintf("\tplayout->def_legend_width = %s;\n",(this->def_legend_width ? "true" : "false"));
   thprintf("\tplayout->legend_width = %lg;\n",this->legend_width);
@@ -1045,6 +1078,7 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->def_grid_size = %s;\n",(this->def_grid_size ? "true" : "false"));
   thprintf("\tplayout->gxs = %lg;\n",this->gxs);
   thprintf("\tplayout->gys = %lg;\n",this->gys);
+  thprintf("\tplayout->gzs = %lg;\n",this->gzs);
 
   thprintf("\tplayout->def_grid_origin = %s;\n",(this->def_grid_origin ? "true" : "false"));
   if (!thisnan(this->gox))
@@ -1226,25 +1260,31 @@ void thlayout::parse_len6(double & d1, double & d2, double & d3, double & d4, do
 
 void thlayout::export_config(FILE * o, thdb2dprj * prj, double x_scale, double x_origin_shx, double x_origin_shy) {
   double pgox, pgoy;
+  double ghs, gvs;
+
   fprintf(o,"Configuration file\n");
   fprintf(o,"hsize: %.2fmm\nvsize: %.2fmm\n",this->hsize * 1000.0,this->vsize * 1000.0);
   fprintf(o,"Overlap: %.2fmm\n",this->overlap * 1000.0);
   //fprintf(o,"Hoffset: %.2fmm\nVoffset: %.2fmm\n",this->hsize * 500.0,this->vsize * 500.0);
 
-  fprintf(o,"HGrid: %.2fmm\nVGrid: %.2fmm\n",this->gxs * this->scale * 1000.0, this->gys * this->scale * 1000.0);
   switch (prj->type) {
     case TT_2DPROJ_EXTEND:
     case TT_2DPROJ_ELEV:
-      pgox = ((thisnan(this->gox) ? 0.0 : this->gox) - prj->shift_x) * x_scale + x_origin_shx;
-      pgoy = ((thisnan(this->goz) ? 0.0 : this->goz) - prj->shift_z) * x_scale + x_origin_shy;
+      pgox = (this->gox - prj->shift_x) * x_scale + x_origin_shx;
+      pgoy = (this->goz - prj->shift_z) * x_scale + x_origin_shy;
+      ghs = this->gxs;
+      gvs = this->gzs;
       break;
     default:
-      pgox = ((thisnan(this->gox) ? 0.0 : this->gox) - prj->shift_x) * x_scale + x_origin_shx;
-      pgoy = ((thisnan(this->goy) ? 0.0 : this->goy) - prj->shift_y) * x_scale + x_origin_shy;
+      pgox = (this->gox - prj->shift_x) * x_scale + x_origin_shx;
+      pgoy = (this->goy - prj->shift_y) * x_scale + x_origin_shy;
+      ghs = this->gxs;
+      gvs = this->gys;
       break;
   }
-  pgox = pgox - (THM2PT * this->gxs * (double)(long)(pgox / this->gxs / THM2PT));
-  pgoy = pgoy - (THM2PT * this->gys * (double)(long)(pgoy / this->gys / THM2PT));
+  fprintf(o,"HGrid: %.2fmm\nVGrid: %.2fmm\n",ghs * this->scale * 1000.0, gvs * this->scale * 1000.0);
+  pgox = pgox - (THM2PT * ghs * (double)(long)(pgox / ghs / THM2PT));
+  pgoy = pgoy - (THM2PT * gvs * (double)(long)(pgoy / gvs / THM2PT));
   fprintf(o,"HGridOffset: %.2fmm\nVGridOffset: %.2fmm\n",pgox / THM2PT * 1000.0,pgoy / THM2PT * 1000.0);
   
   fprintf(o,"Background: 0\n");
@@ -1461,6 +1501,7 @@ void thlayout::process_copy() {
       }
       
       if has_srcl(color_map_fg.defined) {
+        this->color_crit = srcl->color_crit;
         this->color_map_fg.R = srcl->color_map_fg.R;
         this->color_map_fg.G = srcl->color_map_fg.G;
         this->color_map_fg.B = srcl->color_map_fg.B;
@@ -1502,6 +1543,7 @@ void thlayout::process_copy() {
       if has_srcl(def_grid_size) {
         this->gxs = srcl->gxs;
         this->gys = srcl->gys;
+        this->gzs = srcl->gzs;
       }
   
       if has_srcl(def_origin_label) {
@@ -1537,6 +1579,9 @@ void thlayout::process_copy() {
 
       if has_srcl(def_legend)
         this->legend = srcl->legend;
+
+      if has_srcl(def_color_legend)
+        this->color_legend = srcl->color_legend;
 
       if has_srcl(def_legend_width)
         this->legend_width = srcl->legend_width;
@@ -1622,6 +1667,7 @@ void thlayout::process_copy() {
 }
 
 void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin_shx, double x_origin_shy) {
+
   //string excl_list,labelx,labely;
   //bool  excl_pages,background,title_pages,page_numbering,
   //      transparency,map_grid; 
@@ -1629,8 +1675,6 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   //     hgrid,vgrid,hgridoffset,vgridoffset,
 	//nav_factor;
   //int nav_right,nav_up,own_pages;
-
-  double pgox, pgoy;
 
   LAYOUT.excl_list = (this->excl_list != NULL ? this->excl_list : "");
   LAYOUT.labelx = this->olx;
@@ -1647,9 +1691,7 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.legend_width = this->legend_width * THM2PT;
   LAYOUT.legend_columns = (int) this->legend_columns;
   LAYOUT.overlap = this->overlap * THM2PT;
-  LAYOUT.hgrid = this->gxs * THM2PT;
-  LAYOUT.vgrid = this->gys * THM2PT;
-  
+
   switch (this->surface) {
     case TT_LAYOUT_SURFACE_OFF:
       LAYOUT.surface = 0;
@@ -1662,23 +1704,6 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
       break;
   }
   LAYOUT.surface_opacity = this->surface_opacity;
-
-  switch (prj->type) {
-    case TT_2DPROJ_EXTEND:
-    case TT_2DPROJ_ELEV:
-      pgox = ((thisnan(this->gox) ? 0.0 : this->gox) - prj->shift_x) * x_scale + x_origin_shx;
-      pgoy = ((thisnan(this->goz) ? 0.0 : this->goz) - prj->shift_z) * x_scale + x_origin_shy;
-      break;
-    default:
-      pgox = ((thisnan(this->gox) ? 0.0 : this->gox) - prj->shift_x) * x_scale + x_origin_shx;
-      pgoy = ((thisnan(this->goy) ? 0.0 : this->goy) - prj->shift_y) * x_scale + x_origin_shy;
-      break;
-  }
-  pgox = pgox - (THM2PT * this->gxs * (double)(long)(pgox / this->gxs / THM2PT));
-  pgoy = pgoy - (THM2PT * this->gys * (double)(long)(pgoy / this->gys / THM2PT));  
-
-  LAYOUT.hgridoffset = pgox;
-  LAYOUT.vgridoffset = pgoy;
   LAYOUT.nav_factor = this->navf;
   LAYOUT.nav_right = this->navsx;
   LAYOUT.nav_up = this->navsy;

@@ -38,11 +38,14 @@ set xth(gui,help) ".xth_help"
 set xth(gui,message) ".xthmsg"
 set xth(gui,minsize) {480 300}
 
+set xth(kb_control) Control
+set xth(kb_meta) Meta
 set xth(gui,compshow) 0
 set xth(gui,compcmd) "therion"
+set xth(gui,auto_save) 0
 
 set xth(encodings) { iso8859-1 iso8859-2 iso8859-5 iso8859-7 utf-8 }
-set xth(kbencodings) {iso8859-1 iso8859-2 cp1250 macCentEuro unicode}
+set xth(kbencodings) {utf-8 iso8859-1 iso8859-2 cp1250 macCentEuro unicode}
 set xth(length_units) {m cm in ft yd}
 set xth(angle_units) {deg min grad}
 set xth(point_types) {}
@@ -188,6 +191,8 @@ set xth(gui,me,pasivefill) blue
 set xth(gui,me,controlfill) blue
 set xth(gui,me,highlightfill) cyan
 
+set xth(gui,me,typelistwidth) 16
+
 set xth(gui,bindinsdel) 1
 
 # platform dependend settings
@@ -222,10 +227,13 @@ case $tcl_platform(platform) {
     }
   }
   macintosh {
+    set xth(kb_meta) Meta
+    set xth(kb_control) Alt
     set xth(gui,controlk) Cmd
     set xth(gui,platform) macintosh
     set xth(gui,cursor) arrow
     set xth(gui,bindinsdel) 0
+    set xth(app,sencoding) utf-8
   }
 }
 # end of platform dependend settings
@@ -333,5 +341,25 @@ ETebta9AWx5/Gj1eRVnB9bNJS3JQpaYplx69h5BR21fq9BRYGgm6gbRZCxTj
 Any3kaaVGLZsEUIMazVHMUe9irZZQbJCMS5wq4WlsbJ1m7d6u7d827d++7dk
 GRAAOw==
 ====
+}
+
+proc xth_incr_station_name {oname iii} {
+  if {[regexp {^(\S+)(\@\S+)$} $oname dumm stname svname]} {
+    set oname $stname
+  } else {
+    set svname {}
+  }
+  if {[regexp {^\d+$} $oname]} {
+    incr oname $iii
+    return "$oname$svname"
+  } elseif {[regexp {^(.*\D)(\d+)$} $oname dumm s1 s2]} {
+    incr s2 $iii
+    return "$s1$s2$svname"
+  } elseif {[regexp {^(\d+)(\D.*)$} $oname dumm s2 s1]} {
+    incr s2 $iii
+    return "$s2$s1$svname"
+  } else {
+    return "$oname$svname"
+  }
 }
 

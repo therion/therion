@@ -19,28 +19,6 @@
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% -------------------------------------------------------------------- 
 
-% Summary of macros to be used in therion layout files:
-%
-% \opacity{}
-%    -- in transparency mode sets the opacity value
-%
-% \dopage{}, \showpointer, \showpointerlist, \processpointeritem
-%    -- enables custom layouts of atlas pages (see The TherionBook for details)
-%
-% \pagesetup{paper-width}{paper-height}
-%           {page-width}{page-height}
-%           {left-margin}{top-margin}
-%    -- used only in atlas mode
-%
-% \placemaps
-%    -- draws map(s)
-%
-% \placelegend
-%    -- not supported yet
-%
-% \TITLE{}
-%    -- creates an empty page with a large title
-
 \ifx\pdfoutput\undefined
      \newlinechar`\^^J
      \immediate\write16{^^J^^JProcess me with pdfTeX, please!^^J^^J}
@@ -69,13 +47,10 @@
 %  002800740068006500720069006f006e0029002c0020%
 %  004d0065007400610050006f00730074002c0020%
 %  005400650058>}%
-\pdfinfo{/Creator (Therion, MetaPost, TeX)}%
-\pdfcatalog{ /ViewerPreferences << /DisplayDocTitle true >> }
 
 \newbox\xxx
 \newbox\mapbox
 \newbox\navbox
-%\newbox\updownbox
 \newcount\pointerE
 \newcount\pointerW
 \newcount\pointerN
@@ -94,13 +69,6 @@
 
 % hyperlinks
 
-%\def\link#1#2#3#4{%
-%  \rlap{\kern#1bp\raise#2bp\hbox{%
-%  \vbox to0bp{\vss\hbox to 0bp{\hss
-%  \pdfstartlink attr {/Border [0 0 0]} goto name {#4}%
-%  \pdfrefxform#3\pdfendlink\hss}%
-%  \vss}}}}
-
 \def\flatlink#1#2#3#4#5{%
   \setbox\xxx=\hbox{}\wd\xxx=#3bp\ht\xxx=#4bp%
   \rlap{\kern#1bp\raise#2bp\hbox{%
@@ -117,41 +85,32 @@
 \newbox\tmpboxa
 \newbox\tmpboxb
 
-%\def\legendsymbolbox#1#2{\hbox{\raise12pt\vtop{\pdfrefxform#1}\quad#2}\medskip}
-%\def\legendsymbolbox#1#2{\hbox{\pdfrefxform#1\quad\raise12pt\hbox{#2}}\medskip}
 \newdimen\legendsymbolwd
 \newdimen\legendsymbolht \legendsymbolht=12pt
 \newdimen\tmpdimen
-\def\legendsymbolbox#1#2{%
-  \setbox\tmpboxa=\hbox{\pdfrefxform#1}
-  \setbox\tmpboxb=\hbox{(}
-  \legendsymbolwd=\wd\tmpboxa
-  \legendsymbolht=\ht\tmpboxa
-  \advance\legendsymbolht by -\ht\tmpboxb
-  \tmpdimen=\hsize
-  \advance\tmpdimen by -\legendsymbolwd
-  \advance\tmpdimen by -10pt
-  \line{\box\tmpboxa\kern10pt\raise\legendsymbolht\vtop{\hsize=\tmpdimen\rightskip=0pt 
-         plus \hsize minus \hsize\relax#2}}
-  \advance\legendsymbolht by \ht\tmpboxb
-  \medskip
-}
 
 \def\legendsymbolbox#1#2{%
-  \setbox\tmpboxa=\hbox{\pdfrefxform#1}
-  \setbox\tmpboxb=\hbox{(}
+  \setbox\tmpboxa=\hbox{\pdfrefxform#1}%
+  \setbox\tmpboxb=\hbox{(}%
   \legendsymbolwd=\wd\tmpboxa
   \legendsymbolht=\ht\tmpboxa
   \advance\legendsymbolht by -\ht\tmpboxb
+  \advance\legendsymbolht by -1dd
   \tmpdimen=\hsize
-    \advance\tmpdimen by 1em 
+    \advance\tmpdimen by 10pt 
     \divide\tmpdimen by\legendcolumns 
-    \advance\tmpdimen by-1em
+    \advance\tmpdimen by-10pt
   \hbox to \tmpdimen{%
      \box\tmpboxa\kern10pt\raise\legendsymbolht\vtop{%
        \advance\tmpdimen by -\legendsymbolwd
        \advance\tmpdimen by -10pt
-       \hsize=\tmpdimen\rightskip=0pt plus \tmpdimen minus\tmpdimen\relax#2}}
+       \hsize=\tmpdimen\rightskip=0pt plus \tmpdimen minus 0pt\relax#2\vskip1dd}\hss}%
+}
+
+\def\colorlegendbox#1#2#3{%
+  \setbox\xxx=\hbox to 36bp{\PL{q #1 #2 #3 rg 0 0 36 24 re f Q}\hfil}%
+  \ht\xxx=25bp\dp\xxx=0bp
+  \immediate\pdfxform\xxx
 }
 
 
@@ -204,26 +163,6 @@
 
 \def\arr{}        % to be redefined in the \dopage macro
 
-%\newdimen\scw
-%\def\scalebar#1#2{%  % the number must be less than 500
-%    \scw=#1cm
-%    \divide\scw by \scale
-%    \multiply\scw by \ifx#2m100\else31\fi 
-%    \advance\scw by 0.4pt
-%    \vbox{\hsize=\scw\baselineskip=0pt
-%      \centerline{#1\thinspace#2}
-%      \line{\vrule height3pt\hfil\vrule}
-%      \hrule
-%    }%
-%  }
-
-
-% 
-
-%\def\author#1{\pdfinfo{ /Author <feff#1>}}
-%\def\title#1{\pdfinfo{ /Title <feff#1>}}
-%\def\subject#1{\pdfinfo{ /Subject <feff#1>}}
-%\def\keywords#1{\pdfinfo{ /Keywords <feff#1>}}
 
 \def\pagesetup#1#2#3#4#5#6{
   \pdfpagewidth#1
@@ -291,13 +230,13 @@
 }
 
 \newif\iflegend
+\newif\ifcolorlegend
 \newtoks\legendcontent
 
-%\def\legendtitle{}
-%\def\legendcomment{}
 \newtoks\cavename
 \newtoks\comment
 \newtoks\legendtitle
+\newtoks\colorlegendtitle
 \newif\ifnortharrow
 \newif\ifscalebar
 \newtoks\explotitle
@@ -359,13 +298,16 @@
   \legendbox{NE}{\northarrow}
 }
 
-\def\formattedlegend{\iflegend
-  \vskip1cm{\size[14]\the\legendtitle}\bigskip
-  \begmulti\legendcolumns\insertlegend\endmulti\fi}
 
-\def\formattedlegend{\iflegend
+\def\formattedlegend{%
+  \ifcolorlegend
+  \vskip1cm{\size[14]\the\colorlegendtitle}\bigskip
+  \insertcolorlegend
+  \fi
+  \iflegend
   \vskip1cm{\size[14]\the\legendtitle}\bigskip
-  \insertlegend\fi}
+  \insertlegend
+  \fi}
 
 \let\atlaslegend=\formattedlegend
 
@@ -408,42 +350,6 @@
 \def\LEGSW{SW}
 \def\LEGC{C}
 
-
-%\def\legendbox#1#2{%
-%  \unskip
-%  \setbox\tmpboxa=\vbox{#2}%
-%  \sx=\wd\tmpboxa
-%  \sy=\ht\tmpboxa \advance\sy by \dp\tmpboxa
-%  \edef\test{#1}%
-%  \ifx\test\LEGN
-%    \sxd=\hsize \advance\sxd by -\sx \divide\sxd by 2
-%    \syd=\vsize \advance\syd by -\sy
-%  \else\ifx\test\LEGW
-%    \sxd=0pt
-%    \syd=\vsize \advance\syd by -\sy \divide\syd by 2
-%  \else\ifx\test\LEGE
-%    \sxd=\hsize \advance\sxd by -\sx
-%    \syd=\vsize \advance\syd by -\sy \divide\syd by 2
-%  \else\ifx\test\LEGS
-%    \sxd=\hsize \advance\sxd by -\sx \divide\sxd by 2
-%    \syd=0pt
-%  \else\ifx\test\LEGNW
-%    \sxd=0pt
-%    \syd=\vsize \advance\syd by -\sy
-%  \else\ifx\test\LEGNE
-%    \sxd=\hsize \advance\sxd by -\sx
-%    \syd=\vsize \advance\syd by -\sy
-%  \else\ifx\test\LEGSW
-%    \sxd=0pt
-%    \syd=0pt
-%  \else\ifx\test\LEGSE
-%    \sxd=\hsize \advance\sxd by -\sx
-%    \syd=0pt
-%  \fi\fi\fi\fi\fi\fi\fi\fi
-%  \unskip
-%  \rlap{\kern\sxd\raise\syd\box\tmpboxa}%
-%  \ignorespaces
-%}
 
 \newdimen\extraN \extraN=0mm
 \newdimen\extraS \extraS=0mm
@@ -515,6 +421,10 @@
   \input th_legend
 }
 
+\def\insertcolorlegend{%
+  \input th_legendcolor
+}
+
 \newcount\stopcount
 \newcount\stoprow
 \newcount\rows
@@ -522,31 +432,6 @@
 \newcount\i
 \newcount\j
 
-%\def\insertlegendold{%
-%  \input th_legend
-%  \rows=\alllegendobj\divide\rows\legendcolumns
-%  \rowstmp=\rows \multiply\rowstmp\legendcolumns
-%  \ifnum\rowstmp<\alllegendobj \advance\rows by 1\fi
-%
-%  \stopcount=\firstlegendobj\advance\stopcount\alllegendobj
-%  \stoprow=\firstlegendobj\advance\stoprow\rows\advance\stoprow-1
-%
-%  \loop
-%    \i=\firstlegendobj
-%    \j=1
-%    \line{%
-%     {\loop
-%        \ifnum\i<\stopcount\hbox{\pdfrefxform\i}\hskip1em\fi
-%      \ifnum\j<\legendcolumns
-%        \advance\i\rows
-%        \advance\j 1
-%      \repeat}%
-%    \hss}%
-%    \medskip
-%  \ifnum\firstlegendobj<\stoprow
-%    \advance\firstlegendobj by 1
-%  \repeat
-%}
 
 \def\placemaps{
   \message{ [Warning: \string\placemaps\space is deprecated; 

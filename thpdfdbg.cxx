@@ -47,6 +47,7 @@ using namespace std;
 
 
 string tex_Xname(string s) {return("THX"+s);}
+string tex_Wname(string s) {return("THW"+s);}   // special = northarrow &c.
 
 string u2str(unsigned u) {
   unsigned i=u;

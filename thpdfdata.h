@@ -43,6 +43,7 @@ struct scraprecord {
         E1,E2,E3,E4,
         X1,X2,X3,X4;
         
+  double r,g,b;
   scraprecord();
 };
 
@@ -63,6 +64,17 @@ struct legendrecord {
   string name, fname, descr;
 };
 
+struct colorlegendrecord {
+  double R, G, B;
+  string name;
+};
+
+struct paired {
+  double x,y;
+  
+  paired();
+};
+
 struct layout {
   string excl_list,labelx,labely,
          doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
@@ -70,7 +82,9 @@ struct layout {
   bool  excl_pages,title_pages,page_numbering,
         transparency,map_grid,OCG; 
   double hsize,vsize,overlap,
-        hgrid,vgrid,hgridoffset,vgridoffset,nav_factor;
+        hgridsize, vgridsize,
+        hgridorigin, vgridorigin, gridrot,
+        nav_factor;
   int nav_right,nav_up,own_pages,lang,legend_columns;
   double hoffset, voffset, opacity, legend_width;
   double background_r, background_g, background_b;
@@ -78,7 +92,11 @@ struct layout {
   double preview_below_r, preview_below_g, preview_below_b;
   double preview_above_r, preview_above_g, preview_above_b;
   
-  int surface;
+  int surface, grid, proj;
+  string gridAA, gridAB, gridAC, 
+         gridBA, gridBB, gridBC, 
+         gridCA, gridCB, gridCC;
+  paired gridcell[9];
   double surface_opacity;
   
   layout();
@@ -88,6 +106,7 @@ extern map<int,layerrecord> LAYERHASH;
 extern set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
 extern list<scraprecord> SCRAPLIST;
 extern list<legendrecord> LEGENDLIST;
+extern list<colorlegendrecord> COLORLEGENDLIST;
 extern layout LAYOUT;
 
 
@@ -95,6 +114,7 @@ struct surfpictrecord {
   char * filename;
   double dx, dy, xx, xy, yx, yy;
 };
+
 
 extern list<surfpictrecord> SURFPICTLIST;
 

@@ -1,4 +1,50 @@
 --------------------------------------------------------------------------------
+Therion 0.3.6 (2005-01-31):
+
+therion:
+
+ * LRUD passage dimensions support
+ * centreline processed in other programs (*.3d, *.plt) may be imported
+ * transparent solid surface in 3D model
+ * map colouring support
+ * map grid support
+ * if station subtype is not specified, Therion reads it from centreline, 
+   if it's specified there
+ * MetaPost symbols completed and improved (error handling,
+   division by zero fixed)
+ * scrap filled and clipped correctly even if scrap border intersects itself
+ * centerline, bounding box and surface supported in 3DMF and VRML export
+ * Spanish translation added
+ * input language changes:
+   - centreline command: mark, walls, vtreshold;
+     + new role pics
+     + new data item ignoreall
+     + new data type dimensions 
+       (station, up/ceiling, down/floor, left, right)
+     + LRUD dimensions may specified as pair [<from> <to>]
+   - point command: snow
+   - line command: ceiling/floor-meander, border:presumed
+     + line gradient and water-flow not clipped by default
+   - area command: blocks, snow, ice, clay, pebbles
+   - scrap command: -3d changed to -walls option
+   - equate command: may be used outside of centreline
+   - import command added
+ * configuration file changes:
+   - layout command: grid, grid-size, code/endcode, color map-fg <altitude/map>,
+       color-legend
+
+xtherion:
+
+ * new items in xtherion.ini
+ * file timestamps are checked while saving
+ * auto save feature
+ * lot of bugfixes
+ * Map editor: new shortcuts (ctrl-a, ctrl-r, page up/down, shift page up/down)
+ * Map editor: clicking twice on the same point ends the point insertion mode
+ * Map editor: station names are automatically increased (or decreased :) in
+   extended elevation)
+
+--------------------------------------------------------------------------------
 Therion 0.3.5 (2004-11-25):
 
 therion:

@@ -170,6 +170,11 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_DEBRIS, SYMA_DEBRIS)
     tharea_type_export_mp(TT_AREA_TYPE_SUMP, SYMA_SUMP)
     tharea_type_export_mp(TT_AREA_TYPE_WATER, SYMA_WATER)
+    tharea_type_export_mp(TT_AREA_TYPE_BLOCKS, SYMA_BLOCKS)
+    tharea_type_export_mp(TT_AREA_TYPE_SNOW, SYMA_SNOW)
+    tharea_type_export_mp(TT_AREA_TYPE_ICE, SYMA_ICE)
+    tharea_type_export_mp(TT_AREA_TYPE_CLAY, SYMA_CLAY)
+    tharea_type_export_mp(TT_AREA_TYPE_PEBBLES, SYMA_PEBBLES)
   }
   
   if (this->context >= 0) 
@@ -182,10 +187,21 @@ bool tharea::export_mp(class thexpmapmpxs * out)
   if (out->file == NULL)
     return(true);
     
+  thdb_revision_set_type::iterator ri = 
+      this->db->revision_set.find(threvision(this->id, 0));
+  fprintf(out->file,"current_src := \"%s [%d]\";\n", ri->srcf.name, ri->srcf.line);  
+  fprintf(out->file,"string area_border[];\n");
+  thdb2dab * bl = this->first_line;
+  int blnum = 1;
+  while (bl != NULL) {
+    fprintf(out->file,"area_border[%d] := \"%s\";\n", blnum, bl->line->name);
+    bl = bl->next_line;
+    blnum++;
+  }
   fprintf(out->file,"%s(buildcycle(",out->symset->get_mp_macro(macroid));
 
   this->first_line->line->export_path_mp(out);
-  thdb2dab * bl = this->first_line->next_line;
+  bl = this->first_line->next_line;
   while (bl != NULL) {
     fprintf(out->file,",\n");
     bl->line->export_path_mp(out);

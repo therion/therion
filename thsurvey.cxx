@@ -31,6 +31,7 @@
 #include "thdate.h"
 #include "thtfangle.h"
 #include "thinfnan.h"
+#include "thdata.h"
 
 thsurvey::thsurvey()
 {
@@ -42,13 +43,13 @@ thsurvey::thsurvey()
   this->decuds = thnan;
   this->num1 = 0;
   this->person_renames.clear();
+  this->data = NULL;
 }
 
 
 thsurvey::~thsurvey()
 {
 }
-
 
 int thsurvey::get_class_id() 
 {

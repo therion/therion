@@ -174,6 +174,8 @@ enum {
   TT_LINE_TYPE_FLOOR_STEP,
   TT_LINE_TYPE_WATER_FLOW,
   TT_LINE_TYPE_GRADIENT,
+  TT_LINE_TYPE_CEILING_MEANDER,
+  TT_LINE_TYPE_FLOOR_MEANDER,
 };
 
 /**
@@ -183,9 +185,11 @@ enum {
 static const thstok thtt_line_types[] = {
   {"arrow", TT_LINE_TYPE_ARROW},
   {"border", TT_LINE_TYPE_BORDER},
+  {"ceiling-meander", TT_LINE_TYPE_CEILING_MEANDER},
   {"ceiling-step", TT_LINE_TYPE_CEILING_STEP},
   {"chimney", TT_LINE_TYPE_CHIMNEY},
   {"contour", TT_LINE_TYPE_CONTOUR},
+  {"floor-meander", TT_LINE_TYPE_FLOOR_MEANDER},
   {"floor-step", TT_LINE_TYPE_FLOOR_STEP},
   {"flowstone", TT_LINE_TYPE_FLOWSTONE},
   {"gradient", TT_LINE_TYPE_GRADIENT},

@@ -1,6 +1,6 @@
 /**
- * @file tharea.h
- * Area module.
+ * @file thimport.h
+ * import module.
  */
   
 /* Copyright (C) 2000 Stacho Mudrak
@@ -23,102 +23,85 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * -------------------------------------------------------------------- 
+ * --------------------------------------------------------------------
  */
+ 
+#ifndef thimport_h
+#define thimport_h
 
-#ifndef tharea_h
-#define tharea_h
 
-
-#include "th2ddataobject.h"
-#include "thdb2dab.h"
+#include "thdataobject.h"
 
 /**
- * Area command options tokens.
+ * import command options tokens.
  */
  
 enum {
-  TT_AREA_UNKNOWN = 3000,
-  TT_AREA_TYPE = 3001,
+  TT_IMPORT_UNKNOWN = 2000,
+  TT_IMPORT_FORMAT = 2001,
 };
 
 
 /**
- * Area command options parsing table.
+ * import command options parsing table.
  */
  
-static const thstok thtt_area_opt[] = {
-  {NULL, TT_AREA_UNKNOWN},
+static const thstok thtt_import_opt[] = {
+  {"fmt", TT_IMPORT_FORMAT},
+  {"format", TT_IMPORT_FORMAT},
+  {NULL, TT_IMPORT_UNKNOWN},
 };
 
 
-/**
- * Area type tokens.
- */
- 
 enum {
-  TT_AREA_TYPE_UNKNOWN,
-  TT_AREA_TYPE_WATER,
-  TT_AREA_TYPE_SUMP,
-  TT_AREA_TYPE_SAND,
-  TT_AREA_TYPE_DEBRIS,
-  TT_AREA_TYPE_BLOCKS,
-  TT_AREA_TYPE_SNOW,
-  TT_AREA_TYPE_ICE,
-  TT_AREA_TYPE_CLAY,
-  TT_AREA_TYPE_PEBBLES,
+  TT_IMPORT_FMT_UNKNOWN,
+  TT_IMPORT_FMT_3D,
+  TT_IMPORT_FMT_PLT,
+  TT_IMPORT_FMT_XYZ,
 };
 
 
 /**
- * Area types parsing table.
+ * import types parsing table.
  */
  
-static const thstok thtt_area_types[] = {
-  {"blocks", TT_AREA_TYPE_BLOCKS},
-  {"clay", TT_AREA_TYPE_CLAY},
-  {"debris", TT_AREA_TYPE_DEBRIS},
-  {"ice", TT_AREA_TYPE_ICE},
-  {"pebbles", TT_AREA_TYPE_PEBBLES},
-  {"sand", TT_AREA_TYPE_SAND},
-  {"snow", TT_AREA_TYPE_SNOW},
-  {"sump", TT_AREA_TYPE_SUMP},
-  {"water", TT_AREA_TYPE_WATER},
-  {NULL, TT_AREA_TYPE_UNKNOWN},
+static const thstok thtt_import_fmts[] = {
+  {"3d", TT_IMPORT_FMT_3D},
+  {"plt", TT_IMPORT_FMT_PLT},
+  {"xyz", TT_IMPORT_FMT_XYZ},
+  {NULL, TT_IMPORT_FMT_UNKNOWN},
 };
 
 
+
+
+
 /**
- * Area class.
+ * import class.
  */
 
-class tharea : public th2ddataobject {
+class thimport : public thdataobject {
 
   public:
-  
-  friend class thdb2d;
 
-  int type;  ///< Area type.
-  
-  thdb2dab * first_line,  ///< First border line.
-    * last_line;  ///< Last border line.
-    
-  void insert_border_line(int npars, char ** pars);  ///< Insert border line.
-
-  public:
+  // insert here real properties
+  int format;  
+  char * fname;
+  class thdata * data;
+  thobjectsrc mysrc;
 
   /**
    * Standard constructor.
    */
   
-  tharea();
+  thimport();
   
   
   /**
    * Standard destructor.
    */
    
-  ~tharea();
+  virtual ~thimport();
   
   
   /**
@@ -132,7 +115,7 @@ class tharea : public th2ddataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "tharea";};
+  virtual char * get_class_name() {return "thimport";};
   
   
   /**
@@ -195,14 +178,15 @@ class tharea : public th2ddataobject {
    */
    
   virtual void self_print_properties(FILE * outf); 
-
-
-  /**
-   * Export to metapost file.
-   */
-   
-  virtual bool export_mp(class thexpmapmpxs * out);
   
+  
+  void set_file_name(char * fnm);
+  
+  void import_file();
+
+  void import_file_img();
+  
+  const char * station_name(const char * sn, const char separator);
 
 };
 

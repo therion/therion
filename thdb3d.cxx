@@ -262,12 +262,19 @@ void thdb3ddata::export_vrml(FILE * out) {
           reverse = ! reverse;
         }
         break;      
+      case THDB3DFC_LINE_STRIP:
+        fx = fc->firstfx;
+        while (fx != NULL) {
+          fprintf(out, "\t%6ld, ", fx->vertex->id);
+          fx = fx->next;
+        }
+        fprintf(out, "-1,\n");
+        break;
       case THDB3DFC_TRIANGLE_FAN:
       case THDB3DFC_QUADS:
       case THDB3DFC_QUAD_STRIP:
       case THDB3DFC_POLYGON:
       case THDB3DFC_LINES:
-      case THDB3DFC_LINE_STRIP:
       case THDB3DFC_LINE_LOOP:
       default:
         break;      
@@ -281,6 +288,34 @@ void thdb3ddata::export_3dmf(FILE * out) {
   thdb3dfx * fx, * fx1, * fx2, * fx3;
   thdb3dvx * vx;
   bool reverse;
+
+  if ((this->firstfc != NULL) && (this->firstfc->type == THDB3DFC_LINE_STRIP)) {
+
+    for (fc = this->firstfc; fc != NULL; fc = fc->next) {
+      fx = fc->firstfx;
+      nfaces = 0;
+      while (fx != NULL) {
+        nfaces++;
+        fx = fx->next;
+      }
+      if (nfaces > 0) {
+        fprintf(out,"\tPolyLine ( %ld\n", nfaces);
+        fx = fc->firstfx;
+        nfaces = 0;
+        while (fx != NULL) {
+          vx = fx->vertex;
+          fprintf(out,"\t%.2f %.2f %.2f\n", 
+              vx->x - this->exp_shift_x, 
+              vx->z - this->exp_shift_z,
+              this->exp_shift_y - vx->y);
+          fx = fx->next;
+        }
+        fprintf(out,"\t)\n");
+      }
+    }
+
+    return;
+  }
   
   fprintf(out,"\t%ld # nVertices\n", this->nvertices);
   for(vx = this->firstvx; vx != NULL; vx = vx->next)

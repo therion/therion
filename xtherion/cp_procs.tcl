@@ -711,7 +711,8 @@ proc xth_cp_show_errors {} {
     set ctext [$w get $fnd "$fnd lineend"]
     set cfnm {}
     regexp {\S+} $ctext cfnm
-    if {![string equal $cfnm "(data.mp"]} {
+  
+    if {![regexp {(\.mp|\.tex)\)?$} $cfnm]} {
       $w tag add xtherr $fnd $enx
     }
 

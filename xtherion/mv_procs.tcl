@@ -109,9 +109,11 @@ proc xth_mv_update {} {
 proc xth_mv_draw {} {
   global xthmvw xthmvv
   # nakreslime si model
+  glEnable $GL::GL_BLEND
   glClear [expr $GL::GL_COLOR_BUFFER_BIT | $GL::GL_DEPTH_BUFFER_BIT]
-  glCallList $xthmvv(list,model)
   glCallList $xthmvv(list,bbox)
+  glCallList $xthmvv(list,model)
+  xth_mv_gl_wireframe
   glFlush
   $xthmvw swap
 }
@@ -120,12 +122,40 @@ proc xth_mv_gl_wireframe {} {
   glShadeModel $GL::GL_FLAT
   glPolygonMode $GL::GL_FRONT_AND_BACK $GL::GL_LINE
   glDisable $GL::GL_LIGHTING
+  glDepthMask $GL::GL_TRUE
+  glDisable $GL::GL_BLEND
+}
+
+proc xth_mv_gl_walls {} {
+  glShadeModel $GL::GL_SMOOTH
+  glPolygonMode $GL::GL_FRONT_AND_BACK $GL::GL_FILL
+  glEnable $GL::GL_LIGHTING
+  glColor4f 1.0 1.0 1.0 1.0
+  glDepthMask $GL::GL_TRUE
+  glDisable $GL::GL_BLEND
+  glLightModeliv $GL::GL_LIGHT_MODEL_TWO_SIDE $GL::GL_FALSE
+  glMaterialfv $::GL::GL_FRONT_AND_BACK $::GL::GL_AMBIENT {0.0 0.0 0.0 1.0}
+  glMaterialfv $::GL::GL_FRONT_AND_BACK $::GL::GL_DIFFUSE {1.0 1.0 1.0 1.0}
+  glMaterialfv $::GL::GL_FRONT_AND_BACK $::GL::GL_SPECULAR {0.0 0.0 0.0 1.0}
+  glMaterialfv $::GL::GL_FRONT_AND_BACK $::GL::GL_SHININESS 0.5
 }
 
 proc xth_mv_gl_surface {} {
   glShadeModel $GL::GL_SMOOTH
   glPolygonMode $GL::GL_FRONT_AND_BACK $GL::GL_FILL
   glEnable $GL::GL_LIGHTING
+  glEnable $GL::GL_BLEND
+  glDepthMask $GL::GL_FALSE
+  glLightModeliv $GL::GL_LIGHT_MODEL_TWO_SIDE $GL::GL_TRUE
+  glColor4f 0.0 1.0 0.0 1.0
+  glMaterialfv $::GL::GL_FRONT $::GL::GL_AMBIENT {0.0 0.0 0.0 1.0}
+  glMaterialfv $::GL::GL_FRONT $::GL::GL_DIFFUSE {0.3 1.0 0.1 0.5}
+  glMaterialfv $::GL::GL_FRONT $::GL::GL_SPECULAR {0.0 0.0 0.0 1.0}
+  glMaterialfv $::GL::GL_FRONT $::GL::GL_SHININESS 0.5
+  glMaterialfv $::GL::GL_BACK  $::GL::GL_AMBIENT {0.0 0.0 0.0 1.0}
+  glMaterialfv $::GL::GL_BACK  $::GL::GL_DIFFUSE {0.4 0.28 0.055 0.5}
+  glMaterialfv $::GL::GL_BACK  $::GL::GL_SPECULAR {0.0 0.0 0.0 1.0}
+  glMaterialfv $::GL::GL_BACK  $::GL::GL_SHININESS 0.5
 }
 
 proc xth_mv_init {} {
@@ -133,19 +163,19 @@ proc xth_mv_init {} {
   global xthmvw xthmvv xth
   glClearColor 0.0 0.0 0.0 0.0
   glEnable $GL::GL_DEPTH_TEST
-
-
   glEnable $GL::GL_LIGHT0
   glLightfv $GL::GL_LIGHT0 $GL::GL_AMBIENT {0.4 0.4 0.4 1.0}
   glLightfv $GL::GL_LIGHT0 $GL::GL_DIFFUSE {1.0 1.0 1.0 1.0}
 
+  glBlendFunc $GL::GL_SRC_ALPHA $GL::GL_ONE_MINUS_SRC_ALPHA
+  #glEnable $GL::GL_BLEND
+  
   # vytvorime default model
   set xthmvv(list,model) 1
   set xthmvv(list,bbox) 2
   glDeleteLists $xthmvv(list,model) 1
   glNewList $xthmvv(list,model) $GL::GL_COMPILE
-  xth_mv_gl_surface  
-  glColor3f 1.0 1.0 1.0
+  xth_mv_gl_walls
   set xthmvv(model,maxx) 1.0
   set xthmvv(model,maxy) 1.0
   set xthmvv(model,maxz) 1.0
@@ -260,7 +290,7 @@ proc xth_mv_init_model {initcam} {
   glNewList $xthmvv(list,bbox) $GL::GL_COMPILE
   xth_mv_gl_wireframe
   glBegin $GL::GL_LINE_STRIP
-  glColor3f 1.0 0.0 0.0
+  glColor4f 1.0 0.0 0.0 1.0
   glVertex3f [expr $mx] [expr $my] [expr $mz]
   glVertex3f [expr $nx] [expr $my] [expr $mz]
   glVertex3f [expr $nx] [expr $ny] [expr $mz]

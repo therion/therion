@@ -46,7 +46,7 @@ thmap::thmap()
   this->selection_mode = TT_MAPITEM_UNKNOWN;
   this->selection_xs = NULL;
   
-  this->z = 0.0;
+  this->z = thnan;
   this->nz = -1;
 }
 
@@ -221,12 +221,16 @@ void thmap::calc_z() {
       switch (mi->object->get_class_id()) {
         case TT_MAP_CMD:
           ((thmap*)mi->object)->calc_z();
-          this->z += ((thmap*)mi->object)->z;
-          this->nz++;
+          if (((thmap*)mi->object)->nz > 0) {
+            this->z += ((thmap*)mi->object)->z;
+            this->nz++;
+          }
           break;
         case TT_SCRAP_CMD:
-          this->z += ((thscrap*)mi->object)->z;
-          this->nz++;
+          if (!thisnan(((thscrap*)mi->object)->z)) {
+            this->z += ((thscrap*)mi->object)->z;
+            this->nz++;
+          }
           break;
       }
     }
@@ -234,6 +238,8 @@ void thmap::calc_z() {
   }
   if (this->nz > 0) {
     this->z /= double(this->nz);
+  } else {
+    this->z = thnan;
   }
 }
 

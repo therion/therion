@@ -223,7 +223,7 @@ void thsplit_words(thmbuffer * dest, char * src);
  * In the source, they're separated by given character separator.
  */
  
-void thsplit_strings(thmbuffer * dest, char * src, char separator);
+void thsplit_strings(thmbuffer * dest, const char * src, const char separator);
 
 
 /**
@@ -322,6 +322,22 @@ void thparse_altitude(char * src, double & altv, double & fixv);
  */
 
 void thparse_image(char * fname, double & width, double & height, double & dpi);
+
+
+/**
+ * Set color according to color map (TODO).
+ */
+ 
+void thset_color(int color_map, double index, double total, double & R, double & G, double & B);
+
+
+/**
+ * Set grid origin and size.
+ */
+ 
+void thset_grid(double gorigin, double gsize, double min, double max, double & qstart, long & nquads);
+
+
 
 #endif
 

@@ -26,12 +26,6 @@
 ## --------------------------------------------------------------------
 
 xth_app_finish
-if {[llength $xth(app,list)] > 2} {
-  xth_app_show [lindex $xth(app,list) 2]
-} else {
-  xth_app_show [lindex $xth(app,list) 0]
-}
-
 xth_app_clock
 
 encoding system $xth(app,sencoding)
@@ -45,6 +39,20 @@ if {[string length $xth(about,nvr)] > 0} {
 
 wm deiconify $xth(gui,main)
 xth_app_normalize
+
+foreach xapp $xth(app,list) {
+  catch {
+    set xth(app,$xapp,relw) $xth(app,$xapp,tbwidth)
+    xth_app_show $xapp
+  }
+}
+
+if {[llength $xth(app,list)] > 2} {
+  xth_app_show [lindex $xth(app,list) 2]
+} else {
+  xth_app_show [lindex $xth(app,list) 0]
+}
+
 
 set th2open 1
 set cfgopen 1

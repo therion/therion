@@ -55,6 +55,10 @@ thscrap::thscrap()
   this->proj_prev_scrap = NULL;
   this->xscrap = NULL;
   
+  this->R = 1.0;
+  this->G = 1.0;
+  this->B = 1.0;
+  
   this->scale = 1.0;
   this->scale_r1x = 0.0;
   this->scale_r1y = 0.0;
@@ -643,7 +647,11 @@ void thscrap::calc_z()
     }
     cp = cp->nextcp;
   }
-  this->z /= double(numcp);
+  if (numcp > 0) {
+    this->z /= double(numcp);
+  } else {
+    this->z = thnan;
+  }
 }
 
 

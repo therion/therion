@@ -145,7 +145,6 @@ void read_hash() {
 string tex_Fname(string s) {return("THF"+s);}
 string tex_Pname(string s) {return("THP"+s);}
 string tex_Lname(string s) {return("THL"+s);}
-string tex_Wname(string s) {return("THW"+s);}   // special = northarrow &c.
 
 list<scraprecord>::iterator find_scrap(string name) {
     list<scraprecord>::iterator I;
@@ -313,6 +312,11 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         else if (mode == 31) {
           form_id = tex_Wname(name);
         }
+        else if (mode > 100 && mode < 110) {
+          form_id = tex_Wname(name);
+	  LAYOUT.gridcell[mode - 101].x = llx;
+	  LAYOUT.gridcell[mode - 101].y = lly;
+        }
         
 	HS = urx - llx;
 	VS = ury - lly;
@@ -332,7 +336,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
           }
           G.close();
           thstack.clear();
-          TEX << "\\PL{W n}";  // end of boundary clipping path definition
+          TEX << "\\PL{W* n}";  // end of boundary clipping path definition
 	}
       }
       else if (tok == "%%Page:") {
@@ -373,7 +377,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         thstack.clear();
       }
       else if (tok == "fill") {
-        print_str("f",TEX);
+        print_str("f*",TEX);
         thstack.clear();
       }
       else if (tok == "stroke") {
@@ -381,7 +385,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         thstack.clear();
       }
       else if (tok == "clip") {
-        print_str("W n",TEX);
+        print_str("W* n",TEX);
         thstack.clear();
       }
       else if (tok == "setlinejoin") {
@@ -628,6 +632,18 @@ void convert_scraps() {
   if (LAYOUT.scalebar != "") 
              distill_eps("scalebar", LAYOUT.scalebar, "", 31, TEX);
 
+  if (LAYOUT.grid > 0) {
+    distill_eps("grida", LAYOUT.gridAA, "", 101, TEX);
+    distill_eps("gridb", LAYOUT.gridAB, "", 102, TEX);
+    distill_eps("gridc", LAYOUT.gridAC, "", 103, TEX);
+    distill_eps("gridd", LAYOUT.gridBA, "", 104, TEX);
+    distill_eps("gride", LAYOUT.gridBB, "", 105, TEX);
+    distill_eps("gridf", LAYOUT.gridBC, "", 106, TEX);
+    distill_eps("gridg", LAYOUT.gridCA, "", 107, TEX);
+    distill_eps("gridh", LAYOUT.gridCB, "", 108, TEX);
+    distill_eps("gridi", LAYOUT.gridCC, "", 109, TEX);
+  }
+
   TEX.close();
 
   ofstream F("th_fontdef.tex");
@@ -717,12 +733,51 @@ void convert_scraps() {
       pos = i + j * rows;
       if (pos < legendbox_num) 
         LEG << "  \\legendsymbolbox{\\" << tex_Lname(legend_arr_n[pos]) << 
-               "}{" << utf2tex(legend_arr_d[pos]) << "}\\hskip1em" << endl;
+               "}{" << utf2tex(legend_arr_d[pos]) << "}\\hskip10pt" << endl;
     }
     LEG << "\\hss}" << endl;
   }
 
   LEG.close();
+
+  vector<colorlegendrecord> legend_color;
+  colorlegendrecord lcr;
+  for(list<colorlegendrecord>::iterator I = COLORLEGENDLIST.begin(); 
+                                   I != COLORLEGENDLIST.end(); I++) {
+    lcr.R = I->R;
+    lcr.G = I->G;
+    lcr.B = I->B;
+    lcr.name = I->name;
+    legend_color.push_back(lcr);
+  }
+  ofstream LEGCOLOR("th_legendcolor.tex");
+  if(!LEGCOLOR) therror(("Can't write a file!"));
+
+  legendbox_num = COLORLEGENDLIST.size();
+  columns = 1;
+  rows = (int) ceil(double(legendbox_num) / columns);
+  pos = 0;
+  
+  LEGCOLOR << "\\legendcolumns" << columns << endl;
+
+  for (int i = 0; i < rows; i++) {
+    LEGCOLOR << "\\line{%" << endl;
+    for (int j = 0; j < columns; j++) {
+      pos = i + j * rows;
+      if (pos < legendbox_num) {
+        LEGCOLOR << "  \\colorlegendbox{" << 
+	legend_color[pos].R << "}{" <<
+	legend_color[pos].G << "}{" << 
+	legend_color[pos].B << "}%" << endl;
+        LEGCOLOR << "  \\legendsymbolbox{\\pdflastxform}{" <<
+	legend_color[pos].name << "}\\hskip10pt" << endl;
+      }
+    }
+    LEGCOLOR << "\\hss}" << endl;
+  }
+
+  LEGCOLOR.close();
+
 }
 
 void read_rgb() {

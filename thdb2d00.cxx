@@ -111,6 +111,10 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
 int thdb2d_compxm(const void * ee1, const void * ee2)
 {
   thdb2dxm ** e1 = (thdb2dxm **) ee1, ** e2 = (thdb2dxm **) ee2;
+  if (thisnan((*e1)->map->z))
+    return -1;
+  if (thisnan((*e2)->map->z))
+    return 1;
   if ((*e1)->map->z < (*e2)->map->z) {
     return -1;
   } else if ((*e1)->map->z == (*e2)->map->z)
@@ -123,6 +127,10 @@ int thdb2d_compxm(const void * ee1, const void * ee2)
 int thdb2d_compscrap(const void * ee1, const void * ee2)
 {
   thscrap * e1 = (thscrap *) ee1, * e2 = (thscrap *) ee2;
+  if (thisnan(e1->z))
+    return -1;
+  if (thisnan(e2->z))
+    return 1;
   if (e1->z < e2->z) {
     return -1;
   } else if (e1->z == e2->z)
@@ -318,7 +326,8 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
 
     if ((selection == NULL) && (
         (prj->type == TT_2DPROJ_PLAN) || 
-        (prj->type == TT_2DPROJ_ELEV))) {
+        (prj->type == TT_2DPROJ_ELEV)) &&
+        (thdb.db1d.lsid > 0)) {
       // podme vytvorit jednu mapu a vlozit do nej
       // vsetky surveye
       thscrap * scrapp;
@@ -486,6 +495,9 @@ void thdb2d::reset_selection() {
 char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
 
   long newmin = 0, tmpmin;
+  if (fptr == NULL) {
+    return "";
+  }
   char * newname = fptr->title, * tmpname;
   if (strlen(newname) == 0)
     newname = fptr->name;

@@ -40,7 +40,7 @@ def l_label(expr txt,path) =
 
   if strl>pathl:
     txtzoom := pathl / strl;
-    message("[Warning: text scaled down to fit the path]");
+    thwarning("text scaled down to fit the path");
   else:
     txtzoom := 1;
   fi;

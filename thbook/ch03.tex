@@ -127,8 +127,9 @@ Works like |input| command in data files---includes other files.
     surface <top/bottom/off>
     surface-opacity <value>
     layers <on/off>
+    grid <off/top/bottom>
     grid-origin <x> <y> <x> <units>
-    grid-size <width> <height> <units>
+    grid-size <x> <y> <z> <units>
     origin <x> <y> <z> <units>
     origin-label <x-label> <y-label>
     own-pages <number>
@@ -149,6 +150,7 @@ Works like |input| command in data files---includes other files.
     doc-subject <string>
     doc-title <string>
     code <metapost/tex-map/tex-atlas>
+    endcode
 endlayout|
 \endsyntax
 
@@ -240,9 +242,10 @@ endlayout|
   * |surface <top/bottom/off>| = set the position of the surface bitmap
     above/below the map. (M, A; default: |off|)
   * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
+  * |grid <off/bottom/top>| = enable/disable grid (M, A; default: |off|)
   * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
     origin (M, A) [Grid is currently not supported.]
-  * |grid-size <width> <height> <units>| = set grid size in real
+  * |grid-size <x> <y> <z> <units>| = set grid size in real
     units (M, A; default \hbox{|10 m|})
   * |origin <x> <y> <z> <units>| = set origin of atlas pages (M, A)
   * |origin-label <x-label> <y-label>| = set label for atlas page
@@ -269,6 +272,7 @@ endlayout|
   * |legend <on/off/all>| = display list of used map symbols in the map header. 
     If set to |all|, all symbols from the current symbol set are displayed. 
     (M, A; default: |off|)
+  * |colo[u]r-legend <on/off>| = turn on/off colour legend (M, A)
   * |legend-columns <number>| = adjusts the number of legend columns 
     (M, A; default: |2|)
   * |map-comment <string>| = optional comment displayed at the map header (M)
@@ -280,10 +284,12 @@ endlayout|
     |sk| (Slovak), |en| (English), |cz| (Czech) and |fr| (French). 
     See the {\it Appendix} if 
     you want to  add or customize translations. (M, A)
-  * |colour/color <item> <colour>| = customize colour for special map
+  * |colo[u]r <item> <colour>| = customize colour for special map
     items (map-fg, map-bg, preview-above, preview-below). 
     Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
-    for RGB colours.
+    for RGB colours. Special colour specification for |map-fg| is
+    |altitude| or |map|, in which case the map is coloured according to
+    altitude or maps.
   * |debug <on/all/first/second/off>| = draw scrap in different stages
     of transformation in different colours to see how Therion distorts
     map data. See the description of |scrap| command for details.
@@ -303,6 +309,7 @@ endlayout|
     macros here. This allows user to configure various things 
     (like user defined symbols, map and atlas layout at one place \&c.)
     See the chapter {\it Changing layout} for details.
+  * |endcode| = should end the TeX\ and \MP\ sections
 \endcomopt
 
 \midinsert
