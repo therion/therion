@@ -296,63 +296,75 @@ void thdb2d::self_print(FILE * outf)
 
 thdb2dpt * thdb2d::insert_point()
 {
-  return &(* this->pt_list.insert(this->pt_list.end()));
+  thdb2dpt dumm;
+  return &(* this->pt_list.insert(this->pt_list.end(), dumm));
 }
 
 
 thdb2dlp * thdb2d::insert_line_point()
 {
-  return &(* this->lp_list.insert(this->lp_list.end()));
+  thdb2dlp dumm;
+  return &(* this->lp_list.insert(this->lp_list.end(),dumm));
 }
 
 thdb2dab * thdb2d::insert_border_line()
 {
-  return &(* this->ab_list.insert(this->ab_list.end()));
+  thdb2dab dumm;
+  return &(* this->ab_list.insert(this->ab_list.end(),dumm));
 }
 
 thdb2dji * thdb2d::insert_join_item()
 {
-  return &(* this->ji_list.insert(this->ji_list.end()));
+  thdb2dji dumm;
+  return &(* this->ji_list.insert(this->ji_list.end(),dumm));
 }
 
 thdb2dmi * thdb2d::insert_map_item()
 {
-  return &(* this->mi_list.insert(this->mi_list.end()));
+  thdb2dmi dumm;
+  return &(* this->mi_list.insert(this->mi_list.end(),dumm));
 }
 
 thdb2dcp * thdb2d::insert_control_point()
 {
-  return &(* this->cp_list.insert(this->cp_list.end()));
+  thdb2dcp dumm;
+  return &(* this->cp_list.insert(this->cp_list.end(),dumm));
 }
 
 thdb2dxm * thdb2d::insert_xm()
 {
-  return &(* this->xm_list.insert(this->xm_list.end()));
+  thdb2dxm dumm;
+  return &(* this->xm_list.insert(this->xm_list.end(),dumm));
 }
 
 thdb2dxs * thdb2d::insert_xs()
 {
-  return &(* this->xs_list.insert(this->xs_list.end()));
+  thdb2dxs dumm;
+  return &(* this->xs_list.insert(this->xs_list.end(),dumm));
 }
 
 thscraplo * thdb2d::insert_scraplo()
-{
-  return &(* this->scraplo_list.insert(this->scraplo_list.end()));
+{ 
+  thscraplo dumm;
+  return &(* this->scraplo_list.insert(this->scraplo_list.end(),dumm));
 }
 
 thlayoutln * thdb2d::insert_layoutln()
 {
-  return &(* this->layoutln_list.insert(this->layoutln_list.end()));
+  thlayoutln dumm;
+  return &(* this->layoutln_list.insert(this->layoutln_list.end(),dumm));
 }
 
 thscrapen * thdb2d::insert_scrapen()
 {
-  return &(* this->scrapen_list.insert(this->scrapen_list.end()));
+  thscrapen dumm;
+  return &(* this->scrapen_list.insert(this->scrapen_list.end(),dumm));
 }
 
 thscraplp * thdb2d::insert_scraplp()
 {
-  return &(* this->scraplp_list.insert(this->scraplp_list.end()));
+  thscraplp dumm;
+  return &(* this->scraplp_list.insert(this->scraplp_list.end(),dumm));
 }
 
 void thdb2d::process_references()
@@ -1253,6 +1265,8 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
     thprjx_station * xstations = new thprjx_station [numstations],
       * xstation = NULL;
       
+    thprjx_station_link dummxs;
+      
 //    unsigned long cuid;
     
     pps = prj->first_scrap;
@@ -1264,7 +1278,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
       while (cp != NULL) {
         if (cp->is_sticky != TT_POINT_EXTEND_STICKYOFF) {
           xstation = &(xstations[cp->st->uid - 1]);
-          xstation_link = &(*(xstation_links.insert(xstation_links.end())));
+          xstation_link = &(*(xstation_links.insert(xstation_links.end(),dummxs)));
           xstation_link->scrap = xscrap;
           xstation_link->scrapcp = cp;
           if (xstation->nstations == 0) {
@@ -1285,6 +1299,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
     
     // let's add scrap links from UID
     unsigned long station_id;
+    thprjx_link dummxl;
     station_id = 0;
     xstation = xstations;
     while (station_id < numstations) {
@@ -1296,7 +1311,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
             if (xstation_link2->scrap->scrap->id != xstation_link->scrap->scrap->id) {
             
               // pridaj ->
-              xscrap_link = &(*(xscrap_links.insert(xscrap_links.end())));
+              xscrap_link = &(*(xscrap_links.insert(xscrap_links.end(),dummxl)));
               xscrap_link->from_cp = xstation_link->scrapcp;
               xscrap_link->from_scrap = xstation_link->scrap;
               xscrap_link->to_cp = xstation_link2->scrapcp;
@@ -1320,7 +1335,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
               xscrap_link2 = xscrap_link;
               
               // pridaj <-
-              xscrap_link = &(*(xscrap_links.insert(xscrap_links.end())));
+              xscrap_link = &(*(xscrap_links.insert(xscrap_links.end(),dummxl)));
               xscrap_link->from_cp = xstation_link2->scrapcp;
               xscrap_link->from_scrap = xstation_link2->scrap;
               xscrap_link->to_cp = xstation_link->scrapcp;

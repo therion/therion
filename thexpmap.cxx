@@ -47,6 +47,7 @@
 #include "thlogfile.h"
 #include "thconvert.h"
 #include "thpdf.h"
+#include "thpdfdata.h"
 #include "thmpost.h"
 #include "thtex.h"
 #include <fstream>
@@ -345,6 +346,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   thbuffer aboveprev, belowprev;
 
   list<scraprecord>::iterator SCRAPITEM;
+  scraprecord dummsr;
   
   if (this->outpt_def)
     fnm = this->outpt;
@@ -507,7 +509,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                 // naozaj ho exportujeme
                 if (exps != TT_XMPS_NONE) {
                   fprintf(plf,"\t%s => {\n",thexpmap_u2string(sfig));
-                  SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end());
+                  SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
                   SCRAPITEM->sect = 0;
                   SCRAPITEM->name = thexpmap_u2string(sfig);
                   
@@ -579,7 +581,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   if ((!export_outlines_only) && (!export_sections) &&
                       (cbm->bm->selection_xs->fmap->output_number != cbm->bm->selection_xs->preview_output_number)) {
                     fprintf(plf,"\t%s => {\n",thexpmap_u2string(sfig + TT_XMPS_COUNT));
-                    SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end());
+                    SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
                     SCRAPITEM->sect = 0;
                     SCRAPITEM->name = thexpmap_u2string(sfig + TT_XMPS_COUNT);
                     if ((exps & TT_XMPS_B) != TT_XMPS_NONE) {
@@ -811,8 +813,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   if (!quick_map_exp)
     thconvert();
 
-  thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0),wdir.get_buffer());
-
+//  thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0),wdir.get_buffer());
+  thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
+  
   com = "\"";
   com += thini.get_path_pdftex();
   com += "\"";

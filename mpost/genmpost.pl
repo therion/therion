@@ -2,6 +2,9 @@
 
 sub encodecxx {
   $str = shift;
+  $str =~ s/\x0D//g;
+  $str =~ s/\x0C//g;
+  $str =~ s/\x0A//g;
   $str =~ s/\\/\\\\/g;
   $str =~ s/\n/\\n/g;
   $str =~ s/\t/\\t/g;
@@ -20,15 +23,15 @@ while ($ln = <INPT>) {
       $fname = $1;
       $thmpost_library .= "\n\"\\n\\n\\n%%%%% INPUT $fname %%%%%\\n\\n\\n\"";
       while($ln2 = <INPT2>) {
-        $thmpost_library .= "\n\"" . encodecxx($ln2) . "\"";
+        $thmpost_library .= "\n\"" . encodecxx($ln2) . "\\n\"";
       }
       close(INPT2);
       $thmpost_library .= "\n\"\\n\\n\\n%%%%% ENDINPUT $fname %%%%%\\n\\n\\n\"";
     } else {
-      $thmpost_library .= "\n\"" . encodecxx($ln) . "\"";
+      $thmpost_library .= "\n\"" . encodecxx($ln) . "\\n\"";
     }
   } else {
-    $thmpost_library .= "\n\"" . encodecxx($ln) . "\"";
+    $thmpost_library .= "\n\"" . encodecxx($ln) . "\\n\"";
   }
 }
 close(INPT);

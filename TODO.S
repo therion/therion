@@ -1,6 +1,17 @@
 HNED:
++ do search path vo Win32 pridat cestu z registrov, do THINIT
++ v thbooku pomenit ENVIRONMENT - popisat poradie v ktorom hlada
++ urobit make binary
+  WIN32: therion.exe, thbook.pdf, xtherion.tcl, therion.ini, xtherion.ini, 
+    README
+  LINUX: therion, xtherion, thbook.pdf, therion.ini, xtherion.ini,
+    README
++ kontrolovat ci retazce vo vstupnych suboroch su korektne --
+  najmae pre utf-8 vstupne kodovanie
++ option pre standardne vkladanie texu a mpostu (tak ako to bolo kedysi)
 + do section line pridat moznost head (begin,end,none,both)
 + viacnasobne spajanie scrapov (join s1 s2 -count 2)
+
 
 TROCHU NESKOOR:
 + rozlisit makra pre tex-mapu, tex-atlas a metapost (neskoor SVG)
@@ -43,6 +54,7 @@ POTOM:
 V BUDUCNOSTI:
 + pridat do mapy moznost dat survey -> vtedy da len jeho polygon
 + pridat -map-level scrap -> rozvijanie na samotne scrapy
+
+KED TO BUDE TREBA:
 + rozsirene make install 
   * odstranit z perlu co sa da - aby nebol potrebny na kompilaciu (ani tclko)
-

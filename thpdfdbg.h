@@ -26,7 +26,24 @@
 #ifndef thpdfdbg_h
 #define thpdfdbg_h
 
-int thpdfdbg();  // volat len v debugovacom mode
+#include <iostream>
+#include <string>
+
+#ifndef NOTHERION
+#include "thexception.h"
+#endif
+
+using namespace std;
+
+#ifdef NOTHERION
+#define therror(P) {\
+  cerr << P << endl;\
+  exit(0);\
+}
+#endif
+
+void thpdfdbg();  // volat len v debugovacom mode
+string u2str(unsigned u);
 string tex_Xname(string s);
 
 #endif

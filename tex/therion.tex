@@ -46,8 +46,6 @@
 
 \def\scale{200} % !!! to be defined by therion
 
-\def\includechars#1:#2\endinclude{\pdfincludechars#1{#2}} 
-
 \ifx\pdfoutput\undefined
      \newlinechar`\^^J
      \immediate\write16{^^J^^JProcess me with pdfTeX, please!^^J^^J}
@@ -93,7 +91,7 @@
 \newtoks\opacity \opacity{0.7}
 \newif\ifpagenumbering \pagenumberingfalse
 
-
+\let\ne\noexpand
 \def\notdef{notdef}
 
 % hyperlinks
@@ -114,6 +112,10 @@
 
 \def\textlink#1#2{%
   \pdfstartlink attr {/Border [0 0 0]} goto name {#2}#1\pdfendlink}%
+
+
+\def\includechars#1:#2\endinclude{\pdfincludechars#1{#2}}
+
     
 % there should be more general font selection in the future
 
@@ -167,10 +169,10 @@
 
 % 
 
-\def\author#1{\pdfinfo{ /Author (#1)}}
-\def\title#1{\pdfinfo{ /Title (#1)}}
-\def\subject#1{\pdfinfo{ /Subject (#1)}}
-\def\keywords#1{\pdfinfo{ /Keywords (#1)}}
+\def\author#1{\pdfinfo{ /Author <feff#1>}}
+\def\title#1{\pdfinfo{ /Title <feff#1>}}
+\def\subject#1{\pdfinfo{ /Subject <feff#1>}}
+\def\keywords#1{\pdfinfo{ /Keywords <feff#1>}}
 
 \def\pagesetup#1#2#3#4#5#6{
   \pdfpagewidth#1

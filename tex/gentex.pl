@@ -2,6 +2,9 @@
 
 sub encodecxx {
   $str = shift;
+  $str =~ s/\x0D//g;
+  $str =~ s/\x0C//g;
+  $str =~ s/\x0A//g;
   $str =~ s/\\/\\\\/g;
   $str =~ s/\n/\\n/g;
   $str =~ s/\t/\\t/g;
@@ -14,7 +17,7 @@ print "reading therion.tex\n";
 $thtex_library = "";
 open(INPT,"therion.tex");
 while ($ln = <INPT>) {
-  $thtex_library .= "\n\"" . encodecxx($ln) . "\"";
+  $thtex_library .= "\n\"" . encodecxx($ln) . "\\n\"";
 }
 close(INPT);
 

@@ -484,8 +484,30 @@ proc xth_app_clipboard {ev} {
       paste {
          event generate $w <<Paste>>
       }
+      undo {
+         event generate $w <<Undo>>
+      }
+      redo {
+         event generate $w <<Redo>>
+      }
     }
   }
+}
+
+
+proc xth_app_check_text_undo_redo {} {
+  global xth
+  set w [focus -lastfor $xth(gui,main)]
+  if {[winfo ismapped $w]} {
+    catch {
+      $w edit separator
+    }
+  }
+  after idle {after 1000 xth_app_check_text_undo_redo}
+}
+
+if {$xth(gui,text_undo)} {
+  after idle {after 1000 xth_app_check_text_undo_redo}
 }
 
 

@@ -1,4 +1,7 @@
-+ cislovanie riadkov v zhode s therionom
-+ search & replace v text editore
-+ kontrolovat, ci subor nebol modifikovany vonku
+HNED:
 + 3D prehliadac
+
+KED TO BUDE TREBA:
++ kontrolovat, ci subor nebol modifikovany vonku
++ goto source line v mapovom aj textovom editore
+

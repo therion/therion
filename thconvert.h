@@ -26,36 +26,7 @@
 #ifndef thconvert_h
 #define thconvert_h
 
-#ifndef NOTHERION
-#include "thexception.h"
-#endif
-
-#include <string>
-
-using namespace std;
-
-typedef struct {
-  string name,F,B,I,E,X,G,C,P;      // name + files
-  double S1,S2;                      // shift
-  int layer,level,sect;             // Y, V, Z
-  float F1,F2,F3,F4,                // bounding boxes
-        G1,G2,G3,G4,
-        B1,B2,B3,B4,
-        I1,I2,I3,I4,
-        E1,E2,E3,E4,
-        X1,X2,X3,X4;
-} scraprecord;
-
-extern list<scraprecord> SCRAPLIST;
-
 int thconvert();
-
-#ifdef NOTHERION
-#define therror(P) {\
-  cerr << P << endl;\
-  exit(0);\
-}
-#endif
 
 #endif
 

@@ -15,5 +15,5 @@ if (open(VFL,"thversion.h")) {
   $v3 = 1;
 }
 
-system("tar -cvzf ../therion-$v1.$v2.$v3.tar.gz -C .. therion");
-#system("bzip2 -f ../therion-$v1.$v2.$v3.tar");
+system("tar -cvf ../therion-$v1.$v2.$v3.tar -C .. therion");
+system("bzip2 -f ../therion-$v1.$v2.$v3.tar");

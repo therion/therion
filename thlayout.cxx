@@ -31,7 +31,7 @@
 #include "thdata.h"
 #include "thparse.h"
 #include "thinfnan.h"
-#include "thpdf.h"
+#include "thpdfdata.h"
 
 thlayout::thlayout()
 {
@@ -213,6 +213,7 @@ void thlayout_parse_scale(thlayout * pl,char ** args) {
 void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
   double dum;
+  thlayout_copy_src dumm;
   int sv;
   thlayout_copy_src * lcp;
   switch (cod.id) {
@@ -402,7 +403,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       
     case TT_LAYOUT_COPY:
       if (th_is_extkeyword(*args)) {
-        lcp = & ( * thlayout_copy_src_list.insert(thlayout_copy_src_list.end()));
+        lcp = & ( * thlayout_copy_src_list.insert(thlayout_copy_src_list.end(),dumm));
         if (this->first_copy_src == NULL) {
           this->first_copy_src = lcp;
           this->last_copy_src = lcp;
@@ -726,26 +727,26 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj) {
     this->paghs*100.0, this->pagvs*100.0, 
     this->marls*100.0, this->marts*100.0);
     
-  if (this->doc_title != NULL) {
-    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_title);
-    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
-    fprintf(o, "\\title{%s}\n", this->db->buff_enc.get_buffer());
-  }
-  if (this->doc_author != NULL) {
-    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_author);
-    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
-    fprintf(o, "\\author{%s}\n", this->db->buff_enc.get_buffer());
-  }
-  if (this->doc_subject != NULL) {
-    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_subject);
-    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
-    fprintf(o, "\\subject{%s}\n", this->db->buff_enc.get_buffer());
-  }
-  if (this->doc_keywords != NULL) {
-    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_keywords);
-    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
-    fprintf(o, "\\keywords{%s}\n", this->db->buff_enc.get_buffer());
-  }
+//  if (this->doc_title != NULL) {
+//    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_title);
+//    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
+//    fprintf(o, "\\title{%s}\n", this->db->buff_enc.get_buffer());
+//  }
+//  if (this->doc_author != NULL) {
+//    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_author);
+//    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
+//    fprintf(o, "\\author{%s}\n", this->db->buff_enc.get_buffer());
+//  }
+//  if (this->doc_subject != NULL) {
+//    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_subject);
+//    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
+//    fprintf(o, "\\subject{%s}\n", this->db->buff_enc.get_buffer());
+//  }
+//  if (this->doc_keywords != NULL) {
+//    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_keywords);
+//    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
+//    fprintf(o, "\\keywords{%s}\n", this->db->buff_enc.get_buffer());
+//  }
       
   if (this->first_line != NULL) {
     thlayoutln * ln = this->first_line;
@@ -885,8 +886,6 @@ void thlayout::process_copy() {
   this->lock = false;
 }
 
-extern layout LAYOUT;
-
 void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin_shx, double x_origin_shy) {
   //string excl_list,labelx,labely;
   //bool  excl_pages,background,title_pages,page_numbering,
@@ -908,9 +907,9 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.page_numbering = this->pgsnum;
   LAYOUT.transparency = this->transparency;
   //TODO
-  LAYOUT.map_grid = (this->grid != TT_LAYOUT_GRID_NONE);
+  LAYOUT.map_grid = this->page_grid;
   LAYOUT.hsize = this->hsize * THM2PT;
-  LAYOUT.vsize = this->hsize * THM2PT;
+  LAYOUT.vsize = this->vsize * THM2PT;
   LAYOUT.overlap = this->overlap * THM2PT;
   LAYOUT.hgrid = this->gxs * THM2PT;
   LAYOUT.vgrid = this->gys * THM2PT;
@@ -935,6 +934,16 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.nav_right = this->navsx;
   LAYOUT.nav_up = this->navsy;
   LAYOUT.own_pages = this->ownp;
+  
+  if (this->doc_title != NULL)
+    LAYOUT.doc_title = this->doc_title;
+  if (this->doc_author != NULL)
+    LAYOUT.doc_author = this->doc_author;
+  if (this->doc_subject != NULL)
+    LAYOUT.doc_subject = this->doc_subject;
+  if (this->doc_keywords != NULL)
+    LAYOUT.doc_keywords = this->doc_keywords;
+  LAYOUT.opacity = this->opacity;
   
 }
 

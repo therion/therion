@@ -26,38 +26,6 @@
 #ifndef thpdf_h
 #define thpdf_h
 
-#ifndef NOTHERION
-#include "thexception.h"
-#endif
-
-#include <string>
-#include <map>
-#include <set>
-
-using namespace std;
-
-typedef struct {
-  set<int> U,D;
-  string N,T;
-  int Z;
-  float minx, maxx, miny, maxy;
-  map< int,set<string> > scraps;
-  set<string> allscraps;
-} layerrecord;
-
-typedef struct {
-  string excl_list,labelx,labely;
-  bool  excl_pages,background,title_pages,page_numbering,
-        transparency,map_grid; 
-  float hsize,vsize,overlap,
-        hgrid,vgrid,hgridoffset,vgridoffset,
-	nav_factor;
-  int nav_right,nav_up,own_pages;
-} layout;
-
-extern map<int,layerrecord> LAYERHASH;
-extern set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
-
-int thpdf(int mode, char * wdir);   // 0=atlas, 1=mapa
+int thpdf(int mode);   // 0=atlas, 1=mapa
 
 #endif

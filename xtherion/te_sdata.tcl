@@ -384,6 +384,9 @@ proc xth_te_sdata_insert {data invd iidx} {
   } else {
     $w insert $iidx $txt
   }
+  catch {
+    $w edit separator
+  }
   return $err
   
 }
@@ -445,5 +448,173 @@ proc xth_te_sdata_auto_format {} {
     }
   }
   $w see insert
+}
+
+
+proc te_sr_reset {} {
+
+  global xth
+  if {$xth(te,fcurr) < 0} {
+    return
+  }
+  set w $xth(te,[lindex $xth(te,flist) $xth(te,fcurr)],frame).txt
+
+  set has_sel 0  
+  if {$xth(ctrl,te,sr,selection_io)} {
+    set seli [$w tag ranges sel]
+    if {[llength $seli] > 0} {
+      set xth(ctrl,te,sr,selection_start) [lindex $seli 0]
+      set xth(ctrl,te,sr,selection_end) [lindex $seli 1]
+      set xth(ctrl,te,sr,search_end) [lindex $seli 1]
+      $w mark set insert [lindex $seli 0]
+      set has_sel 1
+    } else {
+      set xth(ctrl,te,sr,selection_io) 0
+      update idletasks
+    }
+  }
+  
+  if {!$has_sel} {
+    set xth(ctrl,te,sr,selection_start) {}
+    set xth(ctrl,te,sr,selection_end) {}
+    set xth(ctrl,te,sr,search_end) end
+    $w mark set insert 1.0
+  }
+  
+}
+
+
+proc te_sr_first {} {
+  global xth
+  if {$xth(te,fcurr) < 0} {
+    return
+  }
+  if {[string length $xth(ctrl,te,sr,search)] == 0} {
+    return
+  }
+  catch {
+    $w edit separator
+  }
+  set w $xth(te,[lindex $xth(te,flist) $xth(te,fcurr)],frame).txt
+  te_sr_clear  
+  te_sr_reset
+  if {![te_sr_next_next]} {
+    bell
+  }
+  catch {
+    $w edit separator
+  }
+  focus $w
+}
+
+proc te_sr_next_next {} {
+  global xth
+  if {$xth(te,fcurr) < 0} {
+    return
+  }
+  if {[string length $xth(ctrl,te,sr,search)] == 0} {
+    return
+  }
+  set w $xth(te,[lindex $xth(te,flist) $xth(te,fcurr)],frame).txt
+
+  # prehlada text od pozicie kurzora po koniec (vyberu)
+  # najde text - (zameni ho) - vyznaci ho a kurzor nastavi za neho
+  
+  set cnt 0
+  set fndcmd "set fnd \[$w search -count cnt"
+  if {!$xth(ctrl,te,sr,case_io)} {
+    append fndcmd " -nocase"
+  }
+  if {$xth(ctrl,te,sr,regular_io)} {
+    append fndcmd " -regexp"
+  }
+  append fndcmd { $xth(ctrl,te,sr,search) insert $xth(ctrl,te,sr,search_end)]}
+  eval $fndcmd
+  
+  if {[string length $fnd] > 0} {
+    $w mark set insert "$fnd + $cnt chars"
+    $w mark set xthsrend "$fnd + $cnt chars"
+    # do replace if necessary
+    if {$xth(ctrl,te,sr,replace_io)} {
+      set ostr [$w get $fnd xthsrend]
+      $w delete $fnd xthsrend
+      #puts "<<$ostr"
+      set nstr $xth(ctrl,te,sr,replace)
+      if {$xth(ctrl,te,sr,regular_io)} {
+        set repcmd {regsub}
+        if {!$xth(ctrl,te,sr,case_io)} {
+          append repcmd " -nocase"
+        }
+        append repcmd { $xth(ctrl,te,sr,search) $ostr $xth(ctrl,te,sr,replace) nstr}
+        eval $repcmd
+      }
+      #puts ">>$nstr"
+      $w insert $fnd $nstr
+    }
+    $w tag add xthsr $fnd xthsrend
+    $w tag configure xthsr -background $xth(gui,escolorbg) -foreground $xth(gui,escolorfg)
+    $w see insert
+    return 1
+  } else {
+    # uz sme nic nenasli
+    return 0
+  }  
+
+}
+
+proc te_sr_next {} {
+  global xth
+  if {$xth(te,fcurr) < 0} {
+    return
+  }
+  if {[string length $xth(ctrl,te,sr,search)] == 0} {
+    return
+  }
+  catch {
+    $w edit separator
+  }
+  set w $xth(te,[lindex $xth(te,flist) $xth(te,fcurr)],frame).txt
+  if {![te_sr_next_next]} {
+    bell
+  }
+  catch {
+    $w edit separator
+  }
+  focus $w
+}
+
+proc te_sr_all {} {
+  global xth
+  if {$xth(te,fcurr) < 0} {
+    return
+  }
+  if {[string length $xth(ctrl,te,sr,search)] == 0} {
+    return
+  }
+  catch {
+    $w edit separator
+  }
+  set w $xth(te,[lindex $xth(te,flist) $xth(te,fcurr)],frame).txt
+  te_sr_clear  
+  te_sr_reset
+  if {![te_sr_next_next]} {
+    bell
+  } else {
+    while {[te_sr_next_next]} {}
+  }
+  catch {
+    $w edit separator
+  }
+  focus $w
+}
+
+proc te_sr_clear {} {
+  global xth
+  if {$xth(te,fcurr) < 0} {
+    return
+  }
+  set w $xth(te,[lindex $xth(te,flist) $xth(te,fcurr)],frame).txt
+  $w tag remove xthsr 1.0 end
+  focus $w
 }
 

@@ -425,10 +425,10 @@ proc xth_me_before_close_file {btns} {
 # return success
 # {success name cmds lns}
 
-proc xth_me_read_file {pth} {
+proc xth_me_read_file {pth changebs} {
 
   global errorInfo xth
-
+  
   set curenc utf-8
   set nm [file tail $pth]
   set encspc 0
@@ -472,7 +472,7 @@ proc xth_me_read_file {pth} {
         fconfigure $fid -encoding $curenc
       }
     } else {
-      if {[regexp {(.*)\\\s*$} $lastln dumln prevln]} {
+      if {$changebs && [regexp {(.*)\\\s*$} $lastln dumln prevln]} {
         set fln "$prevln$fln"
         if {[llength $lns] > 1} {
           set lns [lrange $lns 0 [expr [llength $lns] - 2]]
@@ -565,7 +565,7 @@ proc xth_me_open_file {dialogid fname fline} {
   xth_status_bar_push me
   xth_status_bar_status me "Opening $fname ..."
   
-  set fdata [xth_me_read_file $fname]
+  set fdata [xth_me_read_file $fname 1]
   if {[lindex $fdata 0] == 0} {
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
         -icon error -type ok \

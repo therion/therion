@@ -4,27 +4,9 @@ encoding  utf-8
 source "tests/map_plan.th"
 
 # Export settings.
-export map -layout-doc-title "Pokusna jaskyna"
+export map -layout-title "Pokusna jaskyna"
 
 
 
 
-##XTHERION## ##BEGIN##
-##XTHERION## xth_cp_data_tree_insert 5 {} survey tp tp {}
-##XTHERION## xth_cp_data_tree_insert 7 5 scrap ts2 ts2@tp {}
-##XTHERION## xth_cp_data_tree_insert 12 5 scrap ts1 ts1@tp {}
-##XTHERION## xth_cp_data_tree_insert 17 5 scrap dolny dolny@tp {}
-##XTHERION## xth_cp_data_tree_insert 24 17 line jb jb@tp {}
-##XTHERION## xth_cp_data_tree_insert 55 17 line dlw dlw@tp {}
-##XTHERION## xth_cp_data_tree_insert 56 17 line drw drw@tp {}
-##XTHERION## xth_cp_data_tree_insert 64 5 scrap horny horny@tp {}
-##XTHERION## xth_cp_data_tree_insert 78 64 line s3 s3@tp {}
-##XTHERION## xth_cp_data_tree_insert 79 64 line s2 s2@tp {}
-##XTHERION## xth_cp_data_tree_insert 80 64 line s1 s1@tp {}
-##XTHERION## xth_cp_data_tree_insert 82 64 line hrw hrw@tp {}
-##XTHERION## xth_cp_data_tree_insert 83 64 line debris_b debris_b@tp {}
-##XTHERION## xth_cp_data_tree_insert 84 64 line sand_b sand_b@tp {}
-##XTHERION## xth_cp_data_tree_insert 85 64 line hlw hlw@tp {}
-##XTHERION## xth_cp_data_tree_insert 104 5 map hmap hmap@tp {Horna mapa}
-##XTHERION## xth_cp_data_tree_insert 105 5 map dmap dmap@tp {Dolna mapa}
-##XTHERION## ##END##
+

@@ -1,4 +1,0 @@
-metapost: chybna obalka tahu perom
-
-moje: theps2pdf: (dorobi») CONCAT + konverzia rozdelenych textovych riadkov
-                 gsave [...] concat poriesit v C namiesto Perlu       

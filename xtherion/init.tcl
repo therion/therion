@@ -93,6 +93,8 @@ bind Text <Control-Key-c> "#"
 bind Text <Control-Key-v> "#"
 bind Text <Control-Key-f> "#"
 bind Text <Control-Key-h> "#"
+bind Text <Control-Key-z> "#"
+bind Text <Control-Key-y> "#"
 set xth(gui,bind,text_tab) [bind Text <Tab>]
 set xth(gui,bind,text_return) [bind Text <Return>]
 bind Text <Tab> "#"

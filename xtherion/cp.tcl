@@ -46,6 +46,9 @@ text $txb.txt -wrap none -font $xth(gui,efont) \
   -selectborderwidth 0 \
   -yscrollcommand "$txb.sv set" \
   -xscrollcommand "$txb.sh set" 
+if {$xth(gui,text_undo)} {
+    $txb.txt configure -undo 1 -maxundo -1
+}
 scrollbar $txb.sv -orient vert  -command "$txb.txt yview" \
   -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
 scrollbar $txb.sh -orient horiz  -command "$txb.txt xview" \
@@ -58,6 +61,8 @@ grid $txb.sh -column 0 -row 1 -sticky news
 bind $txb.txt <Control-Key-x> "tk_textCut $txb.txt"
 bind $txb.txt <Control-Key-c> "tk_textCopy $txb.txt"
 bind $txb.txt <Control-Key-v> "tk_textPaste $txb.txt"
+bind $txb.txt <Control-Key-z> "catch {$txb.txt edit undo}"
+bind $txb.txt <Control-Key-y> "catch {$txb.txt edit redo}"
 
 if {$xth(gui,bindinsdel)} {
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
@@ -169,17 +174,30 @@ grid $xth(ctrl,cp,stp).gores -row 6 -column 1 -sticky ew
 
 # create objects control
 set clbox $xth(ctrl,cp,dat)
-set sw [ScrolledWindow $clbox.sw -relief sunken -borderwidth 2]
-set tr [Tree $sw.t -relief flat -height 16 -selectcommand xth_cp_data_tree_select]
+#### set sw [ScrolledWindow $clbox.sw -relief sunken -borderwidth 2]
+scrollbar $clbox.sv -orient vert  -command "$clbox.t yview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+scrollbar $clbox.sh -orient horiz  -command "$clbox.t xview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+###set tr [Tree $sw.t -relief flat -height 16 -selectcommand xth_cp_data_tree_select]
+set tr [Tree $clbox.t -relief flat -height 16 -selectcommand xth_cp_data_tree_select \
+  -yscrollcommand "$clbox.sv set" \
+  -xscrollcommand "$clbox.sh set"]
 set xth(ctrl,cp,datrestore) {}
-$sw setwidget $tr
+###$sw setwidget $tr
 $tr bindText <Enter> xth_cp_data_tree_enter
 $tr bindText <Leave> xth_cp_data_tree_leave
 $tr bindText <Double-ButtonPress-1> xth_cp_data_tree_double_click
 $tr bindImage <Enter> xth_cp_data_tree_enter
 $tr bindImage <Leave> xth_cp_data_tree_leave
 $tr bindImage <Double-ButtonPress-1> xth_cp_data_tree_double_click
-pack $sw -side top -expand yes -fill both
+### pack $sw -side top -expand yes -fill both
+
+grid columnconf $clbox 0 -weight 1
+grid rowconf $clbox 0 -weight 1
+grid $tr -column 0 -row 0 -sticky news
+grid $clbox.sv -column 1 -row 0 -sticky news
+grid $clbox.sh -column 0 -row 1 -sticky news
 
 
 # init survey info
@@ -222,17 +240,28 @@ if {$xth(gui,bindinsdel)} {
 
 # create map structure control
 set clbox $xth(ctrl,cp,ms)
-set sw [ScrolledWindow $clbox.sw -relief sunken -borderwidth 2]
-set tr [Tree $sw.t -relief flat -height 16]
+###set sw [ScrolledWindow $clbox.sw -relief sunken -borderwidth 2]
+scrollbar $clbox.sv -orient vert  -command "$clbox.t yview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+scrollbar $clbox.sh -orient horiz  -command "$clbox.t xview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+set tr [Tree $clbox.t -relief flat -height 16 \
+  -yscrollcommand "$clbox.sv set" \
+  -xscrollcommand "$clbox.sh set"]
 set xth(ctrl,cp,msrestore) {}
-$sw setwidget $tr
+###$sw setwidget $tr
 $tr bindText <Enter> xth_cp_map_tree_enter
 $tr bindText <Leave> xth_cp_map_tree_leave
 $tr bindText <Double-ButtonPress-1> xth_cp_map_tree_double_click
 $tr bindImage <Enter> xth_cp_map_tree_enter
 $tr bindImage <Leave> xth_cp_map_tree_leave
 $tr bindImage <Double-ButtonPress-1> xth_cp_map_tree_double_click
-pack $sw -side top -expand yes -fill both
+###pack $sw -side top -expand yes -fill both
+grid columnconf $clbox 0 -weight 1
+grid rowconf $clbox 0 -weight 1
+grid $tr -column 0 -row 0 -sticky news
+grid $clbox.sv -column 1 -row 0 -sticky news
+grid $clbox.sh -column 0 -row 1 -sticky news
 
 
 
@@ -258,6 +287,13 @@ set xth(cp,menu,edit) $xth(cp,menu).edit
 menu $xth(cp,menu,edit) -tearoff 0
 $xth(cp,menu) add cascade -label "Edit" -state disabled \
   -font $xth(gui,lfont) -menu $xth(cp,menu,edit) -underline 0
+if {$xth(gui,text_undo)} {
+  $xth(cp,menu,edit) add command -label "Undo" -font $xth(gui,lfont) \
+    -accelerator "$xth(gui,controlk)-z" -command "xth_app_clipboard undo"
+  $xth(cp,menu,edit) add command -label "Redo" -font $xth(gui,lfont) \
+    -accelerator "$xth(gui,controlk)-y" -command "xth_app_clipboard redo"
+  $xth(cp,menu,edit) add separator
+}
 $xth(cp,menu,edit) add command -label "Cut" -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-x" -command "xth_app_clipboard cut"
 $xth(cp,menu,edit) add command -label "Copy" -font $xth(gui,lfont) \

@@ -1,0 +1,23 @@
+--------------------------------------------------------------------------------
+Therion 0.2.13 (2003-06-16):
+
+therion:
+
+ * thpdf, theps2pdf and 3dtops external programs integrated into Therion
+ * MetaPost and TeX macros compiled into Therion 
+ * compilation: just "make" is enough; works also on win32 systems
+ * input language changes:
+   - centerline command has new options: discovery-date, discovery-team
+   - point command: type anostomosen renamed to anastomosis
+   - layout command has new option: transparency on/off
+   - layout command has changed option: opacity 0.0-100.0
+   - layout command has changed option: grid-size is measured in real units
+ * Therion reads following environment variables: 
+   - THINIT -- search paths for [x]therion.ini file
+   - THERION -- search paths for configuration and source files
+ * PDF output: support for Optional Content Groups (Layers) in Acrobat 6
+
+xtherion:
+
+ * Text editor: text undo/redo works with tcltk8.4.3
+ * Map editor: line symbols may be splitted

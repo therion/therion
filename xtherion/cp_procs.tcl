@@ -76,7 +76,7 @@ proc xth_cp_open_file {fpath} {
   xth_status_bar_push cp
   xth_status_bar_status cp "Opening $fpath ..."
 
-  set fdata [xth_me_read_file $fpath]
+  set fdata [xth_me_read_file $fpath 0]
   if {[lindex $fdata 0] == 0} {
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
         -icon error -type ok \
@@ -110,6 +110,9 @@ proc xth_cp_open_file {fpath} {
 #  $xth(cp,editor).txt delete 1.0 end
   foreach ln [lindex $fdata 3] {
     $xth(cp,editor).txt insert end "$ln\n"
+  }
+  catch {
+    $xth(cp,editor).txt edit reset
   }
   $xth(cp,editor).txt mark set insert $xth(cp,cursor)
   $xth(cp,editor).txt see $xth(cp,cursor)
@@ -186,7 +189,7 @@ proc xth_cp_close_file {} {
   set xth(cp,fpath) ""
   set xth(cp,opts) ""
   xth_app_title cp
-  focus $xth(ctrl,cp,dat).sw.t 
+  focus $xth(ctrl,cp,dat).t 
   
   set xth(ctrl,cp,datrestore) {}
   set xth(ctrl,cp,msrestore) {}
@@ -390,7 +393,7 @@ proc xth_cp_compile {} {
   # update configuration file if required
   set xth(cp,cursor) [$xth(cp,editor).txt index insert]
   if {1} {
-    set fdata [xth_me_read_file $xth(cp,ffull)]
+    set fdata [xth_me_read_file $xth(cp,ffull) 0]
     if {[lindex $fdata 0] == 0} {
         MessageDlg $xth(gui,message) -parent $xth(gui,main) \
           -icon error -type ok \
@@ -427,7 +430,7 @@ proc xth_cp_compile {} {
 
 proc xth_cp_data_tree_clear {} {
   global xth
-  set tp $xth(ctrl,cp,dat).sw.t 
+  set tp $xth(ctrl,cp,dat).t 
   set xth(ctrl,cp,datrestore) {}
   foreach di $xth(ctrl,cp,datlist) {
     catch {
@@ -440,7 +443,7 @@ proc xth_cp_data_tree_clear {} {
   append xth(ctrl,cp,datrestore) "catch \{$tp selection set [$tp selection get]\}\n";
   append xth(ctrl,cp,datrestore) "update idletasks\n"
   $tp delete [$tp nodes root]
-  set tp $xth(ctrl,cp,ms).sw.t 
+  set tp $xth(ctrl,cp,ms).t 
   set xth(ctrl,cp,msrestore) {}
   foreach di $xth(ctrl,cp,maplist) {
     catch {
@@ -476,7 +479,7 @@ proc xth_cp_data_tree_create {} {
   set level 0
   set tocnt 1
   set copen 1
-  set tp $xth(ctrl,cp,dat).sw.t 
+  set tp $xth(ctrl,cp,dat).t 
   while {$tocnt} {
     set tocnt 0
     foreach di $nlist {
@@ -521,7 +524,7 @@ proc xth_cp_map_tree_create {} {
   set level 0
   set tocnt 1
   set copen 1
-  set tp $xth(ctrl,cp,ms).sw.t 
+  set tp $xth(ctrl,cp,ms).t 
   while {$tocnt} {
     set tocnt 0
     foreach di $nlist {
@@ -584,9 +587,9 @@ proc xth_cp_map_tree_create {} {
 
 proc xth_cp_data_tree_enter {node} {
   global xth
-  set tp $xth(ctrl,cp,dat).sw.t 
+  set tp $xth(ctrl,cp,dat).t 
   xth_status_bar_push cp
-  set d [$xth(ctrl,cp,dat).sw.t itemcget $node -data]
+  set d [$xth(ctrl,cp,dat).t itemcget $node -data]
   xth_status_bar_status cp [format "%s - %s (%s)" [lindex $d 0] [lindex $d 1] [lindex $d 2]]
 }
 
@@ -609,7 +612,7 @@ proc xth_cp_data_tree_leave {node} {
 
 proc xth_cp_data_tree_double_click {node} {
   global xth
-  set tp $xth(ctrl,cp,dat).sw.t 
+  set tp $xth(ctrl,cp,dat).t 
   set d [$tp itemcget $node -data]
   set i [$xth(cp,editor).txt index insert]  
   regexp {(\d+)\.} $i dum cln
@@ -618,9 +621,9 @@ proc xth_cp_data_tree_double_click {node} {
 
 proc xth_cp_map_tree_enter {node} {
   global xth
-  set tp $xth(ctrl,cp,ms).sw.t 
+  set tp $xth(ctrl,cp,ms).t 
   xth_status_bar_push cp
-  set d [$xth(ctrl,cp,ms).sw.t itemcget $node -data]
+  set d [$xth(ctrl,cp,ms).t itemcget $node -data]
   xth_status_bar_status cp [format "%s - %s (%s)" [lindex $d 0] [lindex $d 1] [lindex $d 2]]
 }
 
@@ -630,7 +633,7 @@ proc xth_cp_map_tree_leave {node} {
 
 proc xth_cp_map_tree_double_click {node} {
   global xth
-  set tp $xth(ctrl,cp,ms).sw.t 
+  set tp $xth(ctrl,cp,ms).t 
   set d [$tp itemcget $node -data]
   set i [$xth(cp,editor).txt index insert]  
   regexp {(\d+)\.} $i dum cln

@@ -106,7 +106,7 @@ surveying, typesetting and data visualization. Therion can then do its task
 much better than if it was a standalone application in which you could calibrate 
 your printer or scanner and with one click send e-mail with your data.
 
-The compilation of Therion requires an ANSI C/C++ compiler. 
+The compilation of Therion requires GNU C/C++ compiler. 
 If you use the precompiled version, you don't need this.
 
 To run it you need:
@@ -115,7 +115,6 @@ To run it you need:
 * \TeX\ distribution with at least \TeX\ with Plain format, 
   recent pdf-$\varepsilon$-\TeX, and \MP\ with accompanying programs. 
   (\TeX\ and friends is necessary only if you want to create 2D maps.)
-* Perl 5.5 and newer (for 2D maps)
 * Tcl/Tk 8.4 and newer (for XTherion)
 \endlist
 
@@ -146,8 +145,8 @@ Arrows show data flow between programs. Temporary data files are not shown.
 Meaning of colors:
 
 \list
-* black---Therion programs and macros (XTherion is written in Tcl/Tk, thPdf in
-  Perl, so they need these interpreters to run)
+* black---Therion programs and macros (XTherion is written in Tcl/Tk,
+  so it needs this interpreter to run)
 * blue---Survex programs
 * red---\TeX\ package
 * green---input files created by the user and output files created by Therion
@@ -159,7 +158,7 @@ coordinates of survey stations and transforms all other data (e.g.~2D maps)
 according to them. Therion exports data for 2D maps in \MP\ format. \MP\ gives 
 the actual shape to abstract map symbols according to map symbol definitions; it
 creates a lot of PostScript files with small fragments of the cave. These are 
-converted to a PDF-like format by thPdf and theps2pdf, which forms input data 
+read back and converted to a PDF-like format, which forms input data 
 for pdf\TeX. Pdf\TeX does all the typesetting and creates a PDF file of the cave 
 map. Therion may also export simple 3D model (survey shots only) in Survex *.3d 
 and Compass *.plt formats. 

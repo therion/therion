@@ -272,6 +272,8 @@ endsurvey|
       |centerline [OPTIONS]
           date <date>
           team <person> [<roles>]
+          discovery-date <date>
+          discovery-team <person>
           instrument <quantity list> <description>
           calibrate <quantity list> <zero error> [<scale>]
           units <quantity list> [<factor>] <units>
@@ -308,11 +310,14 @@ endsurvey|
 \comopt
   * |date <date>| = survey date. If multiple dates are specified,
     a time interval is created.
+  * |discovery-date <date>| = discovery date. If multiple dates are specified,
+    a time interval is created.
   * |team <person> [<roles>]| = a survey team member. The first argument
     is his/her name, the others describe the roles of the person in
     the team (optional---not currently used). The following role keywords are
     supported: station, length, tape, compass, bearing, clino,
     gradient, counter, depth, station, position, notes and pictures.
+  * |discovery-team <person>| = a discovery team member. 
   * |instrument <quantity list> <description>| = description
     of the instrument that was used to survey the given quantities (same
     keywords as team person's role)
@@ -486,7 +491,7 @@ Point is a command for drawing a point map symbol.
     {\it speleothems:} flowstone, moonmilk, stalactite, stalagmite,
     pillar, curtain, helectite, soda-straw, crystal, wall-calcite,
     popcorn, disk, gypsum, gypsum-flower, aragonite, cave-pearl,
-    rimstone-pool, rimstone-dam, anastomosen, karren, scallop,
+    rimstone-pool, rimstone-dam, anastomosis, karren, scallop,
     flute, raft-cone;
 
     {\it equipement:} anchor, rope, fixed-ladder, rope-ladder, steps,
@@ -503,7 +508,10 @@ Point is a command for drawing a point map symbol.
   * |subtype <keyword>| = determines the object's subtype. The following
     subtypes for given types are supported: 
     
-    {\it station:} temporary, painted, natural, fixed;
+    {\it station:} temporary (default), painted, natural, fixed;
+
+    {\it water-flow:} permanent (default), intermittent, paleo
+
   * |name <reference>| = if the point type is station, this
     option gives the reference to the real survey station.
   * |extend <specification>| = if the point type is station and scrap

@@ -31,9 +31,8 @@
 #include <set>
 #include <string>
 
-
-#include "thconvert.h"
-#include "thpdf.h"
+#include "thpdfdbg.h"
+#include "thpdfdata.h"
 
 #ifndef NOTHERION
 #include "thexception.h"
@@ -42,16 +41,24 @@
 using namespace std;
 
 
-list<scraprecord> SCRAPLIST;
-map<int,layerrecord> LAYERHASH;
-set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
-
-
 string tex_Xname(string s) {return("THX"+s);}
+
+string u2str(unsigned u) {
+  unsigned i=u;
+  char c;
+  string s="";
+  while (i>0) {
+    c = 'a' + ((i-1) % 26);
+    s = c + s;
+    i = (i-1) / 26;
+  };
+  return (s);
+}
+
 
 void print_hash(){
   ofstream F("scraps.dat");
-  if(!F) therror(("???"));
+  if(!F) therror(("Can't open file `scraps.dat'"));
   F << "[SCRAP]" << endl;
   for (list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
@@ -139,47 +146,7 @@ void print_hash(){
   F.close();
 }
 
-void print_hash1(){                       // only temporary solution
-  ofstream F("th_hashdef");
-  if(!F) therror(("???"));
-  F << "%COORD = (" << endl;
-  for (list<scraprecord>::iterator I = SCRAPLIST.begin(); 
-                                  I != SCRAPLIST.end(); I++) {
-    F << " " << I->name << " => {" << endl;
-    if ((I->F1) || (I->F2) || (I->F3) || (I->F4)) {
-      F << "  " << "C => \"" << I->F1 << " " << I->F2 << "\"," << endl;
-      F << "  " << "CU => \"" << I->F3 << " " << I->F4 << "\"," << endl;
-    }
-    if ((I->G1) || (I->G2) || (I->G3) || (I->G4)) {
-      F << "  " << "CG => \"" << I->G1 << " " << I->G2 << "\"," << endl;
-      F << "  " << "CGU => \"" << I->G3 << " " << I->G4 << "\"," << endl;
-    }
-    if ((I->B1) || (I->B2) || (I->B3) || (I->B4)) {
-      F << "  " << "CB => \"" << I->B1 << " " << I->B2 << "\"," << endl;
-      F << "  " << "CBU => \"" << I->B3 << " " << I->B4 << "\"," << endl;
-    }
-    if ((I->I1) || (I->I2) || (I->I3) || (I->I4)) {
-      F << "  " << "CI => \"" << I->I1 << " " << I->I2 << "\"," << endl;
-      F << "  " << "CIU => \"" << I->I3 << " " << I->I4 << "\"," << endl;
-    }
-    if ((I->E1) || (I->E2) || (I->E3) || (I->E4)) {
-      F << "  " << "CE => \"" << I->E1 << " " << I->E2 << "\"," << endl;
-      F << "  " << "CEU => \"" << I->E3 << " " << I->E4 << "\"," << endl;
-    }
-    if ((I->X1) || (I->X2) || (I->X3) || (I->X4)) {
-      F << "  " << "CX => \"" << I->X1 << " " << I->X2 << "\"," << endl;
-      F << "  " << "CXU => \"" << I->X3 << " " << I->X4 << "\"," << endl;
-    }
-    
-    F << " }," << endl;
-  }
-  F << ");" << endl;
-  F.close();
-}
 
-
-int thpdfdbg() {
+void thpdfdbg() {
   print_hash();
-  print_hash1(); // only temporary solution
-  return(0);
 }

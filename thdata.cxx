@@ -1236,11 +1236,12 @@ void thdata::set_data_data(int nargs, char ** args)
 void thdata::insert_data_leg(int nargs, char ** args)
 {
   bool to_clear = true;
+  thdataleg dumm;
   int carg;
   if (this->d_current == 0) {
     this->pd_leg = this->cd_leg;
     this->pd_leg_def = this->cd_leg_def;
-    this->cd_leg = this->leg_list.insert(this->leg_list.end());
+    this->cd_leg = this->leg_list.insert(this->leg_list.end(),dumm);
     
     // set all the data
     this->cd_leg->srcf = this->db->csrc;
@@ -1370,7 +1371,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
           case TT_SV_NUMBER:
             val = this->dlc_gradient.evaluate(val);
             val = this->dlu_gradient.transform(val);
-            if ((val < -90.0) || (val > 90.0))
+            if ((val <= -90.00001) || (val >= 90.00001))
               ththrow(("gradient reading out of range -- %s", args[carg]))
             else
               this->cd_leg->gradient = val;
@@ -1391,7 +1392,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
           case TT_SV_NUMBER:
             val = this->dlc_gradient.evaluate(val);
             val = this->dlu_gradient.transform(val);
-            if ((val < -90.0) || (val > 90.0))
+            if ((val <= -90.00001) || (val >= 90.00001))
               ththrow(("backwards gradient reading out of range -- %s", args[carg]))
             else
               this->cd_leg->backgradient = val;
@@ -1648,6 +1649,7 @@ void thdata::set_data_fix(int nargs, char ** args)
 {
   int ai, vid;
   double val;
+  thdatafix dumm;
   thdatafix_list::iterator it;
   switch(nargs) {
     case 4:
@@ -1659,7 +1661,7 @@ void thdata::set_data_fix(int nargs, char ** args)
     default:
       ththrow(("invalid number of fix option arguments"))
   }
-  it = this->fix_list.insert(this->fix_list.end());
+  it = this->fix_list.insert(this->fix_list.end(),dumm);
   it->srcf = this->db->csrc;
   it->psurvey = this->db->get_current_survey();
   it->sdx = this->dls_x;
@@ -1733,9 +1735,10 @@ void thdata::set_data_fix(int nargs, char ** args)
 void thdata::set_data_equate(int nargs, char ** args)
 {
   int eid, cid = ++this->d_last_equate;
+  thdataequate dumm;
   thdataequate_list::iterator it;
   for(eid = 0; eid < nargs; eid++) {
-    it = this->equate_list.insert(this->equate_list.end());
+    it = this->equate_list.insert(this->equate_list.end(),dumm);
     thparse_objectname(it->station, & this->db->buff_stations, args[eid]);
     it->eqid = cid;
     it->srcf = this->db->csrc;
@@ -1748,7 +1751,8 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
 {
   int ai, fid;
   thdatass_list::iterator it;
-  it = this->ss_list.insert(this->ss_list.end());
+  thdatass dumm;
+  it = this->ss_list.insert(this->ss_list.end(),dumm);
   it->srcf = this->db->csrc;
   it->psurvey = this->db->get_current_survey();
   for(ai = 0; ai < nargs; ai++) {

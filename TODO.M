@@ -1,18 +1,9 @@
-MARTIN:
-* odprasit /endinput z therion.tex-u
-* zmenit vystup na stdout v thpdf.cxx a thconvert.cxx
-* alignment pri continuation a equipement a up-down label
-* mody pre preview (ziadne, linkovane, vsetky)
+thpdf:
 
-THPDF:
-   * opravit cislovanie listov
-   * Umbilicus
-   * mod bez ramikov na velku mapu (automaticke nastavenie velkosti papiera,
-     bez hyperlinkov; do uvahy jedine Umbilicus a siet s rozmermi oka Hsize*Vsize)
-   * nastavitelna priehladnost v PDF (zaviest TeXovsku premennu \opacity=100...)
-     zaviest TransparencyGroups ked bude opravena chyba v pdfTeXu
-   * schema kladu listov (samost. subor, bez linkov, 1 alebo 2 listy;
-     len pre tlacenu verziu)
+ * zmenit vystup na stdout v thpdf.cxx a thconvert.cxx ???
+
+ * co s posunom stran v rychlom mode
+ * Optional Content ked budem mat Acrobat 6
  * k vrstve: meno vo vertikalnom smere alebo udaj o vyske
  * podmienene nacitavanie scrapov v TeXu
  * dvojstrankovy mod (Title vzdy na pravej strane), vtedy akceptovat:
@@ -31,6 +22,30 @@ THPDF:
    (do uvahy aj convergence)
  * graficka mierka + sever (minimalne pre samostatne mapy 
      do samostatneho PDF ako legendu?)
+ * mody pre preview (ziadne, linkovane, vsetky)
+ * vrstva `pri' pre atlas
+
+
+thconvert:
+
+ * (dorobi») CONCAT + konverzia rozdelenych textovych riadkov
+ * optimalizacia zmien fontov + gsave & al.
+
+thtexfonts:
+
+ * fonty v TeXu
+ 
+
+mpost:
+
+ * alignment pri continuation a equipement a up-down label
+ * slope - 
+   poriadne funguje ak su vo vsetkych bodoch smery -1 (vtedy su luce kolme)
+    alebo sa smer (velmi) nemeni; s dlzkou problemy nie su
+   (bude treba vymysliet algoritmus na priemerovanie krajnych hodnot, kedze to, 
+   ktorym poloblukom pojdes, zavisi od orientacie krivky)
+ * sectionline cez kontrolne body -> inak
+
 
 ----- prezitky dob minulych -----
 
@@ -38,4 +53,3 @@ THPDF:
    dalsieho na ne odkazovat pomocou Reference XObject forms -> nefunguje v AR
  * navigacne sipky vypustit z tlacenej verzie (Image/Alternates/DefaultForPrint
    alebo rozne mody) 
-

@@ -118,6 +118,11 @@ set xth(app,sencoding) iso8859-2
 frame .def
 scrollbar .def.scrollbar
 text .def.text
+if {[catch {.def.text configure -undo 1}]} {
+  set xth(gui,text_undo) 0;
+} else {
+  set xth(gui,text_undo) 1;
+}
 label .def.label
 
 set xth(gui,sbwidth) [.def.scrollbar cget -width]
@@ -126,6 +131,8 @@ set xth(gui,lfont) [.def.label cget -font]
 set xth(gui,efont) [.def.text cget -font]
 set xth(gui,ecolorbg) black
 set xth(gui,ecolorfg) green
+set xth(gui,escolorbg) black
+set xth(gui,escolorfg) red
 set xth(gui,ecolorselbg) green
 set xth(gui,ecolorselfg) black
 set xth(gui,selfg) white

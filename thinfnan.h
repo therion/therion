@@ -35,7 +35,7 @@
 // nan handling
 #ifdef NAN
 
-#ifndef THMACOSX
+#ifdef THLINUX
 #define thnan NAN
 #define thisnan isnan
 #else
@@ -54,7 +54,7 @@
 // infinity handling
 #ifdef INFINITY
 
-#ifndef THMACOSX
+#ifdef THLINUX
 #define thinf INFINITY
 #define thisinf isinf
 #else

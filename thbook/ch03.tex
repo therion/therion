@@ -149,12 +149,13 @@ Works like |input| command in data files  - includes other files.
     this redefinition.)
   * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
     origin
-  * |grid-size <width> <height> <units>| = set grid size in paper
+  * |grid-size <width> <height> <units>| = set grid size in real
     units
   * |nav-factor <factor>| = set atlas navigator zoom factor
   * |nav-size <x-size> <y-size>| = set number of atlas pages in
     both directions of navigator
-  * |opacity <on/off> <value>| = set scrap opacity. Value range is 0--100.
+  * |opacity <value>| = set opacity value (used if |transparency| is on). 
+    Value range is 0--100.
   * |origin <x> <y> <x> <units>| = set origin of atlas pages
   * |origin-label <x-label> <y-label>| = set label for atlas page
     which has the lower left corner at the given origin coordinates
@@ -170,6 +171,8 @@ Works like |input| command in data files  - includes other files.
     output map or map atlas
   * |size <width> <height> <units>| = set map size in the atlas mode
   * |title-pages <on/off>| = turn on/off atlas title pages
+  * |transparency <on/off>| = set transparency for the passages (underlying 
+    passages are also visible)
   * all other lines can contain \TeX\ macros, which will produce
     the cave atlas. Here the page layout may be adjusted (positions
     of elements in the area framed by dashed blue line in the picture).
@@ -236,8 +239,8 @@ Works like |input| command in data files  - includes other files.
   * |layout| = map or atlas layout---see layout command for details.
   * |layout-xxx| = where |xxx| stands for other layout options. Using this
     you can change some layout properties directly within the export command.
-  * |map_level <level>| = defines the maximum level of recursion the program 
-     will perform as it selects maps for output.
+%  * |map_level <level>| = defines the maximum level of recursion the program 
+%     will perform as it selects maps for output.
   * |format/fmt <format>| = set map format. Currently only PDF format
     is supported.
 \endoptions

@@ -37,12 +37,12 @@
 #include <cstring>
 #include <cstdio>
 
-#include "thconvert.h"
 #include "thpdfdbg.h"
+#include "thpdfdata.h"
 
 using namespace std;
 
-extern list<scraprecord> SCRAPLIST;
+// extern list<scraprecord> SCRAPLIST;
 
 map<string,string> RGB, ALL_FONTS, ALL_PATTERNS;
 typedef set<unsigned char> FONTCHARS;
@@ -58,8 +58,7 @@ void read_hash() {
   if(!F) therror(("???"));
   string line, tmp = "";
   char buf[100];
-  scraprecord S = {"","","","","","","","","",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-                   0,0,0,0,0,0,0,0,0,0,0,0,0};
+  scraprecord S;
   list<scraprecord>::iterator I;
   while(F.getline(buf,100,'\n')) {
     line = buf;
@@ -156,13 +155,10 @@ list<scraprecord>::iterator find_scrap(string name) {
 
 void print_queue(deque<string>& thstack, float llx, float lly, 
                 string command, ofstream& TEX) {
-  char x[20],y[20];
   if (convert_mode>0) {TEX << "\\PL{";}
   for(unsigned i=0; i<thstack.size(); i=i+2) {
-//    TEX << setprecision(1) << fixed;  // doesn't work on my compiler
-    sprintf(x, "%.1f", atof(thstack[i].c_str())-llx);
-    sprintf(y, "%.1f", atof(thstack[i+1].c_str())-lly);
-    TEX << x << " " << y << " ";
+    TEX << atof(thstack[i].c_str())-llx << " " << 
+           atof(thstack[i+1].c_str())-lly << " ";
   }
   TEX << command;
   if (convert_mode>0) {TEX << "}%";}
@@ -176,18 +172,6 @@ void print_str(string str, ofstream& TEX) {
   TEX << endl;
 }
 
-
-string u2string(unsigned u) {
-  unsigned i=u;
-  char c;
-  string s="";
-  while (i>0) {
-    c = 'a' + ((i-1) % 26);
-    s = c + s;
-    i = (i-1) / 26;
-  };
-  return (s);
-}
 
 string process_pdf_string(string s, string font) {
   string r,t;
@@ -422,7 +406,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
               FORM_PATTERNS.insert(patt);
             }
             if (ALL_PATTERNS.find(patt) == ALL_PATTERNS.end()) {
-              ALL_PATTERNS.insert(make_pair(patt,u2string(patt_id)));
+              ALL_PATTERNS.insert(make_pair(patt,u2str(patt_id)));
               patt_id++;
             }
             print_str("/CS1 cs /"+patt+" scn",TEX);
@@ -501,7 +485,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
           FORM_FONTS.insert(font);
         }
         if (ALL_FONTS.find(font) == ALL_FONTS.end()) {
-          ALL_FONTS.insert(make_pair(font,u2string(font_id)));
+          ALL_FONTS.insert(make_pair(font,u2str(font_id)));
           font_id++;
         }
         font = tex_Fname(ALL_FONTS[font]);
@@ -555,8 +539,21 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
       TEX << "\\PL{Q}%" << endl;
     }
     TEX << "}}\\wd\\xxx=" << HS << "bp" << endl;
+    TEX << "\\immediate\\pdfxform";
+
+//    if (mode == 12 || mode == 13) {
+//      TEX << " attr {";
+//      if (mode == 12) {
+//        TEX << "/OC \\the\\ocU\\space 0 R ";
+//      }
+//      else if (mode == 13) {
+//        TEX << "/OC \\the\\ocD\\space 0 R ";
+//      }
+//      TEX << "} ";
+//    }
+
     if (transp_used || !FORM_FONTS.empty() || !FORM_PATTERNS.empty()) {
-      TEX << "\\immediate\\pdfxform resources { /ProcSet [/PDF /Text] ";
+      TEX << " resources { /ProcSet [/PDF /Text] ";
       if (transp_used) {
         TEX << "/ExtGState \\the\\resid\\space 0 R ";
       }
@@ -580,13 +577,11 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         TEX << ">> ";
         TEX << "/ColorSpace << /CS1 [/Pattern /DeviceGray] >> ";
       }
-      TEX << "} \\xxx\n\\newcount\\" << form_id << 
-             "\\" << form_id << "=\\pdflastxform" << endl;
+      TEX << "} ";
     }
-    else {
-      TEX << "\\immediate\\pdfxform\\xxx\n\\newcount\\" << form_id <<
-             "\\" << form_id << "=\\pdflastxform" << endl;
-    }
+    
+    TEX << "\\xxx\n\\newcount\\" << form_id <<
+           "\\" << form_id << "=\\pdflastxform" << endl;
   }
 }
 
@@ -596,6 +591,9 @@ void convert_scraps() {
  
   ofstream TEX("th_formdef.tex");
   if(!TEX) therror(("???"));
+  TEX.setf(ios::fixed, ios::floatfield);
+  TEX.precision(1);
+  
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
 //    cout << "*" << flush;
@@ -613,6 +611,8 @@ void convert_scraps() {
 
   ofstream F("th_fontdef.tex");
   if(!F) therror(("???"));
+  F.setf(ios::fixed, ios::floatfield);
+  F.precision(2);
   for (map<string,string>::iterator I = ALL_FONTS.begin(); 
                                     I != ALL_FONTS.end(); I++) {
     F << "\\font\\" << tex_Fname((*I).second) << "=" << (*I).first << endl;
