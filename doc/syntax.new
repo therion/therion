@@ -1,0 +1,72 @@
+SYNTAX VSTUPNYCH SUBOROV:
+=========================
+
+Pravidla:
+---------
+
+1. Zakladnou jednotkou vstupnych suborov je jeden riadok.
+2. Pozname niekolko typov riadkov
+   * prikazovy riadok, zacinajuci sa /^\s*\.(\w+)/, pricom \1 je prikaz
+     znamy v danom kontexte. Ak prikaz znamy nie je, je riadok povazovany za
+     datovy.
+   * riadok komentaru, zacinajuci sa /^\s*\#/. Ak sa tento riadok zacina na ##,
+     tak vsetky ostatne riadky su povazovane za komentare az po dalsi riadok
+     zacinajuci sa ## vratane.
+   * datovy riadok, nesplnajuci ani bod jedna, ani bod dva
+3. Koniec riadku v tvare /\\\s*$/ signalizuje, ze nasledujuci riadok je iba
+   pokracovanim tohto a maju sa interpretovat ako jeden riadok.
+   
+
+Syntax prikazov:
+----------------
+
+1. Kazdy prikaz aj s parametrami mooze zaberat najviac jeden riadok.
+2. Prikazy maju vo vseobecnosti tvar:
+   .command [par1] [par2] ... [-option1 value] [-option2 value] ...
+3. Ak niektore z parametrov alebo nastavitelnych moznosti obsahuju v sebe
+   medzery, je potrebne ich uzavriet do {}.
+   
+Priklad datoveho suboru:
+------------------------
+
+survey demo
+
+polygon
+team Martin budaj, Stacho Mudrak, Martin Sluka
+0  1  10  20 20
+1  2  30  21  2
+2  3  15 -10  2
+endpolygon
+
+map
+wall -path {[0] 0p0 ... 80p1 [1] ... 30p2 120>> 100p0 [2]} -pathname w1
+stone 0p0 -direction 120 -diameter 2
+lake -border {w1 b1 w2 b2} -fill normal -link photo/suter1
+title -text {Therion demo passage} -path {[0] 0p2 .. [1] 0p2 .. 100p2 [2]}
+endmap
+
+data
+photo suter1 -file photos/suter.jpg
+enddata
+
+%%
+%%
+
+entrance
+title
+position 
+    Tento vlskjdf 'askjdf as'a
+    as;dlkjf;salkdjf;lksajdfasdf
+    s;ldkjf;laskdjfl;skajdfl;ksaf
+    asdlkfjsl;kdjfl;ksadf
+
+
+endentrance
+
+analyzis
+data CaO FeO Fe2O3
+0 1 20
+2 1 20
+3 2 10
+\endanalyzis
+\endsurvey

@@ -1,0 +1,16 @@
+Therion has NO documentation yet, we include only some hints for hackers
+
+Perl, TeX, MetaPost, GhostView (all programs are part of standard Linux 
+distribution) and Survex should be installed
+
+Add /therion/bin to your path
+
+edit data file (use two example files for beginning; no documentation of data
+format is available (hack the source code;-))
+
+copy file /thrion/etc/Config to your data directory and change it
+according your demands
+
+run script `th' with name of data file as argument
+
+you should see result as file(s) *.eps 

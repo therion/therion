@@ -78,7 +78,7 @@ foreach $extension (@extensions) {
 # we need to know, whether MetaPost's internal variable ``prologues''
 # was set to 1 (by reading first line of any of these files)
 
-open(IN, "$basename.1");
+open(IN, "$basename.1") or die "\nSomething went wrong, I guess...\n";
 $_=<IN>;
 if (/EPSF/) {$Prologues=1} else {$Prologues=0};
 close(IN);

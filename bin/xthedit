@@ -1,0 +1,1343 @@
+#!/usr/bin/wish
+
+#########################################
+# System dependend settings
+
+frame .def
+
+scrollbar .def.scrollbar
+text .def.text
+
+set usr_sbwidth [.def.scrollbar cget -width]
+set usr_editorfont [.def.text cget -font]
+
+case $tcl_platform(platform) {
+     unix { set usr_sbwidth 8
+          }
+     windows { set usr_editorfont "Courier 10"
+             }
+     macintosh {
+               }
+}
+
+destroy .def
+
+#########################################
+# Global variables
+
+set img_zoom 0
+set img_scale 1
+image create photo img_src
+image create photo img_dst
+
+set ent_curx 0
+set ent_cury 0
+
+set ent_cal_p1x 1
+set ent_cal_p1y 1
+set ent_cal_p2x 201
+set ent_cal_p2y 1
+set ent_cal_dst 5.08
+set ent_cal_zoom $img_zoom
+
+set abs_ox 1
+set abs_oy 1
+set abs_cx 0
+set abs_cy 0
+set abs_mode 0
+set abs_zoom $img_zoom
+
+set rel_cp 0
+set rel_cpx ""
+set rel_cpy ""
+set rel_cpid ""
+
+set rel_sp {}
+
+set rel_from ""
+set rel_to ""
+set rel_fx 0
+set rel_fy 0
+set rel_tx 0
+set rel_ty 0
+set rel_dist 0
+set rel_hold 0
+set rel_id 0
+set rel_idtext percentage
+
+set ins_id 0
+set ins_idtext "line insertion"
+set ins_trans "..."
+set ins_ltype ""
+set ins_lpcount 0
+set ins_lltype ""
+
+set txt_fname ""
+set txt_fstatus 0
+set txt_fstatusl 0
+
+set ent_lines {
+    {wall {solid dashed unvisible} }
+    {pit  {ceeling floor} }
+    {border {solid unvisible} }    
+}
+
+###############################################################################
+# Main window
+###############################################################################
+
+wm title . "xthedit"
+wm iconname . "xthedit"
+wm protocol . WM_DELETE_WINDOW "edit_exit"
+
+#########################################
+# Set the grid
+
+frame .wn
+pack .wn -expand yes -fill both
+
+grid columnconfigure .wn 0 -weight 3 -minsize 420
+grid columnconfigure .wn 1 -weight 0 -minsize 10
+grid columnconfigure .wn 2 -weight 1 -minsize 140
+grid columnconfigure .wn 3 -weight 0 -minsize 10
+
+grid rowconfigure .wn 0 -weight 2 -minsize 260
+grid rowconfigure .wn 1 -weight 0 -minsize 10
+grid rowconfigure .wn 2 -weight 1 -minsize 130
+grid rowconfigure .wn 3 -weight 0 -minsize 10
+
+#########################################
+# Set the menu
+
+set mm .menu
+menu $mm -tearoff 0
+
+set m $mm.file
+menu $m -tearoff 0
+$mm add cascade -label "File" -menu $m -underline 0
+$m add command -label "New" -underline 0 -accelerator Meta+N \
+	       -command {text_new}
+$m add command -label "Open" -underline 0 -accelerator F3 \
+	       -command {text_openfile}
+$m add command -label "Save" -underline 0 -accelerator F2 \
+               -command {text_save}
+$m add command -label "Save as" -underline 5 \
+               -command {text_savefile}
+$m add separator
+$m add command -label "Quit" -command {edit_exit} -underline 0 \
+               -accelerator Meta+Q
+
+set m $mm.image
+menu $m -tearoff 0
+$mm add cascade -label "Image" -menu $m -underline 0
+$m add command -label "Load" -underline 0 -command "image_loadfile" \
+       -accelerator Meta+L
+$m add command -label "Load setup" -underline 1 -command {image_loadsetup}
+$m add command -label "Save setup" -underline 0 -command {image_savesetup} 
+$m add separator
+$m add radio -label "25 %" -variable img_zoom -value -2 -command {image_zoom}
+$m add radio -label "50 %" -variable img_zoom -value -1 -command {image_zoom}
+$m add radio -label "100 %" -variable img_zoom -value 0 -command {image_zoom}
+$m add radio -label "200 %" -variable img_zoom -value 1 -command {image_zoom}
+$m add radio -label "400 %" -variable img_zoom -value 2 -command {image_zoom}
+
+$mm add command -label "Compile" -underline 0 \
+	-command {
+	    text_save
+	    toplevel .debug
+	    text .debug.t -width 80 -height 25 -wrap char \
+		    -yscrollcommand ".debug.vs set" 
+	    scrollbar .debug.vs -command ".debug.t yview" -width $usr_sbwidth
+	    button .debug.done -text "Done" -command {destroy .debug}
+	    grid .debug.t -row 0 -column 0
+	    grid .debug.vs -row 0 -column 1 -sticky ns
+	    grid .debug.done -row 1 -column 0 -columnspan 2 -sticky nsew
+	    update
+	    exec th >& th__data.tmp
+	    set OUTPT [open th__data.tmp]
+	    while {![eof $OUTPT]} {
+		.debug.t insert end "[gets $OUTPT]\n"
+	    }
+	    close $OUTPT
+	} \
+	-accelerator Meta+C
+
+
+set m $mm.help
+menu $m -tearoff 0
+$mm add cascade -label "Help" -menu $m -underline 0
+$m add command -label "Editor"
+$m add separator
+$m add command -label "Calibration"
+$m add command -label "Relative system"
+$m add command -label "Absolute system"
+$m add separator
+$m add command -label "Text editor"
+$m add command -label "Points insertion"
+$m add command -label "Lines insertion"
+$m add separator
+$m add command -label "About..." -underline 0
+
+. configure -menu $mm
+
+
+#########################################
+# Set general key bindings
+
+bind . <Meta-Key-l> {image_loadfile}
+bind . <Meta-Key-L> {image_loadfile}
+bind . <Alt-Key-l> {image_loadfile}
+bind . <Alt-Key-L> {image_loadfile}
+
+bind . <Meta-Key-n> {text_new}
+bind . <Meta-Key-N> {text_new}
+bind . <Alt-Key-n> {text_new}
+bind . <Alt-Key-N> {text_new}
+
+bind . <Key-F3> {text_openfile}
+
+bind . <Key-F2> {text_save}
+
+bind . <Meta-Key-q> {edit_exit}
+bind . <Meta-Key-Q> {edit_exit}
+bind . <Alt-Key-q> {edit_exit}
+bind . <Alt-Key-Q> {edit_exit}
+
+###############################################################################
+# Text editor window
+###############################################################################
+
+scrollbar .wn.txtvs -command ".wn.txt yview" -width $usr_sbwidth
+scrollbar .wn.txths -orient horizontal -command ".wn.txt xview" \
+          -width $usr_sbwidth
+text .wn.txt -relief flat -yscrollcommand ".wn.txtvs set" \
+     -height 5 -width 40  -wrap none -xscrollcommand ".wn.txths set" \
+     -setgrid 1 -font $usr_editorfont
+     
+grid .wn.txt -in .wn -row 2 -column 0 -columnspan 3 -sticky nsew
+grid .wn.txths -in .wn -row 3 -column 0 -columnspan 3 -sticky ew
+grid .wn.txtvs -in .wn -row 2 -column 3 -sticky ns
+
+#########################################
+# Text window bindings
+
+bind .wn.txt <KeyPress> "text_changed"
+bind .wn.txt <Destroy> "text_close"
+
+###############################################################################
+# Image window
+###############################################################################
+
+scrollbar .wn.imgvs -command ".wn.img yview" -width $usr_sbwidth
+scrollbar .wn.imghs -orient horizontal -command ".wn.img xview" \
+          -width $usr_sbwidth
+canvas .wn.img -relief flat -borderwidth 0 \
+	-xscrollcommand ".wn.imghs set" \
+	-yscrollcommand ".wn.imgvs set" \
+	-cursor crosshair
+
+set img_id [.wn.img create image 1 1 -image img_dst -anchor nw]
+
+grid .wn.img -in .wn -row 0 -column 0 -sticky nsew
+grid .wn.imghs -in .wn -row 1 -column 0 -sticky ew
+grid .wn.imgvs -in .wn -row 0 -column 1 -sticky ns
+
+#########################################
+# Image window bindings
+
+.wn.img bind $img_id <1> "image_Click %x %y"
+.wn.img bind $img_id <Shift-1> "image_startdrag %x %y"
+.wn.img bind $img_id <Shift-B1-Motion> "image_drag %x %y"
+.wn.img bind $img_id <Shift-B1-ButtonRelease> "image_enddrag"
+.wn.img bind $img_id <3> "image_startdrag %x %y"
+.wn.img bind $img_id <B3-Motion> "image_drag %x %y"
+.wn.img bind $img_id <B3-ButtonRelease> "image_enddrag"
+
+
+###############################################################################
+# Entry widgets
+###############################################################################
+
+frame .wn.ent
+set efr .wn.ent
+grid $efr -in .wn -row 0 -column 2 -rowspan 2 -columnspan 1 -sticky new
+
+scrollbar .wn.entscroll -width $usr_sbwidth
+grid .wn.entscroll -in .wn -row 0 -column 3 -rowspan 2 -sticky ns
+.wn.entscroll set 0 1
+
+
+grid columnconfigure $efr 0 -weight 1
+grid columnconfigure $efr 1 -weight 1
+
+entry $efr.curx -width 5 -textvariable ent_curx -justify center
+entry $efr.cury -width 5 -textvariable ent_cury -justify center
+
+grid $efr.curx -in $efr -row 0 -column 0 -sticky ew
+grid $efr.cury -in $efr -row 0 -column 1 -sticky ew
+
+menubutton $efr.menu -menu $efr.menu.m -direction below -relief flat \
+	   -anchor w -textvariable ent_idtext -indicator 1
+
+menu $efr.menu.m -tearoff 0
+set mm $efr.menu.m
+$mm add command -label "relative" -command "entry_set 4" 
+$mm add command -label "absolute" -command "entry_set 3"
+$mm add command -label "relative setup" -command "entry_set 2"
+$mm add command -label "absolute setup" -command "entry_set 1"
+$mm add command -label "calibration"    -command "entry_set 0"
+
+grid $efr.menu -in $efr -row 1 -column 0 -columnspan 2 -sticky ew
+
+#########################################
+# Calibration frame
+
+set ff $efr.fcal
+frame $ff
+
+grid columnconfigure $ff 0 -weight 1
+grid columnconfigure $ff 1 -weight 1
+grid columnconfigure $ff 2 -weight 1
+
+button $ff.sp1 -text "from" -width 2 -command { set ent_cal_p1x $ent_curx
+                                                 set ent_cal_p1y $ent_cury
+                                                 entry_calcscale
+					       }
+entry  $ff.p1x -textvariable ent_cal_p1x -justify center -relief sunken \
+       -width 2 -state disabled
+entry  $ff.p1y -textvariable ent_cal_p1y -justify center -relief sunken \
+       -width 2 -state disabled
+
+grid $ff.sp1 -in $ff -row 0 -column 0 -sticky ew
+grid $ff.p1x -in $ff -row 0 -column 1 -sticky ew
+grid $ff.p1y -in $ff -row 0 -column 2 -sticky ew
+
+button $ff.sp2 -text "to" -width 2 -command { set ent_cal_p2x $ent_curx
+                                               set ent_cal_p2y $ent_cury
+                                               entry_calcscale
+			    		     }
+entry  $ff.p2x -textvariable ent_cal_p2x -justify center -relief sunken \
+       -width 2 -state disabled
+entry  $ff.p2y -textvariable ent_cal_p2y -justify center -relief sunken \
+       -width 2 -state disabled
+
+grid $ff.sp2 -in $ff -row 1 -column 0 -sticky ew
+grid $ff.p2x -in $ff -row 1 -column 1 -sticky ew
+grid $ff.p2y -in $ff -row 1 -column 2 -sticky ew
+
+label $ff.dl -text "distance" -anchor w -width 2
+entry  $ff.dist -textvariable ent_cal_dst -justify left -relief sunken \
+       -width 2
+label $ff.cs -text "current scale" -anchor w -width 2
+entry  $ff.cse -textvariable img_scale -justify left -relief sunken \
+       -width 2 -state disabled
+
+grid $ff.dl -in $ff -row 2 -column 0 -columnspan 3 -sticky ew
+grid $ff.dist -in $ff -row 3 -column 0 -columnspan 3 -sticky ew
+grid $ff.cs -in $ff -row 4 -column 0 -columnspan 3 -sticky ew
+grid $ff.cse -in $ff -row 5 -column 0 -columnspan 3 -sticky ew
+
+# calibration bindings
+
+bind $ff.dist <KeyPress-Return> {entry_calcscale}
+
+#########################################
+# Relative setup frame
+
+set ff $efr.frs
+frame $ff
+
+grid columnconfigure $ff 0 -weight 1
+grid columnconfigure $ff 1 -weight 1
+
+button $ff.add -text "add" -width 2 -command {image_addspoint}
+button $ff.del -text "del" -width 2 -command {image_delspoint}
+button $ff.edit -text "move" -width 2 -command {image_movespoint}
+button $ff.clear -text "clear" -width 2 -command {image_spointclear}
+
+grid $ff.add -row 0 -column 0 -sticky ew 
+grid $ff.del -row 1 -column 0 -sticky ew 
+grid $ff.edit -row 0 -column 1 -sticky ew
+grid $ff.clear -row 1 -column 1 -sticky ew 
+
+label $ff.nl -text "point name" -width 2 -anchor w
+entry $ff.pnt -textvariable rel_cp -relief sunken -width 2 -justify left
+
+label $ff.crl -text "coordinates" -width 2 -anchor w
+entry $ff.cx -textvariable rel_cpx -width 2 -justify center -state disabled
+entry $ff.cy -textvariable rel_cpy -width 2 -justify center -state disabled
+
+grid $ff.nl -in $ff -row 2 -column 0 -columnspan 2 -sticky ew
+grid $ff.pnt -in $ff -row 3 -column 0 -columnspan 2 -sticky ew
+grid $ff.crl -in $ff -row 4 -column 0 -columnspan 2 -sticky ew
+grid $ff.cx -in $ff -row 5 -column 0 -sticky ew
+grid $ff.cy -in $ff -row 5 -column 1 -sticky ew
+
+#########################################
+# Absolute setup frame
+
+set ff $efr.fas
+frame $ff
+
+grid columnconfigure $ff 0 -weight 1
+grid columnconfigure $ff 1 -weight 1
+
+button $ff.so -text "set origin position" -width 2 \
+       -command { set abs_ox $ent_curx
+                  set abs_oy $ent_cury
+                  set abs_zoom $img_zoom
+                }
+button $ff.sc -text "set coordinates" -width 2 \
+       -command { set abs_cx $ent_curx
+                  set abs_cy $ent_cury
+		}
+       
+grid $ff.so -in $ff -row 0 -column 0 -columnspan 2 -sticky ew
+grid $ff.sc -in $ff -row 1 -column 0 -columnspan 2 -sticky ew
+
+
+label $ff.ol -text "origin position" -anchor w -width 2
+entry  $ff.ox -textvariable abs_ox -justify center -relief sunken \
+       -width 2 -state disabled
+entry  $ff.oy -textvariable abs_oy -justify center -relief sunken \
+       -width 2 -state disabled
+
+grid $ff.ol -in $ff -row 2 -column 0 -columnspan 3 -sticky ew
+grid $ff.ox -in $ff -row 3 -column 0 -sticky ew
+grid $ff.oy -in $ff -row 3 -column 1 -sticky ew
+
+label $ff.cl -text "coordinates" -anchor w -width 2
+entry  $ff.cx -textvariable abs_cx -justify center -relief sunken \
+       -width 2 -state disabled
+entry  $ff.cy -textvariable abs_cy -justify center -relief sunken \
+       -width 2 -state disabled
+
+grid $ff.cl -in $ff -row 4 -column 0 -columnspan 3 -sticky ew
+grid $ff.cx -in $ff -row 5 -column 0 -sticky ew
+grid $ff.cy -in $ff -row 5 -column 1 -sticky ew
+
+
+#########################################
+# Relative frame
+
+set ff $efr.frel
+frame $ff
+
+grid columnconfigure $ff 0 -weight 1
+grid columnconfigure $ff 1 -weight 1
+
+label $ff.fl -text "from" -anchor w -width 2
+label $ff.ft -text "to" -anchor w -width 2
+entry $ff.from -textvariable rel_from -width 2 -justify left
+entry $ff.to -textvariable rel_to -width 2 -justify left
+
+grid $ff.fl -in $ff -row 0 -column 0 -sticky ew
+grid $ff.ft -in $ff -row 0 -column 1 -sticky ew
+grid $ff.from -in $ff -row 1 -column 0 -sticky ew
+grid $ff.to -in $ff -row 1 -column 1 -sticky ew
+
+menubutton $ff.menu -menu $ff.menu.m -direction below -relief flat \
+	   -anchor w -textvariable rel_idtext -indicator 1
+
+menu $ff.menu.m -tearoff 0
+set mm $ff.menu.m
+$mm add command -label "percentage" -command { set rel_id 0
+					       set rel_idtext percentage
+					       update
+                                             }
+$mm add command -label "distance" -command { set rel_id 1
+					     set rel_idtext distance
+					     update
+                                           }
+
+grid $ff.menu -in $ff -row 2 -column 0 -columnspan 2 -sticky ew
+
+entry $ff.dist -textvariable rel_dist -width 2 -justify left
+checkbutton $ff.hold -text "hold distance" -variable rel_hold \
+	    -width 2 -justify left -anchor w
+
+grid $ff.dist -in $ff -row 3 -column 0 -columnspan 2 -sticky ew
+grid $ff.hold -in $ff -row 4 -column 0 -columnspan 2 -sticky ew
+
+
+
+#########################################
+# Absolute frame
+
+set ff $efr.fabs
+frame $ff
+
+grid columnconfigure $ff 0 -weight 1
+
+radiobutton $ff.pol -text "polar" -variable abs_mode -value 0 -anchor w
+radiobutton $ff.crt -text "cartesian" -variable abs_mode -value 1 -anchor w
+
+grid $ff.pol -in $ff -row 0 -column 0 -sticky ew
+grid $ff.crt -in $ff -row 1 -column 0 -sticky ew
+
+#########################################
+# Line/Point insertion frame
+
+set ff $efr.ins
+frame $ff
+
+grid columnconfigure $ff 0 -weight 1
+
+menubutton $ff.menu -menu $ff.menu.m -direction below -relief raised \
+	   -anchor w -textvariable ins_idtext -indicator 1
+
+menu $ff.menu.m -tearoff 0
+set mm $ff.menu.m
+$mm add command -label "line insertion" -command {insertion_set 0}
+$mm add command -label "point insertion" -command {insertion_set 1}
+
+grid $ff.menu -in $ff -row 0 -column 0 -sticky ew
+
+######################
+# line insertion frame
+
+set ff $efr.ins.line
+frame $ff
+
+foreach i {0 1 2 3 4 5} {
+        grid columnconfigure $ff $i -weight 1
+}
+
+button $ff.end -text "end" -width 2 -command {image_endline}
+
+menubutton $ff.ltp -text [lindex [lindex $ent_lines 0] 0] \
+           -menu $ff.ltp.m -indicator 1 -width 2 -anchor w
+
+set m $ff.ltp.m
+menu $m -tearoff 0
+foreach i $ent_lines {
+        set nn [lindex $i 0] 
+        set lt [lindex $i 1]
+	set cm "entry_ltypechange {$lt}; $ff.ltp configure -text $nn"	
+        $m add command -label $nn -command $cm
+}
+
+entry $ff.trans -textvariable ins_trans -width 2 -justify center
+entry $ff.ltype -textvariable ins_ltype -width 2 -justify center
+label $ff.trl -text "transition" -width 2 -anchor w
+menubutton $ff.ltl -text "pattern" -menu $ff.ltl.m -width 2 -anchor w \
+	   -relief flat -indicator 1
+
+grid $ff.end -in $ff -row 0 -column 3 -columnspan 3 -sticky ew
+grid $ff.ltp -in $ff -row 0 -column 0 -columnspan 3 -sticky ew
+grid $ff.trans -in $ff -row 1 -column 0 -columnspan 2 -sticky ew
+grid $ff.trl -in $ff -row 1 -column 2 -columnspan 4 -sticky ew
+grid $ff.ltype -in $ff -row 2 -column 0 -columnspan 2 -sticky ew
+grid $ff.ltl -in $ff -row 2 -column 2 -columnspan 4 -sticky ew
+
+
+#######################
+# point insertion frame
+
+set ff $efr.ins.point
+frame $ff
+
+grid columnconfigure $ff 0 -weight 1
+
+button $ff.wshot -text "write shot" -width 2 -command {image_shotwrite}
+
+grid $ff.wshot -in $ff -row 0 -column 0 -sticky ew
+
+
+###############################################################################
+# Coordinate transform procs
+###############################################################################
+
+proc printcoord {x y} {
+     global img_h
+     global img_w
+     global ent_curx
+     global ent_cury
+     set ent_curx [expr round([lindex [.wn.img xview] 0] * $img_w) + $x]
+     set ent_cury [expr round([lindex [.wn.img yview] 0] * $img_h) + $y]
+}
+
+proc distance {x1 y1 x2 y2} {
+     return [expr sqrt( pow(($x1 - $x2),2) + pow(($y1 - $y2),2) ) ]
+}
+
+proc polarcrd {x1 y1 x2 y2} {
+     global img_scale 
+     set dd [distance $x1 $y1 $x2 $y2]
+     set dd [expr $dd * $img_scale]
+     set pi 3.1415926535
+     set an [expr atan2(($x2-$x1),($y1-$y2)) / $pi * 180]
+     if {$an < 0} {set an [expr 360 + $an]}
+     return "$dd $an"
+}
+
+proc cartesiancrd {x1 y1 x2 y2} {
+     global img_scale 
+     set xx [expr $img_scale * ($x2 - $x1)]
+     set yy [expr $img_scale * ($y1 - $y2)] 
+     return "$xx $yy"
+}
+
+proc getabsolute {x y} {
+
+     global abs_ox abs_oy abs_mode abs_cx abs_cy
+
+     if {![catch {[expr $abs_ox]}]} {return}
+     if {![catch {[expr $abs_oy]}]} {return}
+     if {![catch {[expr $abs_cx]}]} {return}
+     if {![catch {[expr $abs_cy]}]} {return}
+     if {![catch {[expr $x]}]} {return}
+     if {![catch {[expr $y]}]} {return}
+
+     case $abs_mode {
+	    0 { set cc [polarcrd $abs_ox $abs_oy $x $y]
+	        return [format "%1.2f/%1.0f" [lindex $cc 0] [lindex $cc 1]]
+	    }
+            default { set cc [cartesiancrd $abs_ox $abs_oy $x $y]	              
+                      set rx [expr [lindex $cc 0] + $abs_cx]
+                      set ry [expr [lindex $cc 1] + $abs_cy]
+                      return [format "%1.2f,%1.2f" $rx $ry]
+	    }
+     }     
+}
+
+proc getrelative {x y} { 
+     global rel_from rel_fx rel_fy rel_to rel_tx rel_ty rel_dist rel_hold
+     global rel_id img_scale
+     
+     if {![string length rel_from]} {return}
+     if {![string length rel_to]} {return}
+     if {![catch {[expr $rel_dist]}]} {return}
+     
+     set pl [distance $rel_fx $rel_fy $rel_tx $rel_ty]
+     if {$pl == 0} then {set pp 0} else {
+        if {$rel_id == 0} then {set pp [expr $rel_dist / 100.0]} else {
+	   set pp [expr 1.0 * $rel_dist / ($pl * $img_scale)]
+	}
+     }
+     
+     #puts "Shot: $rel_fx,$rel_fy - $rel_tx,$rel_ty length $pl perc $pp" 
+     #puts "Mycr: $x,$y"
+     
+     if {($rel_hold == 1) || ($pl == 0)} then {
+        set ix [expr 1.0 * ($rel_tx - $rel_fx) * $pp + $rel_fx]
+        set iy [expr 1.0 * ($rel_ty - $rel_fy) * $pp + $rel_fy]
+	set pc [polarcrd $ix $iy $x $y]
+	#puts "I: $ix,$iy PC: $pc"
+	
+	if {$rel_id == 0} then {
+	  set pp [expr $pp * 100]
+	  set rel_dist $pp
+	  return [format "%1.0fp%1.2f/%1.0f" $pp [lindex $pc 0] [lindex $pc 1]]
+	} else {
+	  set pp [expr $pp * $pl * $img_scale]   
+	  set rel_dist $pp
+	  return [format "%1.2fm%1.2f/%1.0f" $pp [lindex $pc 0] [lindex $pc 1]]
+	}
+     } else {
+	set vx [expr $rel_tx - $rel_fx]
+	set vy [expr $rel_ty - $rel_fy]
+	set pp [expr 1.0 * (($x*$vx)+($y*$vy)-($rel_fx*$vx)-($rel_fy*$vy)) / \
+	            (pow($pl,2))]
+	set ix [expr $rel_fx + $pp * $vx]
+	set iy [expr $rel_fy + $pp * $vy]
+	set vvx [expr $y - $iy]
+	set vvy [expr $ix - $x]
+	if {[expr $vx*$vvx + $vy*$vvy] < 0} then {set sg -1.0} else {set sg 1.0}
+	
+	set dd [expr [distance $ix $iy $x $y] * $img_scale * $sg]
+	#puts "I: $ix,$iy PP: $pp DD: $dd"
+	if {$rel_id == 0} then {
+	  set pp [expr $pp * 100]	
+	  set rel_dist $pp
+	  return [format "%1.0fp%1.2f" $pp $dd]
+	} else {
+	  set pp [expr $pp * $pl * $img_scale]   
+	  set rel_dist $pp
+	  return [format "%1.2fm%1.2f" $pp $dd]
+	}
+	
+     }
+     
+     
+     
+}
+
+###############################################################################
+# Image procs
+###############################################################################
+
+proc image_loadfile {} {
+     set types {
+         {{Pictures}   {.gif .pnm .ppm} }
+         {{All Files }                * }
+         }
+
+     set filename [tk_getOpenFile -filetypes $types -initialdir . \
+                   -defaultextension ".gif"]
+     if {[string length $filename]} {image_load $filename}
+
+}
+
+proc image_load {filename} {
+     img_src configure -file "$filename"
+     image_zoom
+     entry_set 0      
+}
+
+proc image_zoom {} {
+     global img_zoom
+     global img_w
+     global img_h
+     case $img_zoom {
+          "-2" {img_dst copy img_src -subsample 4 -shrink}
+          "-1" {img_dst copy img_src -subsample 2 -shrink}
+          "1" {img_dst copy img_src -zoom 2 -shrink} 
+          "2" {img_dst copy img_src -zoom 4 -shrink}
+          default {img_dst copy img_src -shrink}	       
+     }
+    set img_w [expr [image width img_dst] - 1]
+    set img_h [expr [image height img_dst] - 1]
+    .wn.img configure -scrollregion "0 0 $img_w $img_h"
+    entry_zoom
+}
+
+proc image_startdrag {x y} {
+     global img_ox img_oy img_mx img_my img_fx img_fy img_w img_h
+     set hss [.wn.imghs get]
+     set vss [.wn.imgvs get]
+     set img_fx [expr (1 - [lindex $hss 1] + [lindex $hss 0]) * $img_w]
+     set img_fy [expr (1 - [lindex $vss 1] + [lindex $vss 0]) * $img_h]     
+     if {$img_fx > 0} {set img_fx [expr (1 - [lindex $hss 1] + [lindex $hss 0]) / $img_fx]}
+     if {$img_fy > 0} {set img_fy [expr (1 - [lindex $vss 1] + [lindex $vss 0]) / $img_fy]}
+     set img_ox [lindex $hss 0]
+     set img_oy [lindex $vss 0]
+     set img_mx $x
+     set img_my $y
+     .wn.img configure -cursor fleur
+     update
+}
+
+proc image_drag {x y} {
+     global img_ox img_oy img_mx img_my img_fx img_fy
+     set xdelta [expr ($img_mx - $x) * $img_fx]
+     set ydelta [expr ($img_my - $y) * $img_fy]
+     .wn.img xview moveto [expr $img_ox + $xdelta]
+     .wn.img yview moveto [expr $img_oy + $ydelta]
+     update     
+}
+
+proc image_enddrag {} {
+     .wn.img configure -cursor crosshair
+     update 
+}
+
+proc image_id2sp {id} {
+     global rel_sp
+     if {![llength $rel_sp]} {return 0}
+     foreach i $rel_sp {
+     if {[lindex $i 0] == $id} {return [concat 1 $i]}
+     }
+     return 0
+}
+
+proc image_name2sp {name} {
+     global rel_sp
+     if {![llength $rel_sp]} {return 0}
+     foreach i $rel_sp {
+     if {[lindex $i 1] == $name} {return [concat 1 $i]}
+     }
+     return 0
+}
+
+proc image_addspoint {} {
+     global rel_cp ent_curx ent_cury rel_cpid rel_sp rel_cpx rel_cpy
+
+     if {![string length $rel_cp]} {return}
+     if {![string length $ent_curx]} {return}
+     if {![string length $ent_cury]} {return}
+     
+     #if point exists
+     if {[lindex [image_name2sp $rel_cp] 0]} {
+        tk_dialog .txtdialog Error "Point $rel_cp already exists." error 0 Ok
+        return
+     }
+     
+     set c .wn.img
+     set x0 [expr $ent_curx - 5]
+     set y0 [expr $ent_cury - 5]
+     set x1 [expr $ent_curx + 3]
+     set y1 [expr $ent_cury + 3]
+     set ID [$c create oval $x0 $y0 $x1 $y1 -outline red -fill red \
+             -width 1 -tags spoint]
+     $c bind $ID <Enter> image_spointEnter
+     $c bind $ID <Leave> image_spointLeave
+     $c bind $ID <1> "image_spointClick $ID"
+     $c bind $ID <Shift-1> "image_Click %x %y"
+     set rel_sp [concat $rel_sp "{$ID $rel_cp $ent_curx $ent_cury}"]
+     catch {incr rel_cp}
+     image_spointunselect 
+}
+
+proc image_delspoint {} {
+     global rel_cp rel_cpid rel_sp rel_cpx rel_cpy
+     
+     
+     set c [image_name2sp $rel_cp]
+     if {[lindex $c 0]} {set rel_cpid [lindex $c 1]} else {
+        if {![string length $rel_cpid]} {return}
+        }
+     
+     set c .wn.img
+     $c delete $rel_cpid
+     set c {}
+     foreach i $rel_sp {
+             if {[lindex $i 0] != $rel_cpid} {set c [concat $c "{$i}"]}
+     }      
+     set rel_sp $c
+     
+     image_spointunselect 
+}
+
+proc image_movespoint {} {
+     global rel_cp rel_cpid rel_sp rel_cpx rel_cpy ent_curx ent_cury
+
+     set c [image_name2sp $rel_cp]
+     if {[lindex $c 0]} {set rel_cpid [lindex $c 1]} else {
+        if {![string length $rel_cpid]} {return}
+        }
+	
+     set rel_cpx [lindex $c 3]
+     set rel_cpy [lindex $c 4]
+     
+     set c .wn.img
+     $c move $rel_cpid [expr $ent_curx - $rel_cpx] [expr $ent_cury - $rel_cpy]
+     
+     set c {}
+     foreach i $rel_sp {
+             if {[lindex $i 0] != $rel_cpid} {set c [concat $c "{$i}"]} else {
+	         set c [concat $c "{$rel_cpid $rel_cp $ent_curx $ent_cury}"]
+	     }
+     }      
+     set rel_sp $c
+     
+     image_spointunselect 
+}
+
+proc image_spointclear {} {
+     global rel_sp
+     set c .wn.img
+     $c delete spoint
+     set rel_sp {}
+}
+
+proc image_loadsetup {} {
+     global rel_cp ent_curx ent_cury
+     global rel_sp img_scale img_zoom
+     global abs_cx abs_cy abs_ox abs_oy
+     global ent_cal_p1x ent_cal_p1y ent_cal_p2x ent_cal_p2y ent_cal_dst
+
+     set types {
+         { {XThedit setup files}   {.xts} }
+         { {All Files }            * }
+         }
+
+     set filename [tk_getOpenFile -filetypes $types -initialdir . \
+                   -defaultextension ".xts"]
+
+     if {[string length $filename]} {
+        set f [open $filename]
+	gets $f line 
+	set img_zoom [lindex $line 1]
+	image_zoom
+	while {![eof $f]} {
+	      gets $f line
+	      case [lindex $line 0] {
+	        scale { set img_scale [lindex $line 1]
+	        }
+	        absolute { set abs_ox [lindex $line 1]
+		           set abs_oy [lindex $line 2]
+			   set abs_cx [lindex $line 3]
+			   set abs_cy [lindex $line 4]        
+	        }
+	        calibrate { set ent_cal_p1x [lindex $line 1]
+		            set ent_cal_p1y [lindex $line 2]
+		            set ent_cal_p2x [lindex $line 3]
+		            set ent_cal_p2y [lindex $line 4]
+		            set ent_cal_dst [lindex $line 5]
+	        }
+	        spoint { set rel_cp [lindex $line 1]
+	                 set ent_curx [lindex $line 2]
+	                 set ent_cury [lindex $line 3]
+	                 if {[string length $rel_cp]} {image_addspoint}
+	        }
+	      }
+	}
+	close $f
+     }
+}
+
+proc image_savesetup {} {
+     global rel_sp img_scale img_zoom
+     global abs_cx abs_cy abs_ox abs_oy
+     global ent_cal_p1x ent_cal_p1y ent_cal_p2x ent_cal_p2y ent_cal_dst
+
+     set types {
+         { {XThedit setup files}   {.xts} }
+         { {All Files }            * }
+         }
+
+     set filename [tk_getSaveFile -filetypes $types -initialdir . \
+                   -defaultextension ".xts"]
+     if {[string length $filename]} {
+        set f [open $filename w]
+	puts $f "zoom $img_zoom"
+	puts $f "scale $img_scale"
+	puts $f "absolute $abs_ox $abs_oy $abs_cx $abs_cy"
+	puts $f "calibrate $ent_cal_p1x $ent_cal_p1y $ent_cal_p2x $ent_cal_p2y $ent_cal_dst"
+        foreach i $rel_sp {
+                set o [concat [lindex $i 1] [lindex $i 2] [lindex $i 3]]
+	        puts $f "spoint $o"
+        }
+	close $f
+     }
+}
+
+proc image_spointunselect {} {
+     global rel_cp rel_cpid rel_cpx rel_cpy 
+     set rel_cpid ""
+     set rel_cpx ""
+     set rel_cpy ""
+     global rel_sp
+}
+
+proc image_spointEnter {} {
+.wn.img itemconfig current -fill yellow
+}
+
+proc image_spointLeave {} {
+.wn.img itemconfig current -fill red}
+
+
+proc image_setline {id} {
+     
+     global rel_from rel_to rel_fx rel_fy rel_tx rel_ty rel_dist rel_hold
+     global ins_id ins_lpcount ins_lltype ent_id ins_ltype
+     
+     set pp [image_id2sp $id]
+     set pn [lindex $pp 2]
+     set px [lindex $pp 3]
+     set py [lindex $pp 4]
+          
+     if {[lindex $pp 0] == 0} {return}
+     
+     if {![string length $rel_from]} {
+        set rel_from $pn
+	set rel_fx $px
+	set rel_fy $py
+	set rel_dist 0
+	set rel_hold 0
+	set ins_lpcount 0
+	set ins_lltype ""
+        set ins_ltype ""
+        if {$ins_id == 0} { .wn.txt insert insert " \[$pn\]"  
+                            event generate .wn.txt <KeyPress-space>
+	                    event generate .wn.txt <KeyPress-BackSpace>
+	}
+	update
+        return
+     }
+
+     if {![string length $rel_to]} {
+        set rel_to $pn
+	set rel_tx $px
+	set rel_ty $py
+        return
+     }
+     
+     if {$ins_id == 0} {.wn.txt insert insert " \[$rel_to\]"
+                         event generate .wn.txt <KeyPress-space>
+                         event generate .wn.txt <KeyPress-BackSpace>
+     }
+     set rel_from $rel_to
+     set rel_fx $rel_tx
+     set rel_fy $rel_ty
+     set rel_to $pn
+     set rel_tx $px
+     set rel_ty $py
+     update
+}
+
+proc image_shotwrite {} {
+     global rel_from rel_to
+     if {![string length $rel_from]} {return}
+     if {![string length $rel_to]} {return}
+     .wn.txt insert insert "\\shot $rel_from $rel_to\n"
+     event generate .wn.txt <KeyPress-space>
+     event generate .wn.txt <KeyPress-BackSpace>
+}
+
+proc image_endline {} {
+     global rel_from rel_to rel_fx rel_fy rel_tx rel_ty ent_id
+     
+     if {$ent_id == 3} {
+     global ins_lpcount ins_lltype ins_ltype
+     set ins_lpcount 0
+     set ins_lltype ""
+     set ins_ltype ""
+     .wn.txt insert insert "\n"
+     event generate .wn.txt <KeyPress-space>
+     event generate .wn.txt <KeyPress-BackSpace>
+     }
+
+     if {$ent_id != 4} {return}
+
+     if {![string length $rel_to]} {return}
+     .wn.txt insert insert " \[$rel_to\]\n"
+     event generate .wn.txt <KeyPress-space>
+     event generate .wn.txt <KeyPress-BackSpace>
+     set rel_from ""
+     set rel_to ""
+     set rel_dist 0
+     set rel_hold 0
+     update
+}
+
+proc image_spointClick {id} {
+     
+     global ent_id ent_curx ent_cury ins_id
+     global rel_id rel_cpx rel_cpy rel_cp rel_cpid
+     set c .wn.img
+     
+     case $ent_id {
+          2 { set me [image_id2sp $id]
+              if {[lindex $me 0]} {
+                 set rel_cpid [lindex $me 1]
+                 set rel_cp [lindex $me 2]
+	         set rel_cpx [lindex $me 3]
+	         set rel_cpy [lindex $me 4]
+	         set ent_curx $rel_cpx
+	         set ent_cury $rel_cpy
+	      }    
+          }
+	  4 {image_setline $id }	  
+     }
+}
+
+proc image_Click {x y} {
+
+     global ent_id ent_curx ent_cury ins_id ins_lpcount ins_lltype
+     global ins_ltype ins_trans
+     printcoord $x $y
+     
+     # get formated point coordinates
+     
+     case $ent_id {
+            4 { set crd [getrelative $ent_curx $ent_cury] }
+	    3 { set crd [getabsolute $ent_curx $ent_cury] }
+	    default {set crd ""}	    
+     }
+     
+     if {($ent_id == 3) || ($ent_id == 4)} {
+        if {![string length $crd]} {return}
+
+        # print point or line
+     
+        case $ins_id {
+               0 { if {$ins_lpcount > 0} {
+                      .wn.txt insert insert " $ins_trans"
+		      if {$ins_ltype != $ins_lltype} {
+		         .wn.txt insert insert " $ins_ltype"
+		         set ins_lltype $ins_ltype
+		      }      
+	           }
+                   incr ins_lpcount 
+	           .wn.txt insert insert " $crd"	   
+	       }
+	       1 {.wn.txt insert insert " $crd"}
+        }
+	event generate .wn.txt <KeyPress-space>
+	event generate .wn.txt <KeyPress-BackSpace>
+     }
+     
+     
+}
+###############################################################################
+# Entry procs
+###############################################################################
+
+proc entry_set {id} {
+     global ent_id
+     global ent_idtext
+     grid forget .wn.ent.fcal .wn.ent.frs .wn.ent.fas .wn.ent.frel .wn.ent.fabs
+     grid forget .wn.ent.ins
+     
+     case $id {
+     4 { set ent_id 4
+         set ent_idtext "relative"
+         grid .wn.ent.frel -in .wn.ent -row 2 -column 0 -columnspan 2 \
+              -sticky ew
+         grid .wn.ent.ins -in .wn.ent -row 3 -column 0 -columnspan 2 \
+              -sticky ew
+       }
+     3 { set ent_id 3
+         set ent_idtext "absolute"
+         grid .wn.ent.fabs -in .wn.ent -row 2 -column 0 -columnspan 2 \
+              -sticky ew
+         grid .wn.ent.ins -in .wn.ent -row 3 -column 0 -columnspan 2 \
+              -sticky ew
+       }
+     2 { set ent_id 2
+         set ent_idtext "relative setup"
+         grid .wn.ent.frs -in .wn.ent -row 2 -column 0 -columnspan 2 \
+              -sticky ew
+       }
+     1 { set ent_id 1
+         set ent_idtext "absolute setup"
+         grid .wn.ent.fas -in .wn.ent -row 2 -column 0 -columnspan 2 \
+              -sticky ew
+       }
+     default { set ent_id 0
+               set ent_idtext "calibration"
+	       grid .wn.ent.fcal -in .wn.ent -row 2 -column 0 -columnspan 2 \
+	            -sticky ew
+	     }
+     }
+}
+
+entry_set 0
+
+proc entry_calcscale {} {
+     global img_zoom
+     global img_scale
+     global ent_cal_zoom
+     global ent_cal_p1x
+     global ent_cal_p1y
+     global ent_cal_p2x
+     global ent_cal_p2y
+     global ent_cal_dst
+     set dist [distance $ent_cal_p1x $ent_cal_p1y $ent_cal_p2x $ent_cal_p2y]
+     set img_scale .0254
+     if {$dist != 0} {set img_scale [expr $ent_cal_dst/$dist]}
+     set ent_cal_zoom $img_zoom
+     update
+}
+
+entry_calcscale
+
+proc entry_zoom {} {
+     global img_zoom
+     
+     # zoom calibration points and recalculate img_scale
+     
+     global ent_cal_zoom ent_cal_p1x ent_cal_p1y ent_cal_p2x ent_cal_p2y
+     set factor [expr pow(2,($img_zoom - $ent_cal_zoom))]
+     set ent_cal_p1x [expr $factor * $ent_cal_p1x]
+     set ent_cal_p1y [expr $factor * $ent_cal_p1y]
+     set ent_cal_p2x [expr $factor * $ent_cal_p2x]
+     set ent_cal_p2y [expr $factor * $ent_cal_p2y]
+     entry_calcscale
+     
+     # zoo absolute origin points
+
+     global abs_zoom abs_ox abs_oy
+     set factor [expr pow(2,($img_zoom - $abs_zoom))]
+     set abs_ox [expr $factor * $abs_ox]
+     set abs_oy [expr $factor * $abs_oy]
+     set abs_zoom $img_zoom
+     
+     global rel_sp
+     global rel_fx rel_fy rel_tx rel_ty
+     set c {}
+     foreach i $rel_sp {
+             set id [lindex $i 0]
+	     set name [lindex $i 1]
+	     set x [lindex $i 2]
+	     set y [lindex $i 3]
+	     .wn.img move $id [expr ($factor-1) * $x] [expr ($factor-1) * $y]
+	     set x [expr $factor * $x]
+	     set y [expr $factor * $y]
+	     set c [concat $c "{$id $name $x $y}"]
+     }
+     set rel_sp $c
+     set rel_fx [expr $rel_fx * $factor]
+     set rel_fy [expr $rel_fy * $factor]
+     set rel_tx [expr $rel_tx * $factor]
+     set rel_ty [expr $rel_ty * $factor]
+
+}
+
+proc insertion_set {id} {
+     global ins_id
+     global ins_idtext
+     grid forget .wn.ent.ins.point .wn.ent.ins.line
+     
+     case $id {
+         1 { set ins_id 1
+	     set ins_idtext "point insertion"
+	     grid .wn.ent.ins.point -row 1 -in .wn.ent.ins -column 0 -sticky ew
+	   }
+	 default { set ins_id 0
+	           set ins_idtext "line insertion"
+	           grid .wn.ent.ins.line -row 1 -in .wn.ent.ins -column 0 \
+		        -sticky ew
+	         }     
+     }
+}
+
+proc entry_ltypechange {tl} {
+     global ins_ltype  
+     set m .wn.ent.ins.line.ltl.m
+     catch {destroy $m}
+     menu $m -tearoff 0
+     foreach i $tl {
+             set cm "set ins_ltype <$i>" 
+             $m add command -label $i -command $cm
+     }
+     set ins_ltype ""
+}
+
+entry_ltypechange [lindex [lindex $ent_lines 0] 1] 
+
+insertion_set 0
+
+###############################################################################
+# Text procs
+###############################################################################
+
+proc text_changed {} {
+     global txt_fstatus
+     global txt_fstatusl
+     if {$txt_fstatus == 1} {return}
+     if {[string length [.wn.txt get 0.0 end]] != $txt_fstatusl} {
+         set txt_fstatus 1
+     }
+}
+
+proc text_read {} {
+     global txt_fname
+     global txt_fstatus
+     .wn.txt delete 0.0 end;
+     if {![string length $txt_fname]} {return}
+     set f [open $txt_fname]
+     while {![eof $f]} { 
+         .wn.txt insert end [read $f 8128]
+     }
+     close $f
+}
+
+proc text_new {} {
+     global txt_fname
+     if {![text_close]} {return}
+     set txt_fname ""
+     text_read
+     text_fstatus
+}
+
+proc text_openfile {} {
+     global txt_fname
+     if {![text_close]} {return}
+     set types {{{Therion data files} {.th}  }
+                {{Text files}         {.txt} }
+		{{All files}               * } 
+               }
+     set filename [tk_getOpenFile -filetypes $types -initialdir . \
+                   -defaultextension ".th"]
+     if {[string length $filename]} { set txt_fname $filename
+                                      text_read
+                                      text_fstatus
+				      text_setfocus
+                                    }
+}
+
+proc text_write {} {
+     global txt_fname
+     global txt_fstatus
+     if {![string length $txt_fname]} {return 0}
+     set f [open $txt_fname w]
+     set txt [.wn.txt get 0.0 end]
+     puts -nonewline $f [string range $txt 0 [expr [string length $txt] - 2]]
+     close $f
+     text_fstatus
+}
+
+proc text_save {} {
+     global txt_fname
+     if {![string length $txt_fname]} then {return [text_savefile]} else {text_write}
+     return 1
+}
+
+proc text_savefile {} {
+     global txt_fname
+     set types {{{Therion data files} {.th}  }
+                {{Text files}         {.txt} }
+		{{All files}               * } 
+               }
+     set filename [tk_getSaveFile -filetypes $types -initialdir . \
+                   -defaultextension ".th"]
+     if {![string length $filename]} {return 0}
+     set txt_fname $filename
+     text_write		   
+     return 1
+}
+
+proc text_close {} {
+     global txt_fname
+     global txt_fstatus
+     set i 1
+     if {$txt_fstatus > 0} {
+        set i [tk_dialog .txtdialog Warning "File $txt_fname was changed. Save?" \
+	       warning 0 Yes No Cancel]
+     }
+     case $i {
+     0 {if {[text_save]} then {return 1} else {
+           return 0}
+       }	     
+     1 {return 1}
+     default {return 0}
+     }
+}
+
+proc text_fstatus {} {
+     global txt_fstatusl
+     global txt_fstatus
+     global txt_fname
+     set txt_fstatus 0
+     set txt_fstatusl [string length [.wn.txt get 0.0 end]] 
+     set fname ""
+     set flast [string last "/" $txt_fname]
+     if {$flast > -1} {
+        set fname [string range $txt_fname [expr $flast + 1] end]
+        set fname " $fname"
+     }
+     wm title . "xthedit$fname"
+}
+
+proc text_setfocus {} {
+     focus .wn.txt
+}
+
+text_setfocus
+text_fstatus
+
+###############################################################################
+# Global editor procs
+###############################################################################
+
+proc edit_exit {} {
+     if {[text_close]} {destroy .}
+     return 0
+}
+
+#########################################
+# System dependend bindings
+
+case $tcl_platform(platform) {
+     unix { 
+            bind .wn.txt <Control-v> {event generate .wn.txt <Control-y>}
+          }
+     windows { 
+             }
+     macintosh {
+               }
+}

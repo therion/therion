@@ -53,3 +53,5 @@ for $i (@pictures) {
     unlink $oldfile;
 }
 print STDERR "\n";
+
+0;

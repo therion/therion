@@ -1,7 +1,8 @@
 #!/bin/sh
 
-thimp data.th
+thimp stiavn.th
 cavern th__data.svx
 mpexp
 mpp th__data.mp
 makeeps th__data
+exit 0

@@ -1,0 +1,122 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<title>Analýza projektu</title>
+</head>
+<body bgcolor="#FFFFFF">
+<h1 align="center"> Analýza projektu </h1>
+<h2>1. Špecifikácia cieľov</h2>
+<ul>
+<li> <b>databáza údajov</b> - všetky údaje získané pri meraní jaskýň a ich
+	dokumentácii prehľadne uložené vo vstupných súboroch. Takisto možnosť
+	použiť ako vstupné dáta akékoľvek údaje v počítači (databázu,
+	databázový súbor, súbory s obrázkami).
+<li> <b>prezenácia údajov</b> - možnosť exportovať zadané údaje v upravenej forme (HTML, TeX, PDF, TXT)
+<li> <b>dvojrozmerné mapy</b> - pôdorys, bokorys, rozvinutý rez. K mapovým
+	objektom existujú linky a odkazy, takže pomocou prezerača sa dá dostať
+	aj k ostatným údajom, týkajúcich sa daných objektov.
+<li> <b>trojrozmerný model</b> - trojrozmerný model chodieb jaskyne. Model takisto obsahuje aj iné objekty okrem chodieb. Tie sú takisto prelinkované s údajmi o nich a pomocou prezerača je možnosť ich zobraziť.
+<li> <b>export</b> - výstup dát (mapy, trojrozmerný model, údaje o objektoch) do iných enginov. Jedná sa hlavne o vytvorenie relačnej databázy v SQL formáte, ďalej o export dát do VTK pre ďalšiu analýzu ako aj export údajov do formátov používaných v neštandardných programoch (M$ Office).
+</ul>
+<h2>2. Hrubá štruktúra objektov</h2>
+<p>Základnou štruktúrnou jednotkou v dátach je SURVEY (Meranie). Tieto tvoria stromovú štruktúru na ktorú sa viažu všetky dáta. Každý dátový objekt musí patriť do nejakého merania a v danom meraní má jedinečný názov medzi objektami svojej triedy.</p>
+<p>V každom meraní sa objekty dajú roztriediť viac menej do nasledovných skupín:</p><ul>
+<li><b>dátové objekty</b> - objekty bez priestorovej reprezentácie (polygon, photo, entrance_data). Obsahujú údaje, ktpré sú prilinkované k iným objektom. 
+<li><b>všeobecné objekty</b> - objekty ktoré majú svoju presnú polohu v priestore a takisto aj priestorovú reprezentáciu (entrance, vzrka, klimatické pozorovanie, vrt).
+Tieto objekty sú automaticky vkladané do 2d aj 3d máp. Obyčajne majú k sebe prilinkované dátové objekty, ktoré ich presnejšie popisujú.
+<p>Ich špecifickou súčasťou sú <b>chodby</b> (passage), ktoré sú zadávané v samostatnej sekcii a rekonštruované z rezov.
+<li><b>mapové bloky</b> - sú to ucelené časti chodieb, koré sa skladajú z <b>mapových objektov</b>.
+Tieto objekty majú takisto svoju reprezentáciu aj v 3d priestore, ale do priestorových máp nie sú automaticky vkladané. Niektoré z nich tvoria len akoby 2d reprezentáciu všeobecných 3d objektov a sú k nim priamo prilinkované.
+(Napr symbol klimatického pozorovania ktorý je kvôli prehladnosti mimo chodby, hoci objekt tohto pozorovania sa nachádza priamo v chodbe.)
+<li><b>rezy</b> - tvoria prechod medzi 2d a 3d. Sú to takisto mapové bloky, ale zadané sú v lokálnych súradniciach. Možno ich vložiť do 2d mapy, alebo z nich rekonštruovať 3d povrch chodby. 
+</ul>
+<p> Každému z objektov, ktorý má svoju priestorovú reprezentáciu sú ešte priradené vrstvy, v ktorých leží. <b>Vrstva</b> (layer) nie je skutočný objekt. Je to len abstraktná konštrukcia, ktorá pomáha pri tvorbe výslednej mapy alebo modelu vyselektovať objekty, ktoré pôjdu do zobrazenia. Základným nástrojom selekcie sú však merania a bloky.
+</p>
+<h2>3. Štruktúra vstupných dát</h2>
+<p> Hlavným zdrojom vstupných údajov (aspoň pre jaskyne) je textový súbor. Pri použití iných zdrojov, ako sú napr. databáza alebo iné programy prebieha vkladanie dát cez textový stream, ktorý má úplne rovnakú syntax.
+<p> Príkazy textového súboru majú štandardnú syntax. Najprv ide názov príkazu, za ním povinný počet parametrov a potom jednotlivé prepínače.
+Znakmi '#' sú v súboroch vyznačené komentáre.
+Pomocou príkazu <b>include</b> sa na dané miesto v súbore vloží iný súbor, čo umožňuje mať aj pomerne rozsiahle dáta uložené prehľadne vo viacerých súboroch v danej adresárovej štruktúre. Samostatným príkazom je <b>encoding</b>, ktorého parametrom je kódová stránka, v ktorej je daný súbor napísaný. 
+Všetky ostatné riadny sú považované za príkazy. Ak v danom kontexte je daný príkaz neznámy, riadok sa považuje za dátový riadok. (Takisto ak riadok začína znakom '\'.)
+<p> Základnou štruktúrnou jednotkou aj v súboroch je <b>survey</b>. Každé sa začína príkazom <tt>survey</tt> a končí príkazom <tt>endsurvey</tt>. Tieto môžu byť do seba vnorené.
+V každom meraní sa potom už definujú jednotlivé objekty. V závislosti od objektu sú definované samostatne (polygon, passage) alebo v nejakom kontexte (map).
+<h2>4. Štruktúra spracovania</h2>
+<p> Na spracovanie údajov budú slúžiť skripty a programy napísané použitím dvoch základných knižníc. Jednej Perlovskej, určenej na spracovanie vstupných textov a druhej npísanej v C++ a určenej na konkrétne spracovanie objektov. Postup spracovania by sa dal zhrnúť v nasledovných bodoch:
+</p>
+<ol>
+<li> vstup: textové súbory, databáza, iné programy, iné súbory
+<li> čítací skript (Perl): jeden upravený textový súbor
+<li> skript na načítanie objektov (Perl): predkompilovaný súbor
+<li> vyrovnávací skript (Perl) - načítanie polygónu, vyrovnanie (nepovinné),
+     vloženie súradníc meračských bodov do predkompilovaného súboru:
+     upravený predkompilovaný súbor
+<li> spracovávací program (C++): binárny súbor obsahujúci všetky údaje
+<li> exporter (C++): export do výstupných súborov (HTML, TeX, VTK)
+<li> rozšírené spracovanie (C++, Perl, Tcl, ...)
+</ol>
+<h2>5. Spracovávacie moduly</h2>
+<ol>
+<li><b>Modul na spracovanie textového súboru</b>
+    <ul>
+    <li> odstránenie komentárov
+    <li> povkladanie súborov
+    <li> zlúčenie dlhých riadkov
+    <li> vytvorenie jedného vstupného súboru
+    <li> vytvorenie paralelného súboru so zdrojovýmy atribútmi (typ zdroja, adresár, zdrojový súbor, kódovanie národných znakov ...)
+    </ul>
+<li><b>Moduly na spracovanie objektov</b>
+    <ul>
+    <li> vytvorenie kontextu meraní (hash survey - id)
+    <li> kontextové spracovanie príkazov a vytvorenie objektov
+    <li> transformačné funkcie
+    <li> kontrola syntaxe parametrov prepínačov
+    </ul>
+<li><b>Vyrovnávací modul</b>
+    <ul>
+    <li> načítanie polygónu
+    <li> export pre vyrovnávací program
+    <li> načítanie vyrovnaných súradníc
+    <li> pripísanie do predkompilovaného súboru
+    </ul>
+</ol>
+<h2>6. Objektová knižnica </h2>
+<p>Táto bude budovaná podľa vzoru VTK. Základné triedy budú mať zhruba rovnaké
+   vlastnosti a takisto aj práca s nimi bude podobná. Základné triedy sú
+   nasledovné:
+<ul> 
+<li> <b>thDataObject</b> - trieda ktorej potomkovia budú dátovými triedami. Obsahuje objekty bez priestorovej reprezentácie aj s ňou. Objekty s priestorovou reprezentáciou budú potomkami tried <b>thPoint, thPolyLine, thPolygon, thMesh</b>.
+Objekty bez nej budú napr. <b>thSurvey, thMapBlock, thPhoto, thEntranceData</b>.
+<li> <b>thDataSet</b> - trieda ktorej potomkovia budú združovať dátové objekty do štruktúr, ktoré sa už budú konkrétnym spôsobom spracovávať.
+Momentálne sa predpokladá iba jeden potomok, a to <b>thCaveSurveyData</b>.
+Je ale pravdepodobné, že pri ďalšom spracovaní bude treba vytvoriť aj iné triedy tohto typu, slúžiace napríklad na nastavenie viditeľností, farieb alebo spôsbov reprezentácie.
+<li> <b>thProcessObject</b> - trieda združujúca všetky objekty a filtre ktoré prevádzajú konkrétne spracovanie alebo io operácie nad dátami.
+</ul>
+<h2>7. Dátové objekty</h2>
+<p>Základnou vlastnosťou všetkých dátových objektov je ich vzájomná
+previazanosť. Ku tomu sú prispôsobené aj vlastnosti a metódy ich tried.
+Na identifikáciu konkrétneho objektu by mali slúžiť tieto jeho vlastnosti:
+<ol>
+<li><b>typ objektu</b> - id triedy tohto objektu, takisto aj id všetkých tried,
+ktorých je potomkom, aby sa na jeho prípadné spracovanie mohli použiť
+algoritmy, ktoré vedia pracovať len z niššími triedami.
+<li><b>id objektu</b> - konkrétne a jedinečné id objektu medzi všetkými
+objektami (resp. objektami danej triedy ?). Toto je potrebné pri ukladaní a načítavaní súborov, keby pointerové odkazy musia byť transformované na číselné a opačne.
+<li><b>meno objektu</b> - nepovinné, ale užitočné zadať hlavne pri dôležitých objektoch.
+Výber objektov sa totiž bude robiť práve pomocou tohto mena a takisto aj
+linkovanie navzájom sa bude zadávať menovým odkazom. Toto meno musí byť jedinečné medzi objektami danej triedy a v danom meraní. Odkazovanie potom funguje nasledovne: meno_triedy:meno_objektu[@meno_merania[.meno_merania[...]]].
+<li><b>zoznam vrstiev</b> - nepovinné, ale takisto užitočné. Uľahčuje to výber objektov pre výstup.
+</ol>
+<p> Vlastnosťou objektu bude aj zoznam odkazov na prilinkované obkjekty. Prilinkovať k objektu možno akýkoľvek iný objekt.
+Pomocou špeciálnych objektov ako sú napr. <b>thExtURL</b>, <b>thExtFile</b>,
+<b>thExtDBRecord</b> možno k objektom prilinkovať aj konkrétnu URL, externý súbor alebo záznam v databáze.
+<p> Okrem tohto voľného linkovania môžu existovať aj iné stupne náväznosti na iné objekty.
+Napr. konkrétne klimatické pozorovanie ako priestorový objekt reprezentovaný
+bodom obsahuje v sebe zoznam dát z týchto pozorovaní. (Na jednom mieste sa robili pozorovania vo viacerých časoch).
+Tieto ale nie sú obsiahnuté v zozname prilinkovaných objektov, ale
+v samostatnom zozname, lebo to vyžaduje ich spracovanie. Práve kvôli takýmto prípadom obsahujú metódy na získanie údajov o linkovaných objektoch aj parameter
+<b>link_level</b>, ktorý hovorí o stupni náveznosti linkov ktoré berieme
+do úvahy pri týchto metódach. Obsluha voľných linkov je riešená v triede
+<b>thDataObject</b>, metódy v jej potomkoch sú potom príslušným spôsobom
+predefinované, aby vracali aj iné ako voľne prilinkované objekty.
+</body>
+</html>

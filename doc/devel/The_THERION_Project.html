@@ -1,0 +1,392 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<title>The THERION Project</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1 align="center">Projekt THERION </h1>
+
+<h2>Základná filozofia:</h2>
+
+<p>Celý systém je predovšetkým určený na komplexné
+spravovanie a spracovanie rôznych údajov získaných z jaskýň
+pri ich prieskume. Takisto sa predpokladá jeho použitie aj pri
+iných činnostiach súvisiacich s prácou v podzemí, ako je
+spracovanie banských diel, ložísk, skládok a podobne.</p>
+
+<p><b>Ako vstupné údaje pre program slúžia:</b></p>
+
+<ul>
+    <li>meračské údaje získané štandardnými geodetickými
+        metódami</li>
+    <li>mapové podklady (obyčajne odvíjajúce sa z týchto
+        meraní)</li>
+    <li>analýzy a pozorovania rôznych druhov (geologické,
+        geochemické, geofyzikálne, mikroklimatické,
+        archeologické) vzťahujúce sa na zamerané objekty</li>
+    <li>rôzny iný dokumentačný materiál (fotografie, popisy,
+        audiovizuálne záznamy)</li>
+</ul>
+
+<p><b>Výstupom z programu má byť predovšetkým:</b></p>
+
+<ul>
+    <li>trojrozmerný model jaskyne (bane, ložiska, ...) s
+        možnostou adekvátneho zobrazenia čo najväcšieho
+        počtu zadaných údajov</li>
+    <li>presná a podrobná dvojrozmerná mapa dokumentačného
+        chrakteru</li>
+    <li>výsledky prieskumu vo forme prehľadných tabuliek a
+        formulárov </li>
+    <li>relačná databáza všetkých zadaných údajov určená
+        na ďalšie spracovanie</li>
+</ul>
+
+<p>Program samotný je navrhnutý ako obiektovo orientovaná
+knižnica. Takáto štruktúra je totiž prehľadná a ľahko
+rozšíriteľná. Aby sa neprogramovali veci, ktoré už
+naprogramované sú a takisto aby program nebol závislý na
+použitej počítačovej platforme, celý program bude
+naprogramovaný v nasledovných jazykoch a za použitia týchto
+programov:</p>
+
+<dl>
+    <dt><strong>1. C++</strong></dt>
+    <dd>V ňom bude naprogramované samotné jadro programu, teda
+        objektová knižnica potrebná na základné spracovanie
+        dát. Takisto aj niektoré jednoduché aplikácie, ktoré
+        toto spracovanie pomocou tejto knižnice prevedú. Táto
+        knižnica však bude otvorená aj pre programovanie v
+        skriptovacích jazykoch (hlavne Perl a Tcl/Tk).</dd>
+    <dt><strong>1. Perl </strong></dt>
+    <dd>V ňom bude naprogramovaný systém skriptov, ktoré
+        budú konvertovať dáta z rôznych formátov do
+        vnútorného formátu systému, a takisto skripty, ktoré
+        spracované dáta budú exportovať naspäť. Ďalej v
+        ňom budú naprogramované aj niektoré náročnejšie
+        spracovávacie skripty (hlavne na textové vstupy),
+        ktoré budú používať hore uvedenú objektovú
+        knižnicu. Perl sa použije aj ako skriptovací jazyk na
+        prepojenie s ostatnými programami. </dd>
+    <dt><strong>3. VTK </strong></dt>
+    <dd>Táto knižnica bude slúžit predovšetkým na
+        interpretáciu a spracovanie základných trojrozmerných
+        modelov. Ovládaná bude pomocou Tcl/Tk. </dd>
+    <dt><strong>4. T</strong><font size="4"><sub><strong>E</strong></sub></font><strong>X
+        </strong></dt>
+    <dd>Použije sa tak na dvojrozmerné mapy a grafy, ako aj
+        všetky prezentačné textové a tabuľkové výstupy z
+        programu. Všetky výstupy z neho budú v PostScripte. </dd>
+    <dt><strong>5. SQL </strong></dt>
+    <dd>Jazyk na databázové aplikácie nad systémom, ktoré
+        budú bežat na nejakom SQL serveri. Tieto aplikácie
+        budú ovládané pomocou Tcl/Tk, alebo HTML v závislosti
+        od toho, odkiaľ bude užívateľ k systému
+        pristupovať.</dd>
+    <dt><strong>6. Tcl/Tk </strong></dt>
+    <dd>V tomto jazyku bude naprogramovaný celý základný
+        grafický užívateľský interface. Ten bude zahŕňať
+        formuláre na zadávanie objektov (napr. meraní, analýz
+        popr. mapové vstupy), formuláre na ovládanie
+        spracovania údajov a takisto aj na nastavenie všetkých
+        parametrov a samotné prevedenie exportu.</dd>
+    <dt><strong>7. HTML </strong></dt>
+    <dd>Okrem výstupných dokumentov pre internet, bude tento
+        jazyk slúžiť aj na naprogramovanie užívateľského
+        interface, pre užívateľov pristupujúcich k systému
+        prostredníctvom internetu. </dd>
+</dl>
+
+<p>Takisto sa v nevylučuje ani použitie iných programov a
+programovacích jazykov, ktoré s danými dokážu spolupracovat.</p>
+
+<h2>Štruktúra systému:</h2>
+
+<p>Systém je koncipovaný ako objektová knižnica. Samotné
+programy sú obyčajne už len malými skriptami, ktoré tieto
+objekty prepájajú. Základná štruktúra tried objektov je
+nasledovná:</p>
+
+<dl>
+    <dt><code><strong>data_object</strong></code></dt>
+    <dd>Všetci potomkovia tejto triedy sú základné dátové
+        štruktúry, ktoré sú súčasťou väčších
+        dátových objektov. Sú klasifikované podľa
+        priestorovej zložitosti od najjednoduchších
+        (abstraktný objekt, bod) až po najzložitejšie
+        (trojrozmerný povrch). Navzájom sú medzi sebou
+        zviazané nasledovne: čiara (<code>polyline</code>) sa
+        skladá z bodov, <code>polygon</code> sa skladá z čiar
+        a povrch sa skladá z polygónov. Každý z nich (resp. z
+        ich potomkov) reprezentuje nejakú skutočnú entitu,
+        ktorej je práve objekt jeho typu najvhodnejšou
+        reprezentáciou. Tak napríklad reprezentáciou skaly,
+        kvapľa alebo vzorky je bod; reprezentáciou vrtu alebo
+        meračského polygónu je čiara (<code>polyline</code>);
+        reprezentáciou chodby, štôlne alebo jazera (v 2D mape)
+        je <code>polygon</code> (uzavretý mnohouholník), a
+        reprezentáciou 3D chodby, štôlne alebo geologického
+        telesa je jeho trojrozmerný povrch (<code>surface</code>).
+        Štruktúra týchto objektov ďalej umožňuje k tejto
+        základnej reprezentácii priradiť ľubovoľné
+        rozširujúce vlastnosti. Napríklad pre bod ktorý
+        reprezentuje odobratú geologickú vzorku, priradiť jej
+        chemické zloženie, petrografický rozbor alebo druh
+        vzorky. Čiare ktorá reprezentuje meračský ťah,
+        priradiť mená meračov alebo presnosť použitej
+        metódy. 3D povrchu, ktorý reprezentuje napr. dóm v
+        jaskyni priradiť fotografiu uloženú v externom súbore
+        alebo báseň ktorú na počesť jeho objavenia napísali
+        jeho objavitelia.</dd>
+    <dd>&nbsp;</dd>
+    <dt><code><strong>data_set</strong></code></dt>
+    <dd>Potomkovia tejto triedy sú objekty, ktoré v sebe
+        obsahujú vzájomne prepojené štruktúry dátových
+        objektov (<code>data_object</code>). Slúžia ako
+        vstupné údaje pre všetky objekty, ktoré s dátami
+        pracujú. Táto trieda momentálne obsahuje dve
+        podtriedy. Prvou sú meračské dáta (<code>survey_data</code>),
+        ktoré slúžia na spravovanie všetkých údajov,
+        súvisiacich so samotným meraním jaskyne. Druhou sú
+        mapové dáta (<code>plot_data</code>), ktoré v sebe
+        zahŕňajú všetky údaje, ktoré sa použijú na
+        výstup.</dd>
+    <dt>&nbsp;</dt>
+    <dt><code><strong>data_set_io_filter</strong></code></dt>
+    <dd>Všetky objekty tejto triedy slúžia ako vstupné alebo
+        výstupné objekty. Trieda <code>data_importer</code> má
+        za úlohu načítať príslušné dáta z rôznych
+        formátov. Jej výstupom je objekt triedy <code>data_set</code>.
+        Naopak trieda exporter má za úlohu vstupný dátový
+        objekt vypísať do ľubovoľného podporovaného
+        formátu. Na načítanie a vypísanie dátových
+        štruktúr prislúchajúcich samotnému programu slúžia
+        triedy <code>data_reader</code> a <code>data_writer</code>.
+        Vnútorný formát systému je binárne textový, aby
+        boli tieto súbory prenositeľné a kompatibilné medzi
+        jednotlivými verziami tohto systému. Formát, v ktorom
+        sa budú samotné údaje zadávať nie je považovaný za
+        súčasť systému. Preto na spracovanie vstupných
+        súborov budú slúžiť objekty triedy <code>data_importer</code>
+        a nie <code>data_rader</code>. Takto je to riešené z
+        toho dôvodu, že nijaký univerzálny jazyk ktorý by
+        danú problematiku kompletne popisoval neexistuje, a
+        navyše každý užívateľ má o zadávaní dát
+        vlastnú predstavu. Keďže vzhľadom na štruktúru
+        systému, nie je problém priprogramovať <code>data_importer</code>
+        na akýkoľvek (nami obľúbený) formát, nemá zmysel
+        sa na niečo obmedzovať. Okrem toho sa pri zadávaní
+        údajov predpokladá existencia mnohých textových
+        predprocesorov a generátorov vstupných súborov
+        (naprogramovaných aj v skriptovacích jazykoch), ako je
+        to pri systémoch tohto druhu zvykom.</dd>
+    <dt>&nbsp;</dt>
+    <dt><code><strong>data_set_process_filter</strong></code></dt>
+    <dd>Táto trieda objektov obsahuje samotné spracovávacie
+        algoritmy, ktoré sa na dáta budú aplikovať. Jej
+        potomkovia sa delia podľa toho, aké triedy dát (<code>data_set</code>)
+        spracúvajú, a aké triedy dát sú ich výstupom.
+        Momentálne obsahuje tri podtriedy. Prvá (<code>survey_data_filter</code>)
+        obsahuje objekty na spracovanie meračských dát
+        (nájdenie okruhov, ich vyrovnanie, výpočet súradníc
+        meračských bodov a pod.), druhá (<code>survey2plot_data_filter</code>)
+        prevedie meračské dáta na dáta za zobrazenie (teda
+        napr. zámeru prevedie na čiaru, meračský bod na bod a
+        pod.) a posledná slúži na vnútorné spracovanie
+        výstupových údajov (rekonštrukci 3D povrchu zo
+        zadaných rezov, základná štatistika, rekonštrukcia
+        hraníc blokov zo zadaných stien a pod.).</dd>
+</dl>
+
+<p>Jedným z cieľov systému je aj spracovanie všetkých
+dostupných údajov, ktoré boli v jaskyni namerané, pozorované
+alebo inak zistené. K riešeniu tejto problematiky je vo
+všeobecnosti možné postupovať dvoma spôsobmi. Prvý je
+vytvoriť pre užívateľa niekoľko základných univerzálnych
+objektov (ako sú v našom prípade bod, čiara, povrch a pod.) a
+pri nich mu dať úplnú voľnosť zádavania čohokoľvek a
+kdekoľvek. Druhý spôsob je vytvorenie pomerne zložitej a
+komplikovanej štruktúry objektov, z ktorých každý je viac
+menej jednoúčelový. Tento systém je priklonený viac k tejto
+druhej, ako tej prvej možnosti (aj keď možnosť nadefinovať
+akúkoľvek vlastnosť akémukoľvek objektu zostáva). Dôvody
+pre takéto riešenie sú nasledovné:</p>
+
+<ol>
+    <li>Hlavný dôvod prečo je to tak je <strong>systematizácia
+        prieskumu</strong>. Ide tu o to, že keď sa v jaskyni
+        ide robiť seriózny a systematický výskum na niečo
+        (výskyt netopierov, rozbor sedimentov, klimatológia a
+        pod.) vždy sa vytvorí najprv určitá metodika, ktorej
+        súčasťou sú formuláre na zbieranie údajov. Tieto sa
+        pri prieskume postupne vypĺňajú a nakoniec sa potom
+        vložia do počítača. Na spracovanie takýchto údajov
+        je však potom konkrátny objekt (napr. triedy
+        klimatologické pozorovanie) omnoho vhodnejší, ako
+        univerzálny objekt (v ktorom by napríklad boli ako
+        vlastnosti teplota vzduchu, vlhkosť, rýchlosť a smer
+        vetra a pod.).</li>
+    <li>Takto koncipovaná knižnica je omnoho menej náročná
+        na použitie pamäte. Ide o to, že keď majú objekty
+        konkrétne popísané vlastnosti, stačí ich štruktúru
+        mať uloženú iba raz (prostredníctvo definície
+        triedy), a všetky konkrétne objekty už obsahujú len
+        konkrétne údaje. Keby sme však mali univerzálne
+        objekty, pri každej vlastnosti by musel byť uložený
+        ešte aj údaj čo je to, ktorý by mnohokrát bol omnoho
+        náročnejší na pamäť ako samotné dáta, ktoré by
+        obsahoval (napr. ak by sme skúmali výskyt bielej
+        škvrny na netopieroch, tak údaj by bol <tt>true</tt>,
+        ale popis k nemu by musel byť v štýle <tt>white_spot_on_bat</tt>).
+        Nevraviac už o tom, že pri takomto spôsobe ukladania
+        dát by sa údaje začali veľmi rýchlo miešať a len
+        veľmi ťažko by sa v nich udržiaval poriadok.</li>
+    <li>Jedným z cieľov výstupu je relačná databáza,
+        všetkých zadaných údajov. Pri všeobecne
+        koncipovaných objektoch, je zostavenie takejto databázy
+        veľmi náročná záležitosť, a ak sú užívatelia
+        neporiadni, môže to byť až neriešiteľné. Ak však
+        máme objekty z konkrétnymi vlastnosťami poriadne
+        zadefinované podľa všetkých pravidiel OOP, takýto
+        neporiadok systém ani neumožňuje. Nevraviac o tom, že
+        na zadávanie takýchto objektov sa dá potom veľmi
+        jednoducho pomocou Tcl/Tk vytvoriť užívateľský
+        interface, ktorý je nie len <em>user friendly</em> ale
+        aj veľmi jednoduchý.</li>
+    <li>Ďalšim z cieľov výstupu (a nie zanedbateľným) sú
+        prehľadné tabuľky a formuláre, ktoré daný prieskum
+        dokumentujú. Mnohé z nich sú už štandardizované
+        rôznymi normami a predpismi ktoré hovoria, ako majú
+        vyzerať. Pri všeobecne koncipovaných objektoch by ich
+        zostavovanie bolo veľmi náročné, práve pre túto
+        všeobecnosť. Naopak pri konkrétnych objektoch je to
+        úplne naopak, lebo tieto sa dajú vytvoriť práve na
+        základe týchto noriem, a tak sa užívateľ už môže
+        iba tešiť na parádne výstupy (T<font size="4"><sub>E</sub></font>X).</li>
+</ol>
+
+<p>Ďalší problém, ktorý pri vytváraní takejto štruktúry
+môže nastať je, že nie vždy je zrejmé, čo je
+najvhodnejšou reprezentáciou daného objektu. Napríklad
+reprezentáciou merania sklonu tektonickej vrstvy nemá byť čo
+iné ako bod, keďže tento sklon sa meria vždy v jednom mieste,
+na nejakom tektonickom zrkadle. Značka ktoá sa použije v mape
+alebo 3D modeli by už samozrejme mala byť orientovaná v tomto
+smere, ale stále je to údaj vzťahujúci sa na jeden bod. Pri
+chemickej analýze to však už také zrejmé byť nemusí.
+Chemická analýza geologickej vzorky má svoju presnú
+štruktúru a z labáku dostaneme vyplnený štandardný
+formulár. Je preto logické, že táto analýza bude jeden
+objekt. Na druhej strane však chemicky sa dá analyzovať vzorka
+odobratá z jedného miesta, nejaká metráž vo vrte, alebo
+sedimenty v jednej chodbe. V prvom prípade by potom ale
+najvhodnejšou reprezentáciou na chemickú vzorku bol bod, v
+druhom čiara a v treťom polygón alebo dokonca povrch. Rovnaký
+problém nastane aj vtedy, keď z jedného miesta odoberieme
+niekoľko vzoriek na rovnakú analýzu. kedy by zase dochádzalo
+k zbytočnej duplicite údajov. Čo robiť v takýchto prípadoch?
+Jediným rozumným riešením tu je vytvoriť objekt chemickej
+analýzy ako abstraktný. V každom konkrétnom prípade potom
+už iba vytvoriť jednoduchý objekt a ako jednu z jeho
+vlastností dať odkaz na prislúchajúcu chemickú analýzu.
+Takisto aj príslušnej chemickej analýze dať do vlastností
+odkaz na tento objekt.</p>
+
+<h2>Základný prehľad objektov:</h2>
+
+<ul>
+    <li><tt>data_object</tt><ul>
+            <li><tt>abstract</tt><ul>
+                    <li><tt>survey</tt></li>
+                    <li><tt>plot_plane</tt></li>
+                    <li><tt>block</tt></li>
+                    <li><tt>entrance</tt></li>
+                    <li><tt>survey_loop</tt></li>
+                    <li><tt>man</tt></li>
+                </ul>
+            </li>
+            <li><tt>point</tt><ul>
+                    <li><tt>survey_point</tt></li>
+                    <li><tt>point_fill</tt></li>
+                    <li><tt>point_analysis</tt></li>
+                </ul>
+            </li>
+            <li><tt>polyline</tt><ul>
+                    <li><tt>survey_shot</tt></li>
+                    <li><tt>passage_wall</tt></li>
+                    <li><tt>leap_line</tt></li>
+                    <li><tt>contour_line</tt></li>
+                    <li><tt>fill_border</tt></li>
+                    <li><tt>rock</tt></li>
+                </ul>
+            </li>
+            <li><tt>polygon</tt><ul>
+                    <li><tt>passage_profile</tt></li>
+                    <li><tt>block_fill</tt></li>
+                    <li><tt>polygon_fill</tt></li>
+                </ul>
+            </li>
+            <li><tt>surface</tt><ul>
+                    <li><tt>passage</tt></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<dir>
+    <li><tt>data_set </tt><ul>
+            <li><tt>survey_data</tt></li>
+            <li><tt>plot_data</tt></li>
+        </ul>
+    </li>
+    <li><tt>data_set_io_filter</tt> <ul>
+            <li><tt>data_reader </tt><ul>
+                    <li><tt>survey_data_reader </tt></li>
+                    <li><tt>plot_data_reader </tt></li>
+                </ul>
+            </li>
+            <li><tt>data_importer </tt><ul>
+                    <li><tt>XYZ_survey_data_importer </tt></li>
+                    <li><tt>XYZ_plot_data_importer </tt></li>
+                </ul>
+            </li>
+            <li><tt>data_writer </tt><ul>
+                    <li><tt>survey_data_writer </tt></li>
+                    <li><tt>plot_data_writer </tt></li>
+                </ul>
+            </li>
+            <li><tt>data_exporter </tt><ul>
+                    <li><tt>XYZ_survey_data_exporter </tt></li>
+                    <li><tt>XYZ_plot_data_exporter </tt></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li><tt>data_set_process_filter </tt><ul>
+            <li><tt>survey_data_filter </tt><ul>
+                    <li><tt>loop_finder </tt></li>
+                    <li><tt>loop_closer </tt></li>
+                    <li><tt>point_calculator </tt></li>
+                </ul>
+            </li>
+            <li><tt>survey2plot_data_filter </tt></li>
+            <li><tt>plot_data_filter </tt><ul>
+                    <li><tt>basic_survey_statistics </tt></li>
+                    <li><tt>passage_profiles_reconstruction </tt></li>
+                    <li><tt>block_fill_reconstruction</tt></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</dir>
+
+<p>Vzhľadom na to, že objektová štruktúra je stále v
+návrhu, nie je tento zoznam všetkých plánovaných objektov
+úplný. Objektová štruktúra bude obsahovať aj pomocné
+objekty, ktoré tu takisto nie sú spomenuté.</p>
+</body>
+</html>

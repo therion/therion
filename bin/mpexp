@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-$outscale = 200;
+$outscale = 250;
 
 $scale = 2834.645669 / $outscale;
 
@@ -77,7 +77,7 @@ sub get_line {
     while ($parc < @params) {
     my @ppp = split ';',$params[$parc];
     unless ($ppp[7] eq '-') {$ppp[7] = 90 - $ppp[7]; $outp .= "{dir $ppp[7]}"};
-    $outp .= get_point($params[$parc]);
+    $outp .= get_point($params[$parc]) . "\n";
     unless ($ppp[8] eq '-') {$ppp[8] = 90 - $ppp[8]; $outp .= "{dir $ppp[8]}"};
     if ((($parc + 1) < @params) || ($lcycle)) {$outp .= $ppp[9]};
     } continue {$parc++};
@@ -151,10 +151,10 @@ sub export_label {
     my $pnt = get_point shift @pars;
     my $azi = shift @pars;
     unless ($azi) {$azi = 0};
-    $azi = -$azi;
-    my $alg = shift @pars;
+    $azi = -$azi + 90;
+    my $alg = (shift @pars) || 'rt';
     my $txt = join ' ', @pars;
-    $block[$cblock][0] .= "\tlabel(btex $txt etex rotated $azi, $pnt);\n";
+    $block[$cblock][0] .= "\tlabel.$alg\(btex $txt etex rotated $azi, $pnt);\n";
 };
 
 sub export_title {
@@ -163,6 +163,66 @@ sub export_title {
     my $text = join ' : ', @pars;
     $block[$cblock][0] .= "\tFreetext(\"$text\", $path, \"csr10\", 1.8);\n";
 };
+
+
+sub transform_specargs {
+    my $tocmd = shift;
+    my @ppar = split /\s+/, shift;
+    my $cmdname = '';
+    if ($tocmd) {
+	$cmdname = shift @ppar;
+    };
+    my $args = '';
+    foreach my $param (@ppar) {
+        if ($param =~ /^\#d\#(\S+)/) {
+	    $param = $1 * $scale;
+	}
+	elsif ($param =~ /^\&p\&(\S+)/) {
+	    $param = $blines{$1};
+	};
+	$args .= "$param ";
+    };
+    return ($cmdname, $args);
+};
+
+sub export_specialpath {
+    my @pars = split /\s+\:\s+/, shift;
+    my $path = get_line shift @pars;
+    my $text = join ' : ', @pars;
+    my ($cmdname, $args) = &transform_specargs(1, $text);
+    my $wh = 0;
+    if ($cmdname =~ /\@(\S+)/) {
+        $wh = 5;
+	$cmdname = $1;
+    };
+    $block[$cblock][$wh] .= "\t$cmdname($path$args);\n";
+};
+
+sub export_specialpoint {
+    my @pars = split /\s+/, shift;
+    my $pnt = get_point shift @pars;
+    my $txt = join ' ', @pars;
+    my ($cmdname, $args) = &transform_specargs(1, $txt);
+    my $wh = 0;
+    if ($cmdname =~ /\@(\S+)/) {
+        $wh = 5;
+	$cmdname = $1;
+    };
+    $block[$cblock][$wh] .= "\t$cmdname($pnt$args);\n";
+};
+
+sub export_special {
+    my $txt = shift;
+    my ($cmdname, $args) = &transform_specargs(0, $txt);
+    my $wh = 0;
+    if ($args =~ /^\s*\@(.*)/) {
+        $wh = 5;
+	$args = $1;
+    };
+    $block[$cblock][$wh] .= "\t$args\n";
+};
+
+
 
 open EXPFILE, 'th__data.exp';
 $cblock = -1;
@@ -188,6 +248,9 @@ while ($line = <EXPFILE>) {
       if ($command eq 'polygon') {export_polygon $parameter};
       if ($command eq 'label') {export_label $parameter};
       if ($command eq 'title') {export_title $parameter};
+      if ($command eq 'specialpath') {export_specialpath $parameter};   
+      if ($command eq 'specialpoint') {export_specialpoint $parameter};   
+      if ($command eq 'special') {export_special $parameter};   
       };
 };
 close EXPFILE;

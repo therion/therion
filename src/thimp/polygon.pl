@@ -42,7 +42,7 @@ sub export_svx_equate {
     };
 
 sub export_survex {
-
+       
     ($polygon_data_trans_sub, $polygon_fix_trans_sub) =
     ('default::polydata_FTAIL_GGM','default::polyfix_PXYZ_MMM');
 

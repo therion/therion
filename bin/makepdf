@@ -1,0 +1,389 @@
+#!/usr/bin/perl -w
+
+use eps2pdf;
+
+$basename = shift;
+die "\nSpecify filename to process!\n\n" if not $basename;
+$basename =~ s/\.mp$//;
+
+&read_config;
+
+
+opendir DIR, ".";
+@epsfiles = grep {/^$basename\.\d+$/o and !/^$basename\.999$/o} readdir DIR;
+@extensions = grep {s/^$basename\.//o} @epsfiles;
+@extensions = sort @extensions;
+closedir DIR;
+
+print STDOUT "\nProcessing EPS files...\n";
+
+$auto = "xxxaaaa";
+$Auto = "aaaa";
+$fontid = "fffaaa";
+$pattid = "pppaaa";
+
+open(PDFTEX, ">th_formdef.tex") or die;
+
+print PDFTEX "\\newbox\\xxx\n";
+print_arrow_defs(PDFTEX);
+
+foreach $extension (@extensions) {
+    open(IN, "$basename.$extension") or die;
+    print STDOUT "+\n";
+    $Inbody = $Inpattern = 0; 
+
+  LINE: while(<IN>) {
+	chomp;
+    last LINE if /^showpage$/;
+	if (/^%%BoundingBox: (\S+) (\S+) (\S+) (\S+)/) {
+	    $llx = $1; $lly = $2; $urx = $3; $ury = $4;
+        &find_corners;    
+        $HS = coord($urx-$llx);
+        $VS = coord($ury-$lly);
+        print PDFTEX "%\n\\setbox\\xxx=\\hbox{\\vbox to${VS}bp{\\vfill\n";
+        next LINE;
+    }
+    if (/^%%Page: 1 1$/) {
+		$Inbody = 1;
+		next LINE;
+    }
+    next LINE if !$Inbody;
+    if (/^% Pattern:.+:/) {
+		$Inpattern = 1;
+        $curr_pattern = $';
+    }
+    if ($Inpattern and not exists $ALLPATTERNS{$curr_pattern}{"est"}) {
+        if (/BBox/) {$ALLPATTERNS{$curr_pattern}{BBox} = $'}
+        if (/XStep/) {$ALLPATTERNS{$curr_pattern}{XStep} = $'}
+        if (/YStep/) {$ALLPATTERNS{$curr_pattern}{YStep} = $'}
+        if (/makepattern/) {
+            $ALLPATTERNS{$curr_pattern}{Matrix} = $`;
+            $ALLPATTERNS{$curr_pattern}{ID} = $pattid;
+            $pattid++;
+        }
+        if (/PaintProc/) {$pattern_body = 1; next LINE;}
+        if (/>>/) {
+            $pattern_body = 0; 
+            $ALLPATTERNS{$curr_pattern}{Body} .= "\n$eps2pdf::prev_pdfline";
+            $eps2pdf::prev_pdfline = "";
+        }
+        $ALLPATTERNS{$curr_pattern}{Body} ||= "";
+        if ($pattern_body) {
+            $tmp = convert_line($_, 0, 0);
+            $ALLPATTERNS{$curr_pattern}{Body} .= "\n$tmp"  if $tmp;
+        }
+    } 
+    elsif (!$Inpattern) {
+        $tmp = convert_line($_, $llx, $lly); print PDFTEX "\\pdfliteral{$tmp}\n" if $tmp
+    }
+    if (/^\/.+ exch def$/) {
+    	$Inpattern = 0;
+        $FORM_PATTERNS{$curr_pattern} = 1;
+        $ALLPATTERNS{$curr_pattern}{"est"} = 1;
+	}
+  }              # end of loop
+
+    print PDFTEX "\\pdfliteral{$eps2pdf::prev_pdfline}\n";
+    if ($eps2pdf::intext) {                # ked je text posledny
+        print PDFTEX "\\pdfliteral{ET}\n";
+        $eps2pdf::intext = 0;
+    }
+
+    $eps2pdf::prev_pdfline = "";
+    print PDFTEX "}}\\wd\\xxx=${HS}bp\n";
+    &print_fonts_and_patterns;
+    $BLOCKS{$extension} = $auto;
+    $auto++;
+    %FONTS = ();
+    %FORM_PATTERNS = ();
+}
+close(IN);
+print "\n";
+
+print PDFTEX "%\n%   Complex pages follow\n";
+open(REF, ">references") or die;
+open(TEXIN, ">th_pages.tex") or die;
+
+
+$HS = coord($Hsize + 2*$Overlap);
+$VS = coord($Vsize + 2*$Overlap);
+
+for ($j=$max_y; $j>=$min_y; $j--) {
+    for ($i=$min_x; $i<=$max_x; $i++) {
+        $Maplist = "$i.$j";
+        if (exists $MAPLISTS{$Maplist}) {
+            $LISTNAME{$Maplist} = $Auto;
+            print REF "$Auto = sheet $Maplist\n"; 
+            print TEXIN "\\input $Auto\n";
+            $Auto++;
+        }
+    }
+}
+
+foreach $Maplist (keys %MAPLISTS) {
+    $L = &move_maplist($Maplist, -1, 0);
+    $R = &move_maplist($Maplist, 1, 0);
+    $U = &move_maplist($Maplist, 0, 1);
+    $D = &move_maplist($Maplist, 0, -1);
+    if (exists $MAPLISTS{$L}) {$JUMP{$Maplist}{L} = 1; $DEST{$L} = 1}
+    if (exists $MAPLISTS{$R}) {$JUMP{$Maplist}{R} = 1; $DEST{$R} = 1}
+    if (exists $MAPLISTS{$U}) {$JUMP{$Maplist}{U} = 1; $DEST{$U} = 1}
+    if (exists $MAPLISTS{$D}) {$JUMP{$Maplist}{D} = 1; $DEST{$D} = 1}
+}
+
+foreach $Maplist (keys %MAPLISTS) {
+    $L = &move_maplist($Maplist, -1, 0);
+    $R = &move_maplist($Maplist, 1, 0);
+    $U = &move_maplist($Maplist, 0, 1);
+    $D = &move_maplist($Maplist, 0, -1);
+
+    print PDFTEX "%\n\\setbox\\xxx=\\hbox to ${HS}bp{%\n";
+    print PDFTEX "\\pdfliteral{0.9 g 0 0 $HS $VS re f}%\n" if $background;
+    ($tmp = $MAPLISTS{"$Maplist"}) =~ s/^ //;
+    ($a, $b) = split /\./, $Maplist;
+    @UsedFiles = split / /, $tmp;		
+    foreach $File (@UsedFiles) {
+        ($xcoord, $ycoord) = split / /, $COORDS[$File];
+        $xcoord -= ($Hsize * $a + $Hoffset - $Overlap); $XC = coord($xcoord);
+        $ycoord -= ($Vsize * $b + $Voffset - $Overlap); $YC = coord($ycoord);
+        print PDFTEX "\\rlap{\\kern${XC}bp\\raise${YC}bp\\hbox{\\pdfrefxform\\$BLOCKS{$File}}}%\n";
+    }   
+    &print_grid; 
+    print PDFTEX "\\hfill}\\ht\\xxx=${VS}bp\\dp\\xxx=0bp\n";
+    print PDFTEX "\\pdfxform\\xxx\\newcount\\$LISTNAME{$Maplist} \\$LISTNAME{$Maplist}=\\pdflastxform\n";
+    print "*";
+    
+    open(PAGE, ">$LISTNAME{$Maplist}.tex");
+    if ($DEST{$Maplist}) {
+        print PAGE "\\pdfdest name {$LISTNAME{$Maplist}} xyz\n";
+    }
+    $half_hs = $HS/2;
+    $half_vs = $VS/2;
+    $link_shift = 10;
+    $hs_dim = $HS-$link_shift;
+    $vs_dim = $VS-$link_shift;
+    print PAGE "\\setbox\\xxx=\\hbox to ${HS}bp{%\n";
+    print PAGE "\\rlap{\\pdfrefxform\\$LISTNAME{$Maplist}}%\n";
+    if ($JUMP{$Maplist}{L}) {
+        print PAGE "\\link{$link_shift}{$half_vs}{\\linkLEFT}{$LISTNAME{$L}}%\n";
+    }
+    if ($JUMP{$Maplist}{R}) {
+        print PAGE "\\link{$hs_dim}{$half_vs}{\\linkRIGHT}{$LISTNAME{$R}}%\n";
+    }
+    if ($JUMP{$Maplist}{U}) {
+        print PAGE "\\link{$half_hs}{$vs_dim}{\\linkUP}{$LISTNAME{$U}}%\n";
+    }
+    if ($JUMP{$Maplist}{D}) {
+        print PAGE "\\link{$half_hs}{$link_shift}{\\linkDOWN}{$LISTNAME{$D}}%\n";
+    }
+    print PAGE "\\hfil}\\ht\\xxx=${VS}bp";
+    print PAGE "\\line{\\hfil\\box\\xxx\\hfil}\\eject\n";
+}
+close(PDFTEX); close(PAGE); print "\n";
+
+open(DEFIN, ">th_fontdef.tex");
+foreach $font(sort keys %ALLFONTS) {
+    print DEFIN "\\font\\$ALLFONTS{$font}=$font\n";
+}
+foreach $patt(sort keys %ALLPATTERNS) {
+    &print_pattern_defs;
+}
+close(DEFIN);
+
+#open(PAGE, ">>th_pages.tex") or die "pruser!!!!!!!!!!!";
+foreach $font(sort keys %eps2pdf::USEDCHARS) {
+#    print  "\\pdfincludechars\\$ALLFONTS{$font} {$eps2pdf::USEDCHARS{$font}}\n";
+    print TEXIN "{\\$ALLFONTS{$font} ";
+    for $i(0..255) {
+        if ($eps2pdf::USEDCHARS{$font}[$i]) {print TEXIN "\\char$i\\/";} 
+    }
+    print TEXIN "}\n";
+}
+close(TEXIN);
+
+
+########################################################################
+
+sub round ($) {			# round (0.1) = round (0.9) = 0
+    my $tmp = shift;		# round (-.1) = round (-.9) = -1
+    if ($tmp >= 0) {
+	return int($tmp);
+    }
+    else {
+	return int($tmp) - 1;
+    }
+}
+
+
+sub units ($) {
+    my $tmp = shift;
+    my ($Num, $Unit);
+    $tmp =~ /[a-z]+/;
+    $Num = $`; $Unit = $&;
+    $Num =~ s/ //g; $Unit =~ s/ //g;
+    if ($Unit eq "bp") {return $Num}			# PostScript points
+    elsif ($Unit eq "pt") {return ($Num * 72 / 72.27)}	# points
+    elsif ($Unit eq "pc") {return ($Num * 864 / 72.27)}	# picas
+    elsif ($Unit eq "in") {return ($Num * 72)}		# inches
+    elsif ($Unit eq "cm") {return ($Num * 72 / 2.54)}	
+    elsif ($Unit eq "mm") {return ($Num * 72 / 25.4)}
+    elsif ($Unit eq "dd") {return ($Num * 1.0660111)}	# Didot points
+    elsif ($Unit eq "cc") {return ($Num * 12.792133)}	# cicero = 12 dd
+    else {die "\nUnknown length unit in Config file!\n\n"}
+}
+
+sub read_config {
+    open(CONF, "Config") or die "\nCan't open Config file: $!\n\n";
+    while(<CONF>) {
+        chomp;
+        if (/^hsize:/i)	{$Hsize = units($')};
+        if (/^vsize:/i)	{$Vsize = units($')};
+        if (/^hoffset: */i) {if ($') {$Hoffset = units($')} else {$Hoffset = 0}};
+        if (/^voffset: */i) {if ($') {$Voffset = units($')} else {$Voffset = 0}};
+        if (/^overlap:/i) {$Overlap = units($')};
+        if (/^hgrid:/i)	{$Hgrid = units($')};
+        if (/^vgrid:/i)	{$Vgrid = units($')};
+        if (/^hgridoffset: */i) {if ($') {$Hgridoffset = units($')} else {$Hgridoffset = 0}};
+        if (/^vgridoffset: */i) {if ($') {$Vgridoffset = units($')} else {$Vgridoffset = 0}};
+        if (/^background: */i) {$background = $'}
+    }
+    die "\nConfig not correct\n\n" unless $Hsize * $Vsize;
+    close(CONF);
+}
+
+sub find_corners {
+    $Llx = round(($llx - $Overlap - $Hoffset) / $Hsize);
+    $Lly = round(($lly - $Overlap - $Voffset) / $Vsize);
+    $Urx = round(($urx + $Overlap - $Hoffset) / $Hsize);
+    $Ury = round(($ury + $Overlap - $Voffset) / $Vsize);
+    for ($i = $Llx; $i <= $Urx; $i++) {
+    	for ($j = $Lly; $j <= $Ury; $j++) {
+	        $MAPLISTS{"$i.$j"} .= " $extension";
+            $COORDS[$extension] = "$llx $lly";
+    	}
+    }
+    $min_x ||= $Llx;
+    $max_x ||= $Urx;
+    $min_y ||= $Lly;
+    $max_y ||= $Ury;
+    if ($min_x > $Llx) {$min_x = $Llx}
+    if ($max_x < $Urx) {$max_x = $Urx}
+    if ($min_y > $Lly) {$min_y = $Lly}
+    if ($max_y < $Ury) {$max_y = $Ury}
+}
+
+sub print_fonts_and_patterns {
+    if (%FONTS or %FORM_PATTERNS) {
+        print PDFTEX "\\immediate\\pdfxform resources { /ProcSet [/PDF /Text] ";
+        if (%FONTS) {
+            print PDFTEX "/Font << ";
+            foreach $font(keys %FONTS) {
+                print PDFTEX "/F\\pdffontname\\$ALLFONTS{$font}\\space\\pdffontobjnum\\$ALLFONTS{$font}\\space 0 R ";
+            }
+            print PDFTEX ">> ";
+        }
+        if (%FORM_PATTERNS) {
+            print PDFTEX "/Pattern << ";
+            foreach $patt (keys %FORM_PATTERNS) {
+                print PDFTEX "/$patt \\the\\$ALLPATTERNS{$patt}{ID}\\space 0 R ";
+            }
+            print PDFTEX ">> ";
+            print PDFTEX "/ColorSpace << /CS1 [/Pattern /DeviceGray] >> ";
+        }
+        print PDFTEX "} \\xxx\n\\newcount\\$auto \\$auto=\\pdflastxform\n";
+    }
+    else {
+        print PDFTEX "\\immediate\\pdfxform\\xxx\n\\newcount\\$auto \\$auto=\\pdflastxform\n";
+    }        
+}
+
+sub print_grid {    
+    print PDFTEX "\\pdfliteral{q}";
+    print PDFTEX "\\pdfliteral{3 w 0 0 $HS $VS re S}";
+    $i = coord($Hsize + $Overlap); $j = coord($Vsize + $Overlap);
+    $ovrl = coord($Overlap);
+    print PDFTEX "\\pdfliteral{0.5 w}";
+    print PDFTEX "\\pdfliteral{0 $ovrl m $HS $ovrl l S}";
+    print PDFTEX "\\pdfliteral{0 $j m $HS $j l S}";
+    print PDFTEX "\\pdfliteral{$ovrl 0 m $ovrl $VS l S}";
+    print PDFTEX "\\pdfliteral{$i 0 m $i $VS l S}";
+    $grid_min = ($Hsize * $a + $Hoffset - $Overlap);
+    $grid_init = $Hgrid * round($grid_min/$Hgrid) + $Hgridoffset - $Hgrid;
+    print PDFTEX "\\pdfliteral{[2 8] 0 d}";        # !!!!!!!!!!!!!!!!!!!!!!
+    for ($i=$grid_init; $i <= $grid_min + $HS; $i += $Hgrid) {
+        $j = coord($i - $grid_min);
+        print PDFTEX "\\pdfliteral{$j 0 m $j $VS l S}";
+    }
+    $grid_min = ($Vsize * $b + $Voffset - $Overlap);
+    $grid_init = $Vgrid * round($grid_min/$Vgrid) + $Vgridoffset - $Vgrid;
+    for ($i=$grid_init; $i <= $grid_min + $VS; $i += $Vgrid) {
+        $j = coord($i - $grid_min);
+        print PDFTEX "\\pdfliteral{0 $j m $HS $j l S}";
+    }
+    print PDFTEX "\\pdfliteral{Q}";
+}
+
+sub print_pattern_defs {
+    print DEFIN "\\immediate\\pdfobj stream attr {/Type /Pattern\n";
+    print DEFIN "/PaintType 1 /PatternType 1 /TilingType 1\n";
+    print DEFIN "/Matrix $ALLPATTERNS{$patt}{Matrix}\n";
+    print DEFIN "/BBox $ALLPATTERNS{$patt}{BBox}\n";
+    print DEFIN "/XStep $ALLPATTERNS{$patt}{XStep}\n";
+    print DEFIN "/YStep $ALLPATTERNS{$patt}{YStep}\n";
+    print DEFIN "/Resources << /ProcSet [/PDF ] >> } {q ";
+    print DEFIN "$ALLPATTERNS{$patt}{Body}";
+    print DEFIN "Q } \\newcount \\$ALLPATTERNS{$patt}{ID}";
+    print DEFIN "\\$ALLPATTERNS{$patt}{ID}=\\pdflastobj\n";
+}
+
+sub move_maplist {
+    my ($list, $a, $b) = @_;
+    my ($x, $y) = split /\./, $list;
+    $x += $a;
+    $y += $b;
+    return "$x.$y";
+}
+
+sub print_arrow_defs {
+    my $ovl = shift;
+    print $ovl <<ENDDEF;
+    \\def\\link#1#2#3#4{%
+            \\rlap{\\kern#1bp\\raise#2bp\\hbox{%
+            \\vbox to0bp{\\vss\\hbox to 0bp{\\hss
+            \\pdfstartlink attr {/Border [0 0 0]} goto name {#4}%
+            \\pdfrefxform#3\\pdfendlink\\hss}%
+            \\vss}}}}
+
+    \\setbox\\xxx=\\hbox{\\vbox to 10bp{\\vfil
+    \\pdfliteral{q}
+    \\pdfliteral{0.11 0.4 0.96 rg}
+    \\pdfliteral{0 0 m 30 0 l 15 10 l h f}
+    \\pdfliteral{Q}
+    }}\\wd\\xxx=30bp \\pdfxform\\xxx
+    \\newcount\\linkUP \\linkUP=\\pdflastxform
+
+    \\setbox\\xxx=\\hbox{\\vbox to 10bp{\\vfil
+    \\pdfliteral{q}
+    \\pdfliteral{0.11 0.4 0.96 rg}
+    \\pdfliteral{0 10 m 30 10 l 15 0 l h f}
+    \\pdfliteral{Q}
+    }}\\wd\\xxx=30bp \\pdfxform\\xxx
+    \\newcount\\linkDOWN \\linkDOWN=\\pdflastxform
+    
+    \\setbox\\xxx=\\hbox{\\vbox to 30bp{\\vfil
+    \\pdfliteral{q}
+    \\pdfliteral{0.11 0.4 0.96 rg}
+    \\pdfliteral{10 0 m 10 30 l 0 15 l h f}
+    \\pdfliteral{Q}
+    }}\\wd\\xxx=10bp \\pdfxform\\xxx
+    \\newcount\\linkLEFT \\linkLEFT=\\pdflastxform
+
+    \\setbox\\xxx=\\hbox{\\vbox to 30bp{\\vfil
+    \\pdfliteral{q}
+    \\pdfliteral{0.11 0.4 0.96 rg}
+    \\pdfliteral{0 0 m 0 30 l 10 15 l h f}
+    \\pdfliteral{Q}
+    }}\\wd\\xxx=10bp \\pdfxform\\xxx
+    \\newcount\\linkRIGHT \\linkRIGHT=\\pdflastxform
+ENDDEF
+}

@@ -1,0 +1,9 @@
+%%%% This file is part of Therion package
+%%%% Copyright (C) 1999-2000 Martin Budaj
+
+%%%% MFT formatting:
+%%% 
+%%% point arclength arctime setbounds withpattern
+%%% length infont llcorner lrcorner urcorner ulcorner label
+%%% enddef beginpattern endpattern beginfig endfig
+

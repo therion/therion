@@ -32,6 +32,17 @@ sub polydata_FTAIL_GGM {
     return ($f, $t, $l, $a, $i);
     };
 
+sub polydata_STIAVN {
+    my ($f, $t, $a, $i, $l) = split /\s+/, shift;
+    $a += 180.0;
+    return ($f, $t, $l, $a, $i);
+    };
+
+sub polydata_STIAVN2 {
+    my ($f, $t, $a, $i, $l) = split /\s+/, shift;
+    return ($f, $t, $l, $a, $i);
+    };
+
 package polygon;
 
 print STDOUT "polygon, ";
@@ -53,7 +64,7 @@ sub svx_export_norm_point {
 
 sub export_svx_shot {
     my $data = shift;
-    my ($f, $t, $l, $a, $i) = &{$polygon_data_trans_sub}($data);
+    my ($f, $t, $l, $a, $i) = &{$polygon_data_trans_sub} ($data);
     $f = svx_export_norm_point($f);
     $t = svx_export_norm_point($t);
     print thPOLYGONFILE "$f\t$t\t$l\t$a\t$i\n";
@@ -76,7 +87,7 @@ sub export_svx_equate {
     };
 
 sub export_survex {
-
+       
     ($polygon_data_trans_sub, $polygon_fix_trans_sub) =
     ('default::polydata_FTAIL_GGM','default::polyfix_PXYZ_MMM');
 
@@ -98,7 +109,8 @@ sub export_survex {
              if ($command =~ 'chdir') {&main::update_csurveydir($parameter);
                 next LINE;};
              if ($command =~ 'transform') {&main::define_transform($parameter);
-                next LINE;};
+                 next LINE;
+		     };
              if ($command =~ 'polytrans') {$polygon_data_trans_sub = $parameter;
                 next LINE;};
              if ($command =~ 'fixtrans') {$polygon_fix_trans_sub = $parameter;
@@ -271,10 +283,18 @@ sub export_label {
     my @posp = split /\s+/, shift @params;
     my $text = join ' : ', @params;
     my $crd = get_point_coord shift @posp;
-    unless ($posp[0]) {$posp[0] = '90'};
-    unless ($posp[1]) {$posp[1] = 'LD'};
+    unless ($posp[0]) {$posp[0] = '0'};
+    unless ($posp[1]) {$posp[1] = 'rt'};
     $pars = join ' ', ($crd, $posp[0], $posp[1]);
     print thEXPORTFILE "*label $pars $text\n";
+};
+
+sub export_specialpoint {
+    my @params = split /\s+/, shift;
+    my $point = shift @params;
+    my $text = join ' ', @params;
+    my $crd = get_point_coord $point;
+    print thEXPORTFILE "*specialpoint $crd $text\n";
 };
 
 sub export_title {
@@ -283,6 +303,19 @@ sub export_title {
     my $text = join ' : ', @params;
     my $ppth = get_line_params $path;
     print thEXPORTFILE "*title $ppth : $text\n";
+};
+
+sub export_specialpath {
+    my @params = split /\s+\:\s+/, shift;
+    my $path = shift @params;
+    my $text = join ' : ', @params;
+    my $ppth = get_line_params $path;
+    print thEXPORTFILE "*specialpath $ppth : $text\n";
+};
+
+sub export_special {
+    my $text = shift;
+    print thEXPORTFILE "*special $text\n";
 };
 
 sub export_polygon {
@@ -319,6 +352,9 @@ sub export_map {
              elsif ($command eq 'label') {export_label $parameter}
              elsif ($command eq 'polygon') {export_polygon $parameter}
              elsif ($command eq 'title') {export_title $parameter}
+             elsif ($command eq 'specialpoint') {export_specialpoint $parameter}
+             elsif ($command eq 'specialpath') {export_specialpath $parameter}
+             elsif ($command eq 'special') {export_special $parameter}
              };
           } continue {
           $linenum++;
