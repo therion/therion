@@ -1,0 +1,31 @@
+This is sample configuration file; please copy it to data directory
+
+hsize: 18cm 
+vsize: 13cm
+Hoffset: 0cm
+Voffset: 0cm
+
+Overlap: 1 cm
+
+HGrid: 5cm
+VGrid: 5cm
+HGridOffset: 0cm
+VGridOffset: 0cm
+
+Background:
+
+StartX: 100
+StartY: H
+StartZ: c
+
+NavRight: 1
+NavUp: 1
+NavFactor: 15
+
+OwnPages: 0
+
+ExclPages: 0
+ ExclList: 5,15
+
+TitlePages: 1
+PageNumbering: 1

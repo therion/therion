@@ -1,0 +1,422 @@
+encoding  utf-8
+ ##XTHERION## xth_me_area_adjust 113.0 82.0 1757.0 812.0
+ ##XTHERION## xth_me_area_zoom_to 200
+ 
+ 
+ 
+ scrap ts2 -projection none -scale [1278.0 610.0 1280.0 418.0 0.0 0.0 0 -5 m]
+ 
+ line border
+   1621.0 241.0
+   1623.0 269.0
+   1630.0 270.0
+   1634.0 241.0
+ endline
+ 
+ point 1674.0 235.0 flowstone
+ 
+ line wall -close on
+   1583.0 248.0
+   1697.0 246.0
+   1697.0 272.0 1642.0 263.0 1642.0 263.0
+   smooth off
+   1642.0 263.0 1583.0 271.0 1583.0 248.0
+   smooth off
+ endline
+ 
+ endscrap ts2
+ 
+ 
+ 
+ scrap ts1 -projection none -scale [900.0 414.0 1280.0 418.0 0 0.0 10 0.0 m]
+ 
+ line wall -reverse on
+   919.5 280.5
+   919.5 280.5 950.0 288.16 980.5 279.5
+   smooth off
+ endline
+ 
+ line wall -reverse on
+   980.5 279.5
+   979.5 308.5 985.0 333.5 970.0 327.0
+   955.0 320.5 966.0 309.0 957.0 307.0
+   948.0 305.0 947.0 313.0 932.5 301.5
+   925.83 296.21 924.5 293.5 919.5 280.5
+   smooth off
+ endline
+ 
+ line border
+   974.5 332.5
+   974.5 300.5
+   974.5 295.75 971.0 295.75 971.0 300.5
+   smooth off
+   971.0 332.5
+ endline
+ 
+ endscrap
+ 
+ 
+ 
+ scrap dolny -stations 3 -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+ 
+ point 1549.0 476.0 passage-height -value 1.2 -align br
+ 
+ point 1640.0 306.0 section -align bottom -scrap ts2
+ 
+ point 900.0 414.0 station -name 4 -subtype natural
+ 
+ point 1278.0 610.0 station -name 2
+ 
+ line chimney -close on -reverse on
+   1135.5 461.0
+   1149.32 469.29 1182.5 465.5 1188.5 458.5
+   1194.5 451.5 1213.0 429.5 1209.5 406.0
+   1206.33 384.73 1177.11 364.1 1156.0 360.0
+   1120.0 353.0 1113.93 361.77 1103.0 382.0
+   1089.5 407.0 1100.5 440.0 1135.5 461.0
+ endline
+ 
+ line flowstone
+   1575.5 375.5
+   1584.5 388.5 1598.0 419.0 1591.0 433.0
+   smooth off
+ endline
+ 
+ line border -id jb -close on -place top
+   1021.0 424.0
+   1037.0 418.5 1093.88 439.33 1080.0 449.0
+   1047.0 472.0 1028.5 476.0 1022.5 466.5
+   1016.5 457.0 1005.0 429.5 1021.0 424.0
+ endline
+ 
+ area water
+   jb
+ endarea
+ 
+ 
+ point 1230.0 361.5 guano
+ 
+ point 1324.5 296.5 ice
+ 
+ point 1345.0 339.0 water
+ 
+ point 1338.5 394.5 blocks
+ 
+ point 1341.5 449.5 debris
+ 
+ point 1349.0 499.5 pebbles
+ 
+ point 1359.0 540.0 sand
+ 
+ point 973.5 417.5 bridge
+ 
+ point 932.0 415.0 traverse
+ 
+ point 870.5 415.5 steps
+ 
+ point 832.0 412.5 fixed-ladder
+ 
+ point 778.0 419.5 rope-ladder
+ 
+ point 723.0 421.0 continuation
+ 
+ line wall -subtype invisible
+   901.0 385.0
+   867.5 386.5 797.52 400.93 764.0 402.0
+   smooth off
+ endline
+ 
+ line wall -subtype invisible
+   767.0 436.0
+   796.0 437.5 879.0 435.0 900.0 438.0
+   smooth off
+ endline
+ 
+ line contour -gradient none
+   1506.0 391.5
+   1522.5 344.0 1520.0 332.5 1566.5 313.5
+   smooth off
+ endline
+ 
+ line contour
+   1487.5 381.5
+   1495.5 354.5 1515.66 299.72 1543.5 295.5
+   smooth off
+ endline
+ 
+ line slope -border on
+   1585.0 505.0
+   l-size 23.5
+   1570.0 521.5 1514.9 546.79 1493.0 551.0
+   1467.0 556.0 1438.0 558.0 1422.5 554.5
+   orientation 179.4
+   smooth off
+   l-size 51.5
+ endline
+ 
+ point 1557.0 421.0 pillar
+ 
+ line section -reverse on -direction end
+   1500.0 424.0
+   1524.5 422.0 1629.0 411.0 1640.0 410.0
+   smooth off
+   1640.0 410.0
+   1640.0 306.0
+ endline
+ 
+ line flowstone
+   1576.5 345.5
+   1583.0 353.5 1604.04 386.99 1606.5 397.0
+   1613.0 423.5 1609.0 446.0 1602.0 459.0
+   smooth off
+ endline
+ 
+ line pit -close on
+   1429.0 287.5
+   1442.5 294.0 1457.5 292.05 1458.5 307.0
+   1459.5 322.0 1465.02 329.3 1450.0 330.0
+   1428.5 331.0 1400.43 326.91 1386.5 310.5
+   1358.5 277.5 1345.5 255.0 1374.0 265.5
+   1402.5 276.0 1415.5 281.0 1429.0 287.5
+ endline
+ 
+ line rock-edge
+   1280.0 341.0
+   1294.5 345.0
+   1305.0 363.0
+   1294.5 345.0
+   1301.5 335.0
+   1296.0 320.0
+   1301.5 335.0
+   1317.0 332.0
+ endline
+ 
+ line rock-border -close on
+   1280.0 341.0
+   1280.0 363.0
+   1305.0 363.0
+   1317.0 332.0
+   1296.0 320.0
+   1280.0 341.0
+ endline
+ 
+ line wall -outline in
+   1391.0 449.0
+   1376.0 470.0 1394.24 501.55 1420.0 500.0
+   smooth off
+ endline
+ 
+ line wall -outline in
+   1420.0 500.0
+   1456.0 495.0 1517.0 472.0 1528.0 453.0
+   1539.0 434.0 1524.9 389.71 1507.0 377.0
+   1476.0 355.0 1458.0 345.0 1420.0 345.0
+   1382.0 345.0 1363.0 357.0 1369.0 383.0
+   1375.0 409.0 1401.04 424.28 1391.0 449.0
+   smooth off
+ endline
+ 
+ line section -direction both
+   921.0 467.0
+   920.5 446.5 923.0 380.5 922.5 365.5
+   smooth off
+ endline
+ 
+ point 890.0 468.0 stalactite
+ 
+ point 922.5 365.5 section -align bl -scrap ts1
+ 
+ line wall -id dlw -reverse on
+   1276.0 649.0
+   1313.0 649.0 1335.0 651.0 1367.0 633.0
+   1399.0 615.0 1415.33 590.68 1451.0 582.0
+   1488.0 573.0 1564.41 571.65 1584.0 539.0
+   1635.0 454.0 1637.0 401.0 1595.0 352.0
+   1553.0 303.0 1415.0 254.0 1356.0 245.0
+   altitude .
+   1297.0 236.0 1225.0 325.0 1192.0 334.0
+   1159.0 343.0 1125.2 389.7 1091.0 389.0
+   1042.0 388.0 901.0 385.0 901.0 385.0
+   smooth off
+ endline
+ 
+ line wall -id drw
+   1278.0 559.0
+   1308.0 559.0 1313.52 467.37 1284.0 462.0
+   1240.0 454.0 1177.0 417.16 1142.0 445.0
+   1098.0 480.0 1107.57 511.55 1052.0 503.0
+   987.0 493.0 993.0 473.0 982.0 465.0
+   971.0 457.0 913.6 437.59 900.0 438.0
+   smooth off
+ endline
+ 
+ point 1184.0 299.5 passage-height -value -10?
+ 
+ point 1452.0 251.5 date -align r -value 2002.2.1
+ 
+ point 1319.0 226.5 passage-height -value [-10 +80 cm]
+ 
+ point 1266.5 243.0 passage-height -value 8
+ 
+ point 1227.0 271.0 passage-height -value 3.2
+ 
+ line wall
+   764.0 402.0
+   736.0 402.5 739.05 437.75 767.0 436.0
+   smooth off
+ endline
+ 
+ endscrap
+ 
+ 
+ 
+ scrap horny -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+ 
+ point 502.0 720.0 water-flow -orientation 271.8
+ 
+ point 438.5 723.0 water-flow -orientation 179.2 -scale l
+ 
+ point 328.0 722.0 water-flow -orientation 359.3
+ 
+ point 267.5 722.0 water-flow -orientation 314.3
+ 
+ point 383.5 720.0 water-flow -orientation 90.4
+ 
+ point 376.5 446.0 moonmilk -orientation 276.3
+ 
+ point 415.5 459.5 flowstone -orientation 93.9
+ 
+ point 445.0 488.0 stalagmite -orientation 57.1
+ 
+ point 463.5 532.0 stalactite -orientation 184.2
+ 
+ point 475.0 581.5 pillar
+ 
+ point 546.0 604.0 station -name 2 -subtype fixed
+ 
+ point 334.0 596.0 station -name 1 -subtype painted
+ 
+ point 346.0 216.0 station -name 0 -subtype temporary
+ 
+ line border -id s3
+   268.5 334.0
+   subtype invisible
+   299.5 327.0 297.0 318.5 310.5 332.0
+   324.0 345.5 304.0 350.57 323.0 349.5
+   358.5 347.5 301.55 370.79 337.0 368.0
+   381.5 364.5 359.0 371.0 359.0 371.0
+   smooth off
+ endline
+ 
+ line border -id s2
+   364.5 405.5
+   345.0 416.0 310.5 439.0 300.5 420.5
+   290.5 402.0 290.0 379.5 271.0 384.0
+   smooth off
+ endline
+ 
+ line border -id s1
+   281.5 293.5
+   303.5 291.5 369.5 292.5 377.5 311.5
+   smooth off
+ endline
+ 
+ line wall -close on -reverse on -outline in
+   419.0 504.0
+   441.0 528.0 432.84 571.1 424.0 577.0
+   406.0 589.0 384.61 583.98 369.0 569.0
+   altitude .
+   344.0 545.0 316.09 527.1 345.0 508.0
+   358.19 499.28 342.0 441.5 375.0 462.5
+   408.0 483.5 398.18 481.29 419.0 504.0
+ endline
+ 
+ line wall -id hrw
+   375.0 216.0
+   360.0 267.0 336.26 329.56 345.0 382.0
+   360.0 472.0 378.59 389.44 445.0 452.0
+   altitude [fix 1500]
+   514.0 517.0 462.92 531.29 546.0 569.0
+   smooth off
+ endline
+ 
+ line border -id debris_b -subtype invisible
+   307.0 634.5
+   345.0 623.5 380.5 642.5 397.5 638.5
+   414.5 634.5 415.5 614.5 410.0 606.5
+   404.5 598.5 449.47 613.02 455.0 621.0
+   464.0 634.0 467.0 661.5 467.0 661.5
+   smooth off
+ endline
+ 
+ line border -id sand_b -subtype invisible
+   228.0 572.0
+   268.5 584.5 329.5 619.0 325.5 686.0
+   smooth off
+ endline
+ 
+ line wall -id hlw
+   316.0 215.0
+   300.0 269.0 276.0 325.0 279.0 374.0
+   282.0 423.0 315.72 456.62 297.0 502.0
+   264.0 582.0 235.0 550.0 249.0 619.0
+   263.0 688.0 315.0 687.0 351.0 673.0
+   387.0 659.0 397.53 650.5 436.0 647.0
+   491.0 642.0 506.0 640.0 544.0 644.0
+   smooth off
+ endline
+ 
+ area sump
+   s2
+   hrw
+   s3
+   hlw
+ endarea
+ 
+ area water
+   s1
+   hlw
+   s3
+   hrw
+ endarea
+ 
+ area sand
+   sand_b
+   hlw
+ endarea
+ 
+ area debris
+   sand_b
+   debris_b
+   hlw
+ endarea
+ 
+ 
+ point 314.5 391.5 label -text "sifón"
+ 
+ point 357.5 326.0 remark -text "tečúca voda"
+ 
+ point 235.5 619.5 station-name -align l
+ 
+ point 382.5 216.5 station-name -align tr
+ 
+ point 207.5 387.0 height -value 11
+ 
+ point 207.0 465.5 height -value -10?
+ 
+ point 208.0 422.5 height -value +?
+ 
+ point 209.0 346.0 height -value -10
+ 
+ point 210.5 299.0 height -value +6
+ 
+ point 212.5 257.5 height -value [50 cm]
+ 
+ point 214.5 214.0 height -value -5
+ 
+ point 309.0 261.5 altitude -align r
+ 
+ endscrap
+ 
+ 
+

@@ -1,0 +1,245 @@
+\chapter Appendix.
+
+\subchapter Installation notes.
+
+Therion runs under Unix, Linux, MacOS X and Win32 operating systems.
+
+\subsubchapter Common requirements.
+\list
+* If you want to compile the therion source code, you need a C/C++ compiler 
+   (for Windows MinGW (|http://www.mingw.org|) is highly recommended---a 
+   distribution of GNU utilities with GNU make, gcc...)
+   
+* \TeX, pdf\TeX\ 1.0 and \MP. Plain should be the default format for \TeX; 
+  Therion doesn't use La\TeX\ or other available formats. If you 
+  have any doubts, install any full distribution of \TeX. (TeXlive for any 
+  platform, teTeX for Unix, fpTeX or MikTeX for Windows.) If you're new
+  to \TeX, visit the homepage of {\it \TeX\ Users Group} at 
+  \path|http://www.tug.org|.
+
+* Perl 5.5 (probably already installed on Unix; for Windows try ActivePerl
+   from \path|http://www.activestate.com|).
+
+* Tcl/Tk 8.4 (|http://www.tcl.tk|) with BWidget widget set 
+  (\path|http://sourceforge.net/projects/tcllib|). Tcl/Tk is only required for 
+  xtherion. For Windows try ActiveTcl from |http://www.activestate.com|.
+
+* Survex 1.0 (|http://www.survex.com|)
+%
+%* Ghostscript 7.0 or Acrobat Reader 5.0 or other viewer of PDF files.
+\endlist
+
+Get all this working before installing therion. We don't provide any support 
+concerning this. All these programs are well documented and accessible on the 
+net.
+
+
+\subsubchapter Compilation.
+
+If you want to compile therion code yourself, follow these 
+steps:
+
+\list
+* unpack source distribution |therion-0.2.*.tar.gz|
+* |cd therion/src|
+* |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows, 
+  respectively
+* |make|
+* |make xtherion|
+* |make thpdf|
+\endlist
+
+This compilation should work on Unix/Linux systems---if it doesn't then read 
+the next section for clues. On Win32, |make xtherion|
+and |make thpdf| will not work. You have to download them compiled.
+
+\subsubchapter Environment variables.
+
+To be able to run therion you will probably need to set up following 
+environment variables:
+
+\list
+* set environment variable `|THERION|' to `|therion/lib|' directory
+
+  This environment variable is used to specify the
+  Therion search path. If not defined (also not specified by |-p| option),
+  \path|$HOME/.therion:/usr/share/therion:/usr/local/share/therion| is used.
+  Notice, that on Windows you must use `|;|' as a path separator. The
+  default directory on Windows is |C:/therion|. This default setting may not 
+  reflect the real location of Therion.
+
+* add `|therion/bin|' directory to `|PATH|' environment variable
+
+* add `|therion/lib/tex|' and `|therion/lib/mpost|' to \TeX\ and \MP\ searching
+   paths 
+   
+   See the documentation included in your \TeX\ distribution 
+   (for web2c based \TeX\ distribution you may set these paths 
+   in the file `|texmf/web2c/texmf.cnf|'
+   or through environment variables |TEXINPUTS| and |MPINPUTS|).
+\endlist
+
+If you're not very experienced in environment variables etc., try the 
+appropriate example below:
+
+On UNIX add the following lines to |.bashrc| (or |.bash_profile|) file in your 
+home directory:
+
+|export PATH=$PATH:therion/bin
+export THERION=therion/lib
+export MPINPUTS=.:$THERION/mpost:
+export TEXINPUTS=.:$THERION/tex:|
+
+On WINDOWS, add the following lines to your |autoexec.bat| file:
+
+|set PATH=%PATH%;C:\therion\bin
+set THERION=C:\therion\lib
+set MPINPUTS=.;%THERION%\mpost;
+set TEXINPUTS=.;%THERION%\tex;|
+
+Note, that on Win 2000 or XP, you have to set environment variables through 
+the dialog {\it Control Panel} $\to$ {\it System} $\to$ {\it Advanced} $\to$ 
+{\it Environment Variables}.
+
+After setting up environment variables you should restart the computer.
+
+The temporary directory used is named |th$PID$| where |$PID$| is a 
+process pid. It is placed in the system temporary directory, which is
+read from the |TEMP| or |TMP| environment variable. 
+
+\subsubchapter Initialization file.
+
+The correct paths are set in the initialization file.
+This file is used to specify Therion's system dependent settings. 
+It's named therion.ini and must be placed in the Therion 
+search path (default location is `|therion/lib/therion.ini|'). If no
+file is found therion uses its default settings. If you want to list
+them, use |--print-init-file| option. The initialization file is read 
+like any other therion file. (Empty lines or lines starting with `|#|' are 
+ignored; lines ending with a backslash continue on next line.) Currently 
+supported initialization commands follow.
+
+\list
+* |encoding_default <encoding-name>|
+
+        Set the default output encoding. For \TeX\ ISO8859-2 is currently
+        hardcoded.
+        
+* |path_cavern <file-path>|
+
+        Set the full path to a Survex ``|cavern|'' executable. (``|cavern|'' is the default).
+        
+* |path_3dtopos <file-path>|
+
+        Set the full path to a Survex ``|3dtopos|'' executable. (``|3dtopos|'' is the default).
+
+* |path_mpost <file-path>|
+
+        Set the full path to a \MP\ executable (``|mpost|'' is the default).
+
+* |path_pdftex <file-path>|
+
+        Set the full path to a pdf\TeX\ executable (``|pdfetex|'' is the default).
+\endlist
+
+\subsubchapter Special setup for Windows.
+
+If you want to create maps you need to be able to run |thpdf| from the command
+line. Therefore you need to edit |thpdf.bat| in |therion/bin| directory and
+set the correct Perl path. The same has to be done with |xtherion|,
+if you want to run it from command line. 
+
+\subsubchapter Speed optimization.
+
+[Optionally creating \MP\ and \TeX\ format files.]
+
+
+\subchapter Map symbols library.
+
+[Gallery of map symbols predefined by Therion.]
+
+%\subchapter Debugging mode.
+
+\subchapter History.
+
+\list
+* 1999
+
+  Oct: first concrete ideas
+
+  Nov: start of programming: scripts, macros \&c.
+
+  Dec 27: Therion compiles simple map for the first time
+       (32 kB of source code). This first release had some interesting features
+       such as {\it transformation functions}, which alowed user-specification
+       of the input format for survey data.
+				
+* 2000
+
+  Jan: xthedit, a graphical front-end for Therion
+
+  Aug: experiments with PDF and pdf\TeX, script for \MP\ $\to$ PDF conversion and
+       atlas building, some \MP\ macros
+
+* 2001
+
+  Nov: start of reimplementation from scratch: 
+       Therion \& interactive 2D map editor ThEdit
+       (as a replacement of xthedit)
+
+  Dec: ThEdit exports simple map for the first time
+
+* 2002
+
+  Mar: Therion 0.1 ---
+       Therion is able to process survey data (centerline) of Dead Bats Cave.
+       XTherion, text editor designed for Therion.
+
+  Jul 27: Therion 0.2 ---
+       Therion compiles simple map (consisting of two scraps)
+       for the first time (800 kB of source code)
+
+  Aug: XTherion extended to 2D map editor (as a replacement of ThEdit)
+
+  Sep: Therion compiles first real and complex map of a cave. XTherion
+       extended to compiler.
+
+%  Oct 5: Public presentation of Therion, held on Trango\v{s}ka
+
+* 2003
+
+  Mar: First version of The Therion Book finished
+
+  Apr: Therion included in Debian GNU/Linux
+\endlist
+
+
+\subchapter Future.
+
+Although Therion is already used for map production, there are a lot of 
+new features to be implemented:
+
+\subsubchapter General.
+
+\list
+* comprehensive information on centerline processing and loop closure
+\endlist
+
+\subsubchapter 2D maps.
+
+\list
+* real font selection for PDF output
+* map symbol sets
+* debugging mode
+* SVG support
+\endlist
+
+
+\subsubchapter 3D models.
+
+\list
+* passage walls modelling
+* OpenGL 3D viewer as a part of XTherion
+\endlist
+
+\endinput

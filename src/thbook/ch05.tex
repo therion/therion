@@ -1,0 +1,227 @@
+\chapter Changing layout.
+
+This chapter is extremely useful if you're not satisfied with the predefined 
+layout of map symbols and maps provided, and want to adapt them to your needs.
+However, you need to know how to write plain \TeX\ and \MP\ macros to do this.
+
+
+\subchapter Page layout in the atlas mode.
+
+The |layout| command allows basic page setup in the atlas mode. This is done 
+through its options such as |page-setup| or |overlap|. But there are no 
+options which would specify the position of map, navigator and other elements 
+inside the area defined by |page-width| and |page-height| dimensions; e.g., 
+why is the navigator below the map and not on its right or left side?
+
+There are many possible arrangements for a page. Rather than offer even more
+options for the |layout| command, Therion uses the \TeX\ language to 
+describe other page layouts. 
+%(See the section `layout' where to put \TeX\ commands.) 
+This approach has the advantage that the user has 
+direct access to the advanced typesetting engine without making the language of 
+Therion overcomplex.
+
+Therion uses pdf\TeX\ with the {\it plain} format for typesetting. So you 
+should be familiar with the plain \TeX\ if you wish to define new layouts.
+
+The ultimate reference for plain \TeX\ is
+\list
+  Knuth, D. E.: {\it The \TeX book}, 
+                Reading, Massachusetts, Addison-Wesley $^1$1984 %[...]
+\endlist
+
+For pdf\TeX's extensions there is a short manual
+\list
+  Th\`anh, H. T.---Rahtz, S.---Hagen, H.: {\it The pdf\TeX\ user manual}, 
+                available at \path|http://www.pdftex.org|
+\endlist
+
+The \TeX\ macros are used inside of |layout| command (see the chapter 
+{\it Processing data} for details). The basic one predefined by Therion is the
+
+|\dopage|
+
+macro. The idea is simple: for each page Therion defines \TeX\ variables 
+(count, token, and box registers) which contain the page elements (map, 
+navigator, page name etc.). At the end of each page macro |\dopage| is invoked. 
+This defines the position of each element on the page. By redefining this macro 
+you'll get desired page layout. Without this redefinition you'll get the 
+standard layout.
+
+Here is the list of variables defined for each page:
+
+\list
+  {\it Boxes:}
+
+  * |\mapbox| = The box containing the map. Its width (height) is set 
+    according to the |size| and |overlap| options of the |layout| command to 
+
+    |size_width + 2*overlap| or 
+    
+    |size_height + 2*overlap|, respectively
+
+  * |\navbox| = The box containing the navigator, with dimensions
+
+    |size_width * (2*nav_size_x+1) / nav_factor| or
+
+    |size_height * (2*nav_size_y+1) / nav_factor|, respectively
+
+    Both |\mapbox| and |\navbox| also contain hyperlinks.
+
+  {\it Count registers:}
+
+  * |\pointerE|, |\pointerW|, |\pointerN|, |\pointerS| contain the page number 
+    of the neighbouring pages in the E, W, N and S directions. If there is no 
+    such a page its page number is set to 0.
+
+  * |\pagenum| current page number
+
+  {\it Token registers:}
+
+  * |\pointerU|, |\pointerD| contain information about pages above and below
+    the current page. It consists of one or more concatenated records. Each 
+    record has a special format
+    
+    {\tt|page-name|\char124|page-number|\char124|destination|\char124\char124}
+    
+    If there are no such pages, the value is set to |notdef|.
+
+    See the description of the |\processpointeritem| macro below for how to 
+    extract and use this information.
+
+  * |\pagename| = name of the current map according to options of the |map|
+    command.
+
+  * |\pagelabel| = the page label as specified by |origin| and |origin-label|
+    options of the |layout| command.
+\endlist
+
+
+The following variables are set at the beginning of the document:
+
+\list
+  * |\hsize|, |\vsize| = \TeX\ page dimensions, set according to |page-width|
+    and |page-height| parameters of the |page-setup| option of the |layout|
+    command. They determine our playground when defining page layout using 
+    the |\dopage| macro.
+
+  * |\ifpagenumbering| = This conditional is set true or false according to
+    the |page-numbers| option of the |layout| command.
+\endlist
+
+There are also some predefined macros which help with the processing of 
+|\pointer*| variables:
+
+\list
+  * |\showpointer| with one of the |\pointerE|, |\pointerW|, |\pointerN| or 
+    |\pointerS| as an argument displays the value of the argument. If the value
+    is 0 it doesn't display anything. This is useful because
+    the zero value (no neighbouring page) shouldn't be displayed.
+    
+  * |\showpointerlist| with one of the |\pointerU| or |\pointerD| as an argument 
+    presents the content of this argument. (Which contains 
+    |\pointerU| or |\pointerD|, see above.) For each record it calls the macro 
+    |\processpointeritem|, which is responsible for data formating. 
+    
+    Macro |\showpointerlist| should be used without redefinition in the place
+    where you want to display the content of its argument; for custom data
+    formating redefine |\processpointeritem| macro.
+         
+  * |\processpointeritem| has three arguments (page-name, page-number, 
+    destination) and visualizes these data. The arguments are delimited as 
+    follows
+    
+    {\tt|\def\processpointeritem#1|\char124|#2|\char124|#3\endarg{...}|}
+
+    An example definition may be
+
+    {\tt|\def\processpointeritem#1|\char124|#2|\char124}|#3\endarg{%
+  \hbox{\pdfstartlink attr {/Border [0 0 0]}% 
+        goto name {#3} #2 (#1)\pdfendlink}%
+}|
+
+   (note how to use the {\it destination} argument), 
+   or much simpler (if we don't need hyperlink features):
+
+    {\tt|\def\processpointeritem#1|\char124|#2|\char124}|#3\endarg{%
+  \hbox{#2 (#1)}%
+}|
+\endlist
+
+
+Now we're ready to define the |\dopage| macro. You may choose which of the 
+predefined elements to use. A very simple example would be
+
+|layout my_layout
+  scale 1 200
+  page-setup 29.7 21 27.7 19 1 1 cm
+  size 26.7 18 cm
+  overlap 0.5 cm
+
+  \def\dopage{\box\mapbox}
+
+  \insertmaps 
+
+endlayout|
+
+which defines the landscape A4 layout without the navigator nor any texts. There 
+is only a map on the page.
+
+Note the |\insertmaps| macro. Map pages are inserted at its position. [Similar 
+macro |\insertlegend| will insert the map legend when Therion supports it.]
+This is not done automatically because you may wish to insert some other pages 
+before the first map page. (In this case something like |\input myfile.tex| 
+should preceed the |\insertmaps| macro.) Without the |\insertmaps| invocation 
+no map pages will be included!
+
+More advanced is the default definition of the |\dopage| macro:
+
+|\def\dopage{%
+  \vbox{\line{\hfil\box\mapbox\hfil}
+    \bigskip
+    \line{%
+     \vbox to \ht\navbox{
+      \hbox{\big\the\pagelabel
+        \ifpagenumbering\space(\the\pagenum)\fi
+        \space\middle\the\pagename}
+      \ifpagenumbering
+        \medskip
+        \hbox{\qquad\qquad
+          \vtop{%
+  	    \hbox to 0pt{\hss\showpointer\pointerN\hss}
+            \hbox to 0pt{\llap{\showpointer\pointerW\hskip0.7em}%
+	           \raise1pt\hbox to 0pt{\hss$\updownarrow$\hss}%
+	           \raise1pt\hbox to 0pt{\hss$\leftrightarrow$\hss}%
+		   \rlap{\hskip0.7em\showpointer\pointerE}}
+  	    \hbox to 0pt{\hss\showpointer\pointerS\hss}
+	  }\qquad\qquad
+          \vtop{
+	    \def\arr{$\uparrow$}
+	    \showpointerlist\pointerU
+	    \def\arr{$\downarrow$}
+	    \showpointerlist\pointerD
+	  }
+        }
+      \fi
+      \vss}\hss
+      \box\navbox
+    }
+  }
+}|
+
+{\it Note:} |\big| and |\middle| are font switches
+
+Using other plain \TeX\ macros or \TeX\ primitives it's possible to add other 
+features, e.g.~a different layout for odd and even pages; headers and footers;
+or adding a logo to each page. 
+
+\subchapter New map symbols.
+
+[This chapter will explain how to define new map symbols in \MP. Currently 
+Therion doesn't support custom map symbol sets.]
+
+%\subchapter More about maps.
+
+%\subchapter Dirty tricks.
+
+\endinput

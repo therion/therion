@@ -1,0 +1,26 @@
+#!/usr/bin/tclsh
+
+proc repair_file {fnm} {
+  puts "repairing file $fnm"
+  set fid [open $fnm r]
+  set fdt [read $fid]
+  close $fid
+  set fid [open $fnm w]
+  fconfigure $fid -translation {auto lf}
+  puts -nonewline $fid $fdt
+  close $fid
+}
+
+proc scan_directory {dnm} {
+  puts "scanning directory $dnm"
+  set files [glob -nocomplain -directory $dnm *.th *.th2 *.th3 *.thcfg thconfig*]
+  set dirs [glob -nocomplain -directory $dnm -type d *]
+  foreach sfl $files {
+    repair_file $sfl
+  }
+  foreach sdr $dirs {
+    scan_directory $sdr
+  }
+}
+
+scan_directory .

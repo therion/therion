@@ -1,0 +1,160 @@
+%% translations
+
+let FixedStation = thFixedstation_ASF;
+let PaintedStation = thPaintedstation_SKBB;
+let NaturalStation = thNaturalstation_ASF;              
+let TemporaryStation = thTemporarystation_ASF;
+
+let Stalactite = thStalactite_UIS;
+let Stalagmite = thStalagmite_UIS;
+let Pillar = thPillar_UIS;
+let Curtain = thCurtain_UIS;
+let Helectite = thHelectite_UIS;
+let Sodastraw = thSodaStraw_UIS;
+let Crystal = thCrystal_UIS;
+let Flowstone = thFlowstoneSymbol_UIS;
+let Moonmilk = thMoonmilkSymbol_UIS;
+let Wallcalcite = thWallcalciteSymbol_UIS;
+let Popcorn = thPopcorn_UIS;
+let Disk = thDisk_UIS;
+let Gypsum = thGypsum_CCNP;
+let Aragonite = thAragonite_CCNP;
+let Cavepearl = thCavepearl_JSSJ;
+let Boxwork = thUndefinedSymbol;                      % !
+let Gypsumflower = thGypsumflower_CCNP;
+let Rimstonepool = thRimstonepoolSymbol_ASF;
+let Rimstonedam = thRimstonedamSymbol_ASF;
+let Anostomosen = thAnostomosen_UIS;
+let Karren = thKarren_UIS;
+let Scallop = thScallop_UIS;
+let Flute = thFlute_UIS;
+let Raft = thRaft_CCNP;
+let Raftcone = thRaftcone_CCNP;
+let Spring = thSpring_SKBB;
+let Sink = thSink_SKBB;
+let NarrowEnd = thNarrowend_UIS;
+let LowEnd = thLowend_UIS;
+let FlowstoneChoke = thFlowstonechoke_CCNP;
+let BreakdownChoke = thBreakdownchoke_CCNP;
+let SedimentChoke = thUndefinedSymbol;               % !
+let Bedrock = thBedrock_ASF;
+let Clay = thSandSymbol_UIS;                         % !
+let Sand = thSandSymbol_UIS;
+let Pebbles = thPebblesSymbol_UIS;
+let Debris = thDebrisSymbol_UIS;
+let Blocks = thBlocksSymbol_UIS;
+let Water = thWaterSymbol_UIS;
+let Ice = thIceSymbol_UIS;
+let ArcheoMaterial = thArcheological_UIS;
+let PaleoMaterial = thPaleontological_UIS;
+let Guano = thGuano_UIS;
+let VegetableDebris = thVegetabledebris_ASF;
+let Root = thRoot_ASF;
+let EntranceArrow = thEntrancearrow_UIS;
+let Paleoflow = thPaleoflow_UIS;
+let GradientArrow = thGradientarrow_UIS;
+let PermanentStream = thPermanentstreamarrow_UIS;
+let IntermittentStream = thIntermittentstreamarrow_UIS;
+def Rope(expr pos,r,s,al) = thEquipmentSymbol_SKBB(pos,1) enddef;          
+def FixedLadder(expr pos,r,s,al) = thEquipmentSymbol_SKBB(pos,2) enddef;   
+def RopeLadder(expr pos,r,s,al) = thEquipmentSymbol_SKBB(pos,3) enddef;    
+def Steps(expr pos,r,s,al) = thEquipmentSymbol_SKBB(pos,4) enddef;         
+def Bridge(expr pos,r,s,al) = thEquipmentSymbol_SKBB(pos,5) enddef;        
+def Traverse(expr pos,r,s,al) = thEquipmentSymbol_SKBB(pos,6) enddef;
+def Anchor(expr pos,r,s,al) = thEquipmentSymbol_SKBB(pos,7) enddef;
+def Notequipped(expr pos,r,s,al) = thEquipmentSymbol_SKBB(pos,8) enddef;
+def AirflowArrow(expr pos,r,s,al) = thAirflowarrow_UIS(pos,r,s,3,al) enddef;
+def Sectionarrow(expr pos,r) = thSectionarrow_SKBB(pos,r) enddef; % !
+def Continuation = thContinuation_UIS enddef;
+
+
+def Label = thLabel enddef;
+def Remark = thLabel enddef;
+def Circledlabel = thCircledlabel enddef;
+def Boxedlabel = thBoxedlabel enddef;
+def Passage = thCircledlabel enddef;
+def Passageheight = thUplabel enddef;
+def Waterdepth = thDownlabel enddef;
+def PassageWater = thUpDownlabel enddef;  % zatial bez zarovnania
+def Altitudelabel = thAltitudelabel enddef;
+let Altitude = thASLlabel;
+def Stationlabel = thSmalllabel enddef;
+def Datelabel = thSmalllabel enddef;
+
+let ClayRndFill = thRandomsand_UIS;       % !
+let SandRndFill = thRandomsand_UIS;       
+let PebblesRndFill = thRandomsand_UIS;    % !
+let DebrisRndFill = thRandomsand_UIS;     % !
+let BlocksRndFill = thRandomsand_UIS;     % !
+let FlowstoneRndFill = thRandomsand_UIS;  % !
+let MoonmilkRndFill = thRandomsand_UIS;   % !
+let IceRndFill = thRandomsand_UIS;        % !
+
+let Hyperlink = thUndefinedSymbol;                             % !
+def Customsymbol(expr pos) = thUndefinedSymbol(pos,0,1) enddef;
+
+let Wall = thWall_UIS;
+let Sandwall = thSandwall_SKBB;
+let Claywall = thClaywall_SKBB;
+let Pebbleswall = thPebbleswall_SKBB;
+let Debriswall = thDebriswall_SKBB;
+let Blockswall = thBlockswall_SKBB;
+let Icewall = thIcewall_SKBB;
+let Underlyingwall = thUnderlyingwall_UIS;
+let Unsurveyedwall = thUnsurveyedwall_SKBB;
+let Presumedwall = thPresumedwall_UIS;
+let Invisiblewall = thInvisiblePath;
+
+let FloorStep = thPit_UIS;
+let Pit = thPit_UIS;
+let CeilingStep = thChimney_SKBB;
+let Chimney = thChimney_UIS;
+let Overhang = thOverhang_SKBB;
+let Floorcanyon = thUndefinedPath;
+let Ceilingcanyon = thUndefinedPath;
+
+let Slope = thSlope_SKBB;
+let Contour = thContour_UIS;
+
+let Rockborder = thRockborder_UIS;
+let Rockedge = thRockedge_UIS;
+let Permanentwater = thPermanentwater_UIS;
+let Intermittentwater = thIntermittentwater_JSSJ;
+let Conjencturalwater = thConjecturalwater_SKBB;
+let Visibleborder = thBorder_SKBB;
+let Invisibleborder = thInvisiblePath;
+let Temporaryborder = thTemporaryBorder_SKBB;
+let Rimstonepath = thUndefinedPath;
+let Flowstonepath = thFlowstonepath_UIS;
+let Moonmilkpath = thUndefinedPath;
+let Fixedladderpath = thUndefinedPath;
+let Ropeladderpath = thUndefinedPath;
+let Bridgepath = thUndefinedPath;
+let Fixedline = thUndefinedPath;
+let Handrail = thUndefinedPath;
+let Fence = thUndefinedPath;
+let Concretewall = thUndefinedPath;
+let Door = thUndefinedPath;
+let Gate = thUndefinedPath;
+let Formedpath = thUndefinedPath;
+let Stepspath = thUndefinedPath;
+let Bridgepath = thUndefinedPath;
+let Sectionline = thBorder_SKBB;
+
+let Freetext = thFreetext;
+let Custompath = thUndefinedPath;
+
+let Polygon = thPolygon_SKBB;
+
+let PatternFill = thPatternFill;
+
+def Waterpattern = scantokens("thLakePattern_UIS") enddef;
+def Sumppattern = scantokens("thSumpPattern_UIS") enddef;
+def Claypattern = scantokens("thSandPattern_UIS") enddef;
+def Sandpattern = scantokens("thSandPattern_UIS") enddef;
+def Pebblespattern = scantokens("thDebrisPattern_SKBB") enddef;
+def Debrispattern = scantokens("thDebrisPattern_SKBB") enddef;
+def Blockspattern = scantokens("thDebrisPattern_SKBB") enddef;
+def Flowstonepattern = scantokens("thLakePattern_UIS") enddef;
+def Moonmilkpattern = scantokens("thLakePattern_UIS") enddef;
+def Icepattern = scantokens("thLakePattern_UIS") enddef;

@@ -1,0 +1,218 @@
+/**
+ * @file th2ddataobject.h
+ * 2ddataobject module.
+ */
+  
+/* Copyright (C) 2000 Stacho Mudrak
+ * 
+ * $Date: $
+ * $RCSfile: $
+ * $Revision: $
+ *
+ * -------------------------------------------------------------------- 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * --------------------------------------------------------------------
+ */
+ 
+#ifndef th2ddataobject_h
+#define th2ddataobject_h
+
+
+#include "thdataobject.h"
+
+/**
+ * Point scale tokens.
+ */
+
+enum {
+  TT_2DOBJ_SCALE_UNKNOWN,
+  TT_2DOBJ_SCALE_XS,
+  TT_2DOBJ_SCALE_S,
+  TT_2DOBJ_SCALE_M,
+  TT_2DOBJ_SCALE_L,
+  TT_2DOBJ_SCALE_XL,
+};
+
+
+/**
+ * Point scale parsing table.
+ */
+ 
+static const thstok thtt_2dobj_scales[] = {
+//  {"extra-large", TT_2DOBJ_SCALE_XL},
+//  {"extra-small", TT_2DOBJ_SCALE_XS},
+  {"l", TT_2DOBJ_SCALE_L},
+  {"large", TT_2DOBJ_SCALE_L},
+  {"m", TT_2DOBJ_SCALE_M},
+  {"medium", TT_2DOBJ_SCALE_M},
+//  {"s", TT_2DOBJ_SCALE_S},
+//  {"small", TT_2DOBJ_SCALE_S},
+//  {"xl", TT_2DOBJ_SCALE_XL},
+//  {"xs", TT_2DOBJ_SCALE_XS},
+	{NULL, TT_2DOBJ_SCALE_UNKNOWN},
+};
+
+ 
+/**
+ * 2ddataobject command options tokens.
+ */
+
+enum {
+  TT_2DOBJ_UNKNOWN = 2000,
+  TT_2DOBJ_SCALE = 2001,
+  TT_2DOBJ_CLIP = 2002,
+  TT_2DOBJ_PLACE = 2003,
+};
+
+
+/**
+ * Default 2D object tags.
+ */
+
+enum {
+  TT_2DOBJ_TAG_NONE = 0,
+  TT_2DOBJ_TAG_CLIP_AUTO = 1024,
+  TT_2DOBJ_TAG_CLIP_ON = 2048,
+};
+
+enum {
+  TT_2DOBJ_PLACE_BOTTOM = 0,
+  TT_2DOBJ_PLACE_NONE = 1,
+  TT_2DOBJ_PLACE_TOP = 2,
+  TT_2DOBJ_PLACE_UNKNOWN = 3,
+};
+
+
+/**
+ * 2ddataobject command options parsing table.
+ */
+ 
+static const thstok thtt_2ddataobject_opt[] = {
+  {"clip", TT_2DOBJ_CLIP},
+  {"place", TT_2DOBJ_PLACE},
+  {"scale", TT_2DOBJ_SCALE},
+  {NULL, TT_2DOBJ_UNKNOWN},
+};
+
+
+/**
+ * 2ddataobject place options.
+ */
+ 
+static const thstok thtt_2ddataobject_place[] = {
+  {"bottom", TT_2DOBJ_PLACE_BOTTOM},
+  {"none", TT_2DOBJ_PLACE_NONE},
+  {"top", TT_2DOBJ_PLACE_TOP},
+  {NULL, TT_2DOBJ_PLACE_UNKNOWN},
+};
+
+
+/**
+ * 2ddataobject class.
+ */
+
+class th2ddataobject : public thdataobject {
+
+  public:
+  
+  th2ddataobject * pscrapoptr, ///< Previos object in the scrap.
+      * nscrapoptr;  ///< Next object in the scrap.
+      
+  class thscrap * fscrapptr;  ///< Father scrap pointer.
+  
+  int scale;  ///< 2D map object scaling.
+  unsigned tags;  ///< 2D map object tags.
+  int place;
+
+  /**
+   * Standard constructor.
+   */
+  
+  th2ddataobject();
+  
+  
+  /**
+   * Standard destructor.
+   */
+   
+  ~th2ddataobject();
+  
+  
+  /**
+   * Return class identifier.
+   */
+  
+  virtual int get_class_id();
+  
+  
+  /**
+   * Return class name.
+   */
+   
+  virtual char * get_class_name() {return "th2ddataobject";};
+  
+  
+  /**
+   * Return true, if son of given class.
+   */
+  
+  virtual bool is(int class_id);
+  
+  
+
+  /**
+   * Return option description.
+   */
+   
+  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  
+  
+  /**
+   * Set command option.
+   *
+   * @param cod Command option description.
+   * @param args Option arguments arry.
+   * @param argenc Arguments encoding.
+   */
+   
+  virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
+
+
+  /**
+   * Print object properties.
+   */
+   
+  virtual void self_print_properties(FILE * outf); 
+  
+
+  /**
+   * Get context for object.
+   */
+   
+  virtual int get_context();
+  
+  
+  /**
+   * Export object to metapost file.
+   */
+  
+  virtual void export_mp(class thexpmapmpxs * out) = 0;
+  
+};
+
+
+#endif
+
+

@@ -1,0 +1,25 @@
+HNED:
+
++ zmenit map-level na cislo/basic/scrap(pridat)
++ rozlisit makra pre mapu a atlas
++ make install
++ pridat unikodove nazvy map do exportu
++ zakladna statistika
++ viacnasobne spajanie scrapov (join s1 s2 -count 2)
++ exportovat styl gridu - ked to bude podporovane v thpdf
+
+MARTIN:
+* odprasit debugovacie informacie !!!
+* alignment pri continuation a equipement a up-down label
+* mody pre preview (ziadne, linkovane, vsetky)
+
+POTOM:
+* skusit odprasit cavern
+* SVG - cvicna verzia
+* rozsirena statistika
+* fonty v texu
+* znackove kluce
+* debugovacie mody
+
+V BUDUCNOSTI:
+* 3D

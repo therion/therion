@@ -1,0 +1,167 @@
+% The Therion Book
+% Copyright (C) 2003 Martin Budaj, Stacho Mudrak
+% Thanks to Wookey for corrections
+
+\ifx\pdfoutput\undefined
+  \input epsf
+  \gdef\outline#1{}
+\else 
+  \input etc/supp-mis 
+  \input etc/supp-pdf 
+  \pdfinfo{/Title (The TherionBook)
+           /Author (Martin Budaj, Stacho Mudrák)
+	   /Subject (Therion documentation)
+	   /Keywords (caves, surveying, cartography, computers)
+	   /Creator (TeX)
+  }
+  \pdfcatalog{/ViewerPreferences << /DisplayDocTitle true >> }
+  \gdef\outline#1{\pdfoutline goto page \the\pageno {/XYZ} {#1}}
+\fi
+
+\input etc/verbatim
+\input etc/path.sty
+
+\font\rm=cmr12
+\font\it=cmti12
+\font\mit=cmmi10 at 12pt
+\font\bf=cmbx12
+\font\tt=cmtt12
+\font\tenrm=cmr10
+\font\sy=cmsy10 at 12pt
+
+\textfont0=\rm
+\textfont1=\mit
+\textfont2=\sy
+
+
+\font\manfnt=logo10 at 12pt
+
+\font\chap=cmssdc10 at 16pt
+\font\subchap=cmssdc10 at 12pt
+
+\def\MP{{\manfnt META}\-{\manfnt POST}}    
+
+\def\cvak{\ifdim\dimen0<6pt \dimen0=9pt \else \dimen0=3pt\fi}
+\def\bodky{\leaders\hbox to12pt{\kern\dimen0.\hss}\hfil}
+
+\def\chapter#1.{\eject\outline{#1}
+	\skiplines2\centerline{\chap #1}
+	\nobreak   \write1{\string\cvak\string\penalty-50
+                    \string\line{\string\bf\space #1\string\bodky\ \folio}}%
+  \skiplines1}
+\def\subchapter#1.{%\global\advance\kapnum by1\pictnum=1\relax
+  \penalty-100\skiplines2\centerline{\subchap #1}\nobreak
+  \write1{\string\cvak\string\line{\string\quad\space
+            #1\string\bodky\ \folio}}\nobreak
+  %\skiplines1\nobreak
+}
+\def\subsubchapter#1.{%\global\advance\kapnum by1\pictnum=1\relax
+  \penalty-100\skiplines2\leftline{\subchap #1}\nobreak
+  \write1{\string\cvak\string\line{\string\qquad\space
+            #1\string\bodky\ \folio}}\nobreak
+}
+\def\skiplines#1{\par\hbox{}\nobreak\vskip-\baselineskip
+                 \vskip#1\baselineskip}
+
+\let\,\thinspace
+
+\def\eq{=}
+
+{\catcode`\*=13\catcode`\=13
+ \gdef\itemize{%
+   \par\leftskip1em%\parskip0pt
+   \catcode`\*13\def*{\par\leavevmode\llap{$\bullet$ }\ignorespaces}
+   \catcode`\=13\def={\ifmmode\eq\else\unskip\
+                      $\triangleright$ \ignorespaces\fi}
+   }
+}
+
+\catcode`\|=13
+\def|{\ifvmode\penalty-100\medskip\fi\verbatim|}
+\def\setupverbatim % see D.E.K., p. 381
+    {\parskip=0pt %
+     \tt %
+     \spaceskip=0pt \xspaceskip=0pt % just in case...
+     \catcode`\^^I=\active %
+%     \catcode`\<=\active \catcode`\>=\active %
+%    \catcode`\,=\active \catcode`\'=\active %
+     \catcode`\`=\active %
+\catcode`\*=12
+     \def\par{\leavevmode\endgraf}% this causes that empty lines aren't 
+                                  % skipped
+     \obeylines \uncatcodespecials \obeyspaces %
+     }%
+
+\def\pic#1{\par\penalty-200
+  \midinsert
+  \ifx\pdfoutput\undefined
+    \centerline{\epsfbox{#1}}
+  \else
+    \centerline{\convertMPtoPDF{#1}{1}{1}}%
+  \fi
+  \endinsert
+}
+
+%\def\future#1{%
+%[This chapter will be finished hopefully in the near future. Please read a 
+%chapter {\it Syntax summary (#1)} in the {\it Appendix}.]}
+
+\def\list{\bgroup\itemize}
+\def\endlist{\par\egroup}
+
+\def\syntax{\par{\it Syntax:} }
+\def\endsyntax{}
+
+\def\context{\par{\it Context:} }
+\def\endcontext{}
+
+\def\description{\par{\it Description:} }
+\def\enddescription{}
+
+\def\arguments{\penalty-20\par{\it Arguments:}\bgroup\nobreak\itemize}
+\def\endarguments{\par\egroup}
+
+\def\options{\penalty-20\par{\it Options:}\bgroup\nobreak\itemize}
+\def\endoptions{\par\egroup}
+
+\def\comopt{\penalty-20\par{\it Command-like options:}\bgroup\nobreak\itemize}
+\def\endcomopt{\par\egroup}
+
+\def\example{\penalty-20\par{\it Example:} }
+\def\endexample{}
+
+\def\notes{\par{\it Special notes:} }
+\def\endnotes{}
+
+\def\www#1#2{\ifx\pdfoutput\undefined#1\else
+    \pdfstartlink attr {/Border [0 0 0]} user{%
+        /Subtype /Link
+        /A << 
+            /Type /Action 
+            /S /URI 
+            /URI (#2) 
+        >>}%
+    #1%
+    \pdfendlink\fi}
+
+\parskip=\medskipamount
+\parindent=0pt
+\baselineskip=16pt
+\raggedbottom
+\widowpenalty10000
+\clubpenalty10000
+\hsize=159.2mm
+\vsize=239.2mm
+
+\language0
+\rm
+
+\input ch00
+\input ch01
+\input ch02
+\input ch03
+\input ch04
+\input ch05
+\input ch06
+
+\end

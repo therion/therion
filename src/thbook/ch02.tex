@@ -1,0 +1,1049 @@
+\chapter Creating data files.
+
+\subchapter Basics.
+
+The input files for Therion are in text format. There are a few rules about how 
+such a file should look:
+
+\list 
+* There are two kinds of commands. One-line commands and
+  multi-line commands.  
+
+* A one-line command is terminated by an end of
+  line character. The syntax of these is
+
+  |command arg1 ... argN [-option1 value1 -option2 value2 ...]|
+
+  where {\it arg1 ... argN} are obligatory arguments, and pairs 
+  {\it -option value} are options, which you may freely omit. 
+  Which arguments and options are available depends on the particular command.
+  An example may be
+
+  |point 643.5 505.0 gradient -orientation 144.7|
+
+  with three obligatory arguments and one optional option/value pair. Sometimes options 
+  have no or multiple values. 
+  
+* Multi-line commands begin similarly to one line commands, but continue on 
+  subsequent lines until explicit command termination. These lines may contain
+  either data or options, which are applied to subsequent data. If a data line
+  starts with a word reserved for an option, you have to insert `|!|' in front
+  of it. The syntax is
+
+  |command arg1 ... argN [-option1 value1 -option2 value2 ...]
+  ...
+  optionX valueX
+  data
+  ...
+endcommand|
+
+Again, for better illustration, a real example follows:  
+
+|line wall -id walltobereferenced
+  1174.0 744.5
+  1194.0 756.5 1192.5 757.5 1176.0 791.0
+  smooth off
+  1205.5 788.0 1195.5 832.5 1173.5 879.0
+endline|
+
+This command |line| has one obligatory argument, a line type (passage wall in 
+this case), followed by one option. The next two lines contain data (coordinates of 
+B\'ezier curves to be drawn). The next line (``|smooth off|'') specifies an option which 
+applies to subsequent data (i.e. not for the whole line, unlike the option |-id| 
+in the first line) and the last line contains some more data.
+
+* if the value of an option or argument contains spaces, you should enclose this
+  value in \hbox{|" "|} or \hbox{|[ ]|}. If you want to put a double-quote |"| into 
+  text in \hbox{|" "|} you need to insert it twice. Quotes are used for strings; 
+  brackets for numerical values and keywords.
+
+* each line ending with a backslash (|\|) is considered to continue on 
+  the next line, as if there was neither line-break nor backlash.
+
+* everything that follows |#|, until the end of line---even inside a command---is 
+  considered to be a comment, and is ignored.
+\endlist
+
+
+\subchapter Data types.
+
+Therion uses following data types:
+
+\list
+* {\it boolean}---logical value (|on|/|off|)
+* {\it keyword}---a sequence of |A-Z|, |a-z|, |0-9| and |[_-]| characters 
+             (not starting with `|-|').
+* {\it ext\_keyword}---keyword that can also contain |[+-*/.,']| characters, but not
+                 on the first position.
+* {\it date}---a date (or a time interval) specification in a format\hfil\break
+          |YYYY.MM.DD@HH:MM:SS.SS - YYYY.MM.DD@HH:MM:SS.SS|
+* {\it person}---a person's first name and surname separated by whitespace characters.
+            Use `|/|' where there are more names.
+* {\it string}---a sequence of any charaters.
+* {\it units}---length units supported: meters, centimeters, inches, feets, yards
+           (also m, cm, in, ft, yd).
+           Angle units supported: degrees, minutes, grads (also deg, min)
+\endlist
+
+
+\subchapter Data format.
+
+The syntax of input files is explained in the description of
+individual commands. [Studying the example files distributed with
+Therion will help you understand.]  Each of the following sections describes
+one Therion command using the following structure:
+
+{\it Description:} notes concerning this command.
+
+{\it Syntax:} schematic syntax description. 
+
+{\it Context:} specifies the context in which is this command allowed. 
+The {\it survey} context means that the commmand must be enclosed by 
+|survey ... endsurvey| pair. The {\it scrap} context means that the command must be 
+enclosed within |scrap ... endscrap| pair. Context {\it all} means that 
+the command may be used anywhere.
+
+{\it Arguments:} a list of the obligatory arguments with explanations.
+
+{\it Options:} a list of the available options.
+
+{\it Command-like options:} options for multi-line commands, which can be specified 
+   among the data lines.
+
+{\it Example:} a short illustration of this command.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsubchapter `encoding'.
+
+\description
+  sets the encoding of input file. This allows the use of non-ASCII characters
+  in input files.
+\enddescription
+
+\syntax
+  |encoding <encoding-name>|
+\endsyntax
+
+\context
+  It should be the very first command in the file.
+\endcontext
+
+\arguments
+* |<encoding-name>| = to see a list of all the supported encoding names, run Therion with 
+  |--print-encodings| option. `UTF-8' (Unicode) and `ASCII' (7\,bit) encodings 
+  are always supported.
+\endarguments
+
+\example
+  |encoding ISO8859-2|
+\endexample
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsubchapter `input'.
+
+\description
+  inserts the contents of a file in place of 
+  the command. Default extension is `.th' and may be ommited. For greatest 
+  portability use relative paths and Unix slashes `|/|', not Windows 
+  backslashes `|\|', as 
+  directory separators.
+\enddescription
+
+\syntax
+  |input <file-name>|
+\endsyntax
+
+\context
+  all
+\endcontext
+
+\arguments
+*  |<file-name>|
+\endarguments
+
+\example
+  |input data/entrance.th2|
+\endexample
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsubchapter `survey'.
+
+\description
+  Survey is the main data structure. Each data object must belong to a 
+  survey. Surveys may be nested---this allows a hierarchical structure 
+  to be built. 
+
+  Each survey has its own namespace specified by its |<id>| argument. Objects 
+  (like survey stations or scraps; see below) which belong to a subsurvey of 
+  the current survey are referenced as
+  
+  |<object-id>@<subsurvey-id>|,
+  
+  or, if there are more nesting levels
+  
+  |<object-id>@<subsubsurvey-id>.<subsurvey-id>|.
+  
+  This means, that object identifiers must be unique only in the scope of one 
+  survey. For instance, survey stations names can be the same if they are 
+  in different surveys. This allows stations to be numbered from 0 in each survey or 
+  the joining of two caves into one cave system without renaming survey stations.
+
+\enddescription
+
+\syntax
+      |survey <id> [OPTIONS]
+       ... other therion objects ...
+       endsurvey [<id>]|
+\endsyntax
+
+\context
+  none, survey
+\endcontext
+
+\arguments
+*|<id>| = survey identifier
+\endarguments
+
+\options 
+* |declination <specification>| = set the default declination for 
+  all data objects in this survey (which can be overridden by
+  declination definitions in subsurveys). The |<specification>| 
+  has three forms:
+
+  1. |[]| an empty string. This will reset the declination definition.
+
+  2. |[<value> <units>]| will set a single value (also for undated surveys).
+
+  3. |[<date1> <value1> [<date2> <value2> ... ] <units>]| 
+     will set declination for several dates. Then the declination
+     of each shot will be set according to the date specification
+     of the data object. If you want to explicitely set the declination
+     for undated survey data, use `|-|' instead of date.
+
+* |author <date> <person>| = author of the data and it's creation date
+* |copyright <date> <string>| = copyright date and name
+* |title <string>| = description of the object
+\endoptions
+
+\example
+
+|survey main -declination [3 deg]
+
+  survey a
+    centerline
+      data normal from to compass clino length
+      1 2 100 -10 10
+    endcenterline
+  endsurvey
+
+  survey b
+    centerline
+      data normal from to compass length clino
+      1 2 0 10 10
+    endcenterline
+  endsurvey
+
+  centerline
+    equate 2@a 1@b
+  endcenterline
+
+endsurvey|
+\endexample      
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsubchapter `centerline'.
+
+\description
+  Survey data (centerline) specification. The syntax is borrowed from Survex 
+  with minor modifications; the Survex manual may be useful as an additional
+  reference for the user.
+\enddescription
+
+\syntax
+      |centerline [OPTIONS]
+          date <date>
+          team <person> [<roles>]
+          instrument <quantity list> <description>
+          calibrate <quantity list> <zero error> [<scale>]
+          units <quantity list> [<factor>] <units>
+          declination <value> <units>
+          infer <what> <on/off>
+          sd <quantity list> <value> <units>
+          grade <grade list>
+          data <style> <readings order>
+          mark <type>
+          flags <shot flags>
+          station <station> <comment> [<flags>]
+          fix <station> [<x> <y> <z> [<std x> <std y> <std z> \
+            [<covxy> <covyz> <covxz>]]]
+          equate <station list>
+          break
+          ...
+          [SURVEY DATA]
+          ...
+        endcenterline|
+\endsyntax
+
+\context
+  survey
+\endcontext
+
+\options
+  * |id <ext_keyword>| = id of the object
+  * |author <date> <person>| = author of the data and it's creation date
+  * |copyright <date> <string>| = copyright date and name
+  * |title <string>| = description of the object
+\endoptions
+
+
+\comopt
+  * |date <date>| = survey date. If multiple dates are specified,
+    a time interval is created.
+  * |team <person> [<roles>]| = a survey team member. The first argument
+    is his/her name, the others describe the roles of the person in
+    the team (optional---not currently used). The following role keywords are
+    supported: station, length, tape, compass, bearing, clino,
+    gradient, counter, depth, station, position, notes and pictures.
+  * |instrument <quantity list> <description>| = description
+    of the instrument that was used to survey the given quantities (same
+    keywords as team person's role)
+  * |infer <what> <on/off>| = `|infer plumbs on|' tells the
+    program to interpret gradients $\pm90\,^\circ$ 
+    as UP/DOWN (this means
+    no clino corrections are applied). `|infer equates on|' will case program to
+    interpret shots with 0 length as equate commands (which means that no
+    tape corrections are applied)
+  * |declination <value> <units>| = sets the declination for subsequent
+    shots $$true\ bearing = measured\ bearing + declination.$$
+    If no declination is specified, or the declination is reset (|-|),
+    then a valid declination specification is searched for in all surveys
+    the data object is in. See declination option of survey command.
+  * |sd <quantity list> <value> <units>| = sets the 
+    standard deviation for the given measurements. The Quantity list can 
+    contain the following keywords: length, tape, bearing, compass, 
+    gradient, clino, counter, depth, x, y, z, position, easting, dx,
+    northing, dy, altitude, dz.
+  * |grade <grade list>| = sets standard deviations according to the
+    survey grade specification (see grade command). All previously
+    specified standard deviations or grades are lost. If you want 
+    to change an SD, use the sd option after this command. If multiple
+    grades are specified, only the last one applies. You can specify
+    grades only for position or only for surveys. If you want to
+    combine them, you must use them in one grade line.
+  * |units <quantity list> [<factor>] <units>| = set the units
+    for given measurements (same quantities as for sd).
+  * |calibrate <quantity list> <zero error> [<scale>]| = set the
+    instrument calibration. The measured value is calculated using the
+    following formula:
+    $measured\ value = (read\ value - zero\ error) \times scale$.
+    The supported quantities are the same as sd.
+  * |data <style> <readings order>| = set data style (normal, topofil,
+    diving, cartesian, cylpolar, nosurvey) and readings order. Reading
+    is one of the following keywords: station, from, to, tape/length, 
+    [back]compass/[back]bearing, [back]clino/[back]gradient, 
+    depth, fromdepth, todepth, depthchange, counter, 
+    fromcount, tocount, northing, easting, altitude. 
+    For interleaved data both newline and direction keywords
+    are supported. If backward and forward compass or clino
+    reading are given, the average of them is computed.
+    See Survex manual for details.
+  * |break| = can be used with interleaved data to separate two traverses
+  * |mark <type>| = set the type of the station. |<type>| is one of: fixed, 
+    painted and temporary (default).
+  * |flags <shot flags>| = set flags for following shots. The supported
+    flags are: surface (for surface measurements), duplicate (for
+    duplicate surveys). Both are excluded from length calculations.
+    Also ``|not|'' is allowed before a flag.
+  * |station <station> <comment> [<flags>]| = set the station comment
+    and flags: entrance or continuation. If |""| is specified as a
+    comment, it is ignored.
+  * |fix <station> [<x> <y> <z> [<std x> <std y> <std z> [<covxy> <covyz> \
+<covxz>]]]| 
+    = fix station coordinates (with errors and
+    covariances---only the units transformation, not calibration,
+    is applied to them).
+  * |equate <station list>| = set points that are equivalent
+\endcomopt
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsubchapter `scrap'.
+
+\description
+  Scrap is a piece of 2D map, which doesn't contain overlapping passages
+  (i.e.~all the passages may be drawn on the paper without overlapping).
+  For small and simple caves, the whole cave may belong to one scrap. 
+  In complicated systems, a scrap is usually one chamber or one passage. 
+  Ideally, a scrap contains about 100~m of the cave. Each scrap is processed 
+  separately by \MP; scraps which are too large may exceed \MP's memory and 
+  cause errors.
+
+  Each scrap has its own local cartesian coordinate system, which usually 
+  corresponds with the millimeter paper (if you measure the coordinates of map
+  symbols by hand) or pixels of the scanned image (if you use XTherion).
+  Therion does the transformation from this local coordinate system to the 
+  real coordinates using the positions of survey stations, which are 
+  specified both in the scrap as point map symbols and in centerline data.
+  If the scrap doesn't contain at least two survey stations, you have
+  to use the |-scale| option for calibrating the scrap. (This is usual for
+  cross sections.)
+\enddescription
+
+\syntax |scrap <id> [OPTIONS]
+       ... point, line and area commands ...
+       endscrap [<id>]|
+\endsyntax
+
+\context
+  survey
+\endcontext
+
+\arguments
+  *|<id>| = scrap identifier
+\endarguments
+
+\options
+  * |projection <specification>| = specifies the drawing projection.
+    Each projection is identified by a type and optionally by an index
+    in the form |type[:index]|. The index can be any keyword. The following 
+    projection types are supported:
+
+    1. |none| = no projection, used for cross sections or maps that
+       are independent of survey data. No index is allowed for this projection.
+
+    2. |plan| = basic plan projection (default).
+
+    3. |elevation| = this projection optionally takes a view direction
+       as an argument (e.g.~|[elevation 10]| or |[elevation 10 deg]|).
+
+    4. |extended| = extended elevation.
+
+  * |scale <specification>| = specifies the drawing units scale.
+    The |<specification>| has four forms:
+
+    1. |<number>| = |<number>| meters per drawing unit.
+
+    2. |[<number> <length units>]| = |<number> <length units>| per
+       drawing unit.
+
+    3. |[<num1> <num2> <length units>]| = |<num1>| drawing units 
+       corresponds to |<num2> <length units>| in reality.
+
+    4. |[<num1> ... <num8> [<length units>]]| = this is the most
+       general format, where you specify, in order, the x and y coordinates
+       of two points in the scrap and two points in reality.
+       Optionally, you can also specify units for the coordinates of the `points in reality'.
+  * |stations <list of station names>| = stations you want to plot
+    to the scrap, but which are not used for scrap transformation. You don't have
+    to specify (draw) them with the |point station| command.
+
+  * |author <date> <person>| = author of the data and it's creation date
+  * |copyright <date> <string>| = copyright date and name
+  * |title <string>| = description of the object
+\endoptions
+
+
+
+
+\subsubchapter `point'.
+
+\description
+Point is a command for drawing a point map symbol.
+\enddescription
+
+\syntax
+  |point <x> <y> <type> [OPTIONS]|
+\endsyntax
+
+\context
+  scrap
+\endcontext
+
+\arguments
+  * |<x>| and |<y>| are the drawing coordinates of an object.
+  * |<type>| determines the type of an object. The following
+    types are supported: 
+
+    {\it special objects:} station, section, water-flow, spring, sink,
+    label, remark, altitude, height, passage-height, station-name,
+    date, air-draught, entrance, gradient;
+
+    {\it symbolic passage fills:} bedrock, sand, raft, clay, pebbles,
+    debris, blocks, water, ice, guano;
+
+    {\it speleothems:} flowstone, moonmilk, stalactite, stalagmite,
+    pillar, curtain, helectite, soda-straw, crystal, wall-calcite,
+    popcorn, disk, gypsum, gypsum-flower, aragonite, cave-pearl,
+    rimstone-pool, rimstone-dam, anastomosen, karren, scallop,
+    flute, raft-cone;
+
+    {\it equipement:} anchor, rope, fixed-ladder, rope-ladder, steps,
+    bridge, traverse, camp, no-equipement;
+
+    {\it passage ends:} continuation, narrow-end, low-end, flowstone-choke,
+    breakdown-choke;
+
+    {\it others:} archeo-material, paleo-material, vegetable-debris, root.
+\endarguments
+
+
+\options
+  * |subtype <keyword>| = determines the object's subtype. The following
+    subtypes for given types are supported: 
+    
+    {\it station:} temporary, painted, natural, fixed;
+  * |name <reference>| = if the point type is station, this
+    option gives the reference to the real survey station.
+  * |extend <specification>| = if the point type is station and scrap
+    projection is extended elevation, you can
+    adjust the extension of the centerline using this option. The |<specification>| is a list
+    of one or more followig keywords:
+
+    1. |left| = indicates extension to the left
+
+    2. |right| = the opposite of above. If no extension direction is
+       given, therion uses the direction of the previous station, or
+       right, if no such station exists.
+
+    3. |root| = determines the starting node for extension.
+
+    4. |sticky <on/off>| = two keywords that identify whether other
+       scraps can be attached to this station. The default is true for
+       end-station.
+
+    5. |previous/prev <reference>| = reference to previous station
+       (or point of type station)
+  * |orientation/orient <number>| = defines the orientation
+    of the symbol. If not specified, it's oriented to north.
+    0 $\le$ |number| $<$ 360.
+  * |text| = text of the label or remark
+  * |value| = value of height, passage-height or altitude label
+  * |align| = alignment of the symbol or text. The following values
+    are accepted: center, c, top, t, bottom, b, left, l, right, r,
+    top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br.
+  * |place <bottom/none/top>| = where to place the symbol relatively
+    to other objects (none by default).
+  * |scale| = symbol scale, can be: medium, m (default), large, l.
+  * |clip <bool>| = specify whether a symbol is clipped by the scrap border.
+    You cannot specify this option in the following symbols: station,
+    station-name, label, remark, date, altitude, height, passage-height.
+  * |scrap <reference>| = reference to a section scrap
+  * |id <ext_keyword>| = id of the object
+  * |author <date> <person>| = author of the data and it's creation date
+  * |copyright <date> <string>| = copyright date and name
+  * |title <string>| = description of the object
+\endoptions
+
+\notes
+   The following point types have specific behaviours:
+        
+   \list
+      {\it altitude:} the value specified is the altitude difference from 
+      the nearest station. If the altitude value is prefixed by ``|fix|''
+      (e.g. |-altitude [fix 1300]|), this value is used as an absolute altitude. 
+      The value can optionally be followed by length units.
+        
+      {\it height:} according to the sign of the value (positive, negative or
+      unsigned), this type of symbol represents chimney height, pit depth
+      or step height. The numeric value can be optionally followed by `|?|', 
+      if the value is presumed and units can be added 
+      (e.g.~|-value [40? ft]|).
+        
+      {\it passage-height:} the following four forms of value are supported:
+      |+<number>| (the height of the ceiling), |-<number>| (the depth of the 
+      floor or water depth), |<number>| (the distance between floor 
+      and ceiling) and |[<number> <number>]| (the distance to ceiling and 
+      distance to floor).
+        
+      {\it station:} in any projection (with the exception of `none' projection),
+      at least one station with station reference (|-name| option) has 
+      to be specified.
+        
+      {\it station-name:} if no text is specified, the name of the nearest
+      station is used.
+        
+      {\it section:} place the section at this point. The section scrap
+      must be in `none' projection. You can specify it through the |-scrap|
+      option.
+        
+      {\it spring, sink:} always use these two symbols with a water-flow
+      arrow.
+        
+      {\it symbolic passage fills:} unlike other symbols, these are
+      clipped by the scrap border.
+  \endlist
+\endnotes
+
+
+\subsubchapter `line'.
+
+\description
+Line is a command for drawing a line symbol on the map.
+\enddescription
+
+\syntax
+  |line <type> [OPTIONS]
+         altitude <value>
+         border <on/off>
+         clip <bool>
+         close <on/off/auto>
+         direction <begin/end/both/none/point>
+         gradient <none/center/point>
+         head <begin/end/both/none>
+         mark <keyword>
+         orientation/orient <number>
+         outline <in/out/none>
+         place <bottom/none/top>
+         reverse <bool>
+         size <number>
+         r-size <number>
+         l-size <number>
+         smooth <on/off/auto>
+         subtype <keyword>
+         text <string>
+         ...
+         [LINE DATA]
+         ...
+       endline|
+\endsyntax
+
+\context
+  scrap
+\endcontext
+
+\arguments
+   * |<type>| is a keyword that determines the type of line.
+     The following types are supported: arrow, border, chimney,
+     contour, flowstone, label, overhang, pit, rock-border,
+     rock-edge, section, slope, survey and wall.
+\endarguments
+
+
+\comopt
+   * |altitude <value>| = can be specified only with the wall type.
+         This option creates an altitude label on the wall. The value
+         gives the altitude difference of the point on the wall 
+         relative to the nearest station. The value can be prefixed
+         by a keyword ``|fix|'', then no nearest station is taken into
+         consideration; the absolue given value is used instead.
+         Units can follow the value. Examples: |+4|, |[+4 m]|,
+         |[fix 1510 m]|.
+       * |border <on/off>| = this option can be specified only with
+         the `slope' symbol type. It switches on/off the border line of the slope.
+       * |close <on/off/auto>| = determines whether a line is closed 
+         or not
+       * |direction <begin/end/both/none/point>| = can be used only
+         with the section type. It indicates where to put 
+         a direction arrow on the section line. None is default.
+       * |gradient <none/center/point>| = can be used only with the contour
+         type and indicates where to put a gradient mark on the contour line.
+         Center is default.
+       * |head <begin/end/both/none>| = can be used only with the arrow
+         type and indicates where to put an arrow head. End is default.
+       * |mark <keyword>| = is used to mark the station on the line (see
+         join command).
+       * |orientation/orient <number>| = orientation of the symbols
+         on the line. If not specified, it's perpendicular to the 
+         line on its left side. 0 $\le$ |number| $<$ 360.
+       * |outline <in/out/none>| = determines whether the line serves as
+         a border line for a scrap. Default value is `|out|' for
+         walls, `|none|' for all other lines.
+       * |reverse <bool>| = whether points are given in reverse order.
+       * |size <number>| = line width (left and right sizes are set to 
+         one half of this value)
+       * |r-size <number>| = size of the line to the right
+       * |l-size <number>| = same to the left
+       * |smooth <on/off/auto>| = whether the line is smooth at the given point.
+         Auto is default.
+       * |subtype <keyword>| = determines line subtype. The following
+         subtypes are supported for given types:  
+
+         {\it wall:} invisible, bedrock (default), sand, clay, pebbles, debris,
+         blocks, ice, underlying, unsurveyed, presumed  
+
+         {\it border:} visible, invisible, temporary
+       * |text <string>| = valid only for label lines.
+       * |[LINE DATA]| specify either the coordinates of a line segment
+         |<x> <y>|, or coordinates of a B\'ezier curve arc 
+         |<c1x> <c1y> <c2x> <c2y> <x> <y>|, where |c| indicates the control
+         point.
+       * |place <bottom/none/top>| = where to place the symbol relative
+         to other objects (none by default).
+       * |clip <bool>| = specify whether a symbol is clipped by the scrap border.
+\endcomopt
+
+\options
+  * |id <ext_keyword>| = id of the object
+  * |author <date> <person>| = author of the data and it's creation date
+  * |copyright <date> <string>| = copyright date and name
+  * |title <string>| = description of the object
+\endoptions
+
+\notes
+   The following line type has this specific behaviour:
+
+   \list
+       {\it section:} if both control points of a B\'ezier curve are given 
+       then the line is drawn up to the perpendicular projection of 
+       the first control point and from the projection of the section control
+       point. No section curve is allowed.
+   \endlist
+\endnotes
+
+
+\subsubchapter `area'.
+
+\description
+Area is a command for drawing an area on the map.
+\enddescription
+
+\syntax
+  |area <type>
+         place <bottom/none/top>
+         clip <bool>
+       ... border line references ...
+       endarea|
+\endsyntax
+
+\context
+  scrap
+\endcontext
+
+\arguments
+  * |<type>| is one of following: water, sump, sand, debris.
+\endarguments
+
+\comopt
+  * the data lines consist of border line references, which must be 
+    in order and each pair of consecutive lines must intersect 
+    (i.e. have a point in common).
+  * |place <bottom/none/top>| = where to place the symbol relative
+    to other objects (none by default).
+  * |clip <bool>| = specify whether a symbol is clipped by the scrap border.
+\endcomopt
+
+\options
+  * |id <ext_keyword>| = id of the object
+  * |author <date> <person>| = author of the data and it's creation date
+  * |copyright <date> <string>| = copyright date and name
+  * |title <string>| = description of the object
+\endoptions
+
+
+\subsubchapter `map'.
+
+\description
+  A map is a collection of either scraps or other maps of the same projection type.
+  It simplifies the data management when selecting data for output.
+\enddescription
+
+\syntax
+  |map <id>
+        ... scrap or other map references ...
+        break
+        ... next level scrap or other map references ...
+        preview <above/beside/below> <other map id>
+      endmap|
+\endsyntax
+
+\context
+  survey
+\endcontext
+
+\arguments
+  *|<id>| = scrap identifier
+\endarguments
+
+\comopt
+  * the data lines consist of scrap or map references. Note that
+    you can not mix them together.
+  * scraps following the |break| will be placed on another level
+  * |preview <above/beside/below> <other map id>| will put the outline of
+    the other map in the specified preview position relative to the
+    current map. Use the revise command if you want to add maps
+    from higher levels.
+\endcomopt
+
+\options
+  * |author <date> <person>| = author of the data and it's creation date
+  * |copyright <date> <string>| = copyright date and name
+  * |title <string>| = description of the object
+\endoptions
+
+
+\subsubchapter `join'.
+
+\description
+  Joins two or more points in a map together
+\enddescription
+
+\syntax
+  |join <point1> <point2> ... <pointN> [OPTIONS]|
+\endsyntax
+
+\context
+  scrap, survey
+\endcontext
+
+\arguments
+   * |<pointX>| can be an id of a point symbol or an id of a line,
+     optionally followed by a line point mark |[<id>:<mark>]|.
+     |<mark>| can be also `|end|' (end of the line) or line point index
+     (where 0 is the first point). A special case is when |<point1>|
+     and |<point2>| are scrap ids---than the closest scrap ends are
+     joined together.
+\endarguments
+
+\options
+  * |smooth <bool>| indicates whether two lines are to be connected 
+    smoothly.
+\endoptions
+
+
+\subsubchapter `grade'.
+
+\description
+   This command is used to store predefined precisions of centerline data.
+   See |sd| option description for |centerline| command. 
+\enddescription
+
+\syntax:
+  |grade <id> [OPTIONS]
+        ...
+        [<quantity list> <value> <units>]
+        ...
+        endgrade|
+\endsyntax
+
+\context
+  all
+\endcontext
+
+\arguments
+\endarguments
+
+\options
+\endoptions
+
+
+\subsubchapter `revise'.
+
+\description
+  This command is used to set or change properties of an already 
+  existing object.
+\enddescription
+
+\syntax
+  The syntax of this command for 
+  object created with ``single line'' command is
+  
+  |revise id [-option1 value1 -option2 value2 ...]|
+  
+  For objects created with ``multi line'' commands is syntax following
+
+|revise id [-option1 value1 -option2 value2 ...]
+  ...
+  optionX valueX
+  data
+  ...
+endrevise|
+\endsyntax
+
+\context
+  all
+\endcontext
+
+\arguments
+  The id stands for object identifier (the id of an object you want to
+  revise must always be specified).
+\endarguments
+
+
+
+
+\subchapter XTherion.
+
+XTherion is an IDE (Integrated Development Environment) for Therion. 
+It helps a lot with creating input data files. Currently it works in 
+three main modes: text editor, map editor and compiler. (Here we're concerned 
+with creating data, so only the two first modes are described in this section. For compiler 
+features see the chapter {\it Processing data}.)
+
+It's not necessary for Therion itself---you may edit input files in your 
+favourite text editor and run Therion from the command line. XTherion is also 
+not the only IDE which may be used with Therion. It's possible to 
+write a better one, which would be more user friendly, more WYSIWYG, faster, 
+more robust and easier to use. Any volunteers?
+
+This manual does not describe such familiar things as `if you want to save a file, go to 
+menu File and select Save, or press Ctrl-s'. Browse the top menu for a minute 
+to get feeling of XTherion. 
+
+For each mode of operation, there is an additional 
+right or left menu. The submenus may be packed; you may unpack them by 
+clicking on the menu button. For most of the menus and buttons, there is a short 
+description in the status line, so it's not hard to guess the meaning of each one.
+The order of submenus on the side may be customized by the user. Right-click on 
+the menu button and select in the menu which of the other menus it should 
+be swapped with.
+
+
+\subsubchapter XTherion---text editor.
+
+[Unicode, tables, multiple files]
+
+\subsubchapter XTherion---map editor.
+
+Although the benefits of the special text editor for Therion are disputable, 
+without a map editor it is really too hard to draw any map. Most of the drawing 
+commands (point, line) require 
+specification of position in Cartesian coordinates ({\it x\/}-axis to the right, 
+{\it y\/}-axis up). Which is better: to measure coordinates on the paper and type
+them by hand, or to display a scanned map on the background of the XTherion's 
+working area and draw the map accordingly as in other vector graphics editors?
+
+But don't expect too much. XTherion is not a truly WYSIWYG editor. It 
+displays only the position, not the actual shape, of drawn point or line 
+symbols. Visually there is no difference between a helectite and a text 
+label---both are rendered as simple dots. The type and other attributes of any 
+object are specified only in the {\it Point control} and {\it Line control} menus.
+
+
+\ifx\pdfoutput\undefined\else
+\leavevmode\llap{\smash{\raise10pt\hbox{\pdfannot width 6cm height 0cm depth  4cm 
+{/Subtype /Text 
+ /Name /Help
+ /Contents (Hints: 1. Why do we use Survex?
+            2. Why do we use MetaPost?)
+}}} \qquad}\fi
+{\it Exercise:} Find two substantial reasons, why the map drawn in XTherion can't be 
+identical with Therion output. (If you answer this, you'll know, why XTherion 
+will never be true WYSIWYG editor. Authors' laziness is not the correct 
+answer.)
+
+Let's begin by describing typical use of the map editor. First, you have 
+to decide which part of the cave (which scrap) you'll draw. (It's possible to 
+draw more than one scrap in one file, in which case all inactive scraps are rendered 
+yellow.)
+
+After creating a new file in the map editor, you may load one or more 
+{\bf images}---scanned survey sketches from the cave---as a backround for 
+the drawing. Click on the {\it Insert} button in {\it Background images} menu.
+Unfortunatelly, as a limitation of Tcl/Tk language, only GIF, PNM and PPM 
+images are supported. All opened images are placed in the upper-left corner of 
+the working area. Move it by double clicking and dragging with the right 
+mouse button or through a menu. For better performance on slower computers, 
+it's possible to temporarily unload a currently unused image from memory 
+by unchecking its {\it Visibility} check-box. ({\it Note:} Therion doesn't
+use these images in any way.)
+
+The size and zoom setting of the {\bf drawing area} is adjusted in the 
+corresponding menu. {\it Auto adjust} calculates optimal size of the working 
+area according to the sizes and positions of loaded background images.
+
+After these preparation steps, you're ready for drawing, or, more 
+precisely, for {\bf creating a map data file}. It's important to remember, 
+that you're actually creating a text file which should conform to the syntax 
+described in the chapter {\it Data format}. Actually, only a subset of the 
+Therion commands are used in the Map editor---multi-line |scrap ... endscrap|
+commands which may contain |point|, |line| and |area| commands. (Cf.~chapter 
+{\it Data format}). This corresponds with a section of hand-drawn map, which is 
+built up from points, lines and filled areas.
+
+So, the first step is defining the {\bf scrap} by a |scrap ... endscrap| 
+multi-line command.  In the {\it File commands} menu click on the {\it Action} 
+submenu and select {\it Insert scrap}. This changes the {\it Action button} 
+above from {\it Insert text} to {\it Insert scrap}. After pressing this button a 
+new scrap will be inserted. You should see lines
+
+|scrap - scrap1
+endscrap
+end of file|
+
+in the preview window above the {\it Insert scrap} button. This window is a 
+simplified outline of the text file, which will be saved by XTherion. Only 
+the command (|scrap|, |point|, |line|, |text|---why text see below) and its 
+type (for |point| and |line|) or name (for |scrap|) are shown. 
+
+The full contents of any command is displayed in the {\it Command preview} 
+menu.
+
+For modifying previously-created commands, there are additional 
+menus---e.g.~{\it Scrap control} for the |scrap| command. Here you can 
+change the name and other options. For details see chapter {\it Data format}.
+
+Now it's possible to insert some {\bf point symbols}. As with scrap 
+insertion, go to the {\it File commands} menu, click on the {\it Action} 
+submenu and select {\it Insert point}; than press newly renamed {\it Insert 
+point} button. A shortcut for all this is Ctrl-p. Than click on the desired 
+spot in the working area and you'll see a blue dot representing a point 
+symbol. Its attributes can be adjusted in the {\it Point control} menu.
+You'll stay in `insert' mode---each click on the working area adds a new 
+point symbol. To escape from `insert' to `select' mode, press {\it Esc} key 
+on the keyboard or {\it Select} button in the {\it File commands} menu.
+
+What order will the commands be in the output file? Exactly as in the 
+outline in the {\it File commands} menu. Newly created point, line and text objects 
+are added before the currently marked line in the outline. It's possible to 
+change the order by selecting a line and pressing {\it Move down} or 
+{\it Move up} buttons in the {\it File commands} menu.
+
+{\bf Drawing lines} is similar to drawing in other 
+vector editing programs, which work with B\'ezier curves. 
+(Guess how to enter the line insertion mode, other than 
+using the shortcut Ctrl-l.) Click where the first point should be, then drag the 
+mouse with pressed left button and release it where the first control point 
+should be. Than click somewhere else (this point will be the second point of 
+the curve) and drag the mouse (adjusting the second control point of the 
+previous arc and the first control point of the next one simultaneously.) If 
+this explanation sounds too obscure, you can 
+get some practise working in some of the standard vector editors with 
+comprehensive documentation. The line will be finished after escaping from the 
+insertion mode.
+
+For line symbols, there are two control menus: {\it Line control} and {\it Line 
+point control}. First one sets attributes for the whole curve, like type or
+name. The check-box {\it reverse} is important: Therion requires oriented 
+curves and it is not unusual that you begin to draw from the wrong end.
+The {\it Line point control} menu enables you to adjust the attributes of any selected 
+point on the line, such as the curve being smooth at this point (which is on 
+by default), or the presence of neighbouring control points (`|<<|' and `|>>|' 
+check-boxes).
+
+{\bf Areas} don't have any visual representation. They are inserted as a |text| 
+command which contents (entered in the {\it Text editor} menu of the Map editor) 
+is usual |area ... endarea| multi-line command (see the chapter {\it Data 
+format}.) 
+
+CAUTION! The command |text| is not a Therion command! It's only a nickname for a 
+block of an arbitrary text in 
+XTherion. In the file saved by XTherion, there'll only be 
+whatever you type into the {\it Text editor} or see in the {\it Command preview}.
+It may be an area definition or whatever you want, such as a comment beginning 
+with a `|#|' character.
+
+In the {\bf selection mode} you can select existing line or point objects and  
+set their attributes in the corresponding menus, move them, or delete them (Ctrl-d or 
+{\it Action button} in {\it File commands menu} after setting {\it Action} to 
+{\it Delete}).
+
+[adding or deleting a point on the curve]
+
+XTherion doesn't do any syntax checking; it only writes drawn objects with their 
+attributes to a text file. Any errors are detected only when you process these 
+files with Therion.
+
+
+\endinput

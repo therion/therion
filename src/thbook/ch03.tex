@@ -1,0 +1,341 @@
+\chapter Processing data.
+
+Besides data files, which contain survey data, Therion uses a configuration file, 
+which contains instructions on how the data should be presented.
+
+\subchapter Configuration file.
+
+The configuration filename can be given as an
+argument to therion. By default Therion searches for file named |thconfig|
+in the current working directory. It is read like any other therion file 
+(i.e.~one command per line; empty lines or lines starting with `|#|' are ignored;
+lines ended with a backslash continue on the next line.) A list of currently 
+supported commands follow.
+
+\subsubchapter `encoding'.
+
+Works like the |encoding| command in data files - specifies character sets.
+
+\subsubchapter `input'.
+
+Works like |input| command in data files  - includes other files.
+
+\subsubchapter `source'.
+
+\description
+   Specifies which source (data) files Therion should read. 
+   You can specify several files here; one per line. 
+   You can also specify them using the |-s| command line option (see below).
+\enddescription
+
+\syntax
+  |source <file-name>|
+\endsyntax
+
+\arguments
+*  |<file-name>| 
+\endarguments
+
+
+
+\subsubchapter `select'.
+
+\description
+  selects objects for export. By default, all survey objects 
+  are selected. 
+\enddescription
+
+\syntax
+  |select <object> [OPTIONS]|
+\endsyntax
+
+\arguments
+*  |<object>| = any object from the database, such as a survey or 
+   map, identified by its id.
+\endarguments
+
+\options
+  * |recursive <on/off>| = valid only when a survey is selected. If set
+    on (by default) all subsurveys of the given survey are recursively
+    selected/unselected.
+  
+  * |map-level <number>| = valid only when a map is selected. Determines
+    the level at which map expansion for atlas export is stopped. 
+    By default 0 is used, if ``|-|'' or ``|.|'' is specified, 
+    expansion is done up to basic maps.
+
+  * |chapter-level <number>| = valid only when a map is selected. Determines
+    the level at which chapter expansion for atlas export is stopped. 
+    By default 0 is used, if ``|-|'' or ``|.|'' is specified, no chapter is
+    exported for this map.
+\endoptions
+
+
+
+\subsubchapter `unselect'.
+
+\description
+  Unselects objects from export.
+\enddescription
+
+\syntax
+  |unselect <object> [OPTIONS]|
+\endsyntax
+
+\arguments
+  The same as the |select| command.
+\endarguments
+
+\options
+  The same as the |select| command. 
+\endoptions
+
+
+\subsubchapter `layout'.
+
+\description
+  Specifies layout for exported 2D maps. Most settings apply 
+  to atlas mode.
+\enddescription
+
+\syntax
+  |layout <id> [OPTIONS]
+          copy <source layout id>
+          doc-author <string>
+          doc-keywords <string>
+          doc-subject <string>
+          doc-title <string>
+          exclude-pages <on/off> <list>
+          grid-origin <x> <y> <x> <units>
+          grid-size <width> <height> <units>
+          nav-factor <factor>
+          nav-size <x-size> <y-size>
+          opacity <on/off> <value>
+          origin <x> <y> <x> <units>
+          origin-label <x-label> <y-label>
+          overlap <value> <units>
+          own-pages <number>
+          page-numbers <on/off>
+          page-setup <dimensions> <units>
+          scale <picture length> <real length>
+          size <width> <height> <units>
+          title-pages <on/off>
+          ... [atlas tex macros] ...
+        endlayout|
+\endsyntax
+
+\arguments
+  |<id>| = layout identifier (to be used in the |export| command)
+\endarguments
+
+\options
+\endoptions
+
+\comopt 
+  * |copy <source layout id>| = set properties here that are not
+    modified based on the given source layout.
+  * |doc-author <string>| = set document author
+  * |doc-keywords <string>| = set document keywords
+  * |doc-subject <string>| = set document subject
+  * |doc-title <string>| = set document title
+  * |exclude-pages <on/off> <list>| = exclude specified pages from cave
+    atlas. The list may contain page numbers separated by a comma or dash (for intervals) 
+    e.g.~|2,4-7,9,23| means, that pages 2, 4, 5, 6, 7, 9 and 23 should be 
+    omited. (Note: this applies only to the map and title pages. Set 
+    |own-pages| to 0 to get the correct page numbers to be excluded.) 
+    If you change |title-pages| setting, you have to
+    adjust this list accordingly. (In the future there will be another form
+    of the specification of which pages to omit, which won't require
+    this redefinition.)
+  * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
+    origin
+  * |grid-size <width> <height> <units>| = set grid size in paper
+    units
+  * |nav-factor <factor>| = set atlas navigator zoom factor
+  * |nav-size <x-size> <y-size>| = set number of atlas pages in
+    both directions of navigator
+  * |opacity <on/off> <value>| = set scrap opacity. Value range is 0--100.
+  * |origin <x> <y> <x> <units>| = set origin of atlas pages
+  * |origin-label <x-label> <y-label>| = set label for atlas page
+    which has the lower left corner at the given origin coordinates
+  * |overlap <value> <units>| = set overlap size in paper units
+  * |own-pages <number>| = set number of own pages added before
+    the first page of automatically generated pages in atlas mode
+    (currently required for correct page numbering)
+  * |page-numbers <on/off>| = turn on/off page numbering in atlas mode
+  * |page-setup <dimensions> <units>| = set page dimensions in
+    this order: paper-width, paper-height, page-width, page-height,
+    left-margin and top-margin.
+  * |scale <picture length> <real length>| = set scale of
+    output map or map atlas
+  * |size <width> <height> <units>| = set map size in the atlas mode
+  * |title-pages <on/off>| = turn on/off atlas title pages
+  * all other lines can contain \TeX\ macros, which will produce
+    the cave atlas. Here the page layout may be adjusted (positions
+    of elements in the area framed by dashed blue line in the picture).
+    See the chapter {\it Page layout} for details.
+\endcomopt
+
+\midinsert
+  \ifx\pdfoutput\undefined\else
+    \pdfximage {pic/page.pdf}%
+  \fi
+  \vbox to 482bp{\centerline{\hbox to 400bp{%
+    \ifx\pdfoutput\undefined
+      \epsfbox{mp/page.1}%
+    \else
+      \rlap{\pdfrefximage\pdflastximage}%
+      \convertMPtoPDF{mp/page.1}{1}{1}
+    \fi
+    \hss}}\vss
+  }
+\endinsert
+
+
+\subsubchapter `export'.
+
+\description
+  Exports specified data from database. 
+\enddescription
+
+\syntax
+  \list
+    * |export <type> [OPTIONS]| 
+%    * |export map/atlas [PROJECTION [OPTIONS]]| 
+  \endlist
+\endsyntax
+
+\arguments
+  * |<type>| = The following export types are supported:
+
+    |model| = 3D model of the cave
+
+    |map| = one page 2D map
+
+    |atlas| = 2D atlas in more pages
+\endarguments
+
+\options
+  {\it common:}
+
+  * |output/o <file>| = set output file name. If no file name is
+    given the prefix ``|cave.|'' is used with an extension corresponding to
+    output format.
+
+  {\it model:}
+
+  * |format/fmt <format>| = set model output format. Currently the following
+    output formats are supported: Therion (native format), Compass 
+    (plt file) and Survex (3d file).
+
+  {\it map/atlas:}
+  
+  * |projection| is a unique identifier that specifies the map projection type.
+    (See the |scrap| command for details.) If there are no scraps with 
+    the specified projection then Therion will give an error. 
+  * |layout| = map or atlas layout---see layout command for details.
+  * |layout-xxx| = where |xxx| stands for other layout options. Using this
+    you can change some layout properties directly within the export command.
+  * |map_level <level>| = defines the maximum level of recursion the program 
+     will perform as it selects maps for output.
+  * |format/fmt <format>| = set map format. Currently only PDF format
+    is supported.
+\endoptions
+
+
+
+\subchapter Running Therion.
+
+Now, after mastering data and configuration files, we're ready to run Therion. 
+Usually this is done from the command line as follows
+
+|therion|
+
+The full syntax is
+
+|therion [-q] [-L] [-l <log-file>]
+        [-s <source-file>] [-p <search-path>]
+        [-g/-u] [-i] [-d] [<cfg-file>]
+
+therion [-h/--help]
+        [-v/--version]
+        [--print-encodings]
+        [--print-init-file]|
+
+\arguments
+  |<cfg-file>| 
+  Therion takes only one optional argument: the name of a configuration
+  file. If no name is specified |thconfig| in the current directory is used. 
+\endarguments
+
+\options
+* |-g|
+
+        Using this option you can generate a new configuration file.
+        If |cfg-file| is not specified therion will use the |thconfig|
+        file. If the destination file exists, it'll be overwritten.
+        
+* |-h, --help|
+
+        Display short help.
+
+* |-i|
+
+        Ignore comments when writing |-g| or |-u| configuration file.
+
+* |-L|
+
+        Do not create a log-file. Normally therion writes all the messages
+        into a therion.log file in the current directory.
+        
+* |-l <log-file>|
+
+        Change the name of the log file.
+        
+* |-p <search-path>|
+
+        This option is used to set the search path (or list of 
+	colon-separated paths) which therion uses to find its source
+        files (if it doesn't find them in the working directory).
+
+* |-q|
+
+        Run therion in quiet mode. It will print only warning
+        and error messages to STDERR.
+
+* |--print-encodings|
+
+        Print a list of all supported encodings.
+        
+* |--print-init-file|
+
+        Print a default initialization file. For more details
+        see the {\it Initialization} section in the {\it Appendix}.
+        
+* |-s <source-file>|
+
+        Set the name of the source file.
+        
+* |-u|
+
+        Upgrade the configuration file.
+
+* |-v, --version|
+
+        Display version information.        
+        
+* |-d|
+
+        Turn on debugging mode. The current implementation creates a 
+	temporary directory named |thTMPDIR| (in your system temporary 
+	directory) and does not delete any temporary files. 
+	What to do with temporary files is explained in the chapter
+	{\it Debugging mode} in the {\it Appendix}.
+\endoptions
+
+\subsubchapter XTherion---compiler.
+
+[Compiler mode F3 and compilation F9]
+
+
+\endinput

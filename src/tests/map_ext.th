@@ -1,0 +1,73 @@
+encoding  utf-8
+  
+  survey test
+    
+    centerline
+      data cartesian from to dx dy dz
+         0     1   10       0       2   
+         1     2    0      10       2   
+         2     3    0       0      10   
+         3     4   10       0       0   
+         4     5    3       3       3   
+         5     6    3       3       3   
+         6     7    3       3       3   
+    endcenterline
+    
+    scrap s1 -projection extended
+      
+      point 0 0 station -name 0
+      point 5 1 station -name 1
+      point 10 2 station -name 2 -id s1.2_1 -extend [sticky off]
+      point 15 1 station -name 1
+      point 20 2 station -name 2 -id s1.2_2
+      
+    endscrap
+    
+    scrap s2 -projection extended
+      
+      point 0 0 station -name 2 -id s2.2
+      point 0 5 station -name 3 -subtype natural
+      point 5 5 station -name 4 -subtype fixed
+      
+    endscrap
+    
+    scrap s3 -projection extended
+      
+      point -1 -1 station -name 4 -extend left  
+      point 0 0 station -name 5 -orient 10 -size 10 -y-size 8 -x-size 5.555
+      point 1 1 station -name 6
+      
+    endscrap
+    
+    scrap s4 -projection extended
+    
+      point 0 0 station -id s4.2 -name 2
+      point 0 -3 stalactite -id stalac1
+      point 0 -3.1 stalactite -id stalac2
+      
+      join stalac1 stalac2
+      
+      point 0 -5 station -name 3 -extend left
+      
+    endscrap
+    
+    scrap s5 -projection plan -stations [1 2 3]
+      point 0 0 station -name 3 -id s5.3
+    endscrap
+  
+  #  join s5.3 s2.2
+  
+    map m1
+      s1
+      s2
+      preview below m2
+    endmap
+    
+    map m2
+      s3
+      s4
+      preview above m1
+    endmap
+    
+  endsurvey
+  

@@ -1,7 +1,0 @@
-This is sample configuration file; please copy it to data directory
-
-Hsize: 16 cm
-Vsize: 20 cm 
-Hoffset: 
-Voffset:
-Output: th
