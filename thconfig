@@ -3,5 +3,18 @@ encoding  utf-8
 # Name of the source file.
 source "tests/map_plan.th"
 
+layout test
+  code mpost
+    % this is mpost code
+  code tex-map
+    % this is tex map code
+    \insertmaps
+  code tex-atlas 
+    % this is tex atlas code
+    \insertmaps
+  symbol-set SKBB #XYZ
+  symbol-hide point station:temporary
+endlayout
+
 # Export settings.
-export map -layout-title "Pokusna jaskyna" -layout-layers off
+export map -layout-title "Pokusna jaskyna" -layout test -layout-layers off -layout-base-scale 1 200 -layout-symbol-set SKBB -layout-symbol-assign point stalactite SKBB -layout-symbol-hide point stalactite

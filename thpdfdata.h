@@ -62,13 +62,13 @@ struct layerrecord {
 struct layout {
   string excl_list,labelx,labely,
          doc_author,doc_keywords,doc_subject,doc_title;
-  bool  excl_pages,background,title_pages,page_numbering,
+  bool  excl_pages,title_pages,page_numbering,
         transparency,map_grid,OCG; 
   double hsize,vsize,overlap,
-        hgrid,vgrid,hgridoffset,vgridoffset,
-	nav_factor;
+        hgrid,vgrid,hgridoffset,vgridoffset,nav_factor;
   int nav_right,nav_up,own_pages;
   double hoffset, voffset,opacity;
+  double background_r, background_g, background_b;
   
   layout();
 };

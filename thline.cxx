@@ -564,6 +564,9 @@ void thline::preprocess()
   }
 }
 
+#define thline_type_export_mp(type,mid) case type: \
+  fprintf(out->file,"%s(",out->symset->get_mp_macro(mid)); \
+  break;
 
 void thline::export_mp(class thexpmapmpxs * out)
 {
@@ -589,41 +592,19 @@ void thline::export_mp(class thexpmapmpxs * out)
         }
         if (todraw) {
           switch (cs) {
-            case TT_LINE_SUBTYPE_INVISIBLE:
-              fprintf(out->file,"Invisiblewall(");
-              break;
-            case TT_LINE_SUBTYPE_BEDROCK:
-              fprintf(out->file,"Wall(");
-              break;
-            case TT_LINE_SUBTYPE_SAND:
-              fprintf(out->file,"Sandwall(");
-              break;
-            case TT_LINE_SUBTYPE_CLAY:
-              fprintf(out->file,"Claywall(");
-              break;
-            case TT_LINE_SUBTYPE_PEBBLES:
-              fprintf(out->file,"Pebbleswall(");
-              break;
-            case TT_LINE_SUBTYPE_DEBRIS:
-              fprintf(out->file,"Debriswall(");
-              break;
-            case TT_LINE_SUBTYPE_BLOCKS:
-              fprintf(out->file,"Blockswall(");
-              break;
-            case TT_LINE_SUBTYPE_ICE:
-              fprintf(out->file,"Icewall(");
-              break;
-            case TT_LINE_SUBTYPE_UNDERLYING:
-              fprintf(out->file,"Underlyingwall(");
-              break;
-            case TT_LINE_SUBTYPE_UNSURVEYED:
-              fprintf(out->file,"Unsurveyedwall(");
-              break;
-            case TT_LINE_SUBTYPE_PRESUMED:
-              fprintf(out->file,"Presumedwall(");
-              break;
+            thline_type_export_mp(TT_LINE_SUBTYPE_INVISIBLE, SYML_WALL_INVISIBLE)
+            thline_type_export_mp(TT_LINE_SUBTYPE_BEDROCK, SYML_WALL_BEDROCK)
+            thline_type_export_mp(TT_LINE_SUBTYPE_SAND, SYML_WALL_SAND)
+            thline_type_export_mp(TT_LINE_SUBTYPE_CLAY, SYML_WALL_CLAY)
+            thline_type_export_mp(TT_LINE_SUBTYPE_PEBBLES, SYML_WALL_PEBBLES)
+            thline_type_export_mp(TT_LINE_SUBTYPE_DEBRIS, SYML_WALL_DEBRIS)
+            thline_type_export_mp(TT_LINE_SUBTYPE_BLOCKS, SYML_WALL_BLOCKS)
+            thline_type_export_mp(TT_LINE_SUBTYPE_ICE, SYML_WALL_ICE)
+            thline_type_export_mp(TT_LINE_SUBTYPE_UNDERLYING, SYML_WALL_UNDERLYING)
+            thline_type_export_mp(TT_LINE_SUBTYPE_UNSURVEYED, SYML_WALL_UNSURVEYED)
+            thline_type_export_mp(TT_LINE_SUBTYPE_PRESUMED, SYML_WALL_PRESUMED)
             default:
-              fprintf(out->file,"thUndefinedPath(");
+              fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_UNDEFINED));
               break;
           }
         }
@@ -642,11 +623,20 @@ void thline::export_mp(class thexpmapmpxs * out)
       } 
       fprintf(out->file,"l_label(btex ");
       switch (this->scale) {
+        case TT_2DOBJ_SCALE_XL:
+          fprintf(out->file,"\\thhugesize ");
+          break;
         case TT_2DOBJ_SCALE_L:
-          fprintf(out->file,"\\size[20] ");
+          fprintf(out->file,"\\thlargesize ");
+          break;
+        case TT_2DOBJ_SCALE_S:
+          fprintf(out->file,"\\thsmallsize ");
+          break;
+        case TT_2DOBJ_SCALE_XS:
+          fprintf(out->file,"\\thtinysize ");
           break;
         default:
-          fprintf(out->file,"\\size[10] ");
+          fprintf(out->file,"\\thnormalsize ");
       }
       //thdecode(&(this->db->buff_enc),TT_ISO8859_2,this->text);
       fprintf(out->file,"%s etex,",utf2tex(this->text));
@@ -655,7 +645,7 @@ void thline::export_mp(class thexpmapmpxs * out)
       postprocess = false;
       break;
     case TT_LINE_TYPE_CONTOUR:
-      fprintf(out->file,"Contour(");
+      fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_CONTOUR));
       this->export_path_mp(out);
       from = 0;
       if ((this->tags & TT_LINE_TAG_GRADIENT_CENTER) > 0) {
@@ -695,7 +685,7 @@ void thline::export_mp(class thexpmapmpxs * out)
         lp = lp->nextlp;
       }
       
-      fprintf(out->file,"Slope(");
+      fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_SLOPE));
       this->export_path_mp(out);
       fprintf(out->file,",%d",
           ((this->tags & TT_LINE_TAG_BORDER) > 0 ? 1 : 0));
@@ -744,32 +734,18 @@ void thline::export_mp(class thexpmapmpxs * out)
       fprintf(out->file,");\n");
       postprocess = false;  
       break;
-    case TT_LINE_TYPE_PIT:
-      fprintf(out->file,"Pit(");
-      break;
-    case TT_LINE_TYPE_CEILING_STEP:
-      fprintf(out->file,"CeilingStep(");
-      break;
-    case TT_LINE_TYPE_FLOOR_STEP:
-      fprintf(out->file,"FloorStep(");
-      break;
-    case TT_LINE_TYPE_OVERHANG:
-      fprintf(out->file,"Overhang(");
-      break;
-    case TT_LINE_TYPE_CHIMNEY:
-      fprintf(out->file,"Chimney(");
-      break;
-    case TT_LINE_TYPE_FLOWSTONE:
-      fprintf(out->file,"Flowstonepath(");
-      break;
-    case TT_LINE_TYPE_ROCK_BORDER:
-      fprintf(out->file,"Rockborder(");
-      break;
-    case TT_LINE_TYPE_SURVEY:
-      fprintf(out->file,"Polygon(");
-      break;
+
+    thline_type_export_mp(TT_LINE_TYPE_PIT, SYML_PIT)
+    thline_type_export_mp(TT_LINE_TYPE_CEILING_STEP, SYML_CEILINGSTEP)
+    thline_type_export_mp(TT_LINE_TYPE_FLOOR_STEP, SYML_FLOORSTEP)
+    thline_type_export_mp(TT_LINE_TYPE_OVERHANG, SYML_OVERHANG)
+    thline_type_export_mp(TT_LINE_TYPE_CHIMNEY, SYML_CHIMNEY)
+    thline_type_export_mp(TT_LINE_TYPE_FLOWSTONE, SYML_FLOWSTONE)
+    thline_type_export_mp(TT_LINE_TYPE_ROCK_BORDER, SYML_ROCKBORDER)
+    thline_type_export_mp(TT_LINE_TYPE_ROCK_EDGE, SYML_ROCKEDGE)
+    thline_type_export_mp(TT_LINE_TYPE_SURVEY, SYML_SURVEY)
     case TT_LINE_TYPE_ARROW:
-      fprintf(out->file,"ArrowPath(");
+      fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_ARROW));
       this->export_path_mp(out);
       from = 0;
       if ((this->tags & TT_LINE_TAG_HEAD_BEGIN) > 0)
@@ -789,7 +765,7 @@ void thline::export_mp(class thexpmapmpxs * out)
                (((this->tags & TT_LINE_TAG_DIRECTION_POINT) != 0) &&
                ((plp->tags & TT_LINEPT_TAG_DIRECTION) > 0)))) {
           // vykresli pociatocnu sipku
-          fprintf(out->file,"Sectionarrow(");
+          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_SECTIONARROW));
           plp->point->export_mp(out);
           fprintf(out->file,",%.2f);\n",atan2(lp->point->yt - plp->point->yt,
             lp->point->xt- plp->point->xt) / 3.14159265358 * 180);        
@@ -800,7 +776,7 @@ void thline::export_mp(class thexpmapmpxs * out)
            (((lp->tags & TT_LINEPT_TAG_DIRECTION) > 0) 
               && ((this->tags & TT_LINE_TAG_DIRECTION_POINT) != 0))) {
           // vykresli koncovu sipku
-          fprintf(out->file,"Sectionarrow(");
+          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_SECTIONARROW));
           lp->point->export_mp(out);
           fprintf(out->file,",%.2f);\n",atan2(lp->point->yt - plp->point->yt,
             lp->point->xt - plp->point->xt) / 3.14159265358 * 180);        
@@ -815,18 +791,19 @@ void thline::export_mp(class thexpmapmpxs * out)
           s2 = (- r1 * (lp->cp2->xt - lp->point->xt) - 
                   r2 * (lp->cp2->yt - lp->point->yt)) /
                (pow(r1,2.0) + pow(r2,2.0));           
-          fprintf(out->file,"Sectionline((");
+          fprintf(out->file,"%s((",out->symset->get_mp_macro(SYML_SECTION));
           plp->point->export_mp(out);          
-          fprintf(out->file," -- (%.2f,%.2f)));\nSectionline(((%.2f,%.2f) -- ",
+          fprintf(out->file," -- (%.2f,%.2f)));\n%s(((%.2f,%.2f) -- ",
             (plp->point->xt + s1 * r1 - out->mx) * out->ms,
             (plp->point->yt + s1 * r2 - out->my) * out->ms,
+            out->symset->get_mp_macro(SYML_SECTION),
             (lp->point->xt - s2 * r1 - out->mx) * out->ms,
             (lp->point->yt - s2 * r2 - out->my) * out->ms
             );
           lp->point->export_mp(out);
           fprintf(out->file,"));\n");
         } else {
-          fprintf(out->file,"Sectionline((");
+          fprintf(out->file,"%s((",out->symset->get_mp_macro(SYML_SECTION));
           plp->point->export_mp(out);          
           fprintf(out->file," -- ");
           lp->point->export_mp(out);
@@ -865,9 +842,6 @@ void thline::export_mp(class thexpmapmpxs * out)
       fprintf(out->file,"Sectionline(");
       break;
       */
-    case TT_LINE_TYPE_ROCK_EDGE:
-      fprintf(out->file,"Rockedge(");
-      break;
     case TT_LINE_TYPE_BORDER:
       from = 0;
       to = 0;
@@ -881,14 +855,10 @@ void thline::export_mp(class thexpmapmpxs * out)
         }
         if (todraw) {
           switch (cs) {
-            case TT_LINE_SUBTYPE_TEMPORARY:
-              fprintf(out->file,"Temporaryborder(");
-              break;
-            case TT_LINE_SUBTYPE_INVISIBLE:
-              fprintf(out->file,"Invisibleborder(");
-              break;
+            thline_type_export_mp(TT_LINE_SUBTYPE_TEMPORARY, SYML_BORDER_TEMPORARY)
+            thline_type_export_mp(TT_LINE_SUBTYPE_INVISIBLE, SYML_BORDER_INVISIBLE)
             default:
-              fprintf(out->file,"Visibleborder(");
+              fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_BORDER_VISIBLE));
               break;
           }
         }
@@ -901,7 +871,7 @@ void thline::export_mp(class thexpmapmpxs * out)
       postprocess = false;  
       break;    
     default:
-      fprintf(out->file,"thUndefinedPath(");
+      fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_UNDEFINED));
       break;
   }
   

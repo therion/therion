@@ -424,16 +424,16 @@ void thpoint::export_mp(class thexpmapmpxs * out)
     case TT_POINT_TYPE_STATION:
       switch (this->subtype) {
         case TT_POINT_SUBTYPE_FIXED:
-          fprintf(out->file,"FixedStation(");
+          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_STATION_FIXED));
           break;
         case TT_POINT_SUBTYPE_NATURAL:
-          fprintf(out->file,"NaturalStation(");
+          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_STATION_NATURAL));
           break;
         case TT_POINT_SUBTYPE_PAINTED:
-          fprintf(out->file,"PaintedStation(");
+          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_STATION_PAINTED));
           break;
         default:
-          fprintf(out->file,"TemporaryStation(");
+          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_STATION_TEMPORARY));
       }
       this->point->export_mp(out);
       fprintf(out->file,");\n");
@@ -539,95 +539,91 @@ void thpoint::export_mp(class thexpmapmpxs * out)
     case TT_POINT_TYPE_SECTION:
       postprocess = false;
       break;
+
+#define thpoint_type_export_mp(type,mid) case type: \
+  fprintf(out->file,"%s(",out->symset->get_mp_macro(mid)); \
+  break;
       
 // ostatne typy      
     case TT_POINT_TYPE_WATER_FLOW:
       switch (this->subtype) {
-        case TT_POINT_SUBTYPE_PALEO:
-          fprintf(out->file,"PaleoFlow(");
-          break;
-        case TT_POINT_SUBTYPE_INTERMITTENT:
-          fprintf(out->file,"IntermittentStream(");
-          break;
+        thpoint_type_export_mp(TT_POINT_SUBTYPE_PALEO,SYMP_WATERFLOW_PALEO);
+        thpoint_type_export_mp(TT_POINT_SUBTYPE_INTERMITTENT,SYMP_WATERFLOW_INTERMITTENT);
         default:
-          fprintf(out->file,"PermanentStream(");
+          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_WATERFLOW_PERMANENT));
       }
       break;
 
-#define thpoint_type_export_mp(type,str) case type: \
-  fprintf(out->file,str); \
-  break;
-  
 // specialne symboly
-    thpoint_type_export_mp(TT_POINT_TYPE_AIR_DRAUGHT,"AirflowArrow(")
-    thpoint_type_export_mp(TT_POINT_TYPE_SPRING,"Spring(")
-    thpoint_type_export_mp(TT_POINT_TYPE_SINK,"Sink(")
-    thpoint_type_export_mp(TT_POINT_TYPE_ENTRANCE,"EntranceArrow(")
-    thpoint_type_export_mp(TT_POINT_TYPE_GRADIENT,"GradientArrow(")
+    thpoint_type_export_mp(TT_POINT_TYPE_AIR_DRAUGHT,SYMP_AIRDRAUGHT)
+    thpoint_type_export_mp(TT_POINT_TYPE_SPRING,SYMP_SPRING)
+    thpoint_type_export_mp(TT_POINT_TYPE_SINK,SYMP_SINK)
+    thpoint_type_export_mp(TT_POINT_TYPE_ENTRANCE,SYMP_ENTRANCE)
+    thpoint_type_export_mp(TT_POINT_TYPE_GRADIENT,SYMP_GRADIENT)
   
 // vystroj
-    thpoint_type_export_mp(TT_POINT_TYPE_ROPE,"Rope(")
-    thpoint_type_export_mp(TT_POINT_TYPE_FIXED_LADDER,"FixedLadder(")
-    thpoint_type_export_mp(TT_POINT_TYPE_ROPE_LADDER,"RopeLadder(")
-    thpoint_type_export_mp(TT_POINT_TYPE_STEPS,"Steps(")
-    thpoint_type_export_mp(TT_POINT_TYPE_BRIDGE,"Bridge(")
-    thpoint_type_export_mp(TT_POINT_TYPE_TRAVERSE,"Traverse(")
-    thpoint_type_export_mp(TT_POINT_TYPE_NO_EQUIPEMENT,"Notequipped(")
-    thpoint_type_export_mp(TT_POINT_TYPE_ANCHOR,"Anchor(")
-//    thpoint_type_export_mp(TT_POINT_TYPE_CAMP,"Camp(")
+    thpoint_type_export_mp(TT_POINT_TYPE_ROPE,SYMP_ROPE)
+    thpoint_type_export_mp(TT_POINT_TYPE_FIXED_LADDER,SYMP_FIXEDLADDER)
+    thpoint_type_export_mp(TT_POINT_TYPE_ROPE_LADDER,SYMP_ROPELADDER)
+    thpoint_type_export_mp(TT_POINT_TYPE_STEPS,SYMP_STEPS)
+    thpoint_type_export_mp(TT_POINT_TYPE_BRIDGE,SYMP_BRIDGE)
+    thpoint_type_export_mp(TT_POINT_TYPE_TRAVERSE,SYMP_TRAVERSE)
+    thpoint_type_export_mp(TT_POINT_TYPE_NO_EQUIPMENT,SYMP_NOEQUIPMENT)
+    thpoint_type_export_mp(TT_POINT_TYPE_ANCHOR,SYMP_ANCHOR)
+    thpoint_type_export_mp(TT_POINT_TYPE_CAMP,SYMP_CAMP)
 
 // ukoncenia chodby
-    thpoint_type_export_mp(TT_POINT_TYPE_CONTINUATION,"Continuation(")
-    thpoint_type_export_mp(TT_POINT_TYPE_NARROW_END,"NarrowEnd(")
-    thpoint_type_export_mp(TT_POINT_TYPE_LOW_END,"LowEnd(")
-    thpoint_type_export_mp(TT_POINT_TYPE_FLOWSTONE_CHOKE,"FlowstoneChoke(")
-    thpoint_type_export_mp(TT_POINT_TYPE_BREAKDOWN_CHOKE,"BreakdownChoke(")
+    thpoint_type_export_mp(TT_POINT_TYPE_CONTINUATION,SYMP_CONTINUATION)
+    thpoint_type_export_mp(TT_POINT_TYPE_NARROW_END,SYMP_NARROWEND)
+    thpoint_type_export_mp(TT_POINT_TYPE_LOW_END,SYMP_LOWEND)
+    thpoint_type_export_mp(TT_POINT_TYPE_FLOWSTONE_CHOKE,SYMP_FLOWSTONECHOKE)
+    thpoint_type_export_mp(TT_POINT_TYPE_BREAKDOWN_CHOKE,SYMP_BREAKDOWNCHOKE)
 
 // vypln
-    thpoint_type_export_mp(TT_POINT_TYPE_FLOWSTONE,"Flowstone(")
-    thpoint_type_export_mp(TT_POINT_TYPE_MOONMILK,"Moonmilk(")
-    thpoint_type_export_mp(TT_POINT_TYPE_STALACTITE,"Stalactite(")
-    thpoint_type_export_mp(TT_POINT_TYPE_STALAGMITE,"Stalagmite(")
-    thpoint_type_export_mp(TT_POINT_TYPE_PILLAR,"Pillar(")
-    thpoint_type_export_mp(TT_POINT_TYPE_CURTAIN,"Curtain(")
-    thpoint_type_export_mp(TT_POINT_TYPE_HELECTITE,"Helectite(")
-    thpoint_type_export_mp(TT_POINT_TYPE_SODA_STRAW,"Sodastraw(")
-    thpoint_type_export_mp(TT_POINT_TYPE_CRYSTAL,"Crystal(")
-    thpoint_type_export_mp(TT_POINT_TYPE_WALL_CALCITE,"Wallcalcite(")
-    thpoint_type_export_mp(TT_POINT_TYPE_POPCORN,"Popcorn(")
-    thpoint_type_export_mp(TT_POINT_TYPE_DISK,"Disk(")
-    thpoint_type_export_mp(TT_POINT_TYPE_GYPSUM,"Gypsum(")
-    thpoint_type_export_mp(TT_POINT_TYPE_GYPSUM_FLOWER,"Gypsumflower(")
-    thpoint_type_export_mp(TT_POINT_TYPE_ARAGONITE,"Aragonite(")
-    thpoint_type_export_mp(TT_POINT_TYPE_CAVE_PEARL,"Cavepearl(")
-    thpoint_type_export_mp(TT_POINT_TYPE_RIMSTONE_POOL,"Rimstonepool(")
-    thpoint_type_export_mp(TT_POINT_TYPE_ROMSTONE_DAM,"Rimstonedam(")
-    thpoint_type_export_mp(TT_POINT_TYPE_ANASTOMOSIS,"Anastomosis(")
-    thpoint_type_export_mp(TT_POINT_TYPE_KARREN,"Karren(")
-    thpoint_type_export_mp(TT_POINT_TYPE_SCALLOP,"Scallop(")
-    thpoint_type_export_mp(TT_POINT_TYPE_FLUTE,"Flute(")
-    thpoint_type_export_mp(TT_POINT_TYPE_RAFT_CONE,"Raftcone(")
+    thpoint_type_export_mp(TT_POINT_TYPE_FLOWSTONE,SYMP_FLOWSTONE)
+    thpoint_type_export_mp(TT_POINT_TYPE_MOONMILK,SYMP_MOONMILK)
+    thpoint_type_export_mp(TT_POINT_TYPE_STALACTITE,SYMP_STALACTITE)
+    thpoint_type_export_mp(TT_POINT_TYPE_STALAGMITE,SYMP_STALAGMITE)
+    thpoint_type_export_mp(TT_POINT_TYPE_PILLAR,SYMP_PILLAR)
+    thpoint_type_export_mp(TT_POINT_TYPE_CURTAIN,SYMP_CURTAIN)
+    thpoint_type_export_mp(TT_POINT_TYPE_HELICTITE,SYMP_HELICTITE)
+    thpoint_type_export_mp(TT_POINT_TYPE_SODA_STRAW,SYMP_SODASTRAW)
+    thpoint_type_export_mp(TT_POINT_TYPE_CRYSTAL,SYMP_CRYSTAL)
+    thpoint_type_export_mp(TT_POINT_TYPE_WALL_CALCITE,SYMP_WALLCALCITE)
+    thpoint_type_export_mp(TT_POINT_TYPE_POPCORN,SYMP_POPCORN)
+    thpoint_type_export_mp(TT_POINT_TYPE_DISK,SYMP_DISK)
+    thpoint_type_export_mp(TT_POINT_TYPE_GYPSUM,SYMP_GYPSUM)
+    thpoint_type_export_mp(TT_POINT_TYPE_GYPSUM_FLOWER,SYMP_GYPSUMFLOWER)
+    thpoint_type_export_mp(TT_POINT_TYPE_ARAGONITE,SYMP_ARAGONITE)
+    thpoint_type_export_mp(TT_POINT_TYPE_CAVE_PEARL,SYMP_CAVEPEARL)
+    thpoint_type_export_mp(TT_POINT_TYPE_RIMSTONE_POOL,SYMP_RIMSTONEPOOL)
+    thpoint_type_export_mp(TT_POINT_TYPE_RIMSTONE_DAM,SYMP_RIMSTONEDAM)
+    thpoint_type_export_mp(TT_POINT_TYPE_ANASTOMOSIS,SYMP_ANASTOMOSIS)
+    thpoint_type_export_mp(TT_POINT_TYPE_KARREN,SYMP_KARREN)
+    thpoint_type_export_mp(TT_POINT_TYPE_SCALLOP,SYMP_SCALLOP)
+    thpoint_type_export_mp(TT_POINT_TYPE_FLUTE,SYMP_FLUTE)
+    thpoint_type_export_mp(TT_POINT_TYPE_RAFT_CONE,SYMP_RAFT)
   
 // plosne vyplne
-    thpoint_type_export_mp(TT_POINT_TYPE_BEDROCK,"Bedrock(")
-    thpoint_type_export_mp(TT_POINT_TYPE_SAND,"Sand(")
-    thpoint_type_export_mp(TT_POINT_TYPE_RAFT,"Raft(")
-    thpoint_type_export_mp(TT_POINT_TYPE_CLAY,"Clay(")
-    thpoint_type_export_mp(TT_POINT_TYPE_PEBBLES,"Pebbles(")
-    thpoint_type_export_mp(TT_POINT_TYPE_DEBRIS,"Debris(")
-    thpoint_type_export_mp(TT_POINT_TYPE_BLOCKS,"Blocks(")
-    thpoint_type_export_mp(TT_POINT_TYPE_WATER,"Water(")
-    thpoint_type_export_mp(TT_POINT_TYPE_ICE,"Ice(")
-    thpoint_type_export_mp(TT_POINT_TYPE_GUANO,"Guano(")
+    thpoint_type_export_mp(TT_POINT_TYPE_BEDROCK,SYMP_BEDROCK)
+    thpoint_type_export_mp(TT_POINT_TYPE_SAND,SYMP_SAND)
+    thpoint_type_export_mp(TT_POINT_TYPE_RAFT,SYMP_RAFT)
+    thpoint_type_export_mp(TT_POINT_TYPE_CLAY,SYMP_CLAY)
+    thpoint_type_export_mp(TT_POINT_TYPE_PEBBLES,SYMP_PEBBLES)
+    thpoint_type_export_mp(TT_POINT_TYPE_DEBRIS,SYMP_DEBRIS)
+    thpoint_type_export_mp(TT_POINT_TYPE_BLOCKS,SYMP_BLOCKS)
+    thpoint_type_export_mp(TT_POINT_TYPE_WATER,SYMP_WATER)
+    thpoint_type_export_mp(TT_POINT_TYPE_ICE,SYMP_ICE)
+    thpoint_type_export_mp(TT_POINT_TYPE_GUANO,SYMP_GUANO)
 
 // ina vypln
-    thpoint_type_export_mp(TT_POINT_TYPE_ARCHEO_MATERIAL,"ArcheoMaterial(")
-    thpoint_type_export_mp(TT_POINT_TYPE_PALEO_MATERIAL,"PaleoMaterial(")
-    thpoint_type_export_mp(TT_POINT_TYPE_VEGETABLE_DEBRIS,"VegetableDebris(")
-    thpoint_type_export_mp(TT_POINT_TYPE_ROOT,"Root(")
+    thpoint_type_export_mp(TT_POINT_TYPE_ARCHEO_MATERIAL,SYMP_ARCHEOMATERIAL)
+    thpoint_type_export_mp(TT_POINT_TYPE_PALEO_MATERIAL,SYMP_PALEOMATERIAL)
+    thpoint_type_export_mp(TT_POINT_TYPE_VEGETABLE_DEBRIS,SYMP_VEGETABLEDEBRIS)
+    thpoint_type_export_mp(TT_POINT_TYPE_ROOT,SYMP_ROOT)
       
     default:
-      fprintf(out->file,"thUndefinedSymbol(");
+      fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_UNDEFINED)); \
       break;
   }
   
@@ -641,16 +637,16 @@ void thpoint::export_mp(class thexpmapmpxs * out)
     double scl = 1.0;
     switch (this->scale) {
       case TT_2DOBJ_SCALE_L:
-        scl = 2.0;
+        scl = 1.414;
         break;
       case TT_2DOBJ_SCALE_XL:
-        scl = 4.0;
+        scl = 2.0;
         break;
       case TT_2DOBJ_SCALE_S:
-        scl = 0.5;
+        scl = 0.707;
         break;
       case TT_2DOBJ_SCALE_XS:
-        scl = 0.25;
+        scl = 0.5;
         break;
     }
     char * al = "(0,0)";

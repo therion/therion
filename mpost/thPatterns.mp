@@ -24,7 +24,7 @@
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% --------------------------------------------------------------------
 
-if unknown thLakePattern_UIS: else: endinput fi;
+if unknown a_water_UIS: else: endinput fi;
 
 % @LIBRARY
 % thPatterns --
@@ -42,7 +42,7 @@ if unknown thLakePattern_UIS: else: endinput fi;
 %
 % fill ((.1,.4)..(.6,.2)..(.8,.4)..(.45,.7){dir 160}..cycle) inscale withpattern thLakePattern_UIS;
 
-beginpattern(thLakePattern_UIS);
+beginpattern(a_water_UIS);
     draw origin--10up withpen pensquare scaled (0.02u);
     patternxstep(.18u);
     patterntransform(identity rotated 45);
@@ -55,7 +55,7 @@ endpattern;
 %
 % fill ((.1,.4)..(.6,.2)..(.8,.4)..(.45,.7){dir 160}..cycle) inscale withpattern thSumpPattern_UIS;
 
-beginpattern(thSumpPattern_UIS);
+beginpattern(a_sump_UIS);
     draw origin--(0,.25u) withpen pensquare scaled (0.02u);
     draw origin--(.25u,0) withpen pensquare scaled (0.02u);
     patterntransform(identity rotated 45);
@@ -69,7 +69,7 @@ endpattern;
 % fill ((.1,.4)..(.6,.2)..(.8,.6)..(.45,.7){dir 130}..cycle) inscale withpattern thSandPattern_UIS;
 
 
-beginpattern(thSandPattern_UIS);
+beginpattern(a_sand_UIS);
     pickup PenC;
     draw (0.2u,.3u);
     draw (0.35u,.7u);
@@ -85,7 +85,7 @@ endpattern;
 % fill ((.05,.4)..(.6,.1)..(.9,.6)..(.45,.9){dir 100}..cycle) inscale withpattern thDebrisPattern_SKBB;
 % @ENDSYMBOL
 
-beginpattern(thDebrisPattern_SKBB);
+beginpattern(a_debris_SKBB);
     pickup PenC;
     p:=(-.15u,0)--(.15u,0);
     draw p rotated -40 shifted (.2u,.3u);
@@ -94,3 +94,7 @@ beginpattern(thDebrisPattern_SKBB);
 %    draw p rotated 95 shifted (.9u,.8u);
 endpattern;
 
+beginpattern(a_empty);
+  patternbbox(0,0,10,10);
+  patternstep(10,10);
+endpattern;

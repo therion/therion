@@ -36,6 +36,9 @@
 #include "thdatabase.h"
 #include "thdatareader.h"
 #include "thdataobject.h"
+#ifdef THWIN32
+#include <windows.h>
+#endif
 
 
 enum {TT_UNKNOWN_CFG, TT_SOURCE, TT_SELECT, TT_UNSELECT, TT_EXPORT};

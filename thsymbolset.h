@@ -1,9 +1,9 @@
 /** 
- * @file thlayoutln.h
- * Scrap outline line class.
+ * @file thsymbolset.h
+ * Symbol set class.
  */
   
-/* Copyright (C) 2000 Stacho Mudrak
+/* Copyright (C) 2003 Stacho Mudrak
  * 
  * $Date: $
  * $RCSfile: $
@@ -26,32 +26,52 @@
  * --------------------------------------------------------------------
  */
  
-#ifndef thlayoutln_h
-#define thlayoutln_h
+#ifndef thsymbolset_h
+#define thsymbolset_h
 
-#include <list>
+#include "thsymbolsetlist.h"
+#include <stdio.h>
 
 /**
- * Layout line class.
+ * Symbol set class.
  */
  
-class thlayoutln {
+class thsymbolset {
 
   public:
   
-  char code;
- 
-  thlayoutln * next_line;
-    
-  char * line;
+  bool assigned[thsymbolset_size],   ///< definovane symboly
+    used[thsymbolset_size];          ///< pouzite symboly
   
-  int smid;  ///< Symbol macro ID
+  thsymbolset();
+  
+  /**
+   * Vrati macro a zaragistruje ho ako pouzite.
+   */
+  const char * get_mp_macro(int id);
+  
 
-  thlayoutln(); ///< Default constructor
+  /**
+   * Do MP suboru zapise mapsymbol() makro + zmeni hidden value.
+   */
+  void export_symbol_assign(FILE * mpf, int sym_id, char * symset);
+
+  /**
+   * Do MP suboru zapise mapsymbol() makro.
+   */
+  void export_symbol_defaults(FILE * mpf, char * symset);
+  
+  /**
+   * Do MP suboru zapise hidesymbol() pre to, co je zvolene.
+   */
+  void export_symbol_hide(FILE * mpf, int sym_id);
+  
 };
 
-
-typedef std::list <thlayoutln> thlayoutln_list;  ///< Points list.
+/**
+ * Vrati ID z popisu classu a symbolu.
+ */
+int thsymbolset__get_id(char * symclass, char * symbol);
 
 
 #endif

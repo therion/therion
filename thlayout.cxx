@@ -32,6 +32,40 @@
 #include "thparse.h"
 #include "thinfnan.h"
 #include "thpdfdata.h"
+#include "thsymbolset.h"
+
+void thlayout_color::parse(char * str) {
+  thsplit_words(&(thdb.mbuff_tmp), str);
+  int nargs = thdb.mbuff_tmp.get_size(), sv;
+  char ** args = thdb.mbuff_tmp.get_buffer();
+#define invalid_color_spec ththrow(("invalid color specification -- %s", str))
+  switch (nargs) {
+    case 3:
+      thparse_double(sv,this->B,args[2]);        
+      if ((sv != TT_SV_NUMBER) || (this->B < 0.0) || (this->B > 100.0))
+        invalid_color_spec;
+      this->B /= 100.0;
+      thparse_double(sv,this->G,args[1]);        
+      if ((sv != TT_SV_NUMBER) || (this->G < 0.0) || (this->G > 100.0))
+        invalid_color_spec;
+      this->G /= 100.0;
+    case 1:
+      thparse_double(sv,this->R,args[0]);        
+      if ((sv != TT_SV_NUMBER) || (this->R < 0.0) || (this->R > 100.0))
+        invalid_color_spec;
+      this->R /= 100.0;
+      if (nargs == 1) {
+        this->B = this->R;
+        this->G = this->R;
+      }
+      this->defined = true;
+      break;
+    default:
+      invalid_color_spec;
+  }
+}
+
+
 
 thlayout::thlayout()
 {
@@ -40,6 +74,9 @@ thlayout::thlayout()
 
   this->def_scale = false;
   this->scale = 0.005;
+  this->def_base_scale = false;
+  this->redef_base_scale = false;
+  this->base_scale = 0.005;
   
   this->def_origin = false;
   this->ox = thnan;
@@ -171,16 +208,18 @@ char * thlayout::get_cmd_name()
 }
 
 
-thcmd_option_desc thlayout::get_cmd_option_desc(char * opts)
-{
-  int id = thmatch_token(opts, thtt_layout_opt);
+thcmd_option_desc thlayout::get_default_cod(int id) {
   switch (id) {
     case TT_LAYOUT_NAV_SIZE:
     case TT_LAYOUT_OVERLAP:
     case TT_LAYOUT_SCALE:
+    case TT_LAYOUT_BASE_SCALE:
     case TT_LAYOUT_EXCLUDE_PAGES:
     case TT_LAYOUT_ORIGIN_LABEL:
+    case TT_LAYOUT_SYMBOL_HIDE:
+    case TT_LAYOUT_COLOR:
       return thcmd_option_desc(id,2);
+    case TT_LAYOUT_SYMBOL_ASSIGN:
     case TT_LAYOUT_GRID_SIZE:
     case TT_LAYOUT_SIZE:
       return thcmd_option_desc(id,3);
@@ -189,14 +228,22 @@ thcmd_option_desc thlayout::get_cmd_option_desc(char * opts)
       return thcmd_option_desc(id,4);
     case TT_LAYOUT_PAGE_SETUP:
       return thcmd_option_desc(id,7);
-    case TT_LAYOUT_UNKNOWN:
-      return thdataobject::get_cmd_option_desc(opts);
     default:
       return thcmd_option_desc(id);
   }
 }
 
-void thlayout_parse_scale(thlayout * pl,char ** args) {
+
+thcmd_option_desc thlayout::get_cmd_option_desc(char * opts)
+{
+  int id = thmatch_token(opts, thtt_layout_opt);
+  if (id == TT_LAYOUT_UNKNOWN) 
+    return thdataobject::get_cmd_option_desc(opts);
+  else 
+    return this->get_default_cod(id);
+}
+
+void thlayout_parse_scale(double * scale,char ** args) {
   double dv;
   int sv;
   thparse_double(sv,dv,args[0]);
@@ -204,13 +251,13 @@ void thlayout_parse_scale(thlayout * pl,char ** args) {
     ththrow(("invalid number -- %s",args[0]))
   if (dv <= 0.0)
     ththrow(("positive number expected -- %s",args[0]))
-  pl->scale = dv;
+  *scale = dv;
   thparse_double(sv,dv,args[1]);
   if (sv != TT_SV_NUMBER)
     ththrow(("invalid number -- %s",args[1]))
   if (dv <= 0.0)
     ththrow(("positive number expected -- %s",args[0]))
-  pl->scale /= dv;  
+  *scale /= dv;  
 }
 
 
@@ -221,9 +268,22 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
   thlayout_copy_src dumm;
   int sv;
   thlayout_copy_src * lcp;
+  thcmd_option_desc defcod = this->get_default_cod(cod.id);
+  switch (cod.id) {
+    case TT_DATAOBJECT_AUTHOR:
+    case TT_DATAOBJECT_COPYRIGHT:
+      defcod.nargs = 2;
+    default:
+      if (cod.nargs > defcod.nargs)
+        ththrow(("too many arguments -- %s", args[defcod.nargs]))
+  }
+  
   switch (cod.id) {
 
     case 0:
+    case TT_LAYOUT_SYMBOL_DEFAULTS:
+    case TT_LAYOUT_SYMBOL_ASSIGN:
+    case TT_LAYOUT_SYMBOL_HIDE:
       if (!this->def_tex_lines) {
         this->first_line = this->db->db2d.insert_layoutln();
         this->last_line = this->first_line;
@@ -232,14 +292,53 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         this->last_line->next_line = this->db->db2d.insert_layoutln();
         this->last_line = this->last_line->next_line;
       }
-      thencode(&(this->db->buff_enc), *args, argenc);
-      this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
-      this->last_line->code = this->ccode;
+      switch(cod.id) {
+        case 0:
+          thencode(&(this->db->buff_enc), *args, argenc);
+          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          this->last_line->code = this->ccode;
+          break;
+        case TT_LAYOUT_SYMBOL_DEFAULTS:
+          if ((*args) != NULL) {
+            if (!th_is_keyword(*args))
+              ththrow(("invalid keyword -- %s", args[0]))
+            thencode(&(this->db->buff_enc), *args, argenc);
+            this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          }
+          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
+          break;
+        case TT_LAYOUT_SYMBOL_ASSIGN:
+          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          if (this->last_line->smid == -1)
+            ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
+          if (!thsymbolset__assign[this->last_line->smid])
+            ththrow(("symbol can not be assigned -- %s %s", args[0], args[1]))
+          if (!th_is_keyword(args[2]))
+            ththrow(("invalid keyword -- %s", args[2]))
+          thencode(&(this->db->buff_enc), args[2], argenc);
+          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
+          break;
+        case TT_LAYOUT_SYMBOL_HIDE:
+          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          if (this->last_line->smid == -1)
+            ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
+          if (!thsymbolset__assign[this->last_line->smid])
+            ththrow(("symbol can not be hidden -- %s %s", args[0], args[1]))
+          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
+          break;
+      }
       break;
       
     case TT_LAYOUT_SCALE:
-      thlayout_parse_scale(this,args);
+      thlayout_parse_scale(&(this->scale),args);
       this->def_scale = true;
+      break;    
+
+    case TT_LAYOUT_BASE_SCALE:
+      thlayout_parse_scale(&(this->base_scale),args);
+      this->def_base_scale = true;
+      this->redef_base_scale = true;
       break;    
 
     case TT_LAYOUT_OVERLAP:
@@ -266,6 +365,21 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->parse_len(this->gxs, this->gys, dum, 2, args, true);
       this->def_grid_size = true;
       break;
+
+    case TT_LAYOUT_COLOR:
+      sv = thmatch_token(args[0],thtt_layout_color);
+      switch (sv) {
+        case TT_LAYOUT_COLOR_MAP_FG:
+          this->color_map_fg.parse(args[1]);
+          break;
+        case TT_LAYOUT_COLOR_MAP_BG:
+          this->color_map_bg.parse(args[1]);
+          break;
+        default:
+        ththrow(("unknown color -- %s",args[0]))
+      }
+      break;
+    
 
     case TT_LAYOUT_GRID_ORIGIN:
       this->parse_len(this->gox, this->goy, this->goz, 3, args, false);
@@ -496,6 +610,9 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_scale = %s;\n",(this->def_scale ? "true" : "false"));
   thprintf("\tplayout->scale = %lg;\n",this->scale);
+  thprintf("\tplayout->def_base_scale = %s;\n",(this->def_base_scale ? "true" : "false"));
+  thprintf("\tplayout->redef_base_scale = %s;\n",(this->redef_base_scale ? "true" : "false"));
+  thprintf("\tplayout->base_scale = %lg;\n",this->base_scale);
 
   thprintf("\tplayout->def_page_setup = %s;\n",(this->def_page_setup ? "true" : "false"));
   thprintf("\tplayout->hsize = %lg;\n",this->hsize);
@@ -506,6 +623,16 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->pagvs = %lg;\n",this->pagvs);
   thprintf("\tplayout->marts = %lg;\n",this->marts);
   thprintf("\tplayout->marls = %lg;\n",this->marls);
+
+  thprintf("\tplayout->color_map_bg.defined = %s;\n",(this->color_map_bg.defined ? "true" : "false"));
+  thprintf("\tplayout->color_map_bg.R = %lg;\n",this->color_map_bg.R);
+  thprintf("\tplayout->color_map_bg.G = %lg;\n",this->color_map_bg.G);
+  thprintf("\tplayout->color_map_bg.B = %lg;\n",this->color_map_bg.B);
+
+  thprintf("\tplayout->color_map_fg.defined = %s;\n",(this->color_map_fg.defined ? "true" : "false"));
+  thprintf("\tplayout->color_map_fg.R = %lg;\n",this->color_map_fg.R);
+  thprintf("\tplayout->color_map_fg.G = %lg;\n",this->color_map_fg.G);
+  thprintf("\tplayout->color_map_fg.B = %lg;\n",this->color_map_fg.B);
 
   thprintf("\tplayout->def_overlap = %s;\n",(this->def_overlap ? "true" : "false"));
   thprintf("\tplayout->overlap = %lg;\n",this->overlap);
@@ -613,27 +740,50 @@ void thlayout::self_print_library() {
   thlayoutln * ln = this->first_line;
   char last_code = TT_LAYOUT_CODE_UNKNOWN;
   while(ln != NULL) {
-    thdecode_c(&(this->db->buff_enc), ln->line);
-    if (ln->code != last_code) {
-      thprintf("\tplayout->ccode = \"");
-      switch (ln->code) {
-        case TT_LAYOUT_CODE_METAPOST:
-          thprintf("TT_LAYOUT_CODE_METAPOST");
-          break;
-        case TT_LAYOUT_CODE_TEX_MAP:
-          thprintf("TT_LAYOUT_CODE_TEX_MAP");
-          break;
-        default:
-          thprintf("TT_LAYOUT_CODE_TEX_ATLAS");
-          break;
-      }
-      thprintf("\";\n");
+    switch (ln->code) {
+      case TT_LAYOUT_CODE_METAPOST:
+      case TT_LAYOUT_CODE_TEX_MAP:
+      case TT_LAYOUT_CODE_TEX_ATLAS:
+        thdecode_c(&(this->db->buff_enc), ln->line);
+        if (ln->code != last_code) {
+          thprintf("\tplayout->ccode = \"");
+          switch (ln->code) {
+            case TT_LAYOUT_CODE_METAPOST:
+              thprintf("TT_LAYOUT_CODE_METAPOST");
+              break;
+            case TT_LAYOUT_CODE_TEX_MAP:
+              thprintf("TT_LAYOUT_CODE_TEX_MAP");
+              break;
+            default:
+              thprintf("TT_LAYOUT_CODE_TEX_ATLAS");
+              break;
+          }
+          thprintf("\";\n");
+        }
+        thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
+        thprintf("\tplayout->set(thcmd_option_desc(0,1),&oname,TT_UTF_8,0);\n");
+        break;
+      case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
+      case TT_LAYOUT_CODE_SYMBOL_DEFAULTS:
+      case TT_LAYOUT_CODE_SYMBOL_HIDE:
+        if (ln->line != NULL) {
+          thdecode_c(&(this->db->buff_enc), ln->line);
+          thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
+        } else {
+          thprintf("\toname = NULL;\n");
+        }
+        thprintf("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),&oname,TT_UTF_8,0);\n");
+        if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
+          thprintf("\tplayout->last_line->code = %s;\n", 
+            (ln->code == TT_LAYOUT_CODE_SYMBOL_HIDE ? "TT_LAYOUT_CODE_SYMBOL_HIDE" : "TT_LAYOUT_CODE_SYMBOL_ASSIGN"));
+          thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+        }
+        break;
     }
-    thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
-    thprintf("\tplayout->set(thcmd_option_desc(0,1),&oname,TT_UTF_8,0);\n");
     ln = ln->next_line;
   }
   thprintf("\tplayout->def_tex_lines = %s;\n",(this->def_tex_lines ? "true" : "false"));
+  
 }
 
 
@@ -809,6 +959,25 @@ void thlayout::export_mpost(FILE * o) {
 
 
 
+void thlayout::export_mpost_symbols(FILE * o, thsymbolset * symset) {
+  thlayoutln * ln = this->first_line;
+  while(ln != NULL) {
+    switch (ln->code) {
+      case TT_LAYOUT_CODE_SYMBOL_DEFAULTS:
+        symset->export_symbol_defaults(o,ln->line);
+        break;
+      case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
+        symset->export_symbol_assign(o,ln->smid,ln->line);
+        break;
+      case TT_LAYOUT_CODE_SYMBOL_HIDE:
+        symset->export_symbol_hide(o,ln->smid);
+        break;
+    }
+    ln = ln->next_line;
+  }
+}
+
+
 
 void thlayout::process_copy() {
   thlayout_copy_src * csp;
@@ -835,22 +1004,28 @@ void thlayout::process_copy() {
         srcl->process_copy();
       
       // teraz skopirujme co nemame a on ma
+#define has_srcl(whatx) (!this->whatx)      
       
-      if (!this->def_scale)
+      if has_srcl(def_scale)
         this->scale = srcl->scale;
+        
+      if ((!this->def_base_scale) && (srcl->redef_base_scale)) {
+        this->base_scale = srcl->base_scale;
+        this->redef_base_scale = true;
+      }
 
-      if (!this->def_origin) {
+      if has_srcl(def_origin) {
         this->ox = srcl->ox;
         this->oy = srcl->oy;
         this->oz = srcl->oz;
       }
 
-      if (!this->def_size) {
+      if has_srcl(def_size) {
         this->hsize = srcl->hsize;
         this->vsize = srcl->vsize;
       }
   
-      if (!this->def_page_setup) {
+      if has_srcl(def_page_setup) {
         this->paphs = srcl->paphs;
         this->papvs = srcl->papvs;
         this->paghs = srcl->paghs;
@@ -859,77 +1034,110 @@ void thlayout::process_copy() {
         this->marts = srcl->marts;
       }  
 
-      if (!this->def_overlap)
+      if has_srcl(def_overlap)
         this->overlap = srcl->overlap;
   
-      if (!this->def_grid_origin) {
+      if has_srcl(def_grid_origin) {
         this->gox = srcl->gox;
         this->goy = srcl->goy;
         this->goz = srcl->goz;
       }  
 
-      if (!this->def_excl_pages) {
+      if has_srcl(def_excl_pages) {
         this->excl_pages = srcl->excl_pages;
         this->excl_list = srcl->excl_list;
       }
+      
+      if has_srcl(color_map_fg.defined) {
+        this->color_map_fg.R = srcl->color_map_fg.R;
+        this->color_map_fg.G = srcl->color_map_fg.G;
+        this->color_map_fg.B = srcl->color_map_fg.B;
+      }
 
-      if (!this->def_doc_title)
+      if has_srcl(color_map_bg.defined) {
+        this->color_map_bg.R = srcl->color_map_bg.R;
+        this->color_map_bg.G = srcl->color_map_bg.G;
+        this->color_map_bg.B = srcl->color_map_bg.B;
+      }
+
+      if has_srcl(def_doc_title)
         this->doc_title = srcl->doc_title;
 
-      if (!this->def_doc_author)
+      if has_srcl(def_doc_author)
         this->doc_author = srcl->doc_author;
 
-      if (!this->def_doc_subject)
+      if has_srcl(def_doc_subject)
         this->doc_subject = srcl->doc_subject;
 
-      if (!this->def_doc_keywords)
+      if has_srcl(def_doc_keywords)
         this->doc_keywords = srcl->doc_keywords;
 
-      if (!this->def_grid_size) {
+      if has_srcl(def_grid_size) {
         this->gxs = srcl->gxs;
         this->gys = srcl->gys;
       }
   
-      if (!this->def_origin_label) {
+      if has_srcl(def_origin_label) {
         this->olx = srcl->olx;
         this->oly = srcl->oly;
       }
   
-      if (!this->def_nav_factor)
+      if has_srcl(def_nav_factor)
         this->navf = srcl->navf;
   
-      if (!this->def_nav_size) {
+      if has_srcl(def_nav_size) {
         this->navsx = srcl->navsx;
         this->navsy = srcl->navsy;
       }
 
-      if (!this->def_own_pages)
+      if has_srcl(def_own_pages)
         this->ownp = srcl->ownp;
       
-      if (!this->def_title_pages)
+      if has_srcl(def_title_pages)
         this->titlep = srcl->titlep;
         
-      if (!this->def_opacity)
+      if has_srcl(def_opacity)
         this->opacity = srcl->opacity;
   
-      if (!this->def_transparency)
+      if has_srcl(def_transparency)
         this->transparency = srcl->transparency;
   
-      if (!this->def_layers)
+      if has_srcl(def_layers)
         this->layers = srcl->layers;
   
-      if (!this->def_grid)
+      if has_srcl(def_grid)
         this->grid = srcl->grid;
 
-      if (!this->def_page_grid)
+      if has_srcl(def_page_grid)
         this->page_grid = srcl->page_grid;
   
-      if (!this->def_page_numbers)
+      if has_srcl(def_page_numbers)
         this->pgsnum = srcl->pgsnum;
 
-      if (!this->def_tex_lines) {
-        this->first_line = srcl->first_line;
-        this->last_line = srcl->last_line;
+      if (srcl->first_line != NULL) {
+        // musime ich nakopirovat pred nase
+        thlayoutln * cl, * nl, * newfl = NULL, * newll = NULL;
+        cl = srcl->first_line;
+        while (cl != NULL) {
+          nl = this->db->db2d.insert_layoutln();
+          *nl = *cl;
+          if (newll == NULL) {
+            newfl = nl;
+            newll = nl;
+            newll->next_line = NULL;
+          } else {
+            newll->next_line = nl;
+            newll = nl;
+          }
+          cl = cl->next_line;
+        }        
+        if (this->last_line == NULL) {
+          this->last_line = newll;
+          newll->next_line = NULL;
+        } else {
+          newll->next_line = this->first_line;
+        }
+        this->first_line = newfl;
       }
       
     } 
@@ -954,8 +1162,6 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.labelx = this->olx;
   LAYOUT.labely = this->oly;
   LAYOUT.excl_pages = this->excl_pages;
-  //TODO
-  LAYOUT.background = false;
   LAYOUT.title_pages = this->titlep;
   LAYOUT.page_numbering = this->pgsnum;
   LAYOUT.transparency = this->transparency;
@@ -998,6 +1204,10 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   if (this->doc_keywords != NULL)
     LAYOUT.doc_keywords = this->doc_keywords;
   LAYOUT.opacity = this->opacity;
+  
+  LAYOUT.background_r = this->color_map_bg.R;
+  LAYOUT.background_g = this->color_map_bg.G;
+  LAYOUT.background_b = this->color_map_bg.B;
   
 }
 

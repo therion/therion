@@ -123,7 +123,11 @@ Works like |input| command in data files---includes other files.
           page-numbers <on/off>
           page-setup <dimensions> <units>
           scale <picture length> <real length>
+          base-scale <picture length> <real length>
           size <width> <height> <units>
+          symbol-set <symbol-set>
+          symbol-assign <point/line/area> <symbol-type> <symbol-set>
+          symbol-hide <point/line/area> <symbol-type>
           title-pages <on/off>
         endlayout|
 \endsyntax
@@ -179,8 +183,37 @@ Works like |input| command in data files---includes other files.
     left-margin and top-margin (A; default: |21 29.7 20 28.7 0.5 0.5 cm|)
   * |scale <picture length> <real length>| = set scale of
     output map or map atlas (M, A; default: |1 200|)
+  * |base-scale <picture length> <real length>| = if set, Therion will
+    optically scale the map by a (|scale/base-scale|) factor.
+    This has the same effect as if the map printed in |base-scale| would be
+    photoreduced to the |scale|. (M, A)
   * |size <width> <height> <units>| = set map size in the atlas mode.
     In map mode applies iff |page-grid| is |on| (M, A; default: |18 22.2 cm|)
+  * |symbol-set <symbol-set>| = use |symbol-set| for all map symbols,
+    if available (M, A)
+    
+    Therion uses following predefined symbol sets:\par
+    UIS (International Union of Speleology)\par
+    ASF (Australian Speleological Federation)\par
+    CCNP (Carlsbad Caverns National Park)\par
+    SKBB (Speleoklub Bansk\'a Bystrica)\par
+    JSSJ (map symbols from the book {\it Jaskynn\'y syst\'em 
+                                      Stratenskej jaskyne})
+  * |symbol-assign <point/line/area> <symbol-type> <symbol-set>| = display a
+    particular symbol in the given symbol-set. This option overrides 
+    |symbol-set| option.
+    
+    If the symbol has a subtype, |<symbol-type>| argument has form
+    |type:subtype|.
+    
+    Following symbols may not be used with this option: point {\it section} 
+    (which isn't rendered at all) and all point and line labels ({\it label}, 
+    {\it remark}, {\it altitude}, {\it height}, {\it passage-height}, 
+    {\it station-name}, {\it date}). See the chapter
+    {\it Changing layout/Customizing text labels} for details how to change
+    labels' appearance. (M, A)
+  * |symbol-hide <point/line/area> <symbol-type>| = don't display particular 
+    symbol (M, A)
   * |title-pages <on/off>| = turn on/off atlas title pages (A; default: |off|)
   * |transparency <on/off>| = set transparency for the passages (underlying 
     passages are also visible) (M, A; default: |on|)
@@ -279,14 +312,12 @@ therion [-h/--help]
 \endarguments
 
 \options
-* |-d|
-
+* |-d| =
   Turn on debugging mode. The current implementation creates a 
   temporary directory named |thTMPDIR| (in your system temporary 
   directory) and does not delete any temporary files. 
 
-* |-g|
-
+* |-g| =
 %  Using this option you can generate a new configuration file.
 %  If |cfg-file| is not specified therion will use the |thconfig|
 %  file. If the destination file exists, it'll be overwritten.
@@ -294,66 +325,52 @@ therion [-h/--help]
   |<cfg-file>| if specified, or |thconfig| in the current directory if not. 
   If the file already exists, it will be overwritten.
         
-* |-h, --help|
-
+* |-h, --help| =
         Display short help.
 
-* |-i|
-
+* |-i| =
         Ignore comments when writing |-g| or |-u| configuration file.
 
-* |-L|
-
+* |-L| =
         Do not create a log-file. Normally therion writes all the messages
         into a therion.log file in the current directory.
         
-* |-l <log-file>|
-
+* |-l <log-file>| =
         Change the name of the log file.
         
-* |-p <search-path>|
-
+* |-p <search-path>| =
         This option is used to set the search path (or list of 
 	colon-separated paths) which therion uses to find its source
         files (if it doesn't find them in the working directory).
 
-* |-q|
-
+* |-q| =
         Run therion in quiet mode. It will print only warning
         and error messages to STDERR.
 
-* |--print-encodings|
-
+* |--print-encodings| =
         Print a list of all supported input encodings.
         
-* |--print-tex-encodings|
-
+* |--print-tex-encodings| =
         Print a list of all supported encodings for PDF output.
         
-* |--print-init-file|
-
+* |--print-init-file| =
         Print a default initialization file. For more details
         see the {\it Initialization} section in the {\it Appendix}.
         
-* |-s <source-file>|
-
+* |-s <source-file>| =
         Set the name of the source file.
         
-* |-u|
-
+* |-u| =
         Upgrade the configuration file.
 
-* |--use-extern-libs|
-  
+* |--use-extern-libs| =
   Don't copy \TeX\ and \MP\ macros to working directory. \TeX\ and \MP\ 
   should search for them on their own. Use with caution.
 
-* |-v, --version|
-
+* |-v, --version| =
   Display version information.        
         
-* |-x|
-
+* |-x| =
   Generate file `.xth-thconfig' with additional informations for XTherion.
 \endoptions
 

@@ -74,7 +74,9 @@ layout::layout() {
   nav_up = 2;
   nav_factor = 30;
   title_pages = false;
-  background = false;
+  background_r = 1; 
+  background_g = 1; 
+  background_b = 1;
   own_pages = 0;
   OCG = true;
 }

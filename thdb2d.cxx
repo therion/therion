@@ -2051,9 +2051,9 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
               while (se2 != NULL) {
                 cdst = hypot(se1->cxt - se2->cxt, se1->cyt - se2->cyt);
 //#ifdef THDEBUG
-//  thprintf("trying (%.2f,%.2f) - (%.2f,%.2f) = %.2f (MIN: %.2f)\n",se1->cxt,se1->cyt,se2->cxt,se2->cyt,cdst,mindst);
+//  thprintf("\ttrying (%.2f,%.2f) - (%.2f,%.2f) = %.2f (MIN: %.2f)\n",se1->cxt,se1->cyt,se2->cxt,se2->cyt,cdst,mindst);
 //#endif
-                if (cdst < mindst) {
+                if ((cdst < mindst) && (se1->active) && (se2->active)) {
                   fse1 = se1;
                   fse2 = se2;
                   mindst = cdst;
@@ -2080,6 +2080,17 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             }
               
             // vytvorime z nich joiny
+            
+#ifdef THDEBUG
+            thprintf("\ncreating new 2 joins:\n");
+            thprintf("\tline %ld (%.2f,%.2f) -- line %ld (%.2f,%.2f)\n",
+                fse1->l1->id, fse1->lp1->point->xt, fse1->lp1->point->yt, 
+                fse2->l1->id, fse2->lp1->point->xt, fse2->lp1->point->yt);
+            thprintf("\tline %ld (%.2f,%.2f) -- line %ld (%.2f,%.2f)\n",
+                fse1->l2->id, fse1->lp2->point->xt, fse1->lp2->point->yt, 
+                fse2->l2->id, fse2->lp2->point->xt, fse2->lp2->point->yt);
+#endif
+            
             tjptr = (thjoin*) thdb.create("join",thobjectsrc());
             thdb.insert(tjptr);
             tjptr->proj = jptr->proj;

@@ -80,6 +80,8 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
       this->scale = thmatch_token(*args, thtt_2dobj_scales);
       if (this->scale == TT_2DOBJ_SCALE_UNKNOWN)
         ththrow(("invalid scale -- %s",*args))
+      if (this->get_class_id() == TT_AREA_CMD)
+        ththrow(("scale specification for area not allowed"))
       break;    
 
     case TT_2DOBJ_CLIP:

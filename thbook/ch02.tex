@@ -488,14 +488,16 @@ Point is a command for drawing a point map symbol.
     types are supported: 
 
     {\it special objects:} station, section, water-flow, spring, sink,
-    label, remark, altitude, height, passage-height, station-name,
-    date, air-draught, entrance, gradient;
+    air-draught, entrance, gradient;
+
+    {\it labels:} label, remark, altitude, height, passage-height, 
+    station-name, date;
 
     {\it symbolic passage fills:} bedrock, sand, raft, clay, pebbles,
     debris, blocks, water, ice, guano;
 
     {\it speleothems:} flowstone, moonmilk, stalactite, stalagmite,
-    pillar, curtain, helectite, soda-straw, crystal, wall-calcite,
+    pillar, curtain, helictite, soda-straw, crystal, wall-calcite,
     popcorn, disk, gypsum, gypsum-flower, aragonite, cave-pearl,
     rimstone-pool, rimstone-dam, anastomosis, karren, scallop,
     flute, raft-cone;
@@ -518,6 +520,27 @@ Point is a command for drawing a point map symbol.
 
     {\it water-flow:} permanent (default), intermittent, paleo
 
+  * |orientation/orient <number>| = defines the orientation
+    of the symbol. If not specified, it's oriented to north.
+    0 $\le$ |number| $<$ 360.
+  * |align| = alignment of the symbol or text. The following values
+    are accepted: center, c, top, t, bottom, b, left, l, right, r,
+    top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br.
+  * |scale| = symbol scale, can be: 
+    tiny (xs), small (s), normal (m), large (l), huge (xl). Normal is default.
+  * |place <bottom/none/top>| = where to place the symbol relatively
+    to other objects (none by default).
+  * |clip <bool>| = specify whether a symbol is clipped by the scrap border.
+    You cannot specify this option in the following symbols: station,
+    station-name, label, remark, date, altitude, height, passage-height.
+  * |visibility <on/off>| = displays/hides an object
+  * |id <ext_keyword>| = id of the object
+  * |author <date> <person>| = author of the data and it's creation date
+  * |copyright <date> <string>| = copyright date and name
+  * |title <string>| = description of the object
+
+    {\it Type-specific options:}
+
   * |name <reference>| = if the point type is station, this
     option gives the reference to the real survey station.
   * |extend <specification>| = if the point type is station and scrap
@@ -539,10 +562,9 @@ Point is a command for drawing a point map symbol.
 
     5. |previous/prev <reference>| = reference to previous station
        (or point of type station)
-  * |orientation/orient <number>| = defines the orientation
-    of the symbol. If not specified, it's oriented to north.
-    0 $\le$ |number| $<$ 360.
-  * |text| = text of the label or remark. It may include following formatting
+  * |scrap <reference>| = if the point type is section, this is a 
+    reference to a cross-section scrap. 
+  * |text| = text of the label or remark. It may contain following formatting
     keywords:
     
     |<br>| = line break
@@ -551,21 +573,6 @@ Point is a command for drawing a point map symbol.
     Ignored if there is no |<br>| tag.
         
   * |value| = value of height, passage-height or altitude label
-  * |align| = alignment of the symbol or text. The following values
-    are accepted: center, c, top, t, bottom, b, left, l, right, r,
-    top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br.
-  * |place <bottom/none/top>| = where to place the symbol relatively
-    to other objects (none by default).
-  * |scale| = symbol scale, can be: medium, m (default), large, l.
-  * |clip <bool>| = specify whether a symbol is clipped by the scrap border.
-    You cannot specify this option in the following symbols: station,
-    station-name, label, remark, date, altitude, height, passage-height.
-  * |scrap <reference>| = reference to a section scrap
-  * |visibility <on/off>| = displays/hides an object
-  * |id <ext_keyword>| = id of the object
-  * |author <date> <person>| = author of the data and it's creation date
-  * |copyright <date> <string>| = copyright date and name
-  * |title <string>| = description of the object
 \endoptions
 
 \notes
@@ -598,7 +605,7 @@ Point is a command for drawing a point map symbol.
         
       {\it section:} place the section at this point. The section scrap
       must be in `none' projection. You can specify it through the |-scrap|
-      option.
+      option. This symbol has no visual representation.
         
       {\it spring, sink:} always use these two symbols with a water-flow
       arrow.

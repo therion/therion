@@ -65,6 +65,11 @@ enum {
   TT_LAYOUT_TRANSPARENCY = 2023,
   TT_LAYOUT_LAYERS = 2024,
   TT_LAYOUT_CODE = 2025,
+  TT_LAYOUT_BASE_SCALE = 2026,
+  TT_LAYOUT_SYMBOL_DEFAULTS = 2027,
+  TT_LAYOUT_SYMBOL_ASSIGN = 2028,
+  TT_LAYOUT_SYMBOL_HIDE = 2029,
+  TT_LAYOUT_COLOR = 2030,
 };
 
 
@@ -102,6 +107,9 @@ enum {
   TT_LAYOUT_CODE_TEX_ATLAS,
   TT_LAYOUT_CODE_TEX_MAP,
   TT_LAYOUT_CODE_METAPOST,
+  TT_LAYOUT_CODE_SYMBOL_DEFAULTS,
+  TT_LAYOUT_CODE_SYMBOL_ASSIGN,
+  TT_LAYOUT_CODE_SYMBOL_HIDE,
 };
 
 
@@ -116,6 +124,31 @@ static const thstok thtt_layout_code[] = {
   {"tex-map", TT_LAYOUT_CODE_TEX_MAP},
   {NULL, TT_LAYOUT_CODE_UNKNOWN}
 };
+
+
+/**
+ * Layout color tokens.
+ */
+
+enum {
+  TT_LAYOUT_COLOR_UNKNOWN = 0,
+  TT_LAYOUT_COLOR_MAP_BG,
+  TT_LAYOUT_COLOR_MAP_FG,
+};
+
+
+/**
+ * Layout color token table.
+ */
+ 
+static const thstok thtt_layout_color[] = {
+  {"map-bg", TT_LAYOUT_COLOR_MAP_BG},
+  {"map-fg", TT_LAYOUT_COLOR_MAP_FG},
+  {NULL, TT_LAYOUT_COLOR_UNKNOWN}
+};
+
+
+
 
 class thlayout_copy_src {
 
@@ -134,7 +167,10 @@ class thlayout_copy_src {
  */
  
 static const thstok thtt_layout_opt[] = {
+  {"base-scale",TT_LAYOUT_BASE_SCALE},
   {"code",TT_LAYOUT_CODE},
+  {"color",TT_LAYOUT_COLOR},
+  {"colour",TT_LAYOUT_COLOR},
   {"copy",TT_LAYOUT_COPY},
   {"doc-author",TT_LAYOUT_DOC_AUTHOR},
   {"doc-keywords",TT_LAYOUT_DOC_KEYWORDS},
@@ -157,9 +193,24 @@ static const thstok thtt_layout_opt[] = {
   {"page-setup",TT_LAYOUT_PAGE_SETUP},
   {"scale", TT_LAYOUT_SCALE},
   {"size", TT_LAYOUT_SIZE},
+  {"symbol-assign", TT_LAYOUT_SYMBOL_ASSIGN},
+  {"symbol-hide", TT_LAYOUT_SYMBOL_HIDE},
+  {"symbol-set", TT_LAYOUT_SYMBOL_DEFAULTS},
   {"title-pages",TT_LAYOUT_TITLE_PAGES},
   {"transparency",TT_LAYOUT_TRANSPARENCY},
   {NULL, TT_LAYOUT_UNKNOWN},
+};
+
+
+/**
+ * layout color class.
+ */
+
+struct thlayout_color {
+  double R, G, B;
+  bool defined;
+  void parse(char * str);
+  thlayout_color() : R(1.0), G(1.0), B(1.0), defined(false) {}
 };
 
 
@@ -171,7 +222,7 @@ class thlayout : public thdataobject {
 
   public:
     
-  double scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gox, goy, goz, navf, overlap, opacity;
+  double scale, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gox, goy, goz, navf, overlap, opacity;
   
   char * olx, * oly, 
     * doc_title, * doc_author, * doc_subject, * doc_keywords, * excl_list;
@@ -180,16 +231,21 @@ class thlayout : public thdataobject {
   
   char grid, ccode;
   
+  thlayout_color color_map_bg, color_map_fg;
+  
   thlayoutln * first_line, * last_line;
   
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid;
   
   bool def_grid_size, def_grid_origin, def_nav_factor, def_nav_size, 
-    def_opacity, def_transparency, def_layers, 
+    def_opacity, def_transparency, def_layers, def_base_scale,
     def_origin, def_origin_label, def_overlap, def_own_pages,
     def_page_numbers, def_page_setup, def_scale, def_size, def_title_pages,
     def_tex_lines, def_doc_title, def_doc_author, def_doc_subject,
-    def_doc_keywords, def_excl_pages, def_grid, def_page_grid;
+    def_doc_keywords, def_excl_pages, def_grid, def_page_grid,
+    
+    redef_base_scale;
+    
   
   thlayout_copy_src * first_copy_src, * last_copy_src;
   
@@ -254,7 +310,7 @@ class thlayout : public thdataobject {
    */
    
   virtual thcmd_option_desc get_cmd_option_desc(char * opts);
-  
+  thcmd_option_desc get_default_cod(int id);
   
   /**
    * Set command option.
@@ -316,6 +372,8 @@ class thlayout : public thdataobject {
    
   void export_pdftex(FILE * o, thdb2dprj * prj, char mode);
   void export_mpost(FILE * o);
+  void export_mpost_symbols(FILE * o, class thsymbolset * symset);
+  
   /**
    * Process copy.
    */

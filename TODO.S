@@ -1,30 +1,41 @@
 HNED:
++ pridat line - water: permanent, conjuctural, intermittent
++ neexportovanie hidenutych symbolov + symbol-show
++ jazyk exportu (vystupov)
+  * <therion|jazyk>[/special]: "text"
+  * thlang.h/cxx kde bude nejake makro na preklad
+  * tcl skript, ktory prehlada zdrojaky, najde texty v makrach, 
+    nacita sucasne preklady a cele to apdejtne, pricom
+    vytvori aj skript, ktory nastavi jazykovy hash
++ generovanie pouzitych znaciek
+  * objekt znackoveho kluca
+  * v ktorom ku kazdej projekcii pouzite znacky
+  * a jeho export do MPostu a TeXu - kombinacie znaciek
+  * zakompilovane lokalne nazvy
++ mapove mody - default, outlines
+  * vynechat texty
+  * vypustenie priecnych rezov pre mapu aj atlas do layoutu
+    (vypustit section scrapy a section lines)
+  * vynechat vsetko okrem obrysov
 
 HOTOVO:
-+ v therion.ini
-  tmp-path <PATH>
-  tmp-remove <COMMAND>
-+ ak nema specifikovany source => error
-+ ak skonci s chybou, tak caka na ENTER z klavesnice
-+ pridane teamove ulohy: instruments (insts), assistant (dog)
-+ centerline/centreline je podporovane
-+ v centreline nove data: up ceiling down floor left right ignore
-+ preview funguje po novom - nastavuje sa podla poradia zadania
-+ v preview len previews z 0-tej urovne
-+ DEG:MIM:SEC syntax povolena pri degrees
-+ instalacny skript pre binarnu verziu
-+ 2d objekty: -visibility on|off
++ v layote:
+  symbol-defaults <KLUC>
+  symbol-hide <point|line|area> <ID>
+  symbol-assign <point|line|area> <ID> <KLUC>
++ cislovanie MP suborov po jednom
++ colour|color <item> <COLOR>
+  * items: map-fg, map-bg [0-100]|[R G B]
 
 POTOM:
++ debugovacie mody
 + navrhnut kroky pre 3D
 + skusit odprasit cavern
 + preview beside
 + do section line pridat moznost head (begin,end,none,both) - ked to
   budu podporovat MP makra
 + rychly mod pre kompilaciu - bez spustania MPostu a bez konverzie
-+ vypustenie priecnych rezov pre mapu aj atlas do layoutu
-  * vypustit section scrapy a section lines
-+ rozsirit cislovanie suborov pre metapost na podadresare
++ rozsirit cislovanie suborov pre metapost na podadresare + cislovanie zaradom
 + exportovat styl gridu - ked to bude podporovane v thpdf
 + statistika na mapy a scrapy 
   * thstatmap
@@ -32,13 +43,6 @@ POTOM:
   * do layoutu dat pre celu mapu pocet meracov 
     a kreslicov vo vystupe
   * pocitame pri ich exporte v ???
-+ jazyk exportu (vystupov) do therion.ini
-  * pripravit spravu jazykov
-+ znackove kluce
-  * objekt znackoveho kluca
-  * v ktorom ku kazdej projekcii pouzite znacky
-  * a jeho export do MPostu a TeXu - kombinacie znaciek
-  * zakompilovane lokalne nazvy
 * SVG - cvicna verzia
 * rozsirena statistika (zakladna statistika
   + thstat (pre vybrane surveys resp. vsetky) 
@@ -47,8 +51,6 @@ POTOM:
   + roky (kolko m bolo zameranych)
   + uzavrete okruhy a chyby na nich
   + pocitame len pri exporte v ???
-* debugovacie mody
-* 3D
 
 KED TO BUDE TREBA:
 + pridat do mapy moznost dat survey -> vtedy da len jeho polygon

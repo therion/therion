@@ -1,8 +1,8 @@
 set xth(point_types) {
 	air-draught
 	altitude
-	anchor
 	anastomosis
+	anchor
 	aragonite
 	archeo-material
 	bedrock
@@ -28,14 +28,14 @@ set xth(point_types) {
 	gypsum
 	gypsum-flower
 	height
-	helectite
+	helictite
 	ice
 	karren
 	label
 	low-end
 	moonmilk
 	narrow-end
-	no-equipement
+	no-equipment
 	paleo-material
 	passage-height
 	pebbles

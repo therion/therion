@@ -102,6 +102,14 @@
   \endinsert
 }
 
+\def\mapsymbol#1{%
+  \ifx\pdfoutput\undefined
+    \hbox{\epsfbox{sym/symlib.#1}}%
+  \else
+    \convertMPtoPDF{sym/symlib.#1}{1}{1}%
+  \fi
+}
+
 %\def\future#1{%
 %[This chapter will be finished hopefully in the near future. Please read a 
 %chapter {\it Syntax summary (#1)} in the {\it Appendix}.]}

@@ -51,16 +51,21 @@ enum {
  */
  
 static const thstok thtt_2dobj_scales[] = {
-//  {"extra-large", TT_2DOBJ_SCALE_XL},
-//  {"extra-small", TT_2DOBJ_SCALE_XS},
+  {"L", TT_2DOBJ_SCALE_L},
+  {"M", TT_2DOBJ_SCALE_M},
+  {"S", TT_2DOBJ_SCALE_S},
+  {"XL", TT_2DOBJ_SCALE_XL},
+  {"XS", TT_2DOBJ_SCALE_XS},
+  {"huge", TT_2DOBJ_SCALE_XL},
   {"l", TT_2DOBJ_SCALE_L},
   {"large", TT_2DOBJ_SCALE_L},
   {"m", TT_2DOBJ_SCALE_M},
-  {"medium", TT_2DOBJ_SCALE_M},
-//  {"s", TT_2DOBJ_SCALE_S},
-//  {"small", TT_2DOBJ_SCALE_S},
-//  {"xl", TT_2DOBJ_SCALE_XL},
-//  {"xs", TT_2DOBJ_SCALE_XS},
+  {"normal", TT_2DOBJ_SCALE_M},
+  {"s", TT_2DOBJ_SCALE_S},
+  {"small", TT_2DOBJ_SCALE_S},
+  {"tiny", TT_2DOBJ_SCALE_XS},
+  {"xl", TT_2DOBJ_SCALE_XL},
+  {"xs", TT_2DOBJ_SCALE_XS},
 	{NULL, TT_2DOBJ_SCALE_UNKNOWN},
 };
 

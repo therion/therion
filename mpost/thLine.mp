@@ -84,7 +84,7 @@ def l_wall_debris_SKBB (expr P) =
   q := ((-.1u,-.15u)--(.2,.03u)--(-.2u,.15u)--cycle) scaled 1.5;
   forever:
     t := arctime (cas + mojkrok/2) of P;
-    thdraw q randomized .2mm rotated uniformdeviate (360) shifted point t of P;
+    thdraw q randomized (u/15) rotated uniformdeviate (360) shifted point t of P;
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
   endfor;
@@ -106,7 +106,7 @@ if dlzka > 0:
     q := ((point t1 of P) + .4u * unitvector(thdir(P,t1) rotated -90)) --
          (subpath (t1,t2) of P) --
          ((point t2 of P) + .4u * unitvector(thdir(P,t2) rotated -90));
-    thdraw q randomized 1mm;
+    thdraw q randomized (u/3);
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
   endfor;
@@ -154,6 +154,8 @@ def l_pit_UIS (expr P) =
   thdraw P;
 enddef;
 
+let l_floorstep_UIS = l_pit_UIS;
+
 def l_overhang_SKBB (expr P) =
   T:=identity;
   cas := 0;
@@ -181,7 +183,7 @@ def l_chimney_UIS (expr P) =
   thdraw P dashed evenly;
 enddef;
 
-def l_chimney_SKBB (expr P) =
+def l_ceilingstep_SKBB (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -414,12 +416,11 @@ def l_flowstone_UIS (expr P) =
   endfor;
 enddef;
 
+%def PolygonLine = .8u enddef;
 
-def PolygonLine = .8 * u enddef;
-%PolygonPoint:=0.25u;
-
-def thPolygon_SKBB (expr P) =
+def l_survey_SKBB (expr P) =
   T:=identity;
+  PolygonLine:=.8u;
   pair zz[];
   pickup PenC;
   for t = 0 upto length P - 1:
@@ -427,20 +428,14 @@ def thPolygon_SKBB (expr P) =
     zz2 := point t+1 of P;
     if length (zz2-zz1) > 2*PolygonLine:
       thdraw zz1 -- zz1 + PolygonLine * unitvector(zz2 - zz1);
-      thdraw zz2 -- zz2 + PolygonLine * unitvector(zz1 - zz2);
+%      thdraw zz2 -- zz2 + PolygonLine * unitvector(zz1 - zz2);
     else:
       thdraw zz1 -- zz2;
     fi;
-%    p := fullcircle scaled PolygonPoint shifted (zz1);
-%    q := fullcircle scaled PolygonPoint shifted (zz2);
-%    thunfill p;
-%    thunfill q;
-%    thdraw p;
-%    thdraw q;
   endfor;
 enddef;
 
-def thPolygon_JSSJ (expr P) =
+def l_survey_JSSJ (expr P) =
   T:=identity;
   pair zz[];
   pickup PenC;
@@ -448,12 +443,6 @@ def thPolygon_JSSJ (expr P) =
     zz1 := point t of P;
     zz2 := point t+1 of P;
     draw zz1 -- zz2;
-%    p := fullcircle scaled PolygonPoint shifted (zz1);
-%    q := fullcircle scaled PolygonPoint shifted (zz2);
-%    thunfill p;
-%    thunfill q;
-%    thdraw p;
-%    thdraw q;
   endfor;
 enddef;
 
@@ -572,7 +561,7 @@ enddef;
 %     2 -- begin
 %     3 -- both
 
-def ArrowPath (expr P, Q) =
+def l_arrow_SKBB (expr P, Q) =
   T:=identity;
   pickup PenC;
   thdraw P;
@@ -620,3 +609,4 @@ enddef;
 
 let l_border_invisible = l_invisible;
 let l_wall_invisible = l_invisible;
+let l_section_SKBB = l_border_visible_SKBB;

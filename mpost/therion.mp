@@ -48,8 +48,8 @@ prologues:=1;
 % in <A HREF="#T">T</A> transformation; recommended
 % values are 1 or 2.
 
-newinternal symbol_scale;
-symbol_scale := 1;
+%newinternal symbol_scale;
+%symbol_scale := 1;
 
 % @VARIABLE
 % fill_only --
@@ -62,7 +62,7 @@ symbol_scale := 1;
 
 boolean fill_only, horiz_labels;
 fill_only := false;
-horiz_labels:=false;
+horiz_labels:=true;
 
 % @VARIABLE
 % last_write --
@@ -80,8 +80,8 @@ last_write = -1;
 % <I>string</I> containing combination of the "highest" and "lowest" character
 % in used font; it's used by <A HREF="">free_text</A> macro.
 
-string strut_string;
-strut_string = "(È";
+%string strut_string;
+%strut_string = "(È";
 
 % @VARIABLE
 % file_name --
@@ -149,17 +149,58 @@ path p,q;
 %    <LI>PenX -- extra thick; not recommended for use
 % </UL>
 
-def initialize (expr Scale) =
-    if Scale <= 100:
+def fonts_setup (expr t,s,m,l,h) =
+  write "\def\updown#1#2{\vbox{" &
+        "\offinterlineskip" &
+        "\setbox100=\hbox{#1}" &
+        "\setbox101=\hbox{#2}" &
+        "\ifnum\wd100>\wd101\hsize=\wd100\else\hsize=\wd101\fi" &
+        "\centerline{\box100}\vskip4pt" &
+        "\centerline{\box101}}}" &
+        "\def\thlabel{\thnormalsize}" &
+        "\def\thremark{\thsmallsize\si}" &
+        "\def\thaltitude{\thsmallsize}" &
+        "\def\thstationname{\thsmallsize}" &
+        "\def\thdate{\thsmallsize}" &
+        "\def\thheight{\thsmallsize}" &
+        "\def\thheightpos{\thsmallsize+\ignorespaces}" &
+        "\def\thheightneg{\thsmallsize-\ignorespaces}" &
+        "\def\thframed{\thsmallsize}" &
+        "\def\thwallaltitude{\thtinysize}"
+  to "mptexpre.tex";
+  write "\def\thtinysize{\size[" & decimal max(t*BaseScale/Scale,0) & "]}" & 
+        "\def\thsmallsize{\size[" & decimal max(s*BaseScale/Scale,0) & "]}" & 
+        "\def\thnormalsize{\size[" & decimal max(m*BaseScale/Scale,0) & "]}" & 
+        "\def\thlargesize{\size[" & decimal max(l*BaseScale/Scale,0) & "]}" & 
+        "\def\thhugesize{\size[" & decimal max(h*BaseScale/Scale,0) & "]}" 
+  to "mptexpre.tex";
+  write EOF to "mptexpre.tex";
+enddef;
+
+%def initialize (expr Scale) =
+
+if unknown BaseScale: BaseScale = Scale; fi;
+
+    if BaseScale <= 100:
         u:=14bp; v:=14bp; w:=12bp;
-    elseif Scale <= 200:
+        fonts_setup(8,10,12,16,24);
+    elseif BaseScale <= 200:
         u:=12bp; v:=12bp; w:=12bp;
-    elseif Scale <= 500:
+        fonts_setup(7,8,10,14,20);
+    elseif BaseScale <= 500:
         u:=10bp; v:=10bp; w:=12bp;
+        fonts_setup(6,7,8,10,14);
     else:
         u:=7bp; v:=14bp; w:=10bp;
+        fonts_setup(5,6,7,8,10);
     fi;
     
+    u := u * BaseScale/Scale;
+    v := v * BaseScale/Scale;
+    w := w * BaseScale/Scale;
+
+    defaultscale := 0.8 * BaseScale/Scale;
+
     def PenA = pencircle scaled (u/10) enddef;
     def PenB = pencircle scaled (0.7*u/10) enddef;
     def PenC = pencircle scaled (0.5*u/10) enddef;
@@ -167,13 +208,13 @@ def initialize (expr Scale) =
     def PenX = pencircle scaled (1.2*u/10) enddef;
     
     legend_scale := 3.14*u;
-enddef;
+%enddef;
 
 % macro is expanded, we have to know all dimensions and pens before reading
 % mpattern macros
 
-initialize(Scale);
-user_initialize;
+%initialize(Scale);
+%user_initialize;
 
 % @MACRO
 % inscale --
@@ -198,7 +239,11 @@ def draw_legend_box =
 enddef;
 
 def legend_point (expr name) =
-  scantokens(name)((0.5,0.5) inscale,0,1);
+  if substring (2,9) of name = "station":
+    scantokens(name)((0.5,0.5) inscale);
+  else:
+    scantokens(name)((0.5,0.5) inscale,0,1,(0,0));
+  fi;
   draw_legend_box;
 enddef;
 
@@ -560,6 +605,46 @@ def draw_downscrap =
   write EOF to clip_name;
   bgfill:=nullpicture;
 enddef;
+
+%%%%%%%%%%%% Map symbols management %%%%%%%%%%%%%%%%%%%
+
+def mapsymbol (expr name, set, warning) = 
+  string s, stype, lname, ID;
+  stype = substring (0,1) of name;
+  lname = name & "_" & set;
+  ID := "ID_" & lname;
+  if (known scantokens ID):
+    if stype = "a":
+      s = "def " & name & " = scantokens(" & ditto & lname & ditto & ") enddef;";
+    else:
+      s = "let " & name & " = " & lname & ";";
+    fi;
+    scantokens s;
+  elseif warning:  
+    message("[Warning: undefined symbol `" & lname & "']");
+  fi;
+enddef;
+
+def hidesymbol (expr name) =
+  string s, stype;
+  stype = substring (0,1) of name;
+  if stype = "a":
+    s = "def " & name & " = scantokens(" & ditto & "a_empty" & ditto & ") enddef;";
+  else:
+    s = "vardef " & name & "@# (text t) = enddef;";
+  fi;
+  scantokens s;
+  write name to "missed.dat";
+enddef;
+
+def initsymbol (expr name) =
+%  string s;
+%  s := "ID_" & str type & "_" & str name & "_" & str set & " = 1";
+  s := "ID_" & name & " = 1";
+  scantokens s;
+enddef;
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % P. Bolek's MPATTERN package adapted and simplified for Therion

@@ -27,7 +27,6 @@
 % @LIBRARY
 % thText --
 
-
 def l_label(expr txt,path) =
   picture pict,pic;
   pair pos;
@@ -84,6 +83,7 @@ def l_label(expr txt,path) =
 enddef;
 
 vardef p_label@#(expr txt,pos,rot,mode) =
+  interim labeloffset:=0bp;
   lab:=thelabel@#(txt, pos);
   if mode>1: pickup PenD fi;
   if mode=1:
@@ -102,10 +102,12 @@ def p_wall_altitude (expr pprev,pos,pnext,txt) =
   rot:=angle(unitvector(pnext-pos)+unitvector(pos-pprev)) - 90;
   pickup PenD;
   pair zz;
-  zz:=(pos + 3*unitvector(dir rot));
+%  zz:=(pos + 3*unitvector(dir rot));
+  zz:=(pos + (u/4)*unitvector(dir rot));
   draw (pos)--zz;
   begingroup 
-    interim labeloffset:=2pt;
+%    interim labeloffset:=2pt;
+    interim labeloffset:=(u/12);
     if horiz_labels:
       rot:=rot mod 360;
       if rot<=22.5: lab:=thelabel.rt(txt, zz);

@@ -115,7 +115,7 @@ enddef;
 %
 % thHelectite_UIS((.5,.5) inscale,0,1);
 
-def p_helectite_UIS(expr pos,theta,sc,al) =
+def p_helictite_UIS(expr pos,theta,sc,al) =
     U:=(.2u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -366,7 +366,7 @@ enddef;
 %
 % thAnostomosen_UIS((.5,.5) inscale,0,1);
 
-def p_anastomose_UIS (expr pos,theta,sc,al)=
+def p_anastomosis_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -580,6 +580,8 @@ def p_sand_UIS (expr pos,theta,sc,al)=
     thdraw (0,.2u) rotated 240;
 enddef;
 
+let p_clay_UIS = p_sand_UIS;
+
 % @SYMBOL
 % thPebblesSymbol_UIS --
 %
@@ -650,7 +652,7 @@ def p_water_UIS (expr pos,theta,sc,al)=
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenD;
     p:=fullcircle xscaled (.85u) yscaled (.6u);
-    thfill p withpattern thLakePattern_UIS;
+    thfill p withpattern a_water_UIS;
     thdraw p;
 enddef;
 
@@ -841,7 +843,7 @@ enddef;
 
 def p_waterflow_intermittent_UIS (expr pos,theta,sc,al)=
   drawoptions(dashed evenly scaled .5);
-  thPermanentstreamarrow_UIS (pos,theta,sc,al);
+  p_waterflow_permanent_UIS (pos,theta,sc,al);
   drawoptions();
 enddef;
 
@@ -852,7 +854,7 @@ enddef;
 %
 % thAirflowarrow_UIS((.5,.5) inscale,0,1,3);
 
-def p_airdraught_UIS (expr pos,theta,sc,intens,al)=
+def p_airdraught_UIS (expr pos,theta,sc,al)=
   U:=(.2u,u);
   T:=identity aligned al rotated theta scaled sc shifted pos;
   pickup PenC;
@@ -860,34 +862,18 @@ def p_airdraught_UIS (expr pos,theta,sc,intens,al)=
 	p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
 	thdraw p;
 	thdraw p reflectedabout (origin,(0,u));
-	for i:=1 upto intens:
+	for i:=1 upto 3:  % !!!
 	  thdraw (0,-(1-0.2i)*u)--(.2u,-(1-0.2(i-1))*u);
 	endfor;
 enddef;
 
-def p_section_SKBB (expr pos,theta)=
+def p_sectionarrow_SKBB (expr pos,theta)=
     T:=identity rotated theta shifted pos;
     pickup PenC;
     thdraw (0,0)--(0,.8u);
     thdraw (-.1u,.55u)--(0,.8u)--(.1u,.55u);
 enddef;
 
-
-
-% @SYMBOL
-% thUndefinedSymbol --
-%
-% @PREVIEW
-%
-% thUndefinedSymbol((.5,.5) inscale,0,1);
-
-def p_undefined(expr pos,theta,sc,al)=
-    U:=(.4u,.4u);
-    T:=identity aligned al scaled sc shifted pos;
-    pickup PenC;
-    thdraw fullcircle scaled 0.8u withcolor red;
-    message("[Warning: undefined point symbol used]");
-enddef;
 
 % @DESCRIPTION
 % <H4>Survey stations:</H4>
@@ -950,6 +936,8 @@ def p_station_temporary_ASF (expr pos)=
     thdraw origin;
 enddef;
 
+let p_station_temporary_SKBB = p_station_painted_SKBB;
+
 def p_station_NoMorph (expr pos)=
     T:=identity shifted pos;
     thdraw origin withpen pencircle scaled 3pt withcolor blue;
@@ -970,10 +958,21 @@ enddef;
 
 % alignment!
 
-def p_equipment_SKBB(expr pos,type) =
+def p_rope_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,1) enddef;          
+def p_fixedladder_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,2) enddef;   
+def p_ropeladder_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,3) enddef;    
+def p_steps_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,4) enddef;         
+def p_bridge_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,5) enddef;        
+def p_traverse_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,6) enddef;
+def p_anchor_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,7) enddef;
+def p_camp_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,8) enddef;
+def p_noequipment_SKBB (expr pos,r,s,al) = thp_equipment_SKBB(pos,9) enddef;
+
+
+def thp_equipment_SKBB(expr pos,type) =
   begingroup
-  interim defaultscale:=0.8;
-  thCircledlabel(
+%  interim defaultscale:=0.8;
+  p_label(
   if lang="en":
     if type=1: "R"        % rope
   	elseif type=2: "Lf"   % fixed ladder
@@ -982,7 +981,8 @@ def p_equipment_SKBB(expr pos,type) =
   	elseif type=5: "B"    % bridge
   	elseif type=6: "T"    % traverse
   	elseif type=7: "A"    % anchor
-  	elseif type=8: "!"    % not equipped
+  	elseif type=7: "C"    % camp
+  	elseif type=9: "!"    % not equipped
   	fi
   elseif lang="sk":
     if type=1: "L"
@@ -992,10 +992,11 @@ def p_equipment_SKBB(expr pos,type) =
   	elseif type=5: "M"
   	elseif type=6: "T"
   	elseif type=7: "K"
-  	elseif type=8: "!"
+  	elseif type=8: "B" % bivak
+  	elseif type=9: "!"
   	fi
 	fi
-    ,pos);
+    ,pos,0,5);
   endgroup;
 enddef;
 

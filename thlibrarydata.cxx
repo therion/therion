@@ -67,6 +67,9 @@ void thlibrary_init_layouts()
 	playout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),&oname,TT_UTF_8,0);
 	playout->def_scale = true;
 	playout->scale = 0.005;
+	playout->def_base_scale = false;
+	playout->redef_base_scale = false;
+	playout->base_scale = 0.005;
 	playout->def_page_setup = true;
 	playout->hsize = 0.24;
 	playout->vsize = 0.1399;
@@ -118,7 +121,9 @@ void thlibrary_init_layouts()
 	playout->titlep = false;
 	playout->def_page_numbers = false;
 	playout->pgsnum = true;
-	playout->def_tex_lines = false;
+	oname = "SKBB";
+	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),&oname,TT_UTF_8,0);
+	playout->def_tex_lines = true;
 	thdb.insert(playout);
 }
 

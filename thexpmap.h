@@ -31,7 +31,8 @@
 
 
 #include "thexport.h"
-
+#include "thsymbolset.h"
+#include "thlayout.h"
 
 /**
  * map export options.
@@ -93,10 +94,33 @@ class thexpmapmpxs {
   
   FILE * file; ///< output file
   double ms, mx, my; ///< Scale and centering.
+  thsymbolset * symset;
   
   thexpmapmpxs() : file(NULL), ms(1.0), mx(0.0), my(0.0) {}
   
 };
+
+
+enum {
+  TT_XMPS_NONE = 0,
+  TT_XMPS_COUNT = 5,
+  TT_XMPS_F = 1,
+  TT_XMPS_COUNT_F = 0,
+  TT_XMPS_B = 2,
+  TT_XMPS_COUNT_B = 1,
+  TT_XMPS_E = 4,
+  TT_XMPS_COUNT_E = 2,
+  TT_XMPS_X = 8,
+  TT_XMPS_COUNT_X = 3,
+};
+
+
+struct thexpmap_xmps {
+  int flags;
+  long F,B,E,X;
+  thexpmap_xmps() : flags(TT_XMPS_NONE), F(-1), B(-1), E(-1), X(-1) {}
+};
+
 
 /**
  * Main export class.
@@ -114,10 +138,12 @@ class thexpmap : public thexport {
     * layoutstr;  ///< Layout string.
   class thdb2dprj * projptr;  ///< Projection pointer.
   class thlayout * layout;  ///< Layout pointer.
+  thsymbolset symset;
+  
   thbuffer layoutopts;  ///< Layout options buffer.
   
   void export_pdf(class thdb2dxm * maps, class thdb2dprj * prj);
-  unsigned export_mp(thexpmapmpxs * out, class thscrap * scrap, unsigned startnum, bool outline_mode);
+  thexpmap_xmps export_mp(thexpmapmpxs * out, class thscrap * scrap, unsigned & startnum, bool outline_mode);
   
 
   public:

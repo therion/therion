@@ -1,0 +1,106 @@
+
+
+[Point symbols]
+
+airdraught: UIS 
+anastomosis: UIS 
+anchor: SKBB 
+aragonite: CCNP 
+archeomaterial: UIS 
+bedrock: ASF 
+blocks: UIS 
+breakdownchoke: CCNP 
+bridge: SKBB 
+camp: SKBB 
+cavepearl: JSSJ 
+clay: UIS 
+continuation: UIS 
+crystal: UIS 
+curtain: UIS 
+debris: UIS 
+disk: UIS 
+entrance: UIS 
+fixedladder: SKBB 
+flowstone: UIS 
+flowstonechoke: CCNP 
+flute: UIS 
+gradient: UIS 
+guano: UIS 
+gypsum: CCNP 
+gypsumflower: CCNP 
+helictite: UIS 
+ice: UIS 
+karren: UIS 
+lowend: CCNP UIS 
+moonmilk: UIS 
+narrowend: UIS 
+noequipment: SKBB 
+paleomaterial: UIS 
+pebbles: UIS 
+pillar: UIS 
+popcorn: UIS 
+raft: CCNP 
+raftcone: CCNP 
+rimstonedam: ASF 
+rimstonepool: ASF 
+root: ASF 
+rope: SKBB 
+ropeladder: SKBB 
+sand: UIS 
+scallop: UIS 
+sectionarrow: SKBB 
+sink: SKBB 
+sodastraw: UIS 
+spring: SKBB 
+stalactite: UIS 
+stalagmite: UIS 
+station_fixed: ASF 
+station_natural: ASF 
+station_painted: SKBB 
+station_temporary: ASF SKBB 
+steps: SKBB 
+traverse: SKBB 
+vegetabledebris: ASF 
+wallcalcite: UIS 
+water: UIS 
+waterflow_intermittent: UIS 
+waterflow_paleo: UIS 
+waterflow_permanent: UIS 
+
+[Line symbols]
+
+arrow: SKBB 
+border_temporary: SKBB 
+border_visible: SKBB 
+ceilingstep: SKBB 
+chimney: UIS 
+contour: UIS 
+floorstep: UIS 
+flowstone: UIS 
+overhang: SKBB 
+pit: UIS 
+rockborder: UIS 
+rockedge: UIS 
+section: SKBB 
+slope: SKBB UIS 
+survey: JSSJ SKBB 
+wall_bedrock: UIS 
+wall_blocks: SKBB 
+wall_clay: SKBB 
+wall_debris: SKBB 
+wall_ice: SKBB 
+wall_pebbles: SKBB 
+wall_presumed: UIS 
+wall_sand: SKBB 
+wall_underlying: UIS 
+wall_unsurveyed: SKBB 
+water_conjectural: SKBB 
+water_intermittent: JSSJ 
+water_permanent: UIS 
+
+[Area symbols]
+
+debris: SKBB 
+sand: UIS 
+sump: UIS 
+water: UIS 

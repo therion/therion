@@ -175,19 +175,15 @@ void tharea::export_mp(class thexpmapmpxs * out)
 
   fprintf(out->file,"),\n");
 
+#define tharea_type_export_mp(type,mid) case type: \
+  fprintf(out->file,"%s",out->symset->get_mp_macro(mid)); \
+  break;
+
   switch (this->type) {
-    case TT_AREA_TYPE_SAND:
-      fprintf(out->file,"Sandpattern");
-      break;
-    case TT_AREA_TYPE_DEBRIS:
-      fprintf(out->file,"Debrispattern");
-      break;
-    case TT_AREA_TYPE_SUMP:
-      fprintf(out->file,"Sumppattern");
-      break;
-    case TT_AREA_TYPE_WATER:
-      fprintf(out->file,"Waterpattern");
-      break;
+    tharea_type_export_mp(TT_AREA_TYPE_SAND, SYMA_SAND)
+    tharea_type_export_mp(TT_AREA_TYPE_DEBRIS, SYMA_DEBRIS)
+    tharea_type_export_mp(TT_AREA_TYPE_SUMP, SYMA_SUMP)
+    tharea_type_export_mp(TT_AREA_TYPE_WATER, SYMA_WATER)
   }
 
   fprintf(out->file,");\n");
