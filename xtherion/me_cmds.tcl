@@ -1236,7 +1236,7 @@ proc xth_me_cmds_click_lineln {id tagOrId mx my} {
       xth_me_cmds_select "$id $pid"
     }
     default {
-      xth_me_cmds_click_area $tagOrId $mx $my
+      xth_me_cmds_click_area ln$id.$pid $mx $my
     }
   }
 }

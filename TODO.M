@@ -19,7 +19,6 @@ thpdf:
  * register pouzitych nazvov - z blokov
                              - z vrstiev
  * vrstvy pod aktualnou: odlisit hlbku odtienmi sedej (?)
- * vylepsit legendu (clenenie); mozno do samostatneho suboru
  * zhrnutie udajov o listoch na konci
  * ramik a stvorcova siet (kriziky): vylepsit alebo cez MetaPost 
    (do uvahy aj convergence)
@@ -44,7 +43,7 @@ thtexfonts:
  
 tex:
 
- * doladit viacstlpcove makra
+   * doladit viacstlpcove makra
  * sipka na sever je zbytocna pri priecnom a rozvinutom reze. V ich pripade
    by tam mal byt nejaky identifikator projekcie  
  * northarrow do atlasu?
@@ -53,18 +52,12 @@ tex:
 mpost:
 
  * poriesit odsadenie bodovych znaciek a najma labelov
+ * alignment pri continuation a equipement -- prekreslit
  * dorobit aby fungovalo predefinovanie u,v,w - pri presumed wall, patternoch
- * alignment pri continuation a equipement
- * slope - 
-   poriadne funguje ak su vo vsetkych bodoch smery -1 (vtedy su luce kolme)
-    alebo sa smer (velmi) nemeni; s dlzkou problemy nie su
-   (bude treba vymysliet algoritmus na priemerovanie krajnych hodnot, kedze to, 
-   ktorym poloblukom pojdes, zavisi od orientacie krivky)
  * initialize(Scale) nepomaha na lejble v legende -- prepisovanie mptexpre.tex?
 
 thbook:
 
- * SQL export v kap. What we get
  * varovania texu a metapostu
  * obrazky mapovych znaciek
 

@@ -121,6 +121,159 @@ proc xth_me_image_toggle_vsb {iidx} {
 }
 
 
+proc xth_me_image_set_gamma {imgx} {
+  global xth
+  if {$xth(me,imgs,$imgx,vsb) <= 0} {
+    return
+  }
+  set ng $xth(me,imgs,$imgx,gamma)
+  xth_status_bar_push me
+  set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
+  set csi 0
+  xth_status_bar_status me [format "Correcting image gamma (%s) ..." $xth(me,imgs,$imgx,name)]
+  xth_me_progbar_show $totalsi
+  foreach imgl $xth(me,imgs,$imgx,subimgs) {
+    set dsti [lindex $imgl 0]
+    incr csi
+    xth_me_progbar_prog $csi
+    $dsti configure -gamma $ng
+  }
+  xth_me_progbar_hide
+  xth_status_bar_pop me
+}
+
+if {$xth(gui,me,nozoom)} {
+
+proc xth_me_images_rescandraw {} {
+  global xth
+  if {($xth(me,zoom) > 100) && $xth(gui,me,nozoom)} {
+    foreach imgx $xth(me,imgs,xlist) {
+      xth_me_image_redraw $imgx
+    }
+  }
+}
+
+proc xth_me_image_redraw {imgx} {
+  global xth
+  if {$xth(me,imgs,$imgx,vsb) <= 0} {
+    return
+  }
+  set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
+  set csi 0
+  set x [lindex $xth(me,imgs,$imgx,position) 0]
+  set y [lindex $xth(me,imgs,$imgx,position) 1]
+  set w [image width $xth(me,imgs,$imgx,image)]
+  set h [image height $xth(me,imgs,$imgx,image)]
+  # ak je zoom 100 - nastavi image na source image
+  # a kasle na ostatne
+  if {$xth(me,zoom) <= 100} {
+    foreach imgl $xth(me,imgs,$imgx,subimgs) {
+      incr csi
+      $xth(me,can) coords [lindex $imgl 1] \
+        [xth_me_real2canx [expr $x + [lindex $imgl 2]]] \
+        [xth_me_real2cany [expr $y - [lindex $imgl 3]]]
+    }
+  } else {
+    # najde si suradnice z obrazka, ktore su viditelne
+    set imgl [lindex $xth(me,imgs,$imgx,subimgs) 0]
+    set cminx [winfo x $xth(me,can)]
+    set cminy [winfo y $xth(me,can)]
+    set cmaxx [expr $cminx + [winfo width $xth(me,can)]]
+    set cmaxy [expr $cminy + [winfo height $xth(me,can)]]
+    set sx [xth_me_can2realx [$xth(me,can) canvasx $cminx]]
+    set sw [expr [xth_me_can2realx [$xth(me,can) canvasx $cmaxx]] - $sx]
+    set sy [xth_me_can2realy [$xth(me,can) canvasy $cminy]]
+    set sh [expr $sy - [xth_me_can2realy [$xth(me,can) canvasy $cmaxy]]]
+
+    # ak je nieco viditelne - tak to zobrazi
+    set vfx [expr round($sx - $x)]
+    set vfy [expr round($y - $sy)] 
+    set vtx [expr round($vfx + $sw)] 
+    set vty [expr round($vfy + $sh)]
+    if {$vfx < 0} {set vfx 0}
+    if {$vfy < 0} {set vfy 0}
+    if {$vtx > $w} {set vtx $w}
+    if {$vty > $h} {set vty $h}
+    
+    #puts "$vfx $vfy $vtx $vty"
+    if {($vtx <= 0) || ($vty <= 0) || 
+        ($vfx >= $w) || ($vfy >= $h) ||
+        ($vtx <= $vfx) || ($vty <= $vfy)} {
+      # nezobrazime nic
+      $xth(me,can) itemconfigure [lindex $imgl 1] -image {}
+    } else {
+      # zobrazime vyrez
+      set dsti [lindex $imgl 0]
+      $dsti copy $xth(me,imgs,$imgx,image) -zoom [expr $xth(me,zoom) / 100] -shrink \
+        -from $vfx $vfy $vtx $vty
+      $xth(me,can) itemconfigure [lindex $imgl 1] -image $dsti
+      $xth(me,can) coords [lindex $imgl 1] \
+        [xth_me_real2canx [expr $x + $vfx]] \
+        [xth_me_real2cany [expr $y - $vfy]]
+    }
+  }
+  update idletasks
+}
+
+proc xth_me_image_rescan {imgx} {
+  global xth
+  if {$xth(me,imgs,$imgx,vsb) <= 0} {
+    return
+  }
+  set srci $xth(me,imgs,$imgx,image)
+  xth_status_bar_push me
+  set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
+  set csi 0
+  xth_status_bar_status me [format "Zooming image %s ..." $xth(me,imgs,$imgx,name)]
+  xth_me_progbar_show $totalsi
+  foreach imgl $xth(me,imgs,$imgx,subimgs) {
+    set dsti [lindex $imgl 0]
+    incr csi
+    xth_me_progbar_prog $csi
+    switch $xth(me,zoom) {
+      100 {
+        $xth(me,can) itemconfigure [lindex $imgl 1] -image $srci
+      }
+      default {
+        $xth(me,can) itemconfigure [lindex $imgl 1] -image $dsti
+      }
+    }
+    switch $xth(me,zoom) {
+      25 {$dsti copy $srci -subsample 4 -shrink}
+      50 {$dsti copy $srci -subsample 2 -shrink}
+      200 {}
+      400 {}
+      default {}
+    }
+  }
+  xth_me_progbar_hide
+  xth_status_bar_pop me
+}
+
+# NOZOOMING
+} else {
+
+proc xth_me_images_rescandraw {} {
+}
+
+proc xth_me_image_redraw {imgx} {
+  global xth
+  if {$xth(me,imgs,$imgx,vsb) <= 0} {
+    return
+  }
+  set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
+  set csi 0
+  set x [lindex $xth(me,imgs,$imgx,position) 0]
+  set y [lindex $xth(me,imgs,$imgx,position) 1]
+  foreach imgl $xth(me,imgs,$imgx,subimgs) {
+    incr csi
+    $xth(me,can) coords [lindex $imgl 1] \
+      [xth_me_real2canx [expr $x + [lindex $imgl 2]]] \
+      [xth_me_real2cany [expr $y - [lindex $imgl 3]]]
+  }
+  update idletasks
+}
+
 proc xth_me_image_rescan {imgx} {
   global xth
   if {$xth(me,imgs,$imgx,vsb) <= 0} {
@@ -153,47 +306,8 @@ proc xth_me_image_rescan {imgx} {
   xth_status_bar_pop me
 }
 
-
-proc xth_me_image_set_gamma {imgx} {
-  global xth
-  if {$xth(me,imgs,$imgx,vsb) <= 0} {
-    return
-  }
-  set ng $xth(me,imgs,$imgx,gamma)
-  xth_status_bar_push me
-  set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
-  set csi 0
-  xth_status_bar_status me [format "Correcting image gamma (%s) ..." $xth(me,imgs,$imgx,name)]
-  xth_me_progbar_show $totalsi
-  foreach imgl $xth(me,imgs,$imgx,subimgs) {
-    set dsti [lindex $imgl 0]
-    incr csi
-    xth_me_progbar_prog $csi
-    $dsti configure -gamma $ng
-  }
-  xth_me_progbar_hide
-  xth_status_bar_pop me
 }
-
-
-proc xth_me_image_redraw {imgx} {
-  global xth
-  if {$xth(me,imgs,$imgx,vsb) <= 0} {
-    return
-  }
-  set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
-  set csi 0
-  set x [lindex $xth(me,imgs,$imgx,position) 0]
-  set y [lindex $xth(me,imgs,$imgx,position) 1]
-  foreach imgl $xth(me,imgs,$imgx,subimgs) {
-    incr csi
-    $xth(me,can) coords [lindex $imgl 1] \
-      [xth_me_real2canx [expr $x + [lindex $imgl 2]]] \
-      [xth_me_real2cany [expr $y - [lindex $imgl 3]]]
-  }
-  update idletasks
-}
-
+# END NO NOZOOM
 
 proc xth_me_image_insert {xx yy fname iidx imgx} {
 
@@ -288,31 +402,47 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
   
   # let's create image subimages
   if {$vsb >= 0} {
-    set iw [image width $imgid]
-    set ih [image height $imgid]
-    set subisize 128
-    for {set subx 0} {$subx < $iw} {incr subx $subisize} {
-      for {set suby 0} {$suby < $ih} {incr suby $subisize} {
-        set subxx [expr $subx + $subisize]
-        set subyy [expr $suby + $subisize]
-        if {$subxx > $iw} {
-          set subxx $iw
-        }
-        if {$subyy > $ih} {
-          set subyy $ih
-        }
-        set subimg [image create photo]
-        set subcimg [$xth(me,can) create image 0 0 -image $subimg -anchor nw \
-          -tags "$imgid bgimg"]
-        xth_me_bind_area_drag $subcimg $imgx
-        xth_me_bind_image_drag $subcimg $imgx
-        lappend xth(me,imgs,$imgx,subimgs) [list $subimg $subcimg $subx $suby $subxx $subyy]
+    if {$xth(gui,me,nozoom)} {
+      set subimg [image create photo]
+      set subcimg [$xth(me,can) create image 0 0 -image $subimg -anchor nw \
+        -tags "$imgid bgimg"]
+      xth_me_bind_area_drag $subcimg $imgx
+      xth_me_bind_image_drag $subcimg $imgx
+      set iw [image width $imgid]
+      set ih [image height $imgid]
+      lappend xth(me,imgs,$imgx,subimgs) [list $subimg $subcimg 0 0 $iw $ih]
+      $xth(me,can) lower $xth(me,imgs,$imgx,image) command
+      if {$iidx > 0} {
+        $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
       }
-    }
-    if {$iidx > 0} {
-      $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
-    }
-  }  
+    } else {
+      set iw [image width $imgid]
+      set ih [image height $imgid]
+      set subisize 128
+      for {set subx 0} {$subx < $iw} {incr subx $subisize} {
+        for {set suby 0} {$suby < $ih} {incr suby $subisize} {
+          set subxx [expr $subx + $subisize]
+          set subyy [expr $suby + $subisize]
+          if {$subxx > $iw} {
+            set subxx $iw
+          }
+          if {$subyy > $ih} {
+            set subyy $ih
+          }
+          set subimg [image create photo]
+          set subcimg [$xth(me,can) create image 0 0 -image $subimg -anchor nw \
+            -tags "$imgid bgimg"]
+          xth_me_bind_area_drag $subcimg $imgx
+          xth_me_bind_image_drag $subcimg $imgx
+          lappend xth(me,imgs,$imgx,subimgs) [list $subimg $subcimg $subx $suby $subxx $subyy]
+        }
+      }
+      $xth(me,can) lower $xth(me,imgs,$imgx,image) command
+      if {$iidx > 0} {
+        $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
+      }
+    }  
+  }
   xth_me_image_rescan $imgx
   xth_me_image_redraw $imgx
   xth_me_image_set_gamma $imgx

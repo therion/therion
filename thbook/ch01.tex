@@ -9,10 +9,9 @@ Therion is a tool for cave surveying. Its purpose is to help
 * create a realistic 3D model of the cave.
 \endlist
 
-It runs on Unix, Linux, MacOS X and Win32 operating systems. 
-Source code and precompiled binaries for Linux and Win32 
-systems are available on the Therion web page (\www{|http://therion.speleo.sk|}%
-{http://therion.speleo.sk}).
+It runs on Unix, Linux, MacOS\,X and Win32 operating systems. 
+Source code and Windows installer are available on the Therion web page 
+(\www{|http://therion.speleo.sk|}{http://therion.speleo.sk}).
 
 Therion is distributed under the \www{GNU General Public License}%
 {http://www.gnu.org/}.
@@ -73,8 +72,8 @@ followed by its coordinates and a symbol type specification.
 Hand-editing of such files is not easy---especially when you draw maps, you 
 need to think in spatial (Cartesian coordinate) terms. Thus there is a special 
 GUI for Therion called XTherion. XTherion works as an advanced text editor, map 
-editor (where maps are drawn fully interactively), and compiler (which runs
-Therion on the data).
+editor (where maps are drawn fully interactively), compiler (which runs
+Therion on the data) and 3D model viewer.
 
 It may look quite complicated, but this approach has a lot of advantages:
 
@@ -100,61 +99,51 @@ It may look quite complicated, but this approach has a lot of advantages:
 
 * It's possible to add new output formats
 
-* 3D model will be generated from 2D plan, elevation and 
-  cross-sections data to get a realistic 3D model without entering
-  too much data
+* 3D model is generated from 2D maps to get a realistic 3D model 
+  without entering too much data
 
-* although the support for WYSIWYG is limited, you get what you want (WYWIWYG)
+* although the support for WYSIWYG is limited, you get what you want
 \endlist
 
 \subchapter Software requirements.
 
 ``A program should do one thing, and do it well.'' (Ken Thompson) 
-Therefore we use some valuable external programs, which are related to the problems of cave 
-surveying, typesetting and data visualization. Therion can then do its task 
+Therefore we use some valuable external programs, which are related to the 
+problems of typesetting and data visualization. Therion can then do its task 
 much better than if it was a standalone application in which you could calibrate 
 your printer or scanner and with one click send e-mail with your data.
 
 Therion needs:
 \list
-* recent Survex (necessary if you want to process any survey data)
-  \path|http://www.survex.com|
-  
-* \TeX\ distribution with at least \TeX\ with Plain format, 
-  recent pdf-$\varepsilon$-\TeX, and \MP\ with accompanying programs. 
-  (\TeX\ and friends is necessary only if you want to create 2D maps.)
-  Plain should be the default format for \TeX; 
-  Therion doesn't use La\TeX\ or other available formats. If you 
-  have any doubts, install any full distribution of \TeX. (TeXlive for any 
-  platform, teTeX for Unix, fpTeX or MikTeX for Windows.) If you're new
-  to \TeX, visit the homepage of {\it \TeX\ Users Group} at 
-  \path|http://www.tug.org|
-
-* Tcl/Tk 8.4.3 and newer (|http://www.tcl.tk|) with BWidget widget set 
-  (\path|http://sourceforge.net/projects/tcllib|). Tcl/Tk is only required for 
-  XTherion. For Windows try ActiveTcl from |http://www.activestate.com|.
+* \TeX\ distribution.
+  Necessary only if you want to create 2D maps.
+* Tcl/Tk  with {\it BWidget}, {\it Tom} and optionally {\it tkImg} extension.
+  It is only required for XTherion.
 \endlist
 
-Get all this working before installing Therion. We don't provide any support 
-concerning this. All these programs are well documented and accessible on the 
-net.
+Windows installer includes \TeX\ and Tcl/Tk distributions with all required 
+extensions. Read the {\it Appendix} if you want to compile Therion yourself.
+
+For displaying of maps and models you may use any of the following programs:
+\list
+* any PDF viewer like Acrobat Reader, ghostscript or xpdf for displaying  
+  2D maps;
+* appropriate 3D viewer for models exported in other than default format;
+* any SQL database client to process exported database.
+\endlist
 
 
 \subchapter Installation.
 
-Primary Therion distribution is the source code. This needs be compiled 
-according to instructions in the {\it Appendix}.
+{\bf Installation from sources (therion-0.3.*.tar.gz package):}
 
-For users' convenience there are also precompiled binaries for Linux and 
-Windows. 
-
-{\bf Installation on Linux (*.tar.gz package):}
-
-Unpack the archive and run the installation script `install.'
+The source code is a primary Therion distribution. It needs be compiled 
+and installed according to instructions in the {\it Appendix}.
 
 {\bf Installation on Windows:}
 
-Run the setup program and follow instructions.
+Run the setup program and follow instructions. It installs all the required 
+stuff and creates shortcuts to XTherion and Therion Book.
 
 
 \subsubchapter Setting-up environment.
@@ -189,35 +178,25 @@ Meaning of colors:
 \list
 * black---Therion programs and macros (XTherion is written in Tcl/Tk,
   so it needs this interpreter to run)
-* blue---Survex program
 * red---\TeX\ package
 * green---input files created by the user and output files created by Therion
 \endlist
 
 Therion itself does the main task. It reads the input files, interpretes them, 
-exports survey data to Survex, which does the loop closure. Then it reads back 
-coordinates of survey stations and transforms all other data (e.g.~2D maps) 
-according to them. Therion exports data for 2D maps in \MP\ format. \MP\ gives 
+finds closed loops and distributes errors. Next it transforms all other data 
+(e.g.~2D maps) according to new stations position.
+Therion exports data for 2D maps in \MP\ format. \MP\ gives 
 the actual shape to abstract map symbols according to map symbol definitions; it
 creates a lot of PostScript files with small fragments of the cave. These are 
 read back and converted to a PDF-like format, which forms input data 
 for pdf\TeX. Pdf\TeX\ does all the typesetting and creates a PDF file of the cave 
 map. 
 
-Therion may also export simple 3D model (survey shots only) in Survex *.3d 
-and Compass *.plt formats. [Complex 3D in the future]
+Therion also exports 3D model (full or centreline) in various formats. The 
+model in the |therion| format may be loaded and displayed in the XTherion's 
+model viewer.
 
-Centreline may be exported for further processing in any SQL 
-database.
-
-For displaying the results you need:
-\list
-* Aven or xcaverot from Survex package for viewing the simple 3D model
-* any PDF viewer like Acrobat Reader, ghostscript or xpdf for displaying  
-  2D maps
-* SQL database client to process exported database
-\endlist
-
+Centreline may be exported for further processing in any SQL database.
 
 
 \subchapter First run.
@@ -233,7 +212,7 @@ on the example data.
 * Open the file `thconfig' from the sample data directory in the `Compiler'
   window of XTherion
 * Press `F9' or `compile' in the menu to run Therion on the data---you'll get
-  some messages from Therion, Survex, \MP\ and \TeX.  
+  some messages from Therion, \MP\ and \TeX.  
 * PDF maps and 3D model are created in the data directory.  
 \endlist
 

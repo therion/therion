@@ -36,6 +36,9 @@
 #include "th2ddataobject.h"
 #include "thline.h"
 #include "thpoint.h"
+#include "thscrapis.h"
+
+#define EXPORT3D_INVISIBLE true
 
 thscrap::thscrap()
 {
@@ -72,6 +75,8 @@ thscrap::thscrap()
   this->polygon_parsed = false;
   this->polygon_first = NULL;
   this->polygon_last = NULL;
+  
+  this->d3_parsed = false;
   
   this->maxdist = 0.0;
   this->avdist = 0.0;
@@ -319,10 +324,17 @@ thscraplo * thscrap::get_outline() {
   double cdist, mindist;
 
   while (obj != NULL) {
+#ifdef THDEBUG
+    if (obj->get_class_id() == TT_LINE_CMD)
+      thprintf("%d [%s]\n", obj->id, obj->name);
+#endif     
     if ((obj->get_class_id() == TT_LINE_CMD) &&
         (((thline *)obj)->first_point != NULL) &&
         ((((thline *)obj)->outline == TT_LINE_OUTLINE_IN) ||
         (((thline *)obj)->outline == TT_LINE_OUTLINE_OUT))) {
+#ifdef THDEBUG
+      thprintf("inserting line - %d [%s]\n", obj->id, obj->name);
+#endif     
       co = this->db->db2d.insert_scraplo();
       co->line = (thline *) obj;
       if (this->outline_first == NULL) {
@@ -374,7 +386,7 @@ thscraplo * thscrap::get_outline() {
       last_pt = co->line->last_point->point;
       co->mode = TT_OUTLINE_NORMAL;
 #ifdef THDEBUG
-      thprintf("\tfirst line: %d - mode %d\n",co->line->id,co->line->outline);
+      thprintf("\tfirst line: %d [%s] - mode %d\n",co->line->id, co->line->name, co->line->outline);
 #endif
       still_in_line = !(co->line->is_closed);
       co3 = co;
@@ -408,7 +420,7 @@ thscraplo * thscrap::get_outline() {
         else {
           co3last->next_line = co3;
 #ifdef THDEBUG
-          thprintf("\tnext line: %d %s\n",co3->line->id,(co3_normal ? "normal" : "reversed"));
+          thprintf("\tnext line: %d [%s] %s\n", co3->line->id, co3->line->name, (co3_normal ? "normal" : "reversed"));
 #endif
           if (co3_normal) {
             co3->mode = TT_OUTLINE_NORMAL;
@@ -503,11 +515,14 @@ thscraplp * thscrap::get_polygon() {
                 case TT_2DPROJ_PLAN:
                   lp->stx = st->x - this->proj->shift_x;
                   lp->sty = st->y - this->proj->shift_y;
+                  lp->stz = st->z - this->proj->shift_z;
                   break;
                 case TT_2DPROJ_ELEV:
                   lp->stx = cosa * (st->x - this->proj->shift_x) 
                             - sina * (st->y - this->proj->shift_y);
                   lp->sty = st->z - this->proj->shift_z;
+                  lp->stz = sina * (st->x - this->proj->shift_x) 
+                            + cosa * (st->y - this->proj->shift_y);
                   break;
               }
             }
@@ -527,16 +542,22 @@ thscraplp * thscrap::get_polygon() {
                 case TT_2DPROJ_PLAN:
                   nlp->lnx1 = st1->x - this->proj->shift_x;
                   nlp->lny1 = st1->y - this->proj->shift_y;
+                  nlp->lnz1 = st1->z - this->proj->shift_z;
                   nlp->lnx2 = st2->x - this->proj->shift_x;
                   nlp->lny2 = st2->y - this->proj->shift_y;
+                  nlp->lnz2 = st2->z - this->proj->shift_z;
                   break;
                 case TT_2DPROJ_ELEV:
                   nlp->lnx1 = cosa * (st1->x - this->proj->shift_x) 
                             - sina * (st1->y - this->proj->shift_y);
                   nlp->lny1 = st1->z - this->proj->shift_z;
+                  nlp->lnz1 = sina * (st1->x - this->proj->shift_x) 
+                            + cosa * (st1->y - this->proj->shift_y);
                   nlp->lnx2 = cosa * (st2->x - this->proj->shift_x) 
                             - sina * (st2->y - this->proj->shift_y);
                   nlp->lny2 = st2->z - this->proj->shift_z;
+                  nlp->lnz2 = sina * (st2->x - this->proj->shift_x) 
+                            + cosa * (st2->y - this->proj->shift_y);
                   break;
               }
               arrow = arrow->next_arrow;
@@ -561,8 +582,10 @@ thscraplp * thscrap::get_polygon() {
           nlp->lnio = true;
           nlp->lnx1 = cp->tx;
           nlp->lny1 = cp->ty;
+          nlp->lnz1 = 0.0;
           nlp->lnx2 = cp->point->extend_point->cpoint->tx;
           nlp->lny2 = cp->point->extend_point->cpoint->ty;
+          nlp->lnz2 = 0.0;
         }
         cp = cp->nextcp;
       }
@@ -624,6 +647,7 @@ thdb1ds * thscrap::get_nearest_station(thdb2dpt * pt) {
   
   return res;
 }
+
 
 thscrapen * thscrap::get_ends() {
   if (this->ends_parsed)
@@ -755,6 +779,8 @@ thscrapen * thscrap::get_ends() {
 }
 
 
+
+
 void thscrap::insert_adata(class thdb1ds * as) {
   // najde ci dane data uz mame
   if (as->data == NULL)
@@ -772,4 +798,285 @@ void thscrap::insert_adata(class thdb1ds * as) {
 }
 
 
+void thscrap::process_3d() {
+
+  if (this->d3_parsed)
+    return;
+    
+  this->d3_parsed = true;
+
+  thscrapis is;
+  thscraplp * slp;
+  th2ddataobject * o2;
+  thpoint * pp;
+  
+  // vlozi vsetky meracske body (body + body z polygonu)
+  slp = this->get_polygon();
+  while (slp != NULL) {
+    if (!slp->lnio) {
+      is.insert_bp(slp->stx, slp->sty, slp->stz);
+    }
+    slp = slp->next_item;
+  }
+  o2 = this->fs2doptr;
+  while (o2 != NULL) {
+    if (o2->get_class_id() == TT_POINT_CMD) {
+      pp = (thpoint *) o2;
+      if (pp->station_name.id != 0) {
+        is.insert_bp(pp->point->xt, pp->point->yt, pp->point->zt);
+      }
+    }
+    o2 = o2->nscrapoptr;
+  }
+  
+  // koniec vkladania
+  is.end_bp();
+  
+  // vlozi vsetky smerniky na zaklade shotov
+  slp = this->get_polygon();
+  while (slp != NULL) {
+    if (slp->lnio) {
+      is.insert_bp_direction(slp->lnx1, slp->lny1, slp->lnz1, 
+        slp->lnx2, slp->lny2, slp->lnz2);
+    }
+    slp = slp->next_item;
+  }
+  
+  // koniec vkladania
+  is.end_bp_direction();
+  
+  // povklada medzibody na shotoch
+  slp = this->get_polygon();
+  while (slp != NULL) {
+    if (slp->lnio) {
+      is.insert_bp_shot(slp->lnx1, slp->lny1, slp->lnz1, 
+        slp->lnx2, slp->lny2, slp->lnz2);
+    }
+    slp = slp->next_item;
+  }
+  
+  // vypise siet pre scrap
+  
+//  double iddx = (this->lxmax - this->lxmin) / 20.0, 
+//    iddy = (this->lymax - this->lymin) / 20.0,
+//    iz[21][21], id, idx, idy;
+//  long i, j;
+//  for (i = 0; i <= 20; i++) {
+//    for (j = 0; j <= 20; j++) {
+//      is.bp_interpolate(this->lxmin + iddx * i, this->lymin + iddy * j,
+//        iz[i][j], id, idx, idy);
+//    }
+//  }
+//
+//  for (j = 0; j < 20; j++) {
+//    fprintf(out,"glColor3f 0.5 0.5 0.5\n");
+//    fprintf(out,"glBegin $GL::GL_TRIANGLE_STRIP\n");
+//    for(i = 0; i <= 20; i++) {
+//      fprintf(out,"glVertex3f %.2f\t%2f\t%.2f\n",
+//        this->lxmin + this->proj->shift_x + iddx * i - avx,
+//        this->lymin + this->proj->shift_y + iddy * j - avy,
+//        iz[i][j] + this->proj->shift_z - avz);
+//      fprintf(out,"glVertex3f %.2f\t%2f\t%.2f\n",
+//        this->lxmin + this->proj->shift_x + iddx * i - avx,
+//        this->lymin + this->proj->shift_y + iddy * (j + 1) - avy,
+//        iz[i][j + 1] + this->proj->shift_z - avz);
+//    }
+//    fprintf(out,"glEnd\n");
+//  }
+  
+  is.outline_scan(this->get_outline());
+
+  // prejde vsetky objekty a nasackuje passage-heights
+  o2 = this->fs2doptr;
+  double cup, cdown;
+  while (o2 != NULL) {
+    if (o2->get_class_id() == TT_POINT_CMD) {
+      pp = (thpoint *) o2;
+      if ((pp->type == TT_POINT_TYPE_PASSAGE_HEIGHT) &&
+          ((pp->tags & TT_POINT_TAG_HEIGHT_U) != 0) &&
+          (!thisnan(pp->xsize))) {
+        cdown = pp->xsize / 1.618;
+        if (cdown > 1.618)
+          cdown = 1.618;
+        cup = pp->xsize - cdown;
+        is.insert_dim(pp->point->xt, pp->point->yt, cup, cdown);
+      }
+    }
+    o2 = o2->nscrapoptr;
+  }
+  is.insert_bp_dim();
+  is.outline_interpolate_dims();  
+  
+  thscrapisolpt * oline, * olineln, * prevolineln = NULL;
+  double normx, normy, norml;
+  bool started = false;
+
+  // povkladame vsetky body na outlineoch
+  for(oline = is.firstolseg; oline != NULL; oline = oline->next_segment) {
+    for(olineln = oline; olineln != NULL; olineln = olineln->next) {
+      olineln->vx3dup = this->d3_outline.insert_vertex(
+        olineln->x + this->proj->shift_x,
+        olineln->y + this->proj->shift_y,
+        olineln->zu + this->proj->shift_z);
+      olineln->vx3ddn = this->d3_outline.insert_vertex(
+        olineln->x + this->proj->shift_x,
+        olineln->y + this->proj->shift_y,
+        olineln->zd + this->proj->shift_z);
+    }
+  }
+
+//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_DIFFUSE {0.0 0.8 0.0 1.0}\n");
+//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_AMBIENT {0.0 0.0 0.0 1.0}\n");
+//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_SPECULAR {0.0 0.0 0.0 1.0}\n");
+//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_SHININESS {0.0}\n");
+//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_EMISSION {0.0 0.0 0.0 1.0}\n");
+//    fprintf(out,"glBegin $GL::GL_TRIANGLE_STRIP\n");
+//    fprintf(out,"glNormal3f %.2f\t%.2f\t%.2f\n", normx / norml, normy / norml, 0.0);
+
+  oline = is.firstolseg;
+  thdb3dfc * cfc;
+  thdb3dfx * cfx, * cfx2;
+  while (oline != NULL) {
+    started = false;
+    olineln = oline->next;
+    while (olineln != NULL) {
+      if (EXPORT3D_INVISIBLE || olineln->visible) {
+        normx = olineln->y - olineln->prev->y;
+        normy = olineln->prev->x - olineln->x;
+        norml = hypot(normx, normy);
+        if (!started) {
+          cfc = this->d3_outline.insert_face(THDB3DFC_TRIANGLE_STRIP);
+          cfx = cfc->insert_vertex(olineln->prev->vx3dup);
+          cfx2 = cfc->insert_vertex(olineln->prev->vx3ddn);
+          if (norml > 0.0) {
+            cfx->insert_normal(normx / norml, normy / norml, 0.0);
+            cfx->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+            cfx->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+            cfx2->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+            cfx2->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+          }
+          started = true;
+        }
+        cfx = cfc->insert_vertex(olineln->vx3dup);
+        cfx2 = cfc->insert_vertex(olineln->vx3ddn);
+        if (norml > 0.0) {
+          cfx->insert_normal(normx / norml, normy / norml, 0.0);
+          cfx->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+          cfx->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+          cfx2->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+          cfx2->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+        }
+      } else {
+        if (started) {
+          started = false;
+        }
+      }
+      prevolineln = olineln;
+      olineln = olineln->next;
+    }
+    
+    if (EXPORT3D_INVISIBLE || oline->visible) {
+      if (!started && (prevolineln != NULL)) {
+        cfc = this->d3_outline.insert_face(THDB3DFC_TRIANGLE_STRIP);
+      }
+      if (prevolineln != NULL) {
+        normx = oline->y - prevolineln->y;
+        normy = prevolineln->x - oline->x;
+        norml = hypot(normx, normy);
+      } else {
+        normx = 1.0;
+        normy = 1.0;
+        norml = sqrt(2.0);
+      }
+      if (!started && (prevolineln != NULL)) {
+        cfx = cfc->insert_vertex(prevolineln->vx3dup);
+        cfx2 = cfc->insert_vertex(prevolineln->vx3ddn);
+        if (norml > 0) {
+          cfx->insert_normal(normx / norml, normy / norml, 0.0);
+          cfx->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+          cfx->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+          cfx2->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+          cfx2->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+        }
+        started = true;
+      }
+      cfx = cfc->insert_vertex(oline->vx3dup);
+      cfx2 = cfc->insert_vertex(oline->vx3ddn);
+      if (norml > 0) {
+        cfx->insert_normal(normx / norml, normy / norml, 0.0);
+        cfx->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+        cfx->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+        cfx2->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+        cfx2->vertex->insert_normal(normx / norml, normy / norml, 0.0);
+      }
+    }
+    oline = oline->next_segment;
+  }
+  
+  int i, j;
+  double vx, vy, vz, wx, wy, wz, nx, ny, nz, nl;
+  if (is.tri_num > 0) {    
+    cfc = this->d3_outline.insert_face(THDB3DFC_TRIANGLES);
+    for(i = 0; i < is.tri_num; i++) {
+
+      oline = is.tri_opts[is.tri_triangles[i][0]];
+      olineln = is.tri_opts[is.tri_triangles[i][1]];
+      vx = olineln->x - oline->x;
+      vy = olineln->y - oline->y;
+      vz = olineln->zd - oline->zd;
+      oline = is.tri_opts[is.tri_triangles[i][1]];
+      olineln = is.tri_opts[is.tri_triangles[i][2]];
+      wx = olineln->x - oline->x;
+      wy = olineln->y - oline->y;
+      wz = olineln->zd - oline->zd;
+      nx = - (vy * wz - wy * vz);
+      ny = - (wx * vz - vx * wz);
+      nz = - (vx * wy - wx * vy);
+      nl = hypot(hypot(nx, ny), nz);
+      for(j = 2; j >= 0; j--) {
+        oline = is.tri_opts[is.tri_triangles[i][j]];
+        cfx = cfc->insert_vertex(oline->vx3ddn);
+        if (nl > 0.0) {
+          if (j == 2)
+            cfx->insert_normal(nx / nl, ny / nl, nz / nl);
+          cfx->vertex->insert_normal(nx / nl, ny / nl, nz / nl);
+        }
+      }
+      
+      oline = is.tri_opts[is.tri_triangles[i][0]];
+      olineln = is.tri_opts[is.tri_triangles[i][1]];
+      vx = olineln->x - oline->x;
+      vy = olineln->y - oline->y;
+      vz = olineln->zu - oline->zu;
+      oline = is.tri_opts[is.tri_triangles[i][1]];
+      olineln = is.tri_opts[is.tri_triangles[i][2]];
+      wx = olineln->x - oline->x;
+      wy = olineln->y - oline->y;
+      wz = olineln->zu - oline->zu;
+      nx = (vy * wz - wy * vz);
+      ny = (wx * vz - vx * wz);
+      nz = (vx * wy - wx * vy);
+      nl = hypot(hypot(nx, ny), nz);
+      for(j = 0; j < 3; j++) {
+        oline = is.tri_opts[is.tri_triangles[i][j]];
+        cfx = cfc->insert_vertex(oline->vx3dup);
+        if (nl > 0.0) {
+          if (j == 0)
+            cfx->insert_normal(nx / nl, ny / nl, nz / nl);
+          cfx->vertex->insert_normal(nx / nl, ny / nl, nz / nl);
+        }
+      }
+    }
+    
+  }
+
+  this->d3_outline.postprocess();
+  
+}
+
+
+thdb3ddata * thscrap::get_3d_outline() {
+  this->process_3d();
+  return &(this->d3_outline);
+}
 

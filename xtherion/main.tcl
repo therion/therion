@@ -38,4 +38,32 @@ encoding system $xth(app,sencoding)
 set xth(encoding_system) [encoding system]
 xth_about_hide
 wm deiconify $xth(gui,main)
-xth_app_maximize
+xth_app_normalize
+
+set th2open 1
+set cfgopen 1
+
+foreach fname $argv {
+  if {$cfgopen && [regexp -nocase {thconfig|thcfg} $fname]} {
+    set cfgopen 0
+    xth_app_show cp
+    update idletasks
+    xth_cp_open_file $fname
+  } elseif {$th2open && [regexp -nocase {\.th2$} $fname]} {
+    set th2open 0
+    xth_app_show me
+    update idletasks
+    xth_me_open_file 0 $fname 1
+  } elseif {[regexp -nocase {\.thm$} $fname]} {
+    if {[string length $xthmvw] > 0} {
+      xth_app_show mv
+      update idletasks
+      xth_mv_open_file $fname
+    }
+  } else {
+    xth_app_show te
+    update idletasks
+    xth_te_open_file 0 $fname 1
+  }
+}
+

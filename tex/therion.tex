@@ -359,6 +359,7 @@
 \def\LEGNW{NW}
 \def\LEGSE{SE}
 \def\LEGSW{SW}
+\def\LEGC{C}
 
 
 \def\legendbox#1#2{%
@@ -397,8 +398,62 @@
   \ignorespaces
 }
 
+\newdimen\extraN \extraN=0mm
+\newdimen\extraS \extraS=0mm
+\newdimen\extraE \extraE=0mm
+\newdimen\extraW \extraW=0mm
+
+\def\legendbox#1#2#3#4{%
+  \unskip
+  \setbox\tmpboxa=\vbox{#4}%
+  \sx=\wd\tmpboxa
+  \sy=\ht\tmpboxa \advance\sy by \dp\tmpboxa
+  \sxd=\hsize \divide\sxd by 100 \multiply\sxd by #1
+  \syd=\vsize \divide\syd by 100 \multiply\syd by #2
+  \edef\test{#3}%
+  \ifx\test\LEGN
+    \divide\sx by 2 \advance\sxd by -\sx
+                    \advance\syd by -\sy
+  \else\ifx\test\LEGW
+    \divide\sy by 2 \advance\syd by -\sy 
+  \else\ifx\test\LEGE
+                    \advance\sxd by -\sx
+    \divide\sy by 2 \advance\syd by -\sy 
+  \else\ifx\test\LEGS
+    \divide\sx by 2 \advance\sxd by -\sx
+  \else\ifx\test\LEGNW
+                    \advance\syd by -\sy 
+  \else\ifx\test\LEGNE
+                    \advance\sxd by -\sx
+                    \advance\syd by -\sy
+  \else\ifx\test\LEGSW
+  \else\ifx\test\LEGSE
+                    \advance\sxd by -\sx
+  \else\ifx\test\LEGC
+    \divide\sx by 2 \advance\sxd by -\sx
+    \divide\sy by 2 \advance\syd by -\sy 
+  \fi\fi\fi\fi\fi\fi\fi\fi\fi
+  %
+  \ifdim\sxd<-\extraW \global\extraW=-\sxd\fi
+  \ifdim\syd<-\extraS \global\extraS=-\syd\fi
+  \sx=\wd\tmpboxa
+  \sy=\ht\tmpboxa \advance\sy by \dp\tmpboxa
+  \advance\sx by \sxd
+  \advance\sy by \syd
+  \ifdim\sx>\hsize \global\extraE=\sx \global\advance\extraE by -\hsize\fi
+  \ifdim\sy>\vsize \global\extraN=\sy \global\advance\extraN by -\vsize\fi
+  %
+  \unskip
+  \advance\sxd by \extraW
+  \advance\syd by \extraS
+  \advance\syd by \dp\tmpboxa
+  \rlap{\kern\sxd\raise\syd\box\tmpboxa}%
+  \ignorespaces
+}
+
 
 \def\insertmaps{%
+  \input th_resources
   \input th_fontdef
   \input th_formdef
   \input th_pagedef
@@ -466,7 +521,6 @@
 
 %% end of multicolumn macros
 
-\input th_resources
 \input th_enc
 \input th_texts
 

@@ -885,6 +885,11 @@ primarydef p smoothed d =
    p ulmoved (0,-ypart paired(d)) -- p llmoved (0,-ypart paired(d)) {down}  .. cycle) 
 enddef ;
 
+vardef punked primary p = 
+  (point 0 of p for i=1 upto length(p)-1 : -- point i of p endfor 
+   if cycle p : -- cycle else : -- point length(p) of p fi)  
+enddef ;  
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % end of MetaFun macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

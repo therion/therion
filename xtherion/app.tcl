@@ -229,6 +229,7 @@ proc xth_app_finish {} {
       source me_cmds2.tcl
       source me_ss.tcl
       source bac.tcl
+      source mv_procs.tcl
     } -font $xth(gui,lfont)
     $dm add command -label "Screen dump" -underline 0 -command {
       after 5000 {xwd -out screendump -frame}
@@ -309,6 +310,7 @@ proc xth_app_control_o {} {
       set xth(cp,updcf) 0
       xth_cp_open_file {}
     }
+    mv {xth_mv_open_file {}}
   }
 }  
 

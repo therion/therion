@@ -197,6 +197,8 @@
 ##
 ##------------------------------------------------------------------------
 
+if {![string equal $xth(gui,platform) windows]} {
+
 package require Tk
 
 proc megawidget {CLASS} {
@@ -2318,3 +2320,6 @@ if {[info exists ::Name]} {
 if {$Console(WWW)} {
     . configure -width [getattr width] -height [getattr height]
 }
+
+}
+# END OF WIN

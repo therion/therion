@@ -804,7 +804,11 @@ void thdb2d::process_point_references(thpoint * pp)
   switch (pp->type) {
     case TT_POINT_TYPE_STATION:
       if (! pp->station_name.is_empty()) {
-        pp->station_name.id = this->db->db1d.get_station_id(pp->station_name,pp->fsptr);
+        try {
+          pp->station_name.id = this->db->db1d.get_station_id(pp->station_name,pp->fsptr);
+        } catch (...) {
+          pp->station_name.id = 0;
+        }  
         if (pp->station_name.id == 0) {
           pp->throw_source();
           if (pp->station_name.survey != NULL)
@@ -818,7 +822,11 @@ void thdb2d::process_point_references(thpoint * pp)
       }
       
       if (! pp->extend_name.is_empty()) {
-        pp->extend_name.id = this->db->db1d.get_station_id(pp->extend_name,pp->fsptr);
+        try {
+          pp->extend_name.id = this->db->db1d.get_station_id(pp->extend_name,pp->fsptr);
+        } catch (...) {
+          pp->extend_name.id = 0;
+        }  
         if (pp->extend_name.id == 0) {
           optr = this->db->get_object(pp->extend_name, pp->fsptr);
           extend_error = true;
@@ -902,7 +910,11 @@ void thdb2d::process_scrap_references(thscrap * sptr)
   
   while (lp != NULL) {
     if (!(lp->station_name.is_empty())) {
-      lp->station_name.id = this->db->db1d.get_station_id(lp->station_name,lp->station_name.psurvey); //sptr->fsptr);
+      try {
+        lp->station_name.id = this->db->db1d.get_station_id(lp->station_name,lp->station_name.psurvey); //sptr->fsptr);
+      } catch (...) {
+        lp->station_name.id = 0;
+      }  
       if (lp->station_name.id == 0) {
         sptr->throw_source();
         if (lp->station_name.survey != NULL)
@@ -933,31 +945,46 @@ int comp_dist(const void * s1, const void * s2) {
   else return 0;
 }
 
-void thdb2d_log_distortions(thdb2dprj * prj) {
+void thdb2d::log_distortions() {
+  thdb2dprj * prj;
+  thdb2dprj_list::iterator prjli;
+  prjli = this->prj_list.begin();
+  thscrap ** ss;
   thscrap * ps;
   unsigned long ns = 0, i;
-  ps = prj->first_scrap;
-  while(ps != NULL) {
-    ps = ps->proj_next_scrap;
-    ns++;
+  
+  while (prjli != this->prj_list.end()) {
+    prj = &(*prjli);
+    ns = 0;
+    ps = prj->first_scrap;
+    while(ps != NULL) {
+      ps = ps->proj_next_scrap;
+      ns++;
+    }
+    if ((ns > 0) && (prj->processed) && (prj->type != TT_2DPROJ_NONE)) {
+      ss = new (thscrap*)[ns];
+      ps = prj->first_scrap;
+      i = 0;
+      while(ps != NULL) {
+        ss[i] = ps;
+        ps = ps->proj_next_scrap;
+        i++;
+      }
+      
+      qsort(ss,ns,sizeof(thscrap*),comp_dist);
+      thlog.printf("\n\n###################### scrap distortions #######################\n");
+      thlog.printf(" PROJECTION: %s%s%s\n", 
+        thmatch_string(prj->type,thtt_2dproj), 
+        strlen(prj->index) > 0 ? ":" : "",
+        strlen(prj->index) > 0 ? prj->index : "");
+      thlog.printf(" AVERAGE  MAXIMAL  SCRAP\n");
+      for(i = 0; i < ns; i++)
+        thlog.printf(" %6.2f%%  %6.2f%%  %s@%s\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name);
+      thlog.printf("################### end of scrap distortions ###################\n");
+      delete [] ss;
+    }
+    prjli++;
   }
-  if (ns == 0)
-    return;
-  thscrap ** ss = new (thscrap*)[ns];
-  ps = prj->first_scrap;
-  i = 0;
-  while(ps != NULL) {
-    ss[i] = ps;
-    ps = ps->proj_next_scrap;
-    i++;
-  }
-  qsort(ss,ns,sizeof(thscrap*),comp_dist);
-  thlog.printf("###################### scrap distortions #######################\n");
-  thlog.printf(" AVERAGE  MAXIMAL  SCRAP\n");
-  for(i = 0; i < ns; i++)
-    thlog.printf(" %6.2f%%  %6.2f%%  %s@%s\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name);
-  thlog.printf("################### end of scrap distortions ###################\n");
-  delete [] ss;
 }
 
 
@@ -992,14 +1019,16 @@ void thdb2d::process_projection(thdb2dprj * prj)
 #ifdef THDEBUG
     thprintf("\n\nprocessing projection %s:%s\n",prjstr,prj->index);
 #else
-    thprintf("processing projection %s:%s ... ",prjstr,prj->index);
+    thprintf("%sprocessing projection %s:%s ... ",
+      thtext_inline ? "\n": "", prjstr,prj->index);
     thtext_inline = true;
 #endif 
   } else {
 #ifdef THDEBUG
     thprintf("\n\nprocessing projection %s\n",prjstr);
 #else
-    thprintf("processing projection %s ... ",prjstr);
+    thprintf("%sprocessing projection %s ... ",
+      thtext_inline ? "\n": "", prjstr);
     thtext_inline = true;
 #endif   
   }
@@ -1025,7 +1054,6 @@ void thdb2d::process_projection(thdb2dprj * prj)
 #endif 
   if (prj->amaxdist > 0.0) {
     thprintf("average distortion: %.2f%%\n", prj->amaxdist);
-    thdb2d_log_distortions(prj);
   }
 
 }

@@ -806,13 +806,13 @@ static const thlang_pchar thlang__translations [119][4] = {
     "vodný tok",
   },
   {
-    "Carto",
+    "Drawn by",
     NULL,
     NULL,
     "Kreslil",
   },
   {
-    "Carto",
+    "Drawn by",
     NULL,
     NULL,
     "Kreslili",
@@ -830,13 +830,13 @@ static const thlang_pchar thlang__translations [119][4] = {
     "Dĺžka",
   },
   {
-    "Explo",
+    "Explored by",
     NULL,
     NULL,
     "Objavil",
   },
   {
-    "Explo",
+    "Explored by",
     NULL,
     NULL,
     "Objavili",
@@ -860,13 +860,13 @@ static const thlang_pchar thlang__translations [119][4] = {
     "[Náhľad spodných vrstiev]",
   },
   {
-    "Topo",
+    "Surveyed by",
     NULL,
     NULL,
     "Zameral",
   },
   {
-    "Topo",
+    "Surveyed by",
     NULL,
     NULL,
     "Zamerali",

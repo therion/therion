@@ -37,6 +37,7 @@
 #include "thscraplp.h"
 #include "thscrapen.h"
 #include "thmapstat.h"
+#include "thdb3d.h"
 
 /**
  * scrap command options tokens.
@@ -97,14 +98,17 @@ class thscrap : public thdataobject {
   thdb2dpt * maxdistp1, * maxdistp2;
   
   thscraplo * outline_first;
-  bool outline_parsed, polygon_parsed, ends_parsed, exported;
+  bool outline_parsed, polygon_parsed, ends_parsed, d3_parsed, exported;
   thscraplp * polygon_first, * polygon_last;
   thscrapen * ends_first;
   
   thmapstat_datamap adata;
   
+  thdb3ddata d3_outline;
+  
   void parse_scale(char * ss);
   void parse_stations(char * ss);
+  void process_3d();
   thscraplp * polygon_insert();
   
   thdb1ds * get_nearest_station(thdb2dpt * pt);
@@ -255,6 +259,13 @@ class thscrap : public thdataobject {
    */
    
  void insert_adata(class thdb1ds * as);
+ 
+ 
+ /**
+  * Return 3D data. Process if necessary.
+  */
+  
+ thdb3ddata * get_3d_outline();
 
 };
 

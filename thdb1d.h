@@ -32,10 +32,25 @@
 #include "thobjectid.h"
 #include "thinfnan.h"
 #include "thdataleg.h"
+#include "thdb3d.h"
 #include <map>
 #include <vector>
+#include <list>
 
 
+struct thdb1d_loop_leg {
+  thdb1d_loop_leg * next_leg, * prev_leg;
+  thdataleg * leg;
+  bool reverse;
+};
+
+struct thdb1d_loop {
+  thdb1d_loop_leg * first_leg, * last_leg;
+  class thdb1ds * from, * to;
+  unsigned long nlegs;
+  bool open;
+  double err_dx, err_dy, err_dz, err_length, src_length;
+};
 
 class thdb1d_tree_node {
 
@@ -111,13 +126,17 @@ class thdb1ds {
   unsigned char flags,  ///< Station flags.
     mark;  ///< Mark type.
   
+  bool adjusted, placed;
+  double sdx, sdy, sdz;
+  
   /**
    * Default constructor.
    */
    
   thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), survey(NULL), 
     data(NULL), data_priority(0), data_slength(0), 
-    flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP) {}
+    flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP),
+    adjusted(false), placed(false), sdx(0.0), sdy(0.0), sdz(0.0) {}
   
 
   /**
@@ -128,7 +147,8 @@ class thdb1ds {
     comment(NULL), survey(ps), 
     data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE), 
-    mark(TT_DATAMARK_TEMP) {}
+    mark(TT_DATAMARK_TEMP),
+    adjusted(false), placed(false), sdx(0.0), sdy(0.0), sdz(0.0) {}
     
   
   /**
@@ -179,6 +199,12 @@ class thdb1dl {
  */
  
 typedef std::vector < thdb1dl > thdb1d_leg_vec_type;
+typedef std::list < thdb1d_loop_leg > thdb1d_loop_leg_list_type;
+typedef std::list < thdb1d_loop > thdb1d_loop_list_type;
+
+
+
+
 
 
 /**
@@ -194,6 +220,10 @@ class thdb1d {
   thdb1d_tree_arrow * tree_arrows;
   
   thdb1d_tree_node  * tree_nodes;
+  
+  thdb3ddata d3_data;
+  
+  bool d3_data_parsed;
   
   unsigned long num_tree_legs; ///< Number of legs in the tree.
   
@@ -230,6 +260,10 @@ class thdb1d {
   thdb1d_station_map_type station_map;  ///< Stations map.
   
   thdb1d_leg_vec_type leg_vec;  ///< Survey shots.
+  
+  thdb1d_loop_leg_list_type loop_leg_list;
+
+  thdb1d_loop_list_type loop_list;
 
   /**
    * Standard constructor.
@@ -289,6 +323,22 @@ class thdb1d {
   thdb1d_tree_arrow * get_tree_arrows() {return this->tree_arrows;}
   
   thdb1d_tree_node * get_tree_nodes() {return this->tree_nodes;}
+  
+  /**
+   * Find loops.
+   */
+
+  void find_loops();
+
+  /**
+   * Make loop closure and calculate station coordinates.
+   */
+  
+  void close_loops();
+  
+  void print_loops();
+  
+  thdb3ddata * get_3d();
     
 };
 

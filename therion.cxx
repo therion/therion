@@ -64,7 +64,8 @@ const char * thhelp_text =
       "        [-v|--version]\n"
       "        [--print-encodings]\n"
       "        [--print-init-file]\n"
-      "        [--print-tex-encodings]\n\n";
+      "        [--print-tex-encodings]\n"
+      "        [--print-environment]\n\n";
 
 const char * thversion_text = THVERSION;
 const char * thversion_format = "therion %s";
@@ -99,7 +100,7 @@ void thprintf2err(const char *format, ...)
 void thprint_environment() {
   thprintf("INIT=%s\n",thcfg.get_initialization_path());
   thprintf("SOURCE=%s\n",thcfg.get_search_path());
-  thprintf("CAVERN=%s\n",thini.get_path_cavern());
+//  thprintf("CAVERN=%s\n",thini.get_path_cavern());
   thprintf("METAPOST=%s\n",thini.get_path_mpost());
   thprintf("PDFTEX=%s\n",thini.get_path_pdftex());
 }
@@ -226,6 +227,12 @@ int main(int argc, char * argv[]) {
     thlibrary_init();
     // load configuration from file
     thcfg.load();
+
+    switch (thcmdln.get_print_state()) {
+      case THPS_PATHS:
+        thprint_environment();
+        thexit(EXIT_SUCCESS);
+    }
     
     // load input
     long sid, maxsid = thcfg.get_source_file_names()->get_size();
@@ -262,9 +269,6 @@ int main(int argc, char * argv[]) {
     switch (thcmdln.get_print_state()) {
       case THPS_LIB_SRC:
         thdb.self_print_library();
-        thexit(EXIT_SUCCESS);
-      case THPS_PATHS:
-        thprint_environment();
         thexit(EXIT_SUCCESS);
     }
 
@@ -311,6 +315,10 @@ int main(int argc, char * argv[]) {
 #ifdef THDEBUG
     thprintf("\n");
 #endif   
+
+    // log statistics
+    thdb.db1d.print_loops();
+    thdb.db2d.log_distortions();
     
     //exit the program
     return(EXIT_SUCCESS);

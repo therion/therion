@@ -44,7 +44,6 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "### Default output language ###\n"
 "# language  en_UK\n\n"
 "### Paths to called executable files ###\n"
-"# cavern-path  \"cavern\"\n"
 "# mpost-path  \"mpost\"\n"
 "# pdftex-path  \"pdfetex\"\n\n"
 "### Search paths for source and configuration files ###\n"
@@ -60,6 +59,62 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 
 thinit::thinit()
 {
+}
+
+
+thinit::~thinit()
+{
+}
+
+enum {
+  TTIC_ENCODING_DEFAULT,
+  TTIC_ENCODING_SQL,
+  TTIC_PATH_CAVERN,
+//  TTIC_PATH_3DTOPOS,
+  TTIC_PATH_MPOST,
+  TTIC_PATH_PDFTEX,
+  TTIC_PATH_SOURCE,
+  TTIC_TMP_PATH,
+  TTIC_TMP_REMOVE_SCRIPT,
+  TTIC_LANG,
+  TTIC_TEX_FONTS,
+  TTIC_UNKNOWN,
+};
+
+
+/**
+ * Data types parsing table.
+ */
+ 
+static const thstok thtt_initcmd[] = {
+//  {"cavern-path", TTIC_PATH_CAVERN},
+  {"encoding-default", TTIC_ENCODING_DEFAULT},
+  {"encoding-sql", TTIC_ENCODING_SQL},
+//  {"encoding_default", TTIC_ENCODING_DEFAULT},
+//  {"path_3dtopos", TTIC_PATH_3DTOPOS},
+  {"language", TTIC_LANG},
+  {"mpost-path", TTIC_PATH_MPOST},
+  {"pdftex-path", TTIC_PATH_PDFTEX},
+  {"source-path", TTIC_PATH_SOURCE},
+  {"tex-fonts",TTIC_TEX_FONTS},
+  {"tmp-path",TTIC_TMP_PATH},
+  {"tmp-remove",TTIC_TMP_REMOVE_SCRIPT},
+  {NULL, TTIC_UNKNOWN},
+};
+
+void thinit__print_open(char * s) {
+#ifdef THDEBUG
+    thprintf("\ninitialization file: %s\nreading\n", s);
+#else
+    thprintf("initialization file: %s\n", s);
+    thprintf("reading ...");
+    thtext_inline = true;
+#endif 
+}
+
+void thinit::load()
+{
+
   // set encodings
   this->encoding_default = TT_ASCII;
   this->encoding_sql = TT_UNKNOWN_ENCODING;
@@ -95,67 +150,23 @@ thinit::thinit()
 #endif  
 
 //  this->path_3dtopos = "3dtopos";
-  this->path_mpost = "mpost";
-  this->path_pdftex = "pdfetex";
+#ifdef THWIN32
+  if (thcfg.install_tex) {
+    this->path_mpost = thcfg.install_path.get_buffer();
+    this->path_pdftex = thcfg.install_path.get_buffer();
+    this->path_mpost += "\\bin\\win32\\mpost.exe";
+    this->path_pdftex += "\\bin\\win32\\pdfetex.exe";
+  } else {
+#endif  
+    this->path_mpost = "mpost";
+    this->path_pdftex = "pdfetex";
+#ifdef THWIN32
+  }
+#endif  
   this->tmp_path = "";
   this->tmp_remove_script = "";
   this->lang = THLANG_UNKNOWN;
   
-}
-
-
-thinit::~thinit()
-{
-}
-
-enum {
-  TTIC_ENCODING_DEFAULT,
-  TTIC_ENCODING_SQL,
-  TTIC_PATH_CAVERN,
-//  TTIC_PATH_3DTOPOS,
-  TTIC_PATH_MPOST,
-  TTIC_PATH_PDFTEX,
-  TTIC_PATH_SOURCE,
-  TTIC_TMP_PATH,
-  TTIC_TMP_REMOVE_SCRIPT,
-  TTIC_LANG,
-  TTIC_TEX_FONTS,
-  TTIC_UNKNOWN,
-};
-
-
-/**
- * Data types parsing table.
- */
- 
-static const thstok thtt_initcmd[] = {
-  {"cavern-path", TTIC_PATH_CAVERN},
-  {"encoding-default", TTIC_ENCODING_DEFAULT},
-  {"encoding-sql", TTIC_ENCODING_SQL},
-//  {"encoding_default", TTIC_ENCODING_DEFAULT},
-//  {"path_3dtopos", TTIC_PATH_3DTOPOS},
-  {"language", TTIC_LANG},
-  {"mpost-path", TTIC_PATH_MPOST},
-  {"pdftex-path", TTIC_PATH_PDFTEX},
-  {"source-path", TTIC_PATH_SOURCE},
-  {"tex-fonts",TTIC_TEX_FONTS},
-  {"tmp-path",TTIC_TMP_PATH},
-  {"tmp-remove",TTIC_TMP_REMOVE_SCRIPT},
-  {NULL, TTIC_UNKNOWN},
-};
-
-void thinit__print_open(char * s) {
-#ifdef THDEBUG
-    thprintf("\ninitialization file: %s\nreading\n", s);
-#else
-    thprintf("initialization file: %s\n", s);
-    thprintf("reading ...");
-    thtext_inline = true;
-#endif 
-}
-
-void thinit::load()
-{
   char * cmdln;
   char ** args;
   int nargs, argid; //, argid2;

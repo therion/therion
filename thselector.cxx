@@ -76,7 +76,7 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
   thselector_item itm;
   itm.unselect = usid;
   if (nargs < 1)
-    ththrow(("not enought command arguments"))
+    ththrow(("not enough command arguments"))
 
   // set object name
   if (strlen(*args) == 0)

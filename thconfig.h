@@ -58,6 +58,7 @@ class thconfig {
   thbuffer fname,  ///< Configuration file name.
     search_path,  ///< Lib files search path.
     init_path,  ///< Initialization path.
+    install_path,  ///< Installation path.
     bf1,  ///< TMP buffer.
     bf2;  ///< TMP buffer.
   thmbuffer strmbuff,  ///< String storage buffer.
@@ -65,7 +66,9 @@ class thconfig {
     cfg_dblines,  ///< Lines with database commands.
     mbf1;  ///< TMP buffer.
   bool skip_comments,  ///< Skip comments when writing config file.
-    generate_xthcfg;  ///< Generate xtherion log file.
+    generate_xthcfg,  ///< Generate xtherion log file.
+    install_tcltk, ///< Whether tcltk is installed with therion.
+    install_tex; ///< Whether TeX is installed with therion.
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.
   int cfg_fenc;  ///< Configuration file encoding.

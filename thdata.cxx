@@ -213,9 +213,8 @@ thcmd_option_desc thdata::get_cmd_option_desc(char * opts)
 void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
   thdate temp_date;
-  thperson temp_person, temp_person2;
+  thperson temp_person;
   int prole_i;
-  thdata_team_set_type::iterator tsi;
   switch (cod.id) {
   
     case 0:
@@ -1363,6 +1362,9 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->cd_leg->dx_sd = this->dls_dx;
     this->cd_leg->dy_sd = this->dls_dy;
     this->cd_leg->dz_sd = this->dls_dz;
+    this->cd_leg->x_sd = this->dls_x;
+    this->cd_leg->y_sd = this->dls_y;
+    this->cd_leg->z_sd = this->dls_z;
     if (thisnan(this->dl_declination)) {
       if (!(this->dl_survey_declination_on)) 
         this->set_survey_declination();
@@ -1386,7 +1388,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
   
     if ((carg == nargs) && 
         (this->d_order[this->d_current] != TT_DATALEG_NEWLINE))
-      ththrow(("not enought data readings"))
+      ththrow(("not enough data readings"))
   
     switch(this->d_order[this->d_current]) {
     
@@ -1752,6 +1754,7 @@ void thdata::complete_interleaved_data()
     this->pd_leg->todepth = this->cd_leg->depth;
   }
   
+  this->pd_leg->topofil = (this->di_count || this->di_fromcount || this->di_tocount);
   this->pd_leg->is_valid = true;
 }
 
@@ -1772,7 +1775,7 @@ void thdata::set_data_fix(int nargs, char ** args)
     case 5:
     case 6:
     case 7:
-    case 10:
+//    case 10:
       break;
     default:
       ththrow(("invalid number of fix option arguments"))
@@ -1780,9 +1783,9 @@ void thdata::set_data_fix(int nargs, char ** args)
   it = this->fix_list.insert(this->fix_list.end(),dumm);
   it->srcf = this->db->csrc;
   it->psurvey = this->db->get_current_survey();
-  it->sdx = this->dls_x;
-  it->sdy = this->dls_y;
-  it->sdz = this->dls_z;
+  it->sdx = thnan;
+  it->sdy = thnan;
+  it->sdz = thnan;
   for(ai = 0; ai < nargs; ai++) {
     if (ai > 0) {
       thparse_double(vid, val, args[ai]);

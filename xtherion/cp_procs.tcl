@@ -36,7 +36,7 @@ proc xth_cp_new_file {} {
   }
   set xth(cp,fopen) 1
   set xth(cp,special) {}
-  set xth(cp,ffull) "thconfig"
+  set xth(cp,ffull) [file join $xth(gui,initdir) "thconfig"]
   if {[xth_cp_save_as]} {
     set ff $xth(cp,ffull)
     set xth(cp,fopen) 0
@@ -380,10 +380,13 @@ proc xth_cp_compile {} {
     }
     close $thid
   }]
+  
+  set see_end 0
   if {$err} {
     bell
     $xth(ctrl,cp,stp).gores configure -text "ERROR" -fg white -bg red
     set ret 0
+    set see_end 1
   } else {
     set xth(cp,compres) 1
     $xth(ctrl,cp,stp).gores configure -text "OK" -fg black -bg green
@@ -399,7 +402,11 @@ proc xth_cp_compile {} {
     }]} {
       $xth(cp,log).txt insert end "\nerror opening therion.log file\n"
   }
-  $xth(cp,log).txt see end
+  if ($see_end) {
+    $xth(cp,log).txt see end
+  } else {
+    $xth(cp,log).txt see 1.0
+  }
   xth_status_bar_pop cp
   update idletasks
 

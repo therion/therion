@@ -264,7 +264,8 @@ void make_sheets() {
   for (list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
     llx = DBL_MAX; lly = DBL_MAX; urx = -DBL_MAX; ury = -DBL_MAX;
-    if (I->F != "") {
+    if (I->F != "" && I->E == "" && I->G == "" && 
+        I->B == "" && I->X == "") { // clipped symbols shouldn't affect map size
       if (I->F1 < llx) llx = I->F1;
       if (I->F2 < lly) lly = I->F2;
       if (I->F3 > urx) urx = I->F3;
@@ -1262,8 +1263,45 @@ void build_pages() {
     }
   }
   else {
-    PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
-    print_page_bg(PAGEDEF);
+    PAGEDEF << "\\newdimen\\x \\x=" << HS << "bp" << endl;
+    PAGEDEF << "\\newdimen\\y \\y=" << VS << "bp" << endl;
+    PAGEDEF << "\\setbox\\xxx=\\hbox to \\x{\\maplayout\\hfill}%\\dp\\xxx=0bp" << endl;
+    PAGEDEF << "\\advance\\x by \\extraE" << endl;
+    PAGEDEF << "\\advance\\x by \\extraW" << endl;
+    PAGEDEF << "\\advance\\y by \\extraN" << endl;
+    PAGEDEF << "\\advance\\y by \\extraS" << endl;
+    PAGEDEF << "\\wd\\xxx=\\x" << endl;
+    PAGEDEF << "\\ht\\xxx=\\y" << endl;
+    PAGEDEF << "\\immediate\\pdfxform\\xxx" << endl;
+    PAGEDEF << "\\newcount\\THmaplegend\\THmaplegend=\\pdflastxform" << endl;
+
+    PAGEDEF << "\\advance\\pdfhorigin by \\extraW" << endl;
+    PAGEDEF << "\\advance\\pdfvorigin by \\extraN" << endl;
+    PAGEDEF << "\\advance\\pdfpagewidth by \\extraW" << endl;
+    PAGEDEF << "\\advance\\pdfpagewidth by \\extraE" << endl;
+    PAGEDEF << "\\advance\\pdfpageheight by \\extraN" << endl;
+    PAGEDEF << "\\advance\\pdfpageheight by \\extraS" << endl;
+
+    PAGEDEF << "\\newdimen\\overlap\\overlap=" << LAYOUT.overlap << "bp" << endl;
+
+    PAGEDEF << "\\dimtobp{\\the\\pdfpagewidth}\\edef\\xsize{\\tmpdef}%" << endl;
+    PAGEDEF << "\\dimtobp{\\the\\pdfpageheight}\\edef\\ysize{\\tmpdef}%" << endl;
+    PAGEDEF << "\\advance\\y by -\\extraN\\advance\\y by \\overlap" << endl;
+    PAGEDEF << "\\dimtobp{\\the\\y}\\edef\\nsize{\\tmpdef}%" << endl;
+    PAGEDEF << "\\x=\\extraW\\advance\\x by \\overlap" << endl;
+    PAGEDEF << "\\dimtobp{\\the\\x}\\edef\\wsize{\\tmpdef}%" << endl;
+
+    PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
+                            LAYOUT.background_g << " " << 
+                            LAYOUT.background_b << " rg -" << 
+			    "\\wsize\\space"  << "-" << 
+			    "\\nsize\\space" << 
+			    "\\xsize\\space" << 
+			    "\\ysize\\space" << 
+                            " re f Q}%" << endl;
+
+    PAGEDEF << "\\leavevmode\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
+//    print_page_bg(PAGEDEF);
     for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                         I != LAYERHASH.end(); I++) {
       if (I->second.Z == 0) {
@@ -1301,12 +1339,15 @@ void build_pages() {
       PAGEDEF << "\\PL{Q}%" << endl;
 
     }
-    PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{";      // map legend
-    PAGEDEF << "\\maplayout\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
-    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
+//    PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{";      // map legend
+//    PAGEDEF << "\\maplayout\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
+//    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
 
     PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
     PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
+    
+    PAGEDEF << "\\smash{\\rlap{\\kern-\\extraW\\raise-\\extraS" << 
+               "\\hbox{\\pdfrefxform\\THmaplegend}}}" << endl;
   }
 
   PAGEDEF.close();

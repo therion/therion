@@ -34,7 +34,7 @@ if {[catch {set imgver [package require Img]}]} {
          } 
 } else {
   set xth(gui,imgfiletypes) {
-           { {Pictures} {.png .jpg .jpeg .tif .tiff .gif .pnm .ppm .bmp} }
+           { {Pictures} {.png .jpeg .jpg .gif .pnm .ppm} }
            { {All Files}                                               * }
          } 
 }

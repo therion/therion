@@ -304,12 +304,13 @@ class thdataleg {
   double length, counter, fromcounter, tocounter, depth, fromdepth,
     todepth, depthchange, bearing, gradient, dx, dy, dz,
     backbearing, backgradient, total_length, total_bearing, total_gradient,
-    total_dx, total_dy, total_dz;
+    total_dx, total_dy, total_dz, adj_dx, adj_dy, adj_dz;
     
   double length_sd, counter_sd, depth_sd, bearing_sd, gradient_sd,
-    dx_sd, dy_sd, dz_sd, declination;
+    dx_sd, dy_sd, dz_sd, x_sd, y_sd, z_sd, declination, 
+    total_sdx, total_sdy, total_sdz;
     
-  bool infer_plumbs, infer_equates, direction;
+  bool infer_plumbs, infer_equates, direction, adjusted, topofil;
   
  
   /**
@@ -331,6 +332,8 @@ class thdataleg {
    */
   
   void clear();
+  
+  void calc_total_stds();
   
 };
 

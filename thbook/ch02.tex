@@ -257,8 +257,7 @@ the command may be used anywhere.
           mark <type>
           flags <shot flags>
           station <station> <comment> [<flags>]
-          fix <station> [<x> <y> <z> [<std x> <std y> <std z> \
-            [<covxy> <covyz> <covxz>]]]
+          fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]
           equate <station list>
           data <style> <readings order>
           break
@@ -335,11 +334,9 @@ the command may be used anywhere.
   * |station <station> <comment> [<flags>]| = set the station comment
     and flags: entrance or continuation. If |""| is specified as a
     comment, it is ignored.
-  * |fix <station> [<x> <y> <z> [<std x> <std y> <std z> [<covxy> <covyz> \
-<covxz>]]]| 
-    = fix station coordinates (with errors and
-    covariances---only the units transformation, not calibration,
-    is applied to them).
+  * |fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]| 
+    = fix station coordinates (with specified errors---only 
+    the units transformation, not calibration, is applied to them).
   * |equate <station list>| = set points that are equivalent
   * |data <style> <readings order>| = set data style (normal, topofil,
     diving, cartesian, cylpolar, nosurvey) and readings order. Reading
@@ -703,6 +700,9 @@ respectively.
          to other objects.
        * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
        * |visibility <on/off>| = displays/hides an object
+
+    {\it Type-specific options:}\Nobreak
+
        * |altitude <value>| = can be specified only with the wall type.
          This option creates an altitude label on the wall. The value
          gives the altitude difference of the point on the wall 
@@ -934,14 +934,15 @@ endrevise|
 
 
 
-
 \subchapter XTherion.
 
 XTherion is a GUI (Graphical User Interface) for Therion. 
 It helps a lot with creating input data files. Currently it works in 
-three main modes: text editor, map editor and compiler. (Here we're concerned 
-with creating data, so only the two first modes are described in this section. For compiler 
-features see the chapter {\it Processing data}.)
+four main modes: text editor, map editor, compiler and model viewer. 
+(Here we're concerned with creating data, so only the two first modes are 
+described in this section. For compiler 
+features see the chapter {\it Processing data}, for model viewer features 
+chapter {\it What we get?})
 
 It's not necessary for Therion itself---you may edit input files in your 
 favourite text editor and run Therion from the command line. XTherion is also 
@@ -977,17 +978,10 @@ command).
 
 \subsubchapter XTherion---map editor.
 
-Although the benefits of the special text editor for Therion are disputable, 
-without a map editor it is really too hard to draw any map. Most of the drawing 
-commands (point, line) require 
-specification of position in Cartesian coordinates ({\it x\/}-axis to the right, 
-{\it y\/}-axis up). Which is better: to measure coordinates on the paper and type
-them by hand, or to display a scanned map on the background of the XTherion's 
-working area and draw the map accordingly as in other vector graphics editors?
-
+Map editor allows you to draw and edit map fully interactively.
 But don't expect too much. XTherion is not a truly WYSIWYG editor. It 
 displays only the position, not the actual shape, of drawn point or line 
-symbols. Visually there is no difference between a helectite and a text 
+symbols. Visually there is no difference between a helictite and a text 
 label---both are rendered as simple dots. The type and other attributes of any 
 object are specified only in the {\it Point control} and {\it Line control} menus.
 
@@ -996,7 +990,7 @@ object are specified only in the {\it Point control} and {\it Line control} menu
 \leavevmode\llap{\smash{\raise10pt\hbox{\pdfannot width 6cm height 0cm depth  4cm 
 {/Subtype /Text 
  /Name /Help
- /Contents (Hints: 1. Why do we use Survex?
+ /Contents (Hints: 1. What does loop closure do?
             2. Why do we use MetaPost?)
 }}} \qquad}\fi
 {\it Exercise:} Find two substantial reasons, why the map drawn in XTherion can't be 
@@ -1013,12 +1007,14 @@ After creating a new file in the map editor, you may load one or more
 {\bf images}---scanned survey sketches from the cave---as a backround for 
 the drawing. Click on the {\it Insert} button in {\it Background images} menu.
 Unfortunatelly, as a limitation of Tcl/Tk language, only GIF, PNM and PPM 
-images are supported. All opened images are placed in the upper-left corner of 
-the working area. Move it by double clicking and dragging with the right 
+(plus PNG and JPEG if you installed tkImg extension) images are supported. 
+All opened images are placed in the upper-left corner of 
+the working area. Move them by double clicking and dragging with the right 
 mouse button or through a menu. For better performance on slower computers, 
 it's possible to temporarily unload a currently unused image from memory 
-by unchecking its {\it Visibility} check-box. ({\it Note:} Therion doesn't
-use these images in any way.)
+by unchecking its {\it Visibility} check-box. It's possible to open an existing 
+file without loading of background images using {\it Open XP} menu.
+({\it Note:} Therion doesn't use background images in any way.)
 
 The size and zoom setting of the {\bf drawing area} is adjusted in the 
 corresponding menu. {\it Auto adjust} calculates optimal size of the working 
@@ -1035,8 +1031,8 @@ built up from points, lines and filled areas.
 
 So, the first step is defining the {\bf scrap} by a |scrap ... endscrap| 
 multi-line command.  In the {\it File commands} menu click on the {\it Action} 
-submenu and select {\it Insert scrap}. This changes the {\it Action button} 
-above from {\it Insert text} to {\it Insert scrap}. After pressing this button a 
+submenu and select {\it Insert scrap}. This changes the {\it Action button} to
+{\it Insert scrap} if it had any other value. After pressing this button a 
 new scrap will be inserted. You should see lines
 
 |scrap - scrap1
@@ -1046,14 +1042,15 @@ end of file|
 in the preview window above the {\it Insert scrap} button. This window is a 
 simplified outline of the text file, which will be saved by XTherion. Only 
 the command (|scrap|, |point|, |line|, |text|---why text see below) and its 
-type (for |point| and |line|) or name (for |scrap|) are shown. 
+type (for |point| and |line|) or ID (for |scrap|) are shown. 
 
 The full contents of any command is displayed in the {\it Command preview} 
 menu.
 
 For modifying previously-created commands, there are additional 
 menus---e.g.~{\it Scrap control} for the |scrap| command. Here you can 
-change the name and other options. For details see chapter {\it Data format}.
+change the ID (very important!) and other options. 
+For details see chapter {\it Data format}.
 
 Now it's possible to insert some {\bf point symbols}. As with scrap 
 insertion, go to the {\it File commands} menu, click on the {\it Action} 
@@ -1062,7 +1059,9 @@ point} button. A shortcut for all this is Ctrl-p. Than click on the desired
 spot in the working area and you'll see a blue dot representing a point 
 symbol. Its attributes can be adjusted in the {\it Point control} menu.
 You'll stay in `insert' mode---each click on the working area adds a new 
-point symbol. To escape from `insert' to `select' mode, press {\it Esc} key 
+point symbol. Take care not to click twice on the same place---you would insert 
+two point symbols in the same place!
+To escape from `insert' to `select' mode, press {\it Esc} key 
 on the keyboard or {\it Select} button in the {\it File commands} menu.
 
 What order will the commands be in the output file? Exactly as in the 
@@ -1145,6 +1144,10 @@ because you need not change symbol type and fill options for each new symbol.
 characters (e.g.~if you're entering stations, |-name 34@pajan| option inherited 
 from previous station may be easily changed to |-name 35@pajan| by retyping one 
 character). 
+It is a good idea to start with drawing all survey stations (don't forget to 
+give them names according to real names in the centreline command), than all 
+passage walls followed by all other point symbols, lines and areas. Finally 
+draw cross-sections.
 
 \subsubchapter Keyboard and mouse shortcuts in the Map editor.
 {\it General}
@@ -1252,5 +1255,80 @@ character).
  * RightClick = select object right below the top object (useful when several
     points lie above each other)
 \endlist
+
+
+
+\subchapter Thinking in Therion.
+
+Although everything about Therion input files has been explained, this chapter 
+offers some aditional tips and hints.
+
+\subsubchapter How to enter centreline?.
+
+If the cave is larger than a few meters it's a good idea to split data in more 
+files and separate centreline data from map data. 
+
+We usually use one |*.th| file containing centreline per survey trip. 
+It's handy to 
+start with an empty template file as shown bellow, where dots will be replaced 
+with appropriate texts.
+
+|encoding ISO8859-1
+survey ... -title "..."
+  centreline
+    team "..."
+    team "..."
+    date ...
+    units clino compass grad
+    data normal from to compass clino length
+      ... ... ... ... ...
+  endcentreline
+endsurvey|
+
+It's useful when the survey has the same name as the file which contains it. 
+(E.g.~|survey entrance| in the file |entrance.th|.)
+
+For really large caves it's possible to build a hierarchical structure of 
+directories. In such a case we create one special file called |INDEX.th| which 
+includes all other |*.th| files from given directory and contains |equate| 
+commands to define connections between surveys.
+
+\subsubchapter How to draw maps?.
+
+The most imortant thing is to devise division of the cave into scraps. 
+It's almost always a {\it bad\/} idea to try to fit each scrap to corresponding
+|*.th| file with centreline from one survey trip. The reason is that 
+connections between scraps should be as simple as possible. 
+Scraps in general are independent on centreline hierarchy so try to forget
+the survey hierarchy when drawing maps and choose best scrap joins. 
+
+We usually insert maps in the last-but-one level in survey hierarchy. Each 
+scrap may than contain arbitrary part of any survey in the last level of 
+hierarchy. For example, there is a survey |main| which contains surveys |a|, 
+|b|, |c| and |d|. Surveys |a| -- |d| contain centreline data from four survey 
+trips and each of them is in a separate file. There is a map |main_map| which 
+contains scraps |s1| and |s2|. If the |main_map| is located in the |main| 
+survey, scrap |s1| may cover part of the centreline from survey |a|, complete 
+survey |b| and part of |c|; |s2| will cover part of the |a| and |c| surveys
+and a complete |d| survey. The survey stations names will be referenced using 
+|@| symbol (e.g.~|1@a|) in the scraps.
+
+Scraps are usually stored in |*.th2| files. Each file may contain more scraps. 
+To keep data well organized, we have some naming conventions: in the file 
+|foo.th2| all scraps are named |foo_si|, where |i| is |1|, |2| an so on. 
+Cross-sections are named |foo_ci|, lines |foo_li| etc. This helps a lot with 
+large cave systems: if some scrap is referenced, you immediately know in which 
+file it had been defined.
+
+Similar to |*.th| files, there may be one file |INDEX.th2| per directory which 
+includes all |*.th2| files, defines scrap joins and maps.
+
+\subsubchapter How to create models?.
+
+The model is created from scrap outlines. The height and depth of the passage 
+are computed from |passage-height| point map symbols. In the future, there will 
+be |point dimensions| map symbol which will allow more precise floor and 
+ceiling specification.
+
 
 \endinput

@@ -2,27 +2,50 @@
 
 \subchapter Compilation.
 
-If you want to compile the Therion source code, you need 
-
+If you want to compile Therion from source code and run it, you need 
+(first three are required only during compilation):
 \list
 * GNU C/C++ compiler
 * GNU make
-* Tcl
 * Perl
+* Tcl/Tk 8.4.3 and newer (|http://www.tcl.tk|) with 
+  {\it BWidget} widget set (\path|http://sourceforge.net/projects/tcllib|),
+  {\it Tom} OpenGL extension (improved version is included in Therion source 
+  distribution)
+  and optionally {\it tkImg} extension (\path|http://sourceforge.net/projects/tkimg|). 
+* \TeX\ distribution with at least \TeX\ with Plain format, 
+  recent pdf\TeX, and \MP\ (\path|http://www.tug.org|). 
 \endlist
 
-For Windows consider using MinGW (|http://www.mingw.org|).
+All programs (with the exception of BWidget, Tom and tkImg package) are usually 
+included in Linux, Unix or MacOS\,X distributions.
+For Windows consider using MinGW and MSYS (|http://www.mingw.org|).
 It's a distribution of GNU utilities with GNU make and GCC.
+(BTW, why not to use precompiled Windows version?)
 
 \subsubchapter Quick start.
 
 \list
-* unpack source distribution |therion-0.2.*.tar.gz|
+* unpack source distribution |therion-0.3.*.tar.gz|
 * |cd therion|
 * |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows, 
   respectively
 * |make|
+* |su|
 * |make install|
+\endlist
+
+Installing Tom:
+
+\list
+* if you use Windows, download a Tcl/Tk source distribution, |make| and
+  |make install| it under MSYS
+* |cd therion/thtom/linux| or |cd therion/thtom/win|
+* |make|
+* copy |Tom0.2| directory (which should contain |pkgIndex.tcl| and one of 
+  |libtom.so| or |libtom.dll|) 
+  to the |lib| subdirectory of your 
+  Tcl/Tk distribution.
 \endlist
 
 \subsubchapter Hacker's guide.
@@ -147,15 +170,13 @@ supported initialization commands follow.
 
 * |mpost-path <file-path>|
 
-  Set the full path to a \MP\ executable (``|mpost|'' is the default).
+  Set the full path to a \MP\ executable if Therion can't find it 
+  (``|mpost|'' is the default).
 
 * |pdftex-path <file-path>|
 
-  Set the full path to a pdf\TeX\ executable (``|pdfetex|'' is the default).
-
-* |cavern-path <file-path>|
-
-  Path to |cavern| program. In most cases not necessary.
+  Set the full path to a pdf\TeX\ executable if Therion can't find it 
+  (``|pdfetex|'' is the default).
 
 * |source-path <directory>| 
 
@@ -164,7 +185,7 @@ supported initialization commands follow.
 
 * |tmp-path <directory>| 
 
-  Path to temporary directory.
+  Path where temporary directory should be created.
   
 * |tmp-remove <OS command>| 
 
@@ -353,9 +374,14 @@ process them with Therion.
   Apr: Therion included in Debian GNU/Linux
 
   Jun: all Perl scripts rewritten in C++, Therion is one executable program
-       now (although using Survex and TeX)
+       now (although using Survex and \TeX)
        
 %  Nov 10: first idea of the Labyrinth project
+
+* {\bf 2004}
+
+  Mar: Therion 0.3 --- Therion exports 3D model created from 2D maps.
+  Loop closure algorithm included into Therion.
 \endlist
 
 
@@ -367,12 +393,16 @@ new features to be implemented:
 \subsubchapter General.
 
 \list
-* comprehensive information on centreline processing and loop closure
+* loop closure informations in SQL
 \endlist
 
 \subsubchapter 2D maps.
 
 \list
+* map rotation
+* map grid
+* complete map symbol sets
+* area blocks
 * SVG support
 \endlist
 
@@ -380,8 +410,8 @@ new features to be implemented:
 \subsubchapter 3D models.
 
 \list
-* passage walls modelling
-* OpenGL 3D viewer
+* improve passage walls modelling
+* more formats for export
 \endlist
 
 \endinput

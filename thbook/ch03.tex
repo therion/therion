@@ -130,7 +130,7 @@ Works like |input| command in data files---includes other files.
     page-grid <on/off>
     legend <on/off/all>
     map-comment <string>
-    map-header <off/n/s/e/w/ne/nw/se/sw>
+    map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>
     statistics <explo/topo/carto/copyright all/off/number>
                <explo/topo-length on/off>
     scale-bar <length> <units>
@@ -225,7 +225,7 @@ endlayout|
     Value range is 0--100. (M, A; default: |70|)
   * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
   * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
-    origin (M, A)
+    origin (M, A) [Grid is currently not supported.]
   * |grid-size <width> <height> <units>| = set grid size in real
     units (M, A; default \hbox{|10 m|})
   * |origin <x> <y> <x> <units>| = set origin of atlas pages (M, A)
@@ -239,12 +239,20 @@ endlayout|
 
   {\it map legend related:}
 
-  * |legend <on/off/all>| = display list of used map symbols. If set to
-    |all|, all symbols from the current symbol set are displayed. 
+  * |map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>| = 
+    print map header at location specified by |<x> <y>|. 
+    Predefined map header contains some basic informations about
+    cave: name, scale, north arrow, list of surveyors etc. It is fully 
+    customizable (see the chapter {\it Changing layout} for details).
+    Ranges for |<x>| and |<y>| are 0--100. Lower-left corner of the map 
+    is |0 0|, 
+    upper-right corner is |100 100|. The header is aligned with the specified 
+    corner or side to this anchor point.
+    (M; default: |0 100 nw|)
+  * |legend <on/off/all>| = display list of used map symbols in the map header. 
+    If set to |all|, all symbols from the current symbol set are displayed. 
     (M, A; default: |off|)
   * |map-comment <string>| = optional comment displayed at the map header (M)
-  * |map-header <off/n/s/e/w/ne/nw/se/sw>| = print map header at specified
-    location. (M; default: |nw|)
   * |statistics <explo/topo/carto/copyright all/off/number>| or 
   * |statistics <explo/topo-length on/off>| = display some basic 
     statistics (M, A; default: |off|)
@@ -296,7 +304,7 @@ endlayout|
 \subsubchapter `export'.
 
 \description
-  Exports specified data from database. 
+  Exports selected surveys or maps. 
 \enddescription
 
 \syntax
@@ -317,6 +325,8 @@ endlayout|
     |database| = SQL database with centreline
 \endarguments
 
+\penalty0
+
 \options
   {\it common:}
 
@@ -327,7 +337,8 @@ endlayout|
   {\it model:}
 
   * |format/fmt <format>| = set model output format. Currently the following
-    output formats are supported: compass (plt file), survex (3d file).
+    output formats are supported: |therion| (native format; default),
+    |compass| (plt file), |survex| (3d file), |vrml| and |3dmf| (walls only).
 
   {\it map/atlas:}
   
@@ -339,11 +350,10 @@ endlayout|
     you can change some layout properties directly within the export command.
   * |format/fmt <format>| = set map format. Currently only PDF format
     is supported.
-  * |title| = title to go on the output survey    
 
   {\it database:}
   
-  * |format/fmt <format>| = currently only SQL
+  * |format/fmt <format>| = currently only |sql|
   * |encoding/enc <encoding>| = set output encoding
 \endoptions
 
@@ -360,7 +370,7 @@ The full syntax is
 
 |therion [-q] [-L] [-l <log-file>]
         [-s <source-file>] [-p <search-path>]
-        [-g/-u] [-i] [-d] [-x] [<cfg-file>]|
+        [-g/-u] [-i] [-d] [-x] [--use-extern-libs] [<cfg-file>]|
 
 or
 
@@ -369,7 +379,7 @@ or
         [--print-encodings]
         [--print-tex-encodings]
         [--print-init-file]
-        [--use-extern-libs]|
+        [--print-environment]|
 
 \arguments
   |<cfg-file>| 

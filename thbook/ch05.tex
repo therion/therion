@@ -242,7 +242,8 @@ before or after the |\insertmaps| macro):
   command
 * |\copyrights| = is set according to copyright options for surveys and other
   objects
-* |\cavename| = name of the exported map
+* |\cavename| = name of the exported map; set according to |-title| option
+  of exported map
 * |\cavelength|, |\cavedepth| = approximate length and depth of displayed map
 * |\cavelengthtitle|, |\cavedepthtitle| = translated labels
 \endlist
@@ -253,7 +254,7 @@ mentioned above to get simple preformatted atlas introductory pages.
 For legend displaying there are
 
 \list
-* |\iflegend| = conditional true iff |legend| option of the |layout| command
+* |\iflegend| = conditional; true iff |legend| option of the |layout| command
   was set to |on| or |all| values
 * |\legendtitle| = token register containing translated legend title
 * |\insertlegend| = macro for inserting legend symbols pictures with translated
@@ -269,9 +270,9 @@ For legend displaying there are
 North arrow and scale bar may be displayed using
 
 \list
-* |\ifnortharrow| = conditional true if map projection is plan and
+* |\ifnortharrow| = conditional; true if map projection is plan and
   symbol north-arrow is not hidden in |layout|
-* |\ifscalebar| = conditional true if scalebar is not hidden
+* |\ifscalebar| = conditional; true if scalebar is not hidden
 * |\northarrow| = PDF form with the north arrow
 * |\scalebar| = PDF form with the scale bar
 \endlist

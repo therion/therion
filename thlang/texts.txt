@@ -444,27 +444,27 @@ en: Depth
 sk: Prevýšenie
 
 therion: title explo (plural)
-en: Explo
+en: Explored by
 sk: Objavili
 
 therion: title explo
-en: Explo
+en: Explored by
 sk: Objavil
 
 therion: title topo (plural)
-en: Topo
+en: Surveyed by
 sk: Zamerali
 
 therion: title topo
-en: Topo
+en: Surveyed by
 sk: Zameral
 
 therion: title carto (plural)
-en: Carto
+en: Drawn by
 sk: Kreslili
 
 therion: title carto
-en: Carto
+en: Drawn by
 sk: Kreslil
 
 therion: title preview above

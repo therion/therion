@@ -140,6 +140,7 @@ proc xth_me_unredo_undo {} {
     if {$xth(me,unredoshift)} {
       $xth(me,can) xview moveto [lindex $acmd 1]
       $xth(me,can) yview moveto [lindex $acmd 2]
+      xth_me_images_rescandraw
     }
     xth_me_unredo_update
   }  
@@ -190,6 +191,7 @@ proc xth_me_center_to {crds} {
     }
     $xth(me,can) yview moveto $pf
   }
+  xth_me_images_rescandraw
 }
 
 
@@ -204,6 +206,7 @@ proc xth_me_unredo_redo {} {
     set xth(me,undolist) [linsert $xth(me,undolist) 0 $acmd]
     $xth(me,can) xview moveto [lindex $acmd 1]
     $xth(me,can) yview moveto [lindex $acmd 2]
+    xth_me_images_rescandraw
     set xth(me,unredook) 0
     eval [lindex $acmd 4]
     set xth(me,unredook) 1
@@ -984,6 +987,7 @@ proc xth_me_area_end_drag {tagOrId imgx x y} {
   if {[string length $imgx] > 0} {
     xth_me_image_choose $imgx
   }
+  xth_me_images_rescandraw
   update idletasks 
 }
 
@@ -1170,13 +1174,17 @@ grid rowconf $xth(gui,me).af.apps 0 -weight 1
 frame $canfm
 set xth(me,can) $canfm.c
 scrollbar $canfm.sv -orient vertical -command "$xth(me,can) yview" \
-  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)  
+bind $canfm.sv <ButtonRelease> xth_me_images_rescandraw
 scrollbar $canfm.sh -orient horizontal -command "$xth(me,can) xview" \
   -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+bind $canfm.sh <ButtonRelease> xth_me_images_rescandraw
 canvas $xth(me,can) -relief flat -borderwidth 0 -bg black \
 	-xscrollcommand "xth_me_area_scroll $canfm.sh" \
 	-yscrollcommand "xth_me_area_scroll $canfm.sv" \
 	-cursor crosshair
+bind $xth(me,can) <Configure> xth_me_images_rescandraw
+  
 set xth(me,canid,area) [$xth(me,can) create polygon 0 0 0 256 256 256 256 0 -fill LightYellow]
 set xth(me,canid,scrap,scp1) [$xth(me,can) create rectangle 0 0 3 3 \
   -fill red -outline red -width 1 -state hidden -tags {cmd_ctrl}]
@@ -1216,25 +1224,25 @@ set xth(me,canid,linept,fl) [$xth(me,can) create line 0 0 10 10 \
   -state hidden -tags {linectrl cmd_ctrl}]
 
 set xth(me,canid,linept,ppcpl) [$xth(me,can) create line 0 0 10 10 \
-  -width 2 -fill magenta -state hidden -tags "linectrl lineptppcp cmd_ctrl"]
+  -width $xth(gui,me,line,clwidth) -fill magenta -state hidden -tags "linectrl lineptppcp cmd_ctrl"]
 set xth(me,canid,linept,nncpl) [$xth(me,can) create line 0 0 10 10 \
-  -width 2 -fill magenta -state hidden -tags "linectrl lineptnncp cmd_ctrl"]
+  -width $xth(gui,me,line,clwidth) -fill magenta -state hidden -tags "linectrl lineptnncp cmd_ctrl"]
 set xth(me,canid,linept,ppcp) [$xth(me,can) create rectangle 0 0 10 10 \
   -width 1 -fill magenta -outline magenta -state hidden -tags "linectrl lineptppcp cmd_ctrl"]
 set xth(me,canid,linept,nncp) [$xth(me,can) create rectangle 0 0 10 10 \
   -width 1 -fill magenta -outline magenta -state hidden -tags "linectrl lineptnncp cmd_ctrl"]
 
 set xth(me,canid,linept,pcpl) [$xth(me,can) create line 0 0 10 10 \
-  -width 2 -fill $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptpcp cmd_ctrl"]
+  -width $xth(gui,me,line,clwidth) -fill $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptpcp cmd_ctrl"]
 set xth(me,canid,linept,ncpl) [$xth(me,can) create line 0 0 10 10 \
-  -width 2 -fill $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptncp cmd_ctrl"]
+  -width $xth(gui,me,line,clwidth) -fill $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptncp cmd_ctrl"]
 set xth(me,canid,linept,pcp) [$xth(me,can) create rectangle 0 0 10 10 \
   -width 1 -fill red -outline $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptpcp cmd_ctrl"]
 set xth(me,canid,linept,ncp) [$xth(me,can) create rectangle 0 0 10 10 \
   -width 1 -fill red -outline $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptncp cmd_ctrl"]
 
 set xth(me,canid,line,tick) [$xth(me,can) create line 0 0 10 10 \
-  -width 3 -fill #ffda00 -state hidden -tags "entirelinectrl cmd_ctrl"]
+  -width $xth(gui,me,line,tickwidth) -fill #ffda00 -state hidden -tags "entirelinectrl cmd_ctrl"]
 
   
 xth_me_bind_area_only_drag $xth(me,canid,linept,fr)

@@ -48,7 +48,7 @@ class thscraplp {
   
   thscraplp(); ///< Default constructor
   
-  double stx, sty, lnx1, lnx2, lny1, lny2;
+  double stx, sty, stz, lnx1, lnx2, lny1, lny2, lnz1, lnz2;
   bool lnio;
   
 };

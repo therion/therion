@@ -278,6 +278,8 @@ class thdb2d {
    
   char * get_projection_title(thdb2dprj * prj);
   
+  void log_distortions();
+  
 };
 
 

@@ -1,36 +1,38 @@
 HNED:
-+ vyrovnavanie polygonu
-+ vymysliet ukladanie LRUD
-+ z thdb1d exportovat serie s LRUD
-+ 3D scanovanie
-+ zarovnavanie legendy zvonku (na sirku)
-+ otacanie vystupnej mapy aj sipky na sever
-+ [...] oznacovanie texovskych textov
-+ -adjust horizontal|vertical pre line point (zakazat v projection plan)
-+ pozriet sa na zuby prazdnym riadkom
++ 3d: upravit 1. interpolacnu funkciu
+  + vytvorit funkciu, co vlozi shot (aby sa upravovali odkazy)
+  + vytvorit funkciu, co vypocita smery
+  + vytvorit interpolacnu funkciu
++ 3d: point dimensions
++ 3d: upravit 2. interpolacnu funkciu
++ 3d: up, down, left, right
++ export model: -enable|disable [walls, centerline, bbox]
++ 3d: novy model export (centerline, walls, bbox)
++ x: nova verzia 3D prehliadaca (visibility, reload)
++ x: vytiahnut co sa da do xtherion.ini
++ SQL: exportovat uzavrete okruhy (chyby, zoznam shotov a zoznam bodov)
++ export database: format text|txt
++ 2d: otacanie vystupnej mapy aj sipky na sever
++ layout: [...] oznacovanie texovskych textov
++ 2d: -adjust horizontal|vertical pre line point (zakazat v projection plan)
 
 HOTOVO:
 
 POTOM:
-+ xtherion: nezobrazuje encoding pre thconfig
-+ xtherion: kontrolovat ci subor nebol modifikovany vonku. Ak hej, zavriet 
++ x: nezobrazuje encoding pre thconfig
++ x: kontrolovat ci subor nebol modifikovany vonku. Ak hej, zavriet 
   - nacitat - znova otvorit v tom istom pohlade (2D)
 + area blocks
 + systemy jednotiek
 + kontrolovat duplikovane body v scrape
-+ navrhnut kroky pre 3D
-+ skusit odprasit cavern
 + preview beside
-+ prispoosobujuce sa body na krivke
 + rychly mod pre kompilaciu - bez spustania MPostu a bez konverzie
 + rozsirit cislovanie suborov pre metapost na podadresare
 + exportovat styl gridu - ked to bude podporovane v thpdf
 * SVG - cvicna verzia
-* do SQL - uzavrete okruhy a chyby na nich
 
 KED TO BUDE TREBA:
-+ xtherion: stromova struktura pre outline v mapovom editore)
 + pridat do mapy moznost dat survey -> vtedy da len jeho polygon
 + pridat -map-level scrap -> rozvijanie na samotne scrapy
-+ rozsirene make install 
-  * odstranit z perlu co sa da - aby nebol potrebny na kompilaciu (ani tclko)
+
+

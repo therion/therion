@@ -504,6 +504,7 @@ enddef;
 def l_section_SKBB (expr P)(text txt) =
   T:=identity;
   pair zz[];
+  path Q; Q = punked P;
   pickup PenC;
   for t = 0 upto length P - 1:
     zz1 := point t of P;
@@ -513,10 +514,10 @@ def l_section_SKBB (expr P)(text txt) =
     if (length(zz3-1/3[zz1,zz2]) > 0.1pt) or
        (length(zz4-2/3[zz1,zz2]) > 0.1pt):
       zz5 = whatever[zz1,zz2];
-      (zz3-zz5) dotprod (zz1-zz2) = 0;
+      (zz3-zz5) = whatever * (zz1-zz2) rotated 90;
       draw zz1--zz5;
       zz6 = whatever[zz1,zz2];
-      (zz4-zz6) dotprod (zz1-zz2) = 0;
+      (zz4-zz6) = whatever * (zz1-zz2) rotated 90;
       draw zz2--zz6;
     else:
       draw zz1--zz2;
@@ -525,7 +526,7 @@ def l_section_SKBB (expr P)(text txt) =
   for pnt=txt:
     if pnt=-1:
     else:
-      T:=identity rotated angle(thdir(P,pnt)) shifted (point pnt of P);
+      T:=identity rotated angle(thdir(Q,pnt)) shifted (point pnt of Q);
       pickup PenC;
       thdraw (0,0)--(0,.8u);
       thdraw (-.1u,.55u)--(0,.8u)--(.1u,.55u);

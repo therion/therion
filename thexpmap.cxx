@@ -203,7 +203,7 @@ void thexpmap::parse_layout_option(int & argx, int nargs, char ** args) {
     ththrow(("unknown layout option -- -%s", opts));
     
   if (argx + o.nargs >= nargs)
-    ththrow(("not enought layout option arguments -- -%s", opts));
+    ththrow(("not enough layout option arguments -- -%s", opts));
   
   argx++;  
   

@@ -72,6 +72,12 @@ void thdataleg::clear()
   this->total_dx = thnan;
   this->total_dy = thnan;
   this->total_dz = thnan;
+  this->total_sdx = thnan;
+  this->total_sdy = thnan;
+  this->total_sdz = thnan;
+  this->adj_dx = thnan;
+  this->adj_dy = thnan;
+  this->adj_dz = thnan;
     
   this->length_sd = thnan;
   this->counter_sd = thnan;
@@ -81,11 +87,17 @@ void thdataleg::clear()
   this->dx_sd = thnan;
   this->dy_sd = thnan;
   this->dz_sd = thnan;
+  this->x_sd = thnan;
+  this->y_sd = thnan;
+  this->z_sd = thnan;
   this->declination = thnan;
     
   this->infer_plumbs = false;
   this->infer_equates = false;
   this->direction = true;
+  this->adjusted = false;
+  this->topofil = false;
+  
 }
 
 
@@ -121,4 +133,105 @@ thdataequate::thdataequate()
   this->psurvey = NULL;
 }
 
+void thdataleg::calc_total_stds()
+{
+
+//  this->total_sdx = this->total_length;
+//  this->total_sdy = this->total_length;
+//  this->total_sdz = this->total_length;
+//
+//  if (this->data_type == TT_DATATYPE_NORMAL) {
+//    if ((thisinf(this->gradient) == -1) || (thisinf(this->gradient) == 1)) {
+//      this->total_sdx = 0.0;
+//      this->total_sdy = 0.0;
+//    }
+//  }
+  
+  double dx, dy, dz, dL, dl, dT, dC, ddx, ddy, ddz, dh, dZ;
+#define setd(a,b,v) if (thisnan(b)) a = v; else a = b;
+  setd(dx, this->x_sd, 0.057735026919);
+  setd(dy, this->y_sd, 0.057735026919);
+  setd(dz, this->z_sd, 0.057735026919);
+  setd(dL, this->length_sd, 0.1);
+  setd(dh, this->length_sd, 0.1);
+  setd(dl, this->counter_sd, 0.1);
+  setd(dZ, this->depth_sd, 0.1);
+  setd(dT, this->bearing_sd, 1.0);
+    dT = dT / 180.0 * 3.14159265359;
+  setd(dC, this->gradient_sd, 1.0);
+    dC = dC / 180.0 * 3.14159265359;
+  setd(ddx, this->dx_sd, 0.057735026919);
+  setd(ddy, this->dy_sd, 0.057735026919);
+  setd(ddz, this->dz_sd, 0.057735026919);
+
+  this->total_sdx = 0.003333333333;
+  this->total_sdy = 0.003333333333;
+  this->total_sdz = 0.003333333333;
+  
+  double x,y,z,T,C,L,h;
+  x = this->total_dx;
+  y = this->total_dy;
+  z = this->total_dz;
+  T = this->total_bearing / 180.0 * 3.14159265359;
+  C = this->total_gradient / 180.0 * 3.14159265359;
+  L = this->total_length;
+  h = hypot(this->total_dx, this->total_dy);
+
+  if (this->topofil) {
+    dL = 1.41421356237 * dl;
+  }
+
+#define pow2(x) ((x) * (x))
+
+  switch (this->data_type) {
+  
+    case TT_DATATYPE_NORMAL:
+      if ((thisinf(this->gradient) == -1) || (thisinf(this->gradient) == 1)) {
+        this->total_sdx = 0.0;
+        this->total_sdy = 0.0;
+      } else {
+        if (L > 0.0) {
+          this->total_sdx = pow2(dx) + pow2(x * dL / L) +
+            pow2(y * dT) + (0.5 + pow2(sin(T) * cos(C))) 
+            * pow2(z * dC);
+          this->total_sdy = pow2(dy) + pow2(y * dL / L) +
+            pow2(x * dT) + (0.5 + pow2(cos(T) * cos(C))) 
+            * pow2(z * dC);
+        }
+      }
+      if (L > 0.0)
+        this->total_sdz = pow2(dz) + pow2(z * dL / L) + pow2(L * cos(C) * dC);
+      break;
+      
+    case TT_DATATYPE_DIVING:
+      if (pow2(h) <= (2 * pow2(dZ) + pow2(dL))) {
+        this->total_sdx = 2 * pow2(dZ) + pow2(dL);
+        this->total_sdy = this->total_sdx;
+      } else {
+        if (h > 0.0) {
+          this->total_sdx = pow2(dx) + pow2(x * dL / L) + pow2(y * dT) +
+            pow2(dZ * z * sin(T) / h);
+          this->total_sdy = pow2(dy) + pow2(y * dL / L) + pow2(x * dT) +
+            pow2(dZ * z * cos(T) / h);
+        }
+      }
+      this->total_sdz = 2 * pow2(dZ);
+      break;
+      
+    case TT_DATATYPE_CYLPOLAR:
+      if (h > 0.0) {
+        this->total_sdx = pow2(dx) + pow2(x * dL / h) + pow2(y * dT);
+        this->total_sdy = pow2(dy) + pow2(y * dL / h) + pow2(x * dT);
+      }
+      this->total_sdz = pow2(dz) + pow2(dZ);
+      break;
+      
+    case TT_DATATYPE_CARTESIAN:
+    default:
+      this->total_sdx = pow2(dx) + pow2(ddx);
+      this->total_sdy = pow2(dy) + pow2(ddy);
+      this->total_sdz = pow2(dz) + pow2(ddz);
+      break;
+  }
+}
 

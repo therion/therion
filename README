@@ -1,17 +1,19 @@
 This is Therion, cave surveying software. 
 
-It allows the drawing of cave surveys on the computer. Data can be added to 
-a drawn plan and it will be realigned to fit any new closures or fixed points. 
-All the work is done by the Therion program. The front-end for entering data 
-is XTherion. It uses Survex for centreline dataprocessing.
+It produces beautiful, always up-to-date cave maps. The map is automatically 
+updated after loop closure, blunder fix or map symbol set change. 
+It's particularly well suitable for documenting large and complicated cave
+systems.
 
-It is the sort of software where you need to read the manual in order to use 
-it effectively. You are unlikely to get a PDF out of it without doing that.
-
-Web page: http://therion.speleo.sk
-
-Copyright (C) 1999-2004 Stacho Mudrak, Martin Budaj
+Therion creates realistic 3D models from 2D maps without quantity of additional
+informations. 
 
 Documentation is in the Therion Book (file thbook.pdf), which can either be 
 downloaded from the internet or compiled in the `thbook' directory using pdfTeX.
 Installation (compilation) is described in the Appendix of the Therion Book.
+
+Web page: http://therion.speleo.sk
+
+Copyright (c) 1999-2004 Stacho Mudrak, Martin Budaj
+
+Distributed free under the GNU General Public License

@@ -61,6 +61,10 @@ const char * THCCC_SOURCE = "# Name of the source file.\n";
 thconfig::thconfig()
 {
 
+  this->install_path.strcpy("");
+  this->install_tex = false;
+  this->install_tcltk = false;
+
 #ifdef THWIN32
   thbuffer * tmpbf = &(this->bf1);
   // set search path according to Windows registers
@@ -68,14 +72,23 @@ thconfig::thconfig()
   DWORD type, length = 1024;
   HKEY key;
   bool loaded_ok = true;
-	if (RegOpenKey(HKEY_LOCAL_MACHINE,"SOFTWARE\\Therion",&key) != ERROR_SUCCESS)
-    loaded_ok = false;
-	if (!loaded_ok || (RegQueryValueEx(key,"InstallDir",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) != ERROR_SUCCESS)) {
+	if (RegOpenKey(HKEY_LOCAL_MACHINE,"SOFTWARE\\Therion",&key) != ERROR_SUCCESS) {
     loaded_ok = false;
   	RegCloseKey(key);
   }
-  if (loaded_ok)
+  if (loaded_ok) {
+    if (RegQueryValueEx(key,"InstallDir",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) != ERROR_SUCCESS) {
+      tmpbf->strcpy("");
+      this->install_path = "";
+    } else {
+      this->install_path = tmpbf->get_buffer();
+      if (RegQueryValueEx(key,"TeX",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) == ERROR_SUCCESS)
+        this->install_tex = true;
+      if (RegQueryValueEx(key,"TclTk",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) == ERROR_SUCCESS)
+        this->install_tcltk = true;
+    }
   	RegCloseKey(key);
+  }
   if (type != REG_SZ)
     loaded_ok = false;
   const char * winini = "C:/WINDOWS;C:/WINNT;C:/Program files/Therion";
@@ -114,8 +127,8 @@ thconfig::thconfig()
     if (sp != NULL) {
 #ifdef THWIN32
       this->search_path += "\\.therion;";
-      if (strlen(tmpbf->get_buffer()) > 0) {
-        this->search_path += tmpbf->get_buffer();
+      if (strlen(this->install_path.get_buffer()) > 0) {
+        this->search_path += this->install_path.get_buffer();
       } else {
         this->search_path += wincfg;
       }
@@ -127,8 +140,8 @@ thconfig::thconfig()
     }
     else {
 #ifdef THWIN32
-      if (strlen(tmpbf->get_buffer()) > 0) {
-        this->search_path += tmpbf->get_buffer();
+      if (strlen(this->install_path.get_buffer()) > 0) {
+        this->search_path += this->install_path.get_buffer();
       } else {
         this->search_path += wincfg;
       }
@@ -162,8 +175,8 @@ thconfig::thconfig()
     if (sp != NULL) {
 #ifdef THWIN32
       this->init_path += "\\.therion;";
-      if (strlen(tmpbf->get_buffer()) > 0) {
-        this->init_path += tmpbf->get_buffer();
+      if (strlen(this->install_path.get_buffer()) > 0) {
+        this->init_path += this->install_path.get_buffer();
       } else {
         this->init_path += winini;
       }
@@ -175,8 +188,8 @@ thconfig::thconfig()
     }
     else {
 #ifdef THWIN32
-      if (strlen(tmpbf->get_buffer()) > 0) {
-        this->init_path += tmpbf->get_buffer();
+      if (strlen(this->install_path.get_buffer()) > 0) {
+        this->init_path += this->install_path.get_buffer();
       } else {
         this->init_path += winini;
       }
@@ -385,7 +398,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     ant = valmb->get_size();
     opts = valmb->get_buffer();
     if (ant < objptr->get_cmd_nargs())
-      ththrow(("not enought command arguments -- must be %d",
+      ththrow(("not enough command arguments -- must be %d",
         objptr->get_cmd_nargs()));
     optd.nargs = 1;
 
@@ -406,7 +419,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
       }
       else {
         if ((ait + optd.nargs) >= ant)
-          ththrow(("not enought option arguments -- %s -- must be %d", *opts, optd.nargs));
+          ththrow(("not enough option arguments -- %s -- must be %d", *opts, optd.nargs));
         opts++;
         ait++;
       }
@@ -448,7 +461,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
         if (optd.id != TT_DATAOBJECT_UNKNOWN) {
           thsplit_args(&this->mbf1, this->bf2.get_buffer());
           if (this->mbf1.get_size() < optd.nargs)
-            ththrow(("not enought option arguments -- %s -- must be %d",
+            ththrow(("not enough option arguments -- %s -- must be %d",
               this->bf1.get_buffer(), optd.nargs));
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 

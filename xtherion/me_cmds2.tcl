@@ -2087,7 +2087,7 @@ proc xth_me_cmds_draw_lineln {id ppid pid} {
   set st2crds [xth_me_cmds_get_crds2state $id $ppid $pid]
   set st [lindex $st2crds 0]
   set crds [lindex $st2crds 1]
-  $xth(me,can) create line [xth_me_cmds_real2can_coords $crds] -width 3 -fill $xth(gui,me,activefill) \
+  $xth(me,can) create line [xth_me_cmds_real2can_coords $crds] -width $xth(gui,me,line,width) -fill $xth(gui,me,activefill) \
     -tags "line ln$id lnln$id ln$id.$pid command" -state $st
   xth_me_bind_area_drag ln$id.$pid {}
   $xth(me,can) bind ln$id.$pid <1> "xth_me_cmds_click_lineln {$id $pid} pt$id.$pid %x %y"

@@ -5,7 +5,7 @@
 \subsubchapter Log file.
 
 Besides the messages from Therion and other programs used, the log file 
-contains information about average and maximal distortion for each scrap. 
+contains information about loop errors and scrap distortions.
 
 \subsubchapter XTherion.
 
@@ -42,7 +42,9 @@ create table SHOT_FLAG (SHOT_ID integer, FLAG char(3));|
 which is followed by a mass of SQL insert commands. This file may be loaded 
 into any SQL database (after some database-dependent initialization, which may 
 include running a SQL server and connecting to it, creating a database and 
-connecting to it). It's important to set-up database encoding to match the one 
+connecting to it. A good idea is to start a transaction before loading this 
+file, if database doesn't start a transaction automatically.) 
+It's important to set-up database encoding to match the one 
 specified in Therion |export database| command.
 
 Table and column names are self-explaining; for undefined or non-existing 
@@ -94,12 +96,16 @@ comments or encryption, etc.
 
 \subchapter 3D models.
 
-Therion exports centreline 3D models in Survex and Compass formats, which may 
-be viewed in these programs. (Aven, xcaverot, or caverot for *.3d Survex files.)
-You may also use |print*| programs from the Survex distribution to print the 
-3D model.
+Therion may export 3D model in various formats besides its native format. These 
+may be loaded in appropriate viewing, editing or raytracing programs to be 
+printed or further processed. If the format doesn't support arbitrary passage 
+shape definition, only the centreline is included.
 
-In the future there should be full passage modelling in Therion. In order to 
-display these models, XTherion will be extended to include an OpenGL 3D viewer.
+\subsubchapter XTherion---model viewer.
+
+XTherion includes OpenGL model viewer which displays models in the native 
+(|therion|) format. It's tested under Linux and Windows 2000 and XP. 
+If you encounter problems compiling or running it on other systems, 
+you may use any other format exported from Therion.
 
 \endinput

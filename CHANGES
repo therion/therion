@@ -1,4 +1,29 @@
 --------------------------------------------------------------------------------
+Therion 0.3.0 (2004-04-16):
+
+therion:
+
+ * Therion exports 3D model
+ * loop closure algorithms implemented in Therion
+ * input language changes:
+   - centreline command: fix doesn't accept covariances specification
+ * configuration file changes:
+   - layout command: map-header improved
+   - export command: new formats for 3D model export added -- vrml, 3dmf,
+     therion (default)
+ * initialization file changes: 
+   - removed item: path-cavern
+ * log file contains both loop errors and scrap distortions at the end
+ * completely new Win32 installation with TeX and Tcl/Tk included
+
+xtherion:
+
+ * data file may be specified as an argument from the command line
+ * basic 3D model viewer added
+ * Map editor: only the visible part of background images is zoomed
+   (less memory consumption and speed improvement)
+ 
+--------------------------------------------------------------------------------
 Therion 0.2.19 (2004-03-01):
 
 therion:

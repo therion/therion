@@ -101,7 +101,7 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
         if (optd.id != TT_DATAOBJECT_UNKNOWN) {
           thsplit_args(&this->mbf1, this->bf2.get_buffer());
           if (this->mbf1.get_size() < optd.nargs)
-            ththrow(("not enought option arguments -- %s -- must be %d",
+            ththrow(("not enough option arguments -- %s -- must be %d",
               this->bf1.get_buffer(), optd.nargs));
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 
@@ -153,7 +153,7 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
         }
         else {
           if (ant < objptr->get_cmd_nargs())
-            ththrow(("not enought command arguments -- must be %d",
+            ththrow(("not enough command arguments -- must be %d",
               objptr->get_cmd_nargs()));
           optd.nargs = 1;
 
@@ -177,7 +177,7 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
           }
           else {
             if ((ait + optd.nargs) >= ant)
-              ththrow(("not enought option arguments -- %s -- must be %d", *opts, optd.nargs));
+              ththrow(("not enough option arguments -- %s -- must be %d", *opts, optd.nargs));
             opts++;
             ait++;
           }

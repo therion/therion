@@ -65,6 +65,11 @@ set xth(app,cp,filetypes) {
   {{All files}       {*}}    
 }
 
+set xth(app,mv,filetypes) {    
+  {{Therion models}       {.thm}}    
+  {{All files}       {*}}    
+}
+
 set xth(icmds) {survey}
 set xth(cmds) {scrap centerline grade line area map layout}
 set dfs {8s}                    
@@ -143,17 +148,39 @@ set xth(gui,selbg) darkBlue
 set xth(gui,etabsize) 2
 set xth(gui,controlk) Ctrl
 
+set xth(gui,me,nozoom) 1
+
 destroy .def
 # end of options autodetection
 
 # map editor settings
+
+
+#########################################
+# SCRAP
+# size of scrap scaling square
 set xth(gui,me,scrap,psize) 4
+
+
+#########################################
+# POINT
+# size of point
 set xth(gui,me,point,psize) 4
-set xth(gui,me,point,cpsize) 5
+
+#########################################
+# LINE
+# size of line point
 set xth(gui,me,line,psize) 4
+# line width
+set xth(gui,me,line,width) 3
+# size of line control point
 set xth(gui,me,line,cpsize) 4
-set xth(gui,me,line,spsize) 5
+# width of line between point and control point
+set xth(gui,me,line,clwidth) 2
+# size of start line tick
 set xth(gui,me,line,ticksize) 10
+# width of start line tick
+set xth(gui,me,line,tickwidth) 3
 
 set xth(gui,me,activefill) red
 set xth(gui,me,pasivefill) blue
@@ -177,6 +204,7 @@ case $tcl_platform(platform) {
     catch {
       set xth(gui,compcmd) "\"[file join [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} InstallDir] therion.exe]\""
     }
+    regsub -all {\/} $xth(gui,compcmd) {\\\\} xth(gui,compcmd)
     set xth(gui,efont) "Courier 16 roman bold"
     set xth(gui,platform) windows
     set xth(gui,cursor) arrow
@@ -306,3 +334,4 @@ Any3kaaVGLZsEUIMazVHMUe9irZZQbJCMS5wq4WlsbJ1m7d6u7d827d++7dk
 GRAAOw==
 ====
 }
+

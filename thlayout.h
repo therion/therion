@@ -187,6 +187,7 @@ enum {
   TT_LAYOUT_MAP_HEADER_SW,
   TT_LAYOUT_MAP_HEADER_SE,
   TT_LAYOUT_MAP_HEADER_OFF,
+  TT_LAYOUT_MAP_HEADER_CENTER,
 };
 
 
@@ -195,6 +196,8 @@ enum {
  */
  
 static const thstok thtt_layout_map_header[] = {
+  {"c", TT_LAYOUT_MAP_HEADER_CENTER},
+  {"center", TT_LAYOUT_MAP_HEADER_CENTER},
   {"e", TT_LAYOUT_MAP_HEADER_E},
   {"n", TT_LAYOUT_MAP_HEADER_N},
   {"ne", TT_LAYOUT_MAP_HEADER_NE},
@@ -347,7 +350,8 @@ class thlayout : public thdataobject {
 
   public:
     
-  double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gox, goy, goz, navf, overlap, opacity;
+  double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gox, goy, goz, navf, overlap, opacity,
+    map_header_x, map_header_y;
   
   char * olx, * oly, 
     * doc_title, * doc_comment, * doc_author, * doc_subject, * doc_keywords, * excl_list;

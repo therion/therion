@@ -161,6 +161,8 @@ thlayout::thlayout()
 
   this->def_map_header = false;
   this->map_header = TT_LAYOUT_MAP_HEADER_NW;
+  this->map_header_x = 0.0;
+  this->map_header_y = 100.0;
 
   this->def_debug = false;
   this->debug = TT_LAYOUT_DEBUG_UNKNOWN;
@@ -269,6 +271,7 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
     case TT_LAYOUT_SYMBOL_ASSIGN:
     case TT_LAYOUT_GRID_SIZE:
     case TT_LAYOUT_SIZE:
+    case TT_LAYOUT_MAP_HEADER:
       return thcmd_option_desc(id,3);
     case TT_LAYOUT_ORIGIN:
     case TT_LAYOUT_GRID_ORIGIN:
@@ -558,9 +561,22 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       break;
     
     case TT_LAYOUT_MAP_HEADER:
-      sv = thmatch_token(args[0],thtt_layout_map_header);
+
+      thparse_double(sv,this->map_header_x,args[0]);
+      if (sv != TT_SV_NUMBER)
+        ththrow(("invalid number -- %s",args[0]))
+      if ((this->map_header_x < 0.0) || (this->map_header_x > 100.0))
+        ththrow(("number between 0.0 - 100.0 expected -- %s",args[0]))
+
+      thparse_double(sv,this->map_header_y,args[1]);
+      if (sv != TT_SV_NUMBER)
+        ththrow(("invalid number -- %s",args[1]))
+      if ((this->map_header_y < 0.0) || (this->map_header_y > 100.0))
+        ththrow(("number between 0.0 - 100.0 expected -- %s",args[1]))
+
+      sv = thmatch_token(args[2],thtt_layout_map_header);
       if (sv == TT_LAYOUT_MAP_HEADER_UNKNOWN)
-        ththrow(("invalid map-header switch -- %s",args[0]))
+        ththrow(("invalid map-header switch -- %s",args[2]))
       this->map_header = sv;
       this->def_map_header = true;
       break;
@@ -857,6 +873,8 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_map_header = %s;\n",(this->def_map_header ? "true" : "false"));
   thprintf("\tplayout->map_header = %d;\n",this->map_header);
+  thprintf("\tplayout->map_header_x = %lg;\n",this->map_header_x);
+  thprintf("\tplayout->map_header_y = %lg;\n",this->map_header_y);
 
   thprintf("\tplayout->def_debug = %s;\n",(this->def_debug ? "true" : "false"));
   thprintf("\tplayout->debug = %d;\n",this->debug);
@@ -1165,8 +1183,11 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
     this->marls*100.0, this->marts*100.0);
   fprintf(o,"\\def\\maplayout{");
   if (this->map_header != TT_LAYOUT_MAP_HEADER_OFF) {
-    fprintf(o,"\\legendbox{");
+    fprintf(o,"\\legendbox{%.0f}{%.0f}{", this->map_header_x, this->map_header_y);
     switch (this->map_header) {
+      case TT_LAYOUT_MAP_HEADER_CENTER:
+        fprintf(o,"C");
+        break;
       case TT_LAYOUT_MAP_HEADER_N:
         fprintf(o,"N");
         break;
@@ -1418,8 +1439,11 @@ void thlayout::process_copy() {
       if has_srcl(def_legend)
         this->legend = srcl->legend;
 
-      if has_srcl(def_map_header)
+      if has_srcl(def_map_header) {
         this->map_header = srcl->map_header;
+        this->map_header_x = srcl->map_header_x;
+        this->map_header_y = srcl->map_header_y;
+      }
 
       if has_srcl(def_debug)
         this->debug = srcl->debug;

@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include "extern/img.h"
 #include "thchenc.h"
+#include "thscrap.h"
 #include <map>
 
 thexpmodel::thexpmodel() {
@@ -86,7 +87,13 @@ void thexpmodel::process_db(class thdatabase * dbp)
       this->export_plt_file(dbp);
       break;
     case TT_EXPMODEL_FMT_THERION:
-      this->export_tm_file(dbp);
+      this->export_thm_file(dbp);
+      break;
+    case TT_EXPMODEL_FMT_3DMF:
+      this->export_3dmf_file(dbp);
+      break;
+    case TT_EXPMODEL_FMT_VRML:
+      this->export_vrml_file(dbp);
       break;
   }
 }
@@ -305,8 +312,233 @@ station_name[8] = 0
 #endif
 }
   
-void thexpmodel::export_tm_file(class thdatabase * dbp)
+void thexpmodel::export_thm_file(class thdatabase * dbp)
 {
+
+  char * fnm;  
+  if (this->outpt_def)
+    fnm = this->outpt;
+  else
+    fnm = "cave.thm";
+  
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif 
+      
+  FILE * pltf;
+
+  pltf = fopen(fnm,"w");
+     
+  if (pltf == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+
+  double avx, avy, avz;
+  
+  thdb3ddata * pgn = dbp->db1d.get_3d();
+  avx = (pgn->limits.minx + pgn->limits.maxx) / 2.0;
+  avy = (pgn->limits.miny + pgn->limits.maxy) / 2.0;
+  avz = (pgn->limits.minz + pgn->limits.maxz) / 2.0;
+  pgn->exp_shift_x = avx;
+  pgn->exp_shift_y = avy;
+  pgn->exp_shift_z = avz;
+
+  // now let's print header
+  
+  fprintf(pltf,"set xthmvv(model,maxx) %.2f\n",pgn->limits.maxx - avx);
+  fprintf(pltf,"set xthmvv(model,maxy) %.2f\n",pgn->limits.maxy - avy);
+  fprintf(pltf,"set xthmvv(model,maxz) %.2f\n",pgn->limits.maxz - avz);
+  fprintf(pltf,"glDeleteLists $xthmvv(list,model) 1\n");
+  fprintf(pltf,"glNewList $xthmvv(list,model) $GL::GL_COMPILE\n");
+  fprintf(pltf,"xth_mv_gl_wireframe\n");
+  fprintf(pltf,"glColor3f 1.0 1.0 1.0\n");
+  pgn->export_thm(pltf);
+
+  
+  // 3D DATA 
+  fprintf(pltf,"\n\n\n");
+  fprintf(pltf,"xth_mv_gl_surface\n");
+  thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+  thscrap * cs;
+  thdb3ddata * d3d;
+  if (!prjid.newprj) {
+    thdb.db2d.process_projection(prjid.prj);
+    cs = prjid.prj->first_scrap;
+    while(cs != NULL) {
+      if (cs->fsptr->is_selected()) {
+        thprintf("[%s] ", cs->name);
+        d3d = cs->get_3d_outline();
+        d3d->exp_shift_x = avx;
+        d3d->exp_shift_y = avy;
+        d3d->exp_shift_z = avz;
+        d3d->export_thm(pltf);
+      }
+      cs = cs->proj_next_scrap;
+    }
+  }
+
+  fprintf(pltf,"glEndList\n");
+  fclose(pltf);
+  
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
 }
 
+
+void thexpmodel::export_vrml_file(class thdatabase * dbp) {
+  char * fnm;  
+  if (this->outpt_def)
+    fnm = this->outpt;
+  else
+#ifdef THWIN32
+    fnm = "cave.wrl";
+#else
+    fnm = "cave.vrml";
+#endif
+  
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif 
+      
+  FILE * pltf;
+
+  pltf = fopen(fnm,"w");
+     
+  if (pltf == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+
+  double avx, avy, avz;
+  
+  thdb3ddata * pgn = dbp->db1d.get_3d();
+  avx = (pgn->limits.minx + pgn->limits.maxx) / 2.0;
+  avy = (pgn->limits.miny + pgn->limits.maxy) / 2.0;
+  avz = (pgn->limits.minz + pgn->limits.maxz) / 2.0;
+  pgn->exp_shift_x = avx;
+  pgn->exp_shift_y = avy;
+  pgn->exp_shift_z = avz;
+
+  // now let's print header
+  fprintf(pltf,"#VRML V2.0 utf8\n\nNavigationInfo {\n\theadlight TRUE\n}\nBackground {\n\tskyColor 0 0 0\n}\n");
+  //pgn->export_vrml(pltf);
+
+  
+  // 3D DATA 
+  thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+  thscrap * cs;
+  thdb3ddata * d3d;
+  if (!prjid.newprj) {
+    thdb.db2d.process_projection(prjid.prj);
+    cs = prjid.prj->first_scrap;
+    while(cs != NULL) {
+      if (cs->fsptr->is_selected()) {
+        thprintf("[%s] ", cs->name);
+        d3d = cs->get_3d_outline();
+        d3d->exp_shift_x = avx;
+        d3d->exp_shift_y = avy;
+        d3d->exp_shift_z = avz;
+        fprintf(pltf,
+          "Shape {\nappearance Appearance {\n" \
+          "\tmaterial Material {\n\t\tdiffuseColor 1.0 1.0 1.0\n\t}" \
+          "\n}\ngeometry IndexedFaceSet {\n");
+        d3d->export_vrml(pltf);
+        fprintf(pltf,"creaseAngle 3.0\n}\n}\n");
+      }
+      cs = cs->proj_next_scrap;
+    }
+  }
+
+  fprintf(pltf,"\n");
+  fclose(pltf);
+  
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}
+
+
+void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
+  char * fnm;  
+  if (this->outpt_def)
+    fnm = this->outpt;
+  else
+    fnm = "cave.3dmf";
+  
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif 
+      
+  FILE * pltf;
+
+  pltf = fopen(fnm,"w");
+     
+  if (pltf == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+
+  double avx, avy, avz;
+  
+  thdb3ddata * pgn = dbp->db1d.get_3d();
+  avx = (pgn->limits.minx + pgn->limits.maxx) / 2.0;
+  avy = (pgn->limits.miny + pgn->limits.maxy) / 2.0;
+  avz = (pgn->limits.minz + pgn->limits.maxz) / 2.0;
+  pgn->exp_shift_x = avx;
+  pgn->exp_shift_y = avy;
+  pgn->exp_shift_z = avz;
+
+  // now let's print header
+  
+  fprintf(pltf,"3DMetafile ( 1 0 Stream nextTOC> ) \n");
+  //pgn->export_thm(pltf);
+
+  
+  // 3D DATA 
+  thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+  thscrap * cs;
+  thdb3ddata * d3d;
+  if (!prjid.newprj) {
+    thdb.db2d.process_projection(prjid.prj);
+    cs = prjid.prj->first_scrap;
+    while(cs != NULL) {
+      if (cs->fsptr->is_selected()) {
+        thprintf("[%s] ", cs->name);
+        d3d = cs->get_3d_outline();
+        d3d->exp_shift_x = avx;
+        d3d->exp_shift_y = avy;
+        d3d->exp_shift_z = avz;
+        fprintf(pltf,"BeginGroup ( \n\tDisplayGroup ( ) \n) \n"
+          "Container ( \n\tMesh ( \n");
+        d3d->export_3dmf(pltf);
+        fprintf(pltf,"\t) \nContainer ( \n\tAttributeSet ( ) \n"
+          "\tDiffuseColor ( 1 1 1 ) \n) \n) \nEndGroup ( ) \n");
+      }
+      cs = cs->proj_next_scrap;
+    }
+  }
+  fprintf(pltf,"\n");
+  fclose(pltf);
+  
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}
 

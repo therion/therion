@@ -61,7 +61,7 @@ void thexporter::parse_export(int nargs, char ** args) {
   int expmode; 
 
   if (nargs < 1)
-    ththrow(("not enought export arguments"))
+    ththrow(("not enough export arguments"))
   expmode = thmatch_token(args[0], thtt_exporter);
   switch (expmode) {
     case TT_EXP_MODEL:
