@@ -27,8 +27,10 @@
 
 
 xth_app_create cp "Compiler" 
-xth_ctrl_add cp dat "Data structure"
 xth_ctrl_add cp stp "Settings"
+xth_ctrl_add cp dat "Survey structure"
+xth_ctrl_add cp info "Survey info"
+xth_ctrl_add cp ms "Map structure"
 xth_ctrl_finish cp
 
 # create config editor
@@ -102,7 +104,23 @@ grid rowconf $txb 0 -weight 1
 grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
+bind $txb.txt <Control-Key-x> "tk_textCut $txb.txt"
+bind $txb.txt <Control-Key-c> "tk_textCopy $txb.txt"
+bind $txb.txt <Control-Key-v> "tk_textPaste $txb.txt"
+
+if {$xth(gui,bindinsdel)} {
+  bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
+  bind $txb.txt <Control-Key-Insert> "tk_textCopy $txb.txt"
+  bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
+#  catch {
+#    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
+#    bind $txb.txt <Control-Key-KP_Insert> "tk_textCopy $txb.txt"
+#    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
+#  }
+}
+
 xth_status_bar cp $txb.txt "Therion log file."
+
 
 # pack editor and log widow
 grid columnconf $xth(gui,cp).af.apps 0 -weight 1
@@ -124,9 +142,12 @@ Entry $xth(ctrl,cp,stp).fe -font $xth(gui,lfont) -state disabled \
   -editable off -textvariable xth(cp,fname)
 xth_status_bar cp $xth(ctrl,cp,stp).fe "Configuration file name."
 
-checkbutton $xth(ctrl,cp,stp).upd -text "update configuration file" -anchor w -font $xth(gui,lfont) -state disabled \
-  -variable xth(cp,updcf)
-xth_status_bar cp $xth(ctrl,cp,stp).upd "Update configuration file on compilation."
+Label $xth(ctrl,cp,stp).optl -text "Command line options" -anchor w -font $xth(gui,lfont) -state disabled
+xth_status_bar cp $xth(ctrl,cp,stp).optl "Therion command line options."
+Entry $xth(ctrl,cp,stp).opte -font $xth(gui,lfont) -state disabled \
+  -textvariable xth(cp,opts)
+xth_status_bar cp $xth(ctrl,cp,stp).opte "Therion command line options."
+
 Button $xth(ctrl,cp,stp).go -text "Compile" -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_cp_compile} -width 4
 Label $xth(ctrl,cp,stp).gores -text "" -anchor center -font $xth(gui,lfont) \
@@ -141,14 +162,16 @@ grid $xth(ctrl,cp,stp).wl -row 0 -column 0 -columnspan 2 -sticky news
 grid $xth(ctrl,cp,stp).we -row 1 -column 0 -columnspan 2 -sticky news
 grid $xth(ctrl,cp,stp).fl -row 2 -column 0 -columnspan 2 -sticky news
 grid $xth(ctrl,cp,stp).fe -row 3 -column 0 -columnspan 2 -sticky news
-grid $xth(ctrl,cp,stp).upd -row 4 -column 0 -columnspan 2 -sticky news
-grid $xth(ctrl,cp,stp).go -row 5 -column 0 -sticky news
-grid $xth(ctrl,cp,stp).gores -row 5 -column 1 -sticky ew
+grid $xth(ctrl,cp,stp).optl -row 4 -column 0 -columnspan 2 -sticky news
+grid $xth(ctrl,cp,stp).opte -row 5 -column 0 -columnspan 2 -sticky news
+grid $xth(ctrl,cp,stp).go -row 6 -column 0 -sticky news
+grid $xth(ctrl,cp,stp).gores -row 6 -column 1 -sticky ew
 
 # create objects control
 set clbox $xth(ctrl,cp,dat)
 set sw [ScrolledWindow $clbox.sw -relief sunken -borderwidth 2]
-set tr [Tree $sw.t -relief flat -height 16]
+set tr [Tree $sw.t -relief flat -height 16 -selectcommand xth_cp_data_tree_select]
+set xth(ctrl,cp,datrestore) {}
 $sw setwidget $tr
 $tr bindText <Enter> xth_cp_data_tree_enter
 $tr bindText <Leave> xth_cp_data_tree_leave
@@ -158,13 +181,70 @@ $tr bindImage <Leave> xth_cp_data_tree_leave
 $tr bindImage <Double-ButtonPress-1> xth_cp_data_tree_double_click
 pack $sw -side top -expand yes -fill both
 
+
+# init survey info
+set txb $xth(ctrl,cp,info)
+text $txb.txt -height 4 -wrap none -font $xth(gui,efont) \
+  -bg $xth(gui,ecolorbg) \
+  -fg $xth(gui,ecolorfg) -insertbackground $xth(gui,ecolorfg) \
+  -relief sunken -state disabled \
+  -selectbackground $xth(gui,ecolorselbg) \
+  -selectforeground $xth(gui,ecolorselfg) \
+  -selectborderwidth 0 \
+  -yscrollcommand "$txb.sv set" \
+  -xscrollcommand "$txb.sh set" 
+scrollbar $txb.sv -orient vert  -command "$txb.txt yview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+scrollbar $txb.sh -orient horiz  -command "$txb.txt xview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+grid columnconf $txb 0 -weight 1
+grid rowconf $txb 0 -weight 1
+grid $txb.txt -column 0 -row 0 -sticky news
+grid $txb.sv -column 1 -row 0 -sticky news
+grid $txb.sh -column 0 -row 1 -sticky news
+xth_status_bar me $txb.txt "Survey informations."
+bind $txb.txt <Control-Key-x> "tk_textCut $txb.txt"
+bind $txb.txt <Control-Key-c> "tk_textCopy $txb.txt"
+bind $txb.txt <Control-Key-v> "tk_textPaste $txb.txt"
+
+if {$xth(gui,bindinsdel)} {
+  bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
+  bind $txb.txt <Control-Key-Insert> "tk_textCopy $txb.txt"
+  bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
+#  catch {
+#    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
+#    bind $txb.txt <Control-Key-KP_Insert> "tk_textCopy $txb.txt"
+#    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
+#  }
+}
+
+
+
+# create map structure control
+set clbox $xth(ctrl,cp,ms)
+set sw [ScrolledWindow $clbox.sw -relief sunken -borderwidth 2]
+set tr [Tree $sw.t -relief flat -height 16]
+set xth(ctrl,cp,msrestore) {}
+$sw setwidget $tr
+$tr bindText <Enter> xth_cp_map_tree_enter
+$tr bindText <Leave> xth_cp_map_tree_leave
+$tr bindText <Double-ButtonPress-1> xth_cp_map_tree_double_click
+$tr bindImage <Enter> xth_cp_map_tree_enter
+$tr bindImage <Leave> xth_cp_map_tree_leave
+$tr bindImage <Double-ButtonPress-1> xth_cp_map_tree_double_click
+pack $sw -side top -expand yes -fill both
+
+
+
+
+
+
 # load menu
 $xth(cp,menu,file) add command -label "New" -command {} \
   -font $xth(gui,lfont) -underline 0 -state normal -command {xth_cp_new_file}
 $xth(cp,menu,file) add command -label "Open" -underline 0 \
   -accelerator "$xth(gui,controlk)-o" -state normal \
   -font $xth(gui,lfont) -command {
-    set xth(cp,updcf) 0
     xth_cp_open_file {}
   }
 $xth(cp,menu,file) add command -label "Save as" -underline 5 \
@@ -188,6 +268,12 @@ $xth(cp,menu,edit) add command -label "Paste" -font $xth(gui,lfont) \
 set xth(cp,fopen) 0
 set xth(cp,cursor) 1.0
 set xth(cp,fname) ""
+set xth(cp,opts) ""
 set xth(cp,fpath) ""
-set xth(cp,updcf) 0
 
+xth_ctrl_minimize cp dat
+xth_ctrl_minimize cp info
+xth_ctrl_minimize cp ms
+
+set xth(ctrl,cp,datlist) {}
+set xth(ctrl,cp,maplist) {}

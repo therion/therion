@@ -146,6 +146,7 @@ void thmap::self_print_properties(FILE * outf)
   thdataobject::self_print_properties(outf);
   fprintf(outf,"thmap:\n");
   fprintf(outf,"\tz: %f\n",this->z);
+  fprintf(outf,"\tprojection id: %d\n",this->projection_id);
   if (this->first_item != NULL) {
     fprintf(outf,"\tmap items:\n");
     thdb2dmi * cbl = this->first_item;

@@ -79,7 +79,7 @@ void thcmdline::process(int argc, char * argv[])
 
   while(1) {
     
-    oc = getopt_long (argc, argv, "gdus:l:qLvhip:",
+    oc = getopt_long (argc, argv, "gduxs:l:qLvhip:",
       thlong_options, &oindex);
     
     // no other options detected
@@ -117,6 +117,10 @@ void thcmdline::process(int argc, char * argv[])
         
       case 'g':
         thcfg.set_file_state(THCFG_GENERATE);
+        break;
+        
+      case 'x':
+        thcfg.generate_xthcfg = true;
         break;
         
       case 'u':

@@ -1,9 +1,9 @@
 all:	xtherion
 
-xtherion:	clean
+xtherion:
 	tclsh mkall.tcl
 
-survex:	clean
+survex:
 	tclsh mkall.tcl survex
 	tar -cvzf ../../../svxedit.tar.gz svxedit
 	perl ../makefile.pl rm svxedit

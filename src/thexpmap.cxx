@@ -65,7 +65,7 @@ thexpmap::~thexpmap() {
   delete this->layout;
 }
 
-void thexpmap_log_log_file(char * logfpath, char * on_title, char * off_title) {
+void thexpmap_log_log_file(char * logfpath, char * on_title, char * off_title, bool mpbug = false) {
   char * lnbuff = new char [4097];
 //  unsigned long lnum = 0;
   thlog.printf("%s",on_title);
@@ -79,10 +79,29 @@ void thexpmap_log_log_file(char * logfpath, char * on_title, char * off_title) {
     return;
   }
   // let's read line by line and print to log file
+  bool skip_next = false, skip_this = false, peoln = false;
   while (!(lf.eof())) {
     lf.getline(lnbuff,4096);
-    thlog.printf("%s\n",lnbuff);
+    if (mpbug && (!skip_this)) {
+      if (strncmp(lnbuff,"write",5) == 0) {
+        skip_next = true;
+        skip_this = true;
+        peoln = false;
+      }
+    }
+    if (!skip_this) {
+      if (!skip_next) {
+        thlog.printf("%s%s", (peoln ? "\n" : ""), lnbuff);
+        peoln = true;
+      } else {
+        skip_next = false;
+      }
+    } else {
+      skip_this = false;
+    } 
   }
+  if (peoln) 
+    thlog.printf("\n");
   lf.close();
   delete [] lnbuff;
   thlog.printf("%s",off_title);
@@ -697,7 +716,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     retcode = system(com.get_buffer());
     thexpmap_log_log_file("data.log",
     "####################### metapost log file ########################\n",
-    "#################### end of metapost log file ####################\n");
+    "#################### end of metapost log file ####################\n",true);
     if (retcode != EXIT_SUCCESS) {
       chdir(wdir.get_buffer());
       ththrow(("metapost exit code -- %d", retcode))
@@ -734,7 +753,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   retcode = system(com.get_buffer());
   thexpmap_log_log_file("data.log",
   "######################## pdftex log file #########################\n",
-  "##################### end of pdftex log file #####################\n");
+  "##################### end of pdftex log file #####################\n",false);
   if (retcode != EXIT_SUCCESS) {
     chdir(wdir.get_buffer());
     ththrow(("pdftex exit code -- %d", retcode))

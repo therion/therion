@@ -59,6 +59,7 @@ thconfig::thconfig()
 {
   this->fname = "thconfig";
   this->skip_comments = false;
+  this->generate_xthcfg = false;
   this->cfg_fenc = TT_UTF_8;
   this->fstate = THCFG_READ;
   char * sp = getenv("THERION");
@@ -405,7 +406,7 @@ void thconfig::save()
     this->exporter.dump_export(cf);
     
     // dump possibilities objects
-    this->selector.dump_selection_db(cf, this->dbptr);
+    // this->selector.dump_selection_db(cf, this->dbptr);
     
     // close config file
     fclose(cf);
@@ -437,6 +438,48 @@ void thconfig::export_data()
 {
   this->exporter.export_db(this->dbptr);
 }
+
+
+
+void thconfig::xth_save()
+{
+  if (this->generate_xthcfg) {
+  
+#ifdef THDEBUG
+    thprintf("\nwriting xtherion file -- .xth-%s\n", this->fname.get_buffer());
+#else
+    thprintf("writing xtherion file ... ");
+    thtext_inline = true;
+#endif 
+
+    // OK, let's open configuration file for output
+    FILE * cf;
+    this->dbptr->buff_tmp = ".xth-";
+    this->dbptr->buff_tmp += this->fname.get_buffer();
+    cf = fopen(this->dbptr->buff_tmp.get_buffer(),"w");
+    if (cf == NULL) {
+      thwarning(("can't open xtherion file for output -- %s.xth", this->fname.get_buffer()));
+      return;
+    }
+  
+    // dump possibilities objects
+    this->selector.dump_selection_db(cf, this->dbptr);
+    
+    // close config file
+    fclose(cf);
+    
+#ifdef THDEBUG
+    thprintf("\n");
+#else
+    thprintf("done.\n");
+    thtext_inline = false;
+#endif 
+
+  }
+}
+  
+
+
 
 
 thconfig thcfg;

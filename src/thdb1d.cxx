@@ -253,6 +253,7 @@ void thdb1d::process_data()
   thsvxctrl survex;
   this->scan_data();
   survex.process_survey_data(this->db);
+  this->process_survey_stat();
 }
 
 
@@ -627,6 +628,107 @@ void thdb1d::process_tree()
 #endif
 }
 
+
+
+void thdb1d__scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_under) {
+  if (ss->stat.station_state == 0) {
+    if (is_under)
+      ss->stat.station_state = 2;
+    else
+      ss->stat.station_state = 1;
+    ss->stat.station_top = st;
+    ss->stat.station_bottom = st;
+    ss->stat.station_south = st;
+    ss->stat.station_north = st;
+    ss->stat.station_east = st;
+    ss->stat.station_west = st;
+  } else if (is_under && (ss->stat.station_state == 1)) {
+    ss->stat.station_state = 2;
+    ss->stat.station_top = st;
+    ss->stat.station_bottom = st;
+    ss->stat.station_south = st;
+    ss->stat.station_north = st;
+    ss->stat.station_east = st;
+    ss->stat.station_west = st;
+  } else if (is_under || (ss->stat.station_state == 1)) {
+    ss->stat.station_state = 2;
+    if (ss->stat.station_top->z < st->z)
+      ss->stat.station_top = st;
+    if (ss->stat.station_bottom->z > st->z)
+      ss->stat.station_bottom = st;
+    if (ss->stat.station_east->x < st->x)
+      ss->stat.station_east = st;
+    if (ss->stat.station_west->x > st->x)
+      ss->stat.station_west = st;
+    if (ss->stat.station_north->y < st->y)
+      ss->stat.station_north = st;
+    if (ss->stat.station_south->y > st->y)
+      ss->stat.station_south = st;
+  }
+}
+
+
+
+void thdb1d::process_survey_stat() {
+
+#ifdef THDEBUG
+    thprintf("\n\ncalculating basic statistics\n");
+#else
+    thprintf("calculating basic statistics ... ");
+    thtext_inline = true;
+#endif 
+
+  thsurvey * ss;
+
+  // prejde vsetky legy a spocita ich a dlzky pre kazde survey
+  // do ktoreho patria
+  thdb1d_leg_vec_type::iterator lit = this->leg_vec.begin();
+  while (lit != this->leg_vec.end()) {    
+    ss = lit->survey;
+    while (ss != NULL) {
+      // skusi ci je duplikovane
+      if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0) {
+        ss->stat.length_duplicate += lit->leg->total_length;
+      // ak nie skusi ci je surface
+      } else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
+        ss->stat.length_surface += lit->leg->total_length;
+      // inak prida do length
+      } else {
+        ss->stat.length += lit->leg->total_length;
+      }
+      if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
+        thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), false);
+        thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), false);
+      } else {
+        thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), true);
+        thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), true);
+      }
+      ss->stat.num_shots++;
+      ss = ss->fsptr;
+    }
+    lit++;
+  }
+
+  // prejde vsetky stations a spocita ich a nastavi limitne stations
+  // pricom ak najde prvu povrchovu, tak nastvi vsetky s nou
+  // ak najde podzemnu a ma niekde povrchovu -> nastavi podzemnu
+  thdb1d_station_vec_type::iterator sit = this->station_vec.begin();
+  while (sit != this->station_vec.end()) {
+    ss = sit->survey;
+    while (ss != NULL) {
+      ss->stat.num_stations++;
+      ss = ss->fsptr;
+    }    
+    sit++;
+  }
+  
+#ifdef THDEBUG
+    thprintf("\nend of basic statistics calculation\n\n");
+#else
+    thprintf("done.\n");
+    thtext_inline = false;
+#endif
+}
 
 
 

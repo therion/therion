@@ -7,3 +7,6 @@
   - opacity 0.0-100.0
 + Point symbols
   - anostomosen -> anastomosis
++ point->subtype: 
+  water-flow: paleo, intermittent, permanent (default)
+  (station: temporary (default))

@@ -57,7 +57,7 @@ char * thexecute_cmd = NULL;
 const char * thhelp_text =
       "\ntherion [-q] [-L] [-l log-file]\n"
       "\t[-s source-file] [-p search-path]\n"
-      "\t[-g|-u] [-i] [-d] [cfg-file]\n\n"
+      "\t[-g|-u] [-i] [-d] [-x] [cfg-file]\n\n"
       "therion [-h|--help]\n"
       "        [-v|--version]\n"
       "        [--print-encodings]\n"
@@ -253,7 +253,8 @@ int main(int argc, char * argv[]) {
     thcfg.export_data();
 
     // save configuration
-    thcfg.save();    
+    thcfg.save();
+    thcfg.xth_save();
 
 #ifdef THDEBUG
     thprintf("\n\nlisting database\n");

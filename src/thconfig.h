@@ -63,7 +63,8 @@ class thconfig {
     src_fnames,  ///< Source file name.
     cfg_dblines,  ///< Lines with database commands.
     mbf1;  ///< TMP buffer.
-  bool skip_comments;  ///< Skip comments when writing config file.
+  bool skip_comments,  ///< Skip comments when writing config file.
+    generate_xthcfg;  ///< Generate xtherion log file.
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.
   int cfg_fenc;  ///< Configuration file encoding.
@@ -165,6 +166,12 @@ class thconfig {
    */
    
   void save();
+
+  /**
+   * Write configuration to xth file.
+   */
+   
+  void xth_save();
   
   
   /**

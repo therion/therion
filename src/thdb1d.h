@@ -201,6 +201,12 @@ class thdb1d {
    */
    
   unsigned long insert_station(class thobjectname on, class thsurvey * ps);
+  
+  /**
+   * Process survey statistics.
+   */
+   
+  void process_survey_stat();
 
   public:
   

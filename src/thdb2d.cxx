@@ -496,7 +496,7 @@ void thdb2d::process_map_references(thmap * mptr)
       case TT_MAP_CMD:
         mapp = (thmap *) optr;
         // if not defined - process recursively
-        if (mapp->projection_id == -1) {
+        if (mapp->projection_id == 0) {
           try {
             this->process_map_references(mapp);
           }
@@ -590,6 +590,9 @@ void thdb2d::process_map_references(thmap * mptr)
     }
     citem = citem->next_item;
   }
+#ifdef THDEBUG
+  thprintf("\nmap projection %s -> %d\n",mptr->name,proj_id);
+#endif 
   mptr->projection_id = proj_id;
 }
 

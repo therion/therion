@@ -239,8 +239,10 @@ class thdataobject {
   
   unsigned long id;  ///< Object identifier.
   
-  bool selected;  ///< Whether object is selected.
-  unsigned long selected_number;  ///< Number of selection.
+  bool selected,  ///< Whether object is selected.
+    tmp_bool;  ///< Temporary variable for some algorithms
+  unsigned long selected_number,  ///< Number of selection.
+    tmp_ulong;  ///< Temporary variable for some algorithms
   
   thdataobject * nsptr,  ///< Next object in survey.
     * psptr;  ///< Previous object in survey.

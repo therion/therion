@@ -37,7 +37,9 @@
 #include "th2ddataobject.h"
 #include "thscrap.h"
 #include <vector>
+#include "thchenc.h"
 #include <algorithm>
+#include "thmap.h"
 
 
 thselector::thselector() {
@@ -213,71 +215,178 @@ void thselector_select_item::parse (thdataobject * op)
 
 typedef std::vector <thselector_select_item> thselector_siv;
 
+void thselector__export_survey_tree_node (FILE * cf, unsigned long level, thdataobject * optr) {
+  thsurvey * ss;
+  while (optr != NULL) {
+    if (optr->get_class_id() == TT_SURVEY_CMD) {
+      ss = (thsurvey *) optr;
+      fprintf(cf,"xth_cp_data_tree_insert %lu", ss->id);
+      if (ss->fsptr != NULL)
+        fprintf(cf," %lu %lu", ss->fsptr->id, level);
+      else
+        fprintf(cf," {} %lu",level);
+      fprintf(cf," %s %s",ss->get_name(),ss->full_name);
+      if (strlen(ss->get_title()) > 0) {
+        thdecode_tex(&(thdb.buff_enc), ss->get_title());
+        fprintf(cf," \"%s\"",thdb.buff_enc.get_buffer());
+        thdecode(&(thdb.buff_enc),TT_ASCII,ss->get_title());
+        thdecode_tex(&(thdb.buff_tmp), thdb.buff_enc.get_buffer());
+        fprintf(cf," \"%s\"",thdb.buff_tmp.get_buffer());
+      }
+      else
+        fprintf(cf," \"\" \"\"");
+      // nakoniec statistika
+      fprintf(cf,
+          " \"length: %.2fm (surface %.2fm, duplicated %.2fm)"
+          ,ss->stat.length,ss->stat.length_surface,ss->stat.length_duplicate);
+      if (ss->stat.station_top != NULL) {
+        fprintf(cf,"\\n"
+        "vertical range: %.2fm (from %s@%s at %.2fm to %s@%s at %.2fm)\\n"
+        "north-south range: %.2fm (from %s@%s at %.2fm to %s@%s at %.2fm)\\n"
+        "east-west range: %.2fm (from %s@%s at %.2fm to %s@%s at %.2fm)\\n"
+        "number of shots: %lu\\n"
+        "number of stations: %lu"
+        "\"\n",
+        ss->stat.station_top->z - ss->stat.station_bottom->z,
+        ss->stat.station_top->name, ss->stat.station_top->survey->full_name,
+        ss->stat.station_top->z,
+        ss->stat.station_bottom->name, ss->stat.station_bottom->survey->full_name,
+        ss->stat.station_bottom->z,
+        ss->stat.station_north->y - ss->stat.station_south->y,
+        ss->stat.station_north->name, ss->stat.station_north->survey->full_name,
+        ss->stat.station_north->y,
+        ss->stat.station_south->name, ss->stat.station_south->survey->full_name,
+        ss->stat.station_south->y,
+        ss->stat.station_east->x - ss->stat.station_west->x,
+        ss->stat.station_east->name, ss->stat.station_east->survey->full_name,
+        ss->stat.station_east->x,
+        ss->stat.station_west->name, ss->stat.station_west->survey->full_name,
+        ss->stat.station_west->x,
+        ss->stat.num_shots, ss->stat.num_stations
+        );
+      } else {
+        fprintf(cf,"\"\n");
+      }
+      if (ss->foptr != NULL)
+        thselector__export_survey_tree_node(cf,level+1,ss->foptr);
+    }
+    optr = optr->nsptr;
+  }
+}
+
+void thselector__prepare_map_tree_export (thdatabase * db) {
+
+  // prejde vsetky mapy a surveye a nastavi tmp_bool na true a tmp_ulong na 0
+  thdb_object_list_type::iterator obi = db->object_list.begin();
+  while (obi != db->object_list.end()) {
+    (*obi)->tmp_bool = true;
+    (*obi)->tmp_ulong = 0;
+    obi++;
+  }
+
+  // prejde vsetky mapy a objektom v nich nastavi (tmp_bool) na false
+  thdb2dmi * mi;
+  obi = db->object_list.begin();
+  while (obi != db->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_MAP_CMD) {
+      mi = ((thmap*)(*obi))->first_item;
+      while (mi != NULL) {
+        if (mi->type == TT_MAPITEM_NORMAL) {
+          mi->object->tmp_bool = false;
+        }
+        mi = mi->next_item;
+      }
+    }
+    obi++;
+  }
+  
+}
+
+void thselector__export_map_tree_node (FILE * cf, unsigned long level, unsigned long pass, thdataobject * optr, thmap * fmap) {
+  if (optr->tmp_ulong == pass)
+    return;
+  optr->tmp_ulong = pass;
+  thmap * mptr = NULL;
+  int subtype = 0;
+  char * types;
+  switch (optr->get_class_id()) {
+    case TT_MAP_CMD:
+      mptr = (thmap*) optr; //id fid level
+      types = "map";
+      if (mptr->is_basic)
+        subtype = 1;
+      break;
+    case TT_SCRAP_CMD:
+      //types = "scrap";
+      //do not export scraps
+      return;
+      break;
+    default:
+      break;
+  }
+  fprintf(cf,"xth_cp_map_tree_insert %s %d %lu",types,subtype,optr->id);
+  if (fmap == NULL)
+    fprintf(cf," p%d %lu",((thmap*)optr)->projection_id,level);
+  else
+    fprintf(cf," %lu %lu",fmap->id,level);
+
+  fprintf(cf," %s %s@%s",optr->get_name(),optr->get_name(),optr->fsptr->full_name);
+  if (strlen(optr->get_title()) > 0) {
+    thdecode_tex(&(thdb.buff_enc), optr->get_title());
+    fprintf(cf," \"%s\"",thdb.buff_enc.get_buffer());
+    thdecode(&(thdb.buff_enc),TT_ASCII,optr->get_title());
+    thdecode_tex(&(thdb.buff_tmp), thdb.buff_enc.get_buffer());
+    fprintf(cf," \"%s\"\n",thdb.buff_tmp.get_buffer());
+  }
+  else
+    fprintf(cf," \"\" \"\"\n");
+  
+  thdb2dmi * mi;
+  if (mptr != NULL) {
+    mi = mptr->first_item;
+    while (mi != NULL) {
+      if (mi->type == TT_MAPITEM_NORMAL) {
+        thselector__export_map_tree_node(cf, level+1, pass, mi->object, mptr);
+      }
+      mi = mi->next_item;
+    }
+  }
+}
+
 void thselector::dump_selection_db (FILE * cf, thdatabase * db)
 {
-  if (this->cfgptr->get_comments_skip())
-    return;
-
-  thselector_siv items;
-  thselector_select_item itm;
-  thdb_object_list_type::iterator ii;
-  bool to_insert;
-  for(ii = db->object_list.begin(); ii != db->object_list.end(); ii++) {
-    to_insert = false;
-    switch ((*ii)->get_class_id()) {
-      case TT_SURVEY_CMD:
-        to_insert = true;
-        break;
-      case TT_GRADE_CMD:
-      case TT_LAYOUT_CMD:
-        to_insert = false;
-        break;  
-      default:
-        if (strlen((*ii)->get_name()) > 0)
-          to_insert = true;
-    }
-    if (to_insert) {
-      itm.parse(*ii);
-      
-      items.push_back(itm);
-    }
+  
+  // exportuje strom surveyov
+  fprintf(cf,"set xth(ctrl,cp,datlist) {}\n");
+  if (db->fsurveyptr != NULL) 
+    thselector__export_survey_tree_node(cf,0,db->fsurveyptr);
+  fprintf(cf,"xth_cp_data_tree_create\n");
+  
+  // exportuje strom map po vsetkych projekciach
+  fprintf(cf,"set xth(ctrl,cp,maplist) {}\n");
+  // exportuje vsetky projekcie
+  thdb2dprj_list::iterator prjli = db->db2d.prj_list.begin();
+  while (prjli != db->db2d.prj_list.end()) {
+    fprintf(cf,"xth_cp_map_tree_insert projection 0 p%d {} 0",prjli->id); 
+    if (strlen(prjli->index) > 0)
+      fprintf(cf," %s:%s",thmatch_string(prjli->type,thtt_2dproj),prjli->index);
+    else
+      fprintf(cf," %s",thmatch_string(prjli->type,thtt_2dproj));
+    fprintf(cf," {} {} {}\n");
+    prjli++;
+  }
+  // exportuje vsetky mapy a scrapy
+  thselector__prepare_map_tree_export(db);
+  thdb_object_list_type::iterator obi = db->object_list.begin();
+  bool expobj;
+  while (obi != db->object_list.end()) {
+    expobj = false;
+    if (((*obi)->get_class_id() == TT_MAP_CMD) && (((thmap*)(*obi))->tmp_bool))
+      thselector__export_map_tree_node(cf,1,(*obi)->id,(*obi),NULL);
+    obi++;
   }
   
-  // zoradi objekty
-  // sort(items.begin(), items.end());
-  
-  if (items.empty())
-    return;
-
-  fprintf(cf,"##XTHERION## ##BEGIN##\n");
-  thselector_siv::iterator itmi;
-  for(itmi = items.begin(); itmi != items.end(); itmi++) {
-    fprintf(cf,"##XTHERION## xth_cp_data_tree_insert %lu", itmi->objp->id);
-    if (itmi->objp->fsptr != NULL) {
-      // skusi ci neni v nejakom scrape
-      if (itmi->objp->is(TT_2DDATAOBJECT_CMD)) {
-        fprintf(cf," %lu", ((th2ddataobject*)(itmi->objp))->fscrapptr->id);
-      } else {
-        fprintf(cf," %lu", itmi->objp->fsptr->id);
-      }
-    } else {
-      fprintf(cf," {}");
-    }
-    fprintf(cf," %s %s",itmi->objp->get_cmd_name(),itmi->objp->get_name());
-    if (strlen(itmi->n1) > 0)
-      fprintf(cf," %s@%s", itmi->n1, itmi->n3);
-    else
-      fprintf(cf," %s", itmi->n3);
-    if (strlen(itmi->objp->get_title()) > 0) {
-      thdecode_tex(&(thdb.buff_enc), itmi->objp->get_title());
-      fprintf(cf," {%s}\n",thdb.buff_enc.get_buffer());
-    }
-    else
-      fprintf(cf," {}\n");
-    
-  }
-  fprintf(cf,"##XTHERION## ##END##\n");
-  fprintf(cf,"\n");
+  fprintf(cf,"xth_cp_map_tree_create\n");
   
 }
 
