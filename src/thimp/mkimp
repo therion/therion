@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cat init.pl default.pl polygon.pl map.pl main.pl > ../../bin/thimp
+chmod 755 ../../bin/thimp
+

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+thimp data.th
+cavern th__data.svx
+mpexp
+mpp th__data.mp
+makeeps th__data

@@ -1,0 +1,45 @@
+\footline={\hfill$\vartheta\eta\varrho\acute\iota o\nu$}
+% vkladenie EPS súborov s veµkými súradnicami
+%
+\newcount\llx
+\newcount\lly
+\newcount\urx
+\newcount\ury
+\newcount\rwi
+\newcount\deltax
+\newcount\deltay
+\newdimen\dx
+\newdimen\dy
+\def\decompose#1 #2 #3 #4 #5 {%
+    \global\llx=#2
+    \global\lly=#3
+    \global\urx=#4
+    \global\ury=#5
+}%
+\def\eps#1{{%
+    \openin1 #1
+    \catcode`\%=11%
+    \read1 to \epsline
+    \read1 to \epsline
+    \expandafter\decompose\epsline        
+    \rwi=\urx \advance\rwi by -\llx \multiply\rwi by 10\relax
+    \deltax=\urx \advance \deltax by -\llx
+    \deltay=\ury \advance \deltay by -\lly
+    \dx=\deltax bp%
+    \dy=\deltay bp%
+    \vbox to \dy{%
+	\vfil
+	\hbox to \dx{%
+	    \special{PSfile=#1\space
+	         llx=\the\llx\space
+		 lly=\the\lly\space
+	         urx=\the\urx\space
+		 ury=\the\ury\space
+	         rwi=\the\rwi\space
+		 clip%
+	    }\hfil
+	}%
+    }%
+    \closein1
+}}%
+\endinput
