@@ -129,7 +129,10 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
         else {
           objptr = dbptr->create(this->inp.get_cmd(), osrc);
           if (objptr == NULL)
-            ththrow(("unknown command -- %s", this->inp.get_cmd()));
+            ththrow(("unknown command -- %s", this->inp.get_cmd()))
+          else
+            dbptr->check_context(objptr);
+            
 	        switch(objptr->get_class_id()) {
             case TT_LAYOUT_CMD:
               ththrow(("layout definition not allowed in input files"))

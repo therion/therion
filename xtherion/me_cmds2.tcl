@@ -3169,6 +3169,9 @@ proc xth_me_cmds_line_split {} {
     }
   }
   
+  xth_me_cmds_update_line_data $id1
+  xth_me_cmds_update_line_data $id2
+  
   # zmaze originalnu
   set pid1 0
   set pid2 [lindex $xth(me,cmds,$id2,xplist) 0]

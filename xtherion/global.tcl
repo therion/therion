@@ -53,7 +53,7 @@ set xth(app,te,filetypes) {
   {{2D therion files}       {.th2}}    
   {{All files}       {*}}    
 }
-set xth(app,te,fileext) {}
+set xth(app,te,fileext) {.th}
 
 set xth(app,me,filetypes) {    
   {{Therion 2D files}       {.th2}}    
@@ -120,7 +120,7 @@ set xth(app,all,relw) -1
 set xth(app,all,wmwd) 180
 set xth(app,all,wpsw) 1
 
-set xth(app,fencoding) iso8859-2
+set xth(app,fencoding) utf-8
 set xth(app,sencoding) iso8859-2
 
 # autodetect some options
@@ -230,7 +230,6 @@ case $tcl_platform(platform) {
 }
 # end of platform dependend settings
 
-set xth(about,info) "xtherion $xth(about,ver)\n \u00A9 2002-2003 Stacho Mudrak"
 set xth(about,image_data) {
 R0lGODlhwACQAOcAAAAAAAAAVQAAqgAA/wAkAAAkVQAkqgAk/wBJAABJVQBJ
 qgBJ/wBtAABtVQBtqgBt/wCSAACSVQCSqgCS/wC2AAC2VQC2qgC2/wDbAADb

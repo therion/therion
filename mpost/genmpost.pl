@@ -15,12 +15,12 @@ sub encodecxx {
 sub init_symbol {
   my $s = shift;
 #  if ($s =~ /def\s+((p|l|a)_([a-z]+_){1,2}[A-Z]+)/) {
-  if ($s =~ /(def|let)\s+(p|l|s)_([a-z_]+)_([A-Z]+)\W/) {
+  if ($s =~ /(def|let)\s+(p|l|a|s)_([a-z_]+)_([A-Z]+)\W/) {
     $SYMBOLS{$2}{$3}{$4} = 1;
   }
-  elsif ($s =~ /beginpattern\(a_([a-z]+)_([A-Z]+)\)/) {
-    $SYMBOLS{"a"}{$1}{$2} = 1;
-  }
+#  elsif ($s =~ /beginpattern\(a_([a-z]+)_([A-Z]+)\)/) {
+#    $SYMBOLS{"a"}{$1}{$2} = 1;
+#  }
 }
 
 sub process_symbols {

@@ -424,9 +424,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   out.file = mpf;
   
   thexpmap_quick_map_export_scale = this->layout->scale;
-  fprintf(mpf,"Scale:=%.2f;\n",1 / this->layout->scale);
+  fprintf(mpf,"Scale:=%.2f;\n",0.01 / this->layout->scale);
   if (this->layout->def_base_scale || this->layout->redef_base_scale)
-    fprintf(mpf,"BaseScale:=%.2f;\n",1 / this->layout->base_scale);
+    fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / this->layout->base_scale);
   fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
     this->layout->color_map_fg.R,
     this->layout->color_map_fg.G,
@@ -706,14 +706,16 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   } else 
     sblen = this->layout->scale_bar;
   snprintf(prevbf,127,"%g",sblen);
-  fprintf(mpf,"beginfig(%d);\ns_scalebar(%g,\"m\",btex %s\\thinspace ",
+  fprintf(mpf,"beginfig(%d);\ns_scalebar(\"%g\",\"m\",btex %s\\thinspace ",
     sfig++, sblen, utf2tex(prevbf));
   fprintf(mpf,"%s etex);\nendfig;\n", utf2tex(thT("units m",layout->lang)));
 
   // sem pride zapisanie legendy do MP suboru
   if (this->layout->def_base_scale || this->layout->redef_base_scale)
-    fprintf(mpf,"Scale:=%.2f;\ninitialize(Scale);\n",1 / this->layout->base_scale);
+    fprintf(mpf,"Scale:=%.2f;\ninitialize(Scale);\n",0.01 / this->layout->base_scale);
   fprintf(mpf,"background:=white;\ntransparency:=false;\n");
+  
+  LEGENDLIST.clear();
   if ((this->layout->legend != TT_LAYOUT_LEGEND_OFF) && 
       ((this->export_mode == TT_EXP_ATLAS) || (this->layout->map_header != TT_LAYOUT_MAP_HEADER_OFF))) {
     this->symset.export_pdf(this->layout,mpf,sfig);

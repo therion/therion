@@ -161,6 +161,7 @@ string utf2tex(string str) {
   string tmp;
   int wc;  //wide char
   int lastenc = -1;
+  int laststyle = -1;
   int align = 0;
   bool is_multiline = false;
 
@@ -196,46 +197,71 @@ string utf2tex(string str) {
   for (unistr::iterator I = s.begin(); I != s.end(); I++) {
     wc = *I;
     if (wc == 32) {                     // space requires special treatment 
-      T << " ";                         // (it's not included in TeX fonts)
+      T << "\\ ";                        // (it's not included in TeX fonts)
       continue;                         // so encodings search doesn't help
     }
     else if (wc == 27) {                // escaped chars (special formatting)
       wc = *(++I);
       switch (wc) {
-        case 1: T << "\\cr "; break;
+        case 1: 
+          T << "\\cr";
+          switch (laststyle) {
+            case 1: T << "\\rm"; break;
+            case 2: T << "\\it"; break;
+            case 3: T << "\\bf"; break;
+            case 4: T << "\\ss"; break;
+            case 5: T << "\\si"; break;
+          }
+          T << " ";
+          break;
         case 2: T << "\\thinspace "; break;
-        case 3: T << "\\rm "; break;
-        case 4: T << "\\it "; break;
-        case 5: T << "\\bf "; break;
-        case 6: T << "\\ss "; break;
-        case 7: T << "\\si "; break;
+        case 3: T << "\\rm "; laststyle = 1; break;
+        case 4: T << "\\it "; laststyle = 2; break;
+        case 5: T << "\\bf "; laststyle = 3; break;
+        case 6: T << "\\ss "; laststyle = 4; break;
+        case 7: T << "\\si "; laststyle = 5; break;
       }
       continue;
     }
     
+    if (wc==39) wc = 8217; // apostrophe -> quoteright;
+    
     bool local_exit = false;
     bool local_repeat = true;
+    bool is_accent = false;
+    bool bot_accent = false;
+    int bc = 0, alt = 0;  // base char, alternative char
 
     while(local_repeat) {
       local_repeat = false;
       for (list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++) {
         int j = J->id;
         for (int i=0; i<256; i++) {
-          if (texenc[i][j] == wc) {
+          if (texenc[i][j] == wc || (is_accent && (texenc[i][j] == alt))) {
             if (j != lastenc) {           // do a better optimization
                                           // of the font changes in a string
-              T << "\\thf" << u2str(j+1) << " ";
+              T << "\\thf" << u2str(j+1);//<< "{}";
               lastenc = j;
             }
+            if (!is_accent) {
                            // some characters require special treatment in TeX
-            if (i==0 || i==127 || i==123 || i==125 || i==36 || i==38 || 
-                i==10 || i==35 || i==95 || i==126 || i==13 || i==94 || 
-                i==92 || i==37) {
-              T << "\\char" << i << " ";
+//              if (i==0 || i==127 || i==123 || i==125 || i==36 || i==38 || 
+//                  i==10 || i==35 || i==95 || i==126 || i==13 || i==94 || 
+//                  i==92 || i==37 || i < 32) {
+                T << "\\char" << i << " ";
+//              }
+//              else {
+//                T << char(i);
+////                if (bot_accent) T << " ";
+//              }
             }
-            else {
-              T << char(i);
-            }
+            else
+              if (!bot_accent) {
+                T << "\\accent" << i << " ";
+              }
+              else {
+                T << "\\fixaccent{" << i << "}";
+              }
             local_exit = true;
             local_repeat = false;
           }
@@ -243,7 +269,7 @@ string utf2tex(string str) {
         }
         if (local_exit) break;
       }
-      if (!local_exit) {
+      if (!local_exit && !is_accent) {
 
         // current character is not included in any of the used encodings;
         // let's try to find an approximation based on Unicode
@@ -254,7 +280,28 @@ string utf2tex(string str) {
           i = (int) (a+b)/2;
           j = unibase[i][0];
           if (j == wc) {
-            wc = unibase[i][1];
+            bc = unibase[i][1];
+            wc = unibase[i][2];
+            alt = -1;
+            bot_accent = false;
+            switch (wc) {
+              case 768: alt =  96; break; // grave
+              case 769: alt = 180; break; // acute
+              case 770: alt = 710; break; // circumflex
+              case 771: alt = 732; break; // tilde
+              case 772: alt = 175; break; // macron
+              case 774: alt = 728; break; // breve
+              case 775: alt = 729; break; // dot above
+              case 776: alt = 168; break; // diaeresis
+              case 778: alt = 730; break; // ring above
+              case 779: alt = 733; break; // double acute -- hungarian
+              case 780: alt = 711; break; // caron
+              case 807: alt = 184; bot_accent = true; break; // cedilla
+              case 808: alt = 731; bot_accent = true; break; // ogonek
+            }
+            if (!bot_accent && bc == 105) bc = 305;   // dotless i correction
+            if (!bot_accent && bc == 106) bc = 63166; // dotless j correction
+            is_accent = true;
             local_repeat = true;
             break;
           }
@@ -263,6 +310,12 @@ string utf2tex(string str) {
           else
             a = i + 1;
         } 
+      }
+      else if (is_accent) {
+        wc = bc;
+        is_accent = false;
+        local_repeat = true;
+        local_exit = false;
       }
     }
     if (!local_exit)       // we didn't find anything to display
@@ -277,7 +330,7 @@ string utf2tex(string str) {
   if (is_multiline) {
     T << "\\cr}}";
   }
-  
+  T << "{}";
   return T.str();
 }
 
@@ -307,6 +360,8 @@ void print_fonts_setup() {
   P << "\\def\\bfs{\\bf}" << endl;
   P << "\\def\\sss{\\ss}" << endl;
   P << "\\def\\sis{\\si}" << endl;
+  P << "\\def\\fixaccent#1#2 {{\\setbox0\\hbox{#2}\\ifdim\\ht0=1ex\\accent#1 #2%" << endl;
+  P << "  \\else\\ooalign{\\unhbox0\\crcr\\hidewidth\\char#1\\hidewidth}\\fi}}" << endl;
 
   P << "\\def\\size[#1]{%" << endl;
   P << "  \\let\\prevstyle\\laststyle" << endl;

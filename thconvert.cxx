@@ -641,7 +641,7 @@ void convert_scraps() {
     << "\\catcode`\\^^@=12\\catcode`\\^^?=12\\catcode`\\{=12" << endl
     << "\\catcode`\\}=12\\catcode`\\$=12\\catcode`\\&=12" << endl
     << "\\catcode`\\#=12\\catcode`\\_=12\\catcode`\\~=12" << endl
-    << "\\catcode`\\^^M=12\\catcode`\\^=12%" << endl;
+    << "\\catcode`\\^^M=12%\\catcode`\\^=12%" << endl;
   for (map<string,FONTCHARS>::iterator I = USED_CHARS.begin(); 
                                        I != USED_CHARS.end(); I++) {
     F << "\\includechars\\" << (*I).first << ":";
@@ -654,7 +654,7 @@ void convert_scraps() {
         if (c==92) F << " ";     // \ has to be followed by space
       }
       else {
-        F << "^^" << c+64;
+        F << "^^" << char(c+64);
       }
     }
     F << "\\endinclude%" << endl;

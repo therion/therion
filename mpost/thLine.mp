@@ -36,8 +36,10 @@ def mark_(expr p,t,l) =
           ((point t of p) + l * unitvector(thdir(p,t) rotated 90));
 enddef;
 
-vardef thdir (expr p,t) = 
-  ((direction t-epsilon of p) + (direction t+epsilon of p)) / 2
+vardef thdir (expr p,t) =    % 1 * epsilon caused problems in scales < 1:1000
+                             % n * epsilon is enough for scale 1:(n*1000)
+  ((direction t-100*epsilon of p) + (direction t+100*epsilon of p)) / 2
+%  direction t of p
 enddef;
 
 % walls:

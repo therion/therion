@@ -33,9 +33,12 @@ def s_northarrow_SKBB =
   drawarrow (0,-1cm)--(0,1cm);
 enddef;
 
-def s_scalebar_SKBB (expr l, units, txt) = 
-  tmpl:=l * cm;
-  tmpl:=tmpl/Scale * if units="m": 100 elseif units="ft": 31 fi / 2;
+def s_scalebar_SKBB (expr ll, units, txt) = 
+  begingroup
+    interim warningcheck:=0;
+    l := scantokens ll;
+    tmpl:=l/Scale * cm * if units="m": 1 elseif units="ft": 0.3048 fi / 2;
+  endgroup;
   pickup PenC;
   draw (-tmpl,0)--(tmpl,0);
   draw (-tmpl,0)--(-tmpl,2bp);

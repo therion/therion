@@ -306,8 +306,10 @@ void thlayout_parse_scale(double * scale,char ** args) {
   if (sv != TT_SV_NUMBER)
     ththrow(("invalid number -- %s",args[1]))
   if (dv <= 0.0)
-    ththrow(("positive number expected -- %s",args[0]))
+    ththrow(("positive number expected -- %s",args[1]))
   *scale /= dv;  
+  if ((*scale > 2.000001e-2) || (*scale < 9.99999e-6))
+    ththrow(("scale out of range -- %s %s",args[0], args[1]))
 }
 
 enum {

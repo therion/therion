@@ -50,7 +50,7 @@ sub read_lang_file {
       if (length($lng) == 0) {
         warn("warning: invalid language \"$lng\" ($fn:$lnum)\n");
       }
-      if ((length($lcode) == 0) || (substr($clng,0,2) == $lcode)) {
+      if ((length($lcode) == 0) || (substr($clng,0,2) eq $lcode)) {
         $res{$itm}{$clng} = $trn;
         $res{$itm}{"$clng-cmnt"} = $cmnt;
       }

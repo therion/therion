@@ -26,6 +26,8 @@
 
 if unknown a_water_UIS: else: endinput fi;
 
+% patterns
+
 beginpattern(pattern_water_UIS);
     draw origin--10up withpen pensquare scaled (0.02u);
     patternxstep(.18u);
@@ -79,18 +81,39 @@ def a_sand_UIS (expr p) =
   thclean p;
   pickup PenC;
   path q; q = bbox p;
-  picture tmp_pic; tmp_pic := nullpicture;
-  for i = xpart llcorner q step 4mm until xpart urcorner q:
-    for j = ypart llcorner q step 4mm until ypart urcorner q:
-      addto tmp_pic contour makepath currentpen shifted ((i,j) randomized 2.5mm);
-    endfor;  
-  endfor;
+  picture tmp_pic; 
+  tmp_pic := image(
+    for i = xpart llcorner q step 4mm until xpart urcorner q:
+      for j = ypart llcorner q step 4mm until ypart urcorner q:
+        draw origin shifted ((i,j) randomized 3mm) withpen PenC;
+      endfor;  
+    endfor;
+  );
   clip tmp_pic to p;
   draw tmp_pic;
 enddef;
 
-def a_debris_SKBB (expr Path) =
+def a_debris_UIS (expr Path) =
   T:=identity;
   thclean Path;
   thfill Path withpattern pattern_debris_SKBB;
+enddef;
+
+def a_debris_SKBB (expr p) =
+  T:=identity;
+  thclean p;
+  pickup PenC;
+  path q; q = bbox p;
+  picture tmp_pic; 
+  tmp_pic := image(
+    for i = xpart llcorner q step 8mm until xpart urcorner q:
+      for j = ypart llcorner q step 8mm until ypart urcorner q:
+        draw ((-.15u,0)--(.15u,0)) 
+             rotated uniformdeviate(360) 
+             shifted ((i,j) randomized 5mm) withpen PenC;
+      endfor;  
+    endfor;
+  );
+  clip tmp_pic to p;
+  draw tmp_pic;
 enddef;

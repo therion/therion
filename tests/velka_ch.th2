@@ -3,8 +3,6 @@ encoding  utf-8
 ##XTHERION## xth_me_area_zoom_to 200
 ##XTHERION## xth_me_image_insert {0 1 1.0} 1200 img/velka.gif 0 {}
 
-
-
 scrap velka_scr -scale [-128 688 1014 688 0.0 0.0 29.0068 0.0 m]
 
 line wall -close on -outline in

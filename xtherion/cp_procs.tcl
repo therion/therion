@@ -151,6 +151,29 @@ proc xth_cp_open_file {fpath} {
 }
 
 
+set xth(cps,n) 0
+set xth(cps,mxs) 0
+set xth(cps,mxl) 0
+set xth(cps,ts) 0
+set xth(cps,tl) 0
+
+proc xth_cp_comp_stat {tlen tscrap} {
+  global xth
+  incr xth(cps,n)
+  if {$tscrap > $xth(cps,mxs)} {
+    set xth(cps,mxs) $tscrap
+  }
+  if {$tlen > $xth(cps,mxl)} {
+    set xth(cps,mxl) $tlen
+  }
+  set xth(cps,ts) [expr $xth(cps,ts) + $tscrap]
+  set xth(cps,tl) [expr $xth(cps,tl) + $tscrap]
+  set xth(cps,as) [expr double($xth(cps,ts)) / double($xth(cps,n))]
+  set xth(cps,al) [expr double($xth(cps,tl)) / double($xth(cps,n))]  
+}
+
+
+
 proc xth_cp_close_file {} {
   
   global xth
@@ -668,4 +691,6 @@ proc xth_cp_map_tree_double_click {node} {
     $xth(cp,editor).txt insert $cln.0 [format "select %s\n" [lindex $d 1]]
   }
 }
+
+
 

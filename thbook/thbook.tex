@@ -69,7 +69,7 @@
 
 {\catcode`\*=13\catcode`\=13
  \gdef\itemize{%
-   \par\nobreak\leftskip1em%\parskip0pt
+   \par\nobreak\advance\leftskip1em%\parskip0pt
    \let\brnobr\nobreak
    \catcode`\*13\def*{\par\brnobr\leavevmode\let\brnobr\relax
                       \llap{$\bullet$ }\ignorespaces}
@@ -153,6 +153,35 @@
         >>}%
     #1%
     \pdfendlink\fi}
+    
+\newcount\footnum \footnum 0    
+\long\def\[#1]{\unskip\global\advance\footnum by 1\footnote{$^{\the\footnum}$}{#1}}
+
+\def\tenpoint{\def\rm{\fam0\tenrm}%
+  \textfont0=\tenrm \scriptfont0=\sevenrm \scriptscriptfont0=\sevenrm
+  \textfont1=\tenit %\scriptfont1=\sevenit \scriptscriptfont1=\sevenit
+  \def\it{\fam\itfam\tenit}%
+  \textfont\itfam=\tenit
+  \def\bf{\fam\bffam\tenbf}%
+  \textfont\bffam=\tenbf \scriptfont\bffam=\sevenbf
+  \scriptscriptfont\bffam=\sevenbf
+  \def\tt{\fam\ttfam\tentt}%
+  \normalbaselineskip=12pt
+  \setbox\strutbox=\hbox{\vrule height9.5pt depth4.5pt width0pt}%
+  \normalbaselines\rm}
+
+\catcode`@=11
+\def\vfootnote#1{\insert\footins\bgroup\tenpoint
+  \interlinepenalty\interfootnotelinepenalty
+  \splittopskip\ht\strutbox % top baseline for broken footnotes
+  \splitmaxdepth\dp\strutbox \floatingpenalty\@MM
+  \leftskip=18pt \rightskip\z@skip \spaceskip\z@skip \xspaceskip\z@skip
+  \indent\llap{#1\thinspace}\ignorespaces
+  \footstrut\futurelet\next\fo@t}
+\count\footins=1000 % footnote magnification factor (1 to 1)
+\catcode`@=12 % at signs are no longer letters
+
+
 
 \parskip=\medskipamount
 \parindent=0pt

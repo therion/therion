@@ -243,6 +243,7 @@ proc xth_app_finish {} {
 
   bind $xth(gui,main) <Control-Key-q> "xth_exit"
   bind $xth(gui,main) <Control-Key-o> xth_app_control_o 
+  bind $xth(gui,main) <Control-Key-r> xth_app_control_r 
   bind $xth(gui,main) <Control-Key-w> xth_app_control_w
   bind $xth(gui,main) <Control-Key-s> xth_app_control_s 
   bind $xth(gui,main) <Control-Key-z> xth_app_control_z
@@ -313,6 +314,21 @@ proc xth_app_control_o {} {
     mv {xth_mv_open_file {}}
   }
 }  
+
+
+proc xth_app_control_r {} {
+
+  global xth
+
+  # puts $xth(app,active)  
+  switch $xth(app,active) {
+    te  {}
+    me  {}
+    cp  {}
+    mv {xth_mv_reload_file}
+  }
+}  
+
 
 proc xth_app_control_w {} {
 
@@ -458,6 +474,8 @@ proc xth_exit {} {
     xth_cp_close_file
   }
   
+  destroy $xth(gui,main)
+  update
   destroy .    
   
 }
@@ -468,10 +486,10 @@ proc xth_app_maximize {} {
   set swd [winfo screenwidth $xth(gui,main)]
   set shg [winfo screenheight $xth(gui,main)]
   wm geometry $xth(gui,main) [format "%dx%d+0+0" $swd $shg]
-  update
+  update idletasks
   regexp {([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)} [winfo geometry $xth(gui,main)] geom xsize ysize xshft yshft
   wm geometry $xth(gui,main) [format "%dx%d+0+0" [expr $swd - $xshft] [expr $shg - $yshft]]
-  update
+  update idletasks
 }
 
 proc xth_app_normalize {} {
@@ -487,11 +505,11 @@ proc xth_app_normalize {} {
   set tpx [expr int(0.5 * ([winfo screenwidth $xth(gui,main)] - $twd))]
   set tpy [expr int(0.5 * ([winfo screenheight $xth(gui,main)] - $thg))]
   wm geometry $xth(gui,main) [format "%dx%d+%d+%d" $twd $thg $tpx $tpy]
-  update
+  update idletasks
   regexp {([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)} [winfo geometry $xth(gui,main)] geom xsize ysize xshft yshft
   wm geometry $xth(gui,main) [format "%dx%d+%d+%d" [expr $twd - $xshft + $tpx] \
     [expr $thg - $yshft + $tpy] $tpx $tpy]
-  update
+  update idletasks
 }
 
 proc xth_app_clipboard {ev} {
@@ -521,10 +539,12 @@ proc xth_app_clipboard {ev} {
 
 proc xth_app_check_text_undo_redo {} {
   global xth
-  set w [focus -lastfor $xth(gui,main)]
-  if {[winfo ismapped $w]} {
-    catch {
-      $w edit separator
+  catch {
+    set w [focus -lastfor $xth(gui,main)]
+    if {[winfo ismapped $w]} {
+      catch {
+        $w edit separator
+      }
     }
   }
   after idle {after 1000 xth_app_check_text_undo_redo}
@@ -550,7 +570,7 @@ proc xth_app_make {} {
   if {!$xth(cp,fopen)} {
     xth_cp_open_file {}
   }
-  update
+  update idletasks
   if {[xth_cp_compile]} {
     if {[string equal $xth(gui,platform) windows]} {
       xth_app_show te

@@ -36,7 +36,13 @@ xth_app_clock
 
 encoding system $xth(app,sencoding)
 set xth(encoding_system) [encoding system]
-xth_about_hide
+if {[string length $xth(about,nvr)] > 0} {
+  xth_about_status $xth(prj,title)
+  after $xth(about,infotime) xth_about_hide
+} else {
+  xth_about_hide
+}
+
 wm deiconify $xth(gui,main)
 xth_app_normalize
 

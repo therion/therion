@@ -54,6 +54,12 @@ $xth(mv,menu,file) add command -label "Open" -underline 0 \
     xth_mv_open_file {}
   }
 
+$xth(mv,menu,file) add command -label "Reload" -underline 0 \
+  -accelerator "$xth(gui,controlk)-r" -state normal \
+  -font $xth(gui,lfont) -command {
+    xth_mv_reload_file
+  }
+
 set f $xth(ctrl,mv,cam)
 set xthmvv(ctrlframe) $f
 

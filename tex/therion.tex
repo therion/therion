@@ -41,8 +41,6 @@
 % \TITLE{}
 %    -- creates an empty page with a large title
 
-\def\scale{200} % !!! to be defined by therion
-
 \ifx\pdfoutput\undefined
      \newlinechar`\^^J
      \immediate\write16{^^J^^JProcess me with pdfTeX, please!^^J^^J}
@@ -520,6 +518,19 @@
       \else \makecolumns{\dimen0} \fi \fi}
 
 %% end of multicolumn macros
+
+%% macros from the texbook
+\newcount\k  % registers used by the \rigidbalance routine
+\def\rigidbalance#1#2{\setbox0=\box#1 \k=#2
+  \line{\splittopskip=\legendsymbolht \vbadness=10000 \hfilneg
+    \valign{##\vfil\cr\dosplits}}}
+\def\dosplits{\ifnum\k>0 \noalign{\hfil}\splitoff
+  \global\advance\k-1\cr\dosplits\fi}
+\def\splitoff{\dimen0=\ht0
+  |^|\divide||\dimen0 by\k \advance\dimen0 by\legendsymbolht
+  \vsplit0 to \dimen0 }
+
+%% end of texbook macros
 
 \input th_enc
 \input th_texts

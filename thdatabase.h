@@ -170,7 +170,8 @@ class thdatabase {
 
   thdb_dictionary_type dictionary;  ///< Database dictionary.
   
-  unsigned long objid;  ///< Object identifier
+  unsigned long objid,  ///< Object identifier
+    nscraps;  ///< Total number of scraps.
   
   void reset_context();  ///< Reset database context.
 
@@ -241,6 +242,12 @@ class thdatabase {
   class thscrap * get_current_scrap();
   
   
+  /**
+   * Insert data object into database.
+   */
+   
+  void check_context(class thdataobject * optr);
+
   /**
    * Insert data object into database.
    */

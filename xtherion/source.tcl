@@ -29,6 +29,7 @@ set xth(debug) 1
 
 #@ALL
 source ver.tcl
+source ivc.tcl
 source global.tcl
 #@XTHERION
 source therion.tcl
@@ -59,7 +60,6 @@ source bac.tcl
 source cp.tcl
 source mv.tcl
 source mv_procs.tcl
-#source v3.tcl
 #@DEBUG
 if {![string equal $xth(gui,platform) windows]} {
   source console.tcl

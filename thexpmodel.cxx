@@ -346,12 +346,15 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   pgn->exp_shift_x = avx;
   pgn->exp_shift_y = avy;
   pgn->exp_shift_z = avz;
-
+  thdb3dlim finlim;
+  finlim.update(&(pgn->limits));
   // now let's print header
+//  thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 
+//          finlim.minx, finlim.maxx, 
+//          finlim.miny, finlim.maxy, 
+//          finlim.minz, finlim.maxz);
+
   
-  fprintf(pltf,"set xthmvv(model,maxx) %.2f\n",pgn->limits.maxx - avx);
-  fprintf(pltf,"set xthmvv(model,maxy) %.2f\n",pgn->limits.maxy - avy);
-  fprintf(pltf,"set xthmvv(model,maxz) %.2f\n",pgn->limits.maxz - avz);
   fprintf(pltf,"glDeleteLists $xthmvv(list,model) 1\n");
   fprintf(pltf,"glNewList $xthmvv(list,model) $GL::GL_COMPILE\n");
   fprintf(pltf,"xth_mv_gl_wireframe\n");
@@ -371,6 +374,11 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
     while(cs != NULL) {
       if (cs->fsptr->is_selected() && (cs->d3 != TT_FALSE)) {
         d3d = cs->get_3d_outline();
+//        thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 
+//          d3d->limits.minx, d3d->limits.maxx, 
+//          d3d->limits.miny, d3d->limits.maxy, 
+//          d3d->limits.minz, d3d->limits.maxz);
+        finlim.update(&(d3d->limits));
         d3d->exp_shift_x = avx;
         d3d->exp_shift_y = avy;
         d3d->exp_shift_z = avz;
@@ -380,7 +388,15 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
     }
   }
 
+  fprintf(pltf,"set xthmvv(model,maxx) %.2f\n",finlim.maxx - avx);
+  fprintf(pltf,"set xthmvv(model,maxy) %.2f\n",finlim.maxy - avy);
+  fprintf(pltf,"set xthmvv(model,maxz) %.2f\n",finlim.maxz - avz);
+  fprintf(pltf,"set xthmvv(model,minx) %.2f\n",finlim.minx - avx);
+  fprintf(pltf,"set xthmvv(model,miny) %.2f\n",finlim.miny - avy);
+  fprintf(pltf,"set xthmvv(model,minz) %.2f\n",finlim.minz - avz);
   fprintf(pltf,"glEndList\n");
+
+
   fclose(pltf);
   
 #ifdef THDEBUG

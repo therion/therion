@@ -1,13 +1,3 @@
-% Date: Thu, 25 May 1995 19:00:36 +0200 (MET DST)
-% From: Petr Sojka <sojka@daeron.ics.muni.cz>
-%
-% some of our (CSTUG- czech TeX Users Group) users want to support
-% 8bit font coding such that:
-% -- lower 7bit  is exactly OT1 (but with differences imposed
-%   by DEK -- e.g. layout of cmr is different from cmtt)
-% -- upper part is taken from ISO-Latin 2 (iso 8859-2),
-%    but some of empty positions are filled with useful characters
-%    usually available in type-1 font (permill sign etc.)
 /XL2encoding [
 %%%%%   '000 = "00
    /Gamma
@@ -154,16 +144,16 @@
    /tilde
    /dieresis
 %%%%%   '200 = "80
-   /ellipsis
-   /dagger
-   /daggerdbl
-   /bullet
-   /sterling
-   /paragraph
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
    /.notdef
    /.notdef
 %%%%%   '210 = "88
-   /.notdef
+   /.notdef               
    /.notdef
    /.notdef
    /.notdef
@@ -191,108 +181,108 @@
    /guillemotright
 %%%%%   '240 = "A0
    /.notdef
-   /Aogonek
-   /breve
-   /Lslash
-   /currency
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
    /Lcaron
-   /Sacute
-   /section
+   /.notdef
+   /.notdef
 %%%%%   '250 = "A8
-   /dieresis
+   /.notdef
    /Scaron
-   /Scedilla
+   /.notdef
    /Tcaron
-   /Zacute
+   /.notdef
    /.notdef
    /Zcaron
-   /Zdotaccent
+   /.notdef
 %%%%%   '260 = "B0
-   /ring
-   /aogonek
-   /cedilla
-   /lslash
-   /acute
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
    /lcaron
-   /sacute
-   /caron
+   /.notdef
+   /.notdef
 %%%%%   '270 = "B8
    /agrave
    /scaron
-   /scedilla
+   /.notdef
    /tcaron
-   /zacute
-   /hungarumlaut
+   /.notdef
+   /.notdef
    /zcaron
-   /zdotaccent
+   /.notdef
 %%%%%   '300 = "C0
    /Racute
    /Aacute
-   /Acircumflex
-   /Abreve
+   /.notdef
+   /.notdef
    /Adieresis
    /Lacute
-   /Cacute
-   /Ccedilla
+   /.notdef
+   /.notdef
 %%%%%   '310 = "C8
    /Ccaron
    /Eacute
-   /Eogonek
-   /Edieresis
+   /.notdef
+   /.notdef
    /Ecaron
    /Iacute
-   /Icircumflex
+   /.notdef
    /Dcaron
 %%%%%   '320 = "D0
-   /Eth
-   /Nacute
+   /.notdef
+   /.notdef
    /Ncaron
    /Oacute
    /Ocircumflex
-   /Ohungarumlaut
+   /.notdef
    /Odieresis
-   /multiply
+   /.notdef
 %%%%%   '330 = "D8
    /Rcaron
    /Uring
    /Uacute
-   /Uhungarumlaut
+   /.notdef
    /Udieresis
    /Yacute
-   /Togonek
-   /germandbls
+   /.notdef
+   /.notdef
 %%%%%   '340 = "E0
    /racute
    /aacute
-   /acircumflex
-   /abreve
+   /.notdef
+   /.notdef
    /adieresis
    /lacute
-   /cacute
-   /ccedilla
+   /.notdef
+   /.notdef
 %%%%%   '350 = "E8
    /ccaron
    /eacute
-   /eogonek
-   /edieresis
+   /.notdef
+   /.notdef
    /ecaron
    /iacute
-   /icircumflex
+   /.notdef
    /dcaron
 %%%%%   '360 = "F0
-   /eth
-   /nacute
+   /.notdef
+   /.notdef
    /ncaron
    /oacute
    /ocircumflex
-   /ohungarumlaut
+   /.notdef
    /odieresis
-   /divide
+   /.notdef
 %%%%%   '370 = "F8
    /rcaron
    /uring
    /uacute
-   /uhungarumlaut
+   /.notdef
    /udieresis
    /yacute
    /quotedblbase

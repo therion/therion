@@ -149,6 +149,9 @@ proc xth_mv_init {} {
   set xthmvv(model,maxx) 1.0
   set xthmvv(model,maxy) 1.0
   set xthmvv(model,maxz) 1.0
+  set xthmvv(model,minx) -1.0
+  set xthmvv(model,miny) -1.0
+  set xthmvv(model,minz) -1.0
 #  if {[string equal $xth(gui,platform) windows]} {
 #    set q [gluNewQuadric]
 #    gluSphere $q 1.0 20 16
@@ -156,6 +159,20 @@ proc xth_mv_init {} {
 #  }
   glEndList
 }
+
+
+proc xth_mv_reload_file {} {
+  global xth xthmvv
+  if {[catch {source $xth(mv,ffull)} opnerr]} {
+      MessageDlg $xth(gui,message) -parent $xth(gui,main) \
+        -icon error -type ok \
+        -message $opnerr\
+        -font $xth(gui,lfont)
+      return 0
+  }
+  xth_mv_init_model 0
+}
+
 
 proc xth_mv_open_file {fpath} {
 
@@ -189,7 +206,7 @@ proc xth_mv_open_file {fpath} {
   set xth(mv,fpath) [file dirname $fpath]
   set xth(mv,ffull) $fpath
   
-  xth_mv_init_model
+  xth_mv_init_model 1
   xth_app_title mv
   xth_status_bar_pop mv
   
@@ -204,9 +221,15 @@ proc xth_mv_init_camera {} {
 
   set xthmvv(cam,profile) 20.0
   set xthmvv(cam,facing) 160.0
-  set xthmvv(cam,cx) 0.0
-  set xthmvv(cam,cy) 0.0
-  set xthmvv(cam,cz) 0.0
+  set mx $xthmvv(model,maxx)
+  set my $xthmvv(model,maxy)
+  set mz $xthmvv(model,maxz)
+  set nx $xthmvv(model,minx)  
+  set ny $xthmvv(model,miny)  
+  set nz $xthmvv(model,minz)
+  set xthmvv(cam,cx) [expr ($mx + $nx) / 2.0]
+  set xthmvv(cam,cy) [expr ($my + $ny) / 2.0]
+  set xthmvv(cam,cz) [expr ($mz + $nz) / 2.0]
 
   set xthmvv(cam,autorotate) 0
   set xthmvv(autorotate,dir) 1
@@ -220,12 +243,18 @@ proc xth_mv_init_camera {} {
 }
 
 
-proc xth_mv_init_model {} {
+proc xth_mv_init_model {initcam} {
   global xthmvv
   set mx $xthmvv(model,maxx)
   set my $xthmvv(model,maxy)
   set mz $xthmvv(model,maxz)
-  set diam [expr sqrt($mx * $mx + $my * $my + $mz * $mz)]
+  set nx $xthmvv(model,minx)  
+  set ny $xthmvv(model,miny)  
+  set nz $xthmvv(model,minz)
+  set dx [expr ($mx - $nx) / 2.0]
+  set dy [expr ($my - $ny) / 2.0]
+  set dz [expr ($mz - $nz) / 2.0]
+  set diam [expr sqrt($dx * $dx + $dy * $dy + $dz * $dz)]
   set xthmvv(model,diam) $diam
   glDeleteLists $xthmvv(list,bbox) 1
   glNewList $xthmvv(list,bbox) $GL::GL_COMPILE
@@ -233,25 +262,27 @@ proc xth_mv_init_model {} {
   glBegin $GL::GL_LINE_STRIP
   glColor3f 1.0 0.0 0.0
   glVertex3f [expr $mx] [expr $my] [expr $mz]
-  glVertex3f [expr -$mx] [expr $my] [expr $mz]
-  glVertex3f [expr -$mx] [expr -$my] [expr $mz]
-  glVertex3f [expr $mx] [expr -$my] [expr $mz]
+  glVertex3f [expr $nx] [expr $my] [expr $mz]
+  glVertex3f [expr $nx] [expr $ny] [expr $mz]
+  glVertex3f [expr $mx] [expr $ny] [expr $mz]
   glVertex3f [expr $mx] [expr $my] [expr $mz]
-  glVertex3f [expr $mx] [expr $my] [expr -$mz]
-  glVertex3f [expr -$mx] [expr $my] [expr -$mz]
-  glVertex3f [expr -$mx] [expr $my] [expr $mz]
-  glVertex3f [expr -$mx] [expr $my] [expr -$mz]
-  glVertex3f [expr -$mx] [expr -$my] [expr -$mz]
-  glVertex3f [expr -$mx] [expr -$my] [expr $mz]
-  glVertex3f [expr -$mx] [expr -$my] [expr -$mz]
-  glVertex3f [expr $mx] [expr -$my] [expr -$mz]
-  glVertex3f [expr $mx] [expr -$my] [expr $mz]
-  glVertex3f [expr $mx] [expr -$my] [expr -$mz]
-  glVertex3f [expr $mx] [expr $my] [expr -$mz]
+  glVertex3f [expr $mx] [expr $my] [expr $nz]
+  glVertex3f [expr $nx] [expr $my] [expr $nz]
+  glVertex3f [expr $nx] [expr $my] [expr $mz]
+  glVertex3f [expr $nx] [expr $my] [expr $nz]
+  glVertex3f [expr $nx] [expr $ny] [expr $nz]
+  glVertex3f [expr $nx] [expr $ny] [expr $mz]
+  glVertex3f [expr $nx] [expr $ny] [expr $nz]
+  glVertex3f [expr $mx] [expr $ny] [expr $nz]
+  glVertex3f [expr $mx] [expr $ny] [expr $mz]
+  glVertex3f [expr $mx] [expr $ny] [expr $nz]
+  glVertex3f [expr $mx] [expr $my] [expr $nz]
   glVertex3f [expr $mx] [expr $my] [expr $mz]
   glEnd
   glEndList
-  xth_mv_init_camera
+  if {$initcam} {
+    xth_mv_init_camera
+  }
   xth_mv_update
 }
 
@@ -307,9 +338,9 @@ proc xth_mv_check_center {} {
   set mx $xthmvv(model,maxx)
   set my $xthmvv(model,maxy)
   set mz $xthmvv(model,maxz)
-  set nx [expr -1.0 * $mx]  
-  set ny [expr -1.0 * $my]  
-  set nz [expr -1.0 * $mz]
+  set nx $xthmvv(model,minx)  
+  set ny $xthmvv(model,miny)  
+  set nz $xthmvv(model,minz)
   if {$cx < $nx} {
     set xthmvv(cam,cx) $nx
   } elseif {$cx > $mx} {
@@ -399,7 +430,7 @@ bind $xthmvw <B2-ButtonRelease> {xth_mv_continue_walk %x %y}
 $f.pscale configure -command xth_mv_change_profile
 
 xth_mv_init
-xth_mv_init_model
+xth_mv_init_model 1
 
 # IF, CI SA MV KONA
 } 

@@ -607,7 +607,7 @@ void thconfig::xth_save()
   
     // dump possibilities objects
     this->selector.dump_selection_db(cf, this->dbptr);
-    
+    fprintf(cf,"xth_cp_comp_stat %.0f %ld\n", thdb.db1d.nlength, thdb.nscraps);
     // close config file
     fclose(cf);
     

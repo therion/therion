@@ -101,6 +101,7 @@ void thdatabase::reset_context()
 {
   this->ccontext = THCTX_NONE;
   this->objid = 0;
+  this->nscraps = 0;
   
   this->fsurveyptr = NULL;
   this->csurveyptr = NULL;
@@ -142,6 +143,29 @@ void thdatabase::clear()
   this->reset_context();
 }
 
+void thdatabase::check_context(class thdataobject * optr) {
+  if (optr == NULL)
+    return;
+  // Let's check the object context
+  char * cmdname = optr->get_cmd_name();
+  char * misscmd = "some";
+  if ((optr->get_context() & this->ccontext) == 0) {
+    switch (optr->get_context()) {
+      case (THCTX_SURVEY | THCTX_SCRAP):
+        misscmd = "survey or scrap";
+        break;
+      case THCTX_SURVEY:
+        misscmd = "survey";
+        break;
+      case THCTX_SCRAP:
+        misscmd = "scrap";
+        break;
+    }
+    optr->self_delete();
+    ththrow(("missing %s command before %s command", misscmd, cmdname));
+  }
+}
+
 void thdatabase::insert(thdataobject * optr)
 {
 
@@ -154,12 +178,7 @@ void thdatabase::insert(thdataobject * optr)
   
   // Call start_insert object method.
   optr->start_insert();
-
-  // Let's check the object context
-  if ((optr->get_context() & this->ccontext) == 0) {
-    optr->self_delete();
-    ththrow(("invalid command context"));
-  }
+  this->check_context(optr);
   
   // Let's take case of insertion of special objects
   bool is_special_o = false;
@@ -298,6 +317,7 @@ void thdatabase::insert(thdataobject * optr)
           scrap_optr = (thscrap *) optr;
           this->ccontext = THCTX_SCRAP;
           this->cscrapptr = scrap_optr;
+          this->nscraps++;
           break;  
         
       }  // end of special objects insertion

@@ -1,5 +1,5 @@
 ##
-## app.tcl --
+## about.tcl --
 ##
 ##     Application module.   
 ##
@@ -27,11 +27,45 @@
 
 
 set xth(about,image_id) [image create photo -data $xth(about,image_data)]
+set xth(about,infotime) 2500
+
+after 0 {
+  xth_ivc
+  if {[string length $xth(about,nvr)] > 0} {
+    bell
+    if {[winfo exists $xth(gui,about)]} {
+      xth_about_nvr
+    } else {
+      # show about window for some time seconds
+      xth_about_show 0
+      after $xth(about,infotime) xth_about_hide
+    }
+  }
+}
 
 proc xth_about_status {str} {
     global xth
-    set xth(about,status) $str
+    set xth(about,status) "$str"
+    catch {
+      $xth(gui,about).i2 configure -text "VERSION $xth(about,nvr) AVAILABLE"
+    }
     update idletasks
+}
+
+
+proc xth_about_nvr {} {
+  global xth
+  if {[string length $xth(about,nvr)] == 0} {
+    return
+  }
+  if {![winfo exists $xth(gui,about)]} {
+    return
+  }
+  set w $xth(gui,about)
+  label $w.i2 -bd 0 -relief sunken -background black -fg red -text "VERSION $xth(about,nvr) AVAILABLE" \
+    -font $xth(gui,lfont) -anchor center
+  pack $w.i2 -after $w.i1 -side top -expand 1 -fill both -pady 5
+  update idletasks
 }
 
 
@@ -51,15 +85,16 @@ proc xth_about_show {btnid} {
     label $w.status -relief flat -background black -foreground white \
     	-textvariable xth(about,status) -font $xth(gui,lfont) -anchor center
     pack $w.status -side top -expand 1 -fill both
-    label $w.info -bd 0 -relief sunken -background black -fg white -textvariable xth(about,info) \
+    label $w.i1 -bd 0 -relief sunken -background black -fg white -text "xtherion\n$xth(about,ver)" \
       -font $xth(gui,lfont) -anchor center
-    pack $w.info -side top -expand 1 -fill both -pady 5
+    pack $w.i1 -side top -expand 1 -fill both -pady 5
     if {$btnid} {
       button $w.close -text "Close" -font $xth(gui,lfont) -anchor center \
         -command xth_about_hide -width 5
       pack $w.close -side top -fill none -anchor center -pady 5
       focus $w.close
     }
+    xth_about_nvr
     wm geometry $xth(gui,about) -$sw-$sh
     wm deiconify $xth(gui,about)
     update idletasks
@@ -68,7 +103,7 @@ proc xth_about_show {btnid} {
     wm geometry $xth(gui,about) +$x+$y
     $w configure -bg black
     $w.image configure -image $xth(about,image_id)
-    $w.info configure -textvariable xth(about,info)
+    $w.i1 configure -text "xtherion $xth(about,ver)\n\u00A9 2002-2004 Stacho Mudrak"
     update idletasks
 }
 

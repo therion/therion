@@ -14,9 +14,9 @@ while(<IN>) {
   ($n1,$n,$n,$n,$n,$n6) = split /;/;
   last if (length($n1)>4);                       # Therion doesn't support
                                                  # higher Unicode values
-  if ($n6 && !(/<fraction> /)) {
+  if ($n6 && !(/<.+> /)) {
     $n6 =~ s/<\w+> //;
-    if (length($n6) > 4) {$n6 = substr($n6,0,4)} # we take only the base char.
+#    if (length($n6) > 4) {$n6 = substr($n6,0,4)} # we take only the base char.
     print OUT "$n1 $n6\n";
   }
 }

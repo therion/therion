@@ -539,18 +539,18 @@ def thp_equipment_SKBB(expr pos,type) =
   begingroup
 %  interim defaultscale:=0.8;
   p_label(
-  if lang="en":
-    if type=1: "R"        % rope
-  	elseif type=2: "Lf"   % fixed ladder
-  	elseif type=3: "Lr"   % rope ladder
-  	elseif type=4: "S"    % steps
-  	elseif type=5: "B"    % bridge
+  if lang="fr":
+    if type=1: "C"        % rope
+  	elseif type=2: "Ef"   % fixed ladder
+  	elseif type=3: "Ec"   % rope ladder
+  	elseif type=4: "M"    % steps
+  	elseif type=5: "P"    % bridge
   	elseif type=6: "T"    % traverse
   	elseif type=7: "A"    % anchor
-  	elseif type=8: "C"    % camp
+  	elseif type=8: "B"    % camp
   	elseif type=9: "!"    % not equipped
   	fi
-  elseif lang="sk":
+  elseif (lang="sk") or (lang="cz"):
     if type=1: "L"
   	elseif type=2: "R"
   	elseif type=3: "Rl"
@@ -561,7 +561,18 @@ def thp_equipment_SKBB(expr pos,type) =
   	elseif type=8: "B" % bivak
   	elseif type=9: "!"
   	fi
-	fi
+  else:
+    if type=1: "R"        % rope
+  	elseif type=2: "Lf"   % fixed ladder
+  	elseif type=3: "Lr"   % rope ladder
+  	elseif type=4: "S"    % steps
+  	elseif type=5: "B"    % bridge
+  	elseif type=6: "T"    % traverse
+  	elseif type=7: "A"    % anchor
+  	elseif type=8: "C"    % camp
+  	elseif type=9: "!"    % not equipped
+  	fi
+  fi
     ,pos,0,5);
   endgroup;
 enddef;

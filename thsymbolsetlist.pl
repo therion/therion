@@ -12,7 +12,7 @@ $SYMHASH{a_zzz} = "noassign hidden";
 
 $SYMHASH{l_border_invisible} = "hidden";
 $SYMHASH{l_wall_invisible} = "hidden";
-$SYMHASH{l_survey} = "noassign";
+# ??? $SYMHASH{l_survey} = "noassign";
 $SYMHASH{l_undefined} = "noassign";
 $SYMHASH{l_label} = "noassign";
 $SYMHASH{l_} = "noassign hidden";
@@ -40,7 +40,7 @@ $SYMHASH{s_} = "noassign hidden";
 $SYMHASH{s_zzz} = "noassign hidden";
 
 $SYMHASH{x_} = "noassign hidden";
-$SYMHASH{x_all} = "noassign hidden";
+$SYMHASH{x_all} = "hidden";
 $SYMHASH{x_centerline} = "hidden";
 $SYMHASH{x_sections} = "hidden";
 $SYMHASH{x_line_wall} = "hidden";

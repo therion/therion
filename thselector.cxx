@@ -428,10 +428,10 @@ void thselector::select_db(class thdatabase * db)
 {
   thmbuffer mbf;
   char ** nms, * nobj = NULL, * nsrv = NULL;
-  int nn;
+  int nn = 0;
   thsurvey * objsrv;
   thdataobject * objptr = NULL;
-  bool to_cont, select_all, has_selected_survey = false;
+  bool to_cont = false, select_all = false, has_selected_survey = false;
   thselector_list::iterator ii = this->data.begin();
   if (this->data.empty()) {
     thselector_item xitm;

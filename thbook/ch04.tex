@@ -60,7 +60,7 @@ much has each of them surveyed:}
 
 {\it Which parts of the cave were surveyed in the year 1998?}
 
-|select TITLE from survey where ID in 
+|select TITLE from SURVEY where ID in 
   (select SURVEY_ID from CENTRELINE 
   where TOPO_DATE between '1998-01-01' and '1998-12-31');|
 

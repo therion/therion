@@ -53,8 +53,9 @@ close(IN);
 open(IN, "basechars.txt") or die "Can't open basechars.txt: $!";
 while(<IN>) {
   chomp;
-  ($n,$u) = split / /;
-  $UNI{$n} = $u;
+  ($n,$u,$a) = split / /;
+  $UNI{$n}{"base"} = $u;
+  $UNI{$n}{"acc"} = ($a ? $a : "0000");
 }
 close(IN);
 
@@ -91,10 +92,11 @@ foreach $composite (keys %UNI) {
 #  if (!exists $USED_CHARS{$ch}) {   # we don't need decompose characters
 #                                    # already present in one of the fonts
    TRY:
-    while(exists $UNI{$ch}) {
-      $ch = $UNI{$ch};
+    while(exists $UNI{$ch}{"base"}) {
+      $ch = $UNI{$ch}{"base"};
       if (exists $USED_CHARS{$ch}) {
-        $UNI2{$composite} = $ch;
+        $UNI2{$composite}{"base"} = $ch;
+        $UNI2{$composite}{"acc"} = $UNI{$composite}{"acc"};
         last TRY;
       }
     }
@@ -129,9 +131,9 @@ for ($i=0; $i < 256; $i++) {
 }
 print OUT "};\n\n";
 
-print OUT "static const int unibase[$maxbase][2] = {\n";
+print OUT "static const int unibase[$maxbase][3] = {\n";
 foreach $ch (sort keys %UNI2) {
-  print OUT "  {0x$ch, 0x$UNI2{$ch}},\n";
+  print OUT "  {0x$ch, 0x$UNI2{$ch}{base}, 0x$UNI2{$ch}{acc}},\n";
 }
 print OUT "};\n";
 close OUT;

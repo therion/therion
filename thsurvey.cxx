@@ -178,7 +178,7 @@ void thsurvey::parse_declination(char * str)
   thdate dd;
   double decl, //year, 
     dumdt;
-  double * all_data;
+  double * all_data = NULL;
   double data2 [2];
   int nid, idx, dateidx, typedt;
   

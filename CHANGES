@@ -1,4 +1,24 @@
 --------------------------------------------------------------------------------
+Therion 0.3.2 (2004-07-22):
+
+therion:
+ * configuration file changes:
+   - layout command: scale 1 50 upto 1 100000 allowed and supported
+ * Therion constructs accented characters if the character is not present
+   in the font. It used to omit the accent and display the base character only
+ * error message `invalid command context' changed to 
+   `missing xxx command before yyy command'
+ * French translation added
+
+xtherion: 
+
+ * line split bug fixed
+ * automatically checks for updates
+ * 3D viewer: reload (Ctrl+R)
+ * 3D viewer: bounding box computation fixed
+
+
+--------------------------------------------------------------------------------
 Therion 0.3.1 (2004-04-23):
 
 therion:

@@ -695,6 +695,11 @@ proc xth_te_open_file {dialogid fname fline} {
 
 proc xth_te_before_close_file {cfid btns} {
   global xth
+  if {
+      [catch {winfo exists $xth(te,$cfid,frame).txt}] 
+      || (![winfo exists $xth(te,$cfid,frame).txt])} {
+    return 1
+  }
   set ftext [$xth(te,$cfid,frame).txt get 1.0 end]
   if {[string compare $xth(te,$cfid,otext) $ftext] != 0} {    
     set wtd [MessageDlg $xth(gui,message) -parent $xth(gui,main) \

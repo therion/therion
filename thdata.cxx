@@ -1992,12 +1992,16 @@ void thdata::set_survey_declination()
     csptr = this->fsptr;
   else
     csptr = this->db->get_current_survey();
-    
-  bool hasdec = csptr->get_decdef();
-  while((csptr != NULL) && (!hasdec)) {
-    csptr = csptr->get_father_survey();
-    if (csptr != NULL)
-      hasdec = csptr->get_decdef();
+  
+  bool hasdec = false;
+  
+  if (csptr != NULL) {  
+    hasdec = csptr->get_decdef();
+    while((csptr != NULL) && (!hasdec)) {
+      csptr = csptr->get_father_survey();
+      if (csptr != NULL)
+        hasdec = csptr->get_decdef();
+    }
   }
     
   // set survey declination

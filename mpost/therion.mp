@@ -42,7 +42,7 @@ tracingstats:=1;
 prologues:=1;
 
 if known Background: background:=Background fi;
-TrueScale:=Scale;
+%TrueScale:=Scale;
 
 % @VARIABLE
 % symbol_scale --
@@ -173,26 +173,27 @@ def fonts_setup (expr t,s,m,l,h) =
         "\def\thframed{\thsmallsize}" &
         "\def\thwallaltitude{\thtinysize}"
   to "mptexpre.tex";
-  write "\def\thtinysize{\size[" & decimal max(t*BaseScale/Scale,0) & "]}" & 
-        "\def\thsmallsize{\size[" & decimal max(s*BaseScale/Scale,0) & "]}" & 
-        "\def\thnormalsize{\size[" & decimal max(m*BaseScale/Scale,0) & "]}" & 
-        "\def\thlargesize{\size[" & decimal max(l*BaseScale/Scale,0) & "]}" & 
-        "\def\thhugesize{\size[" & decimal max(h*BaseScale/Scale,0) & "]}" 
+  write "\def\thtinysize{\size[" & decimal max(optical_zoom*t,0) & "]}" & 
+        "\def\thsmallsize{\size[" & decimal max(optical_zoom*s,0) & "]}" & 
+        "\def\thnormalsize{\size[" & decimal max(optical_zoom*m,0) & "]}" & 
+        "\def\thlargesize{\size[" & decimal max(optical_zoom*l,0) & "]}" & 
+        "\def\thhugesize{\size[" & decimal max(optical_zoom*h,0) & "]}" 
   to "mptexpre.tex";
   write EOF to "mptexpre.tex";
 enddef;
 
-def initialize (expr Scale) =
+def initialize (expr sc) =
 
-if unknown BaseScale: BaseScale = Scale; fi;
+  if unknown BaseScale: BaseScale = sc; fi;
+  optical_zoom := BaseScale/sc;
 
-    if BaseScale <= 100:
+    if BaseScale <= 1:                   % 1:100
         u:=14bp; v:=14bp; w:=12bp;
         fonts_setup(8,10,12,16,24);
-    elseif BaseScale <= 200:
+    elseif BaseScale <= 2:               % 1:200
         u:=12bp; v:=12bp; w:=12bp;
         fonts_setup(7,8,10,14,20);
-    elseif BaseScale <= 500:
+    elseif BaseScale <= 5:               % 1:500
         u:=10bp; v:=10bp; w:=12bp;
         fonts_setup(6,7,8,10,14);
     else:
@@ -200,11 +201,11 @@ if unknown BaseScale: BaseScale = Scale; fi;
         fonts_setup(5,6,7,8,10);
     fi;
     
-    u := u * BaseScale/Scale;
-    v := v * BaseScale/Scale;
-    w := w * BaseScale/Scale;
+    u := optical_zoom * u;
+    v := optical_zoom * v;
+    w := optical_zoom * w;
 
-    defaultscale := 0.8 * BaseScale/Scale;
+    defaultscale := 0.8 * optical_zoom;
 
     def PenA = pencircle scaled (u/10) enddef;
     def PenB = pencircle scaled (0.7*u/10) enddef;

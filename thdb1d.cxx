@@ -48,6 +48,7 @@ thdb1d::thdb1d()
   this->tree_legs = NULL;
   this->num_tree_legs = 0;
   this->lsid = 0;
+  this->nlength = 0.0;
   
   this->tree_arrows = NULL;
   this->tree_nodes = NULL;
@@ -648,7 +649,7 @@ void thdb1d::process_tree()
       
       // something is wrong
       if (n2 == NULL) {
-        ththrow(("a software BUG is present"));
+        ththrow(("a software BUG is present (" __FILE__ ":%d)", __LINE__));
 //#ifdef THDEBUG
 //        thprintf("warning -- not all stations connected to the network\n");
 //#endif
@@ -854,8 +855,10 @@ void thdb1d::process_survey_stat() {
     else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
       lit->data->stat_slength += lit->leg->total_length;
     // inak prida do length
-    else
+    else {
       lit->data->stat_length += lit->leg->total_length;
+      this->nlength += lit->leg->total_length;
+    }
     // stations
     if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
       thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), false);
@@ -1192,7 +1195,7 @@ void thdb1d::find_loops()
     
   if (nstations > 0) 
     crossst = new long [nstations];
-  thlc_leg * lclegs = NULL, * clcleg, * prevlcleg;
+  thlc_leg * lclegs = NULL, * clcleg = NULL, * prevlcleg = NULL;
   if (nlegs > 0) 
     lclegs = new thlc_leg [nlegs];
   
@@ -1914,7 +1917,7 @@ void thdb1d::close_loops()
     }
     
     if (!froms->placed)
-      ththrow(("a software BUG is present"));
+      ththrow(("a software BUG is present (" __FILE__ ":%d)", __LINE__));
     if (!tos->placed) {
       if (cleg->reverse) {
         tos->x = froms->x - cleg->leg->adj_dx;
@@ -1940,7 +1943,10 @@ void thdb1d::close_loops()
       ps->y = froms->y;
       ps->z = froms->z;
       if (!ps->placed) {
-        ththrow(("a software BUG is present"));
+//        ththrow(("a software BUG is present (" __FILE__ ":%d)", __LINE__));
+        ththrow(("can not connect %s@%s to centerline network",
+          this->station_vec[i].name,
+          this->station_vec[i].survey->get_full_name()));
       }
     }
   }
@@ -2098,7 +2104,7 @@ thdb3ddata * thdb1d::get_3d() {
   
   // polygony tam vlozi ako linestripy (data poojdu na thdb1dl)
   last_st = nstat;
-  thdb3dfc * fc;
+  thdb3dfc * fc = NULL;
   thdb1dl ** tlegs = this->get_tree_legs();  
   for(i = 0; i < nlegs; i++, tlegs++) {
     if ((*tlegs)->survey->is_selected()) {

@@ -213,6 +213,8 @@ typedef std::list < thdb1d_loop > thdb1d_loop_list_type;
  
 class thdb1d {
 
+  public:
+
   class thdatabase * db;  ///< Our database.
   
   thdb1dl ** tree_legs; ///< Tree structure.
@@ -228,6 +230,8 @@ class thdb1d {
   unsigned long num_tree_legs; ///< Number of legs in the tree.
   
   unsigned long lsid;  ///< Last station id.
+  
+  double nlength;
   
   /**
    * Scan survey stations.

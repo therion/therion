@@ -121,7 +121,7 @@ proc xth_me_unredo_update {} {
     $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,redo) \
       -label "Redo" -state disabled
   }
-    
+
 }
 
 
@@ -142,6 +142,7 @@ proc xth_me_unredo_undo {} {
       $xth(me,can) yview moveto [lindex $acmd 2]
       xth_me_images_rescandraw
     }
+    set xth(me,fsave) 1
     xth_me_unredo_update
   }  
 }
@@ -210,6 +211,7 @@ proc xth_me_unredo_redo {} {
     set xth(me,unredook) 0
     eval [lindex $acmd 4]
     set xth(me,unredook) 1
+    set xth(me,fsave) 1
     xth_me_unredo_update
   }  
   
@@ -220,7 +222,6 @@ proc xth_me_unredo_action {txt undocmd redocmd} {
   
   global xth
   if {$xth(me,unredook)} {
-    set xth(me,fsave) 1
     set xth(me,redolist) {}
     if {[string length $xth(me,unredola)] > 0} {
       set txt $xth(me,unredola)
@@ -228,6 +229,7 @@ proc xth_me_unredo_action {txt undocmd redocmd} {
     }
     set xth(me,undolist) [linsert $xth(me,undolist) 0 [list \
       $txt [lindex [$xth(me,can) xview] 0] [lindex [$xth(me,can) yview] 0] $undocmd $redocmd]]
+    set xth(me,fsave) 1
     xth_me_unredo_update
   }
   
