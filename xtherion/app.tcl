@@ -236,9 +236,9 @@ proc xth_app_finish {} {
     } -font $xth(gui,lfont)
     $dm add separator
     $dm add command -label "Show command console" -underline 1 \
-      -command "wm deiconify .; wm transient . $xth(gui,main)" -font $xth(gui,lfont)
+      -command "wm deiconify $xth(gui,dbg); wm transient $xth(gui,dbg) $xth(gui,main)" -font $xth(gui,lfont)
     $dm add command -label "Hide command console" -underline 1 \
-      -command "wm withdraw ." -font $xth(gui,lfont)
+      -command "wm withdraw $xth(gui,dbg)" -font $xth(gui,lfont)
   }
 
   bind $xth(gui,main) <Control-Key-q> "xth_exit"

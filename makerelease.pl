@@ -19,5 +19,3 @@ open(VFL,">thversion.h");
 print VFL "#define THVERSION \"$v1.$v2.$v3\"\n";
 close(VFL);
 
-system("tar -cvzf ../therion-$v1.$v2.$v3.tar.gz -C .. therion");
-#system("bzip2 -f ../therion-$v1.$v2.$v3.tar");

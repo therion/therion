@@ -41,7 +41,9 @@ switch $what {
       }
       default {
         set oid [open "xtherion" w]
-        puts $oid "#!/usr/bin/wish"
+        puts $oid "#!/bin/sh"
+        puts $oid "# the next line restarts with wish \\"
+        puts $oid "exec wish \"\$0\" \"\$@\""
       }
     }
     puts $oid {##

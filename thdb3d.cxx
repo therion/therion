@@ -286,8 +286,8 @@ void thdb3ddata::export_3dmf(FILE * out) {
   for(vx = this->firstvx; vx != NULL; vx = vx->next)
     fprintf(out,"\t%.2f %.2f %.2f # %ld\n", 
       vx->x - this->exp_shift_x, 
-      vx->y - this->exp_shift_y, 
       vx->z - this->exp_shift_z,
+      this->exp_shift_y - vx->y, 
       vx->id);
   
   unsigned long nfaces = 0;

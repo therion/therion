@@ -197,7 +197,7 @@
 ##
 ##------------------------------------------------------------------------
 
-if {![string equal $xth(gui,platform) windows]} {
+set xth(gui,dbg) .
 
 package require Tk
 
@@ -2320,6 +2320,3 @@ if {[info exists ::Name]} {
 if {$Console(WWW)} {
     . configure -width [getattr width] -height [getattr height]
 }
-
-}
-# END OF WIN

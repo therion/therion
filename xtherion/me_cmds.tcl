@@ -1038,12 +1038,13 @@ proc xth_me_cmds_update_text {id newdata newcpos} {
   global xth
   set olddata $xth(me,cmds,$id,data)
   set oldcpos $xth(me,cmds,$id,cpos)
-  regsub {\s*$} $newdata "\n" newdata
+  regsub {\s*$} $newdata {} newdata
   if {![string equal $xth(me,cmds,$id,data) $newdata]} {
+    set newdata "$newdata\n"
     xth_me_unredo_action "text changes" \
       "xth_me_cmds_update_text $id [list $olddata] $oldcpos; xth_me_cmds_select $id" \
       "xth_me_cmds_update_text $id [list $newdata] $newcpos; xth_me_cmds_select $id"
-    set xth(me,cmds,$id,data) $newdata    
+    set xth(me,cmds,$id,data) $newdata
     set xth(me,cmds,$id,cpos) $newcpos    
   }
 }
@@ -1082,9 +1083,9 @@ proc xth_me_cmds_create_all {lns} {
   xth_status_bar_push me
   set ctext_push {
     regsub {^\s*} $ctext {} ctext
-    regsub {\s*$} $ctext "\n" ctext
+    regsub {\s*$} $ctext {} ctext
     if {[string length $ctext] > 0} {
-      xth_me_cmds_create_text [expr [llength $xth(me,cmds,xlist)] - 1] 0 "$ctext" 1.0
+      xth_me_cmds_create_text [expr [llength $xth(me,cmds,xlist)] - 1] 0 "$ctext\n" 1.0
       set ctext {}
     }
   }

@@ -270,9 +270,15 @@ void thline::parse_type(char * ss)
 
 void thline::parse_subtype(char * ss) 
 {
+//  int prevcsubtype = this->csubtype;
   this->csubtype = thmatch_token(ss,thtt_line_subtypes);
   if (this->csubtype == TT_LINE_SUBTYPE_UNKNOWN)
     ththrow(("invalid line subtype -- %s",ss))
+//  if ((this->last_point != NULL) && (prevcsubtype != TT_LINE_SUBTYPE_UNKNOWN)
+//       && (this->csubtype != prevcsubtype)) {
+//    this->throw_source();
+//    threwarning2(("multiple subtypes per line are deprecated"))
+//  }
   bool tsok = false;
   switch (this->type) {
     case TT_LINE_TYPE_WALL:

@@ -76,6 +76,7 @@ thscrap::thscrap()
   this->polygon_first = NULL;
   this->polygon_last = NULL;
   
+  this->d3 = TT_AUTO;
   this->d3_parsed = false;
   
   this->maxdist = 0.0;
@@ -163,6 +164,12 @@ void thscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
     
     case TT_SCRAP_STATIONS:
       this->parse_stations(*args);
+      break;
+      
+    case TT_SCRAP_3D:
+      this->d3 = thmatch_token(*args, thtt_onoffauto);
+      if (this->d3 == TT_UNKNOWN_BOOL)
+        ththrow(("invalid -3d switch -- %s", *args));
       break;
     
     // if not found, try to set fathers properties  
@@ -805,6 +812,8 @@ void thscrap::process_3d() {
     
   this->d3_parsed = true;
 
+  thprintf("[%s] ", this->name);
+
   thscrapis is;
   thscraplp * slp;
   th2ddataobject * o2;
@@ -934,7 +943,7 @@ void thscrap::process_3d() {
 //    fprintf(out,"glNormal3f %.2f\t%.2f\t%.2f\n", normx / norml, normy / norml, 0.0);
 
   oline = is.firstolseg;
-  thdb3dfc * cfc;
+  thdb3dfc * cfc = NULL;
   thdb3dfx * cfx, * cfx2;
   while (oline != NULL) {
     started = false;
@@ -975,7 +984,7 @@ void thscrap::process_3d() {
       olineln = olineln->next;
     }
     
-    if (EXPORT3D_INVISIBLE || oline->visible) {
+    if ((oline->next != NULL) && (EXPORT3D_INVISIBLE || oline->visible)) {
       if (!started && (prevolineln != NULL)) {
         cfc = this->d3_outline.insert_face(THDB3DFC_TRIANGLE_STRIP);
       }

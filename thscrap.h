@@ -48,6 +48,7 @@ enum {
   TT_SCRAP_PROJECTION = 2001,
   TT_SCRAP_SCALE = 2002,
   TT_SCRAP_STATIONS = 2003,
+  TT_SCRAP_3D = 2004,
 };
 
 
@@ -56,6 +57,7 @@ enum {
  */
  
 static const thstok thtt_scrap_opt[] = {
+  {"3d", TT_SCRAP_3D},
   {"proj", TT_SCRAP_PROJECTION},
   {"projection", TT_SCRAP_PROJECTION},
   {"scale", TT_SCRAP_SCALE},
@@ -104,6 +106,7 @@ class thscrap : public thdataobject {
   
   thmapstat_datamap adata;
   
+  int d3;
   thdb3ddata d3_outline;
   
   void parse_scale(char * ss);

@@ -33,6 +33,7 @@ set xth(prj,title) "therion user interface"
 set xth(gui,main) ".xth"
 set xth(gui,about) ".xth_about"
 set xth(gui,bacw) ".xth_bac"
+set xth(gui,dbg) ".xth_dbg"
 set xth(gui,help) ".xth_help"
 set xth(gui,message) ".xthmsg"
 set xth(gui,minsize) {480 300}

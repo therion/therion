@@ -60,6 +60,7 @@
   thprint_error_src();\
   thprintf2err P;\
   thprintf2err("\n");\
+  thtext_inline = false;\
   thpause_exit();\
   thexit(EXIT_FAILURE);\
 }
@@ -75,6 +76,7 @@
   thprint_warning_src();\
   thprintf2err P;\
   thprintf2err("\n");\
+  thtext_inline = false;\
 }
 
 /**

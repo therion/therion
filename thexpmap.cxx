@@ -963,6 +963,17 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   com += thtmp.get_file_name("data.pdf");
   com += " ";
   com += fnm;
+
+#ifdef THWIN32
+  unsigned long cpch;
+  char * cpcmd = com.get_buffer();
+  for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
+    if (cpcmd[cpch] == '/') {
+      cpcmd[cpch] = '\\';
+    }
+  }
+#endif
+
 #ifdef THDEBUG
   thprintf("copying results\n");
 #endif

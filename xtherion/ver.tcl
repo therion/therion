@@ -1,1 +1,1 @@
-set xth(about,ver) 0.3.0
+set xth(about,ver) 0.3.1

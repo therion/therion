@@ -107,11 +107,14 @@ install: all
 	perl makeinstall.pl $(THPLATFORM)
 
 
-release: clean
+release:
 	perl makerelease.pl
 
 archive: clean
 	perl makearchive.pl
+
+release-archive: clean
+	perl makearchive2.pl
 
 binary: all doc
 	perl makebinary.pl $(THPLATFORM)

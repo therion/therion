@@ -2107,6 +2107,7 @@ void thdb2d::pp_shift_points(thdb2dprj * prj, bool calc_az)
 
 void thdb2d::pp_process_joins(thdb2dprj * prj)
 {
+
   // prejde join za joinom a vytovori zoznamy
   thjoin * jptr = prj->first_join, * tjptr;
   prj->first_join_list = NULL;

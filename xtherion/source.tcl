@@ -61,7 +61,11 @@ source mv.tcl
 source mv_procs.tcl
 #source v3.tcl
 #@DEBUG
-source console.tcl
+if {![string equal $xth(gui,platform) windows]} {
+  source console.tcl
+} else {
+  source dbg.tcl
+}
 #@ALL
 source main.tcl
 

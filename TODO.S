@@ -1,4 +1,5 @@
 HNED:
++ nepodporovat subtype ako option pre linept ale iba pre line
 + 3d: upravit 1. interpolacnu funkciu
   + vytvorit funkciu, co vlozi shot (aby sa upravovali odkazy)
   + vytvorit funkciu, co vypocita smery
@@ -14,9 +15,14 @@ HNED:
 + export database: format text|txt
 + 2d: otacanie vystupnej mapy aj sipky na sever
 + layout: [...] oznacovanie texovskych textov
++ 2d: pospajat zoznamy na joinovanie, prv ako sa zacne joinovat
 + 2d: -adjust horizontal|vertical pre line point (zakazat v projection plan)
 
 HOTOVO:
++ prazdne riadky v xtherione by uz nemali byt
++ nahradit / \ vo pri win32 vystupe
++ scrap: -3d <on|off|auto>
++ pre vlozenim obrazku do noveho suboru sa chce ulozit
 
 POTOM:
 + x: nezobrazuje encoding pre thconfig

@@ -1,4 +1,21 @@
 --------------------------------------------------------------------------------
+Therion 0.3.1 (2004-04-23):
+
+therion:
+
+ * input language changes:
+   - scrap command has new option: 3d
+ * windows version: accepts slashes as directory separators in the 
+   export command
+ * Czech translation added
+
+xtherion: 
+
+ * Map editor: fixed bug with empty lines displayed as text
+ * Map editor: doesn't allow to insert a background image if the *.th2
+   file hasn't been saved
+
+--------------------------------------------------------------------------------
 Therion 0.3.0 (2004-04-16):
 
 therion:

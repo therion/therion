@@ -369,8 +369,7 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
     thdb.db2d.process_projection(prjid.prj);
     cs = prjid.prj->first_scrap;
     while(cs != NULL) {
-      if (cs->fsptr->is_selected()) {
-        thprintf("[%s] ", cs->name);
+      if (cs->fsptr->is_selected() && (cs->d3 != TT_FALSE)) {
         d3d = cs->get_3d_outline();
         d3d->exp_shift_x = avx;
         d3d->exp_shift_y = avy;
@@ -443,7 +442,6 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
     cs = prjid.prj->first_scrap;
     while(cs != NULL) {
       if (cs->fsptr->is_selected()) {
-        thprintf("[%s] ", cs->name);
         d3d = cs->get_3d_outline();
         d3d->exp_shift_x = avx;
         d3d->exp_shift_y = avy;
@@ -518,7 +516,6 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
     cs = prjid.prj->first_scrap;
     while(cs != NULL) {
       if (cs->fsptr->is_selected()) {
-        thprintf("[%s] ", cs->name);
         d3d = cs->get_3d_outline();
         d3d->exp_shift_x = avx;
         d3d->exp_shift_y = avy;

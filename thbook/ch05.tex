@@ -301,13 +301,14 @@ are described in the previous chapter:
 In order to place them somewhere on the map page, you have to define 
 |\maplayout| macro in the |code tex-map| section of the |layout| command. 
 It should contain one or more |\legendbox| invocations.
-The |\legendbox| macro has two parameters: specification of the position on the 
-page (N, E, S, W, NE, SE, SW or NW) and the content to be displayed.
+The |\legendbox| macro has four parameters: 
+coordinates ranging 0--100, alignment specification 
+(N, E, S, W, NE, SE, SW, NW or C) and the content to be displayed.
 
 A simple example is
 
 |\def\maplayout{
-  \legendbox{NW}{\northarrow}
+  \legendbox{0}{100}{NW}{\northarrow}
 }|
 
 which displays north arrow in the upper-left corner of the map sheet.
@@ -318,7 +319,7 @@ comment, copyrigts and legend.
 Width of the above text may be adjusted by |\legendwidth| dimen register. 
 The |\legendcontent| is also used in the default map layout definition:
 
-|\def\maplayout{\legendbox{NW}{\the\legendcontent}}|
+|\def\maplayout{\legendbox{0}{100}{NW}{\the\legendcontent}}|
 
 
 
