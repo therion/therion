@@ -37,7 +37,7 @@ proc xth_me_ss_next {} {
   if {$cselid == 0} {
     set totalcnt [llength $xth(me,cmds,xlist)]
   } else {
-    set totalcnt [expr [llength $xth(me,cmds,xlist)] - [lsearch -exact -integer $xth(me,cmds,xlist) $cselid] - 1]
+    set totalcnt [expr [llength $xth(me,cmds,xlist)] - [lsearch -exact $xth(me,cmds,xlist) $cselid] - 1]
   }
   set cnt 0
   xth_me_progbar_show $totalcnt
@@ -54,7 +54,7 @@ proc xth_me_ss_next {} {
       incr cnt
     } elseif {($xth(me,cmds,$cselid,ct) != 3) || ($cselpid == 0)} {
       set cselid [lindex $xth(me,cmds,xlist) \
-          [expr [lsearch -exact -integer $xth(me,cmds,xlist) $cselid] + 1]]
+          [expr [lsearch -exact $xth(me,cmds,xlist) $cselid] + 1]]
       if {$xth(me,cmds,$cselid,ct) == 3} {
         set cselpid [lindex $xth(me,cmds,$cselid,xplist) 0]
       } else {
@@ -63,7 +63,7 @@ proc xth_me_ss_next {} {
       incr cnt
     } else {
       set cselpid [lindex $xth(me,cmds,$cselid,xplist) \
-          [expr [lsearch -exact -integer $xth(me,cmds,$cselid,xplist) $cselpid] + 1]]
+          [expr [lsearch -exact $xth(me,cmds,$cselid,xplist) $cselpid] + 1]]
     }
     xth_me_progbar_prog $cnt
     switch $xth(me,cmds,$cselid,ct) {
@@ -83,7 +83,7 @@ proc xth_me_ss_next {} {
           }
         } else {
           if {[xth_me_ss_match [lindex $xth(me,cmds,$cselid,data_pt) \
-              [lsearch -exact -integer $xth(me,cmds,$cselid,xplist) $cselpid]]]} {
+              [lsearch -exact $xth(me,cmds,$cselid,xplist) $cselpid]]]} {
             xth_me_cmds_select "$cselid $cselpid"
             xth_me_progbar_hide
             xth_status_bar_pop me

@@ -45,10 +45,12 @@
 #include "tharea.h"
 #include "thversion.h"
 #include "thtexfonts.h"
+#include "thlang.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string>
 
 bool thverbose_mode = true;
 
@@ -108,7 +110,10 @@ void thprint_environment() {
 
 void thprint_xtherion() {
   bool already_exported;
-  int i, j;
+  int i, j, l;
+  char * lngstr, *trnstr;
+  thbuffer tsrc, tdst;
+  std::string tss;
   thprintf("set xth(point_types) {\n");
   for(i = 0; thtt_point_types[i].tok != TT_POINT_TYPE_UNKNOWN; i++) {
     already_exported = false;
@@ -118,8 +123,28 @@ void thprint_xtherion() {
         break;
       }
     }
-    if (!already_exported)
+    if (!already_exported) {
       thprintf("\t%s\n",thtt_point_types[i].s);
+      tsrc  = "point ";
+      tsrc += thtt_point_types[i].s;
+      l = 0;
+      lngstr = thlang_getid(l);
+      while (strlen(lngstr) > 0) {
+        trnstr = thT(tsrc.get_buffer(), l);
+	if (strcmp(trnstr, tsrc.get_buffer()) != 0) {
+	  thdecode_tcl(&tdst, trnstr);
+    	  tss += "::msgcat::mcset ";
+	  tss += lngstr;
+	  tss += " \"";
+	  tss += tsrc.get_buffer();
+	  tss += "\" [encoding convertfrom utf-8 \"";
+	  tss += tdst.get_buffer();
+	  tss += "\"]\n";
+	}
+        l++;
+        lngstr = thlang_getid(l);
+      }      
+    }
   }
   thprintf("}\n\nset xth(line_types) {\n");
   for(i = 0; thtt_line_types[i].tok != TT_LINE_TYPE_UNKNOWN; i++) {
@@ -130,8 +155,28 @@ void thprint_xtherion() {
         break;
       }
     }
-    if (!already_exported)
+    if (!already_exported) {
       thprintf("\t%s\n",thtt_line_types[i].s);
+      tsrc  = "line ";
+      tsrc += thtt_line_types[i].s;
+      l = 0;
+      lngstr = thlang_getid(l);
+      while (strlen(lngstr) > 0) {
+        trnstr = thT(tsrc.get_buffer(), l);
+	if (strcmp(trnstr, tsrc.get_buffer()) != 0) {
+	  thdecode_tcl(&tdst, trnstr);
+    	  tss += "::msgcat::mcset ";
+	  tss += lngstr;
+	  tss += " \"";
+	  tss += tsrc.get_buffer();
+	  tss += "\" [encoding convertfrom utf-8 \"";
+	  tss += tdst.get_buffer();
+	  tss += "\"]\n";
+	}
+        l++;
+        lngstr = thlang_getid(l);
+      }      
+    }
   }
   thprintf("}\n\nset xth(area_types) {\n");
   for(i = 0; thtt_area_types[i].tok != TT_AREA_TYPE_UNKNOWN; i++) {
@@ -142,10 +187,31 @@ void thprint_xtherion() {
         break;
       }
     }
-    if (!already_exported)
+    if (!already_exported) {
       thprintf("\t%s\n",thtt_area_types[i].s);
+      tsrc  = "area ";
+      tsrc += thtt_area_types[i].s;
+      l = 0;
+      lngstr = thlang_getid(l);
+      while (strlen(lngstr) > 0) {
+        trnstr = thT(tsrc.get_buffer(), l);
+	if (strcmp(trnstr, tsrc.get_buffer()) != 0) {
+	  thdecode_tcl(&tdst, trnstr);
+    	  tss += "::msgcat::mcset ";
+	  tss += lngstr;
+	  tss += " \"";
+	  tss += tsrc.get_buffer();
+	  tss += "\" [encoding convertfrom utf-8 \"";
+	  tss += tdst.get_buffer();
+	  tss += "\"]\n";
+	}
+        l++;
+        lngstr = thlang_getid(l);
+      }      
+    }
   }
   thprintf("}\n");
+  thprintf("\n%s", tss.c_str());
 }
 
 

@@ -1,10 +1,6 @@
 /*
- * Copyright (C) 2003 Martin Budaj
+ * Copyright (C) 2005 Martin Budaj
  * 
- * $Date: $
- * $RCSfile: $
- * $Revision: $
- *
  * -------------------------------------------------------------------- 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,13 +18,9 @@
  * --------------------------------------------------------------------
  */
  
+#ifndef thsvg_h
+#define thsvg_h
 
-#ifndef thconvert_h
-#define thconvert_h
-
-int thconvert();
-void read_rgb();
+void thsvg(char * fname);
 
 #endif
-
-

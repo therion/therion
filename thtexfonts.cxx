@@ -156,7 +156,7 @@ string replace_all(string s, string f, string r) {
 
 // main task is done here
 
-string utf2tex(string str) {
+string utf2tex(string str, bool remove_kerning) {
   ostringstream T;
   string tmp;
   int wc;  //wide char
@@ -248,7 +248,9 @@ string utf2tex(string str) {
 //              if (i==0 || i==127 || i==123 || i==125 || i==36 || i==38 || 
 //                  i==10 || i==35 || i==95 || i==126 || i==13 || i==94 || 
 //                  i==92 || i==37 || i < 32) {
-                T << "\\char" << i << " ";
+
+//original                T << "\\char" << i << " ";
+                T << "\\char" << i << " " << (remove_kerning ? "{}" : "");
 //              }
 //              else {
 //                T << char(i);
@@ -340,8 +342,8 @@ string utf2tex(string str) {
 //}
 
 #ifndef NOTHERION
-const char * utf2tex (char * s) {
-  string t = utf2tex(string(s));
+const char * utf2tex (char * s, bool b) {
+  string t = utf2tex(string(s),b);
   thtexfontsbuff.strcpy(t.c_str());
   return thtexfontsbuff.get_buffer();
 }

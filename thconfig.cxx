@@ -614,9 +614,18 @@ void thconfig::export_data()
 void thconfig::xth_save()
 {
   if (this->generate_xthcfg) {
+
+    thbuffer nfn;
+    nfn = this->fname.get_buffer();
+    char * xbf = nfn.get_buffer();
+    size_t x, xl = strlen(xbf);
+    for (x = 0; x < xl; x++) {
+      if (xbf[x] == '.')
+        xbf[x] = '_';
+    }
   
 #ifdef THDEBUG
-    thprintf("\nwriting xtherion file -- .xth-%s\n", this->fname.get_buffer());
+    thprintf("\nwriting xtherion file -- .xth_%s\n", xbf);
 #else
     thprintf("writing xtherion file ... ");
     thtext_inline = true;
@@ -624,8 +633,9 @@ void thconfig::xth_save()
 
     // OK, let's open configuration file for output
     FILE * cf;
-    this->dbptr->buff_tmp = ".xth-";
-    this->dbptr->buff_tmp += this->fname.get_buffer();
+    this->dbptr->buff_tmp = ".xth_";
+    this->dbptr->buff_tmp += xbf;
+    this->dbptr->buff_tmp += "_xth";
     cf = fopen(this->dbptr->buff_tmp.get_buffer(),"w");
     if (cf == NULL) {
       thwarning(("can't open xtherion file for output -- %s.xth", this->fname.get_buffer()));

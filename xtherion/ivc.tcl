@@ -25,8 +25,12 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ## -------------------------------------------------------------------- 
 
+package require msgcat
+namespace import ::msgcat::mc
+
 set xth(about,nvr) {}
 set xth(about,session) [list]
+
 
 proc xth_ivc {} {
   global xth

@@ -37,6 +37,23 @@
 #include "thdb1d.h"
 #include "thinfnan.h"
 
+enum {
+  TT_SURFACE_GFLIP_UNKNOWN,
+  TT_SURFACE_GFLIP_VERTICAL,
+  TT_SURFACE_GFLIP_HORIZONTAL,
+  TT_SURFACE_GFLIP_NONE,
+};
+ 
+static const thstok thtt_surface_gflip[] = {
+  {"horiz", TT_SURFACE_GFLIP_HORIZONTAL},
+  {"horizontal", TT_SURFACE_GFLIP_HORIZONTAL},
+  {"none", TT_SURFACE_GFLIP_NONE},
+  {"vert", TT_SURFACE_GFLIP_VERTICAL},
+  {"vertical", TT_SURFACE_GFLIP_VERTICAL},
+  {NULL, TT_SURFACE_GFLIP_UNKNOWN},
+};
+
+
 thsurface::thsurface()
 {
   // replace this by setting real properties initialization
@@ -67,6 +84,7 @@ thsurface::thsurface()
   this->calib_r = thnan;
   this->calib_s = thnan;
   this->grid = NULL;
+  this->grid_flip = TT_SURFACE_GFLIP_NONE;
   
   this->s1.clear();
   this->s2.clear();
@@ -150,6 +168,14 @@ void thsurface::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lo
       
     case TT_SURFACE_GRID_UNITS:
       this->grid_units.parse_units(args[0]);
+      break;
+    
+    case TT_SURFACE_GRID_FLIP:
+      if (this->grid != NULL)
+        ththrow(("grid-flip specification after grid data not allowed"));
+      this->grid_flip = thmatch_token(args[0], thtt_surface_gflip);
+      if (this->grid_flip == TT_SURFACE_GFLIP_UNKNOWN)
+        ththrow(("unknown surface flip mode -- %s", args[0]))
       break;
       
     case TT_SURFACE_PICTURE:
@@ -400,6 +426,7 @@ void thsurface::parse_grid(char * spec)
   
   // kazdy parsneme ako cislo a zapiseme do pola  
   long i, ni = thdb.mbuff_tmp.get_size();
+  long x, y;
   int sv;
   double alt;
   char ** heights = thdb.mbuff_tmp.get_buffer();
@@ -409,7 +436,18 @@ void thsurface::parse_grid(char * spec)
       ththrow(("number expected -- %s", heights[i]))
     if (this->grid_counter == this->grid_size)
       ththrow(("too many grid data"))
-    this->grid[this->grid_counter++] = this->grid_units.transform(alt);
+    x = this->grid_counter % this->grid_nx;
+    y = this->grid_ny - (this->grid_counter / this->grid_nx) - 1;
+    switch (this->grid_flip) {
+      case TT_SURFACE_GFLIP_VERTICAL:
+        y = this->grid_ny - y - 1;
+        break;
+      case TT_SURFACE_GFLIP_HORIZONTAL:
+        x = this->grid_nx - x - 1;
+        break;
+    }
+    this->grid[y * this->grid_nx + x] = this->grid_units.transform(alt);
+    this->grid_counter++;
   }
 }
 

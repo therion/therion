@@ -34,6 +34,7 @@
 #include "thtflength.h"
 #include "thtexfonts.h"
 #include "thdate.h"
+#include "thscrap.h"
 
 thpoint::thpoint()
 {
@@ -206,7 +207,7 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
     case TT_POINT_STATION:
       if (this->type != TT_POINT_TYPE_STATION)
         ththrow(("point not station -- -name"))
-      thparse_objectname(this->station_name, & this->db->buff_stations, *args);
+      thparse_objectname(this->station_name, & this->db->buff_stations, *args, thdb.cscrapptr);
       break;
       
     case TT_POINT_EXTEND:
@@ -223,6 +224,7 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
           case TT_POINT_TYPE_DATE:
           case TT_POINT_TYPE_ALTITUDE:
           case TT_POINT_TYPE_HEIGHT:
+          case TT_POINT_TYPE_DIMENSIONS:
           case TT_POINT_TYPE_PASSAGE_HEIGHT:
             ththrow(("-clip not valid with type %s", thmatch_string(this->type,thtt_point_types)))
             break;
@@ -355,8 +357,9 @@ void thpoint::parse_extend(char * estr)
       case TT_POINT_EXTEND_PREV:
         cpar++;
         if (cpar == npar)
-          ththrow(("point or station name expected"))
-        thparse_objectname(this->extend_name,& this->db->buff_stations,pars[cpar]);
+          ththrow(("station name expected"))
+//          ththrow(("point or station name expected"))
+        thparse_objectname(this->extend_name,& this->db->buff_stations,pars[cpar],this->fscrapptr);
         break;
       default:
         ththrow(("invalid keyword -- %s",pars[cpar]))
@@ -401,6 +404,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
   switch(this->type) {
 
+    case TT_POINT_TYPE_DIMENSIONS:
+      postprocess = false;
+      break;
     case TT_POINT_TYPE_LABEL:  
     case TT_POINT_TYPE_REMARK:  
     case TT_POINT_TYPE_STATION_NAME:
@@ -497,7 +503,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       if (this->context >= 0) 
         macroid = this->context;
       if ((!thisnan(this->xsize)) && (out->symset->assigned[macroid])) {          
-        sprintf(buff,"%.0f",this->xsize);
+        sprintf(buff,"%.0f",this->xsize - out->layout->goz);
         if (out->file == NULL)
           return(true);
         out->symset->get_mp_macro(SYMP_ALTITUDE);    
@@ -910,6 +916,7 @@ void thpoint::parse_value(char * ss) {
     case TT_POINT_TYPE_ALTITUDE:
     case TT_POINT_TYPE_HEIGHT:
     case TT_POINT_TYPE_PASSAGE_HEIGHT:
+    case TT_POINT_TYPE_DIMENSIONS:
     case TT_POINT_TYPE_DATE:
       break;
     default:
@@ -969,6 +976,35 @@ void thpoint::parse_value(char * ss) {
           this->tags |= TT_POINT_TAG_HEIGHT_UQ;
       }
       this->xsize = dv;
+      break;
+      
+    case TT_POINT_TYPE_DIMENSIONS:
+      this->xsize = thnan;
+      this->ysize = thnan;
+      switch (npar) {
+        case 3:
+          // parse units
+          lentf.parse_units(pars[2]);
+        case 2:
+          thparse_double(sv,dv,pars[0]);
+          if (sv != TT_SV_NUMBER) {
+            ththrow(("invalid above dimension -- %s",pars[0]))
+          } 
+          this->xsize = lentf.transform(dv);
+          if (this->xsize < 0.0)
+            ththrow(("negative above dimension -- %s",pars[0]))
+
+          thparse_double(sv,dv,pars[1]);
+          if (sv != TT_SV_NUMBER) {
+            ththrow(("invalid below dimension -- %s",pars[1]))
+          } 
+          this->ysize = lentf.transform(dv);
+          if (this->ysize < 0.0)
+            ththrow(("negative below dimension -- %s",pars[1]))
+          break;
+        default:
+          ththrow(("invalid value -- %s",ss))
+      }
       break;
 
     case TT_POINT_TYPE_PASSAGE_HEIGHT:

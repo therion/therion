@@ -26,11 +26,11 @@
 ## --------------------------------------------------------------------
 
 
-xth_app_create cp "Compiler" 
-xth_ctrl_add cp stp "Settings"
-xth_ctrl_add cp dat "Survey structure"
-xth_ctrl_add cp info "Survey info"
-xth_ctrl_add cp ms "Map structure"
+xth_app_create cp [mc "Compiler"]
+xth_ctrl_add cp stp [mc "Settings"]
+xth_ctrl_add cp dat [mc "Survey structure"]
+xth_ctrl_add cp info [mc "Survey info"]
+xth_ctrl_add cp ms [mc "Map structure"]
 xth_ctrl_finish cp
 
 
@@ -67,6 +67,10 @@ bind $txb.txt <$xth(kb_control)-Key-z> "catch {$txb.txt edit undo}"
 bind $txb.txt <$xth(kb_control)-Key-y> "catch {$txb.txt edit redo}"
 
 if {$xth(gui,bindinsdel)} {
+  bind $txb.txt <Delete> {
+    %W delete insert
+    %W see insert
+  }
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
   bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
@@ -116,6 +120,10 @@ bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
 bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
 
 if {$xth(gui,bindinsdel)} {
+  bind $txb.txt <Delete> {
+    %W delete insert
+    %W see insert
+  }
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
   bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
@@ -137,31 +145,31 @@ grid $xth(cp,editor) -column 0 -row 0 -sticky news
 grid $xth(cp,log) -column 0 -row 1 -sticky news
 
 # create setup control
-Label $xth(ctrl,cp,stp).wl -text "Working directory" -anchor w -font $xth(gui,lfont) -state disabled
-xth_status_bar cp $xth(ctrl,cp,stp).wl "Working directory path."
+Label $xth(ctrl,cp,stp).wl -text [mc "Working directory"] -anchor w -font $xth(gui,lfont) -state disabled
+xth_status_bar cp $xth(ctrl,cp,stp).wl [mc "Working directory path."]
 Entry $xth(ctrl,cp,stp).we -font $xth(gui,lfont) -state disabled \
   -editable off -textvariable xth(cp,fpath)
-xth_status_bar cp $xth(ctrl,cp,stp).we "Working directory path."
+xth_status_bar cp $xth(ctrl,cp,stp).we [mc "Working directory path."]
 
-Label $xth(ctrl,cp,stp).fl -text "Configuration file" -anchor w -font $xth(gui,lfont) -state disabled
-xth_status_bar cp $xth(ctrl,cp,stp).fl "Configuration file name."
+Label $xth(ctrl,cp,stp).fl -text [mc "Configuration file"] -anchor w -font $xth(gui,lfont) -state disabled
+xth_status_bar cp $xth(ctrl,cp,stp).fl [mc "Configuration file name."]
 Entry $xth(ctrl,cp,stp).fe -font $xth(gui,lfont) -state disabled \
   -editable off -textvariable xth(cp,fname)
-xth_status_bar cp $xth(ctrl,cp,stp).fe "Configuration file name."
+xth_status_bar cp $xth(ctrl,cp,stp).fe [mc "Configuration file name."]
 
-Label $xth(ctrl,cp,stp).optl -text "Command line options" -anchor w -font $xth(gui,lfont) -state disabled
-xth_status_bar cp $xth(ctrl,cp,stp).optl "Therion command line options."
+Label $xth(ctrl,cp,stp).optl -text [mc "Command line options"] -anchor w -font $xth(gui,lfont) -state disabled
+xth_status_bar cp $xth(ctrl,cp,stp).optl [mc "Therion command line options."]
 Entry $xth(ctrl,cp,stp).opte -font $xth(gui,lfont) -state disabled \
   -textvariable xth(cp,opts)
-xth_status_bar cp $xth(ctrl,cp,stp).opte "Therion command line options."
+xth_status_bar cp $xth(ctrl,cp,stp).opte [mc "Therion command line options."]
 
-Button $xth(ctrl,cp,stp).go -text "Compile" -anchor center -font $xth(gui,lfont) \
+Button $xth(ctrl,cp,stp).go -text [mc "Compile"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_cp_compile} -width 4
 Label $xth(ctrl,cp,stp).gores -text "" -anchor center -font $xth(gui,lfont) \
   -state disabled -width 4 -relief sunken
 set xth(cp,resfg) [$xth(ctrl,cp,stp).gores cget -fg]
 set xth(cp,resbg) [$xth(ctrl,cp,stp).gores cget -bg]
-xth_status_bar cp $xth(ctrl,cp,stp).go "Run therion."
+xth_status_bar cp $xth(ctrl,cp,stp).go [mc "Run therion."]
 
 grid columnconf $xth(ctrl,cp,stp) 0 -weight 1
 grid columnconf $xth(ctrl,cp,stp) 1 -weight 1
@@ -222,12 +230,16 @@ grid rowconf $txb 0 -weight 1
 grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
-xth_status_bar me $txb.txt "Survey informations."
+xth_status_bar me $txb.txt [mc "Survey informations."]
 bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
 bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
 bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
 
 if {$xth(gui,bindinsdel)} {
+  bind $txb.txt <Delete> {
+    %W delete insert
+    %W see insert
+  }
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
   bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
@@ -271,36 +283,36 @@ grid $clbox.sh -column 0 -row 1 -sticky news
 
 
 # load menu
-$xth(cp,menu,file) add command -label "New" -command {} \
+$xth(cp,menu,file) add command -label [mc "New"] -command {} \
   -font $xth(gui,lfont) -underline 0 -state normal -command {xth_cp_new_file}
-$xth(cp,menu,file) add command -label "Open" -underline 0 \
+$xth(cp,menu,file) add command -label [mc "Open"] -underline 0 \
   -accelerator "$xth(gui,controlk)-o" -state normal \
   -font $xth(gui,lfont) -command {
     xth_cp_open_file {}
   }
-$xth(cp,menu,file) add command -label "Save as" -underline 5 \
+$xth(cp,menu,file) add command -label [mc "Save as"] -underline 5 \
   -state disabled -font $xth(gui,lfont) -command xth_cp_save_as
-$xth(cp,menu,file) add command -label "Close" -underline 0 \
+$xth(cp,menu,file) add command -label [mc "Close"] -underline 0 \
   -accelerator "$xth(gui,controlk)-w"  -state disabled \
   -font $xth(gui,lfont) \
   -command xth_cp_close_file
 
 set xth(cp,menu,edit) $xth(cp,menu).edit
 menu $xth(cp,menu,edit) -tearoff 0
-$xth(cp,menu) add cascade -label "Edit" -state disabled \
+$xth(cp,menu) add cascade -label [mc "Edit"] -state disabled \
   -font $xth(gui,lfont) -menu $xth(cp,menu,edit) -underline 0
 if {$xth(gui,text_undo)} {
-  $xth(cp,menu,edit) add command -label "Undo" -font $xth(gui,lfont) \
+  $xth(cp,menu,edit) add command -label [mc "Undo"] -font $xth(gui,lfont) \
     -accelerator "$xth(gui,controlk)-z" -command "xth_app_clipboard undo"
-  $xth(cp,menu,edit) add command -label "Redo" -font $xth(gui,lfont) \
+  $xth(cp,menu,edit) add command -label [mc "Redo"] -font $xth(gui,lfont) \
     -accelerator "$xth(gui,controlk)-y" -command "xth_app_clipboard redo"
   $xth(cp,menu,edit) add separator
 }
-$xth(cp,menu,edit) add command -label "Cut" -font $xth(gui,lfont) \
+$xth(cp,menu,edit) add command -label [mc "Cut"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-x" -command "xth_app_clipboard cut"
-$xth(cp,menu,edit) add command -label "Copy" -font $xth(gui,lfont) \
+$xth(cp,menu,edit) add command -label [mc "Copy"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-c" -command "xth_app_clipboard copy"
-$xth(cp,menu,edit) add command -label "Paste" -font $xth(gui,lfont) \
+$xth(cp,menu,edit) add command -label [mc "Paste"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-v" -command "xth_app_clipboard paste"
 
 set xth(cp,fopen) 0
@@ -315,3 +327,6 @@ xth_ctrl_minimize cp ms
 
 set xth(ctrl,cp,datlist) {}
 set xth(ctrl,cp,maplist) {}
+
+xth_status_bar_status cp [mc "User interface is not active. To activate it, open existing file or create new one."]
+

@@ -33,6 +33,7 @@
 #include "thinfnan.h"
 #include "thdataleg.h"
 #include "thdb3d.h"
+#include "thdataleg.h"
 #include <map>
 #include <vector>
 #include <list>
@@ -56,17 +57,19 @@ class thdb1d_tree_node {
 
   public:
 
-  bool is_attached, is_fixed;
+  bool is_attached, is_fixed, xx_left, xx_touched;
 
   thdb1d_tree_node * next_eq, * prev_eq;
   
   unsigned long id, uid, narrows;
   
+  double xx;
+  
   class thdb1d_tree_arrow * first_arrow, * last_arrow, * back_arrow;
   
-  thdb1d_tree_node() : is_attached(false), is_fixed(false),
+  thdb1d_tree_node() : is_attached(false), is_fixed(false), xx_left(false), xx_touched(false),
     next_eq(NULL), prev_eq(NULL),
-    id(0), uid(0), narrows(0), 
+    id(0), uid(0), narrows(0), xx(0.0),
     first_arrow(NULL), last_arrow(NULL), back_arrow(NULL) {}
   
 };
@@ -83,13 +86,15 @@ class thdb1d_tree_arrow {
   
   class thdb1dl * leg;
   
+  unsigned char extend;
+  
   thdb1d_tree_arrow * negative;
   
   thdb1d_tree_arrow * next_arrow;
   
   thdb1d_tree_arrow() : is_discovery(false), is_reversed(false),
     start_node(NULL), end_node(NULL), 
-    leg(NULL), negative(NULL), next_arrow(NULL) {}
+    leg(NULL), extend(TT_EXTENDFLAG_NORMAL), negative(NULL), next_arrow(NULL) {}
   
 };
 
@@ -112,19 +117,22 @@ class thdb1ds {
   
   unsigned long uid;  ///< Unique ID of a station.
   
-  double x, y, z; // coordinates
+  double x, y, z;   // coordinates
+  double xx;        // coordinate for extended elevation
   
   char * name,  ///< Station name.
     * comment;  ///< Station comment.
   
   class thsurvey * survey;  ///< Station survey.
+  bool tmpselect;
   
   class thdata * data;  ///< Station data.
   unsigned data_priority, ///< 0 - undefined, 1 - equate, 2 - leg, 3 - fix
     data_slength;  ///< Survey specification length
   
   unsigned char flags,  ///< Station flags.
-    mark;  ///< Mark type.
+    mark,  ///< Mark type.
+    extend;  ///< Extend flags: normal, reverse, left, right, break
   bool mark_station;
   
   bool adjusted, placed;
@@ -136,7 +144,7 @@ class thdb1ds {
    
   thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), survey(NULL), 
     data(NULL), data_priority(0), data_slength(0), 
-    flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP),
+    flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), 
     adjusted(false), placed(false), sdx(0.0), sdy(0.0), sdz(0.0) {}
   
 
@@ -147,8 +155,8 @@ class thdb1ds {
   thdb1ds(char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), name(n), 
     comment(NULL), survey(ps), 
     data(NULL), data_priority(0), data_slength(0), 
-    flags(TT_STATIONFLAG_NONE), 
-    mark(TT_DATAMARK_TEMP), mark_station(false), 
+    flags(TT_STATIONFLAG_NONE),
+    mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), mark_station(false), 
     adjusted(false), placed(false), sdx(0.0), sdy(0.0), sdz(0.0) {}
     
   
@@ -344,6 +352,8 @@ class thdb1d {
   void close_loops();
   
   void print_loops();
+  
+  void process_xelev();
   
   thdb3ddata * get_3d();
   thdb3ddata * get_3d_surface();

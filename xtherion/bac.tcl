@@ -128,57 +128,57 @@ proc xth_bac_init {} {
   set f $xth(gui,bacw)
   toplevel $f
   wm transient $f $xth(gui,main)
-  wm title $f "BAC calculator"
+  wm title $f [mc "BAC calculator"]
   
-  Label $f.bdl -text "Biometric data" -anchor center -font $xth(gui,lfont)
-  Label $f.bdal -text "age" -anchor e -font $xth(gui,lfont)
+  Label $f.bdl -text [mc "Biometric data"] -anchor center -font $xth(gui,lfont)
+  Label $f.bdal -text [mc "age"] -anchor e -font $xth(gui,lfont)
   Entry $f.bdae -font $xth(gui,lfont) -width 5 -textvariable xth(bac,age)
-  Label $f.bdau -text "years" -anchor w -font $xth(gui,lfont)
-  Label $f.bdgl -text "gender" -anchor e -font $xth(gui,lfont)
-  radiobutton $f.bdgm -text "male" -anchor w \
+  Label $f.bdau -text [mc "years"] -anchor w -font $xth(gui,lfont)
+  Label $f.bdgl -text [mc "gender"] -anchor e -font $xth(gui,lfont)
+  radiobutton $f.bdgm -text [mc "male"] -anchor w \
   -font $xth(gui,lfont) -variable xth(bac,gender) -value 1
-  radiobutton $f.bdgf -text "female" -anchor w \
+  radiobutton $f.bdgf -text [mc "female"] -anchor w \
   -font $xth(gui,lfont) -variable xth(bac,gender) -value 0
-  Label $f.bdhl -text "height" -anchor e -font $xth(gui,lfont)
+  Label $f.bdhl -text [mc "height"] -anchor e -font $xth(gui,lfont)
   Entry $f.bdhe -font $xth(gui,lfont) -width 5 -textvariable xth(bac,height)
   Label $f.bdhu -text "cm" -anchor w -font $xth(gui,lfont)
-  Label $f.bdwl -text "weight" -anchor e -font $xth(gui,lfont)
+  Label $f.bdwl -text [mc "weight"] -anchor e -font $xth(gui,lfont)
   Entry $f.bdwe -font $xth(gui,lfont) -width 5 -textvariable xth(bac,weight)
   Label $f.bdwu -text "kg" -anchor w -font $xth(gui,lfont)
   Separator $f.s1 -orient horizontal
 
-  Label $f.cdl -text "Consumption data" -anchor center -font $xth(gui,lfont)
-  Label $f.cdvl -text "volume" -anchor e -font $xth(gui,lfont)
+  Label $f.cdl -text [mc "Consumption data"] -anchor center -font $xth(gui,lfont)
+  Label $f.cdvl -text [mc "volume"] -anchor e -font $xth(gui,lfont)
   Entry $f.cdve -font $xth(gui,lfont) -width 5 -textvariable xth(bac,volume)
   Label $f.cdvu -text "ml" -anchor w -font $xth(gui,lfont)
 
-  Label $f.cdll -text "alcohol level" -anchor e -font $xth(gui,lfont)
+  Label $f.cdll -text [mc "alcohol level"] -anchor e -font $xth(gui,lfont)
   Entry $f.cdle -font $xth(gui,lfont) -width 5 -textvariable xth(bac,level)
   Label $f.cdlu -text "%" -anchor w -font $xth(gui,lfont)
   
-  Label $f.cdtl -text "time elapsed" -anchor e -font $xth(gui,lfont)
+  Label $f.cdtl -text [mc "time elapsed"] -anchor e -font $xth(gui,lfont)
   Entry $f.cdte -font $xth(gui,lfont) -width 5 -textvariable xth(bac,time)
-  Label $f.cdtu -text "hours" -anchor w -font $xth(gui,lfont)
+  Label $f.cdtu -text [mc "hours"] -anchor w -font $xth(gui,lfont)
 
-  Button $f.calc -text "Calculate" -anchor center -font $xth(gui,lfont) \
+  Button $f.calc -text [mc "Calculate"] -anchor center -font $xth(gui,lfont) \
   -command xth_bac_calculate
 
-  Label $f.rdll -text "BAC" -anchor e -font $xth(gui,lfont)
+  Label $f.rdll -text [mc "BAC"] -anchor e -font $xth(gui,lfont)
   Entry $f.rdle -font $xth(gui,lfont) -width 5 -textvariable xth(bac,BAC) \
     -editable 0
   Label $f.rdlu -text "%" -anchor w -font $xth(gui,lfont)
   
-  Label $f.rdtl -text "ETA" -anchor e -font $xth(gui,lfont)
+  Label $f.rdtl -text [mc "ETA"] -anchor e -font $xth(gui,lfont)
   Entry $f.rdte -font $xth(gui,lfont) -width 5 -textvariable xth(bac,ETA) \
     -editable 0
-  Label $f.rdtu -text "hours" -anchor w -font $xth(gui,lfont)
+  Label $f.rdtu -text [mc "hours"] -anchor w -font $xth(gui,lfont)
 
-  Label $f.rdml -text "MRR" -anchor e -font $xth(gui,lfont)
+  Label $f.rdml -text [mc "MRR"] -anchor e -font $xth(gui,lfont)
   Entry $f.rdme -font $xth(gui,lfont) -width 5 -textvariable xth(bac,MRS) \
     -editable 0
   Label $f.rdmu -text "%/h" -anchor w -font $xth(gui,lfont)
 
-  Button $f.cls -text "Close" -anchor center -font $xth(gui,lfont) \
+  Button $f.cls -text [mc "Close"] -anchor center -font $xth(gui,lfont) \
   -command "destroy $f"
 
   

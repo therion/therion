@@ -60,7 +60,7 @@ proc xth_app_create {aname title} {
   frame $aw.af.apps
   frame $aw.af.ctrl
   frame $aw.af.lrhn -borderwidth 2 -relief raised -cursor sb_h_double_arrow
-  xth_status_bar $aname $aw.af.lrhn "Drag to resize control panel."
+  xth_status_bar $aname $aw.af.lrhn [mc "Drag to resize control panel."]
 
   frame $aw.sf
   set sbar $aw.sf.sbar
@@ -75,8 +75,8 @@ proc xth_app_create {aname title} {
   set xth($aname,menu) $amn
   
   set fmn $amn.file
-  menu $fmn -tearoff 0
-  $amn add cascade -label "File" -underline 0 -menu $fmn -font $xth(gui,lfont)
+  menu $fmn -tearoff 0 
+  $amn add cascade -label [mc "File"] -menu $fmn -font $xth(gui,lfont) -underline 0
   set xth($aname,menu,file) $fmn
   
   set xth($aname,title) $title
@@ -194,11 +194,11 @@ proc xth_app_finish {} {
   if {[llength $xth(app,list)] > 1} {
     $m add separator
   }
-  $m add command -label "Maximize" -underline 1 \
+  $m add command -label [mc "Maximize"] -underline 1 \
       -command "xth_app_maximize" -font $xth(gui,lfont)
-  $m add command -label "Normalize" -underline 1 \
+  $m add command -label [mc "Normalize"] -underline 1 \
       -command "xth_app_normalize" -font $xth(gui,lfont)
-  $m add command -label "Switch panels" -underline 1 \
+  $m add command -label [mc "Switch panels"] -underline 1 \
       -command "xth_app_switch" -font $xth(gui,lfont)
   $m add separator
   
@@ -212,7 +212,7 @@ proc xth_app_finish {} {
         -variable xth(encoding_system) -value $ecd
     }
   }
-  $m add cascade -label "KBD encoding" -menu $m.kbes
+  $m add cascade -label [mc "KBD encoding"] -menu $m.kbes
   
 
   if {$xth(debug)} {
@@ -259,20 +259,20 @@ proc xth_app_finish {} {
   bind $xth(gui,main) <Key-Escape> xth_app_escape 
   bind $xth(gui,main) <F9> xth_app_make
   foreach aname $xth(app,list) {
-    $xth($aname,menu) add cascade -label "Window" -menu $m -underline 0 \
+    $xth($aname,menu) add cascade -label [mc "Window"] -menu $m -underline 0 \
       -font $xth(gui,lfont)
     if $xth(debug) {
       $xth($aname,menu) add cascade -label "Debug" -menu $dm -underline 0 \
         -font $xth(gui,lfont)
     }
     $xth($aname,menu,file) add separator
-    $xth($aname,menu,file) add command -label "Compile" -underline 0 \
+    $xth($aname,menu,file) add command -label [mc "Compile"] -underline 0 \
       -command "xth_app_make" -font $xth(gui,lfont) \
       -accelerator "F9"
-    $xth($aname,menu,file) add command -label "Quit" -underline 0 \
+    $xth($aname,menu,file) add command -label [mc "Quit"] -underline 0 \
       -command "xth_exit" -font $xth(gui,lfont) \
       -accelerator "$xth(gui,controlk)-q"
-    $xth($aname,menu) add cascade -label "Help" -menu $xth(gui,menu,help) \
+    $xth($aname,menu) add cascade -label [mc "Help"] -menu $xth(gui,menu,help) \
       -underline 0  -font $xth(gui,lfont)
   }  
 
@@ -638,6 +638,9 @@ if {$xth(gui,text_undo)} {
 proc xth_app_make {} {
   global xth
   set oactive $xth(app,active)
+  if {[string length $oactive] == 0} {
+    set oactive cp
+  }
   xth_te_save_all
   xth_me_save_file 0
   switch $oactive {

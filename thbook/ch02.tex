@@ -267,6 +267,8 @@ the command may be used anywhere.
           endgroup
           walls <auto/on/off>
           vtreshold <number> <units>
+          extend <spec> [<station> [<station>]]
+          station-names <prefix> <suffix>
           ...
           [SURVEY DATA]
           ...
@@ -368,6 +370,26 @@ the command may be used anywhere.
     only if there is no scrap referencing given centreline.
   * |vtreshold <number> <units>| = treshold for interpreting LRUD readings
     as left-right-front-back reading perpendicular to the shot.
+  * |extend <spec> [<station> [<station>]]| =
+    control how the centerline is extended. |<spec>| is one of the following
+
+    |normal/reverse| = extend given and following stations 
+     to the same/reverse direction as previous station. If two
+     stations are given---direction is applied only to given shot.
+
+    |left/right| = same as above, but direction is specified explicitely.
+
+    |break| = break series at given station (shot)
+
+    |start| = specify starting station (shot)
+
+    |ignore| = ignore specified station (shot)
+
+    If no stations are specified, |<spec>| is valid for following shots
+    specified.
+
+  * |station-names <prefix> <suffix>| = adds given prefix/suffix to
+    all survey stations in the current centreline. Saves some typing.
     
 \endcomopt
 
@@ -480,6 +502,10 @@ the command may be used anywhere.
     to specify (draw) them with the |point station| command.
   * |walls <on/off/auto>| = specify if the scrap should be used in 3D model 
     reconstruction
+  * |flip (none)/horizontal/vertical| = flips the scrap after
+    scale transformation
+  * |station-names <prefix> <suffix>| = adds given prefix/suffix to
+    all survey stations in the current scrap. Saves some typing.
 
   * |author <date> <person>| = author of the data and its creation date
   * |copyright <date> <string>| = copyright date and name
@@ -515,10 +541,16 @@ Point is a command for drawing a point map symbol.
     |section|\[|section| is an anchor for placing the cross-section at this 
       point.  This symbol has no visual representation. The cross section
       must be in the separate scrap with `none' projection specified. 
-      You can specify it through the |-scrap| option.];
+      You can specify it through the |-scrap| option.],
+     |dimensions|\[Use |-value| option to
+      specify passage dimensions above/below centerline 
+      plane used in 3D model.];
 
     {\it labels:} |label|, |remark|, 
-    |altitude|\[General altitude label. To display altitude on the passage 
+    |altitude|\[General altitude label. 
+    All altitudes are exported as a difference against grid $Z$ origin
+   (which is 0 by default).
+    To display altitude on the passage 
     wall, use |altitude| option for any line point of the passage wall], 
     |height|\[Height of formations inside of the passage (like pit etc.);
     see below for details.], 
@@ -590,25 +622,26 @@ Point is a command for drawing a point map symbol.
 
   * |name <reference>| = if the point type is station, this
     option gives the reference to the real survey station.
-  * |extend <specification>| = if the point type is station and scrap
+  * |extend [prev[ious] <station>]| = if the point type is station and scrap
     projection is extended elevation, you can
-    adjust the extension of the centreline using this option. The |<specification>| is a list
-    of one or more followig keywords:
-
-    1. |left| = indicates extension to the left
-
-    2. |right| = the opposite of above. If no extension direction is
-       given, Therion uses the direction of the previous station, or
-       right, if no such station exists.
-
-    3. |root| = determines the starting node for extension.
-
-    4. |sticky <on/off>| = two keywords that identify whether other
-       scraps can be attached to this station. The default is true for
-       end-station.
-
-    5. |previous/prev <reference>| = reference to previous station
-       (or point of type station)
+    adjust the extension of the centreline using this option. 
+%    The |<specification>| is a list
+%    of one or more followig keywords:
+%
+%    1. |left| = indicates extension to the left
+%
+%    2. |right| = the opposite of above. If no extension direction is
+%       given, Therion uses the direction of the previous station, or
+%       right, if no such station exists.
+%
+%    3. |root| = determines the starting node for extension.
+%
+%    4. |sticky <on/off>| = two keywords that identify whether other
+%       scraps can be attached to this station. The default is true for
+%       end-station.
+%
+%    5. |previous/prev <reference>| = reference to previous station
+%       (or point of type station)
   * |scrap <reference>| = if the point type is section, this is a 
     reference to a cross-section scrap. 
   * |text| = text of the label or remark. It may contain following formatting
@@ -623,7 +656,8 @@ Point is a command for drawing a point map symbol.
     
     |<rm>|, |<it>|, |<bf>|, |<ss>|, |<si>| = font switches
         
-  * |value| = value of height, passage-height or altitude label
+  * |value| = value of height, passage-height or altitude label or point
+     dimensions
 
       {\it height:} according to the sign of the value (positive, negative or
       unsigned), this type of symbol represents chimney height, pit depth
@@ -641,6 +675,11 @@ Point is a command for drawing a point map symbol.
       the nearest station. If the altitude value is prefixed by ``|fix|''
       (e.g. |-value [fix 1300]|), this value is used as an absolute altitude. 
       The value can optionally be followed by length units.
+
+      {\it dimensions:}
+      |-value [<above> <below> [<units>]]|
+      specifies passage dimensions a\-bo\-ve/below centerline 
+      plane used in 3D model.
 \endoptions
 
 
@@ -758,7 +797,10 @@ respectively.
     {\it Type-specific options:}\Nobreak
 
        * |altitude <value>| = can be specified only with the wall type.
-         This option creates an altitude label on the wall. The value
+         This option creates an altitude label on the wall. 
+    All altitudes are exported as a difference against grid $Z$ origin
+   (which is 0 by default).
+         If the value is specified, it
          gives the altitude difference of the point on the wall 
          relative to the nearest station. The value can be prefixed
          by a keyword ``|fix|'', then no nearest station is taken into
@@ -949,6 +991,7 @@ scanned topographical map (currently in 2D maps only) or surface grid
    bitmap <filename> <calibration>
    grid-units <units>
    grid <origin x> <origin y> <x spacing> <y spacing> <x count> <y count>
+   grid-flip (none)/vertical/horizontal
    [grid data]
 endsurface|
 \endsyntax
@@ -988,6 +1031,9 @@ endsurface|
   It starts in the grid-origin and fills the grid in rows 
   (in the row from W to E; rows from S to N).
 
+ * |grid-flip (none)/vertical/horizontal| = useful if your grid (exported
+   from other program) needs to be flipped
+
 \endcomopt
 
 
@@ -1001,14 +1047,27 @@ endsurface|
 \enddescription
 
 \syntax
-  |import <file-name>|
+  |import <file-name> [OPTIONS]|
 \endsyntax
 
 \context
-survey
+survey / all\[only with .3d files, where survey structure is specified]
 \endcontext
 
+\options
+  * |filter <prefix>| = if specified, only stations with given prefix 
+    and shots between  them will be imported. Prefix will be removed 
+    from station names.
+  * |surveys (create)/use/ignore| = 
+     specifies how to import survey structure (works only with .3d files).
 
+     |create| = split stations into subsurveys, if subsurveys do not 
+                exist, create them
+
+     |use| = split stations into existing subsurveys
+
+     |ignore| = do not split stations into sub-surveys
+\endoptions
 
 
 \subsubchapter `grade'.
@@ -1142,6 +1201,8 @@ images used in the same scrap.]---as a backround for
 the drawing. Click on the {\it Insert} button in {\it Background images} menu.
 Unfortunatelly, as a limitation of Tcl/Tk language, only GIF, PNM and PPM 
 (plus PNG and JPEG if you installed tkImg extension) images are supported. 
+Additionally XTherion supports XVI (XTherion vector image) format, which
+displays centreline and LRUD information on the background.
 All opened images are placed in the upper-left corner of 
 the working area. Move them by double clicking and dragging with the right 
 mouse button or through a menu. For better performance on slower computers, 

@@ -107,6 +107,8 @@ void thlibrary_init_layouts()
 	playout->transparency = true;
 	playout->def_legend = false;
 	playout->legend = TT_LAYOUT_LEGEND_OFF;
+	playout->def_color_legend = false;
+	playout->legend = 1;
 	playout->def_legend_width = false;
 	playout->legend_width = 0.14;
 	playout->def_legend_columns = false;

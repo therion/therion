@@ -331,9 +331,6 @@ void thdatabase::insert(thdataobject * optr)
     case TT_SURVEY_CMD:
       this->insert(((thsurvey*)(optr))->data);
       break;
-    case TT_IMPORT_CMD:
-      this->insert(((thimport*)(optr))->data);
-      break;
   }
   
 }  // end of object inserion
@@ -469,7 +466,6 @@ class thdataobject * thdatabase::create(char * oclass,
       
     case TT_IMPORT_CMD:
       ret = new thimport;
-      retdata = new thdata;
       break;
       
     case TT_SURFACE_CMD:
@@ -497,9 +493,6 @@ class thdataobject * thdatabase::create(char * oclass,
   switch (tclass) {
     case TT_SURVEY_CMD:
       ((thsurvey*)(ret))->data = retdata;
-      break;
-    case TT_IMPORT_CMD:
-      ((thimport*)(ret))->data = retdata;
       break;
   }
   

@@ -53,22 +53,22 @@ proc xth_me_cmds_set_action {act} {
   set xth(me,cmds,action) $act
   switch $act {
     0 {
-      $xth(ctrl,me,cmds).cc.go configure -text "Insert line"
+      $xth(ctrl,me,cmds).cc.go configure -text [mc "Insert line"]
     }
     1 {
-      $xth(ctrl,me,cmds).cc.go configure -text "Insert point"
+      $xth(ctrl,me,cmds).cc.go configure -text [mc "Insert point"]
     }
     2 {
-      $xth(ctrl,me,cmds).cc.go configure -text "Insert scrap"
+      $xth(ctrl,me,cmds).cc.go configure -text [mc "Insert scrap"]
     }
     3 {
-      $xth(ctrl,me,cmds).cc.go configure -text "Insert text"
+      $xth(ctrl,me,cmds).cc.go configure -text [mc "Insert text"]
     }
     4 {
-      $xth(ctrl,me,cmds).cc.go configure -text "Delete"
+      $xth(ctrl,me,cmds).cc.go configure -text [mc "Delete"]
     }
     5 {
-      $xth(ctrl,me,cmds).cc.go configure -text "Insert area"
+      $xth(ctrl,me,cmds).cc.go configure -text [mc "Insert area"]
     }
   }
 
@@ -90,7 +90,7 @@ proc xth_me_cmds_update_buttons {} {
     $xth(me,mbar) configure -state normal
     if {$ncmd > 0} {
       $ccbox.sel configure -state normal
-      $xth(me,menu,edit) entryconfigure "Select" -state normal
+      $xth(me,menu,edit) entryconfigure [mc "Select"] -state normal
       $xth(ctrl,me,prev).upd  configure -state normal
 
       $xth(ctrl,me,ss).xl configure -state normal
@@ -113,14 +113,14 @@ proc xth_me_cmds_update_buttons {} {
         $ccbox.mt configure -state disabled
         $ccbox.tt configure -state disabled
       }
-      $ccbox.cfg.m entryconfigure "Delete" -state normal
-      $xth(me,menu,edit) entryconfigure "Delete" -state normal
+      $ccbox.cfg.m entryconfigure [mc "Delete"] -state normal
+      $xth(me,menu,edit) entryconfigure [mc "Delete"] -state normal
     } else {
       $xth(ctrl,me,prev).upd  configure -state disabled
       $ccbox.sel configure -state disabled
-      $xth(me,menu,edit) entryconfigure "Select" -state disabled
-      $ccbox.cfg.m entryconfigure "Delete" -state disabled
-      $xth(me,menu,edit) entryconfigure "Delete" -state disabled
+      $xth(me,menu,edit) entryconfigure [mc "Select"] -state disabled
+      $ccbox.cfg.m entryconfigure [mc "Delete"] -state disabled
+      $xth(me,menu,edit) entryconfigure [mc "Delete"] -state disabled
       $ccbox.mu configure -state disabled
       $ccbox.md configure -state disabled
       $ccbox.mt configure -state disabled
@@ -187,6 +187,7 @@ proc xth_me_cmds_create {typ id ix} {
   set xth(me,cmds,$id,type) {}
   set xth(me,cmds,$id,name) {}
   set xth(me,cmds,$id,data) {}
+  set xth(me,cmds,$id,sbar) {}
   set ix [lsearch $xth(me,cmds,xlist) $xth(me,cmds,selid)]
 
 	# ak sme v normalnom mode a na scrape a chceme vlozit
@@ -318,7 +319,8 @@ proc xth_me_cmds_delete {id} {
       set nwid $oldselid
     }
     xth_me_cmds_select $nwid
-    xth_me_unredo_action "deleting" "xth_me_cmds_undelete $id $oldselpid $ix" \
+    xth_me_unredo_action [mc "deleting"] \
+      "xth_me_cmds_undelete $id $oldselpid $ix" \
       "xth_me_cmds_delete $id"
     xth_me_cmds_update_buttons
   }
@@ -607,7 +609,9 @@ proc xth_me_cmds_move_to {id dx} {
   
 
   # unredo
-  xth_me_unredo_action "moving command" "xth_me_cmds_move_to $id $sx\nxth_me_cmds_select $id" "xth_me_cmds_move_to $id $dx\nxth_me_cmds_select $nid"
+  xth_me_unredo_action [mc "moving command"] \
+    "xth_me_cmds_move_to $id $sx\nxth_me_cmds_select $id" \
+    "xth_me_cmds_move_to $id $dx\nxth_me_cmds_select $nid"
   update idletasks
   
 }
@@ -644,7 +648,9 @@ proc xth_me_cmds_move_up {id} {
   xth_me_cmds_update_list [lindex $xth(me,cmds,xlist) $ix]
   xth_me_cmds_update_list [lindex $xth(me,cmds,xlist) $dix]
   # unredo
-  xth_me_unredo_action "moving command" "xth_me_cmds_move_down $id$selcmd" "xth_me_cmds_move_up $id$selcmd"
+  xth_me_unredo_action [mc "moving command"] \
+    "xth_me_cmds_move_down $id$selcmd" \
+    "xth_me_cmds_move_up $id$selcmd"
   update idletasks
 }
 
@@ -681,7 +687,8 @@ proc xth_me_cmds_move_down {id} {
   # unredo
   xth_me_cmds_update_list [lindex $xth(me,cmds,xlist) $ix]
   xth_me_cmds_update_list [lindex $xth(me,cmds,xlist) $iix]
-  xth_me_unredo_action "moving command" "xth_me_cmds_move_up $id$selcmd" "xth_me_cmds_move_down $id$selcmd"
+  xth_me_unredo_action [mc "moving command"] \
+   "xth_me_cmds_move_up $id$selcmd" "xth_me_cmds_move_down $id$selcmd"
   update idletasks
 }
 
@@ -699,8 +706,9 @@ proc xth_me_cmds_create_endscrap {ix mode name} {
   if {$mode} {
     xth_me_cmds_select $id
     xth_me_cmds_select [expr $id - 1]
-    xth_me_unredo_action "creating endscrap" "xth_me_cmds_delete $id" \
-      "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]"  
+    xth_me_unredo_action [mc "creating endscrap"] \
+     "xth_me_cmds_delete $id" \
+     "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]"  
   }
 }
 
@@ -922,7 +930,7 @@ proc xth_me_cmds_update_scrap {id nname nproj nopt nscale} {
   }
   
   if {![string equal "$oname $oproj $oopt $oscale" "$nname $nproj $nopt $nscale"]} {
-    xth_me_unredo_action "scrap changes" \
+    xth_me_unredo_action [mc "scrap changes"] \
       "xth_me_cmds_update_scrap $id $oname [list $oproj] [list $oopt] [list $oscale]; xth_me_cmds_select $id" \
       "xth_me_cmds_update_scrap $id $nname [list $nproj] [list $nopt] [list $nscale]; xth_me_cmds_select $id"
     set xth(me,cmds,$id,name) $nname
@@ -1059,7 +1067,8 @@ proc xth_me_cmds_create_scrap {ix mode name opts} {
   xth_me_cmds_update_list $id
   xth_me_cmds_update_scrap_data $id
   if {$mode} {
-    xth_me_unredo_action "creating scrap" "xth_me_cmds_delete $id$undoselect" \
+    xth_me_unredo_action [mc "creating scrap"] \
+      "xth_me_cmds_delete $id$undoselect" \
       "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]"  
     xth_me_cmds_create_endscrap $ix $mode {}
   }
@@ -1074,7 +1083,8 @@ proc xth_me_cmds_create_text {ix mode data cpos} {
   set xth(me,cmds,$id,cpos) $cpos
   if {$mode} {
     xth_me_cmds_select $id
-    xth_me_unredo_action "creating text" "xth_me_cmds_delete $id" \
+    xth_me_unredo_action [mc "creating text"] \
+      "xth_me_cmds_delete $id" \
       "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]"
   }
 }
@@ -1087,7 +1097,7 @@ proc xth_me_cmds_update_text {id newdata newcpos} {
   regsub {\s*$} $newdata {} newdata
   if {![string equal $xth(me,cmds,$id,data) $newdata]} {
     set newdata "$newdata\n"
-    xth_me_unredo_action "text changes" \
+    xth_me_unredo_action [mc "text changes"] \
       "xth_me_cmds_update_text $id [list $olddata] $oldcpos; xth_me_cmds_select $id" \
       "xth_me_cmds_update_text $id [list $newdata] $newcpos; xth_me_cmds_select $id"
     set xth(me,cmds,$id,data) $newdata
@@ -1241,10 +1251,25 @@ proc xth_me_cmds_click {id tagOrId x y mx my} {
     1 {
       xth_ctrl_scroll_to me point
       xth_ctrl_maximize me point
+      # check, whether we clicked on XVI station
+      set cptype {}
+      set cpopts {}
+      if {[regexp {XVIstI(\d+)S(\d+)} [$xth(me,can) itemcget $tagOrId -tags] dum imgx sti]} {
+        set csname [lindex [lindex $xth(me,imgs,$imgx,XVIstations) $sti] 2]
+        set x [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 0]
+        set y [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 1]
+        set cptype station
+        set cpopts $xth(me,dflt,point,options)
+        if {[regexp {\-name\s+(\S+)} $cpopts]} {
+          regsub {\-name\s+(\S+)} $cpopts "-name $csname" cpopts
+        } else {
+          set cpopts "-name $csname"
+        }
+      }
       if {$id == ($xth(me,cmds,cmdln) - 1)} {
         xth_me_cmds_end_point 
       } else {
-        xth_me_cmds_create_point {} 1 $x $y {} {}
+        xth_me_cmds_create_point {} 1 $x $y $cptype $cpopts
       }
     }
     2 {
@@ -1285,7 +1310,7 @@ proc xth_me_cmds_end_point {} {
   set recmds "xth_me_cmds_set_mode 0"
   set uncmds "xth_me_cmds_set_mode 1"
   eval $recmds
-  xth_me_unredo_action "end point insertion" $uncmds $recmds
+  xth_me_unredo_action [mc "end point insertion"] $uncmds $recmds
 }
 
 
@@ -1339,18 +1364,18 @@ proc xth_me_cmds_set_mode {nmode} {
   set xth(me,cmds,mode) $nmode
   switch $nmode {
     0 {
-      $xth(me,mbar) configure -text "select object" -bg green -fg black
-      $xth(ctrl,me,ac).ins configure -text "Insert"
+      $xth(me,mbar) configure -text [mc "select object"] -bg green -fg black
+      $xth(ctrl,me,ac).ins configure -text [mc "Insert"]
     }
     1 {
-      $xth(me,mbar) configure -text "insert point" -bg red -fg white
+      $xth(me,mbar) configure -text [mc "insert point"] -bg red -fg white
     }
     2 {
-      $xth(me,mbar) configure -text "insert line point" -bg red -fg white
+      $xth(me,mbar) configure -text [mc "insert line point"] -bg red -fg white
     }
     3 {
-      $xth(me,mbar) configure -text "insert area border" -bg red -fg white
-      $xth(ctrl,me,ac).ins configure -text "Select"
+      $xth(me,mbar) configure -text [mc "insert area border"] -bg red -fg white
+      $xth(ctrl,me,ac).ins configure -text [mc "Select"]
     }
   }
   
@@ -1454,7 +1479,8 @@ proc xth_me_cmds_create_point {ix mode x y type opts} {
   xth_me_cmds_update_list $id
   xth_me_cmds_update_point_data $id
   if {$mode} {
-    xth_me_unredo_action "creating point" "xth_me_cmds_delete $id" \
+    xth_me_unredo_action [mc "creating point"] \
+      "xth_me_cmds_delete $id" \
       "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]"  
     xth_me_cmds_select $id
   }
@@ -1492,6 +1518,16 @@ proc xth_me_cmds_update_point_data {id} {
     set d "$d $xth(me,cmds,$id,options)"
   }
   set xth(me,dflt,point,options) $xth(me,cmds,$id,options)
+
+  set ttype [lindex $d 3]
+  set xth(me,cmds,$id,sbar) "$d"
+  if {([string length $ttype] > 0)} {
+    set ttyp [ mc "point $ttype"]
+    if {![string equal $ttype $ttyp]} {
+      set nd [lreplace $d 3 3 "$ttype:$ttyp"]
+      set xth(me,cmds,$id,sbar) "$nd"
+    }
+  } 
 
   set xth(me,cmds,$id,data) "$d"
   
@@ -1698,7 +1734,7 @@ proc xth_me_cmds_update_area {id ntype nopt} {
   }
   
   if {![string equal "$ntype $nopt" "$otype $oopt"]} {
-    xth_me_unredo_action "area changes" \
+    xth_me_unredo_action [mc "area changes"] \
       "xth_me_cmds_update_area $id $otype [list $oopt]; xth_me_cmds_select $id" \
       "xth_me_cmds_update_area $id $ntype [list $nopt]; xth_me_cmds_select $id"
     set xth(me,cmds,$id,type) $ntype
@@ -1773,7 +1809,7 @@ proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
 #  }
   
   if {![string equal "$nx $ny $ntype $nname $nopt $nrot $nxs $nys" "$ox $oy $otype $oname $oopt $orot $oxs $oys"]} {
-    xth_me_unredo_action "point changes" \
+    xth_me_unredo_action [mc "point changes"] \
       "xth_me_cmds_update_point $id $ox $oy $otype [list $oname] [list $oopt] [list $orot] [list $oxs] [list $oys]; xth_me_cmds_select $id" \
       "xth_me_cmds_update_point $id $nx $ny $ntype [list $nname] [list $nopt] [list $nrot] [list $nxs] [list $nys]; xth_me_cmds_select $id"
     set xth(me,cmds,$id,x) $nx
@@ -1807,7 +1843,7 @@ proc xth_me_cmds_draw_point {id} {
   global xth
   $xth(me,can) create oval [xth_me_cmds_calc_point_coords $id] \
     -tags "command point pt$id" -width 1 -outline blue -fill blue
-  $xth(me,can) bind pt$id <Enter> "$xth(me,can) itemconfigure pt$id -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \$xth(me,cmds,$id,data)\""
+  $xth(me,can) bind pt$id <Enter> "$xth(me,can) itemconfigure pt$id -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \$xth(me,cmds,$id,sbar)\""
   $xth(me,can) bind pt$id <Leave> "$xth(me,can) itemconfigure pt$id -fill \[$xth(me,can) itemcget pt$id -outline\]; xth_status_bar_pop me"
   $xth(me,can) bind pt$id <1> "xth_me_cmds_click $id pt$id \$xth(me,cmds,$id,x) \$xth(me,cmds,$id,y) %x %y"
   $xth(me,can) bind pt$id <3> "xth_me_cmds_special_select $id %x %y"  

@@ -82,8 +82,8 @@ proc xth_me_cmds_update_line_ctrl {id} {
 #    $xth(ctrl,me,line).delp configure -state normal    
     $xth(ctrl,me,line).lpa configure -state normal    
     $xth(ctrl,me,line).upd configure -state normal    
-    $xth(ctrl,me,line).lpa.m entryconfigure "Insert point" -state normal    
-    $xth(ctrl,me,line).lpa.m entryconfigure "Delete point" -state normal    
+    $xth(ctrl,me,line).lpa.m entryconfigure [mc "Insert point"] -state normal    
+    $xth(ctrl,me,line).lpa.m entryconfigure [mc "Delete point"] -state normal    
     $xth(ctrl,me,line).pl.l configure -takefocus 1 \
       -listvariable xth(me,cmds,$id,plist)
 
@@ -118,8 +118,8 @@ proc xth_me_cmds_update_line_ctrl {id} {
 #    $xth(ctrl,me,line).delp configure -state disabled    
     $xth(ctrl,me,line).lpa configure -state disabled    
     $xth(ctrl,me,line).upd configure -state disabled
-    $xth(ctrl,me,line).lpa.m entryconfigure "Insert point" -state disabled
-    $xth(ctrl,me,line).lpa.m entryconfigure "Delete point" -state disabled   
+    $xth(ctrl,me,line).lpa.m entryconfigure [mc "Insert point"] -state disabled
+    $xth(ctrl,me,line).lpa.m entryconfigure [mc "Delete point"] -state disabled   
     $xth(ctrl,me,line).pl.l configure -takefocus 0 \
       -listvariable xth(ctrl,me,line,empty)
     $xth(ctrl,me,line).pl.l selection clear 0 end
@@ -428,12 +428,12 @@ proc xth_me_cmds_update_linept_ctrl {id pid} {
     $xth(ctrl,me,linept).optl configure -state normal
     $xth(ctrl,me,linept).upd configure -state normal
 
-    $xth(ctrl,me,line).lpa.m entryconfigure "Delete point" -state normal    
+    $xth(ctrl,me,line).lpa.m entryconfigure [mc "Delete point"] -state normal    
     set xpid [lsearch -exact $xth(me,cmds,$id,xplist) $pid]
     if {($xpid > 0) && ($xpid < ([llength $xth(me,cmds,$id,xplist)] - 2))} {
-      $xth(ctrl,me,line).lpa.m entryconfigure "Split line" -state normal
+      $xth(ctrl,me,line).lpa.m entryconfigure [mc "Split line"] -state normal
     } else {
-      $xth(ctrl,me,line).lpa.m entryconfigure "Split line" -state disabled
+      $xth(ctrl,me,line).lpa.m entryconfigure [mc "Split line"] -state disabled
     }
 
     $xth(ctrl,me,linept).oe.txt configure -state normal
@@ -526,8 +526,8 @@ proc xth_me_cmds_update_linept_ctrl {id pid} {
     $xth(ctrl,me,linept).oe.txt see 1.0
     $xth(ctrl,me,linept).oe.txt configure -state disabled
 
-    $xth(ctrl,me,line).lpa.m entryconfigure "Delete point" -state disabled
-    $xth(ctrl,me,line).lpa.m entryconfigure "Split line" -state disabled
+    $xth(ctrl,me,line).lpa.m entryconfigure [mc "Delete point"] -state disabled
+    $xth(ctrl,me,line).lpa.m entryconfigure [mc "Split line"] -state disabled
     
     xth_me_cmds_hide_linept_xctrl  
     
@@ -598,7 +598,8 @@ proc xth_me_cmds_delete_linept {id pid} {
   }
   xth_me_cmds_select_linept $id $nwpid
     
-  xth_me_unredo_action "deleting line point" "xth_me_cmds_undelete_linept $id $pid $ix\n$closeaddstr" \
+  xth_me_unredo_action [mc "deleting line point"] \
+    "xth_me_cmds_undelete_linept $id $pid $ix\n$closeaddstr" \
     "$closeremstr\nxth_me_cmds_delete_linept $id $pid"
   
 }
@@ -756,7 +757,8 @@ proc xth_me_cmds_insert_area_line {txt unspec respec} {
   $xth(ctrl,me,ac).ll.l selection set [expr $ix + 1] [expr $ix + 1]
   $xth(ctrl,me,ac).ll.l see [expr $ix + 1]
 
-  xth_me_unredo_action "inserting area border" "xth_me_cmds_select $id\nxth_me_cmds_delete_area_line $id $lid\n$unspec" \
+  xth_me_unredo_action [mc "inserting area border"] \
+    "xth_me_cmds_select $id\nxth_me_cmds_delete_area_line $id $lid\n$unspec" \
     "xth_me_cmds_select $id\n$respec\nxth_me_cmds_undelete_area_line 1 $id $lid $ix"
       
 }
@@ -790,7 +792,8 @@ proc xth_me_cmds_delete_area_line {id lid} {
   $xth(ctrl,me,ac).ll.l selection set $ix $ix
   $xth(ctrl,me,ac).ll.l see $ix
     
-  xth_me_unredo_action "deleting area border" "xth_me_cmds_undelete_area_line 0 $id $lid $ix" \
+  xth_me_unredo_action [mc "deleting area border"] \
+    "xth_me_cmds_undelete_area_line 0 $id $lid $ix" \
     "xth_me_cmds_delete_area_line $id $lid"
   
 }
@@ -845,7 +848,8 @@ proc xth_me_cmds_create_area {ix mode type opts lines} {
   xth_me_cmds_update_list $id
   xth_me_cmds_update_area_data $id
   if {$mode} {
-    xth_me_unredo_action "creating area" "xth_me_cmds_delete $id\nxth_me_cmds_set_mode 0" \
+    xth_me_unredo_action [mc "creating area"] \
+      "xth_me_cmds_delete $id\nxth_me_cmds_set_mode 0" \
       "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]\nxth_me_cmds_set_mode 3"  
     xth_me_cmds_select $id
     xth_me_cmds_start_area_insert 0
@@ -1065,7 +1069,8 @@ proc xth_me_cmds_create_line {ix mode type opts lines} {
   xth_me_cmds_update_list $id
   xth_me_cmds_update_line_data $id
   if {$mode} {
-    xth_me_unredo_action "creating line" "xth_me_cmds_delete $id\nxth_me_cmds_set_mode 0" \
+    xth_me_unredo_action [mc "creating line"] \
+      "xth_me_cmds_delete $id\nxth_me_cmds_set_mode 0" \
       "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]\nxth_me_cmds_set_mode 2"  
     xth_me_cmds_select $id
     xth_me_cmds_start_linept_insert
@@ -1226,6 +1231,8 @@ proc xth_me_cmds_update_line_data {id} {
   }
   set xth(me,dflt,line,options) $xth(me,cmds,$id,options)
   
+  set csbar $d
+  
   set xth(me,cmds,$id,data_ln) "$d\nendline"
   set xth(me,cmds,$id,data_pt) {}
   
@@ -1289,7 +1296,17 @@ proc xth_me_cmds_update_line_data {id} {
     set d "$d\n$ptd"
     set ppid $pid
   }
+
   set xth(me,cmds,$id,data) "$d\nendline"
+  set xth(me,cmds,$id,sbar) $csbar
+  set ttype [lindex $csbar 1]
+  if {([string length $ttype] > 0)} {
+    set ttyp [ mc "line $ttype"]
+    if {![string equal $ttype $ttyp]} {
+      set nd [lreplace $csbar 1 1 "$ttype:$ttyp"]
+      set xth(me,cmds,$id,sbar) "$nd"
+    }
+  } 
   
 }
 
@@ -1632,7 +1649,7 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
   # ak je v niecom rozdiel, tak to updatni
   if {![string equal "$nline $nlinept" "$oline $olinept"]} {
     #puts "new\n{$nline}\n===\n{$nlinept}\n===\nold\n{$oline}\n===\n{$olinept}\n===\n"
-    xth_me_unredo_action "line changes" \
+    xth_me_unredo_action [mc "line changes"] \
       "xth_me_cmds_update_line $id $pid $otype [list $oname] [list $oopts] $orev {$ox} {$oy} {$oxp} {$oyp} {$oxn} {$oyn} {$osmth} {$orot} {$ors} {$ols} [list $optopts] {$optoptpos}; $optsundo xth_me_cmds_select {$id $pid}" \
       "xth_me_cmds_update_line $id $pid $ntype [list $nname] [list $nopts] $nrev {$nx} {$ny} {$nxp} {$nyp} {$nxn} {$nyn} {$nsmth} {$nrot} {$nrs} {$nls} [list $nptopts] {$nptoptpos}; $optsredo xth_me_cmds_select {$id $pid}"    
 
@@ -1988,7 +2005,7 @@ proc xth_me_cmds_close_line {id} {
     set remode ""
     set unmode ""
   }
-  xth_me_unredo_action "line closing" \
+  xth_me_unredo_action [mc "line closing"] \
   "$unpoint\nset xth(me,cmds,$id,close) 0\nxth_me_cmds_update_line_vars $id $olpid\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd \$xth(me,cmds,$id,data)\n$unmode" \
   "$repoint\nset xth(me,cmds,$id,close) 1\nxth_me_cmds_update_line_vars $id $nwpid\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd \$xth(me,cmds,$id,data)\n$remode"
   
@@ -2001,7 +2018,8 @@ proc xth_me_cmds_open_line {id} {
   xth_me_cmds_update_line_vars $id $xth(me,cmds,selpid)
   xth_me_cmds_update_line_data $id
   xth_me_prev_cmd $xth(me,cmds,$id,data)
-  xth_me_unredo_action "line opening" "xth_me_cmds_reclose_line $id" \
+  xth_me_unredo_action [mc "line opening"] \
+    "xth_me_cmds_reclose_line $id" \
     "xth_me_cmds_open_line $id"
 }
 
@@ -2118,7 +2136,7 @@ proc xth_me_cmds_draw_lineln {id ppid pid} {
   $xth(me,can) bind ln$id.$pid <1> "xth_me_cmds_click_lineln {$id $pid} pt$id.$pid %x %y"
   set highlight_on "if {\$xth(me,cmds,selid) != $id} {\$xth(me,can) itemconfigure lnln$id -fill \$xth(gui,me,highlightfill)}"
   set highlight_off "if {\$xth(me,cmds,selid) != $id} {\$xth(me,can) itemconfigure lnln$id -fill \[$xth(me,can) itemcget pt$id.$pid -outline\]}"
-  $xth(me,can) bind ln$id.$pid <Enter> "$highlight_on\nxth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \[lindex \[regexp -inline -- {^\[^\\n\]*} \$xth(me,cmds,$id,data)\] 0\]\""
+  $xth(me,can) bind ln$id.$pid <Enter> "$highlight_on\nxth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \$xth(me,cmds,$id,sbar)\""
   $xth(me,can) bind ln$id.$pid <Leave> "$highlight_off\nxth_status_bar_pop me"
   catch {$xth(me,can) lower ln$id.$pid point}
 }
@@ -2288,7 +2306,8 @@ proc xth_me_cmds_start_create_linept {tagOrId x y mx my} {
   $xth(me,can) bind $tagOrId <B1-ButtonRelease> "xth_me_cmds_end_create_linept %x %y 1"
   $xth(me,can) bind $tagOrId <$xth(kb_control)-B1-ButtonRelease> "xth_me_cmds_end_create_linept %x %y 0"
   xth_me_cmds_continue_linept_creation $mx $my 1
-  xth_me_unredo_action "inserting line point" "xth_me_cmds_delete_linept $id $pid\n$unclosecmd\nxth_me_cmds_select_linept $id $oldpid" \
+  xth_me_unredo_action [mc "inserting line point"] \
+    "xth_me_cmds_delete_linept $id $pid\n$unclosecmd\nxth_me_cmds_select_linept $id $oldpid" \
     "$reclosecmd\nxth_me_cmds_undelete_linept $id $pid $ix"
   if {($ppid > 0) && $xth(me,cmds,$id,$ppid,idn)} {
     $xth(me,can) itemconfigure lineptppcp -state normal
@@ -2389,7 +2408,7 @@ proc xth_me_cmds_end_line {} {
   set recmds "xth_me_cmds_set_mode 0"
   set uncmds "xth_me_cmds_set_mode 2"
   eval $recmds
-  xth_me_unredo_action "line ending" $uncmds $recmds
+  xth_me_unredo_action [mc "line ending"] $uncmds $recmds
 }
 
 
@@ -2774,7 +2793,7 @@ proc xth_me_cmds_end_linecp_drag {x y dragto} {
         set unaltcmd ""
         set realtcmd ""
       }
-      xth_me_unredo_action "moving control point" \
+      xth_me_unredo_action [mc "moving control point"] \
       "xth_me_cmds_select {$id $pid}\nset xth(me,cmds,$id,$ppid,xn) $xth(me,lcpd,oldxpp)\nset xth(me,cmds,$id,$ppid,yn) $xth(me,lcpd,oldypp)\n$unaltcmd\n$movecmd\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd [list $xth(me,cmds,$id,data)]" \
       "xth_me_cmds_select {$id $pid}\nset xth(me,cmds,$id,$ppid,xn) $xth(me,cmds,$id,$ppid,xn)\nset xth(me,cmds,$id,$ppid,yn) $xth(me,cmds,$id,$ppid,yn)\n$realtcmd\n$movecmd\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd [list $xth(me,cmds,$id,data)]"
     }
@@ -2786,7 +2805,7 @@ proc xth_me_cmds_end_linecp_drag {x y dragto} {
         set unaltcmd ""
         set realtcmd ""
       }
-      xth_me_unredo_action "moving control point" \
+      xth_me_unredo_action [mc "moving control point"] \
       "xth_me_cmds_select {$id $pid}\nset xth(me,cmds,$id,$npid,xp) $xth(me,lcpd,oldxnn)\nset xth(me,cmds,$id,$npid,yp) $xth(me,lcpd,oldynn)\n$unaltcmd\n$movecmd\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd [list $xth(me,cmds,$id,data)]" \
       "xth_me_cmds_select {$id $pid}\nset xth(me,cmds,$id,$npid,xp) $xth(me,cmds,$id,$npid,xp)\nset xth(me,cmds,$id,$npid,yp) $xth(me,cmds,$id,$npid,yp)\n$realtcmd\n$movecmd\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd [list $xth(me,cmds,$id,data)]"
     }
@@ -3212,7 +3231,7 @@ proc xth_me_cmds_line_split {} {
   
   # nastavi undo na zmazanie novych a undelete originalnej
   # a redo na undelete novych a zmazanie originalnej
-  xth_me_unredo_action "split line" \
+  xth_me_unredo_action [mc "split line"] \
     "xth_me_cmds_delete $id1; xth_me_cmds_delete $id2; xth_me_cmds_undelete $id $pid $ix" \
     "xth_me_cmds_undelete $id1 $pid1 $ix; xth_me_cmds_undelete $id2 $pid2 $ix; xth_me_cmds_delete $id; xth_me_cmds_select {$id2 $pid2}"
 

@@ -256,6 +256,32 @@ enum {
   TT_DATALFLAG_NOT,  
 };
 
+
+enum {
+  TT_EXTENDFLAG_UNKNOWN = 0,
+  TT_EXTENDFLAG_NORMAL = 1,
+  TT_EXTENDFLAG_REVERSE = 2,
+  TT_EXTENDFLAG_LEFT = 4,
+  TT_EXTENDFLAG_RIGHT = 8,
+  TT_EXTENDFLAG_DIRECTION = 15,
+  TT_EXTENDFLAG_BREAK = 16,
+  TT_EXTENDFLAG_START = 32,
+  TT_EXTENDFLAG_IGNORE = 64,
+};
+
+
+static const thstok thtt_extendflag[] = {
+  {"break", TT_EXTENDFLAG_BREAK},
+  {"ignore", TT_EXTENDFLAG_IGNORE},
+  {"left", TT_EXTENDFLAG_LEFT},
+  {"normal", TT_EXTENDFLAG_NORMAL},
+  {"reverse", TT_EXTENDFLAG_REVERSE},
+  {"right", TT_EXTENDFLAG_RIGHT},
+  {"start", TT_EXTENDFLAG_START},
+  {NULL, TT_EXTENDFLAG_UNKNOWN},
+};
+
+
 /**
  * Data leg flags.
  */
@@ -329,8 +355,9 @@ class thdataleg {
   int data_type,  ///< leg data type
       flags;  ///< Leg flags.
       
-  unsigned char s_mark;  ///< Type of the station mark
-  
+  unsigned char s_mark,  ///< Type of the station mark
+    extend;  ///< Extend flags: normal, reverse, left, right, break
+
   int walls, shape;
   
   thobjectname station, from, to;
@@ -345,9 +372,9 @@ class thdataleg {
     
   double length_sd, counter_sd, depth_sd, bearing_sd, gradient_sd,
     dx_sd, dy_sd, dz_sd, x_sd, y_sd, z_sd, declination, 
-    total_sdx, total_sdy, total_sdz;
+    total_sdx, total_sdy, total_sdz, fxx, txx;
     
-  bool infer_plumbs, infer_equates, direction, adjusted, topofil;
+  bool infer_plumbs, infer_equates, direction, adjusted, topofil, plumbed;
   
  
   /**
@@ -457,6 +484,23 @@ class thdatamark {
 };
 
 
+class thdataextend {
+	
+	public:
+	
+	thobjectname to, from;
+
+  class thsurvey * psurvey;  ///< parent survey
+
+  thobjectsrc srcf;  ///< Source file.
+	
+	int extend;
+	
+	thdataextend() {}
+	
+};
+
+
 
 class thstdims {
   
@@ -482,6 +526,8 @@ typedef std::list < thdatafix > thdatafix_list;  ///< Data fix list.
 typedef std::list < thdatass > thdatass_list;  ///< Data stations list.
 
 typedef std::list < thdataequate > thdataequate_list;  ///< Data equates list.
+
+typedef std::list < thdataextend > thdataextend_list;  ///< Data extend list.
 
 typedef std::list < thdatamark > thdatamark_list;  ///< Universal object name list.
 

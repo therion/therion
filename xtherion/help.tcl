@@ -30,11 +30,11 @@ set hm "$xth(gui,main).hmenu"
 set xth(gui,menu,help) $hm
 
 menu $hm -tearoff 0
-$hm add command -label "Control..." -underline 0 -font $xth(gui,lfont) \
+$hm add command -label [mc "Control..."] -underline 0 -font $xth(gui,lfont) \
   -command xth_help_control_show
-$hm add command -label "BAC calculator..." -underline 0 -font $xth(gui,lfont) \
+$hm add command -label [mc "BAC calculator..."] -underline 0 -font $xth(gui,lfont) \
   -command xth_bac_init
-$hm add command -label "About..." -underline 0 -font $xth(gui,lfont) \
+$hm add command -label [mc "About..."] -underline 0 -font $xth(gui,lfont) \
   -command {
     xth_about_show 1
     xth_about_status $xth(prj,title)
@@ -64,9 +64,9 @@ proc xth_help_control_init {} {
   set ff $f.lf
   frame $ff
   Entry $ff.se -font $xth(gui,lfont)
-  Button $ff.sb -text "Search" -anchor center -font $xth(gui,lfont) \
+  Button $ff.sb -text [mc "Search"] -anchor center -font $xth(gui,lfont) \
   -command xth_help_control_search -width 8
-  Button $ff.cb -text "Close" -anchor center -font $xth(gui,lfont) \
+  Button $ff.cb -text [mc "Close"] -anchor center -font $xth(gui,lfont) \
   -command "destroy $f" -width 8
   grid columnconf $ff 2 -weight 1
 #  grid columnconf $ff 0 -weight 1
@@ -115,91 +115,14 @@ proc xth_help_control_init {} {
   update idletasks
   
   $txb.txt configure -state normal
-  $txb.txt insert end {MAP EDITOR SHORTCUTS
-  
-General shortcuts
- * Ctrl+Z = undo
- * Ctrl+Y = redo
- * F9 = compile current project
- * to select object in the listbox using keyboard:
-    switch using "Tab" into desired listbox;
-    move with underlined cursor to desired object;
-    press "Space"
-
-Drawing area and background images
- * RightClick = scroll drawing area
- * Double RightClick on the image = move the image
- 
-Inserting scrap
- * press "Ctrl-r" or "Edit" > "Insert" > "scrap" to insert new scrap
- * new scrap is inserted just after the current one
-
-Inserting point
- * Ctrl+P = switch to `insert point' mode
- * LeftClick = insert point at given position
- * Ctrl+LeftClick = insert point very close to existing point (normally it
-    will be inserted right above the closest point)
- * Esc = escape from the `inset point' mode
-
-Editing point
- * LeftClick + drag = move point
- * Ctrl+LeftClick + drag = move point close to the existing
-    point (normally it is moved right above closest existing point)
- * LeftClick + drag on point arrows = change point orientation or
-    sizes (according to given switches in Point cotrol panel)
-
-Inserting line
- * Crtl+L = insert new line and enter an `insert line point' mode
- * LeftClick = insert line point (without control points)
- * Ctrl+LeftClick = insert line point very close to existing point 
-    (normally it's inserted right above closest existing point)
- * LeftClick + drag = insert line point (with control points)
- * hold Ctrl while dragging = fix the distance of previous control point
- * LeftClick + drag on the control point = move its position
- * RightClick on one of the previous points = selects the previous point while 
-    in insert mode (useful if you want to change also the direction of
-    previous control point)
- * Esc or LeftClick on the last point = end the line insertion
- * LeftClick on the first line point = close the line and end line insertion
-
-Editing line
- * LeftClick + drag = move line point
- * Ctrl+LeftClick + drag = move line point close to the existing
-    point (normally it is moved right above closest existing point)
- * LeftClick on control point + drag = move control point
-
-Adding line point
- * select the point before which you want to insert points;
-    insert required points;
-    press Esc or left-click on the point you selected at the begining
-  
-Deleting line point
- * select the point you want to delete;
-    press "Edit line" > "Delete point" in the Line control panel
-    
-Splitting line
- * select the point at which you want to split the line;
-    press "Edit line" > "Split line" in the Line control panel
-    
-Inserting area
- * press "Ctrl-a" or "Edit" > "Insert" > "area" to switch to 
-    the "insert area border" mode
- * RightClick on the lines, that suround desired area
- * Esc to finish area border lines insertion
-
-Editing area
- * select area you want to edit
- * pres "Insert" in the area control to insert other border lines
-    at current cursor position
- * pres "Insert ID" to insert border with given ID at current cursor position
- * pres "Delete" to remove selected area border line
-    
-Selecting an existing object
- * LeftClick = select object on the top
- * RightClick = select object right below the top object (useful when several
-    points lie above each other)
-
-} 
+  set hlptxt [ mc "xtherion_help_control" ]  
+  if {[string length $hlptxt] < 100} {
+    set tmploc ::msgcat::mclocale
+    ::msgcat::mclocale en
+    set hlptxt [ mc "xtherion_help_control" ]  
+    ::msgcat::mclocale $tmploc
+  }
+  $txb.txt insert end $hlptxt
     
      
   $txb.txt configure -state disabled

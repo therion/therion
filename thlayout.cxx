@@ -1359,7 +1359,8 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
             anyline = true;
         if ((!anylegend) && (strstr(ln->line, "\\formattedlegend") != NULL))
             anylegend = true;
-        thdecode(&(this->db->buff_enc), TT_ASCII, ln->line);
+        
+        thdecode_utf2tex(&(this->db->buff_enc), ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
       }
       ln = ln->next_line;

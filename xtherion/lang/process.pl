@@ -1,17 +1,25 @@
 #!/usr/bin/perl
 ## usage: 
-## ./process.pl - generate .cxx,.h sources from texts.txt
+## ./process.pl - generate .tcl sources from xtexts.txt
 ## ./process.pl update - find new strings to translate and load all 
-##   texts_xy.txt into texts.txt
-## ./process.pl export[-empty] xy - export texts_xy.txt with texts
+##   xtexts_xy.txt into xtexts.txt
+## ./process.pl export[-empty] xy - export xtexts_xy.txt with texts
 ##   for translation. If export-empty is used, only untranslated strings
 ##   are exported
 
 @trans_sources = (
-  "../thsymbolset.cxx",
-  "../thexpmap.cxx",
-  "../thmapstat.cxx",
-  "../thpdf.cxx",
+  "../app.tcl",
+  "../bac.tcl",
+  "../cp.tcl",
+  "../cp_procs.tcl",
+  "../ctrl.tcl",
+  "../me.tcl",
+  "../me_cmds.tcl",
+  "../me_imgs.tcl",
+  "../me_cmds2.tcl",
+  "../mv.tcl",
+  "../te.tcl",
+  "../help.tcl",
 );
 
 sub read_lang_file {
@@ -110,133 +118,42 @@ sub write_lang_file {
   
 }
 
+sub str2esc {
+  $str = shift;
+  $ret = "";
+  for($i = 0; $i < length($str); $i++) {
+    $co = ord(substr($str,$i,1));
+    if (($co > 31) && ($co < 128)) {
+      $ret .= chr($co);
+    } else {
+      $ret .= sprintf("\\%o", $co);
+    }
+  }
+  return $ret;
+}
+
+
 sub write_sources {
   my $href = shift;
   my %hr = %{$href};
+  open(OUT,">../msgxth.tcl") || die("error: can't open ../msgxth.tcl for output\n");
+  print OUT "# file generated automatically - do not modify!\n\n";
+
+  my %sh = ();
   
-  # vytvorime si zoznam jazykov a ich alternativ
-  my %lngs = ();
-  my $key;
-  my $lkey;
-  foreach $key (keys %hr) {
-    foreach $lkey (keys %{$hr{$key}}) {
+  for $key (keys %hr) {
+    $sh{$hr{$key}{therion}} = $key;
+  }  
+  my @nkeys = sort {$a <=> $b} (keys %sh);
+  
+  for $key (@nkeys) {
+    for $lkey (sort keys %{$hr{$sh{$key}}}) {
       if (($lkey !~ /^the/) && ($lkey !~ /\-cmnt/)) {
-        $lngs{$lkey} = $lkey;
-        if (length($lkey) > 2) {
-          $nlkey = substr($lkey,0,2);
-          $lngs{$nlkey} = $nlkey;
-        }
+        print OUT "  ::msgcat::mcset $lkey \"$sh{$key}\" [encoding convertfrom utf-8 \"". str2esc($hr{$sh{$key}}{$lkey}) ."\"]\n";
       }
     }
+    print OUT "\n";
   }
-  
-  my @langs = (sort keys %lngs);
-  my $i;
-  my $lcode;
-  $languages = "enum {\n  THLANG_UNKNOWN = -1,\n";
-  $langcxxid = "static const thlang_pchar thlang__cxxids []  = {\n";
-  $langparse = "static const thstok thtt_lang [] = {\n";
-  for ($i = 0; $i <= $#langs; $i++) {
-    $lcode = "THLANG_" . uc($langs[$i]);
-    $langcxxid .= "  \"$lcode\",\n";
-    $langparse .= "  {\"$langs[$i]\", $lcode},\n"; 
-    $languages .= "  $lcode = $i,\n";
-    $lngs{$langs[$i]} = $lcode;
-  }
-  $languages .= "};\n";
-  $langcxxid .= "};\n";
-  $langparse .= "  {NULL, THLANG_UNKNOWN},\n};\n";
-  
-  my $alternatives = "static const int thlang__alternatives [] = {\n";
-  for ($i = 0; $i <= $#langs; $i++) {
-    $lkey = $langs[$i];
-    if ((length($lkey) > 2) && (defined($lngs{substr($lkey,0,2)}))) {
-      $alternatives .= "  " . $lngs{substr($lkey,0,2)} . ",\n";
-    } else {
-      $alternatives .= "  THLANG_UNKNOWN,\n";
-    }
-  }
-  $alternatives .= "};\n";
-  
-  @texts = sort keys %hr;
-
-  $textparse = "static const thstok thtt__texts [" . ($#texts + 2) . "] = {\n";
-  $texttable = "static const thlang_pchar thlang__translations [" . ($#texts + 1) . "][" . ($#langs + 1) . "] = {\n";
-  $i = 0;
-  my $nlkey;
-  foreach $key (@texts) {
-    $textparse .= "  {\"$key\",$i},\n";
-    $texttable .= "  {\n";
-    # priradi ll_LL -> ll ak ll neni definovane
-    foreach $lkey (@langs) {
-      if (length($lkey) > 2) {
-        $nlkey = substr($lkey,0,2);
-        if (!defined($hr{$key}{$nlkey})) {
-          $hr{$key}{$nlkey} = $hr{$key}{$lkey};
-        }
-      }
-    }
-    foreach $lkey (@langs) {
-      if (defined($hr{$key}{$lkey})) {
-        $texttable .= "    \"$hr{$key}{$lkey}\",\n";
-      } else {
-        $texttable .= "    NULL,\n";
-      }
-    }
-    $texttable .= "  },\n";
-    $i++;
-  }
-  $textparse .= "  {NULL, -1},\n};\n";
-  $texttable .= "};\n";
-  
-  # exportujeme h subor
-  open(OUT,">../thlangdata.h") || die("error: can't open thlangdata.h for output\n");
-  print OUT <<ENDOUT;
-/**
- * \@file thlangdata.h
- * Therion language translations module.
- *
- * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
- */
-  
- 
-$languages
- 
- 
-ENDOUT
-  close(OUT);
-  
-  # exportujeme cxx subor
-  open(OUT,">../thlangdata.cxx") || die("error: can't open thlangdata.cxx for output\n");
-  print OUT <<ENDOUT;
-/**
- * \@file thlangdata.cxx
- * Therion language translations module.
- *
- * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
- */
-
- 
-typedef char * thlang_pchar;
-
-
-$langparse
-
-
-$langcxxid
-
-
-$alternatives
-
-
-$textparse
-
-
-$texttable
- 
- 
-ENDOUT
-  
   close(OUT);
   
 }
@@ -266,11 +183,11 @@ sub update_todo_list {
     my @lines = <INP>;
     close(INP);
     my $ln = join('',@lines);
-    $ln =~ s/thT\(/\nthT\(/sg;
+    $ln =~ s/\[mc\ /\n\[mc\ /sg;
     @lines = split(/\n/,$ln);
     foreach $ln (@lines) {
       $i++;
-      if ($ln =~ /^thT\(\"(.*)\"/) {
+      if ($ln =~ /^\[mc\ \"(.*)\"/) {
         $hr{$1}{therion} = $i;
       }
     }
@@ -300,6 +217,7 @@ sub backup_file {
   close(OUT);
 
 }
+
 
 sub export_language {
   (my $fn, my $lng, my $href, my $onlyempty) = (shift, shift, shift, shift);
@@ -343,14 +261,13 @@ sub export_language {
 }
 
 
-
-$rf = read_lang_file("texts.txt");
+$rf = read_lang_file("xtexts.txt");
 # ak update
 if ($ARGV[0] =~ /^update$/i) {
   opendir(CDR,".");
-  @updfiles = grep /^texts\_[a-z]{2}\.txt$/, readdir(CDR);
+  @updfiles = grep /^xtexts\_[a-z]{2}\.txt$/, readdir(CDR);
   foreach $ufn (@updfiles) {
-    my $lcode = substr($ufn,6,2);
+    my $lcode = substr($ufn,7,2);
     print "updating $lcode translations ...";
     $rf = read_lang_file($ufn,$lcode,$rf);
     backup_file("$ufn");
@@ -358,9 +275,9 @@ if ($ARGV[0] =~ /^update$/i) {
     print " done\n";
   }
   closedir(CDR);
-  backup_file("texts.txt");
+  backup_file("xtexts.txt");
   $rf = update_todo_list($rf);
-  write_lang_file("texts.txt",$rf);
+  write_lang_file("xtexts.txt",$rf);
   write_sources($rf);
 } elsif ($ARGV[0] =~ /^export(\-empty)?$/i) {
   my $onlyempty = $1;
@@ -368,7 +285,7 @@ if ($ARGV[0] =~ /^update$/i) {
   if (length($lng) != 2) {
     die("error: invalid language \"$ARGV[1]\"\n");
   }
-  export_language("texts_$lng.txt",$lng,$rf,$onlyempty);
+  export_language("xtexts_$lng.txt",$lng,$rf,$onlyempty);
 } else {
   write_sources($rf);
 }

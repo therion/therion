@@ -5,16 +5,25 @@ source tests/map_plan.th
 #select hmap@tp
 
 export model
+export model -fmt survex
+
+layout xxx
+code tex-map
+\legendtitle={Pľuhavá a prašivá legenda}
+\cavename={\size[12]Pľuhavá a prašivá diera}
+endcode
+endlayout
 
 #export map -proj elevation:0 -layout-scale 1 200
 #export model -fmt survex
-#export map -layout-surface top \
+export map -layout-surface top \
   -layout-scale 1 200 \
   -layout-color map-fg altitude \
   -layout-grid top \
   -layout-rotate 90 \
   -layout-transparency on \
-  -layout-legend on
+  -layout-legend on \
+  -layout xxx
  
 #  -layout-symbol-hide group all \
 #  -layout-symbol-show group centerline \

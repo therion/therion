@@ -26,17 +26,17 @@
 ## --------------------------------------------------------------------
 
 
-xth_about_status "loading text editor ..."
+xth_about_status [mc "loading text editor ..."]
 
 if {[string equal -nocase $xth(prj,name) svxedit]} {
   xth_app_create te {}
 } else {
-  xth_app_create te "Text Editor"
+  xth_app_create te [mc "Text Editor"]
 }
 
-xth_ctrl_add te files "Files"
-xth_ctrl_add te sdata "Data table"
-xth_ctrl_add te sr "Search & Replace"
+xth_ctrl_add te files [mc "Files"]
+xth_ctrl_add te sdata [mc "Data table"]
+xth_ctrl_add te sr [mc "Search & Replace"]
 xth_ctrl_finish te
 
 set xth(te,open_file_encoding) $xth(app,fencoding)
@@ -163,18 +163,18 @@ xth_scroll_showcmd $xth(ctrl,te,files).fl.sv "grid $xth(ctrl,te,files).fl.sv -co
 xth_scroll_hidecmd $xth(ctrl,te,files).fl.sv "grid forget $xth(ctrl,te,files).fl.sv"
 xth_scroll_showcmd $xth(ctrl,te,files).fl.sh "grid $xth(ctrl,te,files).fl.sh -column 0 -row 1 -sticky news"
 xth_scroll_hidecmd $xth(ctrl,te,files).fl.sh "grid forget $xth(ctrl,te,files).fl.sh"
-xth_status_bar te $flbox "Switch open files."
+xth_status_bar te $flbox [mc "Switch open files."]
 grid columnconf $xth(ctrl,te,files) 0 -weight 1
 grid $xth(ctrl,te,files).fl -column 0 -row 0 -sticky news
 if {![string equal -nocase $xth(prj,name) svxedit]} {
 grid $xth(ctrl,te,files).ef -column 0 -row 1 -sticky news
 }
-Label $xth(ctrl,te,files).ef.ecl -text Encoding -anchor e -font $xth(gui,lfont) -state disabled
+Label $xth(ctrl,te,files).ef.ecl -text [mc "Encoding"] -anchor e -font $xth(gui,lfont) -state disabled
 ComboBox $xth(ctrl,te,files).ef.ecb -values $xth(encodings) \
   -textvariable xth(te,open_file_encoding) \
   -font $xth(gui,lfont) -height 4 -command xth_te_set_encoding \
   -state disabled
-Button $xth(ctrl,te,files).ef.chb -text "Change to" -anchor e -font $xth(gui,lfont) -padx 1 -state disabled -command xth_te_set_encoding
+Button $xth(ctrl,te,files).ef.chb -text [mc "Change to"] -anchor e -font $xth(gui,lfont) -padx 1 -state disabled -command xth_te_set_encoding
 Label $xth(ctrl,te,files).ef.cel -text "" -anchor w -padx 2 -font $xth(gui,lfont) -state disabled
 #grid columnconf $xth(ctrl,te,files).ef 0 -weight 0
 grid columnconf $xth(ctrl,te,files).ef 1 -weight 1
@@ -182,7 +182,7 @@ grid $xth(ctrl,te,files).ef.ecl -column 0 -row 0 -sticky news
 grid $xth(ctrl,te,files).ef.cel -column 1 -row 0 -sticky news
 grid $xth(ctrl,te,files).ef.chb -column 0 -row 1 -sticky news
 grid $xth(ctrl,te,files).ef.ecb -column 1 -row 1 -sticky ew
-xth_status_bar te $xth(ctrl,te,files).ef "To set file encoding, type encoding name and press <Change> button."
+xth_status_bar te $xth(ctrl,te,files).ef [mc "To set file encoding, type encoding name and press <Change> button."]
 
 frame $xth(gui,te).af.apps.ff -bg $xth(gui,ecolorbg)
 pack $xth(gui,te).af.apps.ff -fill both -expand yes
@@ -190,21 +190,21 @@ pack $xth(gui,te).af.apps.ff -fill both -expand yes
 
 
 # table control
-Button $xth(ctrl,te,sdata).sfb -text "Scan data format" \
+Button $xth(ctrl,te,sdata).sfb -text [mc "Scan data format"] \
   -font $xth(gui,lfont) -state disabled
 xth_status_bar te $xth(ctrl,te,sdata).sfb \
-  "Scan data format and rebuild centerline data insertion tool."
+  [mc "Scan data format and rebuild centerline data insertion tool."]
 
-checkbutton $xth(ctrl,te,sdata).sfs -text "Enter station names" -anchor w \
+checkbutton $xth(ctrl,te,sdata).sfs -text [mc "Enter station names"] -anchor w \
   -font $xth(gui,lfont) -variable xth(te,sdata,es) -state disabled
 xth_status_bar te $xth(ctrl,te,sdata).sfs \
-  "Check if you want to insert station names for each shot."
+  [mc "Check if you want to insert station names for each shot."]
 
 frame $xth(ctrl,te,sdata).sdf
 
-button $xth(ctrl,te,sdata).taf -text "Auto format selection" \
+button $xth(ctrl,te,sdata).taf -text [mc "Auto format selection"] \
   -font $xth(gui,lfont) -state disabled
-xth_status_bar te $xth(ctrl,te,sdata).taf "Format selection to given table."
+xth_status_bar te $xth(ctrl,te,sdata).taf [mc "Format selection to given table."]
 
 grid columnconf $xth(ctrl,te,sdata) 0 -weight 1
 grid $xth(ctrl,te,sdata).sfb -column 0 -row 0 -sticky nsew
@@ -229,56 +229,56 @@ set xth(ctrl,te,sr,selection_start) {}
 set xth(ctrl,te,sr,selection_end) {}
 set xth(ctrl,te,sr,search_end) end
 
-Label $sfm.seal -text "search" -anchor w -font $xth(gui,lfont) -state disabled \
+Label $sfm.seal -text [mc "search"] -anchor w -font $xth(gui,lfont) -state disabled \
   -width 4
-xth_status_bar te $sfm.seal "Search expression."
+xth_status_bar te $sfm.seal [mc "Search expression."]
 Entry $sfm.seae -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,te,sr,search)
-xth_status_bar te $sfm.seae "Search expression."
+xth_status_bar te $sfm.seae [mc "Search expression."]
 
-checkbutton $sfm.replc -text replace -anchor w -font $xth(gui,lfont) \
+checkbutton $sfm.replc -text [mc "replace"] -anchor w -font $xth(gui,lfont) \
   -state disabled -width 4 \
   -variable xth(ctrl,te,sr,replace_io) \
   -command {}
-xth_status_bar te $sfm.replc "Check whether to replace found expression."
+xth_status_bar te $sfm.replc [mc "Check whether to replace found expression."]
 Entry $sfm.reple -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,te,sr,replace)
-xth_status_bar te $sfm.reple "Replace expression."
+xth_status_bar te $sfm.reple [mc "Replace expression."]
 
-checkbutton $sfm.ccase -text "case sensitive search" -anchor w -font $xth(gui,lfont) \
+checkbutton $sfm.ccase -text [mc "case sensitive search"] -anchor w -font $xth(gui,lfont) \
   -state disabled -width 0 \
   -variable xth(ctrl,te,sr,case_io) \
   -command {}
-xth_status_bar te $sfm.ccase "Check if search should be case sensitive."
+xth_status_bar te $sfm.ccase [mc "Check if search should be case sensitive."]
 
-checkbutton $sfm.creg -text "regular expressions" -anchor w -font $xth(gui,lfont) \
+checkbutton $sfm.creg -text [mc "regular expressions"] -anchor w -font $xth(gui,lfont) \
   -state disabled -width 0 \
   -variable xth(ctrl,te,sr,regular_io) \
   -command {}
-xth_status_bar te $sfm.creg "Check whether to evaluate search and replace as regular expressions."
+xth_status_bar te $sfm.creg [mc "Check whether to evaluate search and replace as regular expressions."]
 
-checkbutton $sfm.csel -text "search selection only" -anchor w -font $xth(gui,lfont) \
+checkbutton $sfm.csel -text [mc "search selection only"] -anchor w -font $xth(gui,lfont) \
   -state disabled -width 0 \
   -variable xth(ctrl,te,sr,selection_io) \
   -command {}
-xth_status_bar te $sfm.csel "Check whether to do search only in selected text."
+xth_status_bar te $sfm.csel [mc "Check whether to do search only in selected text."]
 
-Button $sfm.bfirst -text "First" -anchor center -font $xth(gui,lfont) \
+Button $sfm.bfirst -text [mc "First"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 4 -command te_sr_first
-xth_status_bar te $sfm.bfirst "Search or replace first expression in the file."
-Button $sfm.bnext -text "Next" -anchor center -font $xth(gui,lfont) \
+xth_status_bar te $sfm.bfirst [mc "Search or replace first expression in the file."]
+Button $sfm.bnext -text [mc "Next"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 4 -command te_sr_next
-xth_status_bar te $sfm.bnext "Search or replace next expression after the cursor in the file."
-Button $sfm.ball -text "All" -anchor center -font $xth(gui,lfont) \
+xth_status_bar te $sfm.bnext [mc "Search or replace next expression after the cursor in the file."]
+Button $sfm.ball -text [mc "All"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 4 -command te_sr_all
-xth_status_bar te $sfm.ball "Search or replace all expressions in the file."
-Button $sfm.bclear -text "Clear" -anchor center -font $xth(gui,lfont) \
+xth_status_bar te $sfm.ball [mc "Search or replace all expressions in the file."]
+Button $sfm.bclear -text [mc "Clear"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 4 -command {
     te_sr_clear
     set xth(ctrl,te,sr,replace_io) 0
     update idletasks
   }
-xth_status_bar te $sfm.bclear "Clear all highlights in the file."
+xth_status_bar te $sfm.bclear [mc "Clear all highlights in the file."]
 
 
 grid columnconf $sfm 0 -weight 1
@@ -331,12 +331,12 @@ proc xth_te_show_file {fidx} {
     $xth(ctrl,te,files).ef.ecb configure -state normal
     $xth(ctrl,te,files).ef.chb configure -state normal
     $xth(ctrl,te,files).ef.cel configure -state normal
-    $xth(te,menu) entryconfigure Edit -state normal
-    $xth(te,menu,file) entryconfigure "Save" -state normal
-    $xth(te,menu,file) entryconfigure "Save as" -state normal
-    $xth(te,menu,file) entryconfigure "Save all" -state normal
-    $xth(te,menu,file) entryconfigure "Auto save" -state normal
-    $xth(te,menu,file) entryconfigure "Close" -state normal
+    $xth(te,menu) entryconfigure [mc "Edit"] -state normal
+    $xth(te,menu,file) entryconfigure [mc "Save"] -state normal
+    $xth(te,menu,file) entryconfigure [mc "Save as"] -state normal
+    $xth(te,menu,file) entryconfigure [mc "Save all"] -state normal
+    $xth(te,menu,file) entryconfigure [mc "Auto save"] -state normal
+    $xth(te,menu,file) entryconfigure [mc "Close"] -state normal
     $xth(ctrl,te,sr).seal configure -state normal
     $xth(ctrl,te,sr).seae configure -state normal
     $xth(ctrl,te,sr).replc configure -state normal
@@ -349,29 +349,29 @@ proc xth_te_show_file {fidx} {
     $xth(ctrl,te,sr).ball configure -state normal 
     $xth(ctrl,te,sr).bclear configure -state normal
     if {[llength $xth(te,flist)] > 1} {
-      $xth(te,menu,file) entryconfigure "Next" -state normal
-      $xth(te,menu,file) entryconfigure "Previous" -state normal
+      $xth(te,menu,file) entryconfigure [mc "Next"] -state normal
+      $xth(te,menu,file) entryconfigure [mc "Previous"] -state normal
     } else {
-      $xth(te,menu,file) entryconfigure "Next" -state disabled
-      $xth(te,menu,file) entryconfigure "Previous" -state disabled
+      $xth(te,menu,file) entryconfigure [mc "Next"] -state disabled
+      $xth(te,menu,file) entryconfigure [mc "Previous"] -state disabled
     }
     xth_te_sdata_enable ""
   } else {
     set xth(te,open_file) ""
     set xth(te,open_file_encoding) $xth(app,fencoding)
-    $xth(te,menu,file) entryconfigure "Save" -state disabled
-    $xth(te,menu,file) entryconfigure "Save as" -state disabled
-    $xth(te,menu,file) entryconfigure "Save all" -state disabled
-    $xth(te,menu,file) entryconfigure "Auto save" -state disabled
-    $xth(te,menu,file) entryconfigure "Close" -state disabled
-    $xth(te,menu,file) entryconfigure "Next" -state disabled
-    $xth(te,menu,file) entryconfigure "Previous" -state disabled
+    $xth(te,menu,file) entryconfigure [mc "Save"] -state disabled
+    $xth(te,menu,file) entryconfigure [mc "Save as"] -state disabled
+    $xth(te,menu,file) entryconfigure [mc "Save all"] -state disabled
+    $xth(te,menu,file) entryconfigure [mc "Auto save"] -state disabled
+    $xth(te,menu,file) entryconfigure [mc "Close"] -state disabled
+    $xth(te,menu,file) entryconfigure [mc "Next"] -state disabled
+    $xth(te,menu,file) entryconfigure [mc "Previous"] -state disabled
     $xth(ctrl,te,files).ef.ecl configure -state disabled
     $xth(ctrl,te,files).ef.ecb configure -state disabled
     $xth(ctrl,te,files).ef.chb configure -state disabled
     $xth(ctrl,te,files).ef.cel configure -state disabled -text ""
     xth_te_sdata_disable ""
-    $xth(te,menu) entryconfigure Edit -state disabled
+    $xth(te,menu) entryconfigure [mc "Edit"] -state disabled
     $xth(ctrl,te,sr).seal configure -state disabled
     $xth(ctrl,te,sr).seae configure -state disabled
     $xth(ctrl,te,sr).replc configure -state disabled
@@ -429,6 +429,7 @@ proc xth_te_switch_file {fdr} {
 proc xth_te_create_file {} {
 
   global xth
+  xth_status_bar_status te ""
   
   # create file variables
   incr xth(te,fltid)
@@ -491,6 +492,10 @@ proc xth_te_create_file {} {
     bind $cfr.txt <$xth(kb_control)-Key-z> "$iac {catch {$cfr.txt edit undo}}"
     bind $cfr.txt <$xth(kb_control)-Key-y> "$iac {catch {$cfr.txt edit redo}}"
   if {$xth(gui,bindinsdel)} {
+    bind $cfr.txt <Delete> {
+      %W delete insert
+      %W see insert
+    }
     bind $cfr.txt <Shift-Key-Delete> "$iac {tk_textCut $cfr.txt}"
     bind $cfr.txt <$xth(kb_control)-Key-Insert> "$iac {tk_textCopy $cfr.txt}"
     bind $cfr.txt <Shift-Key-Insert> "$iac {tk_textPaste $cfr.txt}"
@@ -663,7 +668,7 @@ proc xth_te_open_file {dialogid fname fline} {
   
   # read the file
   xth_status_bar_push te
-  xth_status_bar_status te "Opening $fname ..."
+  xth_status_bar_status te [format [mc "Opening %s ..."] $fname]
   
   set fdata [xth_te_read_file $fname]
   if {[lindex $fdata 0] == 0} {
@@ -713,7 +718,7 @@ proc xth_te_before_close_file {cfid btns} {
   if {[string compare $xth(te,$cfid,otext) $ftext] != 0} {    
     set wtd [MessageDlg $xth(gui,message) -parent $xth(gui,main) \
       -icon question -type $btns\
-      -message "File $xth(te,$cfid,path) is not saved. Save it now?" \
+      -message [format [mc "File %s is not saved. Save it now?"] $xth(te,$cfid,path)]\
       -font $xth(gui,lfont)]
     switch $wtd {
       0 {
@@ -787,7 +792,7 @@ proc xth_te_save_file {dialogid cfid} {
     ([file mtime $fname] > $xth(te,$cfid,mtime))} {
     set forcesave [MessageDlg $xth(gui,message) -parent $xth(gui,main) \
       -icon warning -type yesno -default 1 \
-      -message "File $fname was modified outside xtherion. Save it anyway?" \
+      -message [format [mc "File %s was modified outside xtherion. Save it anyway?"] $fname]\
       -font $xth(gui,lfont)]
     if {$forcesave != 0} {
       return 0
@@ -801,7 +806,7 @@ proc xth_te_save_file {dialogid cfid} {
   }
   
   # save the file
-  xth_status_bar_status te "Saving $fname ..."
+  xth_status_bar_status te [format [mc "Saving %s ..."] $fname]
   set fdata [xth_te_write_file $fname $xth(te,$cfid,encoding) $ftext]
   if {[lindex $fdata 0] == 0} {
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
@@ -863,63 +868,63 @@ proc xth_te_select_all {} {
 }
 
 
-$xth(te,menu,file) add command -label "New" -command xth_te_create_file \
+$xth(te,menu,file) add command -label [mc "New"] -command xth_te_create_file \
   -font $xth(gui,lfont) -underline 0
-$xth(te,menu,file) add command -label "Open" -underline 0 \
+$xth(te,menu,file) add command -label [mc "Open"] -underline 0 \
   -accelerator "$xth(gui,controlk)-o" \
   -font $xth(gui,lfont) -command {xth_te_open_file 1 {} 1}
-$xth(te,menu,file) add command -label "Save" -underline 0 \
+$xth(te,menu,file) add command -label [mc "Save"] -underline 0 \
   -accelerator "$xth(gui,controlk)-s" -state disabled \
   -font $xth(gui,lfont) -command {
     if {$xth(te,fcurr) >= 0} {
       xth_te_save_file 0 [lindex $xth(te,flist) $xth(te,fcurr)]
     }
   }
-$xth(te,menu,file) add command -label "Save as" -underline 5 \
+$xth(te,menu,file) add command -label [mc "Save as"] -underline 5 \
   -font $xth(gui,lfont) -state disabled -command {
     if {$xth(te,fcurr) >= 0} {
       xth_te_save_file 1 [lindex $xth(te,flist) $xth(te,fcurr)]
     }
   }
-$xth(te,menu,file) add command -label "Save all" -underline 6 \
+$xth(te,menu,file) add command -label [mc "Save all"] -underline 6 \
   -font $xth(gui,lfont) -state disabled -command xth_te_save_all
-$xth(te,menu,file) add checkbutton -label "Auto save" -underline 1 \
+$xth(te,menu,file) add checkbutton -label [mc "Auto save"] -underline 1 \
   -variable xth(gui,auto_save) -font $xth(gui,lfont) \
   -state disabled -command xth_app_autosave_schedule
-$xth(te,menu,file) add command -state disabled -label "Close" -underline 0 \
+$xth(te,menu,file) add command -state disabled -label [mc "Close"] -underline 0 \
   -accelerator "$xth(gui,controlk)-w" \
   -font $xth(gui,lfont) \
   -command "xth_te_close_file"
 
 $xth(te,menu,file) add separator
-$xth(te,menu,file) add command -state disabled -label "Next" \
+$xth(te,menu,file) add command -state disabled -label [mc "Next"] \
   -accelerator "$xth(gui,controlk)-n" \
   -font $xth(gui,lfont) -command "xth_te_switch_file 1" -underline 2
-$xth(te,menu,file) add command -state disabled -label "Previous" \
+$xth(te,menu,file) add command -state disabled -label [mc "Previous"] \
   -accelerator "$xth(gui,controlk)-p" \
   -font $xth(gui,lfont) -command "xth_te_switch_file -1" -underline 0
   
 set xth(te,menu,edit) $xth(te,menu).edit
 menu $xth(te,menu,edit) -tearoff 0
-$xth(te,menu) add cascade -label "Edit" -state disabled \
+$xth(te,menu) add cascade -label [mc "Edit"] -state disabled \
   -font $xth(gui,lfont) -menu $xth(te,menu,edit) -underline 0
 if {$xth(gui,text_undo)} {
-  $xth(te,menu,edit) add command -label "Undo" -font $xth(gui,lfont) \
+  $xth(te,menu,edit) add command -label [mc "Undo"] -font $xth(gui,lfont) \
     -accelerator "$xth(gui,controlk)-z" -command "xth_app_clipboard undo"
-  $xth(te,menu,edit) add command -label "Redo" -font $xth(gui,lfont) \
+  $xth(te,menu,edit) add command -label [mc "Redo"] -font $xth(gui,lfont) \
     -accelerator "$xth(gui,controlk)-y" -command "xth_app_clipboard redo"
   $xth(te,menu,edit) add separator
 }
-$xth(te,menu,edit) add command -label "Cut" -font $xth(gui,lfont) \
+$xth(te,menu,edit) add command -label [mc "Cut"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-x" -command "xth_app_clipboard cut"
-$xth(te,menu,edit) add command -label "Copy" -font $xth(gui,lfont) \
+$xth(te,menu,edit) add command -label [mc "Copy"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-c" -command "xth_app_clipboard copy"
-$xth(te,menu,edit) add command -label "Paste" -font $xth(gui,lfont) \
+$xth(te,menu,edit) add command -label [mc "Paste"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-v" -command "xth_app_clipboard paste"
 $xth(te,menu,edit) add separator
-$xth(te,menu,edit) add command -label "Select all" -font $xth(gui,lfont) \
+$xth(te,menu,edit) add command -label [mc "Select all"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-a" -command "xth_te_select_all"
-$xth(te,menu,edit) add command -label "Auto indent" -font $xth(gui,lfont) \
+$xth(te,menu,edit) add command -label [mc "Auto indent"] -font $xth(gui,lfont) \
   -command "xth_te_auto_indent" -accelerator "$xth(gui,controlk)-i"
 
 proc xth_te_get_indent {w i cilc} {
@@ -1051,7 +1056,7 @@ proc xth_te_auto_indent {} {
   regexp {(\d+)\.} [lindex $rngs 1] dum tln
   xth_status_bar_push te
   for {set cln $fln} {$cln < $tln} {incr cln} {
-    xth_status_bar_status te "Processing line $cln ..."
+    xth_status_bar_status te [format [mc "Processing line %s ..."] $cln]
     $W see $cln.0
     set spcs ""
     regexp {^\s+} [$W get $cln.0 $cln.end] spcs
@@ -1095,4 +1100,4 @@ proc xth_te_text_auto_indent {W} {
 }
 
 xth_ctrl_minimize te sr
-
+xth_status_bar_status te [mc "Text editor is not active. To activate it, open existing file or create new one."]

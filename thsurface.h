@@ -43,6 +43,7 @@ enum {
   TT_SURFACE_PICTURE = 2001,
   TT_SURFACE_GRID = 2002,
   TT_SURFACE_GRID_UNITS = 2003,
+  TT_SURFACE_GRID_FLIP = 2004,
 };
 
 
@@ -53,6 +54,7 @@ enum {
 static const thstok thtt_surface_opt[] = {
   {"bitmap", TT_SURFACE_PICTURE},
   {"grid", TT_SURFACE_GRID},
+  {"grid-flip", TT_SURFACE_GRID_FLIP},
   {"grid-units", TT_SURFACE_GRID_UNITS},
   {NULL, TT_SURFACE_UNKNOWN},
 };
@@ -77,6 +79,7 @@ class thsurface : public thdataobject {
     calib_x, calib_y, calib_s, calib_r, calib_xx, calib_yy, calib_xy, calib_yx,
     pict_dpi, pict_height, pict_width;
   long grid_nx, grid_ny, grid_counter, grid_size;
+  int grid_flip;
   thtflength grid_units;
   double * grid;
   thdb3ddata d3d;

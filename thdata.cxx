@@ -47,6 +47,7 @@ thdata::thdata()
   this->dli_equates = false;
   this->d_mark = TT_DATAMARK_TEMP;
   this->d_flags = TT_LEGFLAG_NONE;
+  this->d_extend = TT_EXTENDFLAG_NORMAL;
   this->d_vtresh = 67.5;
   this->d_shape = TT_DATALEG_SHAPE_OCTAGON;
   this->d_walls = TT_AUTO;
@@ -251,6 +252,10 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       if ((indataline & THOP_INLINE) == 0)
         ththrow(("not a command line option -- flags"))
       this->cgroup->set_data_flags(cod.nargs, args);
+      break;
+
+    case TT_DATA_EXTEND:
+      this->cgroup->set_data_extend(cod.nargs, args);
       break;
       
     case TT_DATA_STATION:
@@ -1476,6 +1481,38 @@ void thdata::set_data_data(int nargs, char ** args)
       ((this->di_from && this->di_to) || this->di_station);
   if (!all_data)
     ththrow(("not all data for given style"))
+   
+  if (this->di_interleaved) {
+    for(dix = 0; (!err_inimm) && (dix < this->d_nitems) && (this->d_order[dix] != TT_DATALEG_NEWLINE); dix++) {
+      switch (this->d_order[dix]) {
+        case TT_DATALEG_FROM:
+        case TT_DATALEG_TO:
+        case TT_DATALEG_DIRECTION:
+        case TT_DATALEG_LENGTH:
+        case TT_DATALEG_BEARING:
+        case TT_DATALEG_BACKBEARING:
+        case TT_DATALEG_GRADIENT:
+        case TT_DATALEG_BACKGRADIENT:
+        case TT_DATALEG_FROMCOUNT:
+        case TT_DATALEG_TOCOUNT:
+        case TT_DATALEG_FROMDEPTH:
+        case TT_DATALEG_TODEPTH:
+        case TT_DATALEG_DEPTHCHANGE:
+        case TT_DATALEG_NORTHING:
+        case TT_DATALEG_EASTING:
+        case TT_DATALEG_ALTITUDE:
+        case TT_DATALEG_X:
+        case TT_DATALEG_Y:
+        case TT_DATALEG_Z:
+          err_inimm = true;
+          break;
+      }
+      
+    }
+    if (err_inimm)
+      ththrow(("non-interleaved data before newline -- %s", args[dix]))
+  }
+    
   
 } // data data
 
@@ -1555,6 +1592,8 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->cd_leg->data_type = this->d_type;
     this->cd_leg->s_mark = this->d_mark;
     this->cd_leg->flags = this->d_flags;
+    this->cd_leg->extend = (unsigned char) this->d_extend;
+    this->d_extend &= (TT_EXTENDFLAG_NORMAL | TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_RIGHT | TT_EXTENDFLAG_REVERSE | TT_EXTENDFLAG_IGNORE);
     this->cd_leg->psurvey = this->db->get_current_survey();
     
     this->cd_leg->walls = this->d_walls;
@@ -1625,21 +1664,21 @@ void thdata::insert_data_leg(int nargs, char ** args)
       case TT_DATALEG_STATION:
         if (this->d_type == TT_DATATYPE_DIMS) {
           thparse_objectname(cdims->station, &(this->db->buff_stations),
-            args[carg]);
+            args[carg], this);
         } else {
           thparse_objectname(this->cd_leg->station, &(this->db->buff_stations),
-            args[carg]);
+            args[carg], this);
         }
         break;
         
       case TT_DATALEG_FROM:
         thparse_objectname(this->cd_leg->from, &(this->db->buff_stations),
-          args[carg]);
+          args[carg], this);
         break;
         
       case TT_DATALEG_TO:
         thparse_objectname(this->cd_leg->to, &(this->db->buff_stations),
-          args[carg]);
+          args[carg], this);
         break;
         
       case TT_DATALEG_DIRECTION:
@@ -2142,7 +2181,7 @@ void thdata::set_data_fix(int nargs, char ** args)
     }
     switch (ai) {
       case 0:
-        thparse_objectname(it->station, & this->db->buff_stations, args[0]);
+        thparse_objectname(it->station, & this->db->buff_stations, args[0], this);
         break;
       case 1:
         val = this->dlc_x.evaluate(val);
@@ -2206,7 +2245,7 @@ void thdata::set_data_equate(int nargs, char ** args)
   thdataequate_list::iterator it;
   for(eid = 0; eid < nargs; eid++) {
     it = this->equate_list.insert(this->equate_list.end(),dumm);
-    thparse_objectname(it->station, & this->db->buff_stations, args[eid]);
+    thparse_objectname(it->station, & this->db->buff_stations, args[eid], this);
     it->eqid = cid;
     it->srcf = this->db->csrc;
     it->psurvey = this->db->get_current_survey();
@@ -2225,7 +2264,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
   for(ai = 0; ai < nargs; ai++) {
     switch (ai) {
       case 0:
-        thparse_objectname(it->station, & this->db->buff_stations, args[0]);
+        thparse_objectname(it->station, & this->db->buff_stations, args[0], this);
         break;
       case 1:
         if (strlen(args[1]) > 0) {
@@ -2284,6 +2323,39 @@ void thdata::set_data_flags(int nargs, char ** args)
 }
 
   
+void thdata::set_data_extend(int nargs, char ** args)
+{
+  int cextend;
+  thdataextend dumm;
+  cextend = thmatch_token(args[0], thtt_extendflag);
+  if (cextend == TT_EXTENDFLAG_UNKNOWN)
+    ththrow(("unknown extend flag -- %s", args[0]))
+  switch (nargs) {
+    case 1:
+      if ((cextend & TT_EXTENDFLAG_DIRECTION) != 0) {
+        this->d_extend &= ~TT_EXTENDFLAG_DIRECTION;
+      }
+      this->d_extend |= cextend;
+      break;
+    case 3:
+      // parsnut mena to bodu
+	    thparse_objectname(dumm.to, & this->db->buff_stations, args[2], this);
+    case 2:
+      // parsnut meno from bodu a prida
+	    thparse_objectname(dumm.from, & this->db->buff_stations, args[1], this);
+      dumm.extend = cextend;
+      dumm.srcf = this->db->csrc;
+      dumm.psurvey = this->db->get_current_survey();
+      this->extend_list.insert(this->extend_list.end(), dumm);
+      break;
+    default:
+      ththrow(("invalid extend specification"))
+  }
+
+
+}
+
+  
 void thdata::set_data_mark(int nargs, char ** args)
 {
   if (nargs < 1)
@@ -2301,7 +2373,7 @@ void thdata::set_data_mark(int nargs, char ** args)
 	  for(mi = 0; mi < (nargs - 1); mi++) {
     	it = this->mark_list.insert(this->mark_list.end(),dumm);
       it->mark = tmp_mark;
-	    thparse_objectname(it->station, & this->db->buff_stations, args[mi]);
+	    thparse_objectname(it->station, & this->db->buff_stations, args[mi], this);
       it->srcf = this->db->csrc;
       it->psurvey = this->db->get_current_survey();
     } 
@@ -2495,6 +2567,7 @@ void thdata::start_group() {
   tmp->d_nitems = this->cgroup->d_nitems;
   tmp->d_mark = this->cgroup->d_mark;
   tmp->d_flags = this->cgroup->d_flags;
+  tmp->d_extend = this->cgroup->d_extend & (TT_EXTENDFLAG_NORMAL | TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_RIGHT | TT_EXTENDFLAG_IGNORE);
   tmp->d_last_equate = this->cgroup->d_last_equate;
   
   tmp->d_vtresh = this->cgroup->d_vtresh;
@@ -2525,6 +2598,11 @@ void thdata::end_group() {
   for(thdatafix_list::iterator fxi = tmp->fix_list.begin();
     fxi != tmp->fix_list.end(); fxi++) {
     this->cgroup->fix_list.insert(this->cgroup->fix_list.end(), (*fxi));
+  }
+  // extend specs
+  for(thdataextend_list::iterator xxi = tmp->extend_list.begin();
+    xxi != tmp->extend_list.end(); xxi++) {
+    this->cgroup->extend_list.insert(this->cgroup->extend_list.end(), (*xxi));
   }
 	// marks
 	for(thdatamark_list::iterator mi = tmp->mark_list.begin();
@@ -2581,7 +2659,7 @@ void thdata::complete_dimensions()
   thdatadimmap dm, idm;
   thdatadimmap::iterator dmi;
   thdatadimrec dr;
-  thdataleg_list::iterator li, pli, nli;
+  thdataleg_list::iterator li, pli;
 
   // vytvori explicitny dim map
   for(thstdims_list::iterator di = this->dims_list.begin();
@@ -2625,8 +2703,7 @@ void thdata::complete_dimensions()
         (!thisnan(li->from_left)) || (!thisnan(li->from_right)) ||
         (!thisnan(li->to_up)) || (!thisnan(li->to_down)) ||
         (!thisnan(li->to_left)) || (!thisnan(li->to_right))) {
-      nli = li++;
-      
+
       // predchadzajuca zamera
       if ((pli != this->leg_list.end()) && (pli->to.id == li->from.id))
         adddims(pli->to_up, pli->to_down, pli->to_left, pli->to_right, li->from_up, li->from_down, li->from_left, li->from_right);

@@ -26,6 +26,7 @@
 ## -------------------------------------------------------------------- 
 
 set xth(gui,openxp) 0
+set xth(me,imgs,xviid) 0
 
 proc xth_me_image_update_position {} {
   global xth 
@@ -43,14 +44,16 @@ proc xth_me_image_update_list {} {
   global xth
   set xth(me,imgs,list) {}
   foreach imgx $xth(me,imgs,xlist) {
-    if {[string length $xth(me,imgs,$imgx,image)] > 0} {
+    if {$xth(me,imgs,$imgx,XVI)} {
+      set imgsize "(XVI)"
+    } elseif {[string length $xth(me,imgs,$imgx,image)] > 0} {
       set imgw [image width $xth(me,imgs,$imgx,image)]
       set imgh [image height $xth(me,imgs,$imgx,image)]
+      set imgsize "($imgw x $imgh)"
     } else {
-      set imgw "---"
-      set imgh "---"
+      set imgsize "(unknown)"
     }
-    lappend xth(me,imgs,list) "$xth(me,imgs,$imgx,name) ($imgw x $imgh)"
+    lappend xth(me,imgs,list) "$xth(me,imgs,$imgx,name) $imgsize"
   }
 }
 
@@ -63,7 +66,8 @@ proc xth_me_image_move_to {} {
   }
   set iidx [lindex [$xth(ctrl,me,images).il.ilbox curselection] 0]
   set imgx [lindex $xth(me,imgs,xlist) $iidx]
-  xth_me_unredo_action "moving image" "xth_me_image_move $imgx $xth(me,imgs,$imgx,position); xth_me_image_update_position" \
+  xth_me_unredo_action [mc "moving image"] \
+    "xth_me_image_move $imgx $xth(me,imgs,$imgx,position); xth_me_image_update_position" \
     "xth_me_image_move $imgx $xth(ctrl,me,images,posx) $xth(ctrl,me,images,posy); xth_me_image_update_position"
   xth_me_image_move $imgx $xth(ctrl,me,images,posx) $xth(ctrl,me,images,posy)
   xth_me_image_update_position
@@ -99,7 +103,8 @@ proc xth_me_image_toggle_vsb {iidx} {
   }
   set imgx [lindex $xth(me,imgs,xlist) $iidx]
 
-  xth_me_unredo_action "toggle image visibility" "xth_me_image_toggle_vsb $iidx" "xth_me_image_toggle_vsb $iidx"
+  xth_me_unredo_action [mc "toggle image visibility"] \
+    "xth_me_image_toggle_vsb $iidx" "xth_me_image_toggle_vsb $iidx"
 
   switch $xth(me,imgs,$imgx,vsb) {
     0 {
@@ -126,12 +131,16 @@ proc xth_me_image_set_gamma {imgx} {
   if {$xth(me,imgs,$imgx,vsb) <= 0} {
     return
   }
+  if {$xth(me,imgs,$imgx,XVI)} {
+    return
+  }
   set ng $xth(me,imgs,$imgx,gamma)
   xth_status_bar_push me
   set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
   set csi 0
   xth_status_bar_status me [format "Correcting image gamma (%s) ..." $xth(me,imgs,$imgx,name)]
   xth_me_progbar_show $totalsi
+  $xth(me,imgs,$imgx,image) configure -gamma $ng
   foreach imgl $xth(me,imgs,$imgx,subimgs) {
     set dsti [lindex $imgl 0]
     incr csi
@@ -156,6 +165,10 @@ proc xth_me_images_rescandraw {} {
 proc xth_me_image_redraw {imgx} {
   global xth
   if {$xth(me,imgs,$imgx,vsb) <= 0} {
+    return
+  }
+  if {$xth(me,imgs,$imgx,XVI)} {
+    xth_me_imgs_xvi_redraw $imgx
     return
   }
   set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
@@ -220,8 +233,13 @@ proc xth_me_image_rescan {imgx} {
   if {$xth(me,imgs,$imgx,vsb) <= 0} {
     return
   }
+  if {$xth(me,imgs,$imgx,XVI)} {
+    return
+  }
   set srci $xth(me,imgs,$imgx,image)
   xth_status_bar_push me
+  set origgamma [$srci cget -gamma]
+  $srci configure -gamma 1.0
   set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
   set csi 0
   xth_status_bar_status me [format "Zooming image %s ..." $xth(me,imgs,$imgx,name)]
@@ -247,6 +265,7 @@ proc xth_me_image_rescan {imgx} {
     }
   }
   xth_me_progbar_hide
+  $srci configure -gamma $origgamma
   xth_status_bar_pop me
 }
 
@@ -259,6 +278,10 @@ proc xth_me_images_rescandraw {} {
 proc xth_me_image_redraw {imgx} {
   global xth
   if {$xth(me,imgs,$imgx,vsb) <= 0} {
+    return
+  }
+  if {$xth(me,imgs,$imgx,XVI)} {
+    xth_me_imgs_xvi_redraw $imgx
     return
   }
   set totalsi [llength $xth(me,imgs,$imgx,subimgs)]
@@ -277,6 +300,9 @@ proc xth_me_image_redraw {imgx} {
 proc xth_me_image_rescan {imgx} {
   global xth
   if {$xth(me,imgs,$imgx,vsb) <= 0} {
+    return
+  }
+  if {$xth(me,imgs,$imgx,XVI)} {
     return
   }
   set srci $xth(me,imgs,$imgx,image)
@@ -309,6 +335,214 @@ proc xth_me_image_rescan {imgx} {
 }
 # END NO NOZOOM
 
+proc xth_me_imgs_xvi_redraw {imgx} {
+  global xth
+  set id $xth(me,imgs,$imgx,image)  
+  
+  # calculate all coordinates
+  # grid
+  set px [lindex $xth(me,imgs,$imgx,position) 0]
+  set py [lindex $xth(me,imgs,$imgx,position) 1]
+  set gx [lindex $xth(me,imgs,$imgx,XVIgrid) 0]
+  set gy [lindex $xth(me,imgs,$imgx,XVIgrid) 1]
+  set gxx [lindex $xth(me,imgs,$imgx,XVIgrid) 2]
+  set gxy [lindex $xth(me,imgs,$imgx,XVIgrid) 3]
+  set gyx [lindex $xth(me,imgs,$imgx,XVIgrid) 4]
+  set gyy [lindex $xth(me,imgs,$imgx,XVIgrid) 5]
+  set ngx [lindex $xth(me,imgs,$imgx,XVIgrid) 6]
+  set ngy [lindex $xth(me,imgs,$imgx,XVIgrid) 7]
+  
+  set shx [expr double($px) - double($gx)]
+  set shy [expr double($py) - double($gy)]
+  
+  set odd 0
+  set crd {}
+  for {set i 0} {$i <= $ngy} {incr i} {
+    set lvx [xth_me_real2canx [expr $shx + $gx + $i * $gyx]]
+    set lvy [xth_me_real2cany [expr $shy + $gy + $i * $gyy]]
+    set rvx [xth_me_real2canx [expr $shx + $gx + $i * $gyx + $ngx * $gxx]]
+    set rvy [xth_me_real2cany [expr $shy + $gy + $i * $gyy + $ngx * $gxy]]
+    if {$odd} {
+      lappend crd $lvx $lvy $rvx $rvy
+      set odd 0
+    } else {
+      lappend crd $rvx $rvy $lvx $lvy
+      set odd 1
+    }
+  }
+  $xth(me,can) coords [format "%sGH" $id] $crd
+  set crd {}
+  for {set i 0} {$i <= $ngx} {incr i} {
+    set lvx [xth_me_real2canx [expr $shx + $gx + $i * $gxx]]
+    set lvy [xth_me_real2cany [expr $shy + $gy + $i * $gxy]]
+    set rvx [xth_me_real2canx [expr $shx + $gx + $i * $gxx + $ngy * $gyx]]
+    set rvy [xth_me_real2cany [expr $shy + $gy + $i * $gxy + $ngy * $gyy]]
+    if {$odd} {
+      lappend crd $lvx $lvy $rvx $rvy
+      set odd 0
+    } else {
+      lappend crd $rvx $rvy $lvx $lvy
+      set odd 1
+    }
+  }
+  $xth(me,can) coords [format "%sGV" $id] $crd
+
+  # walls
+  set shts $xth(me,imgs,$imgx,XVIshots)
+  for {set i 0} {$i < [llength $shts]} {incr i} {
+    if {[llength [lindex $shts $i]] >= 12} {
+      set x0 [xth_me_real2canx [expr $shx + [lindex [lindex $shts $i] 4]]]
+      set y0 [xth_me_real2cany [expr $shy + [lindex [lindex $shts $i] 5]]]
+      set x1 [xth_me_real2canx [expr $shx + [lindex [lindex $shts $i] 6]]]
+      set y1 [xth_me_real2cany [expr $shy + [lindex [lindex $shts $i] 7]]]
+      set x2 [xth_me_real2canx [expr $shx + [lindex [lindex $shts $i] 8]]]
+      set y2 [xth_me_real2cany [expr $shy + [lindex [lindex $shts $i] 9]]]
+      set x3 [xth_me_real2canx [expr $shx + [lindex [lindex $shts $i] 10]]]
+      set y3 [xth_me_real2cany [expr $shy + [lindex [lindex $shts $i] 11]]]
+      $xth(me,can) coords [format "%sWL%d" $id $i] $x0 $y0 $x1 $y1 $x2 $y2 $x3 $y3
+    }
+  }
+
+  # shots
+  for {set i 0} {$i < [llength $shts]} {incr i} {
+    set fx [xth_me_real2canx [expr $shx + [lindex [lindex $shts $i] 0]]]
+    set fy [xth_me_real2cany [expr $shy + [lindex [lindex $shts $i] 1]]]
+    set tx [xth_me_real2canx [expr $shx + [lindex [lindex $shts $i] 2]]]
+    set ty [xth_me_real2cany [expr $shy + [lindex [lindex $shts $i] 3]]]
+    $xth(me,can) coords [format "%sSH%d" $id $i] $fx $fy $tx $ty
+  }
+
+  # stations
+  set stns $xth(me,imgs,$imgx,XVIstations)
+  set xth(me,imgs,$imgx,XVIstationsX) {}
+  for {set i 0} {$i < [llength $stns]} {incr i} {
+    set cx [expr $shx + [lindex [lindex $stns $i] 0]]
+    set cy [expr $shy + [lindex [lindex $stns $i] 1]]
+    lappend xth(me,imgs,$imgx,XVIstationsX) [list $cx $cy]
+    set cx [xth_me_real2canx $cx]
+    set cy [xth_me_real2cany $cy]
+    $xth(me,can) coords [format "%sST%d" $id $i] [expr $cx - 3.0] [expr $cy - 3.0] [expr $cx + 3.0] [expr $cy + 3.0]
+  }
+  
+  if {$xth(me,imgs,$imgx,vsb) == 1} {
+    $xth(me,can) itemconfigure $xth(me,imgs,$imgx,image) -state normal
+  }
+}
+
+proc xth_me_imgs_xvi_create {imgx} {
+  global xth
+
+  # firstly delete all imgx items
+  foreach silist $xth(me,imgs,$imgx,subimgs) {
+    $xth(me,can) delete [lindex $silist 1]
+  }
+  set xth(me,imgs,$imgx,subimgs) {}
+  set id $xth(me,imgs,$imgx,image)
+  set stpref [format "XVIstI%sS" $imgx] 
+  # now create them
+  # grid
+
+  set grid_info_str [format [mc "grid - spacing %s"] $xth(me,imgs,$imgx,XVIgrids)]
+  
+  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id [format "%sGH" $id]]]
+  xth_me_bind_area_drag $cid $imgx
+  xth_me_bind_image_drag $cid $imgx
+  $xth(me,can) bind $cid <Enter> "xth_status_bar_push me; xth_status_bar_status me [list $grid_info_str]"
+  $xth(me,can) bind $cid <Leave> "xth_status_bar_pop me"
+  lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
+  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id [format "%sGV" $id]]]
+  xth_me_bind_area_drag $cid $imgx
+  xth_me_bind_image_drag $cid $imgx
+  $xth(me,can) bind $cid <Enter> "xth_status_bar_push me; xth_status_bar_status me [list $grid_info_str]"
+  $xth(me,can) bind $cid <Leave> "xth_status_bar_pop me"
+  lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
+
+  # walls
+  set shts $xth(me,imgs,$imgx,XVIshots)
+  for {set i 0} {$i < [llength $shts]} {incr i} {
+    if {[llength [lindex $shts $i]] >= 12} {
+      set cid [$xth(me,can) create polygon 0 0 1 0 1 1 -stipple gray12 -fill $xth(gui,xvi_walls_fclr) -outline $xth(gui,xvi_walls_oclr) -width 1 -state hidden -tags [list $id [format "%sWL%d" $id $i]]]
+      xth_me_bind_area_drag $cid $imgx
+      xth_me_bind_image_drag $cid $imgx
+      lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
+    }
+  }
+
+  # shots
+  for {set i 0} {$i < [llength $shts]} {incr i} {
+    set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_shot_clr) -width 3 -state hidden -tags [list $id [format "%sSH%d" $id $i]]]
+    xth_me_bind_area_drag $cid $imgx
+    xth_me_bind_image_drag $cid $imgx
+    lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
+  }
+
+  # stations
+  set stns $xth(me,imgs,$imgx,XVIstations)
+  for {set i 0} {$i < [llength $stns]} {incr i} {
+    set cid [$xth(me,can) create oval 0 0 1 1 -fill $xth(gui,xvi_station_fclr) -outline $xth(gui,xvi_station_oclr) -width 1 -state hidden -tags [list $id [format "%sST%d" $id $i] "$stpref$i"]]
+    xth_me_bind_area_drag $cid $imgx
+    xth_me_bind_image_drag $cid $imgx
+    set stinfo [format [mc "station - %s"] [lindex [lindex $stns $i] 2]]
+    $xth(me,can) bind $cid <Enter> "xth_status_bar_push me; xth_status_bar_status me [list $stinfo]"
+    $xth(me,can) bind $cid <Leave> "xth_status_bar_pop me"
+    lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
+  }
+
+  # and change coordinates
+  $xth(me,can) lower $xth(me,imgs,$imgx,image) command
+  set iidx [lsearch -exact $xth(me,imgs,xlist) $imgx]
+  if {$iidx > 0} {
+    $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
+  }
+  xth_me_imgs_xvi_redraw $imgx
+}
+
+proc xth_me_imgs_set_root {imgx} {
+  global xth
+  if {!$xth(me,imgs,$imgx,XVI)} {
+    return
+  }
+  set rs $xth(me,imgs,$imgx,XVIroot)
+  set xss $xth(me,imgs,$imgx,XVIstations)
+  if {[string length $rs] < 1} {
+    return
+  }
+  
+  # prejde vsetky stations, a skusi najst tu s danym menom
+  # ked ju najde, prerata position na grid origin a vynuluje
+  for {set i 0} {$i < [llength $xss]} {incr i} {
+    if {[string equal [lindex [lindex $xss $i] 2] $rs]} {
+      set sx [lindex [lindex $xss $i] 0]
+      set sy [lindex [lindex $xss $i] 1]
+      set px [lindex $xth(me,imgs,$imgx,position) 0]
+      set py [lindex $xth(me,imgs,$imgx,position) 1]
+      set gx [lindex $xth(me,imgs,$imgx,XVIgrid) 0]
+      set gy [lindex $xth(me,imgs,$imgx,XVIgrid) 1]
+      set xth(me,imgs,$imgx,position) [list [expr double($gx) + double($px) - double($sx)] [expr double($gy) + double($py) - double($sy)]]
+      set xth(me,imgs,$imgx,XVIroot) {}  
+      break
+    }
+  }
+}
+
+proc xth_me_imgs_get_root {imgx} {
+  global xth
+  set xss $xth(me,imgs,$imgx,XVIstations)
+  if {[llength $xss] > 0} {
+    set i 0
+    set sx [lindex [lindex $xss $i] 0]
+    set sy [lindex [lindex $xss $i] 1]
+    set px [lindex $xth(me,imgs,$imgx,position) 0]
+    set py [lindex $xth(me,imgs,$imgx,position) 1]
+    set gx [lindex $xth(me,imgs,$imgx,XVIgrid) 0]
+    set gy [lindex $xth(me,imgs,$imgx,XVIgrid) 1]
+    return [list [lindex $xss $i 2] [expr double($sx) + double($px) - double($gx)] [expr double($sy) + double($py) - double($gy)]]
+  } else {
+    return [list $xth(me,imgs,$imgx,XVIroot)]
+  }
+}
+
+
 proc xth_me_image_insert {xx yy fname iidx imgx} {
 
   global xth
@@ -327,18 +561,36 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
     set xx [lindex $xx 0]
   } 
   
+  set XVIroot {}
+  set isXVI 0
+  if {[llength $yy] > 1} {
+    set XVIroot [lindex $yy 1]
+    set yy [lindex $yy 0]
+  }
 
   if {[catch {expr $xx}]} {
     set xx $xth(me,area,xmin)
   }
   if {[catch {expr $yy}]} {
-    set yy $xth(me,area,ymax)
+    if $isXVI {
+      set yy $xth(me,area,ymax)
+    } else {
+      set yy $xth(me,area,ymin)
+    }
   }
   
   set dial_id 0
+
   if {[string length $fname] < 1} {
   
     if {$xth(me,fnewf)} {
+      set wtd [MessageDlg $xth(gui,message) -parent $xth(gui,main) \
+        -icon question -type yesno \
+        -message [mc "New *.th2 file needs to be saved before inserting background image. Save it now?"] \
+        -font $xth(gui,lfont)]
+      if {$wtd == 1} {
+        return
+      }
       xth_me_save_file 1
     }
     if {$xth(me,fnewf)} {
@@ -374,13 +626,28 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
     set imgx $xth(me,imgln)
   }
   set imgid {}
+  set XVIgrids {}
+  set XVIgrid {}
+  set XVIstations {}
+  set XVIshots {}
 	if {!$xth(gui,openxp)} {
-	  catch {
+    catch {
 	      set imgid [image create photo -file $ffname]
 	  } errorinf
+    if {[string length $imgid] < 1} {
+      catch {
+        source $ffname
+      } errorinf
+      if {[string length $XVIgrids] > 0} {
+        set isXVI 1
+        set imgid "XVI$xth(me,imgs,xviid)"
+        incr xth(me,imgs,xviid)
+      }
+    }
   } else {
 		set errorinf "excluded picture"
 	}
+  
   if {[string length $imgid] < 1} {
     if {$xth(me,unredook)} {
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
@@ -396,7 +663,11 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
     }
   }
 
-  xth_me_unredo_action "inserting image" "xth_me_image_remove $iidx" "xth_me_image_insert {$xx $vsb} $yy [list $fname] $iidx $imgx"
+  set undocmd "xth_me_image_remove %d"
+  set redocmd "xth_me_image_insert {$xx $vsb} {$yy $XVIroot} [list $fname] %d $imgx"
+
+  xth_me_unredo_action [mc "inserting image"] [format $undocmd $iidx] [format $redocmd $iidx]
+     
 
   incr xth(me,nimgs)
   set xth(me,imgs,xlist) [linsert $xth(me,imgs,xlist) $iidx $imgx]
@@ -406,10 +677,23 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
   set xth(me,imgs,$imgx,subimgs) {}
   set xth(me,imgs,$imgx,vsb) $vsb
   set xth(me,imgs,$imgx,gamma) $igamma
+  set xth(me,imgs,$imgx,reload) [list $undocmd $redocmd]
+  set xth(me,imgs,$imgx,ffname) $ffname
+  set xth(me,imgs,$imgx,fmtime) 0
+  catch {set xth(me,imgs,$imgx,fmtime) [file mtime $ffname]}
+  set xth(me,imgs,$imgx,XVI) $isXVI
+  set xth(me,imgs,$imgx,XVIroot) $XVIroot
+  set xth(me,imgs,$imgx,XVIgrids) $XVIgrids
+  set xth(me,imgs,$imgx,XVIgrid) $XVIgrid
+  set xth(me,imgs,$imgx,XVIshots) $XVIshots
+  set xth(me,imgs,$imgx,XVIstations) $XVIstations
+  set xth(me,imgs,$imgx,XVIstationsX) {}
+  
+  xth_me_imgs_set_root $imgx
   
   
   # let's create image subimages
-  if {$vsb >= 0} {
+  if {($vsb >= 0) && (!$xth(me,imgs,$imgx,XVI))} {
     if {$xth(gui,me,nozoom)} {
       set subimg [image create photo]
       set subcimg [$xth(me,can) create image 0 0 -image $subimg -anchor nw \
@@ -446,10 +730,14 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
         }
       }
       $xth(me,can) lower $xth(me,imgs,$imgx,image) command
+      set iidx [lsearch -exact $xth(me,imgs,xlist) $imgx]
       if {$iidx > 0} {
         $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
       }
     }  
+  }
+  if {($vsb >= 0) && ($xth(me,imgs,$imgx,XVI))} {
+    xth_me_imgs_xvi_create $imgx
   }
   xth_me_image_rescan $imgx
   xth_me_image_redraw $imgx
@@ -468,16 +756,26 @@ proc xth_me_image_destroy_all {} {
     unset xth(me,imgs,$imgx,name)
     unset xth(me,imgs,$imgx,position)
     if {[string length $xth(me,imgs,$imgx,image)] > 0} {
-      image delete $xth(me,imgs,$imgx,image)
+      catch {image delete $xth(me,imgs,$imgx,image)}
     }
     unset xth(me,imgs,$imgx,image)
     unset xth(me,imgs,$imgx,vsb)
     unset xth(me,imgs,$imgx,gamma)
     foreach silist $xth(me,imgs,$imgx,subimgs) {
-      image delete [lindex $silist 0]
+      catch {image delete [lindex $silist 0]}
       $xth(me,can) delete [lindex $silist 1]
     }
+    unset xth(me,imgs,$imgx,reload)
+    unset xth(me,imgs,$imgx,ffname)
+    unset xth(me,imgs,$imgx,fmtime)
     unset xth(me,imgs,$imgx,subimgs)
+    unset xth(me,imgs,$imgx,XVI)
+    unset xth(me,imgs,$imgx,XVIroot)
+    unset xth(me,imgs,$imgx,XVIgrids)
+    unset xth(me,imgs,$imgx,XVIgrid)
+    unset xth(me,imgs,$imgx,XVIshots)
+    unset xth(me,imgs,$imgx,XVIstations)
+    unset xth(me,imgs,$imgx,XVIstationsX)
   }
   set xth(me,nimgs) 0
   set xth(me,imgln) 0
@@ -498,20 +796,31 @@ proc xth_me_image_remove {iidx} {
     set iidx [lindex $isel 0]
   }
   set imgx [lindex $xth(me,imgs,xlist) $iidx]
-  xth_me_unredo_action "removing image" "xth_me_image_insert {[lindex $xth(me,imgs,$imgx,position) 0] $xth(me,imgs,$imgx,vsb) $xth(me,imgs,$imgx,gamma)} [lindex $xth(me,imgs,$imgx,position) 1] [list $xth(me,imgs,$imgx,name)] $iidx $imgx" "xth_me_image_remove $iidx"
+  xth_me_unredo_action [mc "removing image"] \
+    "xth_me_image_insert {[lindex $xth(me,imgs,$imgx,position) 0] $xth(me,imgs,$imgx,vsb) $xth(me,imgs,$imgx,gamma)} [lindex $xth(me,imgs,$imgx,position) 1] [list $xth(me,imgs,$imgx,name)] $iidx $imgx" "xth_me_image_remove $iidx"
   unset xth(me,imgs,$imgx,name)
   unset xth(me,imgs,$imgx,position)
   if {[string length $xth(me,imgs,$imgx,image)] > 0} {
-   image delete $xth(me,imgs,$imgx,image)
+    catch {image delete $xth(me,imgs,$imgx,image)}
   }
   unset xth(me,imgs,$imgx,image)
   unset xth(me,imgs,$imgx,vsb)
   unset xth(me,imgs,$imgx,gamma)
   foreach silist $xth(me,imgs,$imgx,subimgs) {
-    image delete [lindex $silist 0]
+    catch {image delete [lindex $silist 0]}
     $xth(me,can) delete [lindex $silist 1]
   }
   unset xth(me,imgs,$imgx,subimgs)
+  unset xth(me,imgs,$imgx,reload)
+  unset xth(me,imgs,$imgx,ffname)
+  unset xth(me,imgs,$imgx,fmtime)
+  unset xth(me,imgs,$imgx,XVI)
+  unset xth(me,imgs,$imgx,XVIroot)
+  unset xth(me,imgs,$imgx,XVIgrids)
+  unset xth(me,imgs,$imgx,XVIgrid)
+  unset xth(me,imgs,$imgx,XVIshots)
+  unset xth(me,imgs,$imgx,XVIstations)
+  unset xth(me,imgs,$imgx,XVIstationsX)
   set xth(me,nimgs) [expr $xth(me,nimgs) - 1]
   set xth(me,imgs,xlist) [lreplace $xth(me,imgs,xlist) $iidx $iidx]
   xth_me_image_update_list
@@ -546,7 +855,8 @@ proc xth_me_image_move_special {iidx newiidx} {
     set xth(me,imgs,xlist) [linsert [lreplace $xth(me,imgs,xlist) $iiidx $iiidx] end $imgx]
   }  
 
-  xth_me_unredo_action "moving image" "xth_me_image_move_special $newiidx $iidx" "xth_me_image_move_special $iidx $newiidx"
+  xth_me_unredo_action [mc "moving image"] \
+    "xth_me_image_move_special $newiidx $iidx" "xth_me_image_move_special $iidx $newiidx"
   xth_me_image_update_list
   xth_me_image_select $xiidx
   
@@ -598,6 +908,10 @@ proc xth_me_image_select {iidx} {
 
   if {!$xth(me,fopen)} {
     return
+  }
+  
+  if {[string length $iidx] == 0} {
+    set iidx 0
   }
   
   if {$xth(me,nimgs) > 0} {
@@ -658,7 +972,8 @@ proc xth_me_image_gamma {imgx gv} {
   set og $xth(me,imgs,$imgx,gamma)
   set xth(me,imgs,$imgx,gamma) $gv
   xth_me_image_set_gamma $imgx
-  xth_me_unredo_action "gamma correction" "xth_me_image_gamma $imgx $og" \
+  xth_me_unredo_action [mc "gamma correction"] \
+    "xth_me_image_gamma $imgx $og" \
     "xth_me_image_gamma $imgx $gv"
   xth_me_image_update_gamma_scale
 }
@@ -686,4 +1001,34 @@ proc xth_me_image_update_gamma_scale {} {
     set xth(ctrl,me,images,gamma) 0
   }
 }
+
+
+proc xth_me_xvi_refresh {} {
+  global xth
+  if {[catch {
+    set todolist $xth(me,imgs,xlist)
+  }]} {
+    return
+  }
+  foreach imgx $todolist {
+    if $xth(me,imgs,$imgx,XVI) {
+      set fmtime 0
+      if {![catch {set fmtime [file mtime $xth(me,imgs,$imgx,ffname)]}]} {
+        if {$fmtime > $xth(me,imgs,$imgx,fmtime)} {
+          set cpos [lsearch -exact $xth(me,imgs,xlist) $imgx]
+          if {$cpos > -1} {
+            set undocmd [format [lindex $xth(me,imgs,$imgx,reload) 0] $cpos]
+            set redocmd [format [lindex $xth(me,imgs,$imgx,reload) 1] $cpos]
+            set xth(me,unredook) 0
+            eval $undocmd
+            eval $redocmd
+            set xth(me,unredook) 1
+          }
+        }
+      }
+    }
+  }
+  xth_me_area_auto_adjust
+}
+
 

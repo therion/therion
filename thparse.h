@@ -294,12 +294,15 @@ bool th_is_extkeyword(char * str);
  
 void thdecode_c(thbuffer * dest, const char * src);
 
+void thdecode_tcl(thbuffer * dest, const char * src);
+
 
 /**
  * Decode string into TeX format.
  */
  
 void thdecode_tex(thbuffer * dest, const char * src);
+void thdecode_utf2tex(thbuffer * dest, const char * src);
 void thdecode_sql(thbuffer * dest, const char * src);
 
 

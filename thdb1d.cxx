@@ -83,6 +83,7 @@ void thdb1d::scan_data()
   thdatafix_list::iterator fii;
   thdatamark_list::iterator mii;
   thdatass_list::iterator ssi;
+  thdataextend_list::iterator xi;
   thdataequate_list::iterator eqi;
   thstdims_list::iterator di;
   thdata * dp;
@@ -195,12 +196,17 @@ void thdb1d::scan_data()
                 lei->total_gradient = (thisinf(lei->gradient) == 1 ? 90.0 
                   : (thisinf(lei->gradient) == -1 ? -90.0 
                   : lei->gradient));
+                                
                 if (!lei->direction)
                   lei->total_gradient *= -1.0;
                 lei->total_dz = lei->total_length * cos(lei->total_gradient/180*THPI);
                 lei->total_dx = lei->total_dz * sin(lei->total_bearing/180*THPI);
                 lei->total_dy = lei->total_dz * cos(lei->total_bearing/180*THPI);
                 lei->total_dz = lei->total_length * sin(lei->total_gradient/180*THPI);
+                lei->plumbed = (thisinf(lei->gradient) != 0);
+                if (lei->infer_plumbs && (!lei->plumbed)) {
+                  lei->plumbed = (lei->gradient == -90.0) || (lei->gradient == 90.0);
+                }
                 break;
                 
               case TT_DATATYPE_DIVING:
@@ -218,6 +224,9 @@ void thdb1d::scan_data()
                 lei->total_dx = lei->total_dz * sin(lei->total_bearing/180*THPI);
                 lei->total_dy = lei->total_dz * cos(lei->total_bearing/180*THPI);
                 lei->total_dz = lei->total_length * sin(lei->total_gradient/180*THPI);
+                if (lei->infer_plumbs && (!lei->plumbed)) {
+                  lei->plumbed = (lei->depthchange == lei->length) && (lei->depthchange != 0.0);
+                }
                 break;
                 
               case TT_DATATYPE_CYLPOLAR:
@@ -235,6 +244,9 @@ void thdb1d::scan_data()
                 lei->total_dx = lei->total_dz * sin(lei->total_bearing/180*THPI);
                 lei->total_dy = lei->total_dz * cos(lei->total_bearing/180*THPI);
                 lei->total_dz = lei->total_length * sin(lei->total_gradient/180*THPI);
+                if (lei->infer_plumbs && (!lei->plumbed)) {
+                  lei->plumbed = (lei->length == 0.0) && (lei->depthchange != 0.0);
+                }
                 break;
                 
               case TT_DATATYPE_CARTESIAN:
@@ -244,6 +256,9 @@ void thdb1d::scan_data()
                 lei->total_length = thdxyz2length(lei->total_dx,lei->total_dy,lei->total_dz);
                 lei->total_bearing = thdxyz2bearing(lei->total_dx,lei->total_dy,lei->total_dz);
                 lei->total_gradient = thdxyz2clino(lei->total_dx,lei->total_dy,lei->total_dz);
+                if (lei->infer_plumbs && (!lei->plumbed)) {
+                  lei->plumbed = (lei->dx == 0.0) && (lei->dy == 0.0) && (lei->dz != 0.0);
+                }
                 break;
             }
 
@@ -264,7 +279,7 @@ void thdb1d::scan_data()
             lei->adj_dx = lei->total_dx;
             lei->adj_dy = lei->total_dy;
             lei->adj_dz = lei->total_dz;
-
+            
             lei->calc_total_stds();
             
           }
@@ -356,6 +371,32 @@ void thdb1d::scan_data()
       }
       catch (...)
         threthrow(("%s [%d]", mii->srcf.name, mii->srcf.line));
+        
+      // scan extends
+      xi = dp->extend_list.begin();
+      try {
+        while(xi != dp->extend_list.end()) {
+          if (!xi->to.is_empty()) {
+            xi->to.id = this->get_station_id(xi->to, xi->psurvey);
+            if (xi->to.id == 0) {
+              if (xi->to.survey == NULL)
+                ththrow(("station doesn't exist -- %s", xi->to.name))
+              else
+                ththrow(("station doesn't exist -- %s@%s", xi->to.name, xi->to.survey))
+            }
+          }
+          xi->from.id = this->get_station_id(xi->from, xi->psurvey);
+          if (xi->from.id == 0) {
+            if (xi->from.survey == NULL)
+              ththrow(("station doesn't exist -- %s", xi->from.name))
+            else
+              ththrow(("station doesn't exist -- %s@%s", xi->from.name, xi->from.survey))
+          }
+          xi++;
+        }
+      }
+      catch (...)
+        threthrow(("%s [%d]", xi->srcf.name, xi->srcf.line));
 
       // scan dimensions
       di = dp->dims_list.begin();
@@ -394,6 +435,7 @@ void thdb1d::process_data()
 #endif
   this->process_survey_stat();
   this->postprocess_objects();
+  this->process_xelev();
 }
 
 
@@ -595,6 +637,8 @@ void thdb1d::process_tree()
     n1->id = ii;
     n1->uid = ii;
     n1->is_fixed = ((this->station_vec[i].flags & TT_STATIONFLAG_FIXED) != 0);
+//    if (n1->is_fixed)
+//      thprintf("FX: %s@%s\n", this->station_vec[i].name, this->station_vec[i].survey->full_name);
     if (n1->is_fixed)
       any_fixed = true;
   }
@@ -655,6 +699,7 @@ void thdb1d::process_tree()
     
     if ((iil->leg->data_type == TT_DATATYPE_NOSURVEY) &&
       ((!a1->start_node->is_fixed) || (!a1->end_node->is_fixed))) {
+//        thprintf("%s@%s - %s@%s\n", iil->leg->from.name, iil->leg->from.survey, iil->leg->to.name, iil->leg->to.survey);
         ththrow(("unsurveyed shot between unfixed stations -- %s [%d]",
           iil->leg->srcf.name, iil->leg->srcf.line
         ));
@@ -1892,8 +1937,10 @@ void thdb1d::close_loops()
           src_dx += dx;
           src_dy += dy;
           src_dz += dz;
-          sum_sdx += ll->leg->total_sdx;
-          sum_sdy += ll->leg->total_sdy;
+          if (!ll->leg->plumbed) {
+            sum_sdx += ll->leg->total_sdx;
+            sum_sdy += ll->leg->total_sdy;
+          }
           sum_sdz += ll->leg->total_sdz;
         }
         
@@ -1954,11 +2001,11 @@ void thdb1d::close_loops()
 
 #define ORIENT (ll->reverse ? -1.0 : 1.0)
             if (sum_sdx > 0.0)
-              ll->leg->adj_dx += ORIENT * err_dx * ll->leg->total_sdx / sum_sdx;
+              ll->leg->adj_dx += ORIENT * err_dx * (ll->leg->plumbed ? 0.0 : ll->leg->total_sdx) / sum_sdx;
             else
               ll->leg->adj_dx += ORIENT * err_dx / sumlegs;
             if (sum_sdy > 0.0)
-              ll->leg->adj_dy += ORIENT * err_dy * ll->leg->total_sdy / sum_sdy;
+              ll->leg->adj_dy += ORIENT * err_dy * (ll->leg->plumbed ? 0.0 : ll->leg->total_sdy) / sum_sdy;
             else
               ll->leg->adj_dy += ORIENT * err_dy / sumlegs;
             if (sum_sdz > 0.0)
@@ -2473,6 +2520,353 @@ void thdb1d::postprocess_objects()
   }
 }
 
+
+
+
+void thdb1d::process_xelev()
+{
+  unsigned long tn_legs = this->leg_vec.size();
+  unsigned long tn_stations = this->station_vec.size();
+  if ((tn_legs < 0) || (tn_stations < 0))
+    return;
+
+#ifdef THDEBUG
+    thprintf("\n\nprocessing extended elevation\n");
+#else
+    thprintf("processing extended elevation ... ");
+    thtext_inline = true;
+#endif 
+    
+  // PREPROCESS
+  thdataextend_list::iterator xi;
+  thdb1ds * st1;
+  thdata * dp;
+  thdb1d_tree_node * nodes = this->get_tree_nodes(), * from_node, * to_node;
+  thdb1d_tree_arrow * carrow;
+  thbuffer tmpbf;
+  thdb_object_list_type::iterator obi = this->db->object_list.begin();
+  while (obi != this->db->object_list.end()) {
+    switch ((*obi)->get_class_id()) {
+      case TT_DATA_CMD:
+        try {
+          dp = (thdata *)(*obi);
+          xi = dp->extend_list.begin();
+          while(xi != dp->extend_list.end()) {
+            if (!xi->to.is_empty()) {
+              // find shot to apply extend to
+              from_node = nodes + (nodes[xi->from.id - 1].uid - 1);
+              to_node = nodes + (nodes[xi->to.id - 1].uid - 1);
+              carrow = from_node->first_arrow;
+              while (carrow != NULL) {
+                if (carrow->end_node->uid == to_node->uid)
+                  break;
+                carrow = carrow->next_arrow;
+              }
+              if (carrow == NULL) {
+                tmpbf = xi->from.name;
+                if (xi->from.survey != NULL) {
+                  tmpbf += "@";
+                  tmpbf += xi->from.survey;
+                }
+                tmpbf += " - ";
+                tmpbf += xi->to.name;
+                if (xi->to.survey != NULL) {
+                  tmpbf += "@";
+                  tmpbf += xi->to.survey;
+                }
+                ththrow(("survey shot not found -- %s", tmpbf.get_buffer()))
+              } else {
+                // the leg is in carrow - set its extend
+                if ((xi->extend & TT_EXTENDFLAG_DIRECTION) != 0) {
+                  carrow->leg->leg->extend &= ~TT_EXTENDFLAG_DIRECTION;
+                  carrow->extend &= ~TT_EXTENDFLAG_DIRECTION;
+                }
+                carrow->extend |= xi->extend;
+                switch (xi->extend) {
+                  case TT_EXTENDFLAG_LEFT:
+                    if (carrow->is_reversed)
+                      carrow->leg->leg->extend |= TT_EXTENDFLAG_RIGHT;
+                    else
+                      carrow->leg->leg->extend |= TT_EXTENDFLAG_LEFT;
+                    break;
+                  case TT_EXTENDFLAG_RIGHT:
+                    if (carrow->is_reversed)
+                      carrow->leg->leg->extend |= TT_EXTENDFLAG_LEFT;
+                    else
+                      carrow->leg->leg->extend |= TT_EXTENDFLAG_RIGHT;
+                    break;
+                  default:
+                    carrow->leg->leg->extend |= xi->extend;
+                }
+              }
+            } else {
+              // add station extend attribute
+              st1 = &(this->station_vec[xi->from.id - 1]);
+              from_node = nodes + (nodes[xi->from.id - 1].uid - 1);
+              if ((xi->extend & TT_EXTENDFLAG_DIRECTION) != 0) {
+                st1->extend &= ~TT_EXTENDFLAG_DIRECTION;
+              }              
+              st1->extend |= xi->extend;
+              if (xi->extend == TT_EXTENDFLAG_IGNORE) {
+                carrow = from_node->first_arrow;
+                while (carrow != NULL) {
+                  carrow->leg->leg->extend |= TT_EXTENDFLAG_IGNORE;
+                  carrow->extend |= TT_EXTENDFLAG_IGNORE;
+                  carrow = carrow->next_arrow;
+                }
+              }
+            }
+            xi++;
+          }
+        }
+        catch (...)
+          threthrow(("%s [%d]", xi->srcf.name, xi->srcf.line));
+        break;
+    }
+    obi++;
+  }
+
+  // PREPARE tree for new tremaux
+  // is_attached to false
+  unsigned long i;
+  thdb1d_tree_node * n1, * current_node = NULL;
+  thdb1d_tree_arrow * a1, * a2;
+
+  // vsetky is discovery na false
+  a1 = this->tree_arrows;
+  for(i = 0; i < tn_legs; i++) {
+    a1->is_discovery = false; a1++;
+    a1->is_discovery = false; a1++;
+  }
+
+  // poojde v modoch normal/ignoreignore
+  
+  // FIND ROOT STATION AND FIRST SHOT
+  // + traverse all stations
+  // + find start in survey in highest level
+  // + find top entrance
+  // + find top station
+  //
+  // SHOT:
+  // + find free start shot
+  // + find free non ignore shot (ak nie ignoreignore)
+  
+  // EXTEND FROM ROOT
+  // until everything is calculated
+
+  unsigned long tarrows = 0;
+  bool component_break = true;
+  bool ignorant_mode = false, default_left = false, go_left, just_started = true;
+  int start_level, clevel;
+  double cxx = 0.0;
+
+  while (tarrows < tn_legs) {
+  
+    if (component_break) {
+    
+      for(i = 0, n1 = nodes; i < tn_stations; i++, n1++) {
+        n1->is_attached = false;
+      }
+      a1 = this->tree_arrows;
+      start_level = 0;
+      a2 = NULL;
+
+      for(i = 0; i < 2 * tn_legs; i++) {
+        if (!a1->is_discovery) {
+          // only ignore shots left
+          clevel = 0;
+          if ((a1->leg->leg->extend & TT_EXTENDFLAG_IGNORE) == 0) {
+            // non ignore shots left
+            clevel = 1;
+            // dead end station
+            if (a1->start_node->narrows == 1)
+              clevel = 2;
+            // entrance station left
+            if ((this->station_vec[(a1->is_reversed ? (a1->leg->leg->to.id) : (a1->leg->leg->from.id)) - 1].flags & TT_STATIONFLAG_ENTRANCE) != 0)
+              clevel = 3;
+            // start station left
+            if ((this->station_vec[a1->start_node->uid - 1].extend & TT_EXTENDFLAG_START) != 0)
+              clevel = 4;
+            // start shot left
+            if ((a1->extend & TT_EXTENDFLAG_START) != 0)
+              clevel = 5;
+            if (a1->start_node->xx_touched)
+              clevel = 6;
+          }
+            
+          if (clevel > start_level) {
+            start_level = clevel;
+            a2 = a1;
+          } else if ((clevel == start_level) && (this->station_vec[a1->start_node->uid - 1].z > this->station_vec[a2->start_node->uid - 1].z)) {
+            a2 = a1;
+          }
+          
+        }
+        a1++;
+      }
+      if (start_level == 0)
+        ignorant_mode = true;
+      
+      // set up current_node & current_node->last_arrow
+      if (a2 == NULL) {
+        thwarning(("not all shots attached to extended elevation"));
+        break;
+      }
+      current_node = a2->start_node;
+      current_node->last_arrow = a2;
+      current_node->is_attached = true;  
+      current_node->back_arrow = NULL;
+      cxx = current_node->xx;
+      component_break = false;
+      if (!current_node->xx_touched) {
+        current_node->xx_left = ((this->station_vec[current_node->uid - 1].extend & (TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_REVERSE)) != 0);
+      }
+      default_left = current_node->xx_left;
+      just_started = true;
+
+#ifdef THDEBUG
+      thprintf("START -- %d (%s@%s)\n", current_node->id,
+        this->station_vec[current_node->id - 1].name,
+        this->station_vec[current_node->id - 1].survey->get_full_name());
+#endif
+      
+    }
+    
+    if (just_started) {
+      just_started = false;
+    } else {
+      // let's make move
+      if (current_node->last_arrow == NULL)
+        current_node->last_arrow = current_node->first_arrow;
+
+      while ((current_node->last_arrow != NULL) && 
+          (current_node->last_arrow->is_discovery) && 
+          ((current_node->last_arrow->extend & TT_EXTENDFLAG_BREAK) == 0) &&
+          (ignorant_mode || ((current_node->last_arrow->extend & TT_EXTENDFLAG_IGNORE) == 0)))
+        current_node->last_arrow = current_node->last_arrow->next_arrow;
+  
+      if (current_node->last_arrow == NULL)
+        current_node->last_arrow = current_node->first_arrow;
+  
+      while ((current_node->last_arrow != NULL) && 
+          (current_node->last_arrow->is_discovery) && 
+          ((current_node->last_arrow->extend & TT_EXTENDFLAG_BREAK) == 0) &&
+          (ignorant_mode || ((current_node->last_arrow->extend & TT_EXTENDFLAG_IGNORE) == 0)))
+        current_node->last_arrow = current_node->last_arrow->next_arrow;
+    
+    }
+  
+    if (current_node->last_arrow == NULL) {
+
+      // go back
+      if (current_node->back_arrow == NULL)
+        component_break = true;
+      else {
+        current_node = current_node->back_arrow->end_node;
+        cxx = current_node->xx;
+        default_left = current_node->xx_left;
+#ifdef THDEBUG
+        thprintf("%d (%s@%s) <-\n", current_node->id,
+          this->station_vec[current_node->id - 1].name,
+          this->station_vec[current_node->id - 1].survey->get_full_name());
+#endif
+      }
+
+    } else {
+    
+      // go forward
+      current_node->last_arrow->is_discovery = true;          
+      current_node->last_arrow->negative->is_discovery = true;          
+      tarrows++;
+      
+      // set start x
+      if (current_node->last_arrow->is_reversed)
+        current_node->last_arrow->leg->leg->txx = cxx;
+      else
+        current_node->last_arrow->leg->leg->fxx = cxx;
+      
+      // change cxx
+      switch (this->station_vec[current_node->last_arrow->end_node->uid - 1].extend & TT_EXTENDFLAG_DIRECTION) {
+        case TT_EXTENDFLAG_REVERSE:
+          default_left = !default_left;
+          break;
+        case TT_EXTENDFLAG_LEFT:
+          default_left = true;
+          break;
+        case TT_EXTENDFLAG_RIGHT:
+          default_left = false;
+          break;
+      }
+      current_node->last_arrow->end_node->xx_left = default_left;
+      go_left = default_left;
+      
+      if ((current_node->last_arrow->extend & 
+          (TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_RIGHT
+           | TT_EXTENDFLAG_REVERSE)) == 0) {
+        switch (current_node->last_arrow->leg->leg->extend & TT_EXTENDFLAG_DIRECTION) {
+          case TT_EXTENDFLAG_LEFT:
+            go_left = true;
+            if (current_node->last_arrow->is_reversed)
+              go_left = !go_left;
+            break;
+          case TT_EXTENDFLAG_RIGHT:
+            go_left = false;
+            if (current_node->last_arrow->is_reversed)
+              go_left = !go_left;
+            break;
+          case TT_EXTENDFLAG_REVERSE:
+            go_left = !go_left;
+            break;
+        }
+      } else {
+        switch (current_node->last_arrow->extend & TT_EXTENDFLAG_DIRECTION) {
+          case TT_EXTENDFLAG_REVERSE:
+            go_left = !go_left;
+            break;
+          case TT_EXTENDFLAG_LEFT:
+            go_left = true;
+            break;
+          case TT_EXTENDFLAG_RIGHT:
+            go_left = false;
+            break;
+        }
+      }
+ 
+      cxx += (go_left ? -1.0 : 1.0) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy);
+      
+      // set end x
+      if (current_node->last_arrow->is_reversed)
+        current_node->last_arrow->leg->leg->fxx = cxx;
+      else
+        current_node->last_arrow->leg->leg->txx = cxx;
+
+#ifdef THDEBUG
+      thprintf("-> %d (%s@%s)\n", current_node->last_arrow->end_node->id,
+        this->station_vec[current_node->last_arrow->end_node->id - 1].name,
+        this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name());
+#endif
+
+      if (!current_node->last_arrow->end_node->is_attached) {
+        current_node->last_arrow->end_node->back_arrow = 
+          current_node->last_arrow->negative;
+        current_node = current_node->last_arrow->end_node;
+        current_node->xx = cxx;
+        current_node->is_attached = true;
+        current_node->xx_touched = true;
+      }
+      
+    }
+  
+  } // END OF TREMAUX
+  
+#ifdef THDEBUG
+    thprintf("\nend of extended elevation\n");
+#else
+    thprintf("done\n");
+    thtext_inline = false;
+#endif
+  
+}
 
 
 

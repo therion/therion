@@ -59,6 +59,8 @@
 #include "thmapstat.h"
 #include "thsurface.h"
 #include <stdlib.h>
+#include "extern/lxMath.h"
+#include "thsvg.h"
 
 #ifdef THWIN32
 #define snprintf _snprintf
@@ -151,6 +153,8 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
         case TT_EXP_MAP:
           switch (this->format) {
             case TT_EXPMAP_FMT_PDF:
+            case TT_EXPMAP_FMT_SVG:
+            case TT_EXPMAP_FMT_XVI:
               supform = true;
           }
           break;
@@ -264,26 +268,18 @@ void thexpmap::process_db(class thdatabase * dbp)
   if (this->format == TT_EXPMAP_FMT_UNKNOWN)
     this->format = this->get_default_format();
 
-  thdb.db2d.process_projection(this->projptr);
-/*  if (this->projptr->first_scrap == NULL) {
-    thwarning(("%s [%d] -- no projection data -- %s",
-      this->src.name, this->src.line, this->projstr))
-    return;
-  }*/
-  
-  // parse layout
-  // thlayout * tmp = NULL;
-  // this->layout = dbp->get_layout(this->layoutstr);
-  // if (this->layout == NULL) {
-  //  tmp = new thlayout;
-  //  this->layout = tmp;
-  // }
+  if (this->format != TT_EXPMAP_FMT_XVI)
+    thdb.db2d.process_projection(this->projptr);
   this->layout->process_copy();
   
   // the export it self
   switch (this->format) {
     case TT_EXPMAP_FMT_PDF:
+    case TT_EXPMAP_FMT_SVG:
       this->export_pdf(thdb.db2d.select_projection(this->projptr),this->projptr);
+      break;
+    case TT_EXPMAP_FMT_XVI:
+      this->export_xvi(this->projptr);
       break;
   }
   
@@ -1201,57 +1197,76 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     com = "thpdf";
 */
 
-  if (!quick_map_exp)
-    thconvert();
 
-//  thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0),wdir.get_buffer());
-  thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
-  
-  com = "\"";
-  com += thini.get_path_pdftex();
-  com += "\"";
-//  com += " --interaction nonstopmode data.tex";
-  com += " data.tex";
-#ifdef THDEBUG
-  thprintf("running pdftex\n");
-#endif
-  retcode = system(com.get_buffer());
-  thexpmap_log_log_file("data.log",
-  "######################## pdftex log file #########################\n",
-  "##################### end of pdftex log file #####################\n",false);
-  if (retcode != EXIT_SUCCESS) {
-    chdir(wdir.get_buffer());
-    ththrow(("pdftex exit code -- %d", retcode))
-  }
-
-    
-  // Let's copy results and log-file to working directory
-  chdir(wdir.get_buffer());
 #ifdef THWIN32
-  com = "copy ";
+      unsigned long cpch;
+      char * cpcmd;
+#endif
+
+
+  switch (this->format) {
+
+    case TT_EXPMAP_FMT_PDF:
+      if (!quick_map_exp)
+        thconvert();
+
+      thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
+
+      com = "\"";
+      com += thini.get_path_pdftex();
+      com += "\"";
+    //  com += " --interaction nonstopmode data.tex";
+      com += " data.tex";
+#ifdef THDEBUG
+      thprintf("running pdftex\n");
+#endif
+      retcode = system(com.get_buffer());
+      thexpmap_log_log_file("data.log",
+      "######################## pdftex log file #########################\n",
+      "##################### end of pdftex log file #####################\n",false);
+      if (retcode != EXIT_SUCCESS) {
+        chdir(wdir.get_buffer());
+        ththrow(("pdftex exit code -- %d", retcode))
+      }
+
+      // Let's copy results and log-file to working directory
+      chdir(wdir.get_buffer());
+#ifdef THWIN32
+      com = "copy ";
 #else
-  com = "cp ";
+      com = "cp ";
 #endif
-  com += thtmp.get_file_name("data.pdf");
-  com += " ";
-  com += fnm;
+      com += thtmp.get_file_name("data.pdf");
+      com += " ";
+      com += fnm;
 
 #ifdef THWIN32
-  unsigned long cpch;
-  char * cpcmd = com.get_buffer();
-  for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
-    if (cpcmd[cpch] == '/') {
-      cpcmd[cpch] = '\\';
-    }
-  }
+      cpcmd = com.get_buffer();
+      for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
+       if (cpcmd[cpch] == '/') {
+         cpcmd[cpch] = '\\';
+       }
+     }
 #endif
 
 #ifdef THDEBUG
-  thprintf("copying results\n");
+      thprintf("copying results\n");
 #endif
-  retcode = system(com.get_buffer());
-  if (retcode != EXIT_SUCCESS)
-    ththrow(("cp exit code -- %d", retcode))
+      retcode = system(com.get_buffer());
+      if (retcode != EXIT_SUCCESS)
+        ththrow(("cp exit code -- %d", retcode))
+      break;
+      // END OF PDF POSTPROCESSING
+
+    case TT_EXPMAP_FMT_SVG:
+      thconvert_new();
+      chdir(wdir.get_buffer());
+      thsvg(fnm);
+      break;
+      
+  }
+
+
 #ifdef THDEBUG
 #else
   thprintf("done\n");
@@ -1290,6 +1305,9 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
       switch (obj->get_class_id()) {
         case TT_POINT_CMD:
           switch (((thpoint*)obj)->type) {
+            case TT_POINT_TYPE_DIMENSIONS:
+              obj->tags &= ~TT_2DOBJ_TAG_VISIBILITY_ON;
+              break;
             case TT_POINT_TYPE_BEDROCK:
             case TT_POINT_TYPE_SAND:
             case TT_POINT_TYPE_RAFT:
@@ -1677,7 +1695,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 fprintf(out->file,",");
                 lp->export_nextcp_mp(out);
                 thdb.buff_enc.guarantee(4096);
-                sprintf(thdb.buff_enc.get_buffer(),"%.0f",lp->rsize);
+                sprintf(thdb.buff_enc.get_buffer(),"%.0f",lp->rsize - out->layout->goz);
                 fprintf(out->file,",btex \\thwallaltitude %s etex);\n",utf2tex(thdb.buff_enc.get_buffer()));
 //                fprintf(out->file,",\"%.0f\");\n",lp->rsize);
               }
@@ -1818,7 +1836,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
       clrec.G = cG; 
       clrec.B = cB;
       opacity_correction(clrec.R, clrec.G, clrec.B);
-      sprintf(tmpb.get_buffer(), "%.0f", curz);
+      sprintf(tmpb.get_buffer(), "%.0f", curz - this->layout->goz);
       clrec.name = utf2tex(tmpb.get_buffer());
       clrec.name += "\\thinspace ";
       clrec.name += utf2tex(thT("units m",layout->lang));
@@ -1884,6 +1902,298 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
 
 }
 
+
+void thexpmap::export_xvi(class thdb2dprj * prj)
+{
+  char * fnm;  
+  if (this->outpt_def)
+    fnm = this->outpt;
+  else
+    fnm = "cave.xvi";
+    
+  switch (prj->type) {
+    case TT_2DPROJ_PLAN:
+    case TT_2DPROJ_ELEV:
+    case TT_2DPROJ_EXTEND:
+      break;
+    default:
+      thwarning(("projection type not supported in XVI export"));
+      return;
+  }
+  
+  if (thdb.db1d.station_vec.size() == 0) {
+    thwarning(("no data to export"));
+    return;
+  }
+  
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif 
+      
+  unsigned long i, nst = thdb.db1d.station_vec.size(), nsh = thdb.db1d.leg_vec.size();
+  thdb1ds * cs;
+  thdataleg * cl;
+  lxVec * stvec;
+  bool * isexp;
+  FILE * pltf;
+
+  pltf = fopen(fnm,"w");
+     
+  if (pltf == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+
+  isexp = new bool [nst];
+  unsigned long nstvec;
+  if (prj->type == TT_2DPROJ_EXTEND)
+    nstvec = 2 * nsh;
+  else
+    nstvec = nst;
+  stvec = new lxVec [nstvec == 0 ? 1 : nstvec];
+
+  layoutnan(gxs, 1.0);
+  layoutnan(gys, 1.0);
+  layoutnan(gzs, 1.0);
+  layoutnan(gox, 0.0);
+  layoutnan(goy, 0.0);
+  layoutnan(goz, 0.0);
+  
+  double xx, yx, zx, xy, yy, zy, xmin = thnan, xmax = thnan, ymin = thnan, ymax = thnan, cx, cy, sf;
+  double shx, shy, gxs, gxo, gyo, gxoo, gyoo, alpha;
+  long gxn, gyn;
+  
+  // scale factor: assume 100dpi
+  sf = 3937.00787402 * this->layout->scale;
+  gxs = this->layout->gxs;
+  fprintf(pltf,"set XVIgrids {%.1f m}\n", gxs);
+  gxs *= sf;
+    
+  switch (prj->type) {
+    case TT_2DPROJ_ELEV:
+    case TT_2DPROJ_EXTEND:
+      if (thisnan(prj->pp1))
+        alpha = 0.0;
+      else
+        alpha = prj->pp1;
+      xx = sf * cos(alpha / 180.0 * THPI);  xy = 0.0;
+      yx = sf * -sin(alpha / 180.0 * THPI);  yy = 0.0;
+      zx = 0.0; zy = sf;
+      gxo = sf * this->layout->gox * xx + this->layout->goy * yx;
+      gyo = sf * this->layout->goz;
+      break;
+    default:
+      xx = sf; xy = 0.0;
+      yx = 0.0; yy = sf;
+      zx = 0.0; zy = 0.0;
+      gxo = sf * this->layout->gox;
+      gyo = sf * this->layout->goy;
+  }
+  
+  // select stations from selected surveys
+  long survid = -1;
+  unsigned long ff, tt;
+
+#define check_cxy_minmax() \
+  if (thisnan(xmin)) { \
+    xmin = cx; \
+    ymin = cy; \
+    xmax = cx; \
+    ymax = cy; \
+  } else { \
+    if (xmin > cx) xmin = cx; \
+    if (ymin > cy) ymin = cy; \
+    if (xmax < cx) xmax = cx; \
+    if (ymax < cy) ymax = cy; \
+  }
+
+
+  for(i = 0; i < nst; i++) {
+    cs = &(thdb.db1d.station_vec[i]);
+    if (cs->survey->is_selected()) {
+      if ((survid > -2) && (long(cs->survey->id) != survid)) {
+        if (survid == -1)
+          survid = (long) cs->survey->id;
+        else
+          survid = -2;
+      }
+      isexp[i] = true;
+      cx = cs->x * xx + cs->y * yx + cs->z * zx;
+      cy = cs->x * xy + cs->y * yy + cs->z * zy;
+      check_cxy_minmax();
+      stvec[i].x = cx;
+      stvec[i].y = cy;
+      stvec[i].z = 0.0;
+    } else {
+      isexp[i] = false;
+    }
+  }
+
+  if (prj->type == TT_2DPROJ_EXTEND) {
+    xmin = thnan;
+    for(i = 0; i < nsh; i++) {
+      cl = thdb.db1d.leg_vec[i].leg;
+      ff = cl->from.id - 1;
+      tt = cl->to.id - 1;
+
+      if (isexp[ff] && isexp[tt] && ((cl->extend & TT_EXTENDFLAG_IGNORE) == 0)) {
+
+        cs = &(thdb.db1d.station_vec[ff]);
+        cx = sf * cl->fxx;
+        cy = sf * cs->z;
+        check_cxy_minmax();
+        stvec[2*i].x = cx;
+        stvec[2*i].y = cy;
+        stvec[2*i].z = 0.0;
+
+        cs = &(thdb.db1d.station_vec[tt]);
+        cy = sf * cs->z;
+        cx = sf * cl->txx;
+        check_cxy_minmax();
+        stvec[2*i+1].x = cx;
+        stvec[2*i+1].y = cy;
+        stvec[2*i+1].z = 0.0;
+      }
+    }
+  }
+  
+  shx = (xmin + xmax) / 2.0;
+  shy = (ymin + ymax) / 2.0;
+  xmin -= shx; xmax -= shx; gxo -= shx;
+  ymin -= shy; ymax -= shy; gyo -= shy;
+
+  thbuffer stname;
+  thsurvey * css;
+  fprintf(pltf,"set XVIstations {\n");
+  for(i = 0; i < nstvec; i++) {
+
+# define export_xvi_station(i,j)  \
+    if (isexp[(i)]) { \
+      cs = &(thdb.db1d.station_vec[(i)]); \
+      stname = cs->name; \
+      css = cs->survey; \
+      if (survid == -2) { \
+        while ((css != NULL) && (css->is_selected())) { \
+          if (css->id == cs->survey->id) \
+            stname += "@"; \
+          else \
+            stname += "."; \
+          stname += css->name; \
+          css = css->fsptr; \
+        } \
+      } \
+      stvec[(j)].x -= shx; \
+      stvec[(j)].y -= shy; \
+      fprintf(pltf,"  {%12.2f %12.2f %s}\n", stvec[(j)].x, stvec[(j)].y, stname.get_buffer()); \
+    }
+    if (prj->type == TT_2DPROJ_EXTEND) {
+      if (i % 2 == 0) {
+        cl = thdb.db1d.leg_vec[i / 2].leg;
+        ff = cl->from.id - 1;
+        tt = cl->to.id - 1;
+        export_xvi_station(ff,i);
+        export_xvi_station(tt,i+1);
+      }
+    } else
+      export_xvi_station(i,i);
+  }
+  fprintf(pltf,"}\n");
+  
+  // calculate grid
+  double goverlap = 0.1 * hypot(xmax - xmin, ymax - ymin);
+  thset_grid(gxo, gxs, xmin - goverlap, xmax + goverlap, gxoo, gxn);
+  thset_grid(gyo, gxs, ymin - goverlap, ymax + goverlap, gyoo, gyn);
+  fprintf(pltf,"set XVIgrid  {%g %g %g 0.0 0.0 %g %ld %ld}\n", gxoo, gyoo, gxs, gxs, gxn+1, gyn+1);
+  
+  // export shots
+  fprintf(pltf,"set XVIshots {\n");
+  lxVec vff, vf1, vf2, vtt, vt1, vt2, rvec;
+  double fl, fr, tl, tr;
+  bool vertical;
+  lxVecLimits vlim;
+  for(i = 0; i < nsh; i++) {
+    cl = thdb.db1d.leg_vec[i].leg;
+    ff = cl->from.id - 1;
+    tt = cl->to.id - 1;
+    if (prj->type == TT_2DPROJ_EXTEND) {
+      vff = stvec[2*i];
+      vtt = stvec[2*i+1];
+    } else {
+      vff = stvec[ff];
+      vtt = stvec[tt];
+    }
+    if (isexp[ff] && isexp[tt] && ((prj->type != TT_2DPROJ_EXTEND) || ((cl->extend & TT_EXTENDFLAG_IGNORE) == 0))) {
+      fprintf(pltf,"  {%12.2f %12.2f %12.2f %12.2f", vff.x, vff.y, vtt.x, vtt.y);
+      // calculate and export LRUD if needed
+      if (cl->walls != TT_FALSE) {
+        if ((vff.x == vtt.x) && (vff.y == vtt.y)) {
+          vlim.valid = false;
+          vlim.Add(-sf * cl->from_left,-sf * cl->from_down,0.0);
+          vlim.Add(sf * cl->from_right, sf * cl->from_up  ,0.0);
+          vlim.Add(-sf * cl->to_left,-sf * cl->to_down,0.0);
+          vlim.Add(sf * cl->to_right, sf * cl->to_up  ,0.0);
+          vf1 = vff + vlim.min;
+          vf2 = vff + lxVec(vlim.min.x, vlim.max.y, 0.0);
+          vt2 = vff + vlim.max;
+          vt1 = vff + lxVec(vlim.max.x, vlim.min.y, 0.0);
+        } else {
+          vertical = false;
+          switch (prj->type) {
+            case TT_2DPROJ_ELEV:
+            case TT_2DPROJ_EXTEND:
+              if (fabs(cl->total_gradient) < cl->vtresh)
+                vertical = true;
+              if ((vertical) || (vff.x < vtt.x) || ((vff.x == vtt.x) && (vff.y < vtt.y))) {
+                fl = sf * cl->from_up; 
+                fr = sf * cl->from_down; 
+                tl = sf * cl->to_up;
+                tr = sf * cl->to_down;
+              } else {
+                fl = sf * cl->from_down; 
+                fr = sf * cl->from_up; 
+                tl = sf * cl->to_down;
+                tr = sf * cl->to_up;
+              }
+              break;
+            default:
+              fl = sf * cl->from_left; 
+              fr = sf * cl->from_right; 
+              tl = sf * cl->to_left;
+              tr = sf * cl->to_right;
+          }
+          if (vertical) {
+            rvec = lxVec(0.0, 1.0, 0.0);
+          } else {
+            rvec = vtt - vff;
+            rvec.Normalize();
+            rvec = rvec.Rotated(90.0,0.0);
+          }
+          vf1 = vff + fl * rvec;
+          vf2 = vff - fr * rvec;
+          vt1 = vtt + tl * rvec;
+          vt2 = vtt - tr * rvec;
+        }
+        fprintf(pltf," %12.2f %12.2f %12.2f %12.2f %12.2f %12.2f %12.2f %12.2f", 
+          vf1.x, vf1.y, vt1.x, vt1.y, vt2.x, vt2.y, vf2.x, vf2.y);
+      }
+      fprintf(pltf,"}\n");
+    }
+  }
+  fprintf(pltf,"}\n");
+
+  delete [] isexp;
+  delete [] stvec;
+  fclose(pltf);
+  
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}
 
 
 

@@ -152,10 +152,12 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
 
   unsigned long last_st = nstat, cur_st;
   int * s_exp = new int [nstat], * cis_exp, leg_flag, x_exp;
-  cis_exp = s_exp; bool is_surface, is_duplicate;
+  cis_exp = s_exp; 
+  bool is_surface, is_duplicate;
   for(i = 0; i < nstat; i++, *cis_exp = 0, cis_exp++);
   for(i = 0; i < nlegs; i++, tlegs++) {
     if ((*tlegs)->survey->is_selected()) {
+//      thprintf("EXP: %s@%s - %s@%s\n", (*tlegs)->leg->from.name, dbp->db1d.station_vec[(*tlegs)->leg->from.id -1].survey->full_name,  (*tlegs)->leg->to.name, dbp->db1d.station_vec[(*tlegs)->leg->to.id -1].survey->full_name);
       cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
       is_surface = (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0);
       is_duplicate = (((*tlegs)->leg->flags & TT_LEGFLAG_DUPLICATE) != 0);
@@ -189,8 +191,10 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   thbuffer stnbuf;
   for(i = 0; i < nstat; i++, cis_exp++) {
     if ((*cis_exp != 0) || (s_exp[dbp->db1d.station_vec[i].uid - 1] != 0) || 
-        ((dbp->db1d.station_vec[i].flags & 
-        (TT_STATIONFLAG_ENTRANCE | TT_STATIONFLAG_FIXED)) != 0)) {
+        (((dbp->db1d.station_vec[i].flags & 
+        (TT_STATIONFLAG_ENTRANCE | TT_STATIONFLAG_FIXED)) != 0) &&
+        (dbp->db1d.station_vec[i].survey->is_selected() ||
+         dbp->db1d.station_vec[dbp->db1d.station_vec[i].uid - 1].survey->is_selected()))) {
       if ((*cis_exp == 0) && (s_exp[dbp->db1d.station_vec[i].uid - 1] != 0))	
         x_exp = s_exp[dbp->db1d.station_vec[i].uid - 1];
       else
@@ -301,6 +305,8 @@ strncpy(station_name,dbp->db1d.station_vec[stid].name,8); \
 station_name[8] = 0
 
 #define toft(x) ((x)/0.3048)
+
+#define exppltdim(ffd,ttd) (thisnan((*tlegs)->reverse ? (*tlegs)->leg->ffd : (*tlegs)->leg->ttd) ? -9999.0 : toft((*tlegs)->reverse ? (*tlegs)->leg->ffd : (*tlegs)->leg->ttd))
   
   // now let's print header
   fprintf(pltf,"Z\t%f\t%f\t%f\t%f\t%f\t%f\n\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin),toft(zmax));
@@ -314,16 +320,24 @@ station_name[8] = 0
       cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
       if (cur_st != last_st) {
         copy_station_name(cur_st);
-        fprintf(pltf,"M\t%f\t%f\t%f\tS%s\tP\t-9999.0\t-9999.0\t-9999.0\t-9999.0\n",
+        fprintf(pltf,"M\t%f\t%f\t%f\tS%s\tP\t%f\t%f\t%f\t%f\n",
           toft(dbp->db1d.station_vec[cur_st].y - avy), toft(dbp->db1d.station_vec[cur_st].x - avx), 
-          toft(dbp->db1d.station_vec[cur_st].z),station_name);
+          toft(dbp->db1d.station_vec[cur_st].z),station_name,
+          exppltdim(to_left, from_left), 
+          exppltdim(to_up, from_up), 
+          exppltdim(to_down, from_down), 
+          exppltdim(to_right, from_right));
 //          toft(dbp->db1d.station_vec[cur_st].z - avz),station_name);
       }
       last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       copy_station_name(last_st);
-      fprintf(pltf,"D\t%f\t%f\t%f\tS%s\tP\t-9999.0\t-9999.0\t-9999.0\t-9999.0\n",
+      fprintf(pltf,"D\t%f\t%f\t%f\tS%s\tP\t%f\t%f\t%f\t%f\n",
         toft(dbp->db1d.station_vec[last_st].y - avy), toft(dbp->db1d.station_vec[last_st].x - avx), 
-        toft(dbp->db1d.station_vec[last_st].z),station_name);
+        toft(dbp->db1d.station_vec[last_st].z),station_name,
+        exppltdim(from_left, to_left), 
+        exppltdim(from_up, to_up), 
+        exppltdim(from_down, to_down), 
+        exppltdim(from_right, to_right));
 //        toft(dbp->db1d.station_vec[last_st].z - avz),station_name);
     }
   }
@@ -382,6 +396,23 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
       pgnlimits.update(&(pgn->limits));
   }
   finlim.update(&(pgnlimits));
+
+  // update limits from surfaces
+  if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
+    obi = dbp->object_list.begin();
+    while (obi != dbp->object_list.end()) {
+      switch ((*obi)->get_class_id()) {
+        case TT_SURFACE_CMD:
+          tmp3d = ((thsurface*)(*obi))->get_3d();
+          if (tmp3d != NULL) {
+            pgnlimits.update(&(tmp3d->limits));
+          }
+          break;
+      }
+      obi++;
+    }
+  }
+
   avx = (pgnlimits.minx + pgnlimits.maxx) / 2.0;
   avy = (pgnlimits.miny + pgnlimits.maxy) / 2.0;
   avz = (pgnlimits.minz + pgnlimits.maxz) / 2.0;
@@ -391,6 +422,7 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   surf_pgn->exp_shift_x = avx;
   surf_pgn->exp_shift_y = avy;
   surf_pgn->exp_shift_z = avz;
+
 
   // now let's print header
 //  thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 

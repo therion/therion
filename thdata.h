@@ -68,6 +68,7 @@ enum {
   TT_DATA_SHAPE = 2021,
   TT_DATA_VTRESH = 2022,
   TT_DATA_WALLS = 2023,
+  TT_DATA_EXTEND = 2024,
 };
 
 
@@ -85,6 +86,7 @@ static const thstok thtt_data_opt[] = {
   {"equate", TT_DATA_EQUATE},
   {"explo-date", TT_DATA_DISCOVERY_DATE},
   {"explo-team", TT_DATA_DISCOVERY_TEAM},
+  {"extend", TT_DATA_EXTEND},
   {"fix", TT_DATA_FIX},
   {"flags", TT_DATA_FLAGS},
   {"grade", TT_DATA_GRADE},
@@ -167,7 +169,8 @@ class thdata : public thdataobject {
     d_shape, ///< Walls shape.
     d_walls, ///< Walls switch.
     d_flags,  ///< Leg flags.
-    d_last_equate;  ///< Last data equate.
+    d_last_equate,  ///< Last data equate.
+    d_extend;  ///< Extend flags.
     
   double d_vtresh; ///< Vertical treshold.
     
@@ -203,6 +206,8 @@ class thdata : public thdataobject {
   void set_data_equate(int nargs, char ** args);  ///< Add equivalency.
   
   void set_data_flags(int nargs, char ** args);  ///< Set data leg flags.
+
+  void set_data_extend(int nargs, char ** args);  ///< Set default extend
   
   void set_data_station(int nargs, char ** args, int argenc);  ///< Set station comment and flags.
 	  
@@ -231,6 +236,8 @@ class thdata : public thdataobject {
 	thdatamark_list mark_list; ///< List of station marks.
   
   thdataequate_list equate_list;  ///< Equate list.
+
+  thdataextend_list extend_list;  ///< Equate list.
   
   thdatass_list ss_list;  ///< Stations list.
   

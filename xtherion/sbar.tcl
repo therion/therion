@@ -27,30 +27,35 @@
 
 
 proc xth_status_bar {aname widg stext} {
-
-  global xth
+  global xth  
+  if {$xth(gui,balloons)} {
+    DynamicHelp::register $widg balloon $stext
+  }
   set sbar $xth(gui,$aname).sf.sbar
   set xth(gui,sbar,$widg,exp) 0  
-  bind $widg <FocusIn> "+ if {\$xth(gui,sbar,$widg,exp) == 0} {set xth(gui,sbar,$widg,exp) 1; set xth(gui,sbar,$widg,otext) \[$sbar cget -text\]; $sbar configure -text \"$stext\"}"
-  bind $widg <Enter> "+ if {\$xth(gui,sbar,$widg,exp) == 0} {set xth(gui,sbar,$widg,exp) 1; set xth(gui,sbar,$widg,otext) \[$sbar cget -text\]; $sbar configure -text \"$stext\"}"
-  bind $widg <FocusOut> "+ if {\$xth(gui,sbar,$widg,exp) == 1} {$sbar configure -text \$xth(gui,sbar,$widg,otext); set xth(gui,sbar,$widg,exp) 0}"
-  bind $widg <Leave> "+ if {\$xth(gui,sbar,$widg,exp) == 1} {$sbar configure -text \$xth(gui,sbar,$widg,otext); set xth(gui,sbar,$widg,exp) 0}"
+  bind $widg <FocusIn> "+ if {\$xth(gui,sbar,$widg,exp) == 0} {catch {set xth(gui,sbar,$widg,exp) 1; set xth(gui,sbar,$widg,otext) \[$sbar cget -text\]; $sbar configure -text [list $stext]}}"
+  bind $widg <Enter> "+ if {\$xth(gui,sbar,$widg,exp) == 0} {catch {set xth(gui,sbar,$widg,exp) 1; set xth(gui,sbar,$widg,otext) \[$sbar cget -text\]; $sbar configure -text [list $stext]}}"
+  bind $widg <FocusOut> "+ if {\$xth(gui,sbar,$widg,exp) == 1} {catch {$sbar configure -text \$xth(gui,sbar,$widg,otext); set xth(gui,sbar,$widg,exp) 0}}"
+  bind $widg <Leave> "+ if {\$xth(gui,sbar,$widg,exp) == 1} {catch {$sbar configure -text \$xth(gui,sbar,$widg,otext); set xth(gui,sbar,$widg,exp) 0}}"
   
 }
 
 proc xth_status_bar_push aname {
   global xth
+  catch {
   set sbar $xth(gui,$aname).sf.sbar
   if {![info exists xth(gui,sbar,$aname)]} {
     set xth(gui,sbar,$aname) [$sbar cget -text]
   } else {
     set xth(gui,sbar,$aname) [lappend $xth(gui,sbar,$aname) [$sbar cget -text]]
   }
+  }
 }
 
 
 proc xth_status_bar_pop aname {
   global xth
+  catch {
   set sbar $xth(gui,$aname).sf.sbar
   if {! [info exists xth(gui,sbar,$aname)]} {
     set xth(gui,sbar,$aname) ""
@@ -58,13 +63,16 @@ proc xth_status_bar_pop aname {
     $sbar configure -text [lindex $xth(gui,sbar,$aname) 0]
     set xth(gui,sbar,$aname) [lreplace $xth(gui,sbar,$aname) 0 0]
   }
+  }
 }
 
 
 proc xth_status_bar_status {aname txt} {
   global xth
+  catch {
   set sbar $xth(gui,$aname).sf.sbar
   $sbar configure -text $txt
   update idletasks
+  }
 }
 

@@ -49,6 +49,14 @@ enum {
   TT_SCRAP_SCALE = 2002,
   TT_SCRAP_STATIONS = 2003,
   TT_SCRAP_3D = 2004,
+  TT_SCRAP_FLIP = 2005,
+};
+
+enum {
+  TT_SCRAP_FLIP_UNKNOWN,
+  TT_SCRAP_FLIP_NONE,
+  TT_SCRAP_FLIP_HORIZ,
+  TT_SCRAP_FLIP_VERT,
 };
 
 
@@ -57,6 +65,7 @@ enum {
  */
  
 static const thstok thtt_scrap_opt[] = {
+  {"flip", TT_SCRAP_FLIP},
   {"proj", TT_SCRAP_PROJECTION},
   {"projection", TT_SCRAP_PROJECTION},
   {"scale", TT_SCRAP_SCALE},
@@ -110,7 +119,7 @@ class thscrap : public thdataobject {
   
   thmapstat_datamap adata;
   
-  int d3;
+  int d3, flip;
   thdb3ddata d3_outline;
   
   void parse_scale(char * ss);

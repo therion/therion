@@ -29,6 +29,8 @@
 #include "thexception.h"
 #include "thchenc.h"
 #include "thdata.h"
+#include "thsurvey.h"
+#include "thendsurvey.h"
 #include "extern/img.h"
 #include <string.h>
 #include <string>
@@ -36,12 +38,20 @@
 #include <list>
 #include <unistd.h>
 
+
+struct thsst {
+  std::string name, fullname;
+  thsurvey * survey;  
+};
+
+
 thimport::thimport()
 {
   // replace this by setting real properties initialization
   this->format = 0;
   this->fname = NULL;
-  this->data = NULL;
+  this->surveys = TT_IMPORT_SURVEYS_CREATE;
+  this->filter = NULL;
 }
 
 
@@ -54,6 +64,13 @@ int thimport::get_class_id()
 {
   return TT_IMPORT_CMD;
 }
+
+
+int thimport::get_context()
+{
+  return (THCTX_SURVEY | THCTX_NONE);
+}
+
 
 
 bool thimport::is(int class_id)
@@ -108,6 +125,19 @@ void thimport::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->format = thmatch_token(args[0], thtt_import_fmts);
       if (this->format == TT_IMPORT_FMT_UNKNOWN)
         ththrow(("unknown import format -- %s", args[0]))
+      break;
+    
+    case TT_IMPORT_SURVEYS:
+      this->surveys = thmatch_token(args[0], thtt_import_surveys);
+      if (this->surveys == TT_IMPORT_SURVEYS_UNKNOWN)
+        ththrow(("unknown survey structure policy -- %s", args[0]))
+      break;
+    
+    case TT_IMPORT_FILTER:
+      if (strlen(args[0]) > 0)
+        this->filter = this->db->strstore(args[0]);
+      else
+        this->filter = NULL;
       break;
     
     // if not found, try to set fathers properties  
@@ -185,8 +215,16 @@ void thimport::import_file()
 {
   thobjectsrc tmpsrc;
   thsurvey * tmpsv;
+  thdataobject * tmpobj;
   tmpsv = this->db->csurveyptr;
+  tmpobj = this->db->lcsobjectptr;
   this->db->csurveyptr = this->fsptr;
+  if (this->fsptr == NULL) {
+    this->db->lcsobjectptr = this;
+    while (this->db->lcsobjectptr->nsptr != NULL)
+      this->db->lcsobjectptr = this->db->lcsobjectptr->nsptr;
+  } else
+    this->db->lcsobjectptr = this->db->csurveyptr->loptr;
   tmpsrc = this->db->csrc;
   this->db->csrc = this->mysrc;
   switch (this->format) {
@@ -198,38 +236,47 @@ void thimport::import_file()
     default:
       ththrow(("unknown file format -- %s", this->fname))
   }
+  this->db->lcsobjectptr = tmpobj;
   this->db->csurveyptr = tmpsv;
   this->db->csrc = tmpsrc;
 }
 
 
-const char * thimport::station_name(const char * sn, const char separator)
+const char * thimport::station_name(const char * sn, const char separator, class thsst * sst)
 {
 
+  sst->survey = NULL;
+  sst->name = sn;
+  
   if (separator == 0)
     return sn;
+    
   
   static thbuffer bx, prevsurvey;
   static thmbuffer psurv, csurv;
   static long active_survey;
+  static thsurvey * prevpsurvey;
+  thdataobject * prevobjptr;
   long i, l;
   bx = sn;
   char * buff = bx.get_buffer(), * rv;
-  
+    
   switch (this->format) {
     case TT_IMPORT_FMT_3D:
-      // TODO: parsnut meno surveya
-      // separator na bodku
       {
         // splitne current na podstringy
         thsplit_strings(&csurv, sn, separator);
         char ** pbf = psurv.get_buffer(), ** cbf = csurv.get_buffer();
         long nps = psurv.get_size(), ncs = csurv.get_size();
         
+        if (nps == 0) {
+          prevpsurvey = NULL;
+        }
+        
         if (nps == 0)
           active_survey = 0;
         
-        if (ncs == 1)
+        if ((ncs == 1) || (this->surveys == TT_IMPORT_SURVEYS_IGNORE))
           return sn;
         
         // skusi porovnat s existujucim
@@ -241,12 +288,50 @@ const char * thimport::station_name(const char * sn, const char separator)
         }
         
         if (!is_ident) {
+          prevpsurvey = NULL;
           thsplit_strings(&psurv, sn, separator);
           prevsurvey = "";
-          thsurvey * csurvey = this->fsptr, * nsurvey;
+          int prevctx;
+          thsurvey * csurvey = this->fsptr, * nsurvey, * prevcsptr = this->db->csurveyptr;
+//          thendsurvey * nendsurvey;
           for (active_survey = 0; active_survey < (ncs - 1); active_survey++) {
             nsurvey = NULL;
             nsurvey = this->db->get_survey_noexc(cbf[active_survey], csurvey);
+            // if nsurvey not found, try if there is no other object 
+            // with this name
+            if ((nsurvey == NULL) && (this->surveys == TT_IMPORT_SURVEYS_CREATE) &&
+                (this->db->object_map.find(thobjectid(cbf[active_survey],(csurvey == NULL) ? 0 : csurvey->id)) 
+                == this->db->object_map.end())) {
+              // if not, create this survey
+              prevcsptr = this->db->csurveyptr;
+              prevctx = this->db->ccontext;
+              prevobjptr = 
+              this->db->csurveyptr = csurvey;
+              if (csurvey == NULL) {
+                this->db->lcsobjectptr = this;
+                while (this->db->lcsobjectptr->nsptr != NULL)
+                  this->db->lcsobjectptr = this->db->lcsobjectptr->nsptr;
+              }
+              else
+                this->db->lcsobjectptr = this->db->csurveyptr->loptr;
+              this->db->ccontext = THCTX_SURVEY;
+              nsurvey = (thsurvey*) this->db->create("survey", this->mysrc);
+              // TODO - nastavit mu meno cez set
+              nsurvey->name = this->db->strstore(cbf[active_survey]);
+              this->db->insert(nsurvey);
+//              nendsurvey = (thendsurvey*) this->db->create("endsurvey", this->mysrc);
+//              this->db->insert(nendsurvey);
+              this->db->csurveyptr = prevcsptr;
+              if (prevcsptr == NULL) {
+                this->db->lcsobjectptr = this;
+                while (this->db->lcsobjectptr->nsptr != NULL)
+                  this->db->lcsobjectptr = this->db->lcsobjectptr->nsptr;
+              }
+              else
+                this->db->lcsobjectptr = this->db->csurveyptr->loptr;
+              this->db->ccontext = prevctx;
+              nsurvey = this->db->get_survey_noexc(cbf[active_survey], csurvey);
+            }
             if (nsurvey != NULL) {
               if (strlen(prevsurvey.get_buffer()) == 0) {
                 prevsurvey = cbf[active_survey];
@@ -257,10 +342,11 @@ const char * thimport::station_name(const char * sn, const char separator)
                 prevsurvey += bx.get_buffer();
               }
               csurvey = nsurvey;
+              prevpsurvey = csurvey;
             } else
               break;
           }
-          // nastavime prevsurvey, activesurvey a psurv
+          //
         }
         
         // poskladame meno bodu
@@ -270,6 +356,8 @@ const char * thimport::station_name(const char * sn, const char separator)
             bx += ".";
           bx += cbf[i];
         }
+        sst->survey = prevpsurvey;
+        sst->name = bx.get_buffer();
         if (strlen(prevsurvey.get_buffer()) > 0) {
           bx += "@";
           bx += prevsurvey;
@@ -285,6 +373,7 @@ const char * thimport::station_name(const char * sn, const char separator)
           rv = &(buff[i+1]);
         }
       }
+      sst->name = rv;
       return rv;
       break;
   }
@@ -295,7 +384,6 @@ struct thimg_shot {
   double fx, fy, fz, tx, ty, tz;
   long flags;
 };
-
 
 struct thimg_stpos {
   double x, y, z;
@@ -317,8 +405,9 @@ bool operator < (const thimg_stpos & p1,
   return false;
 }
 
+
 typedef std::map<std::string, std::string> str2strmap;
-typedef std::map<thimg_stpos, std::string> pos2strmap;
+typedef std::map<thimg_stpos, thsst> pos2strmap;
 typedef std::list<thimg_shot> thimgshotlist;
 
 void thimport::import_file_img()
@@ -335,10 +424,15 @@ void thimport::import_file_img()
   thimg_shot tmpshot;
   
   str2strmap svxs2ths;
+  thsst tmpsst;
+  thdata * tmpdata;
+  thsurvey * tmpsurvey;
   pos2strmap svxpos2ths;
   pos2strmap::iterator p2si;
   thimgshotlist shotlist;
   thimgshotlist::iterator sli;
+
+  unsigned long notimpst = 0, notimpsh = 0;  
   
   // postup - prebehneme subor, vytvorime zoznam shotov,
   // popridavame fixne body spolu s atributmi ak existuju a vytvarame
@@ -348,7 +442,10 @@ void thimport::import_file_img()
 
   img_point imgpt;
   int result;
-  char * args [4];
+  char * args [4], * stnm;
+  size_t filterl = 0;
+  if (this->filter != NULL)
+    filterl = strlen(this->filter);
   thbuffer n1, n2;
   thbuffer xb, yb, zb;
     xb.guarantee(128);
@@ -381,32 +478,59 @@ void thimport::import_file_img()
         
       case img_LABEL:      
         // vlozime fix station
-        orig_name = pimg->label;
-        if (strlen(pimg->label) < 1)
+        stnm = pimg->label;
+        if ((filterl > 0) && (strncmp(stnm, this->filter, filterl) == 0)) {
+          stnm = &stnm[filterl];
+          while ((*stnm != 0) && (*stnm == pimg->separator)) {
+            stnm++;
+          }
+        }
+        orig_name = stnm;
+        if (strlen(stnm) < 1)
           break;
         if (svxs2ths.find(orig_name) == svxs2ths.end()) {
           sprintf(xb.get_buffer(), "%.16g", imgpt.x);
           sprintf(yb.get_buffer(), "%.16g", imgpt.y);
           sprintf(zb.get_buffer(), "%.16g", imgpt.z);
-          new_name = this->station_name(pimg->label, pimg->separator);
+          tmpsurvey = this->db->csurveyptr;
+          new_name = this->station_name(stnm, pimg->separator, &tmpsst);
           // thprintf("%s -> %s\n", pimg->label, new_name.c_str());
+          tmpdata = NULL;
+          if (tmpsst.survey != NULL) {
+            n1 = tmpsst.name.c_str();
+            n2 = tmpsst.name.c_str();
+            tmpdata = tmpsst.survey->data;
+            this->db->csurveyptr = tmpsst.survey;
+          } else {
+            n1 = new_name.c_str();
+            n2 = new_name.c_str();
+            if (this->fsptr != NULL)
+              tmpdata = this->fsptr->data;
+            else {
+              notimpst++;
+              // do not import station
+              break;
+            }
+          }
           tmppos.x = imgpt.x;
           tmppos.y = imgpt.y;
           tmppos.z = imgpt.z;
-          svxpos2ths[tmppos] = new_name;
+          tmpsst.fullname = new_name;
+          svxpos2ths[tmppos] = tmpsst;
           svxs2ths[orig_name] = new_name;
-          n1 = new_name.c_str();
-          args[0] = n1.get_buffer();
           args[1] = xb.get_buffer();
           args[2] = yb.get_buffer();
           args[3] = zb.get_buffer();
-          this->data->set_data_fix(4, args);
+          args[0] = n1.get_buffer();
+          tmpdata->set_data_fix(4, args);
           // ak bude entrance, vlozi aj station
           if ((pimg->flags & img_SFLAG_ENTRANCE) != 0) {
+            args[0] = n2.get_buffer();
             args[1] = "";
             args[2] = "entrance";
-            this->data->set_data_station(3, args, TT_UTF_8);
+            tmpdata->set_data_station(3, args, TT_UTF_8);
           }
+          this->db->csurveyptr = tmpsurvey;
         }
         break;
       case img_BAD:
@@ -416,11 +540,14 @@ void thimport::import_file_img()
     }
   } while (result != img_STOP);
   img_close(pimg);
-  
-  args[0] = "nosurvey";
-  args[1] = "from";
-  args[2] = "to";
-  this->data->set_data_data(3,args);
+
+  if (notimpst > 0) {
+    thwarning(("unable to import %d stations outside survey", notimpst));
+  }
+
+  thsurvey * s1survey, * s2survey;
+  long s1slevel, s2slevel, maxlevel, i, j;
+  thsst s1s, s2s;  
   
   // nakoniec povklada shoty
   for(sli = shotlist.begin(); sli != shotlist.end(); sli++) {
@@ -431,27 +558,101 @@ void thimport::import_file_img()
     p2si = svxpos2ths.find(tmppos);
     if (p2si == svxpos2ths.end())
       continue;
-    n1 = p2si->second.c_str();
-    args[0] = n1.get_buffer();
-
+    s1s = p2si->second;
+    
     tmppos.x = sli->tx;
     tmppos.y = sli->ty;
     tmppos.z = sli->tz;
     p2si = svxpos2ths.find(tmppos);
     if (p2si == svxpos2ths.end())
       continue;
-    n2 = p2si->second.c_str();
-    args[1] = n2.get_buffer();
+    s2s = p2si->second;
     
-    this->data->d_flags = TT_LEGFLAG_NONE;
+    tmpsurvey = this->db->csurveyptr;
+    tmpdata = NULL;
+    
+    // find survey levels
+    s1slevel = 0;
+    s1survey = s1s.survey;
+    while (s1survey != NULL) {
+      s1survey = s1survey->fsptr;
+      s1slevel++;
+    }
+    s2slevel = 0;
+    s2survey = s2s.survey;
+    while (s2survey != NULL) {
+      s2survey = s2survey->fsptr;
+      s2slevel++;
+    }
+    maxlevel = s1slevel;
+    if (s2slevel < maxlevel) maxlevel = s2slevel;
+    // try from max to min level
+    for (i = maxlevel; i > 0; i--) {
+      // find survey at i
+      s1survey = s1s.survey;
+      n1 = s1s.name.c_str();
+      for (j = s1slevel; j > i; j--) {
+        if (j == s1slevel)
+          n1 += "@";
+        else
+          n1 += ".";
+        n1 += s1survey->name;
+        s1survey = s1survey->fsptr;
+      }
+
+      s2survey = s2s.survey;
+      n2 = s2s.name.c_str();
+      for (j = s2slevel; j > i; j--) {
+        if (j == s2slevel)
+          n2 += "@";
+        else
+          n2 += ".";
+        n2 += s2survey->name;
+        s2survey = s2survey->fsptr;
+      }
+      if (s1survey->id == s2survey->id) {
+        this->db->csurveyptr = s1survey;
+        tmpdata = s1survey->data;
+        break;
+      }
+    }
+    
+    if (tmpdata == NULL) {
+      if (this->fsptr != NULL)
+        tmpdata = this->fsptr->data;
+      else {
+        notimpsh++;
+        // do not import
+        continue;
+      }
+
+      // tmpdata = this->data;
+      n1 = s1s.fullname.c_str();
+      n2 = s2s.fullname.c_str();
+    }
+    
+//    thprintf("%s - %s = %s - %s in %s\n", s1s.fullname.c_str(), s2s.fullname.c_str(), n1.get_buffer(), n2.get_buffer(), tmpdata->fsptr->full_name);
+
+    args[0] = "nosurvey";
+    args[1] = "from";
+    args[2] = "to";
+    tmpdata->set_data_data(3,args);
+
+    args[0] = n1.get_buffer();
+    args[1] = n2.get_buffer();
+    tmpdata->d_flags = TT_LEGFLAG_NONE;
     if ((sli->flags & img_FLAG_SURFACE) != 0) {
-      this->data->d_flags |= TT_LEGFLAG_SURFACE;
+      tmpdata->d_flags |= TT_LEGFLAG_SURFACE;
     }
     if ((sli->flags & img_FLAG_DUPLICATE) != 0) {
-      this->data->d_flags |= TT_LEGFLAG_DUPLICATE;
+      tmpdata->d_flags |= TT_LEGFLAG_DUPLICATE;
     }
-    this->data->insert_data_leg(2, args);
-      
+    tmpdata->insert_data_leg(2, args);      
+    this->db->csurveyptr = tmpsurvey;
+  }
+
+  if (notimpsh > 0) {
+    thwarning(("unable to import %d shots outside survey", notimpsh));
   }
 
 }

@@ -76,7 +76,7 @@ class thobjectname {
     
 };
 
-void thparse_objectname(thobjectname & ds, thmbuffer * sstore, char * src);
+void thparse_objectname(thobjectname & ds, thmbuffer * sstore, char * src, class thdataobject * psobj = NULL);
 
 void fprintf(FILE * fh, thobjectname & ds);
 

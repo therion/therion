@@ -29,11 +29,13 @@
 #include <list>
 #include <map>
 #include <set>
+#include "thepsparse.h"
 
 using namespace std;
 
 struct scraprecord {
   string name,F,B,I,E,X,G,C,P;      // name + files
+  converted_data Fc, Bc, Ic, Ec, Xc, Gc;
   double S1,S2;                      // shift
   int layer,level,sect;             // Y, V, Z
   double F1,F2,F3,F4,                // bounding boxes

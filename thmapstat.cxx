@@ -194,6 +194,7 @@ void thmapstat::scanmap(class thmap * map) {
           break;
         case TT_SCRAP_CMD:
           scrapp = (thscrap *) mi->object;
+          scrapp->get_polygon();
           map->stat.addobj(scrapp);
           map->stat.adddata(&(scrapp->adata));
           break;

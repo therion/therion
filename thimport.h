@@ -39,6 +39,8 @@
 enum {
   TT_IMPORT_UNKNOWN = 2000,
   TT_IMPORT_FORMAT = 2001,
+  TT_IMPORT_FILTER = 2002,
+  TT_IMPORT_SURVEYS = 2003,
 };
 
 
@@ -47,8 +49,10 @@ enum {
  */
  
 static const thstok thtt_import_opt[] = {
+  {"filter", TT_IMPORT_FILTER},
   {"fmt", TT_IMPORT_FORMAT},
   {"format", TT_IMPORT_FORMAT},
+  {"surveys", TT_IMPORT_SURVEYS},
   {NULL, TT_IMPORT_UNKNOWN},
 };
 
@@ -73,6 +77,26 @@ static const thstok thtt_import_fmts[] = {
 };
 
 
+enum {
+  TT_IMPORT_SURVEYS_UNKNOWN,
+  TT_IMPORT_SURVEYS_CREATE,
+  TT_IMPORT_SURVEYS_USE,
+  TT_IMPORT_SURVEYS_IGNORE,
+};
+
+
+/**
+ * import types parsing table.
+ */
+ 
+static const thstok thtt_import_surveys[] = {
+  {"create", TT_IMPORT_SURVEYS_CREATE},
+  {"ignore", TT_IMPORT_SURVEYS_IGNORE},
+  {"use", TT_IMPORT_SURVEYS_USE},
+  {NULL, TT_IMPORT_SURVEYS_UNKNOWN},
+};
+
+
 
 
 
@@ -85,9 +109,8 @@ class thimport : public thdataobject {
   public:
 
   // insert here real properties
-  int format;  
-  char * fname;
-  class thdata * data;
+  int format, surveys;  
+  char * fname, * filter;
   thobjectsrc mysrc;
 
   /**
@@ -172,6 +195,11 @@ class thimport : public thdataobject {
    
   virtual void self_delete();
 
+  /**
+   * Get context for object.
+   */
+   
+  virtual int get_context();
 
   /**
    * Print object properties.
@@ -186,7 +214,7 @@ class thimport : public thdataobject {
 
   void import_file_img();
   
-  const char * station_name(const char * sn, const char separator);
+  const char * station_name(const char * sn, const char separator, class thsst * sst);
 
 };
 

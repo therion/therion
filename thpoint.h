@@ -121,6 +121,7 @@ enum {
   TT_POINT_TYPE_AIR_DRAUGHT,
   TT_POINT_TYPE_ENTRANCE,
   TT_POINT_TYPE_GRADIENT,
+  TT_POINT_TYPE_DIMENSIONS,
   
 // vystroj
   TT_POINT_TYPE_NO_EQUIPMENT,
@@ -210,6 +211,7 @@ static const thstok thtt_point_types[] = {
   {"curtain",TT_POINT_TYPE_CURTAIN},
   {"date",TT_POINT_TYPE_DATE},
   {"debris",TT_POINT_TYPE_DEBRIS},
+  {"dimensions",TT_POINT_TYPE_DIMENSIONS},
   {"disk",TT_POINT_TYPE_DISK},
   {"entrance",TT_POINT_TYPE_ENTRANCE},
   {"fixed-ladder",TT_POINT_TYPE_FIXED_LADDER},
@@ -371,12 +373,12 @@ enum {
  */
  
 static const thstok thtt_point_extopt[] = {
-  {"left", TT_POINT_EXTEND_LEFT},
+//  {"left", TT_POINT_EXTEND_LEFT},
   {"prev", TT_POINT_EXTEND_PREV},
   {"previous", TT_POINT_EXTEND_PREV},
-  {"right", TT_POINT_EXTEND_RIGHT},
-  {"root", TT_POINT_EXTEND_ROOT},
-  {"sticky", TT_POINT_EXTEND_STICKY},
+//  {"right", TT_POINT_EXTEND_RIGHT},
+//  {"root", TT_POINT_EXTEND_ROOT},
+//  {"sticky", TT_POINT_EXTEND_STICKY},
 	{NULL, TT_POINT_EXTEND_NONE},
 };
 

@@ -659,7 +659,10 @@ void convert_scraps() {
     << "\\catcode`\\^^@=12\\catcode`\\^^?=12\\catcode`\\{=12" << endl
     << "\\catcode`\\}=12\\catcode`\\$=12\\catcode`\\&=12" << endl
     << "\\catcode`\\#=12\\catcode`\\_=12\\catcode`\\~=12" << endl
-    << "\\catcode`\\^^M=12%\\catcode`\\^=12%" << endl;
+    << "\\catcode`\\%=12" << endl
+    << "\\catcode`\\^^L=12\\catcode`\\^^A=12\\catcode`\\^^K=12\\catcode`\\^^I=12" << endl
+    << "\\catcode`\\^^M=12" << endl;   // na tomto riadku ma tex este stare catcode konca riadku,
+                                       // vsetko nasledovne musi byt v jednom riadku
   for (map<string,FONTCHARS>::iterator I = USED_CHARS.begin(); 
                                        I != USED_CHARS.end(); I++) {
     F << "\\includechars\\" << (*I).first << ":";
@@ -667,7 +670,7 @@ void convert_scraps() {
                              J != ((*I).second).end(); J++) {
       c = *J;
       if (c > 31) {
-        if (c==37) F << "\\";    // % remains a comment
+//        if (c==37) F << "\\";    // % remains a comment
         F << c;
         if (c==92) F << " ";     // \ has to be followed by space
       }
@@ -675,7 +678,7 @@ void convert_scraps() {
         F << "^^" << char(c+64);
       }
     }
-    F << "\\endinclude%" << endl;
+    F << "\\endinclude";
   }
   F << "\\endgroup" << endl;
   ifstream P("patterns.dat");

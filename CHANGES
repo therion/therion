@@ -1,4 +1,31 @@
 --------------------------------------------------------------------------------
+Therion 0.3.7 (2005-03-16):
+
+therion:
+
+ * new (more intuitive) extended elevation arrangement
+ * new import options: filter, surveys
+ * new surface option: grid-flip
+ * new centerline option: extend
+ * new point type: dimensions
+ * new scrap option: flip 
+ * new scrap/centerline option: station-names 
+ * reduced `extend' point option
+ * all altitudes are exported as a difference against grid Z origin
+ * XVI (xtherion vector image) map export
+ * UD data from centerline used in 3D model generated from scraps
+ * plt export with LRUD data
+ * `/' supported as survey name character
+ * unicode characters support in layout TeX code
+ * fixed bugs: plumbed shots; join; statistics of centerline only maps
+
+xtherion:
+
+ * limited i18n support
+ * XVI support (automatic insertion of survey stations, LRUD data)
+ * fixed bug with gamma correction
+
+--------------------------------------------------------------------------------
 Therion 0.3.6 (2005-01-31):
 
 therion:

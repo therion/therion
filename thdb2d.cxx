@@ -188,6 +188,44 @@ void thdb2d_rot_align(int & align, double rot) {
 }
 
 
+void thdb2d_flip_align(int & align, bool horiz) {
+  
+  bool vert = ! horiz;
+
+  switch (align) {
+    case TT_POINT_ALIGN_T:
+      if (vert) align = TT_POINT_ALIGN_B;
+      break;
+    case TT_POINT_ALIGN_B:
+      if (vert) align = TT_POINT_ALIGN_T;
+      break;
+    case TT_POINT_ALIGN_L:
+      if (horiz) align = TT_POINT_ALIGN_R;
+      break;
+    case TT_POINT_ALIGN_R:
+      if (horiz) align = TT_POINT_ALIGN_L;
+      break;
+    case TT_POINT_ALIGN_TL:
+      if (vert)  align = TT_POINT_ALIGN_BL;
+      if (horiz) align = TT_POINT_ALIGN_TR;
+      break;
+    case TT_POINT_ALIGN_BL:
+      if (vert)  align = TT_POINT_ALIGN_TL;
+      if (horiz) align = TT_POINT_ALIGN_BR;
+      break;
+    case TT_POINT_ALIGN_TR:
+      if (vert)  align = TT_POINT_ALIGN_BR;
+      if (horiz) align = TT_POINT_ALIGN_TL;
+      break;
+    case TT_POINT_ALIGN_BR:
+      if (vert)  align = TT_POINT_ALIGN_TR;
+      if (horiz) align = TT_POINT_ALIGN_BL;
+      break;
+  }
+    
+}
+
+
 int thdb2d_rotate_align(int align, double rot) {
   thdb2d_rot_align(align, rot);
   return(align);
@@ -540,8 +578,9 @@ void thdb2d::process_map_references(thmap * mptr)
           }
         }
 
-        // skontroluje ci nie sme v extended projekcii
+        // skontroluje ci nie sme v inej projekcii
         switch (this->get_projection(proj_id)->type) {
+          case TT_2DPROJ_EXTEND:
           case TT_2DPROJ_PLAN:
           case TT_2DPROJ_ELEV:
             break;          
@@ -923,29 +962,32 @@ void thdb2d::process_point_references(thpoint * pp)
           pp->extend_name.id = this->db->db1d.get_station_id(pp->extend_name,pp->fsptr);
         } catch (...) {
           pp->extend_name.id = 0;
-        }  
-        if (pp->extend_name.id == 0) {
-          optr = this->db->get_object(pp->extend_name, pp->fsptr);
+          // ADDED:
           extend_error = true;
-          if (optr != NULL)
-            if (optr->get_class_id() == TT_POINT_CMD) {
-              pp->extend_point = (thpoint *) optr;
-              if (pp->extend_point->type == TT_POINT_TYPE_STATION) {
-                if (pp->extend_point->fscrapptr->id == pp->fscrapptr->id) {
-                  if (!(pp->extend_point->station_name.is_empty()))
-                    extend_error = false;
-                  else
-                    err_code = "no station reference for given point reference";
-                }
-                else
-                  err_code = "referenced point not within the same scrap";
-              }
-              else
-                err_code = "referenced point type is not station";
-            }
-            else
-              err_code = "not a point reference";
-        }
+          err_code = "not a station reference";
+        }  
+//        if (pp->extend_name.id == 0) {
+//          optr = this->db->get_object(pp->extend_name, pp->fsptr);
+//          extend_error = true;
+//          if (optr != NULL)
+//            if (optr->get_class_id() == TT_POINT_CMD) {
+//              pp->extend_point = (thpoint *) optr;
+//              if (pp->extend_point->type == TT_POINT_TYPE_STATION) {
+//                if (pp->extend_point->fscrapptr->id == pp->fscrapptr->id) {
+//                  if (!(pp->extend_point->station_name.is_empty()))
+//                    extend_error = false;
+//                  else
+//                    err_code = "no station reference for given point reference";
+//                }
+//                else
+//                  err_code = "referenced point not within the same scrap";
+//              }
+//              else
+//                err_code = "referenced point type is not station";
+//            }
+//            else
+//              err_code = "not a point reference";
+//        }
         if (extend_error) {
           pp->throw_source();
           if (pp->station_name.survey != NULL)
@@ -999,12 +1041,7 @@ void thdb2d::process_point_references(thpoint * pp)
 
 void thdb2d::process_scrap_references(thscrap * sptr)
 {
-  thscraplp * lp = sptr->polygon_first;
-  if ((lp != NULL) && (sptr->proj->type == TT_2DPROJ_EXTEND)) {
-    sptr->throw_source();
-    threthrow2(("scrap option -stations not allowed in extended projection"))
-  }
-  
+  thscraplp * lp = sptr->polygon_first;  
   while (lp != NULL) {
     if (!(lp->station_name.is_empty())) {
       try {
@@ -1168,12 +1205,13 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
   // prejde vsetky objekty a urobi nasledovne veci
   thscrap * pps;
   thpoint * ppp;
-  thdb2dcp * cp, * scancp, * rootcp;
+  thdb2dcp * cp, * scancp; //, * rootcp;
 	int max_mark;
-  bool has_root = false, some_attached;
-  unsigned long nattached, numcps = 0, numscraps = 0;
+//  bool has_root = false, some_attached;
+  unsigned long // nattached, 
+    numcps = 0, numscraps = 0;
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
-  unsigned long searchid;
+//  unsigned long searchid;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_POINT_CMD) {
       ppp = (thpoint *)(*obi);
@@ -1254,7 +1292,10 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
   
   // now let's calculate projection coordinates for all points
   // first scrap by scrap
-  double sina = 0.0, cosa = 0.0, dxy;
+  double sina = 0.0, cosa = 0.0, dxy, mindxy = 1e99;
+  thdb1d_tree_node * nodes = this->db->db1d.get_tree_nodes(), * cnode;
+  thdb1d_tree_arrow * arrow, * tarrow;
+
   switch (prj->type) {
     case TT_2DPROJ_ELEV:
       sina = sin(prj->pp1 / 180.0 * 3.14159265358);
@@ -1302,135 +1343,186 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
         break;
 
       case TT_2DPROJ_EXTEND:
-        // overi vsetky existujuce referencie predchadzajucich bodov
         cp = pps->fcpp;
-        if (cp == NULL)
-          break;
+        prj->shift_x = shift_x = 0;
+        prj->shift_y = shift_y = maxy; //(miny + maxy) / 2.0;
+        prj->shift_z = shift_z = maxz; //(minz + maxz) / 2.0;
         while (cp != NULL) {
-          if (cp->point->extend_point == NULL) {
-            if (cp->point->extend_name.is_empty()) {
-              if (cp->prevcp != NULL)
-                cp->point->extend_point = cp->prevcp->point;
-            } 
-            else {                
-              searchid = cp->point->extend_name.id;
+          cnode = &(nodes[cp->st->uid - 1]);
+          cp->tx = cnode->xx - shift_x;
+          // if prev station specified - try to find this arrow
+          arrow = NULL;
+          if (!cp->point->extend_name.is_empty()) {
+            arrow = cnode->first_arrow;
+            while (arrow != NULL) {
+              if (arrow->end_node->uid == this->db->db1d.station_vec[cp->point->extend_name.id - 1].uid)
+                break;
+              arrow = arrow->next_arrow;
+            }
+          }
+          // if not find, find arrow with minimal dx where oposite
+          // is valid cp
+          if (arrow == NULL) {
+            tarrow = cnode->first_arrow;
+            while (tarrow != NULL) {
               scancp = pps->fcpp;
               while (scancp != NULL) {
-                if (scancp->point->station_name.id == searchid) {
-                  cp->point->extend_point = scancp->point;
-                  break;
+                if (tarrow->end_node->uid == scancp->st->uid) {
+                  if (arrow == NULL) {
+                    arrow = tarrow;
+                    mindxy = hypot(cp->pt->x - scancp->pt->x, cp->pt->y - scancp->pt->y);
+                  } else {
+                    dxy = hypot(cp->pt->x - scancp->pt->x, cp->pt->y - scancp->pt->y);
+                    if (dxy < mindxy) {
+                      mindxy = dxy;
+                      arrow = tarrow;
+                    }
+                  }
                 }
                 scancp = scancp->nextcp;
-              }                
-
-              if (cp->point->extend_point == NULL) {
-                searchid = this->db->db1d.station_vec[cp->point->extend_name.id - 1].uid;
-                scancp = pps->fcpp;
-                while (scancp != NULL) {
-                  if (scancp->st->uid == searchid) {
-                    cp->point->extend_point = scancp->point;
-                    break;
-                  }
-                  scancp = scancp->nextcp;
-                }
               }
-
-              if (cp->point->extend_point == NULL) {
-                cp->point->throw_source();
-                if (cp->point->station_name.survey != NULL)
-                  threthrow2(("no referenced station found -- %s@%s",
-                    cp->point->extend_name.name,cp->point->extend_name.survey))
-                else
-                  threthrow2(("no referenced station found -- %s",
-                    cp->point->extend_name.name))
-              }
+              tarrow = tarrow->next_arrow;
             }
+          }          
+          if (arrow != NULL) {
+            cp->tx = (arrow->is_reversed ? arrow->leg->leg->txx : arrow->leg->leg->fxx) - shift_x;
           }
+          cp->tz = 0.0;
+          cp->ty = cp->st->z - shift_z;
+          cp->ta = cp->st->z;
           cp = cp->nextcp;
         }
-        
-        // OK, let's find the root CP
-        has_root = false;
-        bool has_first_root = false;
-        rootcp = pps->fcpp;
-        cp = pps->fcpp;
-        while (cp != NULL) {
-          if (cp->point->extend_point == NULL) {
-            rootcp = cp;
-            has_root = true;
-          }
-          if ((!has_root) && (!has_first_root) && (cp->point->extend_name.is_empty())) {
-            rootcp = cp;
-            has_first_root = true;
-          }
-          if ((!has_root) && ((cp->point->extend_opts & TT_POINT_EXTEND_ROOT) != 0)) {
-            has_root = true;
-            rootcp = cp;
-          }
-          if ((cp->point->extend_opts & 
-              (TT_POINT_EXTEND_LEFT | TT_POINT_EXTEND_RIGHT)) == 0) {
-            if (cp->prevcp != NULL)
-              cp->point->extend_opts |= (cp->prevcp->point->extend_opts & 
-              (TT_POINT_EXTEND_LEFT | TT_POINT_EXTEND_RIGHT));
-            else 
-              cp->point->extend_opts |= TT_POINT_EXTEND_RIGHT;
-          }
-          cp = cp->nextcp;
-        }
-        
-        // OK, let's calculate coordinates
-        nattached = 1;
-        rootcp->is_attached = true;
-        rootcp->tx = 0.0;
-        prj->shift_x = rootcp->st->x;
-        rootcp->ty = 0.0;
-        prj->shift_y = rootcp->st->y;
-        rootcp->tz = 0.0;
-        prj->shift_z = rootcp->st->z;
-        rootcp->ta = rootcp->st->z;
-        rootcp->is_sticky = rootcp->point->extend_opts & 
-                (TT_POINT_EXTEND_STICKYON | TT_POINT_EXTEND_STICKYOFF);
-        
-        some_attached = true;
-        while (some_attached) {
-          some_attached = false;
-          cp = pps->fcpp;
-          while (cp != NULL) {
-            if ((!cp->is_attached) &&
-                (cp->point->extend_point->cpoint->is_attached)) {
-              cp->is_attached = true;
-              cp->used_in_attachement = true;
-              //dx = (cp->st->x - cp->point->extend_point->cpoint->st->x);
-              //dy = (cp->st->y - cp->point->extend_point->cpoint->st->y);
-              dxy = hypot((cp->st->x - cp->point->extend_point->cpoint->st->x),
-                (cp->st->y - cp->point->extend_point->cpoint->st->y));
-              //sqrt(dx * dx + dy * dy);
-              if (cp->point->extend_opts & TT_POINT_EXTEND_RIGHT)
-                cp->tx = cp->point->extend_point->cpoint->tx + dxy;
-              else
-                cp->tx = cp->point->extend_point->cpoint->tx - dxy;
-              cp->ty = cp->point->extend_point->cpoint->ty + 
-                (cp->st->z - cp->point->extend_point->cpoint->st->z);
-              cp->tz = 0.0;
-              cp->ta = cp->st->z;
-    
-              cp->is_sticky = cp->point->extend_opts & 
-                (TT_POINT_EXTEND_STICKYON | TT_POINT_EXTEND_STICKYOFF);
-                 
-              nattached++;
-              some_attached = true;
-            }
-            cp = cp->nextcp;
-          }
-        }
-
-        if (nattached < pps->ncp) {
-          pps->throw_source();
-          threthrow(("unable extend survey stations -- scrap %s@%s",
-            pps->name,pps->fsptr->get_full_name()))
-        }
-        
         break;
+  
+//        // overi vsetky existujuce referencie predchadzajucich bodov
+//        cp = pps->fcpp;
+//        if (cp == NULL)
+//          break;
+//        while (cp != NULL) {
+//          if (cp->point->extend_point == NULL) {
+//            if (cp->point->extend_name.is_empty()) {
+//              if (cp->prevcp != NULL)
+//                cp->point->extend_point = cp->prevcp->point;
+//            } 
+//            else {                
+//              searchid = cp->point->extend_name.id;
+//              scancp = pps->fcpp;
+//              while (scancp != NULL) {
+//                if (scancp->point->station_name.id == searchid) {
+//                  cp->point->extend_point = scancp->point;
+//                  break;
+//                }
+//                scancp = scancp->nextcp;
+//              }                
+//
+//              if (cp->point->extend_point == NULL) {
+//                searchid = this->db->db1d.station_vec[cp->point->extend_name.id - 1].uid;
+//                scancp = pps->fcpp;
+//                while (scancp != NULL) {
+//                  if (scancp->st->uid == searchid) {
+//                    cp->point->extend_point = scancp->point;
+//                    break;
+//                  }
+//                  scancp = scancp->nextcp;
+//                }
+//              }
+//
+//              if (cp->point->extend_point == NULL) {
+//                cp->point->throw_source();
+//                if (cp->point->station_name.survey != NULL)
+//                  threthrow2(("no referenced station found -- %s@%s",
+//                    cp->point->extend_name.name,cp->point->extend_name.survey))
+//                else
+//                  threthrow2(("no referenced station found -- %s",
+//                    cp->point->extend_name.name))
+//              }
+//            }
+//          }
+//          cp = cp->nextcp;
+//        }
+//        
+//        // OK, let's find the root CP
+//        has_root = false;
+//        bool has_first_root = false;
+//        rootcp = pps->fcpp;
+//        cp = pps->fcpp;
+//        while (cp != NULL) {
+//          if (cp->point->extend_point == NULL) {
+//            rootcp = cp;
+//            has_root = true;
+//          }
+//          if ((!has_root) && (!has_first_root) && (cp->point->extend_name.is_empty())) {
+//            rootcp = cp;
+//            has_first_root = true;
+//          }
+//          if ((!has_root) && ((cp->point->extend_opts & TT_POINT_EXTEND_ROOT) != 0)) {
+//            has_root = true;
+//            rootcp = cp;
+//          }
+//          if ((cp->point->extend_opts & 
+//              (TT_POINT_EXTEND_LEFT | TT_POINT_EXTEND_RIGHT)) == 0) {
+//            if (cp->prevcp != NULL)
+//              cp->point->extend_opts |= (cp->prevcp->point->extend_opts & 
+//              (TT_POINT_EXTEND_LEFT | TT_POINT_EXTEND_RIGHT));
+//            else 
+//              cp->point->extend_opts |= TT_POINT_EXTEND_RIGHT;
+//          }
+//          cp = cp->nextcp;
+//        }
+//        
+//        // OK, let's calculate coordinates
+//        nattached = 1;
+//        rootcp->is_attached = true;
+//        rootcp->tx = 0.0;
+//        prj->shift_x = rootcp->st->x;
+//        rootcp->ty = 0.0;
+//        prj->shift_y = rootcp->st->y;
+//        rootcp->tz = 0.0;
+//        prj->shift_z = rootcp->st->z;
+//        rootcp->ta = rootcp->st->z;
+//        rootcp->is_sticky = rootcp->point->extend_opts & 
+//                (TT_POINT_EXTEND_STICKYON | TT_POINT_EXTEND_STICKYOFF);
+//        
+//        some_attached = true;
+//        while (some_attached) {
+//          some_attached = false;
+//          cp = pps->fcpp;
+//          while (cp != NULL) {
+//            if ((!cp->is_attached) &&
+//                (cp->point->extend_point->cpoint->is_attached)) {
+//              cp->is_attached = true;
+//              cp->used_in_attachement = true;
+//              //dx = (cp->st->x - cp->point->extend_point->cpoint->st->x);
+//              //dy = (cp->st->y - cp->point->extend_point->cpoint->st->y);
+//              dxy = hypot((cp->st->x - cp->point->extend_point->cpoint->st->x),
+//                (cp->st->y - cp->point->extend_point->cpoint->st->y));
+//              //sqrt(dx * dx + dy * dy);
+//              if (cp->point->extend_opts & TT_POINT_EXTEND_RIGHT)
+//                cp->tx = cp->point->extend_point->cpoint->tx + dxy;
+//              else
+//                cp->tx = cp->point->extend_point->cpoint->tx - dxy;
+//              cp->ty = cp->point->extend_point->cpoint->ty + 
+//                (cp->st->z - cp->point->extend_point->cpoint->st->z);
+//              cp->tz = 0.0;
+//              cp->ta = cp->st->z;
+//    
+//              cp->is_sticky = cp->point->extend_opts & 
+//                (TT_POINT_EXTEND_STICKYON | TT_POINT_EXTEND_STICKYOFF);
+//                 
+//              nattached++;
+//              some_attached = true;
+//            }
+//            cp = cp->nextcp;
+//          }
+//        }
+//
+//        if (nattached < pps->ncp) {
+//          pps->throw_source();
+//          threthrow(("unable extend survey stations -- scrap %s@%s",
+//            pps->name,pps->fsptr->get_full_name()))
+//        }
+//        
+//        break;
         
     } // END of projection switch
 
@@ -1439,269 +1531,200 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
   }
     
   // postprocess if necessary
-  if (prj->type == TT_2DPROJ_EXTEND) {
-    
-    std::list <thprjx_link> xscrap_links;
-    thprjx_link * xscrap_link, * xscrap_link2;
-    
-    std::list <thprjx_station_link> xstation_links;
-    thprjx_station_link * xstation_link, * xstation_link2;
-    
-    thprjx_scrap * xscraps = new thprjx_scrap [numscraps],
-      * xscrap;
-
-    unsigned long numstations = this->db->db1d.station_vec.size();
-    thprjx_station * xstations = new thprjx_station [numstations],
-      * xstation = NULL;
-      
-    thprjx_station_link dummxs;
-      
-//    unsigned long cuid;
-    
-    pps = prj->first_scrap;
-    xscrap = xscraps;
-    while (pps != NULL) {
-      xscrap->scrap = pps;
-      pps->xscrap = xscrap;
-      cp = pps->fcpp;
-      while (cp != NULL) {
-        if (cp->is_sticky != TT_POINT_EXTEND_STICKYOFF) {
-          xstation = &(xstations[cp->st->uid - 1]);
-          xstation_link = &(*(xstation_links.insert(xstation_links.end(),dummxs)));
-          xstation_link->scrap = xscrap;
-          xstation_link->scrapcp = cp;
-          if (xstation->nstations == 0) {
-            xstation->first_link = xstation_link;
-            xstation->last_link = xstation_link;
-          } else {
-            xstation->last_link->next_link = xstation_link;
-            xstation->last_link = xstation_link;
-          }
-        }
-        xstation->nstations++;
-        
-        cp = cp->nextcp;
-      }      
-      pps = pps->proj_next_scrap;
-      xscrap++;
-    }
-    
-    // let's add scrap links from UID
-    unsigned long station_id;
-    thprjx_link dummxl;
-    station_id = 0;
-    xstation = xstations;
-    while (station_id < numstations) {
-      if (xstation->nstations > 1) {
-        xstation_link = xstation->first_link;
-        while (xstation_link != NULL) {
-          xstation_link2 = xstation_link->next_link;
-          while (xstation_link2 != NULL) {
-            if (xstation_link2->scrap->scrap->id != xstation_link->scrap->scrap->id) {
-            
-              // pridaj ->
-              xscrap_link = &(*(xscrap_links.insert(xscrap_links.end(),dummxl)));
-              xscrap_link->from_cp = xstation_link->scrapcp;
-              xscrap_link->from_scrap = xstation_link->scrap;
-              xscrap_link->to_cp = xstation_link2->scrapcp;
-              xscrap_link->to_scrap = xstation_link2->scrap;
-              if (xscrap_link->from_scrap->last_link == NULL) {
-                xscrap_link->from_scrap->last_link = xscrap_link;
-                xscrap_link->from_scrap->first_link = xscrap_link;
-              } else {
-                if ((xscrap_link->from_cp->is_sticky == TT_POINT_EXTEND_STICKYON) ||
-                    (xscrap_link->to_cp->is_sticky == TT_POINT_EXTEND_STICKYON)) {
-                  xscrap_link->from_scrap->first_link->prev_link = xscrap_link;
-                  xscrap_link->next_link = xscrap_link->from_scrap->first_link;                  
-                  xscrap_link->from_scrap->first_link = xscrap_link;
-                } else {
-                  xscrap_link->prev_link = xscrap_link->from_scrap->last_link;
-                  xscrap_link->from_scrap->last_link->next_link = xscrap_link;
-                  xscrap_link->from_scrap->last_link = xscrap_link;
-                }
-              }
-              
-              xscrap_link2 = xscrap_link;
-              
-              // pridaj <-
-              xscrap_link = &(*(xscrap_links.insert(xscrap_links.end(),dummxl)));
-              xscrap_link->from_cp = xstation_link2->scrapcp;
-              xscrap_link->from_scrap = xstation_link2->scrap;
-              xscrap_link->to_cp = xstation_link->scrapcp;
-              xscrap_link->to_scrap = xstation_link->scrap;
-              if (xscrap_link->from_scrap->last_link == NULL) {
-                xscrap_link->from_scrap->last_link = xscrap_link;
-                xscrap_link->from_scrap->first_link = xscrap_link;
-              } else {
-                if ((xscrap_link->from_cp->is_sticky == TT_POINT_EXTEND_STICKYON) ||
-                    (xscrap_link->to_cp->is_sticky == TT_POINT_EXTEND_STICKYON)) {
-                  xscrap_link->from_scrap->first_link->prev_link = xscrap_link;
-                  xscrap_link->next_link = xscrap_link->from_scrap->first_link;                  
-                  xscrap_link->from_scrap->first_link = xscrap_link;
-                } else {
-                  xscrap_link->prev_link = xscrap_link->from_scrap->last_link;
-                  xscrap_link->from_scrap->last_link->next_link = xscrap_link;
-                  xscrap_link->from_scrap->last_link = xscrap_link;
-                }
-              }
-              
-              xscrap_link2->oposite_link = xscrap_link;
-              xscrap_link->oposite_link = xscrap_link2;
-              
-            }
-            xstation_link2 = xstation_link2->next_link;
-          }
-          xstation_link = xstation_link->next_link;
-        }
-      }
-      station_id++;
-      xstation++;
-    }
-    
-    
-//    // let's add scrap links infront of all from JOINS
-//    bool scan_first_one = true;
-//    thjoin * cj = prj->first_join;
-//    thdb2dcp * jcp1, * jcp2;
-//    thdb2dji * jitm, * jitm2;
-//    while (cj != NULL) {
-//      jitm = cj->first_item;
-//      while ((jitm != NULL) && (scan_first_one)) {
-//        if ((jitm->object->get_class_id() == TT_POINT_CMD) &&
-//            (((thpoint *)(jitm->object))->cpoint != NULL)) {
-//          scan_first_one = false;
-//          jcp1 = ((thpoint *)(jitm->object))->cpoint;
-//          jitm2 = jitm->next_item;
-//          while (jitm2 != NULL) {
-//          
-//            if ((jitm2->object->get_class_id() == TT_POINT_CMD) &&
-//                (((thpoint *)(jitm2->object))->cpoint != NULL)) {
-//              jcp2 = ((thpoint *)(jitm2->object))->cpoint;
-//              
-//              // mame 2 roozne xscrapy -> teraz ci su rozlicne
-//              if (jcp1->point->fscrapptr->id != jcp2->point->fscrapptr->id) {
+//  if (prj->type == TT_2DPROJ_EXTEND) {
+//    
+//    std::list <thprjx_link> xscrap_links;
+//    thprjx_link * xscrap_link, * xscrap_link2;
+//    
+//    std::list <thprjx_station_link> xstation_links;
+//    thprjx_station_link * xstation_link, * xstation_link2;
+//    
+//    thprjx_scrap * xscraps = new thprjx_scrap [numscraps],
+//      * xscrap;
 //
-//                // 0. let's create link from 1 to 2
-//                xscrap_link = &(*(xscrap_links.insert(xscrap_links.end())));
-//                xscrap_link->from_cp = jcp1;
-//                xscrap_link->from_scrap = jcp1->point->fscrapptr->xscrap;
-//                xscrap_link->to_cp = jcp2;
-//                xscrap_link->to_scrap = jcp2->point->fscrapptr->xscrap;
-//
-//                // 1. let's remove all links pointing to scrap 2
-//                xscrap_link2 = xscrap_link->from_scrap->first_link;
-//                while (xscrap_link2 != NULL) {
-//                
-//                  // remove oposite links
-//                  if (xscrap_link2->oposite_link != NULL) {
-//
-//                    if (xscrap_link2->oposite_link->prev_link == NULL)
-//                      xscrap_link2->oposite_link->from_scrap->first_link = xscrap_link2->oposite_link->next_link;
-//                    else
-//                      xscrap_link2->oposite_link->prev_link->next_link = xscrap_link2->oposite_link->next_link;
-//
-//                    if (xscrap_link2->oposite_link->next_link == NULL)
-//                      xscrap_link2->oposite_link->from_scrap->last_link = xscrap_link2->oposite_link->prev_link;
-//                    else
-//                      xscrap_link2->oposite_link->next_link->prev_link = xscrap_link2->oposite_link->prev_link;                      
-//                      
-//                    xscrap_link2->oposite_link = NULL;
-//
-//                  }
-//                  
-//                  xscrap_link2 = xscrap_link2->next_link;
-//                }
-//                
-//                // 2. let's add link to the first position
-//                if (xscrap_link->from_scrap->last_link == NULL) {
-//                  xscrap_link->from_scrap->last_link = xscrap_link;
-//                  xscrap_link->from_scrap->first_link = xscrap_link;
-//                } else {
+//    unsigned long numstations = this->db->db1d.station_vec.size();
+//    thprjx_station * xstations = new thprjx_station [numstations],
+//      * xstation = NULL;
+//      
+//    thprjx_station_link dummxs;
+//      
+////    unsigned long cuid;
+//    
+//    pps = prj->first_scrap;
+//    xscrap = xscraps;
+//    while (pps != NULL) {
+//      xscrap->scrap = pps;
+//      pps->xscrap = xscrap;
+//      cp = pps->fcpp;
+//      while (cp != NULL) {
+//        if (cp->is_sticky != TT_POINT_EXTEND_STICKYOFF) {
+//          xstation = &(xstations[cp->st->uid - 1]);
+//          xstation_link = &(*(xstation_links.insert(xstation_links.end(),dummxs)));
+//          xstation_link->scrap = xscrap;
+//          xstation_link->scrapcp = cp;
+//          if (xstation->nstations == 0) {
+//            xstation->first_link = xstation_link;
+//            xstation->last_link = xstation_link;
+//          } else {
+//            xstation->last_link->next_link = xstation_link;
+//            xstation->last_link = xstation_link;
+//          }
+//        }
+//        xstation->nstations++;
+//        
+//        cp = cp->nextcp;
+//      }      
+//      pps = pps->proj_next_scrap;
+//      xscrap++;
+//    }
+//    
+//    // let's add scrap links from UID
+//    unsigned long station_id;
+//    thprjx_link dummxl;
+//    station_id = 0;
+//    xstation = xstations;
+//    while (station_id < numstations) {
+//      if (xstation->nstations > 1) {
+//        xstation_link = xstation->first_link;
+//        while (xstation_link != NULL) {
+//          xstation_link2 = xstation_link->next_link;
+//          while (xstation_link2 != NULL) {
+//            if (xstation_link2->scrap->scrap->id != xstation_link->scrap->scrap->id) {
+//            
+//              // pridaj ->
+//              xscrap_link = &(*(xscrap_links.insert(xscrap_links.end(),dummxl)));
+//              xscrap_link->from_cp = xstation_link->scrapcp;
+//              xscrap_link->from_scrap = xstation_link->scrap;
+//              xscrap_link->to_cp = xstation_link2->scrapcp;
+//              xscrap_link->to_scrap = xstation_link2->scrap;
+//              if (xscrap_link->from_scrap->last_link == NULL) {
+//                xscrap_link->from_scrap->last_link = xscrap_link;
+//                xscrap_link->from_scrap->first_link = xscrap_link;
+//              } else {
+//                if ((xscrap_link->from_cp->is_sticky == TT_POINT_EXTEND_STICKYON) ||
+//                    (xscrap_link->to_cp->is_sticky == TT_POINT_EXTEND_STICKYON)) {
 //                  xscrap_link->from_scrap->first_link->prev_link = xscrap_link;
 //                  xscrap_link->next_link = xscrap_link->from_scrap->first_link;                  
 //                  xscrap_link->from_scrap->first_link = xscrap_link;
+//                } else {
+//                  xscrap_link->prev_link = xscrap_link->from_scrap->last_link;
+//                  xscrap_link->from_scrap->last_link->next_link = xscrap_link;
+//                  xscrap_link->from_scrap->last_link = xscrap_link;
 //                }
-//                      
-//              } // END OF LINK TRANSFORMATION
+//              }
+//              
+//              xscrap_link2 = xscrap_link;
+//              
+//              // pridaj <-
+//              xscrap_link = &(*(xscrap_links.insert(xscrap_links.end(),dummxl)));
+//              xscrap_link->from_cp = xstation_link2->scrapcp;
+//              xscrap_link->from_scrap = xstation_link2->scrap;
+//              xscrap_link->to_cp = xstation_link->scrapcp;
+//              xscrap_link->to_scrap = xstation_link->scrap;
+//              if (xscrap_link->from_scrap->last_link == NULL) {
+//                xscrap_link->from_scrap->last_link = xscrap_link;
+//                xscrap_link->from_scrap->first_link = xscrap_link;
+//              } else {
+//                if ((xscrap_link->from_cp->is_sticky == TT_POINT_EXTEND_STICKYON) ||
+//                    (xscrap_link->to_cp->is_sticky == TT_POINT_EXTEND_STICKYON)) {
+//                  xscrap_link->from_scrap->first_link->prev_link = xscrap_link;
+//                  xscrap_link->next_link = xscrap_link->from_scrap->first_link;                  
+//                  xscrap_link->from_scrap->first_link = xscrap_link;
+//                } else {
+//                  xscrap_link->prev_link = xscrap_link->from_scrap->last_link;
+//                  xscrap_link->from_scrap->last_link->next_link = xscrap_link;
+//                  xscrap_link->from_scrap->last_link = xscrap_link;
+//                }
+//              }
+//              
+//              xscrap_link2->oposite_link = xscrap_link;
+//              xscrap_link->oposite_link = xscrap_link2;
+//              
 //            }
-//            jitm2 = jitm2->next_item;
+//            xstation_link2 = xstation_link2->next_link;
+//          }
+//          xstation_link = xstation_link->next_link;
+//        }
+//      }
+//      station_id++;
+//      xstation++;
+//    }
+//    
+//    
+//    
+//    // let's run TREMAUX on scraps
+//    unsigned long num_scrap_att = 0; 
+//    double movex, movey;
+//    xscrap = xscraps;
+//    while(1) {
+//
+//      // 1 ak nie je xscrap pripojeny, pripoji ho
+//      if (!xscrap->is_attached) {
+//        if (xscrap->via_link != NULL) {
+//          movex = xscrap->via_link->from_cp->tx - xscrap->via_link->to_cp->tx;
+//          movey = xscrap->via_link->from_cp->ty - xscrap->via_link->to_cp->ty;
+//          cp = xscrap->scrap->fcpp;
+//          while (cp != NULL) {
+//            cp->tx = cp->tx + movex;
+//            cp->ty = cp->ty + movey;
+//            cp->tz = double(num_scrap_att);
+//            cp = cp->nextcp;
 //          }
 //        }
-//        jitm = jitm->next_item;
+//        xscrap->is_attached = true;
+//        num_scrap_att++;
 //      }
-//      cj = cj->proj_next_join;
-//    }    
-    
-    // let's run TREMAUX on scraps
-    unsigned long num_scrap_att = 0; 
-    double movex, movey;
-    xscrap = xscraps;
-    while(1) {
-
-      // 1 ak nie je xscrap pripojeny, pripoji ho
-      if (!xscrap->is_attached) {
-        if (xscrap->via_link != NULL) {
-          movex = xscrap->via_link->from_cp->tx - xscrap->via_link->to_cp->tx;
-          movey = xscrap->via_link->from_cp->ty - xscrap->via_link->to_cp->ty;
-          cp = xscrap->scrap->fcpp;
-          while (cp != NULL) {
-            cp->tx = cp->tx + movex;
-            cp->ty = cp->ty + movey;
-            cp->tz = double(num_scrap_att);
-            cp = cp->nextcp;
-          }
-        }
-        xscrap->is_attached = true;
-        num_scrap_att++;
-      }
-
-      // skontroluje ci mooze ist dalej
-      while ((xscrap->first_link != NULL) && (xscrap->first_link->to_scrap->is_attached))
-        xscrap->first_link = xscrap->first_link->next_link;
-
-      // ak nie ide spat ak mooze inak break.
-      if (xscrap->first_link != NULL) {
-        xscrap->first_link->to_scrap->via_link = xscrap->first_link;
-        xscrap = xscrap->first_link->to_scrap;
-        xscrap->via_link->from_scrap->first_link = xscrap->via_link->from_scrap->first_link->next_link;
-      } else {
-        if (xscrap->via_link != NULL)
-          xscrap = xscrap->via_link->from_scrap;
-        else
-          break;
-      }
-    }
-    if (num_scrap_att < numscraps) {
-      xscrap = xscraps;
-      unsigned nxscrap = 0;
-      thlog.printf("error info -- scraps not attached to extended");
-      if (strlen(prj->index) == 0)
-        thlog.printf(":%s",prj->index);
-      thlog.printf("projection:\n");
-      while(nxscrap < numscraps) {
-        if (!xscrap->is_attached)
-          thlog.printf("\t%s@%s\n",xscrap->scrap->name,xscrap->scrap->fsptr->get_full_name());
-        xscrap++;
-        nxscrap++;
-      }
-      if (strlen(prj->index) == 0)
-        ththrow(("can not connect all scraps in exteded projection"))
-      else
-        ththrow(("can not connect all scraps in exteded:%s projection", prj->index))      
-    }
-    
-    delete [] xscraps;
-    delete [] xstations;
-  } // END of extended projection post processing
+//
+//      // skontroluje ci mooze ist dalej
+//      while ((xscrap->first_link != NULL) && (xscrap->first_link->to_scrap->is_attached))
+//        xscrap->first_link = xscrap->first_link->next_link;
+//
+//      // ak nie ide spat ak mooze inak break.
+//      if (xscrap->first_link != NULL) {
+//        xscrap->first_link->to_scrap->via_link = xscrap->first_link;
+//        xscrap = xscrap->first_link->to_scrap;
+//        xscrap->via_link->from_scrap->first_link = xscrap->via_link->from_scrap->first_link->next_link;
+//      } else {
+//        if (xscrap->via_link != NULL)
+//          xscrap = xscrap->via_link->from_scrap;
+//        else
+//          break;
+//      }
+//    }
+//    if (num_scrap_att < numscraps) {
+//      xscrap = xscraps;
+//      unsigned nxscrap = 0;
+//      thlog.printf("error info -- scraps not attached to extended");
+//      if (strlen(prj->index) == 0)
+//        thlog.printf(":%s",prj->index);
+//      thlog.printf("projection:\n");
+//      while(nxscrap < numscraps) {
+//        if (!xscrap->is_attached)
+//          thlog.printf("\t%s@%s\n",xscrap->scrap->name,xscrap->scrap->fsptr->get_full_name());
+//        xscrap++;
+//        nxscrap++;
+//      }
+//      if (strlen(prj->index) == 0)
+//        ththrow(("can not connect all scraps in exteded projection"))
+//      else
+//        ththrow(("can not connect all scraps in exteded:%s projection", prj->index))      
+//    }
+//    
+//    delete [] xscraps;
+//    delete [] xstations;
+//  } // END of extended projection post processing
   
 }
 
 
 void thdb2d::pp_scale_points(thdb2dprj * prj)
 {
-  // najprv prejde scrapy a nastavy matice
   thscrap * ps = prj->first_scrap;
   double maxdist,cdist,scale,ang,tang;
+  
+  
+  // prejde scrapy a nastavy matice
+  ps = prj->first_scrap;
   while (ps != NULL) {
     ps->reset_transformation();
     if (ps->scale_p9) {
@@ -1735,6 +1758,7 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
     }
     ps = ps->proj_next_scrap;
   }
+  
   // podla nastavenia scale v scrape modifikuje suradnice bodov
   thdb2dpt_list::iterator ii = this->pt_list.begin();
   while (ii != this->pt_list.end()) {
@@ -1747,6 +1771,19 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
         ii->xt = ii->x * ps->scale;
         ii->yt = ii->y * ps->scale;
       }
+
+      // flipne ak treba
+      if (ps->flip != TT_SCRAP_FLIP_NONE) {
+        switch (ps->flip) {
+          case TT_SCRAP_FLIP_VERT:
+            ii->yt *= -1.0;
+            break;
+          case TT_SCRAP_FLIP_HORIZ:
+            ii->xt *= -1.0;
+            break;
+        }
+      }
+      
     }
     ii++;
   }
@@ -1770,14 +1807,39 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
             } else if (ppoint->orient >= 360.0) {
               ppoint->orient -= 360.0;
             }
-          } else if (ppoint->align != TT_POINT_ALIGN_C)
+            
+            // flip if needed
+            if (ps->flip != TT_SCRAP_FLIP_NONE) {
+              switch (ps->flip) {
+                case TT_SCRAP_FLIP_VERT:
+                  ppoint->orient -= 90.0;
+                  ppoint->orient = 360.0 - ppoint->orient;
+                  ppoint->orient += 90.0;
+                  break;
+                case TT_SCRAP_FLIP_HORIZ:
+                  ppoint->orient = 360.0 - ppoint->orient;
+                  break;
+              }
+              if (ppoint->orient < 0) {
+                ppoint->orient += 360.0;
+              } else if (ppoint->orient >= 360.0) {
+                ppoint->orient -= 360.0;
+              }
+            } // flip
+            
+          } else if (ppoint->align != TT_POINT_ALIGN_C) {
             thdb2d_rot_align(ppoint->align,ps->mr);
+            if (ps->flip != TT_SCRAP_FLIP_NONE) {
+              thdb2d_flip_align(ppoint->align, ps->flip == TT_SCRAP_FLIP_HORIZ);
+            }
+          }
           //ppoint->xsize *= ps->ms;
           //ppoint->ysize *= ps->ms;
           break;
         case TT_LINE_CMD:
           pline = (thline *) p2dobj;
           plp = pline->first_point;
+
           while (plp != NULL) {            
             if (!thisnan(plp->orient)) {
               plp->orient += ps->mr;
@@ -1786,6 +1848,27 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
               } else if (plp->orient >= 360.0) {
                 plp->orient -= 360.0;
               }
+
+              // flip if needed
+              if (ps->flip != TT_SCRAP_FLIP_NONE) {
+              
+                switch (ps->flip) {
+                  case TT_SCRAP_FLIP_VERT:
+                    plp->orient -= 90.0;
+                    plp->orient = 360.0 - plp->orient;
+                    plp->orient += 90.0;
+                    break;
+                  case TT_SCRAP_FLIP_HORIZ:
+                    plp->orient = 360.0 - plp->orient;
+                    break;
+                }
+                if (plp->orient < 0) {
+                  plp->orient += 360.0;
+                } else if (plp->orient >= 360.0) {
+                  plp->orient -= 360.0;
+                }
+              } // flip
+              
             }
             //  plp->rsize *= ps->ms;
             //  plp->lsize *= ps->ms;
@@ -1803,6 +1886,7 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
     }
     ps = ps->proj_next_scrap;
   }  
+  
   
 }
 
@@ -2543,8 +2627,12 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
       
       // teraz pridame itemy leziace okolo target
       bool ideme_nahor = true;
-      thdb2dji * newlist;
+//      thdb2dji * newlist;
       ppitem = target_item;
+      // add to the end of list
+      while (ppitem->next_list_item != NULL) {
+        ppitem = ppitem->next_list_item;
+      }
       ccitem = target_item->prev_item;
       while ((ccitem != NULL) || ideme_nahor) {
         if ((ccitem != NULL) && (ccitem->is_active)) {
@@ -2553,29 +2641,31 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             ppitem->next_list_item = ccitem;
             ccitem->prev_list_item = ppitem;
             ppitem = ccitem;
-          } else {
-            newlist = ccitem->point->join_item;
-            // najprv odstranime novy list zo zoznamu listov
-            if (newlist->next_list == NULL)
-              prj->last_join_list = newlist->prev_list;
-            else
-              newlist->next_list->prev_list = newlist->prev_list;
-            newlist->next_list = NULL;            
-            if (newlist->prev_list == NULL)
-              prj->first_join_list = newlist->next_list;
-            else
-              newlist->prev_list->next_list = newlist->next_list;
-            newlist->prev_list = NULL;
-            // teraz ho prilinkujeme na ppitem
-            newlist->prev_list_item = ppitem;
-            ppitem->next_list_item = newlist;
-            ppitem = newlist;
-            ppitem->point->join_item = target_item;
-            while (ppitem->next_list_item != NULL) {
-              ppitem->next_item->point->join_item = target_item;
-              ppitem = ppitem->next_item;
-            }
           }
+// TODO: pospajat joinlisty         
+//           else {
+//            newlist = ccitem->point->join_item;
+//            // najprv odstranime novy list zo zoznamu listov
+//            if (newlist->next_list == NULL)
+//              prj->last_join_list = newlist->prev_list;
+//            else
+//              newlist->next_list->prev_list = newlist->prev_list;
+//            if (newlist->prev_list == NULL)
+//              prj->first_join_list = newlist->next_list;
+//            else
+//              newlist->prev_list->next_list = newlist->next_list;
+//            newlist->next_list = NULL;            
+//            newlist->prev_list = NULL;
+//            // teraz ho prilinkujeme na ppitem
+//            newlist->prev_list_item = ppitem;
+//            ppitem->next_list_item = newlist;
+//            ppitem = newlist;
+//            ppitem->point->join_item = target_item;
+//            while (ppitem->next_list_item != NULL) {
+//              ppitem->next_item->point->join_item = target_item;
+//              ppitem = ppitem->next_item;
+//            }
+//          }
         }
         if (ideme_nahor && (ccitem != NULL))
           ccitem = ccitem->prev_item;

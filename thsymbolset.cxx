@@ -575,7 +575,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   insfig(mid,txt); \
   fprintf(mpf,"%s((0.5,0.5) inscale);\n",thsymbolset__mp[mid]);  \
   endfig;
-  
+  // thT("point station")  
   legend_station(SYMP_STATION_TEMPORARY,thT("point station:temporary",layout->lang));
   legend_station(SYMP_STATION_PAINTED,thT("point station:painted",layout->lang));
   legend_station(SYMP_STATION_NATURAL,thT("point station:natural",layout->lang));
@@ -619,6 +619,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   fprintf(mpf,"%s(((-.3,0.5) .. (.3,.3) .. (.7,.7) .. (1.3,.5)) inscale);\n",thsymbolset__mp[mid]);  \
   endfig;
   
+  // thT("line wall")  
   legend_wall(SYML_WALL_BEDROCK,thT("line wall:bedrock",layout->lang));
   legend_wall(SYML_WALL_UNDERLYING,thT("line wall:underlying",layout->lang));
   legend_wall(SYML_WALL_UNSURVEYED,thT("line wall:unsurveyed",layout->lang));
@@ -642,7 +643,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   fprintf(mpf,"p_label.rt(btex \\thaltitude %s etex,((0.3,0.5) inscale),0,1);\n",utf2tex("1510"));
   endfig;
 
-
+  // thT("point section")  
   insfig(SYML_SECTION,thT("line section",layout->lang));
   helpsymbol;
   if isused(SYML_WALL_BEDROCK) {
@@ -675,6 +676,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   endhelpsymbol;
 
 
+  // thT("point passage-height")  
 
   insfig(SYMP_PASSAGEHEIGHT_UNSIGNED,thT("point passage-height:unsigned",layout->lang));
   //insert_big_passage
@@ -761,6 +763,8 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     legend_hpoint(SYMP_GRADIENT,thT("point gradient",layout->lang));
   }
 
+// thT("point height")  
+// thT("point dimensions")  
   insfig(SYMP_HEIGHT_UNSIGNED,thT("point height:unsigned",layout->lang));
   helpsymbol;
   if isused(SYML_FLOORSTEP) {
@@ -826,6 +830,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_GUANO,thT("point guano",layout->lang));
   
   // okraje
+  // thT("line border")  
   legend_cycle(SYML_BORDER_VISIBLE,thT("line border:visible",layout->lang));
   legend_cycle(SYML_BORDER_TEMPORARY,thT("line border:temporary",layout->lang));
   legend_cycle(SYML_BORDER_PRESUMED,thT("line border:presumed",layout->lang));
@@ -854,12 +859,14 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   insfig(mid,txt); \
   fprintf(mpf,"%s(((0.2,0.8) -- (0.8,0.2)) inscale);\n",thsymbolset__mp[mid]);  \
   endfig;
-  legend_hpoint(SYMP_WATERFLOW_PERMANENT,thT("point waterflow:permanent",layout->lang));
-  legend_hpoint(SYMP_WATERFLOW_INTERMITTENT,thT("point waterflow:intermittent",layout->lang));
-  legend_hpoint(SYMP_WATERFLOW_PALEO,thT("point waterflow:paleo",layout->lang));
-  legend_waterflow(SYML_WATERFLOW_PERMANENT,thT("line waterflow:permanent",layout->lang));
-  legend_waterflow(SYML_WATERFLOW_INTERMITTENT,thT("line waterflow:intermittent",layout->lang));
-  legend_waterflow(SYML_WATERFLOW_CONJECTURAL,thT("line waterflow:conjectural",layout->lang));
+  // thT("point water-flow")  
+  legend_hpoint(SYMP_WATERFLOW_PERMANENT,thT("point water-flow:permanent",layout->lang));
+  legend_hpoint(SYMP_WATERFLOW_INTERMITTENT,thT("point water-flow:intermittent",layout->lang));
+  legend_hpoint(SYMP_WATERFLOW_PALEO,thT("point water-flow:paleo",layout->lang));
+  // thT("line water-flow")  
+  legend_waterflow(SYML_WATERFLOW_PERMANENT,thT("line water-flow:permanent",layout->lang));
+  legend_waterflow(SYML_WATERFLOW_INTERMITTENT,thT("line water-flow:intermittent",layout->lang));
+  legend_waterflow(SYML_WATERFLOW_CONJECTURAL,thT("line water-flow:conjectural",layout->lang));
 
   insfig(SYMP_SPRING,thT("point spring",layout->lang));
   helpsymbol;
@@ -939,6 +946,9 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_BRIDGE,thT("point bridge",layout->lang));
   legend_point(SYMP_CAMP,thT("point camp",layout->lang));
 
+  // thT("point remark")  
+  // thT("point label")  
+  // thT("line label")  
 
   // prejde vsetky ostatne objekty
   for (int m = 0; m < SYMX_; m++) {

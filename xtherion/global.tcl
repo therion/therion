@@ -25,8 +25,6 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ## --------------------------------------------------------------------
 
-
-
 set xth(destroyed) 0
 set xth(prj,name) "therion"
 set xth(prj,title) "therion user interface"
@@ -37,6 +35,7 @@ set xth(gui,dbg) ".xth_dbg"
 set xth(gui,help) ".xth_help"
 set xth(gui,message) ".xthmsg"
 set xth(gui,minsize) {480 300}
+set xth(gui,balloons) 0
 
 set xth(kb_control) Control
 set xth(kb_meta) Meta
@@ -66,6 +65,7 @@ set xth(app,me,filetypes) {
 
 set xth(app,cp,filetypes) {    
   {{Therion config files}       {thconfig*}}    
+  {{Therion config files }       {.thcfg .thconfig}}    
   {{All files}       {*}}    
 }
 
@@ -76,13 +76,13 @@ set xth(app,mv,filetypes) {
 
 set xth(icmds) {survey}
 set xth(cmds) {scrap centerline grade line area map layout}
-set dfs {8s}                    
-set dfss {8s}                    
-set dfuf {8.2fx {-}}             
-set dfdf {+8.2fx {-}}            
-set dfcf {8.2fx {-}}             
-set dfccf {8.2f {-}}            
-set dfgf {{8.2fx} {up down -}} 
+set dfs {4s}                    
+set dfss {4s}                    
+set dfuf {5.1fx {-}}             
+set dfdf {+5.1fx {-}}            
+set dfcf {5.1fx {-}}             
+set dfccf {5.1f {-}}            
+set dfgf {{5.1fx} {up down -}} 
 set xth(datafmts) [list \
   "unknown      $dfs" \
   "station      $dfss" \
@@ -114,6 +114,12 @@ set xth(datafmts) [list \
   "northing     $dfcf" \
   "easting      $dfcf" \
   "altitude     $dfcf" \
+  "up           $dfcf" \
+  "down         $dfcf" \
+  "left         $dfcf" \
+  "right        $dfcf" \
+  "ceiling      $dfcf" \
+  "floor        $dfcf" \
 ]
 
 set xth(gui,initdir) [pwd]
@@ -151,6 +157,13 @@ set xth(gui,selfg) white
 set xth(gui,selbg) darkBlue
 set xth(gui,etabsize) 2
 set xth(gui,controlk) Ctrl
+
+set xth(gui,xvi_grid_clr) #00D0D0
+set xth(gui,xvi_walls_fclr) gray60
+set xth(gui,xvi_walls_oclr) gray60
+set xth(gui,xvi_shot_clr) gray50
+set xth(gui,xvi_station_fclr) black
+set xth(gui,xvi_station_oclr) black
 
 set xth(gui,me,nozoom) 1
 

@@ -38,6 +38,9 @@ thdataobject::thdataobject()
   this->title = "";
   this->selected = false;
   this->selected_number = 0;
+
+  this->stnpref = NULL;
+  this->stnsuff = NULL;
   
   this->fsptr = NULL;
   this->nsptr = NULL;
@@ -125,10 +128,14 @@ char * thdataobject::get_cmd_name()
 thcmd_option_desc thdataobject::get_cmd_option_desc(char * opts)
 {
   int id = thmatch_token(opts, thtt_dataobject_opt);
-  if ((id == TT_DATAOBJECT_AUTHOR) || (id == TT_DATAOBJECT_COPYRIGHT))
-    return thcmd_option_desc(id, 2);
-  else
-    return thcmd_option_desc(id);
+  switch (id) {
+    case TT_DATAOBJECT_AUTHOR:
+    case TT_DATAOBJECT_COPYRIGHT:
+    case TT_DATAOBJECT_STNS:
+      return thcmd_option_desc(id, 2);
+    default:
+      return thcmd_option_desc(id);
+  }
 }
 
 
@@ -141,6 +148,33 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         this->name = this->db->strstore(*args);
       else 
         ththrow(("invalid keyword -- %s", *args));
+      break;
+    
+    case TT_DATAOBJECT_STNS:
+      switch (this->get_class_id()) {
+        case TT_DATA_CMD:
+        case TT_SCRAP_CMD:
+          break;
+        default:
+          ththrow(("station-names specification not valid for %s", this->get_cmd_name()))
+          break;  
+      }
+      if (strlen(args[0]) == 0)
+        this->stnpref = NULL;
+      else {
+        if (th_is_extkeyword(args[0]))
+          this->stnpref = this->db->strstore(args[0]);
+        else 
+          ththrow(("invalid keyword -- %s", args[0]));
+      }
+      if (strlen(args[1]) == 0)
+        this->stnsuff = NULL;
+      else {
+        if (th_is_extkeyword(args[1]))
+          this->stnsuff = this->db->strstore(args[1]);
+        else 
+          ththrow(("invalid keyword -- %s", args[1]));
+      }
       break;
 
     case TT_DATAOBJECT_TITLE:

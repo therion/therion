@@ -133,7 +133,7 @@ struct thscrapis {
   
   void end_bp();
   
-  void insert_bp_direction(double x, double y, double z, double tx, double ty, double tz);
+  void insert_bp_direction(double x, double y, double z, double tx, double ty, double tz, class thscraplp * slp);
     
   void end_bp_direction();
 

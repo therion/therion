@@ -77,6 +77,10 @@ void thdataleg::clear()
   this->adj_dx = thnan;
   this->adj_dy = thnan;
   this->adj_dz = thnan;
+  
+  this->fxx = thnan;
+  this->txx = thnan;
+  this->extend = TT_EXTENDFLAG_NORMAL;
     
   this->length_sd = thnan;
   this->counter_sd = thnan;
@@ -110,7 +114,7 @@ void thdataleg::clear()
   this->direction = true;
   this->adjusted = false;
   this->topofil = false;
-  
+  this->plumbed = false;
 }
 
 

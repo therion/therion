@@ -26,7 +26,7 @@
 ## --------------------------------------------------------------------
 
 
-xth_about_status "loading map editor ..."
+xth_about_status [mc "loading map editor ..."]
 
 set xth(me,dflt,scrap,scale) {}
 
@@ -73,6 +73,17 @@ proc xth_me_bind_entry_focus_return {wlist retcmd} {
 }
 
 
+proc xth_me_bind_typecbx_hint {pth smbl} {
+  $pth _create_popup
+  bind $pth.shell.listb <Map> "xth_status_bar_push me\nevent generate $pth.shell.listb <<ListboxSelect>> -when tail"
+  bind $pth.shell.listb <Unmap> "xth_status_bar_pop me"
+  bind $pth.shell.listb <<ListboxSelect>> [format {
+    set vals [%s cget -values]
+    xth_status_bar_status me [ mc "%s [lindex $vals [%s.shell.listb curselection]]"]
+    } $pth $smbl $pth]
+}
+
+
 proc xth_me_unredo_reset {} {
   global xth
   set xth(me,undolist) {}
@@ -108,18 +119,18 @@ proc xth_me_unredo_update {} {
   
   if {[llength $xth(me,undolist)] > 0} {
     $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,undo) \
-      -label [format "Undo %s" [lindex [lindex $xth(me,undolist) 0] 0]] -state normal
+      -label [format [mc "Undo %s"] [lindex [lindex $xth(me,undolist) 0] 0]] -state normal
   } else {
     $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,undo) \
-      -label "Undo" -state disabled
+      -label [mc "Undo"] -state disabled
   }
 
   if {[llength $xth(me,redolist)] > 0} {
     $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,redo) \
-      -label [format "Redo %s" [lindex [lindex $xth(me,redolist) 0] 0]] -state normal
+      -label [format [mc "Redo %s"] [lindex [lindex $xth(me,redolist) 0] 0]] -state normal
   } else {
     $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,redo) \
-      -label "Redo" -state disabled
+      -label [mc "Redo"] -state disabled
   }
 
 }
@@ -240,6 +251,7 @@ proc xth_me_unredo_action {txt undocmd redocmd} {
 proc xth_me_create_file {} {
 
   global xth
+  xth_status_bar_status me ""
   
   # create file variables
   set xth(me,unredook) 0
@@ -283,15 +295,15 @@ proc xth_me_create_file {} {
   $xth(ctrl,me,area).zl configure -state normal
   $xth(ctrl,me,area).zb configure -state normal
     
-  $xth(me,menu,file) entryconfigure "New" -state disabled
-  $xth(me,menu,file) entryconfigure "Open" -state disabled
-  $xth(me,menu,file) entryconfigure "Open (no pics)" -state disabled
-  $xth(me,menu,file) entryconfigure "Save" -state normal
-  $xth(me,menu,file) entryconfigure "Save as" -state normal
-  $xth(me,menu,file) entryconfigure "Auto save" -state normal
-  $xth(me,menu,file) entryconfigure "Close" -state normal
+  $xth(me,menu,file) entryconfigure [mc "New"] -state disabled
+  $xth(me,menu,file) entryconfigure [mc "Open"] -state disabled
+  $xth(me,menu,file) entryconfigure [mc "Open (no pics)"] -state disabled
+  $xth(me,menu,file) entryconfigure [mc "Save"] -state normal
+  $xth(me,menu,file) entryconfigure [mc "Save as"] -state normal
+  $xth(me,menu,file) entryconfigure [mc "Auto save"] -state normal
+  $xth(me,menu,file) entryconfigure [mc "Close"] -state normal
   
-  $xth(me,menu) entryconfigure "Edit" -state normal
+  $xth(me,menu) entryconfigure [mc "Edit"] -state normal
 
   $xth(ctrl,me,area).xmin configure -state normal
   $xth(ctrl,me,area).ymin configure -state normal
@@ -363,15 +375,15 @@ proc xth_me_destroy_file {} {
     set xth(ctrl,me,area,ymax) ""
     $xth(ctrl,me,area).zl configure -state disabled
     $xth(ctrl,me,area).zb configure -state disabled
-    $xth(me,menu,file) entryconfigure "New" -state normal
-    $xth(me,menu,file) entryconfigure "Open" -state normal
-    $xth(me,menu,file) entryconfigure "Open (no pics)" -state normal
-    $xth(me,menu,file) entryconfigure "Save" -state disabled
-    $xth(me,menu,file) entryconfigure "Save as" -state disabled
-    $xth(me,menu,file) entryconfigure "Auto save" -state disabled
-    $xth(me,menu,file) entryconfigure "Close" -state disabled
+    $xth(me,menu,file) entryconfigure [mc "New"] -state normal
+    $xth(me,menu,file) entryconfigure [mc "Open"] -state normal
+    $xth(me,menu,file) entryconfigure [mc "Open (no pics)"] -state normal
+    $xth(me,menu,file) entryconfigure [mc "Save"] -state disabled
+    $xth(me,menu,file) entryconfigure [mc "Save as"] -state disabled
+    $xth(me,menu,file) entryconfigure [mc "Auto save"] -state disabled
+    $xth(me,menu,file) entryconfigure [mc "Close"] -state disabled
 
-    $xth(me,menu) entryconfigure "Edit" -state disabled
+    $xth(me,menu) entryconfigure [mc "Edit"] -state disabled
 
     $xth(ctrl,me,area).xmin configure -state disabled
     $xth(ctrl,me,area).ymin configure -state disabled
@@ -417,7 +429,7 @@ proc xth_me_before_close_file {btns} {
   if {$xth(me,fsave)} {    
     set wtd [MessageDlg $xth(gui,message) -parent $xth(gui,main) \
       -icon question -type $btns\
-      -message "File $xth(me,ffull) is not saved. Save it now?" \
+      -message [format [mc "File %s is not saved. Save it now?"] $xth(me,ffull)] \
       -font $xth(gui,lfont)]
     switch $wtd {
       0 {
@@ -463,7 +475,7 @@ proc xth_me_read_file {pth changebs} {
     if {[regexp {^\s*encoding\s+(\S+)\s*$} $fln encln enc]} {
       if {$encspc} {
         set success 0
-        set nm "$pth \[$flnn\] -- multiple encoding commands in file"
+        set nm [format [mc "%s \[%s\] -- multiple encoding commands in file"] $pth $flnn]
         break
       }
       set encspc 1
@@ -471,7 +483,7 @@ proc xth_me_read_file {pth changebs} {
       set validenc [regexp -nocase $rxp $xth(encodings) dum curenc]
       if {$validenc == 0} {
         set success 0
-        set nm "$pth \[$flnn\] -- unknown encoding -- $enc"
+        set nm [format [mc "%s \[%s\] -- unknown encoding -- %s"] $pth $flnn $enc]
         break
       }
       fconfigure $fid -encoding $curenc
@@ -537,9 +549,22 @@ proc xth_me_write_file {pth} {
     if {$vsb < 0} {
       set vsb [expr $xth(me,imgs,$imgx,vsb) + 2]
     }
+    set root [xth_me_imgs_get_root $imgx]
+    set xpos [expr [lindex $xth(me,imgs,$imgx,position) 0]]
+    set ypos [expr [lindex $xth(me,imgs,$imgx,position) 1]]
+    switch [llength $root] {
+      1 {
+        set ypos [list $ypos [lindex $root 0]]
+      }
+      3 {
+        set xpos [lindex $root 1]
+        set ypos [list [lindex $root 2] [lindex $root 0]]
+      }
+      0 {}
+    }
     puts $fid [format "##XTHERION## xth_me_image_insert %s %s %s 0 {}" \
-      "{[expr [lindex $xth(me,imgs,$imgx,position) 0]] $vsb $gamma}" \
-      [expr [lindex $xth(me,imgs,$imgx,position) 1]] \
+      "{$xpos $vsb $gamma}" \
+      "{$ypos}" \
       [list $xth(me,imgs,$imgx,name)]]
   }
   foreach id $xth(me,cmds,xlist) {
@@ -577,7 +602,7 @@ proc xth_me_open_file {dialogid fname fline} {
   
   # read the file
   xth_status_bar_push me
-  xth_status_bar_status me "Opening $fname ..."
+  xth_status_bar_status me [format [mc "Opening %s ..."] $fname]
   
   set fdata [xth_me_read_file $fname 1]
   if {[lindex $fdata 0] == 0} {
@@ -665,7 +690,7 @@ proc xth_me_save_file {dialogid} {
     ([file mtime $fname] > $xth(me,mtime))} {
     set forcesave [MessageDlg $xth(gui,message) -parent $xth(gui,main) \
       -icon warning -type yesno -default 1 \
-      -message "File $fname was modified outside xtherion. Save it anyway?" \
+      -message [format [mc "File %s was modified outside xtherion. Save it anyway?"] $fname] \
       -font $xth(gui,lfont)]
     if {$forcesave != 0} {
       return 0
@@ -673,7 +698,7 @@ proc xth_me_save_file {dialogid} {
   }
  
   # save the file
-  xth_status_bar_status me "Saving $fname ..."
+  xth_status_bar_status me [format [mc "Saving %s ..."] $fname]
   set fdata [xth_me_write_file $fname]
   if {[lindex $fdata 0] == 0} {
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
@@ -768,10 +793,21 @@ proc xth_me_area_auto_adjust {} {
   foreach imgx $xth(me,imgs,xlist) {
     set px [lindex $xth(me,imgs,$imgx,position) 0]
     set py [lindex $xth(me,imgs,$imgx,position) 1]
-    set sx [image width $xth(me,imgs,$imgx,image)]
-    set sy [image height $xth(me,imgs,$imgx,image)]
     set limits [xth_me_limitize $limits $px $py]
-    set limits [xth_me_limitize $limits [expr $px + $sx] [expr $py - $sy]]
+    if {$xth(me,imgs,$imgx,XVI)} {
+      set gv $xth(me,imgs,$imgx,XVIgrid)
+      set v1x [expr [lindex $gv 2] * ([lindex $gv 6] - 1.0)]
+      set v1y [expr [lindex $gv 3] * ([lindex $gv 6] - 1.0)]
+      set v2x [expr [lindex $gv 4] * ([lindex $gv 7] - 1.0)]
+      set v2y [expr [lindex $gv 5] * ([lindex $gv 7] - 1.0)]
+      set limits [xth_me_limitize $limits [expr $px + $v1x] [expr $py + $v1y]]
+      set limits [xth_me_limitize $limits [expr $px + $v2x] [expr $py + $v2y]]
+      set limits [xth_me_limitize $limits [expr $px + $v1x + $v2x] [expr $py + $v1y + $v2y]]
+    } elseif {[string length $xth(me,imgs,$imgx,image)] > 0} {
+      set sx [image width $xth(me,imgs,$imgx,image)]
+      set sy [image height $xth(me,imgs,$imgx,image)]
+      set limits [xth_me_limitize $limits [expr $px + $sx] [expr $py - $sy]]
+    }
   }
   
   # scan limits of commands
@@ -794,7 +830,7 @@ proc xth_me_area_adjust {x1 y1 x2 y2} {
   
   global xth
   
-  xth_me_unredo_action "adjusting area" \
+  xth_me_unredo_action [mc "adjusting area"] \
     "xth_me_area_adjust $xth(me,area,xmin) $xth(me,area,ymin) $xth(me,area,xmax) $xth(me,area,ymax)" \
     "xth_me_area_adjust $x1 $y1 $x2 $y2"
 
@@ -894,13 +930,14 @@ proc xth_me_area_zoom_to {zv} {
     set ccrds [xth_me_get_center]
   }
   
-  xth_me_unredo_action zooming "xth_me_area_zoom_to $xth(me,zoom)" \
+  xth_me_unredo_action [mc "zooming"] \
+    "xth_me_area_zoom_to $xth(me,zoom)" \
     "xth_me_area_zoom_to $zv"
     
   set xth(me,zoom) $zv
   set xth(me,zoomv) $zv
   $xth(ctrl,me,area).zb configure -text [format "%d %%" $zv]
-  $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,zoom) -label [format "Zoom %d %%" $zv]
+  $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,zoom) -label [format [mc "Zoom %d %%"] $zv]
   
   xth_me_area_redraw   
   xth_me_area_scroll_adjust
@@ -911,7 +948,7 @@ proc xth_me_area_zoom_to {zv} {
   }
   
   xth_status_bar_push me
-  xth_status_bar_status me "Zooming objects ..."
+  xth_status_bar_status me [mc "Zooming objects ..."]
   set ncmds [llength $xth(me,cmds,xlist)]
   xth_me_progbar_show $ncmds
   set ccmd 0
@@ -1066,7 +1103,7 @@ proc xth_me_image_end_drag {tagOrId imgx x y} {
   $xth(me,can) bind $tagOrId <B3-Motion> ""
   $xth(me,can) bind $tagOrId <B3-ButtonRelease> ""
   xth_me_image_choose $imgx
-  xth_me_unredo_action "dragging image" \
+  xth_me_unredo_action [mc "dragging image"] \
     "xth_me_image_move $imgx $xth(me,imgs,drag_px) $xth(me,imgs,drag_py)" \
     "xth_me_image_move $imgx $xth(me,imgs,$imgx,position)"
   update idletasks 
@@ -1080,19 +1117,19 @@ proc xth_me_bind_image_drag {tagOrId imgx} {
 }
 
 
-xth_app_create me "Map Editor" 
+xth_app_create me [mc "Map Editor"]
 
-xth_ctrl_add me cmds "File commands"
-xth_ctrl_add me ss "Search & Select"
-xth_ctrl_add me prev "Command preview"
-xth_ctrl_add me point "Point control"
-xth_ctrl_add me line "Line control"
-xth_ctrl_add me linept "Line point control"
-xth_ctrl_add me ac "Area control"
-xth_ctrl_add me scrap "Scrap control"
-xth_ctrl_add me text "Text editor"
-xth_ctrl_add me area "Drawing area"
-xth_ctrl_add me images "Background images"
+xth_ctrl_add me cmds [mc "File commands"]
+xth_ctrl_add me ss [mc "Search & Select"]
+xth_ctrl_add me prev [mc "Command preview"]
+xth_ctrl_add me point [mc "Point control"]
+xth_ctrl_add me line [mc "Line control"]
+xth_ctrl_add me linept [mc "Line point control"]
+xth_ctrl_add me ac [mc "Area control"]
+xth_ctrl_add me scrap [mc "Scrap control"]
+xth_ctrl_add me text [mc "Text editor"]
+xth_ctrl_add me area [mc "Drawing area"]
+xth_ctrl_add me images [mc "Background images"]
 xth_ctrl_finish me
 
 # global variables initialization
@@ -1185,7 +1222,7 @@ set xth(ctrl,me,ss,cases) 0
 
 # initialize drawing area
 
-xth_about_status "loading area module ..."
+xth_about_status [mc "loading area module ..."]
 
 $xth(gui,me).af.apps configure -bg black
 set canfm $xth(gui,me).af.apps.cf 
@@ -1285,25 +1322,25 @@ xth_scroll_hidecmd $canfm.sh "grid forget $canfm.sh"
 
 
 Label $xth(ctrl,me,area).l -text "" -anchor center -font $xth(gui,lfont) -state disabled
-xth_status_bar me $xth(ctrl,me,area).l "Current drawing area."
+xth_status_bar me $xth(ctrl,me,area).l [mc "Current drawing area."]
 Entry $xth(ctrl,me,area).xmin -font $xth(gui,lfont) -state disabled -width 4 -textvariable xth(ctrl,me,area,xmin)
-xth_status_bar me $xth(ctrl,me,area).xmin "X min."
+xth_status_bar me $xth(ctrl,me,area).xmin [mc "X min."]
 Entry $xth(ctrl,me,area).ymin -font $xth(gui,lfont) -state disabled -width 4 -textvariable xth(ctrl,me,area,ymin)
-xth_status_bar me $xth(ctrl,me,area).ymin "Y min."
+xth_status_bar me $xth(ctrl,me,area).ymin [mc "Y min."]
 Entry $xth(ctrl,me,area).xmax -font $xth(gui,lfont) -state disabled -width 4 -textvariable xth(ctrl,me,area,xmax)
-xth_status_bar me $xth(ctrl,me,area).xmax "X max."
+xth_status_bar me $xth(ctrl,me,area).xmax [mc "X max."]
 Entry $xth(ctrl,me,area).ymax -font $xth(gui,lfont) -state disabled -width 4 -textvariable xth(ctrl,me,area,ymax)
-xth_status_bar me $xth(ctrl,me,area).ymax "Y max."
-Button $xth(ctrl,me,area).mab -text "Adjust" -anchor center -font $xth(gui,lfont) -state disabled -width 12 \
+xth_status_bar me $xth(ctrl,me,area).ymax [mc "Y max."]
+Button $xth(ctrl,me,area).mab -text [mc "Adjust"] -anchor center -font $xth(gui,lfont) -state disabled -width 12 \
   -command {
     xth_me_area_adjust $xth(ctrl,me,area,xmin) $xth(ctrl,me,area,ymin) \
       $xth(ctrl,me,area,xmax) $xth(ctrl,me,area,ymax) 
   }
-xth_status_bar me $xth(ctrl,me,area).mab "Adjust drawing area to given limits."
-Button $xth(ctrl,me,area).aab -text "Auto adjust" -anchor center -font $xth(gui,lfont) -state disabled -width 12 \
+xth_status_bar me $xth(ctrl,me,area).mab [mc "Adjust drawing area to given limits."]
+Button $xth(ctrl,me,area).aab -text [mc "Auto adjust"] -anchor center -font $xth(gui,lfont) -state disabled -width 12 \
   -command xth_me_area_auto_adjust
-xth_status_bar me $xth(ctrl,me,area).aab "Adjust drawing area to automatically calculated limits."
-Label $xth(ctrl,me,area).zl -text "zoom" -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $xth(ctrl,me,area).aab [mc "Adjust drawing area to automatically calculated limits."]
+Label $xth(ctrl,me,area).zl -text [mc "zoom"] -anchor e -font $xth(gui,lfont) -state disabled
 menubutton $xth(ctrl,me,area).zb -text "100 %" -anchor center -font $xth(gui,lfont) \
   -indicatoron true -menu $xth(ctrl,me,area).zb.m -state disabled
 menu $xth(ctrl,me,area).zb.m -tearoff 0 -font $xth(gui,lfont)
@@ -1312,8 +1349,8 @@ $xth(ctrl,me,area).zb.m add radiobutton -label "50 %" -variable xth(me,zoomv) -v
 $xth(ctrl,me,area).zb.m add radiobutton -label "100 %" -variable xth(me,zoomv) -value 100 -command "xth_me_area_zoom_to 100"
 $xth(ctrl,me,area).zb.m add radiobutton -label "200 %" -variable xth(me,zoomv) -value 200 -command "xth_me_area_zoom_to 200"
 $xth(ctrl,me,area).zb.m add radiobutton -label "400 %" -variable xth(me,zoomv) -value 400 -command "xth_me_area_zoom_to 400"
-xth_status_bar me $xth(ctrl,me,area).zb "Zoom drawing area."
-xth_status_bar me $xth(ctrl,me,area).zl "Zoom drawing area."
+xth_status_bar me $xth(ctrl,me,area).zb [mc "Zoom drawing area."]
+xth_status_bar me $xth(ctrl,me,area).zl [mc "Zoom drawing area."]
 
 xth_me_bind_entry_focus_return "$xth(ctrl,me,area).xmin $xth(ctrl,me,area).ymin $xth(ctrl,me,area).xmax $xth(ctrl,me,area).ymax" {
     xth_me_area_adjust $xth(ctrl,me,area,xmin) $xth(ctrl,me,area,ymin) \
@@ -1337,7 +1374,7 @@ grid $xth(ctrl,me,area).zl -column 0 -row 3 -columnspan 2 -sticky news
 grid $xth(ctrl,me,area).zb -column 2 -row 3 -columnspan 2 -sticky news
 
 
-xth_about_status "loading commands module ..."
+xth_about_status [mc "loading commands module ..."]
 
 # initialize file commands
 set clbox $xth(ctrl,me,cmds).cl
@@ -1363,43 +1400,43 @@ xth_scroll_showcmd $clbox.sv "grid $clbox.sv -column 1 -row 0 -sticky news"
 xth_scroll_hidecmd $clbox.sv "grid forget $clbox.sv"
 xth_scroll_showcmd $clbox.sh "grid $clbox.sh -column 0 -row 1 -sticky news"
 xth_scroll_hidecmd $clbox.sh "grid forget $clbox.sh"
-xth_status_bar me $clbox "Select command."
+xth_status_bar me $clbox [mc "Select command."]
 
 grid columnconf $xth(ctrl,me,cmds) 0 -weight 1
 grid $clbox -column 0 -row 0 -sticky news
 grid $ccbox -column 0 -row 1 -sticky news
 
-Button $ccbox.go -text "Insert scrap" -anchor center -font $xth(gui,lfont) \
+Button $ccbox.go -text [mc "Insert scrap"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command xth_me_cmds_action
-xth_status_bar me $ccbox.go "Action button."
-Button $ccbox.sel -text "Select" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $ccbox.go [mc "Action button."]
+Button $ccbox.sel -text [mc "Select"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_set_mode 0}
-xth_status_bar me $ccbox.sel "Switch mouse mode to select objects."
-menubutton $ccbox.cfg -text "Action" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $ccbox.sel [mc "Switch mouse mode to select objects."]
+menubutton $ccbox.cfg -text [mc "Action"] -anchor center -font $xth(gui,lfont) \
   -indicatoron true -menu $ccbox.cfg.m -state disabled
-xth_status_bar me $ccbox.cfg "Configure action assigned to action button."
+xth_status_bar me $ccbox.cfg [mc "Configure action assigned to action button."]
 menu $ccbox.cfg.m -tearoff 0 -font $xth(gui,lfont)
-$ccbox.cfg.m add command -label "Insert point" -command {xth_me_cmds_set_action 1}
-$ccbox.cfg.m add command -label "Insert line" -command {xth_me_cmds_set_action 0}
-$ccbox.cfg.m add command -label "Insert area" -command {xth_me_cmds_set_action 5}
-$ccbox.cfg.m add command -label "Insert scrap" -command {xth_me_cmds_set_action 2}
-$ccbox.cfg.m add command -label "Insert text" -command {xth_me_cmds_set_action 3}
+$ccbox.cfg.m add command -label [mc "Insert point"] -command {xth_me_cmds_set_action 1}
+$ccbox.cfg.m add command -label [mc "Insert line"] -command {xth_me_cmds_set_action 0}
+$ccbox.cfg.m add command -label [mc "Insert area"] -command {xth_me_cmds_set_action 5}
+$ccbox.cfg.m add command -label [mc "Insert scrap"] -command {xth_me_cmds_set_action 2}
+$ccbox.cfg.m add command -label [mc "Insert text"] -command {xth_me_cmds_set_action 3}
 $ccbox.cfg.m add separator
-$ccbox.cfg.m add command -label "Delete" -command {xth_me_cmds_set_action 4}
-Button $ccbox.mu -text "Move up" -anchor center -font $xth(gui,lfont) \
+$ccbox.cfg.m add command -label [mc "Delete"] -command {xth_me_cmds_set_action 4}
+Button $ccbox.mu -text [mc "Move up"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 8 -command "xth_me_cmds_move_up {}"
-xth_status_bar me $ccbox.mu "Move file command up in the list."
-Button $ccbox.md -text "Move down" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $ccbox.mu [mc "Move file command up in the list."]
+Button $ccbox.md -text [mc "Move down"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 8 -command "xth_me_cmds_move_down {}"
-xth_status_bar me $ccbox.md "Move file command down in the list."
-Button $ccbox.mt -text "Move to" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $ccbox.md [mc "Move file command down in the list."]
+Button $ccbox.mt -text [mc "Move to"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 8 -command "xth_me_cmds_move_to {} {}"
-xth_status_bar me $ccbox.mt "Move file command to given position."
+xth_status_bar me $ccbox.mt [mc "Move file command to given position."]
 ComboBox $ccbox.tt -postcommand xth_me_cmds_set_move_to_list \
   -modifycmd xth_me_cmds_set_move_to \
   -font $xth(gui,lfont) -height 4 -state disabled -width 8 \
   -textvariable xth(ctrl,me,cmds,moveto)
-xth_status_bar me $ccbox.tt "Select destination scrap and position in it."
+xth_status_bar me $ccbox.tt [mc "Select destination scrap and position in it."]
 grid columnconf $ccbox 0 -weight 1
 grid columnconf $ccbox 1 -weight 1
 grid $ccbox.go -column 0 -row 0 -columnspan 2 -sticky news
@@ -1422,21 +1459,27 @@ scrollbar $txb.sv -orient vert  -command "$txb.txt yview" \
   -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
 scrollbar $txb.sh -orient horiz  -command "$txb.txt xview" \
   -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
-Button $txb.upd -text "Update text" -anchor center -font $xth(gui,lfont) \
+Button $txb.upd -text [mc "Update text"] -anchor center -font $xth(gui,lfont) \
   -state disabled \
   -command {xth_me_cmds_update {}}
+xth_status_bar me $txb.upd [mc "Press this button to save code you have written."]
+
 grid columnconf $txb 0 -weight 1
 grid rowconf $txb 0 -weight 1
 grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
 grid $txb.upd -column 0 -row 2 -columnspan 2 -sticky news
-xth_status_bar me $txb.txt "Editor for free text in therion 2D file."
+xth_status_bar me $txb.txt [mc "Editor for free text in therion 2D file."]
 bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
 bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
 bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
 
 if {$xth(gui,bindinsdel)} {
+  bind $txb.txt <Delete> {
+    %W delete insert
+    %W see insert
+  }
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
   bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
@@ -1462,30 +1505,30 @@ if {[info exists xth(gui,te)]} {
 # initialize search & select tool
 set ssbx $xth(ctrl,me,ss)
 
-Label $ssbx.xl -text expression -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $ssbx.xl "Enter search expression."
+Label $ssbx.xl -text [mc "expression"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $ssbx.xl [mc "Enter search expression."]
 Entry $ssbx.xe -font $xth(gui,lfont) -state disabled \
   -textvariable xth(ctrl,me,ss,expr) -width 3
 bind $ssbx.xe <Return> xth_me_ss_show
-xth_status_bar me $ssbx.xe "Enter search expression."
-checkbutton $ssbx.rx -text "regular expression" -anchor w -font $xth(gui,lfont) -state disabled \
+xth_status_bar me $ssbx.xe [mc "Enter search expression."]
+checkbutton $ssbx.rx -text [mc "regular expression"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,ss,regexp) -command {}
-xth_status_bar me $ssbx.rx "Search for regular expression."
-checkbutton $ssbx.cs -text "case sensitive" -anchor w -font $xth(gui,lfont) -state disabled \
+xth_status_bar me $ssbx.rx [mc "Search for regular expression."]
+checkbutton $ssbx.cs -text [mc "case sensitive"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,ss,cases) -command {}
-xth_status_bar me $ssbx.cs "Case sensitive search."
-Button $ssbx.sn -text "Find next" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $ssbx.cs [mc "Case sensitive search."]
+Button $ssbx.sn -text [mc "Find next"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command xth_me_ss_next -width 10
-xth_status_bar me $ssbx.sn "Select next object matching expression."
-Button $ssbx.sf -text "Find first" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $ssbx.sn [mc "Select next object matching expression."]
+Button $ssbx.sf -text [mc "Find first"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command xth_me_ss_first -width 10
-xth_status_bar me $ssbx.sf "Select first object matching expression."
-Button $ssbx.sa -text "Show all" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $ssbx.sf [mc "Select first object matching expression."]
+Button $ssbx.sa -text [mc "Show all"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command xth_me_ss_show -width 9
-xth_status_bar me $ssbx.sa "Highlight all objects matching expression."
-Button $ssbx.ca -text "Clear all" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $ssbx.sa [mc "Highlight all objects matching expression."]
+Button $ssbx.ca -text [mc "Clear all"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command xth_me_cmds_set_colors -width 9
-xth_status_bar me $ssbx.ca "Clear highlighted objects."
+xth_status_bar me $ssbx.ca [mc "Clear highlighted objects."]
 
 grid columnconf $ssbx 0 -weight 1
 grid columnconf $ssbx 1 -weight 1
@@ -1499,7 +1542,7 @@ grid $ssbx.sa -column 0 -row 4 -sticky news
 grid $ssbx.ca -column 1 -row 4 -sticky news
 
 
-xth_about_status "loading images module ..."
+xth_about_status [mc "loading images module ..."]
 
 # initialize images
 frame $xth(ctrl,me,images).il
@@ -1524,53 +1567,56 @@ xth_scroll_showcmd $xth(ctrl,me,images).il.sv "grid $xth(ctrl,me,images).il.sv -
 xth_scroll_hidecmd $xth(ctrl,me,images).il.sv "grid forget $xth(ctrl,me,images).il.sv"
 xth_scroll_showcmd $xth(ctrl,me,images).il.sh "grid $xth(ctrl,me,images).il.sh -column 0 -row 1 -sticky news"
 xth_scroll_hidecmd $xth(ctrl,me,images).il.sh "grid forget $xth(ctrl,me,images).il.sh"
-xth_status_bar me $ilbox "Select background image."
+xth_status_bar me $ilbox [mc "Select background image."]
 grid columnconf $xth(ctrl,me,images) 0 -weight 1
 grid $xth(ctrl,me,images).il -column 0 -row 0 -sticky news
 grid $xth(ctrl,me,images).ic -column 0 -row 1 -sticky news
 
-Button $xth(ctrl,me,images).ic.insp -text "Insert" -anchor center -font $xth(gui,lfont) \
-  -state disabled -command {xth_me_image_insert $xth(ctrl,me,images,posx) $xth(ctrl,me,images,posy) {} 0 {}}
-xth_status_bar me $xth(ctrl,me,images).ic.insp "Insert new background image."
-Button $xth(ctrl,me,images).ic.remp -text "Remove" -anchor center -font $xth(gui,lfont) -state disabled \
+Button $xth(ctrl,me,images).ic.insp -text [mc "Insert"] -anchor center -font $xth(gui,lfont) \
+  -state disabled -command {
+    xth_me_image_insert $xth(ctrl,me,images,posx) $xth(ctrl,me,images,posy) {} 0 {}
+    xth_me_area_auto_adjust
+  }
+xth_status_bar me $xth(ctrl,me,images).ic.insp [mc "Insert new background image."]
+Button $xth(ctrl,me,images).ic.remp -text [mc "Remove"] -anchor center -font $xth(gui,lfont) -state disabled \
   -command {xth_me_image_remove ""}
-xth_status_bar me $xth(ctrl,me,images).ic.remp "Remove selected image."
+xth_status_bar me $xth(ctrl,me,images).ic.remp [mc "Remove selected image."]
 Separator $xth(ctrl,me,images).ic.s1 -orient horizontal
-checkbutton $xth(ctrl,me,images).ic.viscb -text "visibility" -anchor w -font $xth(gui,lfont) -state disabled \
+checkbutton $xth(ctrl,me,images).ic.viscb -text [mc "visibility"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,images,vis) -command {xth_me_image_toggle_vsb ""}
-xth_status_bar me $xth(ctrl,me,images).ic.viscb "Switch image visibility."
+xth_status_bar me $xth(ctrl,me,images).ic.viscb [mc "Switch image visibility."]
 
 Label $xth(ctrl,me,images).ic.gl -text "gamma 1.00" -anchor w -font $xth(gui,lfont) -state disabled
-xth_status_bar me $xth(ctrl,me,images).ic.gl "Control gamma value."
-Button $xth(ctrl,me,images).ic.gr -text "Reset" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $xth(ctrl,me,images).ic.gl [mc "Control gamma value."]
+Button $xth(ctrl,me,images).ic.gr -text [mc "Reset"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 8 -command "set xth(ctrl,me,images,gamma) 0.0; xth_me_image_update_gamma"
-xth_status_bar me $xth(ctrl,me,images).ic.gr "Reset image gamma value."
+xth_status_bar me $xth(ctrl,me,images).ic.gr [mc "Reset image gamma value."]
 scale $xth(ctrl,me,images).ic.gs -from -1.0 -to 1.0 \
   -font $xth(gui,lfont) -state disabled -showvalue 0 -resolution 0.01 \
   -variable xth(ctrl,me,images,gamma) -orient horiz
 bind $xth(ctrl,me,images).ic.gs <B1-ButtonRelease> xth_me_image_update_gamma
-xth_status_bar me $xth(ctrl,me,images).ic.gs "Set image gamma value."
+xth_status_bar me $xth(ctrl,me,images).ic.gs [mc "Set image gamma value."]
 
 
-Label $xth(ctrl,me,images).ic.posl -text position -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $xth(ctrl,me,images).ic.posl "Current position of selected image."
+Label $xth(ctrl,me,images).ic.posl -text [mc "position"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $xth(ctrl,me,images).ic.posl [mc "Current position of selected image."]
 Label $xth(ctrl,me,images).ic.posln -text "" -anchor center -font $xth(gui,lfont) -state disabled
-xth_status_bar me $xth(ctrl,me,images).ic.posln "Current position of selected image."
-Button $xth(ctrl,me,images).ic.posch -text "Move to" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $xth(ctrl,me,images).ic.posln [mc "Current position of selected image."]
+Button $xth(ctrl,me,images).ic.posch -text [mc "Move to"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 8 -command "xth_me_image_move_to"
-xth_status_bar me $xth(ctrl,me,images).ic.posch "Move image to given position."
+xth_status_bar me $xth(ctrl,me,images).ic.posch [mc "Move image to given position."]
 Entry $xth(ctrl,me,images).ic.posx -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,images,posx)
-xth_status_bar me $xth(ctrl,me,images).ic.posx "New X coordinate of image."
+xth_status_bar me $xth(ctrl,me,images).ic.posx [mc "New X coordinate of image."]
 Entry $xth(ctrl,me,images).ic.posy -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,images,posy)
-xth_status_bar me $xth(ctrl,me,images).ic.posy "New Y coordinate of image."
-Button $xth(ctrl,me,images).ic.mvf -text "Move front" -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
+xth_status_bar me $xth(ctrl,me,images).ic.posy [mc "New Y coordinate of image."]
+Button $xth(ctrl,me,images).ic.mvf -text [mc "Move front"] -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
   -command xth_me_image_move_front
-xth_status_bar me $xth(ctrl,me,images).ic.mvf "Move image in front of all images."
-Button $xth(ctrl,me,images).ic.mvb -text "Move back" -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
+xth_status_bar me $xth(ctrl,me,images).ic.mvf [mc "Move image in front of all images."]
+Button $xth(ctrl,me,images).ic.mvb -text [mc "Move back"] -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
   -command xth_me_image_move_back
-xth_status_bar me $xth(ctrl,me,images).ic.mvb "Move image behind all images."
+xth_status_bar me $xth(ctrl,me,images).ic.mvb [mc "Move image behind all images."]
 
 xth_me_bind_entry_focus_return "$xth(ctrl,me,images).ic.posx $xth(ctrl,me,images).ic.posy" "xth_me_image_move_to"
 xth_me_bind_entry_focusin "$xth(ctrl,me,images).ic.posx $xth(ctrl,me,images).ic.posy"
@@ -1596,7 +1642,7 @@ grid $xth(ctrl,me,images).ic.viscb -column 0 -row 7 -sticky news -columnspan 4
 # xth_status_bar me $xth(ctrl,me,images). "To set file encoding, type encoding name and press <Change> button."
 
 
-xth_about_status "loading preview module ..."
+xth_about_status [mc "loading preview module ..."]
 
 # init command preview
 set txb $xth(ctrl,me,prev)
@@ -1613,83 +1659,85 @@ scrollbar $txb.sv -orient vert  -command "$txb.txt yview" \
   -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
 scrollbar $txb.sh -orient horiz  -command "$txb.txt xview" \
   -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
-Button $txb.upd -text "Update command" -anchor center -font $xth(gui,lfont) \
+Button $txb.upd -text [mc "Update command"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_update {}}
+xth_status_bar me $txb.upd [mc "Press this button, if you have changed something and you can not see your changes here."]  
 grid columnconf $txb 0 -weight 1
 grid rowconf $txb 0 -weight 1
 grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
 grid $txb.upd -column 0 -row 2 -columnspan 2 -sticky news
-xth_status_bar me $txb.txt "Command preview."
+xth_status_bar me $txb.txt [mc "Command preview."]
 
 # init scrap control
 
-xth_about_status "loading scrap module ..."
+xth_about_status [mc "loading scrap module ..."]
 
 set sfm $xth(ctrl,me,scrap)
 
 Label $sfm.namel -text id -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $sfm.namel "Scrap name."
+xth_status_bar me $sfm.namel [mc "Scrap name."]
 Entry $sfm.name -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,name)
-xth_status_bar me $sfm.name "Scrap name."
+xth_status_bar me $sfm.name [mc "Scrap name."]
 
-Label $sfm.projl -text projection -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $sfm.projl "Scrap projection."
+Label $sfm.projl -text [mc "projection"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $sfm.projl [mc "Scrap projection."]
 ComboBox $sfm.proj -values $xth(scrap_projections) \
   -font $xth(gui,lfont) -height 4 -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,projection) -command {xth_me_cmds_update {}}
 
-xth_status_bar me $sfm.proj "Scrap projection."
+xth_status_bar me $sfm.proj [mc "Scrap projection."]
+xth_me_bind_typecbx_hint $sfm.proj projection
 
-Label $sfm.optl -text options -anchor e -font $xth(gui,lfont) -state disabled -width 8
-xth_status_bar me $sfm.optl "Other scrap options."
+Label $sfm.optl -text [mc "options"] -anchor e -font $xth(gui,lfont) -state disabled -width 8
+xth_status_bar me $sfm.optl [mc "Other scrap options."]
 Entry $sfm.opt -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,options)
 
-xth_status_bar me $sfm.opt "Other scrap options." 
+xth_status_bar me $sfm.opt [mc "Other scrap options."] 
 
 #Separator $sfm.s1 -orient horizontal
-Label $sfm.scl -text scale -anchor sw -font $xth(gui,lfont) -state disabled
-xth_status_bar me $sfm.scl "Scrap scale definition."
-Button $sfm.scpb -text "Update scrap" -anchor center -font $xth(gui,lfont) \
+Label $sfm.scl -text [mc "scale"] -anchor sw -font $xth(gui,lfont) -state disabled
+xth_status_bar me $sfm.scl [mc "Scrap scale definition."]
+Button $sfm.scpb -text [mc "Update scrap"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 4 -command {xth_me_cmds_update {}}
-xth_status_bar me $sfm.scpb "."
-Label $sfm.scpp -text "picture scale points" -anchor w -font $xth(gui,lfont) -state disabled
-xth_status_bar me $sfm.scpp "Calibration points on the picture (X1:Y1 - X2:Y2)."
+xth_status_bar me $sfm.scpb [mc "Press this button to apply your changes to current scrap."]
+Label $sfm.scpp -text [mc "picture scale points"] -anchor w -font $xth(gui,lfont) -state disabled
+xth_status_bar me $sfm.scpp [mc "Calibration points on the picture (X1:Y1 - X2:Y2)."]
 Entry $sfm.scx1p -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,px1)
-xth_status_bar me $sfm.scx1p "X1 picture." 
+xth_status_bar me $sfm.scx1p [mc "X1 picture."] 
 Entry $sfm.scy1p -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,py1)
-xth_status_bar me $sfm.scy1p "Y1 picture." 
+xth_status_bar me $sfm.scy1p [mc "Y1 picture."] 
 Entry $sfm.scx2p -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,px2)
-xth_status_bar me $sfm.scx2p "X2 picture." 
+xth_status_bar me $sfm.scx2p [mc "X2 picture."]
 Entry $sfm.scy2p -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,py2)
-xth_status_bar me $sfm.scy2p "Y2 picture." 
-Label $sfm.scrp -text "real scale points" -anchor w -font $xth(gui,lfont) -state disabled
-xth_status_bar me $sfm.scrp "Real coordinates of calibration points (X1:Y1 - X2:Y2)."
+xth_status_bar me $sfm.scy2p [mc "Y2 picture."]
+Label $sfm.scrp -text [mc "real scale points"] -anchor w -font $xth(gui,lfont) -state disabled
+xth_status_bar me $sfm.scrp [mc "Real coordinates of calibration points (X1:Y1 - X2:Y2)."]
 Entry $sfm.scx1r -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,rx1)
-xth_status_bar me $sfm.scx1r "X1 real." 
+xth_status_bar me $sfm.scx1r [mc "X1 real."]
 Entry $sfm.scy1r -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,ry1)
-xth_status_bar me $sfm.scy1r "Y1 real." 
+xth_status_bar me $sfm.scy1r [mc "Y1 real."]
 Entry $sfm.scx2r -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,rx2)
-xth_status_bar me $sfm.scx2r "X2 real." 
+xth_status_bar me $sfm.scx2r [mc "X2 real."]
 Entry $sfm.scy2r -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,ry2)
-xth_status_bar me $sfm.scy2r "Y2 real." 
-Label $sfm.scul -text "units" -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $sfm.scul "Units of real coordinates."
+xth_status_bar me $sfm.scy2r [mc "Y2 real."]
+Label $sfm.scul -text [mc "units"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $sfm.scul [mc "Units of real coordinates."]
 ComboBox $sfm.scu -values $xth(length_units) \
   -font $xth(gui,lfont) -height 5 -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,units) -command {xth_me_cmds_update {}}
-xth_status_bar me $sfm.scu "Units of real coordinates."
+xth_status_bar me $sfm.scu [mc "Units of real coordinates."]
 
 xth_me_bind_entry_focus_return "$sfm.scx1p $sfm.scy1p $sfm.scx2p $sfm.scy2p" {xth_me_cmds_update {}}
 xth_me_bind_entry_focus_return "$sfm.scx1r $sfm.scy1r $sfm.scx2r $sfm.scy2r" {xth_me_cmds_update {}}
@@ -1718,60 +1766,61 @@ grid $sfm.scu  -row 8 -column 2 -columnspan 2 -sticky news -padx 2
 
 
 # point control
-xth_about_status "loading point module ..."
+xth_about_status [mc "loading point module ..."]
 
 set ptc $xth(ctrl,me,point)
-Label $ptc.posl -text "position" -anchor e -font $xth(gui,lfont) -state disabled -width 8
-xth_status_bar me $ptc.posl "Point position."
+Label $ptc.posl -text [mc "position"] -anchor e -font $xth(gui,lfont) -state disabled -width 8
+xth_status_bar me $ptc.posl [mc "Point position."]
 Entry $ptc.posx -font $xth(gui,lfont) -state disabled -width 4 -textvariable xth(ctrl,me,point,x)
-xth_status_bar me $ptc.posx "Point X coordinate." 
+xth_status_bar me $ptc.posx [mc "Point X coordinate."]
 Entry $ptc.posy -font $xth(gui,lfont) -state disabled -width 4 -textvariable xth(ctrl,me,point,y)
-xth_status_bar me $ptc.posy "Point Y coordinate." 
+xth_status_bar me $ptc.posy [mc "Point Y coordinate."] 
 
-Button $ptc.upd -text "Update point" -anchor center -font $xth(gui,lfont) \
+Button $ptc.upd -text [mc "Update point"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_update {}}
-xth_status_bar me $ptc.upd "Update point data." 
+xth_status_bar me $ptc.upd [mc "Click this button to apply point changes."] 
 
-Label $ptc.typl -text "type" -anchor e -font $xth(gui,lfont) -state disabled -width 8
-xth_status_bar me $ptc.typl "Point type."
+Label $ptc.typl -text [mc "type"] -anchor e -font $xth(gui,lfont) -state disabled -width 8
+xth_status_bar me $ptc.typl [mc "Point type."] 
 ComboBox $ptc.typ -values $xth(point_types) \
   -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
   -textvariable xth(ctrl,me,point,type) -command {xth_me_cmds_update {}}
-xth_status_bar me $ptc.typ "Point type." 
+xth_status_bar me $ptc.typ [mc "Point type."]
+xth_me_bind_typecbx_hint $ptc.typ point
 
-Label $ptc.namel -text "id" -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $ptc.namel "Point name."
+Label $ptc.namel -text [mc "id"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $ptc.namel [mc "Point identifier."]
 Entry $ptc.name -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,point,name)
-xth_status_bar me $ptc.name "Point name." 
+xth_status_bar me $ptc.name [mc "Point identifier."] 
 
-Label $ptc.optl -text "options" -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $ptc.optl "Other point options."
+Label $ptc.optl -text [mc "options"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $ptc.optl [mc "Other point options."]
 Entry $ptc.opt -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,point,opts)
-xth_status_bar me $ptc.opt "Other point options." 
+xth_status_bar me $ptc.opt [mc "I.e, if type is label, write here: -text \042this will be displayed (P100)\042"]
 Separator $ptc.s1 -orient horizontal
 
-checkbutton $ptc.rotc -text "orientation" -anchor w -font $xth(gui,lfont) -state disabled \
+checkbutton $ptc.rotc -text [mc "orientation"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,point,rotid) -command xth_me_cmds_point_change_state
-xth_status_bar me $ptc.rotc "Set point rotation."
 Entry $ptc.rot -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,point,rot)
-xth_status_bar me $ptc.rot "Enter point rotation."
+xth_status_bar me $ptc.rot [mc "Enter symbol orientation angle."]
+xth_status_bar me $ptc.rotc [mc "There are symbol types which must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard."]
 
-checkbutton $ptc.xszc -text "x-size" -anchor w -font $xth(gui,lfont) -state disabled \
+checkbutton $ptc.xszc -text [mc "x-size"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,point,xsid) -command xth_me_cmds_point_change_state
-xth_status_bar me $ptc.xszc "Set point size in main direction."
+xth_status_bar me $ptc.xszc [mc "Set point size in main direction."]
 Entry $ptc.xsz -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,point,xs)
-xth_status_bar me $ptc.xsz "Enter point size in main direction."
+xth_status_bar me $ptc.xsz [mc "Enter point size in main direction."]
 
-checkbutton $ptc.yszc -text "y-size" -anchor w -font $xth(gui,lfont) -state disabled \
+checkbutton $ptc.yszc -text [mc "y-size"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,point,ysid) -command xth_me_cmds_point_change_state
-xth_status_bar me $ptc.yszc "Set point size in side direction."
+xth_status_bar me $ptc.yszc [mc "Set point size in side direction."]
 Entry $ptc.ysz -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,point,ys)
-xth_status_bar me $ptc.ysz "Enter point size in side direction."
+xth_status_bar me $ptc.ysz [mc "Enter point size in side direction."]
 
 xth_me_bind_entry_focus_return "$ptc.posx $ptc.posy" {xth_me_cmds_update {}}
 xth_me_bind_entry_return "$ptc.name $ptc.opt $ptc.rot $ptc.xsz $ptc.ysz" {xth_me_cmds_update {}}
@@ -1803,40 +1852,41 @@ grid $ptc.upd -row 8 -column 0 -columnspan 4 -sticky news
 
 
 # line control
-xth_about_status "loading line module ..."
+xth_about_status [mc "loading line module ..."]
 
 set lnc $xth(ctrl,me,line)
 
-Label $lnc.typl -text "type" -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $lnc.typl "Line type."
+Label $lnc.typl -text [mc "type"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $lnc.typl [mc "Line type."]
 ComboBox $lnc.typ -values $xth(line_types) \
   -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
   -textvariable xth(ctrl,me,line,type) \
   -command {xth_me_cmds_update {}}
-xth_status_bar me $lnc.typ "Line type." 
+xth_status_bar me $lnc.typ [mc "Line type."]
+xth_me_bind_typecbx_hint $lnc.typ line
 
-Label $lnc.namel -text "id" -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $lnc.namel "Line name."
+Label $lnc.namel -text [mc "id"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $lnc.namel [mc "Line identifier."]
 Entry $lnc.name -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,line,name)
-xth_status_bar me $lnc.name "Line name." 
+xth_status_bar me $lnc.name [mc "Line identifier."]
 
-Label $lnc.optl -text "options" -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $lnc.optl "Other line options."
+Label $lnc.optl -text [mc "options"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $lnc.optl [mc "Other line options."]
 Entry $lnc.opt -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,line,opts)
-xth_status_bar me $lnc.opt "Other line options." 
+xth_status_bar me $lnc.opt [mc "Other line options."]
 
-checkbutton $lnc.rev -text "reverse" -anchor w -font $xth(gui,lfont) \
+checkbutton $lnc.rev -text [mc "reverse"] -anchor w -font $xth(gui,lfont) \
   -state disabled \
   -variable xth(ctrl,me,line,reverse) \
   -command xth_me_cmds_toggle_line_reverse
-xth_status_bar me $lnc.rev "Reverse line."
-checkbutton $lnc.cls -text "close" -anchor w -font $xth(gui,lfont) \
+xth_status_bar me $lnc.rev [mc "Reverse line."]
+checkbutton $lnc.cls -text [mc "close"] -anchor w -font $xth(gui,lfont) \
   -state disabled \
   -variable xth(ctrl,me,line,close) \
   -command xth_me_cmds_toggle_line_close
-xth_status_bar me $lnc.cls "Close line."
+xth_status_bar me $lnc.cls [mc "Close line."]
 
 set plf $lnc.pl
 frame $plf
@@ -1863,17 +1913,17 @@ bind $plf.l <<ListboxSelect>> {
 }
 bind $plf.l <B1-ButtonRelease> "focus $plf.l"
 
-menubutton $lnc.lpa -text "Edit line" -anchor w -font $xth(gui,lfont) \
+menubutton $lnc.lpa -text [mc "Edit line"] -anchor w -font $xth(gui,lfont) \
   -indicatoron true -menu $lnc.lpa.m -state disabled -width 10
-xth_status_bar me $lnc.lpa "Insert/delete line point. Split line."
-Button $lnc.upd -text "Update" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $lnc.lpa [mc "Insert/delete line point. Split line."]
+Button $lnc.upd -text [mc "Update"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_update {}} -width 10
-xth_status_bar me $lnc.upd "Update line."
+xth_status_bar me $lnc.upd [mc "Click this button to apply line changes."]
 
 menu $lnc.lpa.m -tearoff 0 -font $xth(gui,lfont)
-$lnc.lpa.m add command -label "Insert point" -command {xth_me_cmds_start_linept_insert} -state disabled
-$lnc.lpa.m add command -label "Delete point" -command {xth_me_cmds_delete_linept {} {}} -state disabled
-$lnc.lpa.m add command -label "Split line" -command {xth_me_cmds_line_split} -state disabled
+$lnc.lpa.m add command -label [mc "Insert point"] -command {xth_me_cmds_start_linept_insert} -state disabled
+$lnc.lpa.m add command -label [mc "Delete point"] -command {xth_me_cmds_delete_linept {} {}} -state disabled
+$lnc.lpa.m add command -label [mc "Split line"] -command {xth_me_cmds_line_split} -state disabled
 
 #Button $lnc.insp -text "Insert" -anchor center -font $xth(gui,lfont) \
 #  -state disabled -width 10 -command {xth_me_cmds_start_linept_insert}
@@ -1887,7 +1937,7 @@ xth_scroll_showcmd $plf.sv "grid $plf.sv -column 1 -row 0 -sticky news"
 xth_scroll_hidecmd $plf.sv "grid forget $plf.sv"
 xth_scroll_showcmd $plf.sh "grid $plf.sh -column 0 -row 1 -sticky news"
 xth_scroll_hidecmd $plf.sh "grid forget $plf.sh"
-xth_status_bar me $plf "Select line point."
+xth_status_bar me $plf [mc "Select line point."]
 
 
 grid columnconf $lnc 0 -weight 1
@@ -1910,77 +1960,77 @@ xth_me_bind_entry_return "$lnc.name $lnc.opt" {xth_me_cmds_update {}}
 xth_me_bind_entry_focusin "$lnc.name $lnc.opt"
 
 # line point control
-xth_about_status "loading line point module ..."
+xth_about_status [mc "loading line point module ..."]
 
 set lpc $xth(ctrl,me,linept)
 
-Label $lpc.posl -text "position" -anchor e -font $xth(gui,lfont) -state disabled -width 0
-xth_status_bar me $lpc.posl "Point position."
+Label $lpc.posl -text [mc "position"] -anchor e -font $xth(gui,lfont) -state disabled -width 0
+xth_status_bar me $lpc.posl [mc "Point position."]
 Entry $lpc.posx -font $xth(gui,lfont) -state disabled \
   -textvariable xth(ctrl,me,linept,x) -width 0
-xth_status_bar me $lpc.posx "Point X coordinate."
+xth_status_bar me $lpc.posx [mc "Point X coordinate."]
 Entry $lpc.posy -font $xth(gui,lfont) -state disabled \
   -textvariable xth(ctrl,me,linept,y) -width 0
-xth_status_bar me $lpc.posy "Point Y coordinate." 
+xth_status_bar me $lpc.posy [mc "Point Y coordinate."] 
 
 Entry $lpc.xp -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,linept,xp)
-xth_status_bar me $lpc.xp "Previous control point X coordinate." 
+xth_status_bar me $lpc.xp [mc "Previous control point X coordinate."] 
 Entry $lpc.yp -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,linept,yp)
-xth_status_bar me $lpc.yp "Previous control point Y coordinate." 
+xth_status_bar me $lpc.yp [mc "Previous control point Y coordinate."] 
 Entry $lpc.xn -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,linept,xn)
-xth_status_bar me $lpc.xn "Next control point X coordinate." 
+xth_status_bar me $lpc.xn [mc "Next control point X coordinate."] 
 Entry $lpc.yn -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,linept,yn)
-xth_status_bar me $lpc.yn "Next control point Y coordinate." 
+xth_status_bar me $lpc.yn [mc "Next control point Y coordinate."] 
 
 checkbutton $lpc.cbp -text "<<" -anchor w -font $xth(gui,lfont) \
   -state disabled -width 0 \
   -variable xth(ctrl,me,linept,idp) \
   -command xth_me_cmds_toggle_linept
-xth_status_bar me $lpc.cbp "Checkbox whether to use previous control point."
-checkbutton $lpc.cbs -text "smooth" -anchor w -font $xth(gui,lfont) -state disabled \
+xth_status_bar me $lpc.cbp [mc "Checkbox whether to use previous control point."]
+checkbutton $lpc.cbs -text [mc "smooth"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,linept,smooth) -width 0\
   -command xth_me_cmds_toggle_linept
-xth_status_bar me $lpc.cbs "Set line to be smooth in given point."
+xth_status_bar me $lpc.cbs [mc "Set line to be smooth in given point."]
 checkbutton $lpc.cbn -text ">>" -anchor w -font $xth(gui,lfont) \
   -state disabled -width 0 \
   -variable xth(ctrl,me,linept,idn) \
   -command xth_me_cmds_toggle_linept
-xth_status_bar me $lpc.cbn "Checkbox whether to use next control point."
+xth_status_bar me $lpc.cbn [mc "Checkbox whether to use next control point."]
 
-checkbutton $lpc.rotc -text "orientation" -anchor w -font $xth(gui,lfont) -state disabled \
+checkbutton $lpc.rotc -text [mc "orientation"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,linept,rotid) -width 0 \
   -command xth_me_cmds_toggle_linept
-xth_status_bar me $lpc.rotc "Set point rotation."
+xth_status_bar me $lpc.rotc [mc "Set line point orientation."]
 Entry $lpc.rot -font $xth(gui,lfont) -state disabled -width 0 \
   -textvariable xth(ctrl,me,linept,rot)
-xth_status_bar me $lpc.rot "Enter point rotation."
+xth_status_bar me $lpc.rot [mc "Enter line point orientation."]
 
-checkbutton $lpc.rszc -text "r-size" -anchor w -font $xth(gui,lfont) -state disabled \
+checkbutton $lpc.rszc -text [mc "r-size"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,linept,rsid) -width 0 \
   -command xth_me_cmds_toggle_linept
-xth_status_bar me $lpc.rszc "Set line size in right direction."
+xth_status_bar me $lpc.rszc [mc "Set line size in right direction."]
 Entry $lpc.rsz -font $xth(gui,lfont) -state disabled -width 0 \
   -textvariable xth(ctrl,me,linept,rs)
-xth_status_bar me $lpc.rsz "Enter line size in right direction."
+xth_status_bar me $lpc.rsz [mc "Enter line size in right direction."]
 
-checkbutton $lpc.lszc -text "l-size" -anchor w -font $xth(gui,lfont) -state disabled \
+checkbutton $lpc.lszc -text [mc "l-size"] -anchor w -font $xth(gui,lfont) -state disabled \
   -variable xth(ctrl,me,linept,lsid) -width 0  \
   -command xth_me_cmds_toggle_linept
-xth_status_bar me $lpc.lszc "Set line size in left direction."
+xth_status_bar me $lpc.lszc [mc "Set line size in left direction."]
 Entry $lpc.lsz -font $xth(gui,lfont) -state disabled -width 0 \
   -textvariable xth(ctrl,me,linept,ls)
-xth_status_bar me $lpc.lsz "Enter line size in left direction."
+xth_status_bar me $lpc.lsz [mc "Enter line size in left direction."]
 
-Label $lpc.optl -text "options" -anchor sw -font $xth(gui,lfont) -state disabled \
+Label $lpc.optl -text [mc "options"] -anchor sw -font $xth(gui,lfont) -state disabled \
  -width 0
-xth_status_bar me $lpc.optl "Line point options editor."
-Button $lpc.upd -text "Update" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $lpc.optl [mc "Line point options editor."]
+Button $lpc.upd -text [mc "Update"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_update {}} -width 0
-xth_status_bar me $lpc.upd "Update line point."
+xth_status_bar me $lpc.upd [mc "Click this button to apply line point changes."]
 
 set txb $lpc.oe
 frame $txb
@@ -2002,12 +2052,16 @@ grid rowconf $txb 0 -weight 1
 grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
-xth_status_bar me $txb "Editor for line point options."
+xth_status_bar me $txb [mc "Editor for line point options."]
 bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
 bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
 bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
 
 if {$xth(gui,bindinsdel)} {
+  bind $txb.txt <Delete> {
+    %W delete insert
+    %W see insert
+  }
   bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
   bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
   bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
@@ -2068,23 +2122,24 @@ xth_me_bind_entry_return "$lpc.rot $lpc.lsz $lpc.rsz" {xth_me_cmds_update {}}
 
 
 # area control
-xth_about_status "loading area module ..."
+xth_about_status [mc "loading area module ..."]
 
 set lnc $xth(ctrl,me,ac)
 
-Label $lnc.typl -text "type" -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $lnc.typl "Area type."
+Label $lnc.typl -text [mc "type"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $lnc.typl [mc "Area type."]
 ComboBox $lnc.typ -values $xth(area_types) \
   -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
   -textvariable xth(ctrl,me,ac,type) \
   -command {xth_me_cmds_update {}}
-xth_status_bar me $lnc.typ "Area type." 
+xth_status_bar me $lnc.typ [mc "Area type."] 
+xth_me_bind_typecbx_hint $lnc.typ area
 
-Label $lnc.optl -text "options" -anchor e -font $xth(gui,lfont) -state disabled
-xth_status_bar me $lnc.optl "Other area options."
+Label $lnc.optl -text [mc "options"] -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $lnc.optl [mc "Other area options."]
 Entry $lnc.opt -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,ac,opts)
-xth_status_bar me $lnc.opt "Other area options." 
+xth_status_bar me $lnc.opt [mc "Other area options."] 
 
 set plf $lnc.ll
 frame $plf
@@ -2100,26 +2155,26 @@ scrollbar $plf.sh -orient horiz  -command "$plf.l xview" \
 bind $plf.l <<ListboxSelect>> {}
 bind $plf.l <B1-ButtonRelease> "focus $plf.l"
 
-Button $lnc.ins -text "Insert" -anchor center -font $xth(gui,lfont) \
+Button $lnc.ins -text [mc "Select lines"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 10 -command {xth_me_cmds_start_area_insert 1}
-xth_status_bar me $lnc.ins "Switch to insert line into area mode."
-Button $lnc.del -text "Delete" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $lnc.ins [mc "Switch to insert line into area mode."]
+Button $lnc.del -text [mc "Delete"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 10 -command {xth_me_cmds_delete_area_line {} {}}
-xth_status_bar me $lnc.del "Delete ID from area."
+xth_status_bar me $lnc.del [mc "Delete ID from area."]
 
-Button $lnc.insid -text "Insert ID" -anchor center -font $xth(gui,lfont) \
+Button $lnc.insid -text [mc "Insert ID"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_insert_area_line $xth(ctrl,me,ac,insid) {} {}} -width 10
-xth_status_bar me $lnc.insid "Insert given id."
+xth_status_bar me $lnc.insid [mc "Insert given id."]
 Entry $lnc.inside -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,ac,insid)
-xth_status_bar me $lnc.inside "ID to insert." 
+xth_status_bar me $lnc.inside [mc "ID to insert."] 
 
-Button $lnc.upd -text "Update" -anchor center -font $xth(gui,lfont) \
+Button $lnc.upd -text [mc "Update"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_update {}} -width 10
-xth_status_bar me $lnc.upd "Update area."
-Button $lnc.shw -text "Show" -anchor center -font $xth(gui,lfont) \
+xth_status_bar me $lnc.upd [mc "Click this button to apply changes you made to area."]
+Button $lnc.shw -text [mc "Show"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_show_current_area} -width 10
-xth_status_bar me $lnc.shw "Show area border lines."
+xth_status_bar me $lnc.shw [mc "Show area border lines."]
 
 grid columnconf $plf 0 -weight 1
 grid rowconf $plf 0 -weight 1
@@ -2128,7 +2183,7 @@ xth_scroll_showcmd $plf.sv "grid $plf.sv -column 1 -row 0 -sticky news"
 xth_scroll_hidecmd $plf.sv "grid forget $plf.sv"
 xth_scroll_showcmd $plf.sh "grid $plf.sh -column 0 -row 1 -sticky news"
 xth_scroll_hidecmd $plf.sh "grid forget $plf.sh"
-xth_status_bar me $plf "Select line in area."
+xth_status_bar me $plf [mc "Select line in area."]
 
 grid columnconf $lnc 0 -weight 1
 grid columnconf $lnc 1 -weight 1
@@ -2149,32 +2204,32 @@ xth_me_bind_entry_focusin "$lnc.opt"
 
 
 # main menu
-xth_about_status "loading main menu ..."
+xth_about_status [mc "loading main menu ..."]
 
 
-$xth(me,menu,file) add command -label "New" -command xth_me_create_file \
+$xth(me,menu,file) add command -label [mc "New"] -command xth_me_create_file \
   -font $xth(gui,lfont) -underline 0 -state normal
-$xth(me,menu,file) add command -label "Open" -underline 0 \
+$xth(me,menu,file) add command -label [mc "Open"] -underline 0 \
   -accelerator "$xth(gui,controlk)-o" -state normal \
   -font $xth(gui,lfont) -command {
 			set xth(gui,openxp) 0
 			xth_me_open_file 1 {} 1
 	}
-$xth(me,menu,file) add command -label "Open (no pics)" -underline 10 \
+$xth(me,menu,file) add command -label [mc "Open (no pics)"] -underline 10 \
   -state normal -font $xth(gui,lfont) -command {
 	    set xth(gui,openxp) 1
 			xth_me_open_file 1 {} 1
 			set xth(gui,openxp) 0
 	}
-$xth(me,menu,file) add command -label "Save" -underline 0 \
+$xth(me,menu,file) add command -label [mc "Save"] -underline 0 \
   -accelerator "$xth(gui,controlk)-s" -state disabled \
   -font $xth(gui,lfont) -command {xth_me_save_file 0}
-$xth(me,menu,file) add command -label "Save as" -underline 5 \
+$xth(me,menu,file) add command -label [mc "Save as"] -underline 5 \
   -font $xth(gui,lfont) -command {xth_me_save_file 1} -state disabled 
-$xth(me,menu,file) add checkbutton -label "Auto save" -underline 1 \
+$xth(me,menu,file) add checkbutton -label [mc "Auto save"] -underline 1 \
   -variable xth(gui,auto_save) -font $xth(gui,lfont) \
   -state disabled -command xth_app_autosave_schedule
-$xth(me,menu,file) add command -label "Close" -underline 0 \
+$xth(me,menu,file) add command -label [mc "Close"] -underline 0 \
   -accelerator "$xth(gui,controlk)-w"  -state disabled \
   -font $xth(gui,lfont) \
   -command xth_me_close_file
@@ -2183,63 +2238,70 @@ set xth(me,menu,edit) $xth(me,menu).edit
 menu $xth(me,menu,edit) -tearoff 0
 menu $xth(me,menu,edit).ins -tearoff 0
 bind $xth(me,menu,edit) <FocusIn> {xth_me_cmds_update {}}
-$xth(me,menu) add cascade -label "Edit" -state disabled \
+$xth(me,menu) add cascade -label [mc "Edit"] -state disabled \
   -font $xth(gui,lfont) -menu $xth(me,menu,edit) -underline 0
-$xth(me,menu,edit) add command -label "Undo" -font $xth(gui,lfont) \
+$xth(me,menu,edit) add command -label [mc "Undo"] -font $xth(gui,lfont) \
   -underline 0 -accelerator "$xth(gui,controlk)-z" -state disabled \
   -command xth_me_unredo_undo
-$xth(me,menu,edit) add command -label "Redo" -font $xth(gui,lfont) \
+$xth(me,menu,edit) add command -label [mc "Redo"] -font $xth(gui,lfont) \
   -underline 0 -accelerator "$xth(gui,controlk)-y" -state disabled \
   -command xth_me_unredo_redo
 $xth(me,menu,edit) add separator
-$xth(me,menu,edit) add command -label "Cut" -font $xth(gui,lfont) \
+$xth(me,menu,edit) add command -label [mc "Cut"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-x" -command "xth_app_clipboard cut"
-$xth(me,menu,edit) add command -label "Copy" -font $xth(gui,lfont) \
+$xth(me,menu,edit) add command -label [mc "Copy"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-c" -command "xth_app_clipboard copy"
-$xth(me,menu,edit) add command -label "Paste" -font $xth(gui,lfont) \
+$xth(me,menu,edit) add command -label [mc "Paste"] -font $xth(gui,lfont) \
   -accelerator "$xth(gui,controlk)-v" -command "xth_app_clipboard paste"
 $xth(me,menu,edit) add separator
-$xth(me,menu,edit) add command -label "Select" -accelerator "Esc" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_set_mode 0}
-$xth(me,menu,edit) add cascade -label "Insert ..." -accelerator "$xth(gui,controlk)-i" -menu $xth(me,menu,edit).ins -underline 0 -font $xth(gui,lfont)
-$xth(me,menu,edit).ins add command -label "point" -accelerator "$xth(gui,controlk)-p" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_set_mode 1}
-$xth(me,menu,edit).ins add command -label "line" -accelerator "$xth(gui,controlk)-l" -underline 0 -font $xth(gui,lfont) -command {
+$xth(me,menu,edit) add command -label [mc "Select"] \
+  -accelerator "Esc" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_set_mode 0}
+$xth(me,menu,edit) add cascade -label [mc "Insert ..."] \
+  -accelerator "$xth(gui,controlk)-i" -menu $xth(me,menu,edit).ins -underline 0 -font $xth(gui,lfont)
+$xth(me,menu,edit).ins add command -label [mc "point"] \
+  -accelerator "$xth(gui,controlk)-p" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_set_mode 1}
+$xth(me,menu,edit).ins add command -label [mc "line"] \
+    -accelerator "$xth(gui,controlk)-l" -underline 0 -font $xth(gui,lfont) -command {
   xth_me_cmds_create_line {} 1 "" "" ""
   xth_ctrl_scroll_to me line
   xth_ctrl_maximize me line
   xth_ctrl_maximize me linept
 }
 
-$xth(me,menu,edit).ins add command -label "area" -accelerator "$xth(gui,controlk)-a" -font $xth(gui,lfont) -underline 0 -command {
+$xth(me,menu,edit).ins add command -label [mc "area"] \
+  -accelerator "$xth(gui,controlk)-a" -font $xth(gui,lfont) -underline 0 -command {
   xth_me_cmds_create_area {} 1 "" "" ""
   xth_ctrl_scroll_to me ac
   xth_ctrl_maximize me ac
 }
 
-$xth(me,menu,edit).ins add command -label "scrap" -accelerator "$xth(gui,controlk)-r" -font $xth(gui,lfont) -underline 0 -command {
+$xth(me,menu,edit).ins add command -label [mc "scrap"] \
+  -accelerator "$xth(gui,controlk)-r" -font $xth(gui,lfont) -underline 0 -command {
   xth_me_cmds_create_scrap {} 1 "" ""
   xth_ctrl_scroll_to me scrap
   xth_ctrl_maximize me scrap
 }
 
-$xth(me,menu,edit).ins add command -label "text" -font $xth(gui,lfont) -underline 0 -command {
+$xth(me,menu,edit).ins add command -label [mc "text"] -font $xth(gui,lfont) -underline 0 -command {
   xth_me_cmds_create_text {} 1 "\n" "1.0"
   xth_ctrl_scroll_to me text
   xth_ctrl_maximize me text
   focus $xth(ctrl,me,text).txt
 }
 
-$xth(me,menu,edit) add command -label "Delete" -accelerator "$xth(gui,controlk)-d" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_delete {}}
+$xth(me,menu,edit) add command -label [mc "Delete"] \
+  -accelerator "$xth(gui,controlk)-d" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_delete {}}
 $xth(me,menu,edit) add separator
-$xth(me,menu,edit) add cascade -label "Zoom 100 %" -font $xth(gui,lfont) \
+$xth(me,menu,edit) add cascade -label [mc "Zoom 100 %"] -font $xth(gui,lfont) \
   -underline 0 -menu $xth(ctrl,me,area).zb.m
-$xth(me,menu,edit) add command -label "Auto adjust area" \
+$xth(me,menu,edit) add command -label [mc "Auto adjust area"] \
   -font $xth(gui,lfont) -command xth_me_area_auto_adjust
-$xth(me,menu,edit) add command -label "Insert image" \
+$xth(me,menu,edit) add command -label [mc "Insert image"] \
   -font $xth(gui,lfont) \
   -command {xth_me_image_insert $xth(ctrl,me,images,posx) $xth(ctrl,me,images,posy) {} 0 {}}
-set xth(me,menu,edit,undo) [$xth(me,menu,edit) index "Undo"]
-set xth(me,menu,edit,redo) [$xth(me,menu,edit) index "Redo"]
-set xth(me,menu,edit,zoom) [$xth(me,menu,edit) index "Zoom 100 %"]
+set xth(me,menu,edit,undo) [$xth(me,menu,edit) index [mc "Undo"]]
+set xth(me,menu,edit,redo) [$xth(me,menu,edit) index [mc "Redo"]]
+set xth(me,menu,edit,zoom) [$xth(me,menu,edit) index [mc "Zoom 100 %"]]
 
 
 # create mouse mode bar and progess bar
@@ -2255,7 +2317,7 @@ Label $xth(me,mbar) -text "" -width 17 -relief sunken -font $xth(gui,lfont) \
 grid $xth(me,mbar) -column 0 -row 0 -sticky news
 set xth(me,mbar,bg) [$xth(me,mbar) cget -bg]
 set xth(me,mbar,fg) [$xth(me,mbar) cget -fg]
-xth_status_bar me $xth(me,mbar) "Mouse mode."
+xth_status_bar me $xth(me,mbar) [mc "Mouse mode."]
 
 set xth(me,progbar) $barfm.pbar
 set xth(me,progbar,value) 0
@@ -2289,7 +2351,7 @@ set xth(me,pbar) $xth(gui,me).sf.pbar
 Label $xth(me,pbar) -text "" -width 15 -relief sunken -font $xth(gui,lfont) \
   -anchor center -state disabled
 pack $xth(me,pbar) -side left
-xth_status_bar me $xth(me,pbar) "Current mouse position."
+xth_status_bar me $xth(me,pbar) [mc "Current mouse position."]
 
 xth_ctrl_minimize me cmds
 xth_ctrl_minimize me prev
@@ -2308,5 +2370,6 @@ set xth(ctrl,me,area,ymin) ""
 set xth(ctrl,me,area,xmax) ""
 set xth(ctrl,me,area,ymax) ""
 
-xth_about_status "loading line procs ..."
+xth_about_status [mc "loading line procs ..."]
+xth_status_bar_status me [mc "Map editor is not active. To activate it, open existing file or create new one."]
 

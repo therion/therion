@@ -31,6 +31,8 @@ set xth(debug) 1
 source ver.tcl
 source ivc.tcl
 source global.tcl
+source msgxth.tcl
+source msgusr.tcl
 #@XTHERION
 source therion.tcl
 #@SURVEX

@@ -81,11 +81,11 @@ proc xth_mv_configure_camera {w h} {
   set xthmvv(cam,righty) $righty
   set xthmvv(cam,rightz) $rightz
 
-  set pnear [expr sqrt($fromx * $fromx + $fromy * $fromy + $fromz * $fromz) - 1.1 * $diam]
+  set pnear [expr sqrt($fromx * $fromx + $fromy * $fromy + $fromz * $fromz) - 2.0 * $diam]
   if {$pnear < 1.0} {
     set pnear 1.0
   }
-  set pfar [expr $pnear + 2.2 * $diam]
+  set pfar [expr $pnear + 4.0 * $diam]
 
   glMatrixMode $GL::GL_PROJECTION
   glLoadIdentity
@@ -93,8 +93,21 @@ proc xth_mv_configure_camera {w h} {
 
   glMatrixMode $GL::GL_MODELVIEW
   glLoadIdentity
+  if {$xthmvv(model,headlight) || $xthmvv(model,lightinpos)} {
+    glLightfv $GL::GL_LIGHT0 $GL::GL_POSITION [list 0.0 0.0 1.0 0.0]
+    set xthmvv(model,lightinpos) 0
+  }
+  if {$xthmvv(model,headlight)} {
+    set xthmvv(model,lx) $fromx
+    set xthmvv(model,ly) $fromy
+    set xthmvv(model,lz) $fromz
+  }
   gluLookAt $fromx $fromy $fromz $cx $cy $cz $upx $upy $upz
-  glLightfv $GL::GL_LIGHT0 $GL::GL_POSITION [list $fromx $fromy $fromz 1.0]
+  if {!$xthmvv(model,headlight)} {
+    glLightfv $GL::GL_LIGHT0 $GL::GL_POSITION [list $xthmvv(model,lx) $xthmvv(model,ly) $xthmvv(model,lz)  0.0]
+  } else {
+    glLightfv $GL::GL_LIGHT0 $GL::GL_POSITION [list $fromx $fromy $fromz 0.0]
+  }
   
 }
 
@@ -141,11 +154,17 @@ proc xth_mv_gl_walls {} {
 }
 
 proc xth_mv_gl_surface {} {
+  global xthmvv
   glShadeModel $GL::GL_SMOOTH
   glPolygonMode $GL::GL_FRONT_AND_BACK $GL::GL_FILL
   glEnable $GL::GL_LIGHTING
-  glEnable $GL::GL_BLEND
-  glDepthMask $GL::GL_FALSE
+  if $xthmvv(model,surftrans) {
+    glEnable $GL::GL_BLEND
+    glDepthMask $GL::GL_FALSE
+  } else {
+    glDepthMask $GL::GL_TRUE
+    glDisable $GL::GL_BLEND
+  }
   glLightModeliv $GL::GL_LIGHT_MODEL_TWO_SIDE $GL::GL_TRUE
   glColor4f 0.0 1.0 0.0 1.0
   glMaterialfv $::GL::GL_FRONT $::GL::GL_AMBIENT {0.0 0.0 0.0 1.0}
@@ -164,8 +183,8 @@ proc xth_mv_init {} {
   glClearColor 0.0 0.0 0.0 0.0
   glEnable $GL::GL_DEPTH_TEST
   glEnable $GL::GL_LIGHT0
-  glLightfv $GL::GL_LIGHT0 $GL::GL_AMBIENT {0.4 0.4 0.4 1.0}
-  glLightfv $GL::GL_LIGHT0 $GL::GL_DIFFUSE {1.0 1.0 1.0 1.0}
+  glLightfv $GL::GL_LIGHT0 $GL::GL_AMBIENT {0.2 0.2 0.2 1.0}
+  glLightfv $GL::GL_LIGHT0 $GL::GL_DIFFUSE {0.8 0.8 0.8 1.0}
 
   glBlendFunc $GL::GL_SRC_ALPHA $GL::GL_ONE_MINUS_SRC_ALPHA
   #glEnable $GL::GL_BLEND
@@ -207,6 +226,7 @@ proc xth_mv_reload_file {} {
 proc xth_mv_open_file {fpath} {
 
   global xthmvv xth
+  xth_status_bar_status mv ""
 
   if {[string length $fpath] == 0} {
     set fpath [tk_getOpenFile -filetypes $xth(app,mv,filetypes) \
@@ -480,7 +500,7 @@ case $xth(gui,platform) {
   }
 }
 
-$f.pscale configure -command xth_mv_change_profile
+$xth(ctrl,mv,cam).pscale configure -command xth_mv_change_profile
 
 xth_mv_init
 xth_mv_init_model 1

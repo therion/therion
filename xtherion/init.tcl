@@ -29,12 +29,12 @@ package require BWidget
 
 if {[catch {set imgver [package require Img]}]} {
   set xth(gui,imgfiletypes) {
-           { {Pictures} {.gif .pnm .ppm} }
+           { {Pictures} {.gif .pnm .ppm .xvi} }
            { {All Files}               * }
          } 
 } else {
   set xth(gui,imgfiletypes) {
-           { {Pictures} {.png .jpeg .jpg .gif .pnm .ppm} }
+           { {Pictures} {.png .jpeg .jpg .gif .pnm .ppm .xvi} }
            { {All Files}                                               * }
          } 
 }
@@ -66,16 +66,10 @@ if {[string equal $xth(gui,platform) windows]} {
   set idirs [split $idir ":"]
 }
 
-set inok 1
 foreach idir $idirs {
-  if {![catch {source [file join $idir xtherion.ini]}]} {
-    set inok 0
-    break
-  }
+  catch {source [file join $idir xtherion.ini]}
 }
-if {$inok} {
-  catch {source xtherion.ini}
-}
+catch {source xtherion.ini}
 
 # create xth window
 wm withdraw .
@@ -96,6 +90,9 @@ bind $xth(gui,main) <Configure> {
 set xth(gui,clock) "00:00"
 
 # redefine some public key bindigs
+if {$xth(gui,bindinsdel)} {
+  bind Text <Delete> { }
+}
 bind Text <$xth(kb_control)-Key-o> "#"
 bind Text <$xth(kb_control)-Key-a> "#"
 bind Text <$xth(kb_control)-Key-i> "#"

@@ -33,6 +33,7 @@
 #include "thdatabase.h"
 #include "thtflength.h"
 #include "thexception.h"
+#include "thtexfonts.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <math.h>
@@ -75,7 +76,7 @@ char * thmatch_tstring(int token, const thstok *tab, int tab_size)
   if (tab[i].tok == token)
     return tab[i].s;
   else
-    return "unknown";  /* no match */
+    return "";  /* no match */
 }
 
 
@@ -379,7 +380,7 @@ bool th_is_keyword(char * str)
     for(i = 0; i < sl; i++, s++) {
       if ((*s > 96) && (*s < 123)) continue;
       if ((*s > 64) && (*s < 91)) continue;
-      if ((*s > 47) && (*s < 58)) continue;
+      if ((*s > 46) && (*s < 58)) continue;
       if (*s == 95) continue;
       if ((*s == 45) && (i > 0)) continue;
       return false;
@@ -409,11 +410,11 @@ bool th_is_keyword_list(char * str, char sep)
   unsigned char * s = (unsigned char *) str;
   if (sl == 0)
     return false;
-  else
+  else 
     for(i = 0; i < sl; i++, s++) {
       if ((*s > 96) && (*s < 123)) continue;
       if ((*s > 64) && (*s < 91)) continue;
-      if ((*s > 47) && (*s < 58)) continue;
+      if ((*s > 46) && (*s < 58)) continue;
       if ((*s == 95) || (*s == 45)) continue;
       if (*s == sep) continue;
       return false;
@@ -432,7 +433,7 @@ bool th_is_extkeyword(char * str)
     for(i = 0; i < sl; i++, s++) {
       if ((*s > 96) && (*s < 123)) continue;
       if ((*s > 64) && (*s < 91)) continue;
-      if ((*s > 47) && (*s < 58)) continue;
+      if ((*s > 46) && (*s < 58)) continue;
       if ((*s == 95) || (*s == 45)) continue;
       if (i > 0) {
         if (*s == 39) continue;
@@ -571,6 +572,44 @@ void thdecode_c(thbuffer * dest, const char * src)
   
 }
 
+
+void thdecode_tcl(thbuffer * dest, const char * src)
+{
+  size_t srcln = strlen(src), srcx = 0;
+  unsigned char * srcp, * dstp;
+  unsigned num;
+  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  srcp = (unsigned char*) src;
+  dstp = (unsigned char*) dest->get_buffer();
+  while (srcx < srcln) {
+    if ((*srcp < 32) || (*srcp > 127)) {
+        *dstp = '\\';
+        dstp++;
+        num = *srcp / 64;
+        *dstp = '0' + num;
+        dstp++;
+	num = *srcp % 64;
+        *dstp = '0' + (num/8);
+        dstp++;
+        *dstp = '0' + (num % 8);
+    } else {
+      if ((*srcp == '\\') || (*srcp == '"')) {
+        *dstp = '\\';
+        dstp++;
+      }
+      *dstp = *srcp;  
+    }
+    srcx++;
+    srcp++;
+    dstp++;
+  }
+  // end destination string with 0
+  *dstp = 0;
+}
+
+
+
+
 void thdecode_tex(thbuffer * dest, const char * src)
 {
 
@@ -613,6 +652,92 @@ void thdecode_tex(thbuffer * dest, const char * src)
   *dstp = 0;
   
 }
+
+
+void thdecode_utf2tex(thbuffer * dest, const char * src)
+{
+
+  static thbuffer tmpb;
+  tmpb = src;
+  size_t srcln = strlen(src), srcx = 0, tmpl;
+  unsigned char * srcp, * dstp, * wsrcp, *tmpp;
+  dest->strcpy("");  // check buffer size
+  srcp = (unsigned char*) src;
+  dstp = (unsigned char*) tmpb.get_buffer();
+  while (srcx < srcln) {
+    switch (*srcp) {
+      case '%':
+      case '_':
+      case '(':
+      case ')':
+      case '[':
+      case ']':
+      case '&':
+      case '$':
+      case '#':
+      case '@':
+      case '~':
+      case '`':
+      case '^':
+      case '*':
+      case '\\':
+      case '{':
+      case '}':
+      case '|':
+      case '"':
+      case ' ':
+      case 9:
+      case 12:
+        *dstp = 0;
+        break;      
+      default:
+        *dstp = *srcp;  
+        break;
+    }
+    srcx++;
+    srcp++;
+    dstp++;
+  }
+
+  // end destination string with 0
+  srcx = 0;
+  srcp = (unsigned char*) src;
+  wsrcp = (unsigned char*) tmpb.get_buffer();
+  unsigned char single[2];
+  bool isutf8;
+  dstp = &(single[0]);
+  single[1] = 0;
+
+  // copy word by word
+  while(srcx < srcln) {
+    if (*wsrcp == 0) {
+      single[0] = *srcp;
+      dest->strcat((char*) dstp);
+      srcx++;
+      srcp++;
+      wsrcp++;
+    } else {
+      isutf8 = false;
+      tmpl = 0;
+      // check if there is some character > 127
+      for(tmpp = wsrcp; *tmpp != 0; tmpp++) {
+        tmpl++;
+        isutf8 = isutf8 || (*tmpp > 127);
+      }
+      if (isutf8) {
+        dest->strcat(utf2tex((char*) wsrcp));
+      } else {
+        dest->strcat((char*) wsrcp);
+      }
+      srcx+=tmpl;
+      srcp+=tmpl;
+      wsrcp+=tmpl;
+    }
+  }
+  
+}
+
+
 
 void thdecode_sql(thbuffer * dest, const char * src)
 {

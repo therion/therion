@@ -26,11 +26,19 @@
 ## --------------------------------------------------------------------
 
 
-xth_about_status "loading compiler..."
+xth_about_status [mc "loading compiler..."]
+
+
+proc xth_xcfg_fname {fpath} {
+  set tmp [file tail $fpath]
+  regsub -all {\.} $tmp {_} tmp
+  return ".xth_$tmp\137xth"
+}
 
 
 proc xth_cp_new_file {} {
   global xth
+  xth_status_bar_status cp ""
   if {$xth(cp,fopen)} {
     return
   }
@@ -56,6 +64,7 @@ proc xth_cp_new_file {} {
 
 proc xth_cp_open_file {fpath} {
   global xth
+  xth_status_bar_status cp ""
   
   if {$xth(cp,fopen)} {
     return
@@ -84,7 +93,7 @@ proc xth_cp_open_file {fpath} {
 
   # read the file
   xth_status_bar_push cp
-  xth_status_bar_status cp "Opening $fpath ..."
+  xth_status_bar_status cp [format [mc "Opening %s ..."] $fpath]
 
   set fdata [xth_me_read_file $fpath 0]
   if {[lindex $fdata 0] == 0} {
@@ -98,7 +107,7 @@ proc xth_cp_open_file {fpath} {
   
   # now let's show the file
   catch {
-    set fid [open [file join [file dirname $fpath] ".xth-[file tail $fpath]"] r]
+    set fid [open [file join [file dirname $fpath] [xth_xcfg_fname $fpath]] r]
     fconfigure $fid -encoding utf-8
     while {![eof $fid]} {
       catch {
@@ -138,11 +147,11 @@ proc xth_cp_open_file {fpath} {
 
   $xth(ctrl,cp,info).txt configure -state normal
   
-  $xth(cp,menu,file) entryconfigure "New" -state disabled
-  $xth(cp,menu,file) entryconfigure "Open" -state disabled
-  $xth(cp,menu,file) entryconfigure "Save as" -state normal
-  $xth(cp,menu,file) entryconfigure "Close" -state normal
-  $xth(cp,menu) entryconfigure "Edit" -state normal
+  $xth(cp,menu,file) entryconfigure [mc "New"] -state disabled
+  $xth(cp,menu,file) entryconfigure [mc "Open"] -state disabled
+  $xth(cp,menu,file) entryconfigure [mc "Save as"] -state normal
+  $xth(cp,menu,file) entryconfigure [mc "Close"] -state normal
+  $xth(cp,menu) entryconfigure [mc "Edit"] -state normal
   
   xth_app_title cp
   xth_status_bar_pop cp
@@ -196,11 +205,11 @@ proc xth_cp_close_file {} {
   $xth(cp,log).txt see 1.0
   $xth(cp,log).txt configure -state disabled
 
-  $xth(cp,menu,file) entryconfigure "New" -state normal
-  $xth(cp,menu,file) entryconfigure "Open" -state normal
-  $xth(cp,menu,file) entryconfigure "Save as" -state disabled
-  $xth(cp,menu,file) entryconfigure "Close" -state disabled
-  $xth(cp,menu) entryconfigure "Edit" -state disabled
+  $xth(cp,menu,file) entryconfigure [mc "New"] -state normal
+  $xth(cp,menu,file) entryconfigure [mc "Open"] -state normal
+  $xth(cp,menu,file) entryconfigure [mc "Save as"] -state disabled
+  $xth(cp,menu,file) entryconfigure [mc "Close"] -state disabled
+  $xth(cp,menu) entryconfigure [mc "Edit"] -state disabled
   
   $xth(ctrl,cp,stp).wl configure -state disabled
   $xth(ctrl,cp,stp).we configure -state disabled
@@ -240,7 +249,7 @@ proc xth_cp_write_file {pth} {
   global errorInfo xth
 
   xth_status_bar_push cp
-  xth_status_bar_status cp "Saving $pth ..."
+  xth_status_bar_status cp [format [mc "Saving %s ..."] $pth]
 
   if {[catch {set fid [open $pth w]}]} {
     MessageDlg $xth(gui,message) -parent $xth(gui,main) \
@@ -387,8 +396,15 @@ proc xth_cp_compile {} {
   $xth(cp,log).txt configure -wrap word
   $xth(cp,editor).txt configure -state disabled
   xth_status_bar_push cp
-  xth_status_bar_status cp "Running therion ..."
-  $xth(ctrl,cp,stp).gores configure -text "RUNNING" -fg black -bg yellow
+  
+  catch {
+    set lid [open "therion.log" w]
+    puts $lid "ERROR: Can not execute \"$xth(gui,compcmd) -x $xth(cp,opts) $xth(cp,fname)\"."
+    close $lid
+  }  
+  
+  xth_status_bar_status cp [mc "Running therion ..."]
+  $xth(ctrl,cp,stp).gores configure -text [mc "RUNNING"] -fg black -bg yellow
   update idletasks
   set err [catch {
     set thid [open "|$xth(gui,compcmd) -x $xth(cp,opts) $xth(cp,fname)" r]
@@ -407,15 +423,15 @@ proc xth_cp_compile {} {
   set see_end 0
   if {$err} {
     bell
-    $xth(ctrl,cp,stp).gores configure -text "ERROR" -fg white -bg red
+    $xth(ctrl,cp,stp).gores configure -text [mc "ERROR"] -fg white -bg red
     set ret 0
     set see_end 1
   } else {
     set xth(cp,compres) 1
-    $xth(ctrl,cp,stp).gores configure -text "OK" -fg black -bg green
+    $xth(ctrl,cp,stp).gores configure -text [mc "OK"] -fg black -bg green
   }
   
-  xth_status_bar_status cp "Reading therion log file ..."
+  xth_status_bar_status cp [mc "Reading therion log file ..."]
   if {[catch {
     set lid [open "therion.log" r]
     $xth(cp,log).txt delete 1.0 end
@@ -423,7 +439,7 @@ proc xth_cp_compile {} {
     $xth(cp,log).txt insert end "[read $lid]\n"
     close $lid
     }]} {
-      $xth(cp,log).txt insert end "\nerror opening therion.log file\n"
+      $xth(cp,log).txt insert end [mc "\nerror opening therion.log file\n"]
   }
   if ($see_end) {
     $xth(cp,log).txt see end
@@ -450,7 +466,7 @@ proc xth_cp_compile {} {
       xth_cp_data_tree_clear      
 
       catch {
-        set fid [open [file join [file dirname $xth(cp,ffull)] ".xth-[file tail $xth(cp,ffull)]"] r]
+        set fid [open [file join [file dirname $xth(cp,ffull)] [xth_xcfg_fname $xth(cp,ffull)]] r]
         fconfigure $fid -encoding utf-8
         while {![eof $fid]} {
           catch {eval [gets $fid]}
@@ -471,6 +487,7 @@ proc xth_cp_compile {} {
     }
   }
   cd $cdir
+  xth_me_xvi_refresh
   return $ret
 }
 

@@ -499,7 +499,12 @@ void thline::preprocess()
   thdb2dpt * t_point;
   int t_tags, t_subtype, t_smooth;
   double t_rsize, t_lsize, t_orient;
-  if (this->reverse) {
+  
+  bool tmpreverse = this->reverse;  
+  if (this->fscrapptr->flip != TT_SCRAP_FLIP_NONE)
+    tmpreverse = !tmpreverse;
+  
+  if (tmpreverse) {
   
     // najprv prehodi podtypy
     c_item = this->first_point;
@@ -696,7 +701,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           fprintf(out->file,"\\thnormalsize ");
       }
       //thdecode(&(this->db->buff_enc),TT_ISO8859_2,this->text);
-      fprintf(out->file,"%s etex,",utf2tex(this->text));
+      fprintf(out->file,"%s etex,",utf2tex(this->text, true));
       this->export_path_mp(out);
       fprintf(out->file,");\n");
       postprocess = false;

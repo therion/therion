@@ -32,6 +32,7 @@
 #include "thline.h"
 #include "thconfig.h"
 #include "thcdt.h"
+#include "thscraplp.h"
 #include <math.h>
 
 #define ONLY_INVISIBLE_LINE 1
@@ -121,7 +122,7 @@ void thscrapis::end_bp()
   
 
 
-void thscrapis::insert_bp_direction(double x, double y, double z, double tx, double ty, double tz)
+void thscrapis::insert_bp_direction(double x, double y, double z, double tx, double ty, double tz, thscraplp * slp)
 {
   // ak najde (x,y), tak prida direction
   std::map <thscrapisloc, thscrapisbp> ::iterator 
@@ -131,7 +132,7 @@ void thscrapis::insert_bp_direction(double x, double y, double z, double tx, dou
   double dx = tx - x, 
     dy = ty - y,
     dz = tz - z,
-    dl = hypot(dx, dy), d;
+    dl = hypot(dx, dy), d, tmpup, tmpdown;
   it->second.suml += hypot(dl,dz);
   it->second.sumsl += 1.0;
   if (dl < THSCRAPISRES) {
@@ -140,6 +141,25 @@ void thscrapis::insert_bp_direction(double x, double y, double z, double tx, dou
     if ((dz < -1.618) && (dz < -(it->second.down)))
       it->second.down = -dz;
     return;
+  }
+  if (slp->arrow != NULL) {
+    tmpup = (slp->arrow->is_reversed ? slp->arrow->leg->leg->to_up : slp->arrow->leg->leg->from_up);
+    tmpdown = (slp->arrow->is_reversed ? slp->arrow->leg->leg->to_down : slp->arrow->leg->leg->from_down);
+    if (fabs(slp->arrow->leg->leg->total_gradient) >= slp->arrow->leg->leg->vtresh) {
+      d = cos(slp->arrow->leg->leg->total_gradient / 180.0 * THPI);     
+    } else {
+      d = 1.0;
+    }
+    if (!thisnan(tmpup)) {
+      tmpup *= d;
+      if (tmpup > it->second.up)
+        it->second.up = tmpup;
+    }
+    if (!thisnan(tmpdown)) {
+      tmpdown *= d;
+      if (tmpdown > it->second.down)
+        it->second.down = tmpdown;
+    }
   }
   if (dy < 0) {
     dx *= -1.0;

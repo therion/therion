@@ -189,7 +189,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     
   thdb_revision_set_type::iterator ri = 
       this->db->revision_set.find(threvision(this->id, 0));
-  fprintf(out->file,"current_src := \"%s [%d]\";\n", ri->srcf.name, ri->srcf.line);  
+  fprintf(out->file,"current_src := \"%s [%ld]\";\n", ri->srcf.name, ri->srcf.line);  
   fprintf(out->file,"string area_border[];\n");
   thdb2dab * bl = this->first_line;
   int blnum = 1;

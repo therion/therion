@@ -1,10 +1,16 @@
 encoding  utf-8
-##XTHERION## xth_me_area_adjust 113.0 82.0 1757.0 812.0
+##XTHERION## xth_me_area_adjust 74.0 -40.0 1830.0 924.0
 ##XTHERION## xth_me_area_zoom_to 100
 
 
 
-scrap test -walls off -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+scrap test -walls on -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+
+point 593.0 636.0 dimensions -value [0 1]
+
+point 929.0 777.0 dimensions -value [0 4]
+
+point 862.0 622.0 dimensions -value [0 3]
 
 line contour -gradient none
   709.0 729.0
@@ -133,7 +139,7 @@ endscrap
 
 
 
-scrap dolny  -walls off -stations 3 -author 2003.12.10 "Stacho Mudrak"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+scrap dolny -walls off -stations 3 -author 2003.12.10 "Stacho Mudrak"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
 
 point 1549.0 476.0 passage-height -value 1.2 -align br
 
@@ -349,7 +355,7 @@ endscrap
 
 
 
-scrap horny  -walls off -author 2001.12.10 "Martin Budaj"  -author 2002.12.10 "Erika Kovacova"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+scrap horny -walls on -author 2001.12.10 "Martin Budaj"  -author 2002.12.10 "Erika Kovacova"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
 
 point 502.0 720.0 water-flow -orientation 271.8
 
@@ -535,4 +541,5 @@ point 214.5 214.0 height -value -5
 point 309.0 261.5 altitude -align r
 
 endscrap
+
 

@@ -45,6 +45,7 @@ class thscraplp {
     
   thobjectname station_name;
   thdb1ds * station, * ustation;
+  class thdb1d_tree_arrow * arrow;
   
   thscraplp(); ///< Default constructor
   

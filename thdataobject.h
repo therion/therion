@@ -88,6 +88,7 @@ enum {
   TT_DATAOBJECT_TITLE = 1002,
   TT_DATAOBJECT_AUTHOR = 1003,
   TT_DATAOBJECT_COPYRIGHT = 1004,
+  TT_DATAOBJECT_STNS = 1005,
 };
 
 
@@ -99,6 +100,7 @@ static const thstok thtt_dataobject_opt[] = {
   {"author", TT_DATAOBJECT_AUTHOR},
   {"copyright", TT_DATAOBJECT_COPYRIGHT},
   {"id", TT_DATAOBJECT_NAME},
+  {"station-names", TT_DATAOBJECT_STNS},
   {"title", TT_DATAOBJECT_TITLE},
 	{NULL, TT_DATAOBJECT_UNKNOWN},
 };
@@ -238,12 +240,15 @@ class thdataobject {
   class thdatabase * db;
 
   char * name,  ///< Object name.
-    * title;  ///< Object title.
+    * title,  ///< Object title.
+    * stnpref, ///< Station names prefix;
+    * stnsuff; ///< Station names suffix;
   
   unsigned long id;  ///< Object identifier.
   
   bool selected,  ///< Whether object is selected.
     tmp_bool;  ///< Temporary variable for some algorithms
+    
   unsigned long selected_number,  ///< Number of selection.
     tmp_ulong;  ///< Temporary variable for some algorithms
   

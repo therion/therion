@@ -18,4 +18,7 @@ if (open(VFL,"thversion.h")) {
 open(VFL,">thversion.h");
 print VFL "#define THVERSION \"$v1.$v2.$v3\"\n";
 close(VFL);
+open(VFL,">thbook/version.tex");
+print VFL "$v1.$v2.$v3";
+close(VFL);
 

@@ -35,6 +35,7 @@ thscraplp::thscraplp() {
   this->station_name.clear();
   this->station = NULL;
   this->ustation = NULL;
+  this->arrow = NULL;
 
   this->lnio = false;
   this->type = 0;

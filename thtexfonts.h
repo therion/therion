@@ -46,10 +46,10 @@ void init_encodings();
 
 string utf2texoctal(string s);
 string utf2texhex(string s);
-string utf2tex (string s);
+string utf2tex (string s, bool b=false);
 
 #ifndef NOTHERION
-const char * utf2tex (char * s);
+const char * utf2tex (char * s, bool b = false);
 #endif
 
 #endif
