@@ -1,0 +1,18 @@
++ Installation
+  - just "make" is enought
+  - make xtherion, make thpdf not needed any more
+  - make xtherion, thpdf works on Win32
++ Layout 
+  - transparency on/off
+  - opacity 0.0-100.0
++ Point symbols
+  - anostomosen -> anastomosis
++ point->subtype: 
+  water-flow: paleo, intermittent, permanent (default)
+  (station: temporary (default))
++ 3dtopos not needed any more (removed also from therion.ini file)
++ layout::grid-size in real distance units
++ environment variables: 
+  THINIT - search paths for (x)therion.ini file
+  THERION - search paths for configuration and source files
++ centerline - discovery-date + discovery-team

@@ -1,0 +1,2 @@
+all:
+	perl genmpost.pl

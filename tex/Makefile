@@ -1,0 +1,2 @@
+all:
+	perl gentex.pl
