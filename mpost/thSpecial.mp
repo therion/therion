@@ -24,20 +24,23 @@
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% --------------------------------------------------------------------
 
-def s_northarrow_SKBB = 
+def s_northarrow_SKBB (expr rot) = 
   T:=identity;
-  begingroup
-    interim defaultscale:=3;
-    label(if lang="sk": "S" else: "N" fi, origin);
-  endgroup;
-  drawarrow (0,-1cm)--(0,1cm);
+  picture tmp_pic;
+  tmp_pic = image (
+    begingroup
+      interim defaultscale:=3;
+      label(if lang="sk": "S" else: "N" fi, origin);
+    endgroup;
+    drawarrow (0,-1cm)--(0,1cm);
+  );
+  draw tmp_pic rotatedaround(origin, -rot);
 enddef;
 
-def s_scalebar_SKBB (expr ll, units, txt) = 
+def s_scalebar_SKBB (expr l, units, txt) = 
   begingroup
     interim warningcheck:=0;
-    l := scantokens ll;
-    tmpl:=l/Scale * cm * if units="m": 1 elseif units="ft": 0.3048 fi / 2;
+    tmpl:=l / Scale * cm * units / 2;
   endgroup;
   pickup PenC;
   draw (-tmpl,0)--(tmpl,0);
@@ -45,7 +48,24 @@ def s_scalebar_SKBB (expr ll, units, txt) =
   draw (tmpl,0)--(tmpl,2bp);
   begingroup
     interim labeloffset:=2bp;
-    label.top(txt,origin);
+    label.top(thTEX(decimal (l) & "\thinspace" & txt),origin);
   endgroup
 enddef;
 
+def s_scalebar_STACHO (expr l, units, txt) = 
+  begingroup
+    interim warningcheck:=0;
+    tmpl:=l / Scale * cm * units / 2;
+  endgroup;
+  pickup PenC;
+  draw (-tmpl,0)--(tmpl,0);
+  draw (-tmpl,0)--(-tmpl,2bp);
+  draw (tmpl,0)--(tmpl,2bp);
+  draw (0,0)--(0,2bp);
+  begingroup
+    interim labeloffset:=3.5bp;
+    label.top(thTEX(decimal (0)),(-tmpl,0));
+    label.top(thTEX(decimal (l/2)),origin);
+    label.top(thTEX(decimal (l) & "\thinspace" & txt),(tmpl,0));
+  endgroup
+enddef;

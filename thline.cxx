@@ -750,7 +750,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           }
         if ((lp->tags & TT_LINEPT_TAG_ORIENT) > 0)
           if (frot) {
-            r1 = lp->orient;
+            r1 = lp->orient + out->rr;
             frot = false;
           }
         lp = lp->nextlp;
@@ -776,8 +776,8 @@ bool thline::export_mp(class thexpmapmpxs * out)
 
           // orientacia
           if ((lp->tags & TT_LINEPT_TAG_ORIENT) > 0) {
-            r1 = lp->orient;
-            fprintf(out->file,"%g,",lp->orient);
+            r1 = lp->orient + out->rr;
+            fprintf(out->file,"%g,",lp->orient + out->rr);
           } else {
             if (lp->nextlp != NULL)                        
               fprintf(out->file,"-1,");

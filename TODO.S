@@ -1,12 +1,13 @@
 HNED:
-+ xtherion: vkladanie objektov mimo scrapu
++ otacanie 3D povrchu (nakoniec do kalibracie)
++ 2d: nova sipka na sever (otacajuca sa) a nova mierka (s 3 cislami)
++ 3d: point dimensions
 + vytahovat typy bodov do mapy z centerline-u
 + mark <station1> .. <stationN> <type>
 + point snow
 + area blocks, snow, ice
 + line ceiling/floor-meander, rope (aj s kotveniami)
 + therion --protractor <options>
-+ pozriet sa co by obnasal DXF export
 + vytvorit novy 3D prehliadac aj 3D export type - loch
 + export vsetkych znackovych klucov
 + komplet navrhnut a zmenit sposob 3D exportu (layout, thm uplne inak)
@@ -18,7 +19,6 @@ HNED:
 + xtherion: switch na perspektivu
 + xtherion: switche na viditelnost, zobrazenie a priehladnost povrchu
 + xtherion: roozne vyfarbovanie jaskyne (podla hlbky alebo zelenou)
-+ 2d: otacanie vystupnej mapy aj sipky na sever v layoute
 + upravit definiciu sipky a mierky
 + LRUD
 + spravit LRUD outline do 3D exportu 
@@ -34,7 +34,6 @@ HNED:
 + 3d: interpolovanie Z na zaklade triangulacie (treba rychle priesecniky)
 + 3d: zjednodusovat outlines
 + 3d: interpolovanie U a D na zaklade sietovych algoritmov
-+ 3d: point dimensions
 + 3d: up, down, left, right
 + 3d: model export aj centerline, walls, bbox
 + x: prerobit ovladanie xtheriona
@@ -76,17 +75,11 @@ LRUD:
 
 
 HOTOVO:
-+ tex-env on|(off) (therion.ini - puziva sa iba pri win32)
-+ centerline: mozna zmena nastaveni medzi group-endgroup
-  plati skoro pre vsetko calibrate, units, sd, data, flags etc...
-+ ked scrapy a ziadna mapa v projekcii - exportuje vsetky scrapy
-  pod seba (mapa nie je potrebna)
-+ xtherion: zvacseny tick na zaciatku ciary
-+ xtherion: vkladanie noveho scrapu na zaciatok suboru
-+ xtherion: error sources like hyperlinks (jumps to open file, or
-  open file in text editor)
-+ xtherion: opraveny bug ked sa maze posledny bod na ciare
-+ xtherion: ked zmena typu ciray - mazu sa aj rotacie a velkosti
++ layout: rotate <rotation>
++ point label -scale urcuje velkost fontu
++ centerline: percent|percentage clino units support
++ xtherion: ciary, body a plochy vklada vzdy do scrapu
+
 
 POTOM:
 + posuvanie map pri oznacovani pomocou selectu + spajacie sipky

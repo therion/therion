@@ -94,14 +94,20 @@ class thexpmapmpxs {
   public:
   
   FILE * file; ///< output file
-  double ms, mx, my; ///< Scale and centering.
+  double ms, mx, my, sr, cr, rr; ///< Scale and centering.
   thsymbolset * symset;
   thlayout * layout;
   
-  thexpmapmpxs() : file(NULL), ms(1.0), mx(0.0), my(0.0) {}
+  thexpmapmpxs() : file(NULL), ms(1.0), mx(0.0), my(0.0), sr(0.0), cr(1.0), rr(0.0) {}
   
 };
 
+
+#define thxmmxst(out, sx, sy) \
+  (((sx) - (out)->mx) * (out)->cr + \
+   ((sy) - (out)->my) * (out)->sr) * out->ms, \
+  (((sy) - (out)->my) * (out)->cr - \
+   ((sx) - (out)->mx) * (out)->sr) * out->ms 
 
 enum {
   TT_XMPS_NONE = 0,

@@ -188,6 +188,16 @@ proc xth_me_cmds_create {typ id ix} {
   set xth(me,cmds,$id,name) {}
   set xth(me,cmds,$id,data) {}
   set ix [lsearch $xth(me,cmds,xlist) $xth(me,cmds,selid)]
+
+	# ak sme v normalnom mode a na scrape a chceme vlozit
+	# point, line, area alebo scrap
+  if {$xth(me,unredook)} {
+		set ccmdid $xth(me,cmds,selid)
+		if {($xth(me,cmds,$ccmdid,ct) == 4) && (($typ == 2) || ($typ == 3) || ($typ == 6))} {
+		    incr ix;
+		}
+	}
+	
   set xth(me,cmds,list) [linsert $xth(me,cmds,list) $ix {}]
   set xth(me,cmds,xlist) [linsert $xth(me,cmds,xlist) $ix $id]
   if {$ix != -1} {

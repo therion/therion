@@ -128,8 +128,7 @@ void thdb2d::assigndb(thdatabase * dbptr)
   this->db = dbptr;
 }
 
-
-void thdb2d_rotate_align(int & align, double rot) {
+void thdb2d_rot_align(int & align, double rot) {
 
   double o;
 
@@ -187,6 +186,13 @@ void thdb2d_rotate_align(int & align, double rot) {
     align = TT_POINT_ALIGN_TL;    
     
 }
+
+
+int thdb2d_rotate_align(int align, double rot) {
+  thdb2d_rot_align(align, rot);
+  return(align);
+}
+
 
 thdb2dprjpr thdb2d::parse_projection(char * prjstr,bool insnew) 
 {
@@ -1728,7 +1734,7 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
               ppoint->orient -= 360.0;
             }
           } else if (ppoint->align != TT_POINT_ALIGN_C)
-            thdb2d_rotate_align(ppoint->align,ps->mr);
+            thdb2d_rot_align(ppoint->align,ps->mr);
           //ppoint->xsize *= ps->ms;
           //ppoint->ysize *= ps->ms;
           break;
@@ -2033,7 +2039,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
               ppoint->orient -= 360.0;
             }
           } else if (ppoint->align != TT_POINT_ALIGN_C)
-            thdb2d_rotate_align(ppoint->align,pscrap->mr);
+            thdb2d_rot_align(ppoint->align,pscrap->mr);
           //  ppoint->xsize *= pscrap->ms;
           //  ppoint->ysize *= pscrap->ms;
           switch (ppoint->type) {

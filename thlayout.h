@@ -83,6 +83,7 @@ enum {
   TT_LAYOUT_LEGEND_COLUMNS = 2040,
   TT_LAYOUT_SURFACE = 2041,
   TT_LAYOUT_SURFACE_OPACITY = 2042,
+  TT_LAYOUT_ROTATE = 2043,
 };
 
 
@@ -349,6 +350,7 @@ static const thstok thtt_layout_opt[] = {
   {"page-grid",TT_LAYOUT_PAGE_GRID},
   {"page-numbers",TT_LAYOUT_PAGE_NUMBERS},
   {"page-setup",TT_LAYOUT_PAGE_SETUP},
+  {"rotate",TT_LAYOUT_ROTATE},
   {"scale", TT_LAYOUT_SCALE},
   {"scale-bar", TT_LAYOUT_SCALE_BAR},
   {"size", TT_LAYOUT_SIZE},
@@ -386,7 +388,7 @@ class thlayout : public thdataobject {
   public:
     
   double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gox, goy, goz, navf, overlap, opacity,
-    map_header_x, map_header_y, legend_width, surface_opacity;
+    map_header_x, map_header_y, legend_width, surface_opacity, rotate;
   
   char * olx, * oly, 
     * doc_title, * doc_comment, * doc_author, * doc_subject, * doc_keywords, * excl_list;
@@ -407,6 +409,7 @@ class thlayout : public thdataobject {
   
   bool def_grid_size, def_grid_origin, def_nav_factor, def_nav_size, 
     def_opacity, def_transparency, def_layers, def_base_scale,
+    def_rotate,
     def_origin, def_origin_label, def_overlap, def_own_pages,
     def_page_numbers, def_page_setup, def_scale, def_size, def_title_pages,
     def_tex_lines, def_doc_title, def_doc_comment, def_doc_author, def_doc_subject,

@@ -332,7 +332,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   char * fnm, * chtitle;
   thbuffer tit;
   bool quick_map_exp = false;
-  double origin_shx, origin_shy;
+  double origin_shx, origin_shy, new_shx, new_shy, srot = 0.0, crot = 1.0, rrot = 0.0;
   thexpmapmpxs out;
   th2ddataobject * op2;
   bool export_sections, export_outlines_only;
@@ -521,38 +521,11 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                     out.mx = (cs->lxmax + cs->lxmin) / 2.0;
                     out.my = (cs->lymax + cs->lymin) / 2.0;
                   }
+                  out.sr = 0.0;
+                  out.cr = 1.0;
+                  out.rr = 0.0;
                   shx = ((thpoint *)op2)->point->xt;
                   shy = ((thpoint *)op2)->point->yt;
-                  switch (((thpoint *)op2)->align) {
-                    case TT_POINT_ALIGN_B:
-                      shy -= (cs->lymax - cs->lymin) / 2.0;
-                      break;
-                    case TT_POINT_ALIGN_T:
-                      shy += (cs->lymax - cs->lymin) / 2.0;
-                      break;
-                    case TT_POINT_ALIGN_R:
-                      shx += (cs->lxmax - cs->lxmin) / 2.0;
-                      break;
-                    case TT_POINT_ALIGN_L:
-                      shx -= (cs->lxmax - cs->lxmin) / 2.0;
-                      break;
-                    case TT_POINT_ALIGN_BR:
-                      shy -= (cs->lymax - cs->lymin) / 2.0;
-                      shx += (cs->lxmax - cs->lxmin) / 2.0;
-                      break;
-                    case TT_POINT_ALIGN_BL:
-                      shy -= (cs->lymax - cs->lymin) / 2.0;
-                      shx -= (cs->lxmax - cs->lxmin) / 2.0;
-                      break;
-                    case TT_POINT_ALIGN_TR:
-                      shy += (cs->lymax - cs->lymin) / 2.0;
-                      shx += (cs->lxmax - cs->lxmin) / 2.0;
-                      break;
-                    case TT_POINT_ALIGN_TL:
-                      shy += (cs->lymax - cs->lymin) / 2.0;
-                      shx -= (cs->lxmax - cs->lxmin) / 2.0;
-                      break;
-                  }
                   shx *= out.ms;
                   shy *= out.ms;
                 } else {
@@ -563,6 +536,16 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                     out.mx = (cs->lxmax + cs->lxmin) / 2.0;
                     out.my = (cs->lymax + cs->lymin) / 2.0;
                   }
+                  switch (prj->type) {
+                    case TT_2DPROJ_ELEV:
+                    case TT_2DPROJ_EXTEND:
+                      break;
+                    default:
+                      out.sr = sin(this->layout->rotate / 180.0 * THPI);
+                      out.cr = cos(this->layout->rotate / 180.0 * THPI);
+                      out.rr = out.layout->rotate;
+                      break;
+                  }
                   shx = out.mx * out.ms;
                   shy = out.my * out.ms;
                   if (!export_outlines_only) {
@@ -570,8 +553,59 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   }
                 } 
                 
+                switch (prj->type) {
+                  case TT_2DPROJ_ELEV:
+                  case TT_2DPROJ_EXTEND:
+                    rrot = 0.0;
+                    srot = 0.0;
+                    crot = 1.0;
+                    break;
+                  default:
+                    rrot = this->layout->rotate;
+                    srot = sin(rrot / 180.0 * THPI);
+                    crot = cos(rrot / 180.0 * THPI);
+                    new_shx = shx * crot + shy * srot;
+                    new_shy = shy * crot - shx * srot;
+                    shx = new_shx;
+                    shy = new_shy;
+                }
+                
                 shx += origin_shx;
                 shy += origin_shy;
+      
+                if (export_sections) {
+                  switch (thdb2d_rotate_align(((thpoint *)op2)->align, rrot)) {
+                    case TT_POINT_ALIGN_B:
+                      shy -= (cs->lymax - cs->lymin) / 2.0 * out.ms;
+                      break;
+                    case TT_POINT_ALIGN_T:
+                      shy += (cs->lymax - cs->lymin) / 2.0 * out.ms;
+                      break;
+                    case TT_POINT_ALIGN_R:
+                      shx += (cs->lxmax - cs->lxmin) / 2.0 * out.ms;
+                      break;
+                    case TT_POINT_ALIGN_L:
+                      shx -= (cs->lxmax - cs->lxmin) / 2.0 * out.ms;
+                      break;
+                    case TT_POINT_ALIGN_BR:
+                      shy -= (cs->lymax - cs->lymin) / 2.0 * out.ms;
+                      shx += (cs->lxmax - cs->lxmin) / 2.0 * out.ms;
+                      break;
+                    case TT_POINT_ALIGN_BL:
+                      shy -= (cs->lymax - cs->lymin) / 2.0 * out.ms;
+                      shx -= (cs->lxmax - cs->lxmin) / 2.0 * out.ms;
+                      break;
+                    case TT_POINT_ALIGN_TR:
+                      shy += (cs->lymax - cs->lymin) / 2.0 * out.ms;
+                      shx += (cs->lxmax - cs->lxmin) / 2.0 * out.ms;
+                      break;
+                    case TT_POINT_ALIGN_TL:
+                      shy += (cs->lymax - cs->lymin) / 2.0 * out.ms;
+                      shx -= (cs->lxmax - cs->lxmin) / 2.0 * out.ms;
+                      break;
+                  }
+                }
+
                 
                 exps = this->export_mp(& out, cs, sfig, export_outlines_only);
                 // naozaj ho exportujeme
@@ -704,7 +738,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
   sprintf(texb.get_buffer(),"data.%d",sfig);
   LAYOUT.northarrow = texb.get_buffer();
-  fprintf(mpf,"beginfig(%d);\ns_northarrow;\nendfig;\n",sfig++);
+  fprintf(mpf,"beginfig(%d);\ns_northarrow(%g);\nendfig;\n",sfig++,this->layout->rotate);
 
   sprintf(texb.get_buffer(),"data.%d",sfig);
   LAYOUT.scalebar = texb.get_buffer();
@@ -721,9 +755,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   } else 
     sblen = this->layout->scale_bar;
   snprintf(prevbf,127,"%g",sblen);
-  fprintf(mpf,"beginfig(%d);\ns_scalebar(\"%g\",\"m\",btex %s\\thinspace ",
-    sfig++, sblen, utf2tex(prevbf));
-  fprintf(mpf,"%s etex);\nendfig;\n", utf2tex(thT("units m",layout->lang)));
+  fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, 1.0, \"%s\");\nendfig;\n",
+    sfig++, sblen,  utf2tex(thT("units m",layout->lang)));
 
   // sem pride zapisanie legendy do MP suboru
   if (this->layout->def_base_scale || this->layout->redef_base_scale)
@@ -738,6 +771,20 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   
   
   // export all surface pictures
+
+  switch (prj->type) {
+    case TT_2DPROJ_ELEV:
+    case TT_2DPROJ_EXTEND:
+      rrot = 0.0;
+      srot = 0.0;
+      crot = 1.0;
+      break;
+    default:
+      rrot = this->layout->rotate;
+      srot = sin(rrot / 180.0 * THPI);
+      crot = cos(rrot / 180.0 * THPI);
+  }
+
   SURFPICTLIST.clear();
   surfpictrecord srfpr;
   thsurface * surf;
@@ -752,12 +799,23 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
         if (surf->pict_name != NULL) {
           surf->calibrate();
           srfpr.filename = surf->pict_name;
-          srfpr.dx = (surf->calib_x - prj->shift_x) * out.ms + origin_shx;
-          srfpr.dy = (surf->calib_y - prj->shift_y) * out.ms + origin_shy;
+          srfpr.dx = (surf->calib_x - prj->shift_x) * out.ms;
+          srfpr.dy = (surf->calib_y - prj->shift_y) * out.ms;
           srfpr.xx = surf->calib_xx * surfscl * surf->pict_dpi / 300.0;
           srfpr.xy = surf->calib_xy * surfscl * surf->pict_dpi / 300.0;
           srfpr.yx = surf->calib_yx * surfscl * surf->pict_dpi / 300.0;
           srfpr.yy = surf->calib_yy * surfscl * surf->pict_dpi / 300.0;
+					
+					// otocenie o rotaciu v layoute
+					double tdx = srfpr.dx, tdy = srfpr.dy,
+						txx = srfpr.xx, txy = srfpr.xy, tyx = srfpr.yx, tyy = srfpr.yy;
+					srfpr.dx =   tdx * crot + tdy * srot + origin_shx;
+					srfpr.dy = - tdx * srot + tdy * crot + origin_shy;
+					srfpr.xx =  crot * txx + srot * tyx;
+					srfpr.xy =  crot * txy + srot * tyy;
+					srfpr.yx = -srot * txx + crot * tyx;
+					srfpr.yy = -srot * txy + crot * tyy;
+					
           SURFPICTLIST.insert(SURFPICTLIST.end(), srfpr);
           fprintf(plf,"\n\n# PICTURE: %s\n", srfpr.filename);
           fprintf(plf,    "#  origin: %g %g\n", srfpr.dx, srfpr.dy);
@@ -1176,10 +1234,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           thexpmap_export_mp_bgif;
           fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
               out->symset->get_mp_macro(slp->type),
-            (slp->lnx1 - out->mx) * out->ms,
-            (slp->lny1 - out->my) * out->ms,
-            (slp->lnx2 - out->mx) * out->ms,
-            (slp->lny2 - out->my) * out->ms);
+              thxmmxst(out, slp->lnx1, slp->lny1),
+              thxmmxst(out, slp->lnx2, slp->lny2));
         }
       }
       slp = slp->next_item;
@@ -1373,10 +1429,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           thexpmap_export_mp_bgif;
           fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
               out->symset->get_mp_macro(slp->type),
-            (slp->lnx1 - out->mx) * out->ms,
-            (slp->lny1 - out->my) * out->ms,
-            (slp->lnx2 - out->mx) * out->ms,
-            (slp->lny2 - out->my) * out->ms);
+              thxmmxst(out, slp->lnx1, slp->lny1),
+              thxmmxst(out, slp->lnx2, slp->lny2));
         }
       }
       slp = slp->next_item;
@@ -1408,8 +1462,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         thexpmap_export_mp_bgif;
         fprintf(out->file,"%s((%.2f,%.2f));\n",
           out->symset->get_mp_macro(macroid),
-          (slp->stx - out->mx) * out->ms,
-          (slp->sty - out->my) * out->ms);
+          thxmmxst(out, slp->stx, slp->sty));
       }
     }
     slp = slp->next_item;

@@ -76,6 +76,7 @@ thdata::thdata()
   
   this->ugroup = NULL;
   this->cgroup = this;
+	this->dlu_gradient.allow_percentage = true;
   
 }
 
@@ -596,6 +597,8 @@ void thdata::set_data_units(int nargs, char ** args)
 {
   static int items[THDATA_MAX_ITEMS];
   int nitems, iit, itid, sdtype = 0; // 1-length, 2-angle
+	
+	this->dlu_sdangle.allow_percentage = true;
 
   nitems = nargs - 1;
   if (nitems > THDATA_MAX_ITEMS)
@@ -701,12 +704,16 @@ void thdata::set_data_units(int nargs, char ** args)
         break;
       case TT_DATALEG_BEARING:
         this->dlu_bearing = this->dlu_sdangle;
+				if (this->dlu_bearing.get_units() == TT_TFU_PERC)
+					ththrow(("percentage bearing specification not allowed"))
         break;
       case TT_DATALEG_GRADIENT:
         this->dlu_gradient = this->dlu_sdangle;
         break;
     }
   }
+
+	this->dlu_sdangle.allow_percentage = false;
 }  // data units
   
 

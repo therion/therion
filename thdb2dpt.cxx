@@ -45,19 +45,13 @@ thdb2dpt::thdb2dpt() {
 void thdb2dpt::export_mp(class thexpmapmpxs * out, int dbglevel) {
   switch (dbglevel) {
     case 1:
-      fprintf(out->file,"(%.2f,%.2f)",
-        (this->dbgx1 - out->mx) * out->ms,
-        (this->dbgy1 - out->my) * out->ms);
+      fprintf(out->file,"(%.2f,%.2f)", thxmmxst(out, this->dbgx1, this->dbgy1));
       break;
     case 0:
-      fprintf(out->file,"(%.2f,%.2f)",
-        (this->dbgx0 - out->mx) * out->ms,
-        (this->dbgy0 - out->my) * out->ms);
+      fprintf(out->file,"(%.2f,%.2f)", thxmmxst(out, this->dbgx0, this->dbgy0));
       break;
     default:
-      fprintf(out->file,"(%.2f,%.2f)",
-        (this->xt - out->mx) * out->ms,
-        (this->yt - out->my) * out->ms);
+      fprintf(out->file,"(%.2f,%.2f)", thxmmxst(out, this->xt, this->yt));
   }
 }
   

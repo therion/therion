@@ -28,12 +28,14 @@
 #include "thparse.h"
 #include "thtfangle.h"
 #include "thexception.h"
-
+#include "thinfnan.h"
+#include <math.h>
 
 thtfangle::thtfangle() {
 
   this->units = TT_TFU_DEG;
-  
+  this->allow_percentage = false;
+
 }
 
 
@@ -53,6 +55,11 @@ void thtfangle::parse_units(char * ustr)
     case TT_TFU_GRAD:
       this->ufactor = 0.9;
       break;
+	  case TT_TFU_PERC:
+			if (this->allow_percentage) {
+	      this->ufactor = 1.0;
+				break;
+			}
     case TT_TFU_UNKNOWN_ANGLE:
       ththrow(("unknown angle unit -- %s", ustr))
       break;
@@ -60,5 +67,12 @@ void thtfangle::parse_units(char * ustr)
   
 }
 
-
-
+double thtfangle::transform(double value) {
+  switch (this->units) {
+	 case TT_TFU_PERC:
+	 	return (atan(thtf::transform(value) / 100.0) / THPI * 180.0); 
+	  break;
+	default:
+	  return thtf::transform(value);
+  }
+}

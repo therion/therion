@@ -397,6 +397,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   int postprocess_label = -1;
   this->db->buff_enc.guarantee(8128);
   char * buff = this->db->buff_enc.get_buffer();
+  double xrr = (thisnan(this->orient) ? out->rr : 0.0);
 
   switch(this->type) {
 
@@ -423,13 +424,29 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
         out->symset->get_mp_macro(macroid);
-        fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(this->align));
+        fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
         switch (this->type) {
           case TT_POINT_TYPE_STATION_NAME:
             fprintf(out->file,"\\thstationname ");
             break;
           case TT_POINT_TYPE_LABEL:
-            fprintf(out->file,"\\thlabel ");
+            fprintf(out->file,"\\thlabel");
+            switch (this->scale) {
+              case TT_2DOBJ_SCALE_XL:
+                fprintf(out->file,"\\thhugesize ");
+                break;
+              case TT_2DOBJ_SCALE_L:
+                fprintf(out->file,"\\thlargesize ");
+                break;
+              case TT_2DOBJ_SCALE_S:
+                fprintf(out->file,"\\thsmallsize ");
+                break;
+              case TT_2DOBJ_SCALE_XS:
+                fprintf(out->file,"\\thtinysize ");
+                break;
+              default:
+                fprintf(out->file,"\\thnormalsize ");
+            }
             break;
           case TT_POINT_TYPE_REMARK:
             fprintf(out->file,"\\thremark ");
@@ -484,7 +501,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
         out->symset->get_mp_macro(SYMP_ALTITUDE);    
-        fprintf(out->file,"p_label%s(btex \\thaltitude %s etex,",thpoint_export_mp_align2mp(this->align),utf2tex(buff));
+        fprintf(out->file,"p_label%s(btex \\thaltitude %s etex,",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)),utf2tex(buff));
         postprocess_label = 1;
       }
       postprocess = false;
@@ -517,7 +534,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           return(true);
 
         out->symset->get_mp_macro(macroid);
-        fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(this->align));
+        fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
 
         if ((this->tags & TT_POINT_TAG_HEIGHT_P) != 0)
           fprintf(out->file,"\\thheightpos ");
@@ -556,7 +573,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           return(true);
         out->symset->get_mp_macro(SYMP_DATE);    
         fprintf(out->file,"p_label%s(btex \\thdate %s etex,",
-            thpoint_export_mp_align2mp(this->align),
+            thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)),
             utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_UTF8_ISO)));
         postprocess_label = 0;
       }
@@ -594,7 +611,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         
         out->symset->get_mp_macro(macroid);
             
-        fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(this->align));
+        fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
         switch (this->tags & (TT_POINT_TAG_HEIGHT_P |
         TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) {
           case (TT_POINT_TAG_HEIGHT_P | TT_POINT_TAG_HEIGHT_N):
@@ -729,7 +746,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   
   if (postprocess_label >= 0) {
     this->point->export_mp(out);
-    fprintf(out->file,",%.1f,%d);\n",(thisnan(this->orient) ? 0 : 360 - this->orient), postprocess_label);
+    fprintf(out->file,",%.1f,%d);\n",(thisnan(this->orient) ? 0 : 360.0 - this->orient - out->rr), postprocess_label);
   }
   
   if (this->context >= 0) 
@@ -762,7 +779,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         break;
     }
     char * al = "(0,0)";
-    switch (this->align) {
+    switch (thdb2d_rotate_align(this->align, xrr)) {
       case TT_POINT_ALIGN_B:
         al = "(0,-1)";
         break;
@@ -789,7 +806,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         break;
     }
     fprintf(out->file,",%.1f,%.2f,%s);\n",
-        (thisnan(this->orient) ? 0 : 360 - this->orient),scl,al);
+        (thisnan(this->orient) ? 0 : 360 - this->orient - out->rr),scl,al);
     if (out->layout->is_debug_stations() || out->layout->is_debug_joins()) {
       fprintf(out->file,"p_debug(-1,0,");
       this->point->export_mp(out);

@@ -80,7 +80,7 @@ class thtf {
    * Make units transformation on number.
    */
   
-  double transform(double value);
+  virtual double transform(double value);
   
 };
 

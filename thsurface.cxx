@@ -35,6 +35,7 @@
 #include "thdatareader.h"
 #include "thparse.h"
 #include "thdb1d.h"
+#include "thinfnan.h"
 
 thsurface::thsurface()
 {

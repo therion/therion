@@ -285,6 +285,7 @@ class thdb2d {
   
 };
 
+int thdb2d_rotate_align(int align, double rot);
 
 #endif
 

@@ -55,18 +55,14 @@ thdb2dlp::thdb2dlp () {
 void thdb2dlp::export_prevcp_mp(class thexpmapmpxs * out) {
   double dx, dy;
   this->get_prevcp(dx,dy);
-  fprintf(out->file,"(%g,%g)",
-    (this->point->xt + dx - out->mx) * out->ms, 
-    (this->point->yt + dy - out->my) * out->ms);
+  fprintf(out->file,"(%g,%g)", thxmmxst(out, (this->point->xt + dx), (this->point->yt + dy)));
 }
 
 
 void thdb2dlp::export_nextcp_mp(class thexpmapmpxs * out) {
   double dx, dy;
   this->get_nextcp(dx,dy);
-  fprintf(out->file,"(%g,%g)",
-    (this->point->xt + dx - out->mx) * out->ms, 
-    (this->point->yt + dy - out->my) * out->ms);
+  fprintf(out->file,"(%g,%g)", thxmmxst(out, (this->point->xt + dx), (this->point->yt + dy)));
 }
 
 

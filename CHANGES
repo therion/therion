@@ -1,4 +1,21 @@
 --------------------------------------------------------------------------------
+Therion 0.3.5 (2004-11-25):
+
+therion:
+
+ * map rotation in 2D output supported
+ * bug fixed: -scale option works for point labels
+ * input language changes:
+   - centreline command: percent[age] clino units support
+ * configuration file changes:
+   - layout command: rotate
+
+xtherion:
+
+ * Map editor: point, line and area symbol are never inserted 
+   outside of a scrap
+  
+--------------------------------------------------------------------------------
 Therion 0.3.4 (2004-10-22):
 
 therion:

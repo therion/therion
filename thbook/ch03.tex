@@ -108,6 +108,7 @@ Works like |input| command in data files---includes other files.
     copy <source layout id>
     scale <picture length> <real length>
     base-scale <picture length> <real length>
+    rotate <number>
     symbol-set <symbol-set>
     symbol-assign <point/line/area/group/special> <symbol-type> \ 
                                                   <symbol-set>
@@ -167,6 +168,7 @@ endlayout|
     optically scale the map by a (|scale/base-scale|) factor.
     This has the same effect as if the map printed in |base-scale| would be
     photoreduced to the |scale|. (M, A)
+  * |rotate <value>| = rotates the map (M, A; default: |0|)
   * |symbol-set <symbol-set>| = use |symbol-set| for all map symbols,
     if available (M, A)
     

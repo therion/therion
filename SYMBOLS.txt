@@ -3,7 +3,7 @@
 [Special symbols]
 
 northarrow: SKBB 
-scalebar: SKBB 
+scalebar: SKBB STACHO 
 
 [Point symbols]
 

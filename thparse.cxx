@@ -733,7 +733,7 @@ void thparse_altitude(char * src, double & altv, double & fixv)
 void thparse_image(char * fname, double & width, double & height, double & dpi)
 {
 
-  FILE * pictf = fopen(fname, "r");
+  FILE * pictf = fopen(fname, "rb");
 #define picths 2048
   size_t phsize;
   double xdpi, ydpi;

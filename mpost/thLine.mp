@@ -518,10 +518,10 @@ enddef;
 
 def l_section_SKBB (expr P)(text txt) =
   T:=identity;
-  pair zz[];
   path Q; Q = punked P;
   pickup PenC;
   for t = 0 upto length P - 1:
+    pair zz[];
     zz1 := point t of P;
     zz2 := point t+1 of P;
     zz3 := postcontrol t of P;

@@ -81,6 +81,9 @@ thlayout::thlayout()
   this->redef_base_scale = false;
   this->base_scale = 0.005;
   
+  this->def_rotate = false;
+  this->rotate = 0.0;
+  
   this->def_origin = false;
   this->ox = thnan;
   this->oy = thnan;
@@ -322,6 +325,25 @@ void thlayout_parse_scale(double * scale,char ** args) {
     ththrow(("scale out of range -- %s %s",args[0], args[1]))
 }
 
+void thlayout_parse_rotate(double & rotate, char * rotstr) {
+  thsplit_words(&(thdb.mbuff_tmp), rotstr);
+  int nargs = thdb.mbuff_tmp.get_size(), sv;
+  char ** args = thdb.mbuff_tmp.get_buffer();
+  thtfangle atf;
+  switch (nargs) {
+    case 2:
+      atf.parse_units(args[1]);
+    case 1:
+      thparse_double(sv, rotate, args[0]);
+      if (sv != TT_SV_NUMBER)
+        ththrow(("invalid rotate specification -- %s", rotstr))
+      rotate = atf.transform(rotate);
+      break;
+    default:
+      ththrow(("invalid rotate specification -- %s", rotstr))
+  }
+}
+
 enum {
   TTL_MAPITEM_CARTO,
   TTL_MAPITEM_COPYRIGHT,
@@ -493,6 +515,11 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       thlayout_parse_scale(&(this->scale),args);
       this->def_scale = true;
       break;    
+  
+    case TT_LAYOUT_ROTATE:
+      thlayout_parse_rotate(this->rotate,args[0]);
+      this->def_rotate = true;
+      break;
 
     case TT_LAYOUT_BASE_SCALE:
       thlayout_parse_scale(&(this->base_scale),args);
@@ -849,6 +876,7 @@ void thlayout::self_print_properties(FILE * outf)
   thdataobject::self_print_properties(outf);
   fprintf(outf,"thlayout:\n");
   fprintf(outf,"\tscale: %f\n",this->scale);
+  fprintf(outf,"\trotate: %f\n",this->rotate);
 }
 
 
@@ -873,6 +901,9 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->def_base_scale = %s;\n",(this->def_base_scale ? "true" : "false"));
   thprintf("\tplayout->redef_base_scale = %s;\n",(this->redef_base_scale ? "true" : "false"));
   thprintf("\tplayout->base_scale = %lg;\n",this->base_scale);
+
+  thprintf("\tplayout->def_rotate = %s;\n",(this->def_rotate ? "true" : "false"));
+  thprintf("\tplayout->rotate = %lg;\n",this->rotate);
 
   thprintf("\tplayout->def_page_setup = %s;\n",(this->def_page_setup ? "true" : "false"));
   thprintf("\tplayout->hsize = %lg;\n",this->hsize);
@@ -1383,6 +1414,9 @@ void thlayout::process_copy() {
       
       if has_srcl(def_scale)
         this->scale = srcl->scale;
+        
+      if has_srcl(def_rotate)
+        this->rotate = srcl->rotate;
         
       if ((!this->def_base_scale) && (srcl->redef_base_scale)) {
         this->base_scale = srcl->base_scale;
