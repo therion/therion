@@ -1,41 +1,20 @@
 \chapter Appendix.
 
-\subchapter Installation notes.
+\subchapter Compilation.
 
-Therion runs under Unix, Linux, MacOS X and Win32 operating systems.
+If you want to compile the Therion source code, you need 
 
-\subsubchapter Common requirements.
 \list
-* If you want to compile the therion source code, you need GNU C/C++ compiler,
-   GNU make, Tcl, Perl
-   (for Windows MinGW (|http://www.mingw.org|) is highly recommended---a 
-   distribution of GNU utilities with GNU make, gcc...)
-   
-* \TeX, pdf\TeX\ 1.0 and \MP. Plain should be the default format for \TeX; 
-  Therion doesn't use La\TeX\ or other available formats. If you 
-  have any doubts, install any full distribution of \TeX. (TeXlive for any 
-  platform, teTeX for Unix, fpTeX or MikTeX for Windows.) If you're new
-  to \TeX, visit the homepage of {\it \TeX\ Users Group} at 
-  \path|http://www.tug.org|.
-
-* Tcl/Tk 8.4.3 (|http://www.tcl.tk|) with BWidget widget set 
-  (\path|http://sourceforge.net/projects/tcllib|). Tcl/Tk is only required for 
-  XTherion. For Windows try ActiveTcl from |http://www.activestate.com|.
-
-* Survex 1.0 (|http://www.survex.com|)
-%
-%* Ghostscript 7.0 or Acrobat Reader 5.0 or other viewer of PDF files.
+* GNU C/C++ compiler
+* GNU make
+* Tcl
+* Perl
 \endlist
 
-Get all this working before installing therion. We don't provide any support 
-concerning this. All these programs are well documented and accessible on the 
-net.
+For Windows consider using MinGW (|http://www.mingw.org|).
+It's a distribution of GNU utilities with GNU make and GCC.
 
-
-\subsubchapter Compilation.
-
-If you want to compile therion code yourself, follow these 
-steps:
+\subsubchapter Quick start.
 
 \list
 * unpack source distribution |therion-0.2.*.tar.gz|
@@ -45,75 +24,48 @@ steps:
 * |make|
 \endlist
 
-%This compilation should work on Unix/Linux systems---if it doesn't then read 
-%the next section for clues. On Win32, |make xtherion|
-%and |make thpdf| will not work. You have to download them compiled.
+\subsubchapter Hacker's guide.
 
-\subsubchapter Environment variables.
+[Make parameters]
 
-To be able to run therion you will probably need to set up following 
-environment variables:
+[Adding new encodings]
+
+[Adding new \TeX\ encodings]
+
+[Generating new \TeX\ and \MP\ headers]
+
+\subchapter Environment variables.
+
+Therion reads following environment variables:
 
 \list
-* THINIT -- search paths for (x)therion.ini file
-* THERION -- search paths for configuration and source files
-
-
-%* set environment variable `|THERION|' to `|therion/lib|' directory
-%
-%  This environment variable is used to specify the
-%  Therion search path. If not defined (also not specified by |-p| option),
-%  \path|$HOME/.therion:/usr/share/therion:/usr/local/share/therion| is used.
-%  Notice, that on Windows you must use `|;|' as a path separator. The
-%  default directory on Windows is |C:/therion|. This default setting may not 
-%  reflect the real location of Therion.
-
-%* add `|therion/bin|' directory to `|PATH|' environment variable
-
-%* add `|therion/lib/tex|' and `|therion/lib/mpost|' to \TeX\ and \MP\ searching
-%   paths 
-%   
-%   See the documentation included in your \TeX\ distribution 
-%   (for web2c based \TeX\ distribution you may set these paths 
-%   in the file `|texmf/web2c/texmf.cnf|'
-%   or through environment variables |TEXINPUTS| and |MPINPUTS|).
+* |THERION| = [not required] search path for (x)therion.ini file(s)
+* |HOME| = [not required, but usually present on your system] search path 
+  for (x)therion.ini file(s)
+* |TEMP|, |TMP| = temporary directory named |th$PID$| (where |$PID$| is a 
+  process id) is created in the system temporary directory, which is
+  read from the |TEMP| or |TMP| environment variable. 
 \endlist
 
-%If you're not very experienced in environment variables etc., try the 
-%appropriate example below:
+Consult the documentation of your OS how to set them.
 
-%On UNIX add the following lines to |.bashrc| (or |.bash_profile|) file in your 
-%home directory:
+\subchapter Initialization files.
 
-%|export PATH=$PATH:therion/bin
-%export THERION=therion/lib
-%export MPINPUTS=.:$THERION/mpost:
-%export TEXINPUTS=.:$THERION/tex:|
+Therion's and XTherion's system dependent settings are specifyed in the 
+file therion.ini or xtherion.ini, respectively.
+They are searched in the following directories:
 
-%On WINDOWS, add the following lines to your |autoexec.bat| file:
+\list
+* on UNIX: 
+  |$THERION|, |$HOME/.therion|, |/etc|, |/usr/etc|, |/usr/local/etc|
+* on WINDOWS:
+  |$THERION|, |$HOME/.therion|, |<Therion-installation-directory>|, 
+  |C:\WINDOWS|, |C:\WINNT|, |C:\Program Files\Therion|
+\endlist
+ 
+\subsubchapter Therion.
 
-%|set PATH=%PATH%;C:\therion\bin
-%set THERION=C:\therion\lib
-%set MPINPUTS=.;%THERION%\mpost;
-%set TEXINPUTS=.;%THERION%\tex;|
-
-%Note, that on Win 2000 or XP, you have to set environment variables through 
-%the dialog {\it Control Panel} $\to$ {\it System} $\to$ {\it Advanced} $\to$ 
-%{\it Environment Variables}.
-
-%After setting up environment variables you should restart the computer.
-
-The temporary directory used is named |th$PID$| where |$PID$| is a 
-process pid. It is placed in the system temporary directory, which is
-read from the |TEMP| or |TMP| environment variable. 
-
-\subsubchapter Initialization file.
-
-The correct paths are set in the initialization file.
-This file is used to specify Therion's system dependent settings. 
-It's named therion.ini and must be placed in the Therion 
-search path (default location is `|therion/lib/therion.ini|'). If no
-file is found therion uses its default settings. If you want to list
+If no file is found Therion uses its default settings. If you want to list
 them, use |--print-init-file| option. The initialization file is read 
 like any other therion file. (Empty lines or lines starting with `|#|' are 
 ignored; lines ending with a backslash continue on next line.) Currently 
@@ -122,77 +74,122 @@ supported initialization commands follow.
 \list
 * |encoding_default <encoding-name>|
 
-        Set the default output encoding. For \TeX\ ISO8859-2 is currently
-        hardcoded.
+  Set the default output encoding.
         
-* |path_cavern <file-path>|
+* |mpost-path <file-path>|
 
-        Set the full path to a Survex ``|cavern|'' executable. (``|cavern|'' is the default).
+  Set the full path to a \MP\ executable (``|mpost|'' is the default).
+
+* |pdftex-path <file-path>|
+
+  Set the full path to a pdf\TeX\ executable (``|pdfetex|'' is the default).
+
+* |cavern-path <file-path>|
+
+  Path to |cavern| program. In most cases not necessary.
+
+* |source-path <directory>| 
+
+  Path to data and configuration files. Used mostly for system-wide grades and 
+  layout definitions.
+
+* |tex-fonts <encoding> <rm> <it> <bf> <ss> <si>|
         
-* |path_mpost <file-path>|
+  Set-up fonts used for given encoding. The list of currently supported 
+  encodings gives the |--print-tex-encodings| command line option.   
+  The same encoding must be used while generating \TeX\ metrics (|*.tfm| files) 
+  for those fonts (e.g.~with the afm2tfm program) and this encoding must be
+  explicitly given also in the pdf\TeX's map file. The only exception is the 
+  base set of Computern Modern fonts, which use `raw' encoding. This encoding
+  doesn't need to be specified in the pdf\TeX's map file.
+  
+  Encoding has to be followed by five font specifications for regular, italic,
+  bold, sans-serif and sans-serif oblique styles.
+  Default setting is |tex-fonts raw cmr10 cmti10 cmbx10 cmss10 cmssi10|
+  
+  Example how to use other fonts (e.g TrueType Palatino in xl2 (an encoding 
+  derived from ISO8859-2) encoding). Run:
+  
+  |ttf2afm -e xl2.enc -o palatino.afm palatino.ttf|
+  
+  |afm2tfm palatino.afm -u -v vpalatino -T xl2.enc|
 
-        Set the full path to a \MP\ executable (``|mpost|'' is the default).
-
-* |path_pdftex <file-path>|
-
-        Set the full path to a pdf\TeX\ executable (``|pdfetex|'' is the default).
+  |vptovf vpalatino.vpl vpalatino.vf vpalatino.tfm|
+  
+  You get files |vpalatino.vf|, |vpalatino.tfm| and |palatino.tfm|. Add the line 
+  
+  |palatino <xl2.enc <palatino.ttf|
+  
+  to the pdf\TeX's map file. The same should be done for the italic and bold
+  faces and corresponding sansserif and sansserifoblique fonts. If you're lazy
+  try 
+  
+  |tex-fonts xl2 palatino palatino palatino palatino palatino|
+  
+  (We should use actually virtual font |vpalatino| instead of |palatino|,
+  which contains no kerning or ligatures, but
+  pdf\TeX\ doesn't support |\pdfincludechars| command on virtual fonts.
+  To be improved.)
+    
+  If you want to add some unsupported encodings, 
+  read the chapter {\it Compilation / Hacker's guide}. 
 \endlist
 
-%\subsubchapter Special setup for Windows.
 
-%If you want to create maps you need to be able to run |thpdf| from the command
-%line. Therefore you need to edit |thpdf.bat| in |therion/bin| directory and
-%set the correct Perl path. The same has to be done with |xtherion|,
-%if you want to run it from command line. 
+\subsubchapter XTherion.
 
-\subsubchapter Speed optimization.
+Initialization file for XTherion is actually a Tcl script evaluated when 
+XTherion starts. The file is commented; see the comments for details.
 
-[Optionally creating \MP\ and \TeX\ format files.]
+
+%\subsubchapter Speed optimization.
+%
+%[Optionally creating \MP\ and \TeX\ format files.]
 
 
 \subchapter Map symbols library.
 
 [Gallery of map symbols predefined by Therion.]
 
-%\subchapter Debugging mode.
 
 \subchapter History.
 
 \list
-* 1999
+\everypar{\hangindent16pt\hangafter1}
+* {\bf 1999}
 
   Oct: first concrete ideas
 
-  Nov: start of programming: perl scripts and \MP\ macros
+  Nov: start of programming (Perl scripts and \MP\ macros)
 
-  Dec 27: Therion compiles simple map for the first time
-       (32 kB of source code). This first release had some interesting features
+  Dec 27: Therion compiles simple map for the first time (32 kB of Perl and 
+       \MP\ source code). This first release had some interesting features
        such as {\it transformation functions}, which alowed user-specification
        of the input format for survey data.
 				
-* 2000
+* {\bf 2000}
 
-  Jan: xthedit, a graphical front-end for Therion
+  Jan: xthedit (Tcl/Tk), a graphical front-end for Therion
 
-  Feb 18: start of (first?) reprogramming: perl scripts
+  Feb 18: start of (first?) reprogramming (Perl)
 
   Apr 1: first hyperlinked PDF cave map 
 
   Aug: experiments with PDF, pdf\TeX and \MP
 
-* 2001
+* {\bf 2001}
 
   Nov: start of reimplementation from scratch: 
-       Therion \& interactive 2D map editor ThEdit
-       (as a replacement of xthedit)
+       Therion (C++ with some Perl scripts inherited from the previous version); 
+       interactive 2D map editor ThEdit as a replacement of xthedit (Delphi) 
 
   Dec: ThEdit exports simple map for the first time
 
-* 2002
+* {\bf 2002}
 
   Mar: Therion 0.1 ---
        Therion is able to process survey data (centerline) of Dead Bats Cave.
-       XTherion, text editor designed for Therion.
+       XTherion, text editor designed for Therion (Tcl/Tk).
 
   Jul 27: Therion 0.2 ---
        Therion compiles simple map (consisting of two scraps)
@@ -205,7 +202,7 @@ supported initialization commands follow.
 
 %  Oct 5: Public presentation of Therion, held on Trango\v{s}ka
 
-* 2003
+* {\bf 2003}
 
   Mar: First version of The Therion Book finished
 
@@ -230,7 +227,7 @@ new features to be implemented:
 \subsubchapter 2D maps.
 
 \list
-* real font selection for PDF output
+% * real font selection for PDF output
 * map symbol sets
 * debugging mode
 * SVG support

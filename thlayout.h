@@ -63,6 +63,7 @@ enum {
   TT_LAYOUT_GRID = 2021,
   TT_LAYOUT_PAGE_GRID = 2022,
   TT_LAYOUT_TRANSPARENCY = 2023,
+  TT_LAYOUT_LAYERS = 2024,
 };
 
 
@@ -118,6 +119,7 @@ static const thstok thtt_layout_opt[] = {
   {"grid",TT_LAYOUT_GRID},
   {"grid-origin",TT_LAYOUT_GRID_ORIGIN},
   {"grid-size",TT_LAYOUT_GRID_SIZE},
+  {"layers",TT_LAYOUT_LAYERS},
   {"nav-factor",TT_LAYOUT_NAV_FACTOR},
   {"nav-size",TT_LAYOUT_NAV_SIZE},
   {"opacity",TT_LAYOUT_OPACITY},
@@ -155,10 +157,11 @@ class thlayout : public thdataobject {
   
   thlayoutln * first_line, * last_line;
   
-  bool titlep, transparency, pgsnum, lock, excl_pages, page_grid;
+  bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid;
   
   bool def_grid_size, def_grid_origin, def_nav_factor, def_nav_size, 
-    def_opacity, def_transparency, def_origin, def_origin_label, def_overlap, def_own_pages,
+    def_opacity, def_transparency, def_layers, 
+    def_origin, def_origin_label, def_overlap, def_own_pages,
     def_page_numbers, def_page_setup, def_scale, def_size, def_title_pages,
     def_tex_lines, def_doc_title, def_doc_author, def_doc_subject,
     def_doc_keywords, def_excl_pages, def_grid, def_page_grid;

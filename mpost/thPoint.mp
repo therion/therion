@@ -1,12 +1,10 @@
 %% therion source code
 %%
-%% thPoint -- therion project file of type metapost symbol library
+%% This file defines macros for point map symbols
 %%
-%% This file defines macros for point map signatures
-%%
-%% $Date: 2002/07/30 15:10:22 $
+%% $Date: 2003/07/01 09:06:44 $
 %% $RCSfile: thPoint.mp,v $
-%% $Revision: 1.5 $
+%% $Revision: 1.8 $
 %%
 %% Copyright (C) 2000 Martin Budaj
 %%
@@ -56,7 +54,7 @@
 
 pair U;
 
-def thStalactite_UIS(expr pos,theta,sc,al) =
+def p_stalactite_UIS(expr pos,theta,sc,al) =
     U:=(.15u, .4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -71,7 +69,7 @@ enddef;
 %
 % thStalagmite_UIS((.5,.5) inscale,0,1);
 
-def thStalagmite_UIS(expr pos,theta,sc,al) =
+def p_stalagmite_UIS(expr pos,theta,sc,al) =
     U:=(.15u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -86,7 +84,7 @@ enddef;
 %
 % thPillar_UIS((.5,.5) inscale,0,1);
 
-def thPillar_UIS(expr pos,theta,sc,al) =
+def p_pillar_UIS(expr pos,theta,sc,al) =
     U:=(.15u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -102,7 +100,7 @@ enddef;
 %
 % thCurtain_UIS((.5,.5) inscale,0,1);
 
-def thCurtain_UIS(expr pos,theta,sc,al) =
+def p_curtain_UIS(expr pos,theta,sc,al) =
     U:=(.15u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -117,7 +115,7 @@ enddef;
 %
 % thHelectite_UIS((.5,.5) inscale,0,1);
 
-def thHelectite_UIS(expr pos,theta,sc,al) =
+def p_helectite_UIS(expr pos,theta,sc,al) =
     U:=(.2u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -134,7 +132,7 @@ enddef;
 %
 % thSodaStraw_UIS((.5,.5) inscale,0,1);
 
-def thSodaStraw_UIS(expr pos,theta,sc,al) =
+def p_sodastraw_UIS(expr pos,theta,sc,al) =
     U:=(.5u,.25u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -156,7 +154,7 @@ enddef;
 %
 % thCrystal_UIS((.5,.5) inscale,0,1);
 
-def thCrystal_UIS (expr pos,theta,sc,al)=
+def p_crystal_UIS (expr pos,theta,sc,al)=
     U:=(.35u,.35u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -175,7 +173,7 @@ enddef;
 %
 % thFlowstoneSymbol_UIS((.5,.5) inscale,0,1);
 
-def thFlowstoneSymbol_UIS (expr pos,theta,sc,al)=
+def p_flowstone_UIS (expr pos,theta,sc,al)=
     U:=(.45u,.1u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -192,7 +190,7 @@ enddef;
 %
 % thMoonmilkSymbol_UIS((.5,.5) inscale,0,1);
 
-def thMoonmilkSymbol_UIS (expr pos,theta,sc,al)=
+def p_moonmilk_UIS (expr pos,theta,sc,al)=
     U:=(.5u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -207,7 +205,7 @@ enddef;
 %
 % thWallcalciteSymbol_UIS((.5,.5) inscale,0,1);
 
-def thWallcalciteSymbol_UIS (expr pos,theta,sc,al)=
+def p_wallcalcite_UIS (expr pos,theta,sc,al)=
     U:=(.2u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -223,7 +221,7 @@ enddef;
 %
 % thPopcorn_UIS((.5,.5) inscale,0,1);
 
-def thPopcorn_UIS (expr pos,theta,sc,al)=
+def p_popcorn_UIS (expr pos,theta,sc,al)=
     U:=(.5u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -244,7 +242,7 @@ enddef;
 %
 % thDisk_UIS((.5,.5) inscale,0,1);
 
-def thDisk_UIS (expr pos,theta,sc,al)=
+def p_disk_UIS (expr pos,theta,sc,al)=
     U:=(.2u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -261,7 +259,7 @@ enddef;
 %
 % thGypsum_CCNP((.5,.5) inscale,0,1);
 
-def thGypsum_CCNP (expr pos,theta,sc,al)=
+def p_gypsum_CCNP (expr pos,theta,sc,al)=
     U:=(.25u,.25u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -276,7 +274,7 @@ enddef;
 %
 % thAragonite_CCNP((.5,.5) inscale,0,1);
 
-def thAragonite_CCNP (expr pos,theta,sc,al)=
+def p_aragonite_CCNP (expr pos,theta,sc,al)=
     U:=(.3u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -294,7 +292,7 @@ enddef;
 %
 % thCavepearl_JSSJ((.5,.5) inscale,0,1);
 
-def thCavepearl_JSSJ (expr pos,theta,sc,al)=
+def p_cavepearl_JSSJ (expr pos,theta,sc,al)=
     U:=(.25u,.25u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -312,7 +310,7 @@ enddef;
 % thGypsumflower_CCNP((.5,.5) inscale,0,1);
 % @ENDSYMBOL
 
-def thGypsumflower_CCNP (expr pos,theta,sc,al)=
+def p_gypsumflower_CCNP (expr pos,theta,sc,al)=
     U:=(.4u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -331,7 +329,7 @@ enddef;
 %
 % thRimstonepoolSymbol_ASF((.5,.5) inscale,0,1);
 
-def thRimstonepoolSymbol_ASF (expr pos,theta,sc,al)=
+def p_rimstonepool_ASF (expr pos,theta,sc,al)=
     U:=(.4u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -347,7 +345,7 @@ enddef;
 %
 % thRimstonedamSymbol_ASF((.5,.5) inscale,0,1);
 
-def thRimstonedamSymbol_ASF (expr pos,theta,sc,al)=
+def p_rimstonedam_ASF (expr pos,theta,sc,al)=
     U:=(.4u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -368,7 +366,7 @@ enddef;
 %
 % thAnostomosen_UIS((.5,.5) inscale,0,1);
 
-def thAnostomosen_UIS (expr pos,theta,sc,al)=
+def p_anastomose_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -384,7 +382,7 @@ enddef;
 %
 % thKarren_UIS((.5,.5) inscale,0,1);
 
-def thKarren_UIS (expr pos,theta,sc,al)=
+def p_karren_UIS (expr pos,theta,sc,al)=
     U:=(.5u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -401,7 +399,7 @@ enddef;
 %
 % thScallop_UIS((.5,.5) inscale,0,1);
 
-def thScallop_UIS (expr pos,theta,sc,al)=
+def p_scallop_UIS (expr pos,theta,sc,al)=
     U:=(.2u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -416,7 +414,7 @@ enddef;
 %
 % thFlute_UIS((.5,.5) inscale,0,1);
 
-def thFlute_UIS (expr pos,theta,sc,al)=
+def p_flute_UIS (expr pos,theta,sc,al)=
     U:=(.5u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -431,7 +429,7 @@ enddef;
 %
 % thRaft_CCNP((.5,.5) inscale,0,1);
 
-def thRaft_CCNP (expr pos,theta,sc,al)=
+def p_raft_CCNP (expr pos,theta,sc,al)=
     U:=(.5u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -446,7 +444,7 @@ enddef;
 %
 % thRaftcone_CCNP((.5,.5) inscale,0,1);
 
-def thRaftcone_CCNP (expr pos,theta,sc,al)=
+def p_raftcone_CCNP (expr pos,theta,sc,al)=
     U:=(.3u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -454,14 +452,14 @@ def thRaftcone_CCNP (expr pos,theta,sc,al)=
 enddef;
 
 
-def thSpring_SKBB (expr pos,theta,sc,al)=
+def p_spring_SKBB (expr pos,theta,sc,al)=
   U:=(.3u,.2u);
   T:=identity aligned al rotated theta scaled sc shifted pos;
   pickup PenC;
   thdraw (-.3u,.2u){down}..(0,-.2u)..{up}(.3u,.2u);
 enddef;
 
-def thSink_SKBB (expr pos,theta,sc,al)=
+def p_sink_SKBB (expr pos,theta,sc,al)=
   U:=(.3u,.2u);
   T:=identity aligned al rotated theta scaled sc shifted pos;
   pickup PenC;
@@ -480,7 +478,7 @@ enddef;
 %
 % thNarrowend_UIS((.5,.5) inscale,0,1);
 
-def thNarrowend_UIS (expr pos,theta,sc,al)=
+def p_narrowend_UIS (expr pos,theta,sc,al)=
     U:=(.1u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -488,7 +486,7 @@ def thNarrowend_UIS (expr pos,theta,sc,al)=
     thdraw (.1u,-.4u)--(.1u,.4u);
 enddef;
 
-def thLowend_UIS (expr pos,theta,sc,al)=
+def p_lowend_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.1u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -503,7 +501,7 @@ enddef;
 %
 % thLowend_CCNP((.5,.5) inscale,0,1);
 
-def thLowend_CCNP (expr pos,theta,sc,al)=
+def p_lowend_CCNP (expr pos,theta,sc,al)=
     U:=(.4u,0);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -517,7 +515,7 @@ enddef;
 %
 % thFlowstonechoke_CCNP((.5,.5) inscale,0,1);
 
-def thFlowstonechoke_CCNP (expr pos,theta,sc,al)=
+def p_flowstonechoke_CCNP (expr pos,theta,sc,al)=
     U:=(.4u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -535,7 +533,7 @@ enddef;
 %
 % thBreakdownchoke_CCNP((.5,.5) inscale,0,1);
 
-def thBreakdownchoke_CCNP (expr pos,theta,sc,al)=
+def p_breakdownchoke_CCNP (expr pos,theta,sc,al)=
     U:=(.5u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -557,7 +555,7 @@ enddef;
 %
 % thBedrock_ASF((.5,.5) inscale,0,1);
 
-def thBedrock_ASF (expr pos,theta,sc,al)=
+def p_bedrock_ASF (expr pos,theta,sc,al)=
     U:=(.5u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -573,7 +571,7 @@ enddef;
 %
 % thSandSymbol_UIS((.5,.5) inscale,0,1);
 
-def thSandSymbol_UIS (expr pos,theta,sc,al)=
+def p_sand_UIS (expr pos,theta,sc,al)=
     U:=(.2u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenB;
@@ -589,7 +587,7 @@ enddef;
 %
 % thPebblesSymbol_UIS((.5,.5) inscale,0,1);
 
-def thPebblesSymbol_UIS (expr pos,theta,sc,al)=
+def p_pebbles_UIS (expr pos,theta,sc,al)=
     U:=(.45u,.35u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -606,7 +604,7 @@ enddef;
 %
 % thDebrisSymbol_UIS((.5,.5) inscale,0,1);
 
-def thDebrisSymbol_UIS (expr pos,theta,sc,al)=
+def p_debris_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -622,7 +620,7 @@ enddef;
 %
 % thBlocksSymbol_UIS((.5,.5) inscale,0,1);
 
-def thBlocksSymbol_UIS (expr pos,theta,sc,al)=
+def p_blocks_UIS (expr pos,theta,sc,al)=
     U:=(.5u,.5u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -647,7 +645,7 @@ enddef;
 % @ENDSYMBOL
 % @USE thLakePattern_UIS
 
-def thWaterSymbol_UIS (expr pos,theta,sc,al)=
+def p_water_UIS (expr pos,theta,sc,al)=
     U:=(.425u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenD;
@@ -663,7 +661,7 @@ enddef;
 %
 % thIceSymbol_UIS((.5,.5) inscale,0,1);
 
-def thIceSymbol_UIS (expr pos,theta,sc,al)=
+def p_ice_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.35u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenD;
@@ -687,7 +685,7 @@ enddef;
 %
 % thArcheological_UIS((.5,.5) inscale,0,1);
 
-def thArcheological_UIS (expr pos,theta,sc,al)=
+def p_archeomaterial_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -705,7 +703,7 @@ enddef;
 %
 % thPaleontological_UIS((.5,.5) inscale,0,1);
 
-def thPaleontological_UIS (expr pos,theta,sc,al)=
+def p_paleomaterial_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     thfill (-.4u,-.2u)..(-.2u,-.08u)---(-.1u,.05u)---(0,.2u)..(-.03u,.4u)..
@@ -721,7 +719,7 @@ enddef;
 %
 % thGuano_UIS((.5,.5) inscale,0,1);
 
-def thGuano_UIS (expr pos,theta,sc,al)=
+def p_guano_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.35u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -735,7 +733,7 @@ enddef;
 %
 % thVegetabledebris_ASF((.5,.5) inscale,0,1);
 
-def thVegetabledebris_ASF (expr pos,theta,sc,al)=
+def p_vegetabledebris_ASF (expr pos,theta,sc,al)=
     U:=(.38u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -752,7 +750,7 @@ enddef;
 %
 % thRoot_ASF((.5,.5) inscale,0,1);
 
-def thRoot_ASF (expr pos,theta,sc,al)=
+def p_root_ASF (expr pos,theta,sc,al)=
     U:=(.1u,.5u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -773,7 +771,7 @@ enddef;
 %
 % thEntrancearrow_UIS((.5,.5) inscale,0,1);
 
-def thEntrancearrow_UIS (expr pos,theta,sc,al)=
+def p_entrance_UIS (expr pos,theta,sc,al)=
     U:=(.2u,.5u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     thfill (-.2u,-.5u)--(0,.5u)--(.2u,-.5u)--cycle;
@@ -786,7 +784,7 @@ enddef;
 %
 % thPaleoflow_UIS((.5,.5) inscale,0,1);
 
-def thPaleoflow_UIS (expr pos,theta,sc,al)=
+def p_waterflow_paleo_UIS (expr pos,theta,sc,al)=
     U:=(.2u,u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -804,7 +802,7 @@ enddef;
 %
 % thGradientarrow_UIS((.5,.5) inscale,0,1);
 
-def thGradientarrow_UIS (expr pos,theta,sc,al)=
+def p_gradient_UIS (expr pos,theta,sc,al)=
     U:=(.15u,u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -821,7 +819,7 @@ enddef;
 %
 % thPermanentstreamarrow_UIS((.5,.5) inscale,0,1);
 
-def thPermanentstreamarrow_UIS (expr pos,theta,sc,al)=
+def p_waterflow_permanent_UIS (expr pos,theta,sc,al)=
     U:=(.15u,.5u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -841,7 +839,7 @@ enddef;
 %
 % thIntermittentstreamarrow_UIS((.5,.5) inscale,0,1);
 
-def thIntermittentstreamarrow_UIS (expr pos,theta,sc,al)=
+def p_waterflow_intermittent_UIS (expr pos,theta,sc,al)=
   drawoptions(dashed evenly scaled .5);
   thPermanentstreamarrow_UIS (pos,theta,sc,al);
   drawoptions();
@@ -854,7 +852,7 @@ enddef;
 %
 % thAirflowarrow_UIS((.5,.5) inscale,0,1,3);
 
-def thAirflowarrow_UIS (expr pos,theta,sc,intens,al)=
+def p_airdraught_UIS (expr pos,theta,sc,intens,al)=
   U:=(.2u,u);
   T:=identity aligned al rotated theta scaled sc shifted pos;
   pickup PenC;
@@ -867,7 +865,7 @@ def thAirflowarrow_UIS (expr pos,theta,sc,intens,al)=
 	endfor;
 enddef;
 
-def thSectionarrow_SKBB (expr pos,theta)=
+def p_section_SKBB (expr pos,theta)=
     T:=identity rotated theta shifted pos;
     pickup PenC;
     thdraw (0,0)--(0,.8u);
@@ -883,7 +881,7 @@ enddef;
 %
 % thUndefinedSymbol((.5,.5) inscale,0,1);
 
-def thUndefinedSymbol(expr pos,theta,sc,al)=
+def p_undefined(expr pos,theta,sc,al)=
     U:=(.4u,.4u);
     T:=identity aligned al scaled sc shifted pos;
     pickup PenC;
@@ -901,7 +899,7 @@ enddef;
 %
 % thFixedstation_ASF((.5,.5) inscale);
 
-def thFixedstation_ASF (expr pos)=
+def p_station_fixed_ASF (expr pos)=
     T:=identity shifted pos;
     pickup PenD;
     pair z;
@@ -911,7 +909,7 @@ def thFixedstation_ASF (expr pos)=
     thdraw origin;
 enddef;
 
-def thPaintedstation_SKBB (expr pos)=
+def p_station_painted_SKBB (expr pos)=
     T:=identity shifted pos;
     pickup PenC;
     thclean fullcircle scaled 0.25u;
@@ -926,7 +924,7 @@ enddef;
 %
 % thNaturalstation_ASF((.5,.5) inscale);
 
-def thNaturalstation_ASF (expr pos)=
+def p_station_natural_ASF (expr pos)=
     T:=identity shifted pos;
     pickup PenD;
     thclean fullcircle scaled .3u;
@@ -941,7 +939,7 @@ enddef;
 %
 % thTemporarystation_ASF((.5,.5) inscale);
 
-def thTemporarystation_ASF (expr pos)=
+def p_station_temporary_ASF (expr pos)=
     T:=identity shifted pos;
     pickup PenD;
     p:=(-.2u,0)--(.2u,0);
@@ -952,7 +950,7 @@ def thTemporarystation_ASF (expr pos)=
     thdraw origin;
 enddef;
 
-def NoMorphStation (expr pos)=
+def p_station_NoMorph (expr pos)=
     T:=identity shifted pos;
     thdraw origin withpen pencircle scaled 3pt withcolor blue;
 enddef;
@@ -972,7 +970,7 @@ enddef;
 
 % alignment!
 
-def thEquipmentSymbol_SKBB(expr pos,type) =
+def p_equipment_SKBB(expr pos,type) =
   begingroup
   interim defaultscale:=0.8;
   thCircledlabel(
@@ -1003,6 +1001,6 @@ enddef;
 
 % doesn't call process_label();
 
-def thContinuation_UIS(expr pos,theta,sc,al) =
+def p_continuation_UIS(expr pos,theta,sc,al) =
    draw thelabel("?", pos);
 enddef;

@@ -4,7 +4,25 @@ encoding  utf-8
 source "tests/map_plan.th"
 
 # Export settings.
-export map -layout-title "Pokusna jaskyna"
+export map -layout-title "Pokusna jaskyna" -layout-layers off
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -64,13 +64,13 @@ set xth(app,cp,filetypes) {
 
 set xth(icmds) {survey}
 set xth(cmds) {scrap centerline grade line area map}
-set dfs {6s}                    
-set dfss {4s}                    
-set dfuf {6.1fx {-}}             
-set dfdf {+6.2fx {-}}            
-set dfcf {6.2fx {-}}             
+set dfs {8s}                    
+set dfss {8s}                    
+set dfuf {8.2fx {-}}             
+set dfdf {+8.2fx {-}}            
+set dfcf {8.2fx {-}}             
 set dfccf {8.2f {-}}            
-set dfgf {{6.1fx} {up down -}} 
+set dfgf {{8.2fx} {up down -}} 
 set xth(datafmts) [list \
   "unknown      $dfs" \
   "station      $dfss" \
@@ -164,6 +164,10 @@ case $tcl_platform(platform) {
     set xth(gui,compshow) 1
   }
   windows {
+    package require registry
+    catch {
+      set xth(gui,compcmd) "\"[file join [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} InstallDir] therion.exe]\""
+    }
     set xth(gui,efont) "Courier 16 roman bold"
     set xth(gui,platform) windows
     set xth(gui,cursor) arrow
@@ -174,9 +178,9 @@ case $tcl_platform(platform) {
       read $fid;
       close $fid
     }]} {
-      set xth(gui,compcmd) "command.com /c therion"
+      set xth(gui,compcmd) "command.com /c $xth(gui,compcmd)"
     } else {
-      set xth(gui,compcmd) "cmd.exe /c therion"
+      set xth(gui,compcmd) "cmd.exe /c $xth(gui,compcmd)"
     }
   }
   macintosh {
@@ -188,7 +192,7 @@ case $tcl_platform(platform) {
 }
 # end of platform dependend settings
 
-set xth(about,info) "xtherion v1.0 beta\n \u00A9 2002 Stacho Mudrak"
+set xth(about,info) "xtherion $xth(about,ver)\n \u00A9 2002-2003 Stacho Mudrak"
 set xth(about,image_data) {
 R0lGODlhwACQAOcAAAAAAAAAVQAAqgAA/wAkAAAkVQAkqgAk/wBJAABJVQBJ
 qgBJ/wBtAABtVQBtqgBt/wCSAACSVQCSqgCS/wC2AAC2VQC2qgC2/wDbAADb

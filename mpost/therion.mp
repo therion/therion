@@ -5,9 +5,9 @@
 %% This file defines low-level MetaPost macros and variables required
 %% for generation of map symbols
 %%
-%% $Date: 2003/04/23 14:09:50 $
+%% $Date: 2003/07/01 09:06:44 $
 %% $RCSfile: therion.mp,v $
-%% $Revision: 1.2 $
+%% $Revision: 1.3 $
 %%
 %% Copyright (C) 2000-2003 Martin Budaj
 %%
@@ -278,6 +278,28 @@ enddef;
 % writes clipping path to a file
 
 def process_updownlabel =
+    p:=bbox lab;
+    leftside:=xpart llcorner p;
+    rightside:=xpart lrcorner p;
+    draw (xpart llcorner p,.5[ypart llcorner p,ypart ulcorner p]) -- 
+         (xpart lrcorner p,.5[ypart llcorner p,ypart ulcorner p]);
+    alef:=1.05-.02*(xpart lrcorner p - xpart llcorner p);
+%    alef:=.8-.02*(rightside-leftside);
+    p:=alef[(leftside, ypart llcorner p),(leftside, ypart ulcorner p)]{up} .. 
+       {down}alef[(rightside, ypart lrcorner p), (rightside, ypart urcorner p)]
+        -- alef[(rightside, ypart urcorner p), (rightside, ypart lrcorner p)]{down}
+        .. {up}alef[(leftside, ypart ulcorner p),(leftside, ypart llcorner p)]
+        -- cycle;
+%    p:=alef[llcorner p,ulcorner p]{up} .. {down}alef[lrcorner p, urcorner p] --
+%        aleff[llcorner p,ulcorner p]{down} .. 
+%        {up}aleff[lrcorner p, urcorner p] -- cycle;
+    draw lab;
+    draw p;
+    p:=reverse p;
+    write_circ_bbox(p);
+enddef;
+
+def process_updownlabel_OLD =
     p:=bbox lab;
     q:=bbox Lab;
     leftside:=min(xpart llcorner p, xpart ulcorner q);

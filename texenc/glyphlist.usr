@@ -1,0 +1,7 @@
+# Define custom PostScriptGlyphName to Unicode mappings here (i.e. for glyph 
+# names which are neither included in AGL nor in the form /uniXXXX or /uXXXX).
+#
+# This file also overrides the AGL mappings so it's possible to change it here.
+#
+# Syntax: <name>;<hexadecimal unicode value><newline character>
+Omega;03A9

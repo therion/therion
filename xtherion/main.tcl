@@ -26,7 +26,11 @@
 ## --------------------------------------------------------------------
 
 xth_app_finish
-xth_app_show [lindex $xth(app,list) 0]
+if {[llength $xth(app,list)] > 2} {
+  xth_app_show [lindex $xth(app,list) 2]
+} else {
+  xth_app_show [lindex $xth(app,list) 0]
+}
 
 xth_app_clock
 

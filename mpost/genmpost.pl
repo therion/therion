@@ -23,7 +23,9 @@ while ($ln = <INPT>) {
       $fname = $1;
       $thmpost_library .= "\n\"\\n\\n\\n%%%%% INPUT $fname %%%%%\\n\\n\\n\"";
       while($ln2 = <INPT2>) {
-        $thmpost_library .= "\n\"" . encodecxx($ln2) . "\\n\"";
+        if ($ln2 !~ /\s*endinput\s*\;\s*$/) {
+          $thmpost_library .= "\n\"" . encodecxx($ln2) . "\\n\"";
+        }
       }
       close(INPT2);
       $thmpost_library .= "\n\"\\n\\n\\n%%%%% ENDINPUT $fname %%%%%\\n\\n\\n\"";

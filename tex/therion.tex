@@ -1,7 +1,7 @@
 %% 
 %% therion.tex
 %%
-%% Copyright (C) 2001-2002 Martin Budaj
+%% Copyright (C) 2001-2003 Martin Budaj
 %%
 %% -------------------------------------------------------------------- 
 %% This program is free software; you can redistribute it and/or modify
@@ -116,22 +116,13 @@
 
 \def\includechars#1:#2\endinclude{\pdfincludechars#1{#2}}
 
-    
-% there should be more general font selection in the future
-
-\font\big=csss10 at 20 pt
-\font\middle=csss10 at 16 pt
-\font\norm=csss10
-
-\norm
-
 \def\legendbox#1#2{\hbox{\raise12pt\vtop{\pdfrefxform#1}\quad#2}\medskip}
 
 \let\PL\pdfliteral
 
 \def\PB#1#2#3{\rlap{\kern#1bp\raise#2bp\hbox{\pdfrefxform#3}}} %placebox
 
-\def\TITLE#1{\eject\hbox{}\vskip5cm\centerline{\big#1}\vfil\eject}
+\def\TITLE#1{\eject\hbox{}\vskip5cm\centerline{\size[24]#1}\vfil\eject}
 
 % processing of the E-W-N-S references
 
@@ -192,9 +183,9 @@
     \bigskip
     \line{%
      \vbox to \ht\navbox{
-      \hbox{\big\the\pagelabel
+      \hbox{\size[20]\the\pagelabel
         \ifpagenumbering\space(\the\pagenum)\fi
-        \space\middle\the\pagename}
+        \space\size[16]\the\pagename}
       \ifpagenumbering
         \medskip
         \hbox{\qquad\qquad
@@ -225,11 +216,14 @@
 \def\maplegend{}
 
 \def\insertmaps{%
+  \input th_enc
   \input th_resources
   \input th_fontdef
   \input th_formdef
   \input th_pagedef
   \input th_pages
+  \immediate\write-1{ \the\count10 \space numeric registers used out of 
+            \ifx\eTeXversion\undefined256\else32768\fi}
 }
     
 \def\insertlegend{%

@@ -1,12 +1,10 @@
 %% therion source code
 %%
-%% thPatterns -- therion project file of type metapost symbol library
+%% This file defines tiling patterns
 %%
-%% This file defines macros for pattern fills
-%%
-%% $Date: 2002/07/30 15:10:22 $
+%% $Date: 2003/07/01 09:06:44 $
 %% $RCSfile: thPatterns.mp,v $
-%% $Revision: 1.3 $
+%% $Revision: 1.6 $
 %%
 %% Copyright (C) 2000 Martin Budaj
 %%

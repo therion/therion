@@ -536,7 +536,14 @@ Point is a command for drawing a point map symbol.
   * |orientation/orient <number>| = defines the orientation
     of the symbol. If not specified, it's oriented to north.
     0 $\le$ |number| $<$ 360.
-  * |text| = text of the label or remark
+  * |text| = text of the label or remark. It may include following formatting
+    keywords:
+    
+    |<br>| = line break
+    
+    |<center>|, |<left>|, |<right>| = line alignment for multi-line labels. 
+    Ignored if there is no |<br>| tag.
+        
   * |value| = value of height, passage-height or altitude label
   * |align| = alignment of the symbol or text. The following values
     are accepted: center, c, top, t, bottom, b, left, l, right, r,

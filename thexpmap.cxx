@@ -50,6 +50,8 @@
 #include "thpdfdata.h"
 #include "thmpost.h"
 #include "thtex.h"
+#include "thcmdline.h"
+#include "thtexfonts.h"
 #include <fstream>
 #include <map>
 #include <set>
@@ -396,7 +398,10 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   fclose(tf);
 
   tf = fopen(thtmp.get_file_name("data.tex"),"w");
-  fprintf(tf,"%s\n",thtex_library);
+  if (thcmdln.extern_libs)
+    fprintf(tf,"\\input therion.tex\n");
+  else
+    fprintf(tf,"%s\n",thtex_library);
   this->layout->export_pdftex(tf,prj);     
   fprintf(tf,"\\end\n");
   fclose(tf);
@@ -418,14 +423,37 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   
   thexpmap_quick_map_export_scale = this->layout->scale;
   fprintf(mpf,"Scale:=%f;\n",1 / this->layout->scale);
-  fprintf(mpf,"%s\n",thmpost_library);
-  fprintf(mpf,"verbatimtex \\font\\default=csss10\\default etex;\n");
-  fprintf(mpf,"verbatimtex \\font\\it=csssi8 etex;\n");
+  fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
+  if (thcmdln.extern_libs)
+    fprintf(mpf,"input therion;\n");
+  else
+    fprintf(mpf,"%s\n",thmpost_library);
+
+  fprintf(mpf,"verbatimtex \\def\\updown#1#2{\\vbox{%%\n");
+  fprintf(mpf,"    \\offinterlineskip\n");
+  fprintf(mpf,"    \\setbox100=\\hbox{#1}\n");
+  fprintf(mpf,"    \\setbox101=\\hbox{#2}\n");
+  fprintf(mpf,"    \\ifnum\\wd100>\\wd101\\hsize=\\wd100\\else\\hsize=\\wd101\\fi\n");
+  fprintf(mpf,"    \\centerline{\\box100}\\vskip4pt\n");
+  fprintf(mpf,"    \\centerline{\\box101}}}\n");
+  fprintf(mpf,"  \\def\\thlabel{\\size[10]}\n");
+  fprintf(mpf,"  \\def\\thremark{\\size[8]\\si}\n");
+  fprintf(mpf,"  \\def\\thaltitude{\\size[8]}\n");
+  fprintf(mpf,"  \\def\\thstationname{\\size[8]}\n");
+  fprintf(mpf,"  \\def\\thdate{\\size[8]}\n");
+  fprintf(mpf,"  \\def\\thheight{\\size[8]}\n");
+  fprintf(mpf,"  \\def\\thheightpos{\\size[8]+\\ignorespaces}\n");
+  fprintf(mpf,"  \\def\\thheightneg{\\size[8]-\\ignorespaces}\n");
+  fprintf(mpf,"  \\def\\thframed{\\size[8]}\n");
+  fprintf(mpf,"  \\def\\thwallaltitude{\\size[8]}\n");
+  fprintf(mpf,"etex;\n");
+
+  fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
+  fprintf(mpf,"defaultscale:=0.8;\n\n");
 
   // prida nultu figure
   // fprintf(mpf,"beginfig(0);\nendfig;\n");
-  
- 
+   
   fprintf(plf,"%%SCRAP = (\n");
   while (cmap != NULL) {
     cbm = cmap->first_bm;
@@ -782,6 +810,10 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   wdir.guarantee(1024);
   getcwd(wdir.get_buffer(),1024);
   chdir(thtmp.get_dir_name());
+  
+  // vypise kodovania
+  print_fonts_setup();
+  
   int retcode;
   
   if (!quick_map_exp) {
@@ -1190,13 +1222,16 @@ unsigned thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
               if (((lp->tags | TT_LINEPT_TAG_ALTITUDE) > 0) &&
                   (!thisnan(lp->rsize))) {
                 thexpmap_export_mp_bgif;
-                fprintf(out->file,"Altitude(");
+                fprintf(out->file,"p_wall_altitude(");
                 lp->export_prevcp_mp(out);
                 fprintf(out->file,",");
                 lp->point->export_mp(out);
                 fprintf(out->file,",");
                 lp->export_nextcp_mp(out);
-                fprintf(out->file,",\"%.0f\");\n",lp->rsize);
+                thdb.buff_enc.guarantee(4096);
+                sprintf(thdb.buff_enc.get_buffer(),"%.0f",lp->rsize);
+                fprintf(out->file,",btex \\thwallaltitude %s etex);\n",utf2tex(thdb.buff_enc.get_buffer()));
+//                fprintf(out->file,",\"%.0f\");\n",lp->rsize);
               }
               lp = lp->nextlp;
             }

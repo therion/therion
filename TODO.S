@@ -1,26 +1,19 @@
 HNED:
-+ do search path vo Win32 pridat cestu z registrov, do THINIT
-+ v thbooku pomenit ENVIRONMENT - popisat poradie v ktorom hlada
-+ urobit make binary
-  WIN32: therion.exe, thbook.pdf, xtherion.tcl, therion.ini, xtherion.ini, 
-    README
-  LINUX: therion, xtherion, thbook.pdf, therion.ini, xtherion.ini,
-    README
++ skusit HOMEDRIVE + HOMEPATH - ked to neni HOME
 + kontrolovat ci retazce vo vstupnych suboroch su korektne --
   najmae pre utf-8 vstupne kodovanie
-+ option pre standardne vkladanie texu a mpostu (tak ako to bolo kedysi)
 + do section line pridat moznost head (begin,end,none,both)
++ rozlisit makra pre tex-mapu, tex-atlas a metapost (neskoor SVG)
 + viacnasobne spajanie scrapov (join s1 s2 -count 2)
 
+HOTOVO:
 
 TROCHU NESKOOR:
-+ rozlisit makra pre tex-mapu, tex-atlas a metapost (neskoor SVG)
++ urobit Linuxovske RPMka
 + rychly mod pre kompilaciu - bez spustania MPostu a bez konverzie
 + vypustenie priecnych rezov pre mapu aj atlas do layoutu
   * vypustit section scrapy a section lines
-+ vyplnit zvysne polia pre thpdf
 + rozsirit cislovanie suborov pre metapost na podadresare
-+ zjednotit export textov do TeXu - pripravit sa na fonty
 + exportovat styl gridu - ked to bude podporovane v thpdf
 + statistika na mapy a scrapy 
   * thstatmap

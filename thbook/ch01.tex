@@ -98,7 +98,7 @@ It may look quite complicated, but this approach has a lot of advantages:
 %* ...
 \endlist
 
-\subchapter How does it work?.
+\subchapter Software requirements.
 
 ``A program should do one thing, and do it well.'' (Ken Thompson) 
 Therefore we use some valuable external programs, which are related to the problems of cave 
@@ -106,26 +106,64 @@ surveying, typesetting and data visualization. Therion can then do its task
 much better than if it was a standalone application in which you could calibrate 
 your printer or scanner and with one click send e-mail with your data.
 
-The compilation of Therion requires GNU C/C++ compiler. 
-If you use the precompiled version, you don't need this.
-
-To run it you need:
+Therion needs:
 \list
 * recent Survex (necessary if you want to process any survey data)
+  \path|http://www.survex.com|
+  
 * \TeX\ distribution with at least \TeX\ with Plain format, 
   recent pdf-$\varepsilon$-\TeX, and \MP\ with accompanying programs. 
   (\TeX\ and friends is necessary only if you want to create 2D maps.)
-* Tcl/Tk 8.4 and newer (for XTherion)
+  Plain should be the default format for \TeX; 
+  Therion doesn't use La\TeX\ or other available formats. If you 
+  have any doubts, install any full distribution of \TeX. (TeXlive for any 
+  platform, teTeX for Unix, fpTeX or MikTeX for Windows.) If you're new
+  to \TeX, visit the homepage of {\it \TeX\ Users Group} at 
+  \path|http://www.tug.org|
+
+* Tcl/Tk 8.4.3 and newer (|http://www.tcl.tk|) with BWidget widget set 
+  (\path|http://sourceforge.net/projects/tcllib|). Tcl/Tk is only required for 
+  XTherion. For Windows try ActiveTcl from |http://www.activestate.com|.
 \endlist
 
-For displaying the results you need:
-\list
-* Aven or xcaverot from Survex package for viewing the simple 3D model
-* any PDF viewer like Acrobat Reader, ghostscript or xpdf for displaying  
-  2D maps
-\endlist
+Get all this working before installing Therion. We don't provide any support 
+concerning this. All these programs are well documented and accessible on the 
+net.
 
-Detailed instructions for Therion installation are in the {\it Appendix}.
+
+\subchapter Installation.
+
+Primary Therion distribution is the source code. This needs be compiled 
+according to instructions in the {\it Appendix}.
+
+For users' convenience there are also precompiled binaries for Linux and 
+Windows. 
+
+{\bf Installation on Linux (*.tar.gz package):}
+
+Copy the binary files `therion' and `xtherion' to `/usr/bin'; initialization 
+files `therion.ini' and `xtherion.ini' to `/etc'.
+
+{\bf Installation on Linux (*.rpm package):}
+
+[Not distributed yet]
+
+{\bf Installation on Windows:}
+
+Run the setup program and follow instructions.
+
+
+\subsubchapter Setting-up environment.
+
+Therion reads settigs from the initialization file. Default settings should 
+work fine for users using only ASCII (non-accented latin) characters, 
+standard \TeX\ and \MP. 
+
+If you want to use accented latin or non-latin characters, edit initialization 
+file. Instructions on how to do this are in the {\it Appendix}.
+
+
+\subchapter How does it work?.
 
 So, now it's clear what Therion needs, let's have a look at the way 
 it interacts with all these programs:
@@ -159,9 +197,16 @@ according to them. Therion exports data for 2D maps in \MP\ format. \MP\ gives
 the actual shape to abstract map symbols according to map symbol definitions; it
 creates a lot of PostScript files with small fragments of the cave. These are 
 read back and converted to a PDF-like format, which forms input data 
-for pdf\TeX. Pdf\TeX does all the typesetting and creates a PDF file of the cave 
+for pdf\TeX. Pdf\TeX\ does all the typesetting and creates a PDF file of the cave 
 map. Therion may also export simple 3D model (survey shots only) in Survex *.3d 
 and Compass *.plt formats. 
+
+For displaying the results you need:
+\list
+* Aven or xcaverot from Survex package for viewing the simple 3D model
+* any PDF viewer like Acrobat Reader, ghostscript or xpdf for displaying  
+  2D maps
+\endlist
 
 [Complex 3D in the future]
 

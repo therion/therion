@@ -148,6 +148,17 @@ There are also some predefined macros which help with the processing of
 }|
 \endlist
 
+For font management there are macros 
+
+\list
+* |\size[#1]| for size changes, and
+
+* |\rm|, |\it|, |\bf|, |\ss|, |\si| for type face switching.
+\endlist
+
+If you use own texts in \TeX\ macros (like a label for the scale bar), these 
+font switches work only in restricted manner: it's supposed that all characters 
+are present in the first encoding specified in the initialization file. 
 
 Now we're ready to define the |\dopage| macro. You may choose which of the 
 predefined elements to use. A very simple example would be
@@ -181,9 +192,9 @@ More advanced is the default definition of the |\dopage| macro:
     \bigskip
     \line{%
      \vbox to \ht\navbox{
-      \hbox{\big\the\pagelabel
+      \hbox{\size[20]\the\pagelabel
         \ifpagenumbering\space(\the\pagenum)\fi
-        \space\middle\the\pagename}
+        \space\size[16]\the\pagename}
       \ifpagenumbering
         \medskip
         \hbox{\qquad\qquad
@@ -203,13 +214,13 @@ More advanced is the default definition of the |\dopage| macro:
 	  }
         }
       \fi
-      \vss}\hss
+      \vss
+      \scalebar{10}m
+      }\hss
       \box\navbox
     }
   }
 }|
-
-{\it Note:} |\big| and |\middle| are font switches
 
 Using other plain \TeX\ macros or \TeX\ primitives it's possible to add other 
 features, e.g.~a different layout for odd and even pages; headers and footers;

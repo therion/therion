@@ -1,12 +1,10 @@
 %% therion source code
 %%
-%% thLine -- therion project file of type metapost symbol library
-%%
 %% This file defines macros for line symbols
 %%
-%% $Date: 2002/07/30 15:12:32 $
+%% $Date: 2003/07/01 09:06:44 $
 %% $RCSfile: thLine.mp,v $
-%% $Revision: 1.1 $
+%% $Revision: 1.4 $
 %%
 %% Copyright (C) 2000 Martin Budaj
 %%
@@ -44,13 +42,13 @@ enddef;
 
 % walls:
 
-def thWall_UIS (expr P) = 
+def l_wall_bedrock_UIS (expr P) = 
   T:=identity;
   pickup PenA;
   thdraw P;
 enddef;
 
-def thSandwall_SKBB (expr P) = 
+def l_wall_sand_SKBB (expr P) = 
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -67,17 +65,17 @@ def thSandwall_SKBB (expr P) =
   thdraw P;
 enddef;
 
-def thClaywall_SKBB (expr P) = 
+def l_wall_clay_SKBB (expr P) = 
   T:=identity;
   thUndefinedPath(P);
 enddef;
 
-def thPebbleswall_SKBB (expr P) = 
+def l_wall_pebbles_SKBB (expr P) = 
   T:=identity;
   thUndefinedPath(P);
 enddef;
 
-def thDebriswall_SKBB (expr P) = 
+def l_wall_debris_SKBB (expr P) = 
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -92,7 +90,7 @@ def thDebriswall_SKBB (expr P) =
   endfor;
 enddef;
 
-def thBlockswall_SKBB (expr P) = 
+def l_wall_blocks_SKBB (expr P) = 
 %  pickup PenD;
 %  draw P withcolor red;
 
@@ -115,24 +113,24 @@ if dlzka > 0:
 fi;
 enddef;
 
-def thIcewall_SKBB (expr P) = 
+def l_wall_ice_SKBB (expr P) = 
   T:=identity;
   thUndefinedPath(P);
 enddef;
 
-def thUnderlyingwall_UIS (expr P) = 
+def l_wall_underlying_UIS (expr P) = 
   T:=identity;
   pickup PenA;
   thdraw P dashed evenly;
 enddef;
 
-def thUnsurveyedwall_SKBB (expr P) = 
+def l_wall_unsurveyed_SKBB (expr P) = 
   T:=identity;
   pickup PenC;
   thdraw P;
 enddef;
 
-def thPresumedwall_UIS (expr P) = 
+def l_wall_presumed_UIS (expr P) = 
   T:=identity;
   pickup PenA;
   thdraw P dashed evenly scaled 2;
@@ -140,7 +138,7 @@ enddef;
 
 % other line symbols
 
-def thPit_UIS (expr P) = 
+def l_pit_UIS (expr P) = 
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -156,7 +154,7 @@ def thPit_UIS (expr P) =
   thdraw P;
 enddef;
 
-def thOverhang_SKBB (expr P) =
+def l_overhang_SKBB (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -177,13 +175,13 @@ def thOverhang_SKBB (expr P) =
 enddef;
 
 
-def thChimney_UIS (expr P) = 
+def l_chimney_UIS (expr P) = 
   T:=identity;
   pickup PenC;
   thdraw P dashed evenly;
 enddef;
 
-def thChimney_SKBB (expr P) =
+def l_chimney_SKBB (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -200,7 +198,7 @@ def thChimney_SKBB (expr P) =
   endfor;
 enddef;
 
-def thSlope_UIS (expr P, showline, widthA, widthB) = 
+def l_slope_UIS (expr P, showline, widthA, widthB) = 
   T:=identity;
   boolean par;
   cas := 0;
@@ -225,7 +223,7 @@ enddef;
 
 boolean alw_perpendicular;
 
-def thSlope_SKBB (expr P,S)(text Q) = 
+def l_slope_SKBB (expr P,S)(text Q) = 
 %show Q;
   T:=identity;
   numeric dirs[];
@@ -356,7 +354,7 @@ def thSlope_SKBB (expr P,S)(text Q) =
 enddef;
 
 
-def thContour_UIS(expr P)(text txt) =      % osetrit Reverse!
+def l_contour_UIS(expr P)(text txt) =      % osetrit Reverse!
   T:=identity;
   pickup PenD;
   thdraw P;
@@ -371,14 +369,14 @@ def thContour_UIS(expr P)(text txt) =      % osetrit Reverse!
 enddef;
 
 
-def thRockborder_UIS (expr P) = 
+def l_rockborder_UIS (expr P) = 
   T:=identity;
   pickup PenC;
   thdraw P;
 enddef;
 
 
-def thRockedge_UIS (expr P) = 
+def l_rockedge_UIS (expr P) = 
   T:=identity;
   pickup PenD;
   thdraw P;
@@ -387,21 +385,19 @@ enddef;
 
 
 
-def thBorder_SKBB (expr Path) =
+def l_border_visible_SKBB (expr Path) =
   T:=identity;
   pickup PenC;
   draw Path;
 enddef;
 
-def thTemporaryBorder_SKBB (expr Path) =
+def l_border_temporary_SKBB (expr Path) =
   T:=identity;
   pickup PenC;
   draw Path dashed evenly;
 enddef;
 
-
-
-def thFlowstonepath_UIS (expr P) = 
+def l_flowstone_UIS (expr P) = 
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -507,7 +503,7 @@ def DoublePit_A (expr Path, Dist) =
     Pit(reverse ppp);
 enddef;
 
-def thPermanentwater_UIS (expr Path,Rnd) =
+def l_water_permanent_UIS (expr Path,Rnd) =
   path ppp;
   T:=identity;
   cas := 0;
@@ -537,22 +533,22 @@ def thPermanentwater_UIS (expr Path,Rnd) =
     drawarrow ppp;
 enddef;
 
-def thIntermittentwater_JSSJ (expr Path,Rnd) =
+def l_water_intermittent_JSSJ (expr Path,Rnd) =
   drawoptions(dashed evenly);
   thPermanentwater_UIS (Path,Rnd);
   drawoptions();
 enddef;
 
-def thConjecturalwater_SKBB (expr Path,Rnd) =
+def l_water_conjectural_SKBB (expr Path,Rnd) =
   drawoptions(dashed withdots scaled .5 withpen PenB);
   thPermanentwater_UIS (Path,Rnd);
   drawoptions();
 enddef;
 
-def thInvisiblePath (expr P) = 
+def l_invisible (expr P) = 
 enddef;
 
-def thUndefinedPath (expr P) = 
+def l_undefined (expr P) = 
   T:=identity;
   pickup PenC;
   thdraw P withcolor red;
@@ -621,3 +617,6 @@ def thSectionPath_SKBB (expr P) =
     fi;
   endfor;
 enddef;
+
+let l_border_invisible = l_invisible;
+let l_wall_invisible = l_invisible;

@@ -43,6 +43,7 @@
 #include "thpoint.h"
 #include "thline.h"
 #include "thversion.h"
+#include "thtexfonts.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -61,7 +62,8 @@ const char * thhelp_text =
       "therion [-h|--help]\n"
       "        [-v|--version]\n"
       "        [--print-encodings]\n"
-      "        [--print-init-file]\n\n";
+      "        [--print-init-file]\n"
+      "        [--print-tex-encodings]\n\n";
 
 const char * thversion_text = THVERSION;
 const char * thversion_format = "therion %s";
@@ -85,6 +87,15 @@ void thprintf2err(const char *format, ...)
   thlog.vprintf(format, &args);
   vfprintf(stderr, format, args);
   va_end(args);
+}
+
+
+void thprint_environment() {
+  thprintf("INIT=%s\n",thcfg.get_initialization_path());
+  thprintf("SOURCE=%s\n",thcfg.get_search_path());
+  thprintf("CAVERN=%s\n",thini.get_path_cavern());
+  thprintf("METAPOST=%s\n",thini.get_path_mpost());
+  thprintf("PDFTEX=%s\n",thini.get_path_pdftex());
 }
 
 
@@ -145,6 +156,9 @@ int main(int argc, char * argv[]) {
     switch (thcmdln.get_print_state()) {
       case THPS_ENCODINGS:
         thprint_encodings();
+        thexit(EXIT_SUCCESS);
+      case THPS_TEX_ENCODINGS:
+        print_tex_encodings();
         thexit(EXIT_SUCCESS);
       case THPS_INIT_FILE:
         thprint_init_file();
@@ -226,6 +240,9 @@ int main(int argc, char * argv[]) {
     switch (thcmdln.get_print_state()) {
       case THPS_LIB_SRC:
         thdb.self_print_library();
+        thexit(EXIT_SUCCESS);
+      case THPS_PATHS:
+        thprint_environment();
         thexit(EXIT_SUCCESS);
     }
 

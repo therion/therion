@@ -35,8 +35,15 @@ switch $what {
 ##}
   }
   default {
-    set oid [open "xtherion" w]
-    puts $oid "#!/usr/bin/wish"
+    case $tcl_platform(platform) {
+      windows {
+        set oid [open "xtherion.tcl" w]
+      }
+      default {
+        set oid [open "xtherion" w]
+        puts $oid "#!/usr/bin/wish"
+      }
+    }
     puts $oid {##
 ## xtherion --
 ##
@@ -52,8 +59,17 @@ switch $what {
 append_all_file licence.tcl
 puts $oid "\n\n\nset xth(debug) 0"
 
-set fid [open source.tcl r]
+catch {
+    set fid [open ../thversion.h r]
+    gets $fid verl
+    regexp {\d+\.\d+\.\d+} $verl vver
+    close $fid
+    set fid [open ver.tcl w]
+    puts $fid "set xth(about,ver) $vver"
+    close $fid
+}
 
+set fid [open source.tcl r]
 
 set toappend 0
 while {![eof $fid]} {

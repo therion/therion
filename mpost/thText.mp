@@ -1,12 +1,10 @@
 %% therion source code
 %%
-%% thText -- therion project file of type metapost symbol library
+%% This file defines macros for labels
 %%
-%% This file defines macros for writing labels
-%%
-%% $Date: 2002/07/30 15:10:22 $
+%% $Date: 2003/07/01 09:06:44 $
 %% $RCSfile: thText.mp,v $
-%% $Revision: 1.3 $
+%% $Revision: 1.6 $
 %%
 %% Copyright (C) 2000 Martin Budaj
 %%
@@ -28,158 +26,79 @@
 
 % @LIBRARY
 % thText --
-%
-% This file provides two kinds of high-level macros. In both are
-% labels typeset by MetaPost, not by TeX. This implies some
-% restrictions. Macro for writing texts along a path accepts
-% as text argument only simple string, so you can't use superscripts etc.
-% Second type of macros are for simple -- optionally boxed or circled --
-% labels (used e.g. as passage height symbol). Text argument 
-% should be a string containing no spaces and at most 5 characters long.
-% For other types of labels, it's better, when
-% Therion constructs them from more primitive commands. (They are
-% typeset by TeX and in MetaPost's
-% <I>btex ... etex</I> construction cannot be inserted string
-% variable; one tricky solution of this problem in TEX.mp file from 
-% standard MetaPost distribution works rather slow.)
-% <P>
-% General syntax for label typesetting (done by TeX) is:
-% <PRE>
-%   lab:=btex ... etex;    
-%   lab:=thelabel.suffix(lab, position);
-%   process_label(position,rot);
-% </PRE>
-%
-% where <I>...</I> means text of your label (you can use all Plain TeX commands
-% in it), <I>lab</I> is predefined
-% picture variable, <I>suffix</I> is one of standard
-% MetaPost's suffixes for label centering, <I>position</I> is
-% pair of coordinates and <I>rot</I> is rotation angle.<BR><BR>
-% Result is always rectangular label.
 
 
-def thFreetext(expr Path,Style,String) =
-  picture pict[];
-  pair zz[];
-  string Font;
-  Font := defaultfont;
-  if Style = 1:      % normal
-    txtScale:=2; 
-  elseif Style = 2:  % big
-    txtScale:=3;
-  else:              % small
-    txtScale:=1;
-  fi;
-  l := length (String);				% No. of characters
-  pict[0] := (String) infont (Font) scaled (txtScale);
-  zz[0] := (lrcorner pict[0]) - (llcorner pict[0]);
-  strl := xpart zz[0];				% real length 
-  pathl := arclength (Path);
+def l_label(expr txt,path) =
+  picture pict,pic;
+  pair pos;
+  numeric dx[],dy[],ptime;
+  string ss,ch;
+
+  pic := thelabel(txt,(0,0));
+  strl := xpart(lrcorner pic - llcorner pic);
+  pathl := arclength (path);
+  dx0 := xpart(llcorner pic);
+%  dy0 := ypart(llcorner pic);
+
   if strl>pathl:
-    txtScale := (pathl/strl) * txtScale;
-    delta := 0;
-    message("[Warning: text scaled down to fit the leading path]");
+    txtzoom := pathl / strl;
+    message("[Warning: text scaled down to fit the path]");
   else:
-    delta := (pathl - strl) / (l - 1);			% distance between chars
+    txtzoom := 1;
   fi;
-  cas := 0;
-  for i=0 upto (l - 1):
-    ch := substring(i,i+1) of (String);
-    pict[0] := ch infont (Font) scaled (txtScale);
-    zz[0] := (lrcorner pict[0]) - (llcorner pict[0]);	    
-    charwidth := xpart zz[0];			% character width
-    if ASCII (ch) <> 32: 
-      zz[1] := lrcorner pict[0];
-      addto pict[0] also (strut_string infont Font scaled txtScale);	% like TeX's $\backslash$ strut
-      zz[2] := llcorner pict[0];
-      zz[3] := ulcorner pict[0];
-      pict[1] := ch infont Font scaled txtScale;
-      setbounds pict[1] to (zz[2]--(xpart zz[1],ypart zz[2])--
-        (xpart zz[1],ypart zz[3])--zz[3]--cycle);
-      cas := cas + (charwidth / 2);
-      t := arctime cas of (Path);			% moving along path
-      lab:=thelabel(pict[1],point t of (Path));
-      process_label(point t of (Path),angle direction t of (Path));
-    else:
-      cas := cas + (charwidth / 2);
+  zoom := pathl / strl;
+
+  for p within pic:
+    if textual p:                                
+      ss := textpart p;
+      dx1 := xpart p;
+      dy1 := ypart p;
+      dx2 := dx1;
+
+      if xxpart p / yypart p <> 1: message("Error: distorted text!") fi;
+      txtscale := txtzoom * xxpart p;
+
+      l := length(ss);
+      ptime := 0;
+      for i=0 upto (l - 1):
+        ch := substring(i,i+1) of ss;
+        pict := ch infont fontpart p scaled txtscale;
+        charwidth := xpart (lrcorner pict - llcorner pict) / txtzoom;
+        dy2 := ypart lrcorner pict / txtzoom;
+        ptime := (dx2 - dx0 + 0.5*charwidth) * zoom;
+        t := arctime ptime of (path);
+        pos := point t of path + 
+          (dy1+dy2)*txtzoom*unitvector((direction t of path) rotated 90);
+        begingroup
+          interim labeloffset:=0bp;
+          lab:=thelabel.top(pict,pos);
+          process_label(pos,angle direction t of path);
+        endgroup;
+        dx2 := dx2 + charwidth;
+      endfor;
+
+    else message("This can't happen!")
     fi;
-    cas := cas + (charwidth / 2) + delta; 
   endfor;
+  % draw path;
 enddef;
 
-% text argumen must be encolsed in btex ... etex or "..."
-
-vardef thLabel@# (expr txt,pos,rot) =
+vardef p_label@#(expr txt,pos,rot,mode) =
   lab:=thelabel@#(txt, pos);
-  process_label(pos,rot);
+  if mode>1: pickup PenD fi;
+  if mode=1:
+    pickup pencircle scaled (u/6);
+    drawdot(pos);
+    process_label(pos,0);
+  elseif mode=2: process_uplabel;       
+  elseif mode=3: process_downlabel;
+  elseif mode=4: process_updownlabel;
+  elseif mode=5: process_circledlabel;
+  elseif mode=6: process_boxedlabel;
+  else: process_label(pos,rot); fi;
 enddef;
 
-vardef thSmalllabel@#(expr txt,pos) =
-  begingroup
-    interim defaultscale:=.8;
-    thLabel@#(txt,pos,0);
-  endgroup;
-enddef;
-
-
-vardef thUplabel@# (expr txt, pos) =
-  if length txt <= 5:
-    interim defaultscale:=.8;
-    pickup PenD;
-    lab:=thelabel@#(txt, pos);
-    process_uplabel;
-  fi
-enddef;
-
-
-vardef thDownlabel@# (expr txt, pos) =
-  if length txt <= 5:
-    interim defaultscale:=.8;
-    pickup PenD;
-    lab:=thelabel@#(txt, pos);
-    process_downlabel;
-  fi
-enddef;
-
-% alignment is ignored, now
-
-vardef thUpDownlabel@# (expr num, den, pos) =
-  if (length num <= 5) and (length den <=5):
-    pickup PenD;
-    begingroup interim labeloffset:=2bp;
-      interim defaultscale:=.8;
-      lab:=thelabel.top(num, pos);
-      Lab:=thelabel.bot(den, pos);
-      process_updownlabel;
-    endgroup;
-  fi
-enddef;
-
-
-vardef thCircledlabel@# (expr txt, pos) =
-  if length txt <= 5:
-    begingroup interim bboxmargin := 1bp;
-      interim defaultscale:=.8;
-      pickup PenD;
-      lab:=thelabel@#(txt, pos);
-      process_circledlabel;
-    endgroup;
-  fi
-enddef;
-
-
-vardef thBoxedlabel@# (expr txt, pos) =
-  if length txt <= 5:
-    interim defaultscale:=.8;
-    pickup PenD;
-    lab:=thelabel@#(txt, pos);
-    process_boxedlabel;
-  fi
-enddef;
-
-
-def thASLlabel (expr pprev,pos,pnext,txt) =
-  %rot:=(angle(pprev-pos)+angle(pos-pnext))/2 + 90;
+def p_wall_altitude (expr pprev,pos,pnext,txt) =
   rot:=angle(unitvector(pnext-pos)+unitvector(pos-pprev)) - 90;
   pickup PenD;
   pair zz;
@@ -187,7 +106,6 @@ def thASLlabel (expr pprev,pos,pnext,txt) =
   draw (pos)--zz;
   begingroup 
     interim labeloffset:=2pt;
-    interim defaultscale:=.8;
     if horiz_labels:
       rot:=rot mod 360;
       if rot<=22.5: lab:=thelabel.rt(txt, zz);
@@ -210,40 +128,5 @@ def thASLlabel (expr pprev,pos,pnext,txt) =
     fi;
     process_label(pos, if horiz_labels: 0 else: rot fi);
   endgroup;
-enddef;
-
-
-vardef thAltitudelabel@#(expr txt,pos) =
-  if length txt <= 10:
-    pickup pencircle scaled (u/6);
-    drawdot(pos);
-    interim defaultscale:=0.8;
-    lab:=thelabel@#(txt, pos);
-    process_label(pos,0);
-  fi
-enddef;
-
-vardef ElevDiff@#(expr txt,pos) =
-  if length txt <= 10:
-    interim defaultscale:=.8;
-    lab:=thelabel@#(txt, pos);
-    process_label(pos,0);
-  fi
-enddef;
-
-vardef ElevDiffPos@#(expr txt,pos) =
-  if length txt <= 10:
-    interim defaultscale:=.8;
-    lab:=thelabel@#(diff_pos&txt, pos);
-    process_label(pos,0);
-  fi
-enddef;
-
-vardef ElevDiffNeg@#(expr txt,pos) =
-  if length txt <= 10:
-    interim defaultscale:=.8;
-    lab:=thelabel@#(diff_neg&txt, pos);
-    process_label(pos,0);
-  fi
 enddef;
 

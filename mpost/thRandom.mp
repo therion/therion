@@ -1,12 +1,10 @@
 %% therion source code
 %%
-%% thRandom -- therion project file of type metapost symbol library
-%%
 %% This file defines macros for random fills
 %%
-%% $Date: 2002/07/30 15:10:22 $
+%% $Date: 2003/07/01 09:06:44 $
 %% $RCSfile: thRandom.mp,v $
-%% $Revision: 1.3 $
+%% $Revision: 1.5 $
 %%
 %% Copyright (C) 2000 Martin Budaj
 %%

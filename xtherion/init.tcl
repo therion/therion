@@ -27,9 +27,9 @@
 
 package require BWidget
 
-# read xtherion.ini file from THINIT directory
+# read xtherion.ini file from THERION directory
 set idir {}
-if {[catch {set idir $env(THINIT)}]} {
+if {[catch {set idir $env(THERION)}]} {
   if {![catch {set idir $env(HOME)}]} {
     append idir "/.therion"
     if {[string equal $xth(gui,platform) windows]} {
@@ -39,7 +39,11 @@ if {[catch {set idir $env(THINIT)}]} {
     }
   }
   if {[string equal $xth(gui,platform) windows]} {
-    append idir "C:/WINDOWS;C:/WINNT;C:/Program files/therion"
+    if {[catch {
+        append idir [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} InstallDir]
+        }]} {
+      append idir "C:/WINDOWS;C:/WINNT;C:/Program files/Therion"
+    }
   } else {
     append idir "/etc:/usr/etc:/usr/local/etc"
   }

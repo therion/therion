@@ -13,21 +13,31 @@ elsif ($ARGV[0] =~ /^\s*mv\s*$/i) {
 
 elsif ($ARGV[0] =~ /^\s*rm\s*$/i) {
   $dum = shift @ARGV;
+  $quietdel = '';
+  if ($ARGV[0] =~ /^\s*\-q\s*$/) {
+    $dum = shift @ARGV;
+    $quietdel = 1;
+  }
   foreach $f (@ARGV) {
     if ($f =~ /\*/) {
       @fl = glob($f);
       foreach $ff (@fl) {
-        unlink($ff) || warn("$0: can't delete $ff\n");
+        unlink($ff) || $quietdel || warn("$0: can't delete $ff\n");
       }
     } else {
-      unlink($f) || warn("$0: can't delete $f\n");
+      unlink($f) || $quietdel || warn("$0: can't delete $f\n");
     }
   }
 }
 
 elsif ($ARGV[0] =~ /^\s*rmdir\s*$/i) {
   $dum = shift @ARGV;
+  $quietdel = '';
+  if ($ARGV[0] =~ /^\s*\-q\s*$/) {
+    $dum = shift @ARGV;
+    $quietdel = 1;
+  }
   foreach $f (@ARGV) {
-    rmtree($f) || warn("$0: can't delete $f\n");;
+    rmtree($f) || $quietdel || warn("$0: can't delete $f\n");;
   }
 }

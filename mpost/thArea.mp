@@ -1,12 +1,10 @@
 %% therion source code
 %%
-%% thArea -- therion project file of type metapost symbol library
+%% This file defines macros for filling areas
 %%
-%% This file defines macros for plane (filled) figures
-%%
-%% $Date: 2002/07/30 15:10:22 $
-%% $RCSfile: thPlane.mp,v $
-%% $Revision: 1.2 $
+%% $Date: 2003/07/01 09:06:44 $
+%% $RCSfile: thArea.mp,v $
+%% $Revision: 1.3 $
 %%
 %% Copyright (C) 2000 Martin Budaj
 %%
@@ -25,12 +23,6 @@
 %% along with this program; if not, write to the Free Software
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% --------------------------------------------------------------------
-
-% @LIBRARY
-% thPlane --
-%
-% This library contains definitions of plane objects
-
 
 def_transparent_rgb(tr_white, 1, 1, 1);
 def_transparent_rgb(tr_black, 0, 0, 0);

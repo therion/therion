@@ -28,6 +28,7 @@
 set xth(debug) 1
 
 #@ALL
+source ver.tcl
 source global.tcl
 #@XTHERION
 source therion.tcl

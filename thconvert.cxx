@@ -176,7 +176,7 @@ void print_str(string str, ofstream& TEX) {
 string process_pdf_string(string s, string font) {
   string r,t;
   unsigned char c;
-  char *err; err = (char *) malloc(20);
+  char *err;
   unsigned j;
   map<string,FONTCHARS>::iterator I; 
 

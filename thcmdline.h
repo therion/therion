@@ -40,6 +40,9 @@ enum {
   THPS_INIT_FILE = 1002,  ///< Print init file.
   THPS_LIB_SRC = 1003,  ///< Print library source file
   THPS_XTHERION_SRC = 1004,  ///< Print point types list.
+  THPS_PATHS = 1005,  ///< Print setting of all paths
+  THPS_EXTERN_LIBS = 1006,  ///< Use extern libraries
+  THPS_TEX_ENCODINGS = 1007,  ///< Print tex encodings
 };
 
 
@@ -51,12 +54,13 @@ enum {
 
 class thcmdline {
 
+  public:
+
   bool version_ds,  ///< Version information display state.
-    help_ds;  ///< Help display state.
+    help_ds,  ///< Help display state.
+    extern_libs;  ///< Use extern libs.
   int print_state;  ///< Query state.
 
-
-  public:
 
   /**
    * Standard constructor.

@@ -32,6 +32,7 @@
 #include "thdb2dlp.h"
 #include "thexpmap.h"
 #include "thtflength.h"
+#include "thtexfonts.h"
 #include "thscrap.h"
 
 thline::thline()
@@ -639,17 +640,18 @@ void thline::export_mp(class thexpmapmpxs * out)
         postprocess = false;
         break;
       } 
-      fprintf(out->file,"Freetext(");
-      this->export_path_mp(out);
+      fprintf(out->file,"l_label(btex ");
       switch (this->scale) {
         case TT_2DOBJ_SCALE_L:
-          to = 1;
+          fprintf(out->file,"\\size[20] ");
           break;
         default:
-          to = 0;
+          fprintf(out->file,"\\size[10] ");
       }
-      thdecode(&(this->db->buff_enc),TT_ISO8859_2,this->text);
-      fprintf(out->file,",%d,\"%s\");\n",to,this->db->buff_enc.get_buffer());
+      //thdecode(&(this->db->buff_enc),TT_ISO8859_2,this->text);
+      fprintf(out->file,"%s etex,",utf2tex(this->text));
+      this->export_path_mp(out);
+      fprintf(out->file,");\n");
       postprocess = false;
       break;
     case TT_LINE_TYPE_CONTOUR:

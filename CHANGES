@@ -1,4 +1,18 @@
 --------------------------------------------------------------------------------
+Therion 0.2.14 (2003-07-16):
+
+therion:
+
+ * input language changes:
+   - layout command has new option: layers on/off
+ * fonts setup for PDF output
+ * updated documentation
+ * Therion reads (definitely) following environment variable: 
+   - THERION -- search paths for [x]therion.ini file
+ * initialization file syntax changes: cavern-path, pdftex-path,
+   mpost-path, source-path
+
+--------------------------------------------------------------------------------
 Therion 0.2.13 (2003-06-16):
 
 therion:

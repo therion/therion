@@ -65,12 +65,22 @@ proc xth_cp_open_file {fpath} {
     set fpath [tk_getOpenFile -filetypes $xth(app,cp,filetypes) \
       -parent $xth(gui,main) -initialdir $xth(gui,initdir)]
   }
-
+  
   if {[string length $fpath] == 0} {
     return 0
   } else {
     set xth(gui,initdir) [file dirname $fpath]
   }
+
+  set is_config_file [xth_cp_is_config_file $fpath];
+  if {[string length $is_config_file] > 0} {
+    MessageDlg $xth(gui,message) -parent $xth(gui,main) \
+      -icon info -type ok \
+      -message  "$fpath\n-----\n$is_config_file" \
+      -font $xth(gui,lfont)
+    return 0;
+  }
+  
 
   # read the file
   xth_status_bar_push cp
@@ -333,6 +343,12 @@ proc xth_cp_read_file {pth} {
 }  
 
 
+proc xth_cp_is_config_file {fname} {
+  set str {}
+  return $str
+}
+
+
 proc xth_cp_compile {} {
   global xth errorInfo
   set xth(cp,compres) 0
@@ -442,7 +458,9 @@ proc xth_cp_data_tree_clear {} {
   append xth(ctrl,cp,datrestore) "catch \{$tp yview moveto [lindex [$tp yview] 0]\}\n";
   append xth(ctrl,cp,datrestore) "catch \{$tp selection set [$tp selection get]\}\n";
   append xth(ctrl,cp,datrestore) "update idletasks\n"
-  $tp delete [$tp nodes root]
+  catch {
+    $tp delete [$tp nodes root]
+  }
   set tp $xth(ctrl,cp,ms).t 
   set xth(ctrl,cp,msrestore) {}
   foreach di $xth(ctrl,cp,maplist) {
@@ -455,7 +473,9 @@ proc xth_cp_data_tree_clear {} {
   append xth(ctrl,cp,msrestore) "catch \{$tp yview moveto [lindex [$tp yview] 0]\}\n";
   append xth(ctrl,cp,msrestore) "catch \{$tp selection set [$tp selection get]\}\n";
   append xth(ctrl,cp,msrestore) "update idletasks\n"
-  $tp delete [$tp nodes root]
+  catch {
+    $tp delete [$tp nodes root]
+  }
   $xth(ctrl,cp,info).txt delete 1.0 end
   # prejde oba stromy a priradi rozvinutie/zvinutie do prikazov
   # plus ulozi poziciu

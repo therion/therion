@@ -1,0 +1,290 @@
+/TeXraw [
+%%%%%   '000 = "00
+   /Gamma
+   /Delta
+   /Theta
+   /Lambda
+   /Xi
+   /Pi
+   /Sigma
+   /Upsilon
+%%%%%   '010 = "08
+   /Phi
+   /Psi
+   /Omega
+   /ff
+   /fi
+   /fl
+   /ffi
+   /ffl
+%%%%%   '020 = "10
+   /dotlessi
+   /dotlessj
+   /grave
+   /acute
+   /caron
+   /breve
+   /macron
+   /ring
+%%%%%   '030 = "18
+   /cedilla
+   /germandbls
+   /ae
+   /oe
+   /oslash
+   /AE
+   /OE
+   /Oslash
+%%%%%   '040 = "20
+   /.notdef
+   /exclam
+   /quotedblright
+   /numbersign
+   /dollar
+   /percent
+   /ampersand
+   /quoteright
+%%%%%   '050 = "28
+   /parenleft
+   /parenright
+   /asterisk
+   /plus
+   /comma
+   /hyphen
+   /period
+   /slash
+%%%%%   '060 = "30
+   /zero
+   /one
+   /two
+   /three
+   /four
+   /five
+   /six
+   /seven
+%%%%%   '070 = "38
+   /eight
+   /nine
+   /colon
+   /semicolon
+   /exclamdown
+   /equal
+   /questiondown
+   /question
+%%%%%   '100 = "40
+   /at
+   /A
+   /B
+   /C
+   /D
+   /E
+   /F
+   /G
+%%%%%   '110 = "48
+   /H
+   /I
+   /J
+   /K
+   /L
+   /M
+   /N
+   /O
+%%%%%   '120 = "50
+   /P
+   /Q
+   /R
+   /S
+   /T
+   /U
+   /V
+   /W
+%%%%%   '130 = "58
+   /X
+   /Y
+   /Z
+   /bracketleft
+   /quotedblleft
+   /bracketright
+   /circumflex
+   /dotaccent
+%%%%%   '140 = "60
+   /quoteleft
+   /a
+   /b
+   /c
+   /d
+   /e
+   /f
+   /g
+%%%%%   '150 = "68
+   /h
+   /i
+   /j
+   /k
+   /l
+   /m
+   /n
+   /o
+%%%%%   '160 = "70
+   /p
+   /q
+   /r
+   /s
+   /t
+   /u
+   /v
+   /w
+%%%%%   '170 = "78
+   /x
+   /y
+   /z
+   /endash
+   /emdash
+   /hungarumlaut
+   /tilde
+   /dieresis
+%%%%%   '200 = "80
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '210 = "88
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '220 = "90
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '230 = "98
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '240 = "A0
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '250 = "A8
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '260 = "B0
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '270 = "B8
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '300 = "C0
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '310 = "C8
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '320 = "D0
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '330 = "D8
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '340 = "E0
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '350 = "E8
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '360 = "F0
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+%%%%%   '370 = "F8
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+   /.notdef
+] def

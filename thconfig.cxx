@@ -59,8 +59,24 @@ thconfig::thconfig()
 {
 
 #ifdef THWIN32
-  const char * winini = "C:/WINDOWS;C:/WINNT;C:/Program files/therion";
-  const char * wincfg = "C:/Program files/therion";
+  thbuffer * tmpbf = &(this->bf1);
+  // set search path according to Windows registers
+  tmpbf->guarantee(1024);
+  DWORD type, length = 1024;
+  HKEY key;
+  bool loaded_ok = true;
+	if (RegOpenKey(HKEY_LOCAL_MACHINE,"SOFTWARE\\Therion",&key) != ERROR_SUCCESS)
+    loaded_ok = false;
+	if (!loaded_ok || (RegQueryValueEx(key,"InstallDir",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) != ERROR_SUCCESS)) {
+    loaded_ok = false;
+  	RegCloseKey(key);
+  }
+  if (loaded_ok)
+  	RegCloseKey(key);
+  if (type != REG_SZ)
+    loaded_ok = false;
+  const char * winini = "C:/WINDOWS;C:/WINNT;C:/Program files/Therion";
+  const char * wincfg = "C:/Program files/Therion";
 #else
   const char * unixini = "/etc:/usr/etc:/usr/local/etc";
   const char * unixcfg = "/usr/share/therion:/usr/local/share/therion";
@@ -72,7 +88,7 @@ thconfig::thconfig()
   this->cfg_fenc = TT_UTF_8;
   this->fstate = THCFG_READ;
 
-  char * sp = getenv("THERION");
+  char * sp = NULL;
   if (sp != NULL)
     this->search_path = sp;
   else {
@@ -81,7 +97,11 @@ thconfig::thconfig()
       this->search_path = sp;
 #ifdef THWIN32
       this->search_path += "/.therion;";
-      this->search_path += wincfg;
+      if (strlen(tmpbf->get_buffer()) > 0) {
+        this->search_path += tmpbf->get_buffer();
+      } else {
+        this->search_path += wincfg;
+      }
 #else
       this->search_path += "/.therion:";
       this->search_path += unixcfg;
@@ -89,7 +109,11 @@ thconfig::thconfig()
     }
     else {
 #ifdef THWIN32
-      this->search_path += wincfg;
+      if (strlen(tmpbf->get_buffer()) > 0) {
+        this->search_path += tmpbf->get_buffer();
+      } else {
+        this->search_path += wincfg;
+      }
 #else
       this->search_path += unixcfg;
 #endif
@@ -97,7 +121,7 @@ thconfig::thconfig()
   }
 
 
-  sp = getenv("THINIT");
+  sp = getenv("THERION");
   if (sp != NULL)
     this->init_path = sp;
   else {
@@ -106,7 +130,11 @@ thconfig::thconfig()
       this->init_path = sp;
 #ifdef THWIN32
       this->init_path += "/.therion;";
-      this->init_path += winini;
+      if (strlen(tmpbf->get_buffer()) > 0) {
+        this->init_path += tmpbf->get_buffer();
+      } else {
+        this->init_path += winini;
+      }
 #else
       this->init_path += "/.therion:";
       this->init_path += unixini;
@@ -114,7 +142,11 @@ thconfig::thconfig()
     }
     else {
 #ifdef THWIN32
-      this->init_path += winini;
+      if (strlen(tmpbf->get_buffer()) > 0) {
+        this->init_path += tmpbf->get_buffer();
+      } else {
+        this->init_path += winini;
+      }
 #else
       this->init_path += unixini;
 #endif

@@ -273,7 +273,11 @@ Button $sfm.ball -text "All" -anchor center -font $xth(gui,lfont) \
   -state disabled -width 4 -command te_sr_all
 xth_status_bar te $sfm.ball "Search or replace all expressions in the file."
 Button $sfm.bclear -text "Clear" -anchor center -font $xth(gui,lfont) \
-  -state disabled -width 4 -command te_sr_clear
+  -state disabled -width 4 -command {
+    te_sr_clear
+    set xth(ctrl,te,sr,replace_io) 0
+    update idletasks
+  }
 xth_status_bar te $sfm.bclear "Clear all highlights in the file."
 
 
@@ -428,7 +432,7 @@ proc xth_te_create_file {} {
   incr xth(te,fltid)
   set cfid $xth(te,fltid)
   set xth(te,$cfid,name) [format "noname%02d$xth(app,te,fileext)" $cfid]
-  set xth(te,$cfid,path) [file join [pwd] $xth(te,$cfid,name)]
+  set xth(te,$cfid,path) [file join $xth(gui,initdir) $xth(te,$cfid,name)]
   set xth(te,$cfid,newf) 1
   set xth(te,$cfid,encoding) $xth(app,fencoding)
   set xth(te,$cfid,frame) $xth(gui,te).af.apps.ff.file$cfid

@@ -94,8 +94,8 @@ Works like |input| command in data files  - includes other files.
 \subsubchapter `layout'.
 
 \description
-  Specifies layout for exported 2D maps. Most settings apply 
-  to atlas mode.
+  Specifies layout for 2D maps. Settings which apply to atlas mode
+  are marked `A'; map mode `M'.
 \enddescription
 
 \syntax
@@ -108,6 +108,7 @@ Works like |input| command in data files  - includes other files.
           exclude-pages <on/off> <list>
           grid-origin <x> <y> <x> <units>
           grid-size <width> <height> <units>
+          layers <on/off>
           nav-factor <factor>
           nav-size <x-size> <y-size>
           opacity <on/off> <value>
@@ -115,6 +116,7 @@ Works like |input| command in data files  - includes other files.
           origin-label <x-label> <y-label>
           overlap <value> <units>
           own-pages <number>
+          page-grid <on/off>
           page-numbers <on/off>
           page-setup <dimensions> <units>
           scale <picture length> <real length>
@@ -134,10 +136,10 @@ Works like |input| command in data files  - includes other files.
 \comopt 
   * |copy <source layout id>| = set properties here that are not
     modified based on the given source layout.
-  * |doc-author <string>| = set document author
-  * |doc-keywords <string>| = set document keywords
-  * |doc-subject <string>| = set document subject
-  * |doc-title <string>| = set document title
+  * |doc-author <string>| = set document author (M, A)
+  * |doc-keywords <string>| = set document keywords (M, A)
+  * |doc-subject <string>| = set document subject (M, A)
+  * |doc-title <string>| = set document title (M, A)
   * |exclude-pages <on/off> <list>| = exclude specified pages from cave
     atlas. The list may contain page numbers separated by a comma or dash (for intervals) 
     e.g.~|2,4-7,9,23| means, that pages 2, 4, 5, 6, 7, 9 and 23 should be 
@@ -146,33 +148,38 @@ Works like |input| command in data files  - includes other files.
     If you change |title-pages| setting, you have to
     adjust this list accordingly. (In the future there will be another form
     of the specification of which pages to omit, which won't require
-    this redefinition.)
+    this redefinition.) (A)
   * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
-    origin
+    origin (M, A)
   * |grid-size <width> <height> <units>| = set grid size in real
-    units
-  * |nav-factor <factor>| = set atlas navigator zoom factor
-  * |nav-size <x-size> <y-size>| = set number of atlas pages in
-    both directions of navigator
-  * |opacity <value>| = set opacity value (used if |transparency| is on). 
-    Value range is 0--100.
-  * |origin <x> <y> <x> <units>| = set origin of atlas pages
+    units (M, A; default \hbox{|10 m|})
+  * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
+  * |nav-factor <factor>| = set atlas navigator zoom factor (A; default: |30|)
+  * |nav-size <x-size> <y-size>| = set number of atlas pages in 
+    both directions of navigator (A; default: |2 2|)
+  * |opacity <value>| = set opacity value (used if |transparency| is |on|). 
+    Value range is 0--100. (M, A; default: |70|)
+  * |origin <x> <y> <x> <units>| = set origin of atlas pages (M, A)
   * |origin-label <x-label> <y-label>| = set label for atlas page
     which has the lower left corner at the given origin coordinates
-  * |overlap <value> <units>| = set overlap size in paper units
-  * |own-pages <number>| = set number of own pages added before
+    (M, A; default: |0 0|)
+  * |overlap <value> <units>| = set overlap size in paper units in the atlas 
+    mode or map margin in the map mode (M, A; default: |1 cm|)
+  * |own-pages <number>| = set number of own pages added before 
     the first page of automatically generated pages in atlas mode
-    (currently required for correct page numbering)
-  * |page-numbers <on/off>| = turn on/off page numbering in atlas mode
+    (currently required for correct page numbering) (A; default: |0|)
+  * |page-grid <on/off>| = show pages key plan (M; default: |off|)
+  * |page-numbers <on/off>| = turn on/off page numbering (A; default: |true|)
   * |page-setup <dimensions> <units>| = set page dimensions in
     this order: paper-width, paper-height, page-width, page-height,
-    left-margin and top-margin.
+    left-margin and top-margin (A; default: |21 29.7 20 28.7 0.5 0.5 cm|)
   * |scale <picture length> <real length>| = set scale of
-    output map or map atlas
-  * |size <width> <height> <units>| = set map size in the atlas mode
-  * |title-pages <on/off>| = turn on/off atlas title pages
+    output map or map atlas (M, A; default: |1 200|)
+  * |size <width> <height> <units>| = set map size in the atlas mode.
+    In map mode applies iff |page-grid| is |on| (M, A; default: |18 22.2 cm|)
+  * |title-pages <on/off>| = turn on/off atlas title pages (A; default: |off|)
   * |transparency <on/off>| = set transparency for the passages (underlying 
-    passages are also visible)
+    passages are also visible) (M, A; default: |on|)
   * all other lines can contain \TeX\ macros, which will produce
     the cave atlas. Here the page layout may be adjusted (positions
     of elements in the area framed by dashed blue line in the picture).
@@ -204,7 +211,6 @@ Works like |input| command in data files  - includes other files.
 \syntax
   \list
     * |export <type> [OPTIONS]| 
-%    * |export map/atlas [PROJECTION [OPTIONS]]| 
   \endlist
 \endsyntax
 
@@ -233,16 +239,15 @@ Works like |input| command in data files  - includes other files.
 
   {\it map/atlas:}
   
-  * |projection| is a unique identifier that specifies the map projection type.
+  * |projection <id>| = unique identifier that specifies the map projection type.
     (See the |scrap| command for details.) If there are no scraps with 
     the specified projection then Therion will give an error. 
-  * |layout| = map or atlas layout---see layout command for details.
+  * |layout <id>| = map or atlas layout---see layout command for details.
   * |layout-xxx| = where |xxx| stands for other layout options. Using this
     you can change some layout properties directly within the export command.
-%  * |map_level <level>| = defines the maximum level of recursion the program 
-%     will perform as it selects maps for output.
   * |format/fmt <format>| = set map format. Currently only PDF format
     is supported.
+  * |title| = title to go on the output survey    
 \endoptions
 
 
@@ -258,12 +263,14 @@ The full syntax is
 
 |therion [-q] [-L] [-l <log-file>]
         [-s <source-file>] [-p <search-path>]
-        [-g/-u] [-i] [-d] [<cfg-file>]
+        [-g/-u] [-i] [-d] [-x] [<cfg-file>]
 
 therion [-h/--help]
         [-v/--version]
         [--print-encodings]
-        [--print-init-file]|
+        [--print-tex-encodings]
+        [--print-init-file]
+        [--use-extern-libs]|
 
 \arguments
   |<cfg-file>| 
@@ -272,11 +279,20 @@ therion [-h/--help]
 \endarguments
 
 \options
+* |-d|
+
+  Turn on debugging mode. The current implementation creates a 
+  temporary directory named |thTMPDIR| (in your system temporary 
+  directory) and does not delete any temporary files. 
+
 * |-g|
 
-        Using this option you can generate a new configuration file.
-        If |cfg-file| is not specified therion will use the |thconfig|
-        file. If the destination file exists, it'll be overwritten.
+%  Using this option you can generate a new configuration file.
+%  If |cfg-file| is not specified therion will use the |thconfig|
+%  file. If the destination file exists, it'll be overwritten.
+  Generate a new configuration file. This will be the given 
+  <cfg-file> if specified, or |thconfig| in the current directory if not. 
+  If the file already exists, it will be overwritten.
         
 * |-h, --help|
 
@@ -308,7 +324,11 @@ therion [-h/--help]
 
 * |--print-encodings|
 
-        Print a list of all supported encodings.
+        Print a list of all supported input encodings.
+        
+* |--print-tex-encodings|
+
+        Print a list of all supported encodings for PDF output.
         
 * |--print-init-file|
 
@@ -323,17 +343,18 @@ therion [-h/--help]
 
         Upgrade the configuration file.
 
+* |--use-extern-libs|
+  
+  Don't copy \TeX\ and \MP\ macros to working directory. \TeX\ and \MP\ 
+  should search for them on their own. Use with caution.
+
 * |-v, --version|
 
-        Display version information.        
+  Display version information.        
         
-* |-d|
+* |-x|
 
-        Turn on debugging mode. The current implementation creates a 
-	temporary directory named |thTMPDIR| (in your system temporary 
-	directory) and does not delete any temporary files. 
-	What to do with temporary files is explained in the chapter
-	{\it Debugging mode} in the {\it Appendix}.
+  Generate file `.xth-config' with additional informations for XTherion.
 \endoptions
 
 \subsubchapter XTherion---compiler.

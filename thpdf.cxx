@@ -46,7 +46,7 @@
 
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
-
+#include "thtexfonts.h"
 
 #ifndef NOTHERION
 #include "thchenc.h"
@@ -91,7 +91,6 @@ bool operator == (sheetrecord a, sheetrecord b) {
 
 list<sheetrecord> SHEET;
 
-typedef list<int> unistr;
 
 //////////
 
@@ -438,106 +437,7 @@ void find_jumps() {
 }
 
 
-unistr utf2uni(string s) {
-  unsigned char c;
-  unistr t;
-  int j;
 
-  for (unsigned i=0; i<s.size(); i++) {
-    c = s[i];
-    if (c<128) {
-      t.push_back(c);
-    }
-    else if (c>=192 && c<=223) {
-      j = 64*(c-192); 
-      c = s[++i];
-      j += c-128;
-      t.push_back(j);
-    }
-    else if (c>=224 && c<=239) {
-      j = 4096*(c-224);
-      c = s[++i];
-      j += 64*(c-128); 
-      c = s[++i];
-      j += c-128;
-      t.push_back(j);
-    }
-    else therror (("Invalid utf-8 string!")); // we don't support higher
-                                              // unicode characters
-  }
-  return t;
-}
-
-string uni2texoctal(unistr s) {
-  string t;
-  char ch[10];
-//  t = "\\ne\\376\\ne\\377";
-  unsigned char c;
-  for (unistr::iterator I = s.begin(); I != s.end(); I++) {
-    c = (*I) / 256;
-    sprintf(ch,"%o",c);
-    t = t + "\\ne\\" + (string) ch;
-    c = (*I) % 256;
-    sprintf(ch,"%o",c);
-    t = t + "\\ne\\" + (string) ch;
-  }
-  return t;
-}
-
-string uni2texhex(unistr s) {
-  string t;
-  char ch[10];
-  unsigned char c;
-  for (unistr::iterator I = s.begin(); I != s.end(); I++) {
-    c = (*I) / 256;
-    sprintf(ch,"%02x",c);
-    t += (string) ch;
-    c = (*I) % 256;
-    sprintf(ch,"%02x",c);
-    t += (string) ch;
-  }
-  return t;
-}
-
-string utf2tex (string s) {
-  unsigned char c;
-  string t;
-
-// to be improved
-
-#ifndef NOTHERION
-  thbuffer buf;
-  thdecode (&buf,TT_ISO8859_2,s.c_str());
-  s = buf.get_buffer();
-#endif
-
-  for (unsigned i=0; i<s.size(); i++) {
-    c = s[i];
-    switch (c) {
-      case '\\': 
-        t+= "{$\\backslash$}";
-        break;
-      case '{': 
-        t+= "{$\\{$}";
-        break;
-      case '}': 
-        t+= "{$\\}$}";
-        break;
-      case '_':
-      case '$':
-      case '#':
-      case '&':
-      case '%':
-        t += "\\";
-        t += c;
-        break;
-      default:
-        t += c;
-        break;
-    }
-  }
-  return t;
-}
 
 string grid_name(string s, int offset) {
   unsigned char c;
@@ -728,7 +628,7 @@ void compose_page(list<sheetrecord>::iterator sheet_it, ofstream& PAGE) {
   if (sheet_it->bookmark) {
     PAGE << "\\pdfoutline goto name {" << u2str(sheet_it->id) << 
                   "} count 0 {\\ne\\376\\ne\\377" << 
-                  uni2texoctal(utf2uni(lay_it->second.N)) << "}%" << endl;
+                  utf2texoctal(lay_it->second.N) << "}%" << endl;
   }
   PAGE << "\\setbox\\mapbox=\\hbox to " << HS << "bp{%" << endl;
   PAGE << "\\rlap{\\pdfrefxform\\" << tex_Sname(u2str(sheet_it->id)) << 
@@ -1156,7 +1056,7 @@ void build_pages() {
                                           I != LAYERHASH.end(); I++) {
         if (I->second.Z == 0) {
           PDFRES << "\\immediate\\pdfobj{ << /Type /OCG /Name <feff" <<
-            uni2texhex(utf2uni(I->second.N)) << "> >> }" << endl;
+            utf2texhex(I->second.N) << "> >> }" << endl;
           PDFRES << "\\newcount\\oc" << u2str(I->first) << "\\oc" << 
                      u2str(I->first) << "=\\pdflastobj" << endl;
         }
@@ -1185,13 +1085,16 @@ void build_pages() {
   }
 
   if (LAYOUT.doc_author != "") 
-    PDFRES << "\\author{" << uni2texhex(utf2uni(LAYOUT.doc_author)) << "}" << endl;
+    PDFRES << "\\author{" << utf2texhex(LAYOUT.doc_author) << "}" << endl;
   if (LAYOUT.doc_subject != "") 
-    PDFRES << "\\subject{" << uni2texhex(utf2uni(LAYOUT.doc_author)) << "}" << endl;
+    PDFRES << "\\subject{" << utf2texhex(LAYOUT.doc_author) << "}" << endl;
   if (LAYOUT.doc_keywords != "") 
-    PDFRES << "\\keywords{" << uni2texhex(utf2uni(LAYOUT.doc_author)) << "}" << endl;
+    PDFRES << "\\keywords{" << utf2texhex(LAYOUT.doc_author) << "}" << endl;
   if (LAYOUT.doc_title != "") 
-    PDFRES << "\\title{" << uni2texhex(utf2uni(LAYOUT.doc_author)) << "}" << endl;
+    PDFRES << "\\title{" << utf2texhex(LAYOUT.doc_author) << "}" << endl;
+
+  PDFRES << "\\pdfcatalog { /TeXsetup /" << pdf_info() << " }" << endl;
+
   PDFRES.close();
 
   if (mode == ATLAS) {
@@ -1298,6 +1201,8 @@ int thpdf(int m) {
   mode = m;
 
 #ifdef NOTHERION
+  init_encodings();
+  print_fonts_setup();
   cout << "making " << ((mode == ATLAS) ? "atlas" : "map") << "... " << flush;
 #else
   thprintf("making %s... ", (mode == ATLAS) ? "atlas" : "map");
@@ -1324,7 +1229,7 @@ int thpdf(int m) {
 
 #ifdef NOTHERION
 int main() {
-  thpdf(1);
+  thpdf(0);
 }
 #endif
 

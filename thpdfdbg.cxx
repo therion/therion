@@ -26,10 +26,15 @@
  */
  
 #include <fstream>
+#include <sstream>
 #include <list>
 #include <map>
 #include <set>
 #include <string>
+#include <iomanip>
+
+
+#include <iostream>
 
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
@@ -144,6 +149,10 @@ void print_hash(){
 
 
   F.close();
+}
+
+string pdf_info (void) {
+  return(string(""));
 }
 
 

@@ -1,0 +1,101 @@
+.TH "THERION" "1" 
+.SH "NAME" 
+Therion \(em program to draw cave surveys 
+.SH "SYNOPSIS" 
+.PP 
+\fBtherion\fP [\fB-q\fP] [\fB-L\fP] [\fB-l \fIlog-file\fR]  
+        [\fB-s \fIsource file\fR] [\fB-p \fIsearch path\fR]  
+        [\fB-g\fP|\fB-u\fP] [\fB-i\fP] [\fB-d\fP] [\fB-x\fP] [config-file]
+.PP
+\fBtherion\fP [\fB-h\fP|\fB--help\fP]
+        [\fB-v\fP|\fB--version\fP]
+        [\fB--print-encodings\fP]  
+        [\fB--print-init-file\fP]  
+        [\fB--print-tex-encodings\fP]  
+.SH "DESCRIPTION" 
+.PP 
+This manual page briefly documents \fBTherion\fP and provides an overview of 
+the package. 
+.PP 
+\fBTherion\fP is a program that processes Therion data files to produce cave 
+surveys. The data files are usually .th files which contain survey  
+data, largely equivalent to survex .svx files, .th2 files which contain drawing  
+data and thconfig files which control the data files to be used and the maps to 
+be output.  
+.PP 
+\fBTherion\fP uses a number of helper programs to do its  
+job. \fBSurvex\fP is used to process the centreline data,  
+\fBMetaPost\fP is used to draw cave symbols, and  
+\fBpdfTeX\fP generates the final maps. 
+.PP 
+In order to make the entering of drawing data practical, and to make the  
+editing of survey files easier, a graphical editor \fBXTherion\fP  
+is included. This also includes a 'compiler' function which runs Therion on the  
+data to produce output. This is implemented using Tcl/Tk. 
+.PP 
+The Therion data files describe the cave as text in terms of objects so  
+the corresponding graphical representations are only inserted at output generation 
+time. This means that a survey can be produced using whichever symbol set you  
+require by specifying the relevant set of MetaPost macros. Currently the UIS symbol  
+set is supported. 
+.PP 
+Multiple languages and character sets are supported \(em currently ISO-8859-1,  
+ISO-8859-2, ISO-8859-5, ISO-8859-7, UTF-8, ASCII and CP1250. 
+.SH "ARGUMENTS" 
+.PP 
+therion takes only one argument \(em a \fIconfig-file\fP. If no file is 
+specified then the default \fIthconfig\fP file in the current directory will 
+be used. A new default file can be created using the \fB-g\fP option. 
+.SH "OPTIONS" 
+.PP 
+This program follows the usual GNU command line syntax, 
+with long options starting with two dashes ("--").  A summary of 
+options is included below.  For a complete description, see 
+\fBThe Therion Book\fP. 
+.IP "\fB-h\fP, \fB--help\fP" 10 
+Show summary of options. 
+.IP "\fB-v\fP, \fB--version\fP" 10 
+Show version information. 
+.IP "\fB-q\fP" 10 
+Quiet mode \(em minimise output. 
+.IP "\fB-g\fP" 10 
+Generate a new configuration file. This will be the given config-file if 
+specified, or \fBthconfig\fP in the current directory if not. If the file 
+already exists, it will be overwritten. 
+.IP "\fB-i\fP" 10 
+Ignore comments when writing (-g|-u) configuration file. 
+.IP "\fB-L\fP" 10 
+Do not create a log-file. Normally all messages are written 
+into a \fBtherion.log\fP file. 
+.IP "\fB-l log-file\fP" 10 
+Change the name of the log file. 
+.IP "\fB-p search-path\fP" 10 
+This option is used to set the search path (or list of paths,  
+separated by colon), which therion will use to find its source 
+files (if it doesn't find them in the working directory). 
+.IP "\fB-q\fP" 10 
+Run therion in quiet mode. It will print only warning 
+and error messages (to STDERR). 
+.IP "\fB--print-encodings\fP" 10 
+Print a list of all supported encodings. 
+.IP "\fB--print-init-file\fP" 10 
+Print a default initialisation file. For more details 
+see the Initialisation section in the Appendix of the Therion Book. 
+.IP "\fB-s\fP" 10 
+Set the name of the source file. 
+.IP "\fB-u\fP" 10 
+Upgrade the configuration file. 
+.IP "\fB-d\fP" 10 
+Turn on debugging mode. The current implementation creates a  
+temporary directory named \fBthTMPDIR\fP (in your system temporary  
+directory) and does not delete any temporary files. 
+.SH "SEE ALSO" 
+.PP 
+xtherion (1)
+.PP 
+For full information see The Therion Book which describes Therion and its use 
+in detail. 
+.SH "AUTHORS" 
+.PP 
+Stacho Mudrak and Martin Budaj. This manual page was written by Wookey 
+wookey@debian.org for the \fBDebian\fP system. Modified by MB.

@@ -80,6 +80,8 @@ void thlibrary_init_layouts()
 	playout->overlap = 0.01;
 	playout->def_transparency = false;
 	playout->transparency = true;
+	playout->def_layers = false;
+	playout->layers = true;
 	playout->def_opacity = false;
 	playout->opacity = 0.7;
 	playout->def_grid = false;

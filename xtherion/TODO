@@ -5,3 +5,7 @@ KED TO BUDE TREBA:
 + kontrolovat, ci subor nebol modifikovany vonku
 + goto source line v mapovom aj textovom editore
 
+OD MARTINA:
++ stromova struktura pre outline v mapovom editore
++ nezobrazuje encoding pre thconfig
++ nastavenie vstupneho kodovania (klavesnice) za behu

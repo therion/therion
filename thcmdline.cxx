@@ -39,6 +39,7 @@ thcmdline::thcmdline()
 {
   this->version_ds = false;
   this->help_ds = false;
+  this->extern_libs = false;
   this->print_state = THPS_NONE;
 }
 
@@ -70,9 +71,12 @@ void thcmdline::process(int argc, char * argv[])
   {
     {"help",no_argument,NULL,'h'},
     {"print-encodings",no_argument,NULL,THPS_ENCODINGS},
+    {"print-environment",no_argument,NULL,THPS_PATHS},
     {"print-init-file",no_argument,NULL,THPS_INIT_FILE},
     {"print-library-src",no_argument,NULL,THPS_LIB_SRC},
+    {"print-tex-encodings",no_argument,NULL,THPS_TEX_ENCODINGS},
     {"print-xtherion-src",no_argument,NULL,THPS_XTHERION_SRC},
+    {"use-extern-libs",no_argument,NULL,THPS_EXTERN_LIBS},
     {"version",no_argument,NULL,'v'},
     {NULL, 0, NULL, 0}
   };
@@ -143,6 +147,10 @@ void thcmdline::process(int argc, char * argv[])
         this->print_state = THPS_ENCODINGS;
         break;
 
+      case THPS_TEX_ENCODINGS:
+        this->print_state = THPS_TEX_ENCODINGS;
+        break;
+
       case THPS_XTHERION_SRC:
         this->print_state = THPS_XTHERION_SRC;
         break;
@@ -154,6 +162,15 @@ void thcmdline::process(int argc, char * argv[])
       case THPS_LIB_SRC:
         this->print_state = THPS_LIB_SRC;
         break;
+     
+      case THPS_PATHS:
+        this->print_state = THPS_PATHS;
+        break;
+        
+      case THPS_EXTERN_LIBS:
+        this->extern_libs = true;
+        break;
+        
     }
       
   }

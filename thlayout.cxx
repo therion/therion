@@ -108,6 +108,9 @@ thlayout::thlayout()
   this->def_transparency = false;
   this->transparency = true;
 
+  this->def_layers = false;
+  this->layers = true;
+
   this->def_grid = false;
   this->grid = TT_LAYOUT_GRID_LINE;
   
@@ -272,6 +275,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid transparency switch -- %s",args[0]))
       this->transparency = (sv == TT_TRUE);
       this->def_transparency = true;
+      break;
+    
+    case TT_LAYOUT_LAYERS:
+      sv = thmatch_token(args[0],thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        ththrow(("invalid layers switch -- %s",args[0]))
+      this->layers = (sv == TT_TRUE);
+      this->def_layers = true;
       break;
     
     case TT_LAYOUT_OPACITY:
@@ -491,6 +502,9 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_transparency = %s;\n",(this->def_transparency ? "true" : "false"));
   thprintf("\tplayout->transparency = %s;\n",(this->transparency ? "true" : "false"));
+
+  thprintf("\tplayout->def_layers = %s;\n",(this->def_layers ? "true" : "false"));
+  thprintf("\tplayout->layers = %s;\n",(this->layers ? "true" : "false"));
 
   thprintf("\tplayout->def_opacity = %s;\n",(this->def_opacity ? "true" : "false"));
   thprintf("\tplayout->opacity = %lg;\n",this->opacity);
@@ -865,6 +879,9 @@ void thlayout::process_copy() {
       if (!this->def_transparency)
         this->transparency = srcl->transparency;
   
+      if (!this->def_layers)
+        this->layers = srcl->layers;
+  
       if (!this->def_grid)
         this->grid = srcl->grid;
 
@@ -906,6 +923,7 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.title_pages = this->titlep;
   LAYOUT.page_numbering = this->pgsnum;
   LAYOUT.transparency = this->transparency;
+  LAYOUT.OCG = this->layers;
   //TODO
   LAYOUT.map_grid = this->page_grid;
   LAYOUT.hsize = this->hsize * THM2PT;

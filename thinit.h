@@ -48,7 +48,7 @@ class thinit {
   thmbuffer cmb;  ///< Command parsing mbuffer.
   
   thinput ini_file;  ///< Initialization file.
-
+  
   public:  
   
   /**

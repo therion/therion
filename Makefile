@@ -13,7 +13,7 @@ CMNOBJECTS = thexception.o thbuffer.o thmbuffer.o thlogfile.o thtmpdir.o \
   thdb2dxm.o thdb2dxs.o thscraplo.o thscraplp.o thscrapen.o \
   thpoint.o thline.o tharea.o \
   thjoin.o thmap.o thexpmap.o thlayoutln.o \
-  thconvert.o thpdf.o thpdfdbg.o thpdfdata.o \
+  thconvert.o thpdf.o thpdfdbg.o thpdfdata.o thtexfonts.o \
   therion.o
 
 
@@ -107,6 +107,8 @@ release: clean
 archive: clean
 	perl makearchive.pl
 
+binary: all doc
+	perl makebinary.pl $(THPLATFORM)
   
 depend:
 	perl makedepend.pl > Makefile.dep
@@ -124,22 +126,24 @@ library:
 xtherion/xtherion: xtherion/*.tcl
 	make -C ./xtherion
 
-doc:
+doc: thbook/thbook.pdf
+
+thbook/thbook.pdf: thbook/*.tex
 	make -C ./thbook
   
 clean:
 	make -C ./xtherion clean
-	perl makefile.pl rm therion ./xtherion/xtherion therion.exe *~ *.log *.o thchencdata/*~
-	perl makefile.pl rm xtherion/*~
-	perl makefile.pl rm extern/*.o extern/*~
-	perl makefile.pl rm tests/*~
-	perl makefile.pl rm tex/*~
-	perl makefile.pl rm mpost/*~
-	perl makefile.pl rm core
-	perl makefile.pl rm data.3d data.svx data.pos data.pts data.err data.plt
-	perl makefile.pl rm cave.3d cave.pdf cave.svg therion.tcl cave_a.pdf cave_m.pdf
-	perl makefile.pl rm ./thbook/*~ ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
-	perl makefile.pl rmdir doc thTMPDIR
+	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~
+	perl makefile.pl rm -q xtherion/*~ .xth-thconfig
+	perl makefile.pl rm -q extern/*.o extern/*~
+	perl makefile.pl rm -q tests/*~
+	perl makefile.pl rm -q tex/*~
+	perl makefile.pl rm -q mpost/*~
+	perl makefile.pl rm -q core
+	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
+	perl makefile.pl rm -q cave.3d cave.pdf cave.svg therion.tcl cave_a.pdf cave_m.pdf
+	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
+	perl makefile.pl rmdir -q doc thTMPDIR
 
 thmpost.h: mpost/*.mp
 	make -C ./mpost
@@ -322,7 +326,8 @@ thexpmap.o: thexpmap.cxx thexpmap.h thexport.h thparse.h thbuffer.h \
   thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
   thtmpdir.h thscrap.h thpoint.h th2ddataobject.h thline.h thlayout.h \
   thmap.h thconfig.h thinput.h thselector.h thchenc.h thchencdata.h \
-  thinit.h thlogfile.h thconvert.h thpdf.h thpdfdata.h thmpost.h thtex.h
+  thinit.h thlogfile.h thconvert.h thpdf.h thpdfdata.h thmpost.h thtex.h \
+  thcmdline.h
 thexpmodel.o: thexpmodel.cxx thexpmodel.h thexport.h thparse.h thbuffer.h \
   thmbuffer.h thobjectsrc.h thexception.h therion.h thdatabase.h \
   thdataobject.h thperson.h thdate.h thdataleg.h thobjectname.h thdb1d.h \
@@ -415,7 +420,7 @@ thparse.o: thparse.cxx thparse.h thbuffer.h thmbuffer.h therion.h \
   thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
   thtflength.h thtf.h thexception.h
 thpdf.o: thpdf.cxx thpdfdbg.h thexception.h therion.h thbuffer.h \
-  thpdfdata.h thchenc.h thchencdata.h thparse.h thmbuffer.h
+  thpdfdata.h thtexfonts.h thchenc.h thchencdata.h thparse.h thmbuffer.h
 thpdfdata.o: thpdfdata.cxx thpdfdata.h
 thpdfdbg.o: thpdfdbg.cxx thpdfdbg.h thexception.h therion.h thbuffer.h \
   thpdfdata.h
@@ -467,6 +472,9 @@ thsvxctrl.o: thsvxctrl.cxx thsvxctrl.h thdataleg.h thparse.h thbuffer.h \
   thscrapen.h thscraplp.h thtmpdir.h thdata.h thtfangle.h thtf.h \
   thtflength.h thtfpwf.h thexception.h thinit.h thinput.h thsurvey.h \
   thlogfile.h extern/img.h
+thtexenc.o: thtexenc.cxx
+thtexfonts.o: thtexfonts.cxx thtexfonts.h thtexenc.cxx thpdfdbg.h \
+  thexception.h therion.h thbuffer.h
 thtfangle.o: thtfangle.cxx thparse.h thbuffer.h thmbuffer.h thtfangle.h \
   thtf.h thexception.h therion.h
 thtf.o: thtf.cxx thtf.h thexception.h therion.h thbuffer.h
