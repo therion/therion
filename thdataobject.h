@@ -61,6 +61,7 @@ enum {
 static const thstok thtt_commands[] = {
   {"area", TT_AREA_CMD},
   {"centerline", TT_DATA_CMD},
+  {"centreline", TT_DATA_CMD},
   {"endscrap", TT_ENDSCRAP_CMD},
   {"endsurvey", TT_ENDSURVEY_CMD},
   {"grade", TT_GRADE_CMD},
@@ -314,6 +315,20 @@ class thdataobject {
    */
    
   virtual char * get_cmd_end();
+  
+  
+  /**
+   * Whether multiple ends.
+   */
+   
+  virtual bool get_cmd_ends_state();
+
+
+  /**
+   * Whether cmd is end.
+   */
+   
+  virtual bool get_cmd_ends_match(char * cmd);
   
   
   /**

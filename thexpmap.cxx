@@ -402,7 +402,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(tf,"\\input therion.tex\n");
   else
     fprintf(tf,"%s\n",thtex_library);
-  this->layout->export_pdftex(tf,prj);     
+  this->layout->export_pdftex(tf,prj,
+    (this->export_mode == TT_EXP_MAP ? TT_LAYOUT_CODE_TEX_MAP : TT_LAYOUT_CODE_TEX_ATLAS)
+  );     
   fprintf(tf,"\\end\n");
   fclose(tf);
 
@@ -424,6 +426,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   thexpmap_quick_map_export_scale = this->layout->scale;
   fprintf(mpf,"Scale:=%f;\n",1 / this->layout->scale);
   fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
+  fprintf(mpf,"def user_initialize = enddef;\n");
+  this->layout->export_mpost(mpf);
   if (thcmdln.extern_libs)
     fprintf(mpf,"input therion;\n");
   else
@@ -436,25 +440,29 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   fprintf(mpf,"    \\ifnum\\wd100>\\wd101\\hsize=\\wd100\\else\\hsize=\\wd101\\fi\n");
   fprintf(mpf,"    \\centerline{\\box100}\\vskip4pt\n");
   fprintf(mpf,"    \\centerline{\\box101}}}\n");
-  fprintf(mpf,"  \\def\\thlabel{\\size[10]}\n");
-  fprintf(mpf,"  \\def\\thremark{\\size[8]\\si}\n");
-  fprintf(mpf,"  \\def\\thaltitude{\\size[8]}\n");
-  fprintf(mpf,"  \\def\\thstationname{\\size[8]}\n");
-  fprintf(mpf,"  \\def\\thdate{\\size[8]}\n");
-  fprintf(mpf,"  \\def\\thheight{\\size[8]}\n");
-  fprintf(mpf,"  \\def\\thheightpos{\\size[8]+\\ignorespaces}\n");
-  fprintf(mpf,"  \\def\\thheightneg{\\size[8]-\\ignorespaces}\n");
-  fprintf(mpf,"  \\def\\thframed{\\size[8]}\n");
-  fprintf(mpf,"  \\def\\thwallaltitude{\\size[8]}\n");
+  fprintf(mpf,"  \\def\\thnormalsize{\\size[10]}\n");
+  fprintf(mpf,"  \\def\\thsmallsize{\\size[8]}\n");
+  fprintf(mpf,"  \\def\\thlabel{\\thnormalsize}\n");
+  fprintf(mpf,"  \\def\\thremark{\\thsmallsize\\si}\n");
+  fprintf(mpf,"  \\def\\thaltitude{\\thsmallsize}\n");
+  fprintf(mpf,"  \\def\\thstationname{\\thsmallsize}\n");
+  fprintf(mpf,"  \\def\\thdate{\\thsmallsize}\n");
+  fprintf(mpf,"  \\def\\thheight{\\thsmallsize}\n");
+  fprintf(mpf,"  \\def\\thheightpos{\\thsmallsize+\\ignorespaces}\n");
+  fprintf(mpf,"  \\def\\thheightneg{\\thsmallsize-\\ignorespaces}\n");
+  fprintf(mpf,"  \\def\\thframed{\\thsmallsize}\n");
+  fprintf(mpf,"  \\def\\thwallaltitude{\\thsmallsize}\n");
   fprintf(mpf,"etex;\n");
 
   fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
   fprintf(mpf,"defaultscale:=0.8;\n\n");
 
+  this->layout->export_mpost(mpf);
+
   // prida nultu figure
   // fprintf(mpf,"beginfig(0);\nendfig;\n");
    
-  fprintf(plf,"%%SCRAP = (\n");
+  fprintf(plf,"%%SCRAP = (\n");
   while (cmap != NULL) {
     cbm = cmap->first_bm;
     bmlevel = 0;
@@ -607,25 +615,24 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   SCRAPITEM->S2 = shy;
                   
                   if ((!export_outlines_only) && (!export_sections) &&
-                      (cbm->bm->selection_xs->fmap->output_number != cbm->bm->selection_xs->preview_output_number)) {
+                      (cbm->bm->selection_xs->fmap->output_number != cbm->bm->selection_xs->preview_output_number)
+                      && ((exps & TT_XMPS_B) != TT_XMPS_NONE)) {
                     fprintf(plf,"\t%s => {\n",thexpmap_u2string(sfig + TT_XMPS_COUNT));
                     SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
                     SCRAPITEM->sect = 0;
                     SCRAPITEM->name = thexpmap_u2string(sfig + TT_XMPS_COUNT);
-                    if ((exps & TT_XMPS_B) != TT_XMPS_NONE) {
-                      fprintf(plf,"\t\t B => \"data.%d\",\n",sfig+TT_XMPS_COUNT_B);
-                      sprintf(texb.get_buffer(),"data.%d",sfig+TT_XMPS_COUNT_B);
-                      SCRAPITEM->B = texb.get_buffer();
-                      fprintf(plf,"\t\t I => \"data.%dbg\",\n",sfig+TT_XMPS_COUNT_B);
-                      sprintf(texb.get_buffer(),"data.%dbg",sfig+TT_XMPS_COUNT_B);
-                      SCRAPITEM->I = texb.get_buffer();
-                      fprintf(plf,"\t\t C => \"data.%dclip\",\n",sfig+TT_XMPS_COUNT_B);
-                      sprintf(texb.get_buffer(),"data.%dclip",sfig+TT_XMPS_COUNT_B);
-                      SCRAPITEM->C = texb.get_buffer();
-                      //fprintf(plf,"\t\t B => \"data.%d\",\n",sfig+TT_XMPS_COUNT_B);
-                      //fprintf(plf,"\t\t I => \"data.%dbg\",\n",sfig+TT_XMPS_COUNT_B);
-                      //fprintf(plf,"\t\t C => \"data.%dclip\",\n",sfig+TT_XMPS_COUNT_B);
-                    }
+                    fprintf(plf,"\t\t B => \"data.%d\",\n",sfig+TT_XMPS_COUNT_B);
+                    sprintf(texb.get_buffer(),"data.%d",sfig+TT_XMPS_COUNT_B);
+                    SCRAPITEM->B = texb.get_buffer();
+                    fprintf(plf,"\t\t I => \"data.%dbg\",\n",sfig+TT_XMPS_COUNT_B);
+                    sprintf(texb.get_buffer(),"data.%dbg",sfig+TT_XMPS_COUNT_B);
+                    SCRAPITEM->I = texb.get_buffer();
+                    fprintf(plf,"\t\t C => \"data.%dclip\",\n",sfig+TT_XMPS_COUNT_B);
+                    sprintf(texb.get_buffer(),"data.%dclip",sfig+TT_XMPS_COUNT_B);
+                    SCRAPITEM->C = texb.get_buffer();
+                    //fprintf(plf,"\t\t B => \"data.%d\",\n",sfig+TT_XMPS_COUNT_B);
+                    //fprintf(plf,"\t\t I => \"data.%dbg\",\n",sfig+TT_XMPS_COUNT_B);
+                    //fprintf(plf,"\t\t C => \"data.%dclip\",\n",sfig+TT_XMPS_COUNT_B);
                     fprintf(plf,"\t\t Y => %ld,\n",cbm->bm->selection_xs->preview_output_number);
                     SCRAPITEM->layer = (int) cbm->bm->selection_xs->preview_output_number;
                     fprintf(plf,"\t\t V => -1,\n");
@@ -661,7 +668,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   }
 
   fprintf(mpf,"end;\n");
-  fprintf(plf,");\n");
+  fprintf(plf,");\n");
   fclose(mpf);
 
   cmap = maps;
@@ -884,7 +891,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     ththrow(("cp exit code -- %d", retcode))
 #ifdef THDEBUG
 #else
-  thprintf("done.\n");
+  thprintf("done\n");
   thtext_inline = false;
 #endif
   

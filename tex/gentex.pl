@@ -43,4 +43,4 @@ const char * thtex_library = $thtex_library;
 ENDOUTPT
 close(OUTPT);
 
-print "done.\n";
+print "done\n";

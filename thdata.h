@@ -136,7 +136,8 @@ class thdata : public thdataobject {
   bool di_station, di_from, di_to, di_length, di_bearing, di_gradient,
     di_backbearing, di_backgradient,
     di_depth, di_fromdepth, di_todepth, di_depthchange, di_count, di_fromcount,
-    di_tocount, di_dx, di_dy, di_dz, di_direction, di_newline, di_interleaved;
+    di_tocount, di_dx, di_dy, di_dz, di_direction, di_newline, di_interleaved,
+    di_up, di_down, di_left, di_right;
   
   bool dl_survey_declination_on;
   
@@ -245,6 +246,20 @@ class thdata : public thdataobject {
    */
    
   virtual char * get_cmd_end();
+
+
+  /**
+   * Whether multiple ends.
+   */
+   
+  virtual bool get_cmd_ends_state();
+
+
+  /**
+   * Whether cmd is end.
+   */
+   
+  virtual bool get_cmd_ends_match(char * cmd);
   
   
   /**

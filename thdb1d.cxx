@@ -623,7 +623,7 @@ void thdb1d::process_tree()
 #ifdef THDEBUG
     thprintf("\nend of scanning data tree\n\n");
 #else
-    thprintf("done.\n");
+    thprintf("done\n");
     thtext_inline = false;
 #endif
 }
@@ -725,7 +725,7 @@ void thdb1d::process_survey_stat() {
 #ifdef THDEBUG
     thprintf("\nend of basic statistics calculation\n\n");
 #else
-    thprintf("done.\n");
+    thprintf("done\n");
     thtext_inline = false;
 #endif
 }

@@ -88,6 +88,8 @@ thinit::thinit()
 //  this->path_3dtopos = "3dtopos";
   this->path_mpost = "mpost";
   this->path_pdftex = "pdfetex";
+  this->tmp_path = "";
+  this->tmp_remove_script = "";
   
 }
 
@@ -103,6 +105,8 @@ enum {
   TTIC_PATH_MPOST,
   TTIC_PATH_PDFTEX,
   TTIC_PATH_SOURCE,
+  TTIC_TMP_PATH,
+  TTIC_TMP_REMOVE_SCRIPT,
   TTIC_TEX_FONTS,
   TTIC_UNKNOWN,
 };
@@ -120,6 +124,8 @@ static const thstok thtt_initcmd[] = {
   {"pdftex-path", TTIC_PATH_PDFTEX},
   {"source-path", TTIC_PATH_SOURCE},
   {"tex-fonts",TTIC_TEX_FONTS},
+  {"tmp-path",TTIC_TMP_PATH},
+  {"tmp-remove",TTIC_TMP_REMOVE_SCRIPT},
   {NULL, TTIC_UNKNOWN},
 };
 
@@ -148,6 +154,8 @@ void thinit::load()
       switch (argid) {      
         case TTIC_ENCODING_DEFAULT:
         case TTIC_PATH_CAVERN:
+        case TTIC_TMP_PATH:
+        case TTIC_TMP_REMOVE_SCRIPT:
         case TTIC_PATH_MPOST:
         case TTIC_PATH_PDFTEX:
         case TTIC_PATH_SOURCE:
@@ -172,6 +180,14 @@ void thinit::load()
           if (strlen(args[1]) < 1)
             ththrow(("invalid path"))
           this->path_cavern.strcpy(args[1]);
+          break;
+
+        case TTIC_TMP_PATH:
+          this->tmp_path.strcpy(args[1]);
+          break;
+
+        case TTIC_TMP_REMOVE_SCRIPT:
+          this->tmp_remove_script.strcpy(args[1]);
           break;
 
         case TTIC_PATH_MPOST:

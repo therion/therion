@@ -1220,9 +1220,9 @@ int thpdf(int m) {
   build_pages();
 
 #ifdef NOTHERION
-  cout << "done." << endl;
+  cout << "done" << endl;
 #else
-  thprintf("done.\n");
+  thprintf("done\n");
 #endif
   return(0);
 }

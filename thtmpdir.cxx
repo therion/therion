@@ -27,6 +27,7 @@
  
 #include "thtmpdir.h"
 #include "therion.h"
+#include "thinit.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -73,33 +74,38 @@ void thtmpdir::create()
     // the debugging temp directory
     dir_path = "thTMPDIR";
 #else
-    char dn[16];
-    char *envtmp;
-    // release temp directory
-    envtmp = getenv("TEMP");
-    if (envtmp != NULL) {
-      dir_path = envtmp;
+    if (strlen(thini.tmp_path.get_buffer()) > 0) {
+      dir_path.strcpy(thini.tmp_path.get_buffer());
     } else {
-      envtmp = getenv("TMP");
+      char dn[16];
+      char *envtmp;
+      // release temp directory
+      envtmp = getenv("TEMP");
       if (envtmp != NULL) {
         dir_path = envtmp;
       } else {
+        envtmp = getenv("TMP");
+        if (envtmp != NULL) {
+          dir_path = envtmp;
+        } else {
 #ifdef THWIN32
-        dir_path = ".";
+          dir_path = ".";
 #else
-        dir_path = "/tmp";
+          dir_path = "/tmp";
 #endif
+        }
+      }
+      dir_path += THPATHSEPARATOR;
+      if (this->debug) {
+        dir_path += "thTMPDIR";
+      } else {
+        dir_path += "th";
+        snprintf(&(dn[0]),16,"%d",getpid());
+        dir_path += &(dn[0]);
       }
     }
-    dir_path += THPATHSEPARATOR;
-    if (this->debug) {
-      dir_path += "thTMPDIR";
-    } else {
-      dir_path += "th";
-      snprintf(&(dn[0]),16,"%d",getpid());
-      dir_path += &(dn[0]);
-    }
 #endif
+
     this->tried = true;
 #ifdef THWIN32
     if (mkdir(dir_path) != 0) {
@@ -131,45 +137,62 @@ void thtmpdir::remove()
 {
   if (this->exist && this->delete_all) {
     // remove directory contents
-#ifdef THMACOSX
-    thbuffer tmpfname;
-    tmpfname = "rm -f -R ";
-    tmpfname += this->name;
-    system(tmpfname.get_buffer());
-    DIR *tmpdir = opendir(this->name);
-    if (tmpdir != NULL) {
-      thwarning(("error deleting temporary directory -- %s",this->name.get_buffer()))      
-      closedir(tmpdir);
-    } else {
-      this->name = ".";
-      this->tried = false;
-      this->exist = false;
-    }
-#else
-    DIR *tmpdir = opendir(this->name);
-    struct dirent *tmpf;
-    thbuffer tmpfname;
-    if (tmpdir != NULL) {
-      tmpf = readdir(tmpdir);
-      while (tmpf != NULL) {
-        tmpfname = this->name;
-        tmpfname += THPATHSEPARATOR;
-        tmpfname += tmpf->d_name;
-        unlink(tmpfname);
-        tmpf = readdir(tmpdir);
+    if (strlen(thini.tmp_remove_script.get_buffer()) > 0) {
+      thbuffer tmpfname;
+      tmpfname = thini.tmp_remove_script.get_buffer();
+      tmpfname += " ";
+      tmpfname += this->name;
+      system(tmpfname.get_buffer());
+      DIR *tmpdir = opendir(this->name);
+      if (tmpdir != NULL) {
+        thwarning(("error deleting temporary directory -- %s",this->name.get_buffer()))      
+        closedir(tmpdir);
+      } else {
+        this->name = ".";
+        this->tried = false;
+        this->exist = false;
       }
-      closedir(tmpdir);
-    }
-
-    // remove directory
-    if (rmdir(this->name) != 0)
-      thwarning(("error deleting temporary directory -- %s",this->name.get_buffer()))
-    else {
-      this->name = ".";
-      this->tried = false;
-      this->exist = false;
-    }
+    } else {
+#ifdef THMACOSX
+      thbuffer tmpfname;
+      tmpfname = "rm -f -R ";
+      tmpfname += this->name;
+      system(tmpfname.get_buffer());
+      DIR *tmpdir = opendir(this->name);
+      if (tmpdir != NULL) {
+        thwarning(("error deleting temporary directory -- %s",this->name.get_buffer()))      
+        closedir(tmpdir);
+      } else {
+        this->name = ".";
+        this->tried = false;
+        this->exist = false;
+      }
+#else
+      DIR *tmpdir = opendir(this->name);
+      struct dirent *tmpf;
+      thbuffer tmpfname;
+      if (tmpdir != NULL) {
+        tmpf = readdir(tmpdir);
+        while (tmpf != NULL) {
+          tmpfname = this->name;
+          tmpfname += THPATHSEPARATOR;
+          tmpfname += tmpf->d_name;
+          unlink(tmpfname);
+          tmpf = readdir(tmpdir);
+        }
+        closedir(tmpdir);
+      }
+  
+      // remove directory
+      if (rmdir(this->name) != 0)
+        thwarning(("error deleting temporary directory -- %s",this->name.get_buffer()))
+      else {
+        this->name = ".";
+        this->tried = false;
+        this->exist = false;
+      }
 #endif    
+    }
   }
 }
 

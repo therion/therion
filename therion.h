@@ -60,6 +60,7 @@
   thprint_error_src();\
   thprintf2err P;\
   thprintf2err("\n");\
+  thpause_exit();\
   thexit(EXIT_FAILURE);\
 }
 
@@ -130,6 +131,11 @@ void thprintf(const char *format, ...);
  
 void thprintf2err(const char *format, ...);
 
+
+/**
+ * Wait a bit.
+ */
+void thpause_exit();
 
 /**
  * Exit therion program.

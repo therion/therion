@@ -38,6 +38,8 @@
 class thlayoutln {
 
   public:
+  
+  char code;
  
   thlayoutln * next_line;
     

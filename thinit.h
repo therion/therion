@@ -39,18 +39,19 @@
  
 class thinit {
 
+  public:  
+
   int encoding_default;  ///< Default encoding.
     
   thbuffer path_cavern, ///< Survex executable full path.
-    path_pdftex, path_mpost;  ///< PDF tex and metapost path
+    path_pdftex, path_mpost,  ///< PDF tex and metapost path
+    tmp_path, tmp_remove_script;
     //path_3dtopos, 
   
   thmbuffer cmb;  ///< Command parsing mbuffer.
   
   thinput ini_file;  ///< Initialization file.
-  
-  public:  
-  
+    
   /**
    * Standard constructor.
    */

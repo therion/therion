@@ -1,16 +1,39 @@
 --------------------------------------------------------------------------------
+Therion 0.2.15 (????-??-??):
+
+therion:
+
+ * input language changes:
+   - layout command has new option: code <metapost|tex-map|tex-atlas>
+   - join command has new option: count <N>
+ * therion checks validity of UTF-8 encoded input files
+ * new therion.ini items:
+   - tmp-path <PATH> -- path to temporary directory
+   - tmp-remove <COMMAND> -- system command to remove temporary directory
+ * error if no source files are specified
+ * if error occures under Win32, waits until RETURN is pressed
+ * new team roles: instruments (insts), assistant (dog)
+ * centerline/centreline syntax allowed
+ * new centerline data items: up ceiling down floor left right ignore
+   
+xtherion:
+
+ * bug fixed -- compiler does not add empty lines to config files
+ * Help/BAC Calculator dialog added
+
+--------------------------------------------------------------------------------
 Therion 0.2.14 (2003-07-16):
 
 therion:
 
  * input language changes:
    - layout command has new option: layers on/off
+ * initialization file syntax changes: 
+     cavern-path, pdftex-path, mpost-path, source-path
  * fonts setup for PDF output
  * updated documentation
  * Therion reads (definitely) following environment variable: 
    - THERION -- search paths for [x]therion.ini file
- * initialization file syntax changes: cavern-path, pdftex-path,
-   mpost-path, source-path
 
 --------------------------------------------------------------------------------
 Therion 0.2.13 (2003-06-16):

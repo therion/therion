@@ -415,7 +415,7 @@ def l_flowstone_UIS (expr P) =
 enddef;
 
 
-PolygonLine:=.8u;
+def PolygonLine = .8 * u enddef;
 %PolygonPoint:=0.25u;
 
 def thPolygon_SKBB (expr P) =

@@ -79,7 +79,7 @@ foreach $ename (sort keys %ifiles) {
   }
   
   close(INP);
-  print "done.\n";
+  print "done\n";
   
 }
 
@@ -143,7 +143,7 @@ foreach $uv (@ku2a) {
 }
 $thdecode_tbl_idx .= "};\n";
 $thdecode_tbl .= "};\n";
-print "done.\n";
+print "done\n";
 
   
   

@@ -173,6 +173,7 @@ enddef;
 % mpattern macros
 
 initialize(Scale);
+user_initialize;
 
 % @MACRO
 % inscale --

@@ -30,6 +30,8 @@ set hm "$xth(gui,main).hmenu"
 set xth(gui,menu,help) $hm
 
 menu $hm -tearoff 0
+$hm add command -label "BAC calculator..." -underline 0 -font $xth(gui,lfont) \
+  -command xth_bac_init
 $hm add command -label "About..." -underline 0 -font $xth(gui,lfont) \
   -command {
     xth_about_show 1

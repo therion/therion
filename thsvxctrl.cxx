@@ -498,7 +498,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 
 #ifdef THDEBUG
 #else
-    thprintf("done.\n");
+    thprintf("done\n");
     thtext_inline = false;
 #endif 
 

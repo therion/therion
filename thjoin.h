@@ -40,6 +40,7 @@
 enum {
   TT_JOIN_UNKNOWN = 2000,
   TT_JOIN_SMOOTH = 2001,
+  TT_JOIN_COUNT = 2002,
 };
 
 
@@ -48,6 +49,7 @@ enum {
  */
  
 static const thstok thtt_join_opt[] = {
+  {"count", TT_JOIN_COUNT},
   {"smooth", TT_JOIN_SMOOTH},
   {NULL, TT_JOIN_UNKNOWN},
 };
@@ -72,7 +74,8 @@ class thjoin : public thdataobject {
   thjoin * proj_next_join,
     * proj_prev_join;
 
-  int smooth;  ///< Smooth option.
+  int smooth,  ///< Smooth option.
+    count; ///< Number of joins.
   
   void parse_item(char * istr);  ///< Parse join item.
 

@@ -54,6 +54,7 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
   thcmd_option_desc optd;  // option descriptor
   bool inside_cmd = false;
   bool configure_cmd = false;
+  bool advanced_end_search = false;
   char * ln, * endlnopt = NULL, * opt, ** opts;
   int ai, ait, ant;
   
@@ -82,7 +83,8 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
              
         // if end_command option, set turn off inside_cmd
         // and insert object into database
-        if (strcmp(this->bf1.get_buffer(), endlnopt) == 0) {
+        if ((advanced_end_search && objptr->get_cmd_ends_match(this->bf1.get_buffer())) || 
+            (strcmp(this->bf1.get_buffer(), endlnopt) == 0)) {
           inside_cmd = false;
           this->inp.cmd_sensitivity_on();
           if (!configure_cmd)
@@ -199,6 +201,7 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
         else {
           if (configure_cmd)
             endlnopt = "endrevise";
+          advanced_end_search = objptr->get_cmd_ends_state();
           inside_cmd = true;
           this->inp.cmd_sensitivity_off();
         }

@@ -202,7 +202,7 @@ class $thclass : public $thfather {
 
 ENDHEADER
 close(OUT);
-print "done.\n";
+print "done\n";
 
 print "writing $thclass.cxx ... ";
 open(OUT,">$thclass.cxx");
@@ -326,4 +326,4 @@ void $thclass\::self_print_properties(FILE * outf)
 
 ENDBODY
 close(OUT);
-print "done.\n";
+print "done\n";

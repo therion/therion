@@ -55,6 +55,7 @@ source me_cmds2.tcl
 source me_ss.tcl
 source me.tcl
 source cp_procs.tcl
+source bac.tcl
 source cp.tcl
 #source v3.tcl
 #@DEBUG

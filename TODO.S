@@ -1,14 +1,29 @@
 HNED:
-+ skusit HOMEDRIVE + HOMEPATH - ked to neni HOME
-+ kontrolovat ci retazce vo vstupnych suboroch su korektne --
-  najmae pre utf-8 vstupne kodovanie
-+ do section line pridat moznost head (begin,end,none,both)
-+ rozlisit makra pre tex-mapu, tex-atlas a metapost (neskoor SVG)
-+ viacnasobne spajanie scrapov (join s1 s2 -count 2)
++ pre vstupny subor zadavat stupne:minuty:sekundy (12:23:23.123123)
++ nefunguje preview above pri savoltovych priestoroch pri -map-level basic
++ pokial je preview - tak je nastaveny na posledne
+  aby isla cela mapa hore, len nieco dole :)))
++ nefunguje preview cez komplikovane mapy
++ pridat pre 2D data object option -visibility on|off
++ error ked iba jeden kontrolny bod ???
++ beside - aby sa zobrazovalo normalne, len by sa orezavalo a dalo
+  by sa na neho skakat
++ navrhnut kroky pre 3D
 
 HOTOVO:
++ v therion.ini
+  tmp-path <PATH>
+  tmp-remove <COMMAND>
++ ak nema specifikovany source => error
++ ak skonci s chybou, tak caka na ENTER z klavesnice
++ pridane teamove ulohy: instruments (insts), assistant (dog)
++ centerline/centreline je podporovane
++ v centreline nove data: up ceiling down floor left right ignore
 
 TROCHU NESKOOR:
++ spisat ovladanie xtheriona (mys a pod.)
++ do section line pridat moznost head (begin,end,none,both) - ked to
+  budu podporovat MP makra
 + urobit Linuxovske RPMka
 + rychly mod pre kompilaciu - bez spustania MPostu a bez konverzie
 + vypustenie priecnych rezov pre mapu aj atlas do layoutu
@@ -38,8 +53,6 @@ POTOM:
   + roky (kolko m bolo zameranych)
   + uzavrete okruhy a chyby na nich
   + pocitame len pri exporte v ???
-* fonty v texu
-* znackove kluce
 * debugovacie mody
 * skusit odprasit cavern
 * 3D

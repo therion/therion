@@ -589,13 +589,14 @@ proc xth_me_open_file {dialogid fname fline} {
   }
   xth_me_cmds_create_all [lindex $fdata 3]
   
-  xth_ctrl_minimize me area
-  xth_ctrl_minimize me images
   xth_ctrl_maximize me cmds
   xth_ctrl_maximize me point
   xth_ctrl_maximize me line
   xth_ctrl_maximize me linept
   xth_ctrl_maximize me scrap
+  xth_ctrl_maximize me text
+  xth_ctrl_maximize me area
+  xth_ctrl_maximize me images
   
   set xth(me,fnewf) 0
   set xth(me,fopen) 1

@@ -217,7 +217,6 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
     default:
       if (cod.id == TT_2DOBJ_CLIP) {
         switch (this->type) {
-          case TT_POINT_TYPE_STATION:
           case TT_POINT_TYPE_STATION_NAME:
           case TT_POINT_TYPE_LABEL:
           case TT_POINT_TYPE_REMARK:
@@ -443,7 +442,7 @@ void thpoint::export_mp(class thexpmapmpxs * out)
 
     case TT_POINT_TYPE_ALTITUDE:
       if (!thisnan(this->xsize)) {          
-        sprintf(buff,"%0.f",this->xsize);
+        sprintf(buff,"%.0f",this->xsize);
         fprintf(out->file,"p_label%s(btex \\thaltitude %s etex,",thpoint_export_mp_align2mp(this->align),utf2tex(buff));
         postprocess_label = 1;
       }
@@ -713,7 +712,7 @@ void thpoint::parse_text(char * ss) {
 }
 
 
-void thpoint_parse_value(int & sv, double & dv, bool & qw, char & sign, char * str) {
+void thpoint_parse_value(int & sv, double & dv, bool & qw, int & sign, char * str) {
 
   // odstrani znamienka a nastavi sign
   sign = 0;
@@ -781,7 +780,7 @@ void thpoint::parse_value(char * ss) {
   int sv, ux, vx, sv2;
   bool parsev, quest, quest2;
   double dv, dv2;
-  char sign, sign2;
+  int sign, sign2;
   thtflength lentf;
   thdate * dp;
   

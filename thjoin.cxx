@@ -33,6 +33,7 @@
 thjoin::thjoin()
 {
   this->smooth = TT_TRUE;
+  this->count = 1;
   
   this->proj = NULL;
   this->proj_next_join = NULL;
@@ -93,6 +94,8 @@ thcmd_option_desc thjoin::get_cmd_option_desc(char * opts)
 void thjoin::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
 
+  double dv;
+  int sv;
   switch (cod.id) {
 
     // replace this by real properties setting
@@ -102,6 +105,13 @@ void thjoin::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
         ththrow(("invalid switch -- %s",*args))
       break;
     
+    case TT_JOIN_COUNT:
+      thparse_double(sv,dv,*args);
+      if ((sv != TT_SV_NUMBER) || (dv <= 1.0) || (dv != double(int(dv))))
+        ththrow(("invalid join count -- %s",*args))
+      this->count = int(dv);
+      break;
+      
     // if not found, try to set fathers properties  
     default:
       if (cod.id < 1000)

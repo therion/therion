@@ -106,6 +106,16 @@ char * thdataobject::get_cmd_end()
 }
 
 
+bool thdataobject::get_cmd_ends_state() {
+  return false;
+}
+
+
+bool thdataobject::get_cmd_ends_match(char * cmd) {
+  return false;
+}
+
+
 char * thdataobject::get_cmd_name()
 {
   return NULL;

@@ -212,6 +212,7 @@ proc xth_app_finish {} {
       source me_cmds.tcl
       source me_cmds2.tcl
       source me_ss.tcl
+      source bac.tcl
     } -font $xth(gui,lfont)
     $dm add command -label "Screen dump" -underline 0 -command {
       after 5000 {xwd -out screendump -frame}

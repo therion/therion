@@ -36,6 +36,8 @@
 thlayout::thlayout()
 {
 
+  this->ccode = TT_LAYOUT_CODE_TEX_ATLAS;
+
   this->def_scale = false;
   this->scale = 0.005;
   
@@ -232,6 +234,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       }
       thencode(&(this->db->buff_enc), *args, argenc);
       this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+      this->last_line->code = this->ccode;
       break;
       
     case TT_LAYOUT_SCALE:
@@ -299,6 +302,13 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid grid switch -- %s",args[0]))
       this->grid = (char) sv;
       this->def_grid = true;
+      break;
+      
+    case TT_LAYOUT_CODE:
+      sv = thmatch_token(args[0],thtt_layout_code);
+      if (sv == TT_LAYOUT_CODE_UNKNOWN)
+        ththrow(("invalid code switch -- %s",args[0]))
+      this->ccode = (char) sv;
       break;
       
     case TT_LAYOUT_PAGE_GRID:
@@ -601,14 +611,29 @@ void thlayout::self_print_library() {
 
   
   thlayoutln * ln = this->first_line;
+  char last_code = TT_LAYOUT_CODE_UNKNOWN;
   while(ln != NULL) {
     thdecode_c(&(this->db->buff_enc), ln->line);
+    if (ln->code != last_code) {
+      thprintf("\tplayout->ccode = \"");
+      switch (ln->code) {
+        case TT_LAYOUT_CODE_METAPOST:
+          thprintf("TT_LAYOUT_CODE_METAPOST");
+          break;
+        case TT_LAYOUT_CODE_TEX_MAP:
+          thprintf("TT_LAYOUT_CODE_TEX_MAP");
+          break;
+        default:
+          thprintf("TT_LAYOUT_CODE_TEX_ATLAS");
+          break;
+      }
+      thprintf("\";\n");
+    }
     thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
     thprintf("\tplayout->set(thcmd_option_desc(0,1),&oname,TT_UTF_8,0);\n");
     ln = ln->next_line;
   }
   thprintf("\tplayout->def_tex_lines = %s;\n",(this->def_tex_lines ? "true" : "false"));
-  
 }
 
 
@@ -733,46 +758,57 @@ void thlayout::export_config(FILE * o, thdb2dprj * prj, double x_scale, double x
 }
 
   
-void thlayout::export_pdftex(FILE * o, thdb2dprj * prj) {
+void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
+
   fprintf(o,"\\opacity{%.2f}\n",this->opacity);
   fprintf(o,"\\def\\scale{%lu}\n",(unsigned long)(1.0 / this->scale));
   fprintf(o,"\\pagesetup{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}\n",
     this->paphs*100.0, this->papvs*100.0, 
     this->paghs*100.0, this->pagvs*100.0, 
     this->marls*100.0, this->marts*100.0);
-    
-//  if (this->doc_title != NULL) {
-//    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_title);
-//    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
-//    fprintf(o, "\\title{%s}\n", this->db->buff_enc.get_buffer());
-//  }
-//  if (this->doc_author != NULL) {
-//    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_author);
-//    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
-//    fprintf(o, "\\author{%s}\n", this->db->buff_enc.get_buffer());
-//  }
-//  if (this->doc_subject != NULL) {
-//    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_subject);
-//    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
-//    fprintf(o, "\\subject{%s}\n", this->db->buff_enc.get_buffer());
-//  }
-//  if (this->doc_keywords != NULL) {
-//    thdecode(&(this->db->buff_tmp), TT_ASCII, this->doc_keywords);
-//    thdecode_tex(&(this->db->buff_enc), this->db->buff_tmp.get_buffer());
-//    fprintf(o, "\\keywords{%s}\n", this->db->buff_enc.get_buffer());
-//  }
-      
+
+  bool anyline = false;
   if (this->first_line != NULL) {
     thlayoutln * ln = this->first_line;
     while(ln != NULL) {
-      thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
-      fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
+      if (ln->code == mode) {
+        anyline = true;
+        thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
+        fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
+      }
       ln = ln->next_line;
     }
-  } else {
+  }
+  
+  if (!anyline) {
     fprintf(o,"\\insertmaps\n");
   }
+
 }
+
+
+void thlayout::export_mpost(FILE * o) {
+
+  bool anyline = false;
+  if (this->first_line != NULL) {
+    thlayoutln * ln = this->first_line;
+    while(ln != NULL) {
+      if (ln->code == TT_LAYOUT_CODE_METAPOST) {
+        anyline = true;
+        thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
+        fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
+      }
+      ln = ln->next_line;
+    }
+  }
+  
+  if (!anyline) {
+  }
+
+}
+
+
+
 
 void thlayout::process_copy() {
   thlayout_copy_src * csp;

@@ -64,6 +64,7 @@ enum {
   TT_LAYOUT_PAGE_GRID = 2022,
   TT_LAYOUT_TRANSPARENCY = 2023,
   TT_LAYOUT_LAYERS = 2024,
+  TT_LAYOUT_CODE = 2025,
 };
 
 
@@ -92,6 +93,29 @@ static const thstok thtt_layout_grid[] = {
   {NULL, TT_LAYOUT_GRID_UNKNOWN}
 };
 
+/**
+ * Layout code tokens.
+ */
+
+enum {
+  TT_LAYOUT_CODE_UNKNOWN = 0,
+  TT_LAYOUT_CODE_TEX_ATLAS,
+  TT_LAYOUT_CODE_TEX_MAP,
+  TT_LAYOUT_CODE_METAPOST,
+};
+
+
+/**
+ * Layout grid token table.
+ */
+ 
+static const thstok thtt_layout_code[] = {
+  {"metapost", TT_LAYOUT_CODE_METAPOST},
+  {"mpost", TT_LAYOUT_CODE_METAPOST},
+  {"tex-atlas", TT_LAYOUT_CODE_TEX_ATLAS},
+  {"tex-map", TT_LAYOUT_CODE_TEX_MAP},
+  {NULL, TT_LAYOUT_CODE_UNKNOWN}
+};
 
 class thlayout_copy_src {
 
@@ -110,6 +134,7 @@ class thlayout_copy_src {
  */
  
 static const thstok thtt_layout_opt[] = {
+  {"code",TT_LAYOUT_CODE},
   {"copy",TT_LAYOUT_COPY},
   {"doc-author",TT_LAYOUT_DOC_AUTHOR},
   {"doc-keywords",TT_LAYOUT_DOC_KEYWORDS},
@@ -153,7 +178,7 @@ class thlayout : public thdataobject {
   
   unsigned navsx, navsy, ownp;
   
-  char grid;
+  char grid, ccode;
   
   thlayoutln * first_line, * last_line;
   
@@ -289,8 +314,8 @@ class thlayout : public thdataobject {
    * Export main tex file.
    */
    
-  void export_pdftex(FILE * o, thdb2dprj * prj);
-  
+  void export_pdftex(FILE * o, thdb2dprj * prj, char mode);
+  void export_mpost(FILE * o);
   /**
    * Process copy.
    */

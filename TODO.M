@@ -1,9 +1,11 @@
+* namiesto "cout <<" pouzivat thprintf - aby to slo aj do log suboru
+* pri vypisoch medzery " ... "
+* pri definovani globalnych funkcii, typov a premennych pouzivat prefix "th" 
+  resp. "TH" (napr. thprint_tex_encodings, THFONTS)
+
 thpdf:
 
- * zmenit vystup na stdout v thpdf.cxx a thconvert.cxx ???
-
  * co s posunom stran v rychlom mode
- * Optional Content ked budem mat Acrobat 6
  * k vrstve: meno vo vertikalnom smere alebo udaj o vyske
  * podmienene nacitavanie scrapov v TeXu
  * dvojstrankovy mod (Title vzdy na pravej strane), vtedy akceptovat:
@@ -31,20 +33,26 @@ thconvert:
  * (dorobi») CONCAT + konverzia rozdelenych textovych riadkov
  * optimalizacia zmien fontov + gsave & al.
 
+
 thtexfonts:
 
- * fonty v TeXu
+ * prepinanie fontov v makrach definovanych uzivatelom v TeXu a MP
+   (\scalebar, equipment, continuation) aj pre cisla stran v atlase
+ * optimalizacia zmien fontov
+ * zaviest kvazi HTML znackovanie vstupnych retazcov? <it>..<it>, <br> a pod.
  
 
 mpost:
 
- * alignment pri continuation a equipement a up-down label
+ * alignment pri continuation a equipement
  * slope - 
    poriadne funguje ak su vo vsetkych bodoch smery -1 (vtedy su luce kolme)
     alebo sa smer (velmi) nemeni; s dlzkou problemy nie su
    (bude treba vymysliet algoritmus na priemerovanie krajnych hodnot, kedze to, 
    ktorym poloblukom pojdes, zavisi od orientacie krivky)
  * sectionline cez kontrolne body -> inak
+ * dorobit aby fungovalo predefinovanie u,v,w - pri polygone, nadm.vyskach, 
+   presumed wall, patternoch
 
 
 ----- prezitky dob minulych -----

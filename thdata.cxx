@@ -108,6 +108,11 @@ void thdata::reset_data()
   this->di_newline = false;
   this->di_interleaved = false;
   
+  this->di_up = false;
+  this->di_down = false;
+  this->di_left = false;
+  this->di_right = false;
+  
   this->d_type = TT_DATATYPE_UNKNOWN;
   int i;
   for(i = 0; i < THDATA_MAX_ITEMS; i++)
@@ -150,7 +155,24 @@ int thdata::get_cmd_nargs()
 char * thdata::get_cmd_end()
 {
   // insert endcommand if multiline command
-  return "endcenterline";
+  return "endcentreline";
+}
+
+
+bool thdata::get_cmd_ends_state() {
+  return true;
+}
+
+
+static const thstok thdata__end_cmds[] = {
+  {"endcenterline", TT_DATA_CMD},
+  {"endcentreline", TT_DATA_CMD},
+	{NULL, TT_UNKNOWN_CMD},
+};
+
+
+bool thdata::get_cmd_ends_match(char * cmd) {
+  return (thmatch_token(cmd,thdata__end_cmds) == TT_DATA_CMD);
 }
 
 
@@ -299,10 +321,16 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
             case TT_DATALEG_BEARING:
             case TT_DATALEG_GRADIENT:
             case TT_DATALEG_NOTES:
+            case TT_DATALEG_ASSISTANT:
+            case TT_DATALEG_INSTRUMENTS:
             case TT_DATALEG_PICTURES:
             case TT_DATALEG_COUNT:
             case TT_DATALEG_DEPTH:
             case TT_DATALEG_STATION:
+            case TT_DATALEG_UP:
+            case TT_DATALEG_DOWN:
+            case TT_DATALEG_LEFT:
+            case TT_DATALEG_RIGHT:
               break;
             default:
               ththrow(("unknown team role -- %s", args[prole_i]))
@@ -477,6 +505,10 @@ void thdata::set_data_calibration(int nargs, char ** args)
       case TT_DATALEG_ALTITUDE:
       case TT_DATALEG_BEARING:
       case TT_DATALEG_GRADIENT:
+      case TT_DATALEG_UP:
+      case TT_DATALEG_DOWN:
+      case TT_DATALEG_LEFT:
+      case TT_DATALEG_RIGHT:
         break;
       default:
         to_set = false;
@@ -563,6 +595,10 @@ void thdata::set_data_units(int nargs, char ** args)
       case TT_DATALEG_NORTHING:
       case TT_DATALEG_Z:
       case TT_DATALEG_ALTITUDE:
+      case TT_DATALEG_UP:
+      case TT_DATALEG_DOWN:
+      case TT_DATALEG_LEFT:
+      case TT_DATALEG_RIGHT:
         if (sdtype == 0)
           sdtype = 1;
         else {
@@ -705,6 +741,12 @@ void thdata::set_data_instrument(int nargs, char ** args)
       case TT_DATALEG_NOTES:
       case TT_DATALEG_PICTURES:
       case TT_DATALEG_POSITION:
+      case TT_DATALEG_INSTRUMENTS:
+      case TT_DATALEG_ASSISTANT:
+      case TT_DATALEG_UP:
+      case TT_DATALEG_DOWN:
+      case TT_DATALEG_LEFT:
+      case TT_DATALEG_RIGHT:
         break;
       default:
         ththrow(("invalid instrument -- %s", args[i]))
@@ -885,7 +927,7 @@ void thdata::set_data_data(int nargs, char ** args)
         }
         this->di_from = true;
         break;        
-        
+     
       case TT_DATALEG_TO:
         if (this->di_to) {
           err_duplicate = true;
@@ -1183,6 +1225,42 @@ void thdata::set_data_data(int nargs, char ** args)
           ththrow(("invalid newline position")) 
         this->di_newline = true;
         break;
+
+      case TT_DATALEG_UP:
+        if (this->di_up) {
+          err_duplicate = true;
+          break;
+        }
+        this->di_up = true;
+        break;
+        
+      case TT_DATALEG_DOWN:
+        if (this->di_down) {
+          err_duplicate = true;
+          break;
+        }
+        this->di_down = true;
+        break;
+        
+      case TT_DATALEG_LEFT:
+        if (this->di_left) {
+          err_duplicate = true;
+          break;
+        }
+        this->di_left = true;
+        break;
+        
+      case TT_DATALEG_RIGHT:
+        if (this->di_right) {
+          err_duplicate = true;
+          break;
+        }
+        this->di_right = true;
+        break;
+
+      case TT_DATALEG_IGNORE:
+        break;
+        
         
       default:
         ththrow(("invalid identifier -- %s", args[dix]))
@@ -1844,7 +1922,7 @@ void thdata::set_data_grade(int nargs, char ** args)
 
 char * thdata::get_cmd_name()
 {
-  return "centerline";
+  return "centreline";
 }
 
 

@@ -423,7 +423,7 @@ void thdb2d::process_references()
 
 #ifdef THDEBUG
 #else
-  thprintf("done.\n");
+  thprintf("done\n");
   thtext_inline = false;
 #endif
 }
@@ -722,7 +722,7 @@ void thdb2d::process_join_references(thjoin * jptr)
           jptr->proj = ((th2ddataobject *)optr)->fscrapptr->proj;
       }
     }    
-
+    
     switch (otype) {
       case TT_SCRAP_CMD:
         scrapp = (thscrap*) optr;
@@ -981,7 +981,7 @@ void thdb2d::process_projection(thdb2dprj * prj)
   
 #ifdef THDEBUG
 #else
-  thprintf("done.\n");
+  thprintf("done\n");
   thtext_inline = false;
 #endif 
 
@@ -1945,11 +1945,12 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
   thjoin * jptr = prj->first_join, * tjptr;
   prj->first_join_list = NULL;
   prj->last_join_list = NULL;
-  thscrap * sc1, * sc2;
+  thscrap * sc1 = NULL, * sc2 = NULL;
   thdb2dji * ji, * tji;
   thdb2dpt * searchpt;
   thscrapen * se1, * se2, * fse1, * fse2;
   thline * l1, * l2;
+  int ccount;
   double mindst, cdst;
   unsigned long nactive;
   while (jptr != NULL) {
@@ -1973,36 +1974,66 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             ji->is_active = false;
           break;
         case TT_SCRAP_CMD:
-          // z dvoch scrapov urobime body na ciarach
-          sc1 = (thscrap *) ji->object;
-          ji->is_active = false;
-          if (ji->next_item != NULL) {
-            ji = ji->next_item;
-            sc2 = (thscrap *) ji->object;
-            ji->is_active = false;
+
+          if (ji->next_item == NULL)
+            break;
+            
+          for(ccount = 0; ccount < jptr->count; ccount++) {
+  
+            // z dvoch scrapov urobime body na ciarach
+            if (ccount == 0) {
+              sc1 = (thscrap *) ji->object;
+              ji->is_active = false;
+              ji = ji->next_item;
+              sc2 = (thscrap *) ji->object;
+              ji->is_active = false;
+            }
+            
             // mame 2 scrapy, najdeme spolocne ciary
             fse1 = sc1->get_ends();
             fse2 = sc2->get_ends();
-            if ((fse1 == NULL) || (fse2 == NULL))
-              break;
+            
+            if (ccount == 0) {
+              se1 = fse1;
+              while (se1 != NULL) {
+                se1->cxt = (se1->lp1->point->xt + se1->lp2->point->xt) / 2.0;
+                se1->cyt = (se1->lp1->point->yt + se1->lp2->point->yt) / 2.0;
+                se1->active = true;
+                se1 = se1->next_end;
+              }
+ 
+              se2 = fse2;
+              while (se2 != NULL) {
+                se2->cxt = (se2->lp1->point->xt + se2->lp2->point->xt) / 2.0;
+                se2->cyt = (se2->lp1->point->yt + se2->lp2->point->yt) / 2.0;
+                se2->active = true;
+                se2 = se2->next_end;
+              }
+            }
               
             se1 = fse1;
-            while (se1 != NULL) {
-              se1->cxt = (se1->lp1->point->xt + se1->lp2->point->xt) / 2.0;
-              se1->cyt = (se1->lp1->point->yt + se1->lp2->point->yt) / 2.0;
+            while ((se1 != NULL) && (!(se1->active))) {
               se1 = se1->next_end;
+              fse1 = se1;
             }
 
             se2 = fse2;
-            while (se2 != NULL) {
-              se2->cxt = (se2->lp1->point->xt + se2->lp2->point->xt) / 2.0;
-              se2->cyt = (se2->lp1->point->yt + se2->lp2->point->yt) / 2.0;
+            while ((se2 != NULL) && (!(se2->active))) {
               se2 = se2->next_end;
+              fse2 = se2;
             }
-            
-            mindst = hypot(fse1->cxt - fse2->cxt, fse1->cyt - fse2->cyt);
+              
+            if ((fse1 != NULL) && (fse2 != NULL))
+              mindst = hypot(fse1->cxt - fse2->cxt, fse1->cyt - fse2->cyt);
+            else {
+              // nenasli sme uz dva konce, skipujeme az na koniec
+              jptr->throw_source();
+              threwarning2(("unable to join scraps (count %d)", ccount + 1));
+              ccount = jptr->count;
+              goto UNABLE_TO_JOIN;
+            }
+              
             se1 = fse1;
-            
             while (se1 != NULL) {
               se2 = sc2->get_ends();
               while (se2 != NULL) {
@@ -2016,7 +2047,10 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
               }
               se1 = se1->next_end;
             }
-            
+              
+            fse1->active = false;
+            fse2->active = false;
+              
             // mame dva najblizsie, zistime ci ich netreba otocit
             if (((fse1->lp1->point->xt - fse1->cxt) * (fse2->lp1->point->xt - fse2->cxt) +
               (fse1->lp1->point->yt - fse1->cyt) * (fse2->lp1->point->yt - fse2->cyt)) < 0) {
@@ -2029,7 +2063,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
               fse2->lp2 = fse2->lp1;
               fse2->lp1 = tlp;
             }
-            
+              
             // vytvorime z nich joiny
             tjptr = (thjoin*) thdb.create("join",thobjectsrc());
             thdb.insert(tjptr);
@@ -2054,7 +2088,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             tji->next_item->prev_item = tji;
             tjptr->first_item = tji;
             tjptr->last_item = tji->next_item;
-
+ 
             tji = this->insert_join_item();
             tji->object = fse1->l2;
             tji->line_point = fse1->lp2;
@@ -2065,9 +2099,10 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             tji->next_item->point = fse2->lp2->point;
             tji->next_item->prev_item = tji;
             tjptr->proj_next_join->first_item = tji;
-            tjptr->proj_next_join->last_item = tji->next_item;
-            
-          }
+            tjptr->proj_next_join->last_item = tji->next_item;              
+
+            UNABLE_TO_JOIN:;
+          } // for count
           break;
         default:
           ji->is_active = false;

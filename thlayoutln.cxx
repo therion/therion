@@ -26,9 +26,11 @@
  */
  
 #include "thlayoutln.h"
+#include "thlayout.h"
 
 thlayoutln::thlayoutln() {
   this->next_line = NULL;
   this->line = NULL;
+  this->code = TT_LAYOUT_CODE_TEX_ATLAS;
 }
   

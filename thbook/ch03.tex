@@ -100,6 +100,7 @@ Works like |input| command in data files  - includes other files.
 
 \syntax
   |layout <id> [OPTIONS]
+          code <metapost/tex-map/tex-atlas>
           copy <source layout id>
           doc-author <string>
           doc-keywords <string>
@@ -134,6 +135,9 @@ Works like |input| command in data files  - includes other files.
 \endoptions
 
 \comopt 
+  * |code <metapost/tex-map/tex-atlas>| = Add/redefine \TeX\ and \MP\
+    macros here. This allows user to configure various things 
+    (like user defined symbols, map and atlas layout at one place \&c.)
   * |copy <source layout id>| = set properties here that are not
     modified based on the given source layout.
   * |doc-author <string>| = set document author (M, A)

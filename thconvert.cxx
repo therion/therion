@@ -703,9 +703,9 @@ int thconvert() {
   thpdfdbg();  // in the debugging mode only
   
 #ifdef NOTHERION
-  cout << "done." << endl;
+  cout << "done" << endl;
 #else
-  thprintf("done.\n");
+  thprintf("done\n");
 #endif
   return(0);
 }

@@ -35,6 +35,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
 {
   // check if source is not UTF-8
   if (srcenc == TT_UTF_8) {
+    thdecode(dest,TT_ASCII,src);
     dest->strcpy(src);
     return;
   }
@@ -120,20 +121,29 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
       else if ((*srcp / 32) == 6) {
         sch = 64 * (*srcp % 32);
         srcp++;
+        srcx++;
+        if ((srcx >= srcln) || (*srcp < 128))
+          therror(("invalid UTF-8 string -- \"%s\"",src));
         sch += *srcp % 64;
       }
       // three byte UTF-8 character
       else if ((*srcp / 16) == 14) {
         sch = 4096 * (*srcp % 16);
         srcp++;
+        srcx++;
+        if ((srcx >= srcln) || (*srcp < 128))
+          therror(("invalid UTF-8 string -- \"%s\"",src));
         sch += 64 * (*srcp % 64);
         srcp++;
+        srcx++;
+        if ((srcx >= srcln) || (*srcp < 128))
+          therror(("invalid UTF-8 string -- \"%s\"",src));
         sch += *srcp % 64;
       } 
       
       // longer chars not supported
       else
-        therror(("unicode character over 0xFFFF not supported"));
+        therror(("invalid UTF-8 string -- \"%s\"",src));
         
       // now we have whchar_t value of UTF-8 character in sch
       if (sch < thchenc_fucc)

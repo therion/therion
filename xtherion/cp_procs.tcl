@@ -233,8 +233,8 @@ proc xth_cp_write_file {pth} {
 
   # let's put data
   set data [$xth(cp,editor).txt get 1.0 end]
-  regsub {\s*$} $data {} "data\n"
-  puts -nonewline $fid $data
+  regsub {\s*$} $data {} data
+  puts $fid $data
     
   # now let's put special commands
   foreach cmd $xth(cp,special) {

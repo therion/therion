@@ -47,6 +47,7 @@ class thscrapen {
   class thdb2dlp * lp2;
   
   double cxt, cyt;
+  bool active;
   
   thscrapen(); ///< Default constructor
 };

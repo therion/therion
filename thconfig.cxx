@@ -93,16 +93,31 @@ thconfig::thconfig()
     this->search_path = sp;
   else {
     sp = getenv("HOME");
+#ifdef THWIN32
     if (sp != NULL) {
       this->search_path = sp;
+    } else {
+      sp = getenv("HOMEDRIVE");
+      if (sp != NULL) {
+        this->search_path = sp;
+        sp = getenv("HOMEPATH");
+        if (sp != NULL) {
+          this->search_path += sp;
+        }
+      }
+      sp = getenv("HOMEDRIVE");
+    }
+#endif    
+    if (sp != NULL) {
 #ifdef THWIN32
-      this->search_path += "/.therion;";
+      this->search_path += "\\.therion;";
       if (strlen(tmpbf->get_buffer()) > 0) {
         this->search_path += tmpbf->get_buffer();
       } else {
         this->search_path += wincfg;
       }
 #else
+      this->search_path = sp;
       this->search_path += "/.therion:";
       this->search_path += unixcfg;
 #endif
@@ -126,16 +141,31 @@ thconfig::thconfig()
     this->init_path = sp;
   else {
     sp = getenv("HOME");
+#ifdef THWIN32
     if (sp != NULL) {
       this->init_path = sp;
+    } else {
+      sp = getenv("HOMEDRIVE");
+      if (sp != NULL) {
+        this->init_path = sp;
+        sp = getenv("HOMEPATH");
+        if (sp != NULL) {
+          this->init_path += sp;
+        }
+      }
+      sp = getenv("HOMEDRIVE");
+    }
+#endif    
+    if (sp != NULL) {
 #ifdef THWIN32
-      this->init_path += "/.therion;";
+      this->init_path += "\\.therion;";
       if (strlen(tmpbf->get_buffer()) > 0) {
         this->init_path += tmpbf->get_buffer();
       } else {
         this->init_path += winini;
       }
 #else
+      this->init_path = sp;
       this->init_path += "/.therion:";
       this->init_path += unixini;
 #endif
@@ -489,7 +519,7 @@ void thconfig::save()
 #ifdef THDEBUG
     thprintf("\n");
 #else
-    thprintf("done.\n");
+    thprintf("done\n");
     thtext_inline = false;
 #endif 
 
@@ -546,7 +576,7 @@ void thconfig::xth_save()
 #ifdef THDEBUG
     thprintf("\n");
 #else
-    thprintf("done.\n");
+    thprintf("done\n");
     thtext_inline = false;
 #endif 
 

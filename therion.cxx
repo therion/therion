@@ -74,9 +74,12 @@ void thprintf(const char *format, ...)
   va_list args;
   va_start(args, format);
   thlog.vprintf(format, &args);
-  if (thverbose_mode)
-    vfprintf(stdout, format, args);
   va_end(args);
+  if (thverbose_mode) {
+    va_start(args, format);
+    vfprintf(stdout, format, args);
+    va_end(args);
+  }
 }
   
 
@@ -85,6 +88,8 @@ void thprintf2err(const char *format, ...)
   va_list args;
   va_start(args, format);
   thlog.vprintf(format, &args);
+  va_end(args);
+  va_start(args, format);
   vfprintf(stderr, format, args);
   va_end(args);
 }
@@ -113,6 +118,16 @@ void thprint_xtherion() {
 
 
 void thprint_xth_lines() {
+}
+
+
+void thpause_exit() {
+#ifdef THWIN32
+  if (thverbose_mode && (!(thcfg.generate_xthcfg))) {
+    thprintf("Press ENTER to exit!");
+    getchar();
+  }
+#endif
 }
 
 
@@ -183,7 +198,7 @@ int main(int argc, char * argv[]) {
 #ifdef THDEBUG
     thprintf("\n");
 #else
-    thprintf(" done.\n");
+    thprintf(" done\n");
     thtext_inline = false;
 #endif 
     
@@ -203,12 +218,14 @@ int main(int argc, char * argv[]) {
 #ifdef THDEBUG
     thprintf("configuration loaded\n\n");
 #else
-    thprintf(" done.\n");
+    thprintf(" done\n");
     thtext_inline = false;
 #endif    
     
     // load input
     long sid, maxsid = thcfg.get_source_file_names()->get_size();
+    if (maxsid == 0)
+      therror(("source files not specified"));
     char ** srcn = thcfg.get_source_file_names()->get_buffer();
 #ifndef THDEBUG
     thprintf("reading source files ... ");
@@ -232,7 +249,7 @@ int main(int argc, char * argv[]) {
     }
 
 #ifndef THDEBUG
-    thprintf("done.\n");
+    thprintf("done\n");
     thtext_inline = false;
 #endif 
 
@@ -262,7 +279,7 @@ int main(int argc, char * argv[]) {
     thcfg.select_data();
 #ifdef THDEBUG
 #else
-    thprintf("done.\n");
+    thprintf("done\n");
     thtext_inline = false;
 #endif
 

@@ -33,6 +33,8 @@ xth_ctrl_add cp info "Survey info"
 xth_ctrl_add cp ms "Map structure"
 xth_ctrl_finish cp
 
+
+
 # create config editor
 set xth(cp,editor) $xth(gui,cp).af.apps.ed
 frame $xth(cp,editor)

@@ -60,4 +60,4 @@ const char * thmpost_library = $thmpost_library;
 ENDOUTPT
 close(OUTPT);
 
-print "done.\n";
+print "done\n";
