@@ -186,9 +186,9 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
       case TT_DATATYPE_CYLPOLAR:
         if (!thisnan(legp_bearing)) {
           legp_bearing += legp->declination;
-          while (legp_bearing >= 360.0)
+          if (legp_bearing >= 360.0)
             legp_bearing -= 360.0;
-          while (legp_bearing < 0.0)
+          if (legp_bearing < 0.0)
             legp_bearing += 360.0;
         }
         break;

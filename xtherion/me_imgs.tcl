@@ -224,10 +224,7 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
   set dial_id 0
   if {[string length $fname] < 1} {
     set fname [tk_getOpenFile -parent $xth(gui,main) \
-       -filetypes {
-         { {Pictures} {.gif .pnm .ppm} }
-         { {All Files}               * }
-         } \
+       -filetypes $xth(gui,imgfiletypes) \
        -initialdir $xth(me,fpath) -defaultextension ".gif"]  
     if {[string length $fname] < 1} {
       return

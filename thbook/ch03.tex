@@ -41,7 +41,7 @@ Works like |input| command in data files---includes other files.
 \subsubchapter `select'.
 
 \description
-  selects objects for export. By default, all survey objects 
+  selects objects (surveys and maps) for export. By default, all survey objects 
   are selected. 
 \enddescription
 
@@ -50,8 +50,7 @@ Works like |input| command in data files---includes other files.
 \endsyntax
 
 \arguments
-*  |<object>| = any object from the database, such as a survey or 
-   map, identified by its id.
+*  |<object>| = any survey or map, identified by its ID.
 \endarguments
 
 \options
@@ -69,7 +68,8 @@ Works like |input| command in data files---includes other files.
   * |chapter-level <number>| = valid only when a map is selected. Determines
     the level at which chapter expansion for atlas export is stopped. 
     By default 0 is used, if ``|-|'' or ``|.|'' is specified, no chapter is
-    exported for this map.
+    exported for this map. If |title-pages| option in |layout| is on,
+    each chapter starts with a title page.
 \endoptions
 
 
@@ -101,94 +101,64 @@ Works like |input| command in data files---includes other files.
 \enddescription
 
 \syntax
-  |layout <id> [OPTIONS]
-          code <metapost/tex-map/tex-atlas>
-          copy <source layout id>
-          doc-author <string>
-          doc-keywords <string>
-          doc-subject <string>
-          doc-title <string>
-          exclude-pages <on/off> <list>
-          grid-origin <x> <y> <x> <units>
-          grid-size <width> <height> <units>
-          layers <on/off>
-          nav-factor <factor>
-          nav-size <x-size> <y-size>
-          opacity <on/off> <value>
-          origin <x> <y> <x> <units>
-          origin-label <x-label> <y-label>
-          overlap <value> <units>
-          own-pages <number>
-          page-grid <on/off>
-          page-numbers <on/off>
-          page-setup <dimensions> <units>
-          scale <picture length> <real length>
-          base-scale <picture length> <real length>
-          size <width> <height> <units>
-          symbol-set <symbol-set>
-          symbol-assign <point/line/area> <symbol-type> <symbol-set>
-          symbol-hide <point/line/area> <symbol-type>
-          title-pages <on/off>
-        endlayout|
+|layout <id> [OPTIONS]
+    copy <source layout id>
+    scale <picture length> <real length>
+    base-scale <picture length> <real length>
+    symbol-set <symbol-set>
+    symbol-assign <point/line/area/group/special> <symbol-type> \ 
+                                                  <symbol-set>
+    symbol-hide <point/line/area/group/special> <symbol-type>
+    symbol-show <point/line/area/group/special> <symbol-type>
+    size <width> <height> <units>
+    overlap <value> <units>
+    page-setup <dimensions> <units>
+    page-numbers <on/off>
+    exclude-pages <on/off> <list>
+    title-pages <on/off>
+    nav-factor <factor>
+    nav-size <x-size> <y-size>
+    transparency <on/off>
+    opacity <value>
+    layers <on/off>
+    grid-origin <x> <y> <x> <units>
+    grid-size <width> <height> <units>
+    origin <x> <y> <x> <units>
+    origin-label <x-label> <y-label>
+    own-pages <number>
+    page-grid <on/off>
+    legend <on/off/all>
+    map-comment <string>
+    map-header <off/n/s/e/w/ne/nw/se/sw>
+    statistics <explo/topo/carto/copyright all/off/number>
+               <explo/topo-length on/off>
+    scale-bar <length> <units>
+    language <xx[_YY]>
+    colour/color <item> <colour>
+    doc-author <string>
+    doc-keywords <string>
+    doc-subject <string>
+    doc-title <string>
+    code <metapost/tex-map/tex-atlas>
+endlayout|
 \endsyntax
 
 \arguments
   |<id>| = layout identifier (to be used in the |export| command)
 \endarguments
 
-\options
-\endoptions
-
 \comopt 
-  * |code <metapost/tex-map/tex-atlas>| = Add/redefine \TeX\ and \MP\
-    macros here. This allows user to configure various things 
-    (like user defined symbols, map and atlas layout at one place \&c.)
-    See the chapter {\it Changing layout} for details.
   * |copy <source layout id>| = set properties here that are not
     modified based on the given source layout.
-  * |doc-author <string>| = set document author (M, A)
-  * |doc-keywords <string>| = set document keywords (M, A)
-  * |doc-subject <string>| = set document subject (M, A)
-  * |doc-title <string>| = set document title (M, A)
-  * |exclude-pages <on/off> <list>| = exclude specified pages from cave
-    atlas. The list may contain page numbers separated by a comma or dash 
-    (for intervals) e.g.~|2,4-7,9,23| means, that pages 2, 4, 5, 6, 7, 9 and 23 
-    should be omited. Only the map pages should be counted. (Set |own-pages 0| 
-    and |title-pages off| to get the correct page numbers to be excluded.) 
-    Changes of |own-pages| or |title-pages| options don't affect page 
-    excluding. (A)
-  * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
-    origin (M, A)
-  * |grid-size <width> <height> <units>| = set grid size in real
-    units (M, A; default \hbox{|10 m|})
-  * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
-  * |nav-factor <factor>| = set atlas navigator zoom factor (A; default: |30|)
-  * |nav-size <x-size> <y-size>| = set number of atlas pages in 
-    both directions of navigator (A; default: |2 2|)
-  * |opacity <value>| = set opacity value (used if |transparency| is |on|). 
-    Value range is 0--100. (M, A; default: |70|)
-  * |origin <x> <y> <x> <units>| = set origin of atlas pages (M, A)
-  * |origin-label <x-label> <y-label>| = set label for atlas page
-    which has the lower left corner at the given origin coordinates
-    (M, A; default: |0 0|)
-  * |overlap <value> <units>| = set overlap size in paper units in the atlas 
-    mode or map margin in the map mode (M, A; default: |1 cm|)
-  * |own-pages <number>| = set number of own pages added before 
-    the first page of automatically generated pages in atlas mode
-    (currently required for correct page numbering) (A; default: |0|)
-  * |page-grid <on/off>| = show pages key plan (M; default: |off|)
-  * |page-numbers <on/off>| = turn on/off page numbering (A; default: |true|)
-  * |page-setup <dimensions> <units>| = set page dimensions in
-    this order: paper-width, paper-height, page-width, page-height,
-    left-margin and top-margin (A; default: |21 29.7 20 28.7 0.5 0.5 cm|)
+  
+  {\it map presentation-related:}
+
   * |scale <picture length> <real length>| = set scale of
     output map or map atlas (M, A; default: |1 200|)
   * |base-scale <picture length> <real length>| = if set, Therion will
     optically scale the map by a (|scale/base-scale|) factor.
     This has the same effect as if the map printed in |base-scale| would be
     photoreduced to the |scale|. (M, A)
-  * |size <width> <height> <units>| = set map size in the atlas mode.
-    In map mode applies iff |page-grid| is |on| (M, A; default: |18 22.2 cm|)
   * |symbol-set <symbol-set>| = use |symbol-set| for all map symbols,
     if available (M, A)
     
@@ -196,15 +166,17 @@ Works like |input| command in data files---includes other files.
     UIS (International Union of Speleology)\par
     ASF (Australian Speleological Federation)\par
     CCNP (Carlsbad Caverns National Park)\par
-    SKBB (Speleoklub Bansk\'a Bystrica)\par
-    JSSJ (map symbols from the book {\it Jaskynn\'y syst\'em 
-                                      Stratenskej jaskyne})
-  * |symbol-assign <point/line/area> <symbol-type> <symbol-set>| = display a
-    particular symbol in the given symbol-set. This option overrides 
-    |symbol-set| option.
+    SKBB (Speleoklub Bansk\'a Bystrica)
     
-    If the symbol has a subtype, |<symbol-type>| argument has form
-    |type:subtype|.
+  * {\rightskip 0cm minus 4pt
+    |symbol-assign <point/line/area/group/special> <symbol-type> <symbol-set>| = 
+    display a
+    particular symbol in the given symbol-set. This option overrides 
+    |symbol-set| option.\par}
+    
+    If the symbol has a subtype, |<symbol-type>| argument may have one
+    of the following forms: |type:subtype| or simply |type|, which
+    assigns new symbol set to all subtypes of a given symbol.
     
     Following symbols may not be used with this option: point {\it section} 
     (which isn't rendered at all) and all point and line labels ({\it label}, 
@@ -212,11 +184,90 @@ Works like |input| command in data files---includes other files.
     {\it station-name}, {\it date}). See the chapter
     {\it Changing layout/Customizing text labels} for details how to change
     labels' appearance. (M, A)
-  * |symbol-hide <point/line/area> <symbol-type>| = don't display particular 
-    symbol (M, A)
-  * |title-pages <on/off>| = turn on/off atlas title pages (A; default: |off|)
+
+    Group may be one of the following: all, centerline, sections.
+    
+    There are two special symbols: north-arrow, scale-bar.
+
+  * |symbol-hide <point/line/area/group/special>  <symbol-type>| = don't display 
+    particular symbol or group of symbols. 
+    May be combined with |symbol-show|.(M, A)
+  * |symbol-show <point/line/area/group/special> <symbol-type>| = display particular 
+    symbol or group of symbols. May be combined with |symbol-hide|. (M, A)
+
+  {\it page layout related:}
+
+  * |size <width> <height> <units>| = set map size in the atlas mode.
+    In map mode applies iff |page-grid| is |on| (M, A; default: |18 22.2 cm|)
+  * |overlap <value> <units>| = set overlap size in paper units in the atlas 
+    mode or map margin in the map mode (M, A; default: |1 cm|)
+  * |page-setup <dimensions> <units>| = set page dimensions in
+    this order: paper-width, paper-height, page-width, page-height,
+    left-margin and top-margin (A; default: |21 29.7 20 28.7 0.5 0.5 cm|)
+  * |page-numbers <on/off>| = turn on/off page numbering (A; default: |true|)
+  * |exclude-pages <on/off> <list>| = exclude specified pages from cave
+    atlas. The list may contain page numbers separated by a comma or dash 
+    (for intervals) e.g.~|2,4-7,9,23| means, that pages 2, 4, 5, 6, 7, 9 and 23 
+    should be omited. Only the map pages should be counted. (Set |own-pages 0| 
+    and |title-pages off| to get the correct page numbers to be excluded.) 
+    Changes of |own-pages| or |title-pages| options don't affect page 
+    excluding. (A)
+  * |title-pages <on/off>| = turn on/off title pages before each atlas chapter
+    (A; default: |off|)
+  * |nav-factor <factor>| = set atlas navigator zoom factor (A; default: |30|)
+  * |nav-size <x-size> <y-size>| = set number of atlas pages in 
+    both directions of navigator (A; default: |2 2|)
   * |transparency <on/off>| = set transparency for the passages (underlying 
     passages are also visible) (M, A; default: |on|)
+  * |opacity <value>| = set opacity value (used if |transparency| is |on|). 
+    Value range is 0--100. (M, A; default: |70|)
+  * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
+  * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
+    origin (M, A)
+  * |grid-size <width> <height> <units>| = set grid size in real
+    units (M, A; default \hbox{|10 m|})
+  * |origin <x> <y> <x> <units>| = set origin of atlas pages (M, A)
+  * |origin-label <x-label> <y-label>| = set label for atlas page
+    which has the lower left corner at the given origin coordinates
+    (M, A; default: |0 0|)
+  * |own-pages <number>| = set number of own pages added before 
+    the first page of automatically generated pages in atlas mode
+    (currently required for correct page numbering) (A; default: |0|)
+  * |page-grid <on/off>| = show pages key plan (M; default: |off|)
+
+  {\it map legend related:}
+
+  * |legend <on/off/all>| = display list of used map symbols. If set to
+    |all|, all symbols from the current symbol set are displayed. 
+    (M, A; default: |off|)
+  * |map-comment <string>| = optional comment displayed at the map header (M)
+  * |map-header <off/n/s/e/w/ne/nw/se/sw>| = print map header at specified
+    location. (M; default: |nw|)
+  * |statistics <explo/topo/carto/copyright all/off/number>| or 
+  * |statistics <explo/topo-length on/off>| = display some basic 
+    statistics (M, A; default: |off|)
+  * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
+  * |language <xx[_YY]>| = set output language. Currently supported languages are
+    |sk| (Slovak) and |en| (English). See the {\it Appendix} if you want to 
+    add or customize translations. (M, A)
+  * |colour/color <item> <colour>| = customize colour for special map
+    items (map-fg, map-bg, preview-above, preview-below). 
+    Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
+    for RGB colours.
+
+  \penalty-40{\it PDF related:}
+
+  * |doc-author <string>| = set document author (M, A)
+  * |doc-keywords <string>| = set document keywords (M, A)
+  * |doc-subject <string>| = set document subject (M, A)
+  * |doc-title <string>| = set document title (M, A)
+
+  {\it customization:}
+
+  * |code <metapost/tex-map/tex-atlas>| = Add/redefine \TeX\ and \MP\
+    macros here. This allows user to configure various things 
+    (like user defined symbols, map and atlas layout at one place \&c.)
+    See the chapter {\it Changing layout} for details.
 \endcomopt
 
 \midinsert
@@ -255,22 +306,23 @@ Works like |input| command in data files---includes other files.
     |map| = one page 2D map
 
     |atlas| = 2D atlas in more pages
+
+    |database| = SQL database with centreline
 \endarguments
 
 \options
-  {\it common:}
+  \penalty-40{\it common:}
 
   * |output/o <file>| = set output file name. If no file name is
     given the prefix ``|cave.|'' is used with an extension corresponding to
     output format.
 
-  {\it model:}
+  \penalty-40{\it model:}
 
   * |format/fmt <format>| = set model output format. Currently the following
-    output formats are supported: therion (native format), compass 
-    (plt file) and survex (3d file).
+    output formats are supported: compass (plt file), survex (3d file).
 
-  {\it map/atlas:}
+  \penalty-40{\it map/atlas:}
   
   * |projection <id>| = unique identifier that specifies the map projection type.
     (See the |scrap| command for details.) If there are no scraps with 
@@ -281,6 +333,11 @@ Works like |input| command in data files---includes other files.
   * |format/fmt <format>| = set map format. Currently only PDF format
     is supported.
   * |title| = title to go on the output survey    
+
+  \penalty-40{\it database:}
+  
+  * |format/fmt <format>| = currently only SQL
+  * |encoding/enc <encoding>| = set output encoding
 \endoptions
 
 
@@ -288,7 +345,7 @@ Works like |input| command in data files---includes other files.
 \subchapter Running Therion.
 
 Now, after mastering data and configuration files, we're ready to run Therion. 
-Usually this is done from the command line in the data directory as follows
+Usually this is done from the command line in the data directory by typing
 
 |therion|
 
@@ -296,9 +353,11 @@ The full syntax is
 
 |therion [-q] [-L] [-l <log-file>]
         [-s <source-file>] [-p <search-path>]
-        [-g/-u] [-i] [-d] [-x] [<cfg-file>]
+        [-g/-u] [-i] [-d] [-x] [<cfg-file>]|
 
-therion [-h/--help]
+or
+
+|therion [-h/--help]
         [-v/--version]
         [--print-encodings]
         [--print-tex-encodings]

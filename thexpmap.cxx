@@ -52,9 +52,11 @@
 #include "thtex.h"
 #include "thcmdline.h"
 #include "thtexfonts.h"
+#include "thsurvey.h"
 #include <fstream>
 #include <map>
 #include <set>
+#include "thmapstat.h"
 
 #ifdef THWIN32
 #define snprintf _snprintf
@@ -307,6 +309,8 @@ char * thexpmap_u2string(unsigned u) {
   return (&(a[0]));
 }
 
+
+
 void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
   // poojde kapitolu za kapitolou a exportuje scrapy a 
@@ -324,6 +328,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   unsigned sscrap = 0;
   thexpmap_xmps exps;
   char * fnm, * chtitle;
+  thbuffer tit;
   bool quick_map_exp = false;
   double origin_shx, origin_shy;
   thexpmapmpxs out;
@@ -334,6 +339,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
   bool anyprev, anyprevabove = false, anyprevbelow = false;
   char * prevbf;
+  prevbf = new char [128];
+  prevbf[127] = 0;
+  
   thbuffer aboveprev, belowprev;
 
   list<scraprecord>::iterator SCRAPITEM;
@@ -397,6 +405,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   );     
   fprintf(tf,"\\end\n");
   fclose(tf);
+  
 
 
   if (thexporter_quick_map_export && 
@@ -417,10 +426,11 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   fprintf(mpf,"Scale:=%.2f;\n",1 / this->layout->scale);
   if (this->layout->def_base_scale || this->layout->redef_base_scale)
     fprintf(mpf,"BaseScale:=%.2f;\n",1 / this->layout->base_scale);
-  fprintf(mpf,"color Background;\nBackground = (%.5f,%.5f,%.5f);\n",
+  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
     this->layout->color_map_fg.R,
     this->layout->color_map_fg.G,
     this->layout->color_map_fg.B);
+  fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n");
   fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
 //  fprintf(mpf,"def user_initialize = enddef;\n");
 //this->layout->export_mpost(mpf);
@@ -428,6 +438,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(mpf,"input therion;\n");
   else
     fprintf(mpf,"%s\n",thmpost_library);
+  fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(thlang_getlang(this->layout->lang)));
 
 //  fprintf(mpf,"verbatimtex \\def\\updown#1#2{\\vbox{%%\n");
 //  fprintf(mpf,"    \\offinterlineskip\n");
@@ -458,7 +469,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   
   this->layout->export_mpost_symbols(mpf, &(this->symset));
   
-  fprintf(mpf,"write EOF to \"missed.dat\";\n\n");
+//fprintf(mpf,"write EOF to \"missed.dat\";\n\n");
 
   // prida nultu figure
   // fprintf(mpf,"beginfig(0);\nendfig;\n");
@@ -537,6 +548,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   out.my = (cs->lymax + cs->lymin) / 2.0;
                   shx = out.mx * out.ms;
                   shy = out.my * out.ms;
+                  if (!export_outlines_only) {
+                    cs->exported = true;
+                  }
                 } 
                 
                 shx += origin_shx;
@@ -651,7 +665,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
               } // if cs != NULL
               if (!export_sections) {
                 export_sections = true;
-                if (export_outlines_only)
+                if ((export_outlines_only) || (!this->symset.assigned[SYMP_SECTION]))
+                  // rezy sa neexportuju
                   op2 = NULL;
                 else
                   op2 = cs->ls2doptr;
@@ -669,6 +684,38 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     cmap = cmap->next_item;
   }
 
+  sprintf(texb.get_buffer(),"data.%d",sfig);
+  LAYOUT.northarrow = texb.get_buffer();
+  fprintf(mpf,"beginfig(%d);\ns_northarrow;\nendfig;\n",sfig++);
+
+  sprintf(texb.get_buffer(),"data.%d",sfig);
+  LAYOUT.scalebar = texb.get_buffer();
+  double sblen;
+  int sbtest;
+  if (this->layout->scale_bar <= 0.0) {
+    sbtest = int(log(0.10 / this->layout->scale) / log(pow(10.0,1.0/3.0)));
+    sblen = pow(10.0,double(sbtest/3));
+    switch (sbtest % 3) {
+      case 0: sblen *= 1.0; break;
+      case 1: sblen *= 2.5; break;
+      default: sblen *= 5.0; break;
+    }
+  } else 
+    sblen = this->layout->scale_bar;
+  snprintf(prevbf,127,"%g",sblen);
+  fprintf(mpf,"beginfig(%d);\ns_scalebar(%g,\"m\",btex %s\\thinspace ",
+    sfig++, sblen, utf2tex(prevbf));
+  fprintf(mpf,"%s etex);\nendfig;\n", utf2tex(thT("units m",layout->lang)));
+
+  // sem pride zapisanie legendy do MP suboru
+  if (this->layout->def_base_scale || this->layout->redef_base_scale)
+    fprintf(mpf,"Scale:=%.2f;\ninitialize(Scale);\n",1 / this->layout->base_scale);
+  fprintf(mpf,"background:=white;\ntransparency:=false;\n");
+  if ((this->layout->legend != TT_LAYOUT_LEGEND_OFF) && 
+      ((this->export_mode == TT_EXP_ATLAS) || (this->layout->map_header != TT_LAYOUT_MAP_HEADER_OFF))) {
+    this->symset.export_pdf(this->layout,mpf,sfig);
+  }
+  
   fprintf(mpf,"end;\n");
   fprintf(plf,");\n");
   fclose(mpf);
@@ -686,8 +733,6 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   }
   
   cmap = maps;  
-  prevbf = new char [128];
-  prevbf[127] = 0;
 
   LAYERHASH.clear();
   MAP_PREVIEW_UP.clear();
@@ -817,7 +862,33 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   delete [] prevbf;
 
   QUICK_MAP_EXPORT:
+
+  //if (strlen(this->layout->doc_title) == 0) {
+  tit.strcpy(thdb.db2d.get_projection_title(prj));
+    //LAYOUT.doc_title = tit.get_buffer();
+  //} else
+  //  tit.strcpy(LAYOUT.doc_title.c_str());
+    
+  tf = fopen(thtmp.get_file_name("th_texts.tex"),"w");
+  fprintf(tf,"\\legendtitle={%s}\n",utf2tex(thT("title legend",this->layout->lang)));
+  // ak neni atlas, tak nastavi legendcavename
+  fprintf(tf,"\\cavename={%s}\n",utf2tex(tit.get_buffer()));
+
+  if (strlen(this->layout->doc_comment) > 0) {
+    fprintf(tf,"\\comment={%s}\n",utf2tex(this->layout->doc_comment));
+  }
   
+  if ((prj->type != TT_2DPROJ_PLAN) || (!this->symset.assigned[SYMS_NORTHARROW]))
+    fprintf(tf,"\\northarrowfalse\n");
+  else 
+    fprintf(tf,"\\northarrowtrue\n");
+  if (!this->symset.assigned[SYMS_SCALEBAR])
+    fprintf(tf,"\\scalebarfalse\n");
+  else 
+    fprintf(tf,"\\scalebartrue\n");
+  prj->stat.export_pdftex(tf, this->layout);
+  fclose(tf);
+
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
   thbuffer com, wdir;
   wdir.guarantee(1024);
@@ -908,6 +979,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     unsigned & startnum, bool outline_mode)
 {
   th2ddataobject * obj;
+  thexpmapmpxs nooutc, * noout;
+  nooutc = *out;
+  noout = &(nooutc);
+  noout->file = NULL;
   thexpmap_xmps result;
   unsigned from, to;
   int placeid;
@@ -916,6 +991,9 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   thscraplp * slp;
   thdb2dlp * lp;
   
+  fprintf(out->file, "current_scrap := \"%s@%s\";\n", scrap->name, 
+    scrap->fsptr->full_name);
+
   // preskuma vsetky objekty a ponastavuje im clip tagy
   obj = scrap->ls2doptr;
   if (outline_mode) obj = NULL;
@@ -975,8 +1053,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     if (outline_mode) obj = NULL;
     while (obj != NULL) {
       if (thxmempiov && ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) > 0) && (obj->place == placeid)) {
-        thexpmap_export_mp_bgif;
-        obj->export_mp(out);
+        if (obj->export_mp(noout)) {
+          thexpmap_export_mp_bgif;
+          obj->export_mp(out);
+        }
       }
       obj = obj->pscrapoptr;
     }
@@ -985,6 +1065,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   // a polygon
   slp = scrap->get_polygon();
   if (outline_mode) slp = NULL;
+  if (!(out->symset->assigned[SYML_SURVEY])) slp = NULL;
   while (slp != NULL) {
     if (slp->lnio) {
       thexpmap_export_mp_bgif;
@@ -1137,8 +1218,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
               case TT_LINE_TYPE_LABEL:
                 break;
               default:
-                thexpmap_export_mp_bgif;
-                obj->export_mp(out);
+                if (obj->export_mp(noout)) {
+                  thexpmap_export_mp_bgif;
+                  obj->export_mp(out);
+                }
                 break;
             }
             break;
@@ -1154,14 +1237,18 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
               case TT_POINT_TYPE_PASSAGE_HEIGHT:
                 break;
               default:
-                thexpmap_export_mp_bgif;
-                obj->export_mp(out);
+                if (obj->export_mp(noout)) {
+                  thexpmap_export_mp_bgif;
+                  obj->export_mp(out);
+                }
                 break;
             }
             break;
           case TT_AREA_CMD:
-            thexpmap_export_mp_bgif;
-            obj->export_mp(out);
+            if (obj->export_mp(noout)) {
+              thexpmap_export_mp_bgif;
+              obj->export_mp(out);
+            }
             break;
         }
       }
@@ -1171,25 +1258,27 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     
   // nakoniec meracske body
   // najprv z polygonu
+  int macroid;
   slp = scrap->get_polygon();
   if (outline_mode) slp = NULL;
   while (slp != NULL) {
     if (!slp->lnio) {
-      thexpmap_export_mp_bgif;
 #define thexpmat_station_type_export_mp(type,mid) case type: \
-  fprintf(out->file,"%s(",out->symset->get_mp_macro(mid)); \
+  macroid = mid; \
   break;
+      macroid = SYMP_STATION_TEMPORARY;
       switch(slp->station->mark) {
         thexpmat_station_type_export_mp(TT_DATAMARK_FIXED,SYMP_STATION_FIXED)
         thexpmat_station_type_export_mp(TT_DATAMARK_NATURAL,SYMP_STATION_NATURAL)
         thexpmat_station_type_export_mp(TT_DATAMARK_PAINTED,SYMP_STATION_PAINTED)
-        default:
-          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_STATION_TEMPORARY));
-          break;
       }
-      fprintf(out->file,"(%.2f,%.2f));\n",
-        (slp->stx - out->mx) * out->ms,
-        (slp->sty - out->my) * out->ms);
+      if (out->symset->assigned[macroid]) {
+        thexpmap_export_mp_bgif;
+        fprintf(out->file,"%s((%.2f,%.2f));\n",
+          out->symset->get_mp_macro(macroid),
+          (slp->stx - out->mx) * out->ms,
+          (slp->sty - out->my) * out->ms);
+      }
     }
     slp = slp->next_item;
   }
@@ -1202,8 +1291,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
       switch (obj->get_class_id()) {
         case TT_POINT_CMD:
           if (((thpoint*)obj)->type == TT_POINT_TYPE_STATION) {
-            thexpmap_export_mp_bgif;
-            obj->export_mp(out);
+            if (obj->export_mp(noout)) {
+              thexpmap_export_mp_bgif;
+              obj->export_mp(out);
+            }
           }
           break;
       }
@@ -1234,13 +1325,15 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
       case TT_LINE_CMD:
         switch (((thline*)obj)->type) {
           case TT_LINE_TYPE_WALL:
+            if (!out->symset->assigned[SYMP_WALLALTITUDE])
+              break;
             // prescanuje stenu
             lp = ((thline*)obj)->first_point;
             while(lp != NULL) {
               if (((lp->tags | TT_LINEPT_TAG_ALTITUDE) > 0) &&
                   (!thisnan(lp->rsize))) {
                 thexpmap_export_mp_bgif;
-                fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_WALL_ALTITUDE));
+                fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_WALLALTITUDE));
                 lp->export_prevcp_mp(out);
                 fprintf(out->file,",");
                 lp->point->export_mp(out);
@@ -1255,8 +1348,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             }
             break;
           case TT_LINE_TYPE_LABEL:
-            thexpmap_export_mp_bgif;
-            obj->export_mp(out);
+            if (((thline*)obj)->export_mp(noout)) {
+              thexpmap_export_mp_bgif;
+              ((thline*)obj)->export_mp(out);
+            }
             break;
         }
         break;
@@ -1269,8 +1364,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           case TT_POINT_TYPE_ALTITUDE:
           case TT_POINT_TYPE_HEIGHT:
           case TT_POINT_TYPE_PASSAGE_HEIGHT:
-            thexpmap_export_mp_bgif;
-            ((thpoint*)obj)->export_mp(out);
+            if (((thpoint*)obj)->export_mp(noout)) {
+              thexpmap_export_mp_bgif;
+              ((thpoint*)obj)->export_mp(out);
+            }
             break;
         }
         break;

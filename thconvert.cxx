@@ -39,6 +39,7 @@
 
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
+#include "thtexfonts.h"
 
 using namespace std;
 
@@ -48,7 +49,7 @@ map<string,string> RGB, ALL_FONTS, ALL_PATTERNS;
 typedef set<unsigned char> FONTCHARS;
 map<string,FONTCHARS> USED_CHARS;
 
-unsigned font_id = 1, patt_id = 1;
+unsigned font_id, patt_id;
 int convert_mode;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,6 +142,8 @@ void read_hash() {
 
 string tex_Fname(string s) {return("THF"+s);}
 string tex_Pname(string s) {return("THP"+s);}
+string tex_Lname(string s) {return("THL"+s);}
+string tex_Wname(string s) {return("THW"+s);}   // special = northarrow &c.
 
 list<scraprecord>::iterator find_scrap(string name) {
     list<scraprecord>::iterator I;
@@ -229,7 +232,7 @@ string process_pdf_string(string s, string font) {
 //                13 -- filled outline
 //                20 -- nonclipped scrap data
 //                30 -- legend
-// 
+//                31 -- northarrow, scalebar
 
 void distill_eps(string name, string fname, string cname, int mode, ofstream& TEX) {
   string form_id;
@@ -301,6 +304,12 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
             form_id = tex_Xname("X"+name);
           }
           else cerr << "Unknown mode!" << endl; 
+        }
+        else if (mode == 30) {
+          form_id = tex_Lname(name);
+        }
+        else if (mode == 31) {
+          form_id = tex_Wname(name);
         }
         
 	HS = urx - llx;
@@ -425,8 +434,8 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
           else cerr << "Unknown special!" << endl;
 	}
 	else {                               // regular RGB color
-          print_str(thstack[0]+" "+thstack[1]+" "+thstack[2]+" g "
-                   +thstack[0]+" "+thstack[1]+" "+thstack[2]+" G",TEX);
+          print_str(thstack[0]+" "+thstack[1]+" "+thstack[2]+" rg "
+                   +thstack[0]+" "+thstack[1]+" "+thstack[2]+" RG",TEX);
 	}
         thstack.clear();
       }
@@ -606,6 +615,16 @@ void convert_scraps() {
   }
 
   // similarly with legend (distill_eps( , , , 30, TEX))
+  for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
+                                  I != LEGENDLIST.end(); I++) {
+    if (I->fname != "") distill_eps(I->name, I->fname, "", 30, TEX);
+  }
+
+  // north arrow &c.
+  if (LAYOUT.northarrow != "") 
+             distill_eps("northarrow", LAYOUT.northarrow, "", 31, TEX);
+  if (LAYOUT.scalebar != "") 
+             distill_eps("scalebar", LAYOUT.scalebar, "", 31, TEX);
 
   TEX.close();
 
@@ -670,6 +689,14 @@ void convert_scraps() {
   P.close();
   F.close();
   
+  ofstream LEG("th_legend.tex");
+  if(!LEG) therror(("Can't write a file!"));
+  for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
+                                   I != LEGENDLIST.end(); I++) {
+    LEG << "\\legendsymbolbox{\\" << tex_Lname(I->name) << "}{" <<
+                               utf2tex(I->descr) << "}" << endl;
+  }
+  LEG.close();
 }
 
 void read_rgb() {
@@ -693,6 +720,13 @@ int thconvert() {
 #else
   thprintf("converting scraps ... ");
 #endif
+  
+  RGB.clear();
+  ALL_FONTS.clear();
+  ALL_PATTERNS.clear();
+  USED_CHARS.clear();
+  font_id = 1;
+  patt_id = 1;
 
 #ifdef NOTHERION
   read_hash();

@@ -1,0 +1,130 @@
+/**
+ * @file thexpdb.h
+ * Export class.
+ */
+  
+/* Copyright (C) 2000 Stacho Mudrak
+ * 
+ * $Date: $
+ * $RCSfile: $
+ * $Revision: $
+ *
+ * -------------------------------------------------------------------- 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * --------------------------------------------------------------------
+ */
+ 
+#ifndef thexpdb_h
+#define thexpdb_h
+
+
+#include "thexport.h"
+
+
+/**
+ * Model export options.
+ */
+
+enum {
+  TT_EXPDB_OPT_UNKNOWN = 0,  ///< Unknown option
+  TT_EXPDB_OPT_FORMAT,  ///< Output option.
+  TT_EXPDB_OPT_ENCODING,  ///< Output option.
+};
+
+
+/**
+ * Options parsing table.
+ */
+ 
+static const thstok thtt_expdb_opt[] = {
+  {"-enc", TT_EXPDB_OPT_ENCODING},
+  {"-encoding", TT_EXPDB_OPT_ENCODING},
+  {"-fmt", TT_EXPDB_OPT_FORMAT},
+  {"-format", TT_EXPDB_OPT_FORMAT},
+  {NULL, TT_EXPDB_OPT_UNKNOWN}
+};
+
+
+
+/**
+ * Model export formats.
+ */
+
+enum {
+  TT_EXPDB_FMT_UNKNOWN = 0,  ///< Unknown option
+  TT_EXPDB_FMT_SQL,  ///< sql
+};
+
+
+/**
+ * Format parsing table.
+ */
+ 
+static const thstok thtt_expdb_fmt[] = {
+  {"sql", TT_EXPDB_FMT_SQL},
+  {NULL, TT_EXPDB_FMT_UNKNOWN}
+};
+
+
+/**
+ * Main export class.
+ */
+ 
+class thexpdb : public thexport {
+
+  public:
+
+  int format,  ///< Output format.
+    encoding;
+  
+  void export_sql_file(class thdatabase * dbp);
+
+  public:
+  
+  thexpdb(); ///< Default constructor.
+
+  /**
+   * Parse model export options.
+   */
+   
+  virtual void parse_options(int & argx, int nargs, char ** args);
+
+  
+  /**
+   * Dump object into file.
+   */
+   
+  virtual void dump_body(FILE * xf);
+
+
+  /**
+   * Dump object into file.
+   */
+   
+  virtual void dump_header(FILE * xf);
+  
+
+  /**
+   * Make export.
+   */
+   
+  virtual void process_db(class thdatabase * dbp);
+  
+};
+
+
+#endif
+
+

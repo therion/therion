@@ -27,6 +27,18 @@
 
 package require BWidget
 
+if {[catch {set imgver [package require Img]}]} {
+  set xth(gui,imgfiletypes) {
+           { {Pictures} {.gif .pnm .ppm} }
+           { {All Files}               * }
+         } 
+} else {
+  set xth(gui,imgfiletypes) {
+           { {Pictures} {.png .jpg .jpeg .tif .tiff .gif .pnm .ppm .bmp} }
+           { {All Files}                                               * }
+         } 
+}
+
 # read xtherion.ini file from THERION directory
 set idir {}
 if {[catch {set idir $env(THERION)}]} {

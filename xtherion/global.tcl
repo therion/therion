@@ -64,7 +64,7 @@ set xth(app,cp,filetypes) {
 }
 
 set xth(icmds) {survey}
-set xth(cmds) {scrap centerline grade line area map}
+set xth(cmds) {scrap centerline grade line area map layout}
 set dfs {8s}                    
 set dfss {8s}                    
 set dfuf {8.2fx {-}}             

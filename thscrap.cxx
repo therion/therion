@@ -30,6 +30,7 @@
 #include "thchenc.h"
 #include "thtflength.h"
 #include "thinfnan.h"
+#include "thdb1d.h"
 #include "thdb2d.h"
 #include "thdb2dmi.h"
 #include "th2ddataobject.h"
@@ -66,6 +67,7 @@ thscrap::thscrap()
   this->outline_parsed = false;
   this->outline_first = NULL;
   this->ends_parsed = false;
+  this->exported = false;
   this->ends_first = NULL;
   this->polygon_parsed = false;
   this->polygon_first = NULL;
@@ -747,4 +749,23 @@ thscrapen * thscrap::get_ends() {
   this->ends_first = res;
   return res;
 }
+
+
+void thscrap::insert_adata(class thdb1ds * as) {
+  // najde ci dane data uz mame
+  if (as->data == NULL)
+    return;
+  thmapstat_dataptr temp;
+  temp.ptr = as->data;
+  
+  thmapstat_datamap::iterator di = this->adata.find(temp);
+  if (di == adata.end()) {
+    this->adata[temp] = 1;
+  } else {
+    di->second++;
+  }
+  
+}
+
+
 

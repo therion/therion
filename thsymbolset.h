@@ -52,26 +52,58 @@ class thsymbolset {
   
 
   /**
-   * Do MP suboru zapise mapsymbol() makro + zmeni hidden value.
-   */
-  void export_symbol_assign(FILE * mpf, int sym_id, char * symset);
-
-  /**
    * Do MP suboru zapise mapsymbol() makro.
    */
   void export_symbol_defaults(FILE * mpf, char * symset);
   
   /**
-   * Do MP suboru zapise hidesymbol() pre to, co je zvolene.
+   * Do MP suboru zapise mapsymbol() makro + zmeni hidden value.
+   */
+  void export_symbol_assign(FILE * mpf, int sym_id, char * symset);
+
+  /**
+   * Skryje symbol.
    */
   void export_symbol_hide(FILE * mpf, int sym_id);
+
+  /**
+   * Zobrazi symbol.
+   */
+  void export_symbol_show(FILE * mpf, int sym_id);
+
+  /**
+   * Do MP suboru zapise mapsymbol() makro + zmeni hidden value.
+   */
+  void export_symbol_assign_group(FILE * mpf, int sym_id, char * symset);
+
+  /**
+   * Skryje symbol.
+   */
+  void export_symbol_hide_group(FILE * mpf, int sym_id);
+
+  /**
+   * Zobrazi symbol.
+   */
+  void export_symbol_show_group(FILE * mpf, int sym_id);
   
+  /** 
+   * Exportuje znackovy kluc do pdfka.
+   */
+   
+  void export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfig);
+
 };
 
 /**
  * Vrati ID z popisu classu a symbolu.
  */
 int thsymbolset__get_id(char * symclass, char * symbol);
+
+
+/**
+ * Vrati ID itemu z groupy.
+ */
+int thsymbolset__get_group(int group_id, int cid);
 
 
 #endif

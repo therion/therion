@@ -66,6 +66,14 @@ thdata::thdata()
   this->d_nitems = 5;
   this->d_current = 0;
   
+  this->stat_length = 0.0;
+  this->stat_dlength = 0.0;
+  this->stat_slength = 0.0;
+  
+  this->stat_st_state = 0;
+  this->stat_st_top = NULL;
+  this->stat_st_bottom = NULL;
+  
 }
 
 void thdata::reset_data_sd()
@@ -359,16 +367,17 @@ void thdata::self_print_properties(FILE * outf)
   thdataobject::self_print_properties(outf);
   fprintf(outf,"thdata:\n");
   fprintf(outf,"\tdate: %s\n",this->date.get_str());
+  fprintf(outf,"\tlength: %g\n",this->stat_length);
   
   // print the data team
-  for(thdata_team_set_type::iterator ii = this->team_set.begin();
+  thdata_team_set_type::iterator ii;
+  for(ii = this->team_set.begin();
       ii != this->team_set.end(); ii++)
     fprintf(outf,"\tteam: \"%s/%s\"\n", ii->get_n1(), ii->get_n2());
-
   fprintf(outf,"\tdiscovery-date: %s\n",this->discovery_date.get_str());
 
   // print the data team
-  for(thdata_team_set_type::iterator ii = this->discovery_team_set.begin();
+  for(ii = this->discovery_team_set.begin();
       ii != this->discovery_team_set.end(); ii++)
     fprintf(outf,"\tdiscovery-team: \"%s/%s\"\n", ii->get_n1(), ii->get_n2());
     

@@ -1,4 +1,26 @@
 --------------------------------------------------------------------------------
+Therion 0.2.18 (2004-02-12):
+
+therion:
+
+ * Therion supports translations of texts in PDF map/atlas output
+ * Therion exports centreline to SQL database
+ * input language changes:
+   - line command has new type: water-flow
+   - centerline command: discovery-date/team renamed to explo-date/team
+   - layout command has new options: language, colo[u]r, symbol-show,
+       map-comment, map-header, scale-bar, statistics
+   - -author and -copyright options apply only to centreline and scrap,
+     -title to survey, centreline, map and scrap
+   - it's possible to leave date field unspecified `-'
+ * configuration file changes:
+   - export command has new type: database
+ * initialization file changes: 
+   - new items: language, encoding-sql
+   - encoding_default renamed to encoding-default
+ * air-draught ticks set according to -scale option
+
+--------------------------------------------------------------------------------
 Therion 0.2.17 (2003-12-04):
 
 therion:

@@ -67,6 +67,11 @@ void thdataleg::clear()
   this->dy = thnan;
   this->dz = thnan;
   this->total_length = thnan;
+  this->total_bearing = thnan;
+  this->total_gradient = thnan;
+  this->total_dx = thnan;
+  this->total_dy = thnan;
+  this->total_dz = thnan;
     
   this->length_sd = thnan;
   this->counter_sd = thnan;

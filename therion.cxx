@@ -188,39 +188,13 @@ int main(int argc, char * argv[]) {
     thprintf("\n");
     
     // load initialization file
-#ifdef THDEBUG
-    thprintf("\nloading initialization file\n");
-#else
-    thprintf("reading initialization file ...");
-    thtext_inline = true;
-#endif 
     thini.load();
-#ifdef THDEBUG
-    thprintf("\n");
-#else
-    thprintf(" done\n");
-    thtext_inline = false;
-#endif 
-    
     // initialize database
     thdb.clear();
     // load therion library
     thlibrary_init();
-
     // load configuration from file
-#ifdef THDEBUG
-    thprintf("\nloading configuration -- %s\n", thcfg.get_file_name());
-#else
-    thprintf("reading configuration file ...");
-    thtext_inline = true;
-#endif 
     thcfg.load();
-#ifdef THDEBUG
-    thprintf("configuration loaded\n\n");
-#else
-    thprintf(" done\n");
-    thtext_inline = false;
-#endif    
     
     // load input
     long sid, maxsid = thcfg.get_source_file_names()->get_size();

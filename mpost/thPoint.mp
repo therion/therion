@@ -285,14 +285,8 @@ def p_aragonite_CCNP (expr pos,theta,sc,al)=
     thdraw (0,.2u){dir 150}..{dir 175}(-.25u,.3u);
 enddef;
 
-% @SYMBOL
-% thCavepearl_JSSJ --
-%
-% @PREVIEW
-%
-% thCavepearl_JSSJ((.5,.5) inscale,0,1);
 
-def p_cavepearl_JSSJ (expr pos,theta,sc,al)=
+def p_cavepearl_SKBB (expr pos,theta,sc,al)=
     U:=(.25u,.25u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -842,9 +836,9 @@ enddef;
 % thIntermittentstreamarrow_UIS((.5,.5) inscale,0,1);
 
 def p_waterflow_intermittent_UIS (expr pos,theta,sc,al)=
-  drawoptions(dashed evenly scaled .5);
+  thdrawoptions(dashed evenly scaled .5);
   p_waterflow_permanent_UIS (pos,theta,sc,al);
-  drawoptions();
+  thdrawoptions();
 enddef;
 
 % @SYMBOL
@@ -856,22 +850,22 @@ enddef;
 
 def p_airdraught_UIS (expr pos,theta,sc,al)=
   U:=(.2u,u);
-  T:=identity aligned al rotated theta scaled sc shifted pos;
+  T:=identity aligned al rotated theta scaled 1 shifted pos;
   pickup PenC;
   thdraw (0,u)--(0,-0.75u);
 	p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
 	thdraw p;
 	thdraw p reflectedabout (origin,(0,u));
-	for i:=1 upto 3:  % !!!
+	for i:=1 upto round(3+2*mlog(sc)/mlog 2):
 	  thdraw (0,-(1-0.2i)*u)--(.2u,-(1-0.2(i-1))*u);
 	endfor;
 enddef;
 
 def p_sectionarrow_SKBB (expr pos,theta)=
-    T:=identity rotated theta shifted pos;
-    pickup PenC;
-    thdraw (0,0)--(0,.8u);
-    thdraw (-.1u,.55u)--(0,.8u)--(.1u,.55u);
+%    T:=identity rotated theta shifted pos;
+%    pickup PenC;
+%    thdraw (0,0)--(0,.8u);
+%    thdraw (-.1u,.55u)--(0,.8u)--(.1u,.55u);
 enddef;
 
 
@@ -981,7 +975,7 @@ def thp_equipment_SKBB(expr pos,type) =
   	elseif type=5: "B"    % bridge
   	elseif type=6: "T"    % traverse
   	elseif type=7: "A"    % anchor
-  	elseif type=7: "C"    % camp
+  	elseif type=8: "C"    % camp
   	elseif type=9: "!"    % not equipped
   	fi
   elseif lang="sk":

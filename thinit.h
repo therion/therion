@@ -37,16 +37,23 @@
  * Therion system dependend properties initializer.
  */
  
+enum {
+  THINIT_ENCODING_DEFAULT,
+  THINIT_ENCODING_SQL,
+};
+ 
 class thinit {
 
   public:  
 
-  int encoding_default;  ///< Default encoding.
+  int encoding_default, encoding_sql;  ///< Default encoding.
     
   thbuffer path_cavern, ///< Survex executable full path.
     path_pdftex, path_mpost,  ///< PDF tex and metapost path
     tmp_path, tmp_remove_script;
     //path_3dtopos, 
+    
+  int lang;
   
   thmbuffer cmb;  ///< Command parsing mbuffer.
   
@@ -97,6 +104,8 @@ class thinit {
    */
    
   char * get_path_pdftex();
+  
+  int get_encoding(int type = THINIT_ENCODING_DEFAULT);
   
   
 };

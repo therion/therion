@@ -26,7 +26,13 @@
  */
  
 #include "thdate.h"
+#include "thparse.h"
 #include "thexception.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <unistd.h>
+#include <errno.h>
 
 #ifdef THWIN32
 #define snprintf _snprintf
@@ -46,8 +52,6 @@ void thdate::reset()
   this->emin = -1;
   this->ssec = -1.0;
   this->esec = -1.0;
-  
-  this->dstr[0] = 0;
 }
 
 thdate::thdate()
@@ -76,15 +80,21 @@ void thdate::parse(char * src)
     dd[7] = -1; dd[8] = -1; dd[9] = -1; 
     dd[10] = -1; dd[11] = -1; dd[12] = -1; dd[13] = -1;
   double ss[2]; ss[0] = -1.0; ss[1] = -1.0;
-  double sm[2]; sm[0] = 1; sm[1] = 1.0;
+  double sm[2]; sm[0] = 1.0; sm[1] = 1.0;
+  bool firstchar = true;
   while (ppos > -1) {
   
     if (*ssrc == 32) {
       ssrc++;
       continue;
     }
-  
-  
+    
+    if (firstchar && (*ssrc == 45)) {
+      if (ssrc[1] == 0)
+        return;
+    }
+    firstchar = false;
+    
     if (*ssrc == 0) {
       ppos = -1;
       ssrc++;
@@ -261,14 +271,12 @@ void thdate::parse(char * src)
       ththrow(("invalid date second -- \"%s\"", osrc))
   }
   
-  this->prnstr();
-
 }  // parse
   
   
 bool thdate::is_interval()
 {
-  if (this->eyear != -1)
+  if (this->eyear > -1)
     return true;
   else
     return false;
@@ -277,7 +285,7 @@ bool thdate::is_interval()
 
 bool thdate::is_defined()
 {
-  if (this->syear != -1)
+  if (this->syear > -1)
     return true;
   else
     return false;
@@ -380,14 +388,16 @@ bool operator != (const thdate & d1, const thdate & d2)
 }
 
 
-void thdate::join(const thdate & dt) 
+void thdate::join(thdate & dt) 
 {
+  if (dt.syear <= -1)
+    return;
   if ((thdate::is_less(dt.syear, dt.smonth, dt.sday, 
       dt.shour, dt.smin, dt.ssec,
       this->syear, this->smonth, this->sday,
       this->shour, this->smin, this->ssec))
-      || (this->syear == -1)) {
-    if (this->eyear == -1) {
+      || (this->syear <= -1)) {
+    if (this->eyear <= -1) {
       this->eyear = this->syear;
       this->emonth = this->smonth;
       this->eday = this->sday;
@@ -425,66 +435,11 @@ void thdate::join(const thdate & dt)
     this->esec = dt.esec;
   }
 
-  this->prnstr();
-
 }
 
 
-void thdate::prnstr()
-{
-  int tl = 52;
-  char * dst = &(this->dstr[0]);
-
-  if (this->ssec >= 0.0)
-    snprintf(dst,tl,"%04d.%02d.%02d %02d:%02d:%05.2f",
-      this->syear, this->smonth, this->sday,
-      this->shour, this->smin, this->ssec);
-  else if (this->smin >= 0)
-    snprintf(dst,tl,"%04d.%02d.%02d %02d:%02d",
-      this->syear, this->smonth, this->sday,
-      this->shour, this->smin);
-  else if (this->shour >= 0)
-    snprintf(dst,tl,"%04d.%02d.%02d %02d:%02d",
-      this->syear, this->smonth, this->sday,
-      this->shour, 0);
-  else if (this->sday > 0)
-    snprintf(dst,tl,"%04d.%02d.%02d",
-      this->syear, this->smonth, this->sday);
-  else if (this->smonth > 0)
-    snprintf(dst,tl,"%04d.%02d",
-      this->syear, this->smonth);
-  else if (this->syear > 0)
-    snprintf(dst,tl,"%04d",
-      this->syear);
-      
-  tl -= strlen(dst);
-  dst += strlen(dst);
-      
-  if (this->esec >= 0.0)
-    snprintf(dst,tl," - %04d.%02d.%02d %02d:%02d:%05.2f",
-      this->eyear, this->emonth, this->eday,
-      this->ehour, this->emin, this->esec);
-  else if (this->emin >= 0)
-    snprintf(dst,tl," - %04d.%02d.%02d %02d:%02d",
-      this->eyear, this->emonth, this->eday,
-      this->ehour, this->emin);
-  else if (this->ehour >= 0)
-    snprintf(dst,tl," - %04d.%02d.%02d %02d:%02d",
-      this->eyear, this->emonth, this->eday,
-      this->ehour, 0);
-  else if (this->eday > 0)
-    snprintf(dst,tl," - %04d.%02d.%02d",
-      this->eyear, this->emonth, this->eday);
-  else if (this->emonth > 0)
-    snprintf(dst,tl," - %04d.%02d",
-      this->eyear, this->emonth);
-  else if (this->eyear > 0)
-    snprintf(dst,tl," - %04d",
-      this->eyear);
-}
-
-
-char * thdate::get_str() {
+char * thdate::get_str(int fmt) {
+  this->print_str(fmt);
   return &(this->dstr[0]);
 }
 
@@ -594,60 +549,124 @@ void thdate::set_years(double sy, double ey)
       this->shour, this->smin, this->ssec);
   thdate_y2d(ey, this->eyear, this->emonth, this->eday,
       this->ehour, this->emin, this->esec);
-  this->prnstr();
 }
 
-void thdate::print_export_str(int fmt) {
-  int tl = 52;
+void thdate::print_str(int fmt) {
+  unsigned int tl = thdate__bufflen - 1;
+  long yyyy, mm, dd;
   char * dst = &(this->dstr[0]);
+  char * sep = " - ";
 
-  if (this->ssec >= 0.0)
-    snprintf(dst,tl,"%d.%d.%d %02d:%02d:%05.2f",
-      this->sday, this->smonth, this->syear,
-      this->shour, this->smin, this->ssec);
-  else if (this->smin >= 0)
-    snprintf(dst,tl,"%d.%d.%d %02d:%02d",
-      this->sday, this->smonth, this->syear,
-      this->shour, this->smin);
-  else if (this->shour >= 0)
-    snprintf(dst,tl,"%d.%d.%d %02d:%02d",
-      this->sday, this->smonth, this->syear,
-      this->shour, 0);
-  else if (this->sday > 0)
-    snprintf(dst,tl,"%d.%d.%d",
-      this->sday, this->smonth, this->syear);
-  else if (this->smonth > 0)
-    snprintf(dst,tl,"%d.%d",
-      this->smonth, this->syear);
-  else if (this->syear > 0)
-    snprintf(dst,tl,"%d",
-      this->syear);
+  switch (fmt) {
+    case TT_DATE_FMT_UTF8_Y:
+      sep = "\xe2\x80\x93";
+    case TT_DATE_FMT_Y:
+      if (this->syear >= 0)
+        snprintf(dst,tl,"%d",
+        this->syear);
+      tl -= strlen(dst);
+      dst += strlen(dst);
+      if (this->eyear >= 0)
+        snprintf(dst,tl,"%s%d", sep,
+          this->eyear);          
+      break;
       
-  tl -= strlen(dst);
-  dst += strlen(dst);
+ 
+    case TT_DATE_FMT_SQL_SINGLE:
+      if (this->eyear >= 0) {
+        yyyy = this->eyear;
+        mm = this->emonth;
+        dd = this->eday;
+      } else {
+        yyyy = this->syear;
+        mm = this->smonth;
+        dd = this->sday;
+      }
+      if (dd > 0 && ((yyyy >= 1000) && (yyyy <= 9999))) {
+        snprintf(dst,tl,"'%04ld-%02ld-%02ld'",yyyy,mm,dd);
+      } else if ((mm > 0) && ((yyyy >= 1000) && (yyyy <= 9999))) {
+        snprintf(dst,tl,"'%04ld-%02ld-01'",yyyy,mm);
+      } else if ((yyyy >= 1000) && (yyyy <= 9999)) {
+        snprintf(dst,tl,"'%04ld-01-01'",yyyy);
+      } else {
+        snprintf(dst,tl,"NULL");
+      }
+      break;
       
-  if (this->esec >= 0.0)
-    snprintf(dst,tl," - %d.%d.%d %02d:%02d:%05.2f",
-      this->eday, this->emonth, this->eyear,
-      this->ehour, this->emin, this->esec);
-  else if (this->emin >= 0)
-    snprintf(dst,tl," - %d.%d.%d %02d:%02d",
-      this->eday, this->emonth, this->eyear,
-      this->ehour, this->emin);
-  else if (this->ehour >= 0)
-    snprintf(dst,tl," - %d.%d.%d %02d:%02d",
-      this->eday, this->emonth, this->eyear,
-      this->ehour, 0);
-  else if (this->eday > 0)
-    snprintf(dst,tl," - %d.%d.%d",
-      this->eday, this->emonth, this->eyear);
-  else if (this->emonth > 0)
-    snprintf(dst,tl," - %d.%d",
-      this->emonth, this->eyear);
-  else if (this->eyear > 0)
-    snprintf(dst,tl," - %d",
-      this->eyear);
+      
+    case TT_DATE_FMT_UTF8_ISO:
+      sep = "\xe2\x80\x93";
+    default:
+      if (this->ssec >= 0.0)
+        snprintf(dst,tl,"%d-%d-%dT%02d:%02d:%05.2f",
+          this->sday, this->smonth, this->syear,
+          this->shour, this->smin, this->ssec);
+      else if (this->smin >= 0)
+        snprintf(dst,tl,"%d-%d-%dT%02d:%02d",
+          this->sday, this->smonth, this->syear,
+          this->shour, this->smin);
+      else if (this->shour >= 0)
+        snprintf(dst,tl,"%d-%d-%dT%02d:%02d",
+          this->sday, this->smonth, this->syear,
+          this->shour, 0);
+      else if (this->sday > 0)
+        snprintf(dst,tl,"%d-%d-%d",
+          this->sday, this->smonth, this->syear);
+      else if (this->smonth > 0)
+        snprintf(dst,tl,"%d-%d",
+          this->smonth, this->syear);
+      else if (this->syear >= 0)
+        snprintf(dst,tl,"%d",
+          this->syear);
+          
+      tl -= strlen(dst);
+      dst += strlen(dst);
+      
+      if (this->esec >= 0.0)
+        snprintf(dst,tl,"%s%d-%d-%dT%02d:%02d:%05.2f", sep,
+          this->eday, this->emonth, this->eyear,
+          this->ehour, this->emin, this->esec);
+      else if (this->emin >= 0)
+        snprintf(dst,tl,"%s%d-%d-%dT%02d:%02d", sep,
+          this->eday, this->emonth, this->eyear,
+          this->ehour, this->emin);
+      else if (this->ehour >= 0)
+        snprintf(dst,tl,"%s%d-%d-%dT%02d:%02d", sep,
+          this->eday, this->emonth, this->eyear,
+          this->ehour, 0);
+      else if (this->eday > 0)
+        snprintf(dst,tl,"%s%d-%d-%d", sep,
+          this->eday, this->emonth, this->eyear);
+      else if (this->emonth > 0)
+        snprintf(dst,tl,"%s%d-%d", sep,
+          this->emonth, this->eyear);
+      else if (this->eyear >= 0)
+        snprintf(dst,tl,"%s%d", sep,
+          this->eyear);
+      break;
+  }    
+
 }
 
 
+void thdate::set_file_date(char * fname) {
+  struct stat buf;
+  struct tm * tim;
+  if ((fname == NULL) || (strlen(fname) == 0))
+    return;
+  if (stat(fname, &buf) != 0)
+    return;
+  tim = localtime(&(buf.st_mtime));
+  this->syear = 1900 + tim->tm_year;
+  this->smonth = tim->tm_mon + 1;
+  this->sday = tim->tm_mday;
+  this->shour = tim->tm_hour;
+  this->smin = tim->tm_min;
+  this->ssec = double(tim->tm_sec > 59 ? 59 : tim->tm_sec);
+#ifdef THDEBUG
+  thprintf("FILEDATE: %s => %s\n", fname, this->get_str());
+#endif   
+}
+
+char thdate::dstr[thdate__bufflen];
 

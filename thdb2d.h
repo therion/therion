@@ -270,6 +270,13 @@ class thdb2d {
    
   thdb2dxm * select_projection(thdb2dprj * prj);
   
+  
+  /**
+   * Get projection title.
+   */
+   
+  char * get_projection_title(thdb2dprj * prj);
+  
 };
 
 

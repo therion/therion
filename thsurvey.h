@@ -107,6 +107,8 @@ class thsurvey : public thdataobject {
   thtfpwf declin;  ///< Return the declination pwf function.
   double decuds;  ///< Declination for undated surveys.
   
+  long num1;  ///< Number of something.
+  
   thsurveystat stat;  ///< Survey statistics.
     
   public:

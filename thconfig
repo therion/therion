@@ -3,18 +3,19 @@ encoding  utf-8
 # Name of the source file.
 source "tests/map_plan.th"
 
-layout test
-  code mpost
-    % this is mpost code
-  code tex-map
-    % this is tex map code
-    \insertmaps
-  code tex-atlas 
-    % this is tex atlas code
-    \insertmaps
-  symbol-set SKBB #XYZ
-  symbol-hide point station:temporary
+layout lgd
+  origin 20 25 0 m
+  scale 1 110
+  base-scale 1 200
+  color preview-below [50 50 60]
+  color preview-above [60 50 50]
+  symbol-set SKBB
+  #symbol-hide group all
+  #symbol-assign special north-arrow SKBB
+  statistics explo off
+  language sk
 endlayout
 
 # Export settings.
-export map -layout-title "Pokusna jaskyna" -layout test -layout-layers off -layout-base-scale 1 200 -layout-symbol-set SKBB -layout-symbol-assign point stalactite SKBB -layout-symbol-hide point stalactite
+export map -layout lgd -layout-doc-title "Pokusna jaskyna" -layout-layers off
+export database -encoding ASCII

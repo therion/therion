@@ -1,10 +1,10 @@
 %% therion source code
 %%
-%% This file defines macros for filling areas
+%% This file defines tiling patterns
 %%
 %% $Date: 2003/07/01 09:06:44 $
-%% $RCSfile: thArea.mp,v $
-%% $Revision: 1.3 $
+%% $RCSfile: thPatterns.mp,v $
+%% $Revision: 1.6 $
 %%
 %% Copyright (C) 2000 Martin Budaj
 %%
@@ -24,20 +24,77 @@
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% --------------------------------------------------------------------
 
-def_transparent_rgb(tr_white, 1, 1, 1);
-def_transparent_rgb(tr_black, 0, 0, 0);
+if unknown a_water_UIS: else: endinput fi;
+
+% @LIBRARY
+% thPatterns --
+%
+% This file contains definitions of pattern fills. Use patterns with
+% thfill command instead of fill. Before use, set <T>T:=identity</T>.
+% (In the definition of pattern you are allowed to use MetaPost's
+% draw, fill etc.)
+
 
 % @SYMBOL
-% thPatternFill --
+% thLakePattern_UIS --
 %
-% @LEGEND
-% p := ((.1,.4)..(.6,.2)..(.8,.6)..(.45,.7){dir 130}..cycle) inscale;
-% thPatternFill(p, thSandPattern_UIS);
-% @ENDSYMBOL
-% @USE thSandPattern_UIS
+% @PREVIEW
+%
+% fill ((.1,.4)..(.6,.2)..(.8,.4)..(.45,.7){dir 160}..cycle) inscale withpattern thLakePattern_UIS;
 
-def thPatternFill (expr Path, Pattern) =
-  T:=identity;
-  thfill Path withtransparentcolor tr_white;
-  thfill Path withpattern Pattern;
-enddef;
+beginpattern(a_water_UIS);
+    draw origin--10up withpen pensquare scaled (0.02u);
+    patternxstep(.18u);
+    patterntransform(identity rotated 45);
+endpattern;
+
+% @SYMBOL
+% thSumpPattern_UIS --
+%
+% @PREVIEW
+%
+% fill ((.1,.4)..(.6,.2)..(.8,.4)..(.45,.7){dir 160}..cycle) inscale withpattern thSumpPattern_UIS;
+
+beginpattern(a_sump_UIS);
+    draw origin--(0,.25u) withpen pensquare scaled (0.02u);
+    draw origin--(.25u,0) withpen pensquare scaled (0.02u);
+    patterntransform(identity rotated 45);
+endpattern;
+
+% @SYMBOL
+% thSandPattern_UIS --
+%
+% @PREVIEW
+%
+% fill ((.1,.4)..(.6,.2)..(.8,.6)..(.45,.7){dir 130}..cycle) inscale withpattern thSandPattern_UIS;
+
+
+beginpattern(a_sand_UIS);
+    pickup PenC;
+    draw (0.2u,.3u);
+    draw (0.35u,.7u);
+    draw (0.6u,.5u);
+    draw (0.8u,.1u);    
+endpattern;
+
+% @SYMBOL
+% thDebrisPattern_SKBB --
+%
+% @PREVIEW
+%
+% fill ((.05,.4)..(.6,.1)..(.9,.6)..(.45,.9){dir 100}..cycle) inscale withpattern thDebrisPattern_SKBB;
+% @ENDSYMBOL
+
+beginpattern(a_debris_SKBB);
+    pickup PenC;
+    p:=(-.15u,0)--(.15u,0);
+    draw p rotated -40 shifted (.2u,.3u);
+    draw p rotated 70 shifted (.9u,1.5u);
+    draw p rotated 20 shifted (1.5u,.8u);
+%    draw p rotated 95 shifted (.9u,.8u);
+endpattern;
+
+beginpattern(a_empty);
+  patternbbox(0,0,10,10);
+  patternstep(10,10);
+endpattern;

@@ -76,9 +76,9 @@ static const thstok thtt_data_opt[] = {
   {"data", TT_DATA_DATA},
   {"date", TT_DATA_DATE},
   {"declination", TT_DATA_DECLINATION},
-  {"discovery-date", TT_DATA_DISCOVERY_DATE},
-  {"discovery-team", TT_DATA_DISCOVERY_TEAM},
   {"equate", TT_DATA_EQUATE},
+  {"explo-date", TT_DATA_DISCOVERY_DATE},
+  {"explo-team", TT_DATA_DISCOVERY_TEAM},
   {"fix", TT_DATA_FIX},
   {"flags", TT_DATA_FLAGS},
   {"grade", TT_DATA_GRADE},
@@ -113,8 +113,8 @@ typedef std::set <thperson> thdata_team_set_type;
 
 class thdata : public thdataobject {
 
-  friend class thgrade;
-
+  public:
+  
   // dlu - data leg units
   thtflength dlu_length, dlu_counter, dlu_depth, dlu_dx, dlu_dy, dlu_dz,
     dlu_x, dlu_y, dlu_z, dlu_sdlength;
@@ -128,6 +128,11 @@ class thdata : public thdataobject {
   double dls_length, dls_gradient, dls_bearing, dls_counter, dls_depth,
     dls_dx, dls_dy, dls_dz, dls_x, dls_y, dls_z, dl_declination,
     dl_survey_declination;
+    
+  // statistics  
+  double stat_length, stat_dlength, stat_slength;
+  class thdb1ds * stat_st_top, * stat_st_bottom;
+  int stat_st_state;
     
   // dli - data leg infers
   bool dli_plumbs, dli_equates, dl_direction;
@@ -155,8 +160,6 @@ class thdata : public thdataobject {
   
   thdataleg_list::iterator cd_leg, pd_leg;  // Current data leg.
   bool cd_leg_def, pd_leg_def;  // Whether these legs are defined.
-  
-  public:
   
   void set_data_calibration(int nargs, char ** args);  ///< Data calibration.
   

@@ -67,12 +67,12 @@ enddef;
 
 def l_wall_clay_SKBB (expr P) = 
   T:=identity;
-  thUndefinedPath(P);
+  l_undefined(P);
 enddef;
 
 def l_wall_pebbles_SKBB (expr P) = 
   T:=identity;
-  thUndefinedPath(P);
+  l_undefined(P);
 enddef;
 
 def l_wall_debris_SKBB (expr P) = 
@@ -115,7 +115,7 @@ enddef;
 
 def l_wall_ice_SKBB (expr P) = 
   T:=identity;
-  thUndefinedPath(P);
+  l_undefined(P);
 enddef;
 
 def l_wall_underlying_UIS (expr P) = 
@@ -428,14 +428,14 @@ def l_survey_SKBB (expr P) =
     zz2 := point t+1 of P;
     if length (zz2-zz1) > 2*PolygonLine:
       thdraw zz1 -- zz1 + PolygonLine * unitvector(zz2 - zz1);
-%      thdraw zz2 -- zz2 + PolygonLine * unitvector(zz1 - zz2);
+      thdraw zz2 -- zz2 + PolygonLine * unitvector(zz1 - zz2);
     else:
       thdraw zz1 -- zz2;
     fi;
   endfor;
 enddef;
 
-def l_survey_JSSJ (expr P) =
+def l_survey_UIS (expr P) =
   T:=identity;
   pair zz[];
   pickup PenC;
@@ -492,7 +492,7 @@ def DoublePit_A (expr Path, Dist) =
     Pit(reverse ppp);
 enddef;
 
-def l_water_permanent_UIS (expr Path,Rnd) =
+def l_waterflow_permanent_UIS (expr Path) =
   path ppp;
   T:=identity;
   cas := 0;
@@ -522,16 +522,16 @@ def l_water_permanent_UIS (expr Path,Rnd) =
     drawarrow ppp;
 enddef;
 
-def l_water_intermittent_JSSJ (expr Path,Rnd) =
-  drawoptions(dashed evenly);
-  thPermanentwater_UIS (Path,Rnd);
-  drawoptions();
+def l_waterflow_intermittent_SKBB (expr Path) =
+  thdrawoptions(dashed evenly);
+  l_waterflow_permanent_UIS (Path);
+  thdrawoptions();
 enddef;
 
-def l_water_conjectural_SKBB (expr Path,Rnd) =
-  drawoptions(dashed withdots scaled .5 withpen PenB);
-  thPermanentwater_UIS (Path,Rnd);
-  drawoptions();
+def l_waterflow_conjectural_SKBB (expr Path) =
+  thdrawoptions(dashed withdots scaled .5 withpen PenB);
+  l_waterflow_permanent_UIS (Path);
+  thdrawoptions();
 enddef;
 
 def l_invisible (expr P) = 
@@ -575,38 +575,39 @@ def l_arrow_SKBB (expr P, Q) =
   fi;
 enddef;
 
-boolean drawsection;
-
-%% len demo, treba prerobit!
-
-def thSectionPath_SKBB (expr P) =
+def l_section_SKBB (expr P)(text txt) =
   T:=identity;
   pair zz[];
-  drawsection:=true;
   pickup PenC;
   for t = 0 upto length P - 1:
-    zz1 = point t of P;
-    zz2 = point t+1 of P;
-    zz3 = postcontrol t of P;
-    zz4 = precontrol t+1 of P;
-    if length (zz1-zz3) > epsilon:
+    zz1 := point t of P;
+    zz2 := point t+1 of P;
+    zz3 := postcontrol t of P;
+    zz4 := precontrol t+1 of P;
+    if (length(zz3-1/3[zz1,zz2]) > 0.1pt) or
+       (length(zz4-2/3[zz1,zz2]) > 0.1pt):
       zz5 = whatever[zz1,zz2];
       (zz3-zz5) dotprod (zz1-zz2) = 0;
       draw zz1--zz5;
-      drawsection:=false;
-    fi;
-    if length (zz2-zz4) > epsilon:
       zz6 = whatever[zz1,zz2];
       (zz4-zz6) dotprod (zz1-zz2) = 0;
       draw zz2--zz6;
-      drawsection:=false;
-    fi;
-    if drawsection:
+    else:
       draw zz1--zz2;
     fi;
+  endfor;
+  for pnt=txt:
+    if pnt=-1:
+    else:
+      T:=identity rotated angle(thdir(P,pnt)) shifted (point pnt of P);
+      pickup PenC;
+      thdraw (0,0)--(0,.8u);
+      thdraw (-.1u,.55u)--(0,.8u)--(.1u,.55u);
+    fi;
+    exitif pnt=-1;
   endfor;
 enddef;
 
 let l_border_invisible = l_invisible;
 let l_wall_invisible = l_invisible;
-let l_section_SKBB = l_border_visible_SKBB;
+%let l_section_SKBB = l_border_visible_SKBB;

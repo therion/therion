@@ -42,7 +42,7 @@
 #include "thlayout.h"
 #include "thconfig.h"
 #include <list>
-
+#include "thmapstat.h"
 
 void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level) {
   thdb2dxs * xs, * txs = NULL;
@@ -260,10 +260,13 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
   cxm = selection;
   while (ii != thcfg.selector.data.end()) {
     if ((!ii->unselect) && (ii->optr != NULL) && 
-        (ii->optr->get_class_id() == TT_MAP_CMD)) {
+        (ii->optr->get_class_id() == TT_MAP_CMD) &&
+        (((thmap*)(ii->optr))->projection_id == prj->id)) {
       selection = this->insert_maps(selection,cxm,(thmap*)(ii->optr),
         ii->number,0,
         ((ii->map_level >= 0) && (ii->chapter_level > ii->map_level) ? ii->map_level : ii->chapter_level),ii->map_level);
+      prj->stat.scanmap((thmap*)(ii->optr));  
+      prj->stat.addstat(&(((thmap*)(ii->optr))->stat));
       while ((cxm != NULL) && (cxm->next_item != NULL))
         cxm = cxm->next_item;
     }
@@ -278,6 +281,8 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       if (((*obi)->get_class_id() == TT_MAP_CMD) &&
           (((thmap*)(*obi))->projection_id == prj->id) &&
           (((thmap*)(*obi))->is_basic)) {
+        prj->stat.scanmap((thmap*)(*obi));  
+        prj->stat.addstat(&(((thmap*)(*obi))->stat));
         cxm = this->insert_xm();
         cxm->title = false;
         cxm->expand = true;
@@ -379,8 +384,110 @@ void thdb2d::reset_selection() {
   }
 }
 
+char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
 
+  long newmin = 0, tmpmin;
+  char * newname = NULL, * tmpname;
+  thdataobject * o;
+  thsurvey * s = fptr, * ss;
+  while (s != NULL) {
+  
+    o = s->foptr;
+    while (o != NULL) {
+      while ((o != NULL) && (o->get_class_id() != TT_SURVEY_CMD))
+        o = o->nsptr;
+      ss = (thsurvey *) o;
+      if (ss != NULL) {
+        tmpname = thdb2dscan_survey_title(ss, tmpmin);
+//        printf("SCAN %s: %d\n", ss->name, tmpmin);
+        s->num1 += tmpmin;
+        if (tmpmin > newmin) {
+          newmin = tmpmin;
+          newname = ss->title;
+          if (strlen(newname) == 0)
+            newname = ss->name;
+        }
+        o = o->nsptr; 
+      }
+    }
+    
+//    printf("TOP %s: %d\n", s->name, s->num1);
+    if (s->num1 > newmin) {
+      newmin = s->num1;
+      newname = s->title;
+      if (strlen(newname) == 0)
+        newname = s->name;
+    }
+    
+    while ((o != NULL) && (o->get_class_id() != TT_SURVEY_CMD))
+      o = o->nsptr;
+    s = (thsurvey *) o;
+    
+  }
+  
+  min = newmin;
+  return newname;
+}
 
+char * thdb2d::get_projection_title(thdb2dprj * prj) {
+
+  // krok cislo jedna - prejde celu selection - ak najde jednu oznacenu
+  // mapu - tak zoberie jej title //alebo name
+  long dum;
+  
+  char * rv = NULL;
+  unsigned long nmaps = 0;
+  thselector_list::iterator ii = thcfg.selector.data.begin();
+  while (ii != thcfg.selector.data.end()) {
+    if ((!ii->unselect) && (ii->optr != NULL) && 
+        (ii->optr->get_class_id() == TT_MAP_CMD) &&
+        (((thmap*)(ii->optr))->projection_id == prj->id)) {
+      nmaps++;
+      if (nmaps > 1) {
+        rv = NULL;
+        break;
+      }
+      if (strlen(((thmap*)(ii->optr))->title) > 0) {
+        rv = ((thmap*)(ii->optr))->title;
+      } 
+      //else {
+      //  rv = ((thmap*)(ii->optr))->name;
+      //}
+    }
+    ii++;
+  }
+  
+  if (rv != NULL)
+    return rv;
+  
+  // prescanuje vsetky objekty a surveyom priradi pocet scrapov, ktore
+  // sa z nich exportovali
+  thdb_object_list_type::iterator obi = this->db->object_list.begin();
+  while (obi != this->db->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+      ((thsurvey*)(*obi))->num1 = 0;
+    }
+    obi++;
+  }
+  
+  obi = this->db->object_list.begin();
+  while (obi != this->db->object_list.end()) {
+    if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
+        (((thscrap*)(*obi))->proj->id == prj->id) && 
+        (((thscrap*)(*obi))->exported)) {
+      ((thscrap*)(*obi))->fsptr->num1++;
+    }
+    obi++;
+  }
+  
+  // rekurzivne prejde vsetky surveye a najde najnizsie take
+  // co ma v sebe najviac scrapov a zoberie jeho nazov
+  dum = 0;
+  rv = thdb2dscan_survey_title(this->db->fsurveyptr, dum);
+  
+  return rv;
+  
+}
 
 
 

@@ -1,5 +1,5 @@
 % The Therion Book
-% Copyright (C) 2003 Martin Budaj, Stacho Mudrak
+% Copyright (C) 2003, 2004 Martin Budaj, Stacho Mudrak
 % Thanks to Wookey for corrections
 
 \ifx\pdfoutput\undefined
@@ -70,7 +70,7 @@
 {\catcode`\*=13\catcode`\=13
  \gdef\itemize{%
    \par\leftskip1em%\parskip0pt
-   \catcode`\*13\def*{\par\leavevmode\llap{$\bullet$ }\ignorespaces}
+   \catcode`\*13\def*{\penalty-20\par\leavevmode\llap{$\bullet$ }\ignorespaces}
    \catcode`\=13\def={\ifmmode\eq\else\unskip\
                       $\triangleright$ \ignorespaces\fi}
    }
@@ -126,16 +126,16 @@
 \def\description{\par{\it Description:} }
 \def\enddescription{}
 
-\def\arguments{\penalty-20\par{\it Arguments:}\bgroup\nobreak\itemize}
+\def\arguments{\penalty-40\par{\it Arguments:}\bgroup\nobreak\itemize}
 \def\endarguments{\par\egroup}
 
-\def\options{\penalty-20\par{\it Options:}\bgroup\nobreak\itemize}
+\def\options{\penalty-40\par{\it Options:}\bgroup\nobreak\itemize}
 \def\endoptions{\par\egroup}
 
-\def\comopt{\penalty-20\par{\it Command-like options:}\bgroup\nobreak\itemize}
+\def\comopt{\penalty-40\par{\it Command-like options:}\bgroup\nobreak\itemize}
 \def\endcomopt{\par\egroup}
 
-\def\example{\penalty-20\par{\it Example:} }
+\def\example{\penalty-40\par{\it Example:} }
 \def\endexample{}
 
 \def\notes{\par{\it Special notes:} }

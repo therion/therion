@@ -32,10 +32,12 @@
 
 
 #include "thpdfdata.h"
+#include "thlang.h"
 
 using namespace std;
 
 list<scraprecord> SCRAPLIST;
+list<legendrecord> LEGENDLIST;
 map<int,layerrecord> LAYERHASH;
 set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
 layout LAYOUT;
@@ -77,6 +79,16 @@ layout::layout() {
   background_r = 1; 
   background_g = 1; 
   background_b = 1;
+  foreground_r = 1; 
+  foreground_g = 1; 
+  foreground_b = 1;
+  preview_below_r = .8; 
+  preview_below_g = .8; 
+  preview_below_b = .8;
+  preview_above_r = 0; 
+  preview_above_g = 0; 
+  preview_above_b = 0;
   own_pages = 0;
   OCG = true;
+  lang = THLANG_UNKNOWN;
 }

@@ -44,7 +44,7 @@ Again, for better illustration, a real example follows:
   1194.0 756.5 1192.5 757.5 1176.0 791.0
   smooth off
   1205.5 788.0 1195.5 832.5 1173.5 879.0
-endline|
+endline|
 
 This command |line| has one obligatory argument, a line type (passage wall in 
 this case), followed by one option. The next two lines contain data (coordinates of 
@@ -71,14 +71,16 @@ Therion uses following data types:
 
 \list
 * {\it boolean} = logical value (|on|/|off|)
-* {\it keyword} = a sequence of |A-Z|, |a-z|, |0-9| and |[_-]| characters 
+* {\it keyword} = a sequence of |A-Z|, |a-z|, |0-9| and |_-| characters 
              (not starting with `|-|').
-* {\it ext\_keyword} = keyword that can also contain |[+-*/.,']| characters, but not
-                 on the first position.
+* {\it ext\_keyword} = keyword that can also contain |+*/.,'| characters, 
+            but not on the first position.
 * {\it date} = a date (or a time interval) specification in a format\hfil\break
-          |YYYY.MM.DD@HH:MM:SS.SS - YYYY.MM.DD@HH:MM:SS.SS|
+          |YYYY.MM.DD@HH:MM:SS.SS - YYYY.MM.DD@HH:MM:SS.SS| or |-|
+          for an unspecified date
 * {\it person} = a person's first name and surname separated by whitespace characters.
-            Use `|/|' where there are more names.
+            Use `|/|' to separate first name and surname where there are 
+            more names.
 * {\it string} = a sequence of any charaters.
 * {\it units} = length units supported: 
            meter[s], centimeter[s], inch[es], feet[s], yard[s]
@@ -93,8 +95,10 @@ Therion uses following data types:
 \subchapter Data format.
 
 The syntax of input files is explained in the description of
-individual commands. [Studying the example files distributed with
-Therion will help you understand.]  Each of the following sections describes
+individual commands. Studying the example files distributed with
+Therion will help you understand. See also an example in the {\it Appendix}.
+
+Each of the following sections describes
 one Therion command using the following structure:
 
 {\it Description:} notes concerning this command.
@@ -113,9 +117,6 @@ the command may be used anywhere.
 
 {\it Command-like options:} options for multi-line commands, which can be specified 
    among the data lines.
-
-{\it Example:} a short illustration of this command.
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -141,10 +142,6 @@ the command may be used anywhere.
   are always supported.
 \endarguments
 
-\example
-  |encoding ISO8859-2|
-\endexample
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -169,10 +166,6 @@ the command may be used anywhere.
 \arguments
 *  |<file-name>|
 \endarguments
-
-\example
-  |input data/entrance.th2|
-\endexample
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -231,35 +224,9 @@ the command may be used anywhere.
      of the data object. If you want to explicitely set the declination
      for undated survey data, use `|-|' instead of date.
 
-* |author <date> <person>| = author of the data and it's creation date
-* |copyright <date> <string>| = copyright date and name
 * |title <string>| = description of the object
 \endoptions
 
-\example
-
-|survey main -declination [3 deg]
-
-  survey a
-    centreline
-      data normal from to compass clino length
-      1 2 100 -10 10
-    endcentreline
-  endsurvey
-
-  survey b
-    centreline
-      data normal from to compass length clino
-      1 2 0 10 10
-    endcentreline
-  endsurvey
-
-  centreline
-    equate 2@a 1@b
-  endcentreline
-
-endsurvey|
-\endexample      
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -276,22 +243,22 @@ endsurvey|
       |centreline [OPTIONS]
           date <date>
           team <person> [<roles>]
-          discovery-date <date>
-          discovery-team <person>
+          explo-date <date>
+          explo-team <person>
           instrument <quantity list> <description>
           calibrate <quantity list> <zero error> [<scale>]
           units <quantity list> [<factor>] <units>
-          declination <value> <units>
-          infer <what> <on/off>
           sd <quantity list> <value> <units>
           grade <grade list>
-          data <style> <readings order>
+          declination <value> <units>
+          infer <what> <on/off>
           mark <type>
           flags <shot flags>
           station <station> <comment> [<flags>]
           fix <station> [<x> <y> <z> [<std x> <std y> <std z> \
             [<covxy> <covyz> <covxz>]]]
           equate <station list>
+          data <style> <readings order>
           break
           ...
           [SURVEY DATA]
@@ -314,7 +281,7 @@ endsurvey|
 \comopt
   * |date <date>| = survey date. If multiple dates are specified,
     a time interval is created.
-  * |discovery-date <date>| = discovery date. If multiple dates are specified,
+  * |explo-date <date>| = discovery date. If multiple dates are specified,
     a time interval is created.
   * |team <person> [<roles>]| = a survey team member. The first argument
     is his/her name, the others describe the roles of the person in
@@ -322,7 +289,7 @@ endsurvey|
     supported: station, length, tape, compass, bearing, clino,
     gradient, counter, depth, station, position, notes, pictures, 
     instruments (insts), assistant (dog).
-  * |discovery-team <person>| = a discovery team member. 
+  * |explo-team <person>| = a discovery team member. 
   * |instrument <quantity list> <description>| = description
     of the instrument that was used to survey the given quantities (same
     keywords as team person's role)
@@ -356,17 +323,6 @@ endsurvey|
     following formula:
     $measured\ value = (read\ value - zero\ error) \times scale$.
     The supported quantities are the same as sd.
-  * |data <style> <readings order>| = set data style (normal, topofil,
-    diving, cartesian, cylpolar, nosurvey) and readings order. Reading
-    is one of the following keywords: station, from, to, tape/length, 
-    [back]compass/[back]bearing, [back]clino/[back]gradient, 
-    depth, fromdepth, todepth, depthchange, counter, 
-    fromcount, tocount, northing, easting, altitude,
-    up/ceiling, down/floor, left, right, ignore. 
-    For interleaved data both newline and direction keywords
-    are supported. If backward and forward compass or clino
-    reading are given, the average of them is computed.
-    See Survex manual for details.
   * |break| = can be used with interleaved data to separate two traverses
   * |mark <type>| = set the type of the station. |<type>| is one of: fixed, 
     painted and temporary (default).
@@ -383,6 +339,17 @@ endsurvey|
     covariances---only the units transformation, not calibration,
     is applied to them).
   * |equate <station list>| = set points that are equivalent
+  * |data <style> <readings order>| = set data style (normal, topofil,
+    diving, cartesian, cylpolar, nosurvey) and readings order. Reading
+    is one of the following keywords: station, from, to, tape/length, 
+    [back]compass/[back]bearing, [back]clino/[back]gradient, 
+    depth, fromdepth, todepth, depthchange, counter, 
+    fromcount, tocount, northing, easting, altitude,
+    up/ceiling, down/floor, left, right, ignore. 
+    For interleaved data both newline and direction keywords
+    are supported. If backward and forward compass or clino
+    reading are given, the average of them is computed.
+    See Survex manual for details.
 \endcomopt
 
 
@@ -535,9 +502,6 @@ Point is a command for drawing a point map symbol.
     station-name, label, remark, date, altitude, height, passage-height.
   * |visibility <on/off>| = displays/hides an object
   * |id <ext_keyword>| = id of the object
-  * |author <date> <person>| = author of the data and it's creation date
-  * |copyright <date> <string>| = copyright date and name
-  * |title <string>| = description of the object
 
     {\it Type-specific options:}
 
@@ -569,8 +533,12 @@ Point is a command for drawing a point map symbol.
     
     |<br>| = line break
     
-    |<center>|, |<left>|, |<right>| = line alignment for multi-line labels. 
+    |<center>/<centre>|, |<left>|, |<right>| = line alignment for multi-line labels. 
     Ignored if there is no |<br>| tag.
+    
+    |<thsp>| = thin space
+    
+    |<rm>|, |<it>|, |<bf>|, |<ss>|, |<si>| = font switches
         
   * |value| = value of height, passage-height or altitude label
 \endoptions
@@ -654,33 +622,35 @@ Line is a command for drawing a line symbol on the map.
 
 \arguments
    * |<type>| is a keyword that determines the type of line.
-     The following types are supported: arrow, border, chimney,
-     contour, flowstone, label, overhang, pit, rock-border,
-     rock-edge, section, slope, survey and wall.
+     The following types are supported: 
+     
+     {\it passages:} wall, contour, slope, floor-step, pit, ceiling-step, 
+     chimney, overhang
+
+     {\it passage fills:} flowstone, rock-border, rock-edge, water-flow
+     
+     {\it labels:} label
+
+     {\it special:} border, arrow, section, survey
 \endarguments
 
 
 \comopt
-   * |altitude <value>| = can be specified only with the wall type.
-         This option creates an altitude label on the wall. The value
-         gives the altitude difference of the point on the wall 
-         relative to the nearest station. The value can be prefixed
-         by a keyword ``|fix|'', then no nearest station is taken into
-         consideration; the absolue given value is used instead.
-         Units can follow the value. Examples: |+4|, |[+4 m]|,
-         |[fix 1510 m]|.
-       * |border <on/off>| = this option can be specified only with
-         the `slope' symbol type. It switches on/off the border line of the slope.
+       * |subtype <keyword>| = determines line subtype. The following
+         subtypes are supported for given types:  
+
+         {\it wall:} invisible, bedrock (default), sand, clay, pebbles, debris,
+         blocks, ice, underlying, unsurveyed, presumed  
+
+         {\it border:} visible (default), invisible, temporary
+         
+         {\it water-flow:} permanent (default), conjectural, intermittent
+       * |[LINE DATA]| specify either the coordinates of a line segment
+         |<x> <y>|, or coordinates of a B\'ezier curve arc 
+         |<c1x> <c1y> <c2x> <c2y> <x> <y>|, where |c| indicates the control
+         point.
        * |close <on/off/auto>| = determines whether a line is closed 
          or not
-       * |direction <begin/end/both/none/point>| = can be used only
-         with the section type. It indicates where to put 
-         a direction arrow on the section line. None is default.
-       * |gradient <none/center/point>| = can be used only with the contour
-         type and indicates where to put a gradient mark on the contour line.
-         Center is default.
-       * |head <begin/end/both/none>| = can be used only with the arrow
-         type and indicates where to put an arrow head. End is default.
        * |mark <keyword>| = is used to mark the station on the line (see
          join command).
        * |orientation/orient <number>| = orientation of the symbols
@@ -693,42 +663,56 @@ Line is a command for drawing a line symbol on the map.
        * |size <number>| = line width (left and right sizes are set to 
          one half of this value)
        * |r-size <number>| = size of the line to the right
-       * |l-size <number>| = same to the left
+       * |l-size <number>| = same to the left. Required for |slope| type.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
          Auto is default.
-       * |subtype <keyword>| = determines line subtype. The following
-         subtypes are supported for given types:  
-
-         {\it wall:} invisible, bedrock (default), sand, clay, pebbles, debris,
-         blocks, ice, underlying, unsurveyed, presumed  
-
-         {\it border:} visible, invisible, temporary
-       * |text <string>| = valid only for label lines.
-       * |[LINE DATA]| specify either the coordinates of a line segment
-         |<x> <y>|, or coordinates of a B\'ezier curve arc 
-         |<c1x> <c1y> <c2x> <c2y> <x> <y>|, where |c| indicates the control
-         point.
        * |place <bottom/none/top>| = where to place the symbol relative
          to other objects (none by default).
        * |clip <bool>| = specify whether a symbol is clipped by the scrap border.
        * |visibility <on/off>| = displays/hides an object
+       * |altitude <value>| = can be specified only with the wall type.
+         This option creates an altitude label on the wall. The value
+         gives the altitude difference of the point on the wall 
+         relative to the nearest station. The value can be prefixed
+         by a keyword ``|fix|'', then no nearest station is taken into
+         consideration; the absolue given value is used instead.
+         Units can follow the value. Examples: |+4|, |[+4 m]|,
+         |[fix 1510 m]|.
+       * |border <on/off>| = this option can be specified only with
+         the `slope' symbol type. It switches on/off the border line of 
+         the slope.
+       * |direction <begin/end/both/none/point>| = can be used only
+         with the section type. It indicates where to put 
+         a direction arrow on the section line. None is default.
+       * |gradient <none/center/point>| = can be used only with the contour
+         type and indicates where to put a gradient mark on the contour line.
+         Center is default.
+       * |head <begin/end/both/none>| = can be used only with the arrow
+         type and indicates where to put an arrow head. End is default.
+       * |text <string>| = valid only for label lines.
 \endcomopt
 
 \options
   * |id <ext_keyword>| = id of the object
-  * |author <date> <person>| = author of the data and it's creation date
-  * |copyright <date> <string>| = copyright date and name
-  * |title <string>| = description of the object
 \endoptions
 
 \notes
-   The following line type has this specific behaviour:
+   The following line types have specific behaviour:
 
    \list
        {\it section:} if both control points of a B\'ezier curve are given 
        then the line is drawn up to the perpendicular projection of 
        the first control point and from the projection of the section control
        point. No section curve is allowed.
+       
+       {\it survey:} survey line is automatically drawn by Therion
+       
+       {\it slope:} slope line marks upper border of the slopy area. It's 
+       necessary to specify |l-size| in at least one point. Gradient lines
+       length and orienation is an average of specified |l-size|s and
+       |orientation|s in the nearest points. If there is no orientation
+       specification, gradient marks are perpendicular to the slope line.
+       
    \endlist
 \endnotes
 
@@ -767,9 +751,6 @@ Area is a command for drawing an area on the map.
 
 \options
   * |id <ext_keyword>| = id of the object
-  * |author <date> <person>| = author of the data and it's creation date
-  * |copyright <date> <string>| = copyright date and name
-  * |title <string>| = description of the object
 \endoptions
 
 
@@ -813,8 +794,6 @@ Area is a command for drawing an area on the map.
 \endcomopt
 
 \options
-  * |author <date> <person>| = author of the data and it's creation date
-  * |copyright <date> <string>| = copyright date and name
   * |title <string>| = description of the object
 \endoptions
 
@@ -858,7 +837,7 @@ Area is a command for drawing an area on the map.
 \enddescription
 
 \syntax:
-  |grade <id> [OPTIONS]
+  |grade <id>
         ...
         [<quantity list> <value> <units>]
         ...
@@ -868,12 +847,6 @@ Area is a command for drawing an area on the map.
 \context
   all
 \endcontext
-
-\arguments
-\endarguments
-
-\options
-\endoptions
 
 
 \subsubchapter `revise'.
@@ -913,7 +886,7 @@ endrevise|
 
 \subchapter XTherion.
 
-XTherion is an GUI (Graphical User Interface) for Therion. 
+XTherion is a GUI (Graphical User Interface) for Therion. 
 It helps a lot with creating input data files. Currently it works in 
 three main modes: text editor, map editor and compiler. (Here we're concerned 
 with creating data, so only the two first modes are described in this section. For compiler 
@@ -1105,13 +1078,13 @@ files with Therion.
 \list
  * Crtl+L = insert new line and enter an `insert line point' mode
  * LeftClick = insert line point (without control points)
- * Shift+LeftClick = insert line point very close to existing point 
+ * Ctrl+LeftClick = insert line point very close to existing point 
     (normally it's inserted right above closest existing point)
  * LeftClick + drag = insert line point (with control points)
  * hold Ctrl while dragging = fix the distance of previous control point
  * LeftClick + drag on the control point = move its position
- * RightClick on previous points = selects the previous point while in
-    insert mode (useful if you want to change also the direction of
+ * RightClick on one of the previous points = selects the previous point while 
+    in insert mode (useful if you want to change also the direction of
     previous control point)
  * Esc or LeftClick on the last point = end the line insertion
  * LeftClick on the first line point = close the line and end line insertion
@@ -1122,7 +1095,7 @@ files with Therion.
 {\it Editing line}
 \list
  * LeftClick + drag = move line point
- * Shift + LeftClick + drag = move line point close to the existing
+ * Ctrl+LeftClick + drag = move line point close to the existing
     point (normally it is moved right above closest existing point)
  * LeftClick on control point + drag = move control point
 \endlist
@@ -1145,7 +1118,7 @@ files with Therion.
 \list
  * Ctrl+P = switch to `insert point' mode
  * LeftClick = insert point at given position
- * Shift+LeftClick = insert point very close to existing point (normally it
+ * Ctrl+LeftClick = insert point very close to existing point (normally it
     will be inserted right above the closest point)
  * Esc = escape from the `inset point' mode
 \endlist
@@ -1153,7 +1126,7 @@ files with Therion.
 {\it Editing point}
 \list
  * LeftClick + drag = move point
- * Shift + LeftClick + drag = move point close to the existing
+ * Ctrl+LeftClick + drag = move point close to the existing
     point (normally it is moved right above closest existing point)
  * LeftClick + drag on point arrows = change point orientation or
     sizes (according to given switches in Point cotrol panel)
@@ -1161,8 +1134,8 @@ files with Therion.
 
 {\it Selecting an existing object}
 \list
- * RightClick = select object on the top
- * LeftClick = select object right below the top object (useful when several
+ * LeftClick = select object on the top
+ * RightClick = select object right below the top object (useful when several
     points lie above each other)
 \endlist
 

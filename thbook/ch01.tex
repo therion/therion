@@ -88,7 +88,7 @@ It may look quite complicated, but this approach has a lot of advantages:
   input data, or merge more maps created by different persons in different 
   styles into one map with unified map symbols set.
 
-  2D maps are adopted for particular output scale (level of abstraction,
+  2D maps are adapted for particular output scale (level of abstraction,
   non-linear scaling of symbols and texts)
   
 * All data are relative to survey station positions. If the coordinates
@@ -202,17 +202,22 @@ the actual shape to abstract map symbols according to map symbol definitions; it
 creates a lot of PostScript files with small fragments of the cave. These are 
 read back and converted to a PDF-like format, which forms input data 
 for pdf\TeX. Pdf\TeX\ does all the typesetting and creates a PDF file of the cave 
-map. Therion may also export simple 3D model (survey shots only) in Survex *.3d 
-and Compass *.plt formats. 
+map. 
+
+Therion may also export simple 3D model (survey shots only) in Survex *.3d 
+and Compass *.plt formats. [Complex 3D in the future]
+
+Centreline may be exported for further processing in any SQL 
+database.
 
 For displaying the results you need:
 \list
 * Aven or xcaverot from Survex package for viewing the simple 3D model
 * any PDF viewer like Acrobat Reader, ghostscript or xpdf for displaying  
   2D maps
+* SQL database client to process exported database
 \endlist
 
-[Complex 3D in the future]
 
 
 \subchapter First run.

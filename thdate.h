@@ -29,6 +29,7 @@
 #ifndef thdate_h
 #define thdate_h
 
+#define thdate__bufflen 255
 
 /**
  * Convert date into decimal year.
@@ -47,7 +48,11 @@ void thdate_y2d(double dy, int  & year, int & month, int & day, int & hour, int 
  * Date formats.
  */
 enum {
-  TT_DATE_FMT_UNKNOWN,
+  TT_DATE_FMT_ISO,
+  TT_DATE_FMT_Y,
+  TT_DATE_FMT_UTF8_ISO,
+  TT_DATE_FMT_UTF8_Y,
+  TT_DATE_FMT_SQL_SINGLE,
 };
 
 /**
@@ -57,6 +62,8 @@ enum {
  */
  
 class thdate {
+
+  public:
 
   int syear,  ///< Start date year
     smonth,  ///< Start date month
@@ -72,8 +79,7 @@ class thdate {
   double ssec, ///< Start date seconds
     esec;  ///< End date seconds
     
-  char dstr[52]; ///< String for given date.
-
+  static char dstr[thdate__bufflen]; ///< String for given date.
 
   friend bool operator < (const thdate &, const thdate &);  ///< Less operator.
   friend bool operator <= (const thdate &, const thdate &);  ///< Less operator.
@@ -103,16 +109,13 @@ class thdate {
    * Create string representation of date.
    */
    
-  void prnstr();
+  void print_str(int fmt);
   
   /**
    * Reset the date.
    */
    
   void reset();
-
-
-  public:
 
     
   /**
@@ -154,14 +157,14 @@ class thdate {
    * Join two dates together.
    */
    
-  void join(const thdate & dt);
+  void join(thdate & dt);
   
   
   /**
    * Return string representation of date.
    */
    
-  char * get_str();
+  char * get_str(int fmt = TT_DATE_FMT_ISO);
   
   
   /**
@@ -184,12 +187,7 @@ class thdate {
    
   void set_years(double sy, double ey);
 
-
-  /**
-   * Print date into specified format.
-   */
-   
-  void print_export_str(int fmt = TT_DATE_FMT_UNKNOWN);
+  void set_file_date(char * fname);
   
 };
 

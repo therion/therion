@@ -31,6 +31,7 @@
 #include "thdatabase.h"
 #include "thexpmodel.h"
 #include "thexpmap.h"
+#include "thexpdb.h"
 #include <stdio.h>
 
 
@@ -65,6 +66,10 @@ void thexporter::parse_export(int nargs, char ** args) {
   switch (expmode) {
     case TT_EXP_MODEL:
       xp = new thexpmodel;
+      xp->export_mode = expmode;
+      break;
+    case TT_EXP_DATABASE:
+      xp = new thexpdb;
       xp->export_mode = expmode;
       break;
     case TT_EXP_MAP:

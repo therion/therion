@@ -12,7 +12,27 @@ line wall -close on -visibility off
   1060.06 476.42 1052.0 842.0 830.0 786.0
 endline
 
+line slope
+  966.0 614.0
+  988.0 718.0 920.0 782.0 834.0 758.0
+  orientation 221.8
+  smooth off
+  l-size 105.6
+endline
+
+point 916.0 584.0 stalactite -scale xl
+
+point 860.0 582.0 stalactite -scale l
+
+point 812.0 604.0 stalactite -scale m
+
+point 768.0 632.0 stalactite -scale s
+
+point 738.0 674.0 stalactite -scale xs
+
 point 840.0 710.0 station -name 4
+
+point 842.0 713.0 station -name 4
 
 endscrap
 
@@ -71,7 +91,7 @@ endscrap
 
 
 
-scrap dolny -stations 3 -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+scrap dolny -stations 3 -author 2003.12.10 "Stacho Mudrak"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
 
 point 1549.0 476.0 passage-height -value 1.2 -align br
 
@@ -104,8 +124,8 @@ line border -id jb -close on -place top
 endline
 
 area water
-   jb
- endarea
+  jb
+endarea
 
 
 point 1230.0 361.5 guano
@@ -175,7 +195,6 @@ line section -reverse on -direction end
   1500.0 424.0
   1524.5 422.0 1629.0 411.0 1640.0 410.0
   smooth off
-  1640.0 410.0
   1640.0 306.0
 endline
 
@@ -285,7 +304,7 @@ endscrap
 
 
 
-scrap horny -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+scrap horny -author 2001.12.10 "Martin Budaj"   -author 2002.12.10 "Stacho Mudrak"   -copyright 2003 "Speleoklub Banska Bystrica" -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
 
 point 502.0 720.0 water-flow -orientation 271.8
 

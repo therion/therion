@@ -159,10 +159,26 @@ void tharea::insert_border_line(int npars, char ** pars)
 }
 
 
-void tharea::export_mp(class thexpmapmpxs * out)
+bool tharea::export_mp(class thexpmapmpxs * out)
 {
+  int macroid = SYMA_WATER;
+#define tharea_type_export_mp(type,mid) case type: \
+  macroid = mid; \
+  break;
+  switch (this->type) {
+    tharea_type_export_mp(TT_AREA_TYPE_SAND, SYMA_SAND)
+    tharea_type_export_mp(TT_AREA_TYPE_DEBRIS, SYMA_DEBRIS)
+    tharea_type_export_mp(TT_AREA_TYPE_SUMP, SYMA_SUMP)
+    tharea_type_export_mp(TT_AREA_TYPE_WATER, SYMA_WATER)
+  }
+  
+  if (!out->symset->assigned[macroid])
+    return(false);
   if (this->first_line == NULL)
-    return;
+    return(false);
+
+  if (out->file == NULL)
+    return(true);
   fprintf(out->file,"PatternFill(buildcycle(");
 
   this->first_line->line->export_path_mp(out);
@@ -172,21 +188,11 @@ void tharea::export_mp(class thexpmapmpxs * out)
     bl->line->export_path_mp(out);
     bl = bl->next_line;
   }
-
-  fprintf(out->file,"),\n");
-
-#define tharea_type_export_mp(type,mid) case type: \
-  fprintf(out->file,"%s",out->symset->get_mp_macro(mid)); \
-  break;
-
-  switch (this->type) {
-    tharea_type_export_mp(TT_AREA_TYPE_SAND, SYMA_SAND)
-    tharea_type_export_mp(TT_AREA_TYPE_DEBRIS, SYMA_DEBRIS)
-    tharea_type_export_mp(TT_AREA_TYPE_SUMP, SYMA_SUMP)
-    tharea_type_export_mp(TT_AREA_TYPE_WATER, SYMA_WATER)
-  }
-
-  fprintf(out->file,");\n");
+  
+  fprintf(out->file,"),\n%s);\n",out->symset->get_mp_macro(macroid));
+  
+  return(false);  
+  
 }
 
 

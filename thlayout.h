@@ -32,6 +32,7 @@
 
 #include "thdataobject.h"
 #include "thlayoutln.h"
+#include "thsymbolset.h"
 #include <list>
 
 /**
@@ -70,6 +71,13 @@ enum {
   TT_LAYOUT_SYMBOL_ASSIGN = 2028,
   TT_LAYOUT_SYMBOL_HIDE = 2029,
   TT_LAYOUT_COLOR = 2030,
+  TT_LAYOUT_SYMBOL_SHOW = 2031,
+  TT_LAYOUT_LEGEND = 2032,
+  TT_LAYOUT_DOC_COMMENT = 2033,
+  TT_LAYOUT_MAP_HEADER = 2034,
+  TT_LAYOUT_LANG = 2035,
+  TT_LAYOUT_MAP_ITEM = 2036,
+  TT_LAYOUT_SCALE_BAR = 2037,
 };
 
 
@@ -98,6 +106,79 @@ static const thstok thtt_layout_grid[] = {
   {NULL, TT_LAYOUT_GRID_UNKNOWN}
 };
 
+
+/**
+ * Layout map-item token table.
+ */
+ 
+//static const thstok thtt_layout_mapitem[] = {
+//  {"north-arrow", SYMS_NORTHARROW},
+//  {"scale-bar", SYMS_SCALEBAR},
+//  {NULL, SYMS_ZZZ}
+//};
+
+/**
+ * Layout legend tokens.
+ */
+
+enum {
+  TT_LAYOUT_LEGEND_UNKNOWN = 0,
+  TT_LAYOUT_LEGEND_OFF,
+  TT_LAYOUT_LEGEND_ON,
+  TT_LAYOUT_LEGEND_ALL,
+};
+
+
+/**
+ * Layout legend token table.
+ */
+ 
+static const thstok thtt_layout_legend[] = {
+  {"all", TT_LAYOUT_LEGEND_ALL},
+  {"off", TT_LAYOUT_LEGEND_OFF},
+  {"on", TT_LAYOUT_LEGEND_ON},
+  {NULL, TT_LAYOUT_LEGEND_UNKNOWN},
+};
+
+
+
+/**
+ * Layout legend tokens.
+ */
+
+enum {
+  TT_LAYOUT_MAP_HEADER_UNKNOWN = 0,
+  TT_LAYOUT_MAP_HEADER_N,
+  TT_LAYOUT_MAP_HEADER_NW,
+  TT_LAYOUT_MAP_HEADER_NE,
+  TT_LAYOUT_MAP_HEADER_E,
+  TT_LAYOUT_MAP_HEADER_W,
+  TT_LAYOUT_MAP_HEADER_S,
+  TT_LAYOUT_MAP_HEADER_SW,
+  TT_LAYOUT_MAP_HEADER_SE,
+  TT_LAYOUT_MAP_HEADER_OFF,
+};
+
+
+/**
+ * Layout legend token table.
+ */
+ 
+static const thstok thtt_layout_map_header[] = {
+  {"e", TT_LAYOUT_MAP_HEADER_E},
+  {"n", TT_LAYOUT_MAP_HEADER_N},
+  {"ne", TT_LAYOUT_MAP_HEADER_NE},
+  {"nw", TT_LAYOUT_MAP_HEADER_NW},
+  {"off", TT_LAYOUT_MAP_HEADER_OFF},
+  {"s", TT_LAYOUT_MAP_HEADER_S},
+  {"se", TT_LAYOUT_MAP_HEADER_SE},
+  {"sw", TT_LAYOUT_MAP_HEADER_SW},
+  {"w", TT_LAYOUT_MAP_HEADER_W},
+  {NULL, TT_LAYOUT_MAP_HEADER_UNKNOWN},
+};
+
+
+
 /**
  * Layout code tokens.
  */
@@ -110,6 +191,8 @@ enum {
   TT_LAYOUT_CODE_SYMBOL_DEFAULTS,
   TT_LAYOUT_CODE_SYMBOL_ASSIGN,
   TT_LAYOUT_CODE_SYMBOL_HIDE,
+  TT_LAYOUT_CODE_SYMBOL_SHOW,
+  TT_LAYOUT_CODE_MAP_ITEM,
 };
 
 
@@ -134,6 +217,8 @@ enum {
   TT_LAYOUT_COLOR_UNKNOWN = 0,
   TT_LAYOUT_COLOR_MAP_BG,
   TT_LAYOUT_COLOR_MAP_FG,
+  TT_LAYOUT_COLOR_PREVIEW_BELOW,
+  TT_LAYOUT_COLOR_PREVIEW_ABOVE,
 };
 
 
@@ -144,6 +229,8 @@ enum {
 static const thstok thtt_layout_color[] = {
   {"map-bg", TT_LAYOUT_COLOR_MAP_BG},
   {"map-fg", TT_LAYOUT_COLOR_MAP_FG},
+  {"preview-above", TT_LAYOUT_COLOR_PREVIEW_ABOVE},
+  {"preview-below", TT_LAYOUT_COLOR_PREVIEW_BELOW},
   {NULL, TT_LAYOUT_COLOR_UNKNOWN}
 };
 
@@ -180,7 +267,11 @@ static const thstok thtt_layout_opt[] = {
   {"grid",TT_LAYOUT_GRID},
   {"grid-origin",TT_LAYOUT_GRID_ORIGIN},
   {"grid-size",TT_LAYOUT_GRID_SIZE},
+  {"language",TT_LAYOUT_LANG},
   {"layers",TT_LAYOUT_LAYERS},
+  {"legend",TT_LAYOUT_LEGEND},
+  {"map-comment",TT_LAYOUT_DOC_COMMENT},
+  {"map-header",TT_LAYOUT_MAP_HEADER},
   {"nav-factor",TT_LAYOUT_NAV_FACTOR},
   {"nav-size",TT_LAYOUT_NAV_SIZE},
   {"opacity",TT_LAYOUT_OPACITY},
@@ -192,10 +283,13 @@ static const thstok thtt_layout_opt[] = {
   {"page-numbers",TT_LAYOUT_PAGE_NUMBERS},
   {"page-setup",TT_LAYOUT_PAGE_SETUP},
   {"scale", TT_LAYOUT_SCALE},
+  {"scale-bar", TT_LAYOUT_SCALE_BAR},
   {"size", TT_LAYOUT_SIZE},
+  {"statistics",TT_LAYOUT_MAP_ITEM},
   {"symbol-assign", TT_LAYOUT_SYMBOL_ASSIGN},
   {"symbol-hide", TT_LAYOUT_SYMBOL_HIDE},
   {"symbol-set", TT_LAYOUT_SYMBOL_DEFAULTS},
+  {"symbol-show", TT_LAYOUT_SYMBOL_SHOW},
   {"title-pages",TT_LAYOUT_TITLE_PAGES},
   {"transparency",TT_LAYOUT_TRANSPARENCY},
   {NULL, TT_LAYOUT_UNKNOWN},
@@ -222,29 +316,33 @@ class thlayout : public thdataobject {
 
   public:
     
-  double scale, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gox, goy, goz, navf, overlap, opacity;
+  double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gox, goy, goz, navf, overlap, opacity;
   
   char * olx, * oly, 
-    * doc_title, * doc_author, * doc_subject, * doc_keywords, * excl_list;
+    * doc_title, * doc_comment, * doc_author, * doc_subject, * doc_keywords, * excl_list;
   
   unsigned navsx, navsy, ownp;
   
   char grid, ccode;
   
-  thlayout_color color_map_bg, color_map_fg;
+  int legend, map_header, lang, max_explos, max_topos, max_cartos, max_copys;
+  
+  thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
   
   thlayoutln * first_line, * last_line;
   
-  bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid;
+  bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
+    explo_lens, topo_lens;
   
   bool def_grid_size, def_grid_origin, def_nav_factor, def_nav_size, 
     def_opacity, def_transparency, def_layers, def_base_scale,
     def_origin, def_origin_label, def_overlap, def_own_pages,
     def_page_numbers, def_page_setup, def_scale, def_size, def_title_pages,
-    def_tex_lines, def_doc_title, def_doc_author, def_doc_subject,
+    def_tex_lines, def_doc_title, def_doc_comment, def_doc_author, def_doc_subject,
     def_doc_keywords, def_excl_pages, def_grid, def_page_grid,
-    
-    redef_base_scale;
+    def_legend, def_map_header, def_lang, def_scale_bar, 
+    redef_base_scale, def_max_explos, def_max_topos, def_max_cartos,
+    def_max_copys, def_explo_lens, def_topo_lens;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;
@@ -356,8 +454,8 @@ class thlayout : public thdataobject {
    * Parse option with 3 or 2 or 1 numbers and units.
    */
    
-  void parse_len(double & d1, double & d2, double & d3, int nargs, char ** args, bool nonneg = false);
-  void parse_len6(double & d1, double & d2, double & d3, double & d4, double & d5, double & d6, int nargs, char ** args, bool nonneg = false);
+  void parse_len(double & d1, double & d2, double & d3, int nargs, char ** args, int nonneg = -1);
+  void parse_len6(double & d1, double & d2, double & d3, double & d4, double & d5, double & d6, int nargs, char ** args, int nonneg = -1);
 
 
   /**

@@ -35,9 +35,9 @@
 #include "thdataleg.h"
 #include "thexception.h"
 #include "thdata.h"
+#include "thinfnan.h"
 #include <math.h>
 
-#define thnanpow2(cislo) ((thisnan(cislo) ? 0.0 : cislo) * (thisnan(cislo) ? 0.0 : cislo))
 
 thdb1d::thdb1d()
 {
@@ -76,7 +76,7 @@ void thdb1d::scan_data()
   thdatass_list::iterator ssi;
   thdataequate_list::iterator eqi;
   thdata * dp;
-  double dcc;
+  double dcc, sindecl, cosdecl;
   thdb1ds * tsp1, * tsp2;  // Temporary stations.
   while (obi != this->db->object_list.end()) {
   
@@ -89,8 +89,8 @@ void thdb1d::scan_data()
       try {
         while(lei != dp->leg_list.end()) {
           if (lei->is_valid) {
-            lei->from.id = this->insert_station(lei->from, lei->psurvey);
-            lei->to.id = this->insert_station(lei->to, lei->psurvey);
+            lei->from.id = this->insert_station(lei->from, lei->psurvey, dp, 3);
+            lei->to.id = this->insert_station(lei->to, lei->psurvey, dp, 3);
             
             this->leg_vec.push_back(thdb1dl(&(*lei),dp,lei->psurvey));
             
@@ -172,13 +172,58 @@ void thdb1d::scan_data()
               case TT_DATATYPE_NORMAL:
               case TT_DATATYPE_DIVING:
                 lei->total_length = lei->length;
+                lei->total_bearing = (thisnan(lei->bearing) ? 0.0 : lei->bearing);
+                if (!lei->direction) {
+                  lei->total_bearing += 180.0;
+                  if (lei->total_bearing >= 360.0)
+                    lei->total_bearing -= 360.0;
+                }               
+                lei->total_gradient = (thisinf(lei->gradient) == 1 ? 90.0 
+                  : (thisinf(lei->gradient) == -1 ? -90.0 
+                  : lei->gradient));
+                if (!lei->direction)
+                  lei->total_gradient *= -1.0;
+                lei->total_dz = lei->total_length * cos(lei->total_gradient/180*THPI);
+                lei->total_dx = lei->total_dz * sin(lei->total_bearing/180*THPI);
+                lei->total_dy = lei->total_dz * cos(lei->total_bearing/180*THPI);
+                lei->total_dz = lei->total_length * sin(lei->total_gradient/180*THPI);
                 break;
               case TT_DATATYPE_CYLPOLAR:
                 lei->total_length = sqrt(thnanpow2(lei->length) + thnanpow2(lei->depthchange));
+                lei->total_bearing = (thisnan(lei->bearing) ? 0.0 : lei->bearing);
+                if (!lei->direction) {
+                  lei->total_bearing += 180.0;
+                  if (lei->total_bearing >= 360.0)
+                    lei->total_bearing -= 360.0;
+                }               
+                lei->total_gradient = asin(lei->depthchange / lei->length) / THPI * 180.0;
+                if (!lei->direction)
+                  lei->total_gradient *= -1.0;
+                lei->total_dz = lei->total_length * cos(lei->total_gradient/180*THPI);
+                lei->total_dx = lei->total_dz * sin(lei->total_bearing/180*THPI);
+                lei->total_dy = lei->total_dz * cos(lei->total_bearing/180*THPI);
+                lei->total_dz = lei->total_length * sin(lei->total_gradient/180*THPI);
                 break;
               case TT_DATATYPE_CARTESIAN:
-                lei->total_length = sqrt(thnanpow2(lei->dx) + thnanpow2(lei->dy) + thnanpow2(lei->dz));
+                lei->total_dx = (lei->direction ? 1.0 : -1.0) * lei->dx;
+                lei->total_dy = (lei->direction ? 1.0 : -1.0) * lei->dy;
+                lei->total_dz = (lei->direction ? 1.0 : -1.0) * lei->dz;
+                lei->total_length = thdxyz2length(lei->total_dx,lei->total_dy,lei->total_dz);
+                lei->total_bearing = thdxyz2bearing(lei->total_dx,lei->total_dy,lei->total_dz);
+                lei->total_gradient = thdxyz2clino(lei->total_dx,lei->total_dy,lei->total_dz);
                 break;
+            }
+
+            if (!thisnan(lei->declination)) {
+              lei->total_bearing += lei->declination;
+              if (lei->total_bearing >= 360.0)
+                lei->total_bearing -= 360.0;
+              if (lei->total_bearing < 0.0)
+                lei->total_bearing += 360.0;
+              cosdecl = cos(lei->declination/180*THPI);
+              sindecl = sin(lei->declination/180*THPI);
+              lei->total_dx = (cosdecl * lei->total_dx) + (sindecl * lei->total_dy);
+              lei->total_dy = (cosdecl * lei->total_dy) - (sindecl * lei->total_dx);
             }
             
           }
@@ -193,7 +238,7 @@ void thdb1d::scan_data()
       fii = dp->fix_list.begin();
       try {
         while(fii != dp->fix_list.end()) {
-          fii->station.id = this->insert_station(fii->station, fii->psurvey);
+          fii->station.id = this->insert_station(fii->station, fii->psurvey, dp, 2);
           this->station_vec[fii->station.id - 1].flags |= TT_STATIONFLAG_FIXED;
           fii++;
         }
@@ -205,7 +250,7 @@ void thdb1d::scan_data()
       eqi = dp->equate_list.begin();
       try {
         while(eqi != dp->equate_list.end()) {
-          eqi->station.id = this->insert_station(eqi->station, eqi->psurvey);
+          eqi->station.id = this->insert_station(eqi->station, eqi->psurvey, dp, 1);
           eqi++;
         }
       }
@@ -270,18 +315,28 @@ unsigned long thdb1d::get_station_id(thobjectname on, thsurvey * ps)
         
 }
 
+void thdb1ds::set_parent_data(class thdata * pd, unsigned pd_priority, unsigned pd_slength) {
+  if ((pd_slength > this->data_slength)) 
+    this->data = pd;
+  else if ((pd_slength == this->data_slength) && (pd_priority >= this->data_priority))
+    this->data = pd;
+}
 
-unsigned long thdb1d::insert_station(class thobjectname on, class thsurvey * ps)
+
+unsigned long thdb1d::insert_station(class thobjectname on, class thsurvey * ps, class thdata * pd, unsigned pd_priority)
 {
   // first insert object into database
+  unsigned pd_slength = strlen(ps->full_name);
   ps = this->db->get_survey(on.survey, ps);
   on.survey = NULL;
   unsigned long csurvey_id = (ps == NULL) ? 0 : ps->id;
   
   thdb1d_station_map_type::iterator sti;
   sti = this->station_map.find(thobjectid(on.name, csurvey_id)); 
-  if (sti != this->station_map.end())
+  if (sti != this->station_map.end()) {
+    this->station_vec[sti->second - 1].set_parent_data(pd,pd_priority,pd_slength);
     return sti->second;
+  }
   
   if (!(this->db->insert_datastation(on, ps))) {
     if (on.survey != NULL)
@@ -292,7 +347,9 @@ unsigned long thdb1d::insert_station(class thobjectname on, class thsurvey * ps)
   
   this->station_map[thobjectid(on.name, csurvey_id)] = ++this->lsid;
   this->station_vec.push_back(thdb1ds(on.name, ps));
+  this->station_vec[this->lsid - 1].set_parent_data(pd,pd_priority,pd_slength);
   return this->lsid;
+  
 }
 
 
@@ -668,6 +725,45 @@ void thdb1d__scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_und
 }
 
 
+void thdb1d__scan_data_station_limits(thdata * ss, thdb1ds * st, bool is_under) {
+  if (ss->stat_st_state == 0) {
+    if (is_under)
+      ss->stat_st_state = 2;
+    else
+      ss->stat_st_state = 1;
+    ss->stat_st_top = st;
+    ss->stat_st_bottom = st;
+//    ss->stat_st_south = st;
+//    ss->stat_st_north = st;
+//    ss->stat_st_east = st;
+//    ss->stat_st_west = st;
+  } else if (is_under && (ss->stat_st_state == 1)) {
+    ss->stat_st_state = 2;
+    ss->stat_st_top = st;
+    ss->stat_st_bottom = st;
+//    ss->stat_st_south = st;
+//    ss->stat_st_north = st;
+//    ss->stat_st_east = st;
+//    ss->stat_st_west = st;
+  } else if (is_under || (ss->stat_st_state == 1)) {
+    ss->stat_st_state = 2;
+    if (ss->stat_st_top->z < st->z)
+      ss->stat_st_top = st;
+    if (ss->stat_st_bottom->z > st->z)
+      ss->stat_st_bottom = st;
+//    if (ss->stat_st_east->x < st->x)
+//      ss->stat_st_east = st;
+//    if (ss->stat_st_west->x > st->x)
+//      ss->stat_st_west = st;
+//    if (ss->stat_st_north->y < st->y)
+//      ss->stat_st_north = st;
+//    if (ss->stat_st_south->y > st->y)
+//      ss->stat_st_south = st;
+  }
+}
+
+
+
 
 void thdb1d::process_survey_stat() {
 
@@ -684,18 +780,37 @@ void thdb1d::process_survey_stat() {
   // do ktoreho patria
   thdb1d_leg_vec_type::iterator lit = this->leg_vec.begin();
   while (lit != this->leg_vec.end()) {    
+
+    // skusi ci je duplikovane
+    if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
+      lit->data->stat_dlength += lit->leg->total_length;
+    // ak nie skusi ci je surface
+    else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
+      lit->data->stat_slength += lit->leg->total_length;
+    // inak prida do length
+    else
+      lit->data->stat_length += lit->leg->total_length;
+    // stations
+    if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
+      thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), false);
+      thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), false);
+    } else {
+      thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), true);
+      thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), true);
+    }
+
+
     ss = lit->survey;
     while (ss != NULL) {
       // skusi ci je duplikovane
-      if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0) {
+      if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
         ss->stat.length_duplicate += lit->leg->total_length;
       // ak nie skusi ci je surface
-      } else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
+      else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
         ss->stat.length_surface += lit->leg->total_length;
       // inak prida do length
-      } else {
+      else
         ss->stat.length += lit->leg->total_length;
-      }
       if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
         thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), false);
         thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), false);

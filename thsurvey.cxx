@@ -40,6 +40,7 @@ thsurvey::thsurvey()
   this->loptr = NULL;
   this->decdef = false;
   this->decuds = thnan;
+  this->num1 = 0;
 }
 
 
@@ -141,6 +142,7 @@ void thsurvey::self_print_properties(FILE * outf)
   }
   else
     fprintf(outf,"\tdeclination: none\n");
+  fprintf(outf,"\tlength: %g\n",this->stat.length);
 }
 
 

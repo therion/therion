@@ -38,10 +38,25 @@ Therion's {\it makefile} may take some optional parameters.
 * |config-release|, |config-oxygen|, |config-ozone| = set optimization level 
   for C++ compiler (none, |-O2| and |-O3|)  
 * |config-debug| = useful before debugging the program  
-* |depend| = find dependencies for include files
 * |install| = install Therion
 * |clean| = delete all temporary files
 \endlist
+
+\penalty-20
+{\it Adding new translations}
+
+Therion supports translation of map labels. 
+Suppose you want to add a new language xx. 
+
+\list
+* run `|perl process.pl export xx|' in the `thlang' Therion source subdirectory. 
+  This creates a file |texts_xx.txt|. This file is UTF-8 encoded.
+* edit the |texts_xx.txt| file. Add your translations at lines beginning with
+  `|xx:|'.
+* run |make update|
+* compile Therion
+\endlist
+
 
 \penalty-20
 {\it Adding new encodings}
@@ -103,13 +118,13 @@ Consult the documentation of your OS how to set them.
 
 Therion's and XTherion's system dependent settings are specifyed in the 
 file therion.ini or xtherion.ini, respectively.
-They are searched in the following directories:
+They are searched for in the following directories:
 
 \list
 * on UNIX: 
-  |$THERION|, |$HOME/.therion|, |/etc|, |/usr/etc|, |/usr/local/etc|
-* on WINDOWS:
-  |$THERION|, |$HOME/.therion|, |<Therion-installation-directory>|, 
+  |.|, |$THERION|, |$HOME/.therion|, |/etc|, |/usr/etc|, |/usr/local/etc|
+* on Windows:
+  |.|, |$THERION|, |$HOME\.therion|, |<Therion-installation-directory>|, 
   |C:\WINDOWS|, |C:\WINNT|, |C:\Program Files\Therion|
 \endlist
  
@@ -122,10 +137,19 @@ ignored; lines ending with a backslash continue on next line.) Currently
 supported initialization commands follow.
 
 \list
-* |encoding_default <encoding-name>|
+* |encoding-default <encoding-name>|
 
-  Set the default output encoding.
+  Set the default output encoding (currently unused).
+
+* |encoding-sql <encoding-name>|
+
+  Set the default output encoding for SQL export.
         
+* |language <xx[_YY]>|  
+
+  Default output language (used for maps). Currently supported languages are
+  |sk| (Slovak) and |en| (English).
+
 * |mpost-path <file-path>|
 
   Set the full path to a \MP\ executable (``|mpost|'' is the default).
@@ -204,6 +228,75 @@ XTherion starts. The file is commented; see the comments for details.
 %
 %[Optionally creating \MP\ and \TeX\ format files.]
 
+\subchapter Example data.
+
+Following simple example illustrates basic usage of Therion commands:
+
+|encoding  utf-8
+
+survey main -title "Test cave"
+  
+  survey first
+    centreline
+      units compass grad
+      data normal from to compass clino length
+                  1    2  100     -5    10
+    endcentreline
+  endsurvey
+
+  survey second -declination [3 deg]
+    centreline
+      calibrate length 0 0.96
+      data normal from to compass length clino
+                  1    2  0       10     +10
+    endcentreline
+  endsurvey
+ 
+  centreline
+    equate 2@first 1@second
+  endcentreline
+ 
+  # scraps are usually in separate *.th2 files
+  scrap s1 -author 2004 "Therion team"
+
+    point 763 746 station -name 2@second
+    point 702 430 station -name 2@first
+    point 352 469 station -name 1@first
+    point 675 585 air-draught -orientation 240 -scale large
+
+    line wall -close on
+      287 475
+      281 354 687 331 755 367
+      981 486 846 879 683 739
+      476 561 293 611 287 475
+    endline
+
+  endscrap
+
+  map m1 -title "Test map"
+    s1
+  endmap
+ 
+endsurvey|
+
+Corrresponding configuration file could be:
+
+|encoding  utf-8
+source test
+
+layout l1
+  scale 1 100
+  layers off
+endlayout
+
+select m1@main
+
+export model -fmt survex
+export map -layout l1|
+
+If you save data file as `test.th' and configuration file as `thconfig' you may 
+process them with Therion.
+
 
 %\subchapter Map symbols library.
 
@@ -268,7 +361,7 @@ XTherion starts. The file is commented; see the comments for details.
   Jun: all Perl scripts rewritten in C++, Therion is one executable program
        now (although using Survex and TeX)
        
-%  Nov 10: ...
+%  Nov 10: first idea of the Labyrinth project
 \endlist
 
 
@@ -286,7 +379,6 @@ new features to be implemented:
 \subsubchapter 2D maps.
 
 \list
-* map legend
 * debugging mode
 * SVG support
 \endlist
@@ -296,7 +388,7 @@ new features to be implemented:
 
 \list
 * passage walls modelling
-* OpenGL 3D viewer as a part of XTherion
+* OpenGL 3D viewer
 \endlist
 
 \endinput

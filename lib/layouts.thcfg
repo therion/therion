@@ -12,6 +12,7 @@ layout SCR200 -title "Computer screen layout"
   nav-factor 25
   
   symbol-defaults SKBB
+  lang sk
   
 endlayout
 

@@ -84,4 +84,5 @@ set xth(line_types) {
 	slope
 	survey
 	wall
+	water-flow
 }

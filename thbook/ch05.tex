@@ -36,7 +36,8 @@ For pdf\TeX's extensions there is a short manual
                 available at \path|http://www.pdftex.org|
 \endlist
 
-The \TeX\ macros are used inside of |layout| command (see the chapter 
+The \TeX\ macros are used inside of |code tex-atlas| part of the |layout| 
+command (see the chapter 
 {\it Processing data} for details). The basic one predefined by Therion is the
 
 |\dopage|
@@ -156,9 +157,11 @@ For font management there are macros
 * |\rm|, |\it|, |\bf|, |\ss|, |\si| for type face switching.
 \endlist
 
-If you use own texts in \TeX\ macros (like a label for the scale bar), these 
-font switches work only in restricted manner: it's supposed that all characters 
-are present in the first encoding specified in the initialization file. 
+%If you use own texts in \TeX\ macros (like a label for the scale bar), these 
+%font switches work only in restricted manner: it's supposed that all characters 
+%are present in the first encoding specified in the initialization file. 
+
+See below for a list of predefined texts which may be used in the atlas.
 
 Now we're ready to define the |\dopage| macro. You may choose which of the 
 predefined elements to use. A very simple example would be
@@ -168,30 +171,25 @@ predefined elements to use. A very simple example would be
   page-setup 29.7 21 27.7 19 1 1 cm
   size 26.7 18 cm
   overlap 0.5 cm
-
-  \def\dopage{\box\mapbox}
-
-  \insertmaps 
-
+  code tex-atlas
+    \def\dopage{\box\mapbox}
+    \insertmaps 
 endlayout|
 
 which defines the landscape A4 layout without the navigator nor any texts. There 
 is only a map on the page.
 
-Note the |\insertmaps| macro. Map pages are inserted at its position. [Similar 
-macro |\insertlegend| will insert the map legend when Therion supports it.]
+Note the |\insertmaps| macro. Map pages are inserted at its position. 
 This is not done automatically because you may wish to insert some other pages 
-before the first map page. (In this case something like |\input myfile.tex| 
-should preceed the |\insertmaps| macro.) Without the |\insertmaps| invocation 
-no map pages will be included!
+before the first map page. 
 
 More advanced is the default definition of the |\dopage| macro:
 
 |\def\dopage{%
-  \vbox{\line{\hfil\box\mapbox\hfil}
-    \bigskip
-    \line{%
-     \vbox to \ht\navbox{
+ \vbox{\centerline{\framed{\mapbox}}
+  \bigskip
+  \line{%
+    \vbox to \ht\navbox{
       \hbox{\size[20]\the\pagelabel
         \ifpagenumbering\space(\the\pagenum)\fi
         \space\size[16]\the\pagename}
@@ -199,32 +197,130 @@ More advanced is the default definition of the |\dopage| macro:
         \medskip
         \hbox{\qquad\qquad
           \vtop{%
-  	    \hbox to 0pt{\hss\showpointer\pointerN\hss}
+            \hbox to 0pt{\hss\showpointer\pointerN\hss}
             \hbox to 0pt{\llap{\showpointer\pointerW\hskip0.7em}%
-	           \raise1pt\hbox to 0pt{\hss$\updownarrow$\hss}%
-	           \raise1pt\hbox to 0pt{\hss$\leftrightarrow$\hss}%
-		   \rlap{\hskip0.7em\showpointer\pointerE}}
-  	    \hbox to 0pt{\hss\showpointer\pointerS\hss}
-	  }\qquad\qquad
+              \raise1pt\hbox to 0pt{\hss$\updownarrow$\hss}%
+              \raise1pt\hbox to 0pt{\hss$\leftrightarrow$\hss}%
+              \rlap{\hskip0.7em\showpointer\pointerE}}
+              \hbox to 0pt{\hss\showpointer\pointerS\hss}
+          }\qquad\qquad
           \vtop{
-	    \def\arr{$\uparrow$}
-	    \showpointerlist\pointerU
-	    \def\arr{$\downarrow$}
-	    \showpointerlist\pointerD
-	  }
+            \def\arr{$\uparrow$}
+            \showpointerlist\pointerU
+            \def\arr{$\downarrow$}
+            \showpointerlist\pointerD
+          }
         }
       \fi
       \vss
-      \scalebar{10}m
-      }\hss
-      \box\navbox
-    }
+      \scalebar
+    }\hss
+    \box\navbox
   }
+ }
 }|
 
 Using other plain \TeX\ macros or \TeX\ primitives it's possible to add other 
 features, e.g.~a different layout for odd and even pages; headers and footers;
 or adding a logo to each page. 
+
+In addition to map pages contains atlas additional items: title page, basic 
+facts about the cave, legend with used map symbols etc.
+
+Therion automatically generates list of used map symbols and lists of persons
+who have discovered, surveyed and drawn selected part of the cave. 
+Following token registers may be used (according to user's requirements 
+before or after the |\insertmaps| macro):
+
+\list
+* |\explotitle|, |\topotitle|, |\cartotitle| = translated titles
+* |\exploteam|, |\topoteam|, |\cartoteam| = participating members 
+  (according to |team|, |explo-team| options for |centreline| and |author|
+  option of scraps)
+* |\explodate|, |\topodate|, |\cartodate| = corresponding dates 
+* |\comment| = is set according to |map-comment| option of the |layout|
+  command
+* |\copyrights| = is set according to copyright options for surveys and other
+  objects
+* |\cavename| = name of the exported map
+* |\cavelength|, |\cavedepth| = approximate length and depth of displayed map
+* |\cavelengthtitle|, |\cavedepthtitle| = translated labels
+\endlist
+
+There is a macro |\atlastitlepages| which combines all token registers 
+mentioned above to get simple preformatted atlas introductory pages.
+
+For legend displaying there are
+
+\list
+* |\iflegend| = conditional true iff |legend| option of the |layout| command
+  was set to |on| or |all| values
+* |\legendtitle| = token register containing translated legend title
+* |\insertlegend| = macro for inserting legend symbols pictures with translated
+  descriptions
+* |\begmulti <i>|, |\endmulti| = text between these macros is typeset in
+  |<i>| columns
+* |\formattedlegend| = combines all four above commands to get
+  preformatted legend with header and symbols typeset in two   (default; 
+  adjust the count register |\legendcolumns| to get them more ore less)
+  columns if |legend| option is set |on|
+\endlist
+
+North arrow and scale bar may be displayed using
+
+\list
+* |\ifnortharrow| = conditional true if map projection is plan and
+  symbol north-arrow is not hidden in |layout|
+* |\ifscalebar| = conditional true if scalebar is not hidden
+* |\northarrow| = PDF form with the north arrow
+* |\scalebar| = PDF form with the scale bar
+\endlist
+
+Example how to create atlas with lists of surveyors etc.\ followed by map pages 
+and with legend at the end:
+
+|code tex-atlas
+  \atlastitlepages
+  \insertmaps
+  \formattedlegend|
+
+\subchapter Page layout in the map mode.
+
+In the map mode it's possible to use a lot of predefined variables which 
+are described in the previous chapter: 
+|\cavename|, |\comment|, |\copyrights|, 
+|\explotitle|, |\topotitle|, |\cartotitle|, 
+|\exploteam|, |\topoteam|, |\cartoteam|, 
+|\explodate|, |\topodate|, |\cartodate|, 
+|\cavelength|, |\cavedepth|, |\cavelengthtitle|, |\cavedepthtitle|,
+|\ifnortharrow|, |\ifscalebar|, |\northarrow|, |\scalebar|, 
+|\iflegend|, |\legendtitle|, |\insertlegend|, |\begmulti <i>|, |\endmulti|, 
+|\formattedlegend|, |\legendcolumns|.
+
+In order to place them somewhere on the map page, you have to define 
+|\maplayout| macro in the |code tex-map| section of the |layout| command. 
+It should contain one or more |\legendbox| invocations.
+The |\legendbox| macro has two parameters: specification of the position on the 
+page (N, E, S, W, NE, SE, SW or NW) and the content to be displayed.
+
+A simple example is
+
+|\def\maplayout{
+  \legendbox{NW}{\northarrow}
+}|
+
+which displays north arrow in the upper-left corner of the map sheet.
+
+For user's convenience, there is |\legendcontent| token register. It contains 
+preformatted cave name, north arrow, scale bar, explo/topo/carto teams, 
+comment, copyrigts and legend.
+Width of the above text may be adjusted by |\legendwidth| dimen register. 
+The |\legendcontent| is also used in the default map layout definition:
+
+|\def\maplayout{\legendbox{NW}{\the\legendcontent}}|
+
+
+
 
 \subchapter Customizing text labels.
 
@@ -274,8 +370,8 @@ possible to add symbols permanently by compiling into Therion executable
 Each symbol has to have a unique name, which consists of following items:
 
 \list 
-* one of the letters `p', `l', `a' for point, line or area symols, 
-  respectively;
+* one of the letters `p', `l', `a', `s' for point, line, area or special 
+  symbols, respectively;
 * underscore character;
 * symbol type as listed in the chapter {\it Data format\/} with all dashes
   removed;
@@ -353,6 +449,8 @@ Following symbols take additional arguments:
 * arrow = numeric: 0 is no arrows, 1 arrow at the end, 2 begin, 3 both ends
 * contour = text: list of points which get the tick or $-1$ to mark tick in the
     middle
+* section = text: list of points which get the orinetation arrow or 
+  $-1$ to indicate no arrows
 * slope = numeric: 0 no border, 1 border; text: list of (point,direction,length) 
   triplets
 \endlist
@@ -389,5 +487,10 @@ Example:
   patterntransform(identity rotated 45);
 endpattern;
 initsymbol("a_water_UIS");|
+
+\subsubchapter Special symbols.
+
+There are currently two special symbols: scale bar and north arrow. 
+Both are experimental and subject to change.
 
 \endinput

@@ -32,13 +32,17 @@
 #include "thconfig.h"
 #include "thexception.h"
 #include "thtexfonts.h"
+#include "thlang.h"
 
 #ifdef THWIN32
 #include <windows.h>
 #endif
 
-const char * THCCC_INIT_FILE = "### Default output encoding ###\n"
-"# encoding_default  ISO8859-1\n\n"
+const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
+"# encoding-default  ASCII\n"
+"# encoding-sql  ASCII\n\n"
+"### Default output language ###\n"
+"# language  en_UK\n\n"
 "### Paths to called executable files ###\n"
 "# cavern-path  \"cavern\"\n"
 "# mpost-path  \"mpost\"\n"
@@ -48,12 +52,17 @@ const char * THCCC_INIT_FILE = "### Default output encoding ###\n"
 "### Tex fonts initialization ###\n"
 "# tex-fonts <encoding> <roman> <italic> <bold> <sansserif> <sansserifoblique>\n"
 "# tex-fonts raw cmr10 cmti10 cmbx10 cmss10 cmssi10\n"
-"# tex-fonts xl2 csr10 csti10 csbx10 csss10 csssi10\n\n";
+"# tex-fonts xl2 csr10 csti10 csbx10 csss10 csssi10\n\n"
+"### Path to temporary directory ###\n"
+"# tmp-path  \"\"\n\n"
+"### Command to remove temporary directory ###\n"
+"# tmp-remove  \"\"\n\n";
 
 thinit::thinit()
 {
   // set encodings
-  this->encoding_default = TT_ISO8859_1;
+  this->encoding_default = TT_ASCII;
+  this->encoding_sql = TT_UNKNOWN_ENCODING;
   
   // set programs paths
   this->path_cavern = "cavern";
@@ -90,6 +99,7 @@ thinit::thinit()
   this->path_pdftex = "pdfetex";
   this->tmp_path = "";
   this->tmp_remove_script = "";
+  this->lang = THLANG_UNKNOWN;
   
 }
 
@@ -100,6 +110,7 @@ thinit::~thinit()
 
 enum {
   TTIC_ENCODING_DEFAULT,
+  TTIC_ENCODING_SQL,
   TTIC_PATH_CAVERN,
 //  TTIC_PATH_3DTOPOS,
   TTIC_PATH_MPOST,
@@ -107,6 +118,7 @@ enum {
   TTIC_PATH_SOURCE,
   TTIC_TMP_PATH,
   TTIC_TMP_REMOVE_SCRIPT,
+  TTIC_LANG,
   TTIC_TEX_FONTS,
   TTIC_UNKNOWN,
 };
@@ -118,8 +130,11 @@ enum {
  
 static const thstok thtt_initcmd[] = {
   {"cavern-path", TTIC_PATH_CAVERN},
-  {"encoding_default", TTIC_ENCODING_DEFAULT},
+  {"encoding-default", TTIC_ENCODING_DEFAULT},
+  {"encoding-sql", TTIC_ENCODING_SQL},
+//  {"encoding_default", TTIC_ENCODING_DEFAULT},
 //  {"path_3dtopos", TTIC_PATH_3DTOPOS},
+  {"language", TTIC_LANG},
   {"mpost-path", TTIC_PATH_MPOST},
   {"pdftex-path", TTIC_PATH_PDFTEX},
   {"source-path", TTIC_PATH_SOURCE},
@@ -129,20 +144,29 @@ static const thstok thtt_initcmd[] = {
   {NULL, TTIC_UNKNOWN},
 };
 
-
+void thinit__print_open(char * s) {
+#ifdef THDEBUG
+    thprintf("\ninitialization file: %s\nreading\n", s);
+#else
+    thprintf("initialization file: %s\n", s);
+    thprintf("reading ...");
+    thtext_inline = true;
+#endif 
+}
 
 void thinit::load()
 {
+  char * cmdln;
+  char ** args;
+  int nargs, argid; //, argid2;
+  fontrecord frec;
+  bool some_tex_fonts = false, started = false;
   this->ini_file.set_search_path(thcfg.get_initialization_path());
   this->ini_file.set_file_name("therion.ini");
   this->ini_file.sp_scan_on();
   this->ini_file.cmd_sensitivity_off();
+  this->ini_file.print_if_opened(thinit__print_open, &started);
   this->ini_file.reset();
-  char * cmdln;
-  char ** args;
-  int nargs, argid; //, argid2;
-  bool some_tex_fonts = false;
-  fontrecord frec;
   try {
     while((cmdln = this->ini_file.read_line()) != NULL) {
       thsplit_args(& this->cmb, cmdln);
@@ -155,6 +179,7 @@ void thinit::load()
         case TTIC_ENCODING_DEFAULT:
         case TTIC_PATH_CAVERN:
         case TTIC_TMP_PATH:
+        case TTIC_LANG:
         case TTIC_TMP_REMOVE_SCRIPT:
         case TTIC_PATH_MPOST:
         case TTIC_PATH_PDFTEX:
@@ -176,6 +201,10 @@ void thinit::load()
           this->encoding_default = thparse_encoding(args[1]);
           break;
           
+        case TTIC_ENCODING_SQL:
+          this->encoding_sql = thparse_encoding(args[1]);
+          break;
+          
         case TTIC_PATH_CAVERN:
           if (strlen(args[1]) < 1)
             ththrow(("invalid path"))
@@ -184,6 +213,12 @@ void thinit::load()
 
         case TTIC_TMP_PATH:
           this->tmp_path.strcpy(args[1]);
+          break;
+
+        case TTIC_LANG:
+          this->lang = thlang_parse(args[1]);
+          if (this->lang == THLANG_UNKNOWN)
+            ththrow(("language not supported -- %s",args[1]))
           break;
 
         case TTIC_TMP_REMOVE_SCRIPT:
@@ -226,7 +261,14 @@ void thinit::load()
   }
   catch (...)
     threthrow(("%s [%d]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number()))
-
+  if (started) {
+#ifdef THDEBUG
+    thprintf("\n");
+#else
+    thprintf(" done\n");
+    thtext_inline = false;
+#endif 
+  }
   if (!some_tex_fonts)
      init_encodings();
 }
@@ -256,6 +298,22 @@ char * thinit::get_path_pdftex()
 void thprint_init_file()
 {
   thprintf(THCCC_INIT_FILE);
+}
+
+
+int thinit::get_encoding(int type) {
+  int res;
+  switch (type) {
+    case THINIT_ENCODING_SQL:
+      res = this->encoding_sql;
+      break;
+    default:
+      res = this->encoding_default;
+      break;
+  }
+  if (res == TT_UNKNOWN_ENCODING)
+    res = this->encoding_default;
+  return res;
 }
 
 

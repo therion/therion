@@ -191,7 +191,7 @@ class tharea : public th2ddataobject {
    * Export to metapost file.
    */
    
-  virtual void export_mp(class thexpmapmpxs * out);
+  virtual bool export_mp(class thexpmapmpxs * out);
   
 
 };

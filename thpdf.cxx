@@ -47,6 +47,7 @@
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
 #include "thtexfonts.h"
+#include "thlang.h"
 
 #ifndef NOTHERION
 #include "thchenc.h"
@@ -96,7 +97,7 @@ list<sheetrecord> SHEET;
 
 int mode;
 const int ATLAS = 0, MAP = 1;
-double MINX=DBL_MAX, MINY=DBL_MAX, MAXX=-DBL_MAX, MAXY=-DBL_MAX;
+double MINX, MINY, MAXX, MAXY;
 double HS,VS;
 //////////
 
@@ -566,7 +567,21 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
     PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
   }
 
-  PAGEDEF << (up ? "\\PL{q .1 w}%" : "\\PL{q .8 g}%") << endl;
+//  PAGEDEF << (up ? "\\PL{q .1 w}%" : "\\PL{q .8 g}%") << endl;
+  
+  if (up) { 
+    PAGEDEF << "\\PL{q .1 w " << LAYOUT.preview_above_r << " " <<
+                                 LAYOUT.preview_above_g << " " <<
+                                 LAYOUT.preview_above_b << " " <<
+                                                           " RG}%" << endl;
+  }
+  else { 
+    PAGEDEF << "\\PL{q " << LAYOUT.preview_below_r << " " <<
+                            LAYOUT.preview_below_g << " " <<
+                            LAYOUT.preview_below_b << " " <<
+                                                      " rg}%" << endl;
+  }
+
   if (mode == ATLAS) {
     map<int,layerrecord>::iterator lay_it = LAYERHASH.find(sheet_it->layer);
     if (lay_it == LAYERHASH.end()) therror(("This can't happen!"));
@@ -638,7 +653,9 @@ void compose_page(list<sheetrecord>::iterator sheet_it, ofstream& PAGE) {
                   "} count 0 {\\ne\\376\\ne\\377" << 
                   utf2texoctal(lay_it->second.N) << "}%" << endl;
   }
+  PAGE.precision(6);
   PAGE << "\\setbox\\mapbox=\\hbox to " << HS << "bp{%" << endl;
+  PAGE.precision(1);
   PAGE << "\\rlap{\\pdfrefxform\\" << tex_Sname(u2str(sheet_it->id)) << 
           "}%" << endl;
 
@@ -656,7 +673,9 @@ void compose_page(list<sheetrecord>::iterator sheet_it, ofstream& PAGE) {
           "}{" << lw << "}{" << u2str(sheet_it->jumpS) << "}%\n";
   
 
+  PAGE.precision(6);
   PAGE << "\\hfil}\\ht\\mapbox=" << VS << "bp%" << endl;
+  PAGE.precision(1);
 
   PAGE << "\\pagelabel={" << grid_name(LAYOUT.labely,-sheet_it->namey) << 
                         " " << grid_name(LAYOUT.labelx,sheet_it->namex) <<
@@ -734,6 +753,61 @@ void compose_page(list<sheetrecord>::iterator sheet_it, ofstream& PAGE) {
   PAGE << "\\dopage\\eject" << endl;
 }
 
+void print_page_bg(ofstream& PAGEDEF) {
+  if ((LAYOUT.background_r != 1) || 
+      (LAYOUT.background_g != 1) || 
+      (LAYOUT.background_b != 1)) {
+
+    // bg rectangle
+    PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
+                            LAYOUT.background_g << " " << 
+                            LAYOUT.background_b << " rg 0 0 " << 
+                            HS << " " << VS << " re f Q}%" << endl;
+  }
+}
+
+void print_page_bg_scraps(int layer, ofstream& PAGEDEF, 
+               list<sheetrecord>::iterator sheet_it) {
+  // if transparency is used, all scraps should be filled white 
+  // on the coloured background, just before preview_down is displayed
+  // and transparency is turned on
+  if (LAYOUT.transparency && 
+      ((LAYOUT.background_r != 1) || 
+       (LAYOUT.background_g != 1) || 
+       (LAYOUT.background_b != 1))) {
+
+    double HSHIFT=0, VSHIFT=0, xc = 0, yc = 0;
+    map < int,set<string> > LEVEL;
+    set <string> used_scraps;
+    if (mode == ATLAS) {
+      HSHIFT = LAYOUT.hsize * sheet_it->namex + LAYOUT.hoffset - LAYOUT.overlap;
+      VSHIFT = LAYOUT.vsize * sheet_it->namey + LAYOUT.voffset - LAYOUT.overlap; 
+      LEVEL = sheet_it->scraps;
+    }
+    else {
+      HSHIFT = MINX;
+      VSHIFT = MINY;
+      LEVEL = ((*(LAYERHASH.find(layer))).second).scraps;
+    }
+
+    PAGEDEF << "\\PL{q 1 g}%" << endl;      // white background of the scrap
+    for (map < int,set<string> >::iterator I = LEVEL.begin();
+                                       I != LEVEL.end(); I++) {
+      used_scraps = (*I).second;
+      // scrap backgrounds
+      for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
+        if (used_scraps.count(K->name) > 0 && K->I != "") {
+          xc = K->I1; yc = K->I2;
+          xc -= HSHIFT; yc -= VSHIFT;
+          PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
+                  tex_Xname("I"+(K->name)) << "}%" << endl;
+        }
+      }
+    }
+    PAGEDEF << "\\PL{Q}%" << endl;         // end of white color for filled bg
+  }
+}
+
 void print_map(int layer, ofstream& PAGEDEF, 
                list<sheetrecord>::iterator sheet_it){
   double HSHIFT=0, VSHIFT=0, xc = 0, yc = 0;
@@ -762,6 +836,11 @@ void print_map(int layer, ofstream& PAGEDEF,
     }
   }
   
+  if (mode == ATLAS) {
+    print_page_bg(PAGEDEF);
+    print_page_bg_scraps(layer, PAGEDEF, sheet_it);
+  }
+
   if (mode == ATLAS && !LAYERHASH.find(layer)->second.D.empty()) {
     print_preview(0,PAGEDEF,HSHIFT,VSHIFT,sheet_it);
   }
@@ -775,8 +854,11 @@ void print_map(int layer, ofstream& PAGEDEF,
       PAGEDEF << "\\PL{/GS1 gs}%" << endl;     // beginning of transparency
     }
 
-    PAGEDEF << "\\PL{q 1 g}%" << endl;         // white background of the scrap
-    
+//    PAGEDEF << "\\PL{q 1 g}%" << endl;         // white background of the scrap
+    PAGEDEF << "\\PL{q " << LAYOUT.foreground_r << " " <<   // background of the scrap
+                            LAYOUT.foreground_g << " " << 
+                            LAYOUT.foreground_b << " rg}%" << endl;
+
     for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
       if (used_scraps.count(K->name) > 0 && K->I != "") {
         xc = K->I1; yc = K->I2;
@@ -1004,17 +1086,19 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
 
 void print_grid(ofstream& PAGEDEF) {
   PAGEDEF << "\\PL{q}";
-  PAGEDEF << "\\PL{3 w 0 0 " << HS << " " << VS << " re S}";
-  double i = LAYOUT.hsize + LAYOUT.overlap; 
-  double j = LAYOUT.vsize + LAYOUT.overlap;
-  PAGEDEF << "\\PL{0.5 w}";
-  PAGEDEF << "\\PL{0 " << LAYOUT.overlap << " m " << HS << " " << 
-                          LAYOUT.overlap << " l S}";
-  PAGEDEF << "\\PL{0 " << j << " m " << HS << " " << j << " l S}";
-  PAGEDEF << "\\PL{" << LAYOUT.overlap << " 0 m " << LAYOUT.overlap << 
-             " " << VS << " l S}";
-  PAGEDEF << "\\PL{" << i << " 0 m " << i << " " << VS << " l S}";
-// add actual grid here  
+//  PAGEDEF << "\\PL{3 w 0 0 " << HS << " " << VS << " re S}";
+  if (LAYOUT.overlap > 0) {
+    double i = LAYOUT.hsize + LAYOUT.overlap; 
+    double j = LAYOUT.vsize + LAYOUT.overlap;
+    PAGEDEF << "\\PL{0.5 w}";
+    PAGEDEF << "\\PL{0 " << LAYOUT.overlap << " m " << HS << " " << 
+                            LAYOUT.overlap << " l S}";
+    PAGEDEF << "\\PL{0 " << j << " m " << HS << " " << j << " l S}";
+    PAGEDEF << "\\PL{" << LAYOUT.overlap << " 0 m " << LAYOUT.overlap << 
+               " " << VS << " l S}";
+    PAGEDEF << "\\PL{" << i << " 0 m " << i << " " << VS << " l S}";
+  }
+  // add actual grid here  
   PAGEDEF << "\\PL{Q}%" << endl;
 }
 
@@ -1055,9 +1139,13 @@ void build_pages() {
   }
 
   if (LAYOUT.OCG) {
-    PDFRES << "\\immediate\\pdfobj{ << /Type /OCG /Name ([Preview above]) >> }" << endl;
+    PDFRES << "\\immediate\\pdfobj{ << /Type /OCG /Name <feff" << 
+      utf2texhex(string(thT("title preview above",LAYOUT.lang))) << 
+      "> >> }" << endl;
     PDFRES << "\\newcount\\ocU\\ocU=\\pdflastobj" << endl;
-    PDFRES << "\\immediate\\pdfobj{ << /Type /OCG /Name ([Preview below]) >> }" << endl;
+    PDFRES << "\\immediate\\pdfobj{ << /Type /OCG /Name <feff" <<
+      utf2texhex(string(thT("title preview below",LAYOUT.lang))) << 
+      "> >> }" << endl;
     PDFRES << "\\newcount\\ocD\\ocD=\\pdflastobj" << endl;
     if (mode == MAP) {
       for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
@@ -1093,15 +1181,28 @@ void build_pages() {
   }
 
   if (LAYOUT.doc_author != "") 
-    PDFRES << "\\author{" << utf2texhex(LAYOUT.doc_author) << "}" << endl;
+    PDFRES << "\\pdfinfo{ /Author <feff" << utf2texhex(LAYOUT.doc_author) << ">}" << endl;
   if (LAYOUT.doc_subject != "") 
-    PDFRES << "\\subject{" << utf2texhex(LAYOUT.doc_author) << "}" << endl;
+    PDFRES << "\\pdfinfo{ /Subject <feff" << utf2texhex(LAYOUT.doc_subject) << ">}" << endl;
   if (LAYOUT.doc_keywords != "") 
-    PDFRES << "\\keywords{" << utf2texhex(LAYOUT.doc_author) << "}" << endl;
-  if (LAYOUT.doc_title != "") 
-    PDFRES << "\\title{" << utf2texhex(LAYOUT.doc_author) << "}" << endl;
+    PDFRES << "\\pdfinfo{ /Keywords <feff" << utf2texhex(LAYOUT.doc_keywords) << ">}" << endl;
+  if (LAYOUT.doc_title != "") {
+    PDFRES << "\\pdfinfo{ /Title <feff" << utf2texhex(LAYOUT.doc_title) << ">}" << endl;
+//    PDFRES << "\\legendcavename={" << utf2tex(LAYOUT.doc_title) << "}" << endl;
+  }
+//  if (LAYOUT.doc_comment != "") {
+//    PDFRES << "\\legendcomment={" << utf2tex(LAYOUT.doc_comment) << "}" << endl;
+//  }
 
   PDFRES << "\\pdfcatalog { /TeXsetup /" << pdf_info() << " }" << endl;
+
+  if (!LEGENDLIST.empty()) {  // zmenit test na LAYOUT.legend???
+    PDFRES << "\\legendtrue" << endl;
+  }
+  else {
+    PDFRES << "\\legendfalse" << endl;
+  }
+
 
   PDFRES.close();
 
@@ -1162,6 +1263,13 @@ void build_pages() {
   }
   else {
     PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
+    print_page_bg(PAGEDEF);
+    for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
+                                        I != LAYERHASH.end(); I++) {
+      if (I->second.Z == 0) {
+        print_page_bg_scraps(I->first,PAGEDEF,NULL);
+      }
+    }
     if (!MAP_PREVIEW_DOWN.empty()) print_preview(0,PAGEDEF,MINX,MINY,NULL);
     for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                         I != LAYERHASH.end(); I++) {
@@ -1193,11 +1301,12 @@ void build_pages() {
       PAGEDEF << "\\PL{Q}%" << endl;
 
     }
-    PAGEDEF << "\\setbox\\xxx=\\hbox{";                     // map legend
-    PAGEDEF << "\\vbox to " << VS << "bp{\\maplegend\\vfill}}" << endl;
-    PAGEDEF << "\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}" << endl;
+    PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{";      // map legend
+    PAGEDEF << "\\maplayout\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
+    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
+
     PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
-    PAGEDEF << "\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
+    PAGEDEF << "\\immediate\\pdfxform\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
   }
 
   PAGEDEF.close();
@@ -1216,6 +1325,10 @@ int thpdf(int m) {
   thprintf("making %s ... ", (mode == ATLAS) ? "atlas" : "map");
 #endif
 
+  SHEET.clear();
+  SHEET_JMP.clear();
+  MINX=DBL_MAX, MINY=DBL_MAX, MAXX=-DBL_MAX, MAXY=-DBL_MAX;
+  
 #ifdef NOTHERION
   read_settings();   // change to the quick mode only
 #endif    

@@ -1,29 +1,56 @@
 #!/usr/bin/perl
 open(I,"mpost/thTrans.mp");
 while (<I>) {
-  if (/^\s*(\S+)\s+([pla]{1}[a-z_]+)/) {
+  if (/^\s*(\S+)\s+([plas]{1}[a-z_]+)/) {
     $SYMHASH{$2} = "";
   }
 }
 close(I);
+
+$SYMHASH{a_} = "noassign hidden";
+$SYMHASH{a_zzz} = "noassign hidden";
+
 $SYMHASH{l_border_invisible} = "hidden";
 $SYMHASH{l_wall_invisible} = "hidden";
 $SYMHASH{l_survey} = "noassign";
 $SYMHASH{l_undefined} = "noassign";
+$SYMHASH{l_label} = "noassign";
+$SYMHASH{l_} = "noassign hidden";
+$SYMHASH{l_zzz} = "noassign hidden";
 
 $SYMHASH{p_undefined} = "noassign";
-$SYMHASH{p_camp} = "";
+$SYMHASH{p_section} = "noassign";
 $SYMHASH{p_label} = "noassign";
 $SYMHASH{p_remark} = "noassign";
 $SYMHASH{p_stationname} = "noassign";
-$SYMHASH{p_height} = "noassign";
 $SYMHASH{p_date} = "noassign";
 $SYMHASH{p_altitude} = "noassign";
-$SYMHASH{p_wall_altitude} = "noassign";
-$SYMHASH{p_passageheight} = "noassign";
-$SYMHASH{p_passageheight_pos} = "noassign";
-$SYMHASH{p_passageheight_neg} = "noassign";
-$SYMHASH{l_label} = "noassign";
+$SYMHASH{p_wallaltitude} = "noassign";
+$SYMHASH{p_height_positive} = "noassign";
+$SYMHASH{p_height_negative} = "noassign";
+$SYMHASH{p_height_unsigned} = "noassign";
+$SYMHASH{p_passageheight_positive} = "noassign";
+$SYMHASH{p_passageheight_negative} = "noassign";
+$SYMHASH{p_passageheight_both} = "noassign";
+$SYMHASH{p_passageheight_unsigned} = "noassign";
+$SYMHASH{p_} = "noassign hidden";
+$SYMHASH{p_zzz} = "noassign hidden";
+
+$SYMHASH{s_} = "noassign hidden";
+$SYMHASH{s_zzz} = "noassign hidden";
+
+$SYMHASH{x_} = "noassign hidden";
+$SYMHASH{x_all} = "noassign hidden";
+$SYMHASH{x_centerline} = "hidden";
+$SYMHASH{x_sections} = "hidden";
+$SYMHASH{x_line_wall} = "hidden";
+$SYMHASH{x_line_border} = "hidden";
+$SYMHASH{x_line_waterflow} = "hidden";
+$SYMHASH{x_point_waterflow} = "hidden";
+$SYMHASH{x_point_station} = "hidden";
+$SYMHASH{x_point_height} = "hidden";
+$SYMHASH{x_point_passageheight} = "hidden";
+
 
 $i = 0;
 foreach $k (sort keys(SYMHASH)) {

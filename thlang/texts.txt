@@ -1,0 +1,472 @@
+therion: point station:temporary
+en: temporary survey station
+sk: meračský bod (nestabilizovaný)
+
+therion: point station:painted
+en: painted survey station
+sk: meračský bod (zafarbený)
+
+therion: point station:natural
+en: natural survey station
+sk: meračský bod (prírodný)
+
+therion: point station:fixed
+en: fixed survey station
+sk: meračský bod (stabilizovaný)
+
+therion: line survey
+en: survey lines
+sk: polygónový ťah
+
+therion: point station-name
+en: survey station name
+sk: číslo meračského bodu
+
+therion: point entrance
+en: entrance
+sk: vchod
+
+therion: line arrow
+en: arrow
+sk: pomocná šípka
+
+therion: line wall:bedrock
+en: wall
+sk: stena
+
+therion: line wall:underlying
+en: underlying wall
+sk: stena nižšej úrovne
+
+therion: line wall:unsurveyed
+en: unsurveyed wall
+sk: nezameraná stena
+
+therion: line wall:presumed
+en: presumed wall
+sk: predpokladaná stena
+
+therion: line wall:blocks
+en: breakdown
+sk: stena tvorená závalom
+
+therion: line wall:debris
+en: debris
+sk: stena tvorená štrkom
+
+therion: line wall:pebbles
+en: pebbles
+sk: stena tvorená okruhliakmi
+
+therion: line wall:sand
+en: sand
+sk: stena tvorená pieskom
+
+therion: line wall:clay
+en: clay
+sk: stena tvorená bahnom
+
+therion: line wall:ice
+en: ice
+sk: stena tvorená ľadom
+
+therion: point wall-altitude
+en: altitude
+sk: nadmorská výška bodu na stene
+
+therion: point altitude
+en: altitude
+sk: nadmorská výška bodu v chodbe
+
+therion: line section
+en: cross-section
+sk: priečny rez
+
+therion: point passage-height:unsigned
+en: passage height
+sk: výška chodby
+
+therion: point passage-height:positive
+en: height above water level
+sk: výška nad hladinou
+
+therion: point passage-height:negative
+en: depth below water level
+sk: hĺbka pod hladinou
+
+therion: point passage-height:both
+en: height above and depth below water level
+sk: výška nad a hĺbka pod hladinou
+
+therion: point air-draught
+en: air draught
+sk: prievan
+
+therion: point date
+en: date of observation
+sk: dátum pozorovania
+
+therion: point continuation
+en: possible continuation
+sk: možné pokračovanie
+
+therion: point narrow-end
+en: passage narrow end
+sk: neprielezné zúženie
+
+therion: point low-end
+en: passage low end
+sk: neprielezné zníženie
+
+therion: point flowstone-choke
+en: flowstone choke
+sk: zasintrený koniec
+
+therion: point breakdown-choke
+en: breakdown choke
+sk: zavalený koniec
+
+therion: line floor-step
+en: floor step
+sk: stupeň
+
+therion: line overhang
+en: overhang
+sk: previs
+
+therion: line pit
+en: pit
+sk: priepasť
+
+therion: line ceiling-step
+en: step on the ceiling
+sk: zmena výšky stropu
+
+therion: line chimney
+en: chimney
+sk: komín
+
+therion: point gradient
+en: passage gradient
+sk: sklon chodby
+
+therion: point height:unsigned
+en: the height of floor step
+sk: výška stupňa
+
+therion: point height:positive
+en: chimney height
+sk: výška komínu
+
+therion: point height:negative
+en: pit depth
+sk: hĺbka priepasti
+
+therion: line contour
+en: contour
+sk: vrstevnica
+
+therion: line slope
+en: slope
+sk: šikmá plocha
+
+therion: line rock-border
+en: rock border
+sk: ohraničenie kameňov
+
+therion: line rock-edge
+en: rock edges
+sk: hrany kameňov
+
+therion: point bedrock
+en: bedrock
+sk: pevná skala
+
+therion: point blocks
+en: blocks, breakdown
+sk: kamenné bloky
+
+therion: point debris
+en: debris
+sk: štrk
+
+therion: point sand
+en: sand
+sk: piesok
+
+therion: point clay
+en: clay
+sk: blato
+
+therion: point water
+en: water
+sk: voda
+
+therion: point ice
+en: ice
+sk: ľad
+
+therion: point pebbles
+en: pebbles
+sk: okruhliaky
+
+therion: point raft
+en: raft
+sk: náplav
+
+therion: point guano
+en: guano
+sk: guáno
+
+therion: line border:visible
+en: border
+sk: ohraničenie
+
+therion: line border:temporary
+en: temporary border
+sk: nestále ohraničenie
+
+therion: area water
+en: water
+sk: vodná plocha
+
+therion: area sump
+en: sump
+sk: zatopená plocha (sifón)
+
+therion: area debris
+en: debris
+sk: štrk
+
+therion: area sand
+en: sand
+sk: piesok
+
+therion: point waterflow:permanent
+en: waterflow
+sk: vodný tok
+
+therion: point waterflow:intermittent
+en: intermittent waterflow
+sk: občasný vodný tok
+
+therion: point waterflow:paleo
+en: paleo waterflow
+sk: paleoriečisko
+
+therion: line waterflow:permanent
+en: waterflow
+sk: vodný tok
+
+therion: line waterflow:intermittent
+en: intermittent waterflow
+sk: občasný vodný tok
+
+therion: line waterflow:conjectural
+en: conjectural waterflow
+sk: predpokladaný vodný tok
+
+therion: point spring
+en: spring
+sk: výver
+
+therion: point sink
+en: sink
+sk: ponor
+
+therion: point flowstone
+en: flowstone
+sk: sinter
+
+therion: line flowstone
+en: flowstone
+sk: sintrové náteky
+
+therion: point moonmilk
+en: moonmilk
+sk: mäkký sinter
+
+therion: point stalactite
+en: stalactite
+sk: stalaktit
+
+therion: point stalagmite
+en: stalagmite
+sk: stalagmit
+
+therion: point pillar
+en: pillar
+sk: stalagnát
+
+therion: point curtain
+en: curtain
+sk: sintrové záclony
+
+therion: point soda-straw
+en: soda straw
+sk: brčká
+
+therion: point popcorn
+en: popcorn
+sk: pizolity
+
+therion: point cave-pearl
+en: cave pearl
+sk: jaskynné perly
+
+therion: point disk
+en: disk
+sk: disk
+
+therion: point helictite
+en: helictite
+sk: helektit
+
+therion: point aragonite
+en: aragonite
+sk: aragonit
+
+therion: point crystal
+en: crystal
+sk: kryštál
+
+therion: point wall-calcite
+en: wall calcite
+sk: vápencový povlak
+
+therion: point gypsum
+en: gypsum
+sk: sádrovec
+
+therion: point gypsum-flower
+en: gypsum flower
+sk: sádrovcový kvet
+
+therion: point rimstone-dam
+en: rimstone dam
+sk: sintrová hrádza
+
+therion: point rimstone-pool
+en: rimstone pool
+sk: sintrové jazierko
+
+therion: point anastomosis
+en: anastomosis
+sk: anastomóza
+
+therion: point karren
+en: karren
+sk: škrapy
+
+therion: point scallop
+en: scallop
+sk: erózne útvary
+
+therion: point flute
+en: flute
+sk: píšťaly
+
+therion: point raft-cone
+en: raft cone
+sk: náplavový kužeľ
+
+therion: point archeo-material
+en: archeo material
+sk: archeologické nálezy
+
+therion: point paleo-material
+en: paleo material
+sk: paleontologické nálezy
+
+therion: point vegetable-debris
+en: vegetable debris
+sk: zvyšky rastlín
+
+therion: point root
+en: root
+sk: korene
+
+therion: point no-equipment
+en: place without equipement
+sk: nevystrojené miesto
+
+therion: point anchor
+en: anchor
+sk: kotvenie
+
+therion: point rope
+en: rope
+sk: lano
+
+therion: point rope-ladder
+en: rope ladder
+sk: lanový rebrík
+
+therion: point fixed-ladder
+en: fixed ladder
+sk: fixný rebrík
+
+therion: point steps
+en: steps
+sk: schody
+
+therion: point traverse
+en: traverse
+sk: traverz
+
+therion: point bridge
+en: bridge
+sk: most
+
+therion: point camp
+en: camp
+sk: bivak
+
+therion: title legend
+en: Legend
+sk: Legenda
+
+therion: title cave length
+en: Length
+sk: Dĺžka
+
+therion: units m
+en: m
+sk: m
+
+therion: title cave depth
+en: Depth
+sk: Prevýšenie
+
+therion: title explo (plural)
+en: Explo
+sk: Objavili
+
+therion: title explo
+en: Explo
+sk: Objavil
+
+therion: title topo (plural)
+en: Topo
+sk: Zamerali
+
+therion: title topo
+en: Topo
+sk: Zameral
+
+therion: title carto (plural)
+en: Carto
+sk: Kreslili
+
+therion: title carto
+en: Carto
+sk: Kreslil
+
+therion: title preview above
+en: [Preview above]
+sk: [Náhľad horných vrstiev]
+
+therion: title preview below
+en: [Preview below]
+sk: [Náhľad spodných vrstiev]
+

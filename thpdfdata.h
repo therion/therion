@@ -59,16 +59,24 @@ struct layerrecord {
   layerrecord();
 };
 
+struct legendrecord {
+  string name, fname, descr;
+};
+
 struct layout {
   string excl_list,labelx,labely,
-         doc_author,doc_keywords,doc_subject,doc_title;
+         doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
+         northarrow, scalebar;
   bool  excl_pages,title_pages,page_numbering,
         transparency,map_grid,OCG; 
   double hsize,vsize,overlap,
         hgrid,vgrid,hgridoffset,vgridoffset,nav_factor;
-  int nav_right,nav_up,own_pages;
+  int nav_right,nav_up,own_pages,lang;
   double hoffset, voffset,opacity;
   double background_r, background_g, background_b;
+  double foreground_r, foreground_g, foreground_b;
+  double preview_below_r, preview_below_g, preview_below_b;
+  double preview_above_r, preview_above_g, preview_above_b;
   
   layout();
 };
@@ -76,6 +84,7 @@ struct layout {
 extern map<int,layerrecord> LAYERHASH;
 extern set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
 extern list<scraprecord> SCRAPLIST;
+extern list<legendrecord> LEGENDLIST;
 extern layout LAYOUT;
 
 #endif

@@ -4,17 +4,69 @@
 
 Therion provides some basic facts about each survey (length, vertical range,
 N--S range, E--W range, number of shots and stations) if |-x| option is given. 
-This information is dispayed in XTherion, {\it Compiler} window,
+This information is displayed in XTherion, {\it Compiler} window,
 {\it Survey info} menu, when some survey from the {\it Survey structure} menu
 is selected.
 
-More advanced statistics should be implemented in the near future.
+\subsubchapter SQL export.
+
+SQL export makes it easy to get very detailed and subtle informations about
+centreline. It is a text file starting with tables declaration (where `?' 
+stands in the following listing for a minimal value required by the column 
+data)
+
+|create table SURVEY (ID integer, PARENT_ID integer, 
+  NAME varchar(?), FULL_NAME varchar(?), TITLE varchar(?));
+create table CENTRELINE (ID integer, SURVEY_ID integer, 
+  TITLE varchar(?), TOPO_DATE date, EXPLO_DATE date, 
+  LENGTH real, SURFACE_LENGTH real, DUPLICATE_LENGTH real);
+create table PERSON (ID integer, NAME varchar(?), SURNAME varchar(?));
+create table EXPLO (PERSON_ID integer, CENTRELINE_ID integer);
+create table TOPO (PERSON_ID integer, CENTRELINE_ID integer);
+create table STATION (ID integer, NAME varchar(?), 
+  SURVEY_ID integer, X real, Y real, Z real);
+create table STATION_FLAG (STATION_ID integer, FLAG char(3));
+create table SHOT (ID integer, FROM_ID integer, TO_ID integer, 
+  CENTRELINE_ID integer, LENGTH real, BEARING real, GRADIENT real, 
+  ADJ_LENGTH real, ADJ_BEARING real, ADJ_GRADIENT real, 
+  ERR_LENGTH real, ERR_BEARING real, ERR_GRADIENT real);
+create table SHOT_FLAG (SHOT_ID integer, FLAG char(3));|
+
+which is followed by a mass of SQL insert commands. This file may be loaded 
+into any SQL database (after some database-dependent initialization, which may 
+include running a SQL server and connecting to it, creating a database and 
+connecting to it). It's important to set-up database encoding to match the one 
+specified in Therion |export database| command.
+
+Table and column names are self-explaining; for undefined or non-existing 
+values |NULL| is used. Examples of simple queries follow:
+
+\penalty-100{\it List of survey team members with an information how
+much has each of them surveyed:}
+
+|select sum(LENGTH), sum(SURFACE_LENGTH), NAME, SURNAME 
+  from CENTRELINE, TOPO, PERSON 
+  where CENTRELINE.ID = TOPO.CENTRELINE_ID and PERSON.ID = PERSON_ID 
+  group by NAME, SURNAME order by 1 desc, 4 asc;|
+
+\penalty-20{\it Which parts of the cave were surveyed in the year 1998?}
+
+|select TITLE from survey where ID in 
+  (select SURVEY_ID from CENTRELINE 
+  where TOPO_DATE between '1998-01-01' and '1998-12-31');|
+
+\penalty-20{\it How long are pasages lying between 1500 and 1550 m a.s.l.?}
+
+|select sum(LENGTH) from SHOT, STATION S1, STATION S2 
+  where (S1.Z+S2.Z)/2 between 1500 and 1550 and 
+  SHOT.FROM_ID = S1.ID and SHOT.TO_ID = S2.ID;|
 
 
 \subchapter 2D maps.
 
 Maps are produced in PDF format, which may be viewed or printed in a wide 
-variety of viewers.
+variety of viewers. Be sure to uncheck {\it Fit page to paper} or similar 
+option if you want to print in the exact scale.
 
 In atlas mode some additional information is put on each page: page 
 number, map name, and page label.

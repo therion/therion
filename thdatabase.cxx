@@ -59,6 +59,7 @@ const char * thlibrarydata_init_text =
   "#include \"thinfnan.h\"\n"
   "#include \"thchencdata.h\"\n"
   "#include \"thlayout.h\"\n"
+  "#include \"thlang.h\"\n"
   "#include \"thgrade.h\"\n\n\n";
 
 const char * thlibrarydata_grades_text =

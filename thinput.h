@@ -46,12 +46,14 @@
 class thinput {
 
   bool cmd_sensitivity,  ///< Command sensitivity ID.
-    scan_search_path;  ///< Whether to scan also search path for input files.
+    scan_search_path,  ///< Whether to scan also search path for input files.
+    pifo, ///< Print if open.
+    * pifoid; ///< Identifier.
   thbuffer file_name;  ///< Main input file name.
   thmbuffer search_path,  ///< Search paths.
     file_suffix,  ///< File suffixes.
     tmpmb;   ///< Temporary multi buffer.
-  
+  void (* pifoproc)(char *);  ///< Function to call if file was opened.
   thbuffer linebf,  ///< Line buffer.
     cmdbf,  ///< Command buffer.
     valuebf;  ///< Value buffer.
@@ -294,6 +296,12 @@ class thinput {
    */
   
   int get_cif_encoding();
+  
+  /**
+   * Text to print some file was opened.
+   */
+   
+  void print_if_opened(void (* pifop)(char *), bool * printed);
    
 };
 

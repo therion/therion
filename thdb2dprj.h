@@ -31,6 +31,7 @@
 
 
 #include "thparse.h"
+#include "thmapstat.h"
 #include <map>
 #include <list>
 
@@ -86,6 +87,7 @@ class thdb2dprj {
 
   double shift_x, shift_y, shift_z; ///< Shift.
 
+  thmapstat stat;
 
   /**
    * Standard constructor.

@@ -258,6 +258,9 @@ void thline::parse_type(char * ss)
     case TT_LINE_TYPE_BORDER:
       this->csubtype = TT_LINE_SUBTYPE_VISIBLE;  
       break;
+    case TT_LINE_TYPE_WATER_FLOW:
+      this->csubtype = TT_LINE_SUBTYPE_PERMANENT;  
+      break;
     case TT_LINE_TYPE_CONTOUR:
       this->tags |= TT_LINE_TAG_GRADIENT_CENTER;
       break;
@@ -296,6 +299,14 @@ void thline::parse_subtype(char * ss)
         case TT_LINE_SUBTYPE_INVISIBLE:
         case TT_LINE_SUBTYPE_TEMPORARY:
         case TT_LINE_SUBTYPE_VISIBLE:
+          tsok = true;
+      }
+      break;
+    case TT_LINE_TYPE_WATER_FLOW:
+      switch (this->csubtype) {
+        case TT_LINE_SUBTYPE_PERMANENT:
+        case TT_LINE_SUBTYPE_INTERMITTENT:
+        case TT_LINE_SUBTYPE_CONJECTURAL:
           tsok = true;
       }
       break;
@@ -565,18 +576,18 @@ void thline::preprocess()
 }
 
 #define thline_type_export_mp(type,mid) case type: \
-  fprintf(out->file,"%s(",out->symset->get_mp_macro(mid)); \
+  macroid = mid; \
   break;
 
-void thline::export_mp(class thexpmapmpxs * out)
+bool thline::export_mp(class thexpmapmpxs * out)
 {
 
   if (this->first_point == NULL)
-    return;
-  bool postprocess = true, todraw, fsize, frot;  //, first
-  int from, to, cs;
-  double s1, s2, r1, r2;
-  thdb2dlp * lp, * plp;
+    return(false);
+  bool postprocess = true, todraw, fsize, frot, anypt;  //, first
+  int from, to, cs, macroid = -1;
+  double s1, r1;
+  thdb2dlp * lp;
   
   switch (this->type) {
     case TT_LINE_TYPE_WALL:
@@ -591,6 +602,7 @@ void thline::export_mp(class thexpmapmpxs * out)
           lp = lp->nextlp;
         }
         if (todraw) {
+          macroid = SYML_UNDEFINED;
           switch (cs) {
             thline_type_export_mp(TT_LINE_SUBTYPE_INVISIBLE, SYML_WALL_INVISIBLE)
             thline_type_export_mp(TT_LINE_SUBTYPE_BEDROCK, SYML_WALL_BEDROCK)
@@ -603,24 +615,26 @@ void thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_UNDERLYING, SYML_WALL_UNDERLYING)
             thline_type_export_mp(TT_LINE_SUBTYPE_UNSURVEYED, SYML_WALL_UNSURVEYED)
             thline_type_export_mp(TT_LINE_SUBTYPE_PRESUMED, SYML_WALL_PRESUMED)
-            default:
-              fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_UNDEFINED));
-              break;
           }
-        }
-        if (todraw) {
-          this->export_path_mp(out,from,to);
-          fprintf(out->file,");\n");
+          if (out->symset->assigned[macroid]) {
+            if (out->file == NULL)
+              return(true);
+            fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+            this->export_path_mp(out,from,to);
+            fprintf(out->file,");\n");
+          }
         }
         from = to;
       }
       postprocess = false;  
       break;
     case TT_LINE_TYPE_LABEL:
-      if (this->text == NULL) {
+      if ((this->text == NULL) || (!out->symset->assigned[SYML_LABEL])) {
         postprocess = false;
         break;
       } 
+      if (out->file == NULL)
+        return(true);
       fprintf(out->file,"l_label(btex ");
       switch (this->scale) {
         case TT_2DOBJ_SCALE_XL:
@@ -645,6 +659,12 @@ void thline::export_mp(class thexpmapmpxs * out)
       postprocess = false;
       break;
     case TT_LINE_TYPE_CONTOUR:
+      if (!out->symset->assigned[SYML_CONTOUR]) {
+        postprocess = false;  
+        break;
+      }
+      if (out->file == NULL)
+        return(true);
       fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_CONTOUR));
       this->export_path_mp(out);
       from = 0;
@@ -665,7 +685,11 @@ void thline::export_mp(class thexpmapmpxs * out)
       postprocess = false;  
       break;
     case TT_LINE_TYPE_SLOPE:
-      s1 = 28.34;
+      if (!out->symset->assigned[SYML_SLOPE]) {
+        postprocess = false;  
+        break;
+      }
+      s1 = 0.0;
       r1 = -1.0;
       // najde prvu rotaciu a velkost
       lp = this->first_point;
@@ -684,7 +708,8 @@ void thline::export_mp(class thexpmapmpxs * out)
           }
         lp = lp->nextlp;
       }
-      
+      if (out->file == NULL)
+        return(true);
       fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_SLOPE));
       this->export_path_mp(out);
       fprintf(out->file,",%d",
@@ -745,6 +770,12 @@ void thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_EDGE, SYML_ROCKEDGE)
     thline_type_export_mp(TT_LINE_TYPE_SURVEY, SYML_SURVEY)
     case TT_LINE_TYPE_ARROW:
+      if (!out->symset->assigned[SYML_ARROW]) {
+        postprocess = false;  
+        break;
+      }
+      if (out->file == NULL)
+        return(true);
       fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_ARROW));
       this->export_path_mp(out);
       from = 0;
@@ -755,93 +786,43 @@ void thline::export_mp(class thexpmapmpxs * out)
       fprintf(out->file,",%d);\n",from);
       postprocess = false;  
       break;
+
     case TT_LINE_TYPE_SECTION:
-      plp = this->first_point;
-      lp = plp->nextlp;
+      if (!out->symset->assigned[SYML_SECTION]) {
+        postprocess = false;  
+        break;
+      }
+      if (out->file == NULL)
+        return(true);
+      fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_SECTION));
+      this->export_path_mp(out);
+      anypt = false;
+      if ((this->tags & TT_LINE_TAG_DIRECTION_BEGIN) > 0) {
+          fprintf(out->file,",0");
+          anypt = true;
+      };
+      from = 0;
+      lp = this->first_point;
       while (lp != NULL) {
-        // zisti ci bude kreslit pociatocnu a koncovu sipku
-        if ((plp->prevlp == NULL) && 
-             (((this->tags & TT_LINE_TAG_DIRECTION_BEGIN) != 0) ||
-               (((this->tags & TT_LINE_TAG_DIRECTION_POINT) != 0) &&
-               ((plp->tags & TT_LINEPT_TAG_DIRECTION) > 0)))) {
-          // vykresli pociatocnu sipku
-          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_SECTIONARROW));
-          plp->point->export_mp(out);
-          fprintf(out->file,",%.2f);\n",atan2(lp->point->yt - plp->point->yt,
-            lp->point->xt- plp->point->xt) / 3.14159265358 * 180);        
+        if (((lp->tags & TT_LINEPT_TAG_GRADIENT) > 0) && 
+            ((this->tags & TT_LINE_TAG_GRADIENT_POINT) > 0)) {
+          fprintf(out->file,",%d",from);
+          anypt = true;
         }
-        
-        if (((lp->nextlp == NULL) 
-              && ((this->tags & TT_LINE_TAG_DIRECTION_END) != 0)) ||
-           (((lp->tags & TT_LINEPT_TAG_DIRECTION) > 0) 
-              && ((this->tags & TT_LINE_TAG_DIRECTION_POINT) != 0))) {
-          // vykresli koncovu sipku
-          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_SECTIONARROW));
-          lp->point->export_mp(out);
-          fprintf(out->file,",%.2f);\n",atan2(lp->point->yt - plp->point->yt,
-            lp->point->xt - plp->point->xt) / 3.14159265358 * 180);        
-        }
-        
-        if ((lp->cp1 != NULL) && (lp->cp2 != NULL)) {
-          r1 = lp->point->xt - plp->point->xt;
-          r2 = lp->point->yt - plp->point->yt;
-          s1 = (r1 * (lp->cp1->xt - plp->point->xt) + 
-                r2 * (lp->cp1->yt - plp->point->yt)) /
-               (pow(r1,2.0) + pow(r2,2.0)); 
-          s2 = (- r1 * (lp->cp2->xt - lp->point->xt) - 
-                  r2 * (lp->cp2->yt - lp->point->yt)) /
-               (pow(r1,2.0) + pow(r2,2.0));           
-          fprintf(out->file,"%s((",out->symset->get_mp_macro(SYML_SECTION));
-          plp->point->export_mp(out);          
-          fprintf(out->file," -- (%.2f,%.2f)));\n%s(((%.2f,%.2f) -- ",
-            (plp->point->xt + s1 * r1 - out->mx) * out->ms,
-            (plp->point->yt + s1 * r2 - out->my) * out->ms,
-            out->symset->get_mp_macro(SYML_SECTION),
-            (lp->point->xt - s2 * r1 - out->mx) * out->ms,
-            (lp->point->yt - s2 * r2 - out->my) * out->ms
-            );
-          lp->point->export_mp(out);
-          fprintf(out->file,"));\n");
-        } else {
-          fprintf(out->file,"%s((",out->symset->get_mp_macro(SYML_SECTION));
-          plp->point->export_mp(out);          
-          fprintf(out->file," -- ");
-          lp->point->export_mp(out);
-          fprintf(out->file,"));\n");
-        }
-        // zisti si ci ma kreslit medzibody, ak ano tak ich nakresli
-        plp = lp;
         lp = lp->nextlp;
+        from++;
       }
-      postprocess = false;
+      if ((this->tags & TT_LINE_TAG_DIRECTION_END) > 0) {
+          fprintf(out->file,",%d",(from - 1));
+          anypt = true;
+      };
+      if (!anypt)
+        fprintf(out->file,",");
+      fprintf(out->file,");\n");
+      postprocess = false;  
       break;
-    /*
-    case TT_LINE_TYPE_SECTION:
-      // vypise section arrows
-      if ((this->tags & TT_LINE_TAG_DIRECTION_BEGIN) != 0) {
-        fprintf(out->file,"Sectionarrow(");
-        this->first_point->point->export_mp(out);
-        fprintf(out->file,",%.2f);\n",this->first_point->get_rotation());
-      }
-      if ((this->tags & TT_LINE_TAG_DIRECTION_END) != 0) {
-        fprintf(out->file,"Sectionarrow(");
-        this->last_point->point->export_mp(out);
-        fprintf(out->file,",%.2f);\n",this->last_point->get_rotation());
-      }
-      if ((this->tags & TT_LINE_TAG_DIRECTION_POINT) != 0) {
-        lp = this->first_point;
-        while (lp != NULL) {
-          if ((lp->tags & TT_LINEPT_TAG_DIRECTION) > 0) {
-            fprintf(out->file,"Sectionarrow(");
-            lp->point->export_mp(out);
-            fprintf(out->file,",%.2f);\n",lp->get_rotation());
-          }
-          lp = lp->nextlp;
-        }
-      }
-      fprintf(out->file,"Sectionline(");
-      break;
-      */
+
+      
     case TT_LINE_TYPE_BORDER:
       from = 0;
       to = 0;
@@ -854,32 +835,75 @@ void thline::export_mp(class thexpmapmpxs * out)
           lp = lp->nextlp;
         }
         if (todraw) {
+          macroid = SYML_BORDER_VISIBLE;
           switch (cs) {
             thline_type_export_mp(TT_LINE_SUBTYPE_TEMPORARY, SYML_BORDER_TEMPORARY)
             thline_type_export_mp(TT_LINE_SUBTYPE_INVISIBLE, SYML_BORDER_INVISIBLE)
-            default:
-              fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_BORDER_VISIBLE));
-              break;
           }
-        }
-        if (todraw) {
-          this->export_path_mp(out,from,to);
-          fprintf(out->file,");\n");
+          if (out->symset->assigned[macroid]) {
+            if (out->file == NULL)
+              return(true);
+            fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+            this->export_path_mp(out,from,to);
+            fprintf(out->file,");\n");
+          }
         }
         from = to;
       }
       postprocess = false;  
       break;    
+
+    case TT_LINE_TYPE_WATER_FLOW:
+      from = 0;
+      to = 0;
+      lp = this->first_point;
+      while (lp != NULL) {
+        cs = lp->subtype;
+        todraw = (lp->nextlp != NULL);
+        while ((lp != NULL) && (lp->subtype == cs)) {
+          to++;
+          lp = lp->nextlp;
+        }
+        if (todraw) {
+          macroid = SYML_WATERFLOW_PERMANENT;
+          switch (cs) {
+            thline_type_export_mp(TT_LINE_SUBTYPE_INTERMITTENT, SYML_WATERFLOW_INTERMITTENT)
+            thline_type_export_mp(TT_LINE_SUBTYPE_CONJECTURAL, SYML_WATERFLOW_CONJECTURAL)
+          }
+          if (out->symset->assigned[macroid]) {
+            if (out->file == NULL)
+              return(true);
+            fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+            this->export_path_mp(out,from,to);
+            fprintf(out->file,");\n");
+          }
+        }
+        from = to;
+      }
+      postprocess = false;  
+      break;    
+
     default:
-      fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_UNDEFINED));
+      macroid = SYML_UNDEFINED;
       break;
   }
   
   if (postprocess) {
-    this->export_path_mp(out);
-    fprintf(out->file,");\n");
+    if (macroid < 0) {
+      this->export_path_mp(out);
+      fprintf(out->file,");\n");
+    } else {
+      if (out->symset->assigned[macroid]) {
+        if (out->file == NULL)
+          return(true);
+        fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+        this->export_path_mp(out);
+        fprintf(out->file,");\n");
+      }
+    }
   }
-  
+
+  return(false);
 }
 
 
@@ -1115,6 +1139,29 @@ void thline::parse_text(char * ss) {
     ththrow(("-text not valid with type %s", thmatch_string(this->type,thtt_line_types)))
   if (strlen(ss) > 0)
     this->text = this->db->strstore(ss);
+}
+
+
+void thline::start_insert() {
+
+  thdb2dlp * lp;
+  bool fsize;
+  
+  switch (this->type) {
+    case TT_LINE_TYPE_SLOPE:
+      lp = this->first_point;
+      fsize = true;
+      while ((lp != NULL) && fsize) {
+        if ((lp->tags & TT_LINEPT_TAG_SIZE) > 0)
+          if (fsize) {
+            fsize = false;
+          }
+        lp = lp->nextlp;
+      }
+      if (fsize)
+        ththrow(("no slope size specification at any line point"))
+      break;
+  }
 }
 
 

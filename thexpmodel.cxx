@@ -33,6 +33,8 @@
 #include "thsurvey.h"
 #include <stdio.h>
 #include "extern/img.h"
+#include "thchenc.h"
+#include <map>
 
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_THERION;
@@ -304,9 +306,5 @@ station_name[8] = 0
 void thexpmodel::export_tm_file(class thdatabase * dbp)
 {
 }
-
-
-
-
 
 

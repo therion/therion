@@ -1,48 +1,31 @@
 HNED:
-+ pridat line - water: permanent, conjuctural, intermittent
-+ neexportovanie hidenutych symbolov + symbol-show
-+ jazyk exportu (vystupov)
-  * <therion|jazyk>[/special]: "text"
-  * thlang.h/cxx kde bude nejake makro na preklad
-  * tcl skript, ktory prehlada zdrojaky, najde texty v makrach, 
-    nacita sucasne preklady a cele to apdejtne, pricom
-    vytvori aj skript, ktory nastavi jazykovy hash
-+ generovanie pouzitych znaciek
-  * objekt znackoveho kluca
-  * v ktorom ku kazdej projekcii pouzite znacky
-  * a jeho export do MPostu a TeXu - kombinacie znaciek
-  * zakompilovane lokalne nazvy
-+ mapove mody - default, outlines
-  * vynechat texty
-  * vypustenie priecnych rezov pre mapu aj atlas do layoutu
-    (vypustit section scrapy a section lines)
-  * vynechat vsetko okrem obrysov
++ odstranit bug s LRUD pri interleaved data (wookey)
++ switch ci to dat pred alebo za pri interleaved mode (alebo aspon
+  start-up switch)
++ pozriet sa na zuby prazdnym riadkom
++ debugovacie mody (-D bude terajsie -d, -d bude vykreslovat 
+  obrysy a meracske body pred posuvanim a pred joinami) - makra:
+  dbg_visible_wall, dbg_invisible_wall, dbg_station  
++ otacanie vystupnej mapy aj sipky na sever
++ [...] oznacovanie texovskych textov
++ x: pridat button move to scrap alebo strom
++ x: area edit window
++ x: kontrolovat ci subor nebol modifikovany vonku. Ak hej, zavriet 
+  - nacitat - znova otvorit v tom istom pohlade (2D)
++ -adjust horizontal|vertical pre line point (zakazat v projection plan)
 
 HOTOVO:
-+ v layote:
-  symbol-defaults <KLUC>
-  symbol-hide <point|line|area> <ID>
-  symbol-assign <point|line|area> <ID> <KLUC>
-+ cislovanie MP suborov po jednom
-+ colour|color <item> <COLOR>
-  * items: map-fg, map-bg [0-100]|[R G B]
 
 POTOM:
-+ debugovacie mody
++ systemy jednotiek
++ kontrolovat duplikovane body v scrape
 + navrhnut kroky pre 3D
 + skusit odprasit cavern
 + preview beside
-+ do section line pridat moznost head (begin,end,none,both) - ked to
-  budu podporovat MP makra
++ prispoosobujuce sa body na krivke
 + rychly mod pre kompilaciu - bez spustania MPostu a bez konverzie
-+ rozsirit cislovanie suborov pre metapost na podadresare + cislovanie zaradom
++ rozsirit cislovanie suborov pre metapost na podadresare
 + exportovat styl gridu - ked to bude podporovane v thpdf
-+ statistika na mapy a scrapy 
-  * thstatmap
-  * kto kedy zameral a nakreslil (a kolko)
-  * do layoutu dat pre celu mapu pocet meracov 
-    a kreslicov vo vystupe
-  * pocitame pri ich exporte v ???
 * SVG - cvicna verzia
 * rozsirena statistika (zakladna statistika
   + thstat (pre vybrane surveys resp. vsetky) 

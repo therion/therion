@@ -1,19 +1,18 @@
 encoding  utf-8
-  survey tp
+  survey tp -title "test survey"
     
     centerline
     
       date 1992.1.12
       team "Stacho Mudrak"
       team "Martin Budaj"
-      discovery-date 1990.12.1
-      discovery-team "Milan Stec"
-      discovery-team "Milan/Stec jr."
+      explo-date 1990.12.1
+      explo-team "Milan Stec"
+      explo-team "Milan/Stec jr."
       
       
       data cartesian from to dx dy dz
-      
-      
+        
          0     1    0      10      -1
          1     2    5       0      -1
          2     3    0      -5      -1

@@ -592,6 +592,45 @@ void thdecode_tex(thbuffer * dest, const char * src)
   
 }
 
+void thdecode_sql(thbuffer * dest, const char * src)
+{
+
+  size_t srcln = strlen(src), srcx = 0;
+  unsigned char * srcp, * dstp;
+//  unsigned num;
+  if ((src == NULL) || (srcln == 0)) {
+    *dest = "NULL";
+    return;
+  }
+  dest->guarantee(srcln * 8 + 3);  // check buffer size
+  srcp = (unsigned char*) src;
+  dstp = (unsigned char*) dest->get_buffer();
+  *dstp = '\'';
+  dstp++;
+  while (srcx < srcln) {
+    switch (*srcp) {
+      case '\'':
+        *dstp = '\'';
+        dstp++;
+        *dstp = *srcp;  
+        break;      
+      default:
+        *dstp = *srcp;  
+        break;
+    }
+    srcx++;
+    srcp++;
+    dstp++;
+  }
+  // end destination string with 0
+  *dstp = '\'';
+  dstp++;
+  *dstp = 0;
+  
+}
+
+
+
 void thdecode_arg(thbuffer * dest, const char * src)
 {
 

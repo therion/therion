@@ -217,7 +217,7 @@ class th2ddataobject : public thdataobject {
    * Export object to metapost file.
    */
   
-  virtual void export_mp(class thexpmapmpxs * out) = 0;
+  virtual bool export_mp(class thexpmapmpxs * out) = 0;
   
 };
 

@@ -303,7 +303,8 @@ class thdataleg {
   
   double length, counter, fromcounter, tocounter, depth, fromdepth,
     todepth, depthchange, bearing, gradient, dx, dy, dz,
-    backbearing, backgradient, total_length;
+    backbearing, backgradient, total_length, total_bearing, total_gradient,
+    total_dx, total_dy, total_dz;
     
   double length_sd, counter_sd, depth_sd, bearing_sd, gradient_sd,
     dx_sd, dy_sd, dz_sd, declination;

@@ -273,13 +273,26 @@ char * thconfig::get_initialization_path()
 }
 
 
+void thconfig__pifo(char * s) {
+#ifdef THDEBUG
+  thprintf("\nconfiguration file: %s\nreading\n",s);
+#else
+  thprintf("configuration file: %s\n",s);
+  thprintf("reading ...");
+  thtext_inline = true;
+#endif 
+}
+
+
 void thconfig::load() 
 {
   thmbuffer valuemb;
+  bool fstarted  = false;
   if ((this->fstate == THCFG_UPDATE) || (this->fstate == THCFG_READ)) {
     this->cfg_file.cmd_sensitivity_on();
     this->cfg_file.sp_scan_off();
     this->cfg_file.set_file_name(this->fname);
+    this->cfg_file.print_if_opened(thconfig__pifo, &fstarted);
     this->cfg_file.reset();
     try {
       char * cfgln = this->cfg_file.read_line();
@@ -324,6 +337,15 @@ void thconfig::load()
     }
     catch (...)
       threthrow(("%s [%d]", this->cfg_file.get_cif_name(), this->cfg_file.get_cif_line_number()));
+  }
+  
+  if (fstarted) {
+#ifdef THDEBUG
+    thprintf("\n");
+#else
+    thprintf(" done\n");
+    thtext_inline = false;
+#endif    
   }
 }
 

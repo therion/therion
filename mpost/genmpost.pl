@@ -15,7 +15,7 @@ sub encodecxx {
 sub init_symbol {
   my $s = shift;
 #  if ($s =~ /def\s+((p|l|a)_([a-z]+_){1,2}[A-Z]+)/) {
-  if ($s =~ /(def|let)\s+(p|l)_([a-z_]+)_([A-Z]+)\W/) {
+  if ($s =~ /(def|let)\s+(p|l|s)_([a-z_]+)_([A-Z]+)\W/) {
     $SYMBOLS{$2}{$3}{$4} = 1;
   }
   elsif ($s =~ /beginpattern\(a_([a-z]+)_([A-Z]+)\)/) {
@@ -29,7 +29,8 @@ sub process_symbols {
   $thmpost_library .= "\n";
   foreach $s1 (reverse sort keys %SYMBOLS) {
     print OUT "\n\n[", 
-              ($s1 eq "p") ? "Point" : (($s1 eq "l") ? "Line" : "Area"), 
+          ($s1 eq "p") ? "Point" : (($s1 eq "l") ? "Line" : 
+	  (($s1 eq "s") ? "Special" : "Area")), 
               " symbols]\n";
     foreach $s2 (sort keys %{$SYMBOLS{$s1}}) {
       print OUT "\n$s2: ";

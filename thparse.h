@@ -143,6 +143,8 @@ enum {
   TT_SV_NINF,  ///< Negative infinity.
   TT_SV_UP,  ///< Up direction.
   TT_SV_DOWN,  ///< Down direction.
+  TT_SV_ALL,  ///< All
+  TT_SV_OFF,  ///< Off
 };
 
 
@@ -172,9 +174,11 @@ static const thstok thtt_special_val[] = {
   {"NaN", TT_SV_NAN},
   {"UP", TT_SV_UP},
   {"Up", TT_SV_UP},
+  {"all", TT_SV_ALL},
   {"down", TT_SV_DOWN},
   {"inf", TT_SV_PINF},
   {"nan", TT_SV_NAN},
+  {"off", TT_SV_OFF},
   {"up", TT_SV_UP},
   {NULL, TT_SV_UNKNOWN}
 };
@@ -296,6 +300,7 @@ void thdecode_c(thbuffer * dest, const char * src);
  */
  
 void thdecode_tex(thbuffer * dest, const char * src);
+void thdecode_sql(thbuffer * dest, const char * src);
 
 
 /**

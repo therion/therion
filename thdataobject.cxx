@@ -144,35 +144,63 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
       break;
 
     case TT_DATAOBJECT_TITLE:
-      if (cod.nargs > 1)
-        ththrow(("multiple option arguments -- title"))
-      thencode(&(this->db->buff_enc), *args, argenc);
-      this->title = this->db->strstore(this->db->buff_enc.get_buffer());
+      switch (this->get_class_id()) {
+        case TT_DATA_CMD:
+        case TT_SURVEY_CMD:
+        case TT_MAP_CMD:
+        case TT_SCRAP_CMD:
+        case TT_GRADE_CMD:
+        case TT_LAYOUT_CMD:
+          if (cod.nargs > 1)
+            ththrow(("multiple option arguments -- title"))
+          thencode(&(this->db->buff_enc), *args, argenc);
+          this->title = this->db->strstore(this->db->buff_enc.get_buffer());
+          break;
+        default:
+          ththrow(("title specification not allowed for this object"));
+          break;
+      }
       break;
       
     case TT_DATAOBJECT_AUTHOR:
-      if (cod.nargs > 2)
-        ththrow(("too many option arguments -- author"))
-      this->dotmp_date.parse(args[0]);
-      thencode(&(this->db->buff_enc), args[1], argenc);
-      this->dotmp_person.parse(this->db, this->db->buff_enc.get_buffer());
-      this->dotmp_author = thdataobject_author(this->dotmp_person,
-          this->revision);
-      this->author_map[this->dotmp_author].join(this->dotmp_date);
+      switch (this->get_class_id()) {
+        case TT_DATA_CMD:
+        case TT_SCRAP_CMD:
+          if (cod.nargs > 2)
+            ththrow(("too many option arguments -- author"))
+          this->dotmp_date.parse(args[0]);
+          thencode(&(this->db->buff_enc), args[1], argenc);
+          this->dotmp_person.parse(this->db, this->db->buff_enc.get_buffer());
+          this->dotmp_author = thdataobject_author(this->dotmp_person,
+              this->revision);
+          this->author_map[this->dotmp_author].join(this->dotmp_date);
+          break;
+        default:
+          ththrow(("author specification not allowed for this object"));
+          break;
+      }
       break;
       
     case TT_DATAOBJECT_COPYRIGHT:
-      if (cod.nargs > 2)
-        ththrow(("too many option arguments -- copyright"))
-      this->dotmp_date.parse(args[0]);
-      thencode(&(this->db->buff_enc), args[1], argenc);
-      this->dotmp_copyright = 
-          thdataobject_copyright(
-          this->db->strstore(this->db->buff_enc.get_buffer(), true), 
-          this->revision);
-      this->copyright_map[this->dotmp_copyright].join(this->dotmp_date);
+      switch (this->get_class_id()) {
+        case TT_DATA_CMD:
+        case TT_SCRAP_CMD:
+          if (cod.nargs > 2)
+            ththrow(("too many option arguments -- copyright"))
+          this->dotmp_date.parse(args[0]);
+          thencode(&(this->db->buff_enc), args[1], argenc);
+          this->dotmp_copyright = 
+            thdataobject_copyright(
+            this->db->strstore(this->db->buff_enc.get_buffer(), true), 
+            this->revision);
+          this->copyright_map[this->dotmp_copyright].join(this->dotmp_date);
+          break;
+        default:
+          ththrow(("copyright specification not allowed for this object"));
+          break;
+      }
       break;
-      
+        
     default:
       ththrow(("unknown option -- %s", args[0]));
 
@@ -222,9 +250,9 @@ void thdataobject::throw_source()
 void thdataobject::self_print(FILE * outf)
 {
   if (strlen(this->name) > 0)
-    fprintf(outf,"%s (%ld:0x%x) -- %s\n", this->get_class_name(), this->id, (unsigned int) this, this->name);
+    fprintf(outf,"%s (%ld:0x%lx) -- %s\n", this->get_class_name(), this->id, (unsigned int) this, this->name);
   else
-    fprintf(outf,"%s (%ld:0x%x)\n", this->get_class_name(), this->id, (unsigned int) this);  
+    fprintf(outf,"%s (%ld:0x%lx)\n", this->get_class_name(), this->id, (unsigned int) this);  
 
   this->self_print_properties(outf);
 
@@ -237,6 +265,7 @@ void thdataobject::self_print(FILE * outf)
 
 void thdataobject::self_print_properties(FILE * outf)
 {
+
   fprintf(outf,"thdataobject:\n");
 
   thdo_author_map_type::iterator aii;

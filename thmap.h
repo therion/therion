@@ -31,6 +31,7 @@
 
 
 #include "thdataobject.h"
+#include "thmapstat.h"
 
 /**
  * map command options tokens.
@@ -62,8 +63,6 @@ class thmap : public thdataobject {
 
   public:
 
-  friend class thdb2d;
-
   class thdb2dmi * first_item,  ///< First map item.
     * last_item;  ///< Last map item.
     
@@ -80,8 +79,8 @@ class thmap : public thdataobject {
   double z;
   long nz;
   unsigned last_level;
-
-  public:
+  
+  thmapstat stat;
 
   /**
    * Standard constructor.

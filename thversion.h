@@ -1,1 +1,1 @@
-#define THVERSION "0.2.17"
+#define THVERSION "0.2.18"

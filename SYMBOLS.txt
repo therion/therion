@@ -1,5 +1,10 @@
 
 
+[Special symbols]
+
+northarrow: SKBB 
+scalebar: SKBB 
+
 [Point symbols]
 
 airdraught: UIS 
@@ -12,7 +17,7 @@ blocks: UIS
 breakdownchoke: CCNP 
 bridge: SKBB 
 camp: SKBB 
-cavepearl: JSSJ 
+cavepearl: SKBB 
 clay: UIS 
 continuation: UIS 
 crystal: UIS 
@@ -83,7 +88,7 @@ rockborder: UIS
 rockedge: UIS 
 section: SKBB 
 slope: SKBB UIS 
-survey: JSSJ SKBB 
+survey: SKBB UIS 
 wall_bedrock: UIS 
 wall_blocks: SKBB 
 wall_clay: SKBB 
@@ -94,9 +99,9 @@ wall_presumed: UIS
 wall_sand: SKBB 
 wall_underlying: UIS 
 wall_unsurveyed: SKBB 
-water_conjectural: SKBB 
-water_intermittent: JSSJ 
-water_permanent: UIS 
+waterflow_conjectural: SKBB 
+waterflow_intermittent: SKBB 
+waterflow_permanent: UIS 
 
 [Area symbols]
 

@@ -390,9 +390,10 @@ char * thpoint_export_mp_align2mp(int a) {
 }
 
 
-void thpoint::export_mp(class thexpmapmpxs * out)
+bool thpoint::export_mp(class thexpmapmpxs * out)
 {
   bool postprocess = true;
+  int macroid = -1;
   int postprocess_label = -1;
   this->db->buff_enc.guarantee(8128);
   char * buff = this->db->buff_enc.get_buffer();
@@ -402,7 +403,24 @@ void thpoint::export_mp(class thexpmapmpxs * out)
     case TT_POINT_TYPE_LABEL:  
     case TT_POINT_TYPE_REMARK:  
     case TT_POINT_TYPE_STATION_NAME:
-      if (this->text != NULL) {          
+      if (this->text != NULL) {
+      
+        switch (this->type) {
+          case TT_POINT_TYPE_LABEL:
+            macroid = SYMP_LABEL;
+            break;
+          case TT_POINT_TYPE_REMARK:
+            macroid = SYMP_LABEL;
+            break;
+          default:
+            macroid = SYMP_STATIONNAME;
+            break;
+        }
+        if (!out->symset->assigned[macroid])
+          return(false);
+        if (out->file == NULL)
+          return(true);
+        out->symset->get_mp_macro(macroid);
         fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(this->align));
         switch (this->type) {
           case TT_POINT_TYPE_STATION_NAME:
@@ -416,7 +434,10 @@ void thpoint::export_mp(class thexpmapmpxs * out)
             break;
         }
         fprintf(out->file,"%s etex,",utf2tex(this->text));        
-        postprocess_label = 0;
+        if (this->type == TT_POINT_TYPE_STATION_NAME)
+          postprocess_label = 7;
+        else
+          postprocess_label = 0;
       }
       postprocess = false;
       break;
@@ -424,25 +445,33 @@ void thpoint::export_mp(class thexpmapmpxs * out)
     case TT_POINT_TYPE_STATION:
       switch (this->subtype) {
         case TT_POINT_SUBTYPE_FIXED:
-          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_STATION_FIXED));
+          macroid = SYMP_STATION_FIXED;
           break;
         case TT_POINT_SUBTYPE_NATURAL:
-          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_STATION_NATURAL));
+          macroid = SYMP_STATION_NATURAL;
           break;
         case TT_POINT_SUBTYPE_PAINTED:
-          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_STATION_PAINTED));
+          macroid = SYMP_STATION_PAINTED;
           break;
         default:
-          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_STATION_TEMPORARY));
+          macroid = SYMP_STATION_TEMPORARY;
       }
-      this->point->export_mp(out);
-      fprintf(out->file,");\n");
+      if (out->symset->assigned[macroid]) {
+        if (out->file == NULL)
+          return(true);
+        fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+        this->point->export_mp(out);
+        fprintf(out->file,");\n");
+      }
       postprocess = false;
       break;
 
     case TT_POINT_TYPE_ALTITUDE:
-      if (!thisnan(this->xsize)) {          
+      if ((!thisnan(this->xsize)) && (out->symset->assigned[SYMP_ALTITUDE])) {          
         sprintf(buff,"%.0f",this->xsize);
+        if (out->file == NULL)
+          return(true);
+        out->symset->get_mp_macro(SYMP_ALTITUDE);    
         fprintf(out->file,"p_label%s(btex \\thaltitude %s etex,",thpoint_export_mp_align2mp(this->align),utf2tex(buff));
         postprocess_label = 1;
       }
@@ -451,14 +480,39 @@ void thpoint::export_mp(class thexpmapmpxs * out)
 
     case TT_POINT_TYPE_HEIGHT:
       if ((this->tags & (TT_POINT_TAG_HEIGHT_P |
-        TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) != 0) {        
+          TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) != 0) {        
+
+        switch (this->tags & (TT_POINT_TAG_HEIGHT_P |
+        TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) {
+          case TT_POINT_TAG_HEIGHT_P:
+            macroid = SYMP_HEIGHT_POSITIVE;
+            break;
+          case TT_POINT_TAG_HEIGHT_N:
+            macroid = SYMP_HEIGHT_NEGATIVE;
+            break;
+          case TT_POINT_TAG_HEIGHT_U:
+            macroid = SYMP_HEIGHT_UNSIGNED;
+            break;
+          default:
+            return(false);
+        }
+        
+        if (!out->symset->assigned[macroid])
+          return(false);
+
+        if (out->file == NULL)
+          return(true);
+
+        out->symset->get_mp_macro(macroid);
         fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(this->align));
+
         if ((this->tags & TT_POINT_TAG_HEIGHT_P) != 0)
           fprintf(out->file,"\\thheightpos ");
         else if ((this->tags & TT_POINT_TAG_HEIGHT_N) != 0)
           fprintf(out->file,"\\thheightneg ");
         else
           fprintf(out->file,"\\thheight ");  
+
         if (!thisnan(this->xsize)) {
           if (double(int(this->xsize)) != this->xsize)
             sprintf(buff,"%.1f",this->xsize);
@@ -469,32 +523,60 @@ void thpoint::export_mp(class thexpmapmpxs * out)
         this->db->buff_enc.strcpy((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
             TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_UQ)) != 0 ? "?" : "" );
         fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc.get_buffer()));
-        postprocess_label = 0;
-        postprocess = false;
+        postprocess_label = 7;
       }
+      postprocess = false;
       break;
 
 
     case TT_POINT_TYPE_DATE:
-      if ((this->tags & TT_POINT_TAG_DATE) > 0) {
-        ((thdate *)this->text)->print_export_str();
+      if  ((out->symset->assigned[SYMP_DATE]) &&
+          ((this->tags & TT_POINT_TAG_DATE) > 0)) {
+//        ((thdate *)this->text)->print_export_str();
 //        fprintf(out->file,"Datelabel%s(\"%s\",",
 //            thpoint_export_mp_align2mp(this->align),
 //            ((thdate *)this->text)->get_str());
+        if (out->file == NULL)
+          return(true);
+        out->symset->get_mp_macro(SYMP_DATE);    
         fprintf(out->file,"p_label%s(btex \\thdate %s etex,",
             thpoint_export_mp_align2mp(this->align),
-            utf2tex(((thdate *)this->text)->get_str()));
+            utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_UTF8_ISO)));
         postprocess_label = 0;
-        postprocess = false;
       }
+      postprocess = false;
       break;
 
     case TT_POINT_TYPE_PASSAGE_HEIGHT:
       if ((this->tags & (TT_POINT_TAG_HEIGHT_P |
           TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) != 0) {
-          
-        fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(this->align));
+
+        switch (this->tags & (TT_POINT_TAG_HEIGHT_P |
+        TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) {
+          case (TT_POINT_TAG_HEIGHT_P | TT_POINT_TAG_HEIGHT_N):
+            macroid = SYMP_PASSAGEHEIGHT_BOTH;
+            break;
+          case TT_POINT_TAG_HEIGHT_P:
+            macroid = SYMP_PASSAGEHEIGHT_POSITIVE;
+            break;
+          case TT_POINT_TAG_HEIGHT_N:
+            macroid = SYMP_PASSAGEHEIGHT_NEGATIVE;
+            break;
+          case TT_POINT_TAG_HEIGHT_U:
+            macroid = SYMP_PASSAGEHEIGHT_UNSIGNED;
+            break;
+          default:
+            return(false);
+        }
         
+        if (!out->symset->assigned[macroid])
+          return(false);
+        if (out->file == NULL)
+          return(true);
+        
+        out->symset->get_mp_macro(macroid);
+            
+        fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(this->align));
         switch (this->tags & (TT_POINT_TAG_HEIGHT_P |
         TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) {
           case (TT_POINT_TAG_HEIGHT_P | TT_POINT_TAG_HEIGHT_N):
@@ -532,8 +614,8 @@ void thpoint::export_mp(class thexpmapmpxs * out)
         }        
         
         fprintf(out->file," etex,");
-        postprocess = false;
       }
+      postprocess = false;
       break;
       
     case TT_POINT_TYPE_SECTION:
@@ -541,7 +623,7 @@ void thpoint::export_mp(class thexpmapmpxs * out)
       break;
 
 #define thpoint_type_export_mp(type,mid) case type: \
-  fprintf(out->file,"%s(",out->symset->get_mp_macro(mid)); \
+  macroid = mid; \
   break;
       
 // ostatne typy      
@@ -550,7 +632,7 @@ void thpoint::export_mp(class thexpmapmpxs * out)
         thpoint_type_export_mp(TT_POINT_SUBTYPE_PALEO,SYMP_WATERFLOW_PALEO);
         thpoint_type_export_mp(TT_POINT_SUBTYPE_INTERMITTENT,SYMP_WATERFLOW_INTERMITTENT);
         default:
-          fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_WATERFLOW_PERMANENT));
+          macroid = SYMP_WATERFLOW_PERMANENT;
       }
       break;
 
@@ -623,13 +705,23 @@ void thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_ROOT,SYMP_ROOT)
       
     default:
-      fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_UNDEFINED)); \
+      macroid = SYMP_UNDEFINED;
       break;
   }
   
   if (postprocess_label >= 0) {
     this->point->export_mp(out);
     fprintf(out->file,",%.1f,%d);\n",(thisnan(this->orient) ? 0 : 360 - this->orient), postprocess_label);
+  }
+  
+  if ((macroid > 0) && postprocess) {
+    if (out->symset->assigned[macroid]) {
+      if (out->file == NULL)
+        return(true);
+      fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+    }
+    else
+      postprocess = false;
   }
   
   if (postprocess) {
@@ -679,6 +771,8 @@ void thpoint::export_mp(class thexpmapmpxs * out)
     fprintf(out->file,",%.1f,%.2f,%s);\n",
         (thisnan(this->orient) ? 0 : 360 - this->orient),scl,al);
   }
+  
+  return(false);
 }
 
 void thpoint::parse_align(char * tstr) {

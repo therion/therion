@@ -46,7 +46,6 @@ class thperson {
   friend bool operator < (const class thperson &, const class thperson &);
   friend bool operator == (const class thperson &, const class thperson &);
   
-
   public:
     
   /**

@@ -27,6 +27,8 @@
 % @LIBRARY
 % thText --
 
+labeloffset:=0bp;
+
 def l_label(expr txt,path) =
   picture pict,pic;
   pair pos;
@@ -69,7 +71,7 @@ def l_label(expr txt,path) =
         pos := point t of path + 
           (dy1+dy2)*txtzoom*unitvector((direction t of path) rotated 90);
         begingroup
-          interim labeloffset:=0bp;
+%          interim labeloffset:=0bp;
           lab:=thelabel.top(pict,pos);
           process_label(pos,angle direction t of path);
         endgroup;
@@ -83,7 +85,7 @@ def l_label(expr txt,path) =
 enddef;
 
 vardef p_label@#(expr txt,pos,rot,mode) =
-  interim labeloffset:=0bp;
+  if (mode=1) or (mode=7): interim labeloffset:=(u/8) fi;
   lab:=thelabel@#(txt, pos);
   if mode>1: pickup PenD fi;
   if mode=1:
@@ -95,10 +97,11 @@ vardef p_label@#(expr txt,pos,rot,mode) =
   elseif mode=4: process_updownlabel;
   elseif mode=5: process_circledlabel;
   elseif mode=6: process_boxedlabel;
+  elseif mode=7: process_label(pos,rot);  % station name
   else: process_label(pos,rot); fi;
 enddef;
 
-def p_wall_altitude (expr pprev,pos,pnext,txt) =
+def p_wallaltitude (expr pprev,pos,pnext,txt) =
   rot:=angle(unitvector(pnext-pos)+unitvector(pos-pprev)) - 90;
   pickup PenD;
   pair zz;

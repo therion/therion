@@ -145,10 +145,18 @@ string utf2texhex(string str) {
   return t;
 }
 
+string replace_all(string s, string f, string r) {
+  unsigned int found = s.find(f);
+  while(found != string::npos) {
+    s.replace(found, f.length(), r);
+    found = s.find(f);
+  }
+  return s;
+}
+
 // main task is done here
 
 string utf2tex(string str) {
-  unistr s = utf2uni(str);
   ostringstream T;
   string tmp;
   int wc;  //wide char
@@ -157,11 +165,24 @@ string utf2tex(string str) {
   bool is_multiline = false;
 
   if (str.find("<center>") != string::npos) align = 1;
+  else if (str.find("<centre>") != string::npos) align = 1;
   else if (str.find("<left>") != string::npos) align = 0;
   else if (str.find("<right>") != string::npos) align = 2;
 
   if (str.find("<br>") != string::npos) is_multiline = true;
-  
+ 
+  str = replace_all(str,"<center>","");
+  str = replace_all(str,"<centre>","");
+  str = replace_all(str,"<left>","");
+  str = replace_all(str,"<right>","");
+  str = replace_all(str,"<br>","\e\1");
+  str = replace_all(str,"<thsp>","\e\2");
+  str = replace_all(str,"<rm>","\e\3");
+  str = replace_all(str,"<it>","\e\4");
+  str = replace_all(str,"<bf>","\e\5");
+  str = replace_all(str,"<ss>","\e\6");
+  str = replace_all(str,"<si>","\e\7");
+
   if (is_multiline) {
     T << "\\vbox{\\halign{";
     if (align > 0) T << "\\hfil";
@@ -170,25 +191,28 @@ string utf2tex(string str) {
     T << "\\cr";
   }
   
+  unistr s = utf2uni(str);
+
   for (unistr::iterator I = s.begin(); I != s.end(); I++) {
     wc = *I;
     if (wc == 32) {                     // space requires special treatment 
       T << " ";                         // (it's not included in TeX fonts)
       continue;                         // so encodings search doesn't help
     }
-    else if (wc == 60) {                // special <.> string formatting
-      tmp = "";
-      I++;
-      while (I != s.end() && (wc = *I) != 62 && wc < 128) {
-        tmp += char(wc);
-        I++;
+    else if (wc == 27) {                // escaped chars (special formatting)
+      wc = *(++I);
+      switch (wc) {
+        case 1: T << "\\cr "; break;
+        case 2: T << "\\thinspace "; break;
+        case 3: T << "\\rm "; break;
+        case 4: T << "\\it "; break;
+        case 5: T << "\\bf "; break;
+        case 6: T << "\\ss "; break;
+        case 7: T << "\\si "; break;
       }
-      if (tmp == "br") T << "\\cr ";
-      else if (tmp == "center" || tmp == "left" || tmp == "right") ;
-      else T << "?";
-      if (I == s.end()) break;   // incorrect input (no closing `>')
       continue;
     }
+    
     bool local_exit = false;
     bool local_repeat = true;
 
@@ -247,7 +271,7 @@ string utf2tex(string str) {
       // by plain TeX macros to mathematical fonts (backslash &c.)
       // This would require to make math fonts scalable with the \size[.] macro
     
-      T << "?";
+      T << ".";
   }
   
   if (is_multiline) {
@@ -333,4 +357,20 @@ int main () {
 #endif
 #endif
 
+// obsolete:
+
+//    else if (wc == 60) {                // special <.> string formatting
+//      tmp = "";
+//      I++;
+//      while (I != s.end() && (wc = *I) != 62 && wc < 128) {
+//        tmp += char(wc);
+//        I++;
+//      }
+//      if (tmp == "br") T << "\\cr ";
+//      else if (tmp == "center" || tmp == "left" || tmp == "right") ;
+//      else if (tmp == "thsp") T << "\\thinspace ";
+//      else T << "?";
+//      if (I == s.end()) break;   // incorrect input (no closing `>')
+//      continue;
+//    }
 

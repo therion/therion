@@ -104,6 +104,10 @@ class thdb1ds {
   
   class thsurvey * survey;  ///< Station survey.
   
+  class thdata * data;  ///< Station data.
+  unsigned data_priority, ///< 0 - undefined, 1 - equate, 2 - leg, 3 - fix
+    data_slength;  ///< Survey specification length
+  
   unsigned char flags,  ///< Station flags.
     mark;  ///< Mark type.
   
@@ -112,6 +116,7 @@ class thdb1ds {
    */
    
   thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), survey(NULL), 
+    data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP) {}
   
 
@@ -120,8 +125,18 @@ class thdb1ds {
    */
    
   thdb1ds(char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), name(n), 
-    comment(NULL), survey(ps), flags(TT_STATIONFLAG_NONE), 
+    comment(NULL), survey(ps), 
+    data(NULL), data_priority(0), data_slength(0), 
+    flags(TT_STATIONFLAG_NONE), 
     mark(TT_DATAMARK_TEMP) {}
+    
+  
+  /**
+   * Set parent data.
+   */
+  
+  void set_parent_data(class thdata * pd, unsigned pd_priority, unsigned pd_slength);
+  
   
 };
 
@@ -200,7 +215,7 @@ class thdb1d {
    * Insert station into mapping.
    */
    
-  unsigned long insert_station(class thobjectname on, class thsurvey * ps);
+  unsigned long insert_station(class thobjectname on, class thsurvey * ps, class thdata * pd, unsigned priority);
   
   /**
    * Process survey statistics.

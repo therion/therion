@@ -1,10 +1,11 @@
-  * namiesto "cout <<" pouzivat thprintf - aby to slo aj do log suboru
-  * pri vypisoch medzery " ... "
-* pri definovani globalnych funkcii, typov a premennych pouzivat prefix "th" 
-  resp. "TH" (napr. thprint_tex_encodings, THFONTS)
+ * pri definovani globalnych funkcii, typov a premennych pouzivat prefix "th" 
+   resp. "TH" (napr. thprint_tex_encodings, THFONTS)
 
 thpdf:
-
+ 
+ * zanorene OCG
+ * cisla stran a odkazov cez utf2tex
+ * skontrolovat ci nezapisujem nadbytocne xobjecty kvoli vrstvam
  * co s posunom stran v rychlom mode
  * k vrstve: meno vo vertikalnom smere alebo udaj o vyske
  * podmienene nacitavanie scrapov v TeXu
@@ -22,44 +23,53 @@ thpdf:
  * zhrnutie udajov o listoch na konci
  * ramik a stvorcova siet (kriziky): vylepsit alebo cez MetaPost 
    (do uvahy aj convergence)
- * graficka mierka + sever (minimalne pre samostatne mapy 
-     do samostatneho PDF ako legendu?)
  * mody pre preview (ziadne, linkovane, vsetky)
  * vrstva `pri' pre atlas
 
 
 thconvert:
 
- * (dorobi») CONCAT + konverzia rozdelenych textovych riadkov
+ * (dorobit) CONCAT + konverzia rozdelenych textovych riadkov
  * optimalizacia zmien fontov + gsave & al.
 
 
 thtexfonts:
 
+ * upravit citanie glyphlistu aby podporovalo viac unicode hodnot
  * prepinanie fontov v makrach definovanych uzivatelom v TeXu a MP
-   (\scalebar, equipment, continuation) aj pre cisla stran v atlase
- * optimalizacia zmien fontov
- * zaviest kvazi HTML znackovanie vstupnych retazcov? <it>..<it>, <br> a pod.
+   (equipment, continuation) aj pre cisla stran v atlase (tie cez utf2tex)
+ * optimalizacia zmien fontov (delenie slov!)
+ * doplnit kvazi HTML znackovanie vstupnych retazcov
+ 
+ 
+tex:
+
+ * doladit viacstlpcove makra
+ * sipka na sever je zbytocna pri priecnom a rozvinutom reze. V ich pripade
+   by tam mal byt nejaky identifikator projekcie  
+ * northarrow do atlasu?
  
 
 mpost:
 
+ * poriesit odsadenie bodovych znaciek a najma labelov
+ * dorobit aby fungovalo predefinovanie u,v,w - pri presumed wall, patternoch
  * alignment pri continuation a equipement
  * slope - 
    poriadne funguje ak su vo vsetkych bodoch smery -1 (vtedy su luce kolme)
     alebo sa smer (velmi) nemeni; s dlzkou problemy nie su
    (bude treba vymysliet algoritmus na priemerovanie krajnych hodnot, kedze to, 
    ktorym poloblukom pojdes, zavisi od orientacie krivky)
- * sectionline cez kontrolne body -> inak
- * dorobit aby fungovalo predefinovanie u,v,w - pri polygone, nadm.vyskach, 
-   presumed wall, patternoch
- * upravit znacku polyline na jednosmernu (aby v mapach nehadzalo druhy
-   koniec, ked tam neni bod)
+ * initialize(Scale) nepomaha na lejble v legende -- prepisovanie mptexpre.tex?
 
+thbook:
+
+ * SQL export v kap. What we get
+ * varovania texu a metapostu
+ * obrazky mapovych znaciek
 
 ----- prezitky dob minulych -----
 
  * mod pre _velke_ mapy (>10MB): scrapy vysadzat do samostatneho suboru a z 
-   dalsieho na ne odkazovat pomocou Reference XObject forms -> nefunguje v AR
- * navigacne sipky vypustit z tlacenej verzie (Image/Alternates/DefaultForPrint
-   alebo rozne mody) 
+   dalsieho na ne odkazovat pomocou Reference XObject forms -> nefunguje v AR5
+

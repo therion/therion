@@ -10,6 +10,7 @@
 #include "thinfnan.h"
 #include "thchencdata.h"
 #include "thlayout.h"
+#include "thlang.h"
 #include "thgrade.h"
 
 
@@ -79,10 +80,46 @@ void thlibrary_init_layouts()
 	playout->pagvs = 0.1925;
 	playout->marts = 0.005;
 	playout->marls = 0.005;
+	playout->color_map_bg.defined = false;
+	playout->color_map_bg.R = 1;
+	playout->color_map_bg.G = 1;
+	playout->color_map_bg.B = 1;
+	playout->color_map_fg.defined = false;
+	playout->color_map_fg.R = 1;
+	playout->color_map_fg.G = 1;
+	playout->color_map_fg.B = 1;
+	playout->color_preview_below.defined = false;
+	playout->color_preview_below.R = 0.5;
+	playout->color_preview_below.G = 0.5;
+	playout->color_preview_below.B = 0.5;
+	playout->color_preview_above.defined = false;
+	playout->color_preview_above.R = 0;
+	playout->color_preview_above.G = 0;
+	playout->color_preview_above.B = 0;
 	playout->def_overlap = true;
 	playout->overlap = 0.01;
+	playout->def_scale_bar = false;
+	playout->scale_bar = -1;
 	playout->def_transparency = false;
 	playout->transparency = true;
+	playout->def_legend = false;
+	playout->legend = TT_LAYOUT_LEGEND_OFF;
+	playout->def_map_header = false;
+	playout->map_header = 2;
+	playout->def_max_explos = false;
+	playout->max_explos = -1;
+	playout->def_max_topos = false;
+	playout->max_topos = -1;
+	playout->def_max_cartos = false;
+	playout->max_cartos = -1;
+	playout->def_max_copys = false;
+	playout->max_copys = -1;
+	playout->def_explo_lens = false;
+	playout->explo_lens = false;
+	playout->def_topo_lens = false;
+	playout->topo_lens = false;
+	playout->def_lang = false;
+	playout->lang = THLANG_UNKNOWN;
 	playout->def_layers = false;
 	playout->layers = true;
 	playout->def_opacity = false;
@@ -96,13 +133,15 @@ void thlibrary_init_layouts()
 	playout->olx = "100";
 	playout->oly = "100";
 	playout->def_doc_title = false;
-	playout->doc_title = NULL;
+	playout->doc_title = "";
+	playout->def_doc_comment = false;
+	playout->doc_comment = "";
 	playout->def_doc_author = false;
-	playout->doc_author = NULL;
+	playout->doc_author = "";
 	playout->def_doc_subject = false;
-	playout->doc_subject = NULL;
+	playout->doc_subject = "";
 	playout->def_doc_keywords = false;
-	playout->doc_keywords = NULL;
+	playout->doc_keywords = "";
 	playout->def_excl_pages = false;
 	playout->excl_pages = false;
 	playout->excl_list = NULL;
@@ -121,8 +160,12 @@ void thlibrary_init_layouts()
 	playout->titlep = false;
 	playout->def_page_numbers = false;
 	playout->pgsnum = true;
-	oname = "SKBB";
-	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),&oname,TT_UTF_8,0);
+	playout->ccode = TT_LAYOUT_CODE_TEX_ATLAS;
+	oname = "symbol-defaults SKBB";
+	playout->set(thcmd_option_desc(0,1),&oname,TT_UTF_8,0);
+	playout->ccode = TT_LAYOUT_CODE_TEX_ATLAS;
+	oname = "lang sk";
+	playout->set(thcmd_option_desc(0,1),&oname,TT_UTF_8,0);
 	playout->def_tex_lines = true;
 	thdb.insert(playout);
 }

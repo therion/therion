@@ -41,6 +41,9 @@
 tracingstats:=1;
 prologues:=1;
 
+if known Background: background:=Background fi;
+TrueScale:=Scale;
+
 % @VARIABLE
 % symbol_scale --
 %
@@ -60,9 +63,10 @@ prologues:=1;
 % commands with exception of <I>thpermanentfill</I>, so that only filled 
 % areas are drawn
 
-boolean fill_only, horiz_labels;
+boolean fill_only, horiz_labels, transparency;
 fill_only := false;
 horiz_labels:=true;
+transparency:=false;
 
 % @VARIABLE
 % last_write --
@@ -94,7 +98,8 @@ last_write = -1;
 %
 % <I>string</I>, temporary string/char variables
 
-string s, ch, file_name, bg_name, clip_name, lang, diff_pos, diff_neg;
+string s, ch, file_name, bg_name, clip_name, lang, diff_pos, diff_neg,
+     current_scrap;
 
 % @VARIABLE
 % u v w --
@@ -177,7 +182,7 @@ def fonts_setup (expr t,s,m,l,h) =
   write EOF to "mptexpre.tex";
 enddef;
 
-%def initialize (expr Scale) =
+def initialize (expr Scale) =
 
 if unknown BaseScale: BaseScale = Scale; fi;
 
@@ -208,13 +213,12 @@ if unknown BaseScale: BaseScale = Scale; fi;
     def PenX = pencircle scaled (1.2*u/10) enddef;
     
     legend_scale := 3.14*u;
-%enddef;
+enddef;
 
 % macro is expanded, we have to know all dimensions and pens before reading
 % mpattern macros
 
-%initialize(Scale);
-%user_initialize;
+initialize(Scale);
 
 % @MACRO
 % inscale --
@@ -238,12 +242,16 @@ def draw_legend_box =
     draw unitsquare inscale;
 enddef;
 
+def clean_legend_box =
+  unfill unitsquare inscale;
+enddef;
+
 def legend_point (expr name) =
-  if substring (2,9) of name = "station":
-    scantokens(name)((0.5,0.5) inscale);
-  else:
+%  if substring (2,9) of name = "station":
+%    scantokens(name)((0.5,0.5) inscale);
+%  else:
     scantokens(name)((0.5,0.5) inscale,0,1,(0,0));
-  fi;
+%  fi;
   draw_legend_box;
 enddef;
 
@@ -466,9 +474,14 @@ extra_endfig := "close_file;";
 % (rotated, scaled, shifted) to scrap's coordinates according T variable.
 % (If <I>fill_only=false</I>)
 
+def thdrawoptions(text t) =
+  def _thop_ = t enddef
+enddef;
+thdrawoptions();
+
 def thdraw expr p = 
   if not fill_only:
-    addto currentpicture doublepath (p transformed T) withpen currentpen _op_
+    addto currentpicture doublepath (p transformed T) withpen currentpen _thop_ _op_
   else:
     addto currentpicture also nullpicture
   fi
@@ -484,14 +497,14 @@ enddef;
 
 
 def thfill expr c = 
-    addto currentpicture contour (c transformed T) _op_ 
+    addto currentpicture contour (c transformed T) _thop_ _op_ 
 enddef;
 
 def thfilldraw expr c =
   if not fill_only:
-    addto currentpicture contour (c transformed T) withpen currentpen _op_ 
+    addto currentpicture contour (c transformed T) withpen currentpen _thop_ _op_ 
   else:
-    addto currentpicture contour (c transformed T) _op_ 
+    addto currentpicture contour (c transformed T) _thop_ _op_ 
   fi
 enddef;
 
@@ -508,8 +521,23 @@ def thunfilldraw expr c =
 enddef;
 
 def thclean expr c =
-  thfill c withtransparentcolor tr_white
+  if transparency:
+    thfill c withtransparentcolor tr_bg
+  else:
+    thunfill c
+  fi;
 enddef;
+
+def thPatternFill (expr Path, Pattern) =
+  T:=identity;
+  thclean Path;
+  thfill Path withpattern Pattern;
+enddef;
+
+%def thLegendPatternFill (expr Path, Pattern) =
+%  T:=identity;
+%  thfill Path withpattern Pattern;
+%enddef;
 
 % for drawarrow:
 
@@ -525,7 +553,7 @@ enddef;
 % text clipping path
 
 %def thpermanentfill expr c = 
-%    addto currentpicture contour (c transformed T) _op_
+%    addto currentpicture contour (c transformed T) _thop_ _op_
 %enddef;
 
 let thpermanentfill = thfill;
@@ -555,10 +583,12 @@ def draw_upscrap (expr isout)(text t) =
     fi;
   endfor;
   if not cycle q: q:=q -- cycle; fi;
+  if turningnumber q = 0: message("[Warning: scrap outline intersects itself in " & 
+          current_scrap & "]"); fi;
   if isout=1:
     if turningnumber q > 0: q := reverse q; fi;
   else:
-    if turningnumber q <= 0: q := reverse q; fi;
+    if turningnumber q < 0: q := reverse q; fi;
   fi;
   addto bgfill contour q;
 enddef;
@@ -625,25 +655,24 @@ def mapsymbol (expr name, set, warning) =
   fi;
 enddef;
 
-def hidesymbol (expr name) =
-  string s, stype;
-  stype = substring (0,1) of name;
-  if stype = "a":
-    s = "def " & name & " = scantokens(" & ditto & "a_empty" & ditto & ") enddef;";
-  else:
-    s = "vardef " & name & "@# (text t) = enddef;";
-  fi;
-  scantokens s;
-  write name to "missed.dat";
-enddef;
+%def hidesymbol (expr name) =
+%  string s, stype;
+%  stype = substring (0,1) of name;
+%  if stype = "a":
+%    s = "def " & name & " = scantokens(" & ditto & "a_empty" & ditto & ") enddef;";
+%  else:
+%    s = "vardef " & name & "@# (text t) = enddef;";
+%  fi;
+%  scantokens s;
+%  write name to "missed.dat";
+%enddef;
 
 def initsymbol (expr name) =
-%  string s;
-%  s := "ID_" & str type & "_" & str name & "_" & str set & " = 1";
   s := "ID_" & name & " = 1";
   scantokens s;
 enddef;
 
+%%%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -783,6 +812,12 @@ primarydef p withtransparentcolor s=
    p withcolor (epsilon, 12*epsilon, s*epsilon);
 enddef;
 
+def_transparent_rgb(tr_white, 1, 1, 1);
+def_transparent_rgb(tr_blue, 0, 0, 1);
+def_transparent_rgb(tr_black, 0, 0, 0);
+def_transparent_rgb(tr_bg, 
+               redpart background, greenpart background, bluepart background);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % some useful macros from H. Hagen's MetaFun package
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -858,11 +893,10 @@ enddef ;
 
 input thPoint;
 input thLine;
-input thText;
-input thRandom;
-input thPatterns;
 input thArea;
+input thText;
+input thSpecial;
+
 input thTrans;
-input thTmp; % only temporary; move content to data file!
 
 nonstopmode;

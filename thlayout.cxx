@@ -33,6 +33,9 @@
 #include "thinfnan.h"
 #include "thpdfdata.h"
 #include "thsymbolset.h"
+#include "thtflength.h"
+#include "thlang.h"
+#include <string.h>
 
 void thlayout_color::parse(char * str) {
   thsplit_words(&(thdb.mbuff_tmp), str);
@@ -126,16 +129,19 @@ thlayout::thlayout()
   this->titlep = false;
   
   this->def_doc_title = false;
-  this->doc_title = NULL;
+  this->doc_title = "";
+  
+  this->def_doc_comment = false;
+  this->doc_comment = "";
   
   this->def_doc_author = false;
-  this->doc_author = NULL;
+  this->doc_author = "";
   
   this->def_doc_keywords = false;
-  this->doc_keywords = NULL;
+  this->doc_keywords = "";
   
   this->def_doc_subject = false;
-  this->doc_subject = NULL;
+  this->doc_subject = "";
   
   this->def_excl_pages = false;
   this->excl_pages = false;
@@ -146,6 +152,32 @@ thlayout::thlayout()
 
   this->def_transparency = false;
   this->transparency = true;
+
+  this->def_legend = false;
+  this->legend = TT_LAYOUT_LEGEND_OFF;
+  
+  this->def_scale_bar = false;
+  this->scale_bar = -1.0;
+
+  this->def_map_header = false;
+  this->map_header = TT_LAYOUT_MAP_HEADER_NW;
+  
+  this->def_max_explos = false;
+  this->max_explos = -1;
+  this->def_max_topos = false;
+  this->max_topos = -1;
+  this->def_max_cartos = false;
+  this->max_cartos = -1;
+  this->def_max_copys = false;
+  this->max_copys = -1;
+
+  this->def_explo_lens = false;
+  this->explo_lens = false;
+  this->def_topo_lens = false;
+  this->topo_lens = false;
+
+  this->def_lang = false;
+  this->lang = THLANG_UNKNOWN;
 
   this->def_layers = false;
   this->layers = true;
@@ -166,6 +198,14 @@ thlayout::thlayout()
   this->lock = false;
   this->first_copy_src = NULL;
   this->last_copy_src = NULL;
+  
+  this->color_preview_below.R = 0.5;
+  this->color_preview_below.G = 0.5;
+  this->color_preview_below.B = 0.5;
+  
+  this->color_preview_above.R = 0;
+  this->color_preview_above.G = 0;
+  this->color_preview_above.B = 0;
   
 }
 
@@ -213,10 +253,13 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
     case TT_LAYOUT_NAV_SIZE:
     case TT_LAYOUT_OVERLAP:
     case TT_LAYOUT_SCALE:
+    case TT_LAYOUT_SCALE_BAR:
     case TT_LAYOUT_BASE_SCALE:
     case TT_LAYOUT_EXCLUDE_PAGES:
     case TT_LAYOUT_ORIGIN_LABEL:
     case TT_LAYOUT_SYMBOL_HIDE:
+    case TT_LAYOUT_SYMBOL_SHOW:
+    case TT_LAYOUT_MAP_ITEM:
     case TT_LAYOUT_COLOR:
       return thcmd_option_desc(id,2);
     case TT_LAYOUT_SYMBOL_ASSIGN:
@@ -260,13 +303,34 @@ void thlayout_parse_scale(double * scale,char ** args) {
   *scale /= dv;  
 }
 
+enum {
+  TTL_MAPITEM_CARTO,
+  TTL_MAPITEM_COPYRIGHT,
+  TTL_MAPITEM_EXPLO,
+  TTL_MAPITEM_TOPO,
+  TTL_MAPITEM_EXPLO_LENS,
+  TTL_MAPITEM_TOPO_LENS,
+  TTL_MAPITEM_UNKNOWN,
+};
+
+static const thstok thlayout__mapitems[] = {
+  {"carto", TTL_MAPITEM_CARTO},
+  {"copyright", TTL_MAPITEM_COPYRIGHT},
+  {"explo", TTL_MAPITEM_EXPLO},
+  {"explo-length", TTL_MAPITEM_EXPLO_LENS},
+  {"topo", TTL_MAPITEM_TOPO},
+  {"topo-length", TTL_MAPITEM_TOPO_LENS},
+	{NULL, TTL_MAPITEM_UNKNOWN},
+};
+
 
 
 void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
   double dum;
   thlayout_copy_src dumm;
-  int sv;
+  int sv, sv2, dum_int;
+  //bool parsed;
   thlayout_copy_src * lcp;
   thcmd_option_desc defcod = this->get_default_cod(cod.id);
   switch (cod.id) {
@@ -284,6 +348,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SYMBOL_DEFAULTS:
     case TT_LAYOUT_SYMBOL_ASSIGN:
     case TT_LAYOUT_SYMBOL_HIDE:
+    case TT_LAYOUT_SYMBOL_SHOW:
       if (!this->def_tex_lines) {
         this->first_line = this->db->db2d.insert_layoutln();
         this->last_line = this->first_line;
@@ -319,14 +384,89 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
           break;
+//        case TT_LAYOUT_MAP_ITEM:
+//          this->last_line->smid = thmatch_token(args[0],thtt_layout_mapitem);
+//          if (this->last_line->smid == SYMS_ZZZ)
+//            ththrow(("unknown map-item specification -- %s", args[0]))
+//          if (!th_is_keyword(args[1]))
+//            ththrow(("invalid keyword -- %s", args[1]))
+//          thencode(&(this->db->buff_enc), args[1], argenc);
+//          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
+//          this->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;
+//          break;
         case TT_LAYOUT_SYMBOL_HIDE:
           this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
-          if (!thsymbolset__assign[this->last_line->smid])
-            ththrow(("symbol can not be hidden -- %s %s", args[0], args[1]))
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
           break;
+        case TT_LAYOUT_SYMBOL_SHOW:
+          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          if (this->last_line->smid == -1)
+            ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
+          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
+          break;
+      }
+      break;
+
+    case TT_LAYOUT_MAP_ITEM:
+      sv2 = thmatch_token(args[0],thlayout__mapitems);
+      switch (sv2) {
+        case TTL_MAPITEM_EXPLO_LENS:
+          sv = thmatch_token(args[1],thtt_bool);
+          if (sv == TT_UNKNOWN_BOOL)
+            ththrow(("invalid map-item explo-length switch -- %s",args[1]))
+          this->explo_lens = (sv == TT_TRUE);
+          this->def_explo_lens = true;
+          break;
+        case TTL_MAPITEM_TOPO_LENS:
+          sv = thmatch_token(args[1],thtt_bool);
+          if (sv == TT_UNKNOWN_BOOL)
+            ththrow(("invalid map-item topo-length switch -- %s",args[1]))
+          this->topo_lens = (sv == TT_TRUE);
+          this->def_topo_lens = true;
+          break;
+        case TTL_MAPITEM_EXPLO:
+        case TTL_MAPITEM_TOPO:
+        case TTL_MAPITEM_CARTO:
+        case TTL_MAPITEM_COPYRIGHT:
+          thparse_double(sv,dum,args[1]);
+          switch (sv) {
+            case TT_SV_NUMBER:
+              dum_int = int(dum);
+              if ((double(dum_int) != dum) || (dum_int < 0))
+                ththrow(("not a non-negative integer -- %s", args[1]))
+              break;
+            case TT_SV_ALL:
+              dum_int = -1;
+              break;
+            case TT_SV_OFF:
+              dum_int = 0;
+              break;   
+            default:
+              ththrow(("invalid number or switch -- %s", args[1]))
+          }
+          switch (sv2) {
+            case TTL_MAPITEM_EXPLO:
+              this->max_explos = dum_int;
+              this->def_max_explos = true;
+              break;
+            case TTL_MAPITEM_TOPO:
+              this->max_topos = dum_int;
+              this->def_max_topos = true;
+              break;
+            case TTL_MAPITEM_CARTO:
+              this->max_cartos = dum_int;
+              this->def_max_cartos = true;
+              break;
+            case TTL_MAPITEM_COPYRIGHT:
+              this->max_copys = dum_int;
+              this->def_max_copys = true;
+              break;
+          }
+          break;
+        default:
+          ththrow(("unknown statistics -- %s", args[0]))
       }
       break;
       
@@ -342,27 +482,27 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       break;    
 
     case TT_LAYOUT_OVERLAP:
-      this->parse_len(this->overlap, dum, dum, 1, args, true);
+      this->parse_len(this->overlap, dum, dum, 1, args, 0);
       this->def_overlap = true;
       break;
 
     case TT_LAYOUT_SIZE:
-      this->parse_len(this->hsize, this->vsize, dum, 2, args, true);
+      this->parse_len(this->hsize, this->vsize, dum, 2, args, 1);
       this->def_size = true;
       break;
 
     case TT_LAYOUT_PAGE_SETUP:
-      this->parse_len6(this->paphs, this->papvs, this->paghs, this->pagvs, this->marls, this->marts, 6, args, true);
+      this->parse_len6(this->paphs, this->papvs, this->paghs, this->pagvs, this->marls, this->marts, 6, args, 1);
       this->def_page_setup = true;
       break;
 
     case TT_LAYOUT_ORIGIN:
-      this->parse_len(this->ox, this->oy, this->oz, 3, args, false);
+      this->parse_len(this->ox, this->oy, this->oz, 3, args, -1);
       this->def_origin = true;
       break;
 
     case TT_LAYOUT_GRID_SIZE:
-      this->parse_len(this->gxs, this->gys, dum, 2, args, true);
+      this->parse_len(this->gxs, this->gys, dum, 2, args, 1);
       this->def_grid_size = true;
       break;
 
@@ -375,6 +515,12 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_LAYOUT_COLOR_MAP_BG:
           this->color_map_bg.parse(args[1]);
           break;
+        case TT_LAYOUT_COLOR_PREVIEW_BELOW:
+          this->color_preview_below.parse(args[1]);
+          break;
+        case TT_LAYOUT_COLOR_PREVIEW_ABOVE:
+          this->color_preview_above.parse(args[1]);
+          break;
         default:
         ththrow(("unknown color -- %s",args[0]))
       }
@@ -382,7 +528,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     
 
     case TT_LAYOUT_GRID_ORIGIN:
-      this->parse_len(this->gox, this->goy, this->goz, 3, args, false);
+      this->parse_len(this->gox, this->goy, this->goz, 3, args, -1);
       this->def_grid_origin = true;
       break;
 
@@ -392,6 +538,35 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid transparency switch -- %s",args[0]))
       this->transparency = (sv == TT_TRUE);
       this->def_transparency = true;
+      break;
+    
+    case TT_LAYOUT_LEGEND:
+      sv = thmatch_token(args[0],thtt_layout_legend);
+      if (sv == TT_LAYOUT_LEGEND_UNKNOWN)
+        ththrow(("invalid legend switch -- %s",args[0]))
+      this->legend = sv;
+      this->def_legend = true;
+      break;
+    
+    case TT_LAYOUT_SCALE_BAR:
+      this->parse_len(this->scale_bar, dum, dum, 1, args, 1);
+      this->def_scale_bar = true;
+      break;
+    
+    case TT_LAYOUT_MAP_HEADER:
+      sv = thmatch_token(args[0],thtt_layout_map_header);
+      if (sv == TT_LAYOUT_MAP_HEADER_UNKNOWN)
+        ththrow(("invalid map-header switch -- %s",args[0]))
+      this->map_header = sv;
+      this->def_map_header = true;
+      break;
+    
+    case TT_LAYOUT_LANG:
+      sv = thlang_parse(args[0]);
+      if (sv == THLANG_UNKNOWN)
+        ththrow(("language not supported -- %s",args[0]))
+      this->lang = sv;
+      this->def_lang = true;
       break;
     
     case TT_LAYOUT_LAYERS:
@@ -471,6 +646,15 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       } else
         this->doc_title = "";
       this->def_doc_title = true;  
+      break;
+    
+    case TT_LAYOUT_DOC_COMMENT:
+      if (strlen(args[0]) > 0) {
+        thencode(&(this->db->buff_enc), args[0], argenc);
+        this->doc_comment = this->db->strstore(this->db->buff_enc.get_buffer());
+      } else
+        this->doc_comment = "";
+      this->def_doc_comment = true;  
       break;
     
     case TT_LAYOUT_DOC_AUTHOR:
@@ -634,11 +818,50 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->color_map_fg.G = %lg;\n",this->color_map_fg.G);
   thprintf("\tplayout->color_map_fg.B = %lg;\n",this->color_map_fg.B);
 
+  thprintf("\tplayout->color_preview_below.defined = %s;\n",(this->color_preview_below.defined ? "true" : "false"));
+  thprintf("\tplayout->color_preview_below.R = %lg;\n",this->color_preview_below.R);
+  thprintf("\tplayout->color_preview_below.G = %lg;\n",this->color_preview_below.G);
+  thprintf("\tplayout->color_preview_below.B = %lg;\n",this->color_preview_below.B);
+
+  thprintf("\tplayout->color_preview_above.defined = %s;\n",(this->color_preview_above.defined ? "true" : "false"));
+  thprintf("\tplayout->color_preview_above.R = %lg;\n",this->color_preview_above.R);
+  thprintf("\tplayout->color_preview_above.G = %lg;\n",this->color_preview_above.G);
+  thprintf("\tplayout->color_preview_above.B = %lg;\n",this->color_preview_above.B);
+
   thprintf("\tplayout->def_overlap = %s;\n",(this->def_overlap ? "true" : "false"));
   thprintf("\tplayout->overlap = %lg;\n",this->overlap);
 
+  thprintf("\tplayout->def_scale_bar = %s;\n",(this->def_scale_bar ? "true" : "false"));
+  thprintf("\tplayout->scale_bar = %lg;\n",this->scale_bar);
+
   thprintf("\tplayout->def_transparency = %s;\n",(this->def_transparency ? "true" : "false"));
   thprintf("\tplayout->transparency = %s;\n",(this->transparency ? "true" : "false"));
+
+  thprintf("\tplayout->def_legend = %s;\n",(this->def_legend ? "true" : "false"));
+  thprintf("\tplayout->legend = %s;\n",(
+    this->legend == TT_LAYOUT_LEGEND_OFF ? "TT_LAYOUT_LEGEND_OFF" : (
+    this->legend == TT_LAYOUT_LEGEND_ON ? "TT_LAYOUT_LEGEND_ON" : "TT_LAYOUT_LEGEND_ALL"
+    )));
+
+  thprintf("\tplayout->def_map_header = %s;\n",(this->def_map_header ? "true" : "false"));
+  thprintf("\tplayout->map_header = %d;\n",this->map_header);
+
+  thprintf("\tplayout->def_max_explos = %s;\n",(this->def_max_explos ? "true" : "false"));
+  thprintf("\tplayout->max_explos = %d;\n",this->max_explos);
+  thprintf("\tplayout->def_max_topos = %s;\n",(this->def_max_topos ? "true" : "false"));
+  thprintf("\tplayout->max_topos = %d;\n",this->max_topos);
+  thprintf("\tplayout->def_max_cartos = %s;\n",(this->def_max_cartos ? "true" : "false"));
+  thprintf("\tplayout->max_cartos = %d;\n",this->max_cartos);
+  thprintf("\tplayout->def_max_copys = %s;\n",(this->def_max_copys ? "true" : "false"));
+  thprintf("\tplayout->max_copys = %d;\n",this->max_copys);
+
+  thprintf("\tplayout->def_explo_lens = %s;\n",(this->def_explo_lens ? "true" : "false"));
+  thprintf("\tplayout->explo_lens = %s;\n",(this->explo_lens ? "true" : "false"));
+  thprintf("\tplayout->def_topo_lens = %s;\n",(this->def_topo_lens ? "true" : "false"));
+  thprintf("\tplayout->topo_lens = %s;\n",(this->topo_lens ? "true" : "false"));
+
+  thprintf("\tplayout->def_lang = %s;\n",(this->def_lang ? "true" : "false"));
+  thprintf("\tplayout->lang = %s;\n",thlang_getcxxid(this->lang));
 
   thprintf("\tplayout->def_layers = %s;\n",(this->def_layers ? "true" : "false"));
   thprintf("\tplayout->layers = %s;\n",(this->layers ? "true" : "false"));
@@ -668,36 +891,24 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->oly = \"%s\";\n", this->db->buff_enc.get_buffer());
 
   thprintf("\tplayout->def_doc_title = %s;\n",(this->def_doc_title ? "true" : "false"));
-  if (this->doc_title == NULL) {
-    thprintf("\tplayout->doc_title = NULL;\n");
-  } else {
-    thdecode_c(&(this->db->buff_enc), this->doc_title);
-    thprintf("\tplayout->doc_title = \"%s\";\n", this->db->buff_enc.get_buffer());
-  }
+  thdecode_c(&(this->db->buff_enc), this->doc_title);
+  thprintf("\tplayout->doc_title = \"%s\";\n", this->db->buff_enc.get_buffer());
+  
+  thprintf("\tplayout->def_doc_comment = %s;\n",(this->def_doc_comment ? "true" : "false"));
+  thdecode_c(&(this->db->buff_enc), this->doc_comment);
+  thprintf("\tplayout->doc_comment = \"%s\";\n", this->db->buff_enc.get_buffer());
   
   thprintf("\tplayout->def_doc_author = %s;\n",(this->def_doc_author ? "true" : "false"));
-  if (this->doc_author == NULL) {
-    thprintf("\tplayout->doc_author = NULL;\n");
-  } else {
-    thdecode_c(&(this->db->buff_enc), this->doc_author);
-    thprintf("\tplayout->doc_author = \"%s\";\n", this->db->buff_enc.get_buffer());
-  }
+  thdecode_c(&(this->db->buff_enc), this->doc_author);
+  thprintf("\tplayout->doc_author = \"%s\";\n", this->db->buff_enc.get_buffer());
 
   thprintf("\tplayout->def_doc_subject = %s;\n",(this->def_doc_author ? "true" : "false"));
-  if (this->doc_subject == NULL) {
-    thprintf("\tplayout->doc_subject = NULL;\n");
-  } else {
-    thdecode_c(&(this->db->buff_enc), this->doc_subject);
-    thprintf("\tplayout->doc_subject = \"%s\";\n", this->db->buff_enc.get_buffer());
-  }
+  thdecode_c(&(this->db->buff_enc), this->doc_subject);
+  thprintf("\tplayout->doc_subject = \"%s\";\n", this->db->buff_enc.get_buffer());
   
   thprintf("\tplayout->def_doc_keywords = %s;\n",(this->def_doc_keywords ? "true" : "false"));
-  if (this->doc_keywords == NULL) {
-    thprintf("\tplayout->doc_keywords = NULL;\n");
-  } else {
-    thdecode_c(&(this->db->buff_enc), this->doc_keywords);
-    thprintf("\tplayout->doc_keywords = \"%s\";\n", this->db->buff_enc.get_buffer());
-  }
+  thdecode_c(&(this->db->buff_enc), this->doc_keywords);
+  thprintf("\tplayout->doc_keywords = \"%s\";\n", this->db->buff_enc.get_buffer());
   
   thprintf("\tplayout->def_excl_pages = %s;\n",(this->def_excl_pages ? "true" : "false"));
   thprintf("\tplayout->excl_pages = %s;\n",(this->excl_pages ? "true" : "false"));
@@ -746,7 +957,7 @@ void thlayout::self_print_library() {
       case TT_LAYOUT_CODE_TEX_ATLAS:
         thdecode_c(&(this->db->buff_enc), ln->line);
         if (ln->code != last_code) {
-          thprintf("\tplayout->ccode = \"");
+          thprintf("\tplayout->ccode = ");
           switch (ln->code) {
             case TT_LAYOUT_CODE_METAPOST:
               thprintf("TT_LAYOUT_CODE_METAPOST");
@@ -758,14 +969,16 @@ void thlayout::self_print_library() {
               thprintf("TT_LAYOUT_CODE_TEX_ATLAS");
               break;
           }
-          thprintf("\";\n");
+          thprintf(";\n");
         }
         thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
         thprintf("\tplayout->set(thcmd_option_desc(0,1),&oname,TT_UTF_8,0);\n");
         break;
       case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
+      case TT_LAYOUT_CODE_MAP_ITEM:
       case TT_LAYOUT_CODE_SYMBOL_DEFAULTS:
       case TT_LAYOUT_CODE_SYMBOL_HIDE:
+      case TT_LAYOUT_CODE_SYMBOL_SHOW:
         if (ln->line != NULL) {
           thdecode_c(&(this->db->buff_enc), ln->line);
           thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
@@ -774,9 +987,23 @@ void thlayout::self_print_library() {
         }
         thprintf("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),&oname,TT_UTF_8,0);\n");
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
-          thprintf("\tplayout->last_line->code = %s;\n", 
-            (ln->code == TT_LAYOUT_CODE_SYMBOL_HIDE ? "TT_LAYOUT_CODE_SYMBOL_HIDE" : "TT_LAYOUT_CODE_SYMBOL_ASSIGN"));
-          thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+          switch (ln->code) {
+            case TT_LAYOUT_CODE_SYMBOL_HIDE:
+              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              break;
+            case TT_LAYOUT_CODE_SYMBOL_SHOW:
+              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              break;
+            case TT_LAYOUT_CODE_MAP_ITEM:
+              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              break;
+            default:  
+              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+          }
         }
         break;
     }
@@ -787,7 +1014,21 @@ void thlayout::self_print_library() {
 }
 
 
-void thlayout::parse_len(double & d1, double & d2, double & d3, int nargs, char ** args, bool nonneg) {
+void check_num(double num, int nonneg) {
+  if (nonneg == 0) {
+    if (num < 0) {
+      ththrow(("not a non-negative number -- %g", num));
+    }
+  }
+  else if (nonneg > 0) {
+    if (num <= 0) {
+      ththrow(("not a positive number -- %g", num));
+    }
+  }
+}
+
+
+void thlayout::parse_len(double & d1, double & d2, double & d3, int nargs, char ** args, int nonneg) {
   int sv;
   thtflength lentf;
   lentf.parse_units(args[nargs]);
@@ -797,27 +1038,24 @@ void thlayout::parse_len(double & d1, double & d2, double & d3, int nargs, char 
       if ((sv != TT_SV_NUMBER))
         ththrow(("invalid number -- %s", args[2]));
       d3 = lentf.transform(d3);
-      if (nonneg && (d3 <= 0.0))
-        ththrow(("not a positive number -- %s", args[2]));
+      check_num(d3,nonneg);
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
         ththrow(("invalid number -- %s", args[1]));
       d2 = lentf.transform(d2);
-      if (nonneg && (d2 <= 0.0))
-        ththrow(("not a positive number -- %s", args[1]));
+      check_num(d2,nonneg);
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
         ththrow(("invalid number -- %s", args[0]));
       d1 = lentf.transform(d1);
-      if (nonneg && (d1 <= 0.0))
-        ththrow(("not a positive number -- %s", args[0]));
+      check_num(d1,nonneg);
   }
 }
 
 
-void thlayout::parse_len6(double & d1, double & d2, double & d3, double & d4, double & d5, double & d6, int nargs, char ** args, bool nonneg) {
+void thlayout::parse_len6(double & d1, double & d2, double & d3, double & d4, double & d5, double & d6, int nargs, char ** args, int nonneg) {
   int sv;
   thtflength lentf;
   lentf.parse_units(args[nargs]);
@@ -827,43 +1065,37 @@ void thlayout::parse_len6(double & d1, double & d2, double & d3, double & d4, do
       if ((sv != TT_SV_NUMBER))
         ththrow(("invalid number -- %s", args[5]));
       d6 = lentf.transform(d6);
-      if (nonneg && (d6 <= 0.0))
-        ththrow(("not a positive number -- %s", args[5]));
+      check_num(d6,nonneg);
     case 5:
       thparse_double(sv,d5,args[4]);
       if ((sv != TT_SV_NUMBER))
         ththrow(("invalid number -- %s", args[4]));
       d5 = lentf.transform(d5);
-      if (nonneg && (d5 <= 0.0))
-        ththrow(("not a positive number -- %s", args[4]));
+      check_num(d5,nonneg);
     case 4:
       thparse_double(sv,d4,args[3]);
       if ((sv != TT_SV_NUMBER))
         ththrow(("invalid number -- %s", args[3]));
       d4 = lentf.transform(d4);
-      if (nonneg && (d4 <= 0.0))
-        ththrow(("not a positive number -- %s", args[3]));
+      check_num(d4,nonneg);
     case 3:
       thparse_double(sv,d3,args[2]);
       if ((sv != TT_SV_NUMBER))
         ththrow(("invalid number -- %s", args[2]));
       d3 = lentf.transform(d3);
-      if (nonneg && (d3 <= 0.0))
-        ththrow(("not a positive number -- %s", args[2]));
+      check_num(d3,nonneg);
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
         ththrow(("invalid number -- %s", args[1]));
       d2 = lentf.transform(d2);
-      if (nonneg && (d2 <= 0.0))
-        ththrow(("not a positive number -- %s", args[1]));
+      check_num(d2,nonneg);
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
         ththrow(("invalid number -- %s", args[0]));
       d1 = lentf.transform(d1);
-      if (nonneg && (d1 <= 0.0))
-        ththrow(("not a positive number -- %s", args[0]));
+      check_num(d1,nonneg);
   }
 }
 
@@ -916,14 +1148,52 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
     this->paphs*100.0, this->papvs*100.0, 
     this->paghs*100.0, this->pagvs*100.0, 
     this->marls*100.0, this->marts*100.0);
+  fprintf(o,"\\def\\maplayout{");
+  if (this->map_header != TT_LAYOUT_MAP_HEADER_OFF) {
+    fprintf(o,"\\legendbox{");
+    switch (this->map_header) {
+      case TT_LAYOUT_MAP_HEADER_N:
+        fprintf(o,"N");
+        break;
+      case TT_LAYOUT_MAP_HEADER_NE:
+        fprintf(o,"NE");
+        break;
+      case TT_LAYOUT_MAP_HEADER_E:
+        fprintf(o,"E");
+        break;
+      case TT_LAYOUT_MAP_HEADER_W:
+        fprintf(o,"W");
+        break;
+      case TT_LAYOUT_MAP_HEADER_S:
+        fprintf(o,"S");
+        break;
+      case TT_LAYOUT_MAP_HEADER_SW:
+        fprintf(o,"SW");
+        break;
+      case TT_LAYOUT_MAP_HEADER_SE:
+        fprintf(o,"SE");
+        break;
+      default:
+        fprintf(o,"NW");
+    }
+    fprintf(o,"}");
+    fprintf(o,"{\\the\\legendcontent}");
+  }
+  fprintf(o,"}\n");
 
   bool anyline = false;
+  bool anylegend = false;
   if (this->first_line != NULL) {
     thlayoutln * ln = this->first_line;
     while(ln != NULL) {
       if (ln->code == mode) {
-        anyline = true;
-        thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
+        // ak najde \\formattedlegend v \\insertmaps tak anyline bude
+        // true
+        if ((!anyline) && (strstr(ln->line, "\\insertmaps") != NULL))
+            anyline = true;
+        if ((!anylegend) && (strstr(ln->line, "\\formattedlegend") != NULL))
+            anylegend = true;
+        thdecode(&(this->db->buff_enc), TT_ASCII, ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
       }
       ln = ln->next_line;
@@ -932,8 +1202,12 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
   
   if (!anyline) {
     fprintf(o,"\\insertmaps\n");
+    if (mode == TT_LAYOUT_CODE_TEX_ATLAS) {
+      if ((!anylegend) && (this->legend != TT_LAYOUT_LEGEND_OFF)) {
+        fprintf(o,"\\formattedlegend\n");
+      }
+    }
   }
-
 }
 
 
@@ -971,6 +1245,12 @@ void thlayout::export_mpost_symbols(FILE * o, thsymbolset * symset) {
         break;
       case TT_LAYOUT_CODE_SYMBOL_HIDE:
         symset->export_symbol_hide(o,ln->smid);
+        break;
+      case TT_LAYOUT_CODE_SYMBOL_SHOW:
+        symset->export_symbol_show(o,ln->smid);
+        break;
+      case TT_LAYOUT_CODE_MAP_ITEM:
+        symset->export_symbol_assign(o,ln->smid,ln->line);
         break;
     }
     ln = ln->next_line;
@@ -1036,6 +1316,9 @@ void thlayout::process_copy() {
 
       if has_srcl(def_overlap)
         this->overlap = srcl->overlap;
+
+      if has_srcl(def_scale_bar)
+        this->scale_bar = srcl->scale_bar;
   
       if has_srcl(def_grid_origin) {
         this->gox = srcl->gox;
@@ -1054,6 +1337,18 @@ void thlayout::process_copy() {
         this->color_map_fg.B = srcl->color_map_fg.B;
       }
 
+      if has_srcl(color_preview_below.defined) {
+        this->color_preview_below.R = srcl->color_preview_below.R;
+        this->color_preview_below.G = srcl->color_preview_below.G;
+        this->color_preview_below.B = srcl->color_preview_below.B;
+      }
+
+      if has_srcl(color_preview_above.defined) {
+        this->color_preview_above.R = srcl->color_preview_above.R;
+        this->color_preview_above.G = srcl->color_preview_above.G;
+        this->color_preview_above.B = srcl->color_preview_above.B;
+      }
+
       if has_srcl(color_map_bg.defined) {
         this->color_map_bg.R = srcl->color_map_bg.R;
         this->color_map_bg.G = srcl->color_map_bg.G;
@@ -1062,6 +1357,9 @@ void thlayout::process_copy() {
 
       if has_srcl(def_doc_title)
         this->doc_title = srcl->doc_title;
+
+      if has_srcl(def_doc_comment)
+        this->doc_comment = srcl->doc_comment;
 
       if has_srcl(def_doc_author)
         this->doc_author = srcl->doc_author;
@@ -1101,6 +1399,33 @@ void thlayout::process_copy() {
   
       if has_srcl(def_transparency)
         this->transparency = srcl->transparency;
+
+      if has_srcl(def_legend)
+        this->legend = srcl->legend;
+
+      if has_srcl(def_map_header)
+        this->map_header = srcl->map_header;
+
+      if has_srcl(def_max_explos)
+        this->max_explos = srcl->max_explos;
+
+      if has_srcl(def_max_topos)
+        this->max_topos = srcl->max_topos;
+
+      if has_srcl(def_max_cartos)
+        this->max_cartos = srcl->max_cartos;
+
+      if has_srcl(def_max_copys)
+        this->max_copys = srcl->max_copys;
+
+      if has_srcl(def_explo_lens)
+        this->explo_lens = srcl->explo_lens;
+
+      if has_srcl(def_topo_lens)
+        this->topo_lens = srcl->topo_lens;
+
+      if (has_srcl(def_lang) && (srcl->lang != THLANG_UNKNOWN))
+        this->lang = srcl->lang;
   
       if has_srcl(def_layers)
         this->layers = srcl->layers;
@@ -1115,6 +1440,7 @@ void thlayout::process_copy() {
         this->pgsnum = srcl->pgsnum;
 
       if (srcl->first_line != NULL) {
+
         // musime ich nakopirovat pred nase
         thlayoutln * cl, * nl, * newfl = NULL, * newll = NULL;
         cl = srcl->first_line;
@@ -1141,6 +1467,7 @@ void thlayout::process_copy() {
       }
       
     } 
+
     // pokracujeme v cykle
     this->first_copy_src = this->first_copy_src->next_src;
   }
@@ -1195,20 +1522,35 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.nav_up = this->navsy;
   LAYOUT.own_pages = this->ownp;
   
-  if (this->doc_title != NULL)
-    LAYOUT.doc_title = this->doc_title;
-  if (this->doc_author != NULL)
+  if (strlen(this->doc_title) > 0)
+    LAYOUT.doc_title = this->doc_title;  
+  if (strlen(this->doc_comment) > 0)
+    LAYOUT.doc_comment = this->doc_comment;
+  if (strlen(this->doc_author) > 0)
     LAYOUT.doc_author = this->doc_author;
-  if (this->doc_subject != NULL)
+  if (strlen(this->doc_subject) > 0)
     LAYOUT.doc_subject = this->doc_subject;
-  if (this->doc_keywords != NULL)
+  if (strlen(this->doc_keywords) > 0)
     LAYOUT.doc_keywords = this->doc_keywords;
   LAYOUT.opacity = this->opacity;
   
   LAYOUT.background_r = this->color_map_bg.R;
   LAYOUT.background_g = this->color_map_bg.G;
   LAYOUT.background_b = this->color_map_bg.B;
+
+  LAYOUT.foreground_r = this->color_map_fg.R;
+  LAYOUT.foreground_g = this->color_map_fg.G;
+  LAYOUT.foreground_b = this->color_map_fg.B;
+
+  LAYOUT.preview_above_r = this->color_preview_above.R;
+  LAYOUT.preview_above_g = this->color_preview_above.G;
+  LAYOUT.preview_above_b = this->color_preview_above.B;
+
+  LAYOUT.preview_below_r = this->color_preview_below.R;
+  LAYOUT.preview_below_g = this->color_preview_below.G;
+  LAYOUT.preview_below_b = this->color_preview_below.B;
   
+  LAYOUT.lang = this->lang;
 }
 
 

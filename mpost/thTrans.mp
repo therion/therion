@@ -1,4 +1,4 @@
-%% translations
+% default translations
 
 let p_station_fixed = p_station_fixed_ASF;
 let p_station_painted = p_station_painted_SKBB;
@@ -23,7 +23,7 @@ let p_popcorn = p_popcorn_UIS;
 let p_disk = p_disk_UIS;
 let p_gypsum = p_gypsum_CCNP;
 let p_aragonite = p_aragonite_CCNP;
-let p_cavepearl = p_cavepearl_JSSJ;
+let p_cavepearl = p_cavepearl_SKBB;
 let p_gypsumflower = p_gypsumflower_CCNP;
 let p_rimstonepool = p_rimstonepool_ASF;
 let p_rimstonedam = p_rimstonedam_ASF;
@@ -79,9 +79,9 @@ let l_wall_unsurveyed = l_wall_unsurveyed_SKBB;
 let l_wall_presumed = l_wall_presumed_UIS;
 %let l_wall_invisible = l_wall_invisible;
 
-let l_water_permanent = l_water_permanent_UIS;
-let l_water_intermittent = l_water_intermittent_JSSJ;
-let l_water_conjectural = l_water_conjectural_SKBB;
+let l_waterflow_permanent = l_waterflow_permanent_UIS;
+let l_waterflow_intermittent = l_waterflow_intermittent_SKBB;
+let l_waterflow_conjectural = l_waterflow_conjectural_SKBB;
 
 let l_border_visible = l_border_visible_SKBB;
 let l_border_temporary = l_border_temporary_SKBB;
@@ -108,7 +108,8 @@ def a_sump = scantokens("a_sump_UIS") enddef;
 def a_sand = scantokens("a_sand_UIS") enddef;
 def a_debris = scantokens("a_debris_SKBB") enddef;
 
-
+let s_northarrow = s_northarrow_SKBB;
+let s_scalebar = s_scalebar_SKBB;
 
 
 %def Pebblespattern = scantokens("thDebrisPattern_SKBB") enddef;

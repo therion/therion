@@ -36,6 +36,7 @@
 #include "thscraplo.h"
 #include "thscraplp.h"
 #include "thscrapen.h"
+#include "thmapstat.h"
 
 /**
  * scrap command options tokens.
@@ -93,9 +94,11 @@ class thscrap : public thdataobject {
   double mx, my, mxx, mxy, myx, myy, mr, ms;  ///< Calibration coeficients.
   
   thscraplo * outline_first;
-  bool outline_parsed, polygon_parsed, ends_parsed;
+  bool outline_parsed, polygon_parsed, ends_parsed, exported;
   thscraplp * polygon_first, * polygon_last;
   thscrapen * ends_first;
+  
+  thmapstat_datamap adata;
   
   void parse_scale(char * ss);
   void parse_stations(char * ss);
@@ -242,6 +245,13 @@ class thscrap : public thdataobject {
    */
      
   void calc_z();
+  
+  
+  /**
+   * Insert associated data from given station.
+   */
+   
+ void insert_adata(class thdb1ds * as);
 
 };
 

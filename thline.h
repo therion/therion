@@ -146,6 +146,7 @@ enum {
   TT_LINE_TYPE_LABEL,
   TT_LINE_TYPE_CEILING_STEP,
   TT_LINE_TYPE_FLOOR_STEP,
+  TT_LINE_TYPE_WATER_FLOW,
 };
 
 /**
@@ -169,6 +170,7 @@ static const thstok thtt_line_types[] = {
   {"slope", TT_LINE_TYPE_SLOPE},
   {"survey", TT_LINE_TYPE_SURVEY},
   {"wall", TT_LINE_TYPE_WALL},
+  {"water-flow", TT_LINE_TYPE_WATER_FLOW},
   {NULL, TT_LINE_TYPE_UNKNOWN},
 };
 
@@ -192,6 +194,9 @@ enum {
   TT_LINE_SUBTYPE_UNDERLYING,
   TT_LINE_SUBTYPE_UNSURVEYED,
   TT_LINE_SUBTYPE_PRESUMED,
+  TT_LINE_SUBTYPE_PERMANENT,
+  TT_LINE_SUBTYPE_INTERMITTENT,
+  TT_LINE_SUBTYPE_CONJECTURAL,
 };
 
 /**
@@ -202,10 +207,13 @@ static const thstok thtt_line_subtypes[] = {
   {"bedrock", TT_LINE_SUBTYPE_BEDROCK},
   {"blocks",TT_LINE_SUBTYPE_BLOCKS},
   {"clay",TT_LINE_SUBTYPE_CLAY},
+  {"conjectural",TT_LINE_SUBTYPE_CONJECTURAL},
   {"debris",TT_LINE_SUBTYPE_DEBRIS},
   {"ice",TT_LINE_SUBTYPE_ICE},
+  {"intermittent",TT_LINE_SUBTYPE_INTERMITTENT},
   {"invisible", TT_LINE_SUBTYPE_INVISIBLE},
   {"pebbles",TT_LINE_SUBTYPE_PEBBLES},
+  {"permanent",TT_LINE_SUBTYPE_PERMANENT},
   {"presumed",TT_LINE_SUBTYPE_PRESUMED},
   {"sand",TT_LINE_SUBTYPE_SAND},
   {"temporary",TT_LINE_SUBTYPE_TEMPORARY},
@@ -355,7 +363,7 @@ class thline : public th2ddataobject {
    * Export to metapost file.
    */
    
-  virtual void export_mp(class thexpmapmpxs * out);
+  virtual bool export_mp(class thexpmapmpxs * out);
 
 
   /**
@@ -364,6 +372,8 @@ class thline : public th2ddataobject {
    
   virtual unsigned export_path_mp(class thexpmapmpxs * out,
       int from = 0, int to = -1);
+
+  virtual void start_insert();
   
 };
 

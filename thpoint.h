@@ -320,6 +320,10 @@ enum {
   TT_POINT_SUBTYPE_PALEO,
   TT_POINT_SUBTYPE_PERMANENT,
   TT_POINT_SUBTYPE_INTERMITTENT,
+  TT_POINT_SUBTYPE_POSITIVE,
+  TT_POINT_SUBTYPE_NEGATIVE,
+  TT_POINT_SUBTYPE_BOTH,
+  TT_POINT_SUBTYPE_UNSIGNED,
 };
 
 
@@ -328,13 +332,17 @@ enum {
  */
  
 static const thstok thtt_point_subtypes[] = {
+  {"both", TT_POINT_SUBTYPE_BOTH},
   {"fixed", TT_POINT_SUBTYPE_FIXED},
   {"intermittent", TT_POINT_SUBTYPE_INTERMITTENT},
   {"natural", TT_POINT_SUBTYPE_NATURAL},
+  {"negative", TT_POINT_SUBTYPE_NEGATIVE},
   {"painted", TT_POINT_SUBTYPE_PAINTED},
   {"paleo", TT_POINT_SUBTYPE_PALEO},
   {"permanent", TT_POINT_SUBTYPE_PERMANENT},
+  {"positive", TT_POINT_SUBTYPE_POSITIVE},
   {"temporary", TT_POINT_SUBTYPE_TEMP},
+  {"unsigned", TT_POINT_SUBTYPE_UNSIGNED},
 	{NULL, TT_POINT_SUBTYPE_UNKNOWN},
 };
 
@@ -503,7 +511,7 @@ class thpoint : public th2ddataobject {
    * Export to metapost file.
    */
    
-  virtual void export_mp(class thexpmapmpxs * out);
+  virtual bool export_mp(class thexpmapmpxs * out);
   
 };
 

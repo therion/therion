@@ -90,6 +90,9 @@ thinput::thinput()
   this->first_ptr = new ifile(NULL);
   this->last_ptr = this->first_ptr;
   this->lnbuffer = new char [thinput::max_line_size];
+  this->pifo = false;
+  this->pifoid = NULL;
+  this->pifoproc = NULL;
 }
 
 
@@ -292,6 +295,15 @@ void thinput::open_file(char * fname)
 #endif
     else {
       this->last_ptr = ifptr;
+      if (this->pifo) {
+        if (this->pifoproc != NULL)
+          this->pifoproc(ifptr->name.get_buffer());
+        if (this->pifoid != NULL)
+          *(this->pifoid) = true;
+        this->pifo = false;
+        this->pifoid = NULL;
+        this->pifoproc = NULL;
+      }
 #ifdef THDEBUG
       thprintf("open file -- %s\n", this->last_ptr->name.get_buffer());
 #endif
@@ -488,5 +500,13 @@ int thinput::get_cif_encoding()
 {
   return this->last_ptr->encoding;
 }
+
+void thinput::print_if_opened(void (* pifop)(char *), bool * printed) {
+  this->pifo = true;
+  if (printed != NULL)
+    this->pifoid = printed;
+  this->pifoproc = pifop;
+}
+
 
 

@@ -33,6 +33,7 @@
 #include "thexport.h"
 #include "thsymbolset.h"
 #include "thlayout.h"
+#include "thlang.h"
 
 /**
  * map export options.

@@ -814,6 +814,7 @@ void thdb2d::process_point_references(thpoint * pp)
             threthrow2(("invalid station reference -- %s",
               pp->station_name.name))
         }
+        pp->fscrapptr->insert_adata(&(this->db->db1d.station_vec[pp->station_name.id - 1]));
       }
       
       if (! pp->extend_name.is_empty()) {
@@ -910,13 +911,16 @@ void thdb2d::process_scrap_references(thscrap * sptr)
         else
           threthrow2(("invalid station reference -- %s",
             lp->station_name.name))
-      } else
-        lp->station = &(this->db->db1d.station_vec[lp->station_name.id - 1]);
-        if (lp->station->uid > 0)
+      }
+      
+      lp->station = &(this->db->db1d.station_vec[lp->station_name.id - 1]);
+      sptr->insert_adata(lp->station);
+      if (lp->station->uid > 0)
           lp->ustation = &(this->db->db1d.station_vec[lp->station->uid - 1]);
         else
           lp->ustation = lp->station;
     }
+    
     lp = lp->next_item;
   }
 }
