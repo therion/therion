@@ -93,50 +93,19 @@ let l_ceilingstep = l_ceilingstep_SKBB;
 let l_chimney = l_chimney_UIS;
 let l_overhang = l_overhang_SKBB;
 let l_slope = l_slope_SKBB;
-let l_contour = l_contour_UIS;
+let l_contour = l_contour_SKBB;
 let l_rockborder = l_rockborder_UIS;
 let l_rockedge = l_rockedge_UIS;
 let l_flowstone = l_flowstone_UIS;
 let l_section = l_section_SKBB;
 let l_survey = l_survey_SKBB;
 let l_arrow = l_arrow_SKBB;
+let l_gradient = l_gradient_UIS;
 
-let PatternFill = thPatternFill;
-
-def a_water = scantokens("a_water_UIS") enddef;
-def a_sump = scantokens("a_sump_UIS") enddef;
-def a_sand = scantokens("a_sand_UIS") enddef;
-def a_debris = scantokens("a_debris_SKBB") enddef;
+let a_water = a_water_UIS;
+let a_sump = a_sump_UIS;
+let a_sand = a_sand_UIS;
+let a_debris = a_debris_SKBB;
 
 let s_northarrow = s_northarrow_SKBB;
 let s_scalebar = s_scalebar_SKBB;
-
-
-%def Pebblespattern = scantokens("thDebrisPattern_SKBB") enddef;
-%def Claypattern = scantokens("thSandPattern_UIS") enddef;
-%def Blockspattern = scantokens("thDebrisPattern_SKBB") enddef;
-%def Flowstonepattern = scantokens("a_water_UIS") enddef;
-%def Moonmilkpattern = scantokens("a_water_UIS") enddef;
-%def Icepattern = scantokens("a_water_UIS") enddef;
-
-
-%let Boxwork = p_undefined;                      % !
-%let SedimentChoke = p_undefined;               % !
-
-
-%let Floorcanyon = l_undefined;
-%let Ceilingcanyon = l_undefined;
-%let Rimstonepath = l_undefined;
-%let Moonmilkpath = l_undefined;
-%let Fixedladderpath = l_undefined;
-%let Ropeladderpath = l_undefined;
-%let Bridgepath = l_undefined;
-%let Fixedline = l_undefined;
-%let Handrail = l_undefined;
-%let Fence = l_undefined;
-%let Concretewall = l_undefined;
-%let Door = l_undefined;
-%let Gate = l_undefined;
-%let Formedpath = l_undefined;
-%let Stepspath = l_undefined;
-%let Bridgepath = l_undefined;

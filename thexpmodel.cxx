@@ -269,6 +269,8 @@ if (var > max) max = var
 #define copy_station_name(stid) \
 strncpy(station_name,dbp->db1d.station_vec[stid].name,8); \
 station_name[8] = 0
+
+#define toft(x) ((x)/0.3048)
   
   // now let's print header
   fprintf(pltf,"Z\t%f\t%f\t%f\t%f\t%f\t%f\n",xmin-avx,xmax-avx,ymin-avy,ymax-avy,zmin,zmax);
@@ -282,14 +284,14 @@ station_name[8] = 0
       if (cur_st != last_st) {
         copy_station_name(cur_st);
         fprintf(pltf,"M\t%f\t%f\t%f\tS%s\tP\t-9.9\t-9.9\t-9.9\t-9.9\n",
-          dbp->db1d.station_vec[cur_st].x - avx, dbp->db1d.station_vec[cur_st].y - avy, 
-          dbp->db1d.station_vec[cur_st].z,station_name);
+          toft(dbp->db1d.station_vec[cur_st].y - avy), toft(dbp->db1d.station_vec[cur_st].x - avx), 
+          toft(dbp->db1d.station_vec[cur_st].z),station_name);
       }
       last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       copy_station_name(last_st);
       fprintf(pltf,"D\t%f\t%f\t%f\tS%s\tP\t-9.9\t-9.9\t-9.9\t-9.9\n",
-        dbp->db1d.station_vec[last_st].x - avx, dbp->db1d.station_vec[last_st].y - avy, 
-        dbp->db1d.station_vec[last_st].z,station_name);
+        toft(dbp->db1d.station_vec[last_st].y - avy), toft(dbp->db1d.station_vec[last_st].x - avx), 
+        toft(dbp->db1d.station_vec[last_st].z),station_name);
     }
   }
 

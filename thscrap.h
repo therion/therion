@@ -93,6 +93,9 @@ class thscrap : public thdataobject {
   
   double mx, my, mxx, mxy, myx, myy, mr, ms;  ///< Calibration coeficients.
   
+  double maxdist, avdist;
+  thdb2dpt * maxdistp1, * maxdistp2;
+  
   thscraplo * outline_first;
   bool outline_parsed, polygon_parsed, ends_parsed, exported;
   thscraplp * polygon_first, * polygon_last;

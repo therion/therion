@@ -370,6 +370,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 #endif 
 
   out.symset = &(this->symset);
+  out.layout = this->layout;
   out.ms = this->layout->scale * 2834.64566929;
   // korekcia shiftu na layout origin
   if (!thisnan(this->layout->ox)) {
@@ -468,6 +469,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   this->layout->export_mpost(mpf);
   
   this->layout->export_mpost_symbols(mpf, &(this->symset));
+  
+  fprintf(mpf,"transparency:=%s;\n", (this->layout->transparency ? "true" : "false"));
   
 //fprintf(mpf,"write EOF to \"missed.dat\";\n\n");
 
@@ -571,8 +574,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   }
                   // pred orezanim
                   if (exps.F > 0) {
-                    fprintf(plf,"\t\t F => \"data.%d\",\n",exps.F);
-                    sprintf(texb.get_buffer(),"data.%d",exps.F);
+                    fprintf(plf,"\t\t F => \"data.%ld\",\n",exps.F);
+                    sprintf(texb.get_buffer(),"data.%ld",exps.F);
                     SCRAPITEM->F = texb.get_buffer();
                   }
 //                  else
@@ -580,14 +583,14 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     
                   // orezavacia cesta a outlines
                   if (exps.B > 0) {
-                    fprintf(plf,"\t\t B => \"data.%d\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%d",exps.B);
+                    fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
+                    sprintf(texb.get_buffer(),"data.%ld",exps.B);
                     SCRAPITEM->B = texb.get_buffer();
-                    fprintf(plf,"\t\t I => \"data.%dbg\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%dbg",exps.B);
+                    fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
+                    sprintf(texb.get_buffer(),"data.%ldbg",exps.B);
                     SCRAPITEM->I = texb.get_buffer();
-                    fprintf(plf,"\t\t C => \"data.%dclip\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%dclip",exps.B);
+                    fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
+                    sprintf(texb.get_buffer(),"data.%ldclip",exps.B);
                     SCRAPITEM->C = texb.get_buffer();
                   }
 //                  else {
@@ -598,19 +601,19 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     
                   // po orezani
                   if (exps.E > 0) {
-                    fprintf(plf,"\t\t E => \"data.%d\",\n",exps.E);
-                    sprintf(texb.get_buffer(),"data.%d",exps.E);
+                    fprintf(plf,"\t\t E => \"data.%ld\",\n",exps.E);
+                    sprintf(texb.get_buffer(),"data.%ld",exps.E);
                     SCRAPITEM->E = texb.get_buffer();
                   }
 //                  else
 //                    fprintf(plf,"\t\t E => \"data.0\",\n");
     
                   if (exps.X > 0) {
-                    fprintf(plf,"\t\t X => \"data.%d\",\n",exps.X);
-                    sprintf(texb.get_buffer(),"data.%d",exps.X);
+                    fprintf(plf,"\t\t X => \"data.%ld\",\n",exps.X);
+                    sprintf(texb.get_buffer(),"data.%ld",exps.X);
                     SCRAPITEM->X = texb.get_buffer();
-                    fprintf(plf,"\t\t P => \"data.%dbbox\",\n",exps.X);
-                    sprintf(texb.get_buffer(),"data.%dbbox",exps.X);
+                    fprintf(plf,"\t\t P => \"data.%ldbbox\",\n",exps.X);
+                    sprintf(texb.get_buffer(),"data.%ldbbox",exps.X);
                     SCRAPITEM->P = texb.get_buffer();
                   }
 
@@ -639,18 +642,18 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                     SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
                     SCRAPITEM->sect = 0;
                     SCRAPITEM->name = thexpmap_u2string(sscrap + 1);
-                    fprintf(plf,"\t\t B => \"data.%d\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%d",exps.B);
+                    fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
+                    sprintf(texb.get_buffer(),"data.%ld",exps.B);
                     SCRAPITEM->B = texb.get_buffer();
-                    fprintf(plf,"\t\t I => \"data.%dbg\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%dbg",exps.B);
+                    fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
+                    sprintf(texb.get_buffer(),"data.%ldbg",exps.B);
                     SCRAPITEM->I = texb.get_buffer();
-                    fprintf(plf,"\t\t C => \"data.%dclip\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%dclip",exps.B);
+                    fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
+                    sprintf(texb.get_buffer(),"data.%ldclip",exps.B);
                     SCRAPITEM->C = texb.get_buffer();
-                    //fprintf(plf,"\t\t B => \"data.%d\",\n",exps.B);
-                    //fprintf(plf,"\t\t I => \"data.%dbg\",\n",exps.B);
-                    //fprintf(plf,"\t\t C => \"data.%dclip\",\n",exps.B);
+                    //fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
+                    //fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
+                    //fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
                     fprintf(plf,"\t\t Y => %ld,\n",cbm->bm->selection_xs->preview_output_number);
                     SCRAPITEM->layer = (int) cbm->bm->selection_xs->preview_output_number;
                     fprintf(plf,"\t\t V => -1,\n");
@@ -1043,7 +1046,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   somex = false;
 #define thexpmap_export_mp_bgif if (!somex) {\
   result.F = startnum++;\
-  fprintf(out->file,"beginfig(%d);\n",result.F);} \
+  fprintf(out->file,"beginfig(%ld);\n",result.F);} \
   somex = true
 
 #define thxmempiov ((obj->tags & TT_2DOBJ_TAG_VISIBILITY_ON) > 0)
@@ -1091,7 +1094,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 #undef thexpmap_export_mp_bgif
 #define thexpmap_export_mp_bgif if (!somex) {\
   result.B = startnum++;\
-  fprintf(out->file,"beginfig(%d);\n",result.B);} \
+  fprintf(out->file,"beginfig(%ld);\n",result.B);} \
   somex = true
   
   lo = scrap->get_outline();
@@ -1204,7 +1207,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 #undef thexpmap_export_mp_bgif
 #define thexpmap_export_mp_bgif if (!somex) {\
   result.E = startnum++;\
-  fprintf(out->file,"beginfig(%d);\n",result.E);} \
+  fprintf(out->file,"beginfig(%ld);\n",result.E);} \
   somex = true
   
   for (placeid = TT_2DOBJ_PLACE_BOTTOM; placeid <= TT_2DOBJ_PLACE_TOP; placeid++) {
@@ -1301,6 +1304,31 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     }
     obj = obj->pscrapoptr;
   }
+
+  if ((scrap->maxdistp1 != NULL) && (out->layout->is_debug_stations())) {
+    thexpmap_export_mp_bgif;
+    fprintf(out->file,"p_debug(-1,1,");
+    scrap->maxdistp1->export_mp(out);
+    fprintf(out->file,");\np_debug(-1,1,");
+    scrap->maxdistp2->export_mp(out);
+    fprintf(out->file,");\nl_debug(-1,1,(");
+    scrap->maxdistp1->export_mp(out);
+    fprintf(out->file," -- ");
+    scrap->maxdistp2->export_mp(out);
+    fprintf(out->file,"));\np_debug(-2,1,");
+    scrap->maxdistp1->export_mp(out,0);
+    fprintf(out->file,");\np_debug(-2,1,");
+    scrap->maxdistp2->export_mp(out,0);
+    fprintf(out->file,");\nl_debug(-2,1,(");
+    scrap->maxdistp1->export_mp(out);
+    fprintf(out->file," -- ");
+    scrap->maxdistp1->export_mp(out,0);
+    fprintf(out->file," -- ");
+    scrap->maxdistp2->export_mp(out,0);
+    fprintf(out->file," -- ");
+    scrap->maxdistp2->export_mp(out);
+    fprintf(out->file,"));\n");
+  }
   
   if (somex) {
     fprintf(out->file,"endfig;\n");  
@@ -1311,10 +1339,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 #undef thexpmap_export_mp_bgif
 #define thexpmap_export_mp_bgif if (!somex) {\
   result.X = startnum++;\
-  fprintf(out->file,"beginfig(%d);\n",result.X);} \
+  fprintf(out->file,"beginfig(%ld);\n",result.X);} \
   somex = true
   somex = false;
-
+  
   obj = scrap->ls2doptr;
   if (outline_mode) obj = NULL;
   while (obj != NULL) {

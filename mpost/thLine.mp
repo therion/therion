@@ -200,29 +200,6 @@ def l_ceilingstep_SKBB (expr P) =
   endfor;
 enddef;
 
-def l_slope_UIS (expr P, showline, widthA, widthB) = 
-  T:=identity;
-  boolean par;
-  cas := 0;
-  krok := 0.7u;
-  dlzka := arclength P;
-  mojkrok:=adjust_step(dlzka,1.4u) / 2;
-  pickup PenD;
-  par := false; 
-  forever:
-    t := arctime cas of P;
-    width:=(cas/dlzka)[widthA,widthB];
-%   show width;
-    if par: mark_(P,t,.33*width) 
-    else: mark_(P,t,width) fi;
-    cas := cas + mojkrok;
-    par := not par;
-    exitif cas > dlzka + (krok / 3);  % for rounding errors
-  endfor;
-  if showline = 1: pickup PenC; draw P fi;
-enddef;
-
-
 boolean alw_perpendicular;
 
 def l_slope_SKBB (expr P,S)(text Q) = 
@@ -244,14 +221,14 @@ def l_slope_SKBB (expr P,S)(text Q) =
     if unknown dirs[i]: dirs[i]:=-1; 
     else: 
       if dirs[i]>-1:
-        dirs[i]:=(90-dirs[i]) mod 360; 
+        dirs[i]:=((90-dirs[i]) - angle(thdir(P,i))) mod 360; 
         alw_perpendicular:=false;
       fi;
     fi;
     if unknown lengths[i]: lengths[i]:=-1; fi;
   endfor;
 
-% for i=0 upto li: show dirs[i]; endfor;
+%for i=0 upto li: show dirs[i]; endfor;
 
   ni:=0; % next
   pi:=0; % previous
@@ -282,7 +259,7 @@ def l_slope_SKBB (expr P,S)(text Q) =
     fi;
   endfor;
 
-% for i=0 upto li: show dirs[i]; endfor;
+%for i=0 upto li: show dirs[i]; endfor;
 
   ni:=0; % next
   pi:=0; % previous
@@ -328,22 +305,22 @@ def l_slope_SKBB (expr P,S)(text Q) =
       w := (arclength(subpath(floor t,t) of P) / 
             arclength(subpath(floor t,ceiling t) of P));
       if alw_perpendicular:
-        a := angle(thdir(P,t))+90;
+        a := 90;
       else:
         a := w[dirs[floor t],dirs[ceiling t]];
       fi;
       l := w[lengths[floor t],lengths[ceiling t]];
     else:
       if alw_perpendicular:
-        a := angle(thdir(P,t))+90;
+        a := 90;
       else:
         a:= dirs[t];
       fi; 
       l:=lengths[t];
     fi;
-%    if (a-angle(thdir(P,t))) mod 360>180:
-%      a:=a-180;
-%    fi;
+    
+    a := a + angle(thdir(P,t));
+    
     thdraw (point t of P) -- 
       ((point t of P) + if par: 0.333 * fi l * unitvector(dir(a)));
     cas := cas + mojkrok;
@@ -355,37 +332,46 @@ def l_slope_SKBB (expr P,S)(text Q) =
 %for i=0 upto li: draw point i of P; endfor;
 enddef;
 
-
-def l_contour_UIS(expr P)(text txt) =      % osetrit Reverse!
+def l_contour_UIS(expr P)(text txt) =
   T:=identity;
   pickup PenD;
   thdraw P;
   for pnt=txt:
-    if pnt=-1:
+    if pnt=-2:
       mark_(P,arctime(arclength(P)/2) of P, 0.2u);
-    else:
+    elseif pnt>=0:
       mark_(P,pnt,0.2*u);
     fi;
-    exitif pnt=-1;
+    exitif pnt<0;
   endfor;
 enddef;
 
+def l_contour_SKBB(expr P)(text txt) =
+  T:=identity;
+  pickup PenD;
+  thdraw P;
+  for pnt=txt:
+    if (pnt=-2) or (pnt=-1):
+      mark_(P,arctime(arclength(P)/2) of P, 0.2u);
+    elseif pnt>=0:
+      mark_(P,pnt,0.2*u);
+    fi;
+    exitif pnt<0;
+  endfor;
+enddef;
 
 def l_rockborder_UIS (expr P) = 
   T:=identity;
   pickup PenC;
+  if cycle P: thclean P fi;
   thdraw P;
 enddef;
-
 
 def l_rockedge_UIS (expr P) = 
   T:=identity;
   pickup PenD;
   thdraw P;
 enddef;
-
-
-
 
 def l_border_visible_SKBB (expr Path) =
   T:=identity;
@@ -416,8 +402,6 @@ def l_flowstone_UIS (expr P) =
   endfor;
 enddef;
 
-%def PolygonLine = .8u enddef;
-
 def l_survey_SKBB (expr P) =
   T:=identity;
   PolygonLine:=.8u;
@@ -444,52 +428,6 @@ def l_survey_UIS (expr P) =
     zz2 := point t+1 of P;
     draw zz1 -- zz2;
   endfor;
-enddef;
-
-
-def ShiftedPath_A (expr Path, Dist, Az) =
-    path ppp,pp[];
-    pair Dir[];
-    for t = 0 upto length Path - 1:
-        pair zz[];
-        Dir1 := dir((angle(direction t-epsilon of Path) + 
-                     angle(direction t+epsilon of Path)) / 2);
-        Dir2 := dir((angle(direction t+1-epsilon of Path) + 
-                     angle(direction t+1+epsilon of Path)) / 2);                 
-        zooma := 1 / (cosd(angle(direction t+epsilon of Path) - angle(Dir1)));
-        zoomb := 1 / (cosd(angle(direction t+1-epsilon of Path) - angle(Dir2)));
-        zz1 := point t of Path;    zz2 := point t+1 of Path;
-        zz3 := postcontrol t of Path;    zz4 := precontrol t+1 of Path;
-        if abs(angle(Dir1) - angle(Dir2)) > 10*epsilon:
-
-            zz0 = (zz1 + whatever * (Dir1 rotated 90)) 
-                = (zz2 + whatever * (Dir2 rotated 90));
-            zz5 := zz1 + (Dist * zooma * unitvector(Dir1 rotated Az));
-            zz6 := zz2 + (Dist * zoomb * unitvector(Dir2 rotated Az));
-            zz7 = zz5 + whatever * (zz3-zz1) = zz0 + whatever * (zz3-zz0);
-            zz8 = zz6 + whatever * (zz4-zz2) = zz0 + whatever * (zz4-zz0);
-%            for i = 0: drawdot zz[i]; endfor;
-%            draw zz1--zz0--zz2;
-        else:
-            def Shift = (Dist * unitvector(Dir1 rotated Az)) enddef;
-            zz5 := zz1 + Shift;
-            zz6 := zz2 + Shift;
-            zz7 := zz3 + Shift;
-            zz8 := zz4 + Shift;
-        fi;
-        pp[t] := zz5 .. controls zz7 and zz8 .. zz6;
-    endfor;
-    ppp := pp[0];
-    for t = 1 upto length Path - 1:
-        ppp := ppp -- pp[t];
-    endfor;
-enddef;
-
-def DoublePit_A (expr Path, Dist) =
-    ShiftedPath (Path, Dist/2, -90);
-    Pit(ppp);
-    ShiftedPath (Path, Dist/2, 90);
-    Pit(reverse ppp);
 enddef;
 
 def l_waterflow_permanent_UIS (expr Path) =
@@ -542,18 +480,6 @@ def l_undefined (expr P) =
   pickup PenC;
   thdraw P withcolor red;
   message("[Warning: undefined line symbol used]");
-enddef;
-
-def NoJoinPath expr P =
-  T:=identity;
-  pickup PenC;
-  thdraw P withcolor blue;
-enddef;
-
-def NoMorphPath expr P =
-  T:=identity;
-  pickup PenC;
-  thdraw P withcolor blue dashed evenly;
 enddef;
 
 % Q = 0 -- no arrows
@@ -610,4 +536,26 @@ enddef;
 
 let l_border_invisible = l_invisible;
 let l_wall_invisible = l_invisible;
-%let l_section_SKBB = l_border_visible_SKBB;
+
+def l_debug (expr col, pen, P) =
+  T:=identity;
+  pickup if pen=0: PenD else: PenB fi;
+  thdraw P 
+    withcolor if col=-2: (1,.85,0)
+          elseif col=-1: black 
+           elseif col=0: red 
+                   else: blue fi;
+enddef;
+
+def l_gradient_UIS (expr P) =
+  T:=identity;
+  pickup PenC;
+  thdraw P;
+  p:=(-.15u,-.4u)--(0,0)--(.15u,-.4u)--cycle;
+  thfill (p rotated (angle(direction infinity of P)-90) 
+         shifted (point infinity of P));
+  thdraw (p rotated (angle(direction infinity of P)-90) 
+         shifted (point infinity of P));
+enddef;
+
+

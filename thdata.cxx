@@ -213,8 +213,9 @@ thcmd_option_desc thdata::get_cmd_option_desc(char * opts)
 void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
   thdate temp_date;
-  thperson temp_person;
+  thperson temp_person, temp_person2;
   int prole_i;
+  thdata_team_set_type::iterator tsi;
   switch (cod.id) {
   
     case 0:
@@ -347,15 +348,15 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
         }
       }
       break;
-    
+
     case TT_DATA_DISCOVERY_TEAM:
       if ((indataline & THOP_INLINE) == 0)
-        ththrow(("not a command line option -- discovery-team"))
+        ththrow(("not a command line option -- explo-team"))
       thencode(&(this->db->buff_enc), *args, argenc);
       temp_person.parse(this->db, this->db->buff_enc.get_buffer());
       this->discovery_team_set.insert(temp_person);
       break;
-    
+
     // if not found, try to set fathers properties  
     default:
       thdataobject::set(cod, args, argenc, indataline);
@@ -1240,12 +1241,20 @@ void thdata::set_data_data(int nargs, char ** args)
           err_duplicate = true;
           break;
         }
+        if (this->di_newline) {
+          err_idanl = true;
+          break;
+        }
         this->di_up = true;
         break;
         
       case TT_DATALEG_DOWN:
         if (this->di_down) {
           err_duplicate = true;
+          break;
+        }
+        if (this->di_newline) {
+          err_idanl = true;
           break;
         }
         this->di_down = true;
@@ -1256,12 +1265,20 @@ void thdata::set_data_data(int nargs, char ** args)
           err_duplicate = true;
           break;
         }
+        if (this->di_newline) {
+          err_idanl = true;
+          break;
+        }
         this->di_left = true;
         break;
         
       case TT_DATALEG_RIGHT:
         if (this->di_right) {
           err_duplicate = true;
+          break;
+        }
+        if (this->di_newline) {
+          err_idanl = true;
           break;
         }
         this->di_right = true;

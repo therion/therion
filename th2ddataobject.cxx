@@ -36,7 +36,7 @@ th2ddataobject::th2ddataobject()
   this->fscrapptr = NULL;
   this->scale = TT_2DOBJ_SCALE_M;
   this->tags = TT_2DOBJ_TAG_CLIP_AUTO | TT_2DOBJ_TAG_VISIBILITY_ON;
-  this->place = TT_2DOBJ_PLACE_NONE;
+  this->place = TT_2DOBJ_PLACE_DEFAULT;
 }
 
 

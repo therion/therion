@@ -6,7 +6,7 @@
 %% $RCSfile: thText.mp,v $
 %% $Revision: 1.6 $
 %%
-%% Copyright (C) 2000 Martin Budaj
+%% Copyright (C) 2000-2004 Martin Budaj
 %%
 %% -------------------------------------------------------------------- 
 %% This program is free software; you can redistribute it and/or modify
@@ -23,9 +23,6 @@
 %% along with this program; if not, write to the Free Software
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% --------------------------------------------------------------------
-
-% @LIBRARY
-% thText --
 
 labeloffset:=0bp;
 

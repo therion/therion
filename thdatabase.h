@@ -330,6 +330,12 @@ class thdatabase {
    */
  
   void self_print_library();
+  
+  /**
+   * Process database references.
+   */
+   
+  void preprocess();
 
 };
 

@@ -73,7 +73,8 @@ class thdb2dprj {
   char type;  ///< Projection type.
   int id;  ///< ID.
   char * index;  ///< Projection index.
-  double pp1;  ///< Projection parameter 1.
+  double pp1,  ///< Projection parameter 1.
+    amaxdist;
   bool processed; ///< Check whether projection is processed.
   
   class thscrap * first_scrap,  ///< First scrap in projection.

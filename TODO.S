@@ -1,22 +1,21 @@
 HNED:
-+ odstranit bug s LRUD pri interleaved data (wookey)
-+ switch ci to dat pred alebo za pri interleaved mode (alebo aspon
-  start-up switch)
-+ pozriet sa na zuby prazdnym riadkom
-+ debugovacie mody (-D bude terajsie -d, -d bude vykreslovat 
-  obrysy a meracske body pred posuvanim a pred joinami) - makra:
-  dbg_visible_wall, dbg_invisible_wall, dbg_station  
++ vyrovnavanie polygonu
++ vymysliet ukladanie LRUD
++ z thdb1d exportovat serie s LRUD
++ 3D scanovanie
++ zarovnavanie legendy zvonku (na sirku)
 + otacanie vystupnej mapy aj sipky na sever
 + [...] oznacovanie texovskych textov
-+ x: pridat button move to scrap alebo strom
-+ x: area edit window
-+ x: kontrolovat ci subor nebol modifikovany vonku. Ak hej, zavriet 
-  - nacitat - znova otvorit v tom istom pohlade (2D)
 + -adjust horizontal|vertical pre line point (zakazat v projection plan)
++ pozriet sa na zuby prazdnym riadkom
 
 HOTOVO:
 
 POTOM:
++ xtherion: nezobrazuje encoding pre thconfig
++ xtherion: kontrolovat ci subor nebol modifikovany vonku. Ak hej, zavriet 
+  - nacitat - znova otvorit v tom istom pohlade (2D)
++ area blocks
 + systemy jednotiek
 + kontrolovat duplikovane body v scrape
 + navrhnut kroky pre 3D
@@ -27,15 +26,10 @@ POTOM:
 + rozsirit cislovanie suborov pre metapost na podadresare
 + exportovat styl gridu - ked to bude podporovane v thpdf
 * SVG - cvicna verzia
-* rozsirena statistika (zakladna statistika
-  + thstat (pre vybrane surveys resp. vsetky) 
-  + meraci (od kedy do kedy, kolko do hromady pod zemou, na povrchu)
-  + kreslici (od kedy do kedy, kolko)
-  + roky (kolko m bolo zameranych)
-  + uzavrete okruhy a chyby na nich
-  + pocitame len pri exporte v ???
+* do SQL - uzavrete okruhy a chyby na nich
 
 KED TO BUDE TREBA:
++ xtherion: stromova struktura pre outline v mapovom editore)
 + pridat do mapy moznost dat survey -> vtedy da len jeho polygon
 + pridat -map-level scrap -> rozvijanie na samotne scrapy
 + rozsirene make install 

@@ -27,7 +27,6 @@ It's a distribution of GNU utilities with GNU make and GCC.
 
 \subsubchapter Hacker's guide.
 
-\penalty-20
 {\it Make parameters}
 
 Therion's {\it makefile} may take some optional parameters.
@@ -42,7 +41,6 @@ Therion's {\it makefile} may take some optional parameters.
 * |clean| = delete all temporary files
 \endlist
 
-\penalty-20
 {\it Adding new translations}
 
 Therion supports translation of map labels. 
@@ -58,7 +56,6 @@ Suppose you want to add a new language xx.
 \endlist
 
 
-\penalty-20
 {\it Adding new encodings}
 
 Although UTF-8 Unicode encoding covers all characters which Therion is able to 
@@ -71,7 +68,6 @@ The translation file should contain two hexadecimal values of a character
 (first one in the 8-bit encoding, second one in Unicode) in each line. Possible 
 comments follow the `|#|' character. 
 
-\penalty-20
 {\it Adding new \TeX\ encodings}
 
 It's easy to add new encodings for 2D map output. Copy an appropriate encoding 
@@ -84,7 +80,6 @@ font. You may find more details in the chapter {\it 6.3.1.5 Encoding file
 format} in the documentation to Dvips program.
 
 
-\penalty-20
 {\it Generating new \TeX\ and \MP\ headers}
 
 Therion uses \TeX\ and \MP\ for 2D map visualization and typesetting. 
@@ -317,8 +312,7 @@ process them with Therion.
        such as {\it transformation functions}, which alowed user-specification
        of the input format for survey data.
 				
-* {\bf 2000}
-
+* {\bf 2000}\nobreak\par\nobreak
   Jan: xthedit (Tcl/Tk), a graphical front-end for Therion
 
   Feb 18: start of (first?) reprogramming (Perl)
@@ -379,7 +373,6 @@ new features to be implemented:
 \subsubchapter 2D maps.
 
 \list
-* debugging mode
 * SVG support
 \endlist
 

@@ -109,6 +109,7 @@ class thdb2d {
   void pp_process_joins(thdb2dprj * prj); ///< ???
   void pp_smooth_lines(thdb2dprj * prj);  ///< ???
   void pp_smooth_joins(thdb2dprj * prj);  ///< ???
+  void pp_calc_distortion(thdb2dprj * prj);  ///< ???
 
   void insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level); ///< ???
   thdb2dxm * insert_maps(thdb2dxm * selection,thdb2dxm * insert_after,thmap * map, 

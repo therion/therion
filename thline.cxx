@@ -261,9 +261,6 @@ void thline::parse_type(char * ss)
     case TT_LINE_TYPE_WATER_FLOW:
       this->csubtype = TT_LINE_SUBTYPE_PERMANENT;  
       break;
-    case TT_LINE_TYPE_CONTOUR:
-      this->tags |= TT_LINE_TAG_GRADIENT_CENTER;
-      break;
     case TT_LINE_TYPE_ARROW:
       this->tags |= TT_LINE_TAG_HEAD_END;
       break;
@@ -622,6 +619,16 @@ bool thline::export_mp(class thexpmapmpxs * out)
             fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
             this->export_path_mp(out,from,to);
             fprintf(out->file,");\n");
+            if (out->layout->is_debug_joins()) {
+              fprintf(out->file,"l_debug(1,1,");
+              this->export_path_mp(out,from,to,1);
+              fprintf(out->file,");\n");
+            }
+            if (out->layout->is_debug_stations()) {
+              fprintf(out->file,"l_debug(0,1,");
+              this->export_path_mp(out,from,to,0);
+              fprintf(out->file,");\n");
+            }
           }
         }
         from = to;
@@ -668,8 +675,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
       fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_CONTOUR));
       this->export_path_mp(out);
       from = 0;
-      if ((this->tags & TT_LINE_TAG_GRADIENT_CENTER) > 0) {
-          fprintf(out->file,",-1");
+      if ((this->tags & TT_LINE_TAG_GRADIENT_NONE) > 0) {
+          fprintf(out->file,",-3");
+      } else if ((this->tags & TT_LINE_TAG_GRADIENT_CENTER) > 0) {
+          fprintf(out->file,",-2");
       } else if ((this->tags & TT_LINE_TAG_GRADIENT_POINT) > 0) {
         lp = this->first_point;
         while (lp != NULL) {
@@ -679,7 +688,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           from++;
         }
       } else {
-          fprintf(out->file,",");
+          fprintf(out->file,",-1");
       }
       fprintf(out->file,");\n");
       postprocess = false;  
@@ -768,6 +777,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_FLOWSTONE, SYML_FLOWSTONE)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_BORDER, SYML_ROCKBORDER)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_EDGE, SYML_ROCKEDGE)
+    thline_type_export_mp(TT_LINE_TYPE_GRADIENT, SYML_GRADIENT)
     thline_type_export_mp(TT_LINE_TYPE_SURVEY, SYML_SURVEY)
     case TT_LINE_TYPE_ARROW:
       if (!out->symset->assigned[SYML_ARROW]) {
@@ -846,6 +856,16 @@ bool thline::export_mp(class thexpmapmpxs * out)
             fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
             this->export_path_mp(out,from,to);
             fprintf(out->file,");\n");
+            if (out->layout->is_debug_joins()) {
+              fprintf(out->file,"l_debug(1,0,");
+              this->export_path_mp(out,from,to,1);
+              fprintf(out->file,");\n");
+            }
+            if (out->layout->is_debug_stations()) {
+              fprintf(out->file,"l_debug(0,0,");
+              this->export_path_mp(out,from,to,0);
+              fprintf(out->file,");\n");
+            }
           }
         }
         from = to;
@@ -899,6 +919,16 @@ bool thline::export_mp(class thexpmapmpxs * out)
         fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
         this->export_path_mp(out);
         fprintf(out->file,");\n");
+        if (out->layout->is_debug_joins()) {
+          fprintf(out->file,"l_debug(1,0,");
+          this->export_path_mp(out,0,-1,1);
+          fprintf(out->file,");\n");
+        }
+        if (out->layout->is_debug_stations()) {
+          fprintf(out->file,"l_debug(0,0,");
+          this->export_path_mp(out,0,-1,0);
+          fprintf(out->file,");\n");
+        }
       }
     }
   }
@@ -908,7 +938,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
 
 
 unsigned thline::export_path_mp(class thexpmapmpxs * out,
-      int from, int to)
+      int from, int to, int dbglevel)
 {
   thdb2dlp * lp = this->first_point;
   thdb2dpt * prev_pt;
@@ -919,26 +949,29 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
     if (long(last) == long(from)) {
       dnu = true;
       fprintf(out->file,"(");
-      lp->point->export_mp(out);
+      lp->point->export_mp(out,dbglevel);
       fprintf(out->file,"\n");
       if (long(last) == long(to)) {
         fprintf(out->file," -- ");
-        lp->point->export_mp(out);
+        lp->point->export_mp(out,dbglevel);
       }
       prev_pt = lp->point;
     } 
     else if (dnu) {
       if ((lp->cp1 != NULL) && (lp->cp2 != NULL)) {
         fprintf(out->file," .. controls ");
-        lp->cp1->export_mp(out);
+        lp->cp1->export_mp(out,dbglevel);
         fprintf(out->file," and ");
-        lp->cp2->export_mp(out);
+        lp->cp2->export_mp(out,dbglevel);
         fprintf(out->file," .. ");
       } 
       else {
         fprintf(out->file," -- ");
       }
-      lp->point->export_mp(out);
+      if ((from == 0) && (lp->nextlp == NULL) && (this->is_closed))
+        fprintf(out->file,"cycle");
+      else
+        lp->point->export_mp(out,dbglevel);
       fprintf(out->file,"\n");
     }
     prev_pt = lp->point;
@@ -996,16 +1029,17 @@ void thline::parse_gradient(char * ss) {
   gd = thmatch_token(ss,thtt_line_gradient);
   switch (gd) {
     case TT_LINE_GRADIENT_NONE:
-      this->tags &= ~(TT_LINE_TAG_GRADIENT_CENTER | TT_LINE_TAG_GRADIENT_POINT);
+      this->tags &= ~(TT_LINE_TAG_GRADIENT_NONE | TT_LINE_TAG_GRADIENT_CENTER | TT_LINE_TAG_GRADIENT_POINT);
+      this->tags |= TT_LINE_TAG_GRADIENT_NONE;
       break;
     case TT_LINE_GRADIENT_CENTER:
-      this->tags &= ~(TT_LINE_TAG_GRADIENT_CENTER | TT_LINE_TAG_GRADIENT_POINT);
+      this->tags &= ~(TT_LINE_TAG_GRADIENT_NONE | TT_LINE_TAG_GRADIENT_CENTER | TT_LINE_TAG_GRADIENT_POINT);
       this->tags |= TT_LINE_TAG_GRADIENT_CENTER;
       break;
     case TT_LINE_GRADIENT_POINT:
       if (this->last_point == NULL)
         ththrow(("no line point specified"))
-      this->tags &= ~TT_LINE_TAG_GRADIENT_CENTER;
+      this->tags &= ~(TT_LINE_TAG_GRADIENT_NONE | TT_LINE_TAG_GRADIENT_CENTER | TT_LINE_TAG_GRADIENT_POINT);
       this->tags |= TT_LINE_TAG_GRADIENT_POINT;
       this->last_point->tags |= TT_LINEPT_TAG_GRADIENT;
       break;

@@ -200,12 +200,28 @@ proc xth_app_finish {} {
       -command "xth_app_normalize" -font $xth(gui,lfont)
   $m add command -label "Switch panels" -underline 1 \
       -command "xth_app_switch" -font $xth(gui,lfont)
+  $m add separator
+  
+  menu $m.kbes -tearoff 0
+  set encnames [encoding names]
+  set xth(encoding_system) [encoding system]
+  foreach ecd [lsort $xth(kbencodings)] {
+    if {[lsearch $encnames $ecd] >= 0} {
+      $m.kbes add radiobutton -label $ecd \
+        -command "encoding system $ecd\nset xth(encoding_system) \[encoding system\]" -font $xth(gui,lfont) \
+        -variable xth(encoding_system) -value $ecd
+    }
+  }
+  $m add cascade -label "KBD encoding" -menu $m.kbes
+  
 
   if {$xth(debug)} {
     set dm "$xth(gui,main).dmenu"
     menu $dm -tearoff 0
   
     $dm add command -label "Refresh procs" -underline 0 -command {
+      source global.tcl
+      source sbar.tcl
       source cp_procs.tcl
       source te_sdata.tcl
       source me_imgs.tcl
@@ -269,10 +285,15 @@ proc xth_app_title {aname} {
   } else {
     set atit ""
   }
-  if {[string length $ofn] > 0} {
-    wm title $xth(gui,main) "$xth(prj,name)$atit - $xth($aname,open_file)"
+  if {[string equal $aname me] && ([string length $xth(me,curscrap)] > 0)} {
+    set sname " - $xth(me,curscrap)"
   } else {
-    wm title $xth(gui,main) "$xth(prj,name)$atit"
+    set sname ""
+  }
+  if {[string length $ofn] > 0} {
+    wm title $xth(gui,main) "$xth(prj,name)$atit - $xth($aname,open_file)$sname"
+  } else {
+    wm title $xth(gui,main) "$xth(prj,name)$atit$sname"
   }
 }
 

@@ -1,10 +1,11 @@
 encoding  utf-8
-  survey tp -title "test survey"
+  survey tp -title "test survey" -person-rename "Erika Kovacova" "Erika Mudrakova"
     
-    centerline
+    centerline -id 19920112
     
       date 1992.1.12
       team "Stacho Mudrak"
+      team "Erika Kovacova"
       team "Martin Budaj"
       explo-date 1990.12.1
       explo-team "Milan Stec"
@@ -20,6 +21,13 @@ encoding  utf-8
          fix 0 0 0 1500   
       
     endcentreline
+    
+    centerline
+      data normal station up down left right newline bearing clino length
+        0 1 1 1 1
+          1 2 3
+        1 2 3 4 5
+    endcenterline
     
     centreline
       data normal from to bearing clino length

@@ -280,7 +280,8 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
     while (obi != this->db->object_list.end()) {
       if (((*obi)->get_class_id() == TT_MAP_CMD) &&
           (((thmap*)(*obi))->projection_id == prj->id) &&
-          (((thmap*)(*obi))->is_basic)) {
+          (((thmap*)(*obi))->is_basic) &&
+          (((thmap*)(*obi))->fsptr->is_selected())) {
         prj->stat.scanmap((thmap*)(*obi));  
         prj->stat.addstat(&(((thmap*)(*obi))->stat));
         cxm = this->insert_xm();
@@ -387,7 +388,9 @@ void thdb2d::reset_selection() {
 char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
 
   long newmin = 0, tmpmin;
-  char * newname = NULL, * tmpname;
+  char * newname = fptr->title, * tmpname;
+  if (strlen(newname) == 0)
+    newname = fptr->name;
   thdataobject * o;
   thsurvey * s = fptr, * ss;
   while (s != NULL) {
@@ -403,9 +406,7 @@ char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
         s->num1 += tmpmin;
         if (tmpmin > newmin) {
           newmin = tmpmin;
-          newname = ss->title;
-          if (strlen(newname) == 0)
-            newname = ss->name;
+          newname = tmpname;
         }
         o = o->nsptr; 
       }
@@ -413,8 +414,11 @@ char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
     
 //    printf("TOP %s: %d\n", s->name, s->num1);
     if (s->num1 > newmin) {
+//      if (newmin != 0)
+//        printf("OLD %s: %d\n", newname, newmin);
       newmin = s->num1;
       newname = s->title;
+//        printf("NEW %s: %d\n", newname, newmin);
       if (strlen(newname) == 0)
         newname = s->name;
     }
@@ -426,6 +430,7 @@ char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
   }
   
   min = newmin;
+//  if (min > 0) printf("RETURN %s: %d\n", newname, newmin);
   return newname;
 }
 

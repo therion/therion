@@ -34,7 +34,8 @@ if {[llength $xth(app,list)] > 2} {
 
 xth_app_clock
 
-encoding system [string tolower $xth(app,sencoding)]
+encoding system $xth(app,sencoding)
+set xth(encoding_system) [encoding system]
 xth_about_hide
 wm deiconify $xth(gui,main)
 xth_app_maximize

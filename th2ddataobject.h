@@ -96,7 +96,7 @@ enum {
 
 enum {
   TT_2DOBJ_PLACE_BOTTOM = 0,
-  TT_2DOBJ_PLACE_NONE = 1,
+  TT_2DOBJ_PLACE_DEFAULT = 1,
   TT_2DOBJ_PLACE_TOP = 2,
   TT_2DOBJ_PLACE_UNKNOWN = 3,
 };
@@ -122,7 +122,7 @@ static const thstok thtt_2ddataobject_opt[] = {
  
 static const thstok thtt_2ddataobject_place[] = {
   {"bottom", TT_2DOBJ_PLACE_BOTTOM},
-  {"none", TT_2DOBJ_PLACE_NONE},
+  {"default", TT_2DOBJ_PLACE_DEFAULT},
   {"top", TT_2DOBJ_PLACE_TOP},
   {NULL, TT_2DOBJ_PLACE_UNKNOWN},
 };

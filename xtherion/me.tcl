@@ -44,6 +44,9 @@ proc xth_me_reset_defaults {} {
 
   set xth(me,dflt,line,type) {wall}
   set xth(me,dflt,line,options) {}
+
+  set xth(me,dflt,area,type) {water}
+  set xth(me,dflt,area,options) {}
     
 }
 
@@ -327,6 +330,7 @@ proc xth_me_destroy_file {} {
 
     set xth(me,unredook) 0
     set xth(me,open_file) ""
+    set xth(me,curscrap) {}
     set xth(me,fnewf) 0
     set xth(me,fopen) 0
     xth_me_image_destroy_all
@@ -383,6 +387,7 @@ proc xth_me_destroy_file {} {
     xth_ctrl_minimize me point
     xth_ctrl_minimize me line
     xth_ctrl_minimize me linept
+    xth_ctrl_minimize me ac
     xth_ctrl_minimize me scrap
     xth_ctrl_minimize me text
     xth_ctrl_minimize me area
@@ -593,6 +598,7 @@ proc xth_me_open_file {dialogid fname fline} {
   xth_ctrl_maximize me point
   xth_ctrl_maximize me line
   xth_ctrl_maximize me linept
+  xth_ctrl_maximize me ac
   xth_ctrl_maximize me scrap
   xth_ctrl_maximize me text
   xth_ctrl_maximize me area
@@ -902,6 +908,7 @@ proc xth_me_area_zoom_to {zv} {
       3 {
         xth_me_cmds_move_line $id
         if {$id == $xth(me,cmds,selid)} {
+          xth_me_cmds_show_line_xctrl $id
           set pid $xth(me,cmds,selpid)
           if {$pid != 0} {
             xth_me_cmds_show_linept_xctrl $id $pid
@@ -1053,11 +1060,12 @@ proc xth_me_bind_image_drag {tagOrId imgx} {
 xth_app_create me "Map Editor" 
 
 xth_ctrl_add me cmds "File commands"
-xth_ctrl_add me prev "Command preview"
 xth_ctrl_add me ss "Search & Select"
+xth_ctrl_add me prev "Command preview"
 xth_ctrl_add me point "Point control"
 xth_ctrl_add me line "Line control"
 xth_ctrl_add me linept "Line point control"
+xth_ctrl_add me ac "Area control"
 xth_ctrl_add me scrap "Scrap control"
 xth_ctrl_add me text "Text editor"
 xth_ctrl_add me area "Drawing area"
@@ -1079,6 +1087,7 @@ set xth(me,undolist) {}
 set xth(me,redolist) {}
 set xth(me,unredook) 0
 set xth(me,unredola) {}
+set xth(me,curscrap) {}
 
 set xth(ctrl,me,images,posx) ""
 set xth(ctrl,me,images,posy) ""
@@ -1088,6 +1097,8 @@ set xth(ctrl,me,area,xmin) ""
 set xth(ctrl,me,area,xmax) ""
 set xth(ctrl,me,area,ymin) ""
 set xth(ctrl,me,area,ymax) ""
+
+set xth(ctrl,me,cmds,moveto) ""
 
 set xth(ctrl,me,scrap,name) ""
 set xth(ctrl,me,scrap,projection) ""
@@ -1137,6 +1148,11 @@ set xth(ctrl,me,linept,ls) {}
 set xth(ctrl,me,linept,rotid) 0
 set xth(ctrl,me,linept,rsid) 0
 set xth(ctrl,me,linept,lsid) 0
+
+set xth(ctrl,me,ac,type) {}
+set xth(ctrl,me,ac,opts) {}
+set xth(ctrl,me,ac,empty) {}
+
 
 set xth(ctrl,me,ss,expr) "station"
 set xth(ctrl,me,ss,regexp) 0
@@ -1209,13 +1225,17 @@ set xth(me,canid,linept,nncp) [$xth(me,can) create rectangle 0 0 10 10 \
   -width 1 -fill magenta -outline magenta -state hidden -tags "linectrl lineptnncp cmd_ctrl"]
 
 set xth(me,canid,linept,pcpl) [$xth(me,can) create line 0 0 10 10 \
-  -width 2 -fill red -state hidden -tags "linectrl lineptpcp cmd_ctrl"]
+  -width 2 -fill $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptpcp cmd_ctrl"]
 set xth(me,canid,linept,ncpl) [$xth(me,can) create line 0 0 10 10 \
-  -width 2 -fill red -state hidden -tags "linectrl lineptncp cmd_ctrl"]
+  -width 2 -fill $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptncp cmd_ctrl"]
 set xth(me,canid,linept,pcp) [$xth(me,can) create rectangle 0 0 10 10 \
-  -width 1 -fill red -outline red -state hidden -tags "linectrl lineptpcp cmd_ctrl"]
+  -width 1 -fill red -outline $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptpcp cmd_ctrl"]
 set xth(me,canid,linept,ncp) [$xth(me,can) create rectangle 0 0 10 10 \
-  -width 1 -fill red -outline red -state hidden -tags "linectrl lineptncp cmd_ctrl"]
+  -width 1 -fill red -outline $xth(gui,me,controlfill) -state hidden -tags "linectrl lineptncp cmd_ctrl"]
+
+set xth(me,canid,line,tick) [$xth(me,can) create line 0 0 10 10 \
+  -width 3 -fill #ffda00 -state hidden -tags "entirelinectrl cmd_ctrl"]
+
   
 xth_me_bind_area_only_drag $xth(me,canid,linept,fr)
 xth_me_bind_area_only_drag $xth(me,canid,linept,fl)
@@ -1329,21 +1349,33 @@ menubutton $ccbox.cfg -text "Action" -anchor center -font $xth(gui,lfont) \
   -indicatoron true -menu $ccbox.cfg.m -state disabled
 xth_status_bar me $ccbox.cfg "Configure action assigned to action button."
 menu $ccbox.cfg.m -tearoff 0 -font $xth(gui,lfont)
-$ccbox.cfg.m add command -label "Insert line" -command {xth_me_cmds_set_action 0}
 $ccbox.cfg.m add command -label "Insert point" -command {xth_me_cmds_set_action 1}
+$ccbox.cfg.m add command -label "Insert line" -command {xth_me_cmds_set_action 0}
+$ccbox.cfg.m add command -label "Insert area" -command {xth_me_cmds_set_action 5}
 $ccbox.cfg.m add command -label "Insert scrap" -command {xth_me_cmds_set_action 2}
 $ccbox.cfg.m add command -label "Insert text" -command {xth_me_cmds_set_action 3}
 $ccbox.cfg.m add separator
 $ccbox.cfg.m add command -label "Delete" -command {xth_me_cmds_set_action 4}
 Button $ccbox.mu -text "Move up" -anchor center -font $xth(gui,lfont) \
   -state disabled -width 8 -command "xth_me_cmds_move_up {}"
+xth_status_bar me $ccbox.mu "Move file command up in the list."
 Button $ccbox.md -text "Move down" -anchor center -font $xth(gui,lfont) \
   -state disabled -width 8 -command "xth_me_cmds_move_down {}"
+xth_status_bar me $ccbox.md "Move file command down in the list."
+Button $ccbox.mt -text "Move to" -anchor center -font $xth(gui,lfont) \
+  -state disabled -width 8 -command "xth_me_cmds_move_to {} {}"
+xth_status_bar me $ccbox.mt "Move file command to given position."
+ComboBox $ccbox.tt -postcommand xth_me_cmds_set_move_to_list \
+  -modifycmd xth_me_cmds_set_move_to \
+  -font $xth(gui,lfont) -height 4 -state disabled -width 8 \
+  -textvariable xth(ctrl,me,cmds,moveto)
+xth_status_bar me $ccbox.tt "Select destination scrap and position in it."
 grid columnconf $ccbox 0 -weight 1
 grid columnconf $ccbox 1 -weight 1
 grid $ccbox.go -column 0 -row 0 -columnspan 2 -sticky news
 grid $ccbox.cfg $ccbox.sel -row 1 -sticky news
 grid $ccbox.mu $ccbox.md -row 2 -sticky news
+grid $ccbox.mt $ccbox.tt -row 3 -sticky news
 
 # initialize text editor
 set txb $xth(ctrl,me,text)
@@ -1999,6 +2031,91 @@ grid $txb -row 7 -column 0 -columnspan 4 -sticky news
 xth_me_bind_entry_focusin "$lpc.rot $lpc.lsz $lpc.rsz"
 xth_me_bind_entry_return "$lpc.rot $lpc.lsz $lpc.rsz" {xth_me_cmds_update {}}
 
+
+
+
+
+# area control
+xth_about_status "loading area module ..."
+
+set lnc $xth(ctrl,me,ac)
+
+Label $lnc.typl -text "type" -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $lnc.typl "Area type."
+ComboBox $lnc.typ -values $xth(area_types) \
+  -font $xth(gui,lfont) -height 8 -state disabled -width 4 \
+  -textvariable xth(ctrl,me,ac,type) \
+  -command {xth_me_cmds_update {}}
+xth_status_bar me $lnc.typ "Area type." 
+
+Label $lnc.optl -text "options" -anchor e -font $xth(gui,lfont) -state disabled
+xth_status_bar me $lnc.optl "Other area options."
+Entry $lnc.opt -font $xth(gui,lfont) -state disabled -width 4 \
+  -textvariable xth(ctrl,me,ac,opts)
+xth_status_bar me $lnc.opt "Other area options." 
+
+set plf $lnc.ll
+frame $plf
+listbox $plf.l -height 4 -selectmode single -takefocus 0 \
+  -yscrollcommand "xth_scroll $plf.sv" \
+  -xscrollcommand "xth_scroll $plf.sh" \
+  -font $xth(gui,lfont) -exportselection no \
+  -selectborderwidth 0
+scrollbar $plf.sv -orient vert  -command "$plf.l yview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+scrollbar $plf.sh -orient horiz  -command "$plf.l xview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+bind $plf.l <<ListboxSelect>> {}
+bind $plf.l <B1-ButtonRelease> "focus $plf.l"
+
+Button $lnc.ins -text "Insert" -anchor center -font $xth(gui,lfont) \
+  -state disabled -width 10 -command {xth_me_cmds_start_area_insert 1}
+xth_status_bar me $lnc.ins "Switch to insert line into area mode."
+Button $lnc.del -text "Delete" -anchor center -font $xth(gui,lfont) \
+  -state disabled -width 10 -command {xth_me_cmds_delete_area_line {} {}}
+xth_status_bar me $lnc.del "Delete ID from area."
+
+Button $lnc.insid -text "Insert ID" -anchor center -font $xth(gui,lfont) \
+  -state disabled -command {xth_me_cmds_insert_area_line $xth(ctrl,me,ac,insid) {} {}} -width 10
+xth_status_bar me $lnc.insid "Insert given id."
+Entry $lnc.inside -font $xth(gui,lfont) -state disabled -width 4 \
+  -textvariable xth(ctrl,me,ac,insid)
+xth_status_bar me $lnc.inside "ID to insert." 
+
+Button $lnc.upd -text "Update" -anchor center -font $xth(gui,lfont) \
+  -state disabled -command {xth_me_cmds_update {}} -width 10
+xth_status_bar me $lnc.upd "Update area."
+Button $lnc.shw -text "Show" -anchor center -font $xth(gui,lfont) \
+  -state disabled -command {xth_me_cmds_show_current_area} -width 10
+xth_status_bar me $lnc.shw "Show area border lines."
+
+grid columnconf $plf 0 -weight 1
+grid rowconf $plf 0 -weight 1
+grid $plf.l -column 0 -row 0 -sticky news
+xth_scroll_showcmd $plf.sv "grid $plf.sv -column 1 -row 0 -sticky news"
+xth_scroll_hidecmd $plf.sv "grid forget $plf.sv"
+xth_scroll_showcmd $plf.sh "grid $plf.sh -column 0 -row 1 -sticky news"
+xth_scroll_hidecmd $plf.sh "grid forget $plf.sh"
+xth_status_bar me $plf "Select line in area."
+
+grid columnconf $lnc 0 -weight 1
+grid columnconf $lnc 1 -weight 1
+grid $lnc.typl -row 0 -column 0 -sticky news
+grid $lnc.typ -row 0 -column 1 -sticky news -padx 2
+grid $lnc.optl -row 1 -column 0 -sticky news
+grid $lnc.opt -row 1 -column 1 -sticky news -padx 1
+grid $lnc.shw -row 2 -column 0 -sticky news
+grid $lnc.upd -row 2 -column 1 -sticky news
+grid $plf -row 3 -column 0 -columnspan 2 -sticky news
+grid $lnc.ins -row 4 -column 0 -sticky news
+grid $lnc.del -row 4 -column 1 -sticky news
+grid $lnc.insid -row 5 -column 0 -sticky news
+grid $lnc.inside -row 5 -column 1 -sticky news
+
+xth_me_bind_entry_return "$lnc.opt" {xth_me_cmds_update {}}
+xth_me_bind_entry_focusin "$lnc.opt"
+
+
 # main menu
 xth_about_status "loading main menu ..."
 
@@ -2051,6 +2168,10 @@ $xth(me,menu,edit) add command -label "Insert point" -accelerator "$xth(gui,cont
 $xth(me,menu,edit) add command -label "Insert line" -accelerator "$xth(gui,controlk)-l" -underline 7 -font $xth(gui,lfont) -command {
   xth_me_cmds_create_line {} 1 "" "" ""
   xth_ctrl_scroll_to me line
+}
+$xth(me,menu,edit) add command -label "Insert area" -font $xth(gui,lfont) -command {
+  xth_me_cmds_create_area {} 1 "" "" ""
+  xth_ctrl_scroll_to me ac
 }
 $xth(me,menu,edit) add command -label "Delete" -accelerator "$xth(gui,controlk)-d" -underline 0 -font $xth(gui,lfont) -command {xth_me_cmds_delete {}}
 $xth(me,menu,edit) add separator
@@ -2121,6 +2242,7 @@ xth_ctrl_minimize me ss
 xth_ctrl_minimize me point
 xth_ctrl_minimize me line
 xth_ctrl_minimize me linept
+xth_ctrl_minimize me ac
 xth_ctrl_minimize me scrap
 xth_ctrl_minimize me text
 xth_ctrl_minimize me area

@@ -96,6 +96,7 @@ class thexpmapmpxs {
   FILE * file; ///< output file
   double ms, mx, my; ///< Scale and centering.
   thsymbolset * symset;
+  thlayout * layout;
   
   thexpmapmpxs() : file(NULL), ms(1.0), mx(0.0), my(0.0) {}
   

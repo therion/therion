@@ -39,7 +39,7 @@ class thdb2dpt {
 
   public:
   
-  double x,y,xt,yt,zt,at; ///< Coordinates.
+  double x,y,xt,yt,zt,at,dbgx0,dbgy0,dbgx1,dbgy1; ///< Coordinates.
 
   class thscrap * pscrap; ///< Parent scrap pointer.
   
@@ -47,7 +47,7 @@ class thdb2dpt {
 
   thdb2dpt(); ///< Default constructor
   
-  void export_mp(class thexpmapmpxs * out);
+  void export_mp(class thexpmapmpxs * out, int dbgleve = -1);
   
 };
 

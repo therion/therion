@@ -64,6 +64,7 @@ enum {
 // tags pre contour
   TT_LINE_TAG_GRADIENT_CENTER = 1,
   TT_LINE_TAG_GRADIENT_POINT = 2,
+  TT_LINE_TAG_GRADIENT_NONE = 4,
 // tags pre section
   TT_LINE_TAG_DIRECTION_BEGIN = 1,
   TT_LINE_TAG_DIRECTION_END = 2,
@@ -147,6 +148,7 @@ enum {
   TT_LINE_TYPE_CEILING_STEP,
   TT_LINE_TYPE_FLOOR_STEP,
   TT_LINE_TYPE_WATER_FLOW,
+  TT_LINE_TYPE_GRADIENT,
 };
 
 /**
@@ -161,9 +163,11 @@ static const thstok thtt_line_types[] = {
   {"contour", TT_LINE_TYPE_CONTOUR},
   {"floor-step", TT_LINE_TYPE_FLOOR_STEP},
   {"flowstone", TT_LINE_TYPE_FLOWSTONE},
+  {"gradient", TT_LINE_TYPE_GRADIENT},
   {"label", TT_LINE_TYPE_LABEL},
   {"overhang", TT_LINE_TYPE_OVERHANG},
   {"pit", TT_LINE_TYPE_PIT},
+  {"pitch", TT_LINE_TYPE_PIT},
   {"rock-border", TT_LINE_TYPE_ROCK_BORDER},
   {"rock-edge", TT_LINE_TYPE_ROCK_EDGE},
   {"section", TT_LINE_TYPE_SECTION},
@@ -371,7 +375,7 @@ class thline : public th2ddataobject {
    */
    
   virtual unsigned export_path_mp(class thexpmapmpxs * out,
-      int from = 0, int to = -1);
+      int from = 0, int to = -1, int dbglevel = -1);
 
   virtual void start_insert();
   

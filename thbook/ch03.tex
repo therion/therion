@@ -42,7 +42,8 @@ Works like |input| command in data files---includes other files.
 
 \description
   selects objects (surveys and maps) for export. By default, all survey objects 
-  are selected. 
+  are selected. If there is no map selected, all maps belonging to
+  selected surveys are selected by default for map export.
 \enddescription
 
 \syntax
@@ -135,6 +136,7 @@ Works like |input| command in data files---includes other files.
     scale-bar <length> <units>
     language <xx[_YY]>
     colour/color <item> <colour>
+    debug <on/all/first/second/off>
     doc-author <string>
     doc-keywords <string>
     doc-subject <string>
@@ -254,8 +256,13 @@ endlayout|
     items (map-fg, map-bg, preview-above, preview-below). 
     Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
     for RGB colours.
+  * |debug <on/all/first/second/off>| = draw scrap in different stages
+    of transformation in different colours to see how Therion distorts
+    map data. See the description of |scrap| command for details.
+    The points with distance changed most during transformation are displayed
+    orange.
 
-  \penalty-40{\it PDF related:}
+  {\it PDF related:}
 
   * |doc-author <string>| = set document author (M, A)
   * |doc-keywords <string>| = set document keywords (M, A)
@@ -311,18 +318,18 @@ endlayout|
 \endarguments
 
 \options
-  \penalty-40{\it common:}
+  {\it common:}
 
   * |output/o <file>| = set output file name. If no file name is
     given the prefix ``|cave.|'' is used with an extension corresponding to
     output format.
 
-  \penalty-40{\it model:}
+  {\it model:}
 
   * |format/fmt <format>| = set model output format. Currently the following
     output formats are supported: compass (plt file), survex (3d file).
 
-  \penalty-40{\it map/atlas:}
+  {\it map/atlas:}
   
   * |projection <id>| = unique identifier that specifies the map projection type.
     (See the |scrap| command for details.) If there are no scraps with 
@@ -334,7 +341,7 @@ endlayout|
     is supported.
   * |title| = title to go on the output survey    
 
-  \penalty-40{\it database:}
+  {\it database:}
   
   * |format/fmt <format>| = currently only SQL
   * |encoding/enc <encoding>| = set output encoding

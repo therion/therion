@@ -53,7 +53,6 @@ rope: SKBB
 ropeladder: SKBB 
 sand: UIS 
 scallop: UIS 
-sectionarrow: SKBB 
 sink: SKBB 
 sodastraw: UIS 
 spring: SKBB 
@@ -79,15 +78,16 @@ border_temporary: SKBB
 border_visible: SKBB 
 ceilingstep: SKBB 
 chimney: UIS 
-contour: UIS 
+contour: SKBB UIS 
 floorstep: UIS 
 flowstone: UIS 
+gradient: UIS 
 overhang: SKBB 
 pit: UIS 
 rockborder: UIS 
 rockedge: UIS 
 section: SKBB 
-slope: SKBB UIS 
+slope: SKBB 
 survey: SKBB UIS 
 wall_bedrock: UIS 
 wall_blocks: SKBB 
@@ -102,10 +102,3 @@ wall_unsurveyed: SKBB
 waterflow_conjectural: SKBB 
 waterflow_intermittent: SKBB 
 waterflow_permanent: UIS 
-
-[Area symbols]
-
-debris: SKBB 
-sand: UIS 
-sump: UIS 
-water: UIS 

@@ -447,8 +447,9 @@ as the first argument. Therefore it's necessary to set {\it T} variable to
 Following symbols take additional arguments: 
 \list
 * arrow = numeric: 0 is no arrows, 1 arrow at the end, 2 begin, 3 both ends
-* contour = text: list of points which get the tick or $-1$ to mark tick in the
-    middle
+* contour = text: list of points which get the tick or one of 
+  $-1$, $-2$ or $-3$ to mark undefined tick, tick in the middle or 
+  no tick, respectively
 * section = text: list of points which get the orinetation arrow or 
   $-1$ to indicate no arrows
 * slope = numeric: 0 no border, 1 border; text: list of (point,direction,length) 
@@ -466,9 +467,21 @@ initsymbol("l_wall_bedrock_UIS");|
 
 \subsubchapter Area symbols.
 
-Areas are defined as patterns with the same user interface (without the 
-|patterncolor| macro) as described in 
-the article
+Areas are similar to lines: they take only one argument -- {\it path} in 
+absolute coordinates. 
+
+You may fill them in three ways:
+
+\list
+ * fill an uniform or randomised grid in a temporary picture 
+   (having dimensions |bbox path|) with some point symbols; clip it according 
+   to |path| and add to the |currentpicture|
+ * fill |path| with a solid colour
+ * fill |path| with a predefined pattern using a |withpattern| keyword.
+\endlist
+
+Patterns are defined using the same user interface (without the 
+|patterncolor| macro) as described in the article
 
 \list
   Bolek, P.: ``\MP\ and patterns,'' {\it TUGboat}, 3, XIX (1998), pp.~276--283,
@@ -477,15 +490,21 @@ the article
 \endlist
 
 You may use standard \MP\ |draw| and similar macros without setting of {\it T} 
-variable.
+variable in pattern definitions.
 
-Example:
+Example on how to define and use patterns:
 
-|beginpattern(a_water_UIS);
+|beginpattern(pattern_water_UIS);
   draw origin--10up withpen pensquare scaled (0.02u);
   patternxstep(.18u);
   patterntransform(identity rotated 45);
 endpattern;
+
+def a_water_UIS (expr p) =
+  T:=identity;
+  thclean p;
+  thfill p withpattern pattern_water_UIS;
+enddef;
 initsymbol("a_water_UIS");|
 
 \subsubchapter Special symbols.

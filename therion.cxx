@@ -42,6 +42,7 @@
 #include "thobjectsrc.h"
 #include "thpoint.h"
 #include "thline.h"
+#include "tharea.h"
 #include "thversion.h"
 #include "thtexfonts.h"
 
@@ -105,13 +106,43 @@ void thprint_environment() {
 
 
 void thprint_xtherion() {
+  bool already_exported;
+  int i, j;
   thprintf("set xth(point_types) {\n");
-  for(int i = 0; thtt_point_types[i].tok != TT_POINT_TYPE_UNKNOWN; i++) {
-    thprintf("\t%s\n",thtt_point_types[i].s);
+  for(i = 0; thtt_point_types[i].tok != TT_POINT_TYPE_UNKNOWN; i++) {
+    already_exported = false;
+    for(j = 0; j < i; j++) {
+      if (thtt_point_types[i].tok == thtt_point_types[j].tok) {
+        already_exported = true;
+        break;
+      }
+    }
+    if (!already_exported)
+      thprintf("\t%s\n",thtt_point_types[i].s);
   }
   thprintf("}\n\nset xth(line_types) {\n");
-  for(int i = 0; thtt_line_types[i].tok != TT_POINT_TYPE_UNKNOWN; i++) {
-    thprintf("\t%s\n",thtt_line_types[i].s);
+  for(i = 0; thtt_line_types[i].tok != TT_LINE_TYPE_UNKNOWN; i++) {
+    already_exported = false;
+    for(j = 0; j < i; j++) {
+      if (thtt_line_types[i].tok == thtt_line_types[j].tok) {
+        already_exported = true;
+        break;
+      }
+    }
+    if (!already_exported)
+      thprintf("\t%s\n",thtt_line_types[i].s);
+  }
+  thprintf("}\n\nset xth(area_types) {\n");
+  for(i = 0; thtt_area_types[i].tok != TT_AREA_TYPE_UNKNOWN; i++) {
+    already_exported = false;
+    for(j = 0; j < i; j++) {
+      if (thtt_area_types[i].tok == thtt_area_types[j].tok) {
+        already_exported = true;
+        break;
+      }
+    }
+    if (!already_exported)
+      thprintf("\t%s\n",thtt_area_types[i].s);
   }
   thprintf("}\n");
 }
@@ -236,6 +267,9 @@ int main(int argc, char * argv[]) {
         thprint_environment();
         thexit(EXIT_SUCCESS);
     }
+
+    // process 2D references
+    thdb.preprocess();
 
     // process survey data
     thdb.db1d.process_data();

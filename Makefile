@@ -151,7 +151,7 @@ clean:
 thmpost.h: mpost/*.mp
 	make -C ./mpost
 
-thsymbolsetlist.h: thsymbolsetlist.pl
+thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 	perl thsymbolsetlist.pl
   
 thtex.h: tex/*.tex
@@ -345,7 +345,7 @@ therion.o: therion.cxx therion.h thlogfile.h thbuffer.h thtmpdir.h \
   thscraplp.h thdatareader.h thexception.h thlibrary.h thinit.h thgrade.h \
   thdata.h thtfangle.h thtf.h thtflength.h thtfpwf.h thlayout.h \
   thsymbolset.h thsymbolsetlist.h thpoint.h th2ddataobject.h thline.h \
-  thversion.h thtexfonts.h
+  tharea.h thversion.h thtexfonts.h
 thexception.o: thexception.cxx thexception.h therion.h thbuffer.h
 thexpdb.o: thexpdb.cxx thexpdb.h thexport.h thparse.h thbuffer.h \
   thmbuffer.h thobjectsrc.h thexception.h therion.h thdatabase.h \

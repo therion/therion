@@ -75,6 +75,7 @@ set xth(line_types) {
 	contour
 	floor-step
 	flowstone
+	gradient
 	label
 	overhang
 	pit
@@ -85,4 +86,11 @@ set xth(line_types) {
 	survey
 	wall
 	water-flow
+}
+
+set xth(area_types) {
+	debris
+	sand
+	sump
+	water
 }

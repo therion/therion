@@ -925,6 +925,40 @@ void thdb2d::process_scrap_references(thscrap * sptr)
   }
 }
 
+int comp_dist(const void * s1, const void * s2) {
+  if ((*((thscrap**)s1))->maxdist > (*((thscrap**)s2))->maxdist)
+    return -1;
+  else if ((*((thscrap**)s1))->maxdist < (*((thscrap**)s2))->maxdist)
+    return 1;
+  else return 0;
+}
+
+void thdb2d_log_distortions(thdb2dprj * prj) {
+  thscrap * ps;
+  unsigned long ns = 0, i;
+  ps = prj->first_scrap;
+  while(ps != NULL) {
+    ps = ps->proj_next_scrap;
+    ns++;
+  }
+  if (ns == 0)
+    return;
+  thscrap ** ss = new (thscrap*)[ns];
+  ps = prj->first_scrap;
+  i = 0;
+  while(ps != NULL) {
+    ss[i] = ps;
+    ps = ps->proj_next_scrap;
+    i++;
+  }
+  qsort(ss,ns,sizeof(thscrap*),comp_dist);
+  thlog.printf("###################### scrap distortions #######################\n");
+  thlog.printf(" AVERAGE  MAXIMAL  SCRAP\n");
+  for(i = 0; i < ns; i++)
+    thlog.printf(" %6.2f%%  %6.2f%%  %s@%s\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name);
+  thlog.printf("################### end of scrap distortions ###################\n");
+  delete [] ss;
+}
 
 
 void thdb2d::process_projection(thdb2dprj * prj)
@@ -982,12 +1016,17 @@ void thdb2d::process_projection(thdb2dprj * prj)
   this->pp_smooth_lines(prj);
   this->pp_smooth_joins(prj);
   this->pp_calc_limits(prj);
+  this->pp_calc_distortion(prj);
   
 #ifdef THDEBUG
 #else
   thprintf("done\n");
   thtext_inline = false;
 #endif 
+  if (prj->amaxdist > 0.0) {
+    thprintf("average distortion: %.2f%%\n", prj->amaxdist);
+    thdb2d_log_distortions(prj);
+  }
 
 }
 
@@ -1552,7 +1591,6 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
   }
   // podla nastavenia scale v scrape modifikuje suradnice bodov
   thdb2dpt_list::iterator ii = this->pt_list.begin();
-//  double tx,ty;
   while (ii != this->pt_list.end()) {
     ps = ii->pscrap;
     if (ps->proj->id == prj->id) {
@@ -1618,7 +1656,8 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
       p2dobj = p2dobj->nscrapoptr;
     }
     ps = ps->proj_next_scrap;
-  }
+  }  
+  
 }
 
 
@@ -1704,16 +1743,61 @@ void thdb2d::pp_calc_limits(thdb2dprj * prj)
 
 void thdb2d::pp_adjust_points(thdb2dprj * prj)
 {
+
   // prejde scrap za scrapom, zrata transf. maticu
-  thscrap * pscrap = prj->first_scrap;
-  thdb2dcp * cp, * cp2, * acp1, * acp2;
+  thscrap * pscrap;
+  thdb2dcp * cp;
+
+  // vycentruje scrapy v projekcii
+  pscrap = prj->first_scrap;
+  while (pscrap != NULL) {
+    pscrap->mx = 0.0;
+    pscrap->my = 0.0;
+    pscrap->ms = 0.0;
+    cp = pscrap->fcpp;
+    while (cp != NULL) {
+      pscrap->mx += cp->pt->xt;
+      pscrap->my += cp->pt->yt;
+      pscrap->ms += 1.0;
+      cp = cp->nextcp;
+    }
+    if (pscrap->ms > 1.0) {
+      pscrap->mx = pscrap->mx / pscrap->ms;
+      pscrap->my = pscrap->my / pscrap->ms;
+    } else {
+      pscrap->mx = 0.0;
+      pscrap->my = 0.0;
+    }
+    pscrap = pscrap->proj_next_scrap;
+  }  
+
+  thdb2dpt_list::iterator ii = this->pt_list.begin();
+  while (ii != this->pt_list.end()) {
+    pscrap = ii->pscrap;
+    if (pscrap->proj->id == prj->id) {
+      ii->xt -= pscrap->mx;
+      ii->yt -= pscrap->my;
+    }
+    ii++;
+  }  
+
+#define THADJUSTLS
+#ifndef THADJUSTLS
+  thdb2dcp * cp2, * acp1, * acp2;
   double maxdist, cdist, scale, ang, tang;
+#else  
+  double sumXx, sumYy, sumYx, sumXy, sumxx, sumyy, movetx, movety, X, Y, a, b;
+#endif
+
+  pscrap = prj->first_scrap;
   while (pscrap != NULL) {
     pscrap->reset_transformation();
     if (pscrap->ncp == 1) {
       pscrap->mx = pscrap->fcpp->tx - pscrap->fcpp->pt->xt;
       pscrap->my = pscrap->fcpp->ty - pscrap->fcpp->pt->yt;
     } else {
+
+#ifndef THADJUSTLS
       acp1 = pscrap->fcpp;
       acp2 = pscrap->fcpp->nextcp;
       maxdist = hypot(acp1->tx - acp2->tx, acp1->ty - acp2->ty);
@@ -1755,6 +1839,51 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
                               - pscrap->mxy * acp1->pt->yt;
         pscrap->my = acp1->ty - pscrap->myx * acp1->pt->xt
                               - pscrap->myy * acp1->pt->yt;                                                            
+#else
+      // 1. najdeme transformaciu targetov
+      // thprintf("\n\n\nscap: %s\n",pscrap->name);
+      movetx = 0.0;
+      movety = 0.0;
+      cp = pscrap->fcpp;
+      while (cp != NULL) {
+        movetx += cp->tx;
+        movety += cp->ty;
+        cp = cp->nextcp;
+      }
+      movetx = movetx / double(pscrap->ncp);
+      movety = movety / double(pscrap->ncp);
+      sumXx = 0.0; sumYy = 0.0; 
+      sumYx = 0.0; sumXy = 0.0;
+      sumxx = 0.0; sumyy = 0.0;
+      cp = pscrap->fcpp;
+      while (cp != NULL) {
+        X = cp->tx - movetx;
+        Y = cp->ty - movety;
+        // thprintf("%.4f,%.4f -> %.4f,%.4f\n",X,Y,cp->pt->xt,cp->pt->yt);
+        sumXx += X * cp->pt->xt;
+        sumYy += Y * cp->pt->yt;
+        sumXy += X * cp->pt->yt;
+        sumYx += Y * cp->pt->xt;
+        sumxx += cp->pt->xt * cp->pt->xt;
+        sumyy += cp->pt->yt * cp->pt->yt;
+        cp = cp->nextcp;
+      }
+
+      a = (sumXx + sumYy) / (sumxx + sumyy);
+      b = (sumYx - sumXy) / (sumxx + sumyy);
+        
+      if (((sumxx + sumyy) > 0) && (hypot(a,b) > 0.0)) {
+        // thprintf("a = %.4f;\nb = %.4f\n",a,b);
+        pscrap->mxx = a;
+        pscrap->mxy = -b;
+        pscrap->myx = b;
+        pscrap->myy = a;
+        pscrap->mx = movetx;
+        pscrap->my = movety;
+        pscrap->ms = hypot(a,b);
+        pscrap->mr = - atan2(b,a) / 3.14159265358 * 180.0;
+        
+#endif
       } else {
         pscrap->mx = pscrap->fcpp->tx - pscrap->fcpp->pt->xt;
         pscrap->my = pscrap->fcpp->ty - pscrap->fcpp->pt->yt;
@@ -1762,9 +1891,10 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
     }
     pscrap = pscrap->proj_next_scrap;
   }
+
   
   // prejde bod za bodom a spocita ich suradnice
-  thdb2dpt_list::iterator ii = this->pt_list.begin();
+  ii = this->pt_list.begin();
   double tmpx, tmpy;
   while (ii != this->pt_list.end()) {
     if (ii->pscrap->proj->id == prj->id) {
@@ -1773,6 +1903,8 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
       tmpy = ii->yt;
       ii->xt = pscrap->mxx * tmpx + pscrap->mxy * tmpy + pscrap->mx;
       ii->yt = pscrap->myx * tmpx + pscrap->myy * tmpy + pscrap->my;
+      ii->dbgx0 = ii->xt;
+      ii->dbgy0 = ii->yt;
     }
     ii++;
   }
@@ -1934,6 +2066,8 @@ void thdb2d::pp_shift_points(thdb2dprj * prj, bool calc_az)
       if (calc_az) {
         ii->at = att / totalw;
         ii->zt = ztt / totalw;
+        ii->dbgx1 = ii->xt;
+        ii->dbgy1 = ii->yt;
       }
     }
     ii++;
@@ -2556,6 +2690,114 @@ void thdb2d::pp_smooth_joins(thdb2dprj * prj)
     } // koniec has_test
     jlist = jlist->next_list;
   }
+}
+
+#define calcdist(p1,p2) { \
+  tmp = hypot(p1->dbgx0 - p2->dbgx0, p1->dbgy0 - p2->dbgy0); \
+  if (tmp > 0.0) { \
+    tmp = hypot(p1->xt - p2->xt, p1->yt - p2->yt) / tmp; \
+    tmp = 100.0 * (1 - ((tmp > 1.0) ? (1.0 / tmp) : tmp)); \
+    cavdist += tmp; \
+    if (cdist < tmp) { \
+      cdist = tmp; \
+      ps->maxdistp1 = p1; \
+      ps->maxdistp2 = p2; \
+    } \
+    numcavdist += 1.0; \
+  } \
+}
+
+void thdb2d::pp_calc_distortion(thdb2dprj * prj) {
+  prj->amaxdist = 0.0;
+  double nums = 0.0;
+  th2ddataobject * so, * so2;
+  thdb2dlp * lp, * lp2;
+  double cdist, cavdist, numcdist, numcavdist, tmp;
+  if (prj->type == TT_2DPROJ_NONE) 
+    return;
+  thscrap * ps = prj->first_scrap;
+  if (ps == NULL)
+    return;
+  while (ps != NULL) {
+    cdist = 0.0;
+    numcdist = 0.0;
+    numcavdist = 0.0;
+    ps->maxdistp1 = NULL;
+    ps->maxdistp2 = NULL;
+    cavdist = 0.0;
+    so = ps->fs2doptr;
+    while (so != NULL) {
+      switch (so->get_class_id()) {
+        case TT_LINE_CMD:
+          lp = ((thline*)so)->first_point;
+          while (lp != NULL) {
+            numcdist += 1.0;
+            if (lp->cp1 != NULL) {
+              calcdist(lp->point, lp->cp1);
+              numcdist += 1.0;
+            }
+            if (lp->cp2 != NULL) {
+              numcdist += 1.0;
+              calcdist(lp->point, lp->cp2);
+            }
+            lp2 = lp->nextlp;
+            while (lp2 != NULL) {
+              calcdist(lp->point, lp2->point);
+              lp2 = lp2->nextlp;
+            }
+            so2 = so->nscrapoptr;
+            while (so2 != NULL) {
+              switch(so2->get_class_id()) {
+                case TT_POINT_CMD:
+                  calcdist(((thpoint*)so2)->point,lp->point);
+                  break;
+                case TT_LINE_CMD:
+                  lp2 = ((thline*)so2)->first_point;
+                  while (lp2 != NULL) {
+                    calcdist(lp->point, lp2->point);
+                    lp2 = lp2->nextlp;
+                  }
+                  break;
+              }
+              so2 = so2->nscrapoptr;
+            }
+            lp = lp->nextlp;
+          }
+          break;
+        case TT_POINT_CMD:
+          numcdist += 1.0;
+          so2 = so->nscrapoptr;
+          while (so2 != NULL) {
+            switch(so2->get_class_id()) {
+              case TT_POINT_CMD:
+                calcdist(((thpoint*)so)->point,((thpoint*)so2)->point);
+                break;
+              case TT_LINE_CMD:
+                lp2 = ((thline*)so2)->first_point;
+                while (lp2 != NULL) {
+                  calcdist(((thpoint*)so)->point, lp2->point);
+                  lp2 = lp2->nextlp;
+                }
+                break;
+            }
+            so2 = so2->nscrapoptr;
+          }
+          break;
+      }
+      so = so->nscrapoptr;
+    }
+    ps->maxdist = cdist;
+    if (numcavdist > 0.0) {
+      ps->avdist = cavdist / numcavdist;
+      prj->amaxdist += ps->avdist * numcdist;
+      nums += numcdist;
+    }
+    ps = ps->proj_next_scrap;
+  }
+  if (nums > 0.0)
+    prj->amaxdist = prj->amaxdist / nums;
+  else
+    prj->amaxdist = 0;
 }
 
 

@@ -31,6 +31,8 @@
 
 #include "thdataobject.h"
 #include "thtfpwf.h"
+#include "thperson.h"
+#include <map>
 
 /**
  * survey command options tokens.
@@ -39,6 +41,7 @@
 enum {
   TT_SURVEY_UNKNOWN = 2000,
   TT_SURVEY_DECLINATION = 2001,
+  TT_SURVEY_PERSON_RENAME = 2002,
 };
 
 
@@ -48,9 +51,12 @@ enum {
  
 static const thstok thtt_survey_opt[] = {
   {"declination", TT_SURVEY_DECLINATION},
+  {"person-rename", TT_SURVEY_PERSON_RENAME},
   {NULL, TT_SURVEY_UNKNOWN},
 };
 
+
+typedef std::map<thperson,thperson> thsurveyp2pmap;
 
 
 /**
@@ -110,6 +116,8 @@ class thsurvey : public thdataobject {
   long num1;  ///< Number of something.
   
   thsurveystat stat;  ///< Survey statistics.
+  
+  thsurveyp2pmap person_renames;
     
   public:
 

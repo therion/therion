@@ -49,7 +49,7 @@ extern "C" {
 # define img_SFLAG_EXPORTED    0x08
 # define img_SFLAG_FIXED       0x10
 
-/* 3D c3D c3D crdinates (in metres) */
+/* 3D coordinates (in metres) */
 typedef struct {
    double x, y, z;
 } img_point;

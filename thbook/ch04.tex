@@ -2,6 +2,13 @@
 
 \subchapter Information files.
 
+\subsubchapter Log file.
+
+Besides the messages from Therion and other programs used, the log file 
+contains information about average and maximal distortion for each scrap. 
+
+\subsubchapter XTherion.
+
 Therion provides some basic facts about each survey (length, vertical range,
 N--S range, E--W range, number of shots and stations) if |-x| option is given. 
 This information is displayed in XTherion, {\it Compiler} window,
@@ -49,13 +56,13 @@ much has each of them surveyed:}
   where CENTRELINE.ID = TOPO.CENTRELINE_ID and PERSON.ID = PERSON_ID 
   group by NAME, SURNAME order by 1 desc, 4 asc;|
 
-\penalty-20{\it Which parts of the cave were surveyed in the year 1998?}
+{\it Which parts of the cave were surveyed in the year 1998?}
 
 |select TITLE from survey where ID in 
   (select SURVEY_ID from CENTRELINE 
   where TOPO_DATE between '1998-01-01' and '1998-12-31');|
 
-\penalty-20{\it How long are pasages lying between 1500 and 1550 m a.s.l.?}
+{\it How long are pasages lying between 1500 and 1550 m a.s.l.?}
 
 |select sum(LENGTH) from SHOT, STATION S1, STATION S2 
   where (S1.Z+S2.Z)/2 between 1500 and 1550 and 

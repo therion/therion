@@ -1,6 +1,6 @@
 /* img.c
  * Routines for reading and writing Survex ".3d" image files
- * Copyright (C) 1993-2002 Olly Betts
+ * Copyright (C) 1993-2003 Olly Betts
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -368,7 +368,7 @@ plt_file:
 	 goto error;
       }
       while (1) {
-	 int ch = getc(pimg->fh);
+	 ch = getc(pimg->fh);
 	 switch (ch) {
 	  case '\x1a':
 	    fseek(pimg->fh, -1, SEEK_CUR);
@@ -1442,7 +1442,7 @@ write_v3label(img *pimg, int opt, const char *s)
       putc(n, pimg->fh);
    } else if (n < 0xffff + 0xfe) {
       putc(0xfe, pimg->fh);
-      put16(n - 0xfe, pimg->fh);
+      put16((short)(n - 0xfe), pimg->fh);
    } else {
       putc(0xff, pimg->fh);
       put32(n, pimg->fh);

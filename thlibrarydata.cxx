@@ -106,6 +106,8 @@ void thlibrary_init_layouts()
 	playout->legend = TT_LAYOUT_LEGEND_OFF;
 	playout->def_map_header = false;
 	playout->map_header = 2;
+	playout->def_debug = false;
+	playout->debug = 4;
 	playout->def_max_explos = false;
 	playout->max_explos = -1;
 	playout->def_max_topos = false;

@@ -161,6 +161,10 @@ thlayout::thlayout()
 
   this->def_map_header = false;
   this->map_header = TT_LAYOUT_MAP_HEADER_NW;
+
+  this->def_debug = false;
+  this->debug = TT_LAYOUT_DEBUG_UNKNOWN;
+
   
   this->def_max_explos = false;
   this->max_explos = -1;
@@ -178,7 +182,7 @@ thlayout::thlayout()
 
   this->def_lang = false;
   this->lang = THLANG_UNKNOWN;
-
+  
   this->def_layers = false;
   this->layers = true;
 
@@ -561,6 +565,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->def_map_header = true;
       break;
     
+    case TT_LAYOUT_DEBUG:
+      sv = thmatch_token(args[0],thtt_layout_debug);
+      if (sv == TT_LAYOUT_DEBUG_UNKNOWN)
+        ththrow(("invalid debug switch -- %s",args[0]))
+      this->debug = sv;
+      this->def_debug = true;
+      break;
+    
     case TT_LAYOUT_LANG:
       sv = thlang_parse(args[0]);
       if (sv == THLANG_UNKNOWN)
@@ -845,6 +857,9 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_map_header = %s;\n",(this->def_map_header ? "true" : "false"));
   thprintf("\tplayout->map_header = %d;\n",this->map_header);
+
+  thprintf("\tplayout->def_debug = %s;\n",(this->def_debug ? "true" : "false"));
+  thprintf("\tplayout->debug = %d;\n",this->debug);
 
   thprintf("\tplayout->def_max_explos = %s;\n",(this->def_max_explos ? "true" : "false"));
   thprintf("\tplayout->max_explos = %d;\n",this->max_explos);
@@ -1406,6 +1421,9 @@ void thlayout::process_copy() {
       if has_srcl(def_map_header)
         this->map_header = srcl->map_header;
 
+      if has_srcl(def_debug)
+        this->debug = srcl->debug;
+
       if has_srcl(def_max_explos)
         this->max_explos = srcl->max_explos;
 
@@ -1553,5 +1571,13 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.lang = this->lang;
 }
 
+
+bool thlayout::is_debug_stations() {
+  return ((this->debug == TT_LAYOUT_DEBUG_ALL) || (this->debug == TT_LAYOUT_DEBUG_STATIONS));
+}
+
+bool thlayout::is_debug_joins() {
+  return ((this->debug == TT_LAYOUT_DEBUG_ALL) || (this->debug == TT_LAYOUT_DEBUG_JOINS));
+}
 
 std::list <thlayout_copy_src> thlayout_copy_src_list;

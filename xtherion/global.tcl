@@ -33,6 +33,7 @@ set xth(prj,title) "therion user interface"
 set xth(gui,main) ".xth"
 set xth(gui,about) ".xth_about"
 set xth(gui,bacw) ".xth_bac"
+set xth(gui,help) ".xth_help"
 set xth(gui,message) ".xthmsg"
 set xth(gui,minsize) {480 300}
 
@@ -40,6 +41,7 @@ set xth(gui,compshow) 0
 set xth(gui,compcmd) "therion"
 
 set xth(encodings) { iso8859-1 iso8859-2 iso8859-5 iso8859-7 utf-8 }
+set xth(kbencodings) {iso8859-1 iso8859-2 cp1250 macCentEuro unicode}
 set xth(length_units) {m cm in ft yd}
 set xth(angle_units) {deg min grad}
 set xth(point_types) {}
@@ -151,6 +153,12 @@ set xth(gui,me,point,cpsize) 5
 set xth(gui,me,line,psize) 4
 set xth(gui,me,line,cpsize) 4
 set xth(gui,me,line,spsize) 5
+set xth(gui,me,line,ticksize) 10
+
+set xth(gui,me,activefill) red
+set xth(gui,me,pasivefill) blue
+set xth(gui,me,controlfill) blue
+set xth(gui,me,highlightfill) cyan
 
 set xth(gui,bindinsdel) 1
 

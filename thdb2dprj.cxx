@@ -49,6 +49,8 @@ thdb2dprj::thdb2dprj() {
   this->shift_x = 0.0;
   this->shift_y = 0.0;
   this->shift_z = 0.0;
+  
+  this->amaxdist = 0.0;
 }
 
 thdb2dprj::thdb2dprj(char t, char * i) {
@@ -67,6 +69,8 @@ thdb2dprj::thdb2dprj(char t, char * i) {
   this->shift_x = 0.0;
   this->shift_y = 0.0;
   this->shift_z = 0.0;
+
+  this->amaxdist = 0.0;
 }
 
 

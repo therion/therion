@@ -41,6 +41,7 @@ thsurvey::thsurvey()
   this->decdef = false;
   this->decuds = thnan;
   this->num1 = 0;
+  this->person_renames.clear();
 }
 
 
@@ -88,13 +89,18 @@ thcmd_option_desc thsurvey::get_cmd_option_desc(char * opts)
   int id = thmatch_token(opts, thtt_survey_opt);
   if (id == TT_SURVEY_UNKNOWN)
     return thdataobject::get_cmd_option_desc(opts);
-  else
-    return thcmd_option_desc(id);
+  else switch (id) {
+    case TT_SURVEY_PERSON_RENAME:
+     return thcmd_option_desc(id,2);
+    default:
+     return thcmd_option_desc(id);
+  }
 }
 
 
 void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
+  thperson tmpp1, tmpp2;
   if (cod.id == 1)
     cod.id = TT_DATAOBJECT_NAME;
     
@@ -102,6 +108,14 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 
     case TT_SURVEY_DECLINATION:
       this->parse_declination(*args);
+      break;
+      
+    case TT_SURVEY_PERSON_RENAME:
+      thencode(&(this->db->buff_enc), args[0], argenc);
+      tmpp1.parse(this->db, this->db->buff_enc.get_buffer());
+      thencode(&(this->db->buff_enc), args[1], argenc);
+      tmpp2.parse(this->db, this->db->buff_enc.get_buffer());
+      this->person_renames[tmpp1] = tmpp2;
       break;
       
     case TT_DATAOBJECT_NAME:

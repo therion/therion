@@ -135,7 +135,8 @@ en: overhang
 sk: previs
 
 therion: line pit
-en: pit
+en_UK: pitch
+en_US: pit
 sk: priepasť
 
 therion: line ceiling-step
@@ -145,6 +146,10 @@ sk: zmena výšky stropu
 therion: line chimney
 en: chimney
 sk: komín
+
+therion: line gradient
+en: passage gradient
+sk: sklon chodby
 
 therion: point gradient
 en: passage gradient

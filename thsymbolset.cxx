@@ -200,6 +200,7 @@ int thsymbolset__get_id(char * symclass, char * symbol)
           }
           break;
         cl3(TT_LINE_TYPE_ARROW,SYML_ARROW);
+        cl3(TT_LINE_TYPE_GRADIENT,SYML_GRADIENT);
         cl3(TT_LINE_TYPE_CEILING_STEP,SYML_CEILINGSTEP);
         cl3(TT_LINE_TYPE_CHIMNEY,SYML_CHIMNEY);
         cl3(TT_LINE_TYPE_CONTOUR,SYML_CONTOUR);
@@ -509,7 +510,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     isin[mid] = false;\
     LEGENDITEM = LEGENDLIST.insert(LEGENDLIST.end(),dummlr); \
     fprintf(mpf,"beginfig(%d);\n",sfig); \
-    fprintf(mpf,"clean_legend_box;\n",sfig); \
+    fprintf(mpf,"clean_legend_box;\n"); \
     sprintf(texb.get_buffer(),"data.%d",sfig); \
     LEGENDITEM->fname = texb.get_buffer(); \
     LEGENDITEM->name = thlegend_u2string(unsigned(symn++)); \
@@ -712,7 +713,13 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_cycle(SYML_PIT,thT("line pit",layout->lang));
   legend_step(SYML_CEILINGSTEP,thT("line ceiling-step",layout->lang));
   legend_cycle(SYML_CHIMNEY,thT("line chimney",layout->lang));
-  legend_hpoint(SYMP_GRADIENT,thT("point gradient",layout->lang));
+  if isused(SYML_GRADIENT) {
+    insfig(SYML_GRADIENT,thT("line gradient",layout->lang));
+    fprintf(mpf,"%s(((0.2,0.5) -- (0.8,0.5)) inscale);\n",thsymbolset__mp[SYML_GRADIENT]);
+    endfig;
+  } else {
+    legend_hpoint(SYMP_GRADIENT,thT("point gradient",layout->lang));
+  }
 
   insfig(SYMP_HEIGHT_UNSIGNED,thT("point height:unsigned",layout->lang));
   helpsymbol;
@@ -749,7 +756,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   endfig;
 
   insfig(SYML_SLOPE,thT("line slope",layout->lang));
-  fprintf(mpf,"%s((((.1,.35) .. (.5,.25) .. (.9,.35)) inscale),1,(0,-1,1u),(2,-1,1u));\n",thsymbolset__mp[SYML_SLOPE],legend_iuline);
+  fprintf(mpf,"%s((((.1,.35) .. (.5,.25) .. (.9,.35)) inscale),1,(0,-1,1u),(2,-1,1u));\n",thsymbolset__mp[SYML_SLOPE]);
   endfig;
   
   // kamene
@@ -784,7 +791,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   // vypln plosna
 #define legend_area(mid,txt) \
   insfig(mid,txt); \
-  fprintf(mpf,"thPatternFill(buildcycle((((-1,0) -- (1,0) -- (1,1) -- (0,1) -- (0,-1))  inscale)),%s);\n",thsymbolset__mp[mid]); \
+  fprintf(mpf,"%s(buildcycle((((-1,0) -- (1,0) -- (1,1) -- (0,1) -- (0,-1))  inscale)));\n",thsymbolset__mp[mid]); \
   endfig;
   legend_area(SYMA_WATER,thT("area water",layout->lang));  
   legend_area(SYMA_SUMP,thT("area sump",layout->lang));  
@@ -932,18 +939,18 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
         break;
         
-      default:
-        // zapise defaultne preview pre bod/krivku/mapu
-        insfig(m,thsymbolset__mp[m]);
-        LEGENDITEM->descr = thsymbolset__mp[m];
-        if ((m > SYMP_) && (m < SYMP_ZZZ)) {
-          fprintf(mpf,"legend_point(\"%s\");\n",thsymbolset__mp[m]);
-        } else if ((m > SYML_) && (m < SYML_ZZZ)) {
-          fprintf(mpf,"legend_line(\"%s\");\n",thsymbolset__mp[m]);
-        } else if ((m > SYMA_) && (m < SYMA_ZZZ)) {
-          fprintf(mpf,"thPatternFill(buildcycle((((-1,0) -- (1,0) -- (1,1) -- (0,1) -- (0,-1))  inscale)),%s);\n",thsymbolset__mp[m]);
-        }
-        endfig;
+//      default:
+//        // zapise defaultne preview pre bod/krivku/mapu
+//        insfig(m,thsymbolset__mp[m]);
+//        LEGENDITEM->descr = thsymbolset__mp[m];
+//        if ((m > SYMP_) && (m < SYMP_ZZZ)) {
+//          fprintf(mpf,"legend_point(\"%s\");\n",thsymbolset__mp[m]);
+//        } else if ((m > SYML_) && (m < SYML_ZZZ)) {
+//          fprintf(mpf,"legend_line(\"%s\");\n",thsymbolset__mp[m]);
+//        } else if ((m > SYMA_) && (m < SYMA_ZZZ)) {
+//          fprintf(mpf,"%s(buildcycle((((-1,0) -- (1,0) -- (1,1) -- (0,1) -- (0,-1))  inscale)));\n",thsymbolset__mp[m]);
+//        }
+//        endfig;
     }
   }
   

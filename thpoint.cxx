@@ -462,6 +462,11 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
         this->point->export_mp(out);
         fprintf(out->file,");\n");
+        if (out->layout->is_debug_stations()) {
+          fprintf(out->file,"p_debug(0,1,");
+          this->point->export_mp(out,0);
+          fprintf(out->file,");\n");
+        }        
       }
       postprocess = false;
       break;
@@ -770,6 +775,21 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     }
     fprintf(out->file,",%.1f,%.2f,%s);\n",
         (thisnan(this->orient) ? 0 : 360 - this->orient),scl,al);
+    if (out->layout->is_debug_stations() || out->layout->is_debug_joins()) {
+      fprintf(out->file,"p_debug(-1,0,");
+      this->point->export_mp(out);
+      fprintf(out->file,");\n");
+    }
+    if (out->layout->is_debug_joins()) {
+      fprintf(out->file,"p_debug(1,0,");
+      this->point->export_mp(out,1);
+      fprintf(out->file,");\n");
+    }
+    if (out->layout->is_debug_stations()) {
+      fprintf(out->file,"p_debug(0,0,");
+      this->point->export_mp(out,0);
+      fprintf(out->file,");\n");
+    }
   }
   
   return(false);

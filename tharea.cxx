@@ -35,7 +35,7 @@
 tharea::tharea()
 {
   this->type = TT_AREA_TYPE_UNKNOWN;
-  
+  this->place = TT_2DOBJ_PLACE_BOTTOM;
   this->first_line = NULL;
   this->last_line = NULL;
 }
@@ -179,7 +179,8 @@ bool tharea::export_mp(class thexpmapmpxs * out)
 
   if (out->file == NULL)
     return(true);
-  fprintf(out->file,"PatternFill(buildcycle(");
+    
+  fprintf(out->file,"%s(buildcycle(",out->symset->get_mp_macro(macroid));
 
   this->first_line->line->export_path_mp(out);
   thdb2dab * bl = this->first_line->next_line;
@@ -189,7 +190,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     bl = bl->next_line;
   }
   
-  fprintf(out->file,"),\n%s);\n",out->symset->get_mp_macro(macroid));
+  fprintf(out->file,"));\n");
   
   return(false);  
   

@@ -64,13 +64,15 @@
                  \vskip#1\baselineskip}
 
 \let\,\thinspace
-
+\def\Nobreak{\let\brnobr\nobreak\nobreak}
 \def\eq{=}
 
 {\catcode`\*=13\catcode`\=13
  \gdef\itemize{%
-   \par\leftskip1em%\parskip0pt
-   \catcode`\*13\def*{\penalty-20\par\leavevmode\llap{$\bullet$ }\ignorespaces}
+   \par\nobreak\leftskip1em%\parskip0pt
+   \let\brnobr\nobreak
+   \catcode`\*13\def*{\par\brnobr\leavevmode\let\brnobr\relax
+                      \llap{$\bullet$ }\ignorespaces}
    \catcode`\=13\def={\ifmmode\eq\else\unskip\
                       $\triangleright$ \ignorespaces\fi}
    }

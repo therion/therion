@@ -73,6 +73,10 @@ thscrap::thscrap()
   this->polygon_first = NULL;
   this->polygon_last = NULL;
   
+  this->maxdist = 0.0;
+  this->avdist = 0.0;
+  this->maxdistp1 = NULL;
+  this->maxdistp2 = NULL;
 }
 
 

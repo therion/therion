@@ -626,6 +626,100 @@ void thdatabase::self_print_library()
 }
 
 
+void thdb_object_rename_persons(thdataobject * op, thsurveyp2pmap * rmap) {
+
+  if ((rmap == NULL) || (rmap->size() == 0))
+    return;
+
+  thsurveyp2pmap::iterator mi;
+  thdataobject_author tmpa;
+  thdo_author_map_type::iterator aii;
+  thdate tmpdt;
+  thdata * dp;
+  for (mi = rmap->begin(); mi != rmap->end(); mi++) {
+    tmpa.name = mi->first;
+    tmpa.rev = 0;
+    aii = op->author_map.find(tmpa);
+    if (aii != op->author_map.end()) {
+      tmpdt = aii->second;
+      op->author_map.erase(aii->first);
+      tmpa.name = mi->second;
+      op->author_map[tmpa].join(tmpdt);
+    }
+    if (op->get_class_id() == TT_DATA_CMD) {
+      dp = (thdata*) op;
+      if (dp->team_set.erase(mi->first) > 0) {
+        dp->team_set.insert(mi->second);
+      }
+      if (dp->discovery_team_set.erase(mi->first) > 0) {
+        dp->discovery_team_set.insert(mi->second);
+      }
+    }
+  }
+}
+
+
+void thdb_survey_rename_persons(thsurvey * cs, thsurveyp2pmap * rmap) {
+  
+  thsurveyp2pmap cmap;
+  thsurveyp2pmap::iterator mi;
+  cmap.clear();
+
+  if ((rmap != NULL) && (rmap->size() > 0)) {
+    mi = rmap->begin();
+    while (mi != rmap->end()) {
+      cmap[mi->first] = mi->second;
+      mi++;
+    }
+  }
+
+  if (cs->person_renames.size() > 0) {
+    mi = cs->person_renames.begin();
+    while (mi != cs->person_renames.end()) {
+      if (cs->person_renames.find(mi->first) != cs->person_renames.end())
+        cmap[mi->first] = mi->second;
+      mi++;
+    }
+  }
+  
+  thdb_object_rename_persons(cs, &cmap);
+  thdataobject * op;
+  op = cs->foptr;
+  while (op != NULL) {
+    if (op->get_class_id() == TT_SURVEY_CMD) {
+      thdb_survey_rename_persons((thsurvey*)op, &cmap);
+    } else {
+      thdb_object_rename_persons(op, &cmap);
+    }
+    op = op->nsptr;
+  }
+  
+}
+
+void thdatabase::preprocess() {
+#ifdef THDEBUG
+  thprintf("\n\npreprocessing database\n");
+#else
+  thprintf("preprocessing database ... ");
+  thtext_inline = true;
+#endif
+  
+  thsurvey * cs = this->fsurveyptr;
+  while (cs != NULL) {
+    thdb_survey_rename_persons(cs, NULL);
+    cs = (thsurvey*)(cs->nsptr);
+  }
+  
+
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+
+}
+
+
 thdatabase thdb;
 
 

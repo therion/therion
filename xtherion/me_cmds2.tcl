@@ -129,6 +129,62 @@ proc xth_me_cmds_update_line_ctrl {id} {
 }
 
 
+
+proc xth_me_cmds_update_area_ctrl {id} {
+
+  global xth
+  
+  if {[string length $id] > 0} {
+
+    $xth(ctrl,me,ac).typl configure -state normal    
+    $xth(ctrl,me,ac).typ configure -state normal    
+    $xth(ctrl,me,ac).optl configure -state normal    
+    $xth(ctrl,me,ac).opt configure -state normal    
+    $xth(ctrl,me,ac).ins configure -state normal    
+    $xth(ctrl,me,ac).del configure -state normal    
+    $xth(ctrl,me,ac).insid configure -state normal    
+    $xth(ctrl,me,ac).inside configure -state normal    
+    $xth(ctrl,me,ac).upd configure -state normal    
+    $xth(ctrl,me,ac).shw configure -state normal    
+    $xth(ctrl,me,ac).ll.l configure -takefocus 1 \
+      -listvariable xth(me,cmds,$id,llist)
+    $xth(ctrl,me,ac).ll.l selection clear 0 end
+    $xth(ctrl,me,ac).ll.l selection set end end
+    $xth(ctrl,me,ac).ll.l see end
+    
+    set xth(ctrl,me,ac,type) $xth(me,cmds,$id,type)
+    set xth(ctrl,me,ac,name) $xth(me,cmds,$id,name)
+    set xth(ctrl,me,ac,opts) $xth(me,cmds,$id,options)
+    set xth(ctrl,me,ac,insid) {}
+    xth_me_prev_cmd $xth(me,cmds,$id,data)
+
+  } else {
+  
+    set xth(ctrl,me,ac,name) {}
+    set xth(ctrl,me,ac,insid) {}
+    set xth(ctrl,me,ac,type) $xth(me,dflt,line,type)
+    set xth(ctrl,me,ac,opts) $xth(me,dflt,line,options)
+
+    $xth(ctrl,me,ac).typl configure -state disabled    
+    $xth(ctrl,me,ac).typ configure -state disabled    
+    $xth(ctrl,me,ac).optl configure -state disabled    
+    $xth(ctrl,me,ac).opt configure -state disabled    
+    $xth(ctrl,me,ac).ins configure -state disabled    
+    $xth(ctrl,me,ac).del configure -state disabled    
+    $xth(ctrl,me,ac).insid configure -state disabled    
+    $xth(ctrl,me,ac).inside configure -state disabled    
+    $xth(ctrl,me,ac).upd configure -state disabled    
+    $xth(ctrl,me,ac).shw configure -state disabled    
+    $xth(ctrl,me,ac).ll.l configure -takefocus 0 \
+      -listvariable xth(ctrl,me,ac,empty)
+    $xth(ctrl,me,ac).ll.l selection clear 0 end
+      
+  }
+  
+}
+
+
+
 proc xth_me_cmds_move_lineptcp_xctrl {id ppid pid npid} {
   global xth
   
@@ -185,7 +241,7 @@ proc xth_me_cmds_move_lineptcp_xctrl {id ppid pid npid} {
 
   xth_me_cmds_move_linept_size_xctrl $id $pid $xth(me,cmds,$id,$pid,rotation) \
     $xth(me,cmds,$id,$pid,rs) $xth(me,cmds,$id,$pid,ls)
-  
+  xth_me_cmds_move_line_xctrl $id
 }
 
 
@@ -200,6 +256,38 @@ proc xth_me_cmds_move_linept_xctrl {id pid} {
     [expr $y + 3 * $xth(gui,me,line,psize)]]
 }
 
+
+proc xth_me_cmds_move_line_xctrl {id} {
+  global xth
+  set pid [lindex $xth(me,cmds,$id,xplist) 0]
+  set rot [xth_me_cmds_get_default_rotation $id $pid]
+  if {$xth(me,cmds,$id,reverse)} {
+    set rot [expr $rot + 180.0]
+  }
+  set x [xth_me_real2canx $xth(me,cmds,$id,$pid,x)]
+  set y [xth_me_real2cany $xth(me,cmds,$id,$pid,y)]
+  $xth(me,can) coords $xth(me,canid,line,tick) [list $x $y \
+      [expr $x + sin($rot/180.0*3.14159265259) * $xth(gui,me,line,ticksize)] \
+      [expr $y - cos($rot/180.0*3.14159265259) * $xth(gui,me,line,ticksize)]]
+}
+
+
+proc xth_me_cmds_show_line_xctrl {id} {
+  global xth
+  if {[llength $xth(me,cmds,$id,xplist)] < 3} {
+    xth_me_cmds_hide_line_xctrl    
+    return
+  }
+  xth_me_cmds_move_line_xctrl $id
+  $xth(me,can) itemconfigure entirelinectrl -state normal
+  $xth(me,can) raise entirelinectrl
+  $xth(me,can) lower entirelinectrl point
+}
+
+proc xth_me_cmds_hide_line_xctrl {} {
+  global xth
+  $xth(me,can) itemconfigure entirelinectrl -state hidden
+}
 
 proc xth_me_cmds_show_linept_xctrl {id pid} {
   global xth
@@ -286,6 +374,7 @@ proc xth_me_cmds_show_linept_xctrl {id pid} {
   xth_me_cmds_configure_linept_size_xctrl $id $pid
   xth_me_cmds_move_linept_size_xctrl $id $pid $xth(me,cmds,$id,$pid,rotation) \
     $xth(me,cmds,$id,$pid,rs) $xth(me,cmds,$id,$pid,ls)
+  xth_me_cmds_move_line_xctrl $id
     
 }
 
@@ -312,6 +401,13 @@ proc xth_me_cmds_hide_linept_xctrl {} {
 proc xth_me_cmds_update_linept_ctrl {id pid} {
 
   global xth
+  
+  if {[string length $id] > 0} {
+    xth_me_cmds_show_line_xctrl $id
+  } else {
+    xth_me_cmds_hide_line_xctrl
+  }
+  
   if {([string length $id] > 0) && ($pid > 0)} {
 
     $xth(ctrl,me,linept).posl configure -state normal
@@ -599,6 +695,164 @@ proc xth_me_cmds_create_line_point {id ix mode x y xp yp xn yn smooth rot rs ls 
 }
 
 
+
+proc xth_me_cmds_create_area_line {id ix mode txt} {
+
+  global xth
+  incr xth(me,cmds,$id,llid)
+  set lid $xth(me,cmds,$id,llid)
+  regsub {\s*$} $txt "" txt
+  regsub {^\s*} $txt "" txt
+  set xth(me,cmds,$id,$lid,txt) $txt
+  # vlozi ho do zoznamu
+  set xth(me,cmds,$id,llist) [linsert $xth(me,cmds,$id,llist) $ix $txt]
+  set xth(me,cmds,$id,xllist) [linsert $xth(me,cmds,$id,xllist) $ix $lid]
+  
+}
+
+
+proc xth_me_cmds_insert_area_lineid {id mx my} {
+  global xth
+  if {$xth(me,unredook)} {
+    xth_me_cmds_update {}
+  }
+  if {[string length $xth(me,cmds,$id,name)] == 0} {
+    set nn [format "l%d-%.0f-%.0f" $id [xth_me_can2realx [$xth(me,can) canvasx $mx]] [xth_me_can2realy [$xth(me,can) canvasy $my]]]
+    set unspec "set xth(me,cmds,$id,name) {}\nxth_me_cmds_update_line_data $id\nxth_me_cmds_update_list $id"
+    set respec "set xth(me,cmds,$id,name) [list $nn]\nxth_me_cmds_update_line_data $id\nxth_me_cmds_update_list $id"
+    eval $respec
+  } else {
+    set nn $xth(me,cmds,$id,name)
+    set unspec {}
+    set respec {}
+  }    
+  xth_me_cmds_insert_area_line $nn $unspec $respec
+}
+
+
+proc xth_me_cmds_insert_area_line {txt unspec respec} {
+
+  global xth
+  if {$xth(me,unredook)} {
+    xth_me_cmds_update {}
+  }
+  regsub {\s*$} $txt "" txt
+  regsub {^\s*} $txt "" txt  
+  if {[string length $txt] == 0} {
+    return;
+  }
+  set id $xth(me,cmds,selid)
+  set lid [lindex $xth(me,cmds,$id,xllist) [$xth(ctrl,me,ac).ll.l curselection]]
+  set ix [lsearch $xth(me,cmds,$id,xllist) $lid]
+  xth_me_cmds_create_area_line $id $ix 1 $txt
+  set lid $xth(me,cmds,$id,llid)
+  xth_me_cmds_update_area_data $id
+  xth_me_prev_cmd $xth(me,cmds,$id,data)
+  $xth(ctrl,me,ac).ll.l selection clear 0 end
+  $xth(ctrl,me,ac).ll.l selection set [expr $ix + 1] [expr $ix + 1]
+  $xth(ctrl,me,ac).ll.l see [expr $ix + 1]
+
+  xth_me_unredo_action "inserting area border" "xth_me_cmds_select $id\nxth_me_cmds_delete_area_line $id $lid\n$unspec" \
+    "xth_me_cmds_select $id\n$respec\nxth_me_cmds_undelete_area_line 1 $id $lid $ix"
+      
+}
+
+
+proc xth_me_cmds_delete_area_line {id lid} {
+
+  global xth
+  
+  if {[string length $id] < 1} {
+    set id $xth(me,cmds,selid)
+  }
+  if {[string length $lid] < 1} {
+    set lid [lindex $xth(me,cmds,$id,xllist) [$xth(ctrl,me,ac).ll.l curselection]]
+  }
+  if {$lid == 0} {
+    return
+  }
+
+  if {$xth(me,unredook)} {
+    xth_me_cmds_update {}
+  }
+  
+  # odstrani ho zo zoznamu
+  set ix [lsearch $xth(me,cmds,$id,xllist) $lid]
+  set xth(me,cmds,$id,xllist) [lreplace $xth(me,cmds,$id,xllist) $ix $ix]
+  set xth(me,cmds,$id,llist) [lreplace $xth(me,cmds,$id,llist) $ix $ix]
+  xth_me_cmds_update_area_data $id
+  xth_me_prev_cmd $xth(me,cmds,$id,data)
+  $xth(ctrl,me,ac).ll.l selection clear 0 end
+  $xth(ctrl,me,ac).ll.l selection set $ix $ix
+  $xth(ctrl,me,ac).ll.l see $ix
+    
+  xth_me_unredo_action "deleting area border" "xth_me_cmds_undelete_area_line 0 $id $lid $ix" \
+    "xth_me_cmds_delete_area_line $id $lid"
+  
+}
+
+
+proc xth_me_cmds_undelete_area_line {cr id lid ix} {
+
+  global xth
+  set xth(me,cmds,$id,xllist) [linsert $xth(me,cmds,$id,xllist) $ix $lid]
+  set xth(me,cmds,$id,llist) [linsert $xth(me,cmds,$id,llist) $ix $xth(me,cmds,$id,$lid,txt)]
+  xth_me_cmds_update_area_data $id
+  xth_me_prev_cmd $xth(me,cmds,$id,data)
+  $xth(ctrl,me,ac).ll.l selection clear 0 end
+  $xth(ctrl,me,ac).ll.l selection set [expr $ix + $cr] [expr $ix + $cr]
+  $xth(ctrl,me,ac).ll.l see [expr $ix + $cr]
+  
+}
+
+
+
+proc xth_me_cmds_create_area {ix mode type opts lines} {
+
+  global xth
+  if {$mode} {
+    xth_me_cmds_update {}
+  }
+  set id [xth_me_cmds_create 6 {} $ix]
+  set xth(me,cmds,$id,llid) 0
+  set xth(me,cmds,$id,llist) {"end of area"}
+  set xth(me,cmds,$id,xllist) {0}
+
+  if {$mode && ([string length $opts] < 1)} {
+    set opts $xth(me,dflt,area,options)
+  }
+
+  if {[string length $type] > 0} {
+    set xth(me,cmds,$id,type) $type
+  } else {
+    set xth(me,cmds,$id,type) $xth(me,dflt,area,type)
+  }  
+
+  foreach ln $lines {
+    xth_me_cmds_create_area_line $id \
+          [expr [llength $xth(me,cmds,$id,xllist)] - 1] $mode $ln
+  }
+  
+  # nastavit options
+  regsub {^\s*} $opts "" opts
+  regsub {\s*$} $opts "" opts
+  set xth(me,cmds,$id,options) $opts
+
+  xth_me_cmds_update_list $id
+  xth_me_cmds_update_area_data $id
+  if {$mode} {
+    xth_me_unredo_action "creating area" "xth_me_cmds_delete $id\nxth_me_cmds_set_mode 0" \
+      "xth_me_cmds_undelete $id 0 [lsearch $xth(me,cmds,xlist) $id]\nxth_me_cmds_set_mode 3"  
+    xth_me_cmds_select $id
+    xth_me_cmds_start_area_insert 0
+  }
+
+
+}
+
+
+
+
 proc xth_me_cmds_create_line {ix mode type opts lines} {
 
   global xth
@@ -629,7 +883,7 @@ proc xth_me_cmds_create_line {ix mode type opts lines} {
   # prejde vsetky riadky a pohlada meno tam
   set newlines {}
   foreach ln $lines {
-    set optl [xth_me_cmds_get_option $ln name]
+    set optl [xth_me_cmds_get_option $ln id]
     if {[lindex $optl 2]} {
       set xth(me,cmds,$id,name) [lindex $optl 0]
       set ln [lindex $optl 1]
@@ -907,6 +1161,32 @@ proc xth_me_cmds_postprocess_line {id} {
 }
 
 
+proc xth_me_cmds_update_area_data {id} {
+
+  global xth
+  set xl $xth(me,cmds,$id,xllist)
+  set lix [expr [llength $xl] - 2]
+
+  set d "area $xth(me,cmds,$id,type)"
+  set xth(me,dflt,line,type) $xth(me,cmds,$id,type)
+
+  # options
+  if {[string length $xth(me,cmds,$id,options)] > 0} {
+    set d "$d $xth(me,cmds,$id,options)"
+  }
+  set xth(me,dflt,line,options) $xth(me,cmds,$id,options)
+
+  for {set ix 0} {$ix <= $lix} {incr ix} {
+    set lid [lindex $xl $ix]
+    set d "$d\n  $xth(me,cmds,$id,$lid,txt)"
+  }
+
+  set xth(me,cmds,$id,data) "$d\nendarea"
+  
+}
+
+
+
 proc xth_me_cmds_update_line_data {id} {
   global xth
   set xl $xth(me,cmds,$id,xplist)
@@ -915,7 +1195,7 @@ proc xth_me_cmds_update_line_data {id} {
   set d "line $xth(me,cmds,$id,type)"
   set xth(me,dflt,line,type) $xth(me,cmds,$id,type)
 
-  # name
+  # id
   if {[string length $xth(me,cmds,$id,name)] > 0} {
     set d "$d -id $xth(me,cmds,$id,name)"
   }
@@ -1074,6 +1354,9 @@ proc xth_me_cmds_toggle_line_reverse {} {
   set xth(ctrl,me,line,reverse) $nrev
   set xth(me,unredola) "line reversion"
   xth_me_cmds_update {}
+  if {[llength $xth(me,cmds,$id,xplist)] > 1} {
+    xth_me_cmds_move_lineln $id [lindex $xth(me,cmds,$id,xplist) 0] [lindex $xth(me,cmds,$id,xplist) 1]
+  }
   $xth(ctrl,me,line).rev configure -variable xth(ctrl,me,line,reverse)
 }
 
@@ -1406,6 +1689,17 @@ proc xth_me_cmds_update_line_vars {id pid} {
     
 }
 
+proc xth_me_cmds_update_area_vars {id} {
+
+  global xth
+  set xth(ctrl,me,ac,type) $xth(me,cmds,$id,type)
+  set xth(ctrl,me,ac,opts) $xth(me,cmds,$id,options)
+    
+}
+
+
+
+
 
 proc xth_me_cmds_get_default_linept_cp {prv id pid} {
   global xth
@@ -1696,6 +1990,13 @@ proc xth_me_cmds_reclose_line {id} {
 
 
 proc xth_me_cmds_get_bezier_coords {x1 y1 c1x c1y c2x c2y x2 y2} {
+#  if {[llength $x1] > 1} {
+#    set tlen [lindex $x1 2]
+#    set rotation [lindex $x1 1]
+#    set x1 [lindex $x1 0]
+#  } else {
+#    set rotation {}
+#  }
   if {[string length $c1x] < 1} {
     set c1x $x1
     set c1y $y1
@@ -1705,7 +2006,12 @@ proc xth_me_cmds_get_bezier_coords {x1 y1 c1x c1y c2x c2y x2 y2} {
     set c2y $y2
   }
   set q 20
-  set crds {}
+#  if {[string length $rotation] > 0} {    
+#    set crds [list [expr $x1 + $tlen * sin(double($rotation)/180.0*3.14159265359)] \
+#      [expr $y1 + $tlen * cos(double($rotation)/180.0*3.14159265359)]]
+#  } else {
+    set crds {}
+#  }
   for {set i 0} {$i <= $q} {incr i} {
     set t [expr $i.0 / $q.0]
     set t2 [expr pow($t,2.0)]
@@ -1736,50 +2042,68 @@ proc xth_me_cmds_real2can_coords {crds} {
 }
 
 
-proc xth_me_cmds_draw_lineln {id ppid pid} {
+proc xth_me_cmds_get_crds2state {id ppid pid} {
   global xth
+#  set tlen [expr 0.01 * $xth(me,zoom) * $xth(gui,me,line,ticksize)]
+
   if {$ppid > 0} {
+
+#    if {[lsearch $xth(me,cmds,$id,xplist) $ppid] == 0} {
+#      set rot [xth_me_cmds_get_default_rotation $id $ppid]
+#      set x1 [list $xth(me,cmds,$id,$ppid,x) $rot $tlen]
+#    } else {
+#      set rot {}
+      set x1 $xth(me,cmds,$id,$ppid,x)
+#    }
+
     set st normal
     if {$xth(me,cmds,$id,$ppid,idn) || $xth(me,cmds,$id,$pid,idp)} {
-      set crds [xth_me_cmds_get_bezier_coords $xth(me,cmds,$id,$ppid,x) \
+      set crds [xth_me_cmds_get_bezier_coords $x1 \
         $xth(me,cmds,$id,$ppid,y) $xth(me,cmds,$id,$ppid,xn) \
         $xth(me,cmds,$id,$ppid,yn) $xth(me,cmds,$id,$pid,xp) \
         $xth(me,cmds,$id,$pid,yp) $xth(me,cmds,$id,$pid,x) \
         $xth(me,cmds,$id,$pid,y)]
     } else {
-      set crds [list $xth(me,cmds,$id,$ppid,x) $xth(me,cmds,$id,$ppid,y) \
-        $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y)]
+#      if {[string length $rot] > 0} {
+#        set crds [list [expr $xth(me,cmds,$id,$ppid,x) + $tlen * sin(double($rot)/180.0*3.14159265359)] \
+#          [expr $xth(me,cmds,$id,$ppid,y) + $tlen * cos(double($rot)/180.0*3.14159265359)]]
+#      } else {
+        set crds {}
+#      }
+      lappend crds $xth(me,cmds,$id,$ppid,x) $xth(me,cmds,$id,$ppid,y) \
+        $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y)
     }
   } else {
     set crds {0 0 10 10}
     set st hidden
   }
-  $xth(me,can) create line [xth_me_cmds_real2can_coords $crds] -width 3 -fill blue \
+  return [list $st $crds]
+}
+
+
+
+proc xth_me_cmds_draw_lineln {id ppid pid} {
+  global xth
+  set st2crds [xth_me_cmds_get_crds2state $id $ppid $pid]
+  set st [lindex $st2crds 0]
+  set crds [lindex $st2crds 1]
+  $xth(me,can) create line [xth_me_cmds_real2can_coords $crds] -width 3 -fill $xth(gui,me,activefill) \
     -tags "line ln$id lnln$id ln$id.$pid command" -state $st
   xth_me_bind_area_drag ln$id.$pid {}
-  #$xth(me,can) bind ln$id.$pid <1> "puts $id.$pid"
+  $xth(me,can) bind ln$id.$pid <1> "xth_me_cmds_click_lineln {$id $pid} pt$id.$pid %x %y"
+  set highlight_on "if {\$xth(me,cmds,selid) != $id} {\$xth(me,can) itemconfigure lnln$id -fill \$xth(gui,me,highlightfill)}"
+  set highlight_off "if {\$xth(me,cmds,selid) != $id} {\$xth(me,can) itemconfigure lnln$id -fill \[$xth(me,can) itemcget pt$id.$pid -outline\]}"
+  $xth(me,can) bind ln$id.$pid <Enter> "$highlight_on\nxth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \[lindex \[regexp -inline -- {^\[^\\n\]*} \$xth(me,cmds,$id,data)\] 0\]\""
+  $xth(me,can) bind ln$id.$pid <Leave> "$highlight_off\nxth_status_bar_pop me"
   catch {$xth(me,can) lower ln$id.$pid point}
 }
 
 
 proc xth_me_cmds_move_lineln {id ppid pid} {
   global xth
-  if {$ppid > 0} {
-    set st normal
-    if {$xth(me,cmds,$id,$ppid,idn) || $xth(me,cmds,$id,$pid,idp)} {
-      set crds [xth_me_cmds_get_bezier_coords $xth(me,cmds,$id,$ppid,x) \
-        $xth(me,cmds,$id,$ppid,y) $xth(me,cmds,$id,$ppid,xn) \
-        $xth(me,cmds,$id,$ppid,yn) $xth(me,cmds,$id,$pid,xp) \
-        $xth(me,cmds,$id,$pid,yp) $xth(me,cmds,$id,$pid,x) \
-        $xth(me,cmds,$id,$pid,y)]
-    } else {
-      set crds [list $xth(me,cmds,$id,$ppid,x) $xth(me,cmds,$id,$ppid,y) \
-        $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y)]
-    }
-  } else {
-    set crds {0 0 10 10}
-    set st hidden
-  }
+  set st2crds [xth_me_cmds_get_crds2state $id $ppid $pid]
+  set st [lindex $st2crds 0]
+  set crds [lindex $st2crds 1]
   $xth(me,can) coords ln$id.$pid [xth_me_cmds_real2can_coords $crds]
   $xth(me,can) itemconfigure ln$id.$pid -state $st
 }
@@ -1789,10 +2113,12 @@ proc xth_me_cmds_draw_linept {id pid} {
   global xth
   $xth(me,can) create oval [expr [xth_me_real2canx $xth(me,cmds,$id,$pid,x)] - $xth(gui,me,line,psize)] \
   [expr [xth_me_real2cany $xth(me,cmds,$id,$pid,y)] - $xth(gui,me,line,psize)] [expr [xth_me_real2canx $xth(me,cmds,$id,$pid,x)] + $xth(gui,me,line,psize)] \
-  [expr [xth_me_real2cany $xth(me,cmds,$id,$pid,y)] + $xth(gui,me,line,psize)] -width 1 -outline blue -fill blue \
+  [expr [xth_me_real2cany $xth(me,cmds,$id,$pid,y)] + $xth(gui,me,line,psize)] -width 1 -outline blue -fill $xth(gui,me,activefill) \
   -tags "point ln$id lnpt$id pt$id.$pid command"
-  $xth(me,can) bind pt$id.$pid <Enter> "$xth(me,can) itemconfigure pt$id.$pid -fill cyan"
-  $xth(me,can) bind pt$id.$pid <Leave> "$xth(me,can) itemconfigure pt$id.$pid -fill \[$xth(me,can) itemcget pt$id.$pid -outline\]"
+  set highlight_on "if {\$xth(me,cmds,selid) != $id} {\$xth(me,can) itemconfigure lnln$id -fill \$xth(gui,me,highlightfill)}"
+  set highlight_off "if {\$xth(me,cmds,selid) != $id} {\$xth(me,can) itemconfigure lnln$id -fill \[$xth(me,can) itemcget pt$id.$pid -outline\]}"
+  $xth(me,can) bind pt$id.$pid <Enter> "$highlight_on\n$xth(me,can) itemconfigure pt$id.$pid -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \[lindex \[regexp -inline -- {^\[^\\n\]*} \$xth(me,cmds,$id,data)\] 0\]\""
+  $xth(me,can) bind pt$id.$pid <Leave> "$highlight_off\n$xth(me,can) itemconfigure pt$id.$pid -fill \[$xth(me,can) itemcget ln$id.$pid -fill\]; xth_status_bar_pop me"
   $xth(me,can) bind pt$id.$pid <1> "xth_me_cmds_click {$id $pid} pt$id.$pid \$xth(me,cmds,$id,$pid,x) \$xth(me,cmds,$id,$pid,y) %x %y"
   $xth(me,can) bind pt$id.$pid <3> "xth_me_cmds_special_select {$id $pid} %x %y"  
   $xth(me,can) bind pt$id.$pid <Shift-1> "xth_me_cmds_special_select {$id $pid} %x %y"  
@@ -2003,6 +2329,7 @@ proc xth_me_cmds_continue_linept_creation {x y motionID} {
     $xth(me,can) itemconfigure lineptncp -state hidden
   }
   xth_me_cmds_move_lineptcp_xctrl $id $ppid $pid $npid
+  xth_me_cmds_move_line_xctrl $id
   xth_me_cmds_move_linelnpt $id $pid
   update idletasks
 }
@@ -2045,6 +2372,16 @@ proc xth_me_cmds_start_linept_insert {} {
   global xth
   set xth(me,cmds,inspid) $xth(me,cmds,selpid)
   xth_me_cmds_set_mode 2
+}
+
+
+proc xth_me_cmds_start_area_insert {btn} {
+  global xth
+  if {$btn && ($xth(me,cmds,mode) == 3)} {
+    xth_me_cmds_set_mode 0
+  } else {
+    xth_me_cmds_set_mode 3
+  }
 }
 
 
@@ -2244,6 +2581,7 @@ proc xth_me_cmds_continue_linecp_drag {x y dragto} {
         }
       }
       xth_me_cmds_move_linept_xctrl $id $pid
+      xth_me_cmds_move_line_xctrl $id
     }
     p {
       set xth(ctrl,me,linept,xp) $nx
@@ -2439,6 +2777,7 @@ proc xth_me_cmds_end_linecp_drag {x y dragto} {
   $xth(me,can) configure -cursor crosshair
   xth_me_cmds_update_line_data $id
   xth_me_prev_cmd $xth(me,cmds,$id,data)  
+  xth_me_cmds_move_line_xctrl $id
   xth_me_cmds_update {}
   
 }
@@ -2603,6 +2942,7 @@ proc xth_me_cmds_linept_fdrag {x y} {
   }
 
   xth_me_cmds_move_linept_size_xctrl $id $pid $xth(ctrl,me,linept,rot) $xth(ctrl,me,linept,rs) $xth(ctrl,me,linept,ls)
+  xth_me_cmds_move_line_xctrl $id
 }
 
 proc xth_me_cmds_end_linept_fdrag {x y} {
@@ -2641,17 +2981,19 @@ proc xth_me_cmds_set_colors {} {
   set cid $xid
   
   set dcol #fff222
+  set scol $xth(gui,me,pasivefill)
   if {$xth(me,cmds,$xth(me,cmds,selid),ct) == 4} {
     set col $dcol
-    set ocol blue
+    set ocol $scol
   } elseif {$xth(me,cmds,$xth(me,cmds,selid),ct) == 5} {
-    set col blue
+    set col $scol
     set ocol $dcol
   } else {
-    set col blue
-    set ocol blue
+    set col $scol
+    set ocol $scol
   }
   
+  set xth(me,curscrap) {}
   set godown 1
   if {$cid < 0} {
     set cid [expr $xid + 1]
@@ -2668,6 +3010,9 @@ proc xth_me_cmds_set_colors {} {
         $xth(me,can) itemconfigure lnln$id -fill $col
       }
       4 - 5 {
+        if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
+          set xth(me,curscrap) $xth(me,cmds,$id,name)
+        }
         if {$cid != $xid} {
           set col $dcol
         }
@@ -2685,7 +3030,68 @@ proc xth_me_cmds_set_colors {} {
       incr cid 1
     }
   }
+  xth_app_title me
 }
+
+
+proc xth_me_cmds_show_current_area {} {
+
+  global xth
+
+  # najde id zaciatku a konca sucasneho scrapu
+  set id $xth(me,cmds,selid)
+  if {$xth(me,cmds,$id,ct) != 6} {
+    return
+  }
+
+  set xid [expr [lsearch $xth(me,cmds,xlist) $id] + 1]
+  set llen [llength $xth(me,cmds,xlist)]
+  set cid $xid
+
+  
+  set godown 1
+  if {$cid < 0} {
+    set cid [expr $xid - 1]
+    set godown 0
+  }
+  
+  while {(($cid >= 0) && ($cid < $llen)) || ($godown)} {
+    set oid [lindex $xth(me,cmds,xlist) $cid]
+    switch $xth(me,cmds,$oid,ct) {
+      3 {
+        foreach lnid $xth(me,cmds,$id,llist) {
+          if {[string equal $xth(me,cmds,$oid,name) $lnid]} {
+            $xth(me,can) itemconfigure lnpt$oid -fill red
+            $xth(me,can) itemconfigure lnln$oid -fill red
+          }
+        }
+      }
+      4 {
+        return
+      }
+      5 {
+        if {$cid != $xid} {
+          set cid [expr $xid - 1]
+          set godown 0
+        }
+      }
+    }
+    
+    if {$godown} {
+      incr cid -1      
+      if {$cid < 0} {
+        set cid [expr $xid - 1]
+        set godown 0
+      }
+    } else {
+      incr cid 1
+    }
+    
+  }
+}
+
+
+
 
 proc xth_me_cmds_line_split {} {
 

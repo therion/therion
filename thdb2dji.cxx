@@ -67,7 +67,7 @@ void thdb2dji::parse_item(char * istr)
       break;
     }
   thsplit_strings(& thdb.db2d.mbf, p_name, ':');
-  */
+*/
   thsplit_strings(& thdb.db2d.mbf, istr, ':');
   int npar = thdb.db2d.mbf.get_size();
   char ** pars = thdb.db2d.mbf.get_buffer();

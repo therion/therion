@@ -6,7 +6,7 @@
 %% $RCSfile: thPatterns.mp,v $
 %% $Revision: 1.6 $
 %%
-%% Copyright (C) 2000 Martin Budaj
+%% Copyright (C) 2000-2004 Martin Budaj
 %%
 %% -------------------------------------------------------------------- 
 %% This program is free software; you can redistribute it and/or modify
@@ -26,50 +26,19 @@
 
 if unknown a_water_UIS: else: endinput fi;
 
-% @LIBRARY
-% thPatterns --
-%
-% This file contains definitions of pattern fills. Use patterns with
-% thfill command instead of fill. Before use, set <T>T:=identity</T>.
-% (In the definition of pattern you are allowed to use MetaPost's
-% draw, fill etc.)
-
-
-% @SYMBOL
-% thLakePattern_UIS --
-%
-% @PREVIEW
-%
-% fill ((.1,.4)..(.6,.2)..(.8,.4)..(.45,.7){dir 160}..cycle) inscale withpattern thLakePattern_UIS;
-
-beginpattern(a_water_UIS);
+beginpattern(pattern_water_UIS);
     draw origin--10up withpen pensquare scaled (0.02u);
     patternxstep(.18u);
     patterntransform(identity rotated 45);
 endpattern;
 
-% @SYMBOL
-% thSumpPattern_UIS --
-%
-% @PREVIEW
-%
-% fill ((.1,.4)..(.6,.2)..(.8,.4)..(.45,.7){dir 160}..cycle) inscale withpattern thSumpPattern_UIS;
-
-beginpattern(a_sump_UIS);
+beginpattern(pattern_sump_UIS);
     draw origin--(0,.25u) withpen pensquare scaled (0.02u);
     draw origin--(.25u,0) withpen pensquare scaled (0.02u);
     patterntransform(identity rotated 45);
 endpattern;
 
-% @SYMBOL
-% thSandPattern_UIS --
-%
-% @PREVIEW
-%
-% fill ((.1,.4)..(.6,.2)..(.8,.6)..(.45,.7){dir 130}..cycle) inscale withpattern thSandPattern_UIS;
-
-
-beginpattern(a_sand_UIS);
+beginpattern(pattern_sand_UIS);
     pickup PenC;
     draw (0.2u,.3u);
     draw (0.35u,.7u);
@@ -77,15 +46,7 @@ beginpattern(a_sand_UIS);
     draw (0.8u,.1u);    
 endpattern;
 
-% @SYMBOL
-% thDebrisPattern_SKBB --
-%
-% @PREVIEW
-%
-% fill ((.05,.4)..(.6,.1)..(.9,.6)..(.45,.9){dir 100}..cycle) inscale withpattern thDebrisPattern_SKBB;
-% @ENDSYMBOL
-
-beginpattern(a_debris_SKBB);
+beginpattern(pattern_debris_SKBB);
     pickup PenC;
     p:=(-.15u,0)--(.15u,0);
     draw p rotated -40 shifted (.2u,.3u);
@@ -94,7 +55,42 @@ beginpattern(a_debris_SKBB);
 %    draw p rotated 95 shifted (.9u,.8u);
 endpattern;
 
-beginpattern(a_empty);
+beginpattern(pattern_empty);
   patternbbox(0,0,10,10);
   patternstep(10,10);
 endpattern;
+
+% symbols
+
+def a_water_UIS (expr Path) =
+  T:=identity;
+  thclean Path;
+  thfill Path withpattern pattern_water_UIS;
+enddef;
+
+def a_sump_UIS (expr Path) =
+  T:=identity;
+  thclean Path;
+  thfill Path withpattern pattern_sump_UIS;
+enddef;
+
+def a_sand_UIS (expr p) =
+  T:=identity;
+  thclean p;
+  pickup PenC;
+  path q; q = bbox p;
+  picture tmp_pic; tmp_pic := nullpicture;
+  for i = xpart llcorner q step 4mm until xpart urcorner q:
+    for j = ypart llcorner q step 4mm until ypart urcorner q:
+      addto tmp_pic contour makepath currentpen shifted ((i,j) randomized 2.5mm);
+    endfor;  
+  endfor;
+  clip tmp_pic to p;
+  draw tmp_pic;
+enddef;
+
+def a_debris_SKBB (expr Path) =
+  T:=identity;
+  thclean Path;
+  thfill Path withpattern pattern_debris_SKBB;
+enddef;

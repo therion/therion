@@ -78,6 +78,7 @@ enum {
   TT_LAYOUT_LANG = 2035,
   TT_LAYOUT_MAP_ITEM = 2036,
   TT_LAYOUT_SCALE_BAR = 2037,
+  TT_LAYOUT_DEBUG = 2038,
 };
 
 
@@ -139,6 +140,35 @@ static const thstok thtt_layout_legend[] = {
   {"on", TT_LAYOUT_LEGEND_ON},
   {NULL, TT_LAYOUT_LEGEND_UNKNOWN},
 };
+
+
+/**
+ * Layout debug tokens.
+ */
+
+enum {
+  TT_LAYOUT_DEBUG_OFF,
+  TT_LAYOUT_DEBUG_STATIONS,
+  TT_LAYOUT_DEBUG_JOINS,
+  TT_LAYOUT_DEBUG_ALL,
+  TT_LAYOUT_DEBUG_UNKNOWN,
+};
+
+
+/**
+ * Layout legend token table.
+ */
+ 
+static const thstok thtt_layout_debug[] = {
+  {"all", TT_LAYOUT_DEBUG_ALL},
+  {"first", TT_LAYOUT_DEBUG_STATIONS},
+  {"off", TT_LAYOUT_DEBUG_OFF},
+  {"on", TT_LAYOUT_DEBUG_ALL},
+  {"second", TT_LAYOUT_DEBUG_JOINS},
+  {NULL, TT_LAYOUT_DEBUG_UNKNOWN},
+};
+
+
 
 
 
@@ -259,6 +289,7 @@ static const thstok thtt_layout_opt[] = {
   {"color",TT_LAYOUT_COLOR},
   {"colour",TT_LAYOUT_COLOR},
   {"copy",TT_LAYOUT_COPY},
+  {"debug",TT_LAYOUT_DEBUG},
   {"doc-author",TT_LAYOUT_DOC_AUTHOR},
   {"doc-keywords",TT_LAYOUT_DOC_KEYWORDS},
   {"doc-subject",TT_LAYOUT_DOC_SUBJECT},
@@ -325,7 +356,8 @@ class thlayout : public thdataobject {
   
   char grid, ccode;
   
-  int legend, map_header, lang, max_explos, max_topos, max_cartos, max_copys;
+  int legend, map_header, lang, max_explos, max_topos, max_cartos, max_copys,
+    debug;
   
   thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
   
@@ -342,7 +374,7 @@ class thlayout : public thdataobject {
     def_doc_keywords, def_excl_pages, def_grid, def_page_grid,
     def_legend, def_map_header, def_lang, def_scale_bar, 
     redef_base_scale, def_max_explos, def_max_topos, def_max_cartos,
-    def_max_copys, def_explo_lens, def_topo_lens;
+    def_max_copys, def_explo_lens, def_topo_lens, def_debug;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;
@@ -478,6 +510,8 @@ class thlayout : public thdataobject {
    
   void process_copy();
   
+  bool is_debug_stations();
+  bool is_debug_joins();
   
   /**
    * set LAYOUT variable.

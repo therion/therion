@@ -1,4 +1,37 @@
 --------------------------------------------------------------------------------
+Therion 0.2.19 (2004-03-01):
+
+therion:
+
+ * input language changes:
+   - place option of point, line, area commands: none renamed to default
+   - area command: place bottom is default
+   - line command: if contour has no gradient specified, visualization
+      is symbol-set dependent (no gradient tick in UIS, tick in the middle
+      in SKBB)
+   - line command: pit may be spelled as pitch
+   - line command has new type: gradient
+   - survey command has new option: person-rename
+ * configuration file changes:
+   - layout command has new option: debug
+   - select command: new rules for selection if there is no map selected
+ * scrap transformation improved, distortion logged in the log file
+ * debugging map mode shows scrap distortions
+ * bug fixed in PLT export 
+
+xtherion:
+
+ * Map editor: status bar displays command preview
+ * Map editor: new Area control
+ * Map editor: `Move to' in File commands added
+ * Map editor: name of the edited scrap displayed in Title bar
+ * Map editor: edited line is highlited
+ * Map editor: selected area is highlited
+ * Map editor: orientation tick at the beginning of line symbols
+ * Help/Control dialog with key and mouse shortcuts
+ * input (keyboard) encoding menu
+
+--------------------------------------------------------------------------------
 Therion 0.2.18 (2004-02-12):
 
 therion:
