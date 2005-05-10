@@ -77,12 +77,14 @@ struct paired {
   paired();
 };
 
+paired rotatedaround(paired x,paired o, double th);
+
 struct layout {
   string excl_list,labelx,labely,
          doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
          northarrow, scalebar;
   bool  excl_pages,title_pages,page_numbering,
-        transparency,map_grid,OCG; 
+        transparency,map_grid,OCG,map_header_bg; 
   double hsize,vsize,overlap,
         hgridsize, vgridsize,
         hgridorigin, vgridorigin, gridrot,
@@ -110,11 +112,13 @@ extern list<scraprecord> SCRAPLIST;
 extern list<legendrecord> LEGENDLIST;
 extern list<colorlegendrecord> COLORLEGENDLIST;
 extern layout LAYOUT;
+extern list<pattern> PATTERNLIST;
+extern list<converted_data> GRIDLIST;
 
 
 struct surfpictrecord {
-  char * filename;
-  double dx, dy, xx, xy, yx, yy;
+  char * filename, * type;
+  double dx, dy, xx, xy, yx, yy, width, height;
 };
 
 

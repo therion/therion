@@ -82,15 +82,15 @@ if {$xth(gui,bindinsdel)} {
 }
 
 # nechame tab, return originalny
-#if {[info exists xth(gui,te)]} {
+if {[info exists xth(gui,te)]} {
 #  bind $txb.txt <$xth(kb_control)-Key-a> "xth_te_text_select_all %W"
 #  bind $txb.txt <$xth(kb_control)-Key-i> "xth_te_text_auto_indent %W"
   bind $txb.txt <Tab> $xth(te,bind,text_tab)
-#  bind $txb.txt <Return> $xth(te,bind,text_return)
-#} else {
-#  bind $txb.txt <Tab> $xth(gui,bind,text_tab)
+  bind $txb.txt <Return> $xth(te,bind,text_return)
+} else {
+  bind $txb.txt <Tab> $xth(gui,bind,text_tab)
   bind $txb.txt <Return> $xth(gui,bind,text_return)
-#}
+}
 
 
 # create log window

@@ -30,7 +30,9 @@ set xth(about,image_id) [image create photo -data $xth(about,image_data)]
 set xth(about,infotime) 2500
 
 after 0 {
-  xth_ivc
+  if {$xth(gui,check_update)} {
+    xth_ivc
+  }
   if {[string length $xth(about,nvr)] > 0} {
     bell
     if {[winfo exists $xth(gui,about)]} {

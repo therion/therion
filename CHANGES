@@ -1,4 +1,22 @@
 --------------------------------------------------------------------------------
+Therion 0.3.8 (2005-05-10):
+
+therion:
+
+ * svg export added (features not yet supported: map header, font embedding,
+   layers, map transparency -- this requires SVG 1.2 features)
+ * dxf model export added
+ * export format automatically determined from file extension
+ * layout: map-header-bg on|(off) - when on, background of map 
+   header is filled with background color
+ * .ini files installed into /etc directory, .ini.new files allways installed
+
+xtherion:
+
+ * new items in xtherion.ini file
+ * text editor - indent mode now simmilar to ordinary text editors
+
+--------------------------------------------------------------------------------
 Therion 0.3.7 (2005-03-16):
 
 therion:

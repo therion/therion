@@ -101,6 +101,7 @@ layout::layout() {
   surface_opacity = 0.7;
   hgridorigin = 0;
   vgridorigin = 0;
+  map_header_bg = false;
 }
 
 paired::paired() {

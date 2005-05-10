@@ -154,6 +154,9 @@ thlayout::thlayout()
   this->def_opacity = false;
   this->opacity = 0.7;
 
+  this->def_map_header_bg = false;
+  this->map_header_bg = false;
+
   this->def_surface = false;
   this->surface = TT_LAYOUT_SURFACE_OFF;
   this->def_surface_opacity = false;
@@ -688,6 +691,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->layers = (sv == TT_TRUE);
       this->def_layers = true;
       break;
+
+    case TT_LAYOUT_MAP_HEADER_BG:
+      sv = thmatch_token(args[0],thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        ththrow(("invalid map-header-bg switch -- %s",args[0]))
+      this->map_header_bg = (sv == TT_TRUE);
+      this->def_map_header_bg = true;
+      break;
     
     case TT_LAYOUT_OPACITY:
       thparse_double(sv,dum,args[0]);        
@@ -1016,6 +1027,9 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_layers = %s;\n",(this->def_layers ? "true" : "false"));
   thprintf("\tplayout->layers = %s;\n",(this->layers ? "true" : "false"));
+
+  thprintf("\tplayout->def_map_header_bg = %s;\n",(this->def_map_header_bg ? "true" : "false"));
+  thprintf("\tplayout->map_header_bg = %s;\n",(this->map_header_bg ? "true" : "false"));
 
   thprintf("\tplayout->def_opacity = %s;\n",(this->def_opacity ? "true" : "false"));
   thprintf("\tplayout->opacity = %lg;\n",this->opacity);
@@ -1622,6 +1636,9 @@ void thlayout::process_copy() {
   
       if has_srcl(def_layers)
         this->layers = srcl->layers;
+
+      if has_srcl(def_map_header_bg)
+        this->map_header_bg = srcl->map_header_bg;
   
       if has_srcl(def_grid)
         this->grid = srcl->grid;
@@ -1685,6 +1702,7 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.page_numbering = this->pgsnum;
   LAYOUT.transparency = this->transparency;
   LAYOUT.OCG = this->layers;
+  LAYOUT.map_header_bg = this->map_header_bg;
   //TODO
   LAYOUT.map_grid = this->page_grid;
   LAYOUT.hsize = this->hsize * THM2PT;

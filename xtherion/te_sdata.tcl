@@ -156,6 +156,15 @@ proc xth_te_sdata_incr {} {
 }
 
 
+proc xth_te_sdata_cspc {itm} {
+  if {[regexp {^\s*[^\"\[]\S*\s+\S+} $itm]} {
+    #"
+    set itm "\[$itm\]"
+  }
+  return $itm
+}
+
+
 proc xth_te_sdata_bind {} {
 
   global xth
@@ -204,9 +213,9 @@ proc xth_te_sdata_bind {} {
     set clw ""
     for {set iet 0} {$iet < $xth(te,sdata,nent)} {incr iet} {
       if {$iet < $xth(te,sdata,invd,ent)} {
-        append wtw1 " \$xth(te,sdata,$iet,cvalue)"
+        append wtw1 " \[xth_te_sdata_cspc \$xth(te,sdata,$iet,cvalue)\]"
       } else {
-        append wtw2 " \$xth(te,sdata,$iet,cvalue)"
+        append wtw2 " \[xth_te_sdata_cspc \$xth(te,sdata,$iet,cvalue)\]"
       }
       if {[lsearch {from to station} $xth(te,sdata,$iet,qtt)] == -1} {
         append clw "set xth(te,sdata,$iet,cvalue) \"\"\n"
@@ -229,7 +238,7 @@ proc xth_te_sdata_bind {} {
     set wtw ""
     set clw ""
     for {set iet 0} {$iet < $xth(te,sdata,nent)} {incr iet} {
-      append wtw " \$xth(te,sdata,$iet,cvalue)"
+      append wtw " \[xth_te_sdata_cspc \$xth(te,sdata,$iet,cvalue)\]"
       if {[lsearch {from to station} $xth(te,sdata,$iet,qtt)] == -1} {
         append clw "set xth(te,sdata,$iet,cvalue) \"\"\n"
       }
@@ -268,11 +277,11 @@ proc xth_te_sdata_insert {data invd iidx} {
   set xth(me,sdata,err_notenought) 0
 
   set err 0
-  if {$xth(gui,etabsize) > 0} {
-    set tabspc [format \x25$xth(gui,etabsize)s " "]
-  } else {
-    set tabspc "  "
-  }
+#  if {$xth(gui,etabsize) > 0} {
+#    set tabspc [format \x25$xth(gui,etabsize)s " "]
+#  } else {
+    set tabspc " "
+#  }
   set sent 0
   set eent $xth(te,sdata,nent)
   switch $invd {

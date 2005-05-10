@@ -488,6 +488,7 @@ proc xth_cp_compile {} {
   }
   cd $cdir
   xth_me_xvi_refresh
+  xth_me_save_file 0
   return $ret
 }
 

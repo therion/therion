@@ -79,7 +79,7 @@ class thsurface : public thdataobject {
     calib_x, calib_y, calib_s, calib_r, calib_xx, calib_yy, calib_xy, calib_yx,
     pict_dpi, pict_height, pict_width;
   long grid_nx, grid_ny, grid_counter, grid_size;
-  int grid_flip;
+  int grid_flip, pict_type;
   thtflength grid_units;
   double * grid;
   thdb3ddata d3d;

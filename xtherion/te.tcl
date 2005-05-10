@@ -52,15 +52,16 @@ set xth(te,bind,text_return) {
   regexp {(\d+)\.} [%W index insert] dum cln
   set spcs ""
   regexp {^\s+} [%W get $cln.0 $cln.end] spcs
-  set spcsc [string length $spcs]
-  set indct [string length [xth_te_get_indent %W $cln.0 1]]
-  if {$spcsc == $indct} {
-  } elseif {$spcsc > $indct} {
-    %W delete $cln.0 $cln.[expr $spcsc - $indct]
-  } elseif {$spcsc < $indct} {
-    %W insert $cln.0 [format \x25[expr $indct - $spcsc]s " "]
-  }
-  xth_te_insert_text %W "\n[xth_te_get_indent %W [expr $cln + 1].0 0]"
+#  set spcsc [string length $spcs]
+#  set indct [string length [xth_te_get_indent %W $cln.0 1]]
+#  if {$spcsc == $indct} {
+#  } elseif {$spcsc > $indct} {
+#    %W delete $cln.0 $cln.[expr $spcsc - $indct]
+#  } elseif {$spcsc < $indct} {
+#    %W insert $cln.0 [format \x25[expr $indct - $spcsc]s " "]
+#  }
+#  xth_te_insert_text %W "\n[xth_te_get_indent %W [expr $cln + 1].0 0]"
+  xth_te_insert_text %W "\n$spcs"
 }
 
 

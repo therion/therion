@@ -76,7 +76,6 @@ void thexporter::parse_export(int nargs, char ** args) {
     case TT_EXP_ATLAS:
       xp = new thexpmap;
       xp->export_mode = expmode;
-      ((thexpmap*)xp)->format = ((thexpmap*)xp)->get_default_format();
       break;
     default:
       ththrow(("unsupported export type -- %s", args[0]))

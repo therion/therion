@@ -1491,8 +1491,8 @@ if {$xth(gui,bindinsdel)} {
 }
 
 if {[info exists xth(gui,te)]} {
-  bind $txb.txt <$xth(kb_control)-Key-a> "xth_te_text_select_all %W"
-  bind $txb.txt <$xth(kb_control)-Key-i> "xth_te_text_auto_indent %W"
+#  bind $txb.txt <$xth(kb_control)-Key-a> "xth_te_text_select_all %W"
+#  bind $txb.txt <$xth(kb_control)-Key-i> "xth_te_text_auto_indent %W"
   bind $txb.txt <Tab> $xth(te,bind,text_tab)
   bind $txb.txt <Return> $xth(te,bind,text_return)
 } else {
@@ -2072,8 +2072,13 @@ if {$xth(gui,bindinsdel)} {
 #  }
 }
 
-bind $txb.txt <Tab> $xth(gui,bind,text_tab)
-bind $txb.txt <Return> $xth(gui,bind,text_return)
+if {[info exists xth(gui,te)]} {
+  bind $txb.txt <Tab> $xth(te,bind,text_tab)
+  bind $txb.txt <Return> $xth(te,bind,text_return)
+} else {
+  bind $txb.txt <Tab> $xth(gui,bind,text_tab)
+  bind $txb.txt <Return> $xth(gui,bind,text_return)
+}
 
 grid columnconf $lpc 0 -weight 1
 grid columnconf $lpc 1 -weight 1

@@ -198,13 +198,6 @@ class thexpmap : public thexport {
 
 
   /**
-   * Return default format.
-   */
-   
-  int get_default_format();
-
-
-  /**
    * Parse export projection.
    */
    

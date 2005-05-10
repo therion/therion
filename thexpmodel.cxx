@@ -39,7 +39,7 @@
 #include "thsurface.h"
 
 thexpmodel::thexpmodel() {
-  this->format = TT_EXPMODEL_FMT_THERION;
+  this->format = TT_EXPMODEL_FMT_UNKNOWN;
   this->items = TT_EXPMODEL_ITEM_ALL;
 }
 
@@ -90,13 +90,22 @@ void thexpmodel::dump_header(FILE * xf)
 void thexpmodel::dump_body(FILE * xf)
 {
   thexport::dump_body(xf);
-  if (this->format != TT_EXPMODEL_FMT_THERION)
+  if (this->format != TT_EXPMODEL_FMT_UNKNOWN)
     fprintf(xf," -format %s", thmatch_string(this->format, thtt_expmodel_fmt));
 }
 
 
 void thexpmodel::process_db(class thdatabase * dbp) 
 {
+  if (this->format == TT_EXPMODEL_FMT_UNKNOWN) {
+    this->format = TT_EXPMODEL_FMT_THERION;
+    thexp_set_ext_fmt(".plt", TT_EXPMODEL_FMT_COMPASS)
+    thexp_set_ext_fmt(".3d", TT_EXPMODEL_FMT_SURVEX)
+    thexp_set_ext_fmt(".wrl", TT_EXPMODEL_FMT_VRML)
+    thexp_set_ext_fmt(".vrml", TT_EXPMODEL_FMT_VRML)
+    thexp_set_ext_fmt(".3dmf", TT_EXPMODEL_FMT_3DMF)
+    thexp_set_ext_fmt(".dxf", TT_EXPMODEL_FMT_DXF)
+  }  
   switch (this->format) {
     case TT_EXPMODEL_FMT_SURVEX:
       this->export_3d_file(dbp);
@@ -112,6 +121,9 @@ void thexpmodel::process_db(class thdatabase * dbp)
       break;
     case TT_EXPMODEL_FMT_VRML:
       this->export_vrml_file(dbp);
+      break;
+    case TT_EXPMODEL_FMT_DXF:
+      this->export_dxf_file(dbp);
       break;
   }
 }
@@ -901,3 +913,339 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
 #endif
 }
 
+void thexpmodel::export_dxf_file(class thdatabase * dbp) {
+  char * fnm;  
+  if (this->outpt_def)
+    fnm = this->outpt;
+  else
+    fnm = "cave.dxf";
+  
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif 
+      
+  FILE * pltf;
+
+  pltf = fopen(fnm,"w");
+     
+  if (pltf == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+
+
+
+
+  double avx, avy, avz;
+  thdb_object_list_type::iterator obi;
+  thdb3ddata * pgn = dbp->db1d.get_3d(), 
+    * surf_pgn = dbp->db1d.get_3d_surface(),
+    * tmp3d;
+  thdb3dlim pgnlimits, finlim, extlim;
+  switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
+    case TT_EXPMODEL_ITEM_SURFACECENTERLINE:
+      pgnlimits.update(&(surf_pgn->limits));
+      break;
+    case TT_EXPMODEL_ITEM_CENTERLINE:
+      pgnlimits.update(&(surf_pgn->limits));
+      pgnlimits.update(&(pgn->limits));
+      break;
+    default:    
+      pgnlimits.update(&(pgn->limits));
+  }
+  finlim.update(&(pgnlimits));
+  avx = 0.0;
+  avy = 0.0;
+  avz = 0.0;
+  pgn->exp_shift_x = avx;
+  pgn->exp_shift_y = avy;
+  pgn->exp_shift_z = avz;
+  surf_pgn->exp_shift_x = avx;
+  surf_pgn->exp_shift_y = avy;
+  surf_pgn->exp_shift_z = avz;
+
+
+  extlim.update(&(surf_pgn->limits));
+  extlim.update(&(pgn->limits));
+
+  // now let's print header
+  fprintf(pltf,"999\n" \
+    "Therion DXF export\n" \
+    "0\n" \
+    "SECTION\n" \
+    "2\n" \
+    "HEADER\n" \
+    "9\n" \
+    "$ACADVER\n" \
+    "1\n" \
+    "AC1006\n" \
+    "9\n" \
+    "$INSBASE\n" \
+    "10\n" \
+    "0.0\n" \
+    "20\n" \
+    "0.0\n" \
+    "30\n" \
+    "0.0\n" \
+    "9\n" \
+    "$EXTMIN\n" \
+    "10\n" \
+    "%.3f\n" \
+    "20\n" \
+    "%.3f\n" \
+    "30\n" \
+    "%.3f\n" \
+    "9\n" \
+    "$EXTMAX\n" \
+    "10\n" \
+    "%.3f\n" \
+    "20\n" \
+    "%.3f\n" \
+    "30\n" \
+    "%.3f\n" \
+    "0\n" \
+    "ENDSEC\n" \
+    "0\n" \
+    "SECTION\n" \
+    "2\n" \
+    "TABLES\n" \
+    "0\n" \
+    "TABLE\n" \
+    "2\n" \
+    "LTYPE\n" \
+    "70\n" \
+    "1\n" \
+    "0\n" \
+    "LTYPE\n" \
+    "2\n" \
+    "CONTINUOUS\n" \
+    "70\n" \
+    "64\n" \
+    "3\n" \
+    "Solid line\n" \
+    "72\n" \
+    "65\n" \
+    "73\n" \
+    "0\n" \
+    "40\n" \
+    "0.000000\n" \
+    "0\n" \
+    "ENDTAB\n" \
+    "0\n" \
+    "TABLE\n" \
+    "2\n" \
+    "LAYER\n" \
+    "70\n" \
+    "6\n" \
+    "0\n" \
+    "LAYER\n" \
+    "2\n" \
+    "CENTERLINE\n" \
+    "70\n" \
+    "64\n" \
+    "62\n" \
+    "4\n" \
+    "6\n" \
+    "CONTINUOUS\n" \
+    "0\n" \
+    "LAYER\n" \
+    "2\n" \
+    "WALLS\n" \
+    "70\n" \
+    "64\n" \
+    "62\n" \
+    "7\n" \
+    "6\n" \
+    "CONTINUOUS\n" \
+    "0\n" \
+    "LAYER\n" \
+    "2\n" \
+    "SURFACE\n" \
+    "70\n" \
+    "64\n" \
+    "62\n" \
+    "3\n" \
+    "6\n" \
+    "CONTINUOUS\n" \
+    "0\n" \
+    "LAYER\n" \
+    "2\n" \
+    "SURFACE_CENTERLINE\n" \
+    "70\n" \
+    "64\n" \
+    "62\n" \
+    "8\n" \
+    "6\n" \
+    "CONTINUOUS\n" \
+    "0\n" \
+    "LAYER\n" \
+    "2\n" \
+    "BBOX\n" \
+    "70\n" \
+    "64\n" \
+    "62\n" \
+    "1\n" \
+    "6\n" \
+    "CONTINUOUS\n" \
+    "0\n" \
+    "ENDTAB\n" \
+    "0\n" \
+    "TABLE\n" \
+    "2\n" \
+    "STYLE\n" \
+    "70\n" \
+    "0\n" \
+    "0\n" \
+    "ENDTAB\n" \
+    "0\n" \
+    "ENDSEC\n" \
+    "0\n" \
+    "SECTION\n" \
+    "2\n" \
+    "BLOCKS\n" \
+    "0\n" \
+    "ENDSEC\n" \
+    "0\n" \
+    "SECTION\n" \
+    "2\n" \
+    "ENTITIES\n",
+    extlim.minx, extlim.miny, extlim.minz,
+    extlim.maxx, extlim.maxy, extlim.maxz);
+
+//    "9\n" 
+//    "$LIMMIN\n" 
+//    "10\n" 
+//    "%.3f\n" 
+//    "20\n" 
+//    "%.3f\n" 
+//    "9\n" 
+//    "$LIMMAX\n" 
+//    "10\n" 
+//    "%.3f\n" 
+//    "20\n" 
+//    "%.3f\n" 
+
+
+  if ((this->items & TT_EXPMODEL_ITEM_CAVECENTERLINE) != 0) {
+    pgn->export_dxf(pltf,"CENTERLINE");
+  }
+  if ((this->items & TT_EXPMODEL_ITEM_SURFACECENTERLINE) != 0) {
+    surf_pgn->export_dxf(pltf,"SURFACE_CENTERLINE");
+  }
+
+  if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
+    // prejde secky surfaces a exportuje z nich povrchy
+    obi = dbp->object_list.begin();
+    while (obi != dbp->object_list.end()) {
+      switch ((*obi)->get_class_id()) {
+        case TT_SURFACE_CMD:
+          tmp3d = ((thsurface*)(*obi))->get_3d();
+          if (tmp3d != NULL) {
+            tmp3d->exp_shift_x = avx;
+            tmp3d->exp_shift_y = avy;
+            tmp3d->exp_shift_z = avz;
+            tmp3d->export_dxf(pltf,"SURFACE");
+            finlim.update(&(tmp3d->limits));
+          }
+          break;
+      }
+      obi++;
+    }
+  }
+
+
+
+  if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
+  
+    // 3D DATA 
+    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+    thscrap * cs;
+    thdb3ddata * d3d;
+    
+    d3d = dbp->db1d.get_3d_walls();
+    finlim.update(&(d3d->limits));
+    d3d->exp_shift_x = avx;
+    d3d->exp_shift_y = avy;
+    d3d->exp_shift_z = avz;
+    d3d->export_dxf(pltf,"WALLS");
+    
+    if (!prjid.newprj) {
+      thdb.db2d.process_projection(prjid.prj);
+      cs = prjid.prj->first_scrap;
+      while(cs != NULL) {
+        if (cs->fsptr->is_selected()) {
+          d3d = cs->get_3d_outline();
+          finlim.update(&(d3d->limits));
+          d3d->exp_shift_x = avx;
+          d3d->exp_shift_y = avy;
+          d3d->exp_shift_z = avz;
+          d3d->export_dxf(pltf,"WALLS");
+        }
+        cs = cs->proj_next_scrap;
+      }
+    }
+    
+  } // WALLS
+  
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.minx - avx, finlim.miny - avy, finlim.minz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.maxx - avx, finlim.miny - avy, finlim.minz - avz);
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.minx - avx, finlim.miny - avy, finlim.minz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.minx - avx, finlim.maxy - avy, finlim.minz - avz);
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.minx - avx, finlim.miny - avy, finlim.minz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.minx - avx, finlim.miny - avy, finlim.maxz - avz);
+  
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.maxx - avx, finlim.maxy - avy, finlim.maxz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.minx - avx, finlim.maxy - avy, finlim.maxz - avz);
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.maxx - avx, finlim.maxy - avy, finlim.maxz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.maxx - avx, finlim.miny - avy, finlim.maxz - avz);
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.maxx - avx, finlim.maxy - avy, finlim.maxz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.maxx - avx, finlim.maxy - avy, finlim.minz - avz);
+
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.minx - avx, finlim.miny - avy, finlim.maxz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.maxx - avx, finlim.miny - avy, finlim.maxz - avz);
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.minx - avx, finlim.miny - avy, finlim.maxz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.minx - avx, finlim.maxy - avy, finlim.maxz - avz);
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.maxx - avx, finlim.miny - avy, finlim.minz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.maxx - avx, finlim.miny - avy, finlim.maxz - avz);
+  
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.maxx - avx, finlim.maxy - avy, finlim.minz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.minx - avx, finlim.maxy - avy, finlim.minz - avz);
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.maxx - avx, finlim.maxy - avy, finlim.minz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.maxx - avx, finlim.miny - avy, finlim.minz - avz);
+
+  fprintf(pltf,"0\nLINE\n8\nBBOX\n");
+  fprintf(pltf,"10\n%.3f\n20\n%.3f\n30\n%.3f\n",finlim.minx - avx, finlim.maxy - avy, finlim.maxz - avz);
+  fprintf(pltf,"11\n%.3f\n21\n%.3f\n31\n%.3f\n",finlim.minx - avx, finlim.maxy - avy, finlim.minz - avz);
+
+  fprintf(pltf,"0\nENDSEC\n0\nEOF\n");
+  fclose(pltf);
+  
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}

@@ -139,6 +139,7 @@ Works like |input| command in data files---includes other files.
     legend-width <n> <units>
     map-comment <string>
     map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>
+    map-header-bg <on/off>
     statistics <explo/topo/carto/copyright all/off/number>
                <explo/topo-length on/off>
     scale-bar <length> <units>
@@ -162,7 +163,7 @@ endlayout|
   * |copy <source layout id>| = set properties here that are not
     modified based on the given source layout.
   
-  {\it map presentation-related:}
+  {\it map presentation-related:}\Nobreak
 
   * |scale <picture length> <real length>| = set scale of
     output map or map atlas (M, A; default: |1 200|)
@@ -211,7 +212,7 @@ endlayout|
     symbol or group of symbols. May be combined with |symbol-hide|. (M, A)
 
 
-  {\it page layout related:}
+  {\it page layout related:}\Nobreak
 
   * |size <width> <height> <units>| = set map size in the atlas mode.
     In map mode applies iff |page-grid| is |on| (M, A; default: |18 22.2 cm|)
@@ -256,7 +257,7 @@ endlayout|
     (currently required for correct page numbering) (A; default: |0|)
   * |page-grid <on/off>| = show pages key plan (M; default: |off|)
 
-  {\it map legend related:}
+  {\it map legend related:}\Nobreak
 
   * |map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>| = 
     print map header at location specified by |<x> <y>|. 
@@ -268,6 +269,9 @@ endlayout|
     upper-right corner is |100 100|. The header is aligned with the specified 
     corner or side to this anchor point.
     (M; default: |0 100 nw|)
+  * |map-header-bg <on/off>| = when on, background of map 
+     header is filled with background color (e.g.~to hide map grid). 
+     (M; default: off)
   * |legend-width <n> <units>| = legend width (M, A; default: |14 cm|)
   * |legend <on/off/all>| = display list of used map symbols in the map header. 
     If set to |all|, all symbols from the current symbol set are displayed. 
@@ -280,8 +284,8 @@ endlayout|
   * |statistics <explo/topo-length on/off>| = display some basic 
     statistics (M, A; default: |off|)
   * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
-  * |language <xx[_YY]>| = set output language. Currently supported languages are
-    |sk| (Slovak), |en| (English), |cz| (Czech) and |fr| (French). 
+  * |language <xx[_YY]>| = set output language. 
+    Available languages are listed on impressum page.
     See the {\it Appendix} if 
     you want to  add or customize translations. (M, A)
   * |colo[u]r <item> <colour>| = customize colour for special map
@@ -296,14 +300,14 @@ endlayout|
     The points with distance changed most during transformation are displayed
     orange.
 
-  {\it PDF related:}
+  {\it PDF related:}\Nobreak
 
   * |doc-author <string>| = set document author (M, A)
   * |doc-keywords <string>| = set document keywords (M, A)
   * |doc-subject <string>| = set document subject (M, A)
   * |doc-title <string>| = set document title (M, A)
 
-  {\it customization:}
+  {\it customization:}\Nobreak
 
   * |code <metapost/tex-map/tex-atlas>| = Add/redefine \TeX\ and \MP\
     macros here. This allows user to configure various things 
@@ -355,25 +359,33 @@ endlayout|
 \penalty0
 
 \options
-  {\it common:}
+  {\it common:}\Nobreak
 
   * |output/o <file>| = set output file name. If no file name is
     given the prefix ``|cave.|'' is used with an extension corresponding to
     output format.
+    
+    If the output filename is given and no output format is specified,
+    the format is determined from the filename extension.
 
   {\it model:}\Nobreak
 
   * |format/fmt <format>| = set model output format. Currently the following
     output formats are supported: |therion| (native format; default),
-    |compass| (plt file), |survex| (3d file), |vrml| and |3dmf|.
+    |compass| (plt file), |survex| (3d file), |dxf|, |vrml| and |3dmf|.
   * |enable <walls/[cave/surface-]centerline/surface/all>| and
   * |disable <walls/[cave/surface-]centerline/surface/all>| = 
      \hfil\break
      selects which features to export, if the format supports it. Surface
      is currently exported in |therion| format only.
 
-  {\it map/atlas:}
+  {\it map/atlas:}\Nobreak
   
+  * |format/fmt <format>| = set map format. Currently |pdf|, |svg| and 
+    |xvi|\[Xtherion vector image. XVI images may be used in
+    xtherion to draw in-scale maps. Scale (100\,dpi image resolution is 
+    assumed) and grid-size from layout are used in export.]
+    for map; |pdf| for atlas are supported.
   * |projection <id>| = unique identifier that specifies the map projection type.
     (See the |scrap| command for details.) 
     
@@ -386,18 +398,22 @@ endlayout|
   * |layout <id>| = use predefined map or atlas layout.
   * |layout-xxx| = where |xxx| stands for other layout options. Using this
     you can change some layout properties directly within the export command.
-  * |format/fmt <format>| = set map format. Currently |pdf| and 
-    |xvi|\[Xtherion vector image. XVI images may be used in
-    xtherion to draw in-scale maps. Scale (100\,dpi image resolution is 
-    assumed) and grid-size from layout are used in export.]
-    for map, |pdf| for atlas are supported.
 
-  {\it database:}
+  {\it database:}\Nobreak
   
   * |format/fmt <format>| = currently only |sql|
   * |encoding/enc <encoding>| = set output encoding
 \endoptions
 
+{\it File formats summary:}
+\nobreak\medskip
+\bgroup
+\leavevmode\kern1em\vbox{\halign{#\hfil\quad&#\hfil\cr
+{\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
+model & therion, dxf, compass, survex, vrml, 3dmf\cr
+map  & pdf, svg, xvi\cr
+atlas & pdf\cr
+database & sql\cr}}\egroup
 
 
 \subchapter Running Therion.

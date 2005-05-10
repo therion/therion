@@ -36,6 +36,10 @@ thdb2dpt::thdb2dpt() {
   this->yt = 0.0;
   this->zt = 0.0;
   this->at = 0.0;
+  this->dbgx0 = 0.0;
+  this->dbgy0 = 0.0;
+  this->dbgx1 = 0.0;
+  this->dbgy1 = 0.0;
     
   this->pscrap = NULL;
   this->join_item = NULL;

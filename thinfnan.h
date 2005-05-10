@@ -108,7 +108,7 @@ void thnan_update(double & oval, double uval);
     thprintf("-thinf"); \
   else \
     thprintf("%lg",cislo);}
-
+
 
 #define THPI 3.1415926535898
 #define thnanpow2(cislo) ((thisnan(cislo) ? 0.0 : cislo) * (thisnan(cislo) ? 0.0 : cislo))

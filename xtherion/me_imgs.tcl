@@ -399,7 +399,8 @@ proc xth_me_imgs_xvi_redraw {imgx} {
       set y2 [xth_me_real2cany [expr $shy + [lindex [lindex $shts $i] 9]]]
       set x3 [xth_me_real2canx [expr $shx + [lindex [lindex $shts $i] 10]]]
       set y3 [xth_me_real2cany [expr $shy + [lindex [lindex $shts $i] 11]]]
-      $xth(me,can) coords [format "%sWL%d" $id $i] $x0 $y0 $x1 $y1 $x2 $y2 $x3 $y3
+      $xth(me,can) coords [format "%sWLF%d" $id $i] $x0 $y0 $x1 $y1 $x2 $y2 $x3 $y3
+      $xth(me,can) coords [format "%sWLO%d" $id $i] $x0 $y0 $x1 $y1 $x2 $y2 $x3 $y3 $x0 $y0
     }
   }
 
@@ -440,10 +441,20 @@ proc xth_me_imgs_xvi_create {imgx} {
   set id $xth(me,imgs,$imgx,image)
   set stpref [format "XVIstI%sS" $imgx] 
   # now create them
-  # grid
 
+  # walls fill
+  set shts $xth(me,imgs,$imgx,XVIshots)
+  for {set i 0} {$i < [llength $shts]} {incr i} {
+    if {[llength [lindex $shts $i]] >= 12} {
+      set cid [$xth(me,can) create polygon 0 0 1 0 1 1 -stipple $xth(gui,xvi_walls_fptn) -fill $xth(gui,xvi_walls_fclr) -width 1 -state hidden -tags [list $id [format "%sWLF%d" $id $i]]]
+      xth_me_bind_area_drag $cid $imgx
+      xth_me_bind_image_drag $cid $imgx
+      lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
+    }
+  }
+
+  # grid
   set grid_info_str [format [mc "grid - spacing %s"] $xth(me,imgs,$imgx,XVIgrids)]
-  
   set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id [format "%sGH" $id]]]
   xth_me_bind_area_drag $cid $imgx
   xth_me_bind_image_drag $cid $imgx
@@ -457,11 +468,11 @@ proc xth_me_imgs_xvi_create {imgx} {
   $xth(me,can) bind $cid <Leave> "xth_status_bar_pop me"
   lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
 
-  # walls
+  # walls outline
   set shts $xth(me,imgs,$imgx,XVIshots)
   for {set i 0} {$i < [llength $shts]} {incr i} {
     if {[llength [lindex $shts $i]] >= 12} {
-      set cid [$xth(me,can) create polygon 0 0 1 0 1 1 -stipple gray12 -fill $xth(gui,xvi_walls_fclr) -outline $xth(gui,xvi_walls_oclr) -width 1 -state hidden -tags [list $id [format "%sWL%d" $id $i]]]
+      set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_walls_oclr) -width 1 -state hidden -tags [list $id [format "%sWLO%d" $id $i]]]
       xth_me_bind_area_drag $cid $imgx
       xth_me_bind_image_drag $cid $imgx
       lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]

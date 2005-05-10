@@ -42,6 +42,7 @@ set xth(kb_meta) Meta
 set xth(gui,compshow) 0
 set xth(gui,compcmd) "therion"
 set xth(gui,auto_save) 0
+set xth(gui,check_update) 1
 
 set xth(encodings) { iso8859-1 iso8859-2 iso8859-5 iso8859-7 utf-8 }
 set xth(kbencodings) {utf-8 iso8859-1 iso8859-2 cp1250 macCentEuro unicode}
@@ -76,51 +77,15 @@ set xth(app,mv,filetypes) {
 
 set xth(icmds) {survey}
 set xth(cmds) {scrap centerline grade line area map layout}
-set dfs {4s}                    
-set dfss {4s}                    
-set dfuf {5.1fx {-}}             
-set dfdf {+5.1fx {-}}            
-set dfcf {5.1fx {-}}             
-set dfccf {5.1f {-}}            
-set dfgf {{5.1fx} {up down -}} 
-set xth(datafmts) [list \
-  "unknown      $dfs" \
-  "station      $dfss" \
-  "from         $dfss" \
-  "to           $dfss" \
-  "compass      $dfuf" \
-  "backcompass  $dfuf" \
-  "bearing      $dfuf" \
-  "backbearing  $dfuf" \
-  "tape         $dfcf" \
-  "length       $dfcf" \
-  "count        $dfccf" \
-  "counter      $dfccf" \
-  "fromcount    $dfccf" \
-  "tocount      $dfccf" \
-  "fromcounter  $dfccf" \
-  "tocounter    $dfccf" \
-  "gradient     $dfgf" \
-  "clino        $dfgf" \
-  "backgradient $dfgf" \
-  "backclino    $dfgf" \
-  "depth        $dfdf" \
-  "fromdepth    $dfdf" \
-  "todepth      $dfdf" \
-  "depthchange  $dfdf" \
-  "dx           $dfcf" \
-  "dy           $dfcf" \
-  "dz           $dfcf" \
-  "northing     $dfcf" \
-  "easting      $dfcf" \
-  "altitude     $dfcf" \
-  "up           $dfcf" \
-  "down         $dfcf" \
-  "left         $dfcf" \
-  "right        $dfcf" \
-  "ceiling      $dfcf" \
-  "floor        $dfcf" \
-]
+
+set xth(datafmt,unknown) {4s}                    
+set xth(datafmt,station) {4s}                    
+set xth(datafmt,length) {6.2fx {-}}             
+set xth(datafmt,counter) {6.2f {-}}            
+set xth(datafmt,bearing) {5.1fx {-}}             
+set xth(datafmt,gradient) {{5.1fx} {up down -}} 
+set xth(datafmt,depth) {6.2fx {-}}            
+set xth(datafmt,dimensions) {4.1fx {-}}             
 
 set xth(gui,initdir) [pwd]
 set xth(app,active) ""
@@ -159,7 +124,8 @@ set xth(gui,etabsize) 2
 set xth(gui,controlk) Ctrl
 
 set xth(gui,xvi_grid_clr) #00D0D0
-set xth(gui,xvi_walls_fclr) gray60
+set xth(gui,xvi_walls_fptn) gray12
+set xth(gui,xvi_walls_fclr) gray80
 set xth(gui,xvi_walls_oclr) gray60
 set xth(gui,xvi_shot_clr) gray50
 set xth(gui,xvi_station_fclr) black

@@ -281,8 +281,9 @@ enddef;
 %
 % rounds <I>numeric value</I> to one decimal point
 
-def roundone(expr n) =
-    round(10*n)/10
+vardef roundone(expr n) =
+%    round(10*n)/10
+  n
 enddef;
 
 % @MACRO
@@ -622,6 +623,7 @@ def draw_downscrap =
      decimal round ypart urcorner bgfill 
      to bg_name;
   write "%%Page: 1 1" to bg_name;
+  write "newpath" to bg_name;
   for qq within bgfill:
     q := pathpart qq;
     tmp:=length q;

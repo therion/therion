@@ -99,8 +99,9 @@ enum {
   TT_EXPMODEL_FMT_SURVEX,  ///< survex
   TT_EXPMODEL_FMT_COMPASS,  ///< compass
   TT_EXPMODEL_FMT_THERION,  ///< therion
-  TT_EXPMODEL_FMT_3DMF,  ///< therion
-  TT_EXPMODEL_FMT_VRML,  ///< therion
+  TT_EXPMODEL_FMT_3DMF,  ///< 3dmf
+  TT_EXPMODEL_FMT_VRML,  ///< vrml
+  TT_EXPMODEL_FMT_DXF,  ///< dxf
 };
 
 
@@ -111,6 +112,7 @@ enum {
 static const thstok thtt_expmodel_fmt[] = {
   {"3dmf", TT_EXPMODEL_FMT_3DMF},
   {"compass", TT_EXPMODEL_FMT_COMPASS},
+  {"dxf", TT_EXPMODEL_FMT_DXF},
   {"survex", TT_EXPMODEL_FMT_SURVEX},
   {"therion", TT_EXPMODEL_FMT_THERION},
   {"vrml", TT_EXPMODEL_FMT_VRML},
@@ -138,6 +140,8 @@ class thexpmodel : public thexport {
   void export_vrml_file(class thdatabase * dbp);  ///< Export vrml file.
 
   void export_3dmf_file(class thdatabase * dbp);  ///< Export 3dmf file.
+
+  void export_dxf_file(class thdatabase * dbp);  ///< Export compass plt file.
 
   public:
   

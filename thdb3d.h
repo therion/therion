@@ -132,6 +132,7 @@ struct thdb3ddata {
   void export_thm(FILE * out);
   void export_vrml(FILE * out);
   void export_3dmf(FILE * out);
+  void export_dxf(FILE * out, char * LAYER);
   
   void postprocess();
   

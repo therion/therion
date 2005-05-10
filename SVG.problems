@@ -1,0 +1,12 @@
+Adobe viewer 3 on Linux:
+
+* ignores fractional part of numbers when LC_NUMERIC=sk_SK or others
+  with comma as decimal separator (zero width lines, singular matrices)
+  
+Sodipodi on Linux:
+
+* doesn't inherit linecap &c. from the parent group
+  
+Batik 1.6 on Linux:
+  
+* fails to load large files

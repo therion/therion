@@ -1784,6 +1784,11 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
         }
       }
       
+      ii->dbgx0 = ii->xt;
+      ii->dbgy0 = ii->yt;
+      ii->dbgx1 = ii->xt;
+      ii->dbgy1 = ii->yt;
+      
     }
     ii++;
   }
@@ -2289,8 +2294,10 @@ void thdb2d::pp_shift_points(thdb2dprj * prj, bool calc_az)
         }
         cp = cp->nextcp;
       }
-      cdx = cdx / totalw;
-      cdy = cdy / totalw;
+      if (totalw > 0.0) {
+        cdx = cdx / totalw;
+        cdy = cdy / totalw;
+      }
       ii->xt = ii->xt + cdx;
       ii->yt = ii->yt + cdy;
       if (calc_az) {

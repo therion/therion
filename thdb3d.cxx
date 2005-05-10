@@ -207,6 +207,11 @@ void thdb3ddata::export_thm(FILE * out) {
 }
 
 
+
+
+
+
+
 void thdb3ddata::export_vrml(FILE * out) {
   thdb3dfc * fc;
   thdb3dfx * fx, * fx1, * fx2, * fx3;
@@ -411,6 +416,84 @@ void thdb3ddata::postprocess() {
     for(fx = fc->firstfx; fx != NULL; fx = fx->next) {
       if (fx->normal != NULL)
         fx->normal->normalize();
+    }
+  }
+}
+
+#define dxfprint0(vertex) fprintf(out, "10\n%.3f\n20\n%.3f\n30\n%.3f\n", (vertex)->x - this->exp_shift_x, (vertex)->y - this->exp_shift_y, (vertex)->z - this->exp_shift_z)
+#define dxfprint1(vertex) fprintf(out, "11\n%.3f\n21\n%.3f\n31\n%.3f\n", (vertex)->x - this->exp_shift_x, (vertex)->y - this->exp_shift_y, (vertex)->z - this->exp_shift_z)
+#define dxfprint2(vertex) fprintf(out, "12\n%.3f\n22\n%.3f\n32\n%.3f\n", (vertex)->x - this->exp_shift_x, (vertex)->y - this->exp_shift_y, (vertex)->z - this->exp_shift_z)
+#define dxfprint3(vertex) fprintf(out, "13\n%.3f\n23\n%.3f\n33\n%.3f\n", (vertex)->x - this->exp_shift_x, (vertex)->y - this->exp_shift_y, (vertex)->z - this->exp_shift_z)
+
+
+
+void thdb3ddata::export_dxf(FILE * out, char * LAYER) {
+  thdb3dfc * fc;
+  thdb3dfx * fx, * fx1, * fx2, * fx3;
+  bool reverse;  
+  
+  for (fc = this->firstfc; fc != NULL; fc = fc->next) {
+    switch (fc->type) {
+      case THDB3DFC_TRIANGLES:
+        fx = fc->firstfx;
+        while (fx != NULL) {
+          fx1 = fx; fx = fx->next; fx2 = NULL; fx3 = NULL;
+          if (fx != NULL) {
+            fx2 = fx; fx = fx->next;
+          }
+          if (fx != NULL) {
+            fx3 = fx; fx = fx->next;
+          }
+          if (fx3 != NULL) {
+            fprintf(out,"0\n3DFACE\n8\n%s\n",LAYER);
+            dxfprint0(fx1->vertex);
+            dxfprint1(fx2->vertex);
+            dxfprint2(fx3->vertex);
+            dxfprint3(fx3->vertex);
+          }
+        }
+        break;      
+      case THDB3DFC_TRIANGLE_STRIP:
+        reverse = true;
+        fx = fc->firstfx;
+        if (fx != NULL) {
+          fx2 = fx; fx = fx->next;
+        }
+        if (fx != NULL) {
+          fx3 = fx; fx = fx->next;
+        }
+        while (fx != NULL) {
+          fx1 = fx2;
+          fx2 = fx3;
+          fx3 = fx; 
+          fx = fx->next;
+          fprintf(out,"0\n3DFACE\n8\n%s\n",LAYER);
+          dxfprint0(reverse ? fx1->vertex : fx2->vertex);
+          dxfprint1(reverse ? fx2->vertex : fx1->vertex);
+          dxfprint2(fx3->vertex);
+          dxfprint3(fx3->vertex);
+          reverse = ! reverse;
+        }
+        break;      
+      case THDB3DFC_LINE_STRIP:
+        fx = fc->firstfx;
+        fx2 = fx->next;
+        while (fx2 != NULL) {
+          fprintf(out,"0\nLINE\n8\n%s\n",LAYER);
+          dxfprint0(fx->vertex);
+          dxfprint1(fx2->vertex);
+          fx = fx2;
+          fx2 = fx2->next;
+        }
+        break;
+      case THDB3DFC_TRIANGLE_FAN:
+      case THDB3DFC_QUADS:
+      case THDB3DFC_QUAD_STRIP:
+      case THDB3DFC_POLYGON:
+      case THDB3DFC_LINES:
+      case THDB3DFC_LINE_LOOP:
+      default:
+        break;      
     }
   }
 }

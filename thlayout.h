@@ -86,6 +86,7 @@ enum {
   TT_LAYOUT_ROTATE = 2043,
   TT_LAYOUT_ENDCODE = 2044,
   TT_LAYOUT_COLOR_LEGEND = 2045,
+  TT_LAYOUT_MAP_HEADER_BG = 2046,
 };
 
 
@@ -384,6 +385,7 @@ static const thstok thtt_layout_opt[] = {
   {"legend-width",TT_LAYOUT_LEGEND_WIDTH},
   {"map-comment",TT_LAYOUT_DOC_COMMENT},
   {"map-header",TT_LAYOUT_MAP_HEADER},
+  {"map-header-bg",TT_LAYOUT_MAP_HEADER_BG},
   {"nav-factor",TT_LAYOUT_NAV_FACTOR},
   {"nav-size",TT_LAYOUT_NAV_SIZE},
   {"opacity",TT_LAYOUT_OPACITY},
@@ -467,7 +469,7 @@ class thlayout : public thdataobject {
   thlayoutln * first_line, * last_line;
   
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
-    explo_lens, topo_lens;
+    explo_lens, topo_lens, map_header_bg;
   
   bool def_grid_size, def_grid_origin, def_nav_factor, def_nav_size, 
     def_opacity, def_transparency, def_layers, def_base_scale,
@@ -477,7 +479,7 @@ class thlayout : public thdataobject {
     def_tex_lines, def_doc_title, def_doc_comment, def_doc_author, def_doc_subject,
     def_doc_keywords, def_excl_pages, def_grid, def_page_grid,
     def_legend, def_color_legend, def_legend_width, def_legend_columns, 
-    def_map_header, def_lang, def_scale_bar, 
+    def_map_header, def_lang, def_scale_bar, def_map_header_bg,
     redef_base_scale, def_max_explos, def_max_topos, def_max_cartos,
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_surface,
     def_surface_opacity;

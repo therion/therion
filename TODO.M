@@ -2,7 +2,7 @@
    resp. "TH" (napr. thprint_tex_encodings, THFONTS)
 
 thpdf:
- 
+
  * zanorene OCG
  * cisla stran a odkazov cez utf2tex
  * skontrolovat ci nezapisujem nadbytocne xobjecty kvoli vrstvam
@@ -23,6 +23,12 @@ thpdf:
  * mody pre preview (ziadne, linkovane, vsetky)
  * vrstva `pri' pre atlas
 
+thsvg:
+
+ * HTML obal - nazov..., legenda -> treba stringy od Stacha
+ * fonty - orezavacie cesty + vkladanie?
+ * layers cez javascript
+ * (priehladnost -> SVG 1.2)
 
 thconvert:
 
@@ -75,3 +81,5 @@ hotovo:
   na sever
  * ramik a stvorcova siet (kriziky): vylepsit alebo cez MetaPost 
    (do uvahy aj convergence)
+
+ * vypnit miesto pod legendou bg farbou 

@@ -41,8 +41,8 @@ source svx_global.tcl
 }
 #@ALL
 source about.tcl
-source syntax.tcl
 source init.tcl
+source syntax.tcl
 source sbar.tcl
 source scroll.tcl
 source help.tcl

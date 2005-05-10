@@ -47,6 +47,7 @@ void init_encodings();
 string utf2texoctal(string s);
 string utf2texhex(string s);
 string utf2tex (string s, bool b=false);
+int tex2uni(string font, int ch);
 
 #ifndef NOTHERION
 const char * utf2tex (char * s, bool b = false);

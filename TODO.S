@@ -2,9 +2,7 @@ HOT LIST:
 
 therion:
 
-+ switch for legend background into layout
-+ installation of .ini files into /etc (create .ini.new files if
-  .ini files already exists - also Win32 installer)
++ value for line contour (as altitude)
 + 2d: LRUD envelope of exported survey maps
 + export scrap walls into XVI images
 + plt import: read LRUD data and survey structure a special way
@@ -45,7 +43,6 @@ therion:
   
 xtherion:
 
-+ text editor - indent mode simmilar to standart text editor
 + translation of types in the ComboBox
 + remove empty lines and areas when saving the file
 + shortcus for mostly used types/sybtypes

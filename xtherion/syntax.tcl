@@ -40,6 +40,45 @@ foreach cmd $xth(cmds) {
   set xth(cmd,end$cmd) -1
 }
 
+set xth(datafmts) [list \
+  "unknown      $xth(datafmt,unknown)" \
+  "station      $xth(datafmt,station)" \
+  "from         $xth(datafmt,station)" \
+  "to           $xth(datafmt,station)" \
+  "compass      $xth(datafmt,bearing)" \
+  "backcompass  $xth(datafmt,bearing)" \
+  "bearing      $xth(datafmt,bearing)" \
+  "backbearing  $xth(datafmt,bearing)" \
+  "tape         $xth(datafmt,length)" \
+  "length       $xth(datafmt,length)" \
+  "count        $xth(datafmt,counter)" \
+  "counter      $xth(datafmt,counter)" \
+  "fromcount    $xth(datafmt,counter)" \
+  "tocount      $xth(datafmt,counter)" \
+  "fromcounter  $xth(datafmt,counter)" \
+  "tocounter    $xth(datafmt,counter)" \
+  "gradient     $xth(datafmt,gradient)" \
+  "clino        $xth(datafmt,gradient)" \
+  "backgradient $xth(datafmt,gradient)" \
+  "backclino    $xth(datafmt,gradient)" \
+  "depth        $xth(datafmt,depth)" \
+  "fromdepth    $xth(datafmt,depth)" \
+  "todepth      $xth(datafmt,depth)" \
+  "depthchange  $xth(datafmt,depth)" \
+  "dx           $xth(datafmt,length)" \
+  "dy           $xth(datafmt,length)" \
+  "dz           $xth(datafmt,length)" \
+  "northing     $xth(datafmt,length)" \
+  "easting      $xth(datafmt,length)" \
+  "altitude     $xth(datafmt,length)" \
+  "up           $xth(datafmt,dimensions)" \
+  "down         $xth(datafmt,dimensions)" \
+  "left         $xth(datafmt,dimensions)" \
+  "right        $xth(datafmt,dimensions)" \
+  "ceiling      $xth(datafmt,dimensions)" \
+  "floor        $xth(datafmt,dimensions)" \
+]
+
 foreach datafmt $xth(datafmts) {
   set qt [lindex $datafmt 0]
   set xth(datafmt,$qt,format) [lindex $datafmt 1]

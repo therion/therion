@@ -877,8 +877,10 @@ void thparse_altitude(char * src, double & altv, double & fixv)
   }
 }
 
-void thparse_image(char * fname, double & width, double & height, double & dpi)
+void thparse_image(char * fname, double & width, double & height, double & dpi, int & type)
 {
+
+  type = TT_IMG_TYPE_UNKNOWN;
 
   FILE * pictf = fopen(fname, "rb");
 #define picths 2048
@@ -896,6 +898,7 @@ void thparse_image(char * fname, double & width, double & height, double & dpi)
     if ((picth[0] == 0xFF) && (picth[1] == 0xD8) &&
         (picth[2] == 0xFF) && (picth[3] == 0xE0)) {
       // JPEG
+      type = TT_IMG_TYPE_JPEG;  
       xdpi = 300.0;
       ydpi = 300.0;
       switch (picth[13]) {
@@ -928,6 +931,7 @@ void thparse_image(char * fname, double & width, double & height, double & dpi)
       (picth[4] == 0x0D) && (picth[5] == 0x0A) &&
       (picth[6] == 0x1A) && (picth[7] == 0x0A)) {
       // PNG
+      type = TT_IMG_TYPE_PNG;  
       // najde pHYs za nim 4(x), 4(y), 1(units) = 01-meters, 00-unspec
       for(sx = 0, scan = &(picth[0]); sx < (phsize - 12); sx++, scan++) {
         if (strncmp((char *) scan,"pHYs",4) == 0) {

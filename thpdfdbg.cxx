@@ -61,6 +61,13 @@ string u2str(unsigned u) {
   return (s);
 }
 
+string rgb2svg(double r, double g, double b) {
+  char ch[8];
+  sprintf(ch,"#%02x%02x%02x",int(255*r) % 256,
+                             int(255*g) % 256,
+                             int(255*b) % 256);
+  return (string) ch;
+}
 
 void print_hash(){
   ofstream F("scraps.dat");

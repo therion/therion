@@ -58,6 +58,7 @@ thsurface::thsurface()
 {
   // replace this by setting real properties initialization
   this->pict_name = NULL;
+  this->pict_type = TT_IMG_TYPE_UNKNOWN;
   this->pict_stations = false;
   this->pict_X1 = thnan;
   this->pict_Y1 = thnan;
@@ -240,7 +241,7 @@ void thsurface::parse_picture(char ** args)
 
   // potom obrazok skontroluje, vytiahne jeho rozmery a DPI
   try {
-    thparse_image(this->pict_name, this->pict_width, this->pict_height, this->pict_dpi);
+    thparse_image(this->pict_name, this->pict_width, this->pict_height, this->pict_dpi, this->pict_type);
   } catch (...) {
     this->pict_name = NULL;
     threwarning(("%s [%d] -- error reading bitmap",

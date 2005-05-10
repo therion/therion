@@ -38,7 +38,7 @@
 #include "thinfnan.h"
 
 thexpdb::thexpdb() {
-  this->format = TT_EXPDB_FMT_SQL;
+  this->format = TT_EXPDB_FMT_UNKNOWN;
   this->encoding = TT_UNKNOWN_ENCODING;
 }
 
@@ -82,7 +82,7 @@ void thexpdb::dump_header(FILE * xf)
 void thexpdb::dump_body(FILE * xf)
 {
   thexport::dump_body(xf);
-  if (this->format != TT_EXPDB_FMT_SQL)
+  if (this->format != TT_EXPDB_FMT_UNKNOWN)
     fprintf(xf," -format %s", thmatch_string(this->format, thtt_expdb_fmt));
   if (this->encoding != TT_UNKNOWN_ENCODING)
     fprintf(xf," -encoding %s", thmatch_string(this->encoding, thtt_encoding));
@@ -91,6 +91,10 @@ void thexpdb::dump_body(FILE * xf)
 
 void thexpdb::process_db(class thdatabase * dbp) 
 {
+  if (this->format == TT_EXPDB_FMT_UNKNOWN) {
+    this->format = TT_EXPDB_FMT_SQL;
+    // TODO: format parsing according to extension
+  }  
   switch (this->format) {
     case TT_EXPDB_FMT_SQL:
       this->export_sql_file(dbp);

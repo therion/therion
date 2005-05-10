@@ -66,7 +66,8 @@ if {[string equal $xth(gui,platform) windows]} {
   set idirs [split $idir ":"]
 }
 
-foreach idir $idirs {
+set xth(idirs) $idirs
+foreach idir $xth(idirs) {
   catch {source [file join $idir xtherion.ini]}
 }
 catch {source xtherion.ini}

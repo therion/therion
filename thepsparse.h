@@ -33,7 +33,9 @@ struct CGS {  // current graphics state
   float color[3];
   int linejoin, linecap;
   float miterlimit, linewidth;
-  
+  list<float> dasharray;
+  float dashoffset;
+  string pattern;
   
   map<int,int> clippathdepth;
   static int clippathID;
@@ -78,13 +80,22 @@ struct MP_index {
 };
 
 struct MP_text {
+  string text, font;
+  float size, x, y, xx, xy, yx, yy;
+  bool transformed;
   
+  MP_text();
+  void clear();
+  void print_svg(ofstream & F, CGS & gstate);
 };
 
 struct MP_setting {
   int command;
   double data[3];
-  string str;
+//  string str;
+  list<float> dasharray;
+  float dashoffset;
+  string pattern;
   
   void print_svg(ofstream & F, CGS & gstate);
 };
@@ -124,7 +135,7 @@ struct MP_data {
   MP_data();
   void clear();
   
-  void print_svg(ofstream & F, string ID);
+  void print_svg(ofstream & F);
 };
 
 struct converted_data {
@@ -135,6 +146,14 @@ struct converted_data {
   
   void clear();
   converted_data();
+};
+
+struct pattern {
+  converted_data data;
+  float llx, lly, urx, ury, xstep, ystep;
+  double llx1,lly1,urx1,ury1;
+  double xx, xy, yx, yy, x, y;
+  string name;
 };
 
 int thconvert_new();

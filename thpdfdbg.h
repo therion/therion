@@ -47,5 +47,6 @@ string u2str(unsigned u);
 string tex_Xname(string s);
 string tex_Wname(string s);
 string pdf_info(void);
+string rgb2svg(double r, double g, double b);
 
 #endif

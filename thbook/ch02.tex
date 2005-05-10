@@ -70,9 +70,9 @@ in the first line) and the last line contains some more data.
 Therion uses following data types:
 
 \list
-* {\it keyword} = a sequence of |A-Z|, |a-z|, |0-9| and |_-| characters 
+* {\it keyword} = a sequence of |A-Z|, |a-z|, |0-9| and |_-/| characters 
              (not starting with `|-|').
-* {\it ext\_keyword} = keyword that can also contain |+*/.,'| characters, 
+* {\it ext\_keyword} = keyword that can also contain |+*.,'| characters, 
             but not on the first position.
 * {\it date} = a date (or a time interval) specification in a format\hfil\break
           |YYYY.MM.DD@HH:MM:SS.SS - YYYY.MM.DD@HH:MM:SS.SS| or `|-|'
@@ -414,7 +414,7 @@ the command may be used anywhere.
   displayed.
   
   Scrap border consists of lines with the |-outline out| or |-outline in| 
-  options (passage walls have |-outline out| by default). These line shouldn't
+  options (passage walls have |-outline out| by default). These lines shouldn't
   intersect---otherwise Therion (\MP) can't detemine the interior of the scrap 
   and \MP\ issues a warning message ``|scrap outline intersects itself|''.
 
@@ -1608,7 +1608,9 @@ Now we are ready to describe how the map (or atlas chapter) is constructed:
 
 \list\obeyspaces\obeylines
 *map area is filled with |color map-bg|
+*surface bitmaps are displayed if |surface| is set |bottom|
 *FOR each scrap: outline is filled white
+*grid is displayed if |grid| is set |bottom|
 *preview below\[As specified using the |preview| option in the |map| command]%
  is filled with |color preview-below|
 *FOR each level\[Level is a collection of scraps not separated by a |break|%
@@ -1630,6 +1632,8 @@ Now we are ready to describe how the map (or atlas chapter) is constructed:
   END of clipping by text labels
   FOR each scrap: draw all (point and line) labels (including |wall-altitude|)
 *preview above is drawn with |color preview-above|
+*surface bitmaps are displayed if |surface| is set |top|
+*grid is displayed if |grid| is set |top|
 \endlist
 
 

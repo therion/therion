@@ -238,7 +238,7 @@ void thexpmap::dump_body(FILE * xf)
   if (strcmp(this->projstr,"plan") != 0)
     fprintf(xf," -projection %s",this->projstr);
   thexport::dump_body(xf);
-  if (this->format != this->get_default_format())
+  if (this->format != TT_EXPMAP_FMT_UNKNOWN)
     fprintf(xf," -format %s", thmatch_string(this->format, thtt_expmap_fmt));
   thdecode(&(this->cfgptr->bf1), this->cfgptr->cfg_fenc, this->layoutopts.get_buffer());
   fprintf(xf,"%s",this->cfgptr->bf1.get_buffer());
@@ -265,8 +265,14 @@ void thexpmap::process_db(class thdatabase * dbp)
   if (this->projptr == NULL)
     return;
 
-  if (this->format == TT_EXPMAP_FMT_UNKNOWN)
-    this->format = this->get_default_format();
+  if (this->format == TT_EXPMAP_FMT_UNKNOWN) {
+    this->format = TT_EXPMAP_FMT_PDF;
+    thexp_set_ext_fmt(".pdf", TT_EXPMAP_FMT_PDF)
+    if (this->export_mode == TT_EXP_MAP) {
+      thexp_set_ext_fmt(".svg", TT_EXPMAP_FMT_SVG)
+      thexp_set_ext_fmt(".xvi", TT_EXPMAP_FMT_XVI)
+    }
+  }
 
   if (this->format != TT_EXPMAP_FMT_XVI)
     thdb.db2d.process_projection(this->projptr);
@@ -288,12 +294,6 @@ void thexpmap::process_db(class thdatabase * dbp)
   //}
 }
 
-int thexpmap::get_default_format() {
-  if (this->export_mode == TT_EXP_MAP)
-    return TT_EXPMAP_FMT_PDF;
-  else 
-    return TT_EXPMAP_FMT_PDF;
-}
 
 
 char * thexpmap_u2string(unsigned u) {
@@ -852,6 +852,17 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
           srfpr.xy = surf->calib_xy * surfscl * surf->pict_dpi / 300.0;
           srfpr.yx = surf->calib_yx * surfscl * surf->pict_dpi / 300.0;
           srfpr.yy = surf->calib_yy * surfscl * surf->pict_dpi / 300.0;
+          srfpr.width = surf->pict_width / surf->pict_dpi * 72.0;
+          srfpr.height = surf->pict_height / surf->pict_dpi * 72.0;
+          srfpr.type = "unknown";
+          switch (surf->pict_type) {
+            case TT_IMG_TYPE_JPEG:
+              srfpr.type = "jpeg";
+              break;
+            case TT_IMG_TYPE_PNG:
+              srfpr.type = "png";
+              break;
+          }
 					
 					// otocenie o rotaciu v layoute
 					double tdx = srfpr.dx, tdy = srfpr.dy,

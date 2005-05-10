@@ -53,15 +53,17 @@ using namespace std;
 extern map<string,string> RGB, ALL_FONTS, ALL_PATTERNS;
 typedef set<unsigned char> FONTCHARS;
 extern map<string,FONTCHARS> USED_CHARS;
+list<pattern> PATTERNLIST;
+list<converted_data> GRIDLIST;
 
 extern unsigned font_id, patt_id;
 
 ////////////////////////////////////////////////////////////////////////////////
 
 CGS::CGS () {
-  color[0] = 0;
-  color[1] = 0;
-  color[2] = 0;
+  color[0] = -1;
+  color[1] = -1;
+  color[2] = -1;
   
 //  clippathID = random();
 //  clippath = false;
@@ -70,15 +72,40 @@ CGS::CGS () {
 int CGS::clippathID = 0;
 
 string CGS::svg_color() {
-  char ch[8];
-  sprintf(ch,"#%02x%02x%02x",int(255*color[0]) % 256,
-                             int(255*color[1]) % 256,
-                             int(255*color[2]) % 256);
-  return (string) ch;
+  if (color[0] == -1) return "inherit";
+  
+//  char ch[8];
+//  sprintf(ch,"#%02x%02x%02x",int(255*color[0]) % 256,
+//                             int(255*color[1]) % 256,
+//                             int(255*color[2]) % 256);
+//  return (string) ch;
+  return rgb2svg(color[0],color[1],color[2]);
 }
 
 MP_data::MP_data () {
   idx = 0;
+}
+
+void MP_text::clear() {
+  x = y = 0;
+  xx = yy = 1;
+  xy = yx = 0;
+  size = 0;
+  transformed = false;
+}
+
+void MP_text::print_svg(ofstream & F, CGS & gstate) {
+  F << "<text font-family=\"" << font << "\" font-size=\"" << size << 
+       "\" transform=\"matrix(" << xx << " " << xy << " " << -yx << " " << -yy <<
+       " " << x << " " << y << ")\">";
+  for (unsigned int i = 0; i < text.size(); i++)
+    F << "&#x" << hex << tex2uni(font, int(text[i])) << dec << ";";
+  F << "</text>" << endl;
+}
+
+
+MP_text::MP_text() {
+  clear();
 }
 
 void MP_transform::clear () {
@@ -149,7 +176,8 @@ void MP_path::print_svg(ofstream & F, CGS & gstate) {
   F << "<path ";
   if (fillstroke != MP_clip) {
     F << "fill=\"" << (fillstroke==MP_fill || fillstroke==MP_fillstroke ? 
-           gstate.svg_color() : "none") <<  
+           (gstate.pattern == ""? gstate.svg_color() : 
+              "url(#patt_" + gstate.pattern + ")") : "none") <<  
          "\" stroke=\"" << (fillstroke==MP_stroke || fillstroke==MP_fillstroke ? 
            gstate.svg_color() : "none") <<  "\" ";
     if (fillstroke==MP_stroke || fillstroke==MP_fillstroke) {
@@ -166,24 +194,34 @@ void MP_path::print_svg(ofstream & F, CGS & gstate) {
       }
       if (gstate.miterlimit != 10) F << "stroke-miterlimit=\"" << 
           gstate.miterlimit << "\" ";
+      if (!gstate.dasharray.empty()) {
+        F << "stroke-dasharray=\"";
+        unsigned int i = 1;
+        for(list<float>::iterator I = gstate.dasharray.begin();
+                                  I != gstate.dasharray.end(); I++) {
+          F << *I;
+          if (i++ < gstate.dasharray.size()) F << ",";
+        }
+        F << "\" stroke-dashoffset=\"" << gstate.dashoffset << "\" ";
+      }
     }
   }
   F << "d=\"";
   for (unsigned i=0; i < segments.size(); i++) {
     switch (segments[i].command) {
       case MP_moveto:
-        F << "M" << segments[i].coord[0] << " " << -segments[i].coord[1];
+        F << "M" << segments[i].coord[0] << " " << segments[i].coord[1];
         break;
       case MP_lineto:
-        F << "L" << segments[i].coord[0] << " " << -segments[i].coord[1];
+        F << "L" << segments[i].coord[0] << " " << segments[i].coord[1];
         break;
       case MP_rlineto:
-        F << "l" << segments[i].coord[0] << " " << -segments[i].coord[1];
+        F << "l" << segments[i].coord[0] << " " << segments[i].coord[1];
         break;
       case MP_curveto:
-        F << "C" << segments[i].coord[0] << " " << -segments[i].coord[1] << " "
-                 << segments[i].coord[2] << " " << -segments[i].coord[3] << " " 
-                 << segments[i].coord[4] << " " << -segments[i].coord[5];
+        F << "C" << segments[i].coord[0] << " " << segments[i].coord[1] << " "
+                 << segments[i].coord[2] << " " << segments[i].coord[3] << " " 
+                 << segments[i].coord[4] << " " << segments[i].coord[5];
         break;
     }
   }
@@ -205,15 +243,26 @@ void MP_data::add(int i, string s) {
   MP_setting set;
   ind.vector = I_setting;
   ind.idx = settings.size();
+  float fl;
   
   if (i == MP_dash) {
-    set.str = s;
+    s.replace(s.find("["),1,"");
+    s.replace(s.find("]"),1,"");
+    set.dasharray.clear();
+    istringstream ss(s);
+    while (ss >> fl) set.dasharray.push_back(fl);
+    set.dasharray.pop_back();
+    set.dashoffset = fl;
+    //set.str = s;
   }
   else if (i == MP_rgb) {
     istringstream ss(s); // prerobit!!!
     ss >> set.data[0];
     ss >> set.data[1];
     ss >> set.data[2];
+  }
+  else if (i == MP_pattern) {
+    set.pattern = s;
   }
   else {
     set.data[0] = atof(s.c_str());
@@ -239,6 +288,14 @@ void MP_data::add(MP_transform T) {
   index.push_back(ind);
 }
 
+void MP_data::add(MP_text T) {
+  MP_index ind;
+  ind.vector = I_text;
+  ind.idx = texts.size();
+  texts.push_back(T);
+  index.push_back(ind);
+}
+
 void MP_data::clear() {
   index.clear();
   paths.clear();
@@ -252,9 +309,14 @@ void MP_setting::print_svg (ofstream & F, CGS & gstate) {
   switch (command) {
     case MP_rgb:
       for (int i=0; i<3; i++) gstate.color[i] = data[i];
+      gstate.pattern = "";
       break;
     case MP_gray:
       for (int i=0; i<3; i++) gstate.color[i] = data[0];
+      gstate.pattern = "";
+      break;
+    case MP_pattern:
+      gstate.pattern = pattern;
       break;
     case MP_linejoin:
       gstate.linejoin = int(data[0]);
@@ -268,12 +330,16 @@ void MP_setting::print_svg (ofstream & F, CGS & gstate) {
     case MP_linewidth:
       gstate.linewidth = data[0];
       break;
+    case MP_dash:
+      gstate.dasharray = dasharray;
+      gstate.dashoffset = dashoffset;
+      break;
   }
 }
 
-void MP_data::print_svg (ofstream & F, string ID) {
-  F << "<g id=\"" << ID <<  // plain MP settings follow
-       "\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\">" << endl;
+void MP_data::print_svg (ofstream & F) {
+//  F << "<g id=\"" << ID <<  // plain MP settings follow
+//       "\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\">" << endl;
   for (unsigned int i=0; i<index.size(); i++) {
     switch (index[i].vector) {
       case I_path:
@@ -281,6 +347,9 @@ void MP_data::print_svg (ofstream & F, string ID) {
         break;
       case I_setting:
         settings[index[i].idx].print_svg(F,gstate);
+        break;
+      case I_text:
+        texts[index[i].idx].print_svg(F,gstate);
         break;
       case I_gsave:
         switch (index[i].idx) {
@@ -314,7 +383,7 @@ void MP_data::print_svg (ofstream & F, string ID) {
         break;
     }
   }
-  F << "</g>" << endl;
+//  F << "</g>" << endl;
   
   assert(gstate.clippathdepth.empty());
 }
@@ -327,6 +396,58 @@ void converted_data::clear() {
 converted_data::converted_data() {
   clear();
 }
+
+
+string process_pdf_string2(string s, string font) {
+  string r,t;
+  unsigned char c;
+  char *err;
+  unsigned j;
+  map<string,FONTCHARS>::iterator I; 
+
+  I = USED_CHARS.find(font);
+  assert (I != USED_CHARS.end());
+  s = s.substr(1,s.length()-3);  // delete surrounding parentheses and final space
+  for (unsigned i=0; i<s.size(); i++) {
+    c = s[i];
+    if (c == 92) {
+      i++;
+      c = s[i];
+      if (c == 92 || c == 40 || c == 41) {     // escape sequences \\, \(, \)
+        r += c;
+      }
+      else if (c>=48 && c<=57) {
+        j = i+1;
+        t = c;
+        while((c=s[j])>=48 && c<=57 && j<i+3) {   // octal numbers
+          t += s[j];
+          j++;
+        }
+        i = j-1;
+        c = strtol(t.c_str(),&err,8);
+        r += c;
+      }
+      else i--;                  // otherwise backslash is ignored
+    }
+    else {
+      r += c;
+    }
+  }
+//  char ch[10];
+  t = "";
+  for (unsigned i=0; i<r.size(); i++) {
+    c = r[i];
+    if (((*I).second).find(c) == ((*I).second).end()) {
+      ((*I).second).insert(c);
+    }
+//    sprintf(ch,"%02x",c);
+//    t += ch;
+  }
+//  return "<" + t + ">";
+  return r;
+}
+
+
 
 void parse_eps(string fname, string cname, double dx, double dy, 
                double & c1, double & c2, double & c3, double & c4, 
@@ -342,6 +463,7 @@ void parse_eps(string fname, string cname, double dx, double dy,
   
   MP_path mp_path;
   MP_transform mp_trans, fntmatr;
+  MP_text text;
 
   ifstream F(fname.c_str());
   if(!F) therror(("Can't open file for reading"));
@@ -397,7 +519,16 @@ void parse_eps(string fname, string cname, double dx, double dy,
         break;
       }
       else if (tok == "moveto") {
-        mp_path.add(MP_moveto, thbuffer[0],thbuffer[1],llx,lly);
+        if (inpath)
+          mp_path.add(MP_moveto, thbuffer[0],thbuffer[1],llx,lly);
+        else if (!concat) {
+          fntmatr.transf[0] = 1;
+          fntmatr.transf[1] = 0;        
+          fntmatr.transf[2] = 0;          
+          fntmatr.transf[3] = 1;          
+          fntmatr.transf[4] = atof(thbuffer[0].c_str())-llx;
+          fntmatr.transf[5] = atof(thbuffer[1].c_str())-lly;
+        }
         thbuffer.clear();
       }
       else if (tok == "curveto") {
@@ -571,17 +702,20 @@ void parse_eps(string fname, string cname, double dx, double dy,
       // path started with moveto is terminated with the `n' operator
       
       else if (tok == "fshow") {            // font changes should be optimized
-/*        unsigned i = thbuffer.size();
+        text.clear();
+        unsigned i = thbuffer.size();
         font = thbuffer[i-2];
-        if (FORM_FONTS.find(font) == FORM_FONTS.end()) {
+        text.font = font;
+        text.size = atof(thbuffer[i-1].c_str());
+        if (FORM_FONTS.count(font) == 0) {
           FORM_FONTS.insert(font);
         }
-        if (ALL_FONTS.find(font) == ALL_FONTS.end()) {
+        if (ALL_FONTS.count(font) == 0) {
           ALL_FONTS.insert(make_pair(font,u2str(font_id)));
           font_id++;
         }
 //        font = tex_Fname(ALL_FONTS[font]);
-        if (USED_CHARS.find(font) == USED_CHARS.end()) {
+        if (USED_CHARS.count(font) == 0) {
           FONTCHARS FCH;
           USED_CHARS.insert(make_pair(font,FCH));
         }
@@ -589,22 +723,15 @@ void parse_eps(string fname, string cname, double dx, double dy,
         for (unsigned j=0; j<i-2; j++) {
           buffer = buffer + thbuffer[j] + " ";
         }
-        buffer = process_pdf_string(buffer,font);
-        print_str("n BT",TEX); // we end the path started with `x y moveto'
-                               // should be done more cleanly
-        print_str("/F\\pdffontname\\"+font+"\\space "+thbuffer[i-1]+" Tf",TEX);
-        if (concat) {
-          print_str(fntmatr+" Tm",TEX);
-        }
-        else {
-          sprintf(x, "%.1f", atof(lastmovex.c_str())-llx);  // modify this part
-          sprintf(y, "%.1f", atof(lastmovey.c_str())-lly);
-          print_str("1 0 0 1 "+string(x)+" "+string(y)+" Tm",TEX);
-        }
-        TEX << "\\PL{" << buffer << " Tj}%" << endl;
-        print_str("ET",TEX);
+        text.text = process_pdf_string2(buffer,font);
+        text.xx = fntmatr.transf[0];
+        text.xy = fntmatr.transf[1];
+        text.yx = fntmatr.transf[2];
+        text.yy = fntmatr.transf[3];
+        text.x = fntmatr.transf[4];
+        text.y = fntmatr.transf[5];
         concat = false;
-      */
+        data.MP.add(text);
         thbuffer.clear();
       }
       else {
@@ -623,11 +750,6 @@ void parse_eps(string fname, string cname, double dx, double dy,
 }
 
 void convert_scraps_new() {
-/*  converted_data dataconv;
-  list<converted_data> convlist;
-  double llx,lly,urx,ury;
-convlist.push_back(dataconv);
-dataconv.clear();*/
   
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
@@ -639,7 +761,78 @@ dataconv.clear();*/
     if (I->X != "") parse_eps(I->X, "", I->S1, I->S2, I->X1, I->X2, I->X3, I->X4, I->Xc);
   }
 
+  GRIDLIST.clear();
+  if (LAYOUT.grid > 0) {
+    converted_data scr;
+    double a,b,c,d;
+    parse_eps(LAYOUT.gridAA, "",0,0,a,b,c,d,scr); GRIDLIST.push_back(scr);scr.clear();
+    LAYOUT.gridcell[0].x = a;
+    LAYOUT.gridcell[0].y = b;
+    parse_eps(LAYOUT.gridAB, "",0,0,a,b,c,d,scr); GRIDLIST.push_back(scr);scr.clear();
+    LAYOUT.gridcell[1].x = a;
+    LAYOUT.gridcell[1].y = b;
+    parse_eps(LAYOUT.gridAC, "",0,0,a,b,c,d,scr); GRIDLIST.push_back(scr);scr.clear();
+    LAYOUT.gridcell[2].x = a;
+    LAYOUT.gridcell[2].y = b;
+    parse_eps(LAYOUT.gridBA, "",0,0,a,b,c,d,scr); GRIDLIST.push_back(scr);scr.clear();
+    LAYOUT.gridcell[3].x = a;
+    LAYOUT.gridcell[3].y = b;
+    parse_eps(LAYOUT.gridBB, "",0,0,a,b,c,d,scr); GRIDLIST.push_back(scr);scr.clear();
+    LAYOUT.gridcell[4].x = a;
+    LAYOUT.gridcell[4].y = b;
+    parse_eps(LAYOUT.gridBC, "",0,0,a,b,c,d,scr); GRIDLIST.push_back(scr);scr.clear();
+    LAYOUT.gridcell[5].x = a;
+    LAYOUT.gridcell[5].y = b;
+    parse_eps(LAYOUT.gridCA, "",0,0,a,b,c,d,scr); GRIDLIST.push_back(scr);scr.clear();
+    LAYOUT.gridcell[6].x = a;
+    LAYOUT.gridcell[6].y = b;
+    parse_eps(LAYOUT.gridCB, "",0,0,a,b,c,d,scr); GRIDLIST.push_back(scr);scr.clear();
+    LAYOUT.gridcell[7].x = a;
+    LAYOUT.gridcell[7].y = b;
+    parse_eps(LAYOUT.gridCC, "",0,0,a,b,c,d,scr); GRIDLIST.push_back(scr);scr.clear();
+    LAYOUT.gridcell[8].x = a;
+    LAYOUT.gridcell[8].y = b;
+  }
 
+  PATTERNLIST.clear();
+
+  ifstream P("patterns.dat");
+  if(!P) therror(("Can't open patterns definition file!"));
+  char buf[500];
+  char delim[] = ":";
+  string line,num,pfile,bbox,xstep,ystep,matr;
+  while(P.getline(buf,500,'\n')) {
+    num = strtok(buf,delim);
+    pfile = strtok(NULL,delim);
+    bbox = strtok(NULL,delim);
+    xstep = strtok(NULL,delim);
+    ystep = strtok(NULL,delim);
+    matr = strtok(NULL,delim);
+    if (ALL_PATTERNS.count(num) > 0) {
+      pattern patt;
+      
+      patt.name = num;
+
+      matr.replace(matr.find("["),1,"");
+      matr.replace(matr.find("]"),1,"");
+      istringstream s1(matr);
+      s1 >> patt.xx >> patt.xy >> patt.yx >> patt.yy >> patt.x >> patt.y;
+      bbox.replace(bbox.find("["),1,"");
+      bbox.replace(bbox.find("]"),1,"");
+      istringstream s2(bbox);
+      s2 >> patt.llx >> patt.lly >> patt.urx >> patt.ury;
+//      F << "/Matrix " << matr << endl;
+//      F << "/BBox " << bbox << endl;
+      patt.xstep = atof(xstep.c_str());
+      patt.ystep = atof(ystep.c_str());
+
+      parse_eps(pfile , "", 0,0, patt.llx1,patt.lly1,patt.urx1,patt.ury1,patt.data);
+      PATTERNLIST.push_back(patt);
+    }
+  }
+  P.close();
+ 
+  
 }
 
 
@@ -652,6 +845,8 @@ int thconvert_new() {
   ALL_FONTS.clear();
   ALL_PATTERNS.clear();
   USED_CHARS.clear();
+  PATTERNLIST.clear();
+  GRIDLIST.clear();
   font_id = 1;
   patt_id = 1;
 

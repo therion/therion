@@ -33,6 +33,7 @@
 
 #include <cstring>
 #include <cstdio>
+#include <cassert>
 
 #include "thtexfonts.h"
 #include "thtexenc.cxx"
@@ -335,6 +336,20 @@ string utf2tex(string str, bool remove_kerning) {
   T << "{}";
   return T.str();
 }
+
+int tex2uni(string font, int ch) {
+  int id = -1;
+  for (list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++)
+    if (J->rm == font || J->it == font || J->ss == font || J->si == font || J->bf == font) {
+      id = J->id;
+      break;
+    }
+  assert(id != -1);
+  ch %= 256;
+  if (ch < 0) ch += 256;  // if string is based on signed char
+  return texenc[ch][id];
+}
+
 
 //const char * utf2tex (char * s) {
 //  string t = utf2tex(string(s));

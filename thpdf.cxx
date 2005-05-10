@@ -1414,6 +1414,14 @@ void build_pages() {
   
   PDFRES << "\\legendwidth=" << LAYOUT.legend_width << "bp" << endl;
 
+  if (LAYOUT.map_header_bg) {
+    PDFRES << "\\bgcolor={" << LAYOUT.background_r << " " << 
+                               LAYOUT.background_g << " " <<
+                               LAYOUT.background_b << "}" << endl;
+    PDFRES << "\\legendbgfilltrue" << endl;
+  } 
+  else PDFRES << "\\legendbgfillfalse" << endl;
+
   PDFRES.close();
 
   // jednorazove vlozenie povrchovych obrazkov

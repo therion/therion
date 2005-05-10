@@ -19,17 +19,22 @@ if ($platform eq 'WIN32') {
   $xthsrc =~ s/\\/\\\\/g;
   print OUTPT $xthsrc;
   close OUTPT;
-} elsif ($platform eq 'MACOSX') {
+} else {
   $cdir = `pwd`;
   $cdir =~ s/\s*$//;
   `rm --force /usr/bin/therion`;
   `rm --force /usr/bin/xtherion`;
+  `rm --force /etc/therion.ini.new`;
+  `rm --force /etc/xtherion.ini.new`;
   `cp --force $cdir/therion /usr/bin/therion`;
   `cp --force $cdir/xtherion/xtherion /usr/bin/xtherion`;
-} else {
-  $cdir = `pwd`;
-  $cdir =~ s/\s*$//;
-  `ln --force --symbolic $cdir/therion /usr/bin/therion`;
-  `ln --force --symbolic $cdir/xtherion/xtherion /usr/bin/xtherion`;
+  `cp --force $cdir/therion.ini /etc/therion.ini.new`;
+  `cp --force $cdir/xtherion/xtherion.ini /etc/xtherion.ini.new`;
+  if ((-s "/etc/therion.ini") <= 0) {
+    `cp --force $cdir/therion.ini /etc/therion.ini`;
+  }
+  if ((-s "/etc/xtherion.ini") <= 0) {
+    `cp --force $cdir/xtherion/xtherion.ini /etc/xtherion.ini`;
+  }
 }
 

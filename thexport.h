@@ -30,6 +30,7 @@
 #define thexport_h
 
 #include <stdio.h>
+#include <strings.h>
 #include "thparse.h"
 #include "thobjectsrc.h"
 
@@ -124,6 +125,15 @@ class thexport {
   virtual void process_db(class thdatabase * dbp) = 0;
   
 };
+
+
+#define thexp_set_ext_fmt(extension,cformat) { \
+    if (strlen(this->outpt) > strlen(extension)) { \
+      if (strcasecmp(&(this->outpt[strlen(this->outpt) - strlen(extension)]), extension) == 0) { \
+        this->format = cformat; \
+      } \
+    } \
+  }
 
 
 #endif

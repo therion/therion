@@ -63,6 +63,8 @@
 \newtoks\opacity \opacity{0.7}
 \newtoks\surfaceopacity \surfaceopacity{0.7}
 \newif\ifpagenumbering \pagenumberingfalse
+\newtoks\bgcolor
+\newif\iflegendbgfill
 
 \let\ne\noexpand
 \def\notdef{notdef}
@@ -360,6 +362,7 @@
 \newdimen\adjustedX
 \newdimen\adjustedY
 
+
 \def\legendbox#1#2#3#4{%
   \unskip
   \setbox\tmpboxa=\vbox{#4}%
@@ -403,7 +406,19 @@
   \unskip
   \advance\sxd by \extraW
   \advance\syd by \extraS
+
+  % vypln pod legendou
+  \iflegendbgfill
+    \dimtobp{\sxd}\edef\shiftx{\tmpdef}%
+    \dimtobp{\syd}\edef\shifty{\tmpdef}%
+    \dimtobp{\wd\tmpboxa}\edef\wdth{\tmpdef}%
+    \sy=\ht\tmpboxa \advance\sy by \dp\tmpboxa
+    \dimtobp{\sy}\edef\hght{\tmpdef}%
+    \rlap{\PL{q \the\bgcolor\space rg \shiftx\space \shifty\space \wdth\space \hght\space re f Q}}%
+  \fi
+  %
   \advance\syd by \dp\tmpboxa
+
   \rlap{\kern\sxd\raise\syd\box\tmpboxa}%
   \ignorespaces
 }

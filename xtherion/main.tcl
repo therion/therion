@@ -81,3 +81,7 @@ foreach fname $argv {
   }
 }
 
+foreach idir $xth(idirs) {
+  catch {source [file join $idir xtherion.ini]}
+}
+catch {source xtherion.ini}
