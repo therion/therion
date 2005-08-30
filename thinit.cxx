@@ -33,6 +33,7 @@
 #include "thexception.h"
 #include "thtexfonts.h"
 #include "thlang.h"
+#include "thlocale.h"
 
 #ifdef THWIN32
 #include <windows.h>
@@ -41,11 +42,15 @@
 const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# encoding-default  ASCII\n"
 "# encoding-sql  ASCII\n\n"
-"### Default output language ###\n"
-"# language  en_UK\n\n"
+"### Default regional settings ###\n"
+"# language  en_UK\n"
+"# units metric\n\n"
+"### Prefered loop closure method\n"
+"# loop-closure survex\n\n"
 "### Paths to called executable files ###\n"
 "# mpost-path  \"mpost\"\n"
-"# pdftex-path  \"pdfetex\"\n\n"
+"# pdftex-path  \"pdfetex\"\n"
+"# cavern-path  \"cavern\"\n\n"
 "### Search paths for source and configuration files ###\n"
 "# source-path  \"\"\n\n"
 "### Tex initialization ###\n"
@@ -61,6 +66,7 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 thinit::thinit()
 {
   this->tex_env = false;
+	this->loopc = THINIT_LOOPC_UNKNOWN;
 }
 
 
@@ -81,6 +87,8 @@ enum {
   TTIC_LANG,
   TTIC_TEX_FONTS,
   TTIC_TEX_ENV,
+	TTIC_UNITS,
+	TTIC_LOOPC,
   TTIC_UNKNOWN,
 };
 
@@ -90,12 +98,13 @@ enum {
  */
  
 static const thstok thtt_initcmd[] = {
-//  {"cavern-path", TTIC_PATH_CAVERN},
+  {"cavern-path", TTIC_PATH_CAVERN},
   {"encoding-default", TTIC_ENCODING_DEFAULT},
   {"encoding-sql", TTIC_ENCODING_SQL},
 //  {"encoding_default", TTIC_ENCODING_DEFAULT},
 //  {"path_3dtopos", TTIC_PATH_3DTOPOS},
   {"language", TTIC_LANG},
+  {"loop-closure", TTIC_LOOPC},
   {"mpost-path", TTIC_PATH_MPOST},
   {"pdftex-path", TTIC_PATH_PDFTEX},
   {"source-path", TTIC_PATH_SOURCE},
@@ -103,6 +112,7 @@ static const thstok thtt_initcmd[] = {
   {"tex-fonts",TTIC_TEX_FONTS},
   {"tmp-path",TTIC_TMP_PATH},
   {"tmp-remove",TTIC_TMP_REMOVE_SCRIPT},
+  {"units",TTIC_UNITS},
   {NULL, TTIC_UNKNOWN},
 };
 
@@ -115,6 +125,14 @@ void thinit__print_open(char * s) {
     thtext_inline = true;
 #endif 
 }
+
+
+static const thstok thtt_loopc[] = {
+  {"survex", THINIT_LOOPC_SURVEX},
+  {"therion", THINIT_LOOPC_THERION},
+  {NULL, THINIT_LOOPC_UNKNOWN},
+};
+
 
 void thinit::load()
 {
@@ -152,6 +170,22 @@ void thinit::load()
     this->path_cavern = "cavern";
   }
 #endif  
+
+	// try running survex
+	if (this->loopc == THINIT_LOOPC_UNKNOWN) {
+	  thbuffer svxcom;
+	  svxcom = "\"";
+	  svxcom += thini.get_path_cavern();
+	  svxcom += "\" --version";  
+#ifdef THDEBUG
+	  thprintf("testing cavern\n");
+#endif
+	  if (system(svxcom.get_buffer()) == EXIT_SUCCESS) {
+			this->loopc = THINIT_LOOPC_SURVEX;
+		} else {
+			this->loopc = THINIT_LOOPC_THERION;
+		}
+	}
 
 //  this->path_3dtopos = "3dtopos";
 #ifdef THWIN32
@@ -193,8 +227,10 @@ void thinit::load()
       switch (argid) {      
         case TTIC_ENCODING_DEFAULT:
         case TTIC_PATH_CAVERN:
+        case TTIC_LOOPC:
         case TTIC_TMP_PATH:
         case TTIC_LANG:
+        case TTIC_UNITS:
         case TTIC_TMP_REMOVE_SCRIPT:
         case TTIC_PATH_MPOST:
         case TTIC_PATH_PDFTEX:
@@ -237,6 +273,10 @@ void thinit::load()
             ththrow(("language not supported -- %s",args[1]))
           break;
 
+        case TTIC_UNITS:
+					thdeflocale.parse_units(args[1]);
+          break;
+
         case TTIC_TMP_REMOVE_SCRIPT:
           this->tmp_remove_script.strcpy(args[1]);
           break;
@@ -275,6 +315,13 @@ void thinit::load()
           if (sv == TT_UNKNOWN_BOOL)
             ththrow(("invalid tex-env switch -- %s", args[1]))
           this->tex_env = (sv == TT_TRUE);
+          break;
+          
+        case TTIC_LOOPC:
+          sv = thmatch_token(args[1], thtt_loopc);
+          if (sv == THINIT_LOOPC_UNKNOWN)
+            ththrow(("invalid loop-closure switch -- %s", args[1]))
+          this->loopc = sv;
           break;
           
         default:

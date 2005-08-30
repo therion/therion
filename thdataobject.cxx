@@ -276,9 +276,7 @@ void thdataobject::throw_source()
 {
   if (strlen(thexc.get_buffer()) > 0)
     thexc.insspf(" -- ");
-  thdb_revision_set_type::iterator ii = 
-      this->db->revision_set.find(threvision(this->id, 0));
-  thexc.insspf("%s [%d]", ii->srcf.name, ii->srcf.line);
+  thexc.insspf("%s [%d]", this->source.name, this->source.line);
 }
 
 void thdataobject::self_print(FILE * outf)

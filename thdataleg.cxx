@@ -113,6 +113,7 @@ void thdataleg::clear()
   this->infer_equates = false;
   this->direction = true;
   this->adjusted = false;
+  this->to_be_adjusted = false;
   this->topofil = false;
   this->plumbed = false;
 }

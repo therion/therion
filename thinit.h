@@ -41,6 +41,12 @@ enum {
   THINIT_ENCODING_DEFAULT,
   THINIT_ENCODING_SQL,
 };
+
+enum {
+	THINIT_LOOPC_UNKNOWN = 0,
+	THINIT_LOOPC_THERION,
+	THINIT_LOOPC_SURVEX,
+};
  
 class thinit {
 
@@ -54,8 +60,7 @@ class thinit {
     //path_3dtopos, 
   
   bool tex_env;
-    
-  int lang;
+  int lang, loopc;
   
   thmbuffer cmb;  ///< Command parsing mbuffer.
   

@@ -68,7 +68,8 @@ class thconfig {
   bool skip_comments,  ///< Skip comments when writing config file.
     generate_xthcfg,  ///< Generate xtherion log file.
     install_tcltk, ///< Whether tcltk is installed with therion.
-    install_tex; ///< Whether TeX is installed with therion.
+    install_tex, ///< Whether TeX is installed with therion.
+    auto_join;  ///< Whether scraps in one file should be automatically joined
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.
   int cfg_fenc;  ///< Configuration file encoding.

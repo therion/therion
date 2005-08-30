@@ -33,6 +33,7 @@
 #include "thdataobject.h"
 #include "thlayoutln.h"
 #include "thsymbolset.h"
+#include "thlocale.h"
 #include <list>
 
 /**
@@ -87,6 +88,7 @@ enum {
   TT_LAYOUT_ENDCODE = 2044,
   TT_LAYOUT_COLOR_LEGEND = 2045,
   TT_LAYOUT_MAP_HEADER_BG = 2046,
+	TT_LAYOUT_UNITS = 2047,
 };
 
 
@@ -156,6 +158,7 @@ enum {
   TT_LAYOUT_DEBUG_OFF,
   TT_LAYOUT_DEBUG_STATIONS,
   TT_LAYOUT_DEBUG_JOINS,
+  TT_LAYOUT_DEBUG_SCRAPNAMES,
   TT_LAYOUT_DEBUG_ALL,
   TT_LAYOUT_DEBUG_UNKNOWN,
 };
@@ -170,6 +173,7 @@ static const thstok thtt_layout_debug[] = {
   {"first", TT_LAYOUT_DEBUG_STATIONS},
   {"off", TT_LAYOUT_DEBUG_OFF},
   {"on", TT_LAYOUT_DEBUG_ALL},
+  {"scrap-names", TT_LAYOUT_DEBUG_SCRAPNAMES},
   {"second", TT_LAYOUT_DEBUG_JOINS},
   {NULL, TT_LAYOUT_DEBUG_UNKNOWN},
 };
@@ -409,6 +413,7 @@ static const thstok thtt_layout_opt[] = {
   {"symbol-show", TT_LAYOUT_SYMBOL_SHOW},
   {"title-pages",TT_LAYOUT_TITLE_PAGES},
   {"transparency",TT_LAYOUT_TRANSPARENCY},
+  {"units",TT_LAYOUT_UNITS},
   {NULL, TT_LAYOUT_UNKNOWN},
 };
 
@@ -470,6 +475,8 @@ class thlayout : public thdataobject {
   
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
     explo_lens, topo_lens, map_header_bg;
+		
+	thlocale units;
   
   bool def_grid_size, def_grid_origin, def_nav_factor, def_nav_size, 
     def_opacity, def_transparency, def_layers, def_base_scale,
@@ -482,7 +489,7 @@ class thlayout : public thdataobject {
     def_map_header, def_lang, def_scale_bar, def_map_header_bg,
     redef_base_scale, def_max_explos, def_max_topos, def_max_cartos,
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_surface,
-    def_surface_opacity;
+    def_surface_opacity, def_units;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;
@@ -620,6 +627,7 @@ class thlayout : public thdataobject {
   
   bool is_debug_stations();
   bool is_debug_joins();
+  bool is_debug_scrapnames();
   
   /**
    * set LAYOUT variable.

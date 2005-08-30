@@ -257,6 +257,7 @@ class thdataobject {
   class thsurvey * fsptr;  ///< Father survey ptr.
   
   unsigned long revision;  ///< Object revision.
+	thobjectsrc source;  ///< Object source.
 
   thperson dotmp_person;  ///< Temporary person.
   thdate dotmp_date;  ///< Temporary date.

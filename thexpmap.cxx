@@ -61,6 +61,7 @@
 #include <stdlib.h>
 #include "extern/lxMath.h"
 #include "thsvg.h"
+#include "extern/img.h"
 
 #ifdef THWIN32
 #define snprintf _snprintf
@@ -155,6 +156,7 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
             case TT_EXPMAP_FMT_PDF:
             case TT_EXPMAP_FMT_SVG:
             case TT_EXPMAP_FMT_XVI:
+            case TT_EXPMAP_FMT_3D:
               supform = true;
           }
           break;
@@ -271,6 +273,7 @@ void thexpmap::process_db(class thdatabase * dbp)
     if (this->export_mode == TT_EXP_MAP) {
       thexp_set_ext_fmt(".svg", TT_EXPMAP_FMT_SVG)
       thexp_set_ext_fmt(".xvi", TT_EXPMAP_FMT_XVI)
+      thexp_set_ext_fmt(".3d", TT_EXPMAP_FMT_3D)
     }
   }
 
@@ -280,6 +283,9 @@ void thexpmap::process_db(class thdatabase * dbp)
   
   // the export it self
   switch (this->format) {
+    case TT_EXPMAP_FMT_3D:
+      this->export_uni(thdb.db2d.select_projection(this->projptr),this->projptr);
+      break;
     case TT_EXPMAP_FMT_PDF:
     case TT_EXPMAP_FMT_SVG:
       this->export_pdf(thdb.db2d.select_projection(this->projptr),this->projptr);
@@ -370,8 +376,11 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   // scalebar length
   double sblen;
   int sbtest;
+
+	this->layout->units.lang = this->layout->lang;
+
   if (this->layout->scale_bar <= 0.0) {
-    sbtest = int(log(0.10 / this->layout->scale) / log(pow(10.0,1.0/3.0)));
+    sbtest = int(log(this->layout->units.convert_length(0.10 / this->layout->scale)) / log(pow(10.0,1.0/3.0)));
     sblen = pow(10.0,double(sbtest/3));
     switch (sbtest % 3) {
       case 0: sblen *= 1.0; break;
@@ -379,7 +388,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       default: sblen *= 5.0; break;
     }
   } else 
-    sblen = this->layout->scale_bar;
+    sblen = this->layout->units.convert_length(this->layout->scale_bar);
+		
 
 #define layoutnan(XXX,VVV) \
   if (thisnan(this->layout->XXX)) this->layout->XXX = (VVV)    
@@ -796,9 +806,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
   sprintf(texb.get_buffer(),"data.%d",sfig);
   LAYOUT.scalebar = texb.get_buffer();
-  snprintf(prevbf,127,"%g",sblen);
-  fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, 1.0, \"%s\");\nendfig;\n",
-    sfig++, sblen,  utf2tex(thT("units m",layout->lang)));
+  //snprintf(prevbf,127,"%g",sblen);
+  fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
+    sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()));
 
   // sem pride zapisanie legendy do MP suboru
   if (this->layout->def_base_scale || this->layout->redef_base_scale)
@@ -1706,8 +1716,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 fprintf(out->file,",");
                 lp->export_nextcp_mp(out);
                 thdb.buff_enc.guarantee(4096);
-                sprintf(thdb.buff_enc.get_buffer(),"%.0f",lp->rsize - out->layout->goz);
-                fprintf(out->file,",btex \\thwallaltitude %s etex);\n",utf2tex(thdb.buff_enc.get_buffer()));
+                //sprintf(thdb.buff_enc.get_buffer(),"%.0f",lp->rsize - out->layout->goz);
+                fprintf(out->file,",btex \\thwallaltitude %s etex);\n",utf2tex(out->layout->units.format_length(lp->rsize - out->layout->goz)));
 //                fprintf(out->file,",\"%.0f\");\n",lp->rsize);
               }
               lp = lp->nextlp;
@@ -1742,6 +1752,17 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     obj = obj->pscrapoptr;
   }
   
+  // nakoniec scrap name, ak mame zapnuty dany debug mod
+  if (out->layout->is_debug_scrapnames()) {
+    thexpmap_export_mp_bgif;
+    thdb2dpt tmppt;
+    tmppt.xt = (scrap->lxmin + scrap->lxmax) / 2.0;
+    tmppt.yt = (scrap->lymin + scrap->lymax) / 2.0;
+    thdb.buff_tmp = utf2tex(scrap->name);
+    fprintf(out->file,"p_label(btex \\thlargesize %s etex,",thdb.buff_tmp.get_buffer());
+    tmppt.export_mp(out);
+    fprintf(out->file,",0.0,6);\n");
+  }
 
   if (somex) {
     fprintf(out->file,"endfig;\n");  
@@ -1847,10 +1868,10 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
       clrec.G = cG; 
       clrec.B = cB;
       opacity_correction(clrec.R, clrec.G, clrec.B);
-      sprintf(tmpb.get_buffer(), "%.0f", curz - this->layout->goz);
-      clrec.name = utf2tex(tmpb.get_buffer());
-      clrec.name += "\\thinspace ";
-      clrec.name += utf2tex(thT("units m",layout->lang));
+      //sprintf(tmpb.get_buffer(), "%.0f", curz - this->layout->goz);
+      clrec.name = utf2tex(this->layout->units.format_length(curz - this->layout->goz));
+      clrec.name += "\\thinspace ";			
+      clrec.name += utf2tex(this->layout->units.format_i18n_length_units());
       COLORLEGENDLIST.insert(COLORLEGENDLIST.end(), clrec);
     }
   }
@@ -2207,6 +2228,190 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
 }
 
 
+void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * prj)
+{
+
+  if (maps == NULL) {
+    thwarning(("%s [%d] -- no selected projection data -- %s",
+      this->src.name, this->src.line, this->projstr))
+    return;
+  }
+
+  char * fnm;  
+  if (this->outpt_def)
+    fnm = this->outpt;
+  else
+    fnm = "cave.3d";
+
+  img * pimg;
+  pimg = img_open_write(fnm, "cave", 1);
+  if (pimg == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+  
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif     
+
+  thdb2dxm * cmap = maps;
+  thdb2dxs * cbm;
+  thdb2dmi * cmi;
+
+  while (cmap != NULL) {
+    cbm = cmap->first_bm;
+    while (cbm != NULL) {
+      cmi = cbm->bm->last_item;
+      if (cbm->mode == TT_MAPITEM_NORMAL) {
+        while (cmi != NULL) {
+          if (cmi->type == TT_MAPITEM_NORMAL)
+						this->export_uni_scrap((FILE *) pimg, (thscrap *) cmi->object);
+          cmi = cmi->prev_item;  
+        }
+      }
+      cbm = cbm->next_item;
+    }
+    cmap = cmap->next_item;
+  }
+
+  img_close(pimg);
+    
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}
+
+
+void thexpmap_line_svx3d(img * pimg, thline * pln)
+{
+	thdb2dlp * plp = pln->first_point, * lp;
+	if (plp != NULL) 
+		lp = plp->nextlp;
+	else 
+		return;
+	bool move_to = true;
+	double t, tt, ttt, t_, tt_, ttt_, nx, ny, nz, px, py;
+	while (lp != NULL) {
+		if (lp->subtype != TT_LINE_SUBTYPE_INVISIBLE) {
+			if (move_to) {
+	      img_write_item(pimg, img_MOVE, 0, NULL, plp->point->xt, plp->point->yt, plp->point->zt);
+				px = plp->point->xt;
+				py = plp->point->yt;
+				move_to = false;
+			}
+			if ((lp->cp1 != NULL) && (lp->cp2 != NULL)) {
+				for(t = 0.05; t < 1.0; t += 0.05) {
+				  tt = t * t;
+					ttt = tt * t;
+					t_ = 1.0 - t;
+					tt_ = t_ * t_;
+					ttt_ = tt_ * t_;				
+					nx = ttt_ * plp->point->xt + 
+							 3.0 * t * tt_ * lp->cp1->xt + 
+							 3.0 * tt * t_ * lp->cp2->xt + 
+							 ttt * lp->point->xt;
+					ny = ttt_ * plp->point->yt + 
+							 3.0 * t * tt_ * lp->cp1->yt + 
+							 3.0 * tt * t_ * lp->cp2->yt + 
+							 ttt * lp->point->yt;
+					nz = t_ * plp->point->zt + t * lp->point->zt;
+					if (hypot(nx - px, ny - py) > 0.5) {
+			      img_write_item(pimg, img_LINE, 0, NULL, nx, ny, nz);
+						px = nx;
+						py = ny;
+					}
+				}			
+			}
+      img_write_item(pimg, img_LINE, 0, NULL, lp->point->xt, lp->point->yt, lp->point->zt);
+			px = lp->point->xt;
+			py = lp->point->yt;
+		} else {
+			move_to = true;
+		}
+		plp = lp;
+		lp = lp->nextlp;
+	}
+}
+
+
+void thexpmap::export_uni_scrap(FILE * out, class thscrap * scrap)
+{
+	
+	img * pimg;
+	pimg = (img *) out;
+	thbuffer stnbuff;
+	
+	double avx = 0.0, avy = 0.0, avz = 0.0, avn = 0.0;
+#define avadd(x,y,z) {avx	+= x; avy += y; avz += z; avn += 1.0;}
+	// export shots
+  thscraplp * slp;
+  slp = scrap->get_polygon();
+  while (slp != NULL) {
+    if (slp->lnio) {
+      img_write_item(pimg, img_MOVE, 0, NULL, slp->lnx1, slp->lny1, slp->lnz1);
+      img_write_item(pimg, img_LINE, img_FLAG_SURFACE, NULL, slp->lnx2, slp->lny2, slp->lnz2);
+    } else {
+			stnbuff = slp->station->survey->get_reverse_full_name();
+			stnbuff += ".";
+			stnbuff += slp->station->name;
+//			img_write_item(pimg, img_LABEL, 0, stnbuff, slp->stx,  slp->sty,  slp->stz);
+			avadd(slp->stx,  slp->sty,  slp->stz);
+		}
+    slp = slp->next_item;
+  }
+	
+	// export objects
+  th2ddataobject * obj;
+	thpoint * ppt;
+	thline * pln;
+  obj = scrap->ls2doptr;
+  while (obj != NULL) {
+		switch (obj->get_class_id()) {
+			case TT_POINT_CMD:
+				ppt = ((thpoint*)obj);
+	      switch (ppt->type) {
+	        case TT_POINT_TYPE_STATION:
+						if ((ppt->cpoint != NULL) && (ppt->cpoint->st != NULL)) {
+							stnbuff = ppt->cpoint->st->survey->get_reverse_full_name();
+							stnbuff += ".";
+							stnbuff += ppt->cpoint->st->name;
+//							img_write_item(pimg, img_LABEL, img_SFLAG_SURFACE, stnbuff, ppt->point->xt, ppt->point->yt, ppt->point->zt);
+							avadd(ppt->point->xt, ppt->point->yt, ppt->point->zt);
+						}
+  		      break;
+				}
+				break;
+		  case TT_LINE_CMD:
+				pln = ((thline*)obj);
+	      switch (pln->type) {
+					case TT_LINE_TYPE_WALL:
+						thexpmap_line_svx3d(pimg, pln);
+						thdb2dlp * lp = pln->first_point;
+						while (lp != NULL) {
+							avadd(lp->point->xt,lp->point->yt,lp->point->zt);
+							lp = lp->nextlp;
+						}
+						break;
+				}
+				break;
+    }
+    obj = obj->pscrapoptr;
+  }
+
+	if (avn > 0.0) {
+//		stnbuff = "SCRAP.";
+		stnbuff = scrap->fsptr->get_reverse_full_name();
+		stnbuff += ".";
+		stnbuff += scrap->name;
+		img_write_item(pimg, img_LABEL, 0, stnbuff, avx/avn, avy/avn, avz/avn);
+	}
+		
+}
 
 
 double thexpmap_quick_map_export_scale;

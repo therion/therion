@@ -2329,3 +2329,18 @@ proc xth_me_cmds_select_nopoint {} {
     }
   }
 }
+
+
+proc xth_me_get_center {} {
+  global xth
+  set sr [$xth(me,can) cget -scrollregion]
+  set xw [$xth(me,can) xview]
+  set yw [$xth(me,can) yview]
+  set xx [expr double([lindex $xw 1] + [lindex $xw 0]) / 2.0]
+  set yy [expr double([lindex $yw 1] + [lindex $yw 0]) / 2.0]
+  set tw [expr [lindex $sr 2] - [lindex $sr 0]]
+  set th [expr [lindex $sr 3] - [lindex $sr 1]]	
+  set x [xth_me_can2realx [expr [lindex $sr 0] + $xx * $tw]]
+  set y [xth_me_can2realy [expr [lindex $sr 1] + $yy * $th]]
+	return "$x $y"
+}

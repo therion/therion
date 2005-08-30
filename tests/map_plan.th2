@@ -1,5 +1,5 @@
 encoding  utf-8
-##XTHERION## xth_me_area_adjust 74.0 -40.0 1830.0 924.0
+##XTHERION## xth_me_area_adjust 74.0 -40.0 1957.0 924.0
 ##XTHERION## xth_me_area_zoom_to 100
 
 
@@ -304,6 +304,21 @@ endline
 point 890.0 468.0 stalactite
 
 point 1138.5 284.5 section -align bl -scrap ts1
+
+line border -id b3 -clip off
+  1764.0 416.0
+  1824.0 391.0
+endline
+
+line border -id b1 -clip off
+  1741.0 209.0
+  1749.0 408.0
+endline
+
+line border -id b2 -clip off
+  1753.0 429.0
+  1640.0 596.0
+endline
 
 line wall -id dlw -reverse on
   1276.0 649.0

@@ -10,6 +10,7 @@
 @trans_sources = (
   "../thsymbolset.cxx",
   "../thexpmap.cxx",
+  "../thlocale.cxx",
   "../thmapstat.cxx",
   "../thpdf.cxx",
 );

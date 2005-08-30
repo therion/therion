@@ -615,7 +615,7 @@ thscraplp * thscrap::get_polygon() {
                         lp->stx = newx;
                         lp->sty = st->z - this->proj->shift_z;
                         lp->stz = 0.0;
-                      } else if (lp->stx != newx) {
+                      } else if (incp && (lp->stx != newx)) {
                         nlp = this->polygon_insert();
                         nlp->station = st;
                         nlp->ustation = st;

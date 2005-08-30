@@ -40,6 +40,8 @@
 #include <set>
 #include "thlogfile.h"
 #include "thsurface.h"
+#include "thlocale.h"
+#include "thinit.h"
 #include "extern/lxMath.h"
 
 //#define THUSESVX
@@ -426,13 +428,12 @@ void thdb1d::scan_data()
 void thdb1d::process_data()
 {
   this->scan_data();
-#ifndef THUSESVX
   this->find_loops();
   this->close_loops();
-#else  
-  thsvxctrl survex;
-  survex.process_survey_data(this->db);
-#endif
+	if (thini.loopc == THINIT_LOOPC_SURVEX) {
+	  thsvxctrl survex;
+	  survex.process_survey_data(this->db);
+	}
   this->process_survey_stat();
   this->postprocess_objects();
   this->process_xelev();
@@ -806,11 +807,11 @@ void thdb1d::process_tree()
         component_break = true;
       else {
         current_node = current_node->back_arrow->end_node;
-//#ifdef THDEBUG
-//        thprintf("%d (%s@%s) <-\n", current_node->id,
-//          this->station_vec[current_node->id - 1].name,
-//          this->station_vec[current_node->id - 1].survey->get_full_name());
-//#endif
+#ifdef THDEBUG
+        thprintf("%d (%s@%s) <-\n", current_node->id,
+          this->station_vec[current_node->id - 1].name,
+          this->station_vec[current_node->id - 1].survey->get_full_name());
+#endif
       }
 
     }
@@ -1829,7 +1830,9 @@ void thdb1d::close_loops()
 {
 
   unsigned long nlegs = this->get_tree_size(),
-    nstations = this->station_vec.size(), i;    
+    nstations = this->station_vec.size();    
+    
+  long i;
 
 #ifdef THDEBUG
     thprintf("\n\ncalculating station coordinates\n");
@@ -1851,7 +1854,8 @@ void thdb1d::close_loops()
       fii = dp->fix_list.begin();
       while(fii != dp->fix_list.end()) {
         ps = &(this->station_vec[this->station_vec[fii->station.id - 1].uid - 1]);
-        ps->placed = true;
+        ps->placed = 1;
+        ps->fixed = true;
         anyfixed = true;
         ps->x = fii->x;
         ps->y = fii->y;
@@ -1991,7 +1995,7 @@ void thdb1d::close_loops()
               li->to->y += err_dy * li->to->sdy / sum_sdy;
             if (sum_sdz > 0.0)
               li->to->z += err_dz * li->to->sdz / sum_sdz;
-            li->from->adjusted = true;
+            li->to->adjusted = true;
           }
         }
         
@@ -2013,6 +2017,11 @@ void thdb1d::close_loops()
             else
               ll->leg->adj_dz += ORIENT * err_dz / sumlegs;
             ll->leg->adjusted = true;
+#ifdef THDEBUG
+            thprintf("ADJLEG %s@%s - %s@%s:    %.2f,%.2f,%.2f -> %.2f,%.2f,%.2f\n", this->station_vec[ll->leg->from.id - 1].name, this->station_vec[ll->leg->from.id - 1].survey->name, this->station_vec[ll->leg->to.id - 1].name, this->station_vec[ll->leg->to.id - 1].survey->name,
+						  ll->leg->total_dx, ll->leg->total_dy, ll->leg->total_dz, 
+							ll->leg->adj_dx, ll->leg->adj_dy, ll->leg->adj_dz);
+#endif				
           }
           ll = ll->next_leg;
         }
@@ -2026,7 +2035,14 @@ void thdb1d::close_loops()
   // * poojde z UID na UID
   thdb1ds * froms, * tos;
   thdb1dl ** legs = this->get_tree_legs(), * cleg;
-  for (i = 0; i < nlegs; i++) {
+  long unrecover = -1;
+  
+  
+  for (i = 0; (unsigned long) i < nlegs; i++) {
+    legs[i]->leg->adjusted = false;
+  }
+  
+  for (i = 0; (unsigned long) i < nlegs; i++) {
 
     cleg = legs[i];
 
@@ -2055,17 +2071,22 @@ void thdb1d::close_loops()
       continue;
     }
     
-    
     if ((i == 0) && (!anyfixed)) {
-      froms->placed = true;
+      froms->placed = 1;
       froms->x = 0.0;
       froms->y = 0.0;
       froms->z = 0.0;
     }
     
-    if (!froms->placed)
+#ifdef THDEBUG
+  	thprintf("LEG: %s@%s [%ld] (from %s@%s [%ld])\n", 
+		  tos->name, tos->survey->name, tos->uid, froms->name, froms->survey->name, froms->uid
+		);
+#endif
+    if (froms->placed == 0)
       ththrow(("a software BUG is present (" __FILE__ ":%d)", __LINE__));
-    if (!tos->placed) {
+    if (tos->placed == 0) {
+      tos->placed += 1;
       if (cleg->reverse) {
         tos->x = froms->x - cleg->leg->adj_dx;
         tos->y = froms->y - cleg->leg->adj_dy;
@@ -2075,21 +2096,117 @@ void thdb1d::close_loops()
         tos->y = froms->y + cleg->leg->adj_dy;
         tos->z = froms->z + cleg->leg->adj_dz;
       }
-      tos->placed = true;
     }
-    
+    else {
+      tos->placed += 1;
+      err_dx = (tos->x - froms->x) - (cleg->reverse ? -1.0 : 1.0) * cleg->leg->adj_dx;
+      err_dy = (tos->y - froms->y) - (cleg->reverse ? -1.0 : 1.0) * cleg->leg->adj_dy;
+      err_dz = (tos->z - froms->z) - (cleg->reverse ? -1.0 : 1.0) * cleg->leg->adj_dz;
+			double err = hypot(hypot(err_dx, err_dy), err_dz);
+      
+			if ((err >= 1e-4) && (i > unrecover)) {			
+#ifdef THDEBUG
+		    thprintf("ERRLEG %s@%s - %s@%s: %.2f,%.2f,%.2f\n", 
+				  froms->name, froms->survey->name, tos->name, tos->survey->name,
+          err_dx, err_dy, err_dz);
+#endif    
+        // mame problem - musime spravit nasledovne
+        thdb1ds * errst, * lastst;
+        errst = tos;
+        lastst = tos;
+        long start_i, end_i;
+        start_i = 0;
+        end_i = i;
+        sumlegs = 0.0; sum_sdx = 0.0; sum_sdy = 0.0; sum_sdz = 0.0;
+                
+        // 1. najst zamery, na ktore chyby rozlozime
+        for (i = end_i; i >= start_i; i--) {
+          cleg = legs[i];
+          if (cleg->reverse) {
+            froms = &(this->station_vec[this->station_vec[cleg->leg->to.id - 1].uid - 1]);
+            tos = &(this->station_vec[this->station_vec[cleg->leg->from.id - 1].uid - 1]);
+          } else {
+            froms = &(this->station_vec[this->station_vec[cleg->leg->from.id - 1].uid - 1]);
+            tos = &(this->station_vec[this->station_vec[cleg->leg->to.id - 1].uid - 1]);
+          }
+          
+          if ((!cleg->leg->adjusted) && (tos->uid == lastst->uid)) {
+            sumlegs += 1.0;
+            if (!cleg->leg->plumbed) {
+              sum_sdx += cleg->leg->total_sdx;
+              sum_sdy += cleg->leg->total_sdy;
+            }
+            sum_sdz += cleg->leg->total_sdz;
+            cleg->leg->to_be_adjusted = true;
+          } else {
+            cleg->leg->to_be_adjusted = false;
+          }
+          
+          if (tos->uid == lastst->uid) {
+            lastst = froms;
+            if ((froms->placed > 1) || (froms->fixed) || (froms->uid == errst->uid)) {
+              start_i = i;
+            }
+          }
+          
+          if (tos->placed > 0)
+            tos->placed--;            
+        }
+                
+        // 2. rozlozit chybu na zamery
+        for (i = start_i; i <= end_i; i++) {
+          cleg = legs[i];
+          if (cleg->leg->to_be_adjusted) {
+
+#define ORIENT2 (cleg->reverse ? -1.0 : 1.0)
+#ifdef THDEBUG
+            thprintf("ADJLEG %s@%s - %s@%s:    %.2f,%.2f,%.2f", this->station_vec[cleg->leg->from.id - 1].name, this->station_vec[cleg->leg->from.id - 1].survey->name, this->station_vec[cleg->leg->to.id - 1].name, this->station_vec[cleg->leg->to.id - 1].survey->name,
+							cleg->leg->adj_dx, cleg->leg->adj_dy, cleg->leg->adj_dz);
+#endif				
+            if (sum_sdx > 0.0)
+              cleg->leg->adj_dx += ORIENT2 * err_dx * (cleg->leg->plumbed ? 0.0 : cleg->leg->total_sdx) / sum_sdx;
+            else
+              cleg->leg->adj_dx += ORIENT2 * err_dx / sumlegs;
+            if (sum_sdy > 0.0)
+              cleg->leg->adj_dy += ORIENT2 * err_dy * (cleg->leg->plumbed ? 0.0 : cleg->leg->total_sdy) / sum_sdy;
+            else
+              cleg->leg->adj_dy += ORIENT2 * err_dy / sumlegs;
+            if (sum_sdz > 0.0)
+              cleg->leg->adj_dz += ORIENT2 * err_dz * cleg->leg->total_sdz / sum_sdz;
+            else
+              cleg->leg->adj_dz += ORIENT2 * err_dz / sumlegs;
+              
+            cleg->leg->adjusted = true;
+#ifdef THDEBUG
+            thprintf(" -> %.2f,%.2f,%.2f\n",
+							cleg->leg->adj_dx, cleg->leg->adj_dy, cleg->leg->adj_dz);
+#endif				
+          }
+        }
+        
+        // 3. ratat este raz
+          i = start_i - 1; 
+        if (sumlegs < 1.0) {
+#ifdef THDEBUG
+          thprintf("ERRLEG UNRECOVERED!\n");
+#endif				
+          unrecover = end_i;
+        }
+          
+			}
+		}
   }
   
   // * potom priradi suradnice nie UID bodom
-  for(i = 0; i < nstations; i++) {
+  for(i = 0; (unsigned long)i < nstations; i++) {
     ps = &(this->station_vec[i]);
     froms = &(this->station_vec[ps->uid - 1]);
-    if (!ps->placed) {
-      ps->placed = froms->placed;
+    if (ps->placed == 0) {
+      ps->placed++;
       ps->x = froms->x;
       ps->y = froms->y;
       ps->z = froms->z;
-      if (!ps->placed) {
+      if (ps->placed == 0) {
 //        ththrow(("a software BUG is present (" __FILE__ ":%d)", __LINE__));
         ththrow(("can not connect %s@%s to centerline network",
           this->station_vec[i].name,
@@ -2149,6 +2266,7 @@ void thdb1d::print_loops() {
   
   thdb1d_loop_leg * ll;
   thsurvey * ss;   
+	int totlen = 6 - strlen(thdeflocale.format_length_units()) + 1;
   thdb1ds * ps, * prev_ps, * first_ps;
   unsigned long psid, prev_psid, first_psid;
   
@@ -2156,9 +2274,14 @@ void thdb1d::print_loops() {
   thlog.printf(    "REL-ERR ABS-ERR TOTAL-L STS X-ERROR Y-ERROR Z-ERROR STATIONS\n");
   for (i = 0; i < nloops; i++) {
     li = lpr[i].li;
-    thlog.printf("%6.2f%% %6.1fm %6.1fm %3ld %6.1fm %6.1fm %6.1fm [",
+    thlog.printf("%6.2f%% %s%s %s%s %3ld %s%s %s%s %s%s [",
       li->src_length > 0.0 ? 100.0 * li->err_length / li->src_length : 0.0,
-      li->err_length, li->src_length, li->nlegs, li->err_dx, li->err_dy, li->err_dz);
+			thdeflocale.format_length(li->err_length,1,totlen), thdeflocale.format_length_units(),			
+			thdeflocale.format_length(li->src_length,1,totlen), thdeflocale.format_length_units(),			
+			li->nlegs,
+			thdeflocale.format_length(li->err_dx,1,totlen), thdeflocale.format_length_units(),			
+			thdeflocale.format_length(li->err_dy,1,totlen), thdeflocale.format_length_units(),			
+			thdeflocale.format_length(li->err_dz,1,totlen), thdeflocale.format_length_units());
     ll = li->first_leg;
     ss = NULL;
     if (ll->reverse)

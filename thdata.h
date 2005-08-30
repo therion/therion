@@ -99,7 +99,7 @@ static const thstok thtt_data_opt[] = {
   {"station", TT_DATA_STATION},
   {"team", TT_DATA_TEAM},
   {"units", TT_DATA_UNITS},
-  {"vtreshold", TT_DATA_VTRESH},
+  {"vthreshold", TT_DATA_VTRESH},
   {"walls", TT_DATA_WALLS},
   {NULL, TT_DATA_UNKNOWN},
 };

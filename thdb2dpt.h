@@ -47,7 +47,7 @@ class thdb2dpt {
 
   thdb2dpt(); ///< Default constructor
   
-  void export_mp(class thexpmapmpxs * out, int dbgleve = -1);
+  void export_mp(class thexpmapmpxs * out, int dbglevel = -1);
   
 };
 

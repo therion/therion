@@ -40,6 +40,7 @@
 #include "thlogfile.h"
 #include <math.h>
 #include "thlayout.h"
+#include "thconfig.h"
 #include <list>
 
 
@@ -2313,12 +2314,18 @@ void thdb2d::pp_shift_points(thdb2dprj * prj, bool calc_az)
 }
 
 
+struct joincand {
+	th2ddataobject * obj;
+	thdb2dlp * lp;
+	thdb2dpt * pt;
+	long fileid;
+};
+
 
 void thdb2d::pp_process_joins(thdb2dprj * prj)
 {
 
-  // prejde join za joinom a vytovori zoznamy
-  thjoin * jptr = prj->first_join, * tjptr;
+  thjoin * jptr, * tjptr;
   prj->first_join_list = NULL;
   prj->last_join_list = NULL;
   thscrap * sc1 = NULL, * sc2 = NULL;
@@ -2329,6 +2336,112 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
   int ccount;
   double mindst, cdst;
   unsigned long nactive;
+
+  // find autojoin candidates
+	std::list<joincand> joincandlist;
+	std::list<joincand>::iterator jci, njci;
+	char * cfile = "";
+	long fileid = 0;
+	thscrap * scp;
+	th2ddataobject * o2d;
+	
+	thdb_object_list_type::iterator obi = this->db->object_list.begin();
+  while (obi != this->db->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_SCRAP_CMD) {
+			scp = (thscrap *)(*obi);
+			if (scp->proj->type != TT_2DPROJ_NONE) {
+ 			o2d = scp->fs2doptr;
+			while (o2d != NULL) {
+ 				// check object source file
+				if (strcmp(cfile, o2d->source.name) != 0) {
+					cfile = o2d->source.name;
+					fileid++;
+				}
+				// insert candidates (not label)
+				thline * pln;
+					switch (o2d->get_class_id()) {
+						case TT_LINE_CMD:
+							pln = (thline*) o2d;
+							switch (pln->type) {
+ 								case TT_LINE_TYPE_LABEL:
+ 								case TT_LINE_TYPE_SECTION:
+ 								case TT_LINE_TYPE_ARROW:
+ 								case TT_LINE_TYPE_GRADIENT:
+ 								case TT_LINE_TYPE_SURVEY:
+ 									break;
+ 							  default:
+ 									if (pln->first_point != NULL) {
+ 										joincand jc;
+ 										jc.obj = pln;
+ 										jc.fileid = fileid;
+ 										jc.pt = pln->first_point->point;
+ 										jc.lp = pln->first_point;
+ 										joincandlist.insert(joincandlist.end(), jc);
+ 										if ((pln->first_point->point->x != pln->last_point->point->x) ||
+ 												(pln->first_point->point->y != pln->last_point->point->y)) {
+ 											jc.obj = pln;
+ 											jc.fileid = fileid;
+ 											jc.pt = pln->last_point->point;
+ 											jc.lp = pln->last_point;
+ 											joincandlist.insert(joincandlist.end(), jc);
+ 										}
+ 									}
+ 									break;
+ 							}
+ 							break;
+ 					}
+ 					o2d = o2d->nscrapoptr;
+ 				}
+ 			}
+ 		}
+ 		obi++;		
+ 	}
+ 
+  // prida na koniec automaticke joiny
+  jci = joincandlist.begin();
+  while (jci != joincandlist.end()) {
+    njci = jci;
+    njci++;
+    while ((njci != joincandlist.end()) && (jci->fileid == njci->fileid)) {
+      if (
+          (jci->obj->fscrapptr->id != njci->obj->fscrapptr->id) && 
+          (jci->obj->fscrapptr->proj->id == njci->obj->fscrapptr->proj->id) &&
+          (jci->pt->x == njci->pt->x) &&
+          (jci->pt->y == njci->pt->y)) {
+         // add automatic join here
+        tjptr = (thjoin*) thdb.create("join",thobjectsrc());
+        thdb.insert(tjptr);
+        tjptr->proj = jci->obj->fscrapptr->proj;
+         // TODO: check smoothness???
+        tjptr->smooth = TT_FALSE;
+                
+        if (prj->last_join == NULL) {
+          prj->first_join = tjptr;
+          prj->last_join = tjptr;
+        } else {
+          tjptr->proj_prev_join = prj->last_join;
+          prj->last_join->proj_next_join = tjptr;
+          prj->last_join = tjptr;
+        }
+        tji = this->insert_join_item();
+        tji->object = jci->obj;
+        tji->line_point = jci->lp;
+        tji->point = jci->pt;
+        tji->next_item = this->insert_join_item();
+        tji->next_item->object = njci->obj;
+        tji->next_item->line_point = njci->lp;
+        tji->next_item->point = njci->pt;
+        tji->next_item->prev_item = tji;
+        tjptr->first_item = tji;
+        tjptr->last_item = tji->next_item;
+      }
+      njci++;
+    }
+    jci++;
+  }
+    
+  // prejde join za joinom a vytovori zoznamy
+  jptr = prj->first_join;
   while (jptr != NULL) {
     nactive = 0;
     ji = jptr->first_item;
@@ -2605,8 +2718,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
       }
       
       // we have at all active positions point defined,
-      // now let's create and insert new list
-      
+      // now let's create and insert new list      
       thdb2dji * target_item = NULL, * first_active_item = NULL,
         * ccitem, * ppitem;
       ji = jptr->first_item;
@@ -2634,7 +2746,6 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
       
       // teraz pridame itemy leziace okolo target
       bool ideme_nahor = true;
-//      thdb2dji * newlist;
       ppitem = target_item;
       // add to the end of list
       while (ppitem->next_list_item != NULL) {
@@ -2649,30 +2760,6 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             ccitem->prev_list_item = ppitem;
             ppitem = ccitem;
           }
-// TODO: pospajat joinlisty         
-//           else {
-//            newlist = ccitem->point->join_item;
-//            // najprv odstranime novy list zo zoznamu listov
-//            if (newlist->next_list == NULL)
-//              prj->last_join_list = newlist->prev_list;
-//            else
-//              newlist->next_list->prev_list = newlist->prev_list;
-//            if (newlist->prev_list == NULL)
-//              prj->first_join_list = newlist->next_list;
-//            else
-//              newlist->prev_list->next_list = newlist->next_list;
-//            newlist->next_list = NULL;            
-//            newlist->prev_list = NULL;
-//            // teraz ho prilinkujeme na ppitem
-//            newlist->prev_list_item = ppitem;
-//            ppitem->next_list_item = newlist;
-//            ppitem = newlist;
-//            ppitem->point->join_item = target_item;
-//            while (ppitem->next_list_item != NULL) {
-//              ppitem->next_item->point->join_item = target_item;
-//              ppitem = ppitem->next_item;
-//            }
-//          }
         }
         if (ideme_nahor && (ccitem != NULL))
           ccitem = ccitem->prev_item;
@@ -2682,12 +2769,17 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
         }
         if (!ideme_nahor)
           ccitem = ccitem->next_item;
-      }
-      
+      }      
     } // more than one active item, add join list
+
     jptr = jptr->proj_next_join;
   }
+	
+  // zredukuje viacnasobne joiny  
   
+
+
+	// vyrovna joiny
   thdb2dji * jlist = prj->first_join_list;
   bool has_target;
   double tx = 0.0, ty = 0.0, tn;

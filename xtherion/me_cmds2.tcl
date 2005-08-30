@@ -3150,6 +3150,8 @@ proc xth_me_cmds_line_split {} {
   
   set id $xth(me,cmds,selid)
   set pid $xth(me,cmds,selpid)  
+	
+	set prev_center [xth_me_get_center]
 
   # najprv zisti ci mooze, ak nie tak exit
   if {$xth(me,cmds,$id,ct) != 3} {
@@ -3226,14 +3228,17 @@ proc xth_me_cmds_line_split {} {
   set pid2 [lindex $xth(me,cmds,$id2,xplist) 0]
   xth_me_cmds_delete $id
   xth_me_cmds_select [list $id2 $pid2]
+	
+	# scrollne sa tam, odkial sme zacinali
+	xth_me_center_to $prev_center
 
   set xth(me,unredook) 1
   
   # nastavi undo na zmazanie novych a undelete originalnej
   # a redo na undelete novych a zmazanie originalnej
   xth_me_unredo_action [mc "split line"] \
-    "xth_me_cmds_delete $id1; xth_me_cmds_delete $id2; xth_me_cmds_undelete $id $pid $ix" \
-    "xth_me_cmds_undelete $id1 $pid1 $ix; xth_me_cmds_undelete $id2 $pid2 $ix; xth_me_cmds_delete $id; xth_me_cmds_select {$id2 $pid2}"
+    "xth_me_cmds_delete $id1; xth_me_cmds_delete $id2; xth_me_cmds_undelete $id $pid $ix; xth_me_center_to {$prev_center}" \
+    "xth_me_cmds_undelete $id1 $pid1 $ix; xth_me_cmds_undelete $id2 $pid2 $ix; xth_me_cmds_delete $id; xth_me_cmds_select {$id2 $pid2}; xth_me_center_to {$prev_center}"
 
 }
 

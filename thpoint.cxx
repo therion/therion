@@ -36,6 +36,7 @@
 #include "thdate.h"
 #include "thscrap.h"
 
+
 thpoint::thpoint()
 {
   // replace this by setting real properties initialization
@@ -399,7 +400,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   int macroid = -1;
   int postprocess_label = -1;
   this->db->buff_enc.guarantee(8128);
-  char * buff = this->db->buff_enc.get_buffer();
+//  char * buff = this->db->buff_enc.get_buffer();
   double xrr = (thisnan(this->orient) ? out->rr : 0.0);
 
   switch(this->type) {
@@ -503,11 +504,13 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       if (this->context >= 0) 
         macroid = this->context;
       if ((!thisnan(this->xsize)) && (out->symset->assigned[macroid])) {          
-        sprintf(buff,"%.0f",this->xsize - out->layout->goz);
+        //sprintf(buff,"%.0f",this->xsize - out->layout->goz);
         if (out->file == NULL)
           return(true);
         out->symset->get_mp_macro(SYMP_ALTITUDE);    
-        fprintf(out->file,"p_label%s(btex \\thaltitude %s etex,",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)),utf2tex(buff));
+        fprintf(out->file,"p_label%s(btex \\thaltitude %s etex,",
+					thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)),
+					utf2tex(out->layout->units.format_length(this->xsize - out->layout->goz)));
         postprocess_label = 1;
       }
       postprocess = false;
@@ -550,11 +553,11 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           fprintf(out->file,"\\thheight ");  
 
         if (!thisnan(this->xsize)) {
-          if (double(int(this->xsize)) != this->xsize)
-            sprintf(buff,"%.1f",this->xsize);
-          else
-            sprintf(buff,"%.0f",this->xsize);
-          fprintf(out->file,utf2tex(buff));
+          //if (double(int(this->xsize)) != this->xsize)
+          //  sprintf(buff,"%.1f",this->xsize);
+          //else
+          //  sprintf(buff,"%.0f",this->xsize);
+          fprintf(out->file,utf2tex(out->layout->units.format_length(this->xsize)));
         }
         this->db->buff_enc.strcpy((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
             TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_UQ)) != 0 ? "?" : "" );
@@ -639,19 +642,19 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         }
 
         if (!thisnan(this->xsize)) {
-          if (double(int(this->xsize)) != this->xsize)
-            sprintf(buff,"%.1f",this->xsize);
-          else
-            sprintf(buff,"%.0f",this->xsize);
-          fprintf(out->file,"{%s}", utf2tex(buff));
+          //if (double(int(this->xsize)) != this->xsize)
+          //  sprintf(buff,"%.1f",this->xsize);
+          //else
+          //  sprintf(buff,"%.0f",this->xsize);
+          fprintf(out->file,"{%s}", utf2tex(out->layout->units.format_length(this->xsize)));
         }
         
         if (!thisnan(this->ysize)) {
-          if (double(int(this->ysize)) != this->ysize)
-            sprintf(buff,"%.1f",this->ysize);
-          else
-            sprintf(buff,"%.0f",this->ysize);
-          fprintf(out->file,"{%s}", utf2tex(buff));
+          //if (double(int(this->ysize)) != this->ysize)
+          //  sprintf(buff,"%.1f",this->ysize);
+          //else
+          //  sprintf(buff,"%.0f",this->ysize);
+          fprintf(out->file,"{%s}", utf2tex(out->layout->units.format_length(this->ysize)));
         }        
         
         fprintf(out->file," etex,");

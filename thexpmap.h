@@ -71,6 +71,7 @@ enum {
   TT_EXPMAP_FMT_SVG,  ///< SVG
   TT_EXPMAP_FMT_PDF,  ///< PDF
   TT_EXPMAP_FMT_XVI,  ///< PDF
+  TT_EXPMAP_FMT_3D,  ///< PDF
 };
 
 
@@ -80,6 +81,7 @@ enum {
  
 static const thstok thtt_expmap_fmt[] = {
   {"pdf", TT_EXPMAP_FMT_PDF},
+  {"survex", TT_EXPMAP_FMT_3D},
   {"svg", TT_EXPMAP_FMT_SVG},
   {"xvi", TT_EXPMAP_FMT_XVI},
   {NULL, TT_EXPMAP_FMT_UNKNOWN}
@@ -153,9 +155,11 @@ class thexpmap : public thexport {
   thbuffer layoutopts;  ///< Layout options buffer.
   
   void export_pdf(class thdb2dxm * maps, class thdb2dprj * prj);
-  void export_xvi(class thdb2dprj * prj);
-  void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
+	void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
+	void export_xvi(class thdb2dprj * prj);
+  void export_uni(class thdb2dxm * maps, class thdb2dprj * prj);
   thexpmap_xmps export_mp(thexpmapmpxs * out, class thscrap * scrap, unsigned & startnum, bool outline_mode);  
+  void export_uni_scrap(FILE * out, class thscrap * scrap);  
 
   public:
   

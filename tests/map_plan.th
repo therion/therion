@@ -135,6 +135,10 @@ encoding  utf-8
   #  join hlw dlw
     join horny dolny
     join horny dolny
+    join dolny horny
+    
+    join b1 b2 b3
+    join b1 b2 b3
 
     
     map hmap -title "Horna mapa"

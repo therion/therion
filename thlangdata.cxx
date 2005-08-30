@@ -46,7 +46,7 @@ static const int thlang__alternatives [] = {
 
 
 
-static const thstok thtt__texts [144] = {
+static const thstok thtt__texts [145] = {
   {"area blocks",0},
   {"area clay",1},
   {"area debris",2},
@@ -189,13 +189,14 @@ static const thstok thtt__texts [144] = {
   {"title surface bitmap",139},
   {"title topo",140},
   {"title topo (plural)",141},
-  {"units m",142},
+  {"units ft",142},
+  {"units m",143},
   {NULL, -1},
 };
 
 
 
-static const thlang_pchar thlang__translations [143][7] = {
+static const thlang_pchar thlang__translations [144][7] = {
   {
     "skalní bloky",
     "blocks",
@@ -1473,6 +1474,15 @@ static const thlang_pchar thlang__translations [143][7] = {
     "Espeleometría",
     "Topographes",
     "Zamerali",
+  },
+  {
+    "ft",
+    "ft",
+    NULL,
+    NULL,
+    "ft",
+    "ft",
+    "ft",
   },
   {
     "m",

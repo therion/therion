@@ -105,6 +105,7 @@ void thexpmodel::process_db(class thdatabase * dbp)
     thexp_set_ext_fmt(".vrml", TT_EXPMODEL_FMT_VRML)
     thexp_set_ext_fmt(".3dmf", TT_EXPMODEL_FMT_3DMF)
     thexp_set_ext_fmt(".dxf", TT_EXPMODEL_FMT_DXF)
+    thexp_set_ext_fmt(".tlx", TT_EXPMODEL_FMT_TLX)
   }  
   switch (this->format) {
     case TT_EXPMODEL_FMT_SURVEX:
@@ -124,6 +125,9 @@ void thexpmodel::process_db(class thdatabase * dbp)
       break;
     case TT_EXPMODEL_FMT_DXF:
       this->export_dxf_file(dbp);
+      break;
+    case TT_EXPMODEL_FMT_TLX:
+      this->export_tlx_file(dbp);
       break;
   }
 }
@@ -1249,3 +1253,220 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   thtext_inline = false;
 #endif
 }
+
+
+
+void thexpmodel::export_tlx_file(class thdatabase * dbp) {
+  char * fnm;  
+  if (this->outpt_def)
+    fnm = this->outpt;
+  else
+    fnm = "cave.tlx";
+
+  thdb_object_list_type::iterator obi;
+  
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif 
+      
+  FILE * pltf;
+
+  pltf = fopen(fnm,"w");
+     
+  if (pltf == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+
+  thsurvey * sptr, * tsptr;
+
+  // vsetkym surveyom nastavi num1 na -1 ak nie su, 1 ak
+  // su oznacene   
+  
+  obi = dbp->object_list.begin();
+  while (obi != dbp->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+      sptr = (thsurvey*)(*obi);
+      if (sptr->is_selected()) {
+        sptr->num1 = 1;
+      } else {
+        sptr->num1 = -1;
+      }
+    }
+    obi++;
+  }
+
+  unsigned long nlegs = dbp->db1d.get_tree_size(),
+    nstat = dbp->db1d.station_vec.size(), i;
+  thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
+  long * stnum = NULL;
+  if (nstat > 0) {
+    stnum = new long[nstat];
+    for (i = 0; i < nstat; i++)
+      stnum[i] = (dbp->db1d.station_vec[i].survey->is_selected() ? 1 : -1);
+  }
+
+  // prejde vsetky zamery, ktore ideme 
+  // exportovat a parent surveyom bodov tychto zamer nastavi num1 na 1
+  // rovnako aj bodom num1 na 1
+  for(i = 0; i < nlegs; i++, tlegs++) {
+    if ((*tlegs)->survey->is_selected()) {
+      stnum[(*tlegs)->leg->from.id - 1] = 1;
+      dbp->db1d.station_vec[(*tlegs)->leg->from.id - 1].survey->num1 = 1;
+      stnum[(*tlegs)->leg->to.id - 1] = 1;
+      dbp->db1d.station_vec[(*tlegs)->leg->to.id - 1].survey->num1 = 1;
+    }
+  }
+  
+  // opat prejde vsetky surveye - doplni medziclanky a nastavi num1 
+  // nastavi od 0 po n - exportuje ich
+  while (obi != dbp->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+    }
+    obi++;
+  }
+
+
+  obi = dbp->object_list.begin();
+  while (obi != dbp->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+      sptr = (thsurvey*)(*obi);
+      if ((sptr->num1 > 0) && (sptr->fsptr != NULL)) {
+        tsptr = sptr->fsptr;
+        if (tsptr->num1 > 0)
+          tsptr = NULL;
+        if (tsptr != NULL)
+          tsptr = tsptr->fsptr;
+        while ((tsptr != NULL) && (tsptr->num1 < 0))
+          tsptr = tsptr->fsptr;
+        if (tsptr != NULL) {
+          sptr = sptr->fsptr;
+          while (sptr->id != tsptr->id) {
+            sptr->num1 = 1;
+            sptr = sptr->fsptr;
+          }
+        }
+      }
+    }
+    obi++;
+  }
+
+
+  long survnum = 0;
+  obi = dbp->object_list.begin();
+  while (obi != dbp->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+      sptr = (thsurvey*)(*obi);
+      if (sptr->num1 > 0) {
+        sptr->num1 = survnum++;
+        fprintf(pltf,"S %d %d %s\n", sptr->num1, (sptr->fsptr != NULL) ? sptr->fsptr->num1 : -1, sptr->name);
+        if (strlen(sptr->title)) {
+          fprintf(pltf,"C %s\n", sptr->title);
+        }
+      }
+    }
+    obi++;
+  }
+
+
+  // prejde vsetky body a nastavi im num od 0 po n a exportuje ich
+  survnum = 0;
+  thdb1ds * pst;
+  for (i = 0; i < nstat; i++) {
+    if (stnum[i] > 0) {
+      stnum[i] = survnum;
+      pst = &(dbp->db1d.station_vec[i]);
+      fprintf(pltf,"T %d %d %s %.3f %.3f %.3f G%s%s%s\n", survnum, pst->survey->num1, pst->name, pst->x, pst->y, pst->z, (pst->flags & TT_STATIONFLAG_ENTRANCE) != 0 ? "E" : "", (pst->flags & TT_STATIONFLAG_FIXED) != 0 ? "F" : "", (pst->flags & TT_STATIONFLAG_CONT) != 0 ? "C" : "");
+      if (pst->comment != NULL) {
+        fprintf(pltf,"C %s\n", pst->comment);
+      }
+      survnum++;
+    }    
+  }
+
+  // exportuje vsetky zamery ktorych psurveye su oznacene, ak
+  // walls tak aj dimensions
+  tlegs = dbp->db1d.get_tree_legs();
+  for(i = 0; i < nlegs; i++, tlegs++) {
+    if ((*tlegs)->survey->is_selected()) {
+      fprintf(pltf,"H %d %d %d G%s%s\n", 
+          stnum[(*tlegs)->leg->from.id - 1],
+          stnum[(*tlegs)->leg->to.id - 1],
+          (*tlegs)->survey->num1,
+          ((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0 ? "S" : "", 
+          ((*tlegs)->leg->flags & TT_LEGFLAG_DUPLICATE) != 0 ? "D" : ""
+        );
+      if (((*tlegs)->leg->walls != TT_FALSE) && ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0))
+        fprintf(pltf,"D %.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f\n",
+          (*tlegs)->leg->from_up, (*tlegs)->leg->from_down, (*tlegs)->leg->from_left, (*tlegs)->leg->from_right,
+          (*tlegs)->leg->to_up, (*tlegs)->leg->to_down, (*tlegs)->leg->to_left, (*tlegs)->leg->to_right);
+    }
+  }
+
+  // export povrchov (vsetkych - ak chceme)
+  thdb3ddata * tmp3d;
+  if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
+    // prejde secky surfaces a exportuje z nich povrchy
+    obi = dbp->object_list.begin();
+    while (obi != dbp->object_list.end()) {
+      switch ((*obi)->get_class_id()) {
+        case TT_SURFACE_CMD:
+          tmp3d = ((thsurface*)(*obi))->get_3d();
+          if ((tmp3d != NULL) && (tmp3d->nfaces > 0)) {
+            fprintf(pltf,"X 1 %d\n", ((thsurface*)(*obi))->fsptr->num1);
+            tmp3d->exp_shift_x = 0.0;
+            tmp3d->exp_shift_y = 0.0;
+            tmp3d->exp_shift_z = 0.0;
+            tmp3d->export_tlx(pltf);
+          }
+          break;
+      }
+      obi++;
+    }
+  }
+
+
+  // export stien
+  if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
+  
+    // 3D DATA 
+    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+    thscrap * cs;
+    thdb3ddata * d3d;
+    
+    if (!prjid.newprj) {
+      thdb.db2d.process_projection(prjid.prj);
+      cs = prjid.prj->first_scrap;
+      while(cs != NULL) {
+        if (cs->fsptr->is_selected()) {
+          d3d = cs->get_3d_outline();
+          if ((d3d != NULL) && (d3d->nfaces > 0)) {
+            d3d->exp_shift_x = 0.0;
+            d3d->exp_shift_y = 0.0;
+            d3d->exp_shift_z = 0.0;
+            fprintf(pltf,"X 0 %d\n", cs->fsptr->num1);
+            d3d->export_tlx(pltf);
+          }
+        }
+        cs = cs->proj_next_scrap;
+      }
+    }
+    
+  } // WALLS
+  
+  fclose(pltf);
+  
+  if (stnum != NULL)
+    delete [] stnum;
+  
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}
+
+

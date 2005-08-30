@@ -804,18 +804,18 @@ void thdata::set_data_vtresh(int nargs, char ** args)
 {
 
   if ((nargs < 1) || (nargs > 2))
-    ththrow(("invalid number of option arguments -- vtreshold"))
+    ththrow(("invalid number of option arguments -- vthreshold"))
   int nid;
   thtfangle dlu;
   thparse_double(nid, this->d_vtresh, args[0]);
   if (nid != TT_SV_NUMBER)
-    ththrow(("invalid vtreshold -- %s", args[0]))
+    ththrow(("invalid vthreshold -- %s", args[0]))
   if (nargs > 1) {
     dlu.parse_units(args[1]);
     this->d_vtresh = dlu.transform(this->d_vtresh);
   }
   if ((this->d_vtresh < 0.0) || (this->d_vtresh > 90.0))
-    ththrow(("vtreshold out of range -- %s", args[0]))
+    ththrow(("vthreshold out of range -- %s", args[0]))
   
 }
 

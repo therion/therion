@@ -41,10 +41,17 @@
 #endif
 
 
-enum {TT_UNKNOWN_CFG, TT_SOURCE, TT_SELECT, TT_UNSELECT, TT_EXPORT, TT_SETUP3D};
+enum {TT_UNKNOWN_CFG, 
+TT_SOURCE, 
+TT_SELECT, 
+TT_UNSELECT, 
+TT_EXPORT, 
+TT_SETUP3D,
+TT_AUTO_JOIN};
 
 
 static const thstok thtt_cfg[] = {
+//  {"auto-join", TT_AUTO_JOIN},
   {"export", TT_EXPORT},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
@@ -65,6 +72,8 @@ thconfig::thconfig()
   this->install_path.strcpy("");
   this->install_tex = false;
   this->install_tcltk = false;
+
+  this->auto_join = true;
 
   this->tmp3dSMP = 1.0;
   this->tmp3dWALLSMP = 1.0;
@@ -344,6 +353,17 @@ void thconfig::load()
               thparse_double(sv, this->tmp3dMAXDIMD, valuemb.get_buffer()[2]);
               if ((sv != TT_SV_NUMBER) || (this->tmp3dMAXDIMD <= 0.0))
                 ththrow(("invalid number -- %s", valuemb.get_buffer()[2]))
+            }
+            break;
+
+          case TT_AUTO_JOIN:
+            if (valuemb.get_size() > 0) {
+              sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
+              if (sv == TT_UNKNOWN_BOOL)
+                ththrow(("invalid auto-join sqitch -- %s", valuemb.get_buffer()[0]))
+              this->auto_join = (sv == TT_TRUE);
+            } else {
+              ththrow(("missing auto-join switch"))
             }
             break;
   

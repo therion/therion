@@ -374,7 +374,7 @@ class thdataleg {
     dx_sd, dy_sd, dz_sd, x_sd, y_sd, z_sd, declination, 
     total_sdx, total_sdy, total_sdz, fxx, txx;
     
-  bool infer_plumbs, infer_equates, direction, adjusted, topofil, plumbed;
+  bool infer_plumbs, infer_equates, direction, adjusted, to_be_adjusted, topofil, plumbed;
   
  
   /**

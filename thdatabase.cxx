@@ -480,6 +480,7 @@ class thdataobject * thdatabase::create(char * oclass,
     ret->assigndb(this);
     // set object id and mark revision
     ret->id = ++this->objid;
+		ret->source = osrc;
     this->revision_set.insert(threvision(ret->id, 0, osrc));
   }
   
@@ -487,6 +488,7 @@ class thdataobject * thdatabase::create(char * oclass,
     retdata->assigndb(this);    
     // set object id and mark revision
     retdata->id = ++this->objid;
+		retdata->source = osrc;
     this->revision_set.insert(threvision(retdata->id, 0, osrc));
   }
 

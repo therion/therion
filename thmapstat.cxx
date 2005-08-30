@@ -252,11 +252,10 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
       b += " "; \
       b += pd[i].person.get_n2(); \
       if (show_lengths) { \
-        snprintf(c.get_buffer(),127,"%.0f",pd[i].crit); \
         b += " ("; \
-        b += c.get_buffer(); \
+				b += layout->units.format_length(pd[i].crit); \
         b += "<thsp>"; \
-        b += thT("units m",layout->lang); \
+		    b += layout->units.format_i18n_length_units(); \
         b += ")"; \
       } \
       if (i < (tcnt-1)) \
@@ -265,6 +264,10 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
     } \
     fprintf(f,"}\n");
   
+//      snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
+//      b += c.get_buffer();
+//      b += thT("units m",layout->lang);
+
 
 void thmapstat::export_pdftex(FILE * f, class thlayout * layout) {
 
@@ -300,19 +303,23 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout) {
   }
 
   if (clen > 0) {
-    b = "";  
-    snprintf(b.get_buffer(),255,"%.0f",clen); \
+    //b = "";  
+    //snprintf(b.get_buffer(),255,"%.0f",clen);
+		b = layout->units.format_length(clen);
     b += "<thsp>";
-    b += thT("units m",layout->lang);
+    //b += thT("units m",layout->lang);
+    b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavelengthtitle={%s}\n",utf2tex(thT("title cave length",layout->lang)));
     fprintf(f,"\\cavelength={%s}\n",utf2tex(b.get_buffer()));
   }
   
   if (z_top > z_bot) {
-    b = "";  
-    snprintf(b.get_buffer(),255,"%.0f",z_top-z_bot); \
+    //b = "";  
+    //snprintf(b.get_buffer(),255,"%.0f",z_top-z_bot);
+		b = layout->units.format_length(z_top-z_bot);
     b += "<thsp>";
-    b += thT("units m",layout->lang);
+    //b += thT("units m",layout->lang);
+    b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavedepthtitle={%s}\n",utf2tex(thT("title cave depth",layout->lang)));
     fprintf(f,"\\cavedepth={%s}\n",utf2tex(b.get_buffer()));
   }

@@ -1574,8 +1574,12 @@ grid $xth(ctrl,me,images).ic -column 0 -row 1 -sticky news
 
 Button $xth(ctrl,me,images).ic.insp -text [mc "Insert"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {
+		set nimgs [llength $xth(me,imgs,xlist)]
     xth_me_image_insert $xth(ctrl,me,images,posx) $xth(ctrl,me,images,posy) {} 0 {}
-    xth_me_area_auto_adjust
+		set nnimgs [llength $xth(me,imgs,xlist)]
+		if {$nnimgs > $nimgs} {
+	    xth_me_area_auto_adjust
+		}
   }
 xth_status_bar me $xth(ctrl,me,images).ic.insp [mc "Insert new background image."]
 Button $xth(ctrl,me,images).ic.remp -text [mc "Remove"] -anchor center -font $xth(gui,lfont) -state disabled \

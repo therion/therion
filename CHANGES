@@ -1,4 +1,23 @@
 --------------------------------------------------------------------------------
+Therion 0.3.9 (2005-08-30):
+
+therion:
+
+ * units (metric)|imperial in layout and initialization file
+ * new therion.ini switch: loop-closure therion|survex
+   By default, survex is used if present, otherwise therion.
+ * fixed bugs - error log when disk full, vtreshold -> vthreshold
+ * map export to .3d files
+ * scraps in one .th2 file that have common end line points are
+   automatically joined
+ * scrap names in map output, via layout: debug scrap-names
+
+xtherion:
+
+ * fixed bugs - view is not moved when line is splitted, file is
+   not changed when image insertion is canceled
+
+--------------------------------------------------------------------------------
 Therion 0.3.8 (2005-05-10):
 
 therion:

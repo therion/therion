@@ -135,7 +135,8 @@ class thdb1ds {
     extend;  ///< Extend flags: normal, reverse, left, right, break
   bool mark_station;
   
-  bool adjusted, placed;
+  bool adjusted, fixed;
+  int placed;
   double sdx, sdy, sdz;
   
   /**
@@ -145,7 +146,7 @@ class thdb1ds {
   thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), survey(NULL), 
     data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), 
-    adjusted(false), placed(false), sdx(0.0), sdy(0.0), sdz(0.0) {}
+    adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0) {}
   
 
   /**
@@ -157,7 +158,7 @@ class thdb1ds {
     data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE),
     mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), mark_station(false), 
-    adjusted(false), placed(false), sdx(0.0), sdy(0.0), sdz(0.0) {}
+    adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0) {}
     
   
   /**

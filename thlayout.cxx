@@ -37,6 +37,12 @@
 #include "thlang.h"
 #include <string.h>
 
+enum {
+  TTLDBG_JOINS = 1,
+  TTLDBG_STATIONS = 2,
+  TTLDBG_SCRAPNAMES = 4,
+};
+
 void thlayout_color::parse(char * str) {
   thsplit_words(&(thdb.mbuff_tmp), str);
   int nargs = thdb.mbuff_tmp.get_size(), sv;
@@ -184,7 +190,7 @@ thlayout::thlayout()
   this->map_header_y = 0.0;
 
   this->def_debug = false;
-  this->debug = TT_LAYOUT_DEBUG_UNKNOWN;
+  this->debug = 0;
 
   
   this->def_max_explos = false;
@@ -203,6 +209,9 @@ thlayout::thlayout()
 
   this->def_lang = false;
   this->lang = THLANG_UNKNOWN;
+  
+  this->def_units = false;
+  this->units = thdeflocale;
   
   this->def_layers = false;
   this->layers = true;
@@ -671,8 +680,24 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_DEBUG:
       sv = thmatch_token(args[0],thtt_layout_debug);
       if (sv == TT_LAYOUT_DEBUG_UNKNOWN)
-        ththrow(("invalid debug switch -- %s",args[0]))
-      this->debug = sv;
+        ththrow(("invalid debug switch -- %s",args[0]))        
+      switch (sv) {
+        case TT_LAYOUT_DEBUG_ALL:
+          this->debug = TTLDBG_JOINS | TTLDBG_STATIONS | TTLDBG_SCRAPNAMES;
+          break;
+        case TT_LAYOUT_DEBUG_OFF:
+          this->debug = 0;
+          break;
+        case TT_LAYOUT_DEBUG_STATIONS:
+          this->debug |= TTLDBG_STATIONS;
+          break;
+        case TT_LAYOUT_DEBUG_JOINS:
+          this->debug |= TTLDBG_JOINS;
+          break;
+        case TT_LAYOUT_DEBUG_SCRAPNAMES:
+          this->debug |= TTLDBG_SCRAPNAMES;
+          break;
+      }
       this->def_debug = true;
       break;
     
@@ -682,6 +707,11 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("language not supported -- %s",args[0]))
       this->lang = sv;
       this->def_lang = true;
+      break;
+    
+    case TT_LAYOUT_UNITS:
+			this->units.parse_units(args[0]);
+      this->def_units = true;
       break;
     
     case TT_LAYOUT_LAYERS:
@@ -1024,6 +1054,9 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_lang = %s;\n",(this->def_lang ? "true" : "false"));
   thprintf("\tplayout->lang = %s;\n",thlang_getcxxid(this->lang));
+
+  thprintf("\tplayout->def_units = %s;\n",(this->def_units ? "true" : "false"));
+  thprintf("\tplayout->units.units = %d;\n",this->units.units);
 
   thprintf("\tplayout->def_layers = %s;\n",(this->def_layers ? "true" : "false"));
   thprintf("\tplayout->layers = %s;\n",(this->layers ? "true" : "false"));
@@ -1633,6 +1666,9 @@ void thlayout::process_copy() {
 
       if (has_srcl(def_lang) && (srcl->lang != THLANG_UNKNOWN))
         this->lang = srcl->lang;
+
+      if (has_srcl(def_units))
+        this->units = srcl->units;
   
       if has_srcl(def_layers)
         this->layers = srcl->layers;
@@ -1761,11 +1797,15 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
 
 
 bool thlayout::is_debug_stations() {
-  return ((this->debug == TT_LAYOUT_DEBUG_ALL) || (this->debug == TT_LAYOUT_DEBUG_STATIONS));
+  return ((this->debug & TTLDBG_STATIONS) != 0);
 }
 
 bool thlayout::is_debug_joins() {
-  return ((this->debug == TT_LAYOUT_DEBUG_ALL) || (this->debug == TT_LAYOUT_DEBUG_JOINS));
+  return ((this->debug & TTLDBG_JOINS) != 0);
+}
+
+bool thlayout::is_debug_scrapnames() {
+  return ((this->debug & TTLDBG_SCRAPNAMES) != 0);
 }
 
 std::list <thlayout_copy_src> thlayout_copy_src_list;

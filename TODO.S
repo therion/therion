@@ -2,10 +2,23 @@ HOT LIST:
 
 therion:
 
-+ value for line contour (as altitude)
++ layout: color map-fg scraps
++ scrap label in the average of scrap points
++ new surface symbols:
+  line dripline
+  line cliff
+  line landform
+  line surface-contour (-altitude??)
++ map coloring 
+  - add user defined color tables into configuration files
+  - chapter|explo-date|topo-date colormodes
+  - saturation as color parameter
+  - use grid settings in altitudes
 + 2d: LRUD envelope of exported survey maps
++ add bookmarks to PDF files (maps?)
 + export scrap walls into XVI images
-+ plt import: read LRUD data and survey structure a special way
++ point camera/picture/hyperlink
++ plt and 3d import: read LRUD data and survey structure a special way
 + add user define map headers into layout (meta language simmilar
   to HTML)
 + add rotation of 3D surface into surface calibration
@@ -13,8 +26,6 @@ therion:
 + new 3D export structure (layout-3d, OpenGL wxWidgets 3D viewer)
 + area -gradient [fx fy tx ty] option
 + area flowstone, bedrock
-+ color map-fg <criterion> <colormap>
-  ked altitude - tak podla nastavenia gridu
 + redo tests directory structure
 + add projection to metapost - different symbols in elevation and plan
   (stalactites)
@@ -22,27 +33,26 @@ therion:
   anchor on/off/auto (point option)
   line-adjust on/off/auto
 + line fixed-ladder, rope-ladder, via-ferrata
-+ scrap flip (auto)
 + check if scrap size does not exceed metapost figure limit - if yes,
   generate some reasonable errorP
 + depth-bar [position| off ] - support for multiple depth-bars
 + grid-bar [position|off] [position|off] - support for multiple grid bars
   s_depthbar() - divide into pieces (to fit into figure size)
   s_gridbar() - divide into pieces (to fit into figure size)
-+ point camera/picture/hyperlink
 + export all symbol sets is some reasonable format (PDF, ? HTML)
 + therion --protractor <options>
-+ 2d: join join lists before joining (join 1 2 + join 2 3 = join 1 2 3)
 + add centerline flags for sink, spring and doline and map these
   flags to metapost symbols in export
-+ add user defined color tables into configuration files
-+ layout: color map-fg chapter|explo-date|topo-date [colormap:saturation]
 + import: shift x y z units
 + automatic selection of top-level maps up to basic maps if exists
 + add statistics survey <survey-name>
++ add survey name under scrap name when debug scrap-names
   
 xtherion:
 
++ thconfig file modified outside therion
++ let xtherion compilation run without configuration file 
+	(only with opened files)
 + translation of types in the ComboBox
 + remove empty lines and areas when saving the file
 + shortcus for mostly used types/sybtypes
@@ -54,8 +64,6 @@ xtherion:
 + Ctrl+F binding in text/map editor - switch focus to Find 
   control panel and maximize it
 + add gradient control to area when supported
-+ let xtherion compilation run without configuration file (only with opened
-  files)
 
 
 WOULD BE NICE LIST:
@@ -74,6 +82,7 @@ therion:
 + preview beside
 + add support for multiple metapost files (more than 4096 scraps)
 + add -map-level scrap to select -> each scrap will be a separate map
++ multiple selections in thconfig file
 + error when 2 simmilar points in scrap
 
 xtherion:

@@ -895,6 +895,13 @@ en: Maps
 es: color (mapa)
 sk: Mapy
 
+therion: units ft
+cz: ft
+en: ft
+es: ft
+fr: ft
+sk: ft
+
 therion: title cave length
 cz: Délka
 en: Length

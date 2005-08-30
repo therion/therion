@@ -133,6 +133,12 @@ class thlogfile {
    */
    
   void logging_off();
+	
+
+	/**
+	 * Logging error.
+	 */ 	
+	void log_error();
   
   
   /**

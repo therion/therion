@@ -108,6 +108,7 @@ Works like |input| command in data files---includes other files.
     copy <source layout id>
     scale <picture length> <real length>
     base-scale <picture length> <real length>
+    units <metric/imperial>
     rotate <number>
     symbol-set <symbol-set>
     symbol-assign <point/line/area/group/special> <symbol-type> \ 
@@ -145,7 +146,7 @@ Works like |input| command in data files---includes other files.
     scale-bar <length> <units>
     language <xx[_YY]>
     colour/color <item> <colour>
-    debug <on/all/first/second/off>
+    debug <on/all/first/second/scrap-names/off>
     doc-author <string>
     doc-keywords <string>
     doc-subject <string>
@@ -172,6 +173,7 @@ endlayout|
     This has the same effect as if the map printed in |base-scale| would be
     photoreduced to the |scale|. (M, A)
   * |rotate <value>| = rotates the map (M, A; default: |0|)
+  * |units <metric/imperial>| = set output units (M, A; default: |imperial|)
   * |symbol-set <symbol-set>| = use |symbol-set| for all map symbols,
     if available (M, A)
     
@@ -294,11 +296,11 @@ endlayout|
     for RGB colours. Special colour specification for |map-fg| is
     |altitude| or |map|, in which case the map is coloured according to
     altitude or maps.
-  * |debug <on/all/first/second/off>| = draw scrap in different stages
+  * |debug <on/all/first/second/scrap-names/off>| = draw scrap in different stages
     of transformation in different colours to see how Therion distorts
     map data. See the description of |scrap| command for details.
     The points with distance changed most during transformation are displayed
-    orange.
+    orange. If |scrap-names| is specified, scrap names are shown for each scrap.
 
   {\it PDF related:}\Nobreak
 
