@@ -36,8 +36,13 @@
 #include <string>
 #include <map>
 #include <list>
+#ifndef THMSVC
 #include <unistd.h>
-
+#else
+#include <direct.h>
+#define getcwd _getcwd
+#define strcasecmp _stricmp
+#endif
 
 struct thsst {
   std::string name, fullname;

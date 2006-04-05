@@ -106,6 +106,12 @@ int thsymbolset__get_id(char * symclass, char * symbol);
 int thsymbolset__get_group(int group_id, int cid);
 
 
+/**
+ * Export all symbols.
+ */
+void export_all_symbols();
+
+
 #endif
 
 

@@ -1379,6 +1379,8 @@ proc xth_me_cmds_set_mode {nmode} {
     }
   }
   
+  set xth(tb,me,action) $nmode
+  
 }
 
 

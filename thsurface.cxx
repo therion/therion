@@ -32,10 +32,17 @@
 #include "thtflength.h"
 #include "thdatabase.h"
 #include <math.h>
+#ifdef THMSVC
+#define hypot _hypot
+#endif
 #include "thdatareader.h"
 #include "thparse.h"
 #include "thdb1d.h"
 #include "thinfnan.h"
+#ifdef THMSVC
+#include <direct.h>
+#define getcwd _getcwd
+#endif
 
 enum {
   TT_SURFACE_GFLIP_UNKNOWN,

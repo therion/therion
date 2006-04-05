@@ -30,9 +30,15 @@
 #include "thinit.h"
 #include <sys/stat.h>
 #include <sys/types.h>
+#ifndef THMSVC
 #include <dirent.h>
-#include <fcntl.h>
 #include <unistd.h>
+#else
+#include <direct.h>
+#define mkdir _mkdir
+#define S_ISDIR(v) (((v) | _S_IFDIR) != 0)
+#endif
+#include <fcntl.h>
 #include <stdlib.h>
 #include <time.h>
 #include <errno.h>
@@ -70,6 +76,7 @@ void thtmpdir::create()
 {
   if ((!this->exist) && (!this->tried)) {
     thbuffer dir_path;
+#ifndef THMSVC
 #ifdef THDEBUG
     // the debugging temp directory
     dir_path = "thTMPDIR";
@@ -105,6 +112,9 @@ void thtmpdir::create()
       }
     }
 #endif
+#else
+    dir_path = "thTMPDIR";
+#endif
 
     this->tried = true;
 #ifdef THWIN32
@@ -112,8 +122,20 @@ void thtmpdir::create()
 #else
     if (mkdir(dir_path,0046750) != 0) {
 #endif
-      struct stat buf;
-      stat(dir_path,&buf);
+
+      struct 
+#ifdef THMSVC
+      _stat
+#else
+      stat 
+#endif
+      buf;
+#ifdef THMSVC
+      _stat
+#else
+      stat 
+#endif
+      (dir_path,&buf);
       if ((errno == EEXIST) && (S_ISDIR(buf.st_mode))) {
           if (!this->debug) {
             thwarning(("temporary directory already exists"));
@@ -143,6 +165,7 @@ void thtmpdir::remove()
       tmpfname += " ";
       tmpfname += this->name;
       system(tmpfname.get_buffer());
+#ifndef THMSVC
       DIR *tmpdir = opendir(this->name);
       if (tmpdir != NULL) {
         thwarning(("error deleting temporary directory -- %s",this->name.get_buffer()))      
@@ -191,7 +214,8 @@ void thtmpdir::remove()
         this->tried = false;
         this->exist = false;
       }
-#endif    
+#endif
+#endif
     }
   }
 }

@@ -46,6 +46,8 @@ char * thlang_getcxxid(int id) {
 }
 
 char * thT(char * txt, int lng) {
+  if (lng == THLANG_SYSTEM)
+    return txt;
   int sv = thmatch_token(txt,thtt__texts);
   char * trans;
   if (sv == -1)

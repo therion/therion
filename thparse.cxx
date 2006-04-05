@@ -920,9 +920,8 @@ void thparse_image(char * fname, double & width, double & height, double & dpi, 
       }      
       for(sx = 0, scan = &(picth[0]); sx < (phsize - 10); sx++, scan++) {
         if ((scan[0] == 0xFF) && ((scan[1] == 0xC0) || (scan[1] == 0xC1))) {
-          height = thround(double(scan[5] * 256.0 + scan[6]));
-          width = thround(double(scan[7] * 256.0 + scan[8]));
-          break;
+          height = thround(double(scan[5]) * 256.0 + double(scan[6]));
+          width = thround(double(scan[7]) * 256.0 + double(scan[8]));
         }
       }
     } else if (
@@ -1022,6 +1021,34 @@ void thset_grid(
   nquads = long(ceil(max - qstart) / gsize);
 }
 
+
+const char * thutf82xhtml(const char * src)
+{
+  static thbuffer tmp;
+  if (src == NULL)
+    return "";
+
+  size_t sx, dx, sl = strlen(src);
+  bool inspec;
+  char * res;
+  tmp.guarantee(sl);
+  res = tmp.get_buffer();
+
+  inspec = false;
+  for(sx = 0, dx = 0; sx < sl; sx++) {
+    if ((!inspec) && (src[sx] == '<')) {
+      inspec = true;
+    } else if ((inspec) && (src[sx] == '>')) {
+      inspec = false;
+    } else if (!inspec) {
+      res[dx] = src[sx];
+      dx++;
+    }
+  }
+  res[dx] = 0;
+  return res;
+  
+}
 
 
 

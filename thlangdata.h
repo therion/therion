@@ -7,6 +7,7 @@
   
  
 enum {
+  THLANG_SYSTEM = -2,
   THLANG_UNKNOWN = -1,
   THLANG_CZ = 0,
   THLANG_EN = 1,

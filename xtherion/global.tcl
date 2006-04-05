@@ -36,6 +36,8 @@ set xth(gui,help) ".xth_help"
 set xth(gui,message) ".xthmsg"
 set xth(gui,minsize) {480 300}
 set xth(gui,balloons) 0
+set xth(gui,toolbar) 1
+set xth(te,template) {}
 
 set xth(kb_control) Control
 set xth(kb_meta) Meta

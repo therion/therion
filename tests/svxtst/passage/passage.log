@@ -1,0 +1,16 @@
+Survex 1.0.38
+Copyright (C) 1990-2005 Olly Betts
+C:\Projects\therion\tests\svxtst\passage\passage.svx:6: warning: Closing prefix omitted from END
+Survey has no fixed points. Therefore I've fixed passage.0 at (0,0,0)
+
+Survey contains 4 survey stations, joined by 3 shots.
+There are 0 loops.
+Total length of survey shots =   61.60m (  61.60m adjusted)
+Total plan length of survey shots =   58.09m
+Total vertical length of survey shots =   18.18m
+Vertical range = 10.00m (from passage.1 at 10.00m to passage.0 at 0.00m)
+North-South range = 34.92m (from passage.3 at 34.92m to passage.0 at 0.00m)
+East-West range = 30.63m (from passage.3 at 30.63m to passage.0 at 0.00m)
+   2 1-nodes.
+   2 2-nodes.
+There were 1 warning(s).

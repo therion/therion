@@ -22,19 +22,19 @@ if ($platform eq 'WIN32') {
 } else {
   $cdir = `pwd`;
   $cdir =~ s/\s*$//;
-  `rm --force /usr/bin/therion`;
-  `rm --force /usr/bin/xtherion`;
-  `rm --force /etc/therion.ini.new`;
-  `rm --force /etc/xtherion.ini.new`;
-  `cp --force $cdir/therion /usr/bin/therion`;
-  `cp --force $cdir/xtherion/xtherion /usr/bin/xtherion`;
-  `cp --force $cdir/therion.ini /etc/therion.ini.new`;
-  `cp --force $cdir/xtherion/xtherion.ini /etc/xtherion.ini.new`;
+  `rm -f /usr/bin/therion`;
+  `rm -f /usr/bin/xtherion`;
+  `rm -f /etc/therion.ini.new`;
+  `rm -f /etc/xtherion.ini.new`;
+  `cp -f $cdir/therion /usr/bin/therion`;
+  `cp -f $cdir/xtherion/xtherion /usr/bin/xtherion`;
+  `cp -f $cdir/therion.ini /etc/therion.ini.new`;
+  `cp -f $cdir/xtherion/xtherion.ini /etc/xtherion.ini.new`;
   if ((-s "/etc/therion.ini") <= 0) {
-    `cp --force $cdir/therion.ini /etc/therion.ini`;
+    `cp -f $cdir/therion.ini /etc/therion.ini`;
   }
   if ((-s "/etc/xtherion.ini") <= 0) {
-    `cp --force $cdir/xtherion/xtherion.ini /etc/xtherion.ini`;
+    `cp -f $cdir/xtherion/xtherion.ini /etc/xtherion.ini`;
   }
 }
 

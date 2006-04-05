@@ -30,7 +30,9 @@
 #define thexport_h
 
 #include <stdio.h>
+#ifndef THMSVC
 #include <strings.h>
+#endif
 #include "thparse.h"
 #include "thobjectsrc.h"
 
@@ -74,6 +76,7 @@ class thexport {
   public:
   
   thexport();  ///< Default constructor.
+  virtual ~thexport();
   
   void assign_config(class thconfig * cptr); ///< ???
   

@@ -21,6 +21,8 @@
 #ifndef thsvg_h
 #define thsvg_h
 
-void thsvg(char * fname);
+#include "thlegenddata.h"
+
+void thsvg(char * fname, int, legenddata ldata = legenddata::legenddata());
 
 #endif

@@ -349,6 +349,13 @@ void thset_grid(double gorigin, double gsize, double min, double max, double & q
 
 
 
+/**
+ * Convert therion string to xhtml.
+ */
+ 
+const char * thutf82xhtml(const char * src);
+
+
 #endif
 
 

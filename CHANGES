@@ -1,4 +1,28 @@
 --------------------------------------------------------------------------------
+Therion 0.3.10 (2006-04-05):
+
+therion:
+
+ * decimal point in low passage heights
+ * fixed bugs: loop closure errors log, symbol-hide group cave-centreline
+ * SVG export in XHTML format
+ * flowstone and waterflow symbols joined in legend, if used
+   as line and point together
+ * improved loop closure method selection - if there was an error
+   when processed using survex - therion is used for loop closure
+ * when scrap size exceed metapost limits - more reasonable errors
+   are generated + limit for centerline scraps is larger
+ * layout: you can change overlap or size and page setup is automatically 
+   recalculated
+ * layout: color map-fg scrap
+ * layout: debug station-names
+
+xtherion:
+
+ * added toolbar (thanks to dzach)
+ * added text editor template (in xtherion.ini file)
+
+--------------------------------------------------------------------------------
 Therion 0.3.9 (2005-08-30):
 
 therion:

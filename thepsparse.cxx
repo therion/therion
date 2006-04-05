@@ -55,6 +55,7 @@ typedef set<unsigned char> FONTCHARS;
 extern map<string,FONTCHARS> USED_CHARS;
 list<pattern> PATTERNLIST;
 list<converted_data> GRIDLIST;
+converted_data NArrow, ScBar;
 
 extern unsigned font_id, patt_id;
 
@@ -388,6 +389,53 @@ void MP_data::print_svg (ofstream & F) {
   assert(gstate.clippathdepth.empty());
 }
 
+void converted_data::print_svg (ofstream & F, long i_patt) {  // i_patt maju byt rozne
+  static long i_patt_def(10000);
+  if (i_patt < 0) i_patt = ++i_patt_def;
+  F << "<svg width=\"" << 2.54/72*(urx - llx) << 
+      "cm\" height=\"" << 2.54/72*(ury - lly) << 
+      "cm\" viewBox=\"" << llx << " " << -ury << 
+      " " << urx-llx << " " << ury-lly << 
+      "\" xmlns=\"http://www.w3.org/2000/svg\" " << 
+      "xmlns:xlink=\"http://www.w3.org/1999/xlink\">" << endl;
+  F << "<defs>" << endl;
+  //patterns
+  if (!patterns.empty()) {
+    for (list<pattern>::iterator J = PATTERNLIST.begin();
+                                J != PATTERNLIST.end(); J++) {
+    if (patterns.count(J->name) > 0) {
+        F << "<pattern id=\"patt_" << J->name << 
+            "\" patternUnits=\"userSpaceOnUse\"" << 
+            " width=\"" << J->xstep <<   
+            "\" height=\"" << J->ystep << 
+            "\" patternTransform=\"matrix(" << J->xx << " " << J->xy << " " 
+                                            << J->yx << " " << J->yy << " " 
+                                            << J->x <<  " " << J->y  << 
+            ")\">" << endl;
+        F << "<g transform=\"translate(" 
+                      << J->llx1-J->llx << " " << J->lly1-J->lly << ")\">" << endl;
+        J->data.MP.print_svg(F);
+        F << "</g>" << endl;
+        F << "</pattern>" << endl;
+      }
+    }
+  }
+  // clip to initial viewBox
+  F << "<clipPath id=\"clip_viewBox_" << i_patt << "\">" << endl;
+  F << "<path d=\"M" << llx << " " << lly << 
+      "L" << urx << " " << lly << 
+      "L" << urx << " " << ury << 
+      "L" << llx << " " << ury << "z\" />" << endl;
+  F << "</clipPath>" << endl;
+  
+  F << "</defs>" << endl;
+  // --- end of definitions ---
+  F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox_" << i_patt << ")\">" << endl;
+  MP.print_svg(F);
+  F << "</g>" << endl;
+  F << "</svg>" << endl;
+}
+
 void converted_data::clear() {
   MP.clear();
   fonts.clear();
@@ -472,13 +520,19 @@ void parse_eps(string fname, string cname, double dx, double dy,
       if (tok == "%%BoundingBox:") {
         F >> llx >> lly >> urx >> ury;
 
-        c1 = llx+dx;
-	c2 = lly+dy;
-	c3 = urx+dx;
-	c4 = ury+dy;	
-                
+        c1 = llx+dx;  // bbox pre absolutnu polohu 
+        c2 = lly+dy;
+        c3 = urx+dx;
+        c4 = ury+dy;
+
 	HS = urx - llx;
 	VS = ury - lly;
+
+        data.llx = 0;  // skutocny bbox 
+        data.lly = 0;
+        data.urx = HS;
+        data.ury = VS;
+
 	if (cname != "") { // beginning of boundary cl.path definition
                            // for F and G scraps
           data.MP.add(MP_gsave);
@@ -761,6 +815,21 @@ void convert_scraps_new() {
     if (I->X != "") parse_eps(I->X, "", I->S1, I->S2, I->X1, I->X2, I->X3, I->X4, I->Xc);
   }
 
+  for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
+                                   I != LEGENDLIST.end(); I++) {
+    double a,b,c,d;
+    if (I->fname != "") parse_eps(I->fname, "",0,0,a,b,c,d,I->ldata);
+  }
+  
+  if (LAYOUT.northarrow != "") {
+    double a, b, c, d;
+    parse_eps(LAYOUT.northarrow, "",0,0,a,b,c,d,NArrow);
+  }
+  if (LAYOUT.scalebar != "") {
+    double a, b, c, d;
+    parse_eps(LAYOUT.scalebar, "",0,0,a,b,c,d,ScBar);
+  }
+
   GRIDLIST.clear();
   if (LAYOUT.grid > 0) {
     converted_data scr;
@@ -839,7 +908,7 @@ void convert_scraps_new() {
 
 int thconvert_new() { 
 
-  thprintf("converting scraps 2 ... ");
+  thprintf("converting scraps* ... ");
   
   RGB.clear();
   ALL_FONTS.clear();

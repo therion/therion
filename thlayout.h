@@ -159,6 +159,7 @@ enum {
   TT_LAYOUT_DEBUG_STATIONS,
   TT_LAYOUT_DEBUG_JOINS,
   TT_LAYOUT_DEBUG_SCRAPNAMES,
+  TT_LAYOUT_DEBUG_STATIONNAMES,
   TT_LAYOUT_DEBUG_ALL,
   TT_LAYOUT_DEBUG_UNKNOWN,
 };
@@ -175,6 +176,7 @@ static const thstok thtt_layout_debug[] = {
   {"on", TT_LAYOUT_DEBUG_ALL},
   {"scrap-names", TT_LAYOUT_DEBUG_SCRAPNAMES},
   {"second", TT_LAYOUT_DEBUG_JOINS},
+  {"station-names", TT_LAYOUT_DEBUG_STATIONNAMES},
   {NULL, TT_LAYOUT_DEBUG_UNKNOWN},
 };
 
@@ -315,6 +317,7 @@ enum {
   TT_LAYOUT_CCRIT_TOPODATE,
   TT_LAYOUT_CCRIT_EXPLODATE,
   TT_LAYOUT_CCRIT_MAP,
+  TT_LAYOUT_CCRIT_SCRAP,
 };
 
 static const thstok thtt_layout_ccrit[] = {
@@ -322,6 +325,7 @@ static const thstok thtt_layout_ccrit[] = {
 //  {"topo-date", TT_LAYOUT_CCRIT_TOPODATE},
 //  {"explo-date", TT_LAYOUT_CCRIT_EXPLODATE},
   {"map", TT_LAYOUT_CCRIT_MAP},
+  {"scrap", TT_LAYOUT_CCRIT_SCRAP},
   {NULL, TT_LAYOUT_CCRIT_UNKNOWN}
 };
 
@@ -628,6 +632,7 @@ class thlayout : public thdataobject {
   bool is_debug_stations();
   bool is_debug_joins();
   bool is_debug_scrapnames();
+  bool is_debug_stationnames();
   
   /**
    * set LAYOUT variable.

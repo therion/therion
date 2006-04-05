@@ -40,6 +40,11 @@
 #include "thsurvey.h"
 #include "thsymbolset.h"
 
+#ifdef THMSVC
+#define hypot _hypot
+#endif
+
+
 #define EXPORT3D_INVISIBLE true
 
 thscrap::thscrap()
@@ -230,7 +235,7 @@ void thscrap::parse_scale(char * ss)
   char ** pars = this->db->db2d.mbf.get_buffer();
   if ((npar < 1) || ((npar > 3) && (npar != 8) && (npar != 9)))
     ththrow(("invalid number of scale arguments -- %d",npar))
-  double n1, n2;
+  double n1 = 1.0, n2 = 1.0;
   bool p9 = false;
   int sv, ux = 0, n2x = 0;
   thtflength lentf;
@@ -643,6 +648,7 @@ thscraplp * thscrap::get_polygon() {
                             + cosa * (st->y - this->proj->shift_y);
                   break;
               }
+              lp->station_name.name = st->name;
               this->update_limits(lp->stx, lp->sty);
             }
           } else
@@ -661,7 +667,7 @@ thscraplp * thscrap::get_polygon() {
                 nlp = this->polygon_insert();
                 nlp->lnio = true;
                 nlp->arrow = arrow;
-                nlp->type = (arrow->leg->leg->flags & TT_LEGFLAG_SURFACE != 0 ? SYML_SURVEY_SURFACE : SYML_SURVEY_CAVE);
+                nlp->type = (((arrow->leg->leg->flags & TT_LEGFLAG_SURFACE) != 0) ? SYML_SURVEY_SURFACE : SYML_SURVEY_CAVE);
                 st1 = &(this->db->db1d.station_vec[arrow->start_node->uid - 1]);
                 st2 = &(this->db->db1d.station_vec[arrow->end_node->uid - 1]);
                 switch (this->proj->type) {

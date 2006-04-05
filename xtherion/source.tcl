@@ -52,6 +52,7 @@ source te.tcl
 source te_sdata.tcl
 source te_sdata2.tcl
 #@XTHERION
+source tools_imgs.tcl
 source me_imgs.tcl
 source me_cmds.tcl
 source me_cmds2.tcl
@@ -62,6 +63,7 @@ source bac.tcl
 source cp.tcl
 source mv.tcl
 source mv_procs.tcl
+source tools.tcl
 #@DEBUG
 if {![string equal $xth(gui,platform) windows]} {
   source console.tcl

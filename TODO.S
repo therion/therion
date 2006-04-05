@@ -2,13 +2,25 @@ HOT LIST:
 
 therion:
 
-+ layout: color map-fg scraps
-+ scrap label in the average of scrap points
++ some comment to continuation
++ report line number when error
++ shp file export
++ warning if reading/backreading difference is big
++ no joins where starting/ending points are identical
++ fix 64bit BUGs
++ area bedrock
 + new surface symbols:
   line dripline
   line cliff
   line landform
   line surface-contour (-altitude??)
++ new centerline symbols
+  point spring
+	point sink
+	point lake
+	point doline
+	point entrance
+	point comment
 + map coloring 
   - add user defined color tables into configuration files
   - chapter|explo-date|topo-date colormodes
@@ -33,8 +45,6 @@ therion:
   anchor on/off/auto (point option)
   line-adjust on/off/auto
 + line fixed-ladder, rope-ladder, via-ferrata
-+ check if scrap size does not exceed metapost figure limit - if yes,
-  generate some reasonable errorP
 + depth-bar [position| off ] - support for multiple depth-bars
 + grid-bar [position|off] [position|off] - support for multiple grid bars
   s_depthbar() - divide into pieces (to fit into figure size)
@@ -50,15 +60,20 @@ therion:
   
 xtherion:
 
++ xvi shifting BUG
++ auto shift picture when inserted
++ undo/redo buttons
++ no selection when file is opened in editor
++ rightclick on map-item with changes of types and subtypes
++ context sensitive controls for most commonly used options
+  (subtype, text, name, visibility, align, scale, ...)
++ modify layout according to Dzach improvements
 + thconfig file modified outside therion
 + let xtherion compilation run without configuration file 
 	(only with opened files)
 + translation of types in the ComboBox
 + remove empty lines and areas when saving the file
 + shortcus for mostly used types/sybtypes
-+ rightclick on map-item with changes of types and subtypes
-+ context sensitive controls for most commonly used options
-  (subtype, text, name, visibility, align, scale, ...)
 + default scrap names constructed from file name
 + initial window size into .ini file
 + Ctrl+F binding in text/map editor - switch focus to Find 

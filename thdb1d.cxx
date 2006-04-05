@@ -43,6 +43,9 @@
 #include "thlocale.h"
 #include "thinit.h"
 #include "extern/lxMath.h"
+#ifdef THMSVC
+#define hypot _hypot
+#endif
 
 //#define THUSESVX
 
@@ -432,7 +435,11 @@ void thdb1d::process_data()
   this->close_loops();
 	if (thini.loopc == THINIT_LOOPC_SURVEX) {
 	  thsvxctrl survex;
-	  survex.process_survey_data(this->db);
+		try {
+		  survex.process_survey_data(this->db);
+	  } catch (...) {
+			thwarning((thexc.get_desc()))
+		}
 	}
   this->process_survey_stat();
   this->postprocess_objects();

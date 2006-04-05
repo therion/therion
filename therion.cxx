@@ -46,6 +46,7 @@
 #include "thversion.h"
 #include "thtexfonts.h"
 #include "thlang.h"
+#include "thsymbolset.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -237,7 +238,9 @@ void thexit(int exit_code)
 
 int main(int argc, char * argv[]) {
 
+#ifndef THDEBUG
   try {
+#endif  
 
     time_t tmUserStart = time(NULL);
     
@@ -291,6 +294,16 @@ int main(int argc, char * argv[]) {
     thdb.clear();
     // load therion library
     thlibrary_init();
+
+
+    switch (thcmdln.get_print_state()) {
+      case THPS_SYMBOLS:
+        export_all_symbols();
+        thexit(EXIT_SUCCESS);
+    }
+
+
+
     // load configuration from file
     thcfg.load();
 
@@ -386,9 +399,14 @@ int main(int argc, char * argv[]) {
     thdb.db1d.print_loops();
     thdb.db2d.log_distortions();
     
+#ifdef THMSVC
+    getchar();
+#endif
+
     //exit the program
     return(EXIT_SUCCESS);
     
+#ifndef THDEBUG
   }
   catch(...)
   {
@@ -398,6 +416,8 @@ int main(int argc, char * argv[]) {
       therror((thexc.get_desc()));
     }
   }
+#endif
+
 }
 
 

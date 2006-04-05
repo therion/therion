@@ -52,6 +52,7 @@ class thtf {
    */
   
   thtf() : ufactor(1.0), sfactor(1.0) {}
+  virtual ~thtf();
   
   
   /**

@@ -99,10 +99,11 @@ enum {
   TT_EXPMODEL_FMT_SURVEX,  ///< survex
   TT_EXPMODEL_FMT_COMPASS,  ///< compass
   TT_EXPMODEL_FMT_THERION,  ///< therion
+  TT_EXPMODEL_FMT_LOCH,  ///< loch
+  TT_EXPMODEL_FMT_LOX,  ///< loch
   TT_EXPMODEL_FMT_3DMF,  ///< 3dmf
   TT_EXPMODEL_FMT_VRML,  ///< vrml
   TT_EXPMODEL_FMT_DXF,  ///< dxf
-  TT_EXPMODEL_FMT_TLX,  ///< tlx
 };
 
 
@@ -114,7 +115,8 @@ static const thstok thtt_expmodel_fmt[] = {
   {"3dmf", TT_EXPMODEL_FMT_3DMF},
   {"compass", TT_EXPMODEL_FMT_COMPASS},
   {"dxf", TT_EXPMODEL_FMT_DXF},
-  {"loch", TT_EXPMODEL_FMT_TLX},
+  {"loch", TT_EXPMODEL_FMT_LOCH},
+  {"lox", TT_EXPMODEL_FMT_LOX},
   {"survex", TT_EXPMODEL_FMT_SURVEX},
   {"therion", TT_EXPMODEL_FMT_THERION},
   {"vrml", TT_EXPMODEL_FMT_VRML},
@@ -145,7 +147,9 @@ class thexpmodel : public thexport {
 
   void export_dxf_file(class thdatabase * dbp);  ///< Export compass plt file.
 
-  void export_tlx_file(class thdatabase * dbp);  ///< Export compass plt file.
+  void export_tlx_file(class thdatabase * dbp);  ///< Export temporary loch file.
+
+  void export_lox_file(class thdatabase * dbp);  ///< Export lox file.
 
   public:
   

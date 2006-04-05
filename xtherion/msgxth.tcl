@@ -500,13 +500,13 @@
   ::msgcat::mcset sk "Enter search expression." [encoding convertfrom utf-8 "Vlo\305\276te h\304\276adan\303\275 v\303\275raz."]
 
   ::msgcat::mcset cz "regular expression" [encoding convertfrom utf-8 "regul\303\241rn\303\255 v\303\275raz"]
-  ::msgcat::mcset en "regular expression" [encoding convertfrom utf-8 "regular expression (cav*)"]
-  ::msgcat::mcset es "regular expression" [encoding convertfrom utf-8 "patr\303\263n regular (kob*)"]
+  ::msgcat::mcset en "regular expression" [encoding convertfrom utf-8 "regular expression"]
+  ::msgcat::mcset es "regular expression" [encoding convertfrom utf-8 "patr\303\263n regular (kob.*)"]
   ::msgcat::mcset sk "regular expression" [encoding convertfrom utf-8 "regul\303\241rny v\303\275raz"]
 
   ::msgcat::mcset cz "Search for regular expression." [encoding convertfrom utf-8 "Vyhled\303\241v\303\241n\303\255 regul\303\241rn\303\255ho v\303\275razu."]
-  ::msgcat::mcset en "Search for regular expression." [encoding convertfrom utf-8 "Use wildcards on search (cav* will find cave, cavern, cavalier...)"]
-  ::msgcat::mcset es "Search for regular expression." [encoding convertfrom utf-8 "Usar comodines en la b\303\272squeda (kob* encuentra koba, kobea, kobie, etc)."]
+  ::msgcat::mcset en "Search for regular expression." [encoding convertfrom utf-8 "Use wildcards on search (cav.* will find cave, cavern, cavalier...)"]
+  ::msgcat::mcset es "Search for regular expression." [encoding convertfrom utf-8 "Usar comodines en la b\303\272squeda (kob.* encuentra koba, kobea, kobie, etc)."]
   ::msgcat::mcset sk "Search for regular expression." [encoding convertfrom utf-8 "Vyh\304\276ad\303\241vanie regul\303\241rneho v\303\275razu."]
 
   ::msgcat::mcset cz "case sensitive" [encoding convertfrom utf-8 "rozli\305\241ovat velikost p\303\255smen"]

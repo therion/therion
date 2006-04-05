@@ -429,7 +429,7 @@ void thdb3ddata::postprocess() {
 
 void thdb3ddata::export_dxf(FILE * out, char * LAYER) {
   thdb3dfc * fc;
-  thdb3dfx * fx, * fx1, * fx2, * fx3;
+  thdb3dfx * fx, * fx1, * fx2 = NULL, * fx3 = NULL;
   bool reverse;  
   
   for (fc = this->firstfc; fc != NULL; fc = fc->next) {

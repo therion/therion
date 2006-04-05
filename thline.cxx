@@ -34,6 +34,9 @@
 #include "thtflength.h"
 #include "thtexfonts.h"
 #include "thscrap.h"
+#ifdef THMSVC
+#define hypot _hypot
+#endif
 
 thline::thline()
 {

@@ -31,7 +31,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
+#ifndef THMSVC
 #include <unistd.h>
+#endif
 #include <errno.h>
 
 #ifdef THWIN32
@@ -566,7 +568,7 @@ void thdate::print_str(int fmt) {
         this->syear);
       tl -= strlen(dst);
       dst += strlen(dst);
-      if (this->eyear >= 0)
+      if ((this->eyear >= 0) && (this->syear != this->eyear))
         snprintf(dst,tl,"%s%d", sep,
           this->eyear);          
       break;
@@ -648,6 +650,10 @@ void thdate::print_str(int fmt) {
 
 }
 
+#ifdef THMSVC
+#define stat _stat
+#endif
+
 
 void thdate::set_file_date(char * fname) {
   struct stat buf;
@@ -667,6 +673,11 @@ void thdate::set_file_date(char * fname) {
   thprintf("FILEDATE: %s => %s\n", fname, this->get_str());
 #endif   
 }
+
+#ifdef THMSVC
+#undef stat
+#endif
+
 
 char thdate::dstr[thdate__bufflen];
 

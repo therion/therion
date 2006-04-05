@@ -1,0 +1,7 @@
+encoding  utf-8
+import cave.3d -surveys use
+
+survey cave
+  input gallery/gallery.th
+  input passage/passage.th
+endsurvey

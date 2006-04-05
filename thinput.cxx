@@ -72,8 +72,13 @@ void thinput::ifile::close()
   }
 }
 
-
-bool thinput::ifile::is_equal(struct stat * buf)
+bool thinput::ifile::is_equal(
+#ifdef THMSVC
+struct _stat
+#else
+struct stat
+#endif
+* buf)
 {
   if ((this->st.st_ino == buf->st_ino) && \
       (this->st.st_dev == buf->st_dev))
@@ -272,7 +277,12 @@ void thinput::open_file(char * fname)
     }
   }
   else {
-    stat(ifptr->name.get_buffer(), &ifptr->st);
+#ifdef THMSVC
+    _stat
+#else
+    stat
+#endif
+    (ifptr->name.get_buffer(), &ifptr->st);
     tmptr = ifptr->prev_ptr;
 #ifdef THWIN32
     while ((tmptr != NULL) && (n_rec < THMAXFREC)) {

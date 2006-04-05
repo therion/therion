@@ -40,6 +40,7 @@ thexport::thexport() {
   this->export_mode = 0;
 }
 
+thexport::~thexport() {}
 
 void thexport::assign_config(class thconfig * cptr) 
 {

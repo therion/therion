@@ -561,7 +561,7 @@ void sort_sheets() {
 
 
 void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
-                   list<sheetrecord>::iterator sheet_it) {
+                   list<sheetrecord>::iterator sheet_it = list<sheetrecord>::iterator()) {
   set<int> used_layers;
   set<string> used_scraps;
   double xc = 0, yc = 0;
@@ -780,7 +780,7 @@ void print_page_bg(ofstream& PAGEDEF) {
 }
 
 void print_page_bg_scraps(int layer, ofstream& PAGEDEF, 
-               list<sheetrecord>::iterator sheet_it) {
+               list<sheetrecord>::iterator sheet_it = list<sheetrecord>::iterator()) {
   // if transparency is used, all scraps should be filled white 
   // on the coloured background, just before preview_down is displayed
   // and transparency is turned on
@@ -975,7 +975,7 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
 
 
 void print_map(int layer, ofstream& PAGEDEF, 
-               list<sheetrecord>::iterator sheet_it){
+               list<sheetrecord>::iterator sheet_it = list<sheetrecord>::iterator()){
   double HSHIFT=0, VSHIFT=0, xc = 0, yc = 0;
   map < int,set<string> > LEVEL;
   set <string> page_text_scraps,used_scraps;
@@ -1561,7 +1561,7 @@ void build_pages() {
 //        if (LAYOUT.OCG) {
 //          PAGEDEF << "\\PL{/OC /oc\\the\\oc" << u2str(I->first) << "\\space BDC}%" << endl;
 //        }
-        print_page_bg_scraps(I->first,PAGEDEF,NULL);
+        print_page_bg_scraps(I->first,PAGEDEF);
 //        if (LAYOUT.OCG) {
 //          PAGEDEF << "\\PL{EMC}%" << endl;
 //        }
@@ -1570,7 +1570,7 @@ void build_pages() {
 
     if (LAYOUT.grid == 1) print_grid(PAGEDEF,MINX,MINY);
 
-    if (!MAP_PREVIEW_DOWN.empty()) print_preview(0,PAGEDEF,MINX,MINY,NULL);
+    if (!MAP_PREVIEW_DOWN.empty()) print_preview(0,PAGEDEF,MINX,MINY);
     for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                         I != LAYERHASH.end(); I++) {
       if (I->second.Z == 0) {
@@ -1578,7 +1578,7 @@ void build_pages() {
                             // we need flush layer data using XObject 
                             // (the text clipping path may become too large)
 
-        print_map((*I).first,PAGEDEF,NULL);
+        print_map((*I).first,PAGEDEF);
 
         PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
         PAGEDEF << "\\immediate\\pdfxform ";
@@ -1588,7 +1588,7 @@ void build_pages() {
         PAGEDEF << "\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
       }
     }
-    if (!MAP_PREVIEW_UP.empty()) print_preview(1,PAGEDEF,MINX,MINY,NULL);
+    if (!MAP_PREVIEW_UP.empty()) print_preview(1,PAGEDEF,MINX,MINY);
 
     if (LAYOUT.surface == 2) print_surface_bitmaps(PAGEDEF,MINX,MINY);
     if (LAYOUT.grid == 2) print_grid(PAGEDEF,MINX,MINY);

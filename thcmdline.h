@@ -43,6 +43,7 @@ enum {
   THPS_PATHS = 1005,  ///< Print setting of all paths
   THPS_EXTERN_LIBS = 1006,  ///< Use extern libraries
   THPS_TEX_ENCODINGS = 1007,  ///< Print tex encodings
+  THPS_SYMBOLS = 1008,  ///< Print symbols
 };
 
 

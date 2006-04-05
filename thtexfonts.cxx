@@ -147,7 +147,7 @@ string utf2texhex(string str) {
 }
 
 string replace_all(string s, string f, string r) {
-  unsigned int found = s.find(f);
+  size_t found = s.find(f);
   while(found != string::npos) {
     s.replace(found, f.length(), r);
     found = s.find(f);
@@ -177,13 +177,13 @@ string utf2tex(string str, bool remove_kerning) {
   str = replace_all(str,"<centre>","");
   str = replace_all(str,"<left>","");
   str = replace_all(str,"<right>","");
-  str = replace_all(str,"<br>","\e\1");
-  str = replace_all(str,"<thsp>","\e\2");
-  str = replace_all(str,"<rm>","\e\3");
-  str = replace_all(str,"<it>","\e\4");
-  str = replace_all(str,"<bf>","\e\5");
-  str = replace_all(str,"<ss>","\e\6");
-  str = replace_all(str,"<si>","\e\7");
+  str = replace_all(str,"<br>","\033\1");   // \e not accepted in VC++
+  str = replace_all(str,"<thsp>","\033\2");
+  str = replace_all(str,"<rm>","\033\3");
+  str = replace_all(str,"<it>","\033\4");
+  str = replace_all(str,"<bf>","\033\5");
+  str = replace_all(str,"<ss>","\033\6");
+  str = replace_all(str,"<si>","\033\7");
 
   if (is_multiline) {
     T << "\\vbox{\\halign{";

@@ -173,7 +173,7 @@ endlayout|
     This has the same effect as if the map printed in |base-scale| would be
     photoreduced to the |scale|. (M, A)
   * |rotate <value>| = rotates the map (M, A; default: |0|)
-  * |units <metric/imperial>| = set output units (M, A; default: |imperial|)
+  * |units <metric/imperial>| = set output units (M, A; default: |metric|)
   * |symbol-set <symbol-set>| = use |symbol-set| for all map symbols,
     if available (M, A)
     
@@ -216,13 +216,15 @@ endlayout|
 
   {\it page layout related:}\Nobreak
 
-  * |size <width> <height> <units>| = set map size in the atlas mode.
+  * |size <width> <height> <units>| = set map size in the atlas mode. If
+    not specified, it will be calculated from |page-setup| and |overlap|.
     In map mode applies iff |page-grid| is |on| (M, A; default: |18 22.2 cm|)
   * |overlap <value> <units>| = set overlap size in paper units in the atlas 
     mode or map margin in the map mode (M, A; default: |1 cm|)
   * |page-setup <dimensions> <units>| = set page dimensions in
     this order: paper-width, paper-height, page-width, page-height,
-    left-margin and top-margin (A; default: |21 29.7 20 28.7 0.5 0.5 cm|)
+    left-margin and top-margin. If not specified, it will be computed
+    from |size| and |overlap| (A; default: |21 29.7 20 28.7 0.5 0.5 cm|)
   * |page-numbers <on/off>| = turn on/off page numbering (A; default: |true|)
   * |exclude-pages <on/off> <list>| = exclude specified pages from cave
     atlas. The list may contain page numbers separated by a comma or dash 
@@ -294,13 +296,15 @@ endlayout|
     items (map-fg, map-bg, preview-above, preview-below). 
     Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
     for RGB colours. Special colour specification for |map-fg| is
-    |altitude| or |map|, in which case the map is coloured according to
-    altitude or maps.
-  * |debug <on/all/first/second/scrap-names/off>| = draw scrap in different stages
+    |altitude|, |scrap| or |map|, in which case the map is coloured according to
+    altitude, scraps or maps.
+  * |debug <on/all/first/second/scrap-names/station-names/off>| = 
+    draw scrap in different stages
     of transformation in different colours to see how Therion distorts
     map data. See the description of |scrap| command for details.
     The points with distance changed most during transformation are displayed
-    orange. If |scrap-names| is specified, scrap names are shown for each scrap.
+    orange. If |scrap-names| is specified, scrap names are shown for each scrap,
+    |station-names| displays name of each survey station.
 
   {\it PDF related:}\Nobreak
 
@@ -383,7 +387,9 @@ endlayout|
 
   {\it map/atlas:}\Nobreak
   
-  * |format/fmt <format>| = set map format. Currently |pdf|, |svg| and 
+  * |format/fmt <format>| = set map format. Currently |pdf|, |svg|, 
+    |xhtml|\[SVG in embedded in XHTML file which contains also legend],
+    |3d| and 
     |xvi|\[Xtherion vector image. XVI images may be used in
     xtherion to draw in-scale maps. Scale (100\,dpi image resolution is 
     assumed) and grid-size from layout are used in export.]
@@ -413,7 +419,7 @@ endlayout|
 \leavevmode\kern1em\vbox{\halign{#\hfil\quad&#\hfil\cr
 {\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
 model & therion, dxf, compass, survex, vrml, 3dmf\cr
-map  & pdf, svg, xvi\cr
+map  & pdf, svg, xhtml, 3d, xvi\cr
 atlas & pdf\cr
 database & sql\cr}}\egroup
 

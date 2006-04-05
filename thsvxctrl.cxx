@@ -41,6 +41,11 @@
 #include "extern/img.h"
 #include <math.h>
 
+#ifdef THMSVC
+#include <direct.h>
+#define getcwd _getcwd
+#endif
+
 #define THPI 3.1415926535898
 
 thsvxctrl::thsvxctrl()

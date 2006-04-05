@@ -134,7 +134,7 @@ sub write_sources {
   my @langs = (sort keys %lngs);
   my $i;
   my $lcode;
-  $languages = "enum {\n  THLANG_UNKNOWN = -1,\n";
+  $languages = "enum {\n  THLANG_SYSTEM = -2,\n  THLANG_UNKNOWN = -1,\n";
   $langcxxid = "static const thlang_pchar thlang__cxxids []  = {\n";
   $langparse = "static const thstok thtt_lang [] = {\n";
   for ($i = 0; $i <= $#langs; $i++) {

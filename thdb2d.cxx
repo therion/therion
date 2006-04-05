@@ -43,6 +43,9 @@
 #include "thconfig.h"
 #include <list>
 
+#ifdef THMSVC
+#define hypot _hypot
+#endif
 
 class thprjx_link {
 

@@ -520,6 +520,7 @@ proc xth_te_create_file {} {
   $xth(ctrl,te,files).fl.flbox insert end "[llength $xth(te,flist)]. $xth(te,$cfid,name) ($xth(te,$cfid,path))"
   
   xth_te_show_file [expr [llength $xth(te,flist)] - 1]
+
 }
 
 
@@ -868,8 +869,14 @@ proc xth_te_select_all {} {
   }
 }
 
+proc xth_te_new_file {} {
+  global xth
+  xth_te_create_file 
+  set cfid [lindex $xth(te,flist) $xth(te,fcurr)]
+  xth_te_insert_text $xth(te,$cfid,frame).txt $xth(te,template)
+}
 
-$xth(te,menu,file) add command -label [mc "New"] -command xth_te_create_file \
+$xth(te,menu,file) add command -label [mc "New"] -command xth_te_new_file \
   -font $xth(gui,lfont) -underline 0
 $xth(te,menu,file) add command -label [mc "Open"] -underline 0 \
   -accelerator "$xth(gui,controlk)-o" \

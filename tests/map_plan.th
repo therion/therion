@@ -2,6 +2,13 @@ encoding  utf-8
   survey tp -title "test survey" -person-rename "Erika Kovacova" "Erika Mudrakova"
 
     centerline
+       data normal from to length compass clino
+       calibrate length -1.0
+       0 0.1 10 0 0
+       0.1 0.2 20 0 0
+    endcenterline
+
+    centerline
       walls on
       data normal station up down left right newline bearing clino length
         0 1 1 1 1

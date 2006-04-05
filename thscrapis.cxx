@@ -34,6 +34,9 @@
 #include "thcdt.h"
 #include "thscraplp.h"
 #include <math.h>
+#ifdef THMSVC
+#define hypot _hypot
+#endif
 
 #define ONLY_INVISIBLE_LINE 1
 #define THSCRAPISSMP thcfg.tmp3dSMP

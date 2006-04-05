@@ -1,0 +1,20 @@
+Survex 1.0.38
+Copyright (C) 1990-2005 Olly Betts
+In file included from C:\Projects\MSVCProjects\therion\tests\svxtst\cave.svx:2:
+C:\Projects\MSVCProjects\therion\tests\svxtst\gallery/gallery.svx:6: warning: Closing prefix omitted from END
+In file included from C:\Projects\MSVCProjects\therion\tests\svxtst\cave.svx:3:
+C:\Projects\MSVCProjects\therion\tests\svxtst\passage/passage.svx:6: warning: Closing prefix omitted from END
+C:\Projects\MSVCProjects\therion\tests\svxtst\cave.svx:6: warning: Closing prefix omitted from END
+
+Survey contains 8 survey stations, joined by 7 shots.
+There are 0 loops.
+Total length of survey shots =   93.20m (  93.20m adjusted)
+Total plan length of survey shots =   87.60m
+Total vertical length of survey shots =   28.25m
+Vertical range = 17.09m (from cave.gallery.3 at 107.09m to cave.passage.0 at 90.00m)
+North-South range = 34.92m (from cave.passage.3 at 117.98m to cave.passage.0 at 83.06m)
+East-West range = 30.63m (from cave.passage.3 at 127.03m to cave.passage.0 at 96.40m)
+   3 1-nodes.
+   4 2-nodes.
+   1 3-node.
+There were 3 warning(s).

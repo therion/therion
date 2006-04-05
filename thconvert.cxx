@@ -750,7 +750,7 @@ void convert_scraps() {
     lcr.R = I->R;
     lcr.G = I->G;
     lcr.B = I->B;
-    lcr.name = I->name;
+    lcr.texname = I->texname;
     legend_color.push_back(lcr);
   }
   ofstream LEGCOLOR("th_legendcolor.tex");
@@ -773,7 +773,7 @@ void convert_scraps() {
 	legend_color[pos].G << "}{" << 
 	legend_color[pos].B << "}%" << endl;
         LEGCOLOR << "  \\legendsymbolbox{\\pdflastxform}{" <<
-	legend_color[pos].name << "}\\hskip10pt" << endl;
+	legend_color[pos].texname << "}\\hskip10pt" << endl;
       }
     }
     LEGCOLOR << "\\hss}" << endl;

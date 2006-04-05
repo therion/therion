@@ -159,6 +159,10 @@ ignored; lines ending with a backslash continue on next line.) Currently
 supported initialization commands follow.
 
 \list
+* |loop-closure <therion/survex>|
+
+  By default, survex is used if present, otherwise therion.
+
 * |encoding-default <encoding-name>|
 
   Set the default output encoding (currently unused).
@@ -171,6 +175,10 @@ supported initialization commands follow.
 
   Default output language (used for maps). See the layout command for
   the list of available languages.
+
+* |units <metric/imperial>| 
+
+  Set default units.
 
 * |mpost-path <file-path>|
 
@@ -258,6 +266,24 @@ XTherion starts. The file is commented; see the comments for details.
 %\subsubchapter Speed optimization.
 %
 %[Optionally creating \MP\ and \TeX\ format files.]
+
+\subchapter Limitations.
+
+\list
+*  scrap size = $\approx 2.8 \times 2.8$ m in the output scale (\MP\ limit)
+*  page size = 
+
+   PDF map or atlas: $\approx 5 \times 5$ m (pdf\TeX\ limit)
+   
+   SVG map: unlimited 
+*  scraps count = approx. 500--6000, depending on frequency of cross-sections
+   
+   current \MP\ limit: $4 (scraps + sections) < 4096$ (may be arbitrarily increased)
+
+   pdf\TeX\ limit: $2\times pages + images + patterns +
+                            6 (scraps + sections) < 32500$
+\endlist
+
 
 \subchapter Example data.
 

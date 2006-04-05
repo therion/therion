@@ -15,6 +15,7 @@ $SYMHASH{l_wall_invisible} = "hidden";
 # ??? $SYMHASH{l_survey} = "noassign";
 $SYMHASH{l_undefined} = "noassign";
 $SYMHASH{l_label} = "noassign";
+$SYMHASH{l_rope} = "noassign hidden";
 $SYMHASH{l_} = "noassign hidden";
 $SYMHASH{l_zzz} = "noassign hidden";
 
@@ -76,6 +77,9 @@ print O <<ENDO;
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */  
 
+#ifndef thsymbolsetlist_h
+#define thsymbolsetlist_h
+
 #define thsymbolset_size $i
 
 enum {
@@ -94,6 +98,8 @@ $HN};
 
 static const thsymbolset__char_ptr thsymbolset__src [] = {
 $TS};
+
+#endif
 
 ENDO
 close(O);

@@ -31,13 +31,16 @@ proc xth_status_bar {aname widg stext} {
   if {$xth(gui,balloons)} {
     DynamicHelp::register $widg balloon $stext
   }
-  set sbar $xth(gui,$aname).sf.sbar
-  set xth(gui,sbar,$widg,exp) 0  
-  bind $widg <FocusIn> "+ if {\$xth(gui,sbar,$widg,exp) == 0} {catch {set xth(gui,sbar,$widg,exp) 1; set xth(gui,sbar,$widg,otext) \[$sbar cget -text\]; $sbar configure -text [list $stext]}}"
-  bind $widg <Enter> "+ if {\$xth(gui,sbar,$widg,exp) == 0} {catch {set xth(gui,sbar,$widg,exp) 1; set xth(gui,sbar,$widg,otext) \[$sbar cget -text\]; $sbar configure -text [list $stext]}}"
-  bind $widg <FocusOut> "+ if {\$xth(gui,sbar,$widg,exp) == 1} {catch {$sbar configure -text \$xth(gui,sbar,$widg,otext); set xth(gui,sbar,$widg,exp) 0}}"
-  bind $widg <Leave> "+ if {\$xth(gui,sbar,$widg,exp) == 1} {catch {$sbar configure -text \$xth(gui,sbar,$widg,otext); set xth(gui,sbar,$widg,exp) 0}}"
-  
+  set anml $aname
+  foreach aname $anml {
+    set sbar $xth(gui,$aname).sf.sbar
+    set widgx "$aname$widg"
+    set xth(gui,sbar,$widgx,exp) 0  
+    bind $widg <FocusIn> "+ if {\$xth(gui,sbar,$widgx,exp) == 0} {catch {set xth(gui,sbar,$widgx,exp) 1; set xth(gui,sbar,$widgx,otext) \[$sbar cget -text\]; $sbar configure -text [list $stext]}}"
+    bind $widg <Enter> "+ if {\$xth(gui,sbar,$widgx,exp) == 0} {catch {set xth(gui,sbar,$widgx,exp) 1; set xth(gui,sbar,$widgx,otext) \[$sbar cget -text\]; $sbar configure -text [list $stext]}}"
+    bind $widg <FocusOut> "+ if {\$xth(gui,sbar,$widgx,exp) == 1} {catch {$sbar configure -text \$xth(gui,sbar,$widgx,otext); set xth(gui,sbar,$widgx,exp) 0}}"
+    bind $widg <Leave> "+ if {\$xth(gui,sbar,$widgx,exp) == 1} {catch {$sbar configure -text \$xth(gui,sbar,$widgx,otext); set xth(gui,sbar,$widgx,exp) 0}}"
+  }
 }
 
 proc xth_status_bar_push aname {

@@ -40,7 +40,7 @@ struct CGS {  // current graphics state
   map<int,int> clippathdepth;
   static int clippathID;
    
-  CGS::CGS();
+  CGS();
   string svg_color();  
 };
 
@@ -142,10 +142,12 @@ struct converted_data {
   MP_data MP;
   set<string> fonts, patterns;
   bool transparency;
-  double hsize, vsize;
+//  double hsize, vsize;
+  double llx, lly, urx, ury;
   
   void clear();
   converted_data();
+  void print_svg(ofstream & F, long=-1);
 };
 
 struct pattern {

@@ -64,11 +64,13 @@ struct layerrecord {
 
 struct legendrecord {
   string name, fname, descr;
+  converted_data ldata;
+  unsigned idsym, idfig, idnum;
 };
 
 struct colorlegendrecord {
   double R, G, B;
-  string name;
+  string texname, name;
 };
 
 struct paired {
@@ -114,6 +116,7 @@ extern list<colorlegendrecord> COLORLEGENDLIST;
 extern layout LAYOUT;
 extern list<pattern> PATTERNLIST;
 extern list<converted_data> GRIDLIST;
+extern converted_data NArrow, ScBar;
 
 
 struct surfpictrecord {

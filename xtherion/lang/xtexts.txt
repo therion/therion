@@ -599,14 +599,14 @@ sk: Vložte hľadaný výraz.
 
 therion: regular expression
 cz: regulární výraz
-en: regular expression (cav*)
-es: patrón regular (kob*)
+en: regular expression
+es: patrón regular (kob.*)
 sk: regulárny výraz
 
 therion: Search for regular expression.
 cz: Vyhledávání regulárního výrazu.
-en: Use wildcards on search (cav* will find cave, cavern, cavalier...)
-es: Usar comodines en la búsqueda (kob* encuentra koba, kobea, kobie, etc).
+en: Use wildcards on search (cav.* will find cave, cavern, cavalier...)
+es: Usar comodines en la búsqueda (kob.* encuentra koba, kobea, kobie, etc).
 sk: Vyhľadávanie regulárneho výrazu.
 
 therion: case sensitive

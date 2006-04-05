@@ -69,6 +69,7 @@ static const thstok thtt_expmap_opt[] = {
 enum {
   TT_EXPMAP_FMT_UNKNOWN = 0,  ///< Unknown option
   TT_EXPMAP_FMT_SVG,  ///< SVG
+  TT_EXPMAP_FMT_XHTML,  ///< SVG
   TT_EXPMAP_FMT_PDF,  ///< PDF
   TT_EXPMAP_FMT_XVI,  ///< PDF
   TT_EXPMAP_FMT_3D,  ///< PDF
@@ -83,6 +84,7 @@ static const thstok thtt_expmap_fmt[] = {
   {"pdf", TT_EXPMAP_FMT_PDF},
   {"survex", TT_EXPMAP_FMT_3D},
   {"svg", TT_EXPMAP_FMT_SVG},
+  {"xhtml", TT_EXPMAP_FMT_XHTML},
   {"xvi", TT_EXPMAP_FMT_XVI},
   {NULL, TT_EXPMAP_FMT_UNKNOWN}
 };

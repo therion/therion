@@ -29,7 +29,10 @@
 #ifndef thinput_h
 #define thinput_h
 
+#ifndef THMSVC
 #include <unistd.h>
+#endif
+
 #include <sys/stat.h>
 #include "thbuffer.h"
 #include "thmbuffer.h"
@@ -79,7 +82,11 @@ class thinput {
     int encoding;  /// Current file encoding.
     ifile * prev_ptr,  /// Pointer to the upper file.
       * next_ptr;  /// Pointer to the lower file.
+#ifdef THMSVC
+    struct _stat st;
+#else
     struct stat st;
+#endif
       
     
     /**
@@ -109,7 +116,13 @@ class thinput {
      * Check if file statistics are equal.
      */
      
-    bool is_equal(struct stat * buf);
+    bool is_equal(
+#ifdef THMSVC
+struct _stat
+#else
+struct stat
+#endif
+         * buf);
     
   };
   

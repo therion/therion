@@ -557,7 +557,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           //  sprintf(buff,"%.1f",this->xsize);
           //else
           //  sprintf(buff,"%.0f",this->xsize);
-          fprintf(out->file,utf2tex(out->layout->units.format_length(this->xsize)));
+          fprintf(out->file,utf2tex(out->layout->units.format_human_length(this->xsize)));
         }
         this->db->buff_enc.strcpy((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
             TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_UQ)) != 0 ? "?" : "" );
@@ -646,7 +646,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           //  sprintf(buff,"%.1f",this->xsize);
           //else
           //  sprintf(buff,"%.0f",this->xsize);
-          fprintf(out->file,"{%s}", utf2tex(out->layout->units.format_length(this->xsize)));
+          fprintf(out->file,"{%s}", utf2tex(out->layout->units.format_human_length(this->xsize)));
         }
         
         if (!thisnan(this->ysize)) {
@@ -654,7 +654,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           //  sprintf(buff,"%.1f",this->ysize);
           //else
           //  sprintf(buff,"%.0f",this->ysize);
-          fprintf(out->file,"{%s}", utf2tex(out->layout->units.format_length(this->ysize)));
+          fprintf(out->file,"{%s}", utf2tex(out->layout->units.format_human_length(this->ysize)));
         }        
         
         fprintf(out->file," etex,");

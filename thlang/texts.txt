@@ -532,35 +532,14 @@ en: blocks
 es: bloques
 sk: skalné bloky
 
-therion: point water-flow
+therion: line water-flow
 cz: vodní tok
 en: water flow
 es: curso agua
 fr: rivière
 sk: vodný tok
 
-therion: point water-flow:permanent
-cz: vodní tok
-en: water flow
-es: curso agua
-fr: rivière, permanente
-sk: vodný tok
-
-therion: point water-flow:intermittent
-cz: občasný vodní tok
-en: intermittent water flow
-es: curso agua intermitente
-fr: rivière, intermittente
-sk: občasný vodný tok
-
-therion: point water-flow:paleo
-cz: paleořečiště
-en: paleo water flow
-es: paleocurso agua
-fr: rivière fossile
-sk: paleoriečisko
-
-therion: line water-flow
+therion: point water-flow
 cz: vodní tok
 en: water flow
 es: curso agua
@@ -574,7 +553,21 @@ es: curso agua
 fr: rivière, permanente
 sk: vodný tok
 
+therion: point water-flow:permanent
+cz: vodní tok
+en: water flow
+es: curso agua
+fr: rivière, permanente
+sk: vodný tok
+
 therion: line water-flow:intermittent
+cz: občasný vodní tok
+en: intermittent water flow
+es: curso agua intermitente
+fr: rivière, intermittente
+sk: občasný vodný tok
+
+therion: point water-flow:intermittent
 cz: občasný vodní tok
 en: intermittent water flow
 es: curso agua intermitente
@@ -587,6 +580,13 @@ en: conjectural water flow
 es: curso agua supuesto
 fr: rivière, conjoncturelle
 sk: predpokladaný vodný tok
+
+therion: point water-flow:paleo
+cz: paleořečiště
+en: paleo water flow
+es: paleocurso agua
+fr: rivière fossile
+sk: paleoriečisko
 
 therion: point spring
 cz: vývěr

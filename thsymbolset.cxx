@@ -36,6 +36,23 @@
 #include "thtexfonts.h"
 #include "thdate.h"
 #include "thlang.h"
+#include "thtmpdir.h"
+#include "thcmdline.h"
+#include "thmpost.h"
+#include "thinit.h"
+#include "thsymbolsets.h"
+#include "thlogfile.h"
+#ifndef THMSVC
+#include <unistd.h>
+#else
+#include <direct.h>
+#define getcwd _getcwd
+#define chdir _chdir
+#define putenv _putenv
+#define hypot _hypot
+#define mkdir _mkdir
+#endif
+
 
 thsymbolset::thsymbolset()
 {
@@ -44,6 +61,51 @@ thsymbolset::thsymbolset()
     this->used[i] = false;
   }
 }
+
+
+void thsymbolset_log_log_file(char * logfpath, char * on_title, char * off_title, bool mpbug = false) {
+  char * lnbuff = new char [4097];
+//  unsigned long lnum = 0;
+  thlog.printf("%s",on_title);
+  std::ifstream lf(logfpath);
+  if (!(lf.is_open())) {{
+    thwarning(("can't open %s file for input", logfpath));
+    }
+    thlog.printf("can't open %s file for input",logfpath);
+    thlog.printf("%s",off_title);
+    delete [] lnbuff;
+    return;
+  }
+  // let's read line by line and print to log file
+  bool skip_next = false, skip_this = false, peoln = false;
+  while (!(lf.eof())) {
+    lf.getline(lnbuff,4096);
+    if (mpbug && (!skip_this)) {
+      if (strncmp(lnbuff,"write",5) == 0) {
+        skip_next = true;
+        skip_this = true;
+        peoln = false;
+      }
+    }
+    if (!skip_this) {
+      if (!skip_next) {
+        thlog.printf("%s%s", (peoln ? "\n" : ""), lnbuff);
+        peoln = true;
+      } else {
+        skip_next = false;
+      }
+    } else {
+      skip_this = false;
+    } 
+  }
+  if (peoln) 
+    thlog.printf("\n");
+  lf.close();
+  delete [] lnbuff;
+  thlog.printf("%s",off_title);
+}
+
+
 
 char * thlegend_u2string(unsigned u) {
   static char a [5];
@@ -550,6 +612,9 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     fprintf(mpf,"beginfig(%d);\n",sfig); \
     fprintf(mpf,"clean_legend_box;\n"); \
     sprintf(texb.get_buffer(),"data.%d",sfig); \
+    LEGENDITEM->idfig = (unsigned) sfig; \
+    LEGENDITEM->idsym = (unsigned) mid; \
+    LEGENDITEM->idnum = (unsigned) symn; \
     LEGENDITEM->fname = texb.get_buffer(); \
     LEGENDITEM->name = thlegend_u2string(unsigned(symn++)); \
     LEGENDITEM->descr = txt; \
@@ -633,7 +698,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
   insfig(SYMP_WALLALTITUDE,thT("point wall-altitude",layout->lang));
   helpsymbol;
-  if isused(SYML_WALL_BEDROCK) 
+  if (true || isused(SYML_WALL_BEDROCK)) 
     fprintf(mpf,"%s(((-.3,0.5) .. controls (.2,.6) and (.2,.6) .. (.3,.7) .. controls (.4,.8) and (.4,.8) .. (.5,1.4)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]);
   endhelpsymbol;
   fprintf(mpf,"%s((0.2,0.6) inscale,(0.3,0.7) inscale,(0.4,0.8) inscale,btex \\thwallaltitude %s etex);\n",thsymbolset__mp[SYMP_WALLALTITUDE],utf2tex("1510"));
@@ -646,10 +711,10 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   // thT("point section")  
   insfig(SYML_SECTION,thT("line section",layout->lang));
   helpsymbol;
-  if isused(SYML_WALL_BEDROCK) {
+  if (true || (true || isused(SYML_WALL_BEDROCK))) {
     fprintf(mpf,"%s(((.25,1.0) .. (.2,.5){dir 270} .. (.15,0.0)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]);
     fprintf(mpf,"%s(((.3,0.0) .. (.4,.5){dir 90} .. (.5,1.0)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]);
-    if isused(SYMP_SECTION) {
+    if (true || isused(SYMP_SECTION)) {
       fprintf(mpf,"%s(((.7,.5){dir 90} .. (.9,.75){dir 270} .. (.8,.15){dir 235} .. cycle) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]);    
     }
   }    
@@ -661,7 +726,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   // vysky chodby
 #define insert_big_passage \
   helpsymbol; \
-  if isused(SYML_WALL_BEDROCK) { \
+  if (true || isused(SYML_WALL_BEDROCK)) { \
     fprintf(mpf,"%s(((.35,1.0) .. (.3,.5){dir 270} .. (.25,0.0)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
     fprintf(mpf,"%s(((.6,0.0) .. (.7,.5){dir 90} .. (.8,1.0)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
   } \
@@ -669,7 +734,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
 #define insert_big_water_passage \
   helpsymbol; \
-  if isused(SYML_WALL_BEDROCK) { \
+  if (true || isused(SYML_WALL_BEDROCK)) { \
     fprintf(mpf,"%s(((.35,1.0) .. (.3,.5){dir 270} .. (.25,0.0)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
     fprintf(mpf,"%s(((.6,0.0) .. (.7,.5){dir 90} .. (.8,1.0)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
   } \
@@ -713,7 +778,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 #define legend_end(mid,txt) \
   insfig(mid,txt); \
   helpsymbol; \
-  if isused(SYML_WALL_BEDROCK) {\
+  if (true || (true || isused(SYML_WALL_BEDROCK))) {\
     fprintf(mpf,"%s(((0,.2){dir 30} .. {dir 0}(.5,.4)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
     fprintf(mpf,"%s(((.5,.6){dir 180} .. {dir 210}(0,.8)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
   } \
@@ -741,7 +806,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   endfig;
 #define insert_small_passage \
   helpsymbol; \
-  if isused(SYML_WALL_BEDROCK) { \
+  if (true || isused(SYML_WALL_BEDROCK)) { \
     fprintf(mpf,"%s(((.2,1.0) .. (.15,.5){dir 270} .. (.1,0.0)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
     fprintf(mpf,"%s(((.4,0.0) .. (.5,.5){dir 90} .. (.6,1.0)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
   } \
@@ -859,14 +924,32 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   insfig(mid,txt); \
   fprintf(mpf,"%s(((0.2,0.8) -- (0.8,0.2)) inscale);\n",thsymbolset__mp[mid]);  \
   endfig;
-  // thT("point water-flow")  
-  legend_hpoint(SYMP_WATERFLOW_PERMANENT,thT("point water-flow:permanent",layout->lang));
-  legend_hpoint(SYMP_WATERFLOW_INTERMITTENT,thT("point water-flow:intermittent",layout->lang));
-  legend_hpoint(SYMP_WATERFLOW_PALEO,thT("point water-flow:paleo",layout->lang));
+	
+	
   // thT("line water-flow")  
-  legend_waterflow(SYML_WATERFLOW_PERMANENT,thT("line water-flow:permanent",layout->lang));
-  legend_waterflow(SYML_WATERFLOW_INTERMITTENT,thT("line water-flow:intermittent",layout->lang));
+  // thT("point water-flow")  
+  if (isused(SYML_WATERFLOW_PERMANENT) && isused(SYMP_WATERFLOW_PERMANENT)) {
+	  insfig(SYML_WATERFLOW_PERMANENT,thT("line water-flow:permanent",layout->lang));
+	  fprintf(mpf,"%s(((0.1,0.3) -- (0.9,0.3)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_PERMANENT]);
+    fprintf(mpf,"%s((0.5,0.7) inscale,270.0,1.0,(0,0));\n",thsymbolset__mp[SYMP_WATERFLOW_PERMANENT]);
+	  endfig;
+  } else {
+	  legend_waterflow(SYML_WATERFLOW_PERMANENT,thT("line water-flow:permanent",layout->lang));
+	  legend_hpoint(SYMP_WATERFLOW_PERMANENT,thT("point water-flow:permanent",layout->lang));
+	}
+	
+  if (isused(SYML_WATERFLOW_INTERMITTENT) && isused(SYMP_WATERFLOW_INTERMITTENT)) {
+	  insfig(SYML_WATERFLOW_INTERMITTENT,thT("line water-flow:intermittent",layout->lang));
+	  fprintf(mpf,"%s(((0.1,0.3) -- (0.9,0.3)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_INTERMITTENT]);
+    fprintf(mpf,"%s((0.5,0.7) inscale,270.0,1.0,(0,0));\n",thsymbolset__mp[SYMP_WATERFLOW_INTERMITTENT]);
+	  endfig;
+  } else {
+	  legend_waterflow(SYML_WATERFLOW_INTERMITTENT,thT("line water-flow:intermittent",layout->lang));
+	  legend_hpoint(SYMP_WATERFLOW_INTERMITTENT,thT("point water-flow:intermittent",layout->lang));
+  }
+
   legend_waterflow(SYML_WATERFLOW_CONJECTURAL,thT("line water-flow:conjectural",layout->lang));
+  legend_hpoint(SYMP_WATERFLOW_PALEO,thT("point water-flow:paleo",layout->lang));
 
   insfig(SYMP_SPRING,thT("point spring",layout->lang));
   helpsymbol;
@@ -904,8 +987,15 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
     
   // vyzdoba
-  legend_point(SYMP_FLOWSTONE,thT("point flowstone",layout->lang));
-  legend_step(SYML_FLOWSTONE,thT("line flowstone",layout->lang));
+  if (isused(SYMP_FLOWSTONE) && isused(SYML_FLOWSTONE)) {
+	  insfig(SYMP_FLOWSTONE,thT("point flowstone",layout->lang));
+	  fprintf(mpf,"%s(((.1,.4) .. (.5,.2) .. (.9,.4)) inscale);\n",thsymbolset__mp[SYML_FLOWSTONE]);
+    fprintf(mpf,"%s((0.5,0.7) inscale,0.0,1.0,(0,0));\n",thsymbolset__mp[SYMP_FLOWSTONE]);
+	  endfig;
+  } else {
+	  legend_point(SYMP_FLOWSTONE,thT("point flowstone",layout->lang));
+	  legend_step(SYML_FLOWSTONE,thT("line flowstone",layout->lang));
+  }
   legend_point(SYMP_MOONMILK,thT("point moonmilk",layout->lang));
   legend_point(SYMP_STALACTITE,thT("point stalactite",layout->lang));
   legend_point(SYMP_STALAGMITE,thT("point stalagmite",layout->lang));
@@ -1015,4 +1105,249 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     }
   }
   
+}
+
+
+static const char base64_tab[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+void base64_encode_f(char * fname, FILE * fout) {
+  int llength = 0;
+  char in_buffer[3];
+  unsigned char out_buffer[4];
+
+  ifstream fin(fname, ios::binary);
+
+  do {
+      for (int i = 0; i < 3; i++) in_buffer[i] = '\x0';
+      for (int i = 0; i < 4; i++) out_buffer[i] = '=';
+
+      fin.read(in_buffer, 3);
+      unsigned long value = 
+        ((unsigned char)in_buffer[0]) << 16 |
+        ((unsigned char)in_buffer[1]) << 8 |
+	((unsigned char)in_buffer[2]) << 0;
+
+      out_buffer[0] = base64_tab[(value >> 18) & 0x3F];
+      out_buffer[1] = base64_tab[(value >> 12) & 0x3F];
+      if (fin.gcount() > 1) out_buffer[2] = base64_tab[(value >> 6) & 0x3F];
+      if (fin.gcount() > 2) out_buffer[3] = base64_tab[(value >> 0) & 0x3F];
+
+      if (llength >= 76) {
+        fprintf(fout, "\n");
+        llength = 0;
+      }
+      fprintf(fout, "%c%c%c%c", out_buffer[0], out_buffer[1],out_buffer[2],out_buffer[3]);
+      llength += 4;
+  } while (fin);
+
+  fin.close();
+}
+
+void export_all_symbols()
+{
+
+  // vytvori si temporary MP subor
+  FILE * mpf;
+  thlayout tmplayout;
+  tmplayout.lang = THLANG_SYSTEM;
+  mpf = fopen(thtmp.get_file_name("data.mp"),"w");
+
+  // spusti metapost a nasledne pdftex
+  fprintf(mpf,"Scale:=%.2f;\n",0.01 / tmplayout.scale);
+  if (tmplayout.def_base_scale || tmplayout.redef_base_scale)
+    fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / tmplayout.base_scale);
+  fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n");
+  fprintf(mpf,"background:=(1.0, 1.0, 1.0);\n");
+  fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
+  if (thcmdln.extern_libs)
+    fprintf(mpf,"input therion;\n");
+  else
+    fprintf(mpf,"%s\n",thmpost_library);
+  fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(thlang_getlang(tmplayout.lang)));
+  fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
+  tmplayout.export_mpost(mpf);
+  fprintf(mpf,"background:=white;\n");
+  fprintf(mpf,"transparency:=false;\n");
+
+  // vyexportuje secky znacky
+  size_t iset, isym;
+  unsigned figi = 1, fign;
+  thsymbolset symset;
+  thsymsets_symbols_init();
+  list<legendrecord>::iterator li;
+  // najprv exportujeme secky defaultne
+  tmplayout.legend = TT_LAYOUT_LEGEND_ALL;
+  LEGENDLIST.clear();
+  symset.export_pdf(&tmplayout, mpf, figi);
+  for(isym = 0; isym < thsymbolset_size; isym++) {
+    thsymsets_figure[isym][thsymsets_size] = 0;
+    thsymsets_order[isym] = 0;
+  }
+  for(li = LEGENDLIST.begin(); li != LEGENDLIST.end(); li++) {
+    thsymsets_figure[li->idsym][thsymsets_size] = li->idfig;
+    thsymsets_comment[li->idsym] = li->descr;
+    thsymsets_order[li->idnum] = li->idsym;
+  }
+  tmplayout.legend = TT_LAYOUT_LEGEND_ON;
+  for (iset = 0; iset < thsymsets_size; iset++) {
+    LEGENDLIST.clear();
+    symset.export_symbol_defaults(mpf, thsymsets[iset]);
+    for(isym = 0; isym < thsymbolset_size; isym++) {
+      if (thsymsets_symbols[isym][iset] > 0)
+        symset.used[isym] = true;
+      else
+        symset.used[isym] = false;
+    }
+    symset.export_pdf(&tmplayout, mpf, figi);
+    for(isym = 0; isym < thsymbolset_size; isym++) {
+      thsymsets_figure[isym][iset] = 0;
+    }
+    thsymsets_count[iset] = 0;
+    for(li = LEGENDLIST.begin(); li != LEGENDLIST.end(); li++) {
+      thsymsets_figure[li->idsym][iset] = li->idfig;
+      thsymsets_count[iset]++;
+    }
+  }
+
+  fprintf(mpf,"end;\n");
+  fclose(mpf);
+
+  // run MP
+  thbuffer com, wdir;
+  wdir.guarantee(1024);
+  getcwd(wdir.get_buffer(),1024);
+  chdir(thtmp.get_dir_name());
+
+  // vypise kodovania
+  print_fonts_setup();
+  
+  int retcode;
+  
+#ifdef THWIN32
+  if (!thini.tex_env) {
+    putenv("TEXMFCNF=");
+    putenv("DVIPSHEADERS=");
+    putenv("GFFONTS=");
+    putenv("GLYPHFONTS=");
+    putenv("MFBASES=");
+    putenv("MFINPUTS=");
+    putenv("MFPOOL=");
+#ifdef THMSVC
+    putenv("MPINPUTS=../mpost;.");
+#else
+    putenv("MPINPUTS=");
+#endif
+    putenv("MPMEMS=");
+    putenv("MPPOOL=");
+    putenv("MPSUPPORT=");
+    putenv("PKFONTS=");
+    putenv("PSHEADERS=");
+    putenv("T1FONTS=");
+    putenv("T1INPUTS=");
+    putenv("T42FONTS=");
+    putenv("TEXCONFIG=");
+    putenv("TEXDOCS=");
+    putenv("TEXFONTMAPS=");
+    putenv("TEXFONTS=");
+    putenv("TEXFORMATS=");
+    putenv("TEXINPUTS=");
+    putenv("TEXMFDBS=");
+    putenv("TEXMFINI=");
+    putenv("TEXPICTS=");
+    putenv("TEXPKS=");
+    putenv("TEXPOOL=");
+    putenv("TEXPSHEADERS=");
+    putenv("TEXSOURCES=");
+    putenv("TFMFONTS=");
+    putenv("TTFONTS=");
+    putenv("VFFONTS=");
+    putenv("WEB2C=");
+  }
+#endif  
+
+  // exportuje 
+  com = "\"";
+  com += thini.get_path_mpost();
+  com += "\"";
+//    com += " --interaction nonstopmode data.mp";
+  com += " data.mp";
+#ifdef THDEBUG
+  thprintf("running metapost\n");
+#endif
+  retcode = system(com.get_buffer());
+  thsymbolset_log_log_file("data.log",
+  "####################### metapost log file ########################\n",
+  "#################### end of metapost log file ####################\n",true);
+  if (retcode != EXIT_SUCCESS) {
+    chdir(wdir.get_buffer());
+    ththrow(("metapost exit code -- %d", retcode))
+  }
+
+  fign = figi;
+  thbuffer tdir, tfn, tcom;
+  tdir = wdir.get_buffer();
+  tdir += "/symbols";
+
+#ifdef THWIN32
+    mkdir(tdir);
+#else
+    mkdir(tdir,0046750);
+#endif
+
+  thprintf("converting files");
+  tcom.guarantee(2048);
+  for(figi = 1; figi < fign; figi++) {
+    thprintf(" [%d]", figi);
+    sprintf(tcom.get_buffer(), "gs -dQUIET -dNOPAUSE -dBATCH -dNOPROMPT -sDEVICE=pngalpha -r300x300 -dEPSCrop -sOutputFile=%s/sym%04d.png -fdata.%d", tdir.get_buffer(), figi, figi);
+    retcode = system(tcom.get_buffer());
+  }
+  thprintf(" done.\n");
+
+  chdir(wdir.get_buffer());
+  FILE * hf = fopen("symbols.xhtml","w");
+  fprintf(hf,"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
+  fprintf(hf,"<html xmlns=\"http://www.w3.org/1999/xhtml\"  xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>Therion symbols</title>\n<body>\n");
+  fprintf(hf,"<table border=\"2\" bordercolor=\"#505050\" cellspacing=\"0\">\n<tr>\n<td>Symbol set</td>\n");
+  for(iset = 0; iset < thsymsets_size; iset++) {
+    if (thsymsets_count[iset] > 0) {
+      fprintf(hf,"<td><b>%s</b></td>\n", thsymsets[iset]);
+    }
+  }
+  fprintf(hf,"</tr>\n");
+  unsigned sx, fx;
+  char fname[30];
+  for(isym = 0; isym < thsymbolset_size; isym++) {
+    if(thsymsets_order[isym] > 0) {
+      sx = thsymsets_order[isym];
+      fprintf(hf,"<tr>\n<td>%s</td>\n", thsymsets_comment[sx].c_str());
+      fx = 0;
+      for(iset = 0; iset < thsymsets_size; iset++) {
+        fx += thsymsets_figure[sx][iset];
+      }
+      if (fx > 0) {
+        for(iset = 0; iset < thsymsets_size; iset++) {
+          fx = thsymsets_figure[sx][iset];
+          if (fx > 0) {
+            fprintf(hf,"<td><svg width=\"167px\" height=\"104px\" xmlns=\"http://www.w3.org/2000/svg\"> <image width=\"167px\" height=\"104px\" xlink:href=\"data:image/png;base64,\n");
+            sprintf(fname, "symbols/sym%04d.png", fx);
+            base64_encode_f(fname, hf);
+            fprintf(hf,"\" /></svg></td>\n");
+          } else {
+            fprintf(hf,"<td></td>\n");
+          }
+        }
+      } else {
+        fprintf(hf,"<td bgcolor=\"#cccccc\" colspan=\"%d\"><svg width=\"167px\" height=\"104px\" xmlns=\"http://www.w3.org/2000/svg\"> <image width=\"167px\" height=\"104px\" xlink:href=\"data:image/png;base64,\n", thsymsets_size);
+        sprintf(fname, "symbols/sym%04d.png", thsymsets_figure[sx][thsymsets_size]);
+        base64_encode_f(fname, hf);
+        fprintf(hf,"\" /></svg></td>\n");
+      }
+      fprintf(hf,"</tr>\n");
+    }
+  }
+  fprintf(hf,"</table>\n");
+  fprintf(hf,"</body></html>");
+  fclose(hf);
+
+
 }

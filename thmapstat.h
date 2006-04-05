@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include "thdate.h"
 #include "thperson.h"
+#include "thlegenddata.h"
 
 
 class thmapstat_data {
@@ -123,7 +124,7 @@ class thmapstat {
   void adddata(thmapstat_datamap * dm);
   
 
-  void export_pdftex(FILE * f, class thlayout * layout);
+  void export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata);
   
 };
 

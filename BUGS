@@ -1,7 +1,0 @@
-+ joining more than 2 points does not work - when specified using 2 join commands. Example:
-  join p1 p2
-  join p2 p3
-  will not work. Use
-  join p1 p2 p3
-  instead.
-  

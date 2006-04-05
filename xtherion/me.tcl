@@ -25,8 +25,9 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ## --------------------------------------------------------------------
 
-
 xth_about_status [mc "loading map editor ..."]
+
+catch {package require Img}
 
 set xth(me,dflt,scrap,scale) {}
 
@@ -326,7 +327,7 @@ proc xth_me_create_file {} {
   set xth(me,fsave) 0
   xth_me_unredo_reset
   xth_me_reset_defaults  
-
+  xth_tools_me_enable
 }
 
 
@@ -418,6 +419,7 @@ proc xth_me_destroy_file {} {
     xth_app_title me
     
   }
+  xth_tools_me_enable
 }
 
 

@@ -201,6 +201,9 @@ proc xth_app_finish {} {
   $m add command -label [mc "Switch panels"] -underline 1 \
       -command "xth_app_switch" -font $xth(gui,lfont)
   $m add separator
+
+  $m add command -label [mc "Toggle toolbar"] -underline 1 \
+      -command "xth_tools_toggle" -font $xth(gui,lfont)
   
   menu $m.kbes -tearoff 0
   set encnames [encoding names]
@@ -524,6 +527,24 @@ proc xth_app_show {aname} {
 
   update idletasks  
   xth_ctrl_reshape $aname
+  
+  # toolbar changes
+  # disable map editor tools
+  catch {
+    pack forget $xth(gui,tb).edif
+    pack forget $xth(gui,tb).self
+  }
+  switch $aname {
+    cp {
+    }
+    me {
+      # enable map editor tools
+      pack $xth(gui,tb).self -side right -anchor nw
+      pack $xth(gui,tb).edif -side right
+    }
+    mv {
+    }    
+  }
 }
 
 

@@ -31,8 +31,12 @@
 #include "thlogfile.h"
 #include "thconfig.h"
 //#include <getopt.h>
-#include "extern/getopt.h"
 #include "thtmpdir.h"
+
+#ifdef THMSVC
+#define __STDC__ 1
+#endif
+#include "extern/getopt.h"
 
 
 thcmdline::thcmdline()
@@ -74,6 +78,7 @@ void thcmdline::process(int argc, char * argv[])
     {"print-environment",no_argument,NULL,THPS_PATHS},
     {"print-init-file",no_argument,NULL,THPS_INIT_FILE},
     {"print-library-src",no_argument,NULL,THPS_LIB_SRC},
+    {"print-symbols",no_argument,NULL,THPS_SYMBOLS},
     {"print-tex-encodings",no_argument,NULL,THPS_TEX_ENCODINGS},
     {"print-xtherion-src",no_argument,NULL,THPS_XTHERION_SRC},
     {"use-extern-libs",no_argument,NULL,THPS_EXTERN_LIBS},
@@ -82,7 +87,7 @@ void thcmdline::process(int argc, char * argv[])
   };
 
   while(1) {
-    
+
     oc = getopt_long (argc, argv, "gduxs:l:qLvhip:",
       thlong_options, &oindex);
     
@@ -149,6 +154,10 @@ void thcmdline::process(int argc, char * argv[])
 
       case THPS_TEX_ENCODINGS:
         this->print_state = THPS_TEX_ENCODINGS;
+        break;
+
+      case THPS_SYMBOLS:
+        this->print_state = THPS_SYMBOLS;
         break;
 
       case THPS_XTHERION_SRC:

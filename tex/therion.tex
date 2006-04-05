@@ -194,6 +194,25 @@
   \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
 }
 
+\def\color[#1 #2 #3]{%
+  \tmpdimen=#1pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#2pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#3pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \pdfliteral{rg}
+}
+
 % actual placing of the page elements
 
 \def\dopage{%
@@ -265,7 +284,7 @@
   \hsize=\legendwidth
   \ifnortharrow\vbox to 0pt{\line{\hfil\northarrow}\vss}\fi
   \edef\tmp{\the\cavename} \ifx\tmp\empty \else
-    {\size[26]\the\cavename} \vskip1cm
+    \color[0 0 0]{\size[26]\the\cavename}\color[0 0 0]\vskip1cm
   \fi
   \ifscalebar\scalebar\vskip1cm\fi
   {\rightskip=0pt plus 3em\parskip=3bp
@@ -425,6 +444,7 @@
 
 
 \def\insertmaps{%
+  \color[0 0 0]
   \input th_formdef
   \input th_pagedef
   \input th_pages

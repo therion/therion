@@ -232,7 +232,7 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
     return 1;
 }
 
-#define thmapstat_print_team(team_map, team_name, max_items) \
+#define thmapstat_print_team(team_map, team_name, max_items, teamstr) \
     fprintf(f,"\\" team_name "={"); \
     pd = new thmapstat_person_data [team_map.size()]; \
     i = 0; \
@@ -261,6 +261,7 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
       if (i < (tcnt-1)) \
         b += ","; \
       fprintf(f,"%s%s",utf2tex(b.get_buffer()),(i < (tcnt-1) ? "\n" : "")); \
+      teamstr += thutf82xhtml(b.get_buffer()); \
     } \
     fprintf(f,"}\n");
   
@@ -269,7 +270,7 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
 //      b += thT("units m",layout->lang);
 
 
-void thmapstat::export_pdftex(FILE * f, class thlayout * layout) {
+void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata) {
 
   thbuffer b,c;
   unsigned long i, cnt, tcnt;
@@ -302,6 +303,8 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout) {
     clen += ii->first.ptr->stat_length;
   }
 
+  ldata->cavelength = "";
+  ldata->cavelengthtitle = "";
   if (clen > 0) {
     //b = "";  
     //snprintf(b.get_buffer(),255,"%.0f",clen);
@@ -311,8 +314,13 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout) {
     b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavelengthtitle={%s}\n",utf2tex(thT("title cave length",layout->lang)));
     fprintf(f,"\\cavelength={%s}\n",utf2tex(b.get_buffer()));
+    ldata->cavelength = thutf82xhtml(b.get_buffer());
+    ldata->cavelengthtitle = thT("title cave length",layout->lang);
   }
   
+  ldata->cavedepth = "";
+  ldata->cavedepthtitle = "";
+
   if (z_top > z_bot) {
     //b = "";  
     //snprintf(b.get_buffer(),255,"%.0f",z_top-z_bot);
@@ -322,75 +330,112 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout) {
     b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavedepthtitle={%s}\n",utf2tex(thT("title cave depth",layout->lang)));
     fprintf(f,"\\cavedepth={%s}\n",utf2tex(b.get_buffer()));
+
+    ldata->cavedepth = thutf82xhtml(b.get_buffer());
+    ldata->cavedepthtitle = thT("title cave depth",layout->lang);
+
   }
   
   show_lengths = layout->explo_lens;
+//  ldata->cartodate
+//  ldata->cartoteam
+//  ldata->cartotitle
+//  ldata->topodate
+//  ldata->topoteam
+//  ldata->topotitle
+//  ldata->copyrights
+
+
+
+  ldata->explodate = "";
+  ldata->exploteam = "";
+  ldata->explotitle = "";
   if ((this->discovered_by.size() > 0) && (layout->max_explos != 0)) {
   
     cnt = this->discovered_by.size();
 
-    if (cnt > 1)
+    if (cnt > 1) {
       fprintf(f,"\\explotitle={%s}\n",
         utf2tex(thT("title explo (plural)",layout->lang)));
-    else
+      ldata->explotitle = thT("title explo (plural)",layout->lang);
+    } else {
       fprintf(f,"\\explotitle={%s}\n",
         utf2tex(thT("title explo",layout->lang)));
-  
+      ldata->explotitle = thT("title explo",layout->lang);
+    }
+
     if (discovered_date.is_defined()) {
       fprintf(f,"\\explodate={%s}\n",
-        utf2tex(thT(discovered_date.get_str(TT_DATE_FMT_UTF8_Y),layout->lang)));
+        utf2tex(discovered_date.get_str(TT_DATE_FMT_UTF8_Y)));
+      ldata->explodate = discovered_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->discovered_by,"exploteam", layout->max_explos);
+    thmapstat_print_team(this->discovered_by,"exploteam", layout->max_explos, ldata->exploteam);
     
   }
   
 
+  ldata->topodate = "";
+  ldata->topoteam = "";
+  ldata->topotitle = "";
   show_lengths = layout->topo_lens;
   if ((this->surveyed_by.size() > 0) && (layout->max_topos != 0)) {
   
     cnt = this->surveyed_by.size();
 
-    if (cnt > 1)
+    if (cnt > 1) {
       fprintf(f,"\\topotitle={%s}\n",
         utf2tex(thT("title topo (plural)",layout->lang)));
-    else
+      ldata->topotitle = thT("title topo (plural)",layout->lang);
+    } else {
       fprintf(f,"\\topotitle={%s}\n",
         utf2tex(thT("title topo",layout->lang)));
+      ldata->topotitle = thT("title topo",layout->lang);
+    }
   
     if (surveyed_date.is_defined()) {
       fprintf(f,"\\topodate={%s}\n",
-        utf2tex(thT(surveyed_date.get_str(TT_DATE_FMT_UTF8_Y),layout->lang)));
+        utf2tex(surveyed_date.get_str(TT_DATE_FMT_UTF8_Y)));
+      ldata->topodate = surveyed_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->surveyed_by,"topoteam", layout->max_topos);
+    thmapstat_print_team(this->surveyed_by,"topoteam", layout->max_topos, ldata->topoteam);
     
   }
 
+  ldata->cartodate = "";
+  ldata->cartoteam = "";
+  ldata->cartotitle = "";
   show_lengths = false;
   if ((this->drawn_by.size() > 0) && (layout->max_cartos != 0)) {
 
     cnt = this->drawn_by.size();
 
-    if (cnt > 1)
+    if (cnt > 1) {
       fprintf(f,"\\cartotitle={%s}\n",
         utf2tex(thT("title carto (plural)",layout->lang)));
-    else
+      ldata->cartotitle = thT("title carto (plural)",layout->lang);
+    } else {
       fprintf(f,"\\cartotitle={%s}\n",
         utf2tex(thT("title carto",layout->lang)));
-  
+      ldata->cartotitle = thT("title carto",layout->lang);
+    }
+
     if (drawn_date.is_defined()) {
       fprintf(f,"\\cartodate={%s}\n",
-        utf2tex(thT(drawn_date.get_str(TT_DATE_FMT_UTF8_Y),layout->lang)));
+        utf2tex(drawn_date.get_str(TT_DATE_FMT_UTF8_Y)));
+      ldata->cartodate = drawn_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->drawn_by,"cartoteam", layout->max_cartos);
+    thmapstat_print_team(this->drawn_by,"cartoteam", layout->max_cartos, ldata->cartoteam);
     
   }
 
+  ldata->copyrights = "";
   if ((this->copyright.size() > 0) && (layout->max_copys != 0)) {
     cnt = this->copyright.size();
     fprintf(f,"\\copyrights={%s",utf2tex("(c) "));
+    ldata->copyrights = "(c) ";
     i = 0;
     for (ci = this->copyright.begin();
           (ci != this->copyright.end()) && ((layout->max_copys < 0) || (i < ((unsigned long)layout->max_copys))); ci++) {
@@ -400,6 +445,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout) {
       b += ci->second.date.get_str(TT_DATE_FMT_UTF8_Y);
       if (i < cnt)
         b += ", ";
+      ldata->copyrights += thutf82xhtml(b.get_buffer());
       fprintf(f,"%s%s",utf2tex(b.get_buffer()),(i < cnt ? "\n" : ""));
     }
     fprintf(f,"}\n");

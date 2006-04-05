@@ -26,6 +26,9 @@
  */
  
 #include "thdataleg.h"
+#ifdef THMSVC
+#define hypot _hypot
+#endif
 
 
 thdataleg::thdataleg()

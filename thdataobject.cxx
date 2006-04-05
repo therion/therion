@@ -161,20 +161,12 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
       }
       if (strlen(args[0]) == 0)
         this->stnpref = NULL;
-      else {
-        if (th_is_extkeyword(args[0]))
-          this->stnpref = this->db->strstore(args[0]);
-        else 
-          ththrow(("invalid keyword -- %s", args[0]));
-      }
+      else
+        this->stnpref = this->db->strstore(args[0]);
       if (strlen(args[1]) == 0)
         this->stnsuff = NULL;
-      else {
-        if (th_is_extkeyword(args[1]))
-          this->stnsuff = this->db->strstore(args[1]);
-        else 
-          ththrow(("invalid keyword -- %s", args[1]));
-      }
+      else
+        this->stnsuff = this->db->strstore(args[1]);
       break;
 
     case TT_DATAOBJECT_TITLE:

@@ -283,3 +283,18 @@ proc xth_me_goto_line {ln} {
 }
 
 
+proc xth_me_ss_next_cmd {type} {
+  global xth
+  set cselid $xth(me,cmds,selid)
+  set cpos [lsearch -exact $xth(me,cmds,xlist) $cselid]
+  if {$cpos < 0} {set cpos 0}
+  set tlen [llength $xth(me,cmds,xlist)]
+  set nxlist [lrange $xth(me,cmds,xlist) [expr $cpos + 1] end]
+  append nxlist " [lrange $xth(me,cmds,xlist) 0 $cpos]"
+  foreach xx $nxlist {
+    if {$xth(me,cmds,$xx,ct) == $type} {
+      xth_me_cmds_select $xx
+      break
+    }
+  }
+}

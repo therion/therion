@@ -37,6 +37,12 @@
 #include "thscrap.h"
 #include <map>
 #include "thsurface.h"
+#include "extern/lxFile.h"
+#include "thsurface.h"
+
+#ifdef THMSVC
+#define strcasecmp _stricmp
+#endif
 
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
@@ -105,9 +111,16 @@ void thexpmodel::process_db(class thdatabase * dbp)
     thexp_set_ext_fmt(".vrml", TT_EXPMODEL_FMT_VRML)
     thexp_set_ext_fmt(".3dmf", TT_EXPMODEL_FMT_3DMF)
     thexp_set_ext_fmt(".dxf", TT_EXPMODEL_FMT_DXF)
-    thexp_set_ext_fmt(".tlx", TT_EXPMODEL_FMT_TLX)
+    thexp_set_ext_fmt(".tlx", TT_EXPMODEL_FMT_LOCH)
+    thexp_set_ext_fmt(".lox", TT_EXPMODEL_FMT_LOX)
   }  
   switch (this->format) {
+    case TT_EXPMODEL_FMT_LOCH:
+      this->export_tlx_file(dbp);
+      break;
+    case TT_EXPMODEL_FMT_LOX:
+      this->export_lox_file(dbp);
+      break;
     case TT_EXPMODEL_FMT_SURVEX:
       this->export_3d_file(dbp);
       break;
@@ -125,9 +138,6 @@ void thexpmodel::process_db(class thdatabase * dbp)
       break;
     case TT_EXPMODEL_FMT_DXF:
       this->export_dxf_file(dbp);
-      break;
-    case TT_EXPMODEL_FMT_TLX:
-      this->export_tlx_file(dbp);
       break;
   }
 }
@@ -1362,7 +1372,7 @@ void thexpmodel::export_tlx_file(class thdatabase * dbp) {
       sptr = (thsurvey*)(*obi);
       if (sptr->num1 > 0) {
         sptr->num1 = survnum++;
-        fprintf(pltf,"S %d %d %s\n", sptr->num1, (sptr->fsptr != NULL) ? sptr->fsptr->num1 : -1, sptr->name);
+        fprintf(pltf,"S %ld %ld %s\n", sptr->num1, (sptr->fsptr != NULL) ? sptr->fsptr->num1 : -1, sptr->name);
         if (strlen(sptr->title)) {
           fprintf(pltf,"C %s\n", sptr->title);
         }
@@ -1379,7 +1389,7 @@ void thexpmodel::export_tlx_file(class thdatabase * dbp) {
     if (stnum[i] > 0) {
       stnum[i] = survnum;
       pst = &(dbp->db1d.station_vec[i]);
-      fprintf(pltf,"T %d %d %s %.3f %.3f %.3f G%s%s%s\n", survnum, pst->survey->num1, pst->name, pst->x, pst->y, pst->z, (pst->flags & TT_STATIONFLAG_ENTRANCE) != 0 ? "E" : "", (pst->flags & TT_STATIONFLAG_FIXED) != 0 ? "F" : "", (pst->flags & TT_STATIONFLAG_CONT) != 0 ? "C" : "");
+      fprintf(pltf,"T %ld %ld %s %.3f %.3f %.3f G%s%s%s\n", survnum, pst->survey->num1, pst->name, pst->x, pst->y, pst->z, (pst->flags & TT_STATIONFLAG_ENTRANCE) != 0 ? "E" : "", (pst->flags & TT_STATIONFLAG_FIXED) != 0 ? "F" : "", (pst->flags & TT_STATIONFLAG_CONT) != 0 ? "C" : "");
       if (pst->comment != NULL) {
         fprintf(pltf,"C %s\n", pst->comment);
       }
@@ -1392,7 +1402,7 @@ void thexpmodel::export_tlx_file(class thdatabase * dbp) {
   tlegs = dbp->db1d.get_tree_legs();
   for(i = 0; i < nlegs; i++, tlegs++) {
     if ((*tlegs)->survey->is_selected()) {
-      fprintf(pltf,"H %d %d %d G%s%s\n", 
+      fprintf(pltf,"H %ld %ld %ld G%s%s\n", 
           stnum[(*tlegs)->leg->from.id - 1],
           stnum[(*tlegs)->leg->to.id - 1],
           (*tlegs)->survey->num1,
@@ -1408,15 +1418,28 @@ void thexpmodel::export_tlx_file(class thdatabase * dbp) {
 
   // export povrchov (vsetkych - ak chceme)
   thdb3ddata * tmp3d;
+  thsurface * csrf;
   if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
     // prejde secky surfaces a exportuje z nich povrchy
     obi = dbp->object_list.begin();
     while (obi != dbp->object_list.end()) {
       switch ((*obi)->get_class_id()) {
         case TT_SURFACE_CMD:
-          tmp3d = ((thsurface*)(*obi))->get_3d();
+          csrf = ((thsurface*)(*obi));
+          if (csrf->pict_name != NULL) {
+            csrf->calibrate();
+            fprintf(pltf,"BF %s\nBC %.14f %.14f %.14f %.14f %.14f %.14f\n",
+              csrf->pict_name,
+              csrf->calib_x,
+              csrf->calib_y,
+              csrf->calib_xx,
+              csrf->calib_yx,
+              csrf->calib_xy,
+              csrf->calib_yy);
+          }
+          tmp3d = csrf->get_3d();
           if ((tmp3d != NULL) && (tmp3d->nfaces > 0)) {
-            fprintf(pltf,"X 1 %d\n", ((thsurface*)(*obi))->fsptr->num1);
+            fprintf(pltf,"X 1 %ld\n", csrf->fsptr->num1);
             tmp3d->exp_shift_x = 0.0;
             tmp3d->exp_shift_y = 0.0;
             tmp3d->exp_shift_z = 0.0;
@@ -1447,7 +1470,7 @@ void thexpmodel::export_tlx_file(class thdatabase * dbp) {
             d3d->exp_shift_x = 0.0;
             d3d->exp_shift_y = 0.0;
             d3d->exp_shift_z = 0.0;
-            fprintf(pltf,"X 0 %d\n", cs->fsptr->num1);
+            fprintf(pltf,"X 0 %ld\n", cs->fsptr->num1);
             d3d->export_tlx(pltf);
           }
         }
@@ -1461,6 +1484,343 @@ void thexpmodel::export_tlx_file(class thdatabase * dbp) {
   
   if (stnum != NULL)
     delete [] stnum;
+  
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}
+
+
+
+
+
+void thexpmodel::export_lox_file(class thdatabase * dbp) {
+
+  char * fnm;  
+  if (this->outpt_def)
+    fnm = this->outpt;
+  else
+    fnm = "cave.lox";
+
+  thdb_object_list_type::iterator obi;
+  
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif
+
+  lxFile expf;
+      
+  thsurvey * sptr, * tsptr;
+
+  // vsetkym surveyom nastavi num1 na -1 ak nie su, 1 ak
+  // su oznacene   
+  
+  obi = dbp->object_list.begin();
+  while (obi != dbp->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+      sptr = (thsurvey*)(*obi);
+      if (sptr->is_selected()) {
+        sptr->num1 = 1;
+      } else {
+        sptr->num1 = -1;
+      }
+    }
+    obi++;
+  }
+
+  unsigned long nlegs = dbp->db1d.get_tree_size(),
+    nstat = dbp->db1d.station_vec.size(), i, j;
+  thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
+  long * stnum = NULL;
+  if (nstat > 0) {
+    stnum = new long[nstat];
+    for (i = 0; i < nstat; i++)
+      stnum[i] = -1; //(dbp->db1d.station_vec[i].survey->is_selected() ? 1 : -1);
+  }
+
+  // prejde vsetky zamery, ktore ideme 
+  // exportovat a parent surveyom bodov tychto zamer nastavi num1 na 1
+  // rovnako aj bodom num1 na 1
+  bool txsfc, txcav, issfc;
+  txsfc = ((this->items & TT_EXPMODEL_ITEM_SURFACECENTERLINE) != 0);
+  txcav = ((this->items & TT_EXPMODEL_ITEM_CAVECENTERLINE) != 0);
+  for(i = 0; i < nlegs; i++, tlegs++) {
+    issfc = (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0);
+    if ((*tlegs)->survey->is_selected() && ((txsfc && issfc) || (txcav && !issfc))) {
+      stnum[(*tlegs)->leg->from.id - 1] = 1;
+      dbp->db1d.station_vec[(*tlegs)->leg->from.id - 1].survey->num1 = 1;
+      stnum[(*tlegs)->leg->to.id - 1] = 1;
+      dbp->db1d.station_vec[(*tlegs)->leg->to.id - 1].survey->num1 = 1;
+    }
+  }
+  
+  // opat prejde vsetky surveye - doplni medziclanky a nastavi num1 
+  // nastavi od 0 po n - exportuje ich
+  obi = dbp->object_list.begin();
+  while (obi != dbp->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+      sptr = (thsurvey*)(*obi);
+      if ((sptr->num1 > 0) && (sptr->fsptr != NULL)) {
+        tsptr = sptr->fsptr;
+        if (tsptr->num1 > 0)
+          tsptr = NULL;
+        if (tsptr != NULL)
+          tsptr = tsptr->fsptr;
+        while ((tsptr != NULL) && (tsptr->num1 < 0))
+          tsptr = tsptr->fsptr;
+        if (tsptr != NULL) {
+          sptr = sptr->fsptr;
+          while (sptr->id != tsptr->id) {
+            sptr->num1 = 1;
+            sptr = sptr->fsptr;
+          }
+        }
+      }
+    }
+    obi++;
+  }
+
+  lxFileSurvey expf_survey;
+
+  long survnum = 0;
+  obi = dbp->object_list.begin();
+  while (obi != dbp->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+      sptr = (thsurvey*)(*obi);
+      if (sptr->num1 > 0) {
+        sptr->num1 = survnum++;
+
+        expf_survey.m_id = sptr->num1;
+        expf_survey.m_parent = (sptr->fsptr != NULL) ? sptr->fsptr->num1 : sptr->num1;
+        expf_survey.m_namePtr = expf.m_surveysData.AppendStr(sptr->name);
+        expf_survey.m_titlePtr = expf.m_surveysData.AppendStr(sptr->title);
+        expf.m_surveys.push_back(expf_survey);
+
+      }
+    }
+    obi++;
+  }
+
+  // prejde vsetky body a nastavi im num od 0 po n a exportuje ich
+  lxFileStation expf_station;
+
+  survnum = 0;
+  thdb1ds * pst;
+  for (i = 0; i < nstat; i++) {
+    if (stnum[i] > 0) {
+      stnum[i] = survnum;
+      pst = &(dbp->db1d.station_vec[i]);
+      //fprintf(pltf,"T %ld %ld %s %.3f %.3f %.3f G%s%s%s\n", survnum, pst->survey->num1, pst->name, pst->x, pst->y, pst->z, (pst->flags & TT_STATIONFLAG_ENTRANCE) != 0 ? "E" : "", (pst->flags & TT_STATIONFLAG_FIXED) != 0 ? "F" : "", (pst->flags & TT_STATIONFLAG_CONT) != 0 ? "C" : "");
+      
+      expf_station.m_c[0] = pst->x;
+      expf_station.m_c[1] = pst->y;
+      expf_station.m_c[2] = pst->z;
+      expf_station.m_id = survnum;
+      expf_station.m_surveyId = pst->survey->num1;
+      expf_station.m_namePtr = expf.m_stationsData.AppendStr(pst->name);
+      expf_station.m_commentPtr = expf.m_stationsData.AppendStr(pst->comment);
+      expf_station.m_flags = 0;
+      if ((pst->flags & TT_STATIONFLAG_ENTRANCE) != 0)
+        expf_station.m_flags |= LXFILE_STATION_FLAG_ENTRANCE;
+      if ((pst->flags & TT_STATIONFLAG_FIXED) != 0)
+        expf_station.m_flags |= LXFILE_STATION_FLAG_FIXED;
+      if ((pst->flags & TT_STATIONFLAG_CONT) != 0)
+        expf_station.m_flags |= LXFILE_STATION_FLAG_CONTINUATION;
+      expf.m_stations.push_back(expf_station);
+
+      survnum++;
+    }    
+  }
+
+  
+  // exportuje vsetky zamery ktorych psurveye su oznacene, ak
+  // walls tak aj dimensions
+  lxFileShot expf_shot;
+  tlegs = dbp->db1d.get_tree_legs();
+  for(i = 0; i < nlegs; i++, tlegs++) {
+    issfc = (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0);
+    if ((*tlegs)->survey->is_selected() && ((txsfc && issfc) || (txcav && !issfc))) {
+      expf_shot.m_from = stnum[(*tlegs)->leg->from.id - 1];
+      expf_shot.m_to = stnum[(*tlegs)->leg->to.id - 1];
+      expf_shot.m_surveyId = (*tlegs)->survey->num1;
+      expf_shot.m_flags = 0;
+      if (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0)
+        expf_shot.m_flags |= LXFILE_SHOT_FLAG_SURFACE;
+      if (((*tlegs)->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
+        expf_shot.m_flags |= LXFILE_SHOT_FLAG_DUPLICATE;
+      if ((*tlegs)->leg->walls != TT_FALSE) {
+        expf_shot.m_sectionType = LXFILE_SHOT_SECTION_OVAL;
+        expf_shot.m_fLRUD[2] = (*tlegs)->leg->from_up;
+        expf_shot.m_fLRUD[3] = (*tlegs)->leg->from_down;
+        expf_shot.m_fLRUD[0] = (*tlegs)->leg->from_left;
+        expf_shot.m_fLRUD[1] = (*tlegs)->leg->from_right;
+        expf_shot.m_tLRUD[2] = (*tlegs)->leg->to_up;
+        expf_shot.m_tLRUD[3] = (*tlegs)->leg->to_down;
+        expf_shot.m_tLRUD[0] = (*tlegs)->leg->to_left;
+        expf_shot.m_tLRUD[1] = (*tlegs)->leg->to_right;
+        expf_shot.m_threshold = (*tlegs)->leg->vtresh;
+      }
+      else
+        expf_shot.m_sectionType = LXFILE_SHOT_SECTION_NONE;
+      expf.m_shots.push_back(expf_shot);
+    }
+  }
+  lxFileSurface expf_sfc;
+  lxFileSurfaceBitmap expf_sfcBmp;
+
+
+  // export povrchov (vsetkych - ak chceme)
+  thdb3ddata * tmp3d;
+  thsurface * csrf;
+  survnum = 0;
+  if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
+    // prejde secky surfaces a exportuje z nich povrchy
+    obi = dbp->object_list.begin();
+    while (obi != dbp->object_list.end()) {
+      switch ((*obi)->get_class_id()) {
+        case TT_SURFACE_CMD:
+          csrf = ((thsurface*)(*obi));
+          tmp3d = csrf->get_3d();
+          if ((tmp3d != NULL) && (tmp3d->nfaces > 0)) {
+            expf_sfc.m_id = survnum;
+            expf_sfc.m_width = csrf->grid_nx;
+            expf_sfc.m_height = csrf->grid_ny;
+            expf_sfc.m_calib[0] = csrf->grid_ox;
+            expf_sfc.m_calib[1] = csrf->grid_oy;
+            expf_sfc.m_calib[2] = csrf->grid_dx;
+            expf_sfc.m_calib[3] = 0.0;
+            expf_sfc.m_calib[4] = 0.0;
+            expf_sfc.m_calib[5] = csrf->grid_dy;
+
+            lxFileDbl * cdata = new lxFileDbl[csrf->grid_size];
+            for(i = 0; i < (unsigned long) csrf->grid_size; i++) {
+              cdata[i] = csrf->grid[i];
+            }
+            expf_sfc.m_dataPtr = expf.m_surfacesData.AppendData((void *) cdata, csrf->grid_size * sizeof(lxFileDbl));
+            expf.m_surfaces.push_back(expf_sfc);
+            delete [] cdata;
+            
+            if (csrf->pict_name != NULL) {
+              csrf->calibrate();
+              expf_sfcBmp.m_surfaceId = survnum;
+              switch (csrf->pict_type) {
+                case TT_IMG_TYPE_PNG:
+                  expf_sfcBmp.m_type = LXFILE_BITMAP_PNG;
+                default:
+                  expf_sfcBmp.m_type = LXFILE_BITMAP_JPEG;
+              }
+              expf_sfcBmp.m_dataPtr = expf.m_surfaceBitmapsData.AppendFile(csrf->pict_name);
+              expf_sfcBmp.m_calib[0] = csrf->calib_x;
+              expf_sfcBmp.m_calib[1] = csrf->calib_y;
+              expf_sfcBmp.m_calib[2] = csrf->calib_xx;
+              expf_sfcBmp.m_calib[3] = csrf->calib_xy;
+              expf_sfcBmp.m_calib[4] = csrf->calib_yx;
+              expf_sfcBmp.m_calib[5] = csrf->calib_yy;
+              expf.m_surfaceBitmaps.push_back(expf_sfcBmp);
+            }
+            survnum++;
+          }
+          break;
+      }
+      obi++;
+    }
+  }
+
+  lxFileScrap expf_scrap;
+  survnum = 0;
+
+  // export stien
+  if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
+  
+    // 3D DATA 
+    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+    thscrap * cs;
+    thdb3ddata * d3d;
+    
+    if (!prjid.newprj) {
+      thdb.db2d.process_projection(prjid.prj);
+      cs = prjid.prj->first_scrap;
+      while(cs != NULL) {
+        if (cs->fsptr->is_selected()) {
+          d3d = cs->get_3d_outline();
+          if ((d3d != NULL) && (d3d->nfaces > 0)) {
+            expf_scrap.m_id = survnum;
+            expf_scrap.m_surveyId = cs->fsptr->num1;
+            // points & triangles
+
+            lxFile3Point * pdata = new lxFile3Point [d3d->nvertices];
+            thdb3dvx * vxp;
+            std::list<lxFile3Angle> tlist;
+            lxFile3Angle t3;
+            for(i = 0, vxp = d3d->firstvx; vxp != NULL; vxp = vxp->next, i++) {
+              pdata[i].m_c[0] = vxp->x;
+              pdata[i].m_c[1] = vxp->y;
+              pdata[i].m_c[2] = vxp->z;
+            }
+            expf_scrap.m_numPoints = d3d->nvertices;
+            expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
+            thdb3dfc * fcp;
+            thdb3dfx * fxp;
+            for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
+              switch (fcp->type) {
+                case THDB3DFC_TRIANGLE_STRIP:
+                  for(j = 0, fxp = fcp->firstfx; fxp->next->next != NULL; j++, fxp = fxp->next) {
+                    t3.m_v[0] = fxp->vertex->id;
+                    switch (j % 2) {
+                      case 0:
+                        t3.m_v[1] = fxp->next->vertex->id;
+                        t3.m_v[2] = fxp->next->next->vertex->id;
+                      default:
+                        t3.m_v[2] = fxp->next->vertex->id;
+                        t3.m_v[1] = fxp->next->next->vertex->id;
+                    }
+                    tlist.insert(tlist.end(), t3);
+                  }
+                  break;
+                case THDB3DFC_TRIANGLES:
+                  for(j = 0, fxp = fcp->firstfx; fxp != NULL; j++, fxp = fxp->next->next->next) {
+                    t3.m_v[0] = fxp->vertex->id;
+                    t3.m_v[1] = fxp->next->vertex->id;
+                    t3.m_v[2] = fxp->next->next->vertex->id;
+                    tlist.insert(tlist.end(), t3);
+                  }
+                  break;
+              }
+            }
+            lxFile3Angle * tdata = new lxFile3Angle[tlist.size()];
+            std::list<lxFile3Angle>::iterator tli;
+            for(i = 0, tli = tlist.begin(); tli != tlist.end(); tli++, i++) {
+              tdata[i] = *tli;
+            }
+            expf_scrap.m_num3Angles = tlist.size();
+            expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(tdata, i * sizeof(lxFile3Angle));
+            delete [] pdata;
+            delete [] tdata;
+            expf.m_scraps.push_back(expf_scrap);
+            survnum++;
+          }
+        }
+        cs = cs->proj_next_scrap;
+      }
+    }
+    
+  } // WALLS  
+  
+  if (stnum != NULL)
+    delete [] stnum;
+
+  expf.ExportLOX(fnm);
+
+  if (expf.m_error.size() > 0) {
+    thwarning(("error writing %s",fnm))
+    return;
+  }
+
   
 #ifdef THDEBUG
 #else

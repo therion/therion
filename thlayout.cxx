@@ -41,6 +41,7 @@ enum {
   TTLDBG_JOINS = 1,
   TTLDBG_STATIONS = 2,
   TTLDBG_SCRAPNAMES = 4,
+  TTLDBG_STATIONNAMES = 8,
 };
 
 void thlayout_color::parse(char * str) {
@@ -683,7 +684,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid debug switch -- %s",args[0]))        
       switch (sv) {
         case TT_LAYOUT_DEBUG_ALL:
-          this->debug = TTLDBG_JOINS | TTLDBG_STATIONS | TTLDBG_SCRAPNAMES;
+          this->debug = TTLDBG_JOINS | TTLDBG_STATIONS | TTLDBG_SCRAPNAMES | TTLDBG_STATIONNAMES;
           break;
         case TT_LAYOUT_DEBUG_OFF:
           this->debug = 0;
@@ -696,6 +697,9 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           break;
         case TT_LAYOUT_DEBUG_SCRAPNAMES:
           this->debug |= TTLDBG_SCRAPNAMES;
+          break;
+        case TT_LAYOUT_DEBUG_STATIONNAMES:
+          this->debug |= TTLDBG_STATIONNAMES;
           break;
       }
       this->def_debug = true;
@@ -1806,6 +1810,10 @@ bool thlayout::is_debug_joins() {
 
 bool thlayout::is_debug_scrapnames() {
   return ((this->debug & TTLDBG_SCRAPNAMES) != 0);
+}
+
+bool thlayout::is_debug_stationnames() {
+  return ((this->debug & TTLDBG_STATIONNAMES) != 0);
 }
 
 std::list <thlayout_copy_src> thlayout_copy_src_list;
