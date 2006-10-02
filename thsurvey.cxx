@@ -42,6 +42,7 @@ thsurvey::thsurvey()
   this->decdef = false;
   this->decuds = thnan;
   this->num1 = 0;
+  this->level = 0;
   this->person_renames.clear();
   this->data = NULL;
 }

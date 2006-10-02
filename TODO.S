@@ -1,8 +1,15 @@
-HOT LIST:
-
 therion:
 
++ specialnu znacku pre jaskynu exportovanu z polygonu
++ fixnut BUG s -map-level 1 a color map-fg map
++ nepouzivat walls-off pri PLT exporte
++ NOT_LRUD priradit v therione shotom, ak je bod v scrape ktory exportujeme
 + some comment to continuation
++ thmorphtrans to thdb2d morphing
++ morphing across shots not stations
++ delete sketch object
++ allow input within therion command (e.g. centerline)
++ error when calling external mpost, pdftex under Win32
 + report line number when error
 + shp file export
 + warning if reading/backreading difference is big
@@ -60,6 +67,7 @@ therion:
   
 xtherion:
 
++ highlight line when selected in area editor
 + xvi shifting BUG
 + auto shift picture when inserted
 + undo/redo buttons
@@ -85,6 +93,7 @@ WOULD BE NICE LIST:
 
 therion:
 
++ shapefile 2D/3D export
 + find different distortion measure
 + export database: format text|txt
 + surface selection according to coverage
@@ -114,7 +123,7 @@ xtherion:
 
 
 ===============================================================================
-Internal remarks - do not try to understand :)
+Structure of new therion documentation & tests
 ===============================================================================
 
 TESTS:

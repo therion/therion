@@ -141,7 +141,7 @@ def p_disk_UIS (expr pos,theta,sc,al)=
     thdraw p;
 enddef;
 
-def p_gypsum_CCNP (expr pos,theta,sc,al)=
+def p_gypsum_NSS (expr pos,theta,sc,al)=
     U:=(.25u,.25u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -149,7 +149,7 @@ def p_gypsum_CCNP (expr pos,theta,sc,al)=
     thdraw (0,-.25u)--(0,.25u);
 enddef;
 
-def p_aragonite_CCNP (expr pos,theta,sc,al)=
+def p_aragonite_NSS (expr pos,theta,sc,al)=
     U:=(.3u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -171,7 +171,7 @@ def p_cavepearl_SKBB (expr pos,theta,sc,al)=
     thdraw p rotated 240;
 enddef;
 
-def p_gypsumflower_CCNP (expr pos,theta,sc,al)=
+def p_gypsumflower_NSS (expr pos,theta,sc,al)=
     U:=(.4u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -232,7 +232,7 @@ def p_flute_UIS (expr pos,theta,sc,al)=
     thdraw (-.3u,.2u){dir -70}..{dir 70}(.3u,.2u);
 enddef;
 
-def p_raft_CCNP (expr pos,theta,sc,al)=
+def p_raft_NSS (expr pos,theta,sc,al)=
     U:=(.5u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -240,7 +240,7 @@ def p_raft_CCNP (expr pos,theta,sc,al)=
         {dir -80}(.5u,-.2u);
 enddef;
 
-def p_raftcone_CCNP (expr pos,theta,sc,al)=
+def p_raftcone_NSS (expr pos,theta,sc,al)=
     U:=(.3u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -277,14 +277,14 @@ def p_lowend_UIS (expr pos,theta,sc,al)=
     thdraw (-.4u,.1u)--(.4u,.1u);
 enddef;
 
-def p_lowend_CCNP (expr pos,theta,sc,al)=
+def p_lowend_NSS (expr pos,theta,sc,al)=
     U:=(.4u,0);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     thdraw (-.4u,0)--(.4u,0);
 enddef;
 
-def p_flowstonechoke_CCNP (expr pos,theta,sc,al)=
+def p_flowstonechoke_NSS (expr pos,theta,sc,al)=
     U:=(.4u,.3u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -295,7 +295,7 @@ def p_flowstonechoke_CCNP (expr pos,theta,sc,al)=
     thdraw p reflectedabout (origin,down) shifted (0,.2u);
 enddef;
 
-def p_breakdownchoke_CCNP (expr pos,theta,sc,al)=
+def p_breakdownchoke_NSS (expr pos,theta,sc,al)=
     U:=(.5u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -480,6 +480,25 @@ def p_gradient_UIS (expr pos,theta,sc,al)=
     p:=(-.15u,.6u)--(0,u)--(.15u,.6u)--cycle;
     thfill p;
     thdraw p;
+enddef;
+
+def p_gradient_BCRA (expr pos,theta,sc,al)=
+    U:=(.25u,0.7u);
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    thfill (-.25u,-0.7u)--(0,.7u)--(.25u,-.7u)--cycle;
+enddef;
+
+% by Philip Schuchardt
+def p_gradient_NSS (expr pos,theta,sc,al) =
+  U:=(.7u, .6u);
+  T:=identity aligned al rotated theta scaled sc shifted pos;
+  pickup PenC;
+
+  thdraw (-.3u, -.5u) -- (-.7u, -.2u);
+  thdraw (-.2u, -.4u) -- (-.4u, .3u);
+  thdraw (0u, -.3u) -- (0u, .6u);
+  thdraw (.3u, -.5u) -- (.7u, -.2u);
+  thdraw (.2u, -.4u) -- (.4u, .3u);
 enddef;
 
 def p_waterflow_permanent_UIS (expr pos,theta,sc,al)=

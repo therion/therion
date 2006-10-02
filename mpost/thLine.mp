@@ -194,7 +194,7 @@ enddef;
 
 let l_floorstep_UIS = l_pit_UIS;
 
-def l_floormeander_SM (expr P) =
+def l_floormeander_SKBB (expr P) =
   l_floorstep_UIS (P);
   l_floorstep_UIS (reverse P);
 enddef;
@@ -243,7 +243,7 @@ def l_ceilingstep_SKBB (expr P) =
   endfor;
 enddef;
 
-def l_ceilingmeander_SM (expr P) =
+def l_ceilingmeander_SKBB (expr P) =
   l_ceilingstep_SKBB (P);
   l_ceilingstep_SKBB (reverse P);
 enddef;
@@ -379,6 +379,138 @@ def l_slope_SKBB (expr P,S)(text Q) =
 %pickup pencircle scaled 3pt;
 %for i=0 upto li: draw point i of P; endfor;
 enddef;
+
+
+def l_slope_BCRA (expr P,S)(text Q) = 
+%show Q;
+  T:=identity;
+  numeric dirs[];
+  numeric lengths[];
+  for i=Q:
+    dirs[redpart i]:=greenpart i;
+    lengths[redpart i]:=bluepart i;
+  endfor;  
+
+
+  li:=length(P); % last
+
+  alw_perpendicular:=true;
+
+  for i=0 upto li:
+    if unknown dirs[i]: dirs[i]:=-1; 
+    else: 
+      if dirs[i]>-1:
+        dirs[i]:=((90-dirs[i]) - angle(thdir(P,i))) mod 360; 
+        alw_perpendicular:=false;
+      fi;
+    fi;
+    if unknown lengths[i]: lengths[i]:=-1; fi;
+  endfor;
+
+%for i=0 upto li: show dirs[i]; endfor;
+
+  ni:=0; % next
+  pi:=0; % previous
+
+  for i=0 upto li:
+    d:=dirs[i];
+    if d=-1:
+      if (i=0) or (i=li):
+        dirs[i] := angle(thdir(P,i) rotated 90) mod 360;
+	pi:=i;
+      else:
+        if ni<=i:
+	  for j=i upto li:
+            ni:=j;
+	    exitif dirs[j]>-1;
+	  endfor;
+	fi;
+	w:=arclength(subpath(pi,i) of P) / 
+	   arclength(subpath(pi,ni) of P);
+	dirs[i]:=w[dirs[pi],dirs[ni]];
+%        if (dirs[i]-angle(thdir(P,i))) mod 360>180:
+%          dirs[i]:=w[dirs[ni],dirs[pi]];
+%	  message("*******");
+%        fi;
+     fi;
+    else:
+      pi:=i;
+    fi;
+  endfor;
+
+%for i=0 upto li: show dirs[i]; endfor;
+
+  ni:=0; % next
+  pi:=0; % previous
+
+  for i=0 upto li:
+    l:=lengths[i];
+    if l=-1:
+      if (i=0) or (i=li):
+        lengths[i] := 1cm; % should never happen!
+	thwarning("slope width at the end point not specified");
+	pi:=i;
+      else:
+        if ni<=i:
+	  for j=i+1 upto li:
+            ni:=j;
+	    exitif lengths[j]>-1;
+	  endfor;
+	fi;
+	w:=arclength(subpath(pi,i) of P) / 
+	   arclength(subpath(pi,ni) of P);
+	lengths[i]:=w[lengths[pi],lengths[ni]];
+	pi:=i;
+      fi;
+    else:
+      pi:=i;
+    fi;
+  endfor;
+
+% for i=0 upto li: show lengths[i]; endfor;
+
+  T:=identity;
+  boolean par;
+  cas := 0.3u;
+  krok := 0.7u;
+  dlzka := (arclength P);
+  if dlzka>3u: dlzka:=dlzka-0.6u fi;
+  mojkrok:=adjust_step(dlzka,1.4u) / 2;
+  pickup PenD;
+  par := false; 
+  forever:
+    t := arctime cas of P;
+    if t mod 1>0:  % not a key point
+      w := (arclength(subpath(floor t,t) of P) / 
+            arclength(subpath(floor t,ceiling t) of P));
+      if alw_perpendicular:
+        a := 90;
+      else:
+        a := w[dirs[floor t],dirs[ceiling t]];
+      fi;
+      l := w[lengths[floor t],lengths[ceiling t]];
+    else:
+      if alw_perpendicular:
+        a := 90;
+      else:
+        a:= dirs[t];
+      fi; 
+      l:=lengths[t];
+    fi;
+    
+    a := a + angle(thdir(P,t));
+    
+    if par:
+      thfill (point t of P) + mojkrok/2.5 * unitvector(dir(a+90))-- 
+        ((point t of P) + l * unitvector(dir(a))) --
+        (point t of P) + mojkrok/2.5 * unitvector(dir(a-90)) -- cycle;
+    fi;
+    cas := cas + mojkrok;
+    par := not par;
+    exitif cas > dlzka + .3u + (krok / 3);  % for rounding errors
+  endfor;
+enddef;
+
 
 def l_contour_UIS(expr P)(text txt) =
   T:=identity;
@@ -619,6 +751,21 @@ def l_gradient_UIS (expr P) =
   thdraw (p rotated (angle(thdir(P,length P))-90) 
          shifted (point infinity of P));
 enddef;
+
+def l_gradient_BCRA (expr P) =
+  T:=identity;
+  pickup PenC;
+  for t = 0 upto length P - 1:
+    pair zz[];
+    zz1 := point t of P;
+    zz2 := point t+1 of P;
+    zz3 := unitvector(zz2 - zz1);
+    thfill zz1 + u/3 * zz3 + .25u * (zz3 rotated 90) --
+           zz2 - u/3 * zz3 --
+	   zz1 + u/3 * zz3 + .25u * (zz3 rotated -90) -- cycle;
+  endfor;
+enddef;
+
 
 def l_rope_SKBB (expr P,exact) =
   T:=identity;

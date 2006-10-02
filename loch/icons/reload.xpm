@@ -1,0 +1,25 @@
+/* XPM */
+static char * reload_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 4 1",
+"  c #008D00",
+". c green",
+"X c gray100",
+"o c None",
+/* pixels */
+"oooooooooooooooo",
+"ooooooooooo oooo",
+"ooooo        ooo",
+"oooo          oo",
+"ooo          ooo",
+"ooo   ooooo oooo",
+"ooo   oooooooooo",
+"oooooooooooooooo",
+"oooooooooo   ooo",
+"oooo ooooo   ooo",
+"ooo          ooo",
+"oo          oooo",
+"ooo        ooooo",
+"oooo ooooooooooo",
+"oooooooooooooooo"
+};

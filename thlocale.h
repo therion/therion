@@ -19,7 +19,7 @@ struct thlocale {
 
 	char * format_length(double length, int prec = 0, int total = 1);
 
-  char * thlocale::format_human_length(double length);
+  char * format_human_length(double length);
   
 	char * format_length_units();	
 

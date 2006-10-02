@@ -552,6 +552,10 @@ proc xth_exit {} {
 
   global xth
 
+  catch {
+    registry set {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} XTherionDir $xth(gui,initdir)
+  }
+  
   # save all open text editor files
   if {![info exists xth(te,flist)]} {
     set xth(te,flist) {}

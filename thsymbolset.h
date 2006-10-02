@@ -36,12 +36,12 @@
  * Symbol set class.
  */
  
-class thsymbolset {
-
-  public:
+struct thsymbolset {
   
   bool assigned[thsymbolset_size],   ///< definovane symboly
     used[thsymbolset_size];          ///< pouzite symboly
+    
+  bool group_symbols; ///< Ci zgrupuje podobne symboly alebo nie.
   
   thsymbolset();
   

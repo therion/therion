@@ -1,0 +1,24 @@
+/* XPM */
+static char *orto_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 3 1",
+"  c black",
+". c gray100",
+"X c None",
+/* pixels */
+"XXXXXXXXXXXXXXXX",
+"XXX XXXXXXXXXXXX",
+"XXX XXXXXXXXXXXX",
+"XXX XXXXXXXXXXXX",
+"XXX XXXXXXXXXXXX",
+"XX     XXXXXXXXX",
+"XXX ...  XXXXXXX",
+"XXX ..... XXXXXX",
+"XXX ...... XXXXX",
+"XXX ..  .. XXXXX",
+"XXX ..  ... XXXX",
+"XXX ....... XXXX",
+"XXX ....... XXXX",
+"XXX             ",
+"XXXXXXXXXXX XXXX"
+};

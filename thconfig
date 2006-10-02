@@ -1,19 +1,23 @@
 encoding  utf-8
 
+source tests/xvitst/test.th
+export map -o tests/xvitst/test.xvi -layout-sketches on
+export map -o tests/xvitst/test.pdf -layout-sketches on -layout-map-header 0 0 off -layout-transparency off
+
 #source tests/svxtst/cave.th
 #export map -layout-debug station-names -o tests/svxtst/thcave.pdf
 #export model -o tests/svxtst/thcave.3d
 
 
 #source tests/velka_ch.th
-source tests/map_plan.th
+#source tests/map_plan.th
 #select xhmap@tp
 #select hmap@tp
 
-export model -o cave.tlx
+#export model -o cave.tlx
 #export model -fmt survex
 
-export map -o cave.xhtml
+#export map -o cave.xhtml
 
 #layout xxx
 #code tex-map

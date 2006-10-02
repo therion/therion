@@ -2278,7 +2278,7 @@ void thdb2d::pp_shift_points(thdb2dprj * prj, bool calc_az)
       while (cp != NULL) {
         dist = hypot(cp->oxt - ii->xt, cp->oyt - ii->yt);
         if (dist > 0) {
-          cpw = pow(dist,-2.0);
+          cpw = 1.0 / (dist * dist);
           cdx += cp->dx * cpw;
           cdy += cp->dy * cpw;
           if (calc_az) {
@@ -2352,7 +2352,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SCRAP_CMD) {
 			scp = (thscrap *)(*obi);
-			if (scp->proj->type != TT_2DPROJ_NONE) {
+			if ((scp->proj->type != TT_2DPROJ_NONE) && (scp->proj->id == prj->id)) {
  			o2d = scp->fs2doptr;
 			while (o2d != NULL) {
  				// check object source file

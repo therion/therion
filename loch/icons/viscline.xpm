@@ -1,0 +1,25 @@
+/* XPM */
+static char *viscline_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 4 1",
+"  c black",
+". c #FFD800",
+"X c gray100",
+"o c None",
+/* pixels */
+"oooooooooooooooo",
+"ooooooooooo...oo",
+"ooooooooooo...oo",
+"oooooooooo ...oo",
+"ooooooooo   oooo",
+"oooooooo   ooooo",
+"ooooooo   oooooo",
+"oooooo   ooooooo",
+"ooooo   oooooooo",
+"oooo   ooooooooo",
+"ooo   oooooooooo",
+"o... ooooooooooo",
+"o...oooooooooooo",
+"o...oooooooooooo",
+"oooooooooooooooo"
+};

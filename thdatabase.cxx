@@ -48,6 +48,7 @@
 #include "thimport.h"
 #include "thsurface.h"
 #include "thendscrap.h"
+#include "thsketch.h"
 
 
 const char * thlibrarydata_init_text =
@@ -107,6 +108,7 @@ void thdatabase::reset_context()
   
   this->fsurveyptr = NULL;
   this->csurveyptr = NULL;
+  this->csurveylevel = 0;
   this->lcsobjectptr = NULL;
   
   this->cscrapptr = NULL;
@@ -232,7 +234,9 @@ void thdatabase::insert(thdataobject * optr)
         this->csurveyptr = csurveyptr->fsptr;
         this->lcsobjectptr = csurveyptr->loptr;
       }
+      this->csurveylevel--;
       optr->self_delete();
+      this->csrc.context = csurveyptr;
       break;
       
     // end of scrap
@@ -247,10 +251,13 @@ void thdatabase::insert(thdataobject * optr)
       this->cscrapptr = NULL;
       this->lcscrapoptr = NULL;
       optr->self_delete();
+      this->csrc.context = csurveyptr;
       break;
   
     // other objects that has to be inserted into database
     default:
+
+      this->csrc.context = optr;
 
       // let's insert object into database
       this->object_list.push_back(optr);
@@ -291,6 +298,7 @@ void thdatabase::insert(thdataobject * optr)
       
         case TT_SURVEY_CMD:
           survey_optr = (thsurvey *) optr;
+          survey_optr->level = ++this->csurveylevel;
           
           if (this->fsurveyptr == NULL) {
             this->fsurveyptr = survey_optr;
@@ -313,6 +321,7 @@ void thdatabase::insert(thdataobject * optr)
           this->survey_map[thsurveyname(survey_optr->full_name)] = survey_optr;
           this->csurveyptr = survey_optr;
           this->lcsobjectptr = survey_optr->loptr;
+          
           break;
           
         case TT_SCRAP_CMD:
@@ -472,6 +481,10 @@ class thdataobject * thdatabase::create(char * oclass,
       ret = new thsurface;
       break;
       
+    case TT_SKETCH_CMD:
+      ret = new thsketch;
+      break;
+      
     default:
       ret = NULL;
   }
@@ -499,6 +512,13 @@ class thdataobject * thdatabase::create(char * oclass,
   }
   
   return ret;
+}
+
+
+char * thdatabase::strstore(const char * src, bool use_dic) {
+  static thbuffer storebuff;
+  storebuff = src;
+  return this->strstore(storebuff, use_dic);
 }
 
 

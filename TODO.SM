@@ -1,2 +1,15 @@
 + hierarchicky outline
 + pridat <tiny>,<small>,<normal>,<large>,<huge> do utf2tex
++ do thbook-u
+
+Having done this you will probably want to install what you have  
+built. This should be done as root:
+
+$ su
+password: ******
+# make install
+On the mac the process is slightly different:
+
+$ sudo make install
+password: ******
+

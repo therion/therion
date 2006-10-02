@@ -44,10 +44,37 @@
 #define strcasecmp _stricmp
 #endif
 
+
+/**
+ * Model wall sources.
+ */
+
+enum {
+  TT_WSRC_UNKNOWN = 0, 
+  TT_WSRC_CENTERLINE = 1,  
+  TT_WSRC_MAPS = 2,
+  TT_WSRC_ALL = 3,
+};
+
+/**
+ * Options parsing table.
+ */
+ 
+static const thstok thtt_expmodel_wallsrc[] = {
+  {"all", TT_WSRC_ALL},
+  {"centerline", TT_WSRC_CENTERLINE},
+  {"centreline", TT_WSRC_CENTERLINE},
+  {"maps", TT_WSRC_MAPS},
+  {NULL, TT_WSRC_UNKNOWN}
+};
+
+
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
   this->items = TT_EXPMODEL_ITEM_ALL;
+  this->wallsrc = TT_WSRC_ALL;
 }
+
 
 
 void thexpmodel::parse_options(int & argx, int nargs, char ** args)
@@ -56,6 +83,7 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
   unsigned utmp;
   int optx = argx;
   switch (optid) {
+
     case TT_EXPMODEL_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
@@ -65,6 +93,7 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
         ththrow(("unknown format -- \"%s\"", args[argx]))
       argx++;
       break;
+
     case TT_EXPMODEL_OPT_ENABLE:
     case TT_EXPMODEL_OPT_DISABLE:
       argx++;
@@ -80,6 +109,18 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
       }
       argx++;
       break;
+
+    case TT_EXPMODEL_OPT_WALLSRC:
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing wall source -- \"%s\"",args[optx]))
+      utmp = thmatch_token(args[argx], thtt_expmodel_wallsrc);
+      if (utmp == TT_WSRC_UNKNOWN)
+        ththrow(("unknown wall source -- \"%s\"", args[argx]))
+      this->wallsrc = utmp;
+      argx++;
+      break;
+
     default:
       thexport::parse_options(argx, nargs, args);
       break;
@@ -104,21 +145,17 @@ void thexpmodel::dump_body(FILE * xf)
 void thexpmodel::process_db(class thdatabase * dbp) 
 {
   if (this->format == TT_EXPMODEL_FMT_UNKNOWN) {
-    this->format = TT_EXPMODEL_FMT_THERION;
+    this->format = TT_EXPMODEL_FMT_LOCH;
     thexp_set_ext_fmt(".plt", TT_EXPMODEL_FMT_COMPASS)
     thexp_set_ext_fmt(".3d", TT_EXPMODEL_FMT_SURVEX)
     thexp_set_ext_fmt(".wrl", TT_EXPMODEL_FMT_VRML)
     thexp_set_ext_fmt(".vrml", TT_EXPMODEL_FMT_VRML)
     thexp_set_ext_fmt(".3dmf", TT_EXPMODEL_FMT_3DMF)
     thexp_set_ext_fmt(".dxf", TT_EXPMODEL_FMT_DXF)
-    thexp_set_ext_fmt(".tlx", TT_EXPMODEL_FMT_LOCH)
-    thexp_set_ext_fmt(".lox", TT_EXPMODEL_FMT_LOX)
+    thexp_set_ext_fmt(".lox", TT_EXPMODEL_FMT_LOCH)
   }  
   switch (this->format) {
     case TT_EXPMODEL_FMT_LOCH:
-      this->export_tlx_file(dbp);
-      break;
-    case TT_EXPMODEL_FMT_LOX:
       this->export_lox_file(dbp);
       break;
     case TT_EXPMODEL_FMT_SURVEX:
@@ -215,6 +252,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
 
   cis_exp = s_exp;
   thbuffer stnbuf;
+  thdb1ds * tmps;
   for(i = 0; i < nstat; i++, cis_exp++) {
     if ((*cis_exp != 0) || (s_exp[dbp->db1d.station_vec[i].uid - 1] != 0) || 
         (((dbp->db1d.station_vec[i].flags & 
@@ -225,9 +263,10 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
         x_exp = s_exp[dbp->db1d.station_vec[i].uid - 1];
       else
         x_exp = *cis_exp;
-      if ((dbp->db1d.station_vec[i].flags & TT_STATIONFLAG_ENTRANCE) != 0)
+      tmps = &(dbp->db1d.station_vec[i]);
+      if ((tmps->flags & TT_STATIONFLAG_ENTRANCE) != 0)
         x_exp |= img_SFLAG_ENTRANCE;
-      if ((dbp->db1d.station_vec[i].flags & TT_STATIONFLAG_FIXED) != 0)
+      if (((tmps->flags & TT_STATIONFLAG_FIXED) != 0) && ((tmps->flags & TT_STATIONFLAG_NOTFIXED) == 0))
         x_exp |= img_SFLAG_FIXED;
       stnbuf.strcpy(dbp->db1d.station_vec[i].survey->get_reverse_full_name());
       stnbuf.strcat(".");
@@ -477,32 +516,36 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
     thdb3ddata * d3d;
 
-    d3d = dbp->db1d.get_3d_walls();
-    finlim.update(&(d3d->limits));
-    d3d->exp_shift_x = avx;
-    d3d->exp_shift_y = avy;
-    d3d->exp_shift_z = avz;
-    d3d->export_thm(pltf);
+    if ((this->wallsrc & TT_WSRC_CENTERLINE) != 0) {
+      d3d = dbp->db1d.get_3d_walls();
+      finlim.update(&(d3d->limits));
+      d3d->exp_shift_x = avx;
+      d3d->exp_shift_y = avy;
+      d3d->exp_shift_z = avz;
+      d3d->export_thm(pltf);
+    }
 
-    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
-    thscrap * cs;
-    if (!prjid.newprj) {
-      thdb.db2d.process_projection(prjid.prj);
-      cs = prjid.prj->first_scrap;
-      while(cs != NULL) {
-        if (cs->fsptr->is_selected() && (cs->d3 != TT_FALSE)) {
-          d3d = cs->get_3d_outline();
-  //        thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 
-  //          d3d->limits.minx, d3d->limits.maxx, 
-  //          d3d->limits.miny, d3d->limits.maxy, 
-  //          d3d->limits.minz, d3d->limits.maxz);
-          finlim.update(&(d3d->limits));
-          d3d->exp_shift_x = avx;
-          d3d->exp_shift_y = avy;
-          d3d->exp_shift_z = avz;
-          d3d->export_thm(pltf);
+    if ((this->wallsrc & TT_WSRC_MAPS) != 0) {
+      thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+      thscrap * cs;
+      if (!prjid.newprj) {
+        thdb.db2d.process_projection(prjid.prj);
+        cs = prjid.prj->first_scrap;
+        while(cs != NULL) {
+          if (cs->fsptr->is_selected() && (cs->d3 != TT_FALSE)) {
+            d3d = cs->get_3d_outline();
+    //        thprintf("\nLIMITS: %10.2f%10.2f%10.2f%10.2f%10.2f%10.2f\n", 
+    //          d3d->limits.minx, d3d->limits.maxx, 
+    //          d3d->limits.miny, d3d->limits.maxy, 
+    //          d3d->limits.minz, d3d->limits.maxz);
+            finlim.update(&(d3d->limits));
+            d3d->exp_shift_x = avx;
+            d3d->exp_shift_y = avy;
+            d3d->exp_shift_z = avz;
+            d3d->export_thm(pltf);
+          }
+          cs = cs->proj_next_scrap;
         }
-        cs = cs->proj_next_scrap;
       }
     }
   
@@ -576,10 +619,6 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
     return;
   }
 
-
-
-
-  double avx, avy, avz;
   thdb_object_list_type::iterator obi;
   thdb3ddata * pgn = dbp->db1d.get_3d(), 
     * surf_pgn = dbp->db1d.get_3d_surface(),
@@ -597,22 +636,11 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
       pgnlimits.update(&(pgn->limits));
   }
   finlim.update(&(pgnlimits));
-  avx = (pgnlimits.minx + pgnlimits.maxx) / 2.0;
-  avy = (pgnlimits.miny + pgnlimits.maxy) / 2.0;
-  avz = (pgnlimits.minz + pgnlimits.maxz) / 2.0;
-  pgn->exp_shift_x = avx;
-  pgn->exp_shift_y = avy;
-  pgn->exp_shift_z = avz;
-  surf_pgn->exp_shift_x = avx;
-  surf_pgn->exp_shift_y = avy;
-  surf_pgn->exp_shift_z = avz;
-
-
-
-
   // now let's print header
-  fprintf(pltf,"#VRML V2.0 utf8\n\nNavigationInfo {\n\theadlight TRUE\n}\nBackground {\n\tskyColor 0 0 0\n}\n");
+  fprintf(pltf,"#VRML V2.0 utf8\n\n");
 
+  fprintf(pltf,"Transform { children [\n");
+  
   if ((this->items & TT_EXPMODEL_ITEM_CAVECENTERLINE) != 0) {
     fprintf(pltf,
        "Shape {\nappearance Appearance {\n" \
@@ -630,22 +658,71 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
     fprintf(pltf,"\n}\n}\n");
   }
 
+  bool has_texture;
+  int imgn = 0;
+  double txx, txy, tyx, tyy, tinv, tdx, tdy;
+  thsurface * srfc;
   if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
     // prejde secky surfaces a exportuje z nich povrchy
+    fprintf(pltf, "Group {\n\tchildren[\n");
+    fprintf(pltf, "DirectionalLight {\n\ton TRUE\n\tintensity  1.0\n\tdirection  0 0 -1\n}");
+    fprintf(pltf, "DirectionalLight {\n\ton TRUE\n\tintensity  1.0\n\tdirection  0 0  1\n}");
     obi = dbp->object_list.begin();
     while (obi != dbp->object_list.end()) {
       switch ((*obi)->get_class_id()) {
         case TT_SURFACE_CMD:
-          tmp3d = ((thsurface*)(*obi))->get_3d();
+          srfc = ((thsurface*)(*obi));
+          tmp3d = srfc->get_3d();
+          srfc->calibrate();
+          tinv = srfc->calib_yy*srfc->calib_xx - srfc->calib_xy*srfc->calib_yx;
+          has_texture = ((srfc->pict_name != NULL) && (srfc->pict_height > 0) && (srfc->pict_width > 0) && (tinv != 0.0));
           if (tmp3d != NULL) {
-            tmp3d->exp_shift_x = avx;
-            tmp3d->exp_shift_y = avy;
-            tmp3d->exp_shift_z = avz;
             fprintf(pltf,
               "Shape {\nappearance Appearance {\n" \
-              "\tmaterial Material {\n\t\tdiffuseColor 0.3 1.0 0.1\n\t\ttransparency 0.5\n\t}" \
+              "\tmaterial Material {\n\t\tdiffuseColor 0.3 1.0 0.1\n\t\ttransparency 0.5\n\t}\n");
+            if (has_texture) {
+              thbuffer tifn;
+              tifn.guarantee(2048);
+              sprintf(tifn.get_buffer(), "%s.img%d.%s", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
+              FILE * texf, * xf;
+              texf = fopen(tifn.get_buffer(), "wb");
+              xf = fopen(srfc->pict_name, "rb");
+              if (texf != NULL) {
+                if (xf != NULL) {
+                  fseek(xf, 0, SEEK_END);
+                  size_t fsz = ftell(xf);
+                  fseek(xf, 0, SEEK_SET);
+                  if (fsz > 0) {
+                    char * cdata = new char [fsz];
+                    fread((void *) cdata, 1, fsz, xf);
+                    fwrite((void *) cdata, 1, fsz, texf);
+                    delete [] cdata;
+                  }
+                  fclose(xf);
+                }
+                fclose(texf);
+                fprintf(pltf,
+                  "\ttexture ImageTexture {\n\t\turl [\"%s\"]\n\t}\n", tifn.get_buffer());
+              }
+            }
+            fprintf(pltf,
               "\n}\ngeometry IndexedFaceSet {\n\tsolid FALSE\n\tcreaseAngle 3.0\n");
             tmp3d->export_vrml(pltf);
+            if (has_texture) {
+              txx = srfc->calib_yy / tinv;
+              txy = -srfc->calib_xy / tinv;
+              tyx = -srfc->calib_yx / tinv;
+              tyy = srfc->calib_xx / tinv;
+              tdx = -1.0 * (txx * srfc->calib_x + txy * srfc->calib_y);
+              tdy = -1.0 * (tyx * srfc->calib_x + tyy * srfc->calib_y);
+              thdb3dvx * vx;
+              fprintf(pltf,"texCoord TextureCoordinate {\n\tpoint [\n");
+              for(vx = tmp3d->firstvx; vx != NULL; vx = vx->next)
+                fprintf(pltf,"\t%8.6f %8.6f,\n", 
+                  (vx->x * txx + vx->y * txy + tdx) / srfc->pict_width, 
+                  (vx->x * tyx + vx->y * tyy + tdy) / srfc->pict_height);
+              fprintf(pltf,"\t]\n}\n");
+            }
             finlim.update(&(tmp3d->limits));
             fprintf(pltf,"\n}\n}\n");
           }
@@ -653,48 +730,46 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
       }
       obi++;
     }
+    fprintf(pltf, "\t]\n}\n");
   }
 
 
 
   if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
   
-    // 3D DATA 
-    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
     thscrap * cs;
     thdb3ddata * d3d;
     
-    d3d = dbp->db1d.get_3d_walls();
-    finlim.update(&(d3d->limits));
-    d3d->exp_shift_x = avx;
-    d3d->exp_shift_y = avy;
-    d3d->exp_shift_z = avz;
-    fprintf(pltf,
-      "Shape {\nappearance Appearance {\n" \
-      "\tmaterial Material {\n\t\tdiffuseColor 1.0 1.0 1.0\n\t}" \
-      "\n}\ngeometry IndexedFaceSet {\n");
-    d3d->export_vrml(pltf);
-    fprintf(pltf,"creaseAngle 3.0\n}\n}\n");
+    if ((this->wallsrc & TT_WSRC_CENTERLINE) != 0) {
+      d3d = dbp->db1d.get_3d_walls();
+      finlim.update(&(d3d->limits));
+      fprintf(pltf,
+        "Shape {\nappearance Appearance {\n" \
+        "\tmaterial Material {\n\t\tdiffuseColor 1.0 1.0 1.0\n\t}" \
+        "\n}\ngeometry IndexedFaceSet {\n");
+      d3d->export_vrml(pltf);
+      fprintf(pltf,"creaseAngle 3.0\n}\n}\n");
+    }
     
-    
-    if (!prjid.newprj) {
-      thdb.db2d.process_projection(prjid.prj);
-      cs = prjid.prj->first_scrap;
-      while(cs != NULL) {
-        if (cs->fsptr->is_selected()) {
-          d3d = cs->get_3d_outline();
-          finlim.update(&(d3d->limits));
-          d3d->exp_shift_x = avx;
-          d3d->exp_shift_y = avy;
-          d3d->exp_shift_z = avz;
-          fprintf(pltf,
-            "Shape {\nappearance Appearance {\n" \
-            "\tmaterial Material {\n\t\tdiffuseColor 1.0 1.0 1.0\n\t}" \
-            "\n}\ngeometry IndexedFaceSet {\n");
-          d3d->export_vrml(pltf);
-          fprintf(pltf,"creaseAngle 3.0\n}\n}\n");
+    // 3D DATA 
+    if ((this->wallsrc & TT_WSRC_MAPS) != 0) {
+      thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+      if (!prjid.newprj) {
+        thdb.db2d.process_projection(prjid.prj);
+        cs = prjid.prj->first_scrap;
+        while(cs != NULL) {
+          if (cs->fsptr->is_selected()) {
+            d3d = cs->get_3d_outline();
+            finlim.update(&(d3d->limits));
+            fprintf(pltf,
+              "Shape {\nappearance Appearance {\n" \
+              "\tmaterial Material {\n\t\tdiffuseColor 1.0 1.0 1.0\n\t}" \
+              "\n}\ngeometry IndexedFaceSet {\n");
+            d3d->export_vrml(pltf);
+            fprintf(pltf,"creaseAngle 3.0\n}\n}\n");
+          }
+          cs = cs->proj_next_scrap;
         }
-        cs = cs->proj_next_scrap;
       }
     }
     
@@ -707,14 +782,14 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
      "\n}\ngeometry IndexedLineSet {\n");
 
   fprintf(pltf,"coord Coordinate {\n\tpoint [\n");
-  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.minx - avx, finlim.miny - avy, finlim.minz - avz);
-  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.minx - avx, finlim.maxy - avy, finlim.minz - avz);
-  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.maxx - avx, finlim.maxy - avy, finlim.minz - avz);
-  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.maxx - avx, finlim.miny - avy, finlim.minz - avz);
-  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.minx - avx, finlim.miny - avy, finlim.maxz - avz);
-  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.minx - avx, finlim.maxy - avy, finlim.maxz - avz);
-  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.maxx - avx, finlim.maxy - avy, finlim.maxz - avz);
-  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.maxx - avx, finlim.miny - avy, finlim.maxz - avz);
+  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.minx , finlim.miny , finlim.minz );
+  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.minx , finlim.maxy , finlim.minz );
+  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.maxx , finlim.maxy , finlim.minz );
+  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.maxx , finlim.miny , finlim.minz );
+  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.minx , finlim.miny , finlim.maxz );
+  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.minx , finlim.maxy , finlim.maxz );
+  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.maxx , finlim.maxy , finlim.maxz );
+  fprintf(pltf,"%8.2f %8.2f %8.2f,\n",finlim.maxx , finlim.miny , finlim.maxz );
   fprintf(pltf,"\t]\n}\n");
   fprintf(pltf,"\tcoordIndex [\n");
   fprintf(pltf,"0, 1, 2, 3, 0, 4, 5, 6, 7, 4, -1,\n");
@@ -725,8 +800,35 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
 
   fprintf(pltf,"\n}\n}\n");
 
+  fprintf(pltf,"\n]\ntranslation %8.2f %8.2f %8.2f} # end of transformation to center\n",
+    (finlim.maxx + finlim.minx) / -2.0,
+    (finlim.maxy + finlim.miny) / -2.0,
+    (finlim.maxz + finlim.minz) / -2.0
+  );
 
 
+  double diamx, diamy, diamz, diamxy, diamxz, diamyz, diam;
+  diamx = (finlim.maxx - finlim.minx) / 2.0;
+  diamy = (finlim.maxy - finlim.miny) / 2.0;
+  diamz = (finlim.maxz - finlim.minz) / 2.0;
+  diamxy = hypot(diamx, diamy);
+  diamxz = hypot(diamx, diamz);
+  diamyz = hypot(diamy, diamz);
+  diam = hypot(diamxy, diamz);
+  fprintf(pltf,"Viewpoint {\n\tfieldOfView 0.42\n\tjump TRUE\n\tposition 0.0 0.0 %8.2f\n\tdescription \"Down\"\n}\n",
+    diamxy / 0.21818181818181 + diamz);
+  fprintf(pltf,"Viewpoint {\n\tfieldOfView 0.42\n\tjump TRUE\n\tposition 0.0 0.0 %8.2f\n\torientation 1 0 0 3.14159\n\tdescription \"Up\"\n}\n",
+    diamxy / -0.21818181818181 - diamz);
+  fprintf(pltf,"Viewpoint {\n\tfieldOfView 0.42\n\tjump TRUE\n\tposition 0.0 %8.2f 0.0\n\torientation 1 0 0 1.570796\n\tdescription \"North\"\n}\n",
+    diamxz / -0.21818181818181 - diamy);
+  fprintf(pltf,"Transform {\n\trotation 0 0 1 1.570796\n\tchildren\nViewpoint {\n\tfieldOfView 0.42\n\tjump TRUE\n\tposition 0.0 %8.2f 0.0\n\torientation 1 0 0 1.570796\n\tdescription \"West\"\n}\n}\n",
+    diamyz / -0.21818181818181 - diamx);
+  fprintf(pltf,"Transform {\n\trotation 0 0 1 -1.570796\n\tchildren\nViewpoint {\n\tfieldOfView 0.42\n\tjump TRUE\n\tposition 0.0 %8.2f 0.0\n\torientation 1 0 0 1.570796\n\tdescription \"East\"\n}\n}\n",
+    diamyz / -0.21818181818181 - diamx);
+  fprintf(pltf,"Transform {\n\trotation 0 0 1 3.1415927\n\tchildren\nViewpoint {\n\tfieldOfView 0.42\n\tjump TRUE\n\tposition 0.0 %8.2f 0.0\n\torientation 1 0 0 1.570796\n\tdescription \"South\"\n}\n}\n",
+    diamxz / -0.21818181818181 - diamy);
+  fprintf(pltf,"\nNavigationInfo {\n\theadlight TRUE\n\tspeed %.1f\n}", diam * 0.1);
+  fprintf(pltf,"\nBackground {\n\tskyColor 0 0 0\n}\n");
   fprintf(pltf,"\n");
   fclose(pltf);
   
@@ -844,43 +946,47 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   // 3D DATA 
   if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
 
-    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
     thscrap * cs;
     thdb3ddata * d3d;
 
-    d3d = dbp->db1d.get_3d_walls();
-    finlim.update(&(d3d->limits));
-    d3d->exp_shift_x = avx;
-    d3d->exp_shift_y = avy;
-    d3d->exp_shift_z = avz;
-    if ((d3d->firstfc != NULL) && (d3d->firstvx != NULL)) {
-      fprintf(pltf,"BeginGroup ( \n\tDisplayGroup ( ) \n) \n"
-        "Container ( \n\tMesh ( \n");
-      d3d->export_3dmf(pltf);
-      fprintf(pltf,"\t) \nContainer ( \n\tAttributeSet ( ) \n"
-        "\tDiffuseColor ( 1 1 1 ) \n) \n) \nEndGroup ( ) \n");
+    if ((this->wallsrc & TT_WSRC_CENTERLINE) != 0) {
+      d3d = dbp->db1d.get_3d_walls();
+      finlim.update(&(d3d->limits));
+      d3d->exp_shift_x = avx;
+      d3d->exp_shift_y = avy;
+      d3d->exp_shift_z = avz;
+      if ((d3d->firstfc != NULL) && (d3d->firstvx != NULL)) {
+        fprintf(pltf,"BeginGroup ( \n\tDisplayGroup ( ) \n) \n"
+          "Container ( \n\tMesh ( \n");
+        d3d->export_3dmf(pltf);
+        fprintf(pltf,"\t) \nContainer ( \n\tAttributeSet ( ) \n"
+          "\tDiffuseColor ( 1 1 1 ) \n) \n) \nEndGroup ( ) \n");
+      }
     }
 
 
-    if (!prjid.newprj) {
-      thdb.db2d.process_projection(prjid.prj);
-      cs = prjid.prj->first_scrap;
-      while(cs != NULL) {
-        if (cs->fsptr->is_selected()) {
-          d3d = cs->get_3d_outline();
-          finlim.update(&(d3d->limits));
-          d3d->exp_shift_x = avx;
-          d3d->exp_shift_y = avy;
-          d3d->exp_shift_z = avz;
-          if ((d3d->firstfc != NULL) && (d3d->firstvx != NULL)) {
-            fprintf(pltf,"BeginGroup ( \n\tDisplayGroup ( ) \n) \n"
-              "Container ( \n\tMesh ( \n");
-            d3d->export_3dmf(pltf);
-            fprintf(pltf,"\t) \nContainer ( \n\tAttributeSet ( ) \n"
-              "\tDiffuseColor ( 1 1 1 ) \n) \n) \nEndGroup ( ) \n");
+    if ((this->wallsrc & TT_WSRC_MAPS) != 0) {
+      thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+      if (!prjid.newprj) {
+        thdb.db2d.process_projection(prjid.prj);
+        cs = prjid.prj->first_scrap;
+        while(cs != NULL) {
+          if (cs->fsptr->is_selected()) {
+            d3d = cs->get_3d_outline();
+            finlim.update(&(d3d->limits));
+            d3d->exp_shift_x = avx;
+            d3d->exp_shift_y = avy;
+            d3d->exp_shift_z = avz;
+            if ((d3d->firstfc != NULL) && (d3d->firstvx != NULL)) {
+              fprintf(pltf,"BeginGroup ( \n\tDisplayGroup ( ) \n) \n"
+                "Container ( \n\tMesh ( \n");
+              d3d->export_3dmf(pltf);
+              fprintf(pltf,"\t) \nContainer ( \n\tAttributeSet ( ) \n"
+                "\tDiffuseColor ( 1 1 1 ) \n) \n) \nEndGroup ( ) \n");
+            }
           }
+          cs = cs->proj_next_scrap;
         }
-        cs = cs->proj_next_scrap;
       }
     }
   
@@ -1175,30 +1281,34 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
   
     // 3D DATA 
-    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
     thscrap * cs;
     thdb3ddata * d3d;
     
-    d3d = dbp->db1d.get_3d_walls();
-    finlim.update(&(d3d->limits));
-    d3d->exp_shift_x = avx;
-    d3d->exp_shift_y = avy;
-    d3d->exp_shift_z = avz;
-    d3d->export_dxf(pltf,"WALLS");
+    if ((this->wallsrc & TT_WSRC_CENTERLINE) != 0) {
+      d3d = dbp->db1d.get_3d_walls();
+      finlim.update(&(d3d->limits));
+      d3d->exp_shift_x = avx;
+      d3d->exp_shift_y = avy;
+      d3d->exp_shift_z = avz;
+      d3d->export_dxf(pltf,"WALLS");
+    }
     
-    if (!prjid.newprj) {
-      thdb.db2d.process_projection(prjid.prj);
-      cs = prjid.prj->first_scrap;
-      while(cs != NULL) {
-        if (cs->fsptr->is_selected()) {
-          d3d = cs->get_3d_outline();
-          finlim.update(&(d3d->limits));
-          d3d->exp_shift_x = avx;
-          d3d->exp_shift_y = avy;
-          d3d->exp_shift_z = avz;
-          d3d->export_dxf(pltf,"WALLS");
+    if ((this->wallsrc & TT_WSRC_MAPS) != 0) {
+      thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
+      if (!prjid.newprj) {
+        thdb.db2d.process_projection(prjid.prj);
+        cs = prjid.prj->first_scrap;
+        while(cs != NULL) {
+          if (cs->fsptr->is_selected()) {
+            d3d = cs->get_3d_outline();
+            finlim.update(&(d3d->limits));
+            d3d->exp_shift_x = avx;
+            d3d->exp_shift_y = avy;
+            d3d->exp_shift_z = avz;
+            d3d->export_dxf(pltf,"WALLS");
+          }
+          cs = cs->proj_next_scrap;
         }
-        cs = cs->proj_next_scrap;
       }
     }
     
@@ -1263,236 +1373,6 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   thtext_inline = false;
 #endif
 }
-
-
-
-void thexpmodel::export_tlx_file(class thdatabase * dbp) {
-  char * fnm;  
-  if (this->outpt_def)
-    fnm = this->outpt;
-  else
-    fnm = "cave.tlx";
-
-  thdb_object_list_type::iterator obi;
-  
-#ifdef THDEBUG
-  thprintf("\n\nwriting %s\n", fnm);
-#else
-  thprintf("writing %s ... ", fnm);
-  thtext_inline = true;
-#endif 
-      
-  FILE * pltf;
-
-  pltf = fopen(fnm,"w");
-     
-  if (pltf == NULL) {
-    thwarning(("can't open %s for output",fnm))
-    return;
-  }
-
-  thsurvey * sptr, * tsptr;
-
-  // vsetkym surveyom nastavi num1 na -1 ak nie su, 1 ak
-  // su oznacene   
-  
-  obi = dbp->object_list.begin();
-  while (obi != dbp->object_list.end()) {
-    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      sptr = (thsurvey*)(*obi);
-      if (sptr->is_selected()) {
-        sptr->num1 = 1;
-      } else {
-        sptr->num1 = -1;
-      }
-    }
-    obi++;
-  }
-
-  unsigned long nlegs = dbp->db1d.get_tree_size(),
-    nstat = dbp->db1d.station_vec.size(), i;
-  thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
-  long * stnum = NULL;
-  if (nstat > 0) {
-    stnum = new long[nstat];
-    for (i = 0; i < nstat; i++)
-      stnum[i] = (dbp->db1d.station_vec[i].survey->is_selected() ? 1 : -1);
-  }
-
-  // prejde vsetky zamery, ktore ideme 
-  // exportovat a parent surveyom bodov tychto zamer nastavi num1 na 1
-  // rovnako aj bodom num1 na 1
-  for(i = 0; i < nlegs; i++, tlegs++) {
-    if ((*tlegs)->survey->is_selected()) {
-      stnum[(*tlegs)->leg->from.id - 1] = 1;
-      dbp->db1d.station_vec[(*tlegs)->leg->from.id - 1].survey->num1 = 1;
-      stnum[(*tlegs)->leg->to.id - 1] = 1;
-      dbp->db1d.station_vec[(*tlegs)->leg->to.id - 1].survey->num1 = 1;
-    }
-  }
-  
-  // opat prejde vsetky surveye - doplni medziclanky a nastavi num1 
-  // nastavi od 0 po n - exportuje ich
-  while (obi != dbp->object_list.end()) {
-    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-    }
-    obi++;
-  }
-
-
-  obi = dbp->object_list.begin();
-  while (obi != dbp->object_list.end()) {
-    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      sptr = (thsurvey*)(*obi);
-      if ((sptr->num1 > 0) && (sptr->fsptr != NULL)) {
-        tsptr = sptr->fsptr;
-        if (tsptr->num1 > 0)
-          tsptr = NULL;
-        if (tsptr != NULL)
-          tsptr = tsptr->fsptr;
-        while ((tsptr != NULL) && (tsptr->num1 < 0))
-          tsptr = tsptr->fsptr;
-        if (tsptr != NULL) {
-          sptr = sptr->fsptr;
-          while (sptr->id != tsptr->id) {
-            sptr->num1 = 1;
-            sptr = sptr->fsptr;
-          }
-        }
-      }
-    }
-    obi++;
-  }
-
-
-  long survnum = 0;
-  obi = dbp->object_list.begin();
-  while (obi != dbp->object_list.end()) {
-    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      sptr = (thsurvey*)(*obi);
-      if (sptr->num1 > 0) {
-        sptr->num1 = survnum++;
-        fprintf(pltf,"S %ld %ld %s\n", sptr->num1, (sptr->fsptr != NULL) ? sptr->fsptr->num1 : -1, sptr->name);
-        if (strlen(sptr->title)) {
-          fprintf(pltf,"C %s\n", sptr->title);
-        }
-      }
-    }
-    obi++;
-  }
-
-
-  // prejde vsetky body a nastavi im num od 0 po n a exportuje ich
-  survnum = 0;
-  thdb1ds * pst;
-  for (i = 0; i < nstat; i++) {
-    if (stnum[i] > 0) {
-      stnum[i] = survnum;
-      pst = &(dbp->db1d.station_vec[i]);
-      fprintf(pltf,"T %ld %ld %s %.3f %.3f %.3f G%s%s%s\n", survnum, pst->survey->num1, pst->name, pst->x, pst->y, pst->z, (pst->flags & TT_STATIONFLAG_ENTRANCE) != 0 ? "E" : "", (pst->flags & TT_STATIONFLAG_FIXED) != 0 ? "F" : "", (pst->flags & TT_STATIONFLAG_CONT) != 0 ? "C" : "");
-      if (pst->comment != NULL) {
-        fprintf(pltf,"C %s\n", pst->comment);
-      }
-      survnum++;
-    }    
-  }
-
-  // exportuje vsetky zamery ktorych psurveye su oznacene, ak
-  // walls tak aj dimensions
-  tlegs = dbp->db1d.get_tree_legs();
-  for(i = 0; i < nlegs; i++, tlegs++) {
-    if ((*tlegs)->survey->is_selected()) {
-      fprintf(pltf,"H %ld %ld %ld G%s%s\n", 
-          stnum[(*tlegs)->leg->from.id - 1],
-          stnum[(*tlegs)->leg->to.id - 1],
-          (*tlegs)->survey->num1,
-          ((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0 ? "S" : "", 
-          ((*tlegs)->leg->flags & TT_LEGFLAG_DUPLICATE) != 0 ? "D" : ""
-        );
-      if (((*tlegs)->leg->walls != TT_FALSE) && ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0))
-        fprintf(pltf,"D %.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f\n",
-          (*tlegs)->leg->from_up, (*tlegs)->leg->from_down, (*tlegs)->leg->from_left, (*tlegs)->leg->from_right,
-          (*tlegs)->leg->to_up, (*tlegs)->leg->to_down, (*tlegs)->leg->to_left, (*tlegs)->leg->to_right);
-    }
-  }
-
-  // export povrchov (vsetkych - ak chceme)
-  thdb3ddata * tmp3d;
-  thsurface * csrf;
-  if ((this->items & TT_EXPMODEL_ITEM_SURFACE) != 0) {
-    // prejde secky surfaces a exportuje z nich povrchy
-    obi = dbp->object_list.begin();
-    while (obi != dbp->object_list.end()) {
-      switch ((*obi)->get_class_id()) {
-        case TT_SURFACE_CMD:
-          csrf = ((thsurface*)(*obi));
-          if (csrf->pict_name != NULL) {
-            csrf->calibrate();
-            fprintf(pltf,"BF %s\nBC %.14f %.14f %.14f %.14f %.14f %.14f\n",
-              csrf->pict_name,
-              csrf->calib_x,
-              csrf->calib_y,
-              csrf->calib_xx,
-              csrf->calib_yx,
-              csrf->calib_xy,
-              csrf->calib_yy);
-          }
-          tmp3d = csrf->get_3d();
-          if ((tmp3d != NULL) && (tmp3d->nfaces > 0)) {
-            fprintf(pltf,"X 1 %ld\n", csrf->fsptr->num1);
-            tmp3d->exp_shift_x = 0.0;
-            tmp3d->exp_shift_y = 0.0;
-            tmp3d->exp_shift_z = 0.0;
-            tmp3d->export_tlx(pltf);
-          }
-          break;
-      }
-      obi++;
-    }
-  }
-
-
-  // export stien
-  if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
-  
-    // 3D DATA 
-    thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
-    thscrap * cs;
-    thdb3ddata * d3d;
-    
-    if (!prjid.newprj) {
-      thdb.db2d.process_projection(prjid.prj);
-      cs = prjid.prj->first_scrap;
-      while(cs != NULL) {
-        if (cs->fsptr->is_selected()) {
-          d3d = cs->get_3d_outline();
-          if ((d3d != NULL) && (d3d->nfaces > 0)) {
-            d3d->exp_shift_x = 0.0;
-            d3d->exp_shift_y = 0.0;
-            d3d->exp_shift_z = 0.0;
-            fprintf(pltf,"X 0 %ld\n", cs->fsptr->num1);
-            d3d->export_tlx(pltf);
-          }
-        }
-        cs = cs->proj_next_scrap;
-      }
-    }
-    
-  } // WALLS
-  
-  fclose(pltf);
-  
-  if (stnum != NULL)
-    delete [] stnum;
-  
-#ifdef THDEBUG
-#else
-  thprintf("done\n");
-  thtext_inline = false;
-#endif
-}
-
-
 
 
 
@@ -1653,7 +1533,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
         expf_shot.m_flags |= LXFILE_SHOT_FLAG_SURFACE;
       if (((*tlegs)->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
         expf_shot.m_flags |= LXFILE_SHOT_FLAG_DUPLICATE;
-      if ((*tlegs)->leg->walls != TT_FALSE) {
+      if (((*tlegs)->leg->walls != TT_FALSE) && ((this->wallsrc & TT_WSRC_CENTERLINE) != 0)) {
         expf_shot.m_sectionType = LXFILE_SHOT_SECTION_OVAL;
         expf_shot.m_fLRUD[2] = (*tlegs)->leg->from_up;
         expf_shot.m_fLRUD[3] = (*tlegs)->leg->from_down;
@@ -1735,7 +1615,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   survnum = 0;
 
   // export stien
-  if ((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) {
+  if (((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) && ((this->wallsrc & TT_WSRC_MAPS) != 0)) {
   
     // 3D DATA 
     thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);

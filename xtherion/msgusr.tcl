@@ -172,3 +172,95 @@ Seleccionar objetos
    (útil cuando varios puntos están superpuestos)
 }]
 
+::msgcat::mcset it "xtherion_help_control" [encoding convertfrom utf-8 {
+
+SHORTCUT - EDITOR DI MAPPA
+  
+Shortcut generali
+ * Ctrl+Z = torna indietro
+ * Ctrl+Y = rifai
+ * F9 = compila il progetto
+ * per selezionare un oggetto in una lista con la tastiera:
+   muovi con il tasto "Tab" nella lista desidearta;
+   muovi il cursore sull'oggetto desiderato;
+   premi il tasto "Spazio"
+
+Area di disegno e immagini di background
+ * Tasto destro = scrolla l'area di disegno
+ * Doppio click col tasto destro su una immagine = muovi l'immagine
+ 
+Inserimento scrap
+ * premi "Ctrl-R" oppure "Edita" > "Inserisci" > "scrap" per inserire un nuovo scrap
+ * il nuovo scrap viene inserito immediatamente dopo quello attivo
+
+Inserimento punto
+ * "Ctrl-P" = cambia alla modalità di inserimento punti
+ * Tasto sinistro = inserisci un punto nella posizione del mouse
+ * Ctrl + tasto sinistro = inserisci un punto vicino ad uno esistente
+   (di solito esso viene inserito esattamente sopra quello esistente)
+ * "Esc" = esci dalla modalità di inserimento punti
+
+Editare punti
+ * Trascina con tasto sinistro = muovi il punto
+ * Trascina con Ctrl + tasto sinistro = muovi il punto vicino ad uno esistente
+   (solitamente viene poszionato proprio sopra quello esistente)
+ * Trascina con tasto sinistro per la punta delle freccie = cambia l'orientazione
+   o la dimensione (dipendentemente dallo switch nel "Controllo Punti" del pannello)
+
+Inserimento linee
+ * "Ctrl-L" = entra in modalità inserimento linee ed inserisci una nuova linea
+ * Tasto sinistro = inserisci un nuovo punto della linea (senza punti di controllo)
+ * Ctrl + tasto sinistro = inserisci un nuovo punto della linea vicino ad uno
+   esistente (normalmente sopra di esso)
+ * Trascina con tasto sinistro = inserisci un nuovo punto della linea (con punti di
+   controllo)
+ * tieni premuto "Ctrl" durante in trascinamento = fissa la distanza del precedente 
+   punto di controllo
+ * Trascina con tasto sinistro su un punto di controllo = muovi la sua posizione
+ * Tasto destro su uno dei punti precedenti = seleziona il punto precedente mentre
+   sei in modaliatà di inserimento (utile se vuoi cambiare anche la direzione
+   del precedente punto di controllo)
+ * "Esc" oppure tasto sinistro sull'ultimo punto = fine inserimento linea
+ * Tasto sinistro sul primo punto = chiudi la linea e fine inserimento
+
+Editare linee
+ * Tasto sinistro e trascina = sposta il punto della linea
+ * Ctrl + tasto sinistro e trascina = sposta il punto dell alinea vicino ad un
+   punto esistente (di solito proprio sopra di esso)
+ * Tasto sinistro su un punto di controllo e trascina = sposta il punto di controllo
+
+Aggiungere punti di linea
+ * seleziona il punto prima del quale vuoi inserire dei punti;
+   inserisci i punti desiderati;
+   premi "Esc" o tasto sinstro sul punto selezionato all'inizio
+  
+Rimuovere un punto di linea
+ * seleziona il punto che vuoi rimuovere;
+   premi "Edita linea" > "Rimuovi punto" nel Controllo Linee del pannello
+    
+Dividere una linea
+ * seleziona il punto dove vuoi dividere la linea;
+   premi "Edita linea" > "Dividi linea"  nel Controllo Linee del pannello
+    
+Inserimento aree
+ * premi "Ctrl-A" oppure "Edita" > "Inserisci" > "area" per passare alla
+   modalità di inserimento bordo area
+ * Tasto destro sulle linee, che contornano l'area desiderata
+ * "Esc" per terminare l'inserimento dell'area
+
+Editare aree
+ * seleziona l'area che vuoi editare
+ * premi "Inserisci" nel Controllo Aree per inserire altre linee di bordo
+   nella posizione del cursore
+ * premi "Inserisci ID" per inserire una linea con un dato ID nella 
+   posizione del cursore
+ * premi "Rimuovi" per rimuovere dal bordo dell'area la linea di bordo 
+   selezionata
+    
+Selezionare un oggetto
+ * Tasto sinistro = selezione l'oggetto che sta sopra
+ * Tasto destro = seleziona l'oggetto appena sotto quello gia` selezionato
+   (utile quando parecchi punti giaciono uno sopra l'altro)
+}]
+
+

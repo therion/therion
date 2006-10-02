@@ -75,7 +75,8 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
       osrc.line = this->inp.get_cif_line_number();
       if (strcmp(osrc.name, this->inp.get_cif_name()) != 0)
         osrc.name = dbptr->strstore(this->inp.get_cif_name(), true);
-      dbptr->csrc = osrc;
+      dbptr->csrc.line = osrc.line;
+      dbptr->csrc.name = osrc.name;
     
       // now different behavoiour whether we're inside or outside command
       if (inside_cmd) {

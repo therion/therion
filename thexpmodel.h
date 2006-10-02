@@ -42,6 +42,7 @@ enum {
   TT_EXPMODEL_OPT_FORMAT,  ///< Output option.
   TT_EXPMODEL_OPT_ENABLE,  ///< Output option.
   TT_EXPMODEL_OPT_DISABLE,  ///< Output option.
+  TT_EXPMODEL_OPT_WALLSRC,  ///< Output option.
 };
 
 
@@ -54,6 +55,7 @@ static const thstok thtt_expmodel_opt[] = {
   {"-enable", TT_EXPMODEL_OPT_ENABLE},
   {"-fmt", TT_EXPMODEL_OPT_FORMAT},
   {"-format", TT_EXPMODEL_OPT_FORMAT},
+  {"-wall-source", TT_EXPMODEL_OPT_WALLSRC},
   {NULL, TT_EXPMODEL_OPT_UNKNOWN}
 };
 
@@ -90,6 +92,8 @@ static const thstok thtt_expmodel_items[] = {
 
 
 
+
+
 /**
  * Model export formats.
  */
@@ -100,7 +104,6 @@ enum {
   TT_EXPMODEL_FMT_COMPASS,  ///< compass
   TT_EXPMODEL_FMT_THERION,  ///< therion
   TT_EXPMODEL_FMT_LOCH,  ///< loch
-  TT_EXPMODEL_FMT_LOX,  ///< loch
   TT_EXPMODEL_FMT_3DMF,  ///< 3dmf
   TT_EXPMODEL_FMT_VRML,  ///< vrml
   TT_EXPMODEL_FMT_DXF,  ///< dxf
@@ -116,9 +119,8 @@ static const thstok thtt_expmodel_fmt[] = {
   {"compass", TT_EXPMODEL_FMT_COMPASS},
   {"dxf", TT_EXPMODEL_FMT_DXF},
   {"loch", TT_EXPMODEL_FMT_LOCH},
-  {"lox", TT_EXPMODEL_FMT_LOX},
   {"survex", TT_EXPMODEL_FMT_SURVEX},
-  {"therion", TT_EXPMODEL_FMT_THERION},
+  {"xtherion", TT_EXPMODEL_FMT_THERION},
   {"vrml", TT_EXPMODEL_FMT_VRML},
   {NULL, TT_EXPMODEL_FMT_UNKNOWN}
 };
@@ -133,7 +135,8 @@ class thexpmodel : public thexport {
   public:
 
   int format;  ///< Output format.
-  unsigned items;
+  unsigned items,
+    wallsrc;
   
   void export_3d_file(class thdatabase * dbp);  ///< Export survex 3d file.
   
@@ -146,8 +149,6 @@ class thexpmodel : public thexport {
   void export_3dmf_file(class thdatabase * dbp);  ///< Export 3dmf file.
 
   void export_dxf_file(class thdatabase * dbp);  ///< Export compass plt file.
-
-  void export_tlx_file(class thdatabase * dbp);  ///< Export temporary loch file.
 
   void export_lox_file(class thdatabase * dbp);  ///< Export lox file.
 

@@ -558,7 +558,7 @@ thscraplp * thscrap::get_polygon() {
         }
         set_ffst_ttst;
         ffselect = ((this->centerline_survey == NULL) && (ffst->survey->selected));
-        ttselect = ((this->centerline_survey == NULL) && (ffst->survey->selected));
+        ttselect = ((this->centerline_survey == NULL) && (ttst->survey->selected));
         ffselect = ffselect || ((this->centerline_survey != NULL) && 
           (ffst->survey->is_in_survey(this->centerline_survey)));
         ttselect = ttselect || ((this->centerline_survey != NULL) && 
@@ -585,6 +585,9 @@ thscraplp * thscrap::get_polygon() {
         lp = this->polygon_insert();
         lp->station = st;
         lp->ustation = st;
+        lp->station_name.id = i+1;
+        lp->station_name.name = st->name;
+        lp->station_name.psurvey = st->survey;
         this->insert_adata(st);
       }
     }  

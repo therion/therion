@@ -2281,6 +2281,9 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
           case TT_DATASFLAG_ENTRANCE:
             it->flags |= TT_STATIONFLAG_ENTRANCE;
             break;
+          case TT_DATASFLAG_NOTFIXED:
+            it->flags |= TT_STATIONFLAG_NOTFIXED;
+            break;
           case TT_DATASFLAG_CONT:
             it->flags |= TT_STATIONFLAG_CONT;
             break;

@@ -89,6 +89,8 @@ enum {
   TT_LAYOUT_COLOR_LEGEND = 2045,
   TT_LAYOUT_MAP_HEADER_BG = 2046,
 	TT_LAYOUT_UNITS = 2047,
+	TT_LAYOUT_SURVEY_LEVEL = 2048,
+	TT_LAYOUT_SKETCHES = 2049,
 };
 
 
@@ -408,9 +410,11 @@ static const thstok thtt_layout_opt[] = {
   {"scale", TT_LAYOUT_SCALE},
   {"scale-bar", TT_LAYOUT_SCALE_BAR},
   {"size", TT_LAYOUT_SIZE},
+  {"sketches", TT_LAYOUT_SKETCHES},
   {"statistics",TT_LAYOUT_MAP_ITEM},
   {"surface",TT_LAYOUT_SURFACE},
   {"surface-opacity",TT_LAYOUT_SURFACE_OPACITY},
+  {"survey-level",TT_LAYOUT_SURVEY_LEVEL},
   {"symbol-assign", TT_LAYOUT_SYMBOL_ASSIGN},
   {"symbol-hide", TT_LAYOUT_SYMBOL_HIDE},
   {"symbol-set", TT_LAYOUT_SYMBOL_DEFAULTS},
@@ -467,7 +471,7 @@ class thlayout : public thdataobject {
   char grid, ccode;
   
   int legend, color_legend, map_header, lang, max_explos, max_topos, max_cartos, max_copys,
-    debug, surface;
+    debug, survey_level, surface;
   
   thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
   int color_crit, // none, altitude, ...
@@ -478,13 +482,13 @@ class thlayout : public thdataobject {
   thlayoutln * first_line, * last_line;
   
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
-    explo_lens, topo_lens, map_header_bg;
+    explo_lens, topo_lens, map_header_bg, sketches;
 		
 	thlocale units;
   
   bool def_grid_size, def_grid_origin, def_nav_factor, def_nav_size, 
     def_opacity, def_transparency, def_layers, def_base_scale,
-    def_rotate,
+    def_rotate, def_sketches, 
     def_origin, def_origin_label, def_overlap, def_own_pages,
     def_page_numbers, def_page_setup, def_scale, def_size, def_title_pages,
     def_tex_lines, def_doc_title, def_doc_comment, def_doc_author, def_doc_subject,
@@ -492,7 +496,7 @@ class thlayout : public thdataobject {
     def_legend, def_color_legend, def_legend_width, def_legend_columns, 
     def_map_header, def_lang, def_scale_bar, def_map_header_bg,
     redef_base_scale, def_max_explos, def_max_topos, def_max_cartos,
-    def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_surface,
+    def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_survey_level, def_surface,
     def_surface_opacity, def_units;
     
   
@@ -621,7 +625,7 @@ class thlayout : public thdataobject {
    
   void export_pdftex(FILE * o, thdb2dprj * prj, char mode);
   void export_mpost(FILE * o);
-  void export_mpost_symbols(FILE * o, class thsymbolset * symset);
+  void export_mpost_symbols(FILE * o, struct thsymbolset * symset);
   
   /**
    * Process copy.
@@ -633,6 +637,7 @@ class thlayout : public thdataobject {
   bool is_debug_joins();
   bool is_debug_scrapnames();
   bool is_debug_stationnames();
+
   
   /**
    * set LAYOUT variable.

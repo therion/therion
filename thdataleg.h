@@ -314,6 +314,7 @@ enum {
   TT_DATASFLAG_ENTRANCE,
   TT_DATASFLAG_CONT,
   TT_DATASFLAG_FIXED,
+  TT_DATASFLAG_NOTFIXED,
 };
 
 /**
@@ -326,6 +327,7 @@ enum {
   TT_STATIONFLAG_CONT = 2,
   TT_STATIONFLAG_FIXED = 4,
   TT_STATIONFLAG_UNDERGROUND = 8,
+  TT_STATIONFLAG_NOTFIXED = 16,
 };
 
 
@@ -336,6 +338,7 @@ enum {
 static const thstok thtt_datasflag[] = {
   {"continuation", TT_DATASFLAG_CONT},
   {"entrance", TT_DATASFLAG_ENTRANCE},
+  {"not-fixed", TT_DATASFLAG_NOTFIXED},
   {NULL, TT_DATASFLAG_UNKNOWN},
 };
 

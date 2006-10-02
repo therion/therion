@@ -268,6 +268,7 @@ endlayout|
     Predefined map header contains some basic informations about
     cave: name, scale, north arrow, list of surveyors etc. It is fully 
     customizable (see the chapter {\it Changing layout} for details).
+    <x> is easting (left-right on page). <y> is northing (up/down page).
     Ranges for |<x>| and |<y>| are -100--200. Lower-left corner of the map 
     is |0 0|, 
     upper-right corner is |100 100|. The header is aligned with the specified 
@@ -377,7 +378,8 @@ endlayout|
   {\it model:}\Nobreak
 
   * |format/fmt <format>| = set model output format. Currently the following
-    output formats are supported: |therion| (native format; default),
+    output formats are supported: |loch| (native format; default),
+    |xtherion| (xtherion 3D viewer format),
     |compass| (plt file), |survex| (3d file), |dxf|, |vrml| and |3dmf|.
   * |enable <walls/[cave/surface-]centerline/surface/all>| and
   * |disable <walls/[cave/surface-]centerline/surface/all>| = 
@@ -418,7 +420,7 @@ endlayout|
 \bgroup
 \leavevmode\kern1em\vbox{\halign{#\hfil\quad&#\hfil\cr
 {\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
-model & therion, dxf, compass, survex, vrml, 3dmf\cr
+model & loch, xtherion, dxf, compass, survex, vrml, 3dmf\cr
 map  & pdf, svg, xhtml, 3d, xvi\cr
 atlas & pdf\cr
 database & sql\cr}}\egroup
@@ -500,6 +502,13 @@ or
 * |--print-init-file| =
         Print a default initialization file. For more details
         see the {\it Initialization} section in the {\it Appendix}.
+
+* |--print-environment| =
+        Print environment settings for therion.
+
+* |--print-environment| =
+        Print a list of all therion supported map symbols in 
+        |symbols.xhtml| file.
         
 * |-s <source-file>| =
         Set the name of the source file.

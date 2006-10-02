@@ -164,6 +164,7 @@ class thdatabase {
   int ccontext;  ///< Current context.
   class thsurvey * csurveyptr,  ///< Pointer to the current survey.
     * fsurveyptr;  ///< Pointer to the first survey.
+  unsigned csurveylevel; ///< Current survey level.
   class thscrap * cscrapptr; ///< Current scrap.
   class th2ddataobject * lcscrapoptr; ///< Last object in given current scrap.
   class thdataobject * lcsobjectptr;  ///< Last object in given current survey.
@@ -288,6 +289,7 @@ class thdatabase {
    */
    
   char * strstore(char * src, bool use_dic = false);
+  char * strstore(const char * src, bool use_dic = false);
   
   
   /**

@@ -918,12 +918,33 @@ void thparse_image(char * fname, double & width, double & height, double & dpi, 
       if (dpi < 1.0) {
         dpi = 300.0;
       }      
-      for(sx = 0, scan = &(picth[0]); sx < (phsize - 10); sx++, scan++) {
-        if ((scan[0] == 0xFF) && ((scan[1] == 0xC0) || (scan[1] == 0xC1))) {
-          height = thround(double(scan[5]) * 256.0 + double(scan[6]));
-          width = thround(double(scan[7]) * 256.0 + double(scan[8]));
-        }
+      //for(sx = 0, scan = &(picth[0]); sx < (phsize - 10); sx++, scan++) {
+      //  if ((scan[0] == 0xFF) && ((scan[1] == 0xC0) || (scan[1] == 0xC1))) {
+      //    height = thround(double(scan[5]) * 256.0 + double(scan[6]));
+      //    width = thround(double(scan[7]) * 256.0 + double(scan[8]));
+      //  }
+      //}
+      sx = 0;
+      int marker;
+      size_t len;
+      pictf = fopen(fname, "rb");      
+      fread(&(picth[0]), 1, 2, pictf);
+      height = -1.0;
+      width = -1.0;
+      while(getc(pictf) == 255) {
+        marker = getc(pictf);
+        len = 256 * (size_t) getc(pictf) + (size_t) getc(pictf);
+        if ((marker == 0xC0) || (marker == 0xC1)) {
+          getc(pictf);
+          height = thround(double(getc(pictf)) * 256.0 + double(getc(pictf)));
+          width = thround(double(getc(pictf)) * 256.0 + double(getc(pictf)));
+          break;
+        } 
+        fseek(pictf, len - 2, SEEK_CUR);
       }
+      fclose(pictf);
+      if ((height < 0.0) || (width < 0.0))
+        ththrow(("unable to determine image size -- %s", fname));
     } else if (
       (picth[0] == 0x89) && (picth[1] == 0x50) &&
       (picth[2] == 0x4E) && (picth[3] == 0x47) &&
@@ -1049,6 +1070,44 @@ const char * thutf82xhtml(const char * src)
   return res;
   
 }
+
+static const char base64_tab[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+void thbase64_encode(char * fname, FILE * fout) {
+  int llength = 0;
+  char in_buffer[3];
+  unsigned char out_buffer[5];
+  out_buffer[4] = 0;
+  FILE * fin;
+  fin = fopen(fname, "rb");
+  size_t count;
+  do {
+    for (int i = 0; i < 3; i++) in_buffer[i] = '\x0';
+    for (int i = 0; i < 4; i++) out_buffer[i] = '=';
+    if (fin != NULL)
+      count = fread(in_buffer, 1, 3, fin);
+    else
+      count = 0;
+    unsigned long value = 
+      ((unsigned char)in_buffer[0]) << 16 |
+      ((unsigned char)in_buffer[1]) << 8 |
+      ((unsigned char)in_buffer[2]) << 0;
+    out_buffer[0] = base64_tab[(value >> 18) & 0x3F];
+    out_buffer[1] = base64_tab[(value >> 12) & 0x3F];
+    if (count > 1) out_buffer[2] = base64_tab[(value >> 6) & 0x3F];
+    if (count > 2) out_buffer[3] = base64_tab[(value >> 0) & 0x3F];
+    if (llength >= 76) {
+      fprintf(fout,"\n");
+      llength = 0;
+    }
+    fprintf(fout,"%s",out_buffer);
+    llength += 4;
+  } while ((fin != NULL) && (!feof(fin)));
+  if (fin != NULL)
+    fclose(fin);
+}
+
+
 
 
 

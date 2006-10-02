@@ -42,6 +42,7 @@
 #include "thsurface.h"
 #include "thlocale.h"
 #include "thinit.h"
+#include "thsketch.h"
 #include "extern/lxMath.h"
 #ifdef THMSVC
 #define hypot _hypot
@@ -297,10 +298,28 @@ void thdb1d::scan_data()
           
       // scan data fixes
       fii = dp->fix_list.begin();
+      thdb1ds * tmps;
+      unsigned olevel, nlevel;
       try {
         while(fii != dp->fix_list.end()) {
           fii->station.id = this->insert_station(fii->station, fii->psurvey, dp, 2);
-          this->station_vec[fii->station.id - 1].flags |= TT_STATIONFLAG_FIXED;
+          tmps = &(this->station_vec[fii->station.id - 1]);
+          tmps->flags |= TT_STATIONFLAG_FIXED;
+          if (fii->srcf.context != NULL) {
+            if (tmps->fixcontext != NULL) {
+              if (tmps->fixcontext->fsptr == NULL)
+                olevel = 0;
+              else
+                olevel = tmps->fixcontext->fsptr->level;
+              if (fii->srcf.context->fsptr == NULL)
+                nlevel = 0;
+              else
+                nlevel = fii->srcf.context->fsptr->level;
+              if (nlevel <= olevel)
+                tmps->fixcontext = fii->srcf.context;
+            } else 
+              tmps->fixcontext = fii->srcf.context;
+          }
           fii++;
         }
       }
@@ -1854,23 +1873,31 @@ void thdb1d::close_loops()
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   thdatafix_list::iterator fii;
   thdb1ds * ps;
+  thdataobject * cx1, * cx2;
+  thdb1ds * tmps;
+
   double avg_error = 0.0, avg_error_sum = 0.0;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
       dp = (thdata *)(*obi);
       fii = dp->fix_list.begin();
       while(fii != dp->fix_list.end()) {
-        ps = &(this->station_vec[this->station_vec[fii->station.id - 1].uid - 1]);
-        ps->placed = 1;
-        ps->fixed = true;
-        anyfixed = true;
-        ps->x = fii->x;
-        ps->y = fii->y;
-        ps->z = fii->z;
-        if (!thisnan(fii->sdx)) {
-          ps->sdx = fii->sdx;
-          ps->sdy = fii->sdy;
-          ps->sdz = fii->sdz;
+        tmps = &(this->station_vec[fii->station.id - 1]);
+        cx1 = tmps->fixcontext;
+        cx2 = fii->srcf.context;
+        if (((cx1 == NULL) && (cx2 == NULL)) || ((cx1 != NULL) && (cx2 != NULL) && (cx1->id == cx2->id))) {
+          ps = &(this->station_vec[this->station_vec[fii->station.id - 1].uid - 1]);
+          ps->placed = 1;
+          ps->fixed = true;
+          anyfixed = true;
+          ps->x = fii->x;
+          ps->y = fii->y;
+          ps->z = fii->z;
+          if (!thisnan(fii->sdx)) {
+            ps->sdx = fii->sdx;
+            ps->sdy = fii->sdy;
+            ps->sdz = fii->sdz;
+          }
         }
         fii++;
       }
@@ -2645,6 +2672,8 @@ void thdb1d::postprocess_objects()
       case TT_SURFACE_CMD:
         ((thsurface*)(*obi))->check_stations();
         break;
+      case TT_SKETCH_CMD:
+        ((thsketch*)(*obi))->check_stations();
     }
     obi++;
   }

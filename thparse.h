@@ -29,6 +29,7 @@
 #ifndef thparse_h
 #define thparse_h
 
+#include <stdio.h>
 #include "thbuffer.h"
 #include "thmbuffer.h"
 
@@ -354,6 +355,12 @@ void thset_grid(double gorigin, double gsize, double min, double max, double & q
  */
  
 const char * thutf82xhtml(const char * src);
+
+/**
+ * Base 64 file encoder.
+ */
+
+void thbase64_encode(char * fname, FILE * fout);
 
 
 #endif

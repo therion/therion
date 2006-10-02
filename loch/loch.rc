@@ -1,0 +1,2 @@
+LOCHICON ICON "loch.ico"
+#include "wx/msw/wx.rc"

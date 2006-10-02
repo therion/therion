@@ -113,7 +113,11 @@ void thtmpdir::create()
     }
 #endif
 #else
-    dir_path = "thTMPDIR";
+   thbuffer wdir;
+   wdir.guarantee(1024);
+   getcwd(wdir.get_buffer(),1024);
+   wdir += "\\thTMPDIR";
+   dir_path = wdir;
 #endif
 
     this->tried = true;

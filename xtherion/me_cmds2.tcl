@@ -837,7 +837,7 @@ proc xth_me_cmds_create_area {ix mode type opts lines} {
 
   foreach ln $lines {
     xth_me_cmds_create_area_line $id \
-          [expr [llength $xth(me,cmds,$id,xllist)] - 1] $mode $ln
+	  [expr [llength $xth(me,cmds,$id,xllist)] - 1] $mode $ln
   }
   
   # nastavit options
@@ -896,7 +896,7 @@ proc xth_me_cmds_create_line {ix mode type opts lines} {
       set xth(me,cmds,$id,name) [lindex $optl 0]
       set ln [lindex $optl 1]
       if {[string length $ln] > 0} {
-        lappend newlines $ln
+	lappend newlines $ln
       }
     } else {
       lappend newlines $ln
@@ -921,7 +921,7 @@ proc xth_me_cmds_create_line {ix mode type opts lines} {
       set xth(me,cmds,$id,reverse) [xth_me_cmds_get_bool [lindex $optl 0]]
       set ln [lindex $optl 1]
       if {[string length $ln] > 0} {
-        lappend newlines $ln
+	lappend newlines $ln
       }
     } else {
       lappend newlines $ln
@@ -944,7 +944,7 @@ proc xth_me_cmds_create_line {ix mode type opts lines} {
       set xth(me,cmds,$id,close) [xth_me_cmds_get_onoffauto [lindex $optl 0]]
       set ln [lindex $optl 1]
       if {[string length $ln] > 0} {
-        lappend newlines $ln
+	lappend newlines $ln
       }
     } else {
       lappend newlines $ln
@@ -968,7 +968,7 @@ proc xth_me_cmds_create_line {ix mode type opts lines} {
     set what 0
     set cmt 0
     if {[regexp {^\s*\!?\s*(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s*(\#.*)?$} \
-          $ln dum x1 y1 x2 y2 x y cmt] && (![catch {expr $x * $y * $x1 * $y1 * $x2 * $y2}])} {
+	  $ln dum x1 y1 x2 y2 x y cmt] && (![catch {expr $x * $y * $x1 * $y1 * $x2 * $y2}])} {
       set what 2
     } elseif {[regexp {^\s*\!?\s*(\S+)\s+(\S+)\s*(\#.*)?$} $ln dum x y cmt] && (![catch {expr $x * $y}])} {
       set x1 {}
@@ -981,46 +981,46 @@ proc xth_me_cmds_create_line {ix mode type opts lines} {
       set cmt $ln
       set optl [xth_me_cmds_get_option $ln orientation]
       if {[lindex $optl 2]} {
-        set rot [lindex $optl 0]
-        set cmt [lindex $optl 1]
+	set rot [lindex $optl 0]
+	set cmt [lindex $optl 1]
       } else {      
-        set optl [xth_me_cmds_get_option $ln orient]
-        if {[lindex $optl 2]} {
-          set rot [lindex $optl 0]
-          set cmt [lindex $optl 1]
-        } else {
-          set optl [xth_me_cmds_get_option $ln smooth]
-          if {[lindex $optl 2]} {
-            set smth [xth_me_cmds_get_onoffauto [lindex $optl 0]]
-            set cmt [lindex $optl 1]
-          } else {
-            set optl [xth_me_cmds_get_option $ln size]
-            if {[lindex $optl 2]} {
-              switch $xth(me,cmds,$id,type) {
-                slope {
-                  set lsz [expr [lindex $optl 0]]
-                }
-                default {
-                  set rsz [expr [lindex $optl 0] / 2.0]
-                  set lsz [expr [lindex $optl 0] / 2.0]
-                }
-              }
-              set cmt [lindex $optl 1]
-            } else {
-              set optl [xth_me_cmds_get_option $ln r-size]
-              if {[lindex $optl 2]} {
-                set rsz [lindex $optl 0]
-                set cmt [lindex $optl 1]
-              } else {
-                set optl [xth_me_cmds_get_option $ln l-size]
-                if {[lindex $optl 2]} {
-                  set lsz [lindex $optl 0]
-                  set cmt [lindex $optl 1]
-                }
-              }
-            }
-          }
-        }
+	set optl [xth_me_cmds_get_option $ln orient]
+	if {[lindex $optl 2]} {
+	  set rot [lindex $optl 0]
+	  set cmt [lindex $optl 1]
+	} else {
+	  set optl [xth_me_cmds_get_option $ln smooth]
+	  if {[lindex $optl 2]} {
+	    set smth [xth_me_cmds_get_onoffauto [lindex $optl 0]]
+	    set cmt [lindex $optl 1]
+	  } else {
+	    set optl [xth_me_cmds_get_option $ln size]
+	    if {[lindex $optl 2]} {
+	      switch $xth(me,cmds,$id,type) {
+		slope {
+		  set lsz [expr [lindex $optl 0]]
+		}
+		default {
+		  set rsz [expr [lindex $optl 0] / 2.0]
+		  set lsz [expr [lindex $optl 0] / 2.0]
+		}
+	      }
+	      set cmt [lindex $optl 1]
+	    } else {
+	      set optl [xth_me_cmds_get_option $ln r-size]
+	      if {[lindex $optl 2]} {
+		set rsz [lindex $optl 0]
+		set cmt [lindex $optl 1]
+	      } else {
+		set optl [xth_me_cmds_get_option $ln l-size]
+		if {[lindex $optl 2]} {
+		  set lsz [lindex $optl 0]
+		  set cmt [lindex $optl 1]
+		}
+	      }
+	    }
+	  }
+	}
       }
       regsub {^\s*} $cmt {} cmt
     } else {
@@ -1029,22 +1029,22 @@ proc xth_me_cmds_create_line {ix mode type opts lines} {
     }
     if {$what == 0} {
       if {[string length $cmt] > 0} {
-        if {[string length $opts] > 0} {
-          set opts "$opts\n$cmt"
-        } else {
-          set opts "$cmt"
-        }
+	if {[string length $opts] > 0} {
+	  set opts "$opts\n$cmt"
+	} else {
+	  set opts "$cmt"
+	}
       }
     } else {
       if {$has_some} {
-        xth_me_cmds_create_line_point $id \
-          [expr [llength $xth(me,cmds,$id,xplist)] - 1] $mode \
-          $px $py $px2 $py2 $x1 $y1 $smth $rot $rsz $lsz $opts 1.0
-        set opts {}
-        set rsz {}
-        set lsz {}
-        set smth {}
-        set rot {}
+	xth_me_cmds_create_line_point $id \
+	  [expr [llength $xth(me,cmds,$id,xplist)] - 1] $mode \
+	  $px $py $px2 $py2 $x1 $y1 $smth $rot $rsz $lsz $opts 1.0
+	set opts {}
+	set rsz {}
+	set lsz {}
+	set smth {}
+	set rot {}
       }
       set has_some 1
       set px $x
@@ -1089,11 +1089,11 @@ proc xth_me_cmds_postprocess_line {id} {
   # overi uzavretie
   if {$xth(me,cmds,$id,close) != 0} {
       if {($xth(me,cmds,$id,[lindex $xl 0],x) == $xth(me,cmds,$id,[lindex $xl $lix],x)) && \
-        ($xth(me,cmds,$id,[lindex $xl 0],y) == $xth(me,cmds,$id,[lindex $xl $lix],y)) && \
-        ($lix > 0)} {
-        set xth(me,cmds,$id,close) 1
+	($xth(me,cmds,$id,[lindex $xl 0],y) == $xth(me,cmds,$id,[lindex $xl $lix],y)) && \
+	($lix > 0)} {
+	set xth(me,cmds,$id,close) 1
       } else {
-        set xth(me,cmds,$id,close) 0
+	set xth(me,cmds,$id,close) 0
       }
   }
   
@@ -1116,12 +1116,12 @@ proc xth_me_cmds_postprocess_line {id} {
   if {$lix == 0} {
     set pid [lindex $xth(me,cmds,$id,xplist) 0]
     if {($xth(me,cmds,$id,$pid,smooth) == -1) && \
-        $xth(me,cmds,$id,$pid,idp) && \
-        $xth(me,cmds,$id,$pid,idn)} {
+	$xth(me,cmds,$id,$pid,idp) && \
+	$xth(me,cmds,$id,$pid,idn)} {
       set xth(me,cmds,$id,$pid,smooth) [xth_me_cmds_are_smooth \
-        $xth(me,cmds,$id,$pid,xp) $xth(me,cmds,$id,$pid,yp) \
-        $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y) \
-        $xth(me,cmds,$id,$pid,xn) $xth(me,cmds,$id,$pid,yn)]
+	$xth(me,cmds,$id,$pid,xp) $xth(me,cmds,$id,$pid,yp) \
+	$xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y) \
+	$xth(me,cmds,$id,$pid,xn) $xth(me,cmds,$id,$pid,yn)]
     } elseif {$xth(me,cmds,$id,$pid,smooth) == -1} {
       set xth(me,cmds,$id,$pid,smooth) 0
     }
@@ -1148,18 +1148,18 @@ proc xth_me_cmds_postprocess_line {id} {
       set x $xth(me,cmds,$id,$pid,x)
       set y $xth(me,cmds,$id,$pid,y)
       if {($ix == 0) && $cls} {
-        set xp $xth(me,cmds,$id,$lid,xp)
-        set yp $xth(me,cmds,$id,$lid,yp)
+	set xp $xth(me,cmds,$id,$lid,xp)
+	set yp $xth(me,cmds,$id,$lid,yp)
       } else {
-        set xp $xth(me,cmds,$id,$pid,xp)
-        set yp $xth(me,cmds,$id,$pid,yp)
+	set xp $xth(me,cmds,$id,$pid,xp)
+	set yp $xth(me,cmds,$id,$pid,yp)
       }
       if {($ix == $lix) && $cls} {
-        set xn $xth(me,cmds,$id,$fid,xn)
-        set yn $xth(me,cmds,$id,$fid,yn)
+	set xn $xth(me,cmds,$id,$fid,xn)
+	set yn $xth(me,cmds,$id,$fid,yn)
       } else {
-        set xn $xth(me,cmds,$id,$pid,xn)
-        set yn $xth(me,cmds,$id,$pid,yn)
+	set xn $xth(me,cmds,$id,$pid,xn)
+	set yn $xth(me,cmds,$id,$pid,yn)
       }
       set xth(me,cmds,$id,$pid,smooth) [xth_me_cmds_are_smooth $xp $yp $x $y $xn $yn]
     } elseif {$xth(me,cmds,$id,$pid,smooth) == -1} {
@@ -1215,7 +1215,7 @@ proc xth_me_cmds_update_line_data {id} {
     if {$xth(me,cmds,$id,close)} {
       set d "$d -close on"
     } elseif {($xth(me,cmds,$id,[lindex $xl 0],x) == $xth(me,cmds,$id,[lindex $xl $lix],x)) && \
-        ($xth(me,cmds,$id,[lindex $xl 0],y) == $xth(me,cmds,$id,[lindex $xl $lix],y))} {
+	($xth(me,cmds,$id,[lindex $xl 0],y) == $xth(me,cmds,$id,[lindex $xl $lix],y))} {
       set d "$d -close off"
     }
 
@@ -1243,24 +1243,24 @@ proc xth_me_cmds_update_line_data {id} {
       set crd [format "  %s %s" $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y)]
     } else {
       if {$xth(me,cmds,$id,$pid,idp) || $xth(me,cmds,$id,$ppid,idn)} {
-        if {$xth(me,cmds,$id,$ppid,idn)} {
-          set x1 $xth(me,cmds,$id,$ppid,xn)
-          set y1 $xth(me,cmds,$id,$ppid,yn)
-        } else {
-          set x1 $xth(me,cmds,$id,$ppid,x)
-          set y1 $xth(me,cmds,$id,$ppid,y)
-        }
-        if {$xth(me,cmds,$id,$pid,idp)} {
-          set x2 $xth(me,cmds,$id,$pid,xp)
-          set y2 $xth(me,cmds,$id,$pid,yp)
-        } else {
-          set x2 $xth(me,cmds,$id,$pid,x)
-          set y2 $xth(me,cmds,$id,$pid,y)
-        }
-        set crd [format "  %s %s %s %s" $x1 $y1 $x2 $y2]
-        set cto 1
+	if {$xth(me,cmds,$id,$ppid,idn)} {
+	  set x1 $xth(me,cmds,$id,$ppid,xn)
+	  set y1 $xth(me,cmds,$id,$ppid,yn)
+	} else {
+	  set x1 $xth(me,cmds,$id,$ppid,x)
+	  set y1 $xth(me,cmds,$id,$ppid,y)
+	}
+	if {$xth(me,cmds,$id,$pid,idp)} {
+	  set x2 $xth(me,cmds,$id,$pid,xp)
+	  set y2 $xth(me,cmds,$id,$pid,yp)
+	} else {
+	  set x2 $xth(me,cmds,$id,$pid,x)
+	  set y2 $xth(me,cmds,$id,$pid,y)
+	}
+	set crd [format "  %s %s %s %s" $x1 $y1 $x2 $y2]
+	set cto 1
       } else {
-        set crd " "
+	set crd " "
       }
       set crd "$crd [format "%s %s" $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y)]"
     }
@@ -1286,7 +1286,7 @@ proc xth_me_cmds_update_line_data {id} {
       set popts $xth(me,cmds,$id,$pid,options)
       regsub {\s*$} $popts {} popts
       if {[string length $popts] > 0} {
-        regsub -all -line {^\s*} $popts {  } popts
+	regsub -all -line {^\s*} $popts {  } popts
       }
       set ptd "$ptd\n$popts"
     }
@@ -1436,14 +1436,14 @@ proc xth_me_cmds_toggle_linept {} {
   if {$nsmooth != $xth(me,cmds,$id,$pid,smooth)} {
     if {$nsmooth} {
       if {!$xth(me,cmds,$id,$pid,idp)} {
-        set crds [xth_me_cmds_get_default_linept_cp 1 $id $pid]
-        set xth(ctrl,me,linept,xp) [lindex $crds 0]
-        set xth(ctrl,me,linept,yp) [lindex $crds 1]
+	set crds [xth_me_cmds_get_default_linept_cp 1 $id $pid]
+	set xth(ctrl,me,linept,xp) [lindex $crds 0]
+	set xth(ctrl,me,linept,yp) [lindex $crds 1]
       }
       if {!$xth(me,cmds,$id,$pid,idn)} {
-        set crds [xth_me_cmds_get_default_linept_cp 0 $id $pid]
-        set xth(ctrl,me,linept,xn) [lindex $crds 0]
-        set xth(ctrl,me,linept,yn) [lindex $crds 1]
+	set crds [xth_me_cmds_get_default_linept_cp 0 $id $pid]
+	set xth(ctrl,me,linept,xn) [lindex $crds 0]
+	set xth(ctrl,me,linept,yn) [lindex $crds 1]
       }
     }
     set xth(ctrl,me,linept,smooth) $nsmooth
@@ -1534,12 +1534,12 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
     set nrot {} 
     foreach xpid $xth(me,cmds,$id,xplist) {
       if {$xpid > 0} {
-        foreach item {rs ls rotation} {
-          if {[string length $xth(me,cmds,$id,$xpid,$item)] > 0} {
-            set optsredo "$optsredo set xth(me,cmds,$id,$xpid,$item) {}; "
-            set optsundo "$optsundo set xth(me,cmds,$id,$xpid,$item) [list $xth(me,cmds,$id,$xpid,$item)]; "
-          }
-        }
+	foreach item {rs ls rotation} {
+	  if {[string length $xth(me,cmds,$id,$xpid,$item)] > 0} {
+	    set optsredo "$optsredo set xth(me,cmds,$id,$xpid,$item) {}; "
+	    set optsundo "$optsundo set xth(me,cmds,$id,$xpid,$item) [list $xth(me,cmds,$id,$xpid,$item)]; "
+	  }
+	}
       }
     }
   }
@@ -1563,13 +1563,13 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
 
     if {[string length $nxp] > 0} {
       if {[catch {expr $nxp}]} {
-        set nxp $oxp
+	set nxp $oxp
       }
       set nxp [expr double($nxp)]
     }
     if {[string length $nyp] > 0} {
       if {[catch {expr $nyp}]} {
-        set nyp $oyp
+	set nyp $oyp
       }
       set nyp [expr double($nyp)]
     }    
@@ -1581,13 +1581,13 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
     
     if {[string length $nxn] > 0} {
       if {[catch {expr $nxn}]} {
-        set nxn $oxn
+	set nxn $oxn
       }
       set nxn [expr double($nxn)]
     }
     if {[string length $nyn] > 0} {
       if {[catch {expr $nyn}]} {
-        set nyn $oyn
+	set nyn $oyn
       }
       set nyn [expr double($nyn)]
     }    
@@ -1607,31 +1607,31 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
     
     if {[string length $nrot] > 0} {
       if {[catch {expr $nrot}]} {
-        set nrot $orot
+	set nrot $orot
       } elseif {($nrot < 0.0) || ($nrot >= 360.0)} {
-        set nrot $orot
+	set nrot $orot
       } else {
-        set nrot [expr double($nrot)]
+	set nrot [expr double($nrot)]
       }
     }
 
     if {[string length $nrs] > 0} {
       if {[catch {expr $nrs}]} {
-        set nrs $ors
+	set nrs $ors
       } elseif {$nrs <= 0.0} {
-        set nrs $ors
+	set nrs $ors
       } else {
-        set nrs [expr double($nrs)]
+	set nrs [expr double($nrs)]
       }
     }
 
     if {[string length $nls] > 0} {
       if {[catch {expr $nls}]} {
-        set nls $ols
+	set nls $ols
       } elseif {$nls <= 0.0} {
-        set nls $ols
+	set nls $ols
       } else {
-        set nls [expr double($nls)]
+	set nls [expr double($nls)]
       }
     }
     
@@ -1668,16 +1668,16 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
       set xth(me,cmds,$id,$pid,xp) $nxp
       set xth(me,cmds,$id,$pid,yp) $nyp
       if {[string length "$nxp$nyp"] > 0} {
-        set xth(me,cmds,$id,$pid,idp) 1
+	set xth(me,cmds,$id,$pid,idp) 1
       } else {
-        set xth(me,cmds,$id,$pid,idp) 0
+	set xth(me,cmds,$id,$pid,idp) 0
       }
       set xth(me,cmds,$id,$pid,xn) $nxn
       set xth(me,cmds,$id,$pid,yn) $nyn
       if {[string length "$nxn$nyn"] > 0} {
-        set xth(me,cmds,$id,$pid,idn) 1
+	set xth(me,cmds,$id,$pid,idn) 1
       } else {
-        set xth(me,cmds,$id,$pid,idn) 0
+	set xth(me,cmds,$id,$pid,idn) 0
       }
       set xth(me,cmds,$id,$pid,smooth) $nsmth 
       set xth(me,cmds,$id,$pid,rotation) $nrot
@@ -1688,27 +1688,27 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
       xth_me_cmds_update_linept_list $id $pid
       set cpid 0
       if {$xth(me,cmds,$id,close)} {
-        set fpid [lindex $xth(me,cmds,$id,xplist) 0]
-        set lpid [lindex $xth(me,cmds,$id,xplist) [expr [llength $xth(me,cmds,$id,xplist)] - 2]]
-        if {$pid == $fpid} {
-          set cpid $lpid
-        } elseif {$pid == $lpid} {
-          set cpid $fpid
-        }
+	set fpid [lindex $xth(me,cmds,$id,xplist) 0]
+	set lpid [lindex $xth(me,cmds,$id,xplist) [expr [llength $xth(me,cmds,$id,xplist)] - 2]]
+	if {$pid == $fpid} {
+	  set cpid $lpid
+	} elseif {$pid == $lpid} {
+	  set cpid $fpid
+	}
       }
       if {$cpid > 0} {
-        set xth(me,cmds,$id,$cpid,x) $nx
-        set xth(me,cmds,$id,$cpid,y) $ny
-        xth_me_cmds_move_linept $id $cpid
-        set xth(me,cmds,$id,$cpid,xp) $nxp
-        set xth(me,cmds,$id,$cpid,yp) $nyp
-        set xth(me,cmds,$id,$cpid,idp) $xth(me,cmds,$id,$pid,idp)
-        set xth(me,cmds,$id,$cpid,xn) $nxn
-        set xth(me,cmds,$id,$cpid,yn) $nyn
-        set xth(me,cmds,$id,$cpid,idn) $xth(me,cmds,$id,$pid,idn)
-        set xth(me,cmds,$id,$cpid,smooth) $nsmth 
-        set ix [lsearch $xth(me,cmds,$id,xplist) $cpid]
-        xth_me_cmds_update_linept_list $id $cpid
+	set xth(me,cmds,$id,$cpid,x) $nx
+	set xth(me,cmds,$id,$cpid,y) $ny
+	xth_me_cmds_move_linept $id $cpid
+	set xth(me,cmds,$id,$cpid,xp) $nxp
+	set xth(me,cmds,$id,$cpid,yp) $nyp
+	set xth(me,cmds,$id,$cpid,idp) $xth(me,cmds,$id,$pid,idp)
+	set xth(me,cmds,$id,$cpid,xn) $nxn
+	set xth(me,cmds,$id,$cpid,yn) $nyn
+	set xth(me,cmds,$id,$cpid,idn) $xth(me,cmds,$id,$pid,idn)
+	set xth(me,cmds,$id,$cpid,smooth) $nsmth 
+	set ix [lsearch $xth(me,cmds,$id,xplist) $cpid]
+	xth_me_cmds_update_linept_list $id $cpid
       }
       xth_me_cmds_move_linelnpt $id $pid
     }  
@@ -1813,22 +1813,22 @@ proc xth_me_cmds_get_default_linept_cp {prv id pid} {
     if {$prv} {
       set ppix [expr [lsearch $xth(me,cmds,$id,xplist) $pid] - 1]
       if {$ppix >= 0} {
-        set ppid [lindex $xth(me,cmds,$id,xplist) $ppix]
-        if {$xth(me,cmds,$id,$ppid,idn)} {
-          set rdx [expr $xth(me,cmds,$id,$ppid,xn) - $xth(me,cmds,$id,$ppid,x)]
-          set rdy [expr $xth(me,cmds,$id,$ppid,yn) - $xth(me,cmds,$id,$ppid,y)]
-          set rd [expr hypot($rdy,$rdx)]
-        }
+	set ppid [lindex $xth(me,cmds,$id,xplist) $ppix]
+	if {$xth(me,cmds,$id,$ppid,idn)} {
+	  set rdx [expr $xth(me,cmds,$id,$ppid,xn) - $xth(me,cmds,$id,$ppid,x)]
+	  set rdy [expr $xth(me,cmds,$id,$ppid,yn) - $xth(me,cmds,$id,$ppid,y)]
+	  set rd [expr hypot($rdy,$rdx)]
+	}
       }        
     } else {
       set npix [expr [lsearch $xth(me,cmds,$id,xplist) $pid] + 1]
       set npid [lindex $xth(me,cmds,$id,xplist) $npix]
       if {$npid > 0} {
-        if {$xth(me,cmds,$id,$npid,idp)} {
-          set rdx [expr $xth(me,cmds,$id,$npid,xp) - $xth(me,cmds,$id,$npid,x)]
-          set rdy [expr $xth(me,cmds,$id,$npid,yp) - $xth(me,cmds,$id,$npid,y)]
-          set rd [expr hypot($rdy,$rdx)]
-        }
+	if {$xth(me,cmds,$id,$npid,idp)} {
+	  set rdx [expr $xth(me,cmds,$id,$npid,xp) - $xth(me,cmds,$id,$npid,x)]
+	  set rdy [expr $xth(me,cmds,$id,$npid,yp) - $xth(me,cmds,$id,$npid,y)]
+	  set rd [expr hypot($rdy,$rdx)]
+	}
       }        
     }
   }
@@ -2102,19 +2102,19 @@ proc xth_me_cmds_get_crds2state {id ppid pid} {
     set st normal
     if {$xth(me,cmds,$id,$ppid,idn) || $xth(me,cmds,$id,$pid,idp)} {
       set crds [xth_me_cmds_get_bezier_coords $x1 \
-        $xth(me,cmds,$id,$ppid,y) $xth(me,cmds,$id,$ppid,xn) \
-        $xth(me,cmds,$id,$ppid,yn) $xth(me,cmds,$id,$pid,xp) \
-        $xth(me,cmds,$id,$pid,yp) $xth(me,cmds,$id,$pid,x) \
-        $xth(me,cmds,$id,$pid,y)]
+	$xth(me,cmds,$id,$ppid,y) $xth(me,cmds,$id,$ppid,xn) \
+	$xth(me,cmds,$id,$ppid,yn) $xth(me,cmds,$id,$pid,xp) \
+	$xth(me,cmds,$id,$pid,yp) $xth(me,cmds,$id,$pid,x) \
+	$xth(me,cmds,$id,$pid,y)]
     } else {
 #      if {[string length $rot] > 0} {
 #        set crds [list [expr $xth(me,cmds,$id,$ppid,x) + $tlen * sin(double($rot)/180.0*3.14159265359)] \
 #          [expr $xth(me,cmds,$id,$ppid,y) + $tlen * cos(double($rot)/180.0*3.14159265359)]]
 #      } else {
-        set crds {}
+	set crds {}
 #      }
       lappend crds $xth(me,cmds,$id,$ppid,x) $xth(me,cmds,$id,$ppid,y) \
-        $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y)
+	$xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y)
     }
   } else {
     set crds {0 0 10 10}
@@ -2350,9 +2350,9 @@ proc xth_me_cmds_continue_linept_creation {x y motionID} {
       set xth(me,lptc,xd) $d
     } else {
       if {[info exist xth(me,lptc,xd)]} {
-        set xd $xth(me,lptc,xd)
+	set xd $xth(me,lptc,xd)
       } else {
-        set xd $d
+	set xd $d
       }
     }
     if {(!$motionID)} {
@@ -2595,34 +2595,34 @@ proc xth_me_cmds_continue_linecp_drag {x y dragto} {
       set xth(ctrl,me,linept,y) $ny
       set xth(me,cmds,$id,$pid,y) $ny
       if {$altpid > 0} {
-        set xth(me,cmds,$id,$altpid,y) $ny
-        set xth(me,cmds,$id,$altpid,x) $nx
+	set xth(me,cmds,$id,$altpid,y) $ny
+	set xth(me,cmds,$id,$altpid,x) $nx
       }
       
       if {$xth(me,cmds,$id,$pid,idp)} {
-        set nxp [expr double([format %.2f [expr $nx + $xth(me,lcpd,oldxp) - $xth(me,lcpd,oldx)]])]
-        set nyp [expr double([format %.2f [expr $ny + $xth(me,lcpd,oldyp) - $xth(me,lcpd,oldy)]])]
-        set xth(ctrl,me,linept,xp) $nxp
-        set xth(me,cmds,$id,$pid,xp) $nxp
-        set xth(ctrl,me,linept,yp) $nyp
-        set xth(me,cmds,$id,$pid,yp) $nyp
-        if {$altpid > 0} {
-          set xth(me,cmds,$id,$altpid,xp) $nxp
-          set xth(me,cmds,$id,$altpid,yp) $nyp
-        }
+	set nxp [expr double([format %.2f [expr $nx + $xth(me,lcpd,oldxp) - $xth(me,lcpd,oldx)]])]
+	set nyp [expr double([format %.2f [expr $ny + $xth(me,lcpd,oldyp) - $xth(me,lcpd,oldy)]])]
+	set xth(ctrl,me,linept,xp) $nxp
+	set xth(me,cmds,$id,$pid,xp) $nxp
+	set xth(ctrl,me,linept,yp) $nyp
+	set xth(me,cmds,$id,$pid,yp) $nyp
+	if {$altpid > 0} {
+	  set xth(me,cmds,$id,$altpid,xp) $nxp
+	  set xth(me,cmds,$id,$altpid,yp) $nyp
+	}
       }
       
       if {$xth(me,cmds,$id,$pid,idn)} {
-        set nxn [expr double([format %.2f [expr $nx + $xth(me,lcpd,oldxn) - $xth(me,lcpd,oldx)]])]
-        set nyn [expr double([format %.2f [expr $ny + $xth(me,lcpd,oldyn) - $xth(me,lcpd,oldy)]])]
-        set xth(ctrl,me,linept,xn) $nxn
-        set xth(me,cmds,$id,$pid,xn) $nxn
-        set xth(ctrl,me,linept,yn) $nyn
-        set xth(me,cmds,$id,$pid,yn) $nyn
-        if {$altpid > 0} {
-          set xth(me,cmds,$id,$altpid,xn) $nxn
-          set xth(me,cmds,$id,$altpid,yn) $nyn
-        }
+	set nxn [expr double([format %.2f [expr $nx + $xth(me,lcpd,oldxn) - $xth(me,lcpd,oldx)]])]
+	set nyn [expr double([format %.2f [expr $ny + $xth(me,lcpd,oldyn) - $xth(me,lcpd,oldy)]])]
+	set xth(ctrl,me,linept,xn) $nxn
+	set xth(me,cmds,$id,$pid,xn) $nxn
+	set xth(ctrl,me,linept,yn) $nyn
+	set xth(me,cmds,$id,$pid,yn) $nyn
+	if {$altpid > 0} {
+	  set xth(me,cmds,$id,$altpid,xn) $nxn
+	  set xth(me,cmds,$id,$altpid,yn) $nyn
+	}
       }
       xth_me_cmds_move_linept_xctrl $id $pid
       xth_me_cmds_move_line_xctrl $id
@@ -2633,23 +2633,23 @@ proc xth_me_cmds_continue_linecp_drag {x y dragto} {
       set xth(ctrl,me,linept,yp) $ny
       set xth(me,cmds,$id,$pid,yp) $ny
       if {$altpid > 0} {
-        set xth(me,cmds,$id,$altpid,xp) $nx
-        set xth(me,cmds,$id,$altpid,yp) $ny
+	set xth(me,cmds,$id,$altpid,xp) $nx
+	set xth(me,cmds,$id,$altpid,yp) $ny
       }
       if {$xth(me,cmds,$id,$pid,idn) && $xth(me,cmds,$id,$pid,smooth)} {
-        set ncn [xth_me_cmds_get_smoothed_cp 1 $nx $ny \
-          $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y) \
-          $xth(me,cmds,$id,$pid,xn) $xth(me,cmds,$id,$pid,yn)]
-        set nxn [lindex $ncn 2]
-        set nyn [lindex $ncn 3]
-        set xth(ctrl,me,linept,xn) $nxn
-        set xth(me,cmds,$id,$pid,xn) $nxn
-        set xth(ctrl,me,linept,yn) $nyn
-        set xth(me,cmds,$id,$pid,yn) $nyn
-        if {$altpid > 0} {
-          set xth(me,cmds,$id,$altpid,xn) $nxn
-          set xth(me,cmds,$id,$altpid,yn) $nyn
-        }
+	set ncn [xth_me_cmds_get_smoothed_cp 1 $nx $ny \
+	  $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y) \
+	  $xth(me,cmds,$id,$pid,xn) $xth(me,cmds,$id,$pid,yn)]
+	set nxn [lindex $ncn 2]
+	set nyn [lindex $ncn 3]
+	set xth(ctrl,me,linept,xn) $nxn
+	set xth(me,cmds,$id,$pid,xn) $nxn
+	set xth(ctrl,me,linept,yn) $nyn
+	set xth(me,cmds,$id,$pid,yn) $nyn
+	if {$altpid > 0} {
+	  set xth(me,cmds,$id,$altpid,xn) $nxn
+	  set xth(me,cmds,$id,$altpid,yn) $nyn
+	}
       }
     }
     n {
@@ -2658,58 +2658,58 @@ proc xth_me_cmds_continue_linecp_drag {x y dragto} {
       set xth(ctrl,me,linept,yn) $ny
       set xth(me,cmds,$id,$pid,yn) $ny
       if {$altpid > 0} {
-        set xth(me,cmds,$id,$altpid,xn) $nx
-        set xth(me,cmds,$id,$altpid,yn) $ny
+	set xth(me,cmds,$id,$altpid,xn) $nx
+	set xth(me,cmds,$id,$altpid,yn) $ny
       }
       if {$xth(me,cmds,$id,$pid,idp) && $xth(me,cmds,$id,$pid,smooth)} {
-        set ncp [xth_me_cmds_get_smoothed_cp -1 \
-          $xth(me,cmds,$id,$pid,xp) $xth(me,cmds,$id,$pid,yp) \
-          $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y) \
-          $nx $ny]
-        set nxp [lindex $ncp 0]
-        set nyp [lindex $ncp 1]
-        set xth(ctrl,me,linept,xp) $nxp
-        set xth(me,cmds,$id,$pid,xp) $nxp
-        set xth(ctrl,me,linept,yp) $nyp
-        set xth(me,cmds,$id,$pid,yp) $nyp
-        if {$altpid > 0} {
-          set xth(me,cmds,$id,$altpid,xp) $nxp
-          set xth(me,cmds,$id,$altpid,yp) $nyp
-        }
+	set ncp [xth_me_cmds_get_smoothed_cp -1 \
+	  $xth(me,cmds,$id,$pid,xp) $xth(me,cmds,$id,$pid,yp) \
+	  $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y) \
+	  $nx $ny]
+	set nxp [lindex $ncp 0]
+	set nyp [lindex $ncp 1]
+	set xth(ctrl,me,linept,xp) $nxp
+	set xth(me,cmds,$id,$pid,xp) $nxp
+	set xth(ctrl,me,linept,yp) $nyp
+	set xth(me,cmds,$id,$pid,yp) $nyp
+	if {$altpid > 0} {
+	  set xth(me,cmds,$id,$altpid,xp) $nxp
+	  set xth(me,cmds,$id,$altpid,yp) $nyp
+	}
       }
     }
     pp {
       if {$xth(me,cmds,$id,$ppid,smooth)} {
-        set ncp [xth_me_cmds_get_smoothed_cp 1 \
-          $xth(me,cmds,$id,$ppid,xp) $xth(me,cmds,$id,$ppid,yp) \
-          $xth(me,cmds,$id,$ppid,x) $xth(me,cmds,$id,$ppid,y) \
-          $nx $ny]
-        set xth(me,cmds,$id,$ppid,xn) [lindex $ncp 2]
-        set xth(me,cmds,$id,$ppid,yn) [lindex $ncp 3]
+	set ncp [xth_me_cmds_get_smoothed_cp 1 \
+	  $xth(me,cmds,$id,$ppid,xp) $xth(me,cmds,$id,$ppid,yp) \
+	  $xth(me,cmds,$id,$ppid,x) $xth(me,cmds,$id,$ppid,y) \
+	  $nx $ny]
+	set xth(me,cmds,$id,$ppid,xn) [lindex $ncp 2]
+	set xth(me,cmds,$id,$ppid,yn) [lindex $ncp 3]
       } else {
-        set xth(me,cmds,$id,$ppid,xn) $nx
-        set xth(me,cmds,$id,$ppid,yn) $ny
+	set xth(me,cmds,$id,$ppid,xn) $nx
+	set xth(me,cmds,$id,$ppid,yn) $ny
       }
       if {$altppid > 0} {
-        set xth(me,cmds,$id,$altppid,xn) $xth(me,cmds,$id,$ppid,xn)
-        set xth(me,cmds,$id,$altppid,yn) $xth(me,cmds,$id,$ppid,yn)
+	set xth(me,cmds,$id,$altppid,xn) $xth(me,cmds,$id,$ppid,xn)
+	set xth(me,cmds,$id,$altppid,yn) $xth(me,cmds,$id,$ppid,yn)
       }
     }
     nn {
       if {$xth(me,cmds,$id,$npid,smooth)} {
-        set ncp [xth_me_cmds_get_smoothed_cp -1 \
-          $nx $ny \
-          $xth(me,cmds,$id,$npid,x) $xth(me,cmds,$id,$npid,y) \
-          $xth(me,cmds,$id,$npid,xn) $xth(me,cmds,$id,$npid,yn)]
-        set xth(me,cmds,$id,$npid,xp) [lindex $ncp 0]
-        set xth(me,cmds,$id,$npid,yp) [lindex $ncp 1]
+	set ncp [xth_me_cmds_get_smoothed_cp -1 \
+	  $nx $ny \
+	  $xth(me,cmds,$id,$npid,x) $xth(me,cmds,$id,$npid,y) \
+	  $xth(me,cmds,$id,$npid,xn) $xth(me,cmds,$id,$npid,yn)]
+	set xth(me,cmds,$id,$npid,xp) [lindex $ncp 0]
+	set xth(me,cmds,$id,$npid,yp) [lindex $ncp 1]
       } else {
-        set xth(me,cmds,$id,$npid,xp) $nx
-        set xth(me,cmds,$id,$npid,yp) $ny
+	set xth(me,cmds,$id,$npid,xp) $nx
+	set xth(me,cmds,$id,$npid,yp) $ny
       }
       if {$altnpid > 0} {
-        set xth(me,cmds,$id,$altnpid,xp) $xth(me,cmds,$id,$npid,xp)
-        set xth(me,cmds,$id,$altnpid,yp) $xth(me,cmds,$id,$npid,yp)
+	set xth(me,cmds,$id,$altnpid,xp) $xth(me,cmds,$id,$npid,xp)
+	set xth(me,cmds,$id,$altnpid,yp) $xth(me,cmds,$id,$npid,yp)
       }
     }
   }
@@ -2743,12 +2743,12 @@ proc xth_me_cmds_end_linecp_drag {x y dragto} {
       set xth(me,cmds,$id,$pid,xn) $xth(me,lcpd,oldxn)
       set xth(me,cmds,$id,$pid,yn) $xth(me,lcpd,oldyn)
       if {$altpid > 0} {
-        set xth(me,cmds,$id,$altpid,x) $xth(me,lcpd,oldx)
-        set xth(me,cmds,$id,$altpid,y) $xth(me,lcpd,oldy)
-        set xth(me,cmds,$id,$altpid,xp) $xth(me,lcpd,oldxp)
-        set xth(me,cmds,$id,$altpid,yp) $xth(me,lcpd,oldyp)
-        set xth(me,cmds,$id,$altpid,xn) $xth(me,lcpd,oldxn)
-        set xth(me,cmds,$id,$altpid,yn) $xth(me,lcpd,oldyn)
+	set xth(me,cmds,$id,$altpid,x) $xth(me,lcpd,oldx)
+	set xth(me,cmds,$id,$altpid,y) $xth(me,lcpd,oldy)
+	set xth(me,cmds,$id,$altpid,xp) $xth(me,lcpd,oldxp)
+	set xth(me,cmds,$id,$altpid,yp) $xth(me,lcpd,oldyp)
+	set xth(me,cmds,$id,$altpid,xn) $xth(me,lcpd,oldxn)
+	set xth(me,cmds,$id,$altpid,yn) $xth(me,lcpd,oldyn)
       }
       set xth(me,unredola) "moving line point"
       $xth(me,can) itemconfigure $xth(me,canid,linept,pcpl) -state $xth(me,lcpd,oldmove,pcplstate)
@@ -2765,10 +2765,10 @@ proc xth_me_cmds_end_linecp_drag {x y dragto} {
       set xth(me,cmds,$id,$pid,xn) $xth(me,lcpd,oldxn)
       set xth(me,cmds,$id,$pid,yn) $xth(me,lcpd,oldyn)
       if {$altpid > 0} {
-        set xth(me,cmds,$id,$altpid,xp) $xth(me,lcpd,oldxp)
-        set xth(me,cmds,$id,$altpid,yp) $xth(me,lcpd,oldyp)
-        set xth(me,cmds,$id,$altpid,xn) $xth(me,lcpd,oldxn)
-        set xth(me,cmds,$id,$altpid,yn) $xth(me,lcpd,oldyn)
+	set xth(me,cmds,$id,$altpid,xp) $xth(me,lcpd,oldxp)
+	set xth(me,cmds,$id,$altpid,yp) $xth(me,lcpd,oldyp)
+	set xth(me,cmds,$id,$altpid,xn) $xth(me,lcpd,oldxn)
+	set xth(me,cmds,$id,$altpid,yn) $xth(me,lcpd,oldyn)
       }
       set xth(me,unredola) "moving control pint"
     }
@@ -2778,20 +2778,20 @@ proc xth_me_cmds_end_linecp_drag {x y dragto} {
       set xth(me,cmds,$id,$pid,xn) $xth(me,lcpd,oldxn)
       set xth(me,cmds,$id,$pid,yn) $xth(me,lcpd,oldyn)
       if {$altpid > 0} {
-        set xth(me,cmds,$id,$altpid,xp) $xth(me,lcpd,oldxp)
-        set xth(me,cmds,$id,$altpid,yp) $xth(me,lcpd,oldyp)
-        set xth(me,cmds,$id,$altpid,xn) $xth(me,lcpd,oldxn)
-        set xth(me,cmds,$id,$altpid,yn) $xth(me,lcpd,oldyn)
+	set xth(me,cmds,$id,$altpid,xp) $xth(me,lcpd,oldxp)
+	set xth(me,cmds,$id,$altpid,yp) $xth(me,lcpd,oldyp)
+	set xth(me,cmds,$id,$altpid,xn) $xth(me,lcpd,oldxn)
+	set xth(me,cmds,$id,$altpid,yn) $xth(me,lcpd,oldyn)
       }
       set xth(me,unredola) "moving control pint"
     }
     pp {
       if {$altppid > 0} {
-        set unaltcmd "set xth(me,cmds,$id,$altppid,xn) $xth(me,lcpd,oldxpp)\nset xth(me,cmds,$id,$altppid,yn) $xth(me,lcpd,oldypp)"
-        set realtcmd "set xth(me,cmds,$id,$altppid,xn) $xth(me,cmds,$id,$ppid,xn)\nset xth(me,cmds,$id,$altppid,yn) $xth(me,cmds,$id,$ppid,yn)"
+	set unaltcmd "set xth(me,cmds,$id,$altppid,xn) $xth(me,lcpd,oldxpp)\nset xth(me,cmds,$id,$altppid,yn) $xth(me,lcpd,oldypp)"
+	set realtcmd "set xth(me,cmds,$id,$altppid,xn) $xth(me,cmds,$id,$ppid,xn)\nset xth(me,cmds,$id,$altppid,yn) $xth(me,cmds,$id,$ppid,yn)"
       } else {
-        set unaltcmd ""
-        set realtcmd ""
+	set unaltcmd ""
+	set realtcmd ""
       }
       xth_me_unredo_action [mc "moving control point"] \
       "xth_me_cmds_select {$id $pid}\nset xth(me,cmds,$id,$ppid,xn) $xth(me,lcpd,oldxpp)\nset xth(me,cmds,$id,$ppid,yn) $xth(me,lcpd,oldypp)\n$unaltcmd\n$movecmd\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd [list $xth(me,cmds,$id,data)]" \
@@ -2799,11 +2799,11 @@ proc xth_me_cmds_end_linecp_drag {x y dragto} {
     }
     nn {
       if {$altnpid > 0} {
-        set unaltcmd "set xth(me,cmds,$id,$altnpid,xp) $xth(me,lcpd,oldxnn)\nset xth(me,cmds,$id,$altnpid,yp) $xth(me,lcpd,oldynn)"
-        set realtcmd "set xth(me,cmds,$id,$altnpid,xp) $xth(me,cmds,$id,$npid,xp)\nset xth(me,cmds,$id,$altnpid,yp) $xth(me,cmds,$id,$npid,yp)"
+	set unaltcmd "set xth(me,cmds,$id,$altnpid,xp) $xth(me,lcpd,oldxnn)\nset xth(me,cmds,$id,$altnpid,yp) $xth(me,lcpd,oldynn)"
+	set realtcmd "set xth(me,cmds,$id,$altnpid,xp) $xth(me,cmds,$id,$npid,xp)\nset xth(me,cmds,$id,$altnpid,yp) $xth(me,cmds,$id,$npid,yp)"
       } else {
-        set unaltcmd ""
-        set realtcmd ""
+	set unaltcmd ""
+	set realtcmd ""
       }
       xth_me_unredo_action [mc "moving control point"] \
       "xth_me_cmds_select {$id $pid}\nset xth(me,cmds,$id,$npid,xp) $xth(me,lcpd,oldxnn)\nset xth(me,cmds,$id,$npid,yp) $xth(me,lcpd,oldynn)\n$unaltcmd\n$movecmd\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd [list $xth(me,cmds,$id,data)]" \
@@ -2835,11 +2835,11 @@ proc xth_me_cmds_configure_linept_size_xctrl {id pid} {
     if {([string length $xth(me,cmds,$id,$pid,rs)] > 0)} {
       $xth(me,can) itemconfigure $xth(me,canid,linept,fr) -state normal
       $xth(me,can) bind $xth(me,canid,linept,fr) <1> \
-        "xth_me_cmds_start_linept_fdrag $xth(me,canid,linept,fr) $id $pid r %x %y"
+	"xth_me_cmds_start_linept_fdrag $xth(me,canid,linept,fr) $id $pid r %x %y"
       $xth(me,can) bind $xth(me,canid,linept,fr) <Enter> \
-        "$xth(me,can) itemconfigure $xth(me,canid,linept,fr) -fill #ffda00"
+	"$xth(me,can) itemconfigure $xth(me,canid,linept,fr) -fill #ffda00"
       $xth(me,can) bind $xth(me,canid,linept,fr) <Leave> \
-        "$xth(me,can) itemconfigure $xth(me,canid,linept,fr) -fill red"
+	"$xth(me,can) itemconfigure $xth(me,canid,linept,fr) -fill red"
     } else {
       $xth(me,can) bind $xth(me,canid,linept,fr) <1> ""
       $xth(me,can) bind $xth(me,canid,linept,fr) <Enter> ""
@@ -2851,11 +2851,11 @@ proc xth_me_cmds_configure_linept_size_xctrl {id pid} {
        ([string length $xth(me,cmds,$id,$pid,rs)] < 1))} {
       $xth(me,can) itemconfigure $xth(me,canid,linept,fl) -state normal
       $xth(me,can) bind $xth(me,canid,linept,fl) <1> \
-        "xth_me_cmds_start_linept_fdrag $xth(me,canid,linept,fl) $id $pid l %x %y"
+	"xth_me_cmds_start_linept_fdrag $xth(me,canid,linept,fl) $id $pid l %x %y"
       $xth(me,can) bind $xth(me,canid,linept,fl) <Enter> \
-        "$xth(me,can) itemconfigure $xth(me,canid,linept,fl) -fill #ffda00"
+	"$xth(me,can) itemconfigure $xth(me,canid,linept,fl) -fill #ffda00"
       $xth(me,can) bind $xth(me,canid,linept,fl) <Leave> \
-        "$xth(me,can) itemconfigure $xth(me,canid,linept,fl) -fill red"
+	"$xth(me,can) itemconfigure $xth(me,canid,linept,fl) -fill red"
     } else {
       $xth(me,can) bind $xth(me,canid,linept,fl) <1> ""
       $xth(me,can) bind $xth(me,canid,linept,fl) <Enter> ""
@@ -3047,33 +3047,33 @@ proc xth_me_cmds_set_colors {} {
     set id [lindex $xth(me,cmds,xlist) $cid]
     switch $xth(me,cmds,$id,ct) {
       2 {
-        $xth(me,can) itemconfigure pt$id -outline $col -fill $col
+	$xth(me,can) itemconfigure pt$id -outline $col -fill $col
       }
       3 {
-        $xth(me,can) itemconfigure lnpt$id -outline $col -fill $col
-        $xth(me,can) itemconfigure lnln$id -fill $col
+	$xth(me,can) itemconfigure lnpt$id -outline $col -fill $col
+	$xth(me,can) itemconfigure lnln$id -fill $col
       }
       4 - 5 {
-        if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
-          set xth(me,curscrap) $xth(me,cmds,$id,name)
+	if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
+	  set xth(me,curscrap) $xth(me,cmds,$id,name)
 	  if {[string equal $xth(me,cmds,$id,projection) extended]} {
 	    set xth(me,snai) -1
 	  } else {
 	    set xth(me,snai) 1
-          }
-        }
-        if {$cid != $xid} {
-          set col $dcol
-        }
+	  }
+	}
+	if {$cid != $xid} {
+	  set col $dcol
+	}
       }
     }
     
     if {$godown} {
       incr cid -1      
       if {$cid < 0} {
-        set cid [expr $xid + 1]
-        set godown 0
-        set col $ocol
+	set cid [expr $xid + 1]
+	set godown 0
+	set col $ocol
       }
     } else {
       incr cid 1
@@ -3087,7 +3087,6 @@ proc xth_me_cmds_show_current_area {} {
 
   global xth
 
-  # najde id zaciatku a konca sucasneho scrapu
   set id $xth(me,cmds,selid)
   if {$xth(me,cmds,$id,ct) != 6} {
     return
@@ -3103,37 +3102,50 @@ proc xth_me_cmds_show_current_area {} {
     set cid [expr $xid - 1]
     set godown 0
   }
+
+  set llist $xth(me,cmds,$id,llist)
+  set llast [expr [llength $llist] - 1]
+  set lcsel [$xth(ctrl,me,ac).ll.l curselection]
+  set lsel {}
+  if {([llength $lcsel] > 0) && ($lcsel < $llast)} {
+    set lsel [lindex $llist $lcsel]
+  }
   
   while {(($cid >= 0) && ($cid < $llen)) || ($godown)} {
     set oid [lindex $xth(me,cmds,xlist) $cid]
     switch $xth(me,cmds,$oid,ct) {
       3 {
-        foreach lnid $xth(me,cmds,$id,llist) {
-          if {[string equal $xth(me,cmds,$oid,name) $lnid]} {
-            $xth(me,can) itemconfigure lnpt$oid -fill red
-            $xth(me,can) itemconfigure lnln$oid -fill red
-          }
-        }
+	foreach lnid $llist {
+	  if {[string equal $xth(me,cmds,$oid,name) $lnid]} {
+	    if {([llength $lsel] == 0) || [string equal $lsel $lnid]} {
+	      $xth(me,can) itemconfigure lnpt$oid -fill red
+	      $xth(me,can) itemconfigure lnln$oid -fill red
+	    } else {
+	      $xth(me,can) itemconfigure lnpt$oid -fill $xth(gui,me,pasivefill)
+	      $xth(me,can) itemconfigure lnln$oid -fill $xth(gui,me,pasivefill)
+	    }
+	  }
+	}
       }
       4 {
-        return
+	return
       }
       5 {
-        if {$cid != $xid} {
-          set cid [expr $xid - 1]
-          set godown 0
-        }
+	if {$cid != $xid} {
+	  set cid [expr $xid - 1]
+	  set godown 0
+	}
       }
     }
     
     if {$godown} {
-      incr cid -1      
-      if {$cid < 0} {
-        set cid [expr $xid - 1]
-        set godown 0
+      incr cid 1      
+      if {$cid >= $llen} {
+	set cid [expr $xid - 1]
+	set godown 0
       }
     } else {
-      incr cid 1
+      incr cid -1
     }
     
   }

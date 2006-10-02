@@ -121,3 +121,11 @@ set xth(gui,bind,text_return) [bind Text <Return>]
 bind Text <Tab> "#"
 bind Text <Return> "#"
 
+if {[string length $xth(gui,initdir)] == 0} {
+  if {[catch {
+    set xth(gui,initdir) [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} XTherionDir]
+  }]} {
+    set xth(gui,initdir) [pwd]
+  }
+}
+

@@ -15,7 +15,11 @@ enum {
   THLANG_EN_US = 3,
   THLANG_ES = 4,
   THLANG_FR = 5,
-  THLANG_SK = 6,
+  THLANG_IT = 6,
+  THLANG_PT = 7,
+  THLANG_PT_BR = 8,
+  THLANG_PT_PT = 9,
+  THLANG_SK = 10,
 };
 
  

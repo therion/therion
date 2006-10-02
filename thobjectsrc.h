@@ -29,6 +29,8 @@
 #ifndef thobjectsrc_h
 #define thobjectsrc_h
 
+#include <cstdlib>
+
 
 /**
  * Object source class.
@@ -42,17 +44,19 @@ class thobjectsrc {
        
   unsigned long line;  ///< File line.
 
+  class thdataobject * context;  ///< Source context.
+
   /**
    * Standard constructor.
    */
   
-  thobjectsrc() : name(""), line(0) {}
+  thobjectsrc() : name(""), line(0), context(NULL) {}
   
   /**
    * Parametric constructor.
    */
   
-  thobjectsrc(char * n, unsigned long ln) : name(n), line(ln) {}
+  thobjectsrc(char * n, unsigned long ln) : name(n), line(ln), context(NULL) {}
     
 };
 

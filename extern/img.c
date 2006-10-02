@@ -38,7 +38,7 @@
 # define TIMENA msg(/*Date and time not available.*/108)
 # define TIMEFMT msg(/*%a,%Y.%m.%d %H:%M:%S %Z*/107)
 #else
-# define INT32_T long
+# define INT32_T int
 # define TIMENA "Time not available."
 # define TIMEFMT "%a,%Y.%m.%d %H:%M:%S %Z"
 # define EXT_SVX_3D "3d"
@@ -64,13 +64,13 @@
 # define fputsnl(S, FH) do {fputs((S), (FH)); putc('\n', (FH));} while(0)
 # define SVX_ASSERT(X)
 
-static long
+static INT32_T
 get32(FILE *fh)
 {
-   long w = getc(fh);
-   w |= (long)getc(fh) << 8l;
-   w |= (long)getc(fh) << 16l;
-   w |= (long)getc(fh) << 24l;
+   INT32_T w = getc(fh);
+   w |= (INT32_T)getc(fh) << 8l;
+   w |= (INT32_T)getc(fh) << 16l;
+   w |= (INT32_T)getc(fh) << 24l;
    return w;
 }
 

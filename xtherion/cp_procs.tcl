@@ -98,9 +98,9 @@ proc xth_cp_open_file {fpath} {
   set fdata [xth_me_read_file $fpath 0]
   if {[lindex $fdata 0] == 0} {
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
-        -icon error -type ok \
-        -message [lindex $fdata 1] \
-        -font $xth(gui,lfont)
+	-icon error -type ok \
+	-message [lindex $fdata 1] \
+	-font $xth(gui,lfont)
       xth_status_bar_pop cp
       return 0
   }
@@ -111,7 +111,7 @@ proc xth_cp_open_file {fpath} {
     fconfigure $fid -encoding utf-8
     while {![eof $fid]} {
       catch {
-        eval [gets $fid]
+	eval [gets $fid]
       }
     }
     close $fid
@@ -253,9 +253,9 @@ proc xth_cp_write_file {pth} {
 
   if {[catch {set fid [open $pth w]}]} {
     MessageDlg $xth(gui,message) -parent $xth(gui,main) \
-        -icon error -type ok \
-        -message $errorInfo \
-        -font $xth(gui,lfont)    
+	-icon error -type ok \
+	-message $errorInfo \
+	-font $xth(gui,lfont)    
     xth_status_bar_pop cp
     return 0
   }
@@ -347,9 +347,9 @@ proc xth_cp_read_file {pth} {
       set rxp "\\s+($enc)\\s+"
       set validenc [regexp -nocase $rxp $xth(encodings) dum curenc]
       if {$validenc == 0} {
-        set success 0
-        set nm "$pth \[$flnn\] -- unknown encoding -- $enc"
-        break
+	set success 0
+	set nm "$pth \[$flnn\] -- unknown encoding -- $enc"
+	break
       }
       fconfigure $fid -encoding $curenc
       set lastln ""
@@ -358,12 +358,12 @@ proc xth_cp_read_file {pth} {
       set lastln ""
     } else {
       if {[regexp {(.*)\\\s*$} $lastln dumln prevln]} {
-        set fln "$prevln$fln"
-        if {[llength $lns] > 1} {
-          set lns [lrange $lns 0 [expr [llength $lns] - 2]]
-        } else {
-          set lns {}
-        }
+	set fln "$prevln$fln"
+	if {[llength $lns] > 1} {
+	  set lns [lrange $lns 0 [expr [llength $lns] - 2]]
+	} else {
+	  set lns {}
+	}
       }
       lappend lns $fln
       set lastln $fln
@@ -410,9 +410,9 @@ proc xth_cp_compile {} {
     set thid [open "|$xth(gui,compcmd) -x $xth(cp,opts) $xth(cp,fname)" r]
     if $xth(gui,compshow) {
       while {![eof $thid]} {
-        $xth(cp,log).txt insert end [read $thid 8]
-        $xth(cp,log).txt see end
-        update idletasks
+	$xth(cp,log).txt insert end [read $thid 8]
+	$xth(cp,log).txt see end
+	update idletasks
       }
     } else {
       read $thid;
@@ -428,6 +428,10 @@ proc xth_cp_compile {} {
     set see_end 1
   } else {
     set xth(cp,compres) 1
+    if {$xth(gui,auto_backup)} {
+      xth_cp_write_file "$xth(cp,ffull)$xth(gui,auto_backup_ext)"
+    }
+
     $xth(ctrl,cp,stp).gores configure -text [mc "OK"] -fg black -bg green
   }
   
@@ -458,27 +462,27 @@ proc xth_cp_compile {} {
   if {1} {
     set fdata [xth_me_read_file $xth(cp,ffull) 0]
     if {[lindex $fdata 0] == 0} {
-        MessageDlg $xth(gui,message) -parent $xth(gui,main) \
-          -icon error -type ok \
-          -message [lindex $fdata 1] \
-          -font $xth(gui,lfont)
+	MessageDlg $xth(gui,message) -parent $xth(gui,main) \
+	  -icon error -type ok \
+	  -message [lindex $fdata 1] \
+	  -font $xth(gui,lfont)
     } else {
       xth_cp_data_tree_clear      
 
       catch {
-        set fid [open [file join [file dirname $xth(cp,ffull)] [xth_xcfg_fname $xth(cp,ffull)]] r]
-        fconfigure $fid -encoding utf-8
-        while {![eof $fid]} {
-          catch {eval [gets $fid]}
-        }
-        close $fid
+	set fid [open [file join [file dirname $xth(cp,ffull)] [xth_xcfg_fname $xth(cp,ffull)]] r]
+	fconfigure $fid -encoding utf-8
+	while {![eof $fid]} {
+	  catch {eval [gets $fid]}
+	}
+	close $fid
       }
 
       set xth(cp,special) [lindex $fdata 2]
       
       $xth(cp,editor).txt delete 1.0 end
       foreach ln [lindex $fdata 3] {
-        $xth(cp,editor).txt insert end "$ln\n"
+	$xth(cp,editor).txt insert end "$ln\n"
       }
       
       $xth(cp,editor).txt mark set insert $xth(cp,cursor)
@@ -553,18 +557,18 @@ proc xth_cp_data_tree_create {} {
     set tocnt 0
     foreach di $nlist {
       if {[lindex $di 3] == $level} {
-        if {$level == 0} {
-          set parent root
-        } else {
-          set parent [lindex $di 2]
-        }
-        catch {
-          $tp insert end $parent [lindex $di 1] -data [list survey [lindex $di 5] [lindex $di 6] [lindex $di 7]] \
-            -text [lindex $di 6] -image [Bitmap::get folder] -open $copen -font $xth(gui,lfont)
-        }
+	if {$level == 0} {
+	  set parent root
+	} else {
+	  set parent [lindex $di 2]
+	}
+	catch {
+	  $tp insert end $parent [lindex $di 1] -data [list survey [lindex $di 5] [lindex $di 6] [lindex $di 7]] \
+	    -text [lindex $di 6] -image [Bitmap::get folder] -open $copen -font $xth(gui,lfont)
+	}
       }
       if {[lindex $di 3] > $level} {
-        set tocnt 1
+	set tocnt 1
       }
     }
     set copen 0
@@ -598,35 +602,35 @@ proc xth_cp_map_tree_create {} {
     set tocnt 0
     foreach di $nlist {
       if {[lindex $di 3] == $level} {
-        if {$level == 0} {
-          set parent root
-        } else {
-          set parent [lindex $di 2]
-        }
-        set ccopen $copen
-        switch [lindex $di 7] {
-          map {
-            if {[lindex $di 8]} {
-              set ii [Bitmap::get file]
-              set ccopen 0
-            } else {
-              set ii [Bitmap::get copy]
-            }
-          }
-          scrap {
-            set ii [Bitmap::get new]
-          }
-          default {
-            set ii [Bitmap::get folder]
-          } 
-        }
-        catch {
-          $tp insert end $parent [lindex $di 1] -data [list [lindex $di 7] [lindex $di 5] [lindex $di 6]] \
-            -text [lindex $di 6] -image $ii -open $ccopen -font $xth(gui,lfont)
-        }
+	if {$level == 0} {
+	  set parent root
+	} else {
+	  set parent [lindex $di 2]
+	}
+	set ccopen $copen
+	switch [lindex $di 7] {
+	  map {
+	    if {[lindex $di 8]} {
+	      set ii [Bitmap::get file]
+	      set ccopen 0
+	    } else {
+	      set ii [Bitmap::get copy]
+	    }
+	  }
+	  scrap {
+	    set ii [Bitmap::get new]
+	  }
+	  default {
+	    set ii [Bitmap::get folder]
+	  } 
+	}
+	catch {
+	  $tp insert end $parent [lindex $di 1] -data [list [lindex $di 7] [lindex $di 5] [lindex $di 6]] \
+	    -text [lindex $di 6] -image $ii -open $ccopen -font $xth(gui,lfont)
+	}
       }
       if {[lindex $di 3] > $level} {
-        set tocnt 1
+	set tocnt 1
       }
     }
     set copen 0
@@ -639,10 +643,10 @@ proc xth_cp_map_tree_create {} {
     set nds [$tp nodes $prj]
     switch [llength $nds] {
       0 {
-        $tp delete $prj
+	$tp delete $prj
       }
       1 {
-        $tp itemconfigure $nds -open 1
+	$tp itemconfigure $nds -open 1
       }
     }
   }
@@ -790,8 +794,8 @@ proc xth_cp_goto_error {x y} {
     # skusime textovy editor, ci to mame otvorene
     foreach fx $xth(te,flist) {
       if {[string equal $fullfnm $xth(te,$fx,path)]} {
-        after idle "xth_app_show te; xth_te_show_file $fx; $xth(te,$fx,frame).txt see $fln.0; $xth(te,$fx,frame).txt mark set insert $fln.0; $xth(te,$fx,frame).txt tag remove sel 1.0 end; $xth(te,$fx,frame).txt tag add sel $fln.0 \"$fln.0 lineend\""
-        return
+	after idle "xth_app_show te; xth_te_show_file $fx; $xth(te,$fx,frame).txt see $fln.0; $xth(te,$fx,frame).txt mark set insert $fln.0; $xth(te,$fx,frame).txt tag remove sel 1.0 end; $xth(te,$fx,frame).txt tag add sel $fln.0 \"$fln.0 lineend\""
+	return
       }
     }
     

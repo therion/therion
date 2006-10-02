@@ -1,0 +1,25 @@
+/* XPM */
+static char * persp_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 4 1",
+"  c #0060A2",
+". c #00A5E4",
+"X c gray100",
+"o c None",
+/* pixels */
+"oooooooooooooooo",
+"oooooooo ooo  oo",
+"oooooooo o  oooo",
+"oooooooo  oooooo",
+"oooooo  . oooooo",
+"oooo  .... ooooo",
+"oo  ...... ooooo",
+"o ........ ooooo",
+"oo  ...... ooooo",
+"oooo  .... ooooo",
+"oooooo  . oooooo",
+"oooooooo  oooooo",
+"oooooooo o  oooo",
+"oooooooo ooo  oo",
+"oooooooooooooooo"
+};

@@ -1,0 +1,26 @@
+/* XPM */
+static char * fly_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 5 1",
+"  c black",
+". c #ACA899",
+"X c #ECE9D8",
+"o c gray100",
+"O c None",
+/* pixels */
+"OOOOOOO  OOOOOOO",
+"OOOOOO o. OOOOOO",
+"OOOOOO oX OOOOOO",
+"OOOOOO oX OOOOOO",
+"       oX       ",
+" XooooXoo.XoooX ",
+"O  XXXXoo.XXX  O",
+"OOO    oX    OOO",
+"OOOOOO oX OOOOOO",
+"OOOOOO oX OOOOOO",
+"OOOO   o    OOOO",
+"OOOO o.o XX OOOO",
+"OOOOO  o   OOOOO",
+"OOOOOOO  OOOOOOO",
+"OOOOOOOOOOOOOOOO"
+};

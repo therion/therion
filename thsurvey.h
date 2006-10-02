@@ -104,6 +104,8 @@ class thsurvey : public thdataobject {
   
   thdataobject * foptr,  ///< First object in survey.
     * loptr;  ///< Last object in survey.
+
+  unsigned level;
     
   class thdata * data;
   

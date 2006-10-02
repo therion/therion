@@ -159,5 +159,8 @@ struct pattern {
 };
 
 int thconvert_new();
+void parse_eps(string fname, string cname, double dx, double dy, 
+               double & c1, double & c2, double & c3, double & c4, 
+               converted_data & data);
 
 #endif

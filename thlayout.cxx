@@ -172,6 +172,9 @@ thlayout::thlayout()
   this->def_transparency = false;
   this->transparency = true;
 
+  this->def_sketches = false;
+  this->sketches = false;
+
   this->def_legend = false;
   this->legend = TT_LAYOUT_LEGEND_OFF;
   this->def_legend_width = false;
@@ -192,6 +195,9 @@ thlayout::thlayout()
 
   this->def_debug = false;
   this->debug = 0;
+
+  this->def_survey_level = false;
+  this->survey_level = 0;
 
   
   this->def_max_explos = false;
@@ -476,6 +482,27 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       }
       break;
 
+    case TT_LAYOUT_SURVEY_LEVEL:
+      thparse_double(sv,dum,args[0]);
+      switch (sv) {
+        case TT_SV_NUMBER:
+          dum_int = int(dum);
+          if ((double(dum_int) != dum) || (dum_int < 0))
+            ththrow(("not an integer -- %s", args[1]))
+            break;
+        case TT_SV_ALL:
+          dum_int = -1;
+          break;
+        case TT_SV_OFF:
+          dum_int = 0;
+          break;   
+        default:
+          ththrow(("invalid number or switch -- %s", args[1]))
+      }
+      this->survey_level = dum_int;
+      this->def_survey_level = true;
+      break;
+
     case TT_LAYOUT_MAP_ITEM:
       sv2 = thmatch_token(args[0],thlayout__mapitems);
       switch (sv2) {
@@ -634,6 +661,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid transparency switch -- %s",args[0]))
       this->transparency = (sv == TT_TRUE);
       this->def_transparency = true;
+      break;
+
+    case TT_LAYOUT_SKETCHES:
+      sv = thmatch_token(args[0],thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        ththrow(("invalid sketches switch -- %s",args[0]))
+      this->sketches = (sv == TT_TRUE);
+      this->def_sketches = true;
       break;
     
     case TT_LAYOUT_LEGEND:
@@ -1019,11 +1054,17 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->def_transparency = %s;\n",(this->def_transparency ? "true" : "false"));
   thprintf("\tplayout->transparency = %s;\n",(this->transparency ? "true" : "false"));
 
+  thprintf("\tplayout->def_sketches = %s;\n",(this->def_sketches ? "true" : "false"));
+  thprintf("\tplayout->sketches = %s;\n",(this->sketches ? "true" : "false"));
+
   thprintf("\tplayout->def_legend = %s;\n",(this->def_legend ? "true" : "false"));
   thprintf("\tplayout->legend = %s;\n",(
     this->legend == TT_LAYOUT_LEGEND_OFF ? "TT_LAYOUT_LEGEND_OFF" : (
     this->legend == TT_LAYOUT_LEGEND_ON ? "TT_LAYOUT_LEGEND_ON" : "TT_LAYOUT_LEGEND_ALL"
     )));
+
+  thprintf("\tplayout->def_survey_level = %s;\n",(this->def_survey_level ? "true" : "false"));
+  thprintf("\tplayout->survey_level = %d;\n", this->survey_level);
 
   thprintf("\tplayout->def_color_legend = %s;\n",(this->def_color_legend ? "true" : "false"));
   thprintf("\tplayout->legend = %d;\n", this->color_legend);
@@ -1629,8 +1670,14 @@ void thlayout::process_copy() {
       if has_srcl(def_transparency)
         this->transparency = srcl->transparency;
 
+      if has_srcl(def_sketches)
+        this->sketches = srcl->sketches;
+
       if has_srcl(def_legend)
         this->legend = srcl->legend;
+
+      if has_srcl(def_survey_level)
+        this->survey_level = srcl->survey_level;
 
       if has_srcl(def_color_legend)
         this->color_legend = srcl->color_legend;
@@ -1724,6 +1771,7 @@ void thlayout::process_copy() {
   this->lock = false;
 }
 
+
 void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin_shx, double x_origin_shy) {
 
   //string excl_list,labelx,labely;
@@ -1762,6 +1810,12 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
       LAYOUT.surface = 1;
       break;
   }
+
+  // TODO: sketches into layer
+  if (this->sketches) {
+    LAYOUT.surface = 1;
+  }
+
   LAYOUT.surface_opacity = this->surface_opacity;
   LAYOUT.nav_factor = this->navf;
   LAYOUT.nav_right = this->navsx;

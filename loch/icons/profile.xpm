@@ -1,0 +1,25 @@
+/* XPM */
+static char * profile_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 4 1",
+"  c red",
+". c #FFCC00",
+"X c gray100",
+"o c None",
+/* pixels */
+"oooooooooooooooo",
+"oooooooooooooooo",
+"ooooooooo oooooo",
+"ooooooooo  ooooo",
+"ooooooooo . oooo",
+"o        ... ooo",
+"o ........... oo",
+"o ............ o",
+"o ........... oo",
+"o        ... ooo",
+"ooooooooo . oooo",
+"ooooooooo  ooooo",
+"ooooooooo oooooo",
+"oooooooooooooooo",
+"oooooooooooooooo"
+};

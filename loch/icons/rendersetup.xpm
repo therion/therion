@@ -1,0 +1,25 @@
+/* XPM */
+static char *rendersetup_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 4 1",
+"  c black",
+". c #505050",
+"X c gray100",
+"o c None",
+/* pixels */
+"oooooooooooooooo",
+"o          ....o",
+"o XXXXXXXX Xo oo",
+"o X......X o   o",
+"o XXXXXXXX oo oo",
+"o X......X oo oo",
+"o XXXXXXXX oo oo",
+"o X......X o   o",
+"o XXXXXXXX oo oo",
+"o          ....o",
+"o.oooooooo.ooooo",
+"o.o oooo o.ooooo",
+"o.        .ooooo",
+"o.o oooo o.ooooo",
+"oooooooooooooooo"
+};

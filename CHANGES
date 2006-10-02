@@ -1,4 +1,29 @@
 --------------------------------------------------------------------------------
+Therion 0.4.0 (2006-10-02):
+
+therion:
+ * loch - new 3D viewer and default 3D export format
+ * vrml model export improved (added surface texture)
+ * export model: -wall-source (all)|maps|centerline -- specify
+   the source of passage walls
+ * layout: survey-level <N> -- show up to N surveys with station
+   names (default N=0, survey-level all is also accepted).
+ * 3d file import improved -- multiple imports of the same centerline
+   allowed
+ * if no map is selected with export, also centerline is exported
+ * symbol sets overview using --print-symbols option. Output in 
+   XHTML format (file symbols.xhtml).
+ * fixed bug with autojoin and multiple projection output
+
+xtherion:
+
+ * images outside .th2 file path accepted, relative path is still
+   created using ".." directory reference
+ * area border lines are highlighted, when selected in listbox
+ * backup of configuration files is created after OK compilation
+ * added IT translation
+
+--------------------------------------------------------------------------------
 Therion 0.3.10 (2006-04-05):
 
 therion:

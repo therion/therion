@@ -1,0 +1,27 @@
+/* XPM */
+static char *scene_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 6 1",
+"  c black",
+". c #3A3A3A",
+"X c #0101C6",
+"o c #BBCEFD",
+"O c gray100",
+"+ c None",
+/* pixels */
+"++++++++++++++++",
+"++            ++",
+"++ OOOOOOOO o ++",
+"++ O.....OO   ++",
+"++ OOOOOOOO O ++",
+"++ OXO....O o ++",
+"++ OOOOOOOO o ++",
+"++ OXO....O o ++",
+"++ OOOOOOOO O ++",
+"++ OXO....O O ++",
+"++ OOOOOOOO O ++",
+"++ OOOOOOOO   ++",
+"++ OOOOOOOO o ++",
+"++            ++",
+"++++++++++++++++"
+};

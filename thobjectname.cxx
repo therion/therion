@@ -30,6 +30,7 @@
 #include "thparse.h"
 #include "thdatabase.h"
 #include "thdataobject.h"
+#include "thsurvey.h"
 
 thobjectname::thobjectname()
 {
@@ -93,4 +94,69 @@ void fprintf(FILE * fh, thobjectname & ds)
     fprintf(fh, ":%ld", ds.id);
 }
 
+
+char * thobjectname::print_name()
+{
+  static thbuffer pname;
+  size_t plen, slen;
+  char * rv;
+  plen = (this->name != NULL ? strlen(this->name) : 0);
+  slen = (this->survey != NULL ? strlen(this->survey) : 0);
+  pname.guarantee(plen + slen + 1);
+  rv = pname.get_buffer();
+  rv[0] = 0;
+  if ((plen > 0) && (slen > 0)) {
+    sprintf(rv, "%s@%s", this->name, this->survey);
+  } else if (plen > 0) {
+    sprintf(rv, "%s", this->name);
+  } else if (slen > 0) {
+    sprintf(rv, "%s", this->survey);
+  }
+  return rv;
+}
+  
+
+char * thobjectname__print_full_name(char * oname, thsurvey * psrv, int slevel)
+{
+  static thbuffer pname;
+  size_t plen, slen, start, cx, tx;
+  int clevel;
+  char * rv;
+  char * sname;
+  sname = NULL;
+  if (psrv != NULL) 
+    sname = psrv->get_full_name();
+  plen = (oname != NULL ? strlen(oname) : 0);
+  slen = (sname != NULL ? strlen(sname) : 0);
+  pname.guarantee(plen + slen + 1);
+  rv = pname.get_buffer();
+  rv[0] = 0;
+  if ((plen > 0) && (slen > 0) && (slevel != 0)) {
+    sprintf(rv, "%s@%s", oname, sname);
+  } else if (plen > 0) {
+    sprintf(rv, "%s", oname);
+  } else if ((slen > 0) && (slevel != 0)) {
+    sprintf(rv, "%s", sname);
+  }
+  if ((slen > 0) && (slevel > 0)) {
+    start = (plen > 0 ? plen + 1 : 0);
+    clevel = 0;
+    tx = strlen(rv);
+    for(cx = start; cx < tx; cx++) {
+      if (rv[cx] == '.') {
+        clevel++;
+        if (clevel == slevel)  {
+          rv[cx] = 0;
+          break;
+        }
+      }
+    }
+  }
+  return rv;
+}
+
+char * thobjectname::print_full_name(int slevel)
+{
+  return thobjectname__print_full_name(this->name, this->psurvey, slevel);
+}
 

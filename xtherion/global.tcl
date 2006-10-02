@@ -44,6 +44,8 @@ set xth(kb_meta) Meta
 set xth(gui,compshow) 0
 set xth(gui,compcmd) "therion"
 set xth(gui,auto_save) 0
+set xth(gui,auto_backup) 1
+set xth(gui,auto_backup_ext) "~"
 set xth(gui,check_update) 1
 
 set xth(encodings) { iso8859-1 iso8859-2 iso8859-5 iso8859-7 utf-8 }
@@ -89,7 +91,7 @@ set xth(datafmt,gradient) {{5.1fx} {up down -}}
 set xth(datafmt,depth) {6.2fx {-}}            
 set xth(datafmt,dimensions) {4.1fx {-}}             
 
-set xth(gui,initdir) [pwd]
+set xth(gui,initdir) ""
 set xth(app,active) ""
 set xth(app,list) {}
 set xth(app,all,relw) -1

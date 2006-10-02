@@ -42,6 +42,7 @@
 #include "thinit.h"
 #include "thsymbolsets.h"
 #include "thlogfile.h"
+#include "thepsparse.h"
 #ifndef THMSVC
 #include <unistd.h>
 #else
@@ -60,6 +61,7 @@ thsymbolset::thsymbolset()
     this->assigned[i] = !(thsymbolset__hidden[i]);
     this->used[i] = false;
   }
+  this->group_symbols = true;
 }
 
 
@@ -648,7 +650,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
 #define insert_station(x,y) \
   helpsymbol \
-  if isused(SYMP_STATION_TEMPORARY) \
+  if (true || isused(SYMP_STATION_TEMPORARY)) \
     fprintf(mpf,"%s((%g,%g) inscale);\n",thsymbolset__mp[SYMP_STATION_TEMPORARY],x,y); \
   else \
   if isused(SYMP_STATION_PAINTED) \
@@ -778,7 +780,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 #define legend_end(mid,txt) \
   insfig(mid,txt); \
   helpsymbol; \
-  if (true || (true || isused(SYML_WALL_BEDROCK))) {\
+  if (true || isused(SYML_WALL_BEDROCK)) {\
     fprintf(mpf,"%s(((0,.2){dir 30} .. {dir 0}(.5,.4)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
     fprintf(mpf,"%s(((.5,.6){dir 180} .. {dir 210}(0,.8)) inscale);\n",thsymbolset__mp[SYML_WALL_BEDROCK]); \
   } \
@@ -824,7 +826,8 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     insfig(SYML_GRADIENT,thT("line gradient",layout->lang));
     fprintf(mpf,"%s(((0.2,0.5) -- (0.8,0.5)) inscale);\n",thsymbolset__mp[SYML_GRADIENT]);
     endfig;
-  } else {
+  } 
+  if ((!(isused(SYML_GRADIENT)) || (!(this->group_symbols)))) {
     legend_hpoint(SYMP_GRADIENT,thT("point gradient",layout->lang));
   }
 
@@ -928,7 +931,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 	
   // thT("line water-flow")  
   // thT("point water-flow")  
-  if (isused(SYML_WATERFLOW_PERMANENT) && isused(SYMP_WATERFLOW_PERMANENT)) {
+  if (isused(SYML_WATERFLOW_PERMANENT) && isused(SYMP_WATERFLOW_PERMANENT) && this->group_symbols) {
 	  insfig(SYML_WATERFLOW_PERMANENT,thT("line water-flow:permanent",layout->lang));
 	  fprintf(mpf,"%s(((0.1,0.3) -- (0.9,0.3)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_PERMANENT]);
     fprintf(mpf,"%s((0.5,0.7) inscale,270.0,1.0,(0,0));\n",thsymbolset__mp[SYMP_WATERFLOW_PERMANENT]);
@@ -938,7 +941,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 	  legend_hpoint(SYMP_WATERFLOW_PERMANENT,thT("point water-flow:permanent",layout->lang));
 	}
 	
-  if (isused(SYML_WATERFLOW_INTERMITTENT) && isused(SYMP_WATERFLOW_INTERMITTENT)) {
+  if (isused(SYML_WATERFLOW_INTERMITTENT) && isused(SYMP_WATERFLOW_INTERMITTENT) && this->group_symbols) {
 	  insfig(SYML_WATERFLOW_INTERMITTENT,thT("line water-flow:intermittent",layout->lang));
 	  fprintf(mpf,"%s(((0.1,0.3) -- (0.9,0.3)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_INTERMITTENT]);
     fprintf(mpf,"%s((0.5,0.7) inscale,270.0,1.0,(0,0));\n",thsymbolset__mp[SYMP_WATERFLOW_INTERMITTENT]);
@@ -970,7 +973,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
   insfig(SYMP_SINK,thT("point sink",layout->lang));
   helpsymbol;
-  if isused(SYML_WATERFLOW_PERMANENT)
+  if (true || isused(SYML_WATERFLOW_PERMANENT))
     fprintf(mpf,"%s(((0.1,0.5) -- (0.7,0.5)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_PERMANENT]);
   else
   if isused(SYMP_WATERFLOW_PERMANENT)
@@ -987,7 +990,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
     
   // vyzdoba
-  if (isused(SYMP_FLOWSTONE) && isused(SYML_FLOWSTONE)) {
+  if (isused(SYMP_FLOWSTONE) && isused(SYML_FLOWSTONE) && this->group_symbols) {
 	  insfig(SYMP_FLOWSTONE,thT("point flowstone",layout->lang));
 	  fprintf(mpf,"%s(((.1,.4) .. (.5,.2) .. (.9,.4)) inscale);\n",thsymbolset__mp[SYML_FLOWSTONE]);
     fprintf(mpf,"%s((0.5,0.7) inscale,0.0,1.0,(0,0));\n",thsymbolset__mp[SYMP_FLOWSTONE]);
@@ -1108,40 +1111,6 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 }
 
 
-static const char base64_tab[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-void base64_encode_f(char * fname, FILE * fout) {
-  int llength = 0;
-  char in_buffer[3];
-  unsigned char out_buffer[4];
-
-  ifstream fin(fname, ios::binary);
-
-  do {
-      for (int i = 0; i < 3; i++) in_buffer[i] = '\x0';
-      for (int i = 0; i < 4; i++) out_buffer[i] = '=';
-
-      fin.read(in_buffer, 3);
-      unsigned long value = 
-        ((unsigned char)in_buffer[0]) << 16 |
-        ((unsigned char)in_buffer[1]) << 8 |
-	((unsigned char)in_buffer[2]) << 0;
-
-      out_buffer[0] = base64_tab[(value >> 18) & 0x3F];
-      out_buffer[1] = base64_tab[(value >> 12) & 0x3F];
-      if (fin.gcount() > 1) out_buffer[2] = base64_tab[(value >> 6) & 0x3F];
-      if (fin.gcount() > 2) out_buffer[3] = base64_tab[(value >> 0) & 0x3F];
-
-      if (llength >= 76) {
-        fprintf(fout, "\n");
-        llength = 0;
-      }
-      fprintf(fout, "%c%c%c%c", out_buffer[0], out_buffer[1],out_buffer[2],out_buffer[3]);
-      llength += 4;
-  } while (fin);
-
-  fin.close();
-}
 
 void export_all_symbols()
 {
@@ -1153,9 +1122,11 @@ void export_all_symbols()
   mpf = fopen(thtmp.get_file_name("data.mp"),"w");
 
   // spusti metapost a nasledne pdftex
-  fprintf(mpf,"Scale:=%.2f;\n",0.01 / tmplayout.scale);
-  if (tmplayout.def_base_scale || tmplayout.redef_base_scale)
-    fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / tmplayout.base_scale);
+//  fprintf(mpf,"Scale:=%.2f;\n",0.01 / tmplayout.scale);
+//  if (tmplayout.def_base_scale || tmplayout.redef_base_scale)
+//    fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / tmplayout.base_scale);
+  fprintf(mpf,"Scale:=0.8;\n");
+  fprintf(mpf,"BaseScale:=2;\n");
   fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n");
   fprintf(mpf,"background:=(1.0, 1.0, 1.0);\n");
   fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
@@ -1171,13 +1142,14 @@ void export_all_symbols()
 
   // vyexportuje secky znacky
   size_t iset, isym;
-  unsigned figi = 1, fign;
+  unsigned figi = 1;
   thsymbolset symset;
   thsymsets_symbols_init();
   list<legendrecord>::iterator li;
   // najprv exportujeme secky defaultne
   tmplayout.legend = TT_LAYOUT_LEGEND_ALL;
   LEGENDLIST.clear();
+  symset.group_symbols = false;
   symset.export_pdf(&tmplayout, mpf, figi);
   for(isym = 0; isym < thsymbolset_size; isym++) {
     thsymsets_figure[isym][thsymsets_size] = 0;
@@ -1283,71 +1255,57 @@ void export_all_symbols()
     ththrow(("metapost exit code -- %d", retcode))
   }
 
-  fign = figi;
-  thbuffer tdir, tfn, tcom;
-  tdir = wdir.get_buffer();
-  tdir += "/symbols";
-
-#ifdef THWIN32
-    mkdir(tdir);
-#else
-    mkdir(tdir,0046750);
-#endif
-
-  thprintf("converting files");
-  tcom.guarantee(2048);
-  for(figi = 1; figi < fign; figi++) {
-    thprintf(" [%d]", figi);
-    sprintf(tcom.get_buffer(), "gs -dQUIET -dNOPAUSE -dBATCH -dNOPROMPT -sDEVICE=pngalpha -r300x300 -dEPSCrop -sOutputFile=%s/sym%04d.png -fdata.%d", tdir.get_buffer(), figi, figi);
-    retcode = system(tcom.get_buffer());
-  }
-  thprintf(" done.\n");
+  thconvert_new();
 
   chdir(wdir.get_buffer());
-  FILE * hf = fopen("symbols.xhtml","w");
-  fprintf(hf,"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-  fprintf(hf,"<html xmlns=\"http://www.w3.org/1999/xhtml\"  xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>Therion symbols</title>\n<body>\n");
-  fprintf(hf,"<table border=\"2\" bordercolor=\"#505050\" cellspacing=\"0\">\n<tr>\n<td>Symbol set</td>\n");
+  ofstream hf ("symbols.xhtml");
+  hf << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+  hf << "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>Therion symbols</title>\n<body>\n";
+  hf << "<table border=\"2\" bordercolor=\"#505050\" cellspacing=\"0\">\n<tr>\n<td>Symbol set</td>\n";
   for(iset = 0; iset < thsymsets_size; iset++) {
     if (thsymsets_count[iset] > 0) {
-      fprintf(hf,"<td><b>%s</b></td>\n", thsymsets[iset]);
+      hf << "<td><b>" << thsymsets[iset] << "</b></td>\n";
     }
   }
-  fprintf(hf,"</tr>\n");
+  hf << "</tr>\n";
   unsigned sx, fx;
-  char fname[30];
+  char fname[100];
+  converted_data svgpict;
+  double a,b,c,d;
   for(isym = 0; isym < thsymbolset_size; isym++) {
     if(thsymsets_order[isym] > 0) {
       sx = thsymsets_order[isym];
-      fprintf(hf,"<tr>\n<td>%s</td>\n", thsymsets_comment[sx].c_str());
+      hf << "<tr>\n<td>" << thsymsets_comment[sx].c_str() << "</td>\n";
       fx = 0;
       for(iset = 0; iset < thsymsets_size; iset++) {
         fx += thsymsets_figure[sx][iset];
       }
       if (fx > 0) {
         for(iset = 0; iset < thsymsets_size; iset++) {
-          fx = thsymsets_figure[sx][iset];
-          if (fx > 0) {
-            fprintf(hf,"<td><svg width=\"167px\" height=\"104px\" xmlns=\"http://www.w3.org/2000/svg\"> <image width=\"167px\" height=\"104px\" xlink:href=\"data:image/png;base64,\n");
-            sprintf(fname, "symbols/sym%04d.png", fx);
-            base64_encode_f(fname, hf);
-            fprintf(hf,"\" /></svg></td>\n");
-          } else {
-            fprintf(hf,"<td></td>\n");
+          if (thsymsets_count[iset] > 0) {
+            fx = thsymsets_figure[sx][iset];
+            if (fx > 0) {
+              sprintf(fname, "%s/data.%d", thtmp.get_dir_name(),fx);
+         	    parse_eps(fname,"",0,0,a,b,c,d,svgpict);
+              hf << "<td>\n";
+         	    svgpict.print_svg(hf);
+              hf << "</td>\n";
+            } else {
+              hf << "<td></td>\n";
+            }
           }
         }
       } else {
-        fprintf(hf,"<td bgcolor=\"#cccccc\" colspan=\"%d\"><svg width=\"167px\" height=\"104px\" xmlns=\"http://www.w3.org/2000/svg\"> <image width=\"167px\" height=\"104px\" xlink:href=\"data:image/png;base64,\n", thsymsets_size);
-        sprintf(fname, "symbols/sym%04d.png", thsymsets_figure[sx][thsymsets_size]);
-        base64_encode_f(fname, hf);
-        fprintf(hf,"\" /></svg></td>\n");
+        sprintf(fname, "%s/data.%d", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
+        parse_eps(fname,"",0,0,a,b,c,d,svgpict);
+        hf << "<td bgcolor=\"#cccccc\" colspan=\"" << thsymsets_size << "\">";
+        svgpict.print_svg(hf);
+        hf << "</td>\n";
       }
-      fprintf(hf,"</tr>\n");
+      hf << "</tr>\n";
     }
   }
-  fprintf(hf,"</table>\n");
-  fprintf(hf,"</body></html>");
-  fclose(hf);
-
-
+  hf << "</table>\n";
+  hf << "</body></html>" << endl;
+  hf.close();
 }

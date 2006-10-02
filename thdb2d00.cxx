@@ -321,8 +321,49 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
         }
       }
       obi++;
-    }    
-    
+    } 
+
+    // add centerline to map, even some basic maps exists
+    if (nmaps > 0) {
+
+      thscrap * scrapp;
+      thmap * mapp;
+      thdb2dmi * xcitem;
+
+      scrapp = new thscrap;
+      scrapp->centerline_io = true;
+      scrapp->fsptr = NULL;
+      scrapp->db = &(thdb);
+      scrapp->proj = prj;
+      thdb.object_list.push_back(scrapp);
+
+      mapp = new thmap;
+      mapp->db = &(thdb);
+      mapp->fsptr = NULL;
+      thdb.object_list.push_back(mapp);
+
+      xcitem = thdb.db2d.insert_map_item();
+      xcitem->itm_level = mapp->last_level;
+      xcitem->source = thdb.csrc;
+      xcitem->psurvey = NULL;
+      xcitem->type = TT_MAPITEM_NORMAL;
+      xcitem->object = scrapp;
+      mapp->first_item = xcitem;
+      mapp->last_item = xcitem;
+
+      cxm = this->insert_xm();
+      cxm->title = false;
+      cxm->expand = true;
+      cxm->map = mapp;
+      prj->stat.scanmap(mapp);  
+      prj->stat.addstat(&(mapp->stat));
+
+      cxm->next_item = selection;
+      selection->prev_item = cxm;
+      selection = cxm;
+      nmaps++;
+
+    }
 
     if ((selection == NULL) && (
         (prj->type == TT_2DPROJ_PLAN) || (prj->type == TT_2DPROJ_EXTEND) ||

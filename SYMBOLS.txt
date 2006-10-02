@@ -12,11 +12,11 @@ vgrid: SM
 airdraught: UIS 
 anastomosis: UIS 
 anchor: SKBB 
-aragonite: CCNP 
+aragonite: NSS 
 archeomaterial: UIS 
 bedrock: ASF 
 blocks: UIS 
-breakdownchoke: CCNP 
+breakdownchoke: NSS 
 bridge: SKBB 
 camp: SKBB 
 cavepearl: SKBB 
@@ -29,16 +29,16 @@ disk: UIS
 entrance: UIS 
 fixedladder: SKBB 
 flowstone: UIS 
-flowstonechoke: CCNP 
+flowstonechoke: NSS 
 flute: UIS 
-gradient: UIS 
+gradient: BCRA NSS UIS 
 guano: UIS 
-gypsum: CCNP 
-gypsumflower: CCNP 
+gypsum: NSS 
+gypsumflower: NSS 
 helictite: UIS 
 ice: UIS 
 karren: UIS 
-lowend: CCNP UIS 
+lowend: NSS UIS 
 moonmilk: UIS 
 narrowend: UIS 
 noequipment: SKBB 
@@ -46,8 +46,8 @@ paleomaterial: UIS
 pebbles: UIS 
 pillar: UIS 
 popcorn: UIS 
-raft: CCNP 
-raftcone: CCNP 
+raft: NSS 
+raftcone: NSS 
 rimstonedam: ASF 
 rimstonepool: ASF 
 root: ASF 
@@ -80,21 +80,21 @@ arrow: SKBB
 border_presumed: SKBB 
 border_temporary: SKBB 
 border_visible: SKBB 
-ceilingmeander: SM 
+ceilingmeander: SKBB 
 ceilingstep: SKBB 
 chimney: UIS 
 contour: SKBB UIS 
-floormeander: SM 
+floormeander: SKBB 
 floorstep: UIS 
 flowstone: UIS 
-gradient: UIS 
+gradient: BCRA UIS 
 overhang: SKBB 
 pit: UIS 
 rockborder: UIS 
 rockedge: UIS 
 rope: SKBB 
 section: SKBB 
-slope: SKBB 
+slope: BCRA SKBB 
 survey_cave: SKBB UIS 
 survey_surface: SKBB 
 wall_bedrock: UIS 

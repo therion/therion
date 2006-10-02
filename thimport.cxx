@@ -232,6 +232,7 @@ void thimport::import_file()
     this->db->lcsobjectptr = this->db->csurveyptr->loptr;
   tmpsrc = this->db->csrc;
   this->db->csrc = this->mysrc;
+  this->db->csrc.context = this;
   switch (this->format) {
     case TT_IMPORT_FMT_3D:
     case TT_IMPORT_FMT_PLT:
@@ -247,7 +248,7 @@ void thimport::import_file()
 }
 
 
-const char * thimport::station_name(const char * sn, const char separator, class thsst * sst)
+const char * thimport::station_name(const char * sn, const char separator, struct thsst * sst)
 {
 
   sst->survey = NULL;
@@ -533,6 +534,12 @@ void thimport::import_file_img()
             args[0] = n2.get_buffer();
             args[1] = "";
             args[2] = "entrance";
+            tmpdata->set_data_station(3, args, TT_UTF_8);
+          }
+          if ((pimg->flags & img_SFLAG_FIXED) == 0) {
+            args[0] = n2.get_buffer();
+            args[1] = "";
+            args[2] = "not-fixed";
             tmpdata->set_data_station(3, args, TT_UTF_8);
           }
           this->db->csurveyptr = tmpsurvey;

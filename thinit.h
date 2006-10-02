@@ -56,6 +56,7 @@ class thinit {
     
   thbuffer path_cavern, ///< Survex executable full path.
     path_pdftex, path_mpost,  ///< PDF tex and metapost path
+    path_convert, path_identify,  ///< Path to ImageMagick convert and identify executables.
     tmp_path, tmp_remove_script;
     //path_3dtopos, 
   
@@ -94,10 +95,15 @@ class thinit {
   char * get_path_cavern();
 
   /**
-   * Return 3dtopos executable path.
+   * Return ImageMagick convert executable path.
    */
    
-  //char * get_path_3dtopos();
+  char * get_path_convert();
+
+  /**
+   * Return ImageMagick identify executable path.
+   */
+  char * get_path_identify();
   
   
   /**

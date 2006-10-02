@@ -367,6 +367,8 @@ proc xth_me_destroy_file {} {
 
     set xth(ctrl,me,images,posx) ""
     set xth(ctrl,me,images,posy) ""
+    set xth(ctrl,me,images,newposx) 0
+    set xth(ctrl,me,images,newposy) 0
     set xth(ctrl,me,images,vis) 0
     $xth(ctrl,me,images).ic.insp configure -state disabled
     $xth(ctrl,me,area).l configure -state disabled -text ""
@@ -435,9 +437,9 @@ proc xth_me_before_close_file {btns} {
       -font $xth(gui,lfont)]
     switch $wtd {
       0 {
-        if {[xth_me_save_file 0] == 0} {
-          return 0
-        }
+	if {[xth_me_save_file 0] == 0} {
+	  return 0
+	}
       }
       1 {}
       default {return 0}
@@ -476,17 +478,17 @@ proc xth_me_read_file {pth changebs} {
     incr flnn
     if {[regexp {^\s*encoding\s+(\S+)\s*$} $fln encln enc]} {
       if {$encspc} {
-        set success 0
-        set nm [format [mc "%s \[%s\] -- multiple encoding commands in file"] $pth $flnn]
-        break
+	set success 0
+	set nm [format [mc "%s \[%s\] -- multiple encoding commands in file"] $pth $flnn]
+	break
       }
       set encspc 1
       set rxp "\\s+($enc)\\s+"
       set validenc [regexp -nocase $rxp $xth(encodings) dum curenc]
       if {$validenc == 0} {
-        set success 0
-        set nm [format [mc "%s \[%s\] -- unknown encoding -- %s"] $pth $flnn $enc]
-        break
+	set success 0
+	set nm [format [mc "%s \[%s\] -- unknown encoding -- %s"] $pth $flnn $enc]
+	break
       }
       fconfigure $fid -encoding $curenc
       set lastln ""
@@ -494,19 +496,19 @@ proc xth_me_read_file {pth changebs} {
       lappend cmds $cmmd
       set lastln ""
       if {[regexp {^\s*\#\#BEGIN\#\#\s*$} $cmmd]} {
-        fconfigure $fid -encoding utf-8
+	fconfigure $fid -encoding utf-8
       }
       if {[regexp {^\s*\#\#END\#\#\s*$} $cmmd]} {
-        fconfigure $fid -encoding $curenc
+	fconfigure $fid -encoding $curenc
       }
     } else {
       if {$changebs && [regexp {(.*)\\\s*$} $lastln dumln prevln]} {
-        set fln "$prevln$fln"
-        if {[llength $lns] > 1} {
-          set lns [lrange $lns 0 [expr [llength $lns] - 2]]
-        } else {
-          set lns {}
-        }
+	set fln "$prevln$fln"
+	if {[llength $lns] > 1} {
+	  set lns [lrange $lns 0 [expr [llength $lns] - 2]]
+	} else {
+	  set lns {}
+	}
       }
       lappend lns $fln
       set lastln $fln
@@ -546,6 +548,7 @@ proc xth_me_write_file {pth} {
     set xxlist [linsert $xxlist 0 $imgx]
   }
   foreach imgx $xxlist {
+    if {$xth(me,imgs,$imgx,XVIimg)} continue
     set vsb $xth(me,imgs,$imgx,vsb)
     set gamma $xth(me,imgs,$imgx,gamma)
     if {$vsb < 0} {
@@ -556,11 +559,11 @@ proc xth_me_write_file {pth} {
     set ypos [expr [lindex $xth(me,imgs,$imgx,position) 1]]
     switch [llength $root] {
       1 {
-        set ypos [list $ypos [lindex $root 0]]
+	set ypos [list $ypos [lindex $root 0]]
       }
       3 {
-        set xpos [lindex $root 1]
-        set ypos [list [lindex $root 2] [lindex $root 0]]
+	set xpos [lindex $root 1]
+	set ypos [list [lindex $root 2] [lindex $root 0]]
       }
       0 {}
     }
@@ -609,9 +612,9 @@ proc xth_me_open_file {dialogid fname fline} {
   set fdata [xth_me_read_file $fname 1]
   if {[lindex $fdata 0] == 0} {
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
-        -icon error -type ok \
-        -message [lindex $fdata 1] \
-        -font $xth(gui,lfont)
+	-icon error -type ok \
+	-message [lindex $fdata 1] \
+	-font $xth(gui,lfont)
       xth_status_bar_pop me
       return 0
   }
@@ -704,9 +707,9 @@ proc xth_me_save_file {dialogid} {
   set fdata [xth_me_write_file $fname]
   if {[lindex $fdata 0] == 0} {
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
-        -icon error -type ok \
-        -message [lindex $fdata 1] \
-        -font $xth(gui,lfont)
+	-icon error -type ok \
+	-message [lindex $fdata 1] \
+	-font $xth(gui,lfont)
       xth_status_bar_pop me
       return 0
   }
@@ -786,6 +789,50 @@ proc xth_me_limitize {limits x y} {
 }
 
 
+proc xth_me_image_newpos {} {
+
+  global xth 
+  set limits {}
+
+  # scan limits of pictures
+  foreach imgx $xth(me,imgs,xlist) {
+    set px [lindex $xth(me,imgs,$imgx,position) 0]
+    set py [lindex $xth(me,imgs,$imgx,position) 1]
+    set limits [xth_me_limitize $limits $px $py]
+    if {$xth(me,imgs,$imgx,XVI)} {
+      set gv $xth(me,imgs,$imgx,XVIgrid)
+      set v1x [expr [lindex $gv 2] * ([lindex $gv 6] - 1.0)]
+      set v1y [expr [lindex $gv 3] * ([lindex $gv 6] - 1.0)]
+      set v2x [expr [lindex $gv 4] * ([lindex $gv 7] - 1.0)]
+      set v2y [expr [lindex $gv 5] * ([lindex $gv 7] - 1.0)]
+      set limits [xth_me_limitize $limits [expr $px + $v1x] [expr $py + $v1y]]
+      set limits [xth_me_limitize $limits [expr $px + $v2x] [expr $py + $v2y]]
+      set limits [xth_me_limitize $limits [expr $px + $v1x + $v2x] [expr $py + $v1y + $v2y]]
+    } elseif {[string length $xth(me,imgs,$imgx,image)] > 0} {
+      set sx [image width $xth(me,imgs,$imgx,image)]
+      set sy [image height $xth(me,imgs,$imgx,image)]
+      set limits [xth_me_limitize $limits [expr $px + $sx] [expr $py - $sy]]
+    }
+  }
+
+  # scan limits of commands
+  set cmdlim [$xth(me,can) bbox command]
+  if {[llength $cmdlim] == 4} {
+    set limits [xth_me_limitize $limits [xth_me_can2realx [lindex $cmdlim 0]] [xth_me_can2realy [lindex $cmdlim 1]]]
+    set limits [xth_me_limitize $limits [xth_me_can2realx [lindex $cmdlim 2]] [xth_me_can2realy [lindex $cmdlim 3]]]
+  }
+
+  if {[llength $limits] > 0} {
+    set xth(ctrl,me,images,newposx) [lindex $limits 0]
+    set xth(ctrl,me,images,newposy) [expr 32.0 + [lindex $limits 3]]
+  } else {
+    set xth(ctrl,me,images,newposx) 0
+    set xth(ctrl,me,images,newposy) 0
+  }
+    
+}
+
+
 proc xth_me_area_auto_adjust {} {
   
   global xth 
@@ -811,7 +858,7 @@ proc xth_me_area_auto_adjust {} {
       set limits [xth_me_limitize $limits [expr $px + $sx] [expr $py - $sy]]
     }
   }
-  
+
   # scan limits of commands
   set cmdlim [$xth(me,can) bbox command]
   if {[llength $cmdlim] == 4} {
@@ -870,6 +917,9 @@ proc xth_me_area_adjust {x1 y1 x2 y2} {
   xth_me_area_scroll_adjust
   
   catch {$xth(ctrl,me,area).l configure -text [format "%.0f:%.0f - %.0f:%.0f" $x1 $y1 $x2 $y2]}
+
+  set xth(ctrl,me,images,newposx) $x1
+  set xth(ctrl,me,images,newposy) $y1
   
 }
 
@@ -959,29 +1009,29 @@ proc xth_me_area_zoom_to {zv} {
     xth_me_progbar_prog $ccmd
     switch $xth(me,cmds,$id,ct) {
       4 {
-        if {$id == $xth(me,cmds,selid)} {
-          xth_me_cmds_move_scrap_xctrl 1 [lindex $xth(me,cmds,$id,scale) 0] \
-            [lindex $xth(me,cmds,$id,scale) 1] 
-          xth_me_cmds_move_scrap_xctrl 2 [lindex $xth(me,cmds,$id,scale) 2] \
-            [lindex $xth(me,cmds,$id,scale) 3]
-        }
+	if {$id == $xth(me,cmds,selid)} {
+	  xth_me_cmds_move_scrap_xctrl 1 [lindex $xth(me,cmds,$id,scale) 0] \
+	    [lindex $xth(me,cmds,$id,scale) 1] 
+	  xth_me_cmds_move_scrap_xctrl 2 [lindex $xth(me,cmds,$id,scale) 2] \
+	    [lindex $xth(me,cmds,$id,scale) 3]
+	}
       }
       3 {
-        xth_me_cmds_move_line $id
-        if {$id == $xth(me,cmds,selid)} {
-          xth_me_cmds_show_line_xctrl $id
-          set pid $xth(me,cmds,selpid)
-          if {$pid != 0} {
-            xth_me_cmds_show_linept_xctrl $id $pid
-          }
-        }
+	xth_me_cmds_move_line $id
+	if {$id == $xth(me,cmds,selid)} {
+	  xth_me_cmds_show_line_xctrl $id
+	  set pid $xth(me,cmds,selpid)
+	  if {$pid != 0} {
+	    xth_me_cmds_show_linept_xctrl $id $pid
+	  }
+	}
       }
       2 {
-        $xth(me,can) coords pt$id [xth_me_cmds_calc_point_coords $id]
-        if {$id == $xth(me,cmds,selid)} {
-          xth_me_cmds_move_point_xctrl $id
-          xth_me_cmds_move_point_fill_xctrl $id $xth(me,cmds,$id,rotation) $xth(me,cmds,$id,xsize) $xth(me,cmds,$id,ysize)
-        }
+	$xth(me,can) coords pt$id [xth_me_cmds_calc_point_coords $id]
+	if {$id == $xth(me,cmds,selid)} {
+	  xth_me_cmds_move_point_xctrl $id
+	  xth_me_cmds_move_point_fill_xctrl $id $xth(me,cmds,$id,rotation) $xth(me,cmds,$id,xsize) $xth(me,cmds,$id,ysize)
+	}
       }
     }
   }
@@ -1155,6 +1205,8 @@ set xth(me,snai) 1
 
 set xth(ctrl,me,images,posx) ""
 set xth(ctrl,me,images,posy) ""
+set xth(ctrl,me,images,newposx) 0
+set xth(ctrl,me,images,newposy) 0
 set xth(ctrl,me,images,vis) 0
 set xth(ctrl,me,images,gamma) 0.0
 set xth(ctrl,me,area,xmin) ""
@@ -1577,7 +1629,8 @@ grid $xth(ctrl,me,images).ic -column 0 -row 1 -sticky news
 Button $xth(ctrl,me,images).ic.insp -text [mc "Insert"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {
 		set nimgs [llength $xth(me,imgs,xlist)]
-    xth_me_image_insert $xth(ctrl,me,images,posx) $xth(ctrl,me,images,posy) {} 0 {}
+    xth_me_image_newpos
+    xth_me_image_insert $xth(ctrl,me,images,newposx) $xth(ctrl,me,images,newposy) {} 0 {}
 		set nnimgs [llength $xth(me,imgs,xlist)]
 		if {$nnimgs > $nimgs} {
 	    xth_me_area_auto_adjust
@@ -1912,8 +1965,8 @@ bind $plf.l <<ListboxSelect>> {
     [lindex [%W curselection] 0]]
     if {$xth(me,cmds,selpid) > 0} {
       xth_me_center_to [list \
-        $xth(me,cmds,$xth(me,cmds,selid),$xth(me,cmds,selpid),x) \
-        $xth(me,cmds,$xth(me,cmds,selid),$xth(me,cmds,selpid),y)]
+	$xth(me,cmds,$xth(me,cmds,selid),$xth(me,cmds,selpid),x) \
+	$xth(me,cmds,$xth(me,cmds,selid),$xth(me,cmds,selpid),y)]
     }
   }
 }
@@ -2163,7 +2216,7 @@ scrollbar $plf.sv -orient vert  -command "$plf.l yview" \
   -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
 scrollbar $plf.sh -orient horiz  -command "$plf.l xview" \
   -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
-bind $plf.l <<ListboxSelect>> {}
+bind $plf.l <<ListboxSelect>> {xth_me_cmds_show_current_area}
 bind $plf.l <B1-ButtonRelease> "focus $plf.l"
 
 Button $lnc.ins -text [mc "Select lines"] -anchor center -font $xth(gui,lfont) \
@@ -2223,14 +2276,14 @@ $xth(me,menu,file) add command -label [mc "New"] -command xth_me_create_file \
 $xth(me,menu,file) add command -label [mc "Open"] -underline 0 \
   -accelerator "$xth(gui,controlk)-o" -state normal \
   -font $xth(gui,lfont) -command {
-			set xth(gui,openxp) 0
-			xth_me_open_file 1 {} 1
+		        set xth(gui,openxp) 0
+		        xth_me_open_file 1 {} 1
 	}
 $xth(me,menu,file) add command -label [mc "Open (no pics)"] -underline 10 \
   -state normal -font $xth(gui,lfont) -command {
 	    set xth(gui,openxp) 1
-			xth_me_open_file 1 {} 1
-			set xth(gui,openxp) 0
+		        xth_me_open_file 1 {} 1
+		        set xth(gui,openxp) 0
 	}
 $xth(me,menu,file) add command -label [mc "Save"] -underline 0 \
   -accelerator "$xth(gui,controlk)-s" -state disabled \
@@ -2309,7 +2362,15 @@ $xth(me,menu,edit) add command -label [mc "Auto adjust area"] \
   -font $xth(gui,lfont) -command xth_me_area_auto_adjust
 $xth(me,menu,edit) add command -label [mc "Insert image"] \
   -font $xth(gui,lfont) \
-  -command {xth_me_image_insert $xth(ctrl,me,images,posx) $xth(ctrl,me,images,posy) {} 0 {}}
+  -command {
+  set nimgs [llength $xth(me,imgs,xlist)]
+  xth_me_image_newpos
+  xth_me_image_insert $xth(ctrl,me,images,newposx) $xth(ctrl,me,images,newposy) {} 0 {}
+  set nnimgs [llength $xth(me,imgs,xlist)]
+  if {$nnimgs > $nimgs} {
+    xth_me_area_auto_adjust
+  }
+}
 set xth(me,menu,edit,undo) [$xth(me,menu,edit) index [mc "Undo"]]
 set xth(me,menu,edit,redo) [$xth(me,menu,edit) index [mc "Redo"]]
 set xth(me,menu,edit,zoom) [$xth(me,menu,edit) index [mc "Zoom 100 %"]]

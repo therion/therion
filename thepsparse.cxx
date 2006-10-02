@@ -513,6 +513,8 @@ void parse_eps(string fname, string cname, double dx, double dy,
   MP_transform mp_trans, fntmatr;
   MP_text text;
 
+  data.clear();
+
   ifstream F(fname.c_str());
   if(!F) therror(("Can't open file for reading"));
   while(F >> tok) {

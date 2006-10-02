@@ -72,6 +72,7 @@ thconfig::thconfig()
   this->install_path.strcpy("");
   this->install_tex = false;
   this->install_tcltk = false;
+  this->install_im = false;
 
   this->auto_join = true;
 
@@ -100,6 +101,8 @@ thconfig::thconfig()
         this->install_tex = true;
       if (RegQueryValueEx(key,"TclTk",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) == ERROR_SUCCESS)
         this->install_tcltk = true;
+      if (RegQueryValueEx(key,"ImageMagick",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) == ERROR_SUCCESS)
+        this->install_im = true;
     }
   	RegCloseKey(key);
   }
@@ -431,7 +434,9 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     osrc.line = this->cfg_file.get_cif_line_number();
     if (strcmp(osrc.name, this->cfg_file.get_cif_name()) != 0)
       osrc.name = dbptr->strstore(this->cfg_file.get_cif_name(), true);
-    dbptr->csrc = osrc;
+    dbptr->csrc.line = osrc.line;
+    dbptr->csrc.name = osrc.name;
+
 
     objptr = dbptr->create(this->cfg_file.get_cmd(), osrc);
     if (objptr == NULL)

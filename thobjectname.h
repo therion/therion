@@ -73,10 +73,25 @@ class thobjectname {
  
   bool is_empty();
   
+
+  /**
+   * Print object name with survey into str.
+   */
+
+  char * print_name();
+  
+
+  /**
+   * Print object name with survey up to given level into str.
+   */
+
+  char * print_full_name(int slevel = -1);
     
 };
 
 void thparse_objectname(thobjectname & ds, thmbuffer * sstore, char * src, class thdataobject * psobj = NULL);
+
+char * thobjectname__print_full_name(char * oname, class thsurvey * psrv, int slevel = -1);
 
 void fprintf(FILE * fh, thobjectname & ds);
 

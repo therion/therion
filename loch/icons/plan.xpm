@@ -1,0 +1,26 @@
+/* XPM */
+static char *plan_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"15 16 4 1",
+"  c black",
+". c red",
+"X c #FFCC00",
+"o c None",
+/* pixels */
+"ooooo.....ooooo",
+"ooooo.XXX.ooooo",
+"ooooo.XXX.ooooo",
+"ooooo.XXX.ooooo",
+"ooooo.XXX.ooooo",
+"ooooo.XXX.ooooo",
+"ooooo.XXX.ooooo",
+"ooooo.XXX.ooooo",
+"ooooo.XXX.ooooo",
+"oo...XXXXX...oo",
+"ooo.XXXXXXX.ooo",
+"oooo.XXXXX.oooo",
+"ooooo.XXX.ooooo",
+"oooooo.X.oooooo",
+"ooooooo.ooooooo",
+"ooooooooooooooo"
+};

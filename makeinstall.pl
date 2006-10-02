@@ -28,6 +28,7 @@ if ($platform eq 'WIN32') {
   `rm -f /etc/xtherion.ini.new`;
   `cp -f $cdir/therion /usr/bin/therion`;
   `cp -f $cdir/xtherion/xtherion /usr/bin/xtherion`;
+  `cp -f $cdir/loch/loch /usr/bin/loch`;
   `cp -f $cdir/therion.ini /etc/therion.ini.new`;
   `cp -f $cdir/xtherion/xtherion.ini /etc/xtherion.ini.new`;
   if ((-s "/etc/therion.ini") <= 0) {

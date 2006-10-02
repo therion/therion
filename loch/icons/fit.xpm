@@ -1,0 +1,25 @@
+/* XPM */
+static char * fit_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 4 1",
+"  c #0000BB",
+". c #009BFF",
+"X c gray100",
+"o c None",
+/* pixels */
+"oooooooooooooooo",
+"oo    ooooo    o",
+"oo ...ooooo... o",
+"oo .ooooooooo. o",
+"oo .ooooooooo. o",
+"oooooooooooooooo",
+"oooooooooooooooo",
+"oooooooooooooooo",
+"oooooooooooooooo",
+"oooooooooooooooo",
+"oo .ooooooooo. o",
+"oo .ooooooooo. o",
+"oo ...ooooo... o",
+"oo    ooooo    o",
+"oooooooooooooooo"
+};

@@ -195,9 +195,11 @@ void thscrapis::end_bp_direction()
       cbp->suml *= 0.618;
       if ((cbp->up < 0.0) && (cbp->down < 0.0)) {
         cbp->down = cbp->suml / 1.618;
-        if (cbp->down > 1.618)
-          cbp->down = 1.618;
+        if (cbp->down > 0.618)
+          cbp->down = 0.618;
         cbp->up = cbp->suml - cbp->down;
+        if (cbp->up > 1.618)
+          cbp->up = 1.618;
       } else if (cbp->up < 0.0) {
         cbp->up = 1.618;
       } else if (cbp->down < 0.0) {
@@ -206,9 +208,13 @@ void thscrapis::end_bp_direction()
     } 
     if (cbp->up < 0.0) {
       cbp->up *= -1.0;
+      if (cbp->up > 1.618)
+        cbp->up = 1.618;
     }
     if (cbp->down < 0.0) {
       cbp->down *= -1.0;
+      if (cbp->down > 0.618)
+        cbp->down = 0.618;
     }
     cbp = cbp->next;
   }
@@ -217,7 +223,7 @@ void thscrapis::end_bp_direction()
 void thscrapis::bp_interpolate(double x, double y, double & iz, double & id, double & idx, double & idy)
 {
   // prejde vsetky body a spocita interpolovane z a direction
-  double sumw = 0.0, sumdw = 0.0, cw, dx, dy;
+  double sumw = 0.0, sumdw = 0.0, cw, dx, dy, dd;
   bool anyd = false;
   iz = 0.0;
   id = 0.0;
@@ -234,7 +240,9 @@ void thscrapis::bp_interpolate(double x, double y, double & iz, double & id, dou
       idy = cbp->dy;
       return;
     }
-    cw = pow(cw,-2.0) * exp(-2.0 * pow(dx * cbp->dx + dy * cbp->dy, 2.0));
+    //cw = pow(cw,-2.0) * exp(-2.0 * pow(dx * cbp->dx + dy * cbp->dy, 2.0));
+    dd = dx * cbp->dx + dy * cbp->dy;
+    cw = 1 / (cw * cw) * exp(-2.0 * dd * dd);
     if (cbp->dd) {
       id += cw * cbp->sumd;
       sumdw += cw;
@@ -356,11 +364,11 @@ void thscrapis::insert_outline_lnsegment(bool newsegment, thline * line,
         y2 = lp->point->yt;
         for(i = 1; i < nb; i++) {
           t = double(i) / double(nb);
-          t2 = pow(t,2.0);
-          t3 = pow(t,3.0);
+          t2 = t * t;
+          t3 = t * t * t;
           t_ = 1.0 - t;
-          t_2 = pow(t_,2.0);
-          t_3 = pow(t_,3.0);
+          t_2 = t_ * t_;
+          t_3 = t_ * t_ * t_;
           tmplist.push_back(thscrapislns(
             t_3 * x1 + 3.0 * t * t_2 * c1x + 3 * t2 * t_ * c2x + t3 * x2
             , 
@@ -912,7 +920,7 @@ void thscrapis::dim_interpolate(double x, double y, double z, double & zu, doubl
       sumw = 1.0;
       break;
     }
-    cw = pow(cw,-2.0); // * exp(-2.0 * pow(dx * cd->dx + dy * cd->dy, 2.0));
+    cw = 1.0 / (cw * cw); //pow(cw,-2.0); // * exp(-2.0 * pow(dx * cd->dx + dy * cd->dy, 2.0));
     zup += cw * cd->zup;
     zdown += cw * cd->zdown;
     up += cw * cd->up;
@@ -921,8 +929,11 @@ void thscrapis::dim_interpolate(double x, double y, double z, double & zu, doubl
     cd = cd->next;
   }
   
-  if (sumw == 0.0)
+  if (sumw == 0.0) {
+    zu = z + 1.0;
+    zd = z - 1.0;
     return;
+  }
     
   if (sumw > 0) {
     zup /= sumw;

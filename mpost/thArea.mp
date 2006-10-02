@@ -198,13 +198,14 @@ def a_blocks_SKBB (expr p) =
   pickup PenC;
   path q, qq; q = bbox p;
   picture tmp_pic; 
+  uu := max(u, (xpart urcorner q - xpart llcorner q)/100, (ypart urcorner q - ypart llcorner q)/100);
   tmp_pic := image(
-    for i = xpart llcorner q step 2u until xpart urcorner q:
-      for j = ypart llcorner q step 2u until ypart urcorner q:
-        qq := punked (((-.5u,-.5u)--(.5u,-.5u)--(.5u,.5u)--(-.5u,.5u)--cycle) 
-	     randomized (u/2))
+    for i = xpart llcorner q step 2uu until xpart urcorner q:
+      for j = ypart llcorner q step 2uu until ypart urcorner q:
+        qq := punked (((-.5uu,-.5uu)--(.5uu,-.5uu)--(.5uu,.5uu)--(-.5uu,.5uu)--cycle) 
+	     randomized (uu/2))
              rotated uniformdeviate(360) 
-             shifted ((i,j) randomized 1.6u);
+             shifted ((i,j) randomized 1.6uu);
 	if xpart (p intersectiontimes qq) < 0:
 	  thclean qq;
 	  thdraw qq;

@@ -1,0 +1,25 @@
+/* XPM */
+static char *vissurface_xpm[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 4 1",
+"  c #41B800",
+". c #98F963",
+"X c gray100",
+"o c None",
+/* pixels */
+"oooooooooooooooo",
+"oooooooooooooooo",
+"oooooooooooooooo",
+"oooooooooooooooo",
+"oooo ooooo.ooooo",
+"ooo   ooo...oooo",
+"oo     o.....ooo",
+"o       ......oo",
+"         .....oo",
+"          ....oo",
+"           ...oo",
+"            ..oo",
+"             .oo",
+"              oo",
+"oooooooooooooooo"
+};
