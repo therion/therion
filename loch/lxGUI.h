@@ -122,7 +122,7 @@ class lxFrame: public wxFrame
   public:
 
     lxGLCanvas * canvas;
-    wxString m_fileName, m_fileDir;
+    wxString m_fileName, m_fileDir, m_fileToOpen;
     int m_fileType;
     
     struct lxData * data;

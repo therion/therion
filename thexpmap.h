@@ -44,6 +44,7 @@ enum {
   TT_EXPMAP_OPT_FORMAT,  ///< Output option.
   TT_EXPMAP_OPT_PROJECTION,  ///< Output projection.
   TT_EXPMAP_OPT_LAYOUT,  ///< Layout.
+  TT_EXPMAP_OPT_ENCODING,  ///< Output encoding.
 };
 
 
@@ -52,6 +53,8 @@ enum {
  */
  
 static const thstok thtt_expmap_opt[] = {
+  {"-enc", TT_EXPMAP_OPT_ENCODING},
+  {"-encoding", TT_EXPMAP_OPT_ENCODING},
   {"-fmt", TT_EXPMAP_OPT_FORMAT},
   {"-format", TT_EXPMAP_OPT_FORMAT},
   {"-layout", TT_EXPMAP_OPT_LAYOUT},
@@ -68,11 +71,13 @@ static const thstok thtt_expmap_opt[] = {
 
 enum {
   TT_EXPMAP_FMT_UNKNOWN = 0,  ///< Unknown option
-  TT_EXPMAP_FMT_SVG,  ///< SVG
-  TT_EXPMAP_FMT_XHTML,  ///< SVG
-  TT_EXPMAP_FMT_PDF,  ///< PDF
-  TT_EXPMAP_FMT_XVI,  ///< PDF
-  TT_EXPMAP_FMT_3D,  ///< PDF
+  TT_EXPMAP_FMT_SVG,  
+  TT_EXPMAP_FMT_XHTML,
+  TT_EXPMAP_FMT_PDF, 
+  TT_EXPMAP_FMT_XVI,  
+  TT_EXPMAP_FMT_3D,  
+  TT_EXPMAP_FMT_SHP,  
+  TT_EXPMAP_FMT_KML,  
 };
 
 
@@ -81,7 +86,12 @@ enum {
  */
  
 static const thstok thtt_expmap_fmt[] = {
+  {"esri", TT_EXPMAP_FMT_SHP},
+  {"kml", TT_EXPMAP_FMT_KML},
   {"pdf", TT_EXPMAP_FMT_PDF},
+  {"shapefile", TT_EXPMAP_FMT_SHP},
+  {"shapefiles", TT_EXPMAP_FMT_SHP},
+  {"shp", TT_EXPMAP_FMT_SHP},
   {"survex", TT_EXPMAP_FMT_3D},
   {"svg", TT_EXPMAP_FMT_SVG},
   {"xhtml", TT_EXPMAP_FMT_XHTML},
@@ -103,8 +113,11 @@ class thexpmapmpxs {
   double ms, mx, my, sr, cr, rr; ///< Scale and centering.
   thsymbolset * symset;
   thlayout * layout;
+  char * attr_last_id, * attr_last_survey, * attr_last_scrap;
+  bool attr_last_scrap_centerline;
   
-  thexpmapmpxs() : file(NULL), ms(1.0), mx(0.0), my(0.0), sr(0.0), cr(1.0), rr(0.0) {}
+  thexpmapmpxs() : file(NULL), ms(1.0), mx(0.0), my(0.0), sr(0.0), cr(1.0), rr(0.0),
+    attr_last_id(""), attr_last_survey(""), attr_last_scrap(""), attr_last_scrap_centerline(false) {}
   
 };
 
@@ -147,7 +160,8 @@ class thexpmap : public thexport {
   
   friend class thexporter;
   
-  int format;  ///< Output format.
+  int format,  ///< Output format.
+    encoding;  ///< Output encoding.
   char * projstr,  ///< Projection string.
     * layoutstr;  ///< Layout string.
   class thdb2dprj * projptr;  ///< Projection pointer.
@@ -155,13 +169,18 @@ class thexpmap : public thexport {
   thsymbolset symset;
   
   thbuffer layoutopts;  ///< Layout options buffer.
+
+  void export_xvi(class thdb2dprj * prj);
   
   void export_pdf(class thdb2dxm * maps, class thdb2dprj * prj);
-	void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
-	void export_xvi(class thdb2dprj * prj);
-  void export_uni(class thdb2dxm * maps, class thdb2dprj * prj);
   thexpmap_xmps export_mp(thexpmapmpxs * out, class thscrap * scrap, unsigned & startnum, bool outline_mode);  
+	void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
+
+  void export_uni(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_uni_scrap(FILE * out, class thscrap * scrap);  
+
+  void export_shp(class thdb2dxm * maps, class thdb2dprj * prj);
+  void export_kml(class thdb2dxm * maps, class thdb2dprj * prj);
 
   public:
   

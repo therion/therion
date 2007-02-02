@@ -1066,6 +1066,8 @@ namespace OGLFT {
 	dx = -( bbox.x_min_ + bbox.x_max_ ) / 2.; break;
       case RIGHT:
 	dx = -bbox.x_max_; break;
+      default:
+        break;
       }
       switch ( vertical_justification_ ) {
       case BOTTOM:
@@ -1074,6 +1076,8 @@ namespace OGLFT {
 	dy = -( bbox.y_min_ + bbox.y_max_ ) / 2.; break;
       case TOP:
 	dy = -bbox.y_max_; break;
+      default:
+        break;
       }
 
       // There is probably a less expensive way to compute this
@@ -1160,6 +1164,8 @@ namespace OGLFT {
 	dx = ( bbox.x_min_ + bbox.x_max_ ) / 2; break;
       case RIGHT:
 	dx = bbox.x_max_; break;
+      default:
+        break;
       }
       switch ( vertical_justification_ ) {
       case BOTTOM:
@@ -1168,6 +1174,8 @@ namespace OGLFT {
 	dy = ( bbox.y_min_ + bbox.y_max_ ) /2; break;
       case TOP:
 	dy = bbox.y_max_; break;
+      default:
+        break;
       }
 
       // **Now** rotate these coordinates around into 3D modeling coordinates!

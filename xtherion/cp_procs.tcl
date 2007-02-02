@@ -402,6 +402,22 @@ proc xth_cp_compile {} {
     puts $lid "ERROR: Can not execute \"$xth(gui,compcmd) -x $xth(cp,opts) $xth(cp,fname)\"."
     close $lid
   }  
+
+  set acroreadopen 1
+  if {[llength $xth(cp,preview,acroreadpath)] > 0 } {
+    catch {
+      set acroreadopen [catch {
+	exec $xth(gui,appctrlcmd) ARExists [file join $xth(cp,fpath) $xth(cp,preview,acroreadpath)]
+      }]
+    }
+    if {!$acroreadopen} {
+      catch {
+	exec $xth(gui,appctrlcmd) AROpen [file join $xth(cp,fpath) $xth(cp,preview,acroreadpath)]
+	exec $xth(gui,appctrlcmd) ARClose [file join $xth(cp,fpath) $xth(cp,preview,acroreadpath)]
+      }
+    }
+  }
+
   
   xth_status_bar_status cp [mc "Running therion ..."]
   $xth(ctrl,cp,stp).gores configure -text [mc "RUNNING"] -fg black -bg yellow
@@ -432,6 +448,21 @@ proc xth_cp_compile {} {
       xth_cp_write_file "$xth(cp,ffull)$xth(gui,auto_backup_ext)"
     }
 
+    if { [llength $xth(cp,preview,xpdfpath)] > 0 } {
+      catch {
+	exec xpdf -remote thpdf [file join $xth(cp,fpath) $xth(cp,preview,xpdfpath)] &
+      }
+    }
+    if { [llength $xth(cp,preview,acroreadpath)] > 0 } {
+      catch {
+	if {$acroreadopen} {
+	  exec $xth(gui,appctrlcmd) AROpen [file join $xth(cp,fpath) $xth(cp,preview,acroreadpath)]
+	} else {
+	  exec $xth(gui,appctrlcmd) ARBack [file join $xth(cp,fpath) $xth(cp,preview,acroreadpath)]
+	}
+      }
+    }
+    
     $xth(ctrl,cp,stp).gores configure -text [mc "OK"] -fg black -bg green
   }
   
@@ -479,6 +510,8 @@ proc xth_cp_compile {} {
       }
 
       set xth(cp,special) [lindex $fdata 2]
+     
+      $xth(cp,editor).txt configure -undo 0 
       
       $xth(cp,editor).txt delete 1.0 end
       foreach ln [lindex $fdata 3] {
@@ -487,6 +520,8 @@ proc xth_cp_compile {} {
       
       $xth(cp,editor).txt mark set insert $xth(cp,cursor)
       $xth(cp,editor).txt see $xth(cp,cursor)
+      
+      $xth(cp,editor).txt configure -undo 1
       
     }
   }
@@ -549,7 +584,7 @@ proc xth_cp_data_tree_create {} {
     return
   }
   set nlist [lsort -dictionary -index 0 $xth(ctrl,cp,datlist)]
-  set level 0
+  set level 1
   set tocnt 1
   set copen 1
   set tp $xth(ctrl,cp,dat).t 
@@ -557,7 +592,7 @@ proc xth_cp_data_tree_create {} {
     set tocnt 0
     foreach di $nlist {
       if {[lindex $di 3] == $level} {
-	if {$level == 0} {
+	if {$level == 1} {
 	  set parent root
 	} else {
 	  set parent [lindex $di 2]

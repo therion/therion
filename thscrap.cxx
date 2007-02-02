@@ -39,6 +39,7 @@
 #include "thscrapis.h"
 #include "thsurvey.h"
 #include "thsymbolset.h"
+#include "thsketch.h"
 
 #ifdef THMSVC
 #define hypot _hypot
@@ -146,8 +147,12 @@ thcmd_option_desc thscrap::get_cmd_option_desc(char * opts)
   int id = thmatch_token(opts, thtt_scrap_opt);
   if (id == TT_SCRAP_UNKNOWN)
     return thdataobject::get_cmd_option_desc(opts);
-  else
-    return thcmd_option_desc(id);
+  else switch (id) {
+    case TT_SCRAP_SKETCH:
+      return thcmd_option_desc(id,3);
+    default:
+      return thcmd_option_desc(id);
+  }
 }
 
 
@@ -166,6 +171,7 @@ void thscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
 {
   
   thdb2dprjpr projection;
+
   if (cod.id == 1)
     cod.id = TT_DATAOBJECT_NAME;
     
@@ -203,6 +209,10 @@ void thscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
       this->flip = thmatch_token(*args, thtt_scrap_flips);
       if (this->flip == TT_SCRAP_FLIP_UNKNOWN)
         ththrow(("invalid -flip switch -- %s", *args));
+      break;
+
+    case TT_SCRAP_SKETCH:
+      this->parse_sketch(args, argenc);
       break;
     
     // if not found, try to set fathers properties  
@@ -534,7 +544,7 @@ thscraplp * thscrap::get_polygon() {
   thdb2dcp * cp;
   thscraplp * lp, * nlp;
   thdb1ds * st, * st1, * st2;
-  unsigned long i, ni = this->db->db1d.station_vec.size(),
+  size_t i, ni = this->db->db1d.station_vec.size(),
     nlegs = this->db->db1d.leg_vec.size();
   thdataleg * cl;
   bool ffselect, ttselect;
@@ -563,9 +573,11 @@ thscraplp * thscrap::get_polygon() {
           (ffst->survey->is_in_survey(this->centerline_survey)));
         ttselect = ttselect || ((this->centerline_survey != NULL) && 
           (ttst->survey->is_in_survey(this->centerline_survey)));          
-        if (ffselect && ttselect && ((cl->extend & TT_EXTENDFLAG_IGNORE) == 0)) {
-          ffst->tmpselect = true;
-          ttst->tmpselect = true;
+        if ((cl->extend & TT_EXTENDFLAG_IGNORE) == 0) {
+          if ((ffselect && ttselect) || (cl->psurvey->is_in_survey(this->centerline_survey))) {
+            ffst->tmpselect = true;
+            ttst->tmpselect = true;
+          }
         }
       }
     } else {
@@ -574,6 +586,13 @@ thscraplp * thscrap::get_polygon() {
         if (((this->centerline_survey != NULL) && (st->survey->is_in_survey(this->centerline_survey))) || 
             ((this->centerline_survey == NULL) && (st->survey->selected))) {
           st->tmpselect = true;
+        }
+      }
+      for (i = 0; i < nlegs; i++) {
+        cl = this->db->db1d.leg_vec[i].leg;
+        if (((cl->extend & TT_EXTENDFLAG_IGNORE) == 0) && (cl->psurvey->is_in_survey(this->centerline_survey))) {
+          this->db->db1d.station_vec[cl->from.id - 1].tmpselect = true;
+          this->db->db1d.station_vec[cl->to.id - 1].tmpselect = true;
         }
       }
     } // other projections
@@ -585,7 +604,7 @@ thscraplp * thscrap::get_polygon() {
         lp = this->polygon_insert();
         lp->station = st;
         lp->ustation = st;
-        lp->station_name.id = i+1;
+        lp->station_name.id = (unsigned long)i+1;
         lp->station_name.name = st->name;
         lp->station_name.psurvey = st->survey;
         this->insert_adata(st);
@@ -1252,5 +1271,28 @@ void thscrap::update_limits(double x, double y)
   }
   
 }
+
+
+
+void thscrap::parse_sketch(char ** args, int argenc)
+{
+  int sv;
+  thsketch sk;
+  sk.m_scrap = this;
+  sk.m_pic.init(args[0], thdb.csrc.name);
+  // X
+  thparse_double(sv,sk.m_x,args[1]);
+  if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
+    ththrow(("invalid	number --	%s", args[1]))
+  // Y
+  thparse_double(sv,sk.m_y,args[2]);
+  if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
+    ththrow(("invalid	number --	%s", args[2]))
+  this->sketch_list.push_back(sk);
+}
+
+
+
+
 
 

@@ -42,13 +42,15 @@
 #include "thsurface.h"
 #include "thlocale.h"
 #include "thinit.h"
-#include "thsketch.h"
+#include "thconfig.h"
+#include "thtrans.h"
 #include "extern/lxMath.h"
 #ifdef THMSVC
 #define hypot _hypot
 #endif
 
 //#define THUSESVX
+//#define THDEBUG
 
 thdb1d::thdb1d()
 {
@@ -60,6 +62,9 @@ thdb1d::thdb1d()
   
   this->tree_arrows = NULL;
   this->tree_nodes = NULL;
+
+  this->min_year = thnan;
+  this->max_year = thnan;
   
   this->d3_data_parsed = false;
 }
@@ -92,13 +97,42 @@ void thdb1d::scan_data()
   thdataextend_list::iterator xi;
   thdataequate_list::iterator eqi;
   thstdims_list::iterator di;
+  double meridian_convergence = thcfg.get_outcs_convergence(), declin;
   thdata * dp;
+  unsigned used_declination = 0;
   double dcc, sindecl, cosdecl, tmpx, tmpy;
   thdb1ds * tsp1, * tsp2;  // Temporary stations.
+  this->min_year = thnan;
+  this->max_year = thnan;
+
+  obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
   
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
       dp = (thdata *)(*obi);
+
+      if (dp->date.is_defined()) {
+        double syear, eyear;
+        syear = dp->date.get_start_year();
+        eyear = syear;
+        if (dp->date.is_interval())
+          eyear = dp->date.get_end_year();
+        if (thisnan(this->min_year)) {
+          this->min_year = syear;
+          this->max_year = eyear;
+        } else {
+          if (this->min_year > syear) this->min_year = syear;
+          if (this->max_year < eyear) this->max_year = eyear;
+        }
+      }
+
+      bool dpdeclindef;
+      double dpdeclin;
+
+      dpdeclin = 0.0;
+      dpdeclindef = false;
+      if (dp->date.is_defined() && (thcfg.get_outcs_mag_decl(dp->date.get_average_year(), dpdeclin)))
+        dpdeclindef = true;      
         
       // scan data shots
       lei = dp->leg_list.begin();
@@ -268,14 +302,25 @@ void thdb1d::scan_data()
                 break;
             }
 
-            if (!thisnan(lei->declination)) {
-              lei->total_bearing += lei->declination;
+            if ((meridian_convergence != 0.0) || (!thisnan(lei->declination)) || dpdeclindef) {
+              declin = meridian_convergence;
+              if (!thisnan(lei->declination)) {
+                declin += lei->declination;
+                used_declination |= 2;
+              } else if (dpdeclindef) {
+                lei->implicit_declination = dpdeclin;
+                declin += dpdeclin;
+                used_declination |= 4;
+              } else {
+                used_declination |= 1;
+              }
+              lei->total_bearing += declin;
               if (lei->total_bearing >= 360.0)
                 lei->total_bearing -= 360.0;
               if (lei->total_bearing < 0.0)
                 lei->total_bearing += 360.0;
-              cosdecl = cos(lei->declination/180*THPI);
-              sindecl = sin(lei->declination/180*THPI);
+              cosdecl = cos(declin/180*THPI);
+              sindecl = sin(declin/180*THPI);
               tmpx = lei->total_dx;
               tmpy = lei->total_dy;
               lei->total_dx = (cosdecl * tmpx) + (sindecl * tmpy);
@@ -444,6 +489,12 @@ void thdb1d::scan_data()
     }  
     obi++;
   }
+
+  if (((used_declination & 1) != 0) && ((used_declination & 4) != 0))
+    thwarning(("unable to determine magnetic declination for undated surveys"))
+
+  thcfg.log_outcs(this->min_year, this->max_year);
+
 }
 
 
@@ -490,7 +541,7 @@ void thdb1ds::set_parent_data(class thdata * pd, unsigned pd_priority, unsigned 
 unsigned long thdb1d::insert_station(class thobjectname on, class thsurvey * ps, class thdata * pd, unsigned pd_priority)
 {
   // first insert object into database
-  unsigned pd_slength = strlen(ps->full_name);
+  size_t pd_slength = strlen(ps->full_name);
   ps = this->db->get_survey(on.survey, ps);
   on.survey = NULL;
   unsigned long csurvey_id = (ps == NULL) ? 0 : ps->id;
@@ -636,8 +687,8 @@ void thdb1d_equate_nodes(thdb1d * thisdb, thdb1d_tree_node * n1, thdb1d_tree_nod
 void thdb1d::process_tree()
 {
 
-  unsigned long tn_legs = this->leg_vec.size();
-  unsigned long tn_stations = this->station_vec.size();
+  size_t tn_legs = this->leg_vec.size();
+  size_t tn_stations = this->station_vec.size();
   
   
   if ((tn_legs < 0) || (tn_stations < 0))
@@ -1067,7 +1118,7 @@ struct thlc_cross
   unsigned long id, station_uid, narrows, dm_dist;
   bool is_fixed, dm_target;  
   thlc_cross * dm_cross, * dm_next;
-  class thlc_cross_arrow * first_arrow, * last_arrow, * dm_arrow;
+  struct thlc_cross_arrow * first_arrow, * last_arrow, * dm_arrow;
   
 };
 
@@ -1315,7 +1366,7 @@ long chledala_chledala(thlc_cross * kde, unsigned long kde_size, thlc_cross * co
 void thdb1d::find_loops()
 {
 
-  unsigned long nlegs = this->get_tree_size(),
+  size_t nlegs = this->get_tree_size(),
     nstations = this->station_vec.size(), numseries,
     i, lastcross, nseries, nloops;
     
@@ -2672,8 +2723,6 @@ void thdb1d::postprocess_objects()
       case TT_SURFACE_CMD:
         ((thsurface*)(*obi))->check_stations();
         break;
-      case TT_SKETCH_CMD:
-        ((thsketch*)(*obi))->check_stations();
     }
     obi++;
   }
@@ -2754,6 +2803,10 @@ void thdb1d::process_xelev()
                     else
                       carrow->leg->leg->extend |= TT_EXTENDFLAG_RIGHT;
                     break;
+                  case TT_EXTENDFLAG_IGNORE:
+                    carrow->negative->extend |= TT_EXTENDFLAG_IGNORE;
+                    carrow->leg->leg->extend |= TT_EXTENDFLAG_IGNORE;
+                    break;
                   default:
                     carrow->leg->leg->extend |= xi->extend;
                 }
@@ -2771,6 +2824,14 @@ void thdb1d::process_xelev()
                 while (carrow != NULL) {
                   carrow->leg->leg->extend |= TT_EXTENDFLAG_IGNORE;
                   carrow->extend |= TT_EXTENDFLAG_IGNORE;
+                  carrow->negative->extend |= TT_EXTENDFLAG_IGNORE;
+                  carrow = carrow->next_arrow;
+                }
+              }
+              if (xi->extend == TT_EXTENDFLAG_BREAK) {
+                carrow = from_node->first_arrow;
+                while (carrow != NULL) {
+                  carrow->extend |= TT_EXTENDFLAG_BREAK;
                   carrow = carrow->next_arrow;
                 }
               }
@@ -2856,7 +2917,7 @@ void thdb1d::process_xelev()
           if (clevel > start_level) {
             start_level = clevel;
             a2 = a1;
-          } else if ((clevel == start_level) && (this->station_vec[a1->start_node->uid - 1].z > this->station_vec[a2->start_node->uid - 1].z)) {
+          } else if ((clevel == start_level) && ((a2 == NULL) || (this->station_vec[a1->start_node->uid - 1].z > this->station_vec[a2->start_node->uid - 1].z))) {
             a2 = a1;
           }
           
@@ -2894,25 +2955,30 @@ void thdb1d::process_xelev()
     if (just_started) {
       just_started = false;
     } else {
-      // let's make move
-      if (current_node->last_arrow == NULL)
-        current_node->last_arrow = current_node->first_arrow;
 
-      while ((current_node->last_arrow != NULL) && 
-          (current_node->last_arrow->is_discovery) && 
-          ((current_node->last_arrow->extend & TT_EXTENDFLAG_BREAK) == 0) &&
-          (ignorant_mode || ((current_node->last_arrow->extend & TT_EXTENDFLAG_IGNORE) == 0)))
-        current_node->last_arrow = current_node->last_arrow->next_arrow;
-  
-      if (current_node->last_arrow == NULL)
+      // let's make move
+      bool try_first;
+      try_first = true;
+
+      if (current_node->last_arrow == NULL) {
+        try_first = false;
         current_node->last_arrow = current_node->first_arrow;
-  
-      while ((current_node->last_arrow != NULL) && 
-          (current_node->last_arrow->is_discovery) && 
-          ((current_node->last_arrow->extend & TT_EXTENDFLAG_BREAK) == 0) &&
-          (ignorant_mode || ((current_node->last_arrow->extend & TT_EXTENDFLAG_IGNORE) == 0)))
+      }
+
+      // find arrow that is not discovery and not ignored (if not ignorant mode)
+      while (current_node->last_arrow != NULL) {
+
+        if ((!current_node->last_arrow->is_discovery) &&
+           (ignorant_mode || (((current_node->last_arrow->extend & TT_EXTENDFLAG_IGNORE) == 0) && ((current_node->last_arrow->extend & TT_EXTENDFLAG_BREAK) == 0))))
+           break;
+
         current_node->last_arrow = current_node->last_arrow->next_arrow;
-    
+        if (try_first && (current_node->last_arrow == NULL)) {
+          try_first = false;
+          current_node->last_arrow = current_node->first_arrow;
+        }
+      }
+
     }
   
     if (current_node->last_arrow == NULL) {
@@ -3012,6 +3078,8 @@ void thdb1d::process_xelev()
         current_node->xx = cxx;
         current_node->is_attached = true;
         current_node->xx_touched = true;
+      } else {
+        cxx = current_node->xx;
       }
       
     }
@@ -3026,9 +3094,6 @@ void thdb1d::process_xelev()
 #endif
   
 }
-
-
-
 
 
 

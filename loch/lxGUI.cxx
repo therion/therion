@@ -22,6 +22,7 @@
 #include <wx/help.h>
 #include <wx/fs_zip.h>
 #include <wx/dnd.h>
+#include <wx/display.h>
 
 #include <vtkObject.h>
 
@@ -147,6 +148,8 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->m_app = app;
     this->data = new lxData;
     this->setup = new lxSetup(data);
+
+    this->m_fileToOpen = _T("");
 
     this->m_renderData = new lxRenderData();
     this->m_fileName = _("noname");
@@ -917,17 +920,37 @@ bool lxApp::OnInit()
     m_path = wxFileName(this->argv[0]);
 
     vtkObject::GlobalWarningDisplayOff();
+
+#if wxUSE_DISPLAY
+    //multi screen support
+    wxDisplay display(0); //Get the settings for screen 0
+    wxRect displayRect = display.GetGeometry();
+#else
     wxSize scr = wxGetDisplaySize();
+#endif
 
     wxFileSystem::AddHandler(new wxZipFSHandler);
 
+#if wxUSE_DISPLAY
+    this->frame = new lxFrame(this, _T("Loch"),
+      wxPoint(displayRect.width / 8, displayRect.height / 8), 
+      wxSize(3 * displayRect.width / 4, 3 * displayRect.height / 4));
+#else
     this->frame = new lxFrame(this, _T("Loch"), wxPoint(scr.x / 8, scr.y / 8), 
       wxSize(3 * scr.x / 4, 3 * scr.y / 4));
+#endif
+  
+    this->frame->Show(true);
     this->frame->canvas->SetFocus();
+
+#if wxUSE_DISPLAY
+    this->frame->canvas->OSCInit(displayRect.width, displayRect.height);
+#else
     this->frame->canvas->OSCInit(wxGetDisplaySize().x, wxGetDisplaySize().y);
+#endif
 
     if (this->argc > 1) {
-      this->frame->OpenFile(wxString(this->argv[1]));
+      this->frame->m_fileToOpen = wxString(this->argv[1]);
     }
 
     return true;

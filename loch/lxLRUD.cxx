@@ -460,8 +460,8 @@ void lxLRUD::Calculate()
   // spocitajme body na fPlane a tPlane
   lxVec ffp[8], ttp[8], nsDir;
   lxPlane sPlane;
-  double sDistMax, sDistMin, sDistCur;
-  int sXMax, sXMin;
+  double sDistMax(0.0), sDistMin(0.0), sDistCur;
+  int sXMax(0), sXMin(0);
   bool allOK;
   for(si = series.begin(); si != series.end(); si++) {
     psi = &(*si);

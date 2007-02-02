@@ -98,6 +98,12 @@ class thexporter {
   void parse_export(int nargs, char ** args);
   
   /**
+   * Parse export option.
+   */
+   
+  void parse_system(char * system_cmd);
+  
+  /**
    * Export database.
    */
    

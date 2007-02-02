@@ -43,6 +43,7 @@ enum {
   TT_EXPMODEL_OPT_ENABLE,  ///< Output option.
   TT_EXPMODEL_OPT_DISABLE,  ///< Output option.
   TT_EXPMODEL_OPT_WALLSRC,  ///< Output option.
+  TT_EXPMODEL_OPT_ENCODING,  ///< Output encoding.
 };
 
 
@@ -53,6 +54,8 @@ enum {
 static const thstok thtt_expmodel_opt[] = {
   {"-disable", TT_EXPMODEL_OPT_DISABLE},
   {"-enable", TT_EXPMODEL_OPT_ENABLE},
+  {"-enc", TT_EXPMODEL_OPT_ENCODING},
+  {"-encoding", TT_EXPMODEL_OPT_ENCODING},
   {"-fmt", TT_EXPMODEL_OPT_FORMAT},
   {"-format", TT_EXPMODEL_OPT_FORMAT},
   {"-wall-source", TT_EXPMODEL_OPT_WALLSRC},
@@ -107,6 +110,8 @@ enum {
   TT_EXPMODEL_FMT_3DMF,  ///< 3dmf
   TT_EXPMODEL_FMT_VRML,  ///< vrml
   TT_EXPMODEL_FMT_DXF,  ///< dxf
+  TT_EXPMODEL_FMT_SHP,  ///< esri shapefile
+  TT_EXPMODEL_FMT_KML,  ///< google earth format
 };
 
 
@@ -115,14 +120,45 @@ enum {
  */
  
 static const thstok thtt_expmodel_fmt[] = {
+  {"3d", TT_EXPMODEL_FMT_SURVEX},
   {"3dmf", TT_EXPMODEL_FMT_3DMF},
   {"compass", TT_EXPMODEL_FMT_COMPASS},
   {"dxf", TT_EXPMODEL_FMT_DXF},
+  {"esri", TT_EXPMODEL_FMT_SHP},
+  {"kml", TT_EXPMODEL_FMT_KML},
   {"loch", TT_EXPMODEL_FMT_LOCH},
+  {"shapefile", TT_EXPMODEL_FMT_SHP},
+  {"shapefiles", TT_EXPMODEL_FMT_SHP},
+  {"shp", TT_EXPMODEL_FMT_SHP},
   {"survex", TT_EXPMODEL_FMT_SURVEX},
-  {"xtherion", TT_EXPMODEL_FMT_THERION},
   {"vrml", TT_EXPMODEL_FMT_VRML},
+//  {"xtherion", TT_EXPMODEL_FMT_THERION},
   {NULL, TT_EXPMODEL_FMT_UNKNOWN}
+};
+
+
+
+/**
+ * Model wall sources.
+ */
+
+enum {
+  TT_WSRC_UNKNOWN = 0, 
+  TT_WSRC_CENTERLINE = 1,  
+  TT_WSRC_MAPS = 2,
+  TT_WSRC_ALL = 3,
+};
+
+/**
+ * Options parsing table.
+ */
+ 
+static const thstok thtt_expmodel_wallsrc[] = {
+  {"all", TT_WSRC_ALL},
+  {"centerline", TT_WSRC_CENTERLINE},
+  {"centreline", TT_WSRC_CENTERLINE},
+  {"maps", TT_WSRC_MAPS},
+  {NULL, TT_WSRC_UNKNOWN}
 };
 
 
@@ -134,7 +170,8 @@ class thexpmodel : public thexport {
 
   public:
 
-  int format;  ///< Output format.
+  int format,  ///< Output format.
+    encoding;  ///< Output encoding.
   unsigned items,
     wallsrc;
   
@@ -151,6 +188,10 @@ class thexpmodel : public thexport {
   void export_dxf_file(class thdatabase * dbp);  ///< Export compass plt file.
 
   void export_lox_file(class thdatabase * dbp);  ///< Export lox file.
+
+  void export_shp_file(class thdatabase * dbp);  ///< Export shp file.
+
+  void export_kml_file(class thdatabase * dbp);  ///< Export kml file.
 
   public:
   

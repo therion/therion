@@ -45,6 +45,8 @@ typedef std::map < unsigned long, thobjectsrc * > thsvxctrl_src_maptype;  ///< S
 class thsvxctrl {
 
   thdataleg pdl;
+
+  double meridian_convergence;
   
   unsigned long svxf_ln;
   thsvxctrl_src_maptype src_map;

@@ -9,6 +9,11 @@ layout water-blue
   enddef;
 endlayout
 
-export map -projection plan -output rabbit-plan.pdf -layout-map-header 0 0 s
-export map -projection extended -output rabbit-xelev.pdf -layout-map-header 0 110 sw -layout water-blue
+select pdx@rabbit
+select pdp@rabbit
+
+export map -projection plan -output rabbit-plan.pdf \
+  -layout-map-header 0 0 s
+export map -projection extended -output rabbit-xelev.pdf \
+  -layout-map-header 0 110 sw -layout water-blue
 export model -output rabbit.lox

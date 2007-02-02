@@ -31,6 +31,7 @@
 #include "thinfnan.h"
 #include "thsurvey.h"
 #include "thgrade.h"
+#include "thcsdata.h"
 #include <string.h>
 #include "thdatareader.h"
 #ifdef THMSVC
@@ -2176,8 +2177,9 @@ void thdata::set_data_fix(int nargs, char ** args)
   it->sdx = thnan;
   it->sdy = thnan;
   it->sdz = thnan;
+  this->convert_cs(args[1], args[2], it->x, it->y);
   for(ai = 0; ai < nargs; ai++) {
-    if (ai > 0) {
+    if (ai > 2) {
       thparse_double(vid, val, args[ai]);
       if (vid != TT_SV_NUMBER)
         ththrow(("invalid number -- %s", args[ai]))
@@ -2187,14 +2189,18 @@ void thdata::set_data_fix(int nargs, char ** args)
         thparse_objectname(it->station, & this->db->buff_stations, args[0], this);
         break;
       case 1:
-        val = this->dlc_x.evaluate(val);
-        val = this->dlu_x.transform(val);
-        it->x = val; 
+        if (this->cs == TTCS_LOCAL) {
+          val = this->dlc_x.evaluate(it->x);
+          val = this->dlu_x.transform(val);
+          it->x = val; 
+        }
         break;
       case 2:
-        val = this->dlc_y.evaluate(val);
-        val = this->dlu_y.transform(val);
-        it->y = val;
+        if (this->cs == TTCS_LOCAL) {
+          val = this->dlc_y.evaluate(it->y);
+          val = this->dlu_y.transform(val);
+          it->y = val;
+        }
         break;
       case 3:
         val = this->dlc_z.evaluate(val);

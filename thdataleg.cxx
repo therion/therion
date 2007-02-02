@@ -97,6 +97,7 @@ void thdataleg::clear()
   this->y_sd = thnan;
   this->z_sd = thnan;
   this->declination = thnan;
+  this->implicit_declination = 0.0;
   
   this->from_up = thnan;
   this->from_down = thnan;

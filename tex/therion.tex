@@ -416,14 +416,14 @@
   \ifdim\syd<-\extraS \global\extraS=-\syd\fi
   \sx=\wd\tmpboxa
   \sy=\ht\tmpboxa \advance\sy by \dp\tmpboxa
-  \advance\sx by \sxd
-  \advance\sy by \syd
-  \ifdim\sx>\hsize \global\extraE=\sx \global\advance\extraE by -\hsize\fi
-  \ifdim\sy>\vsize \global\extraN=\sy \global\advance\extraN by -\vsize\fi
+  \advance\sx by \sxd \advance\sx by -\hsize
+  \advance\sy by \syd \advance\sy by -\vsize
+  \ifdim\sx>\extraE \global\extraE=\sx \fi
+  \ifdim\sy>\extraN \global\extraN=\sy \fi
   %
   \unskip
-  \advance\sxd by \extraW
-  \advance\syd by \extraS
+%  \advance\sxd by \extraW  -- presunute do thpdf.cxx
+%  \advance\syd by \extraS
 
   % vypln pod legendou
   \iflegendbgfill
@@ -441,6 +441,7 @@
   \ignorespaces
 }
 
+\def\loadpicture#1{\pdfximage{#1}\pdfrefximage\pdflastximage}
 
 \def\insertmaps{%
   \color[0 0 0]

@@ -29,10 +29,15 @@
 #include "thexception.h"
 #include "thchenc.h"
 #include "thsurvey.h"
+#include "thconfig.h"
+#include "thparse.h"
+#include "thcsdata.h"
+#include "thproj.h"
 
 thdataobject::thdataobject()
 {
   this->db = NULL;
+  this->cs = TTCS_LOCAL;
   
   this->name = "";
   this->title = "";
@@ -132,6 +137,7 @@ thcmd_option_desc thdataobject::get_cmd_option_desc(char * opts)
     case TT_DATAOBJECT_AUTHOR:
     case TT_DATAOBJECT_COPYRIGHT:
     case TT_DATAOBJECT_STNS:
+    case TT_DATAOBJECT_ATTR:
       return thcmd_option_desc(id, 2);
     default:
       return thcmd_option_desc(id);
@@ -148,6 +154,27 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         this->name = this->db->strstore(*args);
       else 
         ththrow(("invalid keyword -- %s", *args));
+      break;
+
+    case TT_DATAOBJECT_CS:
+      switch (this->get_class_id()) {
+        case TT_DATA_CMD:
+        case TT_LAYOUT_CMD:
+        case TT_SURFACE_CMD:
+        case TT_IMPORT_CMD:
+          break;
+        default:
+          ththrow(("coordinate system specification not valid for %s", this->get_cmd_name()))
+          break;  
+      }
+      {
+        int id = thcasematch_token(*args, thtt_cs);
+        if (id == TTCS_UNKNOWN) {
+          ththrow(("unknown coordinate system -- %s", *args));
+        }
+        this->cs = id;
+        this->cs_source = this->db->csrc;
+      }
       break;
     
     case TT_DATAOBJECT_STNS:
@@ -225,6 +252,18 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
           ththrow(("copyright specification not allowed for this object"));
           break;
       }
+      break;
+
+    case TT_DATAOBJECT_ATTR:
+      switch (this->get_class_id()) {
+        case TT_LAYOUT_CMD:
+          ththrow(("attribute specification not valid for layout"))
+          break;
+      }
+      if (cod.nargs != 2)
+        ththrow(("invalid attribute specification -- should be <name> <value>"))
+      thencode(&(this->db->buff_enc), args[1], argenc);
+      this->parse_attribute(args[0], this->db->buff_enc.get_buffer());
       break;
         
     default:
@@ -357,6 +396,130 @@ bool thdataobject::is_in_survey(thsurvey * psearch)
 
 void thdataobject::start_insert()
 {
+}
+
+
+
+void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double & dst_y)
+{
+  // 1. Check kompatibility with output CS.
+  if (thcfg.outcs_def.is_valid()) {
+    if (((this->cs == TTCS_LOCAL) && (thcfg.outcs != TTCS_LOCAL)) ||
+      ((this->cs != TTCS_LOCAL) && (thcfg.outcs == TTCS_LOCAL)))
+      ththrow(("mixing local and global coordinate systems not allowed -- conflict with cs specification at %s [%d]", thcfg.outcs_def.name, thcfg.outcs_def.line));
+  };
+
+  // 1. Conversion to numbers.
+  int sv;
+  double tx(0.0), ty(0.0), tz(0.0), dst_z(0.0);
+  bool initcs(false);
+  if ((this->cs != TTCS_LOCAL) && thcsdata_table[this->cs].dms) {
+    thparse_double_dms(sv, tx, src_x);
+    tx /= 180.0 / THPI;
+  } else {
+    thparse_double(sv, tx, src_x);
+  }
+  if (sv != TT_SV_NUMBER)
+    ththrow(("invalid X coordinate -- %s", src_x));
+
+  if ((this->cs != TTCS_LOCAL) && thcsdata_table[this->cs].dms) {
+    thparse_double_dms(sv, ty, src_y);
+    ty /= 180.0 / THPI;
+  } else {
+    thparse_double(sv, ty, src_y);
+  }
+  if (sv != TT_SV_NUMBER)
+    ththrow(("invalid Y coordinate -- %s", src_y));
+
+  if ((this->cs != TTCS_LOCAL) && thcsdata_table[this->cs].swap) {
+    tz = tx;
+    tx = ty;
+    ty = tz;
+    tz = 0.0;
+  }
+
+  if (!thcfg.outcs_def.is_valid()) {
+    if ((this->cs != TTCS_LOCAL) && (!thcsdata_table[this->cs].output)) {
+      // TODO: get NS
+      double dumx, dumy, dumz;
+      int south = 0;
+      thcs2cs(thcsdata_table[this->cs].params, thcsdata_table[TTCS_LAT_LONG].params, tx, ty, tz, dumx, dumy, dumz);
+      if (dumy < 0.0)
+        south = 1;
+      thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(thcsdata_table[this->cs].params, tx, ty, tz) - 1) + south;
+    } else {
+      thcfg.outcs = this->cs;
+    }
+    if (this->cs_source.is_valid())
+      thcfg.outcs_def = this->cs_source;
+    else
+      thcfg.outcs_def = this->source;
+    initcs = true;
+  }
+
+  if (this->cs == TTCS_LOCAL) {
+    dst_x = tx;
+    dst_y = ty;
+    dst_z = tz;
+  } else {
+    thcs2cs(thcsdata_table[this->cs].params, thcsdata_table[thcfg.outcs].params, tx, ty, tz, dst_x, dst_y, dst_z);
+  }
+
+  if (thcfg.outcs != TTCS_LOCAL) {
+    if (initcs) {
+      thcfg.outcs_sumx = dst_x;
+      thcfg.outcs_sumy = dst_y;
+      thcfg.outcs_sumz = dst_z;
+      thcfg.outcs_sumn = 1.0;
+    } else {
+      thcfg.outcs_sumx += dst_x;
+      thcfg.outcs_sumy += dst_y;
+      thcfg.outcs_sumz += dst_z;
+      thcfg.outcs_sumn += 1.0;
+    }
+  }
+  
+}
+
+
+void thdataobject::parse_attribute(char * name, char * value) {
+
+  int sv(0), at(0);
+  long lv(0);
+  double d(0.0);
+  // check name
+  if ((name == NULL) || (strlen(name) == 0))
+    ththrow(("epmty attribute name not allowed"))
+  if (name[0] == '_')
+    ththrow(("attribute name starting with '_' not allowed"))
+  if (!th_is_attr_name(name))
+    ththrow(("invalid characters in attribute name -- %s", name))
+
+  // check value type
+  at = THATTR_STRING;
+  if ((value != NULL) && (strlen(value) > 0)) {
+    thparse_double(sv, d, value);
+    if (sv == TT_SV_NUMBER) {
+      at = THATTR_DOUBLE;
+      lv = long(d);
+      if (double(lv) == d) {
+        at = THATTR_INTEGER;
+      }
+    }
+  }
+
+  // insert attribute
+  switch (at) {
+    case THATTR_INTEGER:
+      this->db->attr.insert_attribute(name, lv, long(this->id));
+      break;
+    case THATTR_DOUBLE:
+      this->db->attr.insert_attribute(name, d, long(this->id));
+      break;
+    case THATTR_STRING:
+      this->db->attr.insert_attribute(name, value, long(this->id));
+      break;
+  }
 }
 
 

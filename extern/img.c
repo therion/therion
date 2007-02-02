@@ -1,6 +1,6 @@
 /* img.c
  * Routines for reading and writing Survex ".3d" image files
- * Copyright (C) 1993-2003 Olly Betts
+ * Copyright (C) 1993-2004,2005,2006 Olly Betts
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
 #ifdef HAVE_CONFIG_H
@@ -26,8 +26,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
+#include <locale.h>
 
 #include "img.h"
+
+#define LATEST_IMG_VERSION 6
 
 #ifdef IMG_HOSTED
 # include "debug.h"
@@ -63,6 +66,10 @@
  */
 # define fputsnl(S, FH) do {fputs((S), (FH)); putc('\n', (FH));} while(0)
 # define SVX_ASSERT(X)
+
+# ifndef max
+# define max(a,b) ((a) < (b) ? (b) : (a))
+# endif
 
 static INT32_T
 get32(FILE *fh)
@@ -150,7 +157,7 @@ int my_strcasecmp(const char *s1, const char *s2) {
 }
 #endif
 
-unsigned int img_output_version = 3;
+unsigned int img_output_version = LATEST_IMG_VERSION;
 
 #ifdef IMG_HOSTED
 static enum {
@@ -176,6 +183,12 @@ static img_errcode img_errno = IMG_NONE;
 
 /* Attempt to string paste to ensure we are passed a literal string */
 #define LITLEN(S) (sizeof(S"") - 1)
+
+/* Fake "version numbers" for non-3d formats we can read. */
+#define VERSION_CMAP_SHOT	-4
+#define VERSION_CMAP_STATION	-3
+#define VERSION_COMPASS_PLT	-2
+#define VERSION_SURVEX_POS	-1
 
 static char *
 my_strdup(const char *str)
@@ -279,7 +292,7 @@ img_open_survey(const char *fnm, const char *survey)
       return NULL;
    }
 
-   pimg->fh = fopenWithPthAndExt("", fnm, EXT_SVX_3D, "rb", NULL);
+   pimg->fh = fopenWithPthAndExt("", fnm, EXT_SVX_3D, "rb", &(pimg->filename_opened));
    if (pimg->fh == NULL) {
       osfree(pimg->label_buf);
       osfree(pimg);
@@ -292,16 +305,22 @@ img_open_survey(const char *fnm, const char *survey)
 
    pimg->flags = 0;
 
-   /* for version 3 we use label_buf to store the prefix for reuse */
-   /* for version -2, 0 value indicates we haven't entered a survey yet */
-   /* for version -4, we store the last station here to detect whether
-    * we MOVE or LINE */
+   /* for version >= 3 we use label_buf to store the prefix for reuse */
+   /* for VERSION_COMPASS_PLT, 0 value indicates we haven't
+    * entered a survey yet */
+   /* for VERSION_CMAP_SHOT, we store the last station here
+    * to detect whether we MOVE or LINE */
    pimg->label_len = 0;
    pimg->label_buf[0] = '\0';
 
    pimg->survey = NULL;
    pimg->survey_len = 0;
    pimg->separator = '.';
+   pimg->date1 = 0;
+   pimg->date2 = 0;
+   pimg->is_extended_elevation = 0;
+
+   pimg->l = pimg->r = pimg->u = pimg->d = -1.0;
 
    pimg->title = pimg->datestamp = NULL;
    if (survey) {
@@ -332,17 +351,18 @@ img_open_survey(const char *fnm, const char *survey)
       pimg->survey_len = len;
    }
 
-   /* [version -2, -3, -4] pending IMG_LINE or IMG_MOVE - both have 4 added
-    * [version -1] already skipped heading line, or there wasn't one
+   /* [VERSION_COMPASS_PLT, VERSION_CMAP_STATION, VERSION_CMAP_SHOT] pending
+    * IMG_LINE or IMG_MOVE - both have 4 added.
+    * [VERSION_SURVEX_POS] already skipped heading line, or there wasn't one
     * [version 0] not in the middle of a 'LINE' command
-    * [version 3] not in the middle of turning a LINE into a MOVE
+    * [version >= 3] not in the middle of turning a LINE into a MOVE
     */
    pimg->pending = 0;
 
    len = strlen(fnm);
    if (has_ext(fnm, len, EXT_SVX_POS)) {
 pos_file:
-      pimg->version = -1;
+      pimg->version = VERSION_SURVEX_POS;
       if (!pimg->survey) pimg->title = baseleaf_from_fnm(fnm);
       pimg->datestamp = my_strdup(TIMENA);
       if (!pimg->datestamp) {
@@ -356,7 +376,7 @@ pos_file:
    if (has_ext(fnm, len, EXT_PLT) || has_ext(fnm, len, EXT_PLF)) {
       long fpos;
 plt_file:
-      pimg->version = -2;
+      pimg->version = VERSION_COMPASS_PLT;
       /* Spaces aren't legal in Compass station names, but dots are, so
        * use space as the level separator */
       pimg->separator = ' ';
@@ -429,7 +449,7 @@ plt_file:
       char *line;
 xyz_file:
       /* Spaces aren't legal in CMAP station names, but dots are, so
-       * use space as the level separator */
+       * use space as the level separator. */
       pimg->separator = ' ';
       line = getline_alloc(pimg->fh);
       if (!line) {
@@ -474,9 +494,9 @@ xyz_file:
 	 goto error;
       }
       if (line[1] == 'S') {
-	 pimg->version = -3; /* Station format */
+	 pimg->version = VERSION_CMAP_STATION;
       } else {
-	 pimg->version = -4; /* Shot format */
+	 pimg->version = VERSION_CMAP_SHOT;
       }
       osfree(line);
       line = getline_alloc(pimg->fh);
@@ -540,7 +560,7 @@ xyz_file:
       }
       /* nothing special to do */
    } else if (pimg->version == 0) {
-      if (ch < '2' || ch > '3' || getc(pimg->fh) != '\n') {
+      if (ch < '2' || ch > '0' + LATEST_IMG_VERSION || getc(pimg->fh) != '\n') {
 	 img_errno = IMG_TOONEW;
 	 goto error;
       }
@@ -568,6 +588,12 @@ v03d:
 
    pimg->start = ftell(pimg->fh);
 
+   len = strlen(pimg->title);
+   if (len > 11 && strcmp(pimg->title + len - 11, " (extended)") == 0) {
+       pimg->title[len - 11] = '\0';
+       pimg->is_extended_elevation = 1;
+   }
+
    return pimg;
 }
 
@@ -583,16 +609,17 @@ img_rewind(img *pimg)
       return 0;
    }
    clearerr(pimg->fh);
-   /* [version -1] already skipped heading line, or there wasn't one
+   /* [VERSION_SURVEX_POS] already skipped heading line, or there wasn't one
     * [version 0] not in the middle of a 'LINE' command
-    * [version 3] not in the middle of turning a LINE into a MOVE */
+    * [version >= 3] not in the middle of turning a LINE into a MOVE */
    pimg->pending = 0;
 
    img_errno = IMG_NONE;
 
-   /* for version 3 we use label_buf to store the prefix for reuse */
-   /* for version -2, 0 value indicates we haven't entered a survey yet */
-   /* for version -4, we store the last station here to detect whether
+   /* for version >= 3 we use label_buf to store the prefix for reuse */
+   /* for VERSION_COMPASS_PLT, 0 value indicates we haven't entered a survey
+    * yet */
+   /* for VERSION_CMAP_SHOT, we store the last station here to detect whether
     * we MOVE or LINE */
    pimg->label_len = 0;
    return 1;
@@ -639,7 +666,7 @@ img_open_write(const char *fnm, char *title_buf, bool fBinary)
       pimg->version = 1;
       fputs("Bv0.01\n", pimg->fh); /* binary file format version number */
    } else {
-      pimg->version = (img_output_version > 2) ? 3 : 2;
+      pimg->version = (img_output_version > LATEST_IMG_VERSION) ? LATEST_IMG_VERSION : img_output_version;
       fprintf(pimg->fh, "v%d\n", pimg->version); /* file format version no. */
    }
    fputsnl(title_buf, pimg->fh);
@@ -652,12 +679,33 @@ img_open_write(const char *fnm, char *title_buf, bool fBinary)
       strftime(date, 256, TIMEFMT, localtime(&tm));
       fputsnl(date, pimg->fh);
    }
+#if 0
+   if (img_output_version >= 5) {
+       static const unsigned char codelengths[32] = {
+	   4,  8,  8,  16, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+	   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+       };
+       fwrite(codelengths, 32, 1, pimg->fh);
+   }
+#endif
    pimg->fRead = fFalse; /* writing to this file */
    img_errno = IMG_NONE;
 
-   /* for version 3 we use label_buf to store the prefix for reuse */
+   /* for version >= 3 we use label_buf to store the prefix for reuse */
    pimg->label_buf[0] = '\0';
    pimg->label_len = 0;
+
+   pimg->date1 = 0;
+   pimg->date2 = 0;
+
+   pimg->olddate1 = 0;
+   pimg->olddate2 = 0;
+
+   pimg->l = pimg->r = pimg->u = pimg->d = -1.0;
+
+   pimg->n_legs = 0;
+   pimg->length = 0.0;
+   pimg->E = pimg->H = pimg->V = 0.0;
 
    /* Don't check for write errors now - let img_close() report them... */
    return pimg;
@@ -726,21 +774,73 @@ skip_coord(FILE *fh)
     return (fseek(fh, 12, SEEK_CUR) == 0);
 }
 
+static int
+read_v3label(img *pimg)
+{
+   char *q;
+   long len = getc(pimg->fh);
+   if (len == EOF) {
+      img_errno = feof(pimg->fh) ? IMG_BADFORMAT : IMG_READERROR;
+      return img_BAD;
+   }
+   if (len == 0xfe) {
+      len += get16(pimg->fh);
+      if (feof(pimg->fh)) {
+	 img_errno = IMG_BADFORMAT;
+	 return img_BAD;
+      }
+      if (ferror(pimg->fh)) {
+	 img_errno = IMG_READERROR;
+	 return img_BAD;
+      }
+   } else if (len == 0xff) {
+      len = get32(pimg->fh);
+      if (ferror(pimg->fh)) {
+	 img_errno = IMG_READERROR;
+	 return img_BAD;
+      }
+      if (feof(pimg->fh) || len < 0xfe + 0xffff) {
+	 img_errno = IMG_BADFORMAT;
+	 return img_BAD;
+      }
+   }
+
+   if (!check_label_space(pimg, pimg->label_len + len + 1)) {
+      img_errno = IMG_OUTOFMEMORY;
+      return img_BAD;
+   }
+   q = pimg->label_buf + pimg->label_len;
+   pimg->label_len += len;
+   if (len && fread(q, len, 1, pimg->fh) != 1) {
+      img_errno = feof(pimg->fh) ? IMG_BADFORMAT : IMG_READERROR;
+      return img_BAD;
+   }
+   q[len] = '\0';
+   return 0;
+}
+
+static int img_read_item_ascii(img *pimg, img_point *p);
+
 int
 img_read_item(img *pimg, img_point *p)
 {
    int result;
    pimg->flags = 0;
 
-   if (pimg->version == 3) {
+   if (pimg->version >= 3) {
       int opt;
+      pimg->l = pimg->r = pimg->u = pimg->d = -1.0;
+      if (pimg->pending == 256) {
+	 pimg->pending = 0;
+	 return img_XSECT_END;
+      }
       if (pimg->pending >= 0x80) {
 	 *p = pimg->mv;
 	 pimg->flags = (int)(pimg->pending) & 0x3f;
 	 pimg->pending = 0;
 	 return img_LINE;
       }
-      again3: /* label to goto if we get a prefix */
+      again3: /* label to goto if we get a prefix, date, or lrud */
       pimg->label = pimg->label_buf;
       opt = getc(pimg->fh);
       if (opt == EOF) {
@@ -757,12 +857,13 @@ img_read_item(img *pimg, img_point *p)
 	 if (opt < 15) {
 	    /* 1-14 mean trim that many levels from current prefix */
 	    int c;
-	    if (pimg->label_len <= 16) {
+	    if (pimg->label_len <= 17) {
 	       /* zero prefix using "0" */
 	       img_errno = IMG_BADFORMAT;
 	       return img_BAD;
 	    }
-	    c = pimg->label_len - 16 - 1;
+	    /* extra - 1 because label_len points to one past the end */
+	    c = pimg->label_len - 17 - 1;
 	    while (pimg->label_buf[c] != '.' || --opt > 0) {
 	       if (--c < 0) {
 		  /* zero prefix using "0" */
@@ -778,6 +879,61 @@ img_read_item(img *pimg, img_point *p)
 	    result = img_MOVE;
 	    break;
 	 }
+	 if (opt >= 0x20) {
+	     switch (opt) {
+		 case 0x20: /* Single date */
+		     pimg->date1 = get32(pimg->fh);
+		     pimg->date2 = pimg->date1;
+		     break;
+		 case 0x21: /* Date range */
+		     pimg->date1 = get32(pimg->fh);
+		     pimg->date2 = get32(pimg->fh);
+		     break;
+		 case 0x22: /* Error info */
+		     pimg->n_legs = get32(pimg->fh);
+		     pimg->length = get32(pimg->fh) / 100.0;
+		     pimg->E = get32(pimg->fh) / 100.0;
+		     pimg->H = get32(pimg->fh) / 100.0;
+		     pimg->V = get32(pimg->fh) / 100.0;
+		     return img_ERROR_INFO;
+		 case 0x30: case 0x31: /* LRUD */
+		 case 0x32: case 0x33: /* Big LRUD! */
+		     if (read_v3label(pimg) == img_BAD) return img_BAD;
+		     pimg->flags = (int)opt & 0x01;
+		     if (opt < 0x32) {
+			 pimg->l = get16(pimg->fh) / 100.0;
+			 pimg->r = get16(pimg->fh) / 100.0;
+			 pimg->u = get16(pimg->fh) / 100.0;
+			 pimg->d = get16(pimg->fh) / 100.0;
+		     } else {
+			 pimg->l = get32(pimg->fh) / 100.0;
+			 pimg->r = get32(pimg->fh) / 100.0;
+			 pimg->u = get32(pimg->fh) / 100.0;
+			 pimg->d = get32(pimg->fh) / 100.0;
+		     }
+		     if (pimg->survey_len) {
+			 size_t l = pimg->survey_len;
+			 const char *s = pimg->label_buf;
+			 if (strncmp(pimg->survey, s, l + 1) != 0) {
+			     return img_XSECT_END;
+			 }
+			 pimg->label += l;
+			 /* skip the dot if there */
+			 if (*pimg->label) pimg->label++;
+		     }
+		     /* If this is the last cross-section in this passage, set
+		      * pending so we return img_XSECT_END next time. */
+		     if (pimg->flags & 0x01) {
+			 pimg->pending = 256;
+			 pimg->flags &= ~0x01;
+		     }
+		     return img_XSECT;
+		 default: /* 0x23 - 0x2f and 0x34 - 0x3f are currently unallocated. */
+		     img_errno = IMG_BADFORMAT;
+		     return img_BAD;
+	     }
+	     goto again3;
+	 }
 	 /* 16-31 mean remove (n - 15) characters from the prefix */
 	 /* zero prefix using 0 */
 	 if (pimg->label_len <= (size_t)(opt - 15)) {
@@ -786,72 +942,46 @@ img_read_item(img *pimg, img_point *p)
 	 }
 	 pimg->label_len -= (opt - 15);
 	 goto again3;
-       case 1: case 2: {
-	 char *q;
-	 long len = getc(pimg->fh);
-	 if (len == EOF) {
-	    img_errno = feof(pimg->fh) ? IMG_BADFORMAT : IMG_READERROR;
-	    return img_BAD;
-	 }
-	 if (len == 0xfe) {
-	    len += get16(pimg->fh);
-	    if (feof(pimg->fh)) {
-	       img_errno = IMG_BADFORMAT;
-	       return img_BAD;
-	    }
-	    if (ferror(pimg->fh)) {
-	       img_errno = IMG_READERROR;
-	       return img_BAD;
-	    }
-	 } else if (len == 0xff) {
-	    len = get32(pimg->fh);
-	    if (ferror(pimg->fh)) {
-	       img_errno = IMG_READERROR;
-	       return img_BAD;
-	    }
-	    if (feof(pimg->fh) || len < 0xfe + 0xffff) {
-	       img_errno = IMG_BADFORMAT;
-	       return img_BAD;
-	    }
-	 }
+       case 1:
+	 if (read_v3label(pimg) == img_BAD) return img_BAD;
 
-	 if (!check_label_space(pimg, pimg->label_len + len + 1)) {
-	    img_errno = IMG_OUTOFMEMORY;
-	    return img_BAD;
-	 }
-	 q = pimg->label_buf + pimg->label_len;
-	 pimg->label_len += len;
-	 if (len && fread(q, len, 1, pimg->fh) != 1) {
-	    img_errno = feof(pimg->fh) ? IMG_BADFORMAT : IMG_READERROR;
-	    return img_BAD;
-	 }
-	 q[len] = '\0';
-
-	 result = opt & 0x40 ? img_LABEL : img_LINE;
+	 result = img_LABEL;
 
 	 if (pimg->survey_len) {
 	    size_t l = pimg->survey_len;
 	    const char *s = pimg->label_buf;
-	    if (result == img_LINE) {
-	       if (strncmp(pimg->survey, s, l) != 0 ||
-		   !(s[l] == '.' || s[l] == '\0')) {
-		  if (!read_coord(pimg->fh, &(pimg->mv))) return img_BAD;
-		  pimg->pending = 15;
-		  goto again3;
-	       }
-	    } else {
-	       if (strncmp(pimg->survey, s, l + 1) != 0) {
-		  if (!skip_coord(pimg->fh)) return img_BAD;
-		  pimg->pending = 0;
-		  goto again3;
-	       }
+	    if (strncmp(pimg->survey, s, l + 1) != 0) {
+	       if (!skip_coord(pimg->fh)) return img_BAD;
+	       pimg->pending = 0;
+	       goto again3;
 	    }
 	    pimg->label += l;
 	    /* skip the dot if there */
 	    if (*pimg->label) pimg->label++;
 	 }
 
-	 if (result == img_LINE && pimg->pending) {
+	 pimg->flags = (int)opt & 0x3f;
+	 break;
+       case 2:
+	 if (read_v3label(pimg) == img_BAD) return img_BAD;
+
+	 result = img_LINE;
+
+	 if (pimg->survey_len) {
+	    size_t l = pimg->survey_len;
+	    const char *s = pimg->label_buf;
+	    if (strncmp(pimg->survey, s, l) != 0 ||
+		!(s[l] == '.' || s[l] == '\0')) {
+	       if (!read_coord(pimg->fh, &(pimg->mv))) return img_BAD;
+	       pimg->pending = 15;
+	       goto again3;
+	    }
+	    pimg->label += l;
+	    /* skip the dot if there */
+	    if (*pimg->label) pimg->label++;
+	 }
+
+	 if (pimg->pending) {
 	    *p = pimg->mv;
 	    if (!read_coord(pimg->fh, &(pimg->mv))) return img_BAD;
 	    pimg->pending = opt;
@@ -859,7 +989,6 @@ img_read_item(img *pimg, img_point *p)
 	 }
 	 pimg->flags = (int)opt & 0x3f;
 	 break;
-       }
        default:
 	 img_errno = IMG_BADFORMAT;
 	 return img_BAD;
@@ -1039,7 +1168,25 @@ img_read_item(img *pimg, img_point *p)
       }
 
       return result;
-   } else if (pimg->version == 0) {
+   } else {
+      /* We need to set the default locale for fscanf() to work on
+       * numbers with "." as decimal point. */
+      char * current_locale = my_strdup(setlocale(LC_NUMERIC, NULL));
+      setlocale(LC_NUMERIC, "C");
+      result = img_read_item_ascii(pimg, p);
+      setlocale(LC_NUMERIC, current_locale);
+      free(current_locale);
+      return result;
+   }
+}
+
+/* Handle all for ASCII formats so we can easily fix up the locale
+ * so fscanf(), etc work on numbers with "." as decimal point. */
+static int
+img_read_item_ascii(img *pimg, img_point *p)
+{
+   int result;
+   if (pimg->version == 0) {
       ascii_again:
       pimg->label[0] = '\0';
       if (feof(pimg->fh)) return img_STOP;
@@ -1087,6 +1234,8 @@ img_read_item(img *pimg, img_point *p)
 	    pimg->label = pimg->label_buf;
 	    if (pimg->label[0] == '\\') pimg->label++;
 
+	    pimg->flags = img_SFLAG_UNDERGROUND; /* default flags */
+
 	    result = img_LABEL;
 	 } else {
 	    img_errno = IMG_BADFORMAT;
@@ -1106,8 +1255,8 @@ img_read_item(img *pimg, img_point *p)
       }
 
       return result;
-   } else if (pimg->version == -1) {
-      /* version -1: .pos file */
+   } else if (pimg->version == VERSION_SURVEX_POS) {
+      /* Survex .pos file */
       size_t off;
       pimg->flags = img_SFLAG_UNDERGROUND; /* default flags */
       againpos:
@@ -1159,8 +1308,8 @@ img_read_item(img *pimg, img_point *p)
       }
 
       return img_LABEL;
-   } else if (pimg->version == -2) {
-      /* version -2: Compass .plt file */
+   } else if (pimg->version == VERSION_COMPASS_PLT) {
+      /* Compass .plt file */
       if (pimg->pending > 0) {
 	 /* -1 signals we've entered the first survey we want to
 	  * read, and need to fudge lots if the first action is 'D'...
@@ -1242,7 +1391,7 @@ skip_to_N:
 		  img_errno = IMG_OUTOFMEMORY;
 		  return img_BAD;
 	       }
-	       /* Compass store coordinates as North, East, Up = (y,x,z)! */
+	       /* Compass stores coordinates as North, East, Up = (y,x,z)! */
 	       if (sscanf(line, "%lf%lf%lf", &p->y, &p->x, &p->z) != 3) {
 		  osfree(line);
 		  if (ferror(pimg->fh)) {
@@ -1277,6 +1426,31 @@ skip_to_N:
 	       } else {
 		   memcpy(pimg->label, q, len - 1);
 	       }
+	       q += len - 1;
+	       /* Now read LRUD.  Technically, this is optional but virtually
+		* all PLT files have it (with dummy negative values if no LRUD
+		* was measured) and some versions of Compass can't read PLT
+		* files without it!
+		*/
+	       while (*q && *q <= ' ') q++;
+	       if (*q == 'P') {
+		   if (sscanf(q + 1, "%lf%lf%lf%lf",
+			      &pimg->l, &pimg->r, &pimg->u, &pimg->d) != 4) {
+		       osfree(line);
+		       if (ferror(pimg->fh)) {
+			   img_errno = IMG_READERROR;
+		       } else {
+			   img_errno = IMG_BADFORMAT;
+		       }
+		       return img_BAD;
+		   }
+		   pimg->l *= METRES_PER_FOOT;
+		   pimg->r *= METRES_PER_FOOT;
+		   pimg->u *= METRES_PER_FOOT;
+		   pimg->d *= METRES_PER_FOOT;
+	       } else {
+		   pimg->l = pimg->r = pimg->u = pimg->d = -1;
+	       }
 	       osfree(line);
 	       pimg->flags = img_SFLAG_UNDERGROUND; /* default flags */
 	       if (fpos != -1) {
@@ -1292,7 +1466,7 @@ skip_to_N:
 	 }
       }
    } else {
-      /* version -3 or -4: CMAP .xyz file */
+      /* CMAP .xyz file */
       char *line = NULL;
       char *q;
       size_t len;
@@ -1311,7 +1485,7 @@ skip_to_N:
 	    pimg->pending = img_STOP + 4;
 	    return img_MOVE;
 	 }
-	
+
 	 pimg->pending = 0;
 
 	 if (r == img_STOP) {
@@ -1319,7 +1493,7 @@ skip_to_N:
 	    read_xyz_shot_coords(p, pimg->label_buf + 16);
 	    return img_LINE;
 	 }
-	 
+
 	 return r;
       }
 
@@ -1336,7 +1510,7 @@ skip_to_N:
       if (line[0] == '\x1a') return img_STOP;
 
       len = strlen(line);
-      if (pimg->version == -3) {
+      if (pimg->version == VERSION_CMAP_STATION) {
 	 /* station variant */
 	 if (len < 37) {
 	    osfree(line);
@@ -1349,7 +1523,7 @@ skip_to_N:
 	 *q = '\0';
 
 	 read_xyz_station_coords(p, line);
- 
+
 	 /* FIXME: look at prev for lines (line + 32, 5) */
 	 /* FIXME: duplicate stations... */
 	 return img_LABEL;
@@ -1361,16 +1535,16 @@ skip_to_N:
 	    img_errno = IMG_BADFORMAT;
 	    return img_BAD;
 	 }
- 
+
 	 memcpy(old, line, 7);
 	 q = memchr(old, ' ', 7);
 	 if (!q) q = old + 7;
-	 *q = '\0'; 
+	 *q = '\0';
 
 	 memcpy(new, line + 7, 7);
 	 q = memchr(new, ' ', 7);
 	 if (!q) q = new + 7;
-	 *q = '\0'; 
+	 *q = '\0';
 
 	 pimg->flags = img_SFLAG_UNDERGROUND;
 
@@ -1381,7 +1555,7 @@ skip_to_N:
 	    osfree(line);
 	    return img_LABEL;
 	 }
- 
+
 	 if (strcmp(old, pimg->label) == 0) {
 	    pimg->pending = img_LINE + 4;
 	    read_xyz_shot_coords(p, line);
@@ -1389,7 +1563,7 @@ skip_to_N:
 	    osfree(line);
 	    return img_LABEL;
 	 }
-	 
+
 	 pimg->pending = img_LABEL + 4;
 	 read_xyz_shot_coords(p, line);
 	 strcpy(pimg->label, new);
@@ -1458,22 +1632,75 @@ write_v3label(img *pimg, int opt, const char *s)
    return !ferror(pimg->fh);
 }
 
+static void
+img_write_item_date(img *pimg)
+{
+    if (pimg->date1 != pimg->olddate1 ||
+	    pimg->date2 != pimg->olddate2) {
+	/* Only write dates when they've changed. */
+	if (pimg->date1 == pimg->date2) {
+	    putc(0x20, pimg->fh);
+	    put32(pimg->date1, pimg->fh);
+	} else {
+	    putc(0x21, pimg->fh);
+	    put32(pimg->date1, pimg->fh);
+	    put32(pimg->date2, pimg->fh);
+	}
+	pimg->olddate1 = pimg->date1;
+	pimg->olddate2 = pimg->date2;
+    }
+}
+
 void
 img_write_item(img *pimg, int code, int flags, const char *s,
 	       double x, double y, double z)
 {
    if (!pimg) return;
-   if (pimg->version == 3) {
+   if (pimg->version >= 3) {
       int opt = 0;
       switch (code) {
        case img_LABEL:
 	 write_v3label(pimg, 0x40 | flags, s);
 	 opt = 0;
 	 break;
+       case img_XSECT: {
+	 INT32_T l, r, u, d, max_dim;
+	 /* Need at least version 5 for img_XSECT. */
+	 if (pimg->version < 5) break;
+	 img_write_item_date(pimg);
+	 l = (INT32_T)my_round(pimg->l * 100.0);
+	 r = (INT32_T)my_round(pimg->r * 100.0);
+	 u = (INT32_T)my_round(pimg->u * 100.0);
+	 d = (INT32_T)my_round(pimg->d * 100.0);
+	 if (l < 0) l = -1;
+	 if (r < 0) r = -1;
+	 if (u < 0) u = -1;
+	 if (d < 0) d = -1;
+	 max_dim = max(max(l, r), max(u, d));
+	 flags &= 1;
+	 if (max_dim >= 32768) flags |= 2;
+	 write_v3label(pimg, 0x30 | flags, s);
+	 if (flags & 2) {
+	    /* Big passage!  Need to use 4 bytes. */
+	    put32(l, pimg->fh);
+	    put32(r, pimg->fh);
+	    put32(u, pimg->fh);
+	    put32(d, pimg->fh);
+	 } else {
+	    put16(l, pimg->fh);
+	    put16(r, pimg->fh);
+	    put16(u, pimg->fh);
+	    put16(d, pimg->fh);
+	 }
+	 return;
+       }
        case img_MOVE:
 	 opt = 15;
 	 break;
        case img_LINE:
+	 if (pimg->version >= 4) {
+	     img_write_item_date(pimg);
+	 }
 	 write_v3label(pimg, 0x80 | flags, s ? s : "");
 	 opt = 0;
 	 break;
@@ -1538,6 +1765,25 @@ img_write_item(img *pimg, int code, int flags, const char *s,
    }
 }
 
+/* Write error information for the current traverse
+ * n_legs is the number of legs in the traverse
+ * length is the traverse length (in m)
+ * E is the ratio of the observed misclosure to the theoretical one
+ * H is the ratio of the observed horizontal misclosure to the theoretical one
+ * V is the ratio of the observed vertical misclosure to the theoretical one
+ */
+void
+img_write_errors(img *pimg, int n_legs, double length,
+		 double E, double H, double V)
+{
+    putc(0x22, pimg->fh);
+    put32(n_legs, pimg->fh);
+    put32((INT32_T)my_round(length * 100.0), pimg->fh);
+    put32((INT32_T)my_round(E * 100.0), pimg->fh);
+    put32((INT32_T)my_round(H * 100.0), pimg->fh);
+    put32((INT32_T)my_round(V * 100.0), pimg->fh);
+}
+
 int
 img_close(img *pimg)
 {
@@ -1557,7 +1803,7 @@ img_close(img *pimg)
 	     case 2:
 	       putc(0, pimg->fh);
 	       break;
-	     case 3:
+	     default:
 	       if (pimg->label_len) putc(0, pimg->fh);
 	       putc(0, pimg->fh);
 	       break;

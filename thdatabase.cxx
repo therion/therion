@@ -48,7 +48,6 @@
 #include "thimport.h"
 #include "thsurface.h"
 #include "thendscrap.h"
-#include "thsketch.h"
 
 
 const char * thlibrarydata_init_text =
@@ -102,7 +101,7 @@ bool operator < (const class threvision & r1, const class threvision & r2)
 
 void thdatabase::reset_context()
 {
-  this->ccontext = THCTX_NONE;
+  this->ccontext = THCTX_SURVEY;
   this->objid = 0;
   this->nscraps = 0;
   
@@ -145,6 +144,12 @@ void thdatabase::clear()
   
   // reset other variables
   this->reset_context();
+
+  // create top level survey
+  thsurvey * top = (thsurvey*) this->create("survey",thobjectsrc("error",0));
+  top->name = "";
+  this->insert(top);
+
 }
 
 void thdatabase::check_context(class thdataobject * optr) {
@@ -178,7 +183,8 @@ void thdatabase::insert(thdataobject * optr)
   th2ddataobject * th2ddo_optr;
   char * optr_name;
   int optr_class_id;
-  unsigned long csurvey_id = (this->csurveyptr == NULL) ? 0 : csurveyptr->id;
+  unsigned long csurvey_id = (this->csurveyptr == NULL) ? 0 : csurveyptr->get_nss()->id;
+
   
   // Call start_insert object method.
   optr->start_insert();
@@ -224,16 +230,22 @@ void thdatabase::insert(thdataobject * optr)
           ththrow(("survey - endsurvey names don't match -- %s - %s",
             csurveyptr->name, optr->name))
       }
-      // whether csurvey is not the first one
-      if (csurveyptr->fsptr == NULL) {
-        this->lcsobjectptr = csurveyptr;
-        this->ccontext = THCTX_NONE;
-        this->csurveyptr = NULL;
+
+      if ((optr->get_class_id() == TT_ENDSURVEY_CMD) && (this->fsurveyptr->id == this->csurveyptr->id)) {
+        optr->self_delete();
+        ththrow(("missing survey before endsurvey command"));
       }
-      else {
+
+      // whether csurvey is not the first one
+      //if (csurveyptr->fsptr->id == this->fsurveyptr->id) {
+      //  this->lcsobjectptr = csurveyptr;
+      //  this->ccontext = THCTX_NONE;
+      //  this->csurveyptr = NULL;
+      //}
+      //else {
         this->csurveyptr = csurveyptr->fsptr;
         this->lcsobjectptr = csurveyptr->loptr;
-      }
+      //}
       this->csurveylevel--;
       optr->self_delete();
       this->csrc.context = csurveyptr;
@@ -302,14 +314,15 @@ void thdatabase::insert(thdataobject * optr)
           
           if (this->fsurveyptr == NULL) {
             this->fsurveyptr = survey_optr;
+            this->csurveyptr = survey_optr;
           }
           
-          if (this->csurveyptr == NULL) {
-            this->ccontext = THCTX_SURVEY;
+          //if (this->csurveyptr == NULL) {
+          if (this->csurveyptr->id == this->fsurveyptr->id) {
+            //this->ccontext = THCTX_SURVEY;
             survey_optr->full_name = survey_optr->name;
             survey_optr->reverse_full_name = survey_optr->name;
-          }
-          else {
+          } else {
             this->buff_tmp.strcpy(survey_optr->name);
             this->buff_tmp.strcat(".");
             this->buff_tmp.strcat(this->csurveyptr->full_name);
@@ -362,18 +375,22 @@ thsurvey * thdatabase::get_survey_noexc(char * sn, thsurvey * ps)
   
   if (sn != NULL) {
     this->buff_tmp.strcpy(sn);
-    if (ps != NULL) {
+    if ((ps != NULL) && (ps->id != this->fsurveyptr->id)) {
       this->buff_tmp.strcat(".");
       this->buff_tmp.strcat(ps->full_name);
     }
     si = this->survey_map.find(thsurveyname(this->buff_tmp.get_buffer()));
     if (si != this->survey_map.end())
-      return si->second;
+      return si->second->get_nss();
     else
       return NULL;
   }
-  else
-    return ps;
+  else {
+    if (ps == NULL)
+      return this->fsurveyptr;
+    else
+      return ps->get_nss();
+  }
 }
 
 
@@ -391,6 +408,9 @@ thdataobject * thdatabase::get_object(thobjectname on, thsurvey * ps)
 {
   unsigned long csurvey_id = this->get_survey_id(on.survey, ps);
   thdb_object_map_type::iterator oi;
+  
+  if (on.name == NULL)
+    return this->get_survey(on.survey, ps);
   
   oi = this->object_map.find(thobjectid(on.name,csurvey_id));
   if (oi == this->object_map.end())
@@ -481,10 +501,6 @@ class thdataobject * thdatabase::create(char * oclass,
       ret = new thsurface;
       break;
       
-    case TT_SKETCH_CMD:
-      ret = new thsketch;
-      break;
-      
     default:
       ret = NULL;
   }
@@ -493,6 +509,7 @@ class thdataobject * thdatabase::create(char * oclass,
     ret->assigndb(this);
     // set object id and mark revision
     ret->id = ++this->objid;
+    this->attr.insert_object((void *) ret, (long) ret->id);
 		ret->source = osrc;
     this->revision_set.insert(threvision(ret->id, 0, osrc));
   }
@@ -541,12 +558,12 @@ char * thdatabase::strstore(char * src, bool use_dic)
 
 void thdatabase::end_insert()
 {
-  if (this->ccontext != THCTX_NONE) {
+  if (this->csurveyptr->id != this->fsurveyptr->id) {
     thdb_revision_set_type::iterator ii = 
         this->revision_set.find(threvision(this->csurveyptr->id, 0));
     therror(("%s [%d] -- incomplete survey - endsurvey pair -- %s",
       ii->srcf.name, ii->srcf.line, this->csurveyptr->full_name))
-    }
+  }
 }
 
 

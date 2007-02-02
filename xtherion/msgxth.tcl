@@ -872,7 +872,7 @@
   ::msgcat::mcset sk "Press this button to apply your changes to current scrap." [encoding convertfrom utf-8 "Stla\304\215te tento gomb\303\255k, aby sa va\305\241e zmeny v scrape ulo\305\276ili."]
 
   ::msgcat::mcset cz "picture scale points" [encoding convertfrom utf-8 "body m\304\233\305\231\303\255tka (obr\303\241zek)"]
-  ::msgcat::mcset en "picture scale points" [encoding convertfrom utf-8 "picture scale points pixels)"]
+  ::msgcat::mcset en "picture scale points" [encoding convertfrom utf-8 "picture scale points (pixels)"]
   ::msgcat::mcset es "picture scale points" [encoding convertfrom utf-8 "puntos de escala (pixels)"]
   ::msgcat::mcset it "picture scale points" [encoding convertfrom utf-8 "punti nella scala del disegno"]
   ::msgcat::mcset sk "picture scale points" [encoding convertfrom utf-8 "kalibra\304\215n\303\251 body (obrazovka)"]
@@ -2004,14 +2004,14 @@
   ::msgcat::mcset sk "Check if search should be case sensitive." [encoding convertfrom utf-8 "Za\305\241krtnite pokia\304\276 pri h\304\276adan\303\255 chcete rozli\305\241ova\305\245 mal\303\251 a ve\304\276k\303\251 p\303\255smen\303\241."]
 
   ::msgcat::mcset cz "regular expressions" [encoding convertfrom utf-8 "regul\303\241rn\303\255 v\303\275razy"]
-  ::msgcat::mcset en "regular expressions" [encoding convertfrom utf-8 "regular expressions (cav*)"]
-  ::msgcat::mcset es "regular expressions" [encoding convertfrom utf-8 "patr\303\263n regular (kob*)"]
+  ::msgcat::mcset en "regular expressions" [encoding convertfrom utf-8 "regular expressions"]
+  ::msgcat::mcset es "regular expressions" [encoding convertfrom utf-8 "patr\303\263n regular"]
   ::msgcat::mcset it "regular expressions" [encoding convertfrom utf-8 "esperssioni regolari"]
   ::msgcat::mcset sk "regular expressions" [encoding convertfrom utf-8 "regul\303\241rny v\303\275raz"]
 
   ::msgcat::mcset cz "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "Za\305\241krtn\304\233te pokud chcete vyhled\303\241vat nebo nahrazovat pomoc\303\255 regul\303\241rn\303\255ch v\303\275raz\305\257."]
-  ::msgcat::mcset en "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "Check wether to search using wildcards (cav* will find cave, cavern, cavalier...)"]
-  ::msgcat::mcset es "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "B\303\272squeda usando comodines (kob* encontrar\303\241 koba, kobea, kobie, etc)."]
+  ::msgcat::mcset en "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "Check whether to search using regular expressions."]
+  ::msgcat::mcset es "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "B\303\272squeda usando comodines."]
   ::msgcat::mcset it "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "Attiva per ricerca e sostituzione con espressioni regolari."]
   ::msgcat::mcset sk "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "Za\305\241krtnite ak sa m\303\241 h\304\276adanie a nahradenie vykon\303\241va\305\245 v m\303\263de regul\303\241rnych v\303\275razov."]
 

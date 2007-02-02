@@ -52,11 +52,14 @@ struct thsst {
 
 thimport::thimport()
 {
-  // replace this by setting real properties initialization
   this->format = 0;
   this->fname = NULL;
   this->surveys = TT_IMPORT_SURVEYS_CREATE;
   this->filter = NULL;
+
+  this->calib_x = 0.0;
+  this->calib_y = 0.0;
+  this->calib_z = 0.0;
 }
 
 
@@ -131,6 +134,10 @@ void thimport::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (this->format == TT_IMPORT_FMT_UNKNOWN)
         ththrow(("unknown import format -- %s", args[0]))
       break;
+
+    case TT_IMPORT_CALIB:
+      this->parse_calib(args[0], argenc);
+      break;
     
     case TT_IMPORT_SURVEYS:
       this->surveys = thmatch_token(args[0], thtt_import_surveys);
@@ -179,7 +186,7 @@ void thimport::set_file_name(char * fnm)
   impf_path += "/";
   impf_path += thdb.csrc.name;
   char * pp = impf_path.get_buffer();
-  for(i = strlen(pp); i >= 0; i--) {
+  for(i = (long)strlen(pp); i >= 0; i--) {
     if ((pp[i] == '/') || (pp[i] == '\\')) {
       break;
     } else
@@ -189,7 +196,7 @@ void thimport::set_file_name(char * fnm)
     impf_path = "/";
   impf_path += fnm;
   pp = impf_path.get_buffer();
-  for(i = strlen(pp); i >= 0; i--) {
+  for(i = (long)strlen(pp); i >= 0; i--) {
     if (pp[i] == '\\')
       pp[i] = '/';
   }
@@ -372,7 +379,7 @@ const char * thimport::station_name(const char * sn, const char separator, struc
       }
       break;      
     default:
-      l = strlen(bx);
+      l = (long)strlen(bx);
       rv = buff;
       for(i = 0; i < l; i++) {
         if ((buff[i] == separator) && ((i + 1) < l)) {
@@ -495,9 +502,9 @@ void thimport::import_file_img()
         if (strlen(stnm) < 1)
           break;
         if (svxs2ths.find(orig_name) == svxs2ths.end()) {
-          sprintf(xb.get_buffer(), "%.16g", imgpt.x);
-          sprintf(yb.get_buffer(), "%.16g", imgpt.y);
-          sprintf(zb.get_buffer(), "%.16g", imgpt.z);
+          sprintf(xb.get_buffer(), "%.16g", imgpt.x + this->calib_x);
+          sprintf(yb.get_buffer(), "%.16g", imgpt.y + this->calib_y);
+          sprintf(zb.get_buffer(), "%.16g", imgpt.z + this->calib_z);
           tmpsurvey = this->db->csurveyptr;
           new_name = this->station_name(stnm, pimg->separator, &tmpsst);
           // thprintf("%s -> %s\n", pimg->label, new_name.c_str());
@@ -528,6 +535,7 @@ void thimport::import_file_img()
           args[2] = yb.get_buffer();
           args[3] = zb.get_buffer();
           args[0] = n1.get_buffer();
+          tmpdata->cs = this->cs;
           tmpdata->set_data_fix(4, args);
           // ak bude entrance, vlozi aj station
           if ((pimg->flags & img_SFLAG_ENTRANCE) != 0) {
@@ -668,6 +676,29 @@ void thimport::import_file_img()
   }
 
 }
+
+
+void thimport::parse_calib(char * spec, int enc)
+{
+  thmbuffer * mb;
+  char ** args;
+  mb = &this->db->mbuff_tmp;
+  thsplit_args(mb, spec);
+  args = mb->get_buffer();
+  double v[6];
+  int sv, i;
+  if (mb->get_size() != 6)
+    ththrow(("invalid import calibration -- \"%s\"", spec));
+  for(i = 0; i < 6; i++) {
+    thparse_double(sv, v[i], args[i]);
+    if (sv != TT_SV_NUMBER)
+      ththrow(("invalid number -- %s", args[i]))
+  }
+  this->calib_x = v[3] - v[0];
+  this->calib_y = v[4] - v[1];
+  this->calib_z = v[5] - v[2];
+}
+
 
 
 

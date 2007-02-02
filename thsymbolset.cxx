@@ -154,7 +154,7 @@ static const thstok thtt_symbol_group[] = {
   {"centerline", SYMX_CENTERLINE},
   {"centreline", SYMX_CENTERLINE},
   {"sections", SYMX_SECTIONS},
-  {"surface-centreline", SYMX_SURFACECENTERLINE},
+  {"surface-centerline", SYMX_SURFACECENTERLINE},
   {"surface-centreline", SYMX_SURFACECENTERLINE},
   {NULL, SYMX_}
 };
@@ -196,7 +196,7 @@ int thsymbolset__get_id(char * symclass, char * symbol)
     subtypes[128];
   types[127] = 0;
   subtypes[127] = 0;
-  int ci = 0, slen = strlen(symbol);
+  int ci = 0, slen = (int)strlen(symbol);
   while((ci < slen) && (symbol[ci] != ':')) ci++;
   if (symbol[ci] == ':') {
     strncpy(&(types[0]),symbol,ci);

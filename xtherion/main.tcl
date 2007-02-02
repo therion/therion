@@ -30,12 +30,7 @@ xth_app_clock
 
 encoding system $xth(app,sencoding)
 set xth(encoding_system) [encoding system]
-if {[string length $xth(about,nvr)] > 0} {
-  xth_about_status $xth(prj,title)
-  after $xth(about,infotime) xth_about_hide
-} else {
-  xth_about_hide
-}
+xth_about_hide
 
 wm deiconify $xth(gui,main)
 xth_app_normalize
@@ -68,16 +63,10 @@ foreach fname $argv {
     xth_app_show me
     update idletasks
     xth_me_open_file 0 $fname 1
-  } elseif {[regexp -nocase {\.thm$} $fname]} {
-    if {[string length $xthmvw] > 0} {
-      xth_app_show mv
-      update idletasks
-      xth_mv_open_file $fname
-    }
   } else {
     xth_app_show te
     update idletasks
-    xth_te_open_file 0 $fname 1
+    xth_te_open_file 0 $fname 0
   }
 }
 

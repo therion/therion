@@ -29,11 +29,14 @@
 #ifndef thconfig_h
 #define thconfig_h
 
+#include <list>
+
 #include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thinput.h"
 #include "thexporter.h"
 #include "thselector.h"
+#include "thobjectsrc.h"
 
 /**
  * What to do with configuration file?
@@ -43,6 +46,17 @@ typedef enum {THCFG_GENERATE,  ///< Generate config file.
   THCFG_UPDATE,  ///< Update config file.
   THCFG_READ  ///< Read only config file.
   } thcfg_fstate;
+
+
+struct thconfig_src {
+  char * fname;
+  long startln, endln;
+  thconfig_src() : fname(""), startln(-1), endln(-1) {}
+};
+
+
+typedef std::list<thconfig_src> thconfig_src_list;
+
 
 
 /**
@@ -74,14 +88,19 @@ class thconfig {
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.
   int cfg_fenc;  ///< Configuration file encoding.
+
+  int outcs;  ///< Output coordinate system.
+  int sketch_warp;  ///< Sketch warping method.
+  thobjectsrc outcs_def;  ///< Where output coordinate system is defined.
+  double outcs_sumx, outcs_sumy, outcs_sumz, outcs_sumn;
   
+  thconfig_src_list src;
+
   double tmp3dSMP, tmp3dWALLSMP, tmp3dMAXDIMD;
 
   class thdatabase * dbptr;  ///< Associated db.
   thexporter exporter;  ///< Data exporter.
   thselector selector;  ///< Database selector.
-
-  public:
 
   /**
    * Standard constructor.
@@ -115,14 +134,14 @@ class thconfig {
    * Set input file name.
    */
   
-  void set_source_file_name(char * fn);
+  void append_source(char * fname, long startln = -1, long endln = -1);
   
   
   /**
    * Retrieve input file name.
    */
    
-  thmbuffer * get_source_file_names();
+  thconfig_src_list * get_sources();
   
   
   /**
@@ -223,8 +242,20 @@ class thconfig {
    */
    
   thinput * get_cfg_file() {return &(this->cfg_file);}
-   
   
+
+  /**
+   * Return output coordinate system meridian convergence.
+   */
+  
+  double get_outcs_convergence();
+
+  bool get_outcs_center(double & x, double & y, double & z);
+
+  bool get_outcs_mag_decl(double year, double & decl);
+
+  void log_outcs(double decsyear, double deceyear);
+
 };
 
 

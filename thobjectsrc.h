@@ -57,7 +57,11 @@ class thobjectsrc {
    */
   
   thobjectsrc(char * n, unsigned long ln) : name(n), line(ln), context(NULL) {}
-    
+
+
+  bool is_valid();
+
+
 };
 
 #endif

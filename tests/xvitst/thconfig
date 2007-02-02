@@ -1,0 +1,4 @@
+encoding  utf-8
+source test.th
+export map -fmt xvi -layout-sketches on
+export map -layout-sketches on

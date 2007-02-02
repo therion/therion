@@ -25,7 +25,12 @@
  * --------------------------------------------------------------------
  */
  
+#include <cstring>
 #include "thobjectsrc.h"
 
+
+bool thobjectsrc::is_valid() {
+  return (strlen(this->name) > 0);
+}
 
 

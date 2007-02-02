@@ -41,6 +41,7 @@ enum {
   TT_IMPORT_FORMAT = 2001,
   TT_IMPORT_FILTER = 2002,
   TT_IMPORT_SURVEYS = 2003,
+  TT_IMPORT_CALIB = 2004,
 };
 
 
@@ -49,6 +50,7 @@ enum {
  */
  
 static const thstok thtt_import_opt[] = {
+  {"calibrate", TT_IMPORT_CALIB},
   {"filter", TT_IMPORT_FILTER},
   {"fmt", TT_IMPORT_FORMAT},
   {"format", TT_IMPORT_FORMAT},
@@ -112,6 +114,7 @@ class thimport : public thdataobject {
   int format, surveys;  
   char * fname, * filter;
   thobjectsrc mysrc;
+  double calib_x, calib_y, calib_z;
 
   /**
    * Standard constructor.
@@ -213,8 +216,10 @@ class thimport : public thdataobject {
   void import_file();
 
   void import_file_img();
+
+  void parse_calib(char * spec, int enc);
   
-  const char * station_name(const char * sn, const char separator, class thsst * sst);
+  const char * station_name(const char * sn, const char separator, struct thsst * sst);
 
 };
 

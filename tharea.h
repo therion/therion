@@ -67,6 +67,7 @@ enum {
   TT_AREA_TYPE_ICE,
   TT_AREA_TYPE_CLAY,
   TT_AREA_TYPE_PEBBLES,
+  TT_AREA_TYPE_BEDROCK,
 };
 
 
@@ -75,6 +76,7 @@ enum {
  */
  
 static const thstok thtt_area_types[] = {
+  {"bedrock", TT_AREA_TYPE_BEDROCK},
   {"blocks", TT_AREA_TYPE_BLOCKS},
   {"clay", TT_AREA_TYPE_CLAY},
   {"debris", TT_AREA_TYPE_DEBRIS},

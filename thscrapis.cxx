@@ -770,7 +770,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     thcdtpoly.triangulate();
     
     // set triangulation output
-    this->tri_num = thcdtpoly.triangles.size();
+    this->tri_num = (int)thcdtpoly.triangles.size();
     std::set<thcdttri>::iterator trii;
     long trix, newnum;
     thscrapisolpt tmpop, * ptmpop = &(tmpop);
@@ -781,7 +781,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
           trix < this->tri_num; trii++, trix++) {
         // zisti ci je orientovany OK  
         o1 = (orient_number(this->tri_opts[trii->n1],this->tri_opts[trii->n2],this->tri_opts[trii->n3]) > 0.0);
-        if (o1 > 0) {
+        if (o1) {
           this->tri_triangles[newnum][0] = trii->n1;
           this->tri_triangles[newnum][1] = trii->n2;
           this->tri_triangles[newnum][2] = trii->n3;

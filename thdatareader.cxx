@@ -47,7 +47,7 @@ unsigned long thdatareader__get_opos(bool inlineid, bool cfgid)
 }
 
 
-void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
+void thdatareader::read(char * ifname, long lnstart, long lnend, char * spath, thdatabase * dbptr)
 {
 
   thdataobject * objptr = NULL;  // pointer to the newly created object
@@ -57,6 +57,10 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
   bool advanced_end_search = false;
   char * ln, * endlnopt = NULL, * opt, ** opts;
   int ai, ait, ant;
+
+  bool special_lines_only;
+  unsigned long lnn;
+  special_lines_only = ((lnend >= lnstart) && (lnstart > 0));
   
   this->inp.report_missing = true;
   this->inp.set_file_name(ifname);
@@ -65,11 +69,24 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
   this->inp.set_file_suffix(".th:.th2");
   this->inp.sp_scan_on();
   this->inp.reset();
+  if ((special_lines_only) && (lnstart > 1))
+    this->inp.set_input_sensitivity(false);
   
   thobjectsrc osrc;
-  
+
+#ifndef THMSVC
   try {
+#endif
     while ((ln = this->inp.read_line()) != NULL) {
+
+      lnn = this->inp.get_cif_line_number();
+      if (this->inp.is_first_file() && (special_lines_only) && (((long)lnn < lnstart) || ((long)lnn > lnend))) {
+        if ((long)(lnn + 1) == lnstart)
+          this->inp.set_input_sensitivity(true);
+        if ((long)lnn > lnend)
+          this->inp.set_input_sensitivity(false);
+        continue;
+      }
     
       // let's test source fname
       osrc.line = this->inp.get_cif_line_number();
@@ -87,7 +104,7 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
         if ((advanced_end_search && objptr->get_cmd_ends_match(this->bf1.get_buffer())) || 
             (strcmp(this->bf1.get_buffer(), endlnopt) == 0)) {
           inside_cmd = false;
-          this->inp.cmd_sensitivity_on();
+          //this->inp.cmd_sensitivity_on();
           if (!configure_cmd)
             dbptr->insert(objptr);
           else {
@@ -213,15 +230,20 @@ void thdatareader::read(char * ifname, char * spath, thdatabase * dbptr)
             endlnopt = "endrevise";
           advanced_end_search = objptr->get_cmd_ends_state();
           inside_cmd = true;
-          this->inp.cmd_sensitivity_off();
+          //this->inp.cmd_sensitivity_off();
         }
       }    
     }
+
+#ifndef THMSVC
   }
   // put everything into try block and throw exception, if error
   catch (...)
     threthrow(("%s [%d]", this->inp.get_cif_name(), this->inp.get_cif_line_number()))
+#endif
+
   dbptr->end_insert();  
+
 }
 
 

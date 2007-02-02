@@ -47,12 +47,7 @@ getline (lineptr, n, stream)
 
 # define NDEBUG
 # include <assert.h>
-
-# if STDC_HEADERS
-#  include <stdlib.h>
-# else
-char *malloc (), *realloc ();
-# endif
+# include <stdlib.h>
 
 /* Always add at least this many bytes when extending the buffer.  */
 # define MIN_CHUNK 64

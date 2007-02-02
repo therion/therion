@@ -36,26 +36,43 @@
 #include "thdatabase.h"
 #include "thdatareader.h"
 #include "thdataobject.h"
+#include "thcsdata.h"
+#include "thproj.h"
+#include "thlogfile.h"
+#include "thgeomag.h"
+#include "thgeomagdata.h"
+#include "thlayout.h"
+#include "thsketch.h"
 #ifdef THWIN32
 #include <windows.h>
 #endif
 
 
-enum {TT_UNKNOWN_CFG, 
-TT_SOURCE, 
-TT_SELECT, 
-TT_UNSELECT, 
-TT_EXPORT, 
-TT_SETUP3D,
-TT_AUTO_JOIN};
+enum {
+  TT_UNKNOWN_CFG, 
+  TT_SOURCE, 
+  TT_ENDSOURCE, 
+  TT_SELECT, 
+  TT_UNSELECT, 
+  TT_EXPORT, 
+  TT_OUTCS,
+  TT_SETUP3D,
+  TT_AUTO_JOIN,
+  TT_SYSTEM,
+  TT_SKETCH_WARP,
+};
 
 
 static const thstok thtt_cfg[] = {
 //  {"auto-join", TT_AUTO_JOIN},
+  {"cs", TT_OUTCS},
+  {"endsource", TT_ENDSOURCE},
   {"export", TT_EXPORT},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
+  {"sketch-warp", TT_SKETCH_WARP},
   {"source", TT_SOURCE},
+  {"system", TT_SYSTEM},
   {"unselect", TT_UNSELECT},
   {NULL, TT_UNKNOWN_CFG}
 };
@@ -75,10 +92,15 @@ thconfig::thconfig()
   this->install_im = false;
 
   this->auto_join = true;
+  this->outcs = TTCS_LOCAL;
+  this->outcs_sumx = 0.0;
+  this->outcs_sumy = 0.0;
+  this->outcs_sumn = 0.0;
 
   this->tmp3dSMP = 1.0;
   this->tmp3dWALLSMP = 1.0;
   this->tmp3dMAXDIMD = 5.0;
+  this->sketch_warp = THSKETCH_WARP_IDLINE;
 
 #ifdef THWIN32
   thbuffer * tmpbf = &(this->bf1);
@@ -239,15 +261,19 @@ char * thconfig::get_file_name()
 }
   
 
-void thconfig::set_source_file_name(char * fn)
+void thconfig::append_source(char * fname, long startln, long endln)
 {
-  this->src_fnames.append(fn);
+  thconfig_src xsrc;
+  xsrc.fname = this->src_fnames.append(fname);
+  xsrc.startln = startln;
+  xsrc.endln = endln;
+  this->src.push_back(xsrc);
 }
 
   
-thmbuffer * thconfig::get_source_file_names() 
+thconfig_src_list * thconfig::get_sources()
 {
-  return & this->src_fnames;
+  return & this->src;
 }  
 
 
@@ -314,12 +340,24 @@ void thconfig__pifo(char * s) {
 #endif 
 }
 
+ 
+static const thstok thtt_sketchwarp[] = {
+  {"line", THSKETCH_WARP_IDLINE},
+  {"linear", THSKETCH_WARP_LINEAR},
+  {"plaquette", THSKETCH_WARP_PLAQUETTE},
+  {"point", THSKETCH_WARP_IDPOINT},
+  {NULL, THSKETCH_WARP_UNKNOWN},
+};
+
+
 
 void thconfig::load() 
 {
   thmbuffer valuemb;
   int sv;
+  long srcstart(0), srcend(-1);
   bool fstarted  = false;
+  bool source_mode = false;
   if ((this->fstate == THCFG_UPDATE) || (this->fstate == THCFG_READ)) {
     this->cfg_file.cmd_sensitivity_on();
     this->cfg_file.sp_scan_off();
@@ -331,15 +369,47 @@ void thconfig::load()
       while(cfgln != NULL) {
         this->cfg_fenc = this->cfg_file.get_cif_encoding();
         thsplit_args(&valuemb, this->cfg_file.get_value());
-        switch (thmatch_token(this->cfg_file.get_cmd(),thtt_cfg)) {
+        sv = thmatch_token(this->cfg_file.get_cmd(),thtt_cfg);
+
+        if (source_mode) {
+          if (sv == TT_ENDSOURCE) {
+            source_mode = false;
+            srcend = this->cfg_file.get_cif_line_number() - 1;
+            if (srcend >= srcstart) {
+              this->append_source(this->cfg_file.get_cif_name(), srcstart, srcend);
+            }
+
+            this->cfg_file.set_input_sensitivity(true);
+          }
+        } else switch (sv) {
   
           case TT_SOURCE:
-            if (valuemb.get_size() != 1)
-              ththrow(("one file name expected"))            
-            this->src_fnames.append(valuemb.get_buffer()[0]);
+            if (valuemb.get_size() == 0) {
+              source_mode = true;
+              srcstart = this->cfg_file.get_cif_line_number() + 1;
+              this->cfg_file.set_input_sensitivity(false);
+            } else {
+              if (valuemb.get_size() > 1)
+                ththrow(("one file name expected"))            
+              this->append_source(valuemb.get_buffer()[0]);
+#ifdef THWIN32
+              this->search_path.strcat(";");
+#else
+              this->search_path.strcat(":");
+#endif
+              this->search_path.strcat(this->cfg_file.get_cif_path());
+            }
             break;
             
-            
+          case TT_SKETCH_WARP:
+            if (valuemb.get_size() != 1)
+              ththrow(("single sketch-warp switch expected"));
+            sv = thmatch_token(valuemb.get_buffer()[0],thtt_sketchwarp);
+            if (sv == THSKETCH_WARP_UNKNOWN)
+              ththrow(("invalid sketch-warp switch -- %s", valuemb.get_buffer()[0]));
+            this->sketch_warp = sv;
+            break;
+
           case TT_SETUP3D:
             if (valuemb.get_size() > 0) {
               thparse_double(sv, this->tmp3dSMP, valuemb.get_buffer()[0]);
@@ -373,6 +443,29 @@ void thconfig::load()
           case TT_SELECT:
             this->selector.parse_selection(false, valuemb.get_size(), valuemb.get_buffer());
             break;
+
+          case TT_SYSTEM:
+            if (valuemb.get_size() == 0)
+              ththrow(("missing system command"))
+            if (valuemb.get_size() > 1)
+              ththrow(("single system command expected"))
+            this->exporter.parse_system(valuemb.get_buffer()[0]);
+            break;
+
+          case TT_OUTCS:
+            if (valuemb.get_size() == 1) {
+              sv = thcasematch_token(valuemb.get_buffer()[0], thtt_cs);
+              if (sv == TTCS_UNKNOWN)
+                ththrow(("unknown coordinate system -- %s", valuemb.get_buffer()[0]))
+              if (!thcsdata_table[sv].output)
+                ththrow(("%s coordinate system not supported for output", valuemb.get_buffer()[0]))
+              this->outcs = sv;
+              this->outcs_def.name = this->get_db()->strstore(this->cfg_file.get_cif_name(), true);
+              this->outcs_def.line = this->cfg_file.get_cif_line_number();
+            } else {
+              ththrow(("output coordinate system specification requires single parameter"))
+            }
+            break;
             
           case TT_UNSELECT:
             this->selector.parse_selection(true, valuemb.get_size(), valuemb.get_buffer());
@@ -382,7 +475,7 @@ void thconfig::load()
             this->exporter.parse_export(valuemb.get_size(), valuemb.get_buffer());
             break;
   
-          case TT_UNKNOWN_CFG:
+          default:
 	          // skusi povolene databazove prikazy
             switch (thmatch_token(this->cfg_file.get_cmd(),thtt_commands)) {
             
@@ -396,6 +489,9 @@ void thconfig::load()
 	          }
         }
         cfgln = this->cfg_file.read_line(); 
+      }
+      if (source_mode) {
+        ththrow(("endsource expected"));
       }
     }
     catch (...)
@@ -441,6 +537,11 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     objptr = dbptr->create(this->cfg_file.get_cmd(), osrc);
     if (objptr == NULL)
       ththrow(("unknown command -- %s", this->cfg_file.get_cmd()));
+
+    if (objptr->get_class_id() == TT_LAYOUT_CMD) {
+      ((thlayout*)objptr)->m_pconfig = this;
+    }
+
     thencode(&this->bf1, this->cfg_file.get_line(), this->cfg_file.get_cif_encoding());  
     this->cfg_dblines.append(this->bf1.get_buffer());  
 
@@ -570,21 +671,21 @@ void thconfig::save()
     
     // source file
     long sid;
-    char ** srcn = src_fnames.get_buffer();
+    thconfig_src_list::iterator srcit;
     bool some_src = false;
-    for(sid = 0; sid < this->src_fnames.get_size(); sid++, srcn++) {
+    for(srcit = this->src.begin(); srcit != this->src.end(); srcit++) {
       if (!some_src) {
         if (!this->skip_comments)
           fprintf(cf,"%s",THCCC_SOURCE);
       }
-      fprintf(cf,"source \"%s\"\n",*srcn);
+      fprintf(cf,"source \"%s\"\n", srcit->fname);
       some_src = true;
     }
     if (some_src)
       fprintf(cf,"\n");
 
     // layouts etc.
-    srcn = this->cfg_dblines.get_buffer();
+    char ** srcn = this->cfg_dblines.get_buffer();
     bool some_layout = false;
     for(sid = 0; sid < this->cfg_dblines.get_size(); sid++, srcn++) {
       thdecode(&(this->bf1), this->cfg_fenc, *srcn);
@@ -684,6 +785,66 @@ void thconfig::xth_save()
 }
   
 
+
+  
+double thconfig::get_outcs_convergence()
+{
+  double x, y, z;
+  if (this->get_outcs_center(x, y, z)) {
+    return thcsconverg(thcsdata_table[this->outcs].params, x, y);
+  } else {
+    return 0.0;
+  }
+}
+
+
+bool thconfig::get_outcs_mag_decl(double year, double & decl)
+{
+  double x, y, z, lat, lon, alt;
+  if (!this->get_outcs_center(x, y, z))
+    return false;
+  if ((year < double(thgeomag_minyear)) || (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1))))
+    return false;
+  thcs2cs(thcsdata_table[this->outcs].params, "+proj=latlong +datum=WGS84", x, y, z, lon, lat, alt);
+  decl = thgeomag(lat, lon, alt, year);
+  return true;
+}
+
+
+
+bool thconfig::get_outcs_center(double & x, double & y, double & z)
+{
+  if ((this->outcs == TTCS_LOCAL) || (!this->outcs_def.is_valid()) || (this->outcs_sumn < 0.5)) {
+    return false;
+  } else {
+    x = this->outcs_sumx / this->outcs_sumn;
+    y = this->outcs_sumy / this->outcs_sumn;
+    z = this->outcs_sumz / this->outcs_sumn;
+    return true;
+  }
+}
+
+
+void thconfig::log_outcs(double decsyear, double deceyear) {
+  double x, y, z, dec;
+  bool firstdec = true;
+  if (this->get_outcs_center(x, y, z)) {
+    thlog.printf("output coordinate system: %s\n", thmatch_string(this->outcs, thtt_cs));
+    thlog.printf("meridian convergence (deg): %.4f\n", this->get_outcs_convergence());
+    if (!thisnan(decsyear)) {
+      long min = long(decsyear), max = long(deceyear + 1.0), yyy;
+      for(yyy = min; yyy <= max; yyy++) {
+        if (firstdec) {
+          thlog.printf("geomag declinations (deg):\n");
+          firstdec = false;
+        }
+        if (this->get_outcs_mag_decl(double(yyy) + 0.5, dec)) {
+          thlog.printf("  %4d.1.1  %.4f\n", yyy, dec);
+        }
+      }
+    }
+  }
+}
 
 
 

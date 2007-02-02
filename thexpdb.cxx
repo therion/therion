@@ -91,6 +91,7 @@ void thexpdb::dump_body(FILE * xf)
 
 void thexpdb::process_db(class thdatabase * dbp) 
 {
+  this->db = dbp;
   if (this->format == TT_EXPDB_FMT_UNKNOWN) {
     this->format = TT_EXPDB_FMT_SQL;
     // TODO: format parsing according to extension
@@ -113,12 +114,8 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   if (enc == TT_UNKNOWN_ENCODING)
     enc = thini.get_encoding(THINIT_ENCODING_SQL);
 
-  char * fnm;  
-  if (this->outpt_def)
-    fnm = this->outpt;
-  else
-    fnm = "cave.sql";
-
+  char * fnm = this->get_output("cave.sql");  
+  
   unsigned long i, ni;
   ni = dbp->db1d.get_tree_size();
   

@@ -1,0 +1,109 @@
+/**
+ * @file thexpshp.h
+ * Shapefile export classes.
+ */
+  
+/* Copyright (C) 2007 Stacho Mudrak
+ * 
+ * $Date: $
+ * $RCSfile: $
+ * $Revision: $
+ *
+ * -------------------------------------------------------------------- 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * --------------------------------------------------------------------
+ */
+ 
+#ifndef thexpshp_h
+#define thexpshp_h
+
+#include <list>
+#include "thscrap.h"
+#include "thpoint.h"
+#include "thline.h"
+#include "tharea.h"
+#include "thattr.h"
+#include "thdb2d.h"
+
+
+struct thexpshpf_data {
+  double m_x, m_y, m_z, m_m;
+  thexpshpf_data(double x, double y, double z, double m) : m_x(x), m_y(y), m_z(z), m_m(m) {}
+};
+
+struct thexpshpf_part {
+  int m_type, m_start;
+};
+
+
+// Shapefile module
+struct thexpshpf {
+
+  char * m_fnm, * m_fpath;
+  struct thexpshp * m_xshp;
+  bool m_is_open;
+  int m_type;
+  size_t m_num_objects;
+  SHPHandle m_hndl;
+
+  thattr m_attributes;
+
+  thexpshpf();
+  void init(struct thexpshp * xshp, char * fnm, int type);
+  bool open();
+  void close();
+
+  std::list<thexpshpf_data> m_point_list;
+  std::list<thexpshpf_part> m_part_list;
+  int m_object_id;
+  void object_clear();
+  void object_insert();
+
+  bool m_ring_outer;
+  std::list<thexpshpf_data> m_ring_list;
+
+  void point_insert(double x, double y, double z, double m = 0.0);
+
+  void polygon_start_ring(bool outer);
+  void polygon_insert_line(thline * ln, bool reverse);
+  void polygon_close_ring();
+
+  void tristrip_start();
+
+};
+
+
+// Shapefile export structure.
+struct thexpshp {
+
+  char * m_dirname;
+  thdb2dprj * m_xproj;
+  thexpshpf m_fscrap, m_fpoints, m_flines, m_fareas;
+  thexpshpf m_fstations3D, m_fshots3D, m_fwalls3D;
+  class thexpmap * m_expmap;
+  class thexpmodel * m_expmodel;
+
+  thexpshp();
+  bool open(char * dirname);
+  void xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic);
+  void close();
+
+};
+
+#endif
+
+
+
+

@@ -29,7 +29,6 @@ set xth(debug) 1
 
 #@ALL
 source ver.tcl
-source ivc.tcl
 source global.tcl
 source msgxth.tcl
 source msgusr.tcl
@@ -61,8 +60,6 @@ source me.tcl
 source cp_procs.tcl
 source bac.tcl
 source cp.tcl
-source mv.tcl
-source mv_procs.tcl
 source tools.tcl
 #@DEBUG
 if {![string equal $xth(gui,platform) windows]} {

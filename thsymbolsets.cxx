@@ -126,6 +126,7 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYML_WATERFLOW_CONJECTURAL][3] = 1;
 	thsymsets_symbols[SYML_WATERFLOW_INTERMITTENT][3] = 1;
 	thsymsets_symbols[SYML_WATERFLOW_PERMANENT][5] = 1;
+	thsymsets_symbols[SYMA_BEDROCK][3] = 1;
 	thsymsets_symbols[SYMA_BLOCKS][3] = 1;
 	thsymsets_symbols[SYMA_CLAY][3] = 1;
 	thsymsets_symbols[SYMA_DEBRIS][3] = 1;

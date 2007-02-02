@@ -1,12 +1,12 @@
 #!/bin/sh
-cp -f ./therion /usr/bin
-cp -f ./xtherion /usr/bin
-mkdir /usr/share/doc/therion
-cp -f ./thbook.pdf /usr/share/doc/therion
-cp -f ./README /usr/share/doc/therion
-cp -f ./COPYING /usr/share/doc/therion
-cp -f ./therion.1 /usr/share/man/man1
-cp -f ./xtherion.1 /usr/share/man/man1
-cp ./therion.ini /etc
-cp ./xtherion.ini /etc
+cp -f ./therion /usr/local/bin
+cp -f ./xtherion /usr/local/bin
+mkdir /usr/local/share/doc/therion
+cp -f ./thbook.pdf /usr/local/share/doc/therion
+cp -f ./README /usr/local/share/doc/therion
+cp -f ./COPYING /usr/local/share/doc/therion
+cp -f ./therion.1 /usr/local/man/man1
+cp -f ./xtherion.1 /usr/local/man/man1
+cp ./therion.ini /usr/local/etc
+cp ./xtherion.ini /usr/local/etc
 

@@ -10,15 +10,15 @@ If you want to compile Therion from source code and run it, you need
 * Perl
 * Tcl/Tk 8.4.3 and newer (|http://www.tcl.tk|) with 
   {\it BWidget} widget set (\path|http://sourceforge.net/projects/tcllib|)
-  and optionally 
-  {\it Tom} OpenGL extension (improved version is included in Therion source 
-  distribution)
-  and {\it tkImg} extension (\path|http://sourceforge.net/projects/tkimg|). 
-  
-  
-  
+  and optionally {\it tkImg} extension \hfil\break
+  (\path|http://sourceforge.net/projects/tkimg|).   
+%  {\it Tom} OpenGL extension (improved version is included in Therion source 
+%  distribution)
+%  and 
 * \TeX\ distribution with at least \TeX\ with Plain format, 
   recent pdf\TeX, and \MP\ (\path|http://www.tug.org|). 
+* ImageMagick distribution with {\it convert} and {\it identify} utilities, 
+  if you want to morph survey sketches.
 \endlist
 
 All programs (with the exception of BWidget, Tom and tkImg package) are usually 
@@ -39,18 +39,18 @@ It's a distribution of GNU utilities with GNU make and GCC.
 * |make install|
 \endlist
 
-Installing Tom:
-
-\list
-* if you use Windows, download a Tcl/Tk source distribution, |make| and
-  |make install| it under MSYS
-* |cd therion/thtom/linux| or |cd therion/thtom/win|
-* |make|
-* copy |Tom0.2| directory (which should contain |pkgIndex.tcl| and one of 
-  |libtom.so| or |libtom.dll|) 
-  to the |lib| subdirectory of your 
-  Tcl/Tk distribution.
-\endlist
+%Installing Tom:
+%
+%\list
+%* if you use Windows, download a Tcl/Tk source distribution, |make| and
+%  |make install| it under MSYS
+%* |cd therion/thtom/linux| or |cd therion/thtom/win|
+%* |make|
+%* copy |Tom0.2| directory (which should contain |pkgIndex.tcl| and one of 
+%  |libtom.so| or |libtom.dll|) 
+%  to the |lib| subdirectory of your 
+%  Tcl/Tk distribution.
+%\endlist
 
 \subsubchapter Hacker's guide.
 
@@ -189,6 +189,16 @@ supported initialization commands follow.
 
   Set the full path to a pdf\TeX\ executable if Therion can't find it 
   (``|pdfetex|'' is the default).
+
+* |identify-path <file-path>|
+
+  Set the full path to ImageMagick's indentify executable if Therion
+  can't find it (``|identify|'' is the default).
+  
+* |convert-path <file-path>|
+
+  Set the full path to ImageMagick's convert executable if Therion
+  can't find it (``|convert|'' is the default).
 
 * |source-path <directory>| 
 
@@ -426,7 +436,7 @@ process them with Therion.
 
 * {\bf 2006}\Nobreak
 
-  Oct: Therion 0.4 --- New 3D viewer.
+  Oct: Therion 0.4 --- New 3D viewer (Loch).
 \endlist
 
 

@@ -1,12 +1,8 @@
 # - dzach add toolbar
 set xth(tb,me,action) 0
 set xth(gui,tb) $xth(gui,main).tb
+set allapps {te me cp}
 
-if {[string length $xthmvw] > 0} {
-  set allapps {te me cp mv}
-} else {
-  set allapps {te me cp}
-}
 option add *tb*relief flat
 option add *tb*overRelief groove
 option add *tb*padx 0
@@ -61,7 +57,7 @@ button $xth(gui,tb).openb -image {open_img} \
 		-command {
 			switch -- $xth(app,active) {
 				te {
-					xth_te_open_file 1 {} 1
+					xth_te_open_file 1 {} 0
 				}
 				me {
 					xth_me_open_file 1 {} 1
@@ -69,9 +65,6 @@ button $xth(gui,tb).openb -image {open_img} \
 				cp {
 					xth_cp_open_file {}
 				}
-        mv {
-          xth_mv_open_file {}
-        }
 			}
 		}
 xth_status_bar $allapps $xth(gui,tb).openb [mc "Open file"]
@@ -145,17 +138,6 @@ button $xth(gui,tb).cpb -image {compile_img} \
 			xth_app_show cp
 		}
 xth_status_bar $allapps $xth(gui,tb).cpb [mc "Switch to compiler"]
-    
-button $xth(gui,tb).v3db -image {3d_img} \
-		-command {
-			xth_app_show mv
-		}
-if {[string length $xthmvw] == 0} {
-  $xth(gui,tb).v3db configure -state disabled
-}
-    
-    
-xth_status_bar $allapps $xth(gui,tb).v3db [mc "Switch to 3D viewer"]
 
 label $xth(gui,tb).sp02 -relief groove -width 0 -padx 0 -pady 0 -bd 1
 
@@ -271,7 +253,7 @@ button $xth(gui,tb).deb -image {delete_img} \
 	-command {xth_me_cmds_delete {}} -state disabled
 xth_status_bar me $xth(gui,tb).deb [mc "Delete selected object"]
 
-	label $xth(gui,tb).sp3 -relief groove -width 0 -padx 0 -pady 0 -bd 1
+label $xth(gui,tb).sp3 -relief groove -width 0 -padx 0 -pady 0 -bd 1
 # - file icons
 pack $xth(gui,tb).filf -side left
 pack $xth(gui,tb).newb $xth(gui,tb).openb $xth(gui,tb).saveb $xth(gui,tb).savasb \
@@ -280,7 +262,8 @@ pack $xth(gui,tb).newb $xth(gui,tb).openb $xth(gui,tb).saveb $xth(gui,tb).savasb
 pack $xth(gui,tb).sp01 -padx 7 -pady 5 -fill y -side left -anchor center -in $xth(gui,tb).filf
 # - window icons
 pack $xth(gui,tb).winf -side left
-pack $xth(gui,tb).edb $xth(gui,tb).e2db $xth(gui,tb).cpb $xth(gui,tb).v3db \
+
+pack $xth(gui,tb).edb $xth(gui,tb).e2db $xth(gui,tb).cpb \
 	-side left -anchor center -in $xth(gui,tb).winf
 pack $xth(gui,tb).sp02 -padx 7 -pady 5 -fill y -side left -anchor center -in $xth(gui,tb).winf
 
@@ -302,6 +285,7 @@ pack $xth(gui,tb).selb \
 	-side left -anchor center -in $xth(gui,tb).self
 pack $xth(gui,tb).selscrb $xth(gui,tb).selarrb \
 	-side left -anchor center -in $xth(gui,tb).self
+pack $xth(gui,tb).sp3 -padx 7 -pady 5 -fill y -side left -anchor center -in $xth(gui,tb).self
 pack $xth(gui,tb).deb \
 	-side left -anchor center -in $xth(gui,tb).self
 #pack $xth(gui,tb).sp1 -padx 7 -pady 5 -fill y -side left -anchor center -in $xth(gui,tb).self

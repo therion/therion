@@ -49,6 +49,9 @@ thdb2dprj::thdb2dprj() {
   this->shift_x = 0.0;
   this->shift_y = 0.0;
   this->shift_z = 0.0;
+  this->rshift_x = 0.0;
+  this->rshift_y = 0.0;
+  this->rshift_z = 0.0;
   
   this->amaxdist = 0.0;
 }

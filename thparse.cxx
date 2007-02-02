@@ -37,6 +37,9 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <math.h>
+#ifdef THMSVC
+#define strcasecmp _stricmp
+#endif
 
 #ifdef HAVE_ROUND
 extern double round(double); /* prototype is often missing... */
@@ -58,6 +61,22 @@ int thmatch_stok(char *buffer, const thstok *tab, int tab_size)
   while (a <= b) {
     c = unsigned((a + b) / 2);
     r = strcmp(tab[c].s, buffer);
+    if (r == 0) return tab[c].tok;
+    if (r < 0)
+      a = c + 1;
+    else
+      b = c - 1;
+   }
+   return tab[tab_size].tok; /* no match */
+}
+
+
+int thcasematch_stok(char *buffer, const thstok *tab, int tab_size)
+{
+  int a = 0, b = tab_size - 1, c, r;
+  while (a <= b) {
+    c = unsigned((a + b) / 2);
+    r = strcasecmp(tab[c].s, buffer);
     if (r == 0) return tab[c].tok;
     if (r < 0)
       a = c + 1;
@@ -389,6 +408,24 @@ bool th_is_keyword(char * str)
 }
 
 
+bool th_is_attr_name(char * str)
+{
+  size_t sl = strlen(str), i;
+  unsigned char * s = (unsigned char *) str;
+  if (sl == 0)
+    return false;
+  else
+    for(i = 0; i < sl; i++, s++) {
+      if ((*s > 47) && (*s < 58)) continue;
+      if ((*s > 64) && (*s < 91)) continue;
+      if ((*s > 96) && (*s < 123)) continue;
+      if ((*s == 95) && (i > 0)) continue;
+      return false;
+    }
+  return true;
+}
+
+
 bool th_is_index(char * str)
 {
   size_t sl = strlen(str), i;
@@ -607,6 +644,44 @@ void thdecode_tcl(thbuffer * dest, const char * src)
   *dstp = 0;
 }
 
+
+
+void thdecode_mp(thbuffer * dest, const char * src)
+{
+  size_t srcln = strlen(src), srcx = 0;
+  unsigned char * srcp, * dstp;
+  dest->guarantee(srcln * 8 + 1);  // check buffer size
+  srcp = (unsigned char*) src;
+  dstp = (unsigned char*) dest->get_buffer();
+  while (srcx < srcln) {
+    if (*srcp < 32) {
+        *dstp = ' ';
+    } else {
+      if (*srcp == '"') {
+        *dstp = '"';
+        dstp++;
+        *dstp = '&';
+        dstp++;
+        *dstp = 'd';
+        dstp++;
+        *dstp = 't';
+        dstp++;
+        *dstp = 't';
+        dstp++;
+        *dstp = 'o';
+        dstp++;
+        *dstp = '&';
+        dstp++;
+      }
+      *dstp = *srcp;  
+    }
+    srcx++;
+    srcp++;
+    dstp++;
+  }
+  // end destination string with 0
+  *dstp = 0;
+}
 
 
 
@@ -1106,6 +1181,17 @@ void thbase64_encode(char * fname, FILE * fout) {
   if (fin != NULL)
     fclose(fin);
 }
+
+bool thpath_is_absolute(const char * fname)
+{
+#ifdef THWIN32
+  return ((strlen(fname) > 3) && (fname[1] == ':'));
+#else
+  return ((strlen(fname) > 2) && (fname[0] == '/'));
+#endif
+}
+
+
 
 
 

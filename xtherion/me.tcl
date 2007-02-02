@@ -1230,6 +1230,8 @@ set xth(ctrl,me,scrap,ry2) ""
 set xth(ctrl,me,scrap,units) ""
 set xth(ctrl,me,scrap,pp1) {}
 set xth(ctrl,me,scrap,pp2) {}
+set xth(ctrl,me,scrap,sklempty) {}
+
 
 set xth(ctrl,me,point,x) {}
 set xth(ctrl,me,point,y) {}
@@ -1302,6 +1304,12 @@ set xth(me,canid,scrap,scp1) [$xth(me,can) create rectangle 0 0 3 3 \
   -fill red -outline red -width 1 -state hidden -tags {cmd_ctrl}]
 set xth(me,canid,scrap,scp2) [$xth(me,can) create rectangle 0 0 3 3 \
   -fill red -outline red -width 1 -state hidden -tags {cmd_ctrl}]
+set xth(me,canid,scrap,scpA) [$xth(me,can) create line 0 0 3 3 \
+  -fill red -width 5 -state hidden -arrow last -arrowshape {18 20 5} -tags {cmd_ctrl}]
+
+set xth(me,canid,scrap,scp1,pos) {0 0}
+set xth(me,canid,scrap,scp2,pos) {0 0}
+set xth(me,cmds,scrap_scale) 0
 
 xth_me_bind_area_drag $xth(me,canid,area) {}
 xth_me_area_adjust 0 0 1600 1200
@@ -1758,8 +1766,8 @@ Entry $sfm.opt -font $xth(gui,lfont) -state disabled -width 4 \
 xth_status_bar me $sfm.opt [mc "Other scrap options."] 
 
 #Separator $sfm.s1 -orient horizontal
-Label $sfm.scl -text [mc "scale"] -anchor sw -font $xth(gui,lfont) -state disabled
-xth_status_bar me $sfm.scl [mc "Scrap scale definition."]
+Button $sfm.scl -text [mc "Scale"] -anchor center -font $xth(gui,lfont) -state disabled -command xth_me_cmds_scrap_scale_start
+xth_status_bar me $sfm.scl [mc "Scrap scaling - push to click picture calibration points."]
 Button $sfm.scpb -text [mc "Update scrap"] -anchor center -font $xth(gui,lfont) \
   -state disabled -width 4 -command {xth_me_cmds_update {}}
 xth_status_bar me $sfm.scpb [mc "Press this button to apply your changes to current scrap."]
@@ -1803,6 +1811,42 @@ xth_me_bind_entry_focus_return "$sfm.scx1r $sfm.scy1r $sfm.scx2r $sfm.scy2r" {xt
 xth_me_bind_entry_return "$sfm.name $sfm.opt" {xth_me_cmds_update {}}
 xth_me_bind_entry_focusin "$sfm.name $sfm.opt $sfm.scx1p $sfm.scy1p $sfm.scx2p $sfm.scy2p $sfm.scx1r $sfm.scy1r $sfm.scx2r $sfm.scy2r"
 
+
+# scrap background sketches
+Label $sfm.skl -text [mc "background sketches"] -anchor w -font $xth(gui,lfont) -state disabled
+xth_status_bar me $sfm.skl [mc "List of image files used as scrap background."]
+
+
+set plf $sfm.skll
+frame $plf
+listbox $plf.l -height 2 -selectmode single -takefocus 0 \
+  -yscrollcommand "xth_scroll $plf.sv" \
+  -xscrollcommand "xth_scroll $plf.sh" \
+  -font $xth(gui,lfont) -exportselection no \
+  -selectborderwidth 0
+scrollbar $plf.sv -orient vert  -command "$plf.l yview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+scrollbar $plf.sh -orient horiz  -command "$plf.l xview" \
+  -takefocus 0 -width $xth(gui,sbwidth) -borderwidth $xth(gui,sbwidthb)
+bind $plf.l <B1-ButtonRelease> "focus $plf.l"
+
+Button $sfm.skins -text [mc "Insert"] -anchor center -font $xth(gui,lfont) \
+  -state disabled -width 10 -command xth_me_cmds_scrap_sketch_start
+xth_status_bar me $sfm.skins [mc "Press this button to insert sketch by clicking on it."]
+Button $sfm.skdel -text [mc "Delete"] -anchor center -font $xth(gui,lfont) \
+  -state disabled -width 10 -command {xth_me_cmds_delete_scrap_sketch {} {}}
+xth_status_bar me $sfm.skdel [mc "Delete sketch from scrap."]
+
+grid columnconf $plf 0 -weight 1
+grid rowconf $plf 0 -weight 1
+grid $plf.l -column 0 -row 0 -sticky news
+xth_scroll_showcmd $plf.sv "grid $plf.sv -column 1 -row 0 -sticky news"
+xth_scroll_hidecmd $plf.sv "grid forget $plf.sv"
+xth_scroll_showcmd $plf.sh "grid $plf.sh -column 0 -row 1 -sticky news"
+xth_scroll_hidecmd $plf.sh "grid forget $plf.sh"
+xth_status_bar me $plf [mc "Select line in area."]
+
+
 grid columnconf $sfm 0 -weight 1
 grid columnconf $sfm 1 -weight 1
 grid columnconf $sfm 2 -weight 1
@@ -1822,6 +1866,11 @@ grid $sfm.scrp -column 0 -row 6 -sticky news -columnspan 4
 grid $sfm.scx1r $sfm.scy1r $sfm.scx2r $sfm.scy2r -row 7 -sticky news -padx 1
 grid $sfm.scul -row 8 -column 0 -columnspan 2 -sticky news
 grid $sfm.scu  -row 8 -column 2 -columnspan 2 -sticky news -padx 2
+
+grid $sfm.skl -column 0 -row 9 -sticky news -columnspan 4
+grid $sfm.skll -column 0 -row 10 -sticky news -columnspan 4
+grid $sfm.skins -row 11 -column 0 -columnspan 2 -sticky news
+grid $sfm.skdel -row 11 -column 2 -columnspan 2 -sticky news
 
 
 # point control

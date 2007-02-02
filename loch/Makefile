@@ -6,7 +6,7 @@ CMNOBJECTS = \
   lxGUI.o lxGLCo.o lxGLCs.o lxOptDlg.o lxAboutDlg.o \
   img.o
 
-VTKLIBS =  -lwxzlib-2.6 -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lfreetype
+VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lfreetype
 
 # PLATFORM CONFIG
 
@@ -19,7 +19,7 @@ VTKLIBPATH = /usr/local/lib/vtk-5.0
 CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 LXLIBDIR = linux
-PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lpthread
+PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lpthread -lz 
 LXPLATFORM = LINUX
 
 # PLATFORM WIN32
@@ -30,10 +30,19 @@ LXPLATFORM = LINUX
 ##CXXPFLAGS = -W -Wall -DLXWIN32 $(shell wx-config --static --cxxflags) $(shell freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell wx-config --static --cflags)
 ##LXLIBDIR = mingw
-##PLIBS = $(shell freetype-config --libs) $(shell wx-config --static --libs --gl-libs) $(VTKLIBS)
+##PLIBS = $(shell freetype-config --libs) $(shell wx-config --static --libs --gl-libs) $(VTKLIBS) -lwxzlib-2.6
 ##LXPLATFORM = WIN32
 
 # PLATFORM MACOSX
+##CXX = c++
+##CC = cc
+##VTKPATH = /usr/local/include/vtk-5.0
+##POBJECTS = getline.o
+##CXXPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cxxflags) $(shell freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated
+##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cflags)
+##LXLIBDIR = 
+##PLIBS = -lz $(shell freetype-config --libs) $(shell wx-config --static --libs --gl-libs) $(VTKLIBS)
+##LXPLATFORM = MACOSX
 
 # PLATFORM ENDCONFIG
 

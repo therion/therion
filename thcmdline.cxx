@@ -88,7 +88,7 @@ void thcmdline::process(int argc, char * argv[])
 
   while(1) {
 
-    oc = getopt_long (argc, argv, "gduxs:l:qLvhip:",
+    oc = getopt_long (argc, argv, "dxs:l:qLvhp:",
       thlong_options, &oindex);
     
     // no other options detected
@@ -124,24 +124,24 @@ void thcmdline::process(int argc, char * argv[])
         thlog.set_file_name(optarg);
         break;
         
-      case 'g':
-        thcfg.set_file_state(THCFG_GENERATE);
-        break;
+      //case 'g':
+      //  thcfg.set_file_state(THCFG_GENERATE);
+      //  break;
         
       case 'x':
         thcfg.generate_xthcfg = true;
         break;
         
-      case 'u':
-        thcfg.set_file_state(THCFG_UPDATE);
-        break;
+      //case 'u':
+      //  thcfg.set_file_state(THCFG_UPDATE);
+      //  break;
         
       case 'i':
         thcfg.comments_skip_on();
         break;
         
       case 's':     
-        thcfg.set_source_file_name(optarg);
+        thcfg.append_source(optarg);
         break;
       
       case 'p':  

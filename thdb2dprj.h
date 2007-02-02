@@ -86,7 +86,7 @@ class thdb2dprj {
   class thdb2dji * first_join_list, ///< 1. Join list.
     * last_join_list;  ///< Last join list.
 
-  double shift_x, shift_y, shift_z; ///< Shift.
+  double shift_x, shift_y, shift_z, rshift_x, rshift_y, rshift_z; ///< Shift + reverse shift.
 
   thmapstat stat;
 

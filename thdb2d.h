@@ -105,7 +105,9 @@ class thdb2d {
   void pp_calc_limits(thdb2dprj * prj);  ///< ???
   void pp_calc_stations(thdb2dprj * prj);  ///< ???
   void pp_adjust_points(thdb2dprj * prj);  ///< ???
-  void pp_shift_points(thdb2dprj * prj, bool calc_az = false);  ///< ???
+  void pp_shift_points(thdb2dprj * prj);  ///< ???
+  void pp_morph_points(thdb2dprj * prj);
+  void pp_calc_points_z(thdb2dprj * prj);
   void pp_process_joins(thdb2dprj * prj); ///< ???
   bool pp_process_adjustments(thdb2dprj * prj);
   void pp_smooth_lines(thdb2dprj * prj);  ///< ???

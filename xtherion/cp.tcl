@@ -31,6 +31,26 @@ xth_ctrl_add cp stp [mc "Settings"]
 xth_ctrl_add cp dat [mc "Survey structure"]
 xth_ctrl_add cp info [mc "Survey info"]
 xth_ctrl_add cp ms [mc "Map structure"]
+set xth(cp,preview) 0
+set xth(cp,preview,acroread) 0
+set xth(cp,preview,acroreadpath) {}
+set xth(cp,preview,xpdf) 0
+set xth(cp,preview,xpdfpath) {}
+switch $xth(gui,platform) {
+  windows {
+    if {[string length $xth(gui,appctrlcmd)] > 0} {
+      set xth(cp,preview) 1
+      set xth(cp,preview,acroread) 1
+    }
+  }
+  unix {
+    set xth(cp,preview) 1
+    set xth(cp,preview,xpdf) 1
+  }
+}
+if {$xth(cp,preview)} {
+  xth_ctrl_add cp pview [mc "Preview"]
+}
 xth_ctrl_finish cp
 
 
@@ -182,6 +202,36 @@ grid $xth(ctrl,cp,stp).opte -row 5 -column 0 -columnspan 2 -sticky news
 grid $xth(ctrl,cp,stp).go -row 6 -column 0 -sticky news
 grid $xth(ctrl,cp,stp).gores -row 6 -column 1 -sticky ew
 
+# create preview controls
+if {$xth(cp,preview)} {
+  set crow 0
+  grid columnconf $xth(ctrl,cp,pview) 0 -weight 1
+  grid columnconf $xth(ctrl,cp,pview) 1 -weight 1
+  if {$xth(cp,preview,xpdf)} {
+    Label $xth(ctrl,cp,pview).xpdfl -text [mc "Xpdf"] -anchor w -font $xth(gui,lfont) -state normal
+    xth_status_bar cp $xth(ctrl,cp,pview).xpdfl [mc "PDF file path."]
+    Entry $xth(ctrl,cp,pview).xpdfe -font $xth(gui,lfont) -state normal \
+      -editable on -textvariable xth(cp,preview,xpdfpath)
+    xth_status_bar cp $xth(ctrl,cp,pview).xpdfe [mc "PDF file path."]
+    grid $xth(ctrl,cp,pview).xpdfl -row $crow -column 0 -columnspan 2 -sticky news
+    incr crow
+    grid $xth(ctrl,cp,pview).xpdfe -row $crow -column 0 -columnspan 2 -sticky news
+    incr crow
+  }
+  if {$xth(cp,preview,acroread)} {
+    Label $xth(ctrl,cp,pview).acroreadl -text [mc "Acrobat Reader"] -anchor w -font $xth(gui,lfont) -state normal
+    xth_status_bar cp $xth(ctrl,cp,pview).acroreadl [mc "PDF file path."]
+    Entry $xth(ctrl,cp,pview).acroreade -font $xth(gui,lfont) -state normal \
+      -editable on -textvariable xth(cp,preview,acroreadpath)
+    xth_status_bar cp $xth(ctrl,cp,pview).acroreade [mc "PDF file path."]
+    grid $xth(ctrl,cp,pview).acroreadl -row $crow -column 0 -columnspan 2 -sticky news
+    incr crow
+    grid $xth(ctrl,cp,pview).acroreade -row $crow -column 0 -columnspan 2 -sticky news
+    incr crow
+  }
+}
+
+
 # create objects control
 set clbox $xth(ctrl,cp,dat)
 #### set sw [ScrolledWindow $clbox.sw -relief sunken -borderwidth 2]
@@ -324,6 +374,10 @@ set xth(cp,fpath) ""
 xth_ctrl_minimize cp dat
 xth_ctrl_minimize cp info
 xth_ctrl_minimize cp ms
+if {$xth(cp,preview)} {
+  xth_ctrl_minimize cp pview
+}
+
 
 set xth(ctrl,cp,datlist) {}
 set xth(ctrl,cp,maplist) {}

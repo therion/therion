@@ -40,6 +40,7 @@
 #include "thdb2d.h"
 #include "thobjectname.h"
 #include "thobjectsrc.h"
+#include "thattr.h"
 #include <stdio.h>
 
 /**
@@ -185,6 +186,7 @@ class thdatabase {
   thdb_revision_set_type revision_set;  ///< Object revisions.
   thdb1d db1d;  ///< Survey data part of database.
   thdb2d db2d;  ///< 2D data part of database.
+  thattr attr;  ///< Object attributes.
   thobjectsrc csrc;  ///< Current source position.
   thdb_object_map_type object_map;  ///< Object search hash
   thdb_survey_map_type survey_map;   ///< Survey search hash

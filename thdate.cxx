@@ -545,6 +545,16 @@ double thdate::get_end_year()
       this->ehour, this->emin, this->esec);
 }
 
+double thdate::get_average_year()
+{
+  if (this->is_interval()) {
+    return ((this->get_start_year() + this->get_end_year()) / 2.0);
+  } else {
+    return this->get_start_year();
+  }
+}
+
+
 void thdate::set_years(double sy, double ey) 
 {
   thdate_y2d(sy, this->syear, this->smonth, this->sday,

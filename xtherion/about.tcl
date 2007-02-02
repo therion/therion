@@ -29,47 +29,11 @@
 set xth(about,image_id) [image create photo -data $xth(about,image_data)]
 set xth(about,infotime) 2500
 
-after 0 {
-  if {$xth(gui,check_update)} {
-    xth_ivc
-  }
-  if {[string length $xth(about,nvr)] > 0} {
-    bell
-    if {[winfo exists $xth(gui,about)]} {
-      xth_about_nvr
-    } else {
-      # show about window for some time seconds
-      xth_about_show 0
-      after $xth(about,infotime) xth_about_hide
-    }
-  }
-}
-
 proc xth_about_status {str} {
     global xth
     set xth(about,status) "$str"
-    catch {
-      $xth(gui,about).i2 configure -text "VERSION $xth(about,nvr) AVAILABLE"
-    }
     update idletasks
 }
-
-
-proc xth_about_nvr {} {
-  global xth
-  if {[string length $xth(about,nvr)] == 0} {
-    return
-  }
-  if {![winfo exists $xth(gui,about)]} {
-    return
-  }
-  set w $xth(gui,about)
-  label $w.i2 -bd 0 -relief sunken -background black -fg red -text "VERSION $xth(about,nvr) AVAILABLE" \
-    -font $xth(gui,lfont) -anchor center
-  pack $w.i2 -after $w.i1 -side top -expand 1 -fill both -pady 5
-  update idletasks
-}
-
 
 proc xth_about_show {btnid} {
     global xth
@@ -96,7 +60,6 @@ proc xth_about_show {btnid} {
       pack $w.close -side top -fill none -anchor center -pady 5
       focus $w.close
     }
-    xth_about_nvr
     wm geometry $xth(gui,about) -$sw-$sh
     wm deiconify $xth(gui,about)
     update idletasks
@@ -105,7 +68,7 @@ proc xth_about_show {btnid} {
     wm geometry $xth(gui,about) +$x+$y
     $w configure -bg black
     $w.image configure -image $xth(about,image_id)
-    $w.i1 configure -text "xtherion $xth(about,ver)\n\u00A9 2002-2006 Stacho Mudrak"
+    $w.i1 configure -text "xtherion $xth(about,ver)\n\u00A9 2002-2007 Stacho Mudrak"
     update idletasks
 }
 

@@ -225,6 +225,7 @@ namespace OGLFT {
     //! a GLdouble[3].
     //! \return GLfloat[4] (RGBA) color specification.
     virtual GLfloat* color ( GLdouble* p ) = 0;
+    virtual ~ColorTess();
   };
 
   //! During tesselation of a polygonal Face (outline, filled or solid),
@@ -238,6 +239,7 @@ namespace OGLFT {
     //! a GLdouble[3].
     //! \return GLfloat[2] (s,t) texture coordinates.
     virtual GLfloat* texCoord ( GLdouble* p ) = 0;
+    virtual ~TextureTess();
   };
 
   //! The argument to setCharacterDisplayLists is an STL vector of

@@ -215,9 +215,6 @@ typedef std::list < thdb1d_loop > thdb1d_loop_list_type;
 
 
 
-
-
-
 /**
  * Survey data structure processing class.
  */
@@ -235,6 +232,8 @@ class thdb1d {
   thdb1d_tree_node  * tree_nodes;
   
   thdb3ddata d3_data, d3_surface, d3_walls;
+
+  double min_year, max_year;
   
   bool d3_data_parsed;
   

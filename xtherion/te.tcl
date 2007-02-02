@@ -697,8 +697,12 @@ proc xth_te_open_file {dialogid fname fline} {
     $xth(te,$cfid,frame).txt edit reset
   }
   set xth(te,$cfid,otext) [$xth(te,$cfid,frame).txt get 1.0 end]
-  xth_te_show_file $xth(te,fcurr) 
-  $xth(te,$cfid,frame).txt mark set insert "$fline.0"
+  xth_te_show_file $xth(te,fcurr)
+  if {$fline > 0} { 
+      $xth(te,$cfid,frame).txt mark set insert "$fline.0"
+  } else {
+      $xth(te,$cfid,frame).txt mark set insert "1.0"
+  }
   $xth(te,$cfid,frame).txt see insert
   if {$fline > 0} {
     $xth(te,$cfid,frame).txt tag remove sel 1.0 end
@@ -880,7 +884,7 @@ $xth(te,menu,file) add command -label [mc "New"] -command xth_te_new_file \
   -font $xth(gui,lfont) -underline 0
 $xth(te,menu,file) add command -label [mc "Open"] -underline 0 \
   -accelerator "$xth(gui,controlk)-o" \
-  -font $xth(gui,lfont) -command {xth_te_open_file 1 {} 1}
+  -font $xth(gui,lfont) -command {xth_te_open_file 1 {} 0}
 $xth(te,menu,file) add command -label [mc "Save"] -underline 0 \
   -accelerator "$xth(gui,controlk)-s" -state disabled \
   -font $xth(gui,lfont) -command {

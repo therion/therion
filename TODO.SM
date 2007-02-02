@@ -1,3 +1,4 @@
++ global variables that define density and randomness of area fills
 + hierarchicky outline
 + pridat <tiny>,<small>,<normal>,<large>,<huge> do utf2tex
 + do thbook-u

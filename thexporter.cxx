@@ -32,6 +32,7 @@
 #include "thexpmodel.h"
 #include "thexpmap.h"
 #include "thexpdb.h"
+#include "thexpsys.h"
 #include <stdio.h>
 
 
@@ -52,6 +53,21 @@ thexporter::~thexporter()
 
 void thexporter::assign_config(class thconfig * cptr) {
   this->cfgptr = cptr;
+}
+
+
+
+void thexporter::parse_system(char * system_cmd)
+{
+  if (strlen(system_cmd) == 0)
+    ththrow(("empty system command not allowed"))
+  thexpsys * xp;
+  xp = new thexpsys;
+  xp->src.name = thdb.strstore(thcfg.get_cfg_file()->get_cif_name(),true);
+  xp->src.line = thcfg.get_cfg_file()->get_cif_line_number();  
+  xp->assign_config(this->cfgptr);
+  xp->cmd = thdb.strstore(system_cmd, false);
+  this->xlist.push_back(xp);
 }
 
 
@@ -117,10 +133,9 @@ void thexporter::dump_export(FILE * xf)
 void thexporter::export_db(class thdatabase * dp)
 { 
  
-  thexporter_list::iterator ii, ii2;
-//  thdb2dprjpr prjid1, prjid2;
+  thexporter_list::iterator ii;
   
-  // najprv exportuje mapy a atlasy
+  // najprv spracujeme projekcie
   for(ii = this->xlist.begin(); ii != this->xlist.end(); ii++) {
     switch ((*ii)->export_mode) {
       case TT_EXP_MAP:
@@ -128,51 +143,21 @@ void thexporter::export_db(class thdatabase * dp)
         ((thexpmap*)(*ii))->parse_projection(dp);
     }
   }    
-  
+
+  // exportujeme  
   for(ii = this->xlist.begin(); ii != this->xlist.end(); ii++) {
     switch ((*ii)->export_mode) {
       case TT_EXP_MAP:
       case TT_EXP_ATLAS:
-        if (((thexpmap*)(*ii))->projptr != NULL) {
-          thexporter_quick_map_export = false;
-          (*ii)->process_db(dp);
-          ii2 = ii;
-          // prejde ostatne a tie co maju rovnaku projekciu
-          // exportuje v skratenom legislativnom konani
-          for(ii2++; ii2 != this->xlist.end(); ii2++) {
-            switch ((*ii2)->export_mode) {
-              case TT_EXP_MAP:
-              case TT_EXP_ATLAS:
-                if ((((thexpmap*)(*ii2))->projptr != NULL) &&
-                    (((thexpmap*)(*ii))->projptr->id == 
-                    ((thexpmap*)(*ii2))->projptr->id)) {
-                  thexporter_quick_map_export = true;
-                  (*ii2)->process_db(dp);
-                  ((thexpmap*)(*ii2))->projptr = NULL;            
-                }
-                break;
-              default:
-                break;
-            }
-          }
-          ((thexpmap*)(*ii))->projptr = NULL;            
-        }  
+        thexporter_quick_map_export = false;
+        (*ii)->process_db(dp);
         break;
-    }
-  }
-  
-  // potom vsetko ostatne
-  for(ii = this->xlist.begin(); ii != this->xlist.end(); ii++) {
-    switch ((*ii)->export_mode) {
-      case TT_EXP_MAP:
-      case TT_EXP_ATLAS:
-        break;
+
       default:
         (*ii)->process_db(dp);
         break;
     }
-  }
-  
+  }  
 }
 
 bool thexporter_quick_map_export;

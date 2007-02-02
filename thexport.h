@@ -69,8 +69,10 @@ class thexport {
   class thconfig * cfgptr;  ///< Current config pointer.
   int export_mode;  ///< Export mode.
   thobjectsrc src; ///< Export source.
+  class thdatabase * db; ///< Exported database.
   
   char * outpt;  ///< Output file name.
+  thbuffer cfgpath;  ///< Config path.
   bool outpt_def;  ///< Whether output file defined.  
 
   public:
@@ -126,6 +128,13 @@ class thexport {
    */
    
   virtual void process_db(class thdatabase * dbp) = 0;
+
+
+  /**
+   * Return path to output file.
+   */
+
+  virtual char * get_output(const char * defname);
   
 };
 

@@ -39,40 +39,21 @@
 #include "thsurface.h"
 #include "extern/lxFile.h"
 #include "thsurface.h"
+#include "thchenc.h"
+#include "thconfig.h"
+#include "thcsdata.h"
+#include "thproj.h"
 
 #ifdef THMSVC
 #define strcasecmp _stricmp
 #endif
 
 
-/**
- * Model wall sources.
- */
-
-enum {
-  TT_WSRC_UNKNOWN = 0, 
-  TT_WSRC_CENTERLINE = 1,  
-  TT_WSRC_MAPS = 2,
-  TT_WSRC_ALL = 3,
-};
-
-/**
- * Options parsing table.
- */
- 
-static const thstok thtt_expmodel_wallsrc[] = {
-  {"all", TT_WSRC_ALL},
-  {"centerline", TT_WSRC_CENTERLINE},
-  {"centreline", TT_WSRC_CENTERLINE},
-  {"maps", TT_WSRC_MAPS},
-  {NULL, TT_WSRC_UNKNOWN}
-};
-
-
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
   this->items = TT_EXPMODEL_ITEM_ALL;
   this->wallsrc = TT_WSRC_ALL;
+  this->encoding = TT_UTF_8;
 }
 
 
@@ -91,6 +72,16 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
       this->format = thmatch_token(args[argx], thtt_expmodel_fmt);
       if (this->format == TT_EXPMODEL_FMT_UNKNOWN)
         ththrow(("unknown format -- \"%s\"", args[argx]))
+      argx++;
+      break;
+
+    case TT_EXPMODEL_OPT_ENCODING:  
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing encoding -- \"%s\"",args[optx]))
+      this->encoding = thmatch_token(args[argx], thtt_encoding);
+      if (this->encoding == TT_UNKNOWN_ENCODING)
+        ththrow(("unknown encoding -- \"%s\"", args[argx]))
       argx++;
       break;
 
@@ -144,7 +135,8 @@ void thexpmodel::dump_body(FILE * xf)
 
 void thexpmodel::process_db(class thdatabase * dbp) 
 {
-  if (this->format == TT_EXPMODEL_FMT_UNKNOWN) {
+ this->db = dbp;
+ if (this->format == TT_EXPMODEL_FMT_UNKNOWN) {
     this->format = TT_EXPMODEL_FMT_LOCH;
     thexp_set_ext_fmt(".plt", TT_EXPMODEL_FMT_COMPASS)
     thexp_set_ext_fmt(".3d", TT_EXPMODEL_FMT_SURVEX)
@@ -153,6 +145,8 @@ void thexpmodel::process_db(class thdatabase * dbp)
     thexp_set_ext_fmt(".3dmf", TT_EXPMODEL_FMT_3DMF)
     thexp_set_ext_fmt(".dxf", TT_EXPMODEL_FMT_DXF)
     thexp_set_ext_fmt(".lox", TT_EXPMODEL_FMT_LOCH)
+    thexp_set_ext_fmt(".shp", TT_EXPMODEL_FMT_SHP)
+    thexp_set_ext_fmt(".kml", TT_EXPMODEL_FMT_KML)
   }  
   switch (this->format) {
     case TT_EXPMODEL_FMT_LOCH:
@@ -176,6 +170,12 @@ void thexpmodel::process_db(class thdatabase * dbp)
     case TT_EXPMODEL_FMT_DXF:
       this->export_dxf_file(dbp);
       break;
+    case TT_EXPMODEL_FMT_SHP:
+      this->export_shp_file(dbp);
+      break;
+    case TT_EXPMODEL_FMT_KML:
+      this->export_kml_file(dbp);
+      break;
   }
 }
 
@@ -184,17 +184,13 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
 {
 
   unsigned long nlegs = dbp->db1d.get_tree_size(),
-    nstat = dbp->db1d.station_vec.size();
+    nstat = (unsigned long)dbp->db1d.station_vec.size();
   thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
 
   if (nlegs == 0)
     return;
   
-  char * fnm;  
-  if (this->outpt_def)
-    fnm = this->outpt;
-  else
-    fnm = "cave.3d";
+  char * fnm = this->get_output("cave.3d");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -205,7 +201,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
       
   unsigned long i;
   img * pimg;
-
+  img_output_version = 4;
   pimg = img_open_write(fnm, "cave", 1);
      
   if (!pimg) {
@@ -298,17 +294,13 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
 {
 
   unsigned long nlegs = dbp->db1d.get_tree_size(),
-    nstat = dbp->db1d.station_vec.size();
+    nstat = (unsigned long)dbp->db1d.station_vec.size();
   thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
 
   if (nlegs == 0)
     return;
   
-  char * fnm;  
-  if (this->outpt_def)
-    fnm = this->outpt;
-  else
-    fnm = "cave.plt";
+  char * fnm = this->get_output("cave.plt");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -421,11 +413,7 @@ station_name[8] = 0
 void thexpmodel::export_thm_file(class thdatabase * dbp)
 {
 
-  char * fnm;  
-  if (this->outpt_def)
-    fnm = this->outpt;
-  else
-    fnm = "cave.thm";
+  char * fnm = this->get_output("cave.thm");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -594,13 +582,10 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
 
 void thexpmodel::export_vrml_file(class thdatabase * dbp) {
   char * fnm;  
-  if (this->outpt_def)
-    fnm = this->outpt;
-  else
 #ifdef THWIN32
-    fnm = "cave.wrl";
+  fnm = this->get_output("cave.wrl");
 #else
-    fnm = "cave.vrml";
+  fnm = this->get_output("cave.vrml");
 #endif
   
 #ifdef THDEBUG
@@ -841,11 +826,8 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
 
 
 void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
-  char * fnm;  
-  if (this->outpt_def)
-    fnm = this->outpt;
-  else
-    fnm = "cave.3dmf";
+
+  char * fnm = this->get_output("cave.3dmf");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -1033,12 +1015,10 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
 #endif
 }
 
+
 void thexpmodel::export_dxf_file(class thdatabase * dbp) {
-  char * fnm;  
-  if (this->outpt_def)
-    fnm = this->outpt;
-  else
-    fnm = "cave.dxf";
+
+  char * fnm = this->get_output("cave.dxf");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -1378,11 +1358,7 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
 
 void thexpmodel::export_lox_file(class thdatabase * dbp) {
 
-  char * fnm;  
-  if (this->outpt_def)
-    fnm = this->outpt;
-  else
-    fnm = "cave.lox";
+  char * fnm = this->get_output("cave.lox");
 
   thdb_object_list_type::iterator obi;
   
@@ -1414,7 +1390,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   }
 
   unsigned long nlegs = dbp->db1d.get_tree_size(),
-    nstat = dbp->db1d.station_vec.size(), i, j;
+    nstat = (unsigned long)dbp->db1d.station_vec.size(), i, j;
   thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
   long * stnum = NULL;
   if (nstat > 0) {
@@ -1708,5 +1684,88 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   thtext_inline = false;
 #endif
 }
+
+
+
+
+
+
+void thexpmodel::export_kml_file(class thdatabase * dbp)
+{
+
+  unsigned long nlegs = dbp->db1d.get_tree_size(),
+    nstat = (unsigned long)dbp->db1d.station_vec.size();
+  thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
+
+  if (thcfg.outcs == TTCS_LOCAL) {
+    thwarning(("data not georeferenced -- unable to export KML file"));
+    return;
+  }
+
+  FILE * out;
+  char * fnm = this->get_output("cave.kml");
+  out = fopen(fnm, "w");
+  if (out == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif     
+
+  fprintf(out,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n<Document>\n");
+  fprintf(out,"<name>Therion KML export</name>\n<description>Therion KML export.</description>\n");
+
+
+  unsigned long last_st = nstat, cur_st, numst, i;
+  double x, y, z;
+
+  fprintf(out,"<Placemark>\n");
+  fprintf(out,"<Style>\n<LineStyle>\n<color>ffffff00</color>\n<width>1</width>\n</LineStyle>\n</Style>\n");
+  fprintf(out,"<MultiGeometry>\n");
+
+  numst = 0;
+  for(i = 0; i < nlegs; i++, tlegs++) {
+    if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) == 0)) {
+      cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
+      if (cur_st != last_st) {
+        if (numst > 0)
+          fprintf(out,"</coordinates>\n</LineString>\n");
+        fprintf(out,"<LineString>\n<coordinates>\n");
+        thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+          dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z,
+          x, y, z);
+        fprintf(out, "\t%20.14f,%20.14f,%20.14f\n", x / THPI * 180.0, y / THPI * 180.0, z);
+        numst = 1;
+      }
+      last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
+      thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+        dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z,
+        x, y, z);
+      fprintf(out, "\t%20.14f,%20.14f,%20.14f\n", x / THPI * 180.0, y / THPI * 180.0, z);
+      numst++;
+    }
+  }
+
+  if (numst > 0)
+    fprintf(out,"</coordinates>\n</LineString>\n");
+  fprintf(out,"</MultiGeometry>\n");
+  fprintf(out,"</Placemark>\n</Document>\n</kml>\n");
+  fclose(out);
+    
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+
+}
+
+
+
 
 

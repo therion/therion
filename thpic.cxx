@@ -102,16 +102,29 @@ void thpic::init(const char * pfname, const char * incfnm)
   thbuffer ccom;
   int retcode;
   bool isspc;
+
+  // program path
   isspc = (strcspn(thini.get_path_identify()," \t") < strlen(thini.get_path_identify()));
   ccom = "";
   if (isspc) ccom += "\"";
   ccom += thini.get_path_identify();
   if (isspc) ccom += "\"";
-  ccom += " -format \"%w\\n%h\\n\" \"";
+
+  // format
+  ccom += " -format \"%w\\n%h\\n\" ";
+
+  // filename
+  isspc = (strcspn(this->fname," \t") < strlen(this->fname));
+  if (isspc) ccom += "\"";
   ccom += this->fname;
-  ccom += "\" > \"";
+  if (isspc) ccom += "\"";
+
+  // write into
+  ccom += " > ";
+  isspc = (strcspn(thpic__tmp," \t") < strlen(thpic__tmp));
+  if (isspc) ccom += "\"";
   ccom += thpic__tmp;
-  ccom += "\"";
+  if (isspc) ccom += "\"";
   
 #ifdef THDEBUG
   thprintf("running convert\n");
@@ -150,6 +163,7 @@ char * thpic::convert(const char * type, const char * ext, const char * optfmt, 
   int retcode;
   bool isspc;
   char tmpfn[255];
+  const char * tmpf;
   char options[1024];
   va_list args;
   va_start(args, optfmt);
@@ -163,13 +177,21 @@ char * thpic::convert(const char * type, const char * ext, const char * optfmt, 
   if (isspc) ccom += "\"";
   ccom += " ";
   ccom += options;
-  ccom += " \"";
+  ccom += " ";
+
+  isspc = (strcspn(this->fname," \t") < strlen(this->fname));
+  if (isspc) ccom += "\"";
   ccom += this->fname;
-  ccom += "\" \"";
+  if (isspc) ccom += "\"";
+  ccom += " ";
+
+  tmpf = thtmp.get_file_name(tmpfn);
+  isspc = (strcspn(tmpf," \t") < strlen(tmpf));
+  if (isspc) ccom += "\"";
   ccom += type;
   ccom += ":";
-  ccom += thtmp.get_file_name(tmpfn);
-  ccom += "\"";
+  ccom += tmpf;
+  if (isspc) ccom += "\"";
 
   retcode = system(ccom.get_buffer());
   if (retcode == EXIT_SUCCESS) {

@@ -1017,7 +1017,7 @@ sk: Stlačte tento gombík, aby sa vaše zmeny v scrape uložili.
 
 therion: picture scale points
 cz: body měřítka (obrázek)
-en: picture scale points pixels)
+en: picture scale points (pixels)
 es: puntos de escala (pixels)
 it: punti nella scala del disegno
 sk: kalibračné body (obrazovka)
@@ -2340,15 +2340,15 @@ sk: Zaškrtnite pokiaľ pri hľadaní chcete rozlišovať malé a veľké písme
 
 therion: regular expressions
 cz: regulární výrazy
-en: regular expressions (cav*)
-es: patrón regular (kob*)
+en: regular expressions
+es: patrón regular
 it: esperssioni regolari
 sk: regulárny výraz
 
 therion: Check whether to evaluate search and replace as regular expressions.
 cz: Zaškrtněte pokud chcete vyhledávat nebo nahrazovat pomocí regulárních výrazů.
-en: Check wether to search using wildcards (cav* will find cave, cavern, cavalier...)
-es: Búsqueda usando comodines (kob* encontrará koba, kobea, kobie, etc).
+en: Check whether to search using regular expressions.
+es: Búsqueda usando comodines.
 it: Attiva per ricerca e sostituzione con espressioni regolari.
 sk: Zaškrtnite ak sa má hľadanie a nahradenie vykonávať v móde regulárnych výrazov.
 

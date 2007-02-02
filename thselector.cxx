@@ -438,7 +438,7 @@ void thselector::select_db(class thdatabase * db)
   thmbuffer mbf;
   char ** nms, * nobj = NULL, * nsrv = NULL;
   int nn = 0;
-  thsurvey * objsrv;
+  //thsurvey * objsrv;
   thdataobject * objptr = NULL;
   bool to_cont = false, select_all = false, has_selected_survey = false;
   thselector_list::iterator ii = this->data.begin();
@@ -465,8 +465,8 @@ void thselector::select_db(class thdatabase * db)
     nn = mbf.get_size();
     switch (nn) {
       case 1:
-        nobj = "";
-        nsrv = *nms;
+        nobj = *nms;
+        nsrv = NULL;
         break;
       case 2:
         nobj = nms[0];
@@ -483,28 +483,16 @@ void thselector::select_db(class thdatabase * db)
       continue;
     }
     
-    if ((strlen(nsrv) == 0) || (strcmp(nsrv,"*") == 0)) {
+    if ((nsrv == NULL) && ((strlen(nobj) == 0) || (strcmp(nobj,"*") == 0))) {
       select_all = true;
     }
-    else {
-      // let's find the survey
-      try {
-        objsrv = db->get_survey(nsrv,NULL);
-        objptr = objsrv;
-      }
-      catch(...) {
-        objsrv = NULL;
-      }
-      if (objsrv == NULL) {
-        thwarning(("%s [%d] -- survey not found -- \"%s\"", 
-          ii->src_name, ii->src_ln, nsrv))
-        to_cont = false;
-      }
-    } 
     
-    if (to_cont && (nn == 2)) {
+    if ((!select_all)) {
       try {
-        objptr = db->get_object(thobjectname(nobj,nsrv),NULL);
+        if (nsrv == NULL)
+          objptr = db->get_object(thobjectname(nsrv,nobj),NULL);
+        else
+          objptr = db->get_object(thobjectname(nobj,nsrv),NULL);
       }
       catch(...) {
         objptr = NULL;

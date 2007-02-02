@@ -217,7 +217,10 @@ void MP_path::print_svg(ofstream & F, CGS & gstate) {
         F << "L" << segments[i].coord[0] << " " << segments[i].coord[1];
         break;
       case MP_rlineto:
-        F << "l" << segments[i].coord[0] << " " << segments[i].coord[1];
+        if (segments[i].coord[0] == 0 && segments[i].coord[1] == 0)
+          F << "h0.001";  // rlineto 0 0 used for dot rendering doesn't work in SVG
+	else
+          F << "l" << segments[i].coord[0] << " " << segments[i].coord[1];
         break;
       case MP_curveto:
         F << "C" << segments[i].coord[0] << " " << segments[i].coord[1] << " "

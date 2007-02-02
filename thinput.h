@@ -39,6 +39,7 @@
 #include "thparse.h"
 #include <fstream>
 
+
 /**
  * Input file processing class.
  *
@@ -51,6 +52,7 @@ class thinput {
   public:
 
   bool cmd_sensitivity,  ///< Command sensitivity ID.
+    input_sensitivity,  /// < Whether dive into subfiles.
     scan_search_path,  ///< Whether to scan also search path for input files.
     pifo, ///< Print if open.
     * pifoid, ///< Identifier.
@@ -78,7 +80,7 @@ class thinput {
     std::ifstream sh;   ///< file stream.
     thbuffer name,  ///< Input file name buffer.
       path;  ///< Input file path buffer.
-    unsigned int lnumber;  /// Position at the file.
+    unsigned long lnumber;  /// Position at the file.
     int encoding;  /// Current file encoding.
     ifile * prev_ptr,  /// Pointer to the upper file.
       * next_ptr;  /// Pointer to the lower file.
@@ -129,6 +131,9 @@ struct stat
   
   ifile * first_ptr,  ///< Pointer to the first file.
     * last_ptr;  ///< Pointer to the last file.
+
+
+  bool is_first_file();
 
 
   /**
@@ -244,6 +249,9 @@ struct stat
    */
    
   void set_file_suffix(char * fsx);
+
+  bool get_input_sensitivity();
+  void set_input_sensitivity(bool s);
   
   
   /**
@@ -298,13 +306,19 @@ struct stat
    */  
    
   char * get_cif_name();
-  
+
+
+  /**
+   * Return current input file path.
+   */  
+   
+  char * get_cif_path();
   
   /**
    * Return current input line number.
    */
    
-  unsigned int get_cif_line_number();
+  unsigned long get_cif_line_number();
   
   
   /**

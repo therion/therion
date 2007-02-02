@@ -62,7 +62,7 @@ char * thexecute_cmd = NULL;
 const char * thhelp_text =
       "\ntherion [-q] [-L] [-l log-file]\n"
       "\t[-s source-file] [-p search-path]\n"
-      "\t[-g|-u] [-i] [-d] [-x] [cfg-file]\n\n"
+      "\t[-d] [-x] [cfg-file]\n\n"
       "therion [-h|--help]\n"
       "        [-v|--version]\n"
       "        [--print-encodings]\n"
@@ -102,11 +102,13 @@ void thprintf2err(const char *format, ...)
 
 
 void thprint_environment() {
-  thprintf("INIT=%s\n",thcfg.get_initialization_path());
-  thprintf("SOURCE=%s\n",thcfg.get_search_path());
-//  thprintf("CAVERN=%s\n",thini.get_path_cavern());
+  thprintf("\n\nINIT=%s\n",thcfg.get_initialization_path());
+  thprintf("SOURCE=%s\n\n",thcfg.get_search_path());
+  thprintf("CAVERN=%s\n",thini.get_path_cavern());
   thprintf("METAPOST=%s\n",thini.get_path_mpost());
   thprintf("PDFTEX=%s\n",thini.get_path_pdftex());
+  thprintf("IDENTIFY=%s\n",thini.get_path_identify());
+  thprintf("CONVERT=%s\n",thini.get_path_convert());
 }
 
 
@@ -317,23 +319,23 @@ int main(int argc, char * argv[]) {
     }
     
     // load input
-    long sid, maxsid = thcfg.get_source_file_names()->get_size();
-    if (maxsid == 0)
+    thconfig_src_list * sources = thcfg.get_sources();
+    thconfig_src_list::iterator srcit;
+    if (sources->size() == 0)
       therror(("source files not specified"));
-    char ** srcn = thcfg.get_source_file_names()->get_buffer();
 #ifndef THDEBUG
     thprintf("reading source files ... ");
     thtext_inline = true;
 #endif 
 
 
-    for(sid = 0; sid < maxsid; sid++, srcn++) {
+    for(srcit = sources->begin(); srcit != sources->end(); srcit++) {
 
 #ifdef THDEBUG
-      thprintf("\nreading input -- %s\n", *srcn);
+      thprintf("\nreading input -- %s\n", srcit->fname);
 #endif 
 
-      thdbreader.read(*srcn, 
+      thdbreader.read(srcit->fname, srcit->startln, srcit->endln, 
         thcfg.get_search_path(), &thdb);
 
 #ifdef THDEBUG

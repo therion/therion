@@ -274,6 +274,7 @@ void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY) 
 void print_surface_bitmaps (ofstream &F) {
   if (LAYOUT.transparency) 
     F << "<g opacity=\"" << LAYOUT.surface_opacity << "\">" << endl;
+  F.precision(8);
   for (list<surfpictrecord>::iterator I = SURFPICTLIST.begin();
                                       I != SURFPICTLIST.end(); I++) {
     F << "<g transform=\"matrix(";
@@ -286,6 +287,7 @@ void print_surface_bitmaps (ofstream &F) {
     F << "\" />";
     F << "</g>" << endl;
   };
+  F.precision(3);
   if (LAYOUT.transparency) 
     F << "</g>" << endl;
 }
@@ -305,8 +307,8 @@ void thsvg(char * fname, int fmt, legenddata ldata = legenddata::legenddata()) {
   string bgcol;
 
   ofstream F(fname);
-  //F.setf(ios::fixed, ios::floatfield);
-  //F.precision(2);
+  F.setf(ios::fixed, ios::floatfield);  // dolezite pre velke suradnice
+  F.precision(3);
   
   double llx=0, lly=0, urx=0, ury=0;
   find_dimensions(llx, lly, urx, ury);

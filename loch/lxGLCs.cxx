@@ -402,6 +402,17 @@ bool lxGLCanvas::CameraAutoRotate() {
 
 
 void lxGLCanvas::OnIdle(wxIdleEvent& WXUNUSED(event))	{
+
+  // fix bug with opening file before everything is initialized
+  if (!this->frame->m_fileToOpen.IsEmpty()) {
+    wxString fto;
+    fto = this->frame->m_fileToOpen;
+    this->frame->m_fileToOpen = _T("");
+    this->frame->OpenFile(fto);
+    return;
+  }
+
+
 	switch (this->m_sMoveLock)	{
 		case LXGLCML_PANX:
 		case LXGLCML_PANX2Y:

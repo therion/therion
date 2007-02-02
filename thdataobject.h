@@ -90,6 +90,8 @@ enum {
   TT_DATAOBJECT_AUTHOR = 1003,
   TT_DATAOBJECT_COPYRIGHT = 1004,
   TT_DATAOBJECT_STNS = 1005,
+  TT_DATAOBJECT_CS = 1006,
+  TT_DATAOBJECT_ATTR = 1007,
 };
 
 
@@ -98,8 +100,10 @@ enum {
  */
  
 static const thstok thtt_dataobject_opt[] = {
+  {"attr", TT_DATAOBJECT_ATTR},
   {"author", TT_DATAOBJECT_AUTHOR},
   {"copyright", TT_DATAOBJECT_COPYRIGHT},
+  {"cs", TT_DATAOBJECT_CS},
   {"id", TT_DATAOBJECT_NAME},
   {"station-names", TT_DATAOBJECT_STNS},
   {"title", TT_DATAOBJECT_TITLE},
@@ -267,6 +271,8 @@ class thdataobject {
   thdo_author_map_type author_map;  ///< Author map.
   thdo_copyright_map_type copyright_map;  ///< Copyright map.
 
+  int cs;  ///< Coordinate system.
+	thobjectsrc cs_source;  ///< Coordinate system source.
 
   public:
 
@@ -451,6 +457,19 @@ class thdataobject {
    */
  
   bool is_in_survey(thsurvey * psearch);
+
+  /**
+   * Convert coordinates according to current CS specification.
+   */
+
+  void convert_cs(char * src_x, char * src_y, double & dst_x, double & dst_y);
+
+  /**
+   * Parse object attributes.
+   */
+
+  void parse_attribute(char * name, char * value);
+
 };
 
 

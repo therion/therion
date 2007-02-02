@@ -17,7 +17,6 @@
   "../me_cmds.tcl",
   "../me_imgs.tcl",
   "../me_cmds2.tcl",
-  "../mv.tcl",
   "../te.tcl",
   "../help.tcl",
 );

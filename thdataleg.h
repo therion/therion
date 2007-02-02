@@ -271,7 +271,7 @@ enum {
 
 
 static const thstok thtt_extendflag[] = {
-  {"break", TT_EXTENDFLAG_BREAK},
+  //{"break", TT_EXTENDFLAG_BREAK},
   {"ignore", TT_EXTENDFLAG_IGNORE},
   {"left", TT_EXTENDFLAG_LEFT},
   {"normal", TT_EXTENDFLAG_NORMAL},
@@ -374,7 +374,7 @@ class thdataleg {
     to_up, to_down, to_left, to_right, vtresh;
     
   double length_sd, counter_sd, depth_sd, bearing_sd, gradient_sd,
-    dx_sd, dy_sd, dz_sd, x_sd, y_sd, z_sd, declination, 
+    dx_sd, dy_sd, dz_sd, x_sd, y_sd, z_sd, declination, implicit_declination, 
     total_sdx, total_sdy, total_sdz, fxx, txx;
     
   bool infer_plumbs, infer_equates, direction, adjusted, to_be_adjusted, topofil, plumbed;

@@ -92,6 +92,43 @@ Therion uses following data types:
 \endlist
 
 
+
+\subchapter Coordinate systems.
+
+Therion supports coordinate transformations in geodetic coordinate systems.
+You can specify |cs| option in |centreline|, |surface|, |import| and 
+|layout| and then enter XY data in given system. 
+You can also specify output |cs| 
+in configuration file. If you do not specify any |cs| in your dataset, 
+it is assumed you are working in |local| coordinate system, and no 
+conversions are done. Following coordinate systems are supported:
+
+\list
+* |UTM1| -- |UTM60| = universal transverse mercator in northern hemisphere
+  and given zone, WGS84 datum. 
+* |UTM1S| -- |UTM60S| = UTM in southern hemisphere, WGS84 datum.
+* |lat-long|, |long-lat| = latitude (N positive, S negative) and 
+  longitude (E positive, W negative) in given order in degrees 
+  ($deg[{:}min[{:}sec]]$ allowed), WGS84 datum. By default, not 
+  supported on output.
+* |EPSG:<number>| = Most of EPSG coordinate systems. Almost every 
+  coordinate system used worlwide has its own EPSG number. To find
+  number of your system, see |extern/proj4/nad/epsg| file in the
+  therion source distrubution.
+* |ESRI:<number>| = Simmilar to EPSG, but ESRI standard.
+* |JTSK|, |iJTSK| = Czechoslovak S-JTSK system with south and west
+  axis (JTSK) and its modified version with axis 
+  pointing east and north and negative numbers (iJTSK). JTSK is
+  not supported on output (iJTSK is).
+\endlist
+
+\subchapter Magnetic declination.
+
+Therion contains built-in IGRF Earth geomagnetic field model valid for period 
+1900--2010. It is automatically used if the cave is located in the space using 
+any of supported geodetic coordinate systems and no declination is specified by 
+user. The computed declination is listed in the LOG file for information.
+
 \subchapter Data format.
 
 The syntax of input files is explained in the description of
@@ -173,8 +210,9 @@ the command may be used anywhere.
 \subsubchapter `survey'.
 
 \description
-  Survey is the main data structure. Each data object must belong to a 
-  survey. Surveys may be nested---this allows a hierarchical structure 
+  Survey is the main data structure. 
+ % Each data object must belong to a   survey. 
+  Surveys may be nested---this allows a hierarchical structure 
   to be built. 
 
   Each survey has its own namespace specified by its |<id>| argument. Objects 
@@ -210,6 +248,8 @@ the command may be used anywhere.
 \endarguments
 
 \options 
+* |namespace <on/off>| = specify whether survey creates namespace (|on| 
+  by default)
 * |declination <specification>| = set the default declination for 
   all data objects in this survey (which can be overridden by
   declination definitions in subsurveys). The |<specification>| 
@@ -224,6 +264,10 @@ the command may be used anywhere.
      of each shot will be set according to the date specification
      of the data object. If you want to explicitely set the declination
      for undated survey data, use `|-|' instead of date.
+
+  If no declination is specified and some geodetic coordinate system is 
+  defined, the declination is automatically computed using built-in geomagnetic 
+  model.
 
 * |person-rename <old name> <new name>| = rename a person whose name has been
   changed
@@ -259,6 +303,7 @@ the command may be used anywhere.
           mark <type>
           flags <shot flags>
           station <station> <comment> [<flags>]
+          cs <coordinate system>
           fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]
           equate <station list>
           data <style> <readings order>
@@ -276,7 +321,7 @@ the command may be used anywhere.
 \endsyntax
 
 \context
-  survey
+  none, survey
 \endcontext
 
 \options
@@ -344,6 +389,8 @@ the command may be used anywhere.
   * |station <station> <comment> [<flags>]| = set the station comment
     and flags: entrance or continuation. If |""| is specified as a
     comment, it is ignored.
+  * |cs <coordinate system>| = coordinate system for stations with
+    fixed coordinates
   * |fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]| 
     = fix station coordinates (with specified errors---only 
     the units transformation, not calibration, is applied to them).
@@ -378,8 +425,6 @@ the command may be used anywhere.
      stations are given---direction is applied only to given shot.
 
     |left/right| = same as above, but direction is specified explicitely.
-
-    |break| = break series at given station (shot)
 
     |start| = specify starting station (shot)
 
@@ -453,7 +498,7 @@ the command may be used anywhere.
 \endsyntax
 
 \context
-  survey
+  none, survey
 \endcontext
 
 \arguments
@@ -500,6 +545,8 @@ the command may be used anywhere.
   * |stations <list of station names>| = stations you want to plot
     to the scrap, but which are not used for scrap transformation. You don't have
     to specify (draw) them with the |point station| command.
+  * |sketch <filename> <x> <y>| = underlying sketch bitmap specification
+    (lower left corner coordinates).
   * |walls <on/off/auto>| = specify if the scrap should be used in 3D model 
     reconstruction
   * |flip (none)/horizontal/vertical| = flips the scrap after
@@ -597,6 +644,8 @@ Point is a command for drawing a point map symbol.
 
     {\it water-flow:} |permanent| (default), |intermittent|, |paleo|.
 
+    The subtype may be specified also directly in |<type>| specification using 
+    `|:|' as a separator.\[E.g.~|station:fixed|]
   * |orientation/orient <number>| = defines the orientation
     of the symbol. If not specified, it's oriented to north.
     0 $\le$ |number| $<$ 360.
@@ -625,23 +674,6 @@ Point is a command for drawing a point map symbol.
   * |extend [prev[ious] <station>]| = if the point type is station and scrap
     projection is extended elevation, you can
     adjust the extension of the centreline using this option. 
-%    The |<specification>| is a list
-%    of one or more followig keywords:
-%
-%    1. |left| = indicates extension to the left
-%
-%    2. |right| = the opposite of above. If no extension direction is
-%       given, Therion uses the direction of the previous station, or
-%       right, if no such station exists.
-%
-%    3. |root| = determines the starting node for extension.
-%
-%    4. |sticky <on/off>| = two keywords that identify whether other
-%       scraps can be attached to this station. The default is true for
-%       end-station.
-%
-%    5. |previous/prev <reference>| = reference to previous station
-%       (or point of type station)
   * |scrap <reference>| = if the point type is section, this is a 
     reference to a cross-section scrap. 
   * |text| = text of the label or remark. It may contain following formatting
@@ -758,6 +790,9 @@ respectively.
 	 
 	 {\it survey:} |cave| (default), |surface| (default if centreline has 
 	    surface flag).
+
+    The subtype may be specified also directly in |<type>| specification using 
+    `|:|' as a separator.\[E.g.~|border:invisible|]
          
        * |[LINE DATA]| specify either the coordinates of a line segment
          |<x> <y>|, or coordinates of a B\'ezier curve arc 
@@ -855,7 +890,8 @@ You may use invisible border to achieve this inside of the passage.
 
 \arguments
   * |<type>| is one of following: |water|, |sump|, |sand|, |debris|,
-    |blocks|, |snow|, |ice|, |clay|, |pebbles|.
+    |blocks|, |snow|, |ice|, |clay|, |pebbles|, |bedrock|\[An empty area which 
+    can be used to clean the background.].
 \endarguments
 
 \comopt
@@ -891,7 +927,7 @@ You may use invisible border to achieve this inside of the passage.
 \endsyntax
 
 \context
-  scrap, survey
+  none, scrap, survey
 \endcontext
 
 \arguments
@@ -924,7 +960,7 @@ You may use invisible border to achieve this inside of the passage.
 \endsyntax
 
 \context
-survey
+none, survey
 \endcontext
 
 
@@ -949,7 +985,7 @@ survey
 \endsyntax
 
 \context
-  survey
+  none, survey
 \endcontext
 
 \arguments
@@ -988,6 +1024,7 @@ scanned topographical map (currently in 2D maps only) or surface grid
 \syntax
 
 |surface [<name>]
+   cs <coordinate system>
    bitmap <filename> <calibration>
    grid-units <units>
    grid <origin x> <origin y> <x spacing> <y spacing> <x count> <y count>
@@ -997,10 +1034,12 @@ endsurface|
 \endsyntax
 
 \context
-  survey
+  none, survey
 \endcontext
 
 \comopt
+* |cs <coordinate system>| = coordinate system for bitmap calibration
+  and grid origin specification
 * |bitmap <filename> <calibration>| = scanned topographical map.
 
   |calibration| may have two forms:
@@ -1067,6 +1106,10 @@ survey / all\[only with .3d files, where survey structure is specified]
      |use| = split stations into existing subsurveys
 
      |ignore| = do not split stations into sub-surveys
+  * |cs <coordinate system>| = coordinate system for stations with
+    fixed coordinates
+  * |calibrate [<x> <y> <z> <X> <Y> <Z>]| = coordinates in the imported
+    file are shifted from lower-case coordinates to upper-case coordinates.
 \endoptions
 
 
@@ -1123,6 +1166,24 @@ endrevise|
   revise must always be specified).
 \endarguments
 
+
+
+\subchapter Custom attributes.
+
+Objects {\it survey}, {\it centreline}, {\it scrap}, {\it point}, {\it 
+line}, {\it area}, {\it map} and {\it surface} can contain user-defined 
+attributes in a form |-attr <name> <value>|. |<name>| may contain 
+alphanumeric characters, |<value>| may be either a number or a string. 
+
+The custom attributes are used in map export depending on output 
+format:
+\list
+* in {\it shapefile} export they are written directly to the associated 
+dbf file,
+* in maps generated using \MP\ (PDF, SVG) the attributes are written in 
+the \MP\ source file (in th form |ATTR_<name>|) and can be used by user in symbols definition 
+macros.
+\endlist
 
 
 \subchapter XTherion.
@@ -1305,16 +1366,24 @@ format}.)
 If you draw some scraps with |none| projection, it's necessary to 
 {\bf calibrate} the 
 drawing area. The scale can be defined only one way in XTherion---using 
-coordinates of two points. After selecting a scrap (click on its header in the 
-{\it File commands} menu) two small red squares 
+coordinates of two points (specified both in the picture coordinate system and 
+in the `real' coordinate system). 
+
+After selecting a scrap (click on its header in the 
+{\it File commands} menu) two small red squares connected by red arrow
 will appear (by default, they'll be in the lower corners of drawing area). 
 You have to drag them to points with known coordinates---usually intersections 
 of mm grid lines on the scanned drawing. If you can not see these points, 
-you can move pointer to desired position, read pointer coordinates from 
+you can either
+\list
+* press {\it Scale} button in the {\it Scraps} menu and click on two different 
+places on the image where the endpoints of calibration arrow should be, or
+* move pointer to desired position, read pointer coordinates from 
 the status bar and enter these coordinates into {\it picture scale points}
-boxes in the {\it Scrap control}. You have to fill X1,Y1 and
-X2,Y2 coordinate pairs. Then you have to enter real coordinates of these
-points. 
+boxes in the {\it Scraps} control. After filling X1,Y1 and
+X2,Y2 coordinate pairs the calibration arrow wil be moved correspondingly. 
+\endlist
+Then you have to enter real coordinates of these points (X1, Y1, X2, Y2). 
 
 In the {\bf selection mode} you can select existing line or point objects and  
 set their attributes in the corresponding menus, move them, or delete them (Ctrl-d or 

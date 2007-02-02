@@ -31,6 +31,7 @@
 #include "thmbuffer.h"
 #include "thtflength.h"
 #include "thdatabase.h"
+#include "thcsdata.h"
 #include <math.h>
 #ifdef THMSVC
 #define hypot _hypot
@@ -225,7 +226,7 @@ void thsurface::parse_picture(char ** args)
   pict_path += "/";
   pict_path += thdb.csrc.name;
   char * pp = pict_path.get_buffer();
-  for(i = strlen(pp); i >= 0; i--) {
+  for(i = (long)strlen(pp); i >= 0; i--) {
     if ((pp[i] == '/') || (pp[i] == '\\')) {
       break;
     } else
@@ -235,7 +236,7 @@ void thsurface::parse_picture(char ** args)
     pict_path = "/";
   pict_path += args[0];
   pp = pict_path.get_buffer();
-  for(i = strlen(pp); i >= 0; i--) {
+  for(i = (long)strlen(pp); i >= 0; i--) {
     if (pp[i] == '\\')
       pp[i] = '/';
   }
@@ -260,7 +261,6 @@ void thsurface::parse_picture(char ** args)
   thmbuffer calib;
   thsplit_words(&calib, args[1]);
   thtflength ltr;
-  double dblv;
   int sv;
   long ncals = calib.get_size();
   char ** cals = calib.get_buffer();
@@ -271,19 +271,24 @@ void thsurface::parse_picture(char ** args)
     case 8:
       // parsne jednotlive cisla
 #define surfpiccaldbl(XXX,YYY) \
-      thparse_double(sv, dblv, cals[YYY]); \
+      thparse_double(sv, this->XXX, cals[YYY]); \
       if (sv != TT_SV_NUMBER) \
-        ththrow(("number expected -- %s", cals[YYY])) \
-      this->XXX = ltr.transform(dblv);
+        ththrow(("number expected -- %s", cals[YYY]))
       
       surfpiccaldbl(pict_X1,0);
       surfpiccaldbl(pict_Y1,1);
-      surfpiccaldbl(pict_x1,2);
-      surfpiccaldbl(pict_y1,3);
+      this->convert_cs(cals[2], cals[3], this->pict_x1, this->pict_y1);
+      if (this->cs == TTCS_LOCAL) {
+        this->pict_x1 = ltr.transform(this->pict_x1);
+        this->pict_y1 = ltr.transform(this->pict_y1);
+      }
       surfpiccaldbl(pict_X2,4);
       surfpiccaldbl(pict_Y2,5);
-      surfpiccaldbl(pict_x2,6);
-      surfpiccaldbl(pict_y2,7);
+      this->convert_cs(cals[6], cals[7], this->pict_x2, this->pict_y2);
+      if (this->cs == TTCS_LOCAL) {
+        this->pict_x2 = ltr.transform(this->pict_x2);
+        this->pict_y2 = ltr.transform(this->pict_y2);
+      }
       
       if (((this->pict_X1 == this->pict_X2) && (this->pict_Y1 == this->pict_Y2)) ||
           ((this->pict_x1 == this->pict_x2) && (this->pict_y1 == this->pict_y2))) {
@@ -402,9 +407,13 @@ void thsurface::parse_grid_setup(char ** args)
       if (dblv != double(long(dblv))) \
         ththrow(("integer expected -- %s", args[YYY])) \
       XXX = long(dblv);
-      
-  parsedbl(this->grid_ox,0);
-  parsedbl(this->grid_oy,1);
+  
+  this->convert_cs(args[0], args[1], this->grid_ox, this->grid_oy);
+  if (this->cs == TTCS_LOCAL) {
+    this->grid_ox = this->grid_units.transform(this->grid_ox);
+    this->grid_oy = this->grid_units.transform(this->grid_oy);
+  }
+
   parsedbl(this->grid_dx,2);
   if (this->grid_dx == 0.0)
     ththrow(("non-zero number expected -- %s", args[2]));

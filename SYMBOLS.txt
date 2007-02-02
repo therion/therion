@@ -113,6 +113,7 @@ waterflow_permanent: UIS
 
 [Area symbols]
 
+bedrock: SKBB 
 blocks: SKBB 
 clay: SKBB 
 debris: SKBB UIS 

@@ -232,7 +232,6 @@ proc xth_app_finish {} {
       source me_cmds2.tcl
       source me_ss.tcl
       source bac.tcl
-      source mv_procs.tcl
     } -font $xth(gui,lfont)
     $dm add command -label "Screen dump" -underline 0 -command {
       after 5000 {xwd -out screendump -frame}
@@ -313,13 +312,12 @@ proc xth_app_control_o {} {
 
   # puts $xth(app,active)  
   switch $xth(app,active) {
-    te  {xth_te_open_file 1 {} 1}
+    te  {xth_te_open_file 1 {} 0}
     me  {xth_me_open_file 1 {} 1}
     cp  {
       set xth(cp,updcf) 0
       xth_cp_open_file {}
     }
-    mv {xth_mv_open_file {}}
   }
 }  
 
@@ -332,7 +330,6 @@ proc xth_app_pgup {} {
       $xth(gui,main).me.af.ctrl.c yview scroll -1 pages
     }
     cp  {}
-    mv {}
   }
 }
 
@@ -344,7 +341,6 @@ proc xth_app_pgdn {} {
       $xth(gui,main).me.af.ctrl.c yview scroll 1 pages
     }
     cp  {}
-    mv {}
   }
 }
 
@@ -356,7 +352,6 @@ proc xth_app_shift_pgup {} {
       $xth(ctrl,me,cmds).cl.l yview scroll -1 pages
     }
     cp  {}
-    mv {}
   }
 }
 
@@ -369,7 +364,6 @@ proc xth_app_shift_pgdn {} {
       $xth(ctrl,me,cmds).cl.l yview scroll 1 pages
     }
     cp  {}
-    mv {}
   }
 }
 
@@ -387,7 +381,6 @@ proc xth_app_control_a {} {
       xth_ctrl_maximize me ac
     }
     cp  {}
-    mv {}
   }
 }  
 
@@ -406,7 +399,6 @@ proc xth_app_control_r {} {
     }
     
     cp  {}
-    mv {xth_mv_reload_file}
   }
 }  
 
@@ -542,8 +534,6 @@ proc xth_app_show {aname} {
       pack $xth(gui,tb).self -side right -anchor nw
       pack $xth(gui,tb).edif -side right
     }
-    mv {
-    }    
   }
 }
 

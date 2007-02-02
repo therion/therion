@@ -91,6 +91,7 @@ struct stat
 thinput::thinput()
 {
   this->cmd_sensitivity = true;
+  this->input_sensitivity = true;
   this->scan_search_path = false;
   this->first_ptr = new ifile(NULL);
   this->last_ptr = this->first_ptr;
@@ -331,8 +332,11 @@ void thinput::close_file()
     thprintf("close file -- %s\n", this->last_ptr->name.get_buffer());
 #endif
     this->last_ptr->close();
-    if (this->last_ptr->prev_ptr != NULL)
+    if (this->last_ptr->prev_ptr != NULL) {
       this->last_ptr = this->last_ptr->prev_ptr; 
+      // Is next cmd it really like this ?????
+      this->last_ptr->next_ptr = NULL;
+    }
   }
 }
 
@@ -384,7 +388,7 @@ char * thinput::read_line()
     }
     
     // now let's find last non white character
-    lnlen = strlen(this->lnbuffer);
+    lnlen = (long)strlen(this->lnbuffer);
     idxptr = this->lnbuffer + lnlen - 1;
     while ((lnlen > 0) && (*idxptr < 33)) {
       idxptr--;
@@ -429,12 +433,14 @@ char * thinput::read_line()
       switch (thmatch_token(this->cmdbf.get_buffer(), thtt_input)) {
       
         case TT_INPUT:
-          if (this->tmpmb.get_size() != 1)
-            therror(("%s [%d] -- one input file name expected -- %s", \
-              this->get_cif_name(), this->get_cif_line_number(), \
-              this->valuebf.get_buffer()))
-          else
-            this->open_file(*(this->tmpmb.get_buffer()));
+          if (this->input_sensitivity) {
+            if (this->tmpmb.get_size() != 1)
+              therror(("%s [%d] -- one input file name expected -- %s", \
+                this->get_cif_name(), this->get_cif_line_number(), \
+                this->valuebf.get_buffer()))
+            else
+              this->open_file(*(this->tmpmb.get_buffer()));
+          }
           continue;
           
         case TT_ENCODING:
@@ -458,7 +464,7 @@ char * thinput::read_line()
     // otherwise check if comment
     else {
       idxptr = this->linebf.get_buffer();
-      lnlen = strlen(idxptr);
+      lnlen = (long)strlen(idxptr);
       while ((lnlen > 0) && (*idxptr < 33)) {
         lnlen--;
         idxptr++;
@@ -499,9 +505,18 @@ char * thinput::get_cif_name()
 {
   return this->last_ptr->name.get_buffer();
 }
+
+
+
+char * thinput::get_cif_path()
+{
+  static thbuffer cifpath;
+  thsplit_fpath(&cifpath, this->last_ptr->name.get_buffer());
+  return cifpath.get_buffer();
+}
   
 
-unsigned int thinput::get_cif_line_number()
+unsigned long thinput::get_cif_line_number()
 {
   return this->last_ptr->lnumber;
 }
@@ -520,4 +535,19 @@ void thinput::print_if_opened(void (* pifop)(char *), bool * printed) {
 }
 
 
+void thinput::set_input_sensitivity(bool s)
+{
+  this->input_sensitivity = s;
+}
+
+
+bool thinput::get_input_sensitivity()
+{
+  return this->input_sensitivity;
+}
+
+bool thinput::is_first_file()
+{
+  return ((this->first_ptr == NULL) || (this->first_ptr->next_ptr == NULL));
+}
 

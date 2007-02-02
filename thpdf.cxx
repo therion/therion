@@ -1502,9 +1502,10 @@ void build_pages() {
     PAGEDEF << "\\advance\\x by \\extraW" << endl;
     PAGEDEF << "\\advance\\y by \\extraN" << endl;
     PAGEDEF << "\\advance\\y by \\extraS" << endl;
-    PAGEDEF << "\\wd\\xxx=\\x" << endl;
-    PAGEDEF << "\\ht\\xxx=\\y" << endl;
-    PAGEDEF << "\\immediate\\pdfxform\\xxx" << endl;
+    PAGEDEF << "\\newbox\\xxxx\\setbox\\xxxx=\\hbox to \\x{\\kern\\extraW\\raise\\extraS\\box\\xxx\\hss}%\\dp\\xxx=0bp" << endl;
+    PAGEDEF << "\\wd\\xxxx=\\x" << endl;
+    PAGEDEF << "\\ht\\xxxx=\\y" << endl;
+    PAGEDEF << "\\immediate\\pdfxform\\xxxx" << endl;
     PAGEDEF << "\\newcount\\THmaplegend\\THmaplegend=\\pdflastxform" << endl;
 
     PAGEDEF << "\\advance\\pdfhorigin by \\extraW" << endl;

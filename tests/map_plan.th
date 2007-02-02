@@ -4,6 +4,7 @@ encoding  utf-8
     centerline
        data normal from to length compass clino
        calibrate length -1.0
+       date 2000.1.1
        0 0.1 10 0 0
        0.1 0.2 20 0 0
     endcenterline
@@ -11,6 +12,7 @@ encoding  utf-8
     centerline
       walls on
       data normal station up down left right newline bearing clino length
+      date 2000.1.1
         0 1 1 1 1
           0 1 10
         1 1 2 1 1
@@ -21,6 +23,7 @@ encoding  utf-8
     centerline
       data cylpolar station newline bearing length depthchange
       infer plumbs on
+      date 2000.1.1
       c0 
         -  0 -12
       c1 
@@ -30,11 +33,13 @@ encoding  utf-8
       c3 
         175  10  0
       c0
-      fix c0 50 50 1550
+      cs epsg:4326
+      fix c0 20 -20 1550
     endcenterline
       
     centerline
       
+      date 2000.1.1
       data cartesian from to dx dy dz up down left right
       
       x.0  x.1  10  0  0   [1 2]  [1  1]  [2 1] [1 1]
@@ -90,7 +95,8 @@ encoding  utf-8
          mark 1 painted
          mark 2 fixed
          mark 3 natural
-         fix 0 0 0 1500   
+         cs epsg:4326
+         fix 0 19.9999 -19.9999 1500   
 
          data dimensions station up left
          #3 1 3
@@ -101,6 +107,7 @@ encoding  utf-8
     survey xtp
       centreline
       walls off
+      date 2000.1.1
       data normal from to bearing clino length up down left right
       units bearing clino degrees
       #flags surface
@@ -128,6 +135,7 @@ encoding  utf-8
     
     
     centerline -station-names x x
+      date 2000.1.1
       data cartesian from to dx dy dz
       0 1 5 5 0
       1 2 0 5 0
@@ -137,6 +145,7 @@ encoding  utf-8
     endcenterline
     
     input map_plan.th2
+    revise test -attr fakt "to funguje!!!!"
     
   #  join hrw drw
   #  join hlw dlw

@@ -45,6 +45,7 @@ thexport::~thexport() {}
 void thexport::assign_config(class thconfig * cptr) 
 {
   this->cfgptr = cptr;
+  this->cfgpath = cptr->cfg_file.get_cif_path();
 }
 
 
@@ -109,6 +110,22 @@ void thexport::dump_body(FILE * xf)
     thdecode_arg(&(this->cfgptr->bf1), this->outpt);
     fprintf(xf," -output %s",this->cfgptr->bf1.get_buffer());
   }  
+}
+
+
+char * thexport::get_output(const char * defname)
+{
+  static thbuffer outptfname;
+  outptfname = this->cfgpath.get_buffer();
+  if (this->outpt_def) {
+    if (thpath_is_absolute(this->outpt))
+      return this->outpt;
+    else
+      outptfname += this->outpt;
+  } else {
+    outptfname += defname;
+  }
+  return outptfname.get_buffer();
 }
 
 

@@ -179,6 +179,13 @@ class thdate {
    */
    
   double get_end_year();
+
+
+  /**
+   * Return end average as double value.
+   */
+
+  double get_average_year();
   
   
   /**

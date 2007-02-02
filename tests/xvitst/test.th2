@@ -1,6 +1,20 @@
 encoding  utf-8
-##XTHERION## xth_me_area_adjust -351.955 -661.915 1511.635 647.935
+##XTHERION## xth_me_area_adjust -128.0 -459.0 332.0 127.0
 ##XTHERION## xth_me_area_zoom_to 100
-##XTHERION## xth_me_image_insert {39.365 1 1.0} {39.365 0} test.xvi 0 {}
+##XTHERION## xth_me_image_insert {0.0 1 1.0} {-1.0 {}} test.gif 0 {}
+
+
+
+scrap scrap1 -scale [57.0 -268.0 156.0 -267.0 0.0 0.0 47.335186 0.0 m] -sketch test.gif 0.0 -331.0
+
+point 86.0 -127.0 station -name 3
+
+point 59.0 -169.0 station -name 2
+
+point 142.0 -244.0 station -name 1
+
+point 175.0 -191.0 station -name 0
+
+endscrap
 
 

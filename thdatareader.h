@@ -53,11 +53,13 @@ class thdatareader {
    * Read input to database.
    *
    * @param ifname Input file name.
+   * @param lnstart Start line where to start reading.
+   * @param lnend End line where to stop reading.
    * @param spath Search path for input files.
    * @param dbptr Destination database.
    */
    
-  void read(char * ifname, char * spath, thdatabase * dbptr);
+  void read(char * ifname, long lnstart, long lnend, char * spath, thdatabase * dbptr);
 
 
   /**

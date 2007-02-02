@@ -45,6 +45,25 @@ proc xth_me_cmds_get_line_option {ln opt} {
   return [list $val $rln $res]
 }
 
+proc xth_me_cmds_get_sketch_option {ln} {
+  set rxl [list [list "\\s*\\-sketch\\s+\\\[((\[^\\\]\]*))\\\]\\s+(\\S+)\\s+(\\S+)" "\[" "\]"]\
+    [list "\\s*\\-sketch\\s+\\\"((\\\"\\\"|\[^\\\"])+)\\\"\\s+(\\S+)\\s+(\\S+)" "\"" "\""]\
+    [list "\\s*\\-sketch\\s+((\\S+))\\s+(\\S+)\\s+(\\S+)" {} {}]]
+  set rln $ln
+  set val {}
+  set sep {}
+  set res 0
+  foreach rx $rxl {
+    if {[regexp [lindex $rx 0] $ln dump v1 dum v2 v3]} {
+      regsub [lindex $rx 0] $ln {} rln
+      set val "[lindex $rx 1]$v1[lindex $rx 2] $v2 $v3"
+      set res 1
+      break
+    }
+  }
+  return [list $val $rln $res]
+}
+
 
 proc xth_me_cmds_set_action {act} {
 
@@ -103,15 +122,15 @@ proc xth_me_cmds_update_buttons {} {
       $xth(ctrl,me,ss).ca configure -state normal
       
       if {$ncmd > 1} {
-        $ccbox.mu configure -state normal
-        $ccbox.md configure -state normal
-        $ccbox.mt configure -state normal
-        $ccbox.tt configure -state normal
+	$ccbox.mu configure -state normal
+	$ccbox.md configure -state normal
+	$ccbox.mt configure -state normal
+	$ccbox.tt configure -state normal
      } else {
-        $ccbox.mu configure -state disabled
-        $ccbox.md configure -state disabled
-        $ccbox.mt configure -state disabled
-        $ccbox.tt configure -state disabled
+	$ccbox.mu configure -state disabled
+	$ccbox.md configure -state disabled
+	$ccbox.mt configure -state disabled
+	$ccbox.tt configure -state disabled
       }
       $ccbox.cfg.m entryconfigure [mc "Delete"] -state normal
       $xth(me,menu,edit) entryconfigure [mc "Delete"] -state normal
@@ -126,7 +145,7 @@ proc xth_me_cmds_update_buttons {} {
       $ccbox.mt configure -state disabled
       $ccbox.tt configure -state disabled
       if {$xth(me,cmds,action) == 4} {
-        xth_me_cmds_set_action 3
+	xth_me_cmds_set_action 3
       }
 
       $xth(ctrl,me,ss).xl configure -state disabled
@@ -348,42 +367,42 @@ proc xth_me_cmds_update {id} {
   switch $xth(me,cmds,$id,ct) {
     1 {
       xth_me_cmds_update_text $id [$xth(ctrl,me,text).txt get 1.0 end] \
-        [$xth(ctrl,me,text).txt index insert]
+	[$xth(ctrl,me,text).txt index insert]
     }
     2 {
       xth_me_cmds_update_point $id $xth(ctrl,me,point,x) \
-        $xth(ctrl,me,point,y) $xth(ctrl,me,point,type) \
-        $xth(ctrl,me,point,name) $xth(ctrl,me,point,opts) \
-        $xth(ctrl,me,point,rot) $xth(ctrl,me,point,xs) \
-        $xth(ctrl,me,point,ys)
+	$xth(ctrl,me,point,y) $xth(ctrl,me,point,type) \
+	$xth(ctrl,me,point,name) $xth(ctrl,me,point,opts) \
+	$xth(ctrl,me,point,rot) $xth(ctrl,me,point,xs) \
+	$xth(ctrl,me,point,ys)
       xth_me_cmds_update_point_vars $id
     }
     3 {
       xth_me_cmds_update_line $id $pid $xth(ctrl,me,line,type) \
-        $xth(ctrl,me,line,name) $xth(ctrl,me,line,opts) \
-        $xth(ctrl,me,line,reverse) $xth(ctrl,me,linept,x) \
-        $xth(ctrl,me,linept,y) $xth(ctrl,me,linept,xp) \
-        $xth(ctrl,me,linept,yp) $xth(ctrl,me,linept,xn) \
-        $xth(ctrl,me,linept,yn) $xth(ctrl,me,linept,smooth) \
-        $xth(ctrl,me,linept,rot) $xth(ctrl,me,linept,rs) \
-        $xth(ctrl,me,linept,ls) \
-        [$xth(ctrl,me,linept).oe.txt get 1.0 end] \
-        [$xth(ctrl,me,linept).oe.txt index insert]
+	$xth(ctrl,me,line,name) $xth(ctrl,me,line,opts) \
+	$xth(ctrl,me,line,reverse) $xth(ctrl,me,linept,x) \
+	$xth(ctrl,me,linept,y) $xth(ctrl,me,linept,xp) \
+	$xth(ctrl,me,linept,yp) $xth(ctrl,me,linept,xn) \
+	$xth(ctrl,me,linept,yn) $xth(ctrl,me,linept,smooth) \
+	$xth(ctrl,me,linept,rot) $xth(ctrl,me,linept,rs) \
+	$xth(ctrl,me,linept,ls) \
+	[$xth(ctrl,me,linept).oe.txt get 1.0 end] \
+	[$xth(ctrl,me,linept).oe.txt index insert]
       xth_me_cmds_update_line_vars $id $pid
     }    
     4 {
       xth_me_cmds_update_scrap $id $xth(ctrl,me,scrap,name) \
-        $xth(ctrl,me,scrap,projection) $xth(ctrl,me,scrap,options) \
-         [list $xth(ctrl,me,scrap,px1) $xth(ctrl,me,scrap,py1) \
-          $xth(ctrl,me,scrap,px2) $xth(ctrl,me,scrap,py2) \
-          $xth(ctrl,me,scrap,rx1) $xth(ctrl,me,scrap,ry1) \
-          $xth(ctrl,me,scrap,rx2) $xth(ctrl,me,scrap,ry2) \
-          $xth(ctrl,me,scrap,units)]
+	$xth(ctrl,me,scrap,projection) $xth(ctrl,me,scrap,options) \
+	 [list $xth(ctrl,me,scrap,px1) $xth(ctrl,me,scrap,py1) \
+	  $xth(ctrl,me,scrap,px2) $xth(ctrl,me,scrap,py2) \
+	  $xth(ctrl,me,scrap,rx1) $xth(ctrl,me,scrap,ry1) \
+	  $xth(ctrl,me,scrap,rx2) $xth(ctrl,me,scrap,ry2) \
+	  $xth(ctrl,me,scrap,units)]
       xth_me_cmds_update_scrap_vars $id
     }
     6 {
       xth_me_cmds_update_area $id $xth(ctrl,me,ac,type) \
-        $xth(ctrl,me,ac,opts)
+	$xth(ctrl,me,ac,opts)
       xth_me_cmds_update_area_vars $id
     }
   }
@@ -432,14 +451,14 @@ proc xth_me_cmds_unselect {id} {
       xth_me_cmds_update_linept_ctrl {} 0
       set xth(me,cmds,selpid) 0
       if {$xth(me,cmds,mode) == 2} {
-        xth_me_cmds_set_mode 0
+	xth_me_cmds_set_mode 0
       }
     }
     4 {xth_me_cmds_update_scrap_ctrl {}}
     6 {
       xth_me_cmds_update_area_ctrl {}
       if {$xth(me,cmds,mode) == 3} {
-        xth_me_cmds_set_mode 0
+	xth_me_cmds_set_mode 0
       }
     }
   }
@@ -525,11 +544,11 @@ proc xth_me_cmds_select {id} {
   if {$center_to > 0} {
     switch $xth(me,cmds,$id,ct) {
       2 { xth_me_center_to [list $xth(me,cmds,$id,x) $xth(me,cmds,$id,y)]
-        }
+	}
       3 { xth_me_center_to [list \
-          $xth(me,cmds,$xth(me,cmds,selid),$center_to,x) \
-          $xth(me,cmds,$xth(me,cmds,selid),$center_to,y)]
-        }
+	  $xth(me,cmds,$xth(me,cmds,selid),$center_to,x) \
+	  $xth(me,cmds,$xth(me,cmds,selid),$center_to,y)]
+	}
     }
   }
   update idletasks
@@ -545,11 +564,11 @@ proc xth_me_cmds_set_move_to_list {} {
     set id [lindex $xth(me,cmds,xlist) $ii]
     switch $xth(me,cmds,$id,ct) {
       4 {
-        set lscrap $xth(me,cmds,$id,name)
-        lappend vls "$lscrap begin \[[expr $ii + 1]\]"
+	set lscrap $xth(me,cmds,$id,name)
+	lappend vls "$lscrap begin \[[expr $ii + 1]\]"
       }
       5 {
-        lappend vls "$lscrap end \[$ii\]"
+	lappend vls "$lscrap end \[$ii\]"
       }
     }
   }
@@ -724,17 +743,25 @@ proc xth_me_cmds_hide_scrap_xctrl {} {
   $xth(me,can) itemconfigure $xth(me,canid,scrap,scp2) -state hidden
   $xth(me,can) bind $xth(me,canid,scrap,scp2) <Enter> ""
   $xth(me,can) bind $xth(me,canid,scrap,scp2) <Leave> ""
+
+  $xth(me,can) itemconfigure $xth(me,canid,scrap,scpA) -state hidden
   
 }
 
 
 proc xth_me_cmds_move_scrap_xctrl {id x y} {
   global xth
+  set xth(me,canid,scrap,scp$id,pos) [list $x $y]
   set x [xth_me_real2canx $x]
   set y [xth_me_real2cany $y]
   $xth(me,can) coords $xth(me,canid,scrap,scp$id) \
     [expr $x - $xth(gui,me,scrap,psize)] [expr $y - $xth(gui,me,scrap,psize)] \
     [expr $x + $xth(gui,me,scrap,psize)] [expr $y + $xth(gui,me,scrap,psize)]
+  set x1 [xth_me_real2canx [lindex $xth(me,canid,scrap,scp1,pos) 0]]
+  set y1 [xth_me_real2cany [lindex $xth(me,canid,scrap,scp1,pos) 1]]
+  set x2 [xth_me_real2canx [lindex $xth(me,canid,scrap,scp2,pos) 0]]
+  set y2 [xth_me_real2cany [lindex $xth(me,canid,scrap,scp2,pos) 1]]
+  $xth(me,can) coords $xth(me,canid,scrap,scpA) $x1 $y1 $x2 $y2
 }
 
 
@@ -797,6 +824,8 @@ proc xth_me_cmds_show_scrap_xctrl {x1 y1 x2 y2} {
   $xth(me,can) bind $xth(me,canid,scrap,scp2) <Enter> "xth_status_bar_push me; xth_status_bar_status me \"Scrap picture scale point 2.\"; $xth(me,can) itemconfigure $xth(me,canid,scrap,scp2) -fill yellow"
   $xth(me,can) bind $xth(me,canid,scrap,scp2) <Leave> "xth_status_bar_pop me; $xth(me,can) itemconfigure $xth(me,canid,scrap,scp2) -fill red"
   $xth(me,can) bind $xth(me,canid,scrap,scp2) <1> "xth_me_cmds_start_scrap_xctrl_drag 2 %x %y"
+
+  $xth(me,can) itemconfigure $xth(me,canid,scrap,scpA) -state normal
   
 }
 
@@ -824,6 +853,11 @@ proc xth_me_cmds_update_scrap_ctrl {id} {
     $xth(ctrl,me,scrap).scy2r configure -state normal
     $xth(ctrl,me,scrap).scu configure -state normal
     $xth(ctrl,me,scrap).scul configure -state normal
+    $xth(ctrl,me,scrap).skl configure -state normal
+    $xth(ctrl,me,scrap).skll.l configure -takefocus 1 \
+      -listvariable xth(me,cmds,$id,sklist)
+    $xth(ctrl,me,scrap).skins configure -state normal
+    $xth(ctrl,me,scrap).skdel configure -state normal
     set xth(ctrl,me,scrap,name) $xth(me,cmds,$id,name)
     set xth(ctrl,me,scrap,projection) $xth(me,cmds,$id,projection)
     set xth(ctrl,me,scrap,options) $xth(me,cmds,$id,options)
@@ -873,6 +907,11 @@ proc xth_me_cmds_update_scrap_ctrl {id} {
     $xth(ctrl,me,scrap).scy2r configure -state disabled
     $xth(ctrl,me,scrap).scu configure -state disabled
     $xth(ctrl,me,scrap).scul configure -state disabled
+    $xth(ctrl,me,scrap).skl configure -state disabled
+    $xth(ctrl,me,scrap).skll.l configure -takefocus 0 \
+      -listvariable xth(ctrl,me,scrap,sklempty)
+    $xth(ctrl,me,scrap).skins configure -state disabled
+    $xth(ctrl,me,scrap).skdel configure -state disabled
     xth_me_cmds_hide_scrap_xctrl    
   }
 }
@@ -919,7 +958,7 @@ proc xth_me_cmds_update_scrap {id nname nproj nopt nscale} {
   } else {
     for {set i 0} {$i < 8} {incr i} {
       if {[catch {expr [lindex $nscale $i]}]} {
-        set nscale [lreplace $nscale $i $i [lindex $oscale $i]]
+	set nscale [lreplace $nscale $i $i [lindex $oscale $i]]
       }
     }
   }
@@ -964,6 +1003,10 @@ proc xth_me_cmds_update_scrap_data {id} {
 
   set d "$d -scale \[$xth(me,cmds,$id,scale)\]"
   set xth(me,dflt,scrap,scale) $xth(me,cmds,$id,scale)
+  
+  foreach sk $xth(me,cmds,$id,sklist) {
+    set d "$d -sketch $sk"
+  }
 
   set xth(me,cmds,$id,data) "$d"
   
@@ -984,11 +1027,11 @@ proc xth_me_cmds_create_scrap {ix mode name opts} {
     set cx [lsearch -exact $xth(me,cmds,xlist) $xth(me,cmds,selid)]
     if {$cx > -1} {
       for {set cc [expr $cx + 1]} {$cc < [llength $xth(me,cmds,xlist)]} {incr cc} {
-        set cselid [lindex $xth(me,cmds,xlist) $cc]
-        if {$xth(me,cmds,$cselid,ct) == 4} {
-          set newselid $cselid
-          break
-        }
+	set cselid [lindex $xth(me,cmds,xlist) $cc]
+	if {$xth(me,cmds,$cselid,ct) == 4} {
+	  set newselid $cselid
+	  break
+	}
       }
     }
     xth_me_cmds_select $newselid
@@ -1036,15 +1079,15 @@ proc xth_me_cmds_create_scrap {ix mode name opts} {
   switch [llength $optv] {
     1 {
       set xth(me,cmds,$id,scale) [list $xth(me,area,xmin) $xth(me,area,ymin) \
-        $xth(me,area,xmax) $xth(me,area,ymin) 0.0 0.0 [expr 1.0 * $optv * ($xth(me,area,xmax) - $xth(me,area,xmin))] 0.0 m]
+	$xth(me,area,xmax) $xth(me,area,ymin) 0.0 0.0 [expr 1.0 * $optv * ($xth(me,area,xmax) - $xth(me,area,xmin))] 0.0 m]
     }
     2 {
       set xth(me,cmds,$id,scale) [list $xth(me,area,xmin) $xth(me,area,ymin) \
-        $xth(me,area,xmax) $xth(me,area,ymin) 0.0 0.0 [expr 1.0 * [lindex $optv 0] * ($xth(me,area,xmax) - $xth(me,area,xmin))] 0.0 [lindex $optv 1]]
+	$xth(me,area,xmax) $xth(me,area,ymin) 0.0 0.0 [expr 1.0 * [lindex $optv 0] * ($xth(me,area,xmax) - $xth(me,area,xmin))] 0.0 [lindex $optv 1]]
     }
     3 {
       set xth(me,cmds,$id,scale) [list $xth(me,area,xmin) $xth(me,area,ymin) \
-        $xth(me,area,xmax) $xth(me,area,ymin) 0.0 0.0 [expr 1.0 * [lindex $optv 1] / [lindex $optv 0] * ($xth(me,area,xmax) - $xth(me,area,xmin))] 0.0 [lindex $optv 2]]
+	$xth(me,area,xmax) $xth(me,area,ymin) 0.0 0.0 [expr 1.0 * [lindex $optv 1] / [lindex $optv 0] * ($xth(me,area,xmax) - $xth(me,area,xmin))] 0.0 [lindex $optv 2]]
     }
     8 {
       set xth(me,cmds,$id,scale) [list [lindex $optv 0] [lindex $optv 1] [lindex $optv 2] \
@@ -1059,6 +1102,15 @@ proc xth_me_cmds_create_scrap {ix mode name opts} {
     }
   }
 
+  # set the list of sketches    
+  set xth(me,cmds,$id,sklist) {}
+  set optl [xth_me_cmds_get_sketch_option $opts]
+  while {[lindex $optl 2]} {
+    lappend xth(me,cmds,$id,sklist) [lindex $optl 0]
+    set opts [lindex $optl 1]
+    set optl [xth_me_cmds_get_sketch_option $opts]
+  }
+  
   # nastavit options
   regsub {^\s*} $opts "" opts
   regsub {\s*$} $opts "" opts
@@ -1224,28 +1276,28 @@ proc xth_me_cmds_click {id tagOrId x y mx my} {
   switch $xth(me,cmds,mode) {
     0 {
       if {[llength $id] > 0} {
-        if {$id != $xth(me,cmds,selid)} {
-          xth_me_cmds_select "$id $pid"
-          if {$pid == 0} {
-            xth_ctrl_scroll_to me point
-            xth_ctrl_maximize me point
-          } else {
-            xth_ctrl_scroll_to me line
-            xth_ctrl_maximize me line
-            xth_ctrl_maximize me linept
-          }
-        } else {
-          switch $xth(me,cmds,$id,ct) {
-            2 {xth_me_cmds_start_point_drag $id $mx $my}
-            3 {
-              if {$xth(me,cmds,selpid) != $pid} {
-                xth_me_cmds_select_linept $id $pid
-              } else {
-                xth_me_cmds_start_linecp_drag pt$id.$pid $id 0 $pid 0 x $mx $my
-              }
-            }
-          }
-        }
+	if {$id != $xth(me,cmds,selid)} {
+	  xth_me_cmds_select "$id $pid"
+	  if {$pid == 0} {
+	    xth_ctrl_scroll_to me point
+	    xth_ctrl_maximize me point
+	  } else {
+	    xth_ctrl_scroll_to me line
+	    xth_ctrl_maximize me line
+	    xth_ctrl_maximize me linept
+	  }
+	} else {
+	  switch $xth(me,cmds,$id,ct) {
+	    2 {xth_me_cmds_start_point_drag $id $mx $my}
+	    3 {
+	      if {$xth(me,cmds,selpid) != $pid} {
+		xth_me_cmds_select_linept $id $pid
+	      } else {
+		xth_me_cmds_start_linecp_drag pt$id.$pid $id 0 $pid 0 x $mx $my
+	      }
+	    }
+	  }
+	}
       }
     }
     1 {
@@ -1255,21 +1307,21 @@ proc xth_me_cmds_click {id tagOrId x y mx my} {
       set cptype {}
       set cpopts {}
       if {[regexp {XVIstI(\d+)S(\d+)} [$xth(me,can) itemcget $tagOrId -tags] dum imgx sti]} {
-        set csname [lindex [lindex $xth(me,imgs,$imgx,XVIstations) $sti] 2]
-        set x [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 0]
-        set y [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 1]
-        set cptype station
-        set cpopts $xth(me,dflt,point,options)
-        if {[regexp {\-name\s+(\S+)} $cpopts]} {
-          regsub {\-name\s+(\S+)} $cpopts "-name $csname" cpopts
-        } else {
-          set cpopts "-name $csname"
-        }
+	set csname [lindex [lindex $xth(me,imgs,$imgx,XVIstations) $sti] 2]
+	set x [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 0]
+	set y [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 1]
+	set cptype station
+	set cpopts $xth(me,dflt,point,options)
+	if {[regexp {\-name\s+(\S+)} $cpopts]} {
+	  regsub {\-name\s+(\S+)} $cpopts "-name $csname" cpopts
+	} else {
+	  set cpopts "-name $csname"
+	}
       }
       if {$id == ($xth(me,cmds,cmdln) - 1)} {
-        xth_me_cmds_end_point 
+	xth_me_cmds_end_point 
       } else {
-        xth_me_cmds_create_point {} 1 $x $y $cptype $cpopts
+	xth_me_cmds_create_point {} 1 $x $y $cptype $cpopts
       }
     }
     2 {
@@ -1279,28 +1331,34 @@ proc xth_me_cmds_click {id tagOrId x y mx my} {
       set fpid -1
       set lpid -1
       if {($id == $xth(me,cmds,selid)) && ([string length $id] > 0) && ($pid > 0)} {
-        set xl $xth(me,cmds,$id,xplist)
-        set lix [expr [llength $xl] - 2]
-        if {$lix >= 0} {
-          set fpid [lindex $xl 0]
-          set lpid [lindex $xl $lix]
-        }
+	set xl $xth(me,cmds,$id,xplist)
+	set lix [expr [llength $xl] - 2]
+	if {$lix >= 0} {
+	  set fpid [lindex $xl 0]
+	  set lpid [lindex $xl $lix]
+	}
       }
       if {($id == $xth(me,cmds,selid)) && ($pid != 0) && ($pid == $xth(me,cmds,inspid))} {
-        xth_me_cmds_end_line
+	xth_me_cmds_end_line
       } elseif {($id == $xth(me,cmds,selid)) && ($pid == $fpid) && ($xth(me,cmds,inspid) == 0)} {
-        xth_me_cmds_close_line $id
+	xth_me_cmds_close_line $id
       } elseif {($id == $xth(me,cmds,selid)) && ($pid == $lpid) && ($xth(me,cmds,inspid) == 0)} {
-        xth_me_cmds_end_line
+	xth_me_cmds_end_line
       } else {
-        # vytvori novy bod
-        xth_me_cmds_start_create_linept $tagOrId $x $y $mx $my
+	# vytvori novy bod
+	xth_me_cmds_start_create_linept $tagOrId $x $y $mx $my
       }      
     }
     3 {
       if {([string length $id] > 0) && ($xth(me,cmds,$id,ct) == 3)} {
-        xth_me_cmds_insert_area_lineid $id $mx $my
+	xth_me_cmds_insert_area_lineid $id $mx $my
       }
+    }
+    4 {
+      xth_me_cmds_scrap_scale $x $y
+    }
+    5 {
+      xth_me_cmds_scrap_sketch_insert $tagOrId
     }
   }
 }
@@ -1329,8 +1387,11 @@ proc xth_me_cmds_click_lineln {id tagOrId mx my} {
   switch $xth(me,cmds,mode) {
     3 {
       if {$xth(me,cmds,$id,ct) == 3} {
-        xth_me_cmds_insert_area_lineid $id $mx $my
+	xth_me_cmds_insert_area_lineid $id $mx $my
       }
+    }
+    4 {
+      xth_me_cmds_scrap_scale
     }
     0 {
       xth_me_cmds_select "$id $pid"
@@ -1377,6 +1438,12 @@ proc xth_me_cmds_set_mode {nmode} {
       $xth(me,mbar) configure -text [mc "insert area border"] -bg red -fg white
       $xth(ctrl,me,ac).ins configure -text [mc "Select"]
     }
+    4 {
+      $xth(me,mbar) configure -text [mc "scale scrap"] -bg red -fg white
+    }
+    5 {
+      $xth(me,mbar) configure -text [mc "insert sketch"] -bg red -fg white
+    }
   }
   
   set xth(tb,me,action) $nmode
@@ -1395,8 +1462,8 @@ proc xth_me_cmds_create_point {ix mode x y type opts} {
   
   if {$mode && ([string length $opts] < 1)} {
     if {([string length $type] < 1) && \
-        [string equal $xth(me,dflt,point,type) station] && \
-        [regexp {\-name\s+(\S+)} $xth(me,dflt,point,options) dum stname]} {
+	[string equal $xth(me,dflt,point,type) station] && \
+	[regexp {\-name\s+(\S+)} $xth(me,dflt,point,options) dum stname]} {
       regsub {\-name\s+(\S+)} $xth(me,dflt,point,options) "-name [xth_incr_station_name $stname $xth(me,snai)]" xth(me,dflt,point,options)
     }
     set opts $xth(me,dflt,point,options)
@@ -1900,12 +1967,12 @@ proc xth_me_cmds_special_select {id x y} {
       #puts "select $nid $npid"
       xth_me_cmds_select "$nid $npid"
       if {$npid != 0} {
-        xth_ctrl_scroll_to me line
-        xth_ctrl_maximize me line
-        xth_ctrl_maximize me linept
+	xth_ctrl_scroll_to me line
+	xth_ctrl_maximize me line
+	xth_ctrl_maximize me linept
       } else {
-        xth_ctrl_scroll_to me point
-        xth_ctrl_maximize me point
+	xth_ctrl_scroll_to me point
+	xth_ctrl_maximize me point
       }
       catch {$xth(me,can) lower $utag point}
       catch {$xth(me,can) raise $utag line}
@@ -2252,16 +2319,16 @@ proc xth_me_cmds_point_fdrag {id x y} {
     set cs [expr hypot($dy,$dx)]
     switch $xth(me,point,fdrag_ax) {
       x {
-        set ns [expr $xth(me,cmds,$id,xsize) - $xth(me,point,fdrag_osize) + $cs]
-        if {$ns <= 0.0} {set ns 0.1}
-        set ns [format "%.1f" $ns]
-        set xth(ctrl,me,point,xs) $ns
+	set ns [expr $xth(me,cmds,$id,xsize) - $xth(me,point,fdrag_osize) + $cs]
+	if {$ns <= 0.0} {set ns 0.1}
+	set ns [format "%.1f" $ns]
+	set xth(ctrl,me,point,xs) $ns
       }
       y {
-        set ns [expr $xth(me,cmds,$id,ysize) - $xth(me,point,fdrag_osize) + $cs]
-        if {$ns <= 0.0} {set ns 0.1}
-        set ns [format "%.1f" $ns]
-        set xth(ctrl,me,point,ys) $ns
+	set ns [expr $xth(me,cmds,$id,ysize) - $xth(me,point,fdrag_osize) + $cs]
+	if {$ns <= 0.0} {set ns 0.1}
+	set ns [format "%.1f" $ns]
+	set xth(ctrl,me,point,ys) $ns
       }
     }
   }
@@ -2320,13 +2387,13 @@ proc xth_me_cmds_select_nopoint {} {
     set nid [lindex $xth(me,cmds,xlist) $ii]
     switch $xth(me,cmds,$nid,ct) {
       3 {
-        xth_me_cmds_select "$nid 0"
-        break
+	xth_me_cmds_select "$nid 0"
+	break
       }
       2 {}
       default {
-        xth_me_cmds_select $nid
-        break
+	xth_me_cmds_select $nid
+	break
       }
     }
   }
@@ -2341,8 +2408,155 @@ proc xth_me_get_center {} {
   set xx [expr double([lindex $xw 1] + [lindex $xw 0]) / 2.0]
   set yy [expr double([lindex $yw 1] + [lindex $yw 0]) / 2.0]
   set tw [expr [lindex $sr 2] - [lindex $sr 0]]
-  set th [expr [lindex $sr 3] - [lindex $sr 1]]	
+  set th [expr [lindex $sr 3] - [lindex $sr 1]]        
   set x [xth_me_can2realx [expr [lindex $sr 0] + $xx * $tw]]
   set y [xth_me_can2realy [expr [lindex $sr 1] + $yy * $th]]
 	return "$x $y"
 }
+
+proc xth_me_cmds_scrap_scale_start {} {
+  global xth
+  xth_me_cmds_update {}
+  set xth(me,cmds,scrap_scale) 1
+  xth_me_cmds_set_mode 4
+}
+
+
+proc xth_me_cmds_scrap_sketch_start {} {
+  global xth
+  xth_me_cmds_update {}
+  xth_me_cmds_set_mode 5
+}
+
+
+proc xth_me_cmds_scrap_scale {x y} {
+  global xth
+  xth_me_cmds_update {}
+  set rx $x
+  set ry $y
+  switch $xth(me,cmds,scrap_scale) {
+    1 {
+      set xth(ctrl,me,scrap,px1) $rx
+      set xth(ctrl,me,scrap,py1) $ry
+      incr xth(me,cmds,scrap_scale)
+      xth_me_cmds_update {}
+      focus $xth(ctrl,me,scrap).scx1r
+    }
+    2 {
+      set xth(ctrl,me,scrap,px2) $rx
+      set xth(ctrl,me,scrap,py2) $ry
+      set xth(me,cmds,scrap_scale) 0
+      xth_me_cmds_update {}
+      focus $xth(ctrl,me,scrap).scx2r
+      xth_me_cmds_set_mode 0
+    }
+  }
+}
+
+
+proc xth_me_cmds_scrap_sketch_insert {tagOrId} {
+  global xth
+  xth_me_cmds_set_mode 0 
+  if {[string length $tagOrId] == 0} return
+  xth_me_cmds_update {}
+  set err 1
+  set tags [$xth(me,can) itemcget $tagOrId -tags]
+  foreach ix $xth(me,imgs,xlist) {
+    if {[lsearch -exact $tags $xth(me,imgs,$ix,image)] > -1} {
+      if {($xth(me,imgs,$ix,XVI) == 0) && ([string length $xth(me,imgs,$ix,ffname)] > 0)} {
+	  set sk $xth(me,imgs,$ix,name)
+	  if {[string first " " $sk] > -1} {
+	    set sk "\[$sk\]"
+	  }
+	  set skpos $xth(me,imgs,$ix,position)
+	  set imgh [image height $xth(me,imgs,$ix,image)]
+	  set sk "$sk [lindex $skpos 0] [expr [lindex $skpos 1] - $imgh]"
+	  xth_me_cmds_insert_scrap_sketch $sk
+	  set err 0
+      }
+    }
+  }
+  if {$err} {
+    MessageDlg $xth(gui,message) -parent $xth(gui,main) \
+      -icon error -type ok \
+      -message [mc "Scrap sketch not inserted."] \
+      -font $xth(gui,lfont)
+  }
+}
+
+
+proc xth_me_cmds_insert_scrap_sketch {sk} {
+
+  global xth
+  if {$xth(me,unredook)} {
+    xth_me_cmds_update {}
+  }
+  if {[string length $sk] == 0} {
+    return;
+  }
+  set id $xth(me,cmds,selid)
+  set lid [lindex $xth(me,cmds,$id,sklist) [$xth(ctrl,me,scrap).skll.l curselection]]
+  set ix [lsearch -exact $xth(me,cmds,$id,sklist) $lid]
+  set xth(me,cmds,$id,sklist) [linsert $xth(me,cmds,$id,sklist) $ix $sk]
+  xth_me_cmds_update_scrap_data $id
+  xth_me_prev_cmd $xth(me,cmds,$id,data)
+  $xth(ctrl,me,scrap).skll.l selection clear 0 end
+  $xth(ctrl,me,scrap).skll.l selection set [expr $ix + 1] [expr $ix + 1]
+  $xth(ctrl,me,scrap).skll.l see [expr $ix + 1]
+
+  xth_me_unredo_action [mc "inserting scrap sketch"] \
+    "xth_me_cmds_select $id\nxth_me_cmds_delete_scrap_sketch $id [list $sk]" \
+    "xth_me_cmds_select $id\nxth_me_cmds_undelete_scrap_sketch 1 $id [list $sk] $ix"
+      
+}
+
+
+proc xth_me_cmds_delete_scrap_sketch {id lid} {
+
+  global xth
+  
+  if {[string length $id] < 1} {
+    set id $xth(me,cmds,selid)
+  }
+  if {[string length $lid] == 0} {
+    set lid [lindex $xth(me,cmds,$id,sklist) [$xth(ctrl,me,scrap).skll.l curselection]]
+  }
+  if {[string length $lid] == 0} {
+    return
+  }
+
+  if {$xth(me,unredook)} {
+    xth_me_cmds_update {}
+  }
+  
+  # odstrani ho zo zoznamu
+  set ix [lsearch -exact $xth(me,cmds,$id,sklist) $lid]
+  set xth(me,cmds,$id,sklist) [lreplace $xth(me,cmds,$id,sklist) $ix $ix]
+  xth_me_cmds_update_scrap_data $id
+  xth_me_prev_cmd $xth(me,cmds,$id,data)
+  $xth(ctrl,me,ac).ll.l selection clear 0 end
+  $xth(ctrl,me,ac).ll.l selection set $ix $ix
+  $xth(ctrl,me,ac).ll.l see $ix
+    
+  xth_me_unredo_action [mc "deleting scrap sketch"] \
+    "xth_me_cmds_select $id\nxth_me_cmds_undelete_scrap_sketch 0 $id [list $lid] $ix" \
+    "xth_me_cmds_select $id\nxth_me_cmds_delete_scrap_sketch $id [list $lid]"
+  
+}
+
+
+
+
+proc xth_me_cmds_undelete_scrap_sketch {cr id lid ix} {
+
+  global xth
+  set xth(me,cmds,$id,sklist) [linsert $xth(me,cmds,$id,sklist) $ix $lid]
+  xth_me_cmds_update_scrap_data $id
+  xth_me_prev_cmd $xth(me,cmds,$id,data)
+  $xth(ctrl,me,ac).ll.l selection clear 0 end
+  $xth(ctrl,me,ac).ll.l selection set [expr $ix + $cr] [expr $ix + $cr]
+  $xth(ctrl,me,ac).ll.l see [expr $ix + $cr]
+  
+}
+
+

@@ -42,6 +42,7 @@ enum {
   TT_SURVEY_UNKNOWN = 2000,
   TT_SURVEY_DECLINATION = 2001,
   TT_SURVEY_PERSON_RENAME = 2002,
+  TT_SURVEY_NAMESPACE = 2003,
 };
 
 
@@ -51,6 +52,7 @@ enum {
  
 static const thstok thtt_survey_opt[] = {
   {"declination", TT_SURVEY_DECLINATION},
+  {"namespace", TT_SURVEY_NAMESPACE},
   {"person-rename", TT_SURVEY_PERSON_RENAME},
   {NULL, TT_SURVEY_UNKNOWN},
 };
@@ -122,6 +124,11 @@ class thsurvey : public thdataobject {
   thsurveystat stat;  ///< Survey statistics.
   
   thsurveyp2pmap person_renames;
+
+
+  bool privatens;
+  thsurvey * surveyns;
+
     
   public:
 
@@ -269,6 +276,14 @@ class thsurvey : public thdataobject {
    */
    
   thdataobject * get_last_survey_object() {return this->loptr;}
+
+
+  /**
+   * Return namespace survey.
+   */
+
+  thsurvey * get_nss();
+
   
 };
 

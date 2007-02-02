@@ -121,6 +121,7 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
 
   double dv;
   int sv;
+  char * type, * subtype;
   
   if (cod.id == 3)
     cod.id = TT_POINT_TYPE;
@@ -139,7 +140,10 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
       break;
 
     case TT_POINT_TYPE:
-      this->parse_type(*args);
+      th2dsplitTT(*args, &type, &subtype);
+      this->parse_type(type);
+      if (strlen(subtype) > 0)
+        this->parse_subtype(subtype);
       break;
 
     case TT_POINT_VALUE:
@@ -396,6 +400,8 @@ char * thpoint_export_mp_align2mp(int a) {
 
 bool thpoint::export_mp(class thexpmapmpxs * out)
 {
+  th2ddataobject::export_mp(out);
+
   bool postprocess = true;
   int macroid = -1;
   int postprocess_label = -1;

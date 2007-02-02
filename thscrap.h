@@ -38,6 +38,8 @@
 #include "thscrapen.h"
 #include "thmapstat.h"
 #include "thdb3d.h"
+#include "thsketch.h"
+#include "thtrans.h"
 
 /**
  * scrap command options tokens.
@@ -50,6 +52,7 @@ enum {
   TT_SCRAP_STATIONS = 2003,
   TT_SCRAP_3D = 2004,
   TT_SCRAP_FLIP = 2005,
+  TT_SCRAP_SKETCH = 2006,
 };
 
 enum {
@@ -69,6 +72,7 @@ static const thstok thtt_scrap_opt[] = {
   {"proj", TT_SCRAP_PROJECTION},
   {"projection", TT_SCRAP_PROJECTION},
   {"scale", TT_SCRAP_SCALE},
+  {"sketch", TT_SCRAP_SKETCH},
   {"stations", TT_SCRAP_STATIONS},
   {"walls", TT_SCRAP_3D},
   {NULL, TT_SCRAP_UNKNOWN},
@@ -118,6 +122,7 @@ class thscrap : public thdataobject {
   thscrapen * ends_first;
   
   thmapstat_datamap adata;
+  thmorph2trans morph;
   
   int d3, flip;
   thdb3ddata d3_outline;
@@ -128,6 +133,8 @@ class thscrap : public thdataobject {
   thscraplp * polygon_insert();
   
   thdb1ds * get_nearest_station(thdb2dpt * pt);
+
+  thsketch_list sketch_list;
   
   double z;
     
@@ -208,12 +215,26 @@ class thscrap : public thdataobject {
 
 
   /**
+   * Parse sketch option.
+   */
+
+  void parse_sketch(char ** args, int argenc);
+
+
+  /**
    * Delete this object.
    *
    * @warn Always use this methos instead of delete function.
    */
    
   virtual void self_delete();
+
+
+  /**
+   * Create a sketch linked to current scrap.
+   */
+
+  void insert_sketch(char ** args);
 
 
   /**

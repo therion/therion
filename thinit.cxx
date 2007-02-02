@@ -76,6 +76,7 @@ thinit::~thinit()
 {
 }
 
+
 enum {
   TTIC_ENCODING_DEFAULT,
   TTIC_ENCODING_SQL,
@@ -140,6 +141,24 @@ static const thstok thtt_loopc[] = {
 };
 
 
+#ifdef THWIN32
+thbuffer short_path_buffer;
+void thinit__make_short_path(thbuffer * bf) {
+  DWORD rv;
+  size_t sl;
+  sl = strlen(bf->get_buffer());
+  if (sl == 0)
+    return;
+  short_path_buffer.guarantee(2 * sl);
+  rv = GetShortPathName(bf->get_buffer(), short_path_buffer.get_buffer(), (DWORD) short_path_buffer.size);
+  if ((rv > 0) && (rv < (DWORD) short_path_buffer.size)) {
+    bf->strcpy(short_path_buffer.get_buffer());
+  }
+}
+#endif
+
+
+
 void thinit::load()
 {
 
@@ -154,6 +173,7 @@ void thinit::load()
   // set cavern path according to Windows registers
   this->path_cavern.guarantee(1024);
   thmbuffer mbf;
+  thbuffer bf;
   DWORD type, length = 1024;
   HKEY key;
   bool loaded_ok = true;
@@ -169,9 +189,7 @@ void thinit::load()
     loaded_ok = false;
   if (loaded_ok) {
     thsplit_args(&mbf,this->path_cavern.get_buffer());
-    this->path_cavern = "\"";
-    this->path_cavern += *(mbf.get_buffer());
-    this->path_cavern += "\"";
+    this->path_cavern = *(mbf.get_buffer());
   } else {
     this->path_cavern = "cavern";
   }
@@ -211,8 +229,8 @@ void thinit::load()
 #ifdef THWIN32
   if (thcfg.install_im) {
     this->path_convert = thcfg.install_path.get_buffer();
-    this->path_identify = thcfg.install_path.get_buffer();
     this->path_convert += "\\bin\\convert.exe";
+    this->path_identify = thcfg.install_path.get_buffer();
     this->path_identify += "\\bin\\identify.exe";
   } else {
 #endif  
@@ -376,6 +394,15 @@ void thinit::load()
   }
   if (!some_tex_fonts)
      init_encodings();
+
+#ifdef THWIN32
+  thinit__make_short_path(&this->path_cavern);
+  thinit__make_short_path(&this->path_convert);
+  thinit__make_short_path(&this->path_identify);
+  thinit__make_short_path(&this->path_mpost);
+  thinit__make_short_path(&this->path_pdftex);
+#endif
+
 }
 
 

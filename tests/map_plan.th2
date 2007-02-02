@@ -4,7 +4,7 @@ encoding  utf-8
 
 
 
-scrap test -walls on -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+scrap test -walls on -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m] -title "Ľaľa ľščťžýáíé"
 
 point 593.0 636.0 dimensions -value [0 1]
 
@@ -451,6 +451,7 @@ point 452.0 219.0 label -orientation 0.0 -text "Normal label" -align r
 line water-flow -subtype intermittent
   389.0 394.0
   477.0 385.0 518.0 415.0 551.0 518.0
+  smooth off
 endline
 
 point 255.0 506.0 water-flow -subtype intermittent

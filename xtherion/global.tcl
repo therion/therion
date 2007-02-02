@@ -25,6 +25,9 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ## --------------------------------------------------------------------
 
+package require msgcat
+catch {namespace import ::msgcat::mc}  
+
 set xth(destroyed) 0
 set xth(prj,name) "therion"
 set xth(prj,title) "therion user interface"
@@ -43,8 +46,9 @@ set xth(kb_control) Control
 set xth(kb_meta) Meta
 set xth(gui,compshow) 0
 set xth(gui,compcmd) "therion"
+set xth(gui,appctrlcmd) {}
 set xth(gui,auto_save) 0
-set xth(gui,auto_backup) 1
+set xth(gui,auto_backup) 0
 set xth(gui,auto_backup_ext) "~"
 set xth(gui,check_update) 1
 
@@ -74,13 +78,8 @@ set xth(app,cp,filetypes) {
   {{All files}       {*}}    
 }
 
-set xth(app,mv,filetypes) {    
-  {{Therion models}       {.thm}}    
-  {{All files}       {*}}    
-}
-
 set xth(icmds) {survey}
-set xth(cmds) {scrap centerline grade line area map layout}
+set xth(cmds) {scrap centerline grade line area map layout surface}
 
 set xth(datafmt,unknown) {4s}                    
 set xth(datafmt,station) {4s}                    
@@ -192,6 +191,11 @@ case $tcl_platform(platform) {
     package require registry
     catch {
       set xth(gui,compcmd) "\"[file join [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} InstallDir] therion.exe]\""
+    }
+    catch {
+      if {[registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} AppCtrl]} {
+	set xth(gui,appctrlcmd) "[file join [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} InstallDir] bin appctrl.exe]"
+      }
     }
     regsub -all {\/} $xth(gui,compcmd) {\\\\} xth(gui,compcmd)
     set xth(gui,efont) "Courier 16 roman bold"

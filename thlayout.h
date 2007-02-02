@@ -91,6 +91,8 @@ enum {
 	TT_LAYOUT_UNITS = 2047,
 	TT_LAYOUT_SURVEY_LEVEL = 2048,
 	TT_LAYOUT_SKETCHES = 2049,
+	TT_LAYOUT_NORTH = 2050,
+  TT_LAYOUT_MAP_IMAGE = 2051,
 };
 
 
@@ -284,6 +286,28 @@ static const thstok thtt_layout_code[] = {
 
 
 /**
+ * Layout north tokens.
+ */
+
+enum {
+  TT_LAYOUT_NORTH_UNKNOWN = 0,
+  TT_LAYOUT_NORTH_TRUE,
+  TT_LAYOUT_NORTH_GRID,
+};
+
+
+/**
+ * Layout color token table.
+ */
+ 
+static const thstok thtt_layout_north[] = {
+  {"grid", TT_LAYOUT_NORTH_GRID},
+  {"true", TT_LAYOUT_NORTH_TRUE},
+  {NULL, TT_LAYOUT_NORTH_UNKNOWN}
+};
+
+
+/**
  * Layout color tokens.
  */
 
@@ -324,10 +348,13 @@ enum {
 
 static const thstok thtt_layout_ccrit[] = {
   {"altitude", TT_LAYOUT_CCRIT_ALTITUDE},
+  {"altitudes", TT_LAYOUT_CCRIT_ALTITUDE},
 //  {"topo-date", TT_LAYOUT_CCRIT_TOPODATE},
 //  {"explo-date", TT_LAYOUT_CCRIT_EXPLODATE},
   {"map", TT_LAYOUT_CCRIT_MAP},
+  {"maps", TT_LAYOUT_CCRIT_MAP},
   {"scrap", TT_LAYOUT_CCRIT_SCRAP},
+  {"scraps", TT_LAYOUT_CCRIT_SCRAP},
   {NULL, TT_LAYOUT_CCRIT_UNKNOWN}
 };
 
@@ -396,8 +423,10 @@ static const thstok thtt_layout_opt[] = {
   {"map-comment",TT_LAYOUT_DOC_COMMENT},
   {"map-header",TT_LAYOUT_MAP_HEADER},
   {"map-header-bg",TT_LAYOUT_MAP_HEADER_BG},
+  {"map-image",TT_LAYOUT_MAP_IMAGE},
   {"nav-factor",TT_LAYOUT_NAV_FACTOR},
   {"nav-size",TT_LAYOUT_NAV_SIZE},
+  {"north",TT_LAYOUT_NORTH},
   {"opacity",TT_LAYOUT_OPACITY},
   {"origin",TT_LAYOUT_ORIGIN},
   {"origin-label",TT_LAYOUT_ORIGIN_LABEL},
@@ -432,7 +461,7 @@ static const thstok thtt_layout_opt[] = {
 
 struct thlayout_color {
   double R, G, B;
-  bool defined;
+  int defined;
   void parse(char * str);
   thlayout_color() : R(1.0), G(1.0), B(1.0), defined(false) {}
 };
@@ -452,6 +481,19 @@ struct thlayout_color_value {
 typedef std::list<thlayout_color_value> thlayout_ct;
 
 
+
+struct thlayout_map_image {
+  double m_x, m_y;
+  char * m_fn;
+  int m_align;
+  thlayout_map_image() : m_x(0.0), m_y(0.0), m_fn(""), m_align(TT_LAYOUT_MAP_HEADER_OFF) {}
+  bool defined();
+  void parse(char ** args, const char * cpath);
+};
+
+typedef std::list<thlayout_map_image> thlayout_map_image_list;
+
+
 /**
  * layout class.
  */
@@ -459,6 +501,8 @@ typedef std::list<thlayout_color_value> thlayout_ct;
 class thlayout : public thdataobject {
 
   public:
+
+  class thconfig * m_pconfig;
     
   double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gzs, gox, goy, goz, navf, overlap, opacity,
     map_header_x, map_header_y, legend_width, surface_opacity, rotate;
@@ -470,7 +514,7 @@ class thlayout : public thdataobject {
   
   char grid, ccode;
   
-  int legend, color_legend, map_header, lang, max_explos, max_topos, max_cartos, max_copys,
+  int legend, color_legend, map_header, lang, north, max_explos, max_topos, max_cartos, max_copys,
     debug, survey_level, surface;
   
   thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
@@ -485,17 +529,19 @@ class thlayout : public thdataobject {
     explo_lens, topo_lens, map_header_bg, sketches;
 		
 	thlocale units;
+
+  thlayout_map_image_list map_image_list;
   
-  bool def_grid_size, def_grid_origin, def_nav_factor, def_nav_size, 
+  int def_grid_size, def_grid_origin, def_nav_factor, def_nav_size, 
     def_opacity, def_transparency, def_layers, def_base_scale,
-    def_rotate, def_sketches, 
+    def_rotate, def_sketches, def_north,
     def_origin, def_origin_label, def_overlap, def_own_pages,
     def_page_numbers, def_page_setup, def_scale, def_size, def_title_pages,
     def_tex_lines, def_doc_title, def_doc_comment, def_doc_author, def_doc_subject,
     def_doc_keywords, def_excl_pages, def_grid, def_page_grid,
     def_legend, def_color_legend, def_legend_width, def_legend_columns, 
     def_map_header, def_lang, def_scale_bar, def_map_header_bg,
-    redef_base_scale, def_max_explos, def_max_topos, def_max_cartos,
+    def_max_explos, def_max_topos, def_max_cartos,
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_survey_level, def_surface,
     def_surface_opacity, def_units;
     

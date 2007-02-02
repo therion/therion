@@ -106,6 +106,7 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
 {
 
   int reversion, csmooth, sv;
+  char * type, * subtype;
   if (cod.id == 1)
     cod.id = TT_LINE_TYPE;
     
@@ -118,7 +119,10 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       break;
 
     case TT_LINE_TYPE:
-      this->parse_type(*args);
+      th2dsplitTT(*args, &type, &subtype);
+      this->parse_type(type);
+      if (strlen(subtype) > 0)
+        this->parse_subtype(subtype);
       break;
     
     case TT_LINE_OUTLINE:
@@ -623,6 +627,8 @@ bool thline::export_mp(class thexpmapmpxs * out)
   int from, to, cs, macroid = -1;
   double s1, r1;
   thdb2dlp * lp;
+
+  th2ddataobject::export_mp(out);
   
   switch (this->type) {
     case TT_LINE_TYPE_WALL:

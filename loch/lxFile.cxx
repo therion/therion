@@ -9,7 +9,7 @@
 #include <map>
 #include <list>
 
-#ifdef WIN32
+#if defined LXWIN32 || defined LXMACOSX || defined THWIN32 || defined THMACOSX
 #include "getline.h"
 #endif
 
@@ -17,10 +17,9 @@
 //LXDEPCHECK - standart libraries
 
 #include "lxMath.h"
-#ifdef LOCH
 #include "img.h"
-#endif
-#ifdef LXWIN32
+
+#if defined LXWIN32 || defined THWIN32
 #define strcasecmp stricmp
 #endif
 
@@ -688,6 +687,7 @@ void lxFile::ImportPLT(const char * fn)
   bool lrudOK, lrudOKPrev = false;
   unsigned char * tok[16];
   lxFileDbl lrud[4], lrudPrev[4];
+  lrudPrev[0] = lrudPrev[1] = lrudPrev[2] = lrudPrev[3] = -1.0;
   size_t nt;
 
   this->m_file = fopen(fn,"r");
@@ -808,7 +808,6 @@ bool operator < (const imp3Dpos & p1,
 }
 
 
-#ifdef LOCH        
 void lxFile::Import3D(const char * fn)
 {
 
@@ -819,6 +818,7 @@ void lxFile::Import3D(const char * fn)
 
   bool lrudOK, lrudOKPrev = false;
   lxFileDbl lrud[4], lrudPrev[4];
+  lrudPrev[0] = lrudPrev[1] = lrudPrev[2] = lrudPrev[3] = -1.0;
 
   pimg = img_open(fn);
   if (pimg == NULL) {
@@ -983,8 +983,6 @@ void lxFile::Import3D(const char * fn)
   img_close(pimg);
 
 }
-#endif
-
 
 
 

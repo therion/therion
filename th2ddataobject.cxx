@@ -157,4 +157,36 @@ void th2ddataobject::self_print_properties(FILE * outf)
   // insert intended print of object properties here
 }
 
+thbuffer sTTtype, sTTsubtype;
+void th2dsplitTT(char * src, char ** type, char ** subtype)
+{
+  size_t sl, x, tl, stl;
+  char * t, * st;
+  sl = strlen(src);
+  sTTtype.guarantee(sl+1);
+  sTTsubtype.guarantee(sl+1);
+  t = sTTtype.get_buffer();
+  st = sTTsubtype.get_buffer();
+  t[0] = 0;
+  st[0] = 0;
+  tl = 0;
+  stl = 0;
+  bool inst = false;
+  for(x = 0; x < sl; x++) {
+    if (src[x] == ':') {
+      inst = true;
+    } else if (inst) {
+      st[stl] = src[x];
+      stl++;
+      st[stl] = 0;
+    } else {
+      t[tl] = src[x];
+      tl++;
+      t[tl] = 0;
+    }
+  }
+  *type = t;
+  *subtype = st;
+}
+
 

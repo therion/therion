@@ -1,7 +1,83 @@
 --------------------------------------------------------------------------------
+Therion 0.5.0 (2007-02-02):
+
+therion:
+
+ * geodetic coordinate systems support -- CS specification in
+   layout, centerline, surface, import and configuration file.
+   Coordinate systems used all around the world are supported
+   (EPSG and ESRI standards).
+ * added GEOMAG model for automatic calculation of magnetic
+   declination according to cave coordinates and survey date
+ * multiple images (PDF, PNG, JPEG) in PDF map supported
+   (e.g. plan and xelevation in single PDF) using new layout
+   option map-image <x> <y> <align> <filename>
+ * new improved vector morphing algorithm
+ * morphing of survey sketches now supported. New -sketch option 
+   for scrap + sketches switch in layout. Allows export of morphed 
+   survey sketches in PDF and XVI. ImageMagick package 
+   (convert and identify executables) are needed to use these features.
+ * -attr option for specification of user defined attributes,
+   valid for all objects. Attributes are exported to metapost
+   code using ATTR_* variables.
+ * shapefile map export format
+ * Google Earth (.kml) map (scrap outlines) and model (centerline)
+   export
+ * -enc|-encoding option allowed for map and model export
+ * top level survey command not needed any more
+ * survey: new -namespace switch, enables using datasets with
+   unique station names
+ * new area type: bedrock
+ * subtype specification is now possible using ":" separator 
+   (e.g. border:invisible)
+ * added "system" command in configuration files to execute
+   system commands during therion compilation 
+ * new layou toption: north (true)|grid
+ * -calibrate option for import
+ * source/endsource construct allowed in configuration files
+ * input allowed within multiline commands
+ * improved ceiling and floor meander symbols
+ * background centerline map exported only when no scraps or maps
+   exist
+ * support for 1.1 survex .3d file format
+ * added German translation of symbols (thanks to Roger Schuster),
+   updated italian translation (thanks to Marco Corvi).
+ * default linux installation is done into "/usr/local" instead 
+   of "/usr" directory
+ * bugs fixed:
+   - automatic calculation of atlas paper size when only size is specified
+   - extended elevation generation ("break" removed, only "ignore"
+     works)
+   - empty map when exported with -layout-color map-fg map
+
+xtherion:
+
+ * compiler preview toolbox (experimental, acrobat reader supported
+   on Win32, xpdf on Linux (original idea of Marco Corvi))
+ * sketch control (insert, remove) in scrap toolbox
+ * 3D viewer removed from xtherion
+ * does not connect to internet any more to check new version available
+ * remembers last working directory on Windows
+ * improved scrap scaling - "Scale" button + scale preview arrow in scrap
+   control
+ * scrap selection selects current scrap first
+ * bugs fixed:
+   - hang when area inserted at the end of file
+   - deleting contents of configuration files should not happen any more
+   - fixed zooming of transparent pictures
+
+loch:
+
+ * bugs fixed: 
+   - initial size on multiple display machines
+   - crash when file with texture is opened as loch argument (or
+     doubleclick on Win)
+
+--------------------------------------------------------------------------------
 Therion 0.4.0 (2006-10-02):
 
 therion:
+
  * loch - new 3D viewer and default 3D export format
  * vrml model export improved (added surface texture)
  * export model: -wall-source (all)|maps|centerline -- specify

@@ -127,7 +127,7 @@ double thtfpwf::evaluate(double value)
       return this->valp->y;
     default:
       // let's do a binary search
-      int a = 0, b = this->valn - 1, c, r, ret = -1;
+      int a = 0, b = (int) this->valn - 1, c, r, ret = -1;
       while (a <= b) {
         c = unsigned((a + b) / 2);
         if (this->valp[c].x < value)

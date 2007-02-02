@@ -35,7 +35,14 @@
 #include "thsymbolset.h"
 #include "thtflength.h"
 #include "thlang.h"
+#include "thcsdata.h"
+#include "thconfig.h"
 #include <string.h>
+#ifdef THMSVC
+#include <direct.h>
+#define getcwd _getcwd
+#endif
+
 
 enum {
   TTLDBG_JOINS = 1,
@@ -68,7 +75,7 @@ void thlayout_color::parse(char * str) {
         this->B = this->R;
         this->G = this->R;
       }
-      this->defined = true;
+      this->defined = 2;
       break;
     default:
       invalid_color_spec;
@@ -81,26 +88,26 @@ thlayout::thlayout()
 {
 
   this->ccode = TT_LAYOUT_CODE_UNKNOWN;
+  this->m_pconfig = NULL;
 
-  this->def_scale = false;
+  this->def_scale = 0;
   this->scale = 0.005;
-  this->def_base_scale = false;
-  this->redef_base_scale = false;
+  this->def_base_scale = 0;
   this->base_scale = 0.005;
   
-  this->def_rotate = false;
+  this->def_rotate = 0;
   this->rotate = 0.0;
   
-  this->def_origin = false;
+  this->def_origin = 0;
   this->ox = thnan;
   this->oy = thnan;
   this->oz = thnan;
 
-  this->def_size = false;
+  this->def_size = 0;
   this->hsize = 0.18;
   this->vsize = 0.222;
   
-  this->def_page_setup = false;
+  this->def_page_setup = 0;
   this->paphs = 0.21;
   this->papvs = 0.297;
   this->paghs = 0.20;
@@ -109,130 +116,133 @@ thlayout::thlayout()
   this->marts = 0.005;
   
 
-  this->def_overlap = false;
+  this->def_overlap = 0;
   this->overlap = 0.01;
   
-  this->def_grid_origin = false;
+  this->def_grid_origin = 0;
   this->gox = thnan;
   this->goy = thnan;
   this->goz = thnan;
   
-  this->def_grid_size = false;
+  this->def_grid_size = 0;
   this->gxs = thnan;
   this->gys = thnan;
   this->gzs = thnan;
   
-  this->def_origin_label = false;
+  this->def_origin_label = 0;
   this->olx = "0";
   this->oly = "0";
   
-  this->def_nav_factor = false;
+  this->def_nav_factor = 0;
   this->navf = 30.0;
   
-  this->def_nav_size = false;
+  this->def_nav_size = 0;
   this->navsx = 2;
   this->navsy = 2;
   
-  this->def_own_pages = false;
+  this->def_own_pages = 0;
   this->ownp = 0;
   
-  this->def_title_pages = false;
+  this->def_title_pages = 0;
   this->titlep = false;
   
-  this->def_doc_title = false;
+  this->def_doc_title = 0;
   this->doc_title = "";
   
-  this->def_doc_comment = false;
+  this->def_doc_comment = 0;
   this->doc_comment = "";
   
-  this->def_doc_author = false;
+  this->def_doc_author = 0;
   this->doc_author = "";
   
-  this->def_doc_keywords = false;
+  this->def_doc_keywords = 0;
   this->doc_keywords = "";
   
-  this->def_doc_subject = false;
+  this->def_doc_subject = 0;
   this->doc_subject = "";
   
-  this->def_excl_pages = false;
+  this->def_excl_pages = 0;
   this->excl_pages = false;
   this->excl_list = NULL;
   
-  this->def_opacity = false;
+  this->def_opacity = 0;
   this->opacity = 0.7;
 
-  this->def_map_header_bg = false;
+  this->def_map_header_bg = 0;
   this->map_header_bg = false;
 
-  this->def_surface = false;
+  this->def_surface = 0;
   this->surface = TT_LAYOUT_SURFACE_OFF;
-  this->def_surface_opacity = false;
+  this->def_surface_opacity = 0;
   this->surface_opacity = 0.7;
 
-  this->def_transparency = false;
+  this->def_north = 0;
+  this->north = TT_LAYOUT_NORTH_TRUE;
+
+  this->def_transparency = 0;
   this->transparency = true;
 
-  this->def_sketches = false;
+  this->def_sketches = 0;
   this->sketches = false;
 
-  this->def_legend = false;
+  this->def_legend = 0;
   this->legend = TT_LAYOUT_LEGEND_OFF;
-  this->def_legend_width = false;
+  this->def_legend_width = 0;
   this->legend_width = 0.14;
-  this->def_legend_columns = false;
+  this->def_legend_columns = 0;
   this->legend_columns = 2;
 
-  this->def_color_legend = false;
+  this->def_color_legend = 0;
   this->color_legend = TT_TRUE;
   
-  this->def_scale_bar = false;
+  this->def_scale_bar = 0;
   this->scale_bar = -1.0;
 
-  this->def_map_header = false;
+  this->def_map_header = 0;
   this->map_header = TT_LAYOUT_MAP_HEADER_NE;
   this->map_header_x = 100.0;
   this->map_header_y = 0.0;
 
-  this->def_debug = false;
+  this->def_debug = 0;
   this->debug = 0;
 
-  this->def_survey_level = false;
+  this->def_survey_level = 0;
   this->survey_level = 0;
 
   
-  this->def_max_explos = false;
+  this->def_max_explos = 0;
   this->max_explos = -1;
-  this->def_max_topos = false;
+  this->def_max_topos = 0;
   this->max_topos = -1;
-  this->def_max_cartos = false;
+  this->def_max_cartos = 0;
   this->max_cartos = -1;
-  this->def_max_copys = false;
+  this->def_max_copys = 0;
   this->max_copys = -1;
 
-  this->def_explo_lens = false;
+  this->def_explo_lens = 0;
   this->explo_lens = false;
-  this->def_topo_lens = false;
+  this->def_topo_lens = 0;
   this->topo_lens = false;
 
-  this->def_lang = false;
+  this->def_lang = 0;
   this->lang = THLANG_UNKNOWN;
   
-  this->def_units = false;
+  this->def_units = 0;
   this->units = thdeflocale;
   
-  this->def_layers = false;
+  this->def_layers = 0;
   this->layers = true;
 
-  this->def_grid = false;
+  this->def_grid = 0;
   this->grid = TT_LAYOUT_GRID_OFF;
   
-  this->def_page_grid = false;
+  this->def_page_grid = 0;
   this->page_grid = false;
   
-  this->def_page_numbers = false;
+  this->def_page_numbers = 0;
   this->pgsnum = true;
   
-  this->def_tex_lines = false;
+  this->def_tex_lines = 0;
   this->first_line = NULL;
   this->last_line = NULL;
   
@@ -315,6 +325,7 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
     case TT_LAYOUT_MAP_HEADER:
       return thcmd_option_desc(id,3);
     case TT_LAYOUT_ORIGIN:
+    case TT_LAYOUT_MAP_IMAGE:
     case TT_LAYOUT_GRID_SIZE:
     case TT_LAYOUT_GRID_ORIGIN:
       return thcmd_option_desc(id,4);
@@ -390,7 +401,7 @@ static const thstok thlayout__mapitems[] = {
   {"explo-length", TTL_MAPITEM_EXPLO_LENS},
   {"topo", TTL_MAPITEM_TOPO},
   {"topo-length", TTL_MAPITEM_TOPO_LENS},
-	{NULL, TTL_MAPITEM_UNKNOWN},
+  {NULL, TTL_MAPITEM_UNKNOWN},
 };
 
 
@@ -419,10 +430,10 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SYMBOL_ASSIGN:
     case TT_LAYOUT_SYMBOL_HIDE:
     case TT_LAYOUT_SYMBOL_SHOW:
-      if (!this->def_tex_lines) {
+      if (this->def_tex_lines < 2) {
         this->first_line = this->db->db2d.insert_layoutln();
         this->last_line = this->first_line;
-        this->def_tex_lines = true;
+        this->def_tex_lines = 2;
       } else {
         this->last_line->next_line = this->db->db2d.insert_layoutln();
         this->last_line = this->last_line->next_line;
@@ -500,7 +511,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           ththrow(("invalid number or switch -- %s", args[1]))
       }
       this->survey_level = dum_int;
-      this->def_survey_level = true;
+      this->def_survey_level = 2;
       break;
 
     case TT_LAYOUT_MAP_ITEM:
@@ -511,14 +522,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           if (sv == TT_UNKNOWN_BOOL)
             ththrow(("invalid map-item explo-length switch -- %s",args[1]))
           this->explo_lens = (sv == TT_TRUE);
-          this->def_explo_lens = true;
+          this->def_explo_lens = 2;
           break;
         case TTL_MAPITEM_TOPO_LENS:
           sv = thmatch_token(args[1],thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
             ththrow(("invalid map-item topo-length switch -- %s",args[1]))
           this->topo_lens = (sv == TT_TRUE);
-          this->def_topo_lens = true;
+          this->def_topo_lens = 2;
           break;
         case TTL_MAPITEM_EXPLO:
         case TTL_MAPITEM_TOPO:
@@ -543,19 +554,19 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           switch (sv2) {
             case TTL_MAPITEM_EXPLO:
               this->max_explos = dum_int;
-              this->def_max_explos = true;
+              this->def_max_explos = 2;
               break;
             case TTL_MAPITEM_TOPO:
               this->max_topos = dum_int;
-              this->def_max_topos = true;
+              this->def_max_topos = 2;
               break;
             case TTL_MAPITEM_CARTO:
               this->max_cartos = dum_int;
-              this->def_max_cartos = true;
+              this->def_max_cartos = 2;
               break;
             case TTL_MAPITEM_COPYRIGHT:
               this->max_copys = dum_int;
-              this->def_max_copys = true;
+              this->def_max_copys = 2;
               break;
           }
           break;
@@ -566,28 +577,27 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       
     case TT_LAYOUT_SCALE:
       thlayout_parse_scale(&(this->scale),args);
-      this->def_scale = true;
+      this->def_scale = 2;
       break;    
   
     case TT_LAYOUT_ROTATE:
       thlayout_parse_rotate(this->rotate,args[0]);
-      this->def_rotate = true;
+      this->def_rotate = 2;
       break;
 
     case TT_LAYOUT_BASE_SCALE:
       thlayout_parse_scale(&(this->base_scale),args);
-      this->def_base_scale = true;
-      this->redef_base_scale = true;
+      this->def_base_scale = 2;
       break;    
 
     case TT_LAYOUT_OVERLAP:
       this->parse_len(this->overlap, dum, dum, 1, args, 0);
-      this->def_overlap = true;
+      this->def_overlap = 2;
       break;
 
     case TT_LAYOUT_LEGEND_WIDTH:
       this->parse_len(this->legend_width, dum, dum, 1, args, 0);
-      this->def_legend_width = true;
+      this->def_legend_width = 2;
       break;
 
     case TT_LAYOUT_LEGEND_COLUMNS:
@@ -602,27 +612,33 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           ththrow(("invalid number -- %s", args[0]))
       }
       this->legend_columns = (unsigned) dum_int;
-      this->def_legend_columns = true;
+      this->def_legend_columns = 2;
       break;
 
     case TT_LAYOUT_SIZE:
       this->parse_len(this->hsize, this->vsize, dum, 2, args, 1);
-      this->def_size = true;
+      this->def_size = 2;
       break;
 
     case TT_LAYOUT_PAGE_SETUP:
       this->parse_len6(this->paphs, this->papvs, this->paghs, this->pagvs, this->marls, this->marts, 6, args, 1);
-      this->def_page_setup = true;
+      this->def_page_setup = 2;
       break;
 
     case TT_LAYOUT_ORIGIN:
-      this->parse_len(this->ox, this->oy, this->oz, 3, args, -1);
-      this->def_origin = true;
+      //this->parse_len(this->ox, this->oy, this->oz, 3, args, -1);
+      this->convert_cs(args[0], args[1], this->ox, this->oy);
+      if (this->cs == TTCS_LOCAL) {
+        this->parse_len(this->ox, this->oy, this->oz, 3, args, -1);
+      } else {
+        this->parse_len(this->oz, dum, dum, 1, &(args[2]), -1);
+      }
+      this->def_origin = 2;
       break;
 
     case TT_LAYOUT_GRID_SIZE:
       this->parse_len(this->gxs, this->gys, this->gzs, 3, args, 1);
-      this->def_grid_size = true;
+      this->def_grid_size = 2;
       break;
 
     case TT_LAYOUT_COLOR:
@@ -633,7 +649,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           if (this->color_crit == TT_LAYOUT_CCRIT_UNKNOWN)
             this->color_map_fg.parse(args[1]);
           else
-            this->color_map_fg.defined = true;
+            this->color_map_fg.defined = 2;
           break;
         case TT_LAYOUT_COLOR_MAP_BG:
           this->color_map_bg.parse(args[1]);
@@ -651,8 +667,13 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     
 
     case TT_LAYOUT_GRID_ORIGIN:
-      this->parse_len(this->gox, this->goy, this->goz, 3, args, -1);
-      this->def_grid_origin = true;
+      this->convert_cs(args[0], args[1], this->gox, this->goy);
+      if (this->cs == TTCS_LOCAL) {
+        this->parse_len(this->gox, this->goy, this->goz, 3, args, -1);
+      } else {
+        this->parse_len(this->goz, dum, dum, 1, &(args[2]), -1);
+      }
+      this->def_grid_origin = 2;
       break;
 
     case TT_LAYOUT_TRANSPARENCY:
@@ -660,7 +681,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid transparency switch -- %s",args[0]))
       this->transparency = (sv == TT_TRUE);
-      this->def_transparency = true;
+      this->def_transparency = 2;
       break;
 
     case TT_LAYOUT_SKETCHES:
@@ -668,7 +689,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid sketches switch -- %s",args[0]))
       this->sketches = (sv == TT_TRUE);
-      this->def_sketches = true;
+      this->def_sketches = 2;
       break;
     
     case TT_LAYOUT_LEGEND:
@@ -676,7 +697,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_LAYOUT_LEGEND_UNKNOWN)
         ththrow(("invalid legend switch -- %s",args[0]))
       this->legend = sv;
-      this->def_legend = true;
+      this->def_legend = 2;
       break;
     
     case TT_LAYOUT_COLOR_LEGEND:
@@ -684,12 +705,12 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid color-legend switch -- %s",args[0]))
       this->color_legend = sv;
-      this->def_color_legend = true;
+      this->def_color_legend = 2;
       break;
     
     case TT_LAYOUT_SCALE_BAR:
       this->parse_len(this->scale_bar, dum, dum, 1, args, 1);
-      this->def_scale_bar = true;
+      this->def_scale_bar = 2;
       break;
     
     case TT_LAYOUT_MAP_HEADER:
@@ -710,7 +731,15 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_LAYOUT_MAP_HEADER_UNKNOWN)
         ththrow(("invalid map-header switch -- %s",args[2]))
       this->map_header = sv;
-      this->def_map_header = true;
+      this->def_map_header = 2;
+      break;
+    
+    case TT_LAYOUT_MAP_IMAGE:
+      {
+        thlayout_map_image tmpi;
+        tmpi.parse(args, (this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_path());
+        this->map_image_list.push_back(tmpi);
+      }
       break;
     
     case TT_LAYOUT_DEBUG:
@@ -737,7 +766,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           this->debug |= TTLDBG_STATIONNAMES;
           break;
       }
-      this->def_debug = true;
+      this->def_debug = 2;
       break;
     
     case TT_LAYOUT_LANG:
@@ -745,12 +774,12 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == THLANG_UNKNOWN)
         ththrow(("language not supported -- %s",args[0]))
       this->lang = sv;
-      this->def_lang = true;
+      this->def_lang = 2;
       break;
     
     case TT_LAYOUT_UNITS:
-			this->units.parse_units(args[0]);
-      this->def_units = true;
+      this->units.parse_units(args[0]);
+      this->def_units = 2;
       break;
     
     case TT_LAYOUT_LAYERS:
@@ -758,7 +787,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid layers switch -- %s",args[0]))
       this->layers = (sv == TT_TRUE);
-      this->def_layers = true;
+      this->def_layers = 2;
       break;
 
     case TT_LAYOUT_MAP_HEADER_BG:
@@ -766,7 +795,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid map-header-bg switch -- %s",args[0]))
       this->map_header_bg = (sv == TT_TRUE);
-      this->def_map_header_bg = true;
+      this->def_map_header_bg = 2;
       break;
     
     case TT_LAYOUT_OPACITY:
@@ -774,7 +803,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if ((sv != TT_SV_NUMBER) || (dum < 0.0) || (dum > 100.0))
         ththrow(("invalid opacity value -- %s", args[0]))
       this->opacity = dum / 100.0;
-      this->def_opacity = true;
+      this->def_opacity = 2;
       break;
     
     case TT_LAYOUT_SURFACE_OPACITY:
@@ -782,7 +811,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if ((sv != TT_SV_NUMBER) || (dum < 0.0) || (dum > 100.0))
         ththrow(("invalid opacity value -- %s", args[0]))
       this->surface_opacity = dum / 100.0;
-      this->def_surface_opacity = true;
+      this->def_surface_opacity = 2;
       break;
     
     case TT_LAYOUT_SURFACE:
@@ -790,7 +819,15 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_LAYOUT_SURFACE_UNKNOWN)
         ththrow(("invalid surface switch -- %s",args[0]))
       this->surface = sv;
-      this->def_surface = true;
+      this->def_surface = 2;
+      break;
+
+    case TT_LAYOUT_NORTH:
+      sv = thmatch_token(args[0],thtt_layout_north);
+      if (sv == TT_LAYOUT_NORTH_UNKNOWN)
+        ththrow(("invalid north switch -- %s",args[0]))
+      this->north = sv;
+      this->def_north = 2;
       break;
       
     case TT_LAYOUT_GRID:
@@ -798,7 +835,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_LAYOUT_GRID_UNKNOWN)
         ththrow(("invalid grid switch -- %s",args[0]))
       this->grid = (char) sv;
-      this->def_grid = true;
+      this->def_grid = 2;
       break;
       
     case TT_LAYOUT_ENDCODE:
@@ -817,7 +854,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid page-grid switch -- %s",args[0]))
       this->page_grid = (sv == TT_TRUE);
-      this->def_page_grid = true;
+      this->def_page_grid = 2;
       break;
     
     case TT_LAYOUT_EXCLUDE_PAGES:
@@ -832,7 +869,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       else if (this->excl_pages)
         ththrow(("invalid pages exclusion list -- %s",args[1]));
 
-      this->def_excl_pages = true;
+      this->def_excl_pages = 2;
       break;
     
     case TT_LAYOUT_PAGE_NUMBERS:
@@ -840,7 +877,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid page numbers switch -- %s",*args))
       this->pgsnum = (sv == TT_TRUE);
-      this->def_page_numbers = true;
+      this->def_page_numbers = 2;
       break;
     
     case TT_LAYOUT_TITLE_PAGES:
@@ -848,7 +885,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid title-pages switch -- %s",*args))
       this->titlep = (sv == TT_TRUE);
-      this->def_title_pages = true;
+      this->def_title_pages = 2;
       break;
     
     case TT_LAYOUT_DOC_TITLE:
@@ -857,7 +894,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         this->doc_title = this->db->strstore(this->db->buff_enc.get_buffer());
       } else
         this->doc_title = "";
-      this->def_doc_title = true;  
+      this->def_doc_title = 2;  
       break;
     
     case TT_LAYOUT_DOC_COMMENT:
@@ -866,7 +903,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         this->doc_comment = this->db->strstore(this->db->buff_enc.get_buffer());
       } else
         this->doc_comment = "";
-      this->def_doc_comment = true;  
+      this->def_doc_comment = 2;  
       break;
     
     case TT_LAYOUT_DOC_AUTHOR:
@@ -875,7 +912,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         this->doc_author = this->db->strstore(this->db->buff_enc.get_buffer());
       } else
         this->doc_author = "";
-      this->def_doc_author = true;  
+      this->def_doc_author = 2;  
       break;
     
     case TT_LAYOUT_DOC_SUBJECT:
@@ -884,7 +921,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         this->doc_subject = this->db->strstore(this->db->buff_enc.get_buffer());
       } else
         this->doc_subject = "";
-      this->def_doc_subject = true;  
+      this->def_doc_subject = 2;  
       break;
     
     case TT_LAYOUT_DOC_KEYWORDS:
@@ -893,7 +930,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         this->doc_keywords = this->db->strstore(this->db->buff_enc.get_buffer());
       } else
         this->doc_keywords = "";
-      this->def_doc_keywords = true;  
+      this->def_doc_keywords = 2;  
       break;
     
     case TT_LAYOUT_ORIGIN_LABEL:
@@ -910,7 +947,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       } else
         ththrow(("invalid label -- %s",args[1]));
 
-      this->def_origin_label = true;
+      this->def_origin_label = 2;
       break;
     
     case TT_LAYOUT_NAV_SIZE:
@@ -929,7 +966,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid navigator size -- %s", *args))
       this->navsy = unsigned(dum);
       
-      this->def_nav_size = true;
+      this->def_nav_size = 2;
       break;
       
     case TT_LAYOUT_COPY:
@@ -953,7 +990,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid factor -- %s", *args))
       if (this->navf <= 0.0)
         ththrow(("negative factor not allowed -- %s", *args))
-      this->def_nav_factor = true;
+      this->def_nav_factor = 2;
       break;
     
     case TT_LAYOUT_OWN_PAGES:
@@ -963,7 +1000,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (double(int(dum)) != dum)
         ththrow(("invalid number of own pages -- %s", *args))
       this->ownp = unsigned(dum);
-      this->def_own_pages = true;
+      this->def_own_pages = 2;
       break;
     
     case 1:
@@ -1005,16 +1042,15 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),&oname,TT_UTF_8,0);\n");
 
 
-  thprintf("\tplayout->def_scale = %s;\n",(this->def_scale ? "true" : "false"));
+  thprintf("\tplayout->def_scale = %d;\n", this->def_scale);
   thprintf("\tplayout->scale = %lg;\n",this->scale);
-  thprintf("\tplayout->def_base_scale = %s;\n",(this->def_base_scale ? "true" : "false"));
-  thprintf("\tplayout->redef_base_scale = %s;\n",(this->redef_base_scale ? "true" : "false"));
+  thprintf("\tplayout->def_base_scale = %d;\n", this->def_base_scale);
   thprintf("\tplayout->base_scale = %lg;\n",this->base_scale);
 
-  thprintf("\tplayout->def_rotate = %s;\n",(this->def_rotate ? "true" : "false"));
+  thprintf("\tplayout->def_rotate = %d;\n", this->def_rotate);
   thprintf("\tplayout->rotate = %lg;\n",this->rotate);
 
-  thprintf("\tplayout->def_page_setup = %s;\n",(this->def_page_setup ? "true" : "false"));
+  thprintf("\tplayout->def_page_setup = %d;\n", this->def_page_setup);
   thprintf("\tplayout->hsize = %lg;\n",this->hsize);
   thprintf("\tplayout->vsize = %lg;\n",this->vsize);
   thprintf("\tplayout->paphs = %lg;\n",this->paphs);
@@ -1024,107 +1060,111 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->marts = %lg;\n",this->marts);
   thprintf("\tplayout->marls = %lg;\n",this->marls);
 
-  thprintf("\tplayout->color_map_bg.defined = %s;\n",(this->color_map_bg.defined ? "true" : "false"));
+  thprintf("\tplayout->color_map_bg.defined = %d;\n", this->color_map_bg.defined);
   thprintf("\tplayout->color_map_bg.R = %lg;\n",this->color_map_bg.R);
   thprintf("\tplayout->color_map_bg.G = %lg;\n",this->color_map_bg.G);
   thprintf("\tplayout->color_map_bg.B = %lg;\n",this->color_map_bg.B);
 
-  thprintf("\tplayout->color_map_fg.defined = %s;\n",(this->color_map_fg.defined ? "true" : "false"));
+  thprintf("\tplayout->color_map_fg.defined = %d;\n", this->color_map_fg.defined);
   thprintf("\tplayout->color_crit = %d;\n", this->color_crit);
   thprintf("\tplayout->color_map_fg.R = %lg;\n",this->color_map_fg.R);
   thprintf("\tplayout->color_map_fg.G = %lg;\n",this->color_map_fg.G);
   thprintf("\tplayout->color_map_fg.B = %lg;\n",this->color_map_fg.B);
 
-  thprintf("\tplayout->color_preview_below.defined = %s;\n",(this->color_preview_below.defined ? "true" : "false"));
+  thprintf("\tplayout->color_preview_below.defined = %d;\n", this->color_preview_below.defined);
   thprintf("\tplayout->color_preview_below.R = %lg;\n",this->color_preview_below.R);
   thprintf("\tplayout->color_preview_below.G = %lg;\n",this->color_preview_below.G);
   thprintf("\tplayout->color_preview_below.B = %lg;\n",this->color_preview_below.B);
 
-  thprintf("\tplayout->color_preview_above.defined = %s;\n",(this->color_preview_above.defined ? "true" : "false"));
+  thprintf("\tplayout->color_preview_above.defined = %d;\n", this->color_preview_above.defined);
   thprintf("\tplayout->color_preview_above.R = %lg;\n",this->color_preview_above.R);
   thprintf("\tplayout->color_preview_above.G = %lg;\n",this->color_preview_above.G);
   thprintf("\tplayout->color_preview_above.B = %lg;\n",this->color_preview_above.B);
 
-  thprintf("\tplayout->def_overlap = %s;\n",(this->def_overlap ? "true" : "false"));
+  thprintf("\tplayout->def_overlap = %d;\n", this->def_overlap);
   thprintf("\tplayout->overlap = %lg;\n",this->overlap);
 
-  thprintf("\tplayout->def_scale_bar = %s;\n",(this->def_scale_bar ? "true" : "false"));
+  thprintf("\tplayout->def_scale_bar = %d;\n", this->def_scale_bar);
   thprintf("\tplayout->scale_bar = %lg;\n",this->scale_bar);
 
-  thprintf("\tplayout->def_transparency = %s;\n",(this->def_transparency ? "true" : "false"));
+  thprintf("\tplayout->def_transparency = %d;\n", this->def_transparency);
   thprintf("\tplayout->transparency = %s;\n",(this->transparency ? "true" : "false"));
 
-  thprintf("\tplayout->def_sketches = %s;\n",(this->def_sketches ? "true" : "false"));
+  thprintf("\tplayout->def_sketches = %d;\n", this->def_sketches);
   thprintf("\tplayout->sketches = %s;\n",(this->sketches ? "true" : "false"));
 
-  thprintf("\tplayout->def_legend = %s;\n",(this->def_legend ? "true" : "false"));
+  thprintf("\tplayout->def_legend = %d;\n", this->def_legend);
   thprintf("\tplayout->legend = %s;\n",(
     this->legend == TT_LAYOUT_LEGEND_OFF ? "TT_LAYOUT_LEGEND_OFF" : (
     this->legend == TT_LAYOUT_LEGEND_ON ? "TT_LAYOUT_LEGEND_ON" : "TT_LAYOUT_LEGEND_ALL"
     )));
 
-  thprintf("\tplayout->def_survey_level = %s;\n",(this->def_survey_level ? "true" : "false"));
+  thprintf("\tplayout->def_survey_level = %d;\n", this->def_survey_level);
   thprintf("\tplayout->survey_level = %d;\n", this->survey_level);
 
-  thprintf("\tplayout->def_color_legend = %s;\n",(this->def_color_legend ? "true" : "false"));
+  thprintf("\tplayout->def_color_legend = %d;\n", this->def_color_legend);
   thprintf("\tplayout->legend = %d;\n", this->color_legend);
 
-  thprintf("\tplayout->def_legend_width = %s;\n",(this->def_legend_width ? "true" : "false"));
+  thprintf("\tplayout->def_legend_width = %d;\n", this->def_legend_width);
   thprintf("\tplayout->legend_width = %lg;\n",this->legend_width);
 
-  thprintf("\tplayout->def_legend_columns = %s;\n",(this->def_legend_columns ? "true" : "false"));
+  thprintf("\tplayout->def_legend_columns = %d;\n", this->def_legend_columns);
   thprintf("\tplayout->legend_columns = %d;\n",this->legend_columns);
 
-  thprintf("\tplayout->def_map_header = %s;\n",(this->def_map_header ? "true" : "false"));
+  thprintf("\tplayout->def_map_header = %d;\n", this->def_map_header);
   thprintf("\tplayout->map_header = %d;\n",this->map_header);
   thprintf("\tplayout->map_header_x = %lg;\n",this->map_header_x);
   thprintf("\tplayout->map_header_y = %lg;\n",this->map_header_y);
 
-  thprintf("\tplayout->def_debug = %s;\n",(this->def_debug ? "true" : "false"));
+  thprintf("\tplayout->def_debug = %d;\n", this->def_debug);
   thprintf("\tplayout->debug = %d;\n",this->debug);
 
-  thprintf("\tplayout->def_max_explos = %s;\n",(this->def_max_explos ? "true" : "false"));
+  thprintf("\tplayout->def_max_explos = %d;\n", this->def_max_explos);
   thprintf("\tplayout->max_explos = %d;\n",this->max_explos);
-  thprintf("\tplayout->def_max_topos = %s;\n",(this->def_max_topos ? "true" : "false"));
+  thprintf("\tplayout->def_max_topos = %d;\n", this->def_max_topos);
   thprintf("\tplayout->max_topos = %d;\n",this->max_topos);
-  thprintf("\tplayout->def_max_cartos = %s;\n",(this->def_max_cartos ? "true" : "false"));
+  thprintf("\tplayout->def_max_cartos = %d;\n", this->def_max_cartos);
   thprintf("\tplayout->max_cartos = %d;\n",this->max_cartos);
-  thprintf("\tplayout->def_max_copys = %s;\n",(this->def_max_copys ? "true" : "false"));
+  thprintf("\tplayout->def_max_copys = %d;\n", this->def_max_copys);
   thprintf("\tplayout->max_copys = %d;\n",this->max_copys);
 
-  thprintf("\tplayout->def_explo_lens = %s;\n",(this->def_explo_lens ? "true" : "false"));
+  thprintf("\tplayout->def_explo_lens = %d;\n",this->def_explo_lens);
   thprintf("\tplayout->explo_lens = %s;\n",(this->explo_lens ? "true" : "false"));
-  thprintf("\tplayout->def_topo_lens = %s;\n",(this->def_topo_lens ? "true" : "false"));
+  thprintf("\tplayout->def_topo_lens = %d;\n",this->def_topo_lens);
   thprintf("\tplayout->topo_lens = %s;\n",(this->topo_lens ? "true" : "false"));
 
-  thprintf("\tplayout->def_lang = %s;\n",(this->def_lang ? "true" : "false"));
+  thprintf("\tplayout->def_lang = %d;\n", this->def_lang);
   thprintf("\tplayout->lang = %s;\n",thlang_getcxxid(this->lang));
 
-  thprintf("\tplayout->def_units = %s;\n",(this->def_units ? "true" : "false"));
+  thprintf("\tplayout->def_units = %d;\n", this->def_units);
   thprintf("\tplayout->units.units = %d;\n",this->units.units);
 
-  thprintf("\tplayout->def_layers = %s;\n",(this->def_layers ? "true" : "false"));
+  thprintf("\tplayout->def_layers = %d;\n", this->def_layers);
   thprintf("\tplayout->layers = %s;\n",(this->layers ? "true" : "false"));
 
-  thprintf("\tplayout->def_map_header_bg = %s;\n",(this->def_map_header_bg ? "true" : "false"));
+  thprintf("\tplayout->def_map_header_bg = %d;\n", this->def_map_header_bg);
   thprintf("\tplayout->map_header_bg = %s;\n",(this->map_header_bg ? "true" : "false"));
 
-  thprintf("\tplayout->def_opacity = %s;\n",(this->def_opacity ? "true" : "false"));
+  thprintf("\tplayout->def_opacity = %d;\n", this->def_opacity);
   thprintf("\tplayout->opacity = %lg;\n",this->opacity);
 
-  thprintf("\tplayout->def_surface_opacity = %s;\n", (this->def_surface_opacity ? "true" : "false"));
+  thprintf("\tplayout->def_surface_opacity = %d;\n", this->def_surface_opacity);
   thprintf("\tplayout->surface_opacity = %lg;\n", this->surface_opacity);
-  thprintf("\tplayout->def_surface= %s;\n", (this->def_surface ? "true" : "false"));
+
+  thprintf("\tplayout->def_surface= %d;\n", this->def_surface);
   thprintf("\tplayout->surface = %d;\n", this->surface);
 
-  thprintf("\tplayout->def_grid = %s;\n",(this->def_grid ? "true" : "false"));
+  thprintf("\tplayout->def_north= %d;\n", this->def_north);
+  thprintf("\tplayout->north = %d;\n", this->north);
+
+  thprintf("\tplayout->def_grid = %d;\n", this->def_grid);
   thprintf("\tplayout->grid = %d;\n",this->grid);
 
-  thprintf("\tplayout->def_page_grid = %s;\n",(this->def_page_grid ? "true" : "false"));
+  thprintf("\tplayout->def_page_grid = %d;\n", this->def_page_grid);
   thprintf("\tplayout->page_grid = %s;\n",(this->page_grid ? "true" : "false"));
 
 
-  thprintf("\tplayout->def_origin = %s;\n",(this->def_origin ? "true" : "false"));
+  thprintf("\tplayout->def_origin = %d;\n", this->def_origin);
   if (!thisnan(this->ox))
     thprintf("\tplayout->ox = %lg;\n",this->ox);
   if (!thisnan(this->oy))
@@ -1132,33 +1172,33 @@ void thlayout::self_print_library() {
   if (!thisnan(this->oz))
     thprintf("\tplayout->oz = %lg;\n",this->oz);
 
-  thprintf("\tplayout->def_origin_label = %s;\n",(this->def_origin_label ? "true" : "false"));
+  thprintf("\tplayout->def_origin_label = %d;\n", this->def_origin_label);
   thdecode_c(&(this->db->buff_enc), this->olx);
   thprintf("\tplayout->olx = \"%s\";\n", this->db->buff_enc.get_buffer());
   thdecode_c(&(this->db->buff_enc), this->oly);
   thprintf("\tplayout->oly = \"%s\";\n", this->db->buff_enc.get_buffer());
 
-  thprintf("\tplayout->def_doc_title = %s;\n",(this->def_doc_title ? "true" : "false"));
+  thprintf("\tplayout->def_doc_title = %d;\n", this->def_doc_title);
   thdecode_c(&(this->db->buff_enc), this->doc_title);
   thprintf("\tplayout->doc_title = \"%s\";\n", this->db->buff_enc.get_buffer());
   
-  thprintf("\tplayout->def_doc_comment = %s;\n",(this->def_doc_comment ? "true" : "false"));
+  thprintf("\tplayout->def_doc_comment = %d;\n", this->def_doc_comment);
   thdecode_c(&(this->db->buff_enc), this->doc_comment);
   thprintf("\tplayout->doc_comment = \"%s\";\n", this->db->buff_enc.get_buffer());
   
-  thprintf("\tplayout->def_doc_author = %s;\n",(this->def_doc_author ? "true" : "false"));
+  thprintf("\tplayout->def_doc_author = %d;\n", this->def_doc_author);
   thdecode_c(&(this->db->buff_enc), this->doc_author);
   thprintf("\tplayout->doc_author = \"%s\";\n", this->db->buff_enc.get_buffer());
 
-  thprintf("\tplayout->def_doc_subject = %s;\n",(this->def_doc_author ? "true" : "false"));
+  thprintf("\tplayout->def_doc_subject = %d;\n", this->def_doc_author);
   thdecode_c(&(this->db->buff_enc), this->doc_subject);
   thprintf("\tplayout->doc_subject = \"%s\";\n", this->db->buff_enc.get_buffer());
   
-  thprintf("\tplayout->def_doc_keywords = %s;\n",(this->def_doc_keywords ? "true" : "false"));
+  thprintf("\tplayout->def_doc_keywords = %d;\n", this->def_doc_keywords);
   thdecode_c(&(this->db->buff_enc), this->doc_keywords);
   thprintf("\tplayout->doc_keywords = \"%s\";\n", this->db->buff_enc.get_buffer());
   
-  thprintf("\tplayout->def_excl_pages = %s;\n",(this->def_excl_pages ? "true" : "false"));
+  thprintf("\tplayout->def_excl_pages = %d;\n", this->def_excl_pages);
   thprintf("\tplayout->excl_pages = %s;\n",(this->excl_pages ? "true" : "false"));
   if (this->excl_list == NULL) {
     thprintf("\tplayout->excl_list = NULL;\n");
@@ -1167,12 +1207,12 @@ void thlayout::self_print_library() {
     thprintf("\tplayout->excl_list = \"%s\";\n", this->db->buff_enc.get_buffer());
   }
   
-  thprintf("\tplayout->def_grid_size = %s;\n",(this->def_grid_size ? "true" : "false"));
+  thprintf("\tplayout->def_grid_size = %d;\n", this->def_grid_size);
   thprintf("\tplayout->gxs = %lg;\n",this->gxs);
   thprintf("\tplayout->gys = %lg;\n",this->gys);
   thprintf("\tplayout->gzs = %lg;\n",this->gzs);
 
-  thprintf("\tplayout->def_grid_origin = %s;\n",(this->def_grid_origin ? "true" : "false"));
+  thprintf("\tplayout->def_grid_origin = %d;\n", this->def_grid_origin);
   if (!thisnan(this->gox))
     thprintf("\tplayout->gox = %lg;\n",this->gox);
   if (!thisnan(this->goy))
@@ -1180,20 +1220,20 @@ void thlayout::self_print_library() {
   if (!thisnan(this->goz))
     thprintf("\tplayout->goz = %lg;\n",this->goz);
 
-  thprintf("\tplayout->def_nav_factor = %s;\n",(this->def_nav_factor ? "true" : "false"));
+  thprintf("\tplayout->def_nav_factor = %d;\n", this->def_nav_factor);
   thprintf("\tplayout->navf = %lg;\n",this->navf);
 
-  thprintf("\tplayout->def_nav_size = %s;\n",(this->def_nav_size ? "true" : "false"));
+  thprintf("\tplayout->def_nav_size = %d;\n", this->def_nav_size);
   thprintf("\tplayout->navsx = %d;\n",this->navsx);
   thprintf("\tplayout->navsy = %d;\n",this->navsy);
   
-  thprintf("\tplayout->def_own_pages = %s;\n",(this->def_own_pages ? "true" : "false"));
+  thprintf("\tplayout->def_own_pages = %d;\n", this->def_own_pages);
   thprintf("\tplayout->ownp = %d;\n",this->ownp);
 
-  thprintf("\tplayout->def_title_pages = %s;\n",(this->def_title_pages ? "true" : "false"));
+  thprintf("\tplayout->def_title_pages = %d;\n", this->def_title_pages);
   thprintf("\tplayout->titlep = %s;\n",(this->titlep ? "true" : "false"));
 
-  thprintf("\tplayout->def_page_numbers = %s;\n",(this->def_page_numbers ? "true" : "false"));
+  thprintf("\tplayout->def_page_numbers = %d;\n", this->def_page_numbers);
   thprintf("\tplayout->pgsnum = %s;\n",(this->pgsnum ? "true" : "false"));
 
   
@@ -1258,7 +1298,7 @@ void thlayout::self_print_library() {
     }
     ln = ln->next_line;
   }
-  thprintf("\tplayout->def_tex_lines = %s;\n",(this->def_tex_lines ? "true" : "false"));
+  thprintf("\tplayout->def_tex_lines = %d;\n", this->def_tex_lines);
   
 }
 
@@ -1394,19 +1434,10 @@ void thlayout::export_config(FILE * o, thdb2dprj * prj, double x_scale, double x
   fprintf(o,"MapGrid: %d\n", (this->page_grid ? 1 : 0));
 }
 
-  
-void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
 
-  fprintf(o,"\\opacity{%.2f}\n",this->opacity);
-  fprintf(o,"\\def\\scale{%lu}\n",(unsigned long)(1.0 / this->scale));
-  fprintf(o,"\\pagesetup{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}\n",
-    this->paphs*100.0, this->papvs*100.0, 
-    this->paghs*100.0, this->pagvs*100.0, 
-    this->marls*100.0, this->marts*100.0);
-  fprintf(o,"\\def\\maplayout{");
-  if (this->map_header != TT_LAYOUT_MAP_HEADER_OFF) {
-    fprintf(o,"\\legendbox{%.0f}{%.0f}{", this->map_header_x, this->map_header_y);
-    switch (this->map_header) {
+
+void thlayout_print_header_align(FILE * o, int a) {
+    switch (a) {
       case TT_LAYOUT_MAP_HEADER_CENTER:
         fprintf(o,"C");
         break;
@@ -1434,8 +1465,57 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
       default:
         fprintf(o,"NW");
     }
+}
+
+  
+void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
+
+  fprintf(o,"\\opacity{%.2f}\n",this->opacity);
+  fprintf(o,"\\def\\scale{%lu}\n",(unsigned long)(1.0 / this->scale));
+  fprintf(o,"\\pagesetup{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}\n",
+    this->paphs*100.0, this->papvs*100.0, 
+    this->paghs*100.0, this->pagvs*100.0, 
+    this->marls*100.0, this->marts*100.0);
+  fprintf(o,"\\def\\maplayout{");
+  thlayout_map_image_list::iterator mit;
+  size_t nami = 0;
+  for(mit = this->map_image_list.begin(); mit != this->map_image_list.end(); mit++) {
+    if (mit->defined() && (mit->m_align != TT_LAYOUT_MAP_HEADER_OFF))
+      nami++;
+  }
+
+  thbuffer pict_path, pn;
+  size_t pl;
+  char * pp;
+  long i;
+  pict_path.guarantee(1024);
+  getcwd(pict_path.get_buffer(),1024);
+  pp = pict_path.get_buffer();
+  pl = strlen(pp);
+  if ((pl > 0) && ((pp[pl-1] == '/') || (pp[pl-1] == '\\'))) {
+    pp[pl-1] = 0;
+  }
+
+  if ((this->map_header != TT_LAYOUT_MAP_HEADER_OFF) || (nami > 0)) {
+    fprintf(o,"\\legendbox{%.0f}{%.0f}{", this->map_header_x, this->map_header_y);
+    thlayout_print_header_align(o, this->map_header);
     fprintf(o,"}");
     fprintf(o,"{\\the\\legendcontent}");
+    for(mit = this->map_image_list.begin(); mit != this->map_image_list.end(); mit++) {
+      if (mit->defined() && (mit->m_align != TT_LAYOUT_MAP_HEADER_OFF)) {
+        pn = pict_path;
+        pn += "/";
+        pn += mit->m_fn;
+        pp = pn.get_buffer();
+        for(i = (long)strlen(pp); i >= 0; i--) {
+          if (pp[i] == '\\')
+            pp[i] = '/';
+        }
+        fprintf(o,"\\legendbox{%.0f}{%.0f}{", mit->m_x, mit->m_y);
+        thlayout_print_header_align(o, mit->m_align);
+        fprintf(o,"}{\\loadpicture{%s}}",pp);
+      }
+    }
   }
   fprintf(o,"}\n");
 
@@ -1543,198 +1623,239 @@ void thlayout::process_copy() {
         srcl->process_copy();
       
       // teraz skopirujme co nemame a on ma
-#define has_srcl(whatx) (!this->whatx)      
+#define begcopy(whatx) if ((this->whatx < 2) && (srcl->whatx > 0)) { \
+        this->whatx = 1;
+#define endcopy }
       
-      if has_srcl(def_scale)
+      begcopy(def_scale)
         this->scale = srcl->scale;
+      endcopy
         
-      if has_srcl(def_rotate)
+      begcopy(def_rotate)
         this->rotate = srcl->rotate;
+      endcopy
         
-      if ((!this->def_base_scale) && (srcl->redef_base_scale)) {
+      begcopy(def_base_scale)
         this->base_scale = srcl->base_scale;
-        this->redef_base_scale = true;
-      }
+      endcopy
 
-      if has_srcl(def_origin) {
+      begcopy(def_origin) 
         this->ox = srcl->ox;
         this->oy = srcl->oy;
         this->oz = srcl->oz;
-      }
+      endcopy
 
-      if has_srcl(def_size) {
+      begcopy(def_size)
         this->hsize = srcl->hsize;
         this->vsize = srcl->vsize;
-      }
+      endcopy
   
-      if has_srcl(def_page_setup) {
+      begcopy(def_page_setup)
         this->paphs = srcl->paphs;
         this->papvs = srcl->papvs;
         this->paghs = srcl->paghs;
         this->pagvs = srcl->pagvs;
         this->marls = srcl->marls;
         this->marts = srcl->marts;
-      }  
+      endcopy
 
-      if has_srcl(def_overlap)
+      begcopy(def_overlap)
         this->overlap = srcl->overlap;
+      endcopy
 
-      if has_srcl(def_scale_bar)
+      begcopy(def_scale_bar)
         this->scale_bar = srcl->scale_bar;
+      endcopy
   
-      if has_srcl(def_grid_origin) {
+      begcopy(def_grid_origin)
         this->gox = srcl->gox;
         this->goy = srcl->goy;
         this->goz = srcl->goz;
-      }  
+      endcopy
 
-      if has_srcl(def_excl_pages) {
+      begcopy(def_excl_pages)
         this->excl_pages = srcl->excl_pages;
         this->excl_list = srcl->excl_list;
-      }
+      endcopy
       
-      if has_srcl(color_map_fg.defined) {
+      begcopy(color_map_fg.defined)
         this->color_crit = srcl->color_crit;
         this->color_map_fg.R = srcl->color_map_fg.R;
         this->color_map_fg.G = srcl->color_map_fg.G;
         this->color_map_fg.B = srcl->color_map_fg.B;
-      }
+      endcopy
 
-      if has_srcl(color_preview_below.defined) {
+      begcopy(color_preview_below.defined)
         this->color_preview_below.R = srcl->color_preview_below.R;
         this->color_preview_below.G = srcl->color_preview_below.G;
         this->color_preview_below.B = srcl->color_preview_below.B;
-      }
+      endcopy
 
-      if has_srcl(color_preview_above.defined) {
+      begcopy(color_preview_above.defined)
         this->color_preview_above.R = srcl->color_preview_above.R;
         this->color_preview_above.G = srcl->color_preview_above.G;
         this->color_preview_above.B = srcl->color_preview_above.B;
-      }
+      endcopy
 
-      if has_srcl(color_map_bg.defined) {
+      begcopy(color_map_bg.defined)
         this->color_map_bg.R = srcl->color_map_bg.R;
         this->color_map_bg.G = srcl->color_map_bg.G;
         this->color_map_bg.B = srcl->color_map_bg.B;
-      }
+      endcopy
 
-      if has_srcl(def_doc_title)
+      begcopy(def_doc_title)
         this->doc_title = srcl->doc_title;
+      endcopy
 
-      if has_srcl(def_doc_comment)
+      begcopy(def_doc_comment)
         this->doc_comment = srcl->doc_comment;
+      endcopy
 
-      if has_srcl(def_doc_author)
+      begcopy(def_doc_author)
         this->doc_author = srcl->doc_author;
+      endcopy
 
-      if has_srcl(def_doc_subject)
+      begcopy(def_doc_subject)
         this->doc_subject = srcl->doc_subject;
+      endcopy
 
-      if has_srcl(def_doc_keywords)
+      begcopy(def_doc_keywords)
         this->doc_keywords = srcl->doc_keywords;
+      endcopy
 
-      if has_srcl(def_grid_size) {
+      begcopy(def_grid_size)
         this->gxs = srcl->gxs;
         this->gys = srcl->gys;
         this->gzs = srcl->gzs;
-      }
+      endcopy
   
-      if has_srcl(def_origin_label) {
+      begcopy(def_origin_label)
         this->olx = srcl->olx;
         this->oly = srcl->oly;
-      }
+      endcopy
   
-      if has_srcl(def_nav_factor)
+      begcopy(def_nav_factor)
         this->navf = srcl->navf;
+      endcopy
   
-      if has_srcl(def_nav_size) {
+      begcopy(def_nav_size)
         this->navsx = srcl->navsx;
         this->navsy = srcl->navsy;
-      }
+      endcopy
 
-      if has_srcl(def_own_pages)
+      begcopy(def_own_pages)
         this->ownp = srcl->ownp;
+      endcopy
       
-      if has_srcl(def_title_pages)
+      begcopy(def_title_pages)
         this->titlep = srcl->titlep;
+      endcopy
         
-      if has_srcl(def_opacity)
+      begcopy(def_opacity)
         this->opacity = srcl->opacity;
+      endcopy
 
-      if has_srcl(def_surface)
+      begcopy(def_surface)
         this->surface = srcl->surface;
+      endcopy
 
-      if has_srcl(def_surface_opacity)
+      begcopy(def_north)
+        this->north = srcl->north;
+      endcopy
+
+      begcopy(def_surface_opacity)
         this->surface_opacity = srcl->surface_opacity;
+      endcopy
   
-      if has_srcl(def_transparency)
+      begcopy(def_transparency)
         this->transparency = srcl->transparency;
+      endcopy
 
-      if has_srcl(def_sketches)
+      begcopy(def_sketches)
         this->sketches = srcl->sketches;
+      endcopy
 
-      if has_srcl(def_legend)
+      begcopy(def_legend)
         this->legend = srcl->legend;
+      endcopy
 
-      if has_srcl(def_survey_level)
+      begcopy(def_survey_level)
         this->survey_level = srcl->survey_level;
+      endcopy
 
-      if has_srcl(def_color_legend)
+      begcopy(def_color_legend)
         this->color_legend = srcl->color_legend;
+      endcopy
 
-      if has_srcl(def_legend_width)
+      begcopy(def_legend_width)
         this->legend_width = srcl->legend_width;
+      endcopy
 
-      if has_srcl(def_legend_columns)
+      begcopy(def_legend_columns)
         this->legend_columns = srcl->legend_columns;
+      endcopy
 
-      if has_srcl(def_map_header) {
+      begcopy(def_map_header)
         this->map_header = srcl->map_header;
         this->map_header_x = srcl->map_header_x;
         this->map_header_y = srcl->map_header_y;
-      }
+      endcopy
 
-      if has_srcl(def_debug)
+      begcopy(def_debug)
         this->debug = srcl->debug;
+      endcopy
 
-      if has_srcl(def_max_explos)
+      begcopy(def_max_explos)
         this->max_explos = srcl->max_explos;
+      endcopy
 
-      if has_srcl(def_max_topos)
+      begcopy(def_max_topos)
         this->max_topos = srcl->max_topos;
+      endcopy
 
-      if has_srcl(def_max_cartos)
+      begcopy(def_max_cartos)
         this->max_cartos = srcl->max_cartos;
+      endcopy
 
-      if has_srcl(def_max_copys)
+      begcopy(def_max_copys)
         this->max_copys = srcl->max_copys;
+      endcopy
 
-      if has_srcl(def_explo_lens)
+      begcopy(def_explo_lens)
         this->explo_lens = srcl->explo_lens;
+      endcopy
 
-      if has_srcl(def_topo_lens)
+      begcopy(def_topo_lens)
         this->topo_lens = srcl->topo_lens;
+      endcopy
 
-      if (has_srcl(def_lang) && (srcl->lang != THLANG_UNKNOWN))
+      begcopy(def_lang)
         this->lang = srcl->lang;
+      endcopy
 
-      if (has_srcl(def_units))
+      begcopy(def_units)
         this->units = srcl->units;
+      endcopy
   
-      if has_srcl(def_layers)
+      begcopy(def_layers)
         this->layers = srcl->layers;
+      endcopy
 
-      if has_srcl(def_map_header_bg)
+      begcopy(def_map_header_bg)
         this->map_header_bg = srcl->map_header_bg;
+      endcopy
   
-      if has_srcl(def_grid)
+      begcopy(def_grid)
         this->grid = srcl->grid;
+      endcopy
 
-      if has_srcl(def_page_grid)
+      begcopy(def_page_grid)
         this->page_grid = srcl->page_grid;
+      endcopy
   
-      if has_srcl(def_page_numbers)
+      begcopy(def_page_numbers)
         this->pgsnum = srcl->pgsnum;
+      endcopy
 
       if (srcl->first_line != NULL) {
 
@@ -1762,6 +1883,13 @@ void thlayout::process_copy() {
         }
         this->first_line = newfl;
       }
+
+      // copy map images
+      thlayout_map_image_list::iterator mit, mits;
+      mits = this->map_image_list.begin();
+      for (mit = srcl->map_image_list.begin(); mit != srcl->map_image_list.end(); mit++) {
+        this->map_image_list.insert(mits, *mit);
+      }
       
     } 
 
@@ -1779,7 +1907,7 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   //      transparency,map_grid; 
   //float hsize,vsize,overlap,
   //     hgrid,vgrid,hgridoffset,vgridoffset,
-	//nav_factor;
+  //nav_factor;
   //int nav_right,nav_up,own_pages;
 
   LAYOUT.excl_list = (this->excl_list != NULL ? this->excl_list : "");
@@ -1871,3 +1999,46 @@ bool thlayout::is_debug_stationnames() {
 }
 
 std::list <thlayout_copy_src> thlayout_copy_src_list;
+
+
+bool thlayout_map_image::defined() {
+  return (strlen(this->m_fn) > 0);
+}
+
+
+void thlayout_map_image::parse(char ** args, const char * cpath) {
+
+  int sv;
+
+  thparse_double(sv,this->m_x,args[0]);
+  if (sv != TT_SV_NUMBER)
+    ththrow(("invalid number -- %s",args[0]))
+  if ((this->m_x < -100.0) || (this->m_x > 200.0))
+    ththrow(("number between -100.0 - 200.0 expected -- %s",args[0]))
+
+  thparse_double(sv,this->m_y,args[1]);
+  if (sv != TT_SV_NUMBER)
+    ththrow(("invalid number -- %s",args[1]))
+  if ((this->m_y < -100.0) || (this->m_y > 200.0))
+    ththrow(("number between -100.0 - 200.0 expected -- %s",args[1]))
+
+  sv = thmatch_token(args[2],thtt_layout_map_header);
+  if (sv == TT_LAYOUT_MAP_HEADER_UNKNOWN)
+    ththrow(("invalid map-image align switch -- %s",args[2]))
+  this->m_align = sv;
+
+  if (strlen(args[3]) == 0)
+    ththrow(("empty image file name not allowed"))
+
+  std::string fpath;
+  fpath = cpath;
+  if (thpath_is_absolute(args[3]))
+    fpath = args[3];
+  else
+    fpath += args[3];
+  this->m_fn = thdb.strstore(fpath.c_str());
+
+}
+
+
+

@@ -299,9 +299,7 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 	ADDCB(lxSS_CLNVIS_CAVE, _("Underground"))
 	ADDCB(lxSS_CLNVIS_SURFACE, _("Surface"))
 
-  // lxBoxSizer->Add( \
-	//		new wxStaticLine(lxPanel, wxID_ANY), \
-	//    0, wxBOTTOM | wxEXPAND, lxBORDER);
+  // lxBoxSizer->Add(new wxStaticLine(lxPanel, wxID_ANY), 0, wxBOTTOM | wxEXPAND, lxBORDER);
 
   // ADDST(wxID_ANY, _("Marked stations"));
   // ADDCB(wxID_ANY, _("Entrance"))
@@ -349,9 +347,7 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 //  ADDCB(wxID_ANY, _("Altitudes"))
 //  ADDCB(wxID_ANY, _("Comments"))
 //
-//  lxBoxSizer->Add( \
-//			new wxStaticLine(lxPanel, wxID_ANY), \
-//	    0, wxBOTTOM | wxEXPAND, lxBORDER);
+//  lxBoxSizer->Add(new wxStaticLine(lxPanel, wxID_ANY), 0, wxBOTTOM | wxEXPAND, lxBORDER);
 //
 //  ADDST(wxID_ANY, _("Other labels"))
 //  ADDCB(wxID_ANY, _("Survey names"))
@@ -380,9 +376,7 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 //  lxBoxSizer->Add(bs2, 0, wxBOTTOM | wxALIGN_LEFT, lxBORDER);
 //
 //  ADDCB(wxID_ANY, _("Fit bbox to grid"))
-//  lxBoxSizer->Add( \
-//			new wxStaticLine(lxPanel, wxID_ANY), \
-//	    0, wxBOTTOM | wxEXPAND, lxBORDER);
+//  lxBoxSizer->Add(new wxStaticLine(lxPanel, wxID_ANY), 0, wxBOTTOM | wxEXPAND, lxBORDER);
 //  ADDST(wxID_ANY, _("Grid labels"))
 //  ADDCB(wxID_ANY, _("Altitude"))
 //  ADDCB(wxID_ANY, _("XY coordinates"))
@@ -410,26 +404,6 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 
 //  lxFlexGridSizer = new wxFlexGridSizer(2);
 
-//#define ADDCLR(id, ss, clr) \
-//  lxFlexGridSizer->Add( \
-//    new wxButton(lxPanel, id, _T("")), \
-//		0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM | wxRIGHT, lxBORDER); \
-// 	lxSETWWH(id, 1.0, 0.8); \
-//	lxFButton(id)->SetBackgroundColour(wxColour((unsigned long) clr)); \
-//  lxFlexGridSizer->Add( \
-//    new wxStaticText(lxPanel, wxID_ANY, ss), \
-//		0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxBOTTOM, lxBORDER);
-//
-//  ADDCLR(3345, _("Centerline"), 0xFFFF00);
-//  ADDCLR(3346, _("Walls"), 0xFFFFFF);
-//  ADDCLR(3347, _("Surface"), 0x008800);
-//  ADDCLR(3348, _("Bounding box"), 0x0000FF);
-//  ADDCLR(3349, _("Grid"), 0xBB00FF);
-//  ADDCLR(3350, _("Background"), 0x000000);
-//  lxBoxSizer->Add(lxFlexGridSizer);
-//
-//  this->m_controlSizer->Add(lxBoxSizer, 1, wxEXPAND);
-//  updateCtrlMinSize;
 
   /////////////////////////////////////////////////////////
   // end of tools 

@@ -175,6 +175,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_ICE, SYMA_ICE)
     tharea_type_export_mp(TT_AREA_TYPE_CLAY, SYMA_CLAY)
     tharea_type_export_mp(TT_AREA_TYPE_PEBBLES, SYMA_PEBBLES)
+    tharea_type_export_mp(TT_AREA_TYPE_BEDROCK, SYMA_BEDROCK)
   }
   
   if (this->context >= 0) 
@@ -187,6 +188,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
   if (out->file == NULL)
     return(true);
     
+  th2ddataobject::export_mp(out);
   thdb_revision_set_type::iterator ri = 
       this->db->revision_set.find(threvision(this->id, 0));
   fprintf(out->file,"current_src := \"%s [%ld]\";\n", ri->srcf.name, ri->srcf.line);  

@@ -66,6 +66,8 @@ typedef struct {
  */
  
 int thmatch_stok(char *buffer, const thstok *tab, int tab_size);
+ 
+int thcasematch_stok(char *buffer, const thstok *tab, int tab_size);
 
 
 /**
@@ -73,6 +75,9 @@ int thmatch_stok(char *buffer, const thstok *tab, int tab_size);
  */
 
 #define thmatch_token(buffer, table) thmatch_stok(buffer, table,\
+  ((sizeof(table)/sizeof(thstok)) - 1))
+
+#define thcasematch_token(buffer, table) thcasematch_stok(buffer, table,\
   ((sizeof(table)/sizeof(thstok)) - 1))
 
 
@@ -312,6 +317,7 @@ void thdecode_tcl(thbuffer * dest, const char * src);
 void thdecode_tex(thbuffer * dest, const char * src);
 void thdecode_utf2tex(thbuffer * dest, const char * src);
 void thdecode_sql(thbuffer * dest, const char * src);
+void thdecode_mp(thbuffer * dest, const char * src);
 
 
 /**
@@ -361,6 +367,17 @@ const char * thutf82xhtml(const char * src);
  */
 
 void thbase64_encode(char * fname, FILE * fout);
+
+/**
+ * Check if path is absolute.
+ */
+
+bool thpath_is_absolute(const char * fname);
+
+/**
+ * Check on attribute name.
+ */
+bool th_is_attr_name(char * str);
 
 
 #endif

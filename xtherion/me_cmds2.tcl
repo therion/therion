@@ -3131,10 +3131,12 @@ proc xth_me_cmds_show_current_area {} {
 	return
       }
       5 {
-	if {$cid != $xid} {
-	  set cid [expr $xid - 1]
-	  set godown 0
-	}
+	if {$godown} {
+	  if {$cid != $xid} {
+	    set cid [expr $xid - 1]
+	    set godown 0
+	  }
+	} else return
       }
     }
     

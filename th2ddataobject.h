@@ -221,9 +221,12 @@ class th2ddataobject : public thdataobject {
    * Export object to metapost file.
    */
   
-  virtual bool export_mp(class thexpmapmpxs * out) = 0;
+  virtual bool export_mp(class thexpmapmpxs * out);
   
 };
+
+
+void th2dsplitTT(char * src, char ** type, char ** subtype);
 
 
 #endif

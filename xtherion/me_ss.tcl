@@ -47,57 +47,57 @@ proc xth_me_ss_next {} {
     if {$cselid == 0} {
       set cselid [lindex $xth(me,cmds,xlist) 0]
       if {$xth(me,cmds,$cselid,ct) == 3} {
-        set cselpid [lindex $xth(me,cmds,$cselid,xplist) 0]
+	set cselpid [lindex $xth(me,cmds,$cselid,xplist) 0]
       } else {
-        set cselpid 0
+	set cselpid 0
       }
       incr cnt
     } elseif {($xth(me,cmds,$cselid,ct) != 3) || ($cselpid == 0)} {
       set cselid [lindex $xth(me,cmds,xlist) \
-          [expr [lsearch -exact $xth(me,cmds,xlist) $cselid] + 1]]
+	  [expr [lsearch -exact $xth(me,cmds,xlist) $cselid] + 1]]
       if {$xth(me,cmds,$cselid,ct) == 3} {
-        set cselpid [lindex $xth(me,cmds,$cselid,xplist) 0]
+	set cselpid [lindex $xth(me,cmds,$cselid,xplist) 0]
       } else {
-        set cselpid 0
+	set cselpid 0
       }
       incr cnt
     } else {
       set cselpid [lindex $xth(me,cmds,$cselid,xplist) \
-          [expr [lsearch -exact $xth(me,cmds,$cselid,xplist) $cselpid] + 1]]
+	  [expr [lsearch -exact $xth(me,cmds,$cselid,xplist) $cselpid] + 1]]
     }
     xth_me_progbar_prog $cnt
     switch $xth(me,cmds,$cselid,ct) {
       0 {
-        xth_me_cmds_select 0
-        xth_me_progbar_hide
-        xth_status_bar_pop me
-        return
+	xth_me_cmds_select 0
+	xth_me_progbar_hide
+	xth_status_bar_pop me
+	return
       }
       3 {
-        if {$cselpid == 0} {
-          if {[xth_me_ss_match $xth(me,cmds,$cselid,data_ln)]} {
-            xth_me_cmds_select "$cselid 0"
-            xth_me_progbar_hide
-            xth_status_bar_pop me
-            return
-          }
-        } else {
-          if {[xth_me_ss_match [lindex $xth(me,cmds,$cselid,data_pt) \
-              [lsearch -exact $xth(me,cmds,$cselid,xplist) $cselpid]]]} {
-            xth_me_cmds_select "$cselid $cselpid"
-            xth_me_progbar_hide
-            xth_status_bar_pop me
-            return
-          }
-        }
+	if {$cselpid == 0} {
+	  if {[xth_me_ss_match $xth(me,cmds,$cselid,data_ln)]} {
+	    xth_me_cmds_select "$cselid 0"
+	    xth_me_progbar_hide
+	    xth_status_bar_pop me
+	    return
+	  }
+	} else {
+	  if {[xth_me_ss_match [lindex $xth(me,cmds,$cselid,data_pt) \
+	      [lsearch -exact $xth(me,cmds,$cselid,xplist) $cselpid]]]} {
+	    xth_me_cmds_select "$cselid $cselpid"
+	    xth_me_progbar_hide
+	    xth_status_bar_pop me
+	    return
+	  }
+	}
       }
       default {
-        if {[xth_me_ss_match $xth(me,cmds,$cselid,data)]} {
-          xth_me_cmds_select $cselid
-          xth_me_progbar_hide
-          xth_status_bar_pop me
-          return
-        }
+	if {[xth_me_ss_match $xth(me,cmds,$cselid,data)]} {
+	  xth_me_cmds_select $cselid
+	  xth_me_progbar_hide
+	  xth_status_bar_pop me
+	  return
+	}
       }
     }
   }
@@ -124,15 +124,15 @@ proc xth_me_ss_match {s} {
   } else {
     if $xth(ctrl,me,ss,cases) {
       if {[string first $xth(ctrl,me,ss,expr) $s] >= 0} {
-        return 1
+	return 1
       } else {
-        return 0
+	return 0
       }
     } else {
       if {[string first [string tolower $xth(ctrl,me,ss,expr)] [string tolower $s]] >= 0} {
-        return 1
+	return 1
       } else {
-        return 0
+	return 0
       }
     }
   }
@@ -153,31 +153,31 @@ proc xth_me_ss_show {} {
     xth_me_progbar_prog $objcnt
     switch $xth(me,cmds,$id,ct) {
       2 {
-        if {[xth_me_ss_match $xth(me,cmds,$id,data)]} {
-          # oznaci bod
-          $xth(me,can) itemconfigure pt$id -fill $selcol
-        }
+	if {[xth_me_ss_match $xth(me,cmds,$id,data)]} {
+	  # oznaci bod
+	  $xth(me,can) itemconfigure pt$id -fill $selcol
+	}
       }
       3 {
-        set pnm 0
-        set trywhole 1
-        foreach tx $xth(me,cmds,$id,data_pt) {
-          if {[xth_me_ss_match $tx]} {
-            set pid [lindex $xth(me,cmds,$id,xplist) $pnm]
-            # oznaci bod na ciare
-            set trywhole 0
-            $xth(me,can) itemconfigure pt$id.$pid -fill $selcol
-            set ppid [lindex $xth(me,cmds,$id,xplist) [expr $pnm + 1]]
-            if {[string length $ppid] > 0} {
-              $xth(me,can) itemconfigure ln$id.$ppid -fill $selcol
-            }
-          }
-          incr pnm 1
-        }
-        if {$trywhole && [xth_me_ss_match $xth(me,cmds,$id,data_ln)]} {
-          # oznaci ciaru
-          $xth(me,can) itemconfigure lnln$id -fill $selcol
-        }
+	set pnm 0
+	set trywhole 1
+	foreach tx $xth(me,cmds,$id,data_pt) {
+	  if {[xth_me_ss_match $tx]} {
+	    set pid [lindex $xth(me,cmds,$id,xplist) $pnm]
+	    # oznaci bod na ciare
+	    set trywhole 0
+	    $xth(me,can) itemconfigure pt$id.$pid -fill $selcol
+	    set ppid [lindex $xth(me,cmds,$id,xplist) [expr $pnm + 1]]
+	    if {[string length $ppid] > 0} {
+	      $xth(me,can) itemconfigure ln$id.$ppid -fill $selcol
+	    }
+	  }
+	  incr pnm 1
+	}
+	if {$trywhole && [xth_me_ss_match $xth(me,cmds,$id,data_ln)]} {
+	  # oznaci ciaru
+	  $xth(me,can) itemconfigure lnln$id -fill $selcol
+	}
       }
     }
   }
@@ -220,56 +220,56 @@ proc xth_me_goto_line {ln} {
     if {($ln >= $prevln) && ($ln < $cln)} {
       set posttry 0
       switch $xth(me,cmds,$cid,ct) {
-        1 {
-          xth_ctrl_scroll_to me text
-          set posttry 1
-        }
-        2 {xth_ctrl_scroll_to me point}
-        3 {xth_ctrl_scroll_to me line}
-        4 {xth_ctrl_scroll_to me scrap}
-        6 {xth_ctrl_scroll_to me area}
+	1 {
+	  xth_ctrl_scroll_to me text
+	  set posttry 1
+	}
+	2 {xth_ctrl_scroll_to me point}
+	3 {xth_ctrl_scroll_to me line}
+	4 {xth_ctrl_scroll_to me scrap}
+	6 {xth_ctrl_scroll_to me area}
       }
       xth_me_cmds_select $cid
       if {($ln > $prevln) || $posttry} {
-        # skusime sa trafit presnejsie
-        switch $xth(me,cmds,$cid,ct) {
-          1 {
-            set txln [expr $ln - $prevln + 1]
-            focus $xth(ctrl,me,text).txt
-            $xth(ctrl,me,text).txt mark set insert $txln.0
-            $xth(ctrl,me,text).txt tag remove sel 1.0 end
-            $xth(ctrl,me,text).txt tag add sel $txln.0 "$txln.0 lineend"
-          }
-          3 {
-            # skusime najst bod na ciare
-            set txln [expr $ln - $prevln + 1]
-            if {$txln > 1} {
-              set tmpxpl $xth(me,cmds,$cid,xplist)
-              #puts $tmpxpl
-              set cxpl {}
-              set cpix [lindex $tmpxpl]
-              foreach pix [lrange $tmpxpl 0 [expr [llength $tmpxpl] - 2]] {
-                lappend cxpl $pix
-                catch {
-                  set xth(me,cmds,$cid,xplist) "$cxpl 0"
-                  xth_me_cmds_update_line_data $cid
-                }
-                set clnln [regexp -all {\n} $xth(me,cmds,$cid,data)]
-                set xth(me,cmds,$cid,xplist) $tmpxpl
-                #puts "$clnln -> $txln:\n$xth(me,cmds,$cid,data)"
-                if {$clnln >= $txln} {
-                  set cpix $pix
-                  #puts $pix
-                  break
-                }
-              }
-              set xth(me,cmds,$cid,xplist) $tmpxpl
-              xth_me_cmds_update_line_data $cid
-              xth_me_cmds_select "$cid $pix"
-              xth_ctrl_scroll_to me linept
-            }
-          }
-        }
+	# skusime sa trafit presnejsie
+	switch $xth(me,cmds,$cid,ct) {
+	  1 {
+	    set txln [expr $ln - $prevln + 1]
+	    focus $xth(ctrl,me,text).txt
+	    $xth(ctrl,me,text).txt mark set insert $txln.0
+	    $xth(ctrl,me,text).txt tag remove sel 1.0 end
+	    $xth(ctrl,me,text).txt tag add sel $txln.0 "$txln.0 lineend"
+	  }
+	  3 {
+	    # skusime najst bod na ciare
+	    set txln [expr $ln - $prevln + 1]
+	    if {$txln > 1} {
+	      set tmpxpl $xth(me,cmds,$cid,xplist)
+	      #puts $tmpxpl
+	      set cxpl {}
+	      set cpix [lindex $tmpxpl]
+	      foreach pix [lrange $tmpxpl 0 [expr [llength $tmpxpl] - 2]] {
+		lappend cxpl $pix
+		catch {
+		  set xth(me,cmds,$cid,xplist) "$cxpl 0"
+		  xth_me_cmds_update_line_data $cid
+		}
+		set clnln [regexp -all {\n} $xth(me,cmds,$cid,data)]
+		set xth(me,cmds,$cid,xplist) $tmpxpl
+		#puts "$clnln -> $txln:\n$xth(me,cmds,$cid,data)"
+		if {$clnln >= $txln} {
+		  set cpix $pix
+		  #puts $pix
+		  break
+		}
+	      }
+	      set xth(me,cmds,$cid,xplist) $tmpxpl
+	      xth_me_cmds_update_line_data $cid
+	      xth_me_cmds_select "$cid $pix"
+	      xth_ctrl_scroll_to me linept
+	    }
+	  }
+	}
       }
       return
     }
@@ -287,14 +287,64 @@ proc xth_me_ss_next_cmd {type} {
   global xth
   set cselid $xth(me,cmds,selid)
   set cpos [lsearch -exact $xth(me,cmds,xlist) $cselid]
-  if {$cpos < 0} {set cpos 0}
+  if {$cpos < 0} {
+    set cpos 0
+    set ctyp -1
+  } else {
+    set ctyp $xth(me,cmds,$cselid,ct)
+  }
   set tlen [llength $xth(me,cmds,xlist)]
   set nxlist [lrange $xth(me,cmds,xlist) [expr $cpos + 1] end]
   append nxlist " [lrange $xth(me,cmds,xlist) 0 $cpos]"
+  if {($ctyp > 0) && ($ctyp != 4) && ($type == 4)} {
+    # search for current scrap first
+    set nlst {}
+    foreach xx $nxlist {
+      set nlst [linsert $nlst 0 $xx]
+    }
+    set nxlist $nlst
+  }
   foreach xx $nxlist {
     if {$xth(me,cmds,$xx,ct) == $type} {
       xth_me_cmds_select $xx
+      xth_me_ss_show_control $xx
       break
+    }
+  }
+}
+
+
+# 1 text
+# 2 point
+# 3 line
+# 4 scrap
+# 5 endscrap
+# 6 area
+proc xth_me_ss_show_control {id} {
+  global xth
+  if {[lsearch -exact $xth(me,cmds,xlist) $id] > -1} {
+    switch $xth(me,cmds,$id,ct) {
+      1 {
+	xth_ctrl_scroll_to me text
+	xth_ctrl_maximize me text
+      }
+      2 {
+	xth_ctrl_scroll_to me point
+	xth_ctrl_maximize me point
+      }
+      3 {
+	xth_ctrl_scroll_to me point
+	xth_ctrl_maximize me line
+	xth_ctrl_maximize me linept
+      }
+      4 {
+	xth_ctrl_scroll_to me scrap
+	xth_ctrl_maximize me scrap
+      }
+      6 {
+	xth_ctrl_scroll_to me ac
+	xth_ctrl_maximize me ac
+      }
     }
   }
 }

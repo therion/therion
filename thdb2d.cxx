@@ -41,6 +41,7 @@
 #include <math.h>
 #include "thlayout.h"
 #include "thconfig.h"
+#include "thtrans.h"
 #include <list>
 
 #ifdef THMSVC
@@ -1177,7 +1178,9 @@ void thdb2d::process_projection(thdb2dprj * prj)
   if (prj->type != TT_2DPROJ_NONE) {
     this->pp_calc_stations(prj);
     this->pp_adjust_points(prj); 
-    this->pp_shift_points(prj, true);
+    //this->pp_shift_points(prj, true);
+    this->pp_morph_points(prj);
+    this->pp_calc_points_z(prj);
   }
   this->pp_process_joins(prj);
   this->pp_shift_points(prj);
@@ -1323,6 +1326,9 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
         prj->shift_x = shift_x = minx; //(minx + maxx) / 2.0;
         prj->shift_y = shift_y = maxy; //(miny + maxy) / 2.0;
         prj->shift_z = shift_z = maxz; //(minz + maxz) / 2.0;
+        prj->rshift_x = shift_x;
+        prj->rshift_y = shift_y;
+        prj->rshift_z = shift_z;
         while (cp != NULL) {
           cp->tx = cp->st->x - shift_x;
           cp->ty = cp->st->y - shift_y;
@@ -1337,6 +1343,9 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
         prj->shift_x = shift_x = minx; //(minx + maxx) / 2.0;
         prj->shift_y = shift_y = maxy; //(miny + maxy) / 2.0;
         prj->shift_z = shift_z = maxz; //(minz + maxz) / 2.0;
+        prj->rshift_x = shift_x;
+        prj->rshift_y = shift_y;
+        prj->rshift_z = shift_z;
         while (cp != NULL) {
           cp->tx = cosa * (cp->st->x - shift_x) - sina * (cp->st->y - shift_y);
           cp->tz = sina * (cp->st->x - shift_x) + cosa * (cp->st->y - shift_y);
@@ -1351,6 +1360,9 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
         prj->shift_x = shift_x = 0;
         prj->shift_y = shift_y = maxy; //(miny + maxy) / 2.0;
         prj->shift_z = shift_z = maxz; //(minz + maxz) / 2.0;
+        prj->rshift_x = shift_x;
+        prj->rshift_y = shift_y;
+        prj->rshift_z = shift_z;
         while (cp != NULL) {
           cnode = &(nodes[cp->st->uid - 1]);
           cp->tx = cnode->xx - shift_x;
@@ -2246,7 +2258,8 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
 }
 
 
-void thdb2d::pp_shift_points(thdb2dprj * prj, bool calc_az)
+
+void thdb2d::pp_calc_points_z(thdb2dprj * prj)
 {
   // let's calculate drifts
   // prejde scrap za scrapom
@@ -2266,33 +2279,77 @@ void thdb2d::pp_shift_points(thdb2dprj * prj, bool calc_az)
   
   // prejde bod za bodom a spocita ich suradnice
   thdb2dpt_list::iterator ii = this->pt_list.begin();
-  double cpw, totalw, cdx, cdy, att, ztt, dist;
+  double cpw, totalw, att, ztt, dist;
   while (ii != this->pt_list.end()) {
     if ((ii->pscrap->proj->id == prj->id) && (ii->pscrap->ncp > 0)) {
       cp = ii->pscrap->fcpp;
       totalw = 0.0;
-      cdx = 0.0;
-      cdy = 0.0;
       att = 0.0;
       ztt = 0.0;
       while (cp != NULL) {
         dist = hypot(cp->oxt - ii->xt, cp->oyt - ii->yt);
         if (dist > 0) {
           cpw = 1.0 / (dist * dist);
+          att += cp->ta * cpw;
+          ztt += cp->tz * cpw;
+          totalw += cpw;
+        } else {
+          att = cp->ta;
+          ztt = cp->tz;
+          totalw = 1.0;
+          break;
+        }
+        cp = cp->nextcp;
+      }
+      if (totalw > 0) {
+        ii->at = att / totalw;
+        ii->zt = ztt / totalw;
+      }
+    }
+    ii++;
+  }
+    
+}
+
+
+
+void thdb2d::pp_shift_points(thdb2dprj * prj)
+{
+  // let's calculate drifts
+  // prejde scrap za scrapom
+  thscrap * pscrap = prj->first_scrap;
+  thdb2dcp * cp;
+  while (pscrap != NULL) {
+    cp = pscrap->fcpp;
+    while (cp != NULL) {
+      cp->dx = cp->tx - cp->pt->xt;
+      cp->dy = cp->ty - cp->pt->yt;
+      cp->oxt = cp->pt->xt;
+      cp->oyt = cp->pt->yt;
+      cp = cp->nextcp;
+    }
+    pscrap = pscrap->proj_next_scrap;
+  }
+  
+  // prejde bod za bodom a spocita ich suradnice
+  thdb2dpt_list::iterator ii = this->pt_list.begin();
+  double cpw, totalw, cdx, cdy, dist;
+  while (ii != this->pt_list.end()) {
+    if ((ii->pscrap->proj->id == prj->id) && (ii->pscrap->ncp > 0)) {
+      cp = ii->pscrap->fcpp;
+      totalw = 0.0;
+      cdx = 0.0;
+      cdy = 0.0;
+      while (cp != NULL) {
+        dist = hypot(cp->oxt - ii->xt, cp->oyt - ii->yt);
+        if (dist > 0) {
+          cpw = 1.0 / (dist * dist);
           cdx += cp->dx * cpw;
           cdy += cp->dy * cpw;
-          if (calc_az) {
-            att += cp->ta * cpw;
-            ztt += cp->tz * cpw;
-          }
           totalw += cpw;
         } else {
           cdx = cp->dx;
           cdy = cp->dy;
-          if (calc_az) {
-            att = cp->ta;
-            ztt = cp->tz;
-          }
           totalw = 1.0;
           break;
         }
@@ -2304,17 +2361,47 @@ void thdb2d::pp_shift_points(thdb2dprj * prj, bool calc_az)
       }
       ii->xt = ii->xt + cdx;
       ii->yt = ii->yt + cdy;
-      if (calc_az) {
-        ii->at = att / totalw;
-        ii->zt = ztt / totalw;
-        ii->dbgx1 = ii->xt;
-        ii->dbgy1 = ii->yt;
-      }
     }
     ii++;
   }
     
 }
+
+
+
+void thdb2d::pp_morph_points(thdb2dprj * prj)
+{
+  // initialize morphing function
+  thmorph2trans MT;
+  thscrap * pscrap = prj->first_scrap;
+  thdb2dcp * cp;
+  while (pscrap != NULL) {
+    cp = pscrap->fcpp;
+    while (cp != NULL) {
+      pscrap->morph.insert_point(thvec2(cp->pt->xt, cp->pt->yt), thvec2(cp->tx, cp->ty), cp->st->uid);
+      cp = cp->nextcp;
+    }
+    pscrap->morph.insert_lines_from_db();
+    pscrap->morph.init();
+    pscrap = pscrap->proj_next_scrap;
+  }
+  
+  // prejde bod za bodom a spocita ich suradnice
+  thvec2 it;
+  thdb2dpt_list::iterator ii = this->pt_list.begin();
+  while (ii != this->pt_list.end()) {
+    if ((ii->pscrap->proj->id == prj->id) && (ii->pscrap->ncp > 0)) {
+      it = ii->pscrap->morph.forward(thvec2(ii->xt, ii->yt));
+      ii->xt = it.m_x;
+      ii->yt = it.m_y;
+      ii->dbgx1 = ii->xt;
+      ii->dbgy1 = ii->yt;
+    }
+    ii++;
+  }
+    
+}
+
 
 
 struct joincand {

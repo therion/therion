@@ -34,6 +34,7 @@
 #include "thdatabase.h"
 #include "thinfnan.h"
 #include "thinit.h"
+#include "thconfig.h"
 #include <iostream>
 #include <fstream>
 #include "thsurvey.h"
@@ -184,13 +185,14 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
   double legp_bearing = legp->bearing;
   double legp_dx = legp->dx;
   double legp_dy = legp->dy;
-  if (!thisnan(legp->declination)) {
+  double legp_declin = (this->meridian_convergence + (!thisnan(legp->declination) ? legp->declination : legp->implicit_declination));
+  if (legp_declin != 0.0) {
     switch (legp->data_type) {
       case TT_DATATYPE_NORMAL:
       case TT_DATATYPE_DIVING:
       case TT_DATATYPE_CYLPOLAR:
         if (!thisnan(legp_bearing)) {
-          legp_bearing += legp->declination;
+          legp_bearing += legp_declin;
           if (legp_bearing >= 360.0)
             legp_bearing -= 360.0;
           if (legp_bearing < 0.0)
@@ -198,8 +200,8 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
         }
         break;
       case TT_DATATYPE_CARTESIAN:
-        double cosdecl = cos(legp->declination/180*THPI), 
-          sindecl = sin(legp->declination/180*THPI);
+        double cosdecl = cos(legp_declin/180*THPI), 
+          sindecl = sin(legp_declin/180*THPI);
         legp_dx = (cosdecl * legp->dx) + (sindecl * legp->dy);
         legp_dy = (cosdecl * legp->dy) - (sindecl * legp->dx);
         break;
@@ -290,6 +292,8 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   this->svxf = fopen(svxfn,"w");
   if (svxf == NULL)
     ththrow(("can't open survex file for output -- %s", svxfn))
+
+  this->meridian_convergence = thcfg.get_outcs_convergence();
 
   fprintf(this->svxf,"*units declination clino compass degrees\n");
   fprintf(this->svxf,"*units tape depth counter northing easting altitude metres\n");
@@ -547,7 +551,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   char * chch;
   bool onnum, ondig, fonline;
   long csn;
-  unsigned int lsid;
+  size_t lsid;
   lsid = dbp->db1d.station_vec.size();
   while (!(clf.eof())) {
     lnum++;

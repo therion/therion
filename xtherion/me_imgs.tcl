@@ -315,6 +315,7 @@ proc xth_me_image_rescan {imgx} {
     set dsti [lindex $imgl 0]
     incr csi
     xth_me_progbar_prog $csi
+    $dsti blank
     switch $xth(me,zoom) {
       25 {$dsti copy $srci -subsample 4 -shrink -from \
 	[lindex $imgl 2] [lindex $imgl 3] [lindex $imgl 4] [lindex $imgl 5]}
@@ -727,6 +728,7 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
   set xth(me,imgs,$imgx,fmtime) 0
   catch {set xth(me,imgs,$imgx,fmtime) [file mtime $ffname]}
   set xth(me,imgs,$imgx,XVI) $isXVI
+  set xth(me,imgs,$imgx,XVIbitmaps) {}
   set xth(me,imgs,$imgx,XVIimg) $ximage
   set xth(me,imgs,$imgx,XVIroot) $XVIroot
   set xth(me,imgs,$imgx,XVIgrids) $XVIgrids
@@ -802,7 +804,11 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
   catch {$xth(me,can) raise cmd_ctrl bgimg}  
   set ximg 1
   foreach xid $XVIimages {
+    set llln $xth(me,imgln)
     xth_me_image_insert [expr double([lindex $xid 0]) + $Xshx] [expr double([lindex $xid 1]) + $Xshy] [format "%s - IMG%d" $fname $ximg] [expr $iidx + 1] [list {} [lindex $xid 2]]
+    if {$xth(me,imgln) > $llln} {
+      lappend xth(me,imgs,$imgx,XVIbitmaps) $llln
+    }
     incr ximg
   }
   xth_status_bar_pop me
@@ -829,6 +835,7 @@ proc xth_me_image_destroy_all {} {
     unset xth(me,imgs,$imgx,fmtime)
     unset xth(me,imgs,$imgx,subimgs)
     unset xth(me,imgs,$imgx,XVI)
+    unset xth(me,imgs,$imgx,XVIbitmaps)
     unset xth(me,imgs,$imgx,XVIroot)
     unset xth(me,imgs,$imgx,XVIgrids)
     unset xth(me,imgs,$imgx,XVIgrid)
@@ -853,8 +860,17 @@ proc xth_me_image_remove {iidx} {
   }
   if {[string length $iidx] < 1} {
     set iidx [lindex $isel 0]
+    set imgx [lindex $xth(me,imgs,xlist) $iidx]
+    if {[string length $xth(me,imgs,$imgx,ffname)] == 0} return
   }
   set imgx [lindex $xth(me,imgs,xlist) $iidx]
+  if {[llength $xth(me,imgs,$imgx,XVIbitmaps)] > 0} {
+    foreach bx $xth(me,imgs,$imgx,XVIbitmaps) {
+      set ccc [lsearch -exact $xth(me,imgs,xlist) $bx]
+      catch {xth_me_image_remove $ccc}
+    }
+  }
+  set iidx [lsearch -exact $xth(me,imgs,xlist) $imgx]
   xth_me_unredo_action [mc "removing image"] \
     "xth_me_image_insert {[lindex $xth(me,imgs,$imgx,position) 0] $xth(me,imgs,$imgx,vsb) $xth(me,imgs,$imgx,gamma)} [lindex $xth(me,imgs,$imgx,position) 1] [list $xth(me,imgs,$imgx,name)] $iidx $imgx" "xth_me_image_remove $iidx"
   unset xth(me,imgs,$imgx,name)
@@ -874,6 +890,7 @@ proc xth_me_image_remove {iidx} {
   unset xth(me,imgs,$imgx,ffname)
   unset xth(me,imgs,$imgx,fmtime)
   unset xth(me,imgs,$imgx,XVI)
+  unset xth(me,imgs,$imgx,XVIbitmaps)
   unset xth(me,imgs,$imgx,XVIroot)
   unset xth(me,imgs,$imgx,XVIgrids)
   unset xth(me,imgs,$imgx,XVIgrid)
@@ -1070,6 +1087,7 @@ proc xth_me_xvi_refresh {} {
     return
   }
   foreach imgx $todolist {
+    if {[lsearch -exact $xth(me,imgs,xlist) $imgx] < 0} continue
     if $xth(me,imgs,$imgx,XVI) {
       set fmtime 0
       if {![catch {set fmtime [file mtime $xth(me,imgs,$imgx,ffname)]}]} {

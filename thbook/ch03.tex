@@ -12,9 +12,21 @@ in the current working directory. It is read like any other therion file
 lines ended with a backslash continue on the next line.) A list of currently 
 supported commands follow.
 
+
+\subsubchapter `system'.
+Allows to execute system commands during therion compilation.\[E.g. to open or 
+refresh external PDF viewer.] Normally Therion waits until the subprocess is 
+finished. If you want to continue compilation without break, use |command &| 
+syntax on Linux and |start command| syntax on Windows.
+
+
 \subsubchapter `encoding'.
 
 Works like the |encoding| command in data files---specifies character sets.
+
+\subsubchapter `cs'.
+
+Specifies output coordinate system.
 
 \subsubchapter `input'.
 
@@ -23,28 +35,35 @@ Works like |input| command in data files---includes other files.
 \subsubchapter `source'.
 
 \description
-   Specifies which source (data) files Therion should read. 
-   You can specify several files here; one per line. 
-   You can also specify them using the |-s| command line option (see below).
+   Specifies which source (data) files Therion should read. You can 
+   specify several files here; one per line. 
+   You can also specify them using the |-s| command
+   line option (see below). 
+   
+   It is also possible to type (some small snippets of) code directly in 
+   configuration file using the multi-line syntax.
 \enddescription
 
 \syntax
-  |source <file-name>|
+  \hfill\break|source <file-name>|\hfill\break
+  or\hfill\break
+  |source|\hfill\break
+  {\qquad\it\dots therion commands\dots}\hfill\break
+  |endsource|
 \endsyntax
 
 \arguments
 *  |<file-name>| 
 \endarguments
 
-
-
 \subsubchapter `select'.
 
 \description
   selects objects (surveys and maps) for export. By default, all survey objects 
-  are selected. If there is no map selected, all maps belonging to
+  are selected. If there is no map selected, all scraps belonging to
   selected surveys are selected by default for map export.
-  If there are no such maps, centreline from the selected surveys is 
+
+  If there are no scraps or maps in the data, centreline from all surveys is 
   exported in the map.
 \enddescription
 
@@ -106,6 +125,8 @@ Works like |input| command in data files---includes other files.
 \syntax
 |layout <id> [OPTIONS]
     copy <source layout id>
+    cs <coordinate system>
+    north <true/grid>
     scale <picture length> <real length>
     base-scale <picture length> <real length>
     units <metric/imperial>
@@ -127,6 +148,7 @@ Works like |input| command in data files---includes other files.
     opacity <value>
     surface <top/bottom/off>
     surface-opacity <value>
+    sketches <on/off>
     layers <on/off>
     grid <off/top/bottom>
     grid-origin <x> <y> <x> <units>
@@ -141,6 +163,7 @@ Works like |input| command in data files---includes other files.
     map-comment <string>
     map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>
     map-header-bg <on/off>
+    map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>
     statistics <explo/topo/carto/copyright all/off/number>
                <explo/topo-length on/off>
     scale-bar <length> <units>
@@ -246,8 +269,15 @@ endlayout|
     |transparency| is |on|).  Value range is 0--100. (M, A; default: |70|)
   * |surface <top/bottom/off>| = set the position of the surface bitmap
     above/below the map. (M, A; default: |off|)
+  * |sketches <on/off>| = turn on/off displaying of morphed sketch bitmaps. 
+    (M, A; default: |off|)
   * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
   * |grid <off/bottom/top>| = enable/disable grid (M, A; default: |off|)
+  * |cs <coordinate system>| = coordinate system for |origin| and
+    |grid-origin|
+  * |north <true/grid>| = specify default orientation of the map. 
+    By default, true (astronomical) north is used. It is ignored when used with
+    local coordinate system.
   * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
     origin (M, A) [Grid is currently not supported.]
   * |grid-size <x> <y> <z> <units>| = set grid size in real
@@ -277,6 +307,10 @@ endlayout|
   * |map-header-bg <on/off>| = when on, background of map 
      header is filled with background color (e.g.~to hide map grid). 
      (M; default: off)
+  * |map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>| = 
+    include image specified by |<filename>| into map at location 
+    specified by |<x> <y>|. For coordinates and alignment details, see
+    |map-header| specification.
   * |legend-width <n> <units>| = legend width (M, A; default: |14 cm|)
   * |legend <on/off/all>| = display list of used map symbols in the map header. 
     If set to |all|, all symbols from the current symbol set are displayed. 
@@ -379,19 +413,21 @@ endlayout|
 
   * |format/fmt <format>| = set model output format. Currently the following
     output formats are supported: |loch| (native format; default),
-    |xtherion| (xtherion 3D viewer format),
-    |compass| (plt file), |survex| (3d file), |dxf|, |vrml| and |3dmf|.
+    |compass| (plt file), |survex| (3d file), |dxf|,
+    |esri| (3d shapefiles), |vrml|, |3dmf| and |kml| (Google Earth).
   * |enable <walls/[cave/surface-]centerline/surface/all>| and
   * |disable <walls/[cave/surface-]centerline/surface/all>| = 
      \hfil\break
      selects which features to export, if the format supports it. Surface
      is currently exported in |therion| format only.
+  * |encoding/enc <encoding>| = set output encoding
 
   {\it map/atlas:}\Nobreak
   
   * |format/fmt <format>| = set map format. Currently |pdf|, |svg|, 
     |xhtml|\[SVG in embedded in XHTML file which contains also legend],
-    |3d| and 
+    |3d|, |esri|\[ESRI shapefiles. Multiple files are written to a 
+    directory with the specified filename.], |kml| (Google Earth) and 
     |xvi|\[Xtherion vector image. XVI images may be used in
     xtherion to draw in-scale maps. Scale (100\,dpi image resolution is 
     assumed) and grid-size from layout are used in export.]
@@ -408,6 +444,7 @@ endlayout|
   * |layout <id>| = use predefined map or atlas layout.
   * |layout-xxx| = where |xxx| stands for other layout options. Using this
     you can change some layout properties directly within the export command.
+  * |encoding/enc <encoding>| = set output encoding
 
   {\it database:}\Nobreak
   
@@ -420,8 +457,8 @@ endlayout|
 \bgroup
 \leavevmode\kern1em\vbox{\halign{#\hfil\quad&#\hfil\cr
 {\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
-model & loch, xtherion, dxf, compass, survex, vrml, 3dmf\cr
-map  & pdf, svg, xhtml, 3d, xvi\cr
+model & loch, dxf, compass, survex, vrml, 3dmf, kml\cr
+map  & pdf, svg, xhtml, 3d, xvi, kml\cr
 atlas & pdf\cr
 database & sql\cr}}\egroup
 
@@ -437,7 +474,7 @@ The full syntax is
 
 |therion [-q] [-L] [-l <log-file>]
         [-s <source-file>] [-p <search-path>]
-        [-g/-u] [-i] [-d] [-x] [--use-extern-libs] [<cfg-file>]|
+        [-d] [-x] [--use-extern-libs] [<cfg-file>]|
 
 or
 
@@ -446,7 +483,8 @@ or
         [--print-encodings]
         [--print-tex-encodings]
         [--print-init-file]
-        [--print-environment]|
+        [--print-environment]
+        [--print-symbols]|
 
 \penalty-200
 \arguments
@@ -463,20 +501,20 @@ or
   temporary directory named |thTMPDIR| (in your system temporary 
   directory) and does not delete any temporary files. 
 
-* |-g| =
+%* |-g| =
 %  Using this option you can generate a new configuration file.
 %  If |cfg-file| is not specified therion will use the |thconfig|
 %  file. If the destination file exists, it'll be overwritten.
-  Generate a new configuration file. This will be the given 
-  |<cfg-file>| if specified, or |thconfig| in the current directory if not. 
-  If the file already exists, it will be overwritten.
-        
+%  Generate a new configuration file. This will be the given 
+%  |<cfg-file>| if specified, or |thconfig| in the current directory if not. 
+%  If the file already exists, it will be overwritten.
+%        
 * |-h, --help| =
         Display short help.
 
-* |-i| =
-        Ignore comments when writing |-g| or |-u| configuration file.
-
+%* |-i| =
+%        Ignore comments when writing |-g| or |-u| configuration file.
+%
 * |-L| =
         Do not create a log-file. Normally therion writes all the messages
         into a therion.log file in the current directory.
@@ -513,9 +551,9 @@ or
 * |-s <source-file>| =
         Set the name of the source file.
         
-* |-u| =
-        Upgrade the configuration file.
-
+%* |-u| =
+%        Upgrade the configuration file.
+%
 * |--use-extern-libs| =
   Don't copy \TeX\ and \MP\ macros to working directory. \TeX\ and \MP\ 
   should search for them on their own. Use with caution.

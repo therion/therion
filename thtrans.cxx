@@ -25,12 +25,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --------------------------------------------------------------------
  */
-
+#include <assert.h>
+#include <math.h>
+#include <map>
 
 #include "thtrans.h"
-#include <map>
-#include <math.h>
-
+#include "thdatabase.h"
 
 void thvec2::reset() {
   this->m_x = 0.0;
@@ -134,6 +134,10 @@ thmat2 thmat2::inverse()
   return thmat2(this->m_yy / d, -1.0 * this->m_xy / d, -1.0 * this->m_yx / d, this->m_xx / d);
 }
 
+thvec2 operator - (const thvec2 & v)
+{
+  return thvec2( - v.m_x, - v.m_y);
+}
 
 thvec2 operator + (const thvec2 & v1, const thvec2 & v2)
 {
@@ -152,10 +156,25 @@ double operator * (const thvec2 & v1, const thvec2 & v2)
   return (v1.m_x * v2.m_x + v1.m_y * v2.m_y);
 }
 
+double operator ^ (const thvec2 & v1, const thvec2 & v2)
+{
+  return (v1.m_x * v2.m_y - v1.m_y * v2.m_x);
+}
+
 
 thvec2 operator * (const double & c, const thvec2 & v)
 {
   return thvec2(c * v.m_x, c * v.m_y);
+}
+
+thvec2 operator * (const thvec2 & v, const double & c)
+{
+  return thvec2(v.m_x * c, v.m_y * c);
+}
+
+thvec2 operator / (const thvec2 & v, const double & c)
+{
+  return thvec2(v.m_x / c, v.m_y / c);
 }
 
 
@@ -170,6 +189,10 @@ thmat2 operator * (const double & c, const thmat2 & m)
   return thmat2(c * m.m_xx, c * m.m_xy, c * m.m_yx, c * m.m_yy);
 }
 
+thmat2 operator * (const thmat2 & m, const double & c)
+{
+  return thmat2(c * m.m_xx, c * m.m_xy, c * m.m_yx, c * m.m_yy);
+}
 
 thmat2 operator / (const thmat2 & m, const double & c)
 {
@@ -179,7 +202,9 @@ thmat2 operator / (const thmat2 & m, const double & c)
 
 void thvec2::normalize()
 {
-  *this /= this->length();
+  double l = this->length();
+  if (l > 0.0)
+    *this /= this->length();
 }
 
 
@@ -193,10 +218,48 @@ thline2::thline2(thvec2 from, thvec2 to)
   this->m_c = - (this->m_a * from.m_x + this->m_b * from.m_y);
 }
 
+thvec2::thvec2( thline2 & l1, thline2 & l2 )
+{
+  //      | m_xx    m_xy | * | x | = | -c1 |
+  //      | m_yx    m_yy |   | y |   | -c2 |
+  thmat2 m( l1.m_a, l1.m_b, l2.m_a, l2.m_b );
+  thmat2 m_1 = m.inverse();
+  m_x = - ( m_1.m_xx * l1.m_c + m_1.m_xy * l2.m_c );
+  m_y = - ( m_1.m_yx * l1.m_c + m_1.m_yy * l2.m_c );
+}
+
 
 double thline2::eval(thvec2 p)
 {
   return (p.m_x * this->m_a + p.m_y * this->m_b + this->m_c);
+}
+
+void thmat3::reset()
+{
+  m_xx = 1.0;   m_xy = 0.0;   m_xz = 0.0;
+  m_yx = 0.0;   m_yy = 1.0;   m_yz = 0.0;
+  m_zx = 0.0;   m_zy = 0.0;   m_zz = 1.0;
+}
+
+thmat3 thmat3::inverse()
+{
+  thmat3 minor;
+  minor.m_xx = m_yy * m_zz - m_yz * m_zy;
+  minor.m_xy = m_yx * m_zz - m_yz * m_zx;
+  minor.m_xz = m_yx * m_zy - m_yy * m_zx;
+  minor.m_yx = m_xy * m_zz - m_xz * m_zy;
+  minor.m_yy = m_xx * m_zz - m_xz * m_zx;
+  minor.m_yz = m_xx * m_zy - m_xy * m_zx;
+  minor.m_zx = m_xy * m_yz - m_xz * m_yy;
+  minor.m_zy = m_xx * m_yz - m_xz * m_yx;
+  minor.m_zz = m_xx * m_yy - m_xy * m_yx;
+
+  double det = m_xx * minor.m_xx - m_xy * minor.m_xy + m_xz * minor.m_xz;
+
+
+  return thmat3( minor.m_xx/det, -minor.m_yx/det,  minor.m_zx/det,
+                -minor.m_xy/det,  minor.m_yy/det, -minor.m_zy/det,
+                 minor.m_xz/det, -minor.m_yz/det,  minor.m_zz/det );
 }
 
 
@@ -270,6 +333,30 @@ void thlintrans::init_points()
 
 }
 
+void thlintrans::init(thvec2 src, thvec2 dst) {
+  this->m_fmat.reset();
+  this->m_scale = 1.0;
+  this->m_rot = 0.0;
+  this->m_shift = dst - src;
+}
+
+
+void thlintrans::init(thvec2 srcF, thvec2 srcT, thvec2 dstF, thvec2 dstT)
+{
+  thvec2 srcV, dstV;
+  srcV = srcT - srcF;
+  dstV = dstT - dstF;
+  double r1, r2, rr, ss;
+  r1 = atan2(srcV.m_y, srcV.m_x);
+  r2 = atan2(dstV.m_y, dstV.m_x);
+  rr = r2 - r1;
+  ss = dstV.length() / srcV.length();
+  this->m_fmat = ss * thmat2(cos(rr), -sin(rr), sin(rr), cos(rr));
+  this->m_shift = dstF - this->m_fmat * srcF;
+  this->m_scale = ss;
+  this->m_rot = rr / 3.14159265358 * 180.0;
+}
+
 
 void thlintrans::init_backward()
 {
@@ -315,7 +402,8 @@ thvec2 thmorphtrans::forward(thvec2 src)
     }
   }
   sumv /= sumw;
-  return (src + sumv);
+  sumv += src;
+  return sumv;
 }
 
 
@@ -340,6 +428,8 @@ thvec2 thmorphtrans::backward(thvec2 dst, thvec2 ini)
 }
 
 
+
+
 struct thm2t_point {
   thvec2 m_src, m_dst;
   bool m_used;
@@ -356,27 +446,68 @@ typedef std::list<thm2t_point> thm2t_point_list;
 
 struct thm2t_line {
   long m_f, m_t;
-  thm2t_point_ptr m_fp, m_tp;
-  bool m_used, m_single;
-  struct thmorph2trans * m_trans_ptr;
-  thm2t_line() : m_f(-1), m_t(-1), m_used(false), m_single(false), m_trans_ptr(NULL) {}
-  thm2t_line(long f, long t, struct thmorph2trans * tptr) : m_f(f), m_t(t), m_used(false), m_single(false), m_trans_ptr(tptr) {}
-  void init();
-  bool calc_v2d(thvec2 src, thvec2 & v, double & d);
+  thm2t_line(long f, long t) {
+    if (f < t) {
+      this->m_f = f;
+      this->m_t = t;
+    } else {
+      this->m_t = f;
+      this->m_f = t;
+    }
+  }
 };
 
-bool calc_v2d(thvec2 src, thvec2 & v, double & d)
+typedef thm2t_line * thm2t_line_ptr;
+
+bool operator < (const struct thm2t_line & l1, const struct thm2t_line & l2)
 {
+  if (l1.m_f < l2.m_f)
+    return true;
+  if (l1.m_f > l2.m_f)
+    return false;
+  if (l1.m_t < l2.m_t)
+    return true;
   return false;
 }
 
 typedef std::list<thm2t_line> thm2t_line_list;
+typedef std::map<thm2t_line, thm2t_line_ptr> thm2t_line_map;
+
+struct thm2t_feature {
+  bool m_single;
+  thm2t_point_ptr m_fp, m_tp;
+  thline2 m_ln, m_lnf, m_lnt;
+  thlintrans m_lintrans;
+  double calc_dist(thvec2 src);
+};
+
+
+double thm2t_feature::calc_dist(thvec2 src)
+{
+  double lnfd, lntd;
+  if (this->m_single) {
+    return (src - this->m_fp->m_src).length();
+  } else {
+    lnfd = this->m_lnf.eval(src);
+    lntd = this->m_lnt.eval(src);
+    if (lnfd < 0)
+      return (src - this->m_fp->m_src).length();
+    else if (lntd < 0)
+      return (src - this->m_tp->m_src).length();
+    else
+      return fabs(this->m_ln.eval(src));
+  }
+}
+
+typedef std::list<thm2t_feature> thm2t_feature_list;
 
 struct thmorph2trans_members {
   thm2t_point_list m_points;
   thm2t_point_ptr_map m_point_map;
   thm2t_line_list m_lines;
+  thm2t_line_map m_line_map;
   thm2t_point_ptr get_point(long id);
+  thm2t_feature_list m_features;
 };
 
 thm2t_point_ptr thmorph2trans_members::get_point(long id)
@@ -408,51 +539,145 @@ void thmorph2trans::reset()
   this->m->m_lines.clear();
   this->m->m_points.clear();
   this->m->m_point_map.clear();
+  this->m->m_features.clear();
 }
 
 
 void thmorph2trans::insert_point(thvec2 src, thvec2 dst, long id)
 {
   thm2t_point_list::iterator i;
-  i = this->m->m_points.insert(this->m->m_points.end(), thm2t_point(src, dst - src, id));
+  i = this->m->m_points.insert(this->m->m_points.end(), thm2t_point(src, dst, id));
   this->m->m_point_map[id] = &(*i);
 }
 
-void thm2t_line::init()
-{
-  this->m_used = false;
-  if (this->m_trans_ptr == NULL)
-    return;
-  if ((m_f < 0) || (m_t < 0))
-    return;
-  this->m_fp = this->m_trans_ptr->m->get_point(this->m_f);
-  this->m_tp = this->m_trans_ptr->m->get_point(this->m_t);
-  if ((this->m_fp == NULL) || (this->m_tp == NULL))
-    return;
-  // CONTINUE: Inicializacia line2 struktur!
-}
 
 void thmorph2trans::insert_line(long from, long to)
 {
-  this->m->m_lines.push_back(thm2t_line(from, to, this));
+  thm2t_line tmp(from, to);
+  thm2t_line_map::iterator mi;
+  if (from == to)
+    return;
+  if ((this->m->get_point(from) == NULL) || (this->m->get_point(to) == NULL))
+    return;
+  mi = this->m->m_line_map.find(tmp);
+  if (mi == this->m->m_line_map.end())
+    this->m->m_lines.push_back(thm2t_line(from, to));
 }
 
 
 void thmorph2trans::init(double eps)
 {
+  this->m->m_features.clear();
   this->m_eps = eps;
+
+  // initialize features
+  thm2t_line_list::iterator iln;
+  for(iln = this->m->m_lines.begin(); iln != this->m->m_lines.end(); iln++) {
+    thm2t_feature tmpf;
+    tmpf.m_fp = this->m->get_point(iln->m_f);
+    tmpf.m_tp = this->m->get_point(iln->m_t);
+    if ((tmpf.m_fp != NULL) && (tmpf.m_tp != NULL)) {
+      if (((tmpf.m_fp->m_src - tmpf.m_tp->m_src).length() > 0.0) && 
+        ((tmpf.m_fp->m_dst - tmpf.m_tp->m_dst).length() > 0.0)) {
+          tmpf.m_single = false;
+          tmpf.m_ln = thline2(tmpf.m_fp->m_src, tmpf.m_tp->m_src);
+          tmpf.m_lnf = thline2(tmpf.m_fp->m_src, tmpf.m_fp->m_src + thvec2(-tmpf.m_ln.m_a, -tmpf.m_ln.m_b));
+          tmpf.m_lnt = thline2(tmpf.m_tp->m_src, tmpf.m_tp->m_src + thvec2(tmpf.m_ln.m_a, tmpf.m_ln.m_b));
+          tmpf.m_lintrans.init(tmpf.m_fp->m_src, tmpf.m_tp->m_src, tmpf.m_fp->m_dst, tmpf.m_tp->m_dst);
+          tmpf.m_fp->m_used = true;
+          tmpf.m_tp->m_used = true;
+          this->m->m_features.push_back(tmpf);
+      }
+    }
+  }
+
+  thm2t_point_list::iterator ipt;
+  for(ipt = this->m->m_points.begin(); ipt != this->m->m_points.end(); ipt++) {
+    thm2t_feature tmpf;
+    tmpf.m_fp = &(*ipt);
+    tmpf.m_tp = NULL;
+    if (!tmpf.m_fp->m_used) {
+      tmpf.m_single = true;
+      tmpf.m_lintrans.init(tmpf.m_fp->m_src, tmpf.m_fp->m_dst);
+      this->m->m_features.push_back(tmpf);
+    }
+  }
 }
 
 
 thvec2 thmorph2trans::forward(thvec2 src)
 {
-  return thvec2();
+  thm2t_feature_list::iterator i;
+  thvec2 sumv, cdst;
+  double sumw(0.0), d, w;
+  for(i = this->m->m_features.begin(); i != this->m->m_features.end(); i++) {
+    d = i->calc_dist(src);
+    cdst = i->m_lintrans.forward(src);
+    if (d > 0.0) {
+      w = 1.0 / (d * d * d * d);
+      sumw += w;
+      sumv += w * cdst;
+    } else {
+      return cdst;
+    }
+  }
+  sumv /= sumw;
+  return sumv;
 }
 
 
 thvec2 thmorph2trans::backward(thvec2 dst, thvec2 ini)
 {
-  return thvec2();
+#define EPS 0.01
+#define FF(v) (dst - this->forward(v)).length()
+  double F, a, b, d;
+  thvec2 x(ini), dd;
+  size_t counter(0);
+  do {
+    F = FF(x);
+    if (F < EPS) break;
+    a = (FF(x + thvec2(EPS, 0.0)) - F) / EPS;
+    b = (FF(x + thvec2(0.0, EPS)) - F) / EPS;
+    d = a * a + b * b;
+    if (d == 0.0) break;
+    dd = thvec2(a * F / d, b * F / d);
+    x -= dd;
+  } while (counter++ < 10);
+  return x;
 }
+
+
+
+
+void thmorph2trans::insert_lines_from_db()
+{
+  long nst = (long) thdb.db1d.station_vec.size();
+  thdb1d_tree_node * nodes = thdb.db1d.get_tree_nodes(), * cnode;
+  thdb1d_tree_arrow * carrow;
+
+
+  // station by station and insert shots
+  thm2t_point_list::iterator ipt;
+  thdataleg * lg;
+  long fid, tid;
+  for(ipt = this->m->m_points.begin(); ipt != this->m->m_points.end(); ipt++) {
+    if ((ipt->m_id > 0) && (ipt->m_id < nst)) {
+      cnode = &(nodes[ipt->m_id - 1]);
+      carrow = cnode->first_arrow;
+      while (carrow != NULL) {
+        lg = carrow->leg->leg;
+        fid = thdb.db1d.station_vec[lg->from.id - 1].uid;
+        tid = thdb.db1d.station_vec[lg->to.id - 1].uid;
+        this->insert_line(fid, tid);
+        carrow = carrow->next_arrow;
+      }
+    }
+  }
+
+}
+
+
+
+
 
 

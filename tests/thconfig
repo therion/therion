@@ -1,0 +1,9 @@
+encoding  utf-8
+source map_plan.th
+#export map -o ../cave.shp -fmt esri -enc ascii
+#export model -o ../cave.shp -fmt esri -enc ascii
+#export map -o ../cave.kml
+
+unselect xtp.tp
+export map -proj plan -o xplan.pdf
+export map -proj extended -o xelev.pdf -layout-map-image 100 100 ne xplan.pdf

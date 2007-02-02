@@ -194,11 +194,6 @@ enddef;
 
 let l_floorstep_UIS = l_pit_UIS;
 
-def l_floormeander_SKBB (expr P) =
-  l_floorstep_UIS (P);
-  l_floorstep_UIS (reverse P);
-enddef;
-
 def l_overhang_SKBB (expr P) =
   T:=identity;
   cas := 0;
@@ -244,9 +239,68 @@ def l_ceilingstep_SKBB (expr P) =
 enddef;
 
 def l_ceilingmeander_SKBB (expr P) =
-  l_ceilingstep_SKBB (P);
-  l_ceilingstep_SKBB (reverse P);
+  pair Pp;
+  pair Pd;
+  pair Pv;
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 0.8u);
+  pickup PenC;
+  forever:
+    t  := arctime (cas + mojkrok/2) of P;
+    Pp := (point t of P);
+    Pd := unitvector(thdir(P,t));
+    Pv := Pd rotated 90;
+    thdraw (Pp + 0.1u * Pv) --
+          (Pp + 0.2u * Pv);
+    thdraw (Pp + 0.2u * Pv + 0.2u * Pd) --
+          (Pp + 0.2u * Pv - 0.2u * Pd);
+    thdraw (Pp - 0.1u * Pv) --
+          (Pp - 0.2u * Pv);
+    thdraw (Pp - 0.2u * Pv + 0.2u * Pd) --
+          (Pp - 0.2u * Pv - 0.2u * Pd);
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+  endfor;
 enddef;
+
+
+def l_floormeander_SKBB (expr P) =
+  pair Pp;
+  pair Pd;
+  pair Pv;
+  pair PPp;
+  pair PPd;
+  pair PPv;
+
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 0.25u);
+  pickup PenC;
+  forever:
+    t := arctime cas of P;
+    Pp := (point t of P);
+    Pd := unitvector(thdir(P,t));
+    Pv := Pd rotated 90;
+    thdraw (Pp + 0.1u * Pv) --
+          (Pp + 0.2u * Pv);
+    thdraw (Pp - 0.1u * Pv) --
+          (Pp - 0.2u * Pv);
+    if cas > 0:
+      thdraw (PPp + 0.2u * PPv) --
+          (Pp + 0.2u * Pv);
+      thdraw (PPp - 0.2u * PPv) --
+          (Pp - 0.2u * Pv);
+    fi;
+    PPp := Pp;
+    PPd := Pd;
+    PPv := Pv;
+    cas := cas + mojkrok;
+    exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+  endfor;
+enddef;    
 
 boolean alw_perpendicular;
 

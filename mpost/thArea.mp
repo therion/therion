@@ -99,6 +99,13 @@ def a_debris_UIS (expr Path) =
   thfill Path withpattern pattern_debris_SKBB;
 enddef;
 
+
+def a_bedrock_SKBB (expr Path) =
+  T:=identity;
+  thclean Path;
+enddef;
+
+
 def a_debris_SKBB (expr p) =
   T:=identity;
 %  thclean p;

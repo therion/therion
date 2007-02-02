@@ -45,6 +45,22 @@ thsurvey::thsurvey()
   this->level = 0;
   this->person_renames.clear();
   this->data = NULL;
+  this->privatens = true;
+  this->surveyns = NULL;
+}
+
+
+thsurvey * thsurvey::get_nss()
+{
+  if (this->surveyns == NULL) {
+    this->surveyns = this;
+    if (!this->privatens) {
+      while ((!this->surveyns->privatens) && (this->surveyns->fsptr != NULL)) {
+        this->surveyns = this->surveyns->fsptr;
+      }
+    }
+  }
+  return this->surveyns;
 }
 
 
@@ -100,6 +116,20 @@ thcmd_option_desc thsurvey::get_cmd_option_desc(char * opts)
 }
 
 
+enum {
+  TT_SNS_EXPORT,
+  TT_SNS_PRIVATE,
+  TT_SNS_UNKNOWN,
+};
+ 
+static const thstok thtt_sns[] = {
+  {"off",TT_SNS_EXPORT},
+  {"on",TT_SNS_PRIVATE},
+	{NULL, TT_SNS_UNKNOWN},
+};
+
+
+
 void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
   thperson tmpp1, tmpp2;
@@ -107,6 +137,23 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     cod.id = TT_DATAOBJECT_NAME;
     
   switch (cod.id) {
+
+    case TT_SURVEY_NAMESPACE:
+      switch (thmatch_token(*args, thtt_sns)) {
+
+        case TT_SNS_PRIVATE:
+          this->privatens = false;
+          break;
+
+        case TT_SNS_EXPORT:
+          this->privatens = false;
+          break;
+
+        default:
+          ththrow(("invalid -namespace switch -- %s", *args))
+
+      }
+      break;
 
     case TT_SURVEY_DECLINATION:
       this->parse_declination(*args);
