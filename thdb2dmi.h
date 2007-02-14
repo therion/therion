@@ -47,6 +47,7 @@ enum {
   TT_MAPITEM_ABOVE = 2,
   TT_MAPITEM_BESIDE = 3,
   TT_MAPITEM_NORMAL = 4,
+  TT_MAPITEM_NONE = 5,
 };
 
 
@@ -57,10 +58,24 @@ enum {
 static const thstok thtt_2dmi[] = {
   {"above", TT_MAPITEM_ABOVE},
   {"below", TT_MAPITEM_BELOW},
+  {"none", TT_MAPITEM_NONE},
 //  {"beside", TT_MAPITEM_BESIDE},
   {NULL, TT_MAPITEM_UNKNOWN}
 };
 
+
+
+struct thdb2dmi_shift {
+  double m_x, m_y, m_prev_x, m_prev_y;
+  int m_preview;
+  thdb2dmi_shift() : m_x(0.0), m_y(0.0), m_prev_x(0.0), m_prev_y(0.0), m_preview(TT_MAPITEM_UNKNOWN) {}
+  bool is_active() const;
+  thdb2dmi_shift add(const thdb2dmi_shift & s);
+};
+
+bool operator == (const thdb2dmi_shift & s1, const thdb2dmi_shift & s2);
+
+bool operator < (const thdb2dmi_shift & s1, const thdb2dmi_shift & s2);
 
 
 /**
@@ -84,6 +99,8 @@ class thdb2dmi {
   class thsurvey * psurvey;  ///< Item parent survey.
   
   class thdataobject * object;  ///< Parsed object pointer.
+
+  thdb2dmi_shift m_shift; ///< Map shift specification.
   
   thdb2dmi();  ///< Default constructor.
 };

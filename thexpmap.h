@@ -111,13 +111,17 @@ class thexpmapmpxs {
   
   FILE * file; ///< output file
   double ms, mx, my, sr, cr, rr; ///< Scale and centering.
+
   thsymbolset * symset;
   thlayout * layout;
   char * attr_last_id, * attr_last_survey, * attr_last_scrap;
   bool attr_last_scrap_centerline;
+
+  double m_shift_x, m_shift_y;
   
   thexpmapmpxs() : file(NULL), ms(1.0), mx(0.0), my(0.0), sr(0.0), cr(1.0), rr(0.0),
-    attr_last_id(""), attr_last_survey(""), attr_last_scrap(""), attr_last_scrap_centerline(false) {}
+    attr_last_id(""), attr_last_survey(""), attr_last_scrap(""), attr_last_scrap_centerline(false),
+    m_shift_x(0.0), m_shift_y(0.0) {}
   
 };
 

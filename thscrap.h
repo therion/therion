@@ -130,7 +130,7 @@ class thscrap : public thdataobject {
   void parse_scale(char * ss);
   void parse_stations(char * ss);
   void process_3d();
-  thscraplp * polygon_insert();
+  thscraplp * polygon_insert(thscraplp * before = NULL);
   
   thdb1ds * get_nearest_station(thdb2dpt * pt);
 

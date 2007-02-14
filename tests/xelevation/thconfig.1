@@ -1,0 +1,22 @@
+encoding  utf-8
+#!PROCESS
+#!FILE 1
+#!TITLE 25000 Extended elevation control
+#!
+#! Assume following situation (in plan view),
+#! when there is a loop in centerline between stations 1 and 4, and entrance
+#! to the cave is at station 6.
+#!IMAGE map1p.pdf
+#! By default, extended elevation map of this situation looks like this.
+#!IMAGE map1x.pdf
+
+
+source cave1.th
+
+input thconfig.layout
+
+#export map -proj plan -o cave1.xvi
+export map -proj plan -o map1p.pdf -layout l -layout-scale 1 300
+export map -proj extended -o map1x.pdf -layout l -layout-scale 1 500
+
+#!CLEAN map1p.pdf map1x.pdf

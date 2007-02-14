@@ -497,15 +497,25 @@ thscraplo * thscrap::get_outline() {
 } // get_outline
 
 
-thscraplp * thscrap::polygon_insert() {
+thscraplp * thscrap::polygon_insert(thscraplp * before) {
   thscraplp * rv = this->db->db2d.insert_scraplp();
-  if (this->polygon_last == NULL) {
-    this->polygon_first = rv;
-    this->polygon_last = rv;
+  if (before == NULL) {
+    if (this->polygon_last == NULL) {
+      this->polygon_first = rv;
+      this->polygon_last = rv;
+    } else {
+      this->polygon_last->next_item = rv;
+      rv->prev_item = this->polygon_last;
+      this->polygon_last = rv;
+    }
   } else {
-    this->polygon_last->next_item = rv;
-    rv->prev_item = this->polygon_last;
-    this->polygon_last = rv;
+    if (before->prev_item == NULL)
+      this->polygon_first = rv;
+    else
+      before->prev_item->next_item = rv;
+    rv->prev_item = before->prev_item;
+    before->prev_item = rv;
+    rv->next_item = before;
   }
   return rv;
 }
@@ -573,12 +583,12 @@ thscraplp * thscrap::get_polygon() {
           (ffst->survey->is_in_survey(this->centerline_survey)));
         ttselect = ttselect || ((this->centerline_survey != NULL) && 
           (ttst->survey->is_in_survey(this->centerline_survey)));          
-        if ((cl->extend & TT_EXTENDFLAG_IGNORE) == 0) {
-          if ((ffselect && ttselect) || (cl->psurvey->is_in_survey(this->centerline_survey))) {
-            ffst->tmpselect = true;
-            ttst->tmpselect = true;
-          }
+        //if ((cl->extend & TT_EXTENDFLAG_IGNORE) == 0) {
+        if ((ffselect && ttselect) || (cl->psurvey->is_in_survey(this->centerline_survey))) {
+          ffst->tmpselect = true;
+          ttst->tmpselect = true;
         }
+        //}
       }
     } else {
       for(i = 0; i < ni; i++) {
@@ -590,7 +600,8 @@ thscraplp * thscrap::get_polygon() {
       }
       for (i = 0; i < nlegs; i++) {
         cl = this->db->db1d.leg_vec[i].leg;
-        if (((cl->extend & TT_EXTENDFLAG_IGNORE) == 0) && (cl->psurvey->is_in_survey(this->centerline_survey))) {
+        //if (((cl->extend & TT_EXTENDFLAG_IGNORE) == 0) && (cl->psurvey->is_in_survey(this->centerline_survey))) {
+        if ((cl->psurvey->is_in_survey(this->centerline_survey))) {
           this->db->db1d.station_vec[cl->from.id - 1].tmpselect = true;
           this->db->db1d.station_vec[cl->to.id - 1].tmpselect = true;
         }
@@ -631,30 +642,36 @@ thscraplp * thscrap::get_polygon() {
               switch (this->proj->type) {
                 case TT_2DPROJ_EXTEND:
                   cnode = &(nodes[st->uid - 1]);
-                  arrow = cnode->first_arrow;
-                  lp->stx = thnan;
+                  lp->stx = cnode->extendx - this->proj->shift_x;
                   lp->sty = st->z - this->proj->shift_z;
                   lp->stz = 0.0;
+                  arrow = cnode->first_arrow;
                   while (arrow != NULL) {
-                    if ((arrow->leg->leg->extend & TT_EXTENDFLAG_IGNORE) == 0) {
-                      newx = (arrow->is_reversed ? arrow->leg->leg->txx : arrow->leg->leg->fxx) - this->proj->shift_x;
-                      if (thisnan(lp->stx)) {
-                        lp->stx = newx;
-                        lp->sty = st->z - this->proj->shift_z;
-                        lp->stz = 0.0;
-                      } else if (incp && (lp->stx != newx)) {
-                        nlp = this->polygon_insert();
-                        nlp->station = st;
-                        nlp->ustation = st;
-                        nlp->stx = newx;
-                        nlp->sty = st->z - this->proj->shift_z;
-                        nlp->stz = 0.0;
-                      }
+                    newx = (arrow->is_reversed ? arrow->leg->leg->txx : arrow->leg->leg->fxx) - this->proj->shift_x;
+                    if (newx != lp->stx) {
+                      nlp = this->polygon_insert(lp);
+                      nlp->station = st;
+                      nlp->ustation = st;
+                      nlp->station_name.id = st->uid;
+                      nlp->station_name.name = st->name;
+                      nlp->station_name.psurvey = st->survey;
+                      nlp->stx = newx - this->proj->shift_x;
+                      nlp->sty = st->z - this->proj->shift_z;
+                      nlp->stz = 0.0;
+                      thscraplp * olp;
+                      olp = nlp;
+
+                      nlp = this->polygon_insert(lp);
+                      nlp->lnio = true;
+                      nlp->type = SYML_MAPCONNECTION;
+                      nlp->lnx1 = lp->stx;
+                      nlp->lny1 = lp->sty;
+                      nlp->lnz1 = lp->stz;
+                      nlp->lnx2 = olp->stx;
+                      nlp->lny2 = olp->sty;
+                      nlp->lnz2 = olp->stz;
                     }
                     arrow = arrow->next_arrow;
-                  }
-                  if (thisnan(lp->stx)) {
-                    lp->stx = cnode->xx - this->proj->shift_x;
                   }
                   break;
                 case TT_2DPROJ_PLAN:
@@ -681,9 +698,11 @@ thscraplp * thscrap::get_polygon() {
             arrow = nodes[st->uid - 1].first_arrow;
             while (arrow != NULL) {
             
+//              if ((((this->centerline_survey != NULL) && (arrow->leg->survey->is_in_survey(this->centerline_survey))) || 
+//                  ((this->centerline_survey == NULL) && (arrow->leg->survey->selected))) &&
+//                  ((this->proj->type != TT_2DPROJ_EXTEND) || ((arrow->leg->leg->extend & TT_EXTENDFLAG_IGNORE) == 0))) {
               if ((((this->centerline_survey != NULL) && (arrow->leg->survey->is_in_survey(this->centerline_survey))) || 
-                  ((this->centerline_survey == NULL) && (arrow->leg->survey->selected))) &&
-                  ((this->proj->type != TT_2DPROJ_EXTEND) || ((arrow->leg->leg->extend & TT_EXTENDFLAG_IGNORE) == 0))) {
+                  ((this->centerline_survey == NULL) && (arrow->leg->survey->selected)))) {
 
                 // process arrow here
                 nlp = this->polygon_insert();

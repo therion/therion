@@ -1,0 +1,30 @@
+#!FILE 2
+#! This is obviously not, what we would like to have.
+#!
+#! To control process of extended elevation, there is a special
+#! <code>extend</code> option in centerline command. 
+
+centerline
+  data normal from to compass clino tape
+  0  1  170  -10   4.7
+  
+  # first loop branch
+  1  2  230  -60  12.3
+  2  3  166  -18   6.3
+  3  4  130  -12   5.1
+  
+  # second loop branch
+  1  5  133   +4   8.9
+  5  4  220  -62  16.1
+  
+  4  6  107  -23   9.1
+#!
+#! First of all, we would like to start our extended elevation
+#! at station 6 (where the entrance is). This can be done by specifying
+#!CODE
+extend start 6
+#!ENDCODE
+#! in the centerline. Now it looks better,
+
+endcenterline
+#!ENDCODE

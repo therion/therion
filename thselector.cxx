@@ -334,7 +334,7 @@ void thselector__export_map_tree_node (FILE * cf, unsigned long level, unsigned 
   else
     fprintf(cf," %luX%lu %lu",fmap->id,fmap->nz,level);
 
-  fprintf(cf," %s %s@%s",optr->get_name(),optr->get_name(),optr->fsptr->full_name);
+  fprintf(cf," %s %s%s%s",optr->get_name(),optr->get_name(), (strlen(optr->fsptr->full_name) > 0 ? "@" : ""), optr->fsptr->full_name);
   if (strlen(optr->get_title()) > 0) {
     thdecode_tex(&(thdb.buff_enc), optr->get_title());
     fprintf(cf," \"%s\"",thdb.buff_enc.get_buffer());
@@ -489,10 +489,7 @@ void thselector::select_db(class thdatabase * db)
     
     if ((!select_all)) {
       try {
-        if (nsrv == NULL)
-          objptr = db->get_object(thobjectname(nsrv,nobj),NULL);
-        else
-          objptr = db->get_object(thobjectname(nobj,nsrv),NULL);
+        objptr = db->get_object(thobjectname(nobj,nsrv),NULL);
       }
       catch(...) {
         objptr = NULL;

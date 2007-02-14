@@ -88,6 +88,10 @@ it: freccia
 pt: seta
 sk: pomocná šípka
 
+therion: line map-connection
+en: map connection
+sk: prepojenie máp
+
 therion: line wall
 cz: stěna
 de: Wandverlauf
@@ -296,6 +300,14 @@ fr: courant d’air
 it: corrente d'aria
 pt: presença de vento
 sk: prievan
+
+therion: point air-draught:winter
+en: winter air draught
+sk: zimný prievan
+
+therion: point air-draught:summer
+en: summer air draught
+sk: letný prievan
 
 therion: point date
 cz: datum pozorování

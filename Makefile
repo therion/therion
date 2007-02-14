@@ -162,10 +162,11 @@ thbook/thbook.pdf: thbook/*.tex
 clean:
 	make -C ./xtherion clean
 	make -C ./loch clean
+	make -C ./tests clean
 	make -C ./extern/proj4 clean
 	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
-	perl makefile.pl rm -q extern/*.o extern/*~
+	perl makefile.pl rm -q extern/*.o extern/*~ tests/*~ tests/*.log
 	perl makefile.pl rm -q symbols.html therion.res
 	perl makefile.pl rm -q tri/*.o tri/*~
 	perl makefile.pl rm -q tests/*~
@@ -175,7 +176,7 @@ clean:
 	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
 	perl makefile.pl rm -q cave.3d cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
 	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
-	perl makefile.pl rmdir -q doc thTMPDIR symbols cave.shp
+	perl makefile.pl rmdir -q doc thTMPDIR symbols cave.shp tests/.doc
 
 thmpost.h: mpost/*.mp
 	make -C ./mpost
@@ -584,7 +585,8 @@ thmap.o: thmap.cxx thmap.h thdataobject.h thdatabase.h thmbuffer.h \
   thmapstat.h thdate.h thperson.h thlegenddata.h thdb2dpt.h thdb2dlp.h \
   thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
   thscraplo.h thlayoutln.h thscrapen.h thscraplp.h thattr.h thchenc.h \
-  thchencdata.h thexception.h thscrap.h thsketch.h thpic.h thtrans.h
+  thchencdata.h thexception.h thscrap.h thsketch.h thpic.h thtrans.h \
+  thtflength.h thtf.h
 thmapstat.o: thmapstat.cxx thmapstat.h thdate.h thperson.h thlegenddata.h \
   thscrap.h thdataobject.h thdatabase.h thmbuffer.h thbuffer.h thdb1d.h \
   thobjectid.h thinfnan.h thdataleg.h thparse.h thobjectname.h therion.h \

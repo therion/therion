@@ -1,0 +1,14 @@
+encoding  utf-8
+#!PROCESS
+#!FILE 5
+#!
+#! After these specifications, extended elevation looks as we would like to
+#!IMAGE map3.pdf
+#! and we can draw scraps.
+
+source cave3.th
+input thconfig.layout
+#export map -proj extended -o cave3.xvi
+export map -proj extended -o map3.pdf -layout l -layout-scale 1 500
+
+#!CLEAN map3.pdf

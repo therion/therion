@@ -1,0 +1,19 @@
+encoding  utf-8
+
+source cave.th
+
+#!PROCESS
+#!FILE 3
+#!
+#! If the situation is more complicated, and there is <em>m3</em>
+#! below <em>m2</em>, 
+#!IMAGE map3.pdf
+#!CLEAN map3.pdf
+#! you need to create more complicated map structure
+#! to handle this.
+
+select m1
+select m2
+select m3
+input thconfig.layout
+export map -layout l -o map3.pdf

@@ -36,9 +36,27 @@ thdb2dxs::thdb2dxs()
   this->bm = NULL;
   this->fmap = NULL;
   this->mode = TT_MAPITEM_UNKNOWN;
+  this->m_target = this;
   
   this->previewed = false;
   this->preview_output_number = 0;
+
 }
 
+bool operator < (const thdb2dxs_target_item & i1, const thdb2dxs_target_item & i2)
+{
+  if (i1.m_proj_id < i2.m_proj_id)
+    return true;
+  if (i1.m_proj_id > i2.m_proj_id)
+    return false;
+
+  if (i1.m_map_id < i2.m_map_id)
+    return true;
+  if (i1.m_map_id > i2.m_map_id)
+    return false;
+
+  if (i1.m_shift < i2.m_shift)
+    return true;
+  return false;
+}
   

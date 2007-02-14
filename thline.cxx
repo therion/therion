@@ -826,6 +826,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       break;
 
     thline_type_export_mp(TT_LINE_TYPE_PIT, SYML_PIT)
+    thline_type_export_mp(TT_LINE_TYPE_MAP_CONNECTION, SYML_MAPCONNECTION)
     thline_type_export_mp(TT_LINE_TYPE_CEILING_STEP, SYML_CEILINGSTEP)
     thline_type_export_mp(TT_LINE_TYPE_CEILING_MEANDER, SYML_CEILINGMEANDER)
     thline_type_export_mp(TT_LINE_TYPE_FLOOR_STEP, SYML_FLOORSTEP)

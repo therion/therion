@@ -490,7 +490,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
       ff = cl->from.id - 1;
       tt = cl->to.id - 1;
 
-      if (isexp[ff] && isexp[tt] && ((cl->extend & TT_EXTENDFLAG_IGNORE) == 0)) {
+      if (isexp[ff] && isexp[tt]) {
 
         cs = &(thdb.db1d.station_vec[ff]);
         cx = sf * cl->fxx;
@@ -628,7 +628,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
       vff = stvec[ff];
       vtt = stvec[tt];
     }
-    if (isexp[ff] && isexp[tt] && ((prj->type != TT_2DPROJ_EXTEND) || ((cl->extend & TT_EXTENDFLAG_IGNORE) == 0))) {
+    if (isexp[ff] && isexp[tt]) {
       fprintf(pltf,"  {%12.2f %12.2f %12.2f %12.2f", vff.x, vff.y, vtt.x, vtt.y);
       // calculate and export LRUD if needed
       if (cl->walls != TT_FALSE) {
@@ -962,11 +962,11 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       sclevel = 0;
       // !!! Tu pridat aj ine druhy - teda ABOVE a BELOW
       export_outlines_only = ((cbm->mode == TT_MAPITEM_ABOVE) ||
-        (cbm->mode == TT_MAPITEM_BELOW)) && (!cbm->bm->selection_xs->previewed)
-        && (cbm->bm->selection_xs->fmap->output_number != cbm->bm->selection_xs->preview_output_number);
+        (cbm->mode == TT_MAPITEM_BELOW)) && (!cbm->m_target->previewed)
+        && (cbm->m_target->fmap->output_number != cbm->m_target->preview_output_number);
       if ((cbm->mode == TT_MAPITEM_NORMAL) || export_outlines_only) {
         if (export_outlines_only) {
-          cbm->bm->selection_xs->previewed = true;
+          cbm->m_target->previewed = true;
         }
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL) {
@@ -1039,6 +1039,11 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                     cs->exported = true;
                   }
                 } 
+
+                shx += cbm->m_shift.m_x * out.ms;
+                shy += cbm->m_shift.m_y * out.ms;
+                out.m_shift_x = cbm->m_shift.m_x - cbm->m_shift.m_prev_x;
+                out.m_shift_y = cbm->m_shift.m_y - cbm->m_shift.m_prev_y; 
                 
                 switch (prj->type) {
                   case TT_2DPROJ_ELEV:
@@ -1194,8 +1199,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   }
 
                   if (export_outlines_only) {
-                    fprintf(plf,"\t\t Y => %ld,\n",cbm->bm->selection_xs->preview_output_number);
-                    SCRAPITEM->layer = (int) cbm->bm->selection_xs->preview_output_number;
+                    fprintf(plf,"\t\t Y => %ld,\n",cbm->m_target->preview_output_number);
+                    SCRAPITEM->layer = (int) cbm->m_target->preview_output_number;
                     fprintf(plf,"\t\t V => -1,\n");
                     SCRAPITEM->level = -1;
                   } else {
@@ -1210,8 +1215,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                   SCRAPITEM->S2 = shy;
                   
                   if ((!export_outlines_only) && (!export_sections) &&
-                      (cbm->bm->selection_xs->fmap->output_number != cbm->bm->selection_xs->preview_output_number)
-      	              && (!cbm->bm->selection_xs->previewed)		      
+                      (cbm->m_target->fmap->output_number != cbm->m_target->preview_output_number)
+      	              && (!cbm->m_target->previewed)		      
                       && (exps.B > 0)) {
             		    fprintf(plf,"\t# scrap: %s\n",cs->name);
                     fprintf(plf,"\t%s => {\n",thexpmap_u2string(sscrap + 1));
@@ -1235,8 +1240,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                     //fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     //fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
                     //fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
-                    fprintf(plf,"\t\t Y => %ld,\n",cbm->bm->selection_xs->preview_output_number);
-                    SCRAPITEM->layer = (int) cbm->bm->selection_xs->preview_output_number;
+                    fprintf(plf,"\t\t Y => %ld,\n",cbm->m_target->preview_output_number);
+                    SCRAPITEM->layer = (int) cbm->m_target->preview_output_number;
                     fprintf(plf,"\t\t V => -1,\n");
                     SCRAPITEM->level = -1;
                     fprintf(plf,"\t\t S => \"%.2f %.2f\",\n\t},\n",shx,shy);
@@ -1431,7 +1436,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     if (cmap->expand) {      
       cbm = cmap->first_bm;
       while (cbm != NULL) {
-        cbm->bm->selection_xs->previewed = false;
+        cbm->m_target->previewed = false;
         cbm = cbm->next_item;
       }
     }
@@ -1461,12 +1466,12 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       cbm = cmap->first_bm;
       while (cbm != NULL) {
         if (cbm->mode == TT_MAPITEM_ABOVE) {
-          LAYER_ITER->second.U.insert(cbm->bm->selection_xs->preview_output_number);
+          LAYER_ITER->second.U.insert(cbm->m_target->preview_output_number);
           if (!anyprev) {
-            fprintf(plf,"\t\tU => \"%ld",cbm->bm->selection_xs->preview_output_number);
+            fprintf(plf,"\t\tU => \"%ld",cbm->m_target->preview_output_number);
             anyprev = true;
           } else
-            fprintf(plf," %ld",cbm->bm->selection_xs->preview_output_number);
+            fprintf(plf," %ld",cbm->m_target->preview_output_number);
         }
         cbm = cbm->next_item;
       }
@@ -1491,12 +1496,12 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       cbm = cmap->first_bm;
       while (cbm != NULL) {
         if (cbm->mode == TT_MAPITEM_BELOW) {
-          LAYER_ITER->second.D.insert(cbm->bm->selection_xs->preview_output_number);
+          LAYER_ITER->second.D.insert(cbm->m_target->preview_output_number);
           if (!anyprev) {
-            fprintf(plf,"\t\tD => \"%ld",cbm->bm->selection_xs->preview_output_number);
+            fprintf(plf,"\t\tD => \"%ld",cbm->m_target->preview_output_number);
             anyprev = true;
           } else
-            fprintf(plf," %ld",cbm->bm->selection_xs->preview_output_number);
+            fprintf(plf," %ld",cbm->m_target->preview_output_number);
         }
         cbm = cbm->next_item;
       }
@@ -1508,40 +1513,40 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
       cbm = cmap->first_bm;
       while (cbm != NULL) {
-        if ((! cbm->bm->selection_xs->previewed) && 
-            (cbm->bm->selection_xs->fmap->output_number != cbm->bm->selection_xs->preview_output_number)) {
-          cbm->bm->selection_xs->previewed = true;
+        if ((!cbm->m_target->previewed) && 
+            (cbm->m_target->fmap->output_number != cbm->m_target->preview_output_number)) {
+          cbm->m_target->previewed = true;
           fprintf(plf,"\t# basic map: %s\n",cbm->bm->name);
-          fprintf(plf,"\t%ld => {\n",cbm->bm->selection_xs->preview_output_number);
+          fprintf(plf,"\t%ld => {\n",cbm->m_target->preview_output_number);
           fprintf(plf,"\t\tZ => 1,\n");
-      	  fprintf(plf,"\t\tA => %ld,\n",cbm->bm->selection_xs->fmap->output_number);
+      	  fprintf(plf,"\t\tA => %ld,\n",cbm->m_target->fmap->output_number);
           fprintf(plf,"\t},\n");
 
-          LAYERHASH.insert(make_pair(cbm->bm->selection_xs->preview_output_number,L));
-          LAYER_ITER = LAYERHASH.find(cbm->bm->selection_xs->preview_output_number);
+          LAYERHASH.insert(make_pair(cbm->m_target->preview_output_number,L));
+          LAYER_ITER = LAYERHASH.find(cbm->m_target->preview_output_number);
           LAYER_ITER->second.Z = 1;
-          LAYER_ITER->second.AltJump = cbm->bm->selection_xs->fmap->output_number;
+          LAYER_ITER->second.AltJump = cbm->m_target->fmap->output_number;
 
-          switch (cbm->bm->selection_mode) {
+          switch (cbm->m_target->mode) {
             case TT_MAPITEM_BELOW:
-              MAP_PREVIEW_DOWN.insert(cbm->bm->selection_xs->preview_output_number);
+              MAP_PREVIEW_DOWN.insert(cbm->m_target->preview_output_number);
               if (!anyprevbelow) {
-                snprintf(prevbf,127,"%ld",cbm->bm->selection_xs->preview_output_number);
+                snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
                 belowprev += prevbf;
                 anyprevbelow = true;
               } else {
-                snprintf(prevbf,127," %ld",cbm->bm->selection_xs->preview_output_number);
+                snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
                 belowprev += prevbf;
               }
               break;
             case TT_MAPITEM_ABOVE:
-              MAP_PREVIEW_UP.insert(cbm->bm->selection_xs->preview_output_number);
+              MAP_PREVIEW_UP.insert(cbm->m_target->preview_output_number);
               if (!anyprevabove) {
-                snprintf(prevbf,127,"%ld",cbm->bm->selection_xs->preview_output_number);
+                snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
                 aboveprev += prevbf;
                 anyprevabove = true;
               } else {
-                snprintf(prevbf,127," %ld",cbm->bm->selection_xs->preview_output_number);
+                snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
                 aboveprev += prevbf;
               }
               break;
@@ -1816,6 +1821,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   thscraplp * slp;
   thdb2dlp * lp;
   thexception dbg_stnms;
+  bool map_shift = (hypot(out->m_shift_x, out->m_shift_y) > 1e-2);
 	
 	// check scrap limits
   fprintf(out->file, "warningcheck := 1;\n");
@@ -1876,6 +1882,13 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             case TT_POINT_TYPE_DIMENSIONS:
               obj->tags &= ~TT_2DOBJ_TAG_VISIBILITY_ON;
               break;
+
+            case TT_POINT_TYPE_MAP_CONNECTION:
+              if (!map_shift) {
+                obj->tags &= ~TT_2DOBJ_TAG_VISIBILITY_ON;
+              }
+              break;
+
             case TT_POINT_TYPE_BEDROCK:
             case TT_POINT_TYPE_SAND:
             case TT_POINT_TYPE_RAFT:
@@ -1898,6 +1911,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
               case TT_LINE_TYPE_LABEL:
               case TT_LINE_TYPE_WATER_FLOW:
               case TT_LINE_TYPE_GRADIENT:
+              case TT_LINE_TYPE_MAP_CONNECTION:
                 break;
               default:
                 obj->tags |= TT_2DOBJ_TAG_CLIP_ON;
@@ -2102,7 +2116,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             }
             break;
           case TT_POINT_CMD:
-            switch (((thpoint*)obj)->type) {
+            ptp = ((thpoint*)obj);
+            switch (ptp->type) {
               case TT_POINT_TYPE_STATION:
               case TT_POINT_TYPE_STATION_NAME:
               case TT_POINT_TYPE_LABEL:
@@ -2111,6 +2126,15 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
               case TT_POINT_TYPE_ALTITUDE:
               case TT_POINT_TYPE_HEIGHT:
               case TT_POINT_TYPE_PASSAGE_HEIGHT:
+                break;
+              case TT_POINT_TYPE_MAP_CONNECTION:
+                if (out->symset->assigned[SYML_MAPCONNECTION]) {
+                  thexpmap_export_mp_bgif;
+                  fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
+                  out->symset->get_mp_macro(SYML_MAPCONNECTION),
+                  thxmmxst(out, ptp->point->xt, ptp->point->yt),
+                  thxmmxst(out, ptp->point->xt - out->m_shift_x, ptp->point->yt - out->m_shift_y));
+                }
                 break;
               default:
                 if (obj->export_mp(noout)) {
@@ -2393,7 +2417,8 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
     firstmapscrap = true;
     while (cbm != NULL) {
       cmi = cbm->bm->last_item;
-      if ((cbm->mode == TT_MAPITEM_NORMAL) && (strlen(cbm->bm->name) > 0)) while (cmi != NULL) {
+//      if ((cbm->mode == TT_MAPITEM_NORMAL) && (strlen(cbm->bm->name) > 0)) while (cmi != NULL) {
+      if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
           if (firstmapscrap) {
             nmap++;
@@ -2523,6 +2548,10 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
                 cs->B = this->layout->color_map_fg.B;
               }
             break;
+            default:
+              cs->R = this->layout->color_map_fg.R;
+              cs->G = this->layout->color_map_fg.G;
+              cs->B = this->layout->color_map_fg.B;
           }
         }
         cmi = cmi->prev_item;  

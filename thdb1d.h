@@ -57,19 +57,19 @@ class thdb1d_tree_node {
 
   public:
 
-  bool is_attached, is_fixed, xx_left, xx_touched;
+  bool is_attached, is_fixed, xx_left, xx_touched, extendx_ok;
 
   thdb1d_tree_node * next_eq, * prev_eq;
   
   unsigned long id, uid, narrows;
   
-  double xx;
+  double xx, extendx;
   
   class thdb1d_tree_arrow * first_arrow, * last_arrow, * back_arrow;
   
-  thdb1d_tree_node() : is_attached(false), is_fixed(false), xx_left(false), xx_touched(false),
+  thdb1d_tree_node() : is_attached(false), is_fixed(false), xx_left(false), xx_touched(false), extendx_ok(false),
     next_eq(NULL), prev_eq(NULL),
-    id(0), uid(0), narrows(0), xx(0.0),
+    id(0), uid(0), narrows(0), xx(0.0), extendx(0.0),
     first_arrow(NULL), last_arrow(NULL), back_arrow(NULL) {}
   
 };

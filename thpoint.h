@@ -121,7 +121,9 @@ enum {
   TT_POINT_TYPE_AIR_DRAUGHT,
   TT_POINT_TYPE_ENTRANCE,
   TT_POINT_TYPE_GRADIENT,
+
   TT_POINT_TYPE_DIMENSIONS,
+  TT_POINT_TYPE_MAP_CONNECTION,
   
 // vystroj
   TT_POINT_TYPE_NO_EQUIPMENT,
@@ -228,6 +230,7 @@ static const thstok thtt_point_types[] = {
   {"karren",TT_POINT_TYPE_KARREN},
   {"label",TT_POINT_TYPE_LABEL},
   {"low-end",TT_POINT_TYPE_LOW_END},
+  {"map-connection",TT_POINT_TYPE_MAP_CONNECTION},
   {"moonmilk",TT_POINT_TYPE_MOONMILK},
   {"narrow-end",TT_POINT_TYPE_NARROW_END},
   {"no-equipment",TT_POINT_TYPE_NO_EQUIPMENT},
@@ -328,6 +331,9 @@ enum {
   TT_POINT_SUBTYPE_NEGATIVE,
   TT_POINT_SUBTYPE_BOTH,
   TT_POINT_SUBTYPE_UNSIGNED,
+  TT_POINT_SUBTYPE_WINTER,
+  TT_POINT_SUBTYPE_SUMMER,
+  TT_POINT_SUBTYPE_NONE,
 };
 
 
@@ -341,12 +347,15 @@ static const thstok thtt_point_subtypes[] = {
   {"intermittent", TT_POINT_SUBTYPE_INTERMITTENT},
   {"natural", TT_POINT_SUBTYPE_NATURAL},
   {"negative", TT_POINT_SUBTYPE_NEGATIVE},
+  {"none", TT_POINT_SUBTYPE_NONE},
   {"painted", TT_POINT_SUBTYPE_PAINTED},
   {"paleo", TT_POINT_SUBTYPE_PALEO},
   {"permanent", TT_POINT_SUBTYPE_PERMANENT},
   {"positive", TT_POINT_SUBTYPE_POSITIVE},
+  {"summer", TT_POINT_SUBTYPE_SUMMER},
   {"temporary", TT_POINT_SUBTYPE_TEMP},
   {"unsigned", TT_POINT_SUBTYPE_UNSIGNED},
+  {"winter", TT_POINT_SUBTYPE_WINTER},
 	{NULL, TT_POINT_SUBTYPE_UNKNOWN},
 };
 

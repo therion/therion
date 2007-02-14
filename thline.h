@@ -176,6 +176,7 @@ enum {
   TT_LINE_TYPE_GRADIENT,
   TT_LINE_TYPE_CEILING_MEANDER,
   TT_LINE_TYPE_FLOOR_MEANDER,
+  TT_LINE_TYPE_MAP_CONNECTION,
 };
 
 /**
@@ -194,6 +195,7 @@ static const thstok thtt_line_types[] = {
   {"flowstone", TT_LINE_TYPE_FLOWSTONE},
   {"gradient", TT_LINE_TYPE_GRADIENT},
   {"label", TT_LINE_TYPE_LABEL},
+  {"map-connection", TT_LINE_TYPE_MAP_CONNECTION},
   {"overhang", TT_LINE_TYPE_OVERHANG},
   {"pit", TT_LINE_TYPE_PIT},
   {"pitch", TT_LINE_TYPE_PIT},

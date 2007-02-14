@@ -1,0 +1,6 @@
+layout l
+  map-header 0 0 off
+  symbol-hide group centerline
+  color map-fg [100 100 80]
+  origin -10 -10 0 m
+endlayout

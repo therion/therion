@@ -406,11 +406,13 @@ unsigned long thdatabase::get_survey_id(char * sn, thsurvey * ps)
 
 thdataobject * thdatabase::get_object(thobjectname on, thsurvey * ps)
 {
-  unsigned long csurvey_id = this->get_survey_id(on.survey, ps);
+  unsigned long csurvey_id;
+  if ((ps != NULL) || ((on.survey != NULL) && (strlen(on.survey) > 0)))
+    csurvey_id = this->get_survey_id(on.survey, ps);
+  else
+    csurvey_id = this->fsurveyptr->id;
+
   thdb_object_map_type::iterator oi;
-  
-  if (on.name == NULL)
-    return this->get_survey(on.survey, ps);
   
   oi = this->object_map.find(thobjectid(on.name,csurvey_id));
   if (oi == this->object_map.end())

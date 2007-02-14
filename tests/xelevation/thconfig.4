@@ -1,0 +1,17 @@
+encoding  utf-8
+#!PROCESS
+#!FILE 6
+#! 
+#! Even there is station 1 more then one time in map, therion automatically
+#! detects correct position of this station in each scrap and they are
+#! usually drawn OK.
+
+#!IMAGE map4.pdf
+
+source cave3.th
+source cave3.th2
+
+input thconfig.layout
+export map -proj extended -o map4.pdf -layout l -layout-scale 1 500
+
+#!CLEAN map4.pdf

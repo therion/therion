@@ -39,7 +39,56 @@ thdb2dmi::thdb2dmi()
   
   this->psurvey = NULL;
   this->type = TT_MAPITEM_UNKNOWN;
+
 }
 
+
+thdb2dmi_shift thdb2dmi_shift::add(const thdb2dmi_shift & s)
+{
+  thdb2dmi_shift x;
+  if (s.is_active()) {
+    x.m_preview = s.m_preview;
+    x.m_prev_x = this->m_x;
+    x.m_prev_y = this->m_y;
+  } else {
+    x.m_preview = this->m_preview;
+  }
+  x.m_x = this->m_x + s.m_x;
+  x.m_y = this->m_y + s.m_y;
+  return x;
+}
+
+
+bool operator == (const thdb2dmi_shift & s1, const thdb2dmi_shift & s2)
+{
+  if ((!s1.is_active()) && (!s2.is_active()))
+    return true;
+  if (s1.is_active() && s2.is_active() && (s1.m_x == s2.m_x) && (s1.m_y == s2.m_y))
+    return true;
+  return false;
+}
+
+
+bool operator < (const thdb2dmi_shift & s1, const thdb2dmi_shift & s2)
+{
+  if (s1.is_active() && (!s2.is_active()))
+    return false;
+  if (s2.is_active() && (!s1.is_active()))
+    return true;
+  if ((!s1.is_active()) && (!s2.is_active()))
+    return false;
+  if (s1.m_x < s2.m_x)
+    return true;
+  if (s1.m_x > s2.m_x)
+    return false;
+  if (s1.m_y < s2.m_y)
+    return true;
+  return false;
+}
+
+
+bool thdb2dmi_shift::is_active() const {
+  return (this->m_preview != TT_MAPITEM_UNKNOWN);
+} 
 
 

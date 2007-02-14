@@ -24,6 +24,7 @@ $SYMHASH{p_undefined} = "noassign";
 $SYMHASH{p_section} = "noassign";
 $SYMHASH{p_label} = "noassign";
 $SYMHASH{p_remark} = "noassign";
+$SYMHASH{p_mapconnection} = "noassign";
 $SYMHASH{p_stationname} = "noassign";
 $SYMHASH{p_date} = "noassign";
 $SYMHASH{p_altitude} = "noassign";
@@ -58,6 +59,7 @@ $SYMHASH{x_point_waterflow} = "hidden";
 $SYMHASH{x_point_station} = "hidden";
 $SYMHASH{x_point_height} = "hidden";
 $SYMHASH{x_point_passageheight} = "hidden";
+$SYMHASH{x_point_airdraught} = "hidden";
 
 
 $i = 0;

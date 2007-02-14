@@ -30,6 +30,7 @@
 #define thdb2dxm_h
 
 #include <list>
+#include "thdb2dmi.h"
 
 /**
  * 2D export map class.

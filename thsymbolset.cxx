@@ -291,6 +291,7 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         cl3(TT_LINE_TYPE_FLOOR_MEANDER,SYML_FLOORMEANDER);
         cl3(TT_LINE_TYPE_FLOWSTONE,SYML_FLOWSTONE);
         cl3(TT_LINE_TYPE_LABEL,SYML_LABEL);
+        cl3(TT_LINE_TYPE_MAP_CONNECTION,SYML_MAPCONNECTION);
         cl3(TT_LINE_TYPE_OVERHANG,SYML_OVERHANG);
         cl3(TT_LINE_TYPE_PIT,SYML_PIT);
         cl3(TT_LINE_TYPE_ROCK_BORDER,SYML_ROCKBORDER);
@@ -343,7 +344,14 @@ int thsymbolset__get_id(char * symclass, char * symbol)
             c2(TT_POINT_SUBTYPE_TEMP,SYMP_STATION_TEMPORARY)
           }
           break;
-        cp3(TT_POINT_TYPE_AIR_DRAUGHT,SYMP_AIRDRAUGHT);
+        case TT_POINT_TYPE_AIR_DRAUGHT:
+          sgroup(SYMX_POINT_AIRDRAUGHT)
+          switch (subtype) {
+            c2(TT_POINT_SUBTYPE_NONE,SYMP_AIRDRAUGHT)
+            c2(TT_POINT_SUBTYPE_SUMMER,SYMP_AIRDRAUGHT_SUMMER)
+            c2(TT_POINT_SUBTYPE_WINTER,SYMP_AIRDRAUGHT_WINTER)
+          }
+          break;
         cp3(TT_POINT_TYPE_ALTITUDE,SYMP_ALTITUDE);
         cp3(TT_POINT_TYPE_ANASTOMOSIS,SYMP_ANASTOMOSIS);
         cp3(TT_POINT_TYPE_ANCHOR,SYMP_ANCHOR);
@@ -554,6 +562,12 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(5,SYMP_CAVESTATION)
     egroup
 
+    bgroup(SYMX_POINT_AIRDRAUGHT)
+    group(0,SYMP_AIRDRAUGHT)
+    group(1,SYMP_AIRDRAUGHT_SUMMER)
+    group(2,SYMP_AIRDRAUGHT_WINTER)
+    egroup
+
     bgroup(SYMX_POINT_WATERFLOW)
     group(0,SYMP_WATERFLOW_INTERMITTENT)
     group(1,SYMP_WATERFLOW_PALEO)
@@ -679,6 +693,9 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   fprintf(mpf,"%s(((0.2,0.8) -- (0.8,0.2)) inscale,2)",thsymbolset__mp[SYML_ARROW]);
   endfig;
 
+  insfig(SYML_MAPCONNECTION,thT("line map-connection",layout->lang));
+  fprintf(mpf,"%s(((0.2,0.8) -- (0.8,0.2)) inscale)",thsymbolset__mp[SYML_MAPCONNECTION]);
+  endfig;
 
   // steny + wall-altitude + altitude
 #define legend_wall(mid,txt) \
@@ -767,6 +784,8 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   endfig;
 
   legend_hpoint(SYMP_AIRDRAUGHT,thT("point air-draught",layout->lang));
+  legend_hpoint(SYMP_AIRDRAUGHT_WINTER,thT("point air-draught:winter",layout->lang));
+  legend_hpoint(SYMP_AIRDRAUGHT_SUMMER,thT("point air-draught:summer",layout->lang));
 
   thdate d;
   d.parse("1999.12.31");

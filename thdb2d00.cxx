@@ -44,14 +44,14 @@
 #include <list>
 #include "thmapstat.h"
 
-void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level) {
+void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level, thdb2dmi_shift shift) {
   thdb2dxs * xs, * txs = NULL;
   thdb2dmi * mi;
   bool found = false;
   if (map->is_basic) {
     xs = fmap->first_bm;
     while ((!found) && (xs != NULL)) {
-      if (xs->bm->id == map->id) {
+      if ((xs->bm->id == map->id) && (xs->m_shift == shift)) {
         found = true;
         txs = xs;
       }
@@ -62,6 +62,7 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
       txs = xs;
       xs->bm = map;
       xs->fmap = fmap;
+      xs->m_shift = shift;
       if (fmap->first_bm == NULL) {
         fmap->first_bm = xs;
         fmap->last_bm = xs;
@@ -72,14 +73,36 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
         fmap->last_bm = xs;
       }
     }
+
+
+    thdb2dxs_target_item tmp_target(map->projection_id, map->id, shift);
+    thdb2dxs_target_map::iterator ti;
+    ti = this->m_target_map.find(tmp_target);
+    if (ti == this->m_target_map.end()) {
+      this->m_target_map[tmp_target] = txs;
+      txs->m_target = txs;
+    } else {
+      txs->m_target = ti->second;
+    }
+      
+    
+
 //    if (txs->mode < mode) {
     if (txs->mode != TT_MAPITEM_NORMAL) {
       txs->mode = mode;
-      mi = map->first_item;
+      txs->m_shift = shift;
+//      mi = map->first_item;
 //      if (map->selection_mode < mode) {
-      if (map->selection_mode != TT_MAPITEM_NORMAL) {
-        map->selection_mode = mode;
-        map->selection_xs = txs;
+
+
+//      if (map->selection_mode != TT_MAPITEM_NORMAL) {
+//        map->selection_mode = mode;
+//        map->selection_xs = txs;
+//      }
+
+      if (txs->m_target->mode != TT_MAPITEM_NORMAL) {
+        txs->m_target = txs;
+        this->m_target_map[tmp_target] = txs;
       }
 //      while (mi != NULL) {
 //        if ((mi->type == TT_MAPITEM_NORMAL) && (((thscrap*)(mi->object))->selection_mode < mode)) {
@@ -96,11 +119,15 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
   while (mi != NULL) {
     if (mode == TT_MAPITEM_NORMAL) {
       if (((mi->type != TT_MAPITEM_NORMAL) || (!map->is_basic)) && 
-          ((mi->type == TT_MAPITEM_NORMAL) || (level == 0)))
-        this->insert_basic_maps(fmap,(thmap *)mi->object,mi->type,level+1);
+        ((mi->type == TT_MAPITEM_NORMAL) || (level == 0))) {
+          this->insert_basic_maps(fmap,(thmap *)mi->object,mi->type,level+1, shift.add(mi->m_shift));
+      }
+      if ((mi->type == TT_MAPITEM_NORMAL) && (mi->m_shift.is_active()) && (mi->m_shift.m_preview != TT_MAPITEM_NONE)) {
+        this->insert_basic_maps(fmap,(thmap *)mi->object, mi->m_shift.m_preview, level+1, shift);
+      }
     } else {
       if ((mi->type == TT_MAPITEM_NORMAL) && (!map->is_basic))
-        this->insert_basic_maps(fmap,(thmap *)mi->object,mode,level+1);
+        this->insert_basic_maps(fmap,(thmap *)mi->object,mode,level+1, shift);
     }
     mi = mi->next_item;
   }
@@ -128,10 +155,10 @@ int thdb2d_compscrap(const void * ee1, const void * ee2)
 {
   thscrap * e1 = (thscrap *) ee1, * e2 = (thscrap *) ee2;
   if (thisnan(e1->z))
-    return -1;
-  if (thisnan(e2->z))
     return 1;
-  if (e1->z < e2->z) {
+  if (thisnan(e2->z))
+    return -1;
+  if (e1->z > e2->z) {
     return -1;
   } else if (e1->z == e2->z)
     return 0;
@@ -140,7 +167,7 @@ int thdb2d_compscrap(const void * ee1, const void * ee2)
 }
 
 
-thdb2dxm * thdb2d::insert_maps(thdb2dxm * selection,thdb2dxm * insert_after,thmap * map, 
+thdb2dxm * thdb2d::insert_maps(thdb2dxm * selection,thdb2dxm * insert_after, thmap * map, 
     unsigned long selection_level, int level, int title_level, int map_level) {
   thdb2dxm * cxm = NULL;
   thdb2dmi * mi;
@@ -172,10 +199,10 @@ thdb2dxm * thdb2d::insert_maps(thdb2dxm * selection,thdb2dxm * insert_after,thma
     while (mi != NULL) {
       if (mi->type == TT_MAPITEM_NORMAL) {
         if (cxm == NULL)
-          selection = this->insert_maps(selection,insert_after,(thmap *) mi->object, 
+          selection = this->insert_maps(selection,insert_after,(thmap *) mi->object,
             selection_level, level+1, title_level, map_level);
         else 
-          selection = this->insert_maps(selection,cxm,(thmap *) mi->object, 
+          selection = this->insert_maps(selection,cxm,(thmap *) mi->object,
             selection_level, level+1, title_level, map_level);
       }
       mi = mi->next_item;
@@ -389,6 +416,8 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       }  
 
       mapp = new thmap;
+      mapp->id = ++this->db->objid;
+      mapp->projection_id = prj->id;
       mapp->db = &(thdb);
       mapp->fsptr = NULL;
       thdb.object_list.push_back(mapp);
@@ -511,8 +540,8 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
     cxm = selection;
     while (cxm != NULL) {
       if (cxm->expand) {
-        this->insert_basic_maps(cxm,cxm->map,TT_MAPITEM_NORMAL,0);
         cxm->output_number = ++on;
+        this->insert_basic_maps(cxm,cxm->map,TT_MAPITEM_NORMAL,0);
       }
       cxm = cxm->next_item;
     }
@@ -525,15 +554,28 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       while (pcxs != NULL) {
         // ak je fmap zakladna, tak OK a PON = ON
         // inak PON = ++on
-        if (pcxs->bm->selection_xs->preview_output_number == 0) {
-          if ((pcxs->bm->selection_mode == TT_MAPITEM_NORMAL) &&
-              pcxs->bm->selection_xs->fmap->map->is_basic) 
-            pcxs->bm->selection_xs->preview_output_number =
-                pcxs->bm->selection_xs->fmap->output_number;
+
+        thdb2dxs_target_item tmp_target(pcxs->bm->projection_id, pcxs->bm->id, pcxs->m_shift);
+        pcxs->m_target = this->m_target_map[tmp_target];
+
+        if (pcxs->m_target->preview_output_number == 0) {
+          if ((pcxs->m_target->mode == TT_MAPITEM_NORMAL)
+              && pcxs->m_target->fmap->map->is_basic)
+            pcxs->m_target->preview_output_number = pcxs->m_target->fmap->output_number;
           else
-            pcxs->bm->selection_xs->preview_output_number = ++on;
-//            pcxs->bm->selection_xs->preview_output_number = 0;
+            pcxs->m_target->preview_output_number = ++on;
         }
+
+
+//        if (pcxs->bm->selection_xs->preview_output_number == 0) {
+//          if ((pcxs->bm->selection_mode == TT_MAPITEM_NORMAL) &&
+//              pcxs->bm->selection_xs->fmap->map->is_basic) 
+//            pcxs->bm->selection_xs->preview_output_number =
+//                pcxs->bm->selection_xs->fmap->output_number;
+//          else
+//            pcxs->bm->selection_xs->preview_output_number = ++on;
+//        }       
+
         pcxs = pcxs->next_item;
       }
       cxm = cxm->next_item;
@@ -544,6 +586,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
 }
 
 void thdb2d::reset_selection() {
+  this->m_target_map.clear();
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {

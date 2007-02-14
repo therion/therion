@@ -38,6 +38,7 @@ thdataobject::thdataobject()
 {
   this->db = NULL;
   this->cs = TTCS_LOCAL;
+  this->id = 0;
   
   this->name = "";
   this->title = "";

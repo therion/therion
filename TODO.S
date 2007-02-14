@@ -2,26 +2,32 @@ HOT LIST:
 
 therion:
 
-+ output of under/overlying maps moved to a different place and draw
-  joining arrows to previews  
++ thbook: map in offset (<map> <offset> <preview>)
++ thbook: point map-connection
++ thbook: air-draught: subtype winter|summer|none
+
++ line map-connection (automatically when stations connect together)
++ point extra -dist [2 m] -from [2 3] + LRUD morphing
 + LRUD walls into 3D shapefiles
++ 2d: LRUD envelope of exported survey maps (area dimensions)
++ tests: data processing, features generator
 + import of 3D and PLT via lxFile
 + LRUD envelope generation by lxFile
-+ additional morphing features (+LRUD morphing)
 + add absolute coordinate specification in centerline and scraps
 + add line moonmilk and flowstone areas surrounded by line flowstone or moonmilk
 + associate line section with section scrap
 + areas into shapefiles
-+ import: origin [x y z units]
++ add rotation of 3D surface into surface calibration
 + point camera
 + point picture/hyperlink
-+ redo tests directory structure
 + not to use -walls off when PLT file is exported
 + NOT_LRUD flag to lox shots, when there exists shot point in scrap
 + some comment to continuation
-+ add fast mode for xtherion - just to generate survey and map structures
 + warning if reading/backreading difference is big
 + no joins where starting/ending points are identical
++ new centerline station flags: spring, sink, lake, doline
++ special symbols centerline features: entrance, spring, sink, 
+  lake, doline
 + new surface symbols:
   line dripline
   line cliff
@@ -32,11 +38,9 @@ therion:
   - chapter|explo-date|topo-date colormodes
   - saturation as color parameter
   - use grid settings in altitudes
-+ 2d: LRUD envelope of exported survey maps
 + add bookmarks to PDF files (maps?)
 + add user define map headers into layout (meta language simmilar
   to HTML)
-+ add rotation of 3D surface into surface calibration
 + 3d: fix bug with internal hole, where no part of it is wall
 + area flowstone
 + line rope 
@@ -47,21 +51,15 @@ therion:
 + grid-bar [position|off] [position|off] - support for multiple grid bars
   s_depthbar() - divide into pieces (to fit into figure size)
   s_gridbar() - divide into pieces (to fit into figure size)
-+ therion --protractor <options>
 + add centerline flags for sink, spring and doline and map these
   flags to metapost symbols in export
-+ new centerline symbols
-  point spring
-	point sink
-	point lake
-	point doline
-	point entrance
-	point comment
 + add statistics survey <survey-name>
 + add survey name under scrap name when debug scrap-names
++ therion --protractor <options>
   
 xtherion:
 
++ disable "new file" and "open" when one file is opened in map editor
 + fix insertion of objects outside scraps
 + shortcuts
 + right click on line
@@ -85,6 +83,7 @@ therion:
 
 + find different distortion measure
 + export database: format text|txt
++ add fast mode for xtherion - just to generate survey and map structures
 + surface selection according to coverage
   2D: all surfaces that covers current map sorted by size and coverage
   3D: make a surface selection and clipping

@@ -29,7 +29,10 @@
 #ifndef thdb2dxs_h
 #define thdb2dxs_h
 
+#include "thdb2dmi.h"
+
 #include <list>
+#include <map>
 
 /**
  * 2D export scrap class.
@@ -47,6 +50,9 @@ class thdb2dxs {
   int mode;
   bool previewed;
   unsigned long preview_output_number;
+
+  thdb2dmi_shift m_shift;
+  thdb2dxs * m_target;
   
   thdb2dxs();  ///< Default constructor.
   
@@ -55,6 +61,15 @@ class thdb2dxs {
 
 typedef std::list <thdb2dxs> thdb2dxs_list;  ///< Joins list.
 
+struct thdb2dxs_target_item {
+  long m_proj_id, m_map_id;
+  thdb2dmi_shift m_shift;
+  thdb2dxs_target_item(long proj_id, long map_id, thdb2dmi_shift shift) : m_proj_id(proj_id), m_map_id(map_id), m_shift(shift) {}
+};
+
+bool operator < (const thdb2dxs_target_item & i1, const thdb2dxs_target_item & i2);
+
+typedef std::map<thdb2dxs_target_item, thdb2dxs *> thdb2dxs_target_map;
 
 #endif
 

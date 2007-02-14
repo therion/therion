@@ -610,6 +610,8 @@ void thdb2d::process_map_references(thmap * mptr)
         thdb.object_list.push_back(scrapp);
 
         mapp = new thmap;
+        mapp->projection_id = proj_id;
+        mapp->id = ++this->db->objid;
         mapp->db = this->db;
         mapp->z = scrapp->z;
         mapp->fsptr = NULL;
@@ -711,6 +713,16 @@ void thdb2d::process_map_references(thmap * mptr)
                 citem->name.name,citem->name.survey))
             else
               ththrow(("%s [%d] -- not a map reference -- %s",
+                citem->source.name, citem->source.line, 
+                citem->name.name))
+          }
+          if (citem->m_shift.is_active()) {
+            if (citem->name.survey != NULL)
+              ththrow(("%s [%d] -- shift is not allowed for scrap -- %s@%s",
+                citem->source.name, citem->source.line, 
+                citem->name.name,citem->name.survey))
+            else
+              ththrow(("%s [%d] -- shift is not allowed for scrap -- %s",
                 citem->source.name, citem->source.line, 
                 citem->name.name))
           }
@@ -1365,7 +1377,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
         prj->rshift_z = shift_z;
         while (cp != NULL) {
           cnode = &(nodes[cp->st->uid - 1]);
-          cp->tx = cnode->xx - shift_x;
+          cp->tx = cnode->extendx - shift_x;
           // if prev station specified - try to find this arrow
           arrow = NULL;
           if (!cp->point->extend_name.is_empty()) {

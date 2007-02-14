@@ -114,8 +114,8 @@ class thdb2d {
   void pp_smooth_joins(thdb2dprj * prj);  ///< ???
   void pp_calc_distortion(thdb2dprj * prj);  ///< ???
 
-  void insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level); ///< ???
-  thdb2dxm * insert_maps(thdb2dxm * selection,thdb2dxm * insert_after,thmap * map, 
+  void insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level, thdb2dmi_shift shift = thdb2dmi_shift()); ///< ???
+  thdb2dxm * insert_maps(thdb2dxm * selection,thdb2dxm * insert_after,thmap * map,
     unsigned long selection_level, int level, int title_level, int map_level); ///< ???
   void reset_selection();
     
@@ -124,6 +124,8 @@ class thdb2d {
   thmbuffer mbf,  ///< Multi buffer.
     mbf2; ///< Second buffer.
   thbuffer bf; /// Buffer.
+
+  thdb2dxs_target_map m_target_map;
     
   /**
    * Standard constructor.

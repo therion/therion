@@ -748,6 +748,13 @@ def l_arrow_SKBB (expr P, Q) =
   fi;
 enddef;
 
+def l_mapconnection_SKBB (expr P) =
+  thdrawoptions(dashed withdots scaled (0.5 * optical_zoom) withpen PenB);
+  l_arrow_SKBB(P,3);
+  thdrawoptions();
+enddef;
+
+
 def l_section_SKBB (expr P)(text txt) =
   T:=identity;
   path Q; Q = punked P;

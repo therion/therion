@@ -1,4 +1,7 @@
 encoding  utf-8
+##!PROCESS
+#!CLEAN cave.xvi cave.pdf
+
 source test.th
 export map -fmt xvi -layout-sketches on
 export map -layout-sketches on

@@ -166,7 +166,7 @@ thlayout::thlayout()
   this->excl_list = NULL;
   
   this->def_opacity = 0;
-  this->opacity = 0.7;
+  this->opacity = 0.75;
 
   this->def_map_header_bg = 0;
   this->map_header_bg = false;
@@ -174,7 +174,7 @@ thlayout::thlayout()
   this->def_surface = 0;
   this->surface = TT_LAYOUT_SURFACE_OFF;
   this->def_surface_opacity = 0;
-  this->surface_opacity = 0.7;
+  this->surface_opacity = 0.75;
 
   this->def_north = 0;
   this->north = TT_LAYOUT_NORTH_TRUE;

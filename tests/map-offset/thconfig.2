@@ -1,0 +1,35 @@
+encoding  utf-8
+
+source cave.th
+
+#!PROCESS
+#!FILE 2
+#!
+#! To display map <em>m2</em> in offset, you need to create a map
+#! containing <em>m2</em> and specify offset and preview type
+#! for <em>m2</em> in this map. Example:
+
+source
+#!CODE
+map m12
+  m1
+  break
+  m2 [0 8 m] below
+endmap
+#!ENDCODE
+endsource
+
+#! After selection of <em>m12</em> in configuration file, you
+#! receive:
+#! 
+#!IMAGE map2.pdf
+#!CLEAN map2.pdf
+
+select m12
+input thconfig.layout
+export map -layout l -o map2.pdf
+
+#! Joining arrows are created from <em>map-connection</em> points
+#! specified in scraps that are moved. Otherwise these points are
+#! ignored.
+#!

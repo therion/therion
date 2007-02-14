@@ -10,6 +10,8 @@ vgrid: SM
 [Point symbols]
 
 airdraught: UIS 
+airdraught_summer: UIS 
+airdraught_winter: UIS 
 anastomosis: UIS 
 anchor: SKBB 
 aragonite: NSS 
@@ -88,6 +90,7 @@ floormeander: SKBB
 floorstep: UIS 
 flowstone: UIS 
 gradient: BCRA UIS 
+mapconnection: SKBB 
 overhang: SKBB 
 pit: UIS 
 rockborder: UIS 

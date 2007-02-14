@@ -32,6 +32,7 @@
 #include "thscrap.h"
 #include "thobjectname.h"
 #include "thdb2dmi.h"
+#include "thtflength.h"
 
 thmap::thmap()
 {
@@ -167,11 +168,12 @@ void thmap::self_print_properties(FILE * outf)
   }
 }
 
+thmbuffer mapitmmb;
 
 void thmap::parse_item(int npar, char ** pars)
 {
-  if (npar != 1)
-    ththrow(("one map or scrap name per line allowed"))
+  if ((npar != 1) && (npar != 3))
+    ththrow(("invalid map item"))
   thdb2dmi * citem = this->db->db2d.insert_map_item();
   citem->itm_level = this->last_level;
   citem->source = this->db->csrc;
@@ -186,6 +188,31 @@ void thmap::parse_item(int npar, char ** pars)
     citem->prev_item = this->last_item;
     this->last_item = citem;
   }
+  if (npar == 3) {
+    thsplit_words(&mapitmmb, pars[1]);
+    char ** ss;
+    size_t nw;
+    int sv;
+    nw = mapitmmb.get_size();
+    ss = mapitmmb.get_buffer();
+    if ((nw < 2) || (nw > 3))
+      ththrow(("invalid map shift specification -- %s", pars[1]))
+
+    thtflength l;
+    thparse_double(sv, citem->m_shift.m_x, ss[0]);
+    if (sv != TT_SV_NUMBER)
+      ththrow(("not a number -- %s", ss[0]));
+    thparse_double(sv, citem->m_shift.m_y, ss[1]);
+    if (sv != TT_SV_NUMBER)
+      ththrow(("not a number -- %s", ss[1]));
+    if (nw > 2)
+      l.parse_units(ss[2]);
+    citem->m_shift.m_x = l.transform(citem->m_shift.m_x);
+    citem->m_shift.m_y = l.transform(citem->m_shift.m_y);
+    citem->m_shift.m_preview = thmatch_token(pars[2],thtt_2dmi);
+    if ((citem->m_shift.m_preview == TT_MAPITEM_UNKNOWN) || (citem->m_shift.m_preview == TT_MAPITEM_NORMAL))
+      ththrow(("unsupported preview type -- %s", pars[2]))
+  }
 }
 
 
@@ -195,8 +222,13 @@ void thmap::parse_preview(char ** pars)
   citem->source = this->db->csrc;
   citem->psurvey = this->db->get_current_survey();
   citem->type = thmatch_token(*pars,thtt_2dmi);
-  if (citem->type == TT_MAPITEM_UNKNOWN)
-    ththrow(("invalid preview type -- %s", *pars))
+  switch (citem->type) {
+    case TT_MAPITEM_ABOVE:
+    case TT_MAPITEM_BELOW:
+      break;
+    default:
+      ththrow(("unsupported preview type -- %s", *pars))
+  }
   thparse_objectname(citem->name,& this->db->buff_stations, pars[1]);
   if (this->last_item == NULL) {
     this->first_item = citem;

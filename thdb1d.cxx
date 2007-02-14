@@ -3076,6 +3076,10 @@ void thdb1d::process_xelev()
           current_node->last_arrow->negative;
         current_node = current_node->last_arrow->end_node;
         current_node->xx = cxx;
+        if (!current_node->extendx_ok) {
+          current_node->extendx = cxx;
+          current_node->extendx_ok = true;
+        }
         current_node->is_attached = true;
         current_node->xx_touched = true;
       } else {

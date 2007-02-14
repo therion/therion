@@ -1,0 +1,17 @@
+layout l
+
+  # line survey  
+  code metapost
+    def l_survey_cave_SKBB (expr P) =
+      T:=identity;
+      pickup PenC;
+      thdraw P;
+    enddef;
+  endcode
+  
+  symbol-set SKBB
+  map-header 0 0 off
+  color map-fg [100 100 80]
+  debug station-names
+  
+endlayout

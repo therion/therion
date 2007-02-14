@@ -1,0 +1,69 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust -147.692 -108.312 482.323 620.128
+##XTHERION## xth_me_area_zoom_to 100
+##XTHERION## xth_me_image_insert {118.107 1 1.0} {452.754 0} cave1.xvi 0 {}
+
+
+
+scrap scrap1 -scale [-128.0 -128.0 423.275 -128.0 0.0 0.0 14.002385 0.0 m]
+
+line floor-step -reverse on
+  94.0 382.0
+  115.0 373.0 134.0 340.0 134.0 320.0
+  smooth off
+endline
+
+line floor-step
+  273.0 210.0
+  253.0 231.0 237.0 232.0 221.0 229.0
+  smooth off
+endline
+
+point 341.0 60.0 entrance -orientation 288.7
+
+line wall -close on -outline in
+  154.0 158.0
+  209.16 203.43 247.0 224.0 221.0 246.0
+  195.0 268.0 156.0 337.0 139.0 332.0
+  122.0 327.0 99.0 301.0 79.0 290.0
+  59.0 279.0 97.0 208.0 104.0 187.0
+  111.0 166.0 137.0 144.0 154.0 158.0
+endline
+
+line wall
+  103.0 454.0
+  110.0 418.0 117.0 402.0 111.0 385.0
+  105.0 368.0 80.0 335.0 36.0 309.0
+  -8.0 283.0 10.0 285.0 39.0 217.0
+  68.0 149.0 76.0 130.0 98.0 125.0
+  120.0 120.0 180.0 87.0 310.0 44.0
+  smooth off
+endline
+
+line wall
+  323.0 93.0
+  200.0 114.0 182.0 119.0 201.0 140.0
+  220.0 161.0 254.0 197.0 265.0 226.0
+  276.0 255.0 262.0 296.0 222.0 315.0
+  182.0 334.0 164.0 335.0 151.0 367.0
+  138.0 399.0 129.0 458.0 129.0 458.0
+  smooth off
+endline
+
+point 312.087 69.434 station -name 6
+
+point 257.677 239.374 station -name 5
+
+point 154.137 116.534 station -name 4
+
+point 77.367 177.754 station -name 3
+
+point 46.457 290.154 station -name 2
+
+point 133.857 362.994 station -name 1
+
+point 118.107 452.754 station -name 0
+
+endscrap
+
+

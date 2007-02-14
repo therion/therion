@@ -230,6 +230,7 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
           case TT_POINT_TYPE_ALTITUDE:
           case TT_POINT_TYPE_HEIGHT:
           case TT_POINT_TYPE_DIMENSIONS:
+          case TT_POINT_TYPE_MAP_CONNECTION:
           case TT_POINT_TYPE_PASSAGE_HEIGHT:
             ththrow(("-clip not valid with type %s", thmatch_string(this->type,thtt_point_types)))
             break;
@@ -304,6 +305,15 @@ void thpoint::parse_subtype(char * ststr)
         case TT_POINT_SUBTYPE_FIXED:
         case TT_POINT_SUBTYPE_PAINTED:
         case TT_POINT_SUBTYPE_NATURAL:
+          combok = true;
+          break;
+      }
+      break;
+    case TT_POINT_TYPE_AIR_DRAUGHT:
+      switch (this->subtype) {
+        case TT_POINT_SUBTYPE_NONE:
+        case TT_POINT_SUBTYPE_WINTER:
+        case TT_POINT_SUBTYPE_SUMMER:
           combok = true;
           break;
       }
@@ -412,6 +422,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   switch(this->type) {
 
     case TT_POINT_TYPE_DIMENSIONS:
+    case TT_POINT_TYPE_MAP_CONNECTION:
       postprocess = false;
       break;
     case TT_POINT_TYPE_LABEL:  
@@ -686,8 +697,16 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       }
       break;
 
+    case TT_POINT_TYPE_AIR_DRAUGHT:
+      switch (this->subtype) {
+        thpoint_type_export_mp(TT_POINT_SUBTYPE_WINTER,SYMP_AIRDRAUGHT_WINTER);
+        thpoint_type_export_mp(TT_POINT_SUBTYPE_SUMMER,SYMP_AIRDRAUGHT_SUMMER);
+        default:
+          macroid = SYMP_AIRDRAUGHT;
+      }
+      break;
+
 // specialne symboly
-    thpoint_type_export_mp(TT_POINT_TYPE_AIR_DRAUGHT,SYMP_AIRDRAUGHT)
     thpoint_type_export_mp(TT_POINT_TYPE_SPRING,SYMP_SPRING)
     thpoint_type_export_mp(TT_POINT_TYPE_SINK,SYMP_SINK)
     thpoint_type_export_mp(TT_POINT_TYPE_ENTRANCE,SYMP_ENTRANCE)

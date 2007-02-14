@@ -21,6 +21,8 @@ void thsymsets_symbols_init() {
 		
 	
 	thsymsets_symbols[SYMP_AIRDRAUGHT][5] = 1;
+	thsymsets_symbols[SYMP_AIRDRAUGHT_SUMMER][5] = 1;
+	thsymsets_symbols[SYMP_AIRDRAUGHT_WINTER][5] = 1;
 	thsymsets_symbols[SYMP_ANASTOMOSIS][5] = 1;
 	thsymsets_symbols[SYMP_ANCHOR][3] = 1;
 	thsymsets_symbols[SYMP_ARAGONITE][2] = 1;
@@ -102,6 +104,7 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYML_FLOWSTONE][5] = 1;
 	thsymsets_symbols[SYML_GRADIENT][1] = 1;
 	thsymsets_symbols[SYML_GRADIENT][5] = 1;
+	thsymsets_symbols[SYML_MAPCONNECTION][3] = 1;
 	thsymsets_symbols[SYML_OVERHANG][3] = 1;
 	thsymsets_symbols[SYML_PIT][5] = 1;
 	thsymsets_symbols[SYML_ROCKBORDER][5] = 1;

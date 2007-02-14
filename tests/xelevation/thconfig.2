@@ -1,0 +1,10 @@
+#!PROCESS
+#!FILE 3
+#!IMAGE map2.pdf
+#!but there is still problem with branch around station 5.
+
+source cave2.th
+input thconfig.layout
+export map -proj extended -o map2.pdf -layout l -layout-scale 1 500
+
+#!CLEAN map2.pdf

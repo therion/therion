@@ -535,6 +535,43 @@ def p_airdraught_UIS (expr pos,theta,sc,al)=
 	endfor;
 enddef;
 
+def p_airdraught_winter_UIS (expr pos,theta,sc,al)=
+  U:=(.2u,u);
+  T:=identity aligned al rotated theta scaled 1 shifted pos;
+  pickup PenC;
+  thdraw (0,u)--(0,-0.75u);
+  p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
+  thdraw p;
+  thdraw p reflectedabout (origin,(0,u));
+  for i:=1 upto round(3+2*mlog(sc)/mlog 2):
+    thdraw (0,-(1-0.2i)*u)--(.2u,-(1-0.2(i-1))*u);
+  endfor;
+  thclean fullcircle scaled 0.6u shifted (0,0.05u);
+  thdraw (-0.1732u,-0.05u) -- (0.1732u,0.15u);
+  thdraw (0.1732u,-0.05u) -- (-0.1732u,0.15u);
+  thdraw (0,-0.15u) -- (0,0.25u);
+enddef;
+
+def p_airdraught_summer_UIS (expr pos,theta,sc,al)=
+  U:=(.2u,u);
+  T:=identity aligned al rotated theta scaled 1 shifted pos;
+  pickup PenC;
+  thdraw (0,u)--(0,-0.75u);
+  p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
+  thdraw p;
+  thdraw p reflectedabout (origin,(0,u));
+  for i:=1 upto round(3+2*mlog(sc)/mlog 2):
+    thdraw (0,-(1-0.2i)*u)--(.2u,-(1-0.2(i-1))*u);
+  endfor;
+  thclean fullcircle scaled 0.6u shifted (0,0.05u);
+  thdraw (-0.1732u,-0.05u) -- (0.1732u,0.15u);
+  thdraw (0.1732u,-0.05u) -- (-0.1732u,0.15u);
+  thdraw (0,-0.15u) -- (0,0.25u);
+  thclean fullcircle scaled 0.3u shifted (0,0.05u);
+  thdraw fullcircle scaled 0.2u shifted (0,0.05u);
+enddef;
+
+
 def p_station_fixed_ASF (expr pos)=
     T:=identity shifted pos;
     pickup PenD;

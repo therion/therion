@@ -1,0 +1,31 @@
+encoding  utf-8
+
+source cave.th
+
+#!PROCESS
+#!FILE 4
+
+source
+#!CODE
+map m23
+  m2
+  break
+  m3 [-8 0 m] below
+endmap
+
+map m123
+  m1
+  break
+  m23 [0 8 m] below
+endmap
+#!ENDCODE
+endsource
+
+#! Then <em>m123</em> looks like this:
+#! 
+#!IMAGE map4.pdf
+#!CLEAN map4.pdf
+
+select m123
+input thconfig.layout
+export map -layout l -o map4.pdf
