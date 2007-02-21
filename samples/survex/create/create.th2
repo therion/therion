@@ -1,0 +1,38 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust -124.498 -126.88 623.627 623.0
+##XTHERION## xth_me_area_zoom_to 100
+##XTHERION## xth_me_image_insert {456.253 1 1.0} {60.18 0@create.} create.xvi 0 {}
+
+
+
+scrap create.s -scale [-128.0 -128.0 620.125 -128.0 0.0 0.0 19.002375 0.0 m]
+
+line wall
+  437.0 56.0
+  426.0 98.0 396.0 123.0 370.0 158.0
+  344.0 193.0 265.0 239.0 240.0 281.0
+  215.0 323.0 218.0 344.0 164.0 333.0
+  110.0 322.0 78.0 227.0 55.0 319.0
+  32.0 411.0 215.0 393.0 150.0 481.0
+  smooth off
+endline
+
+point 60.842 321.52 station -name 1@sub.create
+
+point 199.612 418.56 station -name 0@sub.create
+
+point 290.952 288.05 station -name 2@create
+
+point 433.082 135.69 station -name 1@create
+
+point 456.502 59.12 station -name 0@create
+
+line wall
+  470.0 62.0
+  460.71 184.57 359.0 236.0 309.0 289.0
+  259.0 342.0 175.0 473.0 165.0 490.0
+  smooth off
+endline
+
+endscrap
+

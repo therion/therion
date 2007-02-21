@@ -1,0 +1,19 @@
+encoding  utf-8
+
+#!FILE 8
+#!PROCESS
+
+source cave2.th
+input thconfig.layout
+export map -o cave2.pdf -layout cl -layout-color map-fg altitude
+
+#! After this additional <code>import</code> final looks as expected.
+#!IMAGE cave2.pdf
+#!CLEAN cave2.pdf
+
+#!SUBTITLE Conclusion
+#!Even there are several possibilities, how to map survex prefix structure
+#!to therion survey structure, the most clean solution is to create
+#!survey structure to desired depth in .th files using empty 
+#!<code>survey</code>/<code>endsurvey</code> pairs and allways use
+#!<code>-surveys use</code> switch when importing .3d files.

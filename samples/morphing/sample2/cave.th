@@ -1,0 +1,27 @@
+encoding  utf-8
+
+centerline
+  
+  data normal from to length compass clino
+    
+     130  133   9.1  129   -13  
+     133  134  30.5  147    -1
+     134  135  30.5   89     1  
+     135  136  20.5   90    -2  
+     136  137  20.5   55     0  
+     137  138  20.5   37     1  
+     138  139   4.3   20     6  
+     
+  data dimensions station left right up down
+  
+   130 19   15    6    2  
+   133 13    3    8    2  
+   134 10    0    1    2  
+   135  7    7    3    2  
+   136  7    7    3.5  2  
+   137  2.5 10    3.5  2  
+   138  4   10    6    2  
+   139  3   13    6    2  
+    
+endcenterline
+

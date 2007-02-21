@@ -1,0 +1,29 @@
+encoding  utf-8
+source rabbit.th
+#!PROCESS
+#!TITLE 2 Drawing maps in therion
+
+layout water-blue
+  code metapost
+  def a_water (expr p) =
+    T:=identity;
+    thfill p withcolor (0.0, 0.5, 1.0);
+  enddef;
+endlayout
+
+select pdx@rabbit
+select pdp@rabbit
+
+export map -projection plan -output rabbit-plan.pdf \
+  -layout-map-header 0 0 s
+
+#!IMAGE rabbit-plan.pdf
+
+export map -projection extended -output rabbit-xelev.pdf \
+  -layout-map-header 0 110 sw -layout water-blue
+
+#!IMAGE rabbit-xelev.pdf
+
+export model -output rabbit.lox
+
+#!CLEAN rabbit.lox rabbit-plan.pdf rabbit-xelev.pdf

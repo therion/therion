@@ -972,47 +972,24 @@ void thdb2d::process_point_references(thpoint * pp)
               pp->station_name.name))
         }
         pp->fscrapptr->insert_adata(&(this->db->db1d.station_vec[pp->station_name.id - 1]));
-      }
-      
-      if (! pp->extend_name.is_empty()) {
+      }      
+    case TT_POINT_TYPE_EXTRA:
+      if (! pp->from_name.is_empty()) {
         try {
-          pp->extend_name.id = this->db->db1d.get_station_id(pp->extend_name,pp->fsptr);
+          pp->from_name.id = this->db->db1d.get_station_id(pp->from_name,pp->fsptr);
         } catch (...) {
-          pp->extend_name.id = 0;
-          // ADDED:
+          pp->from_name.id = 0;
           extend_error = true;
           err_code = "not a station reference";
         }  
-//        if (pp->extend_name.id == 0) {
-//          optr = this->db->get_object(pp->extend_name, pp->fsptr);
-//          extend_error = true;
-//          if (optr != NULL)
-//            if (optr->get_class_id() == TT_POINT_CMD) {
-//              pp->extend_point = (thpoint *) optr;
-//              if (pp->extend_point->type == TT_POINT_TYPE_STATION) {
-//                if (pp->extend_point->fscrapptr->id == pp->fscrapptr->id) {
-//                  if (!(pp->extend_point->station_name.is_empty()))
-//                    extend_error = false;
-//                  else
-//                    err_code = "no station reference for given point reference";
-//                }
-//                else
-//                  err_code = "referenced point not within the same scrap";
-//              }
-//              else
-//                err_code = "referenced point type is not station";
-//            }
-//            else
-//              err_code = "not a point reference";
-//        }
         if (extend_error) {
           pp->throw_source();
           if (pp->station_name.survey != NULL)
             threthrow2(("%s -- %s@%s",err_code,
-              pp->extend_name.name,pp->extend_name.survey))
+              pp->from_name.name,pp->from_name.survey))
           else
             threthrow2(("%s -- %s",err_code,
-              pp->extend_name.name))
+              pp->from_name.name))
         }
       }  
       break;
@@ -1380,10 +1357,10 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
           cp->tx = cnode->extendx - shift_x;
           // if prev station specified - try to find this arrow
           arrow = NULL;
-          if (!cp->point->extend_name.is_empty()) {
+          if (!cp->point->from_name.is_empty()) {
             arrow = cnode->first_arrow;
             while (arrow != NULL) {
-              if (arrow->end_node->uid == this->db->db1d.station_vec[cp->point->extend_name.id - 1].uid)
+              if (arrow->end_node->uid == this->db->db1d.station_vec[cp->point->from_name.id - 1].uid)
                 break;
               arrow = arrow->next_arrow;
             }
@@ -1422,136 +1399,6 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
         }
         break;
   
-//        // overi vsetky existujuce referencie predchadzajucich bodov
-//        cp = pps->fcpp;
-//        if (cp == NULL)
-//          break;
-//        while (cp != NULL) {
-//          if (cp->point->extend_point == NULL) {
-//            if (cp->point->extend_name.is_empty()) {
-//              if (cp->prevcp != NULL)
-//                cp->point->extend_point = cp->prevcp->point;
-//            } 
-//            else {                
-//              searchid = cp->point->extend_name.id;
-//              scancp = pps->fcpp;
-//              while (scancp != NULL) {
-//                if (scancp->point->station_name.id == searchid) {
-//                  cp->point->extend_point = scancp->point;
-//                  break;
-//                }
-//                scancp = scancp->nextcp;
-//              }                
-//
-//              if (cp->point->extend_point == NULL) {
-//                searchid = this->db->db1d.station_vec[cp->point->extend_name.id - 1].uid;
-//                scancp = pps->fcpp;
-//                while (scancp != NULL) {
-//                  if (scancp->st->uid == searchid) {
-//                    cp->point->extend_point = scancp->point;
-//                    break;
-//                  }
-//                  scancp = scancp->nextcp;
-//                }
-//              }
-//
-//              if (cp->point->extend_point == NULL) {
-//                cp->point->throw_source();
-//                if (cp->point->station_name.survey != NULL)
-//                  threthrow2(("no referenced station found -- %s@%s",
-//                    cp->point->extend_name.name,cp->point->extend_name.survey))
-//                else
-//                  threthrow2(("no referenced station found -- %s",
-//                    cp->point->extend_name.name))
-//              }
-//            }
-//          }
-//          cp = cp->nextcp;
-//        }
-//        
-//        // OK, let's find the root CP
-//        has_root = false;
-//        bool has_first_root = false;
-//        rootcp = pps->fcpp;
-//        cp = pps->fcpp;
-//        while (cp != NULL) {
-//          if (cp->point->extend_point == NULL) {
-//            rootcp = cp;
-//            has_root = true;
-//          }
-//          if ((!has_root) && (!has_first_root) && (cp->point->extend_name.is_empty())) {
-//            rootcp = cp;
-//            has_first_root = true;
-//          }
-//          if ((!has_root) && ((cp->point->extend_opts & TT_POINT_EXTEND_ROOT) != 0)) {
-//            has_root = true;
-//            rootcp = cp;
-//          }
-//          if ((cp->point->extend_opts & 
-//              (TT_POINT_EXTEND_LEFT | TT_POINT_EXTEND_RIGHT)) == 0) {
-//            if (cp->prevcp != NULL)
-//              cp->point->extend_opts |= (cp->prevcp->point->extend_opts & 
-//              (TT_POINT_EXTEND_LEFT | TT_POINT_EXTEND_RIGHT));
-//            else 
-//              cp->point->extend_opts |= TT_POINT_EXTEND_RIGHT;
-//          }
-//          cp = cp->nextcp;
-//        }
-//        
-//        // OK, let's calculate coordinates
-//        nattached = 1;
-//        rootcp->is_attached = true;
-//        rootcp->tx = 0.0;
-//        prj->shift_x = rootcp->st->x;
-//        rootcp->ty = 0.0;
-//        prj->shift_y = rootcp->st->y;
-//        rootcp->tz = 0.0;
-//        prj->shift_z = rootcp->st->z;
-//        rootcp->ta = rootcp->st->z;
-//        rootcp->is_sticky = rootcp->point->extend_opts & 
-//                (TT_POINT_EXTEND_STICKYON | TT_POINT_EXTEND_STICKYOFF);
-//        
-//        some_attached = true;
-//        while (some_attached) {
-//          some_attached = false;
-//          cp = pps->fcpp;
-//          while (cp != NULL) {
-//            if ((!cp->is_attached) &&
-//                (cp->point->extend_point->cpoint->is_attached)) {
-//              cp->is_attached = true;
-//              cp->used_in_attachement = true;
-//              //dx = (cp->st->x - cp->point->extend_point->cpoint->st->x);
-//              //dy = (cp->st->y - cp->point->extend_point->cpoint->st->y);
-//              dxy = hypot((cp->st->x - cp->point->extend_point->cpoint->st->x),
-//                (cp->st->y - cp->point->extend_point->cpoint->st->y));
-//              //sqrt(dx * dx + dy * dy);
-//              if (cp->point->extend_opts & TT_POINT_EXTEND_RIGHT)
-//                cp->tx = cp->point->extend_point->cpoint->tx + dxy;
-//              else
-//                cp->tx = cp->point->extend_point->cpoint->tx - dxy;
-//              cp->ty = cp->point->extend_point->cpoint->ty + 
-//                (cp->st->z - cp->point->extend_point->cpoint->st->z);
-//              cp->tz = 0.0;
-//              cp->ta = cp->st->z;
-//    
-//              cp->is_sticky = cp->point->extend_opts & 
-//                (TT_POINT_EXTEND_STICKYON | TT_POINT_EXTEND_STICKYOFF);
-//                 
-//              nattached++;
-//              some_attached = true;
-//            }
-//            cp = cp->nextcp;
-//          }
-//        }
-//
-//        if (nattached < pps->ncp) {
-//          pps->throw_source();
-//          threthrow(("unable extend survey stations -- scrap %s@%s",
-//            pps->name,pps->fsptr->get_full_name()))
-//        }
-//        
-//        break;
-        
     } // END of projection switch
 
     pps = pps->proj_next_scrap;
@@ -2384,14 +2231,31 @@ void thdb2d::pp_shift_points(thdb2dprj * prj)
 void thdb2d::pp_morph_points(thdb2dprj * prj)
 {
   // initialize morphing function
-  thmorph2trans MT;
   thscrap * pscrap = prj->first_scrap;
   thdb2dcp * cp;
+  th2ddataobject * pobj;
+  thpoint * pointp;
   while (pscrap != NULL) {
     cp = pscrap->fcpp;
     while (cp != NULL) {
       pscrap->morph.insert_point(thvec2(cp->pt->xt, cp->pt->yt), thvec2(cp->tx, cp->ty), cp->st->uid);
       cp = cp->nextcp;
+    }
+    pobj = pscrap->fs2doptr;
+    while (pobj != NULL) {
+      if (pobj->get_class_id() == TT_POINT_CMD) {
+        pointp = (thpoint *) pobj;
+        if (pointp->type == TT_POINT_TYPE_EXTRA) {
+          pointp->check_extra();
+          if ((pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {
+            pscrap->morph.insert_zoom_point(
+              thvec2(pointp->point->xt, pointp->point->yt), 
+              pointp->xsize, 
+              thdb.db1d.station_vec[pointp->from_name.id - 1].uid);
+          }
+        }
+      }
+      pobj = pobj->nscrapoptr;
     }
     pscrap->morph.insert_lines_from_db();
     pscrap->morph.init();

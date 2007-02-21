@@ -1,0 +1,14 @@
+*begin ignore
+*export 0
+*data normal from to bearing clino length
+0 1 17  -1  9.1
+1 2 24 -20  4.6
+2 3 43   5 10.3
+
+*begin sub
+*export 0
+0 1 134 0  9.6
+*end sub
+*equate 2 sub.0
+
+*end ignore

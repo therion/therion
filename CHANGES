@@ -3,16 +3,21 @@ Therion 0.5.1 (YYYY-MM-DD):
 
 therion:
 
- * new tests directory structure
+ * new samples directory
  * new subtypes for air-draught symbol: winter and summer
  * ability to display overlying maps in offset
  * new point and line type: map-connection (used to incicate
    connection between map parts - extended elevations, maps in
    offset)
+ * improved default centerline symbols
+ * LRUD envelopes of maps exported from centerline
  * bugs fixed:
    - top level objects selection
    - generation of extended elevation
    - map coloring
+   - creating surveys from .3d files
+   - subpixel inaccuracy with bitmap morphing
+   - entering angles/lat-long in degree:minutes format
 
 xtherion:
 

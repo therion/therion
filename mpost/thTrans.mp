@@ -120,6 +120,7 @@ let a_ice = a_ice_SKBB;
 let a_pebbles = a_pebbles_SKBB;
 let a_clay = a_clay_SKBB;
 let a_bedrock = a_bedrock_SKBB;
+let a_dimensions = a_dimensions_SKBB;
 
 let s_northarrow = s_northarrow_SKBB;
 let s_scalebar = s_scalebar_SKBB;

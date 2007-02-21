@@ -1,0 +1,25 @@
+encoding  utf-8
+
+#!FILE 6
+#!PROCESS cavern cave.svx
+#!PROCESS
+
+source cave1.th
+input thconfig.layout
+export map -o cave1.pdf -layout cl -layout-color map-fg altitude
+
+#! not all stations are replaced correctly. The "created" series
+#! is placed wrong on the map.
+ 
+#!IMAGE cave1.pdf
+#!CLEAN cave1.pdf cave.3d cave.err
+
+#! This is because in top level import command, survey <em>create</em> is
+#! imported from file <code>create/create.3d</code> with wrong coordinates,
+#! and we import top-level .3d file with <code>-surveys use</code> switch.
+#! This means, cave.create.1 will be imported here as create.1@cave and not
+#! 1@create.cave.
+#!
+#! To solve this problem, we need to re-import stations
+#! from top-level cave.3d file once more with <code>-surveys create</code>
+#! switch.

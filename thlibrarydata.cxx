@@ -143,9 +143,9 @@ void thlibrary_init_layouts()
 	playout->def_map_header_bg = 0;
 	playout->map_header_bg = false;
 	playout->def_opacity = 0;
-	playout->opacity = 0.7;
+	playout->opacity = 0.75;
 	playout->def_surface_opacity = 0;
-	playout->surface_opacity = 0.7;
+	playout->surface_opacity = 0.75;
 	playout->def_surface= 0;
 	playout->surface = 0;
 	playout->def_north= 0;

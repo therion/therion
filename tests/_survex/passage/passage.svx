@@ -1,6 +1,0 @@
-*begin passage
-*data normal from to bearing clino length
-0 1 12  30  20
-1 2 14 -13  18.6
-2 3 89  10  23
-*end

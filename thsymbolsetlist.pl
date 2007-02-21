@@ -8,7 +8,6 @@ while (<I>) {
 close(I);
 
 $SYMHASH{a_} = "noassign hidden";
-$SYMHASH{a_bedrock} = "noassign";
 $SYMHASH{a_zzz} = "noassign hidden";
 
 $SYMHASH{l_border_invisible} = "hidden";

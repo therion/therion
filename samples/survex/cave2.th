@@ -1,0 +1,13 @@
+encoding  utf-8
+
+#!FILE 7
+
+#!CODE
+import cave.3d -surveys use
+import cave.3d -surveys create
+survey cave
+  input use/use.th
+  input create/create.th
+  input ignore/ignore.th  
+endsurvey
+#!ENDCODE

@@ -153,7 +153,9 @@ int thdb2d_compxm(const void * ee1, const void * ee2)
 
 int thdb2d_compscrap(const void * ee1, const void * ee2)
 {
-  thscrap * e1 = (thscrap *) ee1, * e2 = (thscrap *) ee2;
+  thscrap * e1, * e2;
+  e1 = *((thscrap **) ee1);
+  e2 = *((thscrap **) ee2);
   if (thisnan(e1->z))
     return 1;
   if (thisnan(e2->z))

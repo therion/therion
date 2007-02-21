@@ -162,21 +162,20 @@ thbook/thbook.pdf: thbook/*.tex
 clean:
 	make -C ./xtherion clean
 	make -C ./loch clean
-	make -C ./tests clean
+	make -C ./samples clean
 	make -C ./extern/proj4 clean
 	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
-	perl makefile.pl rm -q extern/*.o extern/*~ tests/*~ tests/*.log
+	perl makefile.pl rm -q extern/*.o extern/*~ samples/*~ samples/*.log
 	perl makefile.pl rm -q symbols.html therion.res
 	perl makefile.pl rm -q tri/*.o tri/*~
-	perl makefile.pl rm -q tests/*~
 	perl makefile.pl rm -q tex/*~
 	perl makefile.pl rm -q mpost/*~ examples/*~ examples/therion.log
 	perl makefile.pl rm -q core symbols.xhtml cave.kml
 	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
 	perl makefile.pl rm -q cave.3d cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
 	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
-	perl makefile.pl rmdir -q doc thTMPDIR symbols cave.shp tests/.doc
+	perl makefile.pl rmdir -q doc thTMPDIR samples.doc symbols cave.shp tests/.doc
 
 thmpost.h: mpost/*.mp
 	make -C ./mpost
@@ -668,7 +667,13 @@ thscrapis.o: thscrapis.cxx thscrapis.h thdb3d.h therion.h thdb2dlp.h \
 thscraplo.o: thscraplo.cxx thscraplo.h
 thscraplp.o: thscraplp.cxx thscraplp.h thdb1d.h thobjectid.h thinfnan.h \
   thdataleg.h thparse.h thbuffer.h thmbuffer.h thobjectname.h therion.h \
-  thobjectsrc.h thdb3d.h
+  thobjectsrc.h thdb3d.h thscrap.h thdataobject.h thdatabase.h thdb2d.h \
+  thdb2dprj.h thmapstat.h thdate.h thperson.h thlegenddata.h thdb2dpt.h \
+  thdb2dlp.h thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h \
+  thdb2dxm.h thscraplo.h thlayoutln.h thscrapen.h thattr.h thchenc.h \
+  thchencdata.h thsketch.h thpic.h thtrans.h thexpmap.h thexport.h \
+  thsymbolset.h thsymbolsetlist.h thlayout.h thlocale.h thlang.h \
+  thlangdata.h extern/lxMath.h
 thselector.o: thselector.cxx thselector.h thexception.h therion.h \
   thbuffer.h thconfig.h thmbuffer.h thinput.h thparse.h thexporter.h \
   thexport.h thobjectsrc.h thdatabase.h thdataobject.h thperson.h \
@@ -752,7 +757,7 @@ thwarp.o: thwarp.cxx thwarp.h thpic.h thsketch.h thdb1d.h thobjectid.h \
   thdb2d.h thdb2dprj.h thmapstat.h thdate.h thperson.h thlegenddata.h \
   thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h \
   thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
-  thattr.h thchenc.h thchencdata.h thtrans.h
+  thattr.h thchenc.h thchencdata.h thtrans.h th2ddataobject.h thpoint.h
 thwarpp.o: thwarpp.cxx thwarpp.h thwarp.h thpic.h thsketch.h thwarppme.h \
   therion.h thtrans.h thinfnan.h thwarppt.h thdataobject.h thdatabase.h \
   thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thdataleg.h thparse.h \

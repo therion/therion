@@ -26,6 +26,9 @@
  */
  
 #include "thscraplp.h"
+#include "thscrap.h"
+#include "thexpmap.h"
+#include "extern/lxMath.h"
 
 thscraplp::thscraplp() {
 
@@ -40,4 +43,93 @@ thscraplp::thscraplp() {
   this->lnio = false;
   this->type = 0;
 }
+
+void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
   
+  if ((this->arrow != NULL) && (scrap->get_outline() == NULL)) {
+
+    lxVec vff, vf1, vf2, vtt, vt1, vt2, rvec;
+    double fl, fr, tl, tr;
+    bool vertical;
+    lxVecLimits vlim;
+
+    bool reverse = false;
+    if (this->arrow->is_reversed) reverse = !reverse;
+    if (this->arrow->leg->reverse) reverse = !reverse;
+    thdataleg * cl = this->arrow->leg->leg;
+
+    if (reverse) {
+      vff = lxVec(this->lnx2, this->lny2, this->lnz2);
+      vtt = lxVec(this->lnx1, this->lny1, this->lnz1);
+    } else {
+      vff = lxVec(this->lnx1, this->lny1, this->lnz1);
+      vtt = lxVec(this->lnx2, this->lny2, this->lnz2);
+    }
+
+    if (cl->walls != TT_FALSE) {
+      if ((vff.x == vtt.x) && (vff.y == vtt.y)) {
+        vlim.valid = false;
+        vlim.Add(-cl->from_left,-cl->from_down,0.0);
+        vlim.Add(cl->from_right,cl->from_up  ,0.0);
+        vlim.Add(-cl->to_left,-cl->to_down,0.0);
+        vlim.Add(cl->to_right,cl->to_up  ,0.0);
+        vf1 = vff + vlim.min;
+        vf2 = vff + lxVec(vlim.min.x, vlim.max.y, 0.0);
+        vt2 = vff + vlim.max;
+        vt1 = vff + lxVec(vlim.max.x, vlim.min.y, 0.0);
+      } else {
+        vertical = false;
+        switch (out->proj->type) {
+          case TT_2DPROJ_ELEV:
+          case TT_2DPROJ_EXTEND:
+            if (fabs(cl->total_gradient) < cl->vtresh)
+              vertical = true;
+            if ((vertical) || (vff.x < vtt.x) || ((vff.x == vtt.x) && (vff.y < vtt.y))) {
+              fl = cl->from_up; 
+              fr = cl->from_down; 
+              tl = cl->to_up;
+              tr = cl->to_down;
+            } else {
+              fl = cl->from_down; 
+              fr = cl->from_up; 
+              tl = cl->to_down;
+              tr = cl->to_up;
+            }
+            break;
+          default:
+            fl = cl->from_left; 
+            fr = cl->from_right; 
+            tl = cl->to_left;
+            tr = cl->to_right;
+        }
+        if (vertical) {
+          rvec = lxVec(0.0, 1.0, 0.0);
+        } else {
+          rvec = vtt - vff;
+          rvec.Normalize();
+          rvec = rvec.Rotated(90.0,0.0);
+        }
+        vf1 = vff + fl * rvec;
+        vf2 = vff - fr * rvec;
+        vt1 = vtt + tl * rvec;
+        vt2 = vtt - tr * rvec;
+      }
+      fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f) -- (%.2f,%.2f) -- (%.2f,%.2f) -- cycle));\n",
+        out->symset->get_mp_macro(SYMA_DIMENSIONS),
+        thxmmxst(out, vf1.x, vf1.y),
+        thxmmxst(out, vt1.x, vt1.y), 
+        thxmmxst(out, vt2.x, vt2.y), 
+        thxmmxst(out, vf2.x, vf2.y));
+    }
+  }
+  
+
+  // export line
+  fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
+    out->symset->get_mp_macro(this->type),
+    thxmmxst(out, this->lnx1, this->lny1),
+    thxmmxst(out, this->lnx2, this->lny2));
+
+
+
+}

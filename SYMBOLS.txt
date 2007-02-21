@@ -120,6 +120,7 @@ bedrock: SKBB
 blocks: SKBB 
 clay: SKBB 
 debris: SKBB UIS 
+dimensions: SKBB 
 ice: SKBB 
 pebbles: SKBB 
 sand: UIS 

@@ -1,0 +1,15 @@
+encoding  utf-8
+#!PROCESS
+#!FILE ../2.2
+
+source cave.th
+source cave2.th2
+
+input ../thconfig.layout
+
+export map -o cave2.pdf -layout clean -layout-overlap 2 cm -layout-scale 1 500
+
+#! Morphed sketch after <em>extra</em> points insertion:
+#!IMAGE cave2.pdf
+
+#!CLEAN cave2.pdf

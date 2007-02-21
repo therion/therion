@@ -1,0 +1,9 @@
+*begin cave
+*include use/use.svx
+*include create/create.svx
+*include ignore/ignore.svx
+*fix    use.0 27 17 50
+*fix create.0 20 10 25
+*fix ignore.0 10 10  0
+*end cave
+

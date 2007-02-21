@@ -1,0 +1,15 @@
+encoding  utf-8
+#!FILE ../2
+
+#! Map with station names in this case looks like this:
+#!IMAGE use.pdf
+#! Station names are before '@' symbol, survey names follow this symbol.
+
+#!PROCESS cavern use.svx
+#!PROCESS
+#!CLEAN use.3d use.err use.pdf
+
+source use.th
+input ../thconfig.layout
+#export map -o use.xvi
+export map -o use.pdf -layout cl

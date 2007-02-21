@@ -1,0 +1,54 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust 104.0 -610.0 1132.0 -17.0
+##XTHERION## xth_me_area_zoom_to 100
+##XTHERION## xth_me_image_insert {232.0 1 1.0} {-145.0 {}} cave.png 0 {}
+
+
+
+scrap scrap9 -scale [-128 -1020 1235 -1020 0.0 0.0 34.6202 0.0 m] -sketch cave.png 232.0 -482.0
+
+point 922.0 -381.0 station -name 139
+
+point 889.0 -385.0 station -name 138
+
+point 738.0 -395.0 station -name 137
+
+point 627.0 -386.0 station -name 136
+
+point 565.25 -386.75 station -name 135
+
+point 450.25 -416.75 station -name 134
+
+point 406.25 -323.5 station -name 133
+
+point 391.0 -347.0 extra
+
+point 445.0 -421.0 extra -dist [0.2 m]
+
+point 563.0 -469.0 extra
+
+point 628.0 -470.0 extra
+
+point 740.0 -458.0 extra
+
+point 887.0 -457.0 extra
+
+point 930.0 -463.0 extra
+
+point 922.0 -368.0 extra
+
+point 888.0 -362.0 extra
+
+point 743.0 -349.0 extra
+
+point 624.0 -348.0 extra
+
+point 564.0 -348.0 extra
+
+point 471.0 -269.0 extra
+
+point 363.0 -291.0 station -name 130
+
+endscrap
+
+

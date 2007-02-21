@@ -1,7 +1,0 @@
-*begin cave
-*include gallery/gallery.svx
-*include passage/passage.svx
-*equate gallery.0 passage.1
-*fix gallery.0 100 100 100
-*end
-

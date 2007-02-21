@@ -134,6 +134,7 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYMA_CLAY][3] = 1;
 	thsymsets_symbols[SYMA_DEBRIS][3] = 1;
 	thsymsets_symbols[SYMA_DEBRIS][5] = 1;
+	thsymsets_symbols[SYMA_DIMENSIONS][3] = 1;
 	thsymsets_symbols[SYMA_ICE][3] = 1;
 	thsymsets_symbols[SYMA_PEBBLES][3] = 1;
 	thsymsets_symbols[SYMA_SAND][5] = 1;

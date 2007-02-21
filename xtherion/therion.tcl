@@ -20,6 +20,7 @@ set xth(point_types) {
 	dimensions
 	disk
 	entrance
+	extra
 	fixed-ladder
 	flowstone
 	flowstone-choke
@@ -34,6 +35,7 @@ set xth(point_types) {
 	karren
 	label
 	low-end
+	map-connection
 	moonmilk
 	narrow-end
 	no-equipment
@@ -81,6 +83,7 @@ set xth(line_types) {
 	flowstone
 	gradient
 	label
+	map-connection
 	overhang
 	pit
 	rock-border
@@ -208,7 +211,7 @@ set xth(area_types) {
 ::msgcat::mcset en_US "point breakdown-choke" [encoding convertfrom utf-8 "breakdown choke"]
 ::msgcat::mcset es "point breakdown-choke" [encoding convertfrom utf-8 "colmatado por derrumbe"]
 ::msgcat::mcset fr "point breakdown-choke" [encoding convertfrom utf-8 "tr\303\251mie"]
-::msgcat::mcset it "point breakdown-choke" [encoding convertfrom utf-8 "termine su frana"]
+::msgcat::mcset it "point breakdown-choke" [encoding convertfrom utf-8 "chiude su frana"]
 ::msgcat::mcset pt "point breakdown-choke" [encoding convertfrom utf-8 "obstru\303\247\303\243o por desmoronamento"]
 ::msgcat::mcset pt_BR "point breakdown-choke" [encoding convertfrom utf-8 "obstru\303\247\303\243o por desmoronamento"]
 ::msgcat::mcset pt_PT "point breakdown-choke" [encoding convertfrom utf-8 "obstru\303\247\303\243o por desmoronamento"]
@@ -383,7 +386,7 @@ set xth(area_types) {
 ::msgcat::mcset en_US "point flowstone-choke" [encoding convertfrom utf-8 "flowstone choke"]
 ::msgcat::mcset es "point flowstone-choke" [encoding convertfrom utf-8 "colmatado por concreci\303\263n"]
 ::msgcat::mcset fr "point flowstone-choke" [encoding convertfrom utf-8 "tr\303\251mie calcifi\303\251e"]
-::msgcat::mcset it "point flowstone-choke" [encoding convertfrom utf-8 "termine su colata"]
+::msgcat::mcset it "point flowstone-choke" [encoding convertfrom utf-8 "chiude su colata"]
 ::msgcat::mcset pt "point flowstone-choke" [encoding convertfrom utf-8 "obstru\303\247\303\243o por escorrimento"]
 ::msgcat::mcset pt_BR "point flowstone-choke" [encoding convertfrom utf-8 "obstru\303\247\303\243o por escorrimento"]
 ::msgcat::mcset pt_PT "point flowstone-choke" [encoding convertfrom utf-8 "obstru\303\247\303\243o por escorrimento"]
@@ -407,7 +410,7 @@ set xth(area_types) {
 ::msgcat::mcset en_US "point gradient" [encoding convertfrom utf-8 "passage gradient"]
 ::msgcat::mcset es "point gradient" [encoding convertfrom utf-8 "gradiente"]
 ::msgcat::mcset fr "point gradient" [encoding convertfrom utf-8 "pente"]
-::msgcat::mcset it "point gradient" [encoding convertfrom utf-8 "gradiente"]
+::msgcat::mcset it "point gradient" [encoding convertfrom utf-8 "scivolo"]
 ::msgcat::mcset pt "point gradient" [encoding convertfrom utf-8 "declividade da galeria"]
 ::msgcat::mcset pt_BR "point gradient" [encoding convertfrom utf-8 "declividade da galeria"]
 ::msgcat::mcset pt_PT "point gradient" [encoding convertfrom utf-8 "declividade da galeria"]
@@ -511,7 +514,7 @@ set xth(area_types) {
 ::msgcat::mcset en_US "point low-end" [encoding convertfrom utf-8 "passage low end"]
 ::msgcat::mcset es "point low-end" [encoding convertfrom utf-8 "final bajo"]
 ::msgcat::mcset fr "point low-end" [encoding convertfrom utf-8 "passage bas"]
-::msgcat::mcset it "point low-end" [encoding convertfrom utf-8 "termine per soffitto basso"]
+::msgcat::mcset it "point low-end" [encoding convertfrom utf-8 "chiude su laminatoio"]
 ::msgcat::mcset pt "point low-end" [encoding convertfrom utf-8 "passagem com final baixo"]
 ::msgcat::mcset pt_BR "point low-end" [encoding convertfrom utf-8 "passagem com final baixo"]
 ::msgcat::mcset pt_PT "point low-end" [encoding convertfrom utf-8 "passagem com final baixo"]
@@ -535,7 +538,7 @@ set xth(area_types) {
 ::msgcat::mcset en_US "point narrow-end" [encoding convertfrom utf-8 "passage narrow end"]
 ::msgcat::mcset es "point narrow-end" [encoding convertfrom utf-8 "final estrecho"]
 ::msgcat::mcset fr "point narrow-end" [encoding convertfrom utf-8 "passage imp\303\251n\303\251trable"]
-::msgcat::mcset it "point narrow-end" [encoding convertfrom utf-8 "termine per restringimento"]
+::msgcat::mcset it "point narrow-end" [encoding convertfrom utf-8 "chiude su strettoia"]
 ::msgcat::mcset pt "point narrow-end" [encoding convertfrom utf-8 "passagem com final estreito"]
 ::msgcat::mcset pt_BR "point narrow-end" [encoding convertfrom utf-8 "passagem com final estreito"]
 ::msgcat::mcset pt_PT "point narrow-end" [encoding convertfrom utf-8 "passagem com final estreito"]
@@ -933,7 +936,7 @@ set xth(area_types) {
 ::msgcat::mcset en_UK "line ceiling-meander" [encoding convertfrom utf-8 "ceiling meander"]
 ::msgcat::mcset en_US "line ceiling-meander" [encoding convertfrom utf-8 "ceiling meander"]
 ::msgcat::mcset es "line ceiling-meander" [encoding convertfrom utf-8 "meandro inverso"]
-::msgcat::mcset it "line ceiling-meander" [encoding convertfrom utf-8 "canale di voltcanale di volta"]
+::msgcat::mcset it "line ceiling-meander" [encoding convertfrom utf-8 "canale di volta"]
 ::msgcat::mcset pt "line ceiling-meander" [encoding convertfrom utf-8 "meandro no teto"]
 ::msgcat::mcset pt_BR "line ceiling-meander" [encoding convertfrom utf-8 "meandro no teto"]
 ::msgcat::mcset pt_PT "line ceiling-meander" [encoding convertfrom utf-8 "meandro no tecto"]
@@ -945,7 +948,7 @@ set xth(area_types) {
 ::msgcat::mcset en_US "line ceiling-step" [encoding convertfrom utf-8 "step on the ceiling"]
 ::msgcat::mcset es "line ceiling-step" [encoding convertfrom utf-8 "resalte inverso"]
 ::msgcat::mcset fr "line ceiling-step" [encoding convertfrom utf-8 "marche de plafond"]
-::msgcat::mcset it "line ceiling-step" [encoding convertfrom utf-8 "risalita"]
+::msgcat::mcset it "line ceiling-step" [encoding convertfrom utf-8 "camino"]
 ::msgcat::mcset pt "line ceiling-step" [encoding convertfrom utf-8 "degrau no teto"]
 ::msgcat::mcset pt_BR "line ceiling-step" [encoding convertfrom utf-8 "degrau no teto"]
 ::msgcat::mcset pt_PT "line ceiling-step" [encoding convertfrom utf-8 "degrau no tecto"]
@@ -1016,7 +1019,7 @@ set xth(area_types) {
 ::msgcat::mcset en_US "line gradient" [encoding convertfrom utf-8 "passage gradient"]
 ::msgcat::mcset es "line gradient" [encoding convertfrom utf-8 "gradiente"]
 ::msgcat::mcset fr "line gradient" [encoding convertfrom utf-8 "pente"]
-::msgcat::mcset it "line gradient" [encoding convertfrom utf-8 "gradiente"]
+::msgcat::mcset it "line gradient" [encoding convertfrom utf-8 "scivolo"]
 ::msgcat::mcset pt "line gradient" [encoding convertfrom utf-8 "declividade da galeria"]
 ::msgcat::mcset pt_BR "line gradient" [encoding convertfrom utf-8 "declividade da galeria"]
 ::msgcat::mcset pt_PT "line gradient" [encoding convertfrom utf-8 "declividade da galeria"]
@@ -1029,6 +1032,11 @@ set xth(area_types) {
 ::msgcat::mcset pt_BR "line label" [encoding convertfrom utf-8 "indica\303\247\303\243o"]
 ::msgcat::mcset pt_PT "line label" [encoding convertfrom utf-8 "indica\303\247\303\243o"]
 ::msgcat::mcset sk "line label" [encoding convertfrom utf-8 "pomenovanie"]
+::msgcat::mcset en "line map-connection" [encoding convertfrom utf-8 "map connection"]
+::msgcat::mcset en_UK "line map-connection" [encoding convertfrom utf-8 "map connection"]
+::msgcat::mcset en_US "line map-connection" [encoding convertfrom utf-8 "map connection"]
+::msgcat::mcset it "line map-connection" [encoding convertfrom utf-8 "riporto di mappa"]
+::msgcat::mcset sk "line map-connection" [encoding convertfrom utf-8 "prepojenie m\303\241p"]
 ::msgcat::mcset cz "line overhang" [encoding convertfrom utf-8 "p\305\231evis"]
 ::msgcat::mcset de "line overhang" [encoding convertfrom utf-8 "\303\234berhang"]
 ::msgcat::mcset en "line overhang" [encoding convertfrom utf-8 "overhang"]
@@ -1060,7 +1068,7 @@ set xth(area_types) {
 ::msgcat::mcset en_US "line rock-border" [encoding convertfrom utf-8 "rock border"]
 ::msgcat::mcset es "line rock-border" [encoding convertfrom utf-8 "contorno bloque"]
 ::msgcat::mcset fr "line rock-border" [encoding convertfrom utf-8 "bord d\342\200\231un rocher"]
-::msgcat::mcset it "line rock-border" [encoding convertfrom utf-8 "contorno di masso"]
+::msgcat::mcset it "line rock-border" [encoding convertfrom utf-8 "contorno masso"]
 ::msgcat::mcset pt "line rock-border" [encoding convertfrom utf-8 "lateral da rocha"]
 ::msgcat::mcset pt_BR "line rock-border" [encoding convertfrom utf-8 "lateral da rocha"]
 ::msgcat::mcset pt_PT "line rock-border" [encoding convertfrom utf-8 "lateral da rocha"]
@@ -1072,7 +1080,7 @@ set xth(area_types) {
 ::msgcat::mcset en_US "line rock-edge" [encoding convertfrom utf-8 "rock edges"]
 ::msgcat::mcset es "line rock-edge" [encoding convertfrom utf-8 "arista bloque"]
 ::msgcat::mcset fr "line rock-edge" [encoding convertfrom utf-8 "ar\303\252te d\342\200\231un rocher"]
-::msgcat::mcset it "line rock-edge" [encoding convertfrom utf-8 "linea di masso"]
+::msgcat::mcset it "line rock-edge" [encoding convertfrom utf-8 "spigolo masso"]
 ::msgcat::mcset pt "line rock-edge" [encoding convertfrom utf-8 "bordas da rocha"]
 ::msgcat::mcset pt_BR "line rock-edge" [encoding convertfrom utf-8 "bordas da rocha"]
 ::msgcat::mcset pt_PT "line rock-edge" [encoding convertfrom utf-8 "bordas da rocha"]

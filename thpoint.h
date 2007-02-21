@@ -43,7 +43,7 @@ enum {
   TT_POINT_TYPE = 3001,
   TT_POINT_SUBTYPE = 3002,
   TT_POINT_STATION = 3003,
-  TT_POINT_EXTEND = 3004,
+  TT_POINT_FROM = 3004,
   TT_POINT_ORIENT = 3005,
   TT_POINT_XSIZE = 3006,
   TT_POINT_YSIZE = 3007,
@@ -52,6 +52,7 @@ enum {
   TT_POINT_VALUE = 3010,
   TT_POINT_TEXT = 3011,
   TT_POINT_SCRAP = 3012,
+  TT_POINT_DIST = 3013,
 };
 
 
@@ -61,7 +62,8 @@ enum {
  
 static const thstok thtt_point_opt[] = {
   {"align", TT_POINT_ALIGN},
-  {"extend", TT_POINT_EXTEND},
+  {"dist", TT_POINT_DIST},
+  {"from", TT_POINT_FROM},
   {"name", TT_POINT_STATION},
   {"orient", TT_POINT_ORIENT},
   {"orientation", TT_POINT_ORIENT},
@@ -124,6 +126,7 @@ enum {
 
   TT_POINT_TYPE_DIMENSIONS,
   TT_POINT_TYPE_MAP_CONNECTION,
+  TT_POINT_TYPE_EXTRA,
   
 // vystroj
   TT_POINT_TYPE_NO_EQUIPMENT,
@@ -216,6 +219,7 @@ static const thstok thtt_point_types[] = {
   {"dimensions",TT_POINT_TYPE_DIMENSIONS},
   {"disk",TT_POINT_TYPE_DISK},
   {"entrance",TT_POINT_TYPE_ENTRANCE},
+  {"extra",TT_POINT_TYPE_EXTRA},
   {"fixed-ladder",TT_POINT_TYPE_FIXED_LADDER},
   {"flowstone",TT_POINT_TYPE_FLOWSTONE},
   {"flowstone-choke",TT_POINT_TYPE_FLOWSTONE_CHOKE},
@@ -361,39 +365,6 @@ static const thstok thtt_point_subtypes[] = {
 
 
 /**
- * Extend options.
- */
- 
-enum {
-  TT_POINT_EXTEND_NONE = 0,
-  TT_POINT_EXTEND_STICKYON = 1,
-  TT_POINT_EXTEND_STICKYOFF = 2,
-  TT_POINT_EXTEND_STICKY = 3,
-  TT_POINT_EXTEND_LEFT = 4,
-  TT_POINT_EXTEND_RIGHT = 8,
-  TT_POINT_EXTEND_ROOT = 16,
-  TT_POINT_EXTEND_PREV = 17,
-};
-
-
-
-/**
- * Extend options parsing table.
- */
- 
-static const thstok thtt_point_extopt[] = {
-//  {"left", TT_POINT_EXTEND_LEFT},
-  {"prev", TT_POINT_EXTEND_PREV},
-  {"previous", TT_POINT_EXTEND_PREV},
-//  {"right", TT_POINT_EXTEND_RIGHT},
-//  {"root", TT_POINT_EXTEND_ROOT},
-//  {"sticky", TT_POINT_EXTEND_STICKY},
-	{NULL, TT_POINT_EXTEND_NONE},
-};
-
-
-
-/**
  * point class.
  */
 
@@ -415,8 +386,8 @@ class thpoint : public th2ddataobject {
   class thdb2dcp * cpoint; ///< Control point.
   
   thobjectname station_name,  ///< Station name.
-    extend_name;  ///< Extend name.
-  thpoint * extend_point;  ///< Extend previous point.
+    from_name;  ///< Extend name.
+
   char extend_opts;  ///< Extend options.
     
   void parse_type(char * tstr);  ///< Parse point type.
@@ -425,11 +396,13 @@ class thpoint : public th2ddataobject {
   
   void parse_subtype(char * ststr);  ///< Parse point subtype.
   
-  void parse_extend(char * estr);  ///< Parse station extend.
+  void parse_from(char * estr);  ///< Parse station extend.
 
   void parse_text(char * ss);  ///< Parse point text.
 
   void parse_value(char * ss);  ///< Parse point value.
+
+  void check_extra();
 
   /**
    * Standard constructor.

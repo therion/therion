@@ -527,7 +527,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
       stname = cs->name; \
       css = cs->survey; \
       if (survid == -2) { \
-        while ((css != NULL) && (css->is_selected())) { \
+        while ((css != NULL) && (css->id != thdb.fsurveyptr->id) && (css->is_selected())) { \
           if (css->id == cs->survey->id) \
             stname += "@"; \
           else \
@@ -795,7 +795,6 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   layoutnan(goy, 0.0);
   layoutnan(goz, 0.0);
 
-
   out.symset = &(this->symset);
   out.layout = this->layout;
   out.ms = this->layout->scale * 2834.64566929;
@@ -870,6 +869,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   mpf = fopen(thtmp.get_file_name("data.mp"),"w");     
 
   out.file = mpf;
+  out.proj = prj;
   out.attr_last_survey = "";
   out.attr_last_id = "";
   out.attr_last_scrap = "";
@@ -1814,6 +1814,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   noout = &(nooutc);
   noout->file = NULL;
   thexpmap_xmps result;
+  bool clip_polygon;
+  clip_polygon = (!scrap->centerline_io) && (scrap->get_outline() != NULL);
   unsigned from, to;
   int placeid;
   thscraplo * lo, * lo2;
@@ -1952,17 +1954,18 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   }
 
   // a polygon
-  if (!scrap->centerline_io) {
+  if (clip_polygon) {
     slp = scrap->get_polygon();
     if (outline_mode) slp = NULL;
     while (slp != NULL) {
       if (slp->lnio) {
         if (out->symset->assigned[slp->type]) {
           thexpmap_export_mp_bgif;
-          fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
-              out->symset->get_mp_macro(slp->type),
-              thxmmxst(out, slp->lnx1, slp->lny1),
-              thxmmxst(out, slp->lnx2, slp->lny2));
+          slp->export_mp(out, scrap);
+          //fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
+          //  out->symset->get_mp_macro(slp->type),
+          //  thxmmxst(out, slp->lnx1, slp->lny1),
+          //  thxmmxst(out, slp->lnx2, slp->lny2));
         }
       }
       slp = slp->next_item;
@@ -2157,17 +2160,14 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   }
 
   // a polygon
-  if (scrap->centerline_io) {
+  if (!clip_polygon) {
     slp = scrap->get_polygon();
     if (outline_mode) slp = NULL;
     while (slp != NULL) {
       if (slp->lnio) {
         if (out->symset->assigned[slp->type]) {
           thexpmap_export_mp_bgif;
-          fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
-              out->symset->get_mp_macro(slp->type),
-              thxmmxst(out, slp->lnx1, slp->lny1),
-              thxmmxst(out, slp->lnx2, slp->lny2));
+          slp->export_mp(out, scrap);
         }
       }
       slp = slp->next_item;
@@ -2494,7 +2494,8 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
     firstmapscrap = true;
     while (cbm != NULL) {
       cmi = cbm->bm->last_item;
-      if ((cbm->mode == TT_MAPITEM_NORMAL) && (strlen(cbm->bm->name) > 0)) while (cmi != NULL) {
+//      if ((cbm->mode == TT_MAPITEM_NORMAL) && (strlen(cbm->bm->name) > 0)) while (cmi != NULL) {
+      if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
           cs = (thscrap *) cmi->object;
           curz = cs->z;

@@ -3,26 +3,28 @@ HOT LIST:
 therion:
 
 + thbook: map in offset (<map> <offset> <preview>)
-+ thbook: point map-connection
++ thbook: point/line map-connection
 + thbook: air-draught: subtype winter|summer|none
++ thbook: layout survey-level
++ thbook: point extra -dist <distance> -from <station>
 
-+ line map-connection (automatically when stations connect together)
-+ point extra -dist [2 m] -from [2 3] + LRUD morphing
-+ LRUD walls into 3D shapefiles
-+ 2d: LRUD envelope of exported survey maps (area dimensions)
-+ tests: data processing, features generator
++ add rotation of 3D surface into surface calibration
++ add line moonmilk and flowstone areas surrounded by line flowstone or moonmilk
++ solve transparency of sketches
++ morphing: add additional features (line extra, point extra:point|distance)
++ morphing samples
 + import of 3D and PLT via lxFile
 + LRUD envelope generation by lxFile
 + add absolute coordinate specification in centerline and scraps
-+ add line moonmilk and flowstone areas surrounded by line flowstone or moonmilk
-+ associate line section with section scrap
++ LRUD walls into 3D shapefiles
 + areas into shapefiles
-+ add rotation of 3D surface into surface calibration
++ associate line section with section scrap
 + point camera
 + point picture/hyperlink
 + not to use -walls off when PLT file is exported
-+ NOT_LRUD flag to lox shots, when there exists shot point in scrap
-+ some comment to continuation
++ NOT_LRUD flag to lox shots, when there exists shot point in some
+  scrap with outline
++ allow -text option with continuation
 + warning if reading/backreading difference is big
 + no joins where starting/ending points are identical
 + new centerline station flags: spring, sink, lake, doline
@@ -33,6 +35,7 @@ therion:
   line cliff
   line landform
   line surface-contour (-altitude??)
++ individual coloring of previews
 + map coloring 
   - add user defined color tables into configuration files
   - chapter|explo-date|topo-date colormodes
@@ -81,8 +84,7 @@ WOULD BE NICE LIST:
 
 therion:
 
-+ find different distortion measure
-+ export database: format text|txt
++ export database: format text|txt, dbf
 + add fast mode for xtherion - just to generate survey and map structures
 + surface selection according to coverage
   2D: all surfaces that covers current map sorted by size and coverage

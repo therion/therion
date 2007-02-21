@@ -1,0 +1,29 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust -128.0 -128.0 659.495 403.59
+##XTHERION## xth_me_area_zoom_to 100
+##XTHERION## xth_me_image_insert {492.124 1 1.0} {196.85 0} use.xvi 0 {}
+
+#!FILE ../1.91
+
+scrap use-out.s -scale [-128.0 -128.0 620.125 -128.0 0.0 0.0 19.002375 0.0 m]
+
+line wall
+  227.0 220.0
+  138.0 189.0 175.0 188.0 44.0 189.0
+endline
+
+line wall
+  50.0 156.0
+  99.0 160.0 142.0 139.0 242.0 189.0
+endline
+
+#!CODE
+point 165.744 176.58 station -name 2@use
+#!ENDCODE
+#! but it use-in.th file using
+
+point 58.664 169.09 station -name 3@use
+
+endscrap
+
+

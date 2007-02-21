@@ -1,0 +1,14 @@
+#!PROCESS
+#!FILE ../1.5
+
+source cave1.th
+source cave2.th2
+
+input ../thconfig.layout
+
+export map -o cave2.pdf -layout clean -layout-scale 1 300 -layout-overlap 3 cm
+
+#! Walls after morphing:
+#!IMAGE cave2.pdf
+
+#!CLEAN cave2.pdf

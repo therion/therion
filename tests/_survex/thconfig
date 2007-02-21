@@ -1,5 +1,0 @@
-encoding  utf-8
-##!PROCESS
-source cave.th
-export map -layout-debug all
-

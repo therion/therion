@@ -1,0 +1,19 @@
+encoding  utf-8
+#!PROCESS
+#!FILE ../2
+#!
+#! Another survey sketch:
+#!IMAGE cave.png
+
+source cave.th
+source cave1.th2
+
+input ../thconfig.layout
+
+export map -o cave1.pdf -layout clean -layout-overlap 2 cm -layout-scale 1 500
+
+#! This image after morphing:
+#!IMAGE cave1.pdf
+
+#!CLEAN cave1.pdf
+

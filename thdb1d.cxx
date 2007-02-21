@@ -360,10 +360,12 @@ void thdb1d::scan_data()
                 nlevel = 0;
               else
                 nlevel = fii->srcf.context->fsptr->level;
-              if (nlevel <= olevel)
+              if (nlevel <= olevel) {
                 tmps->fixcontext = fii->srcf.context;
-            } else 
+              }
+            } else {
               tmps->fixcontext = fii->srcf.context;
+            }
           }
           fii++;
         }

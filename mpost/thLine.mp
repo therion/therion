@@ -638,25 +638,30 @@ enddef;
 
 def l_survey_surface_SKBB (expr P) =
   T:=identity;
-  pickup PenC;
+  thdrawoptions(dashed withdots scaled (0.2 * optical_zoom) withpen PenC);
   thdraw P;
+  thdrawoptions();
 enddef;
 
 def l_survey_cave_SKBB (expr P) =
   T:=identity;
-  PolygonLine:=.8u;
-  pair zz[];
   pickup PenC;
-  for t = 0 upto length P - 1:
-    zz1 := point t of P;
-    zz2 := point t+1 of P;
-    if length (zz2-zz1) > 2*PolygonLine:
-      thdraw zz1 -- zz1 + PolygonLine * unitvector(zz2 - zz1);
-      thdraw zz2 -- zz2 + PolygonLine * unitvector(zz1 - zz2);
-    else:
-      thdraw zz1 -- zz2;
-    fi;
-  endfor;
+  if ATTR__scrap_centerline:
+    thdraw P;
+  else:
+    PolygonLine:=.8u;
+    pair zz[];
+    for t = 0 upto length P - 1:
+      zz1 := point t of P;
+      zz2 := point t+1 of P;
+      if length (zz2-zz1) > 2*PolygonLine:
+        thdraw zz1 -- zz1 + PolygonLine * unitvector(zz2 - zz1);
+        thdraw zz2 -- zz2 + PolygonLine * unitvector(zz1 - zz2);
+      else:
+        thdraw zz1 -- zz2;
+      fi;
+    endfor;
+  fi;
 enddef;
 
 def l_survey_cave_UIS (expr P) =

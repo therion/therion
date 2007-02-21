@@ -47,9 +47,7 @@ thpoint::thpoint()
   this->point->pscrap = thdb.get_current_scrap();
   
   this->station_name.clear();
-  this->extend_name.clear();
-  this->extend_point = NULL;
-  this->extend_opts = TT_POINT_EXTEND_NONE;
+  this->from_name.clear();
   
   this->orient = thnan;
   this->xsize = thnan;
@@ -150,6 +148,10 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
       this->parse_value(*args);
       break;
 
+    case TT_POINT_DIST:
+      this->parse_value(*args);
+      break;
+
     case TT_POINT_TEXT:
       thencode(&(this->db->buff_enc), *args, argenc);
       this->parse_text(this->db->buff_enc.get_buffer());
@@ -215,8 +217,8 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
       thparse_objectname(this->station_name, & this->db->buff_stations, *args, thdb.cscrapptr);
       break;
       
-    case TT_POINT_EXTEND:
-      this->parse_extend(*args);
+    case TT_POINT_FROM:
+      this->parse_from(*args);
       break;
     
     // if not found, try to set fathers properties  
@@ -261,9 +263,8 @@ void thpoint::self_print_properties(FILE * outf)
   if (this->type == TT_POINT_TYPE_STATION) {
     fprintf(outf,"\tstation: ");
     fprintf(outf,this->station_name);
-    fprintf(outf,"\n\textend station: ");
-    fprintf(outf,this->extend_name);
-    fprintf(outf,"\n\textend opts: %d\n",this->extend_opts);
+    fprintf(outf,"\n\tfrom station: ");
+    fprintf(outf,this->from_name);
   }
   // insert intended print of object properties here
 }
@@ -332,55 +333,14 @@ void thpoint::parse_subtype(char * ststr)
     ththrow(("invalid point type - subtype combination"))
 }
 
-void thpoint::parse_extend(char * estr)
+void thpoint::parse_from(char * estr)
 {
   thsplit_words(& this->db->db2d.mbf, estr);
-  int npar = this->db->db2d.mbf.get_size(),cpar,stic;
+  int npar = this->db->db2d.mbf.get_size();
   char ** pars = this->db->db2d.mbf.get_buffer();
-  if (npar < 1)
-    ththrow(("no -extend arguments"))
-  cpar = 0;
-  while (cpar < npar) {
-    switch (thmatch_token(pars[cpar],thtt_point_extopt)) {
-      case TT_POINT_EXTEND_LEFT:
-        this->extend_opts = this->extend_opts & 
-          (~(TT_POINT_EXTEND_LEFT | TT_POINT_EXTEND_RIGHT));
-        this->extend_opts = this->extend_opts | TT_POINT_EXTEND_LEFT;
-        break;  
-      case TT_POINT_EXTEND_RIGHT:
-        this->extend_opts = this->extend_opts & 
-          (~(TT_POINT_EXTEND_LEFT | TT_POINT_EXTEND_RIGHT));
-        this->extend_opts = this->extend_opts | TT_POINT_EXTEND_RIGHT;
-        break;
-      case TT_POINT_EXTEND_ROOT:
-        this->extend_opts = this->extend_opts | TT_POINT_EXTEND_ROOT;
-        break;
-      case TT_POINT_EXTEND_STICKY:
-        cpar++;
-        if (cpar == npar)
-          ththrow(("logical value expected"))
-        stic = thmatch_token(pars[cpar],thtt_bool);
-        if (stic == TT_UNKNOWN_BOOL)
-          ththrow(("not a logical value -- %s", pars[cpar]))
-        this->extend_opts = this->extend_opts & 
-          (~(TT_POINT_EXTEND_STICKYON | TT_POINT_EXTEND_STICKYOFF));
-        if (stic == TT_TRUE)
-          this->extend_opts = this->extend_opts | TT_POINT_EXTEND_STICKYON;
-        else
-          this->extend_opts = this->extend_opts | TT_POINT_EXTEND_STICKYOFF;
-        break;
-      case TT_POINT_EXTEND_PREV:
-        cpar++;
-        if (cpar == npar)
-          ththrow(("station name expected"))
-//          ththrow(("point or station name expected"))
-        thparse_objectname(this->extend_name,& this->db->buff_stations,pars[cpar],this->fscrapptr);
-        break;
-      default:
-        ththrow(("invalid keyword -- %s",pars[cpar]))
-    }
-    cpar++;
-  }
+  if (npar != 1)
+    ththrow(("invalid from station reference -- %s", estr))
+  thparse_objectname(this->from_name,& this->db->buff_stations,pars[0],this->fscrapptr);
 }
 
 
@@ -422,6 +382,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   switch(this->type) {
 
     case TT_POINT_TYPE_DIMENSIONS:
+    case TT_POINT_TYPE_EXTRA:
     case TT_POINT_TYPE_MAP_CONNECTION:
       postprocess = false;
       break;
@@ -946,6 +907,7 @@ void thpoint::parse_value(char * ss) {
     case TT_POINT_TYPE_PASSAGE_HEIGHT:
     case TT_POINT_TYPE_DIMENSIONS:
     case TT_POINT_TYPE_DATE:
+    case TT_POINT_TYPE_EXTRA:
       break;
     default:
       ththrow(("-value not valid with type %s", thmatch_string(this->type,thtt_point_types)))
@@ -963,6 +925,29 @@ void thpoint::parse_value(char * ss) {
   thdate * dp;
   
   switch (this->type) {
+
+    case TT_POINT_TYPE_EXTRA:
+      ux = 0;
+      parsev = false;
+      switch (npar) {
+        case 1:
+          break;
+        case 2:
+          ux = 1;
+          break;
+        default:
+          ththrow(("invalid distance -- %s",ss))
+      }
+      this->xsize = thnan;
+      thparse_double(sv,dv,pars[0]);
+      if (sv != TT_SV_NUMBER)
+        ththrow(("not a number -- %s", pars[0]))
+      if (ux > 0) {
+        lentf.parse_units(pars[ux]);
+        dv = lentf.transform(dv);
+      }
+      this->xsize = dv;
+      break;
   
     // let's parse altitude
     case TT_POINT_TYPE_ALTITUDE:
@@ -1120,6 +1105,109 @@ void thpoint::parse_value(char * ss) {
       break;
   }
 }
+
+
+void thpoint::check_extra()
+{
+  thdb2dcp * cp;
+  if (this->from_name.id == 0) {
+    double mind = -1.0, cd;
+    cp = this->fscrapptr->fcpp;
+    while (cp != NULL) {
+      if (cp->st != NULL) {
+        cd = thvec2(this->point->x - cp->pt->x, this->point->y - cp->pt->y).length();
+        if (mind < 0.0) {
+          this->from_name.id = cp->st->uid;
+          mind = cd;
+        } else if (cd < mind) {
+          this->from_name.id = cp->st->uid;
+          mind = cd;
+        }
+      }
+      cp = cp->nextcp;
+    }
+  }
+  if (thisnan(this->xsize) && (this->from_name.id > 0)) {
+    size_t myuid;
+    thdb2dcp * mycp;
+    myuid = thdb.db1d.station_vec[this->from_name.id - 1].uid;
+    cp = this->fscrapptr->fcpp;
+    mycp = NULL;
+    double cdist(0.0);
+    size_t ccount(0);
+    while (cp != NULL) {
+      if ((cp->st != NULL) && (cp->st->uid == myuid)) {
+        mycp = cp;
+        break;
+      }
+      cp = cp->nextcp;
+    }
+    if (mycp == NULL)
+      return;
+    thdb1d_tree_node * nodes = thdb.db1d.get_tree_nodes();
+    thdb1d_tree_arrow * carrow;
+    cp = this->fscrapptr->fcpp;
+    while (cp != NULL) {
+      if ((cp->st != NULL) && (cp->st->uid != myuid)) {
+        carrow = nodes[myuid - 1].first_arrow;
+        while (carrow != NULL) {
+          if (carrow->end_node->uid == cp->st->uid) {
+            bool reverse = false;
+            if (carrow->is_reversed) reverse = !reverse;
+            if (carrow->leg->reverse) reverse = !reverse;
+            thdataleg * cl = carrow->leg->leg;
+            thline2 xl;
+            if (reverse) {
+              xl = thline2(
+              thvec2(mycp->pt->x, mycp->pt->y),
+              thvec2(cp->pt->x, cp->pt->y));
+            } else {
+              xl = thline2(
+              thvec2(cp->pt->x, cp->pt->y),
+              thvec2(mycp->pt->x, mycp->pt->y));
+            }
+            
+            ccount++;
+            switch (this->fscrapptr->proj->type) {
+              case TT_2DPROJ_ELEV:
+              case TT_2DPROJ_EXTEND:
+                if (this->point->y > mycp->pt->y) {
+                  if (!reverse)
+                    cdist += cl->from_up;
+                  else
+                    cdist += cl->to_up;
+                } else {
+                  if (!reverse)
+                    cdist += cl->from_down;
+                  else
+                    cdist += cl->to_down;
+                }
+                break;
+              default:
+                if (xl.eval(thvec2(this->point->x, this->point->y)) < 0.0) {
+                  if (!reverse)
+                    cdist += cl->from_left;
+                  else
+                    cdist += cl->to_left;
+                } else {
+                  if (!reverse)
+                    cdist += cl->from_right;
+                  else
+                    cdist += cl->to_right;
+                }
+            }
+          }
+          carrow = carrow->next_arrow;
+        }
+      }
+      cp = cp->nextcp;
+    }
+    if (ccount > 0)
+      this->xsize = cdist / double(ccount);
+  }
+}
+
+
 
 
 

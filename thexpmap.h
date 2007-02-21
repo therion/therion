@@ -110,6 +110,7 @@ class thexpmapmpxs {
   public:
   
   FILE * file; ///< output file
+  class thdb2dprj * proj;
   double ms, mx, my, sr, cr, rr; ///< Scale and centering.
 
   thsymbolset * symset;
@@ -119,7 +120,7 @@ class thexpmapmpxs {
 
   double m_shift_x, m_shift_y;
   
-  thexpmapmpxs() : file(NULL), ms(1.0), mx(0.0), my(0.0), sr(0.0), cr(1.0), rr(0.0),
+  thexpmapmpxs() : file(NULL), proj(NULL), ms(1.0), mx(0.0), my(0.0), sr(0.0), cr(1.0), rr(0.0),
     attr_last_id(""), attr_last_survey(""), attr_last_scrap(""), attr_last_scrap_centerline(false),
     m_shift_x(0.0), m_shift_y(0.0) {}
   

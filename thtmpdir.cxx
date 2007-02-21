@@ -104,7 +104,12 @@ void thtmpdir::create()
       }
       dir_path += THPATHSEPARATOR;
       if (this->debug) {
-        dir_path += "thTMPDIR";
+        thbuffer wdir;
+        wdir.guarantee(1024);
+        getcwd(wdir.get_buffer(),1024);
+        wdir += "/thTMPDIR";
+        dir_path = wdir;
+        //dir_path += "thTMPDIR";
       } else {
         dir_path += "th";
         snprintf(&(dn[0]),16,"%d",getpid());

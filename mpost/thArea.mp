@@ -106,6 +106,12 @@ def a_bedrock_SKBB (expr Path) =
 enddef;
 
 
+def a_dimensions_SKBB (expr Path) =
+  T:=identity;
+  thclean Path;
+enddef;
+
+
 def a_debris_SKBB (expr p) =
   T:=identity;
 %  thclean p;

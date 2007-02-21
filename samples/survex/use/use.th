@@ -1,0 +1,21 @@
+encoding  utf-8
+#!FILE ../1.9
+#!SUBTITLE Using surveys specified in .th files
+#! If you will import .3d file with <code>-surveys use</code> switch,
+#! then therion tries to find the match between <em>survex prefix</em> 
+#! and <em>therion survey name</em>. If this match is found, stations
+#! are inserted into survey found. Otherwise prefix is left with 
+#! station names. Example code:
+#!CODE
+import use.3d -surveys use
+input use-out.th2
+survey use
+  input use-in.th2
+endsurvey
+#!ENDCODE
+#! In this case, you should take care, where you input your .th2 files
+#! with scraps. In use-out.th2 file, you should refer to station names
+#! using:
+
+join use-in.s@use use-out.s
+

@@ -1,0 +1,13 @@
+encoding  utf-8
+#!FILE ../3.9
+#!SUBTITLE Ignoring station prefixes
+
+#! Last possibility is to import your .3d file using
+#!CODE
+import ignore.3d -surveys ignore
+#!ENDCODE
+input ignore.th2
+
+#! Also in this case, station references in corresponding .th2 file
+#! are same as station names on the next map.
+

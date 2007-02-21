@@ -2,7 +2,7 @@
  * @file thexpsys.cxx
  */
   
-/* Copyright (C) 2000 Stacho Mudrak
+/* Copyright (C) 2007 Stacho Mudrak
  * 
  * $Date: $
  * $RCSfile: $
@@ -30,6 +30,8 @@
 #include "thdb1d.h"
 #include "thscrap.h"
 #include "thtrans.h"
+#include "th2ddataobject.h"
+#include "thpoint.h"
 
 thwarp::~thwarp() {}
    
@@ -159,7 +161,7 @@ thpic * thwarplin::morph(thsketch * sketch, double scale)
   thvec2 pmin, pmax, ptmp, mpic_origin;
   counter = 1;
 
-  if ((stations.size() < 3) || (this->method == 0)) {
+  if (/*(stations.size() < 3) ||*/ (this->method == 0)) {
 
     pmin = pmax = T2.forward(T1.forward(thvec2(0.0, 0.0)));
     ptmp = T2.forward(T1.forward(thvec2(double(sketch->m_pic.width), 0.0))); pmin.minimize(ptmp); pmax.maximize(ptmp);
@@ -271,6 +273,25 @@ thpic * thwarplin::morph(thsketch * sketch, double scale)
         T3.backward(thvec2(ii->tx, ii->ty)), ii->st->uid);
     }
     TM.insert_lines_from_db();
+    th2ddataobject * pobj;
+    thpoint * pointp;
+    pobj = sketch->m_scrap->fs2doptr;
+    while (pobj != NULL) {
+      if (pobj->get_class_id() == TT_POINT_CMD) {
+        pointp = (thpoint *) pobj;
+        if (pointp->type == TT_POINT_TYPE_EXTRA) {
+          if ((T3.m_scale > 0.0) && (pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {
+            TM.insert_zoom_point(
+              T2.forward(T1.forward(thvec2(
+              pointp->point->x - sketch->m_x,
+              pointp->point->y - sketch->m_y))), 
+              pointp->xsize / T3.m_scale, 
+              thdb.db1d.station_vec[pointp->from_name.id - 1].uid);
+          }
+        }
+      }
+      pobj = pobj->nscrapoptr;
+    }
     TM.init();
 
     pmin = pmax = TM.forward(T2.forward(T1.forward(thvec2(0.0, 0.0))));
@@ -336,7 +357,7 @@ thpic * thwarplin::morph(thsketch * sketch, double scale)
                 dBC = fabs(dBC) + dDA;
                 if (dAB > 0.0) dCD /= dAB; else dCD = 0.5;
                 if (dBC > 0.0) dDA /= dBC; else dDA = 0.5;
-                this->mpic.rgba_set_pixel(x, y, sketch->m_pic.rgba_interpolate_pixel(double(ox) - dCD, double(oy) - dDA));
+                this->mpic.rgba_set_pixel(x, y, sketch->m_pic.rgba_interpolate_pixel(double(ox) - dCD, double(oy) - 1.0 + dDA));
               }
             }
           }

@@ -1,0 +1,17 @@
+encoding  utf-8
+
+#!FILE 5
+#!SUBTITLE Managing large projects
+
+#! Assume situation, when you want to join these three small maps
+#! within single large project. Assume, that coordinates of cave
+#! entrances are specified in the top-level cave.3d file. If your
+#! joining code will be
+#!CODE
+import cave.3d -surveys use
+survey cave
+  input use/use.th
+  input create/create.th
+  input ignore/ignore.th
+endsurvey
+#!ENDCODE

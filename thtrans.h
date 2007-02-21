@@ -57,6 +57,7 @@ struct thvec2 {
   void maximize(thvec2 v);                             //!< max( this, v )
   double length();                                     //!< |V| = sqrt( V * V )
   double length2() const { return m_x*m_x + m_y*m_y; } //!< V * V
+  double orientation();                                //!< orientation in degrees
   void reset();                                        //!< V = 0
   void normalize();                                    //!< V / |V|
   thvec2 orthogonal() { return thvec2( m_y, -m_x); }   //!< V^ (anticlockwise orthogonal vector)
@@ -206,6 +207,32 @@ struct thlintrans {
 
 
 /**
+ * Linear zooming transformation.
+ */
+
+struct thlinzoomtrans {
+  
+  bool m_valid, m_single;
+  thvec2 m_from, m_to;
+  double m_fl, m_fr, m_tl, m_tr;
+  int m_flc, m_frc, m_tlc, m_trc;
+
+  thline2 m_line_from, m_line_to, m_line;
+  double m_orient_from, m_orient_to, m_line_l;
+
+  thlinzoomtrans();
+
+  void init_points(thvec2 from, thvec2 to);
+  void init_from(thvec2 src, double dst);
+  void init_to(thvec2 src, double dst);
+  void init();
+
+  thvec2 forward(thvec2 src);
+};
+
+
+
+/**
  * Morphing transformation.
  */
 struct thmorphtrans {
@@ -235,6 +262,7 @@ struct thmorph2trans {
   void insert_point(thvec2 src, thvec2 dst, long id);
   void insert_line(long from, long to);
   void insert_lines_from_db();
+  void insert_zoom_point(thvec2 src, double dst, long id);
   void init(double eps = 0.01);
   thvec2 forward(thvec2 src);
   thvec2 backward(thvec2 dst, thvec2 ini = thvec2(0,0));

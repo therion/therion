@@ -1,0 +1,20 @@
+encoding  utf-8
+#!TITLE 40 Importing survex .3d files
+#!FILE 1
+#!
+#! Therion surveys correspond to station prefixes defined by
+#! <code>*begin</code>/<code>*end</code> pairs in survex source files. Usually, there
+#! does not exists one-to-one mapping between them. So if you want
+#! to keep your centerline in survex files, you need to solve the
+#! problem, how to match survex and therion data structures. This
+#! sample shows three different ways, how to deal with station prefixes
+#! when importing survex .3d files to therion.
+
+layout cl
+  symbol-set SKBB
+  map-header 0 0 off
+  color map-fg [100 100 80]
+  debug station-names
+  survey-level all
+  scale 1 250
+endlayout

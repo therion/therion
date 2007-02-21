@@ -1,0 +1,24 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust -128 -860 736 132.0
+##XTHERION## xth_me_area_zoom_to 100
+##XTHERION## xth_me_image_insert {0 1 1.0} {0 {}} cave1.jpg 0 {}
+
+scrap hlinena_s1 -scale [-128 -860 736 -860 0.0 0.0 21.9456 0.0 m] -sketch cave1.jpg 0 -732
+
+point 347.0 -170.0 station -name 13
+
+point 360.0 -40.0 station -name 14
+
+point 21.0 -301.0 station -name 11
+
+point 134.0 -298.0 station -name 10
+
+point 424.0 -629.0 station -name 9
+
+point 471.0 -374.0 station -name 8
+
+point 533.0 -301.0 station -name 7
+
+endscrap
+
+

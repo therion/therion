@@ -1,0 +1,14 @@
+encoding  utf-8
+#!FILE ../4
+
+#!IMAGE ignore.pdf
+#! Note, that no surveys are created in this case. Station names
+#! are taken from .3d files without change.
+#!PROCESS cavern ignore.svx
+#!PROCESS
+#!CLEAN ignore.3d ignore.err ignore.pdf
+
+source ignore.th
+input ../thconfig.layout
+#export map -o ignore.xvi
+export map -o ignore.pdf -layout cl

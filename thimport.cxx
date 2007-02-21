@@ -305,7 +305,8 @@ const char * thimport::station_name(const char * sn, const char separator, struc
           thsplit_strings(&psurv, sn, separator);
           prevsurvey = "";
           int prevctx;
-          thsurvey * csurvey = this->fsptr, * nsurvey, * prevcsptr = this->db->csurveyptr;
+          thsurvey * csurvey = this->fsptr, * nsurvey,
+            * prevcsptr = this->db->csurveyptr;
 //          thendsurvey * nendsurvey;
           for (active_survey = 0; active_survey < (ncs - 1); active_survey++) {
             nsurvey = NULL;
@@ -332,6 +333,8 @@ const char * thimport::station_name(const char * sn, const char separator, struc
               // TODO - nastavit mu meno cez set
               nsurvey->name = this->db->strstore(cbf[active_survey]);
               this->db->insert(nsurvey);
+              this->db->csrc.context = this;
+              this->db->csurveylevel--;
 //              nendsurvey = (thendsurvey*) this->db->create("endsurvey", this->mysrc);
 //              this->db->insert(nendsurvey);
               this->db->csurveyptr = prevcsptr;

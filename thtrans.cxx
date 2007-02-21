@@ -328,9 +328,17 @@ void thlintrans::init_points()
     this->m_fmat.m_yx = b;
     this->m_fmat.m_yy = a;
     this->m_scale = hypot(a,b);
-    this->m_rot = - atan2(b,a) / 3.14159265358 * 180.0;
+    this->m_rot = - atan2(b,a) / 3.14159265359 * 180.0;
   }
 
+}
+
+double thvec2::orientation()
+{
+  double o = atan2(this->m_x, this->m_y) / 3.14159265359 * 180.0;
+  if (o < 0.0)
+    o += 360.0;
+  return o;
 }
 
 void thlintrans::init(thvec2 src, thvec2 dst) {
@@ -473,11 +481,22 @@ bool operator < (const struct thm2t_line & l1, const struct thm2t_line & l2)
 typedef std::list<thm2t_line> thm2t_line_list;
 typedef std::map<thm2t_line, thm2t_line_ptr> thm2t_line_map;
 
+struct thm2t_zoom_point {
+  thvec2 m_src;
+  double m_dst;
+  long m_id;
+  thm2t_zoom_point(thvec2 src, double dst, long id) : m_src(src), m_dst(dst), m_id(id) {}
+};
+
+typedef std::list<thm2t_zoom_point> thm2t_zoom_point_list;
+
+
 struct thm2t_feature {
   bool m_single;
   thm2t_point_ptr m_fp, m_tp;
   thline2 m_ln, m_lnf, m_lnt;
   thlintrans m_lintrans;
+  thlinzoomtrans m_zoomtrans;
   double calc_dist(thvec2 src);
 };
 
@@ -507,6 +526,7 @@ struct thmorph2trans_members {
   thm2t_line_list m_lines;
   thm2t_line_map m_line_map;
   thm2t_point_ptr get_point(long id);
+  thm2t_zoom_point_list m_zoom_points;
   thm2t_feature_list m_features;
 };
 
@@ -539,6 +559,7 @@ void thmorph2trans::reset()
   this->m->m_lines.clear();
   this->m->m_points.clear();
   this->m->m_point_map.clear();
+  this->m->m_zoom_points.clear();
   this->m->m_features.clear();
 }
 
@@ -551,6 +572,11 @@ void thmorph2trans::insert_point(thvec2 src, thvec2 dst, long id)
 }
 
 
+void thmorph2trans::insert_zoom_point(thvec2 src, double dst, long id)
+{
+  this->m->m_zoom_points.push_back(thm2t_zoom_point(src, dst, id));
+}
+
 void thmorph2trans::insert_line(long from, long to)
 {
   thm2t_line tmp(from, to);
@@ -560,8 +586,10 @@ void thmorph2trans::insert_line(long from, long to)
   if ((this->m->get_point(from) == NULL) || (this->m->get_point(to) == NULL))
     return;
   mi = this->m->m_line_map.find(tmp);
-  if (mi == this->m->m_line_map.end())
-    this->m->m_lines.push_back(thm2t_line(from, to));
+  if (mi == this->m->m_line_map.end()) {
+    thm2t_line_ptr lp = &(*this->m->m_lines.insert(this->m->m_lines.end(), thm2t_line(from, to)));
+    this->m->m_line_map[tmp] = lp;
+  }
 }
 
 
@@ -591,17 +619,71 @@ void thmorph2trans::init(double eps)
     }
   }
 
-  thm2t_point_list::iterator ipt;
+  thm2t_point_list::iterator ipt, ipt2;
   for(ipt = this->m->m_points.begin(); ipt != this->m->m_points.end(); ipt++) {
     thm2t_feature tmpf;
     tmpf.m_fp = &(*ipt);
     tmpf.m_tp = NULL;
     if (!tmpf.m_fp->m_used) {
-      tmpf.m_single = true;
-      tmpf.m_lintrans.init(tmpf.m_fp->m_src, tmpf.m_fp->m_dst);
+      // find nearest TP
+      double md, cd;
+      md = -1.0;
+      for(ipt2 = this->m->m_points.begin(); ipt2 != this->m->m_points.end(); ipt2++) {
+        if (ipt->m_id != ipt2->m_id) {
+          cd = (ipt->m_dst - ipt2->m_dst).length();
+          if ((cd > 0.0) && ((ipt->m_src - ipt2->m_src).length() > 0.0)) {
+            if (md < 0.0) {
+              md = cd;
+              tmpf.m_tp = &(*ipt2);
+            } else if (cd < md) {
+              md = cd;
+              tmpf.m_tp = &(*ipt2);
+            }
+          }
+        }
+      }
+      if (tmpf.m_tp == NULL) {
+        tmpf.m_single = true;
+        tmpf.m_lintrans.init(tmpf.m_fp->m_src, tmpf.m_fp->m_dst);
+      } else {
+        tmpf.m_single = false;
+        tmpf.m_ln = thline2(tmpf.m_fp->m_src, tmpf.m_tp->m_src);
+        tmpf.m_lnf = thline2(tmpf.m_fp->m_src, tmpf.m_fp->m_src + thvec2(-tmpf.m_ln.m_a, -tmpf.m_ln.m_b));
+        tmpf.m_lnt = thline2(tmpf.m_tp->m_src, tmpf.m_tp->m_src + thvec2(tmpf.m_ln.m_a, tmpf.m_ln.m_b));
+        tmpf.m_lintrans.init(tmpf.m_fp->m_src, tmpf.m_tp->m_src, tmpf.m_fp->m_dst, tmpf.m_tp->m_dst);
+        tmpf.m_fp->m_used = true;
+        tmpf.m_tp->m_used = true;
+      }
       this->m->m_features.push_back(tmpf);
     }
   }
+
+  // initialize zoom transformations
+  thm2t_feature_list::iterator i;
+  thm2t_zoom_point_list::iterator izp;
+  for(i = this->m->m_features.begin(); i != this->m->m_features.end(); i++) {
+    if (i->m_tp != NULL)
+      i->m_zoomtrans.init_points(i->m_fp->m_dst, i->m_tp->m_dst);
+    else
+      i->m_zoomtrans.init_points(i->m_fp->m_dst, i->m_fp->m_dst);
+  }
+
+  for(izp = this->m->m_zoom_points.begin(); izp != this->m->m_zoom_points.end(); izp++) {
+    for(i = this->m->m_features.begin(); i != this->m->m_features.end(); i++) {
+      if (izp->m_id == i->m_fp->m_id)
+        i->m_zoomtrans.init_from(this->forward(izp->m_src), izp->m_dst);
+      if (i->m_tp != NULL) {
+        if (izp->m_id == i->m_tp->m_id)
+          i->m_zoomtrans.init_to(this->forward(izp->m_src), izp->m_dst);
+      }
+    }
+
+  }
+
+  for(i = this->m->m_features.begin(); i != this->m->m_features.end(); i++) {
+    i->m_zoomtrans.init();
+  }
+
 }
 
 
@@ -612,7 +694,7 @@ thvec2 thmorph2trans::forward(thvec2 src)
   double sumw(0.0), d, w;
   for(i = this->m->m_features.begin(); i != this->m->m_features.end(); i++) {
     d = i->calc_dist(src);
-    cdst = i->m_lintrans.forward(src);
+    cdst = i->m_zoomtrans.forward(i->m_lintrans.forward(src));
     if (d > 0.0) {
       w = 1.0 / (d * d * d * d);
       sumw += w;
@@ -674,6 +756,162 @@ void thmorph2trans::insert_lines_from_db()
     }
   }
 
+}
+
+
+
+thlinzoomtrans::thlinzoomtrans() {
+
+  this->m_valid = false;
+  this->m_single = true;
+
+  this->m_fl = 0.0;
+  this->m_fr = 0.0;
+  this->m_tl = 0.0;
+  this->m_tr = 0.0;
+
+  this->m_flc = 0;
+  this->m_frc = 0;
+  this->m_tlc = 0;
+  this->m_trc = 0;
+}
+
+
+void thlinzoomtrans::init_points(thvec2 from, thvec2 to) {
+  this->m_from = from;
+  this->m_to = to;
+  thvec2 vec;
+  vec = to - from;
+  this->m_line_l = vec.length();
+  if (this->m_line_l > 0.0) {
+    this->m_line = thline2(from, to);
+    this->m_line_from = thline2(from, from + thvec2(vec.m_y, -vec.m_x));
+    this->m_orient_from = thvec2(vec.m_y, -vec.m_x).orientation();
+    this->m_line_to = thline2(to, to + thvec2(-vec.m_y, vec.m_x));
+    this->m_orient_to = thvec2(-vec.m_y, vec.m_x).orientation();
+    this->m_single = false;
+  } else {
+    this->m_single = true;
+  }
+}
+
+
+void thlinzoomtrans::init_from(thvec2 src, double dst) {
+  double l;
+  l = (src - this->m_from).length();
+  if (l > 0.0) {
+    if (this->m_single) {
+      this->m_flc++;
+      this->m_fl += (dst / l);
+    } else {
+      if (this->m_line.eval(src) > 0) {
+        this->m_flc++;
+        this->m_fl += (dst / l);
+      } else {
+        this->m_frc++;
+        this->m_fr += (dst / l);
+      }
+    }
+  }
+}
+
+
+void thlinzoomtrans::init_to(thvec2 src, double dst) {
+  double l;
+  l = (src - this->m_to).length();
+  if (l > 0.0) {
+    if (this->m_single) {
+      this->m_flc++;
+      this->m_fl += (dst / l);
+    } else {
+      if (this->m_line.eval(src) > 0) {
+        this->m_tlc++;
+        this->m_tl += (dst / l);
+      } else {
+        this->m_trc++;
+        this->m_tr += (dst / l);
+      }
+    }
+  }
+}
+
+
+void thlinzoomtrans::init() {
+  if ((this->m_flc > 0) || (this->m_frc > 0) || (this->m_tlc > 0) || (this->m_trc > 0)) {
+    
+    this->m_valid = true;
+
+    if (this->m_flc > 0) this->m_fl /= double(this->m_flc); else this->m_fl = 1.0;
+    if (this->m_frc > 0) this->m_fr /= double(this->m_frc); else this->m_fr = 1.0;
+    if (this->m_tlc > 0) this->m_tl /= double(this->m_tlc); else this->m_tl = 1.0;
+    if (this->m_trc > 0) this->m_tr /= double(this->m_trc); else this->m_tr = 1.0;
+    
+    //if ((this->m_flc == 0) && (this->m_frc == 0)) {
+    //  this->m_fl = 1.0;
+    //  this->m_fr = 1.0;
+    //} else if ((this->m_flc == 0) && (this->m_frc > 0)) {
+    //  this->m_fl = this->m_fr;
+    //} else if ((this->m_flc > 0) && (this->m_frc == 0)) {
+    //  this->m_fr = this->m_fl;
+    //} 
+    //if ((this->m_tlc == 0) && (this->m_trc == 0)) {
+    //  this->m_tl = 1.0;
+    //  this->m_tr = 1.0;
+    //} else if ((this->m_tlc == 0) && (this->m_trc > 0)) {
+    //  this->m_tl = this->m_tr;
+    //} else if ((this->m_tlc > 0) && (this->m_trc == 0)) {
+    //  this->m_tr = this->m_tl;
+    //} 
+  }
+}
+
+
+thvec2 thlinzoomtrans::forward(thvec2 src) {
+  if (this->m_valid) {
+    thvec2 vec;
+    double vo;
+    if (this->m_single) {
+      vec = src - this->m_from;
+      vec *= this->m_fl;
+      return (src + vec);
+    } else {
+      double dl, dlf, dlt;
+      dl = this->m_line.eval(src);
+      dlf = this->m_line_from.eval(src);
+      dlt = this->m_line_to.eval(src);
+      if (dlf < 0.0) {
+        vec = src - this->m_from;
+        vo = vec.orientation() - this->m_orient_from;
+        if (vo < 0.0) vo += 360.0;
+        vo /= 180.0;
+        vec *= (vo * this->m_fl + (1.0 - vo) * this->m_fr);
+        return this->m_from + vec;
+      } else if (dlt < 0.0) {
+        vec = src - this->m_to;
+        vo = this->m_orient_to - vec.orientation() - 180.0;
+        if (vo < 0.0) vo += 360.0;
+        vo /= 180.0;
+        vec *= (vo * this->m_tl + (1.0 - vo) * this->m_tr);
+        return this->m_to + vec;
+      } else {
+        thvec2 lp;
+        double ln;
+        ln = this->m_line.m_a * this->m_line.m_a + this->m_line.m_b * this->m_line.m_b;
+        lp = thvec2(src.m_x - this->m_line.m_a * dl / ln, src.m_y - this->m_line.m_b * dl / ln);
+        vo = this->m_line.eval(lp);
+        vec = src - lp;
+        vo = (lp - this->m_from).length() / this->m_line_l;
+        if (dl > 0) {
+          vec *= (vo * this->m_tl + (1.0 - vo) * this->m_fl);
+        } else {
+          vec *= (vo * this->m_tr + (1.0 - vo) * this->m_fr);
+        }
+        return lp + vec;
+      }
+    }
+  } else {
+    return src;
+  }
 }
 
 

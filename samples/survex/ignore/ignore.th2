@@ -1,0 +1,41 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust -128.0 -128.0 442.96 620.125
+##XTHERION## xth_me_area_zoom_to 100
+##XTHERION## xth_me_image_insert {59.057 1 1.0} {59.052 ignore.0} ignore.xvi 0 {}
+
+
+
+scrap ignore.s -scale [-128.0 -128.0 620.125 -128.0 0.0 0.0 19.002375 0.0 m]
+
+line wall
+  45.0 68.0
+  87.0 235.0 92.0 326.0 274.0 469.0
+endline
+
+line wall
+  299.0 191.0
+  269.0 224.0 194.0 261.0 215.0 283.0
+  236.0 305.0 296.0 330.0 274.0 351.0
+  252.0 372.0 210.0 363.0 290.0 444.0
+endline
+
+line wall
+  74.0 53.0
+  95.0 124.0 114.0 213.0 147.0 272.0
+  smooth off
+  147.0 272.0 211.0 215.0 271.0 155.0
+  smooth off
+endline
+
+point 281.887 176.772 station -name ignore.sub.1
+
+point 283.857 455.712 station -name ignore.3
+
+point 146.067 308.072 station -name ignore.sub.0
+
+point 111.417 230.312 station -name ignore.1
+
+point 59.057 59.052 station -name ignore.0
+
+endscrap
+

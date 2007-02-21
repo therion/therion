@@ -1,0 +1,18 @@
+encoding  utf-8
+#!FILE ../2.9
+#!SUBTITLE Creating non-existing surveys
+
+#! If you import your .3d file using
+#!CODE
+import create.3d -surveys create
+#!ENDCODE
+#! all survex prefixes are taken into account and if surveys with
+#! corresponding names do not exist, they are created. In this case,
+#! if you do
+#!CODE
+input create.th2
+#!ENDCODE
+#! right after <code>import</code> command, you refer to stations in .th2
+#! file with names shown on the map.
+
+

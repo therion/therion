@@ -90,6 +90,7 @@ sk: pomocná šípka
 
 therion: line map-connection
 en: map connection
+it: riporto di mappa
 sk: prepojenie máp
 
 therion: line wall
@@ -303,10 +304,12 @@ sk: prievan
 
 therion: point air-draught:winter
 en: winter air draught
+it: circolazione invernale
 sk: zimný prievan
 
 therion: point air-draught:summer
 en: summer air draught
+it: circolazione estiva
 sk: letný prievan
 
 therion: point date

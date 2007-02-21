@@ -522,14 +522,14 @@ void thparse_double_dms(int & sv, double & dv, char * src)
       if (thparse_mbuff.get_size() > 1) {
         thparse_double(ssv, dms, thparse_mbuff.get_buffer()[1]);
 //        thprintf("MIN:%lf\n", dms);
-        if ((ssv == TT_SV_NUMBER) && (dms == double(int(dms))) && (dms >= 0.0) && (dv == double(int(dv)))) {
+        if ((ssv == TT_SV_NUMBER) && (dms >= 0.0) && (dv == double(int(dv)))) {
           // ok, mame minuty
           if (dv > 0.0) {
             dv += dms / 60.0;
           } else {
             dv -= dms / 60.0;
           }
-          if (thparse_mbuff.get_size() == 3) {
+          if ((dms == double(int(dms))) && (thparse_mbuff.get_size() == 3)) {
             thparse_double(ssv, dms, thparse_mbuff.get_buffer()[2]);
 //            thprintf("SEC:%lf\n", dms);
             if ((ssv == TT_SV_NUMBER) && (dms >= 0.0)) {
@@ -542,7 +542,7 @@ void thparse_double_dms(int & sv, double & dv, char * src)
               // error
               sv = TT_SV_UNKNOWN;
             }
-          } else if (thparse_mbuff.get_size() > 3) {
+          } else if (thparse_mbuff.get_size() >= 3) {
             // error
             sv = TT_SV_UNKNOWN;
           }

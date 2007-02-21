@@ -1,0 +1,73 @@
+encoding  iso8859-2
+
+survey rabbit -title "Rabbit Cave"
+  
+  centreline
+    
+    date 1997.08.10
+    team "Martin Budaj"
+    team "Stacho Mudrák"
+    team "Miroslav Hofer"
+    
+    units compass clino grads
+    data normal from to compass clino tape
+    
+    
+       0     1   200       -5      6.4 
+       1     2    73       8      5.2 
+       2     3    42       0      2.09
+       3     4    82       8      4   
+       4     5    21      -8      8.28
+       4     6   354      -5     10.89
+       6     7   358       5      7.08
+       7     8   260       1      2.73
+       8     9   382       8      7.28
+       9    10   308       2      6.59
+      10    11   373     -14      3.44
+      11    12   276      -2      6.97
+      11    13   390      62      4.98
+      
+    flags surface
+         
+      13    14   295       3     11.9 
+      14    15   170       2     23.28  
+      
+    fix 15 20 40 646.23
+      
+    extend ignore 5
+    extend ignore 12
+      
+  endcentreline
+
+  input rabbit.th2
+  
+  join ew1:0 ew2:end
+  join ew1:end ew2:0
+  join ps1 ps2
+  
+  map pdx -title "Rabbit Cave -- extended elevation"
+    xs1
+    xs2
+  endmap
+
+  map pdp -title "Rabbit Cave - plan"
+    ps1
+    ps2
+  endmap  
+  
+  surface
+    
+    bitmap surface.jpg [0 0 5 20 100 100 55 70]
+    grid 5 20 10 10 6 6
+  
+    638  642  646  650  654  650
+    639  644  649  654  659  654
+    638  642  646  650  654  650
+    638  642  646  650  654  650
+    639  644  649  654  659  654
+    640  646  652  658  664  658
+   
+  endsurface
+
+endsurvey rabbit
+
