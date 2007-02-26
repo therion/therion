@@ -103,6 +103,7 @@ let l_contour = l_contour_SKBB;
 let l_rockborder = l_rockborder_UIS;
 let l_rockedge = l_rockedge_UIS;
 let l_flowstone = l_flowstone_UIS;
+let l_moonmilk = l_moonmilk_UIS;
 let l_section = l_section_SKBB;
 let l_survey_cave = l_survey_cave_SKBB;
 let l_survey_surface = l_survey_surface_SKBB;
@@ -120,6 +121,8 @@ let a_ice = a_ice_SKBB;
 let a_pebbles = a_pebbles_SKBB;
 let a_clay = a_clay_SKBB;
 let a_bedrock = a_bedrock_SKBB;
+let a_flowstone = a_flowstone_ASF;
+let a_moonmilk = a_moonmilk_ASF;
 let a_dimensions = a_dimensions_SKBB;
 
 let s_northarrow = s_northarrow_SKBB;

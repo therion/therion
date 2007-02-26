@@ -84,6 +84,7 @@ set xth(line_types) {
 	gradient
 	label
 	map-connection
+	moonmilk
 	overhang
 	pit
 	rock-border
@@ -100,7 +101,9 @@ set xth(area_types) {
 	blocks
 	clay
 	debris
+	flowstone
 	ice
+	moonmilk
 	pebbles
 	sand
 	snow

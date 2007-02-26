@@ -57,6 +57,28 @@ beginpattern(pattern_debris_SKBB);
 %    draw p rotated 95 shifted (.9u,.8u);
 endpattern;
 
+
+beginpattern(pattern_moonmilk_ASF);
+    pickup PenC;
+    p:=(-.5u,0){down} .. {up}(-.1666u,0){down}..
+        {up}(.1666u,0){down} .. {up}(.5u,0);
+    draw p;
+    draw p shifted (0.5u,0.3u);
+    patternxstep(1.0u);
+    patternystep(0.6u);
+endpattern;
+
+
+beginpattern(pattern_flowstone_ASF);
+    pickup PenC;
+    p:=(-.35u,0){dir -60} .. {dir 60}(0.35u,0);
+    draw p;
+    draw p shifted (0.35u,0.3u);
+    patternxstep(0.7u);
+    patternystep(0.6u);
+endpattern;
+
+
 beginpattern(pattern_empty);
   patternbbox(0,0,10,10);
   patternstep(10,10);
@@ -75,6 +97,22 @@ def a_sump_UIS (expr Path) =
   thclean Path;
   thfill Path withpattern pattern_sump_UIS;
 enddef;
+
+
+def a_flowstone_ASF (expr Path) =
+  T:=identity;
+  thclean Path;
+  thfill Path withpattern pattern_flowstone_ASF;
+enddef;
+
+
+def a_moonmilk_ASF (expr Path) =
+  T:=identity;
+  thclean Path;
+  thfill Path withpattern pattern_moonmilk_ASF;
+enddef;
+
+
 
 def a_sand_UIS (expr p) =
   T:=identity;

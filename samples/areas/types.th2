@@ -1,0 +1,208 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust 177.0 -100.0 657.0 1333.0
+##XTHERION## xth_me_area_zoom_to 100
+
+centerline
+  data normal from to compass clino tape
+  0 1 0 0 30
+endcenterline
+
+
+scrap scrap.types -scale [0 0 1600 0 0.0 0.0 40.64 0.0 m]
+
+line wall -id l7-497-1096
+  503.0 52.0
+  476.0 169.0 531.0 426.0 498.0 531.0
+  465.0 636.0 516.0 1016.0 500.0 1178.0
+endline
+
+line border -id l46-411-69
+  319.0 72.0
+  363.0 70.0 487.0 67.0 513.0 72.0
+endline
+
+line wall -id l6-342-1086
+  340.0 48.0
+  323.0 129.0 365.0 427.0 338.0 528.0
+  299.42 672.33 359.0 1029.0 332.0 1171.0
+endline
+
+point 511.0 562.0 label -text blocks -align r
+
+point 502.0 645.0 label -text debris -align r
+
+point 503.0 727.0 label -text pebbles -align r
+
+point 507.0 818.0 label -text sand -align r
+
+point 511.0 911.0 label -text clay -align r
+
+area blocks
+  l14-414-607
+  l6-342-1086
+  l15-428-512
+  l7-497-1096
+endarea
+
+area debris
+  l13-424-689
+  l6-342-1086
+  l14-414-607
+  l7-497-1096
+endarea
+
+area pebbles
+  l12-412-775
+  l6-342-1086
+  l13-424-689
+  l7-497-1096
+endarea
+
+area sand
+  l11-426-861
+  l6-342-1086
+  l12-412-775
+  l7-497-1096
+endarea
+
+area clay
+  l10-429-957
+  l6-342-1086
+  l11-426-861
+  l7-497-1096
+endarea
+
+area sump
+  l9-429-1051
+  l6-342-1086
+  l10-429-957
+  l7-497-1096
+endarea
+
+area water
+  l8-427-1151
+  l6-342-1086
+  l9-429-1051
+  l7-497-1096
+endarea
+
+point 517.0 1003.0 label -text sump -align r
+
+point 519.0 1094.0 label -text water -align r
+
+line border -id l19-409-159
+  320.0 161.0
+  353.0 158.0 491.0 159.0 511.0 163.0
+endline
+
+line border -id l18-413-242
+  324.0 244.0
+  367.0 240.0 485.0 239.0 509.0 242.0
+endline
+
+line border -id l17-420-327
+  330.0 331.0
+  397.0 325.0 490.0 327.0 515.0 332.0
+endline
+
+line border -id l16-411-424
+  333.0 425.0
+  374.0 420.0 503.0 426.0 520.0 431.0
+endline
+
+line border -id l15-428-512
+  326.0 513.0
+  375.0 510.0 491.0 514.0 515.0 521.0
+endline
+
+line border -id l14-414-607
+  317.0 606.0
+  358.0 604.0 490.0 606.0 510.0 611.0
+endline
+
+line border -id l13-424-689
+  310.0 694.0
+  388.0 687.0 494.0 688.0 507.0 691.0
+endline
+
+line border -id l12-412-775
+  318.0 780.0
+  370.0 774.0 475.0 774.0 508.0 776.0
+endline
+
+line border -id l11-426-861
+  317.0 870.0
+  359.0 862.0 487.0 857.0 507.0 862.0
+endline
+
+line border -id l10-429-957
+  327.0 963.0
+  371.0 953.0 494.0 957.0 513.0 965.0
+endline
+
+line border -id l9-429-1051
+  330.0 1040.0
+  376.0 1051.0 478.0 1057.0 515.0 1046.0
+endline
+
+point 507.0 109.0 label -text snow -align r
+
+point 506.0 199.0 label -text ice -align r
+
+area moonmilk
+  l17-420-327
+  l6-342-1086
+  l18-413-242
+  l7-497-1096
+  l7-497-1096
+  l7-497-1096
+endarea
+
+area flowstone
+  l16-411-424
+  l6-342-1086
+  l17-420-327
+  l7-497-1096
+endarea
+
+area bedrock
+  l15-428-512
+  l6-342-1086
+  l16-411-424
+  l7-497-1096
+endarea
+
+point 510.0 279.0 label -text moonmilk -align r
+
+point 517.0 375.0 label -text flowstone -align r
+
+point 524.0 473.0 label -text bedrock -align r
+
+point 475.0 1200.0 label -text "Therion area types" -scale xl -align top
+
+area snow
+  l19-409-159
+  l6-342-1086
+  l46-411-69
+  l7-497-1096
+endarea
+
+area ice
+  l18-413-242
+  l6-342-1086
+  l19-409-159
+  l7-497-1096
+endarea
+
+line border -id l8-427-1151
+  329.0 1139.0
+  370.0 1152.0 478.0 1162.0 521.0 1143.0
+endline
+
+point 431.0 1105.0 station -name 1
+
+point 423.0 33.0 station -name 0
+
+endscrap
+
+

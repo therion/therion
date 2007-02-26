@@ -7,7 +7,13 @@ therion:
 + thbook: air-draught: subtype winter|summer|none
 + thbook: layout survey-level
 + thbook: point extra -dist <distance> -from <station>
++ thbook: area flowstone, moonmilk
 
++ BUG: survey name into map title
++ allow scraps without stations, CS specification for scrap (in plan
+  projection)
++ line moonmilk
+  
 + add rotation of 3D surface into surface calibration
 + add line moonmilk and flowstone areas surrounded by line flowstone or moonmilk
 + solve transparency of sketches

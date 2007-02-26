@@ -105,6 +105,7 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYML_GRADIENT][1] = 1;
 	thsymsets_symbols[SYML_GRADIENT][5] = 1;
 	thsymsets_symbols[SYML_MAPCONNECTION][3] = 1;
+	thsymsets_symbols[SYML_MOONMILK][5] = 1;
 	thsymsets_symbols[SYML_OVERHANG][3] = 1;
 	thsymsets_symbols[SYML_PIT][5] = 1;
 	thsymsets_symbols[SYML_ROCKBORDER][5] = 1;
@@ -135,7 +136,9 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYMA_DEBRIS][3] = 1;
 	thsymsets_symbols[SYMA_DEBRIS][5] = 1;
 	thsymsets_symbols[SYMA_DIMENSIONS][3] = 1;
+	thsymsets_symbols[SYMA_FLOWSTONE][0] = 1;
 	thsymsets_symbols[SYMA_ICE][3] = 1;
+	thsymsets_symbols[SYMA_MOONMILK][0] = 1;
 	thsymsets_symbols[SYMA_PEBBLES][3] = 1;
 	thsymsets_symbols[SYMA_SAND][5] = 1;
 	thsymsets_symbols[SYMA_SNOW][3] = 1;

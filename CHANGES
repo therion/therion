@@ -5,12 +5,14 @@ therion:
 
  * new samples directory
  * new subtypes for air-draught symbol: winter and summer
+ * new area types: flowstone, moonmilk
  * ability to display overlying maps in offset
  * new point and line type: map-connection (used to incicate
    connection between map parts - extended elevations, maps in
    offset)
  * improved default centerline symbols
  * LRUD envelopes of maps exported from centerline
+ * point -extend option changed to -from
  * bugs fixed:
    - top level objects selection
    - generation of extended elevation
@@ -18,6 +20,7 @@ therion:
    - creating surveys from .3d files
    - subpixel inaccuracy with bitmap morphing
    - entering angles/lat-long in degree:minutes format
+   
 
 xtherion:
 

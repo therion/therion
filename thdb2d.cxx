@@ -965,10 +965,10 @@ void thdb2d::process_point_references(thpoint * pp)
         if (pp->station_name.id == 0) {
           pp->throw_source();
           if (pp->station_name.survey != NULL)
-            threthrow2(("invalid station reference -- %s@%s",
+            threthrow2(("station does not exist -- %s@%s",
               pp->station_name.name,pp->station_name.survey))
           else
-            threthrow2(("invalid station reference -- %s",
+            threthrow2(("station does not exist -- %s",
               pp->station_name.name))
         }
         pp->fscrapptr->insert_adata(&(this->db->db1d.station_vec[pp->station_name.id - 1]));
@@ -979,16 +979,14 @@ void thdb2d::process_point_references(thpoint * pp)
           pp->from_name.id = this->db->db1d.get_station_id(pp->from_name,pp->fsptr);
         } catch (...) {
           pp->from_name.id = 0;
-          extend_error = true;
-          err_code = "not a station reference";
         }  
-        if (extend_error) {
+        if (pp->from_name.id == 0) {
           pp->throw_source();
           if (pp->station_name.survey != NULL)
-            threthrow2(("%s -- %s@%s",err_code,
+            threthrow2(("station does not exist -- %s@%s",
               pp->from_name.name,pp->from_name.survey))
           else
-            threthrow2(("%s -- %s",err_code,
+            threthrow2(("station does not exist -- %s",
               pp->from_name.name))
         }
       }  

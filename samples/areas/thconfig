@@ -1,0 +1,11 @@
+encoding  utf-8
+source types.th2
+
+export map -o types.pdf \
+  -layout-map-header 0 0 off \
+  -layout-symbol-hide group centerline
+
+#!PROCESS
+#!TITLE 7 Area symbols
+#!IMAGE types.pdf
+#!CLEAN types.pdf

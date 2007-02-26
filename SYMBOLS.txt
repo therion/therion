@@ -91,6 +91,7 @@ floorstep: UIS
 flowstone: UIS 
 gradient: BCRA UIS 
 mapconnection: SKBB 
+moonmilk: UIS 
 overhang: SKBB 
 pit: UIS 
 rockborder: UIS 
@@ -121,7 +122,9 @@ blocks: SKBB
 clay: SKBB 
 debris: SKBB UIS 
 dimensions: SKBB 
+flowstone: ASF 
 ice: SKBB 
+moonmilk: ASF 
 pebbles: SKBB 
 sand: UIS 
 snow: SKBB 

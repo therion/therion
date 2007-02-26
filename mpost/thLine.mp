@@ -636,6 +636,25 @@ def l_flowstone_UIS (expr P) =
   endfor;
 enddef;
 
+
+def l_moonmilk_UIS (expr P) = 
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, .3u);
+  pickup PenC;  
+  t1:=0;
+  forever:
+    t2 := arctime (cas + mojkrok) of P;
+    thdraw (point t1 of P){dir (angle(thdir(P,t1)) + 80)} ..
+           {dir (angle(thdir(P,t2)) - 80)}(point t2 of P);
+    cas := cas + mojkrok;
+    exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+    t1:=t2;
+  endfor;
+enddef;
+
+
 def l_survey_surface_SKBB (expr P) =
   T:=identity;
   thdrawoptions(dashed withdots scaled (0.2 * optical_zoom) withpen PenC);

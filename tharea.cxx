@@ -176,6 +176,8 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_CLAY, SYMA_CLAY)
     tharea_type_export_mp(TT_AREA_TYPE_PEBBLES, SYMA_PEBBLES)
     tharea_type_export_mp(TT_AREA_TYPE_BEDROCK, SYMA_BEDROCK)
+    tharea_type_export_mp(TT_AREA_TYPE_FLOWSTONE, SYMA_FLOWSTONE)
+    tharea_type_export_mp(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK)
   }
   
   if (this->context >= 0) 
