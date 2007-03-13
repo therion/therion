@@ -1,54 +1,75 @@
-/** @file thwarptrans.cxx
+/** @file thwarppt.cxx
  * 
  * @author marco corvi
- * @date   nov 2006
+ * @date   nov 2006 - mar 2007
  * 
- * @brief warping transformation
- *
- * ---------------------------------------------------
- * GNU GPL licence ...
+ * @brief warping plaquette algorithm transform implementation
  */
+/* Copyright (C) 2006-2007 marco corvi
+ * 
+ * $Date: $
+ * $RCSfile: $
+ * $Revision: $
+ *
+ * -------------------------------------------------------------------- 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * --------------------------------------------------------------------
+ */
+#include <assert.h>
 #include <sstream>
 
 #include "thwarppt.h"
 
-#define BOUND_SEGMENT 1.5
-#define BOUND_TRIANGLE 1.5
-#define BOUND_PLAQUETTE 2.0
+typedef unsigned int warpp_t;
+const warpp_t ngbh_mask = ((warpp_t)(0x7))<<(8*sizeof(warpp_t)-3);
+const warpp_t indx_mask = ~ngbh_mask;
 
-thwarptrans::thwarptrans( )
+
+therion::warp::plaquette_algo::plaquette_algo( )
   : m_initialized( false )
-  , m_bound2( BOUND_SEGMENT )
   , m_bound3( BOUND_TRIANGLE )
   , m_bound4( BOUND_PLAQUETTE )
-{ }
+{ 
+}
 
-thwarptrans::thwarptrans( double bound2, double bound3, double bound4 )
+therion::warp::plaquette_algo::plaquette_algo( double bound3, double bound4 )
   : m_initialized( false )
-  , m_bound2( bound2 )
   , m_bound3( bound3 )
   , m_bound4( bound4 )
-{ }
+{ 
+}
 
-thwarptrans::~thwarptrans()
+therion::warp::plaquette_algo::~plaquette_algo( )
 {
   reset();
 }
 
 void 
-thwarptrans::reset()
+therion::warp::plaquette_algo::reset( )
 {
-  for (unsigned int i=0; i<mLines.size(); ++i) {
+  for (size_t i=0; i<mLines.size(); ++i) {
     delete mLines[i];
   }
   mLines.clear();
 
-  for (unsigned int i=0; i<mPairs.size(); ++i) {
+  for (size_t i=0; i<mPairs.size(); ++i) {
     delete mPairs[i];
   }
   mPairs.clear();
 
-  for (unsigned int i=0; i<mPlaquettes.size(); ++i) {
+  for (size_t i=0; i<mPlaquettes.size(); ++i) {
     delete mPlaquettes[i];
   }
   mPlaquettes.clear();
@@ -56,51 +77,65 @@ thwarptrans::reset()
   m_initialized = false;
 }
 
-thmorph_pair *
-thwarptrans::insert_point( thmorph_type t, std::string & name, 
-                           const thvec2 & src, const thvec2 & dst )
+therion::warp::point_pair *
+therion::warp::plaquette_algo::insert_point( 
+    therion::warp::morph_type t, 
+    std::string & name, 
+    const thvec2 & src, 
+    const thvec2 & dst )
 {
-  thmorph_pair * pair = new thmorph_pair( t, name, src.m_x, src.m_y, dst.m_x, dst.m_y );
+  point_pair * pair = new point_pair( t, name, src.m_x, src.m_y, dst.m_x, dst.m_y );
   mPairs.push_back( pair );
   return pair;
 }
 
 void 
-thwarptrans::insert_line( thmorph_type t, std::string & from, std::string & to )
+therion::warp::plaquette_algo::insert_line(
+     therion::warp::morph_type t, 
+     std::string & from, 
+     std::string & to )
 {
-  thmorph_pair * p1 = NULL;
-  thmorph_pair * p2 = NULL;
-  for ( unsigned int i=0; i<mPairs.size(); ++i ) {
+  point_pair * p1 = NULL;
+  point_pair * p2 = NULL;
+  for ( size_t i=0; i<mPairs.size(); ++i ) {
     if ( mPairs[i]->m_name == from ) { p1 = mPairs[i]; if (p2) break; }
     if ( mPairs[i]->m_name == to   ) { p2 = mPairs[i]; if (p1) break; }
   }
   if ( p1 == NULL || p2 == NULL ) throw;
-  mLines.push_back( new thmorph_line( t, p1, p2 ) );
+  mLines.push_back( new therion::warp::line( t, p1, p2 ) );
 }
 
+#ifdef DEBUG
 void
-thwarptrans::print()
+therion::warp::plaquette_algo::print()
 {
-  printf("Warp trans: P %d L %d\n", mPairs.size(), mLines.size() );
-  for ( unsigned int i=0; i<mPairs.size(); ++i ) {
+  printf("Plaquette algo: P.nr %d L.nr %d\n", mPairs.size(), mLines.size() );
+  printf("  X origin %.2f %.2f units %.4f\n", mX0.m_x, mX0.m_y, mXUnit );
+  printf("  U origin %.2f %.2f units %.4f\n", mU0.m_x, mU0.m_y, mUUnit );
+  printf("  UC origin %.2f %.2f units %.2f\n", mUC.m_x, mUC.m_y, mUCUnit);
+
+  for ( size_t i=0; i<mPairs.size(); ++i ) {
     printf("P %2d: %s (T %d) survey %6.2f %6.2f sketch %6.2f %6.2f\n", 
       i, mPairs[i]->m_name.c_str(), mPairs[i]->m_type, 
       mPairs[i]->u.m_x, mPairs[i]->u.m_y, mPairs[i]->x.m_x, mPairs[i]->x.m_y );
   }
-  for ( unsigned int i=0; i<mLines.size(); ++i ) {
+  for ( size_t i=0; i<mLines.size(); ++i ) {
     printf("L %2d: %s %s (T %d)\n", i, mLines[i]->m_p1->m_name.c_str(),
       mLines[i]->m_p2->m_name.c_str(), mLines[i]->m_type );
   }
+  for ( size_t i=0; i<mPlaquettes.size(); ++i ) 
+    mPlaquettes[i]->print();
 }
+#endif
 
 bool
-thwarptrans::initialize( thwarp_proj proj )
+therion::warp::plaquette_algo::initialize( warp_proj proj )
 {
   if ( mPairs.size() < 2 )
     return false;
 
   if ( ! m_initialized ) {
-    unsigned int sz = mPairs.size();
+    size_t sz = mPairs.size();
 
     // bounding box
     thvec2 xmin( mPairs[0]->x );
@@ -108,7 +143,7 @@ thwarptrans::initialize( thwarp_proj proj )
     thvec2 umin( mPairs[0]->u );
     thvec2 umax( umin );
 
-    for ( unsigned int k=1; k<sz; ++k) {
+    for ( size_t k=1; k<sz; ++k) {
       xmin.minimize( mPairs[k]->x );
       xmax.maximize( mPairs[k]->x );
       umin.minimize( mPairs[k]->u );
@@ -122,7 +157,7 @@ thwarptrans::initialize( thwarp_proj proj )
     mUUnit = (umax - umin).length() / 2.0;
 
     // scaled coordinates (relative to the centers)
-    for ( unsigned int k=0; k<sz; ++k ) {
+    for ( size_t k=0; k<sz; ++k ) {
         mPairs[k]->z = ( mPairs[k]->x - mX0 ) / mXUnit;
         mPairs[k]->w = ( mPairs[k]->u - mU0 ) / mUUnit;
     }
@@ -131,24 +166,31 @@ thwarptrans::initialize( thwarp_proj proj )
 
     update_lines();
     make_plaquettes( proj );
+
+    make_neighbors( );
   
     m_initialized = true;
   }
   return m_initialized;
 }
 
-thmorph_line *
-thwarptrans::add_extra_line( thmorph_pair * p1, unsigned int index, thvec2 & x3, thvec2 & u3 )
+therion::warp::line *
+therion::warp::plaquette_algo::add_extra_line( 
+    point_pair * p1, 
+    size_t index, 
+    thvec2 & x3, 
+    thvec2 & u3 )
 {
   std::ostringstream ost;
   ost << p1->m_name << "_E_" << index;
   std::string name = ost.str();
   // thprintf("Extra line() point %s %6.2f %6.2f %6.2f %6.2f \n",
-  //   name.c_str(), x3.m_x, x3.m_y, u3.m_x, u3.m_y );
-  thmorph_pair * p3 = insert_point( THMORPH_EXTRA, name, x3, u3 );
+  //    name.c_str(), x3.m_x, x3.m_y, u3.m_x, u3.m_y );
+
+  point_pair * p3 = insert_point( THMORPH_EXTRA, name, x3, u3 );
   p3->update( mX0, mXUnit, mU0, mUUnit );
   
-  thmorph_line * l3 = new thmorph_line( THMORPH_EXTRA, p1, p3 );
+  therion::warp::line * l3 = new therion::warp::line( THMORPH_EXTRA, p1, p3 );
   l3->update();
   mLines.push_back( l3 );
   return l3;
@@ -157,26 +199,30 @@ thwarptrans::add_extra_line( thmorph_pair * p1, unsigned int index, thvec2 & x3,
 // ========================================================================
 
 bool
-thwarptrans::forward( const thvec2 & src, thvec2 & dst, 
-                      const thvec2 & origin, double unit )
+therion::warp::plaquette_algo::forward( 
+    const thvec2 & src, 
+    thvec2 & dst, 
+    const thvec2 & origin, 
+    double unit )
 {
   thvec2 z = ( src - mX0) / mXUnit;
-  unsigned int szp = mPlaquettes.size();
+  size_t szp = mPlaquettes.size();
   double dmin = -1.0;
-  unsigned int imin = (unsigned int)(-1);
-  for ( unsigned int i=0; i<szp; ++i) {
+  size_t imin = (size_t)(-1);
+  for ( size_t i=0; i<szp; ++i) {
     if ( mPlaquettes[i]->is_inside_from( z ) ) {
       double d = mPlaquettes[i]->distance_from( z );
       if ( thisnan( d ) ) continue;
-      if ( imin == (unsigned int)(-1) || d < dmin ) {
+      if ( imin == (size_t)(-1) || d < dmin ) {
         dmin = d;
         imin = i;
       }
     }
   }
-  if ( imin == (unsigned int)(-1) ) 
+  if ( imin == (size_t)(-1) ) 
     return false;
-  thvec2 w = mPlaquettes[imin]->forward( z );
+  thvec2 w;
+  mPlaquettes[imin]->forward( z, w );
   if ( w.is_nan() )
     return false;
   dst = ( origin + w * unit );
@@ -184,26 +230,30 @@ thwarptrans::forward( const thvec2 & src, thvec2 & dst,
 }
 
 bool
-thwarptrans::backward( const thvec2 & dst, thvec2 & src, 
-                       const thvec2 & origin, double unit )
+therion::warp::plaquette_algo::backward(
+    const thvec2 & dst, 
+    thvec2 & src, 
+    const thvec2 & origin, 
+    double unit )
 {
   thvec2 w = (dst - origin) / unit;
-  unsigned int szp = mPlaquettes.size();
+  size_t szp = mPlaquettes.size();
   double dmin = -1.0;
-  unsigned int imin = (unsigned int)(-1);
-  for ( unsigned int i=0; i<szp; ++i) {
+  size_t imin = (size_t)(-1);
+  for ( size_t i=0; i<szp; ++i) {
     if ( mPlaquettes[i]->is_inside_to( w ) ) {
       double d = mPlaquettes[i]->distance_to( w );
       if ( thisnan( d ) ) continue;
-      if ( imin == (unsigned int)(-1) || d < dmin ) {
+      if ( imin == (size_t)(-1) || d < dmin ) {
         dmin = d;
         imin = i;
       }
     }
   }
-  if ( imin == (unsigned int)(-1) ) 
+  if ( imin == (size_t)(-1) ) 
     return false;
-    thvec2 z = mPlaquettes[imin]->backward( w );
+    thvec2 z;
+    mPlaquettes[imin]->backward( w, z );
     if ( z.is_nan( ) ) 
       return false;
     src = mX0 + z * mXUnit;
@@ -211,45 +261,92 @@ thwarptrans::backward( const thvec2 & dst, thvec2 & src,
 }
 
 void 
-thwarptrans::update_lines()
+therion::warp::plaquette_algo::update_lines()
 {
-  for (unsigned int i=0; i<mLines.size(); ++i) {
+  for (size_t i=0; i<mLines.size(); ++i) {
     mLines[i]->update();
   }
 }
 
+void 
+therion::warp::plaquette_algo::make_neighbors( )
+{
+  // thprintf("plaquette_algo::make_neighbors() plaquettes %d \n", mPlaquettes.size() );
+  for (size_t k=0; k<mPlaquettes.size(); ++k) {
+    find_neighbors( mPlaquettes[k] );
+    // mPlaquettes[k]->compute_slopes();
+  }
+}
+
+void
+therion::warp::plaquette_algo::find_neighbors( therion::warp::basic_pair * me )
+{
+  
+  switch ( me->type() ) {
+    case THWARP_TRIANGLE:
+    case THWARP_PLAQUETTE:
+      for (int k=0; k<me->ngbh_nr(); ++k) 
+        me->m_ngbh[k] = find_plaquette( me->m_pair[k+1], me->m_pair[k] );
+      break;
+    default:
+      thprintf("plaquette_algo::make_neighbors() wrong pair warp-type %d\n",
+        me->type() );
+  }
+}
+
+therion::warp::basic_pair * 
+therion::warp::plaquette_algo::find_plaquette( 
+    point_pair * p1, 
+    point_pair * p2 )
+{
+  // thprintf("find_plaquette() %s %s \n", p1->m_name.c_str(), p2->m_name.c_str() );
+  for (size_t k=0; k<mPlaquettes.size(); ++k ) {
+    int i2 = mPlaquettes[k]->ngbh_nr();
+    if ( i2 >= 1 && i2 < 4 ) {
+      for (int i=0; i<i2; ++i) {
+        if ( mPlaquettes[k]->m_pair[i] == p1 && mPlaquettes[k]->m_pair[i+1] == p2 ) {
+	  // thprintf("found %d\n", mPlaquettes[k]->nr() );
+	  return mPlaquettes[k];
+	}
+      }
+    }
+  }
+  return NULL;
+}
+
+
 
 void 
-thwarptrans::make_plaquettes( thwarp_proj proj )
+therion::warp::plaquette_algo::make_plaquettes( warp_proj proj )
 {
-  for (unsigned int k=0; k<mPlaquettes.size(); ++k) {
+  for (size_t k=0; k<mPlaquettes.size(); ++k) {
     delete mPlaquettes[k];
   }
   mPlaquettes.clear();
 
   // print();
-  unsigned int szp = mPairs.size();
-  for (unsigned int i=0; i<szp; ++i) {
+  size_t szp = mPairs.size();
+  for (size_t i=0; i<szp; ++i) {
       mPairs[i]->order_lines( this, mXUnit/mUUnit, proj );
   }
   // print();
 
   szp = mPairs.size();
-  for (unsigned int i=0; i<szp; ++i) {
+  for (size_t i=0; i<szp; ++i) {
     mPairs[i]->m_used = false;
   }
 
   for ( ; ; ) {
-    thmorph_pair * node1 = NULL;
-    thmorph_line * line = NULL;
-    for (unsigned int i=0; i<szp; ++i) {
+    therion::warp::point_pair * node1 = NULL;
+    therion::warp::line * line = NULL;
+    for (size_t i=0; i<szp; ++i) {
       /*
       if ( mPairs[i]->legs() == 1 && ! mPairs[i]->m_used ) {
         node1 = mPairs[i];
         line  = node1->first_leg();
         for ( ++i; i<szp; ++i) {
           if ( mPairs[i]->size() == 1 ) {
-            thmorph_line * ln = mPairs[i]->next_line(NULL);
+            therion::warp::line * ln = mPairs[i]->next_line(NULL);
             if ( ln && ln->m_type == THMORPH_STATION ) 
               ln->m_type = THMORPH_EXTRA;
           }
@@ -269,18 +366,18 @@ thwarptrans::make_plaquettes( thwarp_proj proj )
       return;
     }
   
-    thmorph_pair * node2 = line->other_end( node1 );
-    thmorph_pair * node10 = node1; // save starting nodes
-    thmorph_pair * node20 = node2;
+    therion::warp::point_pair * node2 = line->other_end( node1 );
+    therion::warp::point_pair * node10 = node1; // save starting nodes
+    therion::warp::point_pair * node20 = node2;
     // thprintf("make_plaquettes()");
     // thprintf(" node1 %s node2 %s\n", node1->m_name.c_str(), node2->m_name.c_str() );
   
     do {
-      thmorph_pair * A = node1;
-      thmorph_pair * B = node2;
+      therion::warp::point_pair * A = node1;
+      therion::warp::point_pair * B = node2;
       if ( line->m_type == THMORPH_STATION ) {
-        unsigned int iA = A->size();
-        unsigned int iB = B->size();
+        size_t iA = A->size();
+        size_t iB = B->size();
         if ( iA == 1 ) // mark the node as used
           A->m_used = true;
         if ( iB == 1 ) 
@@ -288,12 +385,7 @@ thwarptrans::make_plaquettes( thwarp_proj proj )
 
         // thprintf("  A %s (%d)  B %s (%d) line type S\n", A->m_name.c_str(), iA, B->m_name.c_str(), iB );
         if ( iA == 1 && iB == 1 ) { 
-          // segment AB:
-          //              A =========== B
-          //
-          add_segment( A, B );
-          node1 = B;
-          node2 = A;
+	  thprintf("ERROR: segments are no longer supported\n");
         } else if ( iA == 1 ) {
           //                      /
           //           A ======= B ... 
@@ -301,8 +393,8 @@ thwarptrans::make_plaquettes( thwarp_proj proj )
           //                     C
           //
           // do not do anything: B will do it
-          thmorph_line * line2 = B->next_line( line );
-          thmorph_pair * C = line2->other_end( B );
+          therion::warp::line * line2 = B->next_line( line );
+          therion::warp::point_pair * C = line2->other_end( B );
           if ( line2->m_type != THMORPH_STATION )
             add_triangle( A, B, C );
           node1 = B;
@@ -314,8 +406,8 @@ thwarptrans::make_plaquettes( thwarp_proj proj )
           //       ... A ======= B  
           //          / 
           //         D
-          thmorph_line * line1 = A->prev_line( line );
-          thmorph_pair * D = line1->other_end( A );
+          therion::warp::line * line1 = A->prev_line( line );
+          therion::warp::point_pair * D = line1->other_end( A );
           add_triangle( D, A, B );
           node1 = B;
           node2 = A;
@@ -325,18 +417,18 @@ thwarptrans::make_plaquettes( thwarp_proj proj )
           //        |           |
           //        D           C
           //
-          thmorph_line * line1 = A->prev_line( line );
-          thmorph_pair * D = line1->other_end( A );
-          thmorph_line * line2 = B->next_line( line );
-          thmorph_pair * C = line2->other_end( B );
+          therion::warp::line * line1 = A->prev_line( line );
+          therion::warp::point_pair * D = line1->other_end( A );
+          therion::warp::line * line2 = B->next_line( line );
+          therion::warp::point_pair * C = line2->other_end( B );
           add_quadrilater( A, B, C, D );
           node1 = B;
           node2 = C;
           line = line2;
         }
       } else { // line->m_type != THMORPH_STATION 
-        unsigned int iA = A->size();
-        unsigned int iB = B->size();
+        size_t iA = A->size();
+        size_t iB = B->size();
         if ( iA == 1 ) // mark the node as used
           A->m_used = true;
         if ( iB == 1 ) 
@@ -347,7 +439,7 @@ thwarptrans::make_plaquettes( thwarp_proj proj )
         //      |
         //      A ======== B
         //
-        thmorph_line * line2 = A->next_line( line );
+        therion::warp::line * line2 = A->next_line( line );
         if ( line2->m_type == THMORPH_STATION ) {
           //    node_2
           //      |
@@ -361,7 +453,7 @@ thwarptrans::make_plaquettes( thwarp_proj proj )
           //      |
           //      A ======== B
           //
-          thmorph_pair * D = line2->other_end( A );
+          therion::warp::point_pair * D = line2->other_end( A );
           add_triangle( B, A, D );
           node2 = D;
           line = line2;
@@ -370,8 +462,8 @@ thwarptrans::make_plaquettes( thwarp_proj proj )
     } while ( node1 != node10 );
     // back to start
     while ( node2 != node20 ) {
-      thmorph_line * line2 = node1->next_line( line );
-      thmorph_pair * C = line2->other_end( node1 );
+      therion::warp::line * line2 = node1->next_line( line );
+      therion::warp::point_pair * C = line2->other_end( node1 );
       add_triangle( node2, node1, C );
       node2 = C;
       line = line2;
@@ -379,40 +471,25 @@ thwarptrans::make_plaquettes( thwarp_proj proj )
   } // end big for ( ; ; )
 }
 
-void
-thwarptrans::add_segment( thmorph_pair * A, thmorph_pair * B )
-{
-  // thprintf("  ADD Segment %s %s\n", A->m_name.c_str(), B->m_name.c_str() );
-  thmorph_segment_pair * sgm = new thmorph_segment_pair( A, B, this->m_bound2, false );
-  mPlaquettes.push_back( sgm );
-}
 
 void
-thwarptrans::add_triangle( thmorph_pair * A, thmorph_pair * B, thmorph_pair * C )
+therion::warp::plaquette_algo::add_triangle( point_pair * A, point_pair * B, point_pair * C )
 {
-  double vol_x = (C->x - B->x) ^ (A->x - B->x);
-  double vol_u = (C->u - B->u) ^ (A->u - B->u);
-  // thprintf("  ADD Triangle: %s %s %s (vol. %8.4f %8.4f)\n",
-  //   A->m_name.c_str(), B->m_name.c_str(), C->m_name.c_str(), vol_x, vol_u );
-  if ( fabs(vol_u) < 1.E-4 ) {
-    add_segment( A, C );
-    return;
-  }
-  if ( vol_x >= 0.0 ) {
+  if ( ((C->x - B->x) ^ (A->x - B->x)) >= 0.0 ) {
     thprintf("WARNING: bad triangle (%s %s %s) X-orientation\n",
       C->m_name.c_str(), B->m_name.c_str(), A->m_name.c_str() );
   } else if ( ((C->u - B->u) ^ (A->u - B->u)) >= 0.0 ) {
     thprintf("WARNING: bad triangle (%s %s %s) U-orientation\n",
       C->m_name.c_str(), B->m_name.c_str(), A->m_name.c_str() );
   } else {
-    thmorph_triangle_pair * tri = new thmorph_triangle_pair( B, C, A, this->m_bound3  );
+    therion::warp::triangle_pair * tri = new therion::warp::triangle_pair( B, C, A, this->m_bound3 );
     mPlaquettes.push_back( tri );
   }
 }
 
 void
-thwarptrans::add_quadrilater( thmorph_pair * A, thmorph_pair * B, 
-                              thmorph_pair * C, thmorph_pair * D )
+therion::warp::plaquette_algo::add_quadrilater( 
+     point_pair * A, point_pair * B, point_pair * C, point_pair * D )
 {
   // thprintf("  ADD Plaquette: %s %s %s %s\n",
   //   A->m_name.c_str(), B->m_name.c_str(), C->m_name.c_str(), D->m_name.c_str() );
@@ -430,7 +507,7 @@ thwarptrans::add_quadrilater( thmorph_pair * A, thmorph_pair * B,
     thprintf("WARNING: bad plaquette (%s %s %s) U-orientation\n",
       C->m_name.c_str(), B->m_name.c_str(), A->m_name.c_str() );
   } else {
-    thmorph_plaquette_pair * plaq = new thmorph_plaquette_pair( A, B, C, D, this->m_bound4 );
+    therion::warp::plaquette_pair * plaq = new therion::warp::plaquette_pair( A, B, C, D, this->m_bound4 );
     mPlaquettes.push_back( plaq );
   }
 }
@@ -439,10 +516,10 @@ thwarptrans::add_quadrilater( thmorph_pair * A, thmorph_pair * B,
 
 
 bool
-thwarptrans::map_backward_plaquette( unsigned int k, const thvec2 & w, thvec2 & z )
+therion::warp::plaquette_algo::map_backward_plaquette( size_t k, const thvec2 & w, thvec2 & z )
 {
   if ( mPlaquettes[k]->is_inside_to( w ) ) {
-    z = mPlaquettes[k]->backward( w );
+    mPlaquettes[k]->backward( w, z );
     return true;
   }
   return false;
@@ -450,29 +527,38 @@ thwarptrans::map_backward_plaquette( unsigned int k, const thvec2 & w, thvec2 & 
 
 
 bool
-thwarptrans::map_image( const unsigned char * src, unsigned int ws, unsigned int hs,
+therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned int ws, unsigned int hs,
                        unsigned char * dst, unsigned int wd, unsigned int hd,
 		       thvec2 const & origin, double unit,
                        int depth, 
-		       thwarp_proj proj )
+		       warp_proj proj )
 {
   if ( ! initialize( proj ) ) return false;
 
   mUC     = origin;
   mUCUnit = unit;
 
+  double res[4];
+  assert( depth <= 4 ); // max 4 components
+  unsigned int wsd = ws * depth;
+
+  thvec2 z;
+
+  // print();
+
   // thprintf("X origin %6.2f %6.2f units %6.2f\n", mX0.m_x, mX0.m_y, mXUnit);
   // thprintf("U origin %6.2f %6.2f units %6.2f\n", mU0.m_x, mU0.m_y, mUUnit);
   // thprintf("UC origin %6.2f %6.2f units %6.2f\n", mUC.m_x, mUC.m_y, mUCUnit);
   // new way
-  unsigned int * pi = (unsigned int *)malloc( wd * hd * sizeof(unsigned int) );
+  warpp_t * pi = (warpp_t *)malloc( wd * hd * sizeof(warpp_t) );
   if ( pi != NULL ) {
-    memset( pi, 0xff, wd*hd*sizeof(unsigned int) );
+    memset( pi, 0xff, wd*hd*sizeof(warpp_t) );
     double * pf = (double *)malloc( wd * hd * sizeof(double) );
     if ( pf == NULL ) 
       thprintf("warning: failed to allocate temporary distance image\n");
-  
-    for (unsigned int k=0; k<mPlaquettes.size(); ++k ) {
+
+    for (size_t k=0; k<mPlaquettes.size(); ++k ) {
+      assert( ( ( (warpp_t)k) & indx_mask) == (warpp_t)k );
       // thprintf("mapping plaquette %d\n", k );
       thvec2 t1, t2;
       mPlaquettes[k]->bounding_box_to( t1, t2 );
@@ -480,70 +566,100 @@ thwarptrans::map_image( const unsigned char * src, unsigned int ws, unsigned int
       t2 = mUC + mUCUnit * t2;
       t1.maximize( thvec2(0,0) );
       t2.minimize( thvec2(wd, hd) );
+      int i1 = (int)t1.m_x;
       int i2 = (int)t2.m_x;
       int j2 = (int)t2.m_y;
       for (int j=(int)t1.m_y; j<j2; ++j) {
-        unsigned int * piwd = pi + j*wd;
-        double *       pfwd = pf + j*wd;
-        for (int i=(int)t1.m_x; i<i2; ++i) {
-          thvec2 u( i, j );
-          thvec2 w = (u - mUC) / mUCUnit;
-          thvec2 z;
-          if ( map_backward_plaquette( k, w, z ) ) {
-            if ( piwd[i] == 0xffffffff ) {
-              piwd[i] = k;
-	      if ( pf ) pfwd[i] = -1.0;
+        warpp_t * piwd = pi + j*wd;
+        double  * pfwd = pf + j*wd;
+        thvec2 u( i1, j );
+        for (int i=i1; i<i2; ++i) {
+          // thvec2 u( i, j );
+          // thvec2 w = (u - mUC) / mUCUnit;
+	  thvec2 w( (u.m_x - mUC.m_x)/mUCUnit, (u.m_y - mUC.m_y)/mUCUnit );
+          // if ( map_backward_plaquette( k, w, z ) ) {
+	  if ( mPlaquettes[k]->is_inside_to( w ) ) {
+            if ( ( piwd[i] & ngbh_mask ) == ngbh_mask ) {
+              piwd[i] = (warpp_t)k;
+	      if ( pf ) pfwd[i] = -1.0; // delay distance computation
+	      // pfwd[i] = mPlaquettes[k]->distance2_to( w );
             } else {
-              // thvec2 x = mX0 + z * mXUnit;
               double d1 = mPlaquettes[k]->distance2_to( w );
 	      if ( pf ) {
+	        // delayed distance computation
 	        if ( pfwd[i] < 0.0 ) pfwd[i] = mPlaquettes[piwd[i]]->distance2_to( w );
                 double d0 = pfwd[i];
-                if ( d1 <d0 ) { piwd[i] = k; pfwd[i] = d1; }
+                if ( d1 < d0 ) { 
+		  piwd[i] = (warpp_t)k;
+		  pfwd[i] = d1; 
+		}
 	      } else {
 	        double d0 = mPlaquettes[piwd[i]]->distance2_to( w );
-		if ( d1 <d0 ) { piwd[i] = k; }
+		if ( d1 < d0 ) { 
+		  piwd[i] = (warpp_t)k; 
+		}
 	      }
             }
           }
+	  u.m_x += 1.0;
         }
       }
     }
+    warpp_t * pij = pi;
+
+    // not sure if it's better to random-access or scan-through
+    // if the output image is dense a scan-through should be better
+    // if it is "sparse" random-access should be better
+    // in the following i opt for scan-through on the destination image
+    // but random-access of the (i,j) vector
+    //
+    // unsigned int wdd = wd * depth;
+    unsigned char * dst1 = dst;
     for (unsigned int j=0; j<hd; ++j) {
       for (unsigned int i=0; i<wd; ++i) {
-        unsigned int k = pi[j*wd+i];
-        if ( k < mPlaquettes.size() ) {
+        warpp_t kp = *pij++;
+        // if ( kp < mPlaquettes.size() ) {
+	if ( (kp & ngbh_mask) != ngbh_mask ) {
           thvec2 u( i, j );
-          thvec2 z;
-          thvec2 w = (u - mUC) / mUCUnit;;
-          map_backward_plaquette( k, w, z );
-          thvec2 x = mX0 + z * mXUnit;
+          // thvec2 w = (u - mUC) / mUCUnit;
+	  thvec2 w( (u.m_x - mUC.m_x)/mUCUnit, (u.m_y - mUC.m_y)/mUCUnit );
+          map_backward_plaquette( kp, w, z );
+          // thvec2 x = mX0 + z * mXUnit;
+          thvec2 x( mX0.m_x + z.m_x * mXUnit, mX0.m_y + z.m_y * mXUnit );
           int ix1 = (int)x.m_x;
           int ix2 = ix1 + 1;
-          int iy1 = (int)x.m_y;
-          int iy2 = iy1 + 1;
-          if ( ix1 >= 0 && ix2 < (int)ws && iy1 >= 0 && iy2 < (int)hs ) {
-              double dx = x.m_x - ix1;  // bilinear interpolation
+          if ( ix1 >= 0 && ix2 < (int)ws ) {
+            int iy1 = (int)x.m_y;
+            int iy2 = iy1 + 1;
+	    if ( iy1 >= 0 && iy2 < (int)hs ) {
+	      // bilinear interpolation: does not cost much more than nearest-pixel
+              double dx = x.m_x - ix1;  
               double dy = x.m_y - iy1;
-              unsigned char * dst1 = dst + depth * (j * wd + i);
-              const unsigned char * src00 = src + depth * ( iy1*ws + ix1 );
-              const unsigned char * src01 = src00 + depth * ws;
+	      double dx1dy1 = (1-dx) * (1-dy);
+	      double dx1dy0 = (1-dx) * dy;
+	      double dx0dy1 = dx * (1-dy);
+	      double dx0dy0 = dx * dy;
+              // unsigned char * dst1 = dst + (j * wdd + i * depth);
+              const unsigned char * src00 = src + iy1*wsd + ix1 * depth;
+              const unsigned char * src01 = src00 + wsd;
               const unsigned char * src10 = src00 + depth;
               const unsigned char * src11 = src01 + depth;
-              for (int k=0; k<depth; ++k) {
-                double res = ( src00[k] * (1-dx) +  src10[k] * dx ) * (1-dy)
-                           + ( src01[k] * (1-dx) +  src11[k] * dx ) * dy;
-                dst1[k] = (unsigned char)(( res >= 255 ) ? 255 : res);
+              for (int c=0; c<depth; ++c) {
+                res[c] = src00[c] * dx1dy1 + src10[c] * dx0dy1
+                       + src01[c] * dx1dy0 + src11[c] * dx0dy0;
+                dst1[c] = (unsigned char)(( res[c] >= 255 ) ? 255 : res[c]);
               }
-          }
+	    }
+	  }
         }
+	dst1 += depth;
       }
     }
     if ( pf ) free( pf );
     free( pi );
   } else { // old way (used if pi malloc failed ...
     thprintf("warning: failed to allocate temporary index image\n");
-    for (unsigned int k=0; k<mPlaquettes.size(); ++k ) {
+    for (size_t k=0; k<mPlaquettes.size(); ++k ) {
       // thprintf("mapping plaquette %d\n", k );
       thvec2 t1, t2;
       mPlaquettes[k]->bounding_box_to( t1, t2 );
@@ -583,25 +699,6 @@ thwarptrans::map_image( const unsigned char * src, unsigned int ws, unsigned int
       }
     }
   }
-
-  //thprintf("warp done\n");
-  /* debug: check points 
-  unsigned int szp = mPairs.size();
-  for (unsigned int i=0; i<szp; ++i) {
-    // thprintf("%s: X %.2f %.2f Z %.2f %.2f U %.2f %.2f W %.2f %.2f\n",
-    thprintf("%s: X %.2f %.2f U %.2f %.2f \n",
-      mPairs[i]->m_name.c_str(),
-      mPairs[i]->x.m_x, mPairs[i]->x.m_y,
-      // mPairs[i]->z.m_x, mPairs[i]->z.m_y,
-      mPairs[i]->u.m_x, mPairs[i]->u.m_y );
-      // mPairs[i]->w.m_x, mPairs[i]->w.m_y );
-    thvec2 u1, u2;
-    forward( mPairs[i]->x, u1, thvec2(0.0,0.0), 1.0 );
-    forward( mPairs[i]->x, u2, mUC, mUCUnit );
-    thprintf("    U1 %.2f %.2f U2 %.2f %.2f\n",
-      u1.m_x, u1.m_y, u2.m_x, u2.m_y );
-  }
-  */
 
   return true;
 }

@@ -34,6 +34,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <climits>
 
 // #include <cstring>
 #include <cstdio>
@@ -1306,7 +1307,7 @@ void build_pages() {
   }
   
   PDFRES << "\\pdfinfo{/Creator (Therion " << THVERSION << ", MetaPost, TeX)}%" << endl;
-  PDFRES << "\\pdfcatalog{ /ViewerPreferences << /DisplayDocTitle true >> }" << endl;
+  PDFRES << "\\pdfcatalog{ /ViewerPreferences << /DisplayDocTitle true /PrintScaling /None >> }" << endl;
   
 
   if (LAYOUT.transparency) {

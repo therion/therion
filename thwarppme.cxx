@@ -1,9 +1,11 @@
-/**
- * @file thmorphelement.cxx
- * Transformation structures.
+/** @file thwarppme.cxx
+ *
+ * @author marco corvi
+ * @date nov 2006 - mar 2007
+ *
+ * @brief Warping plaquette algo structures
  */
-  
-/* Copyright (C) 2006 marco corvi
+/* Copyright (C) 2006-2007 marco corvi
  * 
  * $Date: $
  * $RCSfile: $
@@ -31,6 +33,15 @@
 #include "thwarppme.h"
 #include "thinfnan.h"
 
+int therion::warp::basic_pair::basic_pair_nr = 0;
+
+namespace therion
+{
+  namespace warp 
+  {
+
+
+
 /** compute vertical-ness
  * @param a   X-coordinate factor
  * @param x   X vector
@@ -43,7 +54,7 @@
  *   - the closer to 0 the more vertical is the vector
  */
 double
-thcompute_vertical( double a, thvec2 & x, thvec2 & u )
+compute_vertical( double a, thvec2 & x, thvec2 & u )
 {
   double vx = ( fabs(x.m_x * a) < fabs(x.m_y) )? 0.0 
               : ( (x.m_y > 0.0)? (1.0 - x.m_y/fabs( x.m_x * a ))
@@ -60,7 +71,7 @@ thcompute_vertical( double a, thvec2 & x, thvec2 & u )
  * @param c   second endpoint of the segment
  */
 double
-thcompute_segment_distance2( const thvec2 & x, const thvec2 & b, const thvec2 & c )
+compute_segment_distance2( const thvec2 & x, const thvec2 & b, const thvec2 & c )
 {
   double xcb = c.m_x - b.m_x;
   double ycb = c.m_y - b.m_y;
@@ -94,8 +105,13 @@ thcompute_segment_distance2( const thvec2 & x, const thvec2 & b, const thvec2 & 
 }
 
 
+
+} // namespace warp
+
+} // namespace therion
+
 void 
-thmorph_pair::add_line( thmorph_line * line )
+therion::warp::point_pair::add_line( line * line )
 {
   // thprintf("%s add_line %s-%s\n", 
   //   m_name.c_str(), line->m_p1->m_name.c_str(), line->m_p2->m_name.c_str() );
@@ -103,7 +119,7 @@ thmorph_pair::add_line( thmorph_line * line )
   mLines.push_back( line );
 }
 
-thmorph_line::thmorph_line( thmorph_type t, thmorph_pair * p1, thmorph_pair * p2 )
+therion::warp::line::line( morph_type t, point_pair * p1, point_pair * p2 )
   : m_type( t ) 
   , m_p1( p1 )
   , m_p2( p2 )
@@ -114,16 +130,16 @@ thmorph_line::thmorph_line( thmorph_type t, thmorph_pair * p1, thmorph_pair * p2
 }
 
 void
-thmorph_pair::update( thvec2 & x0, double xunit, thvec2 & u0, double uunit )
+therion::warp::point_pair::update( thvec2 & x0, double xunit, thvec2 & u0, double uunit )
 {
   z = ( x - x0 ) / xunit;
   w = ( u - u0 ) / uunit;
 }
 
 void
-thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
+therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj proj )
 {
-  unsigned int sz = mLines.size();
+  size_t sz = mLines.size();
   // thprintf("order_lines(): Point %s has %d/%d lines\n", m_name.c_str(), sz, m_legs );
   if ( sz <= 1 ) {
     return;
@@ -133,13 +149,13 @@ thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
   while ( repeat ) {
     sz = mLines.size();
 
-    thmorph_line * l1 = mLines[0];
+    therion::warp::line * l1 = mLines[0];
     thvec2 v1 = ( this == l1->m_p1 ) ? l1->vz : l1->vz * (-1);
-    for ( unsigned int i=1; i<sz-1; ++i) {
+    for ( size_t i=1; i<sz-1; ++i) {
       double theta_min = 2*THPI;
-      unsigned int jmin = i;
-      for (unsigned int j=i; j<sz; ++j) {
-        thmorph_line * l2 = mLines[j];
+      size_t jmin = i;
+      for (size_t j=i; j<sz; ++j) {
+        therion::warp::line * l2 = mLines[j];
         thvec2 v2 = ( this == l2->m_p1 ) ? l2->vz : l2->vz * (-1);
         double ct = v1 * v2;
         double st = v1 ^ v2;
@@ -158,16 +174,16 @@ thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
     repeat = false; 
     // now check that between any two STATION lines there is a non-STATION line
     // thprintf("Point %s: %6.2f %6.2f has %d lines\n", m_name.c_str(), x.m_x, x.m_y, sz );
-    for ( unsigned int i=0; i<sz; ++i) {
-      unsigned int j = (i+1)%sz;
+    for ( size_t i=0; i<sz; ++i) {
+      size_t j = (i+1)%sz;
       if ( m_legs >= 2 ) {
-        thmorph_line * l1 = mLines[i];
-        thmorph_line * l2 = mLines[j];
+        therion::warp::line * l1 = mLines[i];
+        therion::warp::line * l2 = mLines[j];
         if ( l1->m_type != THMORPH_STATION ) continue;
         if ( l2->m_type != THMORPH_STATION ) continue;
-        thmorph_pair * p1 = l1->other_end( this );
-        thmorph_pair * p2 = l2->other_end( this );
-        // printf("point %s (%s - %s) sizes %d %d \n",
+        therion::warp::point_pair * p1 = l1->other_end( this );
+        therion::warp::point_pair * p2 = l2->other_end( this );
+        // thprintf("point %s (%s - %s) sizes %d %d \n",
         //   m_name.c_str(),  p1->m_name.c_str(), p2->m_name.c_str(), p1->size(), p2->size() );
         if ( p1->size() == 1 && p2->size() == 1 ) continue;
 
@@ -175,11 +191,11 @@ thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
         continue;
       } else { // m_legs == 1
         // angle between line[i] and line[j]
-        thmorph_line * l1 = mLines[i];
-        thmorph_line * l2 = mLines[j];
-        thmorph_pair * p1 = l1->other_end( this );
-        thmorph_pair * p2 = l2->other_end( this );
-        // printf("point %s (%s - %s) legs 1 angle %6.2f\n", 
+        therion::warp::line * l1 = mLines[i];
+        therion::warp::line * l2 = mLines[j];
+        therion::warp::point_pair * p1 = l1->other_end( this );
+        therion::warp::point_pair * p2 = l2->other_end( this );
+        // thprintf("point %s (%s - %s) legs 1 angle %6.2f\n", 
         //   m_name.c_str(), p1->m_name.c_str(), p2->m_name.c_str(), 
         //   (p2->u - u) ^ (p1->u -u ) );
         if ( ((p2->u - u) ^ (p1->u -u )) < 0 )
@@ -187,31 +203,31 @@ thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
       }
       repeat = true;
       // thprintf("Point %s: insert %d/%d lines (j=%d)\n", m_name.c_str(), i, sz, j );
-      thmorph_line * l1 = mLines[i];
-      thmorph_line * l2 = mLines[j];
-      thmorph_pair * p1 = l1->other_end( this ); // ( this == l1->m_p1 ) ? l1->m_p2 : l1->m_p1;
-      thmorph_pair * p2 = l2->other_end( this ); // ( this == l2->m_p1 ) ? l2->m_p2 : l2->m_p1;
+      therion::warp::line * l1 = mLines[i];
+      therion::warp::line * l2 = mLines[j];
+      therion::warp::point_pair * p1 = l1->other_end( this ); // ( this == l1->m_p1 ) ? l1->m_p2 : l1->m_p1;
+      therion::warp::point_pair * p2 = l2->other_end( this ); // ( this == l2->m_p1 ) ? l2->m_p2 : l2->m_p1;
       thvec2 x1 = p1->x - x;
       thvec2 x2 = p2->x - x;
       thvec2 u1 = p1->u - u;
       thvec2 u2 = p2->u - u;
-      // printf("must insert between %s %s at %s (m_legs %d) proj %s\n",
+      // thprintf("must insert between %s %s at %s (m_legs %d) proj %s\n",
       //   p1->m_name.c_str(), p2->m_name.c_str(), m_name.c_str(), m_legs,
       //   (proj == THWARP_PLAN)? "plan" : "elev" );
       // try a non-STATION line that reflected is between l1 and l2
-      unsigned int k = 0;
+      size_t k = 0;
       if ( m_legs <= 2 ) {
         for ( ; k<sz; ++k) {
           if ( mLines[k]->m_type == THMORPH_STATION ) continue;
-          thmorph_pair * p0 = mLines[k]->other_end( this );
+          therion::warp::point_pair * p0 = mLines[k]->other_end( this );
           thvec2 x0 = x - p0->x;
           thvec2 u0 = u - p0->u;
           if ( (x2 ^ x0) < 0 && (x0 ^ x1) < 0 && (u2 ^ u0) < 0 && (u0 ^ u1) ) {
             // opposite is OK both for PLAN and for EXTENDED proj
-            // thprintf("can use opposite of %s\n", p0->m_name.c_str() );
+            // thprintf("adding extra as opposite of %s\n", p0->m_name.c_str() );
             thvec2 x3 = x + x0;
             thvec2 u3 = u + u0;
-            morpher->add_extra_line( this, i, x3, u3 );
+            warper->add_extra_line( this, i, x3, u3 );
             break;
           }
         }
@@ -222,49 +238,48 @@ thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
       if ( k == sz ) {
         thvec2 x3, u3;
         if ( proj == THWARP_PLAN ) {
-          thvec2 vu = u2/u2.length() - u1/u1.length();
-          // thline2 lu( vu.m_x, vu.m_y, - u.m_x * vu.m_x - u.m_y * vu.m_y );
-          // double au = vu.length();
-          double du = (u1 - u2).length() / 2.0;
-          double d1 = u1.length()/2.0; // fabs( lu.eval( u1 ) / au );
-          double d2 = u2.length()/2.0; // fabs( lu.eval( u2 ) / au );
+	  // this is a wild guess. there is no generic way to guess
+	  // where the tranverse point(s) are ...
+          double d1 = u1.length(); 
+          double d2 = u2.length(); 
+          double du = (u1 - u2).length();
+          thvec2 vu = u2/d2 - u1/d1;
+	  vu.normalize();
+	  // thprintf("adding extra as bisector at %s [lengths %.2f %.2f %.2f]\n",
+	  //   this->m_name.c_str(), du, d1, d2 );
           if ( d1 < du ) du = d1;
           if ( d2 < du ) du = d2;
-          // du /= 2*au;
-          // double du = dx / x_u;
           u3.m_x = u.m_x + vu.m_y * du;
           u3.m_y = u.m_y - vu.m_x * du;
 
           thvec2 vx = x2/x2.length() - x1/x1.length();
-          // thline2 lx( vx.m_x, vx.m_y, - x.m_x * vx.m_x - x.m_y * vx.m_y );
-          // double ax = vx.length();
+	  vx.normalize();
           /*
           double dx = (x1 - x2).length() / 2.0;
-          double d1 = x1.length()/2.0; // fabs( lx.eval( x1 ) / ax );
-          double d2 = x2.length()/2.0; // fabs( lx.eval( x2 ) / ax );
+          double d1 = x1.length()/2.0; 
+          double d2 = x2.length()/2.0; 
           if ( d1 < dx ) dx = d1;
           if ( d2 < dx ) dx = d2;
-          // dx /= 2*ax;
           */
           double dx = du * x_u;
           x3.m_x = x.m_x + vx.m_y * dx;
           x3.m_y = x.m_y - vx.m_x * dx;
         } else /* if ( proj == THWARP_EXTENDED ) */ {
           #define TH_VERT_ALPHA 32.0
-          double v1 = thcompute_vertical( TH_VERT_ALPHA, x1, u1 );
-          double v2 = thcompute_vertical( TH_VERT_ALPHA, x2, u2 );
+          double v1 = compute_vertical( TH_VERT_ALPHA, x1, u1 );
+          double v2 = compute_vertical( TH_VERT_ALPHA, x2, u2 );
           thvec2 vu = u2/u2.length() - u1/u1.length();
-          double du = (u1 - u2).length() / 2.0;
-          double d1 = u1.length()/2.0; // fabs( lu.eval( u1 ) / au );
-          double d2 = u2.length()/2.0; // fabs( lu.eval( u2 ) / au );
+          double du = (u1 - u2).length();
+          double d1 = u1.length();
+          double d2 = u2.length();
           if ( d1 < du ) du = d1;
           if ( d2 < du ) du = d2;
           double dx = du * x_u;
-          // printf("v1 %f v2 %f \n", v1, v2 );
+          // thprintf("v1 %f v2 %f \n", v1, v2 );
           if ( fabs(v1) < 0.5 || fabs(v2) < 0.5 ) {
             if ( fabs(v1) < 0.1 && fabs(v2) < 0.1 ) {
               if ( v1 * v2 < 0.0 ) { // vertical opposite
-                // printf("horizontal\n");
+                // thprintf("horizontal\n");
                 u3.m_x = u.m_x + ((v2>0.0)? 1.0 : -1.0) * du;
                 u3.m_y = u.m_y;
                 x3.m_x = x.m_x + ((v2>0.0)? 1.0 : -1.0) * dx;
@@ -277,7 +292,7 @@ thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
                 x3.m_y = (x1.m_y + x2.m_y)/2.0;
               }
             } else {
-              // printf("bisector\n");
+              // thprintf("bisector\n");
               u3.m_x = u.m_x + vu.m_y * du;
               u3.m_y = u.m_y - vu.m_x * du;
               thvec2 vx = x2/x2.length() - x1/x1.length();
@@ -285,14 +300,14 @@ thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
               x3.m_y = x.m_y - vx.m_x * dx;
             }
           } else {
-            // printf("vertical\n");
+            // thprintf("vertical\n");
             u3.m_x = u.m_x;
             u3.m_y = u.m_y + ((v2>0.0)? 1.0 : -1.0) * du;
             x3.m_x = x.m_x;
             x3.m_y = x.m_y + ((v2>0.0)? 1.0 : -1.0) * dx;
           }
         }
-        morpher->add_extra_line( this, i, x3, u3 );
+        warper->add_extra_line( this, i, x3, u3 );
       }
     } // for ( ...; i<sz; ...)
   } // while ( repeat )
@@ -300,8 +315,8 @@ thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
   sz = mLines.size();
   /*
   thprintf("Point %s: %6.2f %6.2f has %d/%d lines: ", m_name.c_str(), x.m_x, x.m_y, sz, m_legs );
-  for ( unsigned int i=0; i<sz; ++i) {
-    thmorph_pair * p2 = mLines[i]->other_end( this );
+  for ( size_t i=0; i<sz; ++i) {
+    point_pair * p2 = mLines[i]->other_end( this );
     thprintf("%s ", p2->m_name.c_str() );
   }
   thprintf("\n");
@@ -311,21 +326,21 @@ thmorph_pair::order_lines( thinserter * morpher, double x_u, thwarp_proj proj )
   // node at the other end
   // this check could be restricted to 
   //    if ( m_type == THMORPH_STATION )
-  for ( unsigned int i=0; i<sz; ++i) {
-    thmorph_line * l2 = mLines[i];
+  for ( size_t i=0; i<sz; ++i) {
+    therion::warp::line * l2 = mLines[i];
     if ( l2->m_type != THMORPH_STATION ) {
-      thmorph_pair * p2 = l2->other_end( this );
+      point_pair * p2 = l2->other_end( this );
       assert( p2->mLines.size() == 1 );
     }
   }
 }
 
 
-thmorph_line * 
-thmorph_pair::first_leg()
+therion::warp::line * 
+therion::warp::point_pair::first_leg()
 {
-  unsigned int sz = mLines.size();
-  for (unsigned int j=0; j<sz; ++j) {
+  size_t sz = mLines.size();
+  for (size_t j=0; j<sz; ++j) {
     if ( mLines[j]->m_type == THMORPH_STATION ) return mLines[j];
   }
   return NULL;
@@ -333,7 +348,7 @@ thmorph_pair::first_leg()
 
 
 void
-thmorph_line::update()
+therion::warp::line::update()
 {
   // thprintf("Update line %s %s\n", m_p1->m_name.c_str(), m_p2->m_name.c_str() );
   vz = m_p2->z - m_p1->z;
@@ -350,14 +365,14 @@ thmorph_line::update()
   wab = sqrt(w.m_a*w.m_a + w.m_b*w.m_b);
 
   double dz = vz.length2();
-  R.m_xx = R.m_yy = ( vw * vz ) / dz;
-  R.m_xy = ( vw ^ vz ) / dz;
-  R.m_yx = - R.m_xy;
+  // R.m_xx = R.m_yy = ( vw * vz ) / dz;
+  // R.m_xy = ( vw ^ vz ) / dz;
+  // R.m_yx = - R.m_xy;
 
   double dw = vw.length2();
-  S.m_xx = S.m_yy = ( vz * vw ) / dw;
-  S.m_xy = ( vz ^ vw ) / dw;
-  S.m_yx = - S.m_xy;
+  // S.m_xx = S.m_yy = ( vz * vw ) / dw;
+  // S.m_xy = ( vz ^ vw ) / dw;
+  // S.m_yx = - S.m_xy;
 
   dz = sqrt( dz );
   dw = sqrt( dw );
@@ -370,114 +385,13 @@ thmorph_line::update()
 }
 
 // ---------------------------------------------------------------
-// thmorph_segment
+// therion::warp::plaquette
 
-void thmorph_segment::init( bool reverse )
-{
-  m_AB = m_B - m_A;
-  double n = m_AB.length2();
-  m_ABh = m_AB.orthogonal();
-  m_ABn = m_AB / n;
-  m_ABh /= sqrt(n);
-  if (reverse) m_ABh *= -1.0;
-  /*
-  thprintf("Segment: A %6.2f %6.2f   B %6.2f %6.2f\n", m_A.m_x, m_A.m_y, m_B.m_x, m_B.m_y );
-  thprintf("        AB %6.2f %6.2f ABn %6.2f %6.2f ABh %6.2f %6.2f\n", 
-         m_AB.m_x, m_AB.m_y, m_ABn.m_x, m_ABn.m_y, m_ABh.m_x, m_ABh.m_y );
-  */
-}
-
-thvec2 
-thmorph_segment_pair::backward( const thvec2 & p )
-{
-    thvec2 v = to.map( p );
-    return from.m_A + v.m_x * from.m_AB + v.m_y * from.m_ABh;
-}
-
-bool 
-thmorph_segment_pair::is_inside_from( const thvec2 & p )
-{
-    thvec2 v = from.map( p );
-    return v.m_y >= 0 && v.m_y < m_bound
-        && v.m_x > - m_bound && v.m_x < 1 + m_bound;
-}
-
-bool 
-thmorph_segment_pair::is_inside_to( const thvec2 & p )
-{
-    thvec2 v = to.map( p );
-    return v.m_y >= 0 && v.m_y < m_bound 
-        && v.m_x > - m_bound && v.m_x < 1 + m_bound;
-}
-
-double 
-thmorph_segment_pair::distance_from( const thvec2 & p ) 
-{
-    thvec2 v = from.map( p );
-    return v.m_y;
-}
-
-double 
-thmorph_segment_pair::distance_to( const thvec2 & p ) 
-{
-    thvec2 v = to.map( p );
-    return v.m_y;
-}
-
-double
-thmorph_segment_pair::distance2_from( const thvec2 & p )
-{
-  return thcompute_segment_distance2( p, from.m_A, from.m_B);
-}
-
-double
-thmorph_segment_pair::distance2_to( const thvec2 & p )
-{
-  return thcompute_segment_distance2( p, to.m_A, to.m_B);
-}
-
-void 
-thmorph_segment_pair::bounding_box_to( thvec2 & t1, thvec2 & t2 )
-{
-  thvec2 a = to.m_A - m_bound * to.m_AB;
-  thvec2 b = to.m_B + m_bound * to.m_AB;
-  t1 = a;
-  t1.minimize( b );
-  t2 = a;
-  t2.maximize( b );
-  a = a + m_bound * to.m_ABh;
-  b = b + m_bound * to.m_ABh;
-  t1.minimize( a );
-  t1.minimize( b );
-  t2.maximize( a );
-  t2.maximize( b );
-}
-
-// ---------------------------------------------------------------
-// thmorph_plaquette
-
-void thmorph_plaquette::init()
+void therion::warp::plaquette::init()
 {
   m_AD = m_A - m_D;
   m_BC = m_B - m_C;
-#if TRANSFORMATION == 0 
-  // thprintf("init() intersection interpolation\n");
-  m_AC_BD = m_A + m_C - m_B - m_D;
-  m_ac = m_A ^ m_C;  
-  m_ab = m_A ^ m_B;  // for t
-  m_db = m_D ^ m_B;
-  m_dc = m_D ^ m_C;
-  m_AB = m_A - m_B;
-  m_DC = m_D - m_C;
-  m_at = m_ab - m_ac - m_db + m_dc;
-  m_bt = m_ac + m_db  - 2 * m_ab;
-  m_ad = m_A ^ m_D;  // for s
-  m_bc = m_B ^ m_C;
-  m_bd = - m_db;
-  m_as = m_ad - m_ac - m_bd + m_bc;
-  m_bs = m_ac + m_bd  - 2 * m_ad;
-#elif TRANSFORMATION == 1
-  // thprintf("init() bilinear transformation\n");
+
   m_a =   m_A.m_x - m_B.m_x - m_D.m_x  + m_C.m_x;
   m_b = - m_A.m_x + m_B.m_x;
   m_c = - m_A.m_x           + m_D.m_x;
@@ -490,73 +404,41 @@ void thmorph_plaquette::init()
   m_A0 = m_a * m_f - m_b * m_e;
   m_B0 = m_a * m_h - m_d * m_e + m_c * m_f - m_b * m_g;
   m_C0 = m_c * m_h - m_d * m_g;
-  // m_D0 = m_a * m_g - m_c * m_e;
-  // m_E0 = m_a * m_h - m_d * m_e - m_c * m_f + m_b * m_g;
-  // m_F0 = m_b * m_h - m_d * m_f;
-#endif
+  m_D0 = m_a * m_g - m_c * m_e;
+  m_E0 = m_a * m_h - m_d * m_e - m_c * m_f + m_b * m_g;
+  m_F0 = m_b * m_h - m_d * m_f;
+
+  // angles + "line"
+  m_abn = m_B - m_A;
+  m_abd = m_abn.length(); 
+  m_abn.normalize();
+  m_abh.m_x =   m_abn.m_y;
+  m_abh.m_y = - m_abn.m_x;
+
+  thvec2 ad = m_D - m_A;
+  ad.normalize();
+  m_theta_l = acos( m_abn * ad );
+  m_theta_l = angle( m_abn, ad );
+  thvec2 bc = m_C - m_B;
+  bc.normalize();
+  m_theta_r = acos( - m_abn * bc );
+  m_theta_r = angle( bc, - m_abn );
+  
+  // thprintf("Plaquette Theta L %.2f R %.2f \n", m_theta_l, m_theta_r );
 }
 
-
-/** solve the system
- *    | A+t(D-A)   B+t(C-B)   P  | = 0
- */
-thvec2 thmorph_plaquette::map( const thvec2 & p )
+double
+therion::warp::plaquette::s_map( const thvec2 & p ) const
 {
-  double t, s;
-#if TRANSFORMATION == 0
-  // intersection interpolation
-  double a = m_at;
-  double b = m_bt + ( m_AC_BD ^ p );
-  double c = m_ab - ( m_AB ^ p );
+  double s;
 
-  if ( fabs(a) > 1.e-6 ) { // 2-nd order eq.
-    double det = b*b - 4 * a * c;
-    if ( det < 0.0 ) {
-      t = NAN;
-    } else if ( det < 1.e-12 ) {
-      t =  -b / (2 * a);
-    } else {
-      t = (-b - sqrt(det) ) / (2 * a);
-      double t2 = (-b + sqrt(det) ) / (2 * a);
-      if ( t2 > 0.0 && fabs(t2) < fabs(t) ) t = t2;
-    }
-  } else if ( fabs(b) != 0 ) { // 1-st order eq.
-    t = -c / b;
-  } else {
-    t = ( c == 0.0 ) ? INFINITY : NAN;
-  }
-
-  a = m_as;
-  b = m_bs + ( m_AC_BD ^ p );
-  c = m_ad - ( m_AD ^ p );
-  if ( fabs(a) > 1.e-6 ) { // 2-nd order eq.
-    double det = b*b - 4 * a * c;
-    if ( det < 0.0 ) {
-      s = NAN;
-    } else if ( det < 1.e-12 ) {
-      s = -b / (2 * a);
-    } else {
-      s = (-b - sqrt(det) ) / (2 * a);
-      double s2 = (-b + sqrt(det) ) / (2 * a);
-      if ( s2 > 0.0 && fabs(s2) < fabs(s) ) s = s2;
-    }
-  } else if ( fabs(b) > 1.e-6 ) { // 1-st order eq.
-    s = -c / b;
-  } else {
-    s = ( c == 0.0 ) ? INFINITY : NAN;
-  }
-#elif TRANSFORMATION == 1
-  // bilinear interpolation
   double ex_ay = m_e * p.m_x - m_a * p.m_y;
   double A = m_A0;
-  // double D = m_D0;
   double B = (ex_ay + m_B0)/2.0;
-  // double E = ex_ay + m_E0;
   double C = m_g * p.m_x - m_c * p.m_y + m_C0;
-  // double F = m_f * p.m_x - m_b * p.m_y + m_F0;
   double det = B*B - A * C;
   if ( det < 0.0 )
-    return thvec2( thnan, thnan );
+    return thnan;
   if ( det > 0.0 ) det = sqrt( det );
   if ( fabs(A) > 1.e-6 ) {
     s = (- B + det )/A;
@@ -565,192 +447,376 @@ thvec2 thmorph_plaquette::map( const thvec2 & p )
   } else {
     s = ( B == 0.0 ) ? thinf : - C / (2*B);
   }
-  t = ( p.m_x - m_b * s - m_d ) / ( m_a * s + m_c );
-#endif
-  return thvec2( s, t ); 
-}
-
-// ----------------------------------------------------
-// thmorph_triangle_pair
-
-thvec2 
-thmorph_triangle_pair::forward( const thvec2 & p )
-{
-  thline2 l = from.map( p );
-  return l.m_a * to.m_A + l.m_b * to.m_B + l.m_c * to.m_C;
-}
-
-thvec2
-thmorph_triangle_pair::backward( const thvec2 & p )
-{
-  thline2 l = to.map( p );
-  return l.m_a * from.m_A + l.m_b * from.m_B + l.m_c * from.m_C;
-}
-
-bool 
-thmorph_triangle_pair::is_inside_from( const thvec2 & p )
-{
-  thline2 l = from.map( p );
-  return l.m_b >= 0 && l.m_c >= 0 && l.m_a >= - m_bound;
-}
-
-bool 
-thmorph_triangle_pair::is_inside_to( const thvec2 & p )
-{
-  thline2 l = to.map( p );
-  return l.m_b >= 0 && l.m_c >= 0 && l.m_a >= - m_bound;
-}
-
-double 
-thmorph_triangle_pair::distance_from( const thvec2 & p ) 
-{
-  thline2 l = from.map( p );
-  return 1.0 - l.m_a;
-}
-
-double 
-thmorph_triangle_pair::distance_to( const thvec2 & p ) 
-{
-  thline2 l = to.map( p );
-  return 1.0 - l.m_a;
+  return s;
 }
 
 double
-thmorph_triangle_pair::distance2_from( const thvec2 & p )
+therion::warp::plaquette::t_map( const thvec2 & p ) const
 {
-  thline2 l = from.map( p );
-  if ( l.m_a > 0 ) return 0.0;
-  if ( l.m_b < 0.0 || l.m_c < 0.0 ) return 1.e+12; // INFINITY;
-  return thcompute_segment_distance2( p, from.m_B, from.m_C );
+  double t;
+
+  double ex_ay = m_e * p.m_x - m_a * p.m_y;
+  // double A = m_A0;
+  double D = m_D0;
+  // double B = (ex_ay + m_B0)/2.0;
+  double E = (ex_ay + m_E0)/2.0;
+  // double C = m_g * p.m_x - m_c * p.m_y + m_C0;
+  double F = m_f * p.m_x - m_b * p.m_y + m_F0;
+  double det = E*E - D * F;
+  if ( det < 0.0 )
+    return thnan;
+  if ( det > 0.0 ) det = sqrt( det );
+  if ( fabs(D) > 1.e-6 ) {
+    t = (- E + det )/D;
+    double t2 = (-E-det)/D;
+    if ( t2 > 0.0 && fabs(t2) < fabs(t) ) t = t2;
+  } else {
+    t = ( E == 0.0 ) ? thinf : - F / (2*E);
+  }
+  return t;
 }
 
-double
-thmorph_triangle_pair::distance2_to( const thvec2 & p )
+
+/** solve the system
+ *    | A+t(D-A)   B+t(C-B)   P  | = 0
+ */
+void
+therion::warp::plaquette::st_map( const thvec2 & p, thvec2 & ret ) const
 {
-  thline2 l = to.map( p );
-  if ( l.m_a > 0 ) return 0.0;
-  if ( l.m_b < 0.0 || l.m_c < 0.0 ) return 1.e+12; // INFINITY;
-  return thcompute_segment_distance2( p, to.m_B, to.m_C );
+  double s;
+
+  double ex_ay = m_e * p.m_x - m_a * p.m_y;
+  double A = m_A0;
+  double B = (ex_ay + m_B0)/2.0;
+  double C = m_g * p.m_x - m_c * p.m_y + m_C0;
+  if ( fabs(A) > 1.e-6 ) {
+    double det = B*B - A * C;
+    if ( det < 0.0 ) {
+      ret.m_x = ret.m_y = thnan;
+      return;
+    }
+    if ( det > 0.0 ) det = sqrt( det );
+    s = (- B + det )/A;
+    double s2 = (-B-det)/A;
+    if ( s2 > 0.0 && fabs(s2) < fabs(s) ) s = s2;
+  } else {
+    s = ( B == 0.0 ) ? thinf : - C / (2*B);
+  }
+  ret.m_x = s;
+  ret.m_y = ( p.m_x - m_b * s - m_d ) / ( m_a * s + m_c );
+}
+
+void
+therion::warp::plaquette::inv_st_map( const thvec2 & v, thvec2 & ret ) const
+{
+  ret.m_x = m_a * v.m_x * v.m_y + m_b * v.m_x + m_c * v.m_y + m_d;
+  ret.m_y = m_e * v.m_x * v.m_y + m_f * v.m_x + m_g * v.m_y + m_h;
+}
+
+// this is  Beier-Neely map
+// "Feature-based image metamorphosis" Computer Graphics, 26 35-42, 1992
+//
+// TODO 
+// Taking into account different end-size ratios can be done here
+// or by the caller. The plaquette does not have the ratios, 
+// and the relative weight could be different from the return 
+// X coordinate (ret.m_x)
+//
+void
+therion::warp::plaquette::bn_map( const thvec2 & p, thvec2 & ret ) const
+{
+  thvec2 ap = p - m_A;
+  ret.m_x = ( ap * m_abn ) / m_abd;
+  ret.m_y = ap * m_abh;
 }
 
 void 
-thmorph_triangle_pair::bounding_box_to( thvec2 & t1, thvec2 & t2 )
+therion::warp::plaquette::inv_bn_map( const thvec2 & p, thvec2 & ret ) const
 {
-  thvec2 b = to.m_B - m_bound * (to.m_A - to.m_B);
-  thvec2 c = to.m_C - m_bound * (to.m_A - to.m_C);
-  t1 = to.m_A;
-  t1.minimize( b );
-  t1.minimize( c );
-  t2 = to.m_A;
-  t2.maximize( b );
-  t2.maximize( c );
-}
-
-// ---------------------------------------------------------------
-// thmorph_plaquette_pair
-
-thvec2 thmorph_plaquette_pair::forward( const thvec2 & p )
-{
-  thvec2 v = from.map( p );
-#if TRANSFORMATION == 0
-  // intersection interpolation
-  thvec2 x1 = to.m_A - v.m_x * to.m_AB;
-  thvec2 x2 = to.m_D - v.m_x * to.m_DC;
-  thline2 ly( x1, x2 );
-  thvec2 y1 = to.m_A - v.m_y * to.m_AD;
-  thvec2 y2 = to.m_B - v.m_y * to.m_BC;
-  thline2 lx( y1, y2 );
-  return thvec2( lx, ly );
-#elif TRANSFORMATION == 1
-  // bilinear interpolation
-  return thvec2( to.m_a * v.m_x * v.m_y + to.m_b * v.m_x + to.m_c * v.m_y + to.m_d,
-                 to.m_e * v.m_x * v.m_y + to.m_f * v.m_x + to.m_g * v.m_y + to.m_h );
-#endif
-}
-
-
-thvec2 
-thmorph_plaquette_pair::backward( const thvec2 & p )
-{
-  thvec2 v = to.map( p );
-#if TRANSFORMATION == 0
-  // intersection interpolation
-  thvec2 x1 = from.m_A - v.m_x * from.m_AB;
-  thvec2 x2 = from.m_D - v.m_x * from.m_DC;
-  thline2 ly( x1, x2 );
-  thvec2 y1 = from.m_A - v.m_y * from.m_AD;
-  thvec2 y2 = from.m_B - v.m_y * from.m_BC;
-  thline2 lx( y1, y2 );
-  return thvec2( lx, ly );
-#elif TRANSFORMATION == 1
-  // bilinear interpolation
-  return thvec2( from.m_a * v.m_x * v.m_y + from.m_b * v.m_x + from.m_c * v.m_y + from.m_d,
-                 from.m_e * v.m_x * v.m_y + from.m_f * v.m_x + from.m_g * v.m_y + from.m_h );
-#endif
+  double d = p.m_x * m_abd;
+  // ret = m_A + m_abn * d + m_abh * p.m_y;
+  ret.m_x = m_A.m_x + m_abn.m_x * d + m_abh.m_x * p.m_y;
+  ret.m_y = m_A.m_y + m_abn.m_y * d + m_abh.m_y * p.m_y;
 }
 
 
 
-bool 
-thmorph_plaquette_pair::is_inside_from( const thvec2 & p )
-{
-  thvec2 v = from.map( p );
-  if ( v.is_nan() ) return false;
-  return v.m_x >= 0.0 && v.m_x <= 1.0 && v.m_y >= 0.0 && v.m_y < m_bound;
-}
+// ****************************************************************
+// TRIANGLE PAIRS
+//
 
-bool 
-thmorph_plaquette_pair::is_inside_to( const thvec2 & p )
+namespace therion 
 {
-  thvec2 v = to.map( p );
-  if ( v.is_nan() ) return false;
-  return v.m_x >= 0.0 && v.m_x <= 1.0 && v.m_y >= 0.0 && v.m_y < m_bound;
-}
+  namespace warp 
+  {
+    /** cstr
+     * @param a     A-corner point pair ("vertex" of the triangle)
+     * @param b     B-corner point pair (right side)
+     * @param c     C-corner point pair (left side)
+     * @param bound bound on "a" for is_inside test
+     * @param cubic  whether to use the cubic radial correction
+     * @param border inner border
+     */
+    template< > 
+    item_pair<triangle>::item_pair( point_pair * a, point_pair * b, point_pair * c
+                     , double bound /* = BOUND_TRIANGLE */
+		     )
+        : basic_pair( bound )
+        , from( a->z, b->z, c->z )
+        , to  ( a->w, b->w, c->w )
+    {
+      m_pair[0] = c;
+      m_pair[1] = a;
+      m_pair[2] = b;
 
-double 
-thmorph_plaquette_pair::distance_from( const thvec2 & p ) 
-{
-  thvec2 v = from.map( p );
-  return v.m_y;
-}
+      m_kl = from.theta_left() - to.theta_left();
+      m_kr = from.theta_right() - to.theta_right();
+      m_dl = from.m_ac / to.m_ac;
+      m_dr = from.m_ab / to.m_ab;
 
-double 
-thmorph_plaquette_pair::distance_to( const thvec2 & p ) 
-{
-  thvec2 v = to.map( p );
-  return v.m_y;
-}
+      // thprintf("Triangle [%d] Theta L %.2f R %.2f Ratios L %.2f R %.2f \n", 
+      //   nr(), m_kl, m_kr, m_dl, m_dr );
+    } 
+    
+    /** type of this warping basic_pair
+     * @return the number of points of the basic_pair
+     */ 
+    template< > 
+    warp_type item_pair<triangle>::type() const { return THWARP_TRIANGLE; }
+    
+    /** maximum number of neighbors
+     * @return the maximum number of neighbors
+     */
+    template< >
+    int item_pair<triangle>::ngbh_nr() const { return 2; }
+    
+    /** map p in the "from" image to a point in the "to" img
+     * @param p   2D point in the "from" image 
+     * @return corresponding 2D point in the "to" image
+     */
+    template< >
+    void item_pair<triangle>::forward( const thvec2 & p, thvec2 & ret ) const
+    {
+      static thvec2 v0;
+      from.bn_map( p, v0 );
+      to.inv_bn_map( v0, ret );
+    }
+    
+    /** map p in the "to" image to a point in the "from" img
+     * @param p   2D point in the "to" image
+     * @return corresponding 2D point in the "from" image
+     */
+    template< >
+    void item_pair<triangle>::backward( const thvec2 & p, thvec2 & ret ) const
+    {
+      static thvec2 v0;
+      to.bn_map( p, v0 );
+      from.inv_bn_map( v0, ret );
+    }
 
-double
-thmorph_plaquette_pair::distance2_from( const thvec2 & p )
-{
-  thvec2 v = from.map( p );
-  if ( v.m_y < 0.0 || v.m_x < 0.0 || v.m_x > 1.0 ) return 1.e+12; // INFINITY;
-  if ( v.m_y < 1.0 ) return 0.0;
-  return thcompute_segment_distance2( p, from.m_D, from.m_C );
-}
+    #ifdef DEBUG
+    /** debug: print
+     */
+    template< >
+    void item_pair<triangle>::print() const
+    {
+        thprintf("[%d] Triangle A %6.2f %6.2f <-> %6.2f %6.2f\n",
+          nr(), from.m_A.m_x, from.m_A.m_y, to.m_A.m_x, to.m_A.m_y );
+        thprintf("              B %6.2f %6.2f <-> %6.2f %6.2f\n",
+          from.m_B.m_x, from.m_B.m_y, to.m_B.m_x, to.m_B.m_y );
+        thprintf("              C %6.2f %6.2f <-> %6.2f %6.2f\n",
+          from.m_C.m_x, from.m_C.m_y, to.m_C.m_x, to.m_C.m_y );
+        print_ngbhs();
+    }
+    #endif
 
-double
-thmorph_plaquette_pair::distance2_to( const thvec2 & p )
-{
-  thvec2 v = to.map( p );
-  if ( v.m_y < 0.0 || v.m_x < 0.0 || v.m_x > 1.0 ) return 1.e+12; // INFINITY;
-  if ( v.m_y < 1.0 ) return 0.0;
-  return thcompute_segment_distance2( p, to.m_D, to.m_C );
-}
+// ****************************************************************
+// PLAQUETTE PAIRS
+// 
+    /** cstr
+     * @param a    A-corner point pair
+     * @param b    B-corner point pair
+     * @param c    C-corner point pair
+     * @param d    D-corner point pair
+     * @param bound bound of "t" for the is_inside test
+     * @param cubic  whether to use the cubic correction
+     * @param border inner border 
+     */
+    template< >
+    plaquette_pair::item_pair( point_pair * a, point_pair * b, point_pair * c, point_pair * d
+                    , double bound /* = BOUND_PLAQUETTE */
+		    )
+      : basic_pair( bound )
+      , from( a->z, b->z, c->z, d->z )
+      , to  ( a->w, b->w, c->w, d->w )
+    {
+      m_pair[0] = d;
+      m_pair[1] = a;
+      m_pair[2] = b;
+      m_pair[3] = c;
+
+      m_kl = from.theta_left() - to.theta_left();
+      m_kr = from.theta_right() - to.theta_right();
+      m_dl = from.m_AD.length() / to.m_AD.length();
+      m_dr = from.m_BC.length() / to.m_BC.length();
+      // thprintf("Plaquette [%d] Theta L %.2f R %.2f Ratios L %.2f R %.2f \n", 
+      //   nr(), m_kl, m_kr, m_dl, m_dr );
+    }
+    
+    /** warp type
+     * @return the warp type of the warping basic_pair
+     */
+    template< >
+    warp_type plaquette_pair::type() const { return THWARP_PLAQUETTE; }
+    
+    /** maximum number of neighbors
+     * @return the maximum number of neighbors
+     */
+    template< >
+    int plaquette_pair::ngbh_nr() const { return 3; }
+    
+    #define BD 0.5
+
+    /** map p in the "to" image to a point in the "from" img
+     * @param p   2D point in the "to" image
+     * @return corresponding 2D point in the "from" image
+     */
+    template< >
+    void plaquette_pair::backward( const thvec2 & p, thvec2 & ret ) const
+    {
+        #if 1
+	  static thvec2 v0, r1;
+          double s   = to.s_map( p );
+	  if ( s < BD ) {
+	    double x = s/BD;             // x  = 0 .. 1
+	    double x1 = 1.0 - 2*x + x*x;     // x1 = 1 .. 0
+	    double t = m_kl*x1;
+	    thvec2 pa = to.left_rotate(p, cos(t), -sin(t) );
+	    to.bn_map( pa, v0 );
+	    // v0.m_y *= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
+	    from.inv_bn_map( v0, ret );
+       
+  	    double x2 = 1.0 + 2*x - x*x;     //      1 .. 2
+            t = left_ngbh()->m_kr * x2;
+            pa = left_ngbh()->pto()->right_rotate( p, cos(t), sin(t) );
+	    left_ngbh()->pto()->bn_map( pa, v0 );
+	    // v0.m_y *= v0.m_x * left_ngbh()->m_dr + (1.0-v0.m_x) * left_ngbh()->m_dl;
+	    left_ngbh()->pfrom()->inv_bn_map( v0, r1 );
+	    // ret = ( ret + r1 * x1 ) / ( 1.0 + x1 );
+	    ret.m_x = ( ret.m_x + x1 * r1.m_x ) / ( 1 + x1 );
+	    ret.m_y = ( ret.m_y + x1 * r1.m_y ) / ( 1 + x1 );
+	  } else if ( 1.0 - s < BD ) {
+	    double x = (1.0-s)/BD;
+	    double x1 = 1.0 - 2*x + x*x;
+	    double t = m_kr * x1;
+	    thvec2 pa = to.right_rotate(p, cos(t), sin(t) );
+	    to.bn_map( pa, v0 );
+	    // v0.m_y *= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
+	    from.inv_bn_map( v0, ret );
+
+	    double x2 = 1.0 + 2*x - x*x;
+	    t = right_ngbh()->m_kl * x2;
+	    pa = right_ngbh()->pto()->left_rotate( p, cos(t), -sin(t) );
+	    right_ngbh()->pto()->bn_map( pa, v0 );
+	    // v0.m_y *= v0.m_x * right_ngbh()->m_dr + (1.0-v0.m_x) * right_ngbh()->m_dl;
+	    right_ngbh()->pfrom()->inv_bn_map( v0, r1 );
+	    // ret = ( ret + r1 * x1 ) / ( 1.0 + x1 );
+	    ret.m_x = ( ret.m_x + x1 * r1.m_x ) / ( 1 + x1 );
+	    ret.m_y = ( ret.m_y + x1 * r1.m_y ) / ( 1 + x1 );
+	  } else {
+	    to.bn_map( p, v0 );
+	    from.inv_bn_map( v0, ret );
+	  }
+        #else
+	  // too curly
+	  thvec2 v0, r;
+	  to.bn_map( p, v0 );
+	  from.inv_bn_map( v0, r );
+          double x1  = 1.0 - v.m_x / BD;
+	  thvec2 r1;
+	  left_ngbh()->pto()->bn_map( p, v0 );
+	  left_ngbh()->pfrom()->inv_bn_map( v0, r1 );
+          double x2  = 1.0 - v.m_x;
+	  x2 = 1.0 - x2 / BD;
+	  thvec2 r2;
+	  right_ngbh()->pto()->bn_map( p, v0 );
+	  right_ngbh()->pfrom()->inv_bn_map( v0, r2 );
+	  ret = ( r + r1 * x1+ r2 * x2 ) / ( 1.0 + x1 + x2 );
+        #endif
+    }
+    
+    /** map p in the "from" image to a point in the "to" img
+     * @param p   2D point in the "from" image 
+     * @param ret corresponding 2D point in the "to" image
+     *
+     * The backward() map is not invertibel in close form, therefore
+     * the forward() map is carried out by guessing s first point and
+     * searching around it for a point that satisfies the backward() map.
+     * This way forward() takes 30-40 times longer than backward().
+     *
+     * The forward() code must come after backward() has been instantiated.
+     */
+    template< >
+    void plaquette_pair::forward( const thvec2 & p, thvec2 & ret ) const
+    {
+	  static thvec2 v0, r1; 
+	  thvec2 p1;
+	  double d, d0, x, y;
+	  double dx = 0.1, dy=0.1;
+	  from.bn_map( p, v0 );
+	  to.inv_bn_map( v0, r1 );
+	  this->backward( r1, p1 );
+	  x = p.m_x - p1.m_x;
+	  y = p.m_y - p1.m_y;
+          d0 = x*x + y*y;
+	  do { 
+	    r1.m_x += dx;
+	    this->backward( r1, p1 );
+	    x = p.m_x - p1.m_x;
+	    y = p.m_y - p1.m_y;
+	    d = x*x + y*y;
+	    if ( d < d0 ) {
+	      d0 = d;
+	    } else {
+	      r1.m_x -= dx;
+	      dx = -dx/2;
+	    }
+	    r1.m_y += dy;
+	    this->backward( r1, p1 );
+	    x = p.m_x - p1.m_x;
+	    y = p.m_y - p1.m_y;
+	    d = x*x + y*y;
+	    if ( d < d0 ) {
+	      d0 = d;
+	    } else {
+	      r1.m_y -= dy;
+	      dy = -dy/2;
+	    }
+          } while ( d0 > 1.e-6 && fabs(dx) > 1.e-3 && fabs(dy) > 1.e-3);
+          ret = r1;
+    }
+
+    #ifdef DEBUG
+    /** debug: print
+     */
+    template< >
+    void plaquette_pair::print() const
+    {
+        thprintf("[%d] Plaquette A %6.2f %6.2f <-> %6.2f %6.2f\n",
+          nr(), from.m_A.m_x, from.m_A.m_y, to.m_A.m_x, to.m_A.m_y );
+        thprintf("              B %6.2f %6.2f <-> %6.2f %6.2f\n",
+          from.m_B.m_x, from.m_B.m_y, to.m_B.m_x, to.m_B.m_y );
+        thprintf("              C %6.2f %6.2f <-> %6.2f %6.2f\n",
+          from.m_C.m_x, from.m_C.m_y, to.m_C.m_x, to.m_C.m_y );
+        thprintf("              D %6.2f %6.2f <-> %6.2f %6.2f\n",
+          from.m_D.m_x, from.m_D.m_y, to.m_D.m_x, to.m_D.m_y );
+        print_ngbhs();
+    }
+    #endif
+    
+  } // namespace warp
+
+} // namespace therion
 
 
-void 
-thmorph_plaquette_pair::bounding_box_to( thvec2 & t1, thvec2 & t2 )
-{
-  thvec2 c = to.m_B - m_bound * to.m_BC;
-  thvec2 d = to.m_A - m_bound * to.m_AD;
-  t1 = to.m_A;
-  t1.minimize( to.m_B );
-  t1.minimize( c );
-  t1.minimize( d );
-  t2 = to.m_A;
-  t2.maximize( to.m_B );
-  t2.maximize( c );
-  t2.maximize( d );
-}
+

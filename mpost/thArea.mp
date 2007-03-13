@@ -58,7 +58,7 @@ beginpattern(pattern_debris_SKBB);
 endpattern;
 
 
-beginpattern(pattern_moonmilk_ASF);
+beginpattern(pattern_moonmilk_SKBB);
     pickup PenC;
     p:=(-.5u,0){down} .. {up}(-.1666u,0){down}..
         {up}(.1666u,0){down} .. {up}(.5u,0);
@@ -73,9 +73,9 @@ beginpattern(pattern_flowstone_ASF);
     pickup PenC;
     p:=(-.35u,0){dir -60} .. {dir 60}(0.35u,0);
     draw p;
-    draw p shifted (0.35u,0.3u);
-    patternxstep(0.7u);
-    patternystep(0.6u);
+    draw p shifted (0.35u,0.4u);
+    patternxstep(u);
+    patternystep(0.8u);
 endpattern;
 
 

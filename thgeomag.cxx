@@ -47,12 +47,12 @@ double thgeomag(double lat, double lon, double h, double dat) {
 
   int n,m;
 
-  static double P[nmax+1][nmax+1];
-  static double DP[nmax+1][nmax+1];
-  static double gnm[nmax+1][nmax+1];
-  static double hnm[nmax+1][nmax+1];
-  static double sm[nmax+1];
-  static double cm[nmax+1];
+  double P[nmax+1][nmax+1];
+  double DP[nmax+1][nmax+1];
+  double gnm[nmax+1][nmax+1];
+  double hnm[nmax+1][nmax+1];
+  double sm[nmax+1];
+  double cm[nmax+1];
 
   static double root[nmax+1];
   static double roots[nmax+1][nmax+1][2];

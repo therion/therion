@@ -8,17 +8,17 @@ therion:
 + thbook: layout survey-level
 + thbook: point extra -dist <distance> -from <station>
 + thbook: area flowstone, moonmilk
++ thbook: line moonmilk
++ thbook: layout survey-level
++ thbook: config-file sketch-warp line|plquette
 
-+ BUG: survey name into map title
++ 2D map DXF export
 + allow scraps without stations, CS specification for scrap (in plan
   projection)
-+ line moonmilk
-  
 + add rotation of 3D surface into surface calibration
 + add line moonmilk and flowstone areas surrounded by line flowstone or moonmilk
 + solve transparency of sketches
 + morphing: add additional features (line extra, point extra:point|distance)
-+ morphing samples
 + import of 3D and PLT via lxFile
 + LRUD envelope generation by lxFile
 + add absolute coordinate specification in centerline and scraps
@@ -68,7 +68,10 @@ therion:
   
 xtherion:
 
++ groups of symbol types
++ window initialization geometry
 + disable "new file" and "open" when one file is opened in map editor
++ multiplatform init files
 + fix insertion of objects outside scraps
 + shortcuts
 + right click on line

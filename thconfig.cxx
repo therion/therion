@@ -829,7 +829,32 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
   double x, y, z, dec;
   bool firstdec = true;
   if (this->get_outcs_center(x, y, z)) {
-    thlog.printf("output coordinate system: %s\n", thmatch_string(this->outcs, thtt_cs));
+    size_t tab_size = ((sizeof(thtt_cs)/sizeof(thstok)) - 1);
+    const char * csstr;
+    long i, ii;
+    i = 0;
+    ii = -1;
+    while (i < (long)tab_size) {
+      if (thtt_cs[i].tok == this->outcs) {
+        ii = i;
+        if (strlen(thtt_cs[ii].s) < 6)
+          break;
+        if (!(((thtt_cs[ii].s[0] == 'e' || thtt_cs[ii].s[0] == 'E') && 
+          (thtt_cs[ii].s[0] == 's' || thtt_cs[ii].s[0] == 'S') && 
+          (thtt_cs[ii].s[0] == 'r' || thtt_cs[ii].s[0] == 'R') && 
+          (thtt_cs[ii].s[0] == 'i' || thtt_cs[ii].s[0] == 'I')) || 
+          ((thtt_cs[ii].s[0] == 'e' || thtt_cs[ii].s[0] == 'E') && 
+          (thtt_cs[ii].s[0] == 'p' || thtt_cs[ii].s[0] == 'P') && 
+          (thtt_cs[ii].s[0] == 's' || thtt_cs[ii].s[0] == 'S') && 
+          (thtt_cs[ii].s[0] == 'g' || thtt_cs[ii].s[0] == 'G'))))
+          break;
+      }
+    }
+    if (ii > -1)
+      csstr = thtt_cs[ii].s;
+    else
+      csstr = "unknown";
+    thlog.printf("output coordinate system: %s\n", csstr);
     thlog.printf("meridian convergence (deg): %.4f\n", this->get_outcs_convergence());
     if (!thisnan(decsyear)) {
       long min = long(decsyear), max = long(deceyear + 1.0), yyy;

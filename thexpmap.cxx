@@ -893,9 +893,6 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(mpf,"%s\n",thmpost_library);
   fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(thlang_getlang(this->layout->lang)));
 
-  // System attributes definition.
-  fprintf(mpf,"string ATTR__id, ATTR__survey, ATTR__scrap;\n");
-  fprintf(mpf,"boolean ATTR__scrap_centerline;\nATTR__scrap_centerline = false;\n");
   
   this->db->attr.export_mp_header(out.file);
 

@@ -215,7 +215,7 @@ void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY) 
   ul.y = ur.y;
   origin.x = LAYOUT.hgridorigin;
   origin.y = LAYOUT.vgridorigin;
-  
+//cout << endl << origin.x << " " << origin.y << endl;
   llrot = rotatedaround(ll,origin,-LAYOUT.gridrot);
   urrot = rotatedaround(ur,origin,-LAYOUT.gridrot);
   lrrot = rotatedaround(lr,origin,-LAYOUT.gridrot);
@@ -251,6 +251,14 @@ void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY) 
                    out.x << " " << out.y << ")\">";
 	PAGEDEF << "<use xlink:href=\"#grid_" << u2str(elem+1) << "\" />";
         PAGEDEF << "</g>" << endl;
+	
+/*  PAGEDEF << "<text font-family=\"arial\" font-size=\"10\" " <<
+       "transform=\"matrix(" << 
+                   1 << " " << 0 << " " << 0 << " " << -1 << " " << 
+                   out.x << " " << out.y << ")\">";
+  PAGEDEF << i/72*2.54/100*200 << " " << j/72*2.54/100*200;
+  PAGEDEF << "</text>" << endl;*/
+	
       }
     }
   }
@@ -317,13 +325,14 @@ void thsvg(char * fname, int fmt, legenddata ldata = legenddata::legenddata()) {
     lly = LAYOUT.vgridsize * floor ((lly-LAYOUT.vgridorigin)/LAYOUT.vgridsize) + LAYOUT.vgridorigin;
     ury = LAYOUT.vgridsize * ceil  ((ury-LAYOUT.vgridorigin)/LAYOUT.vgridsize) + LAYOUT.vgridorigin;
   }
-  double llxo(0.0), llyo(0.0), urxo(0.0), uryo(0.0);  // rozmery mapy bez overlapu
   if (LAYOUT.map_grid) {
-    llxo = llx = LAYOUT.hsize * floor (llx/LAYOUT.hsize);
-    llyo = lly = LAYOUT.vsize * floor (lly/LAYOUT.vsize);
-    urxo = urx = LAYOUT.hsize * ceil (urx/LAYOUT.hsize);
-    uryo = ury = LAYOUT.vsize * ceil (ury/LAYOUT.vsize);
+    llx = LAYOUT.hsize * floor (llx/LAYOUT.hsize);
+    lly = LAYOUT.vsize * floor (lly/LAYOUT.vsize);
+    urx = LAYOUT.hsize * ceil (urx/LAYOUT.hsize);
+    ury = LAYOUT.vsize * ceil (ury/LAYOUT.vsize);
   }
+
+  double llxo(llx), llyo(lly), urxo(urx), uryo(ury);  // rozmery mapy bez overlapu
 
   llx -= LAYOUT.overlap;
   urx += LAYOUT.overlap;
@@ -441,7 +450,7 @@ void thsvg(char * fname, int fmt, legenddata ldata = legenddata::legenddata()) {
 
   // white scrap backgrounds (when transparency added):
   // grid:
-  if (LAYOUT.grid == 1) print_grid(F,llx,lly,urx,ury);
+  if (LAYOUT.grid == 1) print_grid(F,llxo,llyo,urxo,uryo);
 
   // preview down:
   if (!MAP_PREVIEW_DOWN.empty()) print_preview(0,F);
@@ -516,7 +525,7 @@ void thsvg(char * fname, int fmt, legenddata ldata = legenddata::legenddata()) {
   if (LAYOUT.surface == 2) print_surface_bitmaps(F);
 
   // grid:
-  if (LAYOUT.grid == 2) print_grid(F,llx,lly,urx,ury);
+  if (LAYOUT.grid == 2) print_grid(F,llxo,llyo,urxo,uryo);
 
   // map grid:
   if (LAYOUT.map_grid) {

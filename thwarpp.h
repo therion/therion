@@ -34,7 +34,7 @@
 #include "thwarppt.h"
 #include "thdataobject.h"
 
-
+#define THERION
 
 /**
  * Sketch station structure.
