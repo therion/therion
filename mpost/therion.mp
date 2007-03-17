@@ -814,7 +814,12 @@ def endpattern=
 enddef;
 
 primarydef p withpattern s=
-   p withcolor (epsilon, 10*epsilon, s*epsilon);
+  if known s:
+    p withcolor (epsilon, 10*epsilon, s*epsilon);
+  else:
+    p withcolor (1,0,0);
+    message("Warning: undefined pattern ignored");
+  fi;  
 enddef;
    
 def patterntransform expr t=

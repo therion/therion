@@ -122,7 +122,7 @@ let a_pebbles = a_pebbles_SKBB;
 let a_clay = a_clay_SKBB;
 let a_bedrock = a_bedrock_SKBB;
 let a_flowstone = a_flowstone_ASF;
-let a_moonmilk = a_moonmilk_ASF;
+let a_moonmilk = a_moonmilk_SKBB;
 let a_dimensions = a_dimensions_SKBB;
 
 let s_northarrow = s_northarrow_SKBB;

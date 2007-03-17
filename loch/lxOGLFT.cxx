@@ -2445,18 +2445,18 @@ namespace OGLFT {
 
     tess_obj_ = gluNewTess();
 
-#ifdef LXLINUX
-    gluTessCallback( tess_obj_, GLU_TESS_VERTEX, (GLUTessCallback)vertexCallback );
-    gluTessCallback( tess_obj_, GLU_TESS_BEGIN, (GLUTessCallback)beginCallback );
-    gluTessCallback( tess_obj_, GLU_TESS_END, (GLUTessCallback)endCallback );
-    gluTessCallback( tess_obj_, GLU_TESS_COMBINE_DATA, (GLUTessCallback)combineCallback );
-    gluTessCallback( tess_obj_, GLU_TESS_ERROR, (GLUTessCallback)errorCallback);
-#else
+#ifdef LXWIN32
     gluTessCallback( tess_obj_, GLU_TESS_VERTEX, (void (__stdcall *)(void)) & glVertex3dv );
     gluTessCallback( tess_obj_, GLU_TESS_BEGIN, (void (__stdcall *)(void)) & glBegin );
     gluTessCallback( tess_obj_, GLU_TESS_END, (void (__stdcall *)(void)) & glEnd );
     gluTessCallback( tess_obj_, GLU_TESS_COMBINE_DATA, (void (__stdcall *)(void)) & combineCallback );
     gluTessCallback( tess_obj_, GLU_TESS_ERROR, (void (__stdcall *)(void)) & errorCallback);
+#else
+    gluTessCallback( tess_obj_, GLU_TESS_VERTEX, (GLUTessCallback)vertexCallback );
+    gluTessCallback( tess_obj_, GLU_TESS_BEGIN, (GLUTessCallback)beginCallback );
+    gluTessCallback( tess_obj_, GLU_TESS_END, (GLUTessCallback)endCallback );
+    gluTessCallback( tess_obj_, GLU_TESS_COMBINE_DATA, (GLUTessCallback)combineCallback );
+    gluTessCallback( tess_obj_, GLU_TESS_ERROR, (GLUTessCallback)errorCallback);
 #endif
   }
 

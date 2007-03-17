@@ -138,7 +138,7 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYMA_DIMENSIONS][3] = 1;
 	thsymsets_symbols[SYMA_FLOWSTONE][0] = 1;
 	thsymsets_symbols[SYMA_ICE][3] = 1;
-	thsymsets_symbols[SYMA_MOONMILK][0] = 1;
+	thsymsets_symbols[SYMA_MOONMILK][3] = 1;
 	thsymsets_symbols[SYMA_PEBBLES][3] = 1;
 	thsymsets_symbols[SYMA_SAND][5] = 1;
 	thsymsets_symbols[SYMA_SNOW][3] = 1;

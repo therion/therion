@@ -7,6 +7,7 @@ CMNOBJECTS = \
   img.o
 
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lfreetype
+POSTMAKE = 
 
 # PLATFORM CONFIG
 
@@ -38,11 +39,11 @@ LXPLATFORM = LINUX
 ##CC = cc
 ##VTKPATH = /usr/local/include/vtk-5.0
 ##POBJECTS = getline.o
-##CXXPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cxxflags) $(shell freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated
-##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cflags)
+##CXXPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cxxflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
+##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cflags) -I/usr/X11R6/include
 ##LXLIBDIR = 
-##PLIBS = -lz $(shell freetype-config --libs) $(shell wx-config --static --libs --gl-libs) $(VTKLIBS)
-##LXPLATFORM = MACOSX
+##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --static --libs --gl-libs) $(VTKLIBS)
+##POSTMAKE = cp -f ./loch ./loch.app/Contents/MacOS
 
 # PLATFORM ENDCONFIG
 
@@ -55,14 +56,14 @@ LXPLATFORM = LINUX
 ##LDBFLAGS = -s
 
 # BUILD OXYGEN
-##CCBFLAGS = -O2
-##CXXBFLAGS = -O2
-##LDBFLAGS = -s
+CCBFLAGS = -O2
+CXXBFLAGS = -O2
+LDBFLAGS = -s
 
 # BUILD RELEASE
-CCBFLAGS = 
-CXXBFLAGS = 
-LDBFLAGS = -s
+##CCBFLAGS = 
+##CXXBFLAGS = 
+##LDBFLAGS = -s
 
 # BUILD DEBUG
 ##CCBFLAGS = -ggdb
@@ -98,6 +99,7 @@ hlp:
 
 loch:	$(OBJECTS)
 	$(CXX) -o loch -Wall $(OBJECTS) $(LIBS) $(LDFLAGS)
+	$(POSTMAKE)
 
 loch.res: loch.rc loch.ico
 	windres --include-dir e:/MSVCProjects/wxWidgets-2.6.0/include -i loch.rc -I rc -o loch.res -O coff
@@ -143,6 +145,7 @@ clean:
 	perl makefile.pl rm -q help/*/*~
 	perl makefile.pl rm -q loch.exe
 	perl makefile.pl rm -q loch
+	perl makefile.pl rm -q loch.app/Contents/MacOS/loch
 	perl makefile.pl rm -q *.o
 	perl makefile.pl rm -q *.log
 	perl makefile.pl rm -q core

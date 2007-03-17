@@ -106,10 +106,10 @@ def a_flowstone_ASF (expr Path) =
 enddef;
 
 
-def a_moonmilk_ASF (expr Path) =
+def a_moonmilk_SKBB (expr Path) =
   T:=identity;
   thclean Path;
-  thfill Path withpattern pattern_moonmilk_ASF;
+  thfill Path withpattern pattern_moonmilk_SKBB;
 enddef;
 
 

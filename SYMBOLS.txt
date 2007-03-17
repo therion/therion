@@ -124,7 +124,7 @@ debris: SKBB UIS
 dimensions: SKBB 
 flowstone: ASF 
 ice: SKBB 
-moonmilk: ASF 
+moonmilk: SKBB 
 pebbles: SKBB 
 sand: UIS 
 snow: SKBB 

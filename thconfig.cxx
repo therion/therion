@@ -840,15 +840,16 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
         if (strlen(thtt_cs[ii].s) < 6)
           break;
         if (!(((thtt_cs[ii].s[0] == 'e' || thtt_cs[ii].s[0] == 'E') && 
-          (thtt_cs[ii].s[0] == 's' || thtt_cs[ii].s[0] == 'S') && 
-          (thtt_cs[ii].s[0] == 'r' || thtt_cs[ii].s[0] == 'R') && 
-          (thtt_cs[ii].s[0] == 'i' || thtt_cs[ii].s[0] == 'I')) || 
+          (thtt_cs[ii].s[1] == 's' || thtt_cs[ii].s[1] == 'S') && 
+          (thtt_cs[ii].s[2] == 'r' || thtt_cs[ii].s[2] == 'R') && 
+          (thtt_cs[ii].s[3] == 'i' || thtt_cs[ii].s[3] == 'I')) || 
           ((thtt_cs[ii].s[0] == 'e' || thtt_cs[ii].s[0] == 'E') && 
-          (thtt_cs[ii].s[0] == 'p' || thtt_cs[ii].s[0] == 'P') && 
-          (thtt_cs[ii].s[0] == 's' || thtt_cs[ii].s[0] == 'S') && 
-          (thtt_cs[ii].s[0] == 'g' || thtt_cs[ii].s[0] == 'G'))))
+          (thtt_cs[ii].s[1] == 'p' || thtt_cs[ii].s[1] == 'P') && 
+          (thtt_cs[ii].s[2] == 's' || thtt_cs[ii].s[2] == 'S') && 
+          (thtt_cs[ii].s[3] == 'g' || thtt_cs[ii].s[3] == 'G'))))
           break;
       }
+      i++;
     }
     if (ii > -1)
       csstr = thtt_cs[ii].s;
