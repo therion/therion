@@ -7,7 +7,8 @@ CMNOBJECTS = \
   img.o
 
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lfreetype
-POSTMAKE = 
+POSTMAKE =
+STRIPFLAG = -s 
 
 # PLATFORM CONFIG
 
@@ -44,6 +45,7 @@ LXPLATFORM = LINUX
 ##LXLIBDIR = 
 ##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --static --libs --gl-libs) $(VTKLIBS)
 ##POSTMAKE = cp -f ./loch ./loch.app/Contents/MacOS
+##STRIPFLAG =
 
 # PLATFORM ENDCONFIG
 
@@ -53,17 +55,17 @@ LXPLATFORM = LINUX
 # BUILD OZONE
 ##CCBFLAGS = -O3
 ##CXXBFLAGS = -O3
-##LDBFLAGS = -s
+##LDBFLAGS = $(STRIPFLAG)
 
 # BUILD OXYGEN
 CCBFLAGS = -O2
 CXXBFLAGS = -O2
-LDBFLAGS = -s
+LDBFLAGS = $(STRIPFLAG)
 
 # BUILD RELEASE
 ##CCBFLAGS = 
 ##CXXBFLAGS = 
-##LDBFLAGS = -s
+##LDBFLAGS = $(STRIPFLAG)
 
 # BUILD DEBUG
 ##CCBFLAGS = -ggdb

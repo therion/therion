@@ -171,6 +171,7 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
             case TT_EXPMAP_FMT_XVI:
             case TT_EXPMAP_FMT_3D:
             case TT_EXPMAP_FMT_KML:
+            case TT_EXPMAP_FMT_DXF:
             case TT_EXPMAP_FMT_SHP:
               supform = true;
           }
@@ -304,6 +305,7 @@ void thexpmap::process_db(class thdatabase * dbp)
       thexp_set_ext_fmt(".3d", TT_EXPMAP_FMT_3D)
       thexp_set_ext_fmt(".shp", TT_EXPMAP_FMT_SHP)
       thexp_set_ext_fmt(".kml", TT_EXPMAP_FMT_KML)
+      thexp_set_ext_fmt(".dxf", TT_EXPMAP_FMT_DXF)
     }
   }
 
@@ -326,6 +328,9 @@ void thexpmap::process_db(class thdatabase * dbp)
       break;
     case TT_EXPMAP_FMT_KML:
       this->export_kml(thdb.db2d.select_projection(this->projptr),this->projptr);
+      break;
+    case TT_EXPMAP_FMT_DXF:
+      this->export_dxf(thdb.db2d.select_projection(this->projptr),this->projptr);
       break;
     case TT_EXPMAP_FMT_XVI:
       this->export_xvi(this->projptr);

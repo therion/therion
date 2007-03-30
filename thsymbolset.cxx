@@ -236,6 +236,9 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         c2(TT_AREA_TYPE_BLOCKS, SYMA_BLOCKS);
         c2(TT_AREA_TYPE_CLAY, SYMA_CLAY);
         c2(TT_AREA_TYPE_PEBBLES, SYMA_PEBBLES);
+        c2(TT_AREA_TYPE_DIMENSIONS, SYMA_DIMENSIONS);
+        c2(TT_AREA_TYPE_FLOWSTONE, SYMA_FLOWSTONE);
+        c2(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK);
       }
       break;
     case TT_SYMBOL_LINE:

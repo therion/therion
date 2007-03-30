@@ -394,6 +394,32 @@ thsurvey * thdatabase::get_survey_noexc(char * sn, thsurvey * ps)
 }
 
 
+
+thsurvey * thdatabase::get_exact_survey_noexc(char * sn, thsurvey * ps)
+{
+  thdb_survey_map_type::iterator si;
+  
+  if (sn != NULL) {
+    this->buff_tmp.strcpy(sn);
+    if ((ps != NULL) && (ps->id != this->fsurveyptr->id)) {
+      this->buff_tmp.strcat(".");
+      this->buff_tmp.strcat(ps->full_name);
+    }
+    si = this->survey_map.find(thsurveyname(this->buff_tmp.get_buffer()));
+    if (si != this->survey_map.end())
+      return si->second;
+    else
+      return NULL;
+  }
+  else {
+    if (ps == NULL)
+      return this->fsurveyptr;
+    else
+      return ps;
+  }
+}
+
+
 unsigned long thdatabase::get_survey_id(char * sn, thsurvey * ps)
 {
   thsurvey * sptr = this->get_survey(sn, ps);
@@ -415,8 +441,9 @@ thdataobject * thdatabase::get_object(thobjectname on, thsurvey * ps)
   thdb_object_map_type::iterator oi;
   
   oi = this->object_map.find(thobjectid(on.name,csurvey_id));
-  if (oi == this->object_map.end())
-    return (thdataobject *) NULL;
+  if (oi == this->object_map.end()) {
+    return this->get_exact_survey_noexc(on.name, (ps == NULL) ? this->fsurveyptr : ps);
+  }
   else
     return oi->second;    
 }

@@ -23,38 +23,87 @@
 #define strcasecmp stricmp
 #endif
 
+/**
+ * Checks to see if the system is big endian or not
+ * if the system is big endian then this function returns
+ * true else the system is little endian and returns false
+ *
+ * @return bool - true if big endian and false if little endian
+ */
+bool isBigEndian() {
+   long int i = 1;
+   const char *p = (const char *) &i;
+   if (p[0] == 1)  // Lowest address contains the least significant byte
+       return false;  //Is little endian
+   return true; //Is big endian
+}
 
-size_t lxFileSize::Save(lxFileBuff & ptr)
+/**
+ * Converts the data to LittleEndian. x86 are Little Endian where as
+ * PPC are Big Endian.  The format should be converted to Little Endian
+ * for portablity
+ * If the system is little endian then this function does nothing
+ * Will convert from big endian to little endian and
+ * little endian to big endian
+ *
+ * @param data char* - The data that will be converted to little endian
+ *                     Will alter the char string 
+ * @param size uint32 - The number of bytes of the data ie number of char's
+ */
+void convertEndian(char* data, uint32_t size) {
+
+    if(isBigEndian()) {
+        char* temp = new char[size];
+        
+        //Copy to temp
+        for(uint32_t i = 0; i < size; i++) {
+            temp[i] = data[i];
+        }
+        
+        //Invert all the char ie make little endian or big endian
+        for(uint32_t i = 0; i < size; i++) {
+            data[i] = temp[size - (i + 1)];
+        }
+        
+        delete temp;
+    }
+}
+
+uint32_t lxFileSize::Save(lxFileBuff & ptr)
 {
-  size_t s(sizeof(this->m_size));
-  *((size_t *)(ptr)) = this->m_size;
+  uint32_t s(sizeof(this->m_size));
+  convertEndian((char*)&this->m_size, s); //Converts from big endian to little endian if needed
+  *((uint32_t *)(ptr)) = this->m_size;
   ptr += s;
   return s;
 }
 
 
-size_t lxFileSize::Load(lxFileBuff & ptr)
+uint32_t lxFileSize::Load(lxFileBuff & ptr)
 {
-  size_t s(sizeof(this->m_size));
-  this->m_size = *((size_t *)(ptr));
+  uint32_t s(sizeof(this->m_size));
+  this->m_size = *((uint32_t *)(ptr));
+  convertEndian((char*)&this->m_size, s); //Converts from little to big endian if needed
   ptr += s;
   return s;
 }
 
 
-size_t lxFileDbl::Save(lxFileBuff & ptr)
+uint32_t lxFileDbl::Save(lxFileBuff & ptr)
 {
-  size_t s(sizeof(this->m_num));
+  uint32_t s(sizeof(this->m_num));
+  convertEndian((char*)&this->m_num, s); //Converts from big endian to little endian if needed
   *((double *)(ptr)) = this->m_num;
   ptr += s;
   return s;
 }
 
 
-size_t lxFileDbl::Load(lxFileBuff & ptr)
+uint32_t lxFileDbl::Load(lxFileBuff & ptr)
 {
-  size_t s(sizeof(this->m_num));
+  uint32_t s(sizeof(this->m_num));
   this->m_num = *((double *)(ptr));
+  convertEndian((char*)&this->m_num, s); //Converts from little to big endian if needed
   ptr += s;
   return s;
 }
@@ -73,18 +122,18 @@ void lxFileDataPtr::Clear()
 }
 
 
-size_t lxFileDataPtr::Save(lxFileBuff & ptr)
+uint32_t lxFileDataPtr::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_position.Save(ptr);
   s += this->m_size.Save(ptr);
   return s;
 }
 
 
-size_t lxFileDataPtr::Load(lxFileBuff & ptr)
+uint32_t lxFileDataPtr::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_position.Load(ptr);
   s += this->m_size.Load(ptr);
   return s;
@@ -108,7 +157,7 @@ void lxFileData::Clear()
   this->m_buffSize = 0;
 }
 
-void lxFileData::Copy(size_t size, const void * src)
+void lxFileData::Copy(uint32_t size, const void * src)
 {
   this->Clear();
   this->m_data = malloc(size);
@@ -150,9 +199,9 @@ const char * lxFileData::GetString(lxFileDataPtr ptr)
     return &(((char *)this->m_data)[ptr.m_position]);
 }
 
-void lxFileData::BuffResize(size_t size)
+void lxFileData::BuffResize(uint32_t size)
 {
-  size_t nsize;
+  uint32_t nsize;
   void * ndata;
 
   if (this->m_buffSize > 0)
@@ -172,7 +221,7 @@ void lxFileData::BuffResize(size_t size)
 lxFileDataPtr lxFileData::AppendStr(const char * str)
 {
   lxFileDataPtr res;
-  size_t strln;
+  uint32_t strln;
   if (str == NULL)
     return res;
   strln = strlen(str);
@@ -189,7 +238,7 @@ lxFileDataPtr lxFileData::AppendFile(const char * fnm)
   xf = fopen(fnm, "rb");
   if (xf != NULL) {
     fseek(xf, 0, SEEK_END);
-    size_t fsz = ftell(xf);
+    uint32_t fsz = ftell(xf);
     fseek(xf, 0, SEEK_SET);
     if (fsz > 0) {
       char * cdata = new char [fsz];
@@ -204,7 +253,7 @@ lxFileDataPtr lxFileData::AppendFile(const char * fnm)
 
 
 
-lxFileDataPtr lxFileData::AppendData(const void * data, size_t size)
+lxFileDataPtr lxFileData::AppendData(const void * data, uint32_t size)
 {
   lxFileDataPtr res;
   if ((data == NULL) || (size == 0))
@@ -281,14 +330,14 @@ enum {
 
 struct lxFileChunkHdr {
   lxFileSize m_type, m_recSize, m_recCount, m_dataSize;
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 
-size_t lxFileChunkHdr::Save(lxFileBuff & ptr)
+uint32_t lxFileChunkHdr::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_type.Save(ptr);
   s += this->m_recSize.Save(ptr);
   s += this->m_recCount.Save(ptr);
@@ -298,9 +347,9 @@ size_t lxFileChunkHdr::Save(lxFileBuff & ptr)
 
 
 
-size_t lxFileChunkHdr::Load(lxFileBuff & ptr)
+uint32_t lxFileChunkHdr::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_type.Load(ptr);
   s += this->m_recSize.Load(ptr);
   s += this->m_recCount.Load(ptr);
@@ -311,9 +360,9 @@ size_t lxFileChunkHdr::Load(lxFileBuff & ptr)
 
 
 
-size_t lxFile3Point::Save(lxFileBuff & ptr)
+uint32_t lxFile3Point::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_c[0].Save(ptr);
   s += this->m_c[1].Save(ptr);
   s += this->m_c[2].Save(ptr);
@@ -321,9 +370,9 @@ size_t lxFile3Point::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFile3Angle::Load(lxFileBuff & ptr)
+uint32_t lxFile3Angle::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_v[0].Load(ptr);
   s += this->m_v[1].Load(ptr);
   s += this->m_v[2].Load(ptr);
@@ -345,11 +394,11 @@ void lxFile::ExportLOX(const char * fn)
   // write data
   lxFileChunkHdr chunkHdr;
   char * tmpPtr, * chunkHdrPtr, chunkHdrBuffer [sizeof(chunkHdr)];
-  size_t chunkHdrSize, tmpSize;
+  uint32_t chunkHdrSize, tmpSize;
   bool writeErr;
 
   writeErr = false;
-  size_t x, size;
+  uint32_t x, size;
 
 #define lxFileExportItem(expID, expClass, expRecs, expData) \
   size = this->expRecs.size(); \
@@ -432,9 +481,9 @@ void lxFile::ImportLOX(const char * fn)
   }
 
   lxFileChunkHdr chunkHdr;
-  size_t i, orig_size, orig_survey_id, orig_station_id;
+  uint32_t i, orig_size, orig_survey_id, orig_station_id;
   char * tmpPtr, * chunkHdrPtr, * tmpRecsData, chunkHdrBuffer [sizeof(chunkHdr)];
-  size_t chunkHdrSize;
+  uint32_t chunkHdrSize;
 
   chunkHdrPtr = chunkHdrBuffer;
   chunkHdrSize = chunkHdr.Save(chunkHdrPtr);
@@ -564,9 +613,9 @@ void lxFile::ImportLOX(const char * fn)
 }
 
 
-size_t lxFile__SplitTokens(unsigned char * str, unsigned char ** tokens, size_t max_tokens)
+uint32_t lxFile__SplitTokens(unsigned char * str, unsigned char ** tokens, uint32_t max_tokens)
 {
-  size_t nt = 0, sl, sp;
+  uint32_t nt = 0, sl, sp;
   unsigned char * cc;
   bool inside = false;
   if ((str == NULL) || (max_tokens == 0))
@@ -623,9 +672,9 @@ bool lxFile__CheckLRUD(double & du, double & dd, double & dl, double & dr, doubl
 }
 
 
-size_t lxFileSurvey::Save(lxFileBuff & ptr)
+uint32_t lxFileSurvey::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_id.Save(ptr);
   s += this->m_namePtr.Save(ptr);
   s += this->m_parent.Save(ptr);
@@ -634,9 +683,9 @@ size_t lxFileSurvey::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurvey::Load(lxFileBuff & ptr)
+uint32_t lxFileSurvey::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_id.Load(ptr);
   s += this->m_namePtr.Load(ptr);
   s += this->m_parent.Load(ptr);
@@ -688,7 +737,7 @@ void lxFile::ImportPLT(const char * fn)
   unsigned char * tok[16];
   lxFileDbl lrud[4], lrudPrev[4];
   lrudPrev[0] = lrudPrev[1] = lrudPrev[2] = lrudPrev[3] = -1.0;
-  size_t nt;
+  uint32_t nt;
 
   this->m_file = fopen(fn,"r");
   if (this->m_file == NULL) {
@@ -987,7 +1036,7 @@ void lxFile::Import3D(const char * fn)
 
 
 struct missingShot {
-  size_t f, t;
+  uint32_t f, t;
   double length;
 };
 
@@ -1004,11 +1053,11 @@ void lxFile::InterpolateMissingLRUD()
   if (this->m_shots.size() == 0) return;
   if (this->m_stations.size() == 0) return;
 
-  std::map<lxVec, size_t> stmap;
+  std::map<lxVec, uint32_t> stmap;
   std::vector<lxFileStation*> osts;
   std::vector<missingStation> stations;
   std::list<missingShot> shots;
-  size_t ns, i;
+  uint32_t ns, i;
 
 
   // 0. vytvorit vector originalnych stations
@@ -1022,7 +1071,7 @@ void lxFile::InterpolateMissingLRUD()
   // 1. vytvorit zoznam identickych bodov a zamer medzi nimi
   ns = 0;
   std::list<lxFileShot>::iterator shi;
-  std::map<lxVec, size_t>::iterator stmi;
+  std::map<lxVec, uint32_t>::iterator stmi;
   lxFileStation * st;
   missingStation tst;
   missingShot ts;
@@ -1127,9 +1176,9 @@ void lxFile::InterpolateMissingLRUD()
 }
 
 
-size_t lxFileStation::Save(lxFileBuff & ptr)
+uint32_t lxFileStation::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_id.Save(ptr);
   s += this->m_surveyId.Save(ptr);
   s += this->m_namePtr.Save(ptr);
@@ -1142,9 +1191,9 @@ size_t lxFileStation::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileStation::Load(lxFileBuff & ptr)
+uint32_t lxFileStation::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_id.Load(ptr);
   s += this->m_surveyId.Load(ptr);
   s += this->m_namePtr.Load(ptr);
@@ -1174,9 +1223,9 @@ bool lxFileStation::GetFlag(int flag)
 
 
 
-size_t lxFileShot::Save(lxFileBuff & ptr)
+uint32_t lxFileShot::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_from.Save(ptr);
   s += this->m_to.Save(ptr);
   s += this->m_fLRUD[0].Save(ptr);
@@ -1195,9 +1244,9 @@ size_t lxFileShot::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileShot::Load(lxFileBuff & ptr)
+uint32_t lxFileShot::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_from.Load(ptr);
   s += this->m_to.Load(ptr);
   s += this->m_fLRUD[0].Load(ptr);
@@ -1231,9 +1280,9 @@ bool lxFileShot::GetFlag(int flag)
 }
 
 
-size_t lxFileScrap::Save(lxFileBuff & ptr)
+uint32_t lxFileScrap::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_id.Save(ptr);
   s += this->m_surveyId.Save(ptr);
   s += this->m_numPoints.Save(ptr);
@@ -1244,9 +1293,9 @@ size_t lxFileScrap::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileScrap::Load(lxFileBuff & ptr)
+uint32_t lxFileScrap::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_id.Load(ptr);
   s += this->m_surveyId.Load(ptr);
   s += this->m_numPoints.Load(ptr);
@@ -1257,9 +1306,9 @@ size_t lxFileScrap::Load(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurface::Save(lxFileBuff & ptr)
+uint32_t lxFileSurface::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_id.Save(ptr);
   s += this->m_width.Save(ptr);
   s += this->m_height.Save(ptr);
@@ -1274,9 +1323,9 @@ size_t lxFileSurface::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurface::Load(lxFileBuff & ptr)
+uint32_t lxFileSurface::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_id.Load(ptr);
   s += this->m_width.Load(ptr);
   s += this->m_height.Load(ptr);
@@ -1291,9 +1340,9 @@ size_t lxFileSurface::Load(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurfaceBitmap::Save(lxFileBuff & ptr)
+uint32_t lxFileSurfaceBitmap::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_surfaceId.Save(ptr);
   s += this->m_type.Save(ptr);
   s += this->m_dataPtr.Save(ptr);
@@ -1307,9 +1356,9 @@ size_t lxFileSurfaceBitmap::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurfaceBitmap::Load(lxFileBuff & ptr)
+uint32_t lxFileSurfaceBitmap::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  uint32_t s(0);
   s += this->m_surfaceId.Load(ptr);
   s += this->m_type.Load(ptr);
   s += this->m_dataPtr.Load(ptr);

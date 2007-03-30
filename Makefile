@@ -197,6 +197,7 @@ thlangdata.cxx: thlang/texts.txt
 
 config-debug:
 	perl makeconfig.pl BUILD DEBUG
+	make -C ./loch config-debug
   
 config-release:
 	perl makeconfig.pl BUILD RELEASE
@@ -220,6 +221,7 @@ config-win32:
   
 config-macosx:
 	perl makeconfig.pl PLATFORM MACOSX
+	make -C ./loch config-macosx
 
 # external sources
 extern/getopt.o: extern/getopt.c extern/getopt.h

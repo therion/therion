@@ -1588,6 +1588,7 @@ proc xth_me_cmds_update_point_data {id} {
   }
   set xth(me,dflt,point,options) $xth(me,cmds,$id,options)
 
+  catch {
   set ttype [lindex $d 3]
   set xth(me,cmds,$id,sbar) "$d"
   if {([string length $ttype] > 0)} {
@@ -1597,6 +1598,7 @@ proc xth_me_cmds_update_point_data {id} {
       set xth(me,cmds,$id,sbar) "$nd"
     }
   } 
+  }
 
   set xth(me,cmds,$id,data) "$d"
   

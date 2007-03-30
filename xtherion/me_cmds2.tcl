@@ -1299,6 +1299,7 @@ proc xth_me_cmds_update_line_data {id} {
 
   set xth(me,cmds,$id,data) "$d\nendline"
   set xth(me,cmds,$id,sbar) $csbar
+  catch {
   set ttype [lindex $csbar 1]
   if {([string length $ttype] > 0)} {
     set ttyp [ mc "line $ttype"]
@@ -1306,6 +1307,7 @@ proc xth_me_cmds_update_line_data {id} {
       set nd [lreplace $csbar 1 1 "$ttype:$ttyp"]
       set xth(me,cmds,$id,sbar) "$nd"
     }
+  }
   } 
   
 }

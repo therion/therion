@@ -11,20 +11,28 @@ therion:
 + thbook: line moonmilk
 + thbook: layout survey-level
 + thbook: config-file sketch-warp line|plquette
++ thbook: 2D contour DXF export
++ thbook: LRUD walls in PDF (area dimensions)
 
-+ 2D map DXF export
++ user defined points/lines/areas
 + allow scraps without stations, CS specification for scrap (in plan
   projection)
 + add rotation of 3D surface into surface calibration
++ add gradient to area
 + add line moonmilk and flowstone areas surrounded by line flowstone or moonmilk
 + solve transparency of sketches
++ add more layers to DXF export (lines, points, areas?) with
+  some symbols
 + morphing: add additional features (line extra, point extra:point|distance)
++ add morphing features browsing code
 + import of 3D and PLT via lxFile
 + LRUD envelope generation by lxFile
 + add absolute coordinate specification in centerline and scraps
 + LRUD walls into 3D shapefiles
 + areas into shapefiles
 + associate line section with section scrap
++ solve section names and sections far from passage
++ add links to NWES page numbers in atlas
 + point camera
 + point picture/hyperlink
 + not to use -walls off when PLT file is exported
@@ -51,7 +59,7 @@ therion:
 + add user define map headers into layout (meta language simmilar
   to HTML)
 + 3d: fix bug with internal hole, where no part of it is wall
-+ area flowstone
++ point rock or block
 + line rope 
   anchor on/off/auto (point option)
   line-adjust on/off/auto
@@ -68,12 +76,17 @@ therion:
   
 xtherion:
 
++ do not save empty lines/areas
 + groups of symbol types
++ import of DXF/SVG into map editor
 + window initialization geometry
++ warn if symbols are outside of scraps
++ autoincrease scrap names (not scrapN)
++ area indicator to map editor (type and rotation)
++ fix MacOS X key bindings
 + disable "new file" and "open" when one file is opened in map editor
 + multiplatform init files
-+ fix insertion of objects outside scraps
-+ shortcuts
++ shortcuts and macros for common actions
 + right click on line
 + undo/redo buttons
 + rightclick on map-item with changes of types and subtypes

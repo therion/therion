@@ -440,8 +440,8 @@ is xq in between x1,x2, assume xq not eq x1 or x2
 ******************************************************************/
 bool	inBetween(double xq,double x1,double x2)
 {
-	assert(xq-x1);
-	assert(xq-x2);
+	//assert(xq-x1);
+	//assert(xq-x2);
 	return((xq-x1)*(xq-x2)<0);
 }
 
@@ -455,8 +455,11 @@ Using line equation (y-y1)/(x-x1)=(y2-y1)/(x2-x1)
 //#EXACT
 double	yOfLineGivenX(double x1,double y1,double x2,double y2,double x)	
 {
-	assert(x2-x1);
-	return ((x-x1)*y2+y1*(x2-x))/(x2-x1);	
+	//assert(x2-x1);
+  if (x2 == x1)
+    return (y1 + y2) / 2.0;
+  else
+	  return ((x-x1)*y2+y1*(x2-x))/(x2-x1);	
 }
 
 /******************************************************************

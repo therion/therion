@@ -6,18 +6,49 @@
 #include <list>
 #include <string>
 #include <cstdio>
+#ifdef THMSVC
+#ifndef UINT32_MAX
+# define UINT32_MAX (0xffffffffUL)
+#endif
+#ifndef uint32_t
+#if (ULONG_MAX == UINT32_MAX) || defined (S_SPLINT_S)
+  typedef unsigned long uint32_t;
+# define UINT32_C(v) v ## UL
+# ifndef PRINTF_INT32_MODIFIER
+#  define PRINTF_INT32_MODIFIER "l"
+# endif
+#elif (UINT_MAX == UINT32_MAX)
+  typedef unsigned int uint32_t;
+# ifndef PRINTF_INT32_MODIFIER
+#  define PRINTF_INT32_MODIFIER ""
+# endif
+# define UINT32_C(v) v ## U
+#elif (USHRT_MAX == UINT32_MAX)
+  typedef unsigned short uint32_t;
+# define UINT32_C(v) ((unsigned short) (v))
+# ifndef PRINTF_INT32_MODIFIER
+#  define PRINTF_INT32_MODIFIER ""
+# endif
+#else
+#error "Platform not supported"
+#endif
+#endif
+#else
+#include <stdint.h>
+#endif
 #endif  
 //LXDEPCHECK - standart libraries
+
 
 
 typedef char * lxFileBuff;
 
 struct lxFileSize {
-  size_t m_size;
-  operator size_t & () {return this->m_size;}
-  size_t & operator = (const size_t & right) {return this->m_size = right;}
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t m_size;
+  operator uint32_t & () {return this->m_size;}
+  uint32_t & operator = (const uint32_t & right) {return this->m_size = right;}
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 
@@ -25,8 +56,8 @@ struct lxFileDbl {
   double m_num;
   operator double & () {return this->m_num;}
   double & operator = (const double & right) {return this->m_num = right;}
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 
@@ -35,24 +66,24 @@ struct lxFileDataPtr {
 
   lxFileDataPtr();
   void Clear();
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 struct lxFileData {
   
   void * m_data;
-  size_t m_size, m_buffSize;
+  uint32_t m_size, m_buffSize;
 
   lxFileData();
   void Clear();
-  void Copy(size_t size, const void * src);
-  void BuffResize(size_t size);
+  void Copy(uint32_t size, const void * src);
+  void BuffResize(uint32_t size);
   const void * GetData(lxFileDataPtr ptr);
   const char * GetString(lxFileDataPtr ptr);
   FILE * GetTmpFile(lxFileDataPtr ptr);
   lxFileDataPtr AppendStr(const char * str);
-  lxFileDataPtr AppendData(const void * data, size_t size);
+  lxFileDataPtr AppendData(const void * data, uint32_t size);
   lxFileDataPtr AppendFile(const char * fnm);
 
 };
@@ -60,23 +91,23 @@ struct lxFileData {
 
 struct lxFile3Point {
   lxFileDbl m_c[3];
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 
 struct lxFile3Angle {
   lxFileSize m_v[3];
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 
 struct lxFileSurvey {
   lxFileSize m_id, m_parent;
   lxFileDataPtr m_namePtr, m_titlePtr;
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 
@@ -98,8 +129,8 @@ struct lxFileStation {
   lxFileSize m_flags;
   lxFileDbl m_c[3];
 
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
   void SetFlag(int flag, bool value);
   bool GetFlag(int flag);
   lxFileStation();
@@ -132,8 +163,8 @@ struct lxFileShot {
   lxFileDbl m_threshold;
   lxFileSize m_flags, m_sectionType;
 
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
   void SetFlag(int flag, bool value);
   bool GetFlag(int flag);
   lxFileShot();
@@ -147,8 +178,8 @@ struct lxFileScrap {
   lxFileSize m_id, m_surveyId;
   lxFileDataPtr m_pointsPtr, m_3AnglesPtr;
   lxFileSize m_numPoints, m_num3Angles;
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 typedef std::list<lxFileScrap> lxFileScrap_list;
@@ -159,8 +190,8 @@ struct lxFileSurface {
   lxFileSize m_width, m_height;
   lxFileDbl m_calib[6];
   lxFileDataPtr m_dataPtr;
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 
@@ -177,8 +208,8 @@ struct lxFileSurfaceBitmap {
   lxFileSize m_type;
   lxFileDbl m_calib[6];
   lxFileDataPtr m_dataPtr;
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  uint32_t Save(lxFileBuff & ptr);
+  uint32_t Load(lxFileBuff & ptr);
 };
 
 
@@ -189,11 +220,11 @@ struct lxFile {
 
   lxFileSurvey_list m_surveys;
   lxFileData m_surveysData;
-  size_t m_nSurveys;
+  uint32_t m_nSurveys;
 
   lxFileStation_list m_stations;
   lxFileData m_stationsData;
-  size_t m_nStations;
+  uint32_t m_nStations;
 
   lxFileShot_list m_shots;
   lxFileData m_shotsData;

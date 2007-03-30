@@ -78,6 +78,7 @@ enum {
   TT_EXPMAP_FMT_3D,  
   TT_EXPMAP_FMT_SHP,  
   TT_EXPMAP_FMT_KML,  
+  TT_EXPMAP_FMT_DXF,  
 };
 
 
@@ -86,6 +87,7 @@ enum {
  */
  
 static const thstok thtt_expmap_fmt[] = {
+  {"dxf", TT_EXPMAP_FMT_DXF},
   {"esri", TT_EXPMAP_FMT_SHP},
   {"kml", TT_EXPMAP_FMT_KML},
   {"pdf", TT_EXPMAP_FMT_PDF},
@@ -186,6 +188,7 @@ class thexpmap : public thexport {
 
   void export_shp(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_kml(class thdb2dxm * maps, class thdb2dprj * prj);
+  void export_dxf(class thdb2dxm * maps, class thdb2dprj * prj);
 
   public:
   

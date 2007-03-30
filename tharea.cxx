@@ -106,6 +106,8 @@ void tharea::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       this->type = thmatch_token(*args, thtt_area_types);
       if (this->type == TT_AREA_TYPE_UNKNOWN)
         ththrow(("unknown area type -- %s", *args))
+      if (this->type == TT_AREA_TYPE_DIMENSIONS)
+        ththrow(("area dimensions is not supported as ordinary type"))
       break;
     
     default:

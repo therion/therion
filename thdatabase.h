@@ -328,6 +328,7 @@ class thdatabase {
    
   thsurvey * get_survey(char * sn, thsurvey * ps);
   thsurvey * get_survey_noexc(char * sn, thsurvey * ps);
+  thsurvey * get_exact_survey_noexc(char * sn, thsurvey * ps);
 
 
   /**

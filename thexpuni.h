@@ -56,6 +56,7 @@ struct thexpuni_part {
 struct thexpuni {
 
   std::list<thexpuni_part> m_part_list;
+  double resol;
 
   thexpuni();
   void clear();
