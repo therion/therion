@@ -101,16 +101,11 @@ lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat,
 	this->m_sCameraLockRotation = false;
 	this->m_sCameraAutoRotateAngle = 1.0;
 
-  this->SetCurrent();
-  glGenTextures(1, &this->m_idTexSurface);
-  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &this->m_maxTSizeS);
+  this->m_maxTSizeO = 0;
+  this->m_maxTSizeS = 0;
 
-  this->OSCInit(128, 128);
-  this->OSCMakeCurrent();
-  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &this->m_maxTSizeO);
-
-  this->OSCDestroy();
   this->SetCurrent();    
+  glGenTextures(1, &this->m_idTexSurface);
 
 }
 
@@ -258,11 +253,34 @@ void lxGLCanvas::UpdateRenderList()
 
 void lxGLCanvas::UpdateRenderContents()
 {
-
   this->setup->UpdateData();
   if (this->data->m_textureSurface.image.data != NULL) {
-    if (this->data->m_textureSurface.texS == NULL)
+    GLint newTSizeO, newTSizeS;
+    newTSizeO = this->m_maxTSizeO;
+    newTSizeS = this->m_maxTSizeS;
+    if (this->m_isO) {
+      glGetIntegerv(GL_MAX_TEXTURE_SIZE, &newTSizeO);
+      if (newTSizeO > 4096) newTSizeO = 4096;
+      //printf("MaxTSizeO: %d\n", newTSizeO);
+      if (newTSizeS == 0) {
+        newTSizeS = newTSizeO;
+      }
+    } else {
+      glGetIntegerv(GL_MAX_TEXTURE_SIZE, &newTSizeS);
+      if (newTSizeS > 4096) newTSizeS = 4096;
+      //printf("MaxTSizeS: %d\n", newTSizeS);
+      if (newTSizeO == 0) {
+        newTSizeO = newTSizeS;
+      }
+    }  
+    if ((this->data->m_textureSurface.texS == NULL) || (this->m_maxTSizeO != newTSizeO) || (this->m_maxTSizeS != newTSizeS)) {
+      this->m_maxTSizeS = newTSizeS;
+      this->m_maxTSizeO = newTSizeO;
+      this->SetCurrent();
       this->data->m_textureSurface.CreateTexImages(this->m_maxTSizeS, this->m_maxTSizeO);
+      if (this->m_isO)
+        this->OSCMakeCurrent();      
+    }
     glBindTexture(GL_TEXTURE_2D, this->m_idTexSurface);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);

@@ -1,23 +1,26 @@
-HNED:
-+ SK Preklad.
-
-POTOM:
-+ vyhladavanie lokalizacnych a help suborov pod linuxom
-+ scalebar a ine co idu dat do OpenGL listu
-+ channel brightness adjustment pri stereo mode
-+ bug s radiobuttonom
-+ lejblovanie
-+ podpora PNG textur
-+ zobrazovanie skryvanie surveyov
-+ farbenie surveyov
-+ revidovat strukturu dat
-+ farebne schemy
-+ plny scene setup
-+ pridat mod so zatvorenym suborom (vsetko disabled)
++ fix 64/32bit and little/big endian portability
++ multiple surfaces support
++ surface backface culling
++ finish SK translation
++ fix Mac OS X built
++ search for help and localization files under Linux
++ scalebar to OpenGL list
++ channel brightness adjustment in stereo mode
++ radiobutton not active when rotation
++ station labeling
++ PNG texture support
++ survey tree
++ color schemes (altitude, surveys, date)
++ add closed file mode
 + File->Close
++ escape in full-screen mode from toolboxes
 
-BUGS:
-+ escape pri full-screene zo setupov
-+ textury pod Linuxom
-+ init textury
 
+MAC OS X:
+ a) Udelat z ni bundlovanou aplikaci
+ b) Dodat Info.plist, do kteryho se napisi typy souboru, 
+    ktery to ma zrat pretazenim, jaky maji mit obrazek
+    (asi mysli ikonu), koncovku, file type, atd.
+ c) Doprogramovat podporu pro tohle aby pri pretazeni 
+    se event zkonvertoval na udalost pro otevreni souboru 
+    aniz by te to otravovalo s oknem pro jeho vyber.

@@ -13,16 +13,22 @@ therion:
 + thbook: config-file sketch-warp line|plquette
 + thbook: 2D contour DXF export
 + thbook: LRUD walls in PDF (area dimensions)
++ thbook: export model -wall-source maps|centerline|all
 
 + user defined points/lines/areas
++ add shot flags to attributes when exported in metapost
++ allow -text and -quality options with continuation
 + allow scraps without stations, CS specification for scrap (in plan
   projection)
 + add rotation of 3D surface into surface calibration
++ negative values to point-dimensions
++ add selections to export queue
 + add gradient to area
 + add line moonmilk and flowstone areas surrounded by line flowstone or moonmilk
 + solve transparency of sketches
 + add more layers to DXF export (lines, points, areas?) with
   some symbols
++ add legends to SVG export
 + morphing: add additional features (line extra, point extra:point|distance)
 + add morphing features browsing code
 + import of 3D and PLT via lxFile
@@ -38,7 +44,6 @@ therion:
 + not to use -walls off when PLT file is exported
 + NOT_LRUD flag to lox shots, when there exists shot point in some
   scrap with outline
-+ allow -text option with continuation
 + warning if reading/backreading difference is big
 + no joins where starting/ending points are identical
 + new centerline station flags: spring, sink, lake, doline
@@ -76,10 +81,15 @@ therion:
   
 xtherion:
 
-+ do not save empty lines/areas
-+ groups of symbol types
++ do not save empty lines/areas/scraps
++ add symbol groups menus
 + import of DXF/SVG into map editor
 + window initialization geometry
++ rightclick on map-item with changes of types and subtypes
++ Ctrl+F binding in text/map editor - switch focus to Find 
+  control panel and maximize it
++ add "Filter" and "Unfilter" button for search & select
++ add filter menus
 + warn if symbols are outside of scraps
 + autoincrease scrap names (not scrapN)
 + area indicator to map editor (type and rotation)
@@ -89,17 +99,11 @@ xtherion:
 + shortcuts and macros for common actions
 + right click on line
 + undo/redo buttons
-+ rightclick on map-item with changes of types and subtypes
 + context sensitive controls for most commonly used options
   (subtype, text, name, visibility, align, scale, ...)
 + rebuild compiler (no more cp text editor)
 + let xtherion compilation run without configuration file 
 	(only with opened files)
-+ translation of types in the ComboBox
-+ remove empty scraps/lines/areas when saving the file
-+ default scrap names by previous scrap
-+ Ctrl+F binding in text/map editor - switch focus to Find 
-  control panel and maximize it
 
 
 WOULD BE NICE LIST:
