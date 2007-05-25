@@ -57,7 +57,10 @@ class thdb1d_tree_node {
 
   public:
 
-  bool is_attached, is_fixed, xx_left, xx_touched, extendx_ok;
+
+  bool is_attached, is_fixed;
+  int xx_left;
+  bool xx_touched, extendx_ok;
 
   thdb1d_tree_node * next_eq, * prev_eq;
   
@@ -67,7 +70,7 @@ class thdb1d_tree_node {
   
   class thdb1d_tree_arrow * first_arrow, * last_arrow, * back_arrow;
   
-  thdb1d_tree_node() : is_attached(false), is_fixed(false), xx_left(false), xx_touched(false), extendx_ok(false),
+  thdb1d_tree_node() : is_attached(false), is_fixed(false), xx_left(1), xx_touched(false), extendx_ok(false),
     next_eq(NULL), prev_eq(NULL),
     id(0), uid(0), narrows(0), xx(0.0), extendx(0.0),
     first_arrow(NULL), last_arrow(NULL), back_arrow(NULL) {}
@@ -121,7 +124,8 @@ class thdb1ds {
   double xx;        // coordinate for extended elevation
   
   char * name,  ///< Station name.
-    * comment;  ///< Station comment.
+    * comment,  ///< Station comment.
+    * code;     ///< Station continuation code.
   
   class thsurvey * survey;  ///< Station survey.
   class thdataobject * fixcontext;  ///< Fix context.
@@ -144,7 +148,7 @@ class thdb1ds {
    * Default constructor.
    */
    
-  thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), survey(NULL), fixcontext(NULL), 
+  thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), code(NULL), survey(NULL), fixcontext(NULL), 
     data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), 
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0) {}
@@ -155,7 +159,7 @@ class thdb1ds {
    */
    
   thdb1ds(char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), name(n), 
-    comment(NULL), survey(ps), fixcontext(NULL),  
+    comment(NULL), code(NULL), survey(ps), fixcontext(NULL),  
     data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE),
     mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), mark_station(false), 

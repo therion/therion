@@ -29,14 +29,14 @@ package require BWidget
 
 if {[catch {set imgver [package require Img]}]} {
   set xth(gui,imgfiletypes) {
-           { {Pictures} {.gif .pnm .ppm .xvi} }
-           { {All Files}               * }
-         } 
+	   { {Pictures} {.gif .pnm .ppm .xvi} }
+	   { {All Files}               * }
+	 } 
 } else {
   set xth(gui,imgfiletypes) {
-           { {Pictures} {.png .jpeg .jpg .gif .pnm .ppm .xvi} }
-           { {All Files}                                               * }
-         } 
+	   { {Pictures} {.png .jpeg .jpg .gif .pnm .ppm .xvi} }
+	   { {All Files}                                               * }
+	 } 
 }
 
 # read xtherion.ini file from THERION directory
@@ -52,8 +52,8 @@ if {[catch {set idir $env(THERION)}]} {
   }
   if {[string equal $xth(gui,platform) windows]} {
     if {[catch {
-        append idir [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} InstallDir]
-        }]} {
+	append idir [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} InstallDir]
+	}]} {
       append idir "C:/WINDOWS;C:/WINNT;C:/Program files/Therion"
     }
   } else {
@@ -126,6 +126,83 @@ if {[string length $xth(gui,initdir)] == 0} {
     set xth(gui,initdir) [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} XTherionDir]
   }]} {
     set xth(gui,initdir) [pwd]
+  }
+}
+
+proc thememc {tt} {
+  set trans [mc $tt]
+  if {[string equal $tt $trans]} {
+    set trans [lindex $tt 1]
+    regsub -all {[\-\:]} $trans { } trans
+  }
+  return $trans
+}
+
+set alllist {}
+foreach type $xth(point_types) {
+  lappend alllist [list point $type]
+}
+foreach type $xth(line_types) {
+  lappend alllist [list line $type]
+}
+foreach type $xth(area_types) {
+  lappend alllist [list area $type]
+}
+set tmp [mc "theme all-symbols"]
+set alllist [linsert $alllist 0 {theme all-symbols}]
+set xth(me,themes) "$alllist $xth(me,themes)"
+set xth(me,themes,list) {}
+set xth(me,themes,showlist) {}
+
+# process themes
+set acttheme all-symbols
+foreach itm $xth(me,themes) {
+  set key [lindex $itm 0]
+  set value [lindex $itm 1]
+  switch $key {
+    theme {
+      lappend xth(me,themes,list) $value
+      lappend xth(me,themes,showlist) [thememc $itm]
+      set xth(me,themes,$value,point,list) {}
+      set xth(me,themes,$value,point,xlist) {}
+      set xth(me,themes,$value,line,list) {}
+      set xth(me,themes,$value,line,xlist) {}
+      set xth(me,themes,$value,area,list) {}
+      set xth(me,themes,$value,area,xlist) {}
+      set acttheme $value
+    }
+    point {
+      lappend xth(me,themes,$acttheme,point,list) $value
+      lappend xth(me,themes,$acttheme,point,xlist) [list [thememc $itm] $value]
+    }
+    line {
+      lappend xth(me,themes,$acttheme,line,list) $value
+      lappend xth(me,themes,$acttheme,line,xlist) [list [thememc $itm] $value]
+    }
+    area {
+      lappend xth(me,themes,$acttheme,area,list) $value
+      lappend xth(me,themes,$acttheme,area,xlist) [list [thememc $itm] $value]
+    }
+  }
+}
+
+proc xth_me_sortxlist {cl} {
+  set cl [lsort -index 0 $cl]
+  set hl {}
+  set sl {}
+  foreach xl $cl {
+    lappend sl [lindex $xl 0]
+    lappend hl [lindex $xl 1]
+  }
+  return [list $sl $hl]
+}
+
+foreach tm $xth(me,themes,list) {
+  foreach itm {point line area} {
+    set lists [xth_me_sortxlist $xth(me,themes,$tm,$itm,xlist)]
+    set xth(me,themes,$tm,$itm,showlist) [lindex $lists 0]
+    set xth(me,themes,$tm,$itm,hidelist) [lindex $lists 1]
+    unset xth(me,themes,$tm,$itm,xlist)
   }
 }
 

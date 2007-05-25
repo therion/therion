@@ -1,4 +1,4 @@
-+ fix 64/32bit and little/big endian portability
+TODO:
 + multiple surfaces support
 + surface backface culling
 + finish SK translation
@@ -6,7 +6,6 @@
 + search for help and localization files under Linux
 + scalebar to OpenGL list
 + channel brightness adjustment in stereo mode
-+ radiobutton not active when rotation
 + station labeling
 + PNG texture support
 + survey tree
@@ -14,6 +13,11 @@
 + add closed file mode
 + File->Close
 + escape in full-screen mode from toolboxes
+
+BUGS:
++ inactive loading file window
++ radiobutton not active when rotation
++ check 64/32bit and little/big endian portability
 
 
 MAC OS X:

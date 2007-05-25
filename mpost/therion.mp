@@ -69,8 +69,32 @@ horiz_labels:=true;
 transparency:=false;
 
 string ATTR__id, ATTR__survey, ATTR__scrap;
-boolean ATTR__scrap_centerline;
-ATTR__scrap_centerline = false;
+boolean ATTR__scrap_centerline, ATTR__text_x;
+picture ATTR__text;
+ATTR__text_x := false;
+ATTR__scrap_centerline := false;
+
+color label_fill_color, label_fill_color_tmp;
+label_fill_color := (1.0, 1.0, 1.0);
+def push_label_fill_color(expr r,g,b) =
+  label_fill_color_tmp := label_fill_color;
+  label_fill_color := (r,g,b);
+enddef;
+def pop_label_fill_color =
+  label_fill_color := label_fill_color_tmp;
+enddef;
+def process_filledlabel(expr cent, rot) =
+  begingroup
+    bboxmargin:=2.0bp;
+    q:=((bbox lab) smoothed 2) rotatedaround (cent, rot);
+    fill q withcolor label_fill_color;
+    draw lab rotatedaround (cent, rot);
+    write_circ_bbox(q);  % without corners smoothing it was enough to use
+                         % write_bbox(q);
+  endgroup;
+enddef;
+
+
 
 
 numeric area_border_errors;
@@ -172,6 +196,8 @@ def fonts_setup (expr t,s,m,l,h) =
         "\centerline{\box101}}}" &
         "\def\thlabel{\thnormalsize}" &
         "\def\thremark{\thsmallsize\si}" &
+        "\def\thcontinuation{\thsmallsize}" &
+        "\def\thentrance{\thsmallsize}" &
         "\def\thaltitude{\thsmallsize}" &
         "\def\thstationname{\thsmallsize}" &
         "\def\thdate{\thsmallsize}" &

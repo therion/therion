@@ -51,6 +51,9 @@ proc xth_me_reset_defaults {} {
     
 }
 
+set xth(me,acttheme) 0
+set xth(ctrl,me,acttheme) [lindex $xth(me,themes,showlist) 0]
+
 xth_me_reset_defaults
 
 proc xth_me_bind_entry_focusin {wlist} {
@@ -1751,7 +1754,7 @@ xth_status_bar me $sfm.name [mc "Scrap name."]
 
 Label $sfm.projl -text [mc "projection"] -anchor e -font $xth(gui,lfont) -state disabled
 xth_status_bar me $sfm.projl [mc "Scrap projection."]
-ComboBox $sfm.proj -values $xth(scrap_projections) \
+ComboBox $sfm.proj -values $xth(scrap_projections) -autocomplete 1 \
   -font $xth(gui,lfont) -height 4 -state disabled -width 4 \
   -textvariable xth(ctrl,me,scrap,projection) -command {xth_me_cmds_update {}}
 
@@ -1877,6 +1880,7 @@ grid $sfm.skdel -row 11 -column 2 -columnspan 2 -sticky news
 xth_about_status [mc "loading point module ..."]
 
 set ptc $xth(ctrl,me,point)
+
 Label $ptc.posl -text [mc "position"] -anchor e -font $xth(gui,lfont) -state disabled -width 8
 xth_status_bar me $ptc.posl [mc "Point position."]
 Entry $ptc.posx -font $xth(gui,lfont) -state disabled -width 4 -textvariable xth(ctrl,me,point,x)
@@ -1888,11 +1892,23 @@ Button $ptc.upd -text [mc "Update point"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_update {}}
 xth_status_bar me $ptc.upd [mc "Click this button to apply point changes."] 
 
+ComboBox $ptc.theme -values $xth(me,themes,showlist) -autocomplete 1 -editable 0 \
+  -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
+  -modifycmd "xth_me_set_theme \[$ptc.theme getvalue\]" -fg blue \
+  -textvariable xth(ctrl,me,acttheme)
+xth_status_bar me $ptc.theme [mc "Actual symbol theme."]
+ComboBox $ptc.themetype -values $xth(me,themes,all-symbols,point,showlist) -autocomplete 1 -editable 0 \
+  -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4  -fg blue \
+  -textvariable xth(ctrl,me,point,themetype) \
+  -modifycmd xth_me_point_themetype_modified
+xth_status_bar me $ptc.themetype [mc "Point type."]
+
 Label $ptc.typl -text [mc "type"] -anchor e -font $xth(gui,lfont) -state disabled -width 8
 xth_status_bar me $ptc.typl [mc "Point type."] 
-ComboBox $ptc.typ -values $xth(point_types) \
+ComboBox $ptc.typ -values $xth(point_types) -autocomplete 1 \
   -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
-  -textvariable xth(ctrl,me,point,type) -command {xth_me_cmds_update {}}
+  -textvariable xth(ctrl,me,point,type) -command {xth_me_cmds_update {}} \
+  -modifycmd {xth_me_cmds_update {}}
 xth_status_bar me $ptc.typ [mc "Point type."]
 xth_me_bind_typecbx_hint $ptc.typ point
 
@@ -1907,6 +1923,7 @@ xth_status_bar me $ptc.optl [mc "Other point options."]
 Entry $ptc.opt -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,point,opts)
 xth_status_bar me $ptc.opt [mc "I.e, if type is label, write here: -text \042this will be displayed (P100)\042"]
+
 Separator $ptc.s1 -orient horizontal
 
 checkbutton $ptc.rotc -text [mc "orientation"] -anchor w -font $xth(gui,lfont) -state disabled \
@@ -1939,24 +1956,36 @@ grid columnconf $ptc 0 -weight 1
 grid columnconf $ptc 1 -weight 1
 grid columnconf $ptc 2 -weight 1
 grid columnconf $ptc 3 -weight 1
-grid $ptc.posl -row 0 -column 0 -columnspan 2 -sticky news
-grid $ptc.posx -row 0 -column 2 -sticky news -padx 1
-grid $ptc.posy -row 0 -column 3 -sticky news -padx 1
-grid $ptc.typl -row 1 -column 0 -columnspan 2 -sticky news
-grid $ptc.typ -row 1 -column 2 -columnspan 2 -sticky news -padx 2
-grid $ptc.namel -row 2 -column 0 -columnspan 2 -sticky news
-grid $ptc.name -row 2 -column 2 -columnspan 2 -sticky news -padx 1
-grid $ptc.optl -row 3 -column 0 -columnspan 2 -sticky news
-grid $ptc.opt -row 3 -column 2 -columnspan 2 -sticky news -padx 1
-grid $ptc.s1 -row 4 -column 0 -columnspan 4 -sticky news -pady 3
-grid $ptc.rotc -row 5 -column 0 -columnspan 2 -sticky news
-grid $ptc.rot -row 5 -column 2 -columnspan 2 -sticky news -padx 1
+
+set crow 0
+grid $ptc.theme -row $crow -column 0 -columnspan 2 -sticky news -padx 2 -pady 2
+grid $ptc.themetype -row $crow -column 2 -columnspan 2 -sticky news -padx 2 -pady 2
+incr crow
+grid $ptc.typl -row $crow -column 0 -columnspan 2 -sticky news
+grid $ptc.typ -row $crow -column 2 -columnspan 2 -sticky news -padx 2
+incr crow
+grid $ptc.s1 -row $crow -column 0 -columnspan 4 -sticky news -pady 2
+incr crow
+grid $ptc.posl -row $crow -column 0 -columnspan 2 -sticky news
+grid $ptc.posx -row $crow -column 2 -sticky news -padx 2 -pady 1
+grid $ptc.posy -row $crow -column 3 -sticky news -padx 2 -pady 1
+incr crow
+grid $ptc.namel -row $crow -column 0 -columnspan 2 -sticky news
+grid $ptc.name -row $crow -column 2 -columnspan 2 -sticky news -padx 2 -pady 1
+incr crow
+grid $ptc.optl -row $crow -column 0 -columnspan 2 -sticky news
+grid $ptc.opt -row $crow -column 2 -columnspan 2 -sticky news -padx 2 -pady 1
+incr crow
+grid $ptc.rotc -row $crow -column 0 -columnspan 2 -sticky news
+grid $ptc.rot -row $crow -column 2 -columnspan 2 -sticky news -padx 2 -pady 1
+incr crow
 ## DISABLED
 #grid $ptc.xszc -row 6 -column 0 -columnspan 2 -sticky news
 #grid $ptc.xsz -row 6 -column 2 -columnspan 2 -sticky news -padx 1
 #grid $ptc.yszc -row 7 -column 0 -columnspan 2 -sticky news
 #grid $ptc.ysz -row 7 -column 2 -columnspan 2 -sticky news -padx 1
-grid $ptc.upd -row 8 -column 0 -columnspan 4 -sticky news
+grid $ptc.upd -row $crow -column 0 -columnspan 4 -sticky news
+incr crow
 
 
 # line control
@@ -1964,14 +1993,27 @@ xth_about_status [mc "loading line module ..."]
 
 set lnc $xth(ctrl,me,line)
 
+ComboBox $lnc.theme -values $xth(me,themes,showlist) -autocomplete 1 -editable 0 \
+  -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
+  -modifycmd "xth_me_set_theme \[$ptc.theme getvalue\]" -fg blue \
+  -textvariable xth(ctrl,me,acttheme)
+xth_status_bar me $lnc.theme [mc "Actual symbol theme."]
+ComboBox $lnc.themetype -values $xth(me,themes,all-symbols,line,showlist) -autocomplete 1 -editable 0 \
+  -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 -fg blue \
+  -textvariable xth(ctrl,me,line,themetype) \
+  -modifycmd xth_me_line_themetype_modified
+xth_status_bar me $lnc.themetype [mc "Line type."]
+
 Label $lnc.typl -text [mc "type"] -anchor e -font $xth(gui,lfont) -state disabled
 xth_status_bar me $lnc.typl [mc "Line type."]
-ComboBox $lnc.typ -values $xth(line_types) \
+ComboBox $lnc.typ -values $xth(line_types) -autocomplete 1  \
   -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
-  -textvariable xth(ctrl,me,line,type) \
+  -textvariable xth(ctrl,me,line,type) -modifycmd {xth_me_cmds_update {}} \
   -command {xth_me_cmds_update {}}
 xth_status_bar me $lnc.typ [mc "Line type."]
 xth_me_bind_typecbx_hint $lnc.typ line
+
+Separator $lnc.s1
 
 Label $lnc.namel -text [mc "id"] -anchor e -font $xth(gui,lfont) -state disabled
 xth_status_bar me $lnc.namel [mc "Line identifier."]
@@ -2050,17 +2092,30 @@ xth_status_bar me $plf [mc "Select line point."]
 
 grid columnconf $lnc 0 -weight 1
 grid columnconf $lnc 1 -weight 1
-grid $lnc.typl -row 0 -column 0 -sticky news
-grid $lnc.typ -row 0 -column 1 -sticky news -padx 2
-grid $lnc.namel -row 1 -column 0 -sticky news
-grid $lnc.name -row 1 -column 1 -sticky news -padx 1
-grid $lnc.optl -row 2 -column 0 -sticky news
-grid $lnc.opt -row 2 -column 1 -sticky news -padx 1
-grid $lnc.rev -row 3 -column 0 -sticky news
-grid $lnc.cls -row 3 -column 1 -sticky news
-grid $plf -row 4 -column 0 -columnspan 2 -sticky news
-grid $lnc.lpa -row 5 -column 0 -sticky news
-grid $lnc.upd -row 5 -column 1 -sticky news
+set crow 0
+grid $lnc.theme -row $crow -column 0 -sticky news -padx 2 -pady 2
+grid $lnc.themetype -row $crow -column 1 -sticky news -padx 2 -pady 2
+incr crow
+grid $lnc.typl -row $crow -column 0 -sticky news
+grid $lnc.typ -row $crow -column 1 -sticky news -padx 2
+incr crow
+grid $lnc.s1 -row $crow -column 0 -columnspan 2 -sticky news -padx 2 -pady 2
+incr crow
+grid $lnc.namel -row $crow -column 0 -sticky news
+grid $lnc.name -row $crow -column 1 -sticky news -padx 2 -pady 1
+incr crow
+grid $lnc.optl -row $crow -column 0 -sticky news
+grid $lnc.opt -row $crow -column 1 -sticky news -padx 2 -pady 1
+incr crow
+grid $lnc.rev -row $crow -column 0 -sticky news
+grid $lnc.cls -row $crow -column 1 -sticky news
+incr crow
+grid $plf -row $crow -column 0 -columnspan 2 -sticky news
+incr crow
+grid $lnc.lpa -row $crow -column 0 -sticky news
+grid $lnc.upd -row $crow -column 1 -sticky news
+incr crow
+
 #grid $lnc.insp -row 5 -column 0 -sticky news
 #grid $lnc.delp -row 5 -column 1 -sticky news
 
@@ -2239,11 +2294,23 @@ xth_about_status [mc "loading area module ..."]
 
 set lnc $xth(ctrl,me,ac)
 
+ComboBox $lnc.theme -values $xth(me,themes,showlist) -autocomplete 1 -editable 0 \
+  -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
+  -modifycmd "xth_me_set_theme \[$ptc.theme getvalue\]" -fg blue \
+  -textvariable xth(ctrl,me,acttheme)
+xth_status_bar me $lnc.theme [mc "Actual symbol theme."]
+ComboBox $lnc.themetype -values $xth(me,themes,all-symbols,area,showlist) -autocomplete 1 -editable 0 \
+  -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 -fg blue \
+  -textvariable xth(ctrl,me,ac,themetype) \
+  -modifycmd xth_me_area_themetype_modified
+xth_status_bar me $lnc.themetype [mc "Area type."]
+Separator $lnc.s1
+
 Label $lnc.typl -text [mc "type"] -anchor e -font $xth(gui,lfont) -state disabled
 xth_status_bar me $lnc.typl [mc "Area type."]
-ComboBox $lnc.typ -values $xth(area_types) \
+ComboBox $lnc.typ -values $xth(area_types) -autocomplete 1 \
   -font $xth(gui,lfont) -height $xth(gui,me,typelistwidth) -state disabled -width 4 \
-  -textvariable xth(ctrl,me,ac,type) \
+  -textvariable xth(ctrl,me,ac,type) -modifycmd {xth_me_cmds_update {}} \
   -command {xth_me_cmds_update {}}
 xth_status_bar me $lnc.typ [mc "Area type."] 
 xth_me_bind_typecbx_hint $lnc.typ area
@@ -2300,18 +2367,29 @@ xth_status_bar me $plf [mc "Select line in area."]
 
 grid columnconf $lnc 0 -weight 1
 grid columnconf $lnc 1 -weight 1
-grid $lnc.typl -row 0 -column 0 -sticky news
-grid $lnc.typ -row 0 -column 1 -sticky news -padx 2
-grid $lnc.optl -row 1 -column 0 -sticky news
-grid $lnc.opt -row 1 -column 1 -sticky news -padx 1
-grid $lnc.shw -row 2 -column 0 -sticky news
-grid $lnc.upd -row 2 -column 1 -sticky news
-grid $plf -row 3 -column 0 -columnspan 2 -sticky news
-grid $lnc.ins -row 4 -column 0 -sticky news
-grid $lnc.del -row 4 -column 1 -sticky news
-grid $lnc.insid -row 5 -column 0 -sticky news
-grid $lnc.inside -row 5 -column 1 -sticky news
-
+set crow 0
+grid $lnc.theme -row $crow -column 0 -sticky news -padx 2 -pady 2
+grid $lnc.themetype -row $crow -column 1 -sticky news -padx 2 -pady 2
+incr crow
+grid $lnc.typl -row $crow -column 0 -sticky news
+grid $lnc.typ -row $crow -column 1 -sticky news -padx 2 -pady 1
+incr crow
+grid $lnc.s1 -row $crow -column 0 -columnspan 2 -sticky news -padx 2 -pady 2
+incr crow
+grid $lnc.optl -row $crow -column 0 -sticky news
+grid $lnc.opt -row $crow -column 1 -sticky news -padx 2 -pady 1
+incr crow
+grid $lnc.shw -row $crow -column 0 -sticky news
+grid $lnc.upd -row $crow -column 1 -sticky news
+incr crow
+grid $plf -row $crow -column 0 -columnspan 2 -sticky news
+incr crow
+grid $lnc.ins -row $crow -column 0 -sticky news
+grid $lnc.del -row $crow -column 1 -sticky news
+incr crow
+grid $lnc.insid -row $crow -column 0 -sticky news
+grid $lnc.inside -row $crow -column 1 -sticky news
+incr crow
 xth_me_bind_entry_return "$lnc.opt" {xth_me_cmds_update {}}
 xth_me_bind_entry_focusin "$lnc.opt"
 
@@ -2491,6 +2569,7 @@ set xth(ctrl,me,area,ymin) ""
 set xth(ctrl,me,area,xmax) ""
 set xth(ctrl,me,area,ymax) ""
 
+xth_me_set_theme 0
 xth_about_status [mc "loading line procs ..."]
 xth_status_bar_status me [mc "Map editor is not active. To activate it, open existing file or create new one."]
 

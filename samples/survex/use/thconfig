@@ -7,7 +7,7 @@ encoding  utf-8
 
 #!PROCESS cavern use.svx
 #!PROCESS
-#!CLEAN use.3d use.err use.pdf
+#!CLEAN use.err use.pdf
 
 source use.th
 input ../thconfig.layout

@@ -35,6 +35,7 @@
 #include "thtexfonts.h"
 #include "thdate.h"
 #include "thscrap.h"
+#include <string>
 
 
 thpoint::thpoint()
@@ -55,6 +56,7 @@ thpoint::thpoint()
   this->align = TT_POINT_ALIGN_C;
   
   this->text = NULL;
+  this->code = NULL;
 }
 
 
@@ -157,6 +159,11 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
       this->parse_text(this->db->buff_enc.get_buffer());
       break;
 
+    case TT_POINT_CODE:
+      thencode(&(this->db->buff_enc), *args, argenc);
+      this->parse_code(this->db->buff_enc.get_buffer());
+      break;
+
     case TT_POINT_ALIGN:
       this->parse_align(*args);
       break;
@@ -212,9 +219,14 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
       break;
       
     case TT_POINT_STATION:
-      if (this->type != TT_POINT_TYPE_STATION)
-        ththrow(("point not station -- -name"))
-      thparse_objectname(this->station_name, & this->db->buff_stations, *args, thdb.cscrapptr);
+      switch (this->type) {
+        case TT_POINT_TYPE_STATION:
+        case TT_POINT_TYPE_CONTINUATION:
+          thparse_objectname(this->station_name, & this->db->buff_stations, *args, thdb.cscrapptr);
+          break;
+        default:
+          ththrow(("station reference not allowed with this point type"))
+      }
       break;
       
     case TT_POINT_FROM:
@@ -373,6 +385,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   th2ddataobject::export_mp(out);
 
   bool postprocess = true;
+  std::string attr_text;
   int macroid = -1;
   int postprocess_label = -1;
   this->db->buff_enc.guarantee(8128);
@@ -667,6 +680,26 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       }
       break;
 
+    case TT_POINT_TYPE_CONTINUATION:
+      macroid = SYMP_CONTINUATION;
+      {
+        std::string tmp;
+        if ((this->code != NULL) && (strlen(this->code) > 0)) {
+          tmp += this->code;
+        }
+        if ((this->text != NULL) && (strlen(this->text) > 0)) {
+          if (tmp.length() > 0)
+            tmp += " -- ";
+          tmp += this->text;
+        }
+        if (tmp.length() > 0) {
+          attr_text = "btex \\thcontinuation ";
+          attr_text += utf2tex(tmp);
+          attr_text += "etex";
+        }
+      }
+      break;
+
 // specialne symboly
     thpoint_type_export_mp(TT_POINT_TYPE_SPRING,SYMP_SPRING)
     thpoint_type_export_mp(TT_POINT_TYPE_SINK,SYMP_SINK)
@@ -685,7 +718,6 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_CAMP,SYMP_CAMP)
 
 // ukoncenia chodby
-    thpoint_type_export_mp(TT_POINT_TYPE_CONTINUATION,SYMP_CONTINUATION)
     thpoint_type_export_mp(TT_POINT_TYPE_NARROW_END,SYMP_NARROWEND)
     thpoint_type_export_mp(TT_POINT_TYPE_LOW_END,SYMP_LOWEND)
     thpoint_type_export_mp(TT_POINT_TYPE_FLOWSTONE_CHOKE,SYMP_FLOWSTONECHOKE)
@@ -747,10 +779,14 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   
   if (this->context >= 0) 
     macroid = this->context;
+
   if ((macroid > 0) && postprocess) {
     if (out->symset->assigned[macroid]) {
       if (out->file == NULL)
         return(true);
+      if (attr_text.length() > 0) {
+        fprintf(out->file, "ATTR__text_x := true;\nATTR__text := %s;\n", attr_text.c_str());
+      }
       fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
     }
     else
@@ -818,6 +854,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       this->point->export_mp(out,0);
       fprintf(out->file,");\n");
     }
+    if (attr_text.length() > 0) {
+      fprintf(out->file, "ATTR__text_x := false;\n");
+    }
   }
   
   return(false);
@@ -840,6 +879,7 @@ void thpoint::parse_text(char * ss) {
     case TT_POINT_TYPE_LABEL:
     case TT_POINT_TYPE_REMARK:
     case TT_POINT_TYPE_STATION_NAME:
+    case TT_POINT_TYPE_CONTINUATION:
       break;
     default:
       ththrow(("-text not valid with type %s", thmatch_string(this->type,thtt_point_types)))
@@ -847,6 +887,21 @@ void thpoint::parse_text(char * ss) {
   }
   if (strlen(ss) > 0)
     this->text = this->db->strstore(ss);
+  else
+    this->text = NULL;
+}
+
+
+void thpoint::parse_code(char * ss) {
+  switch (this->type) {
+    case TT_POINT_TYPE_CONTINUATION:
+      break;
+    default:
+      ththrow(("-code not valid with type %s", thmatch_string(this->type,thtt_point_types)))
+      break;
+  }
+  if (strlen(ss) > 0)
+    this->code = this->db->strstore(ss);
 }
 
 

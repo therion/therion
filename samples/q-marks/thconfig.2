@@ -1,0 +1,36 @@
+encoding  utf-8
+#!PROCESS
+#!FILE 5
+#!
+#! In the map, also only question marks are displayed.
+#!
+#!IMAGE map3.pdf
+#!
+#! When you redefine continuation symbol as mentioned above, 
+#! you can show also continuation codes and descriptions.
+#!
+#!IMAGE map4.pdf
+
+input thconfig.1.layout
+
+source
+  survey sample -title "Sample cave"
+    input centerline.th
+    input map.th2
+  endsurvey
+endsource
+
+export map -o map3.pdf -layout normal
+export map -o map4.pdf -layout show-cont
+
+#!SUBTITLE Exporting question mark lists
+#! You may also export a list of all continuations from your project
+#! project using
+#!CODE
+export continuation-list -o questions.html
+#!ENDCODE
+#! File questions.html then contains following list:
+#!HTML questions.html
+
+
+#!CLEAN map3.pdf map4.pdf questions.html

@@ -4,7 +4,7 @@ encoding  utf-8
 
 #!PROCESS cavern create.svx
 #!PROCESS
-#!CLEAN create.3d create.err create.pdf
+#!CLEAN create.err create.pdf
 
 source create.th
 input ../thconfig.layout

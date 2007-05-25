@@ -26,6 +26,52 @@
 ## --------------------------------------------------------------------
 
 
+proc xth_me_set_theme {x} {
+  global xth
+  set xth(me,acttheme) $x
+  set at [lindex $xth(me,themes,list) $x]
+  $xth(ctrl,me,point).typ configure -values $xth(me,themes,$at,point,list)
+  $xth(ctrl,me,line).typ configure -values $xth(me,themes,$at,line,list)
+  $xth(ctrl,me,ac).typ configure -values $xth(me,themes,$at,area,list)
+  $xth(ctrl,me,point).themetype configure -values $xth(me,themes,$at,point,showlist)
+  $xth(ctrl,me,line).themetype configure -values $xth(me,themes,$at,line,showlist)
+  $xth(ctrl,me,ac).themetype configure -values $xth(me,themes,$at,area,showlist)
+  if {[info exists xth(me,cmds,selid)]} {
+    xth_me_cmds_update {}
+  }
+}
+
+
+proc xth_me_point_themetype_modified {} {
+  global xth
+  set tx [$xth(ctrl,me,point).themetype getvalue]
+  set at [lindex $xth(me,themes,list) $xth(me,acttheme)]
+  if {$tx > -1} {
+    set xth(ctrl,me,point,type) [lindex $xth(me,themes,$at,point,hidelist) $tx]
+    xth_me_cmds_update {}
+  }
+}
+
+proc xth_me_line_themetype_modified {} {
+  global xth
+  set tx [$xth(ctrl,me,line).themetype getvalue]
+  set at [lindex $xth(me,themes,list) $xth(me,acttheme)]
+  if {$tx > -1} {
+    set xth(ctrl,me,line,type) [lindex $xth(me,themes,$at,line,hidelist) $tx]
+    xth_me_cmds_update {}
+  }
+}
+
+proc xth_me_area_themetype_modified {} {
+  global xth
+  set tx [$xth(ctrl,me,ac).themetype getvalue]
+  set at [lindex $xth(me,themes,list) $xth(me,acttheme)]
+  if {$tx > -1} {
+    set xth(ctrl,me,ac,type) [lindex $xth(me,themes,$at,area,hidelist) $tx]
+    xth_me_cmds_update {}
+  }
+}
+
 proc xth_me_cmds_get_line_option {ln opt} {
   set rxl [list [list "\\s*\\-$opt\\s+\\\[(\[^\\\]\]*)\\\]" "\["]\
     [list "\\s*\\-$opt\\s+\\\"((\\\"\\\"|\[^\\\"])+)\\\"" "\""]\
@@ -44,6 +90,7 @@ proc xth_me_cmds_get_line_option {ln opt} {
   }
   return [list $val $rln $res]
 }
+
 
 proc xth_me_cmds_get_sketch_option {ln} {
   set rxl [list [list "\\s*\\-sketch\\s+\\\[((\[^\\\]\]*))\\\]\\s+(\\S+)\\s+(\\S+)" "\[" "\]"]\
@@ -1609,12 +1656,11 @@ proc xth_me_cmds_move_point_xctrl {id} {
   global xth
   set cx [xth_me_real2canx $xth(me,cmds,$id,x)]
   set cy [xth_me_real2cany $xth(me,cmds,$id,y)]
-  $xth(me,can) coords $xth(me,canid,point,selector) [list \
-    [expr $cx - 3 * $xth(gui,me,point,psize)] \
-    [expr $cy - 3 * $xth(gui,me,point,psize)] \
-    [expr $cx + 3 * $xth(gui,me,point,psize)] \
-    [expr $cy + 3 * $xth(gui,me,point,psize)]
-  ]
+  set c1 [expr $cx - 3 * $xth(gui,me,point,psize)]
+  set c2  [expr $cy - 3 * $xth(gui,me,point,psize)]
+  set c3  [expr $cx + 3 * $xth(gui,me,point,psize)]
+  set c4  [expr $cy + 3 * $xth(gui,me,point,psize)]
+  $xth(me,can) coords $xth(me,canid,point,selector) [list $c1 $c2 $c3 $c4]
 }
 
 proc xth_me_cmds_show_point_xctrl {id} {
@@ -1670,13 +1716,22 @@ proc xth_me_cmds_update_point_ctrl {id} {
     $xth(ctrl,me,point).xsz configure -state normal
     $xth(ctrl,me,point).yszc configure -state normal
     $xth(ctrl,me,point).ysz configure -state normal
+    $xth(ctrl,me,point).theme configure -state normal
+    $xth(ctrl,me,point).themetype configure -state normal
     
     set xth(ctrl,me,point,x) $xth(me,cmds,$id,x)
     set xth(ctrl,me,point,y) $xth(me,cmds,$id,y)
     set xth(ctrl,me,point,type) $xth(me,cmds,$id,type)
     set xth(ctrl,me,point,name) $xth(me,cmds,$id,name)
     set xth(ctrl,me,point,opts) $xth(me,cmds,$id,options)
-
+    set at [lindex $xth(me,themes,list) $xth(me,acttheme)]
+    set tx [lsearch -exact $xth(me,themes,$at,point,hidelist) $xth(me,cmds,$id,type)]
+    if {$tx < 0} {
+      set xth(ctrl,me,point,themetype) {}
+    } else {
+      set xth(ctrl,me,point,themetype) [lindex $xth(me,themes,$at,point,showlist) $tx]
+    }
+    
     set xth(ctrl,me,point,rot) $xth(me,cmds,$id,rotation)
     if {[string length $xth(me,cmds,$id,rotation)] > 0} {
       set xth(ctrl,me,point,rotid) 1
@@ -1735,6 +1790,8 @@ proc xth_me_cmds_update_point_ctrl {id} {
     $xth(ctrl,me,point).posy configure -state disabled
     $xth(ctrl,me,point).upd configure -state disabled
     $xth(ctrl,me,point).typl configure -state disabled
+    $xth(ctrl,me,point).theme configure -state disabled
+    $xth(ctrl,me,point).themetype configure -state disabled
     $xth(ctrl,me,point).typ configure -state disabled
     $xth(ctrl,me,point).namel configure -state disabled
     $xth(ctrl,me,point).name configure -state disabled
@@ -1761,7 +1818,14 @@ proc xth_me_cmds_update_point_vars {id} {
   set xth(ctrl,me,point,name) $xth(me,cmds,$id,name)
   set xth(ctrl,me,point,opts) $xth(me,cmds,$id,options)
   set xth(ctrl,me,point,rot) $xth(me,cmds,$id,rotation)
-  
+  set at [lindex $xth(me,themes,list) $xth(me,acttheme)]
+  set tx [lsearch -exact $xth(me,themes,$at,point,hidelist) $xth(me,cmds,$id,type)]
+  if {$tx < 0} {
+    set xth(ctrl,me,point,themetype) {}
+  } else {
+    set xth(ctrl,me,point,themetype) [lindex $xth(me,themes,$at,point,showlist) $tx]
+  }
+    
   if {[string length $xth(me,cmds,$id,rotation)] > 0} {
     set xth(ctrl,me,point,rotid) 1
   } else {
@@ -1901,12 +1965,17 @@ proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
 
 proc xth_me_cmds_calc_point_coords {id} {
   global xth
-  return [list \
-    [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)] \
-    [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)] \
-    [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)] \
-    [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
-  ]
+  set x1 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)]
+  set y1 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)]
+  set x2 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)]
+  set y2 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
+  return [list $x1 $y1 $x2 $y2]
+ # return [list \
+ #   [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)] \
+ #   [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)] \
+ #   [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)] \
+ #   [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
+ # ]
 }
 
 

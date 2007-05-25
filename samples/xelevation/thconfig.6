@@ -1,0 +1,24 @@
+encoding  utf-8
+#!PROCESS
+#!FILE 4.5
+#!
+#! As we have mentioned before, there is a small chimney above station 5.
+#! In this case, it is much more natural to draw this shot as vertical
+#! (because it is a chimney). To specify this, use 
+
+source cave3.th
+
+source
+centerline
+#!CODE
+  extend vertical 5 5'
+#!ENDCODE
+endcenterline
+endsource
+
+#!IMAGE map6.pdf
+
+input thconfig.layout
+export map -proj extended -o map6.pdf -layout l -layout-scale 1 500
+
+#!CLEAN map6.pdf

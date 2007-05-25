@@ -1,0 +1,117 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust -128.0 -128.0 953.0 816.0
+##XTHERION## xth_me_area_zoom_to 100
+##XTHERION## xth_me_image_insert {354.329 1 1.0} {98.423 0} map.xvi 0 {}
+
+
+
+scrap scrap.1 -scale [-128.0 -128.0 935.085 -128.0 0.0 0.0 27.002359 0.0 m]
+
+
+#!FILE 4
+#!SUBTITLE Question marks in maps
+#! In the scrap (.th2 file), you can use <code>-text</code> and <code>-code</code>
+#! options to continuation symbol.
+#!CODE
+point 796.0 676.0 continuation -text "water too cold to continue" -code A
+#!ENDCODE
+
+
+line pit
+  134.0 257.0
+  148.0 276.0 150.0 329.0 150.0 329.0
+  smooth off
+endline
+
+point 87.989 305.313 station -name 5
+
+point 249.609 252.753 station -name 4
+
+point 735.829 558.663 station -name 7
+
+point 672.239 422.443 station -name 6
+
+point 382.089 494.683 station -name 3
+
+point 457.479 339.963 station -name 2
+
+point 382.679 259.643 station -name 1
+
+point 354.329 98.423 station -name 0
+
+line wall
+  432.0 347.0
+  432.0 347.0 418.0 312.0 386.0 295.0
+  354.0 278.0 321.0 274.0 301.0 277.0
+  281.0 280.0 243.0 268.0 203.0 287.0
+  163.0 306.0 150.0 326.0 125.0 340.0
+  100.0 354.0 56.0 377.0 48.0 344.0
+  40.0 311.0 -9.0 248.0 61.0 242.0
+  131.0 236.0 109.0 273.0 153.0 260.0
+  197.0 247.0 230.0 231.0 290.0 233.0
+  350.0 235.0 388.0 270.0 349.0 217.0
+  310.0 164.0 343.0 132.0 295.0 97.0
+  smooth off
+endline
+
+point 362.0 507.0 continuation -text "strong wind from breakdown" -align tl -code B
+
+point 407.0 516.0 air-draught -orientation 155.4
+
+
+line wall:debris
+  383.0 507.0
+  324.0 408.0 383.0 452.0 432.0 347.0
+  smooth off
+endline
+
+line wall
+  729.0 603.0
+  713.0 574.0 676.0 492.0 667.0 478.0
+  658.0 464.0 673.0 431.0 637.0 421.0
+  601.0 411.0 513.0 377.0 491.0 367.0
+  469.0 357.0 470.0 345.0 459.0 371.0
+  448.0 397.0 425.0 437.0 420.0 451.0
+  415.0 465.0 394.0 504.0 394.0 504.0
+  smooth off
+endline
+
+
+area water
+  l22-793-660
+endarea
+
+line border -id l22-793-660 -close on
+  711.0 588.0
+  737.0 568.0 759.95 527.0 771.0 527.0
+  785.0 527.0 820.0 638.0 820.0 638.0
+  smooth off
+  760.0 683.0
+  760.0 683.0 685.0 608.0 711.0 588.0
+endline
+
+line wall:presumed
+  729.0 603.0
+  760.0 660.0
+endline
+
+line wall:presumed
+  768.0 557.0
+  783.0 598.0 807.0 636.0 807.0 636.0
+  smooth off
+endline
+
+line wall
+  378.0 85.0
+  383.0 142.0 388.0 225.0 402.0 247.0
+  416.0 269.0 433.0 305.0 448.0 310.0
+  463.0 315.0 466.0 329.0 523.0 352.0
+  580.0 375.0 614.0 388.0 648.0 399.0
+  682.0 410.0 693.0 413.0 709.0 428.0
+  725.0 443.0 751.0 521.0 768.0 557.0
+  smooth off
+endline
+
+endscrap
+
+

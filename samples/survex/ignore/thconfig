@@ -6,7 +6,7 @@ encoding  utf-8
 #! are taken from .3d files without change.
 #!PROCESS cavern ignore.svx
 #!PROCESS
-#!CLEAN ignore.3d ignore.err ignore.pdf
+#!CLEAN ignore.err ignore.pdf
 
 source ignore.th
 input ../thconfig.layout

@@ -80,6 +80,8 @@ proc xth_me_cmds_update_line_ctrl {id} {
     $xth(ctrl,me,line).cls configure -state normal    
 #    $xth(ctrl,me,line).insp configure -state normal    
 #    $xth(ctrl,me,line).delp configure -state normal    
+    $xth(ctrl,me,line).theme configure -state normal    
+    $xth(ctrl,me,line).themetype configure -state normal    
     $xth(ctrl,me,line).lpa configure -state normal    
     $xth(ctrl,me,line).upd configure -state normal    
     $xth(ctrl,me,line).lpa.m entryconfigure [mc "Insert point"] -state normal    
@@ -92,6 +94,13 @@ proc xth_me_cmds_update_line_ctrl {id} {
     set xth(ctrl,me,line,opts) $xth(me,cmds,$id,options)
     set xth(ctrl,me,line,reverse) $xth(me,cmds,$id,reverse)
     set xth(ctrl,me,line,close) $xth(me,cmds,$id,close)
+    set at [lindex $xth(me,themes,list) $xth(me,acttheme)]
+    set tx [lsearch -exact $xth(me,themes,$at,line,hidelist) $xth(me,cmds,$id,type)]
+    if {$tx < 0} {
+      set xth(ctrl,me,line,themetype) {}
+    } else {
+      set xth(ctrl,me,line,themetype) [lindex $xth(me,themes,$at,line,showlist) $tx]
+    }
 
     xth_me_prev_cmd $xth(me,cmds,$id,data)
 
@@ -116,6 +125,8 @@ proc xth_me_cmds_update_line_ctrl {id} {
     $xth(ctrl,me,line).cls configure -state disabled    
 #    $xth(ctrl,me,line).insp configure -state disabled    
 #    $xth(ctrl,me,line).delp configure -state disabled    
+    $xth(ctrl,me,line).theme configure -state disabled     
+    $xth(ctrl,me,line).themetype configure -state disabled     
     $xth(ctrl,me,line).lpa configure -state disabled    
     $xth(ctrl,me,line).upd configure -state disabled
     $xth(ctrl,me,line).lpa.m entryconfigure [mc "Insert point"] -state disabled
@@ -138,6 +149,8 @@ proc xth_me_cmds_update_area_ctrl {id} {
 
     $xth(ctrl,me,ac).typl configure -state normal    
     $xth(ctrl,me,ac).typ configure -state normal    
+    $xth(ctrl,me,ac).theme configure -state normal    
+    $xth(ctrl,me,ac).themetype configure -state normal
     $xth(ctrl,me,ac).optl configure -state normal    
     $xth(ctrl,me,ac).opt configure -state normal    
     $xth(ctrl,me,ac).ins configure -state normal    
@@ -155,6 +168,15 @@ proc xth_me_cmds_update_area_ctrl {id} {
     set xth(ctrl,me,ac,type) $xth(me,cmds,$id,type)
     set xth(ctrl,me,ac,name) $xth(me,cmds,$id,name)
     set xth(ctrl,me,ac,opts) $xth(me,cmds,$id,options)
+
+    set at [lindex $xth(me,themes,list) $xth(me,acttheme)]
+    set tx [lsearch -exact $xth(me,themes,$at,area,hidelist) $xth(me,cmds,$id,type)]
+    if {$tx < 0} {
+      set xth(ctrl,me,ac,themetype) {}
+    } else {
+      set xth(ctrl,me,ac,themetype) [lindex $xth(me,themes,$at,area,showlist) $tx]
+    }
+
     set xth(ctrl,me,ac,insid) {}
     xth_me_prev_cmd $xth(me,cmds,$id,data)
 
@@ -167,6 +189,8 @@ proc xth_me_cmds_update_area_ctrl {id} {
 
     $xth(ctrl,me,ac).typl configure -state disabled    
     $xth(ctrl,me,ac).typ configure -state disabled    
+    $xth(ctrl,me,ac).theme configure -state disabled    
+    $xth(ctrl,me,ac).themetype configure -state disabled
     $xth(ctrl,me,ac).optl configure -state disabled    
     $xth(ctrl,me,ac).opt configure -state disabled    
     $xth(ctrl,me,ac).ins configure -state disabled    
@@ -1729,6 +1753,16 @@ proc xth_me_cmds_update_line_vars {id pid} {
   set xth(ctrl,me,line,opts) $xth(me,cmds,$id,options)
   set xth(ctrl,me,line,reverse) $xth(me,cmds,$id,reverse)
   set xth(ctrl,me,line,close) $xth(me,cmds,$id,close)
+
+  set at [lindex $xth(me,themes,list) $xth(me,acttheme)]
+  set tx [lsearch -exact $xth(me,themes,$at,line,hidelist) $xth(me,cmds,$id,type)]
+  if {$tx < 0} {
+    set xth(ctrl,me,line,themetype) {}
+  } else {
+    set xth(ctrl,me,line,themetype) [lindex $xth(me,themes,$at,line,showlist) $tx]
+  }
+  
+
   xth_me_cmds_update_linept_ctrl $id $pid
     
 }
@@ -1738,7 +1772,15 @@ proc xth_me_cmds_update_area_vars {id} {
   global xth
   set xth(ctrl,me,ac,type) $xth(me,cmds,$id,type)
   set xth(ctrl,me,ac,opts) $xth(me,cmds,$id,options)
-    
+
+  set at [lindex $xth(me,themes,list) $xth(me,acttheme)]
+  set tx [lsearch -exact $xth(me,themes,$at,area,hidelist) $xth(me,cmds,$id,type)]
+  if {$tx < 0} {
+    set xth(ctrl,me,ac,themetype) {}
+  } else {
+    set xth(ctrl,me,ac,themetype) [lindex $xth(me,themes,$at,area,showlist) $tx]
+  }
+  
 }
 
 

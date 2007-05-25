@@ -1,0 +1,21 @@
+encoding  utf-8
+#!PROCESS
+#!TITLE 60 Question marks handling
+#!FILE 1
+#!
+#! Possible continuations are treated special way in therion
+#! in both centerline and map files. You may associate text
+#! description and arbitrary code with it. There is no special
+#! syntax for the code, different speleo groups have different
+#! standards for question mark classification, any
+#! string will be accepted.
+#!
+
+input thconfig.1.layout
+source centerline.th
+
+export map -o map1.pdf -layout normal
+export map -o map2.pdf -layout show-cont
+export map -o map.xvi
+
+#!CLEAN map1.pdf

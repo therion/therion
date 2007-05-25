@@ -53,6 +53,7 @@ enum {
   TT_POINT_TEXT = 3011,
   TT_POINT_SCRAP = 3012,
   TT_POINT_DIST = 3013,
+  TT_POINT_CODE = 3014,
 };
 
 
@@ -62,6 +63,7 @@ enum {
  
 static const thstok thtt_point_opt[] = {
   {"align", TT_POINT_ALIGN},
+  {"code", TT_POINT_CODE},
   {"dist", TT_POINT_DIST},
   {"from", TT_POINT_FROM},
   {"name", TT_POINT_STATION},
@@ -70,6 +72,7 @@ static const thstok thtt_point_opt[] = {
   {"scrap", TT_POINT_SCRAP},
   {"size", TT_POINT_SIZE},
   {"subtype", TT_POINT_SUBTYPE},
+  {"station", TT_POINT_STATION},
   {"text", TT_POINT_TEXT},
   {"value", TT_POINT_VALUE},
   {"x-size", TT_POINT_XSIZE},
@@ -379,7 +382,8 @@ class thpoint : public th2ddataobject {
     align;  ///< Point align.
   double orient, xsize, ysize;  ///<...
   
-  char * text;  ///< Point text.
+  char * text,  ///< Point text.
+     * code; ///< Continuation code.
     
   thdb2dpt * point;  ///< Point coordinates.
   
@@ -399,6 +403,8 @@ class thpoint : public th2ddataobject {
   void parse_from(char * estr);  ///< Parse station extend.
 
   void parse_text(char * ss);  ///< Parse point text.
+
+  void parse_code(char * ss);  ///< Parse point code.
 
   void parse_value(char * ss);  ///< Parse point value.
 

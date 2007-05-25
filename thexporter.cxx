@@ -33,6 +33,7 @@
 #include "thexpmap.h"
 #include "thexpdb.h"
 #include "thexpsys.h"
+#include "thexptable.h"
 #include <stdio.h>
 
 
@@ -86,6 +87,10 @@ void thexporter::parse_export(int nargs, char ** args) {
       break;
     case TT_EXP_DATABASE:
       xp = new thexpdb;
+      xp->export_mode = expmode;
+      break;
+    case TT_EXP_CONTLIST:
+      xp = new thexptable;
       xp->export_mode = expmode;
       break;
     case TT_EXP_MAP:

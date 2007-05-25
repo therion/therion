@@ -583,12 +583,12 @@ thscraplp * thscrap::get_polygon() {
           (ffst->survey->is_in_survey(this->centerline_survey)));
         ttselect = ttselect || ((this->centerline_survey != NULL) && 
           (ttst->survey->is_in_survey(this->centerline_survey)));          
-        //if ((cl->extend & TT_EXTENDFLAG_IGNORE) == 0) {
-        if ((ffselect && ttselect) || (cl->psurvey->is_in_survey(this->centerline_survey))) {
-          ffst->tmpselect = true;
-          ttst->tmpselect = true;
+        if ((cl->extend & TT_EXTENDFLAG_HIDE) == 0) {
+          if ((ffselect && ttselect) || (cl->psurvey->is_in_survey(this->centerline_survey))) {
+            ffst->tmpselect = true;
+            ttst->tmpselect = true;
+          }
         }
-        //}
       }
     } else {
       for(i = 0; i < ni; i++) {
@@ -600,7 +600,7 @@ thscraplp * thscrap::get_polygon() {
       }
       for (i = 0; i < nlegs; i++) {
         cl = this->db->db1d.leg_vec[i].leg;
-        //if (((cl->extend & TT_EXTENDFLAG_IGNORE) == 0) && (cl->psurvey->is_in_survey(this->centerline_survey))) {
+        //if (((cl->extend & TT_EXTENDFLAG_HIDE) == 0) && (cl->psurvey->is_in_survey(this->centerline_survey))) {
         if ((cl->psurvey->is_in_survey(this->centerline_survey))) {
           this->db->db1d.station_vec[cl->from.id - 1].tmpselect = true;
           this->db->db1d.station_vec[cl->to.id - 1].tmpselect = true;
@@ -648,7 +648,8 @@ thscraplp * thscrap::get_polygon() {
                   arrow = cnode->first_arrow;
                   while (arrow != NULL) {
                     newx = (arrow->is_reversed ? arrow->leg->leg->txx : arrow->leg->leg->fxx) - this->proj->shift_x;
-                    if (newx != lp->stx) {
+
+                    if (((arrow->leg->leg->extend & TT_EXTENDFLAG_HIDE) == 0) && (newx != lp->stx)) {
                       nlp = this->polygon_insert(lp);
                       nlp->station = st;
                       nlp->ustation = st;
@@ -701,8 +702,10 @@ thscraplp * thscrap::get_polygon() {
 //              if ((((this->centerline_survey != NULL) && (arrow->leg->survey->is_in_survey(this->centerline_survey))) || 
 //                  ((this->centerline_survey == NULL) && (arrow->leg->survey->selected))) &&
 //                  ((this->proj->type != TT_2DPROJ_EXTEND) || ((arrow->leg->leg->extend & TT_EXTENDFLAG_IGNORE) == 0))) {
-              if ((((this->centerline_survey != NULL) && (arrow->leg->survey->is_in_survey(this->centerline_survey))) || 
-                  ((this->centerline_survey == NULL) && (arrow->leg->survey->selected)))) {
+              if (((((this->centerline_survey != NULL) && (arrow->leg->survey->is_in_survey(this->centerline_survey))) || 
+                  ((this->centerline_survey == NULL) && (arrow->leg->survey->selected)))) &&
+			      ((this->proj->type != TT_2DPROJ_EXTEND) || 
+				  ((arrow->leg->leg->extend & TT_EXTENDFLAG_HIDE) == 0))) {
 
                 // process arrow here
                 nlp = this->polygon_insert();

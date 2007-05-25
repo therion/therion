@@ -19,6 +19,8 @@
   "../me_cmds2.tcl",
   "../te.tcl",
   "../help.tcl",
+  "../init.tcl",
+  "../global.tcl",
 );
 
 sub read_lang_file {

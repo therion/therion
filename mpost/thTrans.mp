@@ -69,6 +69,8 @@ let p_continuation = p_continuation_UIS;
 let p_airdraught = p_airdraught_UIS;
 let p_airdraught_winter = p_airdraught_winter_UIS;
 let p_airdraught_summer = p_airdraught_summer_UIS;
+let p_continuationstation = p_continuationstation_UIS;
+let p_entrancestation = p_entrancestation_UIS;
 
 let l_wall_bedrock = l_wall_bedrock_UIS;
 let l_wall_sand = l_wall_sand_SKBB;

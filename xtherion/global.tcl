@@ -28,6 +28,10 @@
 package require msgcat
 catch {namespace import ::msgcat::mc}  
 
+if {[string equal -nocase [::msgcat::mclocale] c]} {
+  ::msgcat::mclocale en
+}
+
 set xth(destroyed) 0
 set xth(prj,name) "therion"
 set xth(prj,title) "therion user interface"
@@ -51,6 +55,7 @@ set xth(gui,auto_save) 0
 set xth(gui,auto_backup) 0
 set xth(gui,auto_backup_ext) "~"
 set xth(gui,check_update) 1
+
 
 set xth(encodings) { iso8859-1 iso8859-2 iso8859-5 iso8859-7 utf-8 }
 set xth(kbencodings) {utf-8 iso8859-1 iso8859-2 cp1250 macCentEuro unicode}
@@ -225,6 +230,112 @@ case $tcl_platform(platform) {
 }
 # end of platform dependend settings
 
+# words to translate
+set tmp [mc "theme basic-symbols"]
+set tmp [mc "theme passage-fills"]
+set tmp [mc "theme speleothems"]
+set tmp [mc "theme equipement"]
+
+set xth(me,themes) {
+  {theme basic-symbols}
+    {point gradient}
+    {point height}
+    {point passage-height}
+    {point entrance}
+    {point label}
+    {point station}
+    {point continuation}
+    {point water-flow}
+    {point air-draught}
+    {line wall}
+    {line chimney}
+    {line ceiling-step}
+    {line floor-step}
+    {line pit}
+    {line wall:breakdown}
+    {line floor-meander}
+	  {line ceiling-meander}
+    {line contour}
+    {line label}
+    {line overhang}
+    {line water-flow}
+    {area water}
+    {area sump}
+    {area bedrock}
+  {theme passage-fills}
+    {point blocks}
+    {point archeo-material}
+    {point clay}
+    {point debris}
+    {point breakdown-choke}
+    {point flowstone-choke}
+    {point low-end}
+    {point narrow-end}
+    {point guano}
+    {point ice}
+    {point paleo-material}
+    {point pebbles}
+    {point raft}
+    {point raft-cone}
+    {point root}
+    {point sand}
+    {point snow}
+    {point vegetable-debris}
+    {point water}
+	  {line border}
+	  {line border:invisible}
+    {line rock-border}
+    {line rock-edge}
+    {area blocks}
+    {area clay}
+    {area debris}
+    {area ice}
+    {area pebbles}
+    {area sand}
+    {area snow}
+  {theme speleothems}
+    {point anastomosis}
+    {point aragonite}
+    {point cave-pearl}
+    {point crystal}
+    {point curtain}
+    {point disk}
+    {point flowstone}
+    {point flute}
+    {point gypsum}
+    {point gypsum-flower}
+    {point helictite}
+    {point karren}
+    {point moonmilk}
+    {point pillar}
+    {point popcorn}
+    {point rimstone-dam}
+    {point rimstone-pool}
+    {point scallop}
+    {point soda-straw}
+    {point stalactite}
+    {point stalagmite}
+    {point wall-calcite}
+    {line flowstone}
+	  {line moonmilk}
+    {area flowstone}
+    {area moonmilk}
+  {theme equipement}
+    {point anchor}
+    {point bridge}
+    {point camp}
+    {point fixed-ladder}
+    {point no-equipment}
+    {point rope}
+    {point rope-ladder}
+    {point steps}
+    {point traverse}
+}
+
+
+
+
+
 set xth(about,image_data) {
 R0lGODlhwACQAOcAAAAAAAAAVQAAqgAA/wAkAAAkVQAkqgAk/wBJAABJVQBJ
 qgBJ/wBtAABtVQBtqgBt/wCSAACSVQCSqgCS/wC2AAC2VQC2qgC2/wDbAADb
@@ -349,4 +460,5 @@ proc xth_incr_station_name {oname iii} {
     return "$oname$svname"
   }
 }
+
 

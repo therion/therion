@@ -263,21 +263,25 @@ enum {
   TT_EXTENDFLAG_REVERSE = 2,
   TT_EXTENDFLAG_LEFT = 4,
   TT_EXTENDFLAG_RIGHT = 8,
-  TT_EXTENDFLAG_DIRECTION = 15,
-  TT_EXTENDFLAG_BREAK = 16,
-  TT_EXTENDFLAG_START = 32,
-  TT_EXTENDFLAG_IGNORE = 64,
+  TT_EXTENDFLAG_VERTICAL = 16,
+  TT_EXTENDFLAG_DIRECTION = 31,
+  TT_EXTENDFLAG_BREAK = 32,
+  TT_EXTENDFLAG_START = 64,
+  TT_EXTENDFLAG_IGNORE = 128,
+  TT_EXTENDFLAG_HIDE = 256,
 };
 
 
 static const thstok thtt_extendflag[] = {
   //{"break", TT_EXTENDFLAG_BREAK},
+  {"hide", TT_EXTENDFLAG_HIDE},
   {"ignore", TT_EXTENDFLAG_IGNORE},
   {"left", TT_EXTENDFLAG_LEFT},
   {"normal", TT_EXTENDFLAG_NORMAL},
   {"reverse", TT_EXTENDFLAG_REVERSE},
   {"right", TT_EXTENDFLAG_RIGHT},
   {"start", TT_EXTENDFLAG_START},
+  {"vertical", TT_EXTENDFLAG_VERTICAL},
   {NULL, TT_EXTENDFLAG_UNKNOWN},
 };
 
@@ -315,6 +319,8 @@ enum {
   TT_DATASFLAG_CONT,
   TT_DATASFLAG_FIXED,
   TT_DATASFLAG_NOTFIXED,
+  TT_DATASFLAG_CODE,
+  TT_DATASFLAG_ATTR,
 };
 
 /**
@@ -336,6 +342,8 @@ enum {
  */
  
 static const thstok thtt_datasflag[] = {
+  {"attr", TT_DATASFLAG_ATTR},
+  {"code", TT_DATASFLAG_CODE},
   {"continuation", TT_DATASFLAG_CONT},
   {"entrance", TT_DATASFLAG_ENTRANCE},
   {"not-fixed", TT_DATASFLAG_NOTFIXED},
@@ -358,7 +366,7 @@ class thdataleg {
   int data_type,  ///< leg data type
       flags;  ///< Leg flags.
       
-  unsigned char s_mark,  ///< Type of the station mark
+  unsigned int s_mark,  ///< Type of the station mark
     extend;  ///< Extend flags: normal, reverse, left, right, break
 
   int walls, shape;
@@ -441,6 +449,8 @@ class thdatass {
   class thsurvey * psurvey;  ///< parent survey
 
   char * comment;  ///< Station comment.  
+
+  char * code;  ///< Continuation code.
   
   int flags;  ///< Station flags.
   

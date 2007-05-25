@@ -411,6 +411,8 @@ void thdb1d::scan_data()
           else {
             if (ssi->comment != NULL)
               this->station_vec[ssi->station.id-1].comment = ssi->comment;
+            if (ssi->code != NULL)
+              this->station_vec[ssi->station.id-1].code = ssi->code;
             this->station_vec[ssi->station.id-1].flags |= ssi->flags;
           }
           ssi++;
@@ -2805,11 +2807,11 @@ void thdb1d::process_xelev()
                     else
                       carrow->leg->leg->extend |= TT_EXTENDFLAG_RIGHT;
                     break;
-                  case TT_EXTENDFLAG_IGNORE:
-                    carrow->negative->extend |= TT_EXTENDFLAG_IGNORE;
-                    carrow->leg->leg->extend |= TT_EXTENDFLAG_IGNORE;
+                  case TT_EXTENDFLAG_VERTICAL:
+                    carrow->leg->leg->extend |= TT_EXTENDFLAG_VERTICAL;
+                    carrow->negative->extend |= TT_EXTENDFLAG_VERTICAL;
                     break;
-                  default:
+				  default:
                     carrow->leg->leg->extend |= xi->extend;
                 }
               }
@@ -2821,12 +2823,21 @@ void thdb1d::process_xelev()
                 st1->extend &= ~TT_EXTENDFLAG_DIRECTION;
               }              
               st1->extend |= xi->extend;
-              if (xi->extend == TT_EXTENDFLAG_IGNORE) {
+              if ((xi->extend & TT_EXTENDFLAG_IGNORE) != 0) {
                 carrow = from_node->first_arrow;
                 while (carrow != NULL) {
                   carrow->leg->leg->extend |= TT_EXTENDFLAG_IGNORE;
                   carrow->extend |= TT_EXTENDFLAG_IGNORE;
                   carrow->negative->extend |= TT_EXTENDFLAG_IGNORE;
+                  carrow = carrow->next_arrow;
+                }
+              }
+              if ((xi->extend & TT_EXTENDFLAG_HIDE) != 0) {
+                carrow = from_node->first_arrow;
+                while (carrow != NULL) {
+                  carrow->leg->leg->extend |= TT_EXTENDFLAG_HIDE;
+                  carrow->extend |= TT_EXTENDFLAG_HIDE;
+                  carrow->negative->extend |= TT_EXTENDFLAG_HIDE;
                   carrow = carrow->next_arrow;
                 }
               }
@@ -2878,7 +2889,8 @@ void thdb1d::process_xelev()
 
   unsigned long tarrows = 0;
   bool component_break = true;
-  bool ignorant_mode = false, default_left = false, go_left, just_started = true;
+  bool ignorant_mode = false, just_started = true;
+  int default_left(1), go_left; // -1 - left, 1 - right, 0 - vertical
   int start_level, clevel;
   double cxx = 0.0;
 
@@ -2941,7 +2953,15 @@ void thdb1d::process_xelev()
       cxx = current_node->xx;
       component_break = false;
       if (!current_node->xx_touched) {
-        current_node->xx_left = ((this->station_vec[current_node->uid - 1].extend & (TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_REVERSE)) != 0);
+        switch (this->station_vec[current_node->uid - 1].extend & TT_EXTENDFLAG_DIRECTION) {
+          case TT_EXTENDFLAG_LEFT:
+          case TT_EXTENDFLAG_REVERSE:
+            current_node->xx_left = -1;
+            break;
+          case TT_EXTENDFLAG_VERTICAL:
+            current_node->xx_left = 0;
+            break;
+        }
       }
       default_left = current_node->xx_left;
       just_started = true;
@@ -3015,13 +3035,16 @@ void thdb1d::process_xelev()
       // change cxx
       switch (this->station_vec[current_node->last_arrow->end_node->uid - 1].extend & TT_EXTENDFLAG_DIRECTION) {
         case TT_EXTENDFLAG_REVERSE:
-          default_left = !default_left;
+          default_left = -default_left;
           break;
         case TT_EXTENDFLAG_LEFT:
-          default_left = true;
+          default_left = -1;
           break;
         case TT_EXTENDFLAG_RIGHT:
-          default_left = false;
+          default_left = 1;
+          break;
+        case TT_EXTENDFLAG_VERTICAL:
+          default_left = 0;
           break;
       }
       current_node->last_arrow->end_node->xx_left = default_left;
@@ -3029,37 +3052,43 @@ void thdb1d::process_xelev()
       
       if ((current_node->last_arrow->extend & 
           (TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_RIGHT
-           | TT_EXTENDFLAG_REVERSE)) == 0) {
+           | TT_EXTENDFLAG_REVERSE | TT_EXTENDFLAG_VERTICAL)) == 0) {
         switch (current_node->last_arrow->leg->leg->extend & TT_EXTENDFLAG_DIRECTION) {
           case TT_EXTENDFLAG_LEFT:
-            go_left = true;
+            go_left = -1;
             if (current_node->last_arrow->is_reversed)
-              go_left = !go_left;
+              go_left = -go_left;
             break;
           case TT_EXTENDFLAG_RIGHT:
-            go_left = false;
+            go_left = 1;
             if (current_node->last_arrow->is_reversed)
-              go_left = !go_left;
+              go_left = -go_left;
             break;
           case TT_EXTENDFLAG_REVERSE:
-            go_left = !go_left;
+            go_left = -go_left;
+            break;
+          case TT_EXTENDFLAG_VERTICAL:
+            go_left = 0;
             break;
         }
       } else {
         switch (current_node->last_arrow->extend & TT_EXTENDFLAG_DIRECTION) {
           case TT_EXTENDFLAG_REVERSE:
-            go_left = !go_left;
+            go_left = -go_left;
             break;
           case TT_EXTENDFLAG_LEFT:
-            go_left = true;
+            go_left = -1;
             break;
           case TT_EXTENDFLAG_RIGHT:
-            go_left = false;
+            go_left = 1;
+            break;
+          case TT_EXTENDFLAG_VERTICAL:
+            go_left = 0;
             break;
         }
       }
  
-      cxx += (go_left ? -1.0 : 1.0) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy);
+      cxx += double(go_left) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy);
       
       // set end x
       if (current_node->last_arrow->is_reversed)

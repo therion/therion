@@ -956,6 +956,7 @@ void thdb2d::process_point_references(thpoint * pp)
   char * err_code = "invalid station or point reference";
   switch (pp->type) {
     case TT_POINT_TYPE_STATION:
+    case TT_POINT_TYPE_CONTINUATION:
       if (! pp->station_name.is_empty()) {
         try {
           pp->station_name.id = this->db->db1d.get_station_id(pp->station_name,pp->fsptr);
@@ -971,8 +972,11 @@ void thdb2d::process_point_references(thpoint * pp)
             threthrow2(("station does not exist -- %s",
               pp->station_name.name))
         }
-        pp->fscrapptr->insert_adata(&(this->db->db1d.station_vec[pp->station_name.id - 1]));
+        if (pp->type == TT_POINT_TYPE_STATION)
+          pp->fscrapptr->insert_adata(&(this->db->db1d.station_vec[pp->station_name.id - 1]));
       }      
+      if (pp->type == TT_POINT_TYPE_CONTINUATION)
+        break;
     case TT_POINT_TYPE_EXTRA:
       if (! pp->from_name.is_empty()) {
         try {

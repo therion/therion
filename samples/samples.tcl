@@ -178,6 +178,20 @@ proc process_files {} {
 }
 
 
+proc get_html_body {fn} {
+  set fid [open $fn "r"]
+  set ftext [read $fid]
+  close $fid
+  regexp -nocase {\<\s*body[^\>]*\>\s*(.*)\<\/\s*body[^\>]*\>} $ftext dum ftext
+  regsub -nocase -all {\<\s*table} $ftext {<table class="htmlinput"} ftext
+  regsub -nocase -all {\<\s*tr} $ftext {<tr class="htmlinput"} ftext
+  regsub -nocase -all {\<\s*td} $ftext {<td class="htmlinput"} ftext
+  regsub -nocase -all {\<\s*th} $ftext {<th class="htmlinput"} ftext
+  regsub {\s*$} $ftext {} ftext
+  return $ftext
+}
+
+
 proc create_docs {} {
   global filelist tcl_platform outd
   set cdir {}
@@ -250,6 +264,13 @@ proc create_docs {} {
 	}
 	append data($chid,TEXT) "<p>\n<a href=\"$iifnm\"><img border=\"1\" src=\"$iiimg\"/></a>\n</p>\n"
 	incr imid
+      } elseif {[regexp -nocase {^\s*\#\!HTML\s+(\S.*)$} $ln dum ii]} {
+	set html_src [file join [lindex $fr 1] $ii]
+	if {$inparagraph} {
+	  append data($chid,TEXT) "</p>\n"
+	  set inparagraph 0
+	}
+	append data($chid,TEXT) [get_html_body $html_src]
       } elseif {[regexp -nocase {^\s*\#\!code\s*$} $ln dum ct]} {
 	if {$inparagraph} {
 	  append data($chid,TEXT) "</p>\n"
@@ -319,12 +340,49 @@ a:hover {color: red; text-decoration: none; }
 ol { list-style-type: lower-greek }
 ul { list-style-type: circle }
 
-code {font-family: Courier; font-weight: bold; line-height: 1.5;}
-pre.code {padding:0.5em; border:1px solid #000; font-weight:bold; color:#000; background-color:#f7f9fa; overflow:auto; line-height:140%; margin-left: 16px; margin-right: 16px;}
+code {
+  font-family: Courier; 
+  font-weight: bold; 
+  line-height: 1.5;
+}
+
+pre.code {
+  padding:0.5em; 
+  border:1px solid #000; 
+  font-weight:bold; color:#000; 
+  background-color:#f7f9fa; 
+  overflow:auto; 
+  line-height:140%; 
+  margin-left: 16px; 
+  margin-right: 16px;
+}
 
 font.nav {font-size: 75%;}
 
+table.htmlinput {
+    font-size:80%; 
+    margin-left: 16px; 
+    margin-right: 16px;
+    border-spacing: 0px;
 }
+th.htmlinput {
+    border-bottom:2px solid #a7a9aa;
+    padding-left:8px; 
+    padding-right:8px; 
+    padding-top:0px; 
+    padding-bottom:1px
+}
+td.htmlinput {
+    border-bottom:1px solid #a7a9aa;
+    padding-left:8px; 
+    padding-right:8px;
+    padding-top:0px; 
+    padding-bottom:0px
+}
+
+}
+# END OF CSS
+
   close $fid
 
   # export html pages
@@ -374,6 +432,7 @@ font.nav {font-size: 75%;}
     puts $fout "<hr noshade color=\"#000\" size=\"1\" width=\"100%\"/>"
     puts $fout "<h1>$data($chid,TITLE)</h1>"
     puts -nonewline $fout $data($chid,TEXT)
+    puts $fout "<p></p>\n";
     puts $fout "<hr noshade color=\"#000\" size=\"1\" width=\"100%\"/>"
     puts $fout "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<tr>"
     puts $fout "<td width=\"33%\" align=\"left\">"
@@ -397,7 +456,7 @@ font.nav {font-size: 75%;}
   puts $fidx "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n<tr>"
   puts $fidx "<td width=\"100%\" align=\"right\"><a href=\"[lindex [lindex $chapters 0] 1].html\"><font class=\"nav\">|Start|</font></a></td>"
   puts $fidx "</tr>\n</table>"
-  puts $fidx "</td>\n</tr>\n</table>\n</center>\n</body></html>"
+  puts $fidx "</td>\n</tr>\n</table>\n</center>\n"
   puts $fidx "</body></html>"
 }
 

@@ -139,6 +139,10 @@ class thexport {
 };
 
 
+#ifdef THMSVC
+#define strcasecmp _stricmp
+#endif
+
 #define thexp_set_ext_fmt(extension,cformat) { \
     if (strlen(this->outpt) > strlen(extension)) { \
       if (strcasecmp(&(this->outpt[strlen(this->outpt) - strlen(extension)]), extension) == 0) { \

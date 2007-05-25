@@ -35,11 +35,13 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYMP_CAVEPEARL][3] = 1;
 	thsymsets_symbols[SYMP_CLAY][3] = 1;
 	thsymsets_symbols[SYMP_CONTINUATION][5] = 1;
+	thsymsets_symbols[SYMP_CONTINUATIONSTATION][5] = 1;
 	thsymsets_symbols[SYMP_CRYSTAL][5] = 1;
 	thsymsets_symbols[SYMP_CURTAIN][5] = 1;
 	thsymsets_symbols[SYMP_DEBRIS][5] = 1;
 	thsymsets_symbols[SYMP_DISK][5] = 1;
 	thsymsets_symbols[SYMP_ENTRANCE][5] = 1;
+	thsymsets_symbols[SYMP_ENTRANCESTATION][5] = 1;
 	thsymsets_symbols[SYMP_FIXEDLADDER][3] = 1;
 	thsymsets_symbols[SYMP_FLOWSTONE][5] = 1;
 	thsymsets_symbols[SYMP_FLOWSTONECHOKE][2] = 1;

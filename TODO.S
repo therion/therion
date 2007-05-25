@@ -1,5 +1,11 @@
 HOT LIST:
 
++ make unixify (dos2unix, chmod)
++ samples into win32 installation
++ thbook
++ release
+
+
 therion:
 
 + thbook: map in offset (<map> <offset> <preview>)
@@ -10,19 +16,30 @@ therion:
 + thbook: area flowstone, moonmilk
 + thbook: line moonmilk
 + thbook: layout survey-level
-+ thbook: config-file sketch-warp line|plquette
++ thbook: config-file sketch-warp line|plaquette
 + thbook: 2D contour DXF export
 + thbook: LRUD walls in PDF (area dimensions)
 + thbook: export model -wall-source maps|centerline|all
-
++ thbook: centerline extend vertical|hide
++ thbook: point continuation -text <description> -code <continuation-code>
++ thbook: station code flag
++ thbook: export continuation-list (format html, text, dbf)
+          
++ export of all translations from therion to xtherion
 + user defined points/lines/areas
-+ add shot flags to attributes when exported in metapost
-+ allow -text and -quality options with continuation
++ add shot/stations flags to attributes when exported in metapost
 + allow scraps without stations, CS specification for scrap (in plan
   projection)
++ polyline to bezier conversion mode
++ ------------------------------------------------------------------
++ more complex attribute export
++ attributes to shots/stations
++ add -survey-lines on|off|auto option to scrap - auto by default -
+  if there is some line survey, it will be off
 + add rotation of 3D surface into surface calibration
 + negative values to point-dimensions
-+ add selections to export queue
++ add selections/unselections to export queue
++ redo database export
 + add gradient to area
 + add line moonmilk and flowstone areas surrounded by line flowstone or moonmilk
 + solve transparency of sketches
@@ -81,10 +98,10 @@ therion:
   
 xtherion:
 
-+ do not save empty lines/areas/scraps
-+ add symbol groups menus
++ save/load xtherion startup script somewhere...
 + import of DXF/SVG into map editor
-+ window initialization geometry
++ ------------------------------------------------------------------
++ do not save empty lines/areas/scraps
 + rightclick on map-item with changes of types and subtypes
 + Ctrl+F binding in text/map editor - switch focus to Find 
   control panel and maximize it

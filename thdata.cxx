@@ -1597,7 +1597,8 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->cd_leg->s_mark = this->d_mark;
     this->cd_leg->flags = this->d_flags;
     this->cd_leg->extend = (unsigned char) this->d_extend;
-    this->d_extend &= (TT_EXTENDFLAG_NORMAL | TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_RIGHT | TT_EXTENDFLAG_REVERSE | TT_EXTENDFLAG_IGNORE);
+    this->d_extend &= (TT_EXTENDFLAG_DIRECTION | TT_EXTENDFLAG_IGNORE | TT_EXTENDFLAG_HIDE);
+
     this->cd_leg->psurvey = this->db->get_current_survey();
     
     this->cd_leg->walls = this->d_walls;
@@ -2293,6 +2294,28 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
           case TT_DATASFLAG_CONT:
             it->flags |= TT_STATIONFLAG_CONT;
             break;
+          case TT_DATASFLAG_CODE:
+            if ((it->flags & TT_STATIONFLAG_CONT) == 0)
+              ththrow(("missing continuation flag before code"));
+            if ((ai + 1) == nargs)
+              ththrow(("too few flags - missing continuation code"));
+            ai++;
+            if (strlen(args[ai]) == 0) {
+              it->code = NULL;
+            } else {
+              thencode(&(this->db->buff_enc), args[ai], argenc);
+              it->code = this->db->strstore(this->db->buff_enc.get_buffer());
+            }
+            break;
+          case TT_DATASFLAG_ATTR:
+            if ((ai + 1) == nargs)
+              ththrow(("too few flags - missing attribute name"));
+            if ((ai + 2) == nargs)
+              ththrow(("too few flags - missing attribute value"));
+            ai++;
+            ai++;
+            thwarning(("station attributes are not implemented yet!"));
+            break;
           default:
             ththrow(("invalid station flag -- %s", args[ai]))
         }
@@ -2579,7 +2602,8 @@ void thdata::start_group() {
   tmp->d_nitems = this->cgroup->d_nitems;
   tmp->d_mark = this->cgroup->d_mark;
   tmp->d_flags = this->cgroup->d_flags;
-  tmp->d_extend = this->cgroup->d_extend & (TT_EXTENDFLAG_NORMAL | TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_RIGHT | TT_EXTENDFLAG_IGNORE);
+  tmp->d_extend = this->cgroup->d_extend & 
+    (TT_EXTENDFLAG_DIRECTION | TT_EXTENDFLAG_IGNORE | TT_EXTENDFLAG_HIDE);
   tmp->d_last_equate = this->cgroup->d_last_equate;
   
   tmp->d_vtresh = this->cgroup->d_vtresh;

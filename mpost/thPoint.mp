@@ -712,6 +712,16 @@ def p_continuation_UIS(expr pos,theta,sc,al) =
   thdraw (0,-.2u);
 enddef;
 
+def p_continuationstation_UIS(expr pos) =
+  p_continuation(pos, 0.0, 1.0, (0,2))
+enddef;
+
+def p_entrancestation_UIS(expr pos) =
+  T:=identity shifted pos;
+  pickup PenX;
+  thdraw (-.3u,0) -- (-.2u,0){dir 135} .. (0, .5u) .. {dir 225}(.2u,0) -- (.3u,0);
+enddef;
+
 def p_debug (expr col, pen, pos)=
     T:=identity shifted pos;
     thdraw origin withpen pencircle 

@@ -1,0 +1,22 @@
+encoding  utf-8
+#!PROCESS
+#!FILE 4.6
+#!
+#! Or you can completely hide this leg from extended centerline using:
+
+source cave3.th
+
+source
+centerline
+#!CODE
+  extend hide 5 5'
+#!ENDCODE
+endcenterline
+endsource
+
+#!IMAGE map7.pdf
+
+input thconfig.layout
+export map -proj extended -o map7.pdf -layout l -layout-scale 1 500 -layout-transparency off
+
+#!CLEAN map7.pdf

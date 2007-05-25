@@ -24,11 +24,13 @@ camp: SKBB
 cavepearl: SKBB 
 clay: SKBB 
 continuation: UIS 
+continuationstation: UIS 
 crystal: UIS 
 curtain: UIS 
 debris: UIS 
 disk: UIS 
 entrance: UIS 
+entrancestation: UIS 
 fixedladder: SKBB 
 flowstone: UIS 
 flowstonechoke: NSS 

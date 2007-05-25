@@ -1,3 +1,205 @@
+therion: scale
+cz: měřítko
+en: scale
+es: escala
+it: scala
+sk: mierka
+
+therion: Scrap scale definition.
+cz: Nastavení měřítka scrapu.
+en: Scrap scale definition.
+es: Definir la escala del croquis.
+it: Definizione della scala dello scrap.
+sk: Nastavenie mierky scrapu.
+
+therion: loading model viewer...
+cz: nahrávám 3D prohlížeč...
+en: loading model viewer...
+es: visor 3D...
+it: modulo visualizzazione ...
+sk: 3D prehliadač...
+
+therion: Model viewer
+cz: 3D prohlížeč
+en: Model viewer
+es: Visor 3D
+it: Visualizza modello
+sk: 3D prehliadač
+
+therion: Camera
+cz: Kamera
+en: Camera
+es: Cámara
+it: Camera
+sk: Kamera
+
+therion: Model
+cz: Model
+en: Model
+es: Modelo
+it: Modello
+sk: Model
+
+therion: Reload
+cz: Otevřít znovu
+en: Reload
+es: Recargar
+it: Ricarica
+sk: Znovu načítať
+
+therion: inserting image
+cz: vkládám obrázek
+en: inserting image
+es: insertando imagen
+it: inserimento immagine
+sk: vkladám obrázok
+
+therion: facing
+cz: azimut
+en: facing
+es: vista
+it: di fronte
+sk: azimut
+
+therion: north
+cz: sever
+en: north
+es: norte
+it: nord
+sk: sever
+
+therion: east
+cz: východ
+en: east
+es: este
+it: est
+sk: východ
+
+therion: west
+cz: západ
+en: west
+es: oeste
+it: ovest
+sk: západ
+
+therion: south
+cz: jih
+en: south
+es: sur
+it: sud
+sk: juh
+
+therion: Set facing angle.
+cz: Nastaví úhel otočení.
+en: Set facing angle.
+es: Ajustar punto de vista.
+it: Imposta l'angolo di vista
+sk: Nastav azimut pohľadu.
+
+therion: Facing angle.
+cz: Úhel otočení.
+en: Facing angle.
+es: Punto de vista.
+it: Angolo di vista
+sk: Azimut pohľadu.
+
+therion: auto rotate
+cz: auto rotace
+en: auto rotate
+es: rotar
+it: auto-rotazione
+sk: rotácia
+
+therion: Turn on/off camera auto rotation
+cz: Zapne/vypne automatickou rotaci
+en: Turn on/off camera auto rotation
+es: Conectar-Desconectar rotación automática de la cámara
+it: Attiva/disattiva l'auto-rotazione
+sk: Zapne/vypne automatické otáčanie kamery.
+
+therion: profile
+cz: profil
+en: profile
+es: perfil
+it: profilo
+sk: profil
+
+therion: top
+cz: pohled zhora
+en: top
+es: superior
+it: sopra
+sk: pohľad zhora
+
+therion: side
+cz: pohled zboku
+en: side
+es: lateral
+it: lato
+sk: pohľad zboku
+
+therion: bottom
+cz: pohled zdola
+en: bottom
+es: inferior
+it: sotto
+sk: pohľad zospodu
+
+therion: reset
+cz: reset
+en: reset
+es: reajustar
+it: ripristina
+sk: reset
+
+therion: Set profile angle.
+cz: Nastaví úhel profilu.
+en: Set profile angle.
+es: Ajustar ángulo del perfil.
+it: Imposta l'angolo di profilo.
+sk: Nastaví sklon pohľadu.
+
+therion: Profile angle.
+cz: Úhel profilu.
+en: Profile angle.
+es: Angulo del perfil.
+it: Angolo di profilo.
+sk: Sklon pohľadu.
+
+therion: surface transparency
+cz: průhlednost povrchu
+en: surface transparency
+es: transparencia superficie
+it: trasparenza della superficie
+sk: priehľadnosť povrchu
+
+therion: Turn on/off surface transparency.
+cz: Zapne/vypne průhlednost povrchu.
+en: Turn on/off surface transparency.
+es: Conectar/desconectar transparencia de la superficie.
+it: Attiva/disattiva la trasparenza della superficiale.
+sk: Zapne/vypne priehľadnosť povrchu.
+
+therion: light follows camera
+cz: světlo následuje kameru
+en: light follows camera
+es: luz en cámara
+it: la luce segue la camera
+sk: svetlo nasleduje kameru
+
+therion: Fix light source to camera position.
+cz: Světelný zdroj připevněný ke kameře.
+en: Fix light source to camera position.
+es: La fuente de luz coincidirá siempre con la posición de la cámara
+it: Fissa la sorgente di luce nella posizione della camera.
+sk: Zafixuje zdroj svetla na pozíciu kamery.
+
+therion: Model viewer is not active. To activate it, open some model file.
+en: Model viewer is not active. To activate it, open some model file.
+es: El visor 3D está inactivo. Para activarlo, abre algún modelo.
+it: Il visualizzatore di modello non è attivo. Per attivarlo apri un file di modello.
+sk: Prehliadač modelov nie je aktívny. Aktivuje sa po otvorení súboru.
+
 therion: Drag to resize control panel.
 cz: Změnit šířku panelu.
 en: Drag to resize control panel.
@@ -225,6 +427,9 @@ es: Estructura del mapa
 it: Struttura mappe
 sk: Mapová štruktúra
 
+therion: Preview
+sk: Náhľad
+
 therion: Working directory
 cz: Pracovní adresář
 en: Working directory
@@ -280,6 +485,15 @@ en: Run therion.
 es: Ejecutar therion.
 it: Esegui therion
 sk: Spustiť therion.
+
+therion: Xpdf
+sk: Xpdf
+
+therion: Acrobat Reader
+sk: Acrobat Reader
+
+therion: PDF file path.
+sk: Cesta k PDF súboru.
 
 therion: Survey informations.
 cz: Informace o jednotlivých měřeních (survey).
@@ -987,19 +1201,11 @@ es: Otras opciones del croquis. Consultar thbook.pdf
 it: Altre opzioni dello scrap
 sk: Ostatné možnosti scrapu.
 
-therion: scale
-cz: měřítko
-en: scale
-es: escala
-it: scala
-sk: mierka
+therion: Scale
+sk: Mierka
 
-therion: Scrap scale definition.
-cz: Nastavení měřítka scrapu.
-en: Scrap scale definition.
-es: Definir la escala del croquis.
-it: Definizione della scala dello scrap.
-sk: Nastavenie mierky scrapu.
+therion: Scrap scaling - push to click picture calibration points.
+sk: Škálovanie scrapu - po stlačení klikni na škálovacie body.
 
 therion: Update scrap
 cz: Aktualizovat
@@ -1112,6 +1318,18 @@ en: Units of real coordinates.
 es: Unidades de las coordenadas reales.
 it: Unità delle coordinate reali.
 sk: Jednotky reálnych súradníc.
+
+therion: background sketches
+sk: náčrtky na pozadí.
+
+therion: List of image files used as scrap background.
+sk: Zoznam obrázkov použitých ako pozadie.
+
+therion: Press this button to insert sketch by clicking on it.
+sk: Po stlačení klikni na náčrtok, ktorý treba vložiť do scrapu.
+
+therion: Delete sketch from scrap.
+sk: Odstráň náčrtok zo scrapu.
 
 therion: loading point module ...
 cz: nahrávám point modul ...
@@ -1491,6 +1709,9 @@ es: áreas...
 it: modulo aree ...
 sk: nahrávam modul pre plochy ...
 
+therion: Actual symbol theme.
+sk: Aktuálna téma symbolov.
+
 therion: type
 cz: typ
 en: type
@@ -1821,6 +2042,12 @@ es: Seleccionar
 it: Seleziona
 sk: Vybrať
 
+therion: scale scrap
+sk: mierka scrapu
+
+therion: insert sketch
+sk: vlož náčrtok
+
 therion: creating point
 cz: vytvoření bodu
 en: creating point
@@ -1841,6 +2068,15 @@ en: point changes
 es: cambios de punto
 it: modifiche di punto
 sk: zmena parametrov bodu
+
+therion: Scrap sketch not inserted.
+sk: Náčrtok nebol vložený.
+
+therion: inserting scrap sketch
+sk: vloženie náčrtku
+
+therion: deleting scrap sketch
+sk: odstránenie náčrtku
 
 therion: toggle image visibility
 cz: přepnutí viditelnosti obrázku
@@ -1869,13 +2105,6 @@ en: New *.th2 file needs to be saved before inserting background image. Save it 
 es: Hay que guardar el nuevo archivo .th2 antes de cargar una imagen de fondo. ¿Guardar ahora?
 it: Il nuovo file *.th2 deve essere salvato prima di inserire immagini di background. Salvala ora?
 sk: Pred vložením obrázku musíte nový *.th2 súbor uložiť. Chcete tak urobiť?
-
-therion: inserting image
-cz: vkládám obrázek
-en: inserting image
-es: insertando imagen
-it: inserimento immagine
-sk: vkladanie obrázku
 
 therion: removing image
 cz: odstraňuji obrázek
@@ -2002,187 +2231,6 @@ en: split line
 es: cortar línea
 it: dividi la linea
 sk: rozdelenie čiary
-
-therion: loading model viewer...
-cz: nahrávám 3D prohlížeč...
-en: loading model viewer...
-es: visor 3D...
-it: modulo visualizzazione ...
-sk: 3D prehliadač...
-
-therion: Model viewer
-cz: 3D prohlížeč
-en: Model viewer
-es: Visor 3D
-it: Visualizza modello
-sk: 3D prehliadač
-
-therion: Camera
-cz: Kamera
-en: Camera
-es: Cámara
-it: Camera
-sk: Kamera
-
-therion: Model
-cz: Model
-en: Model
-es: Modelo
-it: Modello
-sk: Model
-
-therion: Reload
-cz: Otevřít znovu
-en: Reload
-es: Recargar
-it: Ricarica
-sk: Znovu načítať
-
-therion: facing
-cz: azimut
-en: facing
-es: vista
-it: di fronte
-sk: azimut
-
-therion: north
-cz: sever
-en: north
-es: norte
-it: nord
-sk: sever
-
-therion: east
-cz: východ
-en: east
-es: este
-it: est
-sk: východ
-
-therion: west
-cz: západ
-en: west
-es: oeste
-it: ovest
-sk: západ
-
-therion: south
-cz: jih
-en: south
-es: sur
-it: sud
-sk: juh
-
-therion: Set facing angle.
-cz: Nastaví úhel otočení.
-en: Set facing angle.
-es: Ajustar punto de vista.
-it: Imposta l'angolo di vista
-sk: Nastav azimut pohľadu.
-
-therion: Facing angle.
-cz: Úhel otočení.
-en: Facing angle.
-es: Punto de vista.
-it: Angolo di vista
-sk: Azimut pohľadu.
-
-therion: auto rotate
-cz: auto rotace
-en: auto rotate
-es: rotar
-it: auto-rotazione
-sk: rotácia
-
-therion: Turn on/off camera auto rotation
-cz: Zapne/vypne automatickou rotaci
-en: Turn on/off camera auto rotation
-es: Conectar-Desconectar rotación automática de la cámara
-it: Attiva/disattiva l'auto-rotazione
-sk: Zapne/vypne automatické otáčanie kamery.
-
-therion: profile
-cz: profil
-en: profile
-es: perfil
-it: profilo
-sk: profil
-
-therion: top
-cz: pohled zhora
-en: top
-es: superior
-it: sopra
-sk: pohľad zhora
-
-therion: side
-cz: pohled zboku
-en: side
-es: lateral
-it: lato
-sk: pohľad zboku
-
-therion: bottom
-cz: pohled zdola
-en: bottom
-es: inferior
-it: sotto
-sk: pohľad zospodu
-
-therion: reset
-cz: reset
-en: reset
-es: reajustar
-it: ripristina
-sk: reset
-
-therion: Set profile angle.
-cz: Nastaví úhel profilu.
-en: Set profile angle.
-es: Ajustar ángulo del perfil.
-it: Imposta l'angolo di profilo.
-sk: Nastaví sklon pohľadu.
-
-therion: Profile angle.
-cz: Úhel profilu.
-en: Profile angle.
-es: Angulo del perfil.
-it: Angolo di profilo.
-sk: Sklon pohľadu.
-
-therion: surface transparency
-cz: průhlednost povrchu
-en: surface transparency
-es: transparencia superficie
-it: trasparenza della superficie
-sk: priehľadnosť povrchu
-
-therion: Turn on/off surface transparency.
-cz: Zapne/vypne průhlednost povrchu.
-en: Turn on/off surface transparency.
-es: Conectar/desconectar transparencia de la superficie.
-it: Attiva/disattiva la trasparenza della superficiale.
-sk: Zapne/vypne priehľadnosť povrchu.
-
-therion: light follows camera
-cz: světlo následuje kameru
-en: light follows camera
-es: luz en cámara
-it: la luce segue la camera
-sk: svetlo nasleduje kameru
-
-therion: Fix light source to camera position.
-cz: Světelný zdroj připevněný ke kameře.
-en: Fix light source to camera position.
-es: La fuente de luz coincidirá siempre con la posición de la cámara
-it: Fissa la sorgente di luce nella posizione della camera.
-sk: Zafixuje zdroj svetla na pozíciu kamery.
-
-therion: Model viewer is not active. To activate it, open some model file.
-en: Model viewer is not active. To activate it, open some model file.
-es: El visor 3D está inactivo. Para activarlo, abre algún modelo.
-it: Il visualizzatore di modello non è attivo. Per attivarlo apri un file di modello.
-sk: Prehliadač modelov nie je aktívny. Aktivuje sa po otvorení súboru.
 
 therion: loading text editor ...
 cz: nahrávám text editor ...
@@ -2602,4 +2650,21 @@ en: Close
 es: Cerrar
 it: Chiudi
 sk: Zavrieť
+
+therion: theme all-symbols
+cz: všechny symboly
+sk: všetky symboly
+
+therion: theme basic-symbols
+cz: základní symboly
+sk: základné symboly
+
+therion: theme passage-fills
+sk: výplň
+
+therion: theme speleothems
+sk: výzdoba
+
+therion: theme equipement
+sk: vystrojenie
 

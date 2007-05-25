@@ -473,3 +473,115 @@ void thattr::export_mp_object(FILE * f, long user_id)
 
 
 
+
+void thattr::export_txt(const char * fname, int encoding)
+{
+  // Create file.
+  FILE * f;
+  thattr_attr * ca;
+  thattr_field * cf;
+  thattr_obj_list::iterator oi;
+  thattr_id2attr_map::iterator ai;
+  thattr_field_list::iterator fli;
+  thbuffer enc;
+
+  this->analyze_fields();
+
+  f = fopen(fname, "w");
+  if (f == NULL) {
+    thwarning(("unable to open file for output -- %s", fname));
+    return;
+  }
+
+  // Create fields.
+  bool hasone = false;
+  for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
+    cf = &(*fli);
+    fprintf(f,"%s%s",hasone ? "\t" : "",fli->m_name.c_str());
+    hasone = true;
+  }
+  fprintf(f,"\n");
+
+  // Insert objects and write fields.
+  const char * value;
+  for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end(); ++oi) {
+    hasone = false;
+    for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
+      cf = &(*fli);
+      ai = oi->m_attributes.find(cf->m_id);
+      if (ai == oi->m_attributes.end()) {
+        value = "#N/A";
+      } else {
+        ca = &(ai->second);
+        value = ca->m_val_string.c_str();
+      }
+      fprintf(f,"%s%s",hasone ? "\t" : "",value);
+      hasone = true;
+    }
+  }
+
+  fclose(f);
+
+}
+
+
+
+
+
+void thattr::export_html(const char * fname, int encoding)
+{
+  // Create file.
+  FILE * f;
+  thattr_attr * ca;
+  thattr_field * cf;
+  thattr_obj_list::iterator oi;
+  thattr_id2attr_map::iterator ai;
+  thattr_field_list::iterator fli;
+  thbuffer enc;
+
+  this->analyze_fields();
+
+  f = fopen(fname, "w");
+  if (f == NULL) {
+    thwarning(("unable to open file for output -- %s", fname));
+    return;
+  }
+
+  // Create fields.
+  fprintf(f,"<html>\n<head>\n<title>therion table output</title>\n"
+    "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n"
+    "</head>\n<body>\n");
+  fprintf(f,"<table>\n<tr>");
+  for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
+    cf = &(*fli);
+    fprintf(f,"<th align=\"left\">%s</th>",fli->m_name.c_str());
+  }
+  fprintf(f,"</tr>\n");
+
+  // Insert objects and write fields.
+  const char * value;
+  for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end(); ++oi) {
+    fprintf(f,"<tr>");
+    for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
+      cf = &(*fli);
+      ai = oi->m_attributes.find(cf->m_id);
+      if (ai == oi->m_attributes.end()) {
+        value = "#N/A";
+      } else {
+        ca = &(ai->second);
+        value = ca->m_val_string.c_str();
+      }
+      fprintf(f,"<td align=\"left\">%s</td>",value);
+    }
+    fprintf(f,"</tr>\n");
+  }
+  fprintf(f,"</table>\n");
+  fprintf(f,"</body>\n</html>\n");
+
+  fclose(f);
+}
+
+
+
+
+

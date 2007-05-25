@@ -24,13 +24,14 @@ therion:
 
 xtherion:
 
- * 
+ * symbol themes and translations comboboxes
+ * autocompletition in symbol type comboboxes
  * bugs fixed:
    - 
 
 loch:
 
- * Mac OS X compilation works
+ * first Mac OS X version works
  * bugs fixed: 
    - surface texture mapping under Linux
 

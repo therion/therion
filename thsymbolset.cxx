@@ -162,6 +162,9 @@ static const thstok thtt_symbol_group[] = {
 
 static const thstok thtt_symbol_point_spec[] = {
   {"cave-station", SYMP_CAVESTATION},
+  {"cont-station", SYMP_CONTINUATIONSTATION},
+  {"continuation-station", SYMP_CONTINUATIONSTATION},
+  {"entrance-station", SYMP_ENTRANCESTATION},
   {"surface-station", SYMP_SURFACESTATION},
   {"wall-altitude", SYMP_WALLALTITUDE},
   {NULL, SYMX_}

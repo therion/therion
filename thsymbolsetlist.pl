@@ -37,6 +37,8 @@ $SYMHASH{p_passageheight_both} = "noassign";
 $SYMHASH{p_passageheight_unsigned} = "noassign";
 $SYMHASH{p_surfacestation} = "noassign";
 $SYMHASH{p_cavestation} = "noassign";
+$SYMHASH{p_entrancestation} = "hidden";
+$SYMHASH{p_continuationstation} = "hidden";
 $SYMHASH{p_} = "noassign hidden";
 $SYMHASH{p_zzz} = "noassign hidden";
 

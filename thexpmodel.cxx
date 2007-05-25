@@ -44,10 +44,6 @@
 #include "thcsdata.h"
 #include "thproj.h"
 
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
-
 
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;

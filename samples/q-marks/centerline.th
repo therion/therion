@@ -1,0 +1,24 @@
+encoding  utf-8
+#!FILE 2
+centerline
+
+  data normal from to compass clino tape
+
+     0    1  10     8     8.4 
+     1    2  43    24     6.1 
+     2    3 334    16     9.1 
+     1    4 267    11     6.9 
+     4    5 288     7     8.7 
+     2    6  69     8    11.8 
+     6    7  25    23     8.3 
+
+#!SUBTITLE Question marks in centerline
+#! In the centerline object, you may add a special flags to the station,
+#! where continuation is possible. Just use following syntax
+
+#!CODE
+station 5 "unexplored cca. 20 m pit" continuation code V
+#!ENDCODE
+
+endcenterline
+

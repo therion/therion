@@ -95,6 +95,7 @@ vardef p_label@#(expr txt,pos,rot,mode) =
   elseif mode=5: process_circledlabel;
   elseif mode=6: process_boxedlabel;
   elseif mode=7: process_label(pos,rot);  % station name
+  elseif mode=8: process_filledlabel(pos, rot);
   else: process_label(pos,rot); fi;
 enddef;
 

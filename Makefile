@@ -8,7 +8,7 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   thinit.o thdb1d.o thsvxctrl.o thdatastation.o thobjectid.o \
   thobjectsrc.o thgrade.o thlibrary.o thgeomag.o \
   thexport.o thexporter.o thselector.o extern/img.o \
-  thexpmodel.o thdb2d00.o thscrapis.o thcsdata.o \
+  thexpmodel.o thdb2d00.o thscrapis.o thcsdata.o thexptable.o \
   thdb2d.o thscrap.o thendscrap.o th2ddataobject.o thdb2dprj.o \
   thdb2dpt.o thdb2dlp.o thdb2dab.o thdb2dji.o thdb2dmi.o thdb2dcp.o \
   thdb2dxm.o thdb2dxs.o thscraplo.o thscraplp.o thscrapen.o \

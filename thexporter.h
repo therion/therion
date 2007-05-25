@@ -42,12 +42,11 @@
 
 enum {
   TT_EXP_UNKNOWN = 0,  ///< Not match.
-  TT_EXP_DATA,  ///< Survey data.
   TT_EXP_MODEL,  ///< 3D model.
   TT_EXP_MAP, ///< 2D map.
   TT_EXP_ATLAS,  ///< 2D atlas.
-  TT_EXP_STAT,  ///< Statistics
   TT_EXP_DATABASE,  ///< Database export.
+  TT_EXP_CONTLIST,  ///< Table with specified data.
 };
 
 
@@ -57,11 +56,10 @@ enum {
  
 static const thstok thtt_exporter[] = {
   {"atlas", TT_EXP_ATLAS},
-//  {"data", TT_EXP_DATA},
+  {"continuation-list", TT_EXP_CONTLIST},
   {"database", TT_EXP_DATABASE},
   {"map", TT_EXP_MAP},
   {"model", TT_EXP_MODEL},
-//  {"stat", TT_EXP_STAT},
   {NULL, TT_EXP_UNKNOWN}
 };
 
