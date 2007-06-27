@@ -27,7 +27,7 @@
   ::msgcat::mcset cz "Camera" [encoding convertfrom utf-8 "Kamera"]
   ::msgcat::mcset en "Camera" [encoding convertfrom utf-8 "Camera"]
   ::msgcat::mcset es "Camera" [encoding convertfrom utf-8 "C\303\241mara"]
-  ::msgcat::mcset it "Camera" [encoding convertfrom utf-8 "Camera"]
+  ::msgcat::mcset it "Camera" [encoding convertfrom utf-8 "Fotocamera"]
   ::msgcat::mcset sk "Camera" [encoding convertfrom utf-8 "Kamera"]
 
   ::msgcat::mcset cz "Model" [encoding convertfrom utf-8 "Model"]
@@ -153,7 +153,7 @@
   ::msgcat::mcset cz "Turn on/off surface transparency." [encoding convertfrom utf-8 "Zapne/vypne pr\305\257hlednost povrchu."]
   ::msgcat::mcset en "Turn on/off surface transparency." [encoding convertfrom utf-8 "Turn on/off surface transparency."]
   ::msgcat::mcset es "Turn on/off surface transparency." [encoding convertfrom utf-8 "Conectar/desconectar transparencia de la superficie."]
-  ::msgcat::mcset it "Turn on/off surface transparency." [encoding convertfrom utf-8 "Attiva/disattiva la trasparenza della superficiale."]
+  ::msgcat::mcset it "Turn on/off surface transparency." [encoding convertfrom utf-8 "Attiva/disattiva la trasparenza della superficie."]
   ::msgcat::mcset sk "Turn on/off surface transparency." [encoding convertfrom utf-8 "Zapne/vypne prieh\304\276adnos\305\245 povrchu."]
 
   ::msgcat::mcset cz "light follows camera" [encoding convertfrom utf-8 "sv\304\233tlo n\303\241sleduje kameru"]
@@ -203,7 +203,7 @@
   ::msgcat::mcset it "Switch panels" [encoding convertfrom utf-8 "Cambia posto al pannello"]
   ::msgcat::mcset sk "Switch panels" [encoding convertfrom utf-8 "Preho\304\217 panely"]
 
-  ::msgcat::mcset it "Toggle toolbar" [encoding convertfrom utf-8 "Mostra/Nascondi barra strumenti"]
+  ::msgcat::mcset it "Toggle toolbar" [encoding convertfrom utf-8 "Mostra/Nascondi la barra strumenti"]
 
   ::msgcat::mcset cz "KBD encoding" [encoding convertfrom utf-8 "K\303\263dov\303\241n\303\255 kl\303\241vesnice"]
   ::msgcat::mcset en "KBD encoding" [encoding convertfrom utf-8 "KBD encoding"]
@@ -367,18 +367,19 @@
   ::msgcat::mcset it "Map structure" [encoding convertfrom utf-8 "Struttura mappe"]
   ::msgcat::mcset sk "Map structure" [encoding convertfrom utf-8 "Mapov\303\241 \305\241trukt\303\272ra"]
 
+  ::msgcat::mcset it "Preview" [encoding convertfrom utf-8 "Anteprima"]
   ::msgcat::mcset sk "Preview" [encoding convertfrom utf-8 "N\303\241h\304\276ad"]
 
   ::msgcat::mcset cz "Working directory" [encoding convertfrom utf-8 "Pracovn\303\255 adres\303\241\305\231"]
   ::msgcat::mcset en "Working directory" [encoding convertfrom utf-8 "Working directory"]
   ::msgcat::mcset es "Working directory" [encoding convertfrom utf-8 "Directorio actual"]
-  ::msgcat::mcset it "Working directory" [encoding convertfrom utf-8 "Directory di lavoro"]
+  ::msgcat::mcset it "Working directory" [encoding convertfrom utf-8 "Cartella di lavoro"]
   ::msgcat::mcset sk "Working directory" [encoding convertfrom utf-8 "Pracovn\303\275 adres\303\241r"]
 
   ::msgcat::mcset cz "Working directory path." [encoding convertfrom utf-8 "Cesta k pracovn\303\255mu adres\303\241\305\231i."]
   ::msgcat::mcset en "Working directory path." [encoding convertfrom utf-8 "Shows working directory path."]
   ::msgcat::mcset es "Working directory path." [encoding convertfrom utf-8 "Muestra el directorio actual."]
-  ::msgcat::mcset it "Working directory path." [encoding convertfrom utf-8 "Path della directory di lavoro"]
+  ::msgcat::mcset it "Working directory path." [encoding convertfrom utf-8 "Path della cartella di lavoro"]
   ::msgcat::mcset sk "Working directory path." [encoding convertfrom utf-8 "Cesta k pracovn\303\251mu adres\303\241ru."]
 
   ::msgcat::mcset cz "Configuration file" [encoding convertfrom utf-8 "Konfigura\304\215n\303\255 soubor"]
@@ -417,10 +418,13 @@
   ::msgcat::mcset it "Run therion." [encoding convertfrom utf-8 "Esegui therion"]
   ::msgcat::mcset sk "Run therion." [encoding convertfrom utf-8 "Spusti\305\245 therion."]
 
+  ::msgcat::mcset it "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset sk "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
 
+  ::msgcat::mcset it "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset sk "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
 
+  ::msgcat::mcset it "PDF file path." [encoding convertfrom utf-8 "File PDF"]
   ::msgcat::mcset sk "PDF file path." [encoding convertfrom utf-8 "Cesta k PDF s\303\272boru."]
 
   ::msgcat::mcset cz "Survey informations." [encoding convertfrom utf-8 "Informace o jednotliv\303\275ch m\304\233\305\231en\303\255ch (survey)."]
@@ -611,7 +615,7 @@
   ::msgcat::mcset cz "Background images" [encoding convertfrom utf-8 "Podkladov\303\251 obr\303\241zky"]
   ::msgcat::mcset en "Background images" [encoding convertfrom utf-8 "Background images"]
   ::msgcat::mcset es "Background images" [encoding convertfrom utf-8 "Im\303\241genes de fondo"]
-  ::msgcat::mcset it "Background images" [encoding convertfrom utf-8 "Immagini background"]
+  ::msgcat::mcset it "Background images" [encoding convertfrom utf-8 "Immagini di background"]
   ::msgcat::mcset sk "Background images" [encoding convertfrom utf-8 "Obr\303\241zky pozadia"]
 
   ::msgcat::mcset cz "Current drawing area." [encoding convertfrom utf-8 "Sou\304\215asn\303\241 kresl\303\255c\303\255 plocha."]
@@ -773,13 +777,13 @@
   ::msgcat::mcset cz "expression" [encoding convertfrom utf-8 "v\303\275raz"]
   ::msgcat::mcset en "expression" [encoding convertfrom utf-8 "search for"]
   ::msgcat::mcset es "expression" [encoding convertfrom utf-8 "buscar"]
-  ::msgcat::mcset it "expression" [encoding convertfrom utf-8 "frase"]
+  ::msgcat::mcset it "expression" [encoding convertfrom utf-8 "testo"]
   ::msgcat::mcset sk "expression" [encoding convertfrom utf-8 "v\303\275raz"]
 
   ::msgcat::mcset cz "Enter search expression." [encoding convertfrom utf-8 "Vlo\305\276te hledan\303\275 v\303\275raz."]
   ::msgcat::mcset en "Enter search expression." [encoding convertfrom utf-8 "Enter word(s) to search for."]
   ::msgcat::mcset es "Enter search expression." [encoding convertfrom utf-8 "Introducir palabra(s) a buscar."]
-  ::msgcat::mcset it "Enter search expression." [encoding convertfrom utf-8 "Scrivi la parola o la frase da cercare."]
+  ::msgcat::mcset it "Enter search expression." [encoding convertfrom utf-8 "Scrivi il testo da cercare."]
   ::msgcat::mcset sk "Enter search expression." [encoding convertfrom utf-8 "Vlo\305\276te h\304\276adan\303\275 v\303\275raz."]
 
   ::msgcat::mcset cz "regular expression" [encoding convertfrom utf-8 "regul\303\241rn\303\255 v\303\275raz"]
@@ -791,7 +795,7 @@
   ::msgcat::mcset cz "Search for regular expression." [encoding convertfrom utf-8 "Vyhled\303\241v\303\241n\303\255 regul\303\241rn\303\255ho v\303\275razu."]
   ::msgcat::mcset en "Search for regular expression." [encoding convertfrom utf-8 "Use wildcards on search (cav.* will find cave, cavern, cavalier...)"]
   ::msgcat::mcset es "Search for regular expression." [encoding convertfrom utf-8 "Usar comodines en la b\303\272squeda (kob.* encuentra koba, kobea, kobie, etc)."]
-  ::msgcat::mcset it "Search for regular expression." [encoding convertfrom utf-8 "Scrivi l'espressione regolare da cercare."]
+  ::msgcat::mcset it "Search for regular expression." [encoding convertfrom utf-8 "Cerca espressione regolare."]
   ::msgcat::mcset sk "Search for regular expression." [encoding convertfrom utf-8 "Vyh\304\276ad\303\241vanie regul\303\241rneho v\303\275razu."]
 
   ::msgcat::mcset cz "case sensitive" [encoding convertfrom utf-8 "rozli\305\241ovat velikost p\303\255smen"]
@@ -815,7 +819,7 @@
   ::msgcat::mcset cz "Select next object matching expression." [encoding convertfrom utf-8 "Vybere dal\305\241\303\255 objekt odpov\303\255daj\303\255c\303\255 v\303\275razu."]
   ::msgcat::mcset en "Select next object matching expression." [encoding convertfrom utf-8 "Select next object matching expression."]
   ::msgcat::mcset es "Select next object matching expression." [encoding convertfrom utf-8 "Selecionar siguiente objeto encontrado."]
-  ::msgcat::mcset it "Select next object matching expression." [encoding convertfrom utf-8 "Seleziona il prossimo oggetto che soddisfa l'espressione di ricerca"]
+  ::msgcat::mcset it "Select next object matching expression." [encoding convertfrom utf-8 "Seleziona il prossimo oggetto trovato"]
   ::msgcat::mcset sk "Select next object matching expression." [encoding convertfrom utf-8 "N\303\241jdi \304\217al\305\241\303\255 objekt zodpovedaj\303\272ci h\304\276adan\303\251mu v\303\275razu."]
 
   ::msgcat::mcset cz "Find first" [encoding convertfrom utf-8 "Naj\303\255t prvn\303\255"]
@@ -827,7 +831,7 @@
   ::msgcat::mcset cz "Select first object matching expression." [encoding convertfrom utf-8 "Vybere prvn\303\255 objekt odpov\303\255daj\303\255c\303\255 v\303\275razu."]
   ::msgcat::mcset en "Select first object matching expression." [encoding convertfrom utf-8 "Selects first object matching expression."]
   ::msgcat::mcset es "Select first object matching expression." [encoding convertfrom utf-8 "Selecionar el primer objeto encontrado."]
-  ::msgcat::mcset it "Select first object matching expression." [encoding convertfrom utf-8 "Seleziona il primo oggetto che soddisfa l'espressione di ricerca"]
+  ::msgcat::mcset it "Select first object matching expression." [encoding convertfrom utf-8 "Seleziona il primo oggetto trovato"]
   ::msgcat::mcset sk "Select first object matching expression." [encoding convertfrom utf-8 "N\303\241jdi prv\303\275 objekt zodpovedaj\303\272ci h\304\276adan\303\251mu v\303\275razu."]
 
   ::msgcat::mcset cz "Show all" [encoding convertfrom utf-8 "Zobrazit v\305\241e"]
@@ -839,7 +843,7 @@
   ::msgcat::mcset cz "Highlight all objects matching expression." [encoding convertfrom utf-8 "Zv\303\275razn\303\255 v\305\241echny objekty odpov\303\255daj\303\255c\303\255 v\303\275razu."]
   ::msgcat::mcset en "Highlight all objects matching expression." [encoding convertfrom utf-8 "Highlight all objects matching expression."]
   ::msgcat::mcset es "Highlight all objects matching expression." [encoding convertfrom utf-8 "Seleccionar todos los objetos encontrados."]
-  ::msgcat::mcset it "Highlight all objects matching expression." [encoding convertfrom utf-8 "Evidenzia tutti gli oggetti che soddisfano l'espressione di ricerca"]
+  ::msgcat::mcset it "Highlight all objects matching expression." [encoding convertfrom utf-8 "Evidenzia tutti gli oggetti trovati"]
   ::msgcat::mcset sk "Highlight all objects matching expression." [encoding convertfrom utf-8 "Zv\303\275razn\303\255 v\305\241etky objekty zodpovedaj\303\272ce h\304\276adan\303\251mu v\303\275razu."]
 
   ::msgcat::mcset cz "Clear all" [encoding convertfrom utf-8 "Zru\305\241 v\303\275b\304\233r"]
@@ -851,7 +855,7 @@
   ::msgcat::mcset cz "Clear highlighted objects." [encoding convertfrom utf-8 "Zru\305\241\303\255 zv\303\275razn\304\233n\303\255 vybran\303\275ch objekt\305\257."]
   ::msgcat::mcset en "Clear highlighted objects." [encoding convertfrom utf-8 "Clear highlighted objects."]
   ::msgcat::mcset es "Clear highlighted objects." [encoding convertfrom utf-8 "Deseleccionar todos los objetos resaltados."]
-  ::msgcat::mcset it "Clear highlighted objects." [encoding convertfrom utf-8 "Togli l'evidenziazione degli oggetti evidenziati."]
+  ::msgcat::mcset it "Clear highlighted objects." [encoding convertfrom utf-8 "Togli l'evidenziazione degli oggetti."]
   ::msgcat::mcset sk "Clear highlighted objects." [encoding convertfrom utf-8 "Zru\305\241\303\255 zv\303\275raznenie vybrat\303\275ch objektov."]
 
   ::msgcat::mcset cz "loading images module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m obr\303\241zkov\303\275 modul ..."]
@@ -923,7 +927,7 @@
   ::msgcat::mcset cz "Current position of selected image." [encoding convertfrom utf-8 "Sou\304\215asn\303\241 pozice vybran\303\251ho obr\303\241zku."]
   ::msgcat::mcset en "Current position of selected image." [encoding convertfrom utf-8 "Current position of selected image (pixels from canvas lower letf corner)."]
   ::msgcat::mcset es "Current position of selected image." [encoding convertfrom utf-8 "Posici\303\263n actual de la imagen seleccionada (medida en pixels desde la esquina inf. izq del lienzo)."]
-  ::msgcat::mcset it "Current position of selected image." [encoding convertfrom utf-8 "Posizione della immagine selezionata."]
+  ::msgcat::mcset it "Current position of selected image." [encoding convertfrom utf-8 "Posizione dell'immagine selezionata."]
   ::msgcat::mcset sk "Current position of selected image." [encoding convertfrom utf-8 "S\303\272\304\215asn\303\241 poz\303\255cia obr\303\241zku."]
 
   ::msgcat::mcset cz "Move to" [encoding convertfrom utf-8 "P\305\231esunout"]
@@ -1028,8 +1032,10 @@
   ::msgcat::mcset it "Other scrap options." [encoding convertfrom utf-8 "Altre opzioni dello scrap"]
   ::msgcat::mcset sk "Other scrap options." [encoding convertfrom utf-8 "Ostatn\303\251 mo\305\276nosti scrapu."]
 
+  ::msgcat::mcset it "Scale" [encoding convertfrom utf-8 "Scala"]
   ::msgcat::mcset sk "Scale" [encoding convertfrom utf-8 "Mierka"]
 
+  ::msgcat::mcset it "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "Rescalamento - premi per selezionare i punti di calibrazione."]
   ::msgcat::mcset sk "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "\305\240k\303\241lovanie scrapu - po stla\304\215en\303\255 klikni na \305\241k\303\241lovacie body."]
 
   ::msgcat::mcset cz "Update scrap" [encoding convertfrom utf-8 "Aktualizovat"]
@@ -1128,12 +1134,16 @@
   ::msgcat::mcset it "Units of real coordinates." [encoding convertfrom utf-8 "Unit\303\240 delle coordinate reali."]
   ::msgcat::mcset sk "Units of real coordinates." [encoding convertfrom utf-8 "Jednotky re\303\241lnych s\303\272radn\303\255c."]
 
+  ::msgcat::mcset it "background sketches" [encoding convertfrom utf-8 "Immagini di background"]
   ::msgcat::mcset sk "background sketches" [encoding convertfrom utf-8 "n\303\241\304\215rtky na pozad\303\255."]
 
+  ::msgcat::mcset it "List of image files used as scrap background." [encoding convertfrom utf-8 "Files usati come background dello scrap"]
   ::msgcat::mcset sk "List of image files used as scrap background." [encoding convertfrom utf-8 "Zoznam obr\303\241zkov pou\305\276it\303\275ch ako pozadie."]
 
+  ::msgcat::mcset it "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "Premi per inserire il disegno che scegli col mouse"]
   ::msgcat::mcset sk "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "Po stla\304\215en\303\255 klikni na n\303\241\304\215rtok, ktor\303\275 treba vlo\305\276i\305\245 do scrapu."]
 
+  ::msgcat::mcset it "Delete sketch from scrap." [encoding convertfrom utf-8 "Rimuovi un disegno dallo scrap"]
   ::msgcat::mcset sk "Delete sketch from scrap." [encoding convertfrom utf-8 "Odstr\303\241\305\210 n\303\241\304\215rtok zo scrapu."]
 
   ::msgcat::mcset cz "loading point module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m point modul ..."]
@@ -1460,6 +1470,7 @@
   ::msgcat::mcset it "loading area module ..." [encoding convertfrom utf-8 "modulo aree ..."]
   ::msgcat::mcset sk "loading area module ..." [encoding convertfrom utf-8 "nahr\303\241vam modul pre plochy ..."]
 
+  ::msgcat::mcset it "Actual symbol theme." [encoding convertfrom utf-8 "Simboli."]
   ::msgcat::mcset sk "Actual symbol theme." [encoding convertfrom utf-8 "Aktu\303\241lna t\303\251ma symbolov."]
 
   ::msgcat::mcset cz "type" [encoding convertfrom utf-8 "typ"]
@@ -1563,6 +1574,7 @@
   ::msgcat::mcset es "Open (no pics)" [encoding convertfrom utf-8 "Abrir (sin im\303\241genes)"]
   ::msgcat::mcset it "Open (no pics)" [encoding convertfrom utf-8 "Apri (no pics)"]
   ::msgcat::mcset sk "Open (no pics)" [encoding convertfrom utf-8 "Otvori\305\245 (bez obr\303\241zkov)"]
+
 
   ::msgcat::mcset cz "Insert ..." [encoding convertfrom utf-8 "Vlo\305\276it ..."]
   ::msgcat::mcset en "Insert ..." [encoding convertfrom utf-8 "Insert ..."]
@@ -1743,8 +1755,10 @@
   ::msgcat::mcset it "Select" [encoding convertfrom utf-8 "Seleziona"]
   ::msgcat::mcset sk "Select" [encoding convertfrom utf-8 "Vybra\305\245"]
 
+  ::msgcat::mcset it "scale scrap" [encoding convertfrom utf-8 "riscala lo scrap"]
   ::msgcat::mcset sk "scale scrap" [encoding convertfrom utf-8 "mierka scrapu"]
 
+  ::msgcat::mcset it "insert sketch" [encoding convertfrom utf-8 "inserisci disegno"]
   ::msgcat::mcset sk "insert sketch" [encoding convertfrom utf-8 "vlo\305\276 n\303\241\304\215rtok"]
 
   ::msgcat::mcset cz "creating point" [encoding convertfrom utf-8 "vytvo\305\231en\303\255 bodu"]
@@ -1765,10 +1779,13 @@
   ::msgcat::mcset it "point changes" [encoding convertfrom utf-8 "modifiche di punto"]
   ::msgcat::mcset sk "point changes" [encoding convertfrom utf-8 "zmena parametrov bodu"]
 
+  ::msgcat::mcset it "Scrap sketch not inserted." [encoding convertfrom utf-8 "Disegno non inerito."]
   ::msgcat::mcset sk "Scrap sketch not inserted." [encoding convertfrom utf-8 "N\303\241\304\215rtok nebol vlo\305\276en\303\275."]
 
+  ::msgcat::mcset it "inserting scrap sketch" [encoding convertfrom utf-8 "inserimento disegno"]
   ::msgcat::mcset sk "inserting scrap sketch" [encoding convertfrom utf-8 "vlo\305\276enie n\303\241\304\215rtku"]
 
+  ::msgcat::mcset it "deleting scrap sketch" [encoding convertfrom utf-8 "rimozione disegno"]
   ::msgcat::mcset sk "deleting scrap sketch" [encoding convertfrom utf-8 "odstr\303\241nenie n\303\241\304\215rtku"]
 
   ::msgcat::mcset cz "toggle image visibility" [encoding convertfrom utf-8 "p\305\231epnut\303\255 viditelnosti obr\303\241zku"]
@@ -1794,6 +1811,7 @@
   ::msgcat::mcset es "New *.th2 file needs to be saved before inserting background image. Save it now?" [encoding convertfrom utf-8 "Hay que guardar el nuevo archivo .th2 antes de cargar una imagen de fondo. \302\277Guardar ahora?"]
   ::msgcat::mcset it "New *.th2 file needs to be saved before inserting background image. Save it now?" [encoding convertfrom utf-8 "Il nuovo file *.th2 deve essere salvato prima di inserire immagini di background. Salvala ora?"]
   ::msgcat::mcset sk "New *.th2 file needs to be saved before inserting background image. Save it now?" [encoding convertfrom utf-8 "Pred vlo\305\276en\303\255m obr\303\241zku mus\303\255te nov\303\275 *.th2 s\303\272bor ulo\305\276i\305\245. Chcete tak urobi\305\245?"]
+
 
   ::msgcat::mcset cz "removing image" [encoding convertfrom utf-8 "odstra\305\210uji obr\303\241zek"]
   ::msgcat::mcset en "removing image" [encoding convertfrom utf-8 "removing image"]
@@ -2002,7 +2020,7 @@
   ::msgcat::mcset cz "Search expression." [encoding convertfrom utf-8 "Hledan\303\275 v\303\275raz."]
   ::msgcat::mcset en "Search expression." [encoding convertfrom utf-8 "Enter word(s) to search for."]
   ::msgcat::mcset es "Search expression." [encoding convertfrom utf-8 "Introducir palabra(s) a buscar."]
-  ::msgcat::mcset it "Search expression." [encoding convertfrom utf-8 "Frase di ricerca."]
+  ::msgcat::mcset it "Search expression." [encoding convertfrom utf-8 "Testo da cercare."]
   ::msgcat::mcset sk "Search expression." [encoding convertfrom utf-8 "H\304\276adan\303\275 v\303\275raz."]
 
   ::msgcat::mcset cz "replace" [encoding convertfrom utf-8 "nahradit"]
@@ -2014,13 +2032,13 @@
   ::msgcat::mcset cz "Check whether to replace found expression." [encoding convertfrom utf-8 "Za\305\241krtn\304\233te pokud chcete nahradit nalezen\303\251 v\303\275razy."]
   ::msgcat::mcset en "Check whether to replace found expression." [encoding convertfrom utf-8 "Check whether to replace found expression."]
   ::msgcat::mcset es "Check whether to replace found expression." [encoding convertfrom utf-8 "Marcar para cambiar los lo encontrado por lo que se escriba aqu\303\255."]
-  ::msgcat::mcset it "Check whether to replace found expression." [encoding convertfrom utf-8 "Attiva per sostituire la frase trovata."]
+  ::msgcat::mcset it "Check whether to replace found expression." [encoding convertfrom utf-8 "Attiva per sostituire il testo trovato."]
   ::msgcat::mcset sk "Check whether to replace found expression." [encoding convertfrom utf-8 "Za\305\241krtn\303\272\305\245 pokia\304\276 sa m\303\241 n\303\241jden\303\275 v\303\275raz nahradi\305\245 in\303\275m."]
 
   ::msgcat::mcset cz "Replace expression." [encoding convertfrom utf-8 "\305\230et\304\233zec, kter\303\275m bude v\303\275raz nahrazen."]
   ::msgcat::mcset en "Replace expression." [encoding convertfrom utf-8 "Search results will be replaced by the string entered here."]
   ::msgcat::mcset es "Replace expression." [encoding convertfrom utf-8 "Los resultados de la b\303\272squeda ser\303\241n cambiados por lo que escribas aqu\303\255."]
-  ::msgcat::mcset it "Replace expression." [encoding convertfrom utf-8 "Sostituisci frase."]
+  ::msgcat::mcset it "Replace expression." [encoding convertfrom utf-8 "Sostituisci testo."]
   ::msgcat::mcset sk "Replace expression." [encoding convertfrom utf-8 "V\303\275raz na nahradenie."]
 
   ::msgcat::mcset cz "case sensitive search" [encoding convertfrom utf-8 "rozli\305\241ovat velikost p\303\255smen"]
@@ -2068,13 +2086,13 @@
   ::msgcat::mcset cz "Search or replace first expression in the file." [encoding convertfrom utf-8 "Najde nebo nahrad\303\255 prvn\303\255 v\303\275raz v souboru."]
   ::msgcat::mcset en "Search or replace first expression in the file." [encoding convertfrom utf-8 "Search or replace first expression in the file."]
   ::msgcat::mcset es "Search or replace first expression in the file." [encoding convertfrom utf-8 "Buscar o reemplazar el primer resultado."]
-  ::msgcat::mcset it "Search or replace first expression in the file." [encoding convertfrom utf-8 "Cerca o sostituisci la prima frase nel file."]
+  ::msgcat::mcset it "Search or replace first expression in the file." [encoding convertfrom utf-8 "Cerca o sostituisci la prima istanza del testo nel file."]
   ::msgcat::mcset sk "Search or replace first expression in the file." [encoding convertfrom utf-8 "N\303\241jte popr\303\255pade nahrad\303\255 prv\303\275 v\303\275skyt h\304\276adan\303\251ho v\303\275razu v s\303\272bore."]
 
   ::msgcat::mcset cz "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "Najde nebo nahrad\303\255 n\303\241sleduj\303\255c\303\255 v\303\275raz v souboru."]
   ::msgcat::mcset en "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "Search or replace next expression after the cursor in the file."]
   ::msgcat::mcset es "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "Buscar o reemplazar el siguiente resultado."]
-  ::msgcat::mcset it "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "Cerca o sostituisci la prossima frase nel file dopo il cursore."]
+  ::msgcat::mcset it "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "Cerca o sostituisci la prossima istanza del testo nel file dopo il cursore."]
   ::msgcat::mcset sk "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "N\303\241jdi alebo nahra\304\217 nasleduj\303\272ci v\303\275raz v s\303\272bore."]
 
   ::msgcat::mcset cz "All" [encoding convertfrom utf-8 "V\305\241e"]
@@ -2263,14 +2281,19 @@
   ::msgcat::mcset sk "Close" [encoding convertfrom utf-8 "Zavrie\305\245"]
 
   ::msgcat::mcset cz "theme all-symbols" [encoding convertfrom utf-8 "v\305\241echny symboly"]
+  ::msgcat::mcset it "theme all-symbols" [encoding convertfrom utf-8 "tutti"]
   ::msgcat::mcset sk "theme all-symbols" [encoding convertfrom utf-8 "v\305\241etky symboly"]
 
   ::msgcat::mcset cz "theme basic-symbols" [encoding convertfrom utf-8 "z\303\241kladn\303\255 symboly"]
+  ::msgcat::mcset it "theme basic-symbols" [encoding convertfrom utf-8 "base"]
   ::msgcat::mcset sk "theme basic-symbols" [encoding convertfrom utf-8 "z\303\241kladn\303\251 symboly"]
 
+  ::msgcat::mcset it "theme passage-fills" [encoding convertfrom utf-8 "riempimenti"]
   ::msgcat::mcset sk "theme passage-fills" [encoding convertfrom utf-8 "v\303\275pl\305\210"]
 
+  ::msgcat::mcset it "theme speleothems" [encoding convertfrom utf-8 "speleotemi"]
   ::msgcat::mcset sk "theme speleothems" [encoding convertfrom utf-8 "v\303\275zdoba"]
 
+  ::msgcat::mcset it "theme equipement" [encoding convertfrom utf-8 "armo"]
   ::msgcat::mcset sk "theme equipement" [encoding convertfrom utf-8 "vystrojenie"]
 

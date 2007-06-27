@@ -55,6 +55,7 @@ source tools_imgs.tcl
 source me_imgs.tcl
 source me_cmds.tcl
 source me_cmds2.tcl
+source me_util.tcl
 source me_ss.tcl
 source me.tcl
 source cp_procs.tcl

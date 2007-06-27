@@ -131,6 +131,15 @@ set xth(gui,selbg) darkBlue
 set xth(gui,etabsize) 2
 set xth(gui,controlk) Ctrl
 
+set xth(import,size) 1024.0
+set xth(import,mind) 8.0
+set xth(import,dxf,scale) 1.0
+set xth(import,dxf,cs) {}
+set xth(import,svg,scale) 1.0
+set xth(import,svg,cs) {}
+set xth(import,default,scale) {}
+set xth(import,default,cs) {}
+
 set xth(gui,xvi_grid_clr) #00D0D0
 set xth(gui,xvi_walls_fptn) gray12
 set xth(gui,xvi_walls_fclr) gray80
@@ -194,12 +203,19 @@ case $tcl_platform(platform) {
   }
   windows {
     package require registry
-    catch {
-      set xth(gui,compcmd) "\"[file join [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} InstallDir] therion.exe]\""
+    set xth(win32registry) {HKEY_LOCAL_MACHINE\SOFTWARE\Therion}
+    if {[catch {
+      set xth(gui,compcmd) "\"[file join [registry get $xth(win32registry) InstallDir] therion.exe]\""
+    }]} {
+      set xth(win32registry) {HKEY_CURRENT_USER\SOFTWARE\Therion}
+      catch {
+	set xth(gui,compcmd) "\"[file join [registry get $xth(win32registry) InstallDir] therion.exe]\""
+      }      
     }
+    
     catch {
       if {[registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} AppCtrl]} {
-	set xth(gui,appctrlcmd) "[file join [registry get {HKEY_LOCAL_MACHINE\SOFTWARE\Therion} InstallDir] bin appctrl.exe]"
+	set xth(gui,appctrlcmd) "[file join [registry get $xth(win32registry) InstallDir] bin appctrl.exe]"
       }
     }
     regsub -all {\/} $xth(gui,compcmd) {\\\\} xth(gui,compcmd)

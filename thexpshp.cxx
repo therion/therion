@@ -502,7 +502,13 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
   th2ddataobject * obj;
 	thpoint * ppt;
 	thline * pln;
+  tharea * parea;
   obj = scrap->ls2doptr;
+  long sp, cp;
+  int csubtype;
+  thdb2dlp * lp;
+
+
   while (obj != NULL) {
 		switch (obj->get_class_id()) {
 			case TT_POINT_CMD:
@@ -510,14 +516,15 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
         this->m_fpoints.point_insert(ppt->point->xt + scrap->proj->rshift_x,  ppt->point->yt + scrap->proj->rshift_y, ppt->point->zt + scrap->proj->rshift_z, ppt->point->at);
         this->m_fpoints.object_insert();
         this->m_fpoints.m_attributes.insert_attribute("_TYPE",thmatch_string(ppt->type, thtt_point_types));
-        this->m_fpoints.m_attributes.insert_attribute("_SUBTYPE",thmatch_string(ppt->type, thtt_point_subtypes));
+        this->m_fpoints.m_attributes.insert_attribute("_SUBTYPE", ppt->type != TT_POINT_TYPE_U ?
+              (thmatch_string(ppt->subtype, thtt_point_subtypes)) : ppt->m_subtype_str);
         this->m_fpoints.m_attributes.copy_attributes(thdb.attr.get_object(ppt->id));
 				break;
 		  case TT_LINE_CMD:
 				pln = ((thline*)obj);
-        long sp = 0, cp = 1;
-        int csubtype;
-  			thdb2dlp * lp = pln->first_point;
+        sp = 0;
+        cp = 1;
+  			lp = pln->first_point;
         if (lp == NULL)
           break;
         csubtype = lp->subtype;
@@ -527,7 +534,8 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
             insert_line_segment(pln, false, this->m_flines.m_point_list, sp, cp);
             this->m_flines.object_insert();
             this->m_flines.m_attributes.insert_attribute("_TYPE",thmatch_string(pln->type, thtt_line_types));
-            this->m_flines.m_attributes.insert_attribute("_SUBTYPE",thmatch_string(csubtype, thtt_line_subtypes));
+            this->m_flines.m_attributes.insert_attribute("_SUBTYPE", pln->type != TT_LINE_TYPE_U ?
+              (thmatch_string(csubtype, thtt_line_subtypes)) : pln->m_subtype_str);
             this->m_flines.m_attributes.copy_attributes(thdb.attr.get_object(pln->id));
             csubtype = lp->subtype; 
             sp = cp;
@@ -536,6 +544,22 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
           cp++;
   			}
 				break;
+		  case TT_AREA_CMD:
+				parea = ((tharea*)obj);
+        if (parea->m_outline_line == NULL)
+          break;
+        this->m_fareas.object_clear();
+        this->m_fareas.polygon_start_ring(true);
+        this->m_fareas.polygon_insert_line(parea->m_outline_line, false);
+        this->m_fareas.polygon_close_ring();
+        this->m_fareas.object_insert();
+        if (this->m_fareas.m_object_id > -1) {
+          // system attributes
+          this->m_fpoints.m_attributes.insert_attribute("_TYPE",thmatch_string(parea->type, thtt_area_types));
+          this->m_fpoints.m_attributes.insert_attribute("_SUBTYPE",parea->m_subtype_str);
+          this->m_fpoints.m_attributes.copy_attributes(thdb.attr.get_object(parea->id));
+        }
+        break;
     }
     obj = obj->pscrapoptr;
   }
@@ -551,6 +575,8 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
       this->src.name, this->src.line, this->projstr))
     return;
   }
+
+  thdb.db2d.process_areas_in_projection(prj);
 
   char * fnm = this->get_output("cave.shp");
   thexpshp xs;

@@ -294,6 +294,12 @@ void thline::parse_type(char * ss)
 void thline::parse_subtype(char * ss) 
 {
 //  int prevcsubtype = this->csubtype;
+  if (this->type == TT_LINE_TYPE_U) {
+    if (this->last_point != NULL)
+      ththrow(("subtype specification not allowed here"))
+    this->parse_u_subtype(ss);
+    return;
+  }
   this->csubtype = thmatch_token(ss,thtt_line_subtypes);
   if (this->csubtype == TT_LINE_SUBTYPE_UNKNOWN)
     ththrow(("invalid line subtype -- %s",ss))
@@ -353,7 +359,7 @@ void thline::parse_subtype(char * ss)
 
 
 
-void thline::insert_line_point(int nargs, char ** args)
+void thline::insert_line_point(int nargs, char ** args, double * nums)
 {
   // check number of parameters
   if ((nargs != 6) && (nargs != 2))
@@ -366,37 +372,50 @@ void thline::insert_line_point(int nargs, char ** args)
   
   if (nargs == 6) {
     pidx = 4;
-    thparse_double(sv, cp1x, args[0]);
-    if (sv != TT_SV_NUMBER) {
-      invs = args[0];
-      invnum = true;
-    }
-    thparse_double(sv, cp1y, args[1]);
-    if (sv != TT_SV_NUMBER) {
-      invs = args[1];
-      invnum = true;
-    }
-    thparse_double(sv, cp2x, args[2]);
-    if (sv != TT_SV_NUMBER) {
-      invs = args[2];
-      invnum = true;
-    }
-    thparse_double(sv, cp2y, args[3]);
-    if (sv != TT_SV_NUMBER) {
-      invs = args[3];
-      invnum = true;
+    if (args != NULL) {
+      thparse_double(sv, cp1x, args[0]);
+      if (sv != TT_SV_NUMBER) {
+        invs = args[0];
+        invnum = true;
+      }
+      thparse_double(sv, cp1y, args[1]);
+      if (sv != TT_SV_NUMBER) {
+        invs = args[1];
+        invnum = true;
+      }
+      thparse_double(sv, cp2x, args[2]);
+      if (sv != TT_SV_NUMBER) {
+        invs = args[2];
+        invnum = true;
+      }
+      thparse_double(sv, cp2y, args[3]);
+      if (sv != TT_SV_NUMBER) {
+        invs = args[3];
+        invnum = true;
+      }
+    } else {
+      cp1x = nums[0];
+      cp1y = nums[1];
+      cp2x = nums[2];
+      cp2y = nums[3];
     }
   }
-  thparse_double(sv, x, args[pidx]);
-  if (sv != TT_SV_NUMBER) {
-    invs = args[pidx];
-    invnum = true;
+  if (args != NULL) {
+    thparse_double(sv, x, args[pidx]);
+    if (sv != TT_SV_NUMBER) {
+      invs = args[pidx];
+      invnum = true;
+    }
+    thparse_double(sv, y, args[pidx+1]);
+    if (sv != TT_SV_NUMBER) {
+      invs = args[pidx+1];
+      invnum = true;
+    }
+  } else {
+    x = nums[pidx];
+    y = nums[pidx+1];
   }
-  thparse_double(sv, y, args[pidx+1]);
-  if (sv != TT_SV_NUMBER) {
-    invs = args[pidx+1];
-    invnum = true;
-  }
+
   if (invnum)
     ththrow(("invalid number -- %s",invs))
 
@@ -838,6 +857,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_BORDER, SYML_ROCKBORDER)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_EDGE, SYML_ROCKEDGE)
     thline_type_export_mp(TT_LINE_TYPE_GRADIENT, SYML_GRADIENT)
+    thline_type_export_mp(TT_LINE_TYPE_U, SYML_U)
     case TT_LINE_TYPE_ARROW:
       macroid = SYML_ARROW;
       if (this->context >= 0) 
@@ -1021,7 +1041,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
           return(true);
         fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
         this->export_path_mp(out);
-        fprintf(out->file,");\n");
+        if (this->type == TT_LINE_TYPE_U)
+          fprintf(out->file,",\"%s\");\n", (this->m_subtype_str == NULL) ? "" : this->m_subtype_str);
+        else
+          fprintf(out->file,");\n");
         if (out->layout->is_debug_joins()) {
           fprintf(out->file,"l_debug(1,0,");
           this->export_path_mp(out,0,-1,1);
@@ -1298,6 +1321,10 @@ void thline::start_insert() {
   bool fsize;
   
   switch (this->type) {
+    case TT_LINE_TYPE_U:
+      if (this->m_subtype_str == NULL)
+        ththrow(("missing subtype specification for line of user defined type"))
+      break;
     case TT_LINE_TYPE_SLOPE:
       lp = this->first_point;
       fsize = true;

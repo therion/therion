@@ -140,6 +140,8 @@ class th2ddataobject : public thdataobject {
 
   public:
   
+  char * m_subtype_str;
+
   th2ddataobject * pscrapoptr, ///< Previos object in the scrap.
       * nscrapoptr;  ///< Next object in the scrap.
       
@@ -222,6 +224,11 @@ class th2ddataobject : public thdataobject {
    */
   
   virtual bool export_mp(class thexpmapmpxs * out);
+
+  /**
+   * Parse user defined subtype.
+   */
+  void parse_u_subtype(char * subtype);
   
 };
 

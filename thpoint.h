@@ -111,6 +111,7 @@ enum {
   TT_POINT_TYPE_UNKNOWN,
 
 // specialne typy
+  TT_POINT_TYPE_U,
   TT_POINT_TYPE_STATION,
   TT_POINT_TYPE_SECTION,
   TT_POINT_TYPE_WATER_FLOW,
@@ -267,6 +268,7 @@ static const thstok thtt_point_types[] = {
   {"station-name", TT_POINT_TYPE_STATION_NAME},
   {"steps",TT_POINT_TYPE_STEPS},
   {"traverse",TT_POINT_TYPE_TRAVERSE},
+  {"u",TT_POINT_TYPE_U},
   {"vegetable-debris",TT_POINT_TYPE_VEGETABLE_DEBRIS},
   {"wall-calcite",TT_POINT_TYPE_WALL_CALCITE},
   {"water",TT_POINT_TYPE_WATER},
@@ -393,6 +395,8 @@ class thpoint : public th2ddataobject {
     from_name;  ///< Extend name.
 
   char extend_opts;  ///< Extend options.
+
+  virtual void start_insert();
     
   void parse_type(char * tstr);  ///< Parse point type.
 

@@ -688,3 +688,6 @@ void thdate::set_file_date(char * fname) {
 #undef stat
 #endif
 
+
+// char thdate::dstr[thdate__bufflen];
+

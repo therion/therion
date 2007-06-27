@@ -156,6 +156,7 @@ static const thstok thtt_line_adjusts[] = {
  
 enum {
   TT_LINE_TYPE_UNKNOWN,
+  TT_LINE_TYPE_U,
   TT_LINE_TYPE_WALL,
   TT_LINE_TYPE_PIT,
   TT_LINE_TYPE_CHIMNEY,
@@ -206,6 +207,7 @@ static const thstok thtt_line_types[] = {
   {"section", TT_LINE_TYPE_SECTION},
   {"slope", TT_LINE_TYPE_SLOPE},
   {"survey", TT_LINE_TYPE_SURVEY},
+  {"u",TT_LINE_TYPE_U},
   {"wall", TT_LINE_TYPE_WALL},
   {"water-flow", TT_LINE_TYPE_WATER_FLOW},
   {NULL, TT_LINE_TYPE_UNKNOWN},
@@ -299,7 +301,7 @@ class thline : public th2ddataobject {
   void parse_head(char * ss);  ///< Parse line head.
   void parse_adjust(char * ss);  ///< Parse line head.
   void parse_text(char * ss);  ///< Parse line text.
-  void insert_line_point(int nargs, char ** args);  ///< Insert line point.
+  void insert_line_point(int nargs, char ** args, double * nums = NULL);  ///< Insert line point.
   void insert_point_mark(char * ss);  ///< Insert line point mark.
   
   void preprocess();  ///< Reverse if necessary and close.

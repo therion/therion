@@ -1,0 +1,62 @@
+encoding  utf-8
+##XTHERION## xth_me_area_adjust 146.0 241.0 749.0 656.0
+##XTHERION## xth_me_area_zoom_to 100
+
+#!FILE 1
+#!TITLE 80 Using user defined symbol types
+#! In the case, where there is no appropriate symbol for the feature
+#! you want to draw to the map, you may use user defined symbol type \
+#! (it is type <code>u</code>, valid for point, line and area object).
+#! 
+#! Syntax is very simle. Assume you want to create "bat" point, line
+#! and area. You just use <code>u:bat</code> as type (bat is in fact subtype)
+#! of u type. So your codes will be like this:
+
+scrap x -scale [250.0 421.0 710.0 421.0 0.0 0.0 20 0.0 m]
+
+line border -id l7-455-492 -close on
+  292.0 485.0
+  287.0 466.0 334.96 364.11 371.0 375.0
+  407.33 385.98 419.87 488.52 333.0 503.0
+  303.0 508.0 297.0 504.0 292.0 485.0
+endline
+
+#!CODE
+point 555.0 480.0 u:bat
+#!ENDCODE
+
+#! or
+
+#!CODE
+line u:bat
+#!ENDCODE
+  524.0 458.0
+  480.0 447.0 483.0 501.0 407.0 472.0
+endline
+
+#! or
+
+#!CODE
+area u:bat
+#!ENDCODE
+  l7-455-492
+endarea
+
+line wall
+  279.0 449.0
+  306.0 465.0 353.0 505.0 426.0 509.0
+  499.0 513.0 529.0 502.0 564.0 523.0
+endline
+
+line wall
+  307.0 375.0
+  357.0 396.0 409.0 469.0 472.0 436.0
+  535.0 403.0 585.0 433.0 616.0 462.0
+endline
+
+endscrap
+
+map xx
+  x
+endmap
+

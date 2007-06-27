@@ -93,7 +93,7 @@ thexpmap::~thexpmap() {
   delete this->layout;
 }
 
-void thexpmap_log_log_file(char * logfpath, char * on_title, char * off_title, bool mpbug = false) {
+void thexpmap_log_log_file(char * logfpath, char * on_title, char * off_title, bool mpbug) {
   char * lnbuff = new char [4097];
 //  unsigned long lnum = 0;
   thlog.printf("%s",on_title);

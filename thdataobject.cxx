@@ -163,6 +163,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_LAYOUT_CMD:
         case TT_SURFACE_CMD:
         case TT_IMPORT_CMD:
+        case TT_SCRAP_CMD:
           break;
         default:
           ththrow(("coordinate system specification not valid for %s", this->get_cmd_name()))

@@ -306,6 +306,8 @@ proc xth_me_create_file {} {
   $xth(me,menu,file) entryconfigure [mc "Save as"] -state normal
   $xth(me,menu,file) entryconfigure [mc "Auto save"] -state normal
   $xth(me,menu,file) entryconfigure [mc "Close"] -state normal
+
+  $xth(me,menu,file) entryconfigure [mc "Import"] -state normal
   
   $xth(me,menu) entryconfigure [mc "Edit"] -state normal
 
@@ -388,6 +390,8 @@ proc xth_me_destroy_file {} {
     $xth(me,menu,file) entryconfigure [mc "Save as"] -state disabled
     $xth(me,menu,file) entryconfigure [mc "Auto save"] -state disabled
     $xth(me,menu,file) entryconfigure [mc "Close"] -state disabled
+
+    $xth(me,menu,file) entryconfigure [mc "Import"] -state disabled
 
     $xth(me,menu) entryconfigure [mc "Edit"] -state disabled
 
@@ -2424,6 +2428,10 @@ $xth(me,menu,file) add command -label [mc "Close"] -underline 0 \
   -accelerator "$xth(gui,controlk)-w"  -state disabled \
   -font $xth(gui,lfont) \
   -command xth_me_close_file
+
+$xth(me,menu,file) add separator
+$xth(me,menu,file) add command -label [mc "Import"] -underline 0 \
+  -state disabled -font $xth(gui,lfont) -command {xth_me_import_file {} {}}
 
 set xth(me,menu,edit) $xth(me,menu).edit
 menu $xth(me,menu,edit) -tearoff 0

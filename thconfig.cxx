@@ -113,6 +113,13 @@ thconfig::thconfig()
     loaded_ok = false;
   	RegCloseKey(key);
   }
+  if (!loaded_ok) {
+    loaded_ok = true;
+	  if (RegOpenKey(HKEY_CURRENT_USER,"SOFTWARE\\Therion",&key) != ERROR_SUCCESS) {
+      loaded_ok = false;
+  	  RegCloseKey(key);
+    }
+  }
   if (loaded_ok) {
     if (RegQueryValueEx(key,"InstallDir",NULL,&type,(BYTE *)tmpbf->get_buffer(),&length) != ERROR_SUCCESS) {
       tmpbf->strcpy("");

@@ -1,10 +1,7 @@
 HOT LIST:
-
-+ make unixify (dos2unix, chmod)
-+ samples into win32 installation
++ redo win32 installations (with samples + nonadmin)
 + thbook
 + release
-
 
 therion:
 
@@ -24,16 +21,19 @@ therion:
 + thbook: point continuation -text <description> -code <continuation-code>
 + thbook: station code flag
 + thbook: export continuation-list (format html, text, dbf)
++ thbook: user defined symbol types
++ thbook: scraps without stations are allowed
++ thbook: -cs for scrap (used in scale transformation)
           
-+ export of all translations from therion to xtherion
-+ user defined points/lines/areas
-+ add shot/stations flags to attributes when exported in metapost
-+ allow scraps without stations, CS specification for scrap (in plan
-  projection)
++ -style option to html table export
++ export rigging list + -text option to point anchor
 + polyline to bezier conversion mode
-+ ------------------------------------------------------------------
 + more complex attribute export
++ link same continuations within different projections
 + attributes to shots/stations
++ user defined symbols to legends 
++ symbol show/hide of user defined symbols (using subtypes)
++ add shot/stations flags to attributes when exported in metapost
 + add -survey-lines on|off|auto option to scrap - auto by default -
   if there is some line survey, it will be off
 + add rotation of 3D surface into surface calibration
@@ -46,13 +46,9 @@ therion:
 + add more layers to DXF export (lines, points, areas?) with
   some symbols
 + add legends to SVG export
-+ morphing: add additional features (line extra, point extra:point|distance)
-+ add morphing features browsing code
 + import of 3D and PLT via lxFile
 + LRUD envelope generation by lxFile
-+ add absolute coordinate specification in centerline and scraps
 + LRUD walls into 3D shapefiles
-+ areas into shapefiles
 + associate line section with section scrap
 + solve section names and sections far from passage
 + add links to NWES page numbers in atlas
@@ -98,11 +94,13 @@ therion:
   
 xtherion:
 
-+ save/load xtherion startup script somewhere...
-+ import of DXF/SVG into map editor
-+ ------------------------------------------------------------------
-+ do not save empty lines/areas/scraps
++ save/load xtherion startup script to $HOME/.xtherion
++ edit line -> to bezier / to polyline option
 + rightclick on map-item with changes of types and subtypes
++ simple line digitizer
++ add map editor import filter
++ SVG import into map editor (using tcldom)
++ do not save empty lines/areas/scraps
 + Ctrl+F binding in text/map editor - switch focus to Find 
   control panel and maximize it
 + add "Filter" and "Unfilter" button for search & select
@@ -127,7 +125,9 @@ WOULD BE NICE LIST:
 
 therion:
 
-+ export database: format text|txt, dbf
++ redo database export
++ morphing: add additional features (line extra, point extra:point|distance)
++ add morphing features browsing code
 + add fast mode for xtherion - just to generate survey and map structures
 + surface selection according to coverage
   2D: all surfaces that covers current map sorted by size and coverage

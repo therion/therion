@@ -734,3 +734,9 @@ def p_debug (expr col, pen, pos)=
 enddef;
 
 
+def p_u_SKBB(expr pos,theta,sc,al,subtype) =
+  T:=identity shifted pos;
+  thdraw origin withpen pencircle scaled 4pt withcolor red;
+enddef;
+
+

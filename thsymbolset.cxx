@@ -1026,13 +1026,13 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   }
 
   if (isused(SYMP_MOONMILK) && isused(SYML_MOONMILK) && this->group_symbols) {
-	  insfig(SYMP_MOONMILK,thT("point flowstone",layout->lang));
+	  insfig(SYMP_MOONMILK,thT("point moonmilk",layout->lang));
 	  fprintf(mpf,"%s(((.1,.4) .. (.5,.2) .. (.9,.4)) inscale);\n",thsymbolset__mp[SYML_MOONMILK]);
     fprintf(mpf,"%s((0.5,0.7) inscale,0.0,1.0,(0,0));\n",thsymbolset__mp[SYMP_MOONMILK]);
 	  endfig;
   } else {
-	  legend_point(SYMP_MOONMILK,thT("point flowstone",layout->lang));
-	  legend_step(SYML_MOONMILK,thT("line flowstone",layout->lang));
+	  legend_point(SYMP_MOONMILK,thT("point moonmilk",layout->lang));
+	  legend_step(SYML_MOONMILK,thT("line moonmilk",layout->lang));
   }
 
   legend_point(SYMP_STALACTITE,thT("point stalactite",layout->lang));

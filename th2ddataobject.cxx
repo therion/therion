@@ -39,6 +39,7 @@ th2ddataobject::th2ddataobject()
   this->tags = TT_2DOBJ_TAG_CLIP_AUTO | TT_2DOBJ_TAG_VISIBILITY_ON;
   this->place = TT_2DOBJ_PLACE_DEFAULT;
   this->context = -1;
+  this->m_subtype_str = NULL;
 }
 
 
@@ -189,4 +190,13 @@ void th2dsplitTT(char * src, char ** type, char ** subtype)
   *subtype = st;
 }
 
+
+
+void th2ddataobject::parse_u_subtype(char * subtype)
+{
+  if (th_is_keyword(subtype)) {
+    this->m_subtype_str = this->db->strstore(subtype, true);
+  } else
+    ththrow(("invalid subtype name -- %s", subtype))
+}
 

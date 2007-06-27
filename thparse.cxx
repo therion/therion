@@ -398,7 +398,7 @@ bool th_is_keyword(char * str)
   else
     for(i = 0; i < sl; i++, s++) {
       if ((*s > 96) && (*s < 123)) continue;
-      if ((*s > 64) && (*s < 91)) continue;
+      if ((*s > 64) && (*s < 91)) continue; 
       if ((*s > 46) && (*s < 58)) continue;
       if (*s == 95) continue;
       if ((*s == 45) && (i > 0)) continue;
@@ -619,7 +619,7 @@ void thdecode_tcl(thbuffer * dest, const char * src)
   srcp = (unsigned char*) src;
   dstp = (unsigned char*) dest->get_buffer();
   while (srcx < srcln) {
-    if ((*srcp < 32) || (*srcp > 127)) {
+    if ((*srcp < 32) || (*srcp > 127) || (*srcp == '[') || (*srcp == '[') || (*srcp == '"')) {
         *dstp = '\\';
         dstp++;
         num = *srcp / 64;

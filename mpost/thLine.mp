@@ -826,6 +826,14 @@ def l_debug (expr col, pen, P) =
                    else: blue fi;
 enddef;
 
+
+def l_u_SKBB (expr P, subtype) =
+  T:=identity;
+  pickup PenA;
+  thdraw P withcolor red;
+enddef;
+
+
 def l_gradient_UIS (expr P) =
   T:=identity;
   pickup PenC;

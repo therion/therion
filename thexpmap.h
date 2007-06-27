@@ -245,6 +245,7 @@ class thexpmap : public thexport {
  
 extern double thexpmap_quick_map_export_scale;
 
+void thexpmap_log_log_file(char * logfpath, char * on_title, char * off_title, bool mpbug = false);
 
 #endif
 

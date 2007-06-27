@@ -40,6 +40,7 @@
 #include "thsurvey.h"
 #include "thsymbolset.h"
 #include "thsketch.h"
+#include "thcsdata.h"
 
 #ifdef THMSVC
 #define hypot _hypot
@@ -269,55 +270,56 @@ void thscrap::parse_scale(char * ss)
     thparse_double(sv,var,pars[parn]); \
     if (sv != TT_SV_NUMBER) \
       ththrow(("real number required -- %s", pars[parn]));
+  
+  if (ux > 0) {
+    lentf.parse_units(pars[ux]);
+  }
 
   if (p9) {
 //    thparse_double(sv,this->scale_r1x,pars[0]);
 //    if ((sv != TT_SV_NUMBER) || (n1 <= 0.0))
 //      ththrow(("real positive number required -- %s", pars[0]));
-      parse_scalep9(this->scale_p1x,0)
-      parse_scalep9(this->scale_p1y,1)
-      parse_scalep9(this->scale_p2x,2)
-      parse_scalep9(this->scale_p2y,3)
+    parse_scalep9(this->scale_p1x,0)
+    parse_scalep9(this->scale_p1y,1)
+    parse_scalep9(this->scale_p2x,2)
+    parse_scalep9(this->scale_p2y,3)
+    if (this->cs == TTCS_LOCAL) {
       parse_scalep9(this->scale_r1x,4)
       parse_scalep9(this->scale_r1y,5)
       parse_scalep9(this->scale_r2x,6)
       parse_scalep9(this->scale_r2y,7)
-      if (hypot(this->scale_r1x - this->scale_r2x,
-        this->scale_r1y - this->scale_r2y) == 0.0)
-        ththrow(("zero scale real length"));
-      if (hypot(this->scale_p1x - this->scale_p2x,
-        this->scale_p1y - this->scale_p2y) == 0.0)
-        ththrow(("zero scale picture length"));        
-  }
-  else {
+      if (ux > 0) {
+        this->scale_r1x = lentf.transform(this->scale_r1x);
+        this->scale_r1y = lentf.transform(this->scale_r1y);
+        this->scale_r2x = lentf.transform(this->scale_r2x);
+        this->scale_r2y = lentf.transform(this->scale_r2y);
+      }
+    } else {
+      this->convert_cs(pars[4], pars[5], this->scale_r1x, this->scale_r1y);
+      this->convert_cs(pars[6], pars[7], this->scale_r2x, this->scale_r2y);
+    }
+    if (hypot(this->scale_r1x - this->scale_r2x,
+      this->scale_r1y - this->scale_r2y) == 0.0)
+      ththrow(("zero scale real length"));
+    if (hypot(this->scale_p1x - this->scale_p2x,
+      this->scale_p1y - this->scale_p2y) == 0.0)
+      ththrow(("zero scale picture length"));        
+  } else {
     // let's parse first number
     thparse_double(sv,n1,pars[0]);
     if ((sv != TT_SV_NUMBER) || (n1 <= 0.0))
       ththrow(("real positive number required -- %s", pars[0]));
-      
     // let's parse second number
     if (n2x > 0) {
       thparse_double(sv,n2,pars[n2x]);
       if ((sv != TT_SV_NUMBER) || (n2 <= 0.0))
         ththrow(("real positive number required -- %s", pars[0]));
       n1 = n2 / n1;
+      if (ux > 0)
+        n1 = lentf.transform(n1);
     }
+    this->scale = n1;
   }    
-  // let's parse units
-  if (ux > 0) {
-    lentf.parse_units(pars[ux]);
-    if (p9) {
-      this->scale_r1x = lentf.transform(this->scale_r1x);
-      this->scale_r1y = lentf.transform(this->scale_r1y);
-      this->scale_r2x = lentf.transform(this->scale_r2x);
-      this->scale_r2y = lentf.transform(this->scale_r2y);
-    } 
-    else {
-      n1 = lentf.transform(n1);
-    }
-  }
-  
-  this->scale = n1;
 }
 
 thdb2dcp * thscrap::insert_control_point()
@@ -1312,6 +1314,19 @@ void thscrap::parse_sketch(char ** args, int argenc)
     ththrow(("invalid	number --	%s", args[2]))
   this->sketch_list.push_back(sk);
 }
+
+
+void thscrap::start_insert() {
+  if (this->cs != TTCS_LOCAL) {
+    if (this->proj->type != TT_2DPROJ_PLAN)
+      ththrow(("coordinate system specification valid only for plan projection"))
+    if (!this->scale_p9)
+      ththrow(("scrap scaling not valid in this coordinate system"))
+  }
+}
+
+
+
 
 
 

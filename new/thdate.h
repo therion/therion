@@ -79,7 +79,7 @@ class thdate {
   double ssec, ///< Start date seconds
     esec;  ///< End date seconds
     
-  char dstr[thdate__bufflen]; ///< String for given date.
+  /* static */ char dstr[thdate__bufflen]; ///< String for given date.
 
   friend bool operator < (const thdate &, const thdate &);  ///< Less operator.
   friend bool operator <= (const thdate &, const thdate &);  ///< Less operator.

@@ -24,6 +24,19 @@ LXLIBDIR = linux
 PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lpthread -lz 
 LXPLATFORM = LINUX
 
+# PLATFORM DEBIAN
+##CXX = c++
+##CC = gcc
+##POBJECTS = lxR2P.o
+##VTKPATH = /usr/include/vtk-5.0
+##VTKLIBPATH = /usr/lib/vtk-5.0
+##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
+##CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
+##CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
+##LXLIBDIR = linux
+##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lpthread -lz 
+##LXPLATFORM = LINUX
+
 # PLATFORM WIN32
 ##CXX = c++
 ##CC = gcc
@@ -135,6 +148,9 @@ config-ozone:
   
 config-linux:
 	perl makeconfig.pl PLATFORM LINUX
+
+config-debian:
+	perl makeconfig.pl PLATFORM DEBIAN
   
 config-win32:
 	perl makeconfig.pl PLATFORM WIN32

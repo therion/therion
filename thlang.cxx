@@ -45,6 +45,11 @@ char * thlang_getcxxid(int id) {
     return thlang__cxxids[id];
 }
 
+const thstok * thlang_get_text_table()
+{
+  return &(thtt__texts[0]);
+}
+
 char * thT(char * txt, int lng) {
   if (lng == THLANG_SYSTEM)
     return txt;

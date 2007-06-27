@@ -116,6 +116,14 @@ thcmd_option_desc thpoint::get_cmd_option_desc(char * opts)
 }
 
 
+void thpoint::start_insert() {
+  if (this->type == TT_POINT_TYPE_U) {
+    if (this->m_subtype_str == NULL)
+      ththrow(("missing subtype specification for point of user defined type"))
+  }
+}
+
+
 void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
 
@@ -306,6 +314,10 @@ void thpoint::parse_subtype(char * ststr)
 {
   if (this->type == TT_POINT_TYPE_UNKNOWN)
     ththrow(("point type must be specified before subtype"))
+  if (this->type == TT_POINT_TYPE_U) {
+    this->parse_u_subtype(ststr);
+    return;
+  }
   this->subtype = thmatch_token(ststr, thtt_point_subtypes);
   if (this->subtype == TT_POINT_SUBTYPE_UNKNOWN)
     ththrow(("unknown point subtype -- %s", ststr))
@@ -766,6 +778,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_PALEO_MATERIAL,SYMP_PALEOMATERIAL)
     thpoint_type_export_mp(TT_POINT_TYPE_VEGETABLE_DEBRIS,SYMP_VEGETABLEDEBRIS)
     thpoint_type_export_mp(TT_POINT_TYPE_ROOT,SYMP_ROOT)
+
+    thpoint_type_export_mp(TT_POINT_TYPE_U,SYMP_U)
       
     default:
       macroid = SYMP_UNDEFINED;
@@ -837,8 +851,14 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         al = "(1,1)";
         break;
     }
-    fprintf(out->file,",%.1f,%.2f,%s);\n",
+    fprintf(out->file,",%.1f,%.2f,%s",
         (thisnan(this->orient) ? 0 : 360 - this->orient - out->rr),scl,al);
+    if (this->type == TT_POINT_TYPE_U) {
+      fprintf(out->file, ",\"%s\");\n", (this->m_subtype_str == NULL) ? "" : this->m_subtype_str);
+    } else {
+      fprintf(out->file, ");\n");
+    }
+
     if (out->layout->is_debug_stations() || out->layout->is_debug_joins()) {
       fprintf(out->file,"p_debug(-1,0,");
       this->point->export_mp(out);

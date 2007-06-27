@@ -13,6 +13,11 @@ therion:
  * improved default centerline symbols
  * LRUD envelopes of maps exported from centerline
  * point -extend option changed to -from
+ * user defined types of points/lines/areas (using u type and 
+   custom subtype string e.g. u:electric-cable)
+ * scraps without calibration stations are allowed
+ * coordinate system specification allowed for scraps
+ * areas exported to SHP files
  * bugs fixed:
    - top level objects selection
    - generation of extended elevation
@@ -20,14 +25,16 @@ therion:
    - creating surveys from .3d files
    - subpixel inaccuracy with bitmap morphing
    - entering angles/lat-long in degree:minutes format
+   - shapefile export fixes
    
 
 xtherion:
 
+ * DXF/SVG import in map editor (File->Import)
  * symbol themes and translations comboboxes
  * autocompletition in symbol type comboboxes
  * bugs fixed:
-   - 
+   - translations of type:subtype works
 
 loch:
 

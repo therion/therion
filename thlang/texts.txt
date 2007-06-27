@@ -537,7 +537,7 @@ de: Umriss eines Felsens
 en: rock border
 es: contorno bloque
 fr: bord d’un rocher
-it: contorno masso
+it: bordo masso
 pt: lateral da rocha
 sk: ohraničenie kameňov
 
@@ -914,6 +914,8 @@ fr: mondmilch
 it: moonmilk
 pt: leite-de-lua
 sk: mäkký sinter
+
+therion: line moonmilk
 
 therion: point stalactite
 cz: stalaktit

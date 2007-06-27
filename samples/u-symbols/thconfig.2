@@ -1,0 +1,118 @@
+encoding  utf-8
+#!PROCESS
+#!FILE 3
+source map.th2
+
+#! To process them correctly, you need to define symbols for them in
+#! metapost languge very simmilar way, as ordinary symbols are redefined.
+#!
+#! Firstly point symbol. In the
+
+
+layout m
+#!CODE
+code metapost
+#!ENDCODE
+
+  path bat_path_x;
+  bat_path_x := (160.43589,619.76148) 
+.. controls (200.83034,598.56215) and (225.01974,599.82632) .. (242.33709,601.15842) 
+.. controls (250.91988,585.02142) and (280.12279,545.7622) .. (328.92385,566.52372) 
+.. controls (343.18917,529.89929) and (387.77695,513.04018) .. (453.54702,518.36185) 
+.. controls (456.6654,525.97557) and (466.09064,533.43257) .. (471.27843,523.05007) 
+.. controls (463.85291,520.67657) and (466.71891,517.42483) .. (471.63814,522.23522) 
+.. controls (472.87859,519.83044) and (472.11254,517.25674) .. (467.00984,516.24193) 
+.. controls (498.08181,494.38071) and (518.37927,488.7935) .. (554.08261,484.34703) 
+.. controls (536.23968,468.87122) and (526.7451,451.32142) .. (536.0878,433.78585) 
+.. controls (539.04313,428.23891) and (549.65293,437.81051) .. (550.08905,431.99134) 
+.. controls (543.35122,428.68782) and (547.16851,429.31755) .. (550.93619,430.90592) 
+.. controls (555.01514,419.20795) and (542.29889,420.82043) .. (539.21019,422.32967) 
+.. controls (526.80565,412.03922) and (538.14174,362.22955) .. (562.04206,325.41289) 
+.. controls (560.70416,305.4475) and (552.94665,275.48765) .. (596.42383,240.15823) 
+.. controls (586.13796,214.86512) and (584.21841,176.344) .. (618.88684,158.99293) 
+.. controls (600.38363,161.42082) and (571.90452,163.00167) .. (555.87287,173.29962) 
+.. controls (533.80922,180.31406) and (511.7587,189.77279) .. (494.76462,217.75852) 
+.. controls (469.02274,260.15007) and (465.60841,280.08537) .. (466.27659,287.73284) 
+.. controls (467.27295,299.13663) and (456.20597,295.4343) .. (455.42733,284.84646) 
+.. controls (447.034,297.47822) and (465.71846,292.96944) .. (457.40227,311.17742) 
+.. controls (451.51715,333.88534) and (454.55183,344.68208) .. (455.22274,365.27634) 
+.. controls (445.59186,380.66207) and (438.52169,394.98144) .. (432.56329,406.97544) 
+.. controls (421.27321,411.75599) and (411.86904,413.85884) .. (403.92838,423.33244) 
+.. controls (391.19793,418.79449) and (380.875,414.46152) .. (373.6673,409.41976) 
+.. controls (365.11095,413.84661) and (372.76761,437.1554) .. (372.88328,437.30963) 
+-- (360.72573,447.88215) 
+.. controls (360.72573,447.88215) and (348.36583,439.38367) .. (342.32921,440.26049) 
+.. controls (340.52016,451.25937) and (343.58923,463.9528) .. (354.67087,475.2679) 
+.. controls (341.63825,482.57642) and (339.10347,494.24676) .. (313.80723,490.57484) 
+.. controls (304.61922,489.24114) and (282.31298,490.61764) .. (258.32359,496.84657) 
+.. controls (246.18809,499.99759) and (248.48311,482.8706) .. (236.36849,493.22467) 
+.. controls (239.32461,491.85429) and (242.55704,492.01948) .. (245.59044,495.64662) 
+.. controls (248.83726,499.52895) and (249.4495,502.08244) .. (244.59097,503.87878) 
+.. controls (221.93401,514.80409) and (190.83965,541.85436) .. (178.69512,574.11392) 
+.. controls (176.80431,577.00681) and (162.4873,600.33708) .. cycle;
+  path bat_path_bb;
+  bat_path_bb = bbox bat_path_x;
+  path bat_path;
+  bat_path = bat_path_x shifted (-(llcorner bat_path_bb) - (urcorner bat_path_bb - llcorner bat_path_bb) / 2.0) scaled (1u / ((xpart urcorner bat_path_bb) - (xpart llcorner bat_path_bb))) rotated 210;
+
+#! section of your layout, you redefine point symbol like this
+#!CODE
+def p_u(expr pos, theta, sc, al, subtype) = 
+  if subtype = "bat": % case of bat symbol
+    T := identity shifted pos;
+    thfill (bat_path scaled 2.0) withcolor black;
+  else: % use default symbol for other cases
+    p_u_SKBB(pos, theta, sc, al, subtype);
+  fi;
+enddef;
+#!ENDCODE
+
+#! same way the line symbol
+#!CODE
+def l_u(expr P, subtype) =
+  if subtype = "bat": % case of bat line
+    T:=identity;
+    cas := 0;
+    dlzka := arclength P;
+    mojkrok:=adjust_step(dlzka, 1.0u);
+    pickup PenD;
+    forever:
+      t := arctime cas of P;
+      thfill bat_path scaled 0.5 shifted (point t of P) withcolor black;
+      cas := cas + mojkrok;
+      exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+    endfor;
+  else: % use default u line for other cases
+    p_l_SKBB(P, subtype);
+  fi;
+enddef;
+#!ENDCODE
+
+#! and area symbol (pattern in this case)
+#!CODE
+% bat pattern
+beginpattern(pattern_bat);
+    fill bat_path withcolor black;
+endpattern;
+
+% bat area symbol
+def a_u (expr Path, subtype) =
+  if subtype = "bat": % bat area
+    T:=identity;
+    thclean Path;
+    thfill Path withpattern pattern_bat;
+  else: % use default u area for other cases
+    a_u_SKBB(Path, subtype);
+  fi;
+enddef;
+#!ENDCODE
+
+endlayout
+
+#! After these definitions, you receive bat point, line and area
+#! with proper graphical representation.
+
+export map -o map2.pdf -layout m -layout-map-header 0 0 off
+
+#!IMAGE map2.pdf
+#!CLEAN map2.pdf

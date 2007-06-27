@@ -30,7 +30,7 @@ therion: Camera
 cz: Kamera
 en: Camera
 es: Cámara
-it: Camera
+it: Fotocamera
 sk: Kamera
 
 therion: Model
@@ -177,7 +177,7 @@ therion: Turn on/off surface transparency.
 cz: Zapne/vypne průhlednost povrchu.
 en: Turn on/off surface transparency.
 es: Conectar/desconectar transparencia de la superficie.
-it: Attiva/disattiva la trasparenza della superficiale.
+it: Attiva/disattiva la trasparenza della superficie.
 sk: Zapne/vypne priehľadnosť povrchu.
 
 therion: light follows camera
@@ -236,7 +236,7 @@ it: Cambia posto al pannello
 sk: Prehoď panely
 
 therion: Toggle toolbar
-it: Mostra/Nascondi barra strumenti
+it: Mostra/Nascondi la barra strumenti
 
 therion: KBD encoding
 cz: Kódování klávesnice
@@ -428,20 +428,21 @@ it: Struttura mappe
 sk: Mapová štruktúra
 
 therion: Preview
+it: Anteprima
 sk: Náhľad
 
 therion: Working directory
 cz: Pracovní adresář
 en: Working directory
 es: Directorio actual
-it: Directory di lavoro
+it: Cartella di lavoro
 sk: Pracovný adresár
 
 therion: Working directory path.
 cz: Cesta k pracovnímu adresáři.
 en: Shows working directory path.
 es: Muestra el directorio actual.
-it: Path della directory di lavoro
+it: Path della cartella di lavoro
 sk: Cesta k pracovnému adresáru.
 
 therion: Configuration file
@@ -487,12 +488,15 @@ it: Esegui therion
 sk: Spustiť therion.
 
 therion: Xpdf
+it: Xpdf
 sk: Xpdf
 
 therion: Acrobat Reader
+it: Acrobat Reader
 sk: Acrobat Reader
 
 therion: PDF file path.
+it: File PDF
 sk: Cesta k PDF súboru.
 
 therion: Survey informations.
@@ -715,7 +719,7 @@ therion: Background images
 cz: Podkladové obrázky
 en: Background images
 es: Imágenes de fondo
-it: Immagini background
+it: Immagini di background
 sk: Obrázky pozadia
 
 therion: Current drawing area.
@@ -904,14 +908,14 @@ therion: expression
 cz: výraz
 en: search for
 es: buscar
-it: frase
+it: testo
 sk: výraz
 
 therion: Enter search expression.
 cz: Vložte hledaný výraz.
 en: Enter word(s) to search for.
 es: Introducir palabra(s) a buscar.
-it: Scrivi la parola o la frase da cercare.
+it: Scrivi il testo da cercare.
 sk: Vložte hľadaný výraz.
 
 therion: regular expression
@@ -925,7 +929,7 @@ therion: Search for regular expression.
 cz: Vyhledávání regulárního výrazu.
 en: Use wildcards on search (cav.* will find cave, cavern, cavalier...)
 es: Usar comodines en la búsqueda (kob.* encuentra koba, kobea, kobie, etc).
-it: Scrivi l'espressione regolare da cercare.
+it: Cerca espressione regolare.
 sk: Vyhľadávanie regulárneho výrazu.
 
 therion: case sensitive
@@ -953,7 +957,7 @@ therion: Select next object matching expression.
 cz: Vybere další objekt odpovídající výrazu.
 en: Select next object matching expression.
 es: Selecionar siguiente objeto encontrado.
-it: Seleziona il prossimo oggetto che soddisfa l'espressione di ricerca
+it: Seleziona il prossimo oggetto trovato
 sk: Nájdi ďalší objekt zodpovedajúci hľadanému výrazu.
 
 therion: Find first
@@ -967,7 +971,7 @@ therion: Select first object matching expression.
 cz: Vybere první objekt odpovídající výrazu.
 en: Selects first object matching expression.
 es: Selecionar el primer objeto encontrado.
-it: Seleziona il primo oggetto che soddisfa l'espressione di ricerca
+it: Seleziona il primo oggetto trovato
 sk: Nájdi prvý objekt zodpovedajúci hľadanému výrazu.
 
 therion: Show all
@@ -981,7 +985,7 @@ therion: Highlight all objects matching expression.
 cz: Zvýrazní všechny objekty odpovídající výrazu.
 en: Highlight all objects matching expression.
 es: Seleccionar todos los objetos encontrados.
-it: Evidenzia tutti gli oggetti che soddisfano l'espressione di ricerca
+it: Evidenzia tutti gli oggetti trovati
 sk: Zvýrazní všetky objekty zodpovedajúce hľadanému výrazu.
 
 therion: Clear all
@@ -995,7 +999,7 @@ therion: Clear highlighted objects.
 cz: Zruší zvýraznění vybraných objektů.
 en: Clear highlighted objects.
 es: Deseleccionar todos los objetos resaltados.
-it: Togli l'evidenziazione degli oggetti evidenziati.
+it: Togli l'evidenziazione degli oggetti.
 sk: Zruší zvýraznenie vybratých objektov.
 
 therion: loading images module ...
@@ -1079,7 +1083,7 @@ therion: Current position of selected image.
 cz: Současná pozice vybraného obrázku.
 en: Current position of selected image (pixels from canvas lower letf corner).
 es: Posición actual de la imagen seleccionada (medida en pixels desde la esquina inf. izq del lienzo).
-it: Posizione della immagine selezionata.
+it: Posizione dell'immagine selezionata.
 sk: Súčasná pozícia obrázku.
 
 therion: Move to
@@ -1202,9 +1206,11 @@ it: Altre opzioni dello scrap
 sk: Ostatné možnosti scrapu.
 
 therion: Scale
+it: Scala
 sk: Mierka
 
 therion: Scrap scaling - push to click picture calibration points.
+it: Rescalamento - premi per selezionare i punti di calibrazione.
 sk: Škálovanie scrapu - po stlačení klikni na škálovacie body.
 
 therion: Update scrap
@@ -1320,15 +1326,19 @@ it: Unità delle coordinate reali.
 sk: Jednotky reálnych súradníc.
 
 therion: background sketches
+it: Immagini di background
 sk: náčrtky na pozadí.
 
 therion: List of image files used as scrap background.
+it: Files usati come background dello scrap
 sk: Zoznam obrázkov použitých ako pozadie.
 
 therion: Press this button to insert sketch by clicking on it.
+it: Premi per inserire il disegno che scegli col mouse
 sk: Po stlačení klikni na náčrtok, ktorý treba vložiť do scrapu.
 
 therion: Delete sketch from scrap.
+it: Rimuovi un disegno dallo scrap
 sk: Odstráň náčrtok zo scrapu.
 
 therion: loading point module ...
@@ -1710,6 +1720,7 @@ it: modulo aree ...
 sk: nahrávam modul pre plochy ...
 
 therion: Actual symbol theme.
+it: Simboli.
 sk: Aktuálna téma symbolov.
 
 therion: type
@@ -1830,6 +1841,8 @@ en: Open (no pics)
 es: Abrir (sin imágenes)
 it: Apri (no pics)
 sk: Otvoriť (bez obrázkov)
+
+therion: Import
 
 therion: Insert ...
 cz: Vložit ...
@@ -2043,9 +2056,11 @@ it: Seleziona
 sk: Vybrať
 
 therion: scale scrap
+it: riscala lo scrap
 sk: mierka scrapu
 
 therion: insert sketch
+it: inserisci disegno
 sk: vlož náčrtok
 
 therion: creating point
@@ -2070,12 +2085,15 @@ it: modifiche di punto
 sk: zmena parametrov bodu
 
 therion: Scrap sketch not inserted.
+it: Disegno non inerito.
 sk: Náčrtok nebol vložený.
 
 therion: inserting scrap sketch
+it: inserimento disegno
 sk: vloženie náčrtku
 
 therion: deleting scrap sketch
+it: rimozione disegno
 sk: odstránenie náčrtku
 
 therion: toggle image visibility
@@ -2105,6 +2123,8 @@ en: New *.th2 file needs to be saved before inserting background image. Save it 
 es: Hay que guardar el nuevo archivo .th2 antes de cargar una imagen de fondo. ¿Guardar ahora?
 it: Il nuovo file *.th2 deve essere salvato prima di inserire immagini di background. Salvala ora?
 sk: Pred vložením obrázku musíte nový *.th2 súbor uložiť. Chcete tak urobiť?
+
+therion: inserting image"] [format $undocmd $iidx] [format $redocmd "{$xx $vsb}" "{$yy $XVIroot}
 
 therion: removing image
 cz: odstraňuji obrázek
@@ -2348,7 +2368,7 @@ therion: Search expression.
 cz: Hledaný výraz.
 en: Enter word(s) to search for.
 es: Introducir palabra(s) a buscar.
-it: Frase di ricerca.
+it: Testo da cercare.
 sk: Hľadaný výraz.
 
 therion: replace
@@ -2362,14 +2382,14 @@ therion: Check whether to replace found expression.
 cz: Zaškrtněte pokud chcete nahradit nalezené výrazy.
 en: Check whether to replace found expression.
 es: Marcar para cambiar los lo encontrado por lo que se escriba aquí.
-it: Attiva per sostituire la frase trovata.
+it: Attiva per sostituire il testo trovato.
 sk: Zaškrtnúť pokiaľ sa má nájdený výraz nahradiť iným.
 
 therion: Replace expression.
 cz: Řetězec, kterým bude výraz nahrazen.
 en: Search results will be replaced by the string entered here.
 es: Los resultados de la búsqueda serán cambiados por lo que escribas aquí.
-it: Sostituisci frase.
+it: Sostituisci testo.
 sk: Výraz na nahradenie.
 
 therion: case sensitive search
@@ -2425,14 +2445,14 @@ therion: Search or replace first expression in the file.
 cz: Najde nebo nahradí první výraz v souboru.
 en: Search or replace first expression in the file.
 es: Buscar o reemplazar el primer resultado.
-it: Cerca o sostituisci la prima frase nel file.
+it: Cerca o sostituisci la prima istanza del testo nel file.
 sk: Nájte poprípade nahradí prvý výskyt hľadaného výrazu v súbore.
 
 therion: Search or replace next expression after the cursor in the file.
 cz: Najde nebo nahradí následující výraz v souboru.
 en: Search or replace next expression after the cursor in the file.
 es: Buscar o reemplazar el siguiente resultado.
-it: Cerca o sostituisci la prossima frase nel file dopo il cursore.
+it: Cerca o sostituisci la prossima istanza del testo nel file dopo il cursore.
 sk: Nájdi alebo nahraď nasledujúci výraz v súbore.
 
 therion: All
@@ -2653,18 +2673,23 @@ sk: Zavrieť
 
 therion: theme all-symbols
 cz: všechny symboly
+it: tutti
 sk: všetky symboly
 
 therion: theme basic-symbols
 cz: základní symboly
+it: base
 sk: základné symboly
 
 therion: theme passage-fills
+it: riempimenti
 sk: výplň
 
 therion: theme speleothems
+it: speleotemi
 sk: výzdoba
 
 therion: theme equipement
+it: armo
 sk: vystrojenie
 

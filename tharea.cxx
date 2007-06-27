@@ -38,12 +38,24 @@ tharea::tharea()
   this->place = TT_2DOBJ_PLACE_DEFAULT_BOTTOM;
   this->first_line = NULL;
   this->last_line = NULL;
+  this->m_outline_line = NULL;
 }
 
 
 tharea::~tharea()
 {
+  if (this->m_outline_line != NULL)
+    delete this->m_outline_line;
 }
+
+
+void tharea::start_insert() {
+  if (this->type == TT_AREA_TYPE_U) {
+    if (this->m_subtype_str == NULL)
+      ththrow(("missing subtype specification for area of user defined type"))
+  }
+}
+
 
 
 int tharea::get_class_id() 
@@ -90,7 +102,7 @@ thcmd_option_desc tharea::get_cmd_option_desc(char * opts)
 
 void tharea::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
-  
+  char * type, * subtype;  
   if (cod.id == 1)
     cod.id = TT_AREA_TYPE;
     
@@ -103,17 +115,39 @@ void tharea::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       break;
   
     case TT_AREA_TYPE:
-      this->type = thmatch_token(*args, thtt_area_types);
-      if (this->type == TT_AREA_TYPE_UNKNOWN)
-        ththrow(("unknown area type -- %s", *args))
-      if (this->type == TT_AREA_TYPE_DIMENSIONS)
-        ththrow(("area dimensions is not supported as ordinary type"))
+      th2dsplitTT(*args, &type, &subtype);
+      this->parse_type(type);
+      if (strlen(subtype) > 0)
+        this->parse_subtype(subtype);
       break;
     
     default:
       th2ddataobject::set(cod, args, argenc, indataline);
       
   }
+}
+
+
+void tharea::parse_type(char * tstr)
+{
+  this->type = thmatch_token(tstr, thtt_area_types);
+  if (this->type == TT_AREA_TYPE_UNKNOWN)
+    ththrow(("unknown area type -- %s", tstr))
+  if (this->type == TT_AREA_TYPE_DIMENSIONS)
+    ththrow(("area dimensions is not supported as ordinary type"))
+}
+
+
+
+void tharea::parse_subtype(char * ststr)
+{
+  if (this->type == TT_AREA_TYPE_UNKNOWN)
+    ththrow(("area type must be specified before subtype"))
+  if (this->type == TT_AREA_TYPE_U) {
+    this->parse_u_subtype(ststr);
+    return;
+  } else
+    ththrow(("invalid type - subtype combination"))
 }
 
 
@@ -180,6 +214,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_BEDROCK, SYMA_BEDROCK)
     tharea_type_export_mp(TT_AREA_TYPE_FLOWSTONE, SYMA_FLOWSTONE)
     tharea_type_export_mp(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK)
+    tharea_type_export_mp(TT_AREA_TYPE_U, SYMA_U)
   }
   
   if (this->context >= 0) 
@@ -214,7 +249,10 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     bl = bl->next_line;
   }
   
-  fprintf(out->file,"));\n");
+  if (this->type == TT_AREA_TYPE_U)
+    fprintf(out->file,"),\"%s\");\n", (this->m_subtype_str == NULL) ? "" : this->m_subtype_str);
+  else
+    fprintf(out->file,"));\n");
   
   return(false);  
   

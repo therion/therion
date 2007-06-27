@@ -306,6 +306,9 @@ class thscrap : public thdataobject {
  
  void update_limits(double x, double y);
 
+ virtual void start_insert();
+
+
 };
 
 

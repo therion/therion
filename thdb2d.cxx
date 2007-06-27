@@ -40,9 +40,22 @@
 #include "thlogfile.h"
 #include <math.h>
 #include "thlayout.h"
+#include "thexpmap.h"
 #include "thconfig.h"
 #include "thtrans.h"
+#include "thtmpdir.h"
+#include "thinit.h"
 #include <list>
+#include <cstdio>
+#ifndef THMSVC
+#include <unistd.h>
+#else
+#include <direct.h>
+#define getcwd _getcwd
+#define chdir _chdir
+#define putenv _putenv
+#define hypot _hypot
+#endif
 
 #ifdef THMSVC
 #define hypot _hypot
@@ -117,6 +130,7 @@ class thprjx_station_link {
 thdb2d::thdb2d()
 {
   this->db = NULL;
+  this->processed_area_outlines = false;
   this->prj_lid = 0;
   thdb2dprjpr dpr = this->parse_projection("plan");
   this->prj_default = dpr.prj; 
@@ -1304,11 +1318,12 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
   pps = prj->first_scrap;  
   while (pps != NULL) {
   
-    if (pps->ncp < 1) {
-      pps->throw_source();
-      threthrow(("no reference station found in scrap -- %s@%s",
-        pps->name,pps->fsptr->get_full_name()))
-    }
+//    // no scraps without stations
+//    if (pps->ncp < 1) {
+//      pps->throw_source();
+//      threthrow(("no reference station found in scrap -- %s@%s",
+//        pps->name,pps->fsptr->get_full_name()))
+//    }
     
     switch (prj->type) {
 
@@ -1907,7 +1922,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
     if (pscrap->ncp == 1) {
       pscrap->mx = pscrap->fcpp->tx - pscrap->fcpp->pt->xt;
       pscrap->my = pscrap->fcpp->ty - pscrap->fcpp->pt->yt;
-    } else {
+    } else if (pscrap->ncp > 1) {
 
 #ifndef THADJUSTLS
       acp1 = pscrap->fcpp;
@@ -3306,6 +3321,289 @@ thdb2dprj * thdb2d::get_projection(int id) {
   }
   return NULL;
 }
+
+
+
+struct area_proc {
+  tharea * area;
+  double x, y, a, s;
+};
+
+void thdb2d::process_areas_in_projection(thdb2dprj * prj)
+{
+
+  if (this->processed_area_outlines)
+    return;
+
+  this->process_projection(prj);
+  this->processed_area_outlines = true;
+
+  std::list<area_proc> todo;
+
+  double xx(0.0), xy(0.0), nx(0.0), ny(0.0), xa(0.0), na(0.0), dx(0.0), dy(0.0);
+  long cnt(0), cnt2;
+
+#define ulim(x,y,a) \
+  { if (cnt == 0) {xx = x; xy = y; xa = a; nx = x; ny = y; na = a;} \
+  else { \
+    if (x > xx) xx = x; if (x < nx) nx = x; \
+    if (y > xy) xy = y; if (y < ny) ny = y; \
+    if (a > xa) xa = a; if (a < na) na = a; \
+  } \
+  cnt++; }
+
+  thscrap * cscrap;
+  th2ddataobject * obj;
+  tharea * carea(NULL);
+  thdb2dab * bln;
+  area_proc itm;
+  thline * cln;
+  thdb2dlp * clp;
+  for (cscrap = prj->first_scrap; cscrap != NULL; cscrap = cscrap->proj_next_scrap) {
+    for (obj = cscrap->fs2doptr; obj != NULL; obj = obj->nscrapoptr) {
+      if (obj->get_class_id() == TT_AREA_CMD) {
+        carea = (tharea*) obj;
+        cnt = 0;
+        for (bln = carea->first_line; bln != NULL; bln = bln->next_line) {
+          cln = bln->line;
+          for (clp = cln->first_point; clp != NULL; clp = clp->nextlp) {
+            if (clp->cp1 != NULL) ulim(clp->cp1->xt, clp->cp1->yt, clp->cp1->at);
+            if (clp->cp2 != NULL) ulim(clp->cp2->xt, clp->cp2->yt, clp->cp2->at);
+            ulim(clp->point->xt, clp->point->yt, clp->point->at);
+          }
+        }
+        dx = (xx - nx);
+        dy = (xy - ny);
+        if ((cnt > 0) && (dx > 0.0) && (dy > 0.0)) {
+          itm.area = carea;
+          itm.x = 0.5 * (xx + nx);
+          itm.y = 0.5 * (xy + ny);
+          itm.a = 0.5 * (xa + na);
+          itm.s = dy > dx ? (200.0 / dy) : (200.0 / dx);
+          todo.push_back(itm);
+        }
+      }
+    }
+  }
+
+  // export mp file
+  FILE * mpf;
+  mpf = fopen(thtmp.get_file_name("data.mp"),"w");
+  fprintf(mpf,
+"numeric area_border_errors;\narea_border_errors = 0;\n"
+"string current_scrap, current_src;\n\n\n"
+"vardef buildcycle(text ll) =\n"
+"  save ta_, tb_, k_, i_, pp_; path pp_[];\n"
+"  k_=0;\n"
+"  for q=ll: pp_[incr k_]=q; endfor\n"
+"  i_=k_;\n"
+"  for i=1 upto k_:\n"
+"    (ta_[i], length pp_[i_]-tb_[i_]) =\n"
+"      pp_[i] intersectiontimes reverse pp_[i_];\n"
+"    if ta_[i]<0:\n"
+"      message(\"[Error: area borders \"& area_border[i] &\" and \"&\n"
+"         area_border[i_] &\" don't intersect in scrap \" & current_scrap &\n"
+"         \" (file \" & current_src & \")]\");\n"
+"      area_border_errors := area_border_errors + 1;\n"
+"    fi\n"
+"    i_ := i;\n"
+"  endfor\n"
+"  for i=1 upto k_: subpath (ta_[i],tb_[i]) of pp_[i] .. endfor\n"
+"    cycle\n"
+"enddef;\n"
+"\n"
+"\n\nbeginfig(1);\n");
+
+  std::list<area_proc>::iterator ti;
+  thdb_revision_set_type::iterator ri;
+  char * sn;
+  long blnum;
+
+  for (ti = todo.begin(); ti != todo.end(); ti++) {
+    itm = (*ti);
+    carea = itm.area;
+    ri = this->db->revision_set.find(threvision(carea->id, 0));
+    fprintf(mpf,"\n\n\ncurrent_scrap := \"%s", carea->fscrapptr->name);
+    sn = carea->fscrapptr->fsptr->get_full_name(); 
+    if (strlen(sn) > 0) fprintf(mpf,"@%s", sn);
+    fprintf(mpf,"\";\ncurrent_src := \"%s [%ld]\";\n", ri->srcf.name, ri->srcf.line);  
+    fprintf(mpf,"string area_border[];\n");
+    blnum = 1;
+    for (bln = carea->first_line; bln != NULL; bln = bln->next_line) {
+      fprintf(mpf,"area_border[%ld] := \"%s\";\n", blnum, bln->line->name);
+      blnum++;
+    }
+
+#define mpfpt(xx,yy) fprintf(mpf, "(%.6f,%.6f)", \
+    ((xx) - itm.x) * itm.s, \
+    ((yy) - itm.y) * itm.s)
+
+    fprintf(mpf,"\ndraw (buildcycle(");
+    for (cnt = 0, bln = carea->first_line; bln != NULL; bln = bln->next_line, cnt++) {
+      cln = bln->line;      
+      if (cnt > 0)
+        fprintf(mpf,",(");
+      else
+        fprintf(mpf,"(");
+      for (clp = cln->first_point, cnt2 = 0; clp != NULL; clp = clp->nextlp, cnt2++) {
+        if (cnt2 > 0) {
+          if ((clp->cp1 != NULL) && (clp->cp2 != NULL)) {
+            fprintf(mpf," .. controls ");
+            mpfpt(clp->cp1->xt, clp->cp1->yt);
+            fprintf(mpf," and ");
+            mpfpt(clp->cp2->xt, clp->cp2->yt);
+            fprintf(mpf," .. ");
+          } else {
+            fprintf(mpf," -- ");
+          }
+        }
+        mpfpt(clp->point->xt, clp->point->yt);
+        fprintf(mpf,"\n");
+      }
+      fprintf(mpf,")");
+    }
+    fprintf(mpf,"));\n");
+  }
+  fprintf(mpf,"endfig;\nend;\n");
+  fclose(mpf);
+
+  // run metapost
+#ifdef THWIN32
+  if (!thini.tex_env) {
+    putenv("TEXMFCNF=");
+    putenv("DVIPSHEADERS=");
+    putenv("GFFONTS=");
+    putenv("GLYPHFONTS=");
+    putenv("MFBASES=");
+    putenv("MFINPUTS=");
+    putenv("MFPOOL=");
+#ifdef THMSVC
+    putenv("MPINPUTS=../mpost;.");
+#else
+    putenv("MPINPUTS=");
+#endif
+    putenv("MPMEMS=");
+    putenv("MPPOOL=");
+    putenv("MPSUPPORT=");
+    putenv("PKFONTS=");
+    putenv("PSHEADERS=");
+    putenv("T1FONTS=");
+    putenv("T1INPUTS=");
+    putenv("T42FONTS=");
+    putenv("TEXCONFIG=");
+    putenv("TEXDOCS=");
+    putenv("TEXFONTMAPS=");
+    putenv("TEXFONTS=");
+    putenv("TEXFORMATS=");
+    putenv("TEXINPUTS=");
+    putenv("TEXMFDBS=");
+    putenv("TEXMFINI=");
+    putenv("TEXPICTS=");
+    putenv("TEXPKS=");
+    putenv("TEXPOOL=");
+    putenv("TEXPSHEADERS=");
+    putenv("TEXSOURCES=");
+    putenv("TFMFONTS=");
+    putenv("TTFONTS=");
+    putenv("VFFONTS=");
+    putenv("WEB2C=");
+  }
+#endif  
+
+  thbuffer com, wdir;
+  wdir.guarantee(1024);
+  getcwd(wdir.get_buffer(),1024);
+  chdir(thtmp.get_dir_name());
+  int retcode;
+
+  com = "\"";
+  com += thini.get_path_mpost();
+  com += "\"";
+  com += " data.mp";
+#ifdef THDEBUG
+  thprintf("running metapost\n");
+#endif
+  retcode = system(com.get_buffer());
+  thexpmap_log_log_file("data.log",
+  "####################### metapost log file ########################\n",
+  "#################### end of metapost log file ####################\n",true);
+  if (retcode != EXIT_SUCCESS) {
+    chdir(wdir.get_buffer());
+    ththrow(("metapost exit code -- %d", retcode))
+  }
+
+  // load data back to therion
+  FILE * af;
+  af = fopen("data.1","r");
+  double n[6];
+  com.guarantee(256);
+  cln = NULL;
+  char * buff = com.get_buffer();
+  ti = todo.begin();
+  while ((fscanf(af,"%32s",buff) > 0) && (ti != todo.end())) {
+    if (cnt < 6) {
+      thparse_double(retcode, n[cnt], buff);
+      if (retcode == TT_SV_NUMBER) {
+        cnt++;
+      }
+    }
+    if ((cnt == 6) && (strcmp(buff,"curveto") == 0) && (cln != NULL)) {
+      cln->insert_line_point(6, NULL, n);
+      cnt = 0;
+    }
+    if ((cnt == 2) && ((strcmp(buff,"lineto") == 0) || (strcmp(buff,"moveto") == 0)) && (cln != NULL)) {
+      cln->insert_line_point(2, NULL, n);
+      cnt = 0;
+    }
+    if (strcmp(buff,"newpath") == 0) { 
+      cln = new thline;
+      cln->db = this->db;
+      cnt = 0;
+    }
+    if ((cln != NULL) && (cln->first_point != NULL) && (cln->first_point->nextlp != NULL) && (strcmp(buff,"closepath") == 0)) {
+      
+      // close path if not closed
+      if ((cln->last_point->point->x != cln->first_point->point->x) ||
+        (cln->last_point->point->y != cln->first_point->point->y)) {
+        n[0] = cln->first_point->point->x;
+        n[1] = cln->first_point->point->y;
+        cln->insert_line_point(2, NULL, n);
+      }
+
+#define mpfptback(pt) if (pt != NULL) { \
+  pt->xt = pt->x / ti->s + ti->x; \
+  pt->yt = pt->y / ti->s + ti->y; \
+  pt->zt = ti->a; \
+  pt->at = ti->a; \
+  pt->pscrap = carea->fscrapptr; \
+}
+
+      for (clp = cln->first_point; clp != NULL; clp = clp->nextlp) {
+        mpfptback(clp->cp1);
+        mpfptback(clp->cp2);
+        mpfptback(clp->point);
+      }
+      
+      // add line
+      cln->is_closed = true;
+      cln->fscrapptr = carea->fscrapptr;
+      cln->fsptr = carea->fsptr;
+      cln->type = TT_LINE_TYPE_BORDER;
+      ti->area->m_outline_line = cln;
+      cln = NULL;
+
+      // increase area counter
+      ti++;
+
+    }
+  }
+
+  if (cln != NULL) delete cln;
+
+  chdir(wdir.get_buffer());
+
+}
+
 
 
 

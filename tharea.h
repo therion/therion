@@ -58,6 +58,7 @@ static const thstok thtt_area_opt[] = {
  
 enum {
   TT_AREA_TYPE_UNKNOWN,
+  TT_AREA_TYPE_U,
   TT_AREA_TYPE_WATER,
   TT_AREA_TYPE_SUMP,
   TT_AREA_TYPE_SAND,
@@ -91,6 +92,7 @@ static const thstok thtt_area_types[] = {
   {"sand", TT_AREA_TYPE_SAND},
   {"snow", TT_AREA_TYPE_SNOW},
   {"sump", TT_AREA_TYPE_SUMP},
+  {"u",TT_AREA_TYPE_U},
   {"water", TT_AREA_TYPE_WATER},
   {NULL, TT_AREA_TYPE_UNKNOWN},
 };
@@ -110,6 +112,8 @@ class tharea : public th2ddataobject {
   
   thdb2dab * first_line,  ///< First border line.
     * last_line;  ///< Last border line.
+
+  class thline * m_outline_line;
     
   void insert_border_line(int npars, char ** pars);  ///< Insert border line.
 
@@ -210,7 +214,14 @@ class tharea : public th2ddataobject {
    */
    
   virtual bool export_mp(class thexpmapmpxs * out);
+
+
+  void parse_type(char * tstr);  ///< Parse area type.
   
+  void parse_subtype(char * ststr);  ///< Parse area subtype.
+
+  virtual void start_insert();
+
 
 };
 

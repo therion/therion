@@ -73,6 +73,8 @@ class thdb2dprjpr {
 class thdb2d {
 
   public:
+
+  bool processed_area_outlines;
   
   class thdatabase * db;  ///< Our database.
   thdb2dprj_list prj_list;  ///< Set of projections.
@@ -268,6 +270,13 @@ class thdb2d {
    */
    
   void process_projection(thdb2dprj * prj);
+  
+  
+  /**
+   * Process projection.
+   */
+   
+  void process_areas_in_projection(thdb2dprj * prj);
   
   
   /**
