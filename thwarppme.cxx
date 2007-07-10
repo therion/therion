@@ -30,8 +30,8 @@
 #include <assert.h>
 #include <math.h>
 
-#include "thwarppme.h"
 #include "thinfnan.h"
+#include "thwarppme.h"
 
 int therion::warp::basic_pair::basic_pair_nr = 0;
 
@@ -385,12 +385,45 @@ therion::warp::line::update()
 }
 
 // ---------------------------------------------------------------
+// therion::warp::triangle
+//
+// TOCHECK from .h
+
+double
+therion::warp::triangle::sm_map( const thvec2 & p, thvec2 & ret ) const
+{
+  ret.m_x = p.m_x - m_A.m_x;
+  ret.m_y = p.m_y - m_A.m_y;
+  double d2 = ret.length2();
+  return d2*d2;
+}
+
+void
+therion::warp::triangle::inv_sm_map( const thvec2 & p, thvec2 & ret, double d4 ) const
+{
+  ret.m_x = d4 * ( m_A.m_x + p.m_x );
+  ret.m_y = d4 * ( m_A.m_y + p.m_y );
+}
+
+// ---------------------------------------------------------------
 // therion::warp::plaquette
 
 void therion::warp::plaquette::init()
 {
-  m_AD = m_A - m_D;
-  m_BC = m_B - m_C;
+  m_AD = m_D - m_A;
+  m_BC = m_C - m_B;
+  m_AB = m_B - m_A;
+  m_BA = m_A - m_B;
+
+  m_AB_len = m_AB.length();   // length of AB (was m_abd)
+  m_AD_len = m_AD.length();   // length of AD
+  m_BC_len = m_BC.length();   // length of BC
+
+  m_adn = m_AD;  m_adn.normalize();
+  m_bcn = m_BC;  m_bcn.normalize();
+  m_abn = m_AB;  m_abn.normalize();
+  m_abh.m_x =   m_abn.m_y;
+  m_abh.m_y = - m_abn.m_x;
 
   m_a =   m_A.m_x - m_B.m_x - m_D.m_x  + m_C.m_x;
   m_b = - m_A.m_x + m_B.m_x;
@@ -409,26 +442,62 @@ void therion::warp::plaquette::init()
   m_F0 = m_b * m_h - m_d * m_f;
 
   // angles + "line"
-  m_abn = m_B - m_A;
-  m_abd = m_abn.length(); 
-  m_abn.normalize();
-  m_abh.m_x =   m_abn.m_y;
-  m_abh.m_y = - m_abn.m_x;
-
-  thvec2 ad = m_D - m_A;
-  ad.normalize();
-  m_theta_l = acos( m_abn * ad );
-  m_theta_l = angle( m_abn, ad );
-  thvec2 bc = m_C - m_B;
-  bc.normalize();
-  m_theta_r = acos( - m_abn * bc );
-  m_theta_r = angle( bc, - m_abn );
+  // thvec2 adn = m_AD; adn.normalize();
+  // m_theta_l = acos( m_abn * adn );
+  m_theta_l = angle( m_abn, m_adn );
+  // thvec2 bcn = m_BC; bcn.normalize();
+  // m_theta_r = acos( - m_abn * bcn );
+  m_theta_r = angle( m_bcn, - m_abn );
   
-  // thprintf("Plaquette Theta L %.2f R %.2f \n", m_theta_l, m_theta_r );
+  // thprintf("Plaquette theta L %.2f R %.2f \n", m_theta_l, m_theta_r );
+  
+  // C1 is the projection (parallel to AB) of C on AD.
+  // [1] line thru C parallel to AB:
+  //      y = C.y + ( x - C.x ) * AB.y / AB.x
+  // [2] intersection with 
+  //      y = A.y + ( x - A.x ) * AD.y / AD.x
+  //
+  //      x ( AB.y AD.x - AB.x AD.y ) = AD.x AB.x ( A.y - C.y ) + AD.x AB.y C.x - AB.x AD.y A.x
+  // i.e.
+  //      - adab * x = AB.x ( AD.x A.y - AD.y A.x ) - AD.x ( AB.x C.y - AB.y C.x )
+  //      adab * x = AB.x * ( A ^ AD ) - AD.x * ( C ^ AB )
+
+  m_adab = - m_adn.m_x * m_abn.m_y + m_adn.m_y * m_abn.m_x; // abn ^ adn
+  m_bcab = - m_bcn.m_x * m_abn.m_y + m_bcn.m_y * m_abn.m_x; // abn ^ bcn
+  m_adA = - m_adn.m_x * m_A.m_y + m_adn.m_y * m_A.m_x;      // A ^ adn
+  m_bcB = - m_bcn.m_x * m_B.m_y + m_bcn.m_y * m_B.m_x;      // B ^ bcn
+
+  double cab = m_C.m_x * m_abn.m_y - m_C.m_y * m_abn.m_x;   // C ^ abn
+  m_C1 = ( m_abn * m_adA - m_adn * cab ) / m_adab;
+
+  // check align A-D-C1
+  assert( fabs( m_A.m_x * m_D.m_y - m_A.m_y * m_D.m_x
+              + m_D.m_x * m_C1.m_y - m_D.m_y * m_C1.m_x
+              + m_C1.m_x * m_A.m_y - m_C1.m_y * m_A.m_x ) < 0.001 );
+
+  m_C1C = m_C - m_C1;
+  // assert m_C1C || m_AB
+  assert( fabs( m_C1C.m_x * m_AB.m_y - m_C1C.m_y * m_AB.m_x ) < 0.001 );
+
+  m_sin = m_AB.m_x / m_AB_len;
+  m_cos = m_AB.m_y / m_AB_len;
+  if ( fabs(m_AB.m_x) * 1.73 > fabs(m_AB.m_y) ) { // horizontal up to 60 deg.
+    if ( fabs(m_AB.m_x) * 1.19 > fabs(m_AB.m_y) ) { // really horizontal
+      m_sin = 0.0;
+      m_cos = 1.0;
+    } 
+  } else {
+    if ( fabs(m_AB.m_y) * 0.58 > fabs(m_AB.m_x) ) {
+      m_sin = 1.0;
+      m_cos = 0.0;
+    }
+  }
+  m_tan = m_sin/m_cos;
+  m_ctg = m_cos/m_sin;
 }
 
 double
-therion::warp::plaquette::s_map( const thvec2 & p ) const
+therion::warp::plaquette::s_map_straight( const thvec2 & p ) const
 {
   double s;
 
@@ -448,6 +517,27 @@ therion::warp::plaquette::s_map( const thvec2 & p ) const
     s = ( B == 0.0 ) ? thinf : - C / (2*B);
   }
   return s;
+}
+
+double
+therion::warp::plaquette::s_map_slant( const thvec2 & p ) const
+{
+  double x0 = p.m_x;
+  double y0 = p.m_y;
+  double pab = p.m_x * m_abn.m_y - p.m_y * m_abn.m_x;
+  // P1 = [ (ad^A) ab + (P^ab) ad ] / [ad^ab]
+  // P2 = [ (bc^B) ab + (P^ab) bc ] / [ad^bc]
+  double x1 = ( m_abn.m_x * m_adA - m_adn.m_x * pab ) / m_adab;
+  double y1 = ( m_abn.m_y * m_adA - m_adn.m_y * pab ) / m_adab;
+  double x2 = ( m_abn.m_x * m_bcB - m_bcn.m_x * pab ) / m_bcab;
+  double y2 = ( m_abn.m_y * m_bcB - m_bcn.m_y * pab ) / m_bcab;
+  // check alignment
+  // double align = (x1*y2 - x2*y1) + (x2*y0 - x0*y2) + (x0*y1 - x1*y0);
+  // assert( fabs(align) < 0.001 );
+
+  double d12 = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1);
+  double d10 = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+  return sqrt( d10/d12 );
 }
 
 double
@@ -475,6 +565,101 @@ therion::warp::plaquette::t_map( const thvec2 & p ) const
   }
   return t;
 }
+
+// --------------------------------------------------------------
+// Horizontal + Vertical stuff
+//
+// X:horizontal - Y:vertical
+void
+therion::warp::plaquette::hv_map( const thvec2 & p, thvec2 & ret ) const
+{
+  ret.m_x = ( p.m_x - m_A.m_x )/m_AB.m_x;
+  // Qy = Ay + (By-Ay)/(Bx-Ax) * (Px - Ax)
+  double yq = m_A.m_y + m_AB.m_y * ret.m_x;
+  ret.m_y = p.m_y - yq;
+}
+
+void
+therion::warp::plaquette::inv_hv_map( const thvec2 & p, thvec2 & ret ) const
+{
+  ret.m_x = m_A.m_x + p.m_x * m_AB.m_x;
+  double yq = m_A.m_y + p.m_x * m_AB.m_y;
+  ret.m_y = yq + p.m_y;
+}
+
+// X:vertical - Y:horizontal
+void
+therion::warp::plaquette::vh_map( const thvec2 & p, thvec2 & ret ) const
+{
+  ret.m_x = ( p.m_y - m_A.m_y )/m_AB.m_y;
+  // Qx = Ax + (Bx-Ax)/(By-Ay) * (Py - Ay)
+  double xq = m_A.m_x + m_AB.m_x * ret.m_x;
+  ret.m_y = p.m_x - xq;
+}
+
+void
+therion::warp::plaquette::inv_vh_map( const thvec2 & p, thvec2 & ret ) const
+{
+  ret.m_y = m_A.m_y + p.m_x * m_AB.m_y;
+  double xq = m_A.m_x + p.m_x * m_AB.m_x;
+  ret.m_x = xq + p.m_y;
+}
+
+// horizontal-vertical at an angle (m1)
+//   X = Px + m1 ( Y - Py )
+//
+// X = Qx + t * cos 
+// Y = Qy + t * sin 
+//
+// t = ( Y - Qy ) / sin
+// X = Qx + cos/sin * ( Y - Qy )
+//   = Px + cos/sin * ( Y - Py )
+// 
+void
+therion::warp::plaquette::vhm_map( const thvec2 & p, thvec2 & ret ) const
+{ 
+  double yq = ( m_AB.m_x * m_A.m_y + (p.m_x - m_A.m_x - m_ctg * p.m_y ) * m_AB.m_y ) 
+            / ( m_AB.m_x - m_ctg * m_AB.m_y );
+  ret.m_x = ( yq - m_A.m_y )/m_AB.m_y;
+  double xq = m_A.m_x + ret.m_x * m_AB.m_x;
+  double dx = p.m_x - xq;
+  double dy = p.m_y - yq;
+  ret.m_y = sqrt( dx*dx + dy*dy );
+} 
+
+void
+therion::warp::plaquette::inv_vhm_map( const thvec2 & p, thvec2 & ret ) const
+{ 
+  double xq = m_A.m_x + p.m_x * m_AB.m_x;
+  double yq = m_A.m_y + p.m_x * m_AB.m_y;
+  ret.m_x = xq + m_cos * p.m_y;
+  ret.m_y = yq + m_sin * p.m_y;
+}
+
+// Y = Py + m ( X - Px )
+void
+therion::warp::plaquette::hvm_map( const thvec2 & p, thvec2 & ret ) const
+{ 
+  double xq = ( m_AB.m_y * m_A.m_x + (p.m_y - m_A.m_y - m_tan * p.m_x ) * m_AB.m_x ) 
+            / ( m_AB.m_y - m_tan * m_AB.m_x );
+  ret.m_x = ( xq - m_A.m_x )/m_AB.m_x;
+  double yq = m_A.m_y + ret.m_x * m_AB.m_y;
+  double dx = p.m_x - xq;
+  double dy = p.m_y - yq;
+  ret.m_y = sqrt( dx*dx + dy*dy );
+} 
+
+void
+therion::warp::plaquette::inv_hvm_map( const thvec2 & p, thvec2 & ret ) const
+{ 
+  double xq = m_A.m_x + p.m_x * m_AB.m_x;
+  double yq = m_A.m_y + p.m_x * m_AB.m_y;
+  ret.m_x = xq + m_cos * p.m_y;
+  ret.m_y = yq + m_sin * p.m_y;
+}
+
+// --------------------------------------------------------------
+
 
 
 /** solve the system
@@ -513,7 +698,7 @@ therion::warp::plaquette::inv_st_map( const thvec2 & v, thvec2 & ret ) const
   ret.m_y = m_e * v.m_x * v.m_y + m_f * v.m_x + m_g * v.m_y + m_h;
 }
 
-// this is  Beier-Neely map
+// this are Beier-Neely type maps
 // "Feature-based image metamorphosis" Computer Graphics, 26 35-42, 1992
 //
 // TODO 
@@ -521,24 +706,99 @@ therion::warp::plaquette::inv_st_map( const thvec2 & v, thvec2 & ret ) const
 // or by the caller. The plaquette does not have the ratios, 
 // and the relative weight could be different from the return 
 // X coordinate (ret.m_x)
-//
+
+// straight BN map
 void
-therion::warp::plaquette::bn_map( const thvec2 & p, thvec2 & ret ) const
+therion::warp::plaquette::bn_map_straight( const thvec2 & p, thvec2 & ret ) const
 {
-  thvec2 ap = p - m_A;
-  ret.m_x = ( ap * m_abn ) / m_abd;
+  thvec2 ap( p.m_x - m_A.m_x, p.m_y - m_A.m_y );
+  ret.m_x = ( ap * m_abn ) / m_AB_len;
   ret.m_y = ap * m_abh;
 }
 
 void 
-therion::warp::plaquette::inv_bn_map( const thvec2 & p, thvec2 & ret ) const
+therion::warp::plaquette::inv_bn_map_straight( const thvec2 & p, thvec2 & ret ) const
 {
-  double d = p.m_x * m_abd;
-  // ret = m_A + m_abn * d + m_abh * p.m_y;
-  ret.m_x = m_A.m_x + m_abn.m_x * d + m_abh.m_x * p.m_y;
-  ret.m_y = m_A.m_y + m_abn.m_y * d + m_abh.m_y * p.m_y;
+  // ret = m_A + m_AB * p.m_x + m_abh * p.m_y;
+  ret.m_x = m_A.m_x + m_AB.m_x * p.m_x + m_abh.m_x * p.m_y;
+  ret.m_y = m_A.m_y + m_AB.m_y * p.m_x + m_abh.m_y * p.m_y;
 }
 
+  
+// slanted BN map
+void
+therion::warp::plaquette::bn_map_slant( const thvec2 & p, thvec2 & ret ) const
+{
+  double x0 = p.m_x;
+  double y0 = p.m_y;
+  double pab = p.m_x * m_abn.m_y - p.m_y * m_abn.m_x;  // P ^ ab
+  // P1 = [ (A^ad) ab - (P^ab) ad ] / [ab^ad]  projection of P parallel to AB on AD
+  // P2 = [ (B^bc) ab - (P^ab) bc ] / [ab^bc]  projection of P parallel to AB on BC
+  double x1 = ( m_abn.m_x * m_adA - m_adn.m_x * pab ) / m_adab;
+  double y1 = ( m_abn.m_y * m_adA - m_adn.m_y * pab ) / m_adab;
+  double x2 = ( m_abn.m_x * m_bcB - m_bcn.m_x * pab ) / m_bcab;
+  double y2 = ( m_abn.m_y * m_bcB - m_bcn.m_y * pab ) / m_bcab;
+  // check alignment
+  // double align = (x1*y2 - x2*y1) + (x2*y0 - x0*y2) + (x0*y1 - x1*y0);
+  // assert( fabs(align) < 0.001 );
+
+  double d12 = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1);
+  double d10 = (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1);
+  ret.m_x = sqrt( d10/d12 );
+
+  // slant distance
+  // x1 = m_A.m_x + ret.m_x * m_AB.m_x;
+  // y1 = m_A.m_y + ret.m_x * m_AB.m_y;
+  // ret.m_y = sqrt( (x0-x1)*(x0-x1) + (y0-y1)*(y0-y1) );
+  // 
+  // straight distance
+  ret.m_y = (p - m_A) * m_abh;
+}
+
+void 
+therion::warp::plaquette::inv_bn_map_slant( const thvec2 & p, thvec2 & ret ) const
+{
+  // slanted BN map
+  /*
+  thvec2 ps = m_A + p.m_x * m_AB;
+  thvec2 p1 = m_C1 + p.m_x * m_C1C;
+  double x = p1.m_x - ps.m_x;
+  double y = p1.m_y - ps.m_y;
+  ret = ps + (p1-ps)*(p.m_y /sqrt(x*x+y*y) );
+  */
+  double d1 = fabs(p.m_y/m_adab);
+  double d2 = fabs(p.m_y/m_bcab);
+  double x1 = 1.0 - p.m_x;
+  ret.m_x = x1 * ( m_A.m_x + d1 * m_adn.m_x ) + p.m_x * ( m_B.m_x + d2 * m_bcn.m_x );
+  ret.m_y = x1 * ( m_A.m_y + d1 * m_adn.m_y ) + p.m_x * ( m_B.m_y + d2 * m_bcn.m_y );
+}
+
+
+// TODO fix this
+double
+therion::warp::plaquette::sm_map( const thvec2 & p, thvec2 & ret ) const
+{
+  thvec2 ap( p.m_x - m_A.m_x, p.m_y - m_A.m_y );
+  ret.m_x = (ap * m_abn) / m_AB_len;
+  ret.m_y = ap * m_abh;
+  double d2;
+  if ( ret.m_x < 0.0 ) { // left point
+    d2 = ap.length2();
+  } else if ( ret.m_x > 1.0 ) { // right point
+    thvec2 bp( p.m_x - m_B.m_x, p.m_y - m_B.m_y );
+    d2 = bp.length2();
+  } else { // middle point
+    d2 = ret.m_y * ret.m_y;
+  }
+  return d2*d2;
+}
+
+void
+therion::warp::plaquette::inv_sm_map( const thvec2 & p, thvec2 & ret, double d4 ) const
+{
+  ret.m_x = d4 * ( m_A.m_x + p.m_x * m_AB.m_x + p.m_y * m_abh.m_x );
+  ret.m_y = d4 * ( m_A.m_y + p.m_x * m_AB.m_y + p.m_y * m_abh.m_y );
+}
 
 
 // ****************************************************************
@@ -569,8 +829,11 @@ namespace therion
       m_pair[1] = a;
       m_pair[2] = b;
 
-      m_kl = from.theta_left() - to.theta_left();
-      m_kr = from.theta_right() - to.theta_right();
+      m_kl = ( from.theta_left() - to.theta_left() ) * MORPH_ANGLE_FACTOR;
+      m_kr = ( from.theta_right() - to.theta_right() ) * MORPH_ANGLE_FACTOR;
+      // m_kl = fabs(from.theta_left()-M_PI_2) - fabs(to.theta_left()-M_PI_2);
+      // m_kr = fabs(from.theta_right()-M_PI_2) - fabs(to.theta_right()-M_PI_2);
+      
       m_dl = from.m_ac / to.m_ac;
       m_dr = from.m_ab / to.m_ab;
 
@@ -589,30 +852,83 @@ namespace therion
      */
     template< >
     int item_pair<triangle>::ngbh_nr() const { return 2; }
-    
-    /** map p in the "from" image to a point in the "to" img
-     * @param p   2D point in the "from" image 
-     * @return corresponding 2D point in the "to" image
-     */
+
+    template< >
+    void item_pair<triangle>::set_projection( warp_proj proj )
+    {
+      // thprintf("item_pair<triangle>::set_projection(%d)\n", proj );
+      // TODO
+    }
+
+
+    template< >
+    void item_pair<triangle>::backward_normal_bd( const thvec2 & p, thvec2 & ret ) const
+    {
+      static thvec2 v0, r1, pa;
+      to.bn_map( p, v0 );
+      v0.m_y *= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
+      from.inv_bn_map( v0, ret );
+
+      if ( v0.m_x < MORPH_BD ) {
+	    double x = v0.m_x/MORPH_BD;             // x  = 0 .. 1
+	    // double x1 = 1.0 - 2*x + x*x;
+	    double x1 = 1 - x;
+	    /*
+            #if MORPH_ROTATE != 0
+              double t = left_ngbh()->m_kr * x1;
+              left_ngbh()->pto()->right_rotate( p, pa, cos(t), -sin(t) );
+	      left_ngbh()->pto()->bn_map( pa, v0 );
+            #else
+	      left_ngbh()->pto()->bn_map( p, v0 );
+            #endif
+	    */
+	    left_ngbh()->right_rotate_to( p, v0, x1 );
+
+	    // double s = left_ngbh()->pto()->s_map( pa );
+	    // v0.m_y *= s * left_ngbh()->m_dr + (1.0-s) * left_ngbh()->m_dl;
+	    v0.m_y *= v0.m_x * left_ngbh()->m_dr + (1.0-v0.m_x) * left_ngbh()->m_dl;
+	    left_ngbh()->pfrom()->inv_bn_map( v0, r1 );
+	    // ret = ( ret + r1 * x1 ) / ( 1.0 + x1 );
+	    ret.m_x = ( ret.m_x + x1 * r1.m_x ) / ( 1 + x1 );
+	    ret.m_y = ( ret.m_y + x1 * r1.m_y ) / ( 1 + x1 );
+      } else if ( 1.0 - v0.m_x < MORPH_BD ) {
+	    double x = (1.0-v0.m_x)/MORPH_BD;
+	    // double x1 = 1.0 - 2*x + x*x;
+	    double x1 = 1 - x;
+	    /*
+            #if MORPH_ROTATE != 0
+	      double t = right_ngbh()->m_kl * x1;
+	      right_ngbh()->pto()->left_rotate( p, pa, cos(t), -sin(t) );
+	      right_ngbh()->pto()->bn_map( pa, v0 );
+            #else
+	      right_ngbh()->pto()->bn_map( p, v0 );
+            #endif
+	    */
+	    right_ngbh()->left_rotate_to( p, v0, x1 );
+
+	    // s = right_ngbh()->pto()->s_map( pa );
+	    // v0.m_y *= s * right_ngbh()->m_dr + (1.0-s) * right_ngbh()->m_dl;
+	    v0.m_y *= v0.m_x * right_ngbh()->m_dr + (1.0-v0.m_x) * right_ngbh()->m_dl;
+	    right_ngbh()->pfrom()->inv_bn_map( v0, r1 );
+	    // ret = ( ret + r1 * x1 ) / ( 1.0 + x1 );
+	    ret.m_x = ( ret.m_x + x1 * r1.m_x ) / ( 1 + x1 );
+	    ret.m_y = ( ret.m_y + x1 * r1.m_y ) / ( 1 + x1 );
+      } else {
+	    /* nothing */
+      }
+    }
+
+    /*
+     * as in therion
     template< >
     void item_pair<triangle>::forward( const thvec2 & p, thvec2 & ret ) const
     {
       static thvec2 v0;
       from.bn_map( p, v0 );
+      v0.m_y /= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
       to.inv_bn_map( v0, ret );
     }
-    
-    /** map p in the "to" image to a point in the "from" img
-     * @param p   2D point in the "to" image
-     * @return corresponding 2D point in the "from" image
      */
-    template< >
-    void item_pair<triangle>::backward( const thvec2 & p, thvec2 & ret ) const
-    {
-      static thvec2 v0;
-      to.bn_map( p, v0 );
-      from.inv_bn_map( v0, ret );
-    }
 
     #ifdef DEBUG
     /** debug: print
@@ -633,6 +949,56 @@ namespace therion
 // ****************************************************************
 // PLAQUETTE PAIRS
 // 
+
+    // TODO FIXME 
+    template< >
+    void item_pair<plaquette>::set_projection( warp_proj proj )
+    {
+      // thprintf("item_pair<plaquette>::set_projection(%d)\n", proj );
+      #ifdef MORPH_EXPERIMENTAL
+      if ( proj == THWARP_EXTENDED ) {
+        // TODO
+	if ( fabs(from.m_sin) > fabs(from.m_cos) ) { // horizontal
+	  if ( fabs(from.m_cos) > 0.0 ) {
+            from.bn_map_impl = &therion::warp::plaquette::hvm_map;
+            from.inv_bn_map_impl = &therion::warp::plaquette::inv_hvm_map;
+            to.bn_map_impl = &therion::warp::plaquette::hvm_map;
+            to.inv_bn_map_impl = &therion::warp::plaquette::inv_hvm_map;
+	  } else {
+            from.bn_map_impl = &therion::warp::plaquette::hv_map;
+            from.inv_bn_map_impl = &therion::warp::plaquette::inv_hv_map;
+            to.bn_map_impl = &therion::warp::plaquette::hv_map;
+            to.inv_bn_map_impl = &therion::warp::plaquette::inv_hv_map;
+          }
+	} else {
+	  if ( fabs(from.m_sin) > 0.0 ) {
+            from.bn_map_impl = &therion::warp::plaquette::vhm_map;
+            from.inv_bn_map_impl = &therion::warp::plaquette::inv_vhm_map;
+            to.bn_map_impl = &therion::warp::plaquette::vhm_map;
+            to.inv_bn_map_impl = &therion::warp::plaquette::inv_vhm_map;
+	  } else {
+            from.bn_map_impl = &therion::warp::plaquette::vh_map;
+            from.inv_bn_map_impl = &therion::warp::plaquette::inv_vh_map;
+            to.bn_map_impl = &therion::warp::plaquette::vh_map;
+            to.inv_bn_map_impl = &therion::warp::plaquette::inv_vh_map;
+          }
+	}
+      } else 
+      #endif
+      {
+        if ( m_kl + m_kr < 0 ) 
+        {
+          from.s_map_impl = &therion::warp::plaquette::s_map_slant;
+          from.bn_map_impl = &therion::warp::plaquette::bn_map_slant;
+          from.inv_bn_map_impl = &therion::warp::plaquette::inv_bn_map_slant;
+        } else if ( false ) {
+          to.s_map_impl = &therion::warp::plaquette::s_map_slant;
+          to.bn_map_impl = &therion::warp::plaquette::bn_map_slant;
+          to.inv_bn_map_impl = &therion::warp::plaquette::inv_bn_map_slant;
+        }
+      }
+    }
+
     /** cstr
      * @param a    A-corner point pair
      * @param b    B-corner point pair
@@ -643,9 +1009,10 @@ namespace therion
      * @param border inner border 
      */
     template< >
-    plaquette_pair::item_pair( point_pair * a, point_pair * b, point_pair * c, point_pair * d
-                    , double bound /* = BOUND_PLAQUETTE */
-		    )
+    item_pair<plaquette>::item_pair( 
+          point_pair * a, point_pair * b, point_pair * c, point_pair * d
+          , double bound /* = BOUND_PLAQUETTE */
+	)
       : basic_pair( bound )
       , from( a->z, b->z, c->z, d->z )
       , to  ( a->w, b->w, c->w, d->w )
@@ -655,96 +1022,82 @@ namespace therion
       m_pair[2] = b;
       m_pair[3] = c;
 
-      m_kl = from.theta_left() - to.theta_left();
-      m_kr = from.theta_right() - to.theta_right();
-      m_dl = from.m_AD.length() / to.m_AD.length();
-      m_dr = from.m_BC.length() / to.m_BC.length();
+      m_kl = ( from.theta_left() - to.theta_left() ) * MORPH_ANGLE_FACTOR;
+      m_kr = ( from.theta_right() - to.theta_right() ) * MORPH_ANGLE_FACTOR;
+      // m_kl = fabs(from.theta_left()-M_PI_2) - fabs(to.theta_left()-M_PI_2);
+      // m_kr = fabs(from.theta_right()-M_PI_2) - fabs(to.theta_right()-M_PI_2);
+      
+      m_dl = from.m_AD_len / to.m_AD_len;
+      m_dr = from.m_BC_len / to.m_BC_len;
       // thprintf("Plaquette [%d] Theta L %.2f R %.2f Ratios L %.2f R %.2f \n", 
       //   nr(), m_kl, m_kr, m_dl, m_dr );
+      //
+
     }
     
     /** warp type
      * @return the warp type of the warping basic_pair
      */
     template< >
-    warp_type plaquette_pair::type() const { return THWARP_PLAQUETTE; }
+    warp_type item_pair<plaquette>::type() const { return THWARP_PLAQUETTE; }
     
     /** maximum number of neighbors
      * @return the maximum number of neighbors
      */
     template< >
-    int plaquette_pair::ngbh_nr() const { return 3; }
+    int item_pair<plaquette>::ngbh_nr() const { return 3; }
     
-    #define BD 0.5
 
-    /** map p in the "to" image to a point in the "from" img
-     * @param p   2D point in the "to" image
-     * @return corresponding 2D point in the "from" image
-     */
     template< >
-    void plaquette_pair::backward( const thvec2 & p, thvec2 & ret ) const
+    void item_pair<plaquette>::backward_normal_bd( const thvec2 & p, thvec2 & ret ) const
     {
-        #if 1
-	  static thvec2 v0, r1;
-          double s   = to.s_map( p );
-	  if ( s < BD ) {
-	    double x = s/BD;             // x  = 0 .. 1
-	    double x1 = 1.0 - 2*x + x*x;     // x1 = 1 .. 0
-	    double t = m_kl*x1;
-	    thvec2 pa = to.left_rotate(p, cos(t), -sin(t) );
-	    to.bn_map( pa, v0 );
-	    // v0.m_y *= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
-	    from.inv_bn_map( v0, ret );
-       
-  	    double x2 = 1.0 + 2*x - x*x;     //      1 .. 2
-            t = left_ngbh()->m_kr * x2;
-            pa = left_ngbh()->pto()->right_rotate( p, cos(t), sin(t) );
-	    left_ngbh()->pto()->bn_map( pa, v0 );
-	    // v0.m_y *= v0.m_x * left_ngbh()->m_dr + (1.0-v0.m_x) * left_ngbh()->m_dl;
-	    left_ngbh()->pfrom()->inv_bn_map( v0, r1 );
-	    // ret = ( ret + r1 * x1 ) / ( 1.0 + x1 );
-	    ret.m_x = ( ret.m_x + x1 * r1.m_x ) / ( 1 + x1 );
-	    ret.m_y = ( ret.m_y + x1 * r1.m_y ) / ( 1 + x1 );
-	  } else if ( 1.0 - s < BD ) {
-	    double x = (1.0-s)/BD;
-	    double x1 = 1.0 - 2*x + x*x;
-	    double t = m_kr * x1;
-	    thvec2 pa = to.right_rotate(p, cos(t), sin(t) );
-	    to.bn_map( pa, v0 );
-	    // v0.m_y *= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
-	    from.inv_bn_map( v0, ret );
+      static thvec2 v0, r1, pa;
+      double s = to.s_map( p );
+      // assert( s >= 0 && s <= 1.0 );
+      if ( s < MORPH_BD ) {
+	double x = s/MORPH_BD;             // x  = 0 .. 1
+	double x1 = 1.0 - 2*x + x*x;     // x1 = 1 .. 0
+	this->left_rotate_to( p, v0, x1 );
 
-	    double x2 = 1.0 + 2*x - x*x;
-	    t = right_ngbh()->m_kl * x2;
-	    pa = right_ngbh()->pto()->left_rotate( p, cos(t), -sin(t) );
-	    right_ngbh()->pto()->bn_map( pa, v0 );
-	    // v0.m_y *= v0.m_x * right_ngbh()->m_dr + (1.0-v0.m_x) * right_ngbh()->m_dl;
-	    right_ngbh()->pfrom()->inv_bn_map( v0, r1 );
-	    // ret = ( ret + r1 * x1 ) / ( 1.0 + x1 );
-	    ret.m_x = ( ret.m_x + x1 * r1.m_x ) / ( 1 + x1 );
-	    ret.m_y = ( ret.m_y + x1 * r1.m_y ) / ( 1 + x1 );
-	  } else {
-	    to.bn_map( p, v0 );
-	    from.inv_bn_map( v0, ret );
-	  }
-        #else
-	  // too curly
-	  thvec2 v0, r;
-	  to.bn_map( p, v0 );
-	  from.inv_bn_map( v0, r );
-          double x1  = 1.0 - v.m_x / BD;
-	  thvec2 r1;
-	  left_ngbh()->pto()->bn_map( p, v0 );
-	  left_ngbh()->pfrom()->inv_bn_map( v0, r1 );
-          double x2  = 1.0 - v.m_x;
-	  x2 = 1.0 - x2 / BD;
-	  thvec2 r2;
-	  right_ngbh()->pto()->bn_map( p, v0 );
-	  right_ngbh()->pfrom()->inv_bn_map( v0, r2 );
-	  ret = ( r + r1 * x1+ r2 * x2 ) / ( 1.0 + x1 + x2 );
-        #endif
+	// v0.m_y *= s * m_dr + (1.0-s) * m_dl;
+	v0.m_y *= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
+	from.inv_bn_map( v0, ret );
+       
+	left_ngbh()->right_rotate_to( p, v0, x1 );
+
+	s = v0.m_x;
+	v0.m_y *= s * left_ngbh()->m_dr + (1.0-s) * left_ngbh()->m_dl;
+	left_ngbh()->pfrom()->inv_bn_map( v0, r1 );
+	// ret = ( ret + r1 * x1 ) / ( 1.0 + x1 );
+	ret.m_x = ( (2-x1)* ret.m_x + x1 * r1.m_x ) / 2; // ( 1 + x1 );
+	ret.m_y = ( (2-x1)* ret.m_y + x1 * r1.m_y ) / 2; // ( 1 + x1 );
+      } else if ( 1.0 - s < MORPH_BD ) {
+	double x = (1.0-s)/MORPH_BD;
+	// double x1 = 1.0 - x;
+	double x1 = 1.0 - 2*x + x*x;
+	this->right_rotate_to( p, v0, x1 );
+
+	// v0.m_y *= s * m_dr + (1.0-s) * m_dl;
+	v0.m_y *= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
+	from.inv_bn_map( v0, ret );
+
+	right_ngbh()->left_rotate_to( p, v0, x1 );
+	s = v0.m_x;
+	v0.m_y *= s * right_ngbh()->m_dr + (1.0-s) * right_ngbh()->m_dl;
+	right_ngbh()->pfrom()->inv_bn_map( v0, r1 );
+	// ret = ( ret + r1 * x1 ) / ( 1.0 + x1 );
+	ret.m_x = ( (2-x1)* ret.m_x + x1 * r1.m_x ) / 2; // ( 1 + x1 );
+	ret.m_y = ( (2-x1)* ret.m_y + x1 * r1.m_y ) / 2; // ( 1 + x1 );
+      } else {
+	to.bn_map( p, v0 );
+	// v0.m_y *= s * m_dr + (1.0-s) * m_dl;
+	v0.m_y *= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
+	from.inv_bn_map( v0, ret );
+	// to.st_map( p, v0 );
+	// from.inv_st_map( v0, ret );
+      }
     }
-    
+
     /** map p in the "from" image to a point in the "to" img
      * @param p   2D point in the "from" image 
      * @param ret corresponding 2D point in the "to" image
@@ -756,14 +1109,16 @@ namespace therion
      *
      * The forward() code must come after backward() has been instantiated.
      */
-    template< >
-    void plaquette_pair::forward( const thvec2 & p, thvec2 & ret ) const
+    template< typename T >
+    void item_pair<T>::forward( const thvec2 & p, thvec2 & ret ) const
     {
 	  static thvec2 v0, r1; 
 	  thvec2 p1;
 	  double d, d0, x, y;
 	  double dx = 0.1, dy=0.1;
 	  from.bn_map( p, v0 );
+	  // v0.m_y *= s * m_dr + (1.0-s) * m_dl;
+	  v0.m_y *= v0.m_x * m_dr + (1.0-v0.m_x) * m_dl;
 	  to.inv_bn_map( v0, r1 );
 	  this->backward( r1, p1 );
 	  x = p.m_x - p1.m_x;
@@ -814,6 +1169,7 @@ namespace therion
     }
     #endif
     
+
   } // namespace warp
 
 } // namespace therion

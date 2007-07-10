@@ -9,7 +9,7 @@ proc procdir {dir} {
   foreach f $files {
     puts $f
     exec chmod 664 $f
-    if {![regexp {\.(res|png|jpg|jpeg|o|3d|icns|chm|htb)$} $f]} {
+    if {![regexp {\.(res|pdf|png|jpg|jpeg|o|3d|icns|chm|htb|mo|po)$} $f]} {
       exec dos2unix -p -k -q $f
     } 
   }

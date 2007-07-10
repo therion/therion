@@ -32,10 +32,9 @@
 
 #ifndef thwarppt_h
 #define thwarppt_h
+#define THERION
 
 #include <vector>
-
-#define THERION
 
 #include "thtrans.h"
 #include "thwarppme.h"
@@ -151,6 +150,9 @@ namespace therion
          */
         point_pair * insert_point( morph_type t, std::string & name, 
                                      const thvec2 & src, const thvec2 & dst );
+
+	point_pair * insert_zoom_point( morph_type t, std::string & name, 
+	                                const thvec2 src, std::string & from, double size );
     
         /** insert a line
          * @param t    line morph type
@@ -273,16 +275,20 @@ namespace therion
          * @param A   first point (left)
          * @param B   second point (vertex)
          * @param C   third point (right)
+         * @param proj warp projection type
          */
-        void add_triangle( point_pair * A, point_pair * B, point_pair * C );
+        void add_triangle( point_pair * A, point_pair * B, point_pair * C,
+          warp_proj proj = THWARP_PLAN );
         
         /** add a quadrilater
          * @param A   first point 
          * @param B   second point
          * @param C   third point 
          * @param D   fourth point 
+         * @param proj warp projection type
          */
-        void add_quadrilater( point_pair * A, point_pair * B, point_pair * C, point_pair * D );
+        void add_quadrilater( point_pair * A, point_pair * B, point_pair * C, point_pair * D,
+          warp_proj proj = THWARP_PLAN );
     };
 
   } // namespace warp

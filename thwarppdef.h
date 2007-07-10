@@ -29,13 +29,23 @@
  */
 #ifndef thwarppdef_h
 #define thwarppdef_h
+#define THERION
 
 // #define BOUND_SEGMENT 1.5
 #define BOUND_TRIANGLE 1.5
-#define BOUND_PLAQUETTE 1.5
+#define BOUND_PLAQUETTE 2.0
 
-#define THERION
 
+#define MORPH_USE_BD
+#define MORPH_BD 0.5
+
+/** whether or not to use rotation
+ */
+#define MORPH_ROTATE 1
+
+/** a multiplicative factor for the angle differences
+ */
+#define MORPH_ANGLE_FACTOR 0.5
 
 namespace therion
 {
@@ -83,6 +93,7 @@ namespace therion
   typedef therion::warp::warp_proj  thwarp_proj;
 
   using therion::warp::THMORPH_STATION;
+  using therion::warp::THMORPH_EXTRA;
 
 #endif
 

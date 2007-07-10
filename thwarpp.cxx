@@ -28,6 +28,8 @@
 
 #include "thwarpp.h"
 #include "thscrap.h"
+#include "th2ddataobject.h"
+#include "thpoint.h"
 
 
 thwarpp::~thwarpp() {}
@@ -116,6 +118,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
       TW.insert_point( THMORPH_STATION,	s,	
         thvec2(ccp->pt->x - sketch->m_x, sketch->m_y + double(sketch->m_pic.height) - ccp->pt->y),
         thvec2(ccp->tx + sketch->m_scrap->proj->rshift_x,- (ccp->ty + sketch->m_scrap->proj->rshift_y)));
+
       ssm[ccp->st->uid] = &(thdb.db1d.station_vec[ccp->st->uid - 1]);
     }
     ccp = ccp->nextcp;
@@ -137,6 +140,38 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
     }
     ++ lg;
   }
+
+  th2ddataobject * pobj = scrap->fs2doptr;
+  int n_extra = 0;
+  while (pobj != NULL) {
+    if (pobj->get_class_id() == TT_POINT_CMD) {
+      thpoint * pointp = (thpoint *) pobj;
+      if (pointp->type == TT_POINT_TYPE_EXTRA) {
+        pointp->check_extra();
+	if ((pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {
+	  unsigned long fuid = thdb.db1d.station_vec[pointp->from_name.id - 1].uid;
+	  if ( ssm.find(fuid) == ssm.end() ) {
+	    thprintf("warning: extra point from %s but no station\n",
+	      pointp->from_name.name );
+	  } else {
+            sprintf(n2sb2.get_buffer(),"%ld",fuid);
+            sprintf(n2sb.get_buffer(),"%ld_E_%d",fuid, ++n_extra);
+            s  = n2sb.get_buffer(); 
+            s2 = n2sb2.get_buffer();
+	    thdb2dpt * pt = pointp->point;
+	    // assert( pt != NULL );
+	    double x = pt->x - sketch->m_x;
+	    double y = sketch->m_y + double(sketch->m_pic.height) - pt->y;
+         
+            TW.insert_zoom_point( THMORPH_EXTRA, s, thvec2(x, y), s2, pointp->xsize );
+            // ssm[ccp->st->uid] = &(thdb.db1d.station_vec[ccp->st->uid - 1]);
+	  }
+	}
+      }
+    }
+    pobj = pobj->nscrapoptr;
+  }
+
 
   TW.initialize();
 

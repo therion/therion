@@ -1,30 +1,5 @@
 HOT LIST:
-+ redo win32 installations (with samples + nonadmin)
-+ thbook
-+ release
 
-therion:
-
-+ thbook: map in offset (<map> <offset> <preview>)
-+ thbook: point/line map-connection
-+ thbook: air-draught: subtype winter|summer|none
-+ thbook: layout survey-level
-+ thbook: point extra -dist <distance> -from <station>
-+ thbook: area flowstone, moonmilk
-+ thbook: line moonmilk
-+ thbook: layout survey-level
-+ thbook: config-file sketch-warp line|plaquette
-+ thbook: 2D contour DXF export
-+ thbook: LRUD walls in PDF (area dimensions)
-+ thbook: export model -wall-source maps|centerline|all
-+ thbook: centerline extend vertical|hide
-+ thbook: point continuation -text <description> -code <continuation-code>
-+ thbook: station code flag
-+ thbook: export continuation-list (format html, text, dbf)
-+ thbook: user defined symbol types
-+ thbook: scraps without stations are allowed
-+ thbook: -cs for scrap (used in scale transformation)
-          
 + -style option to html table export
 + export rigging list + -text option to point anchor
 + polyline to bezier conversion mode
@@ -117,8 +92,6 @@ xtherion:
 + context sensitive controls for most commonly used options
   (subtype, text, name, visibility, align, scale, ...)
 + rebuild compiler (no more cp text editor)
-+ let xtherion compilation run without configuration file 
-	(only with opened files)
 
 
 WOULD BE NICE LIST:
@@ -148,4 +121,6 @@ xtherion:
 + select and move several objects betweens scraps together
 + add encoding control of configuration file
 + solve splitting of curves with id
-
++ let xtherion compilation run without configuration file 
+  (only with opened files)
+m

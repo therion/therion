@@ -18,6 +18,8 @@ therion:
  * scraps without calibration stations are allowed
  * coordinate system specification allowed for scraps
  * areas exported to SHP files
+ * export of simple DXF maps
+ * updated italian translation (thanks to Marco Corvi)
  * bugs fixed:
    - top level objects selection
    - generation of extended elevation

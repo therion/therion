@@ -388,7 +388,10 @@ the command may be used anywhere.
     Also ``|not|'' is allowed before a flag.
   * |station <station> <comment> [<flags>]| = set the station comment
     and flags: entrance or continuation. If |""| is specified as a
-    comment, it is ignored.
+    comment, it is ignored. If station has continuation flag set, you
+    can also specify arbitrary continuation code using code flag followed
+    by code string e.g.\hfil\break
+    |station 4 "pit to explore" continuation code V|
   * |cs <coordinate system>| = coordinate system for stations with
     fixed coordinates
   * |fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]| 
@@ -426,9 +429,16 @@ the command may be used anywhere.
 
     |left/right| = same as above, but direction is specified explicitely.
 
+    |vertical| = no not move station (shot) in X direction, use only Z
+    component of the shot
+
     |start| = specify starting station (shot)
 
-    |ignore| = ignore specified station (shot)
+    |ignore| = ignore specified station (shot), continue extended elevation
+    with other station (shot) if possible
+
+    |hide| = do not show specified station (shot) in extended elevation
+
 
     If no stations are specified, |<spec>| is valid for following shots
     specified.
@@ -542,6 +552,9 @@ the command may be used anywhere.
        of two points in the scrap and two points in reality.
        Optionally, you can also specify units for the coordinates of the `points in reality'.
        This form allows you to apply both scaling and rotation to the scrap.
+  * |cs <coordinate system>| = coordinate system for scrap scale real points
+    points. If CS is specified, no station is needed in scrap - it is placed according
+    to CS specification.
   * |stations <list of station names>| = stations you want to plot
     to the scrap, but which are not used for scrap transformation. You don't have
     to specify (draw) them with the |point station| command.
@@ -629,7 +642,9 @@ Point is a command for drawing a point map symbol.
     |spring|\[Always use |spring| and |sink| symbols with a |water-flow| arrow.], 
     |sink|, 
     |air-draught|\[Number of ticks is set according to |-scale| option],
-    |gradient|.
+    |gradient|, |map-connection|\[Virtual point, used to indicate connection
+    between shifted maps.], |extra|\[Additional morphing point.], 
+    |u|\[For user defined point symbols.].
 
 \endarguments
 
@@ -642,10 +657,13 @@ Point is a command for drawing a point map symbol.
    if it's specified there] 
     |temporary| (default), |painted|, |natural|, |fixed|;
 
+    {\it air-draught:} |winter|, |summer|, |undefined| (default);
+
     {\it water-flow:} |permanent| (default), |intermittent|, |paleo|.
 
     The subtype may be specified also directly in |<type>| specification using 
-    `|:|' as a separator.\[E.g.~|station:fixed|]
+    `|:|' as a separator.\[E.g.~|station:fixed|] Any subtype specification can
+    be used with user defined type (|u|).
   * |orientation/orient <number>| = defines the orientation
     of the symbol. If not specified, it's oriented to north.
     0 $\le$ |number| $<$ 360.
@@ -658,6 +676,10 @@ Point is a command for drawing a point map symbol.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,
     station-name, label, remark, date, altitude, height, passage-height.
+  * |dist <distance>| =  valid for extra points, specifies distance to nearest
+    station (or station specified using |-from| option. If not specified, 
+    appropriate value from LRUD data is used.
+  * |from <station>| =  valid for extra points, specifies reference station.
   * |visibility <on/off>| = displays/hides the symbol.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide| 
     and |symbol-show| layout options) symbol will be hidden/shown according 
@@ -676,8 +698,8 @@ Point is a command for drawing a point map symbol.
     adjust the extension of the centreline using this option. 
   * |scrap <reference>| = if the point type is section, this is a 
     reference to a cross-section scrap. 
-  * |text| = text of the label or remark. It may contain following formatting
-    keywords:
+  * |text| = text of the label, remark or continuation. It may contain 
+    following formatting keywords:
     
     |<br>| = line break
     
@@ -688,6 +710,8 @@ Point is a command for drawing a point map symbol.
     
     |<rm>|, |<it>|, |<bf>|, |<ss>|, |<si>| = font switches
         
+  * |code| = arbitrary extra code used when continuation is marked.
+    It is usually used to express quality of continuation.
   * |value| = value of height, passage-height or altitude label or point
      dimensions
 
@@ -757,7 +781,7 @@ respectively.
      |ceiling-step|, |chimney|, |overhang|, |ceiling-meander|, 
      |floor-meander|;
 
-     {\it passage fills:} |flowstone|, 
+     {\it passage fills:} |flowstone|, |moonmilk|,  
      |rock-border|\[Outer outline of large boulders. If the line is closed, 
        it is filled with the background colour.], 
      |rock-edge|\[Inner edges of large boulders.], 
@@ -771,7 +795,9 @@ respectively.
        then the line is drawn up to the perpendicular projection of 
        the first control point and from the projection of the section control
        point. No section curve is allowed.], 
-     |survey|\[Survey line is automatically drawn by Therion.].
+     |survey|\[Survey line is automatically drawn by Therion.], 
+     |map-connection|\[Used to indicate connection between maps (in offset,
+     or same points in extended elevation).], |u|\[For user defined line symbols.].
 \endarguments
 
 
@@ -792,7 +818,8 @@ respectively.
 	    surface flag).
 
     The subtype may be specified also directly in |<type>| specification using 
-    `|:|' as a separator.\[E.g.~|border:invisible|]
+    `|:|' as a separator.\[E.g.~|border:invisible|] Any subtype specification can
+    be used with user defined type (|u|).
          
        * |[LINE DATA]| specify either the coordinates of a line segment
          |<x> <y>|, or coordinates of a B\'ezier curve arc 
@@ -890,8 +917,10 @@ You may use invisible border to achieve this inside of the passage.
 
 \arguments
   * |<type>| is one of following: |water|, |sump|, |sand|, |debris|,
-    |blocks|, |snow|, |ice|, |clay|, |pebbles|, |bedrock|\[An empty area which 
-    can be used to clean the background.].
+    |blocks|, |flowstone|, |moonmilk|, |snow|, |ice|, |clay|, |pebbles|,
+    |bedrock|\[An empty area which 
+    can be used to clean the background.], |u|\[For user defined area symbols, 
+    may be followed by arbitrary subtype.].
 \endarguments
 
 \comopt
@@ -995,6 +1024,10 @@ none, survey
 \comopt
   * the data lines consist of scrap or map references. Note that
     you can not mix them together.
+  * if you refer to map, you can specify offset at which this
+    sub-map will be displayed together with preview type of its
+    original position. Syntax is following:\hfil\break
+    |<map reference> [<offset X> <offset Y> <units>] <above/below/none>|
   * scraps following the |break| will be placed on another level
   * |preview <above/below> <other map id>| will put the outline of
     the other map in the specified preview position relative to the

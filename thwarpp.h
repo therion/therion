@@ -28,13 +28,12 @@
 
 #ifndef thwarpp_h
 #define thwarpp_h
+#define THERION
 
 #include "thwarp.h"
 #include "thwarppme.h"
 #include "thwarppt.h"
 #include "thdataobject.h"
-
-#define THERION
 
 /**
  * Sketch station structure.

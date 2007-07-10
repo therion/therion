@@ -353,7 +353,7 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         case TT_POINT_TYPE_AIR_DRAUGHT:
           sgroup(SYMX_POINT_AIRDRAUGHT)
           switch (subtype) {
-            c2(TT_POINT_SUBTYPE_NONE,SYMP_AIRDRAUGHT)
+            c2(TT_POINT_SUBTYPE_UNDEF,SYMP_AIRDRAUGHT)
             c2(TT_POINT_SUBTYPE_SUMMER,SYMP_AIRDRAUGHT_SUMMER)
             c2(TT_POINT_SUBTYPE_WINTER,SYMP_AIRDRAUGHT_WINTER)
           }

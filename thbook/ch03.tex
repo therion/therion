@@ -28,6 +28,12 @@ Works like the |encoding| command in data files---specifies character sets.
 
 Specifies output coordinate system.
 
+\subsubchapter `sketch-warp'.
+
+Specifies which scrap warping (morphing) algorithm to use. 
+Possible switches are |line| - the default, |plaquette| - invented by
+Marco Corvi.
+
 \subsubchapter `input'.
 
 Works like |input| command in data files---includes other files.
@@ -167,6 +173,7 @@ Works like |input| command in data files---includes other files.
     statistics <explo/topo/carto/copyright all/off/number>
                <explo/topo-length on/off>
     scale-bar <length> <units>
+    survey-level <N/all>
     language <xx[_YY]>
     colour/color <item> <colour>
     debug <on/all/first/second/scrap-names/off>
@@ -340,6 +347,7 @@ endlayout|
     The points with distance changed most during transformation are displayed
     orange. If |scrap-names| is specified, scrap names are shown for each scrap,
     |station-names| displays name of each survey station.
+  * survey-level <N/all> = how many surveys to display with stations.
 
   {\it PDF related:}\Nobreak
 
@@ -393,6 +401,8 @@ endlayout|
     |map| = one page 2D map
 
     |atlas| = 2D atlas in more pages
+    
+    |continuation-list| = list of possible continuations
 
     |database| = SQL database with centreline
 \endarguments
@@ -401,13 +411,14 @@ endlayout|
 
 \options
   {\it common:}\Nobreak
-
+  * |encoding/enc <encoding>| = set output encoding
   * |output/o <file>| = set output file name. If no file name is
     given the prefix ``|cave.|'' is used with an extension corresponding to
     output format.
     
     If the output filename is given and no output format is specified,
     the format is determined from the filename extension.
+
 
   {\it model:}\Nobreak
 
@@ -420,13 +431,14 @@ endlayout|
      \hfil\break
      selects which features to export, if the format supports it. Surface
      is currently exported in |therion| format only.
-  * |encoding/enc <encoding>| = set output encoding
+  * |wall-source <maps/centerline/all>| = set source data for passage
+    wall modelling.
 
   {\it map/atlas:}\Nobreak
   
   * |format/fmt <format>| = set map format. Currently |pdf|, |svg|, 
     |xhtml|\[SVG in embedded in XHTML file which contains also legend],
-    |3d|, |esri|\[ESRI shapefiles. Multiple files are written to a 
+    |3d|, |dxf|, |esri|\[ESRI shapefiles. Multiple files are written to a 
     directory with the specified filename.], |kml| (Google Earth) and 
     |xvi|\[Xtherion vector image. XVI images may be used in
     xtherion to draw in-scale maps. Scale (100\,dpi image resolution is 
@@ -445,6 +457,11 @@ endlayout|
   * |layout-xxx| = where |xxx| stands for other layout options. Using this
     you can change some layout properties directly within the export command.
   * |encoding/enc <encoding>| = set output encoding
+
+  {\it continuation-list:}\Nobreak
+
+  * |format/fmt <format>| = set continuation output format. Currently the following
+    output formats are supported: |text| (default), |html| and |dbf|.
 
   {\it database:}\Nobreak
   

@@ -336,7 +336,7 @@ void thpoint::parse_subtype(char * ststr)
       break;
     case TT_POINT_TYPE_AIR_DRAUGHT:
       switch (this->subtype) {
-        case TT_POINT_SUBTYPE_NONE:
+        case TT_POINT_SUBTYPE_UNDEF:
         case TT_POINT_SUBTYPE_WINTER:
         case TT_POINT_SUBTYPE_SUMMER:
           combok = true;

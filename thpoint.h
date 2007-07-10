@@ -342,7 +342,7 @@ enum {
   TT_POINT_SUBTYPE_UNSIGNED,
   TT_POINT_SUBTYPE_WINTER,
   TT_POINT_SUBTYPE_SUMMER,
-  TT_POINT_SUBTYPE_NONE,
+  TT_POINT_SUBTYPE_UNDEF,
 };
 
 
@@ -356,13 +356,13 @@ static const thstok thtt_point_subtypes[] = {
   {"intermittent", TT_POINT_SUBTYPE_INTERMITTENT},
   {"natural", TT_POINT_SUBTYPE_NATURAL},
   {"negative", TT_POINT_SUBTYPE_NEGATIVE},
-  {"none", TT_POINT_SUBTYPE_NONE},
   {"painted", TT_POINT_SUBTYPE_PAINTED},
   {"paleo", TT_POINT_SUBTYPE_PALEO},
   {"permanent", TT_POINT_SUBTYPE_PERMANENT},
   {"positive", TT_POINT_SUBTYPE_POSITIVE},
   {"summer", TT_POINT_SUBTYPE_SUMMER},
   {"temporary", TT_POINT_SUBTYPE_TEMP},
+  {"undefined", TT_POINT_SUBTYPE_UNDEF},
   {"unsigned", TT_POINT_SUBTYPE_UNSIGNED},
   {"winter", TT_POINT_SUBTYPE_WINTER},
 	{NULL, TT_POINT_SUBTYPE_UNKNOWN},
