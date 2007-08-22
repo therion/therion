@@ -294,7 +294,7 @@ proc xth_cp_save_as {} {
   set fname [tk_getSaveFile -filetypes $xth(app,cp,filetypes) \
     -parent $xth(gui,main) \
     -initialfile [file tail $fname] \
-    -initialdir [file dirname $fname]]
+    -initialdir [xth_getdir $fname]]
 
   if {[string length $fname] == 0} {
     return 0

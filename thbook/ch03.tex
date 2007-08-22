@@ -201,7 +201,7 @@ endlayout|
   * |base-scale <picture length> <real length>| = if set, Therion will
     optically scale the map by a (|scale/base-scale|) factor.
     This has the same effect as if the map printed in |base-scale| would be
-    photoreduced to the |scale|. (M, A)
+    photo-reduced to the |scale|. (M, A)
   * |rotate <value>| = rotates the map (M, A; default: |0|)
   * |units <metric/imperial>| = set output units (M, A; default: |metric|)
   * |symbol-set <symbol-set>| = use |symbol-set| for all map symbols,
@@ -302,7 +302,7 @@ endlayout|
 
   * |map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>| = 
     print map header at location specified by |<x> <y>|. 
-    Predefined map header contains some basic informations about
+    Predefined map header contains some basic information about
     cave: name, scale, north arrow, list of surveyors etc. It is fully 
     customizable (see the chapter {\it Changing layout} for details).
     <x> is easting (left-right on page). <y> is northing (up/down page).
@@ -331,7 +331,7 @@ endlayout|
     statistics (M, A; default: |off|)
   * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
   * |language <xx[_YY]>| = set output language. 
-    Available languages are listed on impressum page.
+    Available languages are listed on the copyright page.
     See the {\it Appendix} if 
     you want to  add or customize translations. (M, A)
   * |colo[u]r <item> <colour>| = customize colour for special map
@@ -432,16 +432,16 @@ endlayout|
      selects which features to export, if the format supports it. Surface
      is currently exported in |therion| format only.
   * |wall-source <maps/centerline/all>| = set source data for passage
-    wall modelling.
+    wall modeling.
 
   {\it map/atlas:}\Nobreak
   
   * |format/fmt <format>| = set map format. Currently |pdf|, |svg|, 
-    |xhtml|\[SVG in embedded in XHTML file which contains also legend],
+    |xhtml|\[SVG embedded in XHTML file which contains also legend],
     |3d|, |dxf|, |esri|\[ESRI shapefiles. Multiple files are written to a 
     directory with the specified filename.], |kml| (Google Earth) and 
     |xvi|\[Xtherion vector image. XVI images may be used in
-    xtherion to draw in-scale maps. Scale (100\,dpi image resolution is 
+    xtherion to draw in-scale maps. Scale (100\,DPI image resolution is 
     assumed) and grid-size from layout are used in export.]
     for map; |pdf| for atlas are supported.
   * |projection <id>| = unique identifier that specifies the map projection type.
@@ -561,7 +561,7 @@ or
 * |--print-environment| =
         Print environment settings for therion.
 
-* |--print-environment| =
+* |--print-symbols| =
         Print a list of all therion supported map symbols in 
         |symbols.xhtml| file.
         
@@ -579,7 +579,7 @@ or
   Display version information.        
         
 * |-x| =
-  Generate file `.xth-thconfig' with additional informations for XTherion.
+  Generate file `.xth-thconfig' with additional information for XTherion.
 \endoptions
 
 \subsubchapter XTherion---compiler.
@@ -589,13 +589,13 @@ line prompt. Compiler window is the default window of XTherion. To run Therion
 it's enough to open a configuration file and press `F9' or `Compile' button. 
 
 XTherion displays messages from Therion in the lower part of the screen.
-Each error message is highlited and is hyperlinked to the source file
-where the error occured.
+Each error message is highlighted and is hyperlinked to the source file
+where the error occurred.
 
 After a first run there are activated additional menus {\it Survey 
 structure} and {\it Map structure}. User may comfortably select a survey or map 
 for export by double clicking on some of the items in the tree. Simple click in 
-the {\it Survey structure} tree displays some basic informations about the 
+the {\it Survey structure} tree displays some basic information about the 
 survey in the {\it Survey info} menu.
 
 \endinput

@@ -478,3 +478,11 @@ proc xth_incr_station_name {oname iii} {
 }
 
 
+proc xth_getdir {fname} {
+  set d [file dirname $fname]
+  if {[file exists $d] && [file isdirectory $d]} {
+    return $d
+  } 
+  return {}
+}
+

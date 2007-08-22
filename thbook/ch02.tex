@@ -104,7 +104,7 @@ it is assumed you are working in |local| coordinate system, and no
 conversions are done. Following coordinate systems are supported:
 
 \list
-* |UTM1| -- |UTM60| = universal transverse mercator in northern hemisphere
+* |UTM1| -- |UTM60| = universal transverse Mercator in northern hemisphere
   and given zone, WGS84 datum. 
 * |UTM1S| -- |UTM60S| = UTM in southern hemisphere, WGS84 datum.
 * |lat-long|, |long-lat| = latitude (N positive, S negative) and 
@@ -112,10 +112,10 @@ conversions are done. Following coordinate systems are supported:
   ($deg[{:}min[{:}sec]]$ allowed), WGS84 datum. By default, not 
   supported on output.
 * |EPSG:<number>| = Most of EPSG coordinate systems. Almost every 
-  coordinate system used worlwide has its own EPSG number. To find
+  coordinate system used worldwide has its own EPSG number. To find
   number of your system, see |extern/proj4/nad/epsg| file in the
-  therion source distrubution.
-* |ESRI:<number>| = Simmilar to EPSG, but ESRI standard.
+  therion source distribution.
+* |ESRI:<number>| = Similar to EPSG, but ESRI standard.
 * |JTSK|, |iJTSK| = Czechoslovak S-JTSK system with south and west
   axis (JTSK) and its modified version with axis 
   pointing east and north and negative numbers (iJTSK). JTSK is
@@ -143,7 +143,7 @@ one Therion command using the following structure:
 {\it Syntax:} schematic syntax description. 
 
 {\it Context:} specifies the context in which is this command allowed. 
-The {\it survey} context means that the commmand must be enclosed by 
+The {\it survey} context means that the command must be enclosed by 
 |survey ... endsurvey| pair. The {\it scrap} context means that the command must be 
 enclosed within |scrap ... endscrap| pair. Context {\it all} means that 
 the command may be used anywhere.
@@ -262,7 +262,7 @@ the command may be used anywhere.
   3. |[<date1> <value1> [<date2> <value2> ... ] <units>]| 
      will set declination for several dates. Then the declination
      of each shot will be set according to the date specification
-     of the data object. If you want to explicitely set the declination
+     of the data object. If you want to explicitly set the declination
      for undated survey data, use `|-|' instead of date.
 
   If no declination is specified and some geodetic coordinate system is 
@@ -388,7 +388,7 @@ the command may be used anywhere.
     Also ``|not|'' is allowed before a flag.
   * |station <station> <comment> [<flags>]| = set the station comment
     and flags: entrance or continuation. If |""| is specified as a
-    comment, it is ignored. If station has continuation flag set, you
+    comment, it is ignored. If the station has continuation flag set, you
     can also specify arbitrary continuation code using code flag followed
     by code string e.g.\hfil\break
     |station 4 "pit to explore" continuation code V|
@@ -415,10 +415,10 @@ the command may be used anywhere.
   * |endgroup| = |group/endgroup| pair enables the user to make 
     temporary changes
     in almost any setting (calibrate, units, sd, data, flags...)
-  * |walls <auto/on/off>| = turn on/off passage shape genaration from
+  * |walls <auto/on/off>| = turn on/off passage shape generation from
     LRUD data for subsequent shots. If set |auto|, passage is generated
     only if there is no scrap referencing given centreline.
-  * |vthreshold <number> <units>| = treshold for interpreting LRUD readings
+  * |vthreshold <number> <units>| = threshold for interpreting LRUD readings
     as left-right-front-back reading perpendicular to the shot.
   * |extend <spec> [<station> [<station>]]| =
     control how the centerline is extended. |<spec>| is one of the following
@@ -427,9 +427,9 @@ the command may be used anywhere.
      to the same/reverse direction as previous station. If two
      stations are given---direction is applied only to given shot.
 
-    |left/right| = same as above, but direction is specified explicitely.
+    |left/right| = same as above, but direction is specified explicitly.
 
-    |vertical| = no not move station (shot) in X direction, use only Z
+    |vertical| = do not move station (shot) in $X$ direction, use only $Z$
     component of the shot
 
     |start| = specify starting station (shot)
@@ -470,7 +470,7 @@ the command may be used anywhere.
   
   Scrap border consists of lines with the |-outline out| or |-outline in| 
   options (passage walls have |-outline out| by default). These lines shouldn't
-  intersect---otherwise Therion (\MP) can't detemine the interior of the scrap 
+  intersect---otherwise Therion (\MP) can't determine the interior of the scrap 
   and \MP\ issues a warning message ``|scrap outline intersects itself|''.
 
   Each scrap has its own local cartesian coordinate system, which usually 
@@ -492,10 +492,10 @@ the command may be used anywhere.
       transformation is minimal. The result is displayed red if |debug| option 
       of the |layout| command is set |on|.
     * Non-linear transformation of the scrap which (1) moves survey stations
-      to their correct position, (2) is continuos. Displayed blue in the |debug| 
+      to their correct position, (2) is continuous. Displayed blue in the |debug| 
       mode.
     * Non-linear transformation of the scrap which (1) moves joined points
-      together, (2) doesn't move survey stations, (3) is continuos. 
+      together, (2) doesn't move survey stations, (3) is continuous. 
       Finally the position of curves' control points is adjusted to preserve 
       smoothness. The result is final map.
     \endlist
@@ -523,7 +523,7 @@ the command may be used anywhere.
 
     1. |none| = no projection, used for cross sections or maps that
        are independent of survey data (e.g.~digitization of old maps where 
-       no centreline data are avaiable). 
+       no centreline data are available). 
        No index is allowed for this projection.
 
     2. |plan| = basic plan projection (default).
@@ -552,9 +552,10 @@ the command may be used anywhere.
        of two points in the scrap and two points in reality.
        Optionally, you can also specify units for the coordinates of the `points in reality'.
        This form allows you to apply both scaling and rotation to the scrap.
-  * |cs <coordinate system>| = coordinate system for scrap scale real points
-    points. If CS is specified, no station is needed in scrap - it is placed according
-    to CS specification.
+  * |cs <coordinate system>| = assumes that (calibrated) local scrap coordinates are given
+    in specified coordinate system. It is useful for absolute placing of 
+    imported sketches where no survey stations are specified.\[If there are 
+    some survey stations in the scrap, the |cs| specification is ignored.]
   * |stations <list of station names>| = stations you want to plot
     to the scrap, but which are not used for scrap transformation. You don't have
     to specify (draw) them with the |point station| command.
@@ -631,8 +632,8 @@ Point is a command for drawing a point map symbol.
     |rimstone-pool|, |rimstone-dam|, |anastomosis|, |karren|, |scallop|,
     |flute|, |raft-cone|;
 
-    {\it equipement:} |anchor|, |rope|, |fixed-ladder|, |rope-ladder|, |steps|,
-    |bridge|, |traverse|, |camp|, |no-equipement|;
+    {\it equipment:} |anchor|, |rope|, |fixed-ladder|, |rope-ladder|, |steps|,
+    |bridge|, |traverse|, |camp|, |no-equipment|;
 
     {\it passage ends:} |continuation|, |narrow-end|, |low-end|, 
     |flowstone-choke|, |breakdown-choke|, |entrance|;
@@ -676,7 +677,7 @@ Point is a command for drawing a point map symbol.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,
     station-name, label, remark, date, altitude, height, passage-height.
-  * |dist <distance>| =  valid for extra points, specifies distance to nearest
+  * |dist <distance>| =  valid for extra points, specifies the distance to the nearest
     station (or station specified using |-from| option. If not specified, 
     appropriate value from LRUD data is used.
   * |from <station>| =  valid for extra points, specifies reference station.
@@ -772,9 +773,9 @@ respectively.
      The following types are supported: 
      
      {\it passages:} |wall|, |contour|, 
-     |slope|\[Slope line marks upper border of the slopy area. It's 
+     |slope|\[Slope line marks upper border of the sloping area. It's 
        necessary to specify |l-size| in at least one point. Gradient lines
-       length and orienation is an average of specified |l-size|s and
+       length and orientation is an average of specified |l-size|s and
        |orientation|s in the nearest points. If there is no orientation
        specification, gradient marks are perpendicular to the slope line.], 
      |floor-step|, |pit|, 
@@ -797,7 +798,7 @@ respectively.
        point. No section curve is allowed.], 
      |survey|\[Survey line is automatically drawn by Therion.], 
      |map-connection|\[Used to indicate connection between maps (in offset,
-     or same points in extended elevation).], |u|\[For user defined line symbols.].
+     or the same points in extended elevation).], |u|\[For user defined line symbols.].
 \endarguments
 
 
@@ -844,7 +845,7 @@ respectively.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
          Auto is default.
   * |adjust <horizontal/vertical>| = shifts the line point to be aligned
-    horizontaly/ver\-ti\-caly with the previous point (or next point if there is 
+    horizontally/ver\-ti\-cally with the previous point (or next point if there is 
     no previous point). The result is horizontal/vertical line segment). 
     If all line points have this option, they are aligned to the
     average $y$ or $x$ coordinate, respectively. This option is not allowed 
@@ -866,7 +867,7 @@ respectively.
          gives the altitude difference of the point on the wall 
          relative to the nearest station. The value can be prefixed
          by a keyword ``|fix|'', then no nearest station is taken into
-         consideration; the absolue given value is used instead.
+         consideration; the absolute given value is used instead.
          Units can follow the value. Examples: |+4|, |[+4 m]|,
          |[fix 1510 m]|.
        * |border <on/off>| = this option can be specified only with
@@ -1291,9 +1292,9 @@ yellow.]
 After creating a new file in the map editor, you may load one or more 
 {\bf images}---scanned survey sketches from the cave\[XTherion can't scale nor 
 rotate individual images, so use the same orientation, scale and DPI for all 
-images used in the same scrap.]---as a backround for 
+images used in the same scrap.]---as a background for 
 the drawing. Click on the {\it Insert} button in {\it Background images} menu.
-Unfortunatelly, as a limitation of Tcl/Tk language, only GIF, PNM and PPM 
+Unfortunately, as a limitation of Tcl/Tk language, only GIF, PNM and PPM 
 (plus PNG and JPEG if you installed tkImg extension) images are supported. 
 Additionally XTherion supports XVI (XTherion vector image) format, which
 displays centreline and LRUD information on the background.
@@ -1414,7 +1415,7 @@ places on the image where the endpoints of calibration arrow should be, or
 * move pointer to desired position, read pointer coordinates from 
 the status bar and enter these coordinates into {\it picture scale points}
 boxes in the {\it Scraps} control. After filling X1,Y1 and
-X2,Y2 coordinate pairs the calibration arrow wil be moved correspondingly. 
+X2,Y2 coordinate pairs the calibration arrow will be moved correspondingly. 
 \endlist
 Then you have to enter real coordinates of these points (X1, Y1, X2, Y2). 
 
@@ -1498,7 +1499,7 @@ draw cross-sections.
 \list
   * select the point before which you want to insert points;
     insert required points;
-    press Esc or left-click on the point you selected at the begining
+    press Esc or left-click on the point you selected at the beginning
 \endlist
   
 {\it Deleting line point}
@@ -1531,14 +1532,14 @@ draw cross-sections.
  * Ctrl+LeftClick + drag = move point close to the existing
     point (normally it is moved right above closest existing point)
  * LeftClick + drag on point arrows = change point orientation or
-    sizes (according to given switches in Point cotrol panel)
+    sizes (according to given switches in Point control panel)
 \endlist
 
 {\it Inserting area}
 \list
  * press Ctrl+A or {\it File commands} $\to$ {\it Insert} $\to$ {\it area} 
   to switch to the `insert area border' mode
- * RightClick on the lines, that suround desired area
+ * RightClick on the lines, that surround desired area
  * Esc to finish area border lines insertion
 \endlist
 
@@ -1564,7 +1565,7 @@ draw cross-sections.
 \subchapter Thinking in Therion.
 
 Although everything about Therion input files has been explained, this chapter 
-offers some aditional tips and hints.
+offers some additional tips and hints.
 
 \subsubchapter How to enter centreline?.
 
@@ -1602,7 +1603,7 @@ commands to define connections between surveys.
 
 \subsubchapter How to draw maps?.
 
-The most imortant thing is to devise division of the cave into scraps. Scrap is
+The most important thing is to devise division of the cave into scraps. Scrap is
 the basic building block of the map.
 It's almost always a {\it bad\/} idea to try to fit each scrap to corresponding
 |*.th| file with centreline from one survey trip. The reason is that 
@@ -1638,7 +1639,7 @@ includes all |*.th2| files, defines scrap joins and maps.
 
 When drawing scraps you should check if the outline is properly defined: all 
 lines creating the outer border should have |-outline out| option; all lines 
-surrouding inner pillars |-outline in| option. Scrap outlines can't intersect 
+surrounding inner pillars |-outline in| option. Scrap outlines can't intersect 
 themselves---otherwise the inner side of the scrap can't be determined. There 
 are two simple tests that scrap outline is correct:
 \list

@@ -689,7 +689,7 @@ proc xth_me_save_file {dialogid} {
     set fname [tk_getSaveFile -filetypes $xth(app,me,filetypes) \
       -parent $xth(gui,main) \
       -initialfile [file tail $fname] -defaultextension {.th2} \
-      -initialdir [file dirname $fname]]
+      -initialdir [xth_getdir $fname]]
   }
   
   if {[string length $fname] == 0} {

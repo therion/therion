@@ -3100,11 +3100,12 @@ proc xth_me_cmds_set_colors {} {
       4 - 5 {
 	if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
 	  set xth(me,curscrap) $xth(me,cmds,$id,name)
-	  if {[string equal $xth(me,cmds,$id,projection) extended]} {
-	    set xth(me,snai) -1
-	  } else {
-	    set xth(me,snai) 1
-	  }
+#	  if {[string equal $xth(me,cmds,$id,projection) extended]} {
+#	    set xth(me,snai) -1
+#	  } else {
+#	    set xth(me,snai) 1
+#	  }
+    set xth(me,snai) 1
 	}
 	if {$cid != $xid} {
 	  set col $dcol

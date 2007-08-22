@@ -86,7 +86,7 @@ Suppose you want to add a new language xx.
 {\it Adding new encodings}
 
 Although UTF-8 Unicode encoding covers all characters which Therion is able to 
-process, it may be inconveniet to use it. In that case it's possible to add 
+process, it may be inconvenient to use it. In that case it's possible to add 
 support for any 8-bit encoding for text input files. Copy a translation file to 
 the |thchencdata| directory; add its name to `ifiles' hash in the beginning of 
 the Perl script |generate.pl|; run it and recompile Therion.
@@ -138,7 +138,7 @@ Consult the documentation of your OS how to set them.
 
 \subchapter Initialization files.
 
-Therion's and XTherion's system dependent settings are specifyed in the 
+Therion's and XTherion's system dependent settings are specified in the 
 file therion.ini or xtherion.ini, respectively.
 They are searched for in the following directories:
 
@@ -192,7 +192,7 @@ supported initialization commands follow.
 
 * |identify-path <file-path>|
 
-  Set the full path to ImageMagick's indentify executable if Therion
+  Set the full path to ImageMagick's identify executable if Therion
   can't find it (``|identify|'' is the default).
   
 * |convert-path <file-path>|
@@ -231,7 +231,7 @@ supported initialization commands follow.
   The same encoding must be used while generating \TeX\ metrics (|*.tfm| files) 
   for those fonts (e.g.~with the afm2tfm program) and this encoding must be
   explicitly given also in the pdf\TeX's map file. The only exception is the 
-  base set of Computern Modern fonts, which use `raw' encoding. This encoding
+  base set of Computer Modern fonts, which use `raw' encoding. This encoding
   doesn't need to be specified in the pdf\TeX's map file.
   
   Encoding has to be followed by five font specifications for regular, italic,
@@ -252,7 +252,7 @@ supported initialization commands follow.
   |palatino <xl2.enc <palatino.ttf|
   
   to the pdf\TeX's map file. The same should be done for the italic and bold
-  faces and corresponding sansserif and sansserifoblique fonts. If you're lazy
+  faces and corresponding sans-serif and sans-serif-oblique fonts. If you're lazy
   try 
   
   |tex-fonts xl2 palatino palatino palatino palatino palatino|
@@ -346,7 +346,7 @@ survey main -title "Test cave"
  
 endsurvey|
 
-Corrresponding configuration file could be:
+Corresponding configuration file could be:
 
 |encoding  utf-8
 source test
@@ -381,7 +381,7 @@ process them with Therion.
 
   Dec 27: Therion compiles simple map for the first time (32 kB of Perl and 
        \MP\ source code). This first release had some interesting features
-       such as {\it transformation functions}, which alowed user-specification
+       such as {\it transformation functions}, which allowed user-specification
        of the input format for survey data.
 				
 * {\bf 2000}\nobreak\par\nobreak
@@ -448,7 +448,7 @@ new features to be implemented:
 \subsubchapter General.
 
 \list
-* loop closure informations in SQL
+* loop closure information in SQL
 \endlist
 
 \subsubchapter 2D maps.
@@ -461,7 +461,7 @@ new features to be implemented:
 \subsubchapter 3D models.
 
 \list
-* improve passage walls modelling
+* improve passage walls modeling
 \endlist
 
 \endinput

@@ -519,6 +519,24 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
         this->m_fpoints.m_attributes.insert_attribute("_SUBTYPE", ppt->type != TT_POINT_TYPE_U ?
               (thmatch_string(ppt->subtype, thtt_point_subtypes)) : ppt->m_subtype_str);
         this->m_fpoints.m_attributes.copy_attributes(thdb.attr.get_object(ppt->id));
+        switch (ppt->type) {
+          case TT_POINT_TYPE_CONTINUATION:
+            if ((ppt->code != NULL) && (strlen(ppt->code) > 0))
+              this->m_fpoints.m_attributes.insert_attribute("_CODE",ppt->code);
+            break;
+          case TT_POINT_TYPE_LABEL:
+          case TT_POINT_TYPE_REMARK:
+            if ((ppt->text != NULL) && (strlen(ppt->text) > 0))
+              this->m_fpoints.m_attributes.insert_attribute("_TEXT",ppt->text);
+            break;
+          case TT_POINT_TYPE_STATION:
+            if (ppt->station_name.id > 0) {
+              thdb1ds * st = &(thdb.db1d.station_vec[ppt->station_name.id - 1]);
+              this->m_fpoints.m_attributes.insert_attribute("_STNAME",st->name);
+              this->m_fpoints.m_attributes.insert_attribute("_STSURVEY",st->survey->get_full_name());
+            }
+            break;
+        }
 				break;
 		  case TT_LINE_CMD:
 				pln = ((thline*)obj);
@@ -537,6 +555,12 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
             this->m_flines.m_attributes.insert_attribute("_SUBTYPE", pln->type != TT_LINE_TYPE_U ?
               (thmatch_string(csubtype, thtt_line_subtypes)) : pln->m_subtype_str);
             this->m_flines.m_attributes.copy_attributes(thdb.attr.get_object(pln->id));
+            switch (pln->type) {
+              case TT_LINE_TYPE_LABEL:
+                if ((pln->text != NULL) && (strlen(pln->text) > 0))
+                  this->m_flines.m_attributes.insert_attribute("_TEXT",pln->text);
+                break;
+            }
             csubtype = lp->subtype; 
             sp = cp;
           }
@@ -555,9 +579,9 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
         this->m_fareas.object_insert();
         if (this->m_fareas.m_object_id > -1) {
           // system attributes
-          this->m_fpoints.m_attributes.insert_attribute("_TYPE",thmatch_string(parea->type, thtt_area_types));
-          this->m_fpoints.m_attributes.insert_attribute("_SUBTYPE",parea->m_subtype_str);
-          this->m_fpoints.m_attributes.copy_attributes(thdb.attr.get_object(parea->id));
+          this->m_fareas.m_attributes.insert_attribute("_TYPE",thmatch_string(parea->type, thtt_area_types));
+          this->m_fareas.m_attributes.insert_attribute("_SUBTYPE",parea->m_subtype_str);
+          this->m_fareas.m_attributes.copy_attributes(thdb.attr.get_object(parea->id));
         }
         break;
     }

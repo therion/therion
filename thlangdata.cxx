@@ -242,7 +242,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "lama",
     NULL,
     NULL,
-    "blato",
+    "íl",
   },
   {
     "štěrk",
@@ -539,7 +539,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "pomenovanie",
   },
   {
-    NULL,
+    "spojení map",
     NULL,
     "map connection",
     NULL,
@@ -553,6 +553,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "prepojenie máp",
   },
   {
+    "nickamínek",
     NULL,
     NULL,
     NULL,
@@ -563,8 +564,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     NULL,
     NULL,
     NULL,
-    NULL,
-    NULL,
+    "náteky mäkkého sintra",
   },
   {
     "převis",
@@ -606,7 +606,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "lateral da rocha",
     NULL,
     NULL,
-    "ohraničenie kameňov",
+    "obrys kameňa",
   },
   {
     "hrany kamenů",
@@ -620,7 +620,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "bordas da rocha",
     NULL,
     NULL,
-    "hrany kameňov",
+    "hrany kameňa",
   },
   {
     "příčný řez",
@@ -718,7 +718,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "lama",
     NULL,
     NULL,
-    "stena tvorená bahnom",
+    "stena tvorená ílom",
   },
   {
     "štěrk",
@@ -732,7 +732,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "escombros",
     NULL,
     NULL,
-    "stena tvorená štrkom",
+    "stena tvorená suťou",
   },
   {
     "led",
@@ -889,7 +889,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "prievan",
   },
   {
-    NULL,
+    "letní průvan",
     NULL,
     "summer air draught",
     NULL,
@@ -903,7 +903,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "letný prievan",
   },
   {
-    NULL,
+    "zimní průvan",
     NULL,
     "winter air draught",
     NULL,
@@ -1082,7 +1082,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "lama",
     NULL,
     NULL,
-    "blato",
+    "íl",
   },
   {
     "možné pokračování",
@@ -1152,10 +1152,10 @@ static const thlang_pchar thlang__translations [148][12] = {
     "escombros",
     NULL,
     NULL,
-    "štrk",
+    "sutina",
   },
   {
-    NULL,
+    "rozměry",
     "Ausdehnung",
     NULL,
     NULL,
@@ -1320,7 +1320,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "altura do chão para degrau/chaminé/desnível",
     NULL,
     NULL,
-    "výška stupňa/komínu/hĺbka priepasti",
+    "výška/hĺbka stupňa/komína",
   },
   {
     "hloubka propasti",
@@ -1348,7 +1348,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "altura da chaminé",
     NULL,
     NULL,
-    "výška komínu",
+    "výška komína",
   },
   {
     "výška stupně",
@@ -1376,7 +1376,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "helictite",
     "helictite",
     "excêntrica",
-    "helektit",
+    "heliktit",
   },
   {
     "led",
@@ -1740,7 +1740,7 @@ static const thlang_pchar thlang__translations [148][12] = {
     "marcas de fluxo",
     NULL,
     NULL,
-    "erózne útvary",
+    "lastúrovité jamky",
   },
   {
     "příčný řez",

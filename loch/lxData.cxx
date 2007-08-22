@@ -81,7 +81,7 @@ lxData::lxData()
   this->luTable->SetSaturationRange(1.0,1.0);
   this->luTable->Build();
   
-  this->title = _T("No file open");
+  this->title = _("No file open");
 
 }
 

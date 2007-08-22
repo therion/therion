@@ -396,8 +396,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
 
     if ((selection == NULL) && (
         (prj->type == TT_2DPROJ_PLAN) || (prj->type == TT_2DPROJ_EXTEND) ||
-        (prj->type == TT_2DPROJ_ELEV)) &&
-        (thdb.db1d.lsid > 0)) {
+        (prj->type == TT_2DPROJ_ELEV))) {
       // podme vytvorit jednu mapu a vlozit do nej
       // vsetky surveye
       thscrap * scrapp;

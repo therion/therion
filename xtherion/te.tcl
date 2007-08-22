@@ -790,7 +790,7 @@ proc xth_te_save_file {dialogid cfid} {
   if {$dialogid} {
     set fname [tk_getSaveFile -filetypes $xth(app,te,filetypes) \
       -parent $xth(gui,main) \
-      -initialfile [file tail $fname] -initialdir [file dirname $fname] \
+      -initialfile [file tail $fname] -initialdir [xth_getdir $fname] \
       -defaultextension $xth(app,te,fileext)]
   }
   

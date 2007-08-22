@@ -55,6 +55,9 @@ proc xth_me_import_dxf {fnm} {
   set curseq {}
   set polylinevx 0
   set nofitpoint 1
+  
+  set hasx0 0
+  set hasx1 0
 
   incr outcmdn
   lappend rv(olist) $outcmdn
@@ -115,10 +118,10 @@ if $utldbg {
     if {[string equal $cursec ENTITIES]} {
       set postprocess 0
       switch -- $cmd {
-	10 {set x0 [expr double($val)]}
-	11 {set x1 [expr double($val)]}
-	20 {set y0 [expr double($val)]; set postprocess 1}
-	21 {set y1 [expr double($val)]; set postprocess 1}
+	10 {set x0 [expr double($val)]; set hasx0 1}
+	11 {set x1 [expr double($val)]; set hasx1 1}
+	20 {set y0 [expr double($val)]; if {$hasx0} {set postprocess 1}; set hasx0 0}
+	21 {set y1 [expr double($val)]; if {$hasx1} {set postprocess 1}; set hasx1 0}
 	40 {set n40 [expr double($val)]}
 	50 {set n50 [expr double($val)]}
 	51 {set n51 [expr double($val)]; set postprocess 1}
@@ -136,6 +139,19 @@ if $utldbg {
 	      lappend curdat $cpoint
 	      set rv(odata,$outcmdn,type) point
 	      set rv(odata,$outcmdn,opts) "#CIRCLE"
+	      set rv(odata,$outcmdn,data) $curdat
+	    }
+	  }
+	  POINT {
+	    if {[string equal $cmd 20]} {
+	      set cpoint [list $x0 $y0]
+	      set distance [xth_me_import_check_distance $distance $cpoint]
+	      set outline [xth_me_import_check_outline $outline $cpoint]              
+	      incr outcmdn
+	      lappend rv(olist) $outcmdn
+	      lappend curdat $cpoint
+	      set rv(odata,$outcmdn,type) point
+	      set rv(odata,$outcmdn,opts) "#POINT"
 	      set rv(odata,$outcmdn,data) $curdat
 	    }
 	  }
@@ -192,6 +208,24 @@ if $utldbg {
 		set rv(odata,$outcmdn,opts) "#VERTEX"
 		set rv(odata,$outcmdn,data) $curdat
 	      }
+	    }
+	  }
+	  LWPOLYLINE {
+	    if {[string equal $cmd 20]} {
+	      set cpoint [list $x0 $y0]
+	      set distance [xth_me_import_check_distance $distance $cpoint]
+	      set outline [xth_me_import_check_outline $outline $cpoint]
+	      lappend curdat $cpoint
+	    }
+	    if {[llength $curdat] == 2} {
+	      incr outcmdn
+	      lappend rv(olist) $outcmdn
+	      lappend curdat $cpoint
+	      set rv(odata,$outcmdn,type) line
+	      set rv(odata,$outcmdn,opts) "#LWPOLYLINE"
+	      set rv(odata,$outcmdn,data) $curdat
+	    } elseif {[llength $curdat] > 2} {
+	      set rv(odata,$outcmdn,data) $curdat
 	    }
 	  }
 	  SPLINE {
@@ -632,7 +666,7 @@ proc xth_me_import_file {fnm fmt} {
   set sc [expr $xth(import,size) / $dd]
   if {($md * $sc) < $xth(import,mind)} {set sc [expr $xth(import,mind) / $md]}
   
-  if {[info exists $xth(import,sscl)]} {
+  if {[info exists xth(import,sscl)]} {
     set sc $xth(import,sscl)]
   }
 
@@ -749,6 +783,7 @@ if $utldbg {
 if $utldbg {
   set xth(gui,main) .
   #xth_me_import_svg test.svg
-  xth_me_import_file test.svg {}
-  #exit
+  #xth_me_import_dxf map1.dxf
+  xth_me_import_file map1.dxf {}
+  exit
 }

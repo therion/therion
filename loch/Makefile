@@ -177,7 +177,7 @@ clean:
 
 
 # DEPENDENCIES
-lxAboutDlg.o: lxAboutDlg.cxx lxWX.h icons/about.xpm
+lxAboutDlg.o: lxAboutDlg.cxx lxWX.h icons/about.xpm ../thversion.h
 lxData.o: lxData.cxx lxData.h lxMath.h lxImgIO.h lxFile.h lxLRUD.h
 lxFile.o: lxFile.cxx lxFile.h lxMath.h img.h
 lxGLCo.o: lxGLCo.cxx lxGLC.h lxMath.h lxGLCx.h lxGLCx.cxx lxSetup.h \

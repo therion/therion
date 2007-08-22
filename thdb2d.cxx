@@ -1315,6 +1315,9 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
       break;
   }
 
+  if (thisnan(minx)) 
+	  minx = 0.0;
+
   pps = prj->first_scrap;  
   while (pps != NULL) {
   
@@ -1421,6 +1424,19 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
     pps = pps->proj_next_scrap;
     numscraps++;
   }
+
+  // shift all points in scraps without control points
+  thdb2dpt_list::iterator ii = this->pt_list.begin();
+  while (ii != this->pt_list.end()) {
+    pps = ii->pscrap;
+	if ((pps->proj->id == prj->id) && (pps->fcpp == NULL)) {
+	  ii->xt -= prj->shift_x;
+	  ii->yt -= prj->shift_y;
+	  ii->zt -= prj->shift_z;
+    }
+    ii++;
+  }
+  
     
   // postprocess if necessary
 //  if (prj->type == TT_2DPROJ_EXTEND) {
@@ -3585,11 +3601,13 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
       }
       
       // add line
+      //cln->reverse = true;
       cln->is_closed = true;
       cln->fscrapptr = carea->fscrapptr;
       cln->fsptr = carea->fsptr;
       cln->type = TT_LINE_TYPE_BORDER;
       ti->area->m_outline_line = cln;
+      //cln->preprocess();
       cln = NULL;
 
       // increase area counter

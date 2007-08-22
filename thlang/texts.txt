@@ -89,6 +89,7 @@ pt: seta
 sk: pomocná šípka
 
 therion: line map-connection
+cz: spojení map
 en: map connection
 it: riporto di mappa
 sk: prepojenie máp
@@ -161,7 +162,7 @@ es: derrubios
 fr: débris de roche
 it: detriti
 pt: escombros
-sk: stena tvorená štrkom
+sk: stena tvorená suťou
 
 therion: line wall:pebbles
 cz: valouny
@@ -191,7 +192,7 @@ es: arcilla
 fr: argile
 it: argilla
 pt: lama
-sk: stena tvorená bahnom
+sk: stena tvorená ílom
 
 therion: line wall:ice
 cz: led
@@ -303,11 +304,13 @@ pt: presença de vento
 sk: prievan
 
 therion: point air-draught:winter
+cz: zimní průvan
 en: winter air draught
 it: circolazione invernale
 sk: zimný prievan
 
 therion: point air-draught:summer
+cz: letní průvan
 en: summer air draught
 it: circolazione estiva
 sk: letný prievan
@@ -472,9 +475,10 @@ es: altura resalte/chimenea/profundidad pozo
 fr: hauteur d’une marche/d’une cheminée/profondeur
 it: altezza
 pt: altura do chão para degrau/chaminé/desnível
-sk: výška stupňa/komínu/hĺbka priepasti
+sk: výška/hĺbka stupňa/komína
 
 therion: point dimensions
+cz: rozměry
 de: Ausdehnung
 es: dimensiones
 it: dimensione
@@ -499,7 +503,7 @@ es: altura chimenea
 fr: hauteur d’une cheminée
 it: altezza camino
 pt: altura da chaminé
-sk: výška komínu
+sk: výška komína
 
 therion: point height:negative
 cz: hloubka propasti
@@ -539,7 +543,7 @@ es: contorno bloque
 fr: bord d’un rocher
 it: bordo masso
 pt: lateral da rocha
-sk: ohraničenie kameňov
+sk: obrys kameňa
 
 therion: line rock-edge
 cz: hrany kamenů
@@ -549,7 +553,7 @@ es: arista bloque
 fr: arête d’un rocher
 it: spigolo masso
 pt: bordas da rocha
-sk: hrany kameňov
+sk: hrany kameňa
 
 therion: point bedrock
 cz: pevná skála
@@ -579,7 +583,7 @@ es: derrubios
 fr: débris
 it: detriti
 pt: escombros
-sk: štrk
+sk: sutina
 
 therion: point sand
 cz: písek
@@ -599,7 +603,7 @@ es: arcilla
 fr: argile
 it: argilla
 pt: lama
-sk: blato
+sk: íl
 
 therion: point water
 cz: voda
@@ -755,7 +759,7 @@ en: clay
 es: arcilla
 it: argilla
 pt: lama
-sk: blato
+sk: íl
 
 therion: area pebbles
 cz: valouny
@@ -916,6 +920,8 @@ pt: leite-de-lua
 sk: mäkký sinter
 
 therion: line moonmilk
+cz: nickamínek
+sk: náteky mäkkého sintra
 
 therion: point stalactite
 cz: stalaktit
@@ -1008,7 +1014,7 @@ fr: excentrique/hélictite
 it: eccentrica
 pt_BR: helictite
 pt_PT: excêntrica
-sk: helektit
+sk: heliktit
 
 therion: point aragonite
 cz: aragonit
@@ -1110,7 +1116,7 @@ es: cavitaciones
 fr: vagues d’érosion (coups de gouge)
 it: scallop
 pt: marcas de fluxo
-sk: erózne útvary
+sk: lastúrovité jamky
 
 therion: point flute
 cz: píšťaly

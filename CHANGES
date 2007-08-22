@@ -7,7 +7,7 @@ therion:
  * new subtypes for air-draught symbol: winter and summer
  * new area types: flowstone, moonmilk
  * ability to display overlying maps in offset
- * new point and line type: map-connection (used to incicate
+ * new point and line type: map-connection (used to indicate
    connection between map parts - extended elevations, maps in
    offset)
  * improved default centerline symbols
@@ -19,7 +19,7 @@ therion:
  * coordinate system specification allowed for scraps
  * areas exported to SHP files
  * export of simple DXF maps
- * updated italian translation (thanks to Marco Corvi)
+ * updated Italian translation (thanks to Marco Corvi)
  * bugs fixed:
    - top level objects selection
    - generation of extended elevation
@@ -34,7 +34,7 @@ xtherion:
 
  * DXF/SVG import in map editor (File->Import)
  * symbol themes and translations comboboxes
- * autocompletition in symbol type comboboxes
+ * autocompletion in symbol type comboboxes
  * bugs fixed:
    - translations of type:subtype works
 
@@ -78,7 +78,7 @@ therion:
    (e.g. border:invisible)
  * added "system" command in configuration files to execute
    system commands during therion compilation 
- * new layou toption: north (true)|grid
+ * new layout option: north (true)|grid
  * -calibrate option for import
  * source/endsource construct allowed in configuration files
  * input allowed within multiline commands
@@ -87,8 +87,8 @@ therion:
    exist
  * support for 1.1 survex .3d file format
  * added German translation of symbols (thanks to Roger Schuster),
-   updated italian translation (thanks to Marco Corvi).
- * default linux installation is done into "/usr/local" instead 
+   updated Italian translation (thanks to Marco Corvi).
+ * default Linux installation is done into "/usr/local" instead 
    of "/usr" directory
  * bugs fixed:
    - automatic calculation of atlas paper size when only size is specified
@@ -102,7 +102,7 @@ xtherion:
    on Win32, xpdf on Linux (original idea of Marco Corvi))
  * sketch control (insert, remove) in scrap toolbox
  * 3D viewer removed from xtherion
- * does not connect to internet any more to check new version available
+ * does not connect to Internet any more to check new version available
  * remembers last working directory on Windows
  * improved scrap scaling - "Scale" button + scale preview arrow in scrap
    control
@@ -125,7 +125,7 @@ Therion 0.4.0 (2006-10-02):
 therion:
 
  * loch - new 3D viewer and default 3D export format
- * vrml model export improved (added surface texture)
+ * VRML model export improved (added surface texture)
  * export model: -wall-source (all)|maps|centerline -- specify
    the source of passage walls
  * layout: survey-level <N> -- show up to N surveys with station
@@ -185,7 +185,7 @@ therion:
 
 xtherion:
 
- * fixed bugs - view is not moved when line is splitted, file is
+ * fixed bugs - view is not moved when line is split, file is
    not changed when image insertion is canceled
 
 --------------------------------------------------------------------------------
@@ -193,18 +193,18 @@ Therion 0.3.8 (2005-05-10):
 
 therion:
 
- * svg export added (features not yet supported: map header, font embedding,
+ * SVG export added (features not yet supported: map header, font embedding,
    layers, map transparency -- this requires SVG 1.2 features)
- * dxf model export added
+ * DXF model export added
  * export format automatically determined from file extension
  * layout: map-header-bg on|(off) - when on, background of map 
    header is filled with background color
- * .ini files installed into /etc directory, .ini.new files allways installed
+ * .ini files installed into /etc directory, .ini.new files always installed
 
 xtherion:
 
  * new items in xtherion.ini file
- * text editor - indent mode now simmilar to ordinary text editors
+ * text editor - indent mode now similar to ordinary text editors
 
 --------------------------------------------------------------------------------
 Therion 0.3.7 (2005-03-16):
@@ -224,7 +224,7 @@ therion:
  * UD data from centerline used in 3D model generated from scraps
  * plt export with LRUD data
  * `/' supported as survey name character
- * unicode characters support in layout TeX code
+ * Unicode characters support in layout TeX code
  * fixed bugs: plumbed shots; join; statistics of centerline only maps
 
 xtherion:
@@ -353,7 +353,7 @@ Therion 0.3.2 (2004-07-22):
 therion:
 
  * configuration file changes:
-   - layout command: scale 1 50 upto 1 100000 allowed and supported
+   - layout command: scale 1 50 up to 1 100000 allowed and supported
  * Therion constructs accented characters if the character is not present
    in the font. It used to omit the accent and display the base character only
  * error message `invalid command context' changed to 
@@ -437,8 +437,8 @@ xtherion:
  * Map editor: new Area control
  * Map editor: `Move to' in File commands added
  * Map editor: name of the edited scrap displayed in Title bar
- * Map editor: edited line is highlited
- * Map editor: selected area is highlited
+ * Map editor: edited line is highlighted
+ * Map editor: selected area is highlighted
  * Map editor: orientation tick at the beginning of line symbols
  * Help/Control dialog with key and mouse shortcuts
  * input (keyboard) encoding menu
@@ -493,7 +493,7 @@ therion:
  * new rules for displaying map previews
  * new initialization file items: tmp-path, tmp-remove
  * error if no source files are specified
- * if error occures under Win32, Therion waits until RETURN is pressed
+ * if error occurs under Win32, Therion waits until RETURN is pressed
 
 xtherion:
 
@@ -549,4 +549,4 @@ therion:
 xtherion:
 
  * Text editor: text undo/redo works with tcltk8.4.3
- * Map editor: line symbols may be splitted
+ * Map editor: line symbols may be split

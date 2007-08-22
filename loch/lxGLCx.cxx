@@ -733,7 +733,7 @@ void lxGLCanvas::LXCONTEXT(RenderIDepthbar)(double size)
   }
 
   // Depth-bar title
-  this->LXCONTEXT(m_fntNumeric)->draw(0.0, this->m_indRes * (size + 1.0) + 0.5 * lxFNTSH, wxString(_T("Altitude")));
+  this->LXCONTEXT(m_fntNumeric)->draw(0.0, this->m_indRes * (size + 1.0) + 0.5 * lxFNTSH, wxString(_("Altitude")));
 
 
 }

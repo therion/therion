@@ -122,11 +122,11 @@ There are also some predefined macros which help with the processing of
   * |\showpointerlist| with one of the |\pointerU| or |\pointerD| as an argument 
     presents the content of this argument. (Which contains 
     |\pointerU| or |\pointerD|, see above.) For each record it calls the macro 
-    |\processpointeritem|, which is responsible for data formating. 
+    |\processpointeritem|, which is responsible for data formatting. 
     
     Macro |\showpointerlist| should be used without redefinition in the place
     where you want to display the content of its argument; for custom data
-    formating redefine |\processpointeritem| macro.
+    formatting redefine |\processpointeritem| macro.
          
   * |\processpointeritem| has three arguments (page-name, page-number, 
     destination) and visualizes these data. The arguments are delimited as 
@@ -322,7 +322,7 @@ which displays north arrow in the upper-left corner of the map sheet.
 
 For user's convenience, there is |\legendcontent| token register. It contains 
 preformatted cave name, north arrow, scale bar, explo/topo/carto teams, 
-comment, copyrigts and legend.
+comment, copyrights and legend.
 Width of the above text may be adjusted by |\legendwidth| dimen register. 
 The |\legendcontent| is also used in the default map layout definition:
 
@@ -353,9 +353,9 @@ Example:
 
 Therion's layout command makes it easy to switch among various predefined map 
 symbol sets. If there is no such symbol or symbol set you want, it's possible 
-to design new map sybols. 
+to design new map symbols. 
 
-Howewer, this requires knowledge of the \MP\ language, which is used for map 
+However, this requires knowledge of the \MP\ language, which is used for map 
 visualization. It's described in 
 
 \list
@@ -363,7 +363,7 @@ visualization. It's described in
      \path|http://cm.bell-labs.com/cm/cs/cstr/162.ps.gz|
 \endlist
 
-User may also benefit from compehensive reference to the {\manfnt METAFONT} 
+User may also benefit from comprehensive reference to the {\manfnt METAFONT} 
 language, which is quite similar to \MP:
 
 \list
@@ -399,7 +399,7 @@ Each new symbol has to be registered by a macro call
 unless it's compiled into Therion executable. 
 
 There are four predefined pens {\it PenA} (thickest) \dots\ {\it PenD} 
-(thinest), which should be used for all drawings. 
+(thinnest), which should be used for all drawings. 
 For drawing and filling use |thdraw| and |thfill| commands instead of \MP's 
 |draw| and |fill|.
 
@@ -408,7 +408,7 @@ For drawing and filling use |thdraw| and |thfill| commands instead of \MP's
 Point symbols are defined as macros using |def ... enddef;| commands.
 Majority of point symbol definitions has four arguments: 
 position (pair), rotation (numeric), scale (numeric) and alignment (pair). 
-Exceptions are {\it section} which has no visual represantation; 
+Exceptions are {\it section} which has no visual representation; 
 all {\it labels}, which require special treatment as described in the
 previous chapter, and 
 {\it station} which takes only one argument: position (pair).
@@ -459,7 +459,7 @@ Following symbols take additional arguments:
 * contour = text: list of points which get the tick or one of 
   $-1$, $-2$ or $-3$ to mark undefined tick, tick in the middle or 
   no tick, respectively
-* section = text: list of points which get the orinetation arrow or 
+* section = text: list of points which get the orientation arrow or 
   $-1$ to indicate no arrows
 * slope = numeric: 0 no border, 1 border; text: list of (point,direction,length) 
   triplets

@@ -47,17 +47,17 @@
 \def\chapter#1.{\eject\outline{#1}
 	\skiplines2\centerline{\chap #1}
 	\nobreak   \write1{\string\cvak\string\penalty-50
-                    \string\line{\string\bf\space #1\string\bodky\ \folio}}%
+                    \string\Line{\string\bf\space #1\string\bodky\ \folio}}%
   \skiplines1}
 \def\subchapter#1.{%\global\advance\kapnum by1\pictnum=1\relax
   \penalty-100\skiplines2\centerline{\subchap #1}\nobreak
-  \write1{\string\cvak\string\line{\string\quad\space
+  \write1{\string\cvak\string\Line{\string\quad\space
             #1\string\bodky\ \folio}}\nobreak
   %\skiplines1\nobreak
 }
 \def\subsubchapter#1.{%\global\advance\kapnum by1\pictnum=1\relax
   \penalty-100\skiplines2\leftline{\subchap #1}\nobreak
-  \write1{\string\cvak\string\line{\string\qquad\space
+  \write1{\string\cvak\string\Line{\string\qquad\space
             #1\string\bodky\ \folio}}\nobreak
 }
 \def\skiplines#1{\par\hbox{}\nobreak\vskip-\baselineskip

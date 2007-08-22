@@ -1,6 +1,8 @@
 HOT LIST:
 
 + -style option to html table export
++ support cross sections (LRUD) in XVI
++ allow (direction + distance) instead of LRUD
 + export rigging list + -text option to point anchor
 + polyline to bezier conversion mode
 + more complex attribute export
@@ -66,6 +68,7 @@ HOT LIST:
 + add statistics survey <survey-name>
 + add survey name under scrap name when debug scrap-names
 + therion --protractor <options>
++ MacOS X installator (http://s.sudre.free.fr/Software/Iceberg.html)
   
 xtherion:
 

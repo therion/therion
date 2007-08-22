@@ -1,10 +1,10 @@
 # file generated automatically - do not modify!
 
-  ::msgcat::mcset cz "scale" [encoding convertfrom utf-8 "m\304\233\305\231\303\255tko"]
-  ::msgcat::mcset en "scale" [encoding convertfrom utf-8 "scale"]
-  ::msgcat::mcset es "scale" [encoding convertfrom utf-8 "escala"]
-  ::msgcat::mcset it "scale" [encoding convertfrom utf-8 "scala"]
-  ::msgcat::mcset sk "scale" [encoding convertfrom utf-8 "mierka"]
+  ::msgcat::mcset cz "Model viewer is not active. To activate it, open some model file." [encoding convertfrom utf-8 "Prohl\303\255\305\276e\304\215 model\305\257 nen\303\255 aktivn\303\255. Pro jeho aktivaci otev\305\231ete soubor s modelem."]
+  ::msgcat::mcset en "Model viewer is not active. To activate it, open some model file." [encoding convertfrom utf-8 "Model viewer is not active. To activate it, open some model file."]
+  ::msgcat::mcset es "Model viewer is not active. To activate it, open some model file." [encoding convertfrom utf-8 "El visor 3D est\303\241 inactivo. Para activarlo, abre alg\303\272n modelo."]
+  ::msgcat::mcset it "Model viewer is not active. To activate it, open some model file." [encoding convertfrom utf-8 "Il visualizzatore di modello non \303\250 attivo. Per attivarlo apri un file di modello."]
+  ::msgcat::mcset sk "Model viewer is not active. To activate it, open some model file." [encoding convertfrom utf-8 "Prehliada\304\215 modelov nie je akt\303\255vny. Aktivuje sa po otvoren\303\255 s\303\272boru."]
 
   ::msgcat::mcset cz "Scrap scale definition." [encoding convertfrom utf-8 "Nastaven\303\255 m\304\233\305\231\303\255tka scrapu."]
   ::msgcat::mcset en "Scrap scale definition." [encoding convertfrom utf-8 "Scrap scale definition."]
@@ -168,11 +168,6 @@
   ::msgcat::mcset it "Fix light source to camera position." [encoding convertfrom utf-8 "Fissa la sorgente di luce nella posizione della camera."]
   ::msgcat::mcset sk "Fix light source to camera position." [encoding convertfrom utf-8 "Zafixuje zdroj svetla na poz\303\255ciu kamery."]
 
-  ::msgcat::mcset en "Model viewer is not active. To activate it, open some model file." [encoding convertfrom utf-8 "Model viewer is not active. To activate it, open some model file."]
-  ::msgcat::mcset es "Model viewer is not active. To activate it, open some model file." [encoding convertfrom utf-8 "El visor 3D est\303\241 inactivo. Para activarlo, abre alg\303\272n modelo."]
-  ::msgcat::mcset it "Model viewer is not active. To activate it, open some model file." [encoding convertfrom utf-8 "Il visualizzatore di modello non \303\250 attivo. Per attivarlo apri un file di modello."]
-  ::msgcat::mcset sk "Model viewer is not active. To activate it, open some model file." [encoding convertfrom utf-8 "Prehliada\304\215 modelov nie je akt\303\255vny. Aktivuje sa po otvoren\303\255 s\303\272boru."]
-
   ::msgcat::mcset cz "Drag to resize control panel." [encoding convertfrom utf-8 "Zm\304\233nit \305\241\303\255\305\231ku panelu."]
   ::msgcat::mcset en "Drag to resize control panel." [encoding convertfrom utf-8 "Drag to resize control panel."]
   ::msgcat::mcset es "Drag to resize control panel." [encoding convertfrom utf-8 "Arrastar para cambiar el tama\303\261o del panel de control."]
@@ -203,6 +198,7 @@
   ::msgcat::mcset it "Switch panels" [encoding convertfrom utf-8 "Cambia posto al pannello"]
   ::msgcat::mcset sk "Switch panels" [encoding convertfrom utf-8 "Preho\304\217 panely"]
 
+  ::msgcat::mcset cz "Toggle toolbar" [encoding convertfrom utf-8 "Vypnout/zapnout li\305\241tu n\303\241stroj\305\257"]
   ::msgcat::mcset it "Toggle toolbar" [encoding convertfrom utf-8 "Mostra/Nascondi la barra strumenti"]
 
   ::msgcat::mcset cz "KBD encoding" [encoding convertfrom utf-8 "K\303\263dov\303\241n\303\255 kl\303\241vesnice"]
@@ -367,6 +363,7 @@
   ::msgcat::mcset it "Map structure" [encoding convertfrom utf-8 "Struttura mappe"]
   ::msgcat::mcset sk "Map structure" [encoding convertfrom utf-8 "Mapov\303\241 \305\241trukt\303\272ra"]
 
+  ::msgcat::mcset cz "Preview" [encoding convertfrom utf-8 "N\303\241hled"]
   ::msgcat::mcset it "Preview" [encoding convertfrom utf-8 "Anteprima"]
   ::msgcat::mcset sk "Preview" [encoding convertfrom utf-8 "N\303\241h\304\276ad"]
 
@@ -418,12 +415,15 @@
   ::msgcat::mcset it "Run therion." [encoding convertfrom utf-8 "Esegui therion"]
   ::msgcat::mcset sk "Run therion." [encoding convertfrom utf-8 "Spusti\305\245 therion."]
 
+  ::msgcat::mcset cz "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset it "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset sk "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
 
+  ::msgcat::mcset cz "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset it "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset sk "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
 
+  ::msgcat::mcset cz "PDF file path." [encoding convertfrom utf-8 "Cesta k PDF souboru"]
   ::msgcat::mcset it "PDF file path." [encoding convertfrom utf-8 "File PDF"]
   ::msgcat::mcset sk "PDF file path." [encoding convertfrom utf-8 "Cesta k PDF s\303\272boru."]
 
@@ -433,6 +433,7 @@
   ::msgcat::mcset it "Survey informations." [encoding convertfrom utf-8 "Informazioni del rilievo"]
   ::msgcat::mcset sk "Survey informations." [encoding convertfrom utf-8 "Inform\303\241cie o \304\215astiach."]
 
+  ::msgcat::mcset cz "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "U\305\276ivatelsk\303\251 rozhran\303\255 nen\303\255 aktivn\303\255. Pro jeho aktivaci otev\305\231ete existuj\303\255c\303\255 soubor nebo vytvo\305\231te nov\303\275."]
   ::msgcat::mcset en "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "User interface is not active. To activate it, open existing file or create new one."]
   ::msgcat::mcset es "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "El interfaz est\303\241 inactivo. Para activarlo, abre un archivo existente o crea uno nuevo."]
   ::msgcat::mcset it "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "L'interfaccia utente non \303\250 attiva. Per attivarla apri un file o creane uno"]
@@ -1032,9 +1033,11 @@
   ::msgcat::mcset it "Other scrap options." [encoding convertfrom utf-8 "Altre opzioni dello scrap"]
   ::msgcat::mcset sk "Other scrap options." [encoding convertfrom utf-8 "Ostatn\303\251 mo\305\276nosti scrapu."]
 
+  ::msgcat::mcset cz "Scale" [encoding convertfrom utf-8 "M\304\233\305\231\303\255tko"]
   ::msgcat::mcset it "Scale" [encoding convertfrom utf-8 "Scala"]
   ::msgcat::mcset sk "Scale" [encoding convertfrom utf-8 "Mierka"]
 
+  ::msgcat::mcset cz "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "\305\240k\303\241lov\303\241n\303\255 scrapu - stiskni pro v\303\275b\304\233r kalibra\304\215n\303\255ch bod\305\257 obr\303\241zku."]
   ::msgcat::mcset it "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "Rescalamento - premi per selezionare i punti di calibrazione."]
   ::msgcat::mcset sk "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "\305\240k\303\241lovanie scrapu - po stla\304\215en\303\255 klikni na \305\241k\303\241lovacie body."]
 
@@ -1134,15 +1137,19 @@
   ::msgcat::mcset it "Units of real coordinates." [encoding convertfrom utf-8 "Unit\303\240 delle coordinate reali."]
   ::msgcat::mcset sk "Units of real coordinates." [encoding convertfrom utf-8 "Jednotky re\303\241lnych s\303\272radn\303\255c."]
 
+  ::msgcat::mcset cz "background sketches" [encoding convertfrom utf-8 "n\303\241\304\215rtky na pozad\303\255"]
   ::msgcat::mcset it "background sketches" [encoding convertfrom utf-8 "Immagini di background"]
   ::msgcat::mcset sk "background sketches" [encoding convertfrom utf-8 "n\303\241\304\215rtky na pozad\303\255."]
 
+  ::msgcat::mcset cz "List of image files used as scrap background." [encoding convertfrom utf-8 "Seznam obr\303\241zk\305\257 pou\305\276it\303\275ch jako pozad\303\255 scrapu"]
   ::msgcat::mcset it "List of image files used as scrap background." [encoding convertfrom utf-8 "Files usati come background dello scrap"]
   ::msgcat::mcset sk "List of image files used as scrap background." [encoding convertfrom utf-8 "Zoznam obr\303\241zkov pou\305\276it\303\275ch ako pozadie."]
 
+  ::msgcat::mcset cz "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "Stiskn\304\233te toto tla\304\215\303\255tko a v\303\275b\304\233rem n\303\241\304\215rtku my\305\241\303\255 jej vlo\305\276te do scrapu."]
   ::msgcat::mcset it "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "Premi per inserire il disegno che scegli col mouse"]
   ::msgcat::mcset sk "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "Po stla\304\215en\303\255 klikni na n\303\241\304\215rtok, ktor\303\275 treba vlo\305\276i\305\245 do scrapu."]
 
+  ::msgcat::mcset cz "Delete sketch from scrap." [encoding convertfrom utf-8 "Odstranit n\303\241\304\215rtek ze scrapu"]
   ::msgcat::mcset it "Delete sketch from scrap." [encoding convertfrom utf-8 "Rimuovi un disegno dallo scrap"]
   ::msgcat::mcset sk "Delete sketch from scrap." [encoding convertfrom utf-8 "Odstr\303\241\305\210 n\303\241\304\215rtok zo scrapu."]
 
@@ -1470,6 +1477,7 @@
   ::msgcat::mcset it "loading area module ..." [encoding convertfrom utf-8 "modulo aree ..."]
   ::msgcat::mcset sk "loading area module ..." [encoding convertfrom utf-8 "nahr\303\241vam modul pre plochy ..."]
 
+  ::msgcat::mcset cz "Actual symbol theme." [encoding convertfrom utf-8 "Aktu\303\241ln\303\255 t\303\251ma symbol\305\257."]
   ::msgcat::mcset it "Actual symbol theme." [encoding convertfrom utf-8 "Simboli."]
   ::msgcat::mcset sk "Actual symbol theme." [encoding convertfrom utf-8 "Aktu\303\241lna t\303\251ma symbolov."]
 
@@ -1575,6 +1583,7 @@
   ::msgcat::mcset it "Open (no pics)" [encoding convertfrom utf-8 "Apri (no pics)"]
   ::msgcat::mcset sk "Open (no pics)" [encoding convertfrom utf-8 "Otvori\305\245 (bez obr\303\241zkov)"]
 
+  ::msgcat::mcset cz "Import" [encoding convertfrom utf-8 "Import"]
 
   ::msgcat::mcset cz "Insert ..." [encoding convertfrom utf-8 "Vlo\305\276it ..."]
   ::msgcat::mcset en "Insert ..." [encoding convertfrom utf-8 "Insert ..."]
@@ -1648,6 +1657,7 @@
   ::msgcat::mcset it "loading line procs ..." [encoding convertfrom utf-8 "procedure di linea ..."]
   ::msgcat::mcset sk "loading line procs ..." [encoding convertfrom utf-8 "na\304\215itavam modul kriviek ..."]
 
+  ::msgcat::mcset cz "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Mapov\303\275 editor nen\303\255 aktivn\303\255. Pro jeho aktivaci otev\305\231ete existuj\303\255c\303\255 soubor nebo vytvo\305\231te nov\303\275."]
   ::msgcat::mcset en "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Map editor is not active. To activate it, open existing file or create new one."]
   ::msgcat::mcset es "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "El editor de mapas est\303\241 inactivo. Para activarlo, abre un archivo existente o crea uno nuevo."]
   ::msgcat::mcset it "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "L'editor di mappa non \303\250 attivo. Per attivarlo apri un file o creane uno."]
@@ -1731,6 +1741,7 @@
   ::msgcat::mcset it "end point insertion" [encoding convertfrom utf-8 "inserimento punto finale"]
   ::msgcat::mcset sk "end point insertion" [encoding convertfrom utf-8 "koniec vkladania bodov"]
 
+  ::msgcat::mcset cz "select object" [encoding convertfrom utf-8 "ozna\304\215 objekt"]
   ::msgcat::mcset it "select object" [encoding convertfrom utf-8 "seleziona oggetto"]
   ::msgcat::mcset sk "select object" [encoding convertfrom utf-8 "ozna\304\215 objekt"]
 
@@ -1740,12 +1751,15 @@
   ::msgcat::mcset it "Insert" [encoding convertfrom utf-8 "Inserisci"]
   ::msgcat::mcset sk "Insert" [encoding convertfrom utf-8 "Vlo\305\276i\305\245"]
 
+  ::msgcat::mcset cz "insert point" [encoding convertfrom utf-8 "vlo\305\276 bod"]
   ::msgcat::mcset it "insert point" [encoding convertfrom utf-8 "inserisci punto"]
   ::msgcat::mcset sk "insert point" [encoding convertfrom utf-8 "vlo\305\276 bod"]
 
+  ::msgcat::mcset cz "insert line point" [encoding convertfrom utf-8 "vlo\305\276 bod k\305\231ivky"]
   ::msgcat::mcset it "insert line point" [encoding convertfrom utf-8 "inserisci punto di linea"]
   ::msgcat::mcset sk "insert line point" [encoding convertfrom utf-8 "vlo\305\276 bod krivky"]
 
+  ::msgcat::mcset cz "insert area border" [encoding convertfrom utf-8 "vlo\305\276 hranici plochy"]
   ::msgcat::mcset it "insert area border" [encoding convertfrom utf-8 "inserisci bordo dell'area"]
   ::msgcat::mcset sk "insert area border" [encoding convertfrom utf-8 "vlo\305\276 okraj plochy"]
 
@@ -1755,9 +1769,11 @@
   ::msgcat::mcset it "Select" [encoding convertfrom utf-8 "Seleziona"]
   ::msgcat::mcset sk "Select" [encoding convertfrom utf-8 "Vybra\305\245"]
 
+  ::msgcat::mcset cz "scale scrap" [encoding convertfrom utf-8 "m\304\233\305\231\303\255tko scrapu"]
   ::msgcat::mcset it "scale scrap" [encoding convertfrom utf-8 "riscala lo scrap"]
   ::msgcat::mcset sk "scale scrap" [encoding convertfrom utf-8 "mierka scrapu"]
 
+  ::msgcat::mcset cz "insert sketch" [encoding convertfrom utf-8 "vlo\305\276 n\303\241\304\215rtek"]
   ::msgcat::mcset it "insert sketch" [encoding convertfrom utf-8 "inserisci disegno"]
   ::msgcat::mcset sk "insert sketch" [encoding convertfrom utf-8 "vlo\305\276 n\303\241\304\215rtok"]
 
@@ -1779,12 +1795,15 @@
   ::msgcat::mcset it "point changes" [encoding convertfrom utf-8 "modifiche di punto"]
   ::msgcat::mcset sk "point changes" [encoding convertfrom utf-8 "zmena parametrov bodu"]
 
+  ::msgcat::mcset cz "Scrap sketch not inserted." [encoding convertfrom utf-8 "N\303\241\304\215rtek nebyl vlo\305\276en."]
   ::msgcat::mcset it "Scrap sketch not inserted." [encoding convertfrom utf-8 "Disegno non inerito."]
   ::msgcat::mcset sk "Scrap sketch not inserted." [encoding convertfrom utf-8 "N\303\241\304\215rtok nebol vlo\305\276en\303\275."]
 
+  ::msgcat::mcset cz "inserting scrap sketch" [encoding convertfrom utf-8 "vkl\303\241d\303\241m n\303\241\304\215rtek"]
   ::msgcat::mcset it "inserting scrap sketch" [encoding convertfrom utf-8 "inserimento disegno"]
   ::msgcat::mcset sk "inserting scrap sketch" [encoding convertfrom utf-8 "vlo\305\276enie n\303\241\304\215rtku"]
 
+  ::msgcat::mcset cz "deleting scrap sketch" [encoding convertfrom utf-8 "odstra\305\210uji n\303\241\304\215rtek"]
   ::msgcat::mcset it "deleting scrap sketch" [encoding convertfrom utf-8 "rimozione disegno"]
   ::msgcat::mcset sk "deleting scrap sketch" [encoding convertfrom utf-8 "odstr\303\241nenie n\303\241\304\215rtku"]
 
@@ -2245,6 +2264,7 @@
   ::msgcat::mcset it "Processing line %s ..." [encoding convertfrom utf-8 "Elaborazione linea %s ..."]
   ::msgcat::mcset sk "Processing line %s ..." [encoding convertfrom utf-8 "Sprac\303\272vam riadok %s ..."]
 
+  ::msgcat::mcset cz "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Textov\303\275 editor nen\303\255 aktivn\303\255. Pro jeho aktivaci otev\305\231ete existuj\303\255c\303\255 soubor nebo vytvo\305\231te nov\303\275."]
   ::msgcat::mcset en "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Text editor is not active. To activate it, open existing file or create new one."]
   ::msgcat::mcset es "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "El editor de texto est\303\241 inactivo. Para activarlo, abre un archivo existente o crea uno nuevo."]
   ::msgcat::mcset it "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "L'editor di testo non \303\250 attivo. Per attivarlo apri un file o creane uno."]
@@ -2288,12 +2308,15 @@
   ::msgcat::mcset it "theme basic-symbols" [encoding convertfrom utf-8 "base"]
   ::msgcat::mcset sk "theme basic-symbols" [encoding convertfrom utf-8 "z\303\241kladn\303\251 symboly"]
 
+  ::msgcat::mcset cz "theme passage-fills" [encoding convertfrom utf-8 "v\303\275pl\305\210"]
   ::msgcat::mcset it "theme passage-fills" [encoding convertfrom utf-8 "riempimenti"]
   ::msgcat::mcset sk "theme passage-fills" [encoding convertfrom utf-8 "v\303\275pl\305\210"]
 
+  ::msgcat::mcset cz "theme speleothems" [encoding convertfrom utf-8 "v\303\275zdoba"]
   ::msgcat::mcset it "theme speleothems" [encoding convertfrom utf-8 "speleotemi"]
   ::msgcat::mcset sk "theme speleothems" [encoding convertfrom utf-8 "v\303\275zdoba"]
 
+  ::msgcat::mcset cz "theme equipement" [encoding convertfrom utf-8 "vystrojen\303\255"]
   ::msgcat::mcset it "theme equipement" [encoding convertfrom utf-8 "armo"]
   ::msgcat::mcset sk "theme equipement" [encoding convertfrom utf-8 "vystrojenie"]
 

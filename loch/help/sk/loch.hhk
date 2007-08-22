@@ -6,19 +6,19 @@
 </HEAD><BODY>
 <UL>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Contents">
+		<param name="Name" value="Obsah">
 		<param name="Local" value="loch.htm">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Control">
+		<param name="Name" value="Základné ovládanie">
 		<param name="Local" value="loch.htm#Control">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Rendering">
+		<param name="Name" value="Rendrovanie do súboru">
 		<param name="Local" value="loch.htm#Rendering">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="Bugs">
+		<param name="Name" value="Známe problémy">
 		<param name="Local" value="loch.htm#Bugs">
 		</OBJECT>
 </UL>

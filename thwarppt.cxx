@@ -32,6 +32,10 @@
 
 #include "thwarppt.h"
 
+#ifndef M_PI
+#define M_PI       3.14159265358979323846
+#endif
+
 typedef unsigned int warpp_t;
 const warpp_t ngbh_mask = ((warpp_t)(0x7))<<(8*sizeof(warpp_t)-3);
 const warpp_t indx_mask = ~ngbh_mask;
