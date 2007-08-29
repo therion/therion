@@ -23,19 +23,7 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
 # PLATFORM CONFIG
 
 # PLATFORM LINUX
-CXX = g++
-CC = gcc
-POBJECTS =
-LOCHEXE = loch/loch
-CXXPFLAGS = -DTHLINUX
-CCPFLAGS = -DTHLINUX
-LDPFLAGS = -s
-THPLATFORM = LINUX
-THXTHMKCMD = ./therion
-
-
-# PLATFORM DEBIAN
-##CXX = c++
+##CXX = g++
 ##CC = gcc
 ##POBJECTS =
 ##LOCHEXE = loch/loch
@@ -44,6 +32,18 @@ THXTHMKCMD = ./therion
 ##LDPFLAGS = -s
 ##THPLATFORM = LINUX
 ##THXTHMKCMD = ./therion
+
+
+# PLATFORM DEBIAN
+CXX = c++
+CC = gcc
+POBJECTS =
+LOCHEXE = loch/loch
+CXXPFLAGS = -DTHLINUX
+CCPFLAGS = -DTHLINUX
+LDPFLAGS = -s
+THPLATFORM = LINUX
+THXTHMKCMD = ./therion
 
 
 # PLATFORM WIN32
