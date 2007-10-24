@@ -1,5 +1,19 @@
 HOT LIST:
 
++ thbook+CHANGES: text command in configuration file
++ thbook: symbol-set name is case sentive!!!
+
++ makeunixify completely to TCL (not to use dos2unix)
++ add text command to initialization file
++ translate xtherion icon descriptions
++ nastavenie morphing algoritmu (pre scrapy) do config suboru
++ 3D generation algorithm - do not remove join points
++ 3D generation algorithm - take xelevation data into account
++ scrap name with "_" exported with "." when debug scrap-names
++ fix hash export in AutoCAD DXF file format	
++ fix usage of extra morphing points (sometimes are ignored)
++ check bug with iJTSK shapefile export
++ check bug - when no areas are exported to shapefiles
 + -style option to html table export
 + support cross sections (LRUD) in XVI
 + allow (direction + distance) instead of LRUD
@@ -72,6 +86,10 @@ HOT LIST:
   
 xtherion:
 
++ fix file saving when drive/device have been unplugged
++ fix: the scrollbar does not appear automatically in
+  compilation window after a compile. We must resize the window or go back
+  in image window (and go back in compile window) to make it appear
 + save/load xtherion startup script to $HOME/.xtherion
 + edit line -> to bezier / to polyline option
 + rightclick on map-item with changes of types and subtypes

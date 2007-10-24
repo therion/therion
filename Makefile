@@ -284,14 +284,14 @@ thcmdline.o: thcmdline.cxx thcmdline.h therion.h thlogfile.h thbuffer.h \
   thobjectsrc.h thselector.h thtmpdir.h extern/getopt.h
 thconfig.o: thconfig.cxx thconfig.h thbuffer.h thmbuffer.h thinput.h \
   thparse.h thexporter.h thexport.h thobjectsrc.h thselector.h therion.h \
-  thchenc.h thchencdata.h thexception.h thdatabase.h thdataobject.h \
-  thperson.h thdate.h thdataleg.h thobjectname.h thinfnan.h thdb1d.h \
-  thobjectid.h thdb3d.h thdb2d.h thdb2dprj.h thmapstat.h thlegenddata.h \
-  thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h \
-  thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
-  thattr.h thdatareader.h thcsdata.h thproj.h thlogfile.h thgeomag.h \
-  thgeomagdata.h thlayout.h thsymbolset.h thsymbolsetlist.h thlocale.h \
-  thsketch.h thpic.h
+  thlang.h thlangdata.h thchenc.h thchencdata.h thexception.h \
+  thdatabase.h thdataobject.h thperson.h thdate.h thdataleg.h \
+  thobjectname.h thinfnan.h thdb1d.h thobjectid.h thdb3d.h thdb2d.h \
+  thdb2dprj.h thmapstat.h thlegenddata.h thdb2dpt.h thdb2dlp.h thdb2dab.h \
+  thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h \
+  thlayoutln.h thscrapen.h thscraplp.h thattr.h thdatareader.h thcsdata.h \
+  thproj.h thlogfile.h thgeomag.h thgeomagdata.h thlayout.h thsymbolset.h \
+  thsymbolsetlist.h thlocale.h thsketch.h thpic.h
 thconvert.o: thconvert.cxx thpdfdbg.h thexception.h therion.h thbuffer.h \
   thpdfdata.h thepsparse.h thtexfonts.h
 thcsdata.o: thcsdata.cxx thcsdata.h thparse.h thbuffer.h thmbuffer.h
@@ -562,7 +562,13 @@ thjoin.o: thjoin.cxx thjoin.h thdataobject.h thdatabase.h thmbuffer.h \
   thscraplo.h thlayoutln.h thscrapen.h thscraplp.h thattr.h thchenc.h \
   thchencdata.h thexception.h
 thlang.o: thlang.cxx thlang.h thlangdata.h thparse.h thbuffer.h \
-  thmbuffer.h thlangdata.cxx thinit.h thinput.h
+  thmbuffer.h thlangdata.cxx thinit.h thinput.h thdatabase.h \
+  thdataobject.h thperson.h thdate.h thdataleg.h thobjectname.h therion.h \
+  thobjectsrc.h thinfnan.h thdb1d.h thobjectid.h thdb3d.h thdb2d.h \
+  thdb2dprj.h thmapstat.h thlegenddata.h thdb2dpt.h thdb2dlp.h thdb2dab.h \
+  thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h \
+  thlayoutln.h thscrapen.h thscraplp.h thattr.h thchenc.h thchencdata.h \
+  thexception.h
 thlangdata.o: thlangdata.cxx
 thlayout.o: thlayout.cxx thlayout.h thdataobject.h thdatabase.h \
   thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h \

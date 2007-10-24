@@ -13,7 +13,7 @@ if ($platform eq 'WIN32') {
   `rm -f /usr/local/etc/xtherion.ini.new`;
   `cp -f $cdir/therion /usr/local/bin/therion`;
   `cp -f $cdir/xtherion/xtherion /usr/local/bin/xtherion`;
-  if (!($platform eq 'MACOSX')) {
+  if ((-s $cdir/loch/loch) > 0) {
     `cp -f $cdir/loch/loch /usr/local/bin/loch`;
   }
   `cp -f $cdir/therion.ini /usr/local/etc/therion.ini.new`;

@@ -29,6 +29,7 @@
 #include "thconfig.h"
 #include "therion.h"
 #include "thparse.h"
+#include "thlang.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "thchenc.h"
@@ -60,6 +61,7 @@ enum {
   TT_AUTO_JOIN,
   TT_SYSTEM,
   TT_SKETCH_WARP,
+  TT_TEXT,
 };
 
 
@@ -73,6 +75,7 @@ static const thstok thtt_cfg[] = {
   {"sketch-warp", TT_SKETCH_WARP},
   {"source", TT_SOURCE},
   {"system", TT_SYSTEM},
+  {"text", TT_TEXT},
   {"unselect", TT_UNSELECT},
   {NULL, TT_UNKNOWN_CFG}
 };
@@ -457,6 +460,12 @@ void thconfig::load()
             if (valuemb.get_size() > 1)
               ththrow(("single system command expected"))
             this->exporter.parse_system(valuemb.get_buffer()[0]);
+            break;
+
+          case TT_TEXT:
+            if ((valuemb.get_size() < 3) || (valuemb.get_size() > 3))
+              ththrow(("invalid text syntax -- should be: text <language> <text> <translation>"))
+            thlang_set_translation(valuemb.get_buffer()[0], valuemb.get_buffer()[1], valuemb.get_buffer()[2]);
             break;
 
           case TT_OUTCS:
@@ -871,7 +880,7 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
           thlog.printf("geomag declinations (deg):\n");
           firstdec = false;
         }
-        if (this->get_outcs_mag_decl(double(yyy) + 0.5, dec)) {
+        if (this->get_outcs_mag_decl(double(yyy), dec)) {
           thlog.printf("  %4d.1.1  %.4f\n", yyy, dec);
         }
       }

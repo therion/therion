@@ -44,6 +44,8 @@ int thlang_getlang(int lng);
 
 const thstok * thlang_get_text_table();
 
+void thlang_set_translation(char * lang, char * text, char * translation);
+
 #endif
 
 

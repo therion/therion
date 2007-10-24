@@ -28,7 +28,7 @@
 
 
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 #include "lxRender.h"
@@ -439,7 +439,7 @@ void lxRenderFile::Render() {
 #else
     _("PDF files (*.pdf)|*.pdf|PNG files (*.png)|*.png|BMP files (*.bmp)|*.bmp"), 
 #endif
-    wxSAVE | wxOVERWRITE_PROMPT);
+    wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
   fileDlg.CentreOnParent();
   fileDlg.SetFilterIndex(m_pData->m_imgFileType);
   if (fileDlg.ShowModal() == wxID_OK) {
@@ -852,7 +852,7 @@ void lxRenderFile::RenderPDFHeader()
 
   pdf_obj[4] = ftell(this->m_file);
   sprintf(tmp_buff, "q\n%.4f 0 0 %.4f 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
-  fprintf(this->m_file,"4 0 obj <<\n/Length %u\n>>\nstream\n%sendstream\nendobj\n", strlen(tmp_buff), tmp_buff);
+  fprintf(this->m_file,"4 0 obj <<\n/Length %u\n>>\nstream\n%sendstream\nendobj\n", (unsigned)strlen(tmp_buff), tmp_buff);
 
   pdf_obj[3] = ftell(this->m_file);
   fprintf(this->m_file,"3 0 obj <<\n/Type /Page\n/Contents 4 0 R\n/Resources 2 0 R\n/MediaBox [0 0 %.4f %.4f]\n/Parent 5 0 R\n>> endobj\n", imw, imh);
@@ -926,7 +926,7 @@ void lxRenderFile::RenderPDFFooter()
   } while (contpng);
 
   fseek(this->m_file, pdf_png_start_length, SEEK_SET);
-  fprintf(this->m_file,"/Length %u\n/Filter /FlateDecode\n/DecodeParms << /Colors 3 /Columns %u /BitsPerComponent 8 /Predictor 10 >>\n>>\nstream\n", png_len, this->m_imgWidth);
+  fprintf(this->m_file,"/Length %u\n/Filter /FlateDecode\n/DecodeParms << /Colors 3 /Columns %u /BitsPerComponent 8 /Predictor 10 >>\n>>\nstream\n", (unsigned) png_len, this->m_imgWidth);
 
 #define buffsize 256000
   unsigned char * buff = new unsigned char [buffsize]; 
@@ -979,8 +979,8 @@ void lxRenderFile::RenderPDFFooter()
 
   pdf_obj[9] = ftell(this->m_file);
   fprintf(this->m_file,"xref\n0 8\n%010u 65535 f\n%010u 00000 n\n%010u 00000 n\n%010u 00000 n\n%010u 00000 n\n%010u 00000 n\n%010u 00000 n\n%010u 00000 n\n",
-    0,pdf_obj[1],pdf_obj[2],pdf_obj[3],pdf_obj[4],pdf_obj[5],pdf_obj[6],pdf_obj[7]);
-  fprintf(this->m_file,"trailer\n<< /Size 8\n /Root 6 0 R\n/Info 7 0 R >>\nstartxref\n%u\n%%%%EOF\n",pdf_obj[9]);
+    0,(unsigned)pdf_obj[1],(unsigned)pdf_obj[2],(unsigned)pdf_obj[3],(unsigned)pdf_obj[4],(unsigned)pdf_obj[5],(unsigned)pdf_obj[6],(unsigned)pdf_obj[7]);
+  fprintf(this->m_file,"trailer\n<< /Size 8\n /Root 6 0 R\n/Info 7 0 R >>\nstartxref\n%u\n%%%%EOF\n",(unsigned)pdf_obj[9]);
 
   png_destroy_write_struct(&this->png_ptr, &this->png_info_ptr);
 

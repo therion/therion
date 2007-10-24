@@ -162,7 +162,7 @@ sub write_sources {
   @texts = sort keys %hr;
 
   $textparse = "static const thstok thtt__texts [" . ($#texts + 2) . "] = {\n";
-  $texttable = "static const thlang_pchar thlang__translations [" . ($#texts + 1) . "][" . ($#langs + 1) . "] = {\n";
+  $texttable = "static thlang_pchar thlang__translations [" . ($#texts + 1) . "][" . ($#langs + 1) . "] = {\n";
   $i = 0;
   my $nlkey;
   foreach $key (@texts) {

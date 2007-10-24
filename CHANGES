@@ -1,4 +1,26 @@
 --------------------------------------------------------------------------------
+Therion 0.5.2 (YYYY-MM-DD):
+
+therion:
+
+ * updated french translations (thanks to Gilbert Fernandes)
+ * bugs fixed:
+   - symbol-show|hide line moonmilk works
+   - declination output fixed (half year shift removed)
+   
+xtherion:
+
+ * 
+ * bugs fixed:
+   - 
+   
+loch:
+
+ * 
+ * bugs fixed: 
+   - wxWidgets 2.8.0 compilation thanks to Olly Betts
+
+--------------------------------------------------------------------------------
 Therion 0.5.1 (2007-08-29):
 
 therion:

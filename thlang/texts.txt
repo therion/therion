@@ -91,6 +91,7 @@ sk: pomocná šípka
 therion: line map-connection
 cz: spojení map
 en: map connection
+fr: jonction de carte
 it: riporto di mappa
 sk: prepojenie máp
 
@@ -228,6 +229,7 @@ therion: point section
 cz: příčný řez
 de: Schnitt
 es: sección
+fr: section
 it: sezione
 pt_BR: seção
 pt_PT: secção
@@ -306,12 +308,14 @@ sk: prievan
 therion: point air-draught:winter
 cz: zimní průvan
 en: winter air draught
+fr: courant d’air d’hiver
 it: circolazione invernale
 sk: zimný prievan
 
 therion: point air-draught:summer
 cz: letní průvan
 en: summer air draught
+fr: courant d’air d’été
 it: circolazione estiva
 sk: letný prievan
 
@@ -401,6 +405,7 @@ cz: meandr ve dně
 de: Bodenmäander
 en: floor meander
 es: meandro
+fr: méandre au sol
 it: meandro
 pt: meandro no piso
 sk: meander v dne
@@ -432,6 +437,7 @@ cz: stropní meandr
 de: Deckenmäander
 en: ceiling meander
 es: meandro inverso
+fr: méandre de plafond
 it: canale di volta
 pt_BR: meandro no teto
 pt_PT: meandro no tecto
@@ -481,6 +487,7 @@ therion: point dimensions
 cz: rozměry
 de: Ausdehnung
 es: dimensiones
+fr: proportions
 it: dimensione
 pt: dimensões
 sk: rozmery
@@ -630,6 +637,7 @@ cz: sníh
 de: Schnee
 en: snow
 es: nieve
+fr: neige
 it: neve
 pt: neve
 sk: sneh
@@ -729,6 +737,7 @@ cz: sníh
 de: Schneefläche
 en: snow
 es: nieve
+fr: neige
 it: neve
 pt: neve
 sk: sneh
@@ -738,6 +747,7 @@ cz: led
 de: Eisfläche
 en: ice
 es: hielo
+fr: glace
 it: ghiaccio
 pt: gelo
 sk: ľad
@@ -757,6 +767,7 @@ cz: bahno
 de: Lehmfläche
 en: clay
 es: arcilla
+fr: argile
 it: argilla
 pt: lama
 sk: íl
@@ -766,6 +777,7 @@ cz: valouny
 de: Kiesfläche
 en: pebbles
 es: cantos rodados
+fr: galets/pierres
 it: ciotoli
 pt: seixos
 sk: okrúhliaky
@@ -785,6 +797,7 @@ cz: skalní bloky
 de: Fläche mit Blöcken
 en: blocks
 es: bloques
+fr: blocs
 it: massi
 pt: blocos
 sk: skalné bloky
@@ -921,6 +934,7 @@ sk: mäkký sinter
 
 therion: line moonmilk
 cz: nickamínek
+fr: mondmilch
 sk: náteky mäkkého sintra
 
 therion: point stalactite
@@ -1123,7 +1137,7 @@ cz: píšťaly
 de: Kolk
 en: flute
 es: canaleta
-fr: flute (?)
+fr: marmites
 it: scanalatura
 pt: marcas de fluxo
 sk: píšťaly
@@ -1272,6 +1286,7 @@ therion: point remark
 cz: poznámka
 de: Bemerkung
 es: nota
+fr: remarque
 it: nota
 pt: anotação
 sk: poznámka
@@ -1280,6 +1295,7 @@ therion: point label
 cz: pojmenování
 de: Beschriftung
 es: etiqueta
+fr: libellé
 it: etichetta
 pt: indicação
 sk: pomenovanie
@@ -1288,6 +1304,7 @@ therion: line label
 cz: pojmenování
 de: Beschriftung
 es: etiqueta
+fr: libellé
 it: etichetta
 pt: indicação
 sk: pomenovanie
@@ -1307,6 +1324,7 @@ cz: Nadmořské výšky
 de: Höhe des Titelfeldes
 en: Altitudes
 es: color (altitud)
+fr: Altitudes
 it: Profondità
 pt: Altitudes
 sk: Nadmorské výšky
@@ -1316,6 +1334,7 @@ cz: Mapy
 de: Karten
 en: Maps
 es: color (mapa)
+fr: Cartes
 it: Mappa
 pt: Mapas
 sk: Mapy

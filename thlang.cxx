@@ -29,6 +29,8 @@
 #include "thparse.h"
 #include "thlangdata.cxx"
 #include "thinit.h"
+#include "thdatabase.h"
+#include "thexception.h"
 
 int thlang_parse(char * str) {
   return thmatch_token(str, thtt_lang);
@@ -48,6 +50,20 @@ char * thlang_getcxxid(int id) {
 const thstok * thlang_get_text_table()
 {
   return &(thtt__texts[0]);
+}
+
+void thlang_set_translation(char * lang, char * text, char * translation) {
+  
+  int lang_id;
+  lang_id = thlang_parse(lang);
+  if (lang_id == THLANG_UNKNOWN)
+    ththrow(("unknown language -- %s", lang));
+  int text_id;
+  text_id = thmatch_token(text, thtt__texts);
+  if (text_id == -1)
+    ththrow(("unknown text -- %s", text))
+  thlang__translations[text_id][lang_id] = thdb.strstore(translation);
+
 }
 
 char * thT(char * txt, int lng) {
