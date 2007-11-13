@@ -20,7 +20,8 @@ enum {
   THLANG_PT = 8,
   THLANG_PT_BR = 9,
   THLANG_PT_PT = 10,
-  THLANG_SK = 11,
+  THLANG_RU = 11,
+  THLANG_SK = 12,
 };
 
  

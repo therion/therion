@@ -3,6 +3,7 @@ Therion 0.5.2 (YYYY-MM-DD):
 
 therion:
 
+ * added russian translations (thanks to Vasily Vl. Suhachev)
  * updated french translations (thanks to Gilbert Fernandes)
  * bugs fixed:
    - symbol-show|hide line moonmilk works

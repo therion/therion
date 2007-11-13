@@ -77,6 +77,13 @@ void init_encodings() {
   F.ss = "csss10";
   F.si = "csssi10";
   FONTS.push_back(F);
+  F.id = get_enc_id("cmcyr");
+  F.rm = "cmcyr10";
+  F.it = "cmcti10";
+  F.bf = "cmcbx10";
+  F.ss = "cmcss10";
+  F.si = "cmcssi10";
+  FONTS.push_back(F);
 }
 
 unistr utf2uni(string s) {

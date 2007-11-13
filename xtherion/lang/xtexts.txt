@@ -1,22 +1,30 @@
-therion: Model viewer is not active. To activate it, open some model file.
-cz: Prohlížeč modelů není aktivní. Pro jeho aktivaci otevřete soubor s modelem.
-en: Model viewer is not active. To activate it, open some model file.
-es: El visor 3D está inactivo. Para activarlo, abre algún modelo.
-it: Il visualizzatore di modello non è attivo. Per attivarlo apri un file di modello.
-sk: Prehliadač modelov nie je aktívny. Aktivuje sa po otvorení súboru.
+therion: %s \[%s\] -- неизвестная кодировка -- %s
+
+therion: scale
+ru: масштаб
 
 therion: Scrap scale definition.
 cz: Nastavení měřítka scrapu.
 en: Scrap scale definition.
 es: Definir la escala del croquis.
 it: Definizione della scala dello scrap.
+ru: Задание масштаба скрапа.
 sk: Nastavenie mierky scrapu.
+
+therion: inserting image
+cz: vkládám obrázek
+en: inserting image
+es: insertando imagen
+it: inserimento immagine
+ru: вставка изображения
+sk: vkladám obrázok
 
 therion: loading model viewer...
 cz: nahrávám 3D prohlížeč...
 en: loading model viewer...
 es: visor 3D...
 it: modulo visualizzazione ...
+ru: загрузка просмотрщика 3D-модели ...
 sk: 3D prehliadač...
 
 therion: Model viewer
@@ -24,6 +32,7 @@ cz: 3D prohlížeč
 en: Model viewer
 es: Visor 3D
 it: Visualizza modello
+ru: Просмотрщик 3D-модели
 sk: 3D prehliadač
 
 therion: Camera
@@ -31,6 +40,7 @@ cz: Kamera
 en: Camera
 es: Cámara
 it: Fotocamera
+ru: Камера
 sk: Kamera
 
 therion: Model
@@ -38,6 +48,7 @@ cz: Model
 en: Model
 es: Modelo
 it: Modello
+ru: Модель
 sk: Model
 
 therion: Reload
@@ -45,20 +56,15 @@ cz: Otevřít znovu
 en: Reload
 es: Recargar
 it: Ricarica
+ru: Перезагрузить
 sk: Znovu načítať
-
-therion: inserting image
-cz: vkládám obrázek
-en: inserting image
-es: insertando imagen
-it: inserimento immagine
-sk: vkladám obrázok
 
 therion: facing
 cz: azimut
 en: facing
 es: vista
 it: di fronte
+ru: поворот
 sk: azimut
 
 therion: north
@@ -66,6 +72,7 @@ cz: sever
 en: north
 es: norte
 it: nord
+ru: север
 sk: sever
 
 therion: east
@@ -73,6 +80,7 @@ cz: východ
 en: east
 es: este
 it: est
+ru: восток
 sk: východ
 
 therion: west
@@ -80,6 +88,7 @@ cz: západ
 en: west
 es: oeste
 it: ovest
+ru: запад
 sk: západ
 
 therion: south
@@ -87,6 +96,7 @@ cz: jih
 en: south
 es: sur
 it: sud
+ru: юг
 sk: juh
 
 therion: Set facing angle.
@@ -94,6 +104,7 @@ cz: Nastaví úhel otočení.
 en: Set facing angle.
 es: Ajustar punto de vista.
 it: Imposta l'angolo di vista
+ru: Установить угол поворота.
 sk: Nastav azimut pohľadu.
 
 therion: Facing angle.
@@ -101,6 +112,7 @@ cz: Úhel otočení.
 en: Facing angle.
 es: Punto de vista.
 it: Angolo di vista
+ru: Угол поворота.
 sk: Azimut pohľadu.
 
 therion: auto rotate
@@ -108,6 +120,7 @@ cz: auto rotace
 en: auto rotate
 es: rotar
 it: auto-rotazione
+ru: автовращение
 sk: rotácia
 
 therion: Turn on/off camera auto rotation
@@ -115,6 +128,7 @@ cz: Zapne/vypne automatickou rotaci
 en: Turn on/off camera auto rotation
 es: Conectar-Desconectar rotación automática de la cámara
 it: Attiva/disattiva l'auto-rotazione
+ru: Включить/выключить автовращение камеры
 sk: Zapne/vypne automatické otáčanie kamery.
 
 therion: profile
@@ -122,6 +136,7 @@ cz: profil
 en: profile
 es: perfil
 it: profilo
+ru: профиль
 sk: profil
 
 therion: top
@@ -129,6 +144,7 @@ cz: pohled zhora
 en: top
 es: superior
 it: sopra
+ru: верх
 sk: pohľad zhora
 
 therion: side
@@ -136,6 +152,7 @@ cz: pohled zboku
 en: side
 es: lateral
 it: lato
+ru: сторона
 sk: pohľad zboku
 
 therion: bottom
@@ -143,6 +160,7 @@ cz: pohled zdola
 en: bottom
 es: inferior
 it: sotto
+ru: низ
 sk: pohľad zospodu
 
 therion: reset
@@ -150,6 +168,7 @@ cz: reset
 en: reset
 es: reajustar
 it: ripristina
+ru: сбросить
 sk: reset
 
 therion: Set profile angle.
@@ -157,6 +176,7 @@ cz: Nastaví úhel profilu.
 en: Set profile angle.
 es: Ajustar ángulo del perfil.
 it: Imposta l'angolo di profilo.
+ru: Установить угол профиля.
 sk: Nastaví sklon pohľadu.
 
 therion: Profile angle.
@@ -164,6 +184,7 @@ cz: Úhel profilu.
 en: Profile angle.
 es: Angulo del perfil.
 it: Angolo di profilo.
+ru: Угол профиля.
 sk: Sklon pohľadu.
 
 therion: surface transparency
@@ -171,6 +192,7 @@ cz: průhlednost povrchu
 en: surface transparency
 es: transparencia superficie
 it: trasparenza della superficie
+ru: прозрачность поверхности
 sk: priehľadnosť povrchu
 
 therion: Turn on/off surface transparency.
@@ -178,6 +200,7 @@ cz: Zapne/vypne průhlednost povrchu.
 en: Turn on/off surface transparency.
 es: Conectar/desconectar transparencia de la superficie.
 it: Attiva/disattiva la trasparenza della superficie.
+ru: Включить/отключить прозрачность поверхности.
 sk: Zapne/vypne priehľadnosť povrchu.
 
 therion: light follows camera
@@ -185,6 +208,7 @@ cz: světlo následuje kameru
 en: light follows camera
 es: luz en cámara
 it: la luce segue la camera
+ru: источник света следует за камерой
 sk: svetlo nasleduje kameru
 
 therion: Fix light source to camera position.
@@ -192,13 +216,23 @@ cz: Světelný zdroj připevněný ke kameře.
 en: Fix light source to camera position.
 es: La fuente de luz coincidirá siempre con la posición de la cámara
 it: Fissa la sorgente di luce nella posizione della camera.
+ru: Фиксировать источник света в текущей позиции камеры
 sk: Zafixuje zdroj svetla na pozíciu kamery.
+
+therion: Model viewer is not active. To activate it, open some model file.
+cz: Prohlížeč modelů není aktivní. Pro jeho aktivaci otevřete soubor s modelem.
+en: Model viewer is not active. To activate it, open some model file.
+es: El visor 3D está inactivo. Para activarlo, abre algún modelo.
+it: Il visualizzatore di modello non è attivo. Per attivarlo apri un file di modello.
+ru: Просмотрщик трехмерной модели неактивен. Для активации откройте файл модели.
+sk: Prehliadač modelov nie je aktívny. Aktivuje sa po otvorení súboru.
 
 therion: Drag to resize control panel.
 cz: Změnit šířku panelu.
 en: Drag to resize control panel.
 es: Arrastar para cambiar el tamaño del panel de control.
 it: Trascina per ridimensionare il pannello dei controlli
+ru: Перетаскивайте для изменения размера панели
 sk: Rozšíriť alebo zúžiť okno kontrolných panelov.
 
 therion: File
@@ -206,6 +240,7 @@ cz: Soubor
 en: File
 es: Archivo
 it: File
+ru: Файл
 sk: Súbor
 
 therion: Maximize
@@ -213,6 +248,7 @@ cz: Maximalizovat
 en: Maximize
 es: Maximizar
 it: Massimizza
+ru: Развернуть
 sk: Maximalizovať
 
 therion: Normalize
@@ -220,6 +256,7 @@ cz: Normální velikost
 en: Normalize
 es: Normalizar
 it: Normalizza
+ru: Свернуть
 sk: Normálna veľkosť
 
 therion: Switch panels
@@ -227,17 +264,20 @@ cz: Přehoď panely
 en: Switch panels
 es: Alternar paneles
 it: Cambia posto al pannello
+ru: Переключить панели
 sk: Prehoď panely
 
 therion: Toggle toolbar
 cz: Vypnout/zapnout lištu nástrojů
 it: Mostra/Nascondi la barra strumenti
+ru: Переключить панель инструментов
 
 therion: KBD encoding
 cz: Kódování klávesnice
 en: KBD encoding
 es: Codificación teclado
 it: Encoding della tastiera
+ru: Кодировка клавиатуры
 sk: Kódovanie klávesnice
 
 therion: Window
@@ -245,6 +285,7 @@ cz: Okno
 en: Window
 es: Ventana
 it: Finestra
+ru: Окно
 sk: Okno
 
 therion: Quit
@@ -252,6 +293,7 @@ cz: Konec
 en: Quit
 es: Salir
 it: Esci
+ru: Выход
 sk: Ukončiť
 
 therion: Help
@@ -259,6 +301,7 @@ cz: Nápověda
 en: Help
 es: Ayuda
 it: Aiuto
+ru: Помощь
 sk: Pomoc
 
 therion: BAC calculator
@@ -266,6 +309,7 @@ cz: Alkohol tester
 en: BAC calculator
 es: Borrachímetro
 it: Calcolatore BAC
+ru: Калькулятор алкоголя
 sk: Alkohol tester
 
 therion: Biometric data
@@ -273,6 +317,7 @@ cz: Biometrické údaje
 en: Biometric data
 es: Datos biométricos
 it: Dati biometrici
+ru: Биометрические данные
 sk: Biometrické údaje
 
 therion: age
@@ -280,6 +325,7 @@ cz: věk
 en: age
 es: edad
 it: età
+ru: Возраст
 sk: vek
 
 therion: years
@@ -287,6 +333,7 @@ cz: let
 en: years
 es: años
 it: anni
+ru: лет
 sk: rokov
 
 therion: gender
@@ -294,6 +341,7 @@ cz: pohlaví
 en: gender
 es: sexo
 it: sesso
+ru: Пол
 sk: pohlavie
 
 therion: male
@@ -301,6 +349,7 @@ cz: muž
 en: male
 es: hombre
 it: maschio
+ru: мужчина
 sk: muž
 
 therion: female
@@ -308,6 +357,7 @@ cz: žena
 en: female
 es: mujer
 it: femmina
+ru: женщина
 sk: žena
 
 therion: height
@@ -315,6 +365,7 @@ cz: výška
 en: height
 es: altura
 it: altezza
+ru: Рост
 sk: výška
 
 therion: weight
@@ -322,6 +373,7 @@ cz: váha
 en: weight
 es: peso
 it: peso
+ru: Вес
 sk: váha
 
 therion: Consumption data
@@ -329,6 +381,7 @@ cz: Údaje o spotřebě
 en: Consumption data
 es: Datos de ingestión
 it: Bevande assunte
+ru: Характеристика принятого
 sk: Údaje o spotrebe
 
 therion: volume
@@ -336,6 +389,7 @@ cz: objem
 en: volume
 es: volumen
 it: volume
+ru: Объем
 sk: objem
 
 therion: alcohol level
@@ -343,6 +397,7 @@ cz: koncentrace alkoholu
 en: alcohol level
 es: contenido alcohólico
 it: tasso alcolico
+ru: Крепость
 sk: koncentrácia
 
 therion: time elapsed
@@ -350,6 +405,7 @@ cz: uplynulý čas
 en: time elapsed
 es: tiempo transcurrido
 it: tempo trascorso
+ru: Прошло времени
 sk: uplynutý čas
 
 therion: Calculate
@@ -357,6 +413,7 @@ cz: Vypočítat
 en: Calculate
 es: Calcular
 it: Calcola
+ru: Посчитать
 sk: Vypočítať
 
 therion: BAC
@@ -364,6 +421,7 @@ cz: Hladina alkoholu v krvi
 en: BAC
 es: tasa alcoholemia
 it: BAC
+ru: BAC
 sk: Hladina alkoholu
 
 therion: ETA
@@ -371,6 +429,7 @@ cz: Čas do vystřízlivění
 en: ETA
 es: TBE (Tiempo Bajada Estimado)
 it: ETA
+ru: ETA
 sk: Čas do vytriezvenia
 
 therion: hours
@@ -378,6 +437,7 @@ cz: hodin
 en: hours
 es: horas
 it: ore
+ru: часов
 sk: hodín
 
 therion: MRR
@@ -385,6 +445,7 @@ cz: Rychlost odbourávání
 en: MRR
 es: tasa de descenso
 it: MRR
+ru: MRR
 sk: Rýchlosť odburávania
 
 therion: Compiler
@@ -392,6 +453,7 @@ cz: Kompilátor
 en: Compiler
 es: Compilador
 it: Compilatore
+ru: Компилятор
 sk: Kompilátor
 
 therion: Settings
@@ -399,6 +461,7 @@ cz: Nastavení
 en: Settings
 es: Ajustes
 it: Impostazioni
+ru: Настройки
 sk: Nastavenia
 
 therion: Survey structure
@@ -406,6 +469,7 @@ cz: Struktura měření (survey)
 en: Survey structure
 es: Estructura de la poligonal
 it: Struttura rilievi
+ru: Структура съемки
 sk: Štruktúra dát
 
 therion: Survey info
@@ -413,6 +477,7 @@ cz: Info o měření (survey)
 en: Survey info
 es: Información de la poligonal
 it: Informazioni rilievi
+ru: Информация
 sk: Informácie
 
 therion: Map structure
@@ -420,6 +485,7 @@ cz: Mapová struktura
 en: Map structure
 es: Estructura del mapa
 it: Struttura mappe
+ru: Структура карты
 sk: Mapová štruktúra
 
 therion: Preview
@@ -432,6 +498,7 @@ cz: Pracovní adresář
 en: Working directory
 es: Directorio actual
 it: Cartella di lavoro
+ru: Рабочий каталог
 sk: Pracovný adresár
 
 therion: Working directory path.
@@ -439,6 +506,7 @@ cz: Cesta k pracovnímu adresáři.
 en: Shows working directory path.
 es: Muestra el directorio actual.
 it: Path della cartella di lavoro
+ru: Путь к рабочему каталогу.
 sk: Cesta k pracovnému adresáru.
 
 therion: Configuration file
@@ -446,6 +514,7 @@ cz: Konfigurační soubor
 en: Configuration file
 es: Archivo configuración
 it: File di configurazione
+ru: Конфигурационный файл
 sk: Konfiguračný súbor
 
 therion: Configuration file name.
@@ -453,6 +522,7 @@ cz: Jméno konfiguračního souboru.
 en: Shows configuration file name.
 es: Muestra el nombre del archivo de configuración.
 it: Nome del file di configurazione
+ru: Имя конфигурационного файла.
 sk: Meno konfiguračného súboru.
 
 therion: Command line options
@@ -460,6 +530,7 @@ cz: Argumenty programu
 en: Command line options
 es: Opciones de línea de comandos
 it: Opzioni del comando
+ru: Опции командной строки
 sk: Argumenty programu
 
 therion: Therion command line options.
@@ -467,6 +538,7 @@ cz: Argumenty therionu pro příkazovou řádku.
 en: Here you can pass command line options to Therion.
 es: Aquí se pueden pasar a therion opciones de línea de comandos
 it: Opzioni del comando therion
+ru: Опции командной строки Therion.
 sk: Argumenty programu v príkazovom riadku.
 
 therion: Compile
@@ -474,6 +546,7 @@ cz: Kompilovat
 en: Compile
 es: Compilar
 it: Compila
+ru: Компилировать
 sk: Kompilovať
 
 therion: Run therion.
@@ -481,6 +554,7 @@ cz: Spustí therion.
 en: Run therion.
 es: Ejecutar therion.
 it: Esegui therion
+ru: Запуск therion.
 sk: Spustiť therion.
 
 therion: Xpdf
@@ -503,6 +577,7 @@ cz: Informace o jednotlivých měřeních (survey).
 en: Survey informations.
 es: Estadísticas de la poligonal.
 it: Informazioni del rilievo
+ru: Информация о съемке.
 sk: Informácie o častiach.
 
 therion: User interface is not active. To activate it, open existing file or create new one.
@@ -510,6 +585,7 @@ cz: Uživatelské rozhraní není aktivní. Pro jeho aktivaci otevřete existuj�
 en: User interface is not active. To activate it, open existing file or create new one.
 es: El interfaz está inactivo. Para activarlo, abre un archivo existente o crea uno nuevo.
 it: L'interfaccia utente non è attiva. Per attivarla apri un file o creane uno
+ru: Интерфейс неактивен. Для активации откройте существующий файл или создайте новый.
 sk: XTherion momentálne nie je aktívny. Otvorte existujúci konfiguračný súbor alebo vytvorte nový.
 
 therion: loading compiler...
@@ -517,6 +593,7 @@ cz: nahrávám kompilátor...
 en: loading compiler...
 es: compilador...
 it: compilatore ...
+ru: загрузка компилятора...
 sk: kompilátor...
 
 therion: Running therion ...
@@ -524,6 +601,7 @@ cz: Probíhá kompilace ...
 en: Running therion ...
 es: Ejecutando therion ...
 it: esecuzione therion ...
+ru: Запуск therion ...
 sk: Prebieha výpočet...
 
 therion: RUNNING
@@ -531,6 +609,7 @@ cz: PRACUJI
 en: RUNNING
 es: EJECUTANDO
 it: ESECUZIONE
+ru: ОБРАБОТКА
 sk: VÝPOČET
 
 therion: ERROR
@@ -538,6 +617,7 @@ cz: CHYBA
 en: ERROR
 es: ERROR
 it: ERRORE
+ru: ОШИБКА
 sk: CHYBA
 
 therion: OK
@@ -545,6 +625,7 @@ cz: OK
 en: OK
 es: OK
 it: OK
+ru: УСПЕХ
 sk: OK
 
 therion: Reading therion log file ...
@@ -552,6 +633,7 @@ cz: Načítám LOG soubor therionu ...
 en: Reading therion log file ...
 es: Leyendo archivo log ...
 it: Lettura file di log di therion ...
+ru: Чтение лог-файла therion...
 sk: Načitávam LOG súbor.
 
 therion: \nerror opening therion.log file\n
@@ -559,6 +641,7 @@ cz: \nchyba při otevírání souboru therion.log\n
 en: \nerror opening therion.log file\n
 es: \nerror abriendo el archivo therion.log\n
 it: \nerrore in apertura del file therion.log
+ru: \nошибка открытия файла therion.log\n
 sk: \nchyba pri čítaní súboru therion.log\n
 
 therion: Show or hide this control panel
@@ -566,6 +649,7 @@ cz: Zobrazit/skrýt ovládací panel
 en: Click to show or hide this control panel.
 es: Clicar para mostrar u ocultar este panel de control
 it: Visualizza o nascondi questo pannello
+ru: Показать или спрятать панель
 sk: Stlačte ak chcete zobraziť alebo skryť tento panel
 
 therion: loading map editor ...
@@ -573,6 +657,7 @@ cz: nahrávám mapový editor...
 en: loading map editor ...
 es: editor de mapas...
 it: editor di mappa ...
+ru: загрузка редактора карт...
 sk: Mapový editor
 
 therion: Undo %s
@@ -580,6 +665,7 @@ cz: Zpět - %s
 en: Undo %s
 es: Deshacer %s
 it: Indietro %s
+ru: Отменить %s
 sk: Späť - %s
 
 therion: Redo %s
@@ -587,6 +673,7 @@ cz: Znovu - %s
 en: Redo %s
 es: Rehacer %s
 it: Rifai %s
+ru: Вернуть %s
 sk: Opakovať- %s
 
 therion: %s \[%s\] -- multiple encoding commands in file
@@ -594,6 +681,7 @@ cz: %s \[%s\] -- vícenásobný výskyt příkazu encoding v jednom souboru
 en: %s \[%s\] -- multiple encoding commands in file
 es: %s \[%s\] -- múltiples comandos de codificación en el archivo
 it: %s \[%s\] -- encoding ripetuto nel file di comandi
+ru: %s \[%s\] -- несколько команд encoding в файле
 sk: %s \[%s\] -- viac encoding príkazov v jednom súbore
 
 therion: %s \[%s\] -- unknown encoding -- %s
@@ -608,6 +696,7 @@ cz: přizpůsobení pracovní plochy
 en: adjusting area
 es: ajustando área
 it: aggiustamento area
+ru: регулирование области
 sk: prispôsobenie pracovnej plochy
 
 therion: zooming
@@ -615,6 +704,7 @@ cz: zoomování
 en: zooming
 es: zooming
 it: zooming
+ru: масштабирование
 sk: zoomovanie
 
 therion: Zoom %d %%
@@ -622,6 +712,7 @@ cz: Zoom %d %%
 en: Zoom %d %%
 es: Zoom %d %%
 it: Zomm %d %%
+ru: Масштаб %d %%
 sk: Zoom %d %%
 
 therion: Zooming objects ...
@@ -629,6 +720,7 @@ cz: Zoomování objektů ...
 en: Zooming objects ...
 es: Zoom sobre objetos ...
 it: Zoom degli oggetti ...
+ru: Масштабирование объектов...
 sk: Zoomovanie objektov ...
 
 therion: dragging image
@@ -636,6 +728,7 @@ cz: přesouvání obrázku
 en: dragging image
 es: arrastrando imagen
 it: trascinamento immagine
+ru: перетаскивание изображения
 sk: Presúvanie obrázku
 
 therion: Map Editor
@@ -643,6 +736,7 @@ cz: Mapový editor
 en: Map Editor
 es: Editor de mapas
 it: Editor di mappa
+ru: Редактор карт
 sk: Mapový Editor
 
 therion: File commands
@@ -650,6 +744,7 @@ cz: Příkazy
 en: Objects
 es: Objetos
 it: Oggetti
+ru: Команды в файле
 sk: Príkazy v súbore
 
 therion: Search & Select
@@ -657,6 +752,7 @@ cz: Najít & Vybrat
 en: Search & Select
 es: Buscar y Seleccionar
 it: Cerca e seleziona
+ru: Поиск и Выделение
 sk: Hľadaj a Vyber
 
 therion: Command preview
@@ -664,6 +760,7 @@ cz: Náhled příkazu
 en: Command preview
 es: Ver comandos
 it: Anteprima comando
+ru: Просмотр команды
 sk: Náhľad príkazu
 
 therion: Point control
@@ -671,6 +768,7 @@ cz: Bod
 en: Points
 es: Puntos
 it: Punti
+ru: Точка
 sk: Bod
 
 therion: Line control
@@ -678,6 +776,7 @@ cz: Křivka
 en: Lines
 es: Líneas
 it: Linee
+ru: Линия
 sk: Krivka
 
 therion: Line point control
@@ -685,6 +784,7 @@ cz: Bod křivky
 en: Line points
 es: Puntos de línea
 it: Punti della linea
+ru: Точка линии
 sk: Bod krivky
 
 therion: Area control
@@ -692,6 +792,7 @@ cz: Oblast
 en: Areas
 es: Areas
 it: Aree
+ru: Область
 sk: Plocha
 
 therion: Scrap control
@@ -699,6 +800,7 @@ cz: Scrap
 en: Scraps
 es: Croquis
 it: Scrap
+ru: Скрап
 sk: Scrap
 
 therion: Text editor
@@ -706,6 +808,7 @@ cz: Textový editor
 en: Text editor
 es: Editor de texto
 it: Editor di testo
+ru: Редактор
 sk: Textový editor
 
 therion: Drawing area
@@ -713,6 +816,7 @@ cz: Kreslící plocha
 en: Drawing area
 es: Area de dibujo
 it: Area di disegno
+ru: Зона рисования
 sk: Pracovná plocha
 
 therion: Background images
@@ -720,6 +824,7 @@ cz: Podkladové obrázky
 en: Background images
 es: Imágenes de fondo
 it: Immagini di background
+ru: Фоновые изображения
 sk: Obrázky pozadia
 
 therion: Current drawing area.
@@ -727,6 +832,7 @@ cz: Současná kreslící plocha.
 en: Current drawing area.
 es: Area de dibujo actual.
 it: Area di disegno attiva
+ru: Текущая зона рисования.
 sk: Súčasná pracovná plocha.
 
 therion: X min.
@@ -734,6 +840,7 @@ cz: X min.
 en: X min.
 es: X min
 it: Minimo X
+ru: X min.
 sk: Minimum X.
 
 therion: Y min.
@@ -741,6 +848,7 @@ cz: Y min.
 en: Y min.
 es: Y min
 it: Minimo Y
+ru: Y min.
 sk: Minimum Y.
 
 therion: X max.
@@ -748,6 +856,7 @@ cz: X max.
 en: X max.
 es: X max
 it: Massimo X
+ru: X max.
 sk: Maximum X.
 
 therion: Y max.
@@ -755,6 +864,7 @@ cz: Y max.
 en: Y max.
 es: Y max
 it: Massimo Y
+ru: Y max.
 sk: Maximum Y.
 
 therion: Adjust
@@ -762,6 +872,7 @@ cz: Přizpůsobit
 en: Adjust
 es: Ajustar
 it: Ridimensiona
+ru: Установить
 sk: Prispôsob
 
 therion: Adjust drawing area to given limits.
@@ -769,6 +880,7 @@ cz: Přizpůsobí kreslící plochu daným limitům.
 en: Adjust drawing area to given limits.
 es: Ajustar el área de dibujo a los límites indicados.
 it: Ridimensiona l'area di disegno ai limiti dati
+ru: Установить зону рисования в заданных границах.
 sk: Prispôsobiť pracovnú plochu daným limitom.
 
 therion: Auto adjust
@@ -776,6 +888,7 @@ cz: Auto přizpůs.
 en: Auto adjust
 es: Autoajustar
 it: Auto-ridimensiona
+ru: Авто
 sk: Automaticky
 
 therion: Adjust drawing area to automatically calculated limits.
@@ -783,6 +896,7 @@ cz: Automaticky přizpůsobí kreslící plochu všem objektům.
 en: Adjust drawing area to automatically calculated limits.
 es: Ajustar área de dibujo automáticamente.
 it: Ridimensiona l'area di disegno ai limiti calcolati
+ru: Автоматически установить зону рисования.
 sk: Automaticky prispôsobiť pracovnú plochu všetkým objektom.
 
 therion: zoom
@@ -790,6 +904,7 @@ cz: zoom
 en: zoom
 es: zoom
 it: zoom
+ru: масштаб
 sk: zoom
 
 therion: Zoom drawing area.
@@ -797,6 +912,7 @@ cz: Zoom kreslící plochy.
 en: Zoom control. Click on rectangle to see menu.
 es: Control del zoom. Clic en rectángulo para ver menú.
 it: Zoom area di disegno
+ru: Масштабировать зону рисования.
 sk: Zoom pracovnej plochy.
 
 therion: loading commands module ...
@@ -804,6 +920,7 @@ cz: nahrávám příkazový modul ...
 en: loading commands module ...
 es: comandos ...
 it: modulo comandi ...
+ru: загрузка модуля команд...
 sk: príkazový modul...
 
 therion: Select command.
@@ -811,6 +928,7 @@ cz: Výběr příkazu.
 en: Click a line to get corresponding object selected on canvas or vice versa.
 es: Al clicar una de las líneas, se resaltará en la topo el objeto correspondiente, y viceversa.
 it: Seleziona comando.
+ru: Выберите команду.
 sk: Vyber príkaz.
 
 therion: Action button.
@@ -818,6 +936,7 @@ cz: Tlačítko Akce.
 en: After clicking this button, you can insert objects by mouse. Click on action to see menu.
 es: Tras pulsar este botón, se pueden insertar con el ratón puntos, lineas, etc. Clic en acción para ver menú.
 it: Bottone di azione.
+ru: Действия.
 sk: Gombík - akcia.
 
 therion: Switch mouse mode to select objects.
@@ -825,6 +944,7 @@ cz: Přepnutí myši do výběrového módu.
 en: After clicking this button, you can select objects on canvas by mouse.
 es: Tras clicar aquí, podrás seleccionar cosas en la topo con el ratón.
 it: Cambia la modalità del mouse per selezionare oggetti.
+ru: Переключитесь на мышь, чтобы выбирать объекты.
 sk: Nastav mód myši na vyberanie objektov.
 
 therion: Action
@@ -832,6 +952,7 @@ cz: Akce
 en: Action
 es: Acción
 it: Azione
+ru: Действие
 sk: Akcia
 
 therion: Configure action assigned to action button.
@@ -839,6 +960,7 @@ cz: Nastaví akci pro tlačítko akcí.
 en: Action you choose will be executed by clicking on Insert <object> button.
 es: Clic para ver menú. La acción que escojas será la que ejecute el botón Insertar <objeto>
 it: Configura l'azione assegnata al bottone d'azione.
+ru: Выберите действие, назначенное для кнопки.
 sk: Nakonfiguruj akciu pre gombík - akcia.
 
 therion: Move up
@@ -846,6 +968,7 @@ cz: Přesun výš
 en: Move up
 es: Arriba
 it: Sposta sù
+ru: Вверх
 sk: Presuň vyššie
 
 therion: Move file command up in the list.
@@ -853,6 +976,7 @@ cz: Přesune příkaz výš v seznamu příkazů.
 en: Move object up in the list. Use if object is in wrong scrap.
 es: Desplaza el objeto hacia arriba en la lista. Usar si el objeto está en lugar erróneo.
 it: Sposta il comando in sù nella lista.
+ru: Переместить команду вверх по файлу.
 sk: Presuň príkaz vyššie v zozname príkazov.
 
 therion: Move down
@@ -860,6 +984,7 @@ cz: Přesun níž
 en: Move down
 es: Abajo
 it: Sposta giù
+ru: Вниз
 sk: Presuň nižšie
 
 therion: Move file command down in the list.
@@ -867,6 +992,7 @@ cz: Přesune příkaz níž v seznamu příkazů.
 en: Move object down in the list. Use if object is in wrong scrap.
 es: Desplaza el objeto hacia abajo en la lista. Usar si el objeto está en lugar erróneo.
 it: Sposta il comando in giù nella lista.
+ru: Переместить команду вниз по файлу.
 sk: Presuň príkaz nižšie v zozname príkazov.
 
 therion: Move file command to given position.
@@ -874,6 +1000,7 @@ cz: Přesunout příkaz na danou pozici v seznamu.
 en: Move object to given position (position = number on each line).
 es: Mover el objeto a la posición indicada (número al principio de cada línea).
 it: Sposta il comando nella posizione specificata.
+ru: Переместить команду в указанную позицию в файле.
 sk: Presuň príkaz na danú pozíciu v zozname.
 
 therion: Select destination scrap and position in it.
@@ -881,6 +1008,7 @@ cz: Výběr cílového scrapu a pozice v něm.
 en: Select destination scrap and position in it.
 es: Seleccionar croquis de destino y la posición en él.
 it: Selezione lo scrap di destinazione e posizionati in esso.
+ru: Укажите целевой скрап и позицию в нем.
 sk: Nastav cieľový scrap a pozíciu v ňom.
 
 therion: Update text
@@ -888,6 +1016,7 @@ cz: Aktualizovat
 en: Update text
 es: Actualizar texto
 it: Aggiorna testo
+ru: Сохранить текст
 sk: Aktualizuj text
 
 therion: Press this button to save code you have written.
@@ -895,6 +1024,7 @@ cz: Stiskněte toto tlačítko pro uložení Vámi zapsaného kódu.
 en: Press this button to save code you have written.
 es: Clicar aquí para guardar los cambios hechos en el código.
 it: Premi questo bottone per salvare il codice che hai scritto.
+ru: Нажмите эту кнопку для сохранения написанного кода.
 sk: Stlačte toto tlačítko pre uloženie Vami zapísaného kódu.
 
 therion: Editor for free text in therion 2D file.
@@ -902,6 +1032,7 @@ cz: Editor pro text ve 2D souborech.
 en: Use this editor window to modify .th2 files.
 es: Usa este editor para modificar los archivos .th2. Otros editores darán problemas.
 it: Editor di testo libero per il file 2D di therion.
+ru: Редактор произвольного текста в 2D файле.
 sk: Editor pre špeciálne príkazy v 2D súboroch.
 
 therion: expression
@@ -909,6 +1040,7 @@ cz: výraz
 en: search for
 es: buscar
 it: testo
+ru: выражение
 sk: výraz
 
 therion: Enter search expression.
@@ -916,6 +1048,7 @@ cz: Vložte hledaný výraz.
 en: Enter word(s) to search for.
 es: Introducir palabra(s) a buscar.
 it: Scrivi il testo da cercare.
+ru: Введите выражение поиска.
 sk: Vložte hľadaný výraz.
 
 therion: regular expression
@@ -923,6 +1056,7 @@ cz: regulární výraz
 en: regular expression
 es: patrón regular (kob.*)
 it: espressione regolare
+ru: регулярное выражение
 sk: regulárny výraz
 
 therion: Search for regular expression.
@@ -930,6 +1064,7 @@ cz: Vyhledávání regulárního výrazu.
 en: Use wildcards on search (cav.* will find cave, cavern, cavalier...)
 es: Usar comodines en la búsqueda (kob.* encuentra koba, kobea, kobie, etc).
 it: Cerca espressione regolare.
+ru: Искать по регулярному выражению.
 sk: Vyhľadávanie regulárneho výrazu.
 
 therion: case sensitive
@@ -937,6 +1072,7 @@ cz: rozlišovat velikost písmen
 en: case sensitive
 es: distinguir mayúsculas
 it: case-sensitive
+ru: учитывать регистр
 sk: rozlišovať veľkosť
 
 therion: Case sensitive search.
@@ -944,6 +1080,7 @@ cz: Vyhledávání s rozlišením velikosti písmen.
 en: Case sensitive search.
 es: Búsqueda sensible a las mayúsculas.
 it: Ricerca case-sensistive
+ru: Поиск с учетом регистра.
 sk: Vyhľadávanie s rozlišovaním veľkých a malých písmen.
 
 therion: Find next
@@ -951,6 +1088,7 @@ cz: Najít další
 en: Find next
 es: Siguiente
 it: Prossimo
+ru: Следующий
 sk: Nasledujúci
 
 therion: Select next object matching expression.
@@ -958,6 +1096,7 @@ cz: Vybere další objekt odpovídající výrazu.
 en: Select next object matching expression.
 es: Selecionar siguiente objeto encontrado.
 it: Seleziona il prossimo oggetto trovato
+ru: Выбрать следующий объект, соответствующий выражению поиска.
 sk: Nájdi ďalší objekt zodpovedajúci hľadanému výrazu.
 
 therion: Find first
@@ -965,6 +1104,7 @@ cz: Najít první
 en: Search
 es: Buscar
 it: Cerca
+ru: Первый
 sk: Nájdi prvý
 
 therion: Select first object matching expression.
@@ -972,6 +1112,7 @@ cz: Vybere první objekt odpovídající výrazu.
 en: Selects first object matching expression.
 es: Selecionar el primer objeto encontrado.
 it: Seleziona il primo oggetto trovato
+ru: Выбрать первый объект, соответствующий выражению поиска.
 sk: Nájdi prvý objekt zodpovedajúci hľadanému výrazu.
 
 therion: Show all
@@ -979,6 +1120,7 @@ cz: Zobrazit vše
 en: Show all
 es: Mostrar todo
 it: Tutti
+ru: Показать все
 sk: Označ všetky
 
 therion: Highlight all objects matching expression.
@@ -986,6 +1128,7 @@ cz: Zvýrazní všechny objekty odpovídající výrazu.
 en: Highlight all objects matching expression.
 es: Seleccionar todos los objetos encontrados.
 it: Evidenzia tutti gli oggetti trovati
+ru: Подсветить все объекты, соответствующие выражению поиска.
 sk: Zvýrazní všetky objekty zodpovedajúce hľadanému výrazu.
 
 therion: Clear all
@@ -993,6 +1136,7 @@ cz: Zruš výběr
 en: Clear all
 es: Deseleccionar
 it: Cancella
+ru: Очистить все
 sk: Zruš výber
 
 therion: Clear highlighted objects.
@@ -1000,6 +1144,7 @@ cz: Zruší zvýraznění vybraných objektů.
 en: Clear highlighted objects.
 es: Deseleccionar todos los objetos resaltados.
 it: Togli l'evidenziazione degli oggetti.
+ru: Снять подсветку со всех объектов.
 sk: Zruší zvýraznenie vybratých objektov.
 
 therion: loading images module ...
@@ -1007,6 +1152,7 @@ cz: nahrávám obrázkový modul ...
 en: loading images module ...
 es: imágenes ...
 it: modulo immagini ...
+ru: загрузка модуля изображений...
 sk: nahrávam obrázkový modul...
 
 therion: Select background image.
@@ -1014,6 +1160,7 @@ cz: Výběr podkladového obrázku.
 en: Click on a line in the list to select correspondin image.
 es: Al clicar un renglón, seleccionarás la imagen de fondo correspondiente.
 it: Seleziona l'immagine di background.
+ru: Выбор фонового изображения.
 sk: Označ obrázok na pozadí.
 
 therion: Insert new background image.
@@ -1021,6 +1168,7 @@ cz: Vložení nového podkladového obrázku.
 en: Insert new background image (e.g., .xvi image or scanned sketch).
 es: Insertar nueva imagen de fondo (p. ej: un croquis escaneado de la libreta topo).
 it: Inserisci una nuova immagine di background.
+ru: Вставить новое фоновое изображение.
 sk: Vloženie nového podkladového obrázku.
 
 therion: Remove
@@ -1028,6 +1176,7 @@ cz: Odstranit
 en: Remove
 es: Eliminar
 it: Rimuovi
+ru: Убрать
 sk: Odstrániť
 
 therion: Remove selected image.
@@ -1035,6 +1184,7 @@ cz: Odstraní vybraný obrázek.
 en: Remove selected image.
 es: Eliminar imagen seleccionada.
 it: Rimuovi l'immagine selezionata.
+ru: Убрать вырбанное изображение.
 sk: Odstráni označený obrázok.
 
 therion: visibility
@@ -1042,6 +1192,7 @@ cz: viditelnost
 en: visibility
 es: visibilidad
 it: visibilità
+ru: показать
 sk: viditeľnosť
 
 therion: Switch image visibility.
@@ -1049,6 +1200,7 @@ cz: Přepíná viditelnost obrázku.
 en: Switch image visibility.
 es: Cambiar visibilidad de la imagen.
 it: Cambia la visibilità dell'immagine.
+ru: Показать/спрятать изображение.
 sk: Prepínač viditeľnosti obrázku.
 
 therion: Control gamma value.
@@ -1056,6 +1208,7 @@ cz: Nastavení hodnoty gamma.
 en: Control gamma value.
 es: Controlar el valor gamma.
 it: Controlla il valore di gamma.
+ru: Управление гаммой.
 sk: Nastavenie gamma korekcie obrázku (farebného podania).
 
 therion: Reset
@@ -1063,6 +1216,7 @@ cz: Reset
 en: Reset
 es: Reajustar
 it: Ripristina
+ru: Сброс
 sk: Reset
 
 therion: Reset image gamma value.
@@ -1070,6 +1224,7 @@ cz: Resetuje nastavenou hodnotu gamma.
 en: Click here to go back to original gamma value.
 es: Click aquí para volver a los ajustes de gamma iniciales.
 it: Ripristina il valore di gamma dell'immagine.
+ru: Сбросить значение гаммы для изображения.
 sk: Resetuje nastavenú gamma korekciu obrázku.
 
 therion: Set image gamma value.
@@ -1077,6 +1232,7 @@ cz: Nastavuje hodnotu gamma obrázku.
 en: Set image gamma value.
 es: Ajustar valor gamma de la imagen.
 it: Imposta il valore di gamma dell'immagine.
+ru: Установить гамму для изображения.
 sk: Nastavuje gamma korekciu obrázku.
 
 therion: Current position of selected image.
@@ -1084,6 +1240,7 @@ cz: Současná pozice vybraného obrázku.
 en: Current position of selected image (pixels from canvas lower letf corner).
 es: Posición actual de la imagen seleccionada (medida en pixels desde la esquina inf. izq del lienzo).
 it: Posizione dell'immagine selezionata.
+ru: Текущая позиция выбранного изображения.
 sk: Súčasná pozícia obrázku.
 
 therion: Move to
@@ -1091,6 +1248,7 @@ cz: Přesunout
 en: Move to
 es: Mover a
 it: Sposta a
+ru: Переместить
 sk: Presuň na
 
 therion: Move image to given position.
@@ -1098,6 +1256,7 @@ cz: Přesune obrázek na zadanou pozici.
 en: Move image to given position (image's upper left corner will be on given pixel).
 es: Mover imagen a la posición indicada (la esquina sup. izda de la imagen aparecerá en ese pixel).
 it: Sposta l'immagine nella posizione specificata.
+ru: Переместить изображение к указанной позиции.
 sk: Presunie obrázok na zadanú pozíciu.
 
 therion: New X coordinate of image.
@@ -1105,6 +1264,7 @@ cz: Nová souřadnice X obrázku.
 en: New X coordinate of image.
 es: Nueva coordenada X de la imagen.
 it: Nuova coordinata X dell'immagine.
+ru: Новая координата X.
 sk: Nová X súradnica obrázku.
 
 therion: New Y coordinate of image.
@@ -1112,6 +1272,7 @@ cz: Nová souřadnice Y obrázku.
 en: New Y coordinate of image.
 es: Nueva coordenada Y de la imagen.
 it: Nuova coordinata Y dell'immagine.
+ru: Новая координата Y.
 sk: Nový Y súradnica obrázku.
 
 therion: Move front
@@ -1119,6 +1280,7 @@ cz: Dopředu
 en: Move front
 es: Delante
 it: Davanti
+ru: Поверх всех
 sk: Navrch
 
 therion: Move image in front of all images.
@@ -1126,6 +1288,7 @@ cz: Přesune obrázek nad všechny ostatní.
 en: Move image in front of all images.
 es: Trae la imagen al frente de todas las imágenes.
 it: Sposta l'immagine davanti a tutte le immagini.
+ru: Вывести изображение поверх всех остальных.
 sk: Presunie obrázok nad všetky ostatné.
 
 therion: Move back
@@ -1133,6 +1296,7 @@ cz: Dozadu
 en: Move back
 es: Detrás
 it: Dietro
+ru: Под всеми
 sk: Naspodok
 
 therion: Move image behind all images.
@@ -1140,6 +1304,7 @@ cz: Přesune obrázek pod všechny ostatní.
 en: Move image behind all images.
 es: Enviar la imagen detrás de todas las demás.
 it: Sposta l'immagine davanti a tutte le immagini.
+ru: Вывести изображение за всеми остальными.
 sk: Presunie obrázok pod všetky ostatné.
 
 therion: loading preview module ...
@@ -1147,6 +1312,7 @@ cz: nahrávám zobrazovací modul ...
 en: loading preview module ...
 es: ver comandos ...
 it: modulo anteprima ...
+ru: загрузка модуля предпросмотра...
 sk: nahrávam náhľadový modul ...
 
 therion: Update command
@@ -1154,6 +1320,7 @@ cz: Aktualizovat
 en: Update command
 es: Actualizar
 it: Aggiorna comando
+ru: Обновить команду
 sk: Aktualizovať
 
 therion: Press this button, if you have changed something and you can not see your changes here.
@@ -1161,6 +1328,7 @@ cz: Stiskněte toto tlačítko, pokud jste něco změnili a změny nejsou v tomt
 en: Press this button, if you have changed something and you can not see your changes here.
 es: Clicar aquí si has cambiado algo y no ves aquí los resultados del cambio
 it: Premi questo bottone se hai fatto modifiche che non sono visualizzate.
+ru: Нажмите эту кнопку, если вы что-то изменили, но не увидели здесь своих изменений.
 sk: Stlačte toto tlačítko, ak ste niečo zmenili a zmeny nie su v tomto okne viditeľné.
 
 therion: Command preview.
@@ -1168,6 +1336,7 @@ cz: Náhled příkazu.
 en: Here you can see complete commands with options applied.
 es: Aquí se pueden ver los comandos completos, opciones incluídas.
 it: Anteprima comando.
+ru: Просмотр команды.
 sk: Náhľad príkazu.
 
 therion: loading scrap module ...
@@ -1175,6 +1344,7 @@ cz: nahrávám scrap modul ...
 en: loading scrap module ...
 es: croquis ...
 it: modulo scrap ...
+ru: загрузка скрап-модуля...
 sk: nahrávam scrap modul ...
 
 therion: Scrap name.
@@ -1182,6 +1352,7 @@ cz: Název scrapu.
 en: Scrap name.
 es: Nombre del croquis.
 it: Nome dello scrap.
+ru: Имя скрапа.
 sk: Identifikátor (meno) scrapu.
 
 therion: projection
@@ -1189,6 +1360,7 @@ cz: projekce
 en: projection
 es: proyección
 it: proiezione
+ru: проекция
 sk: projekcia
 
 therion: Scrap projection.
@@ -1196,6 +1368,7 @@ cz: Projekce scrapu.
 en: Scrap projection (clic on triangle to see menu).
 es: Proyección del croquis (Clic en triángulo para ver el menú).
 it: Proiezione dello scrap.
+ru: Проекция скрапа.
 sk: Projekcia scrapu.
 
 therion: Other scrap options.
@@ -1203,6 +1376,7 @@ cz: Další volby pro scrap.
 en: Other scrap options (more on this on thbook.pdf)
 es: Otras opciones del croquis. Consultar thbook.pdf
 it: Altre opzioni dello scrap
+ru: Другие опции скрапа.
 sk: Ostatné možnosti scrapu.
 
 therion: Scale
@@ -1220,6 +1394,7 @@ cz: Aktualizovat
 en: Update scrap
 es: Actualizar
 it: Aggiorna scrap
+ru: Обновить скрап
 sk: Aktualizuj scrap
 
 therion: Press this button to apply your changes to current scrap.
@@ -1227,6 +1402,7 @@ cz: Stiskněte toto tlačítko po uplatnění změn aktuálního scrapu.
 en: Press this button to apply your changes to current scrap.
 es: Clicar aquí tras modificar las propiedades del croquis.
 it: Premi questo bottone per applicare le tue modifiche allo scrap.
+ru: Нажмите эту кнопку для введения в действие ваших изменений для текущего скрапа
 sk: Stlačte tento gombík, aby sa vaše zmeny v scrape uložili.
 
 therion: picture scale points
@@ -1234,6 +1410,7 @@ cz: body měřítka (obrázek)
 en: picture scale points (pixels)
 es: puntos de escala (pixels)
 it: punti nella scala del disegno
+ru: масштабирующие точки для картинки
 sk: kalibračné body (obrazovka)
 
 therion: Calibration points on the picture (X1:Y1 - X2:Y2).
@@ -1241,6 +1418,7 @@ cz: Kalibrační body na obrázku (X1:Y1 - X2:Y2).
 en: Calibration points on the picture (X1:Y1 - X2:Y2).
 es: Puntos de calibración en la imagen (X1:Y1 - X2:Y2).
 it: Punti di calibrazione sul disegno (X1:Y1 - X2:Y2).
+ru: Калибровочные точки на картинке (X1:Y1 - X2:Y2).
 sk: Súradnice kalibračných bodov na obrazovke (X1:Y1 - X2:Y2)
 
 therion: X1 picture.
@@ -1248,6 +1426,7 @@ cz: X1 obrázek.
 en: X1 picture.
 es: Punto de escala X1 en la imagen.
 it: X1 del disegno.
+ru: X1 картинки.
 sk: X1 na obrázku.
 
 therion: Y1 picture.
@@ -1255,6 +1434,7 @@ cz: Y1 obrázek.
 en: Y1 picture.
 es: Punto de escala Y1 en la imagen.
 it: Y1 del disegno.
+ru: Y1 картинки.
 sk: Y1 na obrázku.
 
 therion: X2 picture.
@@ -1262,6 +1442,7 @@ cz: X2 obrázek.
 en: X2 picture.
 es: Punto de escala X2 en la imagen.
 it: X2 del disegno.
+ru: X2 картинки.
 sk: X2 na obrázku.
 
 therion: Y2 picture.
@@ -1269,6 +1450,7 @@ cz: Y2 obrázek.
 en: Y2 picture.
 es: Punto de escala Y2 en la imagen.
 it: Y2 del disegno.
+ru: Y2 картинки.
 sk: Y2 na obrázku.
 
 therion: real scale points
@@ -1276,6 +1458,7 @@ cz: body měřítka (skutečné)
 en: real scale points
 es: puntos de escala (reales)
 it: punti nella scala effettiva
+ru: реальные масштабирующие точки
 sk: kalibračné body (skutočné)
 
 therion: Real coordinates of calibration points (X1:Y1 - X2:Y2).
@@ -1283,6 +1466,7 @@ cz: Skutečné souřadnice kalibračních bodů (X1:Y1 - X2:Y2).
 en: Real coordinates of calibration points (X1:Y1 - X2:Y2).
 es: Coordenadas reales de los puntos de calibración (X1:Y1 - X2:Y2).
 it: Coordinate reali dei punti di calibrazione (x1:y1 - x2:y2).
+ru: Реальные координаты калибровочных точек (X1:Y1 - X2:Y2).
 sk: Skutočné súradnice kalibračných bodov (X1:Y1 - X2:Y2).
 
 therion: X1 real.
@@ -1290,6 +1474,7 @@ cz: X1 skutečný.
 en: X1 real.
 es: X1 real
 it: x1 reale.
+ru: X1 реальное.
 sk: X1 skutočný
 
 therion: Y1 real.
@@ -1297,6 +1482,7 @@ cz: Y1 skutečný.
 en: Y1 real.
 es: Y1 real
 it: y1 reale.
+ru: Y1 реальное.
 sk: Y1 skutočný
 
 therion: X2 real.
@@ -1304,6 +1490,7 @@ cz: X2 skutečný.
 en: X2 real.
 es: X2 real
 it: x2 reale.
+ru: X2 реальное.
 sk: X2 skutočný
 
 therion: Y2 real.
@@ -1311,6 +1498,7 @@ cz: Y2 skutečný.
 en: Y2 real.
 es: Y2 real
 it: y2 reale.
+ru: Y2 реальное.
 sk: Y2 skutočný
 
 therion: units
@@ -1318,6 +1506,7 @@ cz: jednotky
 en: units
 es: unidades
 it: unità
+ru: единицы
 sk: jednotky
 
 therion: Units of real coordinates.
@@ -1325,6 +1514,7 @@ cz: Jednotky reálných souřadnic.
 en: Units of real coordinates.
 es: Unidades de las coordenadas reales.
 it: Unità delle coordinate reali.
+ru: Единицы измерения реальных координат.
 sk: Jednotky reálnych súradníc.
 
 therion: background sketches
@@ -1352,6 +1542,7 @@ cz: nahrávám point modul ...
 en: loading point module ...
 es: puntos ...
 it: modolo punti ...
+ru: загрузка модуля точек...
 sk: nahrávam editor bodov ...
 
 therion: Update point
@@ -1359,6 +1550,7 @@ cz: Aktualizovat
 en: Update point
 es: Actualizar
 it: Aggiorna punto
+ru: Обновить точку
 sk: Akualizuj bod
 
 therion: Click this button to apply point changes.
@@ -1366,6 +1558,7 @@ cz: Aktualizuje data týkající se bodu.
 en: Click this button to apply point changes.
 es: Clicar aquí tras modificar las propiedades del punto.
 it: Premi il bottone per fare modifiche al punto.
+ru: Нажмите эту кнопку для применения изменений точки.
 sk: Stlačte aby sa aktualizovali zmenené údaje bodu.
 
 therion: Point type.
@@ -1373,6 +1566,7 @@ cz: Typ bodu.
 en: Point type (click on triangle to see menu).
 es: Tipo de punto. Clic en triángulo para ver menú
 it: Tipo di punto
+ru: Тип точки.
 sk: Typ bodu.
 
 therion: Point identifier.
@@ -1380,6 +1574,7 @@ cz: Identifikátor bodu.
 en: Point identifier.
 es: Nombre (ID) del punto.
 it: Identificatore del punto.
+ru: Идентификатор точки.
 sk: Identifikátor bodu.
 
 therion: Other point options.
@@ -1387,6 +1582,7 @@ cz: Další volby pro bod.
 en: Options allow giving special characteristics to points.
 es: Las opciones permiten dar características especiales a los puntos.
 it: Altre opzioni del punto.
+ru: Другие опции точки.
 sk: Ostatné špecifikácie bodu.
 
 therion: I.e, if type is label, write here: -text \042this will be displayed (P100)\042
@@ -1394,6 +1590,7 @@ cz: Příklad: pokud type je label, zadejte: -text \042this will be displayed (P
 en: I.e, if type is label, write here: -text \042this will be displayed (P100)\042
 es: P.ej, si el tipo es label, escribe: -text \042lo que se verá (P100)\042.
 it: Cioé, se il tipo è etichetta, scrivi: -text \042questo sarà visualizzato (P100)\042
+ru: Например, если тип точки label, здесь можно набрать: -text \042это напечатается (P100)\042
 sk: Príklad: ak je typ label, zadajte: -text \042tento text bude zobrazený\042
 
 therion: Enter symbol orientation angle.
@@ -1401,6 +1598,7 @@ cz: Zadejte orientaci bodu.
 en: Enter symbol orientation angle.
 es: Introducir dirección en que debe apuntar el símbolo.
 it: Scrivi l'angolo di orientazione del simbolo.
+ru: Введите ориентацию символа.
 sk: Zadajte orientáciu bodu.
 
 therion: There are symbol types which must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard.
@@ -1408,6 +1606,7 @@ cz: Jsou symboly, kterým musíte specifikovat orientaci (např. gradient). Zakl
 en: Some symbol types must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard.
 es: Hay tipos de símbolo que deben ser orientados (p.ej, pendientes). Haz clic aquí para orientarlos con ratón o teclado.
 it: Ci sono tipi di simboli che sono orientati (per es. gradiente). Premi qui per orientarli col mouse o la tastiera
+ru: Некоторые типы символов должны быть ориентированы (например gradient). Нажмите здесь для придания им ориентации с помощью мыши или клавиатуры.
 sk: Sú symboly, ktorým treba zadať orientáciu (napr. gradiet). Označte túto voľbu a nastavte orientáciu myšou alebo z klávesnice.
 
 therion: x-size
@@ -1415,6 +1614,7 @@ cz: x-rozsah
 en: x-size
 es: tamaño-x
 it: dim. x
+ru: x-size
 sk: veľkosť-x
 
 therion: Set point size in main direction.
@@ -1422,6 +1622,7 @@ cz: Nastaví rozsah bodu v hlavním směru.
 en: Set point size in main direction.
 es: Ajustar tamaño del punto en dirección principal.
 it: Imposta la dimensione del punto nella direzione principale.
+ru: Установить размер точки в главном направлении.
 sk: Nastavte veľkosť bodu v hlavnom (X) smere.
 
 therion: Enter point size in main direction.
@@ -1429,6 +1630,7 @@ cz: Zadejte rozsah bodu v hlavním směru.
 en: Enter point size in main direction.
 es: Introducir tamaño del punto en dirección principal.
 it: Scrivi la dimensione del punto nella direzione principale.
+ru: Введите размер точки в главном направлении.
 sk: Zadajte veľkosť bodu v hlavnom (X) smere.
 
 therion: y-size
@@ -1436,6 +1638,7 @@ cz: y-rozsah
 en: y-size
 es: tamaño-y
 it: dim. y
+ru: y-size
 sk: veľkosť-y
 
 therion: Set point size in side direction.
@@ -1443,6 +1646,7 @@ cz: Nastaví rozsah bodu ve vedlejším směru.
 en: Set point size in side direction.
 es: Ajustar tamaño del punto en dirección lateral.
 it: Imposta la dimensione del punto nella direzione trasversale.
+ru: Установить размер точки в боковом направлении.
 sk: Nastavte veľkosť bodu vo vedľajšom smere.
 
 therion: Enter point size in side direction.
@@ -1450,6 +1654,7 @@ cz: Zadejte rozsah bodu ve vedlejším směru.
 en: Enter point size in side direction.
 es: Introducir tamaño del punto en dirección lateral.
 it: Scrivi la dimensione del punto nella direzione trasversale.
+ru: Введите размер точки в боковом направлении.
 sk: Zadajte veľkosť bodu vo vedľajšom smere.
 
 therion: loading line module ...
@@ -1457,6 +1662,7 @@ cz: nahrávám křivkový modul ...
 en: loading line module ...
 es: líneas ...
 it: modulo linee ...
+ru: загрузка модуля линий ...
 sk: nahrávam modul kriviek ...
 
 therion: Line type.
@@ -1464,6 +1670,7 @@ cz: Typ křivky.
 en: Line type (click on triangle to see menu).
 es: Tipo de línea. Clic en triángulo para ver el menú.
 it: Tipo di linea.
+ru: Тип линии.
 sk: Typ krivky.
 
 therion: id
@@ -1471,6 +1678,7 @@ cz: id
 en: id
 es: ID
 it: Identificativo
+ru: Ид
 sk: id
 
 therion: Line identifier.
@@ -1478,6 +1686,7 @@ cz: Identifikátor křivky.
 en: Line identifier.
 es: Nombre (ID) de la línea.
 it: Identificativo della linea.
+ru: Идентификатор линии
 sk: Identifikátor krivky.
 
 therion: Other line options.
@@ -1485,6 +1694,7 @@ cz: Další volby pro křivku.
 en: Other line options. I.e., to make line invisible, write here: -subtype invisible. See thbook.pdf
 es: Otras opciones de línea. P. ej: para hacerla invisible, escribe: -subtype invisible (consultar thbook.pdf)
 it: Altre opzioni della linea.
+ru: Прочие опции линии
 sk: Ďalšie možnosti pre krivku.
 
 therion: reverse
@@ -1492,6 +1702,7 @@ cz: obrátit
 en: reverse
 es: invertir
 it: inverti
+ru: обратная
 sk: otočiť
 
 therion: Reverse line.
@@ -1499,6 +1710,7 @@ cz: Obrátit křivku.
 en: Reverse line. If symbol's ticks are on bad side, click here.
 es: Invertir línea. Si p.ej el símbolo de resalte aparece al revés, haz clic aquí.
 it: Inverti la linea.
+ru: Задать обратное направление для линии.
 sk: Otočiť krivku.
 
 therion: close
@@ -1506,6 +1718,7 @@ cz: zavřít
 en: close
 es: cerrar
 it: chiudi
+ru: замкнуть
 sk: zavrieť
 
 therion: Close line.
@@ -1513,6 +1726,7 @@ cz: Uzavřít křivku.
 en: Close line.
 es: Cerrar línea (o sea, unir último punto con el primero para definir un espacio cerrado).
 it: Chiudi la linea.
+ru: Замкнуть линию на её же начало.
 sk: Uzavrieť krivku.
 
 therion: Edit line
@@ -1520,6 +1734,7 @@ cz: Editovat
 en: Edit line
 es: Editar
 it: Edita
+ru: Редактировать линию
 sk: Upraviť
 
 therion: Insert/delete line point. Split line.
@@ -1527,6 +1742,7 @@ cz: Vložení/smazání bodu křivky. Rozdělení křivky.
 en: Insert/delete line point. Split line.
 es: Permite añadir o borrar puntos de la línea, o cortar la línea en dos.
 it: Inserisci/rimuovi un punto della linea. Dividi la linea.
+ru: Вставка/удаление точки, разделение линии.
 sk: Vloženie/odstránenie bodu krivky. Rozdelenie krivky.
 
 therion: Click this button to apply line changes.
@@ -1534,6 +1750,7 @@ cz: Aktualizuje křivku.
 en: Click this button to apply line changes.
 es: Clicar aquí tras modificar las propiedades de la línea.
 it: Primi questo bottone per fare modifiche alla linea.
+ru: Нажмите эту кнопку для применения изменений линии.
 sk: Aktualizuje krivku.
 
 therion: Select line point.
@@ -1541,6 +1758,7 @@ cz: Výběr bodu křivky.
 en: These are selected line points. Click on any to get it selected on canvas.
 es: Lista de puntos que forman esta línea. Clic para resaltar el punto en la topo.
 it: Seleziona un punto della linea.
+ru: Выбрать одну из точек линии.
 sk: Výber bodu krivky.
 
 therion: loading line point module ...
@@ -1548,6 +1766,7 @@ cz: nahrávám modul pro body křivky ...
 en: loading line point module ...
 es: puntos de línea ...
 it: caricando il modulo dei punti di linea ...
+ru: загрузка модуля точек линии ...
 sk: nahrávam modul pre body krivky ...
 
 therion: position
@@ -1555,6 +1774,7 @@ cz: pozice
 en: position
 es: posición
 it: posizione
+ru: позиция
 sk: poloha
 
 therion: Point position.
@@ -1562,6 +1782,7 @@ cz: Pozice bodu.
 en: Point position.
 es: Posición del punto.
 it: Posizione del punto.
+ru: Позиция точки.
 sk: Poloha bodu.
 
 therion: Point X coordinate.
@@ -1569,6 +1790,7 @@ cz: souřadnice X bodu.
 en: Point X coordinate.
 es: Coordenada X del punto.
 it: Coordinata X del punto.
+ru: X координата точки.
 sk: X súradnica bodu.
 
 therion: Point Y coordinate.
@@ -1576,6 +1798,7 @@ cz: souřadnice Y bodu.
 en: Point Y coordinate.
 es: coordenada Y del punto.
 it: Coordinata Y del punto.
+ru: Y координата точки.
 sk: Y súradnica bodu.
 
 therion: Previous control point X coordinate.
@@ -1583,6 +1806,7 @@ cz: Souřadnice X předchozího řídícího bodu.
 en: Previous control point X coordinate.
 es: Coordenada X del punto de control anterior.
 it: Coordinata X del punto di controllo precedente.
+ru: X координата предыдущей управляющей точки.
 sk: X súradnica predchádzajúceho kontrolného bodu.
 
 therion: Previous control point Y coordinate.
@@ -1590,6 +1814,7 @@ cz: Souřadnice Y předchozího řídícího bodu.
 en: Previous control point Y coordinate.
 es: Coordenada Y del punto de control anterior.
 it: Coordinata Y del punto di controllo precedente.
+ru: Y координата предыдущей управляющей точки.
 sk: Y súradnica predchádzajúceho kontrolného bodu.
 
 therion: Next control point X coordinate.
@@ -1597,6 +1822,7 @@ cz: Souřadnice X následujícího řídícího bodu.
 en: Next control point X coordinate.
 es: Coordenada X del siguiente punto de control.
 it: Coordinata X del prossimo punto.
+ru: X координата следующей управляющей точки.
 sk: X súradnica nasledujúceho kontrolného bodu.
 
 therion: Next control point Y coordinate.
@@ -1604,6 +1830,7 @@ cz: Souřadnice Y následujícího řídícího bodu.
 en: Next control point Y coordinate.
 es: Coordenada Y del siguiente punto de control.
 it: Coordinata Y del prossimo punto.
+ru: Y координата следующей управляющей точки.
 sk: Y súradnica nasledujúceho kontrolného bodu.
 
 therion: Checkbox whether to use previous control point.
@@ -1611,6 +1838,7 @@ cz: Zaškrtněte pokud chcete pro tvar křivky použít předchozí řídící b
 en: Checkbox whether to use previous control point.
 es: Usar punto de control anterior.
 it: Checkbox per usare il punto di controllo precedente.
+ru: Поставьте галочку для использования предыдущей управляющей точки.
 sk: Použi predchádzajúci kontrolný bod.
 
 therion: smooth
@@ -1618,6 +1846,7 @@ cz: uhladit
 en: smooth
 es: suavizar
 it: regolarizza
+ru: сгладить
 sk: vyhladiť
 
 therion: Set line to be smooth in given point.
@@ -1625,6 +1854,7 @@ cz: Nastaví hladkou křivku v daném bodě.
 en: Set line to be smooth in given point.
 es: Suavizar la línea en el punto seleccionado.
 it: Imposta la linea ad essere regolare nelpunto specificato.
+ru: Установите для сглаживания линии в данной точке.
 sk: Nastaví kontrolné body tak, aby krivka bola v danom bode hladká.
 
 therion: Checkbox whether to use next control point.
@@ -1632,6 +1862,7 @@ cz: Zaškrtněte pokud chcete pro tvar křivky použít následující řídíc�
 en: Checkbox whether to use next control point.
 es: Usar siguiente punto de control.
 it: Checkbox per usare il prossimo punto di controllo.
+ru: Поставьте галочку для использования следующей управляющей точки.
 sk: Použi nasledujúci kontrolný bod.
 
 therion: orientation
@@ -1639,6 +1870,7 @@ cz: orientace
 en: orientation
 es: orientación
 it: orientazione
+ru: ориентация
 sk: orientácia
 
 therion: Set line point orientation.
@@ -1646,6 +1878,7 @@ cz: Nastaví orientaci bodu.
 en: Set line point orientation.
 es: Ajustar dirección en que apunta un punto de la línea (p.ej una pendiente).
 it: Imposta l'orientazione del punto della linea.
+ru: Установите ориентацию точки линии.
 sk: Nastaví orientáciu symbolov v bode krivky.
 
 therion: Enter line point orientation.
@@ -1653,6 +1886,7 @@ cz: Zadejte orientaci bodu.
 en: Enter line point orientation.
 es: Introducir dirección señalada por el punto.
 it: Scrivi l'orientazione del punto della linea.
+ru: Введите ориентацию точки линии.
 sk: Zadaj orientáciu symbolov v bode krivky.
 
 therion: r-size
@@ -1660,6 +1894,7 @@ cz: p-rozsah
 en: r-size
 es: anchura-dcha
 it: dim. destra
+ru: r-size
 sk: rozmer-p
 
 therion: Set line size in right direction.
@@ -1667,6 +1902,7 @@ cz: Nastaví rozsah křivky v pravém směru.
 en: Set line size in right direction.
 es: Ajustar anchura de línea (lado derecho de la línea).
 it: Imposta la dimensione della linea a destra.
+ru: Установите размер линии в правом направлении.
 sk: Nastaví veľkosť symbolov napravo od krivky.
 
 therion: Enter line size in right direction.
@@ -1674,6 +1910,7 @@ cz: Zadejte rozsah křivky v pravém směru.
 en: Enter line size in right direction.
 es: Introducir anchura de línea (lado derecho de la línea).
 it: Scrivi la dimensione della linea a destra.
+ru: Введите размер линии в правом направлении.
 sk: Zadaj veľkosť symbolov napravo od krivky.
 
 therion: l-size
@@ -1681,6 +1918,7 @@ cz: l-rozsah
 en: l-size
 es: anchura-izda
 it: dim. sinistra
+ru: l-size
 sk: rozmer-ľ
 
 therion: Set line size in left direction.
@@ -1688,6 +1926,7 @@ cz: Nastaví rozsah křivky v levém směru.
 en: Set line size in left direction.
 es: Ajustar anchura de línea (lado izquierdo de la línea). El tipo slope necesita este valor.
 it: Imposta la dimensione della linea a sinistra.
+ru: Установите размер линии в левом направлении.
 sk: Nastaví veľkosť symbolov naľavo od krivky.
 
 therion: Enter line size in left direction.
@@ -1695,6 +1934,7 @@ cz: Zadejte rozsah křivky v levém směru.
 en: Enter line size in left direction.
 es: Introducir anchura de línea (lado izquierdo de la línea). El tipo slope necesita este valor.
 it: Scrivi la dimensione della linea a sinistra.
+ru: Введите размер линии в левом направлении.
 sk: Zadaj veľkosť symbolov naľavo od krivky.
 
 therion: Line point options editor.
@@ -1702,6 +1942,7 @@ cz: Volby bodu křivky.
 en: Line point options editor.
 es: Editor de puntos pertenecientes a la línea seleccionada. Consultar thbook.pdf
 it: Editor delle opzioni del punto della linea.
+ru: Редактор опций точки линии.
 sk: Editor ďalších možností bodu krivky.
 
 therion: Click this button to apply line point changes.
@@ -1709,6 +1950,7 @@ cz: Aktualizovat bod křivky.
 en: Click this button to apply line point changes.
 es: Clicar tras modificar las propiedades de los puntos de una línea.
 it: Premi questo bottone per fare modifiche ai punti della linea.
+ru: Нажмите эту кнопку для применения изменений точки линии.
 sk: Aktializácia bodu krivky.
 
 therion: Editor for line point options.
@@ -1716,6 +1958,7 @@ cz: Editor voleb bodu křivky.
 en: Here you can enter options that will apply to line points.
 es: Aquí se pueden meter opciones que afectarán a los puntos de esta línea.
 it: Editor delle opzioni del punto della linea.
+ru: Редактор опций точки линии.
 sk: Editor ďalších možností bodu krivky.
 
 therion: loading area module ...
@@ -1723,6 +1966,7 @@ cz: nahrávám modul pro oblasti ...
 en: oading area module ...
 es: áreas...
 it: modulo aree ...
+ru: загрузка модуля областей ...
 sk: nahrávam modul pre plochy ...
 
 therion: Actual symbol theme.
@@ -1735,6 +1979,7 @@ cz: typ
 en: type
 es: tipo
 it: tipo
+ru: тип
 sk: typ
 
 therion: Area type.
@@ -1742,6 +1987,7 @@ cz: Typ oblasti.
 en: Area type (clic on triangle to see menu).
 es: Tipo de área. Clic en triángulo para ver el menú.
 it: Tipo dell'area
+ru: Тип области.
 sk: Typ plochy.
 
 therion: options
@@ -1749,6 +1995,7 @@ cz: volby
 en: options
 es: opciones
 it: opzioni
+ru: опции
 sk: možnosti
 
 therion: Other area options.
@@ -1756,6 +2003,7 @@ cz: Další volby pro oblast.
 en: Other area options. See thbook.pdf
 es: Otras opciones de área. Consultar thbook.pdf
 it: Altre opzioni dell'area.
+ru: Другие опции области.
 sk: Ďalšie možnosti plochy.
 
 therion: Select lines
@@ -1763,6 +2011,7 @@ cz: Vyber křivky
 en: Select lines
 es: Seleccionar
 it: Selezione linee
+ru: Выбор линий.
 sk: Vyber krivky
 
 therion: Switch to insert line into area mode.
@@ -1770,6 +2019,7 @@ cz: Výběr ohraničujících křivek oblasti.
 en: After clicking here, select by mouse this area border lines (they must intersect).
 es: Tras clicar aquí, con el ratón puedes seleccionar líneas que limiten un área (deben cortarse entre sí).
 it: Cambia per inserire linee nell'area.
+ru: Переключится в режим вставки линий-границ в область.
 sk: Po stlačení môžete začať vkladať krivky ohraničujúce plochu.
 
 therion: Delete ID from area.
@@ -1777,6 +2027,7 @@ cz: Odstranění objektu z oblasti.
 en: Delete selected line from list (will not be part of area borders)
 es: Borrar la línea seleccionada de la lista (dejará de limitar este área).
 it: Rimuovi identificativo dall'area.
+ru: Удалить линию по ИД из области.
 sk: Odstrániť krivku z daným ID z plochy.
 
 therion: Insert ID
@@ -1784,6 +2035,7 @@ cz: Vlož ID
 en: Insert ID
 es: Insertar ID
 it: Identificativo
+ru: Вставить ИД
 sk: Vlož ID
 
 therion: Insert given id.
@@ -1791,6 +2043,7 @@ cz: Vloží objekt s daným ID.
 en: Insert given id instead of Xtherion default.
 es: Insertar nombre (ID) indicado, no el nombre que therion crea automáticamente
 it: Inserisci l'identificativo specificato
+ru: Вставить линию-границу по заданному ИД.
 sk: Vložiť ID krivky do zoznamu kriviek ohraničujúcich plochu.
 
 therion: ID to insert.
@@ -1798,6 +2051,7 @@ cz: ID objektu ke vložení.
 en: ID to insert.
 es: Escribir el nombre (ID) a insertar.
 it: Identificativo da inserire.
+ru: ИД линии для вставки
 sk: ID na vloženie.
 
 therion: Update
@@ -1805,6 +2059,7 @@ cz: Aktualizovat
 en: Update
 es: Actualizar
 it: Aggiorna
+ru: Обновить
 sk: Aktualizovať
 
 therion: Click this button to apply changes you made to area.
@@ -1812,6 +2067,7 @@ cz: Aktualizace oblasti.
 en: Click this button to apply changes you made to area.
 es: Clicar aquí después de modificar las propiedades de un área.
 it: Premi questo bottone per fare modifiche all'area.
+ru: Нажмите эту кнопку для применения изменений сделанных для области.
 sk: Aktualizovať plochu.
 
 therion: Show
@@ -1819,6 +2075,7 @@ cz: Zobrazit
 en: Show
 es: Mostrar
 it: Mostra
+ru: Показать
 sk: Zobraziť
 
 therion: Show area border lines.
@@ -1826,6 +2083,7 @@ cz: Zobrazí hranice oblasti.
 en: Show area border lines.
 es: Mostrar líneas límite de área.
 it: Mostra le linee del bordo dell'area.
+ru: Показать линии-границы для области.
 sk: Zobraz hranice plochy.
 
 therion: Select line in area.
@@ -1833,6 +2091,7 @@ cz: Výběr křivky ohraničující oblast
 en: Click on any list line to get corresponding area border line selected on canvas.
 es: Cada renglón de la lista corresponde a una línea que limita esta área
 it: Seleziona una linea nell'area.
+ru: Выбор линии.
 sk: Vyber hraničnú krivku.
 
 therion: loading main menu ...
@@ -1840,6 +2099,7 @@ cz: nahrávám hlavní menu ...
 en: loading main menu ...
 es: menú principal ...
 it: menù principale ...
+ru: загрузка главного меню ...
 sk: nahrávam hlavné menu ...
 
 therion: Open (no pics)
@@ -1847,6 +2107,7 @@ cz: Otevřít (bez obrázků)
 en: Open (no pics)
 es: Abrir (sin imágenes)
 it: Apri (no pics)
+ru: Открыть (без картинок)
 sk: Otvoriť (bez obrázkov)
 
 therion: Import
@@ -1857,6 +2118,7 @@ cz: Vložit ...
 en: Insert ...
 es: Insertar ...
 it: Inserisci ...
+ru: Вставка ...
 sk: Vložiť ...
 
 therion: point
@@ -1864,6 +2126,7 @@ cz: bod
 en: point
 es: punto
 it: punto
+ru: точка
 sk: bod
 
 therion: line
@@ -1871,6 +2134,7 @@ cz: křivka
 en: line
 es: línea
 it: linea
+ru: линия
 sk: krivku
 
 therion: area
@@ -1878,6 +2142,7 @@ cz: oblast
 en: area
 es: área
 it: area
+ru: область
 sk: plochu
 
 therion: scrap
@@ -1885,6 +2150,7 @@ cz: scrap
 en: scrap
 es: croquis
 it: scrap
+ru: скрап
 sk: scrap
 
 therion: text
@@ -1892,6 +2158,7 @@ cz: text
 en: text
 es: texto
 it: testo
+ru: текст
 sk: text
 
 therion: Auto adjust area
@@ -1899,6 +2166,7 @@ cz: Auto přizpůsobit
 en: Auto adjust area
 es: Autoajustar área
 it: Auto-ridimensiona area
+ru: Автоподгонка границ зоны рисования.
 sk: Prispôsob plochu
 
 therion: Insert image
@@ -1906,6 +2174,7 @@ cz: Vložit obrázek
 en: Insert image
 es: Insertar imagen
 it: Inserisci immagine
+ru: Вставить изображение
 sk: Vložiť obrázok
 
 therion: Zoom 100 %
@@ -1913,6 +2182,7 @@ cz: Zoom na 100 %
 en: Zoom 100 %
 es: Zoom 100%
 it: Zoom 100 %
+ru: Масштаб 100 %
 sk: Zoom 100%
 
 therion: Mouse mode.
@@ -1920,6 +2190,7 @@ cz: Klikací režim.
 en: Mouse mode.
 es: Modo ratón.
 it: Modalità del mouse.
+ru: Режим мыши.
 sk: Mód myši.
 
 therion: Current mouse position.
@@ -1927,6 +2198,7 @@ cz: Aktuální pozice ukazatele myši.
 en: Current mouse position.
 es: Posición actual del ratón.
 it: Posizione del mouse.
+ru: Текущая позиция указателя мыши.
 sk: Aktuálna poloha myši.
 
 therion: loading line procs ...
@@ -1934,6 +2206,7 @@ cz: zpracovávám křivky ...
 en: loading line procs ...
 es: procesos de línea ...
 it: procedure di linea ...
+ru: загрузка процедур для линий ...
 sk: načitavam modul kriviek ...
 
 therion: Map editor is not active. To activate it, open existing file or create new one.
@@ -1941,6 +2214,7 @@ cz: Mapový editor není aktivní. Pro jeho aktivaci otevřete existující soub
 en: Map editor is not active. To activate it, open existing file or create new one.
 es: El editor de mapas está inactivo. Para activarlo, abre un archivo existente o crea uno nuevo.
 it: L'editor di mappa non è attivo. Per attivarlo apri un file o creane uno.
+ru: Редактор карты не активен. Для активации откройте существующий файл или создайте новый.
 sk: Mapový editor nie je aktívny. Otvorte existujúci súbor alebo vytvorte nový.
 
 therion: Insert line
@@ -1948,6 +2222,7 @@ cz: Vložit křivku
 en: Insert line
 es: Insertar línea
 it: Inserisci linea
+ru: Вставить линию
 sk: Vložiť krivku
 
 therion: Insert scrap
@@ -1955,6 +2230,7 @@ cz: Vložit scrap
 en: Insert scrap
 es: Insertar croquis
 it: Inserisci scrap
+ru: Вставить скрап
 sk: Vložiť scrap
 
 therion: Insert text
@@ -1962,6 +2238,7 @@ cz: Vložit text
 en: Insert text
 es: Insertar texto
 it: Inserisci testo
+ru: Вставить текст
 sk: Vložiť text
 
 therion: Insert area
@@ -1969,6 +2246,7 @@ cz: Vložit oblast
 en: Insert area
 es: Insertar área
 it: Inserisci area
+ru: Вставить область
 sk: Vložiť plochu
 
 therion: Delete
@@ -1976,6 +2254,7 @@ cz: Smazat
 en: Delete
 es: Borrar
 it: Rimuovi
+ru: Удалить
 sk: Odstrániť
 
 therion: deleting
@@ -1983,6 +2262,7 @@ cz: mazání
 en: deleting
 es: borrando
 it: rimuovendo
+ru: удаление
 sk: mazanie
 
 therion: moving command
@@ -1990,6 +2270,7 @@ cz: přesun příkazu
 en: moving command
 es: desplazando comando
 it: comando di spostamento
+ru: перемещение команд
 sk: presun príkazu
 
 therion: creating endscrap
@@ -1997,6 +2278,7 @@ cz: vytvoření konce scrapu
 en: creating endscrap
 es: creando línea final de croquis (endscrap)
 it: creazione endscrap
+ru: создание конца скрапа
 sk: vytvorenie konca scrapu
 
 therion: scrap changes
@@ -2004,6 +2286,7 @@ cz: změna parametrů scrapu
 en: scrap changes
 es: cambios del croquis (scrap)
 it: modifiche dello scrap
+ru: изменение скрапа
 sk: zmena parametrov scrapu
 
 therion: creating scrap
@@ -2011,6 +2294,7 @@ cz: vytvoření scrapu
 en: creating scrap
 es: creando croquis (scrap)
 it: creazione scrap
+ru: создание скрапа
 sk: vytvorenie scrapu
 
 therion: creating text
@@ -2018,6 +2302,7 @@ cz: vytvoření textu
 en: creating text
 es: creando texto
 it: creazione testo
+ru: создание текста
 sk: vytvorenie textu
 
 therion: text changes
@@ -2025,6 +2310,7 @@ cz: změna textu
 en: text changes
 es: cambios de texto
 it: modifiche del testo
+ru: изменение текста
 sk: zmena textu
 
 therion: end point insertion
@@ -2032,11 +2318,13 @@ cz: konec vkládání bodů
 en: end point insertion
 es: final de inserción de punto
 it: inserimento punto finale
+ru: вставка конечной точки
 sk: koniec vkladania bodov
 
 therion: select object
 cz: označ objekt
 it: seleziona oggetto
+ru: выбор объекта
 sk: označ objekt
 
 therion: Insert
@@ -2044,21 +2332,25 @@ cz: Vložit
 en: Insert
 es: Insertar
 it: Inserisci
+ru: Вставка
 sk: Vložiť
 
 therion: insert point
 cz: vlož bod
 it: inserisci punto
+ru: вставка точки
 sk: vlož bod
 
 therion: insert line point
 cz: vlož bod křivky
 it: inserisci punto di linea
+ru: вставка точки линии
 sk: vlož bod krivky
 
 therion: insert area border
 cz: vlož hranici plochy
 it: inserisci bordo dell'area
+ru: вставка границы области
 sk: vlož okraj plochy
 
 therion: Select
@@ -2066,6 +2358,7 @@ cz: Vyber
 en: Select
 es: Seleccionar
 it: Seleziona
+ru: Выбор
 sk: Vybrať
 
 therion: scale scrap
@@ -2083,6 +2376,7 @@ cz: vytvoření bodu
 en: creating point
 es: creando punto
 it: creazione punto
+ru: создание точки
 sk: vytvorenie bodu
 
 therion: area changes
@@ -2090,6 +2384,7 @@ cz: změna parametrů oblasti
 en: area changes
 es: cambios de área
 it: modifiche di area
+ru: изменение области
 sk: zmena parametrov plochy
 
 therion: point changes
@@ -2097,6 +2392,7 @@ cz: změna parametrů bodu
 en: point changes
 es: cambios de punto
 it: modifiche di punto
+ru: изменение точки
 sk: zmena parametrov bodu
 
 therion: Scrap sketch not inserted.
@@ -2119,6 +2415,7 @@ cz: přepnutí viditelnosti obrázku
 en: toggle image visibility
 es: Cambiar visibilidad de la imagen
 it: cambia visibilità immagine
+ru: переключение видимости изображения
 sk: prepni viditeľnosť obrázku
 
 therion: grid - spacing %s
@@ -2126,6 +2423,7 @@ cz: mřížka - odstup %s
 en: grid - spacing %s
 es: anchura cuadrícula %s
 it: reticolato - passo %s
+ru: сетка - шаг %s
 sk: sieť - rozostupy %s
 
 therion: station - %s
@@ -2133,6 +2431,7 @@ cz: měřičský bod - %s
 en: station - %s
 es: estación %s
 it: caposaldo - %s
+ru: пикет - %s
 sk: měračský bod - %s
 
 therion: New *.th2 file needs to be saved before inserting background image. Save it now?
@@ -2140,6 +2439,7 @@ cz: Nový *.th2 soubor musí být uložen před vložením podkladového obrázk
 en: New *.th2 file needs to be saved before inserting background image. Save it now?
 es: Hay que guardar el nuevo archivo .th2 antes de cargar una imagen de fondo. ¿Guardar ahora?
 it: Il nuovo file *.th2 deve essere salvato prima di inserire immagini di background. Salvala ora?
+ru: Новый *.th2 файл нуждается в сохранении перед вставкой фонового изображения. Записать сейчас?
 sk: Pred vložením obrázku musíte nový *.th2 súbor uložiť. Chcete tak urobiť?
 
 therion: inserting image"] [format $undocmd $iidx] [format $redocmd "{$xx $vsb}" "{$yy $XVIroot}
@@ -2149,6 +2449,7 @@ cz: odstraňuji obrázek
 en: removing image
 es: eliminando imagen
 it: rimozione immagine
+ru: удаление изображения
 sk: odstránenie obrázku
 
 therion: moving image
@@ -2156,6 +2457,7 @@ cz: přesunuji obrázek
 en: moving image
 es: moviendo imagen
 it: spostamento immagine
+ru: перемещение изображения
 sk: posun obrázku
 
 therion: gamma correction
@@ -2163,6 +2465,7 @@ cz: gamma korekce
 en: gamma correction
 es: corección gamma
 it: gamma
+ru: коррекция гаммы
 sk: gamma korekcia
 
 therion: Insert point
@@ -2170,6 +2473,7 @@ cz: Vložit bod
 en: Insert point
 es: Insertar punto
 it: Inserisci punto
+ru: Вставить точку
 sk: Vložiť bod
 
 therion: Delete point
@@ -2177,6 +2481,7 @@ cz: Smazat bod
 en: Delete point
 es: Borrar punto
 it: Rimuovi
+ru: Удалить точку
 sk: Odstrániť bod
 
 therion: Split line
@@ -2184,6 +2489,7 @@ cz: Rozdělit křivku
 en: Split line
 es: Cortar línea
 it: Dividi
+ru: Разделить линию
 sk: Rozdeliť krivku
 
 therion: deleting line point
@@ -2191,6 +2497,7 @@ cz: mazaní bodu na křivce
 en: deleting line point
 es: borrando punto de línea
 it: rimozione punto di linea
+ru: Удалить точку линии
 sk: mazanie bodu na čiare
 
 therion: inserting area border
@@ -2198,6 +2505,7 @@ cz: vložení hranice oblasti
 en: inserting area border
 es: insertando límite de área
 it: inserimento bordo area
+ru: вставка границы области
 sk: vloženie okraja plochy
 
 therion: deleting area border
@@ -2205,6 +2513,7 @@ cz: mazaní hranice oblasti
 en: deleting area border
 es: borrando límite de área
 it: rimozione bordo area
+ru: удаление границы области
 sk: mazanie okraja plochy
 
 therion: creating area
@@ -2212,6 +2521,7 @@ cz: vytvoření oblasti
 en: creating area
 es: creando área
 it: creazione area
+ru: создание области
 sk: vytvorenie plochy
 
 therion: creating line
@@ -2219,6 +2529,7 @@ cz: vytvoření křivky
 en: creating line
 es: creando línea
 it: creazione linea
+ru: создание линии
 sk: vytvorenie krivky
 
 therion: line changes
@@ -2226,6 +2537,7 @@ cz: změna parametrů křivky
 en: line changes
 es: cambios de línea
 it: modifiche di linea
+ru: изменение линии
 sk: zmena parametrov krivky
 
 therion: line closing
@@ -2233,6 +2545,7 @@ cz: uzavření křivky
 en: line closing
 es: cerrando línea
 it: chiusura linea
+ru: замыкание линии
 sk: uzavretie krivky
 
 therion: line opening
@@ -2240,6 +2553,7 @@ cz: otevření křivky
 en: line opening
 es: abriendo línea
 it: apertura linea
+ru: размыкание линии
 sk: otvorenie krivky
 
 therion: inserting line point
@@ -2247,6 +2561,7 @@ cz: vložení bodu křivky
 en: inserting line point
 es: insertando punto en la línea
 it: inserimento punto di linea
+ru: вставка точки в линию
 sk: vloženie bodu krivky
 
 therion: line ending
@@ -2254,6 +2569,7 @@ cz: ukončení křivky
 en: line ending
 es: finalizando línea
 it: fine linea
+ru: завершение линии
 sk: ukončenie krivky
 
 therion: moving control point
@@ -2261,6 +2577,7 @@ cz: posun řídícího bodu
 en: moving control point
 es: moviendo punto de control
 it: spostamento punto di controllo
+ru: перемещение управляющей точки
 sk: posun kontrolného bodu
 
 therion: split line
@@ -2268,6 +2585,7 @@ cz: rozdělit křivku
 en: split line
 es: cortar línea
 it: dividi la linea
+ru: разделение линии
 sk: rozdelenie čiary
 
 therion: loading text editor ...
@@ -2275,6 +2593,7 @@ cz: nahrávám text editor ...
 en: loading text editor ...
 es: editor de texto ...
 it: editor di testo ...
+ru: загрузка текстового редактора ...
 sk: načítavam textový editor
 
 therion: Text Editor
@@ -2282,6 +2601,7 @@ cz: Text editor
 en: Text Editor
 es: Editor de texto
 it: Editor di testo
+ru: Текстовой редактор
 sk: Textový editor
 
 therion: Files
@@ -2289,6 +2609,7 @@ cz: Soubory
 en: Files
 es: Archivos
 it: File
+ru: Файлы
 sk: Súbory
 
 therion: Data table
@@ -2296,6 +2617,7 @@ cz: Datová tabulka
 en: Data table
 es: Tabla de datos
 it: Tabella dei dati
+ru: Таблица данных
 sk: Dátová tabuľka
 
 therion: Search & Replace
@@ -2303,6 +2625,7 @@ cz: Najít & Nahradit
 en: Search & Replace
 es: Buscar y cambiar
 it: Cerca e sostituisci
+ru: Поиск и Замена
 sk: Nájdi a Nahraď
 
 therion: Switch open files.
@@ -2310,6 +2633,7 @@ cz: Přepínač otevřených souborů.
 en: This list shows open files. Click on the one you are interested.
 es: Esta lista muestra los archivos abiertos. Haz clic en el que te interese.
 it: Cambia tra i file aperti.
+ru: Поменять открытый файл.
 sk: Prepínač medzi otvorenými súbormi.
 
 therion: Encoding
@@ -2317,6 +2641,7 @@ cz: Kódování
 en: Encoding
 es: Codificación
 it: Encoding
+ru: Кодировка
 sk: Kódovanie
 
 therion: Change to
@@ -2324,6 +2649,7 @@ cz: Změnit na
 en: Change to
 es: Cambiar a
 it: Cambia a
+ru: Изменить на
 sk: Zmeniť na
 
 therion: To set file encoding, type encoding name and press <Change> button.
@@ -2331,6 +2657,7 @@ cz: Nastavení kódování - vyberte kódování a stiskněte tlačítko <Změni
 en: To set file encoding, type encoding name and press <Change> button.
 es: Para ajustar la codificación, escoje la que quieras y pulsa <Cambiar a>.
 it: Per impostare l'encoding, scrivi il nome dell'encoding e premi il bottone <Cambia>
+ru: Для задания кодировки файла введите имя кодировки и нажмите кнопку <Изменить>.
 sk: Na nastavenie kódovania, vložte identifikátor kódovania a stlačte <Zmeniť>.
 
 therion: Scan data format
@@ -2338,6 +2665,7 @@ cz: Skenovat formát dat
 en: Scan data format
 es: Escanear formato de datos
 it: Imposta formato dati
+ru: Определить формат данных
 sk: Nájdi formát dát
 
 therion: Scan data format and rebuild centerline data insertion tool.
@@ -2345,6 +2673,7 @@ cz: Přečte formát dat v souboru a upraví pole pro vkládání měření.
 en: Scans data order and rebuilds data insertion textboxes accordingly.
 es: Ajusta las casillas al orden en que has tomado tus datos.
 it: Imposta il formato dati e ricostruisci la tabella inserimento dati.
+ru: Автоматически определить формат данных и перестроить поля ввода.
 sk: Načíta formát dát z predchádzajúcich riadkov a príslušne zmení panel na vkladanie dát.
 
 therion: Enter station names
@@ -2352,6 +2681,7 @@ cz: Zadávat názvy bodů
 en: Enter station names
 es: Nombrar estaciones
 it: Scrivi nomi capisaldi
+ru: Ввод номера следующего пикета
 sk: Zadávanie názvov bodov
 
 therion: Check if you want to insert station names for each shot.
@@ -2359,6 +2689,7 @@ cz: Zaškrtněte pokud chcete zadávat název pro každý měřičský bod.
 en: Check if you want to insert station names for each shot.
 es: Marcar si se quiere dar un nombre a cada tirada topo.
 it: Attiva per inserire i nomi dei capisaldi per ogni tratta.
+ru: Установите отметку, если хотите, чтобы происходил автоматический ввод номера следующего пикета.
 sk: Zaškrtnite pokiaľ chcete vkladať aj mená bodov pre každú zámeru.
 
 therion: Auto format selection
@@ -2366,6 +2697,7 @@ cz: Auto formátování výběru
 en: Auto format selection
 es: Autoformatear selección
 it: Selezione formato automatico.
+ru: Перестроить выделенные данные
 sk: Naformátuj výber
 
 therion: Format selection to given table.
@@ -2373,6 +2705,7 @@ cz: Naformátuje výběr do tabulky.
 en: Format selection to given table.
 es: Formatea la seleccion (ajusta tabuladores, etc).
 it: Imposta selezione alla tabella specificata.
+ru: Привести выделенные данные к заданному формату.
 sk: Naformátuje výber do dátovej tabuľky.
 
 therion: search
@@ -2380,6 +2713,7 @@ cz: hledat
 en: search
 es: buscar
 it: cerca
+ru: поиск
 sk: hľadaj
 
 therion: Search expression.
@@ -2387,6 +2721,7 @@ cz: Hledaný výraz.
 en: Enter word(s) to search for.
 es: Introducir palabra(s) a buscar.
 it: Testo da cercare.
+ru: Выражение поиска.
 sk: Hľadaný výraz.
 
 therion: replace
@@ -2394,6 +2729,7 @@ cz: nahradit
 en: replace
 es: cambiar
 it: sostituisci
+ru: замена
 sk: nahradiť
 
 therion: Check whether to replace found expression.
@@ -2401,6 +2737,7 @@ cz: Zaškrtněte pokud chcete nahradit nalezené výrazy.
 en: Check whether to replace found expression.
 es: Marcar para cambiar los lo encontrado por lo que se escriba aquí.
 it: Attiva per sostituire il testo trovato.
+ru: Установите отметку, если хотите произвести замену.
 sk: Zaškrtnúť pokiaľ sa má nájdený výraz nahradiť iným.
 
 therion: Replace expression.
@@ -2408,6 +2745,7 @@ cz: Řetězec, kterým bude výraz nahrazen.
 en: Search results will be replaced by the string entered here.
 es: Los resultados de la búsqueda serán cambiados por lo que escribas aquí.
 it: Sostituisci testo.
+ru: Выражение замены.
 sk: Výraz na nahradenie.
 
 therion: case sensitive search
@@ -2415,6 +2753,7 @@ cz: rozlišovat velikost písmen
 en: case sensitive search
 es: sensible a mayúsculas
 it: ricerca case-sensitive
+ru: учитывать регистр
 sk: rozlišovať malé a veľké
 
 therion: Check if search should be case sensitive.
@@ -2422,6 +2761,7 @@ cz: Vyhledávání s rozlišením velikosti písmen.
 en: Check if search should be case sensitive.
 es: Marcar para que la búsqueda distinga entre mayúsculas y minúsculas.
 it: Attiva se la ricerca deve essere case-sensitive.
+ru: Установите отметку, чтобы поиск происходил с учетом регистра.
 sk: Zaškrtnite pokiaľ pri hľadaní chcete rozlišovať malé a veľké písmená.
 
 therion: regular expressions
@@ -2429,6 +2769,7 @@ cz: regulární výrazy
 en: regular expressions
 es: patrón regular
 it: esperssioni regolari
+ru: регулярные выражения
 sk: regulárny výraz
 
 therion: Check whether to evaluate search and replace as regular expressions.
@@ -2436,6 +2777,7 @@ cz: Zaškrtněte pokud chcete vyhledávat nebo nahrazovat pomocí regulárních 
 en: Check whether to search using regular expressions.
 es: Búsqueda usando comodines.
 it: Attiva per ricerca e sostituzione con espressioni regolari.
+ru: Установите отметку, чтобы обрабатывать регулярные выражения при поиске и замене.
 sk: Zaškrtnite ak sa má hľadanie a nahradenie vykonávať v móde regulárnych výrazov.
 
 therion: search selection only
@@ -2443,6 +2785,7 @@ cz: pouze ve vybraném textu
 en: search selection only
 es: selección solo
 it: cerca solo nella selezione
+ru: искать в выделенном
 sk: iba vo vybratom texte
 
 therion: Check whether to do search only in selected text.
@@ -2450,6 +2793,7 @@ cz: Zaškrtněte pokud chcete vyhledávat pouze ve vybraném textu.
 en: Check whether to do search only in selected text.
 es: Marcar para buscar solo dentro del texto seleccionado.
 it: Attiva per cercare solo nel testo selezionato.
+ru: Установите отметку, чтобы искать только в выделенном тексте.
 sk: Zaškrtnite pokiaľ hladanie má prebehnúť len v označenom texte.
 
 therion: First
@@ -2457,6 +2801,7 @@ cz: První
 en: First
 es: Buscar
 it: Primo
+ru: Первый
 sk: Prvý
 
 therion: Search or replace first expression in the file.
@@ -2464,6 +2809,7 @@ cz: Najde nebo nahradí první výraz v souboru.
 en: Search or replace first expression in the file.
 es: Buscar o reemplazar el primer resultado.
 it: Cerca o sostituisci la prima istanza del testo nel file.
+ru: Поиск или замена первого вхождения в файле.
 sk: Nájte poprípade nahradí prvý výskyt hľadaného výrazu v súbore.
 
 therion: Search or replace next expression after the cursor in the file.
@@ -2471,6 +2817,7 @@ cz: Najde nebo nahradí následující výraz v souboru.
 en: Search or replace next expression after the cursor in the file.
 es: Buscar o reemplazar el siguiente resultado.
 it: Cerca o sostituisci la prossima istanza del testo nel file dopo il cursore.
+ru: Поиск или замена следующего после курсора вхождения в файле.
 sk: Nájdi alebo nahraď nasledujúci výraz v súbore.
 
 therion: All
@@ -2478,6 +2825,7 @@ cz: Vše
 en: All
 es: Todo
 it: Tutti
+ru: Все
 sk: Všetko
 
 therion: Search or replace all expressions in the file.
@@ -2485,6 +2833,7 @@ cz: Najde nebo nahradí všechny výrazy v souboru.
 en: Search or replace all expressions in the file.
 es: Buscar o reemplazar todos los resultados.
 it: Cerca o sostituisci tuute le frasi nel file.
+ru: Поиск или замена всех вхождений в файле.
 sk: Nájdi alebo nahraď všetky výrazy v súbore.
 
 therion: Clear
@@ -2492,6 +2841,7 @@ cz: Zrušit
 en: Clear
 es: Deseleccionar
 it: Cancella
+ru: Очистка
 sk: Vyčisti
 
 therion: Clear all highlights in the file.
@@ -2499,6 +2849,7 @@ cz: Zruší zvýraznění nalezených výrazů v souboru.
 en: Clear all highlights in the file.
 es: Deseleccionar todo lo seleccionado.
 it: Cancella tutte le evidenziazioni nel file.
+ru: Очистка всех подсвеченных участков текста.
 sk: Zruší zvýraznenie nájdených výrazov v súbore.
 
 therion: Opening %s ...
@@ -2506,6 +2857,7 @@ cz: Otevírám %s ...
 en: Opening %s ...
 es: Abriendo %s ...
 it: Apertura %s ...
+ru: Открытие %s ...
 sk: Oteváram %s ...
 
 therion: File %s is not saved. Save it now?
@@ -2513,6 +2865,7 @@ cz: Soubor %s není uložen. Uložit nyní?
 en: File %s is not saved. Save it now?
 es: El archivo %s no ha sido guardado. ¿Guardar ahora?
 it: Il file %s non è salvato. Salva ora?
+ru: Файл %s не сохранен. Сохранить его сейчас?
 sk: Súbor %s nie je uložený. Uložiť teraz?
 
 therion: File %s was modified outside xtherion. Save it anyway?
@@ -2520,6 +2873,7 @@ cz: Soubor %s byl modifikován mimo xtherion. Přesto uložit?
 en: File %s was modified outside xtherion. Save it anyway?
 es: El archivo %s ha sido modificado fuera de xtherion. ¿Guardar de todos modos?
 it: Il file %s è stato modificato fuori da xtherion. Salva comunque?
+ru: Файл %s был изменен другим приложением. Сохранить не смотря на это?
 sk: Súbor %s bol modifikovaný mimo programu. Uložiť aj tak?
 
 therion: Saving %s ...
@@ -2527,6 +2881,7 @@ cz: Ukládám %s ...
 en: Saving %s ...
 es: Guardando %s ...
 it: Salvataggio %s ...
+ru: Сохранение %s ...
 sk: Ukladám %s ...
 
 therion: New
@@ -2534,6 +2889,7 @@ cz: Nový
 en: New
 es: Nuevo
 it: Nuovo
+ru: Новый
 sk: Nový
 
 therion: Open
@@ -2541,6 +2897,7 @@ cz: Otevřít...
 en: Open
 es: Abrir
 it: Apri
+ru: Открыть
 sk: Otvoriť
 
 therion: Save
@@ -2548,6 +2905,7 @@ cz: Uložit
 en: Save
 es: Guardar
 it: Salva
+ru: Сохранить
 sk: Uložiť
 
 therion: Save as
@@ -2555,6 +2913,7 @@ cz: Uložit jako...
 en: Save as
 es: Guardar como
 it: Salva come
+ru: Сохранить как
 sk: Uložiť ako
 
 therion: Save all
@@ -2562,6 +2921,7 @@ cz: Uložit vše
 en: Save all
 es: Guardar todo
 it: Salva tutti
+ru: Сохранить всё
 sk: Uložiť všetko
 
 therion: Auto save
@@ -2569,6 +2929,7 @@ cz: Automaticky ukládat
 en: Auto save
 es: Autoguardar
 it: Auto salva
+ru: Автосохранение
 sk: Ukladať automaticky
 
 therion: Next
@@ -2576,6 +2937,7 @@ cz: Následující
 en: Next
 es: Siguiente
 it: Prossima
+ru: Следующий
 sk: Nasledujúci
 
 therion: Previous
@@ -2583,6 +2945,7 @@ cz: Předchozí
 en: Previous
 es: Anterior
 it: Precedente
+ru: Предыдущий
 sk: Predchádzajúci
 
 therion: Edit
@@ -2590,6 +2953,7 @@ cz: Editovat
 en: Edit
 es: Editar
 it: Edita
+ru: Редактировать
 sk: Upraviť
 
 therion: Undo
@@ -2597,6 +2961,7 @@ cz: Zpět
 en: Undo
 es: Deshacer
 it: Indietro
+ru: Отменить
 sk: Späť
 
 therion: Redo
@@ -2604,6 +2969,7 @@ cz: Opakovat
 en: Redo
 es: Rehacer
 it: Rifai
+ru: Вернуть
 sk: Opakovať
 
 therion: Cut
@@ -2611,6 +2977,7 @@ cz: Vyjmout
 en: Cut
 es: Cortar
 it: Taglia
+ru: Вырезать
 sk: Vystrihnúť
 
 therion: Copy
@@ -2618,6 +2985,7 @@ cz: Kopírovat
 en: Copy
 es: Copiar
 it: Copia
+ru: Копировать
 sk: Kopírovať
 
 therion: Paste
@@ -2625,6 +2993,7 @@ cz: Vložit
 en: Paste
 es: Pegar
 it: Incolla
+ru: Вставить
 sk: Vložiť
 
 therion: Select all
@@ -2632,6 +3001,7 @@ cz: Vybrat vše
 en: Select all
 es: Seleccionar todo
 it: Seleziona tutto
+ru: Выделить всё
 sk: Vyber všetko
 
 therion: Auto indent
@@ -2639,6 +3009,7 @@ cz: Automaticky odsazovat
 en: Auto indent
 es: Autoindentar
 it: Indentazione automatica
+ru: Автоотступ
 sk: Automatické odsadenie
 
 therion: Processing line %s ...
@@ -2646,6 +3017,7 @@ cz: Zpracovávám řádek %s ...
 en: Processing line %s ...
 es: Procesando línea %s ...
 it: Elaborazione linea %s ...
+ru: Обработка строки %s ...
 sk: Spracúvam riadok %s ...
 
 therion: Text editor is not active. To activate it, open existing file or create new one.
@@ -2653,6 +3025,7 @@ cz: Textový editor není aktivní. Pro jeho aktivaci otevřete existující sou
 en: Text editor is not active. To activate it, open existing file or create new one.
 es: El editor de texto está inactivo. Para activarlo, abre un archivo existente o crea uno nuevo.
 it: L'editor di testo non è attivo. Per attivarlo apri un file o creane uno.
+ru: Текстовый редактор неактивен. Для активации откройте существующий файл или создайте новый.
 sk: Textový editor nie je aktívny. Otvorte existujúci súbor alebo vytvorte nový.
 
 therion: Control...
@@ -2660,6 +3033,7 @@ cz: Ovládání...
 en: Control...
 es: Control
 it: Controlli ...
+ru: Управление...
 sk: Ovládanie...
 
 therion: BAC calculator...
@@ -2667,6 +3041,7 @@ cz: Alkohol tester...
 en: BAC calculator...
 es: Borrachímetro
 it: Calcolatore BAC ...
+ru: Калькулятор алкоголя...
 sk: Alkohol tester...
 
 therion: About...
@@ -2674,6 +3049,7 @@ cz: O programu...
 en: About...
 es: Acerca de...
 it: Versione ...
+ru: О программе...
 sk: O programe...
 
 therion: Search
@@ -2681,6 +3057,7 @@ cz: Hledat
 en: Search
 es: Buscar
 it: Cerca
+ru: Поиск
 sk: Hľadať
 
 therion: Close
@@ -2688,6 +3065,7 @@ cz: Zavřít
 en: Close
 es: Cerrar
 it: Chiudi
+ru: Закрыть
 sk: Zavrieť
 
 therion: theme all-symbols

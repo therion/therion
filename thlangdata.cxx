@@ -21,6 +21,7 @@ static const thstok thtt_lang [] = {
   {"pt", THLANG_PT},
   {"pt_BR", THLANG_PT_BR},
   {"pt_PT", THLANG_PT_PT},
+  {"ru", THLANG_RU},
   {"sk", THLANG_SK},
   {NULL, THLANG_UNKNOWN},
 };
@@ -39,6 +40,7 @@ static const thlang_pchar thlang__cxxids []  = {
   "THLANG_PT",
   "THLANG_PT_BR",
   "THLANG_PT_PT",
+  "THLANG_RU",
   "THLANG_SK",
 };
 
@@ -56,6 +58,7 @@ static const int thlang__alternatives [] = {
   THLANG_UNKNOWN,
   THLANG_PT,
   THLANG_PT,
+  THLANG_UNKNOWN,
   THLANG_UNKNOWN,
 };
 
@@ -215,7 +218,7 @@ static const thstok thtt__texts [149] = {
 
 
 
-static thlang_pchar thlang__translations [148][12] = {
+static thlang_pchar thlang__translations [148][13] = {
   {
     "skalní bloky",
     "Fläche mit Blöcken",
@@ -228,6 +231,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "blocos",
     NULL,
     NULL,
+    "навал глыб",
     "skalné bloky",
   },
   {
@@ -242,6 +246,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "lama",
     NULL,
     NULL,
+    "глина",
     "íl",
   },
   {
@@ -256,6 +261,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "escombros",
     NULL,
     NULL,
+    "щебень",
     "štrk",
   },
   {
@@ -270,6 +276,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "gelo",
     NULL,
     NULL,
+    "лёд",
     "ľad",
   },
   {
@@ -284,6 +291,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "seixos",
     NULL,
     NULL,
+    "галька",
     "okrúhliaky",
   },
   {
@@ -298,6 +306,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "areia",
     NULL,
     NULL,
+    "песок",
     "piesok",
   },
   {
@@ -312,6 +321,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "neve",
     NULL,
     NULL,
+    "снег",
     "sneh",
   },
   {
@@ -326,6 +336,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "sifão",
     NULL,
     NULL,
+    "сифон",
     "zatopená plocha (sifón)",
   },
   {
@@ -340,6 +351,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "água",
     NULL,
     NULL,
+    "вода",
     "vodná plocha",
   },
   {
@@ -354,6 +366,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "seta",
     NULL,
     NULL,
+    "стрелка",
     "pomocná šípka",
   },
   {
@@ -368,6 +381,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "borda",
     NULL,
     NULL,
+    "граница",
     "ohraničenie",
   },
   {
@@ -382,6 +396,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "borda presumida",
     NULL,
     NULL,
+    "предполагаемая граница",
     "predpokladané ohraničenie",
   },
   {
@@ -396,6 +411,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "borda temporária",
     NULL,
     NULL,
+    "временная граница",
     "nestále ohraničenie",
   },
   {
@@ -410,6 +426,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "borda",
     NULL,
     NULL,
+    "видимая граница",
     "ohraničenie",
   },
   {
@@ -424,6 +441,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "meandro no teto",
     "meandro no teto",
     "meandro no tecto",
+    "меандр, канал в потолке",
     "stropný meander",
   },
   {
@@ -438,6 +456,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "degrau no teto",
     "degrau no teto",
     "degrau no tecto",
+    "уступ потолка",
     "zmena výšky stropu",
   },
   {
@@ -452,6 +471,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "chaminé",
     NULL,
     NULL,
+    "труба",
     "komín",
   },
   {
@@ -466,6 +486,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "contorno",
     NULL,
     NULL,
+    "контур",
     "vrstevnica",
   },
   {
@@ -480,6 +501,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "meandro no piso",
     NULL,
     NULL,
+    "меандр, канал в полу",
     "meander v dne",
   },
   {
@@ -494,6 +516,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "degrau",
     NULL,
     NULL,
+    "уступ пола",
     "stupeň",
   },
   {
@@ -508,6 +531,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "escorrimento",
     NULL,
     NULL,
+    "натечный каскад",
     "sintrové náteky",
   },
   {
@@ -522,6 +546,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "declividade da galeria",
     NULL,
     NULL,
+    "уклон хода",
     "sklon chodby",
   },
   {
@@ -536,6 +561,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "indicação",
     NULL,
     NULL,
+    "текстовая метка",
     "pomenovanie",
   },
   {
@@ -550,6 +576,7 @@ static thlang_pchar thlang__translations [148][12] = {
     NULL,
     NULL,
     NULL,
+    NULL,
     "prepojenie máp",
   },
   {
@@ -560,6 +587,7 @@ static thlang_pchar thlang__translations [148][12] = {
     NULL,
     NULL,
     "mondmilch",
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -578,6 +606,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "projeção",
     "projeção",
     "projecção",
+    "нависание потолка",
     "previs",
   },
   {
@@ -592,6 +621,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "desnível",
     NULL,
     NULL,
+    "колодец",
     "priepasť",
   },
   {
@@ -606,6 +636,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "lateral da rocha",
     NULL,
     NULL,
+    "внешний кромка глыбы",
     "obrys kameňa",
   },
   {
@@ -620,6 +651,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "bordas da rocha",
     NULL,
     NULL,
+    "внутренняя кромка глыбы",
     "hrany kameňa",
   },
   {
@@ -634,6 +666,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "corte",
     NULL,
     NULL,
+    "выносная линия сечения",
     "priečny rez",
   },
   {
@@ -648,6 +681,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "declive",
     NULL,
     NULL,
+    "склон",
     "šikmá plocha",
   },
   {
@@ -662,6 +696,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "linha de topografia",
     NULL,
     NULL,
+    "нитка хода",
     "polygónový ťah",
   },
   {
@@ -676,6 +711,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "parede",
     NULL,
     NULL,
+    "стена",
     "stena",
   },
   {
@@ -690,6 +726,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "parede",
     NULL,
     NULL,
+    "стена",
     "stena",
   },
   {
@@ -704,6 +741,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "desmoronamento",
     NULL,
     NULL,
+    "глыбы",
     "stena tvorená závalom",
   },
   {
@@ -718,6 +756,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "lama",
     NULL,
     NULL,
+    "глина",
     "stena tvorená ílom",
   },
   {
@@ -732,6 +771,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "escombros",
     NULL,
     NULL,
+    "щебень",
     "stena tvorená suťou",
   },
   {
@@ -746,6 +786,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "gelo",
     NULL,
     NULL,
+    "лед, фирн",
     "stena tvorená ľadom",
   },
   {
@@ -760,6 +801,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "seixos",
     NULL,
     NULL,
+    "галька",
     "stena tvorená okruhliakmi",
   },
   {
@@ -774,6 +816,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "parede presumida",
     NULL,
     NULL,
+    "предпологаемая стена",
     "predpokladaná stena",
   },
   {
@@ -788,6 +831,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "areia",
     NULL,
     NULL,
+    "песок",
     "stena tvorená pieskom",
   },
   {
@@ -802,6 +846,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "parede subjacente",
     NULL,
     NULL,
+    "нижерасположенная стена",
     "stena nižšej úrovne",
   },
   {
@@ -816,6 +861,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "parede não-topografada",
     NULL,
     NULL,
+    "глазомерная съемка стен",
     "nezameraná stena",
   },
   {
@@ -830,6 +876,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "fluxo de água",
     NULL,
     NULL,
+    "водоток",
     "vodný tok",
   },
   {
@@ -844,6 +891,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "fluxo de água suposto",
     NULL,
     NULL,
+    "предполагаемый водоток",
     "predpokladaný vodný tok",
   },
   {
@@ -858,6 +906,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "fluxo de água intermitente",
     NULL,
     NULL,
+    "непостоянный водоток",
     "občasný vodný tok",
   },
   {
@@ -872,6 +921,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "fluxo de água permanente",
     NULL,
     NULL,
+    "постоянный водоток",
     "vodný tok",
   },
   {
@@ -886,6 +936,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "presença de vento",
     NULL,
     NULL,
+    "ток воздуха",
     "prievan",
   },
   {
@@ -897,6 +948,7 @@ static thlang_pchar thlang__translations [148][12] = {
     NULL,
     "courant d’air d’été",
     "circolazione estiva",
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -914,6 +966,7 @@ static thlang_pchar thlang__translations [148][12] = {
     NULL,
     NULL,
     NULL,
+    NULL,
     "zimný prievan",
   },
   {
@@ -928,6 +981,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "altura",
     NULL,
     NULL,
+    "высотная отметка",
     "nadmorská výška bodu v chodbe",
   },
   {
@@ -942,6 +996,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "anastomose",
     NULL,
     NULL,
+    "анастомозис",
     "anastomóza",
   },
   {
@@ -956,6 +1011,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "ancoragem",
     NULL,
     NULL,
+    "ИТО",
     "kotvenie",
   },
   {
@@ -970,6 +1026,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "aragonita",
     "aragonita",
     "aragonite",
+    "арагонит",
     "aragonit",
   },
   {
@@ -984,6 +1041,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "material arqueológico",
     NULL,
     NULL,
+    "археологическая находка",
     "archeologické nálezy",
   },
   {
@@ -998,6 +1056,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "rocha encaixante",
     NULL,
     NULL,
+    "коренная порода",
     "pevná skala",
   },
   {
@@ -1012,6 +1071,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "blocos, desmoronamento",
     NULL,
     NULL,
+    "глыбы, завал",
     "kamenné bloky",
   },
   {
@@ -1026,6 +1086,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "obstrução por desmoronamento",
     NULL,
     NULL,
+    "блокировано обвалом",
     "zavalený koniec",
   },
   {
@@ -1040,6 +1101,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "ponte",
     NULL,
     NULL,
+    "мост",
     "most",
   },
   {
@@ -1054,6 +1116,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "acampamento",
     NULL,
     NULL,
+    "ПБЛ",
     "bivak",
   },
   {
@@ -1068,6 +1131,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "pérolas",
     "pérolas",
     "pérolas de Gruta",
+    "пещерный жемчуг",
     "jaskynné perly",
   },
   {
@@ -1082,6 +1146,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "lama",
     NULL,
     NULL,
+    "глина",
     "íl",
   },
   {
@@ -1096,6 +1161,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "possível continuação",
     NULL,
     NULL,
+    "возможное продолжение",
     "možné pokračovanie",
   },
   {
@@ -1110,6 +1176,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "cristal",
     NULL,
     NULL,
+    "кристаллы",
     "kryštál",
   },
   {
@@ -1124,6 +1191,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "cortina",
     NULL,
     NULL,
+    "натечный занавес",
     "sintrové záclony",
   },
   {
@@ -1138,6 +1206,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "data de observação",
     NULL,
     NULL,
+    "дата наблюдения",
     "dátum pozorovania",
   },
   {
@@ -1152,6 +1221,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "escombros",
     NULL,
     NULL,
+    "щебень",
     "sutina",
   },
   {
@@ -1166,6 +1236,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "dimensões",
     NULL,
     NULL,
+    "размеры хода",
     "rozmery",
   },
   {
@@ -1180,6 +1251,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "disco",
     NULL,
     NULL,
+    "диск",
     "disk",
   },
   {
@@ -1194,6 +1266,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "entrada",
     NULL,
     NULL,
+    "вход",
     "vchod",
   },
   {
@@ -1208,6 +1281,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "escada fixa",
     NULL,
     NULL,
+    "жесткая лестница",
     "fixný rebrík",
   },
   {
@@ -1222,6 +1296,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "escorrimento",
     NULL,
     NULL,
+    "натек",
     "sinter",
   },
   {
@@ -1236,6 +1311,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "obstrução por escorrimento",
     NULL,
     NULL,
+    "блокировано натеками",
     "zasintrený koniec",
   },
   {
@@ -1250,6 +1326,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "marcas de fluxo",
     NULL,
     NULL,
+    "канавки",
     "píšťaly",
   },
   {
@@ -1264,6 +1341,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "declividade da galeria",
     NULL,
     NULL,
+    "уклон хода",
     "sklon chodby",
   },
   {
@@ -1278,6 +1356,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "guano",
     NULL,
     NULL,
+    "гуано",
     "guáno",
   },
   {
@@ -1292,6 +1371,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "gipsita",
     NULL,
     NULL,
+    "гипс",
     "sádrovec",
   },
   {
@@ -1306,6 +1386,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "flor de gipsita",
     NULL,
     NULL,
+    "гипсовые цветы",
     "sádrovcový kvet",
   },
   {
@@ -1320,6 +1401,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "altura do chão para degrau/chaminé/desnível",
     NULL,
     NULL,
+    "высота уступа/трубы/колодца",
     "výška/hĺbka stupňa/komína",
   },
   {
@@ -1334,6 +1416,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "profundidade do desnível",
     NULL,
     NULL,
+    "высота колодца",
     "hĺbka priepasti",
   },
   {
@@ -1348,6 +1431,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "altura da chaminé",
     NULL,
     NULL,
+    "высота трубы",
     "výška komína",
   },
   {
@@ -1362,6 +1446,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "altura do degrau no chão",
     NULL,
     NULL,
+    "высота уступа",
     "výška stupňa",
   },
   {
@@ -1376,6 +1461,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "helictite",
     "helictite",
     "excêntrica",
+    "геликтиты",
     "heliktit",
   },
   {
@@ -1390,6 +1476,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "gelo",
     NULL,
     NULL,
+    "лёд",
     "ľad",
   },
   {
@@ -1404,6 +1491,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "lapiás",
     NULL,
     NULL,
+    "карры",
     "škrapy",
   },
   {
@@ -1418,6 +1506,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "indicação",
     NULL,
     NULL,
+    "текстовая метка",
     "pomenovanie",
   },
   {
@@ -1432,6 +1521,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "passagem com final baixo",
     NULL,
     NULL,
+    "горизонтальная узость",
     "neprielezné zníženie",
   },
   {
@@ -1446,6 +1536,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "leite-de-lua",
     NULL,
     NULL,
+    "лунное молоко",
     "mäkký sinter",
   },
   {
@@ -1460,6 +1551,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "passagem com final estreito",
     NULL,
     NULL,
+    "вертикальная узость",
     "neprielezné zúženie",
   },
   {
@@ -1474,6 +1566,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "local sem equipamento",
     NULL,
     NULL,
+    "снаряжение отутствует!",
     "nevystrojené miesto",
   },
   {
@@ -1488,6 +1581,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "material paleontológico",
     NULL,
     NULL,
+    "палео-находка",
     "paleontologické nálezy",
   },
   {
@@ -1502,6 +1596,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "altura da galeria",
     NULL,
     NULL,
+    "высота хода",
     "výška chodby",
   },
   {
@@ -1516,6 +1611,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "altura acima e profundidade abaixo do nível da água",
     NULL,
     NULL,
+    "высота над и глубина ниже уровня воды",
     "výška nad a hĺbka pod hladinou",
   },
   {
@@ -1530,6 +1626,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "profundidade abaixo do nível da água",
     NULL,
     NULL,
+    "глубина ниже уровня воды",
     "hĺbka pod hladinou",
   },
   {
@@ -1544,6 +1641,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "altura acima do nível da água",
     NULL,
     NULL,
+    "высота над уровнем воды",
     "výška nad hladinou",
   },
   {
@@ -1558,6 +1656,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "altura da galeria",
     NULL,
     NULL,
+    "высота хода",
     "výška chodby",
   },
   {
@@ -1572,6 +1671,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "seixos",
     NULL,
     NULL,
+    "галька",
     "okruhliaky",
   },
   {
@@ -1586,6 +1686,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "coluna",
     NULL,
     NULL,
+    "колонна",
     "stalagnát",
   },
   {
@@ -1600,6 +1701,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "couve-flor",
     NULL,
     NULL,
+    "коралиты",
     "pizolity",
   },
   {
@@ -1614,6 +1716,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "jangada",
     NULL,
     NULL,
+    "высыпка",
     "náplav",
   },
   {
@@ -1628,6 +1731,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "cone de jangada",
     NULL,
     NULL,
+    "высыпной конус",
     "náplavový kužeľ",
   },
   {
@@ -1642,6 +1746,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "anotação",
     NULL,
     NULL,
+    "заметка",
     "poznámka",
   },
   {
@@ -1656,6 +1761,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "travertino",
     NULL,
     NULL,
+    "гуры без воды",
     "sintrová hrádza",
   },
   {
@@ -1670,6 +1776,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "lago travertino",
     NULL,
     NULL,
+    "гуры с водой",
     "sintrové jazierko",
   },
   {
@@ -1684,6 +1791,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "raiz",
     NULL,
     NULL,
+    "корни растений",
     "korene",
   },
   {
@@ -1698,6 +1806,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "corda",
     NULL,
     NULL,
+    "линейная опора",
     "lano",
   },
   {
@@ -1712,6 +1821,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "escada de corda",
     NULL,
     NULL,
+    "гибкая лестница",
     "lanový rebrík",
   },
   {
@@ -1726,6 +1836,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "areia",
     NULL,
     NULL,
+    "песок",
     "piesok",
   },
   {
@@ -1740,6 +1851,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "marcas de fluxo",
     NULL,
     NULL,
+    "фасетки",
     "lastúrovité jamky",
   },
   {
@@ -1754,6 +1866,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "seção",
     "seção",
     "secção",
+    "сечение",
     "priečny rez",
   },
   {
@@ -1768,6 +1881,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "sumidouro",
     NULL,
     NULL,
+    "сток",
     "ponor",
   },
   {
@@ -1782,6 +1896,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "neve",
     NULL,
     NULL,
+    "снег",
     "sneh",
   },
   {
@@ -1796,6 +1911,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "canudos",
     NULL,
     "tubulares",
+    "сталактиты-соломины",
     "brčká",
   },
   {
@@ -1810,6 +1926,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "nascente",
     NULL,
     NULL,
+    "исток",
     "výver",
   },
   {
@@ -1824,6 +1941,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "estalactite",
     NULL,
     NULL,
+    "сталактит",
     "stalaktit",
   },
   {
@@ -1838,6 +1956,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "estalagmite",
     NULL,
     NULL,
+    "сталагмит",
     "stalagmit",
   },
   {
@@ -1852,6 +1971,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "base",
     NULL,
     NULL,
+    "пикет",
     "meračský bod",
   },
   {
@@ -1866,6 +1986,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "nome de base",
     NULL,
     NULL,
+    "номер пикета",
     "číslo meračského bodu",
   },
   {
@@ -1880,6 +2001,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "base fixa",
     NULL,
     NULL,
+    "репер",
     "meračský bod (stabilizovaný)",
   },
   {
@@ -1894,6 +2016,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "base natural",
     NULL,
     NULL,
+    "естественная точка привязки",
     "meračský bod (prírodný)",
   },
   {
@@ -1908,6 +2031,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "base pintada",
     NULL,
     NULL,
+    "нарисованный пикет",
     "meračský bod (zafarbený)",
   },
   {
@@ -1922,6 +2046,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "base temporária",
     NULL,
     NULL,
+    "временный пикет",
     "meračský bod (nestabilizovaný)",
   },
   {
@@ -1936,6 +2061,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "degraus",
     NULL,
     NULL,
+    "ступени",
     "schody",
   },
   {
@@ -1950,6 +2076,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "travessia",
     NULL,
     NULL,
+    "троллей",
     "traverz",
   },
   {
@@ -1964,6 +2091,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "restos vegetais",
     NULL,
     NULL,
+    "останки растительности",
     "zvyšky rastlín",
   },
   {
@@ -1978,6 +2106,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "altura",
     NULL,
     NULL,
+    "высотная отметка стены",
     "nadmorská výška bodu na stene",
   },
   {
@@ -1992,6 +2121,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "parede de calcita",
     "parede de calcita",
     "parede de calcite",
+    "настенный кальцит",
     "vápencový povlak",
   },
   {
@@ -2006,6 +2136,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "água",
     NULL,
     NULL,
+    "вода",
     "voda",
   },
   {
@@ -2020,6 +2151,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "fluxo de água",
     NULL,
     NULL,
+    "водоток",
     "vodný tok",
   },
   {
@@ -2034,6 +2166,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "fluxo de água intermitente",
     NULL,
     NULL,
+    "непостоянный водоток",
     "občasný vodný tok",
   },
   {
@@ -2048,6 +2181,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "paleo-fluxo de água",
     NULL,
     NULL,
+    "палео-поток",
     "paleoriečisko",
   },
   {
@@ -2062,6 +2196,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "fluxo de água permanente",
     NULL,
     NULL,
+    "постоянный водоток",
     "vodný tok",
   },
   {
@@ -2076,6 +2211,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Desenhada por",
     NULL,
     NULL,
+    "Камеральная обработка",
     "Kreslil",
   },
   {
@@ -2090,6 +2226,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Desenhadas por",
     NULL,
     NULL,
+    "Камеральная обработка",
     "Kreslili",
   },
   {
@@ -2104,6 +2241,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Desnível",
     NULL,
     NULL,
+    "Глубина",
     "Prevýšenie",
   },
   {
@@ -2118,6 +2256,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Extensão",
     NULL,
     NULL,
+    "Длинна",
     "Dĺžka",
   },
   {
@@ -2132,6 +2271,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Altitudes",
     NULL,
     NULL,
+    "Высотная шкала",
     "Nadmorské výšky",
   },
   {
@@ -2146,6 +2286,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Mapas",
     NULL,
     NULL,
+    "Карты",
     "Mapy",
   },
   {
@@ -2160,6 +2301,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Explorada por",
     NULL,
     NULL,
+    "Исследование",
     "Objavil",
   },
   {
@@ -2174,6 +2316,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Exploradas por",
     NULL,
     NULL,
+    "Исследование",
     "Objavili",
   },
   {
@@ -2188,6 +2331,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Legenda",
     NULL,
     NULL,
+    "Условные обозначения",
     "Legenda",
   },
   {
@@ -2202,6 +2346,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "[Visualização acima]",
     NULL,
     NULL,
+    "[Вид выше]",
     "[Náhľad horných vrstiev]",
   },
   {
@@ -2216,6 +2361,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "[Visualização abaixo]",
     NULL,
     NULL,
+    "[Вид ниже]",
     "[Náhľad spodných vrstiev]",
   },
   {
@@ -2230,6 +2376,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "[Mapa de superfície]",
     NULL,
     NULL,
+    "[Карта поверхности]",
     "[Povrchová mapa]",
   },
   {
@@ -2244,6 +2391,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Topografada por",
     NULL,
     NULL,
+    "Съемка",
     "Zameral",
   },
   {
@@ -2258,6 +2406,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "Topografadas por",
     NULL,
     NULL,
+    "Съемка",
     "Zamerali",
   },
   {
@@ -2272,6 +2421,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "pés",
     NULL,
     NULL,
+    "футов",
     "ft",
   },
   {
@@ -2286,6 +2436,7 @@ static thlang_pchar thlang__translations [148][12] = {
     "m",
     NULL,
     NULL,
+    "метров",
     "m",
   },
 };
