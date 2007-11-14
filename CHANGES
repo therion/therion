@@ -8,6 +8,7 @@ therion:
  * bugs fixed:
    - symbol-show|hide line moonmilk works
    - declination output fixed (half year shift removed)
+   - invalid LRUD dimensions in PDF map output
    
 xtherion:
 

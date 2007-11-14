@@ -2,6 +2,8 @@ HOT LIST:
 
 + thbook+CHANGES: text command in configuration file
 + thbook: symbol-set name is case sentive!!!
++ check LRUD map PDF export (projections, complicated polygons)
++ check LRUD export to loch
 
 + makeunixify completely to TCL (not to use dos2unix)
 + add text command to initialization file

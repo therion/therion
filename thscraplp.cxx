@@ -53,9 +53,10 @@ void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
     bool vertical;
     lxVecLimits vlim;
 
-    bool reverse = false;
-    if (this->arrow->is_reversed) reverse = !reverse;
-    if (this->arrow->leg->reverse) reverse = !reverse;
+    bool reverse = (thdb.db1d.station_vec[this->arrow->leg->leg->from.id - 1].uid != arrow->start_node->uid);
+    //bool reverse = false;
+    //if (this->arrow->is_reversed) reverse = !reverse;
+    //if (this->arrow->leg->reverse) reverse = !reverse;
     thdataleg * cl = this->arrow->leg->leg;
 
     if (reverse) {
@@ -105,15 +106,16 @@ void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
         if (vertical) {
           rvec = lxVec(0.0, 1.0, 0.0);
         } else {
-          rvec = vtt - vff;
-          rvec.Normalize();
+          rvec = lxVec(vtt.x - vff.x, vtt.y - vff.y, 0.0);
           rvec = rvec.Rotated(90.0,0.0);
+          rvec.Normalize();
         }
-        vf1 = vff + fl * rvec;
-        vf2 = vff - fr * rvec;
-        vt1 = vtt + tl * rvec;
-        vt2 = vtt - tr * rvec;
+        vf1 = vff + (fl * rvec);
+        vf2 = vff - (fr * rvec);
+        vt1 = vtt + (tl * rvec);
+        vt2 = vtt - (tr * rvec);
       }
+
       fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f) -- (%.2f,%.2f) -- (%.2f,%.2f) -- cycle));\n",
         out->symset->get_mp_macro(SYMA_DIMENSIONS),
         thxmmxst(out, vf1.x, vf1.y),
