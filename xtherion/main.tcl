@@ -37,7 +37,10 @@ xth_app_normalize
 
 foreach xapp $xth(app,list) {
   catch {
+    set xth(app,$xapp,relw) $xth(app,all,tbwidth)
     set xth(app,$xapp,relw) $xth(app,$xapp,tbwidth)
+  } 
+  catch {
     xth_app_show $xapp
   }
 }

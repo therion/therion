@@ -102,6 +102,7 @@ cz: spojení map
 en: map connection
 fr: jonction de carte
 it: riporto di mappa
+ru: линия выноса
 sk: prepojenie máp
 
 therion: line wall
@@ -340,6 +341,7 @@ cz: zimní průvan
 en: winter air draught
 fr: courant d’air d’hiver
 it: circolazione invernale
+ru: ток воздуха зимний
 sk: zimný prievan
 
 therion: point air-draught:summer
@@ -347,6 +349,7 @@ cz: letní průvan
 en: summer air draught
 fr: courant d’air d’été
 it: circolazione estiva
+ru: ток воздуха летний
 sk: letný prievan
 
 therion: point date
@@ -1026,6 +1029,7 @@ sk: mäkký sinter
 therion: line moonmilk
 cz: nickamínek
 fr: mondmilch
+ru: лунное молоко
 sk: náteky mäkkého sintra
 
 therion: point stalactite

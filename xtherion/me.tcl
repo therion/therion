@@ -2519,7 +2519,7 @@ grid columnconf $barfm 0 -weight 1
 grid rowconf $barfm 0 -weight 1
 
 set xth(me,mbar) $barfm.mbar
-Label $xth(me,mbar) -text "" -width 17 -relief sunken -font $xth(gui,lfont) \
+Label $xth(me,mbar) -text "" -width 20 -relief sunken -font $xth(gui,lfont) \
   -anchor center -state disabled
 grid $xth(me,mbar) -column 0 -row 0 -sticky news
 set xth(me,mbar,bg) [$xth(me,mbar) cget -bg]

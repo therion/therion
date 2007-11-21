@@ -1,14 +1,12 @@
 HOT LIST:
 
-+ thbook+CHANGES: text command in configuration file
++ thbook+CHANGES: text command in configuration & initialization file
 + thbook: symbol-set name is case sentive!!!
 + check LRUD map PDF export (projections, complicated polygons)
 + check LRUD export to loch
 
-+ makeunixify completely to TCL (not to use dos2unix)
-+ add text command to initialization file
-+ translate xtherion icon descriptions
 + nastavenie morphing algoritmu (pre scrapy) do config suboru
++ bug in loch LRUD interpretation when reversed leg
 + 3D generation algorithm - do not remove join points
 + 3D generation algorithm - take xelevation data into account
 + scrap name with "_" exported with "." when debug scrap-names

@@ -46,7 +46,9 @@
  */
  
 #include "thbezier.h"
-#include "assert.h"
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
 
 #define __SP_BEZIER_UTILS_C__
 

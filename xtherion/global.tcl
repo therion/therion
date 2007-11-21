@@ -57,7 +57,7 @@ set xth(gui,auto_backup_ext) "~"
 set xth(gui,check_update) 1
 
 
-set xth(encodings) { iso8859-1 iso8859-2 iso8859-5 iso8859-7 utf-8 }
+set xth(encodings) { iso8859-1 iso8859-2 iso8859-5 iso8859-7 utf-8 cp1250 cp1251 cp1252 cp1253}
 set xth(kbencodings) {utf-8 iso8859-1 iso8859-2 cp1250 macCentEuro unicode}
 set xth(length_units) {m cm in ft yd}
 set xth(angle_units) {deg min grad}
@@ -98,12 +98,13 @@ set xth(datafmt,dimensions) {4.1fx {-}}
 set xth(gui,initdir) ""
 set xth(app,active) ""
 set xth(app,list) {}
-set xth(app,all,relw) -1
+set xth(app,all,tbwidth) 256
+set xth(app,all,relw) 380
 set xth(app,all,wmwd) 180
 set xth(app,all,wpsw) 1
 
 set xth(app,fencoding) utf-8
-set xth(app,sencoding) iso8859-2
+set xth(app,sencoding) utf-8
 
 # autodetect some options
 frame .def

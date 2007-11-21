@@ -92,8 +92,9 @@ enum {
   TTIC_LANG,
   TTIC_TEX_FONTS,
   TTIC_TEX_ENV,
-	TTIC_UNITS,
-	TTIC_LOOPC,
+  TTIC_UNITS,
+  TTIC_LOOPC,
+  TTIC_TEXT,	
   TTIC_UNKNOWN,
 };
 
@@ -117,6 +118,7 @@ static const thstok thtt_initcmd[] = {
   {"source-path", TTIC_PATH_SOURCE},
   {"tex-env",TTIC_TEX_ENV},
   {"tex-fonts",TTIC_TEX_FONTS},
+  {"text",TTIC_TEXT},
   {"tmp-path",TTIC_TMP_PATH},
   {"tmp-remove",TTIC_TMP_REMOVE_SCRIPT},
   {"units",TTIC_UNITS},
@@ -280,6 +282,10 @@ void thinit::load()
           if (nargs != 2)
             ththrow(("invalid number of command arguments"));
           break;
+        case TTIC_TEXT:
+          if (nargs != 4)
+            ththrow(("invalid text syntax -- should be: text <language> <text> <translation>"))
+          break;
         case TTIC_TEX_FONTS:
           if (nargs != 7)
             ththrow(("invalid number of command arguments"));
@@ -327,8 +333,12 @@ void thinit::load()
           break;
 
         case TTIC_UNITS:
-					thdeflocale.parse_units(args[1]);
+          thdeflocale.parse_units(args[1]);
           break;
+
+        case TTIC_TEXT:
+            thlang_set_translation(args[1], args[2], args[3]);
+            break;
 
         case TTIC_TMP_REMOVE_SCRIPT:
           this->tmp_remove_script.strcpy(args[1]);

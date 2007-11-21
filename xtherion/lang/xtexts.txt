@@ -1,232 +1,3 @@
-therion: %s \[%s\] -- неизвестная кодировка -- %s
-
-therion: scale
-ru: масштаб
-
-therion: Scrap scale definition.
-cz: Nastavení měřítka scrapu.
-en: Scrap scale definition.
-es: Definir la escala del croquis.
-it: Definizione della scala dello scrap.
-ru: Задание масштаба скрапа.
-sk: Nastavenie mierky scrapu.
-
-therion: inserting image
-cz: vkládám obrázek
-en: inserting image
-es: insertando imagen
-it: inserimento immagine
-ru: вставка изображения
-sk: vkladám obrázok
-
-therion: loading model viewer...
-cz: nahrávám 3D prohlížeč...
-en: loading model viewer...
-es: visor 3D...
-it: modulo visualizzazione ...
-ru: загрузка просмотрщика 3D-модели ...
-sk: 3D prehliadač...
-
-therion: Model viewer
-cz: 3D prohlížeč
-en: Model viewer
-es: Visor 3D
-it: Visualizza modello
-ru: Просмотрщик 3D-модели
-sk: 3D prehliadač
-
-therion: Camera
-cz: Kamera
-en: Camera
-es: Cámara
-it: Fotocamera
-ru: Камера
-sk: Kamera
-
-therion: Model
-cz: Model
-en: Model
-es: Modelo
-it: Modello
-ru: Модель
-sk: Model
-
-therion: Reload
-cz: Otevřít znovu
-en: Reload
-es: Recargar
-it: Ricarica
-ru: Перезагрузить
-sk: Znovu načítať
-
-therion: facing
-cz: azimut
-en: facing
-es: vista
-it: di fronte
-ru: поворот
-sk: azimut
-
-therion: north
-cz: sever
-en: north
-es: norte
-it: nord
-ru: север
-sk: sever
-
-therion: east
-cz: východ
-en: east
-es: este
-it: est
-ru: восток
-sk: východ
-
-therion: west
-cz: západ
-en: west
-es: oeste
-it: ovest
-ru: запад
-sk: západ
-
-therion: south
-cz: jih
-en: south
-es: sur
-it: sud
-ru: юг
-sk: juh
-
-therion: Set facing angle.
-cz: Nastaví úhel otočení.
-en: Set facing angle.
-es: Ajustar punto de vista.
-it: Imposta l'angolo di vista
-ru: Установить угол поворота.
-sk: Nastav azimut pohľadu.
-
-therion: Facing angle.
-cz: Úhel otočení.
-en: Facing angle.
-es: Punto de vista.
-it: Angolo di vista
-ru: Угол поворота.
-sk: Azimut pohľadu.
-
-therion: auto rotate
-cz: auto rotace
-en: auto rotate
-es: rotar
-it: auto-rotazione
-ru: автовращение
-sk: rotácia
-
-therion: Turn on/off camera auto rotation
-cz: Zapne/vypne automatickou rotaci
-en: Turn on/off camera auto rotation
-es: Conectar-Desconectar rotación automática de la cámara
-it: Attiva/disattiva l'auto-rotazione
-ru: Включить/выключить автовращение камеры
-sk: Zapne/vypne automatické otáčanie kamery.
-
-therion: profile
-cz: profil
-en: profile
-es: perfil
-it: profilo
-ru: профиль
-sk: profil
-
-therion: top
-cz: pohled zhora
-en: top
-es: superior
-it: sopra
-ru: верх
-sk: pohľad zhora
-
-therion: side
-cz: pohled zboku
-en: side
-es: lateral
-it: lato
-ru: сторона
-sk: pohľad zboku
-
-therion: bottom
-cz: pohled zdola
-en: bottom
-es: inferior
-it: sotto
-ru: низ
-sk: pohľad zospodu
-
-therion: reset
-cz: reset
-en: reset
-es: reajustar
-it: ripristina
-ru: сбросить
-sk: reset
-
-therion: Set profile angle.
-cz: Nastaví úhel profilu.
-en: Set profile angle.
-es: Ajustar ángulo del perfil.
-it: Imposta l'angolo di profilo.
-ru: Установить угол профиля.
-sk: Nastaví sklon pohľadu.
-
-therion: Profile angle.
-cz: Úhel profilu.
-en: Profile angle.
-es: Angulo del perfil.
-it: Angolo di profilo.
-ru: Угол профиля.
-sk: Sklon pohľadu.
-
-therion: surface transparency
-cz: průhlednost povrchu
-en: surface transparency
-es: transparencia superficie
-it: trasparenza della superficie
-ru: прозрачность поверхности
-sk: priehľadnosť povrchu
-
-therion: Turn on/off surface transparency.
-cz: Zapne/vypne průhlednost povrchu.
-en: Turn on/off surface transparency.
-es: Conectar/desconectar transparencia de la superficie.
-it: Attiva/disattiva la trasparenza della superficie.
-ru: Включить/отключить прозрачность поверхности.
-sk: Zapne/vypne priehľadnosť povrchu.
-
-therion: light follows camera
-cz: světlo následuje kameru
-en: light follows camera
-es: luz en cámara
-it: la luce segue la camera
-ru: источник света следует за камерой
-sk: svetlo nasleduje kameru
-
-therion: Fix light source to camera position.
-cz: Světelný zdroj připevněný ke kameře.
-en: Fix light source to camera position.
-es: La fuente de luz coincidirá siempre con la posición de la cámara
-it: Fissa la sorgente di luce nella posizione della camera.
-ru: Фиксировать источник света в текущей позиции камеры
-sk: Zafixuje zdroj svetla na pozíciu kamery.
-
-therion: Model viewer is not active. To activate it, open some model file.
-cz: Prohlížeč modelů není aktivní. Pro jeho aktivaci otevřete soubor s modelem.
-en: Model viewer is not active. To activate it, open some model file.
-es: El visor 3D está inactivo. Para activarlo, abre algún modelo.
-it: Il visualizzatore di modello non è attivo. Per attivarlo apri un file di modello.
-ru: Просмотрщик трехмерной модели неактивен. Для активации откройте файл модели.
-sk: Prehliadač modelov nie je aktívny. Aktivuje sa po otvorení súboru.
-
 therion: Drag to resize control panel.
 cz: Změnit šířku panelu.
 en: Drag to resize control panel.
@@ -271,6 +42,7 @@ therion: Toggle toolbar
 cz: Vypnout/zapnout lištu nástrojů
 it: Mostra/Nascondi la barra strumenti
 ru: Переключить панель инструментов
+sk: Zapnúť/vypnúť panel
 
 therion: KBD encoding
 cz: Kódování klávesnice
@@ -491,6 +263,7 @@ sk: Mapová štruktúra
 therion: Preview
 cz: Náhled
 it: Anteprima
+ru: Предпросмотр
 sk: Náhľad
 
 therion: Working directory
@@ -541,14 +314,6 @@ it: Opzioni del comando therion
 ru: Опции командной строки Therion.
 sk: Argumenty programu v príkazovom riadku.
 
-therion: Compile
-cz: Kompilovat
-en: Compile
-es: Compilar
-it: Compila
-ru: Компилировать
-sk: Kompilovať
-
 therion: Run therion.
 cz: Spustí therion.
 en: Run therion.
@@ -570,6 +335,7 @@ sk: Acrobat Reader
 therion: PDF file path.
 cz: Cesta k PDF souboru
 it: File PDF
+ru: PDF-файл для просмотра
 sk: Cesta k PDF súboru.
 
 therion: Survey informations.
@@ -689,6 +455,7 @@ cz: %s \[%s\] -- neznámé kódování znaků -- %s
 en: %s \[%s\] -- unknown encoding -- %s
 es: %s \[%s\] -- codificación desconocida -- %s
 it: %s \[%s\] -- encoding non conosciuto -- %s
+ru: %s \[%s\] -- неизвестная кодировка -- %s
 sk: %s \[%s\] -- neznáme kódovanie znakov -- %s
 
 therion: adjusting area
@@ -1382,11 +1149,13 @@ sk: Ostatné možnosti scrapu.
 therion: Scale
 cz: Měřítko
 it: Scala
+ru: Масштаб
 sk: Mierka
 
 therion: Scrap scaling - push to click picture calibration points.
 cz: Škálování scrapu - stiskni pro výběr kalibračních bodů obrázku.
 it: Rescalamento - premi per selezionare i punti di calibrazione.
+ru: Масштабирование скрапа - нажимте эту кнопку и выставите точки масштабирования мышью
 sk: Škálovanie scrapu - po stlačení klikni na škálovacie body.
 
 therion: Update scrap
@@ -1520,21 +1289,25 @@ sk: Jednotky reálnych súradníc.
 therion: background sketches
 cz: náčrtky na pozadí
 it: Immagini di background
+ru: Фоновые изображения
 sk: náčrtky na pozadí.
 
 therion: List of image files used as scrap background.
 cz: Seznam obrázků použitých jako pozadí scrapu
 it: Files usati come background dello scrap
+ru: Список графических файлов, используемых в качестве фоновых изображений скрапа
 sk: Zoznam obrázkov použitých ako pozadie.
 
 therion: Press this button to insert sketch by clicking on it.
 cz: Stiskněte toto tlačítko a výběrem náčrtku myší jej vložte do scrapu.
 it: Premi per inserire il disegno che scegli col mouse
+ru: Эта кнопка вставляет фон скрапа в список
 sk: Po stlačení klikni na náčrtok, ktorý treba vložiť do scrapu.
 
 therion: Delete sketch from scrap.
 cz: Odstranit náčrtek ze scrapu
 it: Rimuovi un disegno dallo scrap
+ru: Эта кнопка удаляет фон скрапа из списка
 sk: Odstráň náčrtok zo scrapu.
 
 therion: loading point module ...
@@ -1734,7 +1507,7 @@ cz: Editovat
 en: Edit line
 es: Editar
 it: Edita
-ru: Редактировать линию
+ru: Править линию
 sk: Upraviť
 
 therion: Insert/delete line point. Split line.
@@ -1972,6 +1745,7 @@ sk: nahrávam modul pre plochy ...
 therion: Actual symbol theme.
 cz: Aktuální téma symbolů.
 it: Simboli.
+ru: Фильтр группы символов.
 sk: Aktuálna téma symbolov.
 
 therion: type
@@ -2035,7 +1809,7 @@ cz: Vlož ID
 en: Insert ID
 es: Insertar ID
 it: Identificativo
-ru: Вставить ИД
+ru: Вставить по ИД
 sk: Vlož ID
 
 therion: Insert given id.
@@ -2112,13 +1886,15 @@ sk: Otvoriť (bez obrázkov)
 
 therion: Import
 cz: Import
+ru: Импорт
+sk: Import
 
 therion: Insert ...
 cz: Vložit ...
 en: Insert ...
 es: Insertar ...
 it: Inserisci ...
-ru: Вставка ...
+ru: Вставка
 sk: Vložiť ...
 
 therion: point
@@ -2364,11 +2140,13 @@ sk: Vybrať
 therion: scale scrap
 cz: měřítko scrapu
 it: riscala lo scrap
+ru: масштабирование скрапа
 sk: mierka scrapu
 
 therion: insert sketch
 cz: vlož náčrtek
 it: inserisci disegno
+ru: вставка фона
 sk: vlož náčrtok
 
 therion: creating point
@@ -2398,16 +2176,19 @@ sk: zmena parametrov bodu
 therion: Scrap sketch not inserted.
 cz: Náčrtek nebyl vložen.
 it: Disegno non inerito.
+ru: Фон скрапа не вставлен.
 sk: Náčrtok nebol vložený.
 
 therion: inserting scrap sketch
 cz: vkládám náčrtek
 it: inserimento disegno
+ru: вставка фона скрапа
 sk: vloženie náčrtku
 
 therion: deleting scrap sketch
 cz: odstraňuji náčrtek
 it: rimozione disegno
+ru: удаление фона скрапа
 sk: odstránenie náčrtku
 
 therion: toggle image visibility
@@ -2442,7 +2223,13 @@ it: Il nuovo file *.th2 deve essere salvato prima di inserire immagini di backgr
 ru: Новый *.th2 файл нуждается в сохранении перед вставкой фонового изображения. Записать сейчас?
 sk: Pred vložením obrázku musíte nový *.th2 súbor uložiť. Chcete tak urobiť?
 
-therion: inserting image"] [format $undocmd $iidx] [format $redocmd "{$xx $vsb}" "{$yy $XVIroot}
+therion: inserting image
+cz: vkládám obrázek
+en: inserting image
+es: insertando imagen
+it: inserimento immagine
+ru: вставка изображения
+sk: vkladám obrázok
 
 therion: removing image
 cz: odstraňuji obrázek
@@ -3071,25 +2858,92 @@ sk: Zavrieť
 therion: theme all-symbols
 cz: všechny symboly
 it: tutti
+ru: все
 sk: všetky symboly
+
+therion: New file
+sk: Nový súbor
+
+therion: Open file
+sk: Otvoriť súbor
+
+therion: Save file
+sk: Uložiť súbor
+
+therion: Save file as
+sk: Uložiť súbor ako
+
+therion: Close file
+sk: Zatvoriť súbor
+
+therion: Switch to text editor
+sk: Prepnúť na textový editor
+
+therion: Switch to map editor
+sk: Prepnúť na mapový editor
+
+therion: Switch to compiler
+sk: Prepnúť na kompilátor
+
+therion: Compile
+cz: Kompilovat
+en: Compile
+es: Compilar
+it: Compila
+ru: Компилировать
+sk: Kompilovať
+
+therion: Switch to select mode
+sk: Prepnúť do módu na výber objektu
+
+therion: Select next scrap
+sk: Vyber nasledujúci scrap
+
+therion: Select next area
+sk: Vyber nasledujúcu plochu
+
+therion: Zoom in
+sk: Zväčšiť
+
+therion: Zoom out
+sk: Zmenšiť
+
+therion: Insert new scrap
+sk: Vložiť nový scrap
+
+therion: Insert new point
+sk: Vložiť nový bod
+
+therion: Insert new line
+sk: Vložiť novú krivku
+
+therion: Insert new area
+sk: Vložiť novú plochu
+
+therion: Delete selected object
+sk: Zmaž označené objekty
 
 therion: theme basic-symbols
 cz: základní symboly
 it: base
+ru: основные
 sk: základné symboly
 
 therion: theme passage-fills
 cz: výplň
 it: riempimenti
+ru: рельеф хода
 sk: výplň
 
 therion: theme speleothems
 cz: výzdoba
 it: speleotemi
+ru: спелео-формы
 sk: výzdoba
 
 therion: theme equipement
 cz: vystrojení
 it: armo
+ru: оборудование
 sk: vystrojenie
 

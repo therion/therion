@@ -576,7 +576,7 @@ static thlang_pchar thlang__translations [148][13] = {
     NULL,
     NULL,
     NULL,
-    NULL,
+    "линия выноса",
     "prepojenie máp",
   },
   {
@@ -591,7 +591,7 @@ static thlang_pchar thlang__translations [148][13] = {
     NULL,
     NULL,
     NULL,
-    NULL,
+    "лунное молоко",
     "náteky mäkkého sintra",
   },
   {
@@ -951,7 +951,7 @@ static thlang_pchar thlang__translations [148][13] = {
     NULL,
     NULL,
     NULL,
-    NULL,
+    "ток воздуха летний",
     "letný prievan",
   },
   {
@@ -966,7 +966,7 @@ static thlang_pchar thlang__translations [148][13] = {
     NULL,
     NULL,
     NULL,
-    NULL,
+    "ток воздуха зимний",
     "zimný prievan",
   },
   {

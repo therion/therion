@@ -712,7 +712,8 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
     set yy $xth(me,area,ymin)
   }
   
-  xth_me_unredo_action [mc "inserting image"] [format $undocmd $iidx] [format $redocmd "{$xx $vsb}" "{$yy $XVIroot}" $iidx]
+  xth_me_unredo_action [mc "inserting image"] \
+    [format $undocmd $iidx] [format $redocmd "{$xx $vsb}" "{$yy $XVIroot}" $iidx]
   
   
   incr xth(me,nimgs)

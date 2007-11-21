@@ -20,6 +20,7 @@
   "../te.tcl",
   "../help.tcl",
   "../init.tcl",
+  "../tools.tcl",
   "../global.tcl",
 );
 

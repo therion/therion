@@ -3,7 +3,7 @@ Therion 0.5.2 (YYYY-MM-DD):
 
 therion:
 
- * added russian translations (thanks to Vasily Vl. Suhachev)
+ * added russian translations + encodings (thanks to Vasily Vl. Suhachev)
  * updated french translations (thanks to Gilbert Fernandes)
  * bugs fixed:
    - symbol-show|hide line moonmilk works
@@ -12,9 +12,10 @@ therion:
    
 xtherion:
 
- * 
+ * changed increased default sidebar width + default sidebar width
+   configuration option in xtherion.ini file
  * bugs fixed:
-   - 
+   - toolbar icon decriptions added to localization files
    
 loch:
 

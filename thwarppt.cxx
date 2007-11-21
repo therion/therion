@@ -29,6 +29,8 @@
  */
 #include <assert.h>
 #include <sstream>
+#include <stdio.h>
+#include <string.h>
 
 #include "thwarppt.h"
 

@@ -9,15 +9,35 @@ proc procdir {dir} {
   foreach f $files {
     puts $f
     exec chmod 664 $f
-    if {![regexp {\.(res|pdf|png|jpg|jpeg|o|3d|icns|chm|htb|mo|po)$} $f]} {
-      exec dos2unix -p -k -q $f
-    } 
+    dos2unix $f
+  }
+}
+
+proc dos2unix {fnm} {
+  set doit 0
+  if {[regexp {\.(c|cxx|h|tcl|svx|th|thcfg|th2|thc|cof|xpm|txt|pl|mp|tex|TXT|sty|usr|enc|htm)$} $fnm]} {
+    set doit 1
+  } elseif {[regexp {^(Makefile|TODO.*|README|COPYING|CHANGES|thconfig)$} $fnm]} {
+    set doit 1
+  }
+  if {!$doit} return;
+  set fmtime [file mtime $fnm]
+  set fid [open $fnm r]
+  fconfigure $fid -translation binary
+  set fdt [read $fid]
+  close $fid
+  if {[regexp {\15} $fdt]} {
+    puts "  ...converted to UNIX format"
+    regsub -all {\15} $fdt {} fdt
+    set fid [open $fnm w]
+    puts -nonewline $fid $fdt
+    close $fid
+    file mtime $fnm $fmtime
   }
 }
 
 procdir .
 exec chmod 775 ./cclass.pl
-exec chmod 775 ./install
 exec chmod 775 makeconvert.pl
 exec chmod 775 makeconvert2.pl
 exec chmod 775 thcsdata.tcl
