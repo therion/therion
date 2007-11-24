@@ -47,7 +47,7 @@ unsigned long thdatareader__get_opos(bool inlineid, bool cfgid)
 }
 
 
-void thdatareader::read(char * ifname, long lnstart, long lnend, char * spath, thdatabase * dbptr)
+void thdatareader::read(const char * ifname, long lnstart, long lnend, const char * spath, thdatabase * dbptr)
 {
 
   thdataobject * objptr = NULL;  // pointer to the newly created object
@@ -55,7 +55,8 @@ void thdatareader::read(char * ifname, long lnstart, long lnend, char * spath, t
   bool inside_cmd = false;
   bool configure_cmd = false;
   bool advanced_end_search = false;
-  char * ln, * endlnopt = NULL, * opt, ** opts;
+  char * ln, * opt, ** opts;
+  const char * endlnopt = NULL;
   int ai, ait, ant;
 
   bool special_lines_only;
@@ -75,7 +76,7 @@ void thdatareader::read(char * ifname, long lnstart, long lnend, char * spath, t
   thobjectsrc osrc;
 
 #ifndef THMSVC
-  try {
+//  try {
 #endif
     while ((ln = this->inp.read_line()) != NULL) {
 
@@ -236,10 +237,10 @@ void thdatareader::read(char * ifname, long lnstart, long lnend, char * spath, t
     }
 
 #ifndef THMSVC
-  }
+//  }
   // put everything into try block and throw exception, if error
-  catch (...)
-    threthrow(("%s [%d]", this->inp.get_cif_name(), this->inp.get_cif_line_number()))
+//  catch (...)
+//    threthrow(("%s [%d]", this->inp.get_cif_name(), this->inp.get_cif_line_number()))
 #endif
 
   dbptr->end_insert();  

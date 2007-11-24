@@ -55,7 +55,7 @@ using namespace std;
 
 static const char base64_tab[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-void base64_encode(char * fname, ofstream & fout) {
+void base64_encode(const char * fname, ofstream & fout) {
   int llength = 0;
   char in_buffer[3];
   unsigned char out_buffer[4];
@@ -307,7 +307,7 @@ void print_surface_bitmaps (ofstream &F) {
 
 
 
-void thsvg(char * fname, int fmt, legenddata ldata = legenddata::legenddata()) {
+void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddata()) {
   if (fmt == 0)
     thprintf("making svg map ... ");
   else

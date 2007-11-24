@@ -65,7 +65,7 @@ thsymbolset::thsymbolset()
 }
 
 
-void thsymbolset_log_log_file(char * logfpath, char * on_title, char * off_title, bool mpbug = false) {
+void thsymbolset_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug = false) {
   char * lnbuff = new char [4097];
 //  unsigned long lnum = 0;
   thlog.printf("%s",on_title);
@@ -427,7 +427,7 @@ int thsymbolset__get_id(char * symclass, char * symbol)
   return rv;
 }
 
-void thsymbolset::export_symbol_defaults(FILE * mpf, char * symset) 
+void thsymbolset::export_symbol_defaults(FILE * mpf, const char * symset) 
 {
   fprintf(mpf,"\n\n\n%% %s symbol set.\n",symset);
   for(int id = 0; id < SYMX_; id++) {
@@ -438,7 +438,7 @@ void thsymbolset::export_symbol_defaults(FILE * mpf, char * symset)
   }
 }
   
-void thsymbolset::export_symbol_assign(FILE * mpf, int sym_id, char * symset) 
+void thsymbolset::export_symbol_assign(FILE * mpf, int sym_id, const char * symset) 
 {
   if (sym_id > SYMX_)
     export_symbol_assign_group(mpf, sym_id, symset);
@@ -464,7 +464,7 @@ void thsymbolset::export_symbol_show(FILE * mpf, int sym_id)
     this->assigned[sym_id] = true;
 }
 
-void thsymbolset::export_symbol_assign_group(FILE * mpf, int sym_id, char * symset) 
+void thsymbolset::export_symbol_assign_group(FILE * mpf, int sym_id, const char * symset) 
 {
   int id = 0;
   int cid = thsymbolset__get_group(sym_id,id++);

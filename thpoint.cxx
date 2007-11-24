@@ -92,21 +92,21 @@ int thpoint::get_cmd_nargs()
 }
 
 
-char * thpoint::get_cmd_end()
+const char * thpoint::get_cmd_end()
 {
   // insert endcommand if multiline command
   return NULL;
 }
 
 
-char * thpoint::get_cmd_name()
+const char * thpoint::get_cmd_name()
 {
   // insert command name here
   return "point";
 }
 
 
-thcmd_option_desc thpoint::get_cmd_option_desc(char * opts)
+thcmd_option_desc thpoint::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_point_opt);
   if (id == TT_POINT_UNKNOWN)
@@ -368,7 +368,7 @@ void thpoint::parse_from(char * estr)
 }
 
 
-char * thpoint_export_mp_align2mp(int a) {
+const char * thpoint_export_mp_align2mp(int a) {
   switch (a) {
     case TT_POINT_ALIGN_R:
       return ".rt";
@@ -824,7 +824,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         scl = 0.5;
         break;
     }
-    char * al = "(0,0)";
+    const char * al = "(0,0)";
     switch (thdb2d_rotate_align(this->align, xrr)) {
       case TT_POINT_ALIGN_B:
         al = "(0,-1)";

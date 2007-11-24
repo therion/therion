@@ -35,7 +35,7 @@
 #endif
 
 
-void thexception::appspf(char * format, ...)
+void thexception::appspf(const char * format, ...)
 {
   char * desc = new char [8192];
   va_list args;
@@ -47,7 +47,7 @@ void thexception::appspf(char * format, ...)
 }
 
 
-void thexception::insspf(char * format, ...)
+void thexception::insspf(const char * format, ...)
 {
   char * desc = new char [8192];
   char * orig = new char [this->size];

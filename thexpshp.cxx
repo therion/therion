@@ -136,7 +136,7 @@ void thexpshpf::close()
 }
 
 
-void thexpshpf::init(thexpshp * xshp, char * fnm, int type)
+void thexpshpf::init(thexpshp * xshp, const char * fnm, int type)
 {
   this->m_fnm = fnm;
   this->m_fpath = NULL;
@@ -166,7 +166,7 @@ thexpshp::thexpshp()
 
 
 
-bool thexpshp::open(char * dirname)
+bool thexpshp::open(const char * dirname)
 {
   // create directory
 #ifdef THWIN32
@@ -602,7 +602,7 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
 
   thdb.db2d.process_areas_in_projection(prj);
 
-  char * fnm = this->get_output("cave.shp");
+  const char * fnm = this->get_output("cave.shp");
   thexpshp xs;
   xs.m_xproj = prj;
   xs.m_expmap = this;
@@ -653,7 +653,7 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
 void thexpmodel::export_shp_file(class thdatabase * dbp)
 {
 
-  char * fnm = this->get_output("cave.shp");
+  const char * fnm = this->get_output("cave.shp");
   thexpshp xs;
   xs.m_expmodel = this;
   if (!xs.open(fnm)) {

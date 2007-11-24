@@ -1,12 +1,19 @@
 HOT LIST:
 
++ WARNING in xtherion only under linux/unix -- check compilation OK string.
 + thbook+CHANGES: text command in configuration & initialization file
++ check text command in configuration & initialization file + samples
 + thbook: symbol-set name is case sentive!!!
 + check LRUD map PDF export (projections, complicated polygons)
-+ check LRUD export to loch
-
-+ nastavenie morphing algoritmu (pre scrapy) do config suboru
++ check LRUD export to loch + loch interpretation
 + bug in loch LRUD interpretation when reversed leg
+
++ "not" station flag
++ sink,spring,lake,doline flags to stations
++ symplify centerline flags handling and export
++ attributes to shots/stations
+
++ scrap morphing algorithm setup to configuration file
 + 3D generation algorithm - do not remove join points
 + 3D generation algorithm - take xelevation data into account
 + scrap name with "_" exported with "." when debug scrap-names
@@ -21,7 +28,6 @@ HOT LIST:
 + polyline to bezier conversion mode
 + more complex attribute export
 + link same continuations within different projections
-+ attributes to shots/stations
 + user defined symbols to legends 
 + symbol show/hide of user defined symbols (using subtypes)
 + add shot/stations flags to attributes when exported in metapost

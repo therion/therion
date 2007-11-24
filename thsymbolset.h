@@ -54,12 +54,12 @@ struct thsymbolset {
   /**
    * Do MP suboru zapise mapsymbol() makro.
    */
-  void export_symbol_defaults(FILE * mpf, char * symset);
+  void export_symbol_defaults(FILE * mpf, const char * symset);
   
   /**
    * Do MP suboru zapise mapsymbol() makro + zmeni hidden value.
    */
-  void export_symbol_assign(FILE * mpf, int sym_id, char * symset);
+  void export_symbol_assign(FILE * mpf, int sym_id, const char * symset);
 
   /**
    * Skryje symbol.
@@ -74,7 +74,7 @@ struct thsymbolset {
   /**
    * Do MP suboru zapise mapsymbol() makro + zmeni hidden value.
    */
-  void export_symbol_assign_group(FILE * mpf, int sym_id, char * symset);
+  void export_symbol_assign_group(FILE * mpf, int sym_id, const char * symset);
 
   /**
    * Skryje symbol.

@@ -120,7 +120,7 @@ extern converted_data NArrow, ScBar;
 
 
 struct surfpictrecord {
-  char * filename, * type;
+  const char * filename, * type;
   double dx, dy, xx, xy, yx, yy, width, height;
 };
 

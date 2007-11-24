@@ -123,7 +123,7 @@ thpic * thwarplin::morph(thsketch * sketch, double scale)
   // T1 - shift
   // T2 - rotate from TLIN
   // T3 - scale and shift from TLIN
-  char * fn;
+  const char * fn;
   size_t fnx, fnl;
   fn = sketch->m_pic.fname;
   fnl = strlen(sketch->m_pic.fname);

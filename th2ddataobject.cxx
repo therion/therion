@@ -64,7 +64,7 @@ bool th2ddataobject::is(int class_id)
 
 
 
-thcmd_option_desc th2ddataobject::get_cmd_option_desc(char * opts)
+thcmd_option_desc th2ddataobject::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_2ddataobject_opt);
   if (id == TT_2DOBJ_UNKNOWN)
@@ -192,7 +192,7 @@ void th2dsplitTT(char * src, char ** type, char ** subtype)
 
 
 
-void th2ddataobject::parse_u_subtype(char * subtype)
+void th2ddataobject::parse_u_subtype(const char * subtype)
 {
   if (th_is_keyword(subtype)) {
     this->m_subtype_str = this->db->strstore(subtype, true);

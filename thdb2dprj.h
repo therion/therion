@@ -72,7 +72,7 @@ class thdb2dprj {
   
   char type;  ///< Projection type.
   int id;  ///< ID.
-  char * index;  ///< Projection index.
+  const char * index;  ///< Projection index.
   double pp1,  ///< Projection parameter 1.
     amaxdist;
   bool processed; ///< Check whether projection is processed.
@@ -112,13 +112,13 @@ class thdb2dprjid {
   public:
   
   char type;  ///< Projetion type.
-  char * index;  ///< Projection index.
+  const char * index;  ///< Projection index.
   
   thdb2dprjid();  ///< Default constructor.
   
   thdb2dprjid(thdb2dprj * proj);  ///< Constructor from projection.
   
-  thdb2dprjid(int tt, char * ii) : type(tt), index(ii) {}  ///< ???
+  thdb2dprjid(int tt, const char * ii) : type(tt), index(ii) {}  ///< ???
   
 };
 

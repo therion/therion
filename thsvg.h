@@ -23,6 +23,6 @@
 
 #include "thlegenddata.h"
 
-void thsvg(char * fname, int, legenddata ldata = legenddata::legenddata());
+void thsvg(const char * fname, int, legenddata ldata = legenddata::legenddata());
 
 #endif

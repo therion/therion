@@ -64,9 +64,10 @@ static const thstok thtt_exptable_opt[] = {
 
 enum {
   TT_EXPTABLE_FMT_UNKNOWN = 0,  ///< Unknown option
-  TT_EXPTABLE_FMT_DBF,  ///< sql
-  TT_EXPTABLE_FMT_TXT,  ///< sql
-  TT_EXPTABLE_FMT_HTML,  ///< sql
+  TT_EXPTABLE_FMT_DBF, 
+  TT_EXPTABLE_FMT_TXT, 
+  TT_EXPTABLE_FMT_HTML,
+  TT_EXPTABLE_FMT_KML, 
 };
 
 
@@ -77,8 +78,9 @@ enum {
 static const thstok thtt_exptable_fmt[] = {
   {"dbf", TT_EXPTABLE_FMT_DBF},
   {"html", TT_EXPTABLE_FMT_HTML},
+  {"kml", TT_EXPTABLE_FMT_KML},
   {"text", TT_EXPTABLE_FMT_TXT},
-  {"txt", TT_EXPTABLE_FMT_TXT},
+  {"txt", TT_EXPTABLE_FMT_TXT},  
   {NULL, TT_EXPTABLE_FMT_UNKNOWN}
 };
 

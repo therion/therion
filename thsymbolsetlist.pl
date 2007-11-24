@@ -89,7 +89,7 @@ print O <<ENDO;
 enum {
 $TK};
 
-typedef char * thsymbolset__char_ptr;
+typedef const char * thsymbolset__char_ptr;
 
 static const thsymbolset__char_ptr thsymbolset__mp [] = {
 $MP};

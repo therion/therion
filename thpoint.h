@@ -384,7 +384,7 @@ class thpoint : public th2ddataobject {
     align;  ///< Point align.
   double orient, xsize, ysize;  ///<...
   
-  char * text,  ///< Point text.
+  const char * text,  ///< Point text.
      * code; ///< Continuation code.
     
   thdb2dpt * point;  ///< Point coordinates.
@@ -439,7 +439,7 @@ class thpoint : public th2ddataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "thpoint";};
+  virtual const char * get_class_name() {return "thpoint";};
   
   
   /**
@@ -460,21 +460,21 @@ class thpoint : public th2ddataobject {
    * Return command name.
    */
    
-  virtual char * get_cmd_name();
+  virtual const char * get_cmd_name();
   
   
   /**
    * Return command end option.
    */
    
-  virtual char * get_cmd_end();
+  virtual const char * get_cmd_end();
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
   
   
   /**

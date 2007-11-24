@@ -251,7 +251,7 @@ int thdb2d_rotate_align(int align, double rot) {
 }
 
 
-thdb2dprjpr thdb2d::parse_projection(char * prjstr,bool insnew) 
+thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew) 
 {
 
   // let's split string into type - index - param - units
@@ -259,7 +259,7 @@ thdb2dprjpr thdb2d::parse_projection(char * prjstr,bool insnew)
   thdb2dprjpr ret_val;
   thdb2dprj tp;
   char ** pars = this->mbf.get_buffer(), ** pars2;
-  char * type_str, * index_str = "";
+  const char * type_str, * index_str = "";
   double par = tp.pp1;
   int npar = this->mbf.get_size(), prj_type;
   if (npar < 1)
@@ -967,7 +967,7 @@ void thdb2d::process_point_references(thpoint * pp)
 {
   thdataobject * optr;
   bool extend_error = false;
-  char * err_code = "invalid station or point reference";
+  const char * err_code = "invalid station or point reference";
   switch (pp->type) {
     case TT_POINT_TYPE_STATION:
     case TT_POINT_TYPE_CONTINUATION:
@@ -1140,7 +1140,7 @@ void thdb2d::process_projection(thdb2dprj * prj)
   // make sure that 1D tree is processed
   thdb.db1d.get_tree_size();  
   
-  char * prjstr;
+  const char * prjstr;
   switch (prj->type) {
     case TT_2DPROJ_EXTEND:
       prjstr = "extended";
@@ -2339,7 +2339,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
   // find autojoin candidates
 	std::list<joincand> joincandlist;
 	std::list<joincand>::iterator jci, njci;
-	char * cfile = "";
+	const char * cfile = "";
 	long fileid = 0;
 	thscrap * scp;
 	th2ddataobject * o2d;
@@ -3432,7 +3432,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
   std::list<area_proc>::iterator ti;
   thdb_revision_set_type::iterator ri;
-  char * sn;
+  const char * sn;
   long blnum;
 
   for (ti = todo.begin(); ti != todo.end(); ti++) {

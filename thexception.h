@@ -118,14 +118,14 @@ class thexception : public thbuffer {
    * Append sprinted string.
    */
    
-  void appspf(char * format, ...);
+  void appspf(const char * format, ...);
   
     
   /**
    * Insert sprinted string.
    */
    
-  void insspf(char * format, ...);
+  void insspf(const char * format, ...);
   
     
   /**

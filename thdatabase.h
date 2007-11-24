@@ -71,7 +71,7 @@ enum {
  
 class thsurveyname {  
   public:
-  char * n;  ///< Data.
+  const char * n;  ///< Data.
   thsurveyname(): n("") {}  ///< Standard constructor.
   
   /**
@@ -80,7 +80,7 @@ class thsurveyname {
    * @param n Survey name.
    */
    
-  thsurveyname(char * nn) : n(nn) {}
+  thsurveyname(const char * nn) : n(nn) {}
   
 
   /**
@@ -220,7 +220,7 @@ class thdatabase {
    * Create an data object linked to the database.
    */
    
-  class thdataobject * create(char * oclass, thobjectsrc osrc);
+  class thdataobject * create(const char * oclass, thobjectsrc osrc);
   
   
   /**
@@ -283,15 +283,14 @@ class thdatabase {
    * Retrieve map layout from database.
    */
    
-  class thlayout * get_layout(char * gname);
+  class thlayout * get_layout(const char * gname);
   
   
   /**
    * Store given string in the database.
    */
    
-  char * strstore(char * src, bool use_dic = false);
-  char * strstore(const char * src, bool use_dic = false);
+  const char * strstore(const char * src, bool use_dic = false);
   
   
   /**
@@ -326,16 +325,16 @@ class thdatabase {
    * Get survey from database.
    */
    
-  thsurvey * get_survey(char * sn, thsurvey * ps);
-  thsurvey * get_survey_noexc(char * sn, thsurvey * ps);
-  thsurvey * get_exact_survey_noexc(char * sn, thsurvey * ps);
+  thsurvey * get_survey(const char * sn, thsurvey * ps);
+  thsurvey * get_survey_noexc(const char * sn, thsurvey * ps);
+  thsurvey * get_exact_survey_noexc(const char * sn, thsurvey * ps);
 
 
   /**
    * Get survey id from database.
    */
    
-  unsigned long get_survey_id(char * sn, thsurvey * ps);
+  unsigned long get_survey_id(const char * sn, thsurvey * ps);
   
 
   /**

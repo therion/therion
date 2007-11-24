@@ -9,11 +9,14 @@ therion:
    - symbol-show|hide line moonmilk works
    - declination output fixed (half year shift removed)
    - invalid LRUD dimensions in PDF map output
+   - installation script
    
 xtherion:
 
  * changed increased default sidebar width + default sidebar width
    configuration option in xtherion.ini file
+ * if warnings were generated in compilation, not ERROR but WARNING message
+   is generated
  * bugs fixed:
    - toolbar icon decriptions added to localization files
    

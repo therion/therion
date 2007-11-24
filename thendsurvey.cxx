@@ -59,19 +59,19 @@ int thendsurvey::get_cmd_nargs()
 }
 
 
-char * thendsurvey::get_cmd_end()
+const char * thendsurvey::get_cmd_end()
 {
   return NULL;
 }
 
 
-char * thendsurvey::get_cmd_name()
+const char * thendsurvey::get_cmd_name()
 {
   return "endsurvey";
 }
 
 
-thcmd_option_desc thendsurvey::get_cmd_option_desc(char * opts)
+thcmd_option_desc thendsurvey::get_cmd_option_desc(const char * opts)
 {
   return TT_DATAOBJECT_UNKNOWN;
 }

@@ -753,7 +753,7 @@ int   Mesh::import2OFFFile(char* sf){
 int   Mesh::export2OFFFile(char* sf,char* f)
 {
    char delimiter=' ';
-   char* df="result.noff";
+   const char* df="result.noff";
    FILE* fp;   
 
    if(f!=NULL)

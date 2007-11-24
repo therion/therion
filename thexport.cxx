@@ -113,7 +113,7 @@ void thexport::dump_body(FILE * xf)
 }
 
 
-char * thexport::get_output(const char * defname)
+const char * thexport::get_output(const char * defname)
 {
   static thbuffer outptfname;
   outptfname = this->cfgpath.get_buffer();

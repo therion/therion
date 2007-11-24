@@ -226,7 +226,7 @@ struct stat
    * Set main input file name.
    */
    
-  void set_file_name(char * fname);
+  void set_file_name(const char * fname);
   
   
   /**
@@ -240,7 +240,7 @@ struct stat
    * Set search path.
    */
    
-  void set_search_path(char * spath);
+  void set_search_path(const char * spath);
 
   /**
    * Set possible file suffixes.
@@ -248,7 +248,7 @@ struct stat
    * Used, when unable to open input file.
    */
    
-  void set_file_suffix(char * fsx);
+  void set_file_suffix(const char * fsx);
 
   bool get_input_sensitivity();
   void set_input_sensitivity(bool s);

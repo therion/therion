@@ -45,7 +45,7 @@ enum {
  */
 
 typedef struct {
-  char * s;  ///< String.
+  const char * s;  ///< String.
   int tok;  ///< Token.
 } thstok;
 
@@ -65,9 +65,9 @@ typedef struct {
  * @sa thmatch_token
  */
  
-int thmatch_stok(char *buffer, const thstok *tab, int tab_size);
+int thmatch_stok(const char *buffer, const thstok *tab, int tab_size);
  
-int thcasematch_stok(char *buffer, const thstok *tab, int tab_size);
+int thcasematch_stok(const char *buffer, const thstok *tab, int tab_size);
 
 
 /**
@@ -87,7 +87,7 @@ int thcasematch_stok(char *buffer, const thstok *tab, int tab_size);
  * Inverse function to thmatch_stok().
  */
  
-char * thmatch_tstring(int token, const thstok *tab, int tab_size);
+const char * thmatch_tstring(int token, const thstok *tab, int tab_size);
 
 
 /**
@@ -201,13 +201,13 @@ static const thstok thtt_special_val[] = {
  * Parse double value (with check for special values).
  */
  
-void thparse_double(int & sv, double & dv, char * src); 
+void thparse_double(int & sv, double & dv, const char * src); 
 
 /**
  * Parse double value given in DMS (with check for special values).
  */
  
-void thparse_double_dms(int & sv, double & dv, char * src); 
+void thparse_double_dms(int & sv, double & dv, const char * src); 
 
 /**
  * Update double value (with check for special values).
@@ -220,14 +220,14 @@ void thparse_double_dms(int & sv, double & dv, char * src);
  * Split given string into first word and the rest.
  */
  
-void thsplit_word(thbuffer * dword, thbuffer * drest, char * src);
+void thsplit_word(thbuffer * dword, thbuffer * drest, const char * src);
 
 
 /**
  * Split given string into words (separated by white spaces).
  */
  
-void thsplit_words(thmbuffer * dest, char * src);
+void thsplit_words(thmbuffer * dest, const char * src);
 
 
 /**
@@ -245,7 +245,7 @@ void thsplit_strings(thmbuffer * dest, const char * src, const char separator);
  * Take care of C:\....
  */
  
-void thsplit_paths(thmbuffer * dest, char * src, char separator);
+void thsplit_paths(thmbuffer * dest, const char * src, char separator);
 
 
 /**
@@ -255,14 +255,14 @@ void thsplit_paths(thmbuffer * dest, char * src, char separator);
  * ("" = ") or given in [] brackets.
  */
 
-void thsplit_args(thmbuffer * dest, char * src);
+void thsplit_args(thmbuffer * dest, const char * src);
 
 
 /**
  * Separate path part from full file name.
  */
  
-void thsplit_fpath(thbuffer * dest, char * src);
+void thsplit_fpath(thbuffer * dest, const char * src);
 
 
 /**
@@ -271,14 +271,14 @@ void thsplit_fpath(thbuffer * dest, char * src);
  * Valid keyword characters are A-Z, a-z, 0-9,'_' and '-'.
  */
  
-bool th_is_keyword(char * str);
+bool th_is_keyword(const char * str);
 
 
 /**
  * Check if given string is index (positive integer).
  */
  
-bool th_is_index(char * str);
+bool th_is_index(const char * str);
 
 /**
  * Check if given string is keyword list.
@@ -289,7 +289,7 @@ bool th_is_index(char * str);
  * @param sep Keyword separator.
  */
  
-bool th_is_keyword_list(char * str, char sep);
+bool th_is_keyword_list(const char * str, char sep);
 
 
 /**
@@ -298,7 +298,7 @@ bool th_is_keyword_list(char * str, char sep);
  * A-Z, a-z, 0-9 and [_.,-/+*']
  */
  
-bool th_is_extkeyword(char * str);
+bool th_is_extkeyword(const char * str);
 
 
 /**
@@ -331,14 +331,14 @@ void thdecode_arg(thbuffer * dest, const char * src);
  * Parse altitude value
  */
  
-void thparse_altitude(char * src, double & altv, double & fixv);
+void thparse_altitude(const char * src, double & altv, double & fixv);
 
 
 /**
  * Check image.
  */
 
-void thparse_image(char * fname, double & width, double & height, double & dpi, int & type);
+void thparse_image(const char * fname, double & width, double & height, double & dpi, int & type);
 
 
 /**
@@ -366,7 +366,7 @@ const char * thutf82xhtml(const char * src);
  * Base 64 file encoder.
  */
 
-void thbase64_encode(char * fname, FILE * fout);
+void thbase64_encode(const char * fname, FILE * fout);
 
 /**
  * Check if path is absolute.
@@ -377,7 +377,7 @@ bool thpath_is_absolute(const char * fname);
 /**
  * Check on attribute name.
  */
-bool th_is_attr_name(char * str);
+bool th_is_attr_name(const char * str);
 
 
 #endif

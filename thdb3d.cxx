@@ -154,7 +154,7 @@ thdb3dnm * thdb3dvx::insert_normal(double nx, double ny, double nz) {
 void thdb3ddata::export_thm(FILE * out) {
   thdb3dfc * fc;
   thdb3dfx * fx;
-  char * typestr;
+  const char * typestr;
   for (fc = this->firstfc; fc != NULL; fc = fc->next) {
     switch (fc->type) {
       case THDB3DFC_LINES:
@@ -427,7 +427,7 @@ void thdb3ddata::postprocess() {
 
 
 
-void thdb3ddata::export_dxf(FILE * out, char * LAYER) {
+void thdb3ddata::export_dxf(FILE * out, const char * LAYER) {
   thdb3dfc * fc;
   thdb3dfx * fx, * fx1, * fx2 = NULL, * fx3 = NULL;
   bool reverse;  

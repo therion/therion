@@ -140,7 +140,7 @@ class th2ddataobject : public thdataobject {
 
   public:
   
-  char * m_subtype_str;
+  const char * m_subtype_str;
 
   th2ddataobject * pscrapoptr, ///< Previos object in the scrap.
       * nscrapoptr;  ///< Next object in the scrap.
@@ -176,7 +176,7 @@ class th2ddataobject : public thdataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "th2ddataobject";};
+  virtual const char * get_class_name() {return "th2ddataobject";};
   
   
   /**
@@ -191,7 +191,7 @@ class th2ddataobject : public thdataobject {
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
   
   
   /**
@@ -228,7 +228,7 @@ class th2ddataobject : public thdataobject {
   /**
    * Parse user defined subtype.
    */
-  void parse_u_subtype(char * subtype);
+  void parse_u_subtype(const char * subtype);
   
 };
 

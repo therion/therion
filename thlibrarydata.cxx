@@ -17,13 +17,13 @@
 void thlibrary_init_grades()
 {
 	thgrade * pgrade;
-	char * oname;
+	thbuffer oname;
 
 	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
 	oname = "BCRA3";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),&oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "BCRA grade 3";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),&oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
 	pgrade->dls_length = 0.15;
 	pgrade->dls_bearing = 3.33;
 	pgrade->dls_gradient = 3.33;
@@ -39,9 +39,9 @@ void thlibrary_init_grades()
 
 	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
 	oname = "BCRA5";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),&oname,0,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "BCRA grade 5";
-	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),&oname,TT_UTF_8,0);
+	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
 	pgrade->dls_length = 0.033;
 	pgrade->dls_bearing = 0.33;
 	pgrade->dls_gradient = 0.33;
@@ -59,13 +59,13 @@ void thlibrary_init_grades()
 void thlibrary_init_layouts()
 {
 	thlayout * playout;
-	char * oname;
+	thbuffer oname;
 
 	playout = (thlayout *) thdb.create("layout", thobjectsrc("therion",0));
 	oname = "SCR200";
-	playout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),&oname,TT_UTF_8,0);
+	playout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);
 	oname = "Computer screen layout";
-	playout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),&oname,TT_UTF_8,0);
+	playout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
 	playout->def_scale = 2;
 	playout->scale = 0.005;
 	playout->def_base_scale = 0;
@@ -188,7 +188,7 @@ void thlibrary_init_layouts()
 	playout->def_page_numbers = 0;
 	playout->pgsnum = true;
 	oname = "SKBB";
-	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),&oname,TT_UTF_8,0);
+	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);
 	playout->def_tex_lines = 2;
 	thdb.insert(playout);
 }

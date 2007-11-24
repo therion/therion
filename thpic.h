@@ -31,7 +31,9 @@
 
 struct thpic {
 
-  char * fname, * texfname, * rgbafn, * rgba;
+  const char * fname, * texfname, * rgbafn;
+  
+  char * rgba;
 
   long width, height;
 
@@ -44,7 +46,7 @@ struct thpic {
 
   void init(const char * fname, const char * incfnm);
 
-  char * convert(const char * type, const char * ext, const char * optfmt, ...);
+  const char * convert(const char * type, const char * ext, const char * optfmt, ...);
 
   void rgba_load();
 

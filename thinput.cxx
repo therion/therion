@@ -164,7 +164,7 @@ bool thinput::get_sp_scan()
 }
 
 
-void thinput::set_file_name(char * fname)
+void thinput::set_file_name(const char * fname)
 {
   this->file_name = fname;
 }
@@ -176,7 +176,7 @@ char * thinput::get_file_name()
 }
 
 
-void thinput::set_search_path(char * spath)
+void thinput::set_search_path(const char * spath)
 {
   this->search_path.clear();
 #ifdef THWIN32
@@ -186,7 +186,7 @@ void thinput::set_search_path(char * spath)
 #endif
 }
 
-void thinput::set_file_suffix(char * fsx)
+void thinput::set_file_suffix(const char * fsx)
 {
   this->file_suffix.clear();
   thsplit_strings(& this->file_suffix, fsx, ':'); 

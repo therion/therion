@@ -96,21 +96,21 @@ int thimport::get_cmd_nargs()
 }
 
 
-char * thimport::get_cmd_end()
+const char * thimport::get_cmd_end()
 {
   // insert endcommand if multiline command
   return NULL;
 }
 
 
-char * thimport::get_cmd_name()
+const char * thimport::get_cmd_name()
 {
   // insert command name here
   return "import";
 }
 
 
-thcmd_option_desc thimport::get_cmd_option_desc(char * opts)
+thcmd_option_desc thimport::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_import_opt);
   if (id == TT_IMPORT_UNKNOWN)

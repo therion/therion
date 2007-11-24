@@ -68,7 +68,7 @@ thmbuffer::~thmbuffer()
 }
 
 
-char * thmbuffer::appendn(char * src, size_t n)
+char * thmbuffer::appendn(const char * src, size_t n)
 {
   char * dest;
   while (this->free_size <= long(n)) {
@@ -100,7 +100,7 @@ char * thmbuffer::appendn(char * src, size_t n)
 }
 
 
-char * thmbuffer::append(char * src)
+char * thmbuffer::append(const char * src)
 {
   return this->appendn(src, strlen(src));
 }
@@ -125,5 +125,7 @@ char ** thmbuffer::get_buffer()
 {
   return this->buf;
 }
+
+
 
 

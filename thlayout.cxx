@@ -290,13 +290,13 @@ int thlayout::get_cmd_nargs()
 }
 
 
-char * thlayout::get_cmd_end()
+const char * thlayout::get_cmd_end()
 {
   return "endlayout";
 }
 
 
-char * thlayout::get_cmd_name()
+const char * thlayout::get_cmd_name()
 {
   // insert command name here
   return "layout";
@@ -337,7 +337,7 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
 }
 
 
-thcmd_option_desc thlayout::get_cmd_option_desc(char * opts)
+thcmd_option_desc thlayout::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_layout_opt);
   if (id == TT_LAYOUT_UNKNOWN) 
@@ -1035,11 +1035,11 @@ int thlayout::get_context()
 void thlayout::self_print_library() {
 
   thprintf("\toname = \"%s\";\n", this->get_name());
-  thprintf("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),&oname,TT_UTF_8,0);\n");
+  thprintf("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);\n");
   // decode title
   thdecode_c(&(this->db->buff_enc), this->get_title());
   thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
-  thprintf("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),&oname,TT_UTF_8,0);\n");
+  thprintf("\tplayout->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
 
 
   thprintf("\tplayout->def_scale = %d;\n", this->def_scale);
@@ -1261,7 +1261,7 @@ void thlayout::self_print_library() {
           thprintf(";\n");
         }
         thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
-        thprintf("\tplayout->set(thcmd_option_desc(0,1),&oname,TT_UTF_8,0);\n");
+        thprintf("\tplayout->set(thcmd_option_desc(0,1),oname,TT_UTF_8,0);\n");
         break;
       case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
       case TT_LAYOUT_CODE_MAP_ITEM:
@@ -1274,7 +1274,7 @@ void thlayout::self_print_library() {
         } else {
           thprintf("\toname = NULL;\n");
         }
-        thprintf("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),&oname,TT_UTF_8,0);\n");
+        thprintf("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n");
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:

@@ -116,13 +116,13 @@ char * thobjectname::print_name()
 }
   
 
-char * thobjectname__print_full_name(char * oname, thsurvey * psrv, int slevel)
+char * thobjectname__print_full_name(const char * oname, thsurvey * psrv, int slevel)
 {
   static thbuffer pname;
   size_t plen, slen, start, cx, tx;
   int clevel;
   char * rv;
-  char * sname;
+  const char * sname;
   sname = NULL;
   if (psrv != NULL) 
     sname = psrv->get_full_name();

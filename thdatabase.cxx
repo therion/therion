@@ -68,14 +68,14 @@ const char * thlibrarydata_grades_text =
   "void thlibrary_init_grades()\n"
   "{\n"
   "\tthgrade * pgrade;\n"
-  "\tchar * oname;\n";
+  "\tthbuffer oname;\n";
 
 
 const char * thlibrarydata_layouts_text =
   "void thlibrary_init_layouts()\n"
   "{\n"
   "\tthlayout * playout;\n"
-  "\tchar * oname;\n";
+  "\tthbuffer oname;\n";
 
 
 bool operator < (const class thsurveyname & n1, const class thsurveyname & n2)
@@ -156,8 +156,8 @@ void thdatabase::check_context(class thdataobject * optr) {
   if (optr == NULL)
     return;
   // Let's check the object context
-  char * cmdname = optr->get_cmd_name();
-  char * misscmd = "some";
+  const char * cmdname = optr->get_cmd_name();
+  const char * misscmd = "some";
   if ((optr->get_context() & this->ccontext) == 0) {
     switch (optr->get_context()) {
       case (THCTX_SURVEY | THCTX_SCRAP):
@@ -181,7 +181,7 @@ void thdatabase::insert(thdataobject * optr)
   thsurvey * survey_optr;
   thscrap * scrap_optr;
   th2ddataobject * th2ddo_optr;
-  char * optr_name;
+  const char * optr_name;
   int optr_class_id;
   unsigned long csurvey_id = (this->csurveyptr == NULL) ? 0 : csurveyptr->get_nss()->id;
 
@@ -358,7 +358,7 @@ void thdatabase::insert(thdataobject * optr)
 }  // end of object inserion
 
 
-thsurvey * thdatabase::get_survey(char * sn, thsurvey * ps)
+thsurvey * thdatabase::get_survey(const char * sn, thsurvey * ps)
 {
   thsurvey * xxx = this->get_survey_noexc(sn, ps);
   if (xxx != NULL)
@@ -369,7 +369,7 @@ thsurvey * thdatabase::get_survey(char * sn, thsurvey * ps)
 
 
 
-thsurvey * thdatabase::get_survey_noexc(char * sn, thsurvey * ps)
+thsurvey * thdatabase::get_survey_noexc(const char * sn, thsurvey * ps)
 {
   thdb_survey_map_type::iterator si;
   
@@ -395,7 +395,7 @@ thsurvey * thdatabase::get_survey_noexc(char * sn, thsurvey * ps)
 
 
 
-thsurvey * thdatabase::get_exact_survey_noexc(char * sn, thsurvey * ps)
+thsurvey * thdatabase::get_exact_survey_noexc(const char * sn, thsurvey * ps)
 {
   thdb_survey_map_type::iterator si;
   
@@ -420,7 +420,7 @@ thsurvey * thdatabase::get_exact_survey_noexc(char * sn, thsurvey * ps)
 }
 
 
-unsigned long thdatabase::get_survey_id(char * sn, thsurvey * ps)
+unsigned long thdatabase::get_survey_id(const char * sn, thsurvey * ps)
 {
   thsurvey * sptr = this->get_survey(sn, ps);
   if (sptr == NULL)
@@ -464,7 +464,7 @@ bool thdatabase::insert_datastation(thobjectname on, thsurvey * ps)
 }  // end of datastation inserion
 
 
-class thdataobject * thdatabase::create(char * oclass, 
+class thdataobject * thdatabase::create(const char * oclass, 
   thobjectsrc osrc)
 {
   int tclass = thmatch_token(oclass, thtt_commands);
@@ -561,14 +561,7 @@ class thdataobject * thdatabase::create(char * oclass,
 }
 
 
-char * thdatabase::strstore(const char * src, bool use_dic) {
-  static thbuffer storebuff;
-  storebuff = src;
-  return this->strstore(storebuff, use_dic);
-}
-
-
-char * thdatabase::strstore(char * src, bool use_dic)
+const char * thdatabase::strstore(const char * src, bool use_dic)
 {
   if (use_dic) {
     thdb_dictionary_type::iterator ii = 
@@ -717,7 +710,7 @@ class thgrade * thdatabase::get_grade(char * gname)
 }
 
 
-class thlayout * thdatabase::get_layout(char * gname)
+class thlayout * thdatabase::get_layout(const char * gname)
 {
   thdb_layout_map_type::iterator gi = 
     this->layout_map.find(gname);

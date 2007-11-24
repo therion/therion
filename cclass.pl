@@ -129,7 +129,7 @@ class $thclass : public $thfather {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return \"$thclass\";};
+  virtual const char * get_class_name() {return \"$thclass\";};
   
   
   /**
@@ -150,21 +150,21 @@ class $thclass : public $thfather {
    * Return command name.
    */
    
-  virtual char * get_cmd_name();
+  virtual const char * get_cmd_name();
   
   
   /**
    * Return command end option.
    */
    
-  virtual char * get_cmd_end();
+  virtual const char * get_cmd_end();
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
   
   
   /**
@@ -271,21 +271,21 @@ int $thclass\::get_cmd_nargs()
 }
 
 
-char * $thclass\::get_cmd_end()
+const char * $thclass\::get_cmd_end()
 {
   // insert endcommand if multiline command
   return NULL;
 }
 
 
-char * $thclass\::get_cmd_name()
+const char * $thclass\::get_cmd_name()
 {
   // insert command name here
   return \"$class\";
 }
 
 
-thcmd_option_desc $thclass\::get_cmd_option_desc(char * opts)
+thcmd_option_desc $thclass\::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_$class\_opt);
   if (id == TT_$CLASS\_UNKNOWN)

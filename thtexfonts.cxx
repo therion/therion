@@ -52,7 +52,7 @@ typedef list<int> unistr;
 // returns the index of given encoding (as used in predefined encoding arrays)
 // or -1 if such an encoding is not known
 
-int get_enc_id(char* enc) {
+int get_enc_id(const char* enc) {
   for (int i=0; i<max_enc; i++) if (strcmp(encodings[i],enc) == 0) return i;
   return -1;
 }
@@ -364,7 +364,7 @@ int tex2uni(string font, int ch) {
 //}
 
 #ifndef NOTHERION
-const char * utf2tex (char * s, bool b) {
+const char * utf2tex (const char * s, bool b) {
   string t = utf2tex(string(s),b);
   thtexfontsbuff.strcpy(t.c_str());
   return thtexfontsbuff.get_buffer();

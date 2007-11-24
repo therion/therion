@@ -69,7 +69,7 @@ class thsurface : public thdataobject {
   public:
 
   // insert here real properties
-  char * pict_name;
+  const char * pict_name;
   bool pict_stations;
   thobjectname s1, s2;
   class thsurvey * ssurvey;
@@ -115,7 +115,7 @@ class thsurface : public thdataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "thsurface";};
+  virtual const char * get_class_name() {return "thsurface";};
   
   
   /**
@@ -136,21 +136,21 @@ class thsurface : public thdataobject {
    * Return command name.
    */
    
-  virtual char * get_cmd_name();
+  virtual const char * get_cmd_name();
   
   
   /**
    * Return command end option.
    */
    
-  virtual char * get_cmd_end();
+  virtual const char * get_cmd_end();
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
   
   
   /**

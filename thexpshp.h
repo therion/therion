@@ -51,7 +51,7 @@ struct thexpshpf_part {
 // Shapefile module
 struct thexpshpf {
 
-  char * m_fnm, * m_fpath;
+  const char * m_fnm, * m_fpath;
   struct thexpshp * m_xshp;
   bool m_is_open;
   int m_type;
@@ -61,7 +61,7 @@ struct thexpshpf {
   thattr m_attributes;
 
   thexpshpf();
-  void init(struct thexpshp * xshp, char * fnm, int type);
+  void init(struct thexpshp * xshp, const char * fnm, int type);
   bool open();
   void close();
 
@@ -88,7 +88,7 @@ struct thexpshpf {
 // Shapefile export structure.
 struct thexpshp {
 
-  char * m_dirname;
+  const char * m_dirname;
   thdb2dprj * m_xproj;
   thexpshpf m_fscrap, m_fpoints, m_flines, m_fareas;
   thexpshpf m_fstations3D, m_fshots3D, m_fwalls3D;
@@ -96,7 +96,7 @@ struct thexpshp {
   class thexpmodel * m_expmodel;
 
   thexpshp();
-  bool open(char * dirname);
+  bool open(const char * dirname);
   void xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic);
   void close();
 

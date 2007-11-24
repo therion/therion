@@ -43,7 +43,7 @@ class thlayoutln {
  
   thlayoutln * next_line;
     
-  char * line;
+  const char * line;
   
   int smid;  ///< Symbol macro ID
 

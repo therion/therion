@@ -53,7 +53,7 @@ class thdatastation : public thdataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "thdatastation";};
+  virtual const char * get_class_name() {return "thdatastation";};
   
   
   /**

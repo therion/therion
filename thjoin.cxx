@@ -69,19 +69,19 @@ int thjoin::get_cmd_nargs()
 }
 
 
-char * thjoin::get_cmd_end()
+const char * thjoin::get_cmd_end()
 {
   return NULL;
 }
 
 
-char * thjoin::get_cmd_name()
+const char * thjoin::get_cmd_name()
 {
   return "join";
 }
 
 
-thcmd_option_desc thjoin::get_cmd_option_desc(char * opts)
+thcmd_option_desc thjoin::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_join_opt);
   if (id == TT_JOIN_UNKNOWN)

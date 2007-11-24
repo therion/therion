@@ -79,14 +79,14 @@ THXTHMKCMD = ./therion
 ##LDBFLAGS = $(LDPFLAGS)
 
 # BUILD OXYGEN
-CCBFLAGS = -O2
-CXXBFLAGS = -O2
-LDBFLAGS = $(LDPFLAGS)
+##CCBFLAGS = -O2
+##CXXBFLAGS = -O2
+##LDBFLAGS = $(LDPFLAGS)
 
 # BUILD RELEASE
-##CCBFLAGS = 
-##CXXBFLAGS = 
-##LDBFLAGS = $(LDPFLAGS)
+CCBFLAGS = 
+CXXBFLAGS = 
+LDBFLAGS = $(LDPFLAGS)
 
 # BUILD DEBUG
 ##CCBFLAGS = -ggdb
@@ -132,7 +132,7 @@ init:
 	./therion --print-init-file > therion.ini
 
 install: all
-	perl makeinstall.pl $(THPLATFORM)
+	tclsh makeinstall.tcl $(THPLATFORM)
 
 
 release:
@@ -516,7 +516,7 @@ thexptable.o: thexptable.cxx thexptable.h thexport.h thparse.h thbuffer.h \
   thscraplo.h thlayoutln.h thscrapen.h thscraplp.h thdata.h thtfangle.h \
   thtf.h thtflength.h thtfpwf.h thexporter.h thinit.h thinput.h \
   thsurvey.h thscrap.h thsketch.h thpic.h thtrans.h thpoint.h \
-  th2ddataobject.h
+  th2ddataobject.h thcsdata.h thproj.h thconfig.h thselector.h
 thexpuni.o: thexpuni.cxx thexpmap.h thexport.h thparse.h thbuffer.h \
   thmbuffer.h thobjectsrc.h thsymbolset.h thsymbolsetlist.h thlayout.h \
   thdataobject.h thdatabase.h thdb1d.h thobjectid.h thinfnan.h \

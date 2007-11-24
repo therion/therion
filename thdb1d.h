@@ -123,7 +123,7 @@ class thdb1ds {
   double x, y, z;   // coordinates
   double xx;        // coordinate for extended elevation
   
-  char * name,  ///< Station name.
+  const char * name,  ///< Station name.
     * comment,  ///< Station comment.
     * code;     ///< Station continuation code.
   
@@ -158,7 +158,7 @@ class thdb1ds {
    * Default constructor with 2 parameters.
    */
    
-  thdb1ds(char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), name(n), 
+  thdb1ds(const char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), name(n), 
     comment(NULL), code(NULL), survey(ps), fixcontext(NULL),  
     data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE),

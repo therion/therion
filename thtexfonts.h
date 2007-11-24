@@ -38,7 +38,7 @@ struct fontrecord {
 
 extern list <fontrecord> FONTS;
 
-int get_enc_id(char* enc);
+int get_enc_id(const char* enc);
 void print_tex_encodings (void);
 void print_fonts_setup(void);
 
@@ -50,7 +50,7 @@ string utf2tex (string s, bool b=false);
 int tex2uni(string font, int ch);
 
 #ifndef NOTHERION
-const char * utf2tex (char * s, bool b = false);
+const char * utf2tex (const char * s, bool b = false);
 #endif
 
 #endif

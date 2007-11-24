@@ -78,19 +78,19 @@ int tharea::get_cmd_nargs()
 }
 
 
-char * tharea::get_cmd_end()
+const char * tharea::get_cmd_end()
 {
   return "endarea";
 }
 
 
-char * tharea::get_cmd_name()
+const char * tharea::get_cmd_name()
 {
   return "area";
 }
 
 
-thcmd_option_desc tharea::get_cmd_option_desc(char * opts)
+thcmd_option_desc tharea::get_cmd_option_desc(const char * opts)
 {
 //  int id = thmatch_token(opts, thtt_area_opt);
 //  if (id == TT_AREA_UNKNOWN)

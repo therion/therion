@@ -81,7 +81,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
   if (!this->m_sketch->m_pic.exists())
     return NULL;
 
-  char * fn;
+  const char * fn;
   size_t fnx, fnl;
   fn = sketch->m_pic.fname;
   fnl = strlen(sketch->m_pic.fname);

@@ -35,7 +35,7 @@
  
 class thperson {
 
-  char * n1,  ///< First name.
+  const char * n1,  ///< First name.
     * n2,  ///< Second name.
     * nn;  ///< Identification string.
     
@@ -66,14 +66,14 @@ class thperson {
    * Return first name.
    */
    
-  char * get_n1() const;
+  const char * get_n1() const;
 
 
   /**
    * Return second name.
    */
    
-  char * get_n2() const;
+  const char * get_n2() const;
   
 };
 

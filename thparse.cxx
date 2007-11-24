@@ -55,7 +55,7 @@ thround(double x) {
 
 thmbuffer thparse_mbuff;
 
-int thmatch_stok(char *buffer, const thstok *tab, int tab_size)
+int thmatch_stok(const char *buffer, const thstok *tab, int tab_size)
 {
   int a = 0, b = tab_size - 1, c, r;
   while (a <= b) {
@@ -71,7 +71,7 @@ int thmatch_stok(char *buffer, const thstok *tab, int tab_size)
 }
 
 
-int thcasematch_stok(char *buffer, const thstok *tab, int tab_size)
+int thcasematch_stok(const char *buffer, const thstok *tab, int tab_size)
 {
   int a = 0, b = tab_size - 1, c, r;
   while (a <= b) {
@@ -87,7 +87,7 @@ int thcasematch_stok(char *buffer, const thstok *tab, int tab_size)
 }
 
 
-char * thmatch_tstring(int token, const thstok *tab, int tab_size)
+const char * thmatch_tstring(int token, const thstok *tab, int tab_size)
 {
   int i = 0;
   while ((i < tab_size) && (tab[i].tok != token))
@@ -99,7 +99,7 @@ char * thmatch_tstring(int token, const thstok *tab, int tab_size)
 }
 
 
-void thsplit_word(thbuffer * dword, thbuffer * drest, char * src)
+void thsplit_word(thbuffer * dword, thbuffer * drest, const char * src)
 {
   long srcl = strlen(src),
     idx = 0,
@@ -157,7 +157,7 @@ void thsplit_word(thbuffer * dword, thbuffer * drest, char * src)
 }
 
 
-void thsplit_words(thmbuffer * dest, char * src)
+void thsplit_words(thmbuffer * dest, const char * src)
 {
   long srcl = strlen(src),
     idx = 0,
@@ -222,7 +222,7 @@ void thsplit_strings(thmbuffer * dest, const char * src, const char separator)
 }
 
 
-void thsplit_paths(thmbuffer * dest, char * src, char separator)
+void thsplit_paths(thmbuffer * dest, const char * src, char separator)
 {
   long srcl = strlen(src),
     idx = 0,
@@ -275,7 +275,7 @@ void thsplit_args_postp_quotes(char * buf)
 }
 
 
-void thsplit_args(thmbuffer * dest, char * src)
+void thsplit_args(thmbuffer * dest, const char * src)
 {
   long srcl = strlen(src),
     idx = 0,
@@ -377,10 +377,10 @@ void thsplit_args(thmbuffer * dest, char * src)
 }
 
 
-void thsplit_fpath(thbuffer * dest, char * src)
+void thsplit_fpath(thbuffer * dest, const char * src)
 {
   long len = strlen(src);
-  char * s = src + len++;
+  const char * s = src + len++;
   while ((len > 0) && (*s != '/')) {
     s--;
     len--;
@@ -389,7 +389,7 @@ void thsplit_fpath(thbuffer * dest, char * src)
 }
 
 
-bool th_is_keyword(char * str)
+bool th_is_keyword(const char * str)
 {
   size_t sl = strlen(str), i;
   unsigned char * s = (unsigned char *) str;
@@ -408,7 +408,7 @@ bool th_is_keyword(char * str)
 }
 
 
-bool th_is_attr_name(char * str)
+bool th_is_attr_name(const char * str)
 {
   size_t sl = strlen(str), i;
   unsigned char * s = (unsigned char *) str;
@@ -426,7 +426,7 @@ bool th_is_attr_name(char * str)
 }
 
 
-bool th_is_index(char * str)
+bool th_is_index(const char * str)
 {
   size_t sl = strlen(str), i;
   unsigned char * s = (unsigned char *) str;
@@ -441,7 +441,7 @@ bool th_is_index(char * str)
 }
 
 
-bool th_is_keyword_list(char * str, char sep)
+bool th_is_keyword_list(const char * str, char sep)
 {
   size_t sl = strlen(str), i;
   unsigned char * s = (unsigned char *) str;
@@ -460,7 +460,7 @@ bool th_is_keyword_list(char * str, char sep)
 }
 
 
-bool th_is_extkeyword(char * str)
+bool th_is_extkeyword(const char * str)
 {
   size_t sl = strlen(str), i;
   unsigned char * s = (unsigned char *) str;
@@ -482,7 +482,7 @@ bool th_is_extkeyword(char * str)
 }
 
 
-void thparse_double(int & sv, double & dv, char * src)
+void thparse_double(int & sv, double & dv, const char * src)
 {
   char * endptr;
   sv = thmatch_token(src, thtt_special_val);
@@ -509,7 +509,7 @@ void thparse_double(int & sv, double & dv, char * src)
 }
 
 
-void thparse_double_dms(int & sv, double & dv, char * src)
+void thparse_double_dms(int & sv, double & dv, const char * src)
 {
   int ssv;
   double dms;
@@ -906,7 +906,7 @@ void thdecode_arg(thbuffer * dest, const char * src)
 
 
 
-void thparse_altitude(char * src, double & altv, double & fixv)
+void thparse_altitude(const char * src, double & altv, double & fixv)
 {
 
   thsplit_args(& thdb.db2d.mbf, src);
@@ -952,7 +952,7 @@ void thparse_altitude(char * src, double & altv, double & fixv)
   }
 }
 
-void thparse_image(char * fname, double & width, double & height, double & dpi, int & type)
+void thparse_image(const char * fname, double & width, double & height, double & dpi, int & type)
 {
 
   type = TT_IMG_TYPE_UNKNOWN;
@@ -1148,7 +1148,7 @@ const char * thutf82xhtml(const char * src)
 
 static const char base64_tab[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-void thbase64_encode(char * fname, FILE * fout) {
+void thbase64_encode(const char * fname, FILE * fout) {
   int llength = 0;
   char in_buffer[3];
   unsigned char out_buffer[5];

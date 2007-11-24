@@ -41,7 +41,7 @@ class thselector_item {
 
   public:
 
-  char * name, *src_name;
+  const char * name, *src_name;
   unsigned long src_ln;
   unsigned long number;
   bool unselect, recursive;  

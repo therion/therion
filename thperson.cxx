@@ -117,12 +117,12 @@ bool operator == (const class thperson & p1, const class thperson & p2)
 }
 
 
-char * thperson::get_n1() const
+const char * thperson::get_n1() const
 {
   return this->n1;
 }
 
-char * thperson::get_n2() const
+const char * thperson::get_n2() const
 {
   return this->n2;
 }

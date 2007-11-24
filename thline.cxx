@@ -80,19 +80,19 @@ int thline::get_cmd_nargs()
 }
 
 
-char * thline::get_cmd_end()
+const char * thline::get_cmd_end()
 {
   return "endline";
 }
 
 
-char * thline::get_cmd_name()
+const char * thline::get_cmd_name()
 {
   return "line";
 }
 
 
-thcmd_option_desc thline::get_cmd_option_desc(char * opts)
+thcmd_option_desc thline::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_line_opt);
   if (id == TT_LINE_UNKNOWN)
@@ -473,7 +473,7 @@ void thline::insert_point_mark(char * ss)
   this->last_point->mark = this->db->strstore(ss,true);
 }
 
-thdb2dlp * thline::get_marked_station(char * mark)
+thdb2dlp * thline::get_marked_station(const char * mark)
 {
   if (strcmp(mark,"end") == 0) {
     if (this->reverse)
@@ -1256,7 +1256,7 @@ void thline::parse_size(int w, char * ss) {
   double sz;
   if (this->last_point == NULL)
     ththrow(("no line point specified"))
-  char * sizestr = NULL;
+  const char * sizestr = NULL;
   switch (w) {
     case TT_LINE_SIZE:
       sizestr = "size";

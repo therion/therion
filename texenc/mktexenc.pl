@@ -107,6 +107,7 @@ foreach $composite (keys %UNI) {
 # finally write C++ files
 
 $maxenc = keys %ENCODINGS;
+@enclist = ("raw","xl2","cmcyr");
 $maxbase = keys %UNI2;
 $banner = "// This file is generated automatically; don't modify it\n\n";
 
@@ -116,7 +117,7 @@ print OUT "static const int max_enc = $maxenc;\n";
 print OUT "static const int max_base = $maxbase;\n\n";
 
 print OUT "static const char* encodings[$maxenc] = {\n";
-foreach $enc (sort keys %ENCODINGS) {
+foreach $enc (@enclist) {
   print OUT "  \"$enc\",\n";
 }
 print OUT "};\n\n";
@@ -124,7 +125,7 @@ print OUT "};\n\n";
 print OUT "static const int texenc[256][$maxenc] = {\n";
 for ($i=0; $i < 256; $i++) {
   @tmp = ();
-  foreach $enc (sort keys %ENCODINGS) {
+  foreach $enc (@enclist) {
     push(@tmp,"0x${$enc}[$i]");
   }
   print OUT "  {", join(", ",@tmp), "},\n";

@@ -49,7 +49,7 @@ typedef enum {THCFG_GENERATE,  ///< Generate config file.
 
 
 struct thconfig_src {
-  char * fname;
+  const char * fname;
   long startln, endln;
   thconfig_src() : fname(""), startln(-1), endln(-1) {}
 };

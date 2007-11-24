@@ -91,7 +91,7 @@ char * thlocale::format_human_length(double length)
 
 
 
-char * thlocale::format_length_units()
+const char * thlocale::format_length_units()
 {
 	switch (this->units) {
 		case TTLC_UNITS_IMPERIAL:
@@ -101,7 +101,7 @@ char * thlocale::format_length_units()
 	}
 }
 
-char * thlocale::format_i18n_length_units()
+const char * thlocale::format_i18n_length_units()
 {
 	switch (this->units) {
 		case TTLC_UNITS_IMPERIAL:

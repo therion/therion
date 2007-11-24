@@ -111,7 +111,6 @@ static const thstok thtt_dataobject_opt[] = {
 };
 
 
-
 /**
  * Option description class.
  */
@@ -203,7 +202,7 @@ class thdataobject_copyright {
   
   public:
 
-  char * name;  ///< Author's name
+  const char * name;  ///< Author's name
   unsigned long rev;  ///< Object's revision.
   
   /**
@@ -217,7 +216,7 @@ class thdataobject_copyright {
    * Default constructor.
    */
    
-  thdataobject_copyright(char * nn, unsigned long rv) : name(nn), rev(rv) {}
+  thdataobject_copyright(const char * nn, unsigned long rv) : name(nn), rev(rv) {}
   
   
 };
@@ -244,7 +243,7 @@ class thdataobject {
 
   class thdatabase * db;
 
-  char * name,  ///< Object name.
+  const char * name,  ///< Object name.
     * title,  ///< Object title.
     * stnpref, ///< Station names prefix;
     * stnsuff; ///< Station names suffix;
@@ -308,7 +307,7 @@ class thdataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "thdataobject";};
+  virtual const char * get_class_name() {return "thdataobject";};
   
   
   /**
@@ -329,7 +328,7 @@ class thdataobject {
    * Return command end option.
    */
    
-  virtual char * get_cmd_end();
+  virtual const char * get_cmd_end();
   
   
   /**
@@ -350,14 +349,14 @@ class thdataobject {
    * Return command name.
    */
    
-  virtual char * get_cmd_name();
+  virtual const char * get_cmd_name();
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
   
   
   /**
@@ -382,14 +381,14 @@ class thdataobject {
    * Return object name.
    */
    
-  virtual char * get_name();
+  virtual const char * get_name();
   
   
   /**
    * Return object title.
    */
    
-  char * get_title();
+  const char * get_title();
   
   
   /**

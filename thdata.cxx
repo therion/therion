@@ -172,7 +172,7 @@ int thdata::get_cmd_nargs()
 }
 
 
-char * thdata::get_cmd_end()
+const char * thdata::get_cmd_end()
 {
   // insert endcommand if multiline command
   return "endcentreline";
@@ -196,7 +196,7 @@ bool thdata::get_cmd_ends_match(char * cmd) {
 }
 
 
-thcmd_option_desc thdata::get_cmd_option_desc(char * opts)
+thcmd_option_desc thdata::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_data_opt);
   if (id == TT_DATA_UNKNOWN)
@@ -1521,8 +1521,8 @@ void thdata::set_data_data(int nargs, char ** args)
 } // data data
 
 
-void thdata_parse_dim(char * src, double & d1, double & d2, 
-  bool & d2ok, char * item, thtfpwf * ctran, thtflength * utran) {
+void thdata_parse_dim(const char * src, double & d1, double & d2, 
+  bool & d2ok, const char * item, thtfpwf * ctran, thtflength * utran) {
 
   int sv;  
   d1 = thnan;
@@ -2432,7 +2432,7 @@ void thdata::set_data_grade(int nargs, char ** args)
 }
 
 
-char * thdata::get_cmd_name()
+const char * thdata::get_cmd_name()
 {
   return "centreline";
 }

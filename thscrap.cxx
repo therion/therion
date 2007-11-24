@@ -129,21 +129,21 @@ int thscrap::get_cmd_nargs()
 }
 
 
-char * thscrap::get_cmd_end()
+const char * thscrap::get_cmd_end()
 {
   // insert endcommand if multiline command
   return NULL;
 }
 
 
-char * thscrap::get_cmd_name()
+const char * thscrap::get_cmd_name()
 {
   // insert command name here
   return "scrap";
 }
 
 
-thcmd_option_desc thscrap::get_cmd_option_desc(char * opts)
+thcmd_option_desc thscrap::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_scrap_opt);
   if (id == TT_SCRAP_UNKNOWN)

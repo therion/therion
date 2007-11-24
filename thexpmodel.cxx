@@ -186,7 +186,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   if (nlegs == 0)
     return;
   
-  char * fnm = this->get_output("cave.3d");
+  const char * fnm = this->get_output("cave.3d");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -198,7 +198,9 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   unsigned long i;
   img * pimg;
   img_output_version = 4;
-  pimg = img_open_write(fnm, "cave", 1);
+  thbuffer fnmb;
+  fnmb.strcpy("cave");
+  pimg = img_open_write(fnm, fnmb.get_buffer(), 1);
      
   if (!pimg) {
     thwarning(("can't open %s for output",fnm))
@@ -296,7 +298,7 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
   if (nlegs == 0)
     return;
   
-  char * fnm = this->get_output("cave.plt");
+  const char * fnm = this->get_output("cave.plt");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -409,7 +411,7 @@ station_name[8] = 0
 void thexpmodel::export_thm_file(class thdatabase * dbp)
 {
 
-  char * fnm = this->get_output("cave.thm");
+  const char * fnm = this->get_output("cave.thm");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -577,7 +579,7 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
 
 
 void thexpmodel::export_vrml_file(class thdatabase * dbp) {
-  char * fnm;  
+  const char * fnm;  
 #ifdef THWIN32
   fnm = this->get_output("cave.wrl");
 #else
@@ -823,7 +825,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
 
 void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
 
-  char * fnm = this->get_output("cave.3dmf");
+  const char * fnm = this->get_output("cave.3dmf");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -1014,7 +1016,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
 
 void thexpmodel::export_dxf_file(class thdatabase * dbp) {
 
-  char * fnm = this->get_output("cave.dxf");
+  const char * fnm = this->get_output("cave.dxf");
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -1354,7 +1356,7 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
 
 void thexpmodel::export_lox_file(class thdatabase * dbp) {
 
-  char * fnm = this->get_output("cave.lox");
+  const char * fnm = this->get_output("cave.lox");
 
   thdb_object_list_type::iterator obi;
   
@@ -1699,7 +1701,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   }
 
   FILE * out;
-  char * fnm = this->get_output("cave.kml");
+  const char * fnm = this->get_output("cave.kml");
   out = fopen(fnm, "w");
   if (out == NULL) {
     thwarning(("can't open %s for output",fnm))

@@ -448,9 +448,9 @@ class thdatass {
 
   class thsurvey * psurvey;  ///< parent survey
 
-  char * comment;  ///< Station comment.  
+  const char * comment;  ///< Station comment.  
 
-  char * code;  ///< Continuation code.
+  const char * code;  ///< Continuation code.
   
   int flags;  ///< Station flags.
   

@@ -136,7 +136,7 @@ class thdate {
    * Parse string to date.
    */
    
-  void parse(char * src);
+  void parse(const char * src);
   
   
   /**

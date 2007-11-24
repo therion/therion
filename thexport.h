@@ -71,7 +71,7 @@ class thexport {
   thobjectsrc src; ///< Export source.
   class thdatabase * db; ///< Exported database.
   
-  char * outpt;  ///< Output file name.
+  const char * outpt;  ///< Output file name.
   thbuffer cfgpath;  ///< Config path.
   bool outpt_def;  ///< Whether output file defined.  
 
@@ -134,7 +134,7 @@ class thexport {
    * Return path to output file.
    */
 
-  virtual char * get_output(const char * defname);
+  virtual const char * get_output(const char * defname);
   
 };
 

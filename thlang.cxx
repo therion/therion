@@ -36,11 +36,11 @@ int thlang_parse(char * str) {
   return thmatch_token(str, thtt_lang);
 }
 
-char * thlang_getid(int id) {
+const char * thlang_getid(int id) {
   return thmatch_string(id, thtt_lang);
 }
 
-char * thlang_getcxxid(int id) {
+const char * thlang_getcxxid(int id) {
   if (id < 0)
     return "THLANG_UNKNOWN";
   else
@@ -66,11 +66,11 @@ void thlang_set_translation(char * lang, char * text, char * translation) {
 
 }
 
-char * thT(char * txt, int lng) {
+const char * thT(const char * txt, int lng) {
   if (lng == THLANG_SYSTEM)
     return txt;
   int sv = thmatch_token(txt,thtt__texts);
-  char * trans;
+  const char * trans;
   if (sv == -1)
     return txt;
   lng = thlang_getlang(lng);

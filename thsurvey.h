@@ -101,8 +101,8 @@ class thsurvey : public thdataobject {
   friend class thdataobject;
   friend class thdb1d;
   
-  char * full_name,  ///< Full survey name.
-       * reverse_full_name;  ///< Reverse full name - for sorting.
+  const char * full_name;  ///< Full survey name.
+  thbuffer reverse_full_name;  ///< Reverse full name - for sorting.
   
   thdataobject * foptr,  ///< First object in survey.
     * loptr;  ///< Last object in survey.
@@ -171,21 +171,21 @@ class thsurvey : public thdataobject {
    * Return command end option.
    */
    
-  virtual char * get_cmd_end();
+  virtual const char * get_cmd_end();
   
   
   /**
    * Return command name.
    */
    
-  virtual char * get_cmd_name();
+  virtual const char * get_cmd_name();
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
   
   
   /**
@@ -219,21 +219,21 @@ class thsurvey : public thdataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "thsurvey";};
+  virtual const char * get_class_name() {return "thsurvey";};
 
 
   /**
    * Return full survey name.
    */
    
-   virtual char * get_full_name();
+   virtual const char * get_full_name();
   
 
   /**
    * Return reverse full survey name.
    */
    
-   virtual char * get_reverse_full_name() {return this->reverse_full_name;}
+   virtual const char * get_reverse_full_name() {return this->reverse_full_name;}
   
 
   /**

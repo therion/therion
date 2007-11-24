@@ -77,19 +77,19 @@ int thmap::get_cmd_nargs()
 }
 
 
-char * thmap::get_cmd_end()
+const char * thmap::get_cmd_end()
 {
   return "endmap";
 }
 
 
-char * thmap::get_cmd_name()
+const char * thmap::get_cmd_name()
 {
   return "map";
 }
 
 
-thcmd_option_desc thmap::get_cmd_option_desc(char * opts)
+thcmd_option_desc thmap::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_map_opt);
   if (id == TT_MAP_UNKNOWN)

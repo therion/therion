@@ -117,7 +117,7 @@ void thprint_environment() {
 void thprint_xtherion() {
   bool already_exported;
   int i, j, l;
-  char * lngstr, *trnstr, * tsrc;
+  const char * lngstr, *trnstr, * tsrc;
   thbuffer tdst;
   std::string tss;
   thprintf("set xth(point_types) {\n");

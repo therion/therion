@@ -107,7 +107,7 @@ class thmbuffer {
    * @param src Source string.
    */
    
-  char * append(char * src);
+  char * append(const char * src);
   
   
   /**
@@ -117,7 +117,7 @@ class thmbuffer {
    * @param n Source size.
    */
    
-  char * appendn(char * src, size_t n);
+  char * appendn(const char * src, size_t n);
   
   
   /**
@@ -132,7 +132,8 @@ class thmbuffer {
    */
    
   char ** get_buffer();
-
+  
+  
 };
 
 #endif

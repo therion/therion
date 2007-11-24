@@ -56,18 +56,18 @@ void	reportErrorString(char*	str)
 	exit(-1);
 }
 
-void	reportError(char*	str,int line,char* file)
+void	reportError(const char*	str,int line,const char* file)
 {
 	fprintf(stderr,"Error: [%s:%d] %s\n",file,line,str);
 	exit(-1);
 }
 
-void	reportWarningString(char* str)
+void	reportWarningString(const char* str)
 {
 	fprintf(stderr,"Warning: %s\n",str);
 }
 
-void	reportWarning(char* str,int line,char* file)
+void	reportWarning(const char* str,int line,const char* file)
 {
 	fprintf(stderr,"Warning: [%s:%d] %s\n",file,line,str);
 }

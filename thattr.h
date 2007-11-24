@@ -156,6 +156,7 @@ struct thattr {
   void export_dbf(const char * fname, int encoding = TT_UTF_8);
   void export_txt(const char * fname, int encoding = TT_UTF_8);
   void export_html(const char * fname, int encoding = TT_UTF_8);
+  void export_kml(const char * fname);
   void export_mp_header(FILE * f);
   void export_mp_object(FILE * f, long user_id);
 

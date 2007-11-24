@@ -603,13 +603,13 @@ void thdb2d::reset_selection() {
   }
 }
 
-char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
+const char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
 
   long newmin = 0, tmpmin;
   if (fptr == NULL) {
     return "";
   }
-  char * newname = fptr->title, * tmpname;
+  const char * newname = fptr->title, * tmpname;
   if (strlen(newname) == 0)
     newname = fptr->name;
   thdataobject * o;
@@ -655,13 +655,13 @@ char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
   return newname;
 }
 
-char * thdb2d::get_projection_title(thdb2dprj * prj) {
+const char * thdb2d::get_projection_title(thdb2dprj * prj) {
 
   // krok cislo jedna - prejde celu selection - ak najde jednu oznacenu
   // mapu - tak zoberie jej title //alebo name
   long dum;
   
-  char * rv = NULL;
+  const char * rv = NULL;
   unsigned long nmaps = 0;
   thselector_list::iterator ii = thcfg.selector.data.begin();
   while (ii != thcfg.selector.data.end()) {

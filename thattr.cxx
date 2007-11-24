@@ -526,6 +526,56 @@ void thattr::export_txt(const char * fname, int encoding)
 
 
 
+void thattr::export_kml(const char * fname)
+{
+  // Create file.
+  FILE * f;
+  thattr_attr * ca;
+  thattr_field * cf;
+  thattr_obj_list::iterator oi;
+  thattr_id2attr_map::iterator ai;
+  thattr_field_list::iterator fli;
+  thbuffer enc;
+
+  this->analyze_fields();
+  thattr_field * lat = get_field("_LATITUDE", false), 
+      * lon = get_field("_LONGITUDE", false);
+  
+  if ((lat == NULL) || (lon == NULL)) {
+    thwarning(("geographical reference is not associated with table"));
+    return;
+  }
+  
+  f = fopen(fname, "w");
+  if (f == NULL) {
+    thwarning(("unable to open file for output -- %s", fname));
+    return;
+  }
+  
+  // Insert objects and write fields.
+  const char * value;
+  bool hasone;
+  for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end(); ++oi) {
+    hasone = false;
+    for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
+      cf = &(*fli);
+      ai = oi->m_attributes.find(cf->m_id);
+      if (ai == oi->m_attributes.end()) {
+        value = "#N/A";
+      } else {
+        ca = &(ai->second);
+        value = ca->m_val_string.c_str();
+      }
+      fprintf(f,"%s%s",hasone ? "\t" : "",value);
+      hasone = true;
+    }
+  }
+  
+  
+  fclose(f);
+  
+}
+
 
 
 void thattr::export_html(const char * fname, int encoding)

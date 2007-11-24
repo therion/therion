@@ -88,21 +88,21 @@ int thsurvey::get_cmd_nargs()
 }
 
 
-char * thsurvey::get_cmd_end()
+const char * thsurvey::get_cmd_end()
 {
   // insert endcommand if multiline command
   return NULL;
 }
 
 
-char * thsurvey::get_cmd_name()
+const char * thsurvey::get_cmd_name()
 {
   // insert endcommand if multiline command
   return "survey";
 }
 
 
-thcmd_option_desc thsurvey::get_cmd_option_desc(char * opts)
+thcmd_option_desc thsurvey::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_survey_opt);
   if (id == TT_SURVEY_UNKNOWN)
@@ -194,7 +194,7 @@ void thsurvey::self_print_properties(FILE * outf)
   thdataobject::self_print_properties(outf);
   fprintf(outf,"thsurvey:\n");
   fprintf(outf,"\tfull name: \"%s\" (\"%s\")\n", this->full_name,
-    this->reverse_full_name);
+    this->reverse_full_name.get_buffer());
   if (this->decdef) {
     fprintf(outf,"\tdeclination:\n");
     nval = this->declin.get_size();
@@ -214,7 +214,7 @@ int thsurvey::get_context()
   return (THCTX_SURVEY | THCTX_NONE);
 }
 
-char * thsurvey::get_full_name()
+const char * thsurvey::get_full_name()
 {
   return this->full_name;
 }
@@ -315,7 +315,8 @@ void thsurvey::parse_declination(char * str)
 void thsurvey::full_name_reverse()
 {
   size_t fnln = strlen(this->full_name), i1, i2, si; //, ei;
-  char * c1, * c2, *c3;
+  const char * c1, *c3;
+  char * c2;
   c1 = this->full_name;
   si = 0;
   bool has_dot = false;
@@ -323,7 +324,7 @@ void thsurvey::full_name_reverse()
     if ((*c1 == '.') || ((i1 == fnln) && has_dot)) {
       has_dot = true;
       c3 = this->full_name + si;
-      c2 = this->reverse_full_name + fnln - i1;
+      c2 = this->reverse_full_name.get_buffer() + fnln - i1;
       if (i1 < fnln) {
         c2--;
         *c2 = '.';

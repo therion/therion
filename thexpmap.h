@@ -117,7 +117,7 @@ class thexpmapmpxs {
 
   thsymbolset * symset;
   thlayout * layout;
-  char * attr_last_id, * attr_last_survey, * attr_last_scrap;
+  const char * attr_last_id, * attr_last_survey, * attr_last_scrap;
   bool attr_last_scrap_centerline;
 
   double m_shift_x, m_shift_y;
@@ -169,7 +169,7 @@ class thexpmap : public thexport {
   
   int format,  ///< Output format.
     encoding;  ///< Output encoding.
-  char * projstr,  ///< Projection string.
+  const char * projstr,  ///< Projection string.
     * layoutstr;  ///< Layout string.
   class thdb2dprj * projptr;  ///< Projection pointer.
   class thlayout * layout;  ///< Layout pointer.
@@ -245,7 +245,7 @@ class thexpmap : public thexport {
  
 extern double thexpmap_quick_map_export_scale;
 
-void thexpmap_log_log_file(char * logfpath, char * on_title, char * off_title, bool mpbug = false);
+void thexpmap_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug = false);
 
 #endif
 

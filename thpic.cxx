@@ -40,7 +40,7 @@
 
 long thpic__convert_number(1);
 
-char * thpic__tmp(NULL);
+const char * thpic__tmp(NULL);
 
 thpic::thpic() {
   this->fname = NULL;
@@ -154,7 +154,7 @@ void thpic::init(const char * pfname, const char * incfnm)
 }
 
 
-char * thpic::convert(const char * type, const char * ext, const char * optfmt, ...)
+const char * thpic::convert(const char * type, const char * ext, const char * optfmt, ...)
 {
   if (!this->exists())
     return NULL;

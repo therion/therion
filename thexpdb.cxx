@@ -114,7 +114,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   if (enc == TT_UNKNOWN_ENCODING)
     enc = thini.get_encoding(THINIT_ENCODING_SQL);
 
-  char * fnm = this->get_output("cave.sql");  
+  const char * fnm = this->get_output("cave.sql");  
   
   unsigned long i, ni;
   ni = dbp->db1d.get_tree_size();

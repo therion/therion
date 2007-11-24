@@ -112,7 +112,7 @@ class thimport : public thdataobject {
 
   // insert here real properties
   int format, surveys;  
-  char * fname, * filter;
+  const char * fname, * filter;
   thobjectsrc mysrc;
   double calib_x, calib_y, calib_z;
 
@@ -141,7 +141,7 @@ class thimport : public thdataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "thimport";};
+  virtual const char * get_class_name() {return "thimport";};
   
   
   /**
@@ -162,21 +162,21 @@ class thimport : public thdataobject {
    * Return command name.
    */
    
-  virtual char * get_cmd_name();
+  virtual const char * get_cmd_name();
   
   
   /**
    * Return command end option.
    */
    
-  virtual char * get_cmd_end();
+  virtual const char * get_cmd_end();
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
   
   
   /**

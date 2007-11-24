@@ -109,7 +109,7 @@ int thdataobject::get_cmd_nargs()
 }
 
 
-char * thdataobject::get_cmd_end()
+const char * thdataobject::get_cmd_end()
 {
   return NULL;
 }
@@ -125,13 +125,13 @@ bool thdataobject::get_cmd_ends_match(char * cmd) {
 }
 
 
-char * thdataobject::get_cmd_name()
+const char * thdataobject::get_cmd_name()
 {
   return NULL;
 }
 
 
-thcmd_option_desc thdataobject::get_cmd_option_desc(char * opts)
+thcmd_option_desc thdataobject::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_dataobject_opt);
   switch (id) {
@@ -293,13 +293,13 @@ int thdataobject::get_context()
 }
 
 
-char * thdataobject::get_name()
+const char * thdataobject::get_name()
 {
   return this->name;
 }
 
 
-char * thdataobject::get_title()
+const char * thdataobject::get_title()
 {
   return this->title;
 }

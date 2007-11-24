@@ -37,7 +37,7 @@ class thobjectid {
 
   public:  
   
-  char * name;  ///< Object name.
+  const char * name;  ///< Object name.
   unsigned long sid;  ///< Survey id.
   
   thobjectid() : name(""), sid(0) {};  ///< Standard constructor.
@@ -49,7 +49,7 @@ class thobjectid {
    * @param svid Survey identifier.
    */
    
-  thobjectid(char * n, unsigned long svid) : name(n), sid(svid) {}; 
+  thobjectid(const char * n, unsigned long svid) : name(n), sid(svid) {}; 
   
   
   /**

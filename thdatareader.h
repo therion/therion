@@ -59,7 +59,7 @@ class thdatareader {
    * @param dbptr Destination database.
    */
    
-  void read(char * ifname, long lnstart, long lnend, char * spath, thdatabase * dbptr);
+  void read(const char * ifname, long lnstart, long lnend, const char * spath, thdatabase * dbptr);
 
 
   /**

@@ -93,7 +93,7 @@ thexpmap::~thexpmap() {
   delete this->layout;
 }
 
-void thexpmap_log_log_file(char * logfpath, char * on_title, char * off_title, bool mpbug) {
+void thexpmap_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug) {
   char * lnbuff = new char [4097];
 //  unsigned long lnum = 0;
   thlog.printf("%s",on_title);
@@ -363,7 +363,7 @@ char * thexpmap_u2string(unsigned u) {
 
 void thexpmap::export_xvi(class thdb2dprj * prj)
 {
-  char * fnm = this->get_output("cave.xvi");  
+  const char * fnm = this->get_output("cave.xvi");  
     
   switch (prj->type) {
     case TT_2DPROJ_PLAN:
@@ -573,12 +573,12 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
           skpic = skit->morph(sf);
           if (skpic != NULL) {
             double nx, ny, ns;
-            char * srcgif;
+            const char * srcgif;
             nx = sf * (skpic->x) - shx; 
             ny = sf * (skpic->y + skpic->scale * double(skpic->height)) - shy;
             ns = skpic->scale * sf;
 
-            char * fn;
+            const char * fn;
             size_t fnx, fnl;
             fn = skit->m_pic.fname;
             fnl = strlen(skit->m_pic.fname);
@@ -736,7 +736,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   unsigned sfig = 1;
   unsigned sscrap = 0;
   thexpmap_xmps exps;
-  char * chtitle;
+  const char * chtitle;
   thbuffer tit;
   bool quick_map_exp = false;
   double origin_shx, origin_shy, new_shx, new_shy, srot = 0.0, crot = 1.0, rrot = 0.0;
@@ -757,7 +757,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   list<scraprecord>::iterator SCRAPITEM;
   scraprecord dummsr;
   
-  char * fnm = this->get_output("cave.pdf");  
+  const char * fnm = this->get_output("cave.pdf");  
 
   layerrecord L;
   map<int, layerrecord>::iterator LAYER_ITER;
@@ -1370,7 +1370,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
   // nakoniec grid
   double ghs, gvs, gox, goy;
-  char * grid_macro = "s_hgrid";
+  const char * grid_macro = "s_hgrid";
   switch (prj->type) {
   case TT_2DPROJ_ELEV:
   case TT_2DPROJ_EXTEND:
@@ -2207,7 +2207,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         if (out->layout->is_debug_stationnames() && (slp->station_name.id != 0)) {
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
           dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
-            (char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
+            (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
             thxmmxst(out, slp->stx, slp->sty));
         }
       }
@@ -2282,7 +2282,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 if (out->layout->is_debug_stationnames() && (ptp->station_name.id != 0)) {
                   tmps = &(thdb.db1d.station_vec[ptp->station_name.id - 1]);
                   dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
-                    (char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
+                    (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
                     thxmmxst(out, ptp->point->xt, ptp->point->yt));
                 }
               }
@@ -2662,11 +2662,13 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * prj)
     return;
   }
 
-  char * fnm = this->get_output("cave.3d");
+  const char * fnm = this->get_output("cave.3d");
 
   img * pimg;
   img_output_version = 4;
-  pimg = img_open_write(fnm, "cave", 1);
+  thbuffer fname;
+  fname = "cave";
+  pimg = img_open_write(fnm, fname.get_buffer(), 1);
   if (pimg == NULL) {
     thwarning(("can't open %s for output",fnm))
     return;

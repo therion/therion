@@ -6,7 +6,7 @@
  */
 
  
-typedef char * thlang_pchar;
+typedef const char * thlang_pchar;
 
 
 static const thstok thtt_lang [] = {

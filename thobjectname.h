@@ -40,8 +40,8 @@ class thobjectname {
 
   public:
   
-  char * name,  ///< Object name.
-       * survey;  ///< Survey name.
+  const char * name,  ///< Object name.
+      * survey;  ///< Survey name.
        
   class thsurvey * psurvey; ///< Parent survey.
        
@@ -91,7 +91,7 @@ class thobjectname {
 
 void thparse_objectname(thobjectname & ds, thmbuffer * sstore, char * src, class thdataobject * psobj = NULL);
 
-char * thobjectname__print_full_name(char * oname, class thsurvey * psrv, int slevel = -1);
+char * thobjectname__print_full_name(const char * oname, class thsurvey * psrv, int slevel = -1);
 
 void fprintf(FILE * fh, thobjectname & ds);
 

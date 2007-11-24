@@ -37,7 +37,7 @@ class thexpsys : public thexport {
 
   public:
 
-  char * cmd;  ///< System command.
+  const char * cmd;  ///< System command.
   
   thexpsys(); ///< Default constructor.
 

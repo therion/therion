@@ -385,7 +385,7 @@ class thlayout_copy_src {
 
   public:
   
-  char * srcn;
+  const char * srcn;
   thlayout * srcptr;
   class thlayout_copy_src * next_src;
   thlayout_copy_src () : srcn(NULL), srcptr(NULL), next_src(NULL) {};
@@ -484,7 +484,7 @@ typedef std::list<thlayout_color_value> thlayout_ct;
 
 struct thlayout_map_image {
   double m_x, m_y;
-  char * m_fn;
+  const char * m_fn;
   int m_align;
   thlayout_map_image() : m_x(0.0), m_y(0.0), m_fn(""), m_align(TT_LAYOUT_MAP_HEADER_OFF) {}
   bool defined();
@@ -507,7 +507,7 @@ class thlayout : public thdataobject {
   double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gzs, gox, goy, goz, navf, overlap, opacity,
     map_header_x, map_header_y, legend_width, surface_opacity, rotate;
   
-  char * olx, * oly, 
+  const char * olx, * oly, 
     * doc_title, * doc_comment, * doc_author, * doc_subject, * doc_keywords, * excl_list;
   
   unsigned navsx, navsy, ownp, legend_columns;
@@ -573,7 +573,7 @@ class thlayout : public thdataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "thlayout";};
+  virtual const char * get_class_name() {return "thlayout";};
   
   
   /**
@@ -594,21 +594,21 @@ class thlayout : public thdataobject {
    * Return command name.
    */
    
-  virtual char * get_cmd_name();
+  virtual const char * get_cmd_name();
   
   
   /**
    * Return command end option.
    */
    
-  virtual char * get_cmd_end();
+  virtual const char * get_cmd_end();
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
   thcmd_option_desc get_default_cod(int id);
   
   /**

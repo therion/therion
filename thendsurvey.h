@@ -79,21 +79,21 @@ class thendsurvey : public thdataobject {
    * Return command end option.
    */
    
-  virtual char * get_cmd_end();
+  virtual const char * get_cmd_end();
   
   
   /**
    * Return command name.
    */
    
-  virtual char * get_cmd_name();
+  virtual const char * get_cmd_name();
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(char * opts);
+  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
   
   
   /**
@@ -127,7 +127,7 @@ class thendsurvey : public thdataobject {
    * Return class name.
    */
    
-  virtual char * get_class_name() {return "thendsurvey";};  
+  virtual const char * get_class_name() {return "thendsurvey";};  
   
 
   /**

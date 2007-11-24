@@ -63,20 +63,20 @@ int thgrade::get_cmd_nargs()
 }
 
 
-char * thgrade::get_cmd_end()
+const char * thgrade::get_cmd_end()
 {
   return "endgrade";
 }
 
 
-char * thgrade::get_cmd_name()
+const char * thgrade::get_cmd_name()
 {
   // insert command name here
   return "grade";
 }
 
 
-thcmd_option_desc thgrade::get_cmd_option_desc(char * opts)
+thcmd_option_desc thgrade::get_cmd_option_desc(const char * opts)
 {
   // no options allowed
   //  int id = thmatch_token(opts, thtt_grade_opt);
@@ -192,10 +192,10 @@ void thgrade::start_insert()
 
 void thgrade::self_print_library() {
   thprintf("\toname = \"%s\";\n", this->get_name());
-  thprintf("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),&oname,0,0);\n");
+  thprintf("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);\n");
   thdecode_c(&(this->db->buff_enc), this->get_title());
   thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
-  thprintf("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),&oname,TT_UTF_8,0);\n");
+  thprintf("\tpgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);\n");
   thprintf("\tpgrade->dls_length = ");
   thprintinfnan(this->dls_length);
   thprintf(";\n\tpgrade->dls_bearing = ");

@@ -59,19 +59,19 @@ int thendscrap::get_cmd_nargs()
 }
 
 
-char * thendscrap::get_cmd_end()
+const char * thendscrap::get_cmd_end()
 {
   return NULL;
 }
 
 
-char * thendscrap::get_cmd_name()
+const char * thendscrap::get_cmd_name()
 {
   return "endscrap";
 }
 
 
-thcmd_option_desc thendscrap::get_cmd_option_desc(char * opts)
+thcmd_option_desc thendscrap::get_cmd_option_desc(const char * opts)
 {
   return TT_DATAOBJECT_UNKNOWN;
 }

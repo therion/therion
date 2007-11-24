@@ -437,7 +437,14 @@ proc xth_cp_compile {} {
   }]
   
   set see_end 0
+  set enderr 0
   if {$err} {
+    if {[regexp {\: error \-\-} $errorInfo]} {
+      set enderr 1
+    }
+  }
+  
+  if {$enderr} {
     bell
     $xth(ctrl,cp,stp).gores configure -text [mc "ERROR"] -fg white -bg red
     set ret 0
@@ -462,8 +469,12 @@ proc xth_cp_compile {} {
 	}
       }
     }
-    
-    $xth(ctrl,cp,stp).gores configure -text [mc "OK"] -fg black -bg green
+    if {$err} {
+      bell
+      $xth(ctrl,cp,stp).gores configure -text [mc "WARNING"] -fg black -bg orange
+    } else {
+      $xth(ctrl,cp,stp).gores configure -text [mc "OK"] -fg black -bg green
+    }
   }
   
   xth_status_bar_status cp [mc "Reading therion log file ..."]

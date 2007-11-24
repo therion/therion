@@ -40,7 +40,7 @@ class thobjectsrc {
 
   public:
   
-  char * name;  ///< File name.
+  const char * name;  ///< File name.
        
   unsigned long line;  ///< File line.
 
@@ -56,7 +56,7 @@ class thobjectsrc {
    * Parametric constructor.
    */
   
-  thobjectsrc(char * n, unsigned long ln) : name(n), line(ln), context(NULL) {}
+  thobjectsrc(const char * n, unsigned long ln) : name(n), line(ln), context(NULL) {}
 
 
   bool is_valid();

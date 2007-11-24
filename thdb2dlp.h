@@ -67,7 +67,7 @@ class thdb2dlp {
     smooth,  ///< Whether line is smooth in given point.
     adjust;  ///< line point adjustment
     
-  char * mark;  ///< Line point mark.
+  const char * mark;  ///< Line point mark.
   unsigned tags;  ///< Line point tags.
   
   double orient,rsize,lsize; ///< ???

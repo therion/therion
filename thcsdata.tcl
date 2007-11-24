@@ -134,7 +134,7 @@ puts $fid {
  * CS data structure.
  */
 }
-puts $fid "typedef struct \{\n  bool dms, output, swap;\n  char * params;  char * prjspec;\n\} thcsdata;\n"
+puts $fid "typedef struct \{\n  bool dms, output, swap;\n  const char * params;  const char * prjspec;\n\} thcsdata;\n"
 
 puts $fid "extern const thstok thtt_cs\[[expr [llength $proj_parse] + 1]\];\n";
 

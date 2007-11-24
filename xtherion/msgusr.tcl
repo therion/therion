@@ -1,4 +1,4 @@
-::msgcat::mcset en "xtherion_help_control" [encoding convertfrom utf-8 {
+::msgcat::mcset en "xtherion_help_control" {
 
 MAP EDITOR SHORTCUTS
   
@@ -83,9 +83,9 @@ Selecting an existing object
  * LeftClick = select object on the top
  * RightClick = select object right below the top object (useful when several
     points lie above each other)
-}]
+}
 
-::msgcat::mcset es "xtherion_help_control" [encoding convertfrom utf-8 {
+::msgcat::mcset es "xtherion_help_control" {
 
 ATAJOS DE TECLADO PARA EDITAR MAPAS
 
@@ -170,9 +170,9 @@ Seleccionar objetos
  * Click = seleccionar el objeto que está sobre los demás
  * Click dcho = seleccionar el objeto que está en segundo plano
    (útil cuando varios puntos están superpuestos)
-}]
+}
 
-::msgcat::mcset it "xtherion_help_control" [encoding convertfrom utf-8 {
+::msgcat::mcset it "xtherion_help_control" {
 
 SHORTCUT - EDITOR DI MAPPA
   
@@ -261,10 +261,10 @@ Selezionare un oggetto
  * Tasto sinistro = selezione l'oggetto che sta sopra
  * Tasto destro = seleziona l'oggetto appena sotto quello gia` selezionato
    (utile quando parecchi punti giaciono uno sopra l'altro)
-}]
+}
 
 
-::msgcat::mcset ru "xtherion_help_control" [encoding convertfrom utf-8 {
+::msgcat::mcset ru "xtherion_help_control" {
 ﻿КЛАВИАТУРНЫЕ СОКРАЩЕНИЯ И ОПЕРАЦИИ В РЕДАКТОРЕ КАРТ
 
 LeftClick         - щелчек левой кнопкой мыши
@@ -357,4 +357,4 @@ drag              - перетаскивание: удерживая указа�
  * LeftClick = выбор верхнего объекта
  * RightClick = перебор объектов закрытых верхним объектом (например полезно, когда
    несколько точек расположены в одной позиции друг над другом)
-}]
+}

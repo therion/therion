@@ -21,9 +21,9 @@ struct thlocale {
 
   char * format_human_length(double length);
   
-	char * format_length_units();	
+	const char * format_length_units();	
 
-	char * format_i18n_length_units();
+	const char * format_i18n_length_units();
 	
 };
 

@@ -147,7 +147,7 @@ class thselector_select_item {
   public:
 
   thdataobject * objp;
-  char * n1, * n2, * n3;
+  const char * n1, * n2, * n3;
   
   void clear();
   
@@ -310,7 +310,7 @@ void thselector__export_map_tree_node (FILE * cf, unsigned long level, unsigned 
   optr->tmp_ulong = pass;
   thmap * mptr = NULL;
   int subtype = 0;
-  char * types = NULL;
+  const char * types = NULL;
   switch (optr->get_class_id()) {
     case TT_MAP_CMD:
       mptr = (thmap*) optr; //id fid level

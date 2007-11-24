@@ -100,6 +100,12 @@ thbuffer::operator char* ()
 }
 
 
+thbuffer::operator char** ()
+{
+  return &(this->buff);
+}
+
+
 char * thbuffer::get_buffer()
 {
   return this->buff;

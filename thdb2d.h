@@ -164,7 +164,7 @@ class thdb2d {
    * or negative number, if parameters are not consistent.
    */
    
-  thdb2dprjpr parse_projection(char * prjstr,bool insnew = true);
+  thdb2dprjpr parse_projection(const char * prjstr,bool insnew = true);
   
   
   /**
@@ -290,7 +290,7 @@ class thdb2d {
    * Get projection title.
    */
    
-  char * get_projection_title(thdb2dprj * prj);
+  const char * get_projection_title(thdb2dprj * prj);
   
   void log_distortions();
   

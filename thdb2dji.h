@@ -48,7 +48,7 @@ class thdb2dji {
     * next_list_item;  ///< Next list item.
   
   thobjectname name;  ///< Item name.
-  char * mark;  ///< Point mark.
+  const char * mark;  ///< Point mark.
   bool is_active; ///< Whether join item is active.
   
   class thdb2dpt * point, * cp1, * cp2;

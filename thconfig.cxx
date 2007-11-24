@@ -535,7 +535,9 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
 
   thdataobject * objptr;  // pointer to the newly created object
   thcmd_option_desc optd;  // option descriptor
-  char * ln, * endlnopt = NULL, * opt, ** opts;
+  char * ln, * opt;
+  char ** opts;
+  const char * endlnopt = NULL;
   int ai, ait, ant;
   thobjectsrc osrc;
   bool inside_cmd = false;

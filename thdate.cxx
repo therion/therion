@@ -67,13 +67,13 @@ thdate::~thdate()
 }
 
 
-void thdate::parse(char * src)
+void thdate::parse(const char * src)
 {
 
   this->reset();
   
-  unsigned char * osrc = (unsigned char *)src;
-  unsigned char * ssrc = (unsigned char *)src;
+  unsigned const char * osrc = (unsigned const char *)src;
+  unsigned const char * ssrc = (unsigned const char *)src;
   
   int ppos = 0;
   int dd[14]; 
@@ -567,7 +567,7 @@ void thdate::print_str(int fmt) {
   unsigned int tl = thdate__bufflen - 1;
   long yyyy, mm, dd;
   char * dst = &(this->dstr[0]);
-  char * sep = " - ";
+  const char * sep = " - ";
 
   switch (fmt) {
     case TT_DATE_FMT_UTF8_Y:

@@ -32,13 +32,13 @@
 #include "thlangdata.h"
 #include "thparse.h"
 
-char * thT(char * txt, int lng = THLANG_UNKNOWN);
+const char * thT(const char * txt, int lng = THLANG_UNKNOWN);
 
 int thlang_parse(char * str);
 
-char * thlang_getid(int id);
+const char * thlang_getid(int id);
 
-char * thlang_getcxxid(int id);
+const char * thlang_getcxxid(int id);
 
 int thlang_getlang(int lng);
 

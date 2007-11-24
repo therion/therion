@@ -218,7 +218,7 @@ ENDOUT
  */
 
  
-typedef char * thlang_pchar;
+typedef const char * thlang_pchar;
 
 
 $langparse

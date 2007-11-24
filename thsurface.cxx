@@ -130,21 +130,21 @@ int thsurface::get_cmd_nargs()
 }
 
 
-char * thsurface::get_cmd_end()
+const char * thsurface::get_cmd_end()
 {
   // insert endcommand if multiline command
   return "endsurface";
 }
 
 
-char * thsurface::get_cmd_name()
+const char * thsurface::get_cmd_name()
 {
   // insert command name here
   return "surface";
 }
 
 
-thcmd_option_desc thsurface::get_cmd_option_desc(char * opts)
+thcmd_option_desc thsurface::get_cmd_option_desc(const char * opts)
 {
   int id = thmatch_token(opts, thtt_surface_opt);
   if (id == TT_SURFACE_UNKNOWN)
