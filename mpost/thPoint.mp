@@ -720,6 +720,7 @@ def p_entrancestation_UIS(expr pos) =
   T:=identity shifted pos;
   pickup PenX;
   thdraw (-.3u,0) -- (-.2u,0){dir 135} .. (0, .5u) .. {dir 225}(.2u,0) -- (.3u,0);
+  p_label.urt(ATTR__text,pos+(0.4u,0),0,0);
 enddef;
 
 def p_debug (expr col, pen, pos)=

@@ -257,7 +257,7 @@ initialize(Scale);
 
 vardef thTEX primary s =
   write "verbatimtex \input th_enc.tex etex" to "mptextmp.mp";
-  write "btex \thfa "&s&" etex" to "mptextmp.mp";
+  write "btex \mainfont "&s&" etex" to "mptextmp.mp";
   write EOF to "mptextmp.mp";
   scantokens "input mptextmp"
 enddef;

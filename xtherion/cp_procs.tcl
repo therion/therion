@@ -437,14 +437,8 @@ proc xth_cp_compile {} {
   }]
   
   set see_end 0
-  set enderr 0
-  if {$err} {
-    if {[regexp {\: error \-\-} $errorInfo]} {
-      set enderr 1
-    }
-  }
   
-  if {$enderr} {
+  if {$err} {
     bell
     $xth(ctrl,cp,stp).gores configure -text [mc "ERROR"] -fg white -bg red
     set ret 0

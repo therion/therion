@@ -52,7 +52,7 @@ typedef list<int> unistr;
 // returns the index of given encoding (as used in predefined encoding arrays)
 // or -1 if such an encoding is not known
 
-int get_enc_id(const char* enc) {
+int get_enc_id(const char * enc) {
   for (int i=0; i<max_enc; i++) if (strcmp(encodings[i],enc) == 0) return i;
   return -1;
 }
@@ -164,6 +164,8 @@ string replace_all(string s, string f, string r) {
 
 // main task is done here
 
+#define SELFONT if (lastenc!=-1) T << "\\thf" << u2str(lastenc+1)
+
 string utf2tex(string str, bool remove_kerning) {
   ostringstream T;
   string tmp;
@@ -220,14 +222,14 @@ string utf2tex(string str, bool remove_kerning) {
             case 4: T << "\\ss"; break;
             case 5: T << "\\si"; break;
           }
-          T << " ";
+          SELFONT; T << " ";
           break;
         case 2: T << "\\thinspace "; break;
-        case 3: T << "\\rm "; laststyle = 1; break;
-        case 4: T << "\\it "; laststyle = 2; break;
-        case 5: T << "\\bf "; laststyle = 3; break;
-        case 6: T << "\\ss "; laststyle = 4; break;
-        case 7: T << "\\si "; laststyle = 5; break;
+        case 3: T << "\\rm "; laststyle = 1; SELFONT; break;
+        case 4: T << "\\it "; laststyle = 2; SELFONT; break;
+        case 5: T << "\\bf "; laststyle = 3; SELFONT; break;
+        case 6: T << "\\ss "; laststyle = 4; SELFONT; break;
+        case 7: T << "\\si "; laststyle = 5; SELFONT; break;
       }
       continue;
     }
@@ -340,7 +342,7 @@ string utf2tex(string str, bool remove_kerning) {
   if (is_multiline) {
     T << "\\cr}}";
   }
-  T << "{}";
+  T << "\\mainfont{}";
   return T.str();
 }
 
@@ -423,6 +425,7 @@ void print_fonts_setup() {
   P << "}";
   P << "\\let\\laststyle\\rms" << endl;
   P << "\\size[10]\\ss" << endl;
+  P << "\\def\\mainfont{" << firstfont << "}" << endl;
   P.close();
 }
 

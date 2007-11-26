@@ -1,6 +1,5 @@
 HOT LIST:
 
-+ WARNING in xtherion only under linux/unix -- check compilation OK string.
 + thbook+CHANGES: text command in configuration & initialization file
 + check text command in configuration & initialization file + samples
 + thbook: symbol-set name is case sentive!!!
@@ -13,6 +12,7 @@ HOT LIST:
 + symplify centerline flags handling and export
 + attributes to shots/stations
 
++ xtherion - if error but compilation OK, generate only warning message
 + scrap morphing algorithm setup to configuration file
 + 3D generation algorithm - do not remove join points
 + 3D generation algorithm - take xelevation data into account
