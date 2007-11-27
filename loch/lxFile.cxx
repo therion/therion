@@ -23,43 +23,10 @@
 #define strcasecmp stricmp
 #endif
 
-#ifdef THMSVC
-#ifndef UINT32_MAX
-# define UINT32_MAX (0xffffffffUL)
-#endif
-#ifndef uint32_t
-#if (ULONG_MAX == UINT32_MAX) || defined (S_SPLINT_S)
-  typedef unsigned long uint32_t;
-# define UINT32_C(v) v ## UL
-# ifndef PRINTF_INT32_MODIFIER
-#  define PRINTF_INT32_MODIFIER "l"
-# endif
-#elif (UINT_MAX == UINT32_MAX)
-  typedef unsigned int uint32_t;
-# ifndef PRINTF_INT32_MODIFIER
-#  define PRINTF_INT32_MODIFIER ""
-# endif
-# define UINT32_C(v) v ## U
-#elif (USHRT_MAX == UINT32_MAX)
-  typedef unsigned short uint32_t;
-# define UINT32_C(v) ((unsigned short) (v))
-# ifndef PRINTF_INT32_MODIFIER
-#  define PRINTF_INT32_MODIFIER ""
-# endif
-#else
-#error "Platform not supported"
-#endif
-#endif
-#else
-#include <stdint.h>
-#endif
 
-
-
-
-size_t lxFileSize::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 {
-  size_t s(sizeof(uint32_t));
+  lxFileSizeT s(sizeof(uint32_t));
   *((uint32_t *)(ptr)) = (uint32_t) this->m_size;
   lxFile::switchEndian(ptr, s);
   ptr += s;
@@ -67,19 +34,19 @@ size_t lxFileSize::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSize::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileSize::Load(lxFileBuff & ptr)
 {
-  size_t s(sizeof(uint32_t));
-  this->m_size = (size_t) *((uint32_t *)(ptr));
+  lxFileSizeT s(sizeof(lxFileSizeT));
+  this->m_size = (lxFileSizeT) *((uint32_t *)(ptr));
   lxFile::switchEndian((char *)(&this->m_size), s);
   ptr += s;
   return s;
 }
 
 
-size_t lxFileDbl::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileDbl::Save(lxFileBuff & ptr)
 {
-  size_t s(sizeof(this->m_num));
+  lxFileSizeT s(sizeof(this->m_num));
   *((double *)(ptr)) = this->m_num;
   lxFile::switchEndian(ptr, s);
   ptr += s;
@@ -87,9 +54,9 @@ size_t lxFileDbl::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileDbl::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileDbl::Load(lxFileBuff & ptr)
 {
-  size_t s(sizeof(this->m_num));
+  lxFileSizeT s(sizeof(this->m_num));
   this->m_num = *((double *)(ptr));
   lxFile::switchEndian((char *)(&this->m_num), s);
   ptr += s;
@@ -110,18 +77,18 @@ void lxFileDataPtr::Clear()
 }
 
 
-size_t lxFileDataPtr::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileDataPtr::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_position.Save(ptr);
   s += this->m_size.Save(ptr);
   return s;
 }
 
 
-size_t lxFileDataPtr::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileDataPtr::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_position.Load(ptr);
   s += this->m_size.Load(ptr);
   return s;
@@ -145,7 +112,7 @@ void lxFileData::Clear()
   this->m_buffSize = 0;
 }
 
-void lxFileData::Copy(size_t size, const void * src)
+void lxFileData::Copy(lxFileSizeT size, const void * src)
 {
   this->Clear();
   this->m_data = malloc(size);
@@ -187,9 +154,9 @@ const char * lxFileData::GetString(lxFileDataPtr ptr)
     return &(((char *)this->m_data)[ptr.m_position]);
 }
 
-void lxFileData::BuffResize(size_t size)
+void lxFileData::BuffResize(lxFileSizeT size)
 {
-  size_t nsize;
+  lxFileSizeT nsize;
   void * ndata;
 
   if (this->m_buffSize > 0)
@@ -209,7 +176,7 @@ void lxFileData::BuffResize(size_t size)
 lxFileDataPtr lxFileData::AppendStr(const char * str)
 {
   lxFileDataPtr res;
-  size_t strln;
+  lxFileSizeT strln;
   if (str == NULL)
     return res;
   strln = strlen(str);
@@ -226,7 +193,7 @@ lxFileDataPtr lxFileData::AppendFile(const char * fnm)
   xf = fopen(fnm, "rb");
   if (xf != NULL) {
     fseek(xf, 0, SEEK_END);
-    size_t fsz = ftell(xf);
+    lxFileSizeT fsz = ftell(xf);
     fseek(xf, 0, SEEK_SET);
     if (fsz > 0) {
       char * cdata = new char [fsz];
@@ -241,7 +208,7 @@ lxFileDataPtr lxFileData::AppendFile(const char * fnm)
 
 
 
-lxFileDataPtr lxFileData::AppendData(const void * data, size_t size)
+lxFileDataPtr lxFileData::AppendData(const void * data, lxFileSizeT size)
 {
   lxFileDataPtr res;
   if ((data == NULL) || (size == 0))
@@ -272,11 +239,11 @@ bool lxFileIsBigEndian() {
 bool lxFile::m_bigEndian(lxFileIsBigEndian());
 
 
-void lxFile::switchEndian(char * data, size_t size)
+void lxFile::switchEndian(char * data, lxFileSizeT size)
 {
   if (m_bigEndian) {
     char temp;
-    size_t index, rindex, total;
+    lxFileSizeT index, rindex, total;
     total = size / 2;
     for (index = 0; index < total; index++) {
       rindex = size - index - 1;
@@ -344,14 +311,14 @@ enum {
 
 struct lxFileChunkHdr {
   lxFileSize m_type, m_recSize, m_recCount, m_dataSize;
-  size_t Save(lxFileBuff & ptr);
-  size_t Load(lxFileBuff & ptr);
+  lxFileSizeT Save(lxFileBuff & ptr);
+  lxFileSizeT Load(lxFileBuff & ptr);
 };
 
 
-size_t lxFileChunkHdr::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileChunkHdr::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_type.Save(ptr);
   s += this->m_recSize.Save(ptr);
   s += this->m_recCount.Save(ptr);
@@ -361,9 +328,9 @@ size_t lxFileChunkHdr::Save(lxFileBuff & ptr)
 
 
 
-size_t lxFileChunkHdr::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileChunkHdr::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_type.Load(ptr);
   s += this->m_recSize.Load(ptr);
   s += this->m_recCount.Load(ptr);
@@ -374,9 +341,9 @@ size_t lxFileChunkHdr::Load(lxFileBuff & ptr)
 
 
 
-size_t lxFile3Point::Save(lxFileBuff & ptr)
+lxFileSizeT lxFile3Point::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_c[0].Save(ptr);
   s += this->m_c[1].Save(ptr);
   s += this->m_c[2].Save(ptr);
@@ -384,9 +351,9 @@ size_t lxFile3Point::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFile3Angle::Load(lxFileBuff & ptr)
+lxFileSizeT lxFile3Angle::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_v[0].Load(ptr);
   s += this->m_v[1].Load(ptr);
   s += this->m_v[2].Load(ptr);
@@ -408,11 +375,11 @@ void lxFile::ExportLOX(const char * fn)
   // write data
   lxFileChunkHdr chunkHdr;
   char * tmpPtr, * chunkHdrPtr, chunkHdrBuffer [sizeof(chunkHdr)];
-  size_t chunkHdrSize, tmpSize;
+  lxFileSizeT chunkHdrSize, tmpSize;
   bool writeErr;
 
   writeErr = false;
-  size_t x, size;
+  lxFileSizeT x, size;
 
 #define lxFileExportItem(expID, expClass, expRecs, expData) \
   size = this->expRecs.size(); \
@@ -495,9 +462,9 @@ void lxFile::ImportLOX(const char * fn)
   }
 
   lxFileChunkHdr chunkHdr;
-  size_t i, orig_size, orig_survey_id, orig_station_id;
+  lxFileSizeT i, orig_size, orig_survey_id, orig_station_id;
   char * tmpPtr, * chunkHdrPtr, * tmpRecsData, chunkHdrBuffer [sizeof(chunkHdr)];
-  size_t chunkHdrSize;
+  lxFileSizeT chunkHdrSize;
 
   chunkHdrPtr = chunkHdrBuffer;
   chunkHdrSize = chunkHdr.Save(chunkHdrPtr);
@@ -627,9 +594,9 @@ void lxFile::ImportLOX(const char * fn)
 }
 
 
-size_t lxFile__SplitTokens(unsigned char * str, unsigned char ** tokens, size_t max_tokens)
+lxFileSizeT lxFile__SplitTokens(unsigned char * str, unsigned char ** tokens, lxFileSizeT max_tokens)
 {
-  size_t nt = 0, sl, sp;
+  lxFileSizeT nt = 0, sl, sp;
   unsigned char * cc;
   bool inside = false;
   if ((str == NULL) || (max_tokens == 0))
@@ -686,9 +653,9 @@ bool lxFile__CheckLRUD(double & du, double & dd, double & dl, double & dr, doubl
 }
 
 
-size_t lxFileSurvey::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileSurvey::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_id.Save(ptr);
   s += this->m_namePtr.Save(ptr);
   s += this->m_parent.Save(ptr);
@@ -697,9 +664,9 @@ size_t lxFileSurvey::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurvey::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileSurvey::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_id.Load(ptr);
   s += this->m_namePtr.Load(ptr);
   s += this->m_parent.Load(ptr);
@@ -751,7 +718,7 @@ void lxFile::ImportPLT(const char * fn)
   unsigned char * tok[16];
   lxFileDbl lrud[4], lrudPrev[4];
   lrudPrev[0] = lrudPrev[1] = lrudPrev[2] = lrudPrev[3] = -1.0;
-  size_t nt;
+  lxFileSizeT nt;
 
   this->m_file = fopen(fn,"r");
   if (this->m_file == NULL) {
@@ -1050,7 +1017,7 @@ void lxFile::Import3D(const char * fn)
 
 
 struct missingShot {
-  size_t f, t;
+  lxFileSizeT f, t;
   double length;
 };
 
@@ -1067,11 +1034,11 @@ void lxFile::InterpolateMissingLRUD()
   if (this->m_shots.size() == 0) return;
   if (this->m_stations.size() == 0) return;
 
-  std::map<lxVec, size_t> stmap;
+  std::map<lxVec, lxFileSizeT> stmap;
   std::vector<lxFileStation*> osts;
   std::vector<missingStation> stations;
   std::list<missingShot> shots;
-  size_t ns, i;
+  lxFileSizeT ns, i;
 
 
   // 0. vytvorit vector originalnych stations
@@ -1085,7 +1052,7 @@ void lxFile::InterpolateMissingLRUD()
   // 1. vytvorit zoznam identickych bodov a zamer medzi nimi
   ns = 0;
   std::list<lxFileShot>::iterator shi;
-  std::map<lxVec, size_t>::iterator stmi;
+  std::map<lxVec, lxFileSizeT>::iterator stmi;
   lxFileStation * st;
   missingStation tst;
   missingShot ts;
@@ -1190,9 +1157,9 @@ void lxFile::InterpolateMissingLRUD()
 }
 
 
-size_t lxFileStation::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileStation::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_id.Save(ptr);
   s += this->m_surveyId.Save(ptr);
   s += this->m_namePtr.Save(ptr);
@@ -1205,9 +1172,9 @@ size_t lxFileStation::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileStation::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileStation::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_id.Load(ptr);
   s += this->m_surveyId.Load(ptr);
   s += this->m_namePtr.Load(ptr);
@@ -1237,9 +1204,9 @@ bool lxFileStation::GetFlag(int flag)
 
 
 
-size_t lxFileShot::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileShot::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_from.Save(ptr);
   s += this->m_to.Save(ptr);
   s += this->m_fLRUD[0].Save(ptr);
@@ -1258,9 +1225,9 @@ size_t lxFileShot::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileShot::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileShot::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_from.Load(ptr);
   s += this->m_to.Load(ptr);
   s += this->m_fLRUD[0].Load(ptr);
@@ -1294,9 +1261,9 @@ bool lxFileShot::GetFlag(int flag)
 }
 
 
-size_t lxFileScrap::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileScrap::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_id.Save(ptr);
   s += this->m_surveyId.Save(ptr);
   s += this->m_numPoints.Save(ptr);
@@ -1307,9 +1274,9 @@ size_t lxFileScrap::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileScrap::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileScrap::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_id.Load(ptr);
   s += this->m_surveyId.Load(ptr);
   s += this->m_numPoints.Load(ptr);
@@ -1320,9 +1287,9 @@ size_t lxFileScrap::Load(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurface::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileSurface::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_id.Save(ptr);
   s += this->m_width.Save(ptr);
   s += this->m_height.Save(ptr);
@@ -1337,9 +1304,9 @@ size_t lxFileSurface::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurface::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileSurface::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_id.Load(ptr);
   s += this->m_width.Load(ptr);
   s += this->m_height.Load(ptr);
@@ -1354,9 +1321,9 @@ size_t lxFileSurface::Load(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurfaceBitmap::Save(lxFileBuff & ptr)
+lxFileSizeT lxFileSurfaceBitmap::Save(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_surfaceId.Save(ptr);
   s += this->m_type.Save(ptr);
   s += this->m_dataPtr.Save(ptr);
@@ -1370,9 +1337,9 @@ size_t lxFileSurfaceBitmap::Save(lxFileBuff & ptr)
 }
 
 
-size_t lxFileSurfaceBitmap::Load(lxFileBuff & ptr)
+lxFileSizeT lxFileSurfaceBitmap::Load(lxFileBuff & ptr)
 {
-  size_t s(0);
+  lxFileSizeT s(0);
   s += this->m_surfaceId.Load(ptr);
   s += this->m_type.Load(ptr);
   s += this->m_dataPtr.Load(ptr);

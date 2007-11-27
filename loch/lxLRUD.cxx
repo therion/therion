@@ -19,7 +19,7 @@ long lxLRUDData::GetStationID(lxVec pos, bool insert)
     if (insert) {
       this->station_map[pos] = this->nstations;
       nstations++;
-      return this->nstations;
+      return (this->nstations - 1);
     } else {
       return -1;
     }
@@ -116,12 +116,12 @@ size_t xcNodeArrow::GetTX() {
 
 xcNAGet(TU,tu,fu)
 xcNAGet(TD,td,fd)
-xcNAGet(TL,tl,fl)
-xcNAGet(TR,tr,fr)
+xcNAGet(TL,tl,fr)
+xcNAGet(TR,tr,fl)
 xcNAGet(FU,fu,tu)
 xcNAGet(FD,fd,td)
-xcNAGet(FL,fl,tl)
-xcNAGet(FR,fr,tr)
+xcNAGet(FL,fl,tr)
+xcNAGet(FR,fr,tl)
 
 
 struct xcNode {
@@ -266,7 +266,7 @@ void lxLRUD::Calculate()
     for(nait = lastN->arrows.begin(); nait != lastN->arrows.end(); nait++) {
       if (!nait->edge->used) {
         if (nextarrow) {
-          if ((nait->GetDir() * parrow.GetDir()) < (narrow.GetDir() * parrow.GetDir())) {
+          if ((nait->GetDir() * parrow.GetDir()) > (narrow.GetDir() * parrow.GetDir())) {
             narrow = *nait;
           }
         } else {
@@ -342,8 +342,8 @@ void lxLRUD::Calculate()
   }
 
 
-
   for(si = series.begin(); si != series.end(); si++) {
+    
 
     psi = &(*si);
     
