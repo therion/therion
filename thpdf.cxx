@@ -1525,6 +1525,18 @@ void build_pages() {
     PAGEDEF << "\\x=\\extraW\\advance\\x by \\overlap" << endl;
     PAGEDEF << "\\dimtobp{\\the\\x}\\edef\\wsize{\\tmpdef}%" << endl;
 
+    PAGEDEF << "\\newdimen\\overlaphalf\\overlaphalf=\\overlap\\divide\\overlaphalf by 2%" << endl;
+    PAGEDEF << "\\newdimen\\framew\\framew=\\pdfpagewidth\\advance\\framew by -\\overlap" << endl;
+    PAGEDEF << "\\newdimen\\frameh\\frameh=\\pdfpageheight\\advance\\frameh by -\\overlap" << endl;
+    PAGEDEF << "\\newdimen\\framex\\framex=\\extraW\\advance\\framex by \\overlaphalf" << endl;
+    PAGEDEF << "\\newdimen\\framey\\framey=\\extraN\\advance\\framey by \\overlaphalf" << endl;
+
+    PAGEDEF << "\\dimtobp{\\framew}\\edef\\Framew{\\tmpdef}%" << endl;
+    PAGEDEF << "\\dimtobp{\\frameh}\\edef\\Frameh{\\tmpdef}%" << endl;
+    PAGEDEF << "\\dimtobp{\\framex}\\edef\\Framex{\\tmpdef}%" << endl;
+    PAGEDEF << "\\dimtobp{\\framey}\\edef\\Framey{\\tmpdef}%" << endl;
+
+/*
     PAGEDEF << "\\adjustedHS=" << HS << "bp" <<
       "\\advance\\adjustedHS by \\extraE" << 
       "\\advance\\adjustedHS by \\extraW" <<
@@ -1536,7 +1548,7 @@ void build_pages() {
       "\\advance\\adjustedVS by \\extraS" << 
       "\\advance\\adjustedVS by \\overlap" << 
       "\\advance\\adjustedVS by \\overlap" << endl;
-
+*/
     PAGEDEF << "\\tmpdimen=\\extraW\\advance\\tmpdimen by \\overlap" << endl;
     PAGEDEF << "\\dimtobp{\\tmpdimen}\\edef\\adjustedX{\\tmpdef}%" << endl;
     PAGEDEF << "\\tmpdimen=\\extraS\\advance\\tmpdimen by \\overlap" << endl;
@@ -1550,6 +1562,12 @@ void build_pages() {
 			    "\\xsize\\space" << 
 			    "\\ysize\\space" << 
                             " re f Q}%" << endl;
+
+    PAGEDEF << "\\ifdim\\framethickness>0mm\\dimtobp{\\framethickness}\\edef\\Framethickness{\\tmpdef}" <<
+               "\\PL{q 0 0 0 RG 1 J 1 j \\Framethickness\\space w " << 
+               "-\\Framex\\space\\Framey\\space\\Framew\\space-\\Frameh\\space" << 
+               " re s Q}\\fi" << endl;
+
 
 //    PAGEDEF << "\\leavevmode\\setbox\\xxx=\\hbox to " << HS << "bp{%" << endl;
     PAGEDEF << "\\leavevmode\\setbox\\xxx=\\hbox to 0bp{%" << endl;

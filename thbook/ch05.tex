@@ -152,7 +152,9 @@ There are also some predefined macros which help with the processing of
 For font management there are macros 
 
 \list
-* |\size[#1]| for size changes, and
+* |\size[#1]| for size changes,
+
+* |\color[#1 #2 #3]| for colour changes (RGB values in the range 0--100), and
 
 * |\rm|, |\it|, |\bf|, |\ss|, |\si| for type face switching.
 \endlist
@@ -162,6 +164,11 @@ For font management there are macros
 %are present in the first encoding specified in the initialization file. 
 
 See below for a list of predefined texts which may be used in the atlas.
+
+There is also a |\framed| macro which takes a box as an argument and displays the 
+box framed. The frame style can be customized by redefining the |\linestyle| 
+macro which defaults to |1 J 1 j 1.5 w|.
+
 
 Now we're ready to define the |\dopage| macro. You may choose which of the 
 predefined elements to use. A very simple example would be
@@ -323,12 +330,24 @@ which displays north arrow in the upper-left corner of the map sheet.
 For user's convenience, there is |\legendcontent| token register. It contains 
 preformatted cave name, north arrow, scale bar, explo/topo/carto teams, 
 comment, copyrights and legend.
+(The |\legendcontent| is also used in the default map layout definition:
+|\def\maplayout{\legendbox{0}{100}{NW}{\the\legendcontent}}|).
+
 Width of the above text may be adjusted by |\legendwidth| dimen register. 
-The |\legendcontent| is also used in the default map layout definition:
+The color and size of texts in the preformatted legend can be easily changed
+using |\legendtextcolor|, |\legendtextsize|, |\legendtextsectionsize| and 
+|\legendtextheadersize| token registers, 
+e.g. for large blue text:
 
-|\def\maplayout{\legendbox{0}{100}{NW}{\the\legendcontent}}|
+|code tex-map
+  \legendwidth=20cm
+  \legendtextcolor={\color[0 0 100]}
+  \legendtextsize={\size[20]}
+  \legendtextheadersize={\size[60]}|
 
 
+It is possible to display the whole map framed by setting the |\framethickness| 
+dimen register to positive value, e.g. |0.5mm|.
 
 
 \subchapter Customizing text labels.

@@ -273,6 +273,10 @@
 \newtoks\cavedepth
 \newtoks\cavelengthtitle
 \newtoks\cavedepthtitle
+\newtoks\legendtextcolor\legendtextcolor={\color[0 0 0]}
+\newtoks\legendtextsize\legendtextsize={\size[12]}
+\newtoks\legendtextheadersize\legendtextheadersize={\size[26]}
+\newtoks\legendtextsectionsize\legendtextsectionsize={\size[14]}
 
 \def\scalebar{\pdfrefxform\THWscalebar}
 \def\northarrow{\pdfrefxform\THWnortharrow}
@@ -281,36 +285,38 @@
 
 \legendcontent={%
   \hsize=\legendwidth
+  \color[0 0 0]\the\legendtextcolor 
   \ifnortharrow\vbox to 0pt{\line{\hfil\northarrow}\vss}\fi
   \edef\tmp{\the\cavename} \ifx\tmp\empty \else
-    \color[0 0 0]{\size[26]\the\cavename}\color[0 0 0]\vskip1cm
+     {\the\legendtextheadersize\the\cavename}\vskip1cm
   \fi
   \ifscalebar\scalebar\vskip1cm\fi
   {\rightskip=0pt plus 3em\parskip=3bp
     \edef\tmp{\the\comment} \ifx\tmp\empty \else
-      {\size[12]\the\comment} \par\medskip
+      {\the\legendtextsize\the\comment} \par\medskip
     \fi
     \everypar{\hangindent=2em\hangafter=1}
     \edef\tmp{\the\cavelength} \ifx\tmp\empty \else
-      {\size[12]\si\the\cavelengthtitle: \ss\the\cavelength\par}
+      {\the\legendtextsize\si\the\cavelengthtitle: \ss\the\cavelength\par}
     \fi
     \edef\tmp{\the\cavedepth} \ifx\tmp\empty \else
-      {\size[12]\si\the\cavedepthtitle: \ss\the\cavedepth\par}
+      {\the\legendtextsize\si\the\cavedepthtitle: \ss\the\cavedepth\par}
     \fi
     \edef\tmp{\the\exploteam} \ifx\tmp\empty \else
-      {\size[12]\si\the\explotitle: \ss\the\exploteam\quad\si\the\explodate\par}
+      {\the\legendtextsize\si\the\explotitle: \ss\the\exploteam\quad\si\the\explodate\par}
     \fi
     \edef\tmp{\the\topoteam} \ifx\tmp\empty \else
-      {\size[12]\si\the\topotitle: \ss\the\topoteam\quad\si\the\topodate\par}
+      {\the\legendtextsize\si\the\topotitle: \ss\the\topoteam\quad\si\the\topodate\par}
     \fi
     \edef\tmp{\the\cartoteam} \ifx\tmp\empty \else
-      {\size[12]\si\the\cartotitle: \ss\the\cartoteam\quad\si\the\cartodate\par}
+      {\the\legendtextsize\si\the\cartotitle: \ss\the\cartoteam\quad\si\the\cartodate\par}
     \fi
     \edef\tmp{\the\copyrights} \ifx\tmp\empty \else
-      {\size[12]\ss\the\copyrights\par}
+      {\the\legendtextsize\ss\the\copyrights\par}
     \fi
   }
   \formattedlegend
+  \color[0 0 0]
 }
 
 \def\maplayout{
@@ -321,11 +327,11 @@
 
 \def\formattedlegend{%
   \ifcolorlegend
-  \vskip1cm{\size[14]\the\colorlegendtitle}\bigskip
+  \vskip1cm{\the\legendtextsectionsize\the\colorlegendtitle}\bigskip
   \insertcolorlegend
   \fi
   \iflegend
-  \vskip1cm{\size[14]\the\legendtitle}\bigskip
+  \vskip1cm{\the\legendtextsectionsize\the\legendtitle}\bigskip
   \insertlegend
   \fi}
 
@@ -379,7 +385,7 @@
 \newdimen\adjustedVS
 \newdimen\adjustedX
 \newdimen\adjustedY
-
+\newdimen\framethickness\framethickness=0cm
 
 \def\legendbox#1#2#3#4{%
   \unskip
