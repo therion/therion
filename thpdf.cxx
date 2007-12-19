@@ -1397,8 +1397,6 @@ void build_pages() {
 //    PDFRES << "\\legendcomment={" << utf2tex(LAYOUT.doc_comment) << "}" << endl;
 //  }
 
-  PDFRES << "\\pdfcatalog { /TeXsetup <" << pdf_info() << "> }" << endl;
-
   if (!LEGENDLIST.empty()) {  // zmenit test na LAYOUT.legend???
     PDFRES << "\\legendtrue" << endl;
   }
@@ -1536,7 +1534,7 @@ void build_pages() {
     PAGEDEF << "\\dimtobp{\\framex}\\edef\\Framex{\\tmpdef}%" << endl;
     PAGEDEF << "\\dimtobp{\\framey}\\edef\\Framey{\\tmpdef}%" << endl;
 
-/*
+
     PAGEDEF << "\\adjustedHS=" << HS << "bp" <<
       "\\advance\\adjustedHS by \\extraE" << 
       "\\advance\\adjustedHS by \\extraW" <<
@@ -1548,7 +1546,7 @@ void build_pages() {
       "\\advance\\adjustedVS by \\extraS" << 
       "\\advance\\adjustedVS by \\overlap" << 
       "\\advance\\adjustedVS by \\overlap" << endl;
-*/
+
     PAGEDEF << "\\tmpdimen=\\extraW\\advance\\tmpdimen by \\overlap" << endl;
     PAGEDEF << "\\dimtobp{\\tmpdimen}\\edef\\adjustedX{\\tmpdef}%" << endl;
     PAGEDEF << "\\tmpdimen=\\extraS\\advance\\tmpdimen by \\overlap" << endl;

@@ -9,7 +9,7 @@
   \input etc/supp-mis 
   \input etc/supp-pdf 
   \pdfinfo{/Title (The TherionBook)
-           /Author (Martin Budaj, Stacho Mudr√°k)
+           /Author (Martin Budaj, Stacho Mudr·k)
 	   /Subject (Therion documentation)
 	   /Keywords (caves, surveying, cartography, computers)
 	   /Creator (TeX)
@@ -40,6 +40,8 @@
 \font\subchap=cmssdc10 at 12pt
 
 \def\MP{{\manfnt META}\-{\manfnt POST}}    
+
+\footline={\hss\black\tenrm\folio\POPcolor\hss}
 
 \def\cvak{\ifdim\dimen0<6pt \dimen0=9pt \else \dimen0=3pt\fi}
 \def\bodky{\leaders\hbox to12pt{\kern\dimen0.\hss}\hfil}
@@ -79,7 +81,7 @@
 }
 
 \catcode`\|=13
-\def|{\ifvmode\penalty-100\medskip\fi\verbatim|}
+\def|{\ifvmode\penalty-100\medskip\fi\blue\verbatim|}
 \def\setupverbatim % see D.E.K., p. 381
     {\parskip=0pt %
      \tt %
@@ -93,6 +95,8 @@
                                   % skipped
      \obeylines \uncatcodespecials \obeyspaces %
      }%
+\def\doverbatim#1{\def\next##1#1{##1\endgroup\POPcolor}\next}%
+
 
 \def\pic#1{\par\penalty-200
   \midinsert
@@ -153,6 +157,19 @@
         >>}%
     #1%
     \pdfendlink\fi}
+
+
+\ifnum\pdftexversion<140
+  \let\red\relax \let\blue\relax \let\grey\relax \let\black\relax \let\POPcolor\relax
+\else
+  \chardef\Color=\pdfcolorstackinit page direct{0 g}
+  \def\red{\pdfcolorstack\Color push{0 0.89 0.94 0.28 k}}
+  \def\blue{\pdfcolorstack\Color push{1 1 0 0 k}}
+  \def\grey{\pdfcolorstack\Color push{0 0 0 0.50 k}}
+  \def\black{\pdfcolorstack\Color push{0 0 0 1 k}}
+  \def\POPcolor{\pdfcolorstack\Color pop}
+\fi
+
     
 \newcount\footnum \footnum 0    
 \long\def\[#1]{\unskip\global\advance\footnum by 1\footnote{$^{\the\footnum}$}{#1}}

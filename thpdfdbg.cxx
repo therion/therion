@@ -159,9 +159,6 @@ void print_hash(){
   F.close();
 }
 
-string pdf_info (void) {
-  return(string(""));
-}
 
 
 void thpdfdbg() {

@@ -1,3 +1,6 @@
+thepsparse: grid do 2d struktur
+
+
  * pri definovani globalnych funkcii, typov a premennych pouzivat prefix "th" 
    resp. "TH" (napr. thprint_tex_encodings, THFONTS)
 
@@ -25,7 +28,8 @@ thpdf:
 
 thsvg:
 
- * HTML obal - nazov..., legenda -> treba stringy od Stacha
+ * uxivatelsky prefix pre ids
+
  * fonty - orezavacie cesty + vkladanie?
  * layers cez javascript
  * (priehladnost -> SVG 1.2)
