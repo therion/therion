@@ -1,26 +1,151 @@
 %D \module
 %D   [       file=supp-pdf,
-%D        version=2001.07.27,
+%D        version=2006.09.02, % 2004.12.16,
 %D          title=\CONTEXT\ Support Macros,
 %D       subtitle=\METAPOST\ to \PDF\ conversion,
-%D         author=Hans Hagen,
+%D         author=Hans Hagen \& others (see text),
 %D           date=\currentdate,
-%D      copyright={PRAGMA / Hans Hagen \& Ton Otten}]
+%D      copyright=\PRAGMA]
 %C
 %C This module is part of the \CONTEXT\ macro||package and is
-%C therefore copyrighted by \PRAGMA. See mreadme.pdf for 
-%C details. 
+%C therefore copyrighted by \PRAGMA. See mreadme.pdf for
+%C details.
 
-% This method is not that accurate with small files that use
-% penshapes. I tried several methods but so far I could not
-% come up with a better alternative. \TEX's real calculation
-% options are simply to simple. Using \ETEX's expression
-% mechanism does not lead to better results. 
+\ifx\writestatus\undefined
+  \immediate\write16{[Loading MPS to PDF converter (version 2006.09.02).]}
+\else
+  \writestatus{loading}{Context Support Macros / PDF}
+\fi
 
-% beware, we cannot use \zeropoint here since it may be 
-% defined in the range \dimen 0 - 20 which we happen to use 
-% as scratch registers ; inside context we may consider 
-% using dedicated registers 
+%D This module is not optimized because it is used outside
+%D \CONTEXT\ and we cannot forsee what interference will take
+%D place. We no longer load supp-mis. I got too tired of
+%D keeping track of interferences with non \CONTEXT\ usage so
+%D I moved the necessary code in here and use a derived version
+%D in \CONTEXT. When I have the time I will clean up some of the
+%D code that is of no use for non||\CONTEXT\ users.
+
+\ifx\contextversion\undefined
+
+    \chardef\mptopdfstoredatcode\catcode`\@
+
+    \catcode\string`@=11
+
+    \def\unprotect
+      {\let\@@mpstopdf@@unprotect   \unprotect
+       \let\@@mpstopdf@@protect     \protect
+       \edef\protect
+         {\noexpand \let \noexpand \protect   \noexpand \@@mpstopdf@@protect
+          \noexpand \let \noexpand \unprotect \noexpand \@@mpstopdf@@unprotect
+          % context specific
+          \catcode\string`\noexpand @=\the\catcode\string`@
+          \catcode\string`\noexpand !=\the\catcode\string`!
+          \catcode\string`\noexpand ?=\the\catcode\string`?
+          % latex specific
+          \catcode\string`\noexpand /=\the\catcode\string`/
+          \catcode\string`\noexpand -=\the\catcode\string`-
+          \catcode\string`\noexpand :=\the\catcode\string`:
+          \catcode\string`\noexpand ;=\the\catcode\string`;
+          \catcode\string`\noexpand "=\the\catcode\string`"
+          \catcode\string`\noexpand <=\the\catcode\string`<
+          \catcode\string`\noexpand >=\the\catcode\string`>
+          \catcode\string`\noexpand `=\the\catcode\string``}
+      \catcode\string`@=11 \catcode\string`!=11 \catcode\string`?=11
+      \catcode\string`/=12 \catcode\string`-=12
+      \catcode\string`:=12 \catcode\string`;=12
+      \catcode\string`>=12 \catcode\string`<=12
+      \catcode\string`"=12 \catcode\string``=12 }
+
+    \def\defineMPtoPDFfallbacks
+      {% shortcuts
+       \chardef\@@escape      0
+       \chardef\@@begingroup  1
+       \chardef\@@endgroup    2
+       \chardef\@@endofline   5
+       \chardef\@@ignore      9
+       \chardef\@@space      10
+       \chardef\@@letter     11
+       \chardef\@@other      12
+       \chardef\@@active     13
+       \chardef\@@comment    14
+       % placeholders
+       \ifx\withoutpt         \undefined \let\withoutpt         \@@mptopdf@@withoutpt          \fi
+       \ifx\twodigitrounding  \undefined \let\twodigitrounding  \@@mptopdf@@twodigitrounding   \fi
+       \ifx\forgetall         \undefined \let\forgetall         \@@mptopdf@@forgetall          \fi
+       \ifx\uncatcodespecials \undefined \let\uncatcodespecials \@@mptopdf@@uncatcodespecials  \fi
+       \ifx\setnaturalcatcodes\undefined \let\setnaturalcatcodes\@@mptopdf@@setnaturalcatcodes \fi
+       \ifx\dospecials        \undefined \let\dospecials        \@@mptopdf@@dospecials         \fi}
+
+    \def\@@mptopdf@@forgetall
+      {\parskip0pt\leftskip0pt\parindent0pt\everypar{}}
+
+    \def\@@mptopdf@@twodigitrounding#1%
+      {#1}%
+
+    \def\@@mptopdf@@uncatcodespecials
+      {\def\do##1{\catcode`##1=\@@other}\dospecials
+       \catcode`\   =\@@space
+       \catcode`\^^L=\@@ignore
+       \catcode`\^^M=\@@endofline
+       \catcode`\^^?=\@@ignore}
+
+    \def\@@mptopdf@@setnaturalcatcodes
+      {\catcode`\!=\@@other \catcode`\?=\@@other \catcode`\@=\@@other
+       \catcode`\#=\@@other \catcode`\&=\@@other \catcode`\|=\@@other
+       \catcode`\$=\@@other \catcode`\^=\@@other \catcode`\_=\@@other
+       \catcode`\*=\@@other \catcode`\/=\@@other
+       \catcode`\-=\@@other \catcode`+=\@@other
+       \catcode`\==\@@other \catcode`\<=\@@other \catcode`\>=\@@other
+       \catcode`\"=\@@other \catcode`\'=\@@other \catcode`\`=\@@other
+       \catcode`\:=\@@other \catcode`\;=\@@other
+       \catcode`\,=\@@other \catcode`\.=\@@other \catcode`\~=\@@other
+       \catcode`\(=\@@other \catcode`\)=\@@other
+       \catcode`\{=\@@other \catcode`\}=\@@other
+       \catcode`\\=\@@other \catcode`\%=\@@other}
+
+    \def\@@mptopdf@@dospecials
+      {\do\ \do\\\do\{\do\}\do\$%
+       \do\#\do\^\do\_\do\&\do\%%
+       \do\~\do\^^A\do\^^K}
+
+    {
+        \catcode`\.=12
+        \catcode`\p=12
+        \catcode`\t=12
+        \gdef\@@MPTOPDF@@WITHOUTPT#1pt{#1}
+    }
+
+    \def\@@mptopdf@@withoutpt#1%
+      {\expandafter\@@MPTOPDF@@WITHOUTPT#1}
+
+%     \def\@@mptopdf@@newabove#1#2% \dimen \name
+%       {#1#2%
+%        \ifnum\expandafter\gobblesixarguments\meaning#2>20\else
+%          \expandafter\@@mptopdf@@newabove\expandafter#1\expandafter#2%
+%        \fi}
+
+    \def\@@mptopdf@@stripnewabove#1%
+      {\ifnum10<9#1 #1\else\expandafter\@@mptopdf@@stripnewabove\fi}%
+
+    \def\@@mptopdf@@newabove\csname#1\endcsname#2% \dimen \name
+      {\csname#1\endcsname#2%
+       \ifnum\expandafter\@@mptopdf@@stripnewabove\meaning#2>20\else
+         \@@mptopdf@@newabove\csname#1\endcsname#2%
+       \fi}
+
+    \@@mptopdf@@newabove \csname newcount\endcsname \scratchcounter
+    \@@mptopdf@@newabove \csname newdimen\endcsname \scratchdimen
+                         \csname   newbox\endcsname \scratchbox
+
+    \expandafter \newif \csname ifdone\endcsname
+
+    \catcode`\@=\mptopdfstoredatcode
+
+\else
+
+    \let\defineMPtoPDFfallbacks\relax
+
+\fi
 
 %D These macros are written as generic as possible. Some
 %D general support macro's are loaded from a small module
@@ -28,61 +153,69 @@
 %D use a matrix transformation macro written by Tanmoy
 %D Bhattacharya. Thanks to extensive testing by Sebastian
 %D Ratz I was able to complete this module within reasonable
-%D time. This module has support for \METAPOST\ extensions 
+%D time. This module has support for \METAPOST\ extensions
 %D built in.
+%D
+%D Daniel H. Luecking came up with a better (more precise)
+%D transformation method. You can recognize his comment by
+%D his initials. (We keep the old code around because it's a
+%D nice illustration on how a module like this evolves.)
 
-%D First we take care of non||\CONTEXT\ use:
-
-\ifx \undefined \writestatus          \input supp-mis.tex \relax \fi
-\ifx \undefined \convertMPtoPDF \else \expandafter \endinput     \fi 
-\ifx \undefined \StartLatexHack \else \StartLatexHack            \fi 
+%D Beware, we cannot use \type{\zeropoint} here since it may be
+%D defined in the range \type{\dimen0} - 20 which we happen to use
+%D as scratch registers; inside context we may consider
+%D using dedicated registers.
 
 %D This module handles some \PDF\ conversion and insertions
 %D topics. By default, the macros use the \PDFTEX\ primitive
-%D \type{\pdfliteral} when available. 
-
-\writestatus{loading}{Context Support Macros / PDF}
+%D \type{\pdfliteral} when available. Since \PDFTEX\ is now the
+%D default engine for \TEX\ distributions, we need a more complex
+%D test.
 
 \unprotect
 
 \ifx\PDFcode\undefined
   \ifx\pdfliteral\undefined
     \def\PDFcode#1{\special{PDF: #1}}
-  \else
+  \else\ifx\pdfoutput\undefined
+    \def\PDFcode#1{\special{PDF: #1}}
+  \else\ifcase\pdfoutput
+    \def\PDFcode#1{\special{PDF: #1}}
+  \else % pdftex as well as in pdf mode
     \let\PDFcode\pdfliteral
-  \fi
+  \fi\fi\fi
+\else
+  % we probably use context
 \fi
 
-%D \macros 
+%D First we define a handy constant:
+
+\bgroup \defineMPtoPDFfallbacks \catcode`\%=\@@other \xdef\letterpercent{\string%} \egroup
+
+%D \macros
 %D   {pdfimage,pdfimages,pdfclippedimage}
 %D
 %D Starting with pdftex version 14, images are included more
-%D natural to the form embedding. This enables alternative 
-%D images to be embedded. 
+%D natural to the form embedding. This enables alternative
+%D images to be embedded.
 %D
-%D \starttypen
+%D \starttyping
 %D \pdfimage  <optional dimensions> {file}
 %D \pdfimages <optional dimensions> {high res file} {low res file}
-%D \stoptypen
+%D \stoptyping
 %D
-%D The first one replaces the pre||version||14 original, 
-%D while the latter provides alternative images. 
-%D 
-%D The next macro is dedicated to Maarten Gelderman, who 
-%D needed to paste prepared \PDF\ pages into conference 
+%D The first one replaces the pre||version||14 original,
+%D while the latter provides alternative images.
+%D
+%D The next macro is dedicated to Maarten Gelderman, who
+%D needed to paste prepared \PDF\ pages into conference
 %D proceedings.
-%D 
-%D \starttypen
-%D \pdfclippedimage <optional dimensions> {file} {l} {r} {t} {b} 
-%D \stoptypen
+%D
+%D \starttyping
+%D \pdfclippedimage <optional dimensions> {file} {l} {r} {t} {b}
+%D \stoptyping
 
-\ifx\pdftexversion\undefined % no \m!systems for the sake of latex
-  \writestatus{systems}{Why not use pdf(e)TeX binaries?}
-  \protect 
-  \expandafter\endinput 
-\fi 
-
-\ifnum\pdftexversion>13 
+\ifx\pdftexversion\undefined \else \ifnum\pdftexversion>13
 
   \def\pdfimage#1#%
     {\dopdfimage{#1}}
@@ -96,255 +229,59 @@
 
   \def\dopdfimages#1#2#3%
     {\immediate\pdfximage#1{#2}%
-     \immediate\pdfobj
-       {[ << /Image \the\pdflastximage\space0 R 
-             /DefaultForPrinting true >> ]}%
-     \immediate\pdfximage#1 
-       attr {/Alternates \the\pdflastobj\space0 R}{#3}%
+     \immediate\pdfobj{[ << /Image \the\pdflastximage\space0 R /DefaultForPrinting true >> ]}%
+     \immediate\pdfximage#1 attr {/Alternates \the\pdflastobj\space0 R}{#3}%
      \pdfrefximage\pdflastximage}
 
-  \def\pdfclippedimage#1#% specs {file}{left}{right}{top}{bottom} 
+  \def\pdfclippedimage#1#% specs {file}{left}{right}{top}{bottom}
     {\dopdfclippedimage{#1}}
 
-  \def\dopdfclippedimage#1#2#3#4#5#6% 
+  \def\dopdfclippedimage#1#2#3#4#5#6%
     {\bgroup
      \pdfximage#1{#2}%
-     \setbox\scratchbox=\hbox
+     \setbox\scratchbox\hbox
        {\pdfrefximage\pdflastximage}%
-     \hsize=\wd\scratchbox
-     \advance\hsize by -#3 
-     \advance\hsize by -#4 
-     \vsize=\ht\scratchbox
-     \advance\vsize by -#5 
-     \advance\vsize by -#6 
-     \setbox\scratchbox=\vbox to \vsize
+     \hsize\wd\scratchbox
+     \advance\hsize -#3
+     \advance\hsize -#4
+     \vsize\ht\scratchbox
+     \advance\vsize -#5
+     \advance\vsize -#6
+     \setbox\scratchbox\vbox to \vsize
        {\vskip-#5\hbox to \hsize{\hskip-#3\box\scratchbox\hss}}%
      \pdfxform\scratchbox
      \pdfrefxform\pdflastxform
      \egroup}
 
-%D If you want to save a few hash entries, you may prefer the 
-%D less readable alternatives, like:  
-%D  
-%D \starttypen 
+\fi \fi
+
+%D If you want to save a few hash entries, you may prefer the
+%D less readable alternatives, like:
+%D
+%D \starttyping
 %D \def\pdfimage#1#% This one is less readable but needs no additional
-%D   {\bgroup      % hash entry for the second stage macro.   
+%D   {\bgroup      % hash entry for the second stage macro.
 %D    \def\pdfimage##1%
 %D      {\immediate\pdfximage##1{#2}%
 %D       \pdfrefximage\pdflastximage\egroup}}
-%D \stoptypen
+%D \stoptyping
 
-%D For old times sake: (will be removed some day)
+%D For old times sake we provide a few aliases. These will be
+%D removed some day.
+
+\ifx\pdftexversion\undefined \else \ifnum\pdftexversion>13
 
   \let\pdfform    =\pdfxform
   \let\pdflastform=\pdflastxform
   \let\pdfrefform =\pdfrefxform
 
-\fi
-
-%D \macros
-%D   {convertPDFtoPDF}
-%D
-%D \PDFTEX\ supports verbatim inclusion of \PDF\ code. The
-%D following macro takes care of inserting externally defined
-%D illustrations in \PDF\ format. According to a suggestion
-%D Tanmoy Bhattacharya posted to the \PDFTEX\ mailing list, we
-%D first skip lines until \type{stream} is reached and then
-%D copy lines until \type{endstream} is encountered. This
-%D scheme only works with vectorized graphics in which no
-%D indirect references to objects are used. Bitmaps also don't
-%D work. Interpreting their specifications is beyond the
-%D current implementation.
-%D
-%D \starttypen
-%D \convertPDFtoPDF
-%D   {filename}
-%D   {x scale} {y scale}
-%D   {x offset } {y offset}
-%D   {width} {height}
-%D \stoptypen
-%D
-%D When the scales are set to~1, the last last four values
-%D are the same as the bounding box, e.g.
-%D
-%D \starttypen
-%D \convertPDFtoPDF{mp-pra-1.pdf} {1} {1}{-1bp}{-1bp}{398bp}{398bp}
-%D \convertPDFtoPDF{mp-pra-1.pdf}{.5}{.5} {0bp} {0bp}{199bp}{199bp}
-%D \stoptypen
-%D
-%D Keep in mind, that this kind of copying only works for
-%D pure and valid pdf code (without fonts).
-
-%D The scanning and copying is straightforward and quite fast.
-%D To speed up things we use two constants.
-
-\def\@@PDFstream@@    {stream}
-\def\@@PDFendstream@@ {endstream}
-
-%D \macros
-%D   {PDFmediaboxprefered}
-%D
-%D If needed, the macros can scan for the mediabox that
-%D specifies the dimensions and offsets of the graphic. When
-%D we say:
-%D
-%D \starttypen
-%D \PDFmediaboxpreferedtrue
-%D \stoptypen
-%D
-%D the mediabox present in the file superseded the user
-%D specified, already scaled and calculated offset and
-%D dimensions. Beware: the user supplied values are not the
-%D bounding box ones!
-
-\newif\ifPDFmediaboxprefered
-
-\def\setPDFboundingbox#1#2#3#4#5#6%
-  {\dimen0=#1\dimen0=#5\dimen0
-   \ScaledPointsToBigPoints{\number\dimen0}\PDFxoffset
-   \dimen0=#3\dimen0=#5\dimen0
-   \xdef\PDFwidth{\the\dimen0}%
-   \dimen0=#2\dimen0=#6\dimen0
-   \ScaledPointsToBigPoints{\number\dimen0}\PDFyoffset
-   \dimen0=#4\dimen0=#6\dimen0
-   \xdef\PDFheight{\the\dimen0}%
-   \global\let\PDFxoffset=\PDFxoffset
-   \global\let\PDFyoffset=\PDFyoffset}
-
-\def\setPDFmediabox#1[#2 #3 #4 #5]#6\done%
-  {\dimen2=#2bp\dimen2=-\dimen2
-   \dimen4=#3bp\dimen4=-\dimen4
-   \dimen6=#4bp\advance\dimen6 by \dimen2
-   \dimen8=#5bp\advance\dimen8 by \dimen4
-   \setPDFboundingbox{\dimen2}{\dimen4}{\dimen6}{\dimen8}\PDFxscale\PDFyscale}
-
-\def\checkPDFmediabox#1/MediaBox#2#3\done%
-  {\ifx#2\relax \else
-     \message{mediabox}%
-     \setPDFmediabox#2#3\done
-   \fi}
-
-%D We use the general macro \type{\doprocessfile} and feed this
-%D with a line handling macro that changes it's behavior when
-%D the stream operators are encountered.
-
-\def\handlePDFline%
-  {\ifx\@@PDFstream@@\fileline
-     \let\doprocessPDFline=\copyPDFobject
-     \startPDFtoPDF
-   \else\ifPDFmediaboxprefered
-     \expandafter\checkPDFmediabox\fileline/MediaBox\relax\done
-   \fi\fi}
-
-\def\copyPDFobject%
-  {\ifx\@@PDFendstream@@\fileline
-     \ifPDFmediaboxprefered
-       \let\doprocessPDFline=\findPDFmediabox
-     \else
-       \let\doprocessPDFline=\relax
-     \fi
-   \else
-     \advance\scratchcounter by 1
-     \PDFcode{\fileline}%
-   \fi}
-
-\def\findPDFmediabox%
-  {\expandafter\checkPDFmediabox\fileline/MediaBox\relax\done}
+\fi \fi
 
 %D The main conversion macro wraps the \PDF\ codes in a box
 %D that is output as an object. The graphics are embedded
 %D in~\type{q} and~\type{Q} and are scaled and positioned using
 %D one transform call (\type{cm}). This saves some additional
 %D scaling.
-
-%D \starttypen
-%D \def\startPDFtoPDF%
-%D   {\setbox0=\vbox\bgroup
-%D      \message{[PDF to PDF \PDFfilename}%
-%D      \forgetall
-%D      \scratchcounter=0
-%D      \let\stopPDFtoPDF=\dostopPDFtoPDF}
-%D 
-%D \def\dostopPDFtoPDF%
-%D   {\ifnum\scratchcounter<0 \scratchcounter=1 \fi
-%D    \message{(\the\scratchcounter\space lines)]}%
-%D    \egroup
-%D    \wd0=\PDFwidth
-%D    \vbox to \PDFheight
-%D      {\forgetall
-%D       \vfill
-%D       \PDFcode{q}%
-%D       \PDFcode{1 0 0 1 \PDFxoffset\space \PDFyoffset\space cm}%
-%D       \PDFcode{\PDFxscale\space 0 0 \PDFyscale\space 0 0 cm}%
-%D       \box0
-%D       \PDFcode{Q}}}
-%D 
-%D \def\stopPDFtoPDF%
-%D    {\message{[PDF to PDF \PDFfilename\space not found]}}
-%D 
-%D \def\convertPDFtoPDF#1#2#3#4#5#6#7%
-%D   {\bgroup
-%D    \def\PDFfilename{#1}%
-%D    \def\PDFxscale  {#2}%
-%D    \def\PDFyscale  {#3}%
-%D    \setPDFboundingbox{#4}{#5}{#6}{#7}{1}{1}%
-%D    \uncatcodespecials
-%D    \endlinechar=-1
-%D    \let\doprocessPDFline=\handlePDFline
-%D    \doprocessfile\scratchread\PDFfilename\doprocessPDFline
-%D    \stopPDFtoPDF
-%D    \egroup}
-
-\def\convertPDFtoPDF#1#2#3#4#5#6#7%
-  {\message{[PDF to PDF use \string\PDFcode instead]}%
-   \vbox{use the direct method instead}}
-
-%D \macros 
-%D   {dogetPDFmediabox}
-%D
-%D The next macro can be used to find the mediabox of a \PDF\
-%D illustration. 
-%D
-%D \starttypen
-%D \dogetPDFmediabox
-%D   {filename}
-%D   {new dimen}{new dimen}{new dimen}{new dimen} 
-%D \stoptypen
-%D
-%D Beware of dimen clashes: this macro uses the 5~default  
-%D scratch registers! When no file or mediabox is found, the 
-%D dimensions are zeroed. 
-
-\def\dogetPDFmediabox#1#2#3#4#5%
-  {\bgroup
-   \def\PDFxscale{1}%
-   \def\PDFyscale{1}%
-   \uncatcodespecials
-   \endlinechar=-1
-   \def\checkPDFtypepage##1/Type /Page##2##3\done%
-     {\ifx##2\relax 
-      \else\if##2s% accept /Page and /Pages 
-        \let\doprocessPDFline=\findPDFmediabox
-      \else
-        \let\doprocessPDFline=\findPDFmediabox
-      \fi\fi}%
-   \def\findPDFtypepage%
-     {\expandafter\checkPDFtypepage\fileline/Type /Page\relax\done}%
-   \def\checkPDFmediabox##1/MediaBox##2##3\done%
-     {\ifx##2\relax \else
-        \setPDFmediabox##2##3\done
-        \fileprocessedtrue
-      \fi}%
-   \def\findPDFmediabox%
-     {\expandafter\checkPDFmediabox\fileline/MediaBox\relax\done}%
-   \let\doprocessPDFline=\findPDFtypepage
-   \doprocessfile\scratchread{#1}\doprocessPDFline
-   \egroup
-   \ifx\PDFxoffset\undefined
-     #2=\!!zeropoint   #3=\!!zeropoint   #4=\!!zeropoint #5=\!!zeropoint
-   \else
-     #2=\PDFxoffset bp #3=\PDFyoffset bp #4=\PDFwidth    #5=\PDFheight
-   \fi}
 
 %D \macros
 %D   {convertMPtoPDF}
@@ -355,11 +292,11 @@
 %D uses. We don't define irrelevant ones, because these are
 %D skipped anyway.
 
-%D The converter can be made a bit faster by replacing the 
-%D two test macros (the ones with the many \type {\if's}) by 
-%D a call to named branch macros (something \typ {\getvalue 
-%D {xPSmoveto}}. For everyday documents with relatively 
-%D small graphics the gain in speed can be neglected.  
+%D The converter can be made a bit faster by replacing the
+%D two test macros (the ones with the many \type {\if's}) by
+%D a call to named branch macros (something \typ {\getvalue
+%D {xPSmoveto}}. For everyday documents with relatively
+%D small graphics the gain in speed can be neglected.
 
 \def \PScurveto          {curveto}
 \def \PSlineto           {lineto}
@@ -385,20 +322,37 @@
 \def \PSscale            {scale}
 \def \PSconcat           {concat}
 \def \PSdtransform       {dtransform}
+\def \PSsetlinewidth     {setlinewidth}
+\def \PSpop              {pop}
 
-\def \PSnfont            {nfont}    % was needed for TUG98 proceedings 
+\def \PSnfont            {nfont}    % was needed for TUG98 proceedings
 \def \PSspecial          {special}  % extensions to MetaPost
- 
-\def \PSBoundingBox      {BoundingBox:}
-\def \PSHiResBoundingBox {HiResBoundingBox:}
-\def \PSExactBoundingBox {ExactBoundingBox:}
-\def \PSMetaPostSpecial  {MetaPostSpecial:}
-\def \PSMetaPostSpecials {MetaPostSpecials:}
-\def \PSPage             {Page:}
+
+%D A previous version set \type {%} to ignore, which
+%D simplified the following definitions. At the start of
+%D conversion the percent character was made active again.
+%D Because the whole graphic is one paragraph (there are no
+%D empty lines) this does not give the desired effect. This
+%D went unnoticed untill Scott Pakin sent me a test file
+%D percent characters in a string. So, from now on we have
+%D to prefix the following strings with percentages.
+
+%D Some day I'll figure out a better solution (line by line reading
+%D using \ETEX).
+
+\edef \PSBoundingBox      {\letterpercent\letterpercent BoundingBox:}
+\edef \PSHiResBoundingBox {\letterpercent\letterpercent HiResBoundingBox:}
+\edef \PSExactBoundingBox {\letterpercent\letterpercent ExactBoundingBox:}
+\edef \PSMetaPostSpecial  {\letterpercent\letterpercent MetaPostSpecial:}
+\edef \PSMetaPostSpecials {\letterpercent\letterpercent MetaPostSpecials:}
+\edef \PSPage             {\letterpercent\letterpercent Page:}
+\edef \PSBeginProlog      {\letterpercent\letterpercent BeginProlog}
+\edef \PSEndProlog        {\letterpercent\letterpercent EndProlog}
+\edef \PSEof              {\letterpercent\letterpercent EOF}
 
 %D By the way, the \type {setcmykcolor} operator is not
 %D output by \METAPOST\ but can result from converting the
-%D \kap{RGB} color specifications, as implemented in
+%D \cap{RGB} color specifications, as implemented in
 %D \type{supp-mps}.
 
 %D In \POSTSCRIPT\ arguments precede the operators. Due to the
@@ -410,23 +364,23 @@
 %D (optional) postprocessing. Values are pushed onto the stack
 %D by:
 %D
-%D \starttypen
+%D \starttyping
 %D \setMPargument {value}
-%D \stoptypen
+%D \stoptyping
 %D
 %D They can be retrieved by the short named macros:
 %D
-%D \starttypen
+%D \starttyping
 %D \gMPa {number}
 %D \gMPs {number}
-%D \stoptypen
+%D \stoptyping
 %D
 %D When scanning a path specification, we also save the
 %D operator, using
 %D
-%D \starttypen
+%D \starttyping
 %D \setMPkeyword {n}
-%D \stoptypen
+%D \stoptyping
 %D
 %D The path drawing operators are coded for speed: \type{clip},
 %D \type{stroke}, \type{fill} and \type{fillstroke} become
@@ -435,9 +389,9 @@
 %D When processing the path this code can be retrieved
 %D using
 %D
-%D \starttypen
-%D \getMPkeyword{n}
-%D \stoptypen
+%D \starttyping
+%D \getMPkeyword % {n}
+%D \stoptyping
 %D
 %D When setting an argument, the exact position on the stack
 %D depends on the current value of the \COUNTERS\
@@ -449,9 +403,9 @@
 %D These variables hold the coordinates. The argument part of
 %D the stack is reset by:
 %D
-%D \starttypen
+%D \starttyping
 %D \resetMPstack
-%D \stoptypen
+%D \stoptyping
 %D
 %D We use the prefix \type{@@MP} to keep the stack from
 %D conflicting with existing macros. To speed up things a bit
@@ -482,29 +436,32 @@
   {\csname\@@MP\the\nofMPsegments\number#1\endcsname}
 
 \def\dogMPa#1%
-  {\@EAEAEA\do\csname\@@MP0\number#1\endcsname}
+  {\expandafter\expandafter\expandafter\do\csname\@@MP0\number#1\endcsname}
 
-\def\setMPkeyword#1 % 
+\def\setMPkeyword#1 %
   {\expandafter\def\csname\@@MP\the\nofMPsegments0\endcsname{#1}%
-   \advance\nofMPsegments1
-   \nofMParguments0 }
+   \advance\nofMPsegments 1
+   \nofMParguments0}
 
-\def\getMPkeyword#1%
-  {\csname\@@MP#10\endcsname}
+\def\getMPkeyword% #1%
+  {\csname\@@MP\the\nofMPsegments0\endcsname} % {\csname\@@MP#10\endcsname}
+
+\def\docleanupMPargument#1% we need this because args can have [ or ] pre/appended
+  {\expandafter\edef\csname\@@MP\the\nofMPsegments\number#1\endcsname
+     {\csname\@@MP\the\nofMPsegments\number#1\endcsname}}
 
 %D When we reset the stack, we can assume that all further
 %D comment is to be ignored and handled in strings.
 %D By redefining the reset macro after the first call, we
-%D save some run time. Only use this macro after all 
-%D comments are processed and use the simple alternative 
-%D when dealing with comments. 
+%D save some run time. Only use this macro after all
+%D comments are processed and use the simple alternative
+%D when dealing with comments.
 
-\def\doresetMPstack%
-  {\nofMParguments0 }
+\def\doresetMPstack
+  {\nofMParguments0\relax}
 
-\def\resetMPstack%
-  {\catcode`\%=\@@active
-   \let\handleMPgraphic\handleMPendgraphic
+\def\resetMPstack
+  {\let\handleMPgraphic\handleMPendgraphic
    \let\resetMPstack\doresetMPstack
    \resetMPstack}
 
@@ -530,7 +487,26 @@
 \def\octalMPcharacter#1#2#3%
   {\char'#1#2#3\relax}
 
+%D curly braces and squarly brackets are stored in the argument stack
+%D as part  of strings, for instance in:
+%D
+%D \starttyping
+%D /fshow {exch findfont exch scalefont setfont show}bind def
+%D [3 3 ] 0 setdash
+%D \stoptyping
+%D
+%D but we need to keep them in situation like
+%D
+%D \starttyping
+%D ([bla bla] bla bla) ec-lmr10 9.96265 fshow
+%D ({bla bla} bla bla) ec-lmr10 9.96265 fshow
+%D \stoptyping
+%D
+%D So, when we store the snippets, we keep the special tokens, and
+%D when needed we either ignore or obey them
+
 \bgroup
+\defineMPtoPDFfallbacks
 \catcode`\|=\@@comment
 \catcode`\%=\@@active
 \catcode`\[=\@@active
@@ -539,8 +515,14 @@
 \catcode`\}=\@@active
 \catcode`B=\@@begingroup
 \catcode`E=\@@endgroup
+\gdef\keepMPspecials|
+  B\let%\letterpercent|
+   \def[B\noexpand[E|
+   \def]B\noexpand]E|
+   \def{B\noexpand{E|
+   \def}B\noexpand}EE
 \gdef\ignoreMPspecials|
-  B\def%BE|
+  B\let%\letterpercent|
    \def[BE|
    \def]BE|
    \def{BE|
@@ -559,6 +541,8 @@
    \catcode`\]=\@@active
    \catcode`\{=\@@active
    \catcode`\}=\@@active
+   \lccode`\-=0 | latex sets this to `\-
+   \lccode`\%=`\% | otherwise it's seen as a number
    \def\(B\char40\relax     E|
    \def\)B\char41\relax     E|
    \def\\B\char92\relax     E|
@@ -574,18 +558,21 @@
    \def\9B\octalMPcharacter9EE
 \egroup
 
-%D We use the comment symbol as a sort of trigger:
+%D We use the comment symbol as a sort of trigger. Beware!
+%D The whole graphic is seen as on eparagraph, which means
+%D that we cannot change the catcodes in between.
 
 \bgroup
+\defineMPtoPDFfallbacks
 \catcode`\%=\@@active
 \gdef\startMPscanning{\let%=\startMPconversion}
 \egroup
 
 %D In earlier versions we used the sequence
 %D
-%D \starttypen
+%D \starttyping
 %D \expandafter\handleMPsequence\input filename\relax
-%D \stoptypen
+%D \stoptyping
 %D
 %D Persistent problems in \LATEX\ however forced us to use a
 %D different scheme. Every \POSTSCRIPT\ file starts with a
@@ -594,9 +581,8 @@
 %D originates in the redefinition by \LATEX\ of the
 %D \type{\input} primitive.)
 
-\def\startMPconversion%
-  {\catcode`\%=\@@ignore
-   \ignoreMPspecials
+\def\startMPconversion
+  {\keepMPspecials
    \handleMPsequence}
 
 %D Here comes the main loop. Most arguments are numbers. This
@@ -605,107 +591,166 @@
 %D speed up the conversion by handling the \type{path}
 %D seperately.
 
-\def\@EAEAEA{\expandafter\expandafter\expandafter} % to be sure 
-
 \def\dohandleMPsequence#1%
   {\ifdone
-     \ifcase\lccode`#1\relax 
-       \@EAEAEA\dohandleMPsequenceA
+     \ifcase\lccode`#1\relax
+       \expandafter\expandafter\expandafter\dohandleMPsequenceA
      \else
-       \@EAEAEA\dohandleMPsequenceB
+       \expandafter\expandafter\expandafter\dohandleMPsequenceB
      \fi
    \else
-     \@EA\dohandleMPsequenceC
-   \fi#1} 
+     \expandafter\dohandleMPsequenceC
+   \fi#1}
 
-%\def\dohandleMPsequenceA#1 %
-%  {\setMPargument{#1}%
-%   \handleMPsequence}
- 
 \let\dohandleMPsequenceA\setMPsequence
+
+\def\installMPSkeywordN#1#2%
+  {\expandafter\def\csname\@@MP:N:#1\endcsname{#2}}
+
+\def\installMPSshortcutN#1#2% todo: \let
+  {\expandafter\let\csname\@@MP:N:#1\expandafter\endcsname\csname\@@MP:N:#2\endcsname}
 
 \def\dohandleMPsequenceB#1 %
   {\edef\somestring{#1}%
-   \ifx\somestring\PSmoveto
-     \edef\lastMPmoveX{\gMPa1}%
-     \edef\lastMPmoveY{\gMPa2}%
-     \PDFcode{\!MPgMPa1 \!MPgMPa2 m}%
-     \resetMPstack
-   \else\ifx\somestring\PSnewpath
-     \let\handleMPsequence\handleMPpath
-   \else\ifx\somestring\PSgsave
-     \PDFcode{q}%
-     \resetMPstack
-   \else\ifx\somestring\PSgrestore
-     \PDFcode{Q}%
-     \resetMPstack
-   \else\ifx\somestring\PSdtransform  % == setlinewidth
-     \let\handleMPsequence\handleMPdtransform
-   \else\ifx\somestring\PSconcat
-     \PDFcode{\gMPa1 \gMPa2 \gMPa3 \gMPa4 \gMPa5 \gMPa6 cm}%
-     \resetMPstack
-   \else\ifx\somestring\PSsetrgbcolor
-     \handleMPrgbcolor
-     \resetMPstack
-   \else\ifx\somestring\PSsetcmykcolor
-     \handleMPcmykcolor
-     \resetMPstack
-   \else\ifx\somestring\PSsetgray
-     \handleMPgraycolor
-     \resetMPstack
-   \else\ifx\somestring\PStranslate
-     \PDFcode{1 0 0 1 \gMPa1 \gMPa2 cm}%
-     \resetMPstack
-   \else\ifx\somestring\PSsetdash
-     \handleMPsetdash
-     \resetMPstack
-   \else\ifx\somestring\PSsetlinejoin
-     \PDFcode{\gMPa1 j}%
-     \resetMPstack
-   \else\ifx\somestring\PSsetmiterlimit
-     \PDFcode{\gMPa1 M}%
-     \resetMPstack
-   \else\ifx\somestring\PSfshow
-     \PDFcode{n}% 
-     \handleMPfshow
-     \resetMPstack
-   \else\ifx\somestring\PSsetlinecap
-     \PDFcode{\gMPa1 J}%
-     \resetMPstack
-   \else\ifx\somestring\PSrlineto
-     \PDFcode{\!MP\lastMPmoveX\space\!MP\lastMPmoveY\space l S}%
-     \resetMPstack
-   \else\ifx\somestring\PSscale
-     \PDFcode{\gMPa1 0 0 \gMPa2 0 0 cm}%
-     \resetMPstack
-   \else\ifx\somestring\PSspecial
-     \handleMPspecialcommand
-     \resetMPstack
+   \ifcsname\@@MP:N:\somestring\endcsname
+     \csname\@@MP:N:\somestring\expandafter\endcsname
    \else
-     \handleMPgraphic% {#1}%
-   \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+     \expandafter\handleMPgraphic
+   \fi
    \handleMPsequence}
+
+\ifx\eTeXversion\undefined
+    \def\dohandleMPsequenceB#1 %
+      {\edef\somestring{#1}%
+       \expandafter\ifx\csname\@@MP:N:\somestring\endcsname\relax
+         \expandafter\handleMPgraphic
+       \else
+         \csname\@@MP:N:\somestring\expandafter\endcsname
+       \fi
+       \handleMPsequence}
+\fi
+
+\installMPSkeywordN \PSmoveto
+  {\edef\lastMPmoveX{\gMPa1}%
+   \edef\lastMPmoveY{\gMPa2}%
+   \resetMPstack}
+\installMPSkeywordN \PSnewpath
+  {\let\handleMPsequence\handleMPpath}
+\installMPSkeywordN \PSgsave
+  {\PDFcode{q}%
+   \resetMPstack}
+\installMPSkeywordN \PSgrestore
+  {\PDFcode{Q}%
+   \resetMPstack}
+\installMPSkeywordN \PSdtransform  % == setlinewidth
+  {\let\handleMPsequence\handleMPdtransform}
+   % after that we will encounter more tokens until setlinewidth+pop
+   % or pop+setlinewidth which we catch next; we explicitly need to
+   % reset the stack since [] n setdash may follow; a more clever
+   % approach would be to read on till the condition is met, but it's
+   % the only pop / setlinewidth we will encounter so ...
+\installMPSkeywordN \PSsetlinewidth
+  {% already handled in dtransform
+   \resetMPstack}
+\installMPSkeywordN \PSpop
+  {% already handled in dtransform
+   \resetMPstack}
+\installMPSkeywordN \PSconcat
+  {\cleanupMPconcat
+   \PDFcode{\gMPa1 \gMPa2 \gMPa3 \gMPa4 \gMPa5 \gMPa6 cm}%
+   \resetMPstack}
+\installMPSkeywordN \PSsetrgbcolor
+  {\handleMPrgbcolor
+   \resetMPstack}
+\installMPSkeywordN \PSsetcmykcolor
+  {\handleMPcmykcolor
+   \resetMPstack}
+\installMPSkeywordN \PSsetgray
+  {\handleMPgraycolor
+   \resetMPstack}
+\installMPSkeywordN \PStranslate
+  {\PDFcode{1 0 0 1 \gMPa1 \gMPa2 cm}%
+   \resetMPstack}
+\installMPSkeywordN \PSsetdash
+  {\handleMPsetdash
+   \resetMPstack}
+\installMPSkeywordN \PSsetlinejoin
+  {\PDFcode{\gMPa1 j}%
+   \resetMPstack}
+\installMPSkeywordN \PSsetmiterlimit
+  {\PDFcode{\gMPa1 M}%
+   \resetMPstack}
+\installMPSkeywordN \PSfshow
+  {%\PDFcode{n}% removed !
+   \handleMPfshow
+   \resetMPstack}
+\installMPSkeywordN \PSsetlinecap
+  {\PDFcode{\gMPa1 J}%
+   \resetMPstack}
+\installMPSkeywordN \PSrlineto
+  {\flushMPmoveto
+   \PDFcode{\!MP\lastMPmoveX\space\!MP\lastMPmoveY\space l S}%
+   \resetMPmoveto
+   \resetMPstack}
+\installMPSkeywordN \PSscale
+  {\PDFcode{\gMPa1 0 0 \gMPa2 0 0 cm}%
+   \resetMPstack}
+\installMPSkeywordN \PSspecial
+  {\handleMPspecialcommand
+   \resetMPstack}
+
+\installMPSshortcutN {n}  \PSnewpath
+\installMPSshortcutN {p}  \PSclosepath
+\installMPSshortcutN {l}  \PSlineto
+\installMPSshortcutN {r}  \PSrlineto
+\installMPSshortcutN {m}  \PSmoveto
+\installMPSshortcutN {c}  \PScurveto
+\installMPSshortcutN {C}  \PSsetcmykcolor
+\installMPSshortcutN {G}  \PSsetgray
+\installMPSshortcutN {R}  \PSsetrgbcolor
+\installMPSshortcutN {lj} \PSsetlinejoin
+\installMPSshortcutN {ml} \PSsetmiterlimit
+\installMPSshortcutN {lc} \PSsetlinecap
+\installMPSshortcutN {sd} \PSsetdash
+\installMPSshortcutN {S}  \PSstroke
+\installMPSshortcutN {F}  \PSfill
+\installMPSshortcutN {W}  \PSclip
+
+\installMPSshortcutN {q}  \PSgsave
+\installMPSshortcutN {Q}  \PSgrestore
+
+\installMPSshortcutN {s}  \PSscale
+\installMPSshortcutN {t}  \PSconcat
+\installMPSshortcutN {P}  \PSshowpage
+
+\installMPSkeywordN {hlw} {\PDFcode{\gMPa1 w}\resetMPstack}
+\installMPSkeywordN {vlw} {\PDFcode{\gMPa1 w}\resetMPstack}
+\installMPSkeywordN {rd}  {\PDFcode{[] 0   d}\resetMPstack}
 
 \def\dohandleMPsequenceC#1 %
   {\edef\somestring{#1}%
    \handleMPgraphic % {#1}%
    \handleMPsequence}
 
-%D Since colors are not sensitive to transformations, they 
-%D are sometimes used for signaling. Therefore, we handle them 
-%D separately. The next macro can be redefined if needed. 
+%D Since colors are not sensitive to transformations, they
+%D are sometimes used for signaling. Therefore, we handle them
+%D separately. The next macro can be redefined if needed.
 
 \def\handleMPrgbcolor
-  {\PDFcode{\!MPgMPa1 \!MPgMPa2 \!MPgMPa3 rg 
+  {\PDFcode{\!MPgMPa1 \!MPgMPa2 \!MPgMPa3 rg
             \!MPgMPa1 \!MPgMPa2 \!MPgMPa3 RG}}
 
 \def\handleMPcmykcolor
-  {\PDFcode{\!MPgMPa1 \!MPgMPa2 \!MPgMPa3 \!MPgMPa4 k 
+  {\PDFcode{\!MPgMPa1 \!MPgMPa2 \!MPgMPa3 \!MPgMPa4 k
             \!MPgMPa1 \!MPgMPa2 \!MPgMPa3 \!MPgMPa4 K}}
 
 \def\handleMPgraycolor
-  {\PDFcode{\!MPgMPa1 g 
+  {\PDFcode{\!MPgMPa1 g
             \!MPgMPa1 G}}
+
+\def\handleMPspotcolor
+  {\PDFcode{0 g
+            0 G}}
 
 %D Beginning and ending the graphics is taken care of by the
 %D macro \type{\handleMPgraphic}, which is redefined when
@@ -714,9 +759,11 @@
 \def\handleMPendgraphic % #1%
   {\ifx\somestring\PSshowpage
      \let\handleMPsequence\finishMPgraphic
+   \else\ifx\somestring\PSEof
+     \let\handleMPsequence\finishMPgraphic
    \else
      \letMPargument\somestring % {#1}%
-   \fi}
+   \fi\fi}
 
 \def\handleMPbegingraphic % #1%
   {\ifx\somestring\PSBoundingBox
@@ -727,28 +774,44 @@
      \def\handleMPsequence{\handleMPboundingbox3}%
    \else\ifx\somestring\PSshowpage
      \let\handleMPsequence\finishMPgraphic
+   \else\ifx\somestring\PSEof
+     \let\handleMPsequence\finishMPgraphic
    \else\ifx\somestring\PSPage
      \let\handleMPsequence\handleMPpage
    \else\ifx\somestring\PSMetaPostSpecials
      \let\handleMPsequence\handleMPspecialscomment
    \else\ifx\somestring\PSMetaPostSpecial
      \let\handleMPsequence\handleMPspecialcomment
+   \else\ifx\somestring\PSBeginProlog
+     \let\handleMPsequence\handleMPprolog
    \else
-     \letMPargument\somestring % {#1}% 
-   \fi\fi\fi\fi\fi\fi\fi}
+     \letMPargument\somestring % {#1}%
+   \fi\fi\fi\fi\fi\fi\fi\fi\fi}
 
 \let\handleMPgraphic=\handleMPbegingraphic
+
+%D New: we can best filter the prolog because nowdays it can contain
+%D quite some code.
+
+% hm, catcode mess, so we need to tweak %'s catcode here
+% \long\expandafter\def\expandafter\handleMPprolog\expandafter#\expandafter1\PSEndProlog%
+% but today i'm not in the mood for ugly stuff
+
+\long\def\handleMPprolog#1EndProlog %
+  {\doresetMPstack
+   \let\handleMPsequence\dohandleMPsequence
+   \handleMPsequence}
 
 %D We check for three kind of bounding boxes: the normal one
 %D and two high precision ones:
 %D
-%D \starttypen
+%D \starttyping
 %D BoundingBox: llx lly ucx ucy
 %D HiResBoundingBox: llx lly ucx ucy
 %D ExactBoundingBox: llx lly ucx ucy
-%D \stoptypen
+%D \stoptyping
 %D
-%D The original as well as the recalculated dimensions are 
+%D The original as well as the recalculated dimensions are
 %D saved for later use.
 
 \newif\ifskipemptyMPgraphic \skipemptyMPgraphicfalse
@@ -759,34 +822,38 @@
   {\ifnum#1>\currentMPboundingbox
      \xdef\MPllx{#2}\xdef\MPlly{#3}%
      \xdef\MPurx{#4}\xdef\MPury{#5}%
-     \dimen0=#2pt\dimen0=-\MPxscale\dimen0
-     \dimen2=#3pt\dimen2=-\MPyscale\dimen2
-     \xdef\MPxoffset{\withoutpt{\the\dimen0}}%
-     \xdef\MPyoffset{\withoutpt{\the\dimen2}}%
-     \dimen0=#2bp\dimen0=-\dimen0
-     \dimen2=#3bp\dimen2=-\dimen2
-     \advance\dimen0 by #4bp
+     \dimen0=#2pt
+     \dimen0=-\MPxscale\dimen0
+     \dimen2=#3pt
+     \dimen2=-\MPyscale\dimen2
+     \xdef\MPxoffset{\withoutpt\the\dimen0}%
+     \xdef\MPyoffset{\withoutpt\the\dimen2}%
+     \dimen0=#2bp
+     \dimen0=-\dimen0
+     \dimen2=#3bp
+     \dimen2=-\dimen2
+     \advance\dimen0 #4bp
      \dimen0=\MPxscale\dimen0
      \xdef\MPwidth{\the\dimen0}%
-     \advance\dimen2 by #5bp
-     \xdef\MPyshift{\the\dimen2}% unscaled 
+     \advance\dimen2 #5bp
+     \xdef\MPyshift{\the\dimen2}% unscaled
      \dimen2=\MPyscale\dimen2
      \xdef\MPheight{\the\dimen2}%
-     \chardef\currentMPboundingbox=#1\relax
+     \chardef\currentMPboundingbox#1\relax
    \fi
    \doresetMPstack
    \let\handleMPsequence\dohandleMPsequence
    \let\next\handleMPsequence
    \ifskipemptyMPgraphic
-     \ifdim\MPheight=\!!zeropoint\relax\ifdim\MPwidth=\!!zeropoint\relax
-      \def\next{\endinput\finishMPgraphic}%
+     \ifdim\MPheight=0pt\relax\ifdim\MPwidth=0pt\relax
+       \def\next{\endinput\finishMPgraphic}%
      \fi\fi
    \fi
    \next}
 
-%D Unless defined otherwise, we simply ignore specialcomments. 
+%D Unless defined otherwise, we simply ignore specialcomments.
 
-\def\handleMPspecialcomment%
+\def\handleMPspecialcomment
   {\doresetMPstack
    \let\handleMPsequence\dohandleMPsequence
    \handleMPsequence}
@@ -802,9 +869,9 @@
    \let\handleMPsequence\dohandleMPsequence
    \handleMPsequence}
 
-%D The same applies to the special extensions. 
+%D The same applies to the special extensions.
 
-\def\handleMPspecialcommand 
+\def\handleMPspecialcommand
   {\doresetMPstack
    \let\handleMPsequence\dohandleMPsequence
    \handleMPsequence}
@@ -824,24 +891,62 @@
 %D finally I saw the light. It proved that we also had to
 %D take care of \type{(split arguments)}.
 
+% \def\setMPfshowfont#1#2%
+%   {\font\temp=#1\space at #2\relax\temp}
+
+% \startMPcode
+%     draw btex Ga toch effe f\kern0ptietsen?{}` etex ;
+% \stopMPcode
+
+\newtoks \everyMPshowfont
+
 \def\setMPfshowfont#1#2%
-  {\font\temp=#1\space at #2\relax\temp}
+  {\font\temp=#1\space at #2\relax\temp
+   \the\everyMPshowfont}
 
 \let\MPfshowcommand\empty
 
-\def\handleMPfshow%
+%D The next hackery handles characters one by one. We only support this
+%D for the latest greatest \METAPOST\ binaries, the ones that escape
+%D problematic chars.
+
+\def\doflushMPtext#1%
+  {\edef\!!stringa{#1}%
+   \@EA\dodoflushMPtext\!!stringa\relax}
+
+\def\dodoflushMPtext
+  {\afterassignment\dododoflushMPtext\let\nexttoken=}
+
+\def\dododoflushMPtext
+  {\ifx\nexttoken\relax
+     % done
+   \else\ifx\nexttoken\char
+     \@EA\@EA\@EA\dodododoflushMPtext
+   \else
+     {\nexttoken}%
+     \@EA\@EA\@EA\dodoflushMPtext
+   \fi\fi}
+
+\def\dodododoflushMPtext
+  {\afterassignment\dododododoflushMPtext\scratchcounter}
+
+\def\dododododoflushMPtext
+ {{\char\scratchcounter}\let\next\dodoflushMPtext}
+
+\def\dohandleMPfshow
   {\bgroup
-   \setbox\scratchbox=\hbox
+   \setbox\scratchbox\hbox
      {\obeyMPspecials
+      \let\ \relax % mp breaks long lines and appends a \
       \edef\size{\gMPa\nofMParguments}%
-      \ifx\size\PSnfont % round font size (to pt) 
+      \ifx\size\PSnfont % round font size (to pt)
         \advance\nofMParguments -1
         \expandafter\scratchdimen\gMPa\nofMParguments pt\relax
         \ifdim\scratchdimen<1pt
           \def\size{1pt}%
         \else
-          \advance\scratchdimen .5pt 
-          \def\size##1.##2\relax{\def\size{##1pt}}% 
+          \advance\scratchdimen .5pt
+          \def\size##1.##2\relax{\def\size{##1pt}}%
           \expandafter\size\the\scratchdimen\relax
         \fi
       \else
@@ -849,21 +954,22 @@
       \fi
       \advance\nofMParguments -1
      %\font\temp=\gMPa\nofMParguments\space at \size
-      \let\temp\relax % to be sure 
+      \let\temp\relax % to be sure
       \setMPfshowfont{\gMPa\nofMParguments}\size
       \advance\nofMParguments -1
       \temp
       \MPfshowcommand
         {\ifnum\nofMParguments=1
            \def\do(##1){##1}%
-           \dogMPa1%
+           \doflushMPtext{\dogMPa1}% only latest mp gets this treatment
          \else
-           % we need to catch ( a ) (a a a) (\123 \123 \123) etc 
-           \scratchcounter=1
-           \def\dodo##1% Andreas Fieger's bug: (\304...) 
-             {\ifx##1\MPspacechar\MPspacechar\else\expandafter##1\fi}%
+           % we need to catch ( a ) (a a a) (\123 \123 \123) etc
+           \scratchcounter1
+           \def\dodo##1% Andreas Fieger's bug: (\304...)
+             {\edef\!!stringa{##1\empty\empty}% and another one: ( 11) -> \ifx 11
+              \ifx\!!stringa\MPspacechar\MPspacechar\else\expandafter##1\fi}%
            \def\do(##1{\dodo{##1}}%
-           \dogMPa\scratchcounter\MPspacechar 
+           \dogMPa\scratchcounter\MPspacechar
            \let\do\relax
            \loop
              \advance\scratchcounter 1
@@ -874,44 +980,38 @@
            \dogMPa\scratchcounter
          \fi
          \unskip}}%
-  % 
-  % this fails in latest pdftex's
-  %
-  % \dimen0=\lastMPmoveY bp
-  % \advance\dimen0 by \ht0
-  % \ScaledPointsToBigPoints{\number\dimen0}\lastMPmoveY
-  % \PDFcode{n q 1 0 0 1 \lastMPmoveX\space\lastMPmoveY\space cm}%
-  % \dimen0=\ht0
-  % \advance\dimen0 by \dp0
-  % \box0
-  % \vskip-\dimen0
-  % \PDFcode{Q}%
-  % \egroup}
-  %
-   \setbox\scratchbox=\hbox
+   \setbox\scratchbox\hbox
      {\hskip\lastMPmoveX bp\raise\lastMPmoveY bp\box\scratchbox}%
-   \ht\scratchbox\!!zeropoint
-   \dp\scratchbox\!!zeropoint
-   \wd\scratchbox\!!zeropoint
+   \ht\scratchbox0pt%
+   \dp\scratchbox0pt%
+   \wd\scratchbox0pt%
    \box\scratchbox
    \egroup}
 
-%D You could consider the following definition to be the most
-%D natural one. 
+\let\handleMPfshow\dohandleMPfshow % so we can overload this one later
 
-\def\MPspacechar{\space} % normal case 
+%D You could consider the following definition to be the most
+%D natural one.
+
+% \def\MPspacechar{\space} % normal case
+
+\def\MPspacechar{\char32\relax} % old solution does not work with math
 
 %D However, the following implementation is more robust, since
 %D some fonts have funny visible spaces in the space slot. This
 %D gives a mismatch between the space that \METAPOST\ took into
-%D account and the \citeer {natural} space. This only happens in
+%D account and the \quote {natural} space. This only happens in
 %D labels, since \type {btex}||\type {etex} thingies don't have
 %D spaces. This phenomena showed up when preparing the
-%D \METAFUN\ manual, where Palatino fonts are used. We can 
-%D safely assume that \METAPOST\ considers \type {\char32} to 
-%D be the space.  
+%D \METAFUN\ manual, where Palatino fonts are used. We can
+%D safely assume that \METAPOST\ considers \type {\char32} to
+%D be the space.
 
-\def\MPspacechar{\setbox\scratchbox=\hbox{\char32}\kern\wd\scratchbox}
+\def\MPspacechar{\setbox\scratchbox\hbox{\char32}\kern\wd\scratchbox}
+
+%D Well, this does not work with math fonts, so:
+
+\def\MPspacechar{\char32\relax}
 
 %D Most operators are just converted and keep their
 %D arguments. Dashes however need a bit different treatment,
@@ -922,10 +1022,11 @@
 %D at the same time keep the output readable by packing the
 %D literals.
 
-\def\handleMPsetdash%
+\def\handleMPsetdash
   {\bgroup
+   \ignoreMPspecials
    \def\somestring{[}%
-   \scratchcounter=1
+   \scratchcounter1
    \loop
      \ifnum\scratchcounter<\nofMParguments
        \edef\somestring{\somestring\space\gMPa\scratchcounter}%
@@ -936,14 +1037,14 @@
    \egroup}
 
 %D The \type{setlinewidth} commands looks a bit complicated. There are
-%D two alternatives, that result in a similar look in both 
+%D two alternatives, that result in a similar look in both
 %D $x$- and $y$-dorection. As John Hobby says:
 %D
-%D \startsmaller \switchtobodyfont[ss]
-%D \starttypen
+%D \startnarrower \switchtobodyfont[ss]
+%D \starttyping
 %D x 0 dtransform exch truncate exch idtransform pop setlinewidth
 %D 0 y dtransform truncate idtransform setlinewidth pop
-%D \stoptypen
+%D \stoptyping
 %D
 %D These are just fancy versions of \type{x setlinewidth} and
 %D \type{y setlinewidth}. The \type{x 0 ...} form is used if
@@ -957,13 +1058,13 @@
 %D conversion rules cause a horizontal or vertical line of
 %D integer width $n$ in device space to come out $n+1$ pixels
 %D wide, regardless of the phase relative to the pixel grid.)
-%D \stopsmaller
+%D \stopnarrower
 %D
 %D The common operator in these sequences is \type{dtransform},
 %D so we can use this one to trigger setting the linewidth.
 
-\def\handleMPdtransform%
-  {\ifdim\gMPa1pt>\!!zeropoint
+\def\handleMPdtransform
+  {\ifdim\gMPa1 pt>0pt
      \PDFcode{\gMPa1 w}%
      \def\next##1 ##2 ##3 ##4 ##5 ##6 {\handleMPsequence}%
    \else
@@ -990,19 +1091,19 @@
 
 %D In \METAPOST\ there are three ways to handle a path $p$:
 %D
-%D \starttypen
+%D \starttyping
 %D draw p;  fill p;  filldraw p;
-%D \stoptypen
+%D \stoptyping
 %D
 %D The last case outputs a \type{gsave fill grestore} before
 %D \type{stroke}. Handling the path outside the main loops
-%D saves about 40\% run time.\voetnoot{We can save some more by
+%D saves about 40\% run time.\footnote{We can save some more by
 %D following the \METAPOST\ output routine, but for the moment
 %D we keep things simple.} Switching between the main loop and
 %D the path loop is done by means of the recursely called
 %D macro \type{\handleMPsequence}.
 
-\def\handleMPpath%
+\def\handleMPpath
   {\chardef\finiMPpath0
    \let\closeMPpath\relax
    \let\flushMPpath\flushnormalMPpath
@@ -1015,29 +1116,20 @@
 %D split up the routine in two.
 
 \def\flushnormalMPsegment
-  {\expandafter\ifcase\getMPkeyword{\the\nofMPsegments}\relax
+  {\ifcase\getMPkeyword\relax
      \PDFcode{\!MPgMPs1 \!MPgMPs2 l}%
    \or
      \PDFcode{\!MPgMPs1 \!MPgMPs2 \!MPgMPs3 \!MPgMPs4 \!MPgMPs5 \!MPgMPs6 c}%
    \or
-     \PDFcode{\!MP\lastMPmoveX\space\!MP\lastMPmoveY\space l S}%
+     \PDFcode{\!MP\lastMPmoveX\space\!MP\lastMPmoveY\space l}%
    \or
      \edef\lastMPmoveX{\gMPs1}% evt \!MP here
      \edef\lastMPmoveY{\gMPs2}%
      \PDFcode{\!MP\lastMPmoveX\space \!MP\lastMPmoveY\space m}%
    \fi}
 
-\def\flushnormalMPpath%
-  {\scratchcounter\nofMPsegments
-   \nofMPsegments1
-   \loop
-     \flushnormalMPsegment
-     \advance\nofMPsegments 1
-     \ifnum\nofMPsegments<\scratchcounter
-   \repeat}
-
 \def\flushconcatMPsegment
-  {\expandafter\ifcase\getMPkeyword{\the\nofMPsegments}\relax
+  {\ifcase\getMPkeyword\relax
      \doMPconcat{\gMPs1}\a{\gMPs2}\b%
      \PDFcode{\!MP\a\space\!MP\b\space l}%
    \or
@@ -1060,23 +1152,56 @@
      \PDFcode{\!MP\a\space\!MP\b\space m}%
    \fi}
 
-\def\flushconcatMPpath%
-  {\scratchcounter=\nofMPsegments
-   \nofMPsegments=1
-   \loop
-     \flushconcatMPsegment
-     \advance\nofMPsegments 1
-     \ifnum\nofMPsegments<\scratchcounter
-   \repeat}
+% \def\flushnormalMPpath
+%   {\scratchcounter\nofMPsegments
+%    \nofMPsegments 1
+%    \loop
+%      \flushnormalMPsegment
+%      \advance\nofMPsegments 1
+%      \ifnum\nofMPsegments<\scratchcounter
+%    \repeat}
+%
+% \def\flushconcatMPpath
+%   {\scratchcounter\nofMPsegments
+%    \nofMPsegments 1
+%    \loop
+%      \flushconcatMPsegment
+%      \advance\nofMPsegments 1
+%      \ifnum\nofMPsegments<\scratchcounter
+%    \repeat}
+%
+% an alternative is presented below: (no \def assignment)
+
+\def\doflushsomeMPpath
+  {\dodoflushsomeMPpath
+   \advance\nofMPsegments 1
+   \ifnum\nofMPsegments<\scratchcounter
+     \expandafter\doflushsomeMPpath
+   \fi}
+
+\def\flushsomeMPpath
+  {\scratchcounter\nofMPsegments
+   \nofMPsegments 1
+   \doflushsomeMPpath}
+
+\def\flushnormalMPpath{\let\dodoflushsomeMPpath\flushnormalMPsegment\flushsomeMPpath}
+
+%OLD \def\flushconcatMPpath{\let\dodoflushsomeMPpath\flushconcatMPsegment\flushsomeMPpath}
+
+%NEW pre-calculate 1/D so it needn't be repeated for each control point.
+
+\def\flushconcatMPpath
+  {\MPreciprocaldeterminant
+   \let\dodoflushsomeMPpath\flushconcatMPsegment\flushsomeMPpath}
 
 %D The transformation of the coordinates is handled by one of
 %D the macros Tanmoy posted to the \PDFTEX\ mailing list.
 %D I rewrote and optimized the original macro to suit the other
 %D macros in this module.
 %D
-%D \starttypen
+%D \starttyping
 %D \doMPconcat {x position} \xresult {y position} \yresult
-%D \stoptypen
+%D \stoptyping
 %D
 %D By setting the auxiliary \DIMENSIONS\ \type{\dimen0} upto
 %D \type{\dimen10} only once per path, we save over 20\% run
@@ -1090,43 +1215,150 @@
 %D we converted them to pure points, simply because those can
 %D be converted back.
 
-\def\MPconcatfactor{256}
+%OLD \mathchardef\MPconcatfactor=256 % beware don't remove spaces before it
 
-\def\doMPreducedimen#1
-  {\count0=\MPconcatfactor
-   \advance\dimen#1 \ifdim\dimen#1>\!!zeropoint .5\else -.5\fi\count0
-   \divide\dimen#1 \count0\relax}
+%OLD \def\doMPreducedimen#1
+%OLD   {\count0\MPconcatfactor
+%OLD    \advance\dimen#1 \ifdim\dimen#1>0pt .5\else -.5\fi\count0
+%OLD    \divide\dimen#1 \count0\relax}
 
-% too inaccurate (see old pragma logo) 
-% 
-% \def\doMPreducedimen#1
-%   {\count0=\MPconcatfactor
-%    \divide\dimen#1 \count0\relax}
+%OLD % too inaccurate (see old pragma logo)
+%OLD
+%OLD \def\doMPreducedimen#1
+%OLD   {\count0=\MPconcatfactor
+%OLD    \divide\dimen#1 \count0\relax}
 
-\def\doMPexpanddimen#1
-  {\multiply\dimen#1 \MPconcatfactor\relax}
+%OLD \def\doMPreducedimen#1
+%OLD   {\advance\dimen#1 \ifdim\dimen#1>0pt .5\else -.5\fi\MPconcatfactor
+%OLD    \divide\dimen#1 \MPconcatfactor}
 
-\def\presetMPconcat%
-  {\dimen 0=\gMPs1 pt \doMPreducedimen 0    % r_x
-   \dimen 2=\gMPs2 pt \doMPreducedimen 2    % s_x
-   \dimen 4=\gMPs3 pt \doMPreducedimen 4    % s_y
-   \dimen 6=\gMPs4 pt \doMPreducedimen 6    % r_y
-   \dimen 8=\gMPs5 pt \doMPreducedimen 8    % t_x
-   \dimen10=\gMPs6 pt \doMPreducedimen10 }  % t_y
+%D The transformation code is rewritten by Daniel H. Luecking who
+%D describes his patch as follows:
+%D
+%D We would like to divide 1 by $X$, but all divisions are integer so
+%D for accuracy we want to convert to large integers and make sure the
+%D integer quotient has as many significant digits as possible. Thus we
+%D need to replace $1/X$ with $M/N$ where $N$ is as large as possible
+%D and $M/N$ is as large as possible. Also for simplicity $M$ should be
+%D a power of 2. So we make $M = 2^{30}$ \footnote{$2^{31} - 1$ is the
+%D largest legal integer. Using it (and simply ignoring the inaccuracy
+%D caused by $-1$) turns out to be at least as accurate in all cases,
+%D and more accurate in some.} (largest legal power of 2) and adjust
+%D $X$ downward (if necessary) to the the range $1-2^{16}$. This gives
+%D at least 15 significant binary digits, (almost as accurate as
+%D \METAPOST\ for numbers near 1) or almost 5 significant figures
+%D (decimal).
 
-\def\presetMPscale%
-  {\dimen 0=\gMPs1 pt \doMPreducedimen 0 
-   \dimen 2=\!!zeropoint
-   \dimen 4=\!!zeropoint
-   \dimen 6=\gMPs2 pt \doMPreducedimen 6 
-   \dimen 8=\!!zeropoint 
-   \dimen10=\!!zeropoint}  
+\newcount\MPscratchCnt
+\newdimen\MPscratchDim % will be assigned global
 
-\def\noMPtranslate% use this one grouped
-  {\dimen 8=\!!zeropoint                    % t_x
-   \dimen10=\!!zeropoint}                   % t_y
+\def\MPadjustdimen   % sets \MPscratchDim and \MPscratchCnt
+  {\MPscratchCnt0
+   \doMPadjustdimen}
 
-%D \starttypen 
+\def\doMPadjustdimen
+  {\ifdim\MPscratchDim>1pt
+     \divide\MPscratchDim 2
+     \advance\MPscratchCnt 1
+     \expandafter\doMPadjustdimen
+   \fi}
+
+%OLD \def\doMPexpanddimen#1
+%OLD   {\multiply\dimen#1 \MPconcatfactor\relax}
+
+%D DHL: When viewed as an integer, $1 \hbox{pt}=2^{16}$ so $2^{32}/X$
+%D is  the right way to do $(1 \hbox{pt})/(X \hbox{pt})$ and get the
+%D answer  in points. But we are limited to $2^{30}/X$. However, we
+%D actually do  $[ 2^{30} / (X/2^K) ]*2^{2-K}$ where $K$ is the number
+%D of halvings it takes to bring $X$ below $1 \hbox{pt}$. If $K$ is 0
+%D or 1 we readjust by multiplying by 4 or 2, otherwise by halving
+%D $(K-2)$ times \type {\MPscratchCnt} holds the value of $K$ from
+%D \type {\MPadjustdimen}.
+
+\def\MPreadjustdimen  % acts on \MPscratchDim and MPscratchCnt
+  {\ifcase\MPscratchCnt
+     \multiply\scratchdimen 4
+   \or
+     \multiply\scratchdimen 2
+   \else
+     \expandafter\doMPreadjustdimen
+   \fi}
+
+\def\doMPreadjustdimen
+  {\ifnum\MPscratchCnt>2
+     \divide\scratchdimen 2
+     \advance\MPscratchCnt -1
+     \expandafter\doMPreadjustdimen
+   \fi}
+
+\def\MPreciprocaldeterminant
+  {\scratchdimen\withoutpt\the\dimen0 \dimen6            % s_x*s_y
+   \advance\scratchdimen - \withoutpt\the\dimen2 \dimen4 % s_x*s_y - r_x*r_y
+   \ifdim\scratchdimen<0pt  % we need a positive dimension
+     \scratchdimen-\scratchdimen   % for \MPadjustdimen (?)
+     \doMPreciprocal
+     \scratchdimen-\scratchdimen
+   \else
+     \doMPreciprocal
+   \fi
+   \edef\MPreciprocal{\withoutpt\the\scratchdimen}}
+
+\newcount\MPnumerator \MPnumerator = 1073741824 % 2^{30}
+
+% todo: dimexpr
+
+\def\doMPreciprocal % replace \scratchdimen with its reciprocal
+  {\ifdim\scratchdimen=1pt \else
+     \MPadjustdimen
+     \scratchcounter\MPnumerator
+     \divide\scratchcounter\scratchdimen
+     \scratchdimen1\scratchcounter % 1 needed !
+     \MPreadjustdimen
+  \fi}
+
+%OLD \def\presetMPconcat
+%OLD  {\dimen 0=\gMPs1pt \doMPreducedimen 0    % r_x
+%OLD   \dimen 2=\gMPs2pt \doMPreducedimen 2    % s_x
+%OLD   \dimen 4=\gMPs3pt \doMPreducedimen 4    % s_y
+%OLD   \dimen 6=\gMPs4pt \doMPreducedimen 6    % r_y
+%OLD   \dimen 8=\gMPs5pt \doMPreducedimen 8    % t_x
+%OLD   \dimen10=\gMPs6pt \doMPreducedimen10 }  % t_y
+%OLD
+%OLD \def\presetMPscale
+%OLD   {\dimen 0=\gMPs1pt \doMPreducedimen 0
+%OLD    \dimen 2=0pt
+%OLD    \dimen 4=0pt
+%OLD    \dimen 6=\gMPs2pt \doMPreducedimen 6
+%OLD    \dimen 8=0pt
+%OLD    \dimen10=0pt}
+
+\def\cleanupMPconcat
+  {\ignoreMPspecials
+   \docleanupMPargument1%
+   \docleanupMPargument6%
+   \keepMPspecials}
+
+\def\presetMPconcat
+  {\dimen 0=\gMPs1pt   % s_x
+   \dimen 2=\gMPs2pt   % r_x
+   \dimen 4=\gMPs3pt   % r_y
+   \dimen 6=\gMPs4pt   % s_y
+   \dimen 8=\gMPs5pt   % t_x
+   \dimen10=\gMPs6pt}  % t_y
+
+\def\presetMPscale
+  {\dimen 0=\gMPs1pt
+   \dimen 2=0pt
+   \dimen 4=0pt
+   \dimen 6=\gMPs2pt
+   \dimen 8=0pt
+   \dimen10=0pt}
+
+\def\noMPtranslate % use this one grouped
+  {\dimen 8=0pt        % t_x
+   \dimen10=0pt}       % t_y
+
+%D \starttyping
 %D \def\doMPconcat#1#2#3#4%
 %D   {\dimen12=#1 pt \doMPreducedimen12 % p_x
 %D    \dimen14=#3 pt \doMPreducedimen14 % p_y
@@ -1163,14 +1395,14 @@
 %D    \divide   \dimen18  \dimen16 \doMPexpanddimen18
 %D    \divide   \dimen12  \dimen16 \doMPexpanddimen12
 %D    %
-%D    \edef#2{\withoutpt{\the\dimen18}}% % p_x^\prime
-%D    \edef#4{\withoutpt{\the\dimen12}}} % p_y^\prime
-%D \stoptypen 
+%D    \edef#2{\withoutpt\the\dimen18}% % p_x^\prime
+%D    \edef#4{\withoutpt\the\dimen12}} % p_y^\prime
+%D \stoptyping
 
-%D The following optimization resulted from some tests by 
-%D and email exchanges with Sanjoy Mahajan. 
+%D The following optimization resulted from some tests by
+%D and email exchanges with Sanjoy Mahajan.
 %D
-%D \starttypen 
+%D \starttyping
 %D \def\doMPconcat#1#2#3#4%
 %D   {\dimen12=#1 pt \doMPreducedimen12 % p_x
 %D    \dimen14=#3 pt \doMPreducedimen14 % p_y
@@ -1215,11 +1447,11 @@
 %D      \fi
 %D    \fi
 %D    %
-%D    \edef#2{\withoutpt{\the\dimen18}}% % p_x^\prime
-%D    \edef#4{\withoutpt{\the\dimen12}}} % p_y^\prime
-%D \stoptypen 
+%D    \edef#2{\withoutpt\the\dimen18}% % p_x^\prime
+%D    \edef#4{\withoutpt\the\dimen12}} % p_y^\prime
+%D \stoptyping
 %D
-%D But, this one is still too inaccurate, so we now have: 
+%D But, this one is still too inaccurate, so we now have:
 
 % \def\doMPconcat#1#2#3#4%
 %   {\dimen12=#1pt % p_x
@@ -1276,99 +1508,165 @@
 %    \divide\dimen18 \MPfactor
 %    \divide\dimen12 \MPfactor
 %    %
-%    \edef#2{\withoutpt{\the\dimen18}}% % p_x^\prime
-%    \edef#4{\withoutpt{\the\dimen12}}} % p_y^\prime
+%    \edef#2{\withoutpt\the\dimen18}% % p_x^\prime
+%    \edef#4{\withoutpt\the\dimen12}} % p_y^\prime
 
-%\beginETEX
-%
-%  \newdimen\MPcriteriumA \MPcriteriumA=512pt
-%  \newdimen\MPcriteriumB \MPcriteriumB=  2pt
-%
-%\endETEX
+%D We cannot use \type {\beginETEX} here since in plain we
+%D get \type {\outer} problems, sigh.
 
-%D We don't waste dimen registers when uting normal \TEX:
+%OLD \beginTEX
+%OLD
+%OLD \def\MPcriteriumA {512pt} % scale
+%OLD \def\MPcriteriumB   {2pt} % scale
+%OLD
+%OLD \endTEX
+%OLD
+%OLD \ifx\MPcriteriumA\undefined
+%OLD
+%OLD   \newdimen\MPcriteriumA \MPcriteriumA=512pt
+%OLD   \newdimen\MPcriteriumB \MPcriteriumB=  2pt
+%OLD
+%OLD \fi
 
-\beginTEX 
+%OLD \def\doMPconcat#1#2#3#4%
+%OLD   {\dimen12=#1pt % p_x
+%OLD    \dimen14=#3pt % p_y
+%OLD    %
+%OLD    \chardef\MPfactor0
+%OLD    \ifdim\dimen4<\MPcriteriumB\ifdim\dimen4>-\MPcriteriumB
+%OLD      \ifdim\dimen6<\MPcriteriumB\ifdim\dimen6>-\MPcriteriumB
+%OLD        \ifdim\dimen8<\MPcriteriumB\ifdim\dimen8>-\MPcriteriumB
+%OLD          \ifdim\dimen10<\MPcriteriumB\ifdim\dimen10>-\MPcriteriumB
+%OLD            \chardef\MPfactor1
+%OLD          \fi\fi
+%OLD        \fi\fi
+%OLD      \fi\fi
+%OLD    \fi\fi
+%OLD    \ifcase\MPfactor % spurious 0 removed
+%OLD      \chardef\MPfactor1
+%OLD      \ifdim\dimen12<\MPcriteriumA\ifdim\dimen12>-\MPcriteriumA
+%OLD        \ifdim\dimen14<\MPcriteriumA\ifdim\dimen14>-\MPcriteriumA
+%OLD          \chardef\MPfactor16
+%OLD        \fi\fi
+%OLD      \fi\fi
+%OLD    \fi
+%OLD    %
+%OLD    \multiply\dimen12 \MPfactor
+%OLD    \multiply\dimen14 \MPfactor
+%OLD    %
+%OLD    \doMPreducedimen12
+%OLD    \doMPreducedimen14
+%OLD    %
+%OLD    \dimen16  \dimen 0
+%OLD    \multiply \dimen16  \dimen 6
+%OLD    \dimen20  \dimen 2
+%OLD    \multiply \dimen20  \dimen 4
+%OLD    \advance  \dimen16 -\dimen20
+%OLD    %
+%OLD    \dimen18  \dimen12
+%OLD    \multiply \dimen18  \dimen 6
+%OLD    \dimen20  \dimen14
+%OLD    \multiply \dimen20  \dimen 4
+%OLD    \advance  \dimen18 -\dimen20
+%OLD    \dimen20  \dimen 4
+%OLD    \multiply \dimen20  \dimen10
+%OLD    \advance  \dimen18  \dimen20
+%OLD    \dimen20  \dimen 6
+%OLD    \multiply \dimen20  \dimen 8
+%OLD    \advance  \dimen18 -\dimen20
+%OLD    %
+%OLD    \multiply \dimen12 -\dimen 2
+%OLD    \multiply \dimen14  \dimen 0
+%OLD    \advance  \dimen12  \dimen14
+%OLD    \dimen20  \dimen 2
+%OLD    \multiply \dimen20  \dimen 8
+%OLD    \advance  \dimen12  \dimen20
+%OLD    \dimen20  \dimen 0
+%OLD    \multiply \dimen20  \dimen10
+%OLD    \advance  \dimen12 -\dimen20
+%OLD    %
+%OLD    \ifdim\dimen16=1pt \else
+%OLD      \ifdim\dimen16>\MPconcatfactor 1pt \relax
+%OLD        \doMPreducedimen16
+%OLD        \divide \dimen18 \dimen16 \doMPexpanddimen18
+%OLD        \divide \dimen12 \dimen16 \doMPexpanddimen12
+%OLD      \else
+%OLD        \divide \dimen18 \dimen16 \doMPexpanddimen18 \doMPexpanddimen18
+%OLD        \divide \dimen12 \dimen16 \doMPexpanddimen12 \doMPexpanddimen12
+%OLD      \fi
+%OLD    \fi
+%OLD    %
+%OLD    \divide\dimen18 \MPfactor
+%OLD    \divide\dimen12 \MPfactor
+%OLD    %
+%OLD    \edef#2{\withoutpt\the\dimen18}% % p_x^\prime
+%OLD    \edef#4{\withoutpt\the\dimen12}} % p_y^\prime
 
-  \def\MPcriteriumA{512pt} % position 
-  \def\MPcriteriumB  {2pt} % scale 
+%D DHL: Ideally, $r_x$, $r_y$, $s_x$, $s_y$ should be in macros, not
+%D dimensions (they are scalar quantities after all, not lengths). I
+%D suppose the authors decided to do calculations with integer
+%D arithmetic instead of using real factors because it's faster.
+%D However, the actual macros test slower, possibly because I've
+%D omitted three nested loops. In my test files, my approach is more
+%D accurate. It is also far simpler and overflow does not seem to be a
+%D significant concern. The scale factors written by Metapost are (?)
+%D always $<=1$ (it scales coordinates internally) and coordinates are
+%D always likely to be less than \type {\maxdimen}.
+%D
+%D If this should ever cause problems, the scale factors can be reduced.
 
-\endTEX
+% \def\doMPconcat#1#2#3#4%
+%   {\dimen12=#1pt % p_x % #1pt
+%    \dimen14=#3pt % p_y % #3pt
+%    \advance\dimen12 -\dimen8  % p_x - t_x
+%    \advance\dimen14 -\dimen10 % p_y - t_y
+%    \dimen18=\withoutpt\the\dimen6 \dimen12          % s_y(p_x - t_x)
+%    \advance\dimen18 -\withoutpt\the\dimen4 \dimen14 %   - r_y(p_y-t_y)
+%    \dimen14=\withoutpt\the\dimen0 \dimen14          % s_x(p_y-t_y)
+%    \advance\dimen14 -\withoutpt\the\dimen2 \dimen12 %   - r_x(p_x-t_x)
+%    % \MPscratchDim contains precomputed 1/D:
+%    \dimen18=\withoutpt\the\MPscratchDim \dimen18
+%    \dimen14=\withoutpt\the\MPscratchDim \dimen14
+%    \edef#2{\withoutpt\the\dimen18}% % p_x^\prime
+%    \edef#4{\withoutpt\the\dimen14}} % p_y^\prime
 
 \def\doMPconcat#1#2#3#4%
-  {\dimen12=#1pt % p_x
-   \dimen14=#3pt % p_y
-   %
-\chardef\MPfactor0
-\ifdim\dimen4<\MPcriteriumB\ifdim\dimen4>-\MPcriteriumB
-  \ifdim\dimen6<\MPcriteriumB\ifdim\dimen6>-\MPcriteriumB
-    \ifdim\dimen8<\MPcriteriumB\ifdim\dimen8>-\MPcriteriumB
-      \ifdim\dimen10<\MPcriteriumB\ifdim\dimen10>-\MPcriteriumB
-        \chardef\MPfactor1
-      \fi\fi
-    \fi\fi
-  \fi\fi
-\fi\fi
-\ifcase\MPfactor0 
-  \chardef\MPfactor1
-  \ifdim\dimen12<\MPcriteriumA\ifdim\dimen12>-\MPcriteriumA
-    \ifdim\dimen14<\MPcriteriumA\ifdim\dimen14>-\MPcriteriumA
-      \chardef\MPfactor16
-    \fi\fi
-  \fi\fi
-\fi
-   %
-   \multiply\dimen12 \MPfactor
-   \multiply\dimen14 \MPfactor
-   %
-   \doMPreducedimen12
-   \doMPreducedimen14
-   %
-   \dimen16  \dimen 0
-   \multiply \dimen16  \dimen 6
-   \dimen20  \dimen 2
-   \multiply \dimen20  \dimen 4
-   \advance  \dimen16 -\dimen20
-   %
-   \dimen18  \dimen12
-   \multiply \dimen18  \dimen 6
-   \dimen20  \dimen14
-   \multiply \dimen20  \dimen 4
-   \advance  \dimen18 -\dimen20
-   \dimen20  \dimen 4
-   \multiply \dimen20  \dimen10
-   \advance  \dimen18  \dimen20
-   \dimen20  \dimen 6
-   \multiply \dimen20  \dimen 8
-   \advance  \dimen18 -\dimen20
-   %
-   \multiply \dimen12 -\dimen 2
-   \multiply \dimen14  \dimen 0
-   \advance  \dimen12  \dimen14
-   \dimen20  \dimen 2
-   \multiply \dimen20  \dimen 8
-   \advance  \dimen12  \dimen20
-   \dimen20  \dimen 0
-   \multiply \dimen20  \dimen10
-   \advance  \dimen12 -\dimen20
-   %
-   \ifdim\dimen16=1pt \else
-     \ifdim\dimen16>\MPconcatfactor pt
-       \doMPreducedimen16
-       \divide \dimen18 \dimen16 \doMPexpanddimen18
-       \divide \dimen12 \dimen16 \doMPexpanddimen12
-     \else
-       \divide \dimen18 \dimen16 \doMPexpanddimen18 \doMPexpanddimen18
-       \divide \dimen12 \dimen16 \doMPexpanddimen12 \doMPexpanddimen12
-     \fi
-   \fi
-   %
-   \divide\dimen18 \MPfactor
-   \divide\dimen12 \MPfactor
-   %
-   \edef#2{\withoutpt{\the\dimen18}}% % p_x^\prime
-   \edef#4{\withoutpt{\the\dimen12}}} % p_y^\prime
- 
+  {\dimen12=#1pt % p_x % #1pt
+   \dimen14=#3pt % p_y % #3pt
+   \advance\dimen12 -\dimen8  % p_x - t_x
+   \advance\dimen14 -\dimen10 % p_y - t_y
+   \dimen18=\withoutpt\the\dimen6 \dimen12          % s_y(p_x - t_x)
+   \advance\dimen18 -\withoutpt\the\dimen4 \dimen14 %   - r_y(p_y-t_y)
+   \dimen14=\withoutpt\the\dimen0 \dimen14          % s_x(p_y-t_y)
+   \advance\dimen14 -\withoutpt\the\dimen2 \dimen12 %   - r_x(p_x-t_x)
+   % \MPreciprocal contains precomputed 1/D:
+   \dimen18=\MPreciprocal\dimen18
+   \dimen14=\MPreciprocal\dimen14
+   \edef#2{\withoutpt\the\dimen18}% % p_x^\prime
+   \edef#4{\withoutpt\the\dimen14}} % p_y^\prime
+
+% faster but not that often used
+%
+% \def\doMPconcat#1#2#3#4%
+%   {\dimen12\dimexpr#1\points-\dimen 8\relax % p_x-t_x
+%    \dimen14\dimexpr#3\points-\dimen10\relax % p_y-t_y
+%    \dimen18\dimexpr\withoutpt\the\dimen6\dimen12-\withoutpt\the\dimen4\dimen14\relax % s_y(p_x-t_x)-r_y(p_y-t_y)
+%    \dimen14\dimexpr\withoutpt\the\dimen0\dimen14-\withoutpt\the\dimen2\dimen12\relax % s_x(p_y-t_y)-r_x(p_x-t_x)
+%    \edef#2{\withoutpt\the\dimexpr\MPreciprocal\dimen18\relax}% % p_x^\prime
+%    \edef#4{\withoutpt\the\dimexpr\MPreciprocal\dimen14\relax}} % p_y^\prime
+
+%D One reason for Daniel to write this patch was that at small sizes
+%D the accuracy was less than optimal. Here is a test that demonstrates
+%D that his alternative is pretty good:
+%D
+%D \startlinecorrection
+%D \startMPcode
+%D for i = 5cm,1cm,5mm,1mm,.5mm,.1mm,.01mm :
+%D     draw fullcircle scaled i withpen pencircle xscaled (i/10) yscaled (i/20) rotated 45 ;
+%D endfor ;
+%D \stopMPcode
+%D \stoplinecorrection
+
 %D The following explanation of the conversion process was
 %D posted to the \PDFTEX\ mailing list by Tanmoy. The original
 %D macro was part of a set of macro's that included sinus and
@@ -1376,7 +1674,7 @@
 %D \METAPOST\ to \PDF\ conversion however only needs
 %D transformation.
 
-%M \start \switchnaarkorps [ss]
+%M \start \switchtobodyfont [ss]
 
 %D Given a point $(U_x, U_y)$ in user coordinates, the business
 %D of \POSTSCRIPT\ is to convert it to device space. Let us say
@@ -1384,37 +1682,37 @@
 %D \POSTSCRIPT\ $(D_x, D_y)$ can be written in terms of
 %D $(U_x, U_y)$ in matrix notation, either as
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D   \pmatrix{D_x&D_y&1\cr} = \pmatrix{U_x&U_y&1\cr}
 %D                            \pmatrix{s_x&r_x&0\cr
 %D                                     r_y&s_y&0\cr
 %D                                     t_x&t_y&1\cr}
-%D   \stopformule
+%D   \stopformula
 %D
 %D or
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D    \pmatrix{D_x\cr D_y\cr 1} = \pmatrix{s_x&r_y&t_x\cr
 %D                                         r_x&s_y&t_y\cr
 %D                                         0  &0  &1  \cr}
 %D                                \pmatrix{U_x\cr
 %D                                         U_y\cr
 %D                                         1  \cr}
-%D   \stopformule
+%D   \stopformula
 %D
 %D both of which is a shorthand for the same set of equations:
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D      D_x = s_x U_x + r_y U_y + t_x
-%D   \stopformule
+%D   \stopformula
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D      D_y = r_x U_x + s_y U_y + t_y
-%D   \stopformule
+%D   \stopformula
 %D
 %D which define what is called an `affine transformation'.
 %D
@@ -1431,7 +1729,7 @@
 %D $[s_x\, r_x\, r_y\, s_y\, t_x\, t_y]$ and you say \typ{[a b
 %D c d e f] concat}, this means:
 %D
-%D \startsmaller
+%D \startnarrower
 %D Take the user space coordinates and transform them to an
 %D intermediate set of coordinates using array $[a\, b\, c\, d\,
 %D e\, f]$ as the transformation matrix.
@@ -1439,29 +1737,29 @@
 %D Take the intermediate set of coordinates and change them to
 %D device coordinates using array $[s_x\, r_x\, r_y\, s_y\, t_x\, t_y]$
 %D as the transformation matrix.
-%D \stopsmaller
+%D \stopnarrower
 %D
 %D Well, what is the net effect? In matrix notation, it is
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D     \pmatrix{I_x\cr I_y\cr 1\cr} = \pmatrix{a&c&e\cr
 %D                                             b&d&f\cr
 %D                                             0&0&1\cr}
 %D                                    \pmatrix{U_x\cr
 %D                                             U_y\cr
 %D                                             1  \cr}
-%D   \stopformule
+%D   \stopformula
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D     \pmatrix{D_y\cr D_y\cr 1\cr} = \pmatrix{s_x&r_y&t_x\cr
 %D                                             r_x&s_y&t_y\cr
 %D                                             0  &0  &1  \cr}
 %D                                    \pmatrix{I_x\cr
 %D                                             I_y\cr
 %D                                             1  \cr}
-%D   \stopformule
+%D   \stopformula
 %D
 %D where $(I_x, I_y)$ is the intermediate coordinate.
 %D
@@ -1469,26 +1767,26 @@
 %D a chain of such matrix equations, one can always compose
 %D them into one matrix equation using the standard matrix
 %D composition law. The composite matrix from two matrices can
-%D be derived very easily: the element in the $i$\hoog{th}
-%D horizontal row and $j$\hoog{th} vertical column is
-%D calculated by`multiplying' the $i$\hoog{th} row of the first
-%D matrix and the $j$\hoog{th} column of the second matrix (and
+%D be derived very easily: the element in the $i$\high{th}
+%D horizontal row and $j$\high{th} vertical column is
+%D calculated by`multiplying' the $i$\high{th} row of the first
+%D matrix and the $j$\high{th} column of the second matrix (and
 %D summing over the elements). Thus, in the above:
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D   \pmatrix{D_x\cr D_y\cr 1} = \pmatrix{s_x^\prime&r_y^\prime&t_x^\prime\cr
 %D                                        r_x^\prime&s_y^\prime&t_y^\prime\cr
 %D                                        0         &0         &0        \cr}
 %D                               \pmatrix{U_x\cr
 %D                                        U_y\cr
 %D                                        1  \cr}
-%D   \stopformule
+%D   \stopformula
 %D
 %D with
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D      \eqalign
 %D        {s_x^\prime & = s_x a + r_y b       \cr
 %D         r_x^\prime & = r_x a + s_y b       \cr
@@ -1496,7 +1794,7 @@
 %D         s_y^\prime & = r_x c + s_y d       \cr
 %D         t_x^\prime & = s_x e + r_y f + t_x \cr
 %D         t_y^\prime & = r_x e + s_y f + t_y \cr}
-%D   \stopformule
+%D   \stopformula
 
 %D In fact, the same rule is true not only when one is going
 %D from user coordinates to device coordinates, but whenever
@@ -1521,23 +1819,23 @@
 %D acts on $(P_x^\prime, P_y^\prime)$, they produce $(P_x,
 %D P_y)$. That is we need to solve the set of equations:
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D     \pmatrix{P_x\cr P_y\cr 1\cr} = \pmatrix{s_x&r_y&t_x\cr
 %D                                             r_x&s_y&t_y\cr
 %D                                             0  &0  &1  \cr}
 %D                                    \pmatrix{P_x^\prime\cr
 %D                                             P_y^\prime\cr
 %D                                             1         \cr}
-%D   \stopformule
+%D   \stopformula
 %D
 %D Again matrix notation comes in handy (i.e. someone has
 %D already solved the problem for us): we need the inverse
 %D transformation matrix. The inverse transformation matrix can
-%D be calculated very easily: 
+%D be calculated very easily:
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D     \pmatrix{P_x^\prime\cr P_y^\prime\cr 1\cr} =
 %D        \pmatrix{s_x^\prime&r_y^\prime&t_x^\prime\cr
 %D                 r_x^\prime&s_y^\prime&t_y^\prime\cr
@@ -1545,12 +1843,12 @@
 %D        \pmatrix{P_x\cr
 %D                 P_y\cr
 %D                 1         \cr}
-%D   \stopformule
+%D   \stopformula
 %D
 %D where, the inverse transformation matrix is given by
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D     \eqalign
 %D       {D          & = s_x s_y - r_x r_y           \cr
 %D        s_x^\prime & = s_y / D                     \cr
@@ -1559,22 +1857,22 @@
 %D        r_y^\prime & = - r_y / D                   \cr
 %D        t_x^\prime & = ( - s_y t_x + r_y t_y ) / D \cr
 %D        t_y^\prime & = (   r_x t_x - s_x t_y ) / D \cr}
-%D   \stopformule
+%D   \stopformula
 %D
 %D And you can see that when expanded out, this does
 %D give the formulas:
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D     P_x^\prime = { { s_y(p_x-t_x) + r_y(t_y-p_y) } \over
 %D                    { s_x s_y-r_x r_y } }
-%D   \stopformule
+%D   \stopformula
 %D
-%D \plaatsformule
-%D   \startformule
+%D \placeformula
+%D   \startformula
 %D     P_y^\prime = { { s_x(p_y-t_y) + r_x(t_x-p_x) } \over
 %D                    { s_x*s_y-r_x*r_y } }
-%D   \stopformule
+%D   \stopformula
 %D
 %D The code works by representing a real number by converting
 %D it to a dimension to be put into a \DIMENSION\ register: 2.3 would
@@ -1602,19 +1900,19 @@
 %D The path is output using the values saved on the stack. If
 %D needed, all coordinates are recalculated.
 
-\def\finishMPpath%
+\def\finishMPpath
   {\PDFcode{\ifcase\finiMPpath W n\or S\or f\or B\fi}}
 
-\def\processMPpath%
+\def\processMPpath
   {\checkMPpath
    \ifcase\nofMPsegments\else
      \flushMPpath
      \closeMPpath
      \finishMPpath
-   \fi 
+   \fi
    \let\handleMPsequence\dohandleMPsequence
    \resetMPstack
-   \nofMPsegments=0
+   \nofMPsegments0
    \handleMPsequence}
 
 %D The following \METAPOST\ code is quite valid but, when
@@ -1622,31 +1920,31 @@
 %D unprintable on a Hewlett Packard printer (from Acrobat
 %D $v<=5$). Who is to blame, the driver of the OS layer in
 %D between, is hard to determine, so we add an additional
-%D check. 
-%D 
-%D \starttypen
-%D clip currentpicture to origin -- cycle ; 
-%D setbounds currentpicture to fullsquare scaled 5cm ; 
-%D \stoptypen
+%D check.
+%D
+%D \starttyping
+%D clip currentpicture to origin -- cycle ;
+%D setbounds currentpicture to fullsquare scaled 5cm ;
+%D \stoptyping
 
 \def\checkMPpath
-  {\ifcase\finiMPpath       
+  {\ifcase\finiMPpath
      \ifnum\nofMPsegments<3 % n is one ahead
        \message{omitting zero clip path}%
-       \nofMPsegments=0 
-     \fi 
+       \nofMPsegments0
+     \fi
    \fi}
 
 %D In \PDF\ the \type{cm} operator must precede the path
 %D specification. We therefore can output the \type{cm} at
 %D the moment we encounter it.
 
-\def\handleMPpathconcat%
+\def\handleMPpathconcat
   {\presetMPconcat
    \PDFcode{\gMPs1 \gMPs2 \gMPs3 \gMPs4 \gMPs5 \gMPs6 cm}%
    \resetMPstack}
 
-\def\handleMPpathscale%
+\def\handleMPpathscale
   {\presetMPscale
    \PDFcode{\gMPs1 0 0 \gMPs2 0 0 cm}%
    \resetMPstack}
@@ -1656,9 +1954,9 @@
 
 \def\dohandleMPpath#1%
   {\ifcase\lccode`#1\relax
-     \@EA\dohandleMPpathA
+     \expandafter\dohandleMPpathA
    \else
-     \@EA\dohandleMPpathB
+     \expandafter\dohandleMPpathB
    \fi#1}
 
 %\def\dohandleMPpathA#1 %
@@ -1667,219 +1965,281 @@
 
 \let\dohandleMPpathA\setMPsequence
 
+% \def\dohandleMPpathB#1 %
+%   {\def\somestring{#1}%
+%    \ifx\somestring\PSlineto
+%      \setMPkeyword0
+%    \else\ifx\somestring\PScurveto
+%      \setMPkeyword1
+%    \else\ifx\somestring\PSrlineto
+%      \setMPkeyword2
+%    \else\ifx\somestring\PSmoveto
+%      \setMPkeyword3
+%    \else\ifx\somestring\PSclip
+%    % \chardef\finiMPpath0 % already
+%      \let\handleMPsequence\processMPpath
+%    \else\ifx\somestring\PSgsave
+%      \chardef\finiMPpath3
+%    \else\ifx\somestring\PSgrestore
+%    \else\ifx\somestring\PSfill
+%      \ifcase\finiMPpath
+%        \chardef\finiMPpath2
+%        \let\handleMPsequence\processMPpath
+%      \fi
+%    \else\ifx\somestring\PSstroke
+%      \ifcase\finiMPpath
+%        \chardef\finiMPpath1
+%      \fi
+%      \let\handleMPsequence\processMPpath
+%    \else\ifx\somestring\PSclosepath
+%      \def\closeMPpath{\PDFcode{h}}%
+%    \else\ifx\somestring\PSconcat
+%      \cleanupMPconcat
+%      \let\flushMPpath\flushconcatMPpath
+%      \handleMPpathconcat
+%    \else\ifx\somestring\PSscale
+%      \let\flushMPpath\flushconcatMPpath
+%      \handleMPpathscale
+%    \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+%    \handleMPsequence}
+
+\def\installMPSkeywordP#1#2%
+  {\expandafter\def\csname\@@MP:P:#1\endcsname{#2}}
+
+\def\installMPSshortcutP#1#2% todo: \let
+  {\expandafter\let\csname\@@MP:P:#1\expandafter\endcsname\csname\@@MP:P:#2\endcsname}
+
 \def\dohandleMPpathB#1 %
   {\def\somestring{#1}%
-   \ifx\somestring\PSlineto
-     \setMPkeyword0
-   \else\ifx\somestring\PScurveto
-     \setMPkeyword1
-   \else\ifx\somestring\PSrlineto
-     \setMPkeyword2
-   \else\ifx\somestring\PSmoveto
-     \setMPkeyword3
-   \else\ifx\somestring\PSclip
-   % \chardef\finiMPpath0 % already 
-     \let\handleMPsequence\processMPpath
-   \else\ifx\somestring\PSgsave
-     \chardef\finiMPpath3
-   \else\ifx\somestring\PSgrestore
-   \else\ifx\somestring\PSfill
-     \ifcase\finiMPpath
-       \chardef\finiMPpath2
-       \let\handleMPsequence\processMPpath
-     \fi
-   \else\ifx\somestring\PSstroke
-     \ifcase\finiMPpath
-       \chardef\finiMPpath1
-     \fi
-     \let\handleMPsequence\processMPpath
-   \else\ifx\somestring\PSclosepath
-     \def\closeMPpath{\PDFcode{h}}%
-   \else\ifx\somestring\PSconcat
-     \let\flushMPpath\flushconcatMPpath
-     \handleMPpathconcat
-   \else\ifx\somestring\PSscale
-     \let\flushMPpath\flushconcatMPpath
-     \handleMPpathscale
-   \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+   \ifcsname\@@MP:P:\somestring\endcsname
+     \csname\@@MP:P:\somestring\expandafter\endcsname
+   \fi
    \handleMPsequence}
+
+\ifx\eTeXversion\undefined
+    \def\dohandleMPpathB#1 %
+      {\def\somestring{#1}%
+       \csname\@@MP:P:\somestring\endcsname
+       \handleMPsequence}
+\fi
+
+\installMPSkeywordP \PSlineto
+  {\setMPkeyword0 }
+\installMPSkeywordP \PScurveto
+  {\setMPkeyword1 }
+\installMPSkeywordP \PSrlineto
+  {\setMPkeyword2 }
+\installMPSkeywordP \PSmoveto
+  {\edef\lastMPmoveX{\gMPs1}%
+   \edef\lastMPmoveY{\gMPs2}%
+   \resetMPstack
+   \setMPkeyword3 }
+\installMPSkeywordP \PSclip
+  {% \chardef\finiMPpath\zerocount % already
+   \let\handleMPsequence\processMPpath}
+\installMPSkeywordP \PSgsave
+  {\chardef\finiMPpath3 }
+\installMPSkeywordP \PSgrestore
+  {}
+\installMPSkeywordP \PSfill
+  {\ifcase\finiMPpath
+     \chardef\finiMPpath2
+     \let\handleMPsequence\processMPpath
+   \fi}
+\installMPSkeywordP \PSstroke
+  {\ifcase\finiMPpath
+    \chardef\finiMPpath1
+   \fi
+   \let\handleMPsequence\processMPpath}
+\installMPSkeywordP \PSclosepath
+  {\def\closeMPpath{\PDFcode{h}}}
+\installMPSkeywordP \PSconcat
+  {\cleanupMPconcat
+   \let\flushMPpath\flushconcatMPpath
+   \handleMPpathconcat}
+\installMPSkeywordP \PSscale
+  {\let\flushMPpath\flushconcatMPpath
+   \handleMPpathscale}
+
+\installMPSshortcutP {l} \PSlineto
+\installMPSshortcutP {r} \PSrlineto
+\installMPSshortcutP {m} \PSmoveto
+\installMPSshortcutP {c} \PScurveto
+
+\installMPSshortcutP {q} \PSgsave
+\installMPSshortcutP {Q} \PSgrestore
+\installMPSshortcutP {S} \PSstroke
+\installMPSshortcutP {F} \PSfill
+\installMPSshortcutP {B} \PSgsave
+\installMPSshortcutP {W} \PSclip
+\installMPSshortcutP {p} \PSclosepath
+
+\installMPSshortcutP {s} \PSscale
+\installMPSshortcutP {t} \PSconcat
 
 %D The main conversion command is:
 %D
-%D \starttypen
+%D \starttyping
 %D \convertMPtoPDF {filename} {x scale} {y scale}
-%D \stoptypen
+%D \stoptyping
 %D
 %D The dimensions are derived from the bounding box. So we
 %D only have to say:
 %D
-%D \starttypen
+%D \starttyping
 %D \convertMPtoPDF{mp-pra-1.eps}{1}{1}
 %D \convertMPtoPDF{mp-pra-1.eps}{.5}{.5}
-%D \stoptypen
+%D \stoptyping
 
-%D \macros 
+%D \macros
 %D   {makeMPintoPDFobject,lastPDFMPobject}
 %D
 %D For experts there are a few more options. When attributes
-%D are to be added, the code must be embedded in an object 
-%D accompanied with the appropriate directives. One can 
+%D are to be added, the code must be embedded in an object
+%D accompanied with the appropriate directives. One can
 %D influence this process with \type {\makeMPintoPDFobject}.
 %D
-%D This option defaults to~0, because \CONTEXT\ takes care 
-%D of objects at another level, which saves some bytes.  
+%D This option defaults to~0, because \CONTEXT\ takes care
+%D of objects at another level, which saves some bytes.
 %D
-%D \starttabulatie[|l|l|p|]
+%D \starttabulate[|l|l|p|]
 %D \NC 0 \NC never    \NC don't use an object    \NC\NR
 %D \NC 1 \NC always   \NC always use an object   \NC\NR
 %D \NC 2 \NC optional \NC use object when needed \NC\NR
-%D \stoptabulatie 
-%D 
-%D The last object number used is avaliable in the macro 
+%D \stoptabulate
+%D
+%D The last object number used is avaliable in the macro
 %D \type {\lastPDFMPobject}.
 
-\chardef\makeMPintoPDFobject=0 \def\lastPDFMPobject{0}
+\ifx\makeMPintoPDFobject\undefined \chardef\makeMPintoPDFobject=0 \fi
 
-%D The additional code needed can be made available in the 
+\def\lastPDFMPobject{0}
+
+%D The additional code needed can be made available in the
 %D (global) macro \type {\currentPDFresources}.
 
-\let\currentPDFresources\empty  
+\let\currentPDFresources\empty
 
 \newtoks\everyMPtoPDFconversion
 
-\def\convertMPtoPDF#1#2#3%
+\def\convertMPtoPDF % #1#2#3%
   {\bgroup
-   \ifx\pdfdecimaldigits\undefined\else \pdfdecimaldigits=5 \fi % new 
-   \setbox\scratchbox=\vbox\bgroup
+   \defineMPtoPDFfallbacks
+   \ifx\pdfdecimaldigits\undefined\else \pdfdecimaldigits=5 \fi % new
+   \setbox\scratchbox\vbox\bgroup
+     \xdef\MPheight{0pt}%
+     \xdef\MPwidth {0pt}%
      \forgetall
      \offinterlineskip
      \startMPresources
-     \doprocessMPtoPDFfile{#1}{#2}{#3}} % {#1}{0#2}{0#3} would be saver 
+     \doprocessMPtoPDFfile} %
 
-\def\processMPtoPDFfile% file xscale yscale 
+%D The next one is kind of private and probably will become obsolete):
+
+\def\processMPtoPDFfile % file xscale yscale
   {\bgroup
    \let\finishMPgraphic\egroup
    \doprocessMPtoPDFfile}
 
-\def\doprocessMPtoPDFfile#1#2#3% file xscale yscale 
+\let\setMPextensions\relax
+
+\def\doprocessMPtoPDFfile#1#2#3% file xscale yscale
   {\setMPspecials
+   \setMPextensions
    \the\everyMPtoPDFconversion
    \catcode`\^^M=\@@endofline
    \startMPscanning
    \let\do\empty
    \xdef\MPxscale{#2}%
    \xdef\MPyscale{#3}%
+   \xdef\MPxoffset{0}%
+   \xdef\MPyoffset{0}%
+   \xdef\MPyshift{0pt}%
    \donefalse
    \let\handleMPsequence\dohandleMPsequence
-   \message{[MP to PDF]}% was: [MP to PDF #1] but there is a (#1) anyway 
+   \message{[MP to PDF]}% was: [MP to PDF #1] but there is a (#1) anyway
    \input#1\relax}
 
-% strange rounding/clip in pdftex/viewer
-% 
-% \def\finishMPgraphic% 
-%   {\stopMPresources
-%    \egroup
-%    \ifx\pdftexversion\undefined\else\ifnum\pdftexversion<14 % for the moment 
-%      \chardef\makeMPintoPDFobject=0 
-%    \fi\fi
-%    \ifcase\makeMPintoPDFobject\or\or\ifx\currentPDFresources\empty\else
-%      \chardef\makeMPintoPDFobject=1 
-%    \fi\fi
-%    \setbox\scratchbox=\vbox
-%      {\forgetall
-%       \hbox
-%         {\PDFcode{q \MPxscale\space 0 0 \MPyscale\space \MPxoffset\space \MPyoffset\space cm}%
-%          \lower\MPyshift\box\scratchbox % unscaled shift 
-%          \PDFcode{Q}}}%
-%    \ht\scratchbox\MPheight
-%    \wd\scratchbox\MPwidth
-%    \dp\scratchbox\!!zeropoint
-%    \ifcase\makeMPintoPDFobject
-%      \box\scratchbox
-%    \or
-%      \immediate\pdfxform resources{\currentPDFresources}\scratchbox
-%      \xdef\lastPDFMPobject{\the\pdflastxform}%
-%      \pdfrefxform\lastPDFMPobject
-%      \global\let\currentPDFresources\empty
-%    \else
-%      \box\scratchbox
-%    \fi
-%    \egroup}
-%
-% funny clip in viewer
-%
-% \setbox\scratchbox=\vbox
-%   {\forgetall
-%    \dimen0=\MPllx bp
-%    \dimen2=\MPlly bp
-%    \setbox\scratchbox=\hbox{\hskip-\dimen0\raise-\dimen2\box\scratchbox}%
-%    \ht\scratchbox=\!!zeropoint
-%    \dp\scratchbox=\!!zeropoint
-%    \wd\scratchbox=\!!zeropoint
-%    \hbox
-%      {\PDFcode{q \MPxscale\space 0 0 \MPyscale\space 0 0 cm}%
-%       \lower\MPshift\box\scratchbox
-%       \PDFcode{Q}}}%
-
-% \let\PDFMPformoffset\!!zeropoint
-
 \def\PDFMPformoffset
-  {\ifx\objectoffset\undefined\!!zeropoint\else\objectoffset\fi}
+  {\ifx\objectoffset\undefined0pt\else\objectoffset\fi}
 
-\def\finishMPgraphic% 
+\chardef\blackoutMPgraphic0 % in ConTeXt 1
+
+\def\finishMPgraphic
   {\stopMPresources
    \egroup
-   \ifx\pdftexversion\undefined\else\ifnum\pdftexversion<14 % for the moment 
-     \chardef\makeMPintoPDFobject=0 
-   \fi\fi
-   \ifcase\makeMPintoPDFobject\or\or\ifx\currentPDFresources\empty\else
-     \chardef\makeMPintoPDFobject=1 
-   \fi\fi
-   \setbox\scratchbox=\vbox 
+   \setbox\scratchbox\vbox
      {\forgetall
-      \hbox 
+      \hbox
         {\PDFcode{q \MPxscale\space 0 0 \MPyscale\space \MPxoffset\space \MPyoffset\space cm}%
-         \lower\MPyshift\box\scratchbox % unscaled shift 
+         \ifcase\blackoutMPgraphic\or\PDFcode{0 g 0 G}\fi
+         \lower\MPyshift\box\scratchbox % unscaled shift
          \PDFcode{Q}}}%
    \ht\scratchbox\MPheight
    \wd\scratchbox\MPwidth
-   \dp\scratchbox\!!zeropoint\relax
-   \ifcase\makeMPintoPDFobject
-     \box\scratchbox
-   \or
-     \scratchdimen=\PDFMPformoffset\relax
-     \ifdim\scratchdimen>\!!zeropoint % compensate for error 
-       \setbox\scratchbox=\vbox spread 2\scratchdimen
-         {\forgetall
-          \vss
-          \hbox spread 2\scratchdimen
-            {\hss
-             \box\scratchbox
-             \hss}%
-          \vss}%
-     \fi
-     \immediate\pdfxform resources{\currentPDFresources}\scratchbox
-     \xdef\lastPDFMPobject{\the\pdflastxform}%
-     \ifdim\scratchdimen>\!!zeropoint % compensate for error
-       \vbox to \MPheight 
-         {\forgetall
-          \vss\hbox to \MPwidth{\hss\pdfrefxform\lastPDFMPobject\hss}\vss}%
-     \else
-       \pdfrefxform\lastPDFMPobject
-     \fi
-     \global\let\currentPDFresources\empty
-   \else
-     \box\scratchbox
-   \fi
+   \dp\scratchbox0pt\relax
+   \dopackageMPgraphic\scratchbox
    \egroup
    \endinput}
 
-%D \macros 
+%D Alternative for \PDFTEX. We cannot come up with something more contexy
+%D because this module is also used in \LATEX.
+
+\def\dopackageMPgraphic#1% #1 = boxregister
+  {%\ifx\pdfxform\undefined
+   %  \chardef\makeMPintoPDFobject0 % no pdftex at all
+   %\else\ifx\pdftexversion\undefined
+   %  \chardef\makeMPintoPDFobject0 % no pdftex at all
+   %\else\ifnum\pdftexversion<14
+   %  \chardef\makeMPintoPDFobject0 % no resource support
+   %\else
+   %                                         % keep the default value
+   %\fi\fi\fi
+   \ifcase\makeMPintoPDFobject\or\or\ifx\currentPDFresources\empty\else
+     % an existing value of 2 signals object support (set elsewhere)
+     \chardef\makeMPintoPDFobject1
+   \fi\fi
+   \ifcase\makeMPintoPDFobject
+     \box#1%
+   \or
+     \scratchdimen\PDFMPformoffset\relax
+     \ifdim\scratchdimen>0pt % compensate for error
+       \setbox#1\vbox spread 2\scratchdimen
+         {\forgetall\vss\hbox spread 2\scratchdimen{\hss\box#1\hss}\vss}%
+     \fi
+     \setMPPDFobject{\currentPDFresources}{#1}%
+     \ifdim\scratchdimen>0pt % compensate for error
+       \vbox to \MPheight
+         {\forgetall\vss\hbox to \MPwidth{\hss\getMPPDFobject\hss}\vss}%
+     \else
+       \getMPPDFobject
+     \fi
+     \global\let\currentPDFresources\empty
+   \else
+     \box#1%
+   \fi}
+
+\def\setMPPDFobject#1#2% resources boxnumber
+  {\ifx\pdfxform\undefined
+     \def\getMPPDFobject{\box#2}%
+   \else\ifx\pdftexversion\undefined
+     \def\getMPPDFobject{\box#2}%
+   \else\ifnum\pdftexversion<14
+     \def\getMPPDFobject{\box#2}%
+   \else
+     \ifx\everyPDFxform\undefined\else\the\everyPDFxform\fi
+     \immediate\pdfxform resources{#1}#2%
+     \edef\getMPPDFobject{\noexpand\pdfrefxform\the\pdflastxform}%
+   \fi\fi\fi}
+
+\let\getMPPDFobject\relax
+
+%D \macros
 %D   {deleteMPgraphic,
 %D    startMPresources,
 %D    stopMPresources}
-%D 
-%D Here are a few hooks for \CONTEXT\ specific things. 
+%D
+%D Here are a few hooks for \CONTEXT\ specific things.
 
 \ifx\deleteMPgraphic\undefined
   \def\deleteMPgraphic#1{}
@@ -1893,16 +2253,16 @@
 %D \macros
 %D   {twodigitMPoutput}
 %D
-%D We can limit the precision to two digits after the comma 
-%D by saying: 
+%D We can limit the precision to two digits after the comma
+%D by saying:
 %D
-%D \starttypen
+%D \starttyping
 %D \twodigitMPoutput
-%D \stoptypen
+%D \stoptyping
 %D
-%D This option only works in \CONTEXT\ combined with \ETEX. 
+%D This option only works in \CONTEXT\ combined with \ETEX.
 
-\def\twodigitMPoutput%
+\def\twodigitMPoutput
   {\let\!MP        \twodigitrounding
    \def\!MPgMPs##1{\twodigitrounding{\gMPs##1}}%
    \def\!MPgMPa##1{\twodigitrounding{\gMPa##1}}}
@@ -1914,7 +2274,5 @@
 %D This kind of conversion is possible because \METAPOST\
 %D does all the calculations. Converting other \POSTSCRIPT\
 %D files would drive both me and \TEX\ crazy.
-
-\ifx\undefined\StopLatexHack \else \StopLatexHack \fi 
 
 \protect \endinput

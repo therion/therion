@@ -92,12 +92,17 @@ void MP_text::clear() {
   xx = yy = 1;
   xy = yx = 0;
   size = 0;
+  r = g = b = -1;
   transformed = false;
 }
 
 void MP_text::print_svg(ofstream & F, CGS & gstate) {
-  F << "<text font-family=\"" << font << "\" font-size=\"" << size << 
-       "\" transform=\"matrix(" << xx << " " << xy << " " << -yx << " " << -yy <<
+  F << "<text font-family=\"" << font << "\" font-size=\"" << size << "\" ";
+  if (LAYOUT.colored_text && r>=0 && g>=0 && b>=0) F << 
+    "fill=\"" << rgb2svg(r,g,b) << "\" " <<
+    "stroke=\"black\" stroke-width=\"0.1\" ";
+  else F << "fill=\"black\" stroke=\"none\" ";
+  F << "transform=\"matrix(" << xx << " " << xy << " " << -yx << " " << -yy <<
        " " << x << " " << y << ")\">";
   for (unsigned int i = 0; i < text.size(); i++)
     F << "&#x" << hex << tex2uni(font, int(text[i])) << dec << ";";
@@ -168,17 +173,17 @@ void MP_path::add(int command, string s1, string s2, string s3,
   segments.push_back(seg);
 }
 
-void MP_path::print_svg(ofstream & F, CGS & gstate) {
+void MP_path::print_svg(ofstream & F, CGS & gstate, string unique_prefix) {
   if (fillstroke == MP_clip) {
     CGS::clippathID++;
     gstate.clippathdepth.insert(make_pair(CGS::clippathID,0));
-    F << "<clipPath id=\"clip_" << CGS::clippathID << "\">" << endl << "  ";
+    F << "<clipPath id=\"clip_" << CGS::clippathID << "_" << unique_prefix << "\">" << endl << "  ";
   }
   F << "<path ";
   if (fillstroke != MP_clip) {
     F << "fill=\"" << (fillstroke==MP_fill || fillstroke==MP_fillstroke ? 
            (gstate.pattern == ""? gstate.svg_color() : 
-              "url(#patt_" + gstate.pattern + ")") : "none") <<  
+              "url(#patt_" + gstate.pattern + "_" + unique_prefix + ")") : "none") <<  
          "\" stroke=\"" << (fillstroke==MP_stroke || fillstroke==MP_fillstroke ? 
            gstate.svg_color() : "none") <<  "\" ";
     if (fillstroke==MP_stroke || fillstroke==MP_fillstroke) {
@@ -232,7 +237,7 @@ void MP_path::print_svg(ofstream & F, CGS & gstate) {
   if (closed) F << "Z";
   F << "\" />" << endl;
   if (fillstroke == MP_clip) F << "</clipPath>" << endl << 
-     "<g clip-path=\"url(#clip_" << CGS::clippathID << ")\">" << endl;
+     "<g clip-path=\"url(#clip_" << CGS::clippathID << "_" << unique_prefix << ")\">" << endl;
 }
 
 void MP_data::add(int i) {
@@ -341,13 +346,13 @@ void MP_setting::print_svg (ofstream & F, CGS & gstate) {
   }
 }
 
-void MP_data::print_svg (ofstream & F) {
+void MP_data::print_svg (ofstream & F, string unique_prefix) {
 //  F << "<g id=\"" << ID <<  // plain MP settings follow
 //       "\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\">" << endl;
   for (unsigned int i=0; i<index.size(); i++) {
     switch (index[i].vector) {
       case I_path:
-        paths[index[i].idx].print_svg(F,gstate);
+        paths[index[i].idx].print_svg(F,gstate,unique_prefix);
         break;
       case I_setting:
         settings[index[i].idx].print_svg(F,gstate);
@@ -392,9 +397,13 @@ void MP_data::print_svg (ofstream & F) {
   assert(gstate.clippathdepth.empty());
 }
 
-void converted_data::print_svg (ofstream & F, long i_patt) {  // i_patt maju byt rozne
+void converted_data::print_svg (ofstream & F, string unique_prefix) { 
+  ostringstream s;
   static long i_patt_def(10000);
-  if (i_patt < 0) i_patt = ++i_patt_def;
+  s << ++i_patt_def;   // i_patt maju byt rozne
+  unique_prefix += "_";
+  unique_prefix += s.str();
+
   F << "<svg width=\"" << 2.54/72*(urx - llx) << 
       "cm\" height=\"" << 2.54/72*(ury - lly) << 
       "cm\" viewBox=\"" << llx << " " << -ury << 
@@ -407,7 +416,7 @@ void converted_data::print_svg (ofstream & F, long i_patt) {  // i_patt maju byt
     for (list<pattern>::iterator J = PATTERNLIST.begin();
                                 J != PATTERNLIST.end(); J++) {
     if (patterns.count(J->name) > 0) {
-        F << "<pattern id=\"patt_" << J->name << 
+        F << "<pattern id=\"patt_" << J->name <<  "_" << unique_prefix <<
             "\" patternUnits=\"userSpaceOnUse\"" << 
             " width=\"" << J->xstep <<   
             "\" height=\"" << J->ystep << 
@@ -417,14 +426,14 @@ void converted_data::print_svg (ofstream & F, long i_patt) {  // i_patt maju byt
             ")\">" << endl;
         F << "<g transform=\"translate(" 
                       << J->llx1-J->llx << " " << J->lly1-J->lly << ")\">" << endl;
-        J->data.MP.print_svg(F);
+        J->data.MP.print_svg(F,unique_prefix);
         F << "</g>" << endl;
         F << "</pattern>" << endl;
       }
     }
   }
   // clip to initial viewBox
-  F << "<clipPath id=\"clip_viewBox_" << i_patt << "\">" << endl;
+  F << "<clipPath id=\"clip_viewBox_" << unique_prefix << "\">" << endl;
   F << "<path d=\"M" << llx << " " << lly << 
       "L" << urx << " " << lly << 
       "L" << urx << " " << ury << 
@@ -433,8 +442,8 @@ void converted_data::print_svg (ofstream & F, long i_patt) {  // i_patt maju byt
   
   F << "</defs>" << endl;
   // --- end of definitions ---
-  F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox_" << i_patt << ")\">" << endl;
-  MP.print_svg(F);
+  F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox_" << unique_prefix << ")\">" << endl;
+  MP.print_svg(F,unique_prefix);
   F << "</g>" << endl;
   F << "</svg>" << endl;
 }
@@ -502,7 +511,7 @@ string process_pdf_string2(string s, string font) {
 
 void parse_eps(string fname, string cname, double dx, double dy, 
                double & c1, double & c2, double & c3, double & c4, 
-               converted_data & data) {
+               converted_data & data, double R, double G, double B) {
   string tok, buffer;
   string font, patt;
   bool comment = true, concat = false, 
@@ -789,6 +798,9 @@ void parse_eps(string fname, string cname, double dx, double dy,
         text.yy = fntmatr.transf[3];
         text.x = fntmatr.transf[4];
         text.y = fntmatr.transf[5];
+	text.r = R;
+	text.g = G;
+	text.b = B;
         concat = false;
         data.MP.add(text);
         thbuffer.clear();
@@ -812,12 +824,12 @@ void convert_scraps_new() {
   
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
-    if (I->F != "") parse_eps(I->F, I->C, I->S1, I->S2, I->F1, I->F2, I->F3, I->F4, I->Fc);
+    if (I->F != "") parse_eps(I->F, I->C, I->S1, I->S2, I->F1, I->F2, I->F3, I->F4, I->Fc, I->r, I->g, I->b);
     if (I->G != "") parse_eps(I->G, I->C, I->S1, I->S2, I->G1, I->G2, I->G3, I->G4, I->Gc);
-    if (I->B != "") parse_eps(I->B, "", I->S1, I->S2, I->B1, I->B2, I->G3, I->B4, I->Bc);
+    if (I->B != "") parse_eps(I->B, "", I->S1, I->S2, I->B1, I->B2, I->B3, I->B4, I->Bc);
     if (I->I != "") parse_eps(I->I, "", I->S1, I->S2, I->I1, I->I2, I->I3, I->I4, I->Ic);
-    if (I->E != "") parse_eps(I->E, "", I->S1, I->S2, I->E1, I->E2, I->E3, I->E4, I->Ec);
-    if (I->X != "") parse_eps(I->X, "", I->S1, I->S2, I->X1, I->X2, I->X3, I->X4, I->Xc);
+    if (I->E != "") parse_eps(I->E, "", I->S1, I->S2, I->E1, I->E2, I->E3, I->E4, I->Ec, I->r, I->g, I->b);
+    if (I->X != "") parse_eps(I->X, "", I->S1, I->S2, I->X1, I->X2, I->X3, I->X4, I->Xc, I->r, I->g, I->b);
   }
 
   for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 

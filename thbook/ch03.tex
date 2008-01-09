@@ -279,16 +279,18 @@ endlayout|
   * |sketches <on/off>| = turn on/off displaying of morphed sketch bitmaps. 
     (M, A; default: |off|)
   * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
-  * |grid <off/bottom/top>| = enable/disable grid (M, A; default: |off|)
+  * |grid <off/bottom/top>| = enable/disable grid (optionally coordinates' 
+    values may be also displayed)
+    (M, A; default: |off|)
   * |cs <coordinate system>| = coordinate system for |origin| and
     |grid-origin|
   * |north <true/grid>| = specify default orientation of the map. 
     By default, true (astronomical) north is used. It is ignored when used with
     local coordinate system.
   * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
-    origin (M, A) [Grid is currently not supported.]
+    origin (M, A)
   * |grid-size <x> <y> <z> <units>| = set grid size in real
-    units (M, A; default \hbox{|10 m|})
+    units (M, A; default is equal to scalebar size)
   * |origin <x> <y> <z> <units>| = set origin of atlas pages (M, A)
   * |origin-label <x-label> <y-label>| = set label for atlas page
     which has the lower left corner at the given origin coordinates
@@ -438,7 +440,7 @@ endlayout|
   
   * |format/fmt <format>| = set map format. Currently |pdf|, |svg|, 
     |xhtml|\[SVG embedded in XHTML file which contains also legend],
-    |3d|, |dxf|, |esri|\[ESRI shapefiles. Multiple files are written to a 
+    |survex|, |dxf|, |esri|\[ESRI shapefiles. Multiple files are written to a 
     directory with the specified filename.], |kml| (Google Earth) and 
     |xvi|\[Xtherion vector image. XVI images may be used in
     xtherion to draw in-scale maps. Scale (100\,DPI image resolution is 
@@ -475,7 +477,7 @@ endlayout|
 \leavevmode\kern1em\vbox{\halign{#\hfil\quad&#\hfil\cr
 {\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
 model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml\cr
-map  & pdf, svg, xhtml, dxf, esri, 3d, xvi, kml\cr
+map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml\cr
 atlas & pdf\cr
 database & sql\cr}}\egroup
 

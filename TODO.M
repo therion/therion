@@ -1,30 +1,33 @@
-thepsparse: grid do 2d struktur
+[[pri definovani globalnych funkcii, typov a premennych pouzivat prefix "th" 
+   resp. "TH" (napr. thprint_tex_encodings, THFONTS)]]
 
 
- * pri definovani globalnych funkcii, typov a premennych pouzivat prefix "th" 
-   resp. "TH" (napr. thprint_tex_encodings, THFONTS)
+mapy vseobecne:
+ * pri farebnych labeloch stmavit odtien farby
 
 thpdf:
 
+ * zoznam scrapov na danej strane v atlase -> z toho registre
+   * register pouzitych nazvov - z blokov
+                               - z vrstiev
+   * zhrnutie udajov o listoch na konci
+ * k vrstve: meno vo vertikalnom smere alebo udaj o vyske
  * zanorene OCG
  * cisla stran a odkazov cez utf2tex
  * skontrolovat ci nezapisujem nadbytocne xobjecty kvoli vrstvam
- * co s posunom stran v rychlom mode
- * k vrstve: meno vo vertikalnom smere alebo udaj o vyske
  * podmienene nacitavanie scrapov v TeXu
  * dvojstrankovy mod (Title vzdy na pravej strane), vtedy akceptovat:
- * vkladanie prazdnych stran (lepsie: atribut prava/lava pre stranu)
- * exclude pages a vkladanie prazdnych stran: mena namiesto cisel stran (?)
- * zrusit OwnPages option (jedine spolu s predch. -- problem s funkciou
-   find_excluded_pages) -- namiesto cisla strany makro \getpage{.} zvacsi 
-   argument o hodnotu \the\pageno na 1. strane s mapou
+   * vkladanie prazdnych stran (lepsie: atribut prava/lava pre stranu)
+   * exclude pages a vkladanie prazdnych stran: mena namiesto cisel stran (?)
+   * zrusit OwnPages option (jedine spolu s predch. -- problem s funkciou
+     find_excluded_pages) -- namiesto cisla strany makro \getpage{.} zvacsi 
+     argument o hodnotu \the\pageno na 1. strane s mapou
  * 2. sokolie oko
- * register pouzitych nazvov - z blokov
-                             - z vrstiev
  * vrstvy pod aktualnou: odlisit hlbku odtienmi sedej (?)
- * zhrnutie udajov o listoch na konci
  * mody pre preview (ziadne, linkovane, vsetky)
  * vrstva `pri' pre atlas
+ * co s posunom stran v rychlom mode
+
 
 thsvg:
 
@@ -34,10 +37,16 @@ thsvg:
  * layers cez javascript
  * (priehladnost -> SVG 1.2)
 
+
 thconvert:
 
  * (dorobit) CONCAT + konverzia rozdelenych textovych riadkov
  * optimalizacia zmien fontov + gsave & al.
+
+
+thepsparse: 
+
+ * grid do 2d struktur
 
 
 thtexfonts:
@@ -87,3 +96,8 @@ hotovo:
    (do uvahy aj convergence)
 
  * vypnit miesto pod legendou bg farbou 
+
+* text vo farbe scrapov
+* suradnice ku gridu
+* labels ku kladu listov
+* velkost gridu (suradnic) urcit pred zvacsenim plochy podla page-gridu

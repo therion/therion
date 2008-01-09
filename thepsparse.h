@@ -72,7 +72,7 @@ struct MP_path {
   void add(int, string, string, string, string, string, string, double, double);
   void add(int, string, string, double, double);
 
-  void print_svg(ofstream & F, CGS & gstate);
+  void print_svg(ofstream & F, CGS & gstate, string prefix);
 };
 
 struct MP_index {
@@ -81,7 +81,8 @@ struct MP_index {
 
 struct MP_text {
   string text, font;
-  float size, x, y, xx, xy, yx, yy;
+  double size, x, y, xx, xy, yx, yy;
+  double r, g, b;
   bool transformed;
   
   MP_text();
@@ -135,7 +136,7 @@ struct MP_data {
   MP_data();
   void clear();
   
-  void print_svg(ofstream & F);
+  void print_svg(ofstream & F, string prefix);
 };
 
 struct converted_data {
@@ -147,7 +148,7 @@ struct converted_data {
   
   void clear();
   converted_data();
-  void print_svg(ofstream & F, long=-1);
+  void print_svg(ofstream & F, string prefix="");
 };
 
 struct pattern {
@@ -161,6 +162,6 @@ struct pattern {
 int thconvert_new();
 void parse_eps(string fname, string cname, double dx, double dy, 
                double & c1, double & c2, double & c3, double & c4, 
-               converted_data & data);
+               converted_data & data, double = -1, double = -1, double = -1);
 
 #endif

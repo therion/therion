@@ -10,6 +10,9 @@ label.rt(btex {\it therion.mp} etex, (80,35));
 %label(btex theps2pdf etex, (140,-55));
 label(btex {\it therion.tex} etex, (180,-95));
 label(btex XTherion etex, (5,57));
+label.lft(btex Loch etex, (0,-110));
+drawoptions(withcolor blue);
+label.rt(btex \& other viewers etex, (0,-110));
 %label(btex etex, (,));
 drawoptions(withcolor red);
 label(btex MetaPost etex, (80,0));
@@ -19,7 +22,7 @@ label(btex mpto etex, (210,15));
 label(btex \TeX etex, (210,-15));
 label(btex dvitomp etex, (150,-15));
 label(btex {\it Plain format} etex, (210,-40));
-label(btex pdf-$\varepsilon$-\TeX etex, (105,-85));
+label(btex pdfTeX etex, (105,-85));
 label(btex {\it Plain format} etex, (180,-75));
 %label(btex etex, (,));
 drawoptions(withcolor blue);
@@ -27,16 +30,16 @@ drawoptions(withcolor blue);
 %label(btex 3dtopos etex, (-50,-15));
 drawoptions(withcolor (85/255,175/255,43/255));
 label(btex {\it input data}  etex, (15,30));
-label(btex {\it PDF maps} etex, (105,-110));
-label(btex {\it 3D model} etex, (-15,-60));
-label(btex {\it info \& log files} etex, (-15,-80));
-label(btex {\it export (model, SQL)} etex, (15,-100));
+label(btex {\it PDF maps} etex, (110,-111));
+%label(btex {\it 3D model} etex, (-15,-60));
+label(btex {\it info \& log files} etex, (-25,-60));
+label(btex {\it maps, models, DB} etex, (15,-85));
 label(btex {\it scanned sketches} etex, (-50,80));
 %label(btex etex, (,));
 drawoptions();
 drawarrow((15,22)--(15,7));
 
-drawarrow((-40,-70)--(-10,50));
+%drawarrow((-40,-70)--(-10,50));
 drawarrow((-20,-50)--(-10,50));
 
 %drawarrow((-6,2)--(-32,2));
@@ -67,13 +70,15 @@ drawarrow((210,-34)--(210,-22));
 drawarrow((15,-6)--(99,-77));
 
 %drawarrow((134,-61)--(106,-77));
-drawarrow((148,-75)--(131,-81));
-drawarrow((154,-94)--(131,-87));
+drawarrow((148,-75)--(125,-81));
+drawarrow((154,-94)--(125,-87));
 drawarrow((105,-90)--(105,-102));
 
+drawarrow((15,-90)--(15,-102));
+
 drawarrow((15,-6)--(-2,-50));
-drawarrow((15,-6)--(13,-70));
-drawarrow((15,-6)--(32,-90));
+drawarrow((15,-6)--(15,-77));
+%drawarrow((15,-6)--(32,-90));
 
 drawarrow((15,51)--(15,37));
 drawarrow((15,37)--(15,51));

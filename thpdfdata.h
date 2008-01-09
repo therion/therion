@@ -86,11 +86,11 @@ struct layout {
          doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
          northarrow, scalebar;
   bool  excl_pages,title_pages,page_numbering,
-        transparency,map_grid,OCG,map_header_bg; 
+        transparency,map_grid,OCG,map_header_bg,colored_text; 
   double hsize,vsize,overlap,
         hgridsize, vgridsize,
         hgridorigin, vgridorigin, gridrot,
-        nav_factor;
+        nav_factor, XS,YS,XO,YO;
   int nav_right,nav_up,own_pages,lang,legend_columns;
   double hoffset, voffset, opacity, legend_width;
   double background_r, background_g, background_b;
@@ -98,7 +98,7 @@ struct layout {
   double preview_below_r, preview_below_g, preview_below_b;
   double preview_above_r, preview_above_g, preview_above_b;
   
-  int surface, grid, proj;
+  int surface, grid, proj, grid_coord_freq; // freq 0 no, 1 border, 2 all
   string gridAA, gridAB, gridAC, 
          gridBA, gridBB, gridBC, 
          gridCA, gridCB, gridCC;

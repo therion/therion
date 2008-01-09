@@ -11,9 +11,9 @@ Therion is a tool for cave surveying. Its purpose is to help
 
 It runs on Unix, Linux, MacOS\,X and Win32 operating systems. 
 Source code and Windows installer are available on the Therion web page 
-(\www{|http://therion.speleo.sk|}{http://therion.speleo.sk}).
+(\www{http://therion.speleo.sk}).
 
-Therion is distributed under the \www{GNU General Public License}%
+Therion is distributed under the \www[GNU General Public License]
 {http://www.gnu.org/}.
 
 \subchapter Why Therion?.
@@ -117,8 +117,8 @@ Therion needs:
 \list
 * \TeX\ distribution.
   Necessary only if you want to create 2D maps in PDF format.
-* Tcl/Tk with {\it BWidget} and optionally {\it Tom} and {\it tkImg} 
-  extensions. It is only required for XTherion.
+* Tcl/Tk with {\it BWidget} and optionally {\it tkImg} 
+  extension. It is only required for XTherion.
 \endlist
 
 Windows installer includes \TeX\ and Tcl/Tk distributions with all required 
@@ -126,8 +126,8 @@ extensions. Read the {\it Appendix} if you want to compile Therion yourself.
 
 For displaying of maps and models you may use any of the following programs:
 \list
-* any PDF viewer like Acrobat Reader, ghostscript or xpdf for displaying  
-  2D maps;
+* any PDF or SVG viewer displaying 2D maps;
+* any GIS supporting DXF or {\it shapefile} formats for analyzing the maps;
 * appropriate 3D viewer for models exported in other than default format;
 * any SQL database client to process exported database.
 \endlist
@@ -137,7 +137,7 @@ For displaying of maps and models you may use any of the following programs:
 
 {\bf Installation from sources (therion-0.5.*.tar.gz package):}
 
-The source code is a primary Therion distribution. It needs be compiled 
+The source code is a primary Therion distribution. It needs to be compiled 
 and installed according to instructions in the {\it Appendix}.
 
 {\bf Installation on Windows:}
@@ -168,7 +168,7 @@ the user and all necessary programs are run automatically by Therion.
 
 For working with Therion it is enough to know that you have to create input data 
 (best done with XTherion), run Therion, and display output files 
-(3D model, PDF map, log file) in the appropriate program. 
+(3D model, map, log file) in the appropriate program. 
 
 For those who want to understand more about it, here is a brief explanation of 
 the above flowchart. Program names are in roman font, data files in italics. 

@@ -437,6 +437,9 @@ proc xth_cp_compile {} {
   }]
   
   set see_end 0
+  #puts $err
+  #global errorInfo
+  #puts $errorInfo
   
   if {$err} {
     bell
@@ -492,10 +495,21 @@ proc xth_cp_compile {} {
   $xth(cp,log).txt configure -state normal
   $xth(cp,editor).txt configure -state normal
   xth_cp_show_errors
+  
+  # update the tree
+  xth_cp_data_tree_clear      
+  catch {
+    set fid [open [file join [file dirname $xth(cp,ffull)] [xth_xcfg_fname $xth(cp,ffull)]] r]
+    fconfigure $fid -encoding utf-8
+    while {![eof $fid]} {
+      catch {eval [gets $fid]}
+    }
+    close $fid
+  }
 
   # update configuration file if required
   set xth(cp,cursor) [$xth(cp,editor).txt index insert]
-  if {1} {
+  if {0} {
     set fdata [xth_me_read_file $xth(cp,ffull) 0]
     if {[lindex $fdata 0] == 0} {
 	MessageDlg $xth(gui,message) -parent $xth(gui,main) \
@@ -503,16 +517,8 @@ proc xth_cp_compile {} {
 	  -message [lindex $fdata 1] \
 	  -font $xth(gui,lfont)
     } else {
-      xth_cp_data_tree_clear      
+      ###xth_cp_data_tree_clear      
 
-      catch {
-	set fid [open [file join [file dirname $xth(cp,ffull)] [xth_xcfg_fname $xth(cp,ffull)]] r]
-	fconfigure $fid -encoding utf-8
-	while {![eof $fid]} {
-	  catch {eval [gets $fid]}
-	}
-	close $fid
-      }
 
       set xth(cp,special) [lindex $fdata 2]
      

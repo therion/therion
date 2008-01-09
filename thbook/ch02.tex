@@ -267,7 +267,9 @@ the command may be used anywhere.
 
   If no declination is specified and some geodetic coordinate system is 
   defined, the declination is automatically computed using built-in geomagnetic 
-  model.
+  model. 
+  
+  N.B.: The declination is positive when the magnetic north is east of true north. 
 
 * |person-rename <old name> <new name>| = rename a person whose name has been
   changed
@@ -355,6 +357,7 @@ the command may be used anywhere.
     tape corrections are applied)
   * |declination <value> <units>| = sets the declination for subsequent
     shots $$true\ bearing = measured\ bearing + declination.$$
+    The declination is positive when the magnetic north is east of true north. 
     If no declination is specified, or the declination is reset (|-|),
     then a valid declination specification is searched for in all surveys
     the data object is in. See declination option of survey command.
@@ -644,7 +647,7 @@ Point is a command for drawing a point map symbol.
     |sink|, 
     |air-draught|\[Number of ticks is set according to |-scale| option],
     |gradient|, |map-connection|\[Virtual point, used to indicate connection
-    between shifted maps.], |extra|\[Additional morphing point.], 
+    between shifted maps (extended elevation, map offset).], |extra|\[Additional morphing point.], 
     |u|\[For user defined point symbols.].
 
 \endarguments
@@ -1213,10 +1216,19 @@ The custom attributes are used in map export depending on output
 format:
 \list
 * in {\it shapefile} export they are written directly to the associated 
-dbf file,
+  dbf file,
 * in maps generated using \MP\ (PDF, SVG) the attributes are written in 
-the \MP\ source file (in th form |ATTR_<name>|) and can be used by user in symbols definition 
-macros.
+  the \MP\ source file (in the form |ATTR_<name>|) and can be evaluated and used by user in 
+  symbols definition macros.
+  
+  If |<value>| is a number, then the type of |ATTR_<name>| variable in \MP\ is 
+  numeric, otherwise it is string. You can test presence of such a 
+  variable using |if known ATTR_<name>: ... fi|, or to check the type by using
+  |if numeric ATTR_<name>: ... else: ... fi|. 
+  
+  Numeric variable can be converted
+  to string using |decimal ATTR_<name>|.
+  
 \endlist
 
 
@@ -1224,15 +1236,14 @@ macros.
 
 XTherion is a GUI (Graphical User Interface) for Therion. 
 It helps a lot with creating input data files. Currently it works in 
-four main modes: text editor, map editor, compiler and model viewer.%
+three main modes: text editor, map editor and compiler.
 \[Here we're concerned with creating data, so only the two first modes are 
-described in this section. For compiler 
-features see the chapter {\it Processing data}, for model viewer features 
-chapter {\it What we get?}]
+described in this section. For compiler features see the chapter 
+{\it Processing data}.]
 
-It's not necessary for Therion itself---you may edit input files in your 
+It is not necessary for Therion itself---you may edit input files in your 
 favourite text editor and run Therion from the command line. XTherion is also 
-not the only GUI which may be used with Therion. It's possible to 
+not the only GUI which may be used with Therion. It is possible to 
 write a better one, which would be more user friendly, more WYSIWYG, faster, 
 more robust and easier to use. Any volunteers?
 
@@ -1243,7 +1254,7 @@ to get feeling of XTherion.
 For each mode of operation, there is an additional 
 right or left menu. The submenus may be packed; you may unpack them by 
 clicking on the menu button. For most of the menus and buttons, there is a short 
-description in the status line, so it's not hard to guess the meaning of each one.
+(translated) description in the status line, so it's not hard to guess the meaning of each one.
 The order of submenus on the side may be customized by the user. Right-click on 
 the menu button and select in the menu which of the other menus it should 
 be swapped with.
@@ -1253,7 +1264,9 @@ be swapped with.
 
 XTherion's text editor offers some interesting features which may help with 
 creating text input files: support for Unicode encoding and ability to open 
-multiple files. 
+multiple files.\[File encoding is specified on the first line of the file. This
+line is hidden by XTherion and may be accessed only indirectly using the right-hand 
+menu.]
 
 To make entering data easy, it supports table formatting of centreline data. 
 There is a menu {\it Data table} for typing the data. It may be customized to 
@@ -1304,7 +1317,8 @@ mouse button or through a menu. For better performance on slower computers,
 it's possible to temporarily unload a currently unused image from memory 
 by unchecking its {\it Visibility} check-box. It's possible to open an existing 
 file without loading of background images using {\it Open XP} menu.
-\[{\it Note:} Therion doesn't use background images in any way.]
+\[{\it Note:} Therion doesn't use background images in any way unless you 
+assign them to some scrap using |-sketch| option.]
 
 The size and zoom setting of the {\bf drawing area} is adjusted in the 
 corresponding menu. {\it Auto adjust} calculates optimal size of the working 
@@ -1354,11 +1368,12 @@ two point symbols in the same place!
 To escape from `insert' to `select' mode, press {\it Esc} key 
 on the keyboard or {\it Select} button in the {\it File commands} menu.
 
-What order will the commands be in the output file? Exactly as in the 
+What will the order of commands in the output file? Exactly the same as in the 
 outline in the {\it File commands} menu. Newly created point, line and text objects 
-are added before the currently marked line in the outline. It's possible to 
+are added before the currently marked line in the outline. It is possible to 
 change the order by selecting a line and pressing {\it Move down}, 
-{\it Move up} or {\it Move to} buttons in the {\it File commands} menu.
+{\it Move up} or {\it Move to} buttons in the {\it File commands} menu. This way 
+you can also move objects between scraps.
 
 {\bf Drawing lines} is similar to drawing in other 
 vector editing programs, which work with B\'ezier curves. 
@@ -1393,7 +1408,7 @@ XTherion. In the file saved by XTherion, there'll only be
 whatever you type into the {\it Text editor} or see in the {\it Command preview}.
 It may be an area definition or whatever you want, such as a comment beginning 
 with a `|\#|' character.]
-command which contents (entered in the {\it Text editor} menu of the Map editor) 
+command, the contents of which (entered in the {\it Text editor} menu of the Map editor) 
 is usual |area ... endarea| multi-line command (see the chapter {\it Data 
 format}.) 
 
@@ -1412,7 +1427,7 @@ you can either
 \list
 * press {\it Scale} button in the {\it Scraps} menu and click on two different 
 places on the image where the endpoints of calibration arrow should be, or
-* move pointer to desired position, read pointer coordinates from 
+* move mouse pointer to desired position, read pointer coordinates from 
 the status bar and enter these coordinates into {\it picture scale points}
 boxes in the {\it Scraps} control. After filling X1,Y1 and
 X2,Y2 coordinate pairs the calibration arrow will be moved correspondingly. 
@@ -1426,8 +1441,8 @@ set their attributes in the corresponding menus, move them, or delete them (Ctrl
 
 % [adding or deleting a point on the curve]
 
-There is a {\it Search and select} menu, which makes it easy to
-switch between objects and visualize things, you can't see at the first 
+There is a {\it Search and select} menu which makes it easy to
+switch between objects and visualize things you can't see at the first 
 look at the picture. For example, if you enter expression `station' and 
 press {\it Show All}, all stations on the picture will become red. 
 
@@ -1438,9 +1453,8 @@ files with Therion.
 TIP: Entering symbols of the same type at once saves you a lot of time 
 because you need not change symbol type and fill options for each new symbol.
 {\it Options} box preserves the old value and it's enough to change a few 
-characters (e.g.~if you're entering stations, |-name 34@pajan| option inherited 
-from previous station may be easily changed to |-name 35@pajan| by retyping one 
-character). 
+characters. \[In the case of survey stations, XTherion automatically 
+increases the station number for the next symbol inserted.] 
 It is a good idea to start with drawing all survey stations (don't forget to 
 give them names according to real names in the centreline command), than all 
 passage walls followed by all other point symbols, lines and areas. Finally 

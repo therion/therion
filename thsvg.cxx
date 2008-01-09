@@ -25,7 +25,7 @@
  * --------------------------------------------------------------------
  */
  
-// #include <iomanip>
+#include <iomanip>
 #include <iostream>
 #include <fstream>
 #include <list>
@@ -158,7 +158,7 @@ void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
 }
 
 
-void print_preview(int up,ofstream& F) {
+void print_preview(int up,ofstream& F, string unique_prefix) {
   set<int> used_layers;
   set<string> used_scraps;
   
@@ -184,12 +184,12 @@ void print_preview(int up,ofstream& F) {
         if (used_scraps.count(K->name) > 0) {
           if (up) {
             if (K->B != "" && K->sect == 0) {
-              F << "<use x=\"" << K->B1 << "\" y=\"" << K->B2 << "\" xlink:href=\"#B_" << K->name << "\" />" << endl;
+              F << "<use x=\"" << K->B1 << "\" y=\"" << K->B2 << "\" xlink:href=\"#B_" << K->name << "_" << unique_prefix << "\" />" << endl;
             }
           }
           else {
             if (K->I != "" && K->sect == 0) {
-              F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "\" />" << endl;
+              F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />" << endl;
             }
           }
         }
@@ -200,7 +200,7 @@ void print_preview(int up,ofstream& F) {
 }
 
 
-void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY) {
+void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY, string unique_prefix) {
   if (LAYOUT.grid == 0) return;
   PAGEDEF << "<g>" << endl;
   
@@ -228,7 +228,10 @@ void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY) 
   
   double grid_init_x = LAYOUT.hgridsize * floor ((llnew.x-origin.x)/LAYOUT.hgridsize) + origin.x;
   double grid_init_y = LAYOUT.vgridsize * floor ((llnew.y-origin.y)/LAYOUT.vgridsize) + origin.y;
-  
+
+double G_real_init_x = LAYOUT.XO + LAYOUT.XS * floor ((llnew.x-origin.x)/LAYOUT.hgridsize);
+double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.vgridsize);
+
   double cosr = cos(-LAYOUT.gridrot * 3.14159265 / 180);
   double sinr = sin(-LAYOUT.gridrot * 3.14159265 / 180);
 
@@ -236,11 +239,12 @@ void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY) 
 
   if (LAYOUT.proj == 0) {
     paired out,tmp;
-    for (double i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
-      for (double j = grid_init_y; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize) {
-        row = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
-        col = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
-	elem = row + 3*col;
+    int ii,jj;
+    for (double i = grid_init_x, ii=0; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize, ii++) {
+      for (double j = grid_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
+        col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
+        row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
+	elem = col + 3*row;
         tmp.x = i+LAYOUT.gridcell[elem].x;
         tmp.y = j+LAYOUT.gridcell[elem].y;
         out = rotatedaround(tmp,origin,LAYOUT.gridrot);
@@ -249,9 +253,22 @@ void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY) 
         PAGEDEF << "<g transform=\"matrix(" << 
                    cosr << " " << sinr << " " << -sinr << " " << cosr << " " << 
                    out.x << " " << out.y << ")\">";
-	PAGEDEF << "<use xlink:href=\"#grid_" << u2str(elem+1) << "\" />";
+	PAGEDEF << "<use xlink:href=\"#grid_" << u2str(elem+1) << "_" << unique_prefix << "\" />";
         PAGEDEF << "</g>" << endl;
-	
+
+        if (LAYOUT.grid_coord_freq==2 || (LAYOUT.grid_coord_freq==1 && elem!=4)) {
+          tmp.x = i+ (col==2 ? -2 : 2);
+          tmp.y = j+ (row==2 ? -9 : 2);
+          out = rotatedaround(tmp,origin,LAYOUT.gridrot);
+          PAGEDEF << "<text fill=\"black\" stroke=\"none\" font-size=\"8\" " <<
+	          (col == 2 ? "text-anchor=\"end\" " : "") <<
+                  "transform=\"matrix(" << 
+                   cosr << " " << sinr << " " << sinr << " " << -cosr << " " << 
+                   out.x << " " << out.y << ")\">(" << 
+	      setprecision(0) << G_real_init_x+ii*LAYOUT.XS << "," << 
+              G_real_init_y+jj*LAYOUT.YS << setprecision(3) << ")</text>" << endl;
+        }
+  
 /*  PAGEDEF << "<text font-family=\"arial\" font-size=\"10\" " <<
        "transform=\"matrix(" << 
                    1 << " " << 0 << " " << 0 << " " << -1 << " " << 
@@ -264,14 +281,27 @@ void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY) 
   }
   else {
     grid_init_x = LLX;
-    for (double j = grid_init_y; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize) {
+    int jj;
+    for (double j = grid_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
       for (double i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
-        row = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
-        col = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
-	elem = row + 3*col;
+        col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
+        row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
+	elem = col + 3*row;
 	PAGEDEF << "<use x=\"" << i/*-LLX*/+LAYOUT.gridcell[elem].x << "\" y=\"" << 
-	                      j/*-LLY*/+LAYOUT.gridcell[elem].y << "\" xlink:href=\"#grid_" << 
+	                      j/*-LLY*/+LAYOUT.gridcell[elem].y << "\" xlink:href=\"#grid_" << "_" << unique_prefix << 
 			      u2str(elem+1) << "\" />" << endl;
+        if (col == 0 && LAYOUT.grid_coord_freq > 0) {
+          PAGEDEF << "<text fill=\"black\" stroke=\"none\" font-size=\"8\" " << 
+	      "transform=\"matrix(1,0,0,-1," << i << "," << 
+	      j+1 /* podvihnutie o 1 bp */ << ")\">" << 
+	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS << "</text>" << endl;
+	}
+        if (col == 2 && LAYOUT.grid_coord_freq == 2) {
+          PAGEDEF << "<text fill=\"black\" stroke=\"none\" font-size=\"8\" " << 
+	      "transform=\"matrix(1,0,0,-1," << i << "," << 
+	      j+1 /* podvihnutie o 1 bp */ << ")\" text-anchor=\"end\">" << 
+	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS << "</text>" << endl;
+        }
       }
     }
   } 
@@ -302,7 +332,7 @@ void print_surface_bitmaps (ofstream &F) {
 
 
 
-#define ginit(ID) F << "<g id=\"" << ID << "\">" << endl;
+#define ginit(ID) F << "<g id=\"" << ID << "_" << unique_prefix << "\">" << endl;
 #define gend  F << "</g>" << endl;
 
 
@@ -313,6 +343,7 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
   else
     thprintf("making svg (xhtml) map ... ");
   string bgcol;
+  string unique_prefix = fname;
 
   ofstream F(fname);
   F.setf(ios::fixed, ios::floatfield);  // dolezite pre velke suradnice
@@ -367,12 +398,12 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
     if (!ldata.copyrights.empty()) F << "<p>" << ldata.copyrights << "</p>" << endl;
     if (LAYOUT.scalebar != "") {
       F << "<p>" << endl;
-      ScBar.print_svg(F);
+      ScBar.print_svg(F,unique_prefix);
       F << "</p>" << endl;
     }
     if (LAYOUT.northarrow != "") {
       F << "<p>" << endl;
-      NArrow.print_svg(F);
+      NArrow.print_svg(F,unique_prefix);
       F << "</p>" << endl;
     }
   }
@@ -392,7 +423,7 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
   // if the pattern definition exceeds the BBox in MetaPost
   for (list<pattern>::iterator I = PATTERNLIST.begin();
                                I != PATTERNLIST.end(); I++) {
-    F << "<pattern id=\"patt_" << I->name << 
+    F << "<pattern id=\"patt_" << I->name << "_" << unique_prefix <<
          "\" patternUnits=\"userSpaceOnUse\"" << 
          " width=\"" << I->xstep <<   
          "\" height=\"" << I->ystep << 
@@ -402,25 +433,25 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
          ")\">" << endl;
     F << "<g transform=\"translate(" 
                   << I->llx1-I->llx << " " << I->lly1-I->lly << ")\">" << endl;
-    I->data.MP.print_svg(F);
+    I->data.MP.print_svg(F,unique_prefix);
     F << "</g>" << endl;
     F << "</pattern>" << endl;
   }
   // scraps:
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
-    ginit("F_" + I->name); I->Fc.MP.print_svg(F); gend;
-    ginit("G_" + I->name); I->Gc.MP.print_svg(F); gend;
-    ginit("B_" + I->name); I->Bc.MP.print_svg(F); gend;
-    ginit("I_" + I->name); I->Ic.MP.print_svg(F); gend;
-    ginit("E_" + I->name); I->Ec.MP.print_svg(F); gend;
-    ginit("X_" + I->name); I->Xc.MP.print_svg(F); gend;
+    ginit("F_" + I->name); I->Fc.MP.print_svg(F,unique_prefix); gend;
+    ginit("G_" + I->name); I->Gc.MP.print_svg(F,unique_prefix); gend;
+    ginit("B_" + I->name); I->Bc.MP.print_svg(F,unique_prefix); gend;
+    ginit("I_" + I->name); I->Ic.MP.print_svg(F,unique_prefix); gend;
+    ginit("E_" + I->name); I->Ec.MP.print_svg(F,unique_prefix); gend;
+    ginit("X_" + I->name); I->Xc.MP.print_svg(F,unique_prefix); gend;
   }
   // grid:
   int i=0;
   for (list<converted_data>::iterator I = GRIDLIST.begin();
                                       I != GRIDLIST.end(); I++) {
-    ginit("grid_" + u2str(++i)); I->MP.print_svg(F); gend;
+    ginit("grid_" + u2str(++i)); I->MP.print_svg(F,unique_prefix); gend;
   }
   // clip to initial viewBox
   // (browsers mostly ignore clip="auto" overflow="hidden" root svg attributes)
@@ -450,10 +481,10 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
 
   // white scrap backgrounds (when transparency added):
   // grid:
-  if (LAYOUT.grid == 1) print_grid(F,llxo,llyo,urxo,uryo);
+  if (LAYOUT.grid == 1) print_grid(F,llxo,llyo,urxo,uryo,unique_prefix);
 
   // preview down:
-  if (!MAP_PREVIEW_DOWN.empty()) print_preview(0,F);
+  if (!MAP_PREVIEW_DOWN.empty()) print_preview(0,F,unique_prefix);
   
   // map export:
   for (map<int,layerrecord>::iterator J = LAYERHASH.begin();
@@ -486,31 +517,31 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
           }
           if (used_scraps.count(K->name) > 0 && K->I != "") {
             F << "<g fill=\"" << bgcol << "\">" << endl;
-            F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "\" />" << endl;
+            F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />" << endl;
             F << "</g>" << endl;
           }
         }
 
-//    F << "<use x=\"" << I->G1 << "\" y=\"" << -I->G2 << "\" xlink:href=\"#G_" << I->name << "\" />" << endl;
+//    F << "<use x=\"" << I->G1 << "\" y=\"" << -I->G2 << "\" xlink:href=\"#G_" << I->name << "_" << unique_prefix << "\" />" << endl;
 
         for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->F != "") {
-            F << "<use x=\"" << K->F1 << "\" y=\"" << K->F2 << "\" xlink:href=\"#F_" << K->name << "\" />" << endl;
+            F << "<use x=\"" << K->F1 << "\" y=\"" << K->F2 << "\" xlink:href=\"#F_" << K->name << "_" << unique_prefix << "\" />" << endl;
           }
         }
 
         for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->E != "") {
-            F << "<use x=\"" << K->E1 << "\" y=\"" << K->E2 << "\" xlink:href=\"#E_" << K->name << "\" />" << endl;
+            F << "<use x=\"" << K->E1 << "\" y=\"" << K->E2 << "\" xlink:href=\"#E_" << K->name << "_" << unique_prefix << "\" />" << endl;
           }
         }
 
         for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->X != "") {
-            F << "<use x=\"" << K->X1 << "\" y=\"" << K->X2 << "\" xlink:href=\"#X_" << K->name << "\" />" << endl;
+            F << "<use x=\"" << K->X1 << "\" y=\"" << K->X2 << "\" xlink:href=\"#X_" << K->name << "_" << unique_prefix << "\" />" << endl;
           }
         }
 
@@ -519,13 +550,13 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
   }
 
   // preview up:
-  if (!MAP_PREVIEW_UP.empty()) print_preview(1,F);
+  if (!MAP_PREVIEW_UP.empty()) print_preview(1,F,unique_prefix);
   
   // surface:
   if (LAYOUT.surface == 2) print_surface_bitmaps(F);
 
   // grid:
-  if (LAYOUT.grid == 2) print_grid(F,llxo,llyo,urxo,uryo);
+  if (LAYOUT.grid == 2) print_grid(F,llxo,llyo,urxo,uryo,unique_prefix);
 
   // map grid:
   if (LAYOUT.map_grid) {
@@ -583,7 +614,6 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
       int rows = (int) ceil(double(legendbox_num) / columns);
       int pos = 0;
 
-      int i_patt = 0;
       F << "<table cellspacing=\"5\">" << endl;
       for (int i = 0; i < rows; i++) {
         F << "<tr>" << endl;
@@ -591,7 +621,7 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
           F << "<td>" << endl;
           pos = i + j * rows;
           if (pos < legendbox_num) {
-            L[pos].ldata.print_svg(F,++i_patt);
+            L[pos].ldata.print_svg(F,unique_prefix);
             F << L[pos].descr;
             // F << "</p>" << endl;
           }

@@ -102,6 +102,9 @@ layout::layout() {
   hgridorigin = 0;
   vgridorigin = 0;
   map_header_bg = false;
+
+  colored_text = true;
+  grid_coord_freq = 2;
 }
 
 paired::paired() {

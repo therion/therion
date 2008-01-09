@@ -8,35 +8,43 @@ If you want to compile Therion from source code and run it, you need
 * GNU C/C++ compiler
 * GNU make
 * Perl
-* Tcl/Tk 8.4.3 and newer (|http://www.tcl.tk|) with 
-  {\it BWidget} widget set (\path|http://sourceforge.net/projects/tcllib|)
+* Tcl/Tk 8.4.3 and newer (\www{http://www.tcl.tk}) with 
+  {\it BWidget} widget set  \hfil\break
+  (\www{http://sourceforge.net/projects/tcllib})
   and optionally {\it tkImg} extension \hfil\break
-  (\path|http://sourceforge.net/projects/tkimg|).   
+  (\www{http://sourceforge.net/projects/tkimg}).   
 %  {\it Tom} OpenGL extension (improved version is included in Therion source 
 %  distribution)
 %  and 
 * \TeX\ distribution with at least \TeX\ with Plain format, 
-  recent pdf\TeX, and \MP\ (\path|http://www.tug.org|). 
+  recent pdf\TeX, and \MP\ (\www{http://www.tug.org}). 
 * ImageMagick distribution with {\it convert} and {\it identify} utilities, 
   if you want to morph survey sketches.
 \endlist
 
-All programs (with the exception of BWidget, Tom and tkImg package) are usually 
+To compile Loch, you need
+
+\list
+* freetype 2 and newer; freetype-config must work
+* wxWidgets 2.6 and newer; wx-config must work
+* VTK 5.0 and newer
+\endlist
+
+All programs (with the exception of BWidget and tkImg package) are usually 
 included in Linux, Unix or MacOS\,X distributions.
-For Windows consider using MinGW and MSYS (|http://www.mingw.org|).
+For Windows consider using MinGW and MSYS (\www{http://www.mingw.org}).
 It's a distribution of GNU utilities with GNU make and GCC.
 (BTW, why not to use precompiled Windows version?)
 
 \subsubchapter Quick start.
 
 \list
-* unpack source distribution |therion-0.3.*.tar.gz|
+* unpack the source distribution |therion-0.5.*.tar.gz|
 * |cd therion|
 * |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows, 
   respectively
 * |make|
-* |su|
-* |make install|
+* |sudo make install|
 \endlist
 
 %Installing Tom:
@@ -437,6 +445,11 @@ process them with Therion.
 * {\bf 2006}\Nobreak
 
   Oct: Therion 0.4 --- New 3D viewer (Loch).
+
+* {\bf 2007}\Nobreak
+
+  Feb: Therion 0.5 --- geodetic coordinates systems \& geomag declination. 
+  Support for bitmap sketches morphing.
 \endlist
 
 
@@ -454,7 +467,8 @@ new features to be implemented:
 \subsubchapter 2D maps.
 
 \list
-* GIS formats support
+* complete the predefined symbol sets
+* generate registers for atlas
 \endlist
 
 
@@ -462,6 +476,7 @@ new features to be implemented:
 
 \list
 * improve passage walls modeling
+* add funcionality to Loch
 \endlist
 
 \endinput

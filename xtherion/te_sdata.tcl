@@ -24,6 +24,7 @@ proc xth_te_sdata_scan {} {
   set dqts {from to compass clino tape}
   set scan_data {
     if {[regexp {(\s*)data\s+\w+\s+(.*)} $slns dum dind dqts]} {
+      regexp {^([^\#]+)} $dqts dum dqts
       set endscan 1
     }
   }

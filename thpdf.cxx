@@ -25,7 +25,7 @@
  * --------------------------------------------------------------------
  */
  
-// #include <iomanip>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -875,15 +875,21 @@ paired rotatedaround(paired x,paired o, double th) {
 }
 
 
-void print_grid(ofstream& PAGEDEF, double LLX,double LLY) {
+void print_grid_pdf(ofstream& PAGEDEF, double LLX, double LLY, double origMINX,double origMINY,double origMAXX, double origMAXY) {
   if (LAYOUT.grid == 0) return;
   PAGEDEF << "\\PL{q}";
   
   paired ll, ur, lr, ul, llrot, urrot, ulrot, lrrot, llnew, urnew, origin;
-  ll.x = LLX;
+/*  ll.x = LLX;
   ll.y = LLY; 
   ur.x = LLX + HS;
-  ur.y = LLY + VS; 
+  ur.y = LLY + VS;  */
+
+  ll.x = origMINX;
+  ll.y = origMINY; 
+  ur.x = origMAXX;
+  ur.y = origMAXY; 
+
   lr.x = ur.x;
   lr.y = ll.y;
   ul.x = ll.x;
@@ -923,6 +929,9 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
 
   double grid_init_x = LAYOUT.hgridsize * floor ((llnew.x-origin.x)/LAYOUT.hgridsize) + origin.x;
   double grid_init_y = LAYOUT.vgridsize * floor ((llnew.y-origin.y)/LAYOUT.vgridsize) + origin.y;
+
+  double G_real_init_x = LAYOUT.XO + LAYOUT.XS * floor ((llnew.x-origin.x)/LAYOUT.hgridsize);
+  double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.vgridsize);
   
   double cosr = cos(-LAYOUT.gridrot * 3.14159265 / 180);
   double sinr = sin(-LAYOUT.gridrot * 3.14159265 / 180);
@@ -931,11 +940,12 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
 
   if (LAYOUT.proj == 0) {
     paired out,tmp;
-    for (double i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
-      for (double j = grid_init_y; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize) {
-        row = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
-        col = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
-	elem = row + 3*col;
+    int ii,jj;
+    for (double i = grid_init_x, ii=0; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize, ii++) {
+      for (double j = grid_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
+        col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
+        row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
+	elem = col + 3*row;
 /*        tmp.x = i;
         tmp.y = j;
         out = rotatedaround(tmp,origin,LAYOUT.gridrot);
@@ -950,22 +960,57 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         out.y -= LLY;
         PAGEDEF << "\\PL{q}";
 	PAGEDEF << "\\PL{" << cosr << " " << sinr << " " << -sinr << " " << cosr << " " << out.x << " " << out.y << " cm}";
-	PAGEDEF << "\\PB{0}{0}{\\" << tex_Wname("grid") << u2str(elem+1) << "}%" << endl;
-        PAGEDEF << "\\PL{Q}";
+	PAGEDEF << "\\PB{0}{0}{\\" << tex_Wname("grid") << u2str(elem+1) << "}";
+        PAGEDEF << "\\PL{Q}%" << endl;
+
+        if (LAYOUT.grid_coord_freq==2 || (LAYOUT.grid_coord_freq==1 && elem!=4)) {
+          tmp.x = i;
+          tmp.y = j;
+          out = rotatedaround(tmp,origin,LAYOUT.gridrot);
+          out.x -= LLX;
+          out.y -= LLY;
+          PAGEDEF << "\\PL{q}";
+          PAGEDEF << "\\PL{" << cosr << " " << sinr << " " << -sinr << " " << cosr << " " << out.x << " " << out.y << " cm}";
+	  PAGEDEF << "\\gridcoord{" << (row == 2 ? (col == 2 ? 1 : 3) : (col == 2 ? 7 : 9)) << 
+	      "}{$(" << setprecision(0) << 
+	      G_real_init_x+ii*LAYOUT.XS << "," << 
+              G_real_init_y+jj*LAYOUT.YS << setprecision(2) << ")$}%" << endl;
+          PAGEDEF << "\\PL{Q}";
+        }
+
       }
     }
   }
   else {
     grid_init_x = LLX;
-    for (double j = grid_init_y; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize) {
+    int jj;
+    for (double j = grid_init_y,jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize,jj++) {
 //      PAGEDEF << "\\PL{q 3 w 0 0 1 RG 0 " << j-LLY << "  m " << HS << " " << j-LLY << " l S Q}";
       for (double i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
-        row = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
-        col = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
-	elem = row + 3*col;
+        col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
+        row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
+	elem = col + 3*row;
 	PAGEDEF << "\\PB{" << i-LLX+LAYOUT.gridcell[elem].x << "}{" << 
 	                      j-LLY+LAYOUT.gridcell[elem].y << "}{\\" << 
 			      tex_Wname("grid") << u2str(elem+1) << "}%" << endl;
+
+        if (col == 0 && LAYOUT.grid_coord_freq > 0) {
+          PAGEDEF << "\\PL{q}";
+          PAGEDEF << "\\PL{1 0 0 1 " << i-LLX << " " << j-LLY << " cm}";
+          PAGEDEF << "\\gridcoord{" << (row==2?3:9) << "}{$" << 
+	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS << 
+	      setprecision(2)<< "$}";
+          PAGEDEF << "\\PL{Q}%" << endl;
+	}
+        if (col == 2 && LAYOUT.grid_coord_freq == 2) {
+          PAGEDEF << "\\PL{q}";
+          PAGEDEF << "\\PL{1 0 0 1 " << i-LLX << " " << j-LLY << " cm}";
+          PAGEDEF << "\\gridcoord{" << (row==2?1:7) << "}{$" << 
+	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS <<
+	      setprecision(2)<< "$}";
+          PAGEDEF << "\\PL{Q}%" << endl;
+        }
+
       }
     }
   } 
@@ -1007,7 +1052,7 @@ void print_map(int layer, ofstream& PAGEDEF,
     print_page_bg(PAGEDEF);
     if (LAYOUT.surface == 1) print_surface_bitmaps(PAGEDEF,HSHIFT,VSHIFT);
     print_page_bg_scraps(layer, PAGEDEF, sheet_it);
-    if (LAYOUT.grid == 1) print_grid(PAGEDEF,HSHIFT,VSHIFT);
+    if (LAYOUT.grid == 1) print_grid_pdf(PAGEDEF,HSHIFT,VSHIFT,HSHIFT,VSHIFT,HSHIFT+HS,VSHIFT+VS);
   }
 
   if (mode == ATLAS && !LAYERHASH.find(layer)->second.D.empty()) {
@@ -1133,7 +1178,7 @@ void print_map(int layer, ofstream& PAGEDEF,
 
   if (mode == ATLAS) {
     if (LAYOUT.surface == 2) print_surface_bitmaps(PAGEDEF,HSHIFT,VSHIFT);
-    if (LAYOUT.grid == 2) print_grid(PAGEDEF,HSHIFT,VSHIFT);
+    if (LAYOUT.grid == 2) print_grid_pdf(PAGEDEF,HSHIFT,VSHIFT,HSHIFT,VSHIFT,HSHIFT+HS,VSHIFT+VS);
   }
 }
 
@@ -1433,6 +1478,8 @@ void build_pages() {
     i++;
   }
 
+  double origMINX=0, origMINY=0, origMAXX=0, origMAXY=0;
+
   if (mode == ATLAS) {
     HS = LAYOUT.hsize + 2*LAYOUT.overlap;
     VS = LAYOUT.vsize + 2*LAYOUT.overlap;
@@ -1446,6 +1493,7 @@ void build_pages() {
       MAXY = LAYOUT.vgridsize * ceil  ((MAXY-LAYOUT.vgridorigin)/LAYOUT.vgridsize) + LAYOUT.vgridorigin;
     }
     if (LAYOUT.map_grid) {
+      origMINX = MINX; origMINY = MINY; origMAXX = MAXX; origMAXY = MAXY;
       MINX = LAYOUT.hsize * floor (MINX/LAYOUT.hsize);
       MINY = LAYOUT.vsize * floor (MINY/LAYOUT.vsize);
       MAXX = LAYOUT.hsize * ceil (MAXX/LAYOUT.hsize);
@@ -1586,7 +1634,7 @@ void build_pages() {
       }
     }
 
-    if (LAYOUT.grid == 1) print_grid(PAGEDEF,MINX,MINY);
+    if (LAYOUT.grid == 1) print_grid_pdf(PAGEDEF,MINX,MINY,origMINX,origMINY,origMAXX,origMAXY);
 
     if (!MAP_PREVIEW_DOWN.empty()) print_preview(0,PAGEDEF,MINX,MINY);
     for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
@@ -1609,19 +1657,34 @@ void build_pages() {
     if (!MAP_PREVIEW_UP.empty()) print_preview(1,PAGEDEF,MINX,MINY);
 
     if (LAYOUT.surface == 2) print_surface_bitmaps(PAGEDEF,MINX,MINY);
-    if (LAYOUT.grid == 2) print_grid(PAGEDEF,MINX,MINY);
+    if (LAYOUT.grid == 2) print_grid_pdf(PAGEDEF,MINX,MINY,origMINX,origMINY,origMAXX,origMAXY);
 
     if (LAYOUT.map_grid) {
-      PAGEDEF << "\\PL{q .4 w}%" << endl;
+      PAGEDEF << "\\PL{q .4 w 0.6 g 0.6 G }%" << endl;
       PAGEDEF << "\\PL{0 0 " << HS << " " << VS << " re S}%" << endl;
       for (double i=0; i <= HS; i += LAYOUT.hsize) {
         PAGEDEF << "\\PL{" << i << " 0 m " << i << " " << VS << " l S}%" << endl;
+	if (i<HS) {
+          PAGEDEF << "\\PL{q 1 0 0 1 " << i+LAYOUT.hsize/2 << 
+	    " 0 cm}\\gridcoord{8}{\\size[24]" << grid_name(LAYOUT.labelx,(MINX+i)/LAYOUT.hsize) << 
+	    "}\\PL{Q}%" << endl;
+          PAGEDEF << "\\PL{q 1 0 0 1 " << i+LAYOUT.hsize/2 << " " << VS <<
+	    " cm}\\gridcoord{2}{\\size[24]" << grid_name(LAYOUT.labelx,(MINX+i)/LAYOUT.hsize) << 
+	    "}\\PL{Q}%" << endl;
+	}
       }
       for (double i=0; i <= VS; i += LAYOUT.vsize) {
         PAGEDEF << "\\PL{0 " << i << " m " << HS << " " << i << " l S}%" << endl;
+	if (i<VS) {
+          PAGEDEF << "\\PL{q 1 0 0 1 0 " << i+LAYOUT.vsize/2 << 
+    	    " cm}\\gridcoord{6}{\\size[24]" << grid_name(LAYOUT.labely,(MINY+VS-i)/LAYOUT.vsize) << 
+	    "}\\PL{Q}%" << endl;
+          PAGEDEF << "\\PL{q 1 0 0 1 " << HS << " " << i+LAYOUT.vsize/2 << 
+	    " cm}\\gridcoord{4}{\\size[24]" << grid_name(LAYOUT.labely,(MINY+VS-i)/LAYOUT.vsize) << 
+	    "}\\PL{Q}%" << endl;
+	}
       }
       PAGEDEF << "\\PL{Q}%" << endl;
-
     }
 ////    PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{";      // map legend
 ////    PAGEDEF << "\\maplayout\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;

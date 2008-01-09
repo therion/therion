@@ -5,6 +5,9 @@
 \ifx\pdfoutput\undefined
   \input epsf
   \gdef\outline#1{}
+  \def\pdfstartlink#1 #2 #3 #4 #5 #6 #7\pdfendlink{#7}
+  \let\red\relax \let\blue\relax \let\grey\relax 
+  \let\black\relax \let\green\relax \let\POPcolor\relax
 \else 
   \input etc/supp-mis 
   \input etc/supp-pdf 
@@ -16,10 +19,26 @@
   }
   \pdfcatalog{/ViewerPreferences << /DisplayDocTitle true >> }
   \gdef\outline#1{\pdfoutline goto page \the\pageno {/XYZ} {#1}}
+
+  \ifnum\pdftexversion<140
+    \let\red\relax \let\blue\relax \let\grey\relax 
+    \let\black\relax \let\green\relax \let\POPcolor\relax
+  \else
+    \chardef\Color=\pdfcolorstackinit page direct{0 g}
+    \def\red{\pdfcolorstack\Color push{0 0.89 0.94 0.28 k}}
+    \def\blue{\pdfcolorstack\Color push{1 1 0 0 k}}
+    \def\grey{\pdfcolorstack\Color push{0 0 0 0.50 k}}
+    \def\green{\pdfcolorstack\Color push{0.91 0 0.88 0.12 k}}
+    \def\black{\pdfcolorstack\Color push{0 0 0 1 k}}
+    \def\POPcolor{\pdfcolorstack\Color pop}
+  \fi
+
 \fi
 
+\catcode`@=11
+\input etc/optarg
 \input etc/verbatim
-\input etc/path.sty
+%\input etc/path.sty
 
 \font\rm=cmr12
 \font\it=cmti12
@@ -49,18 +68,22 @@
 \def\chapter#1.{\eject\outline{#1}
 	\skiplines2\centerline{\chap #1}
 	\nobreak   \write1{\string\cvak\string\penalty-50
-                    \string\Line{\string\bf\space #1\string\bodky\ \folio}}%
+                    \string\Line{\string\pdfstartlink\space
+		    attr {/Border [0 0 0]} goto page \folio\space {/Fit}
+		    \string\bf\space #1\string\bodky\ \folio\string\pdfendlink}}%
   \skiplines1}
 \def\subchapter#1.{%\global\advance\kapnum by1\pictnum=1\relax
   \penalty-100\skiplines2\centerline{\subchap #1}\nobreak
-  \write1{\string\cvak\string\Line{\string\quad\space
-            #1\string\bodky\ \folio}}\nobreak
+  \write1{\string\cvak\string\Line{\string\quad\string\pdfstartlink\space
+	    attr {/Border [0 0 0]} goto page \folio\space {/Fit}
+            #1\string\bodky\ \folio\string\pdfendlink}}\nobreak
   %\skiplines1\nobreak
 }
 \def\subsubchapter#1.{%\global\advance\kapnum by1\pictnum=1\relax
   \penalty-100\skiplines2\leftline{\subchap #1}\nobreak
-  \write1{\string\cvak\string\Line{\string\qquad\space
-            #1\string\bodky\ \folio}}\nobreak
+  \write1{\string\cvak\string\Line{\string\qquad\string\pdfstartlink\space 
+	    attr {/Border [0 0 0]} goto page \folio\space {/Fit}
+            #1\string\bodky\ \folio\string\pdfendlink}}\nobreak
 }
 \def\skiplines#1{\par\hbox{}\nobreak\vskip-\baselineskip
                  \vskip#1\baselineskip}
@@ -147,28 +170,20 @@
 \def\notes{\par{\it Special notes:} }
 \def\endnotes{}
 
-\def\www#1#2{\ifx\pdfoutput\undefined#1\else
+\def\www{\@getoptionalarg\@www}
+\def\@www#1{\ifx\pdfoutput\undefined
+    \ifx\@optionalarg\empty{\tt#1}\else\@optionalarg\fi
+  \else
     \pdfstartlink attr {/Border [0 0 0]} user{%
         /Subtype /Link
         /A << 
             /Type /Action 
             /S /URI 
-            /URI (#2) 
+            /URI (#1) 
         >>}%
-    #1%
-    \pdfendlink\fi}
-
-
-\ifnum\pdftexversion<140
-  \let\red\relax \let\blue\relax \let\grey\relax \let\black\relax \let\POPcolor\relax
-\else
-  \chardef\Color=\pdfcolorstackinit page direct{0 g}
-  \def\red{\pdfcolorstack\Color push{0 0.89 0.94 0.28 k}}
-  \def\blue{\pdfcolorstack\Color push{1 1 0 0 k}}
-  \def\grey{\pdfcolorstack\Color push{0 0 0 0.50 k}}
-  \def\black{\pdfcolorstack\Color push{0 0 0 1 k}}
-  \def\POPcolor{\pdfcolorstack\Color pop}
-\fi
+    \green\ifx\@optionalarg\empty{\tt#1}\else\@optionalarg\fi\POPcolor
+    \pdfendlink
+  \fi}
 
     
 \newcount\footnum \footnum 0    
@@ -196,6 +211,7 @@
   \indent\llap{#1\thinspace}\ignorespaces
   \footstrut\futurelet\next\fo@t}
 \count\footins=1000 % footnote magnification factor (1 to 1)
+
 \catcode`@=12 % at signs are no longer letters
 
 

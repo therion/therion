@@ -1,0 +1,52 @@
+
+%
+% The following macro \@futurenonspacelet (from the TeXbook) behaves
+% essentially like \futurelet except that it discards any implicit or
+% explicit space tokens that intervene before a nonspace is scanned:
+%
+\def\@futurenonspacelet#1{\def\cs{#1}%
+   \afterassignment\@stepone\let\@nexttoken=
+}%
+\begingroup % The grouping here avoids stepping on an outside use of `\\'.
+\def\\{\global\let\@stoken= }%
+\\ % now \@stoken is a space token (\\ is a control symbol, so that
+   % space after it is seen).
+\endgroup
+\def\@stepone{\expandafter\futurelet\cs\@steptwo}%
+\def\@steptwo{\expandafter\ifx\cs\@stoken\let\@@next=\@stepthree
+   \else\let\@@next=\@nexttoken\fi \@@next}%
+\def\@stepthree{\afterassignment\@stepone\let\@@next= }%
+%
+%
+% \@getoptionalarg\CS gets an optional argument from the input, enclosed
+% in brackets, then expands \CS.  We set \@optionalarg to \empty if we
+% don't find one, otherwise to the text of the argument.  This assumes
+% the brackets don't have a funny category code.
+%
+\def\@getoptionalarg#1{%
+   \let\@optionaltemp = #1%
+   \let\@optionalnext = \relax
+   \@futurenonspacelet\@optionalnext\@bracketcheck
+}%
+%
+% The \expandafter's in this macro let us avoid the use of \aftergroup,
+% which is somewhat more expensive.
+%
+\def\@bracketcheck{%
+   \ifx [\@optionalnext
+      \expandafter\@@getoptionalarg
+   \else
+      \let\@optionalarg = \empty
+      % We can't do the \temp after the \fi, because then the \temp gets
+      % in the way of reading the optional argument from the input, if
+      % we do have one.
+      \expandafter\@optionaltemp
+   \fi
+}%
+%
+\def\@@getoptionalarg[#1]{%
+   \def\@optionalarg{#1}%
+   \@optionaltemp
+}%
+%
+

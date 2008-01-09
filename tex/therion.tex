@@ -123,6 +123,27 @@
 
 \def\PB#1#2#3{\rlap{\kern#1bp\raise#2bp\hbox{\pdfrefxform#3}}} %placebox
 
+\def\gridcoord#1#2{\hbox to0pt{%
+  \ifnum#1=1\hss\fi
+  \ifnum#1=4\hss\fi
+  \ifnum#1=7\hss\fi
+  \ifnum#1=8\hss\fi
+  \ifnum#1=2\hss\fi
+    \vbox to0pt{%
+      \ifnum#1>3\vss\fi
+      \kern2pt%
+      \hbox{\kern2pt#2\kern2pt}%
+      \kern2pt%
+      \ifnum#1<7\vss\fi
+    }%
+  \ifnum#1=3\hss\fi
+  \ifnum#1=6\hss\fi
+  \ifnum#1=9\hss\fi
+  \ifnum#1=8\hss\fi
+  \ifnum#1=2\hss\fi
+  }%
+} 
+
 \def\PBcorr#1#2#3{%
   \xcorr=#1bp\advance\xcorr by\extraW\advance\xcorr by\overlap%
   \ycorr=#2bp\advance\ycorr by\extraS\advance\ycorr by\overlap%

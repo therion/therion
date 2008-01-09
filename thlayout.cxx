@@ -171,6 +171,9 @@ thlayout::thlayout()
   this->def_map_header_bg = 0;
   this->map_header_bg = false;
 
+  this->def_grid_coords = 0;
+  this->grid_coords = TT_LAYOUT_GRIDCOORDS_BORDER;
+
   this->def_surface = 0;
   this->surface = TT_LAYOUT_SURFACE_OFF;
   this->def_surface_opacity = 0;
@@ -241,6 +244,9 @@ thlayout::thlayout()
   
   this->def_page_numbers = 0;
   this->pgsnum = true;
+  
+  this->def_color_labels = 0;
+  this->color_labels = false;
   
   this->def_tex_lines = 0;
   this->first_line = NULL;
@@ -644,6 +650,15 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_COLOR:
       sv = thmatch_token(args[0],thtt_layout_color);
       switch (sv) {
+        case TT_LAYOUT_COLOR_LABELS:
+          sv2 = thmatch_token(args[1], thtt_bool);
+          if (sv2 == TT_UNKNOWN_BOOL)
+            ththrow(("invalid color labels switch (on|off expected) -- %s",args[1]))
+          else {
+            this->color_labels = (sv2 == TT_TRUE);
+	    this->def_color_labels = 2;
+          }
+	  break;
         case TT_LAYOUT_COLOR_MAP_FG:
           this->color_crit = thmatch_token(args[1], thtt_layout_ccrit);
           if (this->color_crit == TT_LAYOUT_CCRIT_UNKNOWN)
@@ -820,6 +835,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         ththrow(("invalid surface switch -- %s",args[0]))
       this->surface = sv;
       this->def_surface = 2;
+      break;
+    
+    case TT_LAYOUT_GRID_COORDS:
+      sv = thmatch_token(args[0],thtt_layout_gridcoords);
+      if (sv == TT_LAYOUT_GRIDCOORDS_UNKNOWN)
+        ththrow(("invalid grid-coords switch -- %s",args[0]))
+      this->grid_coords = sv;
+      this->def_grid_coords = 2;
       break;
 
     case TT_LAYOUT_NORTH:
@@ -1153,6 +1176,12 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_surface= %d;\n", this->def_surface);
   thprintf("\tplayout->surface = %d;\n", this->surface);
+
+  thprintf("\tplayout->def_color_labels= %d;\n", this->def_color_labels);
+  thprintf("\tplayout->color_labels = %s;\n", (this->color_labels ? "true" : "false"));
+
+  thprintf("\tplayout->def_grid_coords = %d;\n", this->def_grid_coords);
+  thprintf("\tplayout->grid_coords = %d;\n", this->grid_coords);
 
   thprintf("\tplayout->def_north= %d;\n", this->def_north);
   thprintf("\tplayout->north = %d;\n", this->north);
@@ -1759,6 +1788,14 @@ void thlayout::process_copy() {
         this->surface = srcl->surface;
       endcopy
 
+      begcopy(def_color_labels)
+        this->color_labels = srcl->color_labels;
+      endcopy
+
+      begcopy(def_grid_coords)
+        this->grid_coords = srcl->grid_coords;
+      endcopy
+
       begcopy(def_north)
         this->north = srcl->north;
       endcopy
@@ -1926,6 +1963,18 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.legend_width = this->legend_width * THM2PT;
   LAYOUT.legend_columns = (int) this->legend_columns;
   LAYOUT.overlap = this->overlap * THM2PT;
+  
+  switch (this->grid_coords) {
+    case TT_LAYOUT_GRIDCOORDS_OFF:
+      LAYOUT.grid_coord_freq = 0;
+      break;
+    case TT_LAYOUT_GRIDCOORDS_ALL:
+      LAYOUT.grid_coord_freq = 2;
+      break;
+    default:
+      LAYOUT.grid_coord_freq = 1;
+      break;
+  }
 
   switch (this->surface) {
     case TT_LAYOUT_SURFACE_OFF:
@@ -1961,6 +2010,8 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   if (strlen(this->doc_keywords) > 0)
     LAYOUT.doc_keywords = this->doc_keywords;
   LAYOUT.opacity = this->opacity;
+  
+  LAYOUT.colored_text = this->color_labels;
   
   LAYOUT.background_r = this->color_map_bg.R;
   LAYOUT.background_g = this->color_map_bg.G;

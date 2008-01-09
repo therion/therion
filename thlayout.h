@@ -93,6 +93,7 @@ enum {
 	TT_LAYOUT_SKETCHES = 2049,
 	TT_LAYOUT_NORTH = 2050,
   TT_LAYOUT_MAP_IMAGE = 2051,
+  TT_LAYOUT_GRID_COORDS = 2052,
 };
 
 
@@ -117,6 +118,30 @@ static const thstok thtt_layout_grid[] = {
   {"off", TT_LAYOUT_GRID_OFF},
   {"top", TT_LAYOUT_GRID_TOP},
   {NULL, TT_LAYOUT_GRID_UNKNOWN}
+};
+
+
+/**
+ * Layout grid tokens.
+ */
+
+enum {
+  TT_LAYOUT_GRIDCOORDS_UNKNOWN = 0,
+  TT_LAYOUT_GRIDCOORDS_OFF,
+  TT_LAYOUT_GRIDCOORDS_BORDER,
+  TT_LAYOUT_GRIDCOORDS_ALL,
+};
+
+
+/**
+ * Layout grid token table.
+ */
+ 
+static const thstok thtt_layout_gridcoords[] = {
+  {"all", TT_LAYOUT_GRIDCOORDS_ALL},
+  {"border", TT_LAYOUT_GRIDCOORDS_BORDER},
+  {"off", TT_LAYOUT_GRIDCOORDS_OFF},
+  {NULL, TT_LAYOUT_GRIDCOORDS_UNKNOWN}
 };
 
 
@@ -317,6 +342,7 @@ enum {
   TT_LAYOUT_COLOR_MAP_FG,
   TT_LAYOUT_COLOR_PREVIEW_BELOW,
   TT_LAYOUT_COLOR_PREVIEW_ABOVE,
+  TT_LAYOUT_COLOR_LABELS,
 };
 
 
@@ -325,6 +351,7 @@ enum {
  */
  
 static const thstok thtt_layout_color[] = {
+  {"labels", TT_LAYOUT_COLOR_LABELS},
   {"map-bg", TT_LAYOUT_COLOR_MAP_BG},
   {"map-fg", TT_LAYOUT_COLOR_MAP_FG},
   {"preview-above", TT_LAYOUT_COLOR_PREVIEW_ABOVE},
@@ -413,6 +440,7 @@ static const thstok thtt_layout_opt[] = {
   {"endcode",TT_LAYOUT_ENDCODE},
   {"exclude-pages",TT_LAYOUT_EXCLUDE_PAGES},
   {"grid",TT_LAYOUT_GRID},
+  {"grid-coords",TT_LAYOUT_GRID_COORDS},
   {"grid-origin",TT_LAYOUT_GRID_ORIGIN},
   {"grid-size",TT_LAYOUT_GRID_SIZE},
   {"language",TT_LAYOUT_LANG},
@@ -515,7 +543,7 @@ class thlayout : public thdataobject {
   char grid, ccode;
   
   int legend, color_legend, map_header, lang, north, max_explos, max_topos, max_cartos, max_copys,
-    debug, survey_level, surface;
+    debug, survey_level, surface, grid_coords;
   
   thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
   int color_crit, // none, altitude, ...
@@ -526,7 +554,7 @@ class thlayout : public thdataobject {
   thlayoutln * first_line, * last_line;
   
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
-    explo_lens, topo_lens, map_header_bg, sketches;
+    explo_lens, topo_lens, map_header_bg, sketches, color_labels;
 		
 	thlocale units;
 
@@ -543,7 +571,7 @@ class thlayout : public thdataobject {
     def_map_header, def_lang, def_scale_bar, def_map_header_bg,
     def_max_explos, def_max_topos, def_max_cartos,
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_survey_level, def_surface,
-    def_surface_opacity, def_units;
+    def_surface_opacity, def_units, def_grid_coords, def_color_labels;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;

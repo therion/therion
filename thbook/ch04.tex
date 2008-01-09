@@ -79,8 +79,18 @@ much has each of them surveyed:}
   where (S1.Z+S2.Z)/2 between 1500 and 1550 and 
   SHOT.FROM_ID = S1.ID and SHOT.TO_ID = S2.ID;|
 
+\subsubchapter List of possible continuations.
+
+Using |export continuation-list| you get an overview of all points in the
+centreline and scraps marked \[using |station| attribute for centreline point
+and |point continuation| in scraps] marked as a possible continuation.
+
+
+
 
 \subchapter 2D maps.
+
+\subsubchapter Maps for printing.
 
 Maps are produced in PDF and SVG formats, which may be viewed or printed in a wide 
 variety of viewers. Be sure to uncheck {\it Fit page to paper} or similar 
@@ -101,6 +111,22 @@ Therion uses most advanced PDF features like transparency and layers.
 Created PDF files may be optionally post-processed in applications like 
 pdf\TeX\ or Adobe Acrobat---it's possible to extract or change some pages, add 
 comments or encryption, etc.
+
+
+
+\subsubchapter Maps for GIS.
+
+Maps produced in DXF, ESRI or KML formats may be further processed in 
+appropriate software. These maps do not contain visualized map symbols
+
+
+\subsubchapter Special-purpose maps.
+
+Map in XVI format contains centreline with LRUD (and optionally morphed 
+sketches) and can be imported in XTherion to serve as a background for 
+digitization.
+
+Map in Survex format is intended for a quick preview in Aven.
 
 
 \subchapter 3D models.

@@ -794,9 +794,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   } else 
     sblen = this->layout->units.convert_length(this->layout->scale_bar);
 
-  layoutnan(gxs, sblen / 5.0);
-  layoutnan(gys, sblen / 5.0);
-  layoutnan(gzs, sblen / 5.0);
+  layoutnan(gxs, sblen);
+  layoutnan(gys, sblen);
+  layoutnan(gzs, sblen);
   layoutnan(gox, 0.0);
   layoutnan(goy, 0.0);
   layoutnan(goz, 0.0);
@@ -1381,6 +1381,10 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     LAYOUT.gridrot = 0.0;
     LAYOUT.proj = 1;
     grid_macro = "s_vgrid";
+    LAYOUT.XS = this->layout->gxs;
+    LAYOUT.YS = this->layout->gzs;
+    LAYOUT.XO = this->layout->gox;
+    LAYOUT.YO = this->layout->goz;
     break;
   default:
     ghs = this->layout->gxs * out.ms;
@@ -1389,6 +1393,10 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     goy = (this->layout->goy - prj->shift_y) * out.ms;
     LAYOUT.gridrot = rrot;
     LAYOUT.proj = 0;
+    LAYOUT.XS = this->layout->gxs;
+    LAYOUT.YS = this->layout->gys;
+    LAYOUT.XO = this->layout->gox;
+    LAYOUT.YO = this->layout->goy;
     break;
   }
   
