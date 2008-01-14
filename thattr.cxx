@@ -518,6 +518,7 @@ void thattr::export_txt(const char * fname, int encoding)
       fprintf(f,"%s%s",hasone ? "\t" : "",value);
       hasone = true;
     }
+    fprintf(f,"\n");
   }
 
   fclose(f);

@@ -253,7 +253,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
   
   ostringstream text_attr;
   if (LAYOUT.colored_text && r >= 0 && g >= 0 && b >= 0) {
-    text_attr << "0.01 w " << r << " " << g << " " << b << " rg 2 Tr ";
+    text_attr << "0.1 w " << r << " " << g << " " << b << " rg 2 Tr ";
   };
 
   ifstream F(fname.c_str());

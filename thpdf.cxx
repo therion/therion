@@ -1492,8 +1492,9 @@ void build_pages() {
       MINY = LAYOUT.vgridsize * floor ((MINY-LAYOUT.vgridorigin)/LAYOUT.vgridsize) + LAYOUT.vgridorigin;
       MAXY = LAYOUT.vgridsize * ceil  ((MAXY-LAYOUT.vgridorigin)/LAYOUT.vgridsize) + LAYOUT.vgridorigin;
     }
+    origMINX = MINX; origMINY = MINY; origMAXX = MAXX; origMAXY = MAXY;
     if (LAYOUT.map_grid) {
-      origMINX = MINX; origMINY = MINY; origMAXX = MAXX; origMAXY = MAXY;
+//      origMINX = MINX; origMINY = MINY; origMAXX = MAXX; origMAXY = MAXY;
       MINX = LAYOUT.hsize * floor (MINX/LAYOUT.hsize);
       MINY = LAYOUT.vsize * floor (MINY/LAYOUT.vsize);
       MAXX = LAYOUT.hsize * ceil (MAXX/LAYOUT.hsize);

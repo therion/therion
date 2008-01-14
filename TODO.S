@@ -1,15 +1,15 @@
 HOT LIST:
 
++ update TODO list
+
 + thbook+CHANGES: text command in configuration & initialization file
 + check text command in configuration & initialization file + samples
 + thbook+CHANGES: layout color labels on|off
 + thbook+CHANGES: grid-coords off|(border)|all
 + thbook: symbol-set name is case sentive!!!
 + check LRUD map PDF export (projections, complicated polygons)
-+ check LRUD export to loch + loch interpretation
 + bug in loch LRUD interpretation when reversed leg
 
-+ fix bug with grid coords with .3d import
 + "not" station flag
 + sink,spring,lake,doline flags to stations
 + symplify centerline flags handling and export
