@@ -33,7 +33,7 @@
 
 #define THMAXFREC 64
 
-const long thinput::max_line_size = 65536;
+const long thinput::max_line_size = 8128;
 
 
 enum {TT_UNKNOWN_INPUT, TT_INPUT, TT_ENCODING};

@@ -458,7 +458,11 @@ void thimport::import_file_img()
 
   img_point imgpt;
   int result;
-  char * args [4], * stnm;
+  char * args [4], * stnm, a0[32], a1[32], a2[32], a3[32];
+  args[0] = a0;
+  args[1] = a1;
+  args[2] = a2;
+  args[3] = a3;
   size_t filterl = 0;
   if (this->filter != NULL)
     filterl = strlen(this->filter);
@@ -543,15 +547,16 @@ void thimport::import_file_img()
           // ak bude entrance, vlozi aj station
           if ((pimg->flags & img_SFLAG_ENTRANCE) != 0) {
             args[0] = n2.get_buffer();
-            args[1] = "";
-            args[2] = "entrance";
+	    args[1] = strcpy(a1, "");
+            args[2] = strcpy(a2, "entrance");
             tmpdata->set_data_station(3, args, TT_UTF_8);
           }
           if ((pimg->flags & img_SFLAG_FIXED) == 0) {
             args[0] = n2.get_buffer();
-            args[1] = "";
-            args[2] = "not-fixed";
-            tmpdata->set_data_station(3, args, TT_UTF_8);
+            args[1] = strcpy(a1, "");
+            args[2] = strcpy(a2, "not");
+            args[3] = strcpy(a3, "fixed");
+            tmpdata->set_data_station(4, args, TT_UTF_8);
           }
           this->db->csurveyptr = tmpsurvey;
         }
@@ -656,9 +661,9 @@ void thimport::import_file_img()
     
 //    thprintf("%s - %s = %s - %s in %s\n", s1s.fullname.c_str(), s2s.fullname.c_str(), n1.get_buffer(), n2.get_buffer(), tmpdata->fsptr->full_name);
 
-    args[0] = "nosurvey";
-    args[1] = "from";
-    args[2] = "to";
+    args[0] = strcpy(a0, "nosurvey");
+    args[1] = strcpy(a1, "from");
+    args[2] = strcpy(a2, "to");
     tmpdata->set_data_data(3,args);
 
     args[0] = n1.get_buffer();

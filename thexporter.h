@@ -47,6 +47,7 @@ enum {
   TT_EXP_ATLAS,  ///< 2D atlas.
   TT_EXP_DATABASE,  ///< Database export.
   TT_EXP_CONTLIST,  ///< Table with specified data.
+  TT_EXP_SURVEYLIST,  ///< Table with specified data.
 };
 
 
@@ -60,6 +61,7 @@ static const thstok thtt_exporter[] = {
   {"database", TT_EXP_DATABASE},
   {"map", TT_EXP_MAP},
   {"model", TT_EXP_MODEL},
+  {"survey-list", TT_EXP_SURVEYLIST},
   {NULL, TT_EXP_UNKNOWN}
 };
 

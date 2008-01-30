@@ -253,6 +253,7 @@ enum {
   TT_DATALFLAG_UNKNOWN,
   TT_DATALFLAG_SURFACE,
   TT_DATALFLAG_DUPLICATE,
+  TT_DATALFLAG_APPROXIMATE,
   TT_DATALFLAG_NOT,  
 };
 
@@ -294,6 +295,7 @@ enum {
   TT_LEGFLAG_NONE = 0,
   TT_LEGFLAG_SURFACE = 1,
   TT_LEGFLAG_DUPLICATE = 2,
+  TT_LEGFLAG_APPROXIMATE = 4,
 };
 
 
@@ -302,6 +304,8 @@ enum {
  */
  
 static const thstok thtt_datalflag[] = {
+  {"approx", TT_DATALFLAG_APPROXIMATE},
+  {"approximate", TT_DATALFLAG_APPROXIMATE},
   {"duplicate", TT_DATALFLAG_DUPLICATE},
   {"not", TT_DATALFLAG_NOT},
   {"surface", TT_DATALFLAG_SURFACE},
@@ -321,6 +325,15 @@ enum {
   TT_DATASFLAG_NOTFIXED,
   TT_DATASFLAG_CODE,
   TT_DATASFLAG_ATTR,
+  TT_DATASFLAG_NOT,
+  TT_DATASFLAG_EXPLORED,
+  TT_DATASFLAG_AIRDRAUGHT,
+  TT_DATASFLAG_AIRDRAUGHT_WINTER,
+  TT_DATASFLAG_AIRDRAUGHT_SUMMER,
+  TT_DATASFLAG_SINK,
+  TT_DATASFLAG_SPRING,
+  TT_DATASFLAG_DOLINE,
+  TT_DATASFLAG_PROBE,
 };
 
 /**
@@ -337,7 +350,9 @@ enum {
   TT_STATIONFLAG_SPRING = 32,
   TT_STATIONFLAG_SINK = 64,
   TT_STATIONFLAG_DOLINE = 128,
-  TT_STATIONFLAG_LAKE = 256,
+  TT_STATIONFLAG_PROBE = 256,
+  TT_STATIONFLAG_AIRDRAUGHT_WINTER = 512,
+  TT_STATIONFLAG_AIRDRAUGHT_SUMMER = 1024,
 };
 
 
@@ -346,11 +361,20 @@ enum {
  */
  
 static const thstok thtt_datasflag[] = {
+  {"air-draught", TT_DATASFLAG_AIRDRAUGHT},
+  {"air-draught:summer", TT_DATASFLAG_AIRDRAUGHT_SUMMER},
+  {"air-draught:winter", TT_DATASFLAG_AIRDRAUGHT_WINTER},
   {"attr", TT_DATASFLAG_ATTR},
   {"code", TT_DATASFLAG_CODE},
   {"continuation", TT_DATASFLAG_CONT},
+  {"doline", TT_DATASFLAG_DOLINE},
   {"entrance", TT_DATASFLAG_ENTRANCE},
-  {"not-fixed", TT_DATASFLAG_NOTFIXED},
+  {"explored", TT_DATASFLAG_EXPLORED},
+  {"fixed", TT_DATASFLAG_FIXED},
+  {"not", TT_DATASFLAG_NOT},
+  {"probe", TT_DATASFLAG_PROBE},
+  {"sink", TT_DATASFLAG_SINK},
+  {"spring", TT_DATASFLAG_SPRING},
   {NULL, TT_DATASFLAG_UNKNOWN},
 };
 
@@ -455,6 +479,8 @@ class thdatass {
   const char * comment;  ///< Station comment.  
 
   const char * code;  ///< Continuation code.
+  
+  double explored;  ///< Explored length within continuation.
   
   int flags;  ///< Station flags.
   

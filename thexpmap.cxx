@@ -775,6 +775,12 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   thprintf("writing %s ...\n", fnm);
 //  thtext_inline = true;
 #endif 
+  
+  switch (this->layout->north) {
+    case TT_LAYOUT_NORTH_GRID:
+      rotate_plus = meridian_conv;
+      break;
+  }
 
   // scalebar length
   double sblen, sbtestdbl;
@@ -815,6 +821,13 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       default:
         origin_shx = (prj->shift_x - this->layout->ox) * out.ms;
         origin_shy = (prj->shift_y - this->layout->oy) * out.ms;
+        rrot = this->layout->rotate - meridian_conv + rotate_plus;
+        srot = sin(rrot / 180.0 * THPI);
+        crot = cos(rrot / 180.0 * THPI);
+        new_shx = origin_shx * crot + origin_shy * srot;
+        new_shy = origin_shy * crot - origin_shx * srot;
+        origin_shx = new_shx;
+        origin_shy = new_shy;
       break;
     }
   } else {
@@ -837,12 +850,6 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 	  this->layout->paphs = this->layout->paghs + 2.0 * this->layout->marls;
 	  this->layout->papvs = this->layout->pagvs + 2.0 * this->layout->marts;
 	}
-  
-  switch (this->layout->north) {
-    case TT_LAYOUT_NORTH_GRID:
-      rotate_plus = meridian_conv;
-      break;
-  }
       
 //  tf = fopen(thtmp.get_file_name("Config"),"w");
 //  this->layout->export_config(tf,prj,out.ms,origin_shx,origin_shy);
@@ -2292,50 +2299,6 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                   dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
                     (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
                     thxmmxst(out, ptp->point->xt, ptp->point->yt));
-                }
-              }
-            }
-            if (station != NULL) {
-              // export continuation station
-              if (out->symset->assigned[SYMP_CONTINUATIONSTATION] && ((station->flags & TT_STATIONFLAG_CONT) != 0 )) {
-                thexpmap_export_mp_bgif;
-                std::string conttext;
-                if ((station->code != NULL) && (strlen(station->code) > 0)) {
-                  conttext = station->code;
-                }
-                if ((station->comment != NULL) && (strlen(station->comment) > 0)) {
-                  if (conttext.length() > 0)
-                    conttext += " -- ";
-                  conttext += station->comment;
-                }
-                bool stname = (conttext.length() > 0);
-                thexpmap_export_mp_bgif;
-                if (stname) {
-                  fprintf(out->file,"ATTR__text_x := true;\n");
-                  fprintf(out->file,"ATTR__text := btex \\thcontinuation %s etex;\n", 
-                    utf2tex(conttext).c_str());
-                }
-                fprintf(out->file,"p_continuationstation((%.2f,%.2f));\n",
-                  thxmmxst(out, ptp->point->xt, ptp->point->yt));
-                if (stname) {
-                  fprintf(out->file,"ATTR__text_x := false;");
-                }
-              }
-            }
-            if (station != NULL) {
-              // export entrance station
-              if (out->symset->assigned[SYMP_ENTRANCESTATION] && ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0 )) {
-                bool stname = ((station->comment != NULL) && (strlen(station->comment) > 0));
-                thexpmap_export_mp_bgif;
-                if (stname) {
-                  fprintf(out->file,"ATTR__text_x := true;\n");
-                  fprintf(out->file,"ATTR__text := btex \\thentrance %s etex;\n", 
-                    utf2tex(station->comment));
-                }
-                fprintf(out->file,"p_entrancestation((%.2f,%.2f));\n",
-                  thxmmxst(out, ptp->point->xt, ptp->point->yt));
-                if (stname) {
-                  fprintf(out->file,"ATTR__text_x := false;");
                 }
               }
             }

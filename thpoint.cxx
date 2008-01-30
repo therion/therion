@@ -172,6 +172,10 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
       this->parse_code(this->db->buff_enc.get_buffer());
       break;
 
+    case TT_POINT_EXPLORED:
+      this->parse_explored(*args);
+      break;
+
     case TT_POINT_ALIGN:
       this->parse_align(*args);
       break;
@@ -912,6 +916,21 @@ void thpoint::parse_text(char * ss) {
 }
 
 
+void thpoint::parse_explored(char * ss) {
+  switch (this->type) {
+    case TT_POINT_TYPE_CONTINUATION:
+      break;
+    default:
+      ththrow(("-explored not valid with type %s", thmatch_string(this->type,thtt_point_types)))
+      break;
+  }
+  int sv;
+  thparse_length(sv, this->xsize, ss);
+  if (sv == TT_SV_UNKNOWN)
+      ththrow(("ivalid explored length -- %s", ss));
+}
+
+
 void thpoint::parse_code(char * ss) {
   switch (this->type) {
     case TT_POINT_TYPE_CONTINUATION:
@@ -920,8 +939,7 @@ void thpoint::parse_code(char * ss) {
       ththrow(("-code not valid with type %s", thmatch_string(this->type,thtt_point_types)))
       break;
   }
-  if (strlen(ss) > 0)
-    this->code = this->db->strstore(ss);
+  // store explored length in XSize field
 }
 
 

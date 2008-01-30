@@ -42,6 +42,13 @@ thattr::thattr()
 }
 
 
+
+void thattr_obj::set_tree_level(size_t level) {
+  m_tree_level = level;
+}
+
+
+
 thattr_field * thattr::insert_field(const char * name)
 {
   thattr_field tmp, * r;
@@ -72,6 +79,13 @@ thattr_field * thattr::get_field(const char * name, bool ins)
   } else
     return it->second;
 }
+
+
+
+thattr_obj * thattr::get_object() {
+    return this->m_obj_last;
+}
+
 
 
 thattr_obj * thattr::get_object(long user_id)
@@ -585,10 +599,11 @@ void thattr::export_html(const char * fname, int encoding)
   FILE * f;
   thattr_attr * ca;
   thattr_field * cf;
-  thattr_obj_list::iterator oi;
+  thattr_obj_list::iterator oi, oinext;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
   thbuffer enc;
+  const char * alstr;
 
   this->analyze_fields();
 
@@ -601,20 +616,57 @@ void thattr::export_html(const char * fname, int encoding)
   // Create fields.
   fprintf(f,"<html>\n<head>\n<title>therion table output</title>\n"
     "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n"
+    "<script language=\"javascript\">\n"
+    "function colexpTree(node)\n"
+    "{\n"
+    "  var fsub = true;\n"
+    "  var show = false;\n"
+    "  var last = node.length;\n"
+    "  var all = document.getElementsByTagName(\"tr\");\n"
+    "  for(i = 1; i < all.length; i++) {\n"
+    "    if ((all[i].id.length > node.length) && (all[i].id.substr(0, node.length) == node)) {\n"
+    "      if (fsub) {\n"
+    "        fsub = false;\n"
+    "        show = (all[i].style.display == \"none\");\n"
+    "        last = all[i].id.lastIndexOf(\".\");\n"
+    "      }\n"
+    "      if (show) {\n"
+    "        if (all[i].id.lastIndexOf(\".\") == last)\n"
+    "        all[i].style.display = \"\";\n"
+    "      } else {\n"
+    "        all[i].style.display = \"none\";\n"
+    "      }\n"
+    "    }\n"
+    "  }\n"
+    "}\n"
+    "</script>\n"
     "</head>\n<body>\n");
   fprintf(f,"<table>\n<tr>");
   for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
     cf = &(*fli);
-    fprintf(f,"<th align=\"left\">%s</th>",fli->m_name.c_str());
+    if ((cf->m_type ==  THATTR_DOUBLE) || (cf->m_type ==  THATTR_INTEGER)) {
+      alstr = "right";
+    } else {
+      alstr = "left";
+    }
+    fprintf(f,"<th align=\"%s\">%s</th>", alstr, fli->m_name.c_str());
   }
   fprintf(f,"</tr>\n");
 
   // Insert objects and write fields.
   const char * value;
+  bool header_value;
+  std::string value_plus;
   for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end(); ++oi) {
-    fprintf(f,"<tr>");
+    fprintf(f,"<tr id=\"%s\">", oi->m_tree_node_id);
+    header_value = true;
     for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
       cf = &(*fli);
+      if ((cf->m_type ==  THATTR_DOUBLE) || (cf->m_type ==  THATTR_INTEGER)) {
+        alstr = "right";
+      } else {
+        alstr = "left";
+      }
       ai = oi->m_attributes.find(cf->m_id);
       if (ai == oi->m_attributes.end()) {
         value = "#N/A";
@@ -622,7 +674,22 @@ void thattr::export_html(const char * fname, int encoding)
         ca = &(ai->second);
         value = ca->m_val_string.c_str();
       }
-      fprintf(f,"<td align=\"left\">%s</td>",value);
+      fprintf(f,"<td align=\"%s\"", alstr);
+      if (m_tree && header_value) {
+        fprintf(f," style=\"padding-left:%ld\"", 12 * oi->m_tree_level);
+        oinext = oi;
+        oinext++;
+        if ((oinext != this->m_obj_list.end()) && (oinext->m_tree_level > oi->m_tree_level)) {
+          value_plus = "<a href=\"javascript:colexpTree('";
+          value_plus += oi->m_tree_node_id;
+          value_plus += "')\">";
+          value_plus += value;
+          value_plus += "</a>";
+          value = value_plus.c_str();
+        }
+      }
+      fprintf(f,">%s</td>", value);
+      header_value = false;
     }
     fprintf(f,"</tr>\n");
   }

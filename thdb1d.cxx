@@ -413,6 +413,7 @@ void thdb1d::scan_data()
               this->station_vec[ssi->station.id-1].comment = ssi->comment;
             if (ssi->code != NULL)
               this->station_vec[ssi->station.id-1].code = ssi->code;
+            this->station_vec[ssi->station.id-1].explored = ssi->explored;
             this->station_vec[ssi->station.id-1].flags |= ssi->flags;
           }
           ssi++;
@@ -1052,6 +1053,9 @@ void thdb1d::process_survey_stat() {
     else {
       lit->data->stat_length += lit->leg->total_length;
       this->nlength += lit->leg->total_length;
+      // check if approximate length
+      if ((lit->leg->flags & TT_LEGFLAG_APPROXIMATE) != 0)
+        lit->data->stat_alength += lit->leg->total_length;
     }
     // stations
     if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
@@ -1072,8 +1076,11 @@ void thdb1d::process_survey_stat() {
       else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
         ss->stat.length_surface += lit->leg->total_length;
       // inak prida do length
-      else
+      else {
+        if ((lit->leg->flags & TT_LEGFLAG_APPROXIMATE) != 0)
+          ss->stat.length_approx += lit->leg->total_length;
         ss->stat.length += lit->leg->total_length;
+      }
       if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
         thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), false);
         thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), false);

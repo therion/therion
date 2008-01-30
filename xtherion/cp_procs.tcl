@@ -30,9 +30,7 @@ xth_about_status [mc "loading compiler..."]
 
 
 proc xth_xcfg_fname {fpath} {
-  set tmp [file tail $fpath]
-  regsub -all {\.} $tmp {_} tmp
-  return ".xth_$tmp\137xth"
+  return ".xtherion.dat"
 }
 
 

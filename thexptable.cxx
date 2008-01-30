@@ -47,14 +47,26 @@
 thexptable::thexptable() {
   this->format = TT_EXPTABLE_FMT_UNKNOWN;
   this->encoding = TT_UTF_8;
+  this->expattr = true;
 }
 
 
 void thexptable::parse_options(int & argx, int nargs, char ** args)
 {
+  int sv;
   int optid = thmatch_token(args[argx], thtt_exptable_opt);
   int optx = argx;
   switch (optid) {
+    case TT_EXPTABLE_OPT_ATTRIBUTES:
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing attributes switch -- \"%s\"",args[optx]))
+      sv = thmatch_token(args[argx], thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        ththrow(("invalid attributes switch -- \"%s\"", args[argx]))
+      this->expattr = (sv == TT_TRUE);
+      argx++;
+      break;
     case TT_EXPTABLE_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
@@ -128,17 +140,18 @@ void thexptable::process_db(class thdatabase * dbp)
   thtext_inline = true;
 #endif 
 
+  const char * survey = NULL;
+  thsurvey * srv;
+  thdb1ds * st;
+  thdb_object_list_type::iterator oi;
+  thpoint * pt;
+
   switch (this->export_mode) {
     case TT_EXP_CONTLIST:
       {
         // check all stations and points
         unsigned long nstat = (unsigned long)dbp->db1d.station_vec.size(),
           i;
-        const char * survey = NULL;
-        thsurvey * srv;
-        thdb1ds * st;
-        thdb_object_list_type::iterator oi;
-        thpoint * pt;
         double lon, lat, alt;
         for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
           if ((*oi)->get_class_id() == TT_POINT_CMD) {
@@ -148,6 +161,10 @@ void thexptable::process_db(class thdatabase * dbp)
               this->m_table.insert_object(NULL);
               this->m_table.insert_attribute("Code",pt->code);
               this->m_table.insert_attribute("Comment",pt->text);
+	            if (!thisnan(pt->xsize))
+                      this->m_table.insert_attribute("Explored",pt->xsize);
+	            else
+                      this->m_table.insert_attribute("Explored",(const char *)NULL);
               if (pt->station_name.id != 0) {
                 st = &(dbp->db1d.station_vec[pt->station_name.id - 1]);
               } else {
@@ -174,7 +191,7 @@ void thexptable::process_db(class thdatabase * dbp)
                 this->m_table.insert_attribute("_LATITUDE",  lat / THPI * 180.0);
                 this->m_table.insert_attribute("_ALTITUDE",  alt);
               }
-         
+              if (this->expattr) this->m_table.copy_attributes(this->db->attr.get_object(pt->id));
             }
           }
         }
@@ -184,6 +201,10 @@ void thexptable::process_db(class thdatabase * dbp)
             this->m_table.insert_object(NULL);
             this->m_table.insert_attribute("Code",st->code);
             this->m_table.insert_attribute("Comment",st->comment);
+	          if (!thisnan(st->explored))
+                    this->m_table.insert_attribute("Explored",st->explored);
+	          else
+                    this->m_table.insert_attribute("Explored",(const char *)NULL);
             if (strlen(st->survey->get_title()) > 0) {
               survey = st->survey->get_title();
             } else {
@@ -203,6 +224,34 @@ void thexptable::process_db(class thdatabase * dbp)
           }
         }        
       }
+      break;
+    case TT_EXP_SURVEYLIST:
+      // todo add survey data
+      //title
+      //explored length
+      //id
+      //approx.
+      //surface
+      //duplicate
+      for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
+        if (((*oi)->get_class_id() == TT_SURVEY_CMD) && (strlen((*oi)->name) > 0)) {
+          srv = (thsurvey*)(*oi);
+          if (srv->is_selected()) {
+            this->m_table.insert_object(NULL);          
+            this->m_table.get_object()->m_tree_level = (size_t)(srv->level - 2);
+            this->m_table.get_object()->m_tree_node_id = srv->get_reverse_full_name();
+            this->m_table.insert_attribute("Title", ((strlen(srv->title) > 0) ? srv->title : srv->name));
+            this->m_table.insert_attribute("Length",(long)(srv->stat.length + 0.5));
+            if (srv->stat.station_top != NULL) {
+              this->m_table.insert_attribute("Depth",(long)(srv->stat.station_top->z - srv->stat.station_bottom->z + 0.5));
+            } else {
+              this->m_table.insert_attribute("Depth",0.0);
+            }
+            this->m_table.insert_attribute("ID", srv->get_reverse_full_name());
+          }
+        }
+      }
+      this->m_table.m_tree = true;
       break;
   }
 

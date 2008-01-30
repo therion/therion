@@ -68,7 +68,7 @@ proc xth_about_show {btnid} {
     wm geometry $xth(gui,about) +$x+$y
     $w configure -bg black
     $w.image configure -image $xth(about,image_id)
-    $w.i1 configure -text "xtherion $xth(about,ver)\n\u00A9 2002-2007 Stacho Mudrak"
+    $w.i1 configure -text "xtherion $xth(about,ver)\n\u00A9 2002-2008 Stacho Mudrak"
     update idletasks
 }
 

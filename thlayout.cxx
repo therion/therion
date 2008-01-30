@@ -172,7 +172,7 @@ thlayout::thlayout()
   this->map_header_bg = false;
 
   this->def_grid_coords = 0;
-  this->grid_coords = TT_LAYOUT_GRIDCOORDS_BORDER;
+  this->grid_coords = TT_LAYOUT_GRIDCOORDS_OFF;
 
   this->def_surface = 0;
   this->surface = TT_LAYOUT_SURFACE_OFF;

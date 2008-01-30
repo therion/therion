@@ -145,7 +145,7 @@ class thdata : public thdataobject {
     dl_survey_declination;
     
   // statistics  
-  double stat_length, stat_dlength, stat_slength;
+  double stat_length, stat_dlength, stat_slength, stat_alength;
   class thdb1ds * stat_st_top, * stat_st_bottom;
   int stat_st_state;
     

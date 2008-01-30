@@ -90,6 +90,7 @@ void thexporter::parse_export(int nargs, char ** args) {
       xp->export_mode = expmode;
       break;
     case TT_EXP_CONTLIST:
+    case TT_EXP_SURVEYLIST:
       xp = new thexptable;
       xp->export_mode = expmode;
       break;

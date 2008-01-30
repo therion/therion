@@ -10,6 +10,7 @@ therion:
    - declination output fixed (half year shift removed)
    - invalid LRUD dimensions in PDF map output
    - installation script
+   - page grid origin not affected by rotation/meridian convergence
    
 xtherion:
 
@@ -17,6 +18,8 @@ xtherion:
    configuration option in xtherion.ini file
  * bugs fixed:
    - toolbar icon decriptions added to localization files
+ * single .xtherion.dat file containing survey and map structures is created
+   after compilation
    
 loch:
 

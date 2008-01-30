@@ -10,10 +10,10 @@ scrap scrap.1 -scale [-128.0 -128.0 935.085 -128.0 0.0 0.0 27.002359 0.0 m]
 
 #!FILE 4
 #!SUBTITLE Question marks in maps
-#! In the scrap (.th2 file), you can use <code>-text</code> and <code>-code</code>
-#! options to continuation symbol.
+#! In the scrap (.th2 file), you can use <code>-text</code>, <code>-code</code>
+#! and <code>-explored</code> options to continuation symbol.
 #!CODE
-point 796.0 676.0 continuation -text "water too cold to continue" -code A
+point 796.0 676.0 continuation -text "water too cold to continue survey" -code A -explored 50m
 #!ENDCODE
 
 

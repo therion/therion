@@ -204,6 +204,12 @@ static const thstok thtt_special_val[] = {
 void thparse_double(int & sv, double & dv, const char * src); 
 
 /**
+ * Parse length value.
+ */
+ 
+void thparse_length(int & sv, double & dv, const char * src); 
+
+/**
  * Parse double value given in DMS (with check for special values).
  */
  

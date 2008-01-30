@@ -5,25 +5,30 @@ HOT LIST:
 + thbook+CHANGES: text command in configuration & initialization file
 + check text command in configuration & initialization file + samples
 + thbook+CHANGES: layout color labels on|off
-+ thbook+CHANGES: grid-coords off|(border)|all
++ thbook+CHANGES: grid-coords (off)|border|all
 + thbook: symbol-set name is case sentive!!!
-+ check LRUD map PDF export (projections, complicated polygons)
-+ bug in loch LRUD interpretation when reversed leg
++ thbook+CHANGES: "not" station flag prefix
++ thbook: sink,spring,doline,probe,air-draught(:winter|summer) flags to 
+  stations
++ thbook: export continuation-list -attributes (on)|off
++ thbook: centerline flags approx(imate)
++ thbook: explored station flag + -explored option to continuation
 
-+ "not" station flag
-+ sink,spring,lake,doline flags to stations
-+ symplify centerline flags handling and export
++ zas nefunguje select dumbier.jmn!!!
++ export: survey-list, entrance-list, continuation-list, rigging-list
++ explored + approximate length to survey statistics
++ remode ATTR_  _x from mp code, use save instead 
++ p_centerlinestation(pos,mark,text,flags)
++ q-marks sample
++ check color table under linux, if problem use therion instead of VTK
++ KML table export
 + attributes to shots/stations
-
-+ xtherion - if error but compilation OK, generate only warning message
 + scrap morphing algorithm setup to configuration file
 + 3D generation algorithm - do not remove join points
 + 3D generation algorithm - take xelevation data into account
 + scrap name with "_" exported with "." when debug scrap-names
 + fix hash export in AutoCAD DXF file format	
 + fix usage of extra morphing points (sometimes are ignored)
-+ check bug with iJTSK shapefile export
-+ check bug - when no areas are exported to shapefiles
 + -style option to html table export
 + support cross sections (LRUD) in XVI
 + allow (direction + distance) instead of LRUD
@@ -91,10 +96,11 @@ HOT LIST:
 + add statistics survey <survey-name>
 + add survey name under scrap name when debug scrap-names
 + therion --protractor <options>
-+ MacOS X installator (http://s.sudre.free.fr/Software/Iceberg.html)
++ MacOS X installator (e.g. http://s.sudre.free.fr/Software/Iceberg.html)
   
 xtherion:
 
++ xtherion - if error but compilation OK, generate only warning message
 + fix file saving when drive/device have been unplugged
 + fix: the scrollbar does not appear automatically in
   compilation window after a compile. We must resize the window or go back

@@ -77,6 +77,7 @@ thdata::thdata()
   this->stat_length = 0.0;
   this->stat_dlength = 0.0;
   this->stat_slength = 0.0;
+  this->stat_alength = 0.0;
   
   this->stat_st_state = 0;
   this->stat_st_top = NULL;
@@ -2263,11 +2264,20 @@ void thdata::set_data_equate(int nargs, char ** args)
 }
   
 
+#define setstflag(casev, flagv) case casev: \
+            if (notflag) \
+                it->flags &= ~flagv; \
+            else \
+                it->flags |= flagv; \
+            break
+
+
 void thdata::set_data_station(int nargs, char ** args, int argenc)
 {
-  int ai, fid;
+  int ai, fid, sv;
   thdatass_list::iterator it;
   thdatass dumm;
+  bool notflag = false;
   it = this->ss_list.insert(this->ss_list.end(),dumm);
   it->srcf = this->db->csrc;
   it->psurvey = this->db->get_current_survey();
@@ -2286,17 +2296,41 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
         fid = thmatch_token(args[ai], thtt_datasflag);
         switch (fid) {
           case TT_DATASFLAG_ENTRANCE:
-            it->flags |= TT_STATIONFLAG_ENTRANCE;
+            if (notflag)
+                it->flags &= ~TT_STATIONFLAG_ENTRANCE;
+            else
+                it->flags |= TT_STATIONFLAG_ENTRANCE;
             break;
-          case TT_DATASFLAG_NOTFIXED:
-            it->flags |= TT_STATIONFLAG_NOTFIXED;
+
+          setstflag(TT_DATASFLAG_AIRDRAUGHT, (TT_STATIONFLAG_AIRDRAUGHT_SUMMER + TT_STATIONFLAG_AIRDRAUGHT_WINTER));
+          setstflag(TT_DATASFLAG_AIRDRAUGHT_SUMMER, TT_STATIONFLAG_AIRDRAUGHT_SUMMER);
+          setstflag(TT_DATASFLAG_AIRDRAUGHT_WINTER, TT_STATIONFLAG_AIRDRAUGHT_WINTER);
+          setstflag(TT_DATASFLAG_SINK, TT_STATIONFLAG_SINK);
+          setstflag(TT_DATASFLAG_SPRING, TT_STATIONFLAG_SPRING);
+          setstflag(TT_DATASFLAG_DOLINE, TT_STATIONFLAG_DOLINE);
+          setstflag(TT_DATASFLAG_PROBE, TT_STATIONFLAG_PROBE);
+
+          case TT_DATASFLAG_FIXED:              
+            if (notflag)
+                it->flags |= TT_STATIONFLAG_NOTFIXED;
+            else
+              ththrow(("you can not set fixed station flag directly - fix command needs to be used for this"));
             break;
           case TT_DATASFLAG_CONT:
-            it->flags |= TT_STATIONFLAG_CONT;
+            if (notflag) {
+	        it->code = NULL;
+		it->explored = thnan;
+                it->flags &= ~TT_STATIONFLAG_CONT;
+            } else
+                it->flags |= TT_STATIONFLAG_CONT;
             break;
           case TT_DATASFLAG_CODE:
             if ((it->flags & TT_STATIONFLAG_CONT) == 0)
               ththrow(("missing continuation flag before code"));
+            if (notflag) {
+                it->code = NULL;
+                break;
+            }
             if ((ai + 1) == nargs)
               ththrow(("too few flags - missing continuation code"));
             ai++;
@@ -2307,18 +2341,49 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
               it->code = this->db->strstore(this->db->buff_enc.get_buffer());
             }
             break;
-          case TT_DATASFLAG_ATTR:
+          case TT_DATASFLAG_EXPLORED:
+            if ((it->flags & TT_STATIONFLAG_CONT) == 0)
+              ththrow(("missing continuation flag before explored length"));
+            if (notflag) {
+                it->explored = thnan;
+                break;
+            }
+            if ((ai + 1) == nargs)
+              ththrow(("too few flags - missing explored length"));
+            ai++;
+            if (strlen(args[ai]) == 0) {
+              it->explored = thnan;
+            } else {
+	      thparse_length(sv, it->explored, args[ai]);
+	      if (sv == TT_SV_UNKNOWN)
+                ththrow(("invalid explored length specification -- %s", args[ai]));
+            }
+            break;
+          case TT_DATASFLAG_ATTR:              
             if ((ai + 1) == nargs)
               ththrow(("too few flags - missing attribute name"));
+            if (notflag) {
+                // TODO: remove this attribute from station
+                ai++;
+                thwarning(("station attributes are not implemented yet!"));
+            }
             if ((ai + 2) == nargs)
               ththrow(("too few flags - missing attribute value"));
+            // TODO: add attribute to station
             ai++;
-            ai++;
+            ai++;            
             thwarning(("station attributes are not implemented yet!"));
+            break;
+          case TT_DATASFLAG_NOT:
             break;
           default:
             ththrow(("invalid station flag -- %s", args[ai]))
         }
+        if (fid == TT_DATASFLAG_NOT)
+            notflag = true;
+        else
+            notflag = false;
+        break;
     }
   }
 }
@@ -2342,6 +2407,13 @@ void thdata::set_data_flags(int nargs, char ** args)
           this->d_flags &= ~TT_LEGFLAG_SURFACE;
         else
           this->d_flags |= TT_LEGFLAG_SURFACE;
+        notb = false;
+        break;
+      case TT_DATALFLAG_APPROXIMATE:
+        if (notb)
+          this->d_flags &= ~TT_LEGFLAG_APPROXIMATE;
+        else
+          this->d_flags |= TT_LEGFLAG_APPROXIMATE;
         notb = false;
         break;
       case TT_DATALFLAG_DUPLICATE:

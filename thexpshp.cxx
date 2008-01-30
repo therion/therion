@@ -704,6 +704,7 @@ void thexpmodel::export_shp_file(class thdatabase * dbp)
     xs.m_fshots3D.m_attributes.insert_attribute("_SURVEY", lg->leg->psurvey->get_full_name());
     xs.m_fshots3D.m_attributes.insert_attribute("_SURFACE", long(((lg->leg->flags | TT_LEGFLAG_SURFACE) != 0) ? 1 : 0));
     xs.m_fshots3D.m_attributes.insert_attribute("_DUPLICATE", long(((lg->leg->flags | TT_LEGFLAG_DUPLICATE) != 0) ? 1 : 0));
+    xs.m_fshots3D.m_attributes.insert_attribute("_APPROXIMATE", long(((lg->leg->flags | TT_LEGFLAG_APPROXIMATE) != 0) ? 1 : 0));
   }
 
 

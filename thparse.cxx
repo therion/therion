@@ -1192,6 +1192,63 @@ bool thpath_is_absolute(const char * fname)
 }
 
 
+void thparse_length(int & sv, double & dv, const char * src)
+{
+
+  sv = thmatch_token(src, thtt_special_val);
+  if (sv == TT_SV_NAN) {
+    dv = thnan;
+    return;
+  } else {
+    sv = TT_SV_UNKNOWN;
+  }
+  
+  char * units;
+  size_t strl, cx;
+  strl = strlen(src);
+  thtflength lt;
+  static thbuffer plb;
+  char * srcb;
+  
+  plb.strcpy(src);  
+  srcb = plb.get_buffer();
+    
+  // first let's find units index
+  bool has_units = false;
+  units = NULL;
+  for(cx = strl - 1; cx > 0; cx--) {
+    if (srcb[cx] < 33) srcb[cx] = 0;
+    if ((!has_units) && (cx < strl - 1) && (!(
+        ((srcb[cx] >= 'a') && (srcb[cx] <= 'z')) || 
+	((srcb[cx] >= 'A') && (srcb[cx] <= 'Z'))
+       ))) {
+      units = &(srcb[cx + 1]);
+      has_units = true;
+    }    
+    if (has_units) {
+      if (srcb[cx] < 33) srcb[cx] = 0;
+      else break;
+    }
+  }
+
+  // parse units if applicable
+  if (units != NULL) {
+    lt.parse_units(units);
+    *units = 0;
+  }
+  
+  // parse double value
+  errno = 0;
+  char * endptr;
+  dv = strtod(srcb,&endptr);
+  if ((*endptr == 0) && (errno == 0))
+    sv = TT_SV_NUMBER;
+  else
+    dv = thnan;
+
+  dv = lt.transform(dv);
+  
+}
 
 
 

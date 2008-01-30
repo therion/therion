@@ -106,13 +106,18 @@ typedef std::list<thattr_field> thattr_field_list;
  
 struct thattr_obj {
   long m_user_id;  ///< User defined ID.
-  size_t m_id;  ///< Internal ID.
+  size_t m_id,  ///< Internal ID.
+    m_tree_level;  ///< Tree level of object, if table has tree structure.
+  const char * m_tree_node_id;  ///< Tree node id.
   void * m_data;  ///< User defined data.
   thattr_id2attr_map m_attributes;  ///< Map of attributes.
 
   struct thattr * m_parent;  ///< Parent attribute class.
 
-  thattr_obj() : m_user_id(-1), m_data(NULL) {}
+  thattr_obj() : m_user_id(-1), m_tree_level(0), m_tree_node_id(""), m_data(NULL) {}
+
+  void set_tree_level(size_t level);
+
 };
 
 typedef std::map<size_t, thattr_obj*> thattr_id2obj_map;
@@ -129,6 +134,8 @@ struct thattr {
   size_t m_num_fields,  ///< Number of fields.
     m_num_objects;  ///< Number of objects.
 
+  bool m_tree; ///< Whether table has a tree structure.
+
   thattr_obj_list m_obj_list;  ///< List of objects.
   thattr_id2obj_map m_obj_map;  ///< ID -> Object map.
   thattr_usrid2obj_map m_obj_usrmap;  ///< User ID -> Object map.
@@ -144,6 +151,7 @@ struct thattr {
 
   thattr_obj * m_obj_last;  ///< Last inserted object.
   thattr_obj * insert_object(void * data, long user_id = -1);
+  thattr_obj * get_object();  ///< Return last inserted object.
   thattr_obj * get_object(long user_id);
   
   void insert_attribute(const char * name, thattr_attr & attr, long user_id = -1);

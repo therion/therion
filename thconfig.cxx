@@ -777,10 +777,7 @@ void thconfig::xth_save()
 
     // OK, let's open configuration file for output
     FILE * cf;
-    this->dbptr->buff_tmp = ".xth_";
-    this->dbptr->buff_tmp += xbf;
-    this->dbptr->buff_tmp += "_xth";
-    cf = fopen(this->dbptr->buff_tmp.get_buffer(),"w");
+    cf = fopen(".xtherion.dat","w");
     if (cf == NULL) {
       thwarning(("can't open xtherion file for output -- %s.xth", this->fname.get_buffer()));
       return;
