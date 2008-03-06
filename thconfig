@@ -1,3 +1,2 @@
-input ../../Cave/Data/JMN/thconfig
-
-
+#input ../../CaveProjects/Data/JMN/thconfig
+input samples/u-symbols/thconfig.2

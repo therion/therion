@@ -42,6 +42,9 @@ void thtflength::parse_units(char * ustr) {
     case TT_TFU_CM:
       this->ufactor = 0.01;
       break;
+    case TT_TFU_MM:
+      this->ufactor = 0.001;
+      break;
     case TT_TFU_FT:
       this->ufactor = 0.3048;
       break;

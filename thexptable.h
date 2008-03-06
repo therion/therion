@@ -32,6 +32,8 @@
 
 #include "thexport.h"
 #include "thattr.h"
+#include <list>
+#include <string>
 
 /**
  * Model export options.
@@ -42,6 +44,7 @@ enum {
   TT_EXPTABLE_OPT_FORMAT,  ///< Output option.
   TT_EXPTABLE_OPT_ENCODING,  ///< Output option.
   TT_EXPTABLE_OPT_ATTRIBUTES,  ///< Output option.
+  TT_EXPTABLE_OPT_LOCATION,
 };
 
 
@@ -56,6 +59,7 @@ static const thstok thtt_exptable_opt[] = {
   {"-encoding", TT_EXPTABLE_OPT_ENCODING},
   {"-fmt", TT_EXPTABLE_OPT_FORMAT},
   {"-format", TT_EXPTABLE_OPT_FORMAT},
+  {"-location", TT_EXPTABLE_OPT_LOCATION},
   {NULL, TT_EXPTABLE_OPT_UNKNOWN}
 };
 
@@ -96,12 +100,14 @@ class thexptable : public thexport {
 
   public:
 
-  bool expattr; ///< Whether to export user defined attributes.
+  bool expattr, exploc; ///< Whether to export user defined attributes.
 
   int format,  ///< Output format.
     encoding;
   
   thattr m_table;
+
+  std::list<std::string> m_str_list;
   
   thexptable(); ///< Default constructor.
 
@@ -131,6 +137,18 @@ class thexptable : public thexport {
    */
    
   virtual void process_db(class thdatabase * dbp);
+
+  /**
+   * Export entraces from survey.
+   */
+
+  void export_survey_entraces(class thsurvey * survey);
+
+  /**
+   * Return string for temporary use.
+   */
+
+  std::string * get_tmp_string();
   
 };
 

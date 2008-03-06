@@ -2277,6 +2277,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
   int ai, fid, sv;
   thdatass_list::iterator it;
   thdatass dumm;
+  std::string attrname;
   bool notflag = false;
   it = this->ss_list.insert(this->ss_list.end(),dumm);
   it->srcf = this->db->csrc;
@@ -2318,29 +2319,28 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
             break;
           case TT_DATASFLAG_CONT:
             if (notflag) {
-	        it->code = NULL;
-		it->explored = thnan;
-                it->flags &= ~TT_STATIONFLAG_CONT;
+		          it->explored = thnan;
+              it->flags &= ~TT_STATIONFLAG_CONT;
             } else
-                it->flags |= TT_STATIONFLAG_CONT;
+              it->flags |= TT_STATIONFLAG_CONT;
             break;
-          case TT_DATASFLAG_CODE:
-            if ((it->flags & TT_STATIONFLAG_CONT) == 0)
-              ththrow(("missing continuation flag before code"));
-            if (notflag) {
-                it->code = NULL;
-                break;
-            }
-            if ((ai + 1) == nargs)
-              ththrow(("too few flags - missing continuation code"));
-            ai++;
-            if (strlen(args[ai]) == 0) {
-              it->code = NULL;
-            } else {
-              thencode(&(this->db->buff_enc), args[ai], argenc);
-              it->code = this->db->strstore(this->db->buff_enc.get_buffer());
-            }
-            break;
+          //case TT_DATASFLAG_CODE:
+          //  if ((it->flags & TT_STATIONFLAG_CONT) == 0)
+          //    ththrow(("missing continuation flag before code"));
+          //  if (notflag) {
+          //      it->code = NULL;
+          //      break;
+          //  }
+          //  if ((ai + 1) == nargs)
+          //    ththrow(("too few flags - missing continuation code"));
+          //  ai++;
+          //  if (strlen(args[ai]) == 0) {
+          //    it->code = NULL;
+          //  } else {
+          //    thencode(&(this->db->buff_enc), args[ai], argenc);
+          //    it->code = this->db->strstore(this->db->buff_enc.get_buffer());
+          //  }
+          //  break;
           case TT_DATASFLAG_EXPLORED:
             if ((it->flags & TT_STATIONFLAG_CONT) == 0)
               ththrow(("missing continuation flag before explored length"));
@@ -2354,26 +2354,38 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
             if (strlen(args[ai]) == 0) {
               it->explored = thnan;
             } else {
-	      thparse_length(sv, it->explored, args[ai]);
-	      if (sv == TT_SV_UNKNOWN)
-                ththrow(("invalid explored length specification -- %s", args[ai]));
+	            thparse_length(sv, it->explored, args[ai]);
+	            if (sv == TT_SV_UNKNOWN)
+                      ththrow(("invalid explored length specification -- %s", args[ai]));
             }
             break;
+
           case TT_DATASFLAG_ATTR:              
             if ((ai + 1) == nargs)
               ththrow(("too few flags - missing attribute name"));
+            ai++;
+            if (strlen(args[ai]) == 0)
+              ththrow(("epmty attribute name not allowed"))
+            if (args[ai][0] == '_')
+              ththrow(("attribute name starting with '_' not allowed -- %s", args[ai]))
+            if (!th_is_attr_name(args[ai]))
+              ththrow(("invalid characters in attribute name -- %s", args[ai]))
+            attrname = args[ai];
             if (notflag) {
-                // TODO: remove this attribute from station
-                ai++;
-                thwarning(("station attributes are not implemented yet!"));
+                it->attr.erase(attrname);
+                break;
             }
             if ((ai + 2) == nargs)
               ththrow(("too few flags - missing attribute value"));
-            // TODO: add attribute to station
-            ai++;
             ai++;            
-            thwarning(("station attributes are not implemented yet!"));
+            if (strlen(args[ai]) > 0) {
+              thencode(&(this->db->buff_enc), args[ai], argenc);
+              it->attr[attrname] = this->db->strstore(this->db->buff_enc.get_buffer());
+            } else {
+              it->attr.erase(attrname);
+            }
             break;
+
           case TT_DATASFLAG_NOT:
             break;
           default:

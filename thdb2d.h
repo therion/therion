@@ -46,6 +46,8 @@
 #include "thscrapen.h"
 #include "thscraplp.h"
 #include <stdio.h>
+#include <map>
+#include <string>
 
 
 
@@ -65,6 +67,44 @@ class thdb2dprjpr {
     
 };
 
+
+/**
+ * User defined subtype group.
+ */
+
+struct thdb2d_udef {
+
+  int m_command;
+
+  const char * m_type;
+
+  thdb2d_udef(int cmd, const char * type) : m_command(cmd), m_type(type) {}
+
+};
+
+
+/**
+ * User defined symbol properties.
+ */
+
+struct thdb2d_udef_prop {
+
+  bool m_used, m_assigned;
+
+  thdb2d_udef_prop() : m_used(false), m_assigned(true) {}
+
+  void reset();
+
+};
+
+
+typedef std::list<thdb2d_udef_prop> thdb2d_udef_prop_list;
+
+typedef std::map<thdb2d_udef, thdb2d_udef_prop *> thdb2d_udef_map;
+
+bool operator < (const struct thdb2d_udef &, const struct thdb2d_udef &);
+
+bool operator == (const struct thdb2d_udef &, const struct thdb2d_udef &);
 
 /**
  * 2D data structure processing class.
@@ -94,6 +134,9 @@ class thdb2d {
   thscrapen_list scrapen_list;  ///< Export map list.
   thlayoutln_list layoutln_list;  ///< Export map list.
   thscraplp_list scraplp_list;  ///< Export scrap list.
+
+  thdb2d_udef_prop_list m_udef_list;  ///< List of user defined symbol properties.
+  thdb2d_udef_map m_udef_map;  ///< User defined symbol map.
   
   void process_area_references(class tharea * aptr);  ///< ???
   void process_point_references(class thpoint * pp);  ///< ???
@@ -284,6 +327,47 @@ class thdb2d {
    */
    
   thdb2dxm * select_projection(thdb2dprj * prj);
+
+
+  /**
+   * Register user defined symbol.
+   */
+
+  void register_u_symbol(int cmd, const char * type);
+
+
+  /**
+   * Return user defined symbol properites.
+   */
+
+  thdb2d_udef_prop * get_u_symbol_prop(int cmd, const char * type);
+
+
+  /**
+   *  Set user defined symbol usage.
+   */
+
+  void use_u_symbol(int cmd, const char * type);
+
+  /**
+   *  Reset all user defined symbols.
+   */
+
+  void reset_u_symbols();
+
+  /**
+   *  Return whether symbol is used.
+   */
+
+  bool is_u_symbol_used(int cmd, const char * type);
+
+
+  /**
+   * Export metapost header file.
+   */
+
+  void export_mp_header(FILE *);
+
   
   
   /**

@@ -827,7 +827,7 @@ def l_debug (expr col, pen, P) =
 enddef;
 
 
-def l_u_SKBB (expr P, subtype) =
+def l_u (expr P) =
   T:=identity;
   pickup PenA;
   thdraw P withcolor red;

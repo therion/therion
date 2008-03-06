@@ -712,15 +712,13 @@ def p_continuation_UIS(expr pos,theta,sc,al) =
   thdraw (0,-.2u);
 enddef;
 
-def p_continuationstation_UIS(expr pos) =
-  p_continuation(pos, 0.0, 1.0, (0,2))
-enddef;
-
-def p_entrancestation_UIS(expr pos) =
-  T:=identity shifted pos;
-  pickup PenX;
-  thdraw (-.3u,0) -- (-.2u,0){dir 135} .. (0, .5u) .. {dir 225}(.2u,0) -- (.3u,0);
-  p_label.urt(ATTR__text,pos+(0.4u,0),0,0);
+def p_station_SKBB(expr pos,mark,txt,flags) =
+  if mark=4: p_station_fixed(pos)
+  elseif mark=3: p_station_natural(pos)
+  elseif mark=2: p_station_painted(pos)
+  elseif mark=1: p_station_temporary(pos)
+  fi;
+  % add entrance and continuation flags
 enddef;
 
 def p_debug (expr col, pen, pos)=
@@ -735,7 +733,7 @@ def p_debug (expr col, pen, pos)=
 enddef;
 
 
-def p_u_SKBB(expr pos,theta,sc,al,subtype) =
+def p_u(expr pos,theta,sc,al) =
   T:=identity shifted pos;
   thdraw origin withpen pencircle scaled 4pt withcolor red;
 enddef;

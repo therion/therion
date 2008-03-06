@@ -7,13 +7,15 @@
 #include <wx/spinctrl.h>
 #include <wx/slider.h>
 #include <wx/gbsizer.h>
-#endif  
-//LXDEPCHECK - standart libraries
 
 #if !wxCHECK_VERSION(2,7,0)
 #define wxFD_OVERWRITE_PROMPT wxOVERWRITE_PROMPT
 #define wxFD_SAVE wxSAVE
 #endif
+
+#endif  
+//LXDEPCHECK - standart libraries
+
 
 #ifdef __WXGTK__
 #define lxBORDER 3

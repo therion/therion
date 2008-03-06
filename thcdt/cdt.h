@@ -591,12 +591,12 @@ int	pointInAngle(double xo,double yo,
 		if(y2>=0)
 		{
 			//2nd 
-			return( yq>0 &&(xq>=0 || xq<0 && sign>0));
+			return( yq>0 && (xq>=0 || (xq<0 && sign>0)));
 		}
 		else
 		{
 			//3rd 
-			return( yq>=0 || yq<0 && xq<0 && sign>0);
+			return( yq>=0 || (yq<0 && xq<0 && sign>0));
 		}
 	}
 }

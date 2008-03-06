@@ -1039,12 +1039,13 @@ bool thline::export_mp(class thexpmapmpxs * out)
       if (out->symset->assigned[macroid]) {
         if (out->file == NULL)
           return(true);
-        fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+        if (this->type == TT_LINE_TYPE_U) {
+          fprintf(out->file,"l_u_%s(", this->m_subtype_str);
+          this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
+        } else
+          fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
         this->export_path_mp(out);
-        if (this->type == TT_LINE_TYPE_U)
-          fprintf(out->file,",\"%s\");\n", (this->m_subtype_str == NULL) ? "" : this->m_subtype_str);
-        else
-          fprintf(out->file,");\n");
+        fprintf(out->file,");\n");
         if (out->layout->is_debug_joins()) {
           fprintf(out->file,"l_debug(1,0,");
           this->export_path_mp(out,0,-1,1);
@@ -1324,6 +1325,7 @@ void thline::start_insert() {
     case TT_LINE_TYPE_U:
       if (this->m_subtype_str == NULL)
         ththrow(("missing subtype specification for line of user defined type"))
+      this->db->db2d.register_u_symbol(this->get_class_id(), this->m_subtype_str);
       break;
     case TT_LINE_TYPE_SLOPE:
       lp = this->first_point;

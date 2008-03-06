@@ -38,6 +38,7 @@
 #include "thinfnan.h"
 #include <math.h>
 #include <set>
+#include "thpoint.h"
 #include "thlogfile.h"
 #include "thsurface.h"
 #include "thlocale.h"
@@ -392,6 +393,23 @@ void thdb1d::scan_data()
   // after scanning
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
+
+    if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+      thsurvey * srv = (thsurvey *) (*obi);
+      if (!srv->entrance.is_empty()) {
+        srv->entrance.id = this->get_station_id(srv->entrance, srv);
+        if (srv->entrance.id == 0) {
+          if (srv->entrance.survey == NULL)
+            ththrow(("station doesn't exist -- %s", srv->entrance.name))
+          else
+            ththrow(("station doesn't exist -- %s@%s", srv->entrance.name, srv->entrance.survey))
+        }
+        // set entrance flag to given station
+        this->station_vec[srv->entrance.id-1].flags |= TT_STATIONFLAG_ENTRANCE;            
+      }
+    }
+
+
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
 
       dp = (thdata *)(*obi);
@@ -411,10 +429,14 @@ void thdb1d::scan_data()
           else {
             if (ssi->comment != NULL)
               this->station_vec[ssi->station.id-1].comment = ssi->comment;
-            if (ssi->code != NULL)
-              this->station_vec[ssi->station.id-1].code = ssi->code;
             this->station_vec[ssi->station.id-1].explored = ssi->explored;
-            this->station_vec[ssi->station.id-1].flags |= ssi->flags;
+            this->station_vec[ssi->station.id-1].flags |= ssi->flags;            
+            // set station attributes
+            this->m_station_attr.insert_object(NULL, (long) ssi->station.id);
+            thdatass_attr_map::iterator ami;
+            for(ami = ssi->attr.begin(); ami != ssi->attr.end(); ami++) {
+              this->m_station_attr.insert_attribute(ami->first.c_str(), ami->second);
+            }
           }
           ssi++;
         }
@@ -1101,11 +1123,34 @@ void thdb1d::process_survey_stat() {
   while (sit != this->station_vec.end()) {
     ss = sit->survey;
     while (ss != NULL) {
+      if (!thisnan(sit->explored))
+        ss->stat.length_explored += sit->explored;
+      if ((sit->flags & TT_STATIONFLAG_ENTRANCE) > 0) {
+        ss->stat.num_entrances++;
+      }
       ss->stat.num_stations++;
       ss = ss->fsptr;
     }    
     sit++;
   }
+
+  // prejde vsetky continuations a prepocita explore length
+  thdb_object_list_type::iterator obi = this->db->object_list.begin();
+  thpoint * pt;
+  while (obi != this->db->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_POINT_CMD) {
+      pt = (thpoint *)(*obi);
+      ss = pt->fsptr;
+      if ((pt->type == TT_POINT_TYPE_CONTINUATION) && (!thisnan(pt->xsize))) {
+        while (ss != NULL) {
+          ss->stat.length_explored += pt->xsize;
+          ss = ss->fsptr;
+        }    
+      }
+    }
+    obi++;
+  }
+
   
 #ifdef THDEBUG
     thprintf("\nend of basic statistics calculation\n\n");

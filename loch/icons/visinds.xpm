@@ -1,5 +1,5 @@
 /* XPM */
-static char *visinds_xpm[] = {
+static const char *visinds_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 15 12 1",
 "  c #0009C4",

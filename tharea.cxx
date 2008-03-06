@@ -53,6 +53,7 @@ void tharea::start_insert() {
   if (this->type == TT_AREA_TYPE_U) {
     if (this->m_subtype_str == NULL)
       ththrow(("missing subtype specification for area of user defined type"))
+    this->db->db2d.register_u_symbol(this->get_class_id(), this->m_subtype_str);
   }
 }
 
@@ -239,7 +240,12 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     bl = bl->next_line;
     blnum++;
   }
-  fprintf(out->file,"%s(buildcycle(",out->symset->get_mp_macro(macroid));
+
+  if (this->type == TT_AREA_TYPE_U) {
+    fprintf(out->file,"a_u_%s(buildcycle(",this->m_subtype_str);
+    this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
+  } else
+    fprintf(out->file,"%s(buildcycle(",out->symset->get_mp_macro(macroid));
 
   this->first_line->line->export_path_mp(out);
   bl = this->first_line->next_line;
@@ -249,10 +255,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     bl = bl->next_line;
   }
   
-  if (this->type == TT_AREA_TYPE_U)
-    fprintf(out->file,"),\"%s\");\n", (this->m_subtype_str == NULL) ? "" : this->m_subtype_str);
-  else
-    fprintf(out->file,"));\n");
+  fprintf(out->file,"));\n");
   
   return(false);  
   

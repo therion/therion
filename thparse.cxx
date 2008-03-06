@@ -1217,17 +1217,23 @@ void thparse_length(int & sv, double & dv, const char * src)
   bool has_units = false;
   units = NULL;
   for(cx = strl - 1; cx > 0; cx--) {
-    if (srcb[cx] < 33) srcb[cx] = 0;
-    if ((!has_units) && (cx < strl - 1) && (!(
-        ((srcb[cx] >= 'a') && (srcb[cx] <= 'z')) || 
-	((srcb[cx] >= 'A') && (srcb[cx] <= 'Z'))
-       ))) {
-      units = &(srcb[cx + 1]);
-      has_units = true;
-    }    
     if (has_units) {
       if (srcb[cx] < 33) srcb[cx] = 0;
       else break;
+    } else {
+      if ((cx < strl - 1) && (!(
+                            ((srcb[cx] >= 'a') && (srcb[cx] <= 'z')) || 
+	                          ((srcb[cx] >= 'A') && (srcb[cx] <= 'Z'))
+                          ))
+        ) {
+          units = &(srcb[cx+1]);
+          if (((*units >= 'a') && (*units <= 'z')) || ((*units >= 'A') && (*units <= 'Z'))) {
+            has_units = true;
+          } else {
+            units = NULL;
+          }
+      }
+      if (srcb[cx] < 33) srcb[cx] = 0;
     }
   }
 

@@ -34,6 +34,8 @@
 #include "thobjectsrc.h"
 #include "thinfnan.h"
 #include <list>
+#include <string>
+#include <map>
 
 /**
  * survey leg components.
@@ -323,7 +325,6 @@ enum {
   TT_DATASFLAG_CONT,
   TT_DATASFLAG_FIXED,
   TT_DATASFLAG_NOTFIXED,
-  TT_DATASFLAG_CODE,
   TT_DATASFLAG_ATTR,
   TT_DATASFLAG_NOT,
   TT_DATASFLAG_EXPLORED,
@@ -351,6 +352,7 @@ enum {
   TT_STATIONFLAG_SINK = 64,
   TT_STATIONFLAG_DOLINE = 128,
   TT_STATIONFLAG_PROBE = 256,
+  TT_STATIONFLAG_AIRDRAUGHT = 1536,
   TT_STATIONFLAG_AIRDRAUGHT_WINTER = 512,
   TT_STATIONFLAG_AIRDRAUGHT_SUMMER = 1024,
 };
@@ -365,7 +367,6 @@ static const thstok thtt_datasflag[] = {
   {"air-draught:summer", TT_DATASFLAG_AIRDRAUGHT_SUMMER},
   {"air-draught:winter", TT_DATASFLAG_AIRDRAUGHT_WINTER},
   {"attr", TT_DATASFLAG_ATTR},
-  {"code", TT_DATASFLAG_CODE},
   {"continuation", TT_DATASFLAG_CONT},
   {"doline", TT_DATASFLAG_DOLINE},
   {"entrance", TT_DATASFLAG_ENTRANCE},
@@ -462,6 +463,9 @@ class thdatafix {
 };
 
 
+typedef std::map<std::string, const char *> thdatass_attr_map;
+
+
 /**
  * Station class.
  */
@@ -478,11 +482,11 @@ class thdatass {
 
   const char * comment;  ///< Station comment.  
 
-  const char * code;  ///< Continuation code.
-  
   double explored;  ///< Explored length within continuation.
   
   int flags;  ///< Station flags.
+
+  thdatass_attr_map attr;  ///< Station attributes.
   
   thdatass();  ///< Standard constructor.
   

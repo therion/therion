@@ -117,7 +117,7 @@ last_write = -1;
 % in used font; it's used by <A HREF="">free_text</A> macro.
 
 %string strut_string;
-%strut_string = "(È";
+%strut_string = "(Ãˆ";
 
 % @VARIABLE
 % file_name --
@@ -196,7 +196,7 @@ def fonts_setup (expr t,s,m,l,h) =
         "\centerline{\box101}}}" &
         "\def\thlabel{\thnormalsize}" &
         "\def\thremark{\thsmallsize\si}" &
-        "\def\thcontinuation{\thsmallsize}" &
+        "\def\thcomment{\thsmallsize}" &
         "\def\thentrance{\thsmallsize}" &
         "\def\thaltitude{\thsmallsize}" &
         "\def\thstationname{\thsmallsize}" &

@@ -48,6 +48,7 @@ thexptable::thexptable() {
   this->format = TT_EXPTABLE_FMT_UNKNOWN;
   this->encoding = TT_UTF_8;
   this->expattr = true;
+  this->exploc = false;
 }
 
 
@@ -65,6 +66,16 @@ void thexptable::parse_options(int & argx, int nargs, char ** args)
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid attributes switch -- \"%s\"", args[argx]))
       this->expattr = (sv == TT_TRUE);
+      argx++;
+      break;
+    case TT_EXPTABLE_OPT_LOCATION:
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing location switch -- \"%s\"",args[optx]))
+      sv = thmatch_token(args[argx], thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        ththrow(("invalid location switch -- \"%s\"", args[argx]))
+      this->exploc = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_FORMAT:  
@@ -106,6 +117,101 @@ void thexptable::dump_body(FILE * xf)
     fprintf(xf," -encoding %s", thmatch_string(this->encoding, thtt_encoding));
 }
 
+
+
+
+void thexptable::export_survey_entraces(thsurvey * survey)
+{
+  thdataobject * obj;
+  thdb1ds * st;
+  double tmpd;
+  if (!survey->is_selected()) return;
+  if (survey->stat.num_entrances == 0) return;
+  // insert survey attributes
+  if (survey->level > 1) {
+    this->m_table.insert_object(NULL);          
+    this->m_table.get_object()->m_tree_level = (size_t)(survey->level - 2);
+    this->m_table.get_object()->m_tree_node_id = survey->get_reverse_full_name();
+    this->m_table.insert_attribute("Title", ((strlen(survey->title) > 0) ? survey->title : survey->name));
+    this->m_table.insert_attribute("Length",(long)(survey->stat.length + 0.5));
+    if (survey->stat.station_top != NULL) {
+      tmpd = survey->stat.station_top->z - survey->stat.station_bottom->z;
+      if (tmpd > survey->stat.length) tmpd = survey->stat.length;
+      this->m_table.insert_attribute("Depth",(long)(tmpd + 0.5));
+    } else {
+      this->m_table.insert_attribute("Depth","");
+    }
+    if (survey->stat.length_explored > 0.0) {
+      this->m_table.insert_attribute("Explored", (long)(survey->stat.length_explored + 0.5));
+    } else {
+      this->m_table.insert_attribute("Explored", "");
+    }
+    if (exploc) {
+      if ((survey->stat.num_entrances == 1) && (survey->entrance.id > 0)) {
+        st = &(this->db->db1d.station_vec[survey->entrance.id - 1]);    
+        this->m_table.insert_attribute("X",st->x);
+        this->m_table.insert_attribute("Y",st->y);
+      } else {
+        this->m_table.insert_attribute("X","");
+        this->m_table.insert_attribute("Y","");
+      }
+    }
+    if (((survey->stat.num_entrances == 1) || ((survey->stat.num_entrances > 1) && (!exploc)))&& (survey->entrance.id > 0)) {
+      st = &(this->db->db1d.station_vec[survey->entrance.id - 1]);    
+      this->m_table.insert_attribute("Altitude",st->z);
+    } else {
+      this->m_table.insert_attribute("Altitude","");
+    }
+    if (this->expattr) this->m_table.copy_attributes(this->db->attr.get_object(survey->id));
+  }
+  if (survey->entrance.id == 0) {
+    for(obj = survey->foptr; obj != NULL; obj = obj->nsptr) {
+      if (obj->get_class_id() == TT_SURVEY_CMD) {
+        this->export_survey_entraces((thsurvey *) obj);
+      }
+    }
+  } else {
+  }
+
+  // insert entrances within this survey
+  size_t nstat = this->db->db1d.station_vec.size(), i;
+  for(i = 0; i < nstat; i++) {
+    st = &(this->db->db1d.station_vec[i]);    
+    if ((st->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
+      if (((exploc) && (survey->entrance.id > 0) && (survey->stat.num_entrances > 1) && (st->survey->is_in_survey(survey))) ||
+        ((survey->entrance.id == 0) && (st->survey->id == survey->id))) {
+          this->m_table.insert_object(NULL);          
+          this->m_table.get_object()->m_tree_level = (size_t)(survey->level - 1);
+          std::string * tmps = get_tmp_string();
+          *tmps = survey->get_reverse_full_name();
+          *tmps += ".";
+          *tmps += st->name;
+          this->m_table.get_object()->m_tree_node_id = tmps->c_str();
+          this->m_table.insert_attribute("Title", st->comment);
+          this->m_table.insert_attribute("Length","");
+          this->m_table.insert_attribute("Depth","");
+          if (st->explored > 0.0) {
+            this->m_table.insert_attribute("Explored", (long)(st->explored + 0.5));
+          } else {
+            this->m_table.insert_attribute("Explored", "");
+          }
+          if (exploc) {
+            this->m_table.insert_attribute("X",st->x);
+            this->m_table.insert_attribute("Y",st->y);
+          }
+          this->m_table.insert_attribute("Altitude",st->z);
+          if (this->expattr) this->m_table.copy_attributes(this->db->db1d.m_station_attr.get_object((long)i+1));
+      }
+    }
+  }
+
+
+
+}
+
+
+
+
 void thexptable::process_db(class thdatabase * dbp) 
 {
   this->db = dbp;
@@ -121,16 +227,16 @@ void thexptable::process_db(class thdatabase * dbp)
   const char * fname;
   switch (this->format) {
     case TT_EXPTABLE_FMT_DBF:
-      fname = this->get_output("table.dbf");
+      fname = this->get_output("list.dbf");
       break;
     case TT_EXPTABLE_FMT_HTML:
-      fname = this->get_output("table.html");
+      fname = this->get_output("list.html");
       break;
     case TT_EXPTABLE_FMT_KML:
-      fname = this->get_output("table.kml");
+      fname = this->get_output("list.kml");
       break;
     default:
-      fname = this->get_output("table.txt");
+      fname = this->get_output("list.txt");
   }
   
 #ifdef THDEBUG
@@ -145,8 +251,13 @@ void thexptable::process_db(class thdatabase * dbp)
   thdb1ds * st;
   thdb_object_list_type::iterator oi;
   thpoint * pt;
+  double tmpd;
 
   switch (this->export_mode) {
+    case TT_EXP_CAVELIST:
+      this->export_survey_entraces(this->db->fsurveyptr);
+      this->m_table.m_tree = true;
+      break;
     case TT_EXP_CONTLIST:
       {
         // check all stations and points
@@ -156,10 +267,9 @@ void thexptable::process_db(class thdatabase * dbp)
         for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
           if ((*oi)->get_class_id() == TT_POINT_CMD) {
             pt = (thpoint*)(*oi);
-            if ((pt->type == TT_POINT_TYPE_CONTINUATION) && ((pt->text != NULL) || (pt->code != NULL)) && (pt->fsptr->is_selected())) {
+            if ((pt->type == TT_POINT_TYPE_CONTINUATION) && (pt->text != NULL) && (pt->fsptr->is_selected())) {
               this->db->db2d.process_projection(pt->fscrapptr->proj);
               this->m_table.insert_object(NULL);
-              this->m_table.insert_attribute("Code",pt->code);
               this->m_table.insert_attribute("Comment",pt->text);
 	            if (!thisnan(pt->xsize))
                       this->m_table.insert_attribute("Explored",pt->xsize);
@@ -197,9 +307,8 @@ void thexptable::process_db(class thdatabase * dbp)
         }
         for(i = 0; i < nstat; i++) {
           st = &(dbp->db1d.station_vec[i]);
-          if (((st->flags & TT_STATIONFLAG_CONT) != 0) && ((st->code != NULL) || (st->comment != NULL)) && (st->survey->is_selected())) {
+          if (((st->flags & TT_STATIONFLAG_CONT) != 0) && (st->comment != NULL) && (st->survey->is_selected())) {
             this->m_table.insert_object(NULL);
-            this->m_table.insert_attribute("Code",st->code);
             this->m_table.insert_attribute("Comment",st->comment);
 	          if (!thisnan(st->explored))
                     this->m_table.insert_attribute("Explored",st->explored);
@@ -221,6 +330,7 @@ void thexptable::process_db(class thdatabase * dbp)
               this->m_table.insert_attribute("_LATITUDE",  lat / THPI * 180.0);
               this->m_table.insert_attribute("_ALTITUDE",  alt);
             }
+            if (this->expattr) this->m_table.copy_attributes(this->db->db1d.m_station_attr.get_object(i+1));
           }
         }        
       }
@@ -243,11 +353,20 @@ void thexptable::process_db(class thdatabase * dbp)
             this->m_table.insert_attribute("Title", ((strlen(srv->title) > 0) ? srv->title : srv->name));
             this->m_table.insert_attribute("Length",(long)(srv->stat.length + 0.5));
             if (srv->stat.station_top != NULL) {
-              this->m_table.insert_attribute("Depth",(long)(srv->stat.station_top->z - srv->stat.station_bottom->z + 0.5));
+              tmpd = srv->stat.station_top->z - srv->stat.station_bottom->z;
+              if (tmpd > srv->stat.length) tmpd = srv->stat.length;
+              this->m_table.insert_attribute("Depth",(long)(tmpd + 0.5));
             } else {
               this->m_table.insert_attribute("Depth",0.0);
             }
-            this->m_table.insert_attribute("ID", srv->get_reverse_full_name());
+            this->m_table.insert_attribute("Explored", (long)(srv->stat.length_explored + 0.5));
+            this->m_table.insert_attribute("Approx.", (long)(srv->stat.length_approx + 0.5));
+            this->m_table.insert_attribute("Duplicate", (long)(srv->stat.length_duplicate + 0.5));
+            this->m_table.insert_attribute("Surface", (long)(srv->stat.length_surface + 0.5));
+            this->m_table.insert_attribute("Shots", (long)(srv->stat.num_shots));
+            this->m_table.insert_attribute("Stations", (long)(srv->stat.num_stations));
+            //this->m_table.insert_attribute("ID", srv->get_full_name());
+            if (this->expattr) this->m_table.copy_attributes(this->db->attr.get_object(srv->id));
           }
         }
       }
@@ -279,6 +398,10 @@ void thexptable::process_db(class thdatabase * dbp)
  
 }
 
+
+std::string * thexptable::get_tmp_string() {
+  return &(* this->m_str_list.insert(this->m_str_list.end(),std::string("")));
+}
 
 
 

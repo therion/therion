@@ -125,6 +125,23 @@ class thprjx_station_link {
 };
 
 
+bool operator < (const struct thdb2d_udef & u1, const struct thdb2d_udef & u2)
+{
+  if (u1.m_command < u2.m_command) return true;
+  if (u1.m_command > u2.m_command) return false;
+  return (strcmp(u1.m_type, u2.m_type) < 0);
+}
+
+bool operator == (const struct thdb2d_udef & u1, const struct thdb2d_udef & u2)
+{
+  if ((u1.m_command == u2.m_command) && (strcmp(u1.m_type, u2.m_type) == 0))
+    return true;
+  else
+    return false;
+}
+
+
+
 
 
 thdb2d::thdb2d()
@@ -3624,6 +3641,79 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
 
 
+void thdb2d::register_u_symbol(int cmd, const char * type)
+{
+  thdb2d_udef x(cmd, type);
+  thdb2d_udef_map::iterator it = this->m_udef_map.find(x);
+  if (it == this->m_udef_map.end()) {
+    thdb2d_udef_prop * p;
+    p = &(*this->m_udef_list.insert(this->m_udef_list.end(), thdb2d_udef_prop()));
+    this->m_udef_map[x] = p;
+  }
+}
+
+
+thdb2d_udef_prop * thdb2d::get_u_symbol_prop(int cmd, const char * type)
+{
+  thdb2d_udef x(cmd, type);
+  thdb2d_udef_map::iterator it = this->m_udef_map.find(x);
+  if (it == this->m_udef_map.end())
+    return NULL;
+  else return it->second;
+}
+
+
+void thdb2d_udef_prop::reset() {
+  this->m_assigned = true;
+  this->m_used = false;
+}
+
+
+void thdb2d::use_u_symbol(int cmd, const char * type)
+{
+  thdb2d_udef_prop * p = get_u_symbol_prop(cmd, type);
+  p->m_used = true;
+}
+
+
+void thdb2d::reset_u_symbols()
+{
+  thdb2d_udef_map::iterator it;
+  for(it = this->m_udef_map.begin(); it != this->m_udef_map.end(); it++) {
+    it->second->reset();
+  }
+}
+
+
+bool thdb2d::is_u_symbol_used(int cmd, const char * type)
+{
+  thdb2d_udef_prop * p = get_u_symbol_prop(cmd, type);
+  return p->m_used;
+}
+
+
+void thdb2d::export_mp_header(FILE * f)
+{
+  thdb2d_udef_map::iterator it;
+  fprintf(f, "\n%% user defined symbols defaults\n");
+  for(it = this->m_udef_map.begin(); it != this->m_udef_map.end(); it++) {
+    switch (it->first.m_command) {
+      case TT_POINT_CMD:
+        fprintf(f, "let p_u_%s = p_u;\n", it->first.m_type);
+        fprintf(f, "def p_u_%s_legend = p_u_%s((0.5,0.5) inscale,0.0,1.0,(0,0)) enddef;\n", it->first.m_type, it->first.m_type);
+        break;
+      case TT_LINE_CMD:
+        fprintf(f, "let l_u_%s = l_u;\n", it->first.m_type);
+        fprintf(f, "def l_u_%s_legend = l_u_%s(((-.3,0.5) .. (.3,.3) .. (.7,.7) .. (1.3,.5)) inscale) enddef;\n", it->first.m_type, it->first.m_type);
+        break;
+      case TT_AREA_CMD:
+        fprintf(f, "let a_u_%s = a_u;\n", it->first.m_type);
+        fprintf(f, "def a_u_%s_legend = a_u_%s(buildcycle((((-1,0) -- (1,0) -- (1,1) -- (0,1) -- (0,-1))  inscale))) enddef;\n", it->first.m_type, it->first.m_type);
+        break;
+    }
+  }
+  fprintf(f, "%% end of user defined symbols\n\n");
+}
 
 
 

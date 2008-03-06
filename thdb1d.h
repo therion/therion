@@ -34,6 +34,7 @@
 #include "thdataleg.h"
 #include "thdb3d.h"
 #include "thdataleg.h"
+#include "thattr.h"
 #include <map>
 #include <vector>
 #include <list>
@@ -124,8 +125,7 @@ class thdb1ds {
   double xx;        // coordinate for extended elevation
   
   const char * name,  ///< Station name.
-    * comment,  ///< Station comment.
-    * code;     ///< Station continuation code.
+    * comment;  ///< Station comment.
   
   class thsurvey * survey;  ///< Station survey.
   class thdataobject * fixcontext;  ///< Fix context.
@@ -135,8 +135,8 @@ class thdb1ds {
   unsigned data_priority, ///< 0 - undefined, 1 - equate, 2 - leg, 3 - fix
     data_slength;  ///< Survey specification length
   
-  unsigned char flags,  ///< Station flags.
-    mark,  ///< Mark type.
+  unsigned long flags;  ///< Station flags.
+  int mark,  ///< Mark type.
     extend;  ///< Extend flags: normal, reverse, left, right, break
   bool mark_station;
   
@@ -150,7 +150,7 @@ class thdb1ds {
    * Default constructor.
    */
    
-  thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), code(NULL), survey(NULL), fixcontext(NULL), 
+  thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), survey(NULL), fixcontext(NULL), 
     data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), 
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
@@ -162,7 +162,7 @@ class thdb1ds {
    */
    
   thdb1ds(const char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), name(n), 
-    comment(NULL), code(NULL), survey(ps), fixcontext(NULL),  
+    comment(NULL), survey(ps), fixcontext(NULL),  
     data(NULL), data_priority(0), data_slength(0), 
     flags(TT_STATIONFLAG_NONE),
     mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), mark_station(false), 
@@ -240,6 +240,8 @@ class thdb1d {
   thdb1d_tree_node  * tree_nodes;
   
   thdb3ddata d3_data, d3_surface, d3_walls;
+
+  thattr m_station_attr;
 
   double min_year, max_year;
   

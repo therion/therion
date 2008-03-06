@@ -23,7 +23,8 @@ struct lxRenderData {
 
 	long m_scaleMode;
   bool m_printRenderer, 
-		m_imgWhiteBg;
+		m_imgWhiteBg,
+    m_askFName;
 
   wxString m_imgFileName;
   int m_imgFileType;

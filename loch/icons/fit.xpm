@@ -1,5 +1,5 @@
 /* XPM */
-static char * fit_xpm[] = {
+static const char * fit_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 15 4 1",
 "  c #0000BB",

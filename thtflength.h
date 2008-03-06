@@ -33,11 +33,12 @@
 #include "thparse.h"
 
 
-enum {TT_TFU_YD, TT_TFU_FT, TT_TFU_IN, TT_TFU_M, TT_TFU_CM, TT_TFU_UNKNOWN_LENGTH};
+enum {TT_TFU_YD, TT_TFU_FT, TT_TFU_IN, TT_TFU_M, TT_TFU_CM, TT_TFU_MM, TT_TFU_UNKNOWN_LENGTH};
 
 static const thstok thtt_tfunits_length[] = {
   {"centimeter", TT_TFU_CM},
   {"centimeters", TT_TFU_CM},
+  {"centimetre", TT_TFU_CM},
   {"centimetres", TT_TFU_CM},
   {"cm", TT_TFU_CM},
   {"feet", TT_TFU_FT},
@@ -51,6 +52,11 @@ static const thstok thtt_tfunits_length[] = {
   {"meters", TT_TFU_M},
   {"metres", TT_TFU_M},
   {"metric", TT_TFU_M},
+  {"millimeter", TT_TFU_MM},
+  {"millimeters", TT_TFU_MM},
+  {"millimetre", TT_TFU_MM},
+  {"millimetres", TT_TFU_MM},
+  {"mm", TT_TFU_MM},
   {"yard", TT_TFU_YD},
   {"yards", TT_TFU_YD},
   {"yd", TT_TFU_YD},

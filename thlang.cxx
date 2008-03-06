@@ -31,6 +31,36 @@
 #include "thinit.h"
 #include "thdatabase.h"
 #include "thexception.h"
+#include <map>
+
+
+struct thlang_str {
+
+  int m_lang;
+
+  const char * m_text;
+
+  thlang_str(int lang, const char * text) : m_lang(lang), m_text(text) {}
+
+};
+
+bool operator < (const struct thlang_str & s1, const struct thlang_str & s2)
+{
+  if (s1.m_lang < s2.m_lang) return true;
+  if (s1.m_lang > s2.m_lang) return false;
+  if (strcmp(s1.m_text, s2.m_text) < 0) return true;
+  return false;
+}
+
+bool operator == (const struct thlang_str & s1, const struct thlang_str & s2)
+{
+  if ((s1.m_lang == s2.m_lang) && (strcmp(s1.m_text, s2.m_text) == 0)) return true;
+  return false;
+}
+
+typedef std::map<thlang_str, const char *> thlang_str_map;
+
+thlang_str_map ulang_map;
 
 int thlang_parse(char * str) {
   return thmatch_token(str, thtt_lang);
@@ -60,10 +90,17 @@ void thlang_set_translation(char * lang, char * text, char * translation) {
     ththrow(("unknown language -- %s", lang));
   int text_id;
   text_id = thmatch_token(text, thtt__texts);
-  if (text_id == -1)
-    ththrow(("unknown text -- %s", text))
-  thlang__translations[text_id][lang_id] = thdb.strstore(translation);
-
+  if (text_id == -1) {
+    if (
+      (strncmp(text,"point u:",8) == 0) ||
+      (strncmp(text,"line u:",7) == 0) ||
+      (strncmp(text,"area u:",7) == 0)) {
+        ulang_map[thlang_str(lang_id, thdb.strstore(text, true))] = thdb.strstore(translation);
+    } else
+      ththrow(("unknown text -- %s", text))
+  } else { 
+    thlang__translations[text_id][lang_id] = thdb.strstore(translation);
+  }
 }
 
 const char * thT(const char * txt, int lng) {
@@ -71,10 +108,17 @@ const char * thT(const char * txt, int lng) {
     return txt;
   int sv = thmatch_token(txt,thtt__texts);
   const char * trans;
-  if (sv == -1)
-    return txt;
   lng = thlang_getlang(lng);
   // najde ci ho mame v danom jazyku
+  if (sv == -1) {
+    thlang_str_map::iterator it = ulang_map.find(thlang_str(lng, txt));
+    if ((it == ulang_map.end()) && (thlang__alternatives[lng] != THLANG_UNKNOWN))
+      it = ulang_map.find(thlang_str(thlang__alternatives[lng], txt));
+    if (it == ulang_map.end())
+      return txt;
+    else
+      return it->second;
+  }
   trans = thlang__translations[sv][lng];
   if ((trans == NULL) && (thlang__alternatives[lng] != THLANG_UNKNOWN)) {
     trans = thlang__translations[sv][thlang__alternatives[lng]];

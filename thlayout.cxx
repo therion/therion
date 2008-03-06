@@ -1736,9 +1736,16 @@ void thlayout::process_copy() {
         this->doc_title = srcl->doc_title;
       endcopy
 
-      begcopy(def_doc_comment)
-        this->doc_comment = srcl->doc_comment;
-      endcopy
+	    if ((this->def_doc_comment > 0) && (strlen(this->doc_comment) > 0) && (srcl->def_doc_comment > 0)) {
+		    std::string tmpstr(this->doc_comment);
+		    tmpstr += "<br>";
+		    tmpstr += srcl->doc_comment;
+		    this->doc_comment = this->db->strstore(tmpstr.c_str());
+	    } else {
+		    begcopy(def_doc_comment)
+		    this->doc_comment = srcl->doc_comment;
+		    endcopy
+	    }
 
       begcopy(def_doc_author)
         this->doc_author = srcl->doc_author;

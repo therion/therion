@@ -1,5 +1,5 @@
 /* XPM */
-static char * lockrot_xpm [] = {
+static const char * lockrot_xpm [] = {
 /* columns rows colors chars-per-pixel */
 "16 15 5 1",
 "  c #0060A2",

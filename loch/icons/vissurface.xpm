@@ -1,5 +1,5 @@
 /* XPM */
-static char *vissurface_xpm[] = {
+static const char *vissurface_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 15 4 1",
 "  c #41B800",

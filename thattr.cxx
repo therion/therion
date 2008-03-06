@@ -34,6 +34,12 @@
 #include <cmath>
 #include <set>
 
+#ifdef THMSVC
+#define snprintf _snprintf
+#define strcasecmp _stricmp
+#endif
+
+
 thattr::thattr()
 {
   this->m_num_fields = 0;
@@ -104,14 +110,20 @@ thattr_obj * thattr::get_object(long user_id)
 thattr_obj * thattr::insert_object(void * data, long user_id)
 {
   thattr_obj tmp, * r;
-  tmp.m_id = this->m_num_objects++;
-  tmp.m_data = data;
-  tmp.m_parent = this;
-  r = &(*this->m_obj_list.insert(this->m_obj_list.end(), tmp));
-  this->m_obj_map[tmp.m_id] = r;
-  if (user_id > -1) {
-    r->m_user_id = user_id;
-    this->m_obj_usrmap[user_id] = r;
+  r = NULL;
+  if (user_id >= 0) {
+    r = this->get_object(user_id);
+  }
+  if (r == NULL) {
+    tmp.m_id = this->m_num_objects++;
+    tmp.m_data = data;
+    tmp.m_parent = this;
+    r = &(*this->m_obj_list.insert(this->m_obj_list.end(), tmp));
+    this->m_obj_map[tmp.m_id] = r;
+    if (user_id > -1) {
+      r->m_user_id = user_id;
+      this->m_obj_usrmap[user_id] = r;
+    }
   }
   this->m_obj_last = r;
   return r;
@@ -147,12 +159,41 @@ void thattr::insert_attribute(const char * name, thattr_attr & attr, long user_i
 
 void thattr::insert_attribute(const char * name, const char * value, long user_id)
 {
+
+  int sv(0);
+  long lv(0);
+  double d(0.0);
   thattr_attr a;
   a.m_type = THATTR_STRING;
-  if (value != NULL)
-    a.m_val_string = std::string(value);
-  else
-    a.m_val_string = std::string("");
+
+  // cast value type
+  if ((value != NULL) && (strlen(value) > 0)) {
+    thparse_double(sv, d, value);
+    if (sv == TT_SV_NUMBER) {
+      a.m_type = THATTR_DOUBLE;
+      lv = long(d);
+      if (double(lv) == d) {
+        a.m_type = THATTR_INTEGER;
+      }
+    }
+  }
+
+  // insert attribute
+  switch (a.m_type) {
+    case THATTR_INTEGER:
+      a.m_val_long = lv;
+      break;
+    case THATTR_DOUBLE:
+      a.m_val_double = d;
+      break;
+    case THATTR_STRING:
+      if (value != NULL)
+        a.m_val_string = std::string(value);
+      else
+        a.m_val_string = std::string("");
+      break;
+  }
+
   this->insert_attribute(name, a, user_id);
 }
 
@@ -177,6 +218,7 @@ void thattr::insert_attribute(const char * name, long value, long user_id)
 
 void thattr::copy_attributes(thattr_obj * object, long user_id)
 {
+  if (object == NULL) return;
   thattr_id2attr_map::iterator it;
   it = object->m_attributes.begin();
   thattr_attr tmp;
@@ -524,7 +566,7 @@ void thattr::export_txt(const char * fname, int encoding)
       cf = &(*fli);
       ai = oi->m_attributes.find(cf->m_id);
       if (ai == oi->m_attributes.end()) {
-        value = "#N/A";
+        value = "";
       } else {
         ca = &(ai->second);
         value = ca->m_val_string.c_str();
@@ -576,7 +618,7 @@ void thattr::export_kml(const char * fname)
       cf = &(*fli);
       ai = oi->m_attributes.find(cf->m_id);
       if (ai == oi->m_attributes.end()) {
-        value = "#N/A";
+        value = "";
       } else {
         ca = &(ai->second);
         value = ca->m_val_string.c_str();
@@ -617,7 +659,7 @@ void thattr::export_html(const char * fname, int encoding)
   fprintf(f,"<html>\n<head>\n<title>therion table output</title>\n"
     "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n"
     "<script language=\"javascript\">\n"
-    "function colexpTree(node)\n"
+    "function xTree(node)\n"
     "{\n"
     "  var fsub = true;\n"
     "  var show = false;\n"
@@ -640,6 +682,12 @@ void thattr::export_html(const char * fname, int encoding)
     "  }\n"
     "}\n"
     "</script>\n"
+    "<style type=\"text/css\">\n"
+    "body {font-family: Verdana, Helvetica, Arial, sans-serif; line-height: 1.5;}\n"
+    "table {font-size:80%%; border-spacing: 0px;}\n"
+    "th {border-bottom:2px solid #a7a9aa; padding-left:8px; padding-right:8px; padding-top:0px; padding-bottom:1px;}\n"
+    "td {border-bottom:1px solid #a7a9aa; padding-left:8px; padding-right:8px; padding-top:0px; padding-bottom:0px;}\n"
+    "</style>\n"
     "</head>\n<body>\n");
   fprintf(f,"<table>\n<tr>");
   for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
@@ -656,6 +704,8 @@ void thattr::export_html(const char * fname, int encoding)
   // Insert objects and write fields.
   const char * value;
   bool header_value;
+  thbuffer valb;
+  valb.guarantee(128);
   std::string value_plus;
   for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end(); ++oi) {
     fprintf(f,"<tr id=\"%s\">", oi->m_tree_node_id);
@@ -669,18 +719,22 @@ void thattr::export_html(const char * fname, int encoding)
       }
       ai = oi->m_attributes.find(cf->m_id);
       if (ai == oi->m_attributes.end()) {
-        value = "#N/A";
+        value = "&nbsp;";
       } else {
         ca = &(ai->second);
-        value = ca->m_val_string.c_str();
+        if (ca->m_type == THATTR_DOUBLE) {
+          snprintf(valb.get_buffer(), 127, "%.1lf", ca->m_val_double);
+          value = valb.get_buffer();
+        } else
+          value = ca->m_val_string.c_str();
       }
       fprintf(f,"<td align=\"%s\"", alstr);
       if (m_tree && header_value) {
-        fprintf(f," style=\"padding-left:%ld\"", 12 * oi->m_tree_level);
+        fprintf(f," style=\"padding-left:+%u\"", 12 * oi->m_tree_level);
         oinext = oi;
         oinext++;
         if ((oinext != this->m_obj_list.end()) && (oinext->m_tree_level > oi->m_tree_level)) {
-          value_plus = "<a href=\"javascript:colexpTree('";
+          value_plus = "<a href=\"javascript:xTree('";
           value_plus += oi->m_tree_node_id;
           value_plus += "')\">";
           value_plus += value;

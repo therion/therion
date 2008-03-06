@@ -83,6 +83,8 @@ enum {
   LXMENU_HELP_RENDERING,
   LXMENU_HELP_BUGS,
   LXMENU_HELP_ABOUT,
+  LXMENU_EXPFIT,
+  LXMENU_EXPROT,
 	LXTB,
 	LXTB_OPEN,
 	LXTB_RELOAD,
@@ -182,6 +184,7 @@ class lxFrame: public wxFrame
     void ToggleVisibilityBBox();
     void ToggleVisibilityGrid();
     void ToggleVisibilityIndicators();
+    void ExportRotationPictures();
 
     void SetColorMode(int);
     void DetectFileType();

@@ -1,5 +1,5 @@
 /* XPM */
-static char *viswalls_xpm[] = {
+static const char *viswalls_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "16 15 39 1",
 "  c black",

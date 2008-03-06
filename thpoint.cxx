@@ -56,7 +56,6 @@ thpoint::thpoint()
   this->align = TT_POINT_ALIGN_C;
   
   this->text = NULL;
-  this->code = NULL;
 }
 
 
@@ -120,6 +119,7 @@ void thpoint::start_insert() {
   if (this->type == TT_POINT_TYPE_U) {
     if (this->m_subtype_str == NULL)
       ththrow(("missing subtype specification for point of user defined type"))
+    this->db->db2d.register_u_symbol(this->get_class_id(), this->m_subtype_str);
   }
 }
 
@@ -165,11 +165,6 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
     case TT_POINT_TEXT:
       thencode(&(this->db->buff_enc), *args, argenc);
       this->parse_text(this->db->buff_enc.get_buffer());
-      break;
-
-    case TT_POINT_CODE:
-      thencode(&(this->db->buff_enc), *args, argenc);
-      this->parse_code(this->db->buff_enc.get_buffer());
       break;
 
     case TT_POINT_EXPLORED:
@@ -700,16 +695,13 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       macroid = SYMP_CONTINUATION;
       {
         std::string tmp;
-        if ((this->code != NULL) && (strlen(this->code) > 0)) {
-          tmp += this->code;
-        }
         if ((this->text != NULL) && (strlen(this->text) > 0)) {
           if (tmp.length() > 0)
             tmp += " -- ";
           tmp += this->text;
         }
         if (tmp.length() > 0) {
-          attr_text = "btex \\thcontinuation ";
+          attr_text = "btex \\thcomment ";
           attr_text += utf2tex(tmp);
           attr_text += "etex";
         }
@@ -805,7 +797,11 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       if (attr_text.length() > 0) {
         fprintf(out->file, "ATTR__text_x := true;\nATTR__text := %s;\n", attr_text.c_str());
       }
-      fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+      if (this->type == TT_POINT_TYPE_U) {
+         fprintf(out->file,"p_u_%s(",this->m_subtype_str);
+         this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
+      } else
+         fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
     }
     else
       postprocess = false;
@@ -857,11 +853,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     }
     fprintf(out->file,",%.1f,%.2f,%s",
         (thisnan(this->orient) ? 0 : 360 - this->orient - out->rr),scl,al);
-    if (this->type == TT_POINT_TYPE_U) {
-      fprintf(out->file, ",\"%s\");\n", (this->m_subtype_str == NULL) ? "" : this->m_subtype_str);
-    } else {
-      fprintf(out->file, ");\n");
-    }
+    fprintf(out->file, ");\n");
 
     if (out->layout->is_debug_stations() || out->layout->is_debug_joins()) {
       fprintf(out->file,"p_debug(-1,0,");
@@ -928,18 +920,6 @@ void thpoint::parse_explored(char * ss) {
   thparse_length(sv, this->xsize, ss);
   if (sv == TT_SV_UNKNOWN)
       ththrow(("ivalid explored length -- %s", ss));
-}
-
-
-void thpoint::parse_code(char * ss) {
-  switch (this->type) {
-    case TT_POINT_TYPE_CONTINUATION:
-      break;
-    default:
-      ththrow(("-code not valid with type %s", thmatch_string(this->type,thtt_point_types)))
-      break;
-  }
-  // store explored length in XSize field
 }
 
 

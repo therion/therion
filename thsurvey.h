@@ -43,6 +43,7 @@ enum {
   TT_SURVEY_DECLINATION = 2001,
   TT_SURVEY_PERSON_RENAME = 2002,
   TT_SURVEY_NAMESPACE = 2003,
+  TT_SURVEY_ENTRANCE = 2004,
 };
 
 
@@ -52,6 +53,7 @@ enum {
  
 static const thstok thtt_survey_opt[] = {
   {"declination", TT_SURVEY_DECLINATION},
+  {"entrance", TT_SURVEY_ENTRANCE},
   {"namespace", TT_SURVEY_NAMESPACE},
   {"person-rename", TT_SURVEY_PERSON_RENAME},
   {NULL, TT_SURVEY_UNKNOWN},
@@ -69,19 +71,20 @@ class thsurveystat {
   
   public:
   
-  double length, length_duplicate, length_surface, length_approx;
+  double length, length_duplicate, length_surface, length_approx, length_explored;
   
   class thdb1ds * station_top, * station_bottom,
     * station_east, * station_west, * station_north, * station_south;
   
   int station_state; ///< 0 - undefined, 1 - surface, 2 - underground
     
-  unsigned long num_stations, num_shots;
+  unsigned long num_stations, num_shots, num_entrances;
   
-  thsurveystat() : length(0.0), length_duplicate(0.0), length_surface(0.0), length_approx(0.0),
+  thsurveystat() : length(0.0), length_duplicate(0.0), 
+    length_surface(0.0), length_approx(0.0), length_explored(0.0),
     station_top(NULL), station_bottom(NULL), station_east(NULL), 
     station_west(NULL), station_north(NULL), station_south(NULL),
-    station_state(0), num_stations(0), num_shots(0) {}
+    station_state(0), num_stations(0), num_shots(0), num_entrances(0) {}
   
 };
 
@@ -125,6 +128,7 @@ class thsurvey : public thdataobject {
   
   thsurveyp2pmap person_renames;
 
+  thobjectname entrance;  ///< Entrance station name.
 
   bool privatens;
   thsurvey * surveyns;

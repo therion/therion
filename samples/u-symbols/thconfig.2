@@ -55,40 +55,34 @@ code metapost
   path bat_path;
   bat_path = bat_path_x shifted (-(llcorner bat_path_bb) - (urcorner bat_path_bb - llcorner bat_path_bb) / 2.0) scaled (1u / ((xpart urcorner bat_path_bb) - (xpart llcorner bat_path_bb))) rotated 210;
 
-#! section of your layout, you redefine point symbol like this
+#! section of your layout, you define point u:bat symbol like this
 #!CODE
-def p_u(expr pos, theta, sc, al, subtype) = 
-  if subtype = "bat": % case of bat symbol
-    T := identity shifted pos;
-    thfill (bat_path scaled 2.0) withcolor black;
-  else: % use default symbol for other cases
-    p_u_SKBB(pos, theta, sc, al, subtype);
-  fi;
+def p_u_bat(expr pos, theta, sc, al) = 
+  T := identity shifted pos;
+  thfill (bat_path scaled 2.0) withcolor black;
 enddef;
 #!ENDCODE
 
-#! same way the line symbol
+#! same way the line u:bat symbol
 #!CODE
-def l_u(expr P, subtype) =
-  if subtype = "bat": % case of bat line
-    T:=identity;
-    cas := 0;
-    dlzka := arclength P;
-    mojkrok:=adjust_step(dlzka, 1.0u);
-    pickup PenD;
-    forever:
-      t := arctime cas of P;
-      thfill bat_path scaled 0.5 shifted (point t of P) withcolor black;
-      cas := cas + mojkrok;
-      exitif cas > dlzka + (mojkrok / 3); % for rounding errors
-    endfor;
-  else: % use default u line for other cases
-    p_l_SKBB(P, subtype);
-  fi;
+def l_u_bat(expr P) =
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 1.0u);
+  pickup PenD;
+  forever:
+    t := arctime cas of P;
+    thfill bat_path scaled 0.5 shifted (point t of P) withcolor black;
+    cas := cas + mojkrok;
+    exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+  endfor;
 enddef;
+
+def l_u_bat_legend = l_u_bat(((.2,.2) -- (.8,.8)) inscale) enddef;
 #!ENDCODE
 
-#! and area symbol (pattern in this case)
+#! and area u:bat symbol (pattern in this case)
 #!CODE
 % bat pattern
 beginpattern(pattern_bat);
@@ -96,23 +90,36 @@ beginpattern(pattern_bat);
 endpattern;
 
 % bat area symbol
-def a_u (expr Path, subtype) =
-  if subtype = "bat": % bat area
-    T:=identity;
-    thclean Path;
-    thfill Path withpattern pattern_bat;
-  else: % use default u area for other cases
-    a_u_SKBB(Path, subtype);
-  fi;
+def a_u_bat (expr Path) =
+  T:=identity;
+  thclean Path;
+  thfill Path withpattern pattern_bat;
 enddef;
 #!ENDCODE
 
+
+code tex-map
+\legendcontent={%
+  \hsize=\legendwidth
+  \color[0 0 0]\the\legendtextcolor 
+  \formattedlegend
+  \color[0 0 0]
+}
+
+legend-width 8 cm
+
+endcode
+
 endlayout
+
+text en "point u:bat" "bat"
+text en "line u:bat" "bat path"
+text en "area u:bat" "lot of bats"
 
 #! After these definitions, you receive bat point, line and area
 #! with proper graphical representation.
 
-export map -o map2.pdf -layout m -layout-map-header 0 0 off
+export map -o map2.pdf -layout m -layout-map-header 0 0 nw -layout-legend on
 
 #!IMAGE map2.pdf
 #!CLEAN map2.pdf

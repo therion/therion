@@ -162,9 +162,6 @@ static const thstok thtt_symbol_group[] = {
 
 static const thstok thtt_symbol_point_spec[] = {
   {"cave-station", SYMP_CAVESTATION},
-  {"cont-station", SYMP_CONTINUATIONSTATION},
-  {"continuation-station", SYMP_CONTINUATIONSTATION},
-  {"entrance-station", SYMP_ENTRANCESTATION},
   {"surface-station", SYMP_SURFACESTATION},
   {"wall-altitude", SYMP_WALLALTITUDE},
   {NULL, SYMX_}
@@ -629,7 +626,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
 // vlozi figure do metapostu
 #define insfig(mid,txt) \
-  if (isused(mid)) {\
+  if ((mid == 0) || (isused(mid))) {\
     isin[mid] = false;\
     LEGENDITEM = LEGENDLIST.insert(LEGENDLIST.end(),dummlr); \
     fprintf(mpf,"beginfig(%d);\n",sfig); \
@@ -1079,70 +1076,35 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   // thT("point label")  
   // thT("line label")  
 
-  // prejde vsetky ostatne objekty
-  for (int m = 0; m < SYMX_; m++) {
-
-    if (!this->assigned[m])
-      continue;
-    if (!(this->used[m] || (layout->legend == TT_LAYOUT_LEGEND_ALL)))
-      continue;
-    if (!isin[m])
-      continue;
-
-    switch (m) {
-
-      // najprv tie, ktore nejdu do preview
-      case SYMP_SECTION:
-      case SYMP_UNDEFINED:
-
-      case SYML_BORDER_INVISIBLE:
-      case SYML_WALL_INVISIBLE:
-      case SYML_UNDEFINED:
-  
-      // potom specialne
-      case SYMP_LABEL:
-      case SYMP_REMARK:
-      case SYMP_STATIONNAME:
-      case SYMP_HEIGHT_POSITIVE:
-      case SYMP_HEIGHT_NEGATIVE:
-      case SYMP_HEIGHT_UNSIGNED:
-      case SYMP_DATE:
-      case SYMP_ALTITUDE:
-      case SYMP_WALLALTITUDE:
-      case SYMP_PASSAGEHEIGHT_POSITIVE:
-      case SYMP_PASSAGEHEIGHT_NEGATIVE:
-      case SYMP_PASSAGEHEIGHT_UNSIGNED:
-      case SYMP_PASSAGEHEIGHT_BOTH:
-      
-      case SYML_LABEL:
-      case SYML_SECTION:
-      case SYML_CONTOUR:
-      case SYML_SLOPE:
-      case SYML_ARROW:
-
-      case SYML_WALL_PEBBLES:
-      case SYML_WALL_CLAY:
-      case SYML_WALL_ICE:
-
-      case SYMS_NORTHARROW:
-      case SYMS_SCALEBAR:
-
-        break;
-        
-//      default:
-//        // zapise defaultne preview pre bod/krivku/mapu
-//        insfig(m,thsymbolset__mp[m]);
-//        LEGENDITEM->descr = thsymbolset__mp[m];
-//        if ((m > SYMP_) && (m < SYMP_ZZZ)) {
-//          fprintf(mpf,"legend_point(\"%s\");\n",thsymbolset__mp[m]);
-//        } else if ((m > SYML_) && (m < SYML_ZZZ)) {
-//          fprintf(mpf,"legend_line(\"%s\");\n",thsymbolset__mp[m]);
-//        } else if ((m > SYMA_) && (m < SYMA_ZZZ)) {
-//          fprintf(mpf,"%s(buildcycle((((-1,0) -- (1,0) -- (1,1) -- (0,1) -- (0,-1))  inscale)));\n",thsymbolset__mp[m]);
-//        }
-//        endfig;
+  // nakoniec prejde uzivatelsky definovane symboly
+  thdb2d_udef_map::iterator it;
+  std::string udef_desc;
+  int mid = SYMX_;
+  for(it = layout->db->db2d.m_udef_map.begin(); it != layout->db->db2d.m_udef_map.end(); it++) {
+    if (it->second->m_assigned && (it->second->m_used || (layout->legend == TT_LAYOUT_LEGEND_ALL))) {
+      insfig(0,thsymbolset__mp[0]);
+      switch (it->first.m_command) {
+        case TT_POINT_CMD:
+          fprintf(mpf,"p_u_%s_legend;\n",it->first.m_type);
+          udef_desc = "point";
+          break;
+        case TT_LINE_CMD:
+          fprintf(mpf,"l_u_%s_legend;\n",it->first.m_type);
+          udef_desc = "line";
+          break;
+        case TT_AREA_CMD:
+          fprintf(mpf,"a_u_%s_legend;\n",it->first.m_type);
+          udef_desc = "area";
+          break;
+      }
+      udef_desc += " u:";
+      udef_desc += it->first.m_type;
+      LEGENDITEM->descr = thT(udef_desc.c_str(), layout->lang);
+      LEGENDITEM->idsym = (unsigned) mid++;
+      endfig;
     }
   }
+
   
 }
 

@@ -146,18 +146,39 @@ void lxViewpointSetupDlg::OnText(wxCommandEvent& event)
 
 void lxViewpointSetupDlg::OnSlider(wxScrollEvent& event)
 {
+  wxCommandEvent tmpEvent(wxEVT_COMMAND_TEXT_UPDATED);
   switch (event.GetId()) {
     case LXVSTP_FACINGSLIDE:
+#if wxCHECK_VERSION(2,7,1)
+      lxFTextCtrl(LXVSTP_FACING)->ChangeValue(wxString::Format(_T("%d"), event.GetInt()));
+      tmpEvent.SetId(LXVSTP_FACING);
+#else
       lxFTextCtrl(LXVSTP_FACING)->SetValue(wxString::Format(_T("%d"), event.GetInt()));
+#endif      
       break;
     case LXVSTP_TILTSLIDE:
+#if wxCHECK_VERSION(2,7,1)
+      lxFTextCtrl(LXVSTP_TILT)->ChangeValue(wxString::Format(_T("%d"), event.GetInt()));
+      tmpEvent.SetId(LXVSTP_TILT);
+#else
       lxFTextCtrl(LXVSTP_TILT)->SetValue(wxString::Format(_T("%d"), event.GetInt()));
+#endif      
       break;
     case LXVSTP_ZOOMSLIDE:
+#if wxCHECK_VERSION(2,7,1)
+      lxFTextCtrl(LXVSTP_ZOOM)->ChangeValue(wxString::Format(_T("%d"), int(20.0 * pow(100.0, (double(event.GetInt()) / 1000.0)))));
+      tmpEvent.SetId(LXVSTP_ZOOM);
+#else
       lxFTextCtrl(LXVSTP_ZOOM)->SetValue(wxString::Format(_T("%d"), int(20.0 * pow(100.0, (double(event.GetInt()) / 1000.0)))));
+#endif      
       break;
     case LXVSTP_DISTSLIDE:
+#if wxCHECK_VERSION(2,7,1)
+      lxFTextCtrl(LXVSTP_DIST)->ChangeValue(wxString::Format(_T("%d"), int(pow(200.0 * this->m_mainFrame->setup->data_limits_diam, (double(event.GetInt()) / 1000.0)))));
+      tmpEvent.SetId(LXVSTP_DIST);
+#else
       lxFTextCtrl(LXVSTP_DIST)->SetValue(wxString::Format(_T("%d"), int(pow(200.0 * this->m_mainFrame->setup->data_limits_diam, (double(event.GetInt()) / 1000.0)))));
+#endif      
       break;
     case LXVSTP_ROTSPEED:
       this->m_mainFrame->canvas->m_sCameraAutoRotateAngle = (event.GetInt() >= 0 ? 1.0 : -1.0) * 
@@ -169,6 +190,7 @@ void lxViewpointSetupDlg::OnSlider(wxScrollEvent& event)
         this->m_mainFrame->canvas->ForceRefresh(false);
       break;
   }
+  this->OnText(tmpEvent);
 }
 
 

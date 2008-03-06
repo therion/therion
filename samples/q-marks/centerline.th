@@ -17,7 +17,7 @@ centerline
 #! where continuation is possible. Just use following syntax
 
 #!CODE
-station 5 "pit" continuation code V explored 20m
+station 5 "pit" continuation attr Code V explored 20m
 #!ENDCODE
 
 endcenterline

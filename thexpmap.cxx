@@ -906,6 +906,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(mpf,"%s\n",thmpost_library);
   fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(thlang_getlang(this->layout->lang)));
 
+  this->db->db2d.export_mp_header(out.file);
   
   this->db->attr.export_mp_header(out.file);
 //  fprintf(mpf,"verbatimtex \\def\\updown#1#2{\\vbox{%%\n");
@@ -2214,11 +2215,29 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         typid = SYMP_CAVESTATION;
       else
         typid = SYMP_SURFACESTATION;
-      if (out->symset->assigned[macroid] && out->symset->assigned[typid]) {
+      if (out->symset->assigned[typid]) {
         thexpmap_export_mp_bgif;
-        fprintf(out->file,"%s((%.2f,%.2f));\n",
-          out->symset->get_mp_macro(macroid),
-          thxmmxst(out, slp->stx, slp->sty));
+        std::string commentstr("0");
+        if ((slp->station->comment != NULL) && (strlen(slp->station->comment) > 0)) {
+          commentstr = "btex \\thcomment ";
+          commentstr += utf2tex(slp->station->comment);
+          commentstr += " etex";
+        }
+        fprintf(out->file,"p_station((%.2f,%.2f),%d,%s,\"\"",
+          thxmmxst(out, slp->stx, slp->sty),
+          out->symset->assigned[macroid] ? slp->station->mark : 0,
+          commentstr.c_str()
+          );
+#define thexpmat_stationflag(flag,str) if ((slp->station->flags & flag) == flag) fprintf(out->file,",\"%s\"", str);
+        thexpmat_stationflag(TT_STATIONFLAG_ENTRANCE, "entrance")
+        thexpmat_stationflag(TT_STATIONFLAG_SINK, "sink")
+        thexpmat_stationflag(TT_STATIONFLAG_SPRING, "spring")
+        thexpmat_stationflag(TT_STATIONFLAG_DOLINE, "doline")
+        thexpmat_stationflag(TT_STATIONFLAG_PROBE, "probe")
+        thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT, "air-draught")
+        thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_SUMMER, "air-draught:summer")
+        thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_WINTER, "air-draught:winter")
+        fprintf(out->file,");\n");
         if (out->layout->is_debug_stationnames() && (slp->station_name.id != 0)) {
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
           dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
@@ -2226,45 +2245,40 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             thxmmxst(out, slp->stx, slp->sty));
         }
       }
-      // export continuation station
-      if (out->symset->assigned[SYMP_CONTINUATIONSTATION] && ((slp->station->flags & TT_STATIONFLAG_CONT) != 0 )) {
-        std::string conttext;
-        if ((slp->station->code != NULL) && (strlen(slp->station->code) > 0)) {
-          conttext = slp->station->code;
-        }
-        if ((slp->station->comment != NULL) && (strlen(slp->station->comment) > 0)) {
-          if (conttext.length() > 0)
-            conttext += " -- ";
-          conttext += slp->station->comment;
-        }
-        bool stname = (conttext.length() > 0);
-        thexpmap_export_mp_bgif;
-        if (stname) {
-          fprintf(out->file,"ATTR__text_x := true;\n");
-          fprintf(out->file,"ATTR__text := btex \\thcontinuation %s etex;\n", 
-            utf2tex(conttext).c_str());
-        }
-        fprintf(out->file,"p_continuationstation((%.2f,%.2f));\n",
-          thxmmxst(out, slp->stx, slp->sty));
-        if (stname) {
-          fprintf(out->file,"ATTR__text_x := false;");
-        }
-      }
-      // export entrance station
-      if (out->symset->assigned[SYMP_ENTRANCESTATION] && ((slp->station->flags & TT_STATIONFLAG_ENTRANCE) != 0 )) {
-        bool stname = ((slp->station->comment != NULL) && (strlen(slp->station->comment) > 0));
-        thexpmap_export_mp_bgif;
-        if (stname) {
-          fprintf(out->file,"ATTR__text_x := true;\n");
-          fprintf(out->file,"ATTR__text := btex \\thentrance %s etex;\n", 
-            utf2tex(slp->station->comment));
-        }
-        fprintf(out->file,"p_entrancestation((%.2f,%.2f));\n",
-          thxmmxst(out, slp->stx, slp->sty));
-        if (stname) {
-          fprintf(out->file,"ATTR__text_x := false;");
-        }
-      }
+      //// export continuation station
+      //if (out->symset->assigned[SYMP_CONTINUATIONSTATION] && ((slp->station->flags & TT_STATIONFLAG_CONT) != 0 )) {
+      //  std::string conttext;
+      //  if ((slp->station->comment != NULL) && (strlen(slp->station->comment) > 0)) {
+      //    conttext = slp->station->comment;
+      //  }
+      //  bool stname = (conttext.length() > 0);
+      //  thexpmap_export_mp_bgif;
+      //  if (stname) {
+      //    fprintf(out->file,"ATTR__text_x := true;\n");
+      //    fprintf(out->file,"ATTR__text := btex \\thcomment %s etex;\n", 
+      //      utf2tex(conttext).c_str());
+      //  }
+      //  fprintf(out->file,"p_continuationstation((%.2f,%.2f));\n",
+      //    thxmmxst(out, slp->stx, slp->sty));
+      //  if (stname) {
+      //    fprintf(out->file,"ATTR__text_x := false;");
+      //  }
+      //}
+      //// export entrance station
+      //if (out->symset->assigned[SYMP_ENTRANCESTATION] && ((slp->station->flags & TT_STATIONFLAG_ENTRANCE) != 0 )) {
+      //  bool stname = ((slp->station->comment != NULL) && (strlen(slp->station->comment) > 0));
+      //  thexpmap_export_mp_bgif;
+      //  if (stname) {
+      //    fprintf(out->file,"ATTR__text_x := true;\n");
+      //    fprintf(out->file,"ATTR__text := btex \\thentrance %s etex;\n", 
+      //      utf2tex(slp->station->comment));
+      //  }
+      //  fprintf(out->file,"p_entrancestation((%.2f,%.2f));\n",
+      //    thxmmxst(out, slp->stx, slp->sty));
+      //  if (stname) {
+      //    fprintf(out->file,"ATTR__text_x := false;");
+      //  }
+      //}
     }
     slp = slp->next_item;
   }

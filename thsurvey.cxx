@@ -44,6 +44,7 @@ thsurvey::thsurvey()
   this->num1 = 0;
   this->level = 0;
   this->person_renames.clear();
+  this->entrance.clear();
   this->data = NULL;
   this->privatens = true;
   this->surveyns = NULL;
@@ -165,6 +166,10 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       thencode(&(this->db->buff_enc), args[1], argenc);
       tmpp2.parse(this->db, this->db->buff_enc.get_buffer());
       this->person_renames[tmpp1] = tmpp2;
+      break;
+
+    case TT_SURVEY_ENTRANCE:
+      thparse_objectname(this->entrance, & this->db->buff_stations, *args);
       break;
       
     case TT_DATAOBJECT_NAME:

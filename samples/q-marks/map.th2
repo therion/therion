@@ -13,7 +13,7 @@ scrap scrap.1 -scale [-128.0 -128.0 935.085 -128.0 0.0 0.0 27.002359 0.0 m]
 #! In the scrap (.th2 file), you can use <code>-text</code>, <code>-code</code>
 #! and <code>-explored</code> options to continuation symbol.
 #!CODE
-point 796.0 676.0 continuation -text "water too cold to continue survey" -code A -explored 50m
+point 796.0 676.0 continuation -text "water too cold to continue survey" -attr Code A -explored 50m
 #!ENDCODE
 
 
@@ -54,7 +54,7 @@ line wall
   smooth off
 endline
 
-point 362.0 507.0 continuation -text "strong wind from breakdown" -align tl -code B
+point 362.0 507.0 continuation -text "strong wind from breakdown" -align tl -attr Code B
 
 point 407.0 516.0 air-draught -orientation 155.4
 

@@ -53,6 +53,7 @@ lxRenderData::lxRenderData()
   this->m_imgHeight = 257.0;
   this->m_imgResolution = 300.0;
   this->m_imgFileType = 0;
+  this->m_askFName = true;
 
 #ifdef lxPPMFORMAT
   this->m_imgFileName = _T("cave.ppm");
@@ -433,20 +434,23 @@ void lxRenderFile::Render() {
   wxFileName::SplitPath(m_pData->m_imgFileName, &cdir, &cnm, NULL);
   if (cdir.Length() == 0)
     cdir = this->m_glc->frame->m_fileDir;
-  wxFileDialog fileDlg(this->m_parent, _("Save rendering as"), cdir, cnm, 
+
+  if (m_pData->m_askFName) {
+    wxFileDialog fileDlg(this->m_parent, _("Save rendering as"), cdir, cnm, 
 #ifdef lxPPMFORMAT
-    _("PPM files (*.ppm)|*.ppm"), 
+      _("PPM files (*.ppm)|*.ppm"), 
 #else
-    _("PDF files (*.pdf)|*.pdf|PNG files (*.png)|*.png|BMP files (*.bmp)|*.bmp"), 
+      _("PDF files (*.pdf)|*.pdf|PNG files (*.png)|*.png|BMP files (*.bmp)|*.bmp"), 
 #endif
-    wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
-  fileDlg.CentreOnParent();
-  fileDlg.SetFilterIndex(m_pData->m_imgFileType);
-  if (fileDlg.ShowModal() == wxID_OK) {
-    m_pData->m_imgFileName = fileDlg.GetPath();
-    m_pData->m_imgFileType = fileDlg.GetFilterIndex();
-  } else
-    return;
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    fileDlg.CentreOnParent();
+    fileDlg.SetFilterIndex(m_pData->m_imgFileType);
+    if (fileDlg.ShowModal() == wxID_OK) {
+      m_pData->m_imgFileName = fileDlg.GetPath();
+      m_pData->m_imgFileType = fileDlg.GetFilterIndex();
+    } else
+      return;
+  }
 
   // otvorime subor
   m_file = fopen(m_pData->m_imgFileName.mb_str(), "w+b");
@@ -490,16 +494,19 @@ void lxRenderFile::Render() {
     ((this->m_imgHeight + this->m_tHeight - 2 * lxRENDERBORDER - 1) / (this->m_tHeight - 2 * lxRENDERBORDER));
   m_continue = true;
   wxString renmsg = wxString::Format(_("Rendering (%d x %d, %.1f MB) ..."), m_imgWidth, m_imgHeight, double(m_imgWidth) * double(m_imgHeight) * 3 / 1048576.0);
-  wxProgressDialog dialog(_("Rendering to bitmap"),
-    renmsg,
-    max,    // range
-    m_parent,   // parent
-    wxPD_CAN_ABORT |
-    wxPD_APP_MODAL |
-    wxPD_AUTO_HIDE |
-    wxPD_ELAPSED_TIME |
-    wxPD_ESTIMATED_TIME |
-    wxPD_REMAINING_TIME);
+  wxProgressDialog * dialog = NULL;
+  if (this->m_pData->m_askFName) {
+    dialog = new wxProgressDialog(_("Rendering to bitmap"),
+      renmsg,
+      max,    // range
+      m_parent,   // parent
+      wxPD_CAN_ABORT |
+      wxPD_APP_MODAL |
+      wxPD_AUTO_HIDE |
+      wxPD_ELAPSED_TIME |
+      wxPD_ESTIMATED_TIME |
+      wxPD_REMAINING_TIME);
+  }
 
   int curColumn;
 
@@ -578,7 +585,7 @@ void lxRenderFile::Render() {
     m_continue = this->m_glc->TRCEndTile();
 
     this->m_cTile++;
-    m_continue = m_continue && dialog.Update(this->m_cTile, renmsg);
+    m_continue = m_continue && ((dialog == NULL) || dialog->Update(this->m_cTile, renmsg));
 
     // save tile do rowbuffera
     {
@@ -648,6 +655,10 @@ void lxRenderFile::Render() {
 
   m_glc->setup->cam_width = tmpcw;
   //pngtst;
+
+  if (dialog != NULL) {
+    delete dialog;
+  }
 
   switch (this->m_pData->m_imgFileType) {
     case 0:

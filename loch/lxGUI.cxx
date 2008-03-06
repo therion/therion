@@ -99,6 +99,8 @@ BEGIN_EVENT_TABLE(lxFrame, wxFrame)
     EVT_MENU(LXMENU_FILE_RELOAD, lxFrame::OnAll)
     EVT_MENU(LXMENU_FILE_RENDER, lxFrame::OnAll)
     EVT_MENU(LXMENU_FILE_RENDER_SETUP, lxFrame::OnAll)
+    EVT_MENU(LXMENU_EXPROT, lxFrame::OnAll)
+    EVT_MENU(LXMENU_EXPFIT, lxFrame::OnAll)
     EVT_MENU_RANGE(LXMENU_HELP_CONTENTS, LXMENU_HELP_ABOUT, lxFrame::OnAll)
 		EVT_TOOL_RANGE(LXTB, LXTBEND, lxFrame::OnAll)
     EVT_SIZE(lxFrame::OnSize)
@@ -286,10 +288,12 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     viewMenu->AppendCheckItem(LXMENU_CAMERA_PERSP, _("Orthogonal"));
     viewMenu->AppendSeparator();
     viewMenu->Append(LXMENU_VIEW_FULLSCREEN, _("Full screen\tF11"));
+    viewMenu->Append(LXMENU_EXPFIT, _("&Size..."));
 
     wxMenu *winMenu = new wxMenu;
     winMenu->AppendCheckItem(LXMENU_VIEW_VIEWPOINTSTP, _("&Camera"));
     winMenu->AppendCheckItem(LXMENU_VIEW_MODELSTP, _("&Scene"));
+    winMenu->Append(LXMENU_EXPROT, _("&Animation"));
     winMenu->AppendSeparator();
     winMenu->Append(LXMENU_TOOLS_OPTIONS, _("&Options..."));
 
@@ -492,6 +496,15 @@ void lxFrame::OnAll(wxCommandEvent& event)
 
     case LXMENU_HELP_CONTENTS:
       this->m_helpController->DisplayContents();
+      break;
+
+    case LXMENU_EXPROT:
+      this->ExportRotationPictures();
+      break;
+
+    case LXMENU_EXPFIT:
+      this->canvas->SetSize(720,576);
+      this->Fit();
       break;
 
     case LXMENU_HELP_CONTROL:
@@ -970,7 +983,23 @@ void lxFrame::OpenFile(const wxString & fName)
 }
 
 
-
+void lxFrame::ExportRotationPictures() {
+  wxMessageDialog dlg(this, _("This is only EXPERIMENTAL function! Are you sure?"), _("Warning"), wxYES_NO | wxNO_DEFAULT | wxICON_EXCLAMATION | wxCENTRE);
+  if (dlg.ShowModal() != wxID_YES) return;
+  int i;
+  lxRenderData * tmpRD = new lxRenderData();
+  tmpRD->m_imgFileType = 1;
+  tmpRD->m_askFName = false;
+  this->canvas->setup->cam_orig_dir = 0.0;
+	this->canvas->setup->RotateCameraF(0.0);
+  for(i = 0; i < 600; i++) {
+    this->canvas->ForceRefresh();
+    tmpRD->m_imgFileName = wxString::Format(_T("ROT%04d.png"), i);
+    tmpRD->Render(this, this->canvas);
+		this->canvas->setup->RotateCameraF(0.6);
+  }
+  delete tmpRD;
+}
 
 
 

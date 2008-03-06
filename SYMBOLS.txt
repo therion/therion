@@ -24,13 +24,11 @@ camp: SKBB
 cavepearl: SKBB 
 clay: SKBB 
 continuation: UIS 
-continuationstation: UIS 
 crystal: UIS 
 curtain: UIS 
 debris: UIS 
 disk: UIS 
 entrance: UIS 
-entrancestation: UIS 
 fixedladder: SKBB 
 flowstone: UIS 
 flowstonechoke: NSS 
@@ -65,13 +63,13 @@ sodastraw: UIS
 spring: SKBB 
 stalactite: UIS 
 stalagmite: UIS 
+station: SKBB 
 station_fixed: ASF 
 station_natural: ASF 
 station_painted: SKBB 
 station_temporary: ASF SKBB 
 steps: SKBB 
 traverse: SKBB 
-u: SKBB 
 vegetabledebris: ASF 
 wallcalcite: UIS 
 water: UIS 
@@ -104,7 +102,6 @@ section: SKBB
 slope: BCRA SKBB 
 survey_cave: SKBB UIS 
 survey_surface: SKBB 
-u: SKBB 
 wall_bedrock: UIS 
 wall_blocks: SKBB 
 wall_clay: SKBB 
@@ -133,5 +130,4 @@ pebbles: SKBB
 sand: UIS 
 snow: SKBB 
 sump: UIS 
-u: SKBB 
 water: UIS 

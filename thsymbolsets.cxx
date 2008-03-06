@@ -35,13 +35,11 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYMP_CAVEPEARL][3] = 1;
 	thsymsets_symbols[SYMP_CLAY][3] = 1;
 	thsymsets_symbols[SYMP_CONTINUATION][5] = 1;
-	thsymsets_symbols[SYMP_CONTINUATIONSTATION][5] = 1;
 	thsymsets_symbols[SYMP_CRYSTAL][5] = 1;
 	thsymsets_symbols[SYMP_CURTAIN][5] = 1;
 	thsymsets_symbols[SYMP_DEBRIS][5] = 1;
 	thsymsets_symbols[SYMP_DISK][5] = 1;
 	thsymsets_symbols[SYMP_ENTRANCE][5] = 1;
-	thsymsets_symbols[SYMP_ENTRANCESTATION][5] = 1;
 	thsymsets_symbols[SYMP_FIXEDLADDER][3] = 1;
 	thsymsets_symbols[SYMP_FLOWSTONE][5] = 1;
 	thsymsets_symbols[SYMP_FLOWSTONECHOKE][2] = 1;
@@ -79,6 +77,7 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYMP_SPRING][3] = 1;
 	thsymsets_symbols[SYMP_STALACTITE][5] = 1;
 	thsymsets_symbols[SYMP_STALAGMITE][5] = 1;
+	thsymsets_symbols[SYMP_STATION][3] = 1;
 	thsymsets_symbols[SYMP_STATION_FIXED][0] = 1;
 	thsymsets_symbols[SYMP_STATION_NATURAL][0] = 1;
 	thsymsets_symbols[SYMP_STATION_PAINTED][3] = 1;
@@ -86,7 +85,6 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYMP_STATION_TEMPORARY][3] = 1;
 	thsymsets_symbols[SYMP_STEPS][3] = 1;
 	thsymsets_symbols[SYMP_TRAVERSE][3] = 1;
-	thsymsets_symbols[SYMP_U][3] = 1;
 	thsymsets_symbols[SYMP_VEGETABLEDEBRIS][0] = 1;
 	thsymsets_symbols[SYMP_WALLCALCITE][5] = 1;
 	thsymsets_symbols[SYMP_WATER][5] = 1;
@@ -120,7 +118,6 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYML_SURVEY_CAVE][3] = 1;
 	thsymsets_symbols[SYML_SURVEY_CAVE][5] = 1;
 	thsymsets_symbols[SYML_SURVEY_SURFACE][3] = 1;
-	thsymsets_symbols[SYML_U][3] = 1;
 	thsymsets_symbols[SYML_WALL_BEDROCK][5] = 1;
 	thsymsets_symbols[SYML_WALL_BLOCKS][3] = 1;
 	thsymsets_symbols[SYML_WALL_CLAY][3] = 1;
@@ -147,6 +144,5 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYMA_SAND][5] = 1;
 	thsymsets_symbols[SYMA_SNOW][3] = 1;
 	thsymsets_symbols[SYMA_SUMP][5] = 1;
-	thsymsets_symbols[SYMA_U][3] = 1;
 	thsymsets_symbols[SYMA_WATER][5] = 1;
 }

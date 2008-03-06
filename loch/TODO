@@ -1,6 +1,8 @@
 TODO:
++ check loch color table under linux, if problem use therion instead of VTK
++ survey tree
++ animation toolbox
 + multiple surfaces support
-+ surface backface culling
 + finish SK translation
 + fix Mac OS X built
 + search for help and localization files under Linux
@@ -8,7 +10,6 @@ TODO:
 + channel brightness adjustment in stereo mode
 + station labeling
 + PNG texture support
-+ survey tree
 + color schemes (altitude, surveys, date)
 + add closed file mode
 + File->Close
@@ -17,8 +18,6 @@ TODO:
 BUGS:
 + inactive loading file window
 + radiobutton not active when rotation
-+ check 64/32bit and little/big endian portability
-
 
 MAC OS X:
  a) Udelat z ni bundlovanou aplikaci

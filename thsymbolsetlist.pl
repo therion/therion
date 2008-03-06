@@ -8,6 +8,7 @@ while (<I>) {
 close(I);
 
 $SYMHASH{a_} = "noassign hidden";
+$SYMHASH{a_u} = "";
 $SYMHASH{a_zzz} = "noassign hidden";
 
 $SYMHASH{l_border_invisible} = "hidden";
@@ -16,6 +17,7 @@ $SYMHASH{l_wall_invisible} = "hidden";
 $SYMHASH{l_undefined} = "noassign";
 $SYMHASH{l_label} = "noassign";
 $SYMHASH{l_rope} = "noassign hidden";
+$SYMHASH{l_u} = "";
 $SYMHASH{l_} = "noassign hidden";
 $SYMHASH{l_zzz} = "noassign hidden";
 
@@ -37,8 +39,8 @@ $SYMHASH{p_passageheight_both} = "noassign";
 $SYMHASH{p_passageheight_unsigned} = "noassign";
 $SYMHASH{p_surfacestation} = "noassign";
 $SYMHASH{p_cavestation} = "noassign";
-$SYMHASH{p_entrancestation} = "hidden";
-$SYMHASH{p_continuationstation} = "hidden";
+$SYMHASH{p_station} = "hidden";
+$SYMHASH{p_u} = "";
 $SYMHASH{p_} = "noassign hidden";
 $SYMHASH{p_zzz} = "noassign hidden";
 

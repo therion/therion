@@ -486,9 +486,6 @@ void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double
 
 void thdataobject::parse_attribute(char * name, char * value) {
 
-  int sv(0), at(0);
-  long lv(0);
-  double d(0.0);
   // check name
   if ((name == NULL) || (strlen(name) == 0))
     ththrow(("epmty attribute name not allowed"))
@@ -497,31 +494,7 @@ void thdataobject::parse_attribute(char * name, char * value) {
   if (!th_is_attr_name(name))
     ththrow(("invalid characters in attribute name -- %s", name))
 
-  // check value type
-  at = THATTR_STRING;
-  if ((value != NULL) && (strlen(value) > 0)) {
-    thparse_double(sv, d, value);
-    if (sv == TT_SV_NUMBER) {
-      at = THATTR_DOUBLE;
-      lv = long(d);
-      if (double(lv) == d) {
-        at = THATTR_INTEGER;
-      }
-    }
-  }
-
-  // insert attribute
-  switch (at) {
-    case THATTR_INTEGER:
-      this->db->attr.insert_attribute(name, lv, long(this->id));
-      break;
-    case THATTR_DOUBLE:
-      this->db->attr.insert_attribute(name, d, long(this->id));
-      break;
-    case THATTR_STRING:
-      this->db->attr.insert_attribute(name, value, long(this->id));
-      break;
-  }
+  this->db->attr.insert_attribute(name, value, long(this->id));
 }
 
 

@@ -2,41 +2,45 @@ HOT LIST:
 
 + update TODO list
 
-+ thbook+CHANGES: text command in configuration & initialization file
++ thbook: text command in configuration & initialization file
 + check text command in configuration & initialization file + samples
-+ thbook+CHANGES: layout color labels on|off
-+ thbook+CHANGES: grid-coords (off)|border|all
++ thbook: layout color labels on|off
++ thbook: grid-coords (off)|border|all
 + thbook: symbol-set name is case sentive!!!
-+ thbook+CHANGES: "not" station flag prefix
++ thbook: "not" station flag prefix
 + thbook: sink,spring,doline,probe,air-draught(:winter|summer) flags to 
   stations
 + thbook: export continuation-list -attributes (on)|off
 + thbook: centerline flags approx(imate)
 + thbook: explored station flag + -explored option to continuation
++ thbook: export survey-list, continuation-list
++ thbook: removed -code option from station & point continuation
++ thbook: setting station attributes
++ thbook: -entrance in survey
++ thbook: export cave-list -location on|(off)
++ thbook: map-comment add instead of replace
++ samples: u-symbols + user defined legend
 
-+ zas nefunguje select dumbier.jmn!!!
-+ export: survey-list, entrance-list, continuation-list, rigging-list
-+ explored + approximate length to survey statistics
++ show/hide U symbols
 + remode ATTR_  _x from mp code, use save instead 
-+ p_centerlinestation(pos,mark,text,flags)
 + q-marks sample
-+ check color table under linux, if problem use therion instead of VTK
++ u-symbols sample
+
++ add cave structure to continuation-list
++ add -source on|(off) to table export
 + KML table export
-+ attributes to shots/stations
++ attributes to shots
 + scrap morphing algorithm setup to configuration file
 + 3D generation algorithm - do not remove join points
 + 3D generation algorithm - take xelevation data into account
 + scrap name with "_" exported with "." when debug scrap-names
 + fix hash export in AutoCAD DXF file format	
 + fix usage of extra morphing points (sometimes are ignored)
-+ -style option to html table export
 + support cross sections (LRUD) in XVI
 + allow (direction + distance) instead of LRUD
-+ export rigging list + -text option to point anchor
 + polyline to bezier conversion mode
 + more complex attribute export
 + link same continuations within different projections
-+ user defined symbols to legends 
 + symbol show/hide of user defined symbols (using subtypes)
 + add shot/stations flags to attributes when exported in metapost
 + add -survey-lines on|off|auto option to scrap - auto by default -
@@ -136,6 +140,7 @@ therion:
 
 + redo database export
 + morphing: add additional features (line extra, point extra:point|distance)
++ export rigging list + -text option to point anchor
 + add morphing features browsing code
 + add fast mode for xtherion - just to generate survey and map structures
 + surface selection according to coverage
@@ -159,4 +164,3 @@ xtherion:
 + solve splitting of curves with id
 + let xtherion compilation run without configuration file 
   (only with opened files)
-m

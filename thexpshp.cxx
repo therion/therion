@@ -520,10 +520,6 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
               (thmatch_string(ppt->subtype, thtt_point_subtypes)) : ppt->m_subtype_str);
         this->m_fpoints.m_attributes.copy_attributes(thdb.attr.get_object(ppt->id));
         switch (ppt->type) {
-          case TT_POINT_TYPE_CONTINUATION:
-            if ((ppt->code != NULL) && (strlen(ppt->code) > 0))
-              this->m_fpoints.m_attributes.insert_attribute("_CODE",ppt->code);
-            break;
           case TT_POINT_TYPE_LABEL:
           case TT_POINT_TYPE_REMARK:
             if ((ppt->text != NULL) && (strlen(ppt->text) > 0))

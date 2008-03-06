@@ -334,7 +334,7 @@ def a_pebbles_SKBB (expr p) =
   draw tmp_pic;
 enddef;
 
-def a_u_SKBB (expr p, subtype) =
+def a_u (expr p) =
     T:=identity;
     thfill p withcolor red;
 enddef;

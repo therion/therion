@@ -145,7 +145,6 @@ thdatass::thdatass()
   this->comment = NULL;
   this->flags = TT_STATIONFLAG_NONE;
   this->psurvey = NULL;
-  this->code = NULL;
   this->explored = thnan;
 }
 

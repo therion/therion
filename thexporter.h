@@ -48,6 +48,7 @@ enum {
   TT_EXP_DATABASE,  ///< Database export.
   TT_EXP_CONTLIST,  ///< Table with specified data.
   TT_EXP_SURVEYLIST,  ///< Table with specified data.
+  TT_EXP_CAVELIST,  ///< Export entrance list.
 };
 
 
@@ -57,6 +58,7 @@ enum {
  
 static const thstok thtt_exporter[] = {
   {"atlas", TT_EXP_ATLAS},
+  {"cave-list", TT_EXP_CAVELIST},
   {"continuation-list", TT_EXP_CONTLIST},
   {"database", TT_EXP_DATABASE},
   {"map", TT_EXP_MAP},

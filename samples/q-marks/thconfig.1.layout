@@ -5,7 +5,7 @@ layout common
   map-header 0 0 off
 #! When you export map and you use
 #!CODE
-symbol-show point continuation-station
+####TODO#### symbol-show point continuation-station
 #!ENDCODE
 #! in your layout, station with continuation flag specified
 #! is marked by question mark.
