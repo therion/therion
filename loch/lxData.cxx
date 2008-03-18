@@ -41,6 +41,7 @@
 #include <vtkVoidArray.h>
 #include <vtkCellData.h>
 #include <vtkPointData.h>
+#include <vtkPolyDataWriter.h>
 #include <locale.h>
 #include <GL/glu.h>
 #include <map>
@@ -530,3 +531,11 @@ void lxData::Rebuild()
 }
 
 
+void lxData::ExportVTK(wxString fileName)
+{
+  vtkPolyDataWriter * w = vtkPolyDataWriter::New();
+  w->SetFileName(fileName.mbc_str());
+  w->SetInput(this->allWallsStripped->GetOutput());
+  w->Write();
+  w->Delete();
+}

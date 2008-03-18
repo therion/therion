@@ -99,6 +99,7 @@ BEGIN_EVENT_TABLE(lxFrame, wxFrame)
     EVT_MENU(LXMENU_FILE_RELOAD, lxFrame::OnAll)
     EVT_MENU(LXMENU_FILE_RENDER, lxFrame::OnAll)
     EVT_MENU(LXMENU_FILE_RENDER_SETUP, lxFrame::OnAll)
+    EVT_MENU(LXMENU_FILE_EXPORT, lxFrame::OnAll)
     EVT_MENU(LXMENU_EXPROT, lxFrame::OnAll)
     EVT_MENU(LXMENU_EXPFIT, lxFrame::OnAll)
     EVT_MENU_RANGE(LXMENU_HELP_CONTENTS, LXMENU_HELP_ABOUT, lxFrame::OnAll)
@@ -240,6 +241,8 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     fileMenu->AppendSeparator();
     fileMenu->Append(LXMENU_FILE_RENDER, _("&Render to file\tCtrl+P"));
     fileMenu->Append(LXMENU_FILE_RENDER_SETUP, _("Rendering &setup..."));
+    fileMenu->AppendSeparator();
+    fileMenu->Append(LXMENU_FILE_EXPORT, _("&Export...\tCtrl+X"));
     fileMenu->AppendSeparator();
     fileMenu->Append(wxID_EXIT, _("E&xit\tCtrl+Q"));
     this->m_fileHistory->UseMenu(fileMenu);
@@ -580,6 +583,29 @@ void lxFrame::OnAll(wxCommandEvent& event)
       break;
 
 		case LXTB_OPEN:
+    
+    case LXMENU_FILE_EXPORT:
+      {
+        wxFileDialog dialog
+                 (
+                    this,
+                    _("Export"),
+                    wxEmptyString,
+                    wxEmptyString,
+                    _("VTK file (*.vtk)|*.vtk"),
+                    wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+                  );
+
+       dialog.SetDirectory(this->m_fileDir);
+			 dialog.CentreOnParent();
+
+       if (dialog.ShowModal() == wxID_OK) {
+          this->data->ExportVTK(dialog.GetPath());
+          this->canvas->ForceRefresh();
+        }
+      }
+      break;
+
     case LXMENU_FILE_OPEN:
       {
         wxFileDialog dialog

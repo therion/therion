@@ -110,6 +110,7 @@ struct lxData {
   void Clear();
   void Rebuild();
   void InitTextures();
+  void ExportVTK(wxString fileName);
   
 };
 
