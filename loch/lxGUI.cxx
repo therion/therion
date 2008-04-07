@@ -582,8 +582,6 @@ void lxFrame::OnAll(wxCommandEvent& event)
       this->canvas->ForceRefresh();
       break;
 
-		case LXTB_OPEN:
-    
     case LXMENU_FILE_EXPORT:
       {
         wxFileDialog dialog
@@ -606,6 +604,7 @@ void lxFrame::OnAll(wxCommandEvent& event)
       }
       break;
 
+		case LXTB_OPEN:
     case LXMENU_FILE_OPEN:
       {
         wxFileDialog dialog

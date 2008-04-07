@@ -2233,7 +2233,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         thexpmat_stationflag(TT_STATIONFLAG_SINK, "sink")
         thexpmat_stationflag(TT_STATIONFLAG_SPRING, "spring")
         thexpmat_stationflag(TT_STATIONFLAG_DOLINE, "doline")
-        thexpmat_stationflag(TT_STATIONFLAG_PROBE, "probe")
+        thexpmat_stationflag(TT_STATIONFLAG_DIG, "dig")
         thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT, "air-draught")
         thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_SUMMER, "air-draught:summer")
         thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_WINTER, "air-draught:winter")

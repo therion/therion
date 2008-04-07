@@ -834,7 +834,7 @@ void print_surface_bitmaps (ofstream &PAGEDEF, double shiftx, double shifty) {
   PAGEDEF.precision(6);
   for (list<surfpictrecord>::iterator I = SURFPICTLIST.begin();
                                       I != SURFPICTLIST.end(); I++) {
-    if (mode == MAP && LAYOUT.transparency || LAYOUT.OCG) {
+    if (mode == (MAP && LAYOUT.transparency) || LAYOUT.OCG) {
       PAGEDEF << "\\bitmapcorr{";
     } else {
       PAGEDEF << "\\bitmap{";
@@ -941,8 +941,9 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
   if (LAYOUT.proj == 0) {
     paired out,tmp;
     int ii,jj;
-    for (double i = grid_init_x, ii=0; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize, ii++) {
-      for (double j = grid_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
+    double i, j;
+    for (i = grid_init_x, ii=0; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize, ii++) {
+      for (j = grid_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
         col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
         row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
 	elem = col + 3*row;
@@ -984,7 +985,8 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
   else {
     grid_init_x = LLX;
     int jj;
-    for (double j = grid_init_y,jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize,jj++) {
+    double j;
+    for (j = grid_init_y,jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize,jj++) {
 //      PAGEDEF << "\\PL{q 3 w 0 0 1 RG 0 " << j-LLY << "  m " << HS << " " << j-LLY << " l S Q}";
       for (double i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
         col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));

@@ -117,7 +117,7 @@ last_write = -1;
 % in used font; it's used by <A HREF="">free_text</A> macro.
 
 %string strut_string;
-%strut_string = "(Ãˆ";
+%strut_string = "(È";
 
 % @VARIABLE
 % file_name --

@@ -1,34 +1,23 @@
 HOT LIST:
 
-+ update TODO list
-
-+ thbook: text command in configuration & initialization file
-+ check text command in configuration & initialization file + samples
-+ thbook: layout color labels on|off
-+ thbook: grid-coords (off)|border|all
-+ thbook: symbol-set name is case sentive!!!
-+ thbook: "not" station flag prefix
-+ thbook: sink,spring,doline,probe,air-draught(:winter|summer) flags to 
-  stations
++ thbook: removed -code option from station & point continuation
 + thbook: export continuation-list -attributes (on)|off
 + thbook: centerline flags approx(imate)
 + thbook: explored station flag + -explored option to continuation
 + thbook: export survey-list, continuation-list
-+ thbook: removed -code option from station & point continuation
-+ thbook: setting station attributes
 + thbook: -entrance in survey
 + thbook: export cave-list -location on|(off)
-+ thbook: map-comment add instead of replace
+
 + samples: u-symbols + user defined legend
++ samples: q-marks sample
 
-+ show/hide U symbols
++ update TODO list
 + remode ATTR_  _x from mp code, use save instead 
-+ q-marks sample
-+ u-symbols sample
-
++ attributes sample
++ show/hide U symbols
++ KML table export
 + add cave structure to continuation-list
 + add -source on|(off) to table export
-+ KML table export
 + attributes to shots
 + scrap morphing algorithm setup to configuration file
 + 3D generation algorithm - do not remove join points

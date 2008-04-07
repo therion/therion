@@ -70,6 +70,7 @@ station_painted: SKBB
 station_temporary: ASF SKBB 
 steps: SKBB 
 traverse: SKBB 
+u: SKBB 
 vegetabledebris: ASF 
 wallcalcite: UIS 
 water: UIS 

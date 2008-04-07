@@ -71,7 +71,8 @@ class thsurveystat {
   
   public:
   
-  double length, length_duplicate, length_surface, length_approx, length_explored;
+  double length, length_duplicate, length_splay, length_surface, 
+    length_approx, length_explored;
   
   class thdb1ds * station_top, * station_bottom,
     * station_east, * station_west, * station_north, * station_south;
@@ -80,7 +81,7 @@ class thsurveystat {
     
   unsigned long num_stations, num_shots, num_entrances;
   
-  thsurveystat() : length(0.0), length_duplicate(0.0), 
+  thsurveystat() : length(0.0), length_duplicate(0.0), length_splay(0.0),
     length_surface(0.0), length_approx(0.0), length_explored(0.0),
     station_top(NULL), station_bottom(NULL), station_east(NULL), 
     station_west(NULL), station_north(NULL), station_south(NULL),

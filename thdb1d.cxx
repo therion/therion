@@ -148,9 +148,9 @@ void thdb1d::scan_data()
             // check station marks
             tsp1 = &(this->station_vec[lei->from.id - 1]);
             tsp2 = &(this->station_vec[lei->to.id - 1]);
-            if (lei->s_mark > tsp1->mark)
+            if (lei->s_mark > (unsigned int)tsp1->mark)
               tsp1->mark = lei->s_mark;
-            if (lei->s_mark > tsp2->mark)
+            if (lei->s_mark > (unsigned int)tsp2->mark)
               tsp2->mark = lei->s_mark;
             
             // set underground station flag
@@ -810,6 +810,13 @@ void thdb1d::process_tree()
         ));
     }
     
+    // hide splay-ed flags from extended elevation2
+    if ((iil->leg->flags && TT_LEGFLAG_SPLAY) != 0) {
+      iil->leg->extend |= TT_EXTENDFLAG_HIDE;
+      a2->extend |= TT_EXTENDFLAG_HIDE;
+      a1->extend |= TT_EXTENDFLAG_HIDE;
+    }
+    
     a2->negative = a1;
     a2->leg = a1->leg;
     a2->start_node = a1->end_node;
@@ -1068,6 +1075,8 @@ void thdb1d::process_survey_stat() {
     // skusi ci je duplikovane
     if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
       lit->data->stat_dlength += lit->leg->total_length;
+    else if ((lit->leg->flags & TT_LEGFLAG_SPLAY) != 0)
+      lit->data->stat_splaylength += lit->leg->total_length;
     // ak nie skusi ci je surface
     else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
       lit->data->stat_slength += lit->leg->total_length;
@@ -1094,6 +1103,8 @@ void thdb1d::process_survey_stat() {
       // skusi ci je duplikovane
       if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
         ss->stat.length_duplicate += lit->leg->total_length;
+      else if ((lit->leg->flags & TT_LEGFLAG_SPLAY) != 0)
+        ss->stat.length_splay += lit->leg->total_length;
       // ak nie skusi ci je surface
       else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
         ss->stat.length_surface += lit->leg->total_length;

@@ -76,6 +76,7 @@ thdata::thdata()
   
   this->stat_length = 0.0;
   this->stat_dlength = 0.0;
+  this->stat_splaylength = 0.0;
   this->stat_slength = 0.0;
   this->stat_alength = 0.0;
   
@@ -2309,7 +2310,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
           setstflag(TT_DATASFLAG_SINK, TT_STATIONFLAG_SINK);
           setstflag(TT_DATASFLAG_SPRING, TT_STATIONFLAG_SPRING);
           setstflag(TT_DATASFLAG_DOLINE, TT_STATIONFLAG_DOLINE);
-          setstflag(TT_DATASFLAG_PROBE, TT_STATIONFLAG_PROBE);
+          setstflag(TT_DATASFLAG_DIG, TT_STATIONFLAG_DIG);
 
           case TT_DATASFLAG_FIXED:              
             if (notflag)
@@ -2419,6 +2420,13 @@ void thdata::set_data_flags(int nargs, char ** args)
           this->d_flags &= ~TT_LEGFLAG_SURFACE;
         else
           this->d_flags |= TT_LEGFLAG_SURFACE;
+        notb = false;
+        break;
+      case TT_DATALFLAG_SPLAY:
+        if (notb)
+          this->d_flags &= ~TT_LEGFLAG_SPLAY;
+        else
+          this->d_flags |= TT_LEGFLAG_SPLAY;
         notb = false;
         break;
       case TT_DATALFLAG_APPROXIMATE:

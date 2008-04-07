@@ -1,4 +1,21 @@
+\eject
+{\baselineskip=12pt
+\setbox1=\hbox{\eightit We both step and do not step in the same rivers. 
+We are and are not.}
+\line{\pdfximage {pic/herakl.pdf}\pdfrefximage\pdflastximage\hss}
+\copy1
+\vskip6pt
+\hbox to \wd1{\hfil\eightrm ---Heraclitus of Ephesus, 
+             {\eightmit 6}th/{\eightmit 5}th century BC}
+}
+
+
+
+
+
+{\let\eject\relax
 \chapter Processing data.
+}
 
 Besides data files, which contain survey data, Therion uses a configuration file, 
 which contains instructions on how the data should be presented.
@@ -121,6 +138,23 @@ Works like |input| command in data files---includes other files.
 \endoptions
 
 
+\subsubchapter `text'.
+
+\description
+  Specifies translation of any default therion text in output.
+\enddescription
+
+\syntax
+  |text <language ID> <therion text> <my text>|
+\endsyntax
+
+\arguments
+*  |<language ID>| = standard ISO language identifier (e.g. |en| or |en_UK|)
+*  |<therion text>| = therion text to translate. For list of therion texts and 
+available translations, see |thlang/texts.txt| file.
+\endarguments
+
+
 \subsubchapter `layout'.
 
 \description
@@ -159,6 +193,7 @@ Works like |input| command in data files---includes other files.
     grid <off/top/bottom>
     grid-origin <x> <y> <x> <units>
     grid-size <x> <y> <z> <units>
+    grid-coords <off/border/all>
     origin <x> <y> <z> <units>
     origin-label <x-label> <y-label>
     own-pages <number>
@@ -205,7 +240,7 @@ endlayout|
   * |rotate <value>| = rotates the map (M, A; default: |0|)
   * |units <metric/imperial>| = set output units (M, A; default: |metric|)
   * |symbol-set <symbol-set>| = use |symbol-set| for all map symbols,
-    if available (M, A)
+    if available. Be aware, that symbol set name is case sensitive. (M, A)
     
     Therion uses following predefined symbol sets:\par
     UIS (International Union of Speleology)\par
@@ -291,6 +326,8 @@ endlayout|
     origin (M, A)
   * |grid-size <x> <y> <z> <units>| = set grid size in real
     units (M, A; default is equal to scalebar size)
+  * |grid-coords <off/border/all>| = where to label grid with
+    coordinates. (M, A; default: |off|)
   * |origin <x> <y> <z> <units>| = set origin of atlas pages (M, A)
   * |origin-label <x-label> <y-label>| = set label for atlas page
     which has the lower left corner at the given origin coordinates
@@ -337,11 +374,16 @@ endlayout|
     See the {\it Appendix} if 
     you want to  add or customize translations. (M, A)
   * |colo[u]r <item> <colour>| = customize colour for special map
-    items (map-fg, map-bg, preview-above, preview-below). 
+    items (map-fg, map-bg, preview-above, preview-below, label). 
     Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
-    for RGB colours. Special colour specification for |map-fg| is
-    |altitude|, |scrap| or |map|, in which case the map is coloured according to
-    altitude, scraps or maps.
+    for RGB colours. 
+    
+    For |map-fg|, you can use |altitude|, |scrap| or |map| as color too. 
+    In this case the map is coloured according to altitude, scraps or maps.
+
+    For labels, you can switch colour |on/off|. If |on|, labels are coloured
+    with same colour as associated scrap.
+    
   * |debug <on/all/first/second/scrap-names/station-names/off>| = 
     draw scrap in different stages
     of transformation in different colours to see how Therion distorts

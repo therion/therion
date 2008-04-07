@@ -2,7 +2,21 @@
 Therion 0.5.2 (YYYY-MM-DD):
 
 therion:
-
+ * improved station flags handling. Added new flags for stations: sink, spring,
+   doline, dig, air-draught(:winter|summer). Also `not' is supported before flag.
+   User defined attributes may be added to stations using flag `attr' followed
+   by attribute name and value.
+ * added `splay' survey shot flag
+ * continuation code option was removed from "point continuation" and
+   station. Use user defined attributes instead.
+ * grid labeling using coordinates - layout option 
+   grid-coords off|border|all
+ * ability to color labels by scrap color using `color labels on|off'
+   in layout
+ * user can change translation of therion texts at runtime using `text'
+   option in configuration or initialization files
+ * when layouts are copied one into another, map-comments are concatenated
+   instead of replaced
  * added russian translations + encodings (thanks to Vasily Vl. Suhachev)
  * updated french translations (thanks to Gilbert Fernandes)
  * bugs fixed:
@@ -23,7 +37,7 @@ xtherion:
    
 loch:
 
- * 
+ * export of cave 3D model in VTK format using File->Export
  * bugs fixed: 
    - wxWidgets 2.8.0 compilation thanks to Olly Betts
 

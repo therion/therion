@@ -712,13 +712,45 @@ def p_continuation_UIS(expr pos,theta,sc,al) =
   thdraw (0,-.2u);
 enddef;
 
-def p_station_SKBB(expr pos,mark,txt,flags) =
+def p_station_SKBB(expr pos,mark,txt)(text flags) =
+  T:=identity shifted pos;
+
   if mark=4: p_station_fixed(pos)
   elseif mark=3: p_station_natural(pos)
   elseif mark=2: p_station_painted(pos)
   elseif mark=1: p_station_temporary(pos)
   fi;
   % add entrance and continuation flags
+  
+  for i=flags:
+    pickup PenX;
+    if i="entrance":
+      thdraw (-.3u,-.25u) -- (-.2u,-.25u){dir 135} .. (0, .25u) .. {dir 225}(.2u,-.25u) -- (.3u,-.25u);
+      p_label.urt(txt,pos+(0.4u,0),0,0);
+    elseif i="sink":
+      thdraw (-0.25u,.01u){down} .. (0,-.3u) .. {up}(.25u,.01u);
+      pickup PenA;
+      thdraw (0,.3u) -- (0,-.14u) withcolor blue;
+      thdraw (-.12u,.05u) -- (0,-.14u) -- (.12u,.05u) withcolor blue;
+    elseif i="spring":
+      thdraw (-0.2u,-.05u){up} .. (0,.3u) .. {down}(.2u,-.05u);
+      pickup PenA;
+      thdraw (0,-.3u) -- (0,.1u) withcolor blue;
+      thdraw (-.15u,-.2u) -- (0,-.3u) -- (.15u,-.2u) withcolor blue;
+    elseif i="doline":
+      thdraw (-.3u,.15u){down}..(0,-0.15u)..{up}(.3u,.15u);
+    elseif i="probe":
+      thdraw (-.25u,.22u) -- (-.18u,.22u)--(-.14u,-.22u)--(.14u,-.22u)--(.18u,.22u)--(.25u,.22u);
+    elseif i="air-draught":
+      pickup PenA;
+      thdraw (-.3u,-.25u)--(-.3u,-.15u)--(.3u,.15u);
+      thdraw (-.15u,-.175u)--(-.15u,-.075u);
+      thdraw ((.1u,.05u)--(.3u,.15u)) rotatedaround ((.3u,.15u),35);
+      thdraw ((.1u,.05u)--(.3u,.15u)) rotatedaround ((.3u,.15u),-35);
+    fi;
+  
+  endfor;
+%  thdraw (0,0) withpen PenX withcolor red;
 enddef;
 
 def p_debug (expr col, pen, pos)=
@@ -733,7 +765,7 @@ def p_debug (expr col, pen, pos)=
 enddef;
 
 
-def p_u(expr pos,theta,sc,al) =
+def p_u_SKBB(expr pos,theta,sc,al,subtype) =
   T:=identity shifted pos;
   thdraw origin withpen pencircle scaled 4pt withcolor red;
 enddef;

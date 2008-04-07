@@ -85,6 +85,7 @@ void thsymsets_symbols_init() {
 	thsymsets_symbols[SYMP_STATION_TEMPORARY][3] = 1;
 	thsymsets_symbols[SYMP_STEPS][3] = 1;
 	thsymsets_symbols[SYMP_TRAVERSE][3] = 1;
+	thsymsets_symbols[SYMP_U][3] = 1;
 	thsymsets_symbols[SYMP_VEGETABLEDEBRIS][0] = 1;
 	thsymsets_symbols[SYMP_WALLCALCITE][5] = 1;
 	thsymsets_symbols[SYMP_WATER][5] = 1;

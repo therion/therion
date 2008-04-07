@@ -1,4 +1,17 @@
+\eject
+\vbox to0pt{\line{\pdfximage width 93.2mm {pic/agrippa.jpg}\pdfrefximage\pdflastximage\hss}\vss}\kern-2pt
+{\eightit\baselineskip16.3pt\leftskip2mm\rightskip6.8cm\parindent4.05cm
+Only for you, children of doctrine and learning, have we written this work. 
+Examine this book, ponder the meaning we have dispersed in various places 
+and gathered again; 
+what we have concealed in one place we have disclosed in another, 
+that it may be understood by your wisdom.\par
+\hbox to 91.2mm{\hfil\eightrm ---Henricus C. Agrippa ab Nettesheym, \eightmit 1533}
+}
+
+{\let\eject\relax
 \chapter Creating data files.
+}
 
 \subchapter Basics.
 
@@ -387,14 +400,20 @@ the command may be used anywhere.
     all subsequent stations are marked.
   * |flags <shot flags>| = set flags for following shots. The supported
     flags are: |surface| (for surface measurements), |duplicate| (for
-    duplicated surveys). Both are excluded from length calculations.
-    Also ``|not|'' is allowed before a flag.
+    duplicated surveys), |splay| (for short side legs that are hidden
+    in extended elevation by default). All are excluded from length 
+    calculations. Also ``|not|'' is allowed before a flag.
   * |station <station> <comment> [<flags>]| = set the station comment
-    and flags: entrance or continuation. If |""| is specified as a
-    comment, it is ignored. If the station has continuation flag set, you
-    can also specify arbitrary continuation code using code flag followed
-    by code string e.g.\hfil\break
-    |station 4 "pit to explore" continuation code V|
+    and its flags. If |""| is specified as a comment, it is ignored.
+    
+    Supported flags: |entrance|, |continuation|, |sink|, |spring|, |doline|,
+    |dig|, |air-draught[:winter/summer]|. Also ``|not|'' is allowed before a flag, 
+    to remove previously added flag.
+    
+    You can also specify custem attributes to the station using |attr| flag
+    followed by attribute name and value. Example:\hfil\break
+    |station 4 "pit to explore" continuation attr code V|
+    
   * |cs <coordinate system>| = coordinate system for stations with
     fixed coordinates
   * |fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]| 
