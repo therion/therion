@@ -2,11 +2,14 @@
 Therion 0.5.2 (YYYY-MM-DD):
 
 therion:
+ * statistics of explored but not yet surveyed passages. Just specify 
+   `-explored <length>' to point continuation or add `explored <length>' to
+   station flags and this length will be used in survey/cave statistics.
  * improved station flags handling. Added new flags for stations: sink, spring,
    doline, dig, air-draught(:winter|summer). Also `not' is supported before flag.
    User defined attributes may be added to stations using flag `attr' followed
    by attribute name and value.
- * added `splay' survey shot flag
+ * added `splay' and  `approx[imate]' survey shot flag
  * continuation code option was removed from "point continuation" and
    station. Use user defined attributes instead.
  * grid labeling using coordinates - layout option 

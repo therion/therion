@@ -703,6 +703,14 @@ def p_camp_SKBB (expr pos,r,s,al) =
     thdraw (0,-.4u)--(0,.5u);
 enddef;
 
+
+def p_dig_UIS (expr pos,r,s,al) = 
+    U:=(.4u, .5u);
+    T:=identity aligned al shifted pos;
+    thfill ((-.075u,-.5u){down} .. {up}(0.075u, -.5u) -- (0.075u, .15u) -- (0.3u, 0.15u) -- (0.3u, 0.5u) --
+    (-.3u, .5u) -- (-.3u, .15u) -- (-.075u, .15u) -- cycle) rotated 45;
+enddef;
+
 def p_continuation_UIS(expr pos,theta,sc,al) =
   U:=(.15u,.3u);
   T:=identity aligned al shifted pos;
@@ -765,7 +773,7 @@ def p_debug (expr col, pen, pos)=
 enddef;
 
 
-def p_u_SKBB(expr pos,theta,sc,al,subtype) =
+def p_u(expr pos,theta,sc,al) =
   T:=identity shifted pos;
   thdraw origin withpen pencircle scaled 4pt withcolor red;
 enddef;

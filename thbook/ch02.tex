@@ -226,7 +226,8 @@ the command may be used anywhere.
   Survey is the main data structure. 
  % Each data object must belong to a   survey. 
   Surveys may be nested---this allows a hierarchical structure 
-  to be built. 
+  to be built. Usually at some level of this hierarchical structure
+  survey represents a cave. 
 
   Each survey has its own namespace specified by its |<id>| argument. Objects 
   (like survey stations or scraps; see below) which belong to a subsurvey of 
@@ -288,6 +289,10 @@ the command may be used anywhere.
   changed
 
 * |title <string>| = description of the object
+
+* |entrance <station-name>| = specifies the main entrance to the cave represented
+  by this survey. If not specified and there is exactly one station marked entrance
+  in this survey, it is considered to represent a cave also.
 \endoptions
 
 
@@ -401,8 +406,15 @@ the command may be used anywhere.
   * |flags <shot flags>| = set flags for following shots. The supported
     flags are: |surface| (for surface measurements), |duplicate| (for
     duplicated surveys), |splay| (for short side legs that are hidden
-    in extended elevation by default). All are excluded from length 
-    calculations. Also ``|not|'' is allowed before a flag.
+    in extended elevation by default). Those are excluded from length 
+    calculations. 
+    
+    If flag is set to |approx[imate]|, it is included to total length
+    calculations, but also calculated separately in survey statistics.
+    It should be used for shots, that were not surveyed properly and need
+    to be resurveyed.
+    
+    Also ``|not|'' is allowed before a flag.
   * |station <station> <comment> [<flags>]| = set the station comment
     and its flags. If |""| is specified as a comment, it is ignored.
     
@@ -412,7 +424,14 @@ the command may be used anywhere.
     
     You can also specify custem attributes to the station using |attr| flag
     followed by attribute name and value. Example:\hfil\break
-    |station 4 "pit to explore" continuation attr code V|
+    |station 4 "pit to explore" continuation attr code "V"|
+    
+    If there is a passage, that was explored, but not surveyed yet, estimated
+    explored length of this passage can be added to the station with 
+    |continuation| flag. Just add |explored <explored-length>| to the station 
+    station flags. Explored lengths are a part of survey/cave statistics. 
+    Example:\hfil\break
+    |station 40 "ugly crollway" continuation explored 100m|
     
   * |cs <coordinate system>| = coordinate system for stations with
     fixed coordinates
@@ -660,7 +679,7 @@ Point is a command for drawing a point map symbol.
     {\it passage ends:} |continuation|, |narrow-end|, |low-end|, 
     |flowstone-choke|, |breakdown-choke|, |entrance|;
 
-    {\it others:} |archeo-material|, |paleo-material|, |vegetable-debris|, 
+    {\it others:} |dig|, |archeo-material|, |paleo-material|, |vegetable-debris|, 
     |root|, |water-flow|, 
     |spring|\[Always use |spring| and |sink| symbols with a |water-flow| arrow.], 
     |sink|, 
@@ -721,6 +740,9 @@ Point is a command for drawing a point map symbol.
     adjust the extension of the centreline using this option. 
   * |scrap <reference>| = if the point type is section, this is a 
     reference to a cross-section scrap. 
+  * |explored <length>| = if the point type is continuation, you can specify
+    length of passages explored but not surveyed yet. This value is afterwards
+    used in survey/cave statistics.
   * |text| = text of the label, remark or continuation. It may contain 
     following formatting keywords:
     
@@ -733,8 +755,6 @@ Point is a command for drawing a point map symbol.
     
     |<rm>|, |<it>|, |<bf>|, |<ss>|, |<si>| = font switches
         
-  * |code| = arbitrary extra code used when continuation is marked.
-    It is usually used to express quality of continuation.
   * |value| = value of height, passage-height or altitude label or point
      dimensions
 

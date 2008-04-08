@@ -63,6 +63,7 @@ let p_bridge = p_bridge_SKBB;
 let p_traverse = p_traverse_SKBB;
 let p_anchor = p_anchor_SKBB;
 let p_camp = p_camp_SKBB;
+let p_dig = p_dig_UIS;
 let p_noequipment = p_noequipment_SKBB;
 let p_sectionarrow = p_sectionarrow_SKBB;
 let p_continuation = p_continuation_UIS;
@@ -70,7 +71,6 @@ let p_airdraught = p_airdraught_UIS;
 let p_airdraught_winter = p_airdraught_winter_UIS;
 let p_airdraught_summer = p_airdraught_summer_UIS;
 let p_station = p_station_SKBB;
-let p_u = p_u_SKBB;
 
 let l_wall_bedrock = l_wall_bedrock_UIS;
 let l_wall_sand = l_wall_sand_SKBB;
@@ -112,7 +112,6 @@ let l_survey_surface = l_survey_surface_SKBB;
 let l_arrow = l_arrow_SKBB;
 let l_gradient = l_gradient_UIS;
 let l_mapconnection = l_mapconnection_SKBB;
-let l_u = l_u_SKBB;
 
 let a_water = a_water_UIS;
 let a_sump = a_sump_UIS;
@@ -127,7 +126,6 @@ let a_bedrock = a_bedrock_SKBB;
 let a_flowstone = a_flowstone_ASF;
 let a_moonmilk = a_moonmilk_SKBB;
 let a_dimensions = a_dimensions_SKBB;
-let a_u = a_u_SKBB;
 
 let s_northarrow = s_northarrow_SKBB;
 let s_scalebar = s_scalebar_SKBB;

@@ -27,6 +27,7 @@ continuation: UIS
 crystal: UIS 
 curtain: UIS 
 debris: UIS 
+dig: UIS 
 disk: UIS 
 entrance: UIS 
 fixedladder: SKBB 
@@ -70,7 +71,6 @@ station_painted: SKBB
 station_temporary: ASF SKBB 
 steps: SKBB 
 traverse: SKBB 
-u: SKBB 
 vegetabledebris: ASF 
 wallcalcite: UIS 
 water: UIS 

@@ -446,6 +446,10 @@ endlayout|
 
     |atlas| = 2D atlas in more pages
     
+    |cave-list| = summary table of caves
+    
+    |survey-list| = summary table of surveys
+    
     |continuation-list| = list of possible continuations
 
     |database| = SQL database with centreline
@@ -502,11 +506,21 @@ endlayout|
     you can change some layout properties directly within the export command.
   * |encoding/enc <encoding>| = set output encoding
 
-  {\it continuation-list:}\Nobreak
+  {\it common for lists:}\Nobreak
 
   * |format/fmt <format>| = set continuation output format. Currently the following
     output formats are supported: |text| (default), |html| and |dbf|.
+    
+  {\it continuation-list:}\Nobreak
 
+  * |attributes <(on)/off>| = set whether to export user defined attributes
+    in continuation list table.
+
+  {\it cave-list:}\Nobreak
+
+  * |location <on/(off)>| = set whether to export location of cave entrances in
+    the table.
+    
   {\it database:}\Nobreak
   
   * |format/fmt <format>| = currently only |sql|

@@ -1,15 +1,10 @@
 HOT LIST:
 
-+ thbook: removed -code option from station & point continuation
-+ thbook: export continuation-list -attributes (on)|off
-+ thbook: centerline flags approx(imate)
-+ thbook: explored station flag + -explored option to continuation
-+ thbook: export survey-list, continuation-list
-+ thbook: -entrance in survey
-+ thbook: export cave-list -location on|(off)
-
 + samples: u-symbols + user defined legend
 + samples: q-marks sample
++ samples: cave-list example
++ html list by defalult
++ odsadzovanie v txt subore
 
 + update TODO list
 + remode ATTR_  _x from mp code, use save instead 

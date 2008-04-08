@@ -142,6 +142,7 @@ enum {
   TT_POINT_TYPE_BRIDGE,
   TT_POINT_TYPE_TRAVERSE,
   TT_POINT_TYPE_CAMP,
+  TT_POINT_TYPE_DIG,
 
 // ukoncenia chodby
   TT_POINT_TYPE_CONTINUATION,
@@ -220,6 +221,7 @@ static const thstok thtt_point_types[] = {
   {"curtain",TT_POINT_TYPE_CURTAIN},
   {"date",TT_POINT_TYPE_DATE},
   {"debris",TT_POINT_TYPE_DEBRIS},
+  {"dig",TT_POINT_TYPE_DIG},
   {"dimensions",TT_POINT_TYPE_DIMENSIONS},
   {"disk",TT_POINT_TYPE_DISK},
   {"entrance",TT_POINT_TYPE_ENTRANCE},

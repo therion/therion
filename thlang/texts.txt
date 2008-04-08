@@ -363,6 +363,12 @@ pt: data de observação
 ru: дата наблюдения
 sk: dátum pozorovania
 
+therion: point dig
+cz: sonda
+en: dig
+sk: sonda
+fr: désobstruction
+
 therion: point continuation
 cz: možné pokračování
 de: mögliche Fortsetzung

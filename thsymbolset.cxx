@@ -373,6 +373,7 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         cp3(TT_POINT_TYPE_CURTAIN,SYMP_CURTAIN);
         cp3(TT_POINT_TYPE_DATE,SYMP_DATE);
         cp3(TT_POINT_TYPE_DEBRIS,SYMP_DEBRIS);
+        cp3(TT_POINT_TYPE_DIG,SYMP_DIG);
         cp3(TT_POINT_TYPE_DISK,SYMP_DISK);
         cp3(TT_POINT_TYPE_ENTRANCE,SYMP_ENTRANCE);
         cp3(TT_POINT_TYPE_FIXED_LADDER,SYMP_FIXEDLADDER);
@@ -1062,6 +1063,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_ROOT,thT("point root",layout->lang));
 
   // vystroj  
+  legend_point(SYMP_DIG,thT("point dig",layout->lang))
   legend_point(SYMP_NOEQUIPMENT,thT("point no-equipment",layout->lang));
   legend_point(SYMP_ANCHOR,thT("point anchor",layout->lang));
   legend_point(SYMP_ROPE,thT("point rope",layout->lang));
