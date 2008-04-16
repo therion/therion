@@ -55,6 +55,8 @@
 
 extern const thstok thtt__texts [];
 
+int therion_exit_state = 2;
+
 bool thverbose_mode = true;
 
 bool thtext_inline = false;
@@ -204,6 +206,7 @@ void thpause_exit() {
 
 void thexit(int exit_code)
 {
+  if (exit_code == EXIT_FAILURE) thcfg.xth_save();
   exit(exit_code);
 }  
 

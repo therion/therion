@@ -151,6 +151,7 @@ thdb2d::thdb2d()
   this->prj_lid = 0;
   thdb2dprjpr dpr = this->parse_projection("plan");
   this->prj_default = dpr.prj; 
+  this->m_udef_map.clear();
 }
 
 

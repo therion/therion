@@ -1,10 +1,11 @@
 HOT LIST:
 
-+ samples: u-symbols + user defined legend
 + samples: q-marks sample
 + samples: cave-list example
-+ html list by defalult
-+ odsadzovanie v txt subore
++ hide/show station attributes, change station export
++ check passage-height up/down
++ save/load compilation status from .xtherion.dat file
++ add shot type to attribute export
 
 + update TODO list
 + remode ATTR_  _x from mp code, use save instead 

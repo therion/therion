@@ -148,6 +148,10 @@ void thlibrary_init_layouts()
 	playout->surface_opacity = 0.75;
 	playout->def_surface= 0;
 	playout->surface = 0;
+	playout->def_color_labels= 0;
+	playout->color_labels = false;
+	playout->def_grid_coords = 0;
+	playout->grid_coords = 1;
 	playout->def_north= 0;
 	playout->north = 1;
 	playout->def_grid = 0;

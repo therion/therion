@@ -386,6 +386,8 @@ it: ERRORE
 ru: ОШИБКА
 sk: CHYBA
 
+therion: WARNING
+
 therion: OK
 cz: OK
 en: OK
@@ -1886,6 +1888,7 @@ sk: Otvoriť (bez obrázkov)
 
 therion: Import
 cz: Import
+it: Importa
 ru: Импорт
 sk: Import
 
@@ -2862,27 +2865,35 @@ ru: все
 sk: všetky symboly
 
 therion: New file
+it: Nuovo
 sk: Nový súbor
 
 therion: Open file
+it: Apri
 sk: Otvoriť súbor
 
 therion: Save file
+it: Salva
 sk: Uložiť súbor
 
 therion: Save file as
+it: Salva come
 sk: Uložiť súbor ako
 
 therion: Close file
+it: Chiudi
 sk: Zatvoriť súbor
 
 therion: Switch to text editor
+it: Editor di testi
 sk: Prepnúť na textový editor
 
 therion: Switch to map editor
+it: Editor di mappe
 sk: Prepnúť na mapový editor
 
 therion: Switch to compiler
+it: Compilatore
 sk: Prepnúť na kompilátor
 
 therion: Compile
@@ -2894,33 +2905,43 @@ ru: Компилировать
 sk: Kompilovať
 
 therion: Switch to select mode
+it: Modalità di selezione
 sk: Prepnúť do módu na výber objektu
 
 therion: Select next scrap
+it: Seleziona il prossimo scrap
 sk: Vyber nasledujúci scrap
 
 therion: Select next area
+it: Seleziona la prossima area
 sk: Vyber nasledujúcu plochu
 
 therion: Zoom in
+it: Zoom in
 sk: Zväčšiť
 
 therion: Zoom out
+it: Zoom out
 sk: Zmenšiť
 
 therion: Insert new scrap
+it: Inserisci un nuovo scrap
 sk: Vložiť nový scrap
 
 therion: Insert new point
+it: Inserisci un nuovo punto
 sk: Vložiť nový bod
 
 therion: Insert new line
+it: Inserisci una nuova linea
 sk: Vložiť novú krivku
 
 therion: Insert new area
+it: Inserisci una nuova area
 sk: Vložiť novú plochu
 
 therion: Delete selected object
+it: Rimuovi l'oggetto selezionato
 sk: Zmaž označené objekty
 
 therion: theme basic-symbols

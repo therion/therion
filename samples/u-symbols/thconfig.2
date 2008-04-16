@@ -4,7 +4,7 @@ encoding  utf-8
 source map.th2
 
 #! To process them correctly, you need to define symbols for them in
-#! metapost languge very simmilar way, as ordinary symbols are redefined.
+#! metapost languge same way, as ordinary symbols are redefined.
 #!
 #! Firstly point symbol. In the
 
@@ -78,8 +78,6 @@ def l_u_bat(expr P) =
     exitif cas > dlzka + (mojkrok / 3); % for rounding errors
   endfor;
 enddef;
-
-def l_u_bat_legend = l_u_bat(((.2,.2) -- (.8,.8)) inscale) enddef;
 #!ENDCODE
 
 #! and area u:bat symbol (pattern in this case)
@@ -97,6 +95,15 @@ def a_u_bat (expr Path) =
 enddef;
 #!ENDCODE
 
+#! These symbols will be included also in the legend. If you would like
+#! to change the way, how they are drawn there - just define appropriate
+#! macro. Its name should be symbol macro name with <code>_legend</code> 
+#! suffix.
+#!CODE
+def l_u_bat_legend = 
+  l_u_bat(((.2,.2) -- (.8,.8)) inscale) 
+enddef;
+#!ENDCODE
 
 code tex-map
 \legendcontent={%
@@ -112,12 +119,17 @@ endcode
 
 endlayout
 
+#! Finally, add description of your new symbols that will be shown 
+#! in the legend using <code>text</code> command anywhere 
+#! in the configuration file.
+#!CODE
 text en "point u:bat" "bat"
 text en "line u:bat" "bat path"
 text en "area u:bat" "lot of bats"
+#!ENDCODE
 
 #! After these definitions, you receive bat point, line and area
-#! with proper graphical representation.
+#! with proper graphical representation and legend boxes.
 
 export map -o map2.pdf -layout m -layout-map-header 0 0 nw -layout-legend on
 

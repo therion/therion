@@ -5,6 +5,7 @@ therion:
  * statistics of explored but not yet surveyed passages. Just specify 
    `-explored <length>' to point continuation or add `explored <length>' to
    station flags and this length will be used in survey/cave statistics.
+ * new handling of user defined symbols (including legend)
  * improved station flags handling. Added new flags for stations: sink, spring,
    doline, dig, air-draught(:winter|summer). Also `not' is supported before flag.
    User defined attributes may be added to stations using flag `attr' followed
@@ -37,12 +38,15 @@ xtherion:
    - toolbar icon decriptions added to localization files
  * single .xtherion.dat file containing survey and map structures is created
    after compilation
+ * bugs fixed: 
+   - "end of line" characters translation
    
 loch:
 
  * export of cave 3D model in VTK format using File->Export
  * bugs fixed: 
    - wxWidgets 2.8.0 compilation thanks to Olly Betts
+   - walls altitude coloring under Linux
 
 --------------------------------------------------------------------------------
 Therion 0.5.1 (2007-08-29):

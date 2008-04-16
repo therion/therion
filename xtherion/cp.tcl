@@ -36,6 +36,7 @@ set xth(cp,preview,acroread) 0
 set xth(cp,preview,acroreadpath) {}
 set xth(cp,preview,xpdf) 0
 set xth(cp,preview,xpdfpath) {}
+set xth(th_exit_number_last) 0
 switch $xth(gui,platform) {
   windows {
     if {[string length $xth(gui,appctrlcmd)] > 0} {

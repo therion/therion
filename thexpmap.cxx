@@ -2228,15 +2228,15 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           out->symset->assigned[macroid] ? slp->station->mark : 0,
           commentstr.c_str()
           );
-#define thexpmat_stationflag(flag,str) if ((slp->station->flags & flag) == flag) fprintf(out->file,",\"%s\"", str);
-        thexpmat_stationflag(TT_STATIONFLAG_ENTRANCE, "entrance")
-        thexpmat_stationflag(TT_STATIONFLAG_SINK, "sink")
-        thexpmat_stationflag(TT_STATIONFLAG_SPRING, "spring")
-        thexpmat_stationflag(TT_STATIONFLAG_DOLINE, "doline")
-        thexpmat_stationflag(TT_STATIONFLAG_DIG, "dig")
-        thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT, "air-draught")
-        thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_SUMMER, "air-draught:summer")
-        thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_WINTER, "air-draught:winter")
+#define thexpmat_stationflag(flag,mid,str) if (((slp->station->flags & flag) == flag) && out->symset->assigned[mid]) fprintf(out->file,",\"%s\"", str);
+        thexpmat_stationflag(TT_STATIONFLAG_ENTRANCE, SYMP_FLAG_ENTRANCE, "entrance")
+        thexpmat_stationflag(TT_STATIONFLAG_SINK, SYMP_FLAG_SINK, "sink")
+        thexpmat_stationflag(TT_STATIONFLAG_SPRING, SYMP_FLAG_SPRING, "spring")
+        thexpmat_stationflag(TT_STATIONFLAG_DOLINE, SYMP_FLAG_DOLINE, "doline")
+        thexpmat_stationflag(TT_STATIONFLAG_DIG, SYMP_FLAG_DIG, "dig")
+        thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT, SYMP_FLAG_AIRDRAUGHT, "air-draught")
+        thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_SUMMER, SYMP_FLAG_AIRDRAUGHT, "air-draught:summer")
+        thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_WINTER, SYMP_FLAG_AIRDRAUGHT, "air-draught:winter")
         fprintf(out->file,");\n");
         if (out->layout->is_debug_stationnames() && (slp->station_name.id != 0)) {
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);

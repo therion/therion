@@ -17,6 +17,7 @@ set xth(point_types) {
 	curtain
 	date
 	debris
+	dig
 	dimensions
 	disk
 	entrance
@@ -421,6 +422,7 @@ set xth(area_types) {
 ::msgcat::mcset sk "line map-connection" [encoding convertfrom utf-8 "prepojenie m\303\241p"]
 ::msgcat::mcset cz "line moonmilk" [encoding convertfrom utf-8 "nickam\303\255nek"]
 ::msgcat::mcset fr "line moonmilk" [encoding convertfrom utf-8 "mondmilch"]
+::msgcat::mcset it "line moonmilk" [encoding convertfrom utf-8 "moonmilk"]
 ::msgcat::mcset ru "line moonmilk" [encoding convertfrom utf-8 "\320\273\321\203\320\275\320\275\320\276\320\265 \320\274\320\276\320\273\320\276\320\272\320\276"]
 ::msgcat::mcset sk "line moonmilk" [encoding convertfrom utf-8 "n\303\241teky m\303\244kk\303\251ho sintra"]
 ::msgcat::mcset cz "line overhang" [encoding convertfrom utf-8 "p\305\231evis"]
@@ -959,6 +961,13 @@ set xth(area_types) {
 ::msgcat::mcset pt_PT "point debris" [encoding convertfrom utf-8 "escombros"]
 ::msgcat::mcset ru "point debris" [encoding convertfrom utf-8 "\321\211\320\265\320\261\320\265\320\275\321\214"]
 ::msgcat::mcset sk "point debris" [encoding convertfrom utf-8 "sutina"]
+::msgcat::mcset cz "point dig" [encoding convertfrom utf-8 "sonda"]
+::msgcat::mcset en "point dig" [encoding convertfrom utf-8 "dig"]
+::msgcat::mcset en_UK "point dig" [encoding convertfrom utf-8 "dig"]
+::msgcat::mcset en_US "point dig" [encoding convertfrom utf-8 "dig"]
+::msgcat::mcset fr "point dig" [encoding convertfrom utf-8 "d\303\251sobstruction"]
+::msgcat::mcset it "point dig" [encoding convertfrom utf-8 "disostruzione"]
+::msgcat::mcset sk "point dig" [encoding convertfrom utf-8 "sonda"]
 ::msgcat::mcset cz "point dimensions" [encoding convertfrom utf-8 "rozm\304\233ry"]
 ::msgcat::mcset de "point dimensions" [encoding convertfrom utf-8 "Ausdehnung"]
 ::msgcat::mcset es "point dimensions" [encoding convertfrom utf-8 "dimensiones"]

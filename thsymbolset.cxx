@@ -162,6 +162,14 @@ static const thstok thtt_symbol_group[] = {
 
 static const thstok thtt_symbol_point_spec[] = {
   {"cave-station", SYMP_CAVESTATION},
+  {"flag", SYMX_POINT_FLAG},
+  {"flag:air-draught", SYMP_FLAG_AIRDRAUGHT},
+  {"flag:continuation", SYMP_FLAG_CONTINUATION},
+  {"flag:dig", SYMP_FLAG_DIG},
+  {"flag:doline", SYMP_FLAG_DOLINE},
+  {"flag:entrance", SYMP_FLAG_ENTRANCE},
+  {"flag:sink", SYMP_FLAG_SINK},
+  {"flag:spring", SYMP_FLAG_SPRING},
   {"surface-station", SYMP_SURFACESTATION},
   {"wall-altitude", SYMP_WALLALTITUDE},
   {NULL, SYMX_}
@@ -311,6 +319,12 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         type = thmatch_token(types,thtt_symbol_point_spec);
         if (type != SYMX_)
           rv = type;
+        type = TT_POINT_TYPE_UNKNOWN;
+      }
+      if ((type == TT_POINT_TYPE_UNKNOWN) && (strlen(subtypes) > 0)) {
+        type = thmatch_token(symbol,thtt_symbol_point_spec);
+        if (type != SYMX_)
+            rv = type;
         type = TT_POINT_TYPE_UNKNOWN;
       }
       switch (type) {
@@ -522,6 +536,16 @@ int thsymbolset__get_group(int group_id, int cid) {
     bgroup(SYMX_SURFACECENTERLINE)
     group(0,SYMP_SURFACESTATION)
     group(1,SYML_SURVEY_SURFACE)
+    egroup  
+
+    bgroup(SYMX_POINT_FLAG)
+    group(0,SYMP_FLAG_ENTRANCE)
+    group(1,SYMP_FLAG_CONTINUATION)
+    group(2,SYMP_FLAG_SINK)
+    group(3,SYMP_FLAG_SPRING)
+    group(4,SYMP_FLAG_DOLINE)
+    group(5,SYMP_FLAG_DIG)
+    group(6,SYMP_FLAG_AIRDRAUGHT)
     egroup  
 
     bgroup(SYMX_CAVECENTERLINE)
@@ -812,6 +836,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   fprintf(mpf,"%s((.6,.5) inscale,270.0,1.0,(0,1));\n",thsymbolset__mp[mid]);  \
   endfig;
   
+  legend_point(SYMP_DIG,thT("point dig",layout->lang))
   legend_end(SYMP_CONTINUATION,thT("point continuation",layout->lang))
   legend_end(SYMP_NARROWEND,thT("point narrow-end",layout->lang))
   legend_end(SYMP_LOWEND,thT("point low-end",layout->lang))
@@ -1063,7 +1088,6 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_ROOT,thT("point root",layout->lang));
 
   // vystroj  
-  legend_point(SYMP_DIG,thT("point dig",layout->lang))
   legend_point(SYMP_NOEQUIPMENT,thT("point no-equipment",layout->lang));
   legend_point(SYMP_ANCHOR,thT("point anchor",layout->lang));
   legend_point(SYMP_ROPE,thT("point rope",layout->lang));
@@ -1082,31 +1106,32 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   thdb2d_udef_map::iterator it;
   std::string udef_desc;
   int mid = SYMX_;
-  for(it = layout->db->db2d.m_udef_map.begin(); it != layout->db->db2d.m_udef_map.end(); it++) {
-    if (it->second->m_assigned && (it->second->m_used || (layout->legend == TT_LAYOUT_LEGEND_ALL))) {
-      insfig(0,thsymbolset__mp[0]);
-      switch (it->first.m_command) {
-        case TT_POINT_CMD:
-          fprintf(mpf,"p_u_%s_legend;\n",it->first.m_type);
-          udef_desc = "point";
-          break;
-        case TT_LINE_CMD:
-          fprintf(mpf,"l_u_%s_legend;\n",it->first.m_type);
-          udef_desc = "line";
-          break;
-        case TT_AREA_CMD:
-          fprintf(mpf,"a_u_%s_legend;\n",it->first.m_type);
-          udef_desc = "area";
-          break;
+  if (layout->db != NULL) {
+    for(it = layout->db->db2d.m_udef_map.begin(); it != layout->db->db2d.m_udef_map.end(); it++) {
+      if (it->second->m_assigned && (it->second->m_used || (layout->legend == TT_LAYOUT_LEGEND_ALL))) {
+        insfig(0,thsymbolset__mp[0]);
+        switch (it->first.m_command) {
+          case TT_POINT_CMD:
+            fprintf(mpf,"p_u_%s_legend;\n",it->first.m_type);
+            udef_desc = "point";
+            break;
+          case TT_LINE_CMD:
+            fprintf(mpf,"l_u_%s_legend;\n",it->first.m_type);
+            udef_desc = "line";
+            break;
+          case TT_AREA_CMD:
+            fprintf(mpf,"a_u_%s_legend;\n",it->first.m_type);
+            udef_desc = "area";
+            break;
+        }
+        udef_desc += " u:";
+        udef_desc += it->first.m_type;
+        LEGENDITEM->descr = thT(udef_desc.c_str(), layout->lang);
+        LEGENDITEM->idsym = (unsigned) mid++;
+        endfig;
       }
-      udef_desc += " u:";
-      udef_desc += it->first.m_type;
-      LEGENDITEM->descr = thT(udef_desc.c_str(), layout->lang);
-      LEGENDITEM->idsym = (unsigned) mid++;
-      endfig;
     }
   }
-
   
 }
 

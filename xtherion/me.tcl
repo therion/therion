@@ -544,7 +544,7 @@ proc xth_me_write_file {pth} {
     set nm $errorInfo
     return [list $success $nm]
   }
-  fconfigure $fid -encoding utf-8 -translation {auto lf}
+  fconfigure $fid -encoding utf-8 -translation {auto auto}
   puts $fid "encoding  utf-8"
   # now let's put special commands
   puts $fid "##XTHERION## xth_me_area_adjust $xth(me,area,xmin) $xth(me,area,ymin) $xth(me,area,xmax) $xth(me,area,ymax)"

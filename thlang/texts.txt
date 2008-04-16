@@ -366,8 +366,9 @@ sk: dátum pozorovania
 therion: point dig
 cz: sonda
 en: dig
-sk: sonda
 fr: désobstruction
+it: disostruzione
+sk: sonda
 
 therion: point continuation
 cz: možné pokračování
@@ -1035,6 +1036,7 @@ sk: mäkký sinter
 therion: line moonmilk
 cz: nickamínek
 fr: mondmilch
+it: moonmilk
 ru: лунное молоко
 sk: náteky mäkkého sintra
 

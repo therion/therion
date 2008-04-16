@@ -163,10 +163,12 @@ void lxGLCanvas::LXCONTEXT(RenderScrapWalls) () {
     glDisable(GL_BLEND);
   }
   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
+  glEnable(GL_COLOR_MATERIAL);
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, clr);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat2);
+  glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+  glColor4fv(clr);
   
   vtkIdType * cPts, nPts, xP;
   double * nmv, * ptc, nmvv[3];
@@ -182,8 +184,7 @@ void lxGLCanvas::LXCONTEXT(RenderScrapWalls) () {
   vtkCellArray * tgs = pdt->GetPolys();
   vtkCellArray * tss = pdt->GetStrips();
   vtkDataArray * nms = pdt->GetPointData()->GetNormals();
-
-
+  
 #define draw3vert(N) \
       ptc = pdt->GetPoint(cPts[N]); \
       nmv = nms->GetTuple(cPts[N]); \
@@ -191,7 +192,7 @@ void lxGLCanvas::LXCONTEXT(RenderScrapWalls) () {
       if ((!this->setup->cam_anaglyph) && (this->setup->m_colormd != lxSETUP_COLORMD_DEFAULT) && (this->setup->m_colormd_app_walls)) { \
         this->data->luTable->GetColor(ptc[2], nmvv); \
         clr[0] = nmvv[0]; clr[1] = nmvv[1]; clr[2] = nmvv[2]; \
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, clr); \
+        glColor4fv(clr); \
       } \
       glVertex3f(lxShiftVecX3(ptc, this->shift));
 
@@ -214,6 +215,8 @@ void lxGLCanvas::LXCONTEXT(RenderScrapWalls) () {
     }
     glEnd();
   }
+  
+  glDisable(GL_COLOR_MATERIAL);
   
 }
 

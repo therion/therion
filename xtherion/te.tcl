@@ -600,11 +600,11 @@ proc xth_te_write_file {pth enc txt} {
     return [list $success $nm]
   }
   
-  fconfigure $fid -encoding $curenc -translation {auto lf}
+  fconfigure $fid -encoding $curenc -translation {auto auto}
   if {![string equal $xth(prj,name) svxedit]} {
     puts $fid "encoding  $enc"
   }
-  fconfigure $fid -encoding $enc -translation {auto lf}
+  fconfigure $fid -encoding $enc -translation {auto auto}
   puts -nonewline $fid $txt
   close $fid
   return [list $success $nm]

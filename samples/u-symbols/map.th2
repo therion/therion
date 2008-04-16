@@ -4,7 +4,7 @@ encoding  utf-8
 
 #!FILE 1
 #!TITLE 80 Using user defined symbol types
-#! In the case, where there is no appropriate symbol for the feature
+#! In the case, when there is no appropriate symbol for the feature
 #! you want to draw to the map, you may use user defined symbol type \
 #! (it is type <code>u</code>, valid for point, line and area object).
 #! 

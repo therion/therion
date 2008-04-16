@@ -32,6 +32,7 @@
 #include "thlang.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "thchenc.h"
 #include "thexception.h"
 #include "thdatabase.h"
@@ -759,17 +760,8 @@ void thconfig::xth_save()
 {
   if (this->generate_xthcfg) {
 
-    thbuffer nfn;
-    nfn = this->fname.get_buffer();
-    char * xbf = nfn.get_buffer();
-    size_t x, xl = strlen(xbf);
-    for (x = 0; x < xl; x++) {
-      if (xbf[x] == '.')
-        xbf[x] = '_';
-    }
-  
 #ifdef THDEBUG
-    thprintf("\nwriting xtherion file -- .xth_%s\n", xbf);
+    thprintf("\nwriting xtherion file -- .xtherion.dat\n");
 #else
     thprintf("writing xtherion file ... ");
     thtext_inline = true;
@@ -784,8 +776,14 @@ void thconfig::xth_save()
     }
   
     // dump possibilities objects
-    this->selector.dump_selection_db(cf, this->dbptr);
-    fprintf(cf,"xth_cp_comp_stat %.0f %ld\n", thdb.db1d.nlength, thdb.nscraps);
+    if (therion_exit_state > 0) {
+      this->selector.dump_selection_db(cf, this->dbptr);
+      fprintf(cf,"xth_cp_comp_stat %.0f %ld\n", thdb.db1d.nlength, thdb.nscraps);
+    }
+    
+    fprintf(cf,"set xth(th_exit_state) %d\n", therion_exit_state);
+    fprintf(cf,"set xth(th_exit_number) %ld\n\n", time(NULL));
+
     // close config file
     fclose(cf);
     

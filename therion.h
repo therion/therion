@@ -62,6 +62,7 @@
   thprintf2err("\n");\
   thtext_inline = false;\
   thpause_exit();\
+  therion_exit_state = 0;\
   thexit(EXIT_FAILURE);\
 }
 
@@ -76,6 +77,7 @@
   thprint_warning_src();\
   thprintf2err P;\
   thprintf2err("\n");\
+  therion_exit_state = 1;\
   thtext_inline = false;\
 }
 
@@ -179,6 +181,8 @@ void thpause_exit();
 void thexit(int exit_code);
 
 extern bool thtext_inline;
+
+extern int therion_exit_state;
 
 #endif
 

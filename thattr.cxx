@@ -534,6 +534,7 @@ void thattr::export_txt(const char * fname, int encoding)
 {
   // Create file.
   FILE * f;
+  unsigned i;
   thattr_attr * ca;
   thattr_field * cf;
   thattr_obj_list::iterator oi;
@@ -561,7 +562,7 @@ void thattr::export_txt(const char * fname, int encoding)
   // Insert objects and write fields.
   const char * value;
   for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end(); ++oi) {
-    hasone = false;
+    hasone = false;    
     for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
       cf = &(*fli);
       ai = oi->m_attributes.find(cf->m_id);
@@ -570,6 +571,9 @@ void thattr::export_txt(const char * fname, int encoding)
       } else {
         ca = &(ai->second);
         value = ca->m_val_string.c_str();
+      }
+      if (m_tree && (!hasone)) {
+        for(i = 0; i <  oi->m_tree_level; i++) fprintf(f,"  ");
       }
       fprintf(f,"%s%s",hasone ? "\t" : "",value);
       hasone = true;

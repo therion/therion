@@ -724,6 +724,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_NO_EQUIPMENT,SYMP_NOEQUIPMENT)
     thpoint_type_export_mp(TT_POINT_TYPE_ANCHOR,SYMP_ANCHOR)
     thpoint_type_export_mp(TT_POINT_TYPE_CAMP,SYMP_CAMP)
+    thpoint_type_export_mp(TT_POINT_TYPE_DIG,SYMP_DIG)
 
 // ukoncenia chodby
     thpoint_type_export_mp(TT_POINT_TYPE_NARROW_END,SYMP_NARROWEND)

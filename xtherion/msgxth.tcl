@@ -338,6 +338,7 @@
   ::msgcat::mcset ru "ERROR" [encoding convertfrom utf-8 "\320\236\320\250\320\230\320\221\320\232\320\220"]
   ::msgcat::mcset sk "ERROR" [encoding convertfrom utf-8 "CHYBA"]
 
+
   ::msgcat::mcset cz "OK" [encoding convertfrom utf-8 "OK"]
   ::msgcat::mcset en "OK" [encoding convertfrom utf-8 "OK"]
   ::msgcat::mcset es "OK" [encoding convertfrom utf-8 "OK"]
@@ -1648,6 +1649,7 @@
   ::msgcat::mcset sk "Open (no pics)" [encoding convertfrom utf-8 "Otvori\305\245 (bez obr\303\241zkov)"]
 
   ::msgcat::mcset cz "Import" [encoding convertfrom utf-8 "Import"]
+  ::msgcat::mcset it "Import" [encoding convertfrom utf-8 "Importa"]
   ::msgcat::mcset ru "Import" [encoding convertfrom utf-8 "\320\230\320\274\320\277\320\276\321\200\321\202"]
   ::msgcat::mcset sk "Import" [encoding convertfrom utf-8 "Import"]
 
@@ -2499,20 +2501,28 @@
   ::msgcat::mcset ru "theme all-symbols" [encoding convertfrom utf-8 "\320\262\321\201\320\265"]
   ::msgcat::mcset sk "theme all-symbols" [encoding convertfrom utf-8 "v\305\241etky symboly"]
 
+  ::msgcat::mcset it "New file" [encoding convertfrom utf-8 "Nuovo"]
   ::msgcat::mcset sk "New file" [encoding convertfrom utf-8 "Nov\303\275 s\303\272bor"]
 
+  ::msgcat::mcset it "Open file" [encoding convertfrom utf-8 "Apri"]
   ::msgcat::mcset sk "Open file" [encoding convertfrom utf-8 "Otvori\305\245 s\303\272bor"]
 
+  ::msgcat::mcset it "Save file" [encoding convertfrom utf-8 "Salva"]
   ::msgcat::mcset sk "Save file" [encoding convertfrom utf-8 "Ulo\305\276i\305\245 s\303\272bor"]
 
+  ::msgcat::mcset it "Save file as" [encoding convertfrom utf-8 "Salva come"]
   ::msgcat::mcset sk "Save file as" [encoding convertfrom utf-8 "Ulo\305\276i\305\245 s\303\272bor ako"]
 
+  ::msgcat::mcset it "Close file" [encoding convertfrom utf-8 "Chiudi"]
   ::msgcat::mcset sk "Close file" [encoding convertfrom utf-8 "Zatvori\305\245 s\303\272bor"]
 
+  ::msgcat::mcset it "Switch to text editor" [encoding convertfrom utf-8 "Editor di testi"]
   ::msgcat::mcset sk "Switch to text editor" [encoding convertfrom utf-8 "Prepn\303\272\305\245 na textov\303\275 editor"]
 
+  ::msgcat::mcset it "Switch to map editor" [encoding convertfrom utf-8 "Editor di mappe"]
   ::msgcat::mcset sk "Switch to map editor" [encoding convertfrom utf-8 "Prepn\303\272\305\245 na mapov\303\275 editor"]
 
+  ::msgcat::mcset it "Switch to compiler" [encoding convertfrom utf-8 "Compilatore"]
   ::msgcat::mcset sk "Switch to compiler" [encoding convertfrom utf-8 "Prepn\303\272\305\245 na kompil\303\241tor"]
 
   ::msgcat::mcset cz "Compile" [encoding convertfrom utf-8 "Kompilovat"]
@@ -2522,24 +2532,34 @@
   ::msgcat::mcset ru "Compile" [encoding convertfrom utf-8 "\320\232\320\276\320\274\320\277\320\270\320\273\320\270\321\200\320\276\320\262\320\260\321\202\321\214"]
   ::msgcat::mcset sk "Compile" [encoding convertfrom utf-8 "Kompilova\305\245"]
 
+  ::msgcat::mcset it "Switch to select mode" [encoding convertfrom utf-8 "Modalit\303\240 di selezione"]
   ::msgcat::mcset sk "Switch to select mode" [encoding convertfrom utf-8 "Prepn\303\272\305\245 do m\303\263du na v\303\275ber objektu"]
 
+  ::msgcat::mcset it "Select next scrap" [encoding convertfrom utf-8 "Seleziona il prossimo scrap"]
   ::msgcat::mcset sk "Select next scrap" [encoding convertfrom utf-8 "Vyber nasleduj\303\272ci scrap"]
 
+  ::msgcat::mcset it "Select next area" [encoding convertfrom utf-8 "Seleziona la prossima area"]
   ::msgcat::mcset sk "Select next area" [encoding convertfrom utf-8 "Vyber nasleduj\303\272cu plochu"]
 
+  ::msgcat::mcset it "Zoom in" [encoding convertfrom utf-8 "Zoom in"]
   ::msgcat::mcset sk "Zoom in" [encoding convertfrom utf-8 "Zv\303\244\304\215\305\241i\305\245"]
 
+  ::msgcat::mcset it "Zoom out" [encoding convertfrom utf-8 "Zoom out"]
   ::msgcat::mcset sk "Zoom out" [encoding convertfrom utf-8 "Zmen\305\241i\305\245"]
 
+  ::msgcat::mcset it "Insert new scrap" [encoding convertfrom utf-8 "Inserisci un nuovo scrap"]
   ::msgcat::mcset sk "Insert new scrap" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\275 scrap"]
 
+  ::msgcat::mcset it "Insert new point" [encoding convertfrom utf-8 "Inserisci un nuovo punto"]
   ::msgcat::mcset sk "Insert new point" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\275 bod"]
 
+  ::msgcat::mcset it "Insert new line" [encoding convertfrom utf-8 "Inserisci una nuova linea"]
   ::msgcat::mcset sk "Insert new line" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\272 krivku"]
 
+  ::msgcat::mcset it "Insert new area" [encoding convertfrom utf-8 "Inserisci una nuova area"]
   ::msgcat::mcset sk "Insert new area" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\272 plochu"]
 
+  ::msgcat::mcset it "Delete selected object" [encoding convertfrom utf-8 "Rimuovi l'oggetto selezionato"]
   ::msgcat::mcset sk "Delete selected object" [encoding convertfrom utf-8 "Zma\305\276 ozna\304\215en\303\251 objekty"]
 
   ::msgcat::mcset cz "theme basic-symbols" [encoding convertfrom utf-8 "z\303\241kladn\303\255 symboly"]

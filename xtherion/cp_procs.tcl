@@ -258,7 +258,7 @@ proc xth_cp_write_file {pth} {
     return 0
   }
 
-  fconfigure $fid -encoding utf-8 -translation {auto lf}
+  fconfigure $fid -encoding utf-8 -translation {auto auto}
   puts $fid "encoding  utf-8"
 
   # let's put data
@@ -420,7 +420,7 @@ proc xth_cp_compile {} {
   xth_status_bar_status cp [mc "Running therion ..."]
   $xth(ctrl,cp,stp).gores configure -text [mc "RUNNING"] -fg black -bg yellow
   update idletasks
-  set err [catch {
+  catch {
     set thid [open "|$xth(gui,compcmd) -x $xth(cp,opts) $xth(cp,fname)" r]
     if $xth(gui,compshow) {
       while {![eof $thid]} {
@@ -432,12 +432,39 @@ proc xth_cp_compile {} {
       read $thid;
     }
     close $thid
-  }]
+  }
   
   set see_end 0
+  
   #puts $err
   #global errorInfo
   #puts $errorInfo
+
+  # update UI
+  xth_cp_data_tree_clear      
+  set xth(th_exit_state) 0
+  set dat_loaded_err [catch {
+    set fid [open [file join [file dirname $xth(cp,ffull)] [xth_xcfg_fname $xth(cp,ffull)]] r]
+    fconfigure $fid -encoding utf-8
+    while {![eof $fid]} {
+      catch {eval [gets $fid]}
+    }
+    close $fid
+  }]
+
+  set err 0
+  if {$dat_loaded_err} {
+    set err 1
+  }
+  if {$xth(th_exit_number) == $xth(th_exit_number_last)} {
+    set err 1
+  } else {
+    set xth(th_exit_number_last) $xth(th_exit_number)
+  }
+  if {$xth(th_exit_state) == 0} {
+    set err 1
+  }
+
   
   if {$err} {
     bell
@@ -448,6 +475,13 @@ proc xth_cp_compile {} {
     set xth(cp,compres) 1
     if {$xth(gui,auto_backup)} {
       xth_cp_write_file "$xth(cp,ffull)$xth(gui,auto_backup_ext)"
+    }
+
+    if {$xth(th_exit_state) == 1} {
+      bell
+      $xth(ctrl,cp,stp).gores configure -text [mc "WARNING"] -fg black -bg orange
+    } else {
+      $xth(ctrl,cp,stp).gores configure -text [mc "OK"] -fg black -bg green
     }
 
     if { [llength $xth(cp,preview,xpdfpath)] > 0 } {
@@ -464,12 +498,7 @@ proc xth_cp_compile {} {
 	}
       }
     }
-    if {$err} {
-      bell
-      $xth(ctrl,cp,stp).gores configure -text [mc "WARNING"] -fg black -bg orange
-    } else {
-      $xth(ctrl,cp,stp).gores configure -text [mc "OK"] -fg black -bg green
-    }
+
   }
   
   xth_status_bar_status cp [mc "Reading therion log file ..."]
@@ -494,17 +523,6 @@ proc xth_cp_compile {} {
   $xth(cp,editor).txt configure -state normal
   xth_cp_show_errors
   
-  # update the tree
-  xth_cp_data_tree_clear      
-  catch {
-    set fid [open [file join [file dirname $xth(cp,ffull)] [xth_xcfg_fname $xth(cp,ffull)]] r]
-    fconfigure $fid -encoding utf-8
-    while {![eof $fid]} {
-      catch {eval [gets $fid]}
-    }
-    close $fid
-  }
-
   # update configuration file if required
   set xth(cp,cursor) [$xth(cp,editor).txt index insert]
   if {0} {

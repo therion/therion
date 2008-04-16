@@ -217,7 +217,7 @@ void thexptable::process_db(class thdatabase * dbp)
   this->db = dbp;
 
   if (this->format == TT_EXPTABLE_FMT_UNKNOWN) {
-    this->format = TT_EXPTABLE_FMT_TXT;
+    this->format = TT_EXPTABLE_FMT_HTML;
     thexp_set_ext_fmt(".txt", TT_EXPTABLE_FMT_TXT)
     thexp_set_ext_fmt(".html", TT_EXPTABLE_FMT_HTML)
     thexp_set_ext_fmt(".htm", TT_EXPTABLE_FMT_HTML)
@@ -227,16 +227,16 @@ void thexptable::process_db(class thdatabase * dbp)
   const char * fname;
   switch (this->format) {
     case TT_EXPTABLE_FMT_DBF:
-      fname = this->get_output("list.dbf");
+      fname = this->get_output("table.dbf");
       break;
     case TT_EXPTABLE_FMT_HTML:
-      fname = this->get_output("list.html");
+      fname = this->get_output("table.html");
       break;
     case TT_EXPTABLE_FMT_KML:
-      fname = this->get_output("list.kml");
+      fname = this->get_output("table.kml");
       break;
     default:
-      fname = this->get_output("list.txt");
+      fname = this->get_output("table.txt");
   }
   
 #ifdef THDEBUG
