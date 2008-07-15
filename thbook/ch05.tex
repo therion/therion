@@ -1,17 +1,14 @@
 \eject
-\pdfximage width 93.2mm {pic/thom.png}\pdfrefximage\pdflastximage
-
-{\eightit\baselineskip12pt\leftskip2mm\rightskip6.8cm
+\vbox{\pic[93.2mm]{thom.jpg}}
+\vskip-3cm %-2.35cm
+{\tenitbx\baselineskip15pt\leftskip2mm\rightskip6.8cm\parindent4.6cm
 Jesus said, `Let him who seeks continue seeking until he
 finds. When he finds, he will become troubled. When he becomes
-troubled, he will be astonished, and he will rule over the all.'\par
-\vskip6pt
-\hbox to 91.2mm{\hfil\eightrm ---Gospel according to Thomas, {\eightmit 2}nd century}
+troubled, he will be astonished, and he will rule over the all.'
+\hfill\eightrm ---Gospel according to Thomas, {\eightmit 2}nd century\par
 }
 
-{\let\eject\relax
 \chapter Changing layout of PDF maps.
-}
 
 This chapter is extremely useful if you're not satisfied with the predefined 
 layout of map symbols and maps provided, and want to adapt them to your needs.
@@ -405,8 +402,8 @@ language, which is quite similar to \MP:
 \endlist
 
 New symbols may be defined in the |code metapost| section of the |layout| 
-command. This makes it easy to add new symbols at the run-time. It's also 
-possible to add symbols permanently by compiling into Therion executable 
+command. This makes it easy to add new symbols at the run-time. It is also 
+possible to add symbols permanently by compiling them into Therion executable 
 (see the {\it Appendix} for instructions how to do this).
 
 Each symbol has to have a unique name, which consists of following items:
@@ -423,7 +420,8 @@ Each symbol has to have a unique name, which consists of following items:
 \endlist
 
 Example: standard name for a point `water-flow' symbol with a `permanent' 
-subtype in the `MY' set is |p_waterflow_permanent_MY|. 
+subtype in the `MY' set is |p_waterflow_permanent_MY|. Standard name for user-defined
+symbol types should not include symbol set identifier, e.g.~|p_u_bat|.
 
 Each new symbol has to be registered by a macro call
 

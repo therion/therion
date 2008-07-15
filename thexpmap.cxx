@@ -2198,6 +2198,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   // najprv z polygonu
   int macroid, typid;
   thdb1ds * tmps;
+  bool flagexp;
   slp = scrap->get_polygon();
   if (outline_mode) slp = NULL;
   while (slp != NULL) {
@@ -2211,11 +2212,22 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         thexpmat_station_type_export_mp(TT_DATAMARK_NATURAL,SYMP_STATION_NATURAL)
         thexpmat_station_type_export_mp(TT_DATAMARK_PAINTED,SYMP_STATION_PAINTED)
       }
+      flagexp = false;
+#define thexpmatselected_stationflag(flag,mid) if (((slp->station->flags & flag) == flag) && out->symset->assigned[mid]) flagexp = true;
+      thexpmatselected_stationflag(TT_STATIONFLAG_ENTRANCE, SYMP_FLAG_ENTRANCE)
+      thexpmatselected_stationflag(TT_STATIONFLAG_SINK, SYMP_FLAG_SINK)
+      thexpmatselected_stationflag(TT_STATIONFLAG_SPRING, SYMP_FLAG_SPRING)
+      thexpmatselected_stationflag(TT_STATIONFLAG_DOLINE, SYMP_FLAG_DOLINE)
+      thexpmatselected_stationflag(TT_STATIONFLAG_DIG, SYMP_FLAG_DIG)
+      thexpmatselected_stationflag(TT_STATIONFLAG_CONT, SYMP_FLAG_CONTINUATION)
+      thexpmatselected_stationflag(TT_STATIONFLAG_AIRDRAUGHT, SYMP_FLAG_AIRDRAUGHT)
+      thexpmatselected_stationflag(TT_STATIONFLAG_AIRDRAUGHT_SUMMER, SYMP_FLAG_AIRDRAUGHT)
+      thexpmatselected_stationflag(TT_STATIONFLAG_AIRDRAUGHT_WINTER, SYMP_FLAG_AIRDRAUGHT)
       if ((slp->station->flags & TT_STATIONFLAG_UNDERGROUND) != 0)
         typid = SYMP_CAVESTATION;
       else
         typid = SYMP_SURFACESTATION;
-      if (out->symset->assigned[typid]) {
+      if (out->symset->assigned[typid] || flagexp) {
         thexpmap_export_mp_bgif;
         std::string commentstr("0");
         if ((slp->station->comment != NULL) && (strlen(slp->station->comment) > 0)) {
@@ -2234,6 +2246,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         thexpmat_stationflag(TT_STATIONFLAG_SPRING, SYMP_FLAG_SPRING, "spring")
         thexpmat_stationflag(TT_STATIONFLAG_DOLINE, SYMP_FLAG_DOLINE, "doline")
         thexpmat_stationflag(TT_STATIONFLAG_DIG, SYMP_FLAG_DIG, "dig")
+        thexpmat_stationflag(TT_STATIONFLAG_CONT, SYMP_FLAG_CONTINUATION, "continuation")
         thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT, SYMP_FLAG_AIRDRAUGHT, "air-draught")
         thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_SUMMER, SYMP_FLAG_AIRDRAUGHT, "air-draught:summer")
         thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_WINTER, SYMP_FLAG_AIRDRAUGHT, "air-draught:winter")

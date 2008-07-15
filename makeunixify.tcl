@@ -17,7 +17,7 @@ proc dos2unix {fnm} {
   set doit 0
   if {[regexp {\.(c|cxx|h|tcl|svx|th|thcfg|th2|thc|cof|xpm|txt|pl|mp|tex|TXT|sty|usr|enc|htm|xvi)$} $fnm]} {
     set doit 1
-  } elseif {[regexp {^(Makefile|TODO.*|README|COPYING|CHANGES|thconfig)$} $fnm]} {
+  } elseif {[regexp {(Makefile|TODO\.\w|README|COPYING|CHANGES|thconfig)$} $fnm]} {
     set doit 1
   }
   if {!$doit} return;
@@ -52,6 +52,7 @@ exec chmod 775 texenc/mktexenc.pl
 exec chmod 775 texenc/unidata.pl
 exec chmod 775 thchencdata/generate.pl
 exec chmod 775 thlang/process.pl
+exec chmod 775 thlang/thlang_stats.pl
 exec chmod 775 xtherion/bac.tcl
 exec chmod 775 xtherion/dbg.tcl 
 exec chmod 775 xtherion/bac.tcl 

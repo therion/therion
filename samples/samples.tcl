@@ -191,6 +191,26 @@ proc get_html_body {fn} {
   return $ftext
 }
 
+proc get_html_body_for_tex {fn} {
+  set fid [open $fn "r"]
+  set ftext [read $fid]
+  close $fid
+  regexp -nocase {\<\s*body[^\>]*\>\s*(.*)\<\/\s*body[^\>]*\>} $ftext dum ftext
+  regsub -nocase -all {\<\s*table[^\>]*>} $ftext "\\bigskip\\begingroup\\input etc/TXSruled.tex \\LeftJustifyTables\\ruledtable" ftext
+  regsub -nocase -all {</td>[\n\s]*</tr>[\n\s]*</table>} $ftext "\\endruledtable\\endgroup\\bigskip" ftext
+  regsub -nocase -all {\<tr[^\>]*>} $ftext {} ftext
+  regsub -nocase {</th>[\n\s]*</tr>} $ftext "\}\\cr" ftext
+  regsub -nocase -all {</td>[\n\s]*\</tr>} $ftext "\\nr" ftext
+  regsub -nocase -all {\<td[^\>]*>} $ftext "" ftext
+  regsub -nocase -all {\</td>} $ftext {\&} ftext
+  regsub -nocase -all {\<th[^\>]*>} $ftext "\{\\bf " ftext
+  regsub -nocase -all {\</th>} $ftext "\}\\&" ftext
+  regsub -all {\_} $ftext {\\_} ftext
+  regsub -all {\&nbsp;} $ftext { } ftext
+  regsub {\s*$} $ftext {} ftext
+  return $ftext
+}
+
 
 proc create_docs {} {
   global filelist tcl_platform outd
@@ -200,6 +220,7 @@ proc create_docs {} {
   set chapters {}
   set imagelist {}
   array set data {}
+  array set texdata {}
   # scan chapters and subchapters
   log_msg "\nScanning texts:\n"
   set inparagraph 0
@@ -209,14 +230,18 @@ proc create_docs {} {
     if {[lindex $fr 3] != $cdir} {
       if {$inparagraph} {
 	append data($chid,TEXT) "</p>\n"
+	append texdata($chid,TEXT) "\n\n"
 	set inparagraph 0
       }
       incr chid
       lappend chapters [list $chid 0]
       set data($chid,TITLE) [file tail [lindex $fr 1]]
+      set texdata($chid,TITLE) [file tail [lindex $fr 1]]
       set data($chid,TEXT) {}
+      set texdata($chid,TEXT) {}
       set csub 0
       set data($chid,SUBS) {}
+      set texdata($chid,SUBS) {}
       set cdir [lindex $fr 3]
     }
     log_msg "[file join [lindex $fr 1] [lindex $fr 0]]\n"
@@ -232,25 +257,33 @@ proc create_docs {} {
       if {[regexp -nocase {^\s*\#\!title\s+(\S+)\s+(\S.*)} $ln dum cn ct]} {
 	if {$inparagraph} {
 	  append data($chid,TEXT) "</p>\n"
+	  append texdata($chid,TEXT) "\n\n"
 	  set inparagraph 0
 	}
 	incr chid
 	lappend chapters [list $chid $cn]
 	set data($chid,TITLE) $ct
+	set texdata($chid,TITLE) $ct
 	set data($chid,TEXT) {}
+	set texdata($chid,TEXT) {}
 	set csub 0
 	set data($chid,SUBS) {}
+	set texdata($chid,SUBS) {}
       } elseif {[regexp -nocase {^\s*\#\!subtitle\s+(\S.*)$} $ln dum ct]} {
 	if {$inparagraph} {
 	  append data($chid,TEXT) "</p>\n"
+	  append texdata($chid,TEXT) "\n\n"
 	  set inparagraph 0
 	}
 	lappend data($chid,SUBS) $ct
+	lappend texdata($chid,SUBS) $ct
 	append data($chid,TEXT) "<a name=\"$csub\"></a><h2>$ct</h2>\n"
+	append texdata($chid,TEXT) "\\subsubchapter {$ct}.\n"
 	incr csub
       } elseif {[regexp {^\s*\#\!\s*$} $ln dum ct]} {
 	if {$inparagraph} {
 	  append data($chid,TEXT) "</p>\n"
+	  append texdata($chid,TEXT) "\n\n"
 	  set inparagraph 0
 	}
       } elseif {[regexp -nocase {^\s*\#\!image\s+(\S.*)$} $ln dum ii]} {
@@ -260,36 +293,51 @@ proc create_docs {} {
 	lappend imagelist [list $imid $iisrc $iifnm $iiimg]
 	if {$inparagraph} {
 	  append data($chid,TEXT) "</p>\n"
+	  append texdata($chid,TEXT) "\n\n"
 	  set inparagraph 0
 	}
 	append data($chid,TEXT) "<p>\n<a href=\"$iifnm\"><img border=\"1\" src=\"$iiimg\"/></a>\n</p>\n"
+	append texdata($chid,TEXT) "\n\n\\fitpic{../samples.doc/$iifnm}\n\n"
 	incr imid
       } elseif {[regexp -nocase {^\s*\#\!HTML\s+(\S.*)$} $ln dum ii]} {
 	set html_src [file join [lindex $fr 1] $ii]
 	if {$inparagraph} {
 	  append data($chid,TEXT) "</p>\n"
+	  append texdata($chid,TEXT) "\n\n"
 	  set inparagraph 0
 	}
 	append data($chid,TEXT) [get_html_body $html_src]
+	append texdata($chid,TEXT) [get_html_body_for_tex $html_src]
       } elseif {[regexp -nocase {^\s*\#\!code\s*$} $ln dum ct]} {
 	if {$inparagraph} {
 	  append data($chid,TEXT) "</p>\n"
+	  append texdata($chid,TEXT) "\n\n"
 	  set inparagraph 0
 	}
 	append data($chid,TEXT) "<pre class=\"code\">\n"
+	append texdata($chid,TEXT) "|"
 	set incode 1
       } elseif {[regexp -nocase {^\s*\#\!endcode\s*$} $ln dum ct]} {
 	append data($chid,TEXT) "</pre>\n"
+	append texdata($chid,TEXT) "|\n"
 	set incode 0
       } elseif {[regexp -nocase {^\s*\#\!(process|clean|file)} $ln dum cmd]} {
       } elseif {$incode} {
 	append data($chid,TEXT) "$ln\n"
+	append texdata($chid,TEXT) "$ln\n"
       } elseif {[regexp {^\s*\#\!(.*\S.*)$} $ln dum ct]} {
 	if {!$inparagraph} {
 	  append data($chid,TEXT) "<p>\n"
+	  append texdata($chid,TEXT) "\n\n"
 	  set inparagraph 1
 	}
 	append data($chid,TEXT) "$ct\n"
+        regsub -nocase -all {\</?code\>} $ct {|} ct
+        regsub -nocase -all {\<em\>} $ct "\{\\it " ct
+        regsub -nocase -all {\</em\>} $ct "\}" ct
+        regsub -nocase -all {MetaPost} $ct "\\MP{}" ct
+	
+	append texdata($chid,TEXT) "$ct\n"
       }
     }
     close $fid 
@@ -388,6 +436,7 @@ td.htmlinput {
   # export html pages
   set fidx [open "$outd/index.html" w]
   fconfigure $fidx -encoding utf-8
+  set texfidx [open "$outd/index.tex" w]
   foreach ch $chapters {
     set csort([expr double([lindex $ch 1])]) $ch
   }
@@ -412,6 +461,8 @@ td.htmlinput {
     set chid [lindex $ch 0]
     set chfn "[lindex $ch 1].html"
     puts $fidx "<li><a href=\"$chfn\">$data($chid,TITLE)</a></li>"
+    puts $texfidx "\\subchapter {$texdata($chid,TITLE)}."
+    puts $texfidx $texdata($chid,TEXT)
     set fout [open "$outd/$chfn" w]
     fconfigure $fout -encoding utf-8
     puts $fout "<html>\n<head>\n<title>$data($chid,TITLE)</title><link href=\"index.css\" rel=\"styleSheet\" type=\"text/css\">\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n</head>\n<body>"

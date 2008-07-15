@@ -834,7 +834,7 @@ void print_surface_bitmaps (ofstream &PAGEDEF, double shiftx, double shifty) {
   PAGEDEF.precision(6);
   for (list<surfpictrecord>::iterator I = SURFPICTLIST.begin();
                                       I != SURFPICTLIST.end(); I++) {
-    if (mode == (MAP && LAYOUT.transparency) || LAYOUT.OCG) {
+    if (mode == MAP && (LAYOUT.transparency || LAYOUT.OCG)) {
       PAGEDEF << "\\bitmapcorr{";
     } else {
       PAGEDEF << "\\bitmap{";

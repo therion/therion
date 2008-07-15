@@ -728,35 +728,46 @@ def p_station_SKBB(expr pos,mark,txt)(text flags) =
   elseif mark=2: p_station_painted(pos)
   elseif mark=1: p_station_temporary(pos)
   fi;
-  % add entrance and continuation flags
   
+  path path_cave;
+  path_cave = (-.3u,-.25u) -- (-.2u,-.25u){dir 135} .. (0, .25u) .. {dir 225}(.2u,-.25u) -- (.3u,-.25u);
   for i=flags:
     pickup PenX;
     if i="entrance":
-      thdraw (-.3u,-.25u) -- (-.2u,-.25u){dir 135} .. (0, .25u) .. {dir 225}(.2u,-.25u) -- (.3u,-.25u);
+      thdraw path_cave;
       p_label.urt(txt,pos+(0.4u,0),0,0);
     elseif i="sink":
-      thdraw (-0.25u,.01u){down} .. (0,-.3u) .. {up}(.25u,.01u);
+      thdraw path_cave cutbefore ((-u,0)--(u,0)) cutafter ((-u,0)--(u,0));
       pickup PenA;
-      thdraw (0,.3u) -- (0,-.14u) withcolor blue;
-      thdraw (-.12u,.05u) -- (0,-.14u) -- (.12u,.05u) withcolor blue;
+      thdraw (0,-.45u) -- (0,.05u) withcolor blue;
+      thdraw (-.15u,-.02u) -- (0,.05u) -- (.15u,-.02u) withcolor blue;
     elseif i="spring":
-      thdraw (-0.2u,-.05u){up} .. (0,.3u) .. {down}(.2u,-.05u);
+      thdraw path_cave cutbefore ((-u,0)--(u,0)) cutafter ((-u,0)--(u,0));
       pickup PenA;
-      thdraw (0,-.3u) -- (0,.1u) withcolor blue;
-      thdraw (-.15u,-.2u) -- (0,-.3u) -- (.15u,-.2u) withcolor blue;
+      thdraw (0,-.45u) -- (0,.05u) withcolor blue;
+      thdraw (-.15u,-.38u) -- (0,-.45u) -- (.15u,-.38u) withcolor blue;
     elseif i="doline":
-      thdraw (-.3u,.15u){down}..(0,-0.15u)..{up}(.3u,.15u);
-    elseif i="probe":
-      thdraw (-.25u,.22u) -- (-.18u,.22u)--(-.14u,-.22u)--(.14u,-.22u)--(.18u,.22u)--(.25u,.22u);
-    elseif i="air-draught":
-      pickup PenA;
-      thdraw (-.3u,-.25u)--(-.3u,-.15u)--(.3u,.15u);
-      thdraw (-.15u,-.175u)--(-.15u,-.075u);
-      thdraw ((.1u,.05u)--(.3u,.15u)) rotatedaround ((.3u,.15u),35);
-      thdraw ((.1u,.05u)--(.3u,.15u)) rotatedaround ((.3u,.15u),-35);
+      thdraw (-.5u,.05u){down}..(0,-0.6u)..{up}(.5u,.05u);
+    elseif i="dig":
+      thdraw (-.5u,.25u) -- (-.35u,.25u)--(-.23u,-.25u)--(.23u,-.25u)--(.35u,.25u)--(.5u,.25u);
+    elseif substring(0,11) of i = "air-draught":
+      pickup PenB;
+      thdraw ((0,.11u){dir-120} ..{dir-70}(0,0) .. {dir-120}(0,-.11u));
+      thdraw ((0,.11u){dir-120} ..{dir-70}(0,0) .. {dir-120}(0,-.11u)) shifted (.11u,0);
+      thdraw ((0,.11u){dir-120} ..{dir-70}(0,0) .. {dir-120}(0,-.11u)) shifted (-.11u,0);
+    elseif i="continuation":
+      if picture(txt):
+        picture ATTR__text;
+        ATTR__text := txt;
+      fi;
+      begingroup;
+        save T; transform T;
+        p_continuation(pos+(0,.25u),0,1,(0,1));
+      endgroup;
+      if picture(txt):
+        save ATTR__text;
+      fi;
     fi;
-  
   endfor;
 %  thdraw (0,0) withpen PenX withcolor red;
 enddef;

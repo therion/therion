@@ -395,9 +395,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 {
   th2ddataobject::export_mp(out);
 
-  bool postprocess = true;
+  bool postprocess = true, expsym = false;
   std::string attr_text;
-  int macroid = -1;
+  int macroid = -1, cmark;
   int postprocess_label = -1;
   this->db->buff_enc.guarantee(8128);
 //  char * buff = this->db->buff_enc.get_buffer();
@@ -440,26 +440,26 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
             break;
           case TT_POINT_TYPE_LABEL:
             fprintf(out->file,"\\thlabel");
-            switch (this->scale) {
-              case TT_2DOBJ_SCALE_XL:
-                fprintf(out->file,"\\thhugesize ");
-                break;
-              case TT_2DOBJ_SCALE_L:
-                fprintf(out->file,"\\thlargesize ");
-                break;
-              case TT_2DOBJ_SCALE_S:
-                fprintf(out->file,"\\thsmallsize ");
-                break;
-              case TT_2DOBJ_SCALE_XS:
-                fprintf(out->file,"\\thtinysize ");
-                break;
-              default:
-                fprintf(out->file,"\\thnormalsize ");
-            }
             break;
           case TT_POINT_TYPE_REMARK:
             fprintf(out->file,"\\thremark ");
             break;
+        }
+        switch (this->scale) {
+          case TT_2DOBJ_SCALE_XL:
+            fprintf(out->file,"\\thhugesize ");
+            break;
+          case TT_2DOBJ_SCALE_L:
+            fprintf(out->file,"\\thlargesize ");
+            break;
+          case TT_2DOBJ_SCALE_S:
+            fprintf(out->file,"\\thsmallsize ");
+            break;
+          case TT_2DOBJ_SCALE_XS:
+            fprintf(out->file,"\\thtinysize ");
+            break;
+          default:
+            fprintf(out->file,"\\thnormalsize ");
         }
         fprintf(out->file,"%s etex,",utf2tex(this->text));        
         if (this->type == TT_POINT_TYPE_STATION_NAME)
@@ -474,30 +474,77 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       switch (this->subtype) {
         case TT_POINT_SUBTYPE_FIXED:
           macroid = SYMP_STATION_FIXED;
+          cmark = TT_DATAMARK_FIXED;
           break;
         case TT_POINT_SUBTYPE_NATURAL:
           macroid = SYMP_STATION_NATURAL;
+          cmark = TT_DATAMARK_NATURAL;
           break;
         case TT_POINT_SUBTYPE_PAINTED:
           macroid = SYMP_STATION_PAINTED;
+          cmark = TT_DATAMARK_PAINTED;
           break;
         default:
           macroid = SYMP_STATION_TEMPORARY;
+          cmark = TT_DATAMARK_TEMP;
       }
+      
+      expsym = out->symset->assigned[macroid];
+
       if (this->context >= 0) 
         macroid = this->context;
-      if (out->symset->assigned[macroid]) {
-        if (out->file == NULL)
-          return(true);
-        fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+
+      {
+        thdb1ds * pst = NULL;
+        std::string commentstr("0");
+        if (this->station_name.id != 0)
+          pst = &(this->db->db1d.station_vec[this->station_name.id - 1]);
+        if (pst != NULL) {
+#define thexpmatselected_stationflag(flag,mid) if (((pst->flags & flag) == flag) && out->symset->assigned[mid]) expsym = true;
+          thexpmatselected_stationflag(TT_STATIONFLAG_ENTRANCE, SYMP_FLAG_ENTRANCE)
+          thexpmatselected_stationflag(TT_STATIONFLAG_SINK, SYMP_FLAG_SINK)
+          thexpmatselected_stationflag(TT_STATIONFLAG_SPRING, SYMP_FLAG_SPRING)
+          thexpmatselected_stationflag(TT_STATIONFLAG_DOLINE, SYMP_FLAG_DOLINE)
+          thexpmatselected_stationflag(TT_STATIONFLAG_DIG, SYMP_FLAG_DIG)
+          thexpmatselected_stationflag(TT_STATIONFLAG_CONT, SYMP_FLAG_CONTINUATION)
+          thexpmatselected_stationflag(TT_STATIONFLAG_AIRDRAUGHT, SYMP_FLAG_AIRDRAUGHT)
+          thexpmatselected_stationflag(TT_STATIONFLAG_AIRDRAUGHT_SUMMER, SYMP_FLAG_AIRDRAUGHT)
+          thexpmatselected_stationflag(TT_STATIONFLAG_AIRDRAUGHT_WINTER, SYMP_FLAG_AIRDRAUGHT)
+        }
+
+        if (out->file == NULL) return(expsym);
+
+        if ((pst != NULL) && (pst->comment != NULL) && (strlen(pst->comment) > 0)) {
+          commentstr = "btex \\thcomment ";
+          commentstr += utf2tex(pst->comment);
+          commentstr += " etex";
+        }
+        fprintf(out->file,"p_station(");
         this->point->export_mp(out);
+        fprintf(out->file,",%d,%s,\"\"",
+          out->symset->assigned[macroid] ? cmark : 0,
+          commentstr.c_str()
+          );
+#define thexpmat_stationflag(flag,mid,str) if (((pst->flags & flag) == flag) && out->symset->assigned[mid]) fprintf(out->file,",\"%s\"", str);
+        if (pst != NULL) {
+          thexpmat_stationflag(TT_STATIONFLAG_ENTRANCE, SYMP_FLAG_ENTRANCE, "entrance")
+          thexpmat_stationflag(TT_STATIONFLAG_SINK, SYMP_FLAG_SINK, "sink")
+          thexpmat_stationflag(TT_STATIONFLAG_SPRING, SYMP_FLAG_SPRING, "spring")
+          thexpmat_stationflag(TT_STATIONFLAG_DOLINE, SYMP_FLAG_DOLINE, "doline")
+          thexpmat_stationflag(TT_STATIONFLAG_DIG, SYMP_FLAG_DIG, "dig")
+          thexpmat_stationflag(TT_STATIONFLAG_CONT, SYMP_FLAG_CONTINUATION, "continuation")
+          thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT, SYMP_FLAG_AIRDRAUGHT, "air-draught")
+          thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_SUMMER, SYMP_FLAG_AIRDRAUGHT, "air-draught:summer")
+          thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_WINTER, SYMP_FLAG_AIRDRAUGHT, "air-draught:winter")
+        }
         fprintf(out->file,");\n");
-        if (out->layout->is_debug_stations()) {
-          fprintf(out->file,"p_debug(0,1,");
-          this->point->export_mp(out,0);
-          fprintf(out->file,");\n");
-        }        
       }
+
+      if (out->symset->assigned[macroid] && out->layout->is_debug_stations()) {
+        fprintf(out->file,"p_debug(0,1,");
+        this->point->export_mp(out,0);
+        fprintf(out->file,");\n");
+      }        
       postprocess = false;
       break;
 
@@ -510,8 +557,23 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
         out->symset->get_mp_macro(SYMP_ALTITUDE);    
-        fprintf(out->file,"p_label%s(btex \\thaltitude %s etex,",
-					thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)),
+        fprintf(out->file,"p_label%s(btex ",
+					thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
+        switch (this->scale) {
+          case TT_2DOBJ_SCALE_XL:
+            fprintf(out->file,"\\thhugesize ");
+            break;
+          case TT_2DOBJ_SCALE_L:
+            fprintf(out->file,"\\thlargesize ");
+            break;
+          case TT_2DOBJ_SCALE_S:
+            fprintf(out->file,"\\thsmallsize ");
+            break;
+          case TT_2DOBJ_SCALE_XS:
+            fprintf(out->file,"\\thtinysize ");
+            break;
+        }
+        fprintf(out->file,"\\thaltitude %s etex,",
 					utf2tex(out->layout->units.format_length(this->xsize - out->layout->goz)));
         postprocess_label = 1;
       }
@@ -546,6 +608,21 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
         out->symset->get_mp_macro(macroid);
         fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
+
+        switch (this->scale) {
+          case TT_2DOBJ_SCALE_XL:
+            fprintf(out->file,"\\thhugesize ");
+            break;
+          case TT_2DOBJ_SCALE_L:
+            fprintf(out->file,"\\thlargesize ");
+            break;
+          case TT_2DOBJ_SCALE_S:
+            fprintf(out->file,"\\thsmallsize ");
+            break;
+          case TT_2DOBJ_SCALE_XS:
+            fprintf(out->file,"\\thtinysize ");
+            break;
+        }
 
         if ((this->tags & TT_POINT_TAG_HEIGHT_P) != 0)
           fprintf(out->file,"\\thheightpos ");
@@ -583,8 +660,23 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
         out->symset->get_mp_macro(SYMP_DATE);    
-        fprintf(out->file,"p_label%s(btex \\thdate %s etex,",
-            thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)),
+        fprintf(out->file,"p_label%s(btex ",
+            thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
+        switch (this->scale) {
+          case TT_2DOBJ_SCALE_XL:
+            fprintf(out->file,"\\thhugesize ");
+            break;
+          case TT_2DOBJ_SCALE_L:
+            fprintf(out->file,"\\thlargesize ");
+            break;
+          case TT_2DOBJ_SCALE_S:
+            fprintf(out->file,"\\thsmallsize ");
+            break;
+          case TT_2DOBJ_SCALE_XS:
+            fprintf(out->file,"\\thtinysize ");
+            break;
+        }
+        fprintf(out->file,"\\thdate %s etex,",
             utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_UTF8_ISO)));
         postprocess_label = 0;
       }
@@ -623,6 +715,20 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         out->symset->get_mp_macro(macroid);
             
         fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
+        switch (this->scale) {
+          case TT_2DOBJ_SCALE_XL:
+            fprintf(out->file,"\\thhugesize ");
+            break;
+          case TT_2DOBJ_SCALE_L:
+            fprintf(out->file,"\\thlargesize ");
+            break;
+          case TT_2DOBJ_SCALE_S:
+            fprintf(out->file,"\\thsmallsize ");
+            break;
+          case TT_2DOBJ_SCALE_XS:
+            fprintf(out->file,"\\thtinysize ");
+            break;
+        }
         switch (this->tags & (TT_POINT_TAG_HEIGHT_P |
         TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) {
           case (TT_POINT_TAG_HEIGHT_P | TT_POINT_TAG_HEIGHT_N):
@@ -796,7 +902,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       if (out->file == NULL)
         return(true);
       if (attr_text.length() > 0) {
-        fprintf(out->file, "ATTR__text_x := true;\nATTR__text := %s;\n", attr_text.c_str());
+        fprintf(out->file, "picture ATTR__text;\nATTR__text := %s;\n", attr_text.c_str());
       }
       if (this->type == TT_POINT_TYPE_U) {
          fprintf(out->file,"p_u_%s(",this->m_subtype_str);
@@ -872,7 +978,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       fprintf(out->file,");\n");
     }
     if (attr_text.length() > 0) {
-      fprintf(out->file, "ATTR__text_x := false;\n");
+      fprintf(out->file, "save ATTR__text;\n");
     }
   }
   

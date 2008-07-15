@@ -1,0 +1,111 @@
+\pdfoutput1
+\directlua0{
+callback.register('define_font',
+  function(name, size)
+    fonttype = nil
+    filename = kpse.find_file(name,"opentype fonts")
+    if (filename)
+    then fonttype = 'opentype'
+    else filename = kpse.find_file(name, "truetype fonts")
+    end
+    if filename and not fonttype then fonttype = 'truetype' end
+    if fonttype then
+      if (size < 0) then size = (- 655.36) * size end
+      ttffont = fontforge.to_table(fontforge.open(filename))
+      if ttffont then
+        f = { }
+        f.name = ttffont.fontname
+        f.fullname = ttffont.names[1].names.fullname
+        f.parameters = { }
+        f.designsize = size
+        f.size = size
+        direction = 0
+        f.parameters.slant = 0
+        f.parameters.space = size * 0.25
+        f.parameters.space_stretch = 0.3 * size
+        f.parameters.space_shrink = 0.1 * size
+        f.parameters.x_height = 0.4 * size
+        f.parameters.quad = 1.0 * size
+        f.parameters.extra_space = 0
+        f.characters = { }
+        mag = size / ttffont.units_per_em
+
+         names_of_char = { }
+        for char, glyph in pairs(ttffont.map.map)
+        do
+          names_of_char[ttffont.glyphs[glyph].name]
+            = ttffont.map.backmap[glyph]
+        end
+
+        names_of_glyph = { }
+        for char, glyph in pairs(ttffont.map.map)
+        do
+          names_of_glyph[ttffont.glyphs[glyph].name]
+            = glyph
+        end
+
+       for char, glyph in pairs(ttffont.map.map)
+        do
+          glyph_table = ttffont.glyphs[glyph]
+
+          f.characters[char] = {
+            index = glyph,
+            width = glyph_table.width * mag,
+            name = glyph_table.name,
+          }
+          if glyph_table.kerns then
+            local kerns = { }
+            for _, kern in pairs(glyph_table.kerns)
+            do
+              kerns[names_of_char[kern.char]] = kern.off * mag
+            end
+          f.characters[char].kerns = kerns
+          end
+        end
+        f.filename = filename
+        f.type = 'real'
+        f.format = fonttype
+        f.embedding = "subset"
+        f.cidinfo = {
+          registry = "Adobe",
+          ordering = "Identity",
+          supplement = 0,
+          version = 1
+        }
+      end
+    else
+      f = font.read_tfm(name, size)
+    end
+  return f
+  end
+)
+}
+
+\nopagenumbers
+
+\font\myfont={GFSPorson.otf} at 11.65 pt
+\baselineskip=16pt
+
+\myfont
+
+%\spaceskip=0.5em
+\setbox1=\vbox{\hsize=93.2mm\parindent=0cm\leftskip=0cm plus 1 fill\pdfliteral{q 0.8 g}
+\strut Μὴ εἶναι βασιλικὴν ἀτραπὸν ἐπὶ γεωμετρίαν.\pdfliteral{Q}%,\break
+%εἶμέν τε καὶ οὐκ εἶμεν.\strut
+\par
+}
+\nopagenumbers
+\hsize=\wd1
+\vsize=\ht1 \advance\vsize by \dp1
+\pdfpageheight=\vsize \advance \pdfpageheight by 2pt
+\pdfpagewidth=\hsize % \advance \pdfpagewidth by 2pt
+\pdfhorigin=0pt
+\pdfvorigin=1pt
+
+%\parskip=0cm
+\topskip=0cm
+\box1
+
+
+
+\end

@@ -275,6 +275,7 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
   // let's split string into type - index - param - units
   thsplit_words(& this->mbf, prjstr);
   thdb2dprjpr ret_val;
+  std::string index_str_str(":");
   thdb2dprj tp;
   char ** pars = this->mbf.get_buffer(), ** pars2;
   const char * type_str, * index_str = "";
@@ -290,9 +291,9 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
     case 2:
       pars2 = this->mbf2.get_buffer();
       type_str = pars2[0];
-      index_str = this->db->strstore(pars2[1], true);
-      if (!th_is_keyword(index_str))
-        ththrow(("projection index not a keyword -- %s", index_str))
+      index_str_str += pars2[1];
+      if (!th_is_keyword(pars2[1]))
+        ththrow(("projection index not a keyword -- %s", pars2[1]))
       break;
     default:
       ththrow(("only one projection index allowed -- %s", pars[0]))
@@ -301,7 +302,7 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
   if (prj_type == TT_2DPROJ_UNKNOWN)
     ththrow(("unknown projection type -- %s", pars[0]));
   
-  if ((prj_type == TT_2DPROJ_NONE) && (strlen(index_str) > 0))
+  if ((prj_type == TT_2DPROJ_NONE) && (index_str_str.length() > 1))
     ththrow(("no projection index allowed -- %s",prjstr))
   
   //parse rest arguments
@@ -314,6 +315,8 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
         ththrow(("too many projection arguments"))
       if (npar > 1) {
         thparse_double(asv,par,pars[1]);
+        index_str_str += ":";
+        index_str_str += pars[1];
         if (asv != TT_SV_NUMBER)
           ththrow(("invalid projection parameter -- %s",pars[1]))
         if (npar > 2) {
@@ -333,6 +336,8 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
   }
   
   // let's find projection in a set or create a new one
+  if (index_str_str.length() > 1)
+    index_str = this->db->strstore(index_str_str.c_str(), true);
   thdb2dprjid_map::iterator pi;
   thdb2dprjid tpid(prj_type, index_str);
   bool prj_found = false;
@@ -347,13 +352,6 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
   
   if (prj_found) {
     ret_val.prj = pi->second;
-    // check parameters
-    switch (prj_type) {
-      case TT_2DPROJ_ELEV:
-        if (par != pi->second->pp1) {
-          ret_val.parok = false;
-        }
-    }
   } else {
     if (insnew) {
       this->prj_lid++;

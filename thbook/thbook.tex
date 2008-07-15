@@ -9,6 +9,7 @@
   \let\red\relax \let\blue\relax \let\grey\relax 
   \let\black\relax \let\green\relax \let\POPcolor\relax
 \else 
+  \pdfminorversion 5
   \input etc/supp-mis 
   \input etc/supp-pdf 
   \pdfinfo{/Title (The TherionBook)
@@ -50,6 +51,7 @@
 \font\eightrm=cmr8
 \font\eightit=cmti8
 \font\eightmit=cmmi8
+\font\tenitbx=cmbxti10
 
 \textfont0=\rm
 \textfont1=\mit
@@ -68,7 +70,7 @@
 \def\cvak{\ifdim\dimen0<6pt \dimen0=9pt \else \dimen0=3pt\fi}
 \def\bodky{\leaders\hbox to12pt{\kern\dimen0.\hss}\hfil}
 
-\def\chapter#1.{\eject\outline{#1}
+\def\chapter#1.{\outline{#1}
 	\skiplines2\centerline{\chap #1}
 	\nobreak   \write1{\string\cvak\string\penalty-50
                     \string\Line{\string\pdfstartlink\space
@@ -117,6 +119,8 @@
 %    \catcode`\,=\active \catcode`\'=\active %
      \catcode`\`=\active %
 \catcode`\*=12
+\catcode`\"=12
+\catcode`\'=12
      \def\par{\leavevmode\endgraf}% this causes that empty lines aren't 
                                   % skipped
      \obeylines \uncatcodespecials \obeyspaces %
@@ -124,14 +128,34 @@
 \def\doverbatim#1{\def\next##1#1{##1\endgroup\POPcolor}\next}%
 
 
-\def\pic#1{\par\penalty-200
-  \midinsert
+\def\MPpic#1{%\par\penalty-200
+%  \midinsert
   \ifx\pdfoutput\undefined
-    \centerline{\epsfbox{#1}}
+    %\centerline{
+    \epsfbox{mp/#1}%}
   \else
-    \centerline{\convertMPtoPDF{#1}{1}{1}}%
+    %\centerline{
+    \convertMPtoPDF{mp/#1}{1}{1}%}%
   \fi
-  \endinsert
+%  \endinsert
+}
+
+\def\pic{\@getoptionalarg\@pic}
+\def\@pic#1{%
+  \ifx\pdfoutput\undefined[[PICTURE SKIPPED IN DVI OUTPUT]]\else
+  \pdfximage\ifx\@optionalarg\empty
+            \else width\@optionalarg \fi{pic/#1}\pdfrefximage\pdflastximage
+  \fi
+}
+
+\def\fitpic#1{
+  \ifx\pdfoutput\undefined[[PICTURE SKIPPED IN DVI OUTPUT]]\else
+  \medskip
+  \setbox0=\hbox{\pdfximage{#1}\pdfrefximage\pdflastximage}
+  \centerline{\pdfximage
+    \ifdim\wd0>\ht0 width \else height \fi 10cm{#1}\pdfrefximage\pdflastximage}
+  \medskip
+  \fi
 }
 
 \def\mapsymbol#1{%
@@ -211,9 +235,10 @@
   \splittopskip\ht\strutbox % top baseline for broken footnotes
   \splitmaxdepth\dp\strutbox \floatingpenalty\@MM
   \leftskip=18pt \rightskip\z@skip \spaceskip\z@skip \xspaceskip\z@skip
-  \indent\llap{#1\thinspace}\ignorespaces
+  \indent\black\llap{#1\thinspace}\ignorespaces
   \footstrut\futurelet\next\fo@t}
 \count\footins=1000 % footnote magnification factor (1 to 1)
+\def\@foot{\POPcolor\strut\egroup}
 
 \catcode`@=12 % at signs are no longer letters
 
@@ -238,5 +263,6 @@
 \input ch04
 \input ch05
 \input ch06
+\input ch07
 
 \end

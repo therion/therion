@@ -10,6 +10,8 @@ therion:
    doline, dig, air-draught(:winter|summer). Also `not' is supported before flag.
    User defined attributes may be added to stations using flag `attr' followed
    by attribute name and value.
+ * station flags can be turned on|off using layout:
+   symbol-show|hide point flag:entrance|continuation|sink|spring|doline|dig...
  * added `splay' and  `approx[imate]' survey shot flag
  * continuation code option was removed from "point continuation" and
    station. Use user defined attributes instead.
@@ -23,6 +25,7 @@ therion:
    instead of replaced
  * added russian translations + encodings (thanks to Vasily Vl. Suhachev)
  * updated french translations (thanks to Gilbert Fernandes)
+ * attributes to metapost are exported as strings only
  * bugs fixed:
    - symbol-show|hide line moonmilk works
    - declination output fixed (half year shift removed)
@@ -32,14 +35,15 @@ therion:
    
 xtherion:
 
+ * ERROR/WARNING state of compilation
  * changed increased default sidebar width + default sidebar width
    configuration option in xtherion.ini file
- * bugs fixed:
-   - toolbar icon decriptions added to localization files
  * single .xtherion.dat file containing survey and map structures is created
    after compilation
  * bugs fixed: 
    - "end of line" characters translation
+   - "-size" bug in point editor fixed
+   - toolbar icon decriptions added to localization files
    
 loch:
 

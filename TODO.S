@@ -1,14 +1,12 @@
 HOT LIST:
 
-+ samples: q-marks sample
-+ samples: cave-list example
-+ hide/show station attributes, change station export
-+ check passage-height up/down
-+ save/load compilation status from .xtherion.dat file
-+ add shot type to attribute export
-
++ new version numbering major.minor.build
++ add shot type (leg flag) to attribute export
++ sort caves in export according to source position!
++ layout: default text orientation switch 
++ automatic label flip if they are up-side down according to given orientation
++ check ignoreall on e-mail sample
 + update TODO list
-+ remode ATTR_  _x from mp code, use save instead 
 + attributes sample
 + show/hide U symbols
 + KML table export
@@ -89,14 +87,18 @@ HOT LIST:
   
 xtherion:
 
-+ xtherion - if error but compilation OK, generate only warning message
++ generate error if therion is not found
++ search & replace toolbar to compiler
++ moving split bar in compiler window
++ commands for tabbing/commenting out blocks of texts
++ rightclick on map-item with changes of types and subtypes
++ multiselection for properties changing
 + fix file saving when drive/device have been unplugged
 + fix: the scrollbar does not appear automatically in
   compilation window after a compile. We must resize the window or go back
   in image window (and go back in compile window) to make it appear
 + save/load xtherion startup script to $HOME/.xtherion
 + edit line -> to bezier / to polyline option
-+ rightclick on map-item with changes of types and subtypes
 + simple line digitizer
 + add map editor import filter
 + SVG import into map editor (using tcldom)

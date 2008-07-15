@@ -1,0 +1,402 @@
+%% file: TXSruled.tex - Ruled Tables - TeXsis version 2.18
+%% @(#) $Id: TXSruled.tex,v 18.0 1999/07/09 17:24:29 myers Exp $
+%======================================================================*
+%
+%       These macros will typeset tables with vertical and
+% horizontal rules. The syntax is similar to Ray Cowan's TABLES.TEX,
+% but the macros have been completely rewritten. Vertical and horizontal 
+% rules are drawn by macros using vertical spacing controlled by struts.
+% Usage:
+%       \ruledtable
+%       <item> <tab> ... <item> <cr>
+%       ...
+%       <item> <tab> ... <item> \endruledtable
+% where <item> is an element of the table (every row must have exactly 
+% the same number of items, although some may be blank), <tab> is any
+% one of
+%     &                 for no vertical rule
+%     |  [or \vb]       for vertical rule
+%     \| [or \Vb]       for thick vertical rule
+%     \dbl              for double vertical rule
+% and <cr> is any one of
+%     \nr               for no horizontal rule
+%     \cr               for horizontal rule
+%     \CR [or \crthick] for thick horizontal rule
+% The last <cr> must be omitted in favour of the \endruledtable
+%
+%  For horizontal rules across only some columns use
+%       ... \nr
+%       \crule | \cskip & \Crule ... \crpart
+% where \crpart is a special \cr for the partial rule line and
+%       \cskip          no rule for column
+%       \crule          horizontal rule for column
+%       \Crule          thick horizontal rule for column
+% The number of columns must be identical to the other rows.
+%
+% To change the appearance of the table, modify \TableItem.
+% Several modifications are built in:
+%       \LeftJustifyTables      left justify each column
+%       \RightJustifyTables     right justify each item
+%       \NoJustifyTables        center each item (default)
+%       \tablespace             horizontal spacing around each item 
+%                               (default is \quad)
+%       \TightTables            use \ horizontal spacing
+%       \LooseTables            use \quad horizontal spacing (default)
+%
+% Use \bigitem to expand the vertical strut for high or deep items. 
+%
+%       These macros have been reorganized and substantially revised from
+% version 2.13. The following functional changes have been made:
+%       (1) The @ signs have been removed from the names of the macros
+% used to save the Plain \cr, \span, and & so that they can be used to
+% modify the preamble. See above.
+%       (2) Macros for partial horizontal rules have been added.
+%       (3) \tabskip glue has been added so that \tablewidth works
+% correctly -- the table stretches uniformly over all columns.
+%       (4) \linecount has been moved to the \cr macros. It produces a
+% warning if the number of columns is different from that in the
+% previous row.
+%       (5) Trailing spaces in the table items are added to the output.
+% A macro \NoTrailingSpaces inserts an \unskip after each item to remove
+% them. But this also removes trailing skips unless they are followed by
+% an empty \hbox or something similar. This is done automatically for 
+% an \hfill (frequently used to left justify an item).
+%       The default is \TrailingSpaces, but you may wish to insert
+% \NoTrailingSpaces in your TXSsite.tex file.
+%       (6) \para uses \normalbaselines rather than specific pt values 
+% for the interline spacing and the final strut.
+%
+% (C) copyright 1990, 1991 by Eric Myers and Frank E. Paige
+%======================================================================*
+% Counters and such:     
+\catcode`@=11                                   % @ is a letter here
+\catcode`\|=12                                  % make sure | is not active
+\catcode`\&=4                                   % and that & is alignment tab
+
+\newcount\ncols         \ncols=\z@              % number of columns in table
+\newcount\nrows         \nrows=\z@              % number of rows in table
+\newcount\curcol        \curcol=\z@             % current column counter
+\let\currow=\nrows                              % current row counter
+     
+\newdimen\thinsize      \thinsize=0.6pt         % thin rule width
+\newdimen\thicksize     \thicksize=1.5pt        % thick rule width
+\newdimen\tablewidth    \tablewidth=-\maxdimen  % start ``turned off''
+\newdimen\parasize      \parasize=4in           % paragraph size in tables
+
+\newif\iftableinfo      \tableinfotrue          % report rows and columns? Yes
+\newif\ifcentertables   \centertablestrue       % center tables? Yes
+\def\centeredtables{\centertablestrue}%
+\def\noncenteredtables{\centertablesfalse}%
+\def\nocenteredtables{\centertablesfalse}%      % synonym !
+     
+\let\plaincr=\cr                        % save real \cr
+\let\plainspan=\span                    % save real \span
+\let\plaintab=&                         % save real alignment tab &
+\def\ampersand{\char`\&}%               % to print `&' in text
+\let\lparen=(                           % save left paren     
+\let\NX=\noexpand                       % shorthand for \noexpand is \NX
+
+%---------------------------------------*
+% Main macros:
+%       \ruledtable <table stuff> \endruledtable turns on the ruled
+% table definitions and makes the table with \halign. It handles all
+% the control stuff; the real work is done by \@RuledTable.
+     
+\def\ruledtable{\relax                          % make ruled table
+    \@BeginRuledTable                           % initialize table
+    \@RuledTable}%                              % now process table body
+
+%  \@BeginRuledTable does all the work of setting things up before
+% we read in the body of the table
+
+\def\@BeginRuledTable{%                         % initialize table
+   \ncols=0\nrows=0                             % reset row and column count
+   \begingroup                                  % keep the following local
+    \offinterlineskip                           % so vrules touch
+    \def~{\phantom{0}}%                         % ~ is phantom digit
+    \def\span{\plainspan\omit\relax\colcount\plainspan}%  \span USER columns
+    \let\cr=\crrule                             % \cr gives a \tablerule
+    \let\CR=\crthick                            % \CR gives a \thickrule
+    \let\nr=\crnorule                           % \nr give no rule
+    \let\|=\Vb                                  % thick vrule between columns
+    \def\hfill{\hskip0pt plus1fill\hbox{}}%     % so it is not removed
+% 
+% support old \tablestrut in place of \tstrut if it exists
+%
+    \ifx\tablestrut\undefined\relax             % if not defined, no problem
+    \else\let\tstrut=\tablestrut\fi             % use \tablestrut
+%
+    \catcode`\|=13 \catcode`\&=13\relax         % make | and & active
+    \TableActive                                % | and & get active \def`s
+    \curcol=1                                   % reset column count
+%
+% define \Halign to do an \halign with or without a width
+%
+    \ifdim\tablewidth>-\maxdimen\relax          %
+      \edef\@Halign{\NX\halign to \NX\tablewidth\NX\bgroup\TablePreamble}% 
+      \tabskip=0pt plus 1fil                    % let things stretch
+    \else                                       %
+      \edef\@Halign{\NX\halign\NX\bgroup\TablePreamble}% 
+      \tabskip=0pt                              % no stretch between columns
+    \fi                                         %
+%
+% center text if needed
+%
+    \ifcentertables                             % should table be centered?
+       \ifhmode\vskip 0pt\fi                    % yes: force vertical mode
+       \line\bgroup\hss                         % center across page
+    \else\hbox\bgroup                           % else: just put in \hbox
+    \fi}%                                       % end of \@BeginRuledTable
+
+
+%       \@RuledTable builds the table with \@Halign and getting the
+% table body text as its argument.
+
+\long\def\@RuledTable#1\endruledtable{%         % ruled table alignment
+   \vrule width\thicksize                       % thick rule on side
+     \vbox{\@Halign                             % then do \halign
+       \thickrule                               % thick rule on top
+       #1\killspace                             % body of table
+       \tstrut                                  % vertical strut for last line
+       \linecount                               % count this line
+       \plaincr\thickrule                       % \cr, thick rule on bottom
+     \egroup}%                                  % end of \halign and \vbox
+   \vrule width\thicksize                       % thick rule on side, end \hbox
+   \ifcentertables\hss\fi\egroup                % finish table centering
+  \endgroup                                     % end group from \ruledtable
+  \global\tablewidth=-\maxdimen                 %   and reset width
+  \iftableinfo                                  % report rows and columns
+      \immediate\write16{[Nrows=\the\nrows, Ncols=\the\ncols]}%
+   \fi}%                                        % end of \@RuledTable
+     
+%---------------------------------------*
+% Preamble and item macros:
+%       \TablePreamble is the preamble for the \halign in \ruledtable. 
+%       To change how each item is processed change \TableItem.  
+%       To make a more complicated table you can change \TablePreamble,
+% but if you do so use the following substitutions in a standard \halign 
+% preamble:
+%    for  &     use     \plaintab
+%    for  \cr   use     \plaincr
+%    for  #     use     ##
+%    for  ##    use     ####
+
+\def\TablePreamble{%                    % \ruledtable preamble
+   \TableItem{####}%                    % the first item
+   \plaintab\plaintab                   % && means repeat this
+   \TableItem{####}%                    % the subsequent items
+   \plaincr}%                           % end of preamble
+
+
+%       \TableItem contains glue or spacing around the item
+
+\def\@TableItem#1{%                     % centers item in ruled table
+   \hfil\tablespace                     % left glue
+   #1\killspace%                        % item
+   \tablespace\hfil                     % right glue
+    }%
+
+\def\@tableright#1{%                    % right justifies item in ruled table
+   \hfil\tablespace\relax               % left glue
+   #1\killspace%                        % item
+   \tablespace\relax}%                  % right glue
+
+\def\@tableleft#1{%                     % left justifies item in ruled table
+   \tablespace\relax                    % left glue
+   #1\killspace%                        % item
+   \tablespace\hfil}%                   % right glue
+
+\let\TableItem=\@TableItem              % default is centered
+     
+\def\RightJustifyTables{\let\TableItem=\@tableright}%   % to right justify
+\def\LeftJustifyTables{\let\TableItem=\@tableleft}%     % to left justify
+\def\NoJustifyTables{\let\TableItem=\@TableItem}%       % to center
+
+
+%       \TightTables makes the spacing of a table as tight as possible.
+% \LooseTables, the default, gives more pleasing spacing.
+
+\def\LooseTables{\let\tablespace=\quad}%        % table spacing is \quad
+\def\TightTables{\let\tablespace=\space}%       % table spacing is space
+\LooseTables                                    % default is \quad
+
+
+%       \TrailingSpaces, the default, allows trailing spaces and glue
+% to change the appearance of a table. \NoTrailingSpaces removes all
+% trailing spaces and glue before inserting the table glue.
+
+\def\TrailingSpaces{\let\killspace=\relax}      % do not kill trailing space
+\def\NoTrailingSpaces{\let\killspace=\unskip}   % kill trailing space
+\TrailingSpaces                                 % default
+
+%---------------------------------------*
+% Table Height and Width:
+%
+%  Normally tables are set to their natural width.  If \tablewidth
+%  has been set then we set the table to that width instead,
+%  but only for the next table.  Then \tablewidth is turned off
+
+%      \setRuledStrut sets up the vertical strut \tstrut with
+% the appropriate dimensions to hold up one line of a ruled table. 
+
+\def\setRuledStrut{% sets interlines spacing for ruled tables
+   \dimen@=\baselineskip                        % \dimen@ = extra space
+   \advance\dimen@ by-\normalbaselineskip       % between lines
+   \ifdim\dimen@<.5ex \dimen@=.5ex\fi           % minimum space
+   \setbox0=\hbox{\lparen}%                     % get character size
+   \dimen1=\dimen@ \advance\dimen1 by \ht0      %% space above line
+   \dimen2=\dimen@ \advance\dimen2 by \dp0      %% space below line
+   \def\tstrut{\vrule height\dimen1 depth\dimen2 width\z@}%
+   }%
+
+\def\tstrut{\vrule height 3.1ex depth 1.2ex width 0pt}%  default
+
+
+%      \tstrut does not produce the correct spacing if the entry in
+% the table is too high. The following constructs a strut higher than its
+% argument and then prints the argument. The minimum space value should
+% be the same as in \setRuledStrut. 
+
+\def\bigitem#1{%                                % larger table entry
+   \dimen@=\baselineskip                        % \dimen@ = extra space
+   \advance\dimen@ by-\normalbaselineskip       % between lines
+   \ifdim\dimen@<.5ex \dimen@=.5ex\fi           % minimum space
+   \setbox0=\hbox{#1}%                          % get argument size
+   \dimen1=\dimen@ \advance\dimen1 by \ht0      % space above line
+   \dimen2=\dimen@ \advance\dimen2 by \dp0      % space below line
+   \vrule height\dimen1 depth\dimen2 width\z@   % make strut to size
+   \copy0}%                                     % print argument
+
+
+%       \vctr{stuff} centers the stuff vertically, so that it can
+% appear between two ROWS.
+     
+\def\vctr#1{\hfil\vbox to 0pt{\vss\hbox{#1}\vss}\hfil}%
+
+%---------------------------------------*
+% Vertical rules:
+%       \tab, \vb and \Vb are used in a table to separate columns with no
+% rule, a thin rule, or a thick rule, respectively.  \nextcolumn{<rule>} skips
+% to  the next column and puts the <rule> between columns.  Use this to build
+% your own separators.
+     
+\def\nextcolumn#1{%                             % move to next col.
+   \plaintab\omit#1\relax\colcount              % tab, insert #1, count
+   \plaintab}%                                  % tab to next user col.
+     
+\def\tab{%                                      % no rule between columns
+   \nextcolumn{\relax}}%                        % count column
+
+\let\novb=\tab                                  % synonym for \tab
+
+\def\vb{%                                       % thin rule between columns
+   \nextcolumn{\vrule width\thinsize}}%         % count and rule
+
+\def\Vb{%                                       % THICK rule between columns
+   \nextcolumn{\vrule width\thicksize}}%        % count and thick rule
+
+\def\dbl{%                                      % double rule between columns
+   \nextcolumn{\vrule width\thinsize            % count and rule
+   \hskip 2\thinsize \vrule width\thinsize}}%   % and skip and rule
+
+%       \TableActive makes | the same as \vb and & the same as \tab so
+% these single characters can be used between columns. Here we have to
+% make & and | active so we get the active version of the characters,
+% hence the temporary change of \catcode.
+     
+{\catcode`\|=13 \let|0
+ \catcode`\&=13 \let&0
+ \gdef\TableActive{\let|=\vb \let&=\tab}%
+}% end \catcode`s
+
+%---------------------------------------*
+% Horizontal rules:
+%       These replacements for \cr put a wide \vrule at the end of the
+% line and maybe put a rule under the line, then begin the next line
+% with the wide \vrule from the preamble.
+     
+
+\def\crrule{\killspace                  % \cr plus rule
+   \tstrut                              % strut for spacing
+   \linecount                           % count this line
+   \plaincr\tablerule                   % \cr, regular rule below line
+  }%
+
+\def\crthick{\killspace                 % \cr plus thick rule
+   \tstrut                              % strut for vertical spacing
+   \linecount                           % count this line
+   \plaincr\thickrule                   % \cr, rule, begin next line
+  }%                
+     
+\def\crnorule{\killspace                % \cr plus no rule
+   \tstrut                              % strut for spacing
+   \linecount                           % count this line
+   \plaincr                             % \cr, norule, begin next line
+   }%
+   
+\def\crpart{\killspace                  % end partial rule line
+   \linecount                           % count this line
+   \plaincr}                            % and end it
+
+
+%       These rules go across the table.
+     
+\def\tablerule{\noalign{\hrule height\thinsize depth 0pt}}%
+\def\thickrule{\noalign{\hrule height\thicksize depth 0pt}}%
+
+
+%       Rules for individual columns. You must use \cskip in columns
+% with no rules to \omit the \TablePreamble.
+
+\def\cskip{\omit\relax}%
+\def\crule{\omit\leaders\hrule height\thinsize depth0pt\hfill}%
+\def\Crule{\omit\leaders\hrule height\thicksize depth0pt\hfill}%
+     
+%---------------------------------------*
+% Counting macros:     
+%       These macros count rows and columns of the table. After the
+% first line has been processed \the\ncols is the total number of
+% columns in the table, which may be useful. During processing,
+% \the\curcol is the number of the current column, while \the\currow is
+% the number of the current row.
+     
+
+\def\linecount{%                                % count and check row
+   \global\advance\nrows by1%                   % advance row counter
+   \ifnum\ncols>0%                              % if \ncols set
+      \ifnum\curcol=\ncols\relax\else           % if new \ncols different
+      \immediate\write16%                       %   then write message
+      {\NX\ruledtable warning: Ncols=\the\curcol\space for Nrow=\the\nrows}%
+      \fi\fi                                    % end of tests
+   \global\ncols=\curcol                        % save columns in \ncols
+   \global\curcol=1}                            % reset counter
+
+\def\colcount{\relax                            %
+   \global\advance\curcol by 1\relax}%          % advance column counter
+
+%---------------------------------------*
+% TEXT TABLES.
+%       To put text in a table use \para{<text>}, with \parasize set
+%  to the desired width of the text.
+
+\long\def\para#1{%                      % make a paragraph for tables
+   \vtop{\hsize=\parasize               % width - set before \para called
+   \normalbaselines                     % set normal baseline skips
+   \noindent #1\relax                   % insert text
+   \vrule width 0pt depth 1.1ex}%       % hold depth of box
+}%
+
+%---------------------------------------*
+% TABLES.TEX
+%   For compatability with Cowan's TABLES.TEX we also allow the
+% syntax \begintable ... \endtable, which do the same thing.
+%
+
+\def\begintable{\relax                          % make ruled table
+    \@BeginRuledTable                           % initialize table
+    \@begintable}%                              % now process table body
+
+\long\def\@begintable#1\endtable{%              % ruled table alignment
+   \@RuledTable#1\endruledtable}%               % same as \ruledtable
+
+%>>> EOF TXSruled.tex <<<

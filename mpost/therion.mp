@@ -69,9 +69,8 @@ horiz_labels:=true;
 transparency:=false;
 
 string ATTR__id, ATTR__survey, ATTR__scrap;
-boolean ATTR__scrap_centerline, ATTR__text_x;
+boolean ATTR__scrap_centerline;
 picture ATTR__text;
-ATTR__text_x := false;
 ATTR__scrap_centerline := false;
 
 color label_fill_color, label_fill_color_tmp;
@@ -202,8 +201,8 @@ def fonts_setup (expr t,s,m,l,h) =
         "\def\thstationname{\thsmallsize}" &
         "\def\thdate{\thsmallsize}" &
         "\def\thheight{\thsmallsize}" &
-        "\def\thheightpos{\thsmallsize+\ignorespaces}" &
-        "\def\thheightneg{\thsmallsize-\ignorespaces}" &
+        "\def\thheightpos{+\ignorespaces}" &
+        "\def\thheightneg{-\ignorespaces}" &
         "\def\thframed{\thsmallsize}" &
         "\def\thwallaltitude{\thtinysize}"
   to "mptexpre.tex";

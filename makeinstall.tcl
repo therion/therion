@@ -26,6 +26,14 @@ if {[string equal $platform WIN32]} {
   copyfile 1 therion.exe "c:/Program files/Therion/therion.exe"
   copyfile 1 xtherion/xtherion.tcl "c:/Program files/Therion/xtherion.tcl"
   copyfile 1 loch/loch.exe "c:/Program files/Therion/loch.exe"
+} elseif {[string equal $platform MACOSX]} {
+  copyfile 1 therion /usr/bin/therion
+  copyfile 1 xtherion/xtherion /usr/bin/xtherion
+  copyfile 1 loch/loch /usr/bin/loch
+  copyfile 1 therion.ini /etc/therion.ini.new
+  copyfile 1 xtherion/xtherion.ini /etc/xtherion.ini.new
+  copyfile 0 therion.ini /etc/therion.ini
+  copyfile 0 xtherion/xtherion.ini /etc/xtherion.ini
 } else {
   copyfile 1 therion $instdir/bin/therion
   copyfile 1 xtherion/xtherion $instdir/bin/xtherion

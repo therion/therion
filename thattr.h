@@ -89,10 +89,7 @@ struct thattr_field {
   std::string m_xdbf_name;  ///< DBF field name.
 
   std::string m_xmp_name,  ///< Metapost field name.
-    m_xmp_last_string;  ///< Last string value exported for given field.
-  bool m_xmp_numeric,  ///< Whether MP field is numeric.
-    m_xmp_transform;  ///< Whether MP field is transformed.
-  double m_xmp_last_numeric;  ///< Last numeric value exported for given field.
+    m_xmp_last;  ///< Last string value exported for given field.
 
 };
 

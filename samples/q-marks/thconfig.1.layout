@@ -5,10 +5,11 @@ layout common
   map-header 0 0 off
 #! When you export map and you use
 #!CODE
-####TODO#### symbol-show point continuation-station
+  symbol-show point flag:continuation
 #!ENDCODE
 #! in your layout, station with continuation flag specified
-#! is marked by question mark.
+#! is marked by question mark (continuation
+#! symbol is shown over the station).
 #!IMAGE map1.pdf
 endlayout
 
@@ -19,24 +20,24 @@ endlayout
 layout show-cont
   copy common
 
-#! You may redefine continuation station symbol to show also
-#! continuation description and code (stored in <code>text</code> 
+#! You may redefine continuation symbol to show also
+#! continuation description (stored in <code>_text</code> 
 #! attribute) using following layout code
 #!CODE
 code metapost
   def p_continuation(expr pos,theta,sc,al) =
-
-    % draw question mark above station
-    p_continuation_UIS(pos,0.0,1.0,(0,2));    
+  
+    % draw default continuation symbol
+    p_continuation_UIS(pos,theta,sc,al);
 
     % if text attribute is set
-    if ATTR__text_x:
+    if known(ATTR__text) and picture(ATTR__text):
     
       % set labeling color to light orange
       push_label_fill_color(1.0, 0.9, 0.8);   
       
-      % draw filled label with text below station
-      p_label.bot(ATTR__text,pos shifted (0,-0.5u),0.0,8);      
+      % draw filled label with text next to ?
+      p_label.urt(ATTR__text,(.5u,-.25u) transformed T,0.0,8);      
       
       % restore original labeling color
       pop_label_fill_color;                   
@@ -45,7 +46,7 @@ code metapost
   enddef;
 endcode
 #!ENDCODE
-#! Then also continuation code and description is displayed in the map.
+#! Then also continuation description is displayed in the map.
 #!IMAGE map2.pdf
 endlayout
 

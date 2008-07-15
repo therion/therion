@@ -1,7 +1,5 @@
-\ifx\pdfoutput\undefined\else
 \vbox to 0pt{\kern-1in\kern-10pt\hbox to 0pt{\kern-1in
-  \pdfximage{pic/thbook.jpg}\pdfrefximage\pdflastximage\hss}\vss}
-\fi
+  \pic{thbook.jpg}\hss}\vss}
 
 {\footline={}
 \hbox{}
@@ -32,22 +30,19 @@ This book describes Therion \input version
 \leftline{{\it Martin Sluka}, {\it Martin Heller}, {\it Wookey}, {\it Olly Betts}}
 \leftline{and all users giving feedback and suggestions.}
 \vskip1.2cm
-\leftline{Translations:}
-%\leftline{{\it Ladislav Bla\v zek} (Czech)}
-%\leftline{{\it  Eric Madelaine} (French)}
-%\leftline{{\it  Roman Mu\~noz} (Spanish)}
+\leftline{Translations (\%):}
 \medskip
-\leavevmode\kern1em\vbox{\halign{#\hfil\quad&#\hfil\quad&#\hfil\quad&#\hfil\cr
-{\it Language}&{\it XTherion}&{\it Map header}&{\it Translated by}\cr\noalign{\smallskip\hrule\smallskip}
-cz (Czech) & yes & yes & Ladislav Bla\v zek\cr
-de (German) & no & yes & Roger Schuster\cr
-en[\_UK$\mid$\_US] (English) & yes & yes & {\it original}\cr
-es (Spanish) & yes & yes & Roman Mu\~noz\cr
-fr (French) & no & yes & Eric Madelaine, \rlap{Gilbert Fernandes}\cr
-it (Italian) & yes & yes & Marco Corvi\cr
-pt[\_BR$\mid$\_PT] (Portuguese) & no & yes & Toni Cavalheiro\cr
-ru (Russian) & yes & yes & Vasily V. Suhachev\cr
-sk (Slovak) & yes & yes & Stacho Mudr\'ak\cr
+\leavevmode\kern1em\vbox{\halign{#\hfil\quad&\hfil#\hfil\quad&\hfil#\hfil\quad&\hfil#\hfil\quad&#\hfil\cr
+{\it Language}&{\it XTherion}&{\it Map header}&{\it Loch}&{\it Translated by}\cr\noalign{\smallskip\hrule\smallskip}
+cz                 & 95 & 99 & -- & Ladislav Bla\v zek\cr
+de                 & -- & 96 & -- & Roger Schuster\cr
+en[\_UK$\mid$\_US] & 88 & 95 &100 & \cr
+es                 & 88 & 96 & -- & Roman Mu\~noz\cr
+fr                 & -- & 99 & -- & Eric Madelaine, Gilbert Fernandes\cr
+it                 & 94 & 98 & -- & Marco Corvi\cr
+pt[\_BR$\mid$\_PT] & -- & 96 & -- & Toni Cavalheiro\cr
+ru                 & 94 & 99 & -- & Vasily V. Suhachev\cr
+sk                 & 99 & 99 & 96 & Stacho Mudr\'ak\cr
 }}
 
 
@@ -79,6 +74,7 @@ in the Dead Bats Cave in Slovakia and the map of it produced by Therion.
 \input etc/contents
 \egroup
 \vfil\eject
+\ifodd\pageno\else\hbox{}\eject\fi
 }
 
 \immediate\openout1=etc/contents

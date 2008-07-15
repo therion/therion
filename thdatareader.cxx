@@ -76,7 +76,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
   thobjectsrc osrc;
 
 #ifndef THMSVC
-//  try {
+  try {
 #endif
     while ((ln = this->inp.read_line()) != NULL) {
 
@@ -237,10 +237,10 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
     }
 
 #ifndef THMSVC
-//  }
-  // put everything into try block and throw exception, if error
-//  catch (...)
-//    threthrow(("%s [%d]", this->inp.get_cif_name(), this->inp.get_cif_line_number()))
+  }
+// put everything into try block and throw exception, if error
+  catch (...)
+    threthrow(("%s [%d]", this->inp.get_cif_name(), this->inp.get_cif_line_number()))
 #endif
 
   dbptr->end_insert();  

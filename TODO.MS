@@ -1,39 +1,49 @@
+preklady (SK, EN)
+
+altitude scaling
+
+zacyklena hlaska v xtherione pre option -size xl
+
+ak je label prazdny retazec, zhuci mp?
+
++proj=merc +latts=0 +lon0=0 +k=1 +x0=0 +y0=0 +a=6378137 +b=6378137 +units=m +nadgrids=\@null +no_defs
+
+nejde naraz zadat mapy elev. v dvoch projekciach
+
+ATTR_xx_numeric?? - zrusit ATTR_xx_numeric, _transform
+
+LOG-subor: 
+X m surveyed (of which Y approximate) + about Z unsurveyed but explored
+(see the continuation-list and survey-list for details)
+
+do xtherionu info o tom ktory ini precital, + warning ak nerozparsoval ini
+
 xtherion linux -- delete nezmaze oznaceny blok textu, len znak na kurzore
-warning v xtherione - oranzovou, nie cervenou
-                    - zapisat warningy a errory z therionu do .xtherion.dat
 
-# stale mizne thconfig (po zacyklenej hlaske tcltk a kill -9)
 label k line section
-ATTR_xx_numeric?? - zrusit ATTR_xx_numeric
-# error v XTH prevzaty z MP hlasok (len linux?)?
 
-************************************************
-
-#LAYOUT:   colored_text, grid_coord_freq
-
-#color labels on|(off)
-#grid-coords none|(border)|all
-
-#page-grid ma problemy s originom pri rotacii a cs
 preco nepouzivame if else v Makefile namiesto komentovania casti?
-
 
 pri centerline so zadanou deklinaciou alebo data nosurvey nepozadovat
 datum na vypocet automatickej deklinacie
 
-#konce riadkov + uziv. atributy v export cont.
+obvod scrapu a rozdelena stena 
 
-#jeden .xtherion.dat na adresar
+spajanie ciar
 
-#flags estimated
+*****************************************************************************
+georeferencovanie bitmap aj pomocou jgw/pgw:
 
-#DLZKA: X m (of which Y estimated) + about Z unsurveyed but explored
-#(see the continuation-list for details)
+A world file file is a plain ASCII text file consisting of six values separated by newlines. The format is:
 
-#option -unsurveyed pre station a continuation (centerline + mapa)
-
-#povolit zadavanie dlzok bez medzery
-
+pixel X size
+rotation about the Y axis (usually 0.0)
+rotation about the X axis (usually 0.0)
+negative pixel Y size
+X coordinate of upper left pixel center
+Y coordinate of upper left pixel center
+      
+************************************************
 loch pada pri exporte
 
 X Error of failed request:  GLXBadContext
@@ -52,7 +62,3 @@ The error was 'GLXBadContext'.
  option to change this behavior. You can then get a meaningful
  backtrace from your debugger if you break on the gdk_x_error() function.)
 		
--value [1 1] pri passage-height
-obvod scrapu a rozdelena stena 
-spajanie ciar
-do xtherionu info o tom ktory ini precital, + warning ak nerozparsoval ini

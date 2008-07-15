@@ -1,0 +1,30 @@
+\newread\testin 
+\openin\testin=../samples.doc/index.tex
+\ifeof\testin \message{Warning: skipping the case studies} \expandafter\endinput
+\else \closein\testin \fi
+
+\eject
+\vbox{\hsize=93.2mm\baselineskip=12pt
+\rightline{\eightit There is no royal road to geometry.}
+\pic{euclid.pdf}
+\vskip1pt
+\eightrm 
+\rightline{---Euclid, {\eightmit 3}rd century BC}
+\vskip10pt
+\rightline{\eightit There is no royal road, but there is a road.}
+\vskip3pt
+\rightline{---Frederick P. Brooks, {\eightmit 1987}}
+}
+
+\chapter Case studies.
+
+This chapter is automatically generated from the samples directory in the
+Therion source code.
+
+\newcount\quoteord \quoteord=1
+\catcode`\"=\active
+\def"{\ifnum\quoteord=1\global\quoteord=0``\else\global\quoteord=1\char34 \fi}
+\catcode`\'=\active
+\def'{\ifnum\quoteord=1\global\quoteord=0`\else\global\quoteord=1\char39 \fi}
+
+\input ../samples.doc/index.tex

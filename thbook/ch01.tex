@@ -1,16 +1,15 @@
-\eject
+\eject \ifodd\pageno\else\hbox{}\eject\fi
+
 {\baselineskip=12pt
 \setbox1=\hbox{\eightit LET NO ONE IGNORANT OF GEOMETRY ENTER HERE}
-\line{\pdfximage width \wd1 {pic/ageom.pdf}\pdfrefximage\pdflastximage\hss}
 \copy1
-\vskip6pt
+\vskip4pt
+\line{\pic[\wd1]{ageom.pdf}\hss}
 \hbox to \wd1{\hfil\eightrm ---alleged inscription over the entrance}
 \hbox to \wd1{\hfil\eightrm of Plato's Academy, {\eightmit 4}th century BC}
 }
 
-{\let\eject\relax
 \chapter Introduction.
-}
 
 Therion is a tool for cave surveying. Its purpose is to help 
 
@@ -128,13 +127,15 @@ your printer or scanner and with one click send e-mail with your data.
 Therion needs:
 \list
 * \TeX\ distribution.
-  Necessary only if you want to create 2D maps in PDF format.
+  Necessary only if you want to create 2D maps in PDF or SVG format.
 * Tcl/Tk with {\it BWidget} and optionally {\it tkImg} 
   extension. It is only required for XTherion.
+* {\it convert} and {\it identify} utilities from ImageMagick distribution, 
+  if you want to morph survey sketches.
 \endlist
 
-Windows installer includes \TeX\ and Tcl/Tk distributions with all required 
-extensions. Read the {\it Appendix} if you want to compile Therion yourself.
+Windows installer includes all required packages. 
+Read the {\it Appendix} if you want to compile Therion yourself.
 
 For displaying of maps and models you may use any of the following programs:
 \list
@@ -161,10 +162,14 @@ stuff and creates shortcuts to XTherion and Therion Book.
 \subsubchapter Setting-up environment.
 
 Therion reads settings from the initialization file. Default settings should 
-work fine for users using only ASCII (non-accented latin) characters, 
+work fine for users using just latin characters\[In the PDF map Therion renders most
+of the accented characters as a combination of accent and a base character. 
+Some obscure accents might be omitted. Precomposed accented letters are included
+for Slovak and Czech languages.], 
 standard \TeX\ and \MP. 
 
-If you want to use accented latin or non-latin characters, edit initialization 
+If you want to use own fonts for latin or non-latin characters in PDF maps, 
+edit initialization 
 file. Instructions on how to do this are in the {\it Appendix}.
 
 
@@ -173,7 +178,10 @@ file. Instructions on how to do this are in the {\it Appendix}.
 So, now it's clear what Therion needs, let's have a look at the way 
 it interacts with all these programs:
 
-\pic{mp/schema.1}
+\par\penalty-200
+\midinsert
+\centerline{\MPpic{schema.1}}
+\endinsert
 
 DON'T PANIC! When your system is set-up right the majority of this is hidden from 
 the user and all necessary programs are run automatically by Therion. 

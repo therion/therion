@@ -156,7 +156,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
         this->m_table.insert_attribute("Y","");
       }
     }
-    if (((survey->stat.num_entrances == 1) || ((survey->stat.num_entrances > 1) && (!exploc)))&& (survey->entrance.id > 0)) {
+    if (((survey->stat.num_entrances > 0) && (!exploc)) && (survey->entrance.id > 0)) {
       st = &(this->db->db1d.station_vec[survey->entrance.id - 1]);    
       this->m_table.insert_attribute("Altitude",st->z);
     } else {
@@ -164,13 +164,13 @@ void thexptable::export_survey_entraces(thsurvey * survey)
     }
     if (this->expattr) this->m_table.copy_attributes(this->db->attr.get_object(survey->id));
   }
+
   if (survey->entrance.id == 0) {
     for(obj = survey->foptr; obj != NULL; obj = obj->nsptr) {
       if (obj->get_class_id() == TT_SURVEY_CMD) {
         this->export_survey_entraces((thsurvey *) obj);
       }
     }
-  } else {
   }
 
   // insert entrances within this survey

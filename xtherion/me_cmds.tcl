@@ -1547,36 +1547,36 @@ proc xth_me_cmds_create_point {ix mode x y type opts} {
     }
   }
 
-  # nastavit xsize
-  if {$mode} {
-    set xth(me,cmds,$id,xsize) $xth(me,dflt,point,xsize)
-  } else {
+#  # nastavit xsize
+#  if {$mode} {
+#    set xth(me,cmds,$id,xsize) $xth(me,dflt,point,xsize)
+#  } else {
     set xth(me,cmds,$id,xsize) {}
-  }
-  set optl [xth_me_cmds_get_line_option $opts size]
-  if {[lindex $optl 2]} {
-    set xth(me,cmds,$id,xsize) [lindex $optl 0]
-    set xth(me,cmds,$id,ysize) [lindex $optl 0]
-    set opts [lindex $optl 1]
-  }
-  set optl [xth_me_cmds_get_line_option $opts "x-size"]
-  if {[lindex $optl 2]} {
-    set xth(me,cmds,$id,xsize) [lindex $optl 0]
-    set opts [lindex $optl 1]
-  }
-
-  # nastavit ysize
-  if {$mode} {
-    set xth(me,cmds,$id,ysize) $xth(me,dflt,point,ysize)
-  } else {
+#  }
+#  set optl [xth_me_cmds_get_line_option $opts size]
+#  if {[lindex $optl 2]} {
+#    set xth(me,cmds,$id,xsize) [lindex $optl 0]
+#    set xth(me,cmds,$id,ysize) [lindex $optl 0]
+#    set opts [lindex $optl 1]
+#  }
+#  set optl [xth_me_cmds_get_line_option $opts "x-size"]
+#  if {[lindex $optl 2]} {
+#    set xth(me,cmds,$id,xsize) [lindex $optl 0]
+#    set opts [lindex $optl 1]
+#  }
+#
+#  # nastavit ysize
+#  if {$mode} {
+#    set xth(me,cmds,$id,ysize) $xth(me,dflt,point,ysize)
+#  } else {
     set xth(me,cmds,$id,ysize) {}
-  }
-  set optl [xth_me_cmds_get_line_option $opts "y-size"]
-  if {[lindex $optl 2]} {
-    set xth(me,cmds,$id,ysize) [lindex $optl 0]
-    set opts [lindex $optl 1]
-  }
-  
+#  }
+#  set optl [xth_me_cmds_get_line_option $opts "y-size"]
+#  if {[lindex $optl 2]} {
+#    set xth(me,cmds,$id,ysize) [lindex $optl 0]
+#    set opts [lindex $optl 1]
+#  }
+#  
 #  if {([string length $xth(me,cmds,$id,ysize)] > 0) &&
 #      ([string length $xth(me,cmds,$id,xsize)] == 0)} {
 #    set xth(me,cmds,$id,xsize) $xth(me,cmds,$id,ysize)

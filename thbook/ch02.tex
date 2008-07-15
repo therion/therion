@@ -1,6 +1,7 @@
 \eject
-\vbox to0pt{\line{\pdfximage width 93.2mm {pic/agrippa.jpg}\pdfrefximage\pdflastximage\hss}\vss}\kern-2pt
-{\eightit\baselineskip16.3pt\leftskip2mm\rightskip6.8cm\parindent4.05cm
+\vbox{\pic[93.2mm]{agrippa.jpg}
+\kern-3.48cm
+\eightit\baselineskip16.3pt\leftskip2mm\rightskip6.8cm\parindent4.05cm
 Only for you, children of doctrine and learning, have we written this work. 
 Examine this book, ponder the meaning we have dispersed in various places 
 and gathered again; 
@@ -9,9 +10,7 @@ that it may be understood by your wisdom.\par
 \hbox to 91.2mm{\hfil\eightrm ---Henricus C. Agrippa ab Nettesheym, \eightmit 1533}
 }
 
-{\let\eject\relax
 \chapter Creating data files.
-}
 
 \subchapter Basics.
 
@@ -226,8 +225,8 @@ the command may be used anywhere.
   Survey is the main data structure. 
  % Each data object must belong to a   survey. 
   Surveys may be nested---this allows a hierarchical structure 
-  to be built. Usually at some level of this hierarchical structure
-  survey represents a cave. 
+  to be built. Usually some level of this hierarchical structure
+  survey represents caves, higher levels karst areas and lower levels e.g.~passages. 
 
   Each survey has its own namespace specified by its |<id>| argument. Objects 
   (like survey stations or scraps; see below) which belong to a subsurvey of 
@@ -292,7 +291,8 @@ the command may be used anywhere.
 
 * |entrance <station-name>| = specifies the main entrance to the cave represented
   by this survey. If not specified and there is exactly one station marked entrance
-  in this survey, it is considered to represent a cave also.
+  in this survey, it is considered to represent a cave also. This information is
+  used for |cave-list| export.
 \endoptions
 
 
@@ -406,11 +406,11 @@ the command may be used anywhere.
   * |flags <shot flags>| = set flags for following shots. The supported
     flags are: |surface| (for surface measurements), |duplicate| (for
     duplicated surveys), |splay| (for short side legs that are hidden
-    in extended elevation by default). Those are excluded from length 
+    in extended elevation by default). These are excluded from length 
     calculations. 
     
     If flag is set to |approx[imate]|, it is included to total length
-    calculations, but also calculated separately in survey statistics.
+    calculations, but also displayed separately in survey statistics.
     It should be used for shots, that were not surveyed properly and need
     to be resurveyed.
     
@@ -418,19 +418,19 @@ the command may be used anywhere.
   * |station <station> <comment> [<flags>]| = set the station comment
     and its flags. If |""| is specified as a comment, it is ignored.
     
-    Supported flags: |entrance|, |continuation|, |sink|, |spring|, |doline|,
-    |dig|, |air-draught[:winter/summer]|. Also ``|not|'' is allowed before a flag, 
+    Supported flags: |entrance|, |continuation|, |air-draught[:winter/summer]|, 
+    |sink|, |spring|, |doline|, |dig|. Also |not| is allowed before a flag, 
     to remove previously added flag.
     
-    You can also specify custem attributes to the station using |attr| flag
+    You can also specify custom attributes to the station using |attr| flag
     followed by attribute name and value. Example:\hfil\break
     |station 4 "pit to explore" continuation attr code "V"|
     
     If there is a passage, that was explored, but not surveyed yet, estimated
     explored length of this passage can be added to the station with 
-    |continuation| flag. Just add |explored <explored-length>| to the station 
-    station flags. Explored lengths are a part of survey/cave statistics. 
-    Example:\hfil\break
+    |continuation| flag. Just add |explored <explored-length>| to the 
+    station flags. Explored lengths are a part of survey/cave statistics, 
+    displayed separately. Example:\hfil\break
     |station 40 "ugly crollway" continuation explored 100m|
     
   * |cs <coordinate system>| = coordinate system for stations with
@@ -704,8 +704,12 @@ Point is a command for drawing a point map symbol.
     {\it water-flow:} |permanent| (default), |intermittent|, |paleo|.
 
     The subtype may be specified also directly in |<type>| specification using 
-    `|:|' as a separator.\[E.g.~|station:fixed|] Any subtype specification can
-    be used with user defined type (|u|).
+    `|:|' as a separator.\[E.g.~|station:fixed|] 
+    
+    Any subtype specification can be used with user defined type (|u|).
+    In this case you need also to define corresponding metapost symbol
+    (see the chapter {\it New map symbols}).
+    
   * |orientation/orient <number>| = defines the orientation
     of the symbol. If not specified, it's oriented to north.
     0 $\le$ |number| $<$ 360.
@@ -742,7 +746,7 @@ Point is a command for drawing a point map symbol.
     reference to a cross-section scrap. 
   * |explored <length>| = if the point type is continuation, you can specify
     length of passages explored but not surveyed yet. This value is afterwards
-    used in survey/cave statistics.
+    displayed in survey/cave statistics.
   * |text| = text of the label, remark or continuation. It may contain 
     following formatting keywords:
     
@@ -767,7 +771,7 @@ Point is a command for drawing a point map symbol.
       {\it passage-height:} the following four forms of value are supported:
       |+<number>| (the height of the ceiling), |-<number>| (the depth of the 
       floor or water depth), |<number>| (the distance between floor 
-      and ceiling) and |[<number> <number>]| (the distance to ceiling and 
+      and ceiling) and |[+<number> -<number>]| (the distance to ceiling and 
       distance to floor).
 
       {\it altitude:} the value specified is the altitude difference from 
@@ -861,8 +865,11 @@ respectively.
 	    surface flag).
 
     The subtype may be specified also directly in |<type>| specification using 
-    `|:|' as a separator.\[E.g.~|border:invisible|] Any subtype specification can
-    be used with user defined type (|u|).
+    `|:|' as a separator.\[E.g.~|border:invisible|] 
+    
+    Any subtype specification can be used with user defined type (|u|).
+    In this case you need also to define corresponding metapost symbol
+    (see the chapter {\it New map symbols}).
          
        * |[LINE DATA]| specify either the coordinates of a line segment
          |<x> <y>|, or coordinates of a B\'ezier curve arc 
@@ -1092,13 +1099,14 @@ none, survey
 \subsubchapter `surface'.
 
 \description
-Surface (terrain) specification. It's possible to display it in two ways: as a 
-scanned topographical map (currently in 2D maps only) or surface grid 
-(3D model).
+Surface (terrain) specification. It is possible to display it in two ways: as a 
+scanned topographical map (both in 2D map and 3D model\[You need to enter 
+elevation data in order to display the topographical map in 3D model. Currently
+only JPEG maps are supported in 3D.]) 
+or surface grid -- digital elevation model (in 3D model only). 
 \enddescription
 
 \syntax
-
 |surface [<name>]
    cs <coordinate system>
    bitmap <filename> <calibration>
@@ -1249,7 +1257,7 @@ endrevise|
 Objects {\it survey}, {\it centreline}, {\it scrap}, {\it point}, {\it 
 line}, {\it area}, {\it map} and {\it surface} can contain user-defined 
 attributes in a form |-attr <name> <value>|. |<name>| may contain 
-alphanumeric characters, |<value>| may be either a number or a string. 
+alphanumeric characters, |<value>| is a string. 
 
 The custom attributes are used in map export depending on output 
 format:
@@ -1260,13 +1268,7 @@ format:
   the \MP\ source file (in the form |ATTR_<name>|) and can be evaluated and used by user in 
   symbols definition macros.
   
-  If |<value>| is a number, then the type of |ATTR_<name>| variable in \MP\ is 
-  numeric, otherwise it is string. You can test presence of such a 
-  variable using |if known ATTR_<name>: ... fi|, or to check the type by using
-  |if numeric ATTR_<name>: ... else: ... fi|. 
-  
-  Numeric variable can be converted
-  to string using |decimal ATTR_<name>|.
+  You can test presence of such a variable using |if known ATTR_<name>: ... fi|. 
   
 \endlist
 

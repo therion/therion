@@ -1,0 +1,68 @@
+encoding  utf-8
+#!PROCESS
+#!TITLE 4 Listing caves
+#!
+#! When surveying caves in some large area, you often need to generate 
+#! an up to date list of all caves in that area. In therion dataset, the "cave" 
+#! can be defined several ways, depending on the level of cave survey.
+#!
+#! If you have just surveyed entrance station (e.g. using GPS or standard
+#! surveying methods), all you need to do is to assign <code>entrance</code>
+#! flag using
+source
+  centerline
+    fix cave-1 123456 789101112 1234
+    fix cave-2 123333 789101122 1256
+#!CODE    
+station cave-1 "Unsurveyed cave" entrance
+#!ENDCODE
+#! 
+#! If there is some explored passage behind this entrance, but you did not
+#! surveyed it properly, you should add also <code>continuation</code> flag
+#! and <code>explored</code> flag followed by explored length. Explored but
+#! unsurveyed passage lengths are also part of summary statistics.
+#!
+#!CODE    
+station cave-2 "Unsurveyed but explored" entrance \
+        continuation explored 80m
+#!ENDCODE
+  endcenterline
+#!
+#! If you have properly surveyed some cave, its data are usually in some
+#! <code>survey</code> structure. Survey becomes cave, if it has main entrance
+#! station specified using <code>-entrance</code> option. Example:
+#!
+#!CODE
+survey small_cave -title "Tunnel cave" -entrance 0
+#!ENDCODE
+  centerline
+  fix 0 123488 78910888 1244 
+  data normal from to compass clino tape
+  0 1 100 -10  10
+  1 2 200 -20  15
+  station 0 "Main entrance" entrance
+  station 2 "Second entrance" entrance
+  endcenterline
+endsurvey
+
+survey xx
+endsurvey
+
+endsource
+#!
+#! If survey contains survey data, but it has no main entrance specified, it
+#! is not considered as a cave, just as data organization unit and thus not
+#! present in the cave list. Only surveys containing some caves (i.e. entrance 
+#! stations or surveys with main entrance defined) are present in the final
+#! cave list table.
+#!
+#! After caves in your data have been properly defined, you can generate
+#! table using
+#!CODE    
+export cave-list -o caves.html
+#!ENDCODE
+#!
+#! Resulting table looks like this
+#!HTML caves.html
+
+#!CLEAN caves.html

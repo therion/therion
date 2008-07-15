@@ -443,6 +443,7 @@ proc xth_cp_compile {} {
   # update UI
   xth_cp_data_tree_clear      
   set xth(th_exit_state) 0
+  set xth(th_exit_number) $xth(th_exit_number_last)
   set dat_loaded_err [catch {
     set fid [open [file join [file dirname $xth(cp,ffull)] [xth_xcfg_fname $xth(cp,ffull)]] r]
     fconfigure $fid -encoding utf-8

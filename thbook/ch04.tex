@@ -1,3 +1,4 @@
+\eject
 \chapter What we get?.
 
 \subchapter Information files.
@@ -7,6 +8,21 @@
 Besides the messages from Therion and other programs used, the log file 
 contains information about computed values of magnetic declination and meridian 
 convergence, loop errors and scrap distortions.
+
+Absolute loop error is $\sqrt{\Delta x^2+\Delta y^2+\Delta z^2}$, where 
+$\Delta x$ is the difference between the identical start and end points of
+the loop before the error distribution measured along the $x$ coordinate axis; 
+similarly for $y$ and
+$z$. Percentual loop error is calculated as {\it absolute error / loop length}. 
+Average error is simple arithmetic average of all loop errors.
+
+Scrap distortion is calculated using the distortion measure defined for
+all pairs of points (point symbols, points and control points of line symbols)
+in the scrap. The measure is calculated as $\left\vert d_a-d_b\right\vert\over d_b$, where $d_b$ is
+the distance of points before warping and $d_a$ is the distance of points after
+warping. The maximal and average scrap distortions are calculated as a maximum
+or average of such measures applied to all pairs of points.
+
 
 \subsubchapter XTherion.
 
@@ -50,14 +66,16 @@ specified in Therion |export database| command.
 
 
 \midinsert
-  \ifx\pdfoutput\undefined\else
-    \centerline{\pdfximage {pic/database.pdf}\pdfrefximage\pdflastximage}%
-  \fi
+    \centerline{\pic{database.pdf}}%
 \endinsert
 
 
 Table and column names are self-explaining; for undefined or non-existing 
-values |NULL| is used. Examples of simple queries follow:
+values |NULL| is used. |FLAG| in |SHOT_FLAG| table is |dpl| or |srf| for duplicated
+or surface shots; in |STATION_FLAG| table |ent|, |con| or |fix| for stations
+with entrance, continuation or fixed attributes.
+
+Examples of simple queries follow:
 
 \penalty-100{\it List of survey team members with an information how
 much has each of them surveyed:}
@@ -79,14 +97,19 @@ much has each of them surveyed:}
   where (S1.Z+S2.Z)/2 between 1500 and 1550 and 
   SHOT.FROM_ID = S1.ID and SHOT.TO_ID = S2.ID;|
 
-\subsubchapter List of possible continuations.
+\subsubchapter Lists---caves, surveys, continuations.
 
 Using |export continuation-list| you get an overview of all points in the
 centreline and scraps marked \[using |station| attribute for centreline point
 and |point continuation| in scraps] marked as a possible continuation.
 
+|export cave-list| gives you a tabular information about surveyed caves (you need
+to specify |entrance| flags in your data) including length, depth and entrance(s)
+location.
 
-
+Detailed information about each sub-survey gives |export survey-list| command.
+The length includes shots with |approximate| flags, but not |explored|, 
+|duplicate| or |surface|.
 
 \subchapter 2D maps.
 

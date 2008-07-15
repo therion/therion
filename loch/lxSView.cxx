@@ -149,6 +149,7 @@ void lxViewpointSetupDlg::OnSlider(wxScrollEvent& event)
   wxCommandEvent tmpEvent(wxEVT_COMMAND_TEXT_UPDATED);
   switch (event.GetId()) {
     case LXVSTP_FACINGSLIDE:
+#ifndef LXDEPCHECK
 #if wxCHECK_VERSION(2,7,1)
       lxFTextCtrl(LXVSTP_FACING)->ChangeValue(wxString::Format(_T("%d"), event.GetInt()));
       tmpEvent.SetId(LXVSTP_FACING);
@@ -178,6 +179,7 @@ void lxViewpointSetupDlg::OnSlider(wxScrollEvent& event)
       tmpEvent.SetId(LXVSTP_DIST);
 #else
       lxFTextCtrl(LXVSTP_DIST)->SetValue(wxString::Format(_T("%d"), int(pow(200.0 * this->m_mainFrame->setup->data_limits_diam, (double(event.GetInt()) / 1000.0)))));
+#endif      
 #endif      
       break;
     case LXVSTP_ROTSPEED:

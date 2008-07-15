@@ -273,8 +273,7 @@ void thattr::analyze_fields()
       else if ((cf->m_xmp_name[i] < 'a'))
         cf->m_xmp_name[i] = tolower(cf->m_xmp_name[i]);
     }
-    cf->m_xmp_last_numeric = 4004.0;
-    cf->m_xmp_last_string = std::string("");
+    cf->m_xmp_last = std::string("");
     cf->m_maxs = 0;
   }
 
@@ -336,8 +335,6 @@ void thattr::analyze_fields()
   int w2;
   for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
     cf = &(*fli);
-    cf->m_xmp_numeric = false;
-    cf->m_xmp_transform = false;
     switch (cf->m_type) {
       case THATTR_INTEGER:
         cf->m_xdbf_decimals = 0;
@@ -345,9 +342,6 @@ void thattr::analyze_fields()
         w2 = (int) log10(double(myabs(cf->m_mini)));
         if (cf->m_xdbf_width < w2) cf->m_xdbf_width = w2;
         ++cf->m_xdbf_width;
-        cf->m_xmp_numeric = true;
-        if ((cf->m_mini < -4000) || (cf->m_maxi > 4000))
-          cf->m_xmp_transform = true;
         break;
       case THATTR_DOUBLE:
         cf->m_xdbf_width = (int) log10(myabs(cf->m_maxd));
@@ -359,9 +353,6 @@ void thattr::analyze_fields()
           cf->m_xdbf_decimals = 12 - cf->m_xdbf_width;
           cf->m_xdbf_width = 12;
         }
-        cf->m_xmp_numeric = true;
-        if ((cf->m_mind < -4000.0) || (cf->m_maxd > 4000.0))
-          cf->m_xmp_transform = true;
         break;
       case THATTR_STRING:
         cf->m_xdbf_width = int(cf->m_maxs + 1);
@@ -454,19 +445,9 @@ void thattr::export_mp_header(FILE * f)
   thattr_field_list::iterator fli;
   for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
     cf = &(*fli);
-    fprintf(f,"boolean %s_numeric;\n", cf->m_xmp_name.c_str());
-    fprintf(f,"%s_numeric := %s;\n", cf->m_xmp_name.c_str(), (cf->m_xmp_numeric ? "true" : "false"));
-    if (cf->m_xmp_numeric) {
-      fprintf(f,"boolean %s_transform;\n", cf->m_xmp_name.c_str());
-      fprintf(f,"%s_transform := %s;\n", cf->m_xmp_name.c_str(), (cf->m_xmp_transform ? "true" : "false"));
-      fprintf(f,"numeric %s;\n", cf->m_xmp_name.c_str());
-      fprintf(f,"%s := 4004;\n", cf->m_xmp_name.c_str());
-      cf->m_xmp_last_numeric = 4004;
-    } else {
-      fprintf(f,"string %s;\n", cf->m_xmp_name.c_str());
-      fprintf(f,"%s := \"\";\n", cf->m_xmp_name.c_str());
-      cf->m_xmp_last_string = std::string("");
-    }
+    fprintf(f,"string %s;\n", cf->m_xmp_name.c_str());
+    fprintf(f,"%s := \"\";\n", cf->m_xmp_name.c_str());
+    cf->m_xmp_last = std::string("");
   }
 }
 
@@ -486,42 +467,20 @@ void thattr::export_mp_object(FILE * f, long user_id)
   thbuffer enc;
 
   std::string news;
-  double newd(0.0);
 
   for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
     cf = &(*fli);
     ai = o->m_attributes.find(cf->m_id);
     if (ai == o->m_attributes.end()) {
       news = std::string("");
-      newd = 4004.0;
     } else {
       ca = &(ai->second);
-      switch (cf->m_type) {
-        case THATTR_INTEGER:          
-          newd = double(ca->m_val_long);
-          break;
-        case THATTR_DOUBLE:
-          newd = ca->m_val_double;
-          break;
-        case THATTR_STRING:
-          news = ca->m_val_string;
-          break;
-      }
-      if (cf->m_xmp_transform) {
-        newd = 8000.0 * (1.0 / (1.0 + exp(-newd/2000.0))) - 4000.0;
-      }
+      news = ca->m_val_string;
     }
-    if (cf->m_xmp_numeric) {
-      if (cf->m_xmp_last_numeric != newd) {
-        fprintf(f,"%s := %g;\n", cf->m_xmp_name.c_str(), newd);
-        cf->m_xmp_last_numeric = newd;
-      }
-    } else {
-      if (cf->m_xmp_last_string != news) {
-        thdecode_mp(&enc, news.c_str());
-        fprintf(f,"%s := \"%s\";\n", cf->m_xmp_name.c_str(), enc.get_buffer());
-        cf->m_xmp_last_string = news;
-      }
+    if (cf->m_xmp_last != news) {
+      thdecode_mp(&enc, news.c_str());
+      fprintf(f,"%s := \"%s\";\n", cf->m_xmp_name.c_str(), enc.get_buffer());
+      cf->m_xmp_last = news;
     }
   }
 }
