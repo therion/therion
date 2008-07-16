@@ -1,14 +1,8 @@
 preklady (SK, EN)
 
-altitude scaling
-
-zacyklena hlaska v xtherione pre option -size xl
+altitude(et al.) scaling
 
 ak je label prazdny retazec, zhuci mp?
-
-+proj=merc +latts=0 +lon0=0 +k=1 +x0=0 +y0=0 +a=6378137 +b=6378137 +units=m +nadgrids=\@null +no_defs
-
-nejde naraz zadat mapy elev. v dvoch projekciach
 
 ATTR_xx_numeric?? - zrusit ATTR_xx_numeric, _transform
 

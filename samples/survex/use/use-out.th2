@@ -20,7 +20,7 @@ endline
 #!CODE
 point 165.744 176.58 station -name 2@use
 #!ENDCODE
-#! but it use-in.th file using
+#! but in the <em>use-in.th</em> file using
 
 point 58.664 169.09 station -name 3@use
 

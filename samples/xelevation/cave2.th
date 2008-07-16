@@ -1,5 +1,5 @@
 #!FILE 2
-#! This is obviously not, what we would like to have.
+#! This is obviously not what we would like to get.
 #!
 #! To control process of extended elevation, there is a special
 #! <code>extend</code> option in centerline command. 
@@ -28,4 +28,3 @@ extend start 6
 #! in the centerline. Now it looks better,
 
 endcenterline
-#!ENDCODE

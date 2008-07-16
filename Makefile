@@ -169,6 +169,13 @@ loch/loch: loch/*.h loch/*.cxx loch/*.c
 
 doc: thbook/thbook.pdf
 
+thbook: thbook/thbook.pdf
+
+samples: samples.doc/index.tex
+
+samples.doc/index.tex:
+	make -C ./samples
+
 thbook/thbook.pdf: thbook/*.tex
 	make -C ./thbook
   

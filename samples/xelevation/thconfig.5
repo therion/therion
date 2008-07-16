@@ -1,16 +1,16 @@
 encoding  utf-8
 #!PROCESS
 #!FILE 7
-#! The only think that is missing is connection line between stations 1
+#! The only thing that is missing is connection line between stations 1
 #! in these two branches.
 
 source cave3.th
 source cave3.th2
-#! Therion does not automatically generates these lines, because their
-#! shape usually depends on the map situation. 
+#! Therion does not automatically generate these lines because their
+#! shape usually depends on particilar map. 
 #! 
-#! To draw such line, all you need to do is to create a simple scrap 
-#! with this line. Here is example:
+#! To draw such a line all you need to do is to create a simple scrap 
+#! with this line. Here is an example:
 source
 centerline
   extend hide 5 5'
@@ -29,7 +29,7 @@ endscrap
 #!ENDCODE
 #! As you can see, even there are two stations with same name, they
 #! are distinguished by <code>-from</code> option, which specifies
-#! previous station in extended elevation. With this scrap, you receive
+#! previous station in extended elevation. Using this scrap you receive the
 #! final map:
 map mc
   sc

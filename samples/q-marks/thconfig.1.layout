@@ -3,13 +3,13 @@ encoding  utf-8
 layout common
   scale 1 500
   map-header 0 0 off
-#! When you export map and you use
+#! When you export map and use
 #!CODE
-  symbol-show point flag:continuation
+symbol-show point flag:continuation
 #!ENDCODE
 #! in your layout, station with continuation flag specified
 #! is marked by question mark (continuation
-#! symbol is shown over the station).
+#! symbol is shown above the station).
 #!IMAGE map1.pdf
 endlayout
 

@@ -4,13 +4,13 @@ encoding  utf-8
 
 #!FILE 1
 #!TITLE 80 Using user defined symbol types
-#! In the case, when there is no appropriate symbol for the feature
-#! you want to draw to the map, you may use user defined symbol type \
-#! (it is type <code>u</code>, valid for point, line and area object).
+#! If therion does not offer any appropriate symbol for the feature
+#! you want to draw to the map, you can use user defined symbol type
+#! (type <code>u</code>, valid for point, line and area objects).
 #! 
-#! Syntax is very simle. Assume you want to create "bat" point, line
-#! and area. You just use <code>u:bat</code> as type (bat is in fact subtype)
-#! of u type. So your codes will be like this:
+#! The syntax is very simple. Assume you want to create "bat" point, line
+#! and area. You just use <code>u:bat</code> as a type (bat is in fact subtype)
+#! of u type. So your code will be like this:
 
 scrap x -scale [250.0 421.0 710.0 421.0 0.0 0.0 20 0.0 m]
 

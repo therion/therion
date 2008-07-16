@@ -3,8 +3,8 @@ encoding  utf-8
 #!FILE 3
 source map.th2
 
-#! To process them correctly, you need to define symbols for them in
-#! metapost languge same way, as ordinary symbols are redefined.
+#! To display them correctly you need to define symbols for them in
+#! MetaPost languge the same way as ordinary symbols are usually redefined.
 #!
 #! Firstly point symbol. In the
 
@@ -55,7 +55,7 @@ code metapost
   path bat_path;
   bat_path = bat_path_x shifted (-(llcorner bat_path_bb) - (urcorner bat_path_bb - llcorner bat_path_bb) / 2.0) scaled (1u / ((xpart urcorner bat_path_bb) - (xpart llcorner bat_path_bb))) rotated 210;
 
-#! section of your layout, you define point u:bat symbol like this
+#! section of your layout define point u:bat symbol like this
 #!CODE
 def p_u_bat(expr pos, theta, sc, al) = 
   T := identity shifted pos;
@@ -63,7 +63,7 @@ def p_u_bat(expr pos, theta, sc, al) =
 enddef;
 #!ENDCODE
 
-#! same way the line u:bat symbol
+#! similarly the line u:bat symbol
 #!CODE
 def l_u_bat(expr P) =
   T:=identity;
@@ -80,7 +80,7 @@ def l_u_bat(expr P) =
 enddef;
 #!ENDCODE
 
-#! and area u:bat symbol (pattern in this case)
+#! and finally the area u:bat symbol (pattern in this case)
 #!CODE
 % bat pattern
 beginpattern(pattern_bat);
@@ -95,8 +95,8 @@ def a_u_bat (expr Path) =
 enddef;
 #!ENDCODE
 
-#! These symbols will be included also in the legend. If you would like
-#! to change the way, how they are drawn there - just define appropriate
+#! These symbols will be included also in the legend. To
+#! change the way how they are drawn there just define appropriate
 #! macro. Its name should be symbol macro name with <code>_legend</code> 
 #! suffix.
 #!CODE
@@ -128,7 +128,7 @@ text en "line u:bat" "bat path"
 text en "area u:bat" "lot of bats"
 #!ENDCODE
 
-#! After these definitions, you receive bat point, line and area
+#! After all these definitions you receive bat point, line and area symbols
 #! with proper graphical representation and legend boxes.
 
 export map -o map2.pdf -layout m -layout-map-header 0 0 nw -layout-legend on

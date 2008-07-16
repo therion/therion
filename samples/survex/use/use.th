@@ -13,8 +13,8 @@ survey use
   input use-in.th2
 endsurvey
 #!ENDCODE
-#! In this case, you should take care, where you input your .th2 files
-#! with scraps. In use-out.th2 file, you should refer to station names
+#! In this case you should take care where you input your .th2 files
+#! containing scraps. In <em>use-out.th2</em> file you should refer to station names
 #! using:
 
 join use-in.s@use use-out.s
