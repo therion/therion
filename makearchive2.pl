@@ -1,11 +1,10 @@
 if (open(VFL,"thversion.h")) {
   @verfl = <VFL>;
-  $verfl[0] =~ /(\d+)\.(\d+)\.(\d+)/;
-  ($v1,$v2,$v3) = ($1,$2,$3);
+  $verfl[0] =~ /(\d+)\.(\d+)(\.(\d+))?/;
+  $version = $&;
   close(VFL);
 } else {
-  $v1 = 0;
-  $v2 = 3;
-  $v3 = 0;
+  $version = "0.0";
 }
-system("tar -cvzf ../therion-$v1.$v2.$v3.tar.gz -C .. therion");
+system("tar -cvf ../therion-$version.tar -C .. therion");
+system("gzip ../therion-$version.tar");

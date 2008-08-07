@@ -58,7 +58,11 @@ set xth(gui,check_update) 1
 
 
 set xth(encodings) { iso8859-1 iso8859-2 iso8859-5 iso8859-7 utf-8 cp1250 cp1251 cp1252 cp1253}
-set xth(kbencodings) {utf-8 iso8859-1 iso8859-2 cp1250 macCentEuro unicode}
+set xth(kbencodings) {utf-8 iso8859-1 iso8859-2 cp1250 cp1251 macCentEuro unicode}
+if {[lsearch -exact $xth(kbencodings) [encoding system]] < 0} {
+  lappend xth(kbencodings) [encoding system]
+}
+
 set xth(length_units) {m cm in ft yd}
 set xth(angle_units) {deg min grad}
 set xth(point_types) {}
@@ -223,7 +227,7 @@ case $tcl_platform(platform) {
     set xth(gui,efont) "Courier 16 roman bold"
     set xth(gui,platform) windows
     set xth(gui,cursor) arrow
-    set xth(app,sencoding) cp1250
+    set xth(app,sencoding) [encoding system]
     set xth(gui,bindinsdel) 0
     if {[catch {
       set fid [open "|cmd.exe /c" r]

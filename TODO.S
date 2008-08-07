@@ -1,18 +1,21 @@
 HOT LIST:
 
 + new version numbering major.minor.build
-+ add shot type (leg flag) to attribute export
++ fix label size switch and tex export
++ add grid-range to layout
++ fix bug with default layout size/page-setup etc...
++ KML table export
++ samples.doc: add coordinates of stations to cave list
++ create cave penetration distance calculation code + label
 + sort caves in export according to source position!
++ add shot type (leg flag) to attribute export
 + layout: default text orientation switch 
 + automatic label flip if they are up-side down according to given orientation
-+ check ignoreall on e-mail sample
-+ update TODO list
 + attributes sample
 + show/hide U symbols
-+ KML table export
 + add cave structure to continuation-list
 + add -source on|(off) to table export
-+ attributes to shots
++ user defined attributes to shots
 + scrap morphing algorithm setup to configuration file
 + 3D generation algorithm - do not remove join points
 + 3D generation algorithm - take xelevation data into account
@@ -84,9 +87,12 @@ HOT LIST:
 + add survey name under scrap name when debug scrap-names
 + therion --protractor <options>
 + MacOS X installator (e.g. http://s.sudre.free.fr/Software/Iceberg.html)
++ single temporary directory, change name if process file exists
++ remove temp-dir warning
   
 xtherion:
 
++ vtopo import
 + generate error if therion is not found
 + search & replace toolbar to compiler
 + moving split bar in compiler window
@@ -125,6 +131,7 @@ WOULD BE NICE LIST:
 
 therion:
 
++ navigation pane labeling
 + redo database export
 + morphing: add additional features (line extra, point extra:point|distance)
 + export rigging list + -text option to point anchor

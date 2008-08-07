@@ -17,7 +17,7 @@ proc dos2unix {fnm} {
   set doit 0
   if {[regexp {\.(c|cxx|h|tcl|svx|th|thcfg|th2|thc|cof|xpm|txt|pl|mp|tex|TXT|sty|usr|enc|htm|xvi)$} $fnm]} {
     set doit 1
-  } elseif {[regexp {(Makefile|TODO\.\w|README|COPYING|CHANGES|thconfig)$} $fnm]} {
+  } elseif {[regexp {(Makefile|TODO\.\w|README|COPYING|CHANGES|thconfig|thconfig\..*)$} $fnm]} {
     set doit 1
   }
   if {!$doit} return;
@@ -30,6 +30,7 @@ proc dos2unix {fnm} {
     puts "  ...converted to UNIX format"
     regsub -all {\15} $fdt {} fdt
     set fid [open $fnm w]
+    fconfigure $fid -translation binary
     puts -nonewline $fid $fdt
     close $fid
     file mtime $fnm $fmtime

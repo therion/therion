@@ -1,8 +1,24 @@
+if (open(VFL,"thversion.h")) {
+  @verfl = <VFL>;
+  $verfl[0] =~ /(\d+)\.(\d+)(\.(\d+))?/;
+  ($v1,$v2,$v3) = ($1,$2,$4);
+  if (!$v3) {
+    $v3 = 0;
+  }
+  close(VFL);
+  $v3++;
+} else {
+  $v1 = 0;
+  $v2 = 0;
+  $v3 = 0;
+}
+open(VFL,">thversion.h");
+print VFL "#define THVERSION \"$v1.$v2.$v3\"\n";
+close(VFL);
+open(VFL,">thbook/version.tex");
+print VFL "$v1.$v2.$v3";
+close(VFL);
 
-($sec,$min,$hour,$mday,$mon,$year,$wday,$yday) = gmtime(time);
-$year += 1900;
-$mon += 1;
-$datestr = sprintf("%04d%02d%02d",$year,$mon,$mday);
+system("tar -cvf ../therion-$v1.$v2.$v3.tar -C .. therion");
+system("gzip ../therion-$v1.$v2.$v3.tar");
 
-system("tar -cvf ../therion-$datestr.tar -C .. therion");
-system("bzip2 -f ../therion-$datestr.tar");

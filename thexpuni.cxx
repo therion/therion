@@ -426,6 +426,12 @@ void thexpuni::parse_line(thline * line)
 void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 {
 
+  if (prj->type != TT_2DPROJ_PLAN) {
+    thwarning(("unable to export KML from non plan projection"));
+    return;
+  }
+
+
   if (thcfg.outcs == TTCS_LOCAL) {
     thwarning(("data not georeferenced -- unable to export KML file"));
     return;
@@ -531,6 +537,107 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
   fprintf(out,"</MultiGeometry>\n</Placemark>\n");
   fprintf(out,"</Document>\n</kml>\n");
+  fclose(out);
+    
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+
+}
+
+
+
+void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
+{
+
+  if (prj->type != TT_2DPROJ_PLAN) {
+    thwarning(("unable to export bounding box of non plan projection"));
+    return;
+  }
+
+  if (thcfg.outcs == TTCS_LOCAL) {
+    thwarning(("data not georeferenced -- unable to export bounding box file"));
+    return;
+  }
+
+  if (maps == NULL) {
+    thwarning(("%s [%d] -- no selected projection data -- %s",
+      this->src.name, this->src.line, this->projstr))
+    return;
+  }
+
+  FILE * out;
+  const char * fnm = this->get_output("cave.bbox");
+  out = fopen(fnm, "w");
+  if (out == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif     
+
+  thdb2dxm * cmap = maps;
+  thdb2dxs * cbm;
+  thdb2dmi * cmi;
+
+  double cx, cy, cz;
+  bool has_scrap = false;
+
+  thscrap * scrap;
+  thexpuni xu;
+  lxVecLimits lim;
+
+  while (cmap != NULL) {
+    cbm = cmap->first_bm;
+    while (cbm != NULL) {
+      cmi = cbm->bm->last_item;
+      if (cbm->mode == TT_MAPITEM_NORMAL) {
+        while (cmi != NULL) {
+          if (cmi->type == TT_MAPITEM_NORMAL) {
+            scrap = (thscrap*) cmi->object;
+            if (!thisnan(scrap->lxmin)) {
+	    
+              thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+                scrap->lxmin + prj->rshift_x, scrap->lymin + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
+              lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
+
+              thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+                scrap->lxmin + prj->rshift_x, scrap->lymax + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
+              lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
+
+              thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+                scrap->lxmax + prj->rshift_x, scrap->lymin + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
+              lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
+
+              thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+                scrap->lxmax + prj->rshift_x, scrap->lymax + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
+              lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
+	      
+	      has_scrap = true;
+	      
+            }
+          }
+          cmi = cmi->prev_item;  
+        }
+      }
+      cbm = cbm->next_item;
+    }
+    cmap = cmap->next_item;
+  }
+
+  if (has_scrap) {
+    fprintf(out,"%.14f\n",lim.min.x);
+    fprintf(out,"%.14f\n",lim.min.y);
+    fprintf(out,"%.14f\n",lim.max.x);
+    fprintf(out,"%.14f\n",lim.max.y);
+  }
   fclose(out);
     
 #ifdef THDEBUG

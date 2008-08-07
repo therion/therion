@@ -264,7 +264,13 @@
         }
       \fi
       \vss
-    }\hss\ifscalebar\hbox to 0pt{\hss\scalebar\qquad}\fi
+    }
+    \hss
+    \vbox to \ht\navbox{
+      \ifnortharrow\hbox to 0pt{\hss\northarrow\qquad}\fi
+      \vss
+      \ifscalebar\hbox to 0pt{\hss\scalebar\qquad}\fi
+    }
     \box\navbox
   }
  }

@@ -64,7 +64,7 @@ puts $oid "\n\n\nset xth(debug) 0"
 catch {
     set fid [open ../thversion.h r]
     gets $fid verl
-    regexp {\d+\.\d+\.\d+} $verl vver
+    regexp {\d+\.\d+(\.\d+)?} $verl vver
     close $fid
     set fid [open ver.tcl w]
     puts $fid "set xth(about,ver) $vver"
