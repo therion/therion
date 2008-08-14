@@ -67,6 +67,8 @@
 #include <map>
 #include <set>
 #include "thmapstat.h"
+#include "thcsdata.h"
+#include "thproj.h"
 #include "thsurface.h"
 #include <stdlib.h>
 #include "extern/lxMath.h"
@@ -952,6 +954,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   this->export_pdf_set_colors(maps, prj);
   double ascR = 1.0, ascG = 1.0, ascB = 1.0,
     pscR = -1.0, pscG = -1.0, pscB = -1.0;
+  lxVecLimits lim;
 
   SURFPICTLIST.clear();
   surfpictrecord srfpr;
@@ -966,6 +969,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     }
     fprintf(plf,"\n\n\n");
   }
+
    
   fprintf(plf,"%%SCRAP = (\n");
   while (cmap != NULL) {
@@ -1115,8 +1119,14 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
                 exps = this->export_mp(& out, cs, sfig, export_outlines_only);
                 // naozaj ho exportujeme
                 if (exps.flags != TT_XMPS_NONE) {
+
                   fprintf(plf,"\t# scrap: %s\n",cs->name);
                   fprintf(plf,"\t%s => {\n",thexpmap_u2string(sscrap));
+
+                  if (!export_sections) {
+                    lim.Add(cs->lxmin, cs->lymin, cs->z);
+                    lim.Add(cs->lxmax, cs->lymax, cs->z);
+                  }
 
                   if (this->layout->sketches) {
                     thsketch_list::iterator skit;
@@ -1379,6 +1389,50 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       obi++;
     }
   }
+
+  // export calibration points
+  double ccx, ccy, ccz;
+
+  // ccx = lim.min.x * out.ms;
+  // ccy = lim.min.y * out.ms;
+  // LAYOUT.calibration_local[0].x = ccx * crot + ccy * srot + origin_shx;
+  //LAYOUT.calibration_local[0].y = - ccx * srot + ccy * crot + origin_shy;
+  // if (prj->type == TT_2DPROJ_PLAN) {
+  //   thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+  //                 lim.min.x + prj->rshift_x, lim.min.y + prj->rshift_y, lim.min.z + prj->rshift_z, ccx, ccy, ccz);
+  // } else {
+  //   ccx = 0.0;
+  //   ccy = 0.0;
+  // }
+  // LAYOUT.calibration_latlong[0].x = ccx / THPI * 180.0;
+  // LAYOUT.calibration_latlong[0].y = ccy / THPI * 180.0;
+
+#define calpoint(n,xxx,yyy) \
+  ccx = (xxx) * out.ms; \
+  ccy = (yyy) * out.ms; \
+  LAYOUT.calibration_local[n].x = ccx * crot + ccy * srot + origin_shx; \
+	LAYOUT.calibration_local[n].y = - ccx * srot + ccy * crot + origin_shy; \
+  if ((prj->type == TT_2DPROJ_PLAN) && (thcfg.outcs != TTCS_LOCAL)) { \
+    thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, \
+                  (xxx) + prj->rshift_x, (yyy) + prj->rshift_y, lim.min.z + prj->rshift_z, ccx, ccy, ccz); \
+  } else { \
+    ccx = 0.0; \
+    ccy = 0.0; \
+  } \
+  LAYOUT.calibration_latlong[n].x = ccx / THPI * 180.0; \
+	LAYOUT.calibration_latlong[n].y = ccy / THPI * 180.0;
+
+  calpoint(0, lim.min.x, lim.min.y);
+  calpoint(1, (lim.min.x + lim.max.x) / 2.0,lim.min.y);
+  calpoint(2, lim.max.x, lim.min.y);
+  calpoint(3, lim.min.x, (lim.min.y + lim.max.y) / 2.0);
+  calpoint(4, lim.max.x, (lim.min.y + lim.max.y) / 2.0);
+  calpoint(5, lim.min.x, lim.max.y);
+  calpoint(6, (lim.min.x + lim.max.x) / 2.0,lim.max.y);
+  calpoint(7, lim.max.x, lim.max.y);
+  calpoint(8, (lim.min.x + lim.max.x) / 2.0, (lim.min.y + lim.max.y) / 2.0);
+  LAYOUT.calibration_hdist = lim.max.x - lim.min.x;
+
 
   // nakoniec grid
   double ghs, gvs, gox, goy;

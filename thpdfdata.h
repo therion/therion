@@ -104,6 +104,8 @@ struct layout {
          gridCA, gridCB, gridCC;
   paired gridcell[9];
   double surface_opacity;
+  paired calibration_local[9], calibration_latlong[9];
+  double calibration_hdist;
   
   layout();
 };

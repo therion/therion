@@ -1598,6 +1598,19 @@ void build_pages() {
       "\\advance\\adjustedVS by \\overlap" << 
       "\\advance\\adjustedVS by \\overlap" << endl;
 
+    //calibration
+    PAGEDEF.precision(10);
+    for (int i=0; i<9; i++) {
+      PAGEDEF << "\\calibrX{" << LAYOUT.calibration_local[i].x - MINX << "bp}\\tmpdimenX=\\tmpdimen" << endl;
+      PAGEDEF << "\\calibrY{" << LAYOUT.calibration_local[i].y - MINY << "bp}\\tmpdimenY=\\tmpdimen" << endl;
+    
+      PAGEDEF << "\\pdfcatalog { /thCalibrate" << i << 
+                 " (X=\\the\\tmpdimenX, Y=\\the\\tmpdimenY, L=" << LAYOUT.calibration_latlong[i].x << 
+                 ", F=" << LAYOUT.calibration_latlong[i].y << ")}" << endl;
+    }
+    PAGEDEF << "\\pdfcatalog { /thCalibrate (HS=\\the\\adjustedHS, VS=\\the\\adjustedVS, HD=" << LAYOUT.calibration_hdist << ")}";
+    PAGEDEF.precision(2);
+
     PAGEDEF << "\\tmpdimen=\\extraW\\advance\\tmpdimen by \\overlap" << endl;
     PAGEDEF << "\\dimtobp{\\tmpdimen}\\edef\\adjustedX{\\tmpdef}%" << endl;
     PAGEDEF << "\\tmpdimen=\\extraS\\advance\\tmpdimen by \\overlap" << endl;

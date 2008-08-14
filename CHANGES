@@ -1,4 +1,24 @@
 --------------------------------------------------------------------------------
+Therion 5.3 (YYYY-MM-DD):
+
+therion:
+ * georeferencing data added to pdf maps
+ * bugs fixed:
+   - 
+   
+xtherion:
+
+ * script for creation of OziExplorer MAP files for georeferenced maps (Help->Calibrate bitmap)
+ * bugs fixed: 
+   - 
+   
+loch:
+
+ * 
+ * bugs fixed: 
+   - 
+
+--------------------------------------------------------------------------------
 Therion 5.2 (2008-08-07):
 
 therion:
