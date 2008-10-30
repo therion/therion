@@ -189,12 +189,15 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
 
     this->m_fileConfig->Read(_T("startup_dir"), &this->m_iniDirectory, wxEmptyString);
     this->m_fileConfig->Read(_T("startup_dir_last"), &this->m_fileDir, ::wxGetCwd());
+    this->m_fileConfig->Read(_T("units"), &this->m_iniUnits, LXUNITS_METRIC);
+
     if (this->m_iniDirectory.Length() > 0) {
       this->m_fileDir = this->m_iniDirectory;
     }
 
     this->m_fileConfig->Read(_T("stereo_channels_last"), &this->m_iniStereoGlassesLast, 0);
     this->m_fileConfig->Read(_T("stereo_channels"), &this->m_iniStereoGlasses, 8);
+
     if (this->m_iniStereoGlasses == 8) 
       this->setup->cam_anaglyph_glasses = this->m_iniStereoGlassesLast;
     else 
@@ -370,6 +373,7 @@ lxFrame::~lxFrame()
   this->m_fileHistory->Save(*this->m_fileConfig);
   this->m_fileConfig->Write(_T("startup_dir"), this->m_iniDirectory);
   this->m_fileConfig->Write(_T("startup_dir_last"), this->m_fileDir);
+  this->m_fileConfig->Write(_T("units"), this->m_iniUnits);
   this->m_fileConfig->Write(_T("stereo_channels_last"), this->m_iniStereoGlassesLast);
   this->m_fileConfig->Write(_T("stereo_channels"), this->m_iniStereoGlasses);
   this->m_fileConfig->Write(_T("wall_extra"), this->m_iniWallsInterpolate);

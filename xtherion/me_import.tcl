@@ -3,6 +3,192 @@
 
 set utldbg 0
 
+set xth(ptopoxvi_resolution) 200
+set xth(ptopoxvi_scale) 200
+set xth(ptopoxvi_grid) 1.0
+set xth(ptopoxvi_projection) PLAN
+
+
+proc xth_me_pt2xvitrans {x y} {
+  global xth
+  upvar l_scale scale
+  upvar l_minx minx
+  upvar l_maxx maxx
+  upvar l_miny miny
+  upvar l_maxy maxy
+  upvar l_def  ldef
+  if {[catch {set x [expr double($x) * $scale]}]} return {}
+  if {[catch {set y [expr double($y) * $scale]}]} return {}
+  if {!$ldef} {
+    set ldef 1
+    set minx $x
+    set miny $y
+    set maxx $x
+    set maxy $y
+  } else {
+    if {$minx > $x} {set minx $x}
+    if {$maxx < $x} {set maxx $x}
+    if {$miny > $y} {set miny $y}
+    if {$maxy < $y} {set maxy $y}
+  }
+  return [list $x $y]
+}
+
+
+proc xth_me_ptopo2xvi {fname} {
+  global xth
+
+  # create bitmap
+  set xviname $fname
+  set dp $xth(gui,main).ptopoxvidlg
+  Dialog $dp -title [mc "XVI properties"] -parent $xth(gui,main) -default 0
+  set df [$dp getframe]
+  Label $df.l1 -text [mc "Scale 1 : "]
+  Entry $df.e1 -textvariable xth(ptopoxvi_scale) -width 8
+  Label $df.l2 -text [mc "Resolution (dpi)"]
+  Entry $df.e2 -textvariable xth(ptopoxvi_resolution) -width 8
+  Label $df.l3 -text [mc "Grid spacing (m)"]
+  Entry $df.e3 -textvariable xth(ptopoxvi_grid) -width 8
+  radiobutton $df.p -text "Plan" -variable xth(ptopoxvi_projection) -value PLAN
+  radiobutton $df.x -text "Extended elevation" -variable xth(ptopoxvi_projection) -value ELEVATION
+  grid $df.l1 -column 0 -row 0 -sticky nes -padx 2 -pady 2
+  grid $df.e1 -column 1 -row 0 -sticky news -padx 2 -pady 2
+  grid $df.l2 -column 0 -row 1 -sticky nes -padx 2 -pady 2
+  grid $df.e2 -column 1 -row 1 -sticky news -padx 2 -pady 2
+  grid $df.l3 -column 0 -row 2 -sticky nes -padx 2 -pady 2
+  grid $df.e3 -column 1 -row 2 -sticky news -padx 2 -pady 2
+  grid $df.p -column 0 -columnspan 2 -row 3 -sticky nws -padx 2
+  grid $df.x -column 0 -columnspan 2 -row 4 -sticky nws -padx 2
+  $dp add -name ok
+  $dp draw
+  destroy $dp
+  if {[catch {set xth(ptopoxvi_resolution) [expr int($xth(ptopoxvi_resolution))]}]} {
+    set xth(ptopoxvi_resolution) 200
+  }
+  if {[catch {set xth(ptopoxvi_scale) [expr int($xth(ptopoxvi_scale))]}]} {
+    set xth(ptopoxvi_scale) 200
+  }
+  if {[catch {set xth(ptopoxvi_grid) [expr double($xth(ptopoxvi_grid))]}]} {
+    set xth(ptopoxvi_grid) 1
+  }
+
+  # read pocket topo file and write XVI file
+  if {[string equal $xth(ptopoxvi_projection) PLAN]} {
+    set projid p
+  } else {
+    set projid e
+  }
+  set xvifname "[file rootname $fname]_$projid.xvi"
+  set xvifnum 0
+  while {[file exists $xvifname]} {
+    set xvifname "[file rootname $fname]_$projid$xvifnum.xvi"
+    incr xvifnum
+  }
+  set fi [open $fname r]
+  set indata 0
+  set inpolyline 0
+  set inshots 0
+  set instations 0
+  set XVIstations {}
+  set XVIshots {}
+  set XVIgrid {}
+  set polylines {}
+  set l_minx 0
+  set l_maxx 0
+  set l_miny 0
+  set l_maxy 0
+  set l_def 0
+  set l_scale [expr 1.0 / double($xth(ptopoxvi_scale)) * 100.0 / 2.54 * double($xth(ptopoxvi_resolution))]
+  while {![eof $fi]} {
+    gets $fi ln
+    if {[string equal $ln $xth(ptopoxvi_projection)]} {
+      set indata 1
+    } elseif {[string equal $ln PLAN] || [string equal $ln ELEVATION]} {
+      set indata 0
+    }
+    if {$indata} {
+      switch -- [lindex $ln 0] {
+	STATIONS {
+	  set inpolyline 0
+	  set inshots 0
+	  set instations 1
+	}
+	SHOTS {
+	  set inpolyline 0
+	  set inshots 1
+	  set instations 0
+	}
+	POLYLINE {
+	  set inpolyline 1
+	  set inshots 0
+	  set instations 0
+	  append polylines "\n[string tolower [lindex $ln 1]]"
+	}
+      }
+
+      if {$instations} {
+	if {[llength $ln] == 3} {
+	  set stc [xth_me_pt2xvitrans [lindex $ln 0] [lindex $ln 1]]
+	  if {[llength $stc] == 2} {
+	    append XVIstations "  {[list [lindex $stc 0] [lindex $stc 1] [lindex $ln 2]]}\n"
+	  }
+	}
+      }
+
+      if {$inshots} {
+	if {[llength $ln] == 4} {
+	  set stc1 [xth_me_pt2xvitrans [lindex $ln 0] [lindex $ln 1]]
+	  set stc2 [xth_me_pt2xvitrans [lindex $ln 2] [lindex $ln 3]]
+	  if {([llength $stc1] == 2) && ([llength $stc2] == 2)} {
+	    append XVIshots "  {[list [lindex $stc1 0] [lindex $stc1 1] [lindex $stc2 0] [lindex $stc2 1]]}\n"
+	  }
+	}
+      }
+
+      if {$inpolyline} {
+	if {[llength $ln] == 2} {
+	  set stc [xth_me_pt2xvitrans [lindex $ln 0] [lindex $ln 1]]
+	  if {[llength $stc] == 2} {
+	    append polylines "  [list [lindex $stc 0] [lindex $stc 1]]"
+	  }
+	}
+      }
+
+    }
+  }
+  close $fi
+
+  if {$l_def} {
+    set gsize [expr $xth(ptopoxvi_grid) * $l_scale]
+    set l_minx [expr $l_minx - 0.5 * $gsize]
+    set l_maxx [expr $l_maxx]
+    set l_miny [expr $l_miny - 0.5 * $gsize]
+    set l_maxy [expr $l_maxy]
+    
+    set XVIsketchlines {}
+    set pll [split $polylines "\n"]
+    foreach pl $pll {
+      if {[llength $pl] == 3} {
+	append XVIsketchlines "  {[list [lindex $pl 0] [lindex $pl 1] [lindex $pl 2] [lindex $pl 1] [lindex $pl 2]]}\n"
+      } elseif {[llength $pl] > 3} {
+	append XVIsketchlines "  {$pl}\n"
+      }
+    }
+
+    set fo [open $xvifname w]
+    puts $fo "set XVIgrids {$xth(ptopoxvi_grid) m}"
+    puts $fo "set XVIstations {\n$XVIstations}"
+    puts $fo "set XVIshots {\n$XVIshots}"
+    puts $fo "set XVIsketchlines {\n$XVIsketchlines}"
+    puts $fo "set XVIgrid {[list $l_minx $l_miny $gsize 0.0 0.0 $gsize [expr int(($l_maxx - $l_minx) / $gsize) + 1] [expr int(($l_maxy - $l_miny) / $gsize) + 1]]}"
+    close $fo
+    return $xvifname
+  }
+  return {}
+}
+
+
+
 proc xth_me_import_check_outline {coutline pt} {
   set px [expr double([lindex $pt 0])]
   set py [expr double([lindex $pt 1])]

@@ -335,6 +335,7 @@ proc xth_te_show_file {fidx} {
     $xth(te,menu) entryconfigure [mc "Edit"] -state normal
     $xth(te,menu,file) entryconfigure [mc "Save"] -state normal
     $xth(te,menu,file) entryconfigure [mc "Save as"] -state normal
+    $xth(te,menu,file) entryconfigure [mc "Import"] -state normal
     $xth(te,menu,file) entryconfigure [mc "Save all"] -state normal
     $xth(te,menu,file) entryconfigure [mc "Auto save"] -state normal
     $xth(te,menu,file) entryconfigure [mc "Close"] -state normal
@@ -362,6 +363,7 @@ proc xth_te_show_file {fidx} {
     set xth(te,open_file_encoding) $xth(app,fencoding)
     $xth(te,menu,file) entryconfigure [mc "Save"] -state disabled
     $xth(te,menu,file) entryconfigure [mc "Save as"] -state disabled
+    $xth(te,menu,file) entryconfigure [mc "Import"] -state disabled
     $xth(te,menu,file) entryconfigure [mc "Save all"] -state disabled
     $xth(te,menu,file) entryconfigure [mc "Auto save"] -state disabled
     $xth(te,menu,file) entryconfigure [mc "Close"] -state disabled
@@ -713,6 +715,7 @@ proc xth_te_open_file {dialogid fname fline} {
   return 1
 }
 
+
 proc xth_te_before_close_file {cfid btns} {
   global xth
   if {
@@ -907,6 +910,11 @@ $xth(te,menu,file) add command -state disabled -label [mc "Close"] -underline 0 
   -accelerator "$xth(gui,controlk)-w" \
   -font $xth(gui,lfont) \
   -command "xth_te_close_file"
+
+$xth(te,menu,file) add separator
+$xth(te,menu,file) add command -state disabled -label [mc "Import"] -underline 0 \
+  -font $xth(gui,lfont) \
+  -command "xth_te_import_file"
 
 $xth(te,menu,file) add separator
 $xth(te,menu,file) add command -state disabled -label [mc "Next"] \
@@ -1110,6 +1118,12 @@ proc xth_te_text_auto_indent {W} {
   $W see insert
   
 }
+
+
+
+
+
+
 
 xth_ctrl_minimize te sr
 xth_status_bar_status te [mc "Text editor is not active. To activate it, open existing file or create new one."]

@@ -4,17 +4,20 @@ Therion 5.3 (YYYY-MM-DD):
 therion:
  * georeferencing data added to pdf maps
  * bugs fixed:
-   - 
+   - BCRA3 and BCRA5 survey grades fixed
    
 xtherion:
 
  * script for creation of OziExplorer MAP files for georeferenced maps (Help->Calibrate bitmap)
+ * added import functions for PocketTopo export
+   - centerline in text editor - File->Import->PocketTopo therion export
+   - sketches in map editor - Backgroud Images->Insert->PocketTopo therion export
  * bugs fixed: 
    - 
    
 loch:
 
- * 
+ * added Tools->Options->Measurement system setup
  * bugs fixed: 
    - 
 

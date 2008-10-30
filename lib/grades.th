@@ -1,34 +1,33 @@
-
 grade BCRA3 -title "BCRA grade 3"
   
-  # 95% of readings are within 0.5m
-  tape 0.15 metres
+  # 95.44% of readings are within 0.5m (2 S.D.)
+  length 0.25 metres
 
-  # 95% of readings are within 10 degrees
-  compass 3.33 degrees
+  # 95.44% of readings are within 2.5 degrees (2 S.D.)
+  bearing 1.25 degrees
 
-  # 95% of readings are within 10 degrees
-  clino 3.33 degrees
+  # 95.44% of readings are within 2.5 degrees (2 S.D.)
+  gradient 1.25 degrees
 
-  # 95% of positions are within 0.5m
-  position 0.15 metres
+  # 95.44% of positions are within 0.5m (2 S.D.)
+  position 0.25 metres
 
 endgrade
 
 
 grade BCRA5 -title "BCRA grade 5"
+
+  # 95.44% of readings are within 0.1m (2 S.D.)
+  length 0.05 metres
+
+  # 95.44% of readings are within 1 degree (2 S.D.)
+  bearing 0.5 degrees
+
+  # 95.44% of readings are within 1 degree (2 S.D.)
+  gradient 0.5 degrees
+
+  # 95.44% of positions are within 0.1m (2 S.D.)
+  position 0.05 metres
   
-  # 95% of readings are within 0.1m
-  tape 0.033 metres
-
-  # 95% of readings are within 1 degrees
-  compass 0.33 degrees
-
-  # 95% of readings are within 1 degrees
-  clino 0.33 degrees
-
-  # 95% of positions are within 0.1m
-  position 0.033 metres
-
 endgrade
 

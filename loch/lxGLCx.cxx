@@ -25,6 +25,7 @@
 
 #include "lxSetup.h"
 #include "lxRender.h"
+#include "lxGUI.h"
 
 
 #ifdef LXCONTEXT
@@ -731,7 +732,11 @@ void lxGLCanvas::LXCONTEXT(RenderIDepthbar)(double size)
   for(t = 0; t <= 10; t++) {
     clrOutCntr();
     this->LXCONTEXT(RenderILine)(dbw, double(t) * size / 10.0, dbw + dbtw, double(t) * size / 10.0);
-    sprintf(&(strCBar[0]), "%.0f m", clr[0] + double(t) / 10.0 * (clr[1] - clr[0]));
+    if (this->frame->m_iniUnits == 1) {
+      sprintf(&(strCBar[0]), "%.0f ft", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])) / 0.3048);
+    } else {
+      sprintf(&(strCBar[0]), "%.0f m", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])));
+    }
     this->LXCONTEXT(m_fntNumeric)->draw(this->m_indRes * dbw + lxFNTSW, this->m_indRes * (double(t) * size / 10.0) - 0.333 * lxFNTSH, strCBar);
   }
 
@@ -751,6 +756,7 @@ void lxGLCanvas::LXCONTEXT(RenderIScalebar)(double size)
   // nasobku standardnej velkosti
 
   // pixel -> 1 meter???
+  char strLen[32];
   double sblen, scale;
   int sbtest;
   // scale = m / pixel
@@ -760,15 +766,64 @@ void lxGLCanvas::LXCONTEXT(RenderIScalebar)(double size)
 #else
     this->wh;
 #endif
-  sbtest = int(floor(log((size * this->m_indRes) * scale) / log(pow(10.0,1.0/3.0))));
-  sblen = pow(10.0,floor(double(sbtest)/3.0));
-  switch (sbtest % 3) {
-              case 0: sblen *= 1.0; break;
-     case -2: case 1: sblen *= 2.5; break;
-             default: sblen *= 5.0; break;
+
+
+  if (this->frame->m_iniUnits == 1) {
+
+    bool miles;
+    miles = false;
+
+    sbtest = int(floor(log((size * this->m_indRes) * scale / 0.3048) / log(pow(10.0,1.0/3.0))));
+    sblen = pow(10.0,floor(double(sbtest)/3.0));
+    switch (sbtest % 3) {
+                case 0: sblen *= 1.0; break;
+      case -2: case 1: sblen *= 2.5; break;
+              default: sblen *= 5.0; break;
+    }
+    size = sblen * 0.3048 / scale / this->m_indRes;
+
+    if (sbtest > 12) {
+      size *= 1.6;
+      miles = true;
+      sbtest = int(floor(log((size * this->m_indRes) * scale / 1609.344) / log(pow(10.0,1.0/3.0))));
+      if (sbtest < 0) sbtest = 0;
+      sblen = pow(10.0,floor(double(sbtest)/3.0));
+      switch (sbtest % 3) {
+                  case 0: sblen *= 1.0; break;
+        case -2: case 1: sblen *= 2.5; break;
+                default: sblen *= 5.0; break;
+      }
+      size = sblen * 1609.344 / scale / this->m_indRes;
+    }
+
+
+    if (miles)
+      sprintf(&(strLen[0]),"%.0f mi", sblen);
+    else
+      sprintf(&(strLen[0]),"%.0f ft", sblen);
+
+  } else {
+
+    sbtest = int(floor(log((size * this->m_indRes) * scale) / log(pow(10.0,1.0/3.0))));
+    sblen = pow(10.0,floor(double(sbtest)/3.0));
+    switch (sbtest % 3) {
+                case 0: sblen *= 1.0; break;
+      case -2: case 1: sblen *= 2.5; break;
+              default: sblen *= 5.0; break;
+    }
+    size = sblen / scale / this->m_indRes;
+
+    if (sblen >= 10000.0)
+      sprintf(&(strLen[0]),"%.0f km", sblen / 1000.0);
+    else if (sblen >= 4.0)
+      sprintf(&(strLen[0]),"%.0f m", sblen);
+    else if (sblen >= 0.01)
+      sprintf(&(strLen[0]),"%.0f mm", sblen * 1000.0);
+    else
+      sprintf(&(strLen[0]),"%g mm", sblen * 1000.0);
   }
-  size = sblen / scale / this->m_indRes;
-  
+
+
   clrOutFill();
   glBegin(GL_QUADS);
   v2r(0.0 * size, 0.0);
@@ -801,15 +856,6 @@ void lxGLCanvas::LXCONTEXT(RenderIScalebar)(double size)
   this->LXCONTEXT(RenderILine)(0.9 * size, sbh, 0.9 * size, sbh + sbt/3.0);
   this->LXCONTEXT(RenderILine)(      size, 0.0,       size, sbh + sbt);
 
-  char strLen[32];
-  if (sblen >= 10000.0)
-    sprintf(&(strLen[0]),"%.0f km", sblen / 1000.0);
-  else if (sblen >= 4.0)
-    sprintf(&(strLen[0]),"%.0f m", sblen);
-  else if (sblen >= 0.01)
-    sprintf(&(strLen[0]),"%.0f mm", sblen * 1000.0);
-  else
-    sprintf(&(strLen[0]),"%g mm", sblen * 1000.0);
   this->LXCONTEXT(m_fntNumeric)->draw(0.5 * size * this->m_indRes - 0.5 * double(strlen(strLen)) * lxFNTSW, (sbh + sbt + 1.0) * this->m_indRes, strLen);
 
 }

@@ -413,6 +413,19 @@ proc xth_me_imgs_xvi_redraw {imgx} {
     set ty [xth_me_real2cany [expr $shy + [lindex [lindex $shts $i] 3]]]
     $xth(me,can) coords [format "%sSH%d" $id $i] $fx $fy $tx $ty
   }
+  
+  # sketch lines
+  set sklns $xth(me,imgs,$imgx,XVIsketchlines)
+  for {set i 0} {$i < [llength $sklns]} {incr i} {
+    set slcl [lrange [lindex $sklns $i] 1 end]
+    set slcrds {}
+    for {set j 0} {$j < [llength $slcl]} {set j [expr $j + 2]} {
+      set xx [xth_me_real2canx [expr $shx + [lindex $slcl $j]]]
+      set yy [xth_me_real2cany [expr $shy + [lindex $slcl [expr $j + 1]]]]
+      append slcrds "$xx $yy "
+    }
+    $xth(me,can) coords [format "%sSKLN%d" $id $i] $slcrds
+  }
 
   # stations
   set stns $xth(me,imgs,$imgx,XVIstations)
@@ -483,6 +496,16 @@ proc xth_me_imgs_xvi_create {imgx} {
   # shots
   for {set i 0} {$i < [llength $shts]} {incr i} {
     set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_shot_clr) -width 3 -state hidden -tags [list $id [format "%sSH%d" $id $i]]]
+    xth_me_bind_area_drag $cid $imgx
+    xth_me_bind_image_drag $cid $imgx
+    lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
+  }
+
+
+  # sketch lines
+  set sklns $xth(me,imgs,$imgx,XVIsketchlines)
+  for {set i 0} {$i < [llength $sklns]} {incr i} {
+    set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_shot_clr) -width 1 -state hidden -tags [list $id [format "%sSKLN%d" $id $i]]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
@@ -608,10 +631,17 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
     
     set fname [tk_getOpenFile -parent $xth(gui,main) \
 	-filetypes $xth(gui,imgfiletypes) \
-	-initialdir $xth(me,fpath) -defaultextension ".gif"]  
+	-initialdir $xth(me,fpath) -defaultextension ".gif"]
+	
     if {[string length $fname] < 1} {
       return
     } else {    
+      if {[string equal -nocase [file extension $fname] .txt]} {
+	 set fname [xth_me_ptopo2xvi $fname]
+	 if {[string length $fname] < 1} {
+	   return
+	 }
+      }
       # overi ci cesta sedi
       if {![string equal -length [string length $xth(me,fpath)] \
 	$xth(me,fpath) $fname]} {
@@ -664,6 +694,7 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
   set XVIgrid {}
   set XVIstations {}
   set XVIshots {}
+  set XVIsketchlines {}
   set XVIimages {}
   if {!$xth(gui,openxp)} {
     catch {
@@ -736,6 +767,7 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
   set xth(me,imgs,$imgx,XVIgrid) $XVIgrid
   set xth(me,imgs,$imgx,XVIshots) $XVIshots
   set xth(me,imgs,$imgx,XVIstations) $XVIstations
+  set xth(me,imgs,$imgx,XVIsketchlines) $XVIsketchlines
   set xth(me,imgs,$imgx,XVIstationsX) {}
 
   xth_me_imgs_set_root $imgx
@@ -843,6 +875,7 @@ proc xth_me_image_destroy_all {} {
     unset xth(me,imgs,$imgx,XVIshots)
     unset xth(me,imgs,$imgx,XVIstations)
     unset xth(me,imgs,$imgx,XVIstationsX)
+    unset xth(me,imgs,$imgx,XVIsketchlines)
   }
   set xth(me,nimgs) 0
   set xth(me,imgln) 0
@@ -898,6 +931,7 @@ proc xth_me_image_remove {iidx} {
   unset xth(me,imgs,$imgx,XVIshots)
   unset xth(me,imgs,$imgx,XVIstations)
   unset xth(me,imgs,$imgx,XVIstationsX)
+  unset xth(me,imgs,$imgx,XVIsketchlines)
   set xth(me,nimgs) [expr $xth(me,nimgs) - 1]
   set xth(me,imgs,xlist) [lreplace $xth(me,imgs,xlist) $iidx $iidx]
   xth_me_image_update_list

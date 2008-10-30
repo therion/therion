@@ -24,17 +24,17 @@ void thlibrary_init_grades()
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "BCRA grade 3";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
-	pgrade->dls_length = 0.15;
-	pgrade->dls_bearing = 3.33;
-	pgrade->dls_gradient = 3.33;
+	pgrade->dls_length = 0.25;
+	pgrade->dls_bearing = 1.25;
+	pgrade->dls_gradient = 1.25;
 	pgrade->dls_counter = thnan;
 	pgrade->dls_depth = thnan;
 	pgrade->dls_dx = thnan;
 	pgrade->dls_dy = thnan;
 	pgrade->dls_dz = thnan;
-	pgrade->dls_x = 0.15;
-	pgrade->dls_y = 0.15;
-	pgrade->dls_z = 0.15;
+	pgrade->dls_x = 0.25;
+	pgrade->dls_y = 0.25;
+	pgrade->dls_z = 0.25;
 	thdb.insert(pgrade);
 
 	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
@@ -42,17 +42,17 @@ void thlibrary_init_grades()
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "BCRA grade 5";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_TITLE,1),oname,TT_UTF_8,0);
-	pgrade->dls_length = 0.033;
-	pgrade->dls_bearing = 0.33;
-	pgrade->dls_gradient = 0.33;
+	pgrade->dls_length = 0.05;
+	pgrade->dls_bearing = 0.5;
+	pgrade->dls_gradient = 0.5;
 	pgrade->dls_counter = thnan;
 	pgrade->dls_depth = thnan;
 	pgrade->dls_dx = thnan;
 	pgrade->dls_dy = thnan;
 	pgrade->dls_dz = thnan;
-	pgrade->dls_x = 0.033;
-	pgrade->dls_y = 0.033;
-	pgrade->dls_z = 0.033;
+	pgrade->dls_x = 0.05;
+	pgrade->dls_y = 0.05;
+	pgrade->dls_z = 0.05;
 	thdb.insert(pgrade);
 }
 

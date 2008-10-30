@@ -1,6 +1,5 @@
 HOT LIST:
 
-+ new version numbering major.minor.build
 + fix label size switch and tex export
 + add grid-range to layout
 + fix bug with default layout size/page-setup etc...

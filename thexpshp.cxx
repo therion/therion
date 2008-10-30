@@ -681,6 +681,7 @@ void thexpmodel::export_shp_file(class thdatabase * dbp)
     xs.m_fstations3D.m_attributes.insert_attribute("_CONTINUATION", long(((st->flags | TT_STATIONFLAG_CONT) != 0) ? 1 : 0));
     if ((st->comment != NULL) && (strlen(st->comment) > 0))
       xs.m_fstations3D.m_attributes.insert_attribute("_COMMENT", st->comment);
+    xs.m_fstations3D.m_attributes.copy_attributes(dbp->db1d.m_station_attr.get_object(i+1));
   }
 
   // shots

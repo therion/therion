@@ -118,6 +118,11 @@ enum {
   LXWALLS_INTERP_MISSING,
 };
 
+enum {
+  LXUNITS_METRIC,
+  LXUNITS_IMPERIAL,
+};
+
 
 class lxFrame: public wxFrame
 {
@@ -147,6 +152,7 @@ class lxFrame: public wxFrame
     wxFileHistory * m_fileHistory;
     wxString m_iniDirectory;
 
+    long m_iniUnits;
     int m_iniStereoGlasses;
     int m_iniStereoGlassesLast;
     long m_iniWallsInterpolate;

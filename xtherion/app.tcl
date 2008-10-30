@@ -223,6 +223,7 @@ proc xth_app_finish {} {
     menu $dm -tearoff 0
   
     $dm add command -label "Refresh procs" -underline 0 -command {
+      set idir $xth(gui,initdir)
       source global.tcl
       source sbar.tcl
       source cp_procs.tcl
@@ -231,7 +232,10 @@ proc xth_app_finish {} {
       source me_cmds.tcl
       source me_cmds2.tcl
       source me_ss.tcl
+      source te_import.tcl
+      source me_import.tcl
       source bac.tcl
+      set xth(gui,initdir) $idir
     } -font $xth(gui,lfont)
     $dm add command -label "Screen dump" -underline 0 -command {
       after 5000 {xwd -out screendump -frame}

@@ -77,6 +77,16 @@ lxOptionsDlg::lxOptionsDlg(wxWindow * parent)
 
   lxStaticBoxSizer->Add(ch, 0, wxEXPAND | lxNOTTOP, lxBORDER);
 
+  lxStaticBoxSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Measurement system")),
+    0, wxALIGN_LEFT | lxNOTTOP, lxBORDER);
+  lxBoxSizer = new wxBoxSizer(wxHORIZONTAL);
+  lxBoxSizer->Add(new wxRadioButton(this, wxID_ANY, _("Metric"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP, lxRadioBtnValidator(&this->m_lxframe->m_iniUnits, LXUNITS_METRIC)),
+    0, wxALIGN_LEFT | lxNOTTOP, lxBORDER);
+  lxBoxSizer->Add(new wxRadioButton(this, wxID_ANY, _("Imperial"), wxDefaultPosition, wxDefaultSize, 0, lxRadioBtnValidator(&this->m_lxframe->m_iniUnits, LXUNITS_IMPERIAL)),
+    0, wxALIGN_LEFT | wxRIGHT | wxBOTTOM, lxBORDER);
+  lxStaticBoxSizer->Add(lxBoxSizer, 0, wxEXPAND);
+
   sizerAll->Add(lxStaticBoxSizer, 0, wxEXPAND | wxALL, lxBORDER);
 
 

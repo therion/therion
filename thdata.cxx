@@ -2376,7 +2376,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
                 it->attr.erase(attrname);
                 break;
             }
-            if ((ai + 2) == nargs)
+            if ((ai + 1) == nargs)
               ththrow(("too few flags - missing attribute value"));
             ai++;            
             if (strlen(args[ai]) > 0) {

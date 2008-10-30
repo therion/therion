@@ -623,3 +623,4 @@ proc te_sr_clear {} {
   focus $w
 }
 
+
