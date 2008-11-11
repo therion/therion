@@ -510,7 +510,7 @@ void lxRenderFile::Render() {
 
   int curColumn;
 
-  this->m_glc->SetFontColorsO();
+  this->m_glc->SetFontColors();
   this->m_glc->m_fntTitleO->setPointSize(14.0 * this->m_pData->m_imgResolution / 96.0);
   this->m_glc->m_fntNumericO->setPointSize(8.0 * this->m_pData->m_imgResolution / 96.0);
     
@@ -520,7 +520,9 @@ void lxRenderFile::Render() {
 
       this->m_glc->TRCBeginTile();
       this->m_glc->m_sInit = true;
+      this->m_glc->m_isO = false;
       this->m_glc->RenderScreen();
+      this->m_glc->m_isO = true;
       this->m_glc->m_sInit = true;
 
     } else {
@@ -530,13 +532,13 @@ void lxRenderFile::Render() {
         if (this->m_glc->m_oList == 0) 
           this->m_glc->m_oList = glGenLists(1);
         glNewList(this->m_glc->m_oList, GL_COMPILE);
-        this->m_glc->RenderAllO();
+        this->m_glc->RenderAll();
         glEndList();
       }
 
       if (this->m_glc->setup->cam_anaglyph) {
         this->m_glc->setup->cam_anaglyph_left = false;
-        this->m_glc->SetCameraO();
+        this->m_glc->SetCamera();
         this->m_glc->TRCBeginTile();
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
         if (this->m_glc->m_renderData->m_imgWhiteBg)
@@ -546,17 +548,17 @@ void lxRenderFile::Render() {
         glClear(GL_COLOR_BUFFER_BIT);
         this->m_glc->SetColorMask();
 #ifdef LXLINUX
-        this->m_glc->RenderAllO();
+        this->m_glc->RenderAll();
 #else    
         glCallList(this->m_glc->m_oList);
 #endif
 
         this->m_glc->setup->cam_anaglyph_left = true;
-        this->m_glc->SetCameraO();
+        this->m_glc->SetCamera();
         this->m_glc->TRCBeginTile();
         this->m_glc->SetColorMask();
 #ifdef LXLINUX
-        this->m_glc->RenderAllO();
+        this->m_glc->RenderAll();
 #else    
         glCallList(this->m_glc->m_oList);
 #endif
@@ -565,10 +567,10 @@ void lxRenderFile::Render() {
 
       } else {
 
-        m_glc->SetCameraO();
+        m_glc->SetCamera();
         this->m_glc->TRCBeginTile();
 #ifdef LXLINUX
-        this->m_glc->RenderAllO();
+        this->m_glc->RenderAll();
 #else    
         glCallList(this->m_glc->m_oList);
 #endif
@@ -577,7 +579,7 @@ void lxRenderFile::Render() {
 
       // render indicators
       if (this->m_glc->setup->m_vis_indicators)
-        this->m_glc->RenderIndsO();
+        this->m_glc->RenderInds();
 
     }
 

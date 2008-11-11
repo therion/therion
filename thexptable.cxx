@@ -156,7 +156,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
         this->m_table.insert_attribute("Y","");
       }
     }
-    if (((survey->stat.num_entrances > 0) && (!exploc)) && (survey->entrance.id > 0)) {
+    if (((survey->stat.num_entrances > 0) && ((!exploc) || (survey->stat.num_entrances == 1))) && (survey->entrance.id > 0)) {
       st = &(this->db->db1d.station_vec[survey->entrance.id - 1]);    
       this->m_table.insert_attribute("Altitude",st->z);
     } else {

@@ -488,6 +488,7 @@ set<int> find_excluded_pages(string s) {
 //  istrstream S(s.c_str());
   istringstream S(s);
   
+  c = ',';
   while (S >> i) {
     S >> c;
     if (c == ',') excl.insert(i);
@@ -1682,10 +1683,10 @@ void build_pages() {
         PAGEDEF << "\\PL{" << i << " 0 m " << i << " " << VS << " l S}%" << endl;
 	if (i<HS) {
           PAGEDEF << "\\PL{q 1 0 0 1 " << i+LAYOUT.hsize/2 << 
-	    " 0 cm}\\gridcoord{8}{\\size[24]" << grid_name(LAYOUT.labelx,(MINX+i)/LAYOUT.hsize) << 
+	    " 0 cm}\\gridcoord{8}{\\size[24]" << grid_name(LAYOUT.labelx,round((MINX+i)/LAYOUT.hsize)) << 
 	    "}\\PL{Q}%" << endl;
           PAGEDEF << "\\PL{q 1 0 0 1 " << i+LAYOUT.hsize/2 << " " << VS <<
-	    " cm}\\gridcoord{2}{\\size[24]" << grid_name(LAYOUT.labelx,(MINX+i)/LAYOUT.hsize) << 
+	    " cm}\\gridcoord{2}{\\size[24]" << grid_name(LAYOUT.labelx,round((MINX+i)/LAYOUT.hsize)) << 
 	    "}\\PL{Q}%" << endl;
 	}
       }
@@ -1693,10 +1694,10 @@ void build_pages() {
         PAGEDEF << "\\PL{0 " << i << " m " << HS << " " << i << " l S}%" << endl;
 	if (i<VS) {
           PAGEDEF << "\\PL{q 1 0 0 1 0 " << i+LAYOUT.vsize/2 << 
-    	    " cm}\\gridcoord{6}{\\size[24]" << grid_name(LAYOUT.labely,(MINY+VS-i)/LAYOUT.vsize) << 
+    	    " cm}\\gridcoord{6}{\\size[24]" << grid_name(LAYOUT.labely,round((MINY+VS-i)/LAYOUT.vsize)-1) << 
 	    "}\\PL{Q}%" << endl;
           PAGEDEF << "\\PL{q 1 0 0 1 " << HS << " " << i+LAYOUT.vsize/2 << 
-	    " cm}\\gridcoord{4}{\\size[24]" << grid_name(LAYOUT.labely,(MINY+VS-i)/LAYOUT.vsize) << 
+	    " cm}\\gridcoord{4}{\\size[24]" << grid_name(LAYOUT.labely,round((MINY+VS-i)/LAYOUT.vsize)-1) << 
 	    "}\\PL{Q}%" << endl;
 	}
       }

@@ -71,6 +71,23 @@ thdb1d::thdb1d()
 }
 
 
+
+void thdb1ds::set_temporary(const char * name)
+{
+  temps = TT_TEMPSTATION_NONE;
+  if (name != NULL) {
+    switch (name[0]) {
+      case '.':
+        temps = TT_TEMPSTATION_FEATURE;
+        break;
+      case '-':
+        temps = TT_TEMPSTATION_WALL;
+        break;
+    }
+  }
+}
+
+
 thdb1d::~thdb1d()
 {
   if (this->tree_legs != NULL)
@@ -142,7 +159,14 @@ void thdb1d::scan_data()
           if (lei->is_valid) {
             lei->from.id = this->insert_station(lei->from, lei->psurvey, dp, 3);
             lei->to.id = this->insert_station(lei->to, lei->psurvey, dp, 3);
-            
+            if ((lei->from.id == 0) && (lei->to.id == 0))
+              ththrow(("shot between stations without names not allowed"))
+            if ((lei->from.id == 0) || (lei->to.id == 0)) {
+              if ((strcmp(lei->from.name,"-") == 0) || (strcmp(lei->to.name,"-") == 0)) {
+                lei->flags |= TT_LEGFLAG_SPLAY;
+                lei->walls = TT_FALSE;
+              }
+            }
             this->leg_vec.push_back(thdb1dl(&(*lei),dp,lei->psurvey));
             
             // check station marks
@@ -567,31 +591,41 @@ void thdb1ds::set_parent_data(class thdata * pd, unsigned pd_priority, unsigned 
 
 unsigned long thdb1d::insert_station(class thobjectname on, class thsurvey * ps, class thdata * pd, unsigned pd_priority)
 {
+  bool is_temp = false;
+  if ((strcmp(on.name,"-") == 0) || (strcmp(on.name,".") == 0)) {
+    is_temp = true;
+  }
+
   // first insert object into database
-  size_t pd_slength = strlen(ps->full_name);
   ps = this->db->get_survey(on.survey, ps);
-  on.survey = NULL;
   unsigned long csurvey_id = (ps == NULL) ? 0 : ps->id;
-  
-  thdb1d_station_map_type::iterator sti;
-  sti = this->station_map.find(thobjectid(on.name, csurvey_id)); 
-  if (sti != this->station_map.end()) {
-    this->station_vec[sti->second - 1].set_parent_data(pd,pd_priority,pd_slength);
-    return sti->second;
-  }
-  
-  if (!(this->db->insert_datastation(on, ps))) {
-    if (on.survey != NULL)
-      ththrow(("object already exist -- %s@%s", on.name, on.survey))
-    else
-      ththrow(("object already exist -- %s", on.name))
-  }
-  
-  this->station_map[thobjectid(on.name, csurvey_id)] = ++this->lsid;
+  size_t pd_slength = strlen(ps->full_name);
+  on.survey = NULL;
+
+  if (!is_temp) {
+    thdb1d_station_map_type::iterator sti;
+    sti = this->station_map.find(thobjectid(on.name, csurvey_id)); 
+    if (sti != this->station_map.end()) {
+      this->station_vec[sti->second - 1].set_parent_data(pd,pd_priority,pd_slength);
+      return sti->second;
+    }
+    if (!(this->db->insert_datastation(on, ps))) {
+      if (on.survey != NULL)
+        ththrow(("object already exist -- %s@%s", on.name, on.survey))
+      else
+        ththrow(("object already exist -- %s", on.name))
+    }
+  }  
+  this->lsid++;
   this->station_vec.push_back(thdb1ds(on.name, ps));
-  this->station_vec[this->lsid - 1].set_parent_data(pd,pd_priority,pd_slength);
-  return this->lsid;
-  
+  thdb1ds * cstation = &(this->station_vec[this->lsid - 1]);
+  if (!is_temp) {
+    this->station_map[thobjectid(on.name, csurvey_id)] = this->lsid;
+  } else {
+    cstation->set_temporary(on.name);
+  }
+  cstation->set_parent_data(pd,pd_priority,pd_slength);
+  return this->lsid;  
 }
 
 
@@ -979,6 +1013,7 @@ void thdb1d::process_tree()
 
 
 void thdb1d__scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_under) {
+  if (st->is_temporary()) return;
   if (ss->stat.station_state == 0) {
     if (is_under)
       ss->stat.station_state = 2;

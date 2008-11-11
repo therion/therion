@@ -1569,6 +1569,22 @@ void thdata_parse_dim(const char * src, double & d1, double & d2,
   
 }
 
+void thdata_parse_station_name(thobjectname & ds, thmbuffer * sstore, char * src, thdataobject * psobj) {
+  ds.name = NULL;
+  if (strcmp(src,"-") == 0) {
+    ds.name = "-";
+  } 
+  if (strcmp(src,".") == 0) {
+    ds.name = ".";
+  } 
+  if (ds.name == NULL)
+    thparse_objectname(ds, sstore, src, psobj);
+  else {
+    ds.survey = NULL;
+    ds.psurvey = thdb.get_current_survey();
+  }
+}
+
 
 void thdata::insert_data_leg(int nargs, char ** args)
 {
@@ -1673,18 +1689,18 @@ void thdata::insert_data_leg(int nargs, char ** args)
           thparse_objectname(cdims->station, &(this->db->buff_stations),
             args[carg], this);
         } else {
-          thparse_objectname(this->cd_leg->station, &(this->db->buff_stations),
+          thdata_parse_station_name(this->cd_leg->station, &(this->db->buff_stations),
             args[carg], this);
         }
         break;
         
       case TT_DATALEG_FROM:
-        thparse_objectname(this->cd_leg->from, &(this->db->buff_stations),
+        thdata_parse_station_name(this->cd_leg->from, &(this->db->buff_stations),
           args[carg], this);
         break;
         
       case TT_DATALEG_TO:
-        thparse_objectname(this->cd_leg->to, &(this->db->buff_stations),
+        thdata_parse_station_name(this->cd_leg->to, &(this->db->buff_stations),
           args[carg], this);
         break;
         

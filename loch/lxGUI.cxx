@@ -823,7 +823,7 @@ lxFrameToggle(SurfaceTransparency, m_srf_transparency)
 
 void lxFrame::ToggleStereo() {
   this->setup->cam_anaglyph = !this->setup->cam_anaglyph;
-  this->canvas->SetFontColorsS();
+  this->canvas->SetFontColors();
   this->canvas->UpdateRenderContents();
   this->canvas->UpdateRenderList();
   this->canvas->ForceRefresh();

@@ -1,0 +1,8 @@
+encoding  utf-8
+source demo.th
+export model -o cave.3d
+export model -o cave.plt
+export model -o cave.lox
+export map -o cave.xvi -layout-scale 1 100
+
+#!CLEAN cave.3d cave.plt cave.lox cave.xvi

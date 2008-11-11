@@ -306,6 +306,7 @@ void lxData::Rebuild()
     st.pos.x = st_it->m_c[0];
     st.pos.y = st_it->m_c[1];
     st.pos.z = st_it->m_c[2];
+    st.m_name = this->m_input.m_stationsData.GetString(st_it->m_namePtr);
     stR.m_pos = st_num;
     stR.m_pst = &(*st_it);
     stationMap[st_it->m_id] = stR;

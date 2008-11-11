@@ -3,7 +3,7 @@ CMNOBJECTS = \
   lxTR.o lxOGLFT.o lxSetup.o lxRender.o lxWX.o \
   lxImgIO.o lxLRUD.o lxFile.o \
   lxData.o lxMath.o lxSView.o lxSScene.o \
-  lxGUI.o lxGLCo.o lxGLCs.o lxOptDlg.o lxAboutDlg.o \
+  lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o \
   img.o
 
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lfreetype
@@ -180,14 +180,11 @@ clean:
 lxAboutDlg.o: lxAboutDlg.cxx lxWX.h icons/about.xpm ../thversion.h
 lxData.o: lxData.cxx lxData.h lxMath.h lxImgIO.h lxFile.h lxLRUD.h
 lxFile.o: lxFile.cxx lxFile.h lxMath.h img.h
-lxGLCo.o: lxGLCo.cxx lxGLC.h lxMath.h lxGLCx.h lxGLCx.cxx lxSetup.h \
-  lxData.h lxImgIO.h lxFile.h lxRender.h lxTR.h
-lxGLCs.o: lxGLCs.cxx lxGLC.h lxMath.h lxGLCx.h lxGUI.h lxData.h lxImgIO.h \
-  lxFile.h lxSetup.h lxSView.h lxWX.h lxFNT6x13_bdf.h lxFNT10x20_bdf.h \
-  lxFNTFreeSans_ttf.h lxGLCx.cxx lxRender.h
-lxGLCx.o: lxGLCx.cxx
-lxGUI.o: lxGUI.cxx lxGUI.h lxGLC.h lxMath.h lxGLCx.h lxData.h lxImgIO.h \
-  lxFile.h lxSetup.h lxRender.h lxOptDlg.h lxAboutDlg.h lxSView.h lxWX.h \
+lxGLC.o: lxGLC.cxx lxGLC.h lxMath.h lxGUI.h lxData.h lxImgIO.h lxFile.h \
+  lxSetup.h lxSView.h lxWX.h lxFNT6x13_bdf.h lxFNT10x20_bdf.h \
+  lxFNTFreeSans_ttf.h lxRender.h lxTR.h
+lxGUI.o: lxGUI.cxx lxGUI.h lxGLC.h lxMath.h lxData.h lxImgIO.h lxFile.h \
+  lxSetup.h lxRender.h lxOptDlg.h lxAboutDlg.h lxSView.h lxWX.h \
   lxSScene.h icons/open.xpm icons/render.xpm icons/reload.xpm \
   icons/stereo.xpm icons/rotation.xpm icons/lockrot.xpm icons/fit.xpm \
   icons/home.xpm icons/rendersetup.xpm icons/plan.xpm icons/profile.xpm \
@@ -198,14 +195,14 @@ lxImgIO.o: lxImgIO.cxx lxImgIO.h
 lxLRUD.o: lxLRUD.cxx lxLRUD.h lxMath.h
 lxMath.o: lxMath.cxx lxMath.h
 lxOGLFT.o: lxOGLFT.cxx lxOGLFT.h
-lxOptDlg.o: lxOptDlg.cxx lxWX.h lxGUI.h lxGLC.h lxMath.h lxGLCx.h
-lxRender.o: lxRender.cxx lxRender.h lxWX.h lxGLC.h lxMath.h lxGLCx.h \
-  lxGUI.h lxSetup.h lxData.h lxImgIO.h lxFile.h lxTR.h
-lxSetup.o: lxSetup.cxx lxSetup.h lxData.h lxMath.h lxImgIO.h lxFile.h
+lxOptDlg.o: lxOptDlg.cxx lxWX.h lxGUI.h lxGLC.h lxMath.h
+lxRender.o: lxRender.cxx lxRender.h lxWX.h lxGLC.h lxMath.h lxGUI.h \
+  lxSetup.h lxData.h lxImgIO.h lxFile.h lxTR.h
 lxSScene.o: lxSScene.cxx lxSScene.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
-  lxGLCx.h lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
-lxSView.o: lxSView.cxx lxSView.h lxWX.h lxGUI.h lxGLC.h lxMath.h lxGLCx.h \
   lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
+lxSView.o: lxSView.cxx lxSView.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
+  lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
+lxSetup.o: lxSetup.cxx lxSetup.h lxData.h lxMath.h lxImgIO.h lxFile.h
 lxWX.o: lxWX.cxx lxWX.h
 getline.o: getline.c
 img.o: img.c img.h

@@ -1,6 +1,10 @@
 HOT LIST:
 
-+ fix label size switch and tex export
++ thbook: splay shots using "-" or "." as station name
+
++ support iso date format YYYY-MM-DD
++ add lookup tables to configuration files
++ check label size switch and tex export
 + add grid-range to layout
 + fix bug with default layout size/page-setup etc...
 + KML table export

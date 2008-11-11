@@ -1,5 +1,8 @@
 TODO:
-+ check loch color table under linux, if problem use therion instead of VTK
++ stations signs + labels
++ label entrances and fixed stations
++ multiple color modes
++ measure toolbox
 + survey tree
 + animation toolbox
 + multiple surfaces support

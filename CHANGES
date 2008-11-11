@@ -3,8 +3,12 @@ Therion 5.3 (YYYY-MM-DD):
 
 therion:
  * georeferencing data added to pdf maps
+ * support for splay shots without station names
  * bugs fixed:
    - BCRA3 and BCRA5 survey grades fixed
+   - missing altitudes in cave list
+   - atlas page exclusion
+   - map header positioning using real numbers
    
 xtherion:
 

@@ -84,7 +84,7 @@ proc xth_te_read_ptopo {fname} {
               }
             }
             if {[llength $ln] == 5} {
-              append ccline "  # [lindex $ln 0] - [lindex $ln 1] [lindex $ln 2] [lindex $ln 3]\n"
+              append ccline "  [lindex $ln 0] - [lindex $ln 1] [lindex $ln 2] [lindex $ln 3]\n"
             } elseif {[llength $ln] == 6} {
               append ccline "  [lindex $ln 0] [lindex $ln 1] [lindex $ln 2] [lindex $ln 3] [lindex $ln 4]\n"
             }

@@ -549,8 +549,11 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
       } \
       stvec[(j)].x -= shx; \
       stvec[(j)].y -= shy; \
-      fprintf(pltf,"  {%12.2f %12.2f %s}\n", stvec[(j)].x, stvec[(j)].y, stname.get_buffer()); \
+      if (!cs->is_temporary()) { \
+        fprintf(pltf,"  {%12.2f %12.2f %s}\n", stvec[(j)].x, stvec[(j)].y, stname.get_buffer()); \
+      } \
     }
+
     if (prj->type == TT_2DPROJ_EXTEND) {
       if (i % 2 == 0) {
         cl = thdb.db1d.leg_vec[i / 2].leg;

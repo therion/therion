@@ -263,9 +263,10 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
       if (((tmps->flags & TT_STATIONFLAG_FIXED) != 0) && ((tmps->flags & TT_STATIONFLAG_NOTFIXED) == 0))
         x_exp |= img_SFLAG_FIXED;
       stnbuf.strcpy(dbp->db1d.station_vec[i].survey->get_reverse_full_name());
-      stnbuf.strcat(".");
+      if (strlen(stnbuf.get_buffer()) > 0) stnbuf.strcat(".");
       stnbuf.strcat(dbp->db1d.station_vec[i].name);
-      img_write_item(pimg, img_LABEL, x_exp, stnbuf,
+      if (!tmps->is_temporary())
+        img_write_item(pimg, img_LABEL, x_exp, stnbuf,
           dbp->db1d.station_vec[i].x, dbp->db1d.station_vec[i].y, dbp->db1d.station_vec[i].z);
     }
   }

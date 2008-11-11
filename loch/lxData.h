@@ -53,6 +53,10 @@
 struct lxDataStation {
 
   lxVec pos;
+
+  const char * m_name;
+
+  lxDataStation() : m_name(NULL) {}
   
 };
 

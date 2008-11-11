@@ -141,13 +141,25 @@ class lxGLCanvas: public wxGLCanvas {
   DECLARE_EVENT_TABLE()
   
     public:
-  
-    // nacita on screen definicie
-#include "lxGLCx.h"
 
-    // nacita off screen definicie
-#define LXOFFSCREENHEAD 1
-#include "lxGLCx.h"    
+    bool IsRenderingOff();
+    OGLFT::Face * GetFontNumeric();
+    OGLFT::Face * GetFontTitle();
+
+    void OpenGLInit();
+    void SetCamera();
+    void RenderAll();
+    void SetFontColors();
+    void RenderSurface();
+    void GeomOutline();
+    void RenderCenterline();
+    void RenderScrapWalls();
+    void RenderInds();
+    void RenderICompass(double size);
+    void RenderIClino(double size);
+    void RenderIScalebar(double size);
+    void RenderIDepthbar(double size);
+    void RenderILine(double fx, double fy, double tx, double ty);
   
 }; // lxGLCanvas
 
