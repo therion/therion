@@ -257,6 +257,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
   
   fprintf(out->file,"));\n");
   
+  th2ddataobject::export_mp_end(out);
   return(false);  
   
 }

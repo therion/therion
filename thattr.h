@@ -47,13 +47,22 @@ enum {
 /**
  * Single attribute structure.
  */
+
+enum {
+  THATTRFLAG_NONE = 0,
+  THATTRFLAG_HIDDEN = 1,
+};
+
  
 struct thattr_attr {
   std::string m_val_string;  ///< String value.
+  unsigned long m_flags; ///< Value flags.
   double m_val_double;  ///< Double value.
   long m_val_long;  ///< Integer value.
   int m_type;  ///< Attribute type.
-  
+  thattr_attr() : m_flags(THATTRFLAG_NONE) {}
+  bool has_flag(unsigned long flag);
+  void set_flag(unsigned long flag, bool value);
   struct thattr_field * m_field;  ///< Attribute's field.
   struct thattr_obj * m_obj;  ///< Attribute's object.
 };
@@ -88,8 +97,8 @@ struct thattr_field {
     m_xdbf_field;  ///< DBF field identifier.
   std::string m_xdbf_name;  ///< DBF field name.
 
-  std::string m_xmp_name,  ///< Metapost field name.
-    m_xmp_last;  ///< Last string value exported for given field.
+  std::string m_xmp_name;  ///< Metapost field name.
+  //  m_xmp_last;  ///< Last string value exported for given field.
 
 };
 
@@ -108,10 +117,11 @@ struct thattr_obj {
   const char * m_tree_node_id;  ///< Tree node id.
   void * m_data;  ///< User defined data.
   thattr_id2attr_map m_attributes;  ///< Map of attributes.
+  thattr_attr * m_last_attribute; ///< Last attribute set for given object.
 
   struct thattr * m_parent;  ///< Parent attribute class.
 
-  thattr_obj() : m_user_id(-1), m_tree_level(0), m_tree_node_id(""), m_data(NULL) {}
+  thattr_obj() : m_user_id(-1), m_tree_level(0), m_tree_node_id(""), m_data(NULL), m_last_attribute(NULL) {}
 
   void set_tree_level(size_t level);
 
@@ -155,6 +165,7 @@ struct thattr {
   void insert_attribute(const char * name, const char * value, long user_id = -1);
   void insert_attribute(const char * name, double value, long user_id = -1);
   void insert_attribute(const char * name, long value, long user_id = -1);
+  thattr_attr * get_attribute();
   void copy_attributes(thattr_obj * object, long user_id = -1);
 
   void analyze_fields();
@@ -163,7 +174,8 @@ struct thattr {
   void export_html(const char * fname, int encoding = TT_UTF_8);
   void export_kml(const char * fname);
   void export_mp_header(FILE * f);
-  void export_mp_object(FILE * f, long user_id);
+  void export_mp_object_begin(FILE * f, long user_id);
+  void export_mp_object_end(FILE * f, long user_id);
 
 };
 

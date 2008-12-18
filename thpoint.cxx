@@ -394,6 +394,8 @@ const char * thpoint_export_mp_align2mp(int a) {
 bool thpoint::export_mp(class thexpmapmpxs * out)
 {
   th2ddataobject::export_mp(out);
+  thattr * station_attr = NULL;
+  long station_attr_id = 0;
 
   bool postprocess = true, expsym = false;
   std::string attr_text;
@@ -497,8 +499,12 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       {
         thdb1ds * pst = NULL;
         std::string commentstr("0");
-        if (this->station_name.id != 0)
+        if (this->station_name.id != 0) {
           pst = &(this->db->db1d.station_vec[this->station_name.id - 1]);
+          station_attr_id = this->station_name.id;
+          station_attr = &(thdb.db1d.m_station_attr);
+          station_attr->export_mp_object_begin(out->file, station_attr_id);
+        }
         if (pst != NULL) {
 #define thexpmatselected_stationflag(flag,mid) if (((pst->flags & flag) == flag) && out->symset->assigned[mid]) expsym = true;
           thexpmatselected_stationflag(TT_STATIONFLAG_ENTRANCE, SYMP_FLAG_ENTRANCE)
@@ -988,6 +994,10 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     }
   }
   
+  if (station_attr != NULL) {
+    station_attr->export_mp_object_end(out->file, station_attr_id);
+  }
+  th2ddataobject::export_mp_end(out);
   return(false);
 }
 

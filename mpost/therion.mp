@@ -325,7 +325,7 @@ enddef;
 
 def process_label (expr cent, rot) =
   begingroup
-    bboxmargin:=0.8bp;
+    interim bboxmargin:=0.8bp;
     q:=((bbox lab) smoothed 2) rotatedaround (cent, rot);
     draw lab rotatedaround (cent, rot);
     write_circ_bbox(q);  % without corners smoothing it was enough to use
@@ -757,6 +757,27 @@ def initsymbol (expr name) =
 enddef;
 
 %%%
+
+% comment out groups in order to use 'save ATTR_*' appropriately
+
+def beginfig(expr c) =
+%  begingroup
+  charcode:=c;
+  clearxy; clearit; clearpen;
+  pickup defaultpen;
+  drawoptions();
+  scantokens extra_beginfig;
+  
+  save smartll, smartur; 
+  pair smartll[], smartur[]; 
+  smart_count := 0;
+enddef;
+
+def endfig =
+  scantokens extra_endfig;
+  shipit;
+%  endgroup
+enddef;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

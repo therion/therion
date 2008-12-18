@@ -224,6 +224,12 @@ class th2ddataobject : public thdataobject {
    */
   
   virtual bool export_mp(class thexpmapmpxs * out);
+  
+  /**
+   * Export object to metapost file.
+   */
+  
+  virtual bool export_mp_end(class thexpmapmpxs * out);
 
   /**
    * Parse user defined subtype.

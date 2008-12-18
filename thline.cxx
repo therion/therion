@@ -1060,6 +1060,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
     }
   }
 
+  th2ddataobject::export_mp_end(out);
   return(false);
 }
 

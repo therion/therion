@@ -51,6 +51,10 @@
 #include "thlang.h"
 #include "thversion.h"
 
+#ifdef THMSVC
+#define round(x) floor((x) + 0.5)
+#endif
+
 #ifndef NOTHERION
 #include "thchenc.h"
 #include "thbuffer.h"

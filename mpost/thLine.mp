@@ -96,6 +96,7 @@ def l_wall_clay_SKBB (expr P) =
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
   endfor;
+  pickup PenA;  
   thdraw P;
 enddef;
 
@@ -153,6 +154,7 @@ def l_wall_ice_SKBB (expr P) =
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
   endfor;
+  pickup PenA;  
   thdraw P;
 enddef;
 

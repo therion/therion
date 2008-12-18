@@ -99,6 +99,74 @@ vardef p_label@#(expr txt,pos,rot,mode) =
   else: process_label(pos,rot); fi;
 enddef;
 
+
+% at beginfig: save smartll[], smartur[]; pair smartll[], smartur[]; smart_count=0;
+numeric smart_count, smart_D;
+boolean smart_quit, smart_inner_quit;
+
+def p_smartlabel (expr txt, pos) =
+%  begingroup;
+  interim bboxmargin:=0.2pt;
+  lab:=thelabel.rt(txt,pos+(0.4u,0));
+  q:=bbox lab;
+  smart_D := 0;
+  forever:
+    smart_quit := true;
+    smart_inner_quit := false;
+    for i=1 upto smart_count:
+      if smart_overlap(((point 0 of q) shifted (0,smart_D)), 
+                       ((point 2 of q) shifted (0,smart_D)),
+                       smartll[i], smartur[i]) = 1:
+        smart_quit := false;
+        smart_D := smart_D - 3pt;
+        smart_inner_quit := true;
+      fi;
+      exitif smart_inner_quit;
+    endfor;
+    exitif smart_quit;
+  endfor;
+  smart_U := 0;
+  forever:
+    smart_quit := true;
+    smart_inner_quit := false;
+    for i=1 upto smart_count:
+      if smart_overlap(((point 0 of q) shifted (0,smart_U)), 
+                       ((point 2 of q) shifted (0,smart_U)),
+                       smartll[i], smartur[i]) = 1:
+        smart_quit := false;
+        smart_U := smart_U + 3pt;
+        smart_inner_quit := true;
+      fi;
+      exitif smart_inner_quit;
+    endfor;
+    exitif smart_quit;
+  endfor;
+  if (smart_U < -smart_D): smart_D := smart_U; fi;
+  draw lab shifted (0,smart_D);
+  if (abs(smart_D)>3pt):
+    pickup PenB;
+    draw pos{left}..{right}(pos shifted (.4u, smart_D)) dashed withdots scaled 0.2;
+    pickup PenA;
+    drawdot pos;
+  fi;
+  smart_count := smart_count + 1;
+  smartll[smart_count] := point 0 of (q shifted (0,smart_D));
+  smartur[smart_count] := point 2 of (q shifted (0,smart_D));
+%  endgroup;
+enddef;
+
+def smart_overlap (expr llA, urA, llB, urB) =
+  if ((xpart llA < xpart urB) and (xpart urA > xpart llB)) and
+     ((ypart llA < ypart urB) and (ypart urA > ypart llB)):
+    1
+  else:
+    0 
+  fi
+enddef;
+
+
+
+
 def p_wallaltitude (expr pprev,pos,pnext,txt) =
   rot:=angle(unitvector(pnext-pos)+unitvector(pos-pprev)) - 90;
   pickup PenD;

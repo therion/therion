@@ -915,9 +915,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(mpf,"%s\n",thmpost_library);
   fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(thlang_getlang(this->layout->lang)));
 
-  this->db->db2d.export_mp_header(out.file);
-  
   this->db->attr.export_mp_header(out.file);
+  this->db->db1d.m_station_attr.export_mp_header(out.file);
+  this->db->db2d.export_mp_header(out.file);
 //  fprintf(mpf,"verbatimtex \\def\\updown#1#2{\\vbox{%%\n");
 //  fprintf(mpf,"    \\offinterlineskip\n");
 //  fprintf(mpf,"    \\setbox100=\\hbox{#1}\n");
@@ -1950,7 +1950,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     fprintf(out->file, "ATTR__scrap_centerline := %s;\n", (scrap->centerline_io ? "true" : "false"));
     out->attr_last_scrap_centerline = scrap->centerline_io;
   }
-  scrap->db->attr.export_mp_object(out->file, (long) scrap->id);
+  scrap->db->attr.export_mp_object_begin(out->file, (long) scrap->id);
 
   // preskuma vsetky objekty a ponastavuje im clip tagy
   obj = scrap->ls2doptr;
@@ -2296,6 +2296,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           commentstr += utf2tex(slp->station->comment);
           commentstr += " etex";
         }
+        this->db->db1d.m_station_attr.export_mp_object_begin(out->file, slp->station_name.id);
         fprintf(out->file,"p_station((%.2f,%.2f),%d,%s,\"\"",
           thxmmxst(out, slp->stx, slp->sty),
           out->symset->assigned[macroid] ? slp->station->mark : 0,
@@ -2312,6 +2313,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_SUMMER, SYMP_FLAG_AIRDRAUGHT, "air-draught:summer")
         thexpmat_stationflag(TT_STATIONFLAG_AIRDRAUGHT_WINTER, SYMP_FLAG_AIRDRAUGHT, "air-draught:winter")
         fprintf(out->file,");\n");
+        this->db->db1d.m_station_attr.export_mp_object_end(out->file, slp->station_name.id);
         if (out->layout->is_debug_stationnames() && (slp->station_name.id != 0)) {
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
           dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
@@ -2518,7 +2520,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     fprintf(out->file,"endfig;\n");  
     result.flags |= TT_XMPS_X;
   }
-
+  scrap->db->attr.export_mp_object_end(out->file, (long) scrap->id);
   return result;
 }
 
@@ -2907,7 +2909,15 @@ bool th2ddataobject::export_mp(thexpmapmpxs * out)
       fprintf(out->file,"ATTR__survey := \"%s\";\n",this->fsptr->full_name);
       out->attr_last_survey = this->fsptr->get_full_name();
     }
-    this->db->attr.export_mp_object(out->file, (long) this->id);
+    this->db->attr.export_mp_object_begin(out->file, (long) this->id);
+  }
+  return true;
+}
+
+bool th2ddataobject::export_mp_end(thexpmapmpxs * out)
+{
+  if (out->file != NULL) {
+    this->db->attr.export_mp_object_end(out->file, (long) this->id);
   }
   return true;
 }

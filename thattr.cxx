@@ -48,6 +48,19 @@ thattr::thattr()
 }
 
 
+bool thattr_attr::has_flag(unsigned long flag)
+{
+  return ((this->m_flags & flag) != 0);
+}
+
+void thattr_attr::set_flag(unsigned long flag, bool value)
+{
+  if (value)
+    this->m_flags |= flag;
+  else
+    this->m_flags &= (~flag);
+}
+
 
 void thattr_obj::set_tree_level(size_t level) {
   m_tree_level = level;
@@ -152,9 +165,21 @@ void thattr::insert_attribute(const char * name, thattr_attr & attr, long user_i
     attr.m_field = f;
     attr.m_obj = o;
     o->m_attributes[f->m_id] = attr;
+    o->m_last_attribute = &(o->m_attributes[f->m_id]);
   }
 
 }
+
+
+
+thattr_attr * thattr::get_attribute()
+{
+  thattr_obj * o = this->m_obj_last;
+  if (o == NULL) return NULL;
+  thattr_attr * a = o->m_last_attribute;
+  return a;
+}
+
 
 
 void thattr::insert_attribute(const char * name, const char * value, long user_id)
@@ -273,7 +298,6 @@ void thattr::analyze_fields()
       else if ((cf->m_xmp_name[i] < 'a'))
         cf->m_xmp_name[i] = tolower(cf->m_xmp_name[i]);
     }
-    cf->m_xmp_last = std::string("");
     cf->m_maxs = 0;
   }
 
@@ -441,24 +465,17 @@ void thattr::export_mp_header(FILE * f)
   if (this->m_num_fields == 0)
     return;
   this->analyze_fields();
-  thattr_field * cf;
-  thattr_field_list::iterator fli;
-  for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
-    cf = &(*fli);
-    fprintf(f,"string %s;\n", cf->m_xmp_name.c_str());
-    fprintf(f,"%s := \"\";\n", cf->m_xmp_name.c_str());
-    cf->m_xmp_last = std::string("");
-  }
 }
 
 
-void thattr::export_mp_object(FILE * f, long user_id)
+void thattr::export_mp_object_begin(FILE * f, long user_id)
 {
   if (this->m_num_fields == 0)
     return;
   thattr_obj * o = this->get_object(user_id);
   if (o == NULL)
     return;
+  if (f == NULL) return;
 
   thattr_attr * ca;
   thattr_field * cf;
@@ -471,20 +488,38 @@ void thattr::export_mp_object(FILE * f, long user_id)
   for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
     cf = &(*fli);
     ai = o->m_attributes.find(cf->m_id);
-    if (ai == o->m_attributes.end()) {
-      news = std::string("");
-    } else {
+    if (ai != o->m_attributes.end()) {
       ca = &(ai->second);
       news = ca->m_val_string;
-    }
-    if (cf->m_xmp_last != news) {
       thdecode_mp(&enc, news.c_str());
+      fprintf(f,"string %s;\n", cf->m_xmp_name.c_str());
       fprintf(f,"%s := \"%s\";\n", cf->m_xmp_name.c_str(), enc.get_buffer());
-      cf->m_xmp_last = news;
     }
   }
 }
 
+
+void thattr::export_mp_object_end(FILE * f, long user_id)
+{
+  if (this->m_num_fields == 0)
+    return;
+  thattr_obj * o = this->get_object(user_id);
+  if (o == NULL)
+    return;
+  if (f == NULL) return;
+
+  thattr_field * cf;
+  thattr_id2attr_map::iterator ai;
+  thattr_field_list::iterator fli;
+
+  for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
+    cf = &(*fli);
+    ai = o->m_attributes.find(cf->m_id);
+    if (ai != o->m_attributes.end()) {
+      fprintf(f,"save %s;\n", cf->m_xmp_name.c_str());
+    }
+  }
+}
 
 
 
@@ -681,6 +716,7 @@ void thattr::export_html(const char * fname, int encoding)
         alstr = "left";
       }
       ai = oi->m_attributes.find(cf->m_id);
+      ca = NULL;
       if (ai == oi->m_attributes.end()) {
         value = "&nbsp;";
       } else {
@@ -705,6 +741,8 @@ void thattr::export_html(const char * fname, int encoding)
           value = value_plus.c_str();
         }
       }
+      if ((ca != NULL) && (ca->has_flag(THATTRFLAG_HIDDEN)))
+        fprintf(f," style=\"color:#808080\"");
       fprintf(f,">%s</td>", value);
       header_value = false;
     }

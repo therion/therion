@@ -735,7 +735,10 @@ def p_station_SKBB(expr pos,mark,txt)(text flags) =
     pickup PenX;
     if i="entrance":
       thdraw path_cave;
-      p_label.urt(txt,pos+(0.4u,0),0,0);
+%      p_label.urt(txt,pos+(0.4u,0),0,0);
+      if not numeric txt:
+        p_smartlabel(txt,pos);
+      fi;
     elseif i="sink":
       thdraw path_cave cutbefore ((-u,0)--(u,0)) cutafter ((-u,0)--(u,0));
       pickup PenA;

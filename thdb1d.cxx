@@ -157,15 +157,14 @@ void thdb1d::scan_data()
       try {
         while(lei != dp->leg_list.end()) {
           if (lei->is_valid) {
+            // thdataleg * lf = &(*lei);
             lei->from.id = this->insert_station(lei->from, lei->psurvey, dp, 3);
             lei->to.id = this->insert_station(lei->to, lei->psurvey, dp, 3);
-            if ((lei->from.id == 0) && (lei->to.id == 0))
+            if (((strcmp(lei->from.name,".") == 0) || (strcmp(lei->from.name,"-") == 0)) && ((strcmp(lei->to.name,".") == 0) || (strcmp(lei->to.name,"-") == 0)))
               ththrow(("shot between stations without names not allowed"))
-            if ((lei->from.id == 0) || (lei->to.id == 0)) {
-              if ((strcmp(lei->from.name,"-") == 0) || (strcmp(lei->to.name,"-") == 0)) {
-                lei->flags |= TT_LEGFLAG_SPLAY;
-                lei->walls = TT_FALSE;
-              }
+            if ((strcmp(lei->from.name,"-") == 0) || (strcmp(lei->to.name,"-") == 0) || (strcmp(lei->from.name,".") == 0) || (strcmp(lei->to.name,".") == 0)) {
+              lei->flags |= TT_LEGFLAG_SPLAY;
+              lei->walls = TT_FALSE;
             }
             this->leg_vec.push_back(thdb1dl(&(*lei),dp,lei->psurvey));
             
@@ -428,8 +427,12 @@ void thdb1d::scan_data()
           else
             ththrow(("station doesn't exist -- %s@%s", srv->entrance.name, srv->entrance.survey))
         }
-        // set entrance flag to given station
+        // set entrance flag & comment to given station
         this->station_vec[srv->entrance.id-1].flags |= TT_STATIONFLAG_ENTRANCE;            
+        if (strlen(srv->title) > 0)
+          this->station_vec[srv->entrance.id-1].comment = srv->title;
+        else
+          this->station_vec[srv->entrance.id-1].comment = srv->name;
       }
     }
 

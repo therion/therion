@@ -125,6 +125,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
   thdataobject * obj;
   thdb1ds * st;
   double tmpd;
+  bool is_cave = (survey->entrance.id != 0);
   if (!survey->is_selected()) return;
   if (survey->stat.num_entrances == 0) return;
   // insert survey attributes
@@ -134,6 +135,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
     this->m_table.get_object()->m_tree_node_id = survey->get_reverse_full_name();
     this->m_table.insert_attribute("Title", ((strlen(survey->title) > 0) ? survey->title : survey->name));
     this->m_table.insert_attribute("Length",(long)(survey->stat.length + 0.5));
+    if (!is_cave) this->m_table.get_attribute()->set_flag(THATTRFLAG_HIDDEN, true);
     if (survey->stat.station_top != NULL) {
       tmpd = survey->stat.station_top->z - survey->stat.station_bottom->z;
       if (tmpd > survey->stat.length) tmpd = survey->stat.length;
@@ -143,6 +145,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
     }
     if (survey->stat.length_explored > 0.0) {
       this->m_table.insert_attribute("Explored", (long)(survey->stat.length_explored + 0.5));
+      if (!is_cave) this->m_table.get_attribute()->set_flag(THATTRFLAG_HIDDEN, true);
     } else {
       this->m_table.insert_attribute("Explored", "");
     }
@@ -165,7 +168,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
     if (this->expattr) this->m_table.copy_attributes(this->db->attr.get_object(survey->id));
   }
 
-  if (survey->entrance.id == 0) {
+  if (!is_cave) {
     for(obj = survey->foptr; obj != NULL; obj = obj->nsptr) {
       if (obj->get_class_id() == TT_SURVEY_CMD) {
         this->export_survey_entraces((thsurvey *) obj);
@@ -185,7 +188,6 @@ void thexptable::export_survey_entraces(thsurvey * survey)
           std::string * tmps = get_tmp_string();
           *tmps = survey->get_reverse_full_name();
           *tmps += ".";
-          *tmps += st->name;
           this->m_table.get_object()->m_tree_node_id = tmps->c_str();
           this->m_table.insert_attribute("Title", st->comment);
           this->m_table.insert_attribute("Length","");

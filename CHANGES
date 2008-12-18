@@ -9,6 +9,7 @@ therion:
    - missing altitudes in cave list
    - atlas page exclusion
    - map header positioning using real numbers
+   - attribute export to metapost
    
 xtherion:
 
