@@ -2,14 +2,20 @@
 Therion 5.3 (YYYY-MM-DD):
 
 therion:
+ * new easy setup for OpenType and TrueType fonts (requires lcdf-typetools)
+ * basic support for right-to-left scripts in labels and legend
+ * PDF files now contain unicode mapping information to allow searching and 
+   copying texts consisting of accented and non-latin characters
  * georeferencing data added to pdf maps
  * support for splay shots without station names
+ * added greek translation (thanks to Stelios Zacharias)
  * bugs fixed:
    - BCRA3 and BCRA5 survey grades fixed
    - missing altitudes in cave list
    - atlas page exclusion
    - map header positioning using real numbers
    - attribute export to metapost
+   - fixed russian translation
    
 xtherion:
 

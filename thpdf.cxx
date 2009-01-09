@@ -1361,6 +1361,12 @@ void build_pages() {
   PDFRES << "\\pdfinfo{/Creator (Therion " << THVERSION << ", MetaPost, TeX)}%" << endl;
   PDFRES << "\\pdfcatalog{ /ViewerPreferences << /DisplayDocTitle true /PrintScaling /None >> }" << endl;
   
+  if(ENC_NEW.NFSS != 0) PDFRES << "\\input thfonts.map" << endl;
+
+  PDFRES << "\\ifnum\\pdftexversion>139" << endl;
+  PDFRES << "  \\input glyphtounicode.tex" << endl;
+  PDFRES << "  \\pdfgentounicode=1" << endl;
+  PDFRES << "\\fi" << endl;
 
   if (LAYOUT.transparency) {
     PDFRES << "\\opacity{" << LAYOUT.opacity << "}%" << endl;

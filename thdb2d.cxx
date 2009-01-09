@@ -3550,7 +3550,8 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
   com = "\"";
   com += thini.get_path_mpost();
-  com += "\"";
+  com += "\" ";
+  com += thini.get_opt_mpost();
   com += " data.mp";
 #ifdef THDEBUG
   thprintf("running metapost\n");

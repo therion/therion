@@ -75,7 +75,7 @@ def l_label(expr txt,path) =
         dx2 := dx2 + charwidth;
       endfor;
 
-    else message("This can't happen!")
+    else: message("Strange component of line label!");
     fi;
   endfor;
   % draw path;

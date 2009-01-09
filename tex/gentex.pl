@@ -24,7 +24,7 @@ close(INPT);
 open(OUTPT,">../thtex.h");
 print OUTPT <<ENDOUTPT;
 /**
- * \@file thtex.h
+ * \@file thmpost.h
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */  
@@ -36,8 +36,30 @@ print OUTPT <<ENDOUTPT;
  * Metapost source file.
  */
  
-const char * thtex_library = $thtex_library;
+extern const char * thtex_library;
  
+#endif
+ENDOUTPT
+close(OUTPT);
+
+
+open(OUTPT,">../thtex.cxx");
+print OUTPT <<ENDOUTPT;
+/**
+ * \@file thtex.cxx
+ *
+ * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
+ */  
+
+#include "thtex.h"
+
+#ifndef THMSVC
+
+const char * thtex_library = $thtex_library;
+
+#else
+
+const char * thtex_library = "\\\\input therion.tex\\n";
 
 #endif
 ENDOUTPT

@@ -21,7 +21,7 @@ STRIPFLAG = -s
 ##CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 ##CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 ##LXLIBDIR = linux
-##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lpthread -lz 
+##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lGLU -lpthread -lz 
 ##LXPLATFORM = LINUX
 
 # PLATFORM DEBIAN
@@ -34,7 +34,7 @@ VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCom
 CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 LXLIBDIR = linux
-PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lpthread -lz 
+PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lGLU -lpthread -lz 
 LXPLATFORM = LINUX
 
 # PLATFORM WIN32

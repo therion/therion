@@ -241,7 +241,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
   string tok, lastmovex, lastmovey, buffer;
   string font, patt, fntmatr;
   bool comment = true, concat = false, 
-       already_transp = false, transp_used = false;
+       already_transp = false, transp_used = false, before_group_transp = false;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
   double dx, dy;
   char x[20],y[20];
@@ -473,10 +473,14 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
       else if (tok == "gsave") {
         print_str("q",TEX);
         thstack.clear();
+        if (already_transp) before_group_transp = true;
+        else before_group_transp = false;
       }
       else if (tok == "grestore") {
         print_str("Q",TEX);
         thstack.clear();
+        if (before_group_transp) already_transp = true;
+        else already_transp = false;
       }
       else if (tok == "translate") {
         print_str("1 0 0 1 "+thstack[0]+" "+thstack[1]+" cm",TEX);

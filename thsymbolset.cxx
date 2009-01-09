@@ -1160,7 +1160,11 @@ void export_all_symbols()
   else
     fprintf(mpf,"%s\n",thmpost_library);
   fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(thlang_getlang(tmplayout.lang)));
+if (ENC_NEW.NFSS==0)
   fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
+else
+  fprintf(mpf,"defaultfont:=\"thss00\";\n");
+  
   tmplayout.export_mpost(mpf);
   fprintf(mpf,"background:=white;\n");
   fprintf(mpf,"transparency:=false;\n");
@@ -1265,7 +1269,8 @@ void export_all_symbols()
   // exportuje 
   com = "\"";
   com += thini.get_path_mpost();
-  com += "\"";
+  com += "\" ";
+  com += thini.get_opt_mpost();
 //    com += " --interaction nonstopmode data.mp";
   com += " data.mp";
 #ifdef THDEBUG

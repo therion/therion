@@ -28,6 +28,8 @@
 
 #include <string>
 #include <list>
+#include <vector>
+#include <map>
 
 using namespace std;
 
@@ -48,6 +50,27 @@ string utf2texoctal(string s);
 string utf2texhex(string s);
 string utf2tex (string s, bool b=false);
 int tex2uni(string font, int ch);
+
+struct encodings_new {
+ private:
+  vector<int> v_fon;  // tex - unicode
+  map<int,int> m_fon; // unicode - tex
+  int i_fon; // last position
+  
+ public:
+  int NFSS, t1_convert;
+  string otf_file[5]; 
+  
+  encodings_new();
+  
+  int get_enc_pos(int ch);
+  int get_enc_count();
+  int get_uni (int f, int ch);
+  void write_enc_files();
+};
+
+extern encodings_new ENC_NEW;
+
 
 #ifndef NOTHERION
 const char * utf2tex (const char * s, bool b = false);

@@ -435,7 +435,10 @@ enddef;
 % clipping path to a file
 
 def process_circledlabel =
+  begingroup;
+    interim bboxmargin := 0.4 bp;
     q:=bbox lab;
+  endgroup;
     q:=point 0 of q .. point 1 of q .. point 2 of q .. point 3 of q .. cycle;
     draw lab;
     draw q;

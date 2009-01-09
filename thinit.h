@@ -29,6 +29,7 @@
 #ifndef thinit_h
 #define thinit_h
 
+#include <string>
 #include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thinput.h"
@@ -56,11 +57,14 @@ class thinit {
     
   thbuffer path_cavern, ///< Survex executable full path.
     path_pdftex, path_mpost,  ///< PDF tex and metapost path
+    opt_mpost, path_otftotfm, 
     path_convert, path_identify,  ///< Path to ImageMagick convert and identify executables.
     tmp_path, tmp_remove_script;
     //path_3dtopos, 
+
+  std::string font_src[5], font_dst[5];
   
-  bool tex_env;
+  bool tex_env, fonts_ok;
   int lang, loopc;
   
   thmbuffer cmb;  ///< Command parsing mbuffer.
@@ -86,7 +90,12 @@ class thinit {
    */
    
   void load();
-  
+
+  /**
+   * Copy fonts to temporary folder.
+   */
+
+  void copy_fonts();
   
   /**
    * Return cavern executable path.
@@ -104,6 +113,12 @@ class thinit {
    * Return ImageMagick identify executable path.
    */
   char * get_path_identify();
+
+  /**
+   * Return metapost options.
+   */
+
+  char * get_opt_mpost();
   
   
   /**
@@ -111,12 +126,15 @@ class thinit {
    */
    
   char * get_path_mpost();
+  char * get_path_otftotfm();
 
   /**
    * Return pdftex executable path.
    */
    
   char * get_path_pdftex();
+
+  void check_font_path(const char * fname, int index);
   
   int get_encoding(int type = THINIT_ENCODING_DEFAULT);
   

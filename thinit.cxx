@@ -34,9 +34,15 @@
 #include "thtexfonts.h"
 #include "thlang.h"
 #include "thlocale.h"
+#include "thtmpdir.h"
 
 #ifdef THWIN32
 #include <windows.h>
+#endif
+
+#ifdef THMSVC
+#define snprintf _snprintf
+#define strcasecmp _stricmp
 #endif
 
 const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
@@ -49,6 +55,7 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# loop-closure survex\n\n"
 "### Paths to called executable files ###\n"
 "# mpost-path  \"mpost\"\n"
+"# mpost-options  \"-tex=etex\"\n"
 "# pdftex-path  \"pdfetex\"\n"
 "# cavern-path  \"cavern\"\n"
 "# convert-path  \"convert\"\n"
@@ -60,6 +67,9 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# tex-fonts <encoding> <roman> <italic> <bold> <sansserif> <sansserifoblique>\n"
 "# tex-fonts raw cmr10 cmti10 cmbx10 cmss10 cmssi10\n"
 "# tex-fonts xl2 csr10 csti10 csbx10 csss10 csssi10\n\n"
+"### PDF fonts initialization\n"
+"# otf2pfb off\n"
+"# pdf-fonts <roman> <italic> <bold> <sansserif> <sansserifoblique>\n\n"
 "### Path to temporary directory ###\n"
 "# tmp-path  \"\"\n\n"
 "### Command to remove temporary directory ###\n"
@@ -67,6 +77,7 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 
 thinit::thinit()
 {
+  this->fonts_ok = false;
   this->tex_env = false;
 	this->loopc = THINIT_LOOPC_UNKNOWN;
 }
@@ -85,6 +96,7 @@ enum {
   TTIC_PATH_CONVERT,
   TTIC_PATH_IDENTIFY,
   TTIC_PATH_MPOST,
+  TTIC_OPT_MPOST,
   TTIC_PATH_PDFTEX,
   TTIC_PATH_SOURCE,
   TTIC_TMP_PATH,
@@ -95,6 +107,8 @@ enum {
   TTIC_UNITS,
   TTIC_LOOPC,
   TTIC_TEXT,	
+  TTIC_PDF_FONTS,
+  TTIC_OTF2PFB,
   TTIC_UNKNOWN,
 };
 
@@ -113,7 +127,10 @@ static const thstok thtt_initcmd[] = {
   {"identify-path", TTIC_PATH_IDENTIFY},
   {"language", TTIC_LANG},
   {"loop-closure", TTIC_LOOPC},
+  {"mpost-options", TTIC_OPT_MPOST},
   {"mpost-path", TTIC_PATH_MPOST},
+  {"otf2pdf", TTIC_OTF2PFB},
+  {"pdf-fonts", TTIC_PDF_FONTS},
   {"pdftex-path", TTIC_PATH_PDFTEX},
   {"source-path", TTIC_PATH_SOURCE},
   {"tex-env",TTIC_TEX_ENV},
@@ -160,6 +177,109 @@ void thinit__make_short_path(thbuffer * bf) {
 #endif
 
 
+void thinit::copy_fonts() {
+
+  if (ENC_NEW.NFSS == 0) return;
+
+  static thbuffer tmpb;
+  int retcode;
+
+  if (fonts_ok) return;
+
+  thprintf("copying_fonts ...\n");
+
+  for(int index = 0; index < 5; index++) {
+    thprintf("%s\n", font_dst[index].c_str());
+  // skopiruje font subor
+#ifdef THWIN32
+    tmpb = "copy \"";
+#else
+    tmpb = "cp \"";
+#endif
+    tmpb += font_src[index].c_str();
+    tmpb += "\" \"";
+    tmpb += thtmp.get_file_name(font_dst[index].c_str());
+    tmpb += "\"";
+
+#ifdef THWIN32
+    char * cpcmd;
+    size_t  cpch;
+    cpcmd = tmpb.get_buffer();
+    for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
+      if (cpcmd[cpch] == '/') {
+        cpcmd[cpch] = '\\';
+      }
+    }
+#endif
+
+#ifdef THDEBUG
+    thprintf("copying font\n");
+#endif
+    retcode = system(tmpb.get_buffer());
+    if (retcode != EXIT_SUCCESS)
+      ththrow(("unable to copy font file -- %s", font_src[index].c_str()))
+  }
+
+#ifdef THWIN32
+  FILE * f = fopen(thtmp.get_file_name("pltotf.bat"),"w");
+  fprintf(f,"@\"%s\\bin\\win32\\pltotf.exe\" %%1 %%2\n",thcfg.install_path.get_buffer());
+  fclose(f);
+#endif
+  thprintf("done.\n");
+  fonts_ok = true;
+}
+
+
+void thinit::check_font_path(const char * fname, int index) {
+
+  static thbuffer pfull, pshort, tmpb;
+
+  pshort.strcpy("");
+  pfull.strcpy("");
+  long i, l;
+  tmpb = fname;
+  char * buff = tmpb.get_buffer();
+  l = (long) strlen(buff);
+  bool search_sn = true;
+  if (l == 0) ththrow(("missing font file name"));
+  for(i = (l-1); i >= 0; i--) {
+    if ((buff[i] == '/') || (buff[i] == '\\')) {
+      if (search_sn) {
+        pshort.strcpy(&(buff[i+1]));
+        search_sn = false;
+      }
+      buff[i] = '/';
+    }
+  }
+  
+  if (strlen(pshort.get_buffer()) == 0) ththrow(("invalid font name -- %s", fname))
+
+  if ( 
+#ifdef THWIN32
+      ((l > 1) && (buff[1] == ':')) ||
+#endif
+      (buff[0] == '/')) {
+    pfull.strcpy(buff);
+  } else {
+    if (strlen(this->ini_file.get_cif_path()) > 0) {
+      pfull.strcpy(this->ini_file.get_cif_path());
+      pfull += "/";
+    } else {
+      pfull = "";
+    }
+    pfull += buff;
+  }
+
+  // checkne ci TTF
+  if ((l > 3) && (strcasecmp(&(buff[l-4]), ".ttf"))) ENC_NEW.t1_convert = 0;
+
+  font_src[index] = pfull.get_buffer();
+  font_dst[index] = pshort.get_buffer();
+  ENC_NEW.otf_file[index] = pshort.get_buffer();
+
+}
+
+
 
 void thinit::load()
 {
@@ -167,6 +287,11 @@ void thinit::load()
   // set encodings
   this->encoding_default = TT_ASCII;
   this->encoding_sql = TT_UNKNOWN_ENCODING;
+
+  ENC_NEW.NFSS = 0;
+  ENC_NEW.t1_convert = 1;
+  this->opt_mpost = "";
+
   
   // set programs paths
   this->path_cavern = "cavern";
@@ -218,12 +343,15 @@ void thinit::load()
   if (thcfg.install_tex) {
     this->path_mpost = thcfg.install_path.get_buffer();
     this->path_pdftex = thcfg.install_path.get_buffer();
+    this->path_otftotfm = thcfg.install_path.get_buffer();
     this->path_mpost += "\\bin\\win32\\mpost.exe";
     this->path_pdftex += "\\bin\\win32\\pdfetex.exe";
+    this->path_otftotfm += "\\bin\\win32\\otftotfm.exe";
   } else {
 #endif  
     this->path_mpost = "mpost";
     this->path_pdftex = "pdfetex";
+    this->path_otftotfm = "otftotfm";
 #ifdef THWIN32
   }
 #endif  
@@ -276,8 +404,10 @@ void thinit::load()
         case TTIC_UNITS:
         case TTIC_TMP_REMOVE_SCRIPT:
         case TTIC_PATH_MPOST:
+        case TTIC_OPT_MPOST:
         case TTIC_PATH_PDFTEX:
         case TTIC_PATH_SOURCE:
+        case TTIC_OTF2PFB:
         case TTIC_TEX_ENV:
           if (nargs != 2)
             ththrow(("invalid number of command arguments"));
@@ -285,6 +415,10 @@ void thinit::load()
         case TTIC_TEXT:
           if (nargs != 4)
             ththrow(("invalid text syntax -- should be: text <language> <text> <translation>"))
+          break;
+        case TTIC_PDF_FONTS:
+          if (nargs != 6)
+            ththrow(("invalid number of command arguments"));
           break;
         case TTIC_TEX_FONTS:
           if (nargs != 7)
@@ -336,6 +470,13 @@ void thinit::load()
           thdeflocale.parse_units(args[1]);
           break;
 
+        case TTIC_OTF2PFB:
+          sv = thmatch_token(args[1], thtt_bool);
+          if (sv == TT_UNKNOWN_BOOL)
+            ththrow(("invalid otf2pfb switch -- %s", args[1]))
+          ENC_NEW.t1_convert = (sv == TT_TRUE);
+          break;
+
         case TTIC_TEXT:
             thlang_set_translation(args[1], args[2], args[3]);
             break;
@@ -348,6 +489,10 @@ void thinit::load()
           if (strlen(args[1]) < 1)
             ththrow(("invalid path"))
           this->path_mpost.strcpy(args[1]);
+          break;
+
+        case TTIC_OPT_MPOST:
+          this->opt_mpost.strcpy(args[1]);
           break;
 
         case TTIC_PATH_PDFTEX:
@@ -371,6 +516,16 @@ void thinit::load()
           frec.si = args[6];
           FONTS.push_back(frec);
           some_tex_fonts = true;
+          break;
+
+        case TTIC_PDF_FONTS:
+          // TODO: parsne nazvy suborov, nastavi t1_convert, 
+          ENC_NEW.NFSS = 1;
+          check_font_path(args[1], 0);
+          check_font_path(args[2], 1);
+          check_font_path(args[3], 2);
+          check_font_path(args[4], 3);
+          check_font_path(args[5], 4);
           break;
           
         case TTIC_TEX_ENV:
@@ -443,9 +598,19 @@ char * thinit::get_path_mpost()
   return this->path_mpost.get_buffer();
 }
 
+char * thinit::get_opt_mpost()
+{
+  return this->opt_mpost.get_buffer();
+}
+
 char * thinit::get_path_pdftex()
 {
   return this->path_pdftex.get_buffer();
+}
+
+char * thinit::get_path_otftotfm()
+{
+  return this->path_otftotfm.get_buffer();
 }
 
 

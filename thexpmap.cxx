@@ -778,6 +778,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   texb.guarantee(128);
   thscrap * cs;
 
+  thini.copy_fonts();
+
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
 #else
@@ -939,7 +941,11 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 //  fprintf(mpf,"  \\def\\thwallaltitude{\\thsmallsize}\n");
 //  fprintf(mpf,"etex;\n");
 
+//  fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
+if (ENC_NEW.NFSS==0)
   fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
+else
+  fprintf(mpf,"defaultfont:=\"thss00\";\n");
   
 //fprintf(mpf,"defaultscale:=0.8;\n\n");
 
@@ -1713,6 +1719,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   
   // vypise kodovania
   print_fonts_setup();
+  ENC_NEW.write_enc_files();
   
   int retcode;
   
@@ -1725,11 +1732,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     putenv("MFBASES=");
     putenv("MFINPUTS=");
     putenv("MFPOOL=");
-#ifdef THMSVC
-    putenv("MPINPUTS=../mpost;.");
-#else
     putenv("MPINPUTS=");
-#endif
     putenv("MPMEMS=");
     putenv("MPPOOL=");
     putenv("MPSUPPORT=");
@@ -1755,6 +1758,13 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     putenv("TTFONTS=");
     putenv("VFFONTS=");
     putenv("WEB2C=");
+#ifdef THMSVC
+    putenv("TEXINPUTS=../tex;../../therionxxx/Setup/texmf/tex;.");
+    putenv("MPINPUTS=../mpost;.");
+    putenv("TEXFONTS=.");
+    putenv("T1FONTS=.");
+    putenv("TTFFONTS=.");
+#endif
   }
 #endif  
   
@@ -1800,6 +1810,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
       thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
 
+  ENC_NEW.write_enc_files();
+
       com = "\"";
       com += thini.get_path_pdftex();
       com += "\"";
@@ -1820,13 +1832,14 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       // Let's copy results and log-file to working directory
       chdir(wdir.get_buffer());
 #ifdef THWIN32
-      com = "copy ";
+      com = "copy \"";
 #else
-      com = "cp ";
+      com = "cp \"";
 #endif
       com += thtmp.get_file_name("data.pdf");
-      com += " ";
+      com += "\" \"";
       com += fnm;
+      com += "\"";
 
 #ifdef THWIN32
       cpcmd = com.get_buffer();

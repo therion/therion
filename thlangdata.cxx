@@ -12,6 +12,7 @@ typedef const char * thlang_pchar;
 static const thstok thtt_lang [] = {
   {"cz", THLANG_CZ},
   {"de", THLANG_DE},
+  {"el", THLANG_EL},
   {"en", THLANG_EN},
   {"en_UK", THLANG_EN_UK},
   {"en_US", THLANG_EN_US},
@@ -31,6 +32,7 @@ static const thstok thtt_lang [] = {
 static const thlang_pchar thlang__cxxids []  = {
   "THLANG_CZ",
   "THLANG_DE",
+  "THLANG_EL",
   "THLANG_EN",
   "THLANG_EN_UK",
   "THLANG_EN_US",
@@ -47,6 +49,7 @@ static const thlang_pchar thlang__cxxids []  = {
 
 
 static const int thlang__alternatives [] = {
+  THLANG_UNKNOWN,
   THLANG_UNKNOWN,
   THLANG_UNKNOWN,
   THLANG_UNKNOWN,
@@ -219,10 +222,11 @@ static const thstok thtt__texts [150] = {
 
 
 
-static thlang_pchar thlang__translations [149][13] = {
+static thlang_pchar thlang__translations [149][14] = {
   {
     "skalní bloky",
     "Fläche mit Blöcken",
+    "ογκόλιθοι",
     "blocks",
     NULL,
     NULL,
@@ -238,6 +242,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "bahno",
     "Lehmfläche",
+    "άργιλος",
     "clay",
     NULL,
     NULL,
@@ -253,6 +258,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "štěrk",
     "Schuttfläche",
+    "χαλάσματα",
     "debris",
     NULL,
     NULL,
@@ -268,6 +274,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "led",
     "Eisfläche",
+    "πάγος",
     "ice",
     NULL,
     NULL,
@@ -283,6 +290,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "valouny",
     "Kiesfläche",
+    "χαλίκια",
     "pebbles",
     NULL,
     NULL,
@@ -298,6 +306,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "písek",
     "Sandfläche",
+    "άμμος",
     "sand",
     NULL,
     NULL,
@@ -313,6 +322,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sníh",
     "Schneefläche",
+    "χιόνι",
     "snow",
     NULL,
     NULL,
@@ -328,6 +338,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sifon",
     "Siphonfläche",
+    "σιφόνι",
     "sump",
     NULL,
     NULL,
@@ -343,6 +354,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "vodní plocha",
     "Wasserfläche",
+    "νερό",
     "water",
     NULL,
     NULL,
@@ -358,6 +370,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "pomocná šipka",
     "Richtungspfeil",
+    "βέλος",
     "arrow",
     NULL,
     NULL,
@@ -373,6 +386,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "ohraničení",
     "Begrenzung",
+    "άκρη",
     "border",
     NULL,
     NULL,
@@ -388,6 +402,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "předpokládané ohraničení",
     "geschätzte Begrenzung",
+    "υποθετική άκρη",
     "presumed border",
     NULL,
     NULL,
@@ -403,6 +418,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "nestálé ohraničení",
     "vorübergehende Begrenzung",
+    "προσωρινή άκρη",
     "temporary border",
     NULL,
     NULL,
@@ -418,6 +434,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "ohraničení",
     "sichtbare Begrenzung",
+    "άκρη",
     "border",
     NULL,
     NULL,
@@ -433,6 +450,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "stropní meandr",
     "Deckenmäander",
+    "μαίανδρος οροφής",
     "ceiling meander",
     NULL,
     NULL,
@@ -448,6 +466,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "změna výšky stropu",
     "Deckenstufe",
+    "σκαλοπάτι οροφής",
     "step on the ceiling",
     NULL,
     NULL,
@@ -463,6 +482,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "komín",
     "Kamin",
+    "καμινάδα",
     "chimney",
     NULL,
     NULL,
@@ -478,6 +498,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "vrstevnice",
     "Höhenlinie",
+    "ισοϋψής",
     "contour",
     NULL,
     NULL,
@@ -493,6 +514,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "meandr ve dně",
     "Bodenmäander",
+    "μαίανδρος δαπέδου",
     "floor meander",
     NULL,
     NULL,
@@ -508,6 +530,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "stupeň",
     "Bodenstufe",
+    "σκαλοπάτι",
     "floor step",
     NULL,
     NULL,
@@ -523,6 +546,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sintrové náteky",
     "flächiger Sinter",
+    "σταλαγμιτικό υλικό δαπέδου",
     "flowstone",
     NULL,
     NULL,
@@ -538,6 +562,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sklon chodby",
     "Gefälle",
+    "κλίση στοάς",
     "passage gradient",
     NULL,
     NULL,
@@ -553,6 +578,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "pojmenování",
     "Beschriftung",
+    "περιγραφή",
     NULL,
     NULL,
     NULL,
@@ -568,6 +594,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "spojení map",
     NULL,
+    "ένωση χαρτών",
     "map connection",
     NULL,
     NULL,
@@ -583,6 +610,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "nickamínek",
     NULL,
+    "γάλα σπηλαίου",
     NULL,
     NULL,
     NULL,
@@ -598,6 +626,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "převis",
     "Überhang",
+    "προέκταση οροφής",
     "overhang",
     NULL,
     NULL,
@@ -613,6 +642,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "propast",
     "Schacht",
+    "πηγάδι",
     "pitch",
     "pitch",
     "pit",
@@ -628,6 +658,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "kameny",
     "Umriss eines Felsens",
+    "περίγραμμα βράχου",
     "rock border",
     NULL,
     NULL,
@@ -643,6 +674,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "hrany kamenů",
     "Struktur eines Felsens",
+    "άκρη βράχου",
     "rock edges",
     NULL,
     NULL,
@@ -658,6 +690,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "příčný řez",
     "Schnittlinie",
+    "τομή",
     "cross-section",
     NULL,
     NULL,
@@ -673,6 +706,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "svah",
     "Hangform",
+    "κλίση",
     "slope",
     NULL,
     NULL,
@@ -688,6 +722,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "polygonový tah",
     "Messzug",
+    "γραμμή χαρτογράφησης",
     "survey lines",
     NULL,
     NULL,
@@ -703,6 +738,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "stěna",
     "Wandverlauf",
+    "τοίχος",
     "wall",
     NULL,
     NULL,
@@ -718,6 +754,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "stěna",
     "Wandverlauf",
+    "τοίχος",
     "wall",
     NULL,
     NULL,
@@ -733,6 +770,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "zával",
     "Raumbegrenzung durch Versturz",
+    "ογκόλιθοι",
     "breakdown",
     NULL,
     NULL,
@@ -748,6 +786,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "bahno",
     "Raumbegrenzung durch Lehm",
+    "άργιλος",
     "clay",
     NULL,
     NULL,
@@ -763,6 +802,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "štěrk",
     "Raumbegrenzung durch Schutt",
+    "χαλάσματα",
     "debris",
     NULL,
     NULL,
@@ -778,6 +818,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "led",
     "Raumbegrenzung durch Eis",
+    "πάγος",
     "ice",
     NULL,
     NULL,
@@ -793,6 +834,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "valouny",
     "Raumbegrenzung durch Kies",
+    "χαλίκια",
     "pebbles",
     NULL,
     NULL,
@@ -808,6 +850,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "předpokládaná stěna",
     "geschätzter Wandverlauf",
+    "τοίχος υποθετικός",
     "presumed wall",
     NULL,
     NULL,
@@ -823,6 +866,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "písek",
     "Raumbegrenzung durch Sand",
+    "άμμος",
     "sand",
     NULL,
     NULL,
@@ -838,6 +882,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "stěna nižší úrovně",
     "unterlagernder Wandverlauf",
+    "υποκείμενος τοίχος",
     "underlying wall",
     NULL,
     NULL,
@@ -853,6 +898,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "nezaměřená stěna",
     "unvermessener Wandverlauf",
+    "τοίχος (μη χαρτογραφημένος)",
     "unsurveyed wall",
     NULL,
     NULL,
@@ -868,6 +914,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "vodní tok",
     "Gerinne",
+    "υδρορροή",
     "water flow",
     NULL,
     NULL,
@@ -883,6 +930,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "předpokládaný vodní tok",
     "vermutetes Gerinne",
+    "υποτιθέμενη υδρορροή",
     "conjectural water flow",
     NULL,
     NULL,
@@ -898,6 +946,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "občasný vodní tok",
     "zeitweises Gerinne",
+    "διακοπτόμενη υδρορροή",
     "intermittent water flow",
     NULL,
     NULL,
@@ -913,6 +962,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "vodní tok",
     "ständiges Gerinne",
+    "μόνιμη υδρορροή",
     "water flow",
     NULL,
     NULL,
@@ -928,6 +978,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "průvan",
     "Luftzug",
+    "ροή αέρα",
     "air draught",
     NULL,
     NULL,
@@ -943,6 +994,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "letní průvan",
     NULL,
+    "θερινή ροή αέρα",
     "summer air draught",
     NULL,
     NULL,
@@ -958,6 +1010,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "zimní průvan",
     NULL,
+    "χειμερινή ροή αέρα",
     "winter air draught",
     NULL,
     NULL,
@@ -973,6 +1026,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "nadmořská výška bodu v chodbě",
     "Höhe über NN",
+    "ύψος",
     "altitude",
     NULL,
     NULL,
@@ -988,6 +1042,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "anastomóza",
     "Anastomose",
+    "αναστόμωση",
     "anastomosis",
     NULL,
     NULL,
@@ -1003,6 +1058,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "kotvení",
     "Seilbefestigung",
+    "αγκύρωση",
     "anchor",
     NULL,
     NULL,
@@ -1018,6 +1074,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "aragonit",
     "Aragonit",
+    "αραγονίτης",
     "aragonite",
     NULL,
     NULL,
@@ -1033,6 +1090,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "archeologické nálezy",
     "archäologischer Fund",
+    "αρχαιολογικό εύρημα",
     "archeo material",
     NULL,
     NULL,
@@ -1048,6 +1106,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "pevná skála",
     "Deckgebirge",
+    "πέτρωμα",
     "bedrock",
     NULL,
     NULL,
@@ -1063,6 +1122,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "kamenné bloky",
     "Blöcke",
+    "ογκόλιθοι",
     "blocks, breakdown",
     NULL,
     NULL,
@@ -1078,6 +1138,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "zavalený konec",
     "Fortsetzung verstürzt",
+    "κλείσιμο στοάς λόγο χαλάσματος",
     "breakdown choke",
     NULL,
     NULL,
@@ -1093,6 +1154,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "most",
     "Brücke",
+    "γέφυρα",
     "bridge",
     NULL,
     NULL,
@@ -1108,6 +1170,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "bivak",
     "Biwak",
+    "κατασκήνωση",
     "camp",
     NULL,
     NULL,
@@ -1123,6 +1186,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "jeskynní perly",
     "Höhlenperle",
+    "μαργαριτάρι των σπηλαίων",
     "cave pearl",
     NULL,
     NULL,
@@ -1138,6 +1202,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "bahno",
     "Lehm",
+    "άργιλος",
     "clay",
     NULL,
     NULL,
@@ -1153,6 +1218,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "možné pokračování",
     "mögliche Fortsetzung",
+    "πιθανή συνέχεια",
     "possible continuation",
     NULL,
     NULL,
@@ -1168,6 +1234,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "krystal",
     "Kristall",
+    "κρύσταλλο",
     "crystal",
     NULL,
     NULL,
@@ -1183,6 +1250,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sintrové záclony",
     "Sinterfahne",
+    "κουρτίνα",
     "curtain",
     NULL,
     NULL,
@@ -1198,6 +1266,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "datum pozorování",
     "Datum",
+    "ημερομηνία",
     "date of observation",
     NULL,
     NULL,
@@ -1213,6 +1282,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "štěrk",
     "Schutt",
+    "χαλάσματα",
     "debris",
     NULL,
     NULL,
@@ -1228,6 +1298,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sonda",
     NULL,
+    "διάνοιξη",
     "dig",
     NULL,
     NULL,
@@ -1243,6 +1314,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "rozměry",
     "Ausdehnung",
+    "διαστάσεις",
     NULL,
     NULL,
     NULL,
@@ -1258,6 +1330,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "disk",
     "Diskus",
+    "δίσκος",
     "disk",
     NULL,
     NULL,
@@ -1273,6 +1346,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "vchod",
     "Eingang",
+    "είσοδος",
     "entrance",
     NULL,
     NULL,
@@ -1288,6 +1362,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "pevný žebřík",
     "feste Leiter",
+    "μόνιμη σκάλα",
     "fixed ladder",
     NULL,
     NULL,
@@ -1303,6 +1378,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sintr",
     "flächiger Sinter",
+    "σταλαγμιτικό υλικό δαπέδου",
     "flowstone",
     NULL,
     NULL,
@@ -1318,6 +1394,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "zasintrovaný konec",
     "Fortsetzung zugesintert",
+    "κλείσιμο στοάς λόγο σταλαγμιτικού αποθέματος",
     "flowstone choke",
     NULL,
     NULL,
@@ -1333,6 +1410,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "píšťaly",
     "Kolk",
+    "αυλάκι διάβρωσης",
     "flute",
     NULL,
     NULL,
@@ -1348,6 +1426,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sklon chodby",
     "Gefälle",
+    "κλίση στοάς",
     "passage gradient",
     NULL,
     NULL,
@@ -1363,6 +1442,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "guano",
     "Guano",
+    "γκουανό (περιττώματα νυχτερίδων)",
     "guano",
     NULL,
     NULL,
@@ -1378,6 +1458,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sádrovec",
     "Gips",
+    "γύψος",
     "gypsum",
     NULL,
     NULL,
@@ -1393,6 +1474,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sádrovcový květ",
     "Gipsblume",
+    "άνθος γύψου",
     "gypsum flower",
     NULL,
     NULL,
@@ -1408,6 +1490,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "výška stupně/komínu/hloubka propasti",
     "Höhe der Stufe oder des Kamins oder Tiefe des Schachts",
+    "ύψος σκαλοπατιού/καμινάδας ή βάθος πηγαδιού",
     "the height of floor step/chimney/pit depth",
     NULL,
     NULL,
@@ -1423,6 +1506,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "hloubka propasti",
     "Tiefe des Schachts",
+    "βάθος πηγαδιού",
     "pit depth",
     NULL,
     NULL,
@@ -1438,6 +1522,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "výška komínu",
     "Höhe des Kamins",
+    "ύψος καμινάδας",
     "chimney height",
     NULL,
     NULL,
@@ -1453,6 +1538,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "výška stupně",
     "Höhe der Bodenstufe",
+    "ύψος σκαλοπατιού",
     "the height of floor step",
     NULL,
     NULL,
@@ -1468,6 +1554,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "heliktit",
     "Excentrique",
+    "ελικτίτης",
     "helictite",
     NULL,
     NULL,
@@ -1483,6 +1570,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "led",
     "Eis",
+    "πάγος",
     "ice",
     NULL,
     NULL,
@@ -1498,6 +1586,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "škrapy",
     "Karren",
+    "κάρρεν - γυμνός καρστικοποιημένος βράχος",
     "karren",
     NULL,
     NULL,
@@ -1513,6 +1602,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "pojmenování",
     "Beschriftung",
+    "περιγραφή",
     NULL,
     NULL,
     NULL,
@@ -1528,6 +1618,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "neprůlezné snížení",
     "Engstelle, zu flach",
+    "κλείσιμο στοάς λόγω χαμηλής οροφής",
     "passage low end",
     NULL,
     NULL,
@@ -1543,6 +1634,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "nickamínek",
     "Mondmilch",
+    "γάλα σπηλαίου",
     "moonmilk",
     NULL,
     NULL,
@@ -1558,6 +1650,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "neprůlezné zúžení",
     "Engstelle, zu schmal",
+    "κλείσιμο στοάς λόγω στενώματος",
     "passage narrow end",
     NULL,
     NULL,
@@ -1573,6 +1666,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "nevystrojené místo",
     "keine Ausrüstung",
+    "χωρίς υλικά",
     "place without equipement",
     NULL,
     NULL,
@@ -1588,6 +1682,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "paleontologické nálezy",
     "paläontologischer Fund",
+    "παλαιοντολογικό εύρημα",
     "paleo material",
     NULL,
     NULL,
@@ -1603,6 +1698,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "výška chodby",
     "Raumhöhe",
+    "ύψος στοάς",
     "passage height",
     NULL,
     NULL,
@@ -1618,6 +1714,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "výška nad i pod hladinou",
     "Raumhöhe gesamt",
+    "ύψος και βάθος στοάς πάνω και κάτω από νερό",
     "height above and depth below water level",
     NULL,
     NULL,
@@ -1633,6 +1730,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "výška chodby pod hladinou",
     "Raumhöhe unter Wasserspiegel",
+    "βάθος στοάς κάτω από νερό",
     "depth below water level",
     NULL,
     NULL,
@@ -1648,6 +1746,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "výška chodby nad hladinou",
     "Raumhöhe über Wasserspiegel",
+    "ύψος στοάς πάνω από νερό",
     "height above water level",
     NULL,
     NULL,
@@ -1663,6 +1762,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "výška chodby",
     "Raumhöhe",
+    "ύψος στοάς",
     "passage height",
     NULL,
     NULL,
@@ -1678,6 +1778,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "valouny",
     "Kies",
+    "χαλίκια",
     "pebbles",
     NULL,
     NULL,
@@ -1693,6 +1794,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "stalagnát",
     "Säule",
+    "κολόνα",
     "pillar",
     NULL,
     NULL,
@@ -1708,6 +1810,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "pizolity",
     "Blumenkohlsinter",
+    "μανιτάρια από σταλαγμιτικό υλικό",
     "popcorn",
     NULL,
     NULL,
@@ -1723,6 +1826,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "náplav",
     "schwimmendes Kalkhäutchen",
+    "σταλαγμιτικό υλικό που επιπλέει",
     "raft",
     NULL,
     NULL,
@@ -1738,6 +1842,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "náplavový kužel",
     "schwimmendes Kalkhäutchen",
+    "σταλαγμιτικός κώνος που επιπλέει",
     "raft cone",
     NULL,
     NULL,
@@ -1753,6 +1858,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "poznámka",
     "Bemerkung",
+    "σχόλιο",
     NULL,
     NULL,
     NULL,
@@ -1768,6 +1874,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sintrová hrázka",
     "Sinterbarriere",
+    "γκουρ (λιθωματικό φράγμα)",
     "rimstone dam",
     NULL,
     NULL,
@@ -1783,6 +1890,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sintrové jezírko",
     "Sinterbecken",
+    "γκουρ (λιθωματική λεκάνη)",
     "rimstone pool",
     NULL,
     NULL,
@@ -1798,6 +1906,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "kořeny",
     "Holzreste",
+    "ρίζες",
     "root",
     NULL,
     NULL,
@@ -1813,6 +1922,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "lano",
     "Seil",
+    "σχοινί",
     "rope",
     NULL,
     NULL,
@@ -1828,6 +1938,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "lanový žebřík",
     "Drahtseilleiter",
+    "ανεμόσκαλα",
     "rope ladder",
     NULL,
     NULL,
@@ -1843,6 +1954,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "písek",
     "Sand",
+    "άμμος",
     "sand",
     NULL,
     NULL,
@@ -1858,6 +1970,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "erozní útvary",
     "Fließfacette",
+    "σκάλοπ (κενά διάβρωσης)",
     "scallop",
     NULL,
     NULL,
@@ -1873,6 +1986,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "příčný řez",
     "Schnitt",
+    "τομή",
     NULL,
     NULL,
     NULL,
@@ -1888,6 +2002,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "ponor",
     "Schluckloch",
+    "καταβόθρα",
     "sink",
     NULL,
     NULL,
@@ -1903,6 +2018,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "sníh",
     "Schnee",
+    "χιώνι",
     "snow",
     NULL,
     NULL,
@@ -1918,6 +2034,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "brčka",
     "Makkaroni",
+    "μακαρόνια",
     "soda straw",
     NULL,
     NULL,
@@ -1933,6 +2050,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "vývěr",
     "Quelle",
+    "πηγή",
     "spring",
     NULL,
     NULL,
@@ -1948,6 +2066,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "stalaktit",
     "Stalaktit",
+    "σταλακτίτης",
     "stalactite",
     NULL,
     NULL,
@@ -1963,6 +2082,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "stalagmit",
     "Stalagmit",
+    "σταλαγμίτης",
     "stalagmite",
     NULL,
     NULL,
@@ -1978,6 +2098,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "měřičský bod",
     "Messpunkt",
+    "σημείο χαρτογράφησης",
     "survey station",
     NULL,
     NULL,
@@ -1993,6 +2114,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "číslo měřičského bodu",
     "Messpunktname",
+    "όνομα σημείου χαρτογράφησης",
     "survey station name",
     NULL,
     NULL,
@@ -2008,6 +2130,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "měřičský bod (stabilizovaný)",
     "dauerhafter Messpunkt",
+    "μόνιμο σημείο χαρτογράφησης",
     "fixed survey station",
     NULL,
     NULL,
@@ -2023,6 +2146,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "měřičský bod (přírodní)",
     "natürlicher Messpunkt",
+    "σημείο χαρτογράφησης (φυσικό)",
     "natural survey station",
     NULL,
     NULL,
@@ -2038,6 +2162,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "měřičský bod (zabarvený)",
     "farbig markierter Messpunkt",
+    "σημείο χαρτογράφησης (βαμμένο)",
     "painted survey station",
     NULL,
     NULL,
@@ -2053,6 +2178,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "měřičský bod (nestabilizovaný)",
     "unmarkierter Messpunkt",
+    "προσωρινό σημείο χαρτογράφησης",
     "temporary survey station",
     NULL,
     NULL,
@@ -2068,6 +2194,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "schody",
     "Stufen",
+    "σκαλοπάτια",
     "steps",
     NULL,
     NULL,
@@ -2083,6 +2210,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "traverz",
     "Querung",
+    "τραβέρσα",
     "traverse",
     NULL,
     NULL,
@@ -2098,6 +2226,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "zbytky rostlin",
     "Pflanzenreste",
+    "φυτικά κατάλοιπα",
     "vegetable debris",
     NULL,
     NULL,
@@ -2113,6 +2242,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "nadmořská výška bodu na stěně",
     "Höhe über NN",
+    "ύψος τοίχου",
     "altitude",
     NULL,
     NULL,
@@ -2128,6 +2258,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "vápencový povlak",
     "Wandsinter",
+    "ασβεστίτης τοιχώματος",
     "wall calcite",
     NULL,
     NULL,
@@ -2143,6 +2274,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "voda",
     "Wasser",
+    "νερό",
     "water",
     NULL,
     NULL,
@@ -2158,6 +2290,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "vodní tok",
     "Gerinne",
+    "υδρορροή",
     "water flow",
     NULL,
     NULL,
@@ -2173,6 +2306,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "občasný vodní tok",
     "zeitweises Gerinne",
+    "διακοπτόμενη υδρορροή",
     "intermittent water flow",
     NULL,
     NULL,
@@ -2188,6 +2322,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "paleořečiště",
     "ehemaliges Gerinne",
+    "παλαιουδρορροή",
     "paleo water flow",
     NULL,
     NULL,
@@ -2203,6 +2338,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "vodní tok",
     "ständiges Gerinne",
+    "μόνιμη υδρορροή",
     "water flow",
     NULL,
     NULL,
@@ -2218,6 +2354,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Kreslil",
     "Gezeichnet von",
+    "Σκαρίφημα",
     "Drawn by",
     NULL,
     NULL,
@@ -2233,6 +2370,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Kreslili",
     "Gezeichnet von",
+    "Σκαρίφημα",
     "Drawn by",
     NULL,
     NULL,
@@ -2248,6 +2386,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Převýšení",
     "Niveaudifferenz",
+    "Βάθος",
     "Depth",
     NULL,
     NULL,
@@ -2263,6 +2402,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Délka",
     "Gesamtlänge",
+    "Μήκος",
     "Length",
     NULL,
     NULL,
@@ -2272,12 +2412,13 @@ static thlang_pchar thlang__translations [149][13] = {
     "Extensão",
     NULL,
     NULL,
-    "Длинна",
+    "Длина",
     "Dĺžka",
   },
   {
     "Nadmořské výšky",
     "Höhe des Titelfeldes",
+    "Υψομετρικά",
     "Altitudes",
     NULL,
     NULL,
@@ -2293,6 +2434,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Mapy",
     "Karten",
+    "Χάρτες",
     "Maps",
     NULL,
     NULL,
@@ -2308,6 +2450,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Objevil",
     "Erforscht von",
+    "Εξερευνητής",
     "Explored by",
     NULL,
     NULL,
@@ -2323,6 +2466,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Objevili",
     "Erforscht von",
+    "Εξερευνητές",
     "Explored by",
     NULL,
     NULL,
@@ -2338,6 +2482,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Legenda",
     "Legende",
+    "Τίτλος",
     "Legend",
     NULL,
     NULL,
@@ -2353,6 +2498,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "[Náhled horních vrstev]",
     "Vorschau oben",
+    "[προεπισκόπηση πάνω]",
     "[Preview above]",
     NULL,
     NULL,
@@ -2368,6 +2514,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "[Náhled dolních vrstev]",
     "Vorschau unten",
+    "[προεπισκόπηση κάτω]",
     "[Preview below]",
     NULL,
     NULL,
@@ -2383,6 +2530,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "[Povrchová mapa]",
     "Erdoberfläche",
+    "[χάρτης επιφάνειας]",
     "[Surface map]",
     NULL,
     NULL,
@@ -2398,6 +2546,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Měřil",
     "Vermessen von",
+    "Χαρτογραφήθηκε από τον",
     "Surveyed by",
     NULL,
     NULL,
@@ -2413,6 +2562,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "Měřili",
     "Vermessen von",
+    "Χαρτογραφήθηκε από τους",
     "Surveyed by",
     NULL,
     NULL,
@@ -2428,6 +2578,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "ft",
     "ft",
+    "πόδια",
     "ft",
     NULL,
     NULL,
@@ -2443,6 +2594,7 @@ static thlang_pchar thlang__translations [149][13] = {
   {
     "m",
     "m",
+    "μ",
     "m",
     NULL,
     NULL,
@@ -2452,7 +2604,7 @@ static thlang_pchar thlang__translations [149][13] = {
     "m",
     NULL,
     NULL,
-    "метров",
+    "м",
     "m",
   },
 };

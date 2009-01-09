@@ -17,7 +17,7 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   thconvert.o thpdf.o thpdfdbg.o thpdfdata.o thtexfonts.o \
   thsymbolset.o thlang.o thmapstat.o thexpdb.o thpic.o thsketch.o thproj.o \
   extern/lxMath.o extern/lxFile.o thcdt.o thdb3d.o thsurface.o thimport.o thsvg.o thepsparse.o \
-  thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o \
+  thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
   therion.o extern/proj4/libproj.a 
 
 # PLATFORM CONFIG
@@ -302,14 +302,6 @@ thconfig.o: thconfig.cxx thconfig.h thbuffer.h thmbuffer.h thinput.h \
 thconvert.o: thconvert.cxx thpdfdbg.h thexception.h therion.h thbuffer.h \
   thpdfdata.h thepsparse.h thtexfonts.h
 thcsdata.o: thcsdata.cxx thcsdata.h thparse.h thbuffer.h thmbuffer.h
-thdata.o: thdata.cxx thdata.h thdataleg.h thparse.h thbuffer.h \
-  thmbuffer.h thobjectname.h therion.h thobjectsrc.h thinfnan.h \
-  thdataobject.h thdatabase.h thdb1d.h thobjectid.h thdb3d.h thattr.h \
-  thchenc.h thchencdata.h thdb2d.h thdb2dprj.h thmapstat.h thdate.h \
-  thperson.h thlegenddata.h thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h \
-  thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h \
-  thscrapen.h thscraplp.h thtfangle.h thtf.h thtflength.h thtfpwf.h \
-  thexception.h thsurvey.h thgrade.h thcsdata.h thdatareader.h thinput.h
 thdatabase.o: thdatabase.cxx thdatabase.h thdataobject.h thperson.h \
   thparse.h thbuffer.h thmbuffer.h thdate.h thdataleg.h thobjectname.h \
   therion.h thobjectsrc.h thinfnan.h thdb1d.h thobjectid.h thdb3d.h \
@@ -321,6 +313,14 @@ thdatabase.o: thdatabase.cxx thdatabase.h thdataobject.h thperson.h \
   thlayout.h thsymbolset.h thsymbolsetlist.h thlocale.h thscrap.h \
   thsketch.h thpic.h thtrans.h th2ddataobject.h thpoint.h thline.h \
   tharea.h thjoin.h thmap.h thimport.h thsurface.h thendscrap.h
+thdata.o: thdata.cxx thdata.h thdataleg.h thparse.h thbuffer.h \
+  thmbuffer.h thobjectname.h therion.h thobjectsrc.h thinfnan.h \
+  thdataobject.h thdatabase.h thdb1d.h thobjectid.h thdb3d.h thattr.h \
+  thchenc.h thchencdata.h thdb2d.h thdb2dprj.h thmapstat.h thdate.h \
+  thperson.h thlegenddata.h thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h \
+  thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h \
+  thscrapen.h thscraplp.h thtfangle.h thtf.h thtflength.h thtfpwf.h \
+  thexception.h thsurvey.h thgrade.h thcsdata.h thdatareader.h thinput.h
 thdataleg.o: thdataleg.cxx thdataleg.h thparse.h thbuffer.h thmbuffer.h \
   thobjectname.h therion.h thobjectsrc.h thinfnan.h
 thdataobject.o: thdataobject.cxx thdataobject.h thdatabase.h thmbuffer.h \
@@ -357,18 +357,6 @@ thdb1d.o: thdb1d.cxx thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
   thtf.h thtflength.h thpoint.h th2ddataobject.h thlogfile.h thsurface.h \
   thlocale.h thinit.h thinput.h thconfig.h thexporter.h thexport.h \
   thselector.h thtrans.h extern/lxMath.h
-thdb2d.o: thdb2d.cxx thdb2d.h thinfnan.h thdb2dprj.h thparse.h thbuffer.h \
-  thmbuffer.h thmapstat.h thdate.h thperson.h thlegenddata.h thdb2dpt.h \
-  thdb2dlp.h thdb2dab.h thobjectname.h therion.h thobjectsrc.h thdb2dji.h \
-  thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h \
-  thscrapen.h thscraplp.h thdb1d.h thobjectid.h thdataleg.h thdb3d.h \
-  thattr.h thchenc.h thchencdata.h thexception.h thdatabase.h \
-  thdataobject.h thtfangle.h thtf.h tharea.h th2ddataobject.h thmap.h \
-  thjoin.h thpoint.h thline.h thscrap.h thsketch.h thpic.h thtrans.h \
-  thsurvey.h thtfpwf.h thlogfile.h thlayout.h thsymbolset.h \
-  thsymbolsetlist.h thlocale.h thexpmap.h thexport.h thlang.h \
-  thlangdata.h thconfig.h thinput.h thexporter.h thselector.h thtmpdir.h \
-  thinit.h
 thdb2d00.o: thdb2d00.cxx thdb2d.h thinfnan.h thdb2dprj.h thparse.h \
   thbuffer.h thmbuffer.h thmapstat.h thdate.h thperson.h thlegenddata.h \
   thdb2dpt.h thdb2dlp.h thdb2dab.h thobjectname.h therion.h thobjectsrc.h \
@@ -383,6 +371,18 @@ thdb2d00.o: thdb2d00.cxx thdb2d.h thinfnan.h thdb2dprj.h thparse.h \
 thdb2dab.o: thdb2dab.cxx thdb2dab.h thobjectname.h thmbuffer.h therion.h \
   thobjectsrc.h
 thdb2dcp.o: thdb2dcp.cxx thdb2dcp.h thdb2dpt.h
+thdb2d.o: thdb2d.cxx thdb2d.h thinfnan.h thdb2dprj.h thparse.h thbuffer.h \
+  thmbuffer.h thmapstat.h thdate.h thperson.h thlegenddata.h thdb2dpt.h \
+  thdb2dlp.h thdb2dab.h thobjectname.h therion.h thobjectsrc.h thdb2dji.h \
+  thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h \
+  thscrapen.h thscraplp.h thdb1d.h thobjectid.h thdataleg.h thdb3d.h \
+  thattr.h thchenc.h thchencdata.h thexception.h thdatabase.h \
+  thdataobject.h thtfangle.h thtf.h tharea.h th2ddataobject.h thmap.h \
+  thjoin.h thpoint.h thline.h thscrap.h thsketch.h thpic.h thtrans.h \
+  thsurvey.h thtfpwf.h thlogfile.h thlayout.h thsymbolset.h \
+  thsymbolsetlist.h thlocale.h thexpmap.h thexport.h thlang.h \
+  thlangdata.h thconfig.h thinput.h thexporter.h thselector.h thtmpdir.h \
+  thinit.h
 thdb2dji.o: thdb2dji.cxx thdb2dji.h thobjectname.h thmbuffer.h therion.h \
   thdatabase.h thdataobject.h thperson.h thparse.h thbuffer.h thdate.h \
   thdataleg.h thobjectsrc.h thinfnan.h thdb1d.h thobjectid.h thdb3d.h \
@@ -561,7 +561,7 @@ thinfnan.o: thinfnan.cxx thinfnan.h
 thinit.o: thinit.cxx thinit.h thbuffer.h thmbuffer.h thinput.h thparse.h \
   thchenc.h thchencdata.h therion.h thconfig.h thexporter.h thexport.h \
   thobjectsrc.h thselector.h thexception.h thtexfonts.h thlang.h \
-  thlangdata.h thlocale.h
+  thlangdata.h thlocale.h thtmpdir.h
 thinput.o: thinput.cxx thinput.h thbuffer.h thmbuffer.h thparse.h \
   thchenc.h thchencdata.h therion.h thexception.h
 thjoin.o: thjoin.cxx thjoin.h thdataobject.h thdatabase.h thmbuffer.h \
@@ -783,13 +783,15 @@ thsymbolset.o: thsymbolset.cxx thsymbolset.h thsymbolsetlist.h thparse.h \
   thlayout.h thlocale.h thtexfonts.h thlang.h thlangdata.h thtmpdir.h \
   thcmdline.h thmpost.h thinit.h thinput.h thsymbolsets.h thlogfile.h
 thsymbolsets.o: thsymbolsets.cxx thsymbolsets.h thsymbolsetlist.h
+thtex.o: thtex.cxx thtex.h
 thtexenc.o: thtexenc.cxx
 thtexfonts.o: thtexfonts.cxx thtexfonts.h thtexenc.cxx thpdfdbg.h \
-  thexception.h therion.h thbuffer.h
-thtf.o: thtf.cxx thtf.h thexception.h therion.h thbuffer.h thparse.h \
-  thmbuffer.h
+  thexception.h therion.h thbuffer.h thinit.h thmbuffer.h thinput.h \
+  thparse.h
 thtfangle.o: thtfangle.cxx thparse.h thbuffer.h thmbuffer.h thtfangle.h \
   thtf.h thexception.h therion.h thinfnan.h
+thtf.o: thtf.cxx thtf.h thexception.h therion.h thbuffer.h thparse.h \
+  thmbuffer.h
 thtflength.o: thtflength.cxx thtflength.h thtf.h thparse.h thbuffer.h \
   thmbuffer.h thexception.h therion.h
 thtfpwf.o: thtfpwf.cxx thtfpwf.h thexception.h therion.h thbuffer.h \
