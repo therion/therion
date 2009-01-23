@@ -33,7 +33,6 @@
      \expandafter\end
 \fi
 
-
 \def\wlog#1{}
 
 
@@ -94,7 +93,7 @@
 
 \def\legendsymbolbox#1#2{%
   \setbox\tmpboxa=\hbox{\pdfrefxform#1}%
-  \setbox\tmpboxb=\hbox{(}%
+  \setbox\tmpboxb=\hbox{\the\legendtextsize(}%
   \legendsymbolwd=\wd\tmpboxa
   \legendsymbolht=\ht\tmpboxa
   \advance\legendsymbolht by -\ht\tmpboxb
@@ -107,7 +106,7 @@
      \box\tmpboxa\kern10pt\raise\legendsymbolht\vtop{%
        \advance\tmpdimen by -\legendsymbolwd
        \advance\tmpdimen by -10pt
-       \hsize=\tmpdimen\rightskip=0pt plus \tmpdimen minus 0pt\relax#2\vskip1dd}\hss}%
+       \hsize=\tmpdimen\rightskip=0pt plus \tmpdimen minus 0pt\relax\the\legendtextsize #2\vskip1dd}\hss}%
 }
 
 \def\colorlegendbox#1#2#3{%

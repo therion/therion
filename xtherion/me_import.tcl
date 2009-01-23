@@ -31,7 +31,7 @@ proc xth_me_pt2xvitrans {x y} {
     if {$miny > $y} {set miny $y}
     if {$maxy < $y} {set maxy $y}
   }
-  return [list $x $y]
+  return [list [format "%.2f" $x] [format "%.2f" $y]]
 }
 
 
@@ -169,7 +169,7 @@ proc xth_me_ptopo2xvi {fname} {
     set pll [split $polylines "\n"]
     foreach pl $pll {
       if {[llength $pl] == 3} {
-	append XVIsketchlines "  {[list [lindex $pl 0] [lindex $pl 1] [lindex $pl 2] [lindex $pl 1] [lindex $pl 2]]}\n"
+	append XVIsketchlines "  {[list [lindex $pl 0] [lindex $pl 1] [lindex $pl 2]]}\n"
       } elseif {[llength $pl] > 3} {
 	append XVIsketchlines "  {$pl}\n"
       }

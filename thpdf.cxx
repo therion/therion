@@ -1364,8 +1364,9 @@ void build_pages() {
   if(ENC_NEW.NFSS != 0) PDFRES << "\\input thfonts.map" << endl;
 
   PDFRES << "\\ifnum\\pdftexversion>139" << endl;
-  PDFRES << "  \\input glyphtounicode.tex" << endl;
-  PDFRES << "  \\pdfgentounicode=1" << endl;
+  PDFRES << "  \\newread\\testin" << endl;
+  PDFRES << "  \\openin\\testin=glyphtounicode.tex" << endl;
+  PDFRES << "  \\ifeof\\testin\\message{No glyph to unicode mapping found!}\\else\\closein\\testin\\input glyphtounicode.tex\\pdfgentounicode=1\\fi" << endl;
   PDFRES << "\\fi" << endl;
 
   if (LAYOUT.transparency) {

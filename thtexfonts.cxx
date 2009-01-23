@@ -73,41 +73,9 @@ encodings_new::encodings_new () {
 
   i_fon = 0;
   
-  NFSS = 1;
+  NFSS = 0;
   t1_convert = 1;
-
-otf_file[0] = "/home/user/experimental/old/ther/otf2tfm/DejaVuLGCSerif.ttf";
-otf_file[1] = "/home/user/experimental/old/ther/otf2tfm/DejaVuLGCSerif-Italic.ttf";
-otf_file[2] = "/home/user/experimental/old/ther/otf2tfm/DejaVuLGCSerif-Bold.ttf";
-otf_file[3] = "/home/user/experimental/old/ther/otf2tfm/DejaVuSans.ttf";
-otf_file[4] = "/home/user/experimental/old/ther/otf2tfm/DejaVuLGCSans-Oblique.ttf";
-otf_file[0] = "/home/user/experimental/fonts/pagella/texgyrepagella-regular.otf";
-otf_file[1] = "/home/user/experimental/fonts/pagella/texgyrepagella-italic.otf";
-otf_file[2] = "/home/user/experimental/fonts/pagella/texgyrepagella-bold.otf";
-otf_file[3] = "/home/user/experimental/fonts/pagella/texgyrepagella-regular.otf";
-otf_file[4] = "/home/user/experimental/fonts/pagella/texgyrepagella-italic.otf";
-otf_file[0] = "GFSNeohellenic.otf";
-otf_file[1] = "GFSNeohellenicIt.otf";
-otf_file[2] = "GFSNeohellenicBold.otf";
-otf_file[3] = "GFSNeohellenic.otf";
-otf_file[4] = "GFSNeohellenicIt.otf";
-otf_file[0] = "/opt/Adobe/Reader8/Resource/Font/MinionPro-Regular.otf";
-otf_file[1] = "/opt/Adobe/Reader8/Resource/Font/MinionPro-It.otf";
-otf_file[2] = "/opt/Adobe/Reader8/Resource/Font/MinionPro-Bold.otf";
-otf_file[3] = "/opt/Adobe/Reader8/Resource/Font/MyriadPro-Regular.otf";
-otf_file[4] = "/opt/Adobe/Reader8/Resource/Font/MyriadPro-It.otf";
-/*
-otf_file[0] = "/home/user/install/fonts/goudy/mygoudy.ttf";
-otf_file[1] = "/home/user/install/fonts/goudy/mygoudy.ttf";
-otf_file[2] = "/home/user/install/fonts/goudy/mygoudy.ttf";
-otf_file[3] = "/home/user/install/fonts/goudy/mygoudy.ttf";
-otf_file[4] = "/home/user/install/fonts/goudy/mygoudy.ttf";
-otf_file[0] = "GRECSWG.TTF";
-otf_file[1] = "GRECSWG.TTF";
-otf_file[2] = "GRECSWG.TTF";
-otf_file[3] = "GRECSWG.TTF";
-otf_file[4] = "GRECSWG.TTF";
-*/}
+}
 
 int encodings_new::get_enc_pos (int ch) {
   if (m_fon.find(ch) == m_fon.end()) {
@@ -126,6 +94,8 @@ int encodings_new::get_enc_pos (int ch) {
 
 void encodings_new::write_enc_files() {
   if (NFSS==0) return;
+
+  thprintf("generating TeX metrics ... ");
   char fc[10];
   string style[5] = {"rm", "it", "bf", "ss", "si"};
   string s;
@@ -187,6 +157,7 @@ void encodings_new::write_enc_files() {
       H.close();
     }
   }
+  thprintf("done\n");
 }
 
 int encodings_new::get_enc_count () {

@@ -1,6 +1,9 @@
 HOT LIST:
 
-+ thbook: splay shots using "-" or "." as station name
++ thbook+changes: splay shots using "-" or "." as station name
++ thbook+changes: in therion.ini otf2pfb on|off
++ thbook+changes: in therion.ini pdf-fonts
++ thbook+changes: -filter (on|off)
 
 + support iso date format YYYY-MM-DD
 + add lookup tables to configuration files

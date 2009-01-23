@@ -424,6 +424,13 @@ proc xth_me_imgs_xvi_redraw {imgx} {
       set yy [xth_me_real2cany [expr $shy + [lindex $slcl [expr $j + 1]]]]
       append slcrds "$xx $yy "
     }
+    if {[llength $slcrds] < 4} {
+      set slcrds [list [expr $xx - 0.5] [expr $yy - 0.5] \
+                 [expr $xx + 0.5] [expr $yy - 0.5] \
+                 [expr $xx + 0.5] [expr $yy + 0.5] \
+                 [expr $xx - 0.5] [expr $yy + 0.5] \
+                 [expr $xx - 0.5] [expr $yy - 0.5]]
+    }
     $xth(me,can) coords [format "%sSKLN%d" $id $i] $slcrds
   }
 
@@ -505,7 +512,7 @@ proc xth_me_imgs_xvi_create {imgx} {
   # sketch lines
   set sklns $xth(me,imgs,$imgx,XVIsketchlines)
   for {set i 0} {$i < [llength $sklns]} {incr i} {
-    set cid [$xth(me,can) create line 0 0 1 1 -fill [lindex [lindex $sklns $i] 0] -width 1 -state hidden -tags [list $id [format "%sSKLN%d" $id $i]]]
+    set cid [$xth(me,can) create line 0 0 1 1 -fill [lindex [lindex $sklns $i] 0] -width $xth(gui,xvi_sketch_line_width) -state hidden -tags [list $id [format "%sSKLN%d" $id $i]]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]

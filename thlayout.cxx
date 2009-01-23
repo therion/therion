@@ -1500,7 +1500,7 @@ void thlayout_print_header_align(FILE * o, int a) {
 void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
 
   fprintf(o,"\\opacity{%.2f}\n",this->opacity);
-  fprintf(o,"\\def\\scale{%lu}\n",(unsigned long)(1.0 / this->scale));
+  fprintf(o,"\\def\\scale{%lu}\n",(unsigned long)(1.0 / this->scale + 0.5));
   fprintf(o,"\\pagesetup{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}{%.4fcm}\n",
     this->paphs*100.0, this->papvs*100.0, 
     this->paghs*100.0, this->pagvs*100.0, 

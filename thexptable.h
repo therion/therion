@@ -45,6 +45,7 @@ enum {
   TT_EXPTABLE_OPT_ENCODING,  ///< Output option.
   TT_EXPTABLE_OPT_ATTRIBUTES,  ///< Output option.
   TT_EXPTABLE_OPT_LOCATION,
+  TT_EXPTABLE_OPT_FILTER,
 };
 
 
@@ -57,6 +58,7 @@ static const thstok thtt_exptable_opt[] = {
   {"-attributes", TT_EXPTABLE_OPT_ATTRIBUTES},
   {"-enc", TT_EXPTABLE_OPT_ENCODING},
   {"-encoding", TT_EXPTABLE_OPT_ENCODING},
+  {"-filter", TT_EXPTABLE_OPT_FILTER},
   {"-fmt", TT_EXPTABLE_OPT_FORMAT},
   {"-format", TT_EXPTABLE_OPT_FORMAT},
   {"-location", TT_EXPTABLE_OPT_LOCATION},
@@ -100,7 +102,7 @@ class thexptable : public thexport {
 
   public:
 
-  bool expattr, exploc; ///< Whether to export user defined attributes.
+  bool expattr, exploc, filter; ///< Whether to export user defined attributes.
 
   int format,  ///< Output format.
     encoding;

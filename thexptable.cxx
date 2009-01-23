@@ -49,6 +49,7 @@ thexptable::thexptable() {
   this->encoding = TT_UTF_8;
   this->expattr = true;
   this->exploc = false;
+  this->filter = true;
 }
 
 
@@ -76,6 +77,16 @@ void thexptable::parse_options(int & argx, int nargs, char ** args)
       if (sv == TT_UNKNOWN_BOOL)
         ththrow(("invalid location switch -- \"%s\"", args[argx]))
       this->exploc = (sv == TT_TRUE);
+      argx++;
+      break;
+    case TT_EXPTABLE_OPT_FILTER:
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing filter switch -- \"%s\"",args[optx]))
+      sv = thmatch_token(args[argx], thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        ththrow(("invalid filter switch -- \"%s\"", args[argx]))
+      this->filter = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_FORMAT:  
@@ -269,7 +280,7 @@ void thexptable::process_db(class thdatabase * dbp)
         for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
           if ((*oi)->get_class_id() == TT_POINT_CMD) {
             pt = (thpoint*)(*oi);
-            if ((pt->type == TT_POINT_TYPE_CONTINUATION) && (pt->text != NULL) && (pt->fsptr->is_selected())) {
+            if ((pt->type == TT_POINT_TYPE_CONTINUATION) && ((pt->text != NULL) || (!this->filter)) && (pt->fsptr->is_selected())) {
               this->db->db2d.process_projection(pt->fscrapptr->proj);
               this->m_table.insert_object(NULL);
               this->m_table.insert_attribute("Comment",pt->text);
@@ -309,7 +320,7 @@ void thexptable::process_db(class thdatabase * dbp)
         }
         for(i = 0; i < nstat; i++) {
           st = &(dbp->db1d.station_vec[i]);
-          if (((st->flags & TT_STATIONFLAG_CONT) != 0) && (st->comment != NULL) && (st->survey->is_selected())) {
+          if (((st->flags & TT_STATIONFLAG_CONT) != 0) && ((st->comment != NULL) || (!this->filter)) && (st->survey->is_selected())) {
             this->m_table.insert_object(NULL);
             this->m_table.insert_attribute("Comment",st->comment);
 	          if (!thisnan(st->explored))

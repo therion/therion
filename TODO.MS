@@ -1,59 +1,44 @@
-CHANGES:
-  * new easy setup for OpenType and TrueType fonts
-  * basic support for right-to-left scripts in labels and legend
-  * PDF files now contain unicode mapping information to allow searching and 
-    copying texts consisting of accented and non-latin characters
+v lochu odlisit splay a duplicate shoty
 
-- kopirovat OTF fonty, kopirovat glyphtounicode.tex do thTMPDIR
-- nastavit: NFSS (ak ini subor obsahuje pdf-fonts), 
-            t1convert (pre TTF vzdy off),
-            otf_file[]
-- v ini mat moznost zadat: mpost-path "mpost -tex=etex"
+pri kresleni s xvi na pozadi: ak nad mer. bod v xvi vkladam dva mer. body, druhy
+  ma nespravne meno
 
-opravene grecke preklady
-2c2
-< el:
----
-> el: σημείο χαρτογράφησης
-404c404
-< el: υψομετρικά
----
-> el: Υψομετρικά
-407c407
-< el: χάρτες
----
-> el: Χάρτες
-413c413
-< el: μήκος
----
-> el: Μήκος
+neumoznit shift 0 0 pre mapy
 
+kontrola nulovych segmentov na ciare pre MP
 
--lGLU pre loch makefile
+stopy/palce pomocou '/"
 
-splay shoty su zobrazene v mape!
-14 desatinnych miest pri niektorych bodoch v xtherione (mer. body gener. z xvi)
+pri ctrl-p aktivovat point dialog a po vlozeni bodu aplikovt zmeny
+
+grades pre polygon aj fixne body
+
+meno obrazku do uvodzoviek: -sketch [Sketches/Greenlink Plan J2 sketch 210707.jpg] 0 -784
+
+sketche do samostatneho layera
+
+map-comments v spravnom poradi
+
 
 konvertor: 
-  nezobrazuju sa bodky!
-  chyba spojnica k priecnemu rezu
-  v priecnom reze chybaju shoty
   serie precislovat na jednoduche nazvy bodov
-HEEB: thexport dodrziavat uhlove jednotky, dat tam trip comment, opakovat 3 merania polygonu, problem s pripojenim roznych dist
+HEEB: 
+  premenovat subor na pth (?)
+  pri manipulacii s fix bodmi (pridanie; najprv fix potom pripojenie na koncovy
+    pri merani od konca) thexport len "FIX\r\n"
+/  chyba spojnica k priecnemu rezu
+/  v priecnom reze chybaju shoty a mer. bod
+/  preco sa vo vsetkych nacrtkoch opakuje bod 0 (fix?)
+/  thexport dodrziavat uhlove jednotky, 
+/  dat tam trip comment, 
+/  opakovat 3 merania polygonu, 
+/  problem s pripojenim roznych dist
 
 neprebera sa attr do survey ... - entrance ...
-
-ak pre survey dam -entrance 0 a mam "fix A ...; equate A 0"
-p_station((559.09,-695.88),0,0,"","entrance");
-p_station((559.09,-695.88),0,btex \thcomment \thfb\char83 \char116 \char97 \char114 \thfc\char253 \ \thfb\char68 \char114 \char105 \char101 \char110 \char111 \char107 \mainfont{} etex,"","entrance");
-p_station((605.13,-681.79),0,0,"","entrance");
-p_station((605.13,-681.79),0,btex \thcomment \thfb\char74 \char80 \thfc\char169 \mainfont{} etex,"","entrance");
 
 ak je continuation s explored udajmi, nezobrazit otaznik ale dlzku
 
 xtherion ma do scrapu doplnit autora + rok! (pokial tam nie je)
-
-mierka v mape \def\scale{}: round, nie int
 
 pridat margin option pre uvodne strany atlasu, potom dat pagesetup do
   1) data.tex za opacity a scale s normalnym okrajom
@@ -61,21 +46,11 @@ pridat margin option pre uvodne strany atlasu, potom dat pagesetup do
   3) do legendy s normalnym
 
 
-
-
-preklady (SK, EN)
-
 altitude scaling
-
-zacyklena hlaska v xtherione pre option -size xl
 
 ak je label prazdny retazec, zhuci mp?
 
-+proj=merc +latts=0 +lon0=0 +k=1 +x0=0 +y0=0 +a=6378137 +b=6378137 +units=m +nadgrids=\@null +no_defs
-
 nejde naraz zadat mapy elev. v dvoch projekciach
-
-ATTR_xx_numeric?? - zrusit ATTR_xx_numeric, _transform
 
 LOG-subor: 
 X m surveyed (of which Y approximate) + about Z unsurveyed but explored

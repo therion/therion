@@ -1761,9 +1761,11 @@ else
 #ifdef THMSVC
     putenv("TEXINPUTS=../tex;../../therionxxx/Setup/texmf/tex;.");
     putenv("MPINPUTS=../mpost;.");
-    putenv("TEXFONTS=.");
-    putenv("T1FONTS=.");
-    putenv("TTFFONTS=.");
+    if (ENC_NEW.NFSS == 1) {
+      putenv("TEXFONTS=.");
+      putenv("T1FONTS=.");
+      putenv("TTFFONTS=.");
+    }
 #endif
   }
 #endif  
@@ -1771,7 +1773,8 @@ else
   if (!quick_map_exp) {
     com = "\"";
     com += thini.get_path_mpost();
-    com += "\"";
+    com += "\" ";
+    com += thini.get_opt_mpost();
 //    com += " --interaction nonstopmode data.mp";
     com += " data.mp";
 #ifdef THDEBUG

@@ -45,7 +45,7 @@ thscraplp::thscraplp() {
 }
 
 void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
-  
+
   if ((this->arrow != NULL) && (scrap->get_outline() == NULL) && (out->symset->assigned[SYMA_DIMENSIONS])) {
 
     lxVec vff, vf1, vf2, vtt, vt1, vt2, rvec;
@@ -57,8 +57,8 @@ void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
     //bool reverse = false;
     //if (this->arrow->is_reversed) reverse = !reverse;
     //if (this->arrow->leg->reverse) reverse = !reverse;
-    thdataleg * cl = this->arrow->leg->leg;
 
+    thdataleg * cl = this->arrow->leg->leg;
     if (reverse) {
       vff = lxVec(this->lnx2, this->lny2, this->lnz2);
       vtt = lxVec(this->lnx1, this->lny1, this->lnz1);
@@ -125,13 +125,18 @@ void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
     }
   }
   
-
   // export line
-  fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
-    out->symset->get_mp_macro(this->type),
-    thxmmxst(out, this->lnx1, this->lny1),
-    thxmmxst(out, this->lnx2, this->lny2));
-
-
+  bool export_shot = true;
+  if (this->arrow != NULL) {
+    thdataleg * cl = this->arrow->leg->leg;
+    export_shot = ((cl->flags & TT_LEGFLAG_SPLAY) == 0) || (scrap->get_outline() == NULL);
+  }
+  
+  if (export_shot) {
+    fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
+      out->symset->get_mp_macro(this->type),
+      thxmmxst(out, this->lnx1, this->lny1),
+      thxmmxst(out, this->lnx2, this->lny2));
+  }
 
 }

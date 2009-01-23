@@ -461,6 +461,15 @@ the command may be used anywhere.
     only if there is no scrap referencing given centreline.
   * |vthreshold <number> <units>| = threshold for interpreting LRUD readings
     as left-right-front-back reading perpendicular to the shot.
+    
+    If passeges are horizontal (|inclination < vthreshold|), 
+    LR is perpendicular to the shot and UD is vertical.
+    
+    If passages are more or less vertical (|inclination > vthreshold|), even UD
+    becomes perpendicular to the shot -- otherwise passages would not look very
+    good. In the case of vertical shots, UD is interpreted as north-south
+    dimension from the station to allow tube-like modelling of verticals.
+    
   * |extend <spec> [<station> [<station>]]| =
     control how the centerline is extended. |<spec>| is one of the following
 

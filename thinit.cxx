@@ -129,7 +129,7 @@ static const thstok thtt_initcmd[] = {
   {"loop-closure", TTIC_LOOPC},
   {"mpost-options", TTIC_OPT_MPOST},
   {"mpost-path", TTIC_PATH_MPOST},
-  {"otf2pdf", TTIC_OTF2PFB},
+  {"otf2pfb", TTIC_OTF2PFB},
   {"pdf-fonts", TTIC_PDF_FONTS},
   {"pdftex-path", TTIC_PATH_PDFTEX},
   {"source-path", TTIC_PATH_SOURCE},
@@ -271,7 +271,7 @@ void thinit::check_font_path(const char * fname, int index) {
   }
 
   // checkne ci TTF
-  if ((l > 3) && (strcasecmp(&(buff[l-4]), ".ttf"))) ENC_NEW.t1_convert = 0;
+  if ((l > 3) && (strcasecmp(&(buff[l-4]), ".ttf")) == 0) ENC_NEW.t1_convert = 0;
 
   font_src[index] = pfull.get_buffer();
   font_dst[index] = pshort.get_buffer();

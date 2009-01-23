@@ -2,6 +2,8 @@
 Therion 5.3 (YYYY-MM-DD):
 
 therion:
+ * -filter (on)|off option added to continuation export to support export
+   of all continuations
  * new easy setup for OpenType and TrueType fonts (requires lcdf-typetools)
  * basic support for right-to-left scripts in labels and legend
  * PDF files now contain unicode mapping information to allow searching and 
@@ -16,6 +18,7 @@ therion:
    - map header positioning using real numbers
    - attribute export to metapost
    - fixed russian translation
+   - transparency in metapost reset when followed by clipped area
    
 xtherion:
 
