@@ -109,11 +109,18 @@ Therion uses following data types:
 
 Therion supports coordinate transformations in geodetic coordinate systems.
 You can specify |cs| option in |centreline|, |surface|, |import| and 
-|layout| and then enter XY data in given system. 
-You can also specify output |cs| 
-in configuration file. If you do not specify any |cs| in your dataset, 
+|layout| objects and then enter XY data in given system. 
+You can also specify output |cs| in configuration file. 
+
+If you do not specify any |cs| in your dataset, 
 it is assumed you are working in |local| coordinate system, and no 
-conversions are done. Following coordinate systems are supported:
+conversions are done. If you specify |cs| anywhere in the data, you have to
+specify it for all location data (|fix|, |origin| in |layout| etc.). 
+
+|cs| applies to all subsequent location data until other |cs| is specified or
+until the end of the current object, whichever comes first.
+
+Following coordinate systems are supported:
 
 \list
 * |UTM1| -- |UTM60| = universal transverse Mercator in northern hemisphere
@@ -1001,13 +1008,18 @@ You may use invisible border to achieve this inside of the passage.
 
 \description
   Join works in two modes: it joins either two scraps or two or more points 
-  in a map together. When joining scraps, only passage walls are joined.
+  or lines in a map together. 
+  
+  When joining more than two points or lines, use one join command for
+  all of them, not a sequence of join commands for pairs.\[E.g. use 
+  |join a b c|, not |join a b| followed by |join b c|.]
+  
+  When joining scraps, only passage walls are joined.
   It's a good idea to place a scrap join in the passage which is as simple 
   as possible, otherwise you have to specify join for each pair of objects 
-  which should be joined. 
-  
-  If you want some object which is clipped by a scrap boundary to continue
-  to a neighbouring scrap, use |-clip off| option for that object.
+  which should be joined.
+  \[If you want some object which is clipped by a scrap boundary to continue
+  to a neighbouring scrap, use |-clip off| option for that object.]
 \enddescription
 
 \syntax
@@ -1032,8 +1044,8 @@ You may use invisible border to achieve this inside of the passage.
 \options
   * |smooth <on/off>| indicates whether two lines are to be connected 
     smoothly.
-  * |count <N>| (when used with scraps) = Therion will try to find more 
-    connections of given two scraps  
+  * |count <N>| (when used with scraps) = Therion will try to join scraps
+    which connect in |N| locations/passages.
 \endoptions
 
 
@@ -1274,8 +1286,8 @@ format:
 * in {\it shapefile} export they are written directly to the associated 
   dbf file,
 * in maps generated using \MP\ (PDF, SVG) the attributes are written in 
-  the \MP\ source file (in the form |ATTR_<name>|) and can be evaluated and used by user in 
-  symbols definition macros.
+  the \MP\ source file as strings (named like |ATTR_<name>|) and can be 
+  evaluated and used by user in symbols definition macros.
   
   You can test presence of such a variable using |if known ATTR_<name>: ... fi|. 
   
@@ -1628,7 +1640,7 @@ draw cross-sections.
 
 \subchapter Thinking in Therion.
 
-Although everything about Therion input files has been explained, this chapter 
+Although everything (well, almost everything) about Therion input files has been explained, this chapter 
 offers some additional tips and hints.
 
 \subsubchapter How to enter centreline?.

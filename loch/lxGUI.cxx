@@ -58,6 +58,10 @@
 #include "icons/visbbox.xpm"
 #include "icons/viswalls.xpm"
 #include "icons/visinds.xpm"
+#include "icons/visentrance.xpm"
+#include "icons/visfix.xpm"
+#include "icons/visstation.xpm"
+#include "icons/vislabel.xpm"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"
@@ -100,6 +104,7 @@ BEGIN_EVENT_TABLE(lxFrame, wxFrame)
     EVT_MENU(LXMENU_FILE_RENDER, lxFrame::OnAll)
     EVT_MENU(LXMENU_FILE_RENDER_SETUP, lxFrame::OnAll)
     EVT_MENU(LXMENU_FILE_EXPORT, lxFrame::OnAll)
+    EVT_MENU(LXMENU_FILE_IMPORT, lxFrame::OnAll)
     EVT_MENU(LXMENU_EXPROT, lxFrame::OnAll)
     EVT_MENU(LXMENU_EXPFIT, lxFrame::OnAll)
     EVT_MENU_RANGE(LXMENU_HELP_CONTENTS, LXMENU_HELP_ABOUT, lxFrame::OnAll)
@@ -225,6 +230,11 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
 		this->m_toolBar->AddTool(LXTB_FIT, _("Fit zoom"), wxBitmap(fit_xpm),  _("Zoom to fit"));
 		this->m_toolBar->AddTool(LXMENU_CAMERA_ORIENT_HOME, _("Reset"), wxBitmap(home_xpm), _("Reset viewpoint"));
 		this->m_toolBar->AddSeparator();		
+		this->m_toolBar->AddTool(LXTB_VISENTRANCE, _("Entrances"), wxBitmap(visentrance_xpm), _("Show entrances"), wxITEM_CHECK);
+		this->m_toolBar->AddTool(LXTB_VISFIX, _("Fixed stations"), wxBitmap(visfix_xpm), _("Show fixed stations"), wxITEM_CHECK);
+		this->m_toolBar->AddTool(LXTB_VISSTATION, _("All stations"), wxBitmap(visstation_xpm), _("Show all stations"), wxITEM_CHECK);
+		this->m_toolBar->AddTool(LXTB_VISLABEL, _("Labels"), wxBitmap(vislabel_xpm), _("Toggle station labeling"));
+		this->m_toolBar->AddSeparator();		
 		this->m_toolBar->AddTool(LXTB_VISCENTERLINE, _("Centerline"), wxBitmap(viscline_xpm), _("Show centerline"), wxITEM_CHECK);
 		this->m_toolBar->AddTool(LXTB_VISWALLS, _("Walls"), wxBitmap(viswalls_xpm), _("Show walls"), wxITEM_CHECK);
 		this->m_toolBar->AddTool(LXTB_VISSURFACE, _("Surface"), wxBitmap(vissurface_xpm), _("Show surface"), wxITEM_CHECK);
@@ -245,6 +255,7 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     fileMenu->Append(LXMENU_FILE_RENDER, _("&Render to file\tCtrl+P"));
     fileMenu->Append(LXMENU_FILE_RENDER_SETUP, _("Rendering &setup..."));
     fileMenu->AppendSeparator();
+    fileMenu->Append(LXMENU_FILE_IMPORT, _("&Import...\tCtrl+I"));
     fileMenu->Append(LXMENU_FILE_EXPORT, _("&Export...\tCtrl+X"));
     fileMenu->AppendSeparator();
     fileMenu->Append(wxID_EXIT, _("E&xit\tCtrl+Q"));
@@ -481,16 +492,20 @@ void lxFrame::ToggleFullScreen() {
 }
 
 
+int lxFrame::GetFileType(wxString fName) {
+#define matchtype(w,t) if (wxMatchWild(_T(w), fName, false)) return t;
+  matchtype("*.lox",1);
+  matchtype("*.LOX",1);
+  matchtype("*.plt",2);
+  matchtype("*.PLT",2);
+  matchtype("*.3d",3);
+  matchtype("*.3D",3);
+}
+
 void lxFrame::DetectFileType()
 {
-#define matchtype(w,t) if (wxMatchWild(_T(w), this->m_fileName, false)) this->m_fileType = t;
   if (this->m_fileType == 0) {
-    matchtype("*.lox",1);
-    matchtype("*.LOX",1);
-    matchtype("*.plt",2);
-    matchtype("*.PLT",2);
-    matchtype("*.3d",3);
-    matchtype("*.3D",3);
+    this->m_fileType = this->GetFileType(this->m_fileName);
   }
 }
 
@@ -594,7 +609,7 @@ void lxFrame::OnAll(wxCommandEvent& event)
                     _("Export"),
                     wxEmptyString,
                     wxEmptyString,
-                    _("VTK file (*.vtk)|*.vtk"),
+                    _("VTK file (*.vtk)|*.vtk|Loch file (*.lox)|*.lox"),
                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT
                   );
 
@@ -602,7 +617,14 @@ void lxFrame::OnAll(wxCommandEvent& event)
 			 dialog.CentreOnParent();
 
        if (dialog.ShowModal() == wxID_OK) {
-          this->data->ExportVTK(dialog.GetPath());
+          switch (dialog.GetFilterIndex()) {
+            case 0:
+              this->data->ExportVTK(dialog.GetPath());
+              break;
+            case 1:
+              this->data->m_input.ExportLOX(dialog.GetPath().mbc_str());
+              break;
+          }
           this->canvas->ForceRefresh();
         }
       }
@@ -610,6 +632,7 @@ void lxFrame::OnAll(wxCommandEvent& event)
 
 		case LXTB_OPEN:
     case LXMENU_FILE_OPEN:
+    case LXMENU_FILE_IMPORT:
       {
         wxFileDialog dialog
                  (
@@ -619,17 +642,20 @@ void lxFrame::OnAll(wxCommandEvent& event)
                     wxEmptyString,
                     _("All supported files (*.lox;*.plt;*.3d)|*.lox;*.plt;*.3d|Loch files (*.lox)|*.lox|Compass PLT files (*.plt)|*.plt|Survex 3D files (*.3d)|*.3d")
                   );
-
        dialog.SetDirectory(this->m_fileDir);
 			 dialog.CentreOnParent();
-
+       
        if (dialog.ShowModal() == wxID_OK) {
-          this->m_fileName = dialog.GetPath();
-          this->m_fileDir  = dialog.GetDirectory();
-          this->m_fileType = dialog.GetFilterIndex();
-          this->DetectFileType();
-          this->ReloadData();
-          this->setup->ResetCamera();
+         if (event.GetId() == LXMENU_FILE_IMPORT) {
+            this->ImportFile(dialog.GetPath(), dialog.GetFilterIndex());
+          } else {
+            this->m_fileName = dialog.GetPath();
+            this->m_fileDir  = dialog.GetDirectory();
+            this->m_fileType = dialog.GetFilterIndex();
+            this->DetectFileType();
+            this->ReloadData();
+            this->setup->ResetCamera();
+          }
           this->canvas->ForceRefresh();
         }
       }
@@ -673,6 +699,51 @@ void lxFrame::OnAll(wxCommandEvent& event)
 
     case LXMENU_VIEW_VIEWPOINTSTP:
       this->ToggleViewpointSetup();
+      break;
+
+    case LXTB_VISENTRANCE:
+      this->ToggleVisibilityCenterlineEntrance();
+      break;
+
+    case LXTB_VISFIX:
+      this->ToggleVisibilityCenterlineFix();
+      break;
+
+    case LXTB_VISSTATION:
+      this->ToggleVisibilityCenterlineStation();
+      break;
+
+    case LXTB_VISLABEL:
+      {
+        int cmode = 0;
+        if (this->setup->m_stlabel_comment) cmode = 1;
+        if (this->setup->m_stlabel_name) cmode = 2;
+        if (this->setup->m_stlabel_name && this->setup->m_stlabel_survey) cmode = 3;
+        if (this->setup->m_stlabel_altitude) cmode = 4;
+        cmode = (cmode + 1) % 5;
+        this->setup->m_stlabel_comment = false;
+        this->setup->m_stlabel_name = false;
+        this->setup->m_stlabel_survey = false;
+        this->setup->m_stlabel_altitude = false;
+        switch (cmode) {
+          case 1:
+            this->setup->m_stlabel_comment = true;
+            break;
+          case 2:
+            this->setup->m_stlabel_name = true;
+            break;
+          case 3:
+            this->setup->m_stlabel_name = true;
+            this->setup->m_stlabel_survey = true;
+            break;
+          case 4:
+            this->setup->m_stlabel_altitude = true;
+            break;
+        }
+        this->canvas->UpdateRenderList();
+        this->canvas->ForceRefresh();
+        this->UpdateM2TB();
+      }
       break;
 
     case LXTB_VISBBOX:
@@ -740,7 +811,11 @@ void lxFrame::UpdateM2TB() {
 	this->m_toolBar->ToggleTool(LXTB_VISWALLS, this->setup->m_vis_walls); 
 	this->m_toolBar->ToggleTool(LXTB_VISSURFACE, this->setup->m_vis_surface); 
 	this->m_toolBar->ToggleTool(LXTB_VISBBOX, this->setup->m_vis_bbox); 
-	this->m_toolBar->ToggleTool(LXTB_VISINDS, this->setup->m_vis_indicators); 
+	this->m_toolBar->ToggleTool(LXTB_VISINDS, this->setup->m_vis_indicators);
+
+  this->m_toolBar->ToggleTool(LXTB_VISENTRANCE, this->setup->m_vis_centerline_entrance);
+  this->m_toolBar->ToggleTool(LXTB_VISFIX, this->setup->m_vis_centerline_fix);
+  this->m_toolBar->ToggleTool(LXTB_VISSTATION, this->setup->m_vis_centerline_station);
 
 	// rotation
 	this->m_menuBar->Check(LXMENU_CAMERA_AUTOROTATE, this->canvas->m_sCameraAutoRotate);
@@ -803,12 +878,21 @@ void lxFrame::TogglePerspective() {
 lxFrameToggle(VisibilityCenterline, m_vis_centerline)
 lxFrameToggle(VisibilityCenterlineCave, m_vis_centerline_cave)
 lxFrameToggle(VisibilityCenterlineSurface, m_vis_centerline_surface)
+lxFrameToggle(VisibilityCenterlineSplay, m_vis_centerline_splay)
+lxFrameToggle(VisibilityCenterlineDuplicate, m_vis_centerline_duplicate)
+lxFrameToggle(VisibilityCenterlineFix, m_vis_centerline_fix)
+lxFrameToggle(VisibilityCenterlineEntrance, m_vis_centerline_entrance)
+lxFrameToggle(VisibilityCenterlineStation, m_vis_centerline_station)
 lxFrameToggle(VisibilityWalls, m_vis_walls)
 lxFrameToggle(VisibilitySurface, m_vis_surface)
 lxFrameToggle(VisibilityLabels, m_vis_labels)
 lxFrameToggle(VisibilityBBox, m_vis_bbox)
 lxFrameToggle(VisibilityGrid, m_vis_grid)
 lxFrameToggle(VisibilityIndicators, m_vis_indicators)
+lxFrameToggle(VisibilityStLabelName, m_stlabel_name)
+lxFrameToggle(VisibilityStLabelComment, m_stlabel_comment)
+lxFrameToggle(VisibilityStLabelAltitude, m_stlabel_altitude)
+lxFrameToggle(VisibilityStLabelSurvey, m_stlabel_survey)
 
 lxFrameFastSet(ColorMode, m_colormd) 
 
@@ -902,21 +986,24 @@ void lxFrame::SetupApply()
 }
 
 
-
-void lxFrame::ReloadData()
+void lxFrame::ImportFile(wxString fName, int fType)
 {
-  this->canvas->Refresh(false);
+  if (fType == 0) fType = this->GetFileType(fName);
+  this->LoadData(fName, fType);
+}
+
+
+void lxFrame::LoadData(wxString fName, int fType) {
   wxBusyInfo info(_("Building 3D model, please wait..."));
-  this->data->m_input.Clear();
-  switch (this->m_fileType) {
+  switch (fType) {
     case 1:
-      this->data->m_input.ImportLOX(this->m_fileName.mbc_str());
+      this->data->m_input.ImportLOX(fName.mbc_str());
       break;
     case 2:
-      this->data->m_input.ImportPLT(this->m_fileName.mbc_str());
+      this->data->m_input.ImportPLT(fName.mbc_str());
       break;
     case 3:
-      this->data->m_input.Import3D(this->m_fileName.mbc_str());
+      this->data->m_input.Import3D(fName.mbc_str());
       break;
     default:
       this->data->m_input.m_error = "unable to detect file format";
@@ -928,9 +1015,7 @@ void lxFrame::ReloadData()
         this->data->m_input.InterpolateMissingLRUD();
       break;
     case LXWALLS_INTERP_MISSING:
-      if (this->m_fileType != 1) {
-        this->data->m_input.InterpolateMissingLRUD();
-      }
+      this->data->m_input.InterpolateMissingLRUD();
       break;
   }
 
@@ -942,6 +1027,14 @@ void lxFrame::ReloadData()
   this->data->Rebuild();
   this->canvas->UpdateRenderContents();
   this->canvas->UpdateRenderList();
+}
+
+
+void lxFrame::ReloadData()
+{
+  this->canvas->Refresh(false);
+  this->data->m_input.Clear();
+  this->LoadData(this->m_fileName, this->m_fileType);
   this->m_modelSetupDlg->InitSetup();
 }
 

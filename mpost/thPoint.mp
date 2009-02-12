@@ -734,6 +734,7 @@ def p_station_SKBB(expr pos,mark,txt)(text flags) =
   for i=flags:
     pickup PenX;
     if i="entrance":
+%      thfill fullcircle scaled 1 cm withtransparentcolor tr_blue;
       thdraw path_cave;
 %      p_label.urt(txt,pos+(0.4u,0),0,0);
       if not numeric txt:
@@ -770,6 +771,11 @@ def p_station_SKBB(expr pos,mark,txt)(text flags) =
       if picture(txt):
         save ATTR__text;
       fi;
+    elseif i="arch":
+      thdraw (-.5u,-.25u)--(-.5u,.25u)--(.5u,.25u)--(.5u,-.25u)..(0,.2u)..cycle;
+      thfill (-.5u,-.25u)--(-.5u,.25u)--(.5u,.25u)--(.5u,-.25u)..(0,.2u)..cycle;
+    elseif i="overhang":
+      thdraw (.2u,-.25u)--(-.2u,-.25u){up}..{right}(.2u,.25u);
     fi;
   endfor;
 %  thdraw (0,0) withpen PenX withcolor red;

@@ -492,8 +492,9 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
     } else {
       this->m_fpoints.point_insert(slp->stx + scrap->proj->rshift_x,  slp->sty + scrap->proj->rshift_y,  slp->stz + scrap->proj->rshift_z);
       this->m_fpoints.object_insert();
-      this->m_flines.m_attributes.insert_attribute("_TYPE","station");
-      this->m_flines.m_attributes.insert_attribute("_NAME",slp->station->name);
+      this->m_fpoints.m_attributes.insert_attribute("_TYPE","station");
+      this->m_fpoints.m_attributes.insert_attribute("_NAME",slp->station->name);
+      this->m_fpoints.m_attributes.insert_attribute("_COMMENT",slp->station->comment);
 		}
     slp = slp->next_item;
   }

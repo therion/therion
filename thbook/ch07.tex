@@ -1,3 +1,10 @@
+\ifx\pdfoutput\undefined
+\else
+\ifnum\pdftexversion<110
+  \message{Warning: skipping the case studies} 
+\expandafter\endinput\expandafter\fi
+\fi
+
 \newread\testin 
 \openin\testin=../samples.doc/index.tex
 \ifeof\testin \message{Warning: skipping the case studies} \expandafter\endinput

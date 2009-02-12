@@ -338,6 +338,8 @@ enum {
   TT_DATASFLAG_SPRING,
   TT_DATASFLAG_DOLINE,
   TT_DATASFLAG_DIG,
+  TT_DATASFLAG_OVERHANG,
+  TT_DATASFLAG_ARCH,
 };
 
 /**
@@ -358,6 +360,8 @@ enum {
   TT_STATIONFLAG_AIRDRAUGHT = 1536,
   TT_STATIONFLAG_AIRDRAUGHT_WINTER = 512,
   TT_STATIONFLAG_AIRDRAUGHT_SUMMER = 1024,
+  TT_STATIONFLAG_OVERHANG = 2048,
+  TT_STATIONFLAG_ARCH = 4096,
 };
 
 
@@ -369,6 +373,7 @@ static const thstok thtt_datasflag[] = {
   {"air-draught", TT_DATASFLAG_AIRDRAUGHT},
   {"air-draught:summer", TT_DATASFLAG_AIRDRAUGHT_SUMMER},
   {"air-draught:winter", TT_DATASFLAG_AIRDRAUGHT_WINTER},
+  {"arch", TT_DATASFLAG_ARCH},
   {"attr", TT_DATASFLAG_ATTR},
   {"continuation", TT_DATASFLAG_CONT},
   {"dig", TT_DATASFLAG_DIG},
@@ -377,6 +382,7 @@ static const thstok thtt_datasflag[] = {
   {"explored", TT_DATASFLAG_EXPLORED},
   {"fixed", TT_DATASFLAG_FIXED},
   {"not", TT_DATASFLAG_NOT},
+  {"overhang", TT_DATASFLAG_OVERHANG},
   {"sink", TT_DATASFLAG_SINK},
   {"spring", TT_DATASFLAG_SPRING},
   {NULL, TT_DATASFLAG_UNKNOWN},

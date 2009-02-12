@@ -60,6 +60,16 @@ lxSetup::lxSetup(lxData * dat)
   this->m_vis_grid = false;
   this->m_vis_centerline_cave = true;
   this->m_vis_centerline_surface = true;
+  this->m_vis_centerline_splay = false;
+  this->m_vis_centerline_duplicate = false;
+  this->m_vis_centerline_entrance = false;
+  this->m_vis_centerline_fix = false;
+  this->m_vis_centerline_station = false;
+
+  this->m_stlabel_altitude = false;
+  this->m_stlabel_comment = false;
+  this->m_stlabel_name = false;
+  this->m_stlabel_survey = false;
 
   this->m_colormd = lxSETUP_COLORMD_ALTITUDE;
   this->m_colormd_app_centerline = true;

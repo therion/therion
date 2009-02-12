@@ -4,12 +4,15 @@ Therion 5.3 (YYYY-MM-DD):
 therion:
  * -filter (on)|off option added to continuation export to support export
    of all continuations
+ * -surveys (on)|off option added to cave-list export to allow export of raw list of caves
  * new easy setup for OpenType and TrueType fonts (requires lcdf-typetools)
+   (new otf2pfb and pdf-fonts options in therion.ini)
  * basic support for right-to-left scripts in labels and legend
  * PDF files now contain unicode mapping information to allow searching and 
    copying texts consisting of accented and non-latin characters
  * georeferencing data added to pdf maps
- * support for splay shots without station names
+ * arch and overhang flags for stations to mark these surface karst features
+ * support for splay shots without station names (just using "-" or "." as station name)
  * added greek translation (thanks to Stelios Zacharias)
  * bugs fixed:
    - BCRA3 and BCRA5 survey grades fixed
@@ -19,6 +22,8 @@ therion:
    - attribute export to metapost
    - fixed russian translation
    - transparency in metapost reset when followed by clipped area
+   - back readings supported in data roles+instruments
+   - missing LRUD data in PLT export (B#25532)
    
 xtherion:
 
@@ -31,7 +36,12 @@ xtherion:
    
 loch:
 
+ * added File->Import function to allow merging e.g. 3d files with DTM in loch
+   format
  * added Tools->Options->Measurement system setup
+ * splay and duplicate shots are hidden by default
+ * entrances, stations and fixed stations and their labels can be displayed
+   on screen (added toolbar buttons and Scene setup->Stations control panel)
  * bugs fixed: 
    - 
 

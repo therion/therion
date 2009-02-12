@@ -57,7 +57,6 @@
 
 #define LXTRCBORDER (this->m_renderData->m_scaleMode == LXRENDER_FIT_SCREEN ? 0 : 16)
 
-
 BEGIN_EVENT_TABLE(lxGLCanvas, wxGLCanvas)
 EVT_LEFT_DCLICK(lxGLCanvas::OnMouseDouble)
 EVT_RIGHT_DCLICK(lxGLCanvas::OnMouseDouble)
@@ -100,6 +99,15 @@ lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat,
   this->mx = 0;
   this->my = 0;
 
+  this->m_sList = 0;
+  this->m_sFixList = 0;
+  this->m_sEntList = 0;
+  this->m_sStList = 0;
+  this->m_oList = 0;
+  this->m_oFixList = 0;
+  this->m_oEntList = 0;
+  this->m_oStList = 0;
+
   this->m_lic = 0;
 
   this->m_sInit = true;
@@ -134,6 +142,7 @@ lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat,
 
   this->SetCurrent();    
   glGenTextures(1, &this->m_idTexSurface);
+  glGenTextures(1, &this->m_idTexStation);
 
 }
 
@@ -195,6 +204,8 @@ void lxGLCanvas::RenderScreen()
 
   }
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+  this->RenderOffList();
 
   if (this->setup->m_vis_indicators)
     this->RenderInds();
@@ -264,7 +275,7 @@ void lxGLCanvas::InitializeS()
   wxSizeEvent tmpe;
   OnSize(tmpe);
   this->OpenGLInit();
-  this->SetFontColors();
+  //this->SetFontColors();
   this->UpdateRenderContents();
   this->UpdateRenderList();
   if (this->m_sInitReset) {
@@ -767,6 +778,12 @@ void lxGLCanvas::SetCamera() {
       lxShiftVecXYZ(this->setup->cam_center,this->shift),
       lxVecXYZ(up));
   }
+
+  // Save view coordinates
+  glGetDoublev(GL_MODELVIEW_MATRIX, m_camera_modelview);
+  glGetDoublev(GL_PROJECTION_MATRIX, m_camera_projection);
+  glGetIntegerv(GL_VIEWPORT, m_camera_viewport);
+
 }
 
 static const GLfloat mat0[] = { 0.0, 0.0, 0.0, 1.0};
@@ -973,6 +990,11 @@ void lxGLCanvas::RenderCenterline() {
     psh = &(this->data->shots[id]);
     if (psh->invisible)
       continue;
+    if (psh->splay && (!this->setup->m_vis_centerline_splay))
+      continue;
+    if (psh->duplicate && (!this->setup->m_vis_centerline_duplicate))
+      continue;
+
 
 #define drawLvert(N) \
   stv = &(this->data->stations[N].pos); \
@@ -1001,6 +1023,247 @@ void lxGLCanvas::RenderCenterline() {
 
 }
 
+void lxGLCanvas::ProjectPoint(double src_x, double src_y, double src_z, GLdouble * x, GLdouble * y, GLdouble * z)
+{
+   gluProject(src_x, src_y, src_z,
+            m_camera_modelview, m_camera_projection, m_camera_viewport,
+            x, y, z);
+}
+
+
+void lxGLCanvas::ProjectStations() {
+  unsigned long id, nid;
+  nid = this->data->stations.size();
+  lxDataStation * st;
+  for(id = 0; id < nid; id++) {
+    st = &(this->data->stations[id]);
+    this->ProjectPoint(lxShiftVecPXYZ(&(st->pos), this->shift), &(st->m_screen_x), &(st->m_screen_y), &(st->m_screen_z));
+  }
+}
+
+
+void lxGLCanvas::RenderOffList()
+{
+
+  if (!(this->setup->m_vis_centerline_fix || 
+        this->setup->m_vis_centerline_station || 
+        this->setup->m_vis_centerline_entrance))
+    return;
+
+  this->ProjectStations();  
+  this->SetIndicatorsTransform();
+
+  // Render stations
+  unsigned long id, nid;
+  nid = this->data->stations.size();
+  lxDataStation * st;
+  GLdouble x, y, z;
+  GLuint fxList, enList, stList;
+
+  glShadeModel(GL_FLAT);
+  glDepthMask(GL_TRUE);
+  glDisable(GL_LIGHTING);
+  glEnable(GL_DEPTH_TEST);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  if (this->IsRenderingOff()) {
+    if (this->m_oStList == 0) {
+      this->m_oStList = glGenLists(3);
+      this->m_oEntList = this->m_oStList + 1;
+      this->m_oFixList = this->m_oStList + 2;
+    }
+    stList = this->m_oStList;
+    enList = this->m_oEntList;
+    fxList = this->m_oFixList;
+  } else {
+    if (this->m_sStList == 0) {
+      this->m_sStList = glGenLists(3);
+      this->m_sEntList = this->m_sStList + 1;
+      this->m_sFixList = this->m_sStList + 2;
+    }
+    stList = this->m_sStList;
+    enList = this->m_sEntList;
+    fxList = this->m_sFixList;
+  }
+
+  glNewList(fxList, GL_COMPILE);
+  glColor3f(0.2,0.0,0.0);
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex3d( 0.0,-2.4,0.0);
+  glVertex3d(+2.4, 0.0,0.0);
+  glVertex3d( 0.0,+2.4,0.0);
+  glVertex3d(-2.4, 0.0,0.0);
+  glEnd();
+  glColor3f(1.0,0.0,0.0);
+  glBegin(GL_LINE_STRIP);
+  glVertex3d( 0.0,-2.4,0.0);
+  glVertex3d(+2.4, 0.0,0.0);
+  glVertex3d( 0.0,+2.4,0.0);
+  glVertex3d(-2.4, 0.0,0.0);
+  glVertex3d( 0.0,-2.4,0.0);
+  glEnd();
+  glBegin(GL_LINES);
+  glVertex3d( 0.0,-2.4,0.0);
+  glVertex3d( 0.0,-3.4,0.0);
+  glVertex3d(+2.4, 0.0,0.0);
+  glVertex3d(+3.4, 0.0,0.0);
+  glVertex3d( 0.0,+2.4,0.0);
+  glVertex3d( 0.0,+3.4,0.0);
+  glVertex3d(-2.4, 0.0,0.0);
+  glVertex3d(-3.4, 0.0,0.0);
+
+  glEnd();
+  glEndList();
+
+  glNewList(enList, GL_COMPILE);
+  glColor3f(0.0,0.0,0.0); //glColor3f(0.1,0.3,0.1);
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex3d(-4.4,-4.4,0.0);
+  glVertex3d(-4.4, 2.4,0.0);
+  glVertex3d(-2.4, 4.4,0.0);
+  glVertex3d( 2.4, 4.4,0.0);
+  glVertex3d( 4.4, 2.4,0.0);
+  glVertex3d( 4.4,-4.4,0.0);
+  glEnd();
+  glColor3f(0.3,1.0,0.3);
+  glBegin(GL_LINE_STRIP);
+  glVertex3d(-3.4,-3.4,0.0);
+  glVertex3d(-0.4,-3.4,0.0);
+  glVertex3d(-3.4,-0.4,0.0);
+  glVertex3d(-3.4, 0.4,0.0);
+  glVertex3d(-0.4, 3.4,0.0);
+  glVertex3d( 0.4, 3.4,0.0);
+  glVertex3d( 3.4, 0.4,0.0);
+  glVertex3d( 3.4,-0.4,0.0);
+  glVertex3d( 0.4,-3.4,0.0);
+  glVertex3d( 3.4,-3.4,0.0);
+  glEnd();
+  glEndList();
+
+  glNewList(stList, GL_COMPILE);
+  glColor3f(1.0,1.0,0.0);
+  glBegin(GL_LINES);
+  glVertex3d(-2.4,   0,0);
+  glVertex3d( 2.4,   0,0);
+  glVertex3d(   0,-2.4,0);
+  glVertex3d(   0,+2.4,0);
+  glEnd();
+  glEndList();
+
+
+  if (this->setup->m_vis_centerline_station) {
+    for(id = 0; id < nid; id++) {
+      st = &(this->data->stations[id]);
+      if (st->m_screen_z < 0.0) continue;
+      x = (GLdouble)long(st->m_screen_x) + 0.5;
+      y = (GLdouble)long(st->m_screen_y) + 0.5;
+      z = - st->m_screen_z;
+      if (st->m_temporary && (!this->setup->m_vis_centerline_splay))
+        continue;
+      if (st->m_surface && (!this->setup->m_vis_centerline_surface))
+        continue;
+      if ((!st->m_surface) && (!this->setup->m_vis_centerline_cave))
+        continue;
+      glLoadIdentity();
+      glTranslated(x, y, z);
+      glCallList(stList);
+    }
+  }
+
+  glDisable(GL_DEPTH_TEST);
+
+  if (this->setup->m_vis_centerline_fix) {
+    for(id = 0; id < nid; id++) {
+      st = &(this->data->stations[id]);
+      if (st->m_fix) {
+        if (st->m_screen_z < 0.0) continue;
+        x = (GLdouble)long(st->m_screen_x) + 0.5;
+        y = (GLdouble)long(st->m_screen_y) + 0.5;
+        z = - st->m_screen_z;
+        glLoadIdentity();
+        glTranslated(x, y, z);
+        glCallList(fxList);
+      }
+    }
+  }
+
+  if (this->setup->m_vis_centerline_entrance) {
+    for(id = 0; id < nid; id++) {
+      st = &(this->data->stations[id]);
+      if (st->m_entrance) {
+        if (st->m_screen_z < 0.0) continue;
+        x = (GLdouble)long(st->m_screen_x) + 0.5;
+        y = (GLdouble)long(st->m_screen_y) + 0.5;
+        z = - st->m_screen_z;
+        glLoadIdentity();
+        glTranslated(x, y, z);
+        glCallList(enList);
+      }
+    }
+  }
+
+  glLoadIdentity();
+  std::string cmnt;
+  const char * csurvey;
+  char strCBar[10];
+  bool show_label;
+  this->GetFontNumeric()->setForegroundColor(1.0, 1.0, 0.5, 1.0);
+  if (this->setup->m_stlabel_name || this->setup->m_stlabel_comment || this->setup->m_stlabel_altitude || this->setup->m_stlabel_survey) {
+    for(id = 0; id < nid; id++) {
+      show_label = false;
+      st = &(this->data->stations[id]);
+      if (st->m_screen_z < 0.0) continue;
+      if (st->m_temporary) continue;
+      if (this->setup->m_vis_centerline_entrance && st->m_entrance) show_label = true;
+      if (this->setup->m_vis_centerline_fix && st->m_fix) show_label = true;
+      if (st->m_surface && this->setup->m_vis_centerline_surface && this->setup->m_vis_centerline_station) show_label = true;
+      if ((!st->m_surface) && this->setup->m_vis_centerline_cave && this->setup->m_vis_centerline_station) show_label = true;
+      if (!show_label) continue;
+
+      // name
+      cmnt = "";
+      if (this->setup->m_stlabel_name && (strlen(st->m_name) > 0))
+        cmnt = st->m_name;
+
+      // survey
+      if (this->setup->m_stlabel_survey) {
+        csurvey = this->data->surveys[st->m_survey_idx].m_full_name.c_str();
+        if (strlen(csurvey) > 0) {
+          if (cmnt.length() > 0) cmnt += "@";
+          cmnt += csurvey;
+        }
+      }
+
+      // altitude
+      if (this->setup->m_stlabel_altitude) {
+        if (this->frame->m_iniUnits == 1) {
+          sprintf(&(strCBar[0]), "%.0f ft", st->pos.z / 0.3048);
+        } else {
+          sprintf(&(strCBar[0]), "%.0f m", st->pos.z);
+        }
+        if (cmnt.length() > 0) cmnt += ":";
+        cmnt += strCBar;
+      }
+
+      // comment
+      if (this->setup->m_stlabel_comment && (strlen(st->m_comment) > 0)) {
+        if (cmnt.length() > 0) cmnt += ":";
+        cmnt += st->m_comment;
+      }
+
+
+      x = (GLdouble)long(st->m_screen_x+0.5);
+      y = (GLdouble)long(st->m_screen_y+0.5);
+      z = - st->m_screen_z;
+
+      if (cmnt.length() > 0) {
+        this->GetFontNumeric()->draw(x + 5, y - 0.25 * lxFNTSH, z, wxString(wxConvUTF8.cMB2WX(cmnt.c_str())));
+      }
+    }
+  }
+
+}
 
 
 void lxGLCanvas::GeomOutline() {
@@ -1090,9 +1353,40 @@ void lxGLCanvas::OpenGLInit() {
 }
 
 
+void lxGLCanvas::SetIndicatorsTransform()
+{
+  if (this->m_isO) {
+    this->m_indRes = this->m_renderData->m_imgResolution / 25.4; // pixels per mm
+    this->m_indLWidth = 0.5;    // line width mm
+    if ((this->m_indLWidth * this->m_indRes) < 1.0) {
+      this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
+    }
+  } else {
+    this->m_indRes = 3.7795276; // pixels per mm
+    this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
+    glLineWidth(1.0);
+  }
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  if (this->m_isO) {
+    trOrtho(this->TRCGetContext(), 0.0, this->m_renderData->m_imgPixW, 0.0, this->m_renderData->m_imgPixH, -1.0, 1.0);
+    this->TRCBeginTile();
+  } else {
+    glOrtho(0.0, this->ww, 0.0, this->wh, 0.0, 1.0);
+    //gluOrtho2D(0.0, this->ww, 0.0, this->wh);
+  }
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+}
+
+
+
 void lxGLCanvas::RenderInds()
 {
 
+  this->SetFontColors();
   if (this->m_isO) {
     this->m_indRes = this->m_renderData->m_imgResolution / 25.4; // pixels per mm
     this->m_indLWidth = 0.5;    // line width mm

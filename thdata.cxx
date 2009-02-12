@@ -370,6 +370,8 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
             case TT_DATALEG_LENGTH:
             case TT_DATALEG_BEARING:
             case TT_DATALEG_GRADIENT:
+            case TT_DATALEG_BACKBEARING:
+            case TT_DATALEG_BACKGRADIENT:
             case TT_DATALEG_NOTES:
             case TT_DATALEG_ASSISTANT:
             case TT_DATALEG_INSTRUMENTS:
@@ -874,6 +876,8 @@ void thdata::set_data_instrument(int nargs, char ** args)
       case TT_DATALEG_LENGTH:
       case TT_DATALEG_BEARING:
       case TT_DATALEG_GRADIENT:
+      case TT_DATALEG_BACKBEARING:
+      case TT_DATALEG_BACKGRADIENT:
       case TT_DATALEG_DEPTH:
       case TT_DATALEG_COUNT:
       case TT_DATALEG_NOTES:
@@ -2327,6 +2331,8 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
           setstflag(TT_DATASFLAG_SPRING, TT_STATIONFLAG_SPRING);
           setstflag(TT_DATASFLAG_DOLINE, TT_STATIONFLAG_DOLINE);
           setstflag(TT_DATASFLAG_DIG, TT_STATIONFLAG_DIG);
+          setstflag(TT_DATASFLAG_OVERHANG, TT_STATIONFLAG_OVERHANG);
+          setstflag(TT_DATASFLAG_ARCH, TT_STATIONFLAG_ARCH);
 
           case TT_DATASFLAG_FIXED:              
             if (notflag)

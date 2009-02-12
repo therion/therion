@@ -46,6 +46,7 @@ enum {
   TT_EXPTABLE_OPT_ATTRIBUTES,  ///< Output option.
   TT_EXPTABLE_OPT_LOCATION,
   TT_EXPTABLE_OPT_FILTER,
+  TT_EXPTABLE_OPT_SURVEYS,
 };
 
 
@@ -62,6 +63,7 @@ static const thstok thtt_exptable_opt[] = {
   {"-fmt", TT_EXPTABLE_OPT_FORMAT},
   {"-format", TT_EXPTABLE_OPT_FORMAT},
   {"-location", TT_EXPTABLE_OPT_LOCATION},
+  {"-surveys", TT_EXPTABLE_OPT_SURVEYS},
   {NULL, TT_EXPTABLE_OPT_UNKNOWN}
 };
 
@@ -102,7 +104,7 @@ class thexptable : public thexport {
 
   public:
 
-  bool expattr, exploc, filter; ///< Whether to export user defined attributes.
+  bool expattr, exploc, filter, surveys; ///< Whether to export user defined attributes.
 
   int format,  ///< Output format.
     encoding;

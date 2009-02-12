@@ -33,6 +33,15 @@ enum {
   lxSS_COLORAPP_WALLS,
   lxSS_CLNVIS_SURFACE,
   lxSS_CLNVIS_CAVE,
+  lxSS_CLNVIS_SPLAY,
+  lxSS_CLNVIS_DUPLICATE,
+  lxSS_CLNVIS_STATION,
+  lxSS_CLNVIS_ENTRANCE,
+  lxSS_CLNVIS_FIX,
+  lxSS_STLABEL_NAME,
+  lxSS_STLABEL_SURVEY,
+  lxSS_STLABEL_COMMENT,
+  lxSS_STLABEL_ALTITUDE,
   lxSS_IND_PNAME,
 };
 
@@ -52,10 +61,19 @@ BEGIN_EVENT_TABLE(lxModelSetupDlg, wxMiniFrame)
   EVT_CHECKBOX(lxSS_WALLS_TRANSPARENCY, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_SRF_TRANSPARENCY, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_SRF_TEXTURE, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_CLNVIS_STATION, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_CLNVIS_ENTRANCE, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_CLNVIS_FIX, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_CLNVIS_SURFACE, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_CLNVIS_CAVE, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_CLNVIS_SPLAY, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_CLNVIS_DUPLICATE, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_COLORAPP_CENTERLINE, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_COLORAPP_WALLS, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_STLABEL_NAME, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_STLABEL_COMMENT, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_STLABEL_ALTITUDE, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_STLABEL_SURVEY, lxModelSetupDlg::OnCommand)
   EVT_MOVE(lxModelSetupDlg::OnMove)
   EVT_CLOSE(lxModelSetupDlg::OnClose)
   EVT_COMMAND_SCROLL(lxSS_WALLS_OPACITY, lxModelSetupDlg::OnSlider)
@@ -136,6 +154,42 @@ void lxModelSetupDlg::OnCommand(wxCommandEvent& event)
       this->m_mainFrame->ToggleVisibilityCenterlineCave();
       break;
 
+    case lxSS_CLNVIS_SPLAY:
+      this->m_mainFrame->ToggleVisibilityCenterlineSplay();
+      break;
+
+    case lxSS_CLNVIS_DUPLICATE:
+      this->m_mainFrame->ToggleVisibilityCenterlineDuplicate();
+      break;
+
+    case lxSS_CLNVIS_FIX:
+      this->m_mainFrame->ToggleVisibilityCenterlineFix();
+      break;
+
+    case lxSS_CLNVIS_ENTRANCE:
+      this->m_mainFrame->ToggleVisibilityCenterlineEntrance();
+      break;
+
+    case lxSS_CLNVIS_STATION:
+      this->m_mainFrame->ToggleVisibilityCenterlineStation();
+      break;
+
+    case lxSS_STLABEL_ALTITUDE:
+      this->m_mainFrame->ToggleVisibilityStLabelAltitude();
+      break;
+
+    case lxSS_STLABEL_NAME:
+      this->m_mainFrame->ToggleVisibilityStLabelName();
+      break;
+
+    case lxSS_STLABEL_SURVEY:
+      this->m_mainFrame->ToggleVisibilityStLabelSurvey();
+      break;
+
+    case lxSS_STLABEL_COMMENT:
+      this->m_mainFrame->ToggleVisibilityStLabelComment();
+      break;
+
     case lxSS_IND_PNAME:
       this->m_mainFrame->data->title = lxFTextCtrl(lxSS_IND_PNAME)->GetValue();
       this->m_mainFrame->canvas->ForceRefresh();
@@ -182,11 +236,11 @@ void lxModelSetupDlg::OnControlSelect(wxCommandEvent& event)
 	this->m_controlSizer->Show(this->m_controlSizer_Visibility, event.GetSelection() == 0);
 	this->m_controlSizer->Show(this->m_controlSizer_ColorMode, event.GetSelection() == 1);
 	this->m_controlSizer->Show(this->m_controlSizer_Centerline, event.GetSelection() == 2);
-	this->m_controlSizer->Show(this->m_controlSizer_Walls, event.GetSelection() == 3);
-	this->m_controlSizer->Show(this->m_controlSizer_Surface, event.GetSelection() == 4);
-	//this->m_controlSizer->Show(this->m_controlSizer_Labels, event.GetSelection() == 5);
+	this->m_controlSizer->Show(this->m_controlSizer_Labels, event.GetSelection() == 3);
+	this->m_controlSizer->Show(this->m_controlSizer_Walls, event.GetSelection() == 4);
+	this->m_controlSizer->Show(this->m_controlSizer_Surface, event.GetSelection() == 5);
 	//this->m_controlSizer->Show(this->m_controlSizer_BBox2Grid, event.GetSelection() == 6);
-	this->m_controlSizer->Show(this->m_controlSizer_Indicators, event.GetSelection() == 5);
+	this->m_controlSizer->Show(this->m_controlSizer_Indicators, event.GetSelection() == 6);
 	//this->m_controlSizer->Show(this->m_controlSizer_ColorSetup, event.GetSelection() == 8);
 	this->m_controlSizer->Layout();
 }
@@ -216,9 +270,9 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 	ctrlLBox->AppendString(_("Visibility"));
 	ctrlLBox->AppendString(_("Color mode"));
 	ctrlLBox->AppendString(_("Centerline"));
+	ctrlLBox->AppendString(_("Stations"));
 	ctrlLBox->AppendString(_("Walls"));
 	ctrlLBox->AppendString(_("Surface"));
-	//ctrlLBox->AppendString(_("Labels"));
 	//ctrlLBox->AppendString(_("BBox & grid"));
 	ctrlLBox->AppendString(_("Indicators"));
 	//ctrlLBox->AppendString(_("Color setup"));
@@ -296,15 +350,10 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 	lxBoxSizer = this->m_controlSizer_Centerline = new wxBoxSizer(wxVERTICAL);
   
 	ADDST(wxID_ANY, _("Centerline visibility"))
-	ADDCB(lxSS_CLNVIS_CAVE, _("Underground"))
 	ADDCB(lxSS_CLNVIS_SURFACE, _("Surface"))
-
-  // lxBoxSizer->Add(new wxStaticLine(lxPanel, wxID_ANY), 0, wxBOTTOM | wxEXPAND, lxBORDER);
-
-  // ADDST(wxID_ANY, _("Marked stations"));
-  // ADDCB(wxID_ANY, _("Entrance"))
-	// ADDCB(wxID_ANY, _("Fixed"))
-	// ADDCB(wxID_ANY, _("All"))
+	ADDCB(lxSS_CLNVIS_CAVE, _("Underground"))
+	ADDCB(lxSS_CLNVIS_SPLAY, _("Splay"))
+	ADDCB(lxSS_CLNVIS_DUPLICATE, _("Duplicate"))
 
   this->m_controlSizer->Add(lxBoxSizer, 1, wxEXPAND);
   updateCtrlMinSize;
@@ -340,13 +389,21 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
   /////////////////////////////////////////////////////////
   // Labels
 
-//	lxBoxSizer = this->m_controlSizer_Labels = new wxBoxSizer(wxVERTICAL);
-//  
-//  ADDST(wxID_ANY, _("Station labels"))
-//  ADDCB(wxID_ANY, _("Names"))
-//  ADDCB(wxID_ANY, _("Altitudes"))
-//  ADDCB(wxID_ANY, _("Comments"))
-//
+	lxBoxSizer = this->m_controlSizer_Labels = new wxBoxSizer(wxVERTICAL);
+  
+
+  ADDST(wxID_ANY, _("Marked stations"));
+	ADDCB(lxSS_CLNVIS_ENTRANCE, _("Entrances"))
+	ADDCB(lxSS_CLNVIS_FIX, _("Fixed stations"))
+	ADDCB(lxSS_CLNVIS_STATION, _("All"))
+
+  lxBoxSizer->Add(new wxStaticLine(lxPanel, wxID_ANY), 0, wxBOTTOM | wxEXPAND, lxBORDER);
+  ADDST(wxID_ANY, _("Labels"))
+  ADDCB(lxSS_STLABEL_COMMENT, _("Comment"))
+  ADDCB(lxSS_STLABEL_NAME, _("Name"))
+  ADDCB(lxSS_STLABEL_SURVEY, _("Survey"))
+  ADDCB(lxSS_STLABEL_ALTITUDE, _("Altitude"))
+
 //  lxBoxSizer->Add(new wxStaticLine(lxPanel, wxID_ANY), 0, wxBOTTOM | wxEXPAND, lxBORDER);
 //
 //  ADDST(wxID_ANY, _("Other labels"))
@@ -354,8 +411,8 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 //  ADDCB(wxID_ANY, _("Map labels"))
 //  ADDCB(wxID_ANY, _("Map remarks"))
 //  
-//  this->m_controlSizer->Add(lxBoxSizer, 1, wxEXPAND);
-//  updateCtrlMinSize;
+  this->m_controlSizer->Add(lxBoxSizer, 1, wxEXPAND);
+  updateCtrlMinSize;
 
   /////////////////////////////////////////////////////////
   // BBox & Grid
@@ -461,11 +518,22 @@ void lxModelSetupDlg::LoadSetup()
 
   lxFCheckBox(lxSS_CLNVIS_CAVE)->SetValue(stp->m_vis_centerline_cave);
   lxFCheckBox(lxSS_CLNVIS_SURFACE)->SetValue(stp->m_vis_centerline_surface);
+  lxFCheckBox(lxSS_CLNVIS_SPLAY)->SetValue(stp->m_vis_centerline_splay);
+  lxFCheckBox(lxSS_CLNVIS_DUPLICATE)->SetValue(stp->m_vis_centerline_duplicate);
+
+  lxFCheckBox(lxSS_CLNVIS_FIX)->SetValue(stp->m_vis_centerline_fix);
+  lxFCheckBox(lxSS_CLNVIS_ENTRANCE)->SetValue(stp->m_vis_centerline_entrance);
+  lxFCheckBox(lxSS_CLNVIS_STATION)->SetValue(stp->m_vis_centerline_station);
 
   lxFRadioBtn(lxSS_COLORMD_ALTITUDE)->SetValue(stp->m_colormd == lxSETUP_COLORMD_ALTITUDE);
   lxFRadioBtn(lxSS_COLORMD_DEFAULT)->SetValue(stp->m_colormd == lxSETUP_COLORMD_DEFAULT);
   lxFCheckBox(lxSS_COLORAPP_CENTERLINE)->SetValue(stp->m_colormd_app_centerline);
   lxFCheckBox(lxSS_COLORAPP_WALLS)->SetValue(stp->m_colormd_app_walls);
+
+  lxFCheckBox(lxSS_STLABEL_ALTITUDE)->SetValue(stp->m_stlabel_altitude);
+  lxFCheckBox(lxSS_STLABEL_NAME)->SetValue(stp->m_stlabel_name);
+  lxFCheckBox(lxSS_STLABEL_SURVEY)->SetValue(stp->m_stlabel_survey);
+  lxFCheckBox(lxSS_STLABEL_COMMENT)->SetValue(stp->m_stlabel_comment);
 
   lxFCheckBox(lxSS_SRF_TRANSPARENCY)->SetValue(stp->m_srf_transparency);
   lxFCheckBox(lxSS_SRF_TEXTURE)->SetValue(stp->m_srf_texture);

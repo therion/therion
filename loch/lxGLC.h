@@ -75,10 +75,11 @@ class lxGLCanvas: public wxGLCanvas {
 
     ~lxGLCanvas();
 
-    GLuint m_idTexSurface;
+    GLuint m_idTexSurface, m_idTexStation;
 
     // screen funkcie a premenne
-    unsigned int m_sList, m_oList;
+    GLuint m_sList, m_oList, m_sFixList, m_sEntList, m_sStList,
+      m_oFixList, m_oEntList, m_oStList;
     int m_sMoveLock;
     double m_indRes, m_indLWidth;
     bool m_sInit, m_sInitReset;
@@ -90,6 +91,10 @@ class lxGLCanvas: public wxGLCanvas {
       * m_fntTitleS;
     OGLFT::Filled * m_fntNumericO,
       * m_fntTitleO;
+
+    GLdouble m_camera_modelview[16];
+    GLdouble m_camera_projection[16];
+    GLint m_camera_viewport[4];
 
 		bool m_sCameraAutoRotate, m_sCameraLockRotation;
     wxStopWatch m_sCameraAutoRotateSWatch;
@@ -115,6 +120,10 @@ class lxGLCanvas: public wxGLCanvas {
     void UpdateRenderContents();
     void UpdateRenderList();
 	  void RenderScreen();
+    void SetIndicatorsTransform();
+    void ProjectPoint(double src_x, double src_y, double src_z, GLdouble * x, GLdouble * y, GLdouble * z);
+    void ProjectStations();
+    void RenderOffList();
 
     // offscreen funkcie a premenne
     struct OSC * m_OSC;

@@ -79,6 +79,7 @@ enum {
   LXMENU_FILE_RENDER,
   LXMENU_FILE_RENDER_SETUP,
   LXMENU_FILE_EXPORT,
+  LXMENU_FILE_IMPORT,
   LXMENU_HELP_CONTENTS,
   LXMENU_HELP_CONTROL,
   LXMENU_HELP_RENDERING,
@@ -108,6 +109,10 @@ enum {
   LXTB_VISSURFACE,
   LXTB_VISBBOX,
   LXTB_VISINDS,
+  LXTB_VISENTRANCE,
+  LXTB_VISFIX,
+  LXTB_VISSTATION,
+  LXTB_VISLABEL,
 	LXTBEND,
 };
 
@@ -130,7 +135,7 @@ class lxFrame: public wxFrame
   public:
 
     lxGLCanvas * canvas;
-    wxString m_fileName, m_fileDir, m_fileToOpen;
+    wxString m_fileDir, m_fileToOpen, m_fileName;
     int m_fileType;
     
     struct lxData * data;
@@ -185,16 +190,26 @@ class lxFrame: public wxFrame
     void ToggleVisibilityCenterline();
     void ToggleVisibilityCenterlineCave();
     void ToggleVisibilityCenterlineSurface();
+    void ToggleVisibilityCenterlineSplay();
+    void ToggleVisibilityCenterlineDuplicate();
+    void ToggleVisibilityCenterlineFix();
+    void ToggleVisibilityCenterlineStation();
+    void ToggleVisibilityCenterlineEntrance();
     void ToggleVisibilitySurface();
     void ToggleVisibilityWalls();
     void ToggleVisibilityLabels();
     void ToggleVisibilityBBox();
     void ToggleVisibilityGrid();
     void ToggleVisibilityIndicators();
+    void ToggleVisibilityStLabelName();
+    void ToggleVisibilityStLabelComment();
+    void ToggleVisibilityStLabelAltitude();
+    void ToggleVisibilityStLabelSurvey();
     void ExportRotationPictures();
 
     void SetColorMode(int);
     void DetectFileType();
+    int GetFileType(wxString fName);
     void ToggleColorsApplyCenterline();
     void ToggleColorsApplyWalls();
 
@@ -206,7 +221,9 @@ class lxFrame: public wxFrame
     void SetupUpdate();
     void SetupApply();
     void OpenFile(const wxString & fName);
+    void ImportFile(const wxString fName, int fType);
 
+    void LoadData(wxString fName, int fType);
     void ReloadData();
 		void UpdateM2TB();
 

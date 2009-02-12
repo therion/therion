@@ -164,10 +164,12 @@ static const thstok thtt_symbol_point_spec[] = {
   {"cave-station", SYMP_CAVESTATION},
   {"flag", SYMX_POINT_FLAG},
   {"flag:air-draught", SYMP_FLAG_AIRDRAUGHT},
+  {"flag:arch", SYMP_FLAG_ARCH},
   {"flag:continuation", SYMP_FLAG_CONTINUATION},
   {"flag:dig", SYMP_FLAG_DIG},
   {"flag:doline", SYMP_FLAG_DOLINE},
   {"flag:entrance", SYMP_FLAG_ENTRANCE},
+  {"flag:overhang", SYMP_FLAG_OVERHANG},
   {"flag:sink", SYMP_FLAG_SINK},
   {"flag:spring", SYMP_FLAG_SPRING},
   {"surface-station", SYMP_SURFACESTATION},
@@ -546,6 +548,8 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(4,SYMP_FLAG_DOLINE)
     group(5,SYMP_FLAG_DIG)
     group(6,SYMP_FLAG_AIRDRAUGHT)
+    group(7,SYMP_FLAG_ARCH)
+    group(8,SYMP_FLAG_OVERHANG)
     egroup  
 
     bgroup(SYMX_CAVECENTERLINE)

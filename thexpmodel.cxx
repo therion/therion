@@ -288,6 +288,8 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
 // 12 - station name
 // 40 - survey comment
 // -9.9 - no dimension
+
+#define toft(x) ((x)/0.3048)
  
 void thexpmodel::export_plt_file(class thdatabase * dbp)
 {
@@ -360,13 +362,11 @@ if (var > max) max = var
 strncpy(station_name,dbp->db1d.station_vec[stid].name,8); \
 station_name[8] = 0
 
-#define toft(x) ((x)/0.3048)
-
-#define exppltdim(ffd,ttd) (thisnan((*tlegs)->reverse ? (*tlegs)->leg->ffd : (*tlegs)->leg->ttd) ? -9999.0 : toft((*tlegs)->reverse ? (*tlegs)->leg->ffd : (*tlegs)->leg->ttd))
+#define exppltdim(ffd,ttd) (((*tlegs)->reverse ? thisnan((*tlegs)->leg->ffd) : thisnan((*tlegs)->leg->ttd)) ? -9999.0 : toft((*tlegs)->reverse ? (*tlegs)->leg->ffd : (*tlegs)->leg->ttd))
   
   // now let's print header
-  fprintf(pltf,"Z\t%f\t%f\t%f\t%f\t%f\t%f\n\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin),toft(zmax));
-//  fprintf(pltf,"Z\t%f\t%f\t%f\t%f\t%f\t%f\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin-avz),toft(zmax-avz));
+  fprintf(pltf,"Z\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin),toft(zmax));
+//  fprintf(pltf,"Z\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin-avz),toft(zmax-avz));
   fprintf(pltf,"STHERION\n");
   fprintf(pltf,"NX\tD\t3\t12\t1997\tCtherion export\n");
   last_st = nstat;
@@ -376,7 +376,7 @@ station_name[8] = 0
       cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
       if (cur_st != last_st) {
         copy_station_name(cur_st);
-        fprintf(pltf,"M\t%f\t%f\t%f\tS%s\tP\t%f\t%f\t%f\t%f\n",
+        fprintf(pltf,"M\t%.2f\t%.2f\t%.2f\tS%s\tP\t%.2f\t%.2f\t%.2f\t%.2f\n",
           toft(dbp->db1d.station_vec[cur_st].y - avy), toft(dbp->db1d.station_vec[cur_st].x - avx), 
           toft(dbp->db1d.station_vec[cur_st].z),station_name,
           exppltdim(to_left, from_left), 
@@ -387,7 +387,9 @@ station_name[8] = 0
       }
       last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       copy_station_name(last_st);
-      fprintf(pltf,"D\t%f\t%f\t%f\tS%s\tP\t%f\t%f\t%f\t%f\n",
+      if (strcmp(station_name,"VA09") == 0) 
+        fflush(pltf);
+      fprintf(pltf,"D\t%.2f\t%.2f\t%.2f\tS%s\tP\t%.2f\t%.2f\t%.2f\t%.2f\n",
         toft(dbp->db1d.station_vec[last_st].y - avy), toft(dbp->db1d.station_vec[last_st].x - avx), 
         toft(dbp->db1d.station_vec[last_st].z),station_name,
         exppltdim(from_left, to_left), 
@@ -398,8 +400,8 @@ station_name[8] = 0
     }
   }
 
-  fprintf(pltf,"X\t%f\t%f\t%f\t%f\t%f\t%f\n\x1A",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin),toft(zmax));
-//  fprintf(pltf,"X\t%f\t%f\t%f\t%f\t%f\t%f\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin-avz),toft(zmax-avz));
+  fprintf(pltf,"X\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n\x1A",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin),toft(zmax));
+//  fprintf(pltf,"X\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin-avz),toft(zmax-avz));
   fclose(pltf);
   
 #ifdef THDEBUG
@@ -1395,7 +1397,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   if (nstat > 0) {
     stnum = new long[nstat];
     for (i = 0; i < nstat; i++)
-      stnum[i] = -1; //(dbp->db1d.station_vec[i].survey->is_selected() ? 1 : -1);
+      stnum[i] = (dbp->db1d.station_vec[i].survey->is_selected() ? 1 : -1); //;-1
   }
 
   // prejde vsetky zamery, ktore ideme 
@@ -1486,6 +1488,8 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
         expf_station.m_flags |= LXFILE_STATION_FLAG_FIXED;
       if ((pst->flags & TT_STATIONFLAG_CONT) != 0)
         expf_station.m_flags |= LXFILE_STATION_FLAG_CONTINUATION;
+      if ((pst->flags & TT_STATIONFLAG_UNDERGROUND) == 0)
+        expf_station.m_flags |= LXFILE_STATION_FLAG_SURFACE;
       expf.m_stations.push_back(expf_station);
 
       survnum++;
@@ -1504,6 +1508,8 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
       expf_shot.m_to = stnum[(*tlegs)->leg->to.id - 1];
       expf_shot.m_surveyId = (*tlegs)->survey->num1;
       expf_shot.m_flags = 0;
+      if (((*tlegs)->leg->flags & TT_LEGFLAG_SPLAY) != 0)
+        expf_shot.m_flags |= LXFILE_SHOT_FLAG_SPLAY;
       if (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0)
         expf_shot.m_flags |= LXFILE_SHOT_FLAG_SURFACE;
       if (((*tlegs)->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)

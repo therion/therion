@@ -50,13 +50,30 @@
 #include "lxFile.h"
 
 
+struct lxDataSurvey {
+
+  size_t m_id, m_parent, m_level;
+
+  const char * m_name, * m_title;
+
+  std::string m_full_name;
+
+};
+
+
 struct lxDataStation {
 
   lxVec pos;
 
-  const char * m_name;
+  size_t m_survey_idx;
 
-  lxDataStation() : m_name(NULL) {}
+  const char * m_name, * m_comment;
+
+  bool m_temporary, m_entrance, m_fix;
+
+  double m_screen_x, m_screen_y, m_screen_z, m_surface;
+
+  lxDataStation() : m_name(NULL), m_temporary(false), m_entrance(false), m_fix(false), m_surface(false) {}
   
 };
 
@@ -80,12 +97,13 @@ struct lxDataShot {
 
   unsigned long from, to;
 
-  bool surface, invisible;
+  bool surface, invisible, splay, duplicate;
   
 };
 
 typedef std::vector<lxDataStation> lxDataStationVec;
 typedef std::vector<lxDataShot> lxDataShotVec;
+typedef std::vector<lxDataSurvey> lxDataSurveyVec;
 
 struct lxData {
 
@@ -94,6 +112,8 @@ struct lxData {
   lxDataStationVec stations;
 
   lxDataShotVec shots;
+
+  lxDataSurveyVec surveys;
 
   wxString title;
   

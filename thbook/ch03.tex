@@ -36,7 +36,9 @@ Works like the |encoding| command in data files---specifies character sets.
 
 \subsubchapter `cs'.
 
-Specifies output coordinate system.
+Outside of |layout| command specifies the coordinate system for output. Inside 
+the |layout| specifies coordinate system for subsequent location data (|origin|, 
+|grid-origin|).
 
 \subsubchapter `sketch-warp'.
 
@@ -81,6 +83,9 @@ Works like |input| command in data files---includes other files.
 
   If there are no scraps or maps in the data, centreline from all surveys is 
   exported in the map.
+  
+  When exporting maps in different projections, you need to select
+  them for each projection separately.
 \enddescription
 
 \syntax
@@ -98,14 +103,14 @@ Works like |input| command in data files---includes other files.
   
   * |map-level <number>| = valid only when a map is selected. Determines
     the level at which map expansion for atlas export is stopped. 
-    By default 0 is used; if ``basic'' is specified, 
+    By default 0 is used; if `basic' is specified, 
     expansion is done up to the basic maps.
     {\it Note:} Map previews are displayed only as specified in maps in the 
     current |map-level|.
 
   * |chapter-level <number>| = valid only when a map is selected. Determines
     the level at which chapter expansion for atlas export is stopped. 
-    By default 0 is used, if ``|-|'' or ``|.|'' is specified, no chapter is
+    By default 0 is used, if `|-|' or `|.|' is specified, no chapter is
     exported for this map. If |title-pages| option in |layout| is on,
     each chapter starts with a title page.
 \endoptions
@@ -540,7 +545,8 @@ endlayout|
 model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml\cr
 map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml\cr
 atlas & pdf\cr
-database & sql\cr}}\egroup
+database & sql\cr
+lists & html, txt, dbf\cr}}\egroup
 
 
 \subchapter Running Therion.

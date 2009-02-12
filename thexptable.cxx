@@ -50,6 +50,7 @@ thexptable::thexptable() {
   this->expattr = true;
   this->exploc = false;
   this->filter = true;
+  this->surveys = true;
 }
 
 
@@ -89,6 +90,16 @@ void thexptable::parse_options(int & argx, int nargs, char ** args)
       this->filter = (sv == TT_TRUE);
       argx++;
       break;
+    case TT_EXPTABLE_OPT_SURVEYS:
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing surveys switch -- \"%s\"",args[optx]))
+      sv = thmatch_token(args[argx], thtt_bool);
+      if (sv == TT_UNKNOWN_BOOL)
+        ththrow(("invalid surveys switch -- \"%s\"", args[argx]))
+      this->surveys = (sv == TT_TRUE);
+      argx++;
+      break;    
     case TT_EXPTABLE_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
@@ -140,10 +151,10 @@ void thexptable::export_survey_entraces(thsurvey * survey)
   if (!survey->is_selected()) return;
   if (survey->stat.num_entrances == 0) return;
   // insert survey attributes
-  if (survey->level > 1) {
+  if ((survey->level > 1) && (this->surveys || is_cave))  {
     this->m_table.insert_object(NULL);          
-    this->m_table.get_object()->m_tree_level = (size_t)(survey->level - 2);
-    this->m_table.get_object()->m_tree_node_id = survey->get_reverse_full_name();
+    this->m_table.get_object()->m_tree_level = (this->surveys ? (size_t)(survey->level - 2) : 0);
+    this->m_table.get_object()->m_tree_node_id = (this->surveys ? survey->get_reverse_full_name() : "");
     this->m_table.insert_attribute("Title", ((strlen(survey->title) > 0) ? survey->title : survey->name));
     this->m_table.insert_attribute("Length",(long)(survey->stat.length + 0.5));
     if (!is_cave) this->m_table.get_attribute()->set_flag(THATTRFLAG_HIDDEN, true);
@@ -161,7 +172,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
       this->m_table.insert_attribute("Explored", "");
     }
     if (exploc) {
-      if ((survey->stat.num_entrances == 1) && (survey->entrance.id > 0)) {
+      if (((survey->stat.num_entrances == 1) || (!this->surveys)) && (survey->entrance.id > 0)) {
         st = &(this->db->db1d.station_vec[survey->entrance.id - 1]);    
         this->m_table.insert_attribute("X",st->x);
         this->m_table.insert_attribute("Y",st->y);
@@ -170,7 +181,8 @@ void thexptable::export_survey_entraces(thsurvey * survey)
         this->m_table.insert_attribute("Y","");
       }
     }
-    if (((survey->stat.num_entrances > 0) && ((!exploc) || (survey->stat.num_entrances == 1))) && (survey->entrance.id > 0)) {
+
+    if (((survey->stat.num_entrances > 0) && ((!exploc) || (survey->stat.num_entrances == 1) || (!this->surveys))) && (survey->entrance.id > 0)) {
       st = &(this->db->db1d.station_vec[survey->entrance.id - 1]);    
       this->m_table.insert_attribute("Altitude",st->z);
     } else {
@@ -189,35 +201,36 @@ void thexptable::export_survey_entraces(thsurvey * survey)
 
   // insert entrances within this survey
   size_t nstat = this->db->db1d.station_vec.size(), i;
-  for(i = 0; i < nstat; i++) {
-    st = &(this->db->db1d.station_vec[i]);    
-    if ((st->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
-      if (((exploc) && (survey->entrance.id > 0) && (survey->stat.num_entrances > 1) && (st->survey->is_in_survey(survey))) ||
-        ((survey->entrance.id == 0) && (st->survey->id == survey->id))) {
-          this->m_table.insert_object(NULL);          
-          this->m_table.get_object()->m_tree_level = (size_t)(survey->level - 1);
-          std::string * tmps = get_tmp_string();
-          *tmps = survey->get_reverse_full_name();
-          *tmps += ".";
-          this->m_table.get_object()->m_tree_node_id = tmps->c_str();
-          this->m_table.insert_attribute("Title", st->comment);
-          this->m_table.insert_attribute("Length","");
-          this->m_table.insert_attribute("Depth","");
-          if (st->explored > 0.0) {
-            this->m_table.insert_attribute("Explored", (long)(st->explored + 0.5));
-          } else {
-            this->m_table.insert_attribute("Explored", "");
-          }
-          if (exploc) {
-            this->m_table.insert_attribute("X",st->x);
-            this->m_table.insert_attribute("Y",st->y);
-          }
-          this->m_table.insert_attribute("Altitude",st->z);
-          if (this->expattr) this->m_table.copy_attributes(this->db->db1d.m_station_attr.get_object((long)i+1));
+  if (this->surveys || (!is_cave)) {
+    for(i = 0; i < nstat; i++) {
+      st = &(this->db->db1d.station_vec[i]);    
+      if ((st->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
+        if (((exploc) && (survey->entrance.id > 0) && (survey->stat.num_entrances > 1) && (st->survey->is_in_survey(survey))) ||
+          ((survey->entrance.id == 0) && (st->survey->id == survey->id))) {
+            this->m_table.insert_object(NULL);          
+            this->m_table.get_object()->m_tree_level = (this->surveys ? (size_t)(survey->level - 1) : 0);
+            std::string * tmps = get_tmp_string();
+            *tmps = survey->get_reverse_full_name();
+            *tmps += ".";
+            this->m_table.get_object()->m_tree_node_id = (this->surveys ? tmps->c_str() : "");
+            this->m_table.insert_attribute("Title", st->comment);
+            this->m_table.insert_attribute("Length","");
+            this->m_table.insert_attribute("Depth","");
+            if (st->explored > 0.0) {
+              this->m_table.insert_attribute("Explored", (long)(st->explored + 0.5));
+            } else {
+              this->m_table.insert_attribute("Explored", "");
+            }
+            if (exploc) {
+              this->m_table.insert_attribute("X",st->x);
+              this->m_table.insert_attribute("Y",st->y);
+            }
+            this->m_table.insert_attribute("Altitude",st->z);
+            if (this->expattr) this->m_table.copy_attributes(this->db->db1d.m_station_attr.get_object((long)i+1));
+        }
       }
     }
   }
-
 
 
 }

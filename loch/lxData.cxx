@@ -91,6 +91,7 @@ void lxData::Clear()
 {
   this->shots.clear();
   this->stations.clear();
+  this->surveys.clear();
   if (this->scrapWalls != NULL) {
     this->scrapWalls->Delete();
     this->scrapWalls = NULL;
@@ -259,9 +260,11 @@ void lxData::Rebuild()
   
   lxDataStation st;
   lxDataShot sh;
+  lxDataSurvey sv;
   bool err;
 
   this->Clear();
+
   this->title = _T("");
   this->scrapWalls = vtkPolyData::New();  
   this->lrudWalls = vtkPolyData::New();
@@ -291,8 +294,10 @@ void lxData::Rebuild()
 //    * tmpCA;
 
   std::map<size_t, lxDataRebuildStationStruct> stationMap;
+  std::map<size_t, size_t> surveyMap;
   size_t st_num;
   lxDataRebuildStationStruct stR;
+  lxFileSurvey_list::iterator sv_it;
   lxFileStation_list::iterator st_it;
   lxFileShot_list::iterator sh_it;
   lxFileSurvey_list::iterator su_it = this->m_input.m_surveys.begin();
@@ -302,11 +307,43 @@ void lxData::Rebuild()
       this->title = wxConvUTF8.cMB2WX(this->m_input.m_surveysData.GetString(su_it->m_namePtr));
   }
 
+
+  for(sv_it = this->m_input.m_surveys.begin(), st_num = 0; sv_it != this->m_input.m_surveys.end(); sv_it++, st_num++) {
+    sv.m_id = sv_it->m_id;
+    sv.m_name = this->m_input.m_surveysData.GetString(sv_it->m_namePtr);
+    sv.m_title = this->m_input.m_surveysData.GetString(sv_it->m_titlePtr);
+    sv.m_parent = sv_it->m_parent;
+    sv.m_level = 0;
+    sv.m_full_name = sv.m_name;
+    this->surveys.push_back(sv);
+    surveyMap[sv_it->m_id] = st_num;
+  }
+  lxDataSurvey * csv, * psv;
+  for(st_num = 0; st_num < this->surveys.size(); st_num++) {
+    csv = &(this->surveys[st_num]);
+    if (surveyMap.find(csv->m_parent) == surveyMap.end())
+      csv->m_level = 0;
+    else if (csv->m_parent == csv->m_id) 
+      csv->m_level = 0;
+    else {
+      psv = &(this->surveys[surveyMap[csv->m_parent]]);
+      if (psv->m_full_name.size() > 0) csv->m_full_name += ".";
+      csv->m_full_name += psv->m_full_name;
+      csv->m_level = psv->m_level + 1;
+    }
+  }
+
   for(st_it = this->m_input.m_stations.begin(), st_num = 0; st_it != this->m_input.m_stations.end(); st_it++, st_num++) {
     st.pos.x = st_it->m_c[0];
     st.pos.y = st_it->m_c[1];
     st.pos.z = st_it->m_c[2];
     st.m_name = this->m_input.m_stationsData.GetString(st_it->m_namePtr);
+    st.m_comment = this->m_input.m_stationsData.GetString(st_it->m_commentPtr);
+    st.m_temporary = (strcmp(st.m_name,".") == 0) || (strcmp(st.m_name,"-") == 0);
+    st.m_fix = st_it->GetFlag(LXFILE_STATION_FLAG_FIXED);
+    st.m_entrance = st_it->GetFlag(LXFILE_STATION_FLAG_ENTRANCE);
+    st.m_surface = st_it->GetFlag(LXFILE_STATION_FLAG_SURFACE);
+    st.m_survey_idx = surveyMap[st_it->m_surveyId];
     stR.m_pos = st_num;
     stR.m_pst = &(*st_it);
     stationMap[st_it->m_id] = stR;
@@ -321,6 +358,8 @@ void lxData::Rebuild()
     sh.to = stationMap[sh_it->m_to].m_pos;
     sh.surface = sh_it->GetFlag(LXFILE_SHOT_FLAG_SURFACE);
     sh.invisible = sh_it->GetFlag(LXFILE_SHOT_FLAG_NOT_VISIBLE);
+    sh.splay = sh_it->GetFlag(LXFILE_SHOT_FLAG_SPLAY);
+    sh.duplicate = sh_it->GetFlag(LXFILE_SHOT_FLAG_DUPLICATE);
     this->shots.push_back(sh);
     cldata_array->InsertNextValue(sh.from);
     //cldata_array->InsertNextVoidPointer(&(*sh_it));

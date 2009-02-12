@@ -4,8 +4,6 @@ do thbooku vysvetlenie o georeferencovani pdf z mailu muttonovi
 
 do thbooku vysvetlenie o debugovani MP (mail muttonovi 15.1.09 
 
-do thbooku: ak je cs pouzity niekde, musi byt vsade
-
 poriadne zvacsit podklad pod legendou
 
 zvacsovanie fontov v suradniciach
@@ -96,6 +94,7 @@ tex:
 
 mpost:
 
+ * konfigurovatelna velkost textu v mierke a velkost sipky na sever
  * point stalctites,stalagmites, via-ferrata
  * gradientny prechod pre areas
  * poriesit odsadenie bodovych znaciek a najma labelov

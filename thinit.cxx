@@ -224,6 +224,9 @@ void thinit::copy_fonts() {
   FILE * f = fopen(thtmp.get_file_name("pltotf.bat"),"w");
   fprintf(f,"@\"%s\\bin\\win32\\pltotf.exe\" %%1 %%2\n",thcfg.install_path.get_buffer());
   fclose(f);
+  f = fopen(thtmp.get_file_name("cfftot1.bat"),"w");
+  fprintf(f,"@\"%s\\bin\\win32\\cfftot1.exe\" %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9\n",thcfg.install_path.get_buffer());
+  fclose(f);
 #endif
   thprintf("done.\n");
   fonts_ok = true;

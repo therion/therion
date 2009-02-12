@@ -9,7 +9,13 @@
   \let\red\relax \let\blue\relax \let\grey\relax 
   \let\black\relax \let\green\relax \let\POPcolor\relax
 \else 
-  \pdfminorversion 5
+  \ifnum\pdftexversion<110
+    \message{Warning: PdfTeX too ancient to process samples}
+  \else\ifnum\pdftexversion<130
+    \pdfoptionpdfminorversion 5
+  \else
+    \pdfminorversion 5
+  \fi\fi
   \input etc/supp-mis 
   \input etc/supp-pdf 
   \pdfinfo{/Title (The TherionBook)

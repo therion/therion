@@ -1,10 +1,16 @@
 HOT LIST:
 
-+ thbook+changes: splay shots using "-" or "." as station name
-+ thbook+changes: in therion.ini otf2pfb on|off
-+ thbook+changes: in therion.ini pdf-fonts
-+ thbook+changes: -filter (on|off)
++ thbook: splay shots using "-" or "." as station name
++ thbook: in therion.ini otf2pfb on|off
++ thbook: in therion.ini pdf-fonts
++ thbook: -filter (on|off)
++ thbook: more join description
++ thbook: flags arch & overhang
++ thbook: export cave-list -surveys (on)|off
 
++ loch entrance/fix/station/label off-screen rendering
++ loch surface handling
++ add options menu to xtherion
 + support iso date format YYYY-MM-DD
 + add lookup tables to configuration files
 + check label size switch and tex export
