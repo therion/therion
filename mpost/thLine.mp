@@ -38,9 +38,14 @@ enddef;
 
 vardef thdir (expr p,t) =    % 1 * epsilon caused problems in scales < 1:1000
                              % n * epsilon is enough for scale 1:(n*1000)
+  if arclength(p)=0:
+    hide(thwarning("unable to determine direction on zero-length path"))
+    (0,1)
+  else:
 %  ((direction t-100*epsilon of p) + (direction t+100*epsilon of p)) / 2
    postcontrol (t+1000*epsilon) of p - precontrol (t-1000*epsilon) of p
 %  direction t of p
+  fi
 enddef;
 
 % walls:
@@ -396,10 +401,15 @@ def l_slope_SKBB (expr P,S)(text Q) =
 
   T:=identity;
   boolean par;
-  cas := 0.3u;
-  krok := 0.7u;
+  offset:=0;
   dlzka := (arclength P);
-  if dlzka>3u: dlzka:=dlzka-0.6u fi;
+  if dlzka>3u: 
+    offset := 0.3u;
+  else:
+    offset := 0.1u;
+  fi;
+  dlzka:=dlzka-2offset;
+  cas := offset;
   mojkrok:=adjust_step(dlzka,1.4u) / 2;
   pickup PenD;
   par := false; 
@@ -429,7 +439,7 @@ def l_slope_SKBB (expr P,S)(text Q) =
       ((point t of P) + if par: 0.333 * fi l * unitvector(dir(a)));
     cas := cas + mojkrok;
     par := not par;
-    exitif cas > dlzka + .3u + (krok / 3);  % for rounding errors
+    exitif cas > dlzka + offset + 0.1mm;  % for rounding errors
   endfor;
   if S = 1: pickup PenC; draw P fi;
 %pickup pencircle scaled 3pt;
@@ -527,10 +537,15 @@ def l_slope_BCRA (expr P,S)(text Q) =
 
   T:=identity;
   boolean par;
-  cas := 0.3u;
-  krok := 0.7u;
+  offset:=0;
   dlzka := (arclength P);
-  if dlzka>3u: dlzka:=dlzka-0.6u fi;
+  if dlzka>3u: 
+    offset := 0.3u;
+  else:
+    offset := 0.1u;
+  fi;
+  dlzka:=dlzka-2offset;
+  cas := offset;
   mojkrok:=adjust_step(dlzka,1.4u) / 2;
   pickup PenD;
   par := false; 
@@ -563,7 +578,7 @@ def l_slope_BCRA (expr P,S)(text Q) =
     fi;
     cas := cas + mojkrok;
     par := not par;
-    exitif cas > dlzka + .3u + (krok / 3);  % for rounding errors
+    exitif cas > dlzka + offset + 0.1mm;  % for rounding errors
   endfor;
 enddef;
 

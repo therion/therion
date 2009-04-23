@@ -84,7 +84,7 @@ paired rotatedaround(paired x,paired o, double th);
 struct layout {
   string excl_list,labelx,labely,
          doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
-         northarrow, scalebar;
+         northarrow, scalebar,langstr;
   bool  excl_pages,title_pages,page_numbering,
         transparency,map_grid,OCG,map_header_bg,colored_text; 
   double hsize,vsize,overlap,

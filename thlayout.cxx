@@ -1525,11 +1525,13 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
     pp[pl-1] = 0;
   }
 
-  if ((this->map_header != TT_LAYOUT_MAP_HEADER_OFF) || (nami > 0)) {
+  if (this->map_header != TT_LAYOUT_MAP_HEADER_OFF) {
     fprintf(o,"\\legendbox{%.0f}{%.0f}{", this->map_header_x, this->map_header_y);
     thlayout_print_header_align(o, this->map_header);
     fprintf(o,"}");
     fprintf(o,"{\\the\\legendcontent}");
+  } 
+  if (nami > 0) {
     for(mit = this->map_image_list.begin(); mit != this->map_image_list.end(); mit++) {
       if (mit->defined() && (mit->m_align != TT_LAYOUT_MAP_HEADER_OFF)) {
         pn = pict_path;
@@ -2037,6 +2039,7 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.preview_below_b = this->color_preview_below.B;
   
   LAYOUT.lang = this->lang;
+  LAYOUT.langstr = thlang_getid(this->lang);
 }
 
 

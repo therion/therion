@@ -5,10 +5,9 @@
 \expandafter\endinput\expandafter\fi
 \fi
 
-\newread\testin 
-\openin\testin=../samples.doc/index.tex
-\ifeof\testin \message{Warning: skipping the case studies} \expandafter\endinput
-\else \closein\testin \fi
+\openin0=../samples.doc/index.tex
+\ifeof0 \message{Warning: skipping the case studies} \expandafter\endinput
+\else \closein0 \fi
 
 \eject
 \vbox{\hsize=93.2mm\baselineskip=12pt

@@ -1,0 +1,610 @@
+%% 
+%% therion.tex
+%%
+%% Copyright (C) 2001-2004 Martin Budaj
+%%
+%% -------------------------------------------------------------------- 
+%% This program is free software; you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation; either version 2 of the License, or
+%% any later version.
+%%
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program; if not, write to the Free Software
+%% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+%% -------------------------------------------------------------------- 
+
+\ifx\pdfoutput\undefined
+     \newlinechar`\^^J
+     \immediate\write16{^^J^^JProcess me with pdfTeX, please!^^J^^J}
+     \expandafter\end
+\fi
+
+\def\requiredformat{plain}
+\ifx\requiredformat\fmtname\else
+     \newlinechar`\^^J
+     \immediate\write16{^^J^^JTherion works only with plain TeX format!^^J}
+     \immediate\write16{Your format is: \fmtname^^J^^J}
+     \expandafter\end
+\fi
+
+\def\wlog#1{}
+
+
+\parindent=0pt
+\raggedbottom
+\nopagenumbers
+\tracingstats=1
+\pdfimageresolution=300
+
+%\pdfinfo{/Creator <feff%
+%  03b803b703c103af03bf03bd0020%
+%  002800740068006500720069006f006e0029002c0020%
+%  004d0065007400610050006f00730074002c0020%
+%  005400650058>}%
+
+\newbox\xxx
+\newbox\mapbox
+\newbox\navbox
+\newcount\pointerE
+\newcount\pointerW
+\newcount\pointerN
+\newcount\pointerS
+\newtoks\pointerU
+\newtoks\pointerD
+\newcount\pagenum
+\newtoks\pagename
+\newtoks\pagelabel
+\newtoks\opacity \opacity{0.7}
+\newtoks\surfaceopacity \surfaceopacity{0.7}
+\newif\ifpagenumbering \pagenumberingfalse
+\newtoks\bgcolor
+\newif\iflegendbgfill
+
+\let\ne\noexpand
+\def\notdef{notdef}
+
+% hyperlinks
+
+\def\flatlink#1#2#3#4#5{%
+  \setbox\xxx=\hbox{}\wd\xxx=#3bp\ht\xxx=#4bp%
+  \rlap{\kern#1bp\raise#2bp\hbox{%
+  \vbox to0bp{\vss\hbox to 0bp{%
+  \pdfstartlink attr {/Border [0 0 0]} goto name {#5}%
+  \box\xxx\pdfendlink\hss}}}}}%
+
+\def\textlink#1#2{%
+  \pdfstartlink attr {/Border [0 0 0]} goto name {#2}#1\pdfendlink}%
+
+
+\def\includechars#1:#2\endinclude{\pdfincludechars#1{#2}}
+
+\newbox\tmpboxa
+\newbox\tmpboxb
+
+\newdimen\legendsymbolwd
+\newdimen\legendsymbolht \legendsymbolht=12pt
+\newdimen\tmpdimen
+
+\def\legendsymbolbox#1#2{%
+  \setbox\tmpboxa=\hbox{\pdfrefxform#1}%
+  \setbox\tmpboxb=\hbox{\the\legendtextsize(}%
+  \legendsymbolwd=\wd\tmpboxa
+  \legendsymbolht=\ht\tmpboxa
+  \advance\legendsymbolht by -\ht\tmpboxb
+  \advance\legendsymbolht by -1dd
+  \tmpdimen=\hsize
+    \advance\tmpdimen by 10pt 
+    \divide\tmpdimen by\legendcolumns 
+    \advance\tmpdimen by-10pt
+  \hbox to \tmpdimen{%
+     \box\tmpboxa\kern10pt\raise\legendsymbolht\vtop{%
+       \advance\tmpdimen by -\legendsymbolwd
+       \advance\tmpdimen by -10pt
+       \hsize=\tmpdimen\rightskip=0pt plus \tmpdimen minus 0pt\relax\the\legendtextsize #2\vskip1dd}\hss}%
+}
+
+\def\colorlegendbox#1#2#3{%
+  \setbox\xxx=\hbox to 36bp{\PL{q #1 #2 #3 rg 0 0 36 24 re f Q}\hfil}%
+  \ht\xxx=25bp\dp\xxx=0bp
+  \immediate\pdfxform\xxx
+}
+
+
+\let\PL\pdfliteral
+
+\newdimen\xcorr
+\newdimen\ycorr
+
+\def\PB#1#2#3{\rlap{\kern#1bp\raise#2bp\hbox{\pdfrefxform#3}}} %placebox
+
+\def\gridcoord#1#2{\hbox to0pt{%
+  \ifnum#1=1\hss\fi
+  \ifnum#1=4\hss\fi
+  \ifnum#1=7\hss\fi
+  \ifnum#1=8\hss\fi
+  \ifnum#1=2\hss\fi
+    \vbox to0pt{%
+      \ifnum#1>3\vss\fi
+      \kern2pt%
+      \hbox{\kern2pt#2\kern2pt}%
+      \kern2pt%
+      \ifnum#1<7\vss\fi
+    }%
+  \ifnum#1=3\hss\fi
+  \ifnum#1=6\hss\fi
+  \ifnum#1=9\hss\fi
+  \ifnum#1=8\hss\fi
+  \ifnum#1=2\hss\fi
+  }%
+} 
+
+\def\PBcorr#1#2#3{%
+  \xcorr=#1bp\advance\xcorr by\extraW\advance\xcorr by\overlap%
+  \ycorr=#2bp\advance\ycorr by\extraS\advance\ycorr by\overlap%
+  \rlap{\kern\xcorr\raise\ycorr\hbox{\pdfrefxform#3}}} %placebox
+
+\def\bitmap#1#2#3#4#5#6#7{%
+  \pdfliteral{q #1 #2 #3 #4 #5 #6 cm}%
+  \rlap{\pdfrefximage#7}%
+  \pdfliteral{Q}%
+}
+
+\def\bitmapcorr#1#2#3#4#5#6#7{%
+  \xcorr=#5bp\advance\xcorr by\extraW\advance\xcorr by\overlap
+  \ycorr=#6bp\advance\ycorr by\extraS\advance\ycorr by\overlap
+  \dimtobp{\xcorr}\edef\wdth{\tmpdef}%
+  \dimtobp{\ycorr}\edef\hght{\tmpdef}%
+  \pdfliteral{q #1 #2 #3 #4 \wdth\space\hght\space cm}%
+  \rlap{\pdfrefximage#7}%
+  \pdfliteral{Q}%
+}
+
+\newdimen\tmpdimenX
+\newdimen\tmpdimenY
+\def\calibrX#1{\tmpdimen=#1\advance\tmpdimen by\overlap\advance\tmpdimen by\extraW}
+\def\calibrY#1{\tmpdimen=#1\advance\tmpdimen by\overlap\advance\tmpdimen by\extraS}
+
+\def\TITLE#1{\eject\hbox{}\vskip5cm\centerline{\size[24]#1}\vfil\eject}
+
+% processing of the E-W-N-S references
+
+\def\showpointer#1{\ifnum\the#1=0\else\the#1\fi}
+
+% processing of the up and down references
+
+\def\showpointerlist#1{\edef\test{\the#1}\ifx\test\notdef\else
+                   \expandafter\process\the#1\endarg\fi}
+
+\def\process#1||#2\endarg{
+  \expandafter\processpointeritem#1\endarg%
+  \if@#2@\def\next##1\endarg{}
+  \else\let\next=\process\fi
+  \next#2\endarg}
+
+\def\processpointeritem#1|#2|#3\endarg{\hbox{\textlink{\arr\ #2 (#1)}{#3}}}
+
+\def\arr{}        % to be redefined in the \dopage macro
+
+
+\def\pagesetup#1#2#3#4#5#6{
+  \pdfpagewidth#1
+  \pdfpageheight#2
+  \hsize#3
+  \vsize#4
+  \pdfhorigin#5
+  \pdfvorigin#6
+  \hoffset0pt
+  \voffset0pt\relax
+}
+
+\def\linestyle{1 J 1 j 1.5 w}
+
+\def\framed#1{% 
+  \dimtobp{\wd#1}\edef\wdth{\tmpdef}%
+  \dimtobp{\ht#1}\edef\hght{\tmpdef}%
+  \hbox to \wd#1{\rlap{\box#1}\PL{q \linestyle\space 0 0 \wdth\space\hght\space re S Q}\hfill}%
+}
+
+{\catcode`\p=12\catcode`\t=12\gdef\SKIPPT#1pt{#1}}
+
+\def\dimtobp#1{%
+  \tmpdimen=#1%
+  \tmpdimen=0.996264\tmpdimen
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+}
+
+\def\color[#1 #2 #3]{%
+  \tmpdimen=#1pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#2pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#3pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \pdfliteral{rg}
+}
+
+% actual placing of the page elements
+
+\def\dopage{%
+ \vbox{\centerline{\framed{\mapbox}}
+  \bigskip
+  \line{%
+    \vbox to \ht\navbox{
+      \hbox{\size[20]\the\pagelabel
+        \ifpagenumbering\space(\the\pagenum)\fi
+        \space\size[16]\the\pagename}
+      \ifpagenumbering
+        \medskip
+        \hbox{\qquad\qquad
+          \vtop{%
+            \hbox to 0pt{\hss\showpointer\pointerN\hss}
+            \hbox to 0pt{\llap{\showpointer\pointerW\hskip0.7em}%
+              \raise1pt\hbox to 0pt{\hss$\updownarrow$\hss}%
+              \raise1pt\hbox to 0pt{\hss$\leftrightarrow$\hss}%
+              \rlap{\hskip0.7em\showpointer\pointerE}}
+              \hbox to 0pt{\hss\showpointer\pointerS\hss}
+          }\qquad\qquad
+          \vtop{
+            \def\arr{$\uparrow$}
+            \showpointerlist\pointerU
+            \def\arr{$\downarrow$}
+            \showpointerlist\pointerD
+          }
+        }
+      \fi
+      \vss
+    }
+    \hss
+    \vbox to \ht\navbox{
+      \ifnortharrow\hbox to 0pt{\hss\northarrow\qquad}\fi
+      \vss
+      \ifscalebar\hbox to 0pt{\hss\scalebar\qquad}\fi
+    }
+    \box\navbox
+  }
+ }
+}
+
+\newif\iflegend
+\newif\ifcolorlegend
+\newtoks\legendcontent
+
+\newtoks\cavename
+\newtoks\comment
+\newtoks\legendtitle
+\newtoks\colorlegendtitle
+\newif\ifnortharrow
+\newif\ifscalebar
+\newtoks\explotitle
+\newtoks\explodate
+\newtoks\exploteam
+\newtoks\topotitle
+\newtoks\topodate
+\newtoks\topoteam
+\newtoks\cartotitle
+\newtoks\cartodate
+\newtoks\cartoteam
+\newtoks\copyrights
+\newtoks\cavelength
+\newtoks\cavedepth
+\newtoks\cavelengthtitle
+\newtoks\cavedepthtitle
+\newtoks\legendtextcolor\legendtextcolor={\color[0 0 0]}
+\newtoks\legendtextsize\legendtextsize={\size[12]}
+\newtoks\legendtextheadersize\legendtextheadersize={\size[26]}
+\newtoks\legendtextsectionsize\legendtextsectionsize={\size[14]}
+
+\def\scalebar{\pdfrefxform\THWscalebar}
+\def\northarrow{\pdfrefxform\THWnortharrow}
+\newdimen\legendwidth %\legendwidth=14cm
+\newcount\legendcolumns \legendcolumns=2
+
+\legendcontent={%
+  \hsize=\legendwidth
+  \color[0 0 0]\the\legendtextcolor 
+  \ifnortharrow\vbox to 0pt{\line{\hfil\northarrow}\vss}\fi
+  \edef\tmp{\the\cavename} \ifx\tmp\empty \else
+     {\the\legendtextheadersize\the\cavename}\vskip1cm
+  \fi
+  \ifscalebar\scalebar\vskip1cm\fi
+  {\rightskip=0pt plus 3em\parskip=3bp
+    \edef\tmp{\the\comment} \ifx\tmp\empty \else
+      {\the\legendtextsize\the\comment} \par\medskip
+    \fi
+    \everypar{\hangindent=2em\hangafter=1}
+    \edef\tmp{\the\cavelength} \ifx\tmp\empty \else
+      {\the\legendtextsize\si\the\cavelengthtitle: \ss\the\cavelength\par}
+    \fi
+    \edef\tmp{\the\cavedepth} \ifx\tmp\empty \else
+      {\the\legendtextsize\si\the\cavedepthtitle: \ss\the\cavedepth\par}
+    \fi
+    \edef\tmp{\the\exploteam} \ifx\tmp\empty \else
+      {\the\legendtextsize\si\the\explotitle: \ss\the\exploteam\quad\si\the\explodate\par}
+    \fi
+    \edef\tmp{\the\topoteam} \ifx\tmp\empty \else
+      {\the\legendtextsize\si\the\topotitle: \ss\the\topoteam\quad\si\the\topodate\par}
+    \fi
+    \edef\tmp{\the\cartoteam} \ifx\tmp\empty \else
+      {\the\legendtextsize\si\the\cartotitle: \ss\the\cartoteam\quad\si\the\cartodate\par}
+    \fi
+    \edef\tmp{\the\copyrights} \ifx\tmp\empty \else
+      {\the\legendtextsize\ss\the\copyrights\par}
+    \fi
+  }
+  \formattedlegend
+  \color[0 0 0]
+}
+
+\def\maplayout{
+  \legendbox{NW}{\the\legendcontent}
+  \legendbox{NE}{\northarrow}
+}
+
+
+\def\formattedlegend{%
+  \ifcolorlegend
+  \vskip1cm{\the\legendtextsectionsize\the\colorlegendtitle}\bigskip
+  \insertcolorlegend
+  \fi
+  \iflegend
+  \vskip1cm{\the\legendtextsectionsize\the\legendtitle}\bigskip
+  \insertlegend
+  \fi}
+
+\let\atlaslegend=\formattedlegend
+
+\def\atlastitlepages{
+  \edef\tmp{\the\cavename} \ifx\tmp\empty \else
+    \TITLE{\the\cavename}
+  \fi
+  {\rightskip=0pt plus 3em\parskip=3bp
+    \edef\tmp{\the\comment} \ifx\tmp\empty \else
+      {\size[12]\the\comment} \par\medskip
+    \fi
+    \everypar{\hangindent=2em\hangafter=1}
+    \edef\tmp{\the\exploteam} \ifx\tmp\empty \else
+      {\size[12]\si\the\explotitle: \ss\the\exploteam\par}
+    \fi
+    \edef\tmp{\the\topoteam} \ifx\tmp\empty \else
+      {\size[12]\si\the\topotitle: \ss\the\topoteam\par}
+    \fi
+    \edef\tmp{\the\cartoteam} \ifx\tmp\empty \else
+      {\size[12]\si\the\cartotitle: \ss\the\cartoteam\par}
+    \fi
+    \edef\tmp{\the\copyrights} \ifx\tmp\empty \else
+      {\size[12]\ss\the\copyrights\par}
+    \fi
+    \edef\tmp{\the\cavelength} \ifx\tmp\empty \else
+      {\the\legendtextsize\si\the\cavelengthtitle: \ss\the\cavelength\par}
+    \fi
+    \edef\tmp{\the\cavedepth} \ifx\tmp\empty \else
+      {\the\legendtextsize\si\the\cavedepthtitle: \ss\the\cavedepth\par}
+    \fi
+  }
+}
+
+\newdimen\sx
+\newdimen\sy
+\newdimen\sxd
+\newdimen\syd
+
+\def\LEGN{N}
+\def\LEGE{E}
+\def\LEGW{W}
+\def\LEGS{S}
+\def\LEGNE{NE}
+\def\LEGNW{NW}
+\def\LEGSE{SE}
+\def\LEGSW{SW}
+\def\LEGC{C}
+
+
+\newdimen\extraN \extraN=0mm
+\newdimen\extraS \extraS=0mm
+\newdimen\extraE \extraE=0mm
+\newdimen\extraW \extraW=0mm
+\newdimen\adjustedHS
+\newdimen\adjustedVS
+\newdimen\adjustedX
+\newdimen\adjustedY
+\newdimen\framethickness\framethickness=0cm
+
+\def\legendbox#1#2#3#4{%
+  \unskip
+  \setbox\tmpboxa=\vbox{#4}%
+  \sx=\wd\tmpboxa
+  \sy=\ht\tmpboxa \advance\sy by \dp\tmpboxa
+  \sxd=\hsize \divide\sxd by 100 \sxd=#1\sxd
+  \syd=\vsize \divide\syd by 100 \syd=#2\syd
+  \edef\test{#3}%
+  \ifx\test\LEGN
+    \divide\sx by 2 \advance\sxd by -\sx
+                    \advance\syd by -\sy
+  \else\ifx\test\LEGW
+    \divide\sy by 2 \advance\syd by -\sy 
+  \else\ifx\test\LEGE
+                    \advance\sxd by -\sx
+    \divide\sy by 2 \advance\syd by -\sy 
+  \else\ifx\test\LEGS
+    \divide\sx by 2 \advance\sxd by -\sx
+  \else\ifx\test\LEGNW
+                    \advance\syd by -\sy 
+  \else\ifx\test\LEGNE
+                    \advance\sxd by -\sx
+                    \advance\syd by -\sy
+  \else\ifx\test\LEGSW
+  \else\ifx\test\LEGSE
+                    \advance\sxd by -\sx
+  \else\ifx\test\LEGC
+    \divide\sx by 2 \advance\sxd by -\sx
+    \divide\sy by 2 \advance\syd by -\sy 
+  \fi\fi\fi\fi\fi\fi\fi\fi\fi
+  %
+  \ifdim\sxd<-\extraW \global\extraW=-\sxd\fi
+  \ifdim\syd<-\extraS \global\extraS=-\syd\fi
+  \sx=\wd\tmpboxa
+  \sy=\ht\tmpboxa \advance\sy by \dp\tmpboxa
+  \advance\sx by \sxd \advance\sx by -\hsize
+  \advance\sy by \syd \advance\sy by -\vsize
+  \ifdim\sx>\extraE \global\extraE=\sx \fi
+  \ifdim\sy>\extraN \global\extraN=\sy \fi
+  %
+  \unskip
+%  \advance\sxd by \extraW  -- presunute do thpdf.cxx
+%  \advance\syd by \extraS
+
+  % vypln pod legendou
+  \iflegendbgfill
+   \begingroup
+     \advance\sxd-1cm
+     \advance\syd-1cm
+     \sx=\wd\tmpboxa \advance\sx by 2cm
+    \dimtobp{\sxd}\edef\shiftx{\tmpdef}%
+    \dimtobp{\syd}\edef\shifty{\tmpdef}%
+%    \dimtobp{\wd\tmpboxa}\edef\wdth{\tmpdef}%
+     \dimtobp{\sx}\edef\wdth{\tmpdef}%
+    \sy=\ht\tmpboxa \advance\sy by \dp\tmpboxa
+      \advance\sy by 2 cm
+    \dimtobp{\sy}\edef\hght{\tmpdef}%
+    \rlap{\PL{q \the\bgcolor\space rg \shiftx\space \shifty\space \wdth\space \hght\space re f Q}}%
+   \endgroup    
+  \fi
+  %
+  \advance\syd by \dp\tmpboxa
+
+  \rlap{\kern\sxd\raise\syd\box\tmpboxa}%
+  \ignorespaces
+}
+
+\def\loadpicture#1{\pdfximage{#1}\pdfrefximage\pdflastximage}
+
+\def\insertmaps{%
+  \color[0 0 0]
+  \input th_formdef
+  \input th_pagedef
+  \input th_pages
+  \immediate\write-1{ \the\count10 \space numeric registers used out of 
+            \ifx\eTeXversion\undefined256\else32768\fi}
+}
+    
+\def\insertlegend{%
+  \input th_legend
+}
+
+\def\insertcolorlegend{%
+  \input th_legendcolor
+}
+
+\def\insertkeyplan#1#2{%
+  \tmpdimen=#1
+  \tmpdimen=2\tmpdimen
+  \setbox0=\hbox{\pdfximage width \tmpdimen {#2}\pdfrefximage\pdflastximage}
+%  \pdfxform0\keyplan=\pdflastxform
+  \setbox1=\hbox to #1 {\copy0\hss}
+  \setbox2=\hbox to #1 {\hss\box0}
+  \eject  
+  \ifodd\pageno\hbox{}\vfil\eject\fi
+  \line{\hss\pdfxform1\pdfrefxform\pdflastxform}
+  \vfil
+  \eject
+  \line{\pdfxform2\pdfrefxform\pdflastxform\hss}
+  \vfil
+  \eject
+}
+
+
+\newcount\stopcount
+\newcount\stoprow
+\newcount\rows
+\newcount\rowstmp
+\newcount\i
+\newcount\j
+
+
+\def\placemaps{
+  \message{ [Warning: \string\placemaps\space is deprecated; 
+            use \string\insertmaps] }
+  \insertmaps
+}
+
+%% Petr Olsak's multicolumn macros (slightly modified)
+
+\newdimen\colsep  \colsep=1em % horiz. mezera mezi sloupci
+\newcount\tempnum             % pracovní promìnná
+\splittopskip=\baselineskip
+\def\roundtolines #1{%% zaokrouhlí na celé násobky vel. øádku
+   \divide #1 by\baselineskip \multiply #1 by\baselineskip}
+\def\corrsize #1{%% #1 := #1 + \splittopskip - \topskip
+   \advance #1 by \splittopskip \advance #1 by-\topskip}
+
+\def\begmulti#1{\par\bigskip\penalty0 \def\Ncols{#1}
+   \setbox0=\vbox\bgroup\penalty0
+   %% \hsize := ¹íøka sloupce = (\hsize+\colsep) / n - \colsep
+   \advance\hsize by\colsep
+   \divide\hsize by\Ncols  \advance\hsize by-\colsep}
+\def\endmulti{\vfil\egroup \setbox1=\vsplit0 to0pt
+   %% \dimen1 := velikost zbylého místa na stránce
+   \ifdim\pagegoal=\maxdimen \dimen1=\vsize \corrsize{\dimen1}
+   \else \dimen1=\pagegoal \advance\dimen1 by-\pagetotal \fi
+   \ifdim \dimen1<2\baselineskip
+     \vfil\break \dimen1=\vsize \corrsize{\dimen1} \fi
+   %% \dimen0 := vý¹ka n sloupcové sazby po rozdìlení do sloupcù
+   %% = (\ht0 + (n-1)\baselineskip) / n, zaokruhleno na øádky
+   \dimen0=\Ncols\baselineskip \advance\dimen0 by-\baselineskip
+   \advance\dimen0 by \ht0 \divide\dimen0 by\Ncols
+   \roundtolines{\dimen0}
+   %% Rozdìlit sazbu n sloupcù do stránek nebo nerozdìlit ?
+   \ifdim \dimen0>\dimen1 \splitpart
+   \else \makecolumns{\dimen0} \fi
+   \ifvoid0 \else \errmessage{Lost text in multiple columns?} \fi
+   \bigskip}
+\def\makecolumns#1{\setbox1=\hbox{}\tempnum=0
+   \loop \ifnum\Ncols>\tempnum
+      \setbox1=\hbox{\unhbox1 \vsplit0 to#1 \hss}
+      \advance\tempnum by1
+   \repeat
+   \hbox{}\nobreak\vskip-\splittopskip \nointerlineskip
+   \line{\unhbox1\unskip}}
+\def\splitpart{\roundtolines{\dimen1}
+   \makecolumns{\dimen1} \advance\dimen0 by-\dimen1
+   %% \dimen0 := vý¹ka _zbylé_ n sloupcové sazby
+   %% \dimen1 := prázdné místo na stránce = (cca) \vsize
+   \vfil\break
+   \dimen1=\vsize \corrsize{\dimen1}
+   %% Rozdìlit zbylou sazbu n sloupcù do více stránek ?
+   \ifvoid0 \else
+      \ifdim \dimen0>\dimen1 \splitpart
+      \else \makecolumns{\dimen0} \fi \fi}
+
+%% end of multicolumn macros
+
+\input th_enc
+\input th_texts
+\input th_resources
+\input th_fontdef
+
+\nonstopmode
+
+
+\opacity{0.75}
+\def\scale{200}
+\pagesetup{21.0000cm}{29.7000cm}{20.0000cm}{28.7000cm}{0.5000cm}{0.5000cm}
+\def\maplayout{}
+\insertmaps
+\end

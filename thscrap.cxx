@@ -158,9 +158,9 @@ thcmd_option_desc thscrap::get_cmd_option_desc(const char * opts)
 
 
 static const thstok thtt_scrap_flips[] = {
-  {"none", TT_SCRAP_FLIP_NONE},
   {"horiz", TT_SCRAP_FLIP_HORIZ},
   {"horizontal", TT_SCRAP_FLIP_HORIZ},
+  {"none", TT_SCRAP_FLIP_NONE},
   {"vert", TT_SCRAP_FLIP_VERT},
   {"vertical", TT_SCRAP_FLIP_VERT},
   {NULL, TT_SCRAP_FLIP_UNKNOWN},

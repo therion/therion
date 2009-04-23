@@ -105,7 +105,7 @@ numeric smart_count, smart_D;
 boolean smart_quit, smart_inner_quit;
 
 def p_smartlabel (expr txt, pos) =
-%  begingroup;
+  begingroup;
   interim bboxmargin:=0.2pt;
   lab:=thelabel.rt(txt,pos+(0.4u,0));
   q:=bbox lab;
@@ -152,7 +152,7 @@ def p_smartlabel (expr txt, pos) =
   smart_count := smart_count + 1;
   smartll[smart_count] := point 0 of (q shifted (0,smart_D));
   smartur[smart_count] := point 2 of (q shifted (0,smart_D));
-%  endgroup;
+  endgroup;
 enddef;
 
 def smart_overlap (expr llA, urA, llB, urB) =

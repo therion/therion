@@ -2,6 +2,9 @@
 Therion 5.3 (YYYY-MM-DD):
 
 therion:
+ * added <lang:XX> switch to labels
+ * added albanian language (sq), thanks to Fatos Katallozi
+ * updated german translation
  * -filter (on)|off option added to continuation export to support export
    of all continuations
  * -surveys (on)|off option added to cave-list export to allow export of raw list of caves
@@ -24,6 +27,9 @@ therion:
    - transparency in metapost reset when followed by clipped area
    - back readings supported in data roles+instruments
    - missing LRUD data in PLT export (B#25532)
+   - segfault on line with single point
+   - "-flip none" do not working for scrap
+   - map-header x y off behaves as if map-header x y nw (B#25537)
    
 xtherion:
 

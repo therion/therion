@@ -83,8 +83,8 @@ def pop_label_fill_color =
   label_fill_color := label_fill_color_tmp;
 enddef;
 def process_filledlabel(expr cent, rot) =
-  begingroup
-    bboxmargin:=2.0bp;
+  begingroup;
+    interim bboxmargin:=2.0bp;
     q:=((bbox lab) smoothed 2) rotatedaround (cent, rot);
     fill q withcolor label_fill_color;
     draw lab rotatedaround (cent, rot);
@@ -324,7 +324,7 @@ enddef;
 
 
 def process_label (expr cent, rot) =
-  begingroup
+  begingroup;
     interim bboxmargin:=0.8bp;
     q:=((bbox lab) smoothed 2) rotatedaround (cent, rot);
     draw lab rotatedaround (cent, rot);
@@ -339,7 +339,10 @@ enddef;
 % draws a label into semicircular box and writes clipping path to a file
 
 def process_uplabel =
+  begingroup;
+    interim bboxmargin := 0.8 bp;
     q:=bbox lab;
+  endgroup;
     alef:=.8-.02*(xpart lrcorner q - xpart llcorner q);
 %    show alef;
     q:=alef[llcorner q,ulcorner q]{up} .. {down}alef[lrcorner q, urcorner q] --
@@ -357,7 +360,10 @@ enddef;
 % clipping path to a file
 
 def process_downlabel =
+  begingroup;
+    interim bboxmargin := 0.8 bp;
     q:=bbox lab;
+  endgroup;
     alef:=1-(.8-.02*(xpart lrcorner q - xpart llcorner q));
     q:=alef[llcorner q,ulcorner q]{down} .. 
         {up}alef[lrcorner q, urcorner q] --
@@ -374,7 +380,10 @@ enddef;
 % writes clipping path to a file
 
 def process_updownlabel =
+  begingroup;
+    interim bboxmargin := 0.8 bp;
     p:=bbox lab;
+  endgroup;
     leftside:=xpart llcorner p;
     rightside:=xpart lrcorner p;
     draw (xpart llcorner p,.5[ypart llcorner p,ypart ulcorner p]) -- 
@@ -526,7 +535,13 @@ thdrawoptions();
 
 def thdraw expr p = 
   if not fill_only:
-    addto currentpicture doublepath (p transformed T) withpen currentpen _thop_ _op_
+    addto currentpicture 
+    if picture p: 
+      also (p transformed T)
+    else:
+      doublepath (p transformed T) withpen currentpen 
+    fi  
+    _thop_  _op_
   else:
     addto currentpicture also nullpicture
   fi

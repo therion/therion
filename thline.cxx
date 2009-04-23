@@ -530,7 +530,7 @@ void thline::preprocess()
   if (this->fscrapptr->flip != TT_SCRAP_FLIP_NONE)
     tmpreverse = !tmpreverse;
   
-  if (tmpreverse) {
+  if (tmpreverse && (this->first_point->nextlp != NULL)) {
   
     // najprv prehodi podtypy
     c_item = this->first_point;

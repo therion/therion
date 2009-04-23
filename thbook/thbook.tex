@@ -18,7 +18,12 @@
   \fi\fi
   \input etc/supp-mis 
   \input etc/supp-pdf 
-  \pdfinfo{/Title (The TherionBook)
+  
+  \openin0=version.tex
+  \read 0 to \thversion
+  \closein0
+  
+  \pdfinfo{/Title (The Therion Book \thversion)
            /Author (Martin Budaj, Stacho Mudrák)
 	   /Subject (Therion documentation)
 	   /Keywords (caves, surveying, cartography, computers)

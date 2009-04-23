@@ -1,0 +1,23 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: -1 -1 4 4 
+%%Creator: MetaPost
+%%CreationDate: 2009.02.13:1551
+%%Pages: 1
+%%EndProlog
+%%Page: 1 1
+newpath -0.12003 -0.12003 moveto
+0.12003 -0.12003 lineto
+0.12003 0.12003 lineto
+0.12003 3.12003 lineto
+-0.12003 3.12003 lineto
+-0.12003 2.87997 lineto
+ closepath fill
+newpath -0.12003 0.12003 moveto
+-0.12003 -0.12003 lineto
+0.12003 -0.12003 lineto
+3.12003 -0.12003 lineto
+3.12003 0.12003 lineto
+2.87997 0.12003 lineto
+ closepath fill
+showpage
+%%EOF

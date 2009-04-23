@@ -9,6 +9,7 @@ it: caposaldo
 pt: base
 ru: пикет
 sk: meračský bod
+sq: stacioni I matjes
 
 therion: point station:temporary
 cz: měřičský bod (nestabilizovaný)
@@ -21,6 +22,7 @@ it: caposaldo termporaneo
 pt: base temporária
 ru: временный пикет
 sk: meračský bod (nestabilizovaný)
+sq: stacion mates I perkohshem
 
 therion: point station:painted
 cz: měřičský bod (zabarvený)
@@ -33,6 +35,7 @@ it: caposaldo verniciato
 pt: base pintada
 ru: нарисованный пикет
 sk: meračský bod (zafarbený)
+sq: stacion mates I ngjyrosur
 
 therion: point station:natural
 cz: měřičský bod (přírodní)
@@ -45,6 +48,7 @@ it: caposaldo naturale
 pt: base natural
 ru: естественная точка привязки
 sk: meračský bod (prírodný)
+sq: stacion mates natyral
 
 therion: point station:fixed
 cz: měřičský bod (stabilizovaný)
@@ -57,6 +61,7 @@ it: caposaldo fisso
 pt: base fixa
 ru: репер
 sk: meračský bod (stabilizovaný)
+sq: stacion mates I palevizshem
 
 therion: line survey
 cz: polygonový tah
@@ -69,6 +74,7 @@ it: poligonale
 pt: linha de topografia
 ru: нитка хода
 sk: polygónový ťah
+sq: vijat matese-vrojtuese
 
 therion: point station-name
 cz: číslo měřičského bodu
@@ -81,6 +87,7 @@ it: node del caposaldo
 pt: nome de base
 ru: номер пикета
 sk: číslo meračského bodu
+sq: emri I stacionit-mates
 
 therion: point entrance
 cz: vchod
@@ -93,10 +100,11 @@ it: ingresso
 pt: entrada
 ru: вход
 sk: vchod
+sq: hyrja
 
 therion: line arrow
 cz: pomocná šipka
-de: Richtungspfeil
+de: Pfeil
 el: βέλος
 en: arrow
 es: flecha
@@ -105,19 +113,22 @@ it: freccia
 pt: seta
 ru: стрелка
 sk: pomocná šípka
+sq: shigjeta
 
 therion: line map-connection
 cz: spojení map
+de: Verbindung zwischen Karten
 el: ένωση χαρτών
 en: map connection
 fr: jonction de carte
 it: riporto di mappa
 ru: линия выноса
 sk: prepojenie máp
+sq: lidhjet ne harta
 
 therion: line wall
 cz: stěna
-de: Wandverlauf
+de: Wand
 el: τοίχος
 en: wall
 es: pared
@@ -126,10 +137,11 @@ it: parete
 pt: parede
 ru: стена
 sk: stena
+sq: muri
 
 therion: line wall:bedrock
 cz: stěna
-de: Wandverlauf
+de: Wand zum Deckgebirge
 el: τοίχος
 en: wall
 es: pared
@@ -138,10 +150,11 @@ it: roccia
 pt: parede
 ru: стена
 sk: stena
+sq: shkembi-muri
 
 therion: line wall:underlying
 cz: stěna nižší úrovně
-de: unterlagernder Wandverlauf
+de: Wand unterlagernder Gang
 el: υποκείμενος τοίχος
 en: underlying wall
 es: pared subyacente
@@ -150,10 +163,11 @@ it: parete soggiacente
 pt: parede subjacente
 ru: нижерасположенная стена
 sk: stena nižšej úrovne
+sq: muri I shtrire
 
 therion: line wall:unsurveyed
 cz: nezaměřená stěna
-de: unvermessener Wandverlauf
+de: Wand unvermessen
 el: τοίχος (μη χαρτογραφημένος)
 en: unsurveyed wall
 es: pared no topografiada
@@ -162,10 +176,11 @@ it: parete stimata
 pt: parede não-topografada
 ru: глазомерная съемка стен
 sk: nezameraná stena
+sq: muri I pamatur
 
 therion: line wall:presumed
 cz: předpokládaná stěna
-de: geschätzter Wandverlauf
+de: Wand geschätzt
 el: τοίχος υποθετικός
 en: presumed wall
 es: pared supuesta
@@ -174,10 +189,11 @@ it: parete presunta
 pt: parede presumida
 ru: предпологаемая стена
 sk: predpokladaná stena
+sq: muri I supozuar
 
 therion: line wall:blocks
 cz: zával
-de: Raumbegrenzung durch Versturz
+de: Wand aus Versturz
 el: ογκόλιθοι
 en: breakdown
 es: bloques
@@ -186,10 +202,11 @@ it: massi
 pt: desmoronamento
 ru: глыбы
 sk: stena tvorená závalom
+sq: blloqe
 
 therion: line wall:debris
 cz: štěrk
-de: Raumbegrenzung durch Schutt
+de: Wand aus Schutt
 el: χαλάσματα
 en: debris
 es: derrubios
@@ -198,10 +215,11 @@ it: detriti
 pt: escombros
 ru: щебень
 sk: stena tvorená suťou
+sq: depozitime/mbetje gurresh
 
 therion: line wall:pebbles
 cz: valouny
-de: Raumbegrenzung durch Kies
+de: Wand aus Kies
 el: χαλίκια
 en: pebbles
 es: cantos rodados
@@ -210,10 +228,11 @@ it: ciotoli
 pt: seixos
 ru: галька
 sk: stena tvorená okruhliakmi
+sq: gurralece
 
 therion: line wall:sand
 cz: písek
-de: Raumbegrenzung durch Sand
+de: Wand aus Sand
 el: άμμος
 en: sand
 es: arena
@@ -222,10 +241,11 @@ it: sabbia
 pt: areia
 ru: песок
 sk: stena tvorená pieskom
+sq: rane
 
 therion: line wall:clay
 cz: bahno
-de: Raumbegrenzung durch Lehm
+de: Wand aus Lehm
 el: άργιλος
 en: clay
 es: arcilla
@@ -234,10 +254,11 @@ it: argilla
 pt: lama
 ru: глина
 sk: stena tvorená ílom
+sq: argjil
 
 therion: line wall:ice
 cz: led
-de: Raumbegrenzung durch Eis
+de: Wand aus Eis
 el: πάγος
 en: ice
 es: hielo
@@ -246,10 +267,11 @@ it: ghiaccio
 pt: gelo
 ru: лед, фирн
 sk: stena tvorená ľadom
+sq: akull
 
 therion: point wall-altitude
 cz: nadmořská výška bodu na stěně
-de: Höhe über NN
+de: Höhe über Koordinatenursprung
 el: ύψος τοίχου
 en: altitude
 es: altura pared
@@ -258,10 +280,11 @@ it: altezza
 pt: altura
 ru: высотная отметка стены
 sk: nadmorská výška bodu na stene
+sq: lartesia mbidetare e murit
 
 therion: point altitude
 cz: nadmořská výška bodu v chodbě
-de: Höhe über NN
+de: Höhe über Koordinatenursprung
 el: ύψος
 en: altitude
 es: altura
@@ -270,6 +293,7 @@ it: quota
 pt: altura
 ru: высотная отметка
 sk: nadmorská výška bodu v chodbe
+sq: lartesia mbidetare
 
 therion: point section
 cz: příčný řez
@@ -282,6 +306,7 @@ pt_BR: seção
 pt_PT: secção
 ru: сечение
 sk: priečny rez
+sq: pike-ndarje
 
 therion: line section
 cz: příčný řez
@@ -294,6 +319,7 @@ it: sezione trasversale
 pt: corte
 ru: выносная линия сечения
 sk: priečny rez
+sq: kryq-ndarje
 
 therion: point passage-height
 cz: výška chodby
@@ -306,6 +332,7 @@ it: altezza galleria
 pt: altura da galeria
 ru: высота хода
 sk: výška chodby
+sq: lartesia e kalimit
 
 therion: point passage-height:unsigned
 cz: výška chodby
@@ -318,10 +345,11 @@ it: altezza galleria
 pt: altura da galeria
 ru: высота хода
 sk: výška chodby
+sq: lartesia e kalimit-e pashenuar
 
 therion: point passage-height:positive
 cz: výška chodby nad hladinou
-de: Raumhöhe über Wasserspiegel
+de: Raumhöhe nach oben
 el: ύψος στοάς πάνω από νερό
 en: height above water level
 es: altura sobre nivel del mar
@@ -330,10 +358,11 @@ it: altezza sopra il livello dell'acqua
 pt: altura acima do nível da água
 ru: высота над уровнем воды
 sk: výška nad hladinou
+sq: lartesia mbi nivelin e ujit
 
 therion: point passage-height:negative
 cz: výška chodby pod hladinou
-de: Raumhöhe unter Wasserspiegel
+de: Raumhöhe nach unten
 el: βάθος στοάς κάτω από νερό
 en: depth below water level
 es: profundidad bajo nivel del mar
@@ -342,6 +371,7 @@ it: profondità sotto il livello dell'acqua
 pt: profundidade abaixo do nível da água
 ru: глубина ниже уровня воды
 sk: hĺbka pod hladinou
+sq: thellesia nen nivelin e ujit
 
 therion: point passage-height:both
 cz: výška nad i pod hladinou
@@ -354,6 +384,7 @@ it: altezza sopra e sotto il livello dell'acqua
 pt: altura acima e profundidade abaixo do nível da água
 ru: высота над и глубина ниже уровня воды
 sk: výška nad a hĺbka pod hladinou
+sq: lartesia mbi dhe nen nivelin e ujit
 
 therion: point air-draught
 cz: průvan
@@ -366,24 +397,29 @@ it: corrente d'aria
 pt: presença de vento
 ru: ток воздуха
 sk: prievan
+sq: rrymim i ajrit
 
 therion: point air-draught:winter
 cz: zimní průvan
+de: Luftzug Winter
 el: χειμερινή ροή αέρα
 en: winter air draught
 fr: courant d’air d’hiver
 it: circolazione invernale
 ru: ток воздуха зимний
 sk: zimný prievan
+sq: rrymim ajri-dimeror
 
 therion: point air-draught:summer
 cz: letní průvan
+de: Luftzug Sommer
 el: θερινή ροή αέρα
 en: summer air draught
 fr: courant d’air d’été
 it: circolazione estiva
 ru: ток воздуха летний
 sk: letný prievan
+sq: rrymim ajri-veror
 
 therion: point date
 cz: datum pozorování
@@ -396,18 +432,21 @@ it: data d'osservazione
 pt: data de observação
 ru: дата наблюдения
 sk: dátum pozorovania
+sq: data e vrojtimit
 
 therion: point dig
 cz: sonda
+de: Grabungsstelle
 el: διάνοιξη
 en: dig
 fr: désobstruction
 it: disostruzione
 sk: sonda
+sq: mihje
 
 therion: point continuation
 cz: možné pokračování
-de: mögliche Fortsetzung
+de: Fortsetzung
 el: πιθανή συνέχεια
 en: possible continuation
 es: continuación
@@ -416,6 +455,7 @@ it: possibile prosecuzione
 pt: possível continuação
 ru: возможное продолжение
 sk: možné pokračovanie
+sq: vazhdim I mundshem
 
 therion: point narrow-end
 cz: neprůlezné zúžení
@@ -428,6 +468,7 @@ it: chiude su strettoia
 pt: passagem com final estreito
 ru: вертикальная узость
 sk: neprielezné zúženie
+sq: kalim I ngushte-fund
 
 therion: point low-end
 cz: neprůlezné snížení
@@ -440,6 +481,7 @@ it: chiude su laminatoio
 pt: passagem com final baixo
 ru: горизонтальная узость
 sk: neprielezné zníženie
+sq: kalim I poshtem-fund
 
 therion: point flowstone-choke
 cz: zasintrovaný konec
@@ -452,6 +494,7 @@ it: chiude su colata
 pt: obstrução por escorrimento
 ru: блокировано натеками
 sk: zasintrený koniec
+sq: mbyllje me gurre-rrjedhes
 
 therion: point breakdown-choke
 cz: zavalený konec
@@ -464,6 +507,7 @@ it: chiude su frana
 pt: obstrução por desmoronamento
 ru: блокировано обвалом
 sk: zavalený koniec
+sq: gurre rrjedhes-fund
 
 therion: line floor-step
 cz: stupeň
@@ -476,6 +520,7 @@ it: gradino
 pt: degrau
 ru: уступ пола
 sk: stupeň
+sq: shkalle ne dysheme
 
 therion: line overhang
 cz: převis
@@ -489,6 +534,7 @@ pt_BR: projeção
 pt_PT: projecção
 ru: нависание потолка
 sk: previs
+sq: varese
 
 therion: line floor-meander
 cz: meandr ve dně
@@ -501,6 +547,7 @@ it: meandro
 pt: meandro no piso
 ru: меандр, канал в полу
 sk: meander v dne
+sq: rrjedhe uji gjarperore
 
 therion: line pit
 cz: propast
@@ -514,6 +561,7 @@ it: pozzo
 pt: desnível
 ru: колодец
 sk: priepasť
+sq: ngjitje
 
 therion: line ceiling-step
 cz: změna výšky stropu
@@ -527,6 +575,7 @@ pt_BR: degrau no teto
 pt_PT: degrau no tecto
 ru: уступ потолка
 sk: zmena výšky stropu
+sq: shkalle ne tavan
 
 therion: line ceiling-meander
 cz: stropní meandr
@@ -540,6 +589,7 @@ pt_BR: meandro no teto
 pt_PT: meandro no tecto
 ru: меандр, канал в потолке
 sk: stropný meander
+sq: rrjedhe uji gjarperore ne tavan
 
 therion: line chimney
 cz: komín
@@ -552,6 +602,7 @@ it: camino
 pt: chaminé
 ru: труба
 sk: komín
+sq: oxhak
 
 therion: line gradient
 cz: sklon chodby
@@ -564,6 +615,7 @@ it: scivolo
 pt: declividade da galeria
 ru: уклон хода
 sk: sklon chodby
+sq: pjertesia e kalimit
 
 therion: point gradient
 cz: sklon chodby
@@ -576,6 +628,7 @@ it: scivolo
 pt: declividade da galeria
 ru: уклон хода
 sk: sklon chodby
+sq: pjertesia e kalimit
 
 therion: point height
 cz: výška stupně/komínu/hloubka propasti
@@ -588,6 +641,7 @@ it: altezza
 pt: altura do chão para degrau/chaminé/desnível
 ru: высота уступа/трубы/колодца
 sk: výška/hĺbka stupňa/komína
+sq: lartesia e shkalles ne dysheme/oxhaku/thellesia e leshimit
 
 therion: point dimensions
 cz: rozměry
@@ -599,6 +653,7 @@ it: dimensione
 pt: dimensões
 ru: размеры хода
 sk: rozmery
+sq: dimenzionet
 
 therion: point height:unsigned
 cz: výška stupně
@@ -611,6 +666,7 @@ it: altezza camino
 pt: altura do degrau no chão
 ru: высота уступа
 sk: výška stupňa
+sq: lartesia e shkalles se dyshemes
 
 therion: point height:positive
 cz: výška komínu
@@ -623,6 +679,7 @@ it: altezza camino
 pt: altura da chaminé
 ru: высота трубы
 sk: výška komína
+sq: lartesia e oxhakut
 
 therion: point height:negative
 cz: hloubka propasti
@@ -635,6 +692,7 @@ it: prodondità pozzo
 pt: profundidade do desnível
 ru: высота колодца
 sk: hĺbka priepasti
+sq: thellesia e leshimit
 
 therion: line contour
 cz: vrstevnice
@@ -647,6 +705,7 @@ it: contorno
 pt: contorno
 ru: контур
 sk: vrstevnica
+sq: kontura
 
 therion: line slope
 cz: svah
@@ -659,6 +718,7 @@ it: scivolo
 pt: declive
 ru: склон
 sk: šikmá plocha
+sq: breg
 
 therion: line rock-border
 cz: kameny
@@ -671,6 +731,7 @@ it: bordo masso
 pt: lateral da rocha
 ru: внешний кромка глыбы
 sk: obrys kameňa
+sq: kufij shkembinjsh
 
 therion: line rock-edge
 cz: hrany kamenů
@@ -683,6 +744,7 @@ it: spigolo masso
 pt: bordas da rocha
 ru: внутренняя кромка глыбы
 sk: hrany kameňa
+sq: skaji I shkembit
 
 therion: point bedrock
 cz: pevná skála
@@ -695,6 +757,7 @@ it: roccia
 pt: rocha encaixante
 ru: коренная порода
 sk: pevná skala
+sq: shtrat shkembi
 
 therion: point blocks
 cz: kamenné bloky
@@ -707,6 +770,7 @@ it: massi
 pt: blocos, desmoronamento
 ru: глыбы, завал
 sk: kamenné bloky
+sq: blloqe, shembje
 
 therion: point debris
 cz: štěrk
@@ -719,6 +783,7 @@ it: detriti
 pt: escombros
 ru: щебень
 sk: sutina
+sq: mbetje-mbeturina
 
 therion: point sand
 cz: písek
@@ -731,6 +796,7 @@ it: sabbia
 pt: areia
 ru: песок
 sk: piesok
+sq: rane
 
 therion: point clay
 cz: bahno
@@ -743,6 +809,7 @@ it: argilla
 pt: lama
 ru: глина
 sk: íl
+sq: argjil
 
 therion: point water
 cz: voda
@@ -755,6 +822,7 @@ it: acqua
 pt: água
 ru: вода
 sk: voda
+sq: uje
 
 therion: point ice
 cz: led
@@ -767,6 +835,7 @@ it: ghiaccio
 pt: gelo
 ru: лёд
 sk: ľad
+sq: akull
 
 therion: point snow
 cz: sníh
@@ -779,6 +848,7 @@ it: neve
 pt: neve
 ru: снег
 sk: sneh
+sq: bore
 
 therion: point pebbles
 cz: valouny
@@ -791,6 +861,7 @@ it: ciotoli
 pt: seixos
 ru: галька
 sk: okruhliaky
+sq: gurralece
 
 therion: point raft
 cz: náplav
@@ -803,6 +874,7 @@ it: calcite flottante
 pt: jangada
 ru: высыпка
 sk: náplav
+sq: trap-skele
 
 therion: point guano
 cz: guano
@@ -815,6 +887,7 @@ it: guano
 pt: guano
 ru: гуано
 sk: guáno
+sq: jashteqitje e lakuriqeve-guano
 
 therion: line border
 cz: ohraničení
@@ -827,6 +900,7 @@ it: bordo
 pt: borda
 ru: граница
 sk: ohraničenie
+sq: kufiri
 
 therion: line border:visible
 cz: ohraničení
@@ -839,6 +913,7 @@ it: bordo
 pt: borda
 ru: видимая граница
 sk: ohraničenie
+sq: vije kufiri-e dukshme
 
 therion: line border:temporary
 cz: nestálé ohraničení
@@ -851,6 +926,7 @@ it: bordo temporaneo
 pt: borda temporária
 ru: временная граница
 sk: nestále ohraničenie
+sq: kufij i perkohshem
 
 therion: line border:presumed
 cz: předpokládané ohraničení
@@ -863,6 +939,7 @@ it: bordo presunto
 pt: borda presumida
 ru: предполагаемая граница
 sk: predpokladané ohraničenie
+sq: kufij I supozuar
 
 therion: area water
 cz: vodní plocha
@@ -875,6 +952,7 @@ it: acqua
 pt: água
 ru: вода
 sk: vodná plocha
+sq: uje
 
 therion: area sump
 cz: sifon
@@ -887,6 +965,7 @@ it: sifone
 pt: sifão
 ru: сифон
 sk: zatopená plocha (sifón)
+sq: sifoni
 
 therion: area snow
 cz: sníh
@@ -899,6 +978,7 @@ it: neve
 pt: neve
 ru: снег
 sk: sneh
+sq: bore
 
 therion: area ice
 cz: led
@@ -911,6 +991,7 @@ it: ghiaccio
 pt: gelo
 ru: лёд
 sk: ľad
+sq: akull
 
 therion: area sand
 cz: písek
@@ -923,6 +1004,7 @@ it: sabbia
 pt: areia
 ru: песок
 sk: piesok
+sq: rane
 
 therion: area clay
 cz: bahno
@@ -935,6 +1017,7 @@ it: argilla
 pt: lama
 ru: глина
 sk: íl
+sq: argjil
 
 therion: area pebbles
 cz: valouny
@@ -947,6 +1030,7 @@ it: ciotoli
 pt: seixos
 ru: галька
 sk: okrúhliaky
+sq: gurralece
 
 therion: area debris
 cz: štěrk
@@ -959,6 +1043,7 @@ it: detriti
 pt: escombros
 ru: щебень
 sk: štrk
+sq: mbetje-gurresh
 
 therion: area blocks
 cz: skalní bloky
@@ -971,6 +1056,7 @@ it: massi
 pt: blocos
 ru: навал глыб
 sk: skalné bloky
+sq: blloqe
 
 therion: line water-flow
 cz: vodní tok
@@ -983,6 +1069,7 @@ it: corso d'acqua
 pt: fluxo de água
 ru: водоток
 sk: vodný tok
+sq: rrjedhe uji
 
 therion: point water-flow
 cz: vodní tok
@@ -995,6 +1082,7 @@ it: corso d'acqua
 pt: fluxo de água
 ru: водоток
 sk: vodný tok
+sq: rrjedhe uji
 
 therion: line water-flow:permanent
 cz: vodní tok
@@ -1007,6 +1095,7 @@ it: corso d'acqua permanente
 pt: fluxo de água permanente
 ru: постоянный водоток
 sk: vodný tok
+sq: rrjedhe uji e perhershme
 
 therion: point water-flow:permanent
 cz: vodní tok
@@ -1019,6 +1108,7 @@ it: corso d'acqua permanente
 pt: fluxo de água permanente
 ru: постоянный водоток
 sk: vodný tok
+sq: rrjedhe uji e perhershme
 
 therion: line water-flow:intermittent
 cz: občasný vodní tok
@@ -1031,6 +1121,7 @@ it: corso d'acqua temporaneo
 pt: fluxo de água intermitente
 ru: непостоянный водоток
 sk: občasný vodný tok
+sq: rrjedhe uji me force
 
 therion: point water-flow:intermittent
 cz: občasný vodní tok
@@ -1043,6 +1134,7 @@ it: corso d'acqua temporaneo
 pt: fluxo de água intermitente
 ru: непостоянный водоток
 sk: občasný vodný tok
+sq: rrjedhe uji me force
 
 therion: line water-flow:conjectural
 cz: předpokládaný vodní tok
@@ -1055,6 +1147,7 @@ it: corso d'acqua presunto
 pt: fluxo de água suposto
 ru: предполагаемый водоток
 sk: predpokladaný vodný tok
+sq: rrjedhe uji e supozuar
 
 therion: point water-flow:paleo
 cz: paleořečiště
@@ -1067,6 +1160,7 @@ it: paleocorso d'acqua
 pt: paleo-fluxo de água
 ru: палео-поток
 sk: paleoriečisko
+sq: rrjedhe uji e vjeter
 
 therion: point spring
 cz: vývěr
@@ -1079,6 +1173,7 @@ it: sorgente
 pt: nascente
 ru: исток
 sk: výver
+sq: burim
 
 therion: point sink
 cz: ponor
@@ -1091,6 +1186,7 @@ it: perdita
 pt: sumidouro
 ru: сток
 sk: ponor
+sq: pus
 
 therion: point flowstone
 cz: sintr
@@ -1103,6 +1199,7 @@ it: concrezione
 pt: escorrimento
 ru: натек
 sk: sinter
+sq: gurre-rrjedhes
 
 therion: line flowstone
 cz: sintrové náteky
@@ -1115,6 +1212,7 @@ it: concrezione
 pt: escorrimento
 ru: натечный каскад
 sk: sintrové náteky
+sq: gurre-rrjedhes
 
 therion: point moonmilk
 cz: nickamínek
@@ -1127,14 +1225,17 @@ it: moonmilk
 pt: leite-de-lua
 ru: лунное молоко
 sk: mäkký sinter
+sq: qumesht-hena
 
 therion: line moonmilk
 cz: nickamínek
+de: Mondmilch
 el: γάλα σπηλαίου
 fr: mondmilch
 it: moonmilk
 ru: лунное молоко
 sk: náteky mäkkého sintra
+sq: qumesht-hena
 
 therion: point stalactite
 cz: stalaktit
@@ -1147,6 +1248,7 @@ it: stalattite
 pt: estalactite
 ru: сталактит
 sk: stalaktit
+sq: stalaktit
 
 therion: point stalagmite
 cz: stalagmit
@@ -1159,6 +1261,7 @@ it: stalagmite
 pt: estalagmite
 ru: сталагмит
 sk: stalagmit
+sq: stalagmit
 
 therion: point pillar
 cz: stalagnát
@@ -1171,6 +1274,7 @@ it: colonna
 pt: coluna
 ru: колонна
 sk: stalagnát
+sq: shtylle
 
 therion: point curtain
 cz: sintrové záclony
@@ -1183,6 +1287,7 @@ it: cortina
 pt: cortina
 ru: натечный занавес
 sk: sintrové záclony
+sq: perde
 
 therion: point soda-straw
 cz: brčka
@@ -1196,6 +1301,7 @@ pt: canudos
 pt_PT: tubulares
 ru: сталактиты-соломины
 sk: brčká
+sq: shkopinje sode
 
 therion: point popcorn
 cz: pizolity
@@ -1208,6 +1314,7 @@ it: cavolfiore
 pt: couve-flor
 ru: коралиты
 sk: pizolity
+sq: palagaqa-kokorroshka
 
 therion: point cave-pearl
 cz: jeskynní perly
@@ -1221,6 +1328,7 @@ pt_BR: pérolas
 pt_PT: pérolas de Gruta
 ru: пещерный жемчуг
 sk: jaskynné perly
+sq: margaritar te shpelles
 
 therion: point disk
 cz: disk
@@ -1233,6 +1341,7 @@ it: disco
 pt: disco
 ru: диск
 sk: disk
+sq: pllake
 
 therion: point helictite
 cz: heliktit
@@ -1246,6 +1355,7 @@ pt_BR: helictite
 pt_PT: excêntrica
 ru: геликтиты
 sk: heliktit
+sq: heliktite
 
 therion: point aragonite
 cz: aragonit
@@ -1259,6 +1369,7 @@ pt_BR: aragonita
 pt_PT: aragonite
 ru: арагонит
 sk: aragonit
+sq: aragonite
 
 therion: point crystal
 cz: krystal
@@ -1271,6 +1382,7 @@ it: cristallo
 pt: cristal
 ru: кристаллы
 sk: kryštál
+sq: kristale
 
 therion: point wall-calcite
 cz: vápencový povlak
@@ -1284,6 +1396,7 @@ pt_BR: parede de calcita
 pt_PT: parede de calcite
 ru: настенный кальцит
 sk: vápencový povlak
+sq: kalcit-muri
 
 therion: point gypsum
 cz: sádrovec
@@ -1296,6 +1409,7 @@ it: gesso
 pt: gipsita
 ru: гипс
 sk: sádrovec
+sq: gjips
 
 therion: point gypsum-flower
 cz: sádrovcový květ
@@ -1308,6 +1422,7 @@ it: fiore di gesso
 pt: flor de gipsita
 ru: гипсовые цветы
 sk: sádrovcový kvet
+sq: lule gjipsi
 
 therion: point rimstone-dam
 cz: sintrová hrázka
@@ -1320,6 +1435,7 @@ it: gour
 pt: travertino
 ru: гуры без воды
 sk: sintrová hrádza
+sq: penda guri
 
 therion: point rimstone-pool
 cz: sintrové jezírko
@@ -1332,6 +1448,7 @@ it: vasca
 pt: lago travertino
 ru: гуры с водой
 sk: sintrové jazierko
+sq: vaska uji
 
 therion: point anastomosis
 cz: anastomóza
@@ -1344,6 +1461,7 @@ it: anastomosi
 pt: anastomose
 ru: анастомозис
 sk: anastomóza
+sq: anastomosa(kuartz)
 
 therion: point karren
 cz: škrapy
@@ -1356,6 +1474,7 @@ it: karren
 pt: lapiás
 ru: карры
 sk: škrapy
+sq: karreni
 
 therion: point scallop
 cz: erozní útvary
@@ -1368,6 +1487,7 @@ it: scallop
 pt: marcas de fluxo
 ru: фасетки
 sk: lastúrovité jamky
+sq: guacat
 
 therion: point flute
 cz: píšťaly
@@ -1380,6 +1500,7 @@ it: scanalatura
 pt: marcas de fluxo
 ru: канавки
 sk: píšťaly
+sq: flauta
 
 therion: point raft-cone
 cz: náplavový kužel
@@ -1392,6 +1513,7 @@ it: calcite flottante
 pt: cone de jangada
 ru: высыпной конус
 sk: náplavový kužeľ
+sq: rrjedhe uji konike
 
 therion: point archeo-material
 cz: archeologické nálezy
@@ -1404,6 +1526,7 @@ it: materiale archeologico
 pt: material arqueológico
 ru: археологическая находка
 sk: archeologické nálezy
+sq: material arkeologjik
 
 therion: point paleo-material
 cz: paleontologické nálezy
@@ -1416,6 +1539,7 @@ it: materiale paleologico
 pt: material paleontológico
 ru: палео-находка
 sk: paleontologické nálezy
+sq: paleo-material
 
 therion: point vegetable-debris
 cz: zbytky rostlin
@@ -1428,6 +1552,7 @@ it: detriti vegetali
 pt: restos vegetais
 ru: останки растительности
 sk: zvyšky rastlín
+sq: mbetje perimesh
 
 therion: point root
 cz: kořeny
@@ -1440,6 +1565,7 @@ it: radice
 pt: raiz
 ru: корни растений
 sk: korene
+sq: rrenje
 
 therion: point no-equipment
 cz: nevystrojené místo
@@ -1452,6 +1578,7 @@ it: senza armo
 pt: local sem equipamento
 ru: снаряжение отутствует!
 sk: nevystrojené miesto
+sq: vend pa pajisje
 
 therion: point anchor
 cz: kotvení
@@ -1464,6 +1591,7 @@ it: ancoraggio
 pt: ancoragem
 ru: ИТО
 sk: kotvenie
+sq: pike-sigurimi
 
 therion: point rope
 cz: lano
@@ -1476,6 +1604,7 @@ it: corda
 pt: corda
 ru: линейная опора
 sk: lano
+sq: litar
 
 therion: point rope-ladder
 cz: lanový žebřík
@@ -1488,6 +1617,7 @@ it: scala di corda
 pt: escada de corda
 ru: гибкая лестница
 sk: lanový rebrík
+sq: shkalle litari
 
 therion: point fixed-ladder
 cz: pevný žebřík
@@ -1500,6 +1630,7 @@ it: scala fissa
 pt: escada fixa
 ru: жесткая лестница
 sk: fixný rebrík
+sq: shkalle fikse
 
 therion: point steps
 cz: schody
@@ -1512,6 +1643,7 @@ it: scalini
 pt: degraus
 ru: ступени
 sk: schody
+sq: shkalle
 
 therion: point traverse
 cz: traverz
@@ -1524,6 +1656,7 @@ it: traverso
 pt: travessia
 ru: троллей
 sk: traverz
+sq: kalim anesore
 
 therion: point bridge
 cz: most
@@ -1536,6 +1669,7 @@ it: ponte di roccia
 pt: ponte
 ru: мост
 sk: most
+sq: ure
 
 therion: point camp
 cz: bivak
@@ -1548,6 +1682,7 @@ it: campo
 pt: acampamento
 ru: ПБЛ
 sk: bivak
+sq: vend-pushim
 
 therion: point remark
 cz: poznámka
@@ -1559,6 +1694,7 @@ it: nota
 pt: anotação
 ru: заметка
 sk: poznámka
+sq: shenim
 
 therion: point label
 cz: pojmenování
@@ -1570,6 +1706,7 @@ it: etichetta
 pt: indicação
 ru: текстовая метка
 sk: pomenovanie
+sq: mbishkrim-etiket
 
 therion: line label
 cz: pojmenování
@@ -1581,6 +1718,7 @@ it: etichetta
 pt: indicação
 ru: текстовая метка
 sk: pomenovanie
+sq: mbishkrim
 
 therion: title legend
 cz: Legenda
@@ -1593,6 +1731,7 @@ it: Legenda
 pt: Legenda
 ru: Условные обозначения
 sk: Legenda
+sq: permbajtja
 
 therion: title color-legend-altitude
 cz: Nadmořské výšky
@@ -1605,6 +1744,7 @@ it: Profondità
 pt: Altitudes
 ru: Высотная шкала
 sk: Nadmorské výšky
+sq: titulli ngjyra-permbajtja-lartesia mbidetare
 
 therion: title color-legend-map
 cz: Mapy
@@ -1617,6 +1757,7 @@ it: Mappa
 pt: Mapas
 ru: Карты
 sk: Mapy
+sq: hartat
 
 therion: units ft
 cz: ft
@@ -1629,6 +1770,7 @@ it: ft
 pt: pés
 ru: футов
 sk: ft
+sq: njesia matese-kembe
 
 therion: title cave length
 cz: Délka
@@ -1641,6 +1783,7 @@ it: Sviluppo
 pt: Extensão
 ru: Длина
 sk: Dĺžka
+sq: gjatesia
 
 therion: units m
 cz: m
@@ -1653,6 +1796,7 @@ it: m
 pt: m
 ru: м
 sk: m
+sq: njesia matese-metri
 
 therion: title cave depth
 cz: Převýšení
@@ -1665,10 +1809,11 @@ it: Profondità
 pt: Desnível
 ru: Глубина
 sk: Prevýšenie
+sq: thellesia
 
 therion: title explo (plural)
 cz: Objevili
-de: Erforscht von
+de: Entdeckung
 el: Εξερευνητές
 en: Explored by
 es: Exploración
@@ -1677,10 +1822,11 @@ it: Esplorazione
 pt: Exploradas por
 ru: Исследование
 sk: Objavili
+sq: hulumtuar nga
 
 therion: title explo
 cz: Objevil
-de: Erforscht von
+de: Entdeckung
 el: Εξερευνητής
 en: Explored by
 es: Exploración
@@ -1689,10 +1835,11 @@ it: Esplorazione
 pt: Explorada por
 ru: Исследование
 sk: Objavil
+sq: hulumtuar nga
 
 therion: title topo (plural)
 cz: Měřili
-de: Vermessen von
+de: Vermessung
 el: Χαρτογραφήθηκε από τους
 en: Surveyed by
 es: Espeleometría
@@ -1701,10 +1848,11 @@ it: Topografia
 pt: Topografadas por
 ru: Съемка
 sk: Zamerali
+sq: matur nga
 
 therion: title topo
 cz: Měřil
-de: Vermessen von
+de: Vermessung
 el: Χαρτογραφήθηκε από τον
 en: Surveyed by
 es: Topografía
@@ -1713,10 +1861,11 @@ it: Topografia
 pt: Topografada por
 ru: Съемка
 sk: Zameral
+sq: matur nga
 
 therion: title carto (plural)
 cz: Kreslili
-de: Gezeichnet von
+de: Zeichnung
 el: Σκαρίφημα
 en: Drawn by
 es: Cartografía
@@ -1725,10 +1874,11 @@ it: Cartografia
 pt: Desenhadas por
 ru: Камеральная обработка
 sk: Kreslili
+sq: vizatuar nga
 
 therion: title carto
 cz: Kreslil
-de: Gezeichnet von
+de: Zeichnung
 el: Σκαρίφημα
 en: Drawn by
 es: Cartografía
@@ -1737,6 +1887,7 @@ it: Cartografia
 pt: Desenhada por
 ru: Камеральная обработка
 sk: Kreslil
+sq: vizatuar nga
 
 therion: title preview above
 cz: [Náhled horních vrstev]
@@ -1749,6 +1900,7 @@ it: Anteprima sopra
 pt: [Visualização acima]
 ru: [Вид выше]
 sk: [Náhľad horných vrstiev]
+sq: parashiqimi lart
 
 therion: title preview below
 cz: [Náhled dolních vrstev]
@@ -1761,6 +1913,7 @@ it: Anteprima sotto
 pt: [Visualização abaixo]
 ru: [Вид ниже]
 sk: [Náhľad spodných vrstiev]
+sq: parashiqimi perfundi
 
 therion: title surface bitmap
 cz: [Povrchová mapa]
@@ -1773,4 +1926,5 @@ it: Mappa superficie
 pt: [Mapa de superfície]
 ru: [Карта поверхности]
 sk: [Povrchová mapa]
+sq: harta e siperfaqes
 

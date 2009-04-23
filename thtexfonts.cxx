@@ -42,6 +42,7 @@
 #include "thtexenc.cxx"
 #include "thpdfdbg.h"
 #include "thinit.h"
+#include "thpdfdata.h"
 
 #ifndef NOTHERION
 #include "thbuffer.h"
@@ -140,7 +141,7 @@ void encodings_new::write_enc_files() {
 //        " -fkern --no-default-ligkern --name " + fname_tfm +
 //        type1 + " --warn-missing "+otf_file[i]+" > thotftfm.tmp").c_str()) > 0)
         type1 + otf_file[i]+" > thotftfm.tmp").c_str()) > 0)
-          therror((("can't generate TFM file from "+otf_file[i]).c_str()));
+          therror((("can't generate TFM file from "+otf_file[i]+" (LCDF typetools not installed?)").c_str()));
       ifstream G ("thotftfm.tmp");
       if (!G) therror(("could not read font mapping data\n"));
       while (G) {
@@ -283,6 +284,37 @@ string replace_all(string s, string f, string r) {
   return s;
 }
 
+// easier to use brute force than to link regex on all platforms :(
+string select_lang(string s, string lang) {
+  size_t i,j;
+  if (s.find("<lang:") != string::npos) {
+    i = s.find("<lang:"+lang+">");
+    if (i != string::npos) {  // precise match
+      i = s.find(">",i);
+      j = s.find("<lang:",i);
+      return s.substr(i+1,(j==string::npos? string::npos : j-i-1));
+    }
+    if (lang.length()==5) {
+      lang = lang.substr(0,2);
+      i = s.find("<lang:"+lang+">");
+      if (i != string::npos) {  // match main language part
+        i = s.find(">",i);
+        j = s.find("<lang:",i);
+        return s.substr(i+1,(j==string::npos? string::npos : j-i-1));
+      }
+    }
+    i = s.find("<lang:"+lang);
+    if (i != string::npos) {  // match any of dialects if no main part is present
+      i = s.find(">",i);
+      j = s.find("<lang:",i);
+      return s.substr(i+1,(j==string::npos? string::npos : j-i-1));
+    }
+    i = s.find("<lang:");  // no match, use everything before first lang as a default
+    return s.substr(0,i);
+  }
+  return s;
+}
+
 // main task is done here
 
 #define SELFONT if (ENC_NEW.NFSS == 0 && lastenc!=-1) T << "\\thf" << u2str(lastenc+1)
@@ -296,6 +328,8 @@ string utf2tex(string str, bool remove_kerning) {
   int align = 0;
   bool rtl = false;
   bool is_multiline = false;
+
+  str = select_lang(str, LAYOUT.langstr);
 
   if (str.find("<center>") != string::npos) align = 1;
   else if (str.find("<centre>") != string::npos) align = 1;

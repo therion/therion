@@ -1,4 +1,15 @@
-v lochu odlisit splay a duplicate shoty
+Pacher: 
+  * obrovske patterny
+  * interim bboxmargin:=0 bez skupiny pri l_wall_ice
+  * systemove farbenie znaciek
+  * --print-symbols: nepodchyti vsetky patterny 
+    (nie vsetky znacky v LEGENDLISTE? -- chybaju v ALL_PATTERNS)
+
+podpora NFSS pri --print-symbols (ENC_NEW.write_enc_files(); + skopirovat fonty)
+
+do sql: ostatne flagy; commenty pre stations
+
+(mutton) ATTR__scale pre vsetky znacky v MP
 
 pri kresleni s xvi na pozadi: ak nad mer. bod v xvi vkladam dva mer. body, druhy
   ma nespravne meno

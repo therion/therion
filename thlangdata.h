@@ -23,6 +23,7 @@ enum {
   THLANG_PT_PT = 11,
   THLANG_RU = 12,
   THLANG_SK = 13,
+  THLANG_SQ = 14,
 };
 
  

@@ -1,0 +1,15 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: -5 -3 9 6 
+%%Creator: MetaPost
+%%CreationDate: 2009.02.13:1551
+%%Pages: 1
+%%EndProlog
+%%Page: 1 1
+ 0 0.6 dtransform truncate idtransform setlinewidth pop [] 0 setdash
+ 1 setlinecap 1 setlinejoin 10 setmiterlimit
+newpath -4.20007 0 moveto
+-2.33337 -3.23323 2.33337 -3.23323 4.20007 0 curveto stroke
+newpath 0 4.79993 moveto
+1.8667 1.5667 6.53345 1.5667 8.40015 4.79993 curveto stroke
+showpage
+%%EOF

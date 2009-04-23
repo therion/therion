@@ -1,10 +1,10 @@
+nastavitelny okraj vyplne pod legendou (0 pre map-image!)
+
 metapost: warningy len v debug mode; interaktivny mod pre -d (s vysvetlenim v thbooku, ktore premenne pouzit)
 
 do thbooku vysvetlenie o georeferencovani pdf z mailu muttonovi
 
 do thbooku vysvetlenie o debugovani MP (mail muttonovi 15.1.09 
-
-poriadne zvacsit podklad pod legendou
 
 zvacsovanie fontov v suradniciach
 
@@ -13,20 +13,6 @@ pri reze grid vpravo pretrca cez mapu (postupne skladanie)
 
 v atlase nie je moznost pouzit mierku a sever pred vlozenim map (formdef vkladat uz v data.tex)
 rozmery zrkadla sadzby zmenit len pre mapy, nie pre uvod a legendu
-
-
-Mutton: 
-  Where elevations are perpendicular to the co-ord system grid (viewed N, S, W, or E) then vertical grid lines (or positions if you use the default cross hairs) would be appropriate, but there is no option for this at present.  (This applies to map outputs as well)
-
-  Using the ‘origin’ and ‘origin-label’ works well in standalone plan view but seem to work poorly when trying to use a consistent 3 dimensional tessellation for a set of plans and elevations orthogonal  to the co-ordinate system. (Of course it would not work very easily in concept it were not orthogonal – and keeping a single three dimensional atlas origin point)
-  As per the attached, I have set the atlas origin so that the atlas plan with origin at bottom left is called X 12 in the navigation box, and so that the atlas elevation with origin at bottom left should be 5 X.  The atlas page is setup so that the drawing length along each of the pages is the same (ie PLAN size + 2xoverlap = ELEV size + 2x overlap).
-  What I find is that the elevation labelling is incorrect (ie the origin sheet for the elevation is labelled 5 V, (not 5 X) and that because my elevation is looking west, the labels increase in the wrong direction.
-
-
-
-
-[[pri definovani globalnych funkcii, typov a premennych pouzivat prefix "th" 
-   resp. "TH" (napr. thprint_tex_encodings, THFONTS)]]
 
 
 mapy vseobecne:
