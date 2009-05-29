@@ -440,6 +440,14 @@ void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double
     tz = 0.0;
   }
 
+  if ((this->cs != TTCS_LOCAL) && thcsdata_table[this->cs].dms) {
+    if ((tx < - THPI) || (tx > THPI))
+      ththrow(("longitude out of range -- %s", thcsdata_table[this->cs].swap ? src_y : src_x));
+
+    if ((ty < (- THPI / 2)) || (ty > (THPI / 2)))
+      ththrow(("latitude out of range -- %s", thcsdata_table[this->cs].swap ? src_x : src_y));
+  }
+
   if (!thcfg.outcs_def.is_valid()) {
     if ((this->cs != TTCS_LOCAL) && (!thcsdata_table[this->cs].output)) {
       // TODO: get NS

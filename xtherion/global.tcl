@@ -469,18 +469,38 @@ proc xth_incr_station_name {oname iii} {
   } else {
     set svname {}
   }
-  if {[regexp {^\d+$} $oname]} {
-    incr oname $iii
-    return "$oname$svname"
-  } elseif {[regexp {^(.*\D)(\d+)$} $oname dumm s1 s2]} {
+  if {[regexp {^0*(\d+)$} $oname dum s2]} {
+    set numlen [string length $dum]
     incr s2 $iii
-    return "$s1$s2$svname"
-  } elseif {[regexp {^(\d+)(\D.*)$} $oname dumm s2 s1]} {
-    incr s2 $iii
-    return "$s2$s1$svname"
-  } else {
-    return "$oname$svname"
+    if {[string length $s2] < $numlen} {
+      set s2 [format [join [list "%0" $numlen d] ""] $s2]
+    }
+    return "$s2$svname"
   }
+  if {[regexp {^(.*\D)(0*(\d+))$} $oname dumm s1 s3 s2]} {
+    set numlen [string length $s3]
+    incr s2 $iii
+    if {[string length $s2] < $numlen} {
+      set s2 [format [join [list "%0" $numlen d] ""] $s2]
+    }
+    return "$s1$s2$svname"
+  } 
+  if {[regexp {^(.*)(\D)$} $oname dumm s2 s1]} {
+    set avs1 [scan $s1 %c]
+    if {(($avs1 >= 65) && ($avs1 < 90)) || (($avs1 >= 97) && ($avs1 < 122))} {
+      incr avs1
+      return "$s2[format %c $avs1]$svname"
+    }
+  } 
+  if {[regexp {^(0*(\d+))(\D.*)$} $oname dumm s3 s2 s1]} {
+    set numlen [string length $s3]
+    incr s2 $iii
+    if {[string length $s2] < $numlen} {
+      set s2 [format [join [list "%0" $numlen d] ""] $s2]
+    }
+    return "$s2$s1$svname"
+  } 
+  return "$oname$svname"
 }
 
 

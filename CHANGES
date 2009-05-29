@@ -38,7 +38,7 @@ xtherion:
    - centerline in text editor - File->Import->PocketTopo therion export
    - sketches in map editor - Backgroud Images->Insert->PocketTopo therion export
  * bugs fixed: 
-   - 
+   - increasing of station numbers with leadeing zeros or trailing letters
    
 loch:
 

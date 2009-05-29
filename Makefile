@@ -193,7 +193,7 @@ clean:
 	perl makefile.pl rm -q mpost/*~ examples/*~ examples/therion.log
 	perl makefile.pl rm -q core symbols.xhtml cave.kml
 	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
-	perl makefile.pl rm -q cave.3d cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
+	perl makefile.pl rm -q cave.3d cave.lox cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
 	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
 	perl makefile.pl rmdir -q doc thTMPDIR samples.doc symbols cave.shp tests/.doc
 

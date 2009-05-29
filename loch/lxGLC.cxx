@@ -140,9 +140,8 @@ lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat,
   this->m_maxTSizeO = 0;
   this->m_maxTSizeS = 0;
 
-  this->SetCurrent();    
-  glGenTextures(1, &this->m_idTexSurface);
-  glGenTextures(1, &this->m_idTexStation);
+  this->SetCurrent();  
+  this->m_initTextures = true;
 
 }
 
@@ -328,6 +327,10 @@ void lxGLCanvas::UpdateRenderContents()
       this->data->m_textureSurface.CreateTexImages(this->m_maxTSizeS, this->m_maxTSizeO);
       if (this->m_isO)
         this->OSCMakeCurrent();      
+    }
+    if (this->m_initTextures) {
+      glGenTextures(1, & this->m_idTexSurface);
+      glGenTextures(1, & this->m_idTexStation);
     }
     glBindTexture(GL_TEXTURE_2D, this->m_idTexSurface);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);

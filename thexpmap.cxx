@@ -501,7 +501,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
       ff = cl->from.id - 1;
       tt = cl->to.id - 1;
 
-      if (isexp[ff] && isexp[tt]) {
+      if (isexp[ff] && isexp[tt] && ((cl->extend & TT_EXTENDFLAG_HIDE) != 0)) {
 
         cs = &(thdb.db1d.station_vec[ff]);
         cx = sf * cl->fxx;

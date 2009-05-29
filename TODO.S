@@ -8,6 +8,8 @@ HOT LIST:
 + thbook: flags arch & overhang
 + thbook: export cave-list -surveys (on)|off
 
++ changes: fixed bug with lat/long out of range
+
 + loch entrance/fix/station/label off-screen rendering
 + loch surface handling
 + add options menu to xtherion

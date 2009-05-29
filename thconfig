@@ -1,1 +1,13 @@
-input samples/temp/guix_bug/guix_bug.thconfig
+source
+
+survey x
+centerline
+  cs epsg:4277
+  fix 1 200 200 0
+endcenterline
+endsurvey
+
+endsource
+
+#cs UTM34
+export map

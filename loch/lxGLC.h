@@ -75,7 +75,7 @@ class lxGLCanvas: public wxGLCanvas {
 
     ~lxGLCanvas();
 
-    GLuint m_idTexSurface, m_idTexStation;
+    GLuint m_idTexSurface, m_idTexStation, m_initTextures;
 
     // screen funkcie a premenne
     GLuint m_sList, m_oList, m_sFixList, m_sEntList, m_sStList,
