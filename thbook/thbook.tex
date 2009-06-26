@@ -223,6 +223,21 @@
     \pdfendlink
   \fi}
 
+\def\NEW#1{\ifdim#1pt>5.2pt%
+       \leavevmode\vadjust{%
+          \vbox to 0pt{%
+	    \vss
+	    \line{%
+	      \ifodd\pageno\hfil\fi
+	      \raise2.3pt\ifodd\pageno\expandafter\rlap\else\expandafter\llap\fi
+	      {\ifodd\pageno\quad\fi\grey\tenit #1\POPcolor\ifodd\pageno\else\quad\fi}%
+	      \ifodd\pageno\else\hfil\fi
+	    }%
+	  }%
+	}\ignorespaces\fi
+      }%
+
+
     
 \newcount\footnum \footnum 0    
 \long\def\[#1]{\unskip\global\advance\footnum by 1\footnote{$^{\the\footnum}$}{#1}}

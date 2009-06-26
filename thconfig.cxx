@@ -41,6 +41,7 @@
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thlogfile.h"
+#include "thinit.h"
 #include "thgeomag.h"
 #include "thgeomagdata.h"
 #include "thlayout.h"
@@ -63,6 +64,7 @@ enum {
   TT_SYSTEM,
   TT_SKETCH_WARP,
   TT_TEXT,
+  TT_LANG,
 };
 
 
@@ -71,6 +73,8 @@ static const thstok thtt_cfg[] = {
   {"cs", TT_OUTCS},
   {"endsource", TT_ENDSOURCE},
   {"export", TT_EXPORT},
+  {"lang", TT_LANG},
+  {"language", TT_LANG},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
   {"sketch-warp", TT_SKETCH_WARP},
@@ -366,6 +370,7 @@ void thconfig::load()
 {
   thmbuffer valuemb;
   int sv;
+  this->lang = thini.get_lang();
   long srcstart(0), srcend(-1);
   bool fstarted  = false;
   bool source_mode = false;
@@ -453,6 +458,15 @@ void thconfig::load()
   
           case TT_SELECT:
             this->selector.parse_selection(false, valuemb.get_size(), valuemb.get_buffer());
+            break;
+
+          case TT_LANG:
+            if (valuemb.get_size() != 1)
+              ththrow(("language specification requires single parameter"))
+            sv = thlang_parse(valuemb.get_buffer()[0]);
+            if (sv == THLANG_UNKNOWN)
+              ththrow(("language not supported -- %s",valuemb.get_buffer()[0]))
+            this->lang = sv;
             break;
 
           case TT_SYSTEM:
@@ -885,6 +899,10 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
   }
 }
 
+
+int thconfig::get_lang() {
+  return thlang_getlang(this->lang);
+}
 
 
 thconfig thcfg;

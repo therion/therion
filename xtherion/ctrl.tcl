@@ -75,7 +75,7 @@ proc xth_ctrl_add {aname cname title} {
     -fg white -bg darkBlue -activebackground lightBlue \
     -anchor w -relief flat \
     -takefocus 0
-  bind $ccf.rb <Button-3> "tk_popup .xth_popup$xth(ctrl,all,number) %X %Y"
+  bind $ccf.rb <Button-$xth(gui,rmb)> "tk_popup .xth_popup$xth(ctrl,all,number) %X %Y"
   xth_status_bar $aname $ccf.rb [mc "Show or hide this control panel"]
   
   pack $ccf.rb -side top -fill x -expand 1

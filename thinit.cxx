@@ -233,6 +233,12 @@ void thinit::copy_fonts() {
 }
 
 
+int thinit::get_lang() {
+  return thlang_getlang(this->lang);
+}
+
+
+
 void thinit::check_font_path(const char * fname, int index) {
 
   static thbuffer pfull, pshort, tmpb;

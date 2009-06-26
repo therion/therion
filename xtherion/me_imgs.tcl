@@ -512,7 +512,13 @@ proc xth_me_imgs_xvi_create {imgx} {
   # sketch lines
   set sklns $xth(me,imgs,$imgx,XVIsketchlines)
   for {set i 0} {$i < [llength $sklns]} {incr i} {
-    set cid [$xth(me,can) create line 0 0 1 1 -fill [lindex [lindex $sklns $i] 0] -width $xth(gui,xvi_sketch_line_width) -state hidden -tags [list $id [format "%sSKLN%d" $id $i]]]
+    set cclr [lindex [lindex $sklns $i] 0]
+    set cdash {}
+    if {[string equal $cclr connect]} {
+      set cclr gray
+      set cdash .
+    }
+    set cid [$xth(me,can) create line 0 0 1 1 -fill $cclr -dash $cdash -width $xth(gui,xvi_sketch_line_width) -state hidden -tags [list $id [format "%sSKLN%d" $id $i]]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]

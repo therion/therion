@@ -2207,7 +2207,7 @@ proc xth_me_cmds_draw_linept {id pid} {
   $xth(me,can) bind pt$id.$pid <Enter> "$highlight_on\n$xth(me,can) itemconfigure pt$id.$pid -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \[lindex \[regexp -inline -- {^\[^\\n\]*} \$xth(me,cmds,$id,data)\] 0\]\""
   $xth(me,can) bind pt$id.$pid <Leave> "$highlight_off\n$xth(me,can) itemconfigure pt$id.$pid -fill \[$xth(me,can) itemcget ln$id.$pid -fill\]; xth_status_bar_pop me"
   $xth(me,can) bind pt$id.$pid <1> "xth_me_cmds_click {$id $pid} pt$id.$pid \$xth(me,cmds,$id,$pid,x) \$xth(me,cmds,$id,$pid,y) %x %y"
-  $xth(me,can) bind pt$id.$pid <3> "xth_me_cmds_special_select {$id $pid} %x %y"  
+  $xth(me,can) bind pt$id.$pid <$xth(gui,rmb)> "xth_me_cmds_special_select {$id $pid} %x %y"  
   $xth(me,can) bind pt$id.$pid <Shift-1> "xth_me_cmds_special_select {$id $pid} %x %y"  
   $xth(me,can) bind pt$id.$pid <$xth(kb_control)-1> "xth_me_cmds_click_area pt$id.$pid %x %y"
 }

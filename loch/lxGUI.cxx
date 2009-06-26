@@ -37,6 +37,7 @@
 #include "lxAboutDlg.h"
 #include "lxSView.h"
 #include "lxSScene.h"
+#include "lxSTree.h"
 
 #include "icons/open.xpm"
 #include "icons/render.xpm"
@@ -142,7 +143,7 @@ DnDFile::OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames)
 lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     const wxSize& size, long style)
     : wxFrame(NULL, wxID_ANY, title, pos, size, style),
-    m_modelSetupDlg(NULL), m_modelSetupDlgOn(false),
+    m_modelSetupDlg(NULL), m_modelSetupDlgOn(false), m_selectionSetupDlg(NULL), m_selectionSetupDlgOn(false),
     m_viewpointSetupDlg(NULL), m_viewpointSetupDlgOn(false)
 {
 
@@ -310,6 +311,7 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     wxMenu *winMenu = new wxMenu;
     winMenu->AppendCheckItem(LXMENU_VIEW_VIEWPOINTSTP, _("&Camera"));
     winMenu->AppendCheckItem(LXMENU_VIEW_MODELSTP, _("&Scene"));
+    winMenu->AppendCheckItem(LXMENU_VIEW_SELECTIONSTP, _("&Selection"));
     winMenu->Append(LXMENU_EXPROT, _("&Animation"));
     winMenu->AppendSeparator();
     winMenu->Append(LXMENU_TOOLS_OPTIONS, _("&Options..."));
@@ -348,14 +350,24 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->m_modelSetupDlg = new lxModelSetupDlg(this);
     this->m_modelSetupDlgOn = false;
 
+    this->m_selectionSetupDlg = new lxModelTreeDlg(this);
+    this->m_selectionSetupDlgOn = false;
     wxSize csize = this->GetClientSize();
-    this->m_viewpointSetupDlg = new lxViewpointSetupDlg(this);
+
 #ifdef __WXMSW__
     lxTBoxPos::m_fsOffset = size.y - csize.y;
-    this->m_viewpointSetupDlg->m_toolBoxPosition.Set(1, size.x - csize.x, size.y - csize.y);
+    this->m_selectionSetupDlg->m_toolBoxPosition.Set(0, size.x - csize.x, size.y - csize.y);
 #else		
     wxSize tbsize = this->m_toolBar->GetSize();
     lxTBoxPos::m_fsOffset = size.y - csize.y + tbsize.y;
+    this->m_selectionSetupDlg->m_toolBoxPosition.Set(0, size.x - csize.x, size.y - csize.y + tbsize.y);
+#endif		
+
+    this->m_viewpointSetupDlg = new lxViewpointSetupDlg(this);
+#ifdef __WXMSW__
+    this->m_viewpointSetupDlg->m_toolBoxPosition.Set(1, size.x - csize.x, size.y - csize.y);
+#else		
+    tbsize = this->m_toolBar->GetSize();
     this->m_viewpointSetupDlg->m_toolBoxPosition.Set(1, size.x - csize.x, size.y - csize.y + tbsize.y);
 #endif		
     this->m_viewpointSetupDlgOn = false;
@@ -697,6 +709,10 @@ void lxFrame::OnAll(wxCommandEvent& event)
       this->ToggleModelSetup();
       break;
 
+    case LXMENU_VIEW_SELECTIONSTP:
+      this->ToggleSelectionSetup();
+      break;
+
     case LXMENU_VIEW_VIEWPOINTSTP:
       this->ToggleViewpointSetup();
       break;
@@ -782,6 +798,9 @@ void lxFrame::OnSize(wxSizeEvent& event)
   if (this->m_modelSetupDlg != NULL) {
     this->m_modelSetupDlg->m_toolBoxPosition.Restore();
   }
+  if (this->m_selectionSetupDlg != NULL) {
+    this->m_selectionSetupDlg->m_toolBoxPosition.Restore();
+  }
 
 }
 
@@ -794,6 +813,9 @@ void lxFrame::OnMove(wxMoveEvent& event)
     if (this->m_modelSetupDlg != NULL) {
       this->m_modelSetupDlg->m_toolBoxPosition.Restore();
     }
+    if (this->m_selectionSetupDlg != NULL) {
+      this->m_selectionSetupDlg->m_toolBoxPosition.Restore();
+    }
   }
 }
 
@@ -804,6 +826,7 @@ void lxFrame::UpdateM2TB() {
 	this->m_menuBar->Check(LXMENU_CAMERA_PERSP, !this->setup->cam_persp);    
 	this->m_menuBar->Check(LXMENU_VIEW_MODELSTP, this->m_modelSetupDlgOn);    
 	this->m_menuBar->Check(LXMENU_VIEW_VIEWPOINTSTP, this->m_viewpointSetupDlgOn);    
+	this->m_menuBar->Check(LXMENU_VIEW_SELECTIONSTP, this->m_selectionSetupDlgOn);    
 	this->m_toolBar->ToggleTool(LXTB_PERSP, !this->setup->cam_persp); 
 
   // visibility
@@ -835,6 +858,8 @@ void lxFrame::UpdateM2TB() {
   this->m_toolMenu->Check(LXMENU_VIEW_VIEWPOINTSTP, this->m_viewpointSetupDlgOn); 
   this->m_toolBar->ToggleTool(LXTB_SCENESTP, this->m_modelSetupDlgOn); 
   this->m_toolMenu->Check(LXMENU_VIEW_MODELSTP, this->m_modelSetupDlgOn); 
+  // TODO: Tree button
+  // this->m_toolMenu->Check(LXMENU_VIEW_SELECTIONSTP, this->m_selectionSetupDlgOn); 
 
 	// full screen	
 	this->m_toolBar->ToggleTool(LXTB_FULLSCREEN, this->IsFullScreen());
@@ -957,6 +982,20 @@ void lxFrame::ToggleModelSetup()
 }
 
 
+void lxFrame::ToggleSelectionSetup()
+{
+  if (this->m_selectionSetupDlgOn) {
+    this->m_selectionSetupDlg->m_toolBoxPosition.Save();
+    this->m_selectionSetupDlg->Show(false);
+  } else {
+    this->m_selectionSetupDlg->m_toolBoxPosition.Restore();
+    this->m_selectionSetupDlg->Show(true);
+  }
+  this->m_selectionSetupDlgOn = !this->m_selectionSetupDlgOn;
+	this->UpdateM2TB();
+}
+
+
 void lxFrame::ToggleViewpointSetup()
 {
   if (this->m_viewpointSetupDlgOn) {
@@ -1036,6 +1075,7 @@ void lxFrame::ReloadData()
   this->data->m_input.Clear();
   this->LoadData(this->m_fileName, this->m_fileType);
   this->m_modelSetupDlg->InitSetup();
+  this->m_selectionSetupDlg->LoadData();
 }
 
 

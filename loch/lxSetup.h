@@ -21,6 +21,7 @@
 
 #include "lxData.h"
 #include "lxMath.h"
+#include <set>
 
 enum {
   lxSETUP_COLORMD_DEFAULT,
@@ -52,6 +53,8 @@ struct lxSetup {
   bool m_colormd_app_centerline,
     m_colormd_app_walls;
   double m_srf_opacity, m_walls_opacity;
+
+  std::set<std::string> m_survey_selection;
   
   lxSetup(struct lxData * dat);
 
@@ -71,6 +74,10 @@ struct lxSetup {
 	void RotateCameraF(double rot);
   void SetLens(double lens);
   void UpdatePos();
+
+  void SelectSurvey(const char * survey);
+  bool IsSurveySelected(const char * survey);
+  void ClearSurveySelection();
   
 };
 

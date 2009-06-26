@@ -32,7 +32,9 @@ If you want to compile Therion from source code and run it, you need
   recent pdf\TeX, and \MP\ (\www{http://www.tug.org}). 
 * LCDF Typetools package (\www{http://www.lcdf.org/type/})
 * ImageMagick distribution with {\it convert} and {\it identify} utilities, 
-  if you want to morph survey sketches.
+  if you want to use warping of survey sketches.
+* {\it ghostscript} if you want to create calibrated images from georeferenced
+  PDF maps.
 \endlist
 
 To compile Loch, you need
@@ -41,6 +43,7 @@ To compile Loch, you need
 * freetype 2 and newer; freetype-config must work
 * wxWidgets 2.6 and newer; wx-config must work
 * VTK 5.0 and newer
+* libjpeg, libpng, zlib
 \endlist
 
 All programs (with the exception of BWidget and tkImg package) are usually 
@@ -92,7 +95,7 @@ Therion's {\it makefile} may take some optional parameters.
 {\it Adding new translations}
 
 Therion supports translation of map labels. 
-Suppose you want to add a new language xx. 
+Suppose you want to add a new language |xx|. 
 
 \list
 * run `|perl process.pl export xx|' in the `thlang' Therion source subdirectory. 
@@ -254,7 +257,7 @@ supported initialization commands follow.
   Using this option you can change any default therion text translation in output.
   For list of therion texts and available translations, see |thlang/texts.txt| file.
 
-* |pdf-fonts <rm> <it> <bf> <ss> <si>|
+* |pdf-fonts <rm> <it> <bf> <ss> <si>|\NEW{5.3}
 
   Set-up fonts to be used in PDF maps. 
   The command has to be followed by paths specifying where regular, italic,
@@ -270,7 +273,7 @@ supported initialization commands follow.
            "/usr/share/fonts/Sans.ttf" \
            "/usr/share/fonts/Sans-Oblique.ttf"|
 
-* |otf2pfb <on/off>|
+* |otf2pfb <on/off>|\NEW{5.3}
 
   When set to |on| (default), OpenType fonts used in |pdf-fonts| are
   converted to PFB fonts, if they are PostScript-based. Some information

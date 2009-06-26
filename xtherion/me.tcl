@@ -1076,8 +1076,8 @@ proc xth_me_area_start_drag {tagOrId imgx x y} {
   $xth(me,can) configure -cursor plus
   $xth(me,can) bind $tagOrId <Shift-B1-Motion> "xth_me_area_drag %x %y"
   $xth(me,can) bind $tagOrId <Shift-B1-ButtonRelease> "xth_me_area_end_drag $tagOrId \"$imgx\" %x %y"
-  $xth(me,can) bind $tagOrId <B3-Motion> "xth_me_area_drag %x %y"
-  $xth(me,can) bind $tagOrId <B3-ButtonRelease> "xth_me_area_end_drag $tagOrId \"$imgx\" %x %y"
+  $xth(me,can) bind $tagOrId <B$xth(gui,rmb)-Motion> "xth_me_area_drag %x %y"
+  $xth(me,can) bind $tagOrId <B$xth(gui,rmb)-ButtonRelease> "xth_me_area_end_drag $tagOrId \"$imgx\" %x %y"
   update idletasks
 }
 
@@ -1097,8 +1097,8 @@ proc xth_me_area_end_drag {tagOrId imgx x y} {
   $xth(me,can) configure -cursor crosshair
   $xth(me,can) bind $tagOrId <Shift-B1-Motion> ""
   $xth(me,can) bind $tagOrId <Shift-B1-ButtonRelease> ""
-  $xth(me,can) bind $tagOrId <B3-Motion> ""
-  $xth(me,can) bind $tagOrId <B3-ButtonRelease> ""
+  $xth(me,can) bind $tagOrId <B$xth(gui,rmb)-Motion> ""
+  $xth(me,can) bind $tagOrId <B$xth(gui,rmb)-ButtonRelease> ""
   if {[string length $imgx] > 0} {
     xth_me_image_choose $imgx
   }
@@ -1118,13 +1118,13 @@ proc xth_me_bind_area_drag {tagOrId imgx} {
   $xth(me,can) bind $tagOrId <1> "xth_me_cmds_click_area $tagOrId %x %y"
   $xth(me,can) bind $tagOrId <Motion> "xth_me_area_motion %x %y"
   $xth(me,can) bind $tagOrId <Shift-1> "xth_me_area_start_drag $tagOrId \"$imgx\" %x %y"
-  $xth(me,can) bind $tagOrId <3> "xth_me_area_start_drag $tagOrId \"$imgx\" %x %y"
+  $xth(me,can) bind $tagOrId <$xth(gui,rmb)> "xth_me_area_start_drag $tagOrId \"$imgx\" %x %y"
 }
 
 proc xth_me_bind_area_only_drag {tagOrId} {
   global xth
   $xth(me,can) bind $tagOrId <Shift-1> "xth_me_area_start_drag $tagOrId {} %x %y"
-  $xth(me,can) bind $tagOrId <3> "xth_me_area_start_drag $tagOrId {} %x %y"
+  $xth(me,can) bind $tagOrId <$xth(gui,rmb)> "xth_me_area_start_drag $tagOrId {} %x %y"
 }
 
 
@@ -1139,8 +1139,8 @@ proc xth_me_image_start_drag {tagOrId imgx x y} {
   $xth(me,can) configure -cursor fleur
   $xth(me,can) bind $tagOrId <Shift-B1-Motion> "xth_me_image_drag $imgx %x %y"
   $xth(me,can) bind $tagOrId <Shift-B1-ButtonRelease> "xth_me_image_end_drag $tagOrId $imgx %x %y"
-  $xth(me,can) bind $tagOrId <B3-Motion> "xth_me_image_drag $imgx %x %y"
-  $xth(me,can) bind $tagOrId <B3-ButtonRelease> "xth_me_image_end_drag $tagOrId $imgx %x %y"
+  $xth(me,can) bind $tagOrId <B$xth(gui,rmb)-Motion> "xth_me_image_drag $imgx %x %y"
+  $xth(me,can) bind $tagOrId <B$xth(gui,rmb)-ButtonRelease> "xth_me_image_end_drag $tagOrId $imgx %x %y"
   update idletasks
 }
 
@@ -1159,8 +1159,8 @@ proc xth_me_image_end_drag {tagOrId imgx x y} {
   $xth(me,can) configure -cursor crosshair
   $xth(me,can) bind $tagOrId <Shift-B1-Motion> ""
   $xth(me,can) bind $tagOrId <Shift-B1-ButtonRelease> ""
-  $xth(me,can) bind $tagOrId <B3-Motion> ""
-  $xth(me,can) bind $tagOrId <B3-ButtonRelease> ""
+  $xth(me,can) bind $tagOrId <B$xth(gui,rmb)-Motion> ""
+  $xth(me,can) bind $tagOrId <B$xth(gui,rmb)-ButtonRelease> ""
   xth_me_image_choose $imgx
   xth_me_unredo_action [mc "dragging image"] \
     "xth_me_image_move $imgx $xth(me,imgs,drag_px) $xth(me,imgs,drag_py)" \
@@ -1172,7 +1172,7 @@ proc xth_me_image_end_drag {tagOrId imgx x y} {
 proc xth_me_bind_image_drag {tagOrId imgx} {
   global xth
   $xth(me,can) bind $tagOrId <Double-Shift-1> "xth_me_image_start_drag $tagOrId $imgx %x %y"
-  $xth(me,can) bind $tagOrId <Double-3> "xth_me_image_start_drag $tagOrId $imgx %x %y"
+  $xth(me,can) bind $tagOrId <Double-$xth(gui,rmb)> "xth_me_image_start_drag $tagOrId $imgx %x %y"
 }
 
 

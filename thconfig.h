@@ -90,6 +90,7 @@ class thconfig {
   int cfg_fenc;  ///< Configuration file encoding.
 
   int outcs;  ///< Output coordinate system.
+  int lang; ///< Output language.
   int sketch_warp;  ///< Sketch warping method.
   thobjectsrc outcs_def;  ///< Where output coordinate system is defined.
   double outcs_sumx, outcs_sumy, outcs_sumz, outcs_sumn;
@@ -255,6 +256,8 @@ class thconfig {
   bool get_outcs_mag_decl(double year, double & decl);
 
   void log_outcs(double decsyear, double deceyear);
+
+  int get_lang();
 
 };
 

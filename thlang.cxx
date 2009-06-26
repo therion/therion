@@ -67,9 +67,8 @@ int thlang_parse(char * str) {
 }
 
 const char * thlang_getid(int id) {
-  const char * rv = thmatch_string(id, thtt_lang);
-  if (rv == NULL) return "en";
-  else return rv;
+  const char * rv = thmatch_string(thlang_getlang(id), thtt_lang);
+  return rv;
 }
 
 const char * thlang_getcxxid(int id) {

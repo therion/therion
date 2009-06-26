@@ -322,6 +322,20 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
           fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'con');\n", (i+1));
         if ((st->flags & TT_STATIONFLAG_FIXED) != TT_STATIONFLAG_NONE)
           fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'fix');\n", (i+1));
+        if ((st->flags & TT_STATIONFLAG_SPRING) != TT_STATIONFLAG_NONE)
+          fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'spr');\n", (i+1));
+        if ((st->flags & TT_STATIONFLAG_SINK) != TT_STATIONFLAG_NONE)
+          fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'sin');\n", (i+1));
+        if ((st->flags & TT_STATIONFLAG_DOLINE) != TT_STATIONFLAG_NONE)
+          fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'dol');\n", (i+1));
+        if ((st->flags & TT_STATIONFLAG_DIG) != TT_STATIONFLAG_NONE)
+          fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'dig');\n", (i+1));
+        if ((st->flags & TT_STATIONFLAG_AIRDRAUGHT) != TT_STATIONFLAG_NONE)
+          fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'air');\n", (i+1));
+        if ((st->flags & TT_STATIONFLAG_OVERHANG) != TT_STATIONFLAG_NONE)
+          fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'ove');\n", (i+1));
+        if ((st->flags & TT_STATIONFLAG_ARCH) != TT_STATIONFLAG_NONE)
+          fprintf(sqlf,"insert into STATION_FLAG values(%ld, 'arc');\n", (i+1));
       } else {
             CHECK_STRLEN(station_name,ESTR);
       }

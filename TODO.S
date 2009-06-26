@@ -1,5 +1,8 @@
 HOT LIST:
 
++ jazyky parsovat na vystupe
++ survey selection v loch-u
+
 + thbook: splay shots using "-" or "." as station name
 + thbook: in therion.ini otf2pfb on|off
 + thbook: in therion.ini pdf-fonts

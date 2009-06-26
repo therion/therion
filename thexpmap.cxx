@@ -915,7 +915,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(mpf,"input therion;\n");
   else
     fprintf(mpf,"%s\n",thmpost_library);
-  fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(thlang_getlang(this->layout->lang)));
+  fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(this->layout->lang));
 
   this->db->attr.export_mp_header(out.file);
   this->db->db1d.m_station_attr.export_mp_header(out.file);

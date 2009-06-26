@@ -1,7 +1,7 @@
 # common therion objects
 CMNOBJECTS = \
   lxTR.o lxOGLFT.o lxSetup.o lxRender.o lxWX.o \
-  lxImgIO.o lxLRUD.o lxFile.o \
+  lxImgIO.o lxLRUD.o lxFile.o lxSTree.o \
   lxData.o lxMath.o lxSView.o lxSScene.o \
   lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o \
   img.o

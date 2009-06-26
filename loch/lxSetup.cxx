@@ -274,3 +274,24 @@ void lxSetup::RotateCameraF(double rot)
 }
 
 
+
+void lxSetup::SelectSurvey(const char * survey)
+{
+  this->m_survey_selection.insert(std::string(survey));
+}
+
+
+bool lxSetup::IsSurveySelected(const char * survey)
+{
+  if (this->m_survey_selection.size() == 0) return true;
+  std::set<std::string>::iterator it = this->m_survey_selection.find(std::string(survey));
+  if (it != this->m_survey_selection.end()) return true;
+  return false;
+}
+
+
+void lxSetup::ClearSurveySelection()
+{
+  this->m_survey_selection.clear();
+}
+

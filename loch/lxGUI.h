@@ -69,6 +69,7 @@ enum {
 	LXMENU_VIEW,
   LXMENU_VIEW_FULLSCREEN,
   LXMENU_VIEW_MODELSTP,
+  LXMENU_VIEW_SELECTIONSTP,
   LXMENU_VIEW_VIEWPOINTSTP,
   LXMENU_TOOLS_OPTIONS,
 	LXMENU_VIEWEND,
@@ -145,6 +146,9 @@ class lxFrame: public wxFrame
     class lxModelSetupDlg * m_modelSetupDlg;
     bool m_modelSetupDlgOn;
 
+    class lxModelTreeDlg * m_selectionSetupDlg;
+    bool m_selectionSetupDlgOn;
+
 		class lxViewpointSetupDlg * m_viewpointSetupDlg;
     bool m_viewpointSetupDlgOn;
 
@@ -185,6 +189,7 @@ class lxFrame: public wxFrame
 		void ToggleRotLock();
     void ToggleFullScreen();
     void ToggleModelSetup();
+    void ToggleSelectionSetup();
     void ToggleViewpointSetup();
 
     void ToggleVisibilityCenterline();

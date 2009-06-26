@@ -33,6 +33,8 @@
 
 using namespace std;
 
+string select_lang(string s, string lang);
+
 struct fontrecord {
   int id;
   string rm,it,bf,ss,si;

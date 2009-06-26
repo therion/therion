@@ -134,6 +134,8 @@ class thinit {
    
   char * get_path_pdftex();
 
+  int get_lang();
+
   void check_font_path(const char * fname, int index);
   
   int get_encoding(int type = THINIT_ENCODING_DEFAULT);

@@ -220,8 +220,8 @@ print OUT <<ENDTEX;
 \\parindent=0pt
 ENDTEX
 
-print OUT "\\setbox0=\\vbox{\\kern${margin}bp\\hbox{\\kern${margin}bp\\vbox{", 
-  "$team $date\\medskip", 
+print OUT "\\setbox0=\\vbox{\\kern${margin}bp\\hbox{\\kern${margin}bp\\vbox{\\hbox{", 
+  "$team $date}\\medskip", 
   make_table(), 
   "}\\kern${margin}bp}\\kern${margin}bp}\\pdfxform0\\data=\\pdflastxform\n";
 for ($i=2; $i<=3; $i++) {

@@ -27,7 +27,7 @@ void init_lcbuff() {
 thlocale::thlocale()
 {
 	this->units = TTLC_UNITS_METRIC;
-	this->lang = thini.lang;
+	this->lang = thini.get_lang();
 }
 
 

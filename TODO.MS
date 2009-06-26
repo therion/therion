@@ -1,3 +1,7 @@
+xth calibrate bitmap: zlucit filtre img/pdf
+
+Makefile: make library pri zmene prekladov (neaktualne therion.tcl!)
+
 Pacher: 
   * obrovske patterny
   * interim bboxmargin:=0 bez skupiny pri l_wall_ice

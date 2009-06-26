@@ -413,8 +413,11 @@ the command may be used anywhere.
   * |flags <shot flags>| = set flags for following shots. The supported
     flags are: |surface| (for surface measurements), |duplicate| (for
     duplicated surveys), |splay| (for short side legs that are hidden
-    in extended elevation by default). These are excluded from length 
+    in maps and models by default). These are excluded from length 
     calculations. 
+    
+    All shots having one of the stations named either `|.|' or `|-|' are 
+    |splay| shots by default (see also |data| command).
     
     If flag is set to |approx[imate]|, it is included to total length
     calculations, but also displayed separately in survey statistics.
@@ -426,7 +429,7 @@ the command may be used anywhere.
     and its flags. If |""| is specified as a comment, it is ignored.
     
     Supported flags: |entrance|, |continuation|, |air-draught[:winter/summer]|, 
-    |sink|, |spring|, |doline|, |dig|. Also |not| is allowed before a flag, 
+    |sink|, |spring|, |doline|, |dig|, \NEW{5.3}|arch|, |overhang|. Also |not| is allowed before a flag, 
     to remove previously added flag.
     
     You can also specify custom attributes to the station using |attr| flag
@@ -455,10 +458,19 @@ the command may be used anywhere.
     up/ceiling\[dimension may be specified as a pair |[<from> <to>\char"5D|, 
     meaning the size at the beginning and end of the shot], 
     down/floor, left, right, ignore, ignoreall. 
+    
+    See Survex manual for details.
+    
     For interleaved data both newline and direction keywords
     are supported. If backward and forward compass or clino
     reading are given, the average of them is computed.
-    See Survex manual for details.
+    
+\NEW{5.3}    If one of the shot stations is named either `|.|' or `|-|', the shot has
+    |splay| attribute set. {\it Dot} should be used for shots ending on
+    features inside passage, {\it dash} for shots ending on passage walls, floor
+    or ceiling. Although Therion makes no distinction between them yet, it
+    should be used to improve 3D modeling in the future.
+    
   * |group| 
   * |endgroup| = |group/endgroup| pair enables the user to make 
     temporary changes
@@ -775,6 +787,14 @@ Point is a command for drawing a point map symbol.
     
     |<rm>|, |<it>|, |<bf>|, |<ss>|, |<si>| = font switches
         
+\NEW{5.3}    |<rtl>| and |</rtl>| = marks beginning and end of a right-to-left written
+    text
+    
+\NEW{5.3}|<lang:XX>| = in multilingual labels only the text between |<lang:XX>|
+    (where |XX| is input language selected in thconfig) and the next |<lang:YY>| 
+    tag is displayed. If no match is found, everything before any occurence of
+    |<lang:ZZ>| tag is displayed.
+    
   * |value| = value of height, passage-height or altitude label or point
      dimensions
 
@@ -853,11 +873,11 @@ respectively.
      {\it labels:} |label|;
 
      {\it special:} |border|, |arrow|, 
-     |section|\[Line showing cross-section position. 
-       If both control points of a B\'ezier curve are given 
-       then the line is drawn up to the perpendicular projection of 
-       the first control point and from the projection of the section control
-       point. No section curve is allowed.], 
+     |section|\[Line showing cross-section position.\NEW{5.3} 
+       If both control points (red dots) of a B\'ezier curve (grey line) are given 
+       then the section line (blue) is drawn up to the perpendicular projection (dotted) of 
+       the first control point and from the projection (dotted) of the section control
+       point. No section curve is displayed.\hfil\break\MPpic{xsect.1}], 
      |survey|\[Survey line is automatically drawn by Therion.], 
      |map-connection|\[Used to indicate connection between maps (in offset,
      or the same points in extended elevation).], |u|\[For user defined line symbols.].
@@ -1372,7 +1392,8 @@ the drawing. Click on the {\it Insert} button in {\it Background images} menu.
 Unfortunately, as a limitation of Tcl/Tk language, only GIF, PNM and PPM 
 (plus PNG and JPEG if you installed tkImg extension) images are supported. 
 Additionally XTherion supports XVI (XTherion vector image) format, which
-displays centreline and LRUD information on the background.
+displays centreline and LRUD information on the background, and PocketTopo 
+data exported in Therion format (see below).
 All opened images are placed in the upper-left corner of 
 the working area. Move them by double clicking and dragging with the right 
 mouse button or through a menu. For better performance on slower computers, 
@@ -1521,6 +1542,35 @@ It is a good idea to start with drawing all survey stations (don't forget to
 give them names according to real names in the centreline command), than all 
 passage walls followed by all other point symbols, lines and areas. Finally 
 draw cross-sections.
+
+
+
+\subsubchapter Additional tools.
+
+\NEW{5.3}{\bf Help/Calibrate bitmap} produces OziExplorer-compatible MAP file based
+on georeferencig data included in a PDF map\[Present if centreline contains
+station(s) fixed using geodetic coordinate system(s)]. 
+
+If the map in PDF format has been converted to raster using external program,
+convertor uses raster image {\it and} pdf map with the same base name 
+located in the same directory to calculate the calibration data.
+
+If the PDF file is used directly, you have to set DPI and output format 
+before automatic conversion\[|ghostscript| and |convert| should be installed
+on your system. Note, that Windows instalation does not include |ghostscript|] 
+to a raster format.
+
+\NEW{5.3}{\bf PocketTopo data} exported in Therion format\[This is a special text
+format which needs to be imported using XTherion and can not be processed
+by Therion directly.]
+from PocketTopo application can be imported in text editor as well as in map 
+editor ({\it File $\to$ Import $\to$ PocketTopo therion export} and 
+{\it Backgroud Images $\to$ Insert $\to$ PocketTopo therion export}). The
+same file is used for both imports. Importing sketch does not create scrap
+data directly. The drawing is just displayed on the background like scanned
+bitmaps and should be digitized manually.
+
+
 
 \subsubchapter Keyboard and mouse shortcuts in the Map editor.
 {\it General}

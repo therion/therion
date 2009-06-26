@@ -228,7 +228,7 @@ thlayout::thlayout()
   this->topo_lens = false;
 
   this->def_lang = 0;
-  this->lang = THLANG_UNKNOWN;
+  this->lang = thcfg.get_lang();
   
   this->def_units = 0;
   this->units = thdeflocale;

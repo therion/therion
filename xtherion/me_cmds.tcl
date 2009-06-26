@@ -1986,7 +1986,7 @@ proc xth_me_cmds_draw_point {id} {
   $xth(me,can) bind pt$id <Enter> "$xth(me,can) itemconfigure pt$id -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \$xth(me,cmds,$id,sbar)\""
   $xth(me,can) bind pt$id <Leave> "$xth(me,can) itemconfigure pt$id -fill \[$xth(me,can) itemcget pt$id -outline\]; xth_status_bar_pop me"
   $xth(me,can) bind pt$id <1> "xth_me_cmds_click $id pt$id \$xth(me,cmds,$id,x) \$xth(me,cmds,$id,y) %x %y"
-  $xth(me,can) bind pt$id <3> "xth_me_cmds_special_select $id %x %y"  
+  $xth(me,can) bind pt$id <$xth(gui,rmb)> "xth_me_cmds_special_select $id %x %y"  
   $xth(me,can) bind pt$id <Shift-1> "xth_me_cmds_special_select $id %x %y"  
   $xth(me,can) bind pt$id <$xth(kb_control)-1> "xth_me_cmds_click_area pt$id %x %y"
 }

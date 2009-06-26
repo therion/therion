@@ -194,6 +194,7 @@ set xth(gui,me,controlfill) blue
 set xth(gui,me,highlightfill) cyan
 
 set xth(gui,me,typelistwidth) 16
+set xth(gui,rmb) 3
 
 set xth(gui,bindinsdel) 1
 
@@ -248,6 +249,7 @@ case $tcl_platform(platform) {
     set xth(gui,cursor) arrow
     set xth(gui,bindinsdel) 0
     set xth(app,sencoding) utf-8
+    set xth(gui,rmb) 2
   }
 }
 # end of platform dependend settings

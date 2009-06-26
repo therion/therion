@@ -1163,7 +1163,7 @@ void export_all_symbols()
     fprintf(mpf,"input therion;\n");
   else
     fprintf(mpf,"%s\n",thmpost_library);
-  fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(thlang_getlang(tmplayout.lang)));
+  fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(tmplayout.lang));
 if (ENC_NEW.NFSS==0)
   fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
 else
