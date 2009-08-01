@@ -34,6 +34,7 @@
 #include "thlayoutln.h"
 #include "thsymbolset.h"
 #include "thlocale.h"
+#include "thlayoutclr.h"
 #include <list>
 
 /**
@@ -94,6 +95,7 @@ enum {
 	TT_LAYOUT_NORTH = 2050,
   TT_LAYOUT_MAP_IMAGE = 2051,
   TT_LAYOUT_GRID_COORDS = 2052,
+  TT_LAYOUT_SYMBOL_COLOR = 2053,
 };
 
 
@@ -293,6 +295,7 @@ enum {
   TT_LAYOUT_CODE_SYMBOL_ASSIGN,
   TT_LAYOUT_CODE_SYMBOL_HIDE,
   TT_LAYOUT_CODE_SYMBOL_SHOW,
+  TT_LAYOUT_CODE_SYMBOL_COLOR,
   TT_LAYOUT_CODE_MAP_ITEM,
 };
 
@@ -473,6 +476,8 @@ static const thstok thtt_layout_opt[] = {
   {"surface-opacity",TT_LAYOUT_SURFACE_OPACITY},
   {"survey-level",TT_LAYOUT_SURVEY_LEVEL},
   {"symbol-assign", TT_LAYOUT_SYMBOL_ASSIGN},
+  {"symbol-color", TT_LAYOUT_SYMBOL_COLOR},
+  {"symbol-colour", TT_LAYOUT_SYMBOL_COLOR},
   {"symbol-hide", TT_LAYOUT_SYMBOL_HIDE},
   {"symbol-set", TT_LAYOUT_SYMBOL_DEFAULTS},
   {"symbol-show", TT_LAYOUT_SYMBOL_SHOW},
@@ -480,18 +485,6 @@ static const thstok thtt_layout_opt[] = {
   {"transparency",TT_LAYOUT_TRANSPARENCY},
   {"units",TT_LAYOUT_UNITS},
   {NULL, TT_LAYOUT_UNKNOWN},
-};
-
-
-/**
- * layout color class.
- */
-
-struct thlayout_color {
-  double R, G, B;
-  int defined;
-  void parse(char * str);
-  thlayout_color() : R(1.0), G(1.0), B(1.0), defined(false) {}
 };
 
 

@@ -275,7 +275,9 @@ bool operator < ( const lxTriGeomPoint& p, const lxTriGeomPoint& q )
 {
   if (p.p < q.p)
     return true;
-  else if (p.n < q.n)
+  if (q.p < p.p)
+    return false;
+  if (p.n < q.n)
     return true;
   else
     return false;

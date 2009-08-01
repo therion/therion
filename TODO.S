@@ -1,7 +1,20 @@
 HOT LIST:
 
-+ jazyky parsovat na vystupe
++ priradenie farieb mapam
++ priame proj4 retazce do CS
+
++ sketche do SVG
++ calibracia surface v lochu
 + survey selection v loch-u
++ loch entrance/fix/station/label off-screen rendering
+
++ splayshoty previest na LRUD
+
++ thbook: units up|down|left|right|dimensions
++ thbook: symbol-color <type> <symbol> <color>
++ jazyky parsovat na vystupe - odskusat
++ chybaju meracske body v legende
++ farby patternov odladit
 
 + thbook: splay shots using "-" or "." as station name
 + thbook: in therion.ini otf2pfb on|off
@@ -13,7 +26,7 @@ HOT LIST:
 
 + changes: fixed bug with lat/long out of range
 
-+ loch entrance/fix/station/label off-screen rendering
++ include maps with previews
 + loch surface handling
 + add options menu to xtherion
 + support iso date format YYYY-MM-DD

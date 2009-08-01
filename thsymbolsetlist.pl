@@ -59,6 +59,7 @@ $SYMHASH{s_zzz} = "noassign hidden";
 $SYMHASH{x_} = "noassign hidden";
 $SYMHASH{x_all} = "hidden";
 $SYMHASH{x_centerline} = "hidden";
+$SYMHASH{x_water} = "hidden";
 $SYMHASH{x_sections} = "hidden";
 $SYMHASH{x_surfacecenterline} = "noassign hidden";
 $SYMHASH{x_cavecenterline} = "noassign hidden";

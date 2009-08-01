@@ -1,13 +1,1 @@
-source
-
-survey x
-centerline
-  cs epsg:4277
-  fix 1 200 200 0
-endcenterline
-endsurvey
-
-endsource
-
-#cs UTM34
-export map
+input samples/morphing/sample1/thconfig.1

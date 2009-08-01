@@ -526,6 +526,28 @@ void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddat
 
 //    F << "<use x=\"" << I->G1 << "\" y=\"" << -I->G2 << "\" xlink:href=\"#G_" << I->name << "_" << unique_prefix << "\" />" << endl;
 
+        // sketches
+        F.precision(8);
+        for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
+                                         K != SCRAPLIST.end(); K++) {
+          for (list<surfpictrecord>::iterator I_sk = K->SKETCHLIST.begin();
+                                              I_sk != K->SKETCHLIST.end(); I_sk++) {
+            F << "<g transform=\"matrix(";
+            F << I_sk->xx << " " << I_sk->yx << " " << -I_sk->xy << " " << -I_sk->yy << " " << 
+                 I_sk->dx << " " << I_sk->dy << ")\">";
+            F << "<image x=\"0\" y=\"" << -I_sk->height << "\" width=\"" << I_sk->width << 
+                 "\" height=\"" << I_sk->height << "\" xlink:href=\"data:image/" << 
+                 I_sk->type << ";base64," << endl;
+            base64_encode(I_sk->filename, F);
+            F << "\" />";
+            F << "</g>" << endl;
+          };
+        }
+        F.precision(3);
+        
+        // end of sketches
+
+
         for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->F != "") {

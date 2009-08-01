@@ -28,6 +28,8 @@
 
 #include "thparse.h"
 #include "therion.h"
+#include "thlang.h"
+#include "thtexfonts.h"
 #include <string.h>
 #include "thinfnan.h"
 #include "thdatabase.h"
@@ -1257,6 +1259,15 @@ void thparse_length(int & sv, double & dv, const char * src)
 }
 
 
+std::string ths2tex(std::string original, int lang, bool remove_kerning)
+{
+  return utf2tex(select_lang(original, thlang_getid(lang)), remove_kerning);
+}
 
 
+std::string ths2txt(std::string original, int lang, int encoding)
+{
+  // TODO: encoding conversion & al.
+  return select_lang(original, thlang_getid(lang));
+}
 

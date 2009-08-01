@@ -1,8 +1,8 @@
+thbook: export map -fmt bbox
+
 nastavitelny okraj vyplne pod legendou (0 pre map-image!)
 
 metapost: warningy len v debug mode; interaktivny mod pre -d (s vysvetlenim v thbooku, ktore premenne pouzit)
-
-do thbooku vysvetlenie o georeferencovani pdf z mailu muttonovi
 
 do thbooku vysvetlenie o debugovani MP (mail muttonovi 15.1.09 
 
@@ -44,8 +44,11 @@ thpdf:
 
 thsvg:
 
+ * pattern coloring using symbol-color
+   - delete setgray and setrgbcolor when converting pattern body
+   - extend structures to include pattcolor
+   - use "inherit" color
  * uxivatelsky prefix pre ids
-
  * fonty - orezavacie cesty + vkladanie?
  * layers cez javascript
  * (priehladnost -> SVG 1.2)

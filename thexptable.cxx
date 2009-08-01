@@ -155,7 +155,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
     this->m_table.insert_object(NULL);          
     this->m_table.get_object()->m_tree_level = (this->surveys ? (size_t)(survey->level - 2) : 0);
     this->m_table.get_object()->m_tree_node_id = (this->surveys ? survey->get_reverse_full_name() : "");
-    this->m_table.insert_attribute("Title", ((strlen(survey->title) > 0) ? survey->title : survey->name));
+    this->m_table.insert_attribute("Title", ths2txt((strlen(survey->title) > 0) ? survey->title : survey->name).c_str());
     this->m_table.insert_attribute("Length",(long)(survey->stat.length + 0.5));
     if (!is_cave) this->m_table.get_attribute()->set_flag(THATTRFLAG_HIDDEN, true);
     if (survey->stat.station_top != NULL) {
@@ -213,7 +213,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
             *tmps = survey->get_reverse_full_name();
             *tmps += ".";
             this->m_table.get_object()->m_tree_node_id = (this->surveys ? tmps->c_str() : "");
-            this->m_table.insert_attribute("Title", st->comment);
+            this->m_table.insert_attribute("Title", ths2txt(st->comment).c_str());
             this->m_table.insert_attribute("Length","");
             this->m_table.insert_attribute("Depth","");
             if (st->explored > 0.0) {
@@ -296,7 +296,7 @@ void thexptable::process_db(class thdatabase * dbp)
             if ((pt->type == TT_POINT_TYPE_CONTINUATION) && ((pt->text != NULL) || (!this->filter)) && (pt->fsptr->is_selected())) {
               this->db->db2d.process_projection(pt->fscrapptr->proj);
               this->m_table.insert_object(NULL);
-              this->m_table.insert_attribute("Comment",pt->text);
+              this->m_table.insert_attribute("Comment",ths2txt(pt->text).c_str());
 	            if (!thisnan(pt->xsize))
                       this->m_table.insert_attribute("Explored",pt->xsize);
 	            else
@@ -318,7 +318,7 @@ void thexptable::process_db(class thdatabase * dbp)
                 if (strlen(survey) == 0)
                   survey = NULL;
               }
-              this->m_table.insert_attribute("Survey", survey);
+              this->m_table.insert_attribute("Survey", ths2txt(survey).c_str());
               this->m_table.insert_attribute("Station", st != NULL ? st->name : NULL);
               if (this->format == TT_EXPTABLE_FMT_KML) { 
                 thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
@@ -335,7 +335,7 @@ void thexptable::process_db(class thdatabase * dbp)
           st = &(dbp->db1d.station_vec[i]);
           if (((st->flags & TT_STATIONFLAG_CONT) != 0) && ((st->comment != NULL) || (!this->filter)) && (st->survey->is_selected())) {
             this->m_table.insert_object(NULL);
-            this->m_table.insert_attribute("Comment",st->comment);
+            this->m_table.insert_attribute("Comment",ths2txt(st->comment).c_str());
 	          if (!thisnan(st->explored))
                     this->m_table.insert_attribute("Explored",st->explored);
 	          else
@@ -347,7 +347,7 @@ void thexptable::process_db(class thdatabase * dbp)
               if (strlen(survey) == 0)
                 survey = NULL;
             }
-            this->m_table.insert_attribute("Survey", survey);
+            this->m_table.insert_attribute("Survey", ths2txt(survey).c_str());
             this->m_table.insert_attribute("Station", st->name);            
             if (this->format == TT_EXPTABLE_FMT_KML) { 
               thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
@@ -376,7 +376,7 @@ void thexptable::process_db(class thdatabase * dbp)
             this->m_table.insert_object(NULL);          
             this->m_table.get_object()->m_tree_level = (size_t)(srv->level - 2);
             this->m_table.get_object()->m_tree_node_id = srv->get_reverse_full_name();
-            this->m_table.insert_attribute("Title", ((strlen(srv->title) > 0) ? srv->title : srv->name));
+            this->m_table.insert_attribute("Title", ths2txt((strlen(srv->title) > 0) ? srv->title : srv->name).c_str());
             this->m_table.insert_attribute("Length",(long)(srv->stat.length + 0.5));
             if (srv->stat.station_top != NULL) {
               tmpd = srv->stat.station_top->z - srv->stat.station_bottom->z;

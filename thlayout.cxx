@@ -51,37 +51,6 @@ enum {
   TTLDBG_STATIONNAMES = 8,
 };
 
-void thlayout_color::parse(char * str) {
-  thsplit_words(&(thdb.mbuff_tmp), str);
-  int nargs = thdb.mbuff_tmp.get_size(), sv;
-  char ** args = thdb.mbuff_tmp.get_buffer();
-#define invalid_color_spec ththrow(("invalid color specification -- %s", str))
-  switch (nargs) {
-    case 3:
-      thparse_double(sv,this->B,args[2]);        
-      if ((sv != TT_SV_NUMBER) || (this->B < 0.0) || (this->B > 100.0))
-        invalid_color_spec;
-      this->B /= 100.0;
-      thparse_double(sv,this->G,args[1]);        
-      if ((sv != TT_SV_NUMBER) || (this->G < 0.0) || (this->G > 100.0))
-        invalid_color_spec;
-      this->G /= 100.0;
-    case 1:
-      thparse_double(sv,this->R,args[0]);        
-      if ((sv != TT_SV_NUMBER) || (this->R < 0.0) || (this->R > 100.0))
-        invalid_color_spec;
-      this->R /= 100.0;
-      if (nargs == 1) {
-        this->B = this->R;
-        this->G = this->R;
-      }
-      this->defined = 2;
-      break;
-    default:
-      invalid_color_spec;
-  }
-}
-
 
 
 thlayout::thlayout()
@@ -329,6 +298,7 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
     case TT_LAYOUT_SYMBOL_ASSIGN:
     case TT_LAYOUT_SIZE:
     case TT_LAYOUT_MAP_HEADER:
+    case TT_LAYOUT_SYMBOL_COLOR:
       return thcmd_option_desc(id,3);
     case TT_LAYOUT_ORIGIN:
     case TT_LAYOUT_MAP_IMAGE:
@@ -436,6 +406,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SYMBOL_ASSIGN:
     case TT_LAYOUT_SYMBOL_HIDE:
     case TT_LAYOUT_SYMBOL_SHOW:
+    case TT_LAYOUT_SYMBOL_COLOR:
       if (this->def_tex_lines < 2) {
         this->first_line = this->db->db2d.insert_layoutln();
         this->last_line = this->first_line;
@@ -495,6 +466,13 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
+          break;
+        case TT_LAYOUT_SYMBOL_COLOR:
+          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          if (this->last_line->smid == -1)
+            ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
+          this->last_line->sclr.parse(args[2]);
+          this->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;
           break;
       }
       break;
@@ -1297,6 +1275,7 @@ void thlayout::self_print_library() {
       case TT_LAYOUT_CODE_SYMBOL_DEFAULTS:
       case TT_LAYOUT_CODE_SYMBOL_HIDE:
       case TT_LAYOUT_CODE_SYMBOL_SHOW:
+      case TT_LAYOUT_CODE_SYMBOL_COLOR:
         if (ln->line != NULL) {
           thdecode_c(&(this->db->buff_enc), ln->line);
           thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
@@ -1318,9 +1297,15 @@ void thlayout::self_print_library() {
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
               thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
               break;
-            default:  
+            case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
               thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              break;
+            case TT_LAYOUT_CODE_SYMBOL_COLOR:
+              thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->sclr = thlayout_color(%f,%f,%f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
+              break;
           }
         }
         break;
@@ -1618,6 +1603,9 @@ void thlayout::export_mpost_symbols(FILE * o, thsymbolset * symset) {
         break;
       case TT_LAYOUT_CODE_SYMBOL_SHOW:
         symset->export_symbol_show(o,ln->smid);
+        break;
+      case TT_LAYOUT_CODE_SYMBOL_COLOR:
+        symset->export_symbol_color(o,ln->smid,&(ln->sclr));
         break;
       case TT_LAYOUT_CODE_MAP_ITEM:
         symset->export_symbol_assign(o,ln->smid,ln->line);

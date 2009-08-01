@@ -116,7 +116,8 @@ void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
         vt2 = vtt - (tr * rvec);
       }
 
-      fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f) -- (%.2f,%.2f) -- (%.2f,%.2f) -- cycle));\n",
+        out->symset->export_mp_symbol_options(out->file, SYMA_DIMENSIONS);
+        fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f) -- (%.2f,%.2f) -- (%.2f,%.2f) -- cycle));\n",
         out->symset->get_mp_macro(SYMA_DIMENSIONS),
         thxmmxst(out, vf1.x, vf1.y),
         thxmmxst(out, vt1.x, vt1.y), 
@@ -133,6 +134,7 @@ void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
   }
   
   if (export_shot) {
+    out->symset->export_mp_symbol_options(out->file, this->type);
     fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
       out->symset->get_mp_macro(this->type),
       thxmmxst(out, this->lnx1, this->lny1),

@@ -240,6 +240,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
   string form_id;
   string tok, lastmovex, lastmovey, buffer;
   string font, patt, fntmatr;
+  string pattcolor = "0 0 0";
   bool comment = true, concat = false, 
        already_transp = false, transp_used = false, before_group_transp = false;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
@@ -406,7 +407,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         print_str(thstack[0]+" M",TEX);
         thstack.clear();
       }
-      else if (tok == "setgray") {
+      else if (mode > 0 && tok == "setgray") {  // ignore color for uncolored patterns
         if (already_transp) {  // transp off
           print_str("/GS0 gs",TEX);
           already_transp = false;
@@ -414,7 +415,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         print_str(thstack[0]+" g "+thstack[0]+" G",TEX);
         thstack.clear();
       }
-      else if (tok == "setrgbcolor") {
+      else if (mode > 0 && tok == "setrgbcolor") {  // ignore color for uncolored patterns
         if ((!((thstack[0] == "0.00002") && (thstack[1] == "0.00018"))) 
               && already_transp) {           // transp off
           print_str("/GS0 gs",TEX);
@@ -430,7 +431,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
               ALL_PATTERNS.insert(make_pair(patt,u2str(patt_id)));
               patt_id++;
             }
-            print_str("/CS1 cs /"+patt+" scn",TEX);
+            print_str("/CS1 cs "+pattcolor+" /"+patt+" scn",TEX);
           }
           else if (thstack[1] == "0.00018") {     // transparency
             transp_used = true;
@@ -554,6 +555,10 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         concat = true;
         thstack.clear();
       }
+      else if (tok == "THsetpatterncolor") {
+        pattcolor = thstack[0] + " " + thstack[1] + " " + thstack[2];
+        thstack.clear();
+      }
       else {
         thstack.push_back(tok);
       }
@@ -601,7 +606,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
                  "\\space 0 R ";
         }
         TEX << ">> ";
-        TEX << "/ColorSpace << /CS1 [/Pattern /DeviceGray] >> ";
+        TEX << "/ColorSpace << /CS1 [/Pattern /DeviceRGB] >> ";
       }
       TEX << "} ";
     }
@@ -707,12 +712,12 @@ void convert_scraps() {
     map<string,string>::iterator I = ALL_PATTERNS.find(num);
     if (I != ALL_PATTERNS.end()) {
       F << "\\immediate\\pdfobj stream attr {/Type /Pattern" << endl;
-      F << "/PaintType 1 /PatternType 1 /TilingType 1" << endl;
+      F << "/PaintType 2 /PatternType 1 /TilingType 1" << endl;
       F << "/Matrix " << matr << endl;
       F << "/BBox " << bbox << endl;
       F << "/XStep " << xstep << endl;
       F << "/YStep " << ystep << endl;
-      F << "/Resources << /ProcSet [/PDF ] >> } {0 g 0 G " << endl;
+      F << "/Resources << /ProcSet [/PDF ] >> } {" << endl;
       distill_eps("", pfile , "", 0, F);
       F << "} \\newcount \\" << tex_Pname((*I).second) << 
            "\\" << tex_Pname((*I).second) << "=\\pdflastobj" << endl;

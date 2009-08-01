@@ -1,0 +1,21 @@
+source ../basics/rabbit.th
+
+source
+map x -title "<lang:en>Test X<lang:sk>Hovadina X"
+ pdp@rabbit
+endmap
+endsource
+
+select x
+
+layout colors
+  map-header 105 50 w
+  language sk
+  legend on
+  symbol-color group centerline [100 0 0]
+  symbol-color group water      [0 20 100]
+endlayout
+
+export map -o cave.pdf -layout colors
+
+#!CLEAN cave.pdf

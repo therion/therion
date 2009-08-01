@@ -29,6 +29,7 @@
 #include "thparse.h"
 #include "thlangdata.cxx"
 #include "thinit.h"
+#include "thconfig.h"
 #include "thdatabase.h"
 #include "thexception.h"
 #include <map>
@@ -131,6 +132,8 @@ const char * thT(const char * txt, int lng) {
 }
 
 int thlang_getlang(int lng) {
+  if (lng == THLANG_UNKNOWN)
+    lng = thcfg.lang;
   if (lng == THLANG_UNKNOWN)
     lng = thini.lang;
   if (lng == THLANG_UNKNOWN)

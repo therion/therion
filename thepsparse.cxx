@@ -514,6 +514,7 @@ void parse_eps(string fname, string cname, double dx, double dy,
                converted_data & data, double R, double G, double B) {
   string tok, buffer;
   string font, patt;
+  string pattcolor = "0 0 0";
   bool comment = true, concat = false, 
        already_transp = false, transp_used = false, before_group_transp = false;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
@@ -807,6 +808,10 @@ void parse_eps(string fname, string cname, double dx, double dy,
 	text.b = B;
         concat = false;
         data.MP.add(text);
+        thbuffer.clear();
+      }
+      else if (tok == "THsetpatterncolor") {
+        pattcolor = thbuffer[0] + " " + thbuffer[1] + " " + thbuffer[2];
         thbuffer.clear();
       }
       else {

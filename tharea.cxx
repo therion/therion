@@ -242,10 +242,13 @@ bool tharea::export_mp(class thexpmapmpxs * out)
   }
 
   if (this->type == TT_AREA_TYPE_U) {
+    out->symset->export_mp_symbol_options(out->file, -1);
     fprintf(out->file,"a_u_%s(buildcycle(",this->m_subtype_str);
     this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
-  } else
+  } else {
+    out->symset->export_mp_symbol_options(out->file, macroid);
     fprintf(out->file,"%s(buildcycle(",out->symset->get_mp_macro(macroid));
+  }
 
   this->first_line->line->export_path_mp(out);
   bl = this->first_line->next_line;

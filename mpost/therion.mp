@@ -877,9 +877,26 @@ def endpattern=
   scantokens(Pname_ & "=Pnum_;");
 enddef;
 
+picture pattpict;
+color patterncolor_;
+patterncolor_ := black;
+
 primarydef p withpattern s=
   if known s:
-    p withcolor (epsilon, 10*epsilon, s*epsilon);
+
+    hide(pattpict := image(draw (0,0)--(10,10));
+      for i within pattpict:
+        patterncolor_ := (redpart i, greenpart i, bluepart i);
+      endfor;)
+
+    p withcolor (epsilon, 10*epsilon, s*epsilon)
+    if known mpversion:
+      if scantokens(mpversion)>=1.000: 
+        withprescript(decimal redpart   patterncolor_ & " " &
+                      decimal greenpart patterncolor_ & " " &
+                      decimal bluepart  patterncolor_ & " THsetpatterncolor")
+      fi;
+    fi;
   else:
     p withcolor (1,0,0);
     message("Warning: undefined pattern ignored");

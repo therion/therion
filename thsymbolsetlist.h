@@ -7,7 +7,7 @@
 #ifndef thsymbolsetlist_h
 #define thsymbolsetlist_h
 
-#define thsymbolset_size 180
+#define thsymbolset_size 181
 
 enum {
   SYMA_ = 0,
@@ -190,6 +190,7 @@ enum {
   SYMX_POINT_WATERFLOW = 177,
   SYMX_SECTIONS = 178,
   SYMX_SURFACECENTERLINE = 179,
+  SYMX_WATER = 180,
 };
 
 typedef const char * thsymbolset__char_ptr;
@@ -375,6 +376,7 @@ static const thsymbolset__char_ptr thsymbolset__mp [] = {
   "x_point_waterflow",
   "x_sections",
   "x_surfacecenterline",
+  "x_water",
 };
 
 static const bool thsymbolset__assign [] = {
@@ -558,6 +560,7 @@ static const bool thsymbolset__assign [] = {
   true,
   true,
   false,
+  true,
 };
 
 static const bool thsymbolset__hidden [] = {
@@ -724,6 +727,7 @@ static const bool thsymbolset__hidden [] = {
   false,
   false,
   false,
+  true,
   true,
   true,
   true,
@@ -924,6 +928,7 @@ static const thsymbolset__char_ptr thsymbolset__src [] = {
   "SYMX_POINT_WATERFLOW",
   "SYMX_SECTIONS",
   "SYMX_SURFACECENTERLINE",
+  "SYMX_WATER",
 };
 
 #endif

@@ -257,6 +257,7 @@ list<sheetrecord>::iterator find_sheet(int x, int y, int z) {
 
 void make_sheets() {
   double llx = 0, lly = 0, urx = 0, ury = 0;
+  double a,b,w,h;
   sheetrecord SHREC;
 
   if (mode == ATLAS) {
@@ -308,6 +309,21 @@ void make_sheets() {
       if (I->X3 > urx) urx = I->X3;
       if (I->X4 > ury) ury = I->X4;
     }
+    for (list<surfpictrecord>::iterator I_sk = I->SKETCHLIST.begin();
+                                          I_sk != I->SKETCHLIST.end(); I_sk++) {
+      for (int i = 0; i<=1; i++) {
+        for (int j = 0; j<=1; j++) {
+          w = i * I_sk->width;
+          h = j * I_sk->height;
+          a = I_sk->xx*w + I_sk->yx*h + I_sk->dx;
+          b = I_sk->xy*w + I_sk->yy*h + I_sk->dy;
+          if (a < llx) llx = a;
+          if (b < lly) lly = b;
+          if (a > urx) urx = a;
+          if (b > ury) ury = b;
+        }
+      }
+    };
 
     if (llx == DBL_MAX || lly == DBL_MAX || urx == -DBL_MAX || ury == -DBL_MAX) 
       therror(("This can't happen -- no data for a scrap!"));
@@ -1097,6 +1113,21 @@ void print_map(int layer, ofstream& PAGEDEF,
         PAGEDEF << "\\PL{Q}%" << endl;            // end of white color for filled bg
       }
     }
+    
+    // sketches
+    PAGEDEF.precision(6);
+    for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
+      for (list<surfpictrecord>::iterator I_sk = K->SKETCHLIST.begin();
+                                          I_sk != K->SKETCHLIST.end(); I_sk++) {
+        PAGEDEF << "\\pdfximage{" << (string) I_sk->filename << "}%" << endl;
+        PAGEDEF << "\\bitmap{" <<
+            I_sk->xx << "}{" << I_sk->yx << "}{" << I_sk->xy << "}{" << I_sk->yy << "}{" << 
+            I_sk->dx - HSHIFT << "}{" << I_sk->dy - VSHIFT  << 
+            "}{\\pdflastximage}%" << endl;
+      };
+    }
+    PAGEDEF.precision(2);
+    // end of sketches
 
     for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
       if (used_scraps.count(K->name) > 0 && K->G != "") {

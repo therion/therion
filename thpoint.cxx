@@ -399,7 +399,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
   bool postprocess = true, expsym = false;
   std::string attr_text;
-  int macroid = -1, cmark;
+  int macroid = -1, omacroid = -1, cmark;
   int postprocess_label = -1;
   this->db->buff_enc.guarantee(8128);
 //  char * buff = this->db->buff_enc.get_buffer();
@@ -435,6 +435,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
         out->symset->get_mp_macro(macroid);
+        out->symset->export_mp_symbol_options(out->file, macroid);
         fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
         switch (this->type) {
           case TT_POINT_TYPE_STATION_NAME:
@@ -463,7 +464,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           default:
             fprintf(out->file,"\\thnormalsize ");
         }
-        fprintf(out->file,"%s etex,",utf2tex(this->text));        
+        fprintf(out->file,"%s etex,",ths2tex(this->text, out->layout->lang).c_str());        
         if (this->type == TT_POINT_TYPE_STATION_NAME)
           postprocess_label = 7;
         else
@@ -492,6 +493,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       }
       
       expsym = out->symset->assigned[macroid];
+      omacroid = macroid;
 
       if (this->context >= 0) 
         macroid = this->context;
@@ -524,9 +526,10 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
         if ((pst != NULL) && (pst->comment != NULL) && (strlen(pst->comment) > 0)) {
           commentstr = "btex \\thcomment ";
-          commentstr += utf2tex(pst->comment);
+          commentstr += ths2tex(pst->comment, out->layout->lang);
           commentstr += " etex";
         }
+        out->symset->export_mp_symbol_options(out->file, omacroid);
         fprintf(out->file,"p_station(");
         this->point->export_mp(out);
         fprintf(out->file,",%d,%s,\"\"",
@@ -567,6 +570,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
         out->symset->get_mp_macro(SYMP_ALTITUDE);    
+        out->symset->export_mp_symbol_options(out->file, SYMP_ALTITUDE);
         fprintf(out->file,"p_label%s(btex \\thaltitude ",
 					thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
         switch (this->scale) {
@@ -617,6 +621,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           return(true);
 
         out->symset->get_mp_macro(macroid);
+        out->symset->export_mp_symbol_options(out->file, macroid);
         fprintf(out->file,"p_label%s(btex \\thheight ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
 
         switch (this->scale) {
@@ -668,6 +673,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
         out->symset->get_mp_macro(SYMP_DATE);    
+        out->symset->export_mp_symbol_options(out->file, SYMP_DATE);
         fprintf(out->file,"p_label%s(btex \\thdate ",
             thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
         switch (this->scale) {
@@ -721,7 +727,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           return(true);
         
         out->symset->get_mp_macro(macroid);
-            
+        out->symset->export_mp_symbol_options(out->file, macroid);
         fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
         switch (this->tags & (TT_POINT_TAG_HEIGHT_P |
         TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) {
@@ -824,7 +830,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         }
         if (tmp.length() > 0) {
           attr_text = "btex \\thcomment ";
-          attr_text += utf2tex(tmp);
+          attr_text += ths2tex(tmp, out->layout->lang);
           attr_text += "etex";
         }
       }
@@ -921,10 +927,13 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         fprintf(out->file, "picture ATTR__text;\nATTR__text := %s;\n", attr_text.c_str());
       }
       if (this->type == TT_POINT_TYPE_U) {
+         out->symset->export_mp_symbol_options(out->file, -1);
          fprintf(out->file,"p_u_%s(",this->m_subtype_str);
          this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
-      } else
+      } else {
+         out->symset->export_mp_symbol_options(out->file, macroid);
          fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+      }
     }
     else
       postprocess = false;

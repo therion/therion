@@ -349,8 +349,9 @@ void lxLRUD::Calculate()
     
 #define pXY(i,x,y) pX[i] = x; pY[i] = y;
 
-    if (shi->profile != prevProfile) {
-      switch (shi->profile) {
+    //if (shi->profile != prevProfile) {
+	if (psi->arrow.edge->shot->profile != prevProfile) {
+      switch (psi->arrow.edge->shot->profile) {
         case LXLRUD_TUNNEL:
           pXY(0,0.0,1.0)
           pXY(1,0.5,0.75)
@@ -393,7 +394,7 @@ void lxLRUD::Calculate()
           break;
       }
     }
-    prevProfile = shi->profile;
+    prevProfile = psi->arrow.edge->shot->profile;
 
     shotDir = nodes[si->arrow.GetTX()].p - nodes[si->arrow.GetFX()].p;
 

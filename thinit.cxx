@@ -310,7 +310,7 @@ void thinit::load()
   this->path_cavern.guarantee(1024);
   thmbuffer mbf;
   thbuffer bf;
-  DWORD type, length = 1024;
+  DWORD type(0), length = 1024;
   HKEY key;
   bool loaded_ok = true;
 	if (RegOpenKey(HKEY_CLASSES_ROOT,"survex.source\\shell\\Process\\command",&key) != ERROR_SUCCESS)

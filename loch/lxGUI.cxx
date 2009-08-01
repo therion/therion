@@ -1013,6 +1013,7 @@ void lxFrame::ToggleViewpointSetup()
 
 void lxFrame::SetupUpdate()
 {
+  if (this == NULL) return;
   if (this->m_viewpointSetupDlgOn)
     this->m_viewpointSetupDlg->LoadSetup();
   if (this->m_modelSetupDlgOn)

@@ -30,7 +30,9 @@
 #define thsymbolset_h
 
 #include "thsymbolsetlist.h"
+#include "thlayoutclr.h"
 #include <stdio.h>
+
 
 /**
  * Symbol set class.
@@ -38,8 +40,9 @@
  
 struct thsymbolset {
   
-  bool assigned[thsymbolset_size],   ///< definovane symboly
-    used[thsymbolset_size];          ///< pouzite symboly
+  bool assigned[thsymbolset_size],        ///< definovane symboly
+    used[thsymbolset_size];               ///< pouzite symboly
+  thlayout_color color[thsymbolset_size];    ///< Symbol colors.
     
   bool group_symbols; ///< Ci zgrupuje podobne symboly alebo nie.
   
@@ -72,6 +75,11 @@ struct thsymbolset {
   void export_symbol_show(FILE * mpf, int sym_id);
 
   /**
+   * Set symbol color.
+   */
+  void export_symbol_color(FILE * mpf, int sym_id, thlayout_color * clr);
+
+  /**
    * Do MP suboru zapise mapsymbol() makro + zmeni hidden value.
    */
   void export_symbol_assign_group(FILE * mpf, int sym_id, const char * symset);
@@ -85,12 +93,25 @@ struct thsymbolset {
    * Zobrazi symbol.
    */
   void export_symbol_show_group(FILE * mpf, int sym_id);
+
+  /**
+   * Set symbol color.
+   */
+  void export_symbol_color_group(FILE * mpf, int sym_id, thlayout_color * clr);
   
   /** 
    * Exportuje znackovy kluc do pdfka.
    */
    
   void export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfig);
+
+
+  /**
+   * Export symbol options to metapost.
+   */
+
+  void export_mp_symbol_options(FILE * mpf, int sym_id);
+
 
 };
 

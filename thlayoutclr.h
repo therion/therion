@@ -1,9 +1,9 @@
 /** 
- * @file thlayoutln.h
+ * @file thlayoutclr.h
  * Scrap outline line class.
  */
   
-/* Copyright (C) 2000 Stacho Mudrak
+/* Copyright (C) 2009 Stacho Mudrak
  * 
  * $Date: $
  * $RCSfile: $
@@ -26,36 +26,21 @@
  * --------------------------------------------------------------------
  */
  
-#ifndef thlayoutln_h
-#define thlayoutln_h
-
-#include <list>
-#include "thlayoutclr.h"
+#ifndef thlayoutclr_h
+#define thlayoutclr_h
 
 /**
- * Layout line class.
+ * layout color class.
  */
- 
-class thlayoutln {
 
-  public:
-  
-  char code;
- 
-  thlayoutln * next_line;
-    
-  const char * line;
-
-  thlayout_color sclr; ///< Symbol color.
-  
-  int smid;  ///< Symbol macro ID
-
-  thlayoutln(); ///< Default constructor
+struct thlayout_color {
+  double R, G, B;
+  int defined;
+  void parse(char * str);
+  thlayout_color() : R(1.0), G(1.0), B(1.0), defined(false) {}
+  thlayout_color(double v) : R(v), G(v), B(v), defined(false) {}
+  thlayout_color(double r, double g, double b) : R(r), G(g), B(b), defined(false) {}
 };
-
-
-typedef std::list <thlayoutln> thlayoutln_list;  ///< Points list.
-
 
 #endif
 

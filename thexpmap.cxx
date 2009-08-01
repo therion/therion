@@ -1137,6 +1137,8 @@ else
                     lim.Add(cs->lxmax, cs->lymax, cs->z);
                   }
 
+                  SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
+
                   if (this->layout->sketches) {
                     thsketch_list::iterator skit;
                     thpic * skpic;
@@ -1164,7 +1166,8 @@ else
                         srfpr.xy =  crot * txy + srot * tyy;
                         srfpr.yx = -srot * txx + crot * tyx;
                         srfpr.yy = -srot * txy + crot * tyy;
-                        SURFPICTLIST.insert(SURFPICTLIST.end(), srfpr);
+                        SCRAPITEM->SKETCHLIST.insert(SCRAPITEM->SKETCHLIST.end(), srfpr);
+                        //SURFPICTLIST.insert(SURFPICTLIST.end(), srfpr);
                         fprintf(plf,"\n\n# PICTURE: %s\n", srfpr.filename);
                         fprintf(plf,    "#  origin: %g %g\n", srfpr.dx, srfpr.dy);
                         fprintf(plf,    "#  matrix: %g %g %g %g\n\n", srfpr.xx, srfpr.xy, srfpr.yx, srfpr.yy);
@@ -1173,8 +1176,6 @@ else
                     }
                   }
 
-
-                  SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
                   SCRAPITEM->sect = 0;
                   SCRAPITEM->name = thexpmap_u2string(sscrap);
 
@@ -1685,12 +1686,12 @@ else
   }
 
   // ak neni atlas, tak nastavi legendcavename
-  fprintf(tf,"\\cavename={%s}\n",utf2tex(tit.get_buffer()));
+  fprintf(tf,"\\cavename={%s}\n",ths2tex(tit.get_buffer(), this->layout->lang).c_str());
   ldata.cavename = tit.get_buffer();
   ldata.comment = "";
 
   if (strlen(this->layout->doc_comment) > 0) {
-    fprintf(tf,"\\comment={%s}\n",utf2tex(this->layout->doc_comment));
+    fprintf(tf,"\\comment={%s}\n",ths2tex(this->layout->doc_comment, this->layout->lang).c_str());
     ldata.comment = this->layout->doc_comment;
   }
   
@@ -2229,6 +2230,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
               case TT_POINT_TYPE_MAP_CONNECTION:
                 if (out->symset->assigned[SYML_MAPCONNECTION]) {
                   thexpmap_export_mp_bgif;
+                  out->symset->export_mp_symbol_options(out->file, SYML_MAPCONNECTION);
                   fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
                   out->symset->get_mp_macro(SYML_MAPCONNECTION),
                   thxmmxst(out, ptp->point->xt, ptp->point->yt),
@@ -2311,10 +2313,11 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         std::string commentstr("0");
         if ((slp->station->comment != NULL) && (strlen(slp->station->comment) > 0)) {
           commentstr = "btex \\thcomment ";
-          commentstr += utf2tex(slp->station->comment);
+          commentstr += ths2tex(slp->station->comment, out->layout->lang);
           commentstr += " etex";
         }
         this->db->db1d.m_station_attr.export_mp_object_begin(out->file, slp->station_name.id);
+        out->symset->export_mp_symbol_options(out->file, macroid);
         fprintf(out->file,"p_station((%.2f,%.2f),%d,%s,\"\"",
           thxmmxst(out, slp->stx, slp->sty),
           out->symset->assigned[macroid] ? slp->station->mark : 0,
@@ -2675,8 +2678,12 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
               // vsetkym scrapom v kazdej priradi farbu
               if (firstmapscrap) {
                 thset_color(0, (double) (nmap - cmn), (double) nmap, cR, cG, cB);
-                clrec.texname = utf2tex(strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name);
-                clrec.name = (strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name);
+                std::string maptitle("");
+                if (strlen(cmap->map->title) > 0) {
+                  maptitle = ths2txt(cmap->map->title, this->layout->lang);
+                }
+                clrec.texname = ths2tex(maptitle.length() > 0 ? cmap->map->title : cmap->map->name, this->layout->lang);
+                clrec.name = (maptitle.length() > 0 ? maptitle : std::string(cmap->map->name));
                 alpha_correction(tmp_alpha, cR, cG, cB);
                 clrec.R = cR;
                 clrec.G = cG; 

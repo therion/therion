@@ -30,6 +30,7 @@
 #define thparse_h
 
 #include <stdio.h>
+#include <string>
 #include "thbuffer.h"
 #include "thmbuffer.h"
 
@@ -385,6 +386,9 @@ bool thpath_is_absolute(const char * fname);
  */
 bool th_is_attr_name(const char * str);
 
+std::string ths2tex(std::string original, int lang = -1, bool remove_kerning = false);
+
+std::string ths2txt(std::string original, int lang = -1, int encoding = -1);
 
 #endif
 

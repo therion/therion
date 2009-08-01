@@ -33,6 +33,12 @@
 
 using namespace std;
 
+struct surfpictrecord {
+  const char * filename, * type;
+  double dx, dy, xx, xy, yx, yy, width, height;
+};
+
+
 struct scraprecord {
   string name,F,B,I,E,X,G,C,P;      // name + files
   converted_data Fc, Bc, Ic, Ec, Xc, Gc;
@@ -46,6 +52,7 @@ struct scraprecord {
         X1,X2,X3,X4;
         
   double r,g,b;
+  list<surfpictrecord> SKETCHLIST;
   scraprecord();
 };
 
@@ -120,11 +127,6 @@ extern list<pattern> PATTERNLIST;
 extern list<converted_data> GRIDLIST;
 extern converted_data NArrow, ScBar;
 
-
-struct surfpictrecord {
-  const char * filename, * type;
-  double dx, dy, xx, xy, yx, yy, width, height;
-};
 
 
 extern list<surfpictrecord> SURFPICTLIST;

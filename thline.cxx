@@ -643,7 +643,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
   if (this->first_point == NULL)
     return(false);
   bool postprocess = true, todraw, fsize, frot, anypt;  //, first
-  int from, to, cs, macroid = -1;
+  int from, to, cs, macroid = -1, omacroid = -1;
   double s1, r1;
   thdb2dlp * lp;
 
@@ -681,6 +681,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           if (out->symset->assigned[macroid]) {
             if (out->file == NULL)
               return(true);
+            out->symset->export_mp_symbol_options(out->file, macroid);
             fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
             this->export_path_mp(out,from,to);
             fprintf(out->file,");\n");
@@ -703,6 +704,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
 
     case TT_LINE_TYPE_LABEL:
       macroid = SYML_LABEL;
+      omacroid = macroid;
       if (this->context >= 0) 
         macroid = this->context;
       if ((this->text == NULL) || (!out->symset->assigned[macroid])) {
@@ -711,6 +713,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       } 
       if (out->file == NULL)
         return(true);
+      out->symset->export_mp_symbol_options(out->file, omacroid);
       fprintf(out->file,"l_label(btex ");
       switch (this->scale) {
         case TT_2DOBJ_SCALE_XL:
@@ -729,7 +732,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           fprintf(out->file,"\\thnormalsize ");
       }
       //thdecode(&(this->db->buff_enc),TT_ISO8859_2,this->text);
-      fprintf(out->file,"%s etex,",utf2tex(this->text, true));
+      fprintf(out->file,"%s etex,",ths2tex(this->text, out->layout->lang, true).c_str());
       this->export_path_mp(out);
       fprintf(out->file,");\n");
       postprocess = false;
@@ -744,6 +747,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       }
       if (out->file == NULL)
         return(true);
+      out->symset->export_mp_symbol_options(out->file, SYML_CONTOUR);
       fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_CONTOUR));
       this->export_path_mp(out);
       from = 0;
@@ -794,6 +798,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       }
       if (out->file == NULL)
         return(true);
+      out->symset->export_mp_symbol_options(out->file, SYML_SLOPE);
       fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_SLOPE));
       this->export_path_mp(out);
       fprintf(out->file,",%d",
@@ -868,6 +873,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       }
       if (out->file == NULL)
         return(true);
+      out->symset->export_mp_symbol_options(out->file, SYML_ARROW);
       fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_ARROW));
       this->export_path_mp(out);
       from = 0;
@@ -889,6 +895,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       }
       if (out->file == NULL)
         return(true);
+      out->symset->export_mp_symbol_options(out->file, SYML_SECTION);
       fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_SECTION));
       this->export_path_mp(out);
       anypt = false;
@@ -936,12 +943,14 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_PRESUMED, SYML_BORDER_PRESUMED)
             thline_type_export_mp(TT_LINE_SUBTYPE_INVISIBLE, SYML_BORDER_INVISIBLE)
           }
+          omacroid = macroid;
           if (this->context >= 0) 
             macroid = this->context;
           if (out->symset->assigned[macroid]) {
             if (out->file == NULL)
               return(true);
-            fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+            out->symset->export_mp_symbol_options(out->file, omacroid);
+            fprintf(out->file,"%s(",out->symset->get_mp_macro(omacroid));
             this->export_path_mp(out,from,to);
             fprintf(out->file,");\n");
             if (out->layout->is_debug_joins()) {
@@ -978,12 +987,14 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_INTERMITTENT, SYML_WATERFLOW_INTERMITTENT)
             thline_type_export_mp(TT_LINE_SUBTYPE_CONJECTURAL, SYML_WATERFLOW_CONJECTURAL)
           }
+          omacroid = macroid;
           if (this->context >= 0) 
             macroid = this->context;
           if (out->symset->assigned[macroid]) {
             if (out->file == NULL)
               return(true);
-            fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+            out->symset->export_mp_symbol_options(out->file, omacroid);
+            fprintf(out->file,"%s(",out->symset->get_mp_macro(omacroid));
             this->export_path_mp(out,from,to);
             fprintf(out->file,");\n");
           }
@@ -1009,12 +1020,14 @@ bool thline::export_mp(class thexpmapmpxs * out)
           switch (cs) {
             thline_type_export_mp(TT_LINE_SUBTYPE_SURFACE, SYML_SURVEY_SURFACE)
           }
+          omacroid = macroid;
           if (this->context >= 0) 
             macroid = this->context;
           if (out->symset->assigned[macroid]) {
             if (out->file == NULL)
               return(true);
-            fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+            out->symset->export_mp_symbol_options(out->file, omacroid);
+            fprintf(out->file,"%s(",out->symset->get_mp_macro(omacroid));
             this->export_path_mp(out,from,to);
             fprintf(out->file,");\n");
           }
@@ -1034,16 +1047,20 @@ bool thline::export_mp(class thexpmapmpxs * out)
       this->export_path_mp(out);
       fprintf(out->file,");\n");
     } else {
+      omacroid = macroid;
       if (this->context >= 0) 
         macroid = this->context;
       if (out->symset->assigned[macroid]) {
         if (out->file == NULL)
           return(true);
         if (this->type == TT_LINE_TYPE_U) {
+          out->symset->export_mp_symbol_options(out->file, -1);
           fprintf(out->file,"l_u_%s(", this->m_subtype_str);
           this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
-        } else
-          fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+        } else {
+          out->symset->export_mp_symbol_options(out->file, omacroid);
+          fprintf(out->file,"%s(",out->symset->get_mp_macro(omacroid));
+        }
         this->export_path_mp(out);
         fprintf(out->file,");\n");
         if (out->layout->is_debug_joins()) {

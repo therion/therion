@@ -376,9 +376,9 @@ int main(int argc, char * argv[]) {
     thdb.db1d.print_loops();
     thdb.db2d.log_distortions();
     
-#ifdef THMSVC
-    getchar();
-#endif
+//#ifdef THMSVC
+//    getchar();
+//#endif
 
     //exit the program
     return(EXIT_SUCCESS);

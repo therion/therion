@@ -6,7 +6,8 @@ CMNOBJECTS = \
   lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o \
   img.o
 
-VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lfreetype
+VTKVERSION = 5.4
+VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
 POSTMAKE =
 STRIPFLAG = -s 
 
@@ -16,47 +17,49 @@ STRIPFLAG = -s
 ##CXX = c++
 ##CC = gcc
 ##POBJECTS = lxR2P.o
-##VTKPATH = /usr/local/include/vtk-5.0
-##VTKLIBPATH = /usr/local/lib/vtk-5.0
+##VTKPATH = /usr/local/include/vtk-$(VTKVERSION)
+##VTKLIBPATH = /usr/local/lib/vtk-$(VTKVERSION)
 ##CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 ##CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 ##LXLIBDIR = linux
-##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lGLU -lpthread -lz 
+##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lpthread -lz 
 ##LXPLATFORM = LINUX
 
 # PLATFORM DEBIAN
 CXX = c++
 CC = gcc
 POBJECTS = lxR2P.o
-VTKPATH = /usr/include/vtk-5.0
-VTKLIBPATH = /usr/lib/vtk-5.0
+VTKPATH = /usr/include/vtk-$(VTKVERSION)
+VTKLIBPATH = /usr/lib/vtk-$(VTKVERSION)
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 LXLIBDIR = linux
-PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKPATH)/lib/vtk $(VTKLIBS) -lGLU -lpthread -lz 
+PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lpthread -lz 
 LXPLATFORM = LINUX
 
 # PLATFORM WIN32
 ##CXX = c++
 ##CC = gcc
-##VTKPATH = /usr/local/include/vtk-5.0
+##VTKPATH = /usr/local/include/vtk-$(VTKVERSION)
+##VTKLIBPATH = /usr/local/lib/vtk-$(VTKVERSION)
 ##POBJECTS = loch.res lxR2D.o getline.o
 ##CXXPFLAGS = -W -Wall -DLXWIN32 $(shell wx-config --static --cxxflags) $(shell freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell wx-config --static --cflags)
 ##LXLIBDIR = mingw
-##PLIBS = $(shell freetype-config --libs) $(shell wx-config --static --libs --gl-libs) $(VTKLIBS) -lwxzlib-2.6
+##PLIBS = $(shell freetype-config --libs) $(shell wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##LXPLATFORM = WIN32
 
 # PLATFORM MACOSX
 ##CXX = c++
 ##CC = cc
-##VTKPATH = /usr/local/include/vtk-5.0
+##VTKPATH = /usr/local/include/vtk-$(VTKVERSION)
+##VTKLIBPATH = /usr/local/lib/vtk-$(VTKVERSION)
 ##POBJECTS = getline.o
 ##CXXPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cxxflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
 ##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cflags) -I/usr/X11R6/include
 ##LXLIBDIR = 
-##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --static --libs --gl-libs) $(VTKLIBS)
+##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##POSTMAKE = cp -f ./loch ./loch.app/Contents/MacOS
 ##STRIPFLAG =
 

@@ -1,3 +1,5 @@
+bug s izbicou a pevnymi bodmi
+
 xth calibrate bitmap: zlucit filtre img/pdf
 
 Makefile: make library pri zmene prekladov (neaktualne therion.tcl!)

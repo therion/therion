@@ -140,7 +140,6 @@ lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat,
   this->m_maxTSizeO = 0;
   this->m_maxTSizeS = 0;
 
-  this->SetCurrent();  
   this->m_initTextures = true;
 
 }
