@@ -329,7 +329,7 @@ string utf2tex(string str, bool remove_kerning) {
   bool rtl = false;
   bool is_multiline = false;
 
-  str = select_lang(str, LAYOUT.langstr);
+//  str = select_lang(str, LAYOUT.langstr);
 
   if (str.find("<center>") != string::npos) align = 1;
   else if (str.find("<centre>") != string::npos) align = 1;

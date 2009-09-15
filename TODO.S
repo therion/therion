@@ -2,20 +2,15 @@ HOT LIST:
 
 + priradenie farieb mapam
 + priame proj4 retazce do CS
-
-+ sketche do SVG
 + calibracia surface v lochu
 + survey selection v loch-u
 + loch entrance/fix/station/label off-screen rendering
-
 + splayshoty previest na LRUD
-
-+ thbook: units up|down|left|right|dimensions
-+ thbook: symbol-color <type> <symbol> <color>
 + jazyky parsovat na vystupe - odskusat
 + chybaju meracske body v legende
 + farby patternov odladit
 
++ thbook: units up|down|left|right|dimensions
 + thbook: splay shots using "-" or "." as station name
 + thbook: in therion.ini otf2pfb on|off
 + thbook: in therion.ini pdf-fonts
@@ -23,8 +18,8 @@ HOT LIST:
 + thbook: more join description
 + thbook: flags arch & overhang
 + thbook: export cave-list -surveys (on)|off
-
-+ changes: fixed bug with lat/long out of range
++ thbook: symbol-colour
++ thbook: new symbol groups
 
 + include maps with previews
 + loch surface handling

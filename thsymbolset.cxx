@@ -153,7 +153,10 @@ static const thstok thtt_symbol_group[] = {
   {"cave-centreline", SYMX_CAVECENTERLINE},
   {"centerline", SYMX_CENTERLINE},
   {"centreline", SYMX_CENTERLINE},
+  {"equipment", SYMX_EQUIPMENT},
+  {"passage-fills", SYMX_PASSAGEFILLS},
   {"sections", SYMX_SECTIONS},
+  {"speleothems", SYMX_SPELEOTHEMS},
   {"surface-centerline", SYMX_SURFACECENTERLINE},
   {"surface-centreline", SYMX_SURFACECENTERLINE},
   {"water", SYMX_WATER},
@@ -565,6 +568,79 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(3,SYMA_WATER)
     group(4,SYMA_SUMP)
     egroup  
+
+    bgroup(SYMX_EQUIPMENT)
+    group( 0,SYMP_ANCHOR);
+    group( 1,SYMP_ROPE);
+    group( 2,SYMP_FIXEDLADDER);
+    group( 3,SYMP_ROPELADDER);
+    group( 4,SYMP_STEPS);
+    group( 5,SYMP_BRIDGE);
+    group( 6,SYMP_TRAVERSE);
+    group( 7,SYMP_CAMP);
+    group( 8,SYMP_NOEQUIPMENT);
+    group( 9,SYML_ROPE);
+    egroup
+
+
+
+    bgroup(SYMX_SPELEOTHEMS)
+    group( 0,SYMP_FLOWSTONE);
+    group( 1,SYMP_MOONMILK);
+    group( 2,SYMP_STALACTITE);
+    group( 3,SYMP_STALAGMITE);
+    group( 4,SYMP_PILLAR);
+    group( 5,SYMP_CURTAIN);
+    group( 6,SYMP_HELICTITE);
+    group( 7,SYMP_SODASTRAW);
+    group( 8,SYMP_CRYSTAL);
+    group( 9,SYMP_WALLCALCITE);
+    group(10,SYMP_POPCORN);
+    group(11,SYMP_DISK);
+    group(12,SYMP_GYPSUM);
+    group(13,SYMP_GYPSUMFLOWER);
+    group(14,SYMP_ARAGONITE);
+    group(15,SYMP_CAVEPEARL);
+    group(16,SYMP_RIMSTONEPOOL);
+    group(17,SYMP_RIMSTONEDAM);
+    group(18,SYMP_ANASTOMOSIS);
+    group(19,SYMP_KARREN);
+    group(20,SYMP_SCALLOP);
+    group(21,SYMP_FLUTE);
+    group(22,SYMP_RAFTCONE);
+    group(23,SYML_FLOWSTONE);
+    group(24,SYML_MOONMILK);
+    group(25,SYMA_FLOWSTONE)
+    group(26,SYMA_MOONMILK)
+    egroup
+
+    bgroup(SYMX_PASSAGEFILLS)
+    group(0,SYMX_POINT_WATERFLOW)
+    group(1,SYMP_BEDROCK);
+    group(2,SYMP_SAND);
+    group(3,SYMP_RAFT);
+    group(4,SYMP_CLAY);
+    group(5,SYMP_PEBBLES);
+    group(6,SYMP_DEBRIS);
+    group(7,SYMP_BLOCKS);
+    group(8,SYMP_WATER);
+    group(9,SYMP_ICE);
+    group(10,SYMP_GUANO);
+    group(11,SYMP_SNOW);
+    group(12,SYML_ROCKBORDER);
+    group(13,SYML_ROCKEDGE);
+    group(14,SYMX_LINE_WATERFLOW)
+    group(15,SYMA_WATER)
+    group(16,SYMA_SUMP)
+    group(17,SYMA_BEDROCK)
+    group(18,SYMA_BLOCKS)
+    group(19,SYMA_CLAY)
+    group(20,SYMA_DEBRIS)
+    group(21,SYMA_ICE)
+    group(22,SYMA_PEBBLES)
+    group(23,SYMA_SAND)
+    group(24,SYMA_SNOW)
+    egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
     group(0,SYMP_SURFACESTATION)

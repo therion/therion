@@ -122,7 +122,7 @@ comments follow the `|#|' character.
 {\it Adding new \TeX\ encodings}
 
 It's easy to add new encodings for 2D map output.%
-\[This section applies to the old-style font selection using |tex-fonts|
+\[\NEW{5.3}This section applies to old-style font selection using |tex-fonts|
 command in the initialization file and is obsolete when using |pdf-fonts| 
 command.]
 Copy an appropriate encoding 
@@ -201,7 +201,7 @@ supported initialization commands follow.
         
 * |language <xx[_YY]>|  
 
-  Default output language (used for maps). See the layout command for
+  Default output language. See the copyright page for
   the list of available languages.
 
 * |units <metric/imperial>| 
@@ -212,6 +212,10 @@ supported initialization commands follow.
 
   Set the full path to a \MP\ executable if Therion can't find it 
   (``|mpost|'' is the default).
+
+* |mpost-options <string>|
+
+  Set \MP\ options.
 
 * |pdftex-path <file-path>|
 
@@ -519,6 +523,7 @@ new features to be implemented:
 \list
 * complete the predefined symbol sets
 * generate registers for atlas
+* use MPlib instead of \MP
 \endlist
 
 
@@ -537,8 +542,9 @@ new features to be implemented:
 \subsubchapter Loch.
 
 \list
-* station labels and markers, colour schemes
+* colour schemes
 * survey tree for selecting sub-surveys to display
+* spatial filtering (e.g.~clipping by planes)
 * support for multiple surfaces
 \endlist
 

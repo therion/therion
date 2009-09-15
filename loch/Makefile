@@ -49,6 +49,8 @@ LXPLATFORM = LINUX
 ##LXLIBDIR = mingw
 ##PLIBS = $(shell freetype-config --libs) $(shell wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##LXPLATFORM = WIN32
+##STRIPFLAG = -static-libgcc -static -s
+
 
 # PLATFORM MACOSX
 ##CXX = c++

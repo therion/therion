@@ -61,6 +61,7 @@ void base64_encode(const char * fname, ofstream & fout) {
   unsigned char out_buffer[4];
 
   ifstream fin(fname, ios::binary);
+  if (!fin) therror((((string)"Can't read file "+fname+"!\n").c_str()));
 
   do {
       for (int i = 0; i < 3; i++) in_buffer[i] = '\x0';
@@ -90,6 +91,7 @@ void base64_encode(const char * fname, ofstream & fout) {
 
 void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
   double llx = 0, lly = 0, urx = 0, ury = 0;
+  double a,b,w,h;
   MINX=DBL_MAX, MINY=DBL_MAX, MAXX=-DBL_MAX, MAXY=-DBL_MAX;
   for (list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
@@ -131,6 +133,22 @@ void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
       if (I->X3 > urx) urx = I->X3;
       if (I->X4 > ury) ury = I->X4;
     }
+    for (list<surfpictrecord>::iterator I_sk = I->SKETCHLIST.begin();
+                                          I_sk != I->SKETCHLIST.end(); I_sk++) {
+      for (int i = 0; i<=1; i++) {
+        for (int j = 0; j<=1; j++) {
+          w = i * I_sk->width;
+          h = j * I_sk->height;
+          a = I_sk->xx*w + I_sk->yx*h + I_sk->dx;
+          b = I_sk->xy*w + I_sk->yy*h + I_sk->dy;
+          if (a < llx) llx = a;
+          if (b < lly) lly = b;
+          if (a > urx) urx = a;
+          if (b > ury) ury = b;
+        }
+      }
+    };
+
 
     if (llx == DBL_MAX || lly == DBL_MAX || urx == -DBL_MAX || ury == -DBL_MAX) 
       therror(("This can't happen -- no data for a scrap!"));

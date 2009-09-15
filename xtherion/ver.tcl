@@ -1,1 +1,1 @@
-set xth(about,ver) 5.2.11
+set xth(about,ver) 5.2.12

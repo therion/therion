@@ -388,6 +388,8 @@ bool th_is_attr_name(const char * str);
 
 std::string ths2tex(std::string original, int lang = -1, bool remove_kerning = false);
 
+std::string ths2txt(const char * original, int lang = -1, int encoding = -1);
+
 std::string ths2txt(std::string original, int lang = -1, int encoding = -1);
 
 #endif

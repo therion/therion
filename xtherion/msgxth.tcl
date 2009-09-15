@@ -8,6 +8,7 @@
   ::msgcat::mcset it "Drag to resize control panel." [encoding convertfrom utf-8 "Trascina per ridimensionare il pannello dei controlli"]
   ::msgcat::mcset ru "Drag to resize control panel." [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\321\202\320\260\321\201\320\272\320\270\320\262\320\260\320\271\321\202\320\265 \320\264\320\273\321\217 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\321\217 \321\200\320\260\320\267\320\274\320\265\321\200\320\260 \320\277\320\260\320\275\320\265\320\273\320\270"]
   ::msgcat::mcset sk "Drag to resize control panel." [encoding convertfrom utf-8 "Roz\305\241\303\255ri\305\245 alebo z\303\272\305\276i\305\245 okno kontroln\303\275ch panelov."]
+  ::msgcat::mcset sq "Drag to resize control panel." [encoding convertfrom utf-8 "levize per te rritur dritaren kontrolluese"]
 
   ::msgcat::mcset cz "File" [encoding convertfrom utf-8 "Soubor"]
   ::msgcat::mcset de "File" [encoding convertfrom utf-8 "Datei"]
@@ -17,6 +18,7 @@
   ::msgcat::mcset it "File" [encoding convertfrom utf-8 "File"]
   ::msgcat::mcset ru "File" [encoding convertfrom utf-8 "\320\244\320\260\320\271\320\273"]
   ::msgcat::mcset sk "File" [encoding convertfrom utf-8 "S\303\272bor"]
+  ::msgcat::mcset sq "File" [encoding convertfrom utf-8 "fajlli"]
 
   ::msgcat::mcset cz "Maximize" [encoding convertfrom utf-8 "Maximalizovat"]
   ::msgcat::mcset de "Maximize" [encoding convertfrom utf-8 "Maximieren"]
@@ -26,6 +28,7 @@
   ::msgcat::mcset it "Maximize" [encoding convertfrom utf-8 "Massimizza"]
   ::msgcat::mcset ru "Maximize" [encoding convertfrom utf-8 "\320\240\320\260\320\267\320\262\320\265\321\200\320\275\321\203\321\202\321\214"]
   ::msgcat::mcset sk "Maximize" [encoding convertfrom utf-8 "Maximalizova\305\245"]
+  ::msgcat::mcset sq "Maximize" [encoding convertfrom utf-8 "rrite ne maksimum"]
 
   ::msgcat::mcset cz "Normalize" [encoding convertfrom utf-8 "Norm\303\241ln\303\255 velikost"]
   ::msgcat::mcset de "Normalize" [encoding convertfrom utf-8 "Normalgr\303\266\303\237e"]
@@ -35,6 +38,7 @@
   ::msgcat::mcset it "Normalize" [encoding convertfrom utf-8 "Normalizza"]
   ::msgcat::mcset ru "Normalize" [encoding convertfrom utf-8 "\320\241\320\262\320\265\321\200\320\275\321\203\321\202\321\214"]
   ::msgcat::mcset sk "Normalize" [encoding convertfrom utf-8 "Norm\303\241lna ve\304\276kos\305\245"]
+  ::msgcat::mcset sq "Normalize" [encoding convertfrom utf-8 "normalizo"]
 
   ::msgcat::mcset cz "Switch panels" [encoding convertfrom utf-8 "P\305\231eho\304\217 panely"]
   ::msgcat::mcset de "Switch panels" [encoding convertfrom utf-8 "Panel verschieben"]
@@ -44,6 +48,7 @@
   ::msgcat::mcset it "Switch panels" [encoding convertfrom utf-8 "Cambia posto al pannello"]
   ::msgcat::mcset ru "Switch panels" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\272\320\273\321\216\321\207\320\270\321\202\321\214 \320\277\320\260\320\275\320\265\320\273\320\270"]
   ::msgcat::mcset sk "Switch panels" [encoding convertfrom utf-8 "Preho\304\217 panely"]
+  ::msgcat::mcset sq "Switch panels" [encoding convertfrom utf-8 "nderro panelat"]
 
   ::msgcat::mcset cz "Toggle toolbar" [encoding convertfrom utf-8 "Vypnout/zapnout li\305\241tu n\303\241stroj\305\257"]
   ::msgcat::mcset de "Toggle toolbar" [encoding convertfrom utf-8 "Werkzeugleiste anzeigen/verbergen"]
@@ -51,6 +56,7 @@
   ::msgcat::mcset it "Toggle toolbar" [encoding convertfrom utf-8 "Mostra/Nascondi la barra strumenti"]
   ::msgcat::mcset ru "Toggle toolbar" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\272\320\273\321\216\321\207\320\270\321\202\321\214 \320\277\320\260\320\275\320\265\320\273\321\214 \320\270\320\275\321\201\321\202\321\200\321\203\320\274\320\265\320\275\321\202\320\276\320\262"]
   ::msgcat::mcset sk "Toggle toolbar" [encoding convertfrom utf-8 "Zapn\303\272\305\245/vypn\303\272\305\245 panel"]
+  ::msgcat::mcset sq "Toggle toolbar" [encoding convertfrom utf-8 "dritarja aktivizuese"]
 
   ::msgcat::mcset cz "KBD encoding" [encoding convertfrom utf-8 "K\303\263dov\303\241n\303\255 kl\303\241vesnice"]
   ::msgcat::mcset de "KBD encoding" [encoding convertfrom utf-8 "Zeichensatz"]
@@ -60,6 +66,7 @@
   ::msgcat::mcset it "KBD encoding" [encoding convertfrom utf-8 "Encoding della tastiera"]
   ::msgcat::mcset ru "KBD encoding" [encoding convertfrom utf-8 "\320\232\320\276\320\264\320\270\321\200\320\276\320\262\320\272\320\260 \320\272\320\273\320\260\320\262\320\270\320\260\321\202\321\203\321\200\321\213"]
   ::msgcat::mcset sk "KBD encoding" [encoding convertfrom utf-8 "K\303\263dovanie kl\303\241vesnice"]
+  ::msgcat::mcset sq "KBD encoding" [encoding convertfrom utf-8 "KBD-kodimi"]
 
   ::msgcat::mcset cz "Window" [encoding convertfrom utf-8 "Okno"]
   ::msgcat::mcset de "Window" [encoding convertfrom utf-8 "Fenster"]
@@ -69,6 +76,7 @@
   ::msgcat::mcset it "Window" [encoding convertfrom utf-8 "Finestra"]
   ::msgcat::mcset ru "Window" [encoding convertfrom utf-8 "\320\236\320\272\320\275\320\276"]
   ::msgcat::mcset sk "Window" [encoding convertfrom utf-8 "Okno"]
+  ::msgcat::mcset sq "Window" [encoding convertfrom utf-8 "dritarja"]
 
   ::msgcat::mcset cz "Quit" [encoding convertfrom utf-8 "Konec"]
   ::msgcat::mcset de "Quit" [encoding convertfrom utf-8 "Beenden"]
@@ -78,6 +86,7 @@
   ::msgcat::mcset it "Quit" [encoding convertfrom utf-8 "Esci"]
   ::msgcat::mcset ru "Quit" [encoding convertfrom utf-8 "\320\222\321\213\321\205\320\276\320\264"]
   ::msgcat::mcset sk "Quit" [encoding convertfrom utf-8 "Ukon\304\215i\305\245"]
+  ::msgcat::mcset sq "Quit" [encoding convertfrom utf-8 "mbylle"]
 
   ::msgcat::mcset cz "Help" [encoding convertfrom utf-8 "N\303\241pov\304\233da"]
   ::msgcat::mcset de "Help" [encoding convertfrom utf-8 "Hilfe"]
@@ -87,6 +96,7 @@
   ::msgcat::mcset it "Help" [encoding convertfrom utf-8 "Aiuto"]
   ::msgcat::mcset ru "Help" [encoding convertfrom utf-8 "\320\237\320\276\320\274\320\276\321\211\321\214"]
   ::msgcat::mcset sk "Help" [encoding convertfrom utf-8 "Pomoc"]
+  ::msgcat::mcset sq "Help" [encoding convertfrom utf-8 "ndihma"]
 
   ::msgcat::mcset cz "BAC calculator" [encoding convertfrom utf-8 "Alkohol tester"]
   ::msgcat::mcset de "BAC calculator" [encoding convertfrom utf-8 "Blutalkoholrechner"]
@@ -96,6 +106,7 @@
   ::msgcat::mcset it "BAC calculator" [encoding convertfrom utf-8 "Calcolatore BAC"]
   ::msgcat::mcset ru "BAC calculator" [encoding convertfrom utf-8 "\320\232\320\260\320\273\321\214\320\272\321\203\320\273\321\217\321\202\320\276\321\200 \320\260\320\273\320\272\320\276\320\263\320\276\320\273\321\217"]
   ::msgcat::mcset sk "BAC calculator" [encoding convertfrom utf-8 "Alkohol tester"]
+  ::msgcat::mcset sq "BAC calculator" [encoding convertfrom utf-8 "llogaritesi I alkoolit"]
 
   ::msgcat::mcset cz "Biometric data" [encoding convertfrom utf-8 "Biometrick\303\251 \303\272daje"]
   ::msgcat::mcset de "Biometric data" [encoding convertfrom utf-8 "Pers\303\266nliche Angaben"]
@@ -105,6 +116,7 @@
   ::msgcat::mcset it "Biometric data" [encoding convertfrom utf-8 "Dati biometrici"]
   ::msgcat::mcset ru "Biometric data" [encoding convertfrom utf-8 "\320\221\320\270\320\276\320\274\320\265\321\202\321\200\320\270\321\207\320\265\321\201\320\272\320\270\320\265 \320\264\320\260\320\275\320\275\321\213\320\265"]
   ::msgcat::mcset sk "Biometric data" [encoding convertfrom utf-8 "Biometrick\303\251 \303\272daje"]
+  ::msgcat::mcset sq "Biometric data" [encoding convertfrom utf-8 "shenimet biometrike"]
 
   ::msgcat::mcset cz "age" [encoding convertfrom utf-8 "v\304\233k"]
   ::msgcat::mcset de "age" [encoding convertfrom utf-8 "Alter"]
@@ -114,6 +126,7 @@
   ::msgcat::mcset it "age" [encoding convertfrom utf-8 "et\303\240"]
   ::msgcat::mcset ru "age" [encoding convertfrom utf-8 "\320\222\320\276\320\267\321\200\320\260\321\201\321\202"]
   ::msgcat::mcset sk "age" [encoding convertfrom utf-8 "vek"]
+  ::msgcat::mcset sq "age" [encoding convertfrom utf-8 "mosha"]
 
   ::msgcat::mcset cz "years" [encoding convertfrom utf-8 "let"]
   ::msgcat::mcset de "years" [encoding convertfrom utf-8 "Jahre"]
@@ -123,6 +136,7 @@
   ::msgcat::mcset it "years" [encoding convertfrom utf-8 "anni"]
   ::msgcat::mcset ru "years" [encoding convertfrom utf-8 "\320\273\320\265\321\202"]
   ::msgcat::mcset sk "years" [encoding convertfrom utf-8 "rokov"]
+  ::msgcat::mcset sq "years" [encoding convertfrom utf-8 "vitet"]
 
   ::msgcat::mcset cz "gender" [encoding convertfrom utf-8 "pohlav\303\255"]
   ::msgcat::mcset de "gender" [encoding convertfrom utf-8 "Geschlecht"]
@@ -132,6 +146,7 @@
   ::msgcat::mcset it "gender" [encoding convertfrom utf-8 "sesso"]
   ::msgcat::mcset ru "gender" [encoding convertfrom utf-8 "\320\237\320\276\320\273"]
   ::msgcat::mcset sk "gender" [encoding convertfrom utf-8 "pohlavie"]
+  ::msgcat::mcset sq "gender" [encoding convertfrom utf-8 "gjinia"]
 
   ::msgcat::mcset cz "male" [encoding convertfrom utf-8 "mu\305\276"]
   ::msgcat::mcset de "male" [encoding convertfrom utf-8 "m\303\244nnlich"]
@@ -141,6 +156,7 @@
   ::msgcat::mcset it "male" [encoding convertfrom utf-8 "maschio"]
   ::msgcat::mcset ru "male" [encoding convertfrom utf-8 "\320\274\321\203\320\266\321\207\320\270\320\275\320\260"]
   ::msgcat::mcset sk "male" [encoding convertfrom utf-8 "mu\305\276"]
+  ::msgcat::mcset sq "male" [encoding convertfrom utf-8 "mashkull"]
 
   ::msgcat::mcset cz "female" [encoding convertfrom utf-8 "\305\276ena"]
   ::msgcat::mcset de "female" [encoding convertfrom utf-8 "weiblich"]
@@ -150,6 +166,7 @@
   ::msgcat::mcset it "female" [encoding convertfrom utf-8 "femmina"]
   ::msgcat::mcset ru "female" [encoding convertfrom utf-8 "\320\266\320\265\320\275\321\211\320\270\320\275\320\260"]
   ::msgcat::mcset sk "female" [encoding convertfrom utf-8 "\305\276ena"]
+  ::msgcat::mcset sq "female" [encoding convertfrom utf-8 "femer"]
 
   ::msgcat::mcset cz "height" [encoding convertfrom utf-8 "v\303\275\305\241ka"]
   ::msgcat::mcset de "height" [encoding convertfrom utf-8 "Gr\303\266\303\237e"]
@@ -159,6 +176,7 @@
   ::msgcat::mcset it "height" [encoding convertfrom utf-8 "altezza"]
   ::msgcat::mcset ru "height" [encoding convertfrom utf-8 "\320\240\320\276\321\201\321\202"]
   ::msgcat::mcset sk "height" [encoding convertfrom utf-8 "v\303\275\305\241ka"]
+  ::msgcat::mcset sq "height" [encoding convertfrom utf-8 "gjatesia"]
 
   ::msgcat::mcset cz "weight" [encoding convertfrom utf-8 "v\303\241ha"]
   ::msgcat::mcset de "weight" [encoding convertfrom utf-8 "Gewicht"]
@@ -168,6 +186,7 @@
   ::msgcat::mcset it "weight" [encoding convertfrom utf-8 "peso"]
   ::msgcat::mcset ru "weight" [encoding convertfrom utf-8 "\320\222\320\265\321\201"]
   ::msgcat::mcset sk "weight" [encoding convertfrom utf-8 "v\303\241ha"]
+  ::msgcat::mcset sq "weight" [encoding convertfrom utf-8 "pesha"]
 
   ::msgcat::mcset cz "Consumption data" [encoding convertfrom utf-8 "\303\232daje o spot\305\231eb\304\233"]
   ::msgcat::mcset de "Consumption data" [encoding convertfrom utf-8 "Alkoholkonsum"]
@@ -177,6 +196,7 @@
   ::msgcat::mcset it "Consumption data" [encoding convertfrom utf-8 "Bevande assunte"]
   ::msgcat::mcset ru "Consumption data" [encoding convertfrom utf-8 "\320\245\320\260\321\200\320\260\320\272\321\202\320\265\321\200\320\270\321\201\321\202\320\270\320\272\320\260 \320\277\321\200\320\270\320\275\321\217\321\202\320\276\320\263\320\276"]
   ::msgcat::mcset sk "Consumption data" [encoding convertfrom utf-8 "\303\232daje o spotrebe"]
+  ::msgcat::mcset sq "Consumption data" [encoding convertfrom utf-8 "shenimet e hargjimeve"]
 
   ::msgcat::mcset cz "volume" [encoding convertfrom utf-8 "objem"]
   ::msgcat::mcset de "volume" [encoding convertfrom utf-8 "Menge"]
@@ -186,6 +206,7 @@
   ::msgcat::mcset it "volume" [encoding convertfrom utf-8 "volume"]
   ::msgcat::mcset ru "volume" [encoding convertfrom utf-8 "\320\236\320\261\321\212\320\265\320\274"]
   ::msgcat::mcset sk "volume" [encoding convertfrom utf-8 "objem"]
+  ::msgcat::mcset sq "volume" [encoding convertfrom utf-8 "volumi"]
 
   ::msgcat::mcset cz "alcohol level" [encoding convertfrom utf-8 "koncentrace alkoholu"]
   ::msgcat::mcset de "alcohol level" [encoding convertfrom utf-8 "Alkoholgehalt"]
@@ -195,6 +216,7 @@
   ::msgcat::mcset it "alcohol level" [encoding convertfrom utf-8 "tasso alcolico"]
   ::msgcat::mcset ru "alcohol level" [encoding convertfrom utf-8 "\320\232\321\200\320\265\320\277\320\276\321\201\321\202\321\214"]
   ::msgcat::mcset sk "alcohol level" [encoding convertfrom utf-8 "koncentr\303\241cia"]
+  ::msgcat::mcset sq "alcohol level" [encoding convertfrom utf-8 "sasia e alkoolit"]
 
   ::msgcat::mcset cz "time elapsed" [encoding convertfrom utf-8 "uplynul\303\275 \304\215as"]
   ::msgcat::mcset de "time elapsed" [encoding convertfrom utf-8 "vergangene Zeit"]
@@ -204,6 +226,7 @@
   ::msgcat::mcset it "time elapsed" [encoding convertfrom utf-8 "tempo trascorso"]
   ::msgcat::mcset ru "time elapsed" [encoding convertfrom utf-8 "\320\237\321\200\320\276\321\210\320\273\320\276 \320\262\321\200\320\265\320\274\320\265\320\275\320\270"]
   ::msgcat::mcset sk "time elapsed" [encoding convertfrom utf-8 "uplynut\303\275 \304\215as"]
+  ::msgcat::mcset sq "time elapsed" [encoding convertfrom utf-8 "koha e duhur"]
 
   ::msgcat::mcset cz "Calculate" [encoding convertfrom utf-8 "Vypo\304\215\303\255tat"]
   ::msgcat::mcset de "Calculate" [encoding convertfrom utf-8 "Berechne"]
@@ -213,6 +236,7 @@
   ::msgcat::mcset it "Calculate" [encoding convertfrom utf-8 "Calcola"]
   ::msgcat::mcset ru "Calculate" [encoding convertfrom utf-8 "\320\237\320\276\321\201\321\207\320\270\321\202\320\260\321\202\321\214"]
   ::msgcat::mcset sk "Calculate" [encoding convertfrom utf-8 "Vypo\304\215\303\255ta\305\245"]
+  ::msgcat::mcset sq "Calculate" [encoding convertfrom utf-8 "llogarit"]
 
   ::msgcat::mcset cz "BAC" [encoding convertfrom utf-8 "Hladina alkoholu v krvi"]
   ::msgcat::mcset de "BAC" [encoding convertfrom utf-8 "Blutalkoholpegel"]
@@ -222,6 +246,7 @@
   ::msgcat::mcset it "BAC" [encoding convertfrom utf-8 "BAC"]
   ::msgcat::mcset ru "BAC" [encoding convertfrom utf-8 "BAC"]
   ::msgcat::mcset sk "BAC" [encoding convertfrom utf-8 "Hladina alkoholu"]
+  ::msgcat::mcset sq "BAC" [encoding convertfrom utf-8 "perqindja e alkoolit ne gjak-BAC"]
 
   ::msgcat::mcset cz "ETA" [encoding convertfrom utf-8 "\304\214as do vyst\305\231\303\255zliv\304\233n\303\255"]
   ::msgcat::mcset el "ETA" [encoding convertfrom utf-8 "\316\221\316\275\316\261\316\274\316\265\316\275\317\214\316\274\316\265\316\275\316\267 \317\216\317\201\316\261 \316\254\317\206\316\271\316\276\316\267\317\202"]
@@ -230,6 +255,7 @@
   ::msgcat::mcset it "ETA" [encoding convertfrom utf-8 "ETA"]
   ::msgcat::mcset ru "ETA" [encoding convertfrom utf-8 "ETA"]
   ::msgcat::mcset sk "ETA" [encoding convertfrom utf-8 "\304\214as do vytriezvenia"]
+  ::msgcat::mcset sq "ETA" [encoding convertfrom utf-8 "ETA"]
 
   ::msgcat::mcset cz "hours" [encoding convertfrom utf-8 "hodin"]
   ::msgcat::mcset de "hours" [encoding convertfrom utf-8 "Stunden"]
@@ -239,6 +265,7 @@
   ::msgcat::mcset it "hours" [encoding convertfrom utf-8 "ore"]
   ::msgcat::mcset ru "hours" [encoding convertfrom utf-8 "\321\207\320\260\321\201\320\276\320\262"]
   ::msgcat::mcset sk "hours" [encoding convertfrom utf-8 "hod\303\255n"]
+  ::msgcat::mcset sq "hours" [encoding convertfrom utf-8 "oret"]
 
   ::msgcat::mcset cz "MRR" [encoding convertfrom utf-8 "Rychlost odbour\303\241v\303\241n\303\255"]
   ::msgcat::mcset el "MRR" [encoding convertfrom utf-8 "MRR"]
@@ -247,6 +274,7 @@
   ::msgcat::mcset it "MRR" [encoding convertfrom utf-8 "MRR"]
   ::msgcat::mcset ru "MRR" [encoding convertfrom utf-8 "MRR"]
   ::msgcat::mcset sk "MRR" [encoding convertfrom utf-8 "R\303\275chlos\305\245 odbur\303\241vania"]
+  ::msgcat::mcset sq "MRR" [encoding convertfrom utf-8 "MRR"]
 
   ::msgcat::mcset cz "Compiler" [encoding convertfrom utf-8 "Kompil\303\241tor"]
   ::msgcat::mcset de "Compiler" [encoding convertfrom utf-8 "Compiler"]
@@ -256,6 +284,7 @@
   ::msgcat::mcset it "Compiler" [encoding convertfrom utf-8 "Compilatore"]
   ::msgcat::mcset ru "Compiler" [encoding convertfrom utf-8 "\320\232\320\276\320\274\320\277\320\270\320\273\321\217\321\202\320\276\321\200"]
   ::msgcat::mcset sk "Compiler" [encoding convertfrom utf-8 "Kompil\303\241tor"]
+  ::msgcat::mcset sq "Compiler" [encoding convertfrom utf-8 "kompilatori"]
 
   ::msgcat::mcset cz "Settings" [encoding convertfrom utf-8 "Nastaven\303\255"]
   ::msgcat::mcset de "Settings" [encoding convertfrom utf-8 "Einstellungen"]
@@ -265,6 +294,7 @@
   ::msgcat::mcset it "Settings" [encoding convertfrom utf-8 "Impostazioni"]
   ::msgcat::mcset ru "Settings" [encoding convertfrom utf-8 "\320\235\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\270"]
   ::msgcat::mcset sk "Settings" [encoding convertfrom utf-8 "Nastavenia"]
+  ::msgcat::mcset sq "Settings" [encoding convertfrom utf-8 "setingu"]
 
   ::msgcat::mcset cz "Survey structure" [encoding convertfrom utf-8 "Struktura m\304\233\305\231en\303\255 (survey)"]
   ::msgcat::mcset de "Survey structure" [encoding convertfrom utf-8 "Messdatenstruktur"]
@@ -274,6 +304,7 @@
   ::msgcat::mcset it "Survey structure" [encoding convertfrom utf-8 "Struttura rilievi"]
   ::msgcat::mcset ru "Survey structure" [encoding convertfrom utf-8 "\320\241\321\202\321\200\321\203\320\272\321\202\321\203\321\200\320\260 \321\201\321\212\320\265\320\274\320\272\320\270"]
   ::msgcat::mcset sk "Survey structure" [encoding convertfrom utf-8 "\305\240trukt\303\272ra d\303\241t"]
+  ::msgcat::mcset sq "Survey structure" [encoding convertfrom utf-8 "struktura e matjeve"]
 
   ::msgcat::mcset cz "Survey info" [encoding convertfrom utf-8 "Info o m\304\233\305\231en\303\255 (survey)"]
   ::msgcat::mcset de "Survey info" [encoding convertfrom utf-8 "Infos zur Vermessung"]
@@ -283,6 +314,7 @@
   ::msgcat::mcset it "Survey info" [encoding convertfrom utf-8 "Informazioni rilievi"]
   ::msgcat::mcset ru "Survey info" [encoding convertfrom utf-8 "\320\230\320\275\321\204\320\276\321\200\320\274\320\260\321\206\320\270\321\217"]
   ::msgcat::mcset sk "Survey info" [encoding convertfrom utf-8 "Inform\303\241cie"]
+  ::msgcat::mcset sq "Survey info" [encoding convertfrom utf-8 "informatat e matjeve"]
 
   ::msgcat::mcset cz "Map structure" [encoding convertfrom utf-8 "Mapov\303\241 struktura"]
   ::msgcat::mcset de "Map structure" [encoding convertfrom utf-8 "Planstruktur"]
@@ -292,6 +324,7 @@
   ::msgcat::mcset it "Map structure" [encoding convertfrom utf-8 "Struttura mappe"]
   ::msgcat::mcset ru "Map structure" [encoding convertfrom utf-8 "\320\241\321\202\321\200\321\203\320\272\321\202\321\203\321\200\320\260 \320\272\320\260\321\200\321\202\321\213"]
   ::msgcat::mcset sk "Map structure" [encoding convertfrom utf-8 "Mapov\303\241 \305\241trukt\303\272ra"]
+  ::msgcat::mcset sq "Map structure" [encoding convertfrom utf-8 "struktura e hartes"]
 
   ::msgcat::mcset cz "Preview" [encoding convertfrom utf-8 "N\303\241hled"]
   ::msgcat::mcset de "Preview" [encoding convertfrom utf-8 "Vorschau"]
@@ -299,6 +332,7 @@
   ::msgcat::mcset it "Preview" [encoding convertfrom utf-8 "Anteprima"]
   ::msgcat::mcset ru "Preview" [encoding convertfrom utf-8 "\320\237\321\200\320\265\320\264\320\277\321\200\320\276\321\201\320\274\320\276\321\202\321\200"]
   ::msgcat::mcset sk "Preview" [encoding convertfrom utf-8 "N\303\241h\304\276ad"]
+  ::msgcat::mcset sq "Preview" [encoding convertfrom utf-8 "parashiqimi"]
 
   ::msgcat::mcset cz "Working directory" [encoding convertfrom utf-8 "Pracovn\303\255 adres\303\241\305\231"]
   ::msgcat::mcset de "Working directory" [encoding convertfrom utf-8 "Arbeitsverzeichnis"]
@@ -308,6 +342,7 @@
   ::msgcat::mcset it "Working directory" [encoding convertfrom utf-8 "Cartella di lavoro"]
   ::msgcat::mcset ru "Working directory" [encoding convertfrom utf-8 "\320\240\320\260\320\261\320\276\321\207\320\270\320\271 \320\272\320\260\321\202\320\260\320\273\320\276\320\263"]
   ::msgcat::mcset sk "Working directory" [encoding convertfrom utf-8 "Pracovn\303\275 adres\303\241r"]
+  ::msgcat::mcset sq "Working directory" [encoding convertfrom utf-8 "direktorati i punes"]
 
   ::msgcat::mcset cz "Working directory path." [encoding convertfrom utf-8 "Cesta k pracovn\303\255mu adres\303\241\305\231i."]
   ::msgcat::mcset de "Working directory path." [encoding convertfrom utf-8 "Pfad zum Arbeitsverzeichnis."]
@@ -317,6 +352,7 @@
   ::msgcat::mcset it "Working directory path." [encoding convertfrom utf-8 "Path della cartella di lavoro"]
   ::msgcat::mcset ru "Working directory path." [encoding convertfrom utf-8 "\320\237\321\203\321\202\321\214 \320\272 \321\200\320\260\320\261\320\276\321\207\320\265\320\274\321\203 \320\272\320\260\321\202\320\260\320\273\320\276\320\263\321\203."]
   ::msgcat::mcset sk "Working directory path." [encoding convertfrom utf-8 "Cesta k pracovn\303\251mu adres\303\241ru."]
+  ::msgcat::mcset sq "Working directory path." [encoding convertfrom utf-8 "tregon shtegun e direktoratit punues"]
 
   ::msgcat::mcset cz "Configuration file" [encoding convertfrom utf-8 "Konfigura\304\215n\303\255 soubor"]
   ::msgcat::mcset de "Configuration file" [encoding convertfrom utf-8 "Konfigurationsdatei"]
@@ -326,6 +362,7 @@
   ::msgcat::mcset it "Configuration file" [encoding convertfrom utf-8 "File di configurazione"]
   ::msgcat::mcset ru "Configuration file" [encoding convertfrom utf-8 "\320\232\320\276\320\275\321\204\320\270\320\263\321\203\321\200\320\260\321\206\320\270\320\276\320\275\320\275\321\213\320\271 \321\204\320\260\320\271\320\273"]
   ::msgcat::mcset sk "Configuration file" [encoding convertfrom utf-8 "Konfigura\304\215n\303\275 s\303\272bor"]
+  ::msgcat::mcset sq "Configuration file" [encoding convertfrom utf-8 "arkivi I konfiguracionit"]
 
   ::msgcat::mcset cz "Configuration file name." [encoding convertfrom utf-8 "Jm\303\251no konfigura\304\215n\303\255ho souboru."]
   ::msgcat::mcset de "Configuration file name." [encoding convertfrom utf-8 "Name der Konfigurationsdatei."]
@@ -335,6 +372,7 @@
   ::msgcat::mcset it "Configuration file name." [encoding convertfrom utf-8 "Nome del file di configurazione"]
   ::msgcat::mcset ru "Configuration file name." [encoding convertfrom utf-8 "\320\230\320\274\321\217 \320\272\320\276\320\275\321\204\320\270\320\263\321\203\321\200\320\260\321\206\320\270\320\276\320\275\320\275\320\276\320\263\320\276 \321\204\320\260\320\271\320\273\320\260."]
   ::msgcat::mcset sk "Configuration file name." [encoding convertfrom utf-8 "Meno konfigura\304\215n\303\251ho s\303\272boru."]
+  ::msgcat::mcset sq "Configuration file name." [encoding convertfrom utf-8 "tregon emrin e arkivit te konfiguracionit"]
 
   ::msgcat::mcset cz "Command line options" [encoding convertfrom utf-8 "Argumenty programu"]
   ::msgcat::mcset de "Command line options" [encoding convertfrom utf-8 "Kommandozeilenoptionen"]
@@ -344,6 +382,7 @@
   ::msgcat::mcset it "Command line options" [encoding convertfrom utf-8 "Opzioni del comando"]
   ::msgcat::mcset ru "Command line options" [encoding convertfrom utf-8 "\320\236\320\277\321\206\320\270\320\270 \320\272\320\276\320\274\320\260\320\275\320\264\320\275\320\276\320\271 \321\201\321\202\321\200\320\276\320\272\320\270"]
   ::msgcat::mcset sk "Command line options" [encoding convertfrom utf-8 "Argumenty programu"]
+  ::msgcat::mcset sq "Command line options" [encoding convertfrom utf-8 "opcionet e vijes komanduese"]
 
   ::msgcat::mcset cz "Therion command line options." [encoding convertfrom utf-8 "Argumenty therionu pro p\305\231\303\255kazovou \305\231\303\241dku."]
   ::msgcat::mcset de "Therion command line options." [encoding convertfrom utf-8 "Therion Kommandozeilenoptionen."]
@@ -353,6 +392,7 @@
   ::msgcat::mcset it "Therion command line options." [encoding convertfrom utf-8 "Opzioni del comando therion"]
   ::msgcat::mcset ru "Therion command line options." [encoding convertfrom utf-8 "\320\236\320\277\321\206\320\270\320\270 \320\272\320\276\320\274\320\260\320\275\320\264\320\275\320\276\320\271 \321\201\321\202\321\200\320\276\320\272\320\270 Therion."]
   ::msgcat::mcset sk "Therion command line options." [encoding convertfrom utf-8 "Argumenty programu v pr\303\255kazovom riadku."]
+  ::msgcat::mcset sq "Therion command line options." [encoding convertfrom utf-8 "ketu ju mund te bartni vijen komanduese te arkivit tek Therion-i"]
 
   ::msgcat::mcset cz "Run therion." [encoding convertfrom utf-8 "Spust\303\255 therion."]
   ::msgcat::mcset de "Run therion." [encoding convertfrom utf-8 "Therion ausf\303\274hren."]
@@ -362,16 +402,19 @@
   ::msgcat::mcset it "Run therion." [encoding convertfrom utf-8 "Esegui therion"]
   ::msgcat::mcset ru "Run therion." [encoding convertfrom utf-8 "\320\227\320\260\320\277\321\203\321\201\320\272 therion."]
   ::msgcat::mcset sk "Run therion." [encoding convertfrom utf-8 "Spusti\305\245 therion."]
+  ::msgcat::mcset sq "Run therion." [encoding convertfrom utf-8 "aktivizo Therion-in"]
 
   ::msgcat::mcset cz "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset de "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset it "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset sk "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
+  ::msgcat::mcset sq "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
 
   ::msgcat::mcset cz "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset de "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset it "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset sk "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
+  ::msgcat::mcset sq "Acrobat Reader" [encoding convertfrom utf-8 "lexuesi I programit-Akrobat"]
 
   ::msgcat::mcset cz "PDF file path." [encoding convertfrom utf-8 "Cesta k PDF souboru"]
   ::msgcat::mcset de "PDF file path." [encoding convertfrom utf-8 "Pfad zur PDF-Datei."]
@@ -379,6 +422,7 @@
   ::msgcat::mcset it "PDF file path." [encoding convertfrom utf-8 "File PDF"]
   ::msgcat::mcset ru "PDF file path." [encoding convertfrom utf-8 "PDF-\321\204\320\260\320\271\320\273 \320\264\320\273\321\217 \320\277\321\200\320\276\321\201\320\274\320\276\321\202\321\200\320\260"]
   ::msgcat::mcset sk "PDF file path." [encoding convertfrom utf-8 "Cesta k PDF s\303\272boru."]
+  ::msgcat::mcset sq "PDF file path." [encoding convertfrom utf-8 "arkivi-PDF"]
 
   ::msgcat::mcset cz "Survey informations." [encoding convertfrom utf-8 "Informace o jednotliv\303\275ch m\304\233\305\231en\303\255ch (survey)."]
   ::msgcat::mcset de "Survey informations." [encoding convertfrom utf-8 "Infos zur Vermessung."]
@@ -388,6 +432,7 @@
   ::msgcat::mcset it "Survey informations." [encoding convertfrom utf-8 "Informazioni del rilievo"]
   ::msgcat::mcset ru "Survey informations." [encoding convertfrom utf-8 "\320\230\320\275\321\204\320\276\321\200\320\274\320\260\321\206\320\270\321\217 \320\276 \321\201\321\212\320\265\320\274\320\272\320\265."]
   ::msgcat::mcset sk "Survey informations." [encoding convertfrom utf-8 "Inform\303\241cie o \304\215astiach."]
+  ::msgcat::mcset sq "Survey informations." [encoding convertfrom utf-8 "informatat e matjeve"]
 
   ::msgcat::mcset cz "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "U\305\276ivatelsk\303\251 rozhran\303\255 nen\303\255 aktivn\303\255. Pro jeho aktivaci otev\305\231ete existuj\303\255c\303\255 soubor nebo vytvo\305\231te nov\303\275."]
   ::msgcat::mcset de "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Fenster nicht aktiv. Um es zu benutzen, \303\266ffne eine existierende Datei oder lege eine neue an."]
@@ -397,6 +442,7 @@
   ::msgcat::mcset it "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "L'interfaccia utente non \303\250 attiva. Per attivarla apri un file o creane uno"]
   ::msgcat::mcset ru "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "\320\230\320\275\321\202\320\265\321\200\321\204\320\265\320\271\321\201 \320\275\320\265\320\260\320\272\321\202\320\270\320\262\320\265\320\275. \320\224\320\273\321\217 \320\260\320\272\321\202\320\270\320\262\320\260\321\206\320\270\320\270 \320\276\321\202\320\272\321\200\320\276\320\271\321\202\320\265 \321\201\321\203\321\211\320\265\321\201\321\202\320\262\321\203\321\216\321\211\320\270\320\271 \321\204\320\260\320\271\320\273 \320\270\320\273\320\270 \321\201\320\276\320\267\320\264\320\260\320\271\321\202\320\265 \320\275\320\276\320\262\321\213\320\271."]
   ::msgcat::mcset sk "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "XTherion moment\303\241lne nie je akt\303\255vny. Otvorte existuj\303\272ci konfigura\304\215n\303\275 s\303\272bor alebo vytvorte nov\303\275."]
+  ::msgcat::mcset sq "User interface is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "interfejsi I perdoruesit nuk eshte aktiv. Ta aktivizosh, hape arkivin egzistues apo hape nje te ri."]
 
   ::msgcat::mcset cz "loading compiler..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m kompil\303\241tor..."]
   ::msgcat::mcset de "loading compiler..." [encoding convertfrom utf-8 "Lade Compiler..."]
@@ -406,6 +452,7 @@
   ::msgcat::mcset it "loading compiler..." [encoding convertfrom utf-8 "compilatore ..."]
   ::msgcat::mcset ru "loading compiler..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\272\320\276\320\274\320\277\320\270\320\273\321\217\321\202\320\276\321\200\320\260..."]
   ::msgcat::mcset sk "loading compiler..." [encoding convertfrom utf-8 "kompil\303\241tor..."]
+  ::msgcat::mcset sq "loading compiler..." [encoding convertfrom utf-8 "duke lexuar kompiluesin\342\200\246"]
 
   ::msgcat::mcset cz "Running therion ..." [encoding convertfrom utf-8 "Prob\303\255h\303\241 kompilace ..."]
   ::msgcat::mcset de "Running therion ..." [encoding convertfrom utf-8 "Therion ausf\303\274hren ..."]
@@ -415,6 +462,7 @@
   ::msgcat::mcset it "Running therion ..." [encoding convertfrom utf-8 "esecuzione therion ..."]
   ::msgcat::mcset ru "Running therion ..." [encoding convertfrom utf-8 "\320\227\320\260\320\277\321\203\321\201\320\272 therion ..."]
   ::msgcat::mcset sk "Running therion ..." [encoding convertfrom utf-8 "Prebieha v\303\275po\304\215et..."]
+  ::msgcat::mcset sq "Running therion ..." [encoding convertfrom utf-8 "duke ve ne pune therion-in\342\200\246"]
 
   ::msgcat::mcset cz "RUNNING" [encoding convertfrom utf-8 "PRACUJI"]
   ::msgcat::mcset de "RUNNING" [encoding convertfrom utf-8 "ARBEITE"]
@@ -424,6 +472,7 @@
   ::msgcat::mcset it "RUNNING" [encoding convertfrom utf-8 "ESECUZIONE"]
   ::msgcat::mcset ru "RUNNING" [encoding convertfrom utf-8 "\320\236\320\221\320\240\320\220\320\221\320\236\320\242\320\232\320\220"]
   ::msgcat::mcset sk "RUNNING" [encoding convertfrom utf-8 "V\303\235PO\304\214ET"]
+  ::msgcat::mcset sq "RUNNING" [encoding convertfrom utf-8 "ne punim e siper"]
 
   ::msgcat::mcset cz "ERROR" [encoding convertfrom utf-8 "CHYBA"]
   ::msgcat::mcset de "ERROR" [encoding convertfrom utf-8 "FEHLER"]
@@ -433,6 +482,7 @@
   ::msgcat::mcset it "ERROR" [encoding convertfrom utf-8 "ERRORE"]
   ::msgcat::mcset ru "ERROR" [encoding convertfrom utf-8 "\320\236\320\250\320\230\320\221\320\232\320\220"]
   ::msgcat::mcset sk "ERROR" [encoding convertfrom utf-8 "CHYBA"]
+  ::msgcat::mcset sq "ERROR" [encoding convertfrom utf-8 "gabim"]
 
   ::msgcat::mcset de "WARNING" [encoding convertfrom utf-8 "WARNUNG"]
 
@@ -444,6 +494,7 @@
   ::msgcat::mcset it "OK" [encoding convertfrom utf-8 "OK"]
   ::msgcat::mcset ru "OK" [encoding convertfrom utf-8 "\320\243\320\241\320\237\320\225\320\245"]
   ::msgcat::mcset sk "OK" [encoding convertfrom utf-8 "OK"]
+  ::msgcat::mcset sq "OK" [encoding convertfrom utf-8 "ne rregull-O.K."]
 
   ::msgcat::mcset cz "Reading therion log file ..." [encoding convertfrom utf-8 "Na\304\215\303\255t\303\241m LOG soubor therionu ..."]
   ::msgcat::mcset de "Reading therion log file ..." [encoding convertfrom utf-8 "Lese Therion Logdatei ..."]
@@ -453,6 +504,7 @@
   ::msgcat::mcset it "Reading therion log file ..." [encoding convertfrom utf-8 "Lettura file di log di therion ..."]
   ::msgcat::mcset ru "Reading therion log file ..." [encoding convertfrom utf-8 "\320\247\321\202\320\265\320\275\320\270\320\265 \320\273\320\276\320\263-\321\204\320\260\320\271\320\273\320\260 therion..."]
   ::msgcat::mcset sk "Reading therion log file ..." [encoding convertfrom utf-8 "Na\304\215it\303\241vam LOG s\303\272bor."]
+  ::msgcat::mcset sq "Reading therion log file ..." [encoding convertfrom utf-8 "duke lexuar arkivin hyres te Therion-it"]
 
   ::msgcat::mcset cz "\nerror opening therion.log file\n" [encoding convertfrom utf-8 "\nchyba p\305\231i otev\303\255r\303\241n\303\255 souboru therion.log\n"]
   ::msgcat::mcset de "\nerror opening therion.log file\n" [encoding convertfrom utf-8 "\nFehler beim \303\226ffnen von therion.log\n"]
@@ -462,6 +514,7 @@
   ::msgcat::mcset it "\nerror opening therion.log file\n" [encoding convertfrom utf-8 "\nerrore in apertura del file therion.log"]
   ::msgcat::mcset ru "\nerror opening therion.log file\n" [encoding convertfrom utf-8 "\n\320\276\321\210\320\270\320\261\320\272\320\260 \320\276\321\202\320\272\321\200\321\213\321\202\320\270\321\217 \321\204\320\260\320\271\320\273\320\260 therion.log\n"]
   ::msgcat::mcset sk "\nerror opening therion.log file\n" [encoding convertfrom utf-8 "\nchyba pri \304\215\303\255tan\303\255 s\303\272boru therion.log\n"]
+  ::msgcat::mcset sq "\nerror opening therion.log file\n" [encoding convertfrom utf-8 "gabim gjate hapjes se Therion-it.arkivin hyres/n"]
 
   ::msgcat::mcset cz "Show or hide this control panel" [encoding convertfrom utf-8 "Zobrazit/skr\303\275t ovl\303\241dac\303\255 panel"]
   ::msgcat::mcset de "Show or hide this control panel" [encoding convertfrom utf-8 "Dieses Panel anzeigen oder verbergen"]
@@ -471,6 +524,7 @@
   ::msgcat::mcset it "Show or hide this control panel" [encoding convertfrom utf-8 "Visualizza o nascondi questo pannello"]
   ::msgcat::mcset ru "Show or hide this control panel" [encoding convertfrom utf-8 "\320\237\320\276\320\272\320\260\320\267\320\260\321\202\321\214 \320\270\320\273\320\270 \321\201\320\277\321\200\321\217\321\202\320\260\321\202\321\214 \320\277\320\260\320\275\320\265\320\273\321\214"]
   ::msgcat::mcset sk "Show or hide this control panel" [encoding convertfrom utf-8 "Stla\304\215te ak chcete zobrazi\305\245 alebo skry\305\245 tento panel"]
+  ::msgcat::mcset sq "Show or hide this control panel" [encoding convertfrom utf-8 "kliko te hapesh ose te mbyllesh kete panel te kontrollit"]
 
   ::msgcat::mcset cz "loading map editor ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m mapov\303\275 editor..."]
   ::msgcat::mcset de "loading map editor ..." [encoding convertfrom utf-8 "Lade Karteneditor ..."]
@@ -480,6 +534,7 @@
   ::msgcat::mcset it "loading map editor ..." [encoding convertfrom utf-8 "editor di mappa ..."]
   ::msgcat::mcset ru "loading map editor ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \321\200\320\265\320\264\320\260\320\272\321\202\320\276\321\200\320\260 \320\272\320\260\321\200\321\202..."]
   ::msgcat::mcset sk "loading map editor ..." [encoding convertfrom utf-8 "Mapov\303\275 editor"]
+  ::msgcat::mcset sq "loading map editor ..." [encoding convertfrom utf-8 "duke lexuar permiresuesin e hartave\342\200\246"]
 
   ::msgcat::mcset cz "Undo %s" [encoding convertfrom utf-8 "Zp\304\233t - %s"]
   ::msgcat::mcset de "Undo %s" [encoding convertfrom utf-8 "R\303\274ckg\303\244ngig %s"]
@@ -489,6 +544,7 @@
   ::msgcat::mcset it "Undo %s" [encoding convertfrom utf-8 "Indietro %s"]
   ::msgcat::mcset ru "Undo %s" [encoding convertfrom utf-8 "\320\236\321\202\320\274\320\265\320\275\320\270\321\202\321\214 %s"]
   ::msgcat::mcset sk "Undo %s" [encoding convertfrom utf-8 "Sp\303\244\305\245 - %s"]
+  ::msgcat::mcset sq "Undo %s" [encoding convertfrom utf-8 "prishe %s"]
 
   ::msgcat::mcset cz "Redo %s" [encoding convertfrom utf-8 "Znovu - %s"]
   ::msgcat::mcset de "Redo %s" [encoding convertfrom utf-8 "Wiederholen %s"]
@@ -498,6 +554,7 @@
   ::msgcat::mcset it "Redo %s" [encoding convertfrom utf-8 "Rifai %s"]
   ::msgcat::mcset ru "Redo %s" [encoding convertfrom utf-8 "\320\222\320\265\321\200\320\275\321\203\321\202\321\214 %s"]
   ::msgcat::mcset sk "Redo %s" [encoding convertfrom utf-8 "Opakova\305\245- %s"]
+  ::msgcat::mcset sq "Redo %s" [encoding convertfrom utf-8 "beje perseri %s"]
 
   ::msgcat::mcset cz "%s \[%s\] -- multiple encoding commands in file" [encoding convertfrom utf-8 "%s \[%s\] -- v\303\255cen\303\241sobn\303\275 v\303\275skyt p\305\231\303\255kazu encoding v jednom souboru"]
   ::msgcat::mcset el "%s \[%s\] -- multiple encoding commands in file" [encoding convertfrom utf-8 "%s \[%s\] -- \317\200\316\277\316\273\316\273\316\261\317\200\316\273\316\255\317\202 \316\265\316\275\317\204\316\277\316\273\316\255\317\202 \316\272\317\211\316\264\316\271\316\272\316\277\317\200\316\277\316\257\316\267\317\203\316\267\317\202 \317\203\317\204\316\277 \316\261\317\201\317\207\316\265\316\257\316\277"]
@@ -506,6 +563,7 @@
   ::msgcat::mcset it "%s \[%s\] -- multiple encoding commands in file" [encoding convertfrom utf-8 "%s \[%s\] -- encoding ripetuto nel file di comandi"]
   ::msgcat::mcset ru "%s \[%s\] -- multiple encoding commands in file" [encoding convertfrom utf-8 "%s \[%s\] -- \320\275\320\265\321\201\320\272\320\276\320\273\321\214\320\272\320\276 \320\272\320\276\320\274\320\260\320\275\320\264 encoding \320\262 \321\204\320\260\320\271\320\273\320\265"]
   ::msgcat::mcset sk "%s \[%s\] -- multiple encoding commands in file" [encoding convertfrom utf-8 "%s \[%s\] -- viac encoding pr\303\255kazov v jednom s\303\272bore"]
+  ::msgcat::mcset sq "%s \[%s\] -- multiple encoding commands in file" [encoding convertfrom utf-8 "%s \[%s\] \342\200\223shumezo komandat te deshifrimit ne arkiv"]
 
   ::msgcat::mcset cz "%s \[%s\] -- unknown encoding -- %s" [encoding convertfrom utf-8 "%s \[%s\] -- nezn\303\241m\303\251 k\303\263dov\303\241n\303\255 znak\305\257 -- %s"]
   ::msgcat::mcset el "%s \[%s\] -- unknown encoding -- %s" [encoding convertfrom utf-8 "%s \[%s\] -- \316\254\316\263\316\275\317\211\317\203\317\204\316\267 \316\272\317\211\316\264\316\271\316\272\316\277\317\200\316\277\316\257\316\267\317\203\316\267 -- %s"]
@@ -514,6 +572,7 @@
   ::msgcat::mcset it "%s \[%s\] -- unknown encoding -- %s" [encoding convertfrom utf-8 "%s \[%s\] -- encoding non conosciuto -- %s"]
   ::msgcat::mcset ru "%s \[%s\] -- unknown encoding -- %s" [encoding convertfrom utf-8 "%s \[%s\] -- \320\275\320\265\320\270\320\267\320\262\320\265\321\201\321\202\320\275\320\260\321\217 \320\272\320\276\320\264\320\270\321\200\320\276\320\262\320\272\320\260 -- %s"]
   ::msgcat::mcset sk "%s \[%s\] -- unknown encoding -- %s" [encoding convertfrom utf-8 "%s \[%s\] -- nezn\303\241me k\303\263dovanie znakov -- %s"]
+  ::msgcat::mcset sq "%s \[%s\] -- unknown encoding -- %s" [encoding convertfrom utf-8 "%s \[%s\] \342\200\223 deshifrim I panjohur -- %s"]
 
   ::msgcat::mcset cz "adjusting area" [encoding convertfrom utf-8 "p\305\231izp\305\257soben\303\255 pracovn\303\255 plochy"]
   ::msgcat::mcset de "adjusting area" [encoding convertfrom utf-8 "Fl\303\244che anpassen"]
@@ -532,6 +591,7 @@
   ::msgcat::mcset it "zooming" [encoding convertfrom utf-8 "zooming"]
   ::msgcat::mcset ru "zooming" [encoding convertfrom utf-8 "\320\274\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265"]
   ::msgcat::mcset sk "zooming" [encoding convertfrom utf-8 "zoomovanie"]
+  ::msgcat::mcset sq "zooming" [encoding convertfrom utf-8 "zmadhimi"]
 
   ::msgcat::mcset cz "Zoom %d %%" [encoding convertfrom utf-8 "Zoom %d %%"]
   ::msgcat::mcset de "Zoom %d %%" [encoding convertfrom utf-8 "Zoom %d %%"]
@@ -541,6 +601,7 @@
   ::msgcat::mcset it "Zoom %d %%" [encoding convertfrom utf-8 "Zomm %d %%"]
   ::msgcat::mcset ru "Zoom %d %%" [encoding convertfrom utf-8 "\320\234\320\260\321\201\321\210\321\202\320\260\320\261 %d %%"]
   ::msgcat::mcset sk "Zoom %d %%" [encoding convertfrom utf-8 "Zoom %d %%"]
+  ::msgcat::mcset sq "Zoom %d %%" [encoding convertfrom utf-8 "zmadho %d %%"]
 
   ::msgcat::mcset cz "Zooming objects ..." [encoding convertfrom utf-8 "Zoomov\303\241n\303\255 objekt\305\257 ..."]
   ::msgcat::mcset de "Zooming objects ..." [encoding convertfrom utf-8 "Zoome Objekte ..."]
@@ -550,6 +611,7 @@
   ::msgcat::mcset it "Zooming objects ..." [encoding convertfrom utf-8 "Zoom degli oggetti ..."]
   ::msgcat::mcset ru "Zooming objects ..." [encoding convertfrom utf-8 "\320\234\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265 \320\276\320\261\321\212\320\265\320\272\321\202\320\276\320\262..."]
   ::msgcat::mcset sk "Zooming objects ..." [encoding convertfrom utf-8 "Zoomovanie objektov ..."]
+  ::msgcat::mcset sq "Zooming objects ..." [encoding convertfrom utf-8 "objektet e zmadhimit\342\200\246"]
 
   ::msgcat::mcset cz "dragging image" [encoding convertfrom utf-8 "p\305\231esouv\303\241n\303\255 obr\303\241zku"]
   ::msgcat::mcset de "dragging image" [encoding convertfrom utf-8 "Bild verschieben"]
@@ -559,6 +621,7 @@
   ::msgcat::mcset it "dragging image" [encoding convertfrom utf-8 "trascinamento immagine"]
   ::msgcat::mcset ru "dragging image" [encoding convertfrom utf-8 "\320\277\320\265\321\200\320\265\321\202\320\260\321\201\320\272\320\270\320\262\320\260\320\275\320\270\320\265 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217"]
   ::msgcat::mcset sk "dragging image" [encoding convertfrom utf-8 "Pres\303\272vanie obr\303\241zku"]
+  ::msgcat::mcset sq "dragging image" [encoding convertfrom utf-8 "imazhi per tu vizatuar"]
 
   ::msgcat::mcset cz "Map Editor" [encoding convertfrom utf-8 "Mapov\303\275 editor"]
   ::msgcat::mcset de "Map Editor" [encoding convertfrom utf-8 "Karteneditor"]
@@ -568,6 +631,7 @@
   ::msgcat::mcset it "Map Editor" [encoding convertfrom utf-8 "Editor di mappa"]
   ::msgcat::mcset ru "Map Editor" [encoding convertfrom utf-8 "\320\240\320\265\320\264\320\260\320\272\321\202\320\276\321\200 \320\272\320\260\321\200\321\202"]
   ::msgcat::mcset sk "Map Editor" [encoding convertfrom utf-8 "Mapov\303\275 Editor"]
+  ::msgcat::mcset sq "Map Editor" [encoding convertfrom utf-8 "permiresuesi I hartave"]
 
   ::msgcat::mcset cz "File commands" [encoding convertfrom utf-8 "P\305\231\303\255kazy"]
   ::msgcat::mcset de "File commands" [encoding convertfrom utf-8 "Dateibefehle"]
@@ -577,6 +641,7 @@
   ::msgcat::mcset it "File commands" [encoding convertfrom utf-8 "Oggetti"]
   ::msgcat::mcset ru "File commands" [encoding convertfrom utf-8 "\320\232\320\276\320\274\320\260\320\275\320\264\321\213 \320\262 \321\204\320\260\320\271\320\273\320\265"]
   ::msgcat::mcset sk "File commands" [encoding convertfrom utf-8 "Pr\303\255kazy v s\303\272bore"]
+  ::msgcat::mcset sq "File commands" [encoding convertfrom utf-8 "objektet"]
 
   ::msgcat::mcset cz "Search & Select" [encoding convertfrom utf-8 "Naj\303\255t & Vybrat"]
   ::msgcat::mcset de "Search & Select" [encoding convertfrom utf-8 "Suchen & ausw\303\244hlen"]
@@ -586,6 +651,7 @@
   ::msgcat::mcset it "Search & Select" [encoding convertfrom utf-8 "Cerca e seleziona"]
   ::msgcat::mcset ru "Search & Select" [encoding convertfrom utf-8 "\320\237\320\276\320\270\321\201\320\272 \320\270 \320\222\321\213\320\264\320\265\320\273\320\265\320\275\320\270\320\265"]
   ::msgcat::mcset sk "Search & Select" [encoding convertfrom utf-8 "H\304\276adaj a Vyber"]
+  ::msgcat::mcset sq "Search & Select" [encoding convertfrom utf-8 "kerko dhe zgjidh"]
 
   ::msgcat::mcset cz "Command preview" [encoding convertfrom utf-8 "N\303\241hled p\305\231\303\255kazu"]
   ::msgcat::mcset de "Command preview" [encoding convertfrom utf-8 "Kommandovorschau"]
@@ -595,6 +661,7 @@
   ::msgcat::mcset it "Command preview" [encoding convertfrom utf-8 "Anteprima comando"]
   ::msgcat::mcset ru "Command preview" [encoding convertfrom utf-8 "\320\237\321\200\320\276\321\201\320\274\320\276\321\202\321\200 \320\272\320\276\320\274\320\260\320\275\320\264\321\213"]
   ::msgcat::mcset sk "Command preview" [encoding convertfrom utf-8 "N\303\241h\304\276ad pr\303\255kazu"]
+  ::msgcat::mcset sq "Command preview" [encoding convertfrom utf-8 "komanda e parashiqimit"]
 
   ::msgcat::mcset cz "Point control" [encoding convertfrom utf-8 "Bod"]
   ::msgcat::mcset de "Point control" [encoding convertfrom utf-8 "Punkte bearbeiten"]
@@ -604,6 +671,7 @@
   ::msgcat::mcset it "Point control" [encoding convertfrom utf-8 "Punti"]
   ::msgcat::mcset ru "Point control" [encoding convertfrom utf-8 "\320\242\320\276\321\207\320\272\320\260"]
   ::msgcat::mcset sk "Point control" [encoding convertfrom utf-8 "Bod"]
+  ::msgcat::mcset sq "Point control" [encoding convertfrom utf-8 "pikat"]
 
   ::msgcat::mcset cz "Line control" [encoding convertfrom utf-8 "K\305\231ivka"]
   ::msgcat::mcset de "Line control" [encoding convertfrom utf-8 "Linien bearbeiten"]
@@ -613,6 +681,7 @@
   ::msgcat::mcset it "Line control" [encoding convertfrom utf-8 "Linee"]
   ::msgcat::mcset ru "Line control" [encoding convertfrom utf-8 "\320\233\320\270\320\275\320\270\321\217"]
   ::msgcat::mcset sk "Line control" [encoding convertfrom utf-8 "Krivka"]
+  ::msgcat::mcset sq "Line control" [encoding convertfrom utf-8 "rjeshtat"]
 
   ::msgcat::mcset cz "Line point control" [encoding convertfrom utf-8 "Bod k\305\231ivky"]
   ::msgcat::mcset de "Line point control" [encoding convertfrom utf-8 "Linienpunkte bearbeiten"]
@@ -622,6 +691,7 @@
   ::msgcat::mcset it "Line point control" [encoding convertfrom utf-8 "Punti della linea"]
   ::msgcat::mcset ru "Line point control" [encoding convertfrom utf-8 "\320\242\320\276\321\207\320\272\320\260 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "Line point control" [encoding convertfrom utf-8 "Bod krivky"]
+  ::msgcat::mcset sq "Line point control" [encoding convertfrom utf-8 "pikat e rjeshtit"]
 
   ::msgcat::mcset cz "Area control" [encoding convertfrom utf-8 "Oblast"]
   ::msgcat::mcset de "Area control" [encoding convertfrom utf-8 "Fl\303\244chen bearbeiten"]
@@ -631,6 +701,7 @@
   ::msgcat::mcset it "Area control" [encoding convertfrom utf-8 "Aree"]
   ::msgcat::mcset ru "Area control" [encoding convertfrom utf-8 "\320\236\320\261\320\273\320\260\321\201\321\202\321\214"]
   ::msgcat::mcset sk "Area control" [encoding convertfrom utf-8 "Plocha"]
+  ::msgcat::mcset sq "Area control" [encoding convertfrom utf-8 "fushat"]
 
   ::msgcat::mcset cz "Scrap control" [encoding convertfrom utf-8 "Scrap"]
   ::msgcat::mcset de "Scrap control" [encoding convertfrom utf-8 "Skizze bearbeiten"]
@@ -640,6 +711,7 @@
   ::msgcat::mcset it "Scrap control" [encoding convertfrom utf-8 "Scrap"]
   ::msgcat::mcset ru "Scrap control" [encoding convertfrom utf-8 "\320\241\320\272\321\200\320\260\320\277"]
   ::msgcat::mcset sk "Scrap control" [encoding convertfrom utf-8 "Scrap"]
+  ::msgcat::mcset sq "Scrap control" [encoding convertfrom utf-8 "mbeturinat"]
 
   ::msgcat::mcset cz "Text editor" [encoding convertfrom utf-8 "Textov\303\275 editor"]
   ::msgcat::mcset de "Text editor" [encoding convertfrom utf-8 "Texteditor"]
@@ -649,6 +721,7 @@
   ::msgcat::mcset it "Text editor" [encoding convertfrom utf-8 "Editor di testo"]
   ::msgcat::mcset ru "Text editor" [encoding convertfrom utf-8 "\320\240\320\265\320\264\320\260\320\272\321\202\320\276\321\200"]
   ::msgcat::mcset sk "Text editor" [encoding convertfrom utf-8 "Textov\303\275 editor"]
+  ::msgcat::mcset sq "Text editor" [encoding convertfrom utf-8 "permirsuesi I tekstit"]
 
   ::msgcat::mcset cz "Drawing area" [encoding convertfrom utf-8 "Kresl\303\255c\303\255 plocha"]
   ::msgcat::mcset de "Drawing area" [encoding convertfrom utf-8 "Zeichenfl\303\244che"]
@@ -658,6 +731,7 @@
   ::msgcat::mcset it "Drawing area" [encoding convertfrom utf-8 "Area di disegno"]
   ::msgcat::mcset ru "Drawing area" [encoding convertfrom utf-8 "\320\227\320\276\320\275\320\260 \321\200\320\270\321\201\320\276\320\262\320\260\320\275\320\270\321\217"]
   ::msgcat::mcset sk "Drawing area" [encoding convertfrom utf-8 "Pracovn\303\241 plocha"]
+  ::msgcat::mcset sq "Drawing area" [encoding convertfrom utf-8 "fusha e vizatimit"]
 
   ::msgcat::mcset cz "Background images" [encoding convertfrom utf-8 "Podkladov\303\251 obr\303\241zky"]
   ::msgcat::mcset de "Background images" [encoding convertfrom utf-8 "Hintergrundbilder"]
@@ -667,6 +741,7 @@
   ::msgcat::mcset it "Background images" [encoding convertfrom utf-8 "Immagini di background"]
   ::msgcat::mcset ru "Background images" [encoding convertfrom utf-8 "\320\244\320\276\320\275\320\276\320\262\321\213\320\265 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217"]
   ::msgcat::mcset sk "Background images" [encoding convertfrom utf-8 "Obr\303\241zky pozadia"]
+  ::msgcat::mcset sq "Background images" [encoding convertfrom utf-8 "imazhet ne prapavije"]
 
   ::msgcat::mcset cz "Current drawing area." [encoding convertfrom utf-8 "Sou\304\215asn\303\241 kresl\303\255c\303\255 plocha."]
   ::msgcat::mcset de "Current drawing area." [encoding convertfrom utf-8 "Aktuelle Zeichenfl\303\244che"]
@@ -676,6 +751,7 @@
   ::msgcat::mcset it "Current drawing area." [encoding convertfrom utf-8 "Area di disegno attiva"]
   ::msgcat::mcset ru "Current drawing area." [encoding convertfrom utf-8 "\320\242\320\265\320\272\321\203\321\211\320\260\321\217 \320\267\320\276\320\275\320\260 \321\200\320\270\321\201\320\276\320\262\320\260\320\275\320\270\321\217."]
   ::msgcat::mcset sk "Current drawing area." [encoding convertfrom utf-8 "S\303\272\304\215asn\303\241 pracovn\303\241 plocha."]
+  ::msgcat::mcset sq "Current drawing area." [encoding convertfrom utf-8 "fusha momentale e vizatimit"]
 
   ::msgcat::mcset cz "X min." [encoding convertfrom utf-8 "X min."]
   ::msgcat::mcset el "X min." [encoding convertfrom utf-8 "\316\225\316\273\316\254\317\207\316\271\317\203\317\204\316\277 \316\247"]
@@ -684,6 +760,7 @@
   ::msgcat::mcset it "X min." [encoding convertfrom utf-8 "Minimo X"]
   ::msgcat::mcset ru "X min." [encoding convertfrom utf-8 "X min."]
   ::msgcat::mcset sk "X min." [encoding convertfrom utf-8 "Minimum X."]
+  ::msgcat::mcset sq "X min." [encoding convertfrom utf-8 "minimum X."]
 
   ::msgcat::mcset cz "Y min." [encoding convertfrom utf-8 "Y min."]
   ::msgcat::mcset el "Y min." [encoding convertfrom utf-8 "\316\225\316\273\316\254\317\207\316\271\317\203\317\204\316\277 \316\245"]
@@ -692,6 +769,7 @@
   ::msgcat::mcset it "Y min." [encoding convertfrom utf-8 "Minimo Y"]
   ::msgcat::mcset ru "Y min." [encoding convertfrom utf-8 "Y min."]
   ::msgcat::mcset sk "Y min." [encoding convertfrom utf-8 "Minimum Y."]
+  ::msgcat::mcset sq "Y min." [encoding convertfrom utf-8 "minimum Y."]
 
   ::msgcat::mcset cz "X max." [encoding convertfrom utf-8 "X max."]
   ::msgcat::mcset el "X max." [encoding convertfrom utf-8 "\316\234\316\255\316\263\316\271\317\203\317\204\316\277 \316\247"]
@@ -700,6 +778,7 @@
   ::msgcat::mcset it "X max." [encoding convertfrom utf-8 "Massimo X"]
   ::msgcat::mcset ru "X max." [encoding convertfrom utf-8 "X max."]
   ::msgcat::mcset sk "X max." [encoding convertfrom utf-8 "Maximum X."]
+  ::msgcat::mcset sq "X max." [encoding convertfrom utf-8 "maksimum X."]
 
   ::msgcat::mcset cz "Y max." [encoding convertfrom utf-8 "Y max."]
   ::msgcat::mcset el "Y max." [encoding convertfrom utf-8 "\316\234\316\255\316\263\316\271\317\203\317\204\316\277 \316\245"]
@@ -708,6 +787,7 @@
   ::msgcat::mcset it "Y max." [encoding convertfrom utf-8 "Massimo Y"]
   ::msgcat::mcset ru "Y max." [encoding convertfrom utf-8 "Y max."]
   ::msgcat::mcset sk "Y max." [encoding convertfrom utf-8 "Maximum Y."]
+  ::msgcat::mcset sq "Y max." [encoding convertfrom utf-8 "maksimum Y."]
 
   ::msgcat::mcset cz "Adjust" [encoding convertfrom utf-8 "P\305\231izp\305\257sobit"]
   ::msgcat::mcset de "Adjust" [encoding convertfrom utf-8 "Anpassen"]
@@ -717,6 +797,7 @@
   ::msgcat::mcset it "Adjust" [encoding convertfrom utf-8 "Ridimensiona"]
   ::msgcat::mcset ru "Adjust" [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214"]
   ::msgcat::mcset sk "Adjust" [encoding convertfrom utf-8 "Prisp\303\264sob"]
+  ::msgcat::mcset sq "Adjust" [encoding convertfrom utf-8 "permireso"]
 
   ::msgcat::mcset cz "Adjust drawing area to given limits." [encoding convertfrom utf-8 "P\305\231izp\305\257sob\303\255 kresl\303\255c\303\255 plochu dan\303\275m limit\305\257m."]
   ::msgcat::mcset de "Adjust drawing area to given limits." [encoding convertfrom utf-8 "Zeichenfl\303\244che an Begrenzung anpassen."]
@@ -726,6 +807,7 @@
   ::msgcat::mcset it "Adjust drawing area to given limits." [encoding convertfrom utf-8 "Ridimensiona l'area di disegno ai limiti dati"]
   ::msgcat::mcset ru "Adjust drawing area to given limits." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214 \320\267\320\276\320\275\321\203 \321\200\320\270\321\201\320\276\320\262\320\260\320\275\320\270\321\217 \320\262 \320\267\320\260\320\264\320\260\320\275\320\275\321\213\321\205 \320\263\321\200\320\260\320\275\320\270\321\206\320\260\321\205."]
   ::msgcat::mcset sk "Adjust drawing area to given limits." [encoding convertfrom utf-8 "Prisp\303\264sobi\305\245 pracovn\303\272 plochu dan\303\275m limitom."]
+  ::msgcat::mcset sq "Adjust drawing area to given limits." [encoding convertfrom utf-8 "permireso fushen e vizatimit deri ne kufijt e dhene."]
 
   ::msgcat::mcset cz "Auto adjust" [encoding convertfrom utf-8 "Auto p\305\231izp\305\257s."]
   ::msgcat::mcset de "Auto adjust" [encoding convertfrom utf-8 "Automatisch anpassen"]
@@ -735,6 +817,7 @@
   ::msgcat::mcset it "Auto adjust" [encoding convertfrom utf-8 "Auto-ridimensiona"]
   ::msgcat::mcset ru "Auto adjust" [encoding convertfrom utf-8 "\320\220\320\262\321\202\320\276"]
   ::msgcat::mcset sk "Auto adjust" [encoding convertfrom utf-8 "Automaticky"]
+  ::msgcat::mcset sq "Auto adjust" [encoding convertfrom utf-8 "permiresimi automatik"]
 
   ::msgcat::mcset cz "Adjust drawing area to automatically calculated limits." [encoding convertfrom utf-8 "Automaticky p\305\231izp\305\257sob\303\255 kresl\303\255c\303\255 plochu v\305\241em objekt\305\257m."]
   ::msgcat::mcset de "Adjust drawing area to automatically calculated limits." [encoding convertfrom utf-8 "Zeichenfl\303\244che an berechnete Begrenzung anpassen."]
@@ -744,6 +827,7 @@
   ::msgcat::mcset it "Adjust drawing area to automatically calculated limits." [encoding convertfrom utf-8 "Ridimensiona l'area di disegno ai limiti calcolati"]
   ::msgcat::mcset ru "Adjust drawing area to automatically calculated limits." [encoding convertfrom utf-8 "\320\220\320\262\321\202\320\276\320\274\320\260\321\202\320\270\321\207\320\265\321\201\320\272\320\270 \321\203\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214 \320\267\320\276\320\275\321\203 \321\200\320\270\321\201\320\276\320\262\320\260\320\275\320\270\321\217."]
   ::msgcat::mcset sk "Adjust drawing area to automatically calculated limits." [encoding convertfrom utf-8 "Automaticky prisp\303\264sobi\305\245 pracovn\303\272 plochu v\305\241etk\303\275m objektom."]
+  ::msgcat::mcset sq "Adjust drawing area to automatically calculated limits." [encoding convertfrom utf-8 "permireso fushen e vizatimit ne kufirin e llogaritur automatikisht."]
 
   ::msgcat::mcset cz "zoom" [encoding convertfrom utf-8 "zoom"]
   ::msgcat::mcset de "zoom" [encoding convertfrom utf-8 "Zoom"]
@@ -753,6 +837,7 @@
   ::msgcat::mcset it "zoom" [encoding convertfrom utf-8 "zoom"]
   ::msgcat::mcset ru "zoom" [encoding convertfrom utf-8 "\320\274\320\260\321\201\321\210\321\202\320\260\320\261"]
   ::msgcat::mcset sk "zoom" [encoding convertfrom utf-8 "zoom"]
+  ::msgcat::mcset sq "zoom" [encoding convertfrom utf-8 "zmadho"]
 
   ::msgcat::mcset cz "Zoom drawing area." [encoding convertfrom utf-8 "Zoom kresl\303\255c\303\255 plochy."]
   ::msgcat::mcset de "Zoom drawing area." [encoding convertfrom utf-8 "Zeichenfl\303\244che zoomen."]
@@ -762,6 +847,7 @@
   ::msgcat::mcset it "Zoom drawing area." [encoding convertfrom utf-8 "Zoom area di disegno"]
   ::msgcat::mcset ru "Zoom drawing area." [encoding convertfrom utf-8 "\320\234\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\321\202\321\214 \320\267\320\276\320\275\321\203 \321\200\320\270\321\201\320\276\320\262\320\260\320\275\320\270\321\217."]
   ::msgcat::mcset sk "Zoom drawing area." [encoding convertfrom utf-8 "Zoom pracovnej plochy."]
+  ::msgcat::mcset sq "Zoom drawing area." [encoding convertfrom utf-8 "kontrolli I zmadhimit. Kliko ne gjashtekendesh te shohesh menyn"]
 
   ::msgcat::mcset cz "loading commands module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m p\305\231\303\255kazov\303\275 modul ..."]
   ::msgcat::mcset de "loading commands module ..." [encoding convertfrom utf-8 "Lade Befehlsmodul ..."]
@@ -771,6 +857,7 @@
   ::msgcat::mcset it "loading commands module ..." [encoding convertfrom utf-8 "modulo comandi ..."]
   ::msgcat::mcset ru "loading commands module ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\274\320\276\320\264\321\203\320\273\321\217 \320\272\320\276\320\274\320\260\320\275\320\264..."]
   ::msgcat::mcset sk "loading commands module ..." [encoding convertfrom utf-8 "pr\303\255kazov\303\275 modul..."]
+  ::msgcat::mcset sq "loading commands module ..." [encoding convertfrom utf-8 "duke lexuar modulin komandues\342\200\246"]
 
   ::msgcat::mcset cz "Select command." [encoding convertfrom utf-8 "V\303\275b\304\233r p\305\231\303\255kazu."]
   ::msgcat::mcset de "Select command." [encoding convertfrom utf-8 "W\303\244hle Befehl."]
@@ -780,6 +867,7 @@
   ::msgcat::mcset it "Select command." [encoding convertfrom utf-8 "Seleziona comando."]
   ::msgcat::mcset ru "Select command." [encoding convertfrom utf-8 "\320\222\321\213\320\261\320\265\321\200\320\270\321\202\320\265 \320\272\320\276\320\274\320\260\320\275\320\264\321\203."]
   ::msgcat::mcset sk "Select command." [encoding convertfrom utf-8 "Vyber pr\303\255kaz."]
+  ::msgcat::mcset sq "Select command." [encoding convertfrom utf-8 "kliko ne resht qe te fitosh objektin e deshiruar I zgjedhur ne pelhure ose anasjelltas."]
 
   ::msgcat::mcset cz "Action button." [encoding convertfrom utf-8 "Tla\304\215\303\255tko Akce."]
   ::msgcat::mcset de "Action button." [encoding convertfrom utf-8 "Aktionsknopf."]
@@ -789,6 +877,7 @@
   ::msgcat::mcset it "Action button." [encoding convertfrom utf-8 "Bottone di azione."]
   ::msgcat::mcset ru "Action button." [encoding convertfrom utf-8 "\320\224\320\265\320\271\321\201\321\202\320\262\320\270\321\217."]
   ::msgcat::mcset sk "Action button." [encoding convertfrom utf-8 "Gomb\303\255k - akcia."]
+  ::msgcat::mcset sq "Action button." [encoding convertfrom utf-8 "pasi te klikoni kete buton, ju mund te futni objekte me mi. kliko ne aksion qe te shohesh menyn."]
 
   ::msgcat::mcset cz "Switch mouse mode to select objects." [encoding convertfrom utf-8 "P\305\231epnut\303\255 my\305\241i do v\303\275b\304\233rov\303\251ho m\303\263du."]
   ::msgcat::mcset de "Switch mouse mode to select objects." [encoding convertfrom utf-8 "Maus umschalten um Objekte auszuw\303\244hlen."]
@@ -798,6 +887,7 @@
   ::msgcat::mcset it "Switch mouse mode to select objects." [encoding convertfrom utf-8 "Cambia la modalit\303\240 del mouse per selezionare oggetti."]
   ::msgcat::mcset ru "Switch mouse mode to select objects." [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\272\320\273\321\216\321\207\320\270\321\202\320\265\321\201\321\214 \320\275\320\260 \320\274\321\213\321\210\321\214, \321\207\321\202\320\276\320\261\321\213 \320\262\321\213\320\261\320\270\321\200\320\260\321\202\321\214 \320\276\320\261\321\212\320\265\320\272\321\202\321\213."]
   ::msgcat::mcset sk "Switch mouse mode to select objects." [encoding convertfrom utf-8 "Nastav m\303\263d my\305\241i na vyberanie objektov."]
+  ::msgcat::mcset sq "Switch mouse mode to select objects." [encoding convertfrom utf-8 "pasi te klikosh kete buton, ju mund te zgjedhni objektet ne pelhure me mi."]
 
   ::msgcat::mcset cz "Action" [encoding convertfrom utf-8 "Akce"]
   ::msgcat::mcset de "Action" [encoding convertfrom utf-8 "Aktion"]
@@ -807,6 +897,7 @@
   ::msgcat::mcset it "Action" [encoding convertfrom utf-8 "Azione"]
   ::msgcat::mcset ru "Action" [encoding convertfrom utf-8 "\320\224\320\265\320\271\321\201\321\202\320\262\320\270\320\265"]
   ::msgcat::mcset sk "Action" [encoding convertfrom utf-8 "Akcia"]
+  ::msgcat::mcset sq "Action" [encoding convertfrom utf-8 "aksion"]
 
   ::msgcat::mcset cz "Configure action assigned to action button." [encoding convertfrom utf-8 "Nastav\303\255 akci pro tla\304\215\303\255tko akc\303\255."]
   ::msgcat::mcset de "Configure action assigned to action button." [encoding convertfrom utf-8 "Dem Aktionsknopf zugewiesene Aktion konfigurieren."]
@@ -816,6 +907,7 @@
   ::msgcat::mcset it "Configure action assigned to action button." [encoding convertfrom utf-8 "Configura l'azione assegnata al bottone d'azione."]
   ::msgcat::mcset ru "Configure action assigned to action button." [encoding convertfrom utf-8 "\320\222\321\213\320\261\320\265\321\200\320\270\321\202\320\265 \320\264\320\265\320\271\321\201\321\202\320\262\320\270\320\265, \320\275\320\260\320\267\320\275\320\260\321\207\320\265\320\275\320\275\320\276\320\265 \320\264\320\273\321\217 \320\272\320\275\320\276\320\277\320\272\320\270."]
   ::msgcat::mcset sk "Configure action assigned to action button." [encoding convertfrom utf-8 "Nakonfiguruj akciu pre gomb\303\255k - akcia."]
+  ::msgcat::mcset sq "Configure action assigned to action button." [encoding convertfrom utf-8 "aksionin qe e zgjedhni do te egzekutohet me klikimin ne butonin Fute <objektin>"]
 
   ::msgcat::mcset cz "Move up" [encoding convertfrom utf-8 "P\305\231esun v\303\275\305\241"]
   ::msgcat::mcset de "Move up" [encoding convertfrom utf-8 "Schiebe nach oben"]
@@ -825,6 +917,7 @@
   ::msgcat::mcset it "Move up" [encoding convertfrom utf-8 "Sposta s\303\271"]
   ::msgcat::mcset ru "Move up" [encoding convertfrom utf-8 "\320\222\320\262\320\265\321\200\321\205"]
   ::msgcat::mcset sk "Move up" [encoding convertfrom utf-8 "Presu\305\210 vy\305\241\305\241ie"]
+  ::msgcat::mcset sq "Move up" [encoding convertfrom utf-8 "levize lart"]
 
   ::msgcat::mcset cz "Move file command up in the list." [encoding convertfrom utf-8 "P\305\231esune p\305\231\303\255kaz v\303\275\305\241 v seznamu p\305\231\303\255kaz\305\257."]
   ::msgcat::mcset de "Move file command up in the list." [encoding convertfrom utf-8 "In der Liste nach oben schieben."]
@@ -834,6 +927,7 @@
   ::msgcat::mcset it "Move file command up in the list." [encoding convertfrom utf-8 "Sposta il comando in s\303\271 nella lista."]
   ::msgcat::mcset ru "Move file command up in the list." [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\274\320\265\321\201\321\202\320\270\321\202\321\214 \320\272\320\276\320\274\320\260\320\275\320\264\321\203 \320\262\320\262\320\265\321\200\321\205 \320\277\320\276 \321\204\320\260\320\271\320\273\321\203."]
   ::msgcat::mcset sk "Move file command up in the list." [encoding convertfrom utf-8 "Presu\305\210 pr\303\255kaz vy\305\241\305\241ie v zozname pr\303\255kazov."]
+  ::msgcat::mcset sq "Move file command up in the list." [encoding convertfrom utf-8 "levize objektin lart ne liste. Perdor nese objekti eshte ne deponi te gabuar."]
 
   ::msgcat::mcset cz "Move down" [encoding convertfrom utf-8 "P\305\231esun n\303\255\305\276"]
   ::msgcat::mcset de "Move down" [encoding convertfrom utf-8 "Schiebe nach unten"]
@@ -843,6 +937,7 @@
   ::msgcat::mcset it "Move down" [encoding convertfrom utf-8 "Sposta gi\303\271"]
   ::msgcat::mcset ru "Move down" [encoding convertfrom utf-8 "\320\222\320\275\320\270\320\267"]
   ::msgcat::mcset sk "Move down" [encoding convertfrom utf-8 "Presu\305\210 ni\305\276\305\241ie"]
+  ::msgcat::mcset sq "Move down" [encoding convertfrom utf-8 "levize poshte"]
 
   ::msgcat::mcset cz "Move file command down in the list." [encoding convertfrom utf-8 "P\305\231esune p\305\231\303\255kaz n\303\255\305\276 v seznamu p\305\231\303\255kaz\305\257."]
   ::msgcat::mcset de "Move file command down in the list." [encoding convertfrom utf-8 "In der Liste nach unten schieben."]
@@ -852,6 +947,7 @@
   ::msgcat::mcset it "Move file command down in the list." [encoding convertfrom utf-8 "Sposta il comando in gi\303\271 nella lista."]
   ::msgcat::mcset ru "Move file command down in the list." [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\274\320\265\321\201\321\202\320\270\321\202\321\214 \320\272\320\276\320\274\320\260\320\275\320\264\321\203 \320\262\320\275\320\270\320\267 \320\277\320\276 \321\204\320\260\320\271\320\273\321\203."]
   ::msgcat::mcset sk "Move file command down in the list." [encoding convertfrom utf-8 "Presu\305\210 pr\303\255kaz ni\305\276\305\241ie v zozname pr\303\255kazov."]
+  ::msgcat::mcset sq "Move file command down in the list." [encoding convertfrom utf-8 "levize objektin poshte ne liste. Perdore nese objekti eshte ne deponi te gabuar."]
 
   ::msgcat::mcset cz "Move file command to given position." [encoding convertfrom utf-8 "P\305\231esunout p\305\231\303\255kaz na danou pozici v seznamu."]
   ::msgcat::mcset de "Move file command to given position." [encoding convertfrom utf-8 "Befehl an angegebene Position schieben."]
@@ -861,6 +957,7 @@
   ::msgcat::mcset it "Move file command to given position." [encoding convertfrom utf-8 "Sposta il comando nella posizione specificata."]
   ::msgcat::mcset ru "Move file command to given position." [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\274\320\265\321\201\321\202\320\270\321\202\321\214 \320\272\320\276\320\274\320\260\320\275\320\264\321\203 \320\262 \321\203\320\272\320\260\320\267\320\260\320\275\320\275\321\203\321\216 \320\277\320\276\320\267\320\270\321\206\320\270\321\216 \320\262 \321\204\320\260\320\271\320\273\320\265."]
   ::msgcat::mcset sk "Move file command to given position." [encoding convertfrom utf-8 "Presu\305\210 pr\303\255kaz na dan\303\272 poz\303\255ciu v zozname."]
+  ::msgcat::mcset sq "Move file command to given position." [encoding convertfrom utf-8 "levize objektin ne pozicion te dhanun( pozicioni = numri ne secilen rjesht)."]
 
   ::msgcat::mcset cz "Select destination scrap and position in it." [encoding convertfrom utf-8 "V\303\275b\304\233r c\303\255lov\303\251ho scrapu a pozice v n\304\233m."]
   ::msgcat::mcset de "Select destination scrap and position in it." [encoding convertfrom utf-8 "Zielskizze ausw\303\244hlen und positionieren."]
@@ -870,6 +967,7 @@
   ::msgcat::mcset it "Select destination scrap and position in it." [encoding convertfrom utf-8 "Selezione lo scrap di destinazione e posizionati in esso."]
   ::msgcat::mcset ru "Select destination scrap and position in it." [encoding convertfrom utf-8 "\320\243\320\272\320\260\320\266\320\270\321\202\320\265 \321\206\320\265\320\273\320\265\320\262\320\276\320\271 \321\201\320\272\321\200\320\260\320\277 \320\270 \320\277\320\276\320\267\320\270\321\206\320\270\321\216 \320\262 \320\275\320\265\320\274."]
   ::msgcat::mcset sk "Select destination scrap and position in it." [encoding convertfrom utf-8 "Nastav cie\304\276ov\303\275 scrap a poz\303\255ciu v \305\210om."]
+  ::msgcat::mcset sq "Select destination scrap and position in it." [encoding convertfrom utf-8 "zgjedhe destinacionin per deponi dhe poziciono ne te."]
 
   ::msgcat::mcset cz "Update text" [encoding convertfrom utf-8 "Aktualizovat"]
   ::msgcat::mcset de "Update text" [encoding convertfrom utf-8 "Text aktualisieren"]
@@ -879,6 +977,7 @@
   ::msgcat::mcset it "Update text" [encoding convertfrom utf-8 "Aggiorna testo"]
   ::msgcat::mcset ru "Update text" [encoding convertfrom utf-8 "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214 \321\202\320\265\320\272\321\201\321\202"]
   ::msgcat::mcset sk "Update text" [encoding convertfrom utf-8 "Aktualizuj text"]
+  ::msgcat::mcset sq "Update text" [encoding convertfrom utf-8 "aktualizo tekstin"]
 
   ::msgcat::mcset cz "Press this button to save code you have written." [encoding convertfrom utf-8 "Stiskn\304\233te toto tla\304\215\303\255tko pro ulo\305\276en\303\255 V\303\241mi zapsan\303\251ho k\303\263du."]
   ::msgcat::mcset de "Press this button to save code you have written." [encoding convertfrom utf-8 "Diesen Knopf dr\303\274cken, um Daten zu speichern."]
@@ -888,6 +987,7 @@
   ::msgcat::mcset it "Press this button to save code you have written." [encoding convertfrom utf-8 "Premi questo bottone per salvare il codice che hai scritto."]
   ::msgcat::mcset ru "Press this button to save code you have written." [encoding convertfrom utf-8 "\320\235\320\260\320\266\320\274\320\270\321\202\320\265 \321\215\321\202\321\203 \320\272\320\275\320\276\320\277\320\272\321\203 \320\264\320\273\321\217 \321\201\320\276\321\205\321\200\320\260\320\275\320\265\320\275\320\270\321\217 \320\275\320\260\320\277\320\270\321\201\320\260\320\275\320\275\320\276\320\263\320\276 \320\272\320\276\320\264\320\260."]
   ::msgcat::mcset sk "Press this button to save code you have written." [encoding convertfrom utf-8 "Stla\304\215te toto tla\304\215\303\255tko pre ulo\305\276enie Vami zap\303\255san\303\251ho k\303\263du."]
+  ::msgcat::mcset sq "Press this button to save code you have written." [encoding convertfrom utf-8 "shtype kete buton ta ruajsh kodin te cilin e ke shkru."]
 
   ::msgcat::mcset cz "Editor for free text in therion 2D file." [encoding convertfrom utf-8 "Editor pro text ve 2D souborech."]
   ::msgcat::mcset de "Editor for free text in therion 2D file." [encoding convertfrom utf-8 "Editor f\303\274r Freitext in Therion 2D Datei."]
@@ -897,6 +997,7 @@
   ::msgcat::mcset it "Editor for free text in therion 2D file." [encoding convertfrom utf-8 "Editor di testo libero per il file 2D di therion."]
   ::msgcat::mcset ru "Editor for free text in therion 2D file." [encoding convertfrom utf-8 "\320\240\320\265\320\264\320\260\320\272\321\202\320\276\321\200 \320\277\321\200\320\276\320\270\320\267\320\262\320\276\320\273\321\214\320\275\320\276\320\263\320\276 \321\202\320\265\320\272\321\201\321\202\320\260 \320\262 2D \321\204\320\260\320\271\320\273\320\265."]
   ::msgcat::mcset sk "Editor for free text in therion 2D file." [encoding convertfrom utf-8 "Editor pre \305\241peci\303\241lne pr\303\255kazy v 2D s\303\272boroch."]
+  ::msgcat::mcset sq "Editor for free text in therion 2D file." [encoding convertfrom utf-8 "perdore kete dritare per permiresim qe te modofikosh. Th2 arkivin."]
 
   ::msgcat::mcset cz "expression" [encoding convertfrom utf-8 "v\303\275raz"]
   ::msgcat::mcset de "expression" [encoding convertfrom utf-8 "Muster"]
@@ -906,6 +1007,7 @@
   ::msgcat::mcset it "expression" [encoding convertfrom utf-8 "testo"]
   ::msgcat::mcset ru "expression" [encoding convertfrom utf-8 "\320\262\321\213\321\200\320\260\320\266\320\265\320\275\320\270\320\265"]
   ::msgcat::mcset sk "expression" [encoding convertfrom utf-8 "v\303\275raz"]
+  ::msgcat::mcset sq "expression" [encoding convertfrom utf-8 "kerko per"]
 
   ::msgcat::mcset cz "Enter search expression." [encoding convertfrom utf-8 "Vlo\305\276te hledan\303\275 v\303\275raz."]
   ::msgcat::mcset de "Enter search expression." [encoding convertfrom utf-8 "Suchmuster eingeben."]
@@ -915,6 +1017,7 @@
   ::msgcat::mcset it "Enter search expression." [encoding convertfrom utf-8 "Scrivi il testo da cercare."]
   ::msgcat::mcset ru "Enter search expression." [encoding convertfrom utf-8 "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\262\321\213\321\200\320\260\320\266\320\265\320\275\320\270\320\265 \320\277\320\276\320\270\321\201\320\272\320\260."]
   ::msgcat::mcset sk "Enter search expression." [encoding convertfrom utf-8 "Vlo\305\276te h\304\276adan\303\275 v\303\275raz."]
+  ::msgcat::mcset sq "Enter search expression." [encoding convertfrom utf-8 "fute fjalin qe do ta kerkosh."]
 
   ::msgcat::mcset cz "regular expression" [encoding convertfrom utf-8 "regul\303\241rn\303\255 v\303\275raz"]
   ::msgcat::mcset de "regular expression" [encoding convertfrom utf-8 "Regul\303\244rer Ausdruck"]
@@ -924,6 +1027,7 @@
   ::msgcat::mcset it "regular expression" [encoding convertfrom utf-8 "espressione regolare"]
   ::msgcat::mcset ru "regular expression" [encoding convertfrom utf-8 "\321\200\320\265\320\263\321\203\320\273\321\217\321\200\320\275\320\276\320\265 \320\262\321\213\321\200\320\260\320\266\320\265\320\275\320\270\320\265"]
   ::msgcat::mcset sk "regular expression" [encoding convertfrom utf-8 "regul\303\241rny v\303\275raz"]
+  ::msgcat::mcset sq "regular expression" [encoding convertfrom utf-8 "shprehje e rregullt"]
 
   ::msgcat::mcset cz "Search for regular expression." [encoding convertfrom utf-8 "Vyhled\303\241v\303\241n\303\255 regul\303\241rn\303\255ho v\303\275razu."]
   ::msgcat::mcset de "Search for regular expression." [encoding convertfrom utf-8 "Suche nach regul\303\244rem Ausdruck."]
@@ -933,6 +1037,7 @@
   ::msgcat::mcset it "Search for regular expression." [encoding convertfrom utf-8 "Cerca espressione regolare."]
   ::msgcat::mcset ru "Search for regular expression." [encoding convertfrom utf-8 "\320\230\321\201\320\272\320\260\321\202\321\214 \320\277\320\276 \321\200\320\265\320\263\321\203\320\273\321\217\321\200\320\275\320\276\320\274\321\203 \320\262\321\213\321\200\320\260\320\266\320\265\320\275\320\270\321\216."]
   ::msgcat::mcset sk "Search for regular expression." [encoding convertfrom utf-8 "Vyh\304\276ad\303\241vanie regul\303\241rneho v\303\275razu."]
+  ::msgcat::mcset sq "Search for regular expression." [encoding convertfrom utf-8 "kerko per shprehje te rregullt."]
 
   ::msgcat::mcset cz "case sensitive" [encoding convertfrom utf-8 "rozli\305\241ovat velikost p\303\255smen"]
   ::msgcat::mcset de "case sensitive" [encoding convertfrom utf-8 "Gro\303\237- und Kleinschreibung ber\303\274cksichtigen"]
@@ -942,6 +1047,7 @@
   ::msgcat::mcset it "case sensitive" [encoding convertfrom utf-8 "case-sensitive"]
   ::msgcat::mcset ru "case sensitive" [encoding convertfrom utf-8 "\321\203\321\207\320\270\321\202\321\213\320\262\320\260\321\202\321\214 \321\200\320\265\320\263\320\270\321\201\321\202\321\200"]
   ::msgcat::mcset sk "case sensitive" [encoding convertfrom utf-8 "rozli\305\241ova\305\245 ve\304\276kos\305\245"]
+  ::msgcat::mcset sq "case sensitive" [encoding convertfrom utf-8 "rast I ndjeshem-senzitiv"]
 
   ::msgcat::mcset cz "Case sensitive search." [encoding convertfrom utf-8 "Vyhled\303\241v\303\241n\303\255 s rozli\305\241en\303\255m velikosti p\303\255smen."]
   ::msgcat::mcset de "Case sensitive search." [encoding convertfrom utf-8 "Suche mit Gro\303\237- und Kleinbuchstaben."]
@@ -951,6 +1057,7 @@
   ::msgcat::mcset it "Case sensitive search." [encoding convertfrom utf-8 "Ricerca case-sensistive"]
   ::msgcat::mcset ru "Case sensitive search." [encoding convertfrom utf-8 "\320\237\320\276\320\270\321\201\320\272 \321\201 \321\203\321\207\320\265\321\202\320\276\320\274 \321\200\320\265\320\263\320\270\321\201\321\202\321\200\320\260."]
   ::msgcat::mcset sk "Case sensitive search." [encoding convertfrom utf-8 "Vyh\304\276ad\303\241vanie s rozli\305\241ovan\303\255m ve\304\276k\303\275ch a mal\303\275ch p\303\255smen."]
+  ::msgcat::mcset sq "Case sensitive search." [encoding convertfrom utf-8 "kerko rast senzitiv"]
 
   ::msgcat::mcset cz "Find next" [encoding convertfrom utf-8 "Naj\303\255t dal\305\241\303\255"]
   ::msgcat::mcset de "Find next" [encoding convertfrom utf-8 "N\303\244chste Stelle finden"]
@@ -960,6 +1067,7 @@
   ::msgcat::mcset it "Find next" [encoding convertfrom utf-8 "Prossimo"]
   ::msgcat::mcset ru "Find next" [encoding convertfrom utf-8 "\320\241\320\273\320\265\320\264\321\203\321\216\321\211\320\270\320\271"]
   ::msgcat::mcset sk "Find next" [encoding convertfrom utf-8 "Nasleduj\303\272ci"]
+  ::msgcat::mcset sq "Find next" [encoding convertfrom utf-8 "gjeje tjetren me radhe"]
 
   ::msgcat::mcset cz "Select next object matching expression." [encoding convertfrom utf-8 "Vybere dal\305\241\303\255 objekt odpov\303\255daj\303\255c\303\255 v\303\275razu."]
   ::msgcat::mcset de "Select next object matching expression." [encoding convertfrom utf-8 "N\303\244chstes Objekt ausw\303\244hlen, das auf Muster passt."]
@@ -969,6 +1077,7 @@
   ::msgcat::mcset it "Select next object matching expression." [encoding convertfrom utf-8 "Seleziona il prossimo oggetto trovato"]
   ::msgcat::mcset ru "Select next object matching expression." [encoding convertfrom utf-8 "\320\222\321\213\320\261\321\200\320\260\321\202\321\214 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\320\270\320\271 \320\276\320\261\321\212\320\265\320\272\321\202, \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\270\320\271 \320\262\321\213\321\200\320\260\320\266\320\265\320\275\320\270\321\216 \320\277\320\276\320\270\321\201\320\272\320\260."]
   ::msgcat::mcset sk "Select next object matching expression." [encoding convertfrom utf-8 "N\303\241jdi \304\217al\305\241\303\255 objekt zodpovedaj\303\272ci h\304\276adan\303\251mu v\303\275razu."]
+  ::msgcat::mcset sq "Select next object matching expression." [encoding convertfrom utf-8 "zgjedhe objektin tjeter me radhe te shprehjes qe pershtatet"]
 
   ::msgcat::mcset cz "Find first" [encoding convertfrom utf-8 "Naj\303\255t prvn\303\255"]
   ::msgcat::mcset de "Find first" [encoding convertfrom utf-8 "Finde erstes"]
@@ -978,6 +1087,7 @@
   ::msgcat::mcset it "Find first" [encoding convertfrom utf-8 "Cerca"]
   ::msgcat::mcset ru "Find first" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\262\321\213\320\271"]
   ::msgcat::mcset sk "Find first" [encoding convertfrom utf-8 "N\303\241jdi prv\303\275"]
+  ::msgcat::mcset sq "Find first" [encoding convertfrom utf-8 "kerko te parin"]
 
   ::msgcat::mcset cz "Select first object matching expression." [encoding convertfrom utf-8 "Vybere prvn\303\255 objekt odpov\303\255daj\303\255c\303\255 v\303\275razu."]
   ::msgcat::mcset de "Select first object matching expression." [encoding convertfrom utf-8 "Erstes Objekt finden, das auf Muster passt."]
@@ -987,6 +1097,7 @@
   ::msgcat::mcset it "Select first object matching expression." [encoding convertfrom utf-8 "Seleziona il primo oggetto trovato"]
   ::msgcat::mcset ru "Select first object matching expression." [encoding convertfrom utf-8 "\320\222\321\213\320\261\321\200\320\260\321\202\321\214 \320\277\320\265\321\200\320\262\321\213\320\271 \320\276\320\261\321\212\320\265\320\272\321\202, \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\270\320\271 \320\262\321\213\321\200\320\260\320\266\320\265\320\275\320\270\321\216 \320\277\320\276\320\270\321\201\320\272\320\260."]
   ::msgcat::mcset sk "Select first object matching expression." [encoding convertfrom utf-8 "N\303\241jdi prv\303\275 objekt zodpovedaj\303\272ci h\304\276adan\303\251mu v\303\275razu."]
+  ::msgcat::mcset sq "Select first object matching expression." [encoding convertfrom utf-8 "zgjedh objektin e pare te shprehjes qe pershtatet"]
 
   ::msgcat::mcset cz "Show all" [encoding convertfrom utf-8 "Zobrazit v\305\241e"]
   ::msgcat::mcset de "Show all" [encoding convertfrom utf-8 "Zeige alles"]
@@ -996,6 +1107,7 @@
   ::msgcat::mcset it "Show all" [encoding convertfrom utf-8 "Tutti"]
   ::msgcat::mcset ru "Show all" [encoding convertfrom utf-8 "\320\237\320\276\320\272\320\260\320\267\320\260\321\202\321\214 \320\262\321\201\320\265"]
   ::msgcat::mcset sk "Show all" [encoding convertfrom utf-8 "Ozna\304\215 v\305\241etky"]
+  ::msgcat::mcset sq "Show all" [encoding convertfrom utf-8 "tregoji te gjitha"]
 
   ::msgcat::mcset cz "Highlight all objects matching expression." [encoding convertfrom utf-8 "Zv\303\275razn\303\255 v\305\241echny objekty odpov\303\255daj\303\255c\303\255 v\303\275razu."]
   ::msgcat::mcset de "Highlight all objects matching expression." [encoding convertfrom utf-8 "Alle Objekte hervorheben, die auf Muster passen."]
@@ -1005,6 +1117,7 @@
   ::msgcat::mcset it "Highlight all objects matching expression." [encoding convertfrom utf-8 "Evidenzia tutti gli oggetti trovati"]
   ::msgcat::mcset ru "Highlight all objects matching expression." [encoding convertfrom utf-8 "\320\237\320\276\320\264\321\201\320\262\320\265\321\202\320\270\321\202\321\214 \320\262\321\201\320\265 \320\276\320\261\321\212\320\265\320\272\321\202\321\213, \321\201\320\276\320\276\321\202\320\262\320\265\321\202\321\201\321\202\320\262\321\203\321\216\321\211\320\270\320\265 \320\262\321\213\321\200\320\260\320\266\320\265\320\275\320\270\321\216 \320\277\320\276\320\270\321\201\320\272\320\260."]
   ::msgcat::mcset sk "Highlight all objects matching expression." [encoding convertfrom utf-8 "Zv\303\275razn\303\255 v\305\241etky objekty zodpovedaj\303\272ce h\304\276adan\303\251mu v\303\275razu."]
+  ::msgcat::mcset sq "Highlight all objects matching expression." [encoding convertfrom utf-8 "zghedh te gjitha objektet qe pershtaten me shprehjen"]
 
   ::msgcat::mcset cz "Clear all" [encoding convertfrom utf-8 "Zru\305\241 v\303\275b\304\233r"]
   ::msgcat::mcset de "Clear all" [encoding convertfrom utf-8 "Alles l\303\266schen"]
@@ -1014,6 +1127,7 @@
   ::msgcat::mcset it "Clear all" [encoding convertfrom utf-8 "Cancella"]
   ::msgcat::mcset ru "Clear all" [encoding convertfrom utf-8 "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\262\321\201\320\265"]
   ::msgcat::mcset sk "Clear all" [encoding convertfrom utf-8 "Zru\305\241 v\303\275ber"]
+  ::msgcat::mcset sq "Clear all" [encoding convertfrom utf-8 "fshij krejt"]
 
   ::msgcat::mcset cz "Clear highlighted objects." [encoding convertfrom utf-8 "Zru\305\241\303\255 zv\303\275razn\304\233n\303\255 vybran\303\275ch objekt\305\257."]
   ::msgcat::mcset de "Clear highlighted objects." [encoding convertfrom utf-8 "Hervorgehobene Objekte l\303\266schen."]
@@ -1023,6 +1137,7 @@
   ::msgcat::mcset it "Clear highlighted objects." [encoding convertfrom utf-8 "Togli l'evidenziazione degli oggetti."]
   ::msgcat::mcset ru "Clear highlighted objects." [encoding convertfrom utf-8 "\320\241\320\275\321\217\321\202\321\214 \320\277\320\276\320\264\321\201\320\262\320\265\321\202\320\272\321\203 \321\201\320\276 \320\262\321\201\320\265\321\205 \320\276\320\261\321\212\320\265\320\272\321\202\320\276\320\262."]
   ::msgcat::mcset sk "Clear highlighted objects." [encoding convertfrom utf-8 "Zru\305\241\303\255 zv\303\275raznenie vybrat\303\275ch objektov."]
+  ::msgcat::mcset sq "Clear highlighted objects." [encoding convertfrom utf-8 "fshij objektet e zgjedhura-te hijezuara"]
 
   ::msgcat::mcset cz "loading images module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m obr\303\241zkov\303\275 modul ..."]
   ::msgcat::mcset de "loading images module ..." [encoding convertfrom utf-8 "Lade Bildmodul ..."]
@@ -1032,6 +1147,7 @@
   ::msgcat::mcset it "loading images module ..." [encoding convertfrom utf-8 "modulo immagini ..."]
   ::msgcat::mcset ru "loading images module ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\274\320\276\320\264\321\203\320\273\321\217 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\271..."]
   ::msgcat::mcset sk "loading images module ..." [encoding convertfrom utf-8 "nahr\303\241vam obr\303\241zkov\303\275 modul..."]
+  ::msgcat::mcset sq "loading images module ..." [encoding convertfrom utf-8 "duke lexuar modulin e imazhit\342\200\246"]
 
   ::msgcat::mcset cz "Select background image." [encoding convertfrom utf-8 "V\303\275b\304\233r podkladov\303\251ho obr\303\241zku."]
   ::msgcat::mcset de "Select background image." [encoding convertfrom utf-8 "W\303\244hle Hintergrundbild."]
@@ -1041,6 +1157,7 @@
   ::msgcat::mcset it "Select background image." [encoding convertfrom utf-8 "Seleziona l'immagine di background."]
   ::msgcat::mcset ru "Select background image." [encoding convertfrom utf-8 "\320\222\321\213\320\261\320\276\321\200 \321\204\320\276\320\275\320\276\320\262\320\276\320\263\320\276 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217."]
   ::msgcat::mcset sk "Select background image." [encoding convertfrom utf-8 "Ozna\304\215 obr\303\241zok na pozad\303\255."]
+  ::msgcat::mcset sq "Select background image." [encoding convertfrom utf-8 "kliko rreshtin ne liste qe te zgjedhesh imazhin qe pershtatet."]
 
   ::msgcat::mcset cz "Insert new background image." [encoding convertfrom utf-8 "Vlo\305\276en\303\255 nov\303\251ho podkladov\303\251ho obr\303\241zku."]
   ::msgcat::mcset de "Insert new background image." [encoding convertfrom utf-8 "Neues Hintergrundbild einf\303\274gen."]
@@ -1050,6 +1167,7 @@
   ::msgcat::mcset it "Insert new background image." [encoding convertfrom utf-8 "Inserisci una nuova immagine di background."]
   ::msgcat::mcset ru "Insert new background image." [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\275\320\276\320\262\320\276\320\265 \321\204\320\276\320\275\320\276\320\262\320\276\320\265 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265."]
   ::msgcat::mcset sk "Insert new background image." [encoding convertfrom utf-8 "Vlo\305\276enie nov\303\251ho podkladov\303\251ho obr\303\241zku."]
+  ::msgcat::mcset sq "Insert new background image." [encoding convertfrom utf-8 "fute imazhin e ri ne prapavije (p.sh., . xvi imazhin apo vizatimin e skanuar)."]
 
   ::msgcat::mcset cz "Remove" [encoding convertfrom utf-8 "Odstranit"]
   ::msgcat::mcset de "Remove" [encoding convertfrom utf-8 "Entferne"]
@@ -1059,6 +1177,7 @@
   ::msgcat::mcset it "Remove" [encoding convertfrom utf-8 "Rimuovi"]
   ::msgcat::mcset ru "Remove" [encoding convertfrom utf-8 "\320\243\320\261\321\200\320\260\321\202\321\214"]
   ::msgcat::mcset sk "Remove" [encoding convertfrom utf-8 "Odstr\303\241ni\305\245"]
+  ::msgcat::mcset sq "Remove" [encoding convertfrom utf-8 "hiqe"]
 
   ::msgcat::mcset cz "Remove selected image." [encoding convertfrom utf-8 "Odstran\303\255 vybran\303\275 obr\303\241zek."]
   ::msgcat::mcset de "Remove selected image." [encoding convertfrom utf-8 "Entferne ausgew\303\244hltes Bild."]
@@ -1068,6 +1187,7 @@
   ::msgcat::mcset it "Remove selected image." [encoding convertfrom utf-8 "Rimuovi l'immagine selezionata."]
   ::msgcat::mcset ru "Remove selected image." [encoding convertfrom utf-8 "\320\243\320\261\321\200\320\260\321\202\321\214 \320\262\321\213\321\200\320\261\320\260\320\275\320\275\320\276\320\265 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265."]
   ::msgcat::mcset sk "Remove selected image." [encoding convertfrom utf-8 "Odstr\303\241ni ozna\304\215en\303\275 obr\303\241zok."]
+  ::msgcat::mcset sq "Remove selected image." [encoding convertfrom utf-8 "hiqe imazhin e zgjedhur."]
 
   ::msgcat::mcset cz "visibility" [encoding convertfrom utf-8 "viditelnost"]
   ::msgcat::mcset de "visibility" [encoding convertfrom utf-8 "Sichtbarkeit"]
@@ -1077,6 +1197,7 @@
   ::msgcat::mcset it "visibility" [encoding convertfrom utf-8 "visibilit\303\240"]
   ::msgcat::mcset ru "visibility" [encoding convertfrom utf-8 "\320\277\320\276\320\272\320\260\320\267\320\260\321\202\321\214"]
   ::msgcat::mcset sk "visibility" [encoding convertfrom utf-8 "vidite\304\276nos\305\245"]
+  ::msgcat::mcset sq "visibility" [encoding convertfrom utf-8 "shiqueshmeria-vizibiliteti"]
 
   ::msgcat::mcset cz "Switch image visibility." [encoding convertfrom utf-8 "P\305\231ep\303\255n\303\241 viditelnost obr\303\241zku."]
   ::msgcat::mcset de "Switch image visibility." [encoding convertfrom utf-8 "Bildsichtbarkeit umschalten."]
@@ -1086,6 +1207,7 @@
   ::msgcat::mcset it "Switch image visibility." [encoding convertfrom utf-8 "Cambia la visibilit\303\240 dell'immagine."]
   ::msgcat::mcset ru "Switch image visibility." [encoding convertfrom utf-8 "\320\237\320\276\320\272\320\260\320\267\320\260\321\202\321\214/\321\201\320\277\321\200\321\217\321\202\320\260\321\202\321\214 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265."]
   ::msgcat::mcset sk "Switch image visibility." [encoding convertfrom utf-8 "Prep\303\255na\304\215 vidite\304\276nosti obr\303\241zku."]
+  ::msgcat::mcset sq "Switch image visibility." [encoding convertfrom utf-8 "lesho shiqueshmerine-vizibilitetin e imazhit."]
 
   ::msgcat::mcset cz "Control gamma value." [encoding convertfrom utf-8 "Nastaven\303\255 hodnoty gamma."]
   ::msgcat::mcset de "Control gamma value." [encoding convertfrom utf-8 "Gammawert einstellen."]
@@ -1095,6 +1217,7 @@
   ::msgcat::mcset it "Control gamma value." [encoding convertfrom utf-8 "Controlla il valore di gamma."]
   ::msgcat::mcset ru "Control gamma value." [encoding convertfrom utf-8 "\320\243\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\265 \320\263\320\260\320\274\320\274\320\276\320\271."]
   ::msgcat::mcset sk "Control gamma value." [encoding convertfrom utf-8 "Nastavenie gamma korekcie obr\303\241zku (farebn\303\251ho podania)."]
+  ::msgcat::mcset sq "Control gamma value." [encoding convertfrom utf-8 "kontrollo vleren-gamma"]
 
   ::msgcat::mcset cz "Reset" [encoding convertfrom utf-8 "Reset"]
   ::msgcat::mcset de "Reset" [encoding convertfrom utf-8 "Zur\303\274cksetzen"]
@@ -1104,6 +1227,7 @@
   ::msgcat::mcset it "Reset" [encoding convertfrom utf-8 "Ripristina"]
   ::msgcat::mcset ru "Reset" [encoding convertfrom utf-8 "\320\241\320\261\321\200\320\276\321\201"]
   ::msgcat::mcset sk "Reset" [encoding convertfrom utf-8 "Reset"]
+  ::msgcat::mcset sq "Reset" [encoding convertfrom utf-8 "reseto"]
 
   ::msgcat::mcset cz "Reset image gamma value." [encoding convertfrom utf-8 "Resetuje nastavenou hodnotu gamma."]
   ::msgcat::mcset de "Reset image gamma value." [encoding convertfrom utf-8 "Gammawert zur\303\274cksetzen."]
@@ -1113,6 +1237,7 @@
   ::msgcat::mcset it "Reset image gamma value." [encoding convertfrom utf-8 "Ripristina il valore di gamma dell'immagine."]
   ::msgcat::mcset ru "Reset image gamma value." [encoding convertfrom utf-8 "\320\241\320\261\321\200\320\276\321\201\320\270\321\202\321\214 \320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\263\320\260\320\274\320\274\321\213 \320\264\320\273\321\217 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217."]
   ::msgcat::mcset sk "Reset image gamma value." [encoding convertfrom utf-8 "Resetuje nastaven\303\272 gamma korekciu obr\303\241zku."]
+  ::msgcat::mcset sq "Reset image gamma value." [encoding convertfrom utf-8 "kliko ketu qe te kthehesh prapa tek vlera origjinale-gamma."]
 
   ::msgcat::mcset cz "Set image gamma value." [encoding convertfrom utf-8 "Nastavuje hodnotu gamma obr\303\241zku."]
   ::msgcat::mcset de "Set image gamma value." [encoding convertfrom utf-8 "Setze Gammawert."]
@@ -1122,6 +1247,7 @@
   ::msgcat::mcset it "Set image gamma value." [encoding convertfrom utf-8 "Imposta il valore di gamma dell'immagine."]
   ::msgcat::mcset ru "Set image gamma value." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214 \320\263\320\260\320\274\320\274\321\203 \320\264\320\273\321\217 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217."]
   ::msgcat::mcset sk "Set image gamma value." [encoding convertfrom utf-8 "Nastavuje gamma korekciu obr\303\241zku."]
+  ::msgcat::mcset sq "Set image gamma value." [encoding convertfrom utf-8 "vendos vleren gamma te imazhit."]
 
   ::msgcat::mcset cz "Current position of selected image." [encoding convertfrom utf-8 "Sou\304\215asn\303\241 pozice vybran\303\251ho obr\303\241zku."]
   ::msgcat::mcset de "Current position of selected image." [encoding convertfrom utf-8 "Gegenw\303\244rtige Position des ausgew\303\244hlten Bildes."]
@@ -1131,6 +1257,7 @@
   ::msgcat::mcset it "Current position of selected image." [encoding convertfrom utf-8 "Posizione dell'immagine selezionata."]
   ::msgcat::mcset ru "Current position of selected image." [encoding convertfrom utf-8 "\320\242\320\265\320\272\321\203\321\211\320\260\321\217 \320\277\320\276\320\267\320\270\321\206\320\270\321\217 \320\262\321\213\320\261\321\200\320\260\320\275\320\275\320\276\320\263\320\276 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217."]
   ::msgcat::mcset sk "Current position of selected image." [encoding convertfrom utf-8 "S\303\272\304\215asn\303\241 poz\303\255cia obr\303\241zku."]
+  ::msgcat::mcset sq "Current position of selected image." [encoding convertfrom utf-8 "pozicioni momental I imazhit te zgjedhur(pikat apo pikselat prej pelhures kendi I poshtem I majte)."]
 
   ::msgcat::mcset cz "Move to" [encoding convertfrom utf-8 "P\305\231esunout"]
   ::msgcat::mcset de "Move to" [encoding convertfrom utf-8 "Verschiebe nach"]
@@ -1140,6 +1267,7 @@
   ::msgcat::mcset it "Move to" [encoding convertfrom utf-8 "Sposta a"]
   ::msgcat::mcset ru "Move to" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\274\320\265\321\201\321\202\320\270\321\202\321\214"]
   ::msgcat::mcset sk "Move to" [encoding convertfrom utf-8 "Presu\305\210 na"]
+  ::msgcat::mcset sq "Move to" [encoding convertfrom utf-8 "levize tek"]
 
   ::msgcat::mcset cz "Move image to given position." [encoding convertfrom utf-8 "P\305\231esune obr\303\241zek na zadanou pozici."]
   ::msgcat::mcset de "Move image to given position." [encoding convertfrom utf-8 "Verschiebe Bild an angegebene Position."]
@@ -1149,6 +1277,7 @@
   ::msgcat::mcset it "Move image to given position." [encoding convertfrom utf-8 "Sposta l'immagine nella posizione specificata."]
   ::msgcat::mcset ru "Move image to given position." [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\274\320\265\321\201\321\202\320\270\321\202\321\214 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265 \320\272 \321\203\320\272\320\260\320\267\320\260\320\275\320\275\320\276\320\271 \320\277\320\276\320\267\320\270\321\206\320\270\320\270."]
   ::msgcat::mcset sk "Move image to given position." [encoding convertfrom utf-8 "Presunie obr\303\241zok na zadan\303\272 poz\303\255ciu."]
+  ::msgcat::mcset sq "Move image to given position." [encoding convertfrom utf-8 "levize imazhin ne poziten e dhene(kendi I eperm I majte I imazhit do te jete ne pikselin e japur)."]
 
   ::msgcat::mcset cz "New X coordinate of image." [encoding convertfrom utf-8 "Nov\303\241 sou\305\231adnice X obr\303\241zku."]
   ::msgcat::mcset de "New X coordinate of image." [encoding convertfrom utf-8 "Neue X-Koordinate des Bildes."]
@@ -1158,6 +1287,7 @@
   ::msgcat::mcset it "New X coordinate of image." [encoding convertfrom utf-8 "Nuova coordinata X dell'immagine."]
   ::msgcat::mcset ru "New X coordinate of image." [encoding convertfrom utf-8 "\320\235\320\276\320\262\320\260\321\217 \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202\320\260 X."]
   ::msgcat::mcset sk "New X coordinate of image." [encoding convertfrom utf-8 "Nov\303\241 X s\303\272radnica obr\303\241zku."]
+  ::msgcat::mcset sq "New X coordinate of image." [encoding convertfrom utf-8 "X-koordinata e re e imazhit"]
 
   ::msgcat::mcset cz "New Y coordinate of image." [encoding convertfrom utf-8 "Nov\303\241 sou\305\231adnice Y obr\303\241zku."]
   ::msgcat::mcset de "New Y coordinate of image." [encoding convertfrom utf-8 "Neue Y-Koordinate des Bildes."]
@@ -1167,6 +1297,7 @@
   ::msgcat::mcset it "New Y coordinate of image." [encoding convertfrom utf-8 "Nuova coordinata Y dell'immagine."]
   ::msgcat::mcset ru "New Y coordinate of image." [encoding convertfrom utf-8 "\320\235\320\276\320\262\320\260\321\217 \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202\320\260 Y."]
   ::msgcat::mcset sk "New Y coordinate of image." [encoding convertfrom utf-8 "Nov\303\275 Y s\303\272radnica obr\303\241zku."]
+  ::msgcat::mcset sq "New Y coordinate of image." [encoding convertfrom utf-8 "koordinata Y e re e imazhit."]
 
   ::msgcat::mcset cz "Move front" [encoding convertfrom utf-8 "Dop\305\231edu"]
   ::msgcat::mcset de "Move front" [encoding convertfrom utf-8 "Nach vorne verschieben"]
@@ -1176,6 +1307,7 @@
   ::msgcat::mcset it "Move front" [encoding convertfrom utf-8 "Davanti"]
   ::msgcat::mcset ru "Move front" [encoding convertfrom utf-8 "\320\237\320\276\320\262\320\265\321\200\321\205 \320\262\321\201\320\265\321\205"]
   ::msgcat::mcset sk "Move front" [encoding convertfrom utf-8 "Navrch"]
+  ::msgcat::mcset sq "Move front" [encoding convertfrom utf-8 "levize perpara"]
 
   ::msgcat::mcset cz "Move image in front of all images." [encoding convertfrom utf-8 "P\305\231esune obr\303\241zek nad v\305\241echny ostatn\303\255."]
   ::msgcat::mcset de "Move image in front of all images." [encoding convertfrom utf-8 "Bild ganz nach vorne verschieben."]
@@ -1185,6 +1317,7 @@
   ::msgcat::mcset it "Move image in front of all images." [encoding convertfrom utf-8 "Sposta l'immagine davanti a tutte le immagini."]
   ::msgcat::mcset ru "Move image in front of all images." [encoding convertfrom utf-8 "\320\222\321\213\320\262\320\265\321\201\321\202\320\270 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265 \320\277\320\276\320\262\320\265\321\200\321\205 \320\262\321\201\320\265\321\205 \320\276\321\201\321\202\320\260\320\273\321\214\320\275\321\213\321\205."]
   ::msgcat::mcset sk "Move image in front of all images." [encoding convertfrom utf-8 "Presunie obr\303\241zok nad v\305\241etky ostatn\303\251."]
+  ::msgcat::mcset sq "Move image in front of all images." [encoding convertfrom utf-8 "levize imazhin para te gjitha imazheve."]
 
   ::msgcat::mcset cz "Move back" [encoding convertfrom utf-8 "Dozadu"]
   ::msgcat::mcset de "Move back" [encoding convertfrom utf-8 "Nach hinten verschieben"]
@@ -1194,6 +1327,7 @@
   ::msgcat::mcset it "Move back" [encoding convertfrom utf-8 "Dietro"]
   ::msgcat::mcset ru "Move back" [encoding convertfrom utf-8 "\320\237\320\276\320\264 \320\262\321\201\320\265\320\274\320\270"]
   ::msgcat::mcset sk "Move back" [encoding convertfrom utf-8 "Naspodok"]
+  ::msgcat::mcset sq "Move back" [encoding convertfrom utf-8 "levize prapa"]
 
   ::msgcat::mcset cz "Move image behind all images." [encoding convertfrom utf-8 "P\305\231esune obr\303\241zek pod v\305\241echny ostatn\303\255."]
   ::msgcat::mcset de "Move image behind all images." [encoding convertfrom utf-8 "Bild ganz nach hinten verschieben."]
@@ -1203,6 +1337,7 @@
   ::msgcat::mcset it "Move image behind all images." [encoding convertfrom utf-8 "Sposta l'immagine davanti a tutte le immagini."]
   ::msgcat::mcset ru "Move image behind all images." [encoding convertfrom utf-8 "\320\222\321\213\320\262\320\265\321\201\321\202\320\270 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265 \320\267\320\260 \320\262\321\201\320\265\320\274\320\270 \320\276\321\201\321\202\320\260\320\273\321\214\320\275\321\213\320\274\320\270."]
   ::msgcat::mcset sk "Move image behind all images." [encoding convertfrom utf-8 "Presunie obr\303\241zok pod v\305\241etky ostatn\303\251."]
+  ::msgcat::mcset sq "Move image behind all images." [encoding convertfrom utf-8 "levize imazhin prapa te gjitha imazheve."]
 
   ::msgcat::mcset cz "loading preview module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m zobrazovac\303\255 modul ..."]
   ::msgcat::mcset de "loading preview module ..." [encoding convertfrom utf-8 "Lade Vorschaumodul ..."]
@@ -1212,6 +1347,7 @@
   ::msgcat::mcset it "loading preview module ..." [encoding convertfrom utf-8 "modulo anteprima ..."]
   ::msgcat::mcset ru "loading preview module ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\274\320\276\320\264\321\203\320\273\321\217 \320\277\321\200\320\265\320\264\320\277\321\200\320\276\321\201\320\274\320\276\321\202\321\200\320\260..."]
   ::msgcat::mcset sk "loading preview module ..." [encoding convertfrom utf-8 "nahr\303\241vam n\303\241h\304\276adov\303\275 modul ..."]
+  ::msgcat::mcset sq "loading preview module ..." [encoding convertfrom utf-8 "duke lexuar modulin e perkohshem\342\200\246"]
 
   ::msgcat::mcset cz "Update command" [encoding convertfrom utf-8 "Aktualizovat"]
   ::msgcat::mcset de "Update command" [encoding convertfrom utf-8 "Kommando aktualisieren"]
@@ -1221,6 +1357,7 @@
   ::msgcat::mcset it "Update command" [encoding convertfrom utf-8 "Aggiorna comando"]
   ::msgcat::mcset ru "Update command" [encoding convertfrom utf-8 "\320\236\320\261\320\275\320\276\320\262\320\270\321\202\321\214 \320\272\320\276\320\274\320\260\320\275\320\264\321\203"]
   ::msgcat::mcset sk "Update command" [encoding convertfrom utf-8 "Aktualizova\305\245"]
+  ::msgcat::mcset sq "Update command" [encoding convertfrom utf-8 "urdheri-komanda e aktualizimit"]
 
   ::msgcat::mcset cz "Press this button, if you have changed something and you can not see your changes here." [encoding convertfrom utf-8 "Stiskn\304\233te toto tla\304\215\303\255tko, pokud jste n\304\233co zm\304\233nili a zm\304\233ny nejsou v tomto okn\304\233 viditeln\303\251."]
   ::msgcat::mcset de "Press this button, if you have changed something and you can not see your changes here." [encoding convertfrom utf-8 "Dr\303\274cke diesen Knopf, falls du etwas ge\303\244ndert hast und die \303\204nderungen nicht hier sehen kannst."]
@@ -1230,6 +1367,7 @@
   ::msgcat::mcset it "Press this button, if you have changed something and you can not see your changes here." [encoding convertfrom utf-8 "Premi questo bottone se hai fatto modifiche che non sono visualizzate."]
   ::msgcat::mcset ru "Press this button, if you have changed something and you can not see your changes here." [encoding convertfrom utf-8 "\320\235\320\260\320\266\320\274\320\270\321\202\320\265 \321\215\321\202\321\203 \320\272\320\275\320\276\320\277\320\272\321\203, \320\265\321\201\320\273\320\270 \320\262\321\213 \321\207\321\202\320\276-\321\202\320\276 \320\270\320\267\320\274\320\265\320\275\320\270\320\273\320\270, \320\275\320\276 \320\275\320\265 \321\203\320\262\320\270\320\264\320\265\320\273\320\270 \320\267\320\264\320\265\321\201\321\214 \321\201\320\262\320\276\320\270\321\205 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271."]
   ::msgcat::mcset sk "Press this button, if you have changed something and you can not see your changes here." [encoding convertfrom utf-8 "Stla\304\215te toto tla\304\215\303\255tko, ak ste nie\304\215o zmenili a zmeny nie su v tomto okne vidite\304\276n\303\251."]
+  ::msgcat::mcset sq "Press this button, if you have changed something and you can not see your changes here." [encoding convertfrom utf-8 "shtype kete buton, nese ke ndryshuar diqka te cilin ndryshim nuk mund ta shohesh ketu."]
 
   ::msgcat::mcset cz "Command preview." [encoding convertfrom utf-8 "N\303\241hled p\305\231\303\255kazu."]
   ::msgcat::mcset de "Command preview." [encoding convertfrom utf-8 "Kommando Vorschau."]
@@ -1239,6 +1377,7 @@
   ::msgcat::mcset it "Command preview." [encoding convertfrom utf-8 "Anteprima comando."]
   ::msgcat::mcset ru "Command preview." [encoding convertfrom utf-8 "\320\237\321\200\320\276\321\201\320\274\320\276\321\202\321\200 \320\272\320\276\320\274\320\260\320\275\320\264\321\213."]
   ::msgcat::mcset sk "Command preview." [encoding convertfrom utf-8 "N\303\241h\304\276ad pr\303\255kazu."]
+  ::msgcat::mcset sq "Command preview." [encoding convertfrom utf-8 "ketu mund te shohesh komandat komplete me opcionet e vendosura."]
 
   ::msgcat::mcset cz "loading scrap module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m scrap modul ..."]
   ::msgcat::mcset de "loading scrap module ..." [encoding convertfrom utf-8 "Lade Skizzenmodul ..."]
@@ -1248,6 +1387,7 @@
   ::msgcat::mcset it "loading scrap module ..." [encoding convertfrom utf-8 "modulo scrap ..."]
   ::msgcat::mcset ru "loading scrap module ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \321\201\320\272\321\200\320\260\320\277-\320\274\320\276\320\264\321\203\320\273\321\217..."]
   ::msgcat::mcset sk "loading scrap module ..." [encoding convertfrom utf-8 "nahr\303\241vam scrap modul ..."]
+  ::msgcat::mcset sq "loading scrap module ..." [encoding convertfrom utf-8 "duke lexuar modulin e deponise\342\200\246"]
 
   ::msgcat::mcset cz "Scrap name." [encoding convertfrom utf-8 "N\303\241zev scrapu."]
   ::msgcat::mcset de "Scrap name." [encoding convertfrom utf-8 "Skizzenname."]
@@ -1257,6 +1397,7 @@
   ::msgcat::mcset it "Scrap name." [encoding convertfrom utf-8 "Nome dello scrap."]
   ::msgcat::mcset ru "Scrap name." [encoding convertfrom utf-8 "\320\230\320\274\321\217 \321\201\320\272\321\200\320\260\320\277\320\260."]
   ::msgcat::mcset sk "Scrap name." [encoding convertfrom utf-8 "Identifik\303\241tor (meno) scrapu."]
+  ::msgcat::mcset sq "Scrap name." [encoding convertfrom utf-8 "emri I deponise."]
 
   ::msgcat::mcset cz "projection" [encoding convertfrom utf-8 "projekce"]
   ::msgcat::mcset de "projection" [encoding convertfrom utf-8 "Projektion"]
@@ -1266,6 +1407,7 @@
   ::msgcat::mcset it "projection" [encoding convertfrom utf-8 "proiezione"]
   ::msgcat::mcset ru "projection" [encoding convertfrom utf-8 "\320\277\321\200\320\276\320\265\320\272\321\206\320\270\321\217"]
   ::msgcat::mcset sk "projection" [encoding convertfrom utf-8 "projekcia"]
+  ::msgcat::mcset sq "projection" [encoding convertfrom utf-8 "projekcioni"]
 
   ::msgcat::mcset cz "Scrap projection." [encoding convertfrom utf-8 "Projekce scrapu."]
   ::msgcat::mcset de "Scrap projection." [encoding convertfrom utf-8 "Skizzenprojektion"]
@@ -1275,6 +1417,7 @@
   ::msgcat::mcset it "Scrap projection." [encoding convertfrom utf-8 "Proiezione dello scrap."]
   ::msgcat::mcset ru "Scrap projection." [encoding convertfrom utf-8 "\320\237\321\200\320\276\320\265\320\272\321\206\320\270\321\217 \321\201\320\272\321\200\320\260\320\277\320\260."]
   ::msgcat::mcset sk "Scrap projection." [encoding convertfrom utf-8 "Projekcia scrapu."]
+  ::msgcat::mcset sq "Scrap projection." [encoding convertfrom utf-8 "projeksioni I deponise (kliko ne trekendesh te shohesh menyne)."]
 
   ::msgcat::mcset cz "Other scrap options." [encoding convertfrom utf-8 "Dal\305\241\303\255 volby pro scrap."]
   ::msgcat::mcset de "Other scrap options." [encoding convertfrom utf-8 "Andere Skizzenoptionen."]
@@ -1284,6 +1427,7 @@
   ::msgcat::mcset it "Other scrap options." [encoding convertfrom utf-8 "Altre opzioni dello scrap"]
   ::msgcat::mcset ru "Other scrap options." [encoding convertfrom utf-8 "\320\224\321\200\321\203\320\263\320\270\320\265 \320\276\320\277\321\206\320\270\320\270 \321\201\320\272\321\200\320\260\320\277\320\260."]
   ::msgcat::mcset sk "Other scrap options." [encoding convertfrom utf-8 "Ostatn\303\251 mo\305\276nosti scrapu."]
+  ::msgcat::mcset sq "Other scrap options." [encoding convertfrom utf-8 "opcionet tjera te deponise (me shume per kete ne librin e therion-it.pdf)"]
 
   ::msgcat::mcset cz "Scale" [encoding convertfrom utf-8 "M\304\233\305\231\303\255tko"]
   ::msgcat::mcset de "Scale" [encoding convertfrom utf-8 "Ma\303\237stab"]
@@ -1291,6 +1435,7 @@
   ::msgcat::mcset it "Scale" [encoding convertfrom utf-8 "Scala"]
   ::msgcat::mcset ru "Scale" [encoding convertfrom utf-8 "\320\234\320\260\321\201\321\210\321\202\320\260\320\261"]
   ::msgcat::mcset sk "Scale" [encoding convertfrom utf-8 "Mierka"]
+  ::msgcat::mcset sq "Scale" [encoding convertfrom utf-8 "matesi"]
 
   ::msgcat::mcset cz "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "\305\240k\303\241lov\303\241n\303\255 scrapu - stiskni pro v\303\275b\304\233r kalibra\304\215n\303\255ch bod\305\257 obr\303\241zku."]
   ::msgcat::mcset de "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "Skizze skalieren - dr\303\274cken um Bildeinstellungspunkte zu klicken."]
@@ -1298,6 +1443,7 @@
   ::msgcat::mcset it "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "Rescalamento - premi per selezionare i punti di calibrazione."]
   ::msgcat::mcset ru "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "\320\234\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265 \321\201\320\272\321\200\320\260\320\277\320\260 - \320\275\320\260\320\266\320\270\320\274\321\202\320\265 \321\215\321\202\321\203 \320\272\320\275\320\276\320\277\320\272\321\203 \320\270 \320\262\321\213\321\201\321\202\320\260\320\262\320\270\321\202\320\265 \321\202\320\276\321\207\320\272\320\270 \320\274\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\320\275\320\270\321\217 \320\274\321\213\321\210\321\214\321\216"]
   ::msgcat::mcset sk "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "\305\240k\303\241lovanie scrapu - po stla\304\215en\303\255 klikni na \305\241k\303\241lovacie body."]
+  ::msgcat::mcset sq "Scrap scaling - push to click picture calibration points." [encoding convertfrom utf-8 "matja e deponise-shtyp te klikosh pikat kalibruese te fotos."]
 
   ::msgcat::mcset cz "Update scrap" [encoding convertfrom utf-8 "Aktualizovat"]
   ::msgcat::mcset de "Update scrap" [encoding convertfrom utf-8 "Skizze aktualisieren"]
@@ -1307,6 +1453,7 @@
   ::msgcat::mcset it "Update scrap" [encoding convertfrom utf-8 "Aggiorna scrap"]
   ::msgcat::mcset ru "Update scrap" [encoding convertfrom utf-8 "\320\236\320\261\320\275\320\276\320\262\320\270\321\202\321\214 \321\201\320\272\321\200\320\260\320\277"]
   ::msgcat::mcset sk "Update scrap" [encoding convertfrom utf-8 "Aktualizuj scrap"]
+  ::msgcat::mcset sq "Update scrap" [encoding convertfrom utf-8 "aktualizo deponine"]
 
   ::msgcat::mcset cz "Press this button to apply your changes to current scrap." [encoding convertfrom utf-8 "Stiskn\304\233te toto tla\304\215\303\255tko po uplatn\304\233n\303\255 zm\304\233n aktu\303\241ln\303\255ho scrapu."]
   ::msgcat::mcset de "Press this button to apply your changes to current scrap." [encoding convertfrom utf-8 "Dr\303\274cke diesen Knopf, um deine \303\204nderungen auf diese Skizze anzuwenden."]
@@ -1316,6 +1463,7 @@
   ::msgcat::mcset it "Press this button to apply your changes to current scrap." [encoding convertfrom utf-8 "Premi questo bottone per applicare le tue modifiche allo scrap."]
   ::msgcat::mcset ru "Press this button to apply your changes to current scrap." [encoding convertfrom utf-8 "\320\235\320\260\320\266\320\274\320\270\321\202\320\265 \321\215\321\202\321\203 \320\272\320\275\320\276\320\277\320\272\321\203 \320\264\320\273\321\217 \320\262\320\262\320\265\320\264\320\265\320\275\320\270\321\217 \320\262 \320\264\320\265\320\271\321\201\321\202\320\262\320\270\320\265 \320\262\320\260\321\210\320\270\321\205 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271 \320\264\320\273\321\217 \321\202\320\265\320\272\321\203\321\211\320\265\320\263\320\276 \321\201\320\272\321\200\320\260\320\277\320\260"]
   ::msgcat::mcset sk "Press this button to apply your changes to current scrap." [encoding convertfrom utf-8 "Stla\304\215te tento gomb\303\255k, aby sa va\305\241e zmeny v scrape ulo\305\276ili."]
+  ::msgcat::mcset sq "Press this button to apply your changes to current scrap." [encoding convertfrom utf-8 "shtype kete buton qe te besh ndrimet ne deponine momentale."]
 
   ::msgcat::mcset cz "picture scale points" [encoding convertfrom utf-8 "body m\304\233\305\231\303\255tka (obr\303\241zek)"]
   ::msgcat::mcset de "picture scale points" [encoding convertfrom utf-8 "Bildskalierungspunkte"]
@@ -1325,6 +1473,7 @@
   ::msgcat::mcset it "picture scale points" [encoding convertfrom utf-8 "punti nella scala del disegno"]
   ::msgcat::mcset ru "picture scale points" [encoding convertfrom utf-8 "\320\274\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\321\203\321\216\321\211\320\270\320\265 \321\202\320\276\321\207\320\272\320\270 \320\264\320\273\321\217 \320\272\320\260\321\200\321\202\320\270\320\275\320\272\320\270"]
   ::msgcat::mcset sk "picture scale points" [encoding convertfrom utf-8 "kalibra\304\215n\303\251 body (obrazovka)"]
+  ::msgcat::mcset sq "picture scale points" [encoding convertfrom utf-8 "pikat matese te fotos-pikselat"]
 
   ::msgcat::mcset cz "Calibration points on the picture (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "Kalibra\304\215n\303\255 body na obr\303\241zku (X1:Y1 - X2:Y2)."]
   ::msgcat::mcset de "Calibration points on the picture (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "Kalibrierungspunkte auf dem Bild (X1:Y1 - X2:Y2)."]
@@ -1334,6 +1483,7 @@
   ::msgcat::mcset it "Calibration points on the picture (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "Punti di calibrazione sul disegno (X1:Y1 - X2:Y2)."]
   ::msgcat::mcset ru "Calibration points on the picture (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "\320\232\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\276\321\207\320\275\321\213\320\265 \321\202\320\276\321\207\320\272\320\270 \320\275\320\260 \320\272\320\260\321\200\321\202\320\270\320\275\320\272\320\265 (X1:Y1 - X2:Y2)."]
   ::msgcat::mcset sk "Calibration points on the picture (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "S\303\272radnice kalibra\304\215n\303\275ch bodov na obrazovke (X1:Y1 - X2:Y2)"]
+  ::msgcat::mcset sq "Calibration points on the picture (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "pikat e kalibrimit ne foto (X1:Y1 - X2:Y2)"]
 
   ::msgcat::mcset cz "X1 picture." [encoding convertfrom utf-8 "X1 obr\303\241zek."]
   ::msgcat::mcset de "X1 picture." [encoding convertfrom utf-8 "X1 Bild."]
@@ -1343,6 +1493,7 @@
   ::msgcat::mcset it "X1 picture." [encoding convertfrom utf-8 "X1 del disegno."]
   ::msgcat::mcset ru "X1 picture." [encoding convertfrom utf-8 "X1 \320\272\320\260\321\200\321\202\320\270\320\275\320\272\320\270."]
   ::msgcat::mcset sk "X1 picture." [encoding convertfrom utf-8 "X1 na obr\303\241zku."]
+  ::msgcat::mcset sq "X1 picture." [encoding convertfrom utf-8 "x1 fotoja"]
 
   ::msgcat::mcset cz "Y1 picture." [encoding convertfrom utf-8 "Y1 obr\303\241zek."]
   ::msgcat::mcset de "Y1 picture." [encoding convertfrom utf-8 "Y1 Bild."]
@@ -1352,6 +1503,7 @@
   ::msgcat::mcset it "Y1 picture." [encoding convertfrom utf-8 "Y1 del disegno."]
   ::msgcat::mcset ru "Y1 picture." [encoding convertfrom utf-8 "Y1 \320\272\320\260\321\200\321\202\320\270\320\275\320\272\320\270."]
   ::msgcat::mcset sk "Y1 picture." [encoding convertfrom utf-8 "Y1 na obr\303\241zku."]
+  ::msgcat::mcset sq "Y1 picture." [encoding convertfrom utf-8 "Y1 fotoja"]
 
   ::msgcat::mcset cz "X2 picture." [encoding convertfrom utf-8 "X2 obr\303\241zek."]
   ::msgcat::mcset de "X2 picture." [encoding convertfrom utf-8 "X2 Bild."]
@@ -1361,6 +1513,7 @@
   ::msgcat::mcset it "X2 picture." [encoding convertfrom utf-8 "X2 del disegno."]
   ::msgcat::mcset ru "X2 picture." [encoding convertfrom utf-8 "X2 \320\272\320\260\321\200\321\202\320\270\320\275\320\272\320\270."]
   ::msgcat::mcset sk "X2 picture." [encoding convertfrom utf-8 "X2 na obr\303\241zku."]
+  ::msgcat::mcset sq "X2 picture." [encoding convertfrom utf-8 "X2 fotoja"]
 
   ::msgcat::mcset cz "Y2 picture." [encoding convertfrom utf-8 "Y2 obr\303\241zek."]
   ::msgcat::mcset de "Y2 picture." [encoding convertfrom utf-8 "Y2 Bild."]
@@ -1370,6 +1523,7 @@
   ::msgcat::mcset it "Y2 picture." [encoding convertfrom utf-8 "Y2 del disegno."]
   ::msgcat::mcset ru "Y2 picture." [encoding convertfrom utf-8 "Y2 \320\272\320\260\321\200\321\202\320\270\320\275\320\272\320\270."]
   ::msgcat::mcset sk "Y2 picture." [encoding convertfrom utf-8 "Y2 na obr\303\241zku."]
+  ::msgcat::mcset sq "Y2 picture." [encoding convertfrom utf-8 "Y2 fotoja"]
 
   ::msgcat::mcset cz "real scale points" [encoding convertfrom utf-8 "body m\304\233\305\231\303\255tka (skute\304\215n\303\251)"]
   ::msgcat::mcset de "real scale points" [encoding convertfrom utf-8 "Punkte f\303\274r Realma\303\237stab"]
@@ -1379,6 +1533,7 @@
   ::msgcat::mcset it "real scale points" [encoding convertfrom utf-8 "punti nella scala effettiva"]
   ::msgcat::mcset ru "real scale points" [encoding convertfrom utf-8 "\321\200\320\265\320\260\320\273\321\214\320\275\321\213\320\265 \320\274\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\321\203\321\216\321\211\320\270\320\265 \321\202\320\276\321\207\320\272\320\270"]
   ::msgcat::mcset sk "real scale points" [encoding convertfrom utf-8 "kalibra\304\215n\303\251 body (skuto\304\215n\303\251)"]
+  ::msgcat::mcset sq "real scale points" [encoding convertfrom utf-8 "pikat reale te matjes"]
 
   ::msgcat::mcset cz "Real coordinates of calibration points (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "Skute\304\215n\303\251 sou\305\231adnice kalibra\304\215n\303\255ch bod\305\257 (X1:Y1 - X2:Y2)."]
   ::msgcat::mcset de "Real coordinates of calibration points (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "Realkoordinaten der Kalibrierungspunkte (X1:Y1 - X2:Y2)."]
@@ -1388,6 +1543,7 @@
   ::msgcat::mcset it "Real coordinates of calibration points (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "Coordinate reali dei punti di calibrazione (x1:y1 - x2:y2)."]
   ::msgcat::mcset ru "Real coordinates of calibration points (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "\320\240\320\265\320\260\320\273\321\214\320\275\321\213\320\265 \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202\321\213 \320\272\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\276\321\207\320\275\321\213\321\205 \321\202\320\276\321\207\320\265\320\272 (X1:Y1 - X2:Y2)."]
   ::msgcat::mcset sk "Real coordinates of calibration points (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "Skuto\304\215n\303\251 s\303\272radnice kalibra\304\215n\303\275ch bodov (X1:Y1 - X2:Y2)."]
+  ::msgcat::mcset sq "Real coordinates of calibration points (X1:Y1 - X2:Y2)." [encoding convertfrom utf-8 "koordinatat reale te pikave te kalibrimit (X1:Y1 - X2:Y2)."]
 
   ::msgcat::mcset cz "X1 real." [encoding convertfrom utf-8 "X1 skute\304\215n\303\275."]
   ::msgcat::mcset el "X1 real." [encoding convertfrom utf-8 "\316\240\317\201\316\261\316\263\316\274\316\261\317\204\316\271\316\272\317\214 \316\2471."]
@@ -1396,6 +1552,7 @@
   ::msgcat::mcset it "X1 real." [encoding convertfrom utf-8 "x1 reale."]
   ::msgcat::mcset ru "X1 real." [encoding convertfrom utf-8 "X1 \321\200\320\265\320\260\320\273\321\214\320\275\320\276\320\265."]
   ::msgcat::mcset sk "X1 real." [encoding convertfrom utf-8 "X1 skuto\304\215n\303\275"]
+  ::msgcat::mcset sq "X1 real." [encoding convertfrom utf-8 "X1 I vertet-real"]
 
   ::msgcat::mcset cz "Y1 real." [encoding convertfrom utf-8 "Y1 skute\304\215n\303\275."]
   ::msgcat::mcset el "Y1 real." [encoding convertfrom utf-8 "\316\240\317\201\316\261\316\263\316\274\316\261\317\204\316\271\316\272\317\214 \316\2451."]
@@ -1404,6 +1561,7 @@
   ::msgcat::mcset it "Y1 real." [encoding convertfrom utf-8 "y1 reale."]
   ::msgcat::mcset ru "Y1 real." [encoding convertfrom utf-8 "Y1 \321\200\320\265\320\260\320\273\321\214\320\275\320\276\320\265."]
   ::msgcat::mcset sk "Y1 real." [encoding convertfrom utf-8 "Y1 skuto\304\215n\303\275"]
+  ::msgcat::mcset sq "Y1 real." [encoding convertfrom utf-8 "Y1 I vertet-real"]
 
   ::msgcat::mcset cz "X2 real." [encoding convertfrom utf-8 "X2 skute\304\215n\303\275."]
   ::msgcat::mcset el "X2 real." [encoding convertfrom utf-8 "\316\240\317\201\316\261\316\263\316\274\316\261\317\204\316\271\316\272\317\214 \316\2471."]
@@ -1412,6 +1570,7 @@
   ::msgcat::mcset it "X2 real." [encoding convertfrom utf-8 "x2 reale."]
   ::msgcat::mcset ru "X2 real." [encoding convertfrom utf-8 "X2 \321\200\320\265\320\260\320\273\321\214\320\275\320\276\320\265."]
   ::msgcat::mcset sk "X2 real." [encoding convertfrom utf-8 "X2 skuto\304\215n\303\275"]
+  ::msgcat::mcset sq "X2 real." [encoding convertfrom utf-8 "X2 I vertet-real"]
 
   ::msgcat::mcset cz "Y2 real." [encoding convertfrom utf-8 "Y2 skute\304\215n\303\275."]
   ::msgcat::mcset el "Y2 real." [encoding convertfrom utf-8 "\316\240\317\201\316\261\316\263\316\274\316\261\317\204\316\271\316\272\317\214 \316\2452"]
@@ -1420,6 +1579,7 @@
   ::msgcat::mcset it "Y2 real." [encoding convertfrom utf-8 "y2 reale."]
   ::msgcat::mcset ru "Y2 real." [encoding convertfrom utf-8 "Y2 \321\200\320\265\320\260\320\273\321\214\320\275\320\276\320\265."]
   ::msgcat::mcset sk "Y2 real." [encoding convertfrom utf-8 "Y2 skuto\304\215n\303\275"]
+  ::msgcat::mcset sq "Y2 real." [encoding convertfrom utf-8 "Y2 I vertet-real"]
 
   ::msgcat::mcset cz "units" [encoding convertfrom utf-8 "jednotky"]
   ::msgcat::mcset de "units" [encoding convertfrom utf-8 "Einheiten"]
@@ -1429,6 +1589,7 @@
   ::msgcat::mcset it "units" [encoding convertfrom utf-8 "unit\303\240"]
   ::msgcat::mcset ru "units" [encoding convertfrom utf-8 "\320\265\320\264\320\270\320\275\320\270\321\206\321\213"]
   ::msgcat::mcset sk "units" [encoding convertfrom utf-8 "jednotky"]
+  ::msgcat::mcset sq "units" [encoding convertfrom utf-8 "njesite"]
 
   ::msgcat::mcset cz "Units of real coordinates." [encoding convertfrom utf-8 "Jednotky re\303\241ln\303\275ch sou\305\231adnic."]
   ::msgcat::mcset de "Units of real coordinates." [encoding convertfrom utf-8 "Einheiten der Realkoordinaten."]
@@ -1438,6 +1599,7 @@
   ::msgcat::mcset it "Units of real coordinates." [encoding convertfrom utf-8 "Unit\303\240 delle coordinate reali."]
   ::msgcat::mcset ru "Units of real coordinates." [encoding convertfrom utf-8 "\320\225\320\264\320\270\320\275\320\270\321\206\321\213 \320\270\320\267\320\274\320\265\321\200\320\265\320\275\320\270\321\217 \321\200\320\265\320\260\320\273\321\214\320\275\321\213\321\205 \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202."]
   ::msgcat::mcset sk "Units of real coordinates." [encoding convertfrom utf-8 "Jednotky re\303\241lnych s\303\272radn\303\255c."]
+  ::msgcat::mcset sq "Units of real coordinates." [encoding convertfrom utf-8 "njesite e koordinatave te verteta."]
 
   ::msgcat::mcset cz "background sketches" [encoding convertfrom utf-8 "n\303\241\304\215rtky na pozad\303\255"]
   ::msgcat::mcset de "background sketches" [encoding convertfrom utf-8 "Hintergrundskizzen"]
@@ -1445,6 +1607,7 @@
   ::msgcat::mcset it "background sketches" [encoding convertfrom utf-8 "Immagini di background"]
   ::msgcat::mcset ru "background sketches" [encoding convertfrom utf-8 "\320\244\320\276\320\275\320\276\320\262\321\213\320\265 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217"]
   ::msgcat::mcset sk "background sketches" [encoding convertfrom utf-8 "n\303\241\304\215rtky na pozad\303\255."]
+  ::msgcat::mcset sq "background sketches" [encoding convertfrom utf-8 "skicat e prapavise."]
 
   ::msgcat::mcset cz "List of image files used as scrap background." [encoding convertfrom utf-8 "Seznam obr\303\241zk\305\257 pou\305\276it\303\275ch jako pozad\303\255 scrapu"]
   ::msgcat::mcset de "List of image files used as scrap background." [encoding convertfrom utf-8 "Liste der als Hintergrund verwendeten Bilder."]
@@ -1452,6 +1615,7 @@
   ::msgcat::mcset it "List of image files used as scrap background." [encoding convertfrom utf-8 "Files usati come background dello scrap"]
   ::msgcat::mcset ru "List of image files used as scrap background." [encoding convertfrom utf-8 "\320\241\320\277\320\270\321\201\320\276\320\272 \320\263\321\200\320\260\321\204\320\270\321\207\320\265\321\201\320\272\320\270\321\205 \321\204\320\260\320\271\320\273\320\276\320\262, \320\270\321\201\320\277\320\276\320\273\321\214\320\267\321\203\320\265\320\274\321\213\321\205 \320\262 \320\272\320\260\321\207\320\265\321\201\321\202\320\262\320\265 \321\204\320\276\320\275\320\276\320\262\321\213\321\205 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\271 \321\201\320\272\321\200\320\260\320\277\320\260"]
   ::msgcat::mcset sk "List of image files used as scrap background." [encoding convertfrom utf-8 "Zoznam obr\303\241zkov pou\305\276it\303\275ch ako pozadie."]
+  ::msgcat::mcset sq "List of image files used as scrap background." [encoding convertfrom utf-8 "lista e foto-arkivit te perdorura si prapavije e deponise."]
 
   ::msgcat::mcset cz "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "Stiskn\304\233te toto tla\304\215\303\255tko a v\303\275b\304\233rem n\303\241\304\215rtku my\305\241\303\255 jej vlo\305\276te do scrapu."]
   ::msgcat::mcset de "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "Diesen Knopf dr\303\274cken um Skizze einzuf\303\274gen."]
@@ -1459,6 +1623,7 @@
   ::msgcat::mcset it "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "Premi per inserire il disegno che scegli col mouse"]
   ::msgcat::mcset ru "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "\320\255\321\202\320\260 \320\272\320\275\320\276\320\277\320\272\320\260 \320\262\321\201\321\202\320\260\320\262\320\273\321\217\320\265\321\202 \321\204\320\276\320\275 \321\201\320\272\321\200\320\260\320\277\320\260 \320\262 \321\201\320\277\320\270\321\201\320\276\320\272"]
   ::msgcat::mcset sk "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "Po stla\304\215en\303\255 klikni na n\303\241\304\215rtok, ktor\303\275 treba vlo\305\276i\305\245 do scrapu."]
+  ::msgcat::mcset sq "Press this button to insert sketch by clicking on it." [encoding convertfrom utf-8 "shtype kete buton te fusesh skicen duke klikuar ne te."]
 
   ::msgcat::mcset cz "Delete sketch from scrap." [encoding convertfrom utf-8 "Odstranit n\303\241\304\215rtek ze scrapu"]
   ::msgcat::mcset de "Delete sketch from scrap." [encoding convertfrom utf-8 "L\303\266sche Skizze."]
@@ -1466,6 +1631,7 @@
   ::msgcat::mcset it "Delete sketch from scrap." [encoding convertfrom utf-8 "Rimuovi un disegno dallo scrap"]
   ::msgcat::mcset ru "Delete sketch from scrap." [encoding convertfrom utf-8 "\320\255\321\202\320\260 \320\272\320\275\320\276\320\277\320\272\320\260 \321\203\320\264\320\260\320\273\321\217\320\265\321\202 \321\204\320\276\320\275 \321\201\320\272\321\200\320\260\320\277\320\260 \320\270\320\267 \321\201\320\277\320\270\321\201\320\272\320\260"]
   ::msgcat::mcset sk "Delete sketch from scrap." [encoding convertfrom utf-8 "Odstr\303\241\305\210 n\303\241\304\215rtok zo scrapu."]
+  ::msgcat::mcset sq "Delete sketch from scrap." [encoding convertfrom utf-8 "fshije skicen nga deponia"]
 
   ::msgcat::mcset cz "loading point module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m point modul ..."]
   ::msgcat::mcset de "loading point module ..." [encoding convertfrom utf-8 "Lade Punktmodul ..."]
@@ -1475,6 +1641,7 @@
   ::msgcat::mcset it "loading point module ..." [encoding convertfrom utf-8 "modolo punti ..."]
   ::msgcat::mcset ru "loading point module ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\274\320\276\320\264\321\203\320\273\321\217 \321\202\320\276\321\207\320\265\320\272..."]
   ::msgcat::mcset sk "loading point module ..." [encoding convertfrom utf-8 "nahr\303\241vam editor bodov ..."]
+  ::msgcat::mcset sq "loading point module ..." [encoding convertfrom utf-8 "duke lexuar modulin e pikes\342\200\246"]
 
   ::msgcat::mcset cz "Update point" [encoding convertfrom utf-8 "Aktualizovat"]
   ::msgcat::mcset de "Update point" [encoding convertfrom utf-8 "Punkt aktualisieren"]
@@ -1484,6 +1651,7 @@
   ::msgcat::mcset it "Update point" [encoding convertfrom utf-8 "Aggiorna punto"]
   ::msgcat::mcset ru "Update point" [encoding convertfrom utf-8 "\320\236\320\261\320\275\320\276\320\262\320\270\321\202\321\214 \321\202\320\276\321\207\320\272\321\203"]
   ::msgcat::mcset sk "Update point" [encoding convertfrom utf-8 "Akualizuj bod"]
+  ::msgcat::mcset sq "Update point" [encoding convertfrom utf-8 "pika e aktualizimit"]
 
   ::msgcat::mcset cz "Click this button to apply point changes." [encoding convertfrom utf-8 "Aktualizuje data t\303\275kaj\303\255c\303\255 se bodu."]
   ::msgcat::mcset de "Click this button to apply point changes." [encoding convertfrom utf-8 "Klicke diesen Knopf, um \303\204nderungen am Punkt anzuwenden."]
@@ -1493,6 +1661,7 @@
   ::msgcat::mcset it "Click this button to apply point changes." [encoding convertfrom utf-8 "Premi il bottone per fare modifiche al punto."]
   ::msgcat::mcset ru "Click this button to apply point changes." [encoding convertfrom utf-8 "\320\235\320\260\320\266\320\274\320\270\321\202\320\265 \321\215\321\202\321\203 \320\272\320\275\320\276\320\277\320\272\321\203 \320\264\320\273\321\217 \320\277\321\200\320\270\320\274\320\265\320\275\320\265\320\275\320\270\321\217 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Click this button to apply point changes." [encoding convertfrom utf-8 "Stla\304\215te aby sa aktualizovali zmenen\303\251 \303\272daje bodu."]
+  ::msgcat::mcset sq "Click this button to apply point changes." [encoding convertfrom utf-8 "kliko kete buton te aktualizosh nderrimet e pikes."]
 
   ::msgcat::mcset cz "Point type." [encoding convertfrom utf-8 "Typ bodu."]
   ::msgcat::mcset de "Point type." [encoding convertfrom utf-8 "Punkttyp."]
@@ -1502,6 +1671,7 @@
   ::msgcat::mcset it "Point type." [encoding convertfrom utf-8 "Tipo di punto"]
   ::msgcat::mcset ru "Point type." [encoding convertfrom utf-8 "\320\242\320\270\320\277 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Point type." [encoding convertfrom utf-8 "Typ bodu."]
+  ::msgcat::mcset sq "Point type." [encoding convertfrom utf-8 "lloji I pikave (kliko ne trekendesh te shohesh menun)."]
 
   ::msgcat::mcset cz "Point identifier." [encoding convertfrom utf-8 "Identifik\303\241tor bodu."]
   ::msgcat::mcset de "Point identifier." [encoding convertfrom utf-8 "Punktbezeichner."]
@@ -1511,6 +1681,7 @@
   ::msgcat::mcset it "Point identifier." [encoding convertfrom utf-8 "Identificatore del punto."]
   ::msgcat::mcset ru "Point identifier." [encoding convertfrom utf-8 "\320\230\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Point identifier." [encoding convertfrom utf-8 "Identifik\303\241tor bodu."]
+  ::msgcat::mcset sq "Point identifier." [encoding convertfrom utf-8 "identifikuesi I pikes."]
 
   ::msgcat::mcset cz "Other point options." [encoding convertfrom utf-8 "Dal\305\241\303\255 volby pro bod."]
   ::msgcat::mcset de "Other point options." [encoding convertfrom utf-8 "Andere Punktoptionen."]
@@ -1520,6 +1691,7 @@
   ::msgcat::mcset it "Other point options." [encoding convertfrom utf-8 "Altre opzioni del punto."]
   ::msgcat::mcset ru "Other point options." [encoding convertfrom utf-8 "\320\224\321\200\321\203\320\263\320\270\320\265 \320\276\320\277\321\206\320\270\320\270 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Other point options." [encoding convertfrom utf-8 "Ostatn\303\251 \305\241pecifik\303\241cie bodu."]
+  ::msgcat::mcset sq "Other point options." [encoding convertfrom utf-8 "opcionet tjera te pikes."]
 
   ::msgcat::mcset cz "I.e, if type is label, write here: -text \042this will be displayed (P100)\042" [encoding convertfrom utf-8 "P\305\231\303\255klad: pokud type je label, zadejte: -text \042this will be displayed (P100)\042"]
   ::msgcat::mcset de "I.e, if type is label, write here: -text \042this will be displayed (P100)\042" [encoding convertfrom utf-8 "d.h., wenn der Typ Beschriftung ist, schreibe hier: -text \042das wird hier angezeigt (P100)\042"]
@@ -1529,6 +1701,7 @@
   ::msgcat::mcset it "I.e, if type is label, write here: -text \042this will be displayed (P100)\042" [encoding convertfrom utf-8 "Cio\303\251, se il tipo \303\250 etichetta, scrivi: -text \042questo sar\303\240 visualizzato (P100)\042"]
   ::msgcat::mcset ru "I.e, if type is label, write here: -text \042this will be displayed (P100)\042" [encoding convertfrom utf-8 "\320\235\320\260\320\277\321\200\320\270\320\274\320\265\321\200, \320\265\321\201\320\273\320\270 \321\202\320\270\320\277 \321\202\320\276\321\207\320\272\320\270 label, \320\267\320\264\320\265\321\201\321\214 \320\274\320\276\320\266\320\275\320\276 \320\275\320\260\320\261\321\200\320\260\321\202\321\214: -text \042\321\215\321\202\320\276 \320\275\320\260\320\277\320\265\321\207\320\260\321\202\320\260\320\265\321\202\321\201\321\217 (P100)\042"]
   ::msgcat::mcset sk "I.e, if type is label, write here: -text \042this will be displayed (P100)\042" [encoding convertfrom utf-8 "Pr\303\255klad: ak je typ label, zadajte: -text \042tento text bude zobrazen\303\275\042"]
+  ::msgcat::mcset sq "I.e, if type is label, write here: -text \042this will be displayed (P100)\042" [encoding convertfrom utf-8 "p.sh. nese lloji eshte etikete, shkruaj ketu: -teksti \042 kjo do te lajmerohet (P100)\042"]
 
   ::msgcat::mcset cz "Enter symbol orientation angle." [encoding convertfrom utf-8 "Zadejte orientaci bodu."]
   ::msgcat::mcset de "Enter symbol orientation angle." [encoding convertfrom utf-8 "Winkel der Symbolausrichtung angeben."]
@@ -1538,6 +1711,7 @@
   ::msgcat::mcset it "Enter symbol orientation angle." [encoding convertfrom utf-8 "Scrivi l'angolo di orientazione del simbolo."]
   ::msgcat::mcset ru "Enter symbol orientation angle." [encoding convertfrom utf-8 "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\321\216 \321\201\320\270\320\274\320\262\320\276\320\273\320\260."]
   ::msgcat::mcset sk "Enter symbol orientation angle." [encoding convertfrom utf-8 "Zadajte orient\303\241ciu bodu."]
+  ::msgcat::mcset sq "Enter symbol orientation angle." [encoding convertfrom utf-8 "fute simbolin e kendit te orientimit."]
 
   ::msgcat::mcset cz "There are symbol types which must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard." [encoding convertfrom utf-8 "Jsou symboly, kter\303\275m mus\303\255te specifikovat orientaci (nap\305\231. gradient). Zaklikn\304\233te tuto volbu a nastavte jim orientaci my\305\241\303\255 nebo z kl\303\241vesnice."]
   ::msgcat::mcset de "There are symbol types which must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard." [encoding convertfrom utf-8 "Es gibt Symbole, die eine Ausrichtung haben m\303\274ssen (z.B. Gef\303\244lle). Klicke hier, um sie mit der Maus oder der Tastatur auszurichten."]
@@ -1547,6 +1721,7 @@
   ::msgcat::mcset it "There are symbol types which must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard." [encoding convertfrom utf-8 "Ci sono tipi di simboli che sono orientati (per es. gradiente). Premi qui per orientarli col mouse o la tastiera"]
   ::msgcat::mcset ru "There are symbol types which must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard." [encoding convertfrom utf-8 "\320\235\320\265\320\272\320\276\321\202\320\276\321\200\321\213\320\265 \321\202\320\270\320\277\321\213 \321\201\320\270\320\274\320\262\320\276\320\273\320\276\320\262 \320\264\320\276\320\273\320\266\320\275\321\213 \320\261\321\213\321\202\321\214 \320\276\321\200\320\270\320\265\320\275\321\202\320\270\321\200\320\276\320\262\320\260\320\275\321\213 (\320\275\320\260\320\277\321\200\320\270\320\274\320\265\321\200 gradient). \320\235\320\260\320\266\320\274\320\270\321\202\320\265 \320\267\320\264\320\265\321\201\321\214 \320\264\320\273\321\217 \320\277\321\200\320\270\320\264\320\260\320\275\320\270\321\217 \320\270\320\274 \320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\320\270 \321\201 \320\277\320\276\320\274\320\276\321\211\321\214\321\216 \320\274\321\213\321\210\320\270 \320\270\320\273\320\270 \320\272\320\273\320\260\320\262\320\270\320\260\321\202\321\203\321\200\321\213."]
   ::msgcat::mcset sk "There are symbol types which must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard." [encoding convertfrom utf-8 "S\303\272 symboly, ktor\303\275m treba zada\305\245 orient\303\241ciu (napr. gradiet). Ozna\304\215te t\303\272to vo\304\276bu a nastavte orient\303\241ciu my\305\241ou alebo z kl\303\241vesnice."]
+  ::msgcat::mcset sq "There are symbol types which must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard." [encoding convertfrom utf-8 "disa lloje te simboleve duhet te orientohen (p.sh.:gradienti). Kliko ketu qe ti orientosh me mi apo tastature."]
 
   ::msgcat::mcset cz "x-size" [encoding convertfrom utf-8 "x-rozsah"]
   ::msgcat::mcset de "x-size" [encoding convertfrom utf-8 "x-Gr\303\266\303\237e"]
@@ -1556,6 +1731,7 @@
   ::msgcat::mcset it "x-size" [encoding convertfrom utf-8 "dim. x"]
   ::msgcat::mcset ru "x-size" [encoding convertfrom utf-8 "x-size"]
   ::msgcat::mcset sk "x-size" [encoding convertfrom utf-8 "ve\304\276kos\305\245-x"]
+  ::msgcat::mcset sq "x-size" [encoding convertfrom utf-8 "madhesia-X"]
 
   ::msgcat::mcset cz "Set point size in main direction." [encoding convertfrom utf-8 "Nastav\303\255 rozsah bodu v hlavn\303\255m sm\304\233ru."]
   ::msgcat::mcset de "Set point size in main direction." [encoding convertfrom utf-8 "Setze Punktgr\303\266\303\237e in Hauptrichtung."]
@@ -1565,6 +1741,7 @@
   ::msgcat::mcset it "Set point size in main direction." [encoding convertfrom utf-8 "Imposta la dimensione del punto nella direzione principale."]
   ::msgcat::mcset ru "Set point size in main direction." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214 \321\200\320\260\320\267\320\274\320\265\321\200 \321\202\320\276\321\207\320\272\320\270 \320\262 \320\263\320\273\320\260\320\262\320\275\320\276\320\274 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Set point size in main direction." [encoding convertfrom utf-8 "Nastavte ve\304\276kos\305\245 bodu v hlavnom (X) smere."]
+  ::msgcat::mcset sq "Set point size in main direction." [encoding convertfrom utf-8 "vene madhesine e pikes ne drejtimin kryesor."]
 
   ::msgcat::mcset cz "Enter point size in main direction." [encoding convertfrom utf-8 "Zadejte rozsah bodu v hlavn\303\255m sm\304\233ru."]
   ::msgcat::mcset de "Enter point size in main direction." [encoding convertfrom utf-8 "Punktgr\303\266\303\237e in Hauptrichtung eingeben."]
@@ -1574,6 +1751,7 @@
   ::msgcat::mcset it "Enter point size in main direction." [encoding convertfrom utf-8 "Scrivi la dimensione del punto nella direzione principale."]
   ::msgcat::mcset ru "Enter point size in main direction." [encoding convertfrom utf-8 "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\200\320\260\320\267\320\274\320\265\321\200 \321\202\320\276\321\207\320\272\320\270 \320\262 \320\263\320\273\320\260\320\262\320\275\320\276\320\274 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Enter point size in main direction." [encoding convertfrom utf-8 "Zadajte ve\304\276kos\305\245 bodu v hlavnom (X) smere."]
+  ::msgcat::mcset sq "Enter point size in main direction." [encoding convertfrom utf-8 "fute madhesine e pikes ne drejtimin kryesor."]
 
   ::msgcat::mcset cz "y-size" [encoding convertfrom utf-8 "y-rozsah"]
   ::msgcat::mcset de "y-size" [encoding convertfrom utf-8 "y-Gr\303\266\303\237e"]
@@ -1583,6 +1761,7 @@
   ::msgcat::mcset it "y-size" [encoding convertfrom utf-8 "dim. y"]
   ::msgcat::mcset ru "y-size" [encoding convertfrom utf-8 "y-size"]
   ::msgcat::mcset sk "y-size" [encoding convertfrom utf-8 "ve\304\276kos\305\245-y"]
+  ::msgcat::mcset sq "y-size" [encoding convertfrom utf-8 "madhesia-Y"]
 
   ::msgcat::mcset cz "Set point size in side direction." [encoding convertfrom utf-8 "Nastav\303\255 rozsah bodu ve vedlej\305\241\303\255m sm\304\233ru."]
   ::msgcat::mcset de "Set point size in side direction." [encoding convertfrom utf-8 "Setze Punktgr\303\266\303\237e in seitlicher Richtung."]
@@ -1592,6 +1771,7 @@
   ::msgcat::mcset it "Set point size in side direction." [encoding convertfrom utf-8 "Imposta la dimensione del punto nella direzione trasversale."]
   ::msgcat::mcset ru "Set point size in side direction." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214 \321\200\320\260\320\267\320\274\320\265\321\200 \321\202\320\276\321\207\320\272\320\270 \320\262 \320\261\320\276\320\272\320\276\320\262\320\276\320\274 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Set point size in side direction." [encoding convertfrom utf-8 "Nastavte ve\304\276kos\305\245 bodu vo ved\304\276aj\305\241om smere."]
+  ::msgcat::mcset sq "Set point size in side direction." [encoding convertfrom utf-8 "vene madhesine e pikes ne drejtim anesore."]
 
   ::msgcat::mcset cz "Enter point size in side direction." [encoding convertfrom utf-8 "Zadejte rozsah bodu ve vedlej\305\241\303\255m sm\304\233ru."]
   ::msgcat::mcset de "Enter point size in side direction." [encoding convertfrom utf-8 "Punktgr\303\266\303\237e in seitlicher Richtung eingeben."]
@@ -1601,6 +1781,7 @@
   ::msgcat::mcset it "Enter point size in side direction." [encoding convertfrom utf-8 "Scrivi la dimensione del punto nella direzione trasversale."]
   ::msgcat::mcset ru "Enter point size in side direction." [encoding convertfrom utf-8 "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\200\320\260\320\267\320\274\320\265\321\200 \321\202\320\276\321\207\320\272\320\270 \320\262 \320\261\320\276\320\272\320\276\320\262\320\276\320\274 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Enter point size in side direction." [encoding convertfrom utf-8 "Zadajte ve\304\276kos\305\245 bodu vo ved\304\276aj\305\241om smere."]
+  ::msgcat::mcset sq "Enter point size in side direction." [encoding convertfrom utf-8 "fute madhesine e pikes ne drejtim anesore."]
 
   ::msgcat::mcset cz "loading line module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m k\305\231ivkov\303\275 modul ..."]
   ::msgcat::mcset de "loading line module ..." [encoding convertfrom utf-8 "Lade Linienmodul ..."]
@@ -1610,6 +1791,7 @@
   ::msgcat::mcset it "loading line module ..." [encoding convertfrom utf-8 "modulo linee ..."]
   ::msgcat::mcset ru "loading line module ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\274\320\276\320\264\321\203\320\273\321\217 \320\273\320\270\320\275\320\270\320\271 ..."]
   ::msgcat::mcset sk "loading line module ..." [encoding convertfrom utf-8 "nahr\303\241vam modul kriviek ..."]
+  ::msgcat::mcset sq "loading line module ..." [encoding convertfrom utf-8 "duke lexuar modulin e rrjeshtit\342\200\246"]
 
   ::msgcat::mcset cz "Line type." [encoding convertfrom utf-8 "Typ k\305\231ivky."]
   ::msgcat::mcset de "Line type." [encoding convertfrom utf-8 "Linientyp."]
@@ -1619,6 +1801,7 @@
   ::msgcat::mcset it "Line type." [encoding convertfrom utf-8 "Tipo di linea."]
   ::msgcat::mcset ru "Line type." [encoding convertfrom utf-8 "\320\242\320\270\320\277 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Line type." [encoding convertfrom utf-8 "Typ krivky."]
+  ::msgcat::mcset sq "Line type." [encoding convertfrom utf-8 "lloji I rrjeshtit."]
 
   ::msgcat::mcset cz "id" [encoding convertfrom utf-8 "id"]
   ::msgcat::mcset de "id" [encoding convertfrom utf-8 "id"]
@@ -1628,6 +1811,7 @@
   ::msgcat::mcset it "id" [encoding convertfrom utf-8 "Identificativo"]
   ::msgcat::mcset ru "id" [encoding convertfrom utf-8 "\320\230\320\264"]
   ::msgcat::mcset sk "id" [encoding convertfrom utf-8 "id"]
+  ::msgcat::mcset sq "id" [encoding convertfrom utf-8 "ID-identifikimi"]
 
   ::msgcat::mcset cz "Line identifier." [encoding convertfrom utf-8 "Identifik\303\241tor k\305\231ivky."]
   ::msgcat::mcset de "Line identifier." [encoding convertfrom utf-8 "Linienbezeichner."]
@@ -1637,6 +1821,7 @@
   ::msgcat::mcset it "Line identifier." [encoding convertfrom utf-8 "Identificativo della linea."]
   ::msgcat::mcset ru "Line identifier." [encoding convertfrom utf-8 "\320\230\320\264\320\265\320\275\321\202\320\270\321\204\320\270\320\272\320\260\321\202\320\276\321\200 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "Line identifier." [encoding convertfrom utf-8 "Identifik\303\241tor krivky."]
+  ::msgcat::mcset sq "Line identifier." [encoding convertfrom utf-8 "identifikimi I rrjeshtit."]
 
   ::msgcat::mcset cz "Other line options." [encoding convertfrom utf-8 "Dal\305\241\303\255 volby pro k\305\231ivku."]
   ::msgcat::mcset de "Other line options." [encoding convertfrom utf-8 "Andere Linienoptionen."]
@@ -1646,6 +1831,7 @@
   ::msgcat::mcset it "Other line options." [encoding convertfrom utf-8 "Altre opzioni della linea."]
   ::msgcat::mcset ru "Other line options." [encoding convertfrom utf-8 "\320\237\321\200\320\276\321\207\320\270\320\265 \320\276\320\277\321\206\320\270\320\270 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "Other line options." [encoding convertfrom utf-8 "\304\216al\305\241ie mo\305\276nosti pre krivku."]
+  ::msgcat::mcset sq "Other line options." [encoding convertfrom utf-8 "opcionet tjera te rrjeshtit."]
 
   ::msgcat::mcset cz "reverse" [encoding convertfrom utf-8 "obr\303\241tit"]
   ::msgcat::mcset de "reverse" [encoding convertfrom utf-8 "Umkehren"]
@@ -1655,6 +1841,7 @@
   ::msgcat::mcset it "reverse" [encoding convertfrom utf-8 "inverti"]
   ::msgcat::mcset ru "reverse" [encoding convertfrom utf-8 "\320\276\320\261\321\200\320\260\321\202\320\275\320\260\321\217"]
   ::msgcat::mcset sk "reverse" [encoding convertfrom utf-8 "oto\304\215i\305\245"]
+  ::msgcat::mcset sq "reverse" [encoding convertfrom utf-8 "ktheje pas"]
 
   ::msgcat::mcset cz "Reverse line." [encoding convertfrom utf-8 "Obr\303\241tit k\305\231ivku."]
   ::msgcat::mcset de "Reverse line." [encoding convertfrom utf-8 "Linie umkehren."]
@@ -1664,6 +1851,7 @@
   ::msgcat::mcset it "Reverse line." [encoding convertfrom utf-8 "Inverti la linea."]
   ::msgcat::mcset ru "Reverse line." [encoding convertfrom utf-8 "\320\227\320\260\320\264\320\260\321\202\321\214 \320\276\320\261\321\200\320\260\321\202\320\275\320\276\320\265 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\265 \320\264\320\273\321\217 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Reverse line." [encoding convertfrom utf-8 "Oto\304\215i\305\245 krivku."]
+  ::msgcat::mcset sq "Reverse line." [encoding convertfrom utf-8 "rrjeshti I pasem-I kthyer"]
 
   ::msgcat::mcset cz "close" [encoding convertfrom utf-8 "zav\305\231\303\255t"]
   ::msgcat::mcset de "close" [encoding convertfrom utf-8 "schlie\303\237en"]
@@ -1673,6 +1861,7 @@
   ::msgcat::mcset it "close" [encoding convertfrom utf-8 "chiudi"]
   ::msgcat::mcset ru "close" [encoding convertfrom utf-8 "\320\267\320\260\320\274\320\272\320\275\321\203\321\202\321\214"]
   ::msgcat::mcset sk "close" [encoding convertfrom utf-8 "zavrie\305\245"]
+  ::msgcat::mcset sq "close" [encoding convertfrom utf-8 "mbylle"]
 
   ::msgcat::mcset cz "Close line." [encoding convertfrom utf-8 "Uzav\305\231\303\255t k\305\231ivku."]
   ::msgcat::mcset de "Close line." [encoding convertfrom utf-8 "Linie schlie\303\237en."]
@@ -1682,6 +1871,7 @@
   ::msgcat::mcset it "Close line." [encoding convertfrom utf-8 "Chiudi la linea."]
   ::msgcat::mcset ru "Close line." [encoding convertfrom utf-8 "\320\227\320\260\320\274\320\272\320\275\321\203\321\202\321\214 \320\273\320\270\320\275\320\270\321\216 \320\275\320\260 \320\265\321\221 \320\266\320\265 \320\275\320\260\321\207\320\260\320\273\320\276."]
   ::msgcat::mcset sk "Close line." [encoding convertfrom utf-8 "Uzavrie\305\245 krivku."]
+  ::msgcat::mcset sq "Close line." [encoding convertfrom utf-8 "mbylle rrjeshtin."]
 
   ::msgcat::mcset cz "Edit line" [encoding convertfrom utf-8 "Editovat"]
   ::msgcat::mcset de "Edit line" [encoding convertfrom utf-8 "Linie bearbeiten"]
@@ -1691,6 +1881,7 @@
   ::msgcat::mcset it "Edit line" [encoding convertfrom utf-8 "Edita"]
   ::msgcat::mcset ru "Edit line" [encoding convertfrom utf-8 "\320\237\321\200\320\260\320\262\320\270\321\202\321\214 \320\273\320\270\320\275\320\270\321\216"]
   ::msgcat::mcset sk "Edit line" [encoding convertfrom utf-8 "Upravi\305\245"]
+  ::msgcat::mcset sq "Edit line" [encoding convertfrom utf-8 "permireso rrjeshtin"]
 
   ::msgcat::mcset cz "Insert/delete line point. Split line." [encoding convertfrom utf-8 "Vlo\305\276en\303\255/smaz\303\241n\303\255 bodu k\305\231ivky. Rozd\304\233len\303\255 k\305\231ivky."]
   ::msgcat::mcset de "Insert/delete line point. Split line." [encoding convertfrom utf-8 "Punkt auf Linie eingeben/l\303\266schen. Linie teilen."]
@@ -1700,6 +1891,7 @@
   ::msgcat::mcset it "Insert/delete line point. Split line." [encoding convertfrom utf-8 "Inserisci/rimuovi un punto della linea. Dividi la linea."]
   ::msgcat::mcset ru "Insert/delete line point. Split line." [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\272\320\260/\321\203\320\264\320\260\320\273\320\265\320\275\320\270\320\265 \321\202\320\276\321\207\320\272\320\270, \321\200\320\260\320\267\320\264\320\265\320\273\320\265\320\275\320\270\320\265 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Insert/delete line point. Split line." [encoding convertfrom utf-8 "Vlo\305\276enie/odstr\303\241nenie bodu krivky. Rozdelenie krivky."]
+  ::msgcat::mcset sq "Insert/delete line point. Split line." [encoding convertfrom utf-8 "fute/fshije piken e rrjeshtit. Ndaje rrjeshtin."]
 
   ::msgcat::mcset cz "Click this button to apply line changes." [encoding convertfrom utf-8 "Aktualizuje k\305\231ivku."]
   ::msgcat::mcset de "Click this button to apply line changes." [encoding convertfrom utf-8 "Klicke diesen Knopf, um Linien\303\244nderungen anzuwenden."]
@@ -1709,6 +1901,7 @@
   ::msgcat::mcset it "Click this button to apply line changes." [encoding convertfrom utf-8 "Primi questo bottone per fare modifiche alla linea."]
   ::msgcat::mcset ru "Click this button to apply line changes." [encoding convertfrom utf-8 "\320\235\320\260\320\266\320\274\320\270\321\202\320\265 \321\215\321\202\321\203 \320\272\320\275\320\276\320\277\320\272\321\203 \320\264\320\273\321\217 \320\277\321\200\320\270\320\274\320\265\320\275\320\265\320\275\320\270\321\217 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Click this button to apply line changes." [encoding convertfrom utf-8 "Aktualizuje krivku."]
+  ::msgcat::mcset sq "Click this button to apply line changes." [encoding convertfrom utf-8 "kliko kete buton te aktualizosh nderrimet e rrjeshtit."]
 
   ::msgcat::mcset cz "Select line point." [encoding convertfrom utf-8 "V\303\275b\304\233r bodu k\305\231ivky."]
   ::msgcat::mcset de "Select line point." [encoding convertfrom utf-8 "Punkt auf Linie ausw\303\244hlen."]
@@ -1718,6 +1911,7 @@
   ::msgcat::mcset it "Select line point." [encoding convertfrom utf-8 "Seleziona un punto della linea."]
   ::msgcat::mcset ru "Select line point." [encoding convertfrom utf-8 "\320\222\321\213\320\261\321\200\320\260\321\202\321\214 \320\276\320\264\320\275\321\203 \320\270\320\267 \321\202\320\276\321\207\320\265\320\272 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Select line point." [encoding convertfrom utf-8 "V\303\275ber bodu krivky."]
+  ::msgcat::mcset sq "Select line point." [encoding convertfrom utf-8 "selekto piken e rrjeshtit."]
 
   ::msgcat::mcset cz "loading line point module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m modul pro body k\305\231ivky ..."]
   ::msgcat::mcset de "loading line point module ..." [encoding convertfrom utf-8 "Lade Linienpunktmodul ..."]
@@ -1727,6 +1921,7 @@
   ::msgcat::mcset it "loading line point module ..." [encoding convertfrom utf-8 "caricando il modulo dei punti di linea ..."]
   ::msgcat::mcset ru "loading line point module ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\274\320\276\320\264\321\203\320\273\321\217 \321\202\320\276\321\207\320\265\320\272 \320\273\320\270\320\275\320\270\320\270 ..."]
   ::msgcat::mcset sk "loading line point module ..." [encoding convertfrom utf-8 "nahr\303\241vam modul pre body krivky ..."]
+  ::msgcat::mcset sq "loading line point module ..." [encoding convertfrom utf-8 "duke lexuar modulin e pikes se rrjeshtit."]
 
   ::msgcat::mcset cz "position" [encoding convertfrom utf-8 "pozice"]
   ::msgcat::mcset de "position" [encoding convertfrom utf-8 "Position"]
@@ -1736,6 +1931,7 @@
   ::msgcat::mcset it "position" [encoding convertfrom utf-8 "posizione"]
   ::msgcat::mcset ru "position" [encoding convertfrom utf-8 "\320\277\320\276\320\267\320\270\321\206\320\270\321\217"]
   ::msgcat::mcset sk "position" [encoding convertfrom utf-8 "poloha"]
+  ::msgcat::mcset sq "position" [encoding convertfrom utf-8 "pozicioni"]
 
   ::msgcat::mcset cz "Point position." [encoding convertfrom utf-8 "Pozice bodu."]
   ::msgcat::mcset de "Point position." [encoding convertfrom utf-8 "Punktposition."]
@@ -1745,6 +1941,7 @@
   ::msgcat::mcset it "Point position." [encoding convertfrom utf-8 "Posizione del punto."]
   ::msgcat::mcset ru "Point position." [encoding convertfrom utf-8 "\320\237\320\276\320\267\320\270\321\206\320\270\321\217 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Point position." [encoding convertfrom utf-8 "Poloha bodu."]
+  ::msgcat::mcset sq "Point position." [encoding convertfrom utf-8 "pozicioni I pikes."]
 
   ::msgcat::mcset cz "Point X coordinate." [encoding convertfrom utf-8 "sou\305\231adnice X bodu."]
   ::msgcat::mcset de "Point X coordinate." [encoding convertfrom utf-8 "Punkt X-Koordinate."]
@@ -1754,6 +1951,7 @@
   ::msgcat::mcset it "Point X coordinate." [encoding convertfrom utf-8 "Coordinata X del punto."]
   ::msgcat::mcset ru "Point X coordinate." [encoding convertfrom utf-8 "X \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202\320\260 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Point X coordinate." [encoding convertfrom utf-8 "X s\303\272radnica bodu."]
+  ::msgcat::mcset sq "Point X coordinate." [encoding convertfrom utf-8 "pika X e koordinates."]
 
   ::msgcat::mcset cz "Point Y coordinate." [encoding convertfrom utf-8 "sou\305\231adnice Y bodu."]
   ::msgcat::mcset de "Point Y coordinate." [encoding convertfrom utf-8 "Punkt Y-Koordinate."]
@@ -1763,6 +1961,7 @@
   ::msgcat::mcset it "Point Y coordinate." [encoding convertfrom utf-8 "Coordinata Y del punto."]
   ::msgcat::mcset ru "Point Y coordinate." [encoding convertfrom utf-8 "Y \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202\320\260 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Point Y coordinate." [encoding convertfrom utf-8 "Y s\303\272radnica bodu."]
+  ::msgcat::mcset sq "Point Y coordinate." [encoding convertfrom utf-8 "pika Y e koordinates."]
 
   ::msgcat::mcset cz "Previous control point X coordinate." [encoding convertfrom utf-8 "Sou\305\231adnice X p\305\231edchoz\303\255ho \305\231\303\255d\303\255c\303\255ho bodu."]
   ::msgcat::mcset de "Previous control point X coordinate." [encoding convertfrom utf-8 "Vorherige X-Koordinate eines Kontrollpunkts."]
@@ -1772,6 +1971,7 @@
   ::msgcat::mcset it "Previous control point X coordinate." [encoding convertfrom utf-8 "Coordinata X del punto di controllo precedente."]
   ::msgcat::mcset ru "Previous control point X coordinate." [encoding convertfrom utf-8 "X \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202\320\260 \320\277\321\200\320\265\320\264\321\213\320\264\321\203\321\211\320\265\320\271 \321\203\320\277\321\200\320\260\320\262\320\273\321\217\321\216\321\211\320\265\320\271 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Previous control point X coordinate." [encoding convertfrom utf-8 "X s\303\272radnica predch\303\241dzaj\303\272ceho kontroln\303\251ho bodu."]
+  ::msgcat::mcset sq "Previous control point X coordinate." [encoding convertfrom utf-8 "pika e kontrollit te meparshem te koordinates X"]
 
   ::msgcat::mcset cz "Previous control point Y coordinate." [encoding convertfrom utf-8 "Sou\305\231adnice Y p\305\231edchoz\303\255ho \305\231\303\255d\303\255c\303\255ho bodu."]
   ::msgcat::mcset de "Previous control point Y coordinate." [encoding convertfrom utf-8 "Vorherige Y-Koordinate eines Kontrollpunkts."]
@@ -1781,6 +1981,7 @@
   ::msgcat::mcset it "Previous control point Y coordinate." [encoding convertfrom utf-8 "Coordinata Y del punto di controllo precedente."]
   ::msgcat::mcset ru "Previous control point Y coordinate." [encoding convertfrom utf-8 "Y \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202\320\260 \320\277\321\200\320\265\320\264\321\213\320\264\321\203\321\211\320\265\320\271 \321\203\320\277\321\200\320\260\320\262\320\273\321\217\321\216\321\211\320\265\320\271 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Previous control point Y coordinate." [encoding convertfrom utf-8 "Y s\303\272radnica predch\303\241dzaj\303\272ceho kontroln\303\251ho bodu."]
+  ::msgcat::mcset sq "Previous control point Y coordinate." [encoding convertfrom utf-8 "pika e kontrollit te meparshem te koordinates-Y"]
 
   ::msgcat::mcset cz "Next control point X coordinate." [encoding convertfrom utf-8 "Sou\305\231adnice X n\303\241sleduj\303\255c\303\255ho \305\231\303\255d\303\255c\303\255ho bodu."]
   ::msgcat::mcset de "Next control point X coordinate." [encoding convertfrom utf-8 "N\303\244chste X-Koordinate eines Kontrollpunkts."]
@@ -1790,6 +1991,7 @@
   ::msgcat::mcset it "Next control point X coordinate." [encoding convertfrom utf-8 "Coordinata X del prossimo punto."]
   ::msgcat::mcset ru "Next control point X coordinate." [encoding convertfrom utf-8 "X \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202\320\260 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\320\265\320\271 \321\203\320\277\321\200\320\260\320\262\320\273\321\217\321\216\321\211\320\265\320\271 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Next control point X coordinate." [encoding convertfrom utf-8 "X s\303\272radnica nasleduj\303\272ceho kontroln\303\251ho bodu."]
+  ::msgcat::mcset sq "Next control point X coordinate." [encoding convertfrom utf-8 "pika e ardhshme kontrollit te coordinates X"]
 
   ::msgcat::mcset cz "Next control point Y coordinate." [encoding convertfrom utf-8 "Sou\305\231adnice Y n\303\241sleduj\303\255c\303\255ho \305\231\303\255d\303\255c\303\255ho bodu."]
   ::msgcat::mcset de "Next control point Y coordinate." [encoding convertfrom utf-8 "N\303\244chste Y-Koordinate eines Kontrollpunkts."]
@@ -1799,6 +2001,7 @@
   ::msgcat::mcset it "Next control point Y coordinate." [encoding convertfrom utf-8 "Coordinata Y del prossimo punto."]
   ::msgcat::mcset ru "Next control point Y coordinate." [encoding convertfrom utf-8 "Y \320\272\320\276\320\276\321\200\320\264\320\270\320\275\320\260\321\202\320\260 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\320\265\320\271 \321\203\320\277\321\200\320\260\320\262\320\273\321\217\321\216\321\211\320\265\320\271 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Next control point Y coordinate." [encoding convertfrom utf-8 "Y s\303\272radnica nasleduj\303\272ceho kontroln\303\251ho bodu."]
+  ::msgcat::mcset sq "Next control point Y coordinate." [encoding convertfrom utf-8 "pika e ardhshme kontrollit te coordinates Y"]
 
   ::msgcat::mcset cz "Checkbox whether to use previous control point." [encoding convertfrom utf-8 "Za\305\241krtn\304\233te pokud chcete pro tvar k\305\231ivky pou\305\276\303\255t p\305\231edchoz\303\255 \305\231\303\255d\303\255c\303\255 bod."]
   ::msgcat::mcset de "Checkbox whether to use previous control point." [encoding convertfrom utf-8 "Auswahl, ob vorheriger Kontrollpunkt benutzt wird."]
@@ -1808,6 +2011,7 @@
   ::msgcat::mcset it "Checkbox whether to use previous control point." [encoding convertfrom utf-8 "Checkbox per usare il punto di controllo precedente."]
   ::msgcat::mcset ru "Checkbox whether to use previous control point." [encoding convertfrom utf-8 "\320\237\320\276\321\201\321\202\320\260\320\262\321\214\321\202\320\265 \320\263\320\260\320\273\320\276\321\207\320\272\321\203 \320\264\320\273\321\217 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\320\276\320\262\320\260\320\275\320\270\321\217 \320\277\321\200\320\265\320\264\321\213\320\264\321\203\321\211\320\265\320\271 \321\203\320\277\321\200\320\260\320\262\320\273\321\217\321\216\321\211\320\265\320\271 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Checkbox whether to use previous control point." [encoding convertfrom utf-8 "Pou\305\276i predch\303\241dzaj\303\272ci kontroln\303\275 bod."]
+  ::msgcat::mcset sq "Checkbox whether to use previous control point." [encoding convertfrom utf-8 "kutia-kontrollit a duhet te perdoret pika e kontrollit e meparshme"]
 
   ::msgcat::mcset cz "smooth" [encoding convertfrom utf-8 "uhladit"]
   ::msgcat::mcset de "smooth" [encoding convertfrom utf-8 "gegl\303\244ttet"]
@@ -1817,6 +2021,7 @@
   ::msgcat::mcset it "smooth" [encoding convertfrom utf-8 "regolarizza"]
   ::msgcat::mcset ru "smooth" [encoding convertfrom utf-8 "\321\201\320\263\320\273\320\260\320\264\320\270\321\202\321\214"]
   ::msgcat::mcset sk "smooth" [encoding convertfrom utf-8 "vyhladi\305\245"]
+  ::msgcat::mcset sq "smooth" [encoding convertfrom utf-8 "e bute"]
 
   ::msgcat::mcset cz "Set line to be smooth in given point." [encoding convertfrom utf-8 "Nastav\303\255 hladkou k\305\231ivku v dan\303\251m bod\304\233."]
   ::msgcat::mcset de "Set line to be smooth in given point." [encoding convertfrom utf-8 "Setze Linie auf gegl\303\244ttet am gegebenen Punkt."]
@@ -1826,6 +2031,7 @@
   ::msgcat::mcset it "Set line to be smooth in given point." [encoding convertfrom utf-8 "Imposta la linea ad essere regolare nelpunto specificato."]
   ::msgcat::mcset ru "Set line to be smooth in given point." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\320\265 \320\264\320\273\321\217 \321\201\320\263\320\273\320\260\320\266\320\270\320\262\320\260\320\275\320\270\321\217 \320\273\320\270\320\275\320\270\320\270 \320\262 \320\264\320\260\320\275\320\275\320\276\320\271 \321\202\320\276\321\207\320\272\320\265."]
   ::msgcat::mcset sk "Set line to be smooth in given point." [encoding convertfrom utf-8 "Nastav\303\255 kontroln\303\251 body tak, aby krivka bola v danom bode hladk\303\241."]
+  ::msgcat::mcset sq "Set line to be smooth in given point." [encoding convertfrom utf-8 "vene rrjeshtin per te qene I bute ne piken e dhanun"]
 
   ::msgcat::mcset cz "Checkbox whether to use next control point." [encoding convertfrom utf-8 "Za\305\241krtn\304\233te pokud chcete pro tvar k\305\231ivky pou\305\276\303\255t n\303\241sleduj\303\255c\303\255 \305\231\303\255d\303\255c\303\255 bod."]
   ::msgcat::mcset de "Checkbox whether to use next control point." [encoding convertfrom utf-8 "Auswahl, ob n\303\244chster Kontrollpunkt benutzt wird."]
@@ -1835,6 +2041,7 @@
   ::msgcat::mcset it "Checkbox whether to use next control point." [encoding convertfrom utf-8 "Checkbox per usare il prossimo punto di controllo."]
   ::msgcat::mcset ru "Checkbox whether to use next control point." [encoding convertfrom utf-8 "\320\237\320\276\321\201\321\202\320\260\320\262\321\214\321\202\320\265 \320\263\320\260\320\273\320\276\321\207\320\272\321\203 \320\264\320\273\321\217 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\320\276\320\262\320\260\320\275\320\270\321\217 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\320\265\320\271 \321\203\320\277\321\200\320\260\320\262\320\273\321\217\321\216\321\211\320\265\320\271 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Checkbox whether to use next control point." [encoding convertfrom utf-8 "Pou\305\276i nasleduj\303\272ci kontroln\303\275 bod."]
+  ::msgcat::mcset sq "Checkbox whether to use next control point." [encoding convertfrom utf-8 "kutia-kontrollit a duhet te perdoret pika e kontrollit e ardhshme"]
 
   ::msgcat::mcset cz "orientation" [encoding convertfrom utf-8 "orientace"]
   ::msgcat::mcset de "orientation" [encoding convertfrom utf-8 "Ausrichtung"]
@@ -1844,6 +2051,7 @@
   ::msgcat::mcset it "orientation" [encoding convertfrom utf-8 "orientazione"]
   ::msgcat::mcset ru "orientation" [encoding convertfrom utf-8 "\320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\321\217"]
   ::msgcat::mcset sk "orientation" [encoding convertfrom utf-8 "orient\303\241cia"]
+  ::msgcat::mcset sq "orientation" [encoding convertfrom utf-8 "orientimi"]
 
   ::msgcat::mcset cz "Set line point orientation." [encoding convertfrom utf-8 "Nastav\303\255 orientaci bodu."]
   ::msgcat::mcset de "Set line point orientation." [encoding convertfrom utf-8 "Setze Ausrichtung des Linienpunkts."]
@@ -1853,6 +2061,7 @@
   ::msgcat::mcset it "Set line point orientation." [encoding convertfrom utf-8 "Imposta l'orientazione del punto della linea."]
   ::msgcat::mcset ru "Set line point orientation." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\320\265 \320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\321\216 \321\202\320\276\321\207\320\272\320\270 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Set line point orientation." [encoding convertfrom utf-8 "Nastav\303\255 orient\303\241ciu symbolov v bode krivky."]
+  ::msgcat::mcset sq "Set line point orientation." [encoding convertfrom utf-8 "vene orientimin e pikes se rrjeshtit"]
 
   ::msgcat::mcset cz "Enter line point orientation." [encoding convertfrom utf-8 "Zadejte orientaci bodu."]
   ::msgcat::mcset de "Enter line point orientation." [encoding convertfrom utf-8 "Ausrichtung des Linienpunkts eingeben."]
@@ -1862,6 +2071,7 @@
   ::msgcat::mcset it "Enter line point orientation." [encoding convertfrom utf-8 "Scrivi l'orientazione del punto della linea."]
   ::msgcat::mcset ru "Enter line point orientation." [encoding convertfrom utf-8 "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\321\216 \321\202\320\276\321\207\320\272\320\270 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Enter line point orientation." [encoding convertfrom utf-8 "Zadaj orient\303\241ciu symbolov v bode krivky."]
+  ::msgcat::mcset sq "Enter line point orientation." [encoding convertfrom utf-8 "fute orientimin e pikes se rrjeshtit"]
 
   ::msgcat::mcset cz "r-size" [encoding convertfrom utf-8 "p-rozsah"]
   ::msgcat::mcset de "r-size" [encoding convertfrom utf-8 "r-Gr\303\266\303\237e"]
@@ -1871,6 +2081,7 @@
   ::msgcat::mcset it "r-size" [encoding convertfrom utf-8 "dim. destra"]
   ::msgcat::mcset ru "r-size" [encoding convertfrom utf-8 "r-size"]
   ::msgcat::mcset sk "r-size" [encoding convertfrom utf-8 "rozmer-p"]
+  ::msgcat::mcset sq "r-size" [encoding convertfrom utf-8 "r-madhesia"]
 
   ::msgcat::mcset cz "Set line size in right direction." [encoding convertfrom utf-8 "Nastav\303\255 rozsah k\305\231ivky v prav\303\251m sm\304\233ru."]
   ::msgcat::mcset de "Set line size in right direction." [encoding convertfrom utf-8 "Setze Liniengr\303\266\303\237e nach rechts."]
@@ -1880,6 +2091,7 @@
   ::msgcat::mcset it "Set line size in right direction." [encoding convertfrom utf-8 "Imposta la dimensione della linea a destra."]
   ::msgcat::mcset ru "Set line size in right direction." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\320\265 \321\200\320\260\320\267\320\274\320\265\321\200 \320\273\320\270\320\275\320\270\320\270 \320\262 \320\277\321\200\320\260\320\262\320\276\320\274 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Set line size in right direction." [encoding convertfrom utf-8 "Nastav\303\255 ve\304\276kos\305\245 symbolov napravo od krivky."]
+  ::msgcat::mcset sq "Set line size in right direction." [encoding convertfrom utf-8 "cakto madhesine e rrjeshtit ne drejtim te djathte"]
 
   ::msgcat::mcset cz "Enter line size in right direction." [encoding convertfrom utf-8 "Zadejte rozsah k\305\231ivky v prav\303\251m sm\304\233ru."]
   ::msgcat::mcset de "Enter line size in right direction." [encoding convertfrom utf-8 "Liniengr\303\266\303\237e nach rechts eingeben."]
@@ -1889,6 +2101,7 @@
   ::msgcat::mcset it "Enter line size in right direction." [encoding convertfrom utf-8 "Scrivi la dimensione della linea a destra."]
   ::msgcat::mcset ru "Enter line size in right direction." [encoding convertfrom utf-8 "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\200\320\260\320\267\320\274\320\265\321\200 \320\273\320\270\320\275\320\270\320\270 \320\262 \320\277\321\200\320\260\320\262\320\276\320\274 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Enter line size in right direction." [encoding convertfrom utf-8 "Zadaj ve\304\276kos\305\245 symbolov napravo od krivky."]
+  ::msgcat::mcset sq "Enter line size in right direction." [encoding convertfrom utf-8 "fute madhesine e rjeshtit ne drejtim te djathte"]
 
   ::msgcat::mcset cz "l-size" [encoding convertfrom utf-8 "l-rozsah"]
   ::msgcat::mcset de "l-size" [encoding convertfrom utf-8 "l-Gr\303\266\303\237e"]
@@ -1898,6 +2111,7 @@
   ::msgcat::mcset it "l-size" [encoding convertfrom utf-8 "dim. sinistra"]
   ::msgcat::mcset ru "l-size" [encoding convertfrom utf-8 "l-size"]
   ::msgcat::mcset sk "l-size" [encoding convertfrom utf-8 "rozmer-\304\276"]
+  ::msgcat::mcset sq "l-size" [encoding convertfrom utf-8 "madhesia-l"]
 
   ::msgcat::mcset cz "Set line size in left direction." [encoding convertfrom utf-8 "Nastav\303\255 rozsah k\305\231ivky v lev\303\251m sm\304\233ru."]
   ::msgcat::mcset de "Set line size in left direction." [encoding convertfrom utf-8 "Setze Liniengr\303\266\303\237e nach links."]
@@ -1907,6 +2121,7 @@
   ::msgcat::mcset it "Set line size in left direction." [encoding convertfrom utf-8 "Imposta la dimensione della linea a sinistra."]
   ::msgcat::mcset ru "Set line size in left direction." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\320\265 \321\200\320\260\320\267\320\274\320\265\321\200 \320\273\320\270\320\275\320\270\320\270 \320\262 \320\273\320\265\320\262\320\276\320\274 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Set line size in left direction." [encoding convertfrom utf-8 "Nastav\303\255 ve\304\276kos\305\245 symbolov na\304\276avo od krivky."]
+  ::msgcat::mcset sq "Set line size in left direction." [encoding convertfrom utf-8 "cakto madhesine e rjeshtit ne drejtim te majte"]
 
   ::msgcat::mcset cz "Enter line size in left direction." [encoding convertfrom utf-8 "Zadejte rozsah k\305\231ivky v lev\303\251m sm\304\233ru."]
   ::msgcat::mcset de "Enter line size in left direction." [encoding convertfrom utf-8 "Liniengr\303\266\303\237e nach links eingeben."]
@@ -1916,6 +2131,7 @@
   ::msgcat::mcset it "Enter line size in left direction." [encoding convertfrom utf-8 "Scrivi la dimensione della linea a sinistra."]
   ::msgcat::mcset ru "Enter line size in left direction." [encoding convertfrom utf-8 "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\200\320\260\320\267\320\274\320\265\321\200 \320\273\320\270\320\275\320\270\320\270 \320\262 \320\273\320\265\320\262\320\276\320\274 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Enter line size in left direction." [encoding convertfrom utf-8 "Zadaj ve\304\276kos\305\245 symbolov na\304\276avo od krivky."]
+  ::msgcat::mcset sq "Enter line size in left direction." [encoding convertfrom utf-8 "fute madhesine e rjeshtit ne drejtim te majte"]
 
   ::msgcat::mcset cz "Line point options editor." [encoding convertfrom utf-8 "Volby bodu k\305\231ivky."]
   ::msgcat::mcset de "Line point options editor." [encoding convertfrom utf-8 "Linienpunktoptionen bearbeiten."]
@@ -1925,6 +2141,7 @@
   ::msgcat::mcset it "Line point options editor." [encoding convertfrom utf-8 "Editor delle opzioni del punto della linea."]
   ::msgcat::mcset ru "Line point options editor." [encoding convertfrom utf-8 "\320\240\320\265\320\264\320\260\320\272\321\202\320\276\321\200 \320\276\320\277\321\206\320\270\320\271 \321\202\320\276\321\207\320\272\320\270 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Line point options editor." [encoding convertfrom utf-8 "Editor \304\217al\305\241\303\255ch mo\305\276nost\303\255 bodu krivky."]
+  ::msgcat::mcset sq "Line point options editor." [encoding convertfrom utf-8 "opcioni I editimit te pikes se rjeshtit"]
 
   ::msgcat::mcset cz "Click this button to apply line point changes." [encoding convertfrom utf-8 "Aktualizovat bod k\305\231ivky."]
   ::msgcat::mcset de "Click this button to apply line point changes." [encoding convertfrom utf-8 "Klicke diesen Knopf, um \303\204nderungen am Linienpunkt anzuwenden."]
@@ -1934,6 +2151,7 @@
   ::msgcat::mcset it "Click this button to apply line point changes." [encoding convertfrom utf-8 "Premi questo bottone per fare modifiche ai punti della linea."]
   ::msgcat::mcset ru "Click this button to apply line point changes." [encoding convertfrom utf-8 "\320\235\320\260\320\266\320\274\320\270\321\202\320\265 \321\215\321\202\321\203 \320\272\320\275\320\276\320\277\320\272\321\203 \320\264\320\273\321\217 \320\277\321\200\320\270\320\274\320\265\320\275\320\265\320\275\320\270\321\217 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271 \321\202\320\276\321\207\320\272\320\270 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Click this button to apply line point changes." [encoding convertfrom utf-8 "Aktializ\303\241cia bodu krivky."]
+  ::msgcat::mcset sq "Click this button to apply line point changes." [encoding convertfrom utf-8 "kliko kete buton per te bere ndrimet e pikes se rjeshtit"]
 
   ::msgcat::mcset cz "Editor for line point options." [encoding convertfrom utf-8 "Editor voleb bodu k\305\231ivky."]
   ::msgcat::mcset de "Editor for line point options." [encoding convertfrom utf-8 "Edditor f\303\274r Linienpunktoptionen."]
@@ -1943,6 +2161,7 @@
   ::msgcat::mcset it "Editor for line point options." [encoding convertfrom utf-8 "Editor delle opzioni del punto della linea."]
   ::msgcat::mcset ru "Editor for line point options." [encoding convertfrom utf-8 "\320\240\320\265\320\264\320\260\320\272\321\202\320\276\321\200 \320\276\320\277\321\206\320\270\320\271 \321\202\320\276\321\207\320\272\320\270 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Editor for line point options." [encoding convertfrom utf-8 "Editor \304\217al\305\241\303\255ch mo\305\276nost\303\255 bodu krivky."]
+  ::msgcat::mcset sq "Editor for line point options." [encoding convertfrom utf-8 "ketu mund te futni opcionet te cilat do te vlejne per pikat e rrjeshtit"]
 
   ::msgcat::mcset cz "loading area module ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m modul pro oblasti ..."]
   ::msgcat::mcset de "loading area module ..." [encoding convertfrom utf-8 "Lade Fl\303\244chenmodul ..."]
@@ -1952,6 +2171,7 @@
   ::msgcat::mcset it "loading area module ..." [encoding convertfrom utf-8 "modulo aree ..."]
   ::msgcat::mcset ru "loading area module ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\274\320\276\320\264\321\203\320\273\321\217 \320\276\320\261\320\273\320\260\321\201\321\202\320\265\320\271 ..."]
   ::msgcat::mcset sk "loading area module ..." [encoding convertfrom utf-8 "nahr\303\241vam modul pre plochy ..."]
+  ::msgcat::mcset sq "loading area module ..." [encoding convertfrom utf-8 "duke lexuar modulin e fushes\342\200\246"]
 
   ::msgcat::mcset cz "Actual symbol theme." [encoding convertfrom utf-8 "Aktu\303\241ln\303\255 t\303\251ma symbol\305\257."]
   ::msgcat::mcset de "Actual symbol theme." [encoding convertfrom utf-8 "Aktueller Symbolsatz."]
@@ -1959,6 +2179,7 @@
   ::msgcat::mcset it "Actual symbol theme." [encoding convertfrom utf-8 "Simboli."]
   ::msgcat::mcset ru "Actual symbol theme." [encoding convertfrom utf-8 "\320\244\320\270\320\273\321\214\321\202\321\200 \320\263\321\200\321\203\320\277\320\277\321\213 \321\201\320\270\320\274\320\262\320\276\320\273\320\276\320\262."]
   ::msgcat::mcset sk "Actual symbol theme." [encoding convertfrom utf-8 "Aktu\303\241lna t\303\251ma symbolov."]
+  ::msgcat::mcset sq "Actual symbol theme." [encoding convertfrom utf-8 "tema aktuale e simbolit."]
 
   ::msgcat::mcset cz "type" [encoding convertfrom utf-8 "typ"]
   ::msgcat::mcset de "type" [encoding convertfrom utf-8 "Typ"]
@@ -1968,6 +2189,7 @@
   ::msgcat::mcset it "type" [encoding convertfrom utf-8 "tipo"]
   ::msgcat::mcset ru "type" [encoding convertfrom utf-8 "\321\202\320\270\320\277"]
   ::msgcat::mcset sk "type" [encoding convertfrom utf-8 "typ"]
+  ::msgcat::mcset sq "type" [encoding convertfrom utf-8 "lloji"]
 
   ::msgcat::mcset cz "Area type." [encoding convertfrom utf-8 "Typ oblasti."]
   ::msgcat::mcset de "Area type." [encoding convertfrom utf-8 "Fl\303\244chentyp."]
@@ -1977,6 +2199,7 @@
   ::msgcat::mcset it "Area type." [encoding convertfrom utf-8 "Tipo dell'area"]
   ::msgcat::mcset ru "Area type." [encoding convertfrom utf-8 "\320\242\320\270\320\277 \320\276\320\261\320\273\320\260\321\201\321\202\320\270."]
   ::msgcat::mcset sk "Area type." [encoding convertfrom utf-8 "Typ plochy."]
+  ::msgcat::mcset sq "Area type." [encoding convertfrom utf-8 "lloji I fushes."]
 
   ::msgcat::mcset cz "options" [encoding convertfrom utf-8 "volby"]
   ::msgcat::mcset de "options" [encoding convertfrom utf-8 "Optionen"]
@@ -1986,6 +2209,7 @@
   ::msgcat::mcset it "options" [encoding convertfrom utf-8 "opzioni"]
   ::msgcat::mcset ru "options" [encoding convertfrom utf-8 "\320\276\320\277\321\206\320\270\320\270"]
   ::msgcat::mcset sk "options" [encoding convertfrom utf-8 "mo\305\276nosti"]
+  ::msgcat::mcset sq "options" [encoding convertfrom utf-8 "opcionet"]
 
   ::msgcat::mcset cz "Other area options." [encoding convertfrom utf-8 "Dal\305\241\303\255 volby pro oblast."]
   ::msgcat::mcset de "Other area options." [encoding convertfrom utf-8 "Andere Fl\303\244chenoptionen."]
@@ -1995,6 +2219,7 @@
   ::msgcat::mcset it "Other area options." [encoding convertfrom utf-8 "Altre opzioni dell'area."]
   ::msgcat::mcset ru "Other area options." [encoding convertfrom utf-8 "\320\224\321\200\321\203\320\263\320\270\320\265 \320\276\320\277\321\206\320\270\320\270 \320\276\320\261\320\273\320\260\321\201\321\202\320\270."]
   ::msgcat::mcset sk "Other area options." [encoding convertfrom utf-8 "\304\216al\305\241ie mo\305\276nosti plochy."]
+  ::msgcat::mcset sq "Other area options." [encoding convertfrom utf-8 "opcionet tjera te fushes."]
 
   ::msgcat::mcset cz "Select lines" [encoding convertfrom utf-8 "Vyber k\305\231ivky"]
   ::msgcat::mcset de "Select lines" [encoding convertfrom utf-8 "Linien ausw\303\244hlen"]
@@ -2004,6 +2229,7 @@
   ::msgcat::mcset it "Select lines" [encoding convertfrom utf-8 "Selezione linee"]
   ::msgcat::mcset ru "Select lines" [encoding convertfrom utf-8 "\320\222\321\213\320\261\320\276\321\200 \320\273\320\270\320\275\320\270\320\271."]
   ::msgcat::mcset sk "Select lines" [encoding convertfrom utf-8 "Vyber krivky"]
+  ::msgcat::mcset sq "Select lines" [encoding convertfrom utf-8 "selekto rjeshtat"]
 
   ::msgcat::mcset cz "Switch to insert line into area mode." [encoding convertfrom utf-8 "V\303\275b\304\233r ohrani\304\215uj\303\255c\303\255ch k\305\231ivek oblasti."]
   ::msgcat::mcset el "Switch to insert line into area mode." [encoding convertfrom utf-8 "\316\221\317\206\316\277\317\215 \317\200\316\261\317\204\316\256\317\203\317\204\316\265 \316\265\316\264\317\216, \316\265\317\200\316\271\316\273\316\255\316\263\316\265\317\204\316\265 \316\274\316\265 \317\204\316\277 \317\200\316\277\316\275\317\204\316\257\316\272\316\271 \317\204\316\271\317\202 \316\263\317\201\316\261\316\274\316\274\316\255\317\202 \316\277\317\201\316\257\317\211\316\275 \317\204\316\267\317\202 \316\265\317\200\316\271\317\206\316\254\316\275\316\265\316\271\316\261\317\202 (\317\200\317\201\316\255\317\200\316\265\316\271 \316\275\316\261 \317\204\316\255\316\274\316\275\316\277\316\275\317\204\316\261\316\271)"]
@@ -2012,6 +2238,7 @@
   ::msgcat::mcset it "Switch to insert line into area mode." [encoding convertfrom utf-8 "Cambia per inserire linee nell'area."]
   ::msgcat::mcset ru "Switch to insert line into area mode." [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\272\320\273\321\216\321\207\320\270\321\202\321\201\321\217 \320\262 \321\200\320\265\320\266\320\270\320\274 \320\262\321\201\321\202\320\260\320\262\320\272\320\270 \320\273\320\270\320\275\320\270\320\271-\320\263\321\200\320\260\320\275\320\270\321\206 \320\262 \320\276\320\261\320\273\320\260\321\201\321\202\321\214."]
   ::msgcat::mcset sk "Switch to insert line into area mode." [encoding convertfrom utf-8 "Po stla\304\215en\303\255 m\303\264\305\276ete za\304\215a\305\245 vklada\305\245 krivky ohrani\304\215uj\303\272ce plochu."]
+  ::msgcat::mcset sq "Switch to insert line into area mode." [encoding convertfrom utf-8 "pasi te klikoni ketu, selekto me mi rjeshtat e kufirit te fushes (ato duhet te nderlidhen)"]
 
   ::msgcat::mcset cz "Delete ID from area." [encoding convertfrom utf-8 "Odstran\304\233n\303\255 objektu z oblasti."]
   ::msgcat::mcset de "Delete ID from area." [encoding convertfrom utf-8 "L\303\266sche ID aus Fl\303\244che."]
@@ -2021,6 +2248,7 @@
   ::msgcat::mcset it "Delete ID from area." [encoding convertfrom utf-8 "Rimuovi identificativo dall'area."]
   ::msgcat::mcset ru "Delete ID from area." [encoding convertfrom utf-8 "\320\243\320\264\320\260\320\273\320\270\321\202\321\214 \320\273\320\270\320\275\320\270\321\216 \320\277\320\276 \320\230\320\224 \320\270\320\267 \320\276\320\261\320\273\320\260\321\201\321\202\320\270."]
   ::msgcat::mcset sk "Delete ID from area." [encoding convertfrom utf-8 "Odstr\303\241ni\305\245 krivku z dan\303\275m ID z plochy."]
+  ::msgcat::mcset sq "Delete ID from area." [encoding convertfrom utf-8 "fshije ID prej fushes"]
 
   ::msgcat::mcset cz "Insert ID" [encoding convertfrom utf-8 "Vlo\305\276 ID"]
   ::msgcat::mcset de "Insert ID" [encoding convertfrom utf-8 "ID einf\303\274gen"]
@@ -2030,6 +2258,7 @@
   ::msgcat::mcset it "Insert ID" [encoding convertfrom utf-8 "Identificativo"]
   ::msgcat::mcset ru "Insert ID" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\277\320\276 \320\230\320\224"]
   ::msgcat::mcset sk "Insert ID" [encoding convertfrom utf-8 "Vlo\305\276 ID"]
+  ::msgcat::mcset sq "Insert ID" [encoding convertfrom utf-8 "fute ID-ne"]
 
   ::msgcat::mcset cz "Insert given id." [encoding convertfrom utf-8 "Vlo\305\276\303\255 objekt s dan\303\275m ID."]
   ::msgcat::mcset de "Insert given id." [encoding convertfrom utf-8 "Angegebene ID einf\303\274gen."]
@@ -2039,6 +2268,7 @@
   ::msgcat::mcset it "Insert given id." [encoding convertfrom utf-8 "Inserisci l'identificativo specificato"]
   ::msgcat::mcset ru "Insert given id." [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\273\320\270\320\275\320\270\321\216-\320\263\321\200\320\260\320\275\320\270\321\206\321\203 \320\277\320\276 \320\267\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 \320\230\320\224."]
   ::msgcat::mcset sk "Insert given id." [encoding convertfrom utf-8 "Vlo\305\276i\305\245 ID krivky do zoznamu kriviek ohrani\304\215uj\303\272cich plochu."]
+  ::msgcat::mcset sq "Insert given id." [encoding convertfrom utf-8 "fute ID-n e dhene ne vend te X-therion"]
 
   ::msgcat::mcset cz "ID to insert." [encoding convertfrom utf-8 "ID objektu ke vlo\305\276en\303\255."]
   ::msgcat::mcset de "ID to insert." [encoding convertfrom utf-8 "einzuf\303\274gende ID."]
@@ -2048,6 +2278,7 @@
   ::msgcat::mcset it "ID to insert." [encoding convertfrom utf-8 "Identificativo da inserire."]
   ::msgcat::mcset ru "ID to insert." [encoding convertfrom utf-8 "\320\230\320\224 \320\273\320\270\320\275\320\270\320\270 \320\264\320\273\321\217 \320\262\321\201\321\202\320\260\320\262\320\272\320\270"]
   ::msgcat::mcset sk "ID to insert." [encoding convertfrom utf-8 "ID na vlo\305\276enie."]
+  ::msgcat::mcset sq "ID to insert." [encoding convertfrom utf-8 "ID-ja per tu futur."]
 
   ::msgcat::mcset cz "Update" [encoding convertfrom utf-8 "Aktualizovat"]
   ::msgcat::mcset de "Update" [encoding convertfrom utf-8 "Aktualisieren"]
@@ -2057,6 +2288,7 @@
   ::msgcat::mcset it "Update" [encoding convertfrom utf-8 "Aggiorna"]
   ::msgcat::mcset ru "Update" [encoding convertfrom utf-8 "\320\236\320\261\320\275\320\276\320\262\320\270\321\202\321\214"]
   ::msgcat::mcset sk "Update" [encoding convertfrom utf-8 "Aktualizova\305\245"]
+  ::msgcat::mcset sq "Update" [encoding convertfrom utf-8 "aktualizo"]
 
   ::msgcat::mcset cz "Click this button to apply changes you made to area." [encoding convertfrom utf-8 "Aktualizace oblasti."]
   ::msgcat::mcset de "Click this button to apply changes you made to area." [encoding convertfrom utf-8 "Klicke diesen Knopf, um \303\204nderungen an einer Fl\303\244che anzuwenden."]
@@ -2066,6 +2298,7 @@
   ::msgcat::mcset it "Click this button to apply changes you made to area." [encoding convertfrom utf-8 "Premi questo bottone per fare modifiche all'area."]
   ::msgcat::mcset ru "Click this button to apply changes you made to area." [encoding convertfrom utf-8 "\320\235\320\260\320\266\320\274\320\270\321\202\320\265 \321\215\321\202\321\203 \320\272\320\275\320\276\320\277\320\272\321\203 \320\264\320\273\321\217 \320\277\321\200\320\270\320\274\320\265\320\275\320\265\320\275\320\270\321\217 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271 \321\201\320\264\320\265\320\273\320\260\320\275\320\275\321\213\321\205 \320\264\320\273\321\217 \320\276\320\261\320\273\320\260\321\201\321\202\320\270."]
   ::msgcat::mcset sk "Click this button to apply changes you made to area." [encoding convertfrom utf-8 "Aktualizova\305\245 plochu."]
+  ::msgcat::mcset sq "Click this button to apply changes you made to area." [encoding convertfrom utf-8 "kliko kete buton te aktualizosh ndrimet te cilat I ke bere ne fushe"]
 
   ::msgcat::mcset cz "Show" [encoding convertfrom utf-8 "Zobrazit"]
   ::msgcat::mcset de "Show" [encoding convertfrom utf-8 "Zeige"]
@@ -2075,6 +2308,7 @@
   ::msgcat::mcset it "Show" [encoding convertfrom utf-8 "Mostra"]
   ::msgcat::mcset ru "Show" [encoding convertfrom utf-8 "\320\237\320\276\320\272\320\260\320\267\320\260\321\202\321\214"]
   ::msgcat::mcset sk "Show" [encoding convertfrom utf-8 "Zobrazi\305\245"]
+  ::msgcat::mcset sq "Show" [encoding convertfrom utf-8 "trego"]
 
   ::msgcat::mcset cz "Show area border lines." [encoding convertfrom utf-8 "Zobraz\303\255 hranice oblasti."]
   ::msgcat::mcset de "Show area border lines." [encoding convertfrom utf-8 "Zeige Fl\303\244chenbegrenzungen."]
@@ -2084,6 +2318,7 @@
   ::msgcat::mcset it "Show area border lines." [encoding convertfrom utf-8 "Mostra le linee del bordo dell'area."]
   ::msgcat::mcset ru "Show area border lines." [encoding convertfrom utf-8 "\320\237\320\276\320\272\320\260\320\267\320\260\321\202\321\214 \320\273\320\270\320\275\320\270\320\270-\320\263\321\200\320\260\320\275\320\270\321\206\321\213 \320\264\320\273\321\217 \320\276\320\261\320\273\320\260\321\201\321\202\320\270."]
   ::msgcat::mcset sk "Show area border lines." [encoding convertfrom utf-8 "Zobraz hranice plochy."]
+  ::msgcat::mcset sq "Show area border lines." [encoding convertfrom utf-8 "trego kufirin e vijave te fushes."]
 
   ::msgcat::mcset cz "Select line in area." [encoding convertfrom utf-8 "V\303\275b\304\233r k\305\231ivky ohrani\304\215uj\303\255c\303\255 oblast"]
   ::msgcat::mcset de "Select line in area." [encoding convertfrom utf-8 "W\303\244hle Linie in Fl\303\244che."]
@@ -2093,6 +2328,7 @@
   ::msgcat::mcset it "Select line in area." [encoding convertfrom utf-8 "Seleziona una linea nell'area."]
   ::msgcat::mcset ru "Select line in area." [encoding convertfrom utf-8 "\320\222\321\213\320\261\320\276\321\200 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Select line in area." [encoding convertfrom utf-8 "Vyber hrani\304\215n\303\272 krivku."]
+  ::msgcat::mcset sq "Select line in area." [encoding convertfrom utf-8 "kliko ne cilindo rrjesht te listes qe te kesh rrjeshtin kufizues te fushes pershtatese, I zgjedhur ne pelhure"]
 
   ::msgcat::mcset cz "loading main menu ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m hlavn\303\255 menu ..."]
   ::msgcat::mcset de "loading main menu ..." [encoding convertfrom utf-8 "Lade Hauptmen\303\274 ..."]
@@ -2102,6 +2338,7 @@
   ::msgcat::mcset it "loading main menu ..." [encoding convertfrom utf-8 "men\303\271 principale ..."]
   ::msgcat::mcset ru "loading main menu ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\263\320\273\320\260\320\262\320\275\320\276\320\263\320\276 \320\274\320\265\320\275\321\216 ..."]
   ::msgcat::mcset sk "loading main menu ..." [encoding convertfrom utf-8 "nahr\303\241vam hlavn\303\251 menu ..."]
+  ::msgcat::mcset sq "loading main menu ..." [encoding convertfrom utf-8 "duke lexuar menyn kryesore\342\200\246"]
 
   ::msgcat::mcset cz "Open (no pics)" [encoding convertfrom utf-8 "Otev\305\231\303\255t (bez obr\303\241zk\305\257)"]
   ::msgcat::mcset de "Open (no pics)" [encoding convertfrom utf-8 "\303\226ffne (keine Bilder)"]
@@ -2111,6 +2348,7 @@
   ::msgcat::mcset it "Open (no pics)" [encoding convertfrom utf-8 "Apri (no pics)"]
   ::msgcat::mcset ru "Open (no pics)" [encoding convertfrom utf-8 "\320\236\321\202\320\272\321\200\321\213\321\202\321\214 (\320\261\320\265\320\267 \320\272\320\260\321\200\321\202\320\270\320\275\320\276\320\272)"]
   ::msgcat::mcset sk "Open (no pics)" [encoding convertfrom utf-8 "Otvori\305\245 (bez obr\303\241zkov)"]
+  ::msgcat::mcset sq "Open (no pics)" [encoding convertfrom utf-8 "hape (pa foto)"]
 
   ::msgcat::mcset cz "Insert ..." [encoding convertfrom utf-8 "Vlo\305\276it ..."]
   ::msgcat::mcset de "Insert ..." [encoding convertfrom utf-8 "Einf\303\274gen ..."]
@@ -2120,6 +2358,7 @@
   ::msgcat::mcset it "Insert ..." [encoding convertfrom utf-8 "Inserisci ..."]
   ::msgcat::mcset ru "Insert ..." [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\272\320\260"]
   ::msgcat::mcset sk "Insert ..." [encoding convertfrom utf-8 "Vlo\305\276i\305\245 ..."]
+  ::msgcat::mcset sq "Insert ..." [encoding convertfrom utf-8 "fute\342\200\246"]
 
   ::msgcat::mcset cz "point" [encoding convertfrom utf-8 "bod"]
   ::msgcat::mcset de "point" [encoding convertfrom utf-8 "Punkt"]
@@ -2129,6 +2368,7 @@
   ::msgcat::mcset it "point" [encoding convertfrom utf-8 "punto"]
   ::msgcat::mcset ru "point" [encoding convertfrom utf-8 "\321\202\320\276\321\207\320\272\320\260"]
   ::msgcat::mcset sk "point" [encoding convertfrom utf-8 "bod"]
+  ::msgcat::mcset sq "point" [encoding convertfrom utf-8 "pika"]
 
   ::msgcat::mcset cz "line" [encoding convertfrom utf-8 "k\305\231ivka"]
   ::msgcat::mcset de "line" [encoding convertfrom utf-8 "Linie"]
@@ -2138,6 +2378,7 @@
   ::msgcat::mcset it "line" [encoding convertfrom utf-8 "linea"]
   ::msgcat::mcset ru "line" [encoding convertfrom utf-8 "\320\273\320\270\320\275\320\270\321\217"]
   ::msgcat::mcset sk "line" [encoding convertfrom utf-8 "krivku"]
+  ::msgcat::mcset sq "line" [encoding convertfrom utf-8 "vija apo rjeshti"]
 
   ::msgcat::mcset cz "area" [encoding convertfrom utf-8 "oblast"]
   ::msgcat::mcset de "area" [encoding convertfrom utf-8 "Fl\303\244che"]
@@ -2147,6 +2388,7 @@
   ::msgcat::mcset it "area" [encoding convertfrom utf-8 "area"]
   ::msgcat::mcset ru "area" [encoding convertfrom utf-8 "\320\276\320\261\320\273\320\260\321\201\321\202\321\214"]
   ::msgcat::mcset sk "area" [encoding convertfrom utf-8 "plochu"]
+  ::msgcat::mcset sq "area" [encoding convertfrom utf-8 "fusha"]
 
   ::msgcat::mcset cz "scrap" [encoding convertfrom utf-8 "scrap"]
   ::msgcat::mcset de "scrap" [encoding convertfrom utf-8 "Skizze"]
@@ -2156,6 +2398,7 @@
   ::msgcat::mcset it "scrap" [encoding convertfrom utf-8 "scrap"]
   ::msgcat::mcset ru "scrap" [encoding convertfrom utf-8 "\321\201\320\272\321\200\320\260\320\277"]
   ::msgcat::mcset sk "scrap" [encoding convertfrom utf-8 "scrap"]
+  ::msgcat::mcset sq "scrap" [encoding convertfrom utf-8 "deponia"]
 
   ::msgcat::mcset cz "text" [encoding convertfrom utf-8 "text"]
   ::msgcat::mcset de "text" [encoding convertfrom utf-8 "Text"]
@@ -2165,6 +2408,7 @@
   ::msgcat::mcset it "text" [encoding convertfrom utf-8 "testo"]
   ::msgcat::mcset ru "text" [encoding convertfrom utf-8 "\321\202\320\265\320\272\321\201\321\202"]
   ::msgcat::mcset sk "text" [encoding convertfrom utf-8 "text"]
+  ::msgcat::mcset sq "text" [encoding convertfrom utf-8 "teksti"]
 
   ::msgcat::mcset cz "Auto adjust area" [encoding convertfrom utf-8 "Auto p\305\231izp\305\257sobit"]
   ::msgcat::mcset de "Auto adjust area" [encoding convertfrom utf-8 "Fl\303\244che automatisch anpassen"]
@@ -2174,6 +2418,7 @@
   ::msgcat::mcset it "Auto adjust area" [encoding convertfrom utf-8 "Auto-ridimensiona area"]
   ::msgcat::mcset ru "Auto adjust area" [encoding convertfrom utf-8 "\320\220\320\262\321\202\320\276\320\277\320\276\320\264\320\263\320\276\320\275\320\272\320\260 \320\263\321\200\320\260\320\275\320\270\321\206 \320\267\320\276\320\275\321\213 \321\200\320\270\321\201\320\276\320\262\320\260\320\275\320\270\321\217."]
   ::msgcat::mcset sk "Auto adjust area" [encoding convertfrom utf-8 "Prisp\303\264sob plochu"]
+  ::msgcat::mcset sq "Auto adjust area" [encoding convertfrom utf-8 "fusha automatikisht e pershtatur"]
 
   ::msgcat::mcset cz "Insert image" [encoding convertfrom utf-8 "Vlo\305\276it obr\303\241zek"]
   ::msgcat::mcset de "Insert image" [encoding convertfrom utf-8 "Bild einf\303\274gen"]
@@ -2183,6 +2428,7 @@
   ::msgcat::mcset it "Insert image" [encoding convertfrom utf-8 "Inserisci immagine"]
   ::msgcat::mcset ru "Insert image" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265"]
   ::msgcat::mcset sk "Insert image" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 obr\303\241zok"]
+  ::msgcat::mcset sq "Insert image" [encoding convertfrom utf-8 "fute imazhin"]
 
   ::msgcat::mcset cz "Zoom 100 %" [encoding convertfrom utf-8 "Zoom na 100 %"]
   ::msgcat::mcset el "Zoom 100 %" [encoding convertfrom utf-8 "\316\234\316\265\316\263\316\255\316\270\317\205\316\275\317\203\316\267 100%"]
@@ -2191,6 +2437,7 @@
   ::msgcat::mcset it "Zoom 100 %" [encoding convertfrom utf-8 "Zoom 100 %"]
   ::msgcat::mcset ru "Zoom 100 %" [encoding convertfrom utf-8 "\320\234\320\260\321\201\321\210\321\202\320\260\320\261 100 %"]
   ::msgcat::mcset sk "Zoom 100 %" [encoding convertfrom utf-8 "Zoom 100%"]
+  ::msgcat::mcset sq "Zoom 100 %" [encoding convertfrom utf-8 "zmadho 100%"]
 
   ::msgcat::mcset cz "Mouse mode." [encoding convertfrom utf-8 "Klikac\303\255 re\305\276im."]
   ::msgcat::mcset de "Mouse mode." [encoding convertfrom utf-8 "Mausmodus."]
@@ -2200,6 +2447,7 @@
   ::msgcat::mcset it "Mouse mode." [encoding convertfrom utf-8 "Modalit\303\240 del mouse."]
   ::msgcat::mcset ru "Mouse mode." [encoding convertfrom utf-8 "\320\240\320\265\320\266\320\270\320\274 \320\274\321\213\321\210\320\270."]
   ::msgcat::mcset sk "Mouse mode." [encoding convertfrom utf-8 "M\303\263d my\305\241i."]
+  ::msgcat::mcset sq "Mouse mode." [encoding convertfrom utf-8 "miu ne funkcion"]
 
   ::msgcat::mcset cz "Current mouse position." [encoding convertfrom utf-8 "Aktu\303\241ln\303\255 pozice ukazatele my\305\241i."]
   ::msgcat::mcset de "Current mouse position." [encoding convertfrom utf-8 "Aktuelle Mausposition."]
@@ -2209,6 +2457,7 @@
   ::msgcat::mcset it "Current mouse position." [encoding convertfrom utf-8 "Posizione del mouse."]
   ::msgcat::mcset ru "Current mouse position." [encoding convertfrom utf-8 "\320\242\320\265\320\272\321\203\321\211\320\260\321\217 \320\277\320\276\320\267\320\270\321\206\320\270\321\217 \321\203\320\272\320\260\320\267\320\260\321\202\320\265\320\273\321\217 \320\274\321\213\321\210\320\270."]
   ::msgcat::mcset sk "Current mouse position." [encoding convertfrom utf-8 "Aktu\303\241lna poloha my\305\241i."]
+  ::msgcat::mcset sq "Current mouse position." [encoding convertfrom utf-8 "pozicioni aktual I miut."]
 
   ::msgcat::mcset cz "loading line procs ..." [encoding convertfrom utf-8 "zpracov\303\241v\303\241m k\305\231ivky ..."]
   ::msgcat::mcset el "loading line procs ..." [encoding convertfrom utf-8 "\317\206\317\214\317\201\317\204\316\271\317\203\316\267 \316\263\317\201\316\261\316\274\316\274\316\271\316\272\317\216\316\275 \316\264\316\271\316\261\316\264\316\271\316\272\316\261\317\203\316\271\317\216\316\275..."]
@@ -2217,6 +2466,7 @@
   ::msgcat::mcset it "loading line procs ..." [encoding convertfrom utf-8 "procedure di linea ..."]
   ::msgcat::mcset ru "loading line procs ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \320\277\321\200\320\276\321\206\320\265\320\264\321\203\321\200 \320\264\320\273\321\217 \320\273\320\270\320\275\320\270\320\271 ..."]
   ::msgcat::mcset sk "loading line procs ..." [encoding convertfrom utf-8 "na\304\215itavam modul kriviek ..."]
+  ::msgcat::mcset sq "loading line procs ..." [encoding convertfrom utf-8 "duke lexuar proceduren rjeshtit\342\200\246"]
 
   ::msgcat::mcset cz "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Mapov\303\275 editor nen\303\255 aktivn\303\255. Pro jeho aktivaci otev\305\231ete existuj\303\255c\303\255 soubor nebo vytvo\305\231te nov\303\275."]
   ::msgcat::mcset de "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Karteneditor ist nicht aktiv. Um ihn zu aktivieren, lade eine existierende Datei oder lege eine neue an."]
@@ -2226,6 +2476,7 @@
   ::msgcat::mcset it "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "L'editor di mappa non \303\250 attivo. Per attivarlo apri un file o creane uno."]
   ::msgcat::mcset ru "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "\320\240\320\265\320\264\320\260\320\272\321\202\320\276\321\200 \320\272\320\260\321\200\321\202\321\213 \320\275\320\265 \320\260\320\272\321\202\320\270\320\262\320\265\320\275. \320\224\320\273\321\217 \320\260\320\272\321\202\320\270\320\262\320\260\321\206\320\270\320\270 \320\276\321\202\320\272\321\200\320\276\320\271\321\202\320\265 \321\201\321\203\321\211\320\265\321\201\321\202\320\262\321\203\321\216\321\211\320\270\320\271 \321\204\320\260\320\271\320\273 \320\270\320\273\320\270 \321\201\320\276\320\267\320\264\320\260\320\271\321\202\320\265 \320\275\320\276\320\262\321\213\320\271."]
   ::msgcat::mcset sk "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Mapov\303\275 editor nie je akt\303\255vny. Otvorte existuj\303\272ci s\303\272bor alebo vytvorte nov\303\275."]
+  ::msgcat::mcset sq "Map editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "permiresuesi I hartes nuk eshte aktiv. Qe ta aktivizosh, hape fajlin egzistues ose krijo nje te ri"]
 
   ::msgcat::mcset cz "Insert line" [encoding convertfrom utf-8 "Vlo\305\276it k\305\231ivku"]
   ::msgcat::mcset de "Insert line" [encoding convertfrom utf-8 "Linie einf\303\274gen"]
@@ -2235,6 +2486,7 @@
   ::msgcat::mcset it "Insert line" [encoding convertfrom utf-8 "Inserisci linea"]
   ::msgcat::mcset ru "Insert line" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\273\320\270\320\275\320\270\321\216"]
   ::msgcat::mcset sk "Insert line" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 krivku"]
+  ::msgcat::mcset sq "Insert line" [encoding convertfrom utf-8 "fute rjeshtin-vijen"]
 
   ::msgcat::mcset cz "Insert scrap" [encoding convertfrom utf-8 "Vlo\305\276it scrap"]
   ::msgcat::mcset de "Insert scrap" [encoding convertfrom utf-8 "Skizze einf\303\274gen"]
@@ -2244,6 +2496,7 @@
   ::msgcat::mcset it "Insert scrap" [encoding convertfrom utf-8 "Inserisci scrap"]
   ::msgcat::mcset ru "Insert scrap" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \321\201\320\272\321\200\320\260\320\277"]
   ::msgcat::mcset sk "Insert scrap" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 scrap"]
+  ::msgcat::mcset sq "Insert scrap" [encoding convertfrom utf-8 "fute deponin"]
 
   ::msgcat::mcset cz "Insert text" [encoding convertfrom utf-8 "Vlo\305\276it text"]
   ::msgcat::mcset de "Insert text" [encoding convertfrom utf-8 "Text einf\303\274gen"]
@@ -2253,6 +2506,7 @@
   ::msgcat::mcset it "Insert text" [encoding convertfrom utf-8 "Inserisci testo"]
   ::msgcat::mcset ru "Insert text" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \321\202\320\265\320\272\321\201\321\202"]
   ::msgcat::mcset sk "Insert text" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 text"]
+  ::msgcat::mcset sq "Insert text" [encoding convertfrom utf-8 "fute tekstin"]
 
   ::msgcat::mcset cz "Insert area" [encoding convertfrom utf-8 "Vlo\305\276it oblast"]
   ::msgcat::mcset de "Insert area" [encoding convertfrom utf-8 "Fl\303\244che einf\303\274gen"]
@@ -2262,6 +2516,7 @@
   ::msgcat::mcset it "Insert area" [encoding convertfrom utf-8 "Inserisci area"]
   ::msgcat::mcset ru "Insert area" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\276\320\261\320\273\320\260\321\201\321\202\321\214"]
   ::msgcat::mcset sk "Insert area" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 plochu"]
+  ::msgcat::mcset sq "Insert area" [encoding convertfrom utf-8 "fute fushen"]
 
   ::msgcat::mcset cz "Delete" [encoding convertfrom utf-8 "Smazat"]
   ::msgcat::mcset de "Delete" [encoding convertfrom utf-8 "L\303\266sche"]
@@ -2271,6 +2526,7 @@
   ::msgcat::mcset it "Delete" [encoding convertfrom utf-8 "Rimuovi"]
   ::msgcat::mcset ru "Delete" [encoding convertfrom utf-8 "\320\243\320\264\320\260\320\273\320\270\321\202\321\214"]
   ::msgcat::mcset sk "Delete" [encoding convertfrom utf-8 "Odstr\303\241ni\305\245"]
+  ::msgcat::mcset sq "Delete" [encoding convertfrom utf-8 "fshije"]
 
   ::msgcat::mcset cz "deleting" [encoding convertfrom utf-8 "maz\303\241n\303\255"]
   ::msgcat::mcset de "deleting" [encoding convertfrom utf-8 "l\303\266sche"]
@@ -2280,6 +2536,7 @@
   ::msgcat::mcset it "deleting" [encoding convertfrom utf-8 "rimuovendo"]
   ::msgcat::mcset ru "deleting" [encoding convertfrom utf-8 "\321\203\320\264\320\260\320\273\320\265\320\275\320\270\320\265"]
   ::msgcat::mcset sk "deleting" [encoding convertfrom utf-8 "mazanie"]
+  ::msgcat::mcset sq "deleting" [encoding convertfrom utf-8 "duke fshire"]
 
   ::msgcat::mcset cz "moving command" [encoding convertfrom utf-8 "p\305\231esun p\305\231\303\255kazu"]
   ::msgcat::mcset de "moving command" [encoding convertfrom utf-8 "Verschiebebefehl"]
@@ -2289,6 +2546,7 @@
   ::msgcat::mcset it "moving command" [encoding convertfrom utf-8 "comando di spostamento"]
   ::msgcat::mcset ru "moving command" [encoding convertfrom utf-8 "\320\277\320\265\321\200\320\265\320\274\320\265\321\211\320\265\320\275\320\270\320\265 \320\272\320\276\320\274\320\260\320\275\320\264"]
   ::msgcat::mcset sk "moving command" [encoding convertfrom utf-8 "presun pr\303\255kazu"]
+  ::msgcat::mcset sq "moving command" [encoding convertfrom utf-8 "komanda e levizjes"]
 
   ::msgcat::mcset cz "creating endscrap" [encoding convertfrom utf-8 "vytvo\305\231en\303\255 konce scrapu"]
   ::msgcat::mcset de "creating endscrap" [encoding convertfrom utf-8 "Erzeuge Skizzenende"]
@@ -2298,6 +2556,7 @@
   ::msgcat::mcset it "creating endscrap" [encoding convertfrom utf-8 "creazione endscrap"]
   ::msgcat::mcset ru "creating endscrap" [encoding convertfrom utf-8 "\321\201\320\276\320\267\320\264\320\260\320\275\320\270\320\265 \320\272\320\276\320\275\321\206\320\260 \321\201\320\272\321\200\320\260\320\277\320\260"]
   ::msgcat::mcset sk "creating endscrap" [encoding convertfrom utf-8 "vytvorenie konca scrapu"]
+  ::msgcat::mcset sq "creating endscrap" [encoding convertfrom utf-8 "duke kriju fundin e deponise"]
 
   ::msgcat::mcset cz "scrap changes" [encoding convertfrom utf-8 "zm\304\233na parametr\305\257 scrapu"]
   ::msgcat::mcset de "scrap changes" [encoding convertfrom utf-8 "Skizzen\303\244nderung"]
@@ -2307,6 +2566,7 @@
   ::msgcat::mcset it "scrap changes" [encoding convertfrom utf-8 "modifiche dello scrap"]
   ::msgcat::mcset ru "scrap changes" [encoding convertfrom utf-8 "\320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\265 \321\201\320\272\321\200\320\260\320\277\320\260"]
   ::msgcat::mcset sk "scrap changes" [encoding convertfrom utf-8 "zmena parametrov scrapu"]
+  ::msgcat::mcset sq "scrap changes" [encoding convertfrom utf-8 "ndryshimet ne deponi"]
 
   ::msgcat::mcset cz "creating scrap" [encoding convertfrom utf-8 "vytvo\305\231en\303\255 scrapu"]
   ::msgcat::mcset de "creating scrap" [encoding convertfrom utf-8 "Erzeuge Skizze"]
@@ -2316,6 +2576,7 @@
   ::msgcat::mcset it "creating scrap" [encoding convertfrom utf-8 "creazione scrap"]
   ::msgcat::mcset ru "creating scrap" [encoding convertfrom utf-8 "\321\201\320\276\320\267\320\264\320\260\320\275\320\270\320\265 \321\201\320\272\321\200\320\260\320\277\320\260"]
   ::msgcat::mcset sk "creating scrap" [encoding convertfrom utf-8 "vytvorenie scrapu"]
+  ::msgcat::mcset sq "creating scrap" [encoding convertfrom utf-8 "duke kriju deponin"]
 
   ::msgcat::mcset cz "creating text" [encoding convertfrom utf-8 "vytvo\305\231en\303\255 textu"]
   ::msgcat::mcset de "creating text" [encoding convertfrom utf-8 "Erzeuge Text"]
@@ -2325,6 +2586,7 @@
   ::msgcat::mcset it "creating text" [encoding convertfrom utf-8 "creazione testo"]
   ::msgcat::mcset ru "creating text" [encoding convertfrom utf-8 "\321\201\320\276\320\267\320\264\320\260\320\275\320\270\320\265 \321\202\320\265\320\272\321\201\321\202\320\260"]
   ::msgcat::mcset sk "creating text" [encoding convertfrom utf-8 "vytvorenie textu"]
+  ::msgcat::mcset sq "creating text" [encoding convertfrom utf-8 "duke kriju tekstin"]
 
   ::msgcat::mcset cz "text changes" [encoding convertfrom utf-8 "zm\304\233na textu"]
   ::msgcat::mcset de "text changes" [encoding convertfrom utf-8 "Text\303\244nderungen"]
@@ -2334,6 +2596,7 @@
   ::msgcat::mcset it "text changes" [encoding convertfrom utf-8 "modifiche del testo"]
   ::msgcat::mcset ru "text changes" [encoding convertfrom utf-8 "\320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\265 \321\202\320\265\320\272\321\201\321\202\320\260"]
   ::msgcat::mcset sk "text changes" [encoding convertfrom utf-8 "zmena textu"]
+  ::msgcat::mcset sq "text changes" [encoding convertfrom utf-8 "ndrimet e tekstit"]
 
   ::msgcat::mcset cz "end point insertion" [encoding convertfrom utf-8 "konec vkl\303\241d\303\241n\303\255 bod\305\257"]
   ::msgcat::mcset de "end point insertion" [encoding convertfrom utf-8 "Endpunkt eingef\303\274gt"]
@@ -2343,6 +2606,7 @@
   ::msgcat::mcset it "end point insertion" [encoding convertfrom utf-8 "inserimento punto finale"]
   ::msgcat::mcset ru "end point insertion" [encoding convertfrom utf-8 "\320\262\321\201\321\202\320\260\320\262\320\272\320\260 \320\272\320\276\320\275\320\265\321\207\320\275\320\276\320\271 \321\202\320\276\321\207\320\272\320\270"]
   ::msgcat::mcset sk "end point insertion" [encoding convertfrom utf-8 "koniec vkladania bodov"]
+  ::msgcat::mcset sq "end point insertion" [encoding convertfrom utf-8 "perfundo futjet e pikave"]
 
   ::msgcat::mcset cz "select object" [encoding convertfrom utf-8 "ozna\304\215 objekt"]
   ::msgcat::mcset de "select object" [encoding convertfrom utf-8 "Objekt ausw\303\244hlen"]
@@ -2350,6 +2614,7 @@
   ::msgcat::mcset it "select object" [encoding convertfrom utf-8 "seleziona oggetto"]
   ::msgcat::mcset ru "select object" [encoding convertfrom utf-8 "\320\262\321\213\320\261\320\276\321\200 \320\276\320\261\321\212\320\265\320\272\321\202\320\260"]
   ::msgcat::mcset sk "select object" [encoding convertfrom utf-8 "ozna\304\215 objekt"]
+  ::msgcat::mcset sq "select object" [encoding convertfrom utf-8 "selekto objektin"]
 
   ::msgcat::mcset cz "Insert" [encoding convertfrom utf-8 "Vlo\305\276it"]
   ::msgcat::mcset de "Insert" [encoding convertfrom utf-8 "Einf\303\274gen"]
@@ -2359,6 +2624,7 @@
   ::msgcat::mcset it "Insert" [encoding convertfrom utf-8 "Inserisci"]
   ::msgcat::mcset ru "Insert" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\272\320\260"]
   ::msgcat::mcset sk "Insert" [encoding convertfrom utf-8 "Vlo\305\276i\305\245"]
+  ::msgcat::mcset sq "Insert" [encoding convertfrom utf-8 "fute"]
 
   ::msgcat::mcset cz "insert point" [encoding convertfrom utf-8 "vlo\305\276 bod"]
   ::msgcat::mcset de "insert point" [encoding convertfrom utf-8 "Punkt einf\303\274gen"]
@@ -2366,6 +2632,7 @@
   ::msgcat::mcset it "insert point" [encoding convertfrom utf-8 "inserisci punto"]
   ::msgcat::mcset ru "insert point" [encoding convertfrom utf-8 "\320\262\321\201\321\202\320\260\320\262\320\272\320\260 \321\202\320\276\321\207\320\272\320\270"]
   ::msgcat::mcset sk "insert point" [encoding convertfrom utf-8 "vlo\305\276 bod"]
+  ::msgcat::mcset sq "insert point" [encoding convertfrom utf-8 "fute piken"]
 
   ::msgcat::mcset cz "insert line point" [encoding convertfrom utf-8 "vlo\305\276 bod k\305\231ivky"]
   ::msgcat::mcset de "insert line point" [encoding convertfrom utf-8 "Linienpunkt einf\303\274gen"]
@@ -2373,6 +2640,7 @@
   ::msgcat::mcset it "insert line point" [encoding convertfrom utf-8 "inserisci punto di linea"]
   ::msgcat::mcset ru "insert line point" [encoding convertfrom utf-8 "\320\262\321\201\321\202\320\260\320\262\320\272\320\260 \321\202\320\276\321\207\320\272\320\270 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "insert line point" [encoding convertfrom utf-8 "vlo\305\276 bod krivky"]
+  ::msgcat::mcset sq "insert line point" [encoding convertfrom utf-8 "fute piken e rjeshtit"]
 
   ::msgcat::mcset cz "insert area border" [encoding convertfrom utf-8 "vlo\305\276 hranici plochy"]
   ::msgcat::mcset de "insert area border" [encoding convertfrom utf-8 "Fl\303\244chenrand einf\303\274gen"]
@@ -2380,6 +2648,7 @@
   ::msgcat::mcset it "insert area border" [encoding convertfrom utf-8 "inserisci bordo dell'area"]
   ::msgcat::mcset ru "insert area border" [encoding convertfrom utf-8 "\320\262\321\201\321\202\320\260\320\262\320\272\320\260 \320\263\321\200\320\260\320\275\320\270\321\206\321\213 \320\276\320\261\320\273\320\260\321\201\321\202\320\270"]
   ::msgcat::mcset sk "insert area border" [encoding convertfrom utf-8 "vlo\305\276 okraj plochy"]
+  ::msgcat::mcset sq "insert area border" [encoding convertfrom utf-8 "fute kufirin e fushes"]
 
   ::msgcat::mcset cz "Select" [encoding convertfrom utf-8 "Vyber"]
   ::msgcat::mcset de "Select" [encoding convertfrom utf-8 "Ausw\303\244hlen"]
@@ -2389,6 +2658,7 @@
   ::msgcat::mcset it "Select" [encoding convertfrom utf-8 "Seleziona"]
   ::msgcat::mcset ru "Select" [encoding convertfrom utf-8 "\320\222\321\213\320\261\320\276\321\200"]
   ::msgcat::mcset sk "Select" [encoding convertfrom utf-8 "Vybra\305\245"]
+  ::msgcat::mcset sq "Select" [encoding convertfrom utf-8 "selekto"]
 
   ::msgcat::mcset cz "scale scrap" [encoding convertfrom utf-8 "m\304\233\305\231\303\255tko scrapu"]
   ::msgcat::mcset de "scale scrap" [encoding convertfrom utf-8 "Skizze skalieren"]
@@ -2396,6 +2666,7 @@
   ::msgcat::mcset it "scale scrap" [encoding convertfrom utf-8 "riscala lo scrap"]
   ::msgcat::mcset ru "scale scrap" [encoding convertfrom utf-8 "\320\274\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265 \321\201\320\272\321\200\320\260\320\277\320\260"]
   ::msgcat::mcset sk "scale scrap" [encoding convertfrom utf-8 "mierka scrapu"]
+  ::msgcat::mcset sq "scale scrap" [encoding convertfrom utf-8 "deponia e matjeve"]
 
   ::msgcat::mcset cz "insert sketch" [encoding convertfrom utf-8 "vlo\305\276 n\303\241\304\215rtek"]
   ::msgcat::mcset de "insert sketch" [encoding convertfrom utf-8 "Skizze einf\303\274gen"]
@@ -2403,6 +2674,7 @@
   ::msgcat::mcset it "insert sketch" [encoding convertfrom utf-8 "inserisci disegno"]
   ::msgcat::mcset ru "insert sketch" [encoding convertfrom utf-8 "\320\262\321\201\321\202\320\260\320\262\320\272\320\260 \321\204\320\276\320\275\320\260"]
   ::msgcat::mcset sk "insert sketch" [encoding convertfrom utf-8 "vlo\305\276 n\303\241\304\215rtok"]
+  ::msgcat::mcset sq "insert sketch" [encoding convertfrom utf-8 "fute skicen"]
 
   ::msgcat::mcset cz "creating point" [encoding convertfrom utf-8 "vytvo\305\231en\303\255 bodu"]
   ::msgcat::mcset de "creating point" [encoding convertfrom utf-8 "Punkt erzeugen"]
@@ -2412,6 +2684,7 @@
   ::msgcat::mcset it "creating point" [encoding convertfrom utf-8 "creazione punto"]
   ::msgcat::mcset ru "creating point" [encoding convertfrom utf-8 "\321\201\320\276\320\267\320\264\320\260\320\275\320\270\320\265 \321\202\320\276\321\207\320\272\320\270"]
   ::msgcat::mcset sk "creating point" [encoding convertfrom utf-8 "vytvorenie bodu"]
+  ::msgcat::mcset sq "creating point" [encoding convertfrom utf-8 "duke kriju piken"]
 
   ::msgcat::mcset cz "area changes" [encoding convertfrom utf-8 "zm\304\233na parametr\305\257 oblasti"]
   ::msgcat::mcset de "area changes" [encoding convertfrom utf-8 "Fl\303\244chen\303\244nderungen"]
@@ -2421,6 +2694,7 @@
   ::msgcat::mcset it "area changes" [encoding convertfrom utf-8 "modifiche di area"]
   ::msgcat::mcset ru "area changes" [encoding convertfrom utf-8 "\320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\265 \320\276\320\261\320\273\320\260\321\201\321\202\320\270"]
   ::msgcat::mcset sk "area changes" [encoding convertfrom utf-8 "zmena parametrov plochy"]
+  ::msgcat::mcset sq "area changes" [encoding convertfrom utf-8 "ndrimet e fushes"]
 
   ::msgcat::mcset cz "point changes" [encoding convertfrom utf-8 "zm\304\233na parametr\305\257 bodu"]
   ::msgcat::mcset de "point changes" [encoding convertfrom utf-8 "Punkt\303\244nderungen"]
@@ -2430,6 +2704,7 @@
   ::msgcat::mcset it "point changes" [encoding convertfrom utf-8 "modifiche di punto"]
   ::msgcat::mcset ru "point changes" [encoding convertfrom utf-8 "\320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\265 \321\202\320\276\321\207\320\272\320\270"]
   ::msgcat::mcset sk "point changes" [encoding convertfrom utf-8 "zmena parametrov bodu"]
+  ::msgcat::mcset sq "point changes" [encoding convertfrom utf-8 "ndrimet e pikes"]
 
   ::msgcat::mcset cz "Scrap sketch not inserted." [encoding convertfrom utf-8 "N\303\241\304\215rtek nebyl vlo\305\276en."]
   ::msgcat::mcset de "Scrap sketch not inserted." [encoding convertfrom utf-8 "Skizze nicht eingef\303\274gt."]
@@ -2437,6 +2712,7 @@
   ::msgcat::mcset it "Scrap sketch not inserted." [encoding convertfrom utf-8 "Disegno non inerito."]
   ::msgcat::mcset ru "Scrap sketch not inserted." [encoding convertfrom utf-8 "\320\244\320\276\320\275 \321\201\320\272\321\200\320\260\320\277\320\260 \320\275\320\265 \320\262\321\201\321\202\320\260\320\262\320\273\320\265\320\275."]
   ::msgcat::mcset sk "Scrap sketch not inserted." [encoding convertfrom utf-8 "N\303\241\304\215rtok nebol vlo\305\276en\303\275."]
+  ::msgcat::mcset sq "Scrap sketch not inserted." [encoding convertfrom utf-8 "skica e deponise nuk eshte futur"]
 
   ::msgcat::mcset cz "inserting scrap sketch" [encoding convertfrom utf-8 "vkl\303\241d\303\241m n\303\241\304\215rtek"]
   ::msgcat::mcset de "inserting scrap sketch" [encoding convertfrom utf-8 "F\303\274ge Skizze ein"]
@@ -2444,6 +2720,7 @@
   ::msgcat::mcset it "inserting scrap sketch" [encoding convertfrom utf-8 "inserimento disegno"]
   ::msgcat::mcset ru "inserting scrap sketch" [encoding convertfrom utf-8 "\320\262\321\201\321\202\320\260\320\262\320\272\320\260 \321\204\320\276\320\275\320\260 \321\201\320\272\321\200\320\260\320\277\320\260"]
   ::msgcat::mcset sk "inserting scrap sketch" [encoding convertfrom utf-8 "vlo\305\276enie n\303\241\304\215rtku"]
+  ::msgcat::mcset sq "inserting scrap sketch" [encoding convertfrom utf-8 "duke future skicen e deponise"]
 
   ::msgcat::mcset cz "deleting scrap sketch" [encoding convertfrom utf-8 "odstra\305\210uji n\303\241\304\215rtek"]
   ::msgcat::mcset de "deleting scrap sketch" [encoding convertfrom utf-8 "L\303\266sche Skizze"]
@@ -2451,6 +2728,7 @@
   ::msgcat::mcset it "deleting scrap sketch" [encoding convertfrom utf-8 "rimozione disegno"]
   ::msgcat::mcset ru "deleting scrap sketch" [encoding convertfrom utf-8 "\321\203\320\264\320\260\320\273\320\265\320\275\320\270\320\265 \321\204\320\276\320\275\320\260 \321\201\320\272\321\200\320\260\320\277\320\260"]
   ::msgcat::mcset sk "deleting scrap sketch" [encoding convertfrom utf-8 "odstr\303\241nenie n\303\241\304\215rtku"]
+  ::msgcat::mcset sq "deleting scrap sketch" [encoding convertfrom utf-8 "duke fshire skicen e deponise"]
 
   ::msgcat::mcset cz "toggle image visibility" [encoding convertfrom utf-8 "p\305\231epnut\303\255 viditelnosti obr\303\241zku"]
   ::msgcat::mcset de "toggle image visibility" [encoding convertfrom utf-8 "Bildsichtbarkeit umschalten"]
@@ -2460,6 +2738,7 @@
   ::msgcat::mcset it "toggle image visibility" [encoding convertfrom utf-8 "cambia visibilit\303\240 immagine"]
   ::msgcat::mcset ru "toggle image visibility" [encoding convertfrom utf-8 "\320\277\320\265\321\200\320\265\320\272\320\273\321\216\321\207\320\265\320\275\320\270\320\265 \320\262\320\270\320\264\320\270\320\274\320\276\321\201\321\202\320\270 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217"]
   ::msgcat::mcset sk "toggle image visibility" [encoding convertfrom utf-8 "prepni vidite\304\276nos\305\245 obr\303\241zku"]
+  ::msgcat::mcset sq "toggle image visibility" [encoding convertfrom utf-8 "shikueshmeria e toggle-imazhit"]
 
   ::msgcat::mcset cz "grid - spacing %s" [encoding convertfrom utf-8 "m\305\231\303\255\305\276ka - odstup %s"]
   ::msgcat::mcset de "grid - spacing %s" [encoding convertfrom utf-8 "Gitterweite - %s"]
@@ -2469,6 +2748,7 @@
   ::msgcat::mcset it "grid - spacing %s" [encoding convertfrom utf-8 "reticolato - passo %s"]
   ::msgcat::mcset ru "grid - spacing %s" [encoding convertfrom utf-8 "\321\201\320\265\321\202\320\272\320\260 - \321\210\320\260\320\263 %s"]
   ::msgcat::mcset sk "grid - spacing %s" [encoding convertfrom utf-8 "sie\305\245 - rozostupy %s"]
+  ::msgcat::mcset sq "grid - spacing %s" [encoding convertfrom utf-8 "%s hapesira e katroreve"]
 
   ::msgcat::mcset cz "station - %s" [encoding convertfrom utf-8 "m\304\233\305\231i\304\215sk\303\275 bod - %s"]
   ::msgcat::mcset de "station - %s" [encoding convertfrom utf-8 "Messpunkt - %s"]
@@ -2478,6 +2758,7 @@
   ::msgcat::mcset it "station - %s" [encoding convertfrom utf-8 "caposaldo - %s"]
   ::msgcat::mcset ru "station - %s" [encoding convertfrom utf-8 "\320\277\320\270\320\272\320\265\321\202 - %s"]
   ::msgcat::mcset sk "station - %s" [encoding convertfrom utf-8 "m\304\233ra\304\215sk\303\275 bod - %s"]
+  ::msgcat::mcset sq "station - %s" [encoding convertfrom utf-8 "stacioni - %s"]
 
   ::msgcat::mcset cz "New *.th2 file needs to be saved before inserting background image. Save it now?" [encoding convertfrom utf-8 "Nov\303\275 *.th2 soubor mus\303\255 b\303\275t ulo\305\276en p\305\231ed vlo\305\276en\303\255m podkladov\303\251ho obr\303\241zku. Ulo\305\276it nyn\303\255?"]
   ::msgcat::mcset de "New *.th2 file needs to be saved before inserting background image. Save it now?" [encoding convertfrom utf-8 "Neue *.th2-Datei muss gespeichert werden, bevor ein Hintergrundbild eingef\303\274gt werden kann. Jetzt speichern?"]
@@ -2487,6 +2768,7 @@
   ::msgcat::mcset it "New *.th2 file needs to be saved before inserting background image. Save it now?" [encoding convertfrom utf-8 "Il nuovo file *.th2 deve essere salvato prima di inserire immagini di background. Salvala ora?"]
   ::msgcat::mcset ru "New *.th2 file needs to be saved before inserting background image. Save it now?" [encoding convertfrom utf-8 "\320\235\320\276\320\262\321\213\320\271 *.th2 \321\204\320\260\320\271\320\273 \320\275\321\203\320\266\320\264\320\260\320\265\321\202\321\201\321\217 \320\262 \321\201\320\276\321\205\321\200\320\260\320\275\320\265\320\275\320\270\320\270 \320\277\320\265\321\200\320\265\320\264 \320\262\321\201\321\202\320\260\320\262\320\272\320\276\320\271 \321\204\320\276\320\275\320\276\320\262\320\276\320\263\320\276 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217. \320\227\320\260\320\277\320\270\321\201\320\260\321\202\321\214 \321\201\320\265\320\271\321\207\320\260\321\201?"]
   ::msgcat::mcset sk "New *.th2 file needs to be saved before inserting background image. Save it now?" [encoding convertfrom utf-8 "Pred vlo\305\276en\303\255m obr\303\241zku mus\303\255te nov\303\275 *.th2 s\303\272bor ulo\305\276i\305\245. Chcete tak urobi\305\245?"]
+  ::msgcat::mcset sq "New *.th2 file needs to be saved before inserting background image. Save it now?" [encoding convertfrom utf-8 "arkivi I ri *.th2 duhet te ruhet para se te futet imazhi I prapavise.Te ruhet tani?"]
 
   ::msgcat::mcset cz "inserting image" [encoding convertfrom utf-8 "vkl\303\241d\303\241m obr\303\241zek"]
   ::msgcat::mcset de "inserting image" [encoding convertfrom utf-8 "Bild einf\303\274gen"]
@@ -2496,6 +2778,7 @@
   ::msgcat::mcset it "inserting image" [encoding convertfrom utf-8 "inserimento immagine"]
   ::msgcat::mcset ru "inserting image" [encoding convertfrom utf-8 "\320\262\321\201\321\202\320\260\320\262\320\272\320\260 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217"]
   ::msgcat::mcset sk "inserting image" [encoding convertfrom utf-8 "vklad\303\241m obr\303\241zok"]
+  ::msgcat::mcset sq "inserting image" [encoding convertfrom utf-8 "duke futur imazhin"]
 
   ::msgcat::mcset cz "removing image" [encoding convertfrom utf-8 "odstra\305\210uji obr\303\241zek"]
   ::msgcat::mcset de "removing image" [encoding convertfrom utf-8 "Bild entfernen"]
@@ -2505,6 +2788,7 @@
   ::msgcat::mcset it "removing image" [encoding convertfrom utf-8 "rimozione immagine"]
   ::msgcat::mcset ru "removing image" [encoding convertfrom utf-8 "\321\203\320\264\320\260\320\273\320\265\320\275\320\270\320\265 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217"]
   ::msgcat::mcset sk "removing image" [encoding convertfrom utf-8 "odstr\303\241nenie obr\303\241zku"]
+  ::msgcat::mcset sq "removing image" [encoding convertfrom utf-8 "duke hequr imazhin"]
 
   ::msgcat::mcset cz "moving image" [encoding convertfrom utf-8 "p\305\231esunuji obr\303\241zek"]
   ::msgcat::mcset de "moving image" [encoding convertfrom utf-8 "Bild verschieben"]
@@ -2514,6 +2798,7 @@
   ::msgcat::mcset it "moving image" [encoding convertfrom utf-8 "spostamento immagine"]
   ::msgcat::mcset ru "moving image" [encoding convertfrom utf-8 "\320\277\320\265\321\200\320\265\320\274\320\265\321\211\320\265\320\275\320\270\320\265 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\321\217"]
   ::msgcat::mcset sk "moving image" [encoding convertfrom utf-8 "posun obr\303\241zku"]
+  ::msgcat::mcset sq "moving image" [encoding convertfrom utf-8 "duke levizur imazhin"]
 
   ::msgcat::mcset cz "gamma correction" [encoding convertfrom utf-8 "gamma korekce"]
   ::msgcat::mcset de "gamma correction" [encoding convertfrom utf-8 "Gammakorrektur"]
@@ -2523,6 +2808,7 @@
   ::msgcat::mcset it "gamma correction" [encoding convertfrom utf-8 "gamma"]
   ::msgcat::mcset ru "gamma correction" [encoding convertfrom utf-8 "\320\272\320\276\321\200\321\200\320\265\320\272\321\206\320\270\321\217 \320\263\320\260\320\274\320\274\321\213"]
   ::msgcat::mcset sk "gamma correction" [encoding convertfrom utf-8 "gamma korekcia"]
+  ::msgcat::mcset sq "gamma correction" [encoding convertfrom utf-8 "korekcioni gamma"]
 
   ::msgcat::mcset cz "Insert point" [encoding convertfrom utf-8 "Vlo\305\276it bod"]
   ::msgcat::mcset de "Insert point" [encoding convertfrom utf-8 "Punkt einf\303\274gen"]
@@ -2532,6 +2818,7 @@
   ::msgcat::mcset it "Insert point" [encoding convertfrom utf-8 "Inserisci punto"]
   ::msgcat::mcset ru "Insert point" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \321\202\320\276\321\207\320\272\321\203"]
   ::msgcat::mcset sk "Insert point" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 bod"]
+  ::msgcat::mcset sq "Insert point" [encoding convertfrom utf-8 "fute piken"]
 
   ::msgcat::mcset cz "Delete point" [encoding convertfrom utf-8 "Smazat bod"]
   ::msgcat::mcset de "Delete point" [encoding convertfrom utf-8 "Punkt l\303\266schen"]
@@ -2541,6 +2828,7 @@
   ::msgcat::mcset it "Delete point" [encoding convertfrom utf-8 "Rimuovi"]
   ::msgcat::mcset ru "Delete point" [encoding convertfrom utf-8 "\320\243\320\264\320\260\320\273\320\270\321\202\321\214 \321\202\320\276\321\207\320\272\321\203"]
   ::msgcat::mcset sk "Delete point" [encoding convertfrom utf-8 "Odstr\303\241ni\305\245 bod"]
+  ::msgcat::mcset sq "Delete point" [encoding convertfrom utf-8 "fshije piken"]
 
   ::msgcat::mcset cz "Split line" [encoding convertfrom utf-8 "Rozd\304\233lit k\305\231ivku"]
   ::msgcat::mcset de "Split line" [encoding convertfrom utf-8 "Linie teilen"]
@@ -2550,6 +2838,7 @@
   ::msgcat::mcset it "Split line" [encoding convertfrom utf-8 "Dividi"]
   ::msgcat::mcset ru "Split line" [encoding convertfrom utf-8 "\320\240\320\260\320\267\320\264\320\265\320\273\320\270\321\202\321\214 \320\273\320\270\320\275\320\270\321\216"]
   ::msgcat::mcset sk "Split line" [encoding convertfrom utf-8 "Rozdeli\305\245 krivku"]
+  ::msgcat::mcset sq "Split line" [encoding convertfrom utf-8 "ndaje rjeshtin-vijen"]
 
   ::msgcat::mcset cz "deleting line point" [encoding convertfrom utf-8 "mazan\303\255 bodu na k\305\231ivce"]
   ::msgcat::mcset de "deleting line point" [encoding convertfrom utf-8 "Linienpunkt l\303\266schen"]
@@ -2559,6 +2848,7 @@
   ::msgcat::mcset it "deleting line point" [encoding convertfrom utf-8 "rimozione punto di linea"]
   ::msgcat::mcset ru "deleting line point" [encoding convertfrom utf-8 "\320\243\320\264\320\260\320\273\320\270\321\202\321\214 \321\202\320\276\321\207\320\272\321\203 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "deleting line point" [encoding convertfrom utf-8 "mazanie bodu na \304\215iare"]
+  ::msgcat::mcset sq "deleting line point" [encoding convertfrom utf-8 "duke fshire piken e rjeshtit-vijes"]
 
   ::msgcat::mcset cz "inserting area border" [encoding convertfrom utf-8 "vlo\305\276en\303\255 hranice oblasti"]
   ::msgcat::mcset de "inserting area border" [encoding convertfrom utf-8 "Fl\303\244chenrand einf\303\274gen"]
@@ -2568,6 +2858,7 @@
   ::msgcat::mcset it "inserting area border" [encoding convertfrom utf-8 "inserimento bordo area"]
   ::msgcat::mcset ru "inserting area border" [encoding convertfrom utf-8 "\320\262\321\201\321\202\320\260\320\262\320\272\320\260 \320\263\321\200\320\260\320\275\320\270\321\206\321\213 \320\276\320\261\320\273\320\260\321\201\321\202\320\270"]
   ::msgcat::mcset sk "inserting area border" [encoding convertfrom utf-8 "vlo\305\276enie okraja plochy"]
+  ::msgcat::mcset sq "inserting area border" [encoding convertfrom utf-8 "duke future kufirin e fushes"]
 
   ::msgcat::mcset cz "deleting area border" [encoding convertfrom utf-8 "mazan\303\255 hranice oblasti"]
   ::msgcat::mcset de "deleting area border" [encoding convertfrom utf-8 "Fl\303\244chenrand l\303\266schen"]
@@ -2577,6 +2868,7 @@
   ::msgcat::mcset it "deleting area border" [encoding convertfrom utf-8 "rimozione bordo area"]
   ::msgcat::mcset ru "deleting area border" [encoding convertfrom utf-8 "\321\203\320\264\320\260\320\273\320\265\320\275\320\270\320\265 \320\263\321\200\320\260\320\275\320\270\321\206\321\213 \320\276\320\261\320\273\320\260\321\201\321\202\320\270"]
   ::msgcat::mcset sk "deleting area border" [encoding convertfrom utf-8 "mazanie okraja plochy"]
+  ::msgcat::mcset sq "deleting area border" [encoding convertfrom utf-8 "duke fshire kufirin e fushes"]
 
   ::msgcat::mcset cz "creating area" [encoding convertfrom utf-8 "vytvo\305\231en\303\255 oblasti"]
   ::msgcat::mcset de "creating area" [encoding convertfrom utf-8 "Fl\303\244che erzeugen"]
@@ -2586,6 +2878,7 @@
   ::msgcat::mcset it "creating area" [encoding convertfrom utf-8 "creazione area"]
   ::msgcat::mcset ru "creating area" [encoding convertfrom utf-8 "\321\201\320\276\320\267\320\264\320\260\320\275\320\270\320\265 \320\276\320\261\320\273\320\260\321\201\321\202\320\270"]
   ::msgcat::mcset sk "creating area" [encoding convertfrom utf-8 "vytvorenie plochy"]
+  ::msgcat::mcset sq "creating area" [encoding convertfrom utf-8 "duke kriju fushen"]
 
   ::msgcat::mcset cz "creating line" [encoding convertfrom utf-8 "vytvo\305\231en\303\255 k\305\231ivky"]
   ::msgcat::mcset de "creating line" [encoding convertfrom utf-8 "Linie erzeugen"]
@@ -2595,6 +2888,7 @@
   ::msgcat::mcset it "creating line" [encoding convertfrom utf-8 "creazione linea"]
   ::msgcat::mcset ru "creating line" [encoding convertfrom utf-8 "\321\201\320\276\320\267\320\264\320\260\320\275\320\270\320\265 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "creating line" [encoding convertfrom utf-8 "vytvorenie krivky"]
+  ::msgcat::mcset sq "creating line" [encoding convertfrom utf-8 "duke kriju vijen apo rrjeshtin"]
 
   ::msgcat::mcset cz "line changes" [encoding convertfrom utf-8 "zm\304\233na parametr\305\257 k\305\231ivky"]
   ::msgcat::mcset de "line changes" [encoding convertfrom utf-8 "Linien\303\244nderung"]
@@ -2604,6 +2898,7 @@
   ::msgcat::mcset it "line changes" [encoding convertfrom utf-8 "modifiche di linea"]
   ::msgcat::mcset ru "line changes" [encoding convertfrom utf-8 "\320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\265 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "line changes" [encoding convertfrom utf-8 "zmena parametrov krivky"]
+  ::msgcat::mcset sq "line changes" [encoding convertfrom utf-8 "ndrimet e vijes"]
 
   ::msgcat::mcset cz "line closing" [encoding convertfrom utf-8 "uzav\305\231en\303\255 k\305\231ivky"]
   ::msgcat::mcset de "line closing" [encoding convertfrom utf-8 "Linie schlie\303\237en"]
@@ -2613,6 +2908,7 @@
   ::msgcat::mcset it "line closing" [encoding convertfrom utf-8 "chiusura linea"]
   ::msgcat::mcset ru "line closing" [encoding convertfrom utf-8 "\320\267\320\260\320\274\321\213\320\272\320\260\320\275\320\270\320\265 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "line closing" [encoding convertfrom utf-8 "uzavretie krivky"]
+  ::msgcat::mcset sq "line closing" [encoding convertfrom utf-8 "mbyllja e vijes-rjeshtit"]
 
   ::msgcat::mcset cz "line opening" [encoding convertfrom utf-8 "otev\305\231en\303\255 k\305\231ivky"]
   ::msgcat::mcset de "line opening" [encoding convertfrom utf-8 "Linie \303\266ffnen"]
@@ -2622,6 +2918,7 @@
   ::msgcat::mcset it "line opening" [encoding convertfrom utf-8 "apertura linea"]
   ::msgcat::mcset ru "line opening" [encoding convertfrom utf-8 "\321\200\320\260\320\267\320\274\321\213\320\272\320\260\320\275\320\270\320\265 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "line opening" [encoding convertfrom utf-8 "otvorenie krivky"]
+  ::msgcat::mcset sq "line opening" [encoding convertfrom utf-8 "hapja e vijes-rjeshtit"]
 
   ::msgcat::mcset cz "inserting line point" [encoding convertfrom utf-8 "vlo\305\276en\303\255 bodu k\305\231ivky"]
   ::msgcat::mcset de "inserting line point" [encoding convertfrom utf-8 "Linienpunkt einf\303\274gen"]
@@ -2631,6 +2928,7 @@
   ::msgcat::mcset it "inserting line point" [encoding convertfrom utf-8 "inserimento punto di linea"]
   ::msgcat::mcset ru "inserting line point" [encoding convertfrom utf-8 "\320\262\321\201\321\202\320\260\320\262\320\272\320\260 \321\202\320\276\321\207\320\272\320\270 \320\262 \320\273\320\270\320\275\320\270\321\216"]
   ::msgcat::mcset sk "inserting line point" [encoding convertfrom utf-8 "vlo\305\276enie bodu krivky"]
+  ::msgcat::mcset sq "inserting line point" [encoding convertfrom utf-8 "duke futur piken e vijes"]
 
   ::msgcat::mcset cz "line ending" [encoding convertfrom utf-8 "ukon\304\215en\303\255 k\305\231ivky"]
   ::msgcat::mcset de "line ending" [encoding convertfrom utf-8 "Linienende"]
@@ -2640,6 +2938,7 @@
   ::msgcat::mcset it "line ending" [encoding convertfrom utf-8 "fine linea"]
   ::msgcat::mcset ru "line ending" [encoding convertfrom utf-8 "\320\267\320\260\320\262\320\265\321\200\321\210\320\265\320\275\320\270\320\265 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "line ending" [encoding convertfrom utf-8 "ukon\304\215enie krivky"]
+  ::msgcat::mcset sq "line ending" [encoding convertfrom utf-8 "rjeshti ne perfundim"]
 
   ::msgcat::mcset cz "moving control point" [encoding convertfrom utf-8 "posun \305\231\303\255d\303\255c\303\255ho bodu"]
   ::msgcat::mcset de "moving control point" [encoding convertfrom utf-8 "Verschiebe Kontrollpunkt"]
@@ -2649,6 +2948,7 @@
   ::msgcat::mcset it "moving control point" [encoding convertfrom utf-8 "spostamento punto di controllo"]
   ::msgcat::mcset ru "moving control point" [encoding convertfrom utf-8 "\320\277\320\265\321\200\320\265\320\274\320\265\321\211\320\265\320\275\320\270\320\265 \321\203\320\277\321\200\320\260\320\262\320\273\321\217\321\216\321\211\320\265\320\271 \321\202\320\276\321\207\320\272\320\270"]
   ::msgcat::mcset sk "moving control point" [encoding convertfrom utf-8 "posun kontroln\303\251ho bodu"]
+  ::msgcat::mcset sq "moving control point" [encoding convertfrom utf-8 "duke levize piken e kontrollit"]
 
   ::msgcat::mcset cz "split line" [encoding convertfrom utf-8 "rozd\304\233lit k\305\231ivku"]
   ::msgcat::mcset de "split line" [encoding convertfrom utf-8 "Linie teilen"]
@@ -2658,6 +2958,7 @@
   ::msgcat::mcset it "split line" [encoding convertfrom utf-8 "dividi la linea"]
   ::msgcat::mcset ru "split line" [encoding convertfrom utf-8 "\321\200\320\260\320\267\320\264\320\265\320\273\320\265\320\275\320\270\320\265 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "split line" [encoding convertfrom utf-8 "rozdelenie \304\215iary"]
+  ::msgcat::mcset sq "split line" [encoding convertfrom utf-8 "ndarja e pikes-rjeshtit"]
 
   ::msgcat::mcset cz "loading text editor ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m text editor ..."]
   ::msgcat::mcset de "loading text editor ..." [encoding convertfrom utf-8 "Lade Texteditor ..."]
@@ -2667,6 +2968,7 @@
   ::msgcat::mcset it "loading text editor ..." [encoding convertfrom utf-8 "editor di testo ..."]
   ::msgcat::mcset ru "loading text editor ..." [encoding convertfrom utf-8 "\320\267\320\260\320\263\321\200\321\203\320\267\320\272\320\260 \321\202\320\265\320\272\321\201\321\202\320\276\320\262\320\276\320\263\320\276 \321\200\320\265\320\264\320\260\320\272\321\202\320\276\321\200\320\260 ..."]
   ::msgcat::mcset sk "loading text editor ..." [encoding convertfrom utf-8 "na\304\215\303\255tavam textov\303\275 editor"]
+  ::msgcat::mcset sq "loading text editor ..." [encoding convertfrom utf-8 "duke lexuar editorin e tekstit\342\200\246"]
 
   ::msgcat::mcset cz "Text Editor" [encoding convertfrom utf-8 "Text editor"]
   ::msgcat::mcset de "Text Editor" [encoding convertfrom utf-8 "Texteditor"]
@@ -2676,6 +2978,7 @@
   ::msgcat::mcset it "Text Editor" [encoding convertfrom utf-8 "Editor di testo"]
   ::msgcat::mcset ru "Text Editor" [encoding convertfrom utf-8 "\320\242\320\265\320\272\321\201\321\202\320\276\320\262\320\276\320\271 \321\200\320\265\320\264\320\260\320\272\321\202\320\276\321\200"]
   ::msgcat::mcset sk "Text Editor" [encoding convertfrom utf-8 "Textov\303\275 editor"]
+  ::msgcat::mcset sq "Text Editor" [encoding convertfrom utf-8 "editori I tekstit"]
 
   ::msgcat::mcset cz "Files" [encoding convertfrom utf-8 "Soubory"]
   ::msgcat::mcset de "Files" [encoding convertfrom utf-8 "Dateien"]
@@ -2685,6 +2988,7 @@
   ::msgcat::mcset it "Files" [encoding convertfrom utf-8 "File"]
   ::msgcat::mcset ru "Files" [encoding convertfrom utf-8 "\320\244\320\260\320\271\320\273\321\213"]
   ::msgcat::mcset sk "Files" [encoding convertfrom utf-8 "S\303\272bory"]
+  ::msgcat::mcset sq "Files" [encoding convertfrom utf-8 "fajlat-arkivi"]
 
   ::msgcat::mcset cz "Data table" [encoding convertfrom utf-8 "Datov\303\241 tabulka"]
   ::msgcat::mcset de "Data table" [encoding convertfrom utf-8 "Datentabelle"]
@@ -2694,6 +2998,7 @@
   ::msgcat::mcset it "Data table" [encoding convertfrom utf-8 "Tabella dei dati"]
   ::msgcat::mcset ru "Data table" [encoding convertfrom utf-8 "\320\242\320\260\320\261\320\273\320\270\321\206\320\260 \320\264\320\260\320\275\320\275\321\213\321\205"]
   ::msgcat::mcset sk "Data table" [encoding convertfrom utf-8 "D\303\241tov\303\241 tabu\304\276ka"]
+  ::msgcat::mcset sq "Data table" [encoding convertfrom utf-8 "tabela e te dhenave"]
 
   ::msgcat::mcset cz "Search & Replace" [encoding convertfrom utf-8 "Naj\303\255t & Nahradit"]
   ::msgcat::mcset de "Search & Replace" [encoding convertfrom utf-8 "Suchen & ersetzen"]
@@ -2703,6 +3008,7 @@
   ::msgcat::mcset it "Search & Replace" [encoding convertfrom utf-8 "Cerca e sostituisci"]
   ::msgcat::mcset ru "Search & Replace" [encoding convertfrom utf-8 "\320\237\320\276\320\270\321\201\320\272 \320\270 \320\227\320\260\320\274\320\265\320\275\320\260"]
   ::msgcat::mcset sk "Search & Replace" [encoding convertfrom utf-8 "N\303\241jdi a Nahra\304\217"]
+  ::msgcat::mcset sq "Search & Replace" [encoding convertfrom utf-8 "kerko dhe ndero vendin"]
 
   ::msgcat::mcset cz "Switch open files." [encoding convertfrom utf-8 "P\305\231ep\303\255na\304\215 otev\305\231en\303\275ch soubor\305\257."]
   ::msgcat::mcset de "Switch open files." [encoding convertfrom utf-8 "Ge\303\266ffnete Dateien wechseln."]
@@ -2712,6 +3018,7 @@
   ::msgcat::mcset it "Switch open files." [encoding convertfrom utf-8 "Cambia tra i file aperti."]
   ::msgcat::mcset ru "Switch open files." [encoding convertfrom utf-8 "\320\237\320\276\320\274\320\265\320\275\321\217\321\202\321\214 \320\276\321\202\320\272\321\200\321\213\321\202\321\213\320\271 \321\204\320\260\320\271\320\273."]
   ::msgcat::mcset sk "Switch open files." [encoding convertfrom utf-8 "Prep\303\255na\304\215 medzi otvoren\303\275mi s\303\272bormi."]
+  ::msgcat::mcset sq "Switch open files." [encoding convertfrom utf-8 "kjo liste tregon fajlat e hapura. Kliko ne ate te cilen je I interesuar."]
 
   ::msgcat::mcset cz "Encoding" [encoding convertfrom utf-8 "K\303\263dov\303\241n\303\255"]
   ::msgcat::mcset de "Encoding" [encoding convertfrom utf-8 "Zeichenkodierung"]
@@ -2721,6 +3028,7 @@
   ::msgcat::mcset it "Encoding" [encoding convertfrom utf-8 "Encoding"]
   ::msgcat::mcset ru "Encoding" [encoding convertfrom utf-8 "\320\232\320\276\320\264\320\270\321\200\320\276\320\262\320\272\320\260"]
   ::msgcat::mcset sk "Encoding" [encoding convertfrom utf-8 "K\303\263dovanie"]
+  ::msgcat::mcset sq "Encoding" [encoding convertfrom utf-8 "de-kodimi"]
 
   ::msgcat::mcset cz "Change to" [encoding convertfrom utf-8 "Zm\304\233nit na"]
   ::msgcat::mcset de "Change to" [encoding convertfrom utf-8 "\303\204ndern in"]
@@ -2730,6 +3038,7 @@
   ::msgcat::mcset it "Change to" [encoding convertfrom utf-8 "Cambia a"]
   ::msgcat::mcset ru "Change to" [encoding convertfrom utf-8 "\320\230\320\267\320\274\320\265\320\275\320\270\321\202\321\214 \320\275\320\260"]
   ::msgcat::mcset sk "Change to" [encoding convertfrom utf-8 "Zmeni\305\245 na"]
+  ::msgcat::mcset sq "Change to" [encoding convertfrom utf-8 "ndero ne"]
 
   ::msgcat::mcset cz "To set file encoding, type encoding name and press <Change> button." [encoding convertfrom utf-8 "Nastaven\303\255 k\303\263dov\303\241n\303\255 - vyberte k\303\263dov\303\241n\303\255 a stiskn\304\233te tla\304\215\303\255tko <Zm\304\233nit na>."]
   ::msgcat::mcset de "To set file encoding, type encoding name and press <Change> button." [encoding convertfrom utf-8 "Um Zeichenkodierung zu \303\244ndern, gebe den Namen der Kodierung ein und dr\303\274cke den <Change> Knopf."]
@@ -2739,6 +3048,7 @@
   ::msgcat::mcset it "To set file encoding, type encoding name and press <Change> button." [encoding convertfrom utf-8 "Per impostare l'encoding, scrivi il nome dell'encoding e premi il bottone <Cambia>"]
   ::msgcat::mcset ru "To set file encoding, type encoding name and press <Change> button." [encoding convertfrom utf-8 "\320\224\320\273\321\217 \320\267\320\260\320\264\320\260\320\275\320\270\321\217 \320\272\320\276\320\264\320\270\321\200\320\276\320\262\320\272\320\270 \321\204\320\260\320\271\320\273\320\260 \320\262\320\262\320\265\320\264\320\270\321\202\320\265 \320\270\320\274\321\217 \320\272\320\276\320\264\320\270\321\200\320\276\320\262\320\272\320\270 \320\270 \320\275\320\260\320\266\320\274\320\270\321\202\320\265 \320\272\320\275\320\276\320\277\320\272\321\203 <\320\230\320\267\320\274\320\265\320\275\320\270\321\202\321\214>."]
   ::msgcat::mcset sk "To set file encoding, type encoding name and press <Change> button." [encoding convertfrom utf-8 "Na nastavenie k\303\263dovania, vlo\305\276te identifik\303\241tor k\303\263dovania a stla\304\215te <Zmeni\305\245>."]
+  ::msgcat::mcset sq "To set file encoding, type encoding name and press <Change> button." [encoding convertfrom utf-8 "per te vendos fajlin per dekodim, shtype emrin per dekodim dhe kliko butonin <ndroje>"]
 
   ::msgcat::mcset cz "Scan data format" [encoding convertfrom utf-8 "Skenovat form\303\241t dat"]
   ::msgcat::mcset de "Scan data format" [encoding convertfrom utf-8 "Datenformat einlesen"]
@@ -2748,6 +3058,7 @@
   ::msgcat::mcset it "Scan data format" [encoding convertfrom utf-8 "Imposta formato dati"]
   ::msgcat::mcset ru "Scan data format" [encoding convertfrom utf-8 "\320\236\320\277\321\200\320\265\320\264\320\265\320\273\320\270\321\202\321\214 \321\204\320\276\321\200\320\274\320\260\321\202 \320\264\320\260\320\275\320\275\321\213\321\205"]
   ::msgcat::mcset sk "Scan data format" [encoding convertfrom utf-8 "N\303\241jdi form\303\241t d\303\241t"]
+  ::msgcat::mcset sq "Scan data format" [encoding convertfrom utf-8 "skano formatin e shenimeve"]
 
   ::msgcat::mcset cz "Scan data format and rebuild centerline data insertion tool." [encoding convertfrom utf-8 "P\305\231e\304\215te form\303\241t dat v souboru a uprav\303\255 pole pro vkl\303\241d\303\241n\303\255 m\304\233\305\231en\303\255."]
   ::msgcat::mcset de "Scan data format and rebuild centerline data insertion tool." [encoding convertfrom utf-8 "Datenformat einlesen und Messdateneditor anpassen."]
@@ -2757,6 +3068,7 @@
   ::msgcat::mcset it "Scan data format and rebuild centerline data insertion tool." [encoding convertfrom utf-8 "Imposta il formato dati e ricostruisci la tabella inserimento dati."]
   ::msgcat::mcset ru "Scan data format and rebuild centerline data insertion tool." [encoding convertfrom utf-8 "\320\220\320\262\321\202\320\276\320\274\320\260\321\202\320\270\321\207\320\265\321\201\320\272\320\270 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\270\321\202\321\214 \321\204\320\276\321\200\320\274\320\260\321\202 \320\264\320\260\320\275\320\275\321\213\321\205 \320\270 \320\277\320\265\321\200\320\265\321\201\321\202\321\200\320\276\320\270\321\202\321\214 \320\277\320\276\320\273\321\217 \320\262\320\262\320\276\320\264\320\260."]
   ::msgcat::mcset sk "Scan data format and rebuild centerline data insertion tool." [encoding convertfrom utf-8 "Na\304\215\303\255ta form\303\241t d\303\241t z predch\303\241dzaj\303\272cich riadkov a pr\303\255slu\305\241ne zmen\303\255 panel na vkladanie d\303\241t."]
+  ::msgcat::mcset sq "Scan data format and rebuild centerline data insertion tool." [encoding convertfrom utf-8 "skanon formatin e shenimeve dhe rinderton tekst-katroret per futjen e shenimeve net e njejten kohe"]
 
   ::msgcat::mcset cz "Enter station names" [encoding convertfrom utf-8 "Zad\303\241vat n\303\241zvy bod\305\257"]
   ::msgcat::mcset de "Enter station names" [encoding convertfrom utf-8 "Messpunktnamen eingeben"]
@@ -2766,6 +3078,7 @@
   ::msgcat::mcset it "Enter station names" [encoding convertfrom utf-8 "Scrivi nomi capisaldi"]
   ::msgcat::mcset ru "Enter station names" [encoding convertfrom utf-8 "\320\222\320\262\320\276\320\264 \320\275\320\276\320\274\320\265\321\200\320\260 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\320\265\320\263\320\276 \320\277\320\270\320\272\320\265\321\202\320\260"]
   ::msgcat::mcset sk "Enter station names" [encoding convertfrom utf-8 "Zad\303\241vanie n\303\241zvov bodov"]
+  ::msgcat::mcset sq "Enter station names" [encoding convertfrom utf-8 "futi emrat e stacioneve"]
 
   ::msgcat::mcset cz "Check if you want to insert station names for each shot." [encoding convertfrom utf-8 "Za\305\241krtn\304\233te pokud chcete zad\303\241vat n\303\241zev pro ka\305\276d\303\275 m\304\233\305\231i\304\215sk\303\275 bod."]
   ::msgcat::mcset de "Check if you want to insert station names for each shot." [encoding convertfrom utf-8 "Ankreuzen, wenn du Messpunktnamen f\303\274r jede Strecke eingeben willst."]
@@ -2775,6 +3088,7 @@
   ::msgcat::mcset it "Check if you want to insert station names for each shot." [encoding convertfrom utf-8 "Attiva per inserire i nomi dei capisaldi per ogni tratta."]
   ::msgcat::mcset ru "Check if you want to insert station names for each shot." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\320\265 \320\276\321\202\320\274\320\265\321\202\320\272\321\203, \320\265\321\201\320\273\320\270 \321\205\320\276\321\202\320\270\321\202\320\265, \321\207\321\202\320\276\320\261\321\213 \320\277\321\200\320\276\320\270\321\201\321\205\320\276\320\264\320\270\320\273 \320\260\320\262\321\202\320\276\320\274\320\260\321\202\320\270\321\207\320\265\321\201\320\272\320\270\320\271 \320\262\320\262\320\276\320\264 \320\275\320\276\320\274\320\265\321\200\320\260 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\320\265\320\263\320\276 \320\277\320\270\320\272\320\265\321\202\320\260."]
   ::msgcat::mcset sk "Check if you want to insert station names for each shot." [encoding convertfrom utf-8 "Za\305\241krtnite pokia\304\276 chcete vklada\305\245 aj men\303\241 bodov pre ka\305\276d\303\272 z\303\241meru."]
+  ::msgcat::mcset sq "Check if you want to insert station names for each shot." [encoding convertfrom utf-8 "kontrollo nese deshiron ti fusesh emrat e stacioneve per secilin foto"]
 
   ::msgcat::mcset cz "Auto format selection" [encoding convertfrom utf-8 "Auto form\303\241tov\303\241n\303\255 v\303\275b\304\233ru"]
   ::msgcat::mcset de "Auto format selection" [encoding convertfrom utf-8 "Auswahl formatieren"]
@@ -2784,6 +3098,7 @@
   ::msgcat::mcset it "Auto format selection" [encoding convertfrom utf-8 "Selezione formato automatico."]
   ::msgcat::mcset ru "Auto format selection" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\321\201\321\202\321\200\320\276\320\270\321\202\321\214 \320\262\321\213\320\264\320\265\320\273\320\265\320\275\320\275\321\213\320\265 \320\264\320\260\320\275\320\275\321\213\320\265"]
   ::msgcat::mcset sk "Auto format selection" [encoding convertfrom utf-8 "Naform\303\241tuj v\303\275ber"]
+  ::msgcat::mcset sq "Auto format selection" [encoding convertfrom utf-8 "zgjedhja automatike e formatit"]
 
   ::msgcat::mcset cz "Format selection to given table." [encoding convertfrom utf-8 "Naform\303\241tuje v\303\275b\304\233r do tabulky."]
   ::msgcat::mcset de "Format selection to given table." [encoding convertfrom utf-8 "Formatiere Auswahl zur gegebenen Tabelle."]
@@ -2793,6 +3108,7 @@
   ::msgcat::mcset it "Format selection to given table." [encoding convertfrom utf-8 "Imposta selezione alla tabella specificata."]
   ::msgcat::mcset ru "Format selection to given table." [encoding convertfrom utf-8 "\320\237\321\200\320\270\320\262\320\265\321\201\321\202\320\270 \320\262\321\213\320\264\320\265\320\273\320\265\320\275\320\275\321\213\320\265 \320\264\320\260\320\275\320\275\321\213\320\265 \320\272 \320\267\320\260\320\264\320\260\320\275\320\275\320\276\320\274\321\203 \321\204\320\276\321\200\320\274\320\260\321\202\321\203."]
   ::msgcat::mcset sk "Format selection to given table." [encoding convertfrom utf-8 "Naform\303\241tuje v\303\275ber do d\303\241tovej tabu\304\276ky."]
+  ::msgcat::mcset sq "Format selection to given table." [encoding convertfrom utf-8 "zgjedhja e formatit per tabelen e dhene"]
 
   ::msgcat::mcset cz "search" [encoding convertfrom utf-8 "hledat"]
   ::msgcat::mcset de "search" [encoding convertfrom utf-8 "Suche"]
@@ -2802,6 +3118,7 @@
   ::msgcat::mcset it "search" [encoding convertfrom utf-8 "cerca"]
   ::msgcat::mcset ru "search" [encoding convertfrom utf-8 "\320\277\320\276\320\270\321\201\320\272"]
   ::msgcat::mcset sk "search" [encoding convertfrom utf-8 "h\304\276adaj"]
+  ::msgcat::mcset sq "search" [encoding convertfrom utf-8 "kerko"]
 
   ::msgcat::mcset cz "Search expression." [encoding convertfrom utf-8 "Hledan\303\275 v\303\275raz."]
   ::msgcat::mcset de "Search expression." [encoding convertfrom utf-8 "Suche Muster."]
@@ -2811,6 +3128,7 @@
   ::msgcat::mcset it "Search expression." [encoding convertfrom utf-8 "Testo da cercare."]
   ::msgcat::mcset ru "Search expression." [encoding convertfrom utf-8 "\320\222\321\213\321\200\320\260\320\266\320\265\320\275\320\270\320\265 \320\277\320\276\320\270\321\201\320\272\320\260."]
   ::msgcat::mcset sk "Search expression." [encoding convertfrom utf-8 "H\304\276adan\303\275 v\303\275raz."]
+  ::msgcat::mcset sq "Search expression." [encoding convertfrom utf-8 "shkruaje fjalen per tu kerkuar"]
 
   ::msgcat::mcset cz "replace" [encoding convertfrom utf-8 "nahradit"]
   ::msgcat::mcset de "replace" [encoding convertfrom utf-8 "Ersetze"]
@@ -2820,6 +3138,7 @@
   ::msgcat::mcset it "replace" [encoding convertfrom utf-8 "sostituisci"]
   ::msgcat::mcset ru "replace" [encoding convertfrom utf-8 "\320\267\320\260\320\274\320\265\320\275\320\260"]
   ::msgcat::mcset sk "replace" [encoding convertfrom utf-8 "nahradi\305\245"]
+  ::msgcat::mcset sq "replace" [encoding convertfrom utf-8 "ndero vendin"]
 
   ::msgcat::mcset cz "Check whether to replace found expression." [encoding convertfrom utf-8 "Za\305\241krtn\304\233te pokud chcete nahradit nalezen\303\251 v\303\275razy."]
   ::msgcat::mcset el "Check whether to replace found expression." [encoding convertfrom utf-8 "\316\225\317\200\316\271\316\273\316\255\316\276\317\204\316\265 \316\263\316\271\316\261 \316\261\316\275\317\204\316\271\316\272\316\261\317\204\316\254\317\203\317\204\316\261\317\203\316\267 \317\204\316\267\317\202 \316\265\317\205\317\201\316\265\316\270\316\265\316\257\317\203\316\261\317\202 \317\200\316\265\317\201\316\257\317\200\317\204\317\211\317\203\316\267\317\202."]
@@ -2828,6 +3147,7 @@
   ::msgcat::mcset it "Check whether to replace found expression." [encoding convertfrom utf-8 "Attiva per sostituire il testo trovato."]
   ::msgcat::mcset ru "Check whether to replace found expression." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\320\265 \320\276\321\202\320\274\320\265\321\202\320\272\321\203, \320\265\321\201\320\273\320\270 \321\205\320\276\321\202\320\270\321\202\320\265 \320\277\321\200\320\276\320\270\320\267\320\262\320\265\321\201\321\202\320\270 \320\267\320\260\320\274\320\265\320\275\321\203."]
   ::msgcat::mcset sk "Check whether to replace found expression." [encoding convertfrom utf-8 "Za\305\241krtn\303\272\305\245 pokia\304\276 sa m\303\241 n\303\241jden\303\275 v\303\275raz nahradi\305\245 in\303\275m."]
+  ::msgcat::mcset sq "Check whether to replace found expression." [encoding convertfrom utf-8 "kontrollo a duhet te ndrohet fjalia e gjetur"]
 
   ::msgcat::mcset cz "Replace expression." [encoding convertfrom utf-8 "\305\230et\304\233zec, kter\303\275m bude v\303\275raz nahrazen."]
   ::msgcat::mcset de "Replace expression." [encoding convertfrom utf-8 "Ersetze Muster."]
@@ -2837,6 +3157,7 @@
   ::msgcat::mcset it "Replace expression." [encoding convertfrom utf-8 "Sostituisci testo."]
   ::msgcat::mcset ru "Replace expression." [encoding convertfrom utf-8 "\320\222\321\213\321\200\320\260\320\266\320\265\320\275\320\270\320\265 \320\267\320\260\320\274\320\265\320\275\321\213."]
   ::msgcat::mcset sk "Replace expression." [encoding convertfrom utf-8 "V\303\275raz na nahradenie."]
+  ::msgcat::mcset sq "Replace expression." [encoding convertfrom utf-8 "rezultatet e gjetura do te ndrohen nga fjalia e future ketu"]
 
   ::msgcat::mcset cz "case sensitive search" [encoding convertfrom utf-8 "rozli\305\241ovat velikost p\303\255smen"]
   ::msgcat::mcset de "case sensitive search" [encoding convertfrom utf-8 "Gro\303\237- und Kleinschreibung bei Suche ber\303\274cksichtigen"]
@@ -2846,6 +3167,7 @@
   ::msgcat::mcset it "case sensitive search" [encoding convertfrom utf-8 "ricerca case-sensitive"]
   ::msgcat::mcset ru "case sensitive search" [encoding convertfrom utf-8 "\321\203\321\207\320\270\321\202\321\213\320\262\320\260\321\202\321\214 \321\200\320\265\320\263\320\270\321\201\321\202\321\200"]
   ::msgcat::mcset sk "case sensitive search" [encoding convertfrom utf-8 "rozli\305\241ova\305\245 mal\303\251 a ve\304\276k\303\251"]
+  ::msgcat::mcset sq "case sensitive search" [encoding convertfrom utf-8 "kerkimi -rast sensitiv"]
 
   ::msgcat::mcset cz "Check if search should be case sensitive." [encoding convertfrom utf-8 "Vyhled\303\241v\303\241n\303\255 s rozli\305\241en\303\255m velikosti p\303\255smen."]
   ::msgcat::mcset de "Check if search should be case sensitive." [encoding convertfrom utf-8 "Ankreuzen, wenn Suche Gro\303\237- und Kleinschreibung ber\303\274cksichtigen soll."]
@@ -2855,6 +3177,7 @@
   ::msgcat::mcset it "Check if search should be case sensitive." [encoding convertfrom utf-8 "Attiva se la ricerca deve essere case-sensitive."]
   ::msgcat::mcset ru "Check if search should be case sensitive." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\320\265 \320\276\321\202\320\274\320\265\321\202\320\272\321\203, \321\207\321\202\320\276\320\261\321\213 \320\277\320\276\320\270\321\201\320\272 \320\277\321\200\320\276\320\270\321\201\321\205\320\276\320\264\320\270\320\273 \321\201 \321\203\321\207\320\265\321\202\320\276\320\274 \321\200\320\265\320\263\320\270\321\201\321\202\321\200\320\260."]
   ::msgcat::mcset sk "Check if search should be case sensitive." [encoding convertfrom utf-8 "Za\305\241krtnite pokia\304\276 pri h\304\276adan\303\255 chcete rozli\305\241ova\305\245 mal\303\251 a ve\304\276k\303\251 p\303\255smen\303\241."]
+  ::msgcat::mcset sq "Check if search should be case sensitive." [encoding convertfrom utf-8 "kontrollo nese kerkimi do te jete rast-sensitiv"]
 
   ::msgcat::mcset cz "regular expressions" [encoding convertfrom utf-8 "regul\303\241rn\303\255 v\303\275razy"]
   ::msgcat::mcset de "regular expressions" [encoding convertfrom utf-8 "Regul\303\244rer Ausdruck."]
@@ -2864,6 +3187,7 @@
   ::msgcat::mcset it "regular expressions" [encoding convertfrom utf-8 "esperssioni regolari"]
   ::msgcat::mcset ru "regular expressions" [encoding convertfrom utf-8 "\321\200\320\265\320\263\321\203\320\273\321\217\321\200\320\275\321\213\320\265 \320\262\321\213\321\200\320\260\320\266\320\265\320\275\320\270\321\217"]
   ::msgcat::mcset sk "regular expressions" [encoding convertfrom utf-8 "regul\303\241rny v\303\275raz"]
+  ::msgcat::mcset sq "regular expressions" [encoding convertfrom utf-8 "shprehje te rregullta"]
 
   ::msgcat::mcset cz "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "Za\305\241krtn\304\233te pokud chcete vyhled\303\241vat nebo nahrazovat pomoc\303\255 regul\303\241rn\303\255ch v\303\275raz\305\257."]
   ::msgcat::mcset de "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "Ankreuzen, ob Suchen und Ersetzen regul\303\244ren Ausdruck nutzen soll."]
@@ -2873,6 +3197,7 @@
   ::msgcat::mcset it "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "Attiva per ricerca e sostituzione con espressioni regolari."]
   ::msgcat::mcset ru "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\320\265 \320\276\321\202\320\274\320\265\321\202\320\272\321\203, \321\207\321\202\320\276\320\261\321\213 \320\276\320\261\321\200\320\260\320\261\320\260\321\202\321\213\320\262\320\260\321\202\321\214 \321\200\320\265\320\263\321\203\320\273\321\217\321\200\320\275\321\213\320\265 \320\262\321\213\321\200\320\260\320\266\320\265\320\275\320\270\321\217 \320\277\321\200\320\270 \320\277\320\276\320\270\321\201\320\272\320\265 \320\270 \320\267\320\260\320\274\320\265\320\275\320\265."]
   ::msgcat::mcset sk "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "Za\305\241krtnite ak sa m\303\241 h\304\276adanie a nahradenie vykon\303\241va\305\245 v m\303\263de regul\303\241rnych v\303\275razov."]
+  ::msgcat::mcset sq "Check whether to evaluate search and replace as regular expressions." [encoding convertfrom utf-8 "kontrollo a do te kerkosh duke perdor shprehje te zakonta-rregullta"]
 
   ::msgcat::mcset cz "search selection only" [encoding convertfrom utf-8 "pouze ve vybran\303\251m textu"]
   ::msgcat::mcset de "search selection only" [encoding convertfrom utf-8 "Nur in Auwahl suchen"]
@@ -2882,6 +3207,7 @@
   ::msgcat::mcset it "search selection only" [encoding convertfrom utf-8 "cerca solo nella selezione"]
   ::msgcat::mcset ru "search selection only" [encoding convertfrom utf-8 "\320\270\321\201\320\272\320\260\321\202\321\214 \320\262 \320\262\321\213\320\264\320\265\320\273\320\265\320\275\320\275\320\276\320\274"]
   ::msgcat::mcset sk "search selection only" [encoding convertfrom utf-8 "iba vo vybratom texte"]
+  ::msgcat::mcset sq "search selection only" [encoding convertfrom utf-8 "kerko vetem selekcionet"]
 
   ::msgcat::mcset cz "Check whether to do search only in selected text." [encoding convertfrom utf-8 "Za\305\241krtn\304\233te pokud chcete vyhled\303\241vat pouze ve vybran\303\251m textu."]
   ::msgcat::mcset de "Check whether to do search only in selected text." [encoding convertfrom utf-8 "Ankreuzen, wenn nur im ausgew\303\244hlten Text gesucht werden soll."]
@@ -2891,6 +3217,7 @@
   ::msgcat::mcset it "Check whether to do search only in selected text." [encoding convertfrom utf-8 "Attiva per cercare solo nel testo selezionato."]
   ::msgcat::mcset ru "Check whether to do search only in selected text." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\320\265 \320\276\321\202\320\274\320\265\321\202\320\272\321\203, \321\207\321\202\320\276\320\261\321\213 \320\270\321\201\320\272\320\260\321\202\321\214 \321\202\320\276\320\273\321\214\320\272\320\276 \320\262 \320\262\321\213\320\264\320\265\320\273\320\265\320\275\320\275\320\276\320\274 \321\202\320\265\320\272\321\201\321\202\320\265."]
   ::msgcat::mcset sk "Check whether to do search only in selected text." [encoding convertfrom utf-8 "Za\305\241krtnite pokia\304\276 hladanie m\303\241 prebehn\303\272\305\245 len v ozna\304\215enom texte."]
+  ::msgcat::mcset sq "Check whether to do search only in selected text." [encoding convertfrom utf-8 "kontrollo a do te perdoresh kerkimin vetem ne tekstin e selekcionuar"]
 
   ::msgcat::mcset cz "First" [encoding convertfrom utf-8 "Prvn\303\255"]
   ::msgcat::mcset de "First" [encoding convertfrom utf-8 "Erstes"]
@@ -2900,6 +3227,7 @@
   ::msgcat::mcset it "First" [encoding convertfrom utf-8 "Primo"]
   ::msgcat::mcset ru "First" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\262\321\213\320\271"]
   ::msgcat::mcset sk "First" [encoding convertfrom utf-8 "Prv\303\275"]
+  ::msgcat::mcset sq "First" [encoding convertfrom utf-8 "e para"]
 
   ::msgcat::mcset cz "Search or replace first expression in the file." [encoding convertfrom utf-8 "Najde nebo nahrad\303\255 prvn\303\255 v\303\275raz v souboru."]
   ::msgcat::mcset de "Search or replace first expression in the file." [encoding convertfrom utf-8 "Suche oder ersetze erstes Muster in der Datei."]
@@ -2909,6 +3237,7 @@
   ::msgcat::mcset it "Search or replace first expression in the file." [encoding convertfrom utf-8 "Cerca o sostituisci la prima istanza del testo nel file."]
   ::msgcat::mcset ru "Search or replace first expression in the file." [encoding convertfrom utf-8 "\320\237\320\276\320\270\321\201\320\272 \320\270\320\273\320\270 \320\267\320\260\320\274\320\265\320\275\320\260 \320\277\320\265\321\200\320\262\320\276\320\263\320\276 \320\262\321\205\320\276\320\266\320\264\320\265\320\275\320\270\321\217 \320\262 \321\204\320\260\320\271\320\273\320\265."]
   ::msgcat::mcset sk "Search or replace first expression in the file." [encoding convertfrom utf-8 "N\303\241jte popr\303\255pade nahrad\303\255 prv\303\275 v\303\275skyt h\304\276adan\303\251ho v\303\275razu v s\303\272bore."]
+  ::msgcat::mcset sq "Search or replace first expression in the file." [encoding convertfrom utf-8 "kerko ose ndro shprehjet e para ne fajlla"]
 
   ::msgcat::mcset cz "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "Najde nebo nahrad\303\255 n\303\241sleduj\303\255c\303\255 v\303\275raz v souboru."]
   ::msgcat::mcset de "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "Suche oder ersetze n\303\244chstes Muster nach dem Cursor in der Datei."]
@@ -2918,6 +3247,7 @@
   ::msgcat::mcset it "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "Cerca o sostituisci la prossima istanza del testo nel file dopo il cursore."]
   ::msgcat::mcset ru "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "\320\237\320\276\320\270\321\201\320\272 \320\270\320\273\320\270 \320\267\320\260\320\274\320\265\320\275\320\260 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\320\265\320\263\320\276 \320\277\320\276\321\201\320\273\320\265 \320\272\321\203\321\200\321\201\320\276\321\200\320\260 \320\262\321\205\320\276\320\266\320\264\320\265\320\275\320\270\321\217 \320\262 \321\204\320\260\320\271\320\273\320\265."]
   ::msgcat::mcset sk "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "N\303\241jdi alebo nahra\304\217 nasleduj\303\272ci v\303\275raz v s\303\272bore."]
+  ::msgcat::mcset sq "Search or replace next expression after the cursor in the file." [encoding convertfrom utf-8 "kerko ose ndroje shprehjen e ardhshme pas kursorit ne fajll"]
 
   ::msgcat::mcset cz "All" [encoding convertfrom utf-8 "V\305\241e"]
   ::msgcat::mcset de "All" [encoding convertfrom utf-8 "Alles"]
@@ -2927,6 +3257,7 @@
   ::msgcat::mcset it "All" [encoding convertfrom utf-8 "Tutti"]
   ::msgcat::mcset ru "All" [encoding convertfrom utf-8 "\320\222\321\201\320\265"]
   ::msgcat::mcset sk "All" [encoding convertfrom utf-8 "V\305\241etko"]
+  ::msgcat::mcset sq "All" [encoding convertfrom utf-8 "te gjithat"]
 
   ::msgcat::mcset cz "Search or replace all expressions in the file." [encoding convertfrom utf-8 "Najde nebo nahrad\303\255 v\305\241echny v\303\275razy v souboru."]
   ::msgcat::mcset de "Search or replace all expressions in the file." [encoding convertfrom utf-8 "Suche oder ersetze alle Muster in der Datei."]
@@ -2936,6 +3267,7 @@
   ::msgcat::mcset it "Search or replace all expressions in the file." [encoding convertfrom utf-8 "Cerca o sostituisci tuute le frasi nel file."]
   ::msgcat::mcset ru "Search or replace all expressions in the file." [encoding convertfrom utf-8 "\320\237\320\276\320\270\321\201\320\272 \320\270\320\273\320\270 \320\267\320\260\320\274\320\265\320\275\320\260 \320\262\321\201\320\265\321\205 \320\262\321\205\320\276\320\266\320\264\320\265\320\275\320\270\320\271 \320\262 \321\204\320\260\320\271\320\273\320\265."]
   ::msgcat::mcset sk "Search or replace all expressions in the file." [encoding convertfrom utf-8 "N\303\241jdi alebo nahra\304\217 v\305\241etky v\303\275razy v s\303\272bore."]
+  ::msgcat::mcset sq "Search or replace all expressions in the file." [encoding convertfrom utf-8 "kerko ose ndroji te gjitha shprehjet ne fajlla"]
 
   ::msgcat::mcset cz "Clear" [encoding convertfrom utf-8 "Zru\305\241it"]
   ::msgcat::mcset de "Clear" [encoding convertfrom utf-8 "L\303\266schen"]
@@ -2945,6 +3277,7 @@
   ::msgcat::mcset it "Clear" [encoding convertfrom utf-8 "Cancella"]
   ::msgcat::mcset ru "Clear" [encoding convertfrom utf-8 "\320\236\321\207\320\270\321\201\321\202\320\272\320\260"]
   ::msgcat::mcset sk "Clear" [encoding convertfrom utf-8 "Vy\304\215isti"]
+  ::msgcat::mcset sq "Clear" [encoding convertfrom utf-8 "e paster"]
 
   ::msgcat::mcset cz "Clear all highlights in the file." [encoding convertfrom utf-8 "Zru\305\241\303\255 zv\303\275razn\304\233n\303\255 nalezen\303\275ch v\303\275raz\305\257 v souboru."]
   ::msgcat::mcset de "Clear all highlights in the file." [encoding convertfrom utf-8 "L\303\266sche alle Hervorhebungen in der Datei."]
@@ -2954,6 +3287,7 @@
   ::msgcat::mcset it "Clear all highlights in the file." [encoding convertfrom utf-8 "Cancella tutte le evidenziazioni nel file."]
   ::msgcat::mcset ru "Clear all highlights in the file." [encoding convertfrom utf-8 "\320\236\321\207\320\270\321\201\321\202\320\272\320\260 \320\262\321\201\320\265\321\205 \320\277\320\276\320\264\321\201\320\262\320\265\321\207\320\265\320\275\320\275\321\213\321\205 \321\203\321\207\320\260\321\201\321\202\320\272\320\276\320\262 \321\202\320\265\320\272\321\201\321\202\320\260."]
   ::msgcat::mcset sk "Clear all highlights in the file." [encoding convertfrom utf-8 "Zru\305\241\303\255 zv\303\275raznenie n\303\241jden\303\275ch v\303\275razov v s\303\272bore."]
+  ::msgcat::mcset sq "Clear all highlights in the file." [encoding convertfrom utf-8 "fshij te gjitha selekcionimet apo hijezimet ne fajlla"]
 
   ::msgcat::mcset cz "Opening %s ..." [encoding convertfrom utf-8 "Otev\303\255r\303\241m %s ..."]
   ::msgcat::mcset de "Opening %s ..." [encoding convertfrom utf-8 "\303\226ffne %s ..."]
@@ -2963,6 +3297,7 @@
   ::msgcat::mcset it "Opening %s ..." [encoding convertfrom utf-8 "Apertura %s ..."]
   ::msgcat::mcset ru "Opening %s ..." [encoding convertfrom utf-8 "\320\236\321\202\320\272\321\200\321\213\321\202\320\270\320\265 %s ..."]
   ::msgcat::mcset sk "Opening %s ..." [encoding convertfrom utf-8 "Otev\303\241ram %s ..."]
+  ::msgcat::mcset sq "Opening %s ..." [encoding convertfrom utf-8 "duke hap %s \342\200\246"]
 
   ::msgcat::mcset cz "File %s is not saved. Save it now?" [encoding convertfrom utf-8 "Soubor %s nen\303\255 ulo\305\276en. Ulo\305\276it nyn\303\255?"]
   ::msgcat::mcset de "File %s is not saved. Save it now?" [encoding convertfrom utf-8 "datei %s nicht gespeichert. Speichere jetzt?"]
@@ -2972,6 +3307,7 @@
   ::msgcat::mcset it "File %s is not saved. Save it now?" [encoding convertfrom utf-8 "Il file %s non \303\250 salvato. Salva ora?"]
   ::msgcat::mcset ru "File %s is not saved. Save it now?" [encoding convertfrom utf-8 "\320\244\320\260\320\271\320\273 %s \320\275\320\265 \321\201\320\276\321\205\321\200\320\260\320\275\320\265\320\275. \320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214 \320\265\320\263\320\276 \321\201\320\265\320\271\321\207\320\260\321\201?"]
   ::msgcat::mcset sk "File %s is not saved. Save it now?" [encoding convertfrom utf-8 "S\303\272bor %s nie je ulo\305\276en\303\275. Ulo\305\276i\305\245 teraz?"]
+  ::msgcat::mcset sq "File %s is not saved. Save it now?" [encoding convertfrom utf-8 "fajlli %s nuk eshte I ruajtur. Ta ruajm tani?"]
 
   ::msgcat::mcset cz "File %s was modified outside xtherion. Save it anyway?" [encoding convertfrom utf-8 "Soubor %s byl modifikov\303\241n mimo xtherion. P\305\231esto ulo\305\276it?"]
   ::msgcat::mcset de "File %s was modified outside xtherion. Save it anyway?" [encoding convertfrom utf-8 "Datei %s wurde au\303\237erhalb von Xtherion ge\303\244ndert. Trotzdem speichern?"]
@@ -2981,6 +3317,7 @@
   ::msgcat::mcset it "File %s was modified outside xtherion. Save it anyway?" [encoding convertfrom utf-8 "Il file %s \303\250 stato modificato fuori da xtherion. Salva comunque?"]
   ::msgcat::mcset ru "File %s was modified outside xtherion. Save it anyway?" [encoding convertfrom utf-8 "\320\244\320\260\320\271\320\273 %s \320\261\321\213\320\273 \320\270\320\267\320\274\320\265\320\275\320\265\320\275 \320\264\321\200\321\203\320\263\320\270\320\274 \320\277\321\200\320\270\320\273\320\276\320\266\320\265\320\275\320\270\320\265\320\274. \320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214 \320\275\320\265 \321\201\320\274\320\276\321\202\321\200\321\217 \320\275\320\260 \321\215\321\202\320\276?"]
   ::msgcat::mcset sk "File %s was modified outside xtherion. Save it anyway?" [encoding convertfrom utf-8 "S\303\272bor %s bol modifikovan\303\275 mimo programu. Ulo\305\276i\305\245 aj tak?"]
+  ::msgcat::mcset sq "File %s was modified outside xtherion. Save it anyway?" [encoding convertfrom utf-8 "fajlli %s eshte ndryshuar jashte x therion-it. Ta ruajm sido qe te jete?"]
 
   ::msgcat::mcset cz "Saving %s ..." [encoding convertfrom utf-8 "Ukl\303\241d\303\241m %s ..."]
   ::msgcat::mcset de "Saving %s ..." [encoding convertfrom utf-8 "Speichere %s ..."]
@@ -2990,6 +3327,7 @@
   ::msgcat::mcset it "Saving %s ..." [encoding convertfrom utf-8 "Salvataggio %s ..."]
   ::msgcat::mcset ru "Saving %s ..." [encoding convertfrom utf-8 "\320\241\320\276\321\205\321\200\320\260\320\275\320\265\320\275\320\270\320\265 %s ..."]
   ::msgcat::mcset sk "Saving %s ..." [encoding convertfrom utf-8 "Uklad\303\241m %s ..."]
+  ::msgcat::mcset sq "Saving %s ..." [encoding convertfrom utf-8 "duke ruajtur %s. . ."]
 
   ::msgcat::mcset cz "New" [encoding convertfrom utf-8 "Nov\303\275"]
   ::msgcat::mcset de "New" [encoding convertfrom utf-8 "Neu"]
@@ -2999,6 +3337,7 @@
   ::msgcat::mcset it "New" [encoding convertfrom utf-8 "Nuovo"]
   ::msgcat::mcset ru "New" [encoding convertfrom utf-8 "\320\235\320\276\320\262\321\213\320\271"]
   ::msgcat::mcset sk "New" [encoding convertfrom utf-8 "Nov\303\275"]
+  ::msgcat::mcset sq "New" [encoding convertfrom utf-8 "e re"]
 
   ::msgcat::mcset cz "Open" [encoding convertfrom utf-8 "Otev\305\231\303\255t..."]
   ::msgcat::mcset de "Open" [encoding convertfrom utf-8 "\303\226ffnen"]
@@ -3008,6 +3347,7 @@
   ::msgcat::mcset it "Open" [encoding convertfrom utf-8 "Apri"]
   ::msgcat::mcset ru "Open" [encoding convertfrom utf-8 "\320\236\321\202\320\272\321\200\321\213\321\202\321\214"]
   ::msgcat::mcset sk "Open" [encoding convertfrom utf-8 "Otvori\305\245"]
+  ::msgcat::mcset sq "Open" [encoding convertfrom utf-8 "hape"]
 
   ::msgcat::mcset cz "Save" [encoding convertfrom utf-8 "Ulo\305\276it"]
   ::msgcat::mcset de "Save" [encoding convertfrom utf-8 "Speichern"]
@@ -3017,6 +3357,7 @@
   ::msgcat::mcset it "Save" [encoding convertfrom utf-8 "Salva"]
   ::msgcat::mcset ru "Save" [encoding convertfrom utf-8 "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214"]
   ::msgcat::mcset sk "Save" [encoding convertfrom utf-8 "Ulo\305\276i\305\245"]
+  ::msgcat::mcset sq "Save" [encoding convertfrom utf-8 "ruaje"]
 
   ::msgcat::mcset cz "Save as" [encoding convertfrom utf-8 "Ulo\305\276it jako..."]
   ::msgcat::mcset de "Save as" [encoding convertfrom utf-8 "Speichern als"]
@@ -3026,6 +3367,7 @@
   ::msgcat::mcset it "Save as" [encoding convertfrom utf-8 "Salva come"]
   ::msgcat::mcset ru "Save as" [encoding convertfrom utf-8 "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214 \320\272\320\260\320\272"]
   ::msgcat::mcset sk "Save as" [encoding convertfrom utf-8 "Ulo\305\276i\305\245 ako"]
+  ::msgcat::mcset sq "Save as" [encoding convertfrom utf-8 "ruaje si"]
 
   ::msgcat::mcset cz "Save all" [encoding convertfrom utf-8 "Ulo\305\276it v\305\241e"]
   ::msgcat::mcset de "Save all" [encoding convertfrom utf-8 "Speichere alles"]
@@ -3035,6 +3377,7 @@
   ::msgcat::mcset it "Save all" [encoding convertfrom utf-8 "Salva tutti"]
   ::msgcat::mcset ru "Save all" [encoding convertfrom utf-8 "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214 \320\262\321\201\321\221"]
   ::msgcat::mcset sk "Save all" [encoding convertfrom utf-8 "Ulo\305\276i\305\245 v\305\241etko"]
+  ::msgcat::mcset sq "Save all" [encoding convertfrom utf-8 "ruaji te gjitha"]
 
   ::msgcat::mcset cz "Auto save" [encoding convertfrom utf-8 "Automaticky ukl\303\241dat"]
   ::msgcat::mcset de "Auto save" [encoding convertfrom utf-8 "Automatisch speichern"]
@@ -3044,6 +3387,7 @@
   ::msgcat::mcset it "Auto save" [encoding convertfrom utf-8 "Auto salva"]
   ::msgcat::mcset ru "Auto save" [encoding convertfrom utf-8 "\320\220\320\262\321\202\320\276\321\201\320\276\321\205\321\200\320\260\320\275\320\265\320\275\320\270\320\265"]
   ::msgcat::mcset sk "Auto save" [encoding convertfrom utf-8 "Uklada\305\245 automaticky"]
+  ::msgcat::mcset sq "Auto save" [encoding convertfrom utf-8 "ruajtja automatike"]
 
   ::msgcat::mcset cz "Import" [encoding convertfrom utf-8 "Import"]
   ::msgcat::mcset de "Import" [encoding convertfrom utf-8 "Importieren"]
@@ -3051,6 +3395,7 @@
   ::msgcat::mcset it "Import" [encoding convertfrom utf-8 "Importa"]
   ::msgcat::mcset ru "Import" [encoding convertfrom utf-8 "\320\230\320\274\320\277\320\276\321\200\321\202"]
   ::msgcat::mcset sk "Import" [encoding convertfrom utf-8 "Import"]
+  ::msgcat::mcset sq "Import" [encoding convertfrom utf-8 "importi"]
 
   ::msgcat::mcset cz "Next" [encoding convertfrom utf-8 "N\303\241sleduj\303\255c\303\255"]
   ::msgcat::mcset de "Next" [encoding convertfrom utf-8 "N\303\244chstes"]
@@ -3060,6 +3405,7 @@
   ::msgcat::mcset it "Next" [encoding convertfrom utf-8 "Prossima"]
   ::msgcat::mcset ru "Next" [encoding convertfrom utf-8 "\320\241\320\273\320\265\320\264\321\203\321\216\321\211\320\270\320\271"]
   ::msgcat::mcset sk "Next" [encoding convertfrom utf-8 "Nasleduj\303\272ci"]
+  ::msgcat::mcset sq "Next" [encoding convertfrom utf-8 "tjetra"]
 
   ::msgcat::mcset cz "Previous" [encoding convertfrom utf-8 "P\305\231edchoz\303\255"]
   ::msgcat::mcset de "Previous" [encoding convertfrom utf-8 "Vorheriges"]
@@ -3069,6 +3415,7 @@
   ::msgcat::mcset it "Previous" [encoding convertfrom utf-8 "Precedente"]
   ::msgcat::mcset ru "Previous" [encoding convertfrom utf-8 "\320\237\321\200\320\265\320\264\321\213\320\264\321\203\321\211\320\270\320\271"]
   ::msgcat::mcset sk "Previous" [encoding convertfrom utf-8 "Predch\303\241dzaj\303\272ci"]
+  ::msgcat::mcset sq "Previous" [encoding convertfrom utf-8 "e perparmja"]
 
   ::msgcat::mcset cz "Edit" [encoding convertfrom utf-8 "Editovat"]
   ::msgcat::mcset de "Edit" [encoding convertfrom utf-8 "Bearbeiten"]
@@ -3078,6 +3425,7 @@
   ::msgcat::mcset it "Edit" [encoding convertfrom utf-8 "Edita"]
   ::msgcat::mcset ru "Edit" [encoding convertfrom utf-8 "\320\240\320\265\320\264\320\260\320\272\321\202\320\270\321\200\320\276\320\262\320\260\321\202\321\214"]
   ::msgcat::mcset sk "Edit" [encoding convertfrom utf-8 "Upravi\305\245"]
+  ::msgcat::mcset sq "Edit" [encoding convertfrom utf-8 "permireso"]
 
   ::msgcat::mcset cz "Undo" [encoding convertfrom utf-8 "Zp\304\233t"]
   ::msgcat::mcset de "Undo" [encoding convertfrom utf-8 "R\303\274ckg\303\244ngig"]
@@ -3087,6 +3435,7 @@
   ::msgcat::mcset it "Undo" [encoding convertfrom utf-8 "Indietro"]
   ::msgcat::mcset ru "Undo" [encoding convertfrom utf-8 "\320\236\321\202\320\274\320\265\320\275\320\270\321\202\321\214"]
   ::msgcat::mcset sk "Undo" [encoding convertfrom utf-8 "Sp\303\244\305\245"]
+  ::msgcat::mcset sq "Undo" [encoding convertfrom utf-8 "prishe-undo"]
 
   ::msgcat::mcset cz "Redo" [encoding convertfrom utf-8 "Opakovat"]
   ::msgcat::mcset de "Redo" [encoding convertfrom utf-8 "Wiederholen"]
@@ -3096,6 +3445,7 @@
   ::msgcat::mcset it "Redo" [encoding convertfrom utf-8 "Rifai"]
   ::msgcat::mcset ru "Redo" [encoding convertfrom utf-8 "\320\222\320\265\321\200\320\275\321\203\321\202\321\214"]
   ::msgcat::mcset sk "Redo" [encoding convertfrom utf-8 "Opakova\305\245"]
+  ::msgcat::mcset sq "Redo" [encoding convertfrom utf-8 "beje prape-redo"]
 
   ::msgcat::mcset cz "Cut" [encoding convertfrom utf-8 "Vyjmout"]
   ::msgcat::mcset de "Cut" [encoding convertfrom utf-8 "Ausschneiden"]
@@ -3105,6 +3455,7 @@
   ::msgcat::mcset it "Cut" [encoding convertfrom utf-8 "Taglia"]
   ::msgcat::mcset ru "Cut" [encoding convertfrom utf-8 "\320\222\321\213\321\200\320\265\320\267\320\260\321\202\321\214"]
   ::msgcat::mcset sk "Cut" [encoding convertfrom utf-8 "Vystrihn\303\272\305\245"]
+  ::msgcat::mcset sq "Cut" [encoding convertfrom utf-8 "preje"]
 
   ::msgcat::mcset cz "Copy" [encoding convertfrom utf-8 "Kop\303\255rovat"]
   ::msgcat::mcset de "Copy" [encoding convertfrom utf-8 "Kopieren"]
@@ -3114,6 +3465,7 @@
   ::msgcat::mcset it "Copy" [encoding convertfrom utf-8 "Copia"]
   ::msgcat::mcset ru "Copy" [encoding convertfrom utf-8 "\320\232\320\276\320\277\320\270\321\200\320\276\320\262\320\260\321\202\321\214"]
   ::msgcat::mcset sk "Copy" [encoding convertfrom utf-8 "Kop\303\255rova\305\245"]
+  ::msgcat::mcset sq "Copy" [encoding convertfrom utf-8 "kopjo"]
 
   ::msgcat::mcset cz "Paste" [encoding convertfrom utf-8 "Vlo\305\276it"]
   ::msgcat::mcset de "Paste" [encoding convertfrom utf-8 "Einf\303\274gen"]
@@ -3123,6 +3475,7 @@
   ::msgcat::mcset it "Paste" [encoding convertfrom utf-8 "Incolla"]
   ::msgcat::mcset ru "Paste" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214"]
   ::msgcat::mcset sk "Paste" [encoding convertfrom utf-8 "Vlo\305\276i\305\245"]
+  ::msgcat::mcset sq "Paste" [encoding convertfrom utf-8 "vendose-paste"]
 
   ::msgcat::mcset cz "Select all" [encoding convertfrom utf-8 "Vybrat v\305\241e"]
   ::msgcat::mcset de "Select all" [encoding convertfrom utf-8 "Alles ausw\303\244hlen"]
@@ -3132,6 +3485,7 @@
   ::msgcat::mcset it "Select all" [encoding convertfrom utf-8 "Seleziona tutto"]
   ::msgcat::mcset ru "Select all" [encoding convertfrom utf-8 "\320\222\321\213\320\264\320\265\320\273\320\270\321\202\321\214 \320\262\321\201\321\221"]
   ::msgcat::mcset sk "Select all" [encoding convertfrom utf-8 "Vyber v\305\241etko"]
+  ::msgcat::mcset sq "Select all" [encoding convertfrom utf-8 "zghedhi-selekciono te gjitha"]
 
   ::msgcat::mcset cz "Auto indent" [encoding convertfrom utf-8 "Automaticky odsazovat"]
   ::msgcat::mcset de "Auto indent" [encoding convertfrom utf-8 "Automatisch einr\303\274cken"]
@@ -3141,6 +3495,7 @@
   ::msgcat::mcset it "Auto indent" [encoding convertfrom utf-8 "Indentazione automatica"]
   ::msgcat::mcset ru "Auto indent" [encoding convertfrom utf-8 "\320\220\320\262\321\202\320\276\320\276\321\202\321\201\321\202\321\203\320\277"]
   ::msgcat::mcset sk "Auto indent" [encoding convertfrom utf-8 "Automatick\303\251 odsadenie"]
+  ::msgcat::mcset sq "Auto indent" [encoding convertfrom utf-8 "indenti automatik"]
 
   ::msgcat::mcset cz "Processing line %s ..." [encoding convertfrom utf-8 "Zpracov\303\241v\303\241m \305\231\303\241dek %s ..."]
   ::msgcat::mcset de "Processing line %s ..." [encoding convertfrom utf-8 "Verarbeite Zeile %s ..."]
@@ -3150,6 +3505,7 @@
   ::msgcat::mcset it "Processing line %s ..." [encoding convertfrom utf-8 "Elaborazione linea %s ..."]
   ::msgcat::mcset ru "Processing line %s ..." [encoding convertfrom utf-8 "\320\236\320\261\321\200\320\260\320\261\320\276\321\202\320\272\320\260 \321\201\321\202\321\200\320\276\320\272\320\270 %s ..."]
   ::msgcat::mcset sk "Processing line %s ..." [encoding convertfrom utf-8 "Sprac\303\272vam riadok %s ..."]
+  ::msgcat::mcset sq "Processing line %s ..." [encoding convertfrom utf-8 "rrjeshti %s ne proces\342\200\246"]
 
   ::msgcat::mcset cz "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Textov\303\275 editor nen\303\255 aktivn\303\255. Pro jeho aktivaci otev\305\231ete existuj\303\255c\303\255 soubor nebo vytvo\305\231te nov\303\275."]
   ::msgcat::mcset de "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Texteditor ist nicht aktiv. Um ihn zu aktivieren, \303\266ffne eine existierende Datei oder lege eine neue an."]
@@ -3159,6 +3515,7 @@
   ::msgcat::mcset it "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "L'editor di testo non \303\250 attivo. Per attivarlo apri un file o creane uno."]
   ::msgcat::mcset ru "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "\320\242\320\265\320\272\321\201\321\202\320\276\320\262\321\213\320\271 \321\200\320\265\320\264\320\260\320\272\321\202\320\276\321\200 \320\275\320\265\320\260\320\272\321\202\320\270\320\262\320\265\320\275. \320\224\320\273\321\217 \320\260\320\272\321\202\320\270\320\262\320\260\321\206\320\270\320\270 \320\276\321\202\320\272\321\200\320\276\320\271\321\202\320\265 \321\201\321\203\321\211\320\265\321\201\321\202\320\262\321\203\321\216\321\211\320\270\320\271 \321\204\320\260\320\271\320\273 \320\270\320\273\320\270 \321\201\320\276\320\267\320\264\320\260\320\271\321\202\320\265 \320\275\320\276\320\262\321\213\320\271."]
   ::msgcat::mcset sk "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "Textov\303\275 editor nie je akt\303\255vny. Otvorte existuj\303\272ci s\303\272bor alebo vytvorte nov\303\275."]
+  ::msgcat::mcset sq "Text editor is not active. To activate it, open existing file or create new one." [encoding convertfrom utf-8 "editori I tekstit nuk eshte aktiv. Qe ta aktivizosh, hape fajllin egzistues ose krijo nje tjeter."]
 
   ::msgcat::mcset cz "Control..." [encoding convertfrom utf-8 "Ovl\303\241d\303\241n\303\255..."]
   ::msgcat::mcset de "Control..." [encoding convertfrom utf-8 "Kontrollfeld..."]
@@ -3168,6 +3525,7 @@
   ::msgcat::mcset it "Control..." [encoding convertfrom utf-8 "Controlli ..."]
   ::msgcat::mcset ru "Control..." [encoding convertfrom utf-8 "\320\243\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\265..."]
   ::msgcat::mcset sk "Control..." [encoding convertfrom utf-8 "Ovl\303\241danie..."]
+  ::msgcat::mcset sq "Control..." [encoding convertfrom utf-8 "kontrolli. . ."]
 
   ::msgcat::mcset cz "BAC calculator..." [encoding convertfrom utf-8 "Alkohol tester..."]
   ::msgcat::mcset de "BAC calculator..." [encoding convertfrom utf-8 "Blutalkoholrechner"]
@@ -3177,6 +3535,7 @@
   ::msgcat::mcset it "BAC calculator..." [encoding convertfrom utf-8 "Calcolatore BAC ..."]
   ::msgcat::mcset ru "BAC calculator..." [encoding convertfrom utf-8 "\320\232\320\260\320\273\321\214\320\272\321\203\320\273\321\217\321\202\320\276\321\200 \320\260\320\273\320\272\320\276\320\263\320\276\320\273\321\217..."]
   ::msgcat::mcset sk "BAC calculator..." [encoding convertfrom utf-8 "Alkohol tester..."]
+  ::msgcat::mcset sq "BAC calculator..." [encoding convertfrom utf-8 "matesi I alkoolit-BAC"]
 
   ::msgcat::mcset de "Calibrate bitmap..." [encoding convertfrom utf-8 "Bild kalibrieren..."]
 
@@ -3188,6 +3547,7 @@
   ::msgcat::mcset it "About..." [encoding convertfrom utf-8 "Versione ..."]
   ::msgcat::mcset ru "About..." [encoding convertfrom utf-8 "\320\236 \320\277\321\200\320\276\320\263\321\200\320\260\320\274\320\274\320\265..."]
   ::msgcat::mcset sk "About..." [encoding convertfrom utf-8 "O programe..."]
+  ::msgcat::mcset sq "About..." [encoding convertfrom utf-8 "per programin\342\200\246"]
 
   ::msgcat::mcset cz "Search" [encoding convertfrom utf-8 "Hledat"]
   ::msgcat::mcset de "Search" [encoding convertfrom utf-8 "Suche"]
@@ -3197,6 +3557,7 @@
   ::msgcat::mcset it "Search" [encoding convertfrom utf-8 "Cerca"]
   ::msgcat::mcset ru "Search" [encoding convertfrom utf-8 "\320\237\320\276\320\270\321\201\320\272"]
   ::msgcat::mcset sk "Search" [encoding convertfrom utf-8 "H\304\276ada\305\245"]
+  ::msgcat::mcset sq "Search" [encoding convertfrom utf-8 "kerko"]
 
   ::msgcat::mcset cz "Close" [encoding convertfrom utf-8 "Zav\305\231\303\255t"]
   ::msgcat::mcset de "Close" [encoding convertfrom utf-8 "Schlie\303\237en"]
@@ -3206,6 +3567,7 @@
   ::msgcat::mcset it "Close" [encoding convertfrom utf-8 "Chiudi"]
   ::msgcat::mcset ru "Close" [encoding convertfrom utf-8 "\320\227\320\260\320\272\321\200\321\213\321\202\321\214"]
   ::msgcat::mcset sk "Close" [encoding convertfrom utf-8 "Zavrie\305\245"]
+  ::msgcat::mcset sq "Close" [encoding convertfrom utf-8 "mbyll"]
 
   ::msgcat::mcset cz "theme all-symbols" [encoding convertfrom utf-8 "v\305\241echny symboly"]
   ::msgcat::mcset de "theme all-symbols" [encoding convertfrom utf-8 "Alle Zeichen"]
@@ -3213,46 +3575,55 @@
   ::msgcat::mcset it "theme all-symbols" [encoding convertfrom utf-8 "tutti"]
   ::msgcat::mcset ru "theme all-symbols" [encoding convertfrom utf-8 "\320\262\321\201\320\265"]
   ::msgcat::mcset sk "theme all-symbols" [encoding convertfrom utf-8 "v\305\241etky symboly"]
+  ::msgcat::mcset sq "theme all-symbols" [encoding convertfrom utf-8 "tematizo te gjitha simbolet-shenjat"]
 
   ::msgcat::mcset de "New file" [encoding convertfrom utf-8 "Neue Datei"]
   ::msgcat::mcset el "New file" [encoding convertfrom utf-8 "\316\235\316\255\316\277 \316\261\317\201\317\207\316\265\316\257\316\277"]
   ::msgcat::mcset it "New file" [encoding convertfrom utf-8 "Nuovo"]
   ::msgcat::mcset sk "New file" [encoding convertfrom utf-8 "Nov\303\275 s\303\272bor"]
+  ::msgcat::mcset sq "New file" [encoding convertfrom utf-8 "arkivi-fajlli I ri"]
 
   ::msgcat::mcset de "Open file" [encoding convertfrom utf-8 "Datei \303\266ffnen"]
   ::msgcat::mcset el "Open file" [encoding convertfrom utf-8 "\316\206\316\275\316\277\316\271\316\263\316\274\316\261"]
   ::msgcat::mcset it "Open file" [encoding convertfrom utf-8 "Apri"]
   ::msgcat::mcset sk "Open file" [encoding convertfrom utf-8 "Otvori\305\245 s\303\272bor"]
+  ::msgcat::mcset sq "Open file" [encoding convertfrom utf-8 "hape fajllin"]
 
   ::msgcat::mcset de "Save file" [encoding convertfrom utf-8 "Datei speichern"]
   ::msgcat::mcset el "Save file" [encoding convertfrom utf-8 "\316\221\317\200\316\277\316\270\316\256\316\272\316\265\317\205\317\203\316\267"]
   ::msgcat::mcset it "Save file" [encoding convertfrom utf-8 "Salva"]
   ::msgcat::mcset sk "Save file" [encoding convertfrom utf-8 "Ulo\305\276i\305\245 s\303\272bor"]
+  ::msgcat::mcset sq "Save file" [encoding convertfrom utf-8 "ruaje fajllin"]
 
   ::msgcat::mcset de "Save file as" [encoding convertfrom utf-8 "Datei speichern als"]
   ::msgcat::mcset el "Save file as" [encoding convertfrom utf-8 "\316\221\317\200\316\277\316\270\316\256\316\272\316\265\317\205\317\203\316\267 \317\211\317\202"]
   ::msgcat::mcset it "Save file as" [encoding convertfrom utf-8 "Salva come"]
   ::msgcat::mcset sk "Save file as" [encoding convertfrom utf-8 "Ulo\305\276i\305\245 s\303\272bor ako"]
+  ::msgcat::mcset sq "Save file as" [encoding convertfrom utf-8 "ruaje fajllin si"]
 
   ::msgcat::mcset de "Close file" [encoding convertfrom utf-8 "Datei schlie\303\237en"]
   ::msgcat::mcset el "Close file" [encoding convertfrom utf-8 "\316\232\316\273\316\265\316\257\317\203\316\271\316\274\316\277 \316\261\317\201\317\207\316\265\316\257\316\277\317\205"]
   ::msgcat::mcset it "Close file" [encoding convertfrom utf-8 "Chiudi"]
   ::msgcat::mcset sk "Close file" [encoding convertfrom utf-8 "Zatvori\305\245 s\303\272bor"]
+  ::msgcat::mcset sq "Close file" [encoding convertfrom utf-8 "mbylle fajllin"]
 
   ::msgcat::mcset de "Switch to text editor" [encoding convertfrom utf-8 "Zum Texteditor wechseln"]
   ::msgcat::mcset el "Switch to text editor" [encoding convertfrom utf-8 "\316\234\316\265\317\204\316\254\316\262\316\261\317\203\316\267 \317\203\316\265 \316\265\317\200\316\265\316\276\316\265\317\201\316\263\316\261\317\203\317\204\316\256 \316\272\316\265\316\271\316\274\316\255\316\275\316\277\317\205"]
   ::msgcat::mcset it "Switch to text editor" [encoding convertfrom utf-8 "Editor di testi"]
   ::msgcat::mcset sk "Switch to text editor" [encoding convertfrom utf-8 "Prepn\303\272\305\245 na textov\303\275 editor"]
+  ::msgcat::mcset sq "Switch to text editor" [encoding convertfrom utf-8 "kalo tek editori i tekstit"]
 
   ::msgcat::mcset de "Switch to map editor" [encoding convertfrom utf-8 "Zum Karteneditor wechseln"]
   ::msgcat::mcset el "Switch to map editor" [encoding convertfrom utf-8 "\316\234\316\265\317\204\316\254\316\262\316\261\317\203\316\267 \317\203\316\265 \316\265\317\200\316\265\316\276\316\265\317\201\316\263\316\261\317\203\317\204\316\256 \317\203\317\207\316\265\316\264\316\257\316\277\317\205"]
   ::msgcat::mcset it "Switch to map editor" [encoding convertfrom utf-8 "Editor di mappe"]
   ::msgcat::mcset sk "Switch to map editor" [encoding convertfrom utf-8 "Prepn\303\272\305\245 na mapov\303\275 editor"]
+  ::msgcat::mcset sq "Switch to map editor" [encoding convertfrom utf-8 "kalo tek editori I hartes"]
 
   ::msgcat::mcset de "Switch to compiler" [encoding convertfrom utf-8 "Zum Compiler wechseln"]
   ::msgcat::mcset el "Switch to compiler" [encoding convertfrom utf-8 "\316\234\316\265\317\204\316\254\316\262\316\261\317\203\316\267 \317\203\316\265 \317\203\317\205\316\275\317\204\316\254\316\272\317\204\316\267"]
   ::msgcat::mcset it "Switch to compiler" [encoding convertfrom utf-8 "Compilatore"]
   ::msgcat::mcset sk "Switch to compiler" [encoding convertfrom utf-8 "Prepn\303\272\305\245 na kompil\303\241tor"]
+  ::msgcat::mcset sq "Switch to compiler" [encoding convertfrom utf-8 "kalo tek kompilatori"]
 
   ::msgcat::mcset cz "Compile" [encoding convertfrom utf-8 "Kompilovat"]
   ::msgcat::mcset de "Compile" [encoding convertfrom utf-8 "Compilieren"]
@@ -3262,56 +3633,67 @@
   ::msgcat::mcset it "Compile" [encoding convertfrom utf-8 "Compila"]
   ::msgcat::mcset ru "Compile" [encoding convertfrom utf-8 "\320\232\320\276\320\274\320\277\320\270\320\273\320\270\321\200\320\276\320\262\320\260\321\202\321\214"]
   ::msgcat::mcset sk "Compile" [encoding convertfrom utf-8 "Kompilova\305\245"]
+  ::msgcat::mcset sq "Compile" [encoding convertfrom utf-8 "kompilo"]
 
   ::msgcat::mcset de "Switch to select mode" [encoding convertfrom utf-8 "In Auswahlmodus wechseln"]
   ::msgcat::mcset el "Switch to select mode" [encoding convertfrom utf-8 "\316\234\316\265\317\204\316\254\316\262\316\261\317\203\316\267 \317\203\316\265 \316\273\316\265\316\271\317\204\316\277\317\205\317\201\316\263\316\257\316\261 \316\265\317\200\316\271\316\273\316\277\316\263\316\256\317\202"]
   ::msgcat::mcset it "Switch to select mode" [encoding convertfrom utf-8 "Modalit\303\240 di selezione"]
   ::msgcat::mcset sk "Switch to select mode" [encoding convertfrom utf-8 "Prepn\303\272\305\245 do m\303\263du na v\303\275ber objektu"]
+  ::msgcat::mcset sq "Switch to select mode" [encoding convertfrom utf-8 "kalo tek moduli per selekcionim"]
 
   ::msgcat::mcset de "Select next scrap" [encoding convertfrom utf-8 "N\303\244chste Skizze ausw\303\244hlen"]
   ::msgcat::mcset el "Select next scrap" [encoding convertfrom utf-8 "\316\225\317\200\316\271\316\273\316\277\316\263\316\256 \316\265\317\200\317\214\316\274\316\265\316\275\316\277\317\205 \317\203\316\272\317\201\316\261\317\200"]
   ::msgcat::mcset it "Select next scrap" [encoding convertfrom utf-8 "Seleziona il prossimo scrap"]
   ::msgcat::mcset sk "Select next scrap" [encoding convertfrom utf-8 "Vyber nasleduj\303\272ci scrap"]
+  ::msgcat::mcset sq "Select next scrap" [encoding convertfrom utf-8 "zgjedhe deponin e ardhshme"]
 
   ::msgcat::mcset de "Select next area" [encoding convertfrom utf-8 "N\303\244chste Fl\303\244che ausw\303\244hlen"]
   ::msgcat::mcset el "Select next area" [encoding convertfrom utf-8 "\316\225\317\200\316\271\316\273\316\277\316\263\316\256 \316\265\317\200\317\214\316\274\316\265\316\275\316\267\317\202 \316\265\317\200\316\271\317\206\316\254\316\275\316\265\316\271\316\261\317\202"]
   ::msgcat::mcset it "Select next area" [encoding convertfrom utf-8 "Seleziona la prossima area"]
   ::msgcat::mcset sk "Select next area" [encoding convertfrom utf-8 "Vyber nasleduj\303\272cu plochu"]
+  ::msgcat::mcset sq "Select next area" [encoding convertfrom utf-8 "zgjedhe-selekto fushen e ardhshme"]
 
   ::msgcat::mcset de "Zoom in" [encoding convertfrom utf-8 "Vergr\303\266\303\237ern"]
   ::msgcat::mcset el "Zoom in" [encoding convertfrom utf-8 "\316\234\316\265\316\263\316\255\316\270\317\205\316\275\317\203\316\267"]
   ::msgcat::mcset it "Zoom in" [encoding convertfrom utf-8 "Zoom in"]
   ::msgcat::mcset sk "Zoom in" [encoding convertfrom utf-8 "Zv\303\244\304\215\305\241i\305\245"]
+  ::msgcat::mcset sq "Zoom in" [encoding convertfrom utf-8 "zmadho"]
 
   ::msgcat::mcset de "Zoom out" [encoding convertfrom utf-8 "Verkleinern"]
   ::msgcat::mcset el "Zoom out" [encoding convertfrom utf-8 "\316\243\316\274\316\257\316\272\317\201\317\205\316\275\317\203\316\267"]
   ::msgcat::mcset it "Zoom out" [encoding convertfrom utf-8 "Zoom out"]
   ::msgcat::mcset sk "Zoom out" [encoding convertfrom utf-8 "Zmen\305\241i\305\245"]
+  ::msgcat::mcset sq "Zoom out" [encoding convertfrom utf-8 "zvogelo"]
 
   ::msgcat::mcset de "Insert new scrap" [encoding convertfrom utf-8 "Neue Skizze einf\303\274gen"]
   ::msgcat::mcset el "Insert new scrap" [encoding convertfrom utf-8 "\316\225\316\271\317\203\316\261\316\263\317\211\316\263\316\256 \316\275\316\255\316\277\317\205 \317\203\316\272\317\201\316\261\317\200"]
   ::msgcat::mcset it "Insert new scrap" [encoding convertfrom utf-8 "Inserisci un nuovo scrap"]
   ::msgcat::mcset sk "Insert new scrap" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\275 scrap"]
+  ::msgcat::mcset sq "Insert new scrap" [encoding convertfrom utf-8 "fute deponin e re"]
 
   ::msgcat::mcset de "Insert new point" [encoding convertfrom utf-8 "Neuen Punkt einf\303\274gen"]
   ::msgcat::mcset el "Insert new point" [encoding convertfrom utf-8 "\316\225\316\271\317\203\316\261\316\263\317\211\316\263\316\256 \316\275\316\255\316\277\317\205 \317\203\316\267\316\274\316\265\316\257\316\277\317\205"]
   ::msgcat::mcset it "Insert new point" [encoding convertfrom utf-8 "Inserisci un nuovo punto"]
   ::msgcat::mcset sk "Insert new point" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\275 bod"]
+  ::msgcat::mcset sq "Insert new point" [encoding convertfrom utf-8 "fute piken e re"]
 
   ::msgcat::mcset de "Insert new line" [encoding convertfrom utf-8 "Neue Linie einf\303\274gen"]
   ::msgcat::mcset el "Insert new line" [encoding convertfrom utf-8 "\316\225\316\271\317\203\316\261\316\263\317\211\316\263\316\256 \316\275\316\255\316\261\317\202 \316\263\317\201\316\261\316\274\316\274\316\256\317\202"]
   ::msgcat::mcset it "Insert new line" [encoding convertfrom utf-8 "Inserisci una nuova linea"]
   ::msgcat::mcset sk "Insert new line" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\272 krivku"]
+  ::msgcat::mcset sq "Insert new line" [encoding convertfrom utf-8 "fute rrjeshtin e ri"]
 
   ::msgcat::mcset de "Insert new area" [encoding convertfrom utf-8 "Neue Fl\303\244che einf\303\274gen"]
   ::msgcat::mcset el "Insert new area" [encoding convertfrom utf-8 "\316\225\316\271\317\203\316\261\316\263\317\211\316\263\316\256 \316\275\316\255\316\261\317\202 \316\265\317\200\316\271\317\206\316\254\316\275\316\265\316\271\316\261\317\202"]
   ::msgcat::mcset it "Insert new area" [encoding convertfrom utf-8 "Inserisci una nuova area"]
   ::msgcat::mcset sk "Insert new area" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\272 plochu"]
+  ::msgcat::mcset sq "Insert new area" [encoding convertfrom utf-8 "fute fushen e re"]
 
   ::msgcat::mcset de "Delete selected object" [encoding convertfrom utf-8 "Ausgew\303\244hltes Objekt l\303\266schen"]
   ::msgcat::mcset el "Delete selected object" [encoding convertfrom utf-8 "\316\264\316\271\316\261\316\263\317\201\316\261\317\206\316\256 \316\265\317\200\316\271\316\273\316\265\316\263\316\274\316\255\316\275\316\277\317\205"]
   ::msgcat::mcset it "Delete selected object" [encoding convertfrom utf-8 "Rimuovi l'oggetto selezionato"]
   ::msgcat::mcset sk "Delete selected object" [encoding convertfrom utf-8 "Zma\305\276 ozna\304\215en\303\251 objekty"]
+  ::msgcat::mcset sq "Delete selected object" [encoding convertfrom utf-8 "fshije objektin e selektuar"]
 
   ::msgcat::mcset cz "theme basic-symbols" [encoding convertfrom utf-8 "z\303\241kladn\303\255 symboly"]
   ::msgcat::mcset de "theme basic-symbols" [encoding convertfrom utf-8 "Grundsymbole"]
@@ -3319,6 +3701,7 @@
   ::msgcat::mcset it "theme basic-symbols" [encoding convertfrom utf-8 "base"]
   ::msgcat::mcset ru "theme basic-symbols" [encoding convertfrom utf-8 "\320\276\321\201\320\275\320\276\320\262\320\275\321\213\320\265"]
   ::msgcat::mcset sk "theme basic-symbols" [encoding convertfrom utf-8 "z\303\241kladn\303\251 symboly"]
+  ::msgcat::mcset sq "theme basic-symbols" [encoding convertfrom utf-8 "tema simbolet-baze"]
 
   ::msgcat::mcset cz "theme passage-fills" [encoding convertfrom utf-8 "v\303\275pl\305\210"]
   ::msgcat::mcset de "theme passage-fills" [encoding convertfrom utf-8 "Gangf\303\274llungen"]
@@ -3326,6 +3709,7 @@
   ::msgcat::mcset it "theme passage-fills" [encoding convertfrom utf-8 "riempimenti"]
   ::msgcat::mcset ru "theme passage-fills" [encoding convertfrom utf-8 "\321\200\320\265\320\273\321\214\320\265\321\204 \321\205\320\276\320\264\320\260"]
   ::msgcat::mcset sk "theme passage-fills" [encoding convertfrom utf-8 "v\303\275pl\305\210"]
+  ::msgcat::mcset sq "theme passage-fills" [encoding convertfrom utf-8 "tema mbushjet e kalimeve"]
 
   ::msgcat::mcset cz "theme speleothems" [encoding convertfrom utf-8 "v\303\275zdoba"]
   ::msgcat::mcset de "theme speleothems" [encoding convertfrom utf-8 "Sinter"]
@@ -3333,6 +3717,7 @@
   ::msgcat::mcset it "theme speleothems" [encoding convertfrom utf-8 "speleotemi"]
   ::msgcat::mcset ru "theme speleothems" [encoding convertfrom utf-8 "\321\201\320\277\320\265\320\273\320\265\320\276-\321\204\320\276\321\200\320\274\321\213"]
   ::msgcat::mcset sk "theme speleothems" [encoding convertfrom utf-8 "v\303\275zdoba"]
+  ::msgcat::mcset sq "theme speleothems" [encoding convertfrom utf-8 "speleo-tema"]
 
   ::msgcat::mcset cz "theme equipement" [encoding convertfrom utf-8 "vystrojen\303\255"]
   ::msgcat::mcset de "theme equipement" [encoding convertfrom utf-8 "Ausr\303\274stung"]
@@ -3340,4 +3725,5 @@
   ::msgcat::mcset it "theme equipement" [encoding convertfrom utf-8 "armo"]
   ::msgcat::mcset ru "theme equipement" [encoding convertfrom utf-8 "\320\276\320\261\320\276\321\200\321\203\320\264\320\276\320\262\320\260\320\275\320\270\320\265"]
   ::msgcat::mcset sk "theme equipement" [encoding convertfrom utf-8 "vystrojenie"]
+  ::msgcat::mcset sq "theme equipement" [encoding convertfrom utf-8 "tema pajisjet"]
 

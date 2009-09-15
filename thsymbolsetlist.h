@@ -7,7 +7,7 @@
 #ifndef thsymbolsetlist_h
 #define thsymbolsetlist_h
 
-#define thsymbolset_size 181
+#define thsymbolset_size 184
 
 enum {
   SYMA_ = 0,
@@ -178,19 +178,22 @@ enum {
   SYMX_ALL = 165,
   SYMX_CAVECENTERLINE = 166,
   SYMX_CENTERLINE = 167,
-  SYMX_LINE_BORDER = 168,
-  SYMX_LINE_SURVEY = 169,
-  SYMX_LINE_WALL = 170,
-  SYMX_LINE_WATERFLOW = 171,
-  SYMX_POINT_AIRDRAUGHT = 172,
-  SYMX_POINT_FLAG = 173,
-  SYMX_POINT_HEIGHT = 174,
-  SYMX_POINT_PASSAGEHEIGHT = 175,
-  SYMX_POINT_STATION = 176,
-  SYMX_POINT_WATERFLOW = 177,
-  SYMX_SECTIONS = 178,
-  SYMX_SURFACECENTERLINE = 179,
-  SYMX_WATER = 180,
+  SYMX_EQUIPMENT = 168,
+  SYMX_LINE_BORDER = 169,
+  SYMX_LINE_SURVEY = 170,
+  SYMX_LINE_WALL = 171,
+  SYMX_LINE_WATERFLOW = 172,
+  SYMX_PASSAGEFILLS = 173,
+  SYMX_POINT_AIRDRAUGHT = 174,
+  SYMX_POINT_FLAG = 175,
+  SYMX_POINT_HEIGHT = 176,
+  SYMX_POINT_PASSAGEHEIGHT = 177,
+  SYMX_POINT_STATION = 178,
+  SYMX_POINT_WATERFLOW = 179,
+  SYMX_SECTIONS = 180,
+  SYMX_SPELEOTHEMS = 181,
+  SYMX_SURFACECENTERLINE = 182,
+  SYMX_WATER = 183,
 };
 
 typedef const char * thsymbolset__char_ptr;
@@ -364,10 +367,12 @@ static const thsymbolset__char_ptr thsymbolset__mp [] = {
   "x_all",
   "x_cavecenterline",
   "x_centerline",
+  "x_equipment",
   "x_line_border",
   "x_line_survey",
   "x_line_wall",
   "x_line_waterflow",
+  "x_passagefills",
   "x_point_airdraught",
   "x_point_flag",
   "x_point_height",
@@ -375,6 +380,7 @@ static const thsymbolset__char_ptr thsymbolset__mp [] = {
   "x_point_station",
   "x_point_waterflow",
   "x_sections",
+  "x_speleothems",
   "x_surfacecenterline",
   "x_water",
 };
@@ -547,6 +553,9 @@ static const bool thsymbolset__assign [] = {
   false,
   true,
   false,
+  true,
+  true,
+  true,
   true,
   true,
   true,
@@ -745,6 +754,9 @@ static const bool thsymbolset__hidden [] = {
   true,
   true,
   true,
+  true,
+  true,
+  true,
 };
 
 static const thsymbolset__char_ptr thsymbolset__src [] = {
@@ -916,10 +928,12 @@ static const thsymbolset__char_ptr thsymbolset__src [] = {
   "SYMX_ALL",
   "SYMX_CAVECENTERLINE",
   "SYMX_CENTERLINE",
+  "SYMX_EQUIPMENT",
   "SYMX_LINE_BORDER",
   "SYMX_LINE_SURVEY",
   "SYMX_LINE_WALL",
   "SYMX_LINE_WATERFLOW",
+  "SYMX_PASSAGEFILLS",
   "SYMX_POINT_AIRDRAUGHT",
   "SYMX_POINT_FLAG",
   "SYMX_POINT_HEIGHT",
@@ -927,6 +941,7 @@ static const thsymbolset__char_ptr thsymbolset__src [] = {
   "SYMX_POINT_STATION",
   "SYMX_POINT_WATERFLOW",
   "SYMX_SECTIONS",
+  "SYMX_SPELEOTHEMS",
   "SYMX_SURFACECENTERLINE",
   "SYMX_WATER",
 };

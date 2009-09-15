@@ -92,7 +92,15 @@ Therion uses following data types:
 * {\it person} = a person's first name and surname separated by whitespace characters.
             Use `|/|' to separate first name and surname if there are 
             more names.
-* {\it string} = a sequence of any characters.
+* {\it string} = a sequence of any characters. 
+    \NEW{5.3}Strings may contain special tag |<lang:XX>| to separate 
+    translations.
+    In multilingual strings only the text between |<lang:XX>|
+    (where |XX| is the language selected in initialization 
+    or configuration file) and the next |<lang:YY>| 
+    tag is displayed on the output. 
+    If no match is found, everything before any occurence of
+    |<lang:ZZ>| tag is displayed.
 * {\it units} = length units supported: 
            meter[s], centimeter[s], inch[es], feet[s], yard[s]
            (also m, cm, in, ft, yd).
@@ -780,7 +788,7 @@ Point is a command for drawing a point map symbol.
     
     |<br>| = line break
     
-    |<center>/<centre>|, |<left>|, |<right>| = line alignment for multi-line labels. 
+    |<center>|/|<centre>|, |<left>|, |<right>| = line alignment for multi-line labels. 
     Ignored if there is no |<br>| tag.
     
     |<thsp>| = thin space
@@ -790,10 +798,8 @@ Point is a command for drawing a point map symbol.
 \NEW{5.3}    |<rtl>| and |</rtl>| = marks beginning and end of a right-to-left written
     text
     
-\NEW{5.3}|<lang:XX>| = in multilingual labels only the text between |<lang:XX>|
-    (where |XX| is input language selected in thconfig) and the next |<lang:YY>| 
-    tag is displayed. If no match is found, everything before any occurence of
-    |<lang:ZZ>| tag is displayed.
+\NEW{5.3}|<lang:XX>| = creates multilingual label (see |string| type for
+   detailed description)
     
   * |value| = value of height, passage-height or altitude label or point
      dimensions

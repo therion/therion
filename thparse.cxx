@@ -1265,6 +1265,13 @@ std::string ths2tex(std::string original, int lang, bool remove_kerning)
 }
 
 
+
+std::string ths2txt(const char * original, int lang, int encoding)
+{
+  return ths2txt(std::string(original == NULL ? "" : original), lang, encoding);
+}
+
+
 std::string ths2txt(std::string original, int lang, int encoding)
 {
   // TODO: encoding conversion & al.

@@ -1146,7 +1146,14 @@ else
                     while (skit != cs->sketch_list.end()) {
                       skpic = skit->morph(out.ms);
                       if (skpic != NULL) { 
-                        srfpr.filename = skpic->texfname;
+                        switch (this->format) {
+                          case TT_EXPMAP_FMT_SVG:
+                          case TT_EXPMAP_FMT_XHTML:
+                            srfpr.filename = thdb.strstore(thtmp.get_file_name(skpic->texfname));
+                            break;
+                          default:
+                            srfpr.filename = skpic->texfname;
+                        }
                         srfpr.width  = skpic->width / 300.0 * 72.0;
                         srfpr.height = skpic->height / 300.0 * 72.0;
                         srfpr.dx = ( - prj->shift_x + skpic->x ) * out.ms;

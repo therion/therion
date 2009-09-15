@@ -722,7 +722,7 @@ void thattr::export_html(const char * fname, int encoding)
       } else {
         ca = &(ai->second);
         if (ca->m_type == THATTR_DOUBLE) {
-          snprintf(valb.get_buffer(), 127, "%.1lf", ca->m_val_double);
+          snprintf(valb.get_buffer(), 127, "%.1f", ca->m_val_double);
           value = valb.get_buffer();
         } else
           value = ca->m_val_string.c_str();

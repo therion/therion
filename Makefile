@@ -53,7 +53,7 @@ THXTHMKCMD = ./therion
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
-##LDPFLAGS = -s
+##LDPFLAGS = -static-libgcc -static -s
 ##THPLATFORM = WIN32
 ##THXTHMKCMD = therion
 
@@ -126,7 +126,7 @@ therion:	$(OBJECTS)
 
 
 therion.res: therion.rc
-	windres -i therion.rc -I rc -o therion.res -O coff
+	windres -i therion.rc -J rc -o therion.res -O coff
 
 init:
 	./therion --print-init-file > therion.ini

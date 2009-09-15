@@ -1,22 +1,28 @@
 --------------------------------------------------------------------------------
-Therion 5.3 (YYYY-MM-DD):
+Already done for future Therion 5.3 (YYYY-MM-DD):
 
 therion:
- * added <lang:XX> switch to labels
- * added albanian language (sq), thanks to Fatos Katallozi
- * updated german translation
+ * added <lang:XX> language selector for strings
  * -filter (on)|off option added to continuation export to support export
    of all continuations
- * -surveys (on)|off option added to cave-list export to allow export of raw list of caves
+ * -surveys (on)|off option added to cave-list export to allow export of raw
+   list of caves
  * new easy setup for OpenType and TrueType fonts (requires lcdf-typetools)
    (new otf2pfb and pdf-fonts options in therion.ini)
  * basic support for right-to-left scripts in labels and legend
  * PDF files now contain unicode mapping information to allow searching and 
    copying texts consisting of accented and non-latin characters
  * georeferencing data added to pdf maps
- * arch and overhang flags for stations to mark these surface karst features
- * support for splay shots without station names (just using "-" or "." as station name)
+ * new layout option: symbol-color <type> <symbol> <color>
+ * new symbol groups: water, speleothems, passage-fills, equipment
+ * new flags for stations: arch and overhang to mark these surface 
+   karst features
+ * support for splay shots without station names (using "-" or "." as station 
+   name)
  * added greek translation (thanks to Stelios Zacharias)
+ * added albanian translation (thanks to Fatos Katallozi)
+ * updated german translation (thanks to Roger Schuster; Georg Pacher's 
+   additions to be implemented soon)
  * bugs fixed:
    - BCRA3 and BCRA5 survey grades fixed
    - missing altitudes in cave list
@@ -28,22 +34,24 @@ therion:
    - back readings supported in data roles+instruments
    - missing LRUD data in PLT export (B#25532)
    - segfault on line with single point
-   - "-flip none" do not working for scrap
+   - "-flip none" not working for scrap
+   - lat/long out of range
    - map-header x y off behaves as if map-header x y nw (B#25537)
    
 xtherion:
 
- * script for creation of OziExplorer MAP files for georeferenced maps (Help->Calibrate bitmap)
+ * script for creation of OziExplorer MAP files for georeferenced maps 
+   (Help->Calibrate bitmap)
  * added import functions for PocketTopo export
-   - centerline in text editor - File->Import->PocketTopo therion export
-   - sketches in map editor - Backgroud Images->Insert->PocketTopo therion export
- * bugs fixed: 
-   - increasing of station numbers with leadeing zeros or trailing letters
+   - centerline in text editor: File->Import->PocketTopo therion export
+   - sketches in map editor: Backgroud Images->Insert->PocketTopo therion export
+ * bugs fixed:
+   - increasing of station numbers with leading zeros or trailing letters
    
 loch:
 
- * added File->Import function to allow merging e.g. 3d files with DTM in loch
-   format
+ * added File->Import function to allow merging of e.g. 3d files with DTM in 
+   loch format
  * added Tools->Options->Measurement system setup
  * splay and duplicate shots are hidden by default
  * entrances, stations and fixed stations and their labels can be displayed

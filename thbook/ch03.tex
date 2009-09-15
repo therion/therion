@@ -26,24 +26,49 @@ supported commands follow.
 \subsubchapter `system'.
 Allows to execute system commands during therion compilation.\[E.g. to open or 
 refresh external PDF viewer.] Normally Therion waits until the subprocess is 
-finished. If you want to continue compilation without break, use |command &| 
-syntax on Linux and |start command| syntax on Windows.
+finished. If you want to continue compilation without break, use |<command> &| 
+syntax on Linux and |start <command>| syntax on Windows.
 
 
 \subsubchapter `encoding'.
 
 Works like the |encoding| command in data files---specifies character sets.
 
+\subsubchapter `language'.
+\syntax
+  \list
+    * |language <xx_[YY]>| 
+  \endlist
+\endsyntax
+
+\NEW{5.3}Sets the output language for translatable texts.
+
 \subsubchapter `cs'.
 
-Outside of |layout| command specifies the coordinate system for output. Inside 
+\syntax
+  \list
+    * |cs <coordinate system>| 
+  \endlist
+\endsyntax
+
+\NEW{5.3}Outside of |layout| command specifies the coordinate system for output. 
+It is not possible to specify more coordinate systems for different outputs (the 
+last occurence of |cs| is used for all output files).
+
+Inside 
 the |layout| specifies coordinate system for subsequent location data (|origin|, 
 |grid-origin|).
 
 \subsubchapter `sketch-warp'.
 
+\syntax
+  \list
+    * |sketch-warp <algorithm>| 
+  \endlist
+\endsyntax
+
 Specifies which scrap warping (morphing) algorithm to use. 
-Possible switches are |line| - the default, |plaquette| - invented by
+Possible algorithms are |line|---the default; |plaquette|---invented by
 Marco Corvi.
 
 \subsubchapter `input'.
@@ -174,6 +199,7 @@ available translations, see |thlang/texts.txt| file.
                                                   <symbol-set>
     symbol-hide <point/line/area/group/special> <symbol-type>
     symbol-show <point/line/area/group/special> <symbol-type>
+    symbol-colour <point/line/area/group/special> <symbol-type> <colour>
     size <width> <height> <units>
     overlap <value> <units>
     page-setup <dimensions> <units>
@@ -263,7 +289,8 @@ endlayout|
     {\it Changing layout/Customizing text labels} for details how to change
     labels' appearance. (M, A)
 
-    Group may be one of the following: all, centerline, sections.
+    Group may be one of the following: all, centerline, sections, \NEW{5.3}water,
+    speleothems, passage-fills, equipment.
     
     There are two special symbols: north-arrow, scale-bar.
 
@@ -281,6 +308,11 @@ endlayout|
     May be combined with |symbol-show|.(M, A)
   * |symbol-show <point/line/area/group/special> <symbol-type>| = display particular 
     symbol or group of symbols. May be combined with |symbol-hide|. (M, A)
+
+  * \NEW{5.3}|symbol-colo[u]r <point/line/area/group/special> <symbol-type> <colour>| = 
+    change colour of particular symbol or group of symbols.\[Note: colour change
+    currently applies to pattern fills only if (1) output format is PDF and
+    (2)~\MP\ version is at least 1.000] (M, A)
 
 
   {\it page layout related:}\Nobreak
@@ -435,6 +467,18 @@ endlayout|
 \endinsert
 
 
+\subsubchapter `setup3d'.
+
+\syntax
+  \list
+    * |setup3d <value>| 
+  \endlist
+\endsyntax
+
+\NEW{5.3}Temporary hack to set sampling distance in meters when generating 
+piecewise linear 3d model from passage walls made of B\'ezier curves.
+
+
 \subsubchapter `export'.
 
 \description
@@ -463,6 +507,9 @@ endlayout|
     |continuation-list| = list of possible continuations
 
     |database| = SQL database with centreline
+
+    \NEW{5.3}|bbox| = text file containing geographic coordinates of 
+    lower-left and upper-right corners of the map area
 \endarguments
 
 \penalty0
@@ -544,13 +591,14 @@ endlayout|
 {\it File formats summary:}
 \nobreak\medskip
 \bgroup
-\leavevmode\kern1em\vbox{\halign{#\hfil\quad&#\hfil\cr
+\leavevmode\kern1em\vbox{\advance\hsize-1em\halign{#\hfil\quad&#\hfil\cr
 {\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
 model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml\cr
 map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml\cr
 atlas & pdf\cr
 database & sql\cr
-lists & html, txt, dbf\cr}}\egroup
+lists & html, txt, dbf\cr
+\NEW{5.3}special & bbox\cr}}\egroup
 
 
 \subchapter Running Therion.
