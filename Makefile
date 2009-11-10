@@ -135,13 +135,13 @@ install: all
 	tclsh makeinstall.tcl $(THPLATFORM)
 
 
-release:
+minor-release:
 	perl makerelease.pl
 
 archive: clean
 	perl makearchive2.pl
 
-release-archive: clean
+release: clean
 	perl makearchive.pl
 
 binary: all doc

@@ -405,7 +405,7 @@ def l_slope_SKBB (expr P,S)(text Q) =
   dlzka := (arclength P);
   if dlzka>3u: 
     offset := 0.3u;
-  else:
+  elsif dlzka>u:
     offset := 0.1u;
   fi;
   dlzka:=dlzka-2offset;
@@ -541,7 +541,7 @@ def l_slope_BCRA (expr P,S)(text Q) =
   dlzka := (arclength P);
   if dlzka>3u: 
     offset := 0.3u;
-  else:
+  elsif dlzka>u:
     offset := 0.1u;
   fi;
   dlzka:=dlzka-2offset;
