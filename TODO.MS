@@ -1,3 +1,7 @@
+extend left/right a backreadings problem
+
+suradnice v cave-liste su v semilogaritmickom tvare
+
 bug s izbicou a pevnymi bodmi
 
 xth calibrate bitmap: zlucit filtre img/pdf
@@ -40,6 +44,7 @@ map-comments v spravnom poradi
 konvertor: 
   serie precislovat na jednoduche nazvy bodov
 HEEB: 
++ chybajuci podorys vo vtacej2
   premenovat subor na pth (?)
   pri manipulacii s fix bodmi (pridanie; najprv fix potom pripojenie na koncovy
     pri merani od konca) thexport len "FIX\r\n"

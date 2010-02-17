@@ -12,7 +12,7 @@ sub y2y {
   return int(($y-1900) / 5 + 0.5);  # 1900 hardcoded
 }
 
-open (IN, "IGRF10.cof");
+open (IN, "IGRF11.COF");
 while (<IN>) {
   chomp;
   if (/^ {3,5}(\S+)\s+(\d{4}\.\d{2})\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d{4}\.\d{2})\s+(\d{4}\.\d{2})/) {
@@ -27,13 +27,13 @@ while (<IN>) {
     else             {$DATA{y2y($year)}{"extr"} = 0;}
     if ($deg > $degmax) {$degmax = $deg;}
   }
-  elsif (/^[ \d]\d[ \d]\d/) {
-    $i = substr($_, 0, 2) + 0.0;
-    $j = substr($_, 2, 2) + 0.0;
-    $a = substr($_, 4, 8) + 0.0;
-    $b = substr($_,12, 8) + 0.0;
-    $c = substr($_,20, 8) + 0.0;
-    $d = substr($_,28, 8) + 0.0;
+  elsif (/^[ \d]\d [ \d]\d/) {
+    $j = substr($_, 0, 2) + 0.0;
+    $i = substr($_, 3, 2) + 0.0;
+    $a = substr($_, 6, 9) + 0.0;
+    $b = substr($_,16, 9) + 0.0;
+    $c = substr($_,26, 9) + 0.0;
+    $d = substr($_,36, 9) + 0.0;
     $DATAa{y2y($year)}{$i}{$j} = $a;
     $DATAb{y2y($year)}{$i}{$j} = $b;
     $DATAc{y2y($year)}{$i}{$j} = $c;

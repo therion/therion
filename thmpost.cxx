@@ -50,7 +50,7 @@ const char * thmpost_library =
 "\n"
 "\n"
 "tracingstats:=1;\n"
-"prologues:=1;\n"
+"prologues:=0;\n"
 "\n"
 "if known Background: background:=Background fi;\n"
 "%TrueScale:=Scale;\n"

@@ -16,6 +16,10 @@
   \else
     \pdfminorversion 5
   \fi\fi
+  \ifnum\pdftexversion>139
+    \openin0=glyphtounicode.tex
+    \ifeof0\message{No glyph to unicode mapping found!}\else\closein0\input glyphtounicode.tex\pdfgentounicode=1\fi
+  \fi
   \input etc/supp-mis 
   \input etc/supp-pdf 
   

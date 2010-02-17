@@ -320,6 +320,9 @@ string select_lang(string s, string lang) {
 #define SELFONT if (ENC_NEW.NFSS == 0 && lastenc!=-1) T << "\\thf" << u2str(lastenc+1)
 
 string utf2tex(string str, bool remove_kerning) {
+
+  if (str.empty()) return str;
+
   ostringstream T;
   string tmp;
   int wc;  //wide char

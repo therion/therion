@@ -151,8 +151,9 @@ Following coordinate systems are supported:
 
 \subchapter Magnetic declination.
 
-Therion contains built-in IGRF Earth geomagnetic field model valid for period 
-1900--2010. It is automatically used if the cave is located in the space using 
+Therion contains built-in IGRF\[See \www{http://www.ngdc.noaa.gov/IAGA/vmod/}] 
+Earth geomagnetic field model valid for period 
+1900--2015\NEW{5.3}. It is automatically used if the cave is located in space using 
 any of supported geodetic coordinate systems and no declination is specified by 
 user. The computed declination is listed in the LOG file for information.
 
@@ -375,8 +376,8 @@ the command may be used anywhere.
   * |team <person> [<roles>]| = a survey team member. The first argument
     is his/her name, the others describe the roles of the person in
     the team (optional---currently not used). The following role keywords are
-    supported: station, length, tape, compass, bearing, clino,
-    gradient, counter, depth, station, position, notes, pictures, pics,
+    supported: station, length, tape, [back]compass, [back]bearing, [back]clino,
+    [back]gradient, counter, depth, station, position, notes, pictures, pics,
     instruments (insts), assistant (dog).
   * |explo-team <person>| = a discovery team member. 
   * |instrument <quantity list> <description>| = description
@@ -694,7 +695,7 @@ Point is a command for drawing a point map symbol.
     see below for details.], 
     |passage-height|\[Height of the passage; see below for details.], 
     |station-name|\[If no text is specified, the name of the nearest
-      station is used.], 
+      station is used.], \penalty-100
     |date|;
 
     {\it symbolic passage fills:}\[Unlike other point symbols, these are

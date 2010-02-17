@@ -10,6 +10,7 @@ $elev = 3;
 $cm = 72/2.54;
 
 ## SETTINGS ##
+$cave = "";
 $team = "";
 $date = "";
 $columns = 3;
@@ -40,13 +41,15 @@ if (defined $opt_i) {do $opt_i;}
 $block = 0;
 $poly_len = 0;
 @DATA=();
+$DATA[1] = "";
+@CENTRELINE = ();
 open IN, $ARGV[0] or die "can't open pockettopo file $ARGV[0]!\n";
 while(<IN>) {
   s/\s+$//;
   if (/^$/) {next;}
   if (/^TRIP$/) {
     $block = 1;
-    $DATA[$block] = "";
+#    $DATA[$block] = "";
     $subblock = 0;
   }
   elsif (/^PLAN$/) {
@@ -71,7 +74,7 @@ while(<IN>) {
   }
   elsif (/^DATA$/) {
     $subblock = 1;
-    @CENTRELINE = ();
+#    @CENTRELINE = ();
   }
   elsif (/^STATIONS$/) {
     $subblock = 1;
@@ -221,7 +224,7 @@ print OUT <<ENDTEX;
 ENDTEX
 
 print OUT "\\setbox0=\\vbox{\\kern${margin}bp\\hbox{\\kern${margin}bp\\vbox{\\hbox{", 
-  "$team $date}\\medskip", 
+  "$cave}\\hbox{$team}\\hbox{$date}\\medskip", 
   make_table(), 
   "}\\kern${margin}bp}\\kern${margin}bp}\\pdfxform0\\data=\\pdflastxform\n";
 for ($i=2; $i<=3; $i++) {

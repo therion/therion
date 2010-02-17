@@ -39,7 +39,7 @@
 
 
 tracingstats:=1;
-prologues:=1;
+prologues:=0;
 
 if known Background: background:=Background fi;
 %TrueScale:=Scale;

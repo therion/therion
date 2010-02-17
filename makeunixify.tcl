@@ -44,7 +44,7 @@ exec chmod 775 makeconvert2.pl
 exec chmod 775 thcsdata.tcl
 exec chmod 775 threpair-files
 exec chmod 775 thsymbolsetlist.pl
-exec chmod 775 geomag/cof2c.pl
+exec chmod 775 geomag/cof11_2c.pl
 exec chmod 775 mpost/genmpost.pl
 exec chmod 775 samples/samples.tcl
 exec chmod 775 tex/gentex.pl

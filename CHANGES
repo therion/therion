@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-Already done for future Therion 5.3 (YYYY-MM-DD):
+Therion 5.3 (2010-02-17):
 
 therion:
  * added <lang:XX> language selector for strings
@@ -23,13 +23,16 @@ therion:
  * added albanian translation (thanks to Fatos Katallozi)
  * updated german translation (thanks to Roger Schuster; Georg Pacher's 
    additions to be implemented soon)
+ * sketches displayed in map layer in pdf and svg, not among surface bitmaps (T#8996)
+ * PROJ.4 library updated to 4.7.0
+ * geomag data updated until 2015
  * bugs fixed:
    - BCRA3 and BCRA5 survey grades fixed
    - missing altitudes in cave list
    - atlas page exclusion
    - map header positioning using real numbers
    - attribute export to metapost
-   - fixed russian translation
+   - fixed russian translation (B#26399)
    - transparency in metapost reset when followed by clipped area
    - back readings supported in data roles+instruments
    - missing LRUD data in PLT export (B#25532)
@@ -37,6 +40,7 @@ therion:
    - "-flip none" not working for scrap
    - lat/long out of range
    - map-header x y off behaves as if map-header x y nw (B#25537)
+   - incorrect boundary of background sketches in pdf and svg maps
    
 xtherion:
 
@@ -56,8 +60,6 @@ loch:
  * splay and duplicate shots are hidden by default
  * entrances, stations and fixed stations and their labels can be displayed
    on screen (added toolbar buttons and Scene setup->Stations control panel)
- * bugs fixed: 
-   - 
 
 --------------------------------------------------------------------------------
 Therion 5.2 (2008-08-07):

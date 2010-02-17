@@ -315,8 +315,8 @@ void make_sheets() {
         for (int j = 0; j<=1; j++) {
           w = i * I_sk->width;
           h = j * I_sk->height;
-          a = I_sk->xx*w + I_sk->yx*h + I_sk->dx;
-          b = I_sk->xy*w + I_sk->yy*h + I_sk->dy;
+          a = I_sk->xx*w + I_sk->xy*h + I_sk->dx;
+          b = I_sk->yx*w + I_sk->yy*h + I_sk->dy;
           if (a < llx) llx = a;
           if (b < lly) lly = b;
           if (a > urx) urx = a;

@@ -139,8 +139,8 @@ void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
         for (int j = 0; j<=1; j++) {
           w = i * I_sk->width;
           h = j * I_sk->height;
-          a = I_sk->xx*w + I_sk->yx*h + I_sk->dx;
-          b = I_sk->xy*w + I_sk->yy*h + I_sk->dy;
+          a = I_sk->xx*w + I_sk->xy*h + I_sk->dx;
+          b = I_sk->yx*w + I_sk->yy*h + I_sk->dy;
           if (a < llx) llx = a;
           if (b < lly) lly = b;
           if (a > urx) urx = a;
@@ -357,7 +357,7 @@ void print_surface_bitmaps (ofstream &F) {
 
 
 
-void thsvg(const char * fname, int fmt, legenddata ldata = legenddata::legenddata()) {
+void thsvg(const char * fname, int fmt, legenddata ldata) {
   if (fmt == 0)
     thprintf("making svg map ... ");
   else
