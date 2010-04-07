@@ -1,4 +1,21 @@
 --------------------------------------------------------------------------------
+Already done for future Therion 5.4 (YYYY-MM-DD):
+
+therion:
+ * bugs fixed:
+   - fixed huge coordinate numbers in extended elevation xvi
+   - xvi with sketches export
+   - unnecessary warningcheck changes eliminated from metapost code
+   
+xtherion:
+ * bugs fixed:
+   - 
+   
+loch:
+ * bugs fixed:
+   - 
+
+--------------------------------------------------------------------------------
 Therion 5.3 (2010-02-17):
 
 therion:

@@ -494,15 +494,18 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
     }
   }
 
+
   if (prj->type == TT_2DPROJ_EXTEND) {
-    xmin = thnan;
+    bool first_st = true;
     for(i = 0; i < nsh; i++) {
       cl = thdb.db1d.leg_vec[i].leg;
       ff = cl->from.id - 1;
       tt = cl->to.id - 1;
-
-      if (isexp[ff] && isexp[tt] && ((cl->extend & TT_EXTENDFLAG_HIDE) != 0)) {
-
+      if (isexp[ff] && isexp[tt] && ((cl->extend & TT_EXTENDFLAG_HIDE) == 0)) {
+        if (first_st) {
+          xmin = thnan;
+          first_st = false;
+        }
         cs = &(thdb.db1d.station_vec[ff]);
         cx = sf * cl->fxx;
         cy = sf * cs->z;
@@ -575,7 +578,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
     thpic * skpic;
     thscrap * scrap;
     for (obi = thdb.object_list.begin(); obi != thdb.object_list.end(); obi++) {
-      if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi))->proj->id == prj->id)) {
+      if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi))->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi))->proj->id == prj->id)) {
         scrap = (thscrap *)(*obi);
         skit = scrap->sketch_list.begin();
         while (skit != scrap->sketch_list.end()) {
@@ -1930,7 +1933,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   bool map_shift = (hypot(out->m_shift_x, out->m_shift_y) > 1e-2);
 	
 	// check scrap limits
-  fprintf(out->file, "warningcheck := 1;\n");
+  bool warncheckchange = false;
 	if (!thisnan(scrap->lxmin)) {
 		vec2d v1, v2;
 		v1.set(thxmmxst(out, scrap->lxmin, scrap->lymin)); 
@@ -1945,6 +1948,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 		if (max > 4095.0) {
 		  minscale = (1.0 / out->layout->scale) * (max / 4095.0);
 			if (scrap->centerline_io) {
+        fprintf(out->file, "thtmpwarningcheck := warningcheck;\n");
+        warncheckchange = true;
 			  fprintf(out->file, "warningcheck := 0;\n");
 				if (max > 32767.0) {
 				  minscale = (1.0 / out->layout->scale) * (max / 32767.0);
@@ -2551,6 +2556,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     result.flags |= TT_XMPS_X;
   }
   scrap->db->attr.export_mp_object_end(out->file, (long) scrap->id);
+
+  if (warncheckchange)
+    fprintf(out->file, "warningcheck := thtmpwarningcheck;\n");
+
   return result;
 }
 

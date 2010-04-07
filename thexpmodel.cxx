@@ -1451,13 +1451,11 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
       sptr = (thsurvey*)(*obi);
       if (sptr->num1 > 0) {
         sptr->num1 = survnum++;
-
         expf_survey.m_id = sptr->num1;
-        expf_survey.m_parent = (sptr->fsptr != NULL) ? sptr->fsptr->num1 : sptr->num1;
+        expf_survey.m_parent = ((sptr->fsptr == NULL) || (sptr->fsptr->num1 < 0)) ? sptr->num1 : sptr->fsptr->num1;
         expf_survey.m_namePtr = expf.m_surveysData.AppendStr(sptr->name);
         expf_survey.m_titlePtr = expf.m_surveysData.AppendStr(sptr->title);
         expf.m_surveys.push_back(expf_survey);
-
       }
     }
     obi++;

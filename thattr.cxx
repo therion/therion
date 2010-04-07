@@ -325,7 +325,7 @@ void thattr::analyze_fields()
         case THATTR_DOUBLE:
           cvald = ai->second.m_val_double;
           ca->m_val_long = long(cvald);
-          sprintf(b,"%g", cvald);
+          sprintf(b,"%f", cvald);
           ca->m_val_string = b;
           if (cf->m_type == THATTR_INTEGER)
             cf->m_type = THATTR_DOUBLE;

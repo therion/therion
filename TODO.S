@@ -1,5 +1,7 @@
 HOT LIST:
 
++ suradnice v cave-liste su s Eckami
+
 + priradenie farieb mapam
 + priame proj4 retazce do CS
 + calibracia surface v lochu
@@ -8,7 +10,6 @@ HOT LIST:
 + splayshoty previest na LRUD
 + jazyky parsovat na vystupe - odskusat
 + chybaju meracske body v legende
-+ farby patternov odladit
 
 + thbook: units up|down|left|right|dimensions
 + thbook: splay shots using "-" or "." as station name
