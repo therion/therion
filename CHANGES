@@ -6,6 +6,7 @@ therion:
    - fixed huge coordinate numbers in extended elevation xvi
    - xvi with sketches export
    - unnecessary warningcheck changes eliminated from metapost code
+   - fixed bug with 3d model generation from scraps without outline
    
 xtherion:
  * bugs fixed:

@@ -112,6 +112,10 @@ void thscrapis::end_bp()
 {
   // vytvori odkazy
   std::map <thscrapisloc, thscrapisbp> ::iterator it = this->bp_map.begin();
+  this->firstbp = NULL;
+  if (it == this->bp_map.end())
+    return;
+
   thscrapisbp * cbp = &(it->second);
   this->firstbp = cbp;
   it++;
@@ -121,6 +125,7 @@ void thscrapis::end_bp()
     cbp = cbp->next;
     it++;
   }
+
 }
   
 
