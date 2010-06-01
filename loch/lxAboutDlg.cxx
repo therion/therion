@@ -77,7 +77,7 @@ lxAboutDlg::lxAboutDlg(wxWindow * parent)
   sizerAll->Add(new wxStaticText(this, lxABDG_TEXT2,_("3D visualization tool for caves")), 0, lxNOTTOP, lxBORDER);
   wxString lxVer;
   lxVer = _T("Version: ");
-  lxVer += _T(THVERSION);
+  lxVer += _T("" THVERSION "");
   sizerAll->Add(new wxStaticText(this, lxABDG_TEXT3, lxVer), 0, lxNOTTOP, lxBORDER);
   
   wxBoxSizer * sizerAllAbove = new wxBoxSizer(wxHORIZONTAL);

@@ -425,7 +425,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           this->last_line->code = this->ccode;
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
-          if ((*args) != NULL) {
+          if (args != NULL) {
             if (!th_is_keyword(*args))
               ththrow(("invalid keyword -- %s", args[0]))
             thencode(&(this->db->buff_enc), *args, argenc);
@@ -1279,10 +1279,11 @@ void thlayout::self_print_library() {
         if (ln->line != NULL) {
           thdecode_c(&(this->db->buff_enc), ln->line);
           thprintf("\toname = \"%s\";\n", this->db->buff_enc.get_buffer());
-        } else {
-          thprintf("\toname = NULL;\n");
         }
-        thprintf("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n");
+        if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS)
+          thprintf("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,0),NULL,TT_UTF_8,0);\n");
+        else
+          thprintf("\tplayout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);\n");
         if (ln->code != TT_LAYOUT_CODE_SYMBOL_DEFAULTS) {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
@@ -1304,7 +1305,7 @@ void thlayout::self_print_library() {
             case TT_LAYOUT_CODE_SYMBOL_COLOR:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
               thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
-              thprintf("\tplayout->last_line->sclr = thlayout_color(%f,%f,%f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
+              thprintf("\tplayout->last_line->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
               break;
           }
         }

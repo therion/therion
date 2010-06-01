@@ -154,8 +154,10 @@ static const thstok thtt_symbol_group[] = {
   {"centerline", SYMX_CENTERLINE},
   {"centreline", SYMX_CENTERLINE},
   {"equipment", SYMX_EQUIPMENT},
+  {"ice", SYMX_ICE},
   {"passage-fills", SYMX_PASSAGEFILLS},
   {"sections", SYMX_SECTIONS},
+  {"sediments", SYMX_SEDIMENTS},
   {"speleothems", SYMX_SPELEOTHEMS},
   {"surface-centerline", SYMX_SURFACECENTERLINE},
   {"surface-centreline", SYMX_SURFACECENTERLINE},
@@ -273,6 +275,11 @@ int thsymbolset__get_id(char * symclass, char * symbol)
             c2(TT_LINE_SUBTYPE_SAND,SYML_WALL_SAND)
             c2(TT_LINE_SUBTYPE_UNDERLYING,SYML_WALL_UNDERLYING)
             c2(TT_LINE_SUBTYPE_UNSURVEYED,SYML_WALL_UNSURVEYED)
+            c2(TT_LINE_SUBTYPE_FLOWSTONE,SYML_WALL_FLOWSTONE)
+            c2(TT_LINE_SUBTYPE_MOONMILK,SYML_WALL_MOONMILK)
+			c2(TT_LINE_SUBTYPE_PIT,SYML_WALL_PIT)
+            c2(TT_LINE_SUBTYPE_OVERLYING,SYML_WALL_OVERLYING)
+
           }
           break;
         case TT_LINE_TYPE_BORDER:
@@ -399,6 +406,7 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         cp3(TT_POINT_TYPE_FIXED_LADDER,SYMP_FIXEDLADDER);
         cp3(TT_POINT_TYPE_FLOWSTONE,SYMP_FLOWSTONE);
         cp3(TT_POINT_TYPE_FLOWSTONE_CHOKE,SYMP_FLOWSTONECHOKE);
+        cp3(TT_POINT_TYPE_CLAY_CHOKE,SYMP_CLAYCHOKE);
         cp3(TT_POINT_TYPE_FLUTE,SYMP_FLUTE);
         cp3(TT_POINT_TYPE_GRADIENT,SYMP_GRADIENT);
         cp3(TT_POINT_TYPE_GUANO,SYMP_GUANO);
@@ -439,6 +447,9 @@ int thsymbolset__get_id(char * symclass, char * symbol)
         cp3(TT_POINT_TYPE_VEGETABLE_DEBRIS,SYMP_VEGETABLEDEBRIS);
         cp3(TT_POINT_TYPE_WALL_CALCITE,SYMP_WALLCALCITE);
         cp3(TT_POINT_TYPE_WATER,SYMP_WATER);
+        cp3(TT_POINT_TYPE_ICE_STALACTITE,SYMP_ICESTALACTITE);
+        cp3(TT_POINT_TYPE_ICE_STALAGMITE,SYMP_ICESTALAGMITE);
+        cp3(TT_POINT_TYPE_ICE_PILLAR,SYMP_ICEPILLAR);
       }
       break;
   }
@@ -567,6 +578,8 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(2,SYMP_WATER)
     group(3,SYMA_WATER)
     group(4,SYMA_SUMP)
+    group(5,SYMP_SPRING)
+    group(6,SYMP_SINK)
     egroup  
 
     bgroup(SYMX_EQUIPMENT)
@@ -581,8 +594,6 @@ int thsymbolset__get_group(int group_id, int cid) {
     group( 8,SYMP_NOEQUIPMENT);
     group( 9,SYML_ROPE);
     egroup
-
-
 
     bgroup(SYMX_SPELEOTHEMS)
     group( 0,SYMP_FLOWSTONE);
@@ -603,16 +614,38 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(15,SYMP_CAVEPEARL);
     group(16,SYMP_RIMSTONEPOOL);
     group(17,SYMP_RIMSTONEDAM);
-    group(18,SYMP_ANASTOMOSIS);
-    group(19,SYMP_KARREN);
-    group(20,SYMP_SCALLOP);
-    group(21,SYMP_FLUTE);
-    group(22,SYMP_RAFTCONE);
-    group(23,SYML_FLOWSTONE);
-    group(24,SYML_MOONMILK);
-    group(25,SYMA_FLOWSTONE)
-    group(26,SYMA_MOONMILK)
+    group(19,SYML_FLOWSTONE);
+    group(20,SYML_MOONMILK);
+    group(21,SYMA_FLOWSTONE)
+    group(22,SYMA_MOONMILK)
     egroup
+
+
+    bgroup(SYMX_ICE)
+    group(0,SYML_WALL_ICE);
+    group(1,SYMP_ICE);
+    group(2,SYMP_ICESTALACTITE);
+    group(3,SYMP_ICESTALAGMITE);
+    group(4,SYMP_ICEPILLAR);
+    group(5,SYMP_SNOW);
+    group(6,SYMA_ICE);
+    group(7,SYMA_SNOW);
+    egroup
+
+
+    bgroup(SYMX_SEDIMENTS)
+    group(0,SYML_WALL_SAND);
+    group(1,SYML_WALL_CLAY);
+    group(2,SYMP_SAND);
+    group(3,SYMP_CLAY);
+    group(4,SYMA_SAND);
+    group(5,SYMA_CLAY);
+    group(6,SYMP_CLAYTREE);
+    group(7,SYMP_RAFT);
+    group(8,SYMP_RAFTCONE);
+    group(9,SYMP_GUANO);
+    egroup
+
 
     bgroup(SYMX_PASSAGEFILLS)
     group(0,SYMX_POINT_WATERFLOW)
@@ -675,6 +708,10 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(7,SYML_WALL_SAND)
     group(8,SYML_WALL_UNDERLYING)
     group(9,SYML_WALL_UNSURVEYED)
+    group(10,SYML_WALL_PIT)
+    group(11,SYML_WALL_OVERLYING)
+    group(12,SYML_WALL_MOONMILK)
+    group(13,SYML_WALL_FLOWSTONE)
     egroup  
 
     bgroup(SYMX_LINE_WATERFLOW)
@@ -854,14 +891,18 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   // thT("line wall")  
   legend_wall(SYML_WALL_BEDROCK,thT("line wall:bedrock",layout->lang));
   legend_wall(SYML_WALL_UNDERLYING,thT("line wall:underlying",layout->lang));
+  legend_wall(SYML_WALL_OVERLYING,thT("line wall:overlying",layout->lang));
   legend_wall(SYML_WALL_UNSURVEYED,thT("line wall:unsurveyed",layout->lang));
   legend_wall(SYML_WALL_PRESUMED,thT("line wall:presumed",layout->lang));
+  legend_wall(SYML_WALL_PIT,thT("line wall:pit",layout->lang));
   legend_wall(SYML_WALL_BLOCKS,thT("line wall:blocks",layout->lang));
   legend_wall(SYML_WALL_DEBRIS,thT("line wall:debris",layout->lang));
   legend_wall(SYML_WALL_PEBBLES,thT("line wall:pebbles",layout->lang));
   legend_wall(SYML_WALL_SAND,thT("line wall:sand",layout->lang));
   legend_wall(SYML_WALL_CLAY,thT("line wall:clay",layout->lang));
   legend_wall(SYML_WALL_ICE,thT("line wall:ice",layout->lang));
+  legend_wall(SYML_WALL_FLOWSTONE,thT("line wall:flowstone",layout->lang));
+  legend_wall(SYML_WALL_MOONMILK,thT("line wall:moonmilk",layout->lang));
 
   insfig(SYMP_WALLALTITUDE,thT("point wall-altitude",layout->lang));
   helpsymbol;
@@ -970,6 +1011,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_end(SYMP_LOWEND,thT("point low-end",layout->lang))
   legend_end(SYMP_FLOWSTONECHOKE,thT("point flowstone-choke",layout->lang))
   legend_end(SYMP_BREAKDOWNCHOKE,thT("point breakdown-choke",layout->lang))
+  legend_end(SYMP_CLAYCHOKE,thT("point clay-choke",layout->lang))
   
 #define legend_iuline "(((.1,.6) .. (.5,.4) .. (.9,.6)) inscale)"
 #define legend_cline "(((.85,.5){dir 90} .. (.5,.85){dir 180} .. (.4,.15){dir 0} .. cycle) inscale)"
@@ -1084,6 +1126,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_PEBBLES,thT("point pebbles",layout->lang));
   legend_point(SYMP_RAFT,thT("point raft",layout->lang));
   legend_point(SYMP_GUANO,thT("point guano",layout->lang));
+  legend_point(SYMP_CLAYTREE,thT("point clay-tree",layout->lang));
   
   // okraje
   // thT("line border")  
@@ -1151,17 +1194,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
   insfig(SYMP_SPRING,thT("point spring",layout->lang));
   helpsymbol;
-  if isused(SYML_WATERFLOW_PERMANENT)
-    fprintf(mpf,"%s(((0.3,0.5) -- (0.9,0.5)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_PERMANENT]);
-  else
-  if isused(SYMP_WATERFLOW_PERMANENT)
-    fprintf(mpf,"%s((0.3,0.5) inscale,270,1.0,(0,1));\n",thsymbolset__mp[SYMP_WATERFLOW_PERMANENT]);
-  else
-  if isused(SYML_WATERFLOW_INTERMITTENT)
-    fprintf(mpf,"%s(((0.3,0.5) -- (0.9,0.5)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_INTERMITTENT]);
-  else
-  if isused(SYMP_WATERFLOW_INTERMITTENT)
-    fprintf(mpf,"%s((0.3,0.5) inscale,270,1.0,(0,1));\n",thsymbolset__mp[SYMP_WATERFLOW_INTERMITTENT]);
+  fprintf(mpf,"%s(((0.3,0.5) -- (0.9,0.5)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_PERMANENT]);
   endhelpsymbol;
   this->export_mp_symbol_options(mpf, SYMP_SPRING);
   fprintf(mpf,"%s((0.3,0.5) inscale,270,1.0,(0,-1));\n",thsymbolset__mp[SYMP_SPRING]);
@@ -1169,17 +1202,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
   insfig(SYMP_SINK,thT("point sink",layout->lang));
   helpsymbol;
-  if (true || isused(SYML_WATERFLOW_PERMANENT))
-    fprintf(mpf,"%s(((0.1,0.5) -- (0.7,0.5)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_PERMANENT]);
-  else
-  if isused(SYMP_WATERFLOW_PERMANENT)
-    fprintf(mpf,"%s((0.7,0.5) inscale,270,1.0,(0,-1));\n",thsymbolset__mp[SYMP_WATERFLOW_PERMANENT]);
-  else
-  if isused(SYML_WATERFLOW_INTERMITTENT)
-    fprintf(mpf,"%s(((0.1,0.5) -- (0.7,0.5)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_INTERMITTENT]);
-  else
-  if isused(SYMP_WATERFLOW_INTERMITTENT)
-    fprintf(mpf,"%s((0.7,0.5) inscale,270,1.0,(0,-1));\n",thsymbolset__mp[SYMP_WATERFLOW_INTERMITTENT]);
+  fprintf(mpf,"%s(((0.1,0.5) -- (0.7,0.5)) inscale);\n",thsymbolset__mp[SYML_WATERFLOW_PERMANENT]);
   endhelpsymbol;
   this->export_mp_symbol_options(mpf, SYMP_SINK);
   fprintf(mpf,"%s((0.7,0.5) inscale,270,1.0,(0,1));\n",thsymbolset__mp[SYMP_SINK]);
@@ -1214,6 +1237,9 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_STALACTITE,thT("point stalactite",layout->lang));
   legend_point(SYMP_STALAGMITE,thT("point stalagmite",layout->lang));
   legend_point(SYMP_PILLAR,thT("point pillar",layout->lang));
+  legend_point(SYMP_ICESTALACTITE,thT("point ice-stalactite",layout->lang));
+  legend_point(SYMP_ICESTALAGMITE,thT("point ice-stalagmite",layout->lang));
+  legend_point(SYMP_ICEPILLAR,thT("point ice-pillar",layout->lang));
   legend_point(SYMP_CURTAIN,thT("point curtain",layout->lang));
   legend_point(SYMP_SODASTRAW,thT("point soda-straw",layout->lang));
   legend_point(SYMP_POPCORN,thT("point popcorn",layout->lang));

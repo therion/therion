@@ -269,6 +269,7 @@ endlayout|
     Therion uses following predefined symbol sets:\par
     UIS (International Union of Speleology)\par
     ASF (Australian Speleological Federation)\par
+    AUT (Austrian Speleological Association)\par
     CCNP (Carlsbad Caverns National Park)\par
     SKBB (Speleoklub Bansk\'a Bystrica)
     
@@ -290,7 +291,7 @@ endlayout|
     labels' appearance. (M, A)
 
     Group may be one of the following: all, centerline, sections, \NEW{5.3}water,
-    speleothems, passage-fills, equipment.
+    speleothems, passage-fills, \NEW{5.4}ice, sediments, equipment.
     
     There are two special symbols: north-arrow, scale-bar.
 
@@ -507,9 +508,6 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
     |continuation-list| = list of possible continuations
 
     |database| = SQL database with centreline
-
-    \NEW{5.3}|bbox| = text file containing geographic coordinates of 
-    lower-left and upper-right corners of the map area
 \endarguments
 
 \penalty0
@@ -544,10 +542,12 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
   * |format/fmt <format>| = set map format. Currently |pdf|, |svg|, 
     |xhtml|\[SVG embedded in XHTML file which contains also legend],
     |survex|, |dxf|, |esri|\[ESRI shapefiles. Multiple files are written to a 
-    directory with the specified filename.], |kml| (Google Earth) and 
+    directory with the specified filename.], |kml| (Google Earth), 
     |xvi|\[Xtherion vector image. XVI images may be used in
     xtherion to draw in-scale maps. Scale (100\,DPI image resolution is 
-    assumed) and grid-size from layout are used in export.]
+    assumed) and grid-size from layout are used in export.] and
+    \NEW{5.3}|bbox|\[Text file containing geographic coordinates of 
+    lower-left and upper-right corners of the map area.]
     for map; |pdf| for atlas are supported.
   * |projection <id>| = unique identifier that specifies the map projection type.
     (See the |scrap| command for details.) 
@@ -594,11 +594,10 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
 \leavevmode\kern1em\vbox{\advance\hsize-1em\halign{#\hfil\quad&#\hfil\cr
 {\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
 model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml\cr
-map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml\cr
+map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml, \NEW{5.3}bbox\cr
 atlas & pdf\cr
 database & sql\cr
-lists & html, txt, dbf\cr
-\NEW{5.3}special & bbox\cr}}\egroup
+lists & html, txt, dbf\cr}}\egroup
 
 
 \subchapter Running Therion.

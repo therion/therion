@@ -150,6 +150,7 @@ enum {
   TT_POINT_TYPE_LOW_END,
   TT_POINT_TYPE_FLOWSTONE_CHOKE,
   TT_POINT_TYPE_BREAKDOWN_CHOKE,
+  TT_POINT_TYPE_CLAY_CHOKE,
 
 // vypln
   TT_POINT_TYPE_FLOWSTONE,
@@ -175,6 +176,10 @@ enum {
   TT_POINT_TYPE_SCALLOP,
   TT_POINT_TYPE_FLUTE,
   TT_POINT_TYPE_RAFT_CONE,
+  TT_POINT_TYPE_ICE_STALACTITE,
+  TT_POINT_TYPE_ICE_STALAGMITE,
+  TT_POINT_TYPE_ICE_PILLAR,
+
   
 // plosne vyplne
   TT_POINT_TYPE_BEDROCK,
@@ -188,6 +193,8 @@ enum {
   TT_POINT_TYPE_ICE,
   TT_POINT_TYPE_SNOW,
   TT_POINT_TYPE_GUANO,
+  TT_POINT_TYPE_CLAY_TREE,
+
 
 // ina vypln
   TT_POINT_TYPE_ARCHEO_MATERIAL,
@@ -216,6 +223,8 @@ static const thstok thtt_point_types[] = {
   {"camp",TT_POINT_TYPE_CAMP},
   {"cave-pearl",TT_POINT_TYPE_CAVE_PEARL},
   {"clay",TT_POINT_TYPE_CLAY},
+  {"clay-choke",TT_POINT_TYPE_CLAY_CHOKE},
+  {"clay-tree",TT_POINT_TYPE_CLAY_TREE},
   {"continuation",TT_POINT_TYPE_CONTINUATION},
   {"crystal",TT_POINT_TYPE_CRYSTAL},
   {"curtain",TT_POINT_TYPE_CURTAIN},
@@ -237,6 +246,9 @@ static const thstok thtt_point_types[] = {
   {"height",TT_POINT_TYPE_HEIGHT},
   {"helictite",TT_POINT_TYPE_HELICTITE},
   {"ice",TT_POINT_TYPE_ICE},
+  {"ice-pillar",TT_POINT_TYPE_ICE_PILLAR},
+  {"ice-stalactite",TT_POINT_TYPE_ICE_STALACTITE},
+  {"ice-stalagmite",TT_POINT_TYPE_ICE_STALAGMITE},
   {"karren",TT_POINT_TYPE_KARREN},
   {"label",TT_POINT_TYPE_LABEL},
   {"low-end",TT_POINT_TYPE_LOW_END},

@@ -443,19 +443,21 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
   // if the pattern definition exceeds the BBox in MetaPost
   for (list<pattern>::iterator I = PATTERNLIST.begin();
                                I != PATTERNLIST.end(); I++) {
-    F << "<pattern id=\"patt_" << I->name << "_" << unique_prefix <<
-         "\" patternUnits=\"userSpaceOnUse\"" << 
-         " width=\"" << I->xstep <<   
-         "\" height=\"" << I->ystep << 
-         "\" patternTransform=\"matrix(" << I->xx << " " << I->xy << " " 
-                                         << I->yx << " " << I->yy << " " 
-                                         << I->x <<  " " << I->y  << 
-         ")\">" << endl;
-    F << "<g transform=\"translate(" 
-                  << I->llx1-I->llx << " " << I->lly1-I->lly << ")\">" << endl;
-    I->data.MP.print_svg(F,unique_prefix);
-    F << "</g>" << endl;
-    F << "</pattern>" << endl;
+    if (I->used) {
+      F << "<pattern id=\"patt_" << I->name << "_" << unique_prefix <<
+           "\" patternUnits=\"userSpaceOnUse\"" << 
+           " width=\"" << I->xstep <<   
+           "\" height=\"" << I->ystep << 
+           "\" patternTransform=\"matrix(" << I->xx << " " << I->xy << " " 
+                                           << I->yx << " " << I->yy << " " 
+                                           << I->x <<  " " << I->y  << 
+           ")\">" << endl;
+      F << "<g transform=\"translate(" 
+                    << I->llx1-I->llx << " " << I->lly1-I->lly << ")\">" << endl;
+      I->data.MP.print_svg(F,unique_prefix);
+      F << "</g>" << endl;
+      F << "</pattern>" << endl;
+    }
   }
   // scraps:
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 

@@ -49,6 +49,7 @@
 
 using namespace std;
 
+#define IOerr(F) ((string)"Can't open file "+F+"!\n").c_str()
 
 extern map<string,string> RGB, ALL_FONTS, ALL_PATTERNS;
 typedef set<unsigned char> FONTCHARS;
@@ -529,7 +530,7 @@ void parse_eps(string fname, string cname, double dx, double dy,
   data.clear();
 
   ifstream F(fname.c_str());
-  if(!F) therror(("Can't open file for reading"));
+  if(!F) therror((IOerr(fname)));
   while(F >> tok) {
     if (comment) {                      // File header
       if (tok == "%%BoundingBox:") {
@@ -552,7 +553,7 @@ void parse_eps(string fname, string cname, double dx, double dy,
                            // for F and G scraps
           data.MP.add(MP_gsave);
           ifstream G(cname.c_str());
-          if(!G) therror(("Can't open file"));
+          if(!G) therror((IOerr(cname)));
           mp_path.clear();
           while(G >> buffer) {
             if (buffer == "m") {
@@ -903,9 +904,14 @@ void convert_scraps_new() {
     xstep = strtok(NULL,delim);
     ystep = strtok(NULL,delim);
     matr = strtok(NULL,delim);
-    if (ALL_PATTERNS.count(num) > 0) {
+//    if (ALL_PATTERNS.count(num) > 0) {  // changed to patt.used flag
+                                          // because thsymbolset.cxx 
+                                          // calls eps_parse after
+                                          // this function is called
+                                          // and patterns referenced
+                                          // there would be missing in this list
       pattern patt;
-      
+      patt.used = (ALL_PATTERNS.count(num) > 0);
       patt.name = num;
 
       matr.replace(matr.find("["),1,"");
@@ -923,7 +929,7 @@ void convert_scraps_new() {
 
       parse_eps(pfile , "", 0,0, patt.llx1,patt.lly1,patt.urx1,patt.ury1,patt.data);
       PATTERNLIST.push_back(patt);
-    }
+//    }  // patt.used
   }
   P.close();
  

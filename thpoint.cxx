@@ -859,6 +859,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_LOW_END,SYMP_LOWEND)
     thpoint_type_export_mp(TT_POINT_TYPE_FLOWSTONE_CHOKE,SYMP_FLOWSTONECHOKE)
     thpoint_type_export_mp(TT_POINT_TYPE_BREAKDOWN_CHOKE,SYMP_BREAKDOWNCHOKE)
+    thpoint_type_export_mp(TT_POINT_TYPE_CLAY_CHOKE,SYMP_CLAYCHOKE)
 
 // vypln
     thpoint_type_export_mp(TT_POINT_TYPE_FLOWSTONE,SYMP_FLOWSTONE)
@@ -866,6 +867,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_STALACTITE,SYMP_STALACTITE)
     thpoint_type_export_mp(TT_POINT_TYPE_STALAGMITE,SYMP_STALAGMITE)
     thpoint_type_export_mp(TT_POINT_TYPE_PILLAR,SYMP_PILLAR)
+    thpoint_type_export_mp(TT_POINT_TYPE_ICE_STALACTITE,SYMP_ICESTALACTITE)
+    thpoint_type_export_mp(TT_POINT_TYPE_ICE_STALAGMITE,SYMP_ICESTALAGMITE)
+    thpoint_type_export_mp(TT_POINT_TYPE_ICE_PILLAR,SYMP_ICEPILLAR)
     thpoint_type_export_mp(TT_POINT_TYPE_CURTAIN,SYMP_CURTAIN)
     thpoint_type_export_mp(TT_POINT_TYPE_HELICTITE,SYMP_HELICTITE)
     thpoint_type_export_mp(TT_POINT_TYPE_SODA_STRAW,SYMP_SODASTRAW)
@@ -884,6 +888,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_SCALLOP,SYMP_SCALLOP)
     thpoint_type_export_mp(TT_POINT_TYPE_FLUTE,SYMP_FLUTE)
     thpoint_type_export_mp(TT_POINT_TYPE_RAFT_CONE,SYMP_RAFT)
+    thpoint_type_export_mp(TT_POINT_TYPE_CLAY_TREE,SYMP_CLAYTREE)
+
   
 // plosne vyplne
     thpoint_type_export_mp(TT_POINT_TYPE_BEDROCK,SYMP_BEDROCK)

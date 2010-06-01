@@ -56,6 +56,7 @@ enum {
   TT_LINE_HEAD = 3016,
   TT_LINE_TEXT = 3017,
   TT_LINE_ADJUST = 3018,
+  TT_LINE_HEIGHT = 3019,
 };
 
 
@@ -89,6 +90,7 @@ static const thstok thtt_line_opt[] = {
   {"direction", TT_LINE_DIRECTION},
   {"gradient", TT_LINE_GRADIENT},
   {"head", TT_LINE_HEAD},
+  {"height", TT_LINE_HEIGHT},
   {"l-size",TT_LINE_LSIZE},
   {"mark", TT_LINE_MARK},
   {"orient", TT_LINE_ORIENT},
@@ -238,6 +240,10 @@ enum {
   TT_LINE_SUBTYPE_CONJECTURAL,
   TT_LINE_SUBTYPE_CAVE,
   TT_LINE_SUBTYPE_SURFACE,
+  TT_LINE_SUBTYPE_OVERLYING,
+  TT_LINE_SUBTYPE_PIT,
+  TT_LINE_SUBTYPE_MOONMILK,
+  TT_LINE_SUBTYPE_FLOWSTONE,
 };
 
 /**
@@ -251,11 +257,15 @@ static const thstok thtt_line_subtypes[] = {
   {"clay",TT_LINE_SUBTYPE_CLAY},
   {"conjectural",TT_LINE_SUBTYPE_CONJECTURAL},
   {"debris",TT_LINE_SUBTYPE_DEBRIS},
+  {"flowstone",TT_LINE_SUBTYPE_FLOWSTONE},
   {"ice",TT_LINE_SUBTYPE_ICE},
   {"intermittent",TT_LINE_SUBTYPE_INTERMITTENT},
   {"invisible", TT_LINE_SUBTYPE_INVISIBLE},
+  {"moonmilk",TT_LINE_SUBTYPE_MOONMILK},
+  {"overlying",TT_LINE_SUBTYPE_OVERLYING},
   {"pebbles",TT_LINE_SUBTYPE_PEBBLES},
   {"permanent",TT_LINE_SUBTYPE_PERMANENT},
+  {"pit",TT_LINE_SUBTYPE_PIT},
   {"presumed",TT_LINE_SUBTYPE_PRESUMED},
   {"sand",TT_LINE_SUBTYPE_SAND},
   {"surface",TT_LINE_SUBTYPE_SURFACE},
@@ -287,6 +297,8 @@ class thline : public th2ddataobject {
   
   bool reverse;  ///< Whether line should be reversed.
   bool is_closed;  ///< Whether line is closed.
+
+  double m_height; ///< Height of a pit.
   
   class thdb2dlp * first_point,  ///< First line point.
     * last_point;  ///< Last line point.
@@ -300,6 +312,7 @@ class thline : public th2ddataobject {
   void parse_altitude(char * ss);  ///< Parse wall altitude
   void parse_head(char * ss);  ///< Parse line head.
   void parse_adjust(char * ss);  ///< Parse line head.
+  void parse_height(char * ss);  ///< Parse pit/chimney height.
   void parse_text(char * ss);  ///< Parse line text.
   void insert_line_point(int nargs, char ** args, double * nums = NULL);  ///< Insert line point.
   void insert_point_mark(char * ss);  ///< Insert line point mark.

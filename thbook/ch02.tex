@@ -708,20 +708,20 @@ Point is a command for drawing a point map symbol.
     |pillar|, |curtain|, |helictite|, |soda-straw|, |crystal|, |wall-calcite|,
     |popcorn|, |disk|, |gypsum|, |gypsum-flower|, |aragonite|, |cave-pearl|,
     |rimstone-pool|, |rimstone-dam|, |anastomosis|, |karren|, |scallop|,
-    |flute|, |raft-cone|;
+    |flute|, |raft-cone|, \NEW{5.4}|clay-tree|;
 
     {\it equipment:} |anchor|, |rope|, |fixed-ladder|, |rope-ladder|, |steps|,
     |bridge|, |traverse|, |camp|, |no-equipment|;
 
     {\it passage ends:} |continuation|, |narrow-end|, |low-end|, 
-    |flowstone-choke|, |breakdown-choke|, |entrance|;
+    |flowstone-choke|, |breakdown-choke|, \NEW{5.4}|clay-choke|, |entrance|;
 
     {\it others:} |dig|, |archeo-material|, |paleo-material|, |vegetable-debris|, 
     |root|, |water-flow|, 
     |spring|\[Always use |spring| and |sink| symbols with a |water-flow| arrow.], 
-    |sink|, 
-    |air-draught|\[Number of ticks is set according to |-scale| option],
-    |gradient|, |map-connection|\[Virtual point, used to indicate connection
+    |sink|, \NEW{5.4}|ice-stalactite|, |ice-stalagmite|, |ice-pillar|,
+    |gradient|, |air-draught|\[Number of ticks is set according to |-scale| option],
+    |map-connection|\[Virtual point, used to indicate connection
     between shifted maps (extended elevation, map offset).], |extra|\[Additional morphing point.], 
     |u|\[For user defined point symbols.].
 
@@ -896,8 +896,8 @@ respectively.
          subtypes are supported for given types:  
 
          {\it wall:} |invisible|, |bedrock| (default), |sand|, |clay|, 
-         |pebbles|, |debris|, |blocks|, |ice|, |underlying|, |unsurveyed|, 
-         |presumed|  ;
+         |pebbles|, |debris|, |blocks|, |ice|, |underlying|, \NEW{5.4}|overlying|, |unsurveyed|, 
+         |presumed|, |pit|\[Usually open to surface.], |flowstone|, |moonmilk|;
 
          {\it border:} |visible| (default), |invisible|, |temporary|, 
          |presumed|;
@@ -975,6 +975,8 @@ respectively.
        * |head <begin/end/both/none>| = can be used only with the arrow
          type and indicates where to put an arrow head. End is default.
        * |text <string>| = valid only for label lines.
+       * \NEW{5.4}|height <value>| = height of pit or wall:pit; available in
+         \MP\ as a numeric variable |ATTR__height|.
 \endcomopt
 
 \options

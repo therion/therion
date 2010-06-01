@@ -48,6 +48,8 @@ using namespace std;
 
 // extern list<scraprecord> SCRAPLIST;
 
+#define IOerr(F) ((string)"Can't open file "+F+"!\n").c_str()
+
 map<string,string> RGB, ALL_FONTS, ALL_PATTERNS;
 typedef set<unsigned char> FONTCHARS;
 map<string,FONTCHARS> USED_CHARS;
@@ -59,7 +61,7 @@ int convert_mode;
 
 void read_hash() {
   ifstream F("data.pl");
-  if(!F) therror(("???"));
+  if(!F) therror((IOerr("data.pl")));
   string line, tmp = "";
   char buf[100];
   scraprecord S;
@@ -258,7 +260,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
   };
 
   ifstream F(fname.c_str());
-  if(!F) therror(("???"));
+  if(!F) therror((IOerr(fname)));
   while(F >> tok) {
     if (comment) {                      // File header
       if ((tok == "%%BoundingBox:") && (mode > 0)) {
@@ -331,7 +333,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
 	if ((mode <= 11) && (cname != "")) { // beginning of boundary cl.path definition
           TEX << "\\PL{q}";          // for F and G scraps
           ifstream G(cname.c_str());
-          if(!G) therror(("???"));
+          if(!G) therror((IOerr(cname)));
           while(G >> buffer) {
             if ((buffer == "m") || (buffer == "l") || (buffer == "c")) {
               print_queue(thstack,llx,lly,buffer,TEX);
@@ -623,7 +625,7 @@ void convert_scraps() {
   unsigned char c;
  
   ofstream TEX("th_formdef.tex");
-  if(!TEX) therror(("???"));
+  if(!TEX) therror((IOerr("th_formdef.tex")));
   TEX.setf(ios::fixed, ios::floatfield);
   TEX.precision(2);
   
@@ -665,7 +667,7 @@ void convert_scraps() {
   TEX.close();
 
   ofstream F("th_fontdef.tex");
-  if(!F) therror(("???"));
+  if(!F) therror((IOerr("th_fontdef.tex")));
   F.setf(ios::fixed, ios::floatfield);
   F.precision(2);
   for (map<string,string>::iterator I = ALL_FONTS.begin(); 
@@ -700,7 +702,7 @@ void convert_scraps() {
   }
   F << "\\endgroup" << endl;
   ifstream P("patterns.dat");
-  if(!P) therror(("???"));
+  if(!P) therror((IOerr("patterns.dat")));
   char buf[200];
   char delim[] = ":";
   string line,num,pfile,bbox,xstep,ystep,matr;
@@ -803,7 +805,7 @@ void convert_scraps() {
 
 void read_rgb() {
   ifstream F("rgbcolors.dat");
-  if(!F) therror(("???"));
+  if(!F) therror((IOerr("rgbcolors.dat")));
   char buf[100];
   string line, color, value;
   while(F.getline(buf,100,'\n')) {

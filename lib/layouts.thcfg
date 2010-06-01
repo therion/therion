@@ -15,4 +15,11 @@ layout SCR200 -title "Computer screen layout"
   
 endlayout
 
-
+layout AUT -title "Austrian symbol set"
+  symbol-set AUT
+  symbol-color group water [18 19 57]
+  symbol-color group speleothems [87 39 23]
+  symbol-color group sediments [50 42 39]
+  symbol-color group centerline [95 0 0]
+  symbol-color group ice [0 68 94]
+endlayout

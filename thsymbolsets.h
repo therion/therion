@@ -7,7 +7,7 @@
 #include <string>
 
 
-#define thsymsets_size 6
+#define thsymsets_size 7
 
 extern int thsymsets_symbols [thsymbolset_size][thsymsets_size];
 
@@ -22,6 +22,7 @@ extern std::map<unsigned, std::string> thsymsets_comment;
 
 static const thsymbolset__char_ptr thsymsets [] = {
 "ASF",
+"AUT",
 "BCRA",
 "NSS",
 "SKBB",

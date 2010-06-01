@@ -1,7 +1,6 @@
 HOT LIST:
 
-+ suradnice v cave-liste su s Eckami
-
++ layout pri exporte XHTML
 + priradenie farieb mapam
 + priame proj4 retazce do CS
 + calibracia surface v lochu

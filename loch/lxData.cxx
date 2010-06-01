@@ -575,6 +575,7 @@ void lxData::ExportVTK(wxString fileName)
 {
   vtkPolyDataWriter * w = vtkPolyDataWriter::New();
   w->SetFileName(fileName.mbc_str());
+  w->SetFileTypeToBinary();
   w->SetInput(this->allWallsStripped->GetOutput());
   w->Write();
   w->Delete();

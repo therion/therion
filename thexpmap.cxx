@@ -919,6 +919,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   else
     fprintf(mpf,"%s\n",thmpost_library);
   fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(this->layout->lang));
+  fprintf(mpf,"ATTR__elevation:=%s;\n",((prj->type == TT_2DPROJ_ELEV) || (prj->type == TT_2DPROJ_EXTEND) ? "true" : "false"));
+
 
   this->db->attr.export_mp_header(out.file);
   this->db->db1d.m_station_attr.export_mp_header(out.file);
@@ -1770,7 +1772,7 @@ else
     putenv("VFFONTS=");
     putenv("WEB2C=");
 #ifdef THMSVC
-    putenv("TEXINPUTS=../tex;../../therionxxx/Setup/texmf/tex;.");
+    putenv("TEXINPUTS=../tex;../../therion.prj/Setup/texmf/tex;.");
     putenv("MPINPUTS=../mpost;.");
     if (ENC_NEW.NFSS == 1) {
       putenv("TEXFONTS=.");

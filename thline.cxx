@@ -52,6 +52,7 @@ thline::thline()
   this->last_point = NULL;
   
   this->text = NULL;
+  this->m_height = thnan;
 }
 
 
@@ -147,6 +148,10 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_LINE_SUBTYPE:
       this->parse_subtype(*args);
       break;
+
+	case TT_LINE_HEIGHT:
+	  this->parse_height(*args);
+	  break;
     
     case TT_LINE_BORDER:
       this->parse_border(*args);
@@ -323,6 +328,10 @@ void thline::parse_subtype(char * ss)
         case TT_LINE_SUBTYPE_UNDERLYING:
         case TT_LINE_SUBTYPE_UNSURVEYED:
         case TT_LINE_SUBTYPE_PRESUMED:
+        case TT_LINE_SUBTYPE_OVERLYING:
+        case TT_LINE_SUBTYPE_PIT:
+        case TT_LINE_SUBTYPE_MOONMILK:
+        case TT_LINE_SUBTYPE_FLOWSTONE:
           tsok = true;
       }
       break;
@@ -648,6 +657,14 @@ bool thline::export_mp(class thexpmapmpxs * out)
   thdb2dlp * lp;
 
   th2ddataobject::export_mp(out);
+  if (out->file != NULL) {
+    if (thisnan(this->m_height)) {
+      fprintf(out->file,"ATTR__height := -1;\n");
+    } else {
+      fprintf(out->file,"ATTR__height := %.2f;\n", this->m_height);
+    }
+  }
+
   
   switch (this->type) {
     case TT_LINE_TYPE_WALL:
@@ -672,9 +689,13 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_DEBRIS, SYML_WALL_DEBRIS)
             thline_type_export_mp(TT_LINE_SUBTYPE_BLOCKS, SYML_WALL_BLOCKS)
             thline_type_export_mp(TT_LINE_SUBTYPE_ICE, SYML_WALL_ICE)
+            thline_type_export_mp(TT_LINE_SUBTYPE_FLOWSTONE, SYML_WALL_FLOWSTONE)
+            thline_type_export_mp(TT_LINE_SUBTYPE_MOONMILK, SYML_WALL_MOONMILK)
             thline_type_export_mp(TT_LINE_SUBTYPE_UNDERLYING, SYML_WALL_UNDERLYING)
+            thline_type_export_mp(TT_LINE_SUBTYPE_OVERLYING, SYML_WALL_OVERLYING)
             thline_type_export_mp(TT_LINE_SUBTYPE_UNSURVEYED, SYML_WALL_UNSURVEYED)
             thline_type_export_mp(TT_LINE_SUBTYPE_PRESUMED, SYML_WALL_PRESUMED)
+            thline_type_export_mp(TT_LINE_SUBTYPE_PIT, SYML_WALL_PIT)
           }
           if (this->context >= 0) 
             macroid = this->context;
@@ -1361,6 +1382,52 @@ void thline::start_insert() {
   }
 }
 
+
+
+
+
+void thline::parse_height(char * ss) {
+  switch (this->type) {
+    case TT_LINE_TYPE_PIT:
+      break;
+	case TT_LINE_TYPE_WALL:
+	  if (this->csubtype == TT_LINE_SUBTYPE_PIT)
+		  break;
+    default:
+      ththrow(("-height not valid with type %s", thmatch_string(this->type,thtt_line_types)))
+      break;
+  }
+
+  thsplit_words(& this->db->db2d.mbf,ss);
+  int npar = this->db->db2d.mbf.get_size();
+  char ** pars = this->db->db2d.mbf.get_buffer();
+  int sv, ux;
+  double dv;
+  thtflength lentf;
+  
+  ux = 0;
+  switch (npar) {
+    case 1:
+      break;
+    case 2:
+      ux = 1;
+      break;
+    default:
+      ththrow(("invalid distance -- %s",ss))
+  }
+  this->m_height = thnan;
+  thparse_double(sv,dv,pars[0]);
+  if (sv != TT_SV_NUMBER)
+    ththrow(("not a number -- %s", pars[0]))
+  if (dv <= 0.0)
+	ththrow(("nor a positivie number -- %s", pars[0]))
+  if (ux > 0) {
+    lentf.parse_units(pars[ux]);
+    dv = lentf.transform(dv);
+  }
+  this->m_height = dv;
+
+}
 
 
 

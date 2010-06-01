@@ -117,7 +117,7 @@ sq: shigjeta
 
 therion: line map-connection
 cz: spojení map
-de: Verbindung zwischen Karten
+de: zusammenhängende Pläne
 el: ένωση χαρτών
 en: map connection
 fr: jonction de carte
@@ -165,6 +165,11 @@ ru: нижерасположенная стена
 sk: stena nižšej úrovne
 sq: muri I shtrire
 
+therion: line wall:overlying
+de: überlagerter Wandverlauf
+en: overlying wall
+sk: stena vyššej úrovne
+
 therion: line wall:unsurveyed
 cz: nezaměřená stěna
 de: Wand unvermessen
@@ -190,6 +195,11 @@ pt: parede presumida
 ru: предпологаемая стена
 sk: predpokladaná stena
 sq: muri I supozuar
+
+therion: line wall:pit
+de: Eingangsschacht
+en: entrance pit
+sk: vstupná priepasť
 
 therion: line wall:blocks
 cz: zával
@@ -268,6 +278,16 @@ pt: gelo
 ru: лед, фирн
 sk: stena tvorená ľadom
 sq: akull
+
+therion: line wall:flowstone
+de: Wand aus Sinter
+en: flowstone wall
+sk: stena tvorená sintrom
+
+therion: line wall:moonmilk
+de: Wand aus Bergmilch
+en: moonmilk wall
+sk: stena tvorená mäkkým sintrom
 
 therion: point wall-altitude
 cz: nadmořská výška bodu na stěně
@@ -401,7 +421,7 @@ sq: rrymim i ajrit
 
 therion: point air-draught:winter
 cz: zimní průvan
-de: Luftzug Winter
+de: Luftzug im Winter
 el: χειμερινή ροή αέρα
 en: winter air draught
 fr: courant d’air d’hiver
@@ -412,7 +432,7 @@ sq: rrymim ajri-dimeror
 
 therion: point air-draught:summer
 cz: letní průvan
-de: Luftzug Sommer
+de: Luftzug im Sommer
 el: θερινή ροή αέρα
 en: summer air draught
 fr: courant d’air d’été
@@ -436,7 +456,7 @@ sq: data e vrojtimit
 
 therion: point dig
 cz: sonda
-de: Grabungsstelle
+de: Grabung
 el: διάνοιξη
 en: dig
 fr: désobstruction
@@ -508,6 +528,11 @@ pt: obstrução por desmoronamento
 ru: блокировано обвалом
 sk: zavalený koniec
 sq: gurre rrjedhes-fund
+
+therion: point clay-choke
+de: Fortsetzung verlehmt
+en: clay choke
+sk: koniec uzavretý ílom
 
 therion: line floor-step
 cz: stupeň
@@ -593,7 +618,7 @@ sq: rrjedhe uji gjarperore ne tavan
 
 therion: line chimney
 cz: komín
-de: Kamin
+de: Schlot
 el: καμινάδα
 en: chimney
 es: chimenea
@@ -632,7 +657,7 @@ sq: pjertesia e kalimit
 
 therion: point height
 cz: výška stupně/komínu/hloubka propasti
-de: Höhe der Stufe oder des Kamins oder Tiefe des Schachts
+de: Höhe der Stufe oder des Schlotes oder Tiefe des Schachts
 el: ύψος σκαλοπατιού/καμινάδας ή βάθος πηγαδιού
 en: the height of floor step/chimney/pit depth
 es: altura resalte/chimenea/profundidad pozo
@@ -670,7 +695,7 @@ sq: lartesia e shkalles se dyshemes
 
 therion: point height:positive
 cz: výška komínu
-de: Höhe des Kamins
+de: Höhe des Schlotes
 el: ύψος καμινάδας
 en: chimney height
 es: altura chimenea
@@ -888,6 +913,10 @@ pt: guano
 ru: гуано
 sk: guáno
 sq: jashteqitje e lakuriqeve-guano
+
+therion: point clay-tree
+de: Lehmbäumchen
+en: clay tree
 
 therion: line border
 cz: ohraničení
@@ -1216,7 +1245,7 @@ sq: gurre-rrjedhes
 
 therion: point moonmilk
 cz: nickamínek
-de: Mondmilch
+de: Bergmilch
 el: γάλα σπηλαίου
 en: moonmilk
 es: mondmilch
@@ -1229,8 +1258,9 @@ sq: qumesht-hena
 
 therion: line moonmilk
 cz: nickamínek
-de: Mondmilch
+de: Bergmilch
 el: γάλα σπηλαίου
+en: moonmilk
 fr: mondmilch
 it: moonmilk
 ru: лунное молоко
@@ -1275,6 +1305,21 @@ pt: coluna
 ru: колонна
 sk: stalagnát
 sq: shtylle
+
+therion: point ice-stalactite
+de: Eisstalaktit
+en: ice stalactite
+sk: ľadový stalaktit
+
+therion: point ice-stalagmite
+de: Eisstalagmit
+en: ice stalagmite
+sk: ľadový stalagmit
+
+therion: point ice-pillar
+de: Eissäule
+en: ice pillar
+sk: ľadový stalagnát
 
 therion: point curtain
 cz: sintrové záclony

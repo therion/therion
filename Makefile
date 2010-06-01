@@ -160,6 +160,8 @@ library:
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
+thlibrarydata.cxx: thlang/texts.txt
+	make library
 
 xtherion/xtherion: xtherion/*.tcl
 	make -C ./xtherion

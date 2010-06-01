@@ -71,7 +71,11 @@ transparency:=false;
 string ATTR__id, ATTR__survey, ATTR__scrap;
 boolean ATTR__scrap_centerline;
 picture ATTR__text;
+numeric ATTR__height;
+boolean ATTR__elevation;
 ATTR__scrap_centerline := false;
+ATTR__height:=0;
+ATTR__elevation:=false;
 
 color label_fill_color, label_fill_color_tmp;
 label_fill_color := (1.0, 1.0, 1.0);
@@ -1046,6 +1050,7 @@ input thLine;
 input thArea;
 input thText;
 input thSpecial;
+input uAUT;
 
 input thTrans;
 

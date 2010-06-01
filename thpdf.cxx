@@ -62,6 +62,7 @@
 
 using namespace std;
 
+#define IOerr(F) ((string)"Can't open file "+F+"!\n").c_str()
 
 
 ///////////
@@ -1151,7 +1152,7 @@ void print_map(int layer, ofstream& PAGEDEF,
           K->P != "" && K->level >= (I->first)) {
         xc = HSHIFT - K->S1; yc = VSHIFT - K->S2;
         ifstream G((K->P).c_str());
-        if(!G) therror(("Can't open file"));
+        if(!G) therror((IOerr(K->P)));
         while(G >> buffer) {
           if ((buffer == "m") || (buffer == "l") || (buffer == "c")) {
             PAGEDEF << "\\PL{"; 
@@ -1372,17 +1373,17 @@ void print_margins(ofstream& PAGEDEF) {
 void build_pages() {
   
   ofstream PAGEDEF("th_pagedef.tex");
-  if(!PAGEDEF) therror(("Can't write file"));
+  if(!PAGEDEF) therror(("Can't write file th_pagedef.tex"));
   PAGEDEF.setf(ios::fixed, ios::floatfield);
   PAGEDEF.precision(2);
 
   ofstream PAGE("th_pages.tex");
-  if(!PAGE) therror(("Can't write file"));
+  if(!PAGE) therror(("Can't write file th_pages.tex"));
   PAGE.setf(ios::fixed, ios::floatfield);
   PAGE.precision(2);
 
   ofstream PDFRES("th_resources.tex");
-  if(!PDFRES) therror(("Can't write file"));
+  if(!PDFRES) therror(("Can't write file th_resources.tex"));
   if (LAYOUT.transparency || LAYOUT.OCG) {
     PDFRES << "\\ifnum\\pdftexversion<110\\pdfcatalog{ /Version /" <<
       (LAYOUT.OCG ? "1.5" : "1.4") << " }" << 

@@ -1,4 +1,5 @@
-thbook: export map -fmt bbox
+* fixed bug with missing patterns in symbols.xhtml
+-------------------
 
 nastavitelny okraj vyplne pod legendou (0 pre map-image!)
 
@@ -118,3 +119,6 @@ hotovo:
 * suradnice ku gridu
 * labels ku kladu listov
 * velkost gridu (suradnic) urcit pred zvacsenim plochy podla page-gridu
+* --print-symbols: nepodchyti vsetky patterny 
+  (nie vsetky znacky v LEGENDLISTE? -- chybaju v ALL_PATTERNS)
+* systemove farbenie znaciek

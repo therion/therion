@@ -157,6 +157,7 @@ struct pattern {
   double llx1,lly1,urx1,ury1;
   double xx, xy, yx, yy, x, y;
   string name;
+  bool used;
 };
 
 int thconvert_new();

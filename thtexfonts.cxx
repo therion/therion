@@ -569,7 +569,7 @@ const char * utf2tex (const char * s, bool b) {
 
 void print_fonts_setup() {
   ofstream P("th_enc.tex");  // included also in MetaPost
-  if(!P) therror(("Can't write file"));
+  if(!P) therror(("Can't write file th_enc.tex"));
   P << "\\def\\rms{\\rm}" << endl;
   P << "\\def\\its{\\it}" << endl;
   P << "\\def\\bfs{\\bf}" << endl;

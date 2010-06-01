@@ -334,6 +334,13 @@ def a_pebbles_SKBB (expr p) =
   draw tmp_pic;
 enddef;
 
+def a_water_SKBB (expr Path) =
+  T:=identity;
+  thfill Path;
+enddef;
+
+let a_sump_SKBB = a_water_SKBB;
+
 def a_u (expr p) =
     T:=identity;
     thfill p withcolor red;

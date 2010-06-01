@@ -2,17 +2,26 @@
 Already done for future Therion 5.4 (YYYY-MM-DD):
 
 therion:
+ * added new point types: ice-stalactite, ice-stalagmite, ice-pillar, clay-choke, 
+   clay-tree
+ * added new wall subtypes: pit, flowstone, moonmilk, overlying
+ * added new symbol groups: ice, sediments
+ * added -height option for pit/wall:pit
+ * Austrian symbol set added (thanks to Georg Pacher)
+ * updated German translation (thanks to Georg Pacher)
  * bugs fixed:
    - fixed huge coordinate numbers in extended elevation xvi
    - xvi with sketches export
    - unnecessary warningcheck changes eliminated from metapost code
    - fixed bug with 3d model generation from scraps without outline
+   - fixed bug with missing patterns in symbols.xhtml
    
 xtherion:
  * bugs fixed:
    - 
    
 loch:
+ * VTK file export changed to binary type (problem with coordinate systems)
  * bugs fixed:
    - 
 

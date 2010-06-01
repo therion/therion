@@ -11,9 +11,6 @@ Makefile: make library pri zmene prekladov (neaktualne therion.tcl!)
 Pacher: 
   * obrovske patterny
   * interim bboxmargin:=0 bez skupiny pri l_wall_ice
-  * systemove farbenie znaciek
-  * --print-symbols: nepodchyti vsetky patterny 
-    (nie vsetky znacky v LEGENDLISTE? -- chybaju v ALL_PATTERNS)
 
 podpora NFSS pri --print-symbols (ENC_NEW.write_enc_files(); + skopirovat fonty)
 
