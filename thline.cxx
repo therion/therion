@@ -927,8 +927,8 @@ bool thline::export_mp(class thexpmapmpxs * out)
       from = 0;
       lp = this->first_point;
       while (lp != NULL) {
-        if (((lp->tags & TT_LINEPT_TAG_GRADIENT) > 0) && 
-            ((this->tags & TT_LINE_TAG_GRADIENT_POINT) > 0)) {
+        if (((lp->tags & TT_LINEPT_TAG_DIRECTION) > 0) && 
+            ((this->tags & TT_LINE_TAG_DIRECTION_POINT) > 0)) {
           fprintf(out->file,",%d",from);
           anypt = true;
         }

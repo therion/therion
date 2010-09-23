@@ -23,6 +23,7 @@ enum {
   TTCS_IJTSK,
   TTCS_S_MERC,
   TTCS_OSGB_ST,
+  TTCS_OSGB_SN,
   TTCS_UTM1N,
   TTCS_UTM1S,
   TTCS_UTM2N,
@@ -4394,9 +4395,9 @@ typedef struct {
   const char * params;  const char * prjspec;
 } thcsdata;
 
-extern const thstok thtt_cs[6860];
+extern const thstok thtt_cs[6861];
 
-extern const thcsdata thcsdata_table[4365];
+extern const thcsdata thcsdata_table[4366];
 
 
 #endif

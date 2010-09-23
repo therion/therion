@@ -2,11 +2,12 @@
 Already done for future Therion 5.4 (YYYY-MM-DD):
 
 therion:
- * added new point types: ice-stalactite, ice-stalagmite, ice-pillar, clay-choke, 
-   clay-tree
+ * added new point types: ice-stalactite, ice-stalagmite, ice-pillar, 
+   clay-choke, clay-tree
  * added new wall subtypes: pit, flowstone, moonmilk, overlying
  * added new symbol groups: ice, sediments
  * added -height option for pit/wall:pit
+ * added new layout option: color map-bg transparent
  * Austrian symbol set added (thanks to Georg Pacher)
  * updated German translation (thanks to Georg Pacher)
  * bugs fixed:
@@ -15,6 +16,14 @@ therion:
    - unnecessary warningcheck changes eliminated from metapost code
    - fixed bug with 3d model generation from scraps without outline
    - fixed bug with missing patterns in symbols.xhtml
+   - fixed bug - direction point not working with line secion
+   - fixed inaccurate clipping of coloured scrap background
+   - fixed placement of surface bitmaps with larger offset
+   - fixed alignment of some point symbols in AUT symbol set
+   - missing white fill below cave passages in transparent PDFs if background
+     colour is white (needed if the map is included into other map with 
+     non-white background)
+
    
 xtherion:
  * bugs fixed:

@@ -790,9 +790,10 @@ void compose_page(list<sheetrecord>::iterator sheet_it, ofstream& PAGE) {
 }
 
 void print_page_bg(ofstream& PAGEDEF) {
-  if ((LAYOUT.background_r != 1) || 
+/*  if ((LAYOUT.background_r != 1) || 
       (LAYOUT.background_g != 1) || 
-      (LAYOUT.background_b != 1)) {
+      (LAYOUT.background_b != 1)) { */
+  if (! LAYOUT.transparent_map_bg) {
 
     // bg rectangle
     PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
@@ -807,10 +808,14 @@ void print_page_bg_scraps(int layer, ofstream& PAGEDEF,
   // if transparency is used, all scraps should be filled white 
   // on the coloured background, just before preview_down is displayed
   // and transparency is turned on
-  if (LAYOUT.transparency && 
+/*  if (LAYOUT.transparency && 
       ((LAYOUT.background_r != 1) || 
        (LAYOUT.background_g != 1) || 
-       (LAYOUT.background_b != 1))) {
+       (LAYOUT.background_b != 1))) { */  // even if bg is white, pdf might
+                                          // be included in other pdf with
+                                          // non-white bg; we should avoid 
+                                          // overoptimization
+  if (LAYOUT.transparency ) {
 
     double HSHIFT=0, VSHIFT=0, xc = 0, yc = 0;
     map < int,set<string> > LEVEL;
@@ -1660,7 +1665,11 @@ void build_pages() {
     PAGEDEF << "\\tmpdimen=\\extraS\\advance\\tmpdimen by \\overlap" << endl;
     PAGEDEF << "\\dimtobp{\\tmpdimen}\\edef\\adjustedY{\\tmpdef}%" << endl;
 
-    PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
+/*    if ((LAYOUT.background_r != 1) || 
+      (LAYOUT.background_g != 1) || 
+      (LAYOUT.background_b != 1)) {  */
+    if (! LAYOUT.transparent_map_bg) {
+        PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
                             LAYOUT.background_g << " " << 
                             LAYOUT.background_b << " rg -" << 
 			    "\\wsize\\space"  << "-" << 
@@ -1668,7 +1677,7 @@ void build_pages() {
 			    "\\xsize\\space" << 
 			    "\\ysize\\space" << 
                             " re f Q}%" << endl;
-
+    }
     PAGEDEF << "\\ifdim\\framethickness>0mm\\dimtobp{\\framethickness}\\edef\\Framethickness{\\tmpdef}" <<
                "\\PL{q 0 0 0 RG 1 J 1 j \\Framethickness\\space w " << 
                "-\\Framex\\space\\Framey\\space\\Framew\\space-\\Frameh\\space" << 

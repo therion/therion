@@ -9,7 +9,7 @@ CMNOBJECTS = \
 VTKVERSION = 5.4
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
 POSTMAKE =
-STRIPFLAG = -s 
+STRIPFLAG = -s
 
 # PLATFORM CONFIG
 

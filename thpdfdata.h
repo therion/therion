@@ -93,7 +93,7 @@ struct layout {
          doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
          northarrow, scalebar,langstr;
   bool  excl_pages,title_pages,page_numbering,
-        transparency,map_grid,OCG,map_header_bg,colored_text; 
+        transparency,map_grid,OCG,map_header_bg,colored_text,transparent_map_bg; 
   double hsize,vsize,overlap,
         hgridsize, vgridsize,
         hgridorigin, vgridorigin, gridrot,

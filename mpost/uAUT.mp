@@ -2,7 +2,7 @@
 
 % color (for Austrian symbol-set)
 
-color col_water_bg, col_water_fg;
+color col_water_bg;
 col_water_bg :=(226/255,244/255,253/255);
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -696,13 +696,15 @@ enddef;
 %% points
 
 def p_stalactite_AUT(expr pos,theta,sc,al) =
-    U:=(.15u, .4u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     if ATTR__elevation:
+      U:=(.15u, .4u);
+      T:=identity aligned al rotated theta scaled sc shifted pos;
       thdraw (0,-.4u) -- (0,.15u) -- (-.15u,.4u);
       thdraw (0,.15u) -- (.15u,.4u);
     else:
+      U:=(.175u, .175u);
+      T:=identity aligned al rotated theta scaled sc shifted pos;
       thclean fullcircle scaled 0.35u;
       thdraw fullcircle scaled 0.35u;
     fi;
@@ -711,13 +713,15 @@ enddef;
 let p_icestalactite_AUT = p_stalactite_AUT;
 
 def p_stalagmite_AUT(expr pos,theta,sc,al) =
-    U:=(.15u,.4u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     if ATTR__elevation:
+      U:=(.15u,.4u);
+      T:=identity aligned al rotated theta scaled sc shifted pos;
       thdraw (0,.4u) -- (0,-.15u) -- (-.15u,-.4u);
       thdraw (0,-.15u) -- (.15u,-.4u);
     else:
+      U:=(.15u,.15u);
+      T:=identity aligned al rotated theta scaled sc shifted pos;
       thfill fullcircle scaled 0.3u;
     fi;
 enddef;
@@ -725,14 +729,16 @@ enddef;
 let p_icestalagmite_AUT = p_stalagmite_AUT;
 
 def p_pillar_AUT(expr pos,theta,sc,al) =
-    U:=(.15u,.4u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     if ATTR__elevation:
+      U:=(.15u,.4u);
+      T:=identity aligned al rotated theta scaled sc shifted pos;
       thdraw (0,.15u)--(0,-.15u);
       thdraw (-.15u,-.4u)--(0,-.15u)--(.15u,-.4u);
       thdraw (-.15u,.4u)--(0,.15u)--(.15u,.4u);
     else:
+      U:=(.225u,.225u);
+      T:=identity aligned al rotated theta scaled sc shifted pos;
       thclean fullcircle scaled 0.45u;
       thdraw fullcircle scaled 0.45u;
       thfill fullcircle scaled 0.3u;
@@ -772,7 +778,8 @@ def p_sink_AUT (expr pos,theta,sc,al)=
 enddef;
 
 def p_breakdownchoke_AUT (expr pos,theta,sc,al)=
-    T:=identity aligned al scaled sc shifted pos;
+    U:=(.4u,.4u);
+    T:=identity rotated -theta aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     thclean (-.4u,-.4u)--(.4u,-.4u)--(.4u,.4u)--(-.4u,.4u)--cycle;
     thdraw (-.4u,-.4u)--(.4u,-.4u)--(.4u,.4u)--(-.4u,.4u)--cycle;
@@ -780,6 +787,7 @@ def p_breakdownchoke_AUT (expr pos,theta,sc,al)=
 enddef;
 
 def p_sand_AUT (expr pos,theta,sc,al)=
+    U:=(.2u,.2u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     p:= origin -- (0.01u,0.01u);
@@ -795,7 +803,7 @@ enddef;
 let p_clay_AUT  = p_sand_AUT;
 
 def p_pebbles_AUT (expr pos,theta,sc,al)=
-    U:=(.45u,.35u);
+    U:=(.4u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     path qq;
@@ -812,6 +820,7 @@ def p_pebbles_AUT (expr pos,theta,sc,al)=
 enddef;
 
 def p_debris_AUT (expr pos,theta,sc,al)=
+    U:=(.5u,.5u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     path block,q;
     block :=  ((-.15u,-.15u)--(.15u,-.15u)--(.3u,0.01u)--(.15u,.15u)--(-.15u,.15u)--cycle) ;
@@ -828,6 +837,7 @@ def p_debris_AUT (expr pos,theta,sc,al)=
 enddef;
 
 def p_blocks_AUT (expr pos,theta,sc,al)=
+    U:=(u,u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
 
@@ -856,7 +866,7 @@ def p_water_AUT (expr pos,theta,sc,al)=
 enddef;
 
 def p_ice_AUT (expr pos,theta,sc,al)=
-    U:=(.4u,.5u);
+    U:=(.6u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     p:=(-.15u,.0u) -- (0.15u,.0u);
@@ -870,6 +880,7 @@ def p_ice_AUT (expr pos,theta,sc,al)=
 enddef;
 
 def p_entrance_AUT (expr pos,theta,sc,al)=
+    U:=(.3u,.75u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     path slice;
     for i= -0.5 step 0.01 until 0.5:
@@ -913,7 +924,8 @@ let p_station_painted_AUT = p_station_temporary_AUT ;
 let p_station_fixed_AUT = p_station_temporary_AUT ;
 
 def p_claychoke_AUT (expr pos,theta,sc,al)=
-    T:=identity aligned al scaled sc shifted pos;
+    U:=(.4u,.4u);
+    T:=identity rotated -theta aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     thclean (-.4u,-.4u)--(.4u,-.4u)--(.4u,.4u)--(-.4u,.4u)--cycle;
     thdraw (-.4u,-.4u)--(.4u,-.4u)--(.4u,.4u)--(-.4u,.4u)--cycle;
@@ -921,6 +933,7 @@ def p_claychoke_AUT (expr pos,theta,sc,al)=
 enddef;
 
 def p_claytree_AUT (expr pos,theta,sc,al)=
+    U:=(.55u,.6u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     p:= (-.15u,.15u)--(.0u,.6u)--(.15u,.15u);

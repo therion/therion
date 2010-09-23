@@ -645,7 +645,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
             this->color_map_fg.defined = 2;
           break;
         case TT_LAYOUT_COLOR_MAP_BG:
-          this->color_map_bg.parse(args[1]);
+          this->color_map_bg.parse(args[1], true);
           break;
         case TT_LAYOUT_COLOR_PREVIEW_BELOW:
           this->color_preview_below.parse(args[1]);
@@ -1954,6 +1954,7 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.transparency = this->transparency;
   LAYOUT.OCG = this->layers;
   LAYOUT.map_header_bg = this->map_header_bg;
+  LAYOUT.transparent_map_bg = (this->color_map_bg.A < 1.0);
   //TODO
   LAYOUT.map_grid = this->page_grid;
   LAYOUT.hsize = this->hsize * THM2PT;

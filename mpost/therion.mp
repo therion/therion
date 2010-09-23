@@ -669,10 +669,10 @@ def draw_downscrap =
   clip_name := jobname & "." & decimal(charcode) & "clip";
   write "%!PS" to bg_name;
   write "%%BoundingBox: " & 
-     decimal round xpart llcorner bgfill & " " &
-     decimal round ypart llcorner bgfill & " " &
-     decimal round xpart urcorner bgfill & " " &
-     decimal round ypart urcorner bgfill 
+     decimal floor xpart llcorner bgfill & " " &
+     decimal floor ypart llcorner bgfill & " " &
+     decimal ceiling xpart urcorner bgfill & " " &
+     decimal ceiling ypart urcorner bgfill 
      to bg_name;
   write "%%Page: 1 1" to bg_name;
   write "newpath" to bg_name;

@@ -156,11 +156,11 @@
 }
 
 \def\bitmapcorr#1#2#3#4#5#6#7{%
-  \xcorr=#5bp\advance\xcorr by\extraW\advance\xcorr by\overlap
-  \ycorr=#6bp\advance\ycorr by\extraS\advance\ycorr by\overlap
+  \xcorr=0bp\advance\xcorr by\extraW\advance\xcorr by\overlap
+  \ycorr=0bp\advance\ycorr by\extraS\advance\ycorr by\overlap
   \dimtobp{\xcorr}\edef\wdth{\tmpdef}%
   \dimtobp{\ycorr}\edef\hght{\tmpdef}%
-  \pdfliteral{q #1 #2 #3 #4 \wdth\space\hght\space cm}%
+  \pdfliteral{q 1 0 0 1 \wdth\space\hght\space cm #1 #2 #3 #4 #5 #6 cm}% two-step transformation to avoid overflow
   \rlap{\pdfrefximage#7}%
   \pdfliteral{Q}%
 }

@@ -1,4 +1,3 @@
-* fixed bug with missing patterns in symbols.xhtml
 -------------------
 
 nastavitelny okraj vyplne pod legendou (0 pre map-image!)
@@ -122,3 +121,11 @@ hotovo:
 * --print-symbols: nepodchyti vsetky patterny 
   (nie vsetky znacky v LEGENDLISTE? -- chybaju v ALL_PATTERNS)
 * systemove farbenie znaciek
+* fixed bug with missing patterns in symbols.xhtml
+* fixed inaccurate clipping of coloured scrap background
+* fixed placement of surface bitmaps with larger offset
+* added white fill below cave passages in transparent PDFs if background
+  colour is white (needed if the map is included into other map with non-white
+  background)
+* fixed alignment of some point symbols in AUT symbol set
+* new layout option 'color map-bg transparent' to omit page background

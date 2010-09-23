@@ -31,7 +31,7 @@
 #include "thexception.h"
 
 
-void thlayout_color::parse(char * str) {
+void thlayout_color::parse(char * str, bool aalpha) {
   thsplit_words(&(thdb.mbuff_tmp), str);
   int nargs = thdb.mbuff_tmp.get_size(), sv;
   char ** args = thdb.mbuff_tmp.get_buffer();
@@ -47,6 +47,10 @@ void thlayout_color::parse(char * str) {
         invalid_color_spec;
       this->G /= 100.0;
     case 1:
+      if (aalpha && strcmp(args[0],"transparent")) {
+        this->A = 0.0;
+        break;
+      }
       thparse_double(sv,this->R,args[0]);        
       if ((sv != TT_SV_NUMBER) || (this->R < 0.0) || (this->R > 100.0))
         invalid_color_spec;
