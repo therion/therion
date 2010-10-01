@@ -47,7 +47,7 @@ void thlayout_color::parse(char * str, bool aalpha) {
         invalid_color_spec;
       this->G /= 100.0;
     case 1:
-      if (aalpha && strcmp(args[0],"transparent")) {
+      if (aalpha && (strcmp(args[0],"transparent") == 0)) {
         this->A = 0.0;
         break;
       }
