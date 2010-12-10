@@ -35,9 +35,6 @@
 #include "lxMath.h"
 
 
-double lxVecPrec(0.001);
-
-
 void lxVec::Normalize() 
 {
   double n = this->Length();
@@ -235,21 +232,17 @@ lxVec lxVec::operator /= ( const double& c)
   return *this;
 }
 
-bool operator < ( const lxVec& p, const lxVec& q )
+bool operator < (const struct lxVec & p, const struct lxVec & q)
 {
-  static lxVec d;
-  d = p - q;
-  if (d.x > lxVecPrec)
-    return false;
-  else if (d.x < -lxVecPrec)
+  if (p.x < q.x)
     return true;
-  if (d.y > lxVecPrec)
+  if (p.x > q.x)
     return false;
-  else if (d.y < -lxVecPrec)
+  if (p.y < q.y)
     return true;
-  if (d.z > lxVecPrec)
+  if (p.y > q.y)
     return false;
-  else if (d.z < -lxVecPrec)
+  if (p.z < q.z)
     return true;
   return false;
 }

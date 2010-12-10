@@ -295,3 +295,33 @@ void lxSetup::ClearSurveySelection()
   this->m_survey_selection.clear();
 }
 
+
+wxXmlNode * lxSetup::SaveToXML(unsigned long items)
+{
+	wxXmlNode * rv, * n, * nn;
+	rv = new wxXmlNode(wxXML_ELEMENT_NODE, _T("Setup"));
+	if (items & lxSETUP_CAMERA) {
+		n = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraTilt"));
+		nn = new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, wxString::Format(_T("%.0f"), this->cam_tilt));
+		n->AddChild(nn);
+		rv->AddChild(n);
+	}
+	return rv;
+}
+
+
+void lxSetup::LoadFromXML(wxXmlNode * n)
+{
+	if (n->GetName() != _T("Setup"))
+		return;
+	wxXmlNode * nn;
+  nn = n->GetChildren();
+	while (nn != NULL) {
+		if (nn->GetName() == _T("CameraTilt")) {
+			n = nn->GetChildren();
+			if (n->GetType() == wxXML_TEXT_NODE)
+				this->cam_tilt = atof(n->GetContent().mbc_str());
+		}
+		nn = nn->GetNext();
+	}
+}

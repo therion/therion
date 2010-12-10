@@ -1065,22 +1065,26 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->color_map_bg.R = %lg;\n",this->color_map_bg.R);
   thprintf("\tplayout->color_map_bg.G = %lg;\n",this->color_map_bg.G);
   thprintf("\tplayout->color_map_bg.B = %lg;\n",this->color_map_bg.B);
+  thprintf("\tplayout->color_map_bg.A = %lg;\n",this->color_map_bg.A);
 
   thprintf("\tplayout->color_map_fg.defined = %d;\n", this->color_map_fg.defined);
   thprintf("\tplayout->color_crit = %d;\n", this->color_crit);
   thprintf("\tplayout->color_map_fg.R = %lg;\n",this->color_map_fg.R);
   thprintf("\tplayout->color_map_fg.G = %lg;\n",this->color_map_fg.G);
   thprintf("\tplayout->color_map_fg.B = %lg;\n",this->color_map_fg.B);
+  thprintf("\tplayout->color_map_fg.A = %lg;\n",this->color_map_fg.A);
 
   thprintf("\tplayout->color_preview_below.defined = %d;\n", this->color_preview_below.defined);
   thprintf("\tplayout->color_preview_below.R = %lg;\n",this->color_preview_below.R);
   thprintf("\tplayout->color_preview_below.G = %lg;\n",this->color_preview_below.G);
   thprintf("\tplayout->color_preview_below.B = %lg;\n",this->color_preview_below.B);
+  thprintf("\tplayout->color_preview_below.A = %lg;\n",this->color_preview_below.A);
 
   thprintf("\tplayout->color_preview_above.defined = %d;\n", this->color_preview_above.defined);
   thprintf("\tplayout->color_preview_above.R = %lg;\n",this->color_preview_above.R);
   thprintf("\tplayout->color_preview_above.G = %lg;\n",this->color_preview_above.G);
   thprintf("\tplayout->color_preview_above.B = %lg;\n",this->color_preview_above.B);
+  thprintf("\tplayout->color_preview_above.A = %lg;\n",this->color_preview_above.A);
 
   thprintf("\tplayout->def_overlap = %d;\n", this->def_overlap);
   thprintf("\tplayout->overlap = %lg;\n",this->overlap);
@@ -1215,9 +1219,11 @@ void thlayout::self_print_library() {
   }
   
   thprintf("\tplayout->def_grid_size = %d;\n", this->def_grid_size);
-  thprintf("\tplayout->gxs = %lg;\n",this->gxs);
-  thprintf("\tplayout->gys = %lg;\n",this->gys);
-  thprintf("\tplayout->gzs = %lg;\n",this->gzs);
+  if (!thisnan(this->gxs)) {
+    thprintf("\tplayout->gxs = %lg;\n",this->gxs);
+    thprintf("\tplayout->gys = %lg;\n",this->gys);
+    thprintf("\tplayout->gzs = %lg;\n",this->gzs);
+  }
 
   thprintf("\tplayout->def_grid_origin = %d;\n", this->def_grid_origin);
   if (!thisnan(this->gox))
@@ -1703,24 +1709,28 @@ void thlayout::process_copy() {
         this->color_map_fg.R = srcl->color_map_fg.R;
         this->color_map_fg.G = srcl->color_map_fg.G;
         this->color_map_fg.B = srcl->color_map_fg.B;
+        this->color_map_fg.A = srcl->color_map_fg.A;
       endcopy
 
       begcopy(color_preview_below.defined)
         this->color_preview_below.R = srcl->color_preview_below.R;
         this->color_preview_below.G = srcl->color_preview_below.G;
         this->color_preview_below.B = srcl->color_preview_below.B;
+        this->color_preview_below.A = srcl->color_preview_below.A;
       endcopy
 
       begcopy(color_preview_above.defined)
         this->color_preview_above.R = srcl->color_preview_above.R;
         this->color_preview_above.G = srcl->color_preview_above.G;
         this->color_preview_above.B = srcl->color_preview_above.B;
+        this->color_preview_above.A = srcl->color_preview_above.A;
       endcopy
 
       begcopy(color_map_bg.defined)
         this->color_map_bg.R = srcl->color_map_bg.R;
         this->color_map_bg.G = srcl->color_map_bg.G;
         this->color_map_bg.B = srcl->color_map_bg.B;
+        this->color_map_bg.A = srcl->color_map_bg.A;
       endcopy
 
       begcopy(def_doc_title)

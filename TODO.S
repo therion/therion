@@ -1,5 +1,9 @@
 HOT LIST:
 
++ interpolovane LRUD na zaklade shotov
++ vylucit z interpolacie tie shoty, ktore nemaju 
+  oba body explicitne zadane (cez stations uid)
+
 + layout pri exporte XHTML
 + priradenie farieb mapam
 + priame proj4 retazce do CS

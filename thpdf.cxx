@@ -1693,13 +1693,13 @@ void build_pages() {
     for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
                                         I != LAYERHASH.end(); I++) {
       if (I->second.Z == 0) {
-//        if (LAYOUT.OCG) {
-//          PAGEDEF << "\\PL{/OC /oc\\the\\oc" << u2str(I->first) << "\\space BDC}%" << endl;
-//        }
+        if (LAYOUT.OCG && LAYOUT.transparency) {
+          PAGEDEF << "\\PL{/OC /oc\\the\\oc" << u2str(I->first) << "\\space BDC}%" << endl;
+        }
         print_page_bg_scraps(I->first,PAGEDEF);
-//        if (LAYOUT.OCG) {
-//          PAGEDEF << "\\PL{EMC}%" << endl;
-//        }
+        if (LAYOUT.OCG && LAYOUT.transparency) {
+          PAGEDEF << "\\PL{EMC}%" << endl;
+        }
       }
     }
 
@@ -1765,7 +1765,19 @@ void build_pages() {
     
     PAGEDEF << "\\smash{\\rlap{\\kern-\\extraW\\raise-\\extraS" << 
                "\\hbox{\\pdfrefxform\\THmaplegend}}}" << endl;
+
+    if (LAYOUT.OCG && LAYOUT.transparency) {
+      PAGEDEF << "\\edef\\thpdfpageres { /Properties << ";
+      for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
+                                          I != LAYERHASH.end(); I++) {
+        if (I->second.Z == 0)
+          PAGEDEF << "/oc\\the\\oc" << u2str(I->first) << "\\space\\the\\oc" << 
+                     u2str(I->first) << "\\space0 R ";
+      }
+      PAGEDEF << " >> }\\pdfpageresources\\expandafter{\\thpdfpageres}" << endl;
+    }
   }
+
 
   PAGEDEF.close();
   PAGE.close();

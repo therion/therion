@@ -848,11 +848,11 @@ void thdb1d::process_tree()
     }
     
     // hide splay-ed flags from extended elevation2
-    if ((iil->leg->flags && TT_LEGFLAG_SPLAY) != 0) {
-      iil->leg->extend |= TT_EXTENDFLAG_HIDE;
-      a2->extend |= TT_EXTENDFLAG_HIDE;
-      a1->extend |= TT_EXTENDFLAG_HIDE;
-    }
+    //if ((iil->leg->flags && TT_LEGFLAG_SPLAY) != 0) {
+    //  iil->leg->extend |= TT_EXTENDFLAG_HIDE;
+    //  a2->extend |= TT_EXTENDFLAG_HIDE;
+    //  a1->extend |= TT_EXTENDFLAG_HIDE;
+    //}
     
     a2->negative = a1;
     a2->leg = a1->leg;
@@ -2830,6 +2830,33 @@ void thdb1d::postprocess_objects()
         break;
     }
     obi++;
+  }
+  // zrata priemerne dlzky shotov pre vsetky stations kvuoli interpolacii
+  thdb1d_tree_arrow * arrow;
+  thdb1d_tree_node * node, * nodes = this->get_tree_nodes();
+  thdb1ds * s;
+  double numl;
+  for(long i = 0; i < (long)this->station_vec.size(); i++) {
+    s = &(this->station_vec[i]);
+    if (s->uid < (i + 1)) {
+      s->asl = this->station_vec[s->uid - 1].asl;
+    } else {
+      s->asl = 0.0;
+      numl = 0;
+      node = &(nodes[i]);
+      arrow = node->first_arrow;
+      while (arrow != NULL) {
+        if ((arrow->leg->leg->flags & TT_LEGFLAG_SURFACE) == 0) {
+          s->asl += arrow->leg->leg->total_length;
+          numl += 1.0;
+        }
+        arrow = arrow->next_arrow;
+      }
+      if (s->asl == 0.0)
+        s->asl = thnan;
+      else
+        s->asl /= numl;
+    }
   }
 }
 

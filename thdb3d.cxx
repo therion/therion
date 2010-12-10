@@ -86,7 +86,12 @@ thdb3dfc * thdb3ddata::insert_face(int type) {
   }
   return face;
 }
-  
+
+thdb3dvx * thdb3ddata::insert_vertex(lxVec v, void * dt) {
+  return this->insert_vertex(v.x, v.y, v.z, dt);
+}
+
+
 thdb3dvx * thdb3ddata::insert_vertex(double vxx, double vxy, double vxz, void * dt) {
   thdb3dvx * vertex;
   vertex = &(*thdatabase3d.vertex_list.insert(thdatabase3d.vertex_list.end(),thdb3dvx()));

@@ -10,6 +10,7 @@ therion:
  * added new layout option: color map-bg transparent
  * Austrian symbol set added (thanks to Georg Pacher)
  * updated German translation (thanks to Georg Pacher)
+ * updated Italian translation (thanks to Marco Corvi)
  * bugs fixed:
    - fixed huge coordinate numbers in extended elevation xvi
    - xvi with sketches export
@@ -23,6 +24,10 @@ therion:
    - missing white fill below cave passages in transparent PDFs if background
      colour is white (needed if the map is included into other map with 
      non-white background)
+   - fixed incorrect line width conversion in some patterns
+   - hide white background of scraps when the PDF layer containing them
+     is invisible
+   - constrained Delaunay triangulation engine replaced by poly2tri
 
    
 xtherion:

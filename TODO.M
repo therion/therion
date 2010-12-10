@@ -129,3 +129,5 @@ hotovo:
   background)
 * fixed alignment of some point symbols in AUT symbol set
 * new layout option 'color map-bg transparent' to omit page background
+* fixed incorrect line width conversion in some patterns
+* hide white background of scraps when the PDF layer containing them is invisible

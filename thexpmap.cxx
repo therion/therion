@@ -1969,9 +1969,13 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 	}
 
 	
-  if (scrap->fsptr != NULL) {  
-    fprintf(out->file, "current_scrap := \"%s@%s\";\n", scrap->name, 
-      scrap->fsptr->full_name);
+  if (scrap->fsptr != NULL) { 
+    const char * sfn = "", * div = "";
+    if (strlen(scrap->fsptr->full_name) > 0) {
+      sfn = scrap->fsptr->full_name;
+      div = "@";
+    }
+    fprintf(out->file, "current_scrap := \"%s%s%s\";\n", scrap->name, div, sfn);
   }
   if (strcmp(out->attr_last_scrap, scrap->name) != 0) {
     fprintf(out->file, "ATTR__scrap := \"%s\";\n", scrap->name);

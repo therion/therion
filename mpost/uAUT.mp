@@ -84,8 +84,12 @@ beginpattern(pattern_sand_AUT);
            shifted ((i,j) randomized 0.09u);
         endfor;
     endfor;
-    patternstep(2.6u,2.6u);
-       
+    if BaseScale<=2.5:
+      my_step:=2.4u;
+    else:
+      my_step:=2.6u;
+    fi;
+    patternstep(my_step,my_step);       
 endpattern;
 
 beginpattern(pattern_pebbles_AUT);

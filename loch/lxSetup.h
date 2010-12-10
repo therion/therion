@@ -15,6 +15,7 @@
 
 // Standard libraries
 #ifndef LXDEPCHECK
+#include <wx/xml/xml.h>
 #endif  
 //LXDEPCHECK - standart libraries
 
@@ -26,6 +27,12 @@
 enum {
   lxSETUP_COLORMD_DEFAULT,
   lxSETUP_COLORMD_ALTITUDE,
+};
+
+enum {
+  lxSETUP_CAMERA = 1,
+  lxSETUP_SCENE = 2,
+  lxSETUP_ALL = lxSETUP_CAMERA | lxSETUP_SCENE,
 };
 
 struct lxSetup {
@@ -78,6 +85,9 @@ struct lxSetup {
   void SelectSurvey(const char * survey);
   bool IsSurveySelected(const char * survey);
   void ClearSurveySelection();
+
+  wxXmlNode * SaveToXML(unsigned long items = lxSETUP_ALL);
+  void LoadFromXML(wxXmlNode * n);
   
 };
 

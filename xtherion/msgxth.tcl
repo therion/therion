@@ -3538,6 +3538,7 @@
   ::msgcat::mcset sq "BAC calculator..." [encoding convertfrom utf-8 "matesi I alkoolit-BAC"]
 
   ::msgcat::mcset de "Calibrate bitmap..." [encoding convertfrom utf-8 "Bild kalibrieren..."]
+  ::msgcat::mcset it "Calibrate bitmap..." [encoding convertfrom utf-8 "Mappa georeferenziata..."]
 
   ::msgcat::mcset cz "About..." [encoding convertfrom utf-8 "O programu..."]
   ::msgcat::mcset de "About..." [encoding convertfrom utf-8 "\303\234ber..."]

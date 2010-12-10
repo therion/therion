@@ -1175,6 +1175,7 @@ void thdb2d::process_projection(thdb2dprj * prj)
       break;
   }
 
+  bool old_thtext_inline = thtext_inline;
   if (strlen(prj->index) > 0) {
 #ifdef THDEBUG
     thprintf("\n\nprocessing projection %s:%s\n",prjstr,prj->index);
@@ -1215,7 +1216,7 @@ void thdb2d::process_projection(thdb2dprj * prj)
 #ifdef THDEBUG
 #else
   thprintf("done\n");
-  thtext_inline = false;
+  thtext_inline = old_thtext_inline;
 #endif 
   if (prj->amaxdist > 0.0) {
     thprintf("average distortion: %.2f%%\n", prj->amaxdist);

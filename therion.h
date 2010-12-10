@@ -60,7 +60,6 @@
   thprint_error_src();\
   thprintf2err P;\
   thprintf2err("\n");\
-  thtext_inline = false;\
   thpause_exit();\
   therion_exit_state = 0;\
   thexit(EXIT_FAILURE);\
@@ -78,7 +77,6 @@
   thprintf2err P;\
   thprintf2err("\n");\
   therion_exit_state = 1;\
-  thtext_inline = false;\
 }
 
 

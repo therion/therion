@@ -31,6 +31,7 @@
 
 #include <list>
 #include <stdio.h>
+#include "extern/lxMath.h"
 
 enum {
   THDB3DFC_POINTS,
@@ -75,8 +76,9 @@ struct thdb3dvx {
   thdb3dvx * next;
   thdb3dvx() : id(0), x(0.0), y(0.0), z(0.0), 
     data(NULL), normal(NULL), next(NULL) {}
-  
+  lxVec get_vector() {return lxVec(this->x, this->y, this->z);}  
   thdb3dnm * insert_normal(double nx, double ny, double nz);
+  thdb3dnm * insert_normal(lxVec n) {return this->insert_normal(n.x, n.y, n.z);};
   
 };
 
@@ -89,6 +91,7 @@ struct thdb3dfx {
   thdb3dfx() : data(NULL), normal(NULL), vertex(NULL), next(NULL) {}
   
   thdb3dnm * insert_normal(double nx, double ny, double nz);
+  thdb3dnm * insert_normal(lxVec n) {return this->insert_normal(n.x, n.y, n.z);};
   
 };
 
@@ -128,6 +131,7 @@ struct thdb3ddata {
   thdb3dfc * insert_face(int type);
   
   thdb3dvx * insert_vertex(double vxx, double vxy, double vxz, void * dt = NULL);
+  thdb3dvx * insert_vertex(lxVec v, void * dt = NULL);
   
   void export_thm(FILE * out);
   void export_vrml(FILE * out);

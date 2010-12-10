@@ -159,7 +159,7 @@ el: υποκείμενος τοίχος
 en: underlying wall
 es: pared subyacente
 fr: mur sousjacent
-it: parete soggiacente
+it: parete:sottostante
 pt: parede subjacente
 ru: нижерасположенная стена
 sk: stena nižšej úrovne
@@ -168,6 +168,7 @@ sq: muri I shtrire
 therion: line wall:overlying
 de: überlagerter Wandverlauf
 en: overlying wall
+it: parete:sovrastante
 sk: stena vyššej úrovne
 
 therion: line wall:unsurveyed
@@ -177,7 +178,7 @@ el: τοίχος (μη χαρτογραφημένος)
 en: unsurveyed wall
 es: pared no topografiada
 fr: mur non topographié
-it: parete stimata
+it: parete:stimata
 pt: parede não-topografada
 ru: глазомерная съемка стен
 sk: nezameraná stena
@@ -190,7 +191,7 @@ el: τοίχος υποθετικός
 en: presumed wall
 es: pared supuesta
 fr: mur supposé
-it: parete presunta
+it: parete:presunta
 pt: parede presumida
 ru: предпологаемая стена
 sk: predpokladaná stena
@@ -199,6 +200,7 @@ sq: muri I supozuar
 therion: line wall:pit
 de: Eingangsschacht
 en: entrance pit
+it: parete:pozzo
 sk: vstupná priepasť
 
 therion: line wall:blocks
@@ -282,11 +284,13 @@ sq: akull
 therion: line wall:flowstone
 de: Wand aus Sinter
 en: flowstone wall
+it: colata
 sk: stena tvorená sintrom
 
 therion: line wall:moonmilk
 de: Wand aus Bergmilch
 en: moonmilk wall
+it: moonmilk
 sk: stena tvorená mäkkým sintrom
 
 therion: point wall-altitude
@@ -532,6 +536,7 @@ sq: gurre rrjedhes-fund
 therion: point clay-choke
 de: Fortsetzung verlehmt
 en: clay choke
+it: chiude su riempimento
 sk: koniec uzavretý ílom
 
 therion: line floor-step
@@ -595,7 +600,7 @@ el: σκαλοπάτι οροφής
 en: step on the ceiling
 es: resalte inverso
 fr: marche de plafond
-it: camino
+it: gradino a soffitto
 pt_BR: degrau no teto
 pt_PT: degrau no tecto
 ru: уступ потолка
@@ -917,6 +922,7 @@ sq: jashteqitje e lakuriqeve-guano
 therion: point clay-tree
 de: Lehmbäumchen
 en: clay tree
+it: pini d'argilla
 
 therion: line border
 cz: ohraničení
@@ -1309,16 +1315,19 @@ sq: shtylle
 therion: point ice-stalactite
 de: Eisstalaktit
 en: ice stalactite
+it: stalattite di ghiaccio
 sk: ľadový stalaktit
 
 therion: point ice-stalagmite
 de: Eisstalagmit
 en: ice stalagmite
+it: stalagmite di ghiaccio
 sk: ľadový stalagmit
 
 therion: point ice-pillar
 de: Eissäule
 en: ice pillar
+it: colonna di ghiaccio
 sk: ľadový stalagnát
 
 therion: point curtain

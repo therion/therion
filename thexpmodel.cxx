@@ -1366,7 +1366,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
 #else
-  thprintf("writing %s ... ", fnm);
+  thprintf("writing %s ...", fnm);
   thtext_inline = true;
 #endif
 
@@ -1683,7 +1683,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   
 #ifdef THDEBUG
 #else
-  thprintf("done\n");
+  thprintf(" done\n");
   thtext_inline = false;
 #endif
 }

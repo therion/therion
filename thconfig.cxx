@@ -106,7 +106,7 @@ thconfig::thconfig()
   this->outcs_sumn = 0.0;
 
   this->tmp3dSMP = 1.0;
-  this->tmp3dWALLSMP = 1.0;
+  this->tmp3dWALLSMP = 0.1;
   this->tmp3dMAXDIMD = 5.0;
   this->sketch_warp = THSKETCH_WARP_IDLINE;
 

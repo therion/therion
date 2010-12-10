@@ -410,7 +410,10 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         thstack.clear();
       }
       else if (tok == "setgray") {
-        if (mode == 0) continue;            // ignore color for uncolored patterns
+        if (mode == 0) {
+          thstack.clear();
+          continue;            // ignore color for uncolored patterns
+        }
         if (already_transp) {  // transp off
           print_str("/GS0 gs",TEX);
           already_transp = false;
@@ -419,7 +422,10 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         thstack.clear();
       }
       else if (tok == "setrgbcolor") {
-        if (mode == 0) continue;            // ignore color for uncolored patterns
+        if (mode == 0) {
+          thstack.clear();
+          continue;            // ignore color for uncolored patterns
+        }
         if ((!((thstack[0] == "0.00002") && (thstack[1] == "0.00018"))) 
               && already_transp) {           // transp off
           print_str("/GS0 gs",TEX);

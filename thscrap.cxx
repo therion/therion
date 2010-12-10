@@ -613,7 +613,7 @@ thscraplp * thscrap::get_polygon() {
     // enter selected stations
     for(i = 0; i < ni; i++) {
       st = &(this->db->db1d.station_vec[i]);
-      if (st->tmpselect) {
+      if (st->tmpselect && !st->is_temporary()) {
         lp = this->polygon_insert();
         lp->station = st;
         lp->ustation = st;
@@ -996,13 +996,15 @@ void thscrap::process_3d() {
     
   this->d3_parsed = true;
 
-  thprintf("[%s] ", this->name);
+  thprintf(".");
 
-  thscrapis is;
+  thscrapis is(this);
+
+#ifndef THSCRAPIS_NEW3D
   thscraplp * slp;
   th2ddataobject * o2;
   thpoint * pp;
-  
+
   // vlozi vsetky meracske body (body + body z polygonu)
   slp = this->get_polygon();
   while (slp != NULL) {
@@ -1047,38 +1049,11 @@ void thscrap::process_3d() {
     }
     slp = slp->next_item;
   }
-  
-  // vypise siet pre scrap
-  
-//  double iddx = (this->lxmax - this->lxmin) / 20.0, 
-//    iddy = (this->lymax - this->lymin) / 20.0,
-//    iz[21][21], id, idx, idy;
-//  long i, j;
-//  for (i = 0; i <= 20; i++) {
-//    for (j = 0; j <= 20; j++) {
-//      is.bp_interpolate(this->lxmin + iddx * i, this->lymin + iddy * j,
-//        iz[i][j], id, idx, idy);
-//    }
-//  }
-//
-//  for (j = 0; j < 20; j++) {
-//    fprintf(out,"glColor3f 0.5 0.5 0.5\n");
-//    fprintf(out,"glBegin $GL::GL_TRIANGLE_STRIP\n");
-//    for(i = 0; i <= 20; i++) {
-//      fprintf(out,"glVertex3f %.2f\t%2f\t%.2f\n",
-//        this->lxmin + this->proj->shift_x + iddx * i - avx,
-//        this->lymin + this->proj->shift_y + iddy * j - avy,
-//        iz[i][j] + this->proj->shift_z - avz);
-//      fprintf(out,"glVertex3f %.2f\t%2f\t%.2f\n",
-//        this->lxmin + this->proj->shift_x + iddx * i - avx,
-//        this->lymin + this->proj->shift_y + iddy * (j + 1) - avy,
-//        iz[i][j + 1] + this->proj->shift_z - avz);
-//    }
-//    fprintf(out,"glEnd\n");
-//  }
-  
+#endif
+
   is.outline_scan(this->get_outline());
 
+#ifndef THSCRAPIS_NEW3D
   // prejde vsetky objekty a nasackuje passage-heights
   o2 = this->fs2doptr;
   double cup, cdown;
@@ -1101,11 +1076,14 @@ void thscrap::process_3d() {
     o2 = o2->nscrapoptr;
   }
   is.insert_bp_dim();
-  is.outline_interpolate_dims();  
+  is.outline_interpolate_dims(); 
+#endif
   
   thscrapisolpt * oline, * olineln, * prevolineln = NULL;
-  double normx, normy, norml;
   bool started = false;
+
+#ifndef THSCRAPIS_NEW3D
+  double normx, normy, norml;
 
   // povkladame vsetky body na outlineoch
   for(oline = is.firstolseg; oline != NULL; oline = oline->next_segment) {
@@ -1120,14 +1098,6 @@ void thscrap::process_3d() {
         olineln->zd + this->proj->shift_z);
     }
   }
-
-//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_DIFFUSE {0.0 0.8 0.0 1.0}\n");
-//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_AMBIENT {0.0 0.0 0.0 1.0}\n");
-//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_SPECULAR {0.0 0.0 0.0 1.0}\n");
-//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_SHININESS {0.0}\n");
-//    fprintf(out,"glMaterialfv $GL::GL_FRONT $GL::GL_EMISSION {0.0 0.0 0.0 1.0}\n");
-//    fprintf(out,"glBegin $GL::GL_TRIANGLE_STRIP\n");
-//    fprintf(out,"glNormal3f %.2f\t%.2f\t%.2f\n", normx / norml, normy / norml, 0.0);
 
   oline = is.firstolseg;
   thdb3dfc * cfc = NULL;
@@ -1215,13 +1185,13 @@ void thscrap::process_3d() {
     cfc = this->d3_outline.insert_face(THDB3DFC_TRIANGLES);
     for(i = 0; i < is.tri_num; i++) {
 
-      oline = is.tri_opts[is.tri_triangles[i][0]];
-      olineln = is.tri_opts[is.tri_triangles[i][1]];
+      oline = is.tri_triangles[i][0];
+      olineln = is.tri_triangles[i][1];
       vx = olineln->x - oline->x;
       vy = olineln->y - oline->y;
       vz = olineln->zd - oline->zd;
-      oline = is.tri_opts[is.tri_triangles[i][1]];
-      olineln = is.tri_opts[is.tri_triangles[i][2]];
+      oline = is.tri_triangles[i][1];
+      olineln = is.tri_triangles[i][2];
       wx = olineln->x - oline->x;
       wy = olineln->y - oline->y;
       wz = olineln->zd - oline->zd;
@@ -1230,7 +1200,7 @@ void thscrap::process_3d() {
       nz = - (vx * wy - wx * vy);
       nl = hypot(hypot(nx, ny), nz);
       for(j = 2; j >= 0; j--) {
-        oline = is.tri_opts[is.tri_triangles[i][j]];
+        oline = is.tri_triangles[i][j];
         cfx = cfc->insert_vertex(oline->vx3ddn);
         if (nl > 0.0) {
           if (j == 2)
@@ -1239,13 +1209,13 @@ void thscrap::process_3d() {
         }
       }
       
-      oline = is.tri_opts[is.tri_triangles[i][0]];
-      olineln = is.tri_opts[is.tri_triangles[i][1]];
+      oline = is.tri_triangles[i][0];
+      olineln = is.tri_triangles[i][1];
       vx = olineln->x - oline->x;
       vy = olineln->y - oline->y;
       vz = olineln->zu - oline->zu;
-      oline = is.tri_opts[is.tri_triangles[i][1]];
-      olineln = is.tri_opts[is.tri_triangles[i][2]];
+      oline = is.tri_triangles[i][1];
+      olineln = is.tri_triangles[i][2];
       wx = olineln->x - oline->x;
       wy = olineln->y - oline->y;
       wz = olineln->zu - oline->zu;
@@ -1254,7 +1224,7 @@ void thscrap::process_3d() {
       nz = (vx * wy - wx * vy);
       nl = hypot(hypot(nx, ny), nz);
       for(j = 0; j < 3; j++) {
-        oline = is.tri_opts[is.tri_triangles[i][j]];
+        oline = is.tri_triangles[i][j];
         cfx = cfc->insert_vertex(oline->vx3dup);
         if (nl > 0.0) {
           if (j == 0)
@@ -1265,6 +1235,118 @@ void thscrap::process_3d() {
     }
     
   }
+#endif
+
+
+#ifdef THSCRAPIS_NEW3D
+  lxVec norm;
+  double norml;
+
+  // povkladame horne a spodne body
+  for(oline = is.firstolseg; oline != NULL; oline = oline->next_segment) {
+    for(olineln = oline; olineln != NULL; olineln = olineln->next) {
+      olineln->vx3dup = this->d3_outline.insert_vertex(olineln->pt + olineln->d_up * olineln->dir);
+      olineln->vx3ddn = this->d3_outline.insert_vertex(olineln->pt - olineln->d_dn * olineln->dir);
+    }
+  }
+
+  // vlozime triangle strip dookola
+  oline = is.firstolseg;
+  thdb3dfc * cfc = NULL;
+  thdb3dfx * cfx, * cfx2;
+  while (oline != NULL) {
+
+    started = false;
+
+    // najdeme posledny bod
+    prevolineln = NULL;
+    olineln = oline->next;
+    while (olineln != NULL) {
+      prevolineln = olineln;
+      olineln = olineln->next;
+    }
+    // nemame ani 2 body - nerobime outline
+    if (prevolineln == NULL) 
+      break;
+
+    olineln = oline;
+    while (olineln != NULL) {
+      if (EXPORT3D_INVISIBLE || olineln->visible) {
+        norm = (olineln->pt - prevolineln->pt) ^ (olineln->dir);
+        norml = norm.Length();
+        if (!started) {
+          cfc = this->d3_outline.insert_face(THDB3DFC_TRIANGLE_STRIP);
+          cfx = cfc->insert_vertex(prevolineln->vx3dup);
+          cfx2 = cfc->insert_vertex(prevolineln->vx3ddn);
+          if (norml > 0.0) {
+            norm /= norml;
+            cfx->insert_normal(norm);
+            cfx->vertex->insert_normal(2.0 * norm);
+            cfx2->vertex->insert_normal(2.0 * norm);
+          }
+          started = true;
+        }
+        cfx = cfc->insert_vertex(olineln->vx3dup);
+        cfx2 = cfc->insert_vertex(olineln->vx3ddn);
+        if (norml > 0.0) {
+          cfx->insert_normal(norm);
+          cfx->vertex->insert_normal(2.0 * norm);
+          cfx2->vertex->insert_normal(2.0 * norm);
+        }
+      } else {
+        if (started) {
+          started = false;
+        }
+      }
+      prevolineln = olineln;
+      olineln = olineln->next;
+    }
+    
+    // prejdeme dalsi segment
+    oline = oline->next_segment;
+  }
+  
+  int i, j;
+  lxVec v, w;
+  if (is.tri_num > 0) {    
+    cfc = this->d3_outline.insert_face(THDB3DFC_TRIANGLES);
+    for(i = 0; i < is.tri_num; i++) {
+
+      // spodne trojuholniky
+      v = is.tri_triangles[i][1]->vx3ddn->get_vector() - is.tri_triangles[i][0]->vx3ddn->get_vector();
+      w = is.tri_triangles[i][2]->vx3ddn->get_vector() - is.tri_triangles[i][1]->vx3ddn->get_vector();
+      norm = -1.0 * (v ^ w);
+      norml = norm.Length();
+      if (norml > 0.0) norm /= norml;
+      for(j = 2; j >= 0; j--) {
+        oline = is.tri_triangles[i][j];
+        cfx = cfc->insert_vertex(oline->vx3ddn);
+        if (norml > 0.0) {
+          if (j == 2)
+            cfx->insert_normal(norm);
+          cfx->vertex->insert_normal(norm);
+        }
+      }
+
+      // horne trojuholniky
+      v = is.tri_triangles[i][1]->vx3dup->get_vector() - is.tri_triangles[i][0]->vx3dup->get_vector();
+      w = is.tri_triangles[i][2]->vx3dup->get_vector() - is.tri_triangles[i][1]->vx3dup->get_vector();
+      norm = (v ^ w);
+      norml = norm.Length();
+      if (norml > 0.0) norm /= norml;
+      for(j = 0; j < 3; j++) {
+        oline = is.tri_triangles[i][j];
+        cfx = cfc->insert_vertex(oline->vx3dup);
+        if (norml > 0.0) {
+          if (j == 0)
+            cfx->insert_normal(norm);
+          cfx->vertex->insert_normal(norm);
+        }
+      }
+    }
+  }
+#endif
+
 
   this->d3_outline.postprocess();
   

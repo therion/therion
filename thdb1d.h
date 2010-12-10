@@ -128,6 +128,7 @@ class thdb1ds {
   
   double x, y, z;   // coordinates
   double xx;        // coordinate for extended elevation
+  double asl; // average cave shot length from this point
   
   const char * name,  ///< Station name.
     * comment;  ///< Station comment.

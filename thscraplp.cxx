@@ -130,7 +130,7 @@ void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
   bool export_shot = true;
   if (this->arrow != NULL) {
     thdataleg * cl = this->arrow->leg->leg;
-    export_shot = ((cl->flags & TT_LEGFLAG_SPLAY) == 0) || (scrap->get_outline() == NULL);
+    export_shot = ((cl->flags & TT_LEGFLAG_SPLAY) == 0) || scrap->centerline_io;
   }
   
   if (export_shot) {
