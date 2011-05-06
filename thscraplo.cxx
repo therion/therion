@@ -34,6 +34,8 @@ thscraplo::thscraplo() {
   this->next_scrap_line = NULL;
   this->line = NULL;
   this->mode = TT_OUTLINE_NO;
+  this->lfreefirst = true;
+  this->lfreelast = true;
 
 }
   

@@ -180,9 +180,6 @@ void thlibrary_init_layouts()
 	playout->excl_pages = false;
 	playout->excl_list = NULL;
 	playout->def_grid_size = 0;
-	playout->gxs = thnan;
-	playout->gys = thnan;
-	playout->gzs = thnan;
 	playout->def_grid_origin = 0;
 	playout->def_nav_factor = 0;
 	playout->navf = 30;

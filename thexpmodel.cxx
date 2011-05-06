@@ -43,6 +43,7 @@
 #include "thconfig.h"
 #include "thcsdata.h"
 #include "thproj.h"
+#include "thcs.h"
 
 
 thexpmodel::thexpmodel() {
@@ -1739,14 +1740,14 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
         if (numst > 0)
           fprintf(out,"</coordinates>\n</LineString>\n");
         fprintf(out,"<LineString>\n<coordinates>\n");
-        thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+        thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
           dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z,
           x, y, z);
         fprintf(out, "\t%20.14f,%20.14f,%20.14f\n", x / THPI * 180.0, y / THPI * 180.0, z);
         numst = 1;
       }
       last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
-      thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+      thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
         dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z,
         x, y, z);
       fprintf(out, "\t%20.14f,%20.14f,%20.14f\n", x / THPI * 180.0, y / THPI * 180.0, z);

@@ -11,7 +11,7 @@ survex:
 clean:
 	perl ../makefile.pl rm -q *~
 	perl ../makefile.pl rm -q ../../bin/xtherion
-	perl ../makefile.pl rm -q thlang/*~
+	perl ../makefile.pl rm -q lang/*~
 	perl ../makefile.pl rm -q svxedit
 	perl ../makefile.pl rm -q xtherion.tar.gz
 	perl ../makefile.pl rm -q svxedit.tar.gz

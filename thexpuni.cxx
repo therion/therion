@@ -66,6 +66,8 @@
 #include <errno.h>
 #include "thexpuni.h"
 #include "thproj.h"
+#include "thcs.h"
+
 
 static const char * DXFpre = 
 "  0\nSECTION\n  2\nHEADER\n  9\n$ACADVER\n  1\nAC1014\n  9\n$ACADMAINTVER\n"
@@ -513,7 +515,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
                 fprintf(out,"<LinearRing>\n<coordinates>\n");
                 for(ip = it->m_point_list.begin(); ip != it->m_point_list.end(); ip++) {
-                  thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+                  thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
                     ip->m_x, ip->m_y, scrap->z, x, y, z);
                   fprintf(out, "\t%20.14f,%20.14f,%20.14f\n", x / THPI * 180.0, y / THPI * 180.0, 0.0);
                 }
@@ -604,19 +606,19 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
             scrap = (thscrap*) cmi->object;
             if (!thisnan(scrap->lxmin)) {
 	    
-              thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
                 scrap->lxmin + prj->rshift_x, scrap->lymin + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
               lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
 
-              thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params,  
                 scrap->lxmin + prj->rshift_x, scrap->lymax + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
               lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
 
-              thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
                 scrap->lxmax + prj->rshift_x, scrap->lymin + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
               lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
 
-              thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
                 scrap->lxmax + prj->rshift_x, scrap->lymax + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
               lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
 	      

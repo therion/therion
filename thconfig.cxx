@@ -46,6 +46,7 @@
 #include "thgeomagdata.h"
 #include "thlayout.h"
 #include "thsketch.h"
+#include "thcs.h"
 #ifdef THWIN32
 #include <windows.h>
 #endif
@@ -98,6 +99,7 @@ thconfig::thconfig()
   this->install_tex = false;
   this->install_tcltk = false;
   this->install_im = false;
+  this->lang = THLANG_UNKNOWN;
 
   this->auto_join = true;
   this->outcs = TTCS_LOCAL;
@@ -485,10 +487,10 @@ void thconfig::load()
 
           case TT_OUTCS:
             if (valuemb.get_size() == 1) {
-              sv = thcasematch_token(valuemb.get_buffer()[0], thtt_cs);
+              sv = thcs_parse(valuemb.get_buffer()[0]);
               if (sv == TTCS_UNKNOWN)
                 ththrow(("unknown coordinate system -- %s", valuemb.get_buffer()[0]))
-              if (!thcsdata_table[sv].output)
+              if (!thcs_get_data(sv)->output)
                 ththrow(("%s coordinate system not supported for output", valuemb.get_buffer()[0]))
               this->outcs = sv;
               this->outcs_def.name = this->get_db()->strstore(this->cfg_file.get_cif_name(), true);
@@ -818,7 +820,7 @@ double thconfig::get_outcs_convergence()
 {
   double x, y, z;
   if (this->get_outcs_center(x, y, z)) {
-    return thcsconverg(thcsdata_table[this->outcs].params, x, y);
+    return thcsconverg(thcs_get_data(this->outcs)->params, x, y);
   } else {
     return 0.0;
   }
@@ -832,7 +834,7 @@ bool thconfig::get_outcs_mag_decl(double year, double & decl)
     return false;
   if ((year < double(thgeomag_minyear)) || (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1))))
     return false;
-  thcs2cs(thcsdata_table[this->outcs].params, "+proj=latlong +datum=WGS84", x, y, z, lon, lat, alt);
+  thcs2cs(thcs_get_data(this->outcs)->params, "+proj=latlong +datum=WGS84", x, y, z, lon, lat, alt);
   decl = thgeomag(lat, lon, alt, year);
   return true;
 }
@@ -856,33 +858,7 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
   double x, y, z, dec;
   bool firstdec = true;
   if (this->get_outcs_center(x, y, z)) {
-    size_t tab_size = ((sizeof(thtt_cs)/sizeof(thstok)) - 1);
-    const char * csstr;
-    long i, ii;
-    i = 0;
-    ii = -1;
-    while (i < (long)tab_size) {
-      if (thtt_cs[i].tok == this->outcs) {
-        ii = i;
-        if (strlen(thtt_cs[ii].s) < 6)
-          break;
-        if (!(((thtt_cs[ii].s[0] == 'e' || thtt_cs[ii].s[0] == 'E') && 
-          (thtt_cs[ii].s[1] == 's' || thtt_cs[ii].s[1] == 'S') && 
-          (thtt_cs[ii].s[2] == 'r' || thtt_cs[ii].s[2] == 'R') && 
-          (thtt_cs[ii].s[3] == 'i' || thtt_cs[ii].s[3] == 'I')) || 
-          ((thtt_cs[ii].s[0] == 'e' || thtt_cs[ii].s[0] == 'E') && 
-          (thtt_cs[ii].s[1] == 'p' || thtt_cs[ii].s[1] == 'P') && 
-          (thtt_cs[ii].s[2] == 's' || thtt_cs[ii].s[2] == 'S') && 
-          (thtt_cs[ii].s[3] == 'g' || thtt_cs[ii].s[3] == 'G'))))
-          break;
-      }
-      i++;
-    }
-    if (ii > -1)
-      csstr = thtt_cs[ii].s;
-    else
-      csstr = "unknown";
-    thlog.printf("output coordinate system: %s\n", csstr);
+    thlog.printf("output coordinate system: %s\n", thcs_get_name(this->outcs));
     thlog.printf("meridian convergence (deg): %.4f\n", this->get_outcs_convergence());
     if (!thisnan(decsyear)) {
       long min = long(decsyear), max = long(deceyear + 1.0), yyy;

@@ -74,6 +74,7 @@
 #include "extern/lxMath.h"
 #include "thsvg.h"
 #include "extern/img.h"
+#include "thcs.h"
 
 #ifdef THMSVC
 #define snprintf _snprintf
@@ -1420,7 +1421,7 @@ else
   // LAYOUT.calibration_local[0].x = ccx * crot + ccy * srot + origin_shx;
   //LAYOUT.calibration_local[0].y = - ccx * srot + ccy * crot + origin_shy;
   // if (prj->type == TT_2DPROJ_PLAN) {
-  //   thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+  //   thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
   //                 lim.min.x + prj->rshift_x, lim.min.y + prj->rshift_y, lim.min.z + prj->rshift_z, ccx, ccy, ccz);
   // } else {
   //   ccx = 0.0;
@@ -1435,7 +1436,7 @@ else
   LAYOUT.calibration_local[n].x = ccx * crot + ccy * srot + origin_shx; \
 	LAYOUT.calibration_local[n].y = - ccx * srot + ccy * crot + origin_shy; \
   if ((prj->type == TT_2DPROJ_PLAN) && (thcfg.outcs != TTCS_LOCAL)) { \
-    thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, \
+    thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, \
                   (xxx) + prj->rshift_x, (yyy) + prj->rshift_y, lim.min.z + prj->rshift_z, ccx, ccy, ccz); \
   } else { \
     ccx = 0.0; \

@@ -1,5 +1,18 @@
 HOT LIST:
 
++ pridat strukturu na triangulation line
+  - vypocitat typ: AB,BCDE,ABCDE,BCDEF,ABCDEF
++ do trojuholnika pridat pointer na t-line + info ci normal/reverse
++ vypocitat intersection-point-up/down alebo central-point-up/down,up,down
++ vypocitat potrebne body (ABCDEF)
++ vytriangulovat
+
+
++ vytvorit thcs.h & thcs.cxx:
+	- vrati int cs podla mena alebo unknown
+	- vrati meno podla int
+	- vrati pointer na strukturu podla int
+	- pridat custom CS alebo throwne exception
 + interpolovane LRUD na zaklade shotov
 + vylucit z interpolacie tie shoty, ktore nemaju 
   oba body explicitne zadane (cez stations uid)

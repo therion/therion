@@ -52,6 +52,7 @@ set proj_specs {
   {{s-merc} {output} {+proj=merc +latts=0 +lon0=0 +k=1 +x0=0 +y0=0 +a=6378137 +b=6378137 +units=m +nadgrids=\\@null +no_defs} {}}
   {{OSGB:ST} {output} {+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=100000 +y_0=-200000 +ellps=airy +datum=OSGB36 +units=m +no_defs} {}}
   {{OSGB:SN} {output} {+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=200000 +y_0=-300000 +ellps=airy +datum=OSGB36 +units=m +no_defs} {}}
+  {{eur79z30} {output} "+proj=utm +zone=30 +ellps=intl +towgs84=-86,-98,-119,0,0,0,0 +no_defs" {}}
 }
 
 

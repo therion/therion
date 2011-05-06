@@ -1,6 +1,6 @@
 /* img.h
  * Header file for routines to read and write Survex ".3d" image files
- * Copyright (C) Olly Betts 1993,1994,1997,2001,2002,2003,2004,2005,2006
+ * Copyright (C) Olly Betts 1993,1994,1997,2001,2002,2003,2004,2005,2006,2010
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,19 @@
 
 #ifndef IMG_H
 # define IMG_H
+
+/* Define IMG_API_VERSION if you want more recent versions of the img API.
+ *
+ * 0 (default)	The old API.  date1 and date2 give the survey date as time_t.
+ *		Set to 0 for "unknown".
+ * 1		days1 and days2 give survey dates as days since 1st Jan 1900.
+ *		Set to -1 for "unknown".
+ */
+#ifndef IMG_API_VERSION
+# define IMG_API_VERSION 0
+#elif IMG_API_VERSION > 1
+# error IMG_API_VERSION > 1 too new
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,7 +81,11 @@ typedef struct {
    char *title;
    char *datestamp;
    char separator; /* character used to separate survey levels ('.' usually) */
+#if IMG_API_VERSION == 0
    time_t date1, date2;
+#else /* IMG_API_VERSION == 1 */
+   int days1, days2;
+#endif
    double l, r, u, d;
    /* Error information - valid when IMG_ERROR is returned: */
    int n_legs;
@@ -100,13 +117,18 @@ typedef struct {
     *   4 => survey date
     *   5 => LRUD info
     *   6 => error info
+    *   7 => more compact dates with wider range
     */
    int version;
    char *survey;
    size_t survey_len;
    int pending; /* for old style text format files and survey filtering */
    img_point mv;
+#if IMG_API_VERSION == 0
    time_t olddate1, olddate2;
+#else /* IMG_API_VERSION == 1 */
+   int olddays1, olddays2;
+#endif
 } img;
 
 /* Which version of the file format to output (defaults to newest) */

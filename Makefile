@@ -8,7 +8,7 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   thinit.o thdb1d.o thsvxctrl.o thdatastation.o thobjectid.o \
   thobjectsrc.o thgrade.o thlibrary.o thgeomag.o thbezier.o \
   thexport.o thexporter.o thselector.o extern/img.o \
-  thexpmodel.o thdb2d00.o thscrapis.o thcsdata.o thexptable.o \
+  thexpmodel.o thdb2d00.o thscrapis.o thcs.o thcsdata.o thexptable.o \
   thdb2d.o thscrap.o thendscrap.o th2ddataobject.o thdb2dprj.o \
   thdb2dpt.o thdb2dlp.o thdb2dab.o thdb2dji.o thdb2dmi.o thdb2dcp.o \
   thdb2dxm.o thdb2dxs.o thscraplo.o thscraplp.o thscrapen.o \
@@ -80,14 +80,14 @@ THXTHMKCMD = ./therion
 ##LDBFLAGS = $(LDPFLAGS)
 
 # BUILD OXYGEN
-##CCBFLAGS = -O2
-##CXXBFLAGS = -O2
-##LDBFLAGS = $(LDPFLAGS)
+CCBFLAGS = -O2
+CXXBFLAGS = -O2
+LDBFLAGS = $(LDPFLAGS)
 
 # BUILD RELEASE
-CCBFLAGS = 
-CXXBFLAGS = 
-LDBFLAGS = $(LDPFLAGS)
+##CCBFLAGS = 
+##CXXBFLAGS = 
+##LDBFLAGS = $(LDPFLAGS)
 
 # BUILD DEBUG
 ##CCBFLAGS = -ggdb
@@ -99,7 +99,7 @@ LDBFLAGS = $(LDPFLAGS)
 
 # compiler settings
 CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS)
-CCFLAGS = -Wall $(CCPFLAGS) $(CCBFLAGS)
+CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(POBJECTS) $(CMNOBJECTS)
 
 

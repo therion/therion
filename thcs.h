@@ -1,9 +1,4 @@
-/** 
- * @file thscraplo.h
- * Scrap outline line class.
- */
-  
-/* Copyright (C) 2000 Stacho Mudrak
+/* * Copyright (C) 2006 Martin Budaj
  * 
  * $Date: $
  * $RCSfile: $
@@ -26,42 +21,18 @@
  * --------------------------------------------------------------------
  */
  
-#ifndef thscraplo_h
-#define thscraplo_h
 
-#include <list>
+#ifndef thcs_h
+#define thcs_h
 
-enum {
-  TT_OUTLINE_NO,
-  TT_OUTLINE_NORMAL,
-  TT_OUTLINE_REVERSED,
-};
+#include "thcsdata.h"
 
-/**
- * Scrap outline line class.
- */
- 
-class thscraplo {
+int thcs_parse(const char * name);
 
-  public:
+const char * thcs_get_name(int cs);
 
-  bool lfreefirst, lfreelast;
- 
-  thscraplo * next_line,
-    * next_outline,
-    * next_scrap_line;
-    
-  class thline * line;
-  
-  int mode;
-  
-  thscraplo(); ///< Default constructor
-};
+const thcsdata * thcs_get_data(int cs);
 
-
-typedef std::list <thscraplo> thscraplo_list;  ///< Points list.
-
+void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args);
 
 #endif
-
-

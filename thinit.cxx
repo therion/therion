@@ -35,6 +35,7 @@
 #include "thlang.h"
 #include "thlocale.h"
 #include "thtmpdir.h"
+#include "thcs.h"
 
 #ifdef THWIN32
 #include <windows.h>
@@ -72,6 +73,8 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# pdf-fonts <roman> <italic> <bold> <sansserif> <sansserifoblique>\n\n"
 "### Path to temporary directory ###\n"
 "# tmp-path  \"\"\n\n"
+"### User defined coordinate system ###\n"
+"# cs-def <id> <proj4id> [other options]\n\n"
 "### Command to remove temporary directory ###\n"
 "# tmp-remove  \"\"\n\n";
 
@@ -79,6 +82,7 @@ thinit::thinit()
 {
   this->fonts_ok = false;
   this->tex_env = false;
+  this->lang = THLANG_UNKNOWN;
 	this->loopc = THINIT_LOOPC_UNKNOWN;
 }
 
@@ -109,6 +113,7 @@ enum {
   TTIC_TEXT,	
   TTIC_PDF_FONTS,
   TTIC_OTF2PFB,
+  TTIC_CS_DEF,
   TTIC_UNKNOWN,
 };
 
@@ -120,6 +125,7 @@ enum {
 static const thstok thtt_initcmd[] = {
   {"cavern-path", TTIC_PATH_CAVERN},
   {"convert-path", TTIC_PATH_CONVERT},
+  {"cs-def", TTIC_CS_DEF},
   {"encoding-default", TTIC_ENCODING_DEFAULT},
   {"encoding-sql", TTIC_ENCODING_SQL},
 //  {"encoding_default", TTIC_ENCODING_DEFAULT},
@@ -433,11 +439,19 @@ void thinit::load()
           if (nargs != 7)
             ththrow(("invalid number of command arguments"));
           break;
+        case TTIC_CS_DEF:
+          if (nargs < 2)
+            ththrow(("invalid cs-def syntax -- should be: cs-def <id> <proj4id> [other options]"))
+          break;
         default:
           ththrow(("invalid initialization command -- %s", args[0]))
       }
         
       switch(argid) {
+
+        case TTIC_CS_DEF:
+          thcs_add_cs(args[1], args[2], nargs - 2, &(args[3]));
+          break;
         
         case TTIC_ENCODING_DEFAULT:
           this->encoding_default = thparse_encoding(args[1]);

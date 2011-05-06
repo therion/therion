@@ -46,7 +46,6 @@
 #define hypot _hypot
 #endif
 
-
 #define EXPORT3D_INVISIBLE true
 
 thscrap::thscrap()
@@ -429,6 +428,62 @@ thscraplo * thscrap::get_outline() {
     obj = obj->nscrapoptr;
   }
   
+  co = this->outline_first;
+  while (co != NULL) {
+    if (co->line->is_closed) {
+      co->lfreefirst = false;
+      co->lfreelast = false;
+    }
+    co2 = co->next_scrap_line;
+    while (co2 != NULL && (co->lfreefirst || co->lfreelast)) {
+      if ((co2->line->outline == co->line->outline) && (co2->lfreefirst || co2->lfreelast)) {
+        if (co->lfreefirst && co2->lfreefirst && 
+          (co->line->first_point->point->x == co2->line->first_point->point->x) && 
+          (co->line->first_point->point->y == co2->line->first_point->point->y)) {
+            co->lfreefirst = false;
+            co2->lfreefirst = false;
+#ifdef THDEBUG
+            thprintf("\tJOIN F-F: %.2f,%.2f\n", co->line->first_point->point->x, co->line->first_point->point->y);
+            thprintf("\t%d -- %d\n", co->line->id, co2->line->id);
+#endif
+        }
+        if (co->lfreefirst && co2->lfreelast && 
+          (co->line->first_point->point->x == co2->line->last_point->point->x) && 
+          (co->line->first_point->point->y == co2->line->last_point->point->y)) {
+            co->lfreefirst = false;
+            co2->lfreelast = false;
+#ifdef THDEBUG
+            thprintf("\tJOIN F-L: %.2f,%.2f\n", co->line->first_point->point->x, co->line->first_point->point->y);
+            thprintf("\t%d -- %d\n", co->line->id, co2->line->id);
+#endif
+        }
+        if (co->lfreelast && co2->lfreefirst && 
+          (co->line->last_point->point->x == co2->line->first_point->point->x) && 
+          (co->line->last_point->point->y == co2->line->first_point->point->y)) {
+            co->lfreelast = false;
+            co2->lfreefirst = false;
+#ifdef THDEBUG
+            thprintf("\tJOIN L-F: %.2f,%.2f\n", co->line->last_point->point->x, co->line->last_point->point->y);
+            thprintf("\t%d -- %d\n", co->line->id, co2->line->id);
+#endif
+        }
+        if (co->lfreelast && co2->lfreelast && 
+          (co->line->last_point->point->x == co2->line->last_point->point->x) && 
+          (co->line->last_point->point->y == co2->line->last_point->point->y)) {
+            co->lfreelast = false;
+            co2->lfreelast = false;
+#ifdef THDEBUG
+            thprintf("\tJOIN L-L: %.2f,%.2f\n", co->line->last_point->point->x, co->line->last_point->point->y);
+            thprintf("\t%d -- %d\n", co->line->id, co2->line->id);
+#endif
+        }
+      }
+      co2 = co2->next_scrap_line;
+    }
+    co = co->next_scrap_line;
+  }
+  
+
   bool still_in_line, co3_normal = false;
   thdb2dpt * first_pt, * last_pt;
   if (this->outline_first != NULL) {
@@ -442,30 +497,55 @@ thscraplo * thscrap::get_outline() {
 #endif
       still_in_line = !(co->line->is_closed);
       co3 = co;
+      bool search_all;
       while (still_in_line) {
         mindist = hypot(last_pt->x - first_pt->x, last_pt->y - first_pt->y);
         co2 = co->next_scrap_line;
+        search_all = false;
         co3last = co3;
         co3 = NULL;
         while (co2 != NULL) {
           if ((co2->mode == TT_OUTLINE_NO) &&
               (co2->line->outline == co->line->outline)) {
-            cdist = hypot(co2->line->last_point->point->x - last_pt->x,
-                          co2->line->last_point->point->y - last_pt->y);
-            if (cdist <= mindist) {
-              co3_normal = false;
-              co3 = co2;
-              mindist = cdist;
+            if ((co2->line->last_point->point->x == last_pt->x) && 
+                (co2->line->last_point->point->y == last_pt->y)) {
+                co3_normal = false;
+                co3 = co2;
+                mindist = 0.0;
             }
-            cdist = hypot(co2->line->first_point->point->x - last_pt->x,
-                          co2->line->first_point->point->y - last_pt->y);
-            if (cdist <= mindist) {
-              co3_normal = true;
-              co3 = co2;
-              mindist = cdist;
+            if (search_all || co2->lfreelast) {
+              cdist = hypot(co2->line->last_point->point->x - last_pt->x,
+                            co2->line->last_point->point->y - last_pt->y);
+              if (cdist <= mindist) {
+                co3_normal = false;
+                co3 = co2;
+                mindist = cdist;
+              }
+            }
+            if ((co2->line->first_point->point->x == last_pt->x) && 
+                (co2->line->first_point->point->y == last_pt->y)) {
+                co3_normal = true;
+                co3 = co2;
+                mindist = 0.0;
+            }
+            if (search_all || co2->lfreefirst) {
+              cdist = hypot(co2->line->first_point->point->x - last_pt->x,
+                            co2->line->first_point->point->y - last_pt->y);
+              if (cdist <= mindist) {
+                co3_normal = true;
+                co3 = co2;
+                mindist = cdist;
+              }
             }
           }
           co2 = co2->next_scrap_line;
+          if ((co2 == NULL) && (!search_all) && (co3 == NULL)) {
+            co2 = co->next_scrap_line;
+            search_all = true;
+#ifdef THDEBUG
+            thprintf("\tsearch all\n");
+#endif
+          }
         }
         if (co3 == NULL)
           still_in_line = false;

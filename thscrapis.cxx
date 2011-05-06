@@ -659,14 +659,7 @@ void thscrapis::int3d() {
   int3di i3(this->m_scrap);
   bool xelev = (this->m_scrap->proj->type == TT_2DPROJ_EXTEND);
 
-  // vlozi vsetok polygon zo scrapu
-  slp = this->m_scrap->get_polygon();
-  while (slp != NULL) {
-    i3.insert_slp(slp);
-    slp = slp->next_item;
-  }
-
-  // vlozi vsetky ostatne body
+  // vlozi vsetky meracske body zo scrapu
   o2 = this->m_scrap->fs2doptr;
   while (o2 != NULL) {
     if (o2->get_class_id() == TT_POINT_CMD) {
@@ -676,6 +669,13 @@ void thscrapis::int3d() {
       }
     }
     o2 = o2->nscrapoptr;
+  }
+
+  // vlozi vsetok polygon zo scrapu (ciary vklada len tie, co maju oba body v scrape!)
+  slp = this->m_scrap->get_polygon();
+  while (slp != NULL) {
+    i3.insert_slp(slp);
+    slp = slp->next_item;
   }
   
   // prejde vsetky objekty a nasackuje passage-heights
@@ -726,6 +726,8 @@ void thscrapis::int3d() {
   lxVec sumv, pos, sumupv, sumdnv;
   thvec2 v2, pt;
   double sumw, sumdw, w, p, cw, sup, sdn;
+
+
   oline = this->firstolseg;
   while (oline != NULL) {
     olineln = oline;
@@ -756,6 +758,7 @@ void thscrapis::int3d() {
       } else {
         olineln->dir = ddir;
       }
+
 
       // interpolujeme position & direction pre dimension points
       iii = i3.m_features.begin();
@@ -799,7 +802,6 @@ void thscrapis::int3d() {
         }
         iii++;
       }
-
 
 
       // interpolujeme position & dimensions

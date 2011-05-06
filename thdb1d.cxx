@@ -827,6 +827,7 @@ void thdb1d::process_tree()
   }
   
   // go leg by leg and fill arrows  
+  size_t tn_nosurveylegs(0);
   for(iil = this->leg_vec.begin(), a1 = arrows; iil != this->leg_vec.end(); iil++) {
     
     if (iil->leg->infer_equates)
@@ -839,12 +840,17 @@ void thdb1d::process_tree()
     a1->start_node = nodes + (nodes[iil->leg->from.id - 1].uid - 1);
     a1->end_node = nodes + (nodes[iil->leg->to.id - 1].uid - 1);
     
-    if ((iil->leg->data_type == TT_DATATYPE_NOSURVEY) &&
-      ((!a1->start_node->is_fixed) || (!a1->end_node->is_fixed))) {
-//        thprintf("%s@%s - %s@%s\n", iil->leg->from.name, iil->leg->from.survey, iil->leg->to.name, iil->leg->to.survey);
-        ththrow(("unsurveyed shot between unfixed stations -- %s [%d]",
-          iil->leg->srcf.name, iil->leg->srcf.line
-        ));
+//    if ((iil->leg->data_type == TT_DATATYPE_NOSURVEY) &&
+//      ((!a1->start_node->is_fixed) || (!a1->end_node->is_fixed))) {
+////        thprintf("%s@%s - %s@%s\n", iil->leg->from.name, iil->leg->from.survey, iil->leg->to.name, iil->leg->to.survey);
+//        ththrow(("unsurveyed shot between unfixed stations -- %s [%d]",
+//          iil->leg->srcf.name, iil->leg->srcf.line
+//        ));
+//    }
+    if (iil->leg->data_type == TT_DATATYPE_NOSURVEY) {
+        a1->is_discovery = true;
+        a2->is_discovery = true;
+        tn_nosurveylegs++;
     }
     
     // hide splay-ed flags from extended elevation2
@@ -885,7 +891,7 @@ void thdb1d::process_tree()
   this->tree_legs = new thdb1dl* [tn_legs];
   thdb1dl ** current_leg = this->tree_legs;
 
-  while (tarrows < tn_legs) {
+  while ((tarrows + tn_nosurveylegs) < tn_legs) {
   
     if (component_break) {
       

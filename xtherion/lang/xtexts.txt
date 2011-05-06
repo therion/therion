@@ -1,4 +1,5 @@
 therion: Drag to resize control panel.
+bg: Плъзнете, за да промените размера на контролния панел
 cz: Změnit šířku panelu.
 de: Ziehen um Größe zu ändern.
 el: Drag για προσαρμογή μεγέθους πίνακα ελέγχου.
@@ -10,6 +11,7 @@ sk: Rozšíriť alebo zúžiť okno kontrolných panelov.
 sq: levize per te rritur dritaren kontrolluese
 
 therion: File
+bg: Файл
 cz: Soubor
 de: Datei
 el: Αρχείο
@@ -21,6 +23,7 @@ sk: Súbor
 sq: fajlli
 
 therion: Maximize
+bg: Увеличаване
 cz: Maximalizovat
 de: Maximieren
 el: Μεγιστοποίηση
@@ -32,6 +35,7 @@ sk: Maximalizovať
 sq: rrite ne maksimum
 
 therion: Normalize
+bg: Нормализиране
 cz: Normální velikost
 de: Normalgröße
 el: Κανονικό μέγεθος
@@ -43,6 +47,7 @@ sk: Normálna veľkosť
 sq: normalizo
 
 therion: Switch panels
+bg: Превключи панела
 cz: Přehoď panely
 de: Panel verschieben
 el: Αλλαγή παράθυρου
@@ -54,6 +59,7 @@ sk: Prehoď panely
 sq: nderro panelat
 
 therion: Toggle toolbar
+bg: Превключи панела с инструменти
 cz: Vypnout/zapnout lištu nástrojů
 de: Werkzeugleiste anzeigen/verbergen
 el: Εμφάνιση / μη-εμφάνιση γραμμής εργαλείων
@@ -63,6 +69,7 @@ sk: Zapnúť/vypnúť panel
 sq: dritarja aktivizuese
 
 therion: KBD encoding
+bg: Кодировка на клавиатурата
 cz: Kódování klávesnice
 de: Zeichensatz
 el: Κωδικοποίηση πληκτρολογίου
@@ -74,6 +81,7 @@ sk: Kódovanie klávesnice
 sq: KBD-kodimi
 
 therion: Window
+bg: Прозорец
 cz: Okno
 de: Fenster
 el: Παράθυρο
@@ -85,6 +93,7 @@ sk: Okno
 sq: dritarja
 
 therion: Quit
+bg: Изход
 cz: Konec
 de: Beenden
 el: Έξοδος
@@ -96,6 +105,7 @@ sk: Ukončiť
 sq: mbylle
 
 therion: Help
+bg: Помощ
 cz: Nápověda
 de: Hilfe
 el: Βοήθεια
@@ -107,6 +117,7 @@ sk: Pomoc
 sq: ndihma
 
 therion: BAC calculator
+bg: Алкохолен калкулатор
 cz: Alkohol tester
 de: Blutalkoholrechner
 el: Αλκοτέστ
@@ -118,6 +129,7 @@ sk: Alkohol tester
 sq: llogaritesi I alkoolit
 
 therion: Biometric data
+bg: Биометрични данни
 cz: Biometrické údaje
 de: Persönliche Angaben
 el: Βιομετρικά δεδομένα
@@ -129,6 +141,7 @@ sk: Biometrické údaje
 sq: shenimet biometrike
 
 therion: age
+bg: Възраст
 cz: věk
 de: Alter
 el: ηλικία
@@ -140,6 +153,7 @@ sk: vek
 sq: mosha
 
 therion: years
+bg: Години
 cz: let
 de: Jahre
 el: έτη
@@ -151,6 +165,7 @@ sk: rokov
 sq: vitet
 
 therion: gender
+bg: Пол
 cz: pohlaví
 de: Geschlecht
 el: φύλο
@@ -162,6 +177,7 @@ sk: pohlavie
 sq: gjinia
 
 therion: male
+bg: Мъж
 cz: muž
 de: männlich
 el: αρσενικό
@@ -173,6 +189,7 @@ sk: muž
 sq: mashkull
 
 therion: female
+bg: Жена
 cz: žena
 de: weiblich
 el: θυλικό
@@ -184,6 +201,7 @@ sk: žena
 sq: femer
 
 therion: height
+bg: Ръст
 cz: výška
 de: Größe
 el: ύψος
@@ -195,6 +213,7 @@ sk: výška
 sq: gjatesia
 
 therion: weight
+bg: Тегло
 cz: váha
 de: Gewicht
 el: βάρος
@@ -206,6 +225,7 @@ sk: váha
 sq: pesha
 
 therion: Consumption data
+bg: Какво сте пили
 cz: Údaje o spotřebě
 de: Alkoholkonsum
 el: Δεδομένα κατανάλωσης
@@ -217,6 +237,7 @@ sk: Údaje o spotrebe
 sq: shenimet e hargjimeve
 
 therion: volume
+bg: Количество
 cz: objem
 de: Menge
 el: όγκος
@@ -228,6 +249,7 @@ sk: objem
 sq: volumi
 
 therion: alcohol level
+bg: Концентрация
 cz: koncentrace alkoholu
 de: Alkoholgehalt
 el: περιεκτικότητα σε αλκοόλ
@@ -239,6 +261,7 @@ sk: koncentrácia
 sq: sasia e alkoolit
 
 therion: time elapsed
+bg: Минало време
 cz: uplynulý čas
 de: vergangene Zeit
 el: ώρα που πέρασε
@@ -250,6 +273,7 @@ sk: uplynutý čas
 sq: koha e duhur
 
 therion: Calculate
+bg: Изчисли
 cz: Vypočítat
 de: Berechne
 el: υπολογισμός
@@ -261,6 +285,7 @@ sk: Vypočítať
 sq: llogarit
 
 therion: BAC
+bg: Наличие на алкохол в кръвта
 cz: Hladina alkoholu v krvi
 de: Blutalkoholpegel
 el: Περιεκτικότητα αίματος σε αλκοόλ
@@ -272,6 +297,7 @@ sk: Hladina alkoholu
 sq: perqindja e alkoolit ne gjak-BAC
 
 therion: ETA
+bg: Време до изтрезняване
 cz: Čas do vystřízlivění
 el: Αναμενόμενη ώρα άφιξης
 en: ETA
@@ -282,6 +308,7 @@ sk: Čas do vytriezvenia
 sq: ETA
 
 therion: hours
+bg: часове
 cz: hodin
 de: Stunden
 el: ώρες
@@ -293,6 +320,7 @@ sk: hodín
 sq: oret
 
 therion: MRR
+bg: MRR
 cz: Rychlost odbourávání
 el: MRR
 en: MRR
@@ -303,6 +331,7 @@ sk: Rýchlosť odburávania
 sq: MRR
 
 therion: Compiler
+bg: Компилатор
 cz: Kompilátor
 de: Compiler
 el: Συντάκτης
@@ -314,6 +343,7 @@ sk: Kompilátor
 sq: kompilatori
 
 therion: Settings
+bg: Настройки
 cz: Nastavení
 de: Einstellungen
 el: Ρυθμίσεις
@@ -325,6 +355,7 @@ sk: Nastavenia
 sq: setingu
 
 therion: Survey structure
+bg: Структура на картировката
 cz: Struktura měření (survey)
 de: Messdatenstruktur
 el: Δομή χαρτογράφησης
@@ -336,6 +367,7 @@ sk: Štruktúra dát
 sq: struktura e matjeve
 
 therion: Survey info
+bg: Информация
 cz: Info o měření (survey)
 de: Infos zur Vermessung
 el: Πληροφορίες χαρτογράφησης
@@ -347,6 +379,7 @@ sk: Informácie
 sq: informatat e matjeve
 
 therion: Map structure
+bg: Структура на картата
 cz: Mapová struktura
 de: Planstruktur
 el: Δομή αποτύπωσης
@@ -358,6 +391,7 @@ sk: Mapová štruktúra
 sq: struktura e hartes
 
 therion: Preview
+bg: Предварителен изглед
 cz: Náhled
 de: Vorschau
 el: Προεπισκόπηση
@@ -367,6 +401,7 @@ sk: Náhľad
 sq: parashiqimi
 
 therion: Working directory
+bg: Работна директория
 cz: Pracovní adresář
 de: Arbeitsverzeichnis
 el: Φάκελος εργασίας
@@ -378,6 +413,7 @@ sk: Pracovný adresár
 sq: direktorati i punes
 
 therion: Working directory path.
+bg: Път към работната директория
 cz: Cesta k pracovnímu adresáři.
 de: Pfad zum Arbeitsverzeichnis.
 el: Φάκελος εργασίας
@@ -389,6 +425,7 @@ sk: Cesta k pracovnému adresáru.
 sq: tregon shtegun e direktoratit punues
 
 therion: Configuration file
+bg: Конфигурационен файл
 cz: Konfigurační soubor
 de: Konfigurationsdatei
 el: Αρχείο σχηματισμού (config)
@@ -400,6 +437,7 @@ sk: Konfiguračný súbor
 sq: arkivi I konfiguracionit
 
 therion: Configuration file name.
+bg: Име на конфигурационният файл
 cz: Jméno konfiguračního souboru.
 de: Name der Konfigurationsdatei.
 el: Εμφανίζει το όνομα του αρχείου σχηματισμού (config)
@@ -411,6 +449,7 @@ sk: Meno konfiguračného súboru.
 sq: tregon emrin e arkivit te konfiguracionit
 
 therion: Command line options
+bg: Опции на командният ред
 cz: Argumenty programu
 de: Kommandozeilenoptionen
 el: Επιλογές γραμμής εντολής
@@ -422,6 +461,7 @@ sk: Argumenty programu
 sq: opcionet e vijes komanduese
 
 therion: Therion command line options.
+bg: Опции на командният ред на Терион
 cz: Argumenty therionu pro příkazovou řádku.
 de: Therion Kommandozeilenoptionen.
 el: Εδώ μπορείτε να περάσετε τις επιλογές γραμμής εντολής στο Therion
@@ -433,6 +473,7 @@ sk: Argumenty programu v príkazovom riadku.
 sq: ketu ju mund te bartni vijen komanduese te arkivit tek Therion-i
 
 therion: Run therion.
+bg: Пускане на therion
 cz: Spustí therion.
 de: Therion ausführen.
 el: Εκτέλεση του Therion
@@ -444,6 +485,7 @@ sk: Spustiť therion.
 sq: aktivizo Therion-in
 
 therion: Xpdf
+bg: Xpdf
 cz: Xpdf
 de: Xpdf
 it: Xpdf
@@ -451,6 +493,7 @@ sk: Xpdf
 sq: Xpdf
 
 therion: Acrobat Reader
+bg: Acrobat Reader
 cz: Acrobat Reader
 de: Acrobat Reader
 it: Acrobat Reader
@@ -458,6 +501,7 @@ sk: Acrobat Reader
 sq: lexuesi I programit-Akrobat
 
 therion: PDF file path.
+bg: Път към PDF файл
 cz: Cesta k PDF souboru
 de: Pfad zur PDF-Datei.
 el: υποφάκελος του .pdf
@@ -467,6 +511,7 @@ sk: Cesta k PDF súboru.
 sq: arkivi-PDF
 
 therion: Survey informations.
+bg: Информация за картировката
 cz: Informace o jednotlivých měřeních (survey).
 de: Infos zur Vermessung.
 el: Στοιχεία χαρτογράφησης
@@ -478,6 +523,7 @@ sk: Informácie o častiach.
 sq: informatat e matjeve
 
 therion: User interface is not active. To activate it, open existing file or create new one.
+bg: Потребителският интерфейс е неактивен. За да го активирате отворете съществуващ файл или създайте нов.
 cz: Uživatelské rozhraní není aktivní. Pro jeho aktivaci otevřete existující soubor nebo vytvořte nový.
 de: Fenster nicht aktiv. Um es zu benutzen, öffne eine existierende Datei oder lege eine neue an.
 el: Διασύνδεση χρήστη ανενεργή. Για να ενεργοποιηθεί, ανοίξτε υπάρχον αρχείο ή δημιουργήστε νέο.
@@ -489,6 +535,7 @@ sk: XTherion momentálne nie je aktívny. Otvorte existujúci konfiguračný sú
 sq: interfejsi I perdoruesit nuk eshte aktiv. Ta aktivizosh, hape arkivin egzistues apo hape nje te ri.
 
 therion: loading compiler...
+bg: Зареждане на компилатора...
 cz: nahrávám kompilátor...
 de: Lade Compiler...
 el: φόρτιση συντάκτη...
@@ -500,6 +547,7 @@ sk: kompilátor...
 sq: duke lexuar kompiluesin…
 
 therion: Running therion ...
+bg: Стартиране на therion ...
 cz: Probíhá kompilace ...
 de: Therion ausführen ...
 el: Εκτελείται το Therion
@@ -511,6 +559,7 @@ sk: Prebieha výpočet...
 sq: duke ve ne pune therion-in…
 
 therion: RUNNING
+bg: Обработка
 cz: PRACUJI
 de: ARBEITE
 el: ΕΚΤΕΛΕΣΗ
@@ -522,6 +571,7 @@ sk: VÝPOČET
 sq: ne punim e siper
 
 therion: ERROR
+bg: Грешка
 cz: CHYBA
 de: FEHLER
 el: ΣΦΑΛΜΑ
@@ -533,9 +583,11 @@ sk: CHYBA
 sq: gabim
 
 therion: WARNING
+bg: Внимание!
 de: WARNUNG
 
 therion: OK
+bg: ОК
 cz: OK
 de: OK
 el: ΟΚ
@@ -547,6 +599,7 @@ sk: OK
 sq: ne rregull-O.K.
 
 therion: Reading therion log file ...
+bg: Четене на лог-файла на therion ...
 cz: Načítám LOG soubor therionu ...
 de: Lese Therion Logdatei ...
 el: Ανάγνωση του αρχείου log therion
@@ -558,6 +611,7 @@ sk: Načitávam LOG súbor.
 sq: duke lexuar arkivin hyres te Therion-it
 
 therion: \nerror opening therion.log file\n
+bg: \nгрешка при отварянето на файла therion.log\n
 cz: \nchyba při otevírání souboru therion.log\n
 de: \nFehler beim Öffnen von therion.log\n
 el: \nσφάλμα κατα το άνοιγμα του αρχείου therion.log\n
@@ -569,6 +623,7 @@ sk: \nchyba pri čítaní súboru therion.log\n
 sq: gabim gjate hapjes se Therion-it.arkivin hyres/n
 
 therion: Show or hide this control panel
+bg: Показване/скриване на контролният панел
 cz: Zobrazit/skrýt ovládací panel
 de: Dieses Panel anzeigen oder verbergen
 el: Κάντε κλικ για εμφάνιση ή μη-εμφάνιση του πίνακα ελέγχου
@@ -580,6 +635,7 @@ sk: Stlačte ak chcete zobraziť alebo skryť tento panel
 sq: kliko te hapesh ose te mbyllesh kete panel te kontrollit
 
 therion: loading map editor ...
+bg: Зареждане на редактора на карти ...
 cz: nahrávám mapový editor...
 de: Lade Karteneditor ...
 el: φόρτιση του επεξεργαστή αποτύπωσης...
@@ -591,6 +647,7 @@ sk: Mapový editor
 sq: duke lexuar permiresuesin e hartave…
 
 therion: Undo %s
+bg: Отмяна
 cz: Zpět - %s
 de: Rückgängig %s
 el: Αναίρεση %s
@@ -602,6 +659,7 @@ sk: Späť - %s
 sq: prishe %s
 
 therion: Redo %s
+bg: Възстановяване
 cz: Znovu - %s
 de: Wiederholen %s
 el: Επανάληψη %s
@@ -613,6 +671,7 @@ sk: Opakovať- %s
 sq: beje perseri %s
 
 therion: %s \[%s\] -- multiple encoding commands in file
+bg: %s \[%s\] -- няколко команди encoding във файла
 cz: %s \[%s\] -- vícenásobný výskyt příkazu encoding v jednom souboru
 el: %s \[%s\] -- πολλαπλές εντολές κωδικοποίησης στο αρχείο
 en: %s \[%s\] -- multiple encoding commands in file
@@ -623,6 +682,7 @@ sk: %s \[%s\] -- viac encoding príkazov v jednom súbore
 sq: %s \[%s\] –shumezo komandat te deshifrimit ne arkiv
 
 therion: %s \[%s\] -- unknown encoding -- %s
+bg: %s \[%s\] -- неизвестна кодировка -- %s
 cz: %s \[%s\] -- neznámé kódování znaků -- %s
 el: %s \[%s\] -- άγνωστη κωδικοποίηση -- %s
 en: %s \[%s\] -- unknown encoding -- %s
@@ -633,6 +693,7 @@ sk: %s \[%s\] -- neznáme kódovanie znakov -- %s
 sq: %s \[%s\] – deshifrim I panjohur -- %s
 
 therion: adjusting area
+bg: регулиране на областта
 cz: přizpůsobení pracovní plochy
 de: Fläche anpassen
 el: προσαρμογή επιφάνειας
@@ -643,6 +704,7 @@ ru: регулирование области
 sk: prispôsobenie pracovnej plochy
 
 therion: zooming
+bg: мащабиране
 cz: zoomování
 de: Zoomen
 el: μεγέθυνση
@@ -654,6 +716,7 @@ sk: zoomovanie
 sq: zmadhimi
 
 therion: Zoom %d %%
+bg: мащаб %d %%
 cz: Zoom %d %%
 de: Zoom %d %%
 el: Μεγέθυνση %d %%
@@ -665,6 +728,7 @@ sk: Zoom %d %%
 sq: zmadho %d %%
 
 therion: Zooming objects ...
+bg: Мащабиране на обекти ...
 cz: Zoomování objektů ...
 de: Zoome Objekte ...
 el: Μεγέθυνση αντικειμένων...
@@ -676,6 +740,7 @@ sk: Zoomovanie objektov ...
 sq: objektet e zmadhimit…
 
 therion: dragging image
+bg: Плъзгане на изображение
 cz: přesouvání obrázku
 de: Bild verschieben
 el: μετακίνηση εικόνας
@@ -687,6 +752,7 @@ sk: Presúvanie obrázku
 sq: imazhi per tu vizatuar
 
 therion: Map Editor
+bg: Редактор на карти
 cz: Mapový editor
 de: Karteneditor
 el: Επεξεργαστής αποτύπωσης
@@ -698,6 +764,7 @@ sk: Mapový Editor
 sq: permiresuesi I hartave
 
 therion: File commands
+bg: Команди във файл
 cz: Příkazy
 de: Dateibefehle
 el: Αντικείμενα
@@ -709,6 +776,7 @@ sk: Príkazy v súbore
 sq: objektet
 
 therion: Search & Select
+bg: Търсене и избиране
 cz: Najít & Vybrat
 de: Suchen & auswählen
 el: Αναζήτηση και επιλογή
@@ -720,6 +788,7 @@ sk: Hľadaj a Vyber
 sq: kerko dhe zgjidh
 
 therion: Command preview
+bg: Преглед на команда
 cz: Náhled příkazu
 de: Kommandovorschau
 el: Προεπισκόπηση εντολής
@@ -731,6 +800,7 @@ sk: Náhľad príkazu
 sq: komanda e parashiqimit
 
 therion: Point control
+bg: Точка
 cz: Bod
 de: Punkte bearbeiten
 el: Σημεία
@@ -742,6 +812,7 @@ sk: Bod
 sq: pikat
 
 therion: Line control
+bg: Линия
 cz: Křivka
 de: Linien bearbeiten
 el: Γραμμές
@@ -753,6 +824,7 @@ sk: Krivka
 sq: rjeshtat
 
 therion: Line point control
+bg: Точка на линия
 cz: Bod křivky
 de: Linienpunkte bearbeiten
 el: Σημεία γραμμών
@@ -764,6 +836,7 @@ sk: Bod krivky
 sq: pikat e rjeshtit
 
 therion: Area control
+bg: Област
 cz: Oblast
 de: Flächen bearbeiten
 el: Επιφάνειες
@@ -775,6 +848,7 @@ sk: Plocha
 sq: fushat
 
 therion: Scrap control
+bg: Скрап
 cz: Scrap
 de: Skizze bearbeiten
 el: Σκραπ
@@ -786,6 +860,7 @@ sk: Scrap
 sq: mbeturinat
 
 therion: Text editor
+bg: Текстов редактор
 cz: Textový editor
 de: Texteditor
 el: Επεξεργαστής κειμένου
@@ -797,6 +872,7 @@ sk: Textový editor
 sq: permirsuesi I tekstit
 
 therion: Drawing area
+bg: Зона на чертане
 cz: Kreslící plocha
 de: Zeichenfläche
 el: Επιφάνεια σχεδιασμού
@@ -808,6 +884,7 @@ sk: Pracovná plocha
 sq: fusha e vizatimit
 
 therion: Background images
+bg: Фоново изображение
 cz: Podkladové obrázky
 de: Hintergrundbilder
 el: Εικόνες φόντου
@@ -819,6 +896,7 @@ sk: Obrázky pozadia
 sq: imazhet ne prapavije
 
 therion: Current drawing area.
+bg: Текуща зона на чертане
 cz: Současná kreslící plocha.
 de: Aktuelle Zeichenfläche
 el: Ενεργή επιφάνεια σχεδιασμού
@@ -830,6 +908,7 @@ sk: Súčasná pracovná plocha.
 sq: fusha momentale e vizatimit
 
 therion: X min.
+bg: X min.
 cz: X min.
 el: Ελάχιστο Χ
 en: X min.
@@ -840,6 +919,7 @@ sk: Minimum X.
 sq: minimum X.
 
 therion: Y min.
+bg: Y min.
 cz: Y min.
 el: Ελάχιστο Υ
 en: Y min.
@@ -850,6 +930,7 @@ sk: Minimum Y.
 sq: minimum Y.
 
 therion: X max.
+bg: X max.
 cz: X max.
 el: Μέγιστο Χ
 en: X max.
@@ -860,6 +941,7 @@ sk: Maximum X.
 sq: maksimum X.
 
 therion: Y max.
+bg: Y max.
 cz: Y max.
 el: Μέγιστο Υ
 en: Y max.
@@ -870,6 +952,7 @@ sk: Maximum Y.
 sq: maksimum Y.
 
 therion: Adjust
+bg: Определи
 cz: Přizpůsobit
 de: Anpassen
 el: Προσαρμογή
@@ -881,6 +964,7 @@ sk: Prispôsob
 sq: permireso
 
 therion: Adjust drawing area to given limits.
+bg: Определи зоната за чертане в зададените граници
 cz: Přizpůsobí kreslící plochu daným limitům.
 de: Zeichenfläche an Begrenzung anpassen.
 el: Προσαρμογή επιφάνειας σχεδίου στα δεδομένα όρια
@@ -892,6 +976,7 @@ sk: Prispôsobiť pracovnú plochu daným limitom.
 sq: permireso fushen e vizatimit deri ne kufijt e dhene.
 
 therion: Auto adjust
+bg: Автоматично определяне
 cz: Auto přizpůs.
 de: Automatisch anpassen
 el: Αυτόματη προσαρμογή
@@ -903,6 +988,7 @@ sk: Automaticky
 sq: permiresimi automatik
 
 therion: Adjust drawing area to automatically calculated limits.
+bg: Определи автоматично зоната за чертане
 cz: Automaticky přizpůsobí kreslící plochu všem objektům.
 de: Zeichenfläche an berechnete Begrenzung anpassen.
 el: Προσαρμογή επιφάνειας σχεδίου στα όρια που αυτομάτως ορίστηκαν
@@ -914,6 +1000,7 @@ sk: Automaticky prispôsobiť pracovnú plochu všetkým objektom.
 sq: permireso fushen e vizatimit ne kufirin e llogaritur automatikisht.
 
 therion: zoom
+bg: мащаб
 cz: zoom
 de: Zoom
 el: μεγέθυνση
@@ -925,6 +1012,7 @@ sk: zoom
 sq: zmadho
 
 therion: Zoom drawing area.
+bg: Мащабиране на зоната за чертане
 cz: Zoom kreslící plochy.
 de: Zeichenfläche zoomen.
 el: Έλεγχος μεγέθυνσης. Κάντε κλικ στον ορθογώνιο για να δείτε το μενού.
@@ -936,6 +1024,7 @@ sk: Zoom pracovnej plochy.
 sq: kontrolli I zmadhimit. Kliko ne gjashtekendesh te shohesh menyn
 
 therion: loading commands module ...
+bg: зареждане на модула за команди
 cz: nahrávám příkazový modul ...
 de: Lade Befehlsmodul ...
 el: φόρτιση ενότητα εντολών...
@@ -947,6 +1036,7 @@ sk: príkazový modul...
 sq: duke lexuar modulin komandues…
 
 therion: Select command.
+bg: Изберете команда
 cz: Výběr příkazu.
 de: Wähle Befehl.
 el: Κάντε κλικ σε μια γραμμή για να συλλέξετε το αντικείμενο στον καμβά και το αντίθετο.
@@ -958,6 +1048,7 @@ sk: Vyber príkaz.
 sq: kliko ne resht qe te fitosh objektin e deshiruar I zgjedhur ne pelhure ose anasjelltas.
 
 therion: Action button.
+bg: Действие
 cz: Tlačítko Akce.
 de: Aktionsknopf.
 el: Πατώντας εδώ μπορείτε να εισάγετε αντικείμενα με το ποντίκι. Πατήστε την εντολή να δείτε το μενού.
@@ -969,6 +1060,7 @@ sk: Gombík - akcia.
 sq: pasi te klikoni kete buton, ju mund te futni objekte me mi. kliko ne aksion qe te shohesh menyn.
 
 therion: Switch mouse mode to select objects.
+bg: Преминете на мишка за да избирате обекти
 cz: Přepnutí myši do výběrového módu.
 de: Maus umschalten um Objekte auszuwählen.
 el: Αφού πατήστε εδώ μπορείτε να συλλέξετε αντικείμενα στον καμβά με το ποντίκι.
@@ -980,6 +1072,7 @@ sk: Nastav mód myši na vyberanie objektov.
 sq: pasi te klikosh kete buton, ju mund te zgjedhni objektet ne pelhure me mi.
 
 therion: Action
+bg: Действие
 cz: Akce
 de: Aktion
 el: Εντολή
@@ -991,6 +1084,7 @@ sk: Akcia
 sq: aksion
 
 therion: Configure action assigned to action button.
+bg: Действието, което изберете, ще бъде изпълнене, кликайки в/у бутона 'Вмъкни <обект>'
 cz: Nastaví akci pro tlačítko akcí.
 de: Dem Aktionsknopf zugewiesene Aktion konfigurieren.
 el: Ορισμός εντολής που θα εκτελείται κάνοντας κλικ στο κουμπί Εισαγωγή <αντικείμενο>
@@ -1002,6 +1096,7 @@ sk: Nakonfiguruj akciu pre gombík - akcia.
 sq: aksionin qe e zgjedhni do te egzekutohet me klikimin ne butonin Fute <objektin>
 
 therion: Move up
+bg: Нагоре
 cz: Přesun výš
 de: Schiebe nach oben
 el: Μετακίνηση προς τα πάνω
@@ -1013,6 +1108,7 @@ sk: Presuň vyššie
 sq: levize lart
 
 therion: Move file command up in the list.
+bg: Премести нагоре в списъка файла с команди
 cz: Přesune příkaz výš v seznamu příkazů.
 de: In der Liste nach oben schieben.
 el: Μετακίνηση αντικειμένου ψηλότερα στην λίστα. Χρήσιμο σε περίπτωση που είναι σε λάθος σκράπ το αντικείμενο.
@@ -1024,6 +1120,7 @@ sk: Presuň príkaz vyššie v zozname príkazov.
 sq: levize objektin lart ne liste. Perdor nese objekti eshte ne deponi te gabuar.
 
 therion: Move down
+bg: Надолу
 cz: Přesun níž
 de: Schiebe nach unten
 el: Μετακίνηση προς τα κάτω
@@ -1035,6 +1132,7 @@ sk: Presuň nižšie
 sq: levize poshte
 
 therion: Move file command down in the list.
+bg: Премести надолу в списъка файла с команди
 cz: Přesune příkaz níž v seznamu příkazů.
 de: In der Liste nach unten schieben.
 el: Μετακίνηση αντικειμένου χαμηλότερα στην λίστα. Χρήσιμο σε περίπτωση που είναι σε λάθος σκράπ το αντικείμενο.
@@ -1046,6 +1144,7 @@ sk: Presuň príkaz nižšie v zozname príkazov.
 sq: levize objektin poshte ne liste. Perdore nese objekti eshte ne deponi te gabuar.
 
 therion: Move file command to given position.
+bg: Премести файла с команди на указаната позиция
 cz: Přesunout příkaz na danou pozici v seznamu.
 de: Befehl an angegebene Position schieben.
 el: Μετακίνηση αντικειμένου σε συγκεκριμένη θέση (θέση = αριθμός σε κάθε σειρά).
@@ -1057,6 +1156,7 @@ sk: Presuň príkaz na danú pozíciu v zozname.
 sq: levize objektin ne pozicion te dhanun( pozicioni = numri ne secilen rjesht).
 
 therion: Select destination scrap and position in it.
+bg: Изберете местоназначението на скрап и позицията в него
 cz: Výběr cílového scrapu a pozice v něm.
 de: Zielskizze auswählen und positionieren.
 el: Επιλέξετε το σκραπ προορισμού και την θέση μέσα σε αυτό.
@@ -1068,6 +1168,7 @@ sk: Nastav cieľový scrap a pozíciu v ňom.
 sq: zgjedhe destinacionin per deponi dhe poziciono ne te.
 
 therion: Update text
+bg: Обнови текста
 cz: Aktualizovat
 de: Text aktualisieren
 el: Ανανέωση κειμένου
@@ -1079,6 +1180,7 @@ sk: Aktualizuj text
 sq: aktualizo tekstin
 
 therion: Press this button to save code you have written.
+bg: Натиснете този бутон за да запазите написаният код
 cz: Stiskněte toto tlačítko pro uložení Vámi zapsaného kódu.
 de: Diesen Knopf drücken, um Daten zu speichern.
 el: Πατήστε το κουμπί να αποθηκευτεί ο κώδικας που γράψατε
@@ -1090,6 +1192,7 @@ sk: Stlačte toto tlačítko pre uloženie Vami zapísaného kódu.
 sq: shtype kete buton ta ruajsh kodin te cilin e ke shkru.
 
 therion: Editor for free text in therion 2D file.
+bg: Редактор за произволен текст в 2D файла
 cz: Editor pro text ve 2D souborech.
 de: Editor für Freitext in Therion 2D Datei.
 el: Χρησιμοποιείτε τον επεξεργαστή αυτό για επεξεργασία αρχείων .th2
@@ -1101,6 +1204,7 @@ sk: Editor pre špeciálne príkazy v 2D súboroch.
 sq: perdore kete dritare per permiresim qe te modofikosh. Th2 arkivin.
 
 therion: expression
+bg: израз
 cz: výraz
 de: Muster
 el: αναζήτηση για
@@ -1112,6 +1216,7 @@ sk: výraz
 sq: kerko per
 
 therion: Enter search expression.
+bg: Въведете дума/и за търсене
 cz: Vložte hledaný výraz.
 de: Suchmuster eingeben.
 el: Εισαγωγή λέξεις για αναζήτηση
@@ -1123,6 +1228,7 @@ sk: Vložte hľadaný výraz.
 sq: fute fjalin qe do ta kerkosh.
 
 therion: regular expression
+bg: регулярен израз
 cz: regulární výraz
 de: Regulärer Ausdruck
 el: Χρήση μπαλαντέρ
@@ -1134,6 +1240,7 @@ sk: regulárny výraz
 sq: shprehje e rregullt
 
 therion: Search for regular expression.
+bg: Търсене по регулярен израз
 cz: Vyhledávání regulárního výrazu.
 de: Suche nach regulärem Ausdruck.
 el: Χρήση μπαλαντέρ στην αναζήτηση (σπή.* θα βρει σπήλαιο, σπήλαια, σπήκερ)
@@ -1145,6 +1252,7 @@ sk: Vyhľadávanie regulárneho výrazu.
 sq: kerko per shprehje te rregullt.
 
 therion: case sensitive
+bg: отчита се регистъра
 cz: rozlišovat velikost písmen
 de: Groß- und Kleinschreibung berücksichtigen
 el: case sensitive
@@ -1156,6 +1264,7 @@ sk: rozlišovať veľkosť
 sq: rast I ndjeshem-senzitiv
 
 therion: Case sensitive search.
+bg: Търсене с отчитане на регистъра
 cz: Vyhledávání s rozlišením velikosti písmen.
 de: Suche mit Groß- und Kleinbuchstaben.
 el: Αναζήτηση case sensitive
@@ -1167,6 +1276,7 @@ sk: Vyhľadávanie s rozlišovaním veľkých a malých písmen.
 sq: kerko rast senzitiv
 
 therion: Find next
+bg: следващ
 cz: Najít další
 de: Nächste Stelle finden
 el: Εύρεση επομένου
@@ -1178,6 +1288,7 @@ sk: Nasledujúci
 sq: gjeje tjetren me radhe
 
 therion: Select next object matching expression.
+bg: Избери следващият обект на търсенето
 cz: Vybere další objekt odpovídající výrazu.
 de: Nächstes Objekt auswählen, das auf Muster passt.
 el: Επιλογή επόμενου αντικείμενου που ταιριάζει στην αναζήτηση
@@ -1189,6 +1300,7 @@ sk: Nájdi ďalší objekt zodpovedajúci hľadanému výrazu.
 sq: zgjedhe objektin tjeter me radhe te shprehjes qe pershtatet
 
 therion: Find first
+bg: Намвери първият
 cz: Najít první
 de: Finde erstes
 el: Εύρεση πρώτου
@@ -1200,6 +1312,7 @@ sk: Nájdi prvý
 sq: kerko te parin
 
 therion: Select first object matching expression.
+bg: Избери първият обект на търсенето
 cz: Vybere první objekt odpovídající výrazu.
 de: Erstes Objekt finden, das auf Muster passt.
 el: Επιλογή πρώτου αντικείμενου που ταιριάζει στην αναζήτηση
@@ -1211,6 +1324,7 @@ sk: Nájdi prvý objekt zodpovedajúci hľadanému výrazu.
 sq: zgjedh objektin e pare te shprehjes qe pershtatet
 
 therion: Show all
+bg: Покажи всичко
 cz: Zobrazit vše
 de: Zeige alles
 el: Εμφάνιση όλων
@@ -1222,6 +1336,7 @@ sk: Označ všetky
 sq: tregoji te gjitha
 
 therion: Highlight all objects matching expression.
+bg: Освети всички обекти, съответстващи на търсенето
 cz: Zvýrazní všechny objekty odpovídající výrazu.
 de: Alle Objekte hervorheben, die auf Muster passen.
 el: Τόνωση όλων όσων ταιριάζουν στην αναζήτηση.
@@ -1233,6 +1348,7 @@ sk: Zvýrazní všetky objekty zodpovedajúce hľadanému výrazu.
 sq: zghedh te gjitha objektet qe pershtaten me shprehjen
 
 therion: Clear all
+bg: Изчисти всичко
 cz: Zruš výběr
 de: Alles löschen
 el: Αναίρεση όλων
@@ -1244,6 +1360,7 @@ sk: Zruš výber
 sq: fshij krejt
 
 therion: Clear highlighted objects.
+bg: Изчести осветяването на всички обекти
 cz: Zruší zvýraznění vybraných objektů.
 de: Hervorgehobene Objekte löschen.
 el: Αναίρεση των τονισθέντων
@@ -1255,6 +1372,7 @@ sk: Zruší zvýraznenie vybratých objektov.
 sq: fshij objektet e zgjedhura-te hijezuara
 
 therion: loading images module ...
+bg: зареждане на модула за изображения
 cz: nahrávám obrázkový modul ...
 de: Lade Bildmodul ...
 el: φορτίζεται η ενότητα εικόνων...
@@ -1266,6 +1384,7 @@ sk: nahrávam obrázkový modul...
 sq: duke lexuar modulin e imazhit…
 
 therion: Select background image.
+bg: Избери фоново изображение
 cz: Výběr podkladového obrázku.
 de: Wähle Hintergrundbild.
 el: Κάντε κλικ στον κατάλογο να επιλέξετε την εικόνα που αντιστοιχεί.
@@ -1277,6 +1396,7 @@ sk: Označ obrázok na pozadí.
 sq: kliko rreshtin ne liste qe te zgjedhesh imazhin qe pershtatet.
 
 therion: Insert new background image.
+bg: Вмъкни ново фоново изображение
 cz: Vložení nového podkladového obrázku.
 de: Neues Hintergrundbild einfügen.
 el: Εισαγωγή νέας εικόνας φόντου (π.χ. αρχείο .xvi ή ψηφιακό σχέδιο)
@@ -1288,6 +1408,7 @@ sk: Vloženie nového podkladového obrázku.
 sq: fute imazhin e ri ne prapavije (p.sh., . xvi imazhin apo vizatimin e skanuar).
 
 therion: Remove
+bg: Премахни
 cz: Odstranit
 de: Entferne
 el: Διαγραφή
@@ -1299,6 +1420,7 @@ sk: Odstrániť
 sq: hiqe
 
 therion: Remove selected image.
+bg: Премахни избраното изображение
 cz: Odstraní vybraný obrázek.
 de: Entferne ausgewähltes Bild.
 el: Διαγραφή επιλεγμένης εικόνας
@@ -1310,6 +1432,7 @@ sk: Odstráni označený obrázok.
 sq: hiqe imazhin e zgjedhur.
 
 therion: visibility
+bg: Покажи
 cz: viditelnost
 de: Sichtbarkeit
 el: ορατότητα
@@ -1321,6 +1444,7 @@ sk: viditeľnosť
 sq: shiqueshmeria-vizibiliteti
 
 therion: Switch image visibility.
+bg: Покажи/скрий изображение
 cz: Přepíná viditelnost obrázku.
 de: Bildsichtbarkeit umschalten.
 el: Αλλαγή ορατότητας εικόνας
@@ -1332,6 +1456,7 @@ sk: Prepínač viditeľnosti obrázku.
 sq: lesho shiqueshmerine-vizibilitetin e imazhit.
 
 therion: Control gamma value.
+bg: Управление на гамата
 cz: Nastavení hodnoty gamma.
 de: Gammawert einstellen.
 el: Ρυθμίσεις τιμών gamma.
@@ -1343,6 +1468,7 @@ sk: Nastavenie gamma korekcie obrázku (farebného podania).
 sq: kontrollo vleren-gamma
 
 therion: Reset
+bg: Възобнови
 cz: Reset
 de: Zurücksetzen
 el: Επαναφορά
@@ -1354,6 +1480,7 @@ sk: Reset
 sq: reseto
 
 therion: Reset image gamma value.
+bg: Възобнови настойките на гамата
 cz: Resetuje nastavenou hodnotu gamma.
 de: Gammawert zurücksetzen.
 el: Επαναφορά τιμής gamma της εικόνας.
@@ -1365,6 +1492,7 @@ sk: Resetuje nastavenú gamma korekciu obrázku.
 sq: kliko ketu qe te kthehesh prapa tek vlera origjinale-gamma.
 
 therion: Set image gamma value.
+bg: Определи гамата на изображението
 cz: Nastavuje hodnotu gamma obrázku.
 de: Setze Gammawert.
 el: Ορισμός τιμής gamma της εικόνας.
@@ -1376,6 +1504,7 @@ sk: Nastavuje gamma korekciu obrázku.
 sq: vendos vleren gamma te imazhit.
 
 therion: Current position of selected image.
+bg: Текуща позиция на избраното изображение
 cz: Současná pozice vybraného obrázku.
 de: Gegenwärtige Position des ausgewählten Bildes.
 el: Τρέχουσα θέση επιλεγμένης εικόνας
@@ -1387,6 +1516,7 @@ sk: Súčasná pozícia obrázku.
 sq: pozicioni momental I imazhit te zgjedhur(pikat apo pikselat prej pelhures kendi I poshtem I majte).
 
 therion: Move to
+bg: Премести
 cz: Přesunout
 de: Verschiebe nach
 el: Μετακίνηση προς
@@ -1398,6 +1528,7 @@ sk: Presuň na
 sq: levize tek
 
 therion: Move image to given position.
+bg: Премести изображението на указаната позиция
 cz: Přesune obrázek na zadanou pozici.
 de: Verschiebe Bild an angegebene Position.
 el: Μετακίνηση εικόνας στην προσδιορισμένη θέση (η πάνω αριστερά γωνία θα είναι στο δεδομένο πίξελ)
@@ -1409,6 +1540,7 @@ sk: Presunie obrázok na zadanú pozíciu.
 sq: levize imazhin ne poziten e dhene(kendi I eperm I majte I imazhit do te jete ne pikselin e japur).
 
 therion: New X coordinate of image.
+bg: Нова Х координата на изображението
 cz: Nová souřadnice X obrázku.
 de: Neue X-Koordinate des Bildes.
 el: Νέα συντεταγμένη Χ εικόνας
@@ -1420,6 +1552,7 @@ sk: Nová X súradnica obrázku.
 sq: X-koordinata e re e imazhit
 
 therion: New Y coordinate of image.
+bg: Нова Y координата на изображението
 cz: Nová souřadnice Y obrázku.
 de: Neue Y-Koordinate des Bildes.
 el: Νέα συντεταγμένη Υ εικόνας
@@ -1431,6 +1564,7 @@ sk: Nový Y súradnica obrázku.
 sq: koordinata Y e re e imazhit.
 
 therion: Move front
+bg: Премести отпред
 cz: Dopředu
 de: Nach vorne verschieben
 el: Μετακίνηση προς τα μπρος
@@ -1442,6 +1576,7 @@ sk: Navrch
 sq: levize perpara
 
 therion: Move image in front of all images.
+bg: Премести изображението пред всички останали.
 cz: Přesune obrázek nad všechny ostatní.
 de: Bild ganz nach vorne verschieben.
 el: Μετακίνηση εικόνας στην κορυφή
@@ -1453,6 +1588,7 @@ sk: Presunie obrázok nad všetky ostatné.
 sq: levize imazhin para te gjitha imazheve.
 
 therion: Move back
+bg: Премести назад
 cz: Dozadu
 de: Nach hinten verschieben
 el: Μετακίνηση προς τα πίσω
@@ -1464,6 +1600,7 @@ sk: Naspodok
 sq: levize prapa
 
 therion: Move image behind all images.
+bg: Премести изображението отзад останалите
 cz: Přesune obrázek pod všechny ostatní.
 de: Bild ganz nach hinten verschieben.
 el: Μετακίνηση της εικόνας στο φόντο
@@ -1475,6 +1612,7 @@ sk: Presunie obrázok pod všetky ostatné.
 sq: levize imazhin prapa te gjitha imazheve.
 
 therion: loading preview module ...
+bg: зареждане на модула за предварителен преглед ...
 cz: nahrávám zobrazovací modul ...
 de: Lade Vorschaumodul ...
 el: Φορτίζεται η ενότητα προεπισκόπισης...
@@ -1486,6 +1624,7 @@ sk: nahrávam náhľadový modul ...
 sq: duke lexuar modulin e perkohshem…
 
 therion: Update command
+bg: Обнови командата
 cz: Aktualizovat
 de: Kommando aktualisieren
 el: Ανανέωση
@@ -1497,6 +1636,7 @@ sk: Aktualizovať
 sq: urdheri-komanda e aktualizimit
 
 therion: Press this button, if you have changed something and you can not see your changes here.
+bg: Натиснете този бутон, ако сте направили промени и не ги виждате тук.
 cz: Stiskněte toto tlačítko, pokud jste něco změnili a změny nejsou v tomto okně viditelné.
 de: Drücke diesen Knopf, falls du etwas geändert hast und die Änderungen nicht hier sehen kannst.
 el: Πατήστε εδώ αν αλλάξατε κάτι και δεν εμφανίζονται εδώ οι αλλαγές.
@@ -1508,6 +1648,7 @@ sk: Stlačte toto tlačítko, ak ste niečo zmenili a zmeny nie su v tomto okne 
 sq: shtype kete buton, nese ke ndryshuar diqka te cilin ndryshim nuk mund ta shohesh ketu.
 
 therion: Command preview.
+bg: Преглед на командата.
 cz: Náhled příkazu.
 de: Kommando Vorschau.
 el: Εδώ βλέπετε ολοκληρωμένες εντολές με εφαρμογή επιλογών.
@@ -1519,6 +1660,7 @@ sk: Náhľad príkazu.
 sq: ketu mund te shohesh komandat komplete me opcionet e vendosura.
 
 therion: loading scrap module ...
+bg: Зареждане на скрап модула ...
 cz: nahrávám scrap modul ...
 de: Lade Skizzenmodul ...
 el: φορτίζεται η ενότητα των σκραπ...
@@ -1530,6 +1672,7 @@ sk: nahrávam scrap modul ...
 sq: duke lexuar modulin e deponise…
 
 therion: Scrap name.
+bg: Име на скрап.
 cz: Název scrapu.
 de: Skizzenname.
 el: Όνομα σκραπ
@@ -1541,6 +1684,7 @@ sk: Identifikátor (meno) scrapu.
 sq: emri I deponise.
 
 therion: projection
+bg: проекция
 cz: projekce
 de: Projektion
 el: προβολή
@@ -1552,6 +1696,7 @@ sk: projekcia
 sq: projekcioni
 
 therion: Scrap projection.
+bg: Проекция на скрапа.
 cz: Projekce scrapu.
 de: Skizzenprojektion
 el: Προβολή σκραπ (κλικ στο τρίγωνο για μενού)
@@ -1563,6 +1708,7 @@ sk: Projekcia scrapu.
 sq: projeksioni I deponise (kliko ne trekendesh te shohesh menyne).
 
 therion: Other scrap options.
+bg: Други опции на скрапа.
 cz: Další volby pro scrap.
 de: Andere Skizzenoptionen.
 el: Άλλες επιλογές των σκραπ - βλέπετε το thbook.pdf
@@ -1574,6 +1720,7 @@ sk: Ostatné možnosti scrapu.
 sq: opcionet tjera te deponise (me shume per kete ne librin e therion-it.pdf)
 
 therion: Scale
+bg: Мащаб
 cz: Měřítko
 de: Maßstab
 el: Κλίμακας
@@ -1583,6 +1730,7 @@ sk: Mierka
 sq: matesi
 
 therion: Scrap scaling - push to click picture calibration points.
+bg: Мащабиране на скрапа - натиснете този бутон и поставете с мишката точка за мащабиране в/у скрапа.
 cz: Škálování scrapu - stiskni pro výběr kalibračních bodů obrázku.
 de: Skizze skalieren - drücken um Bildeinstellungspunkte zu klicken.
 el: Καλιπράρισμα σκραπ - κάντε κλικ για να επιλέξετε τα σημεία για καλιμπράρισμα.
@@ -1592,6 +1740,7 @@ sk: Škálovanie scrapu - po stlačení klikni na škálovacie body.
 sq: matja e deponise-shtyp te klikosh pikat kalibruese te fotos.
 
 therion: Update scrap
+bg: Обнови скрапа
 cz: Aktualizovat
 de: Skizze aktualisieren
 el: Ενημέρωση σκραπ
@@ -1603,6 +1752,7 @@ sk: Aktualizuj scrap
 sq: aktualizo deponine
 
 therion: Press this button to apply your changes to current scrap.
+bg: Натиснете този бутон за да приложите промените в/у текущия скрап.
 cz: Stiskněte toto tlačítko po uplatnění změn aktuálního scrapu.
 de: Drücke diesen Knopf, um deine Änderungen auf diese Skizze anzuwenden.
 el: Πατήστε εδώ για να γίνει εφαρμογή των αλλαγών σας στο τρέχον σκραπ.
@@ -1614,6 +1764,7 @@ sk: Stlačte tento gombík, aby sa vaše zmeny v scrape uložili.
 sq: shtype kete buton qe te besh ndrimet ne deponine momentale.
 
 therion: picture scale points
+bg: мащабиращи точки за изображение
 cz: body měřítka (obrázek)
 de: Bildskalierungspunkte
 el: σημεία για καλιμπράρισμα (πίξελ)
@@ -1625,6 +1776,7 @@ sk: kalibračné body (obrazovka)
 sq: pikat matese te fotos-pikselat
 
 therion: Calibration points on the picture (X1:Y1 - X2:Y2).
+bg: Калибриращи точки на изображение (X1:Y1 - X2:Y2)
 cz: Kalibrační body na obrázku (X1:Y1 - X2:Y2).
 de: Kalibrierungspunkte auf dem Bild (X1:Y1 - X2:Y2).
 el: Σημεία καλιμπραρίσματος στην εικόνα (Χ1:Υ1 - Χ2:Υ2).
@@ -1636,6 +1788,7 @@ sk: Súradnice kalibračných bodov na obrazovke (X1:Y1 - X2:Y2)
 sq: pikat e kalibrimit ne foto (X1:Y1 - X2:Y2)
 
 therion: X1 picture.
+bg: X1 на изображение
 cz: X1 obrázek.
 de: X1 Bild.
 el: Χ1 εικόνας
@@ -1647,6 +1800,7 @@ sk: X1 na obrázku.
 sq: x1 fotoja
 
 therion: Y1 picture.
+bg: Y1 на изображение
 cz: Y1 obrázek.
 de: Y1 Bild.
 el: Υ1 εικόνας
@@ -1658,6 +1812,7 @@ sk: Y1 na obrázku.
 sq: Y1 fotoja
 
 therion: X2 picture.
+bg: X2 на изображение
 cz: X2 obrázek.
 de: X2 Bild.
 el: Χ2 εικόνας
@@ -1669,6 +1824,7 @@ sk: X2 na obrázku.
 sq: X2 fotoja
 
 therion: Y2 picture.
+bg: Y2 на изображение
 cz: Y2 obrázek.
 de: Y2 Bild.
 el: Υ2 εικόνας
@@ -1680,6 +1836,7 @@ sk: Y2 na obrázku.
 sq: Y2 fotoja
 
 therion: real scale points
+bg: реални мащабиращи точки
 cz: body měřítka (skutečné)
 de: Punkte für Realmaßstab
 el: πραγματικά σημεία για καλιμπράρισμα
@@ -1691,6 +1848,7 @@ sk: kalibračné body (skutočné)
 sq: pikat reale te matjes
 
 therion: Real coordinates of calibration points (X1:Y1 - X2:Y2).
+bg: Реални координати на калибриращите точки (X1:Y1 - X2:Y2).
 cz: Skutečné souřadnice kalibračních bodů (X1:Y1 - X2:Y2).
 de: Realkoordinaten der Kalibrierungspunkte (X1:Y1 - X2:Y2).
 el: Πραγματικές συντεταγμένες σημείων καλιμπραρίσματος (Χ1:Υ1 - Χ2:Υ2)
@@ -1702,6 +1860,7 @@ sk: Skutočné súradnice kalibračných bodov (X1:Y1 - X2:Y2).
 sq: koordinatat reale te pikave te kalibrimit (X1:Y1 - X2:Y2).
 
 therion: X1 real.
+bg: X1 реално.
 cz: X1 skutečný.
 el: Πραγματικό Χ1.
 en: X1 real.
@@ -1712,6 +1871,7 @@ sk: X1 skutočný
 sq: X1 I vertet-real
 
 therion: Y1 real.
+bg: Y1 реално.
 cz: Y1 skutečný.
 el: Πραγματικό Υ1.
 en: Y1 real.
@@ -1722,6 +1882,7 @@ sk: Y1 skutočný
 sq: Y1 I vertet-real
 
 therion: X2 real.
+bg: X2 реално.
 cz: X2 skutečný.
 el: Πραγματικό Χ1.
 en: X2 real.
@@ -1732,6 +1893,7 @@ sk: X2 skutočný
 sq: X2 I vertet-real
 
 therion: Y2 real.
+bg: Y2 реално.
 cz: Y2 skutečný.
 el: Πραγματικό Υ2
 en: Y2 real.
@@ -1742,6 +1904,7 @@ sk: Y2 skutočný
 sq: Y2 I vertet-real
 
 therion: units
+bg: единици
 cz: jednotky
 de: Einheiten
 el: μονάδες
@@ -1753,6 +1916,7 @@ sk: jednotky
 sq: njesite
 
 therion: Units of real coordinates.
+bg: Единици на реалните координати.
 cz: Jednotky reálných souřadnic.
 de: Einheiten der Realkoordinaten.
 el: Μονάδες πραγματικών συντεταγμένων.
@@ -1764,6 +1928,7 @@ sk: Jednotky reálnych súradníc.
 sq: njesite e koordinatave te verteta.
 
 therion: background sketches
+bg: Фонова скица.
 cz: náčrtky na pozadí
 de: Hintergrundskizzen
 el: Σχέδια του φόντου
@@ -1773,6 +1938,7 @@ sk: náčrtky na pozadí.
 sq: skicat e prapavise.
 
 therion: List of image files used as scrap background.
+bg: Списък на графични файлове, използвани за фонови изображения на скрапа.
 cz: Seznam obrázků použitých jako pozadí scrapu
 de: Liste der als Hintergrund verwendeten Bilder.
 el: Κατάλογος αρχείων εικόνων που χρησιμοποιούνται ως φόντο του σκραπ
@@ -1782,6 +1948,7 @@ sk: Zoznam obrázkov použitých ako pozadie.
 sq: lista e foto-arkivit te perdorura si prapavije e deponise.
 
 therion: Press this button to insert sketch by clicking on it.
+bg: Натиснете този бутон, за да вмъкнете скица, като кликнете върху нея.
 cz: Stiskněte toto tlačítko a výběrem náčrtku myší jej vložte do scrapu.
 de: Diesen Knopf drücken um Skizze einzufügen.
 el: Πατήστε εδώ για εισαγωγή σχεδίου με ποντίκι
@@ -1791,6 +1958,7 @@ sk: Po stlačení klikni na náčrtok, ktorý treba vložiť do scrapu.
 sq: shtype kete buton te fusesh skicen duke klikuar ne te.
 
 therion: Delete sketch from scrap.
+bg: Изтрий скица от скрапа.
 cz: Odstranit náčrtek ze scrapu
 de: Lösche Skizze.
 el: Διαγραφή σχεδίου από σκραπ
@@ -1800,6 +1968,7 @@ sk: Odstráň náčrtok zo scrapu.
 sq: fshije skicen nga deponia
 
 therion: loading point module ...
+bg: зареждане на модула за точки ...
 cz: nahrávám point modul ...
 de: Lade Punktmodul ...
 el: φόρτιση ενότητας σημείων…
@@ -1811,6 +1980,7 @@ sk: nahrávam editor bodov ...
 sq: duke lexuar modulin e pikes…
 
 therion: Update point
+bg: Обнови точка
 cz: Aktualizovat
 de: Punkt aktualisieren
 el: Ενημέρωση σημείου
@@ -1822,6 +1992,7 @@ sk: Akualizuj bod
 sq: pika e aktualizimit
 
 therion: Click this button to apply point changes.
+bg: натиснете този бутон за прилагане на измененията в/у точката.
 cz: Aktualizuje data týkající se bodu.
 de: Klicke diesen Knopf, um Änderungen am Punkt anzuwenden.
 el: Κάντε κλικ για να γίνει εφαρμογή των αλλαγών που κάνατε στα σημεία
@@ -1833,6 +2004,7 @@ sk: Stlačte aby sa aktualizovali zmenené údaje bodu.
 sq: kliko kete buton te aktualizosh nderrimet e pikes.
 
 therion: Point type.
+bg: Тип на точката.
 cz: Typ bodu.
 de: Punkttyp.
 el: Είδος σημείου
@@ -1844,6 +2016,7 @@ sk: Typ bodu.
 sq: lloji I pikave (kliko ne trekendesh te shohesh menun).
 
 therion: Point identifier.
+bg: Индетификатор на точката.
 cz: Identifikátor bodu.
 de: Punktbezeichner.
 el: ID σημείου
@@ -1855,6 +2028,7 @@ sk: Identifikátor bodu.
 sq: identifikuesi I pikes.
 
 therion: Other point options.
+bg: Други опции на точката.
 cz: Další volby pro bod.
 de: Andere Punktoptionen.
 el: Άλλες επιλογές για σημεία
@@ -1866,6 +2040,7 @@ sk: Ostatné špecifikácie bodu.
 sq: opcionet tjera te pikes.
 
 therion: I.e, if type is label, write here: -text \042this will be displayed (P100)\042
+bg: Например, ако типът на точката е label (етикет), тук можете да въведете: -text \042 , това ще изобрази: (P100)\042
 cz: Příklad: pokud type je label, zadejte: -text \042this will be displayed (P100)\042
 de: d.h., wenn der Typ Beschriftung ist, schreibe hier: -text \042das wird hier angezeigt (P100)\042
 el: Δηλαδή, αν το είδος είναι ταμπέλα, εδώ γράφετε: -text \042αυτό εμφανίζεται (P100)\042
@@ -1877,6 +2052,7 @@ sk: Príklad: ak je typ label, zadajte: -text \042tento text bude zobrazený\042
 sq: p.sh. nese lloji eshte etikete, shkruaj ketu: -teksti \042 kjo do te lajmerohet (P100)\042
 
 therion: Enter symbol orientation angle.
+bg: Въведете ориентация на символа.
 cz: Zadejte orientaci bodu.
 de: Winkel der Symbolausrichtung angeben.
 el: Εισαγωγή γωνίας προσανατολισμού σύμβολου.
@@ -1888,6 +2064,7 @@ sk: Zadajte orientáciu bodu.
 sq: fute simbolin e kendit te orientimit.
 
 therion: There are symbol types which must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard.
+bg: Някои типове символи трябва да бъдат ориентирани (например gradient). Натиснете тук за да им дадете направление с помощта на мишката или клавиатурата.
 cz: Jsou symboly, kterým musíte specifikovat orientaci (např. gradient). Zaklikněte tuto volbu a nastavte jim orientaci myší nebo z klávesnice.
 de: Es gibt Symbole, die eine Ausrichtung haben müssen (z.B. Gefälle). Klicke hier, um sie mit der Maus oder der Tastatur auszurichten.
 el: Κάποια είδη συμβόλων πρέπει να προσανατολιστούν (π.χ. κλίσεις). Κάντε κλικ εδώ να ορισθεί ο προσανατολισμός είτε από το πληκτρολόγιο είτε με το ποντίκι.
@@ -1899,6 +2076,7 @@ sk: Sú symboly, ktorým treba zadať orientáciu (napr. gradiet). Označte tút
 sq: disa lloje te simboleve duhet te orientohen (p.sh.:gradienti). Kliko ketu qe ti orientosh me mi apo tastature.
 
 therion: x-size
+bg: х-размер
 cz: x-rozsah
 de: x-Größe
 el: μέγεθος x
@@ -1910,6 +2088,7 @@ sk: veľkosť-x
 sq: madhesia-X
 
 therion: Set point size in main direction.
+bg: Укажете размера на точката в главното направление.
 cz: Nastaví rozsah bodu v hlavním směru.
 de: Setze Punktgröße in Hauptrichtung.
 el: Ορισμός πλευρικού μεγέθους σημείου
@@ -1921,6 +2100,7 @@ sk: Nastavte veľkosť bodu v hlavnom (X) smere.
 sq: vene madhesine e pikes ne drejtimin kryesor.
 
 therion: Enter point size in main direction.
+bg: Въведете размера на точката в главното направление.
 cz: Zadejte rozsah bodu v hlavním směru.
 de: Punktgröße in Hauptrichtung eingeben.
 el: Εισαγωγή πλευρικού μεγέθους σημείου
@@ -1932,6 +2112,7 @@ sk: Zadajte veľkosť bodu v hlavnom (X) smere.
 sq: fute madhesine e pikes ne drejtimin kryesor.
 
 therion: y-size
+bg: y-размер
 cz: y-rozsah
 de: y-Größe
 el: μέγεθος y
@@ -1943,6 +2124,7 @@ sk: veľkosť-y
 sq: madhesia-Y
 
 therion: Set point size in side direction.
+bg: Укажете размера на точката в обратното направление.
 cz: Nastaví rozsah bodu ve vedlejším směru.
 de: Setze Punktgröße in seitlicher Richtung.
 el: Ορισμός πλευρικού μεγέθους σημείου
@@ -1954,6 +2136,7 @@ sk: Nastavte veľkosť bodu vo vedľajšom smere.
 sq: vene madhesine e pikes ne drejtim anesore.
 
 therion: Enter point size in side direction.
+bg: Въведете размера на точката в обратното направление.
 cz: Zadejte rozsah bodu ve vedlejším směru.
 de: Punktgröße in seitlicher Richtung eingeben.
 el: Εισαγωγή πλευρικού μεγέθους σημείου
@@ -1965,6 +2148,7 @@ sk: Zadajte veľkosť bodu vo vedľajšom smere.
 sq: fute madhesine e pikes ne drejtim anesore.
 
 therion: loading line module ...
+bg: зареждане на модула за линии ...
 cz: nahrávám křivkový modul ...
 de: Lade Linienmodul ...
 el: φόρτιση ενότητας γραμμών...
@@ -1976,6 +2160,7 @@ sk: nahrávam modul kriviek ...
 sq: duke lexuar modulin e rrjeshtit…
 
 therion: Line type.
+bg: Тип на линия.
 cz: Typ křivky.
 de: Linientyp.
 el: Είδος γραμμής
@@ -1987,6 +2172,7 @@ sk: Typ krivky.
 sq: lloji I rrjeshtit.
 
 therion: id
+bg: id - индетификатор
 cz: id
 de: id
 el: ID
@@ -1998,6 +2184,7 @@ sk: id
 sq: ID-identifikimi
 
 therion: Line identifier.
+bg: Индетификатор на линия
 cz: Identifikátor křivky.
 de: Linienbezeichner.
 el: ID γραμμής.
@@ -2009,6 +2196,7 @@ sk: Identifikátor krivky.
 sq: identifikimi I rrjeshtit.
 
 therion: Other line options.
+bg: Други опции на линията
 cz: Další volby pro křivku.
 de: Andere Linienoptionen.
 el: Άλλες επιλογές γραμμής. Δηλαδή για μη-εμφάνιση γραμμής γράφετε εδώ: -subtype invisible. Βλέπετε το thbook.pdf
@@ -2020,6 +2208,7 @@ sk: Ďalšie možnosti pre krivku.
 sq: opcionet tjera te rrjeshtit.
 
 therion: reverse
+bg: обратна
 cz: obrátit
 de: Umkehren
 el: αναστροφή
@@ -2031,6 +2220,7 @@ sk: otočiť
 sq: ktheje pas
 
 therion: Reverse line.
+bg: Обърни линията
 cz: Obrátit křivku.
 de: Linie umkehren.
 el: Αναστροφή γραμμής. Σε περίπτωση που τα σημαδάκια είναι ανάποδα, κάντε κλικ εδώ.
@@ -2042,6 +2232,7 @@ sk: Otočiť krivku.
 sq: rrjeshti I pasem-I kthyer
 
 therion: close
+bg: затвори
 cz: zavřít
 de: schließen
 el: κλείσιμο
@@ -2053,6 +2244,7 @@ sk: zavrieť
 sq: mbylle
 
 therion: Close line.
+bg: Затвори линията с началото и.
 cz: Uzavřít křivku.
 de: Linie schließen.
 el: Κλείσιμο γραμμής
@@ -2064,6 +2256,7 @@ sk: Uzavrieť krivku.
 sq: mbylle rrjeshtin.
 
 therion: Edit line
+bg: Редактирай линия
 cz: Editovat
 de: Linie bearbeiten
 el: Επεξεργασία γραμμής
@@ -2075,6 +2268,7 @@ sk: Upraviť
 sq: permireso rrjeshtin
 
 therion: Insert/delete line point. Split line.
+bg: Вмъкване/триене на точка. Разделяне на линия.
 cz: Vložení/smazání bodu křivky. Rozdělení křivky.
 de: Punkt auf Linie eingeben/löschen. Linie teilen.
 el: Εισαγωγή και διαγραφή σημείων γραμμής. Διαίρεση γραμμής.
@@ -2086,6 +2280,7 @@ sk: Vloženie/odstránenie bodu krivky. Rozdelenie krivky.
 sq: fute/fshije piken e rrjeshtit. Ndaje rrjeshtin.
 
 therion: Click this button to apply line changes.
+bg: Натиснете този бутон за да приложите измененията на линията.
 cz: Aktualizuje křivku.
 de: Klicke diesen Knopf, um Linienänderungen anzuwenden.
 el: Κάντε κλικ για να γίνει εφαρμογή των αλλαγών στην γραμμή.
@@ -2097,6 +2292,7 @@ sk: Aktualizuje krivku.
 sq: kliko kete buton te aktualizosh nderrimet e rrjeshtit.
 
 therion: Select line point.
+bg: Избери една от точките на линията.
 cz: Výběr bodu křivky.
 de: Punkt auf Linie auswählen.
 el: Αυτά είναι τα επιλεγμένα σημεία γραμμών. Κάντε κλικ σε όποιο σας ενδιαφέρει για να εμφανιστεί ως επιλεγμένο στον καμβά.
@@ -2108,6 +2304,7 @@ sk: Výber bodu krivky.
 sq: selekto piken e rrjeshtit.
 
 therion: loading line point module ...
+bg: зареждане на модула линейни точки ...
 cz: nahrávám modul pro body křivky ...
 de: Lade Linienpunktmodul ...
 el: φόρτιση ενότητας σημείων γραμμών...
@@ -2119,6 +2316,7 @@ sk: nahrávam modul pre body krivky ...
 sq: duke lexuar modulin e pikes se rrjeshtit.
 
 therion: position
+bg: позиция
 cz: pozice
 de: Position
 el: θέση
@@ -2130,6 +2328,7 @@ sk: poloha
 sq: pozicioni
 
 therion: Point position.
+bg: Позиция на точката.
 cz: Pozice bodu.
 de: Punktposition.
 el: Θέση σημείου
@@ -2141,6 +2340,7 @@ sk: Poloha bodu.
 sq: pozicioni I pikes.
 
 therion: Point X coordinate.
+bg: X координата на точката.
 cz: souřadnice X bodu.
 de: Punkt X-Koordinate.
 el: Συντεταγμένη Χ σημείου
@@ -2152,6 +2352,7 @@ sk: X súradnica bodu.
 sq: pika X e koordinates.
 
 therion: Point Y coordinate.
+bg: Y координата на точката.
 cz: souřadnice Y bodu.
 de: Punkt Y-Koordinate.
 el: Συντεταγμένη Υ σημείου
@@ -2163,6 +2364,7 @@ sk: Y súradnica bodu.
 sq: pika Y e koordinates.
 
 therion: Previous control point X coordinate.
+bg: X координата на предишната управляваща точка.
 cz: Souřadnice X předchozího řídícího bodu.
 de: Vorherige X-Koordinate eines Kontrollpunkts.
 el: Συντεταγμένη Χ προηγούμενου σημείου ελέγχου
@@ -2174,6 +2376,7 @@ sk: X súradnica predchádzajúceho kontrolného bodu.
 sq: pika e kontrollit te meparshem te koordinates X
 
 therion: Previous control point Y coordinate.
+bg: Y координата на предишната управляваща точка.
 cz: Souřadnice Y předchozího řídícího bodu.
 de: Vorherige Y-Koordinate eines Kontrollpunkts.
 el: Συντεταγμένη Υ προηγούμενου σημείου ελέγχου
@@ -2185,6 +2388,7 @@ sk: Y súradnica predchádzajúceho kontrolného bodu.
 sq: pika e kontrollit te meparshem te koordinates-Y
 
 therion: Next control point X coordinate.
+bg: X координата на следващата управляваща точка.
 cz: Souřadnice X následujícího řídícího bodu.
 de: Nächste X-Koordinate eines Kontrollpunkts.
 el: Συντεταγμένη Χ επόμενου σημείου ελέγχου
@@ -2196,6 +2400,7 @@ sk: X súradnica nasledujúceho kontrolného bodu.
 sq: pika e ardhshme kontrollit te coordinates X
 
 therion: Next control point Y coordinate.
+bg: Y координата на следващата управляваща точка.
 cz: Souřadnice Y následujícího řídícího bodu.
 de: Nächste Y-Koordinate eines Kontrollpunkts.
 el: Συντεταγμένη Υ επόμενου σημείου ελέγχου
@@ -2207,6 +2412,7 @@ sk: Y súradnica nasledujúceho kontrolného bodu.
 sq: pika e ardhshme kontrollit te coordinates Y
 
 therion: Checkbox whether to use previous control point.
+bg: Поставете отбелязка за използване на предишната управляваща точка.
 cz: Zaškrtněte pokud chcete pro tvar křivky použít předchozí řídící bod.
 de: Auswahl, ob vorheriger Kontrollpunkt benutzt wird.
 el: Επιλογή για χρήση προηγούμενου σημείου ελέγχου
@@ -2218,6 +2424,7 @@ sk: Použi predchádzajúci kontrolný bod.
 sq: kutia-kontrollit a duhet te perdoret pika e kontrollit e meparshme
 
 therion: smooth
+bg: изглаждане
 cz: uhladit
 de: geglättet
 el: απαλή
@@ -2229,6 +2436,7 @@ sk: vyhladiť
 sq: e bute
 
 therion: Set line to be smooth in given point.
+bg: Установете за изглаждане на линията в дадената точка.
 cz: Nastaví hladkou křivku v daném bodě.
 de: Setze Linie auf geglättet am gegebenen Punkt.
 el: Ορισμός απαλής καμπύλης στο επόμενο σημείο της γραμμής
@@ -2240,6 +2448,7 @@ sk: Nastaví kontrolné body tak, aby krivka bola v danom bode hladká.
 sq: vene rrjeshtin per te qene I bute ne piken e dhanun
 
 therion: Checkbox whether to use next control point.
+bg: Поставете отбелязка за използване на следващата управляваща точка.
 cz: Zaškrtněte pokud chcete pro tvar křivky použít následující řídící bod.
 de: Auswahl, ob nächster Kontrollpunkt benutzt wird.
 el: Επιλογή για χρήση επόμενου σημείου ελέγχου
@@ -2251,6 +2460,7 @@ sk: Použi nasledujúci kontrolný bod.
 sq: kutia-kontrollit a duhet te perdoret pika e kontrollit e ardhshme
 
 therion: orientation
+bg: ориентация
 cz: orientace
 de: Ausrichtung
 el: προσανατολισμός
@@ -2262,6 +2472,7 @@ sk: orientácia
 sq: orientimi
 
 therion: Set line point orientation.
+bg: Укажете ориентацията на точка на линията.
 cz: Nastaví orientaci bodu.
 de: Setze Ausrichtung des Linienpunkts.
 el: Ορισμός προσανατολισμού σημείου γραμμής
@@ -2273,6 +2484,7 @@ sk: Nastaví orientáciu symbolov v bode krivky.
 sq: vene orientimin e pikes se rrjeshtit
 
 therion: Enter line point orientation.
+bg: Въведете ориентацията на точка на линията.
 cz: Zadejte orientaci bodu.
 de: Ausrichtung des Linienpunkts eingeben.
 el: Εισαγωγή προσανατολισμού σημείου γραμμής
@@ -2284,6 +2496,7 @@ sk: Zadaj orientáciu symbolov v bode krivky.
 sq: fute orientimin e pikes se rrjeshtit
 
 therion: r-size
+bg: r-размер
 cz: p-rozsah
 de: r-Größe
 el: διάσταση (δ)
@@ -2295,6 +2508,7 @@ sk: rozmer-p
 sq: r-madhesia
 
 therion: Set line size in right direction.
+bg: Укажете размера на линията в направление надясно.
 cz: Nastaví rozsah křivky v pravém směru.
 de: Setze Liniengröße nach rechts.
 el: Ορισμός διάστασης γραμμής προς τα δεξιά
@@ -2306,6 +2520,7 @@ sk: Nastaví veľkosť symbolov napravo od krivky.
 sq: cakto madhesine e rrjeshtit ne drejtim te djathte
 
 therion: Enter line size in right direction.
+bg: Въведете размера на линията в направление надясно.
 cz: Zadejte rozsah křivky v pravém směru.
 de: Liniengröße nach rechts eingeben.
 el: Εισαγωγή διάσταση γραμμής προς τα δεξιά
@@ -2317,6 +2532,7 @@ sk: Zadaj veľkosť symbolov napravo od krivky.
 sq: fute madhesine e rjeshtit ne drejtim te djathte
 
 therion: l-size
+bg: l-размер
 cz: l-rozsah
 de: l-Größe
 el: διάσταση (α)
@@ -2328,6 +2544,7 @@ sk: rozmer-ľ
 sq: madhesia-l
 
 therion: Set line size in left direction.
+bg: Укажете размера на линията в направление наляво.
 cz: Nastaví rozsah křivky v levém směru.
 de: Setze Liniengröße nach links.
 el: Ορισμός διάστασης γραμμής προς τα αριστερά
@@ -2339,6 +2556,7 @@ sk: Nastaví veľkosť symbolov naľavo od krivky.
 sq: cakto madhesine e rjeshtit ne drejtim te majte
 
 therion: Enter line size in left direction.
+bg: Въведете размера на линията в направление наляво.
 cz: Zadejte rozsah křivky v levém směru.
 de: Liniengröße nach links eingeben.
 el: Εισαγωγή διάσταση γραμμής προς τα αριστερά
@@ -2350,6 +2568,7 @@ sk: Zadaj veľkosť symbolov naľavo od krivky.
 sq: fute madhesine e rjeshtit ne drejtim te majte
 
 therion: Line point options editor.
+bg: Редактор на опциите на точка на линията.
 cz: Volby bodu křivky.
 de: Linienpunktoptionen bearbeiten.
 el: Επεξεργαστής επιλογών σημείων γραμμών
@@ -2361,6 +2580,7 @@ sk: Editor ďalších možností bodu krivky.
 sq: opcioni I editimit te pikes se rjeshtit
 
 therion: Click this button to apply line point changes.
+bg: Натисмете този бутон за прилагане на промените в/у точка на линията.
 cz: Aktualizovat bod křivky.
 de: Klicke diesen Knopf, um Änderungen am Linienpunkt anzuwenden.
 el: Πατήστε εδώ για να γίνει εφαρμογή των αλλαγών στο σημείο της γραμμής.
@@ -2372,6 +2592,7 @@ sk: Aktializácia bodu krivky.
 sq: kliko kete buton per te bere ndrimet e pikes se rjeshtit
 
 therion: Editor for line point options.
+bg: Редактор за опциите на точка на линията.
 cz: Editor voleb bodu křivky.
 de: Edditor für Linienpunktoptionen.
 el: Εδώ μπορείτε να εισάγετε επιλογές για τα σημεία των γραμμών.
@@ -2383,6 +2604,7 @@ sk: Editor ďalších možností bodu krivky.
 sq: ketu mund te futni opcionet te cilat do te vlejne per pikat e rrjeshtit
 
 therion: loading area module ...
+bg: зареждане на модула за области ...
 cz: nahrávám modul pro oblasti ...
 de: Lade Flächenmodul ...
 el: φορτίζεται η ενότητα επιφανειών...
@@ -2394,6 +2616,7 @@ sk: nahrávam modul pre plochy ...
 sq: duke lexuar modulin e fushes…
 
 therion: Actual symbol theme.
+bg: Актуален набир на символи
 cz: Aktuální téma symbolů.
 de: Aktueller Symbolsatz.
 el: Σύμβολο
@@ -2403,6 +2626,7 @@ sk: Aktuálna téma symbolov.
 sq: tema aktuale e simbolit.
 
 therion: type
+bg: тип
 cz: typ
 de: Typ
 el: είδος
@@ -2414,6 +2638,7 @@ sk: typ
 sq: lloji
 
 therion: Area type.
+bg: Тип на областта
 cz: Typ oblasti.
 de: Flächentyp.
 el: Είδος επιφάνειας
@@ -2425,6 +2650,7 @@ sk: Typ plochy.
 sq: lloji I fushes.
 
 therion: options
+bg: опции
 cz: volby
 de: Optionen
 el: επιλογές
@@ -2436,6 +2662,7 @@ sk: možnosti
 sq: opcionet
 
 therion: Other area options.
+bg: Други опции на областта.
 cz: Další volby pro oblast.
 de: Andere Flächenoptionen.
 el: Άλλες επιλογές επιφανειών. Βλ. thbook.pdf
@@ -2447,6 +2674,7 @@ sk: Ďalšie možnosti plochy.
 sq: opcionet tjera te fushes.
 
 therion: Select lines
+bg: Избор на линии
 cz: Vyber křivky
 de: Linien auswählen
 el: Επιλογή γραμμών
@@ -2458,6 +2686,7 @@ sk: Vyber krivky
 sq: selekto rjeshtat
 
 therion: Switch to insert line into area mode.
+bg: Превключи в режим поставяне на линии-граници в областта.
 cz: Výběr ohraničujících křivek oblasti.
 el: Αφού πατήστε εδώ, επιλέγετε με το ποντίκι τις γραμμές ορίων της επιφάνειας (πρέπει να τέμνονται)
 en: After clicking here, select by mouse this area border lines (they must intersect).
@@ -2468,6 +2697,7 @@ sk: Po stlačení môžete začať vkladať krivky ohraničujúce plochu.
 sq: pasi te klikoni ketu, selekto me mi rjeshtat e kufirit te fushes (ato duhet te nderlidhen)
 
 therion: Delete ID from area.
+bg: Изтрий линия по ID от областта.
 cz: Odstranění objektu z oblasti.
 de: Lösche ID aus Fläche.
 el: Διαγραφή ID από επιφάνεια
@@ -2479,6 +2709,7 @@ sk: Odstrániť krivku z daným ID z plochy.
 sq: fshije ID prej fushes
 
 therion: Insert ID
+bg: Вмъкни по ID
 cz: Vlož ID
 de: ID einfügen
 el: Εισαγωγή ID
@@ -2490,6 +2721,7 @@ sk: Vlož ID
 sq: fute ID-ne
 
 therion: Insert given id.
+bg: Вмъкни линия-граница по зададено ID.
 cz: Vloží objekt s daným ID.
 de: Angegebene ID einfügen.
 el: Εισαγωγή ID άλλο από το προκαθορισμένο του Xtherion
@@ -2501,6 +2733,7 @@ sk: Vložiť ID krivky do zoznamu kriviek ohraničujúcich plochu.
 sq: fute ID-n e dhene ne vend te X-therion
 
 therion: ID to insert.
+bg: ID за вмъкване
 cz: ID objektu ke vložení.
 de: einzufügende ID.
 el: Εισαγωγή ID.
@@ -2512,6 +2745,7 @@ sk: ID na vloženie.
 sq: ID-ja per tu futur.
 
 therion: Update
+bg: Обнови
 cz: Aktualizovat
 de: Aktualisieren
 el: Εμημέρωση
@@ -2523,6 +2757,7 @@ sk: Aktualizovať
 sq: aktualizo
 
 therion: Click this button to apply changes you made to area.
+bg: Натиснете този бутон за да приложите промените, направени в областта.
 cz: Aktualizace oblasti.
 de: Klicke diesen Knopf, um Änderungen an einer Fläche anzuwenden.
 el: Κάντε κλικ να γίνει εφαρμογή των αλλαγών που κάνατε στην επιφάνεια.
@@ -2534,6 +2769,7 @@ sk: Aktualizovať plochu.
 sq: kliko kete buton te aktualizosh ndrimet te cilat I ke bere ne fushe
 
 therion: Show
+bg: Покажи
 cz: Zobrazit
 de: Zeige
 el: Εμφάνιση
@@ -2545,6 +2781,7 @@ sk: Zobraziť
 sq: trego
 
 therion: Show area border lines.
+bg: Покажи границите на областта.
 cz: Zobrazí hranice oblasti.
 de: Zeige Flächenbegrenzungen.
 el: Εμφάνιση γραμμών ορίων επιφάνειας
@@ -2556,6 +2793,7 @@ sk: Zobraz hranice plochy.
 sq: trego kufirin e vijave te fushes.
 
 therion: Select line in area.
+bg: Избери линия.
 cz: Výběr křivky ohraničující oblast
 de: Wähle Linie in Fläche.
 el: Κάντε κλικ σε οποιαδήποτε γραμμή του καταλόγου για να επιλεχθεί η αντίστοιχη γραμμή ορίου επιφάνειας στον καμβά.
@@ -2567,6 +2805,7 @@ sk: Vyber hraničnú krivku.
 sq: kliko ne cilindo rrjesht te listes qe te kesh rrjeshtin kufizues te fushes pershtatese, I zgjedhur ne pelhure
 
 therion: loading main menu ...
+bg: Зареждане на главното меню ...
 cz: nahrávám hlavní menu ...
 de: Lade Hauptmenü ...
 el: φόρτιση κύριου μενού
@@ -2578,6 +2817,7 @@ sk: nahrávam hlavné menu ...
 sq: duke lexuar menyn kryesore…
 
 therion: Open (no pics)
+bg: Отвори (без изображения)
 cz: Otevřít (bez obrázků)
 de: Öffne (keine Bilder)
 el: Άνοιγμα (χωρίς εικόνες)
@@ -2589,6 +2829,7 @@ sk: Otvoriť (bez obrázkov)
 sq: hape (pa foto)
 
 therion: Insert ...
+bg: Вмъкни ...
 cz: Vložit ...
 de: Einfügen ...
 el: Εισαγωγή...
@@ -2600,6 +2841,7 @@ sk: Vložiť ...
 sq: fute…
 
 therion: point
+bg: точка
 cz: bod
 de: Punkt
 el: σημείο
@@ -2611,6 +2853,7 @@ sk: bod
 sq: pika
 
 therion: line
+bg: линия
 cz: křivka
 de: Linie
 el: γραμμή
@@ -2622,6 +2865,7 @@ sk: krivku
 sq: vija apo rjeshti
 
 therion: area
+bg: област
 cz: oblast
 de: Fläche
 el: επιφάνεια
@@ -2633,6 +2877,7 @@ sk: plochu
 sq: fusha
 
 therion: scrap
+bg: скрап
 cz: scrap
 de: Skizze
 el: σκραπ
@@ -2644,6 +2889,7 @@ sk: scrap
 sq: deponia
 
 therion: text
+bg: текст
 cz: text
 de: Text
 el: κείμενο
@@ -2655,6 +2901,7 @@ sk: text
 sq: teksti
 
 therion: Auto adjust area
+bg: Автоматична настройка на област
 cz: Auto přizpůsobit
 de: Fläche automatisch anpassen
 el: Αυτόματη ρύθμιση επιφάνειας
@@ -2666,6 +2913,7 @@ sk: Prispôsob plochu
 sq: fusha automatikisht e pershtatur
 
 therion: Insert image
+bg: Вмъкни изображение
 cz: Vložit obrázek
 de: Bild einfügen
 el: Εισαγωγή εικόνας
@@ -2677,6 +2925,7 @@ sk: Vložiť obrázok
 sq: fute imazhin
 
 therion: Zoom 100 %
+bg: Мащаб 100%
 cz: Zoom na 100 %
 el: Μεγέθυνση 100%
 en: Zoom 100 %
@@ -2687,6 +2936,7 @@ sk: Zoom 100%
 sq: zmadho 100%
 
 therion: Mouse mode.
+bg: Режим 'мишка'.
 cz: Klikací režim.
 de: Mausmodus.
 el: Λειτουργία ποντικιού.
@@ -2698,6 +2948,7 @@ sk: Mód myši.
 sq: miu ne funkcion
 
 therion: Current mouse position.
+bg: Текуща позиция на курсора.
 cz: Aktuální pozice ukazatele myši.
 de: Aktuelle Mausposition.
 el: Τρέχουσα θέση ποντικιού.
@@ -2709,6 +2960,7 @@ sk: Aktuálna poloha myši.
 sq: pozicioni aktual I miut.
 
 therion: loading line procs ...
+bg: зареждане на процедурите за линия ...
 cz: zpracovávám křivky ...
 el: φόρτιση γραμμικών διαδικασιών...
 en: loading line procs ...
@@ -2719,6 +2971,7 @@ sk: načitavam modul kriviek ...
 sq: duke lexuar proceduren rjeshtit…
 
 therion: Map editor is not active. To activate it, open existing file or create new one.
+bg: Редактора на карти не е активен. За активиране отворете съществуващ файл или създайте нов.
 cz: Mapový editor není aktivní. Pro jeho aktivaci otevřete existující soubor nebo vytvořte nový.
 de: Karteneditor ist nicht aktiv. Um ihn zu aktivieren, lade eine existierende Datei oder lege eine neue an.
 el: Ο επεξεργαστής σχεδίου δεν είναι ενεργός. Για να τον ενεργοποιήσετε, ανοίξτε ένα αρχείο ή δημιουργήστε νέο.
@@ -2730,6 +2983,7 @@ sk: Mapový editor nie je aktívny. Otvorte existujúci súbor alebo vytvorte no
 sq: permiresuesi I hartes nuk eshte aktiv. Qe ta aktivizosh, hape fajlin egzistues ose krijo nje te ri
 
 therion: Insert line
+bg: Вмъкни линия
 cz: Vložit křivku
 de: Linie einfügen
 el: Εισαγωγή γραμμής
@@ -2741,6 +2995,7 @@ sk: Vložiť krivku
 sq: fute rjeshtin-vijen
 
 therion: Insert scrap
+bg: Вмъкни скрап
 cz: Vložit scrap
 de: Skizze einfügen
 el: Εισαγωγή σκραπ
@@ -2752,6 +3007,7 @@ sk: Vložiť scrap
 sq: fute deponin
 
 therion: Insert text
+bg: Вмъкни текст
 cz: Vložit text
 de: Text einfügen
 el: Εισαγωγή κειμένου
@@ -2763,6 +3019,7 @@ sk: Vložiť text
 sq: fute tekstin
 
 therion: Insert area
+bg: Вмъкни област
 cz: Vložit oblast
 de: Fläche einfügen
 el: Εισαγωγή επιφάνειας
@@ -2774,6 +3031,7 @@ sk: Vložiť plochu
 sq: fute fushen
 
 therion: Delete
+bg: Изтрий
 cz: Smazat
 de: Lösche
 el: Διαγραφή
@@ -2785,6 +3043,7 @@ sk: Odstrániť
 sq: fshije
 
 therion: deleting
+bg: изтриване
 cz: mazání
 de: lösche
 el: διαγραφή
@@ -2796,6 +3055,7 @@ sk: mazanie
 sq: duke fshire
 
 therion: moving command
+bg: преместване на команда
 cz: přesun příkazu
 de: Verschiebebefehl
 el: εντολή μετακίνησης
@@ -2807,6 +3067,7 @@ sk: presun príkazu
 sq: komanda e levizjes
 
 therion: creating endscrap
+bg: създаване край на скрапа
 cz: vytvoření konce scrapu
 de: Erzeuge Skizzenende
 el: δημιουργία τέλους σκραπ (endscrap)
@@ -2818,6 +3079,7 @@ sk: vytvorenie konca scrapu
 sq: duke kriju fundin e deponise
 
 therion: scrap changes
+bg: промяна на скрапа
 cz: změna parametrů scrapu
 de: Skizzenänderung
 el: αλλαγές σκραπ
@@ -2829,6 +3091,7 @@ sk: zmena parametrov scrapu
 sq: ndryshimet ne deponi
 
 therion: creating scrap
+bg: създаване на скрап
 cz: vytvoření scrapu
 de: Erzeuge Skizze
 el: δημιουργία σκραπ
@@ -2840,6 +3103,7 @@ sk: vytvorenie scrapu
 sq: duke kriju deponin
 
 therion: creating text
+bg: създаване на текст
 cz: vytvoření textu
 de: Erzeuge Text
 el: δημιουργία δοκιμής
@@ -2851,6 +3115,7 @@ sk: vytvorenie textu
 sq: duke kriju tekstin
 
 therion: text changes
+bg: промяна на текст
 cz: změna textu
 de: Textänderungen
 el: αλλαγές κειμένου
@@ -2862,6 +3127,7 @@ sk: zmena textu
 sq: ndrimet e tekstit
 
 therion: end point insertion
+bg: слагане на точка за край
 cz: konec vkládání bodů
 de: Endpunkt eingefügt
 el: εισαγωγή τελικού σημείου
@@ -2873,6 +3139,7 @@ sk: koniec vkladania bodov
 sq: perfundo futjet e pikave
 
 therion: select object
+bg: избор на обект
 cz: označ objekt
 de: Objekt auswählen
 el: επιλογή αντικειμένου
@@ -2882,6 +3149,7 @@ sk: označ objekt
 sq: selekto objektin
 
 therion: Insert
+bg: Вмъкни
 cz: Vložit
 de: Einfügen
 el: Εισαγωγή
@@ -2893,6 +3161,7 @@ sk: Vložiť
 sq: fute
 
 therion: insert point
+bg: вмъкни точка
 cz: vlož bod
 de: Punkt einfügen
 el: εισαγωγή σημείου
@@ -2902,6 +3171,7 @@ sk: vlož bod
 sq: fute piken
 
 therion: insert line point
+bg: вмъкни точка от линия
 cz: vlož bod křivky
 de: Linienpunkt einfügen
 el: εισαγωγή σημείου γραμμής
@@ -2911,6 +3181,7 @@ sk: vlož bod krivky
 sq: fute piken e rjeshtit
 
 therion: insert area border
+bg: вмъкни граница на област
 cz: vlož hranici plochy
 de: Flächenrand einfügen
 el: εισαγωγή ορίων επιφάνειας
@@ -2920,6 +3191,7 @@ sk: vlož okraj plochy
 sq: fute kufirin e fushes
 
 therion: Select
+bg: Избери
 cz: Vyber
 de: Auswählen
 el: Επιλογή
@@ -2931,6 +3203,7 @@ sk: Vybrať
 sq: selekto
 
 therion: scale scrap
+bg: мащабиране на скрап
 cz: měřítko scrapu
 de: Skizze skalieren
 el: αλλαγή κλίμακα σκραπ
@@ -2940,6 +3213,7 @@ sk: mierka scrapu
 sq: deponia e matjeve
 
 therion: insert sketch
+bg: вмъкване на скица
 cz: vlož náčrtek
 de: Skizze einfügen
 el: εισαγωγή σχεδίου
@@ -2949,6 +3223,7 @@ sk: vlož náčrtok
 sq: fute skicen
 
 therion: creating point
+bg: създаване на точка
 cz: vytvoření bodu
 de: Punkt erzeugen
 el: δημιουργία σημείου
@@ -2960,6 +3235,7 @@ sk: vytvorenie bodu
 sq: duke kriju piken
 
 therion: area changes
+bg: изменение на областта
 cz: změna parametrů oblasti
 de: Flächenänderungen
 el: αλλαγές επιφανειών
@@ -2971,6 +3247,7 @@ sk: zmena parametrov plochy
 sq: ndrimet e fushes
 
 therion: point changes
+bg: изменение на точка
 cz: změna parametrů bodu
 de: Punktänderungen
 el: αλλαγές σημείων
@@ -2982,6 +3259,7 @@ sk: zmena parametrov bodu
 sq: ndrimet e pikes
 
 therion: Scrap sketch not inserted.
+bg: Не е вмъкната скица в скрапа.
 cz: Náčrtek nebyl vložen.
 de: Skizze nicht eingefügt.
 el: δεν εισήχθη σχέδιο σκραπ
@@ -2991,6 +3269,7 @@ sk: Náčrtok nebol vložený.
 sq: skica e deponise nuk eshte futur
 
 therion: inserting scrap sketch
+bg: вмъкване на скица в скрапа
 cz: vkládám náčrtek
 de: Füge Skizze ein
 el: εισαγωγή σχεδίου σκραπ
@@ -3000,6 +3279,7 @@ sk: vloženie náčrtku
 sq: duke future skicen e deponise
 
 therion: deleting scrap sketch
+bg: изтриване на скица от скрапа
 cz: odstraňuji náčrtek
 de: Lösche Skizze
 el: διαγραφή σχεδίου σκραπ
@@ -3009,6 +3289,7 @@ sk: odstránenie náčrtku
 sq: duke fshire skicen e deponise
 
 therion: toggle image visibility
+bg: превключване на видимостта на изображение
 cz: přepnutí viditelnosti obrázku
 de: Bildsichtbarkeit umschalten
 el: αλλαγή ορατότητας εικόνας
@@ -3020,6 +3301,7 @@ sk: prepni viditeľnosť obrázku
 sq: shikueshmeria e toggle-imazhit
 
 therion: grid - spacing %s
+bg: мрежа - стъпка %s
 cz: mřížka - odstup %s
 de: Gitterweite - %s
 el: πλέγμα - μέγεθος %s
@@ -3031,6 +3313,7 @@ sk: sieť - rozostupy %s
 sq: %s hapesira e katroreve
 
 therion: station - %s
+bg: репер %s
 cz: měřičský bod - %s
 de: Messpunkt - %s
 el: σημείο χαρτογράφησης - %s
@@ -3042,6 +3325,7 @@ sk: měračský bod - %s
 sq: stacioni - %s
 
 therion: New *.th2 file needs to be saved before inserting background image. Save it now?
+bg: Новият *.th2 се нуждае от съхраняване преди да се вмъкне фоново изображение. Да се Запиши сега?
 cz: Nový *.th2 soubor musí být uložen před vložením podkladového obrázku. Uložit nyní?
 de: Neue *.th2-Datei muss gespeichert werden, bevor ein Hintergrundbild eingefügt werden kann. Jetzt speichern?
 el: Το νέο αρχείο *.th2 πρέπει να αποθηκευτεί πριν εισαχθεί εικόνα φόντου. Αποθήκευση τώρα;
@@ -3053,6 +3337,7 @@ sk: Pred vložením obrázku musíte nový *.th2 súbor uložiť. Chcete tak uro
 sq: arkivi I ri *.th2 duhet te ruhet para se te futet imazhi I prapavise.Te ruhet tani?
 
 therion: inserting image
+bg: вмъкване на изображение
 cz: vkládám obrázek
 de: Bild einfügen
 el: εισαγωγή εικόνας
@@ -3064,6 +3349,7 @@ sk: vkladám obrázok
 sq: duke futur imazhin
 
 therion: removing image
+bg: махане на изображение
 cz: odstraňuji obrázek
 de: Bild entfernen
 el: διαγραφή εικόνας
@@ -3075,6 +3361,7 @@ sk: odstránenie obrázku
 sq: duke hequr imazhin
 
 therion: moving image
+bg: преместване на изображение
 cz: přesunuji obrázek
 de: Bild verschieben
 el: μετακίνηση εικόνας
@@ -3086,6 +3373,7 @@ sk: posun obrázku
 sq: duke levizur imazhin
 
 therion: gamma correction
+bg: корекция на гамата
 cz: gamma korekce
 de: Gammakorrektur
 el: gamma correction
@@ -3097,6 +3385,7 @@ sk: gamma korekcia
 sq: korekcioni gamma
 
 therion: Insert point
+bg: Вмъкни точка
 cz: Vložit bod
 de: Punkt einfügen
 el: Εισαγωγή σημείου
@@ -3108,6 +3397,7 @@ sk: Vložiť bod
 sq: fute piken
 
 therion: Delete point
+bg: Изтрий точка
 cz: Smazat bod
 de: Punkt löschen
 el: Διαγραφή σημείου
@@ -3119,6 +3409,7 @@ sk: Odstrániť bod
 sq: fshije piken
 
 therion: Split line
+bg: Раздели линия
 cz: Rozdělit křivku
 de: Linie teilen
 el: Διαίρεση γραμμής
@@ -3130,6 +3421,7 @@ sk: Rozdeliť krivku
 sq: ndaje rjeshtin-vijen
 
 therion: deleting line point
+bg: Изтрий точка от линията
 cz: mazaní bodu na křivce
 de: Linienpunkt löschen
 el: διαγραφή σημείου γραμμής
@@ -3141,6 +3433,7 @@ sk: mazanie bodu na čiare
 sq: duke fshire piken e rjeshtit-vijes
 
 therion: inserting area border
+bg: Вмъкване на граница на област
 cz: vložení hranice oblasti
 de: Flächenrand einfügen
 el: εισαγωγή ορίου επιφάνειας
@@ -3152,6 +3445,7 @@ sk: vloženie okraja plochy
 sq: duke future kufirin e fushes
 
 therion: deleting area border
+bg: изтриване на ганица на област
 cz: mazaní hranice oblasti
 de: Flächenrand löschen
 el: όριο επιφάνειας
@@ -3163,6 +3457,7 @@ sk: mazanie okraja plochy
 sq: duke fshire kufirin e fushes
 
 therion: creating area
+bg: създаване на област
 cz: vytvoření oblasti
 de: Fläche erzeugen
 el: δημιουργία επιφάνειας
@@ -3174,6 +3469,7 @@ sk: vytvorenie plochy
 sq: duke kriju fushen
 
 therion: creating line
+bg: създаване на линия
 cz: vytvoření křivky
 de: Linie erzeugen
 el: δημιουργία γραμμής
@@ -3185,6 +3481,7 @@ sk: vytvorenie krivky
 sq: duke kriju vijen apo rrjeshtin
 
 therion: line changes
+bg: изменение на линия
 cz: změna parametrů křivky
 de: Linienänderung
 el: αλλαγές γραμμής
@@ -3196,6 +3493,7 @@ sk: zmena parametrov krivky
 sq: ndrimet e vijes
 
 therion: line closing
+bg: затваряне на линия
 cz: uzavření křivky
 de: Linie schließen
 el: κλείσιμο γραμμής
@@ -3207,6 +3505,7 @@ sk: uzavretie krivky
 sq: mbyllja e vijes-rjeshtit
 
 therion: line opening
+bg: отваряне (разделяне) на линия
 cz: otevření křivky
 de: Linie öffnen
 el: άνοιγμα γραμμής
@@ -3218,6 +3517,7 @@ sk: otvorenie krivky
 sq: hapja e vijes-rjeshtit
 
 therion: inserting line point
+bg: вмъкване на точка в линия
 cz: vložení bodu křivky
 de: Linienpunkt einfügen
 el: εισαγωγή σημείο γραμμής
@@ -3229,6 +3529,7 @@ sk: vloženie bodu krivky
 sq: duke futur piken e vijes
 
 therion: line ending
+bg: завършване на линия
 cz: ukončení křivky
 de: Linienende
 el: τέλος γραμμής
@@ -3240,6 +3541,7 @@ sk: ukončenie krivky
 sq: rjeshti ne perfundim
 
 therion: moving control point
+bg: преместване на управляваща точка
 cz: posun řídícího bodu
 de: Verschiebe Kontrollpunkt
 el: μεταβαλλόμενο σημείο ελέγχου
@@ -3251,6 +3553,7 @@ sk: posun kontrolného bodu
 sq: duke levize piken e kontrollit
 
 therion: split line
+bg: разделяне на линия
 cz: rozdělit křivku
 de: Linie teilen
 el: διαίρεση γραμμής
@@ -3262,6 +3565,7 @@ sk: rozdelenie čiary
 sq: ndarja e pikes-rjeshtit
 
 therion: loading text editor ...
+bg: зареждане на текстовия редактор ...
 cz: nahrávám text editor ...
 de: Lade Texteditor ...
 el: Άνοιγμα επεξεργαστή κειμένου...
@@ -3273,6 +3577,7 @@ sk: načítavam textový editor
 sq: duke lexuar editorin e tekstit…
 
 therion: Text Editor
+bg: Текстов редактор
 cz: Text editor
 de: Texteditor
 el: Επεξεργαστής κειμένου
@@ -3284,6 +3589,7 @@ sk: Textový editor
 sq: editori I tekstit
 
 therion: Files
+bg: Файлове
 cz: Soubory
 de: Dateien
 el: Αρχεία
@@ -3295,6 +3601,7 @@ sk: Súbory
 sq: fajlat-arkivi
 
 therion: Data table
+bg: Таблица с данни
 cz: Datová tabulka
 de: Datentabelle
 el: Πίνακας δεδομένων
@@ -3306,6 +3613,7 @@ sk: Dátová tabuľka
 sq: tabela e te dhenave
 
 therion: Search & Replace
+bg: Търсене и замяна
 cz: Najít & Nahradit
 de: Suchen & ersetzen
 el: Αναζήτηση και αντικατάσταση
@@ -3317,6 +3625,7 @@ sk: Nájdi a Nahraď
 sq: kerko dhe ndero vendin
 
 therion: Switch open files.
+bg: Превключи отвореният файл
 cz: Přepínač otevřených souborů.
 de: Geöffnete Dateien wechseln.
 el: Η λίστα δείχνει τα ανοικτά αρχεία. Επιλέξετε αυτό που σας ενδιαφέρει.
@@ -3328,6 +3637,7 @@ sk: Prepínač medzi otvorenými súbormi.
 sq: kjo liste tregon fajlat e hapura. Kliko ne ate te cilen je I interesuar.
 
 therion: Encoding
+bg: Кодировка
 cz: Kódování
 de: Zeichenkodierung
 el: Κωδικοσελίδα
@@ -3339,6 +3649,7 @@ sk: Kódovanie
 sq: de-kodimi
 
 therion: Change to
+bg: Промени на
 cz: Změnit na
 de: Ändern in
 el: Αλλαγή σε
@@ -3350,6 +3661,7 @@ sk: Zmeniť na
 sq: ndero ne
 
 therion: To set file encoding, type encoding name and press <Change> button.
+bg: За задавне на кодираовката на файла, въведете името на кодировката и натиснете бутона <Промяна>
 cz: Nastavení kódování - vyberte kódování a stiskněte tlačítko <Změnit na>.
 de: Um Zeichenkodierung zu ändern, gebe den Namen der Kodierung ein und drücke den <Change> Knopf.
 el: Για ρύθμιση κωδικοσελίδας, εισάγετε όνομα και πατήστε το κουμπί <Αλλαγή>
@@ -3361,6 +3673,7 @@ sk: Na nastavenie kódovania, vložte identifikátor kódovania a stlačte <Zmen
 sq: per te vendos fajlin per dekodim, shtype emrin per dekodim dhe kliko butonin <ndroje>
 
 therion: Scan data format
+bg: Определи формата на данните
 cz: Skenovat formát dat
 de: Datenformat einlesen
 el: Έλεγχος μορφής δεδομένων
@@ -3372,6 +3685,7 @@ sk: Nájdi formát dát
 sq: skano formatin e shenimeve
 
 therion: Scan data format and rebuild centerline data insertion tool.
+bg: Автоматично определи формата на данните и преустрой полетата за въвеждане.
 cz: Přečte formát dat v souboru a upraví pole pro vkládání měření.
 de: Datenformat einlesen und Messdateneditor anpassen.
 el: Ελέγχει την σειρά των δεδομένων και ξανασυντάσσει αυτόματα τα textbox για εισαγωγή δεδομένων.
@@ -3383,6 +3697,7 @@ sk: Načíta formát dát z predchádzajúcich riadkov a príslušne zmení pane
 sq: skanon formatin e shenimeve dhe rinderton tekst-katroret per futjen e shenimeve net e njejten kohe
 
 therion: Enter station names
+bg: Въвеждане на името на репераната точка
 cz: Zadávat názvy bodů
 de: Messpunktnamen eingeben
 el: Εισαγωγή ονομάτων σημείων χαρτογράφησης
@@ -3394,6 +3709,7 @@ sk: Zadávanie názvov bodov
 sq: futi emrat e stacioneve
 
 therion: Check if you want to insert station names for each shot.
+bg: Сложете отбелязка, ако искате следващите имена на репери да се въвеждат автоматично.
 cz: Zaškrtněte pokud chcete zadávat název pro každý měřičský bod.
 de: Ankreuzen, wenn du Messpunktnamen für jede Strecke eingeben willst.
 el: Επιλέξτε για εισαγωγή των ονομάτων των σημείων χαρτογράφησης για το κάθε διάνυσμα.
@@ -3405,6 +3721,7 @@ sk: Zaškrtnite pokiaľ chcete vkladať aj mená bodov pre každú zámeru.
 sq: kontrollo nese deshiron ti fusesh emrat e stacioneve per secilin foto
 
 therion: Auto format selection
+bg: Автоматичен избор на формат.
 cz: Auto formátování výběru
 de: Auswahl formatieren
 el: Αυτόματη μορφοποίηση επιλογής
@@ -3416,6 +3733,7 @@ sk: Naformátuj výber
 sq: zgjedhja automatike e formatit
 
 therion: Format selection to given table.
+bg: Избор на формат за определена таблица
 cz: Naformátuje výběr do tabulky.
 de: Formatiere Auswahl zur gegebenen Tabelle.
 el: Μορφοποίηση επιλογής σύμφωνα με το δεδομένο πίνακα.
@@ -3427,6 +3745,7 @@ sk: Naformátuje výber do dátovej tabuľky.
 sq: zgjedhja e formatit per tabelen e dhene
 
 therion: search
+bg: търсене
 cz: hledat
 de: Suche
 el: αναζήτηση
@@ -3438,6 +3757,7 @@ sk: hľadaj
 sq: kerko
 
 therion: Search expression.
+bg: Израз за търсене
 cz: Hledaný výraz.
 de: Suche Muster.
 el: Πληκτρολογήσετε τις λέξεις για αναζήτηση.
@@ -3449,6 +3769,7 @@ sk: Hľadaný výraz.
 sq: shkruaje fjalen per tu kerkuar
 
 therion: replace
+bg: замяна
 cz: nahradit
 de: Ersetze
 el: Αντικατάσταση
@@ -3460,6 +3781,7 @@ sk: nahradiť
 sq: ndero vendin
 
 therion: Check whether to replace found expression.
+bg: Сложете отбелязка, ако искате да се извърши замяна.
 cz: Zaškrtněte pokud chcete nahradit nalezené výrazy.
 el: Επιλέξτε για αντικατάσταση της ευρεθείσας περίπτωσης.
 en: Check whether to replace found expression.
@@ -3470,6 +3792,7 @@ sk: Zaškrtnúť pokiaľ sa má nájdený výraz nahradiť iným.
 sq: kontrollo a duhet te ndrohet fjalia e gjetur
 
 therion: Replace expression.
+bg: Израз за замяна.
 cz: Řetězec, kterým bude výraz nahrazen.
 de: Ersetze Muster.
 el: Τα αποτελέσματα αναζήτησης θα αντικατασταθούν από το συγκεκριμένο κείμενο.
@@ -3481,6 +3804,7 @@ sk: Výraz na nahradenie.
 sq: rezultatet e gjetura do te ndrohen nga fjalia e future ketu
 
 therion: case sensitive search
+bg: да се отчита регистъра
 cz: rozlišovat velikost písmen
 de: Groß- und Kleinschreibung bei Suche berücksichtigen
 el: case sensitive αναζήτηση
@@ -3492,6 +3816,7 @@ sk: rozlišovať malé a veľké
 sq: kerkimi -rast sensitiv
 
 therion: Check if search should be case sensitive.
+bg: Сложете отбелязка за да се извърши търсене с отчитане на регистъра.
 cz: Vyhledávání s rozlišením velikosti písmen.
 de: Ankreuzen, wenn Suche Groß- und Kleinschreibung berücksichtigen soll.
 el: Επιλέξετε αν η αναζήτηση πρέπει να είναι case sensitive.
@@ -3503,6 +3828,7 @@ sk: Zaškrtnite pokiaľ pri hľadaní chcete rozlišovať malé a veľké písme
 sq: kontrollo nese kerkimi do te jete rast-sensitiv
 
 therion: regular expressions
+bg: регулярни изрази
 cz: regulární výrazy
 de: Regulärer Ausdruck.
 el: κανονικό συντακτικό (χρήση μπαλαντέρ αναζήτησης)
@@ -3514,6 +3840,7 @@ sk: regulárny výraz
 sq: shprehje te rregullta
 
 therion: Check whether to evaluate search and replace as regular expressions.
+bg: Сложете отбелязка за да се обработват регулярните изрази при търсене и замяна.
 cz: Zaškrtněte pokud chcete vyhledávat nebo nahrazovat pomocí regulárních výrazů.
 de: Ankreuzen, ob Suchen und Ersetzen regulären Ausdruck nutzen soll.
 el: Επιλέξτε για αναζήτηση με κανονικό συντακτικό(χρήση μπαλαντέρ αναζήτησης)
@@ -3525,6 +3852,7 @@ sk: Zaškrtnite ak sa má hľadanie a nahradenie vykonávať v móde regulárnyc
 sq: kontrollo a do te kerkosh duke perdor shprehje te zakonta-rregullta
 
 therion: search selection only
+bg: търсене само в избраното
 cz: pouze ve vybraném textu
 de: Nur in Auwahl suchen
 el: αναζήτηση μόνο σε επιλογή
@@ -3536,6 +3864,7 @@ sk: iba vo vybratom texte
 sq: kerko vetem selekcionet
 
 therion: Check whether to do search only in selected text.
+bg: Сложете отбелязка за да ае търси само в избраният текст.
 cz: Zaškrtněte pokud chcete vyhledávat pouze ve vybraném textu.
 de: Ankreuzen, wenn nur im ausgewählten Text gesucht werden soll.
 el: Επιλέξετε για να γίνει η αναζήτηση μόνο στο επιλεγμένο κείμενο.
@@ -3547,6 +3876,7 @@ sk: Zaškrtnite pokiaľ hladanie má prebehnúť len v označenom texte.
 sq: kontrollo a do te perdoresh kerkimin vetem ne tekstin e selekcionuar
 
 therion: First
+bg: Първи
 cz: První
 de: Erstes
 el: Πρώτο
@@ -3558,6 +3888,7 @@ sk: Prvý
 sq: e para
 
 therion: Search or replace first expression in the file.
+bg: Търсене или замяна на първият израз във файла.
 cz: Najde nebo nahradí první výraz v souboru.
 de: Suche oder ersetze erstes Muster in der Datei.
 el: Αναζήτηση ή αντικατάσταση πρώτης περίπτωσης στο αρχείο.
@@ -3569,6 +3900,7 @@ sk: Nájte poprípade nahradí prvý výskyt hľadaného výrazu v súbore.
 sq: kerko ose ndro shprehjet e para ne fajlla
 
 therion: Search or replace next expression after the cursor in the file.
+bg: Търсене или замяна на следващият израз след курсора във файла.
 cz: Najde nebo nahradí následující výraz v souboru.
 de: Suche oder ersetze nächstes Muster nach dem Cursor in der Datei.
 el: Αναζήτηση ή αντικατάσταση επόμενης περίπτωσης μετά τον κούρσορα.
@@ -3580,6 +3912,7 @@ sk: Nájdi alebo nahraď nasledujúci výraz v súbore.
 sq: kerko ose ndroje shprehjen e ardhshme pas kursorit ne fajll
 
 therion: All
+bg: Всичко
 cz: Vše
 de: Alles
 el: Όλα
@@ -3591,6 +3924,7 @@ sk: Všetko
 sq: te gjithat
 
 therion: Search or replace all expressions in the file.
+bg: Търсене или замяна на всички изрази във файла.
 cz: Najde nebo nahradí všechny výrazy v souboru.
 de: Suche oder ersetze alle Muster in der Datei.
 el: Αναζήτηση ή αντικατάσταση όλων των περιπτώσεων στο αρχείο.
@@ -3602,6 +3936,7 @@ sk: Nájdi alebo nahraď všetky výrazy v súbore.
 sq: kerko ose ndroji te gjitha shprehjet ne fajlla
 
 therion: Clear
+bg: Изчисване
 cz: Zrušit
 de: Löschen
 el: Αναίρεση
@@ -3613,6 +3948,7 @@ sk: Vyčisti
 sq: e paster
 
 therion: Clear all highlights in the file.
+bg: Изчистване на всички осветени текстови участъци във файла.
 cz: Zruší zvýraznění nalezených výrazů v souboru.
 de: Lösche alle Hervorhebungen in der Datei.
 el: Αναίρεση όλων των τονισθέντων.
@@ -3624,6 +3960,7 @@ sk: Zruší zvýraznenie nájdených výrazov v súbore.
 sq: fshij te gjitha selekcionimet apo hijezimet ne fajlla
 
 therion: Opening %s ...
+bg: Отваряне %s ...
 cz: Otevírám %s ...
 de: Öffne %s ...
 el: Άνοιγμα του %s ...
@@ -3635,6 +3972,7 @@ sk: Oteváram %s ...
 sq: duke hap %s …
 
 therion: File %s is not saved. Save it now?
+bg: Файлът %s не е съхранен. Да го съхраня сега?
 cz: Soubor %s není uložen. Uložit nyní?
 de: datei %s nicht gespeichert. Speichere jetzt?
 el: Το αρχείο %s δεν έχει αποθηκευτεί. Αποθήκευση τώρα;
@@ -3646,6 +3984,7 @@ sk: Súbor %s nie je uložený. Uložiť teraz?
 sq: fajlli %s nuk eshte I ruajtur. Ta ruajm tani?
 
 therion: File %s was modified outside xtherion. Save it anyway?
+bg: Файлът %s е изменен от друго приложение. Да го съхраня въпреки това?
 cz: Soubor %s byl modifikován mimo xtherion. Přesto uložit?
 de: Datei %s wurde außerhalb von Xtherion geändert. Trotzdem speichern?
 el: Το αρχείο %s τροποποιήθηκε εκτός xtherion. Να αποθηκευτεί όπως και να'ναι;
@@ -3657,6 +3996,7 @@ sk: Súbor %s bol modifikovaný mimo programu. Uložiť aj tak?
 sq: fajlli %s eshte ndryshuar jashte x therion-it. Ta ruajm sido qe te jete?
 
 therion: Saving %s ...
+bg: Съхранение %s ...
 cz: Ukládám %s ...
 de: Speichere %s ...
 el: Αποθήκευση του %s ...
@@ -3668,6 +4008,7 @@ sk: Ukladám %s ...
 sq: duke ruajtur %s. . .
 
 therion: New
+bg: Нов
 cz: Nový
 de: Neu
 el: Νέο
@@ -3679,6 +4020,7 @@ sk: Nový
 sq: e re
 
 therion: Open
+bg: Отвори
 cz: Otevřít...
 de: Öffnen
 el: Άνοιγμα
@@ -3690,6 +4032,7 @@ sk: Otvoriť
 sq: hape
 
 therion: Save
+bg: Запиши
 cz: Uložit
 de: Speichern
 el: Αποθήκευση
@@ -3701,6 +4044,7 @@ sk: Uložiť
 sq: ruaje
 
 therion: Save as
+bg: Запиши като
 cz: Uložit jako...
 de: Speichern als
 el: Αποθήκευση ως...
@@ -3712,6 +4056,7 @@ sk: Uložiť ako
 sq: ruaje si
 
 therion: Save all
+bg: Запиши всички
 cz: Uložit vše
 de: Speichere alles
 el: Αποθήκευση όλων
@@ -3723,6 +4068,7 @@ sk: Uložiť všetko
 sq: ruaji te gjitha
 
 therion: Auto save
+bg: Автосъхранение
 cz: Automaticky ukládat
 de: Automatisch speichern
 el: Αυτόματη αποθήκευση
@@ -3734,6 +4080,7 @@ sk: Ukladať automaticky
 sq: ruajtja automatike
 
 therion: Import
+bg: Внасяне
 cz: Import
 de: Importieren
 el: Εισαγωγή...
@@ -3743,6 +4090,7 @@ sk: Import
 sq: importi
 
 therion: Next
+bg: Следващ
 cz: Následující
 de: Nächstes
 el: Επόμενο
@@ -3754,6 +4102,7 @@ sk: Nasledujúci
 sq: tjetra
 
 therion: Previous
+bg: Предишен
 cz: Předchozí
 de: Vorheriges
 el: Προηγούμενο
@@ -3765,6 +4114,7 @@ sk: Predchádzajúci
 sq: e perparmja
 
 therion: Edit
+bg: Редактиране
 cz: Editovat
 de: Bearbeiten
 el: Διόρθωση
@@ -3776,6 +4126,7 @@ sk: Upraviť
 sq: permireso
 
 therion: Undo
+bg: Отмяна
 cz: Zpět
 de: Rückgängig
 el: Αναίρεση
@@ -3787,6 +4138,7 @@ sk: Späť
 sq: prishe-undo
 
 therion: Redo
+bg: Възстановяване
 cz: Opakovat
 de: Wiederholen
 el: Επανάληψη
@@ -3798,6 +4150,7 @@ sk: Opakovať
 sq: beje prape-redo
 
 therion: Cut
+bg: Изрежи
 cz: Vyjmout
 de: Ausschneiden
 el: Αποκοπή
@@ -3809,6 +4162,7 @@ sk: Vystrihnúť
 sq: preje
 
 therion: Copy
+bg: Копирай
 cz: Kopírovat
 de: Kopieren
 el: Αντιγραφή
@@ -3820,6 +4174,7 @@ sk: Kopírovať
 sq: kopjo
 
 therion: Paste
+bg: Вмъкни
 cz: Vložit
 de: Einfügen
 el: Επικόλληση
@@ -3831,6 +4186,7 @@ sk: Vložiť
 sq: vendose-paste
 
 therion: Select all
+bg: Избери всичко
 cz: Vybrat vše
 de: Alles auswählen
 el: Επιλογή όλων
@@ -3842,6 +4198,7 @@ sk: Vyber všetko
 sq: zghedhi-selekciono te gjitha
 
 therion: Auto indent
+bg: Автоматичен отстъп
 cz: Automaticky odsazovat
 de: Automatisch einrücken
 el: Αυτόματη παραγραφοποίηση
@@ -3853,6 +4210,7 @@ sk: Automatické odsadenie
 sq: indenti automatik
 
 therion: Processing line %s ...
+bg: Обработване на ред %s ...
 cz: Zpracovávám řádek %s ...
 de: Verarbeite Zeile %s ...
 el: Επεξεργασία γραμμής %s ...
@@ -3864,6 +4222,7 @@ sk: Spracúvam riadok %s ...
 sq: rrjeshti %s ne proces…
 
 therion: Text editor is not active. To activate it, open existing file or create new one.
+bg: Текстовият редактор не е активен. За активиране отворете съществуващ файл или създайте нов.
 cz: Textový editor není aktivní. Pro jeho aktivaci otevřete existující soubor nebo vytvořte nový.
 de: Texteditor ist nicht aktiv. Um ihn zu aktivieren, öffne eine existierende Datei oder lege eine neue an.
 el: Ο επεξεργαστής κειμένου δεν είναι ενεργός. Για να τον ενεργοποιήσετε, ανοίξτε αρχείο, ή δημιουργήστε νέο.
@@ -3875,6 +4234,7 @@ sk: Textový editor nie je aktívny. Otvorte existujúci súbor alebo vytvorte n
 sq: editori I tekstit nuk eshte aktiv. Qe ta aktivizosh, hape fajllin egzistues ose krijo nje tjeter.
 
 therion: Control...
+bg: Контрол ...
 cz: Ovládání...
 de: Kontrollfeld...
 el: Έλεγχος...
@@ -3886,6 +4246,7 @@ sk: Ovládanie...
 sq: kontrolli. . .
 
 therion: BAC calculator...
+bg: Калкулатор на алкохол ...
 cz: Alkohol tester...
 de: Blutalkoholrechner
 el: Αλκοτέστ...
@@ -3897,10 +4258,12 @@ sk: Alkohol tester...
 sq: matesi I alkoolit-BAC
 
 therion: Calibrate bitmap...
+bg: Калибриране на изображение ...
 de: Bild kalibrieren...
 it: Mappa georeferenziata...
 
 therion: About...
+bg: За програмата ...
 cz: O programu...
 de: Über...
 el: Σχετικά...
@@ -3912,6 +4275,7 @@ sk: O programe...
 sq: per programin…
 
 therion: Search
+bg: Търсене
 cz: Hledat
 de: Suche
 el: Αναζήτηση
@@ -3923,6 +4287,7 @@ sk: Hľadať
 sq: kerko
 
 therion: Close
+bg: Затвори
 cz: Zavřít
 de: Schließen
 el: Κλείσιμο
@@ -3934,6 +4299,7 @@ sk: Zavrieť
 sq: mbyll
 
 therion: theme all-symbols
+bg: всички символи
 cz: všechny symboly
 de: Alle Zeichen
 el: όλα
@@ -3943,6 +4309,7 @@ sk: všetky symboly
 sq: tematizo te gjitha simbolet-shenjat
 
 therion: New file
+bg: Нов файл
 de: Neue Datei
 el: Νέο αρχείο
 it: Nuovo
@@ -3950,6 +4317,7 @@ sk: Nový súbor
 sq: arkivi-fajlli I ri
 
 therion: Open file
+bg: Отвори файл
 de: Datei öffnen
 el: Άνοιγμα
 it: Apri
@@ -3957,6 +4325,7 @@ sk: Otvoriť súbor
 sq: hape fajllin
 
 therion: Save file
+bg: Запиши файл
 de: Datei speichern
 el: Αποθήκευση
 it: Salva
@@ -3964,6 +4333,7 @@ sk: Uložiť súbor
 sq: ruaje fajllin
 
 therion: Save file as
+bg: Запиши файл като
 de: Datei speichern als
 el: Αποθήκευση ως
 it: Salva come
@@ -3971,6 +4341,7 @@ sk: Uložiť súbor ako
 sq: ruaje fajllin si
 
 therion: Close file
+bg: Затвори файл
 de: Datei schließen
 el: Κλείσιμο αρχείου
 it: Chiudi
@@ -3978,6 +4349,7 @@ sk: Zatvoriť súbor
 sq: mbylle fajllin
 
 therion: Switch to text editor
+bg: Превключи на текстов редактор
 de: Zum Texteditor wechseln
 el: Μετάβαση σε επεξεργαστή κειμένου
 it: Editor di testi
@@ -3985,6 +4357,7 @@ sk: Prepnúť na textový editor
 sq: kalo tek editori i tekstit
 
 therion: Switch to map editor
+bg: Превключи на редактор на карти
 de: Zum Karteneditor wechseln
 el: Μετάβαση σε επεξεργαστή σχεδίου
 it: Editor di mappe
@@ -3992,6 +4365,7 @@ sk: Prepnúť na mapový editor
 sq: kalo tek editori I hartes
 
 therion: Switch to compiler
+bg: Превключи на компилатор
 de: Zum Compiler wechseln
 el: Μετάβαση σε συντάκτη
 it: Compilatore
@@ -3999,6 +4373,7 @@ sk: Prepnúť na kompilátor
 sq: kalo tek kompilatori
 
 therion: Compile
+bg: Компилирай
 cz: Kompilovat
 de: Compilieren
 el: Σύνταξη
@@ -4010,6 +4385,7 @@ sk: Kompilovať
 sq: kompilo
 
 therion: Switch to select mode
+bg: Превключи на режим 'Избиране'
 de: In Auswahlmodus wechseln
 el: Μετάβαση σε λειτουργία επιλογής
 it: Modalità di selezione
@@ -4017,6 +4393,7 @@ sk: Prepnúť do módu na výber objektu
 sq: kalo tek moduli per selekcionim
 
 therion: Select next scrap
+bg: Избери следващият скрап
 de: Nächste Skizze auswählen
 el: Επιλογή επόμενου σκραπ
 it: Seleziona il prossimo scrap
@@ -4024,6 +4401,7 @@ sk: Vyber nasledujúci scrap
 sq: zgjedhe deponin e ardhshme
 
 therion: Select next area
+bg: Избери следващата област
 de: Nächste Fläche auswählen
 el: Επιλογή επόμενης επιφάνειας
 it: Seleziona la prossima area
@@ -4031,6 +4409,7 @@ sk: Vyber nasledujúcu plochu
 sq: zgjedhe-selekto fushen e ardhshme
 
 therion: Zoom in
+bg: Приближи
 de: Vergrößern
 el: Μεγέθυνση
 it: Zoom in
@@ -4038,6 +4417,7 @@ sk: Zväčšiť
 sq: zmadho
 
 therion: Zoom out
+bg: Отдалечи
 de: Verkleinern
 el: Σμίκρυνση
 it: Zoom out
@@ -4045,6 +4425,7 @@ sk: Zmenšiť
 sq: zvogelo
 
 therion: Insert new scrap
+bg: Вмъкни нов скрап
 de: Neue Skizze einfügen
 el: Εισαγωγή νέου σκραπ
 it: Inserisci un nuovo scrap
@@ -4052,6 +4433,7 @@ sk: Vložiť nový scrap
 sq: fute deponin e re
 
 therion: Insert new point
+bg: Вмъкни нова точка
 de: Neuen Punkt einfügen
 el: Εισαγωγή νέου σημείου
 it: Inserisci un nuovo punto
@@ -4059,6 +4441,7 @@ sk: Vložiť nový bod
 sq: fute piken e re
 
 therion: Insert new line
+bg: Вмъкни нова линия
 de: Neue Linie einfügen
 el: Εισαγωγή νέας γραμμής
 it: Inserisci una nuova linea
@@ -4066,6 +4449,7 @@ sk: Vložiť novú krivku
 sq: fute rrjeshtin e ri
 
 therion: Insert new area
+bg: Вмъкни нова област
 de: Neue Fläche einfügen
 el: Εισαγωγή νέας επιφάνειας
 it: Inserisci una nuova area
@@ -4073,6 +4457,7 @@ sk: Vložiť novú plochu
 sq: fute fushen e re
 
 therion: Delete selected object
+bg: Изтрий избраният обект
 de: Ausgewähltes Objekt löschen
 el: διαγραφή επιλεγμένου
 it: Rimuovi l'oggetto selezionato
@@ -4080,6 +4465,7 @@ sk: Zmaž označené objekty
 sq: fshije objektin e selektuar
 
 therion: theme basic-symbols
+bg: основни символи
 cz: základní symboly
 de: Grundsymbole
 el: βασικά σύμβολα
@@ -4089,6 +4475,7 @@ sk: základné symboly
 sq: tema simbolet-baze
 
 therion: theme passage-fills
+bg: релеф на галерията
 cz: výplň
 de: Gangfüllungen
 el: γέμισμα στοών
@@ -4098,6 +4485,7 @@ sk: výplň
 sq: tema mbushjet e kalimeve
 
 therion: theme speleothems
+bg: спелеоформи
 cz: výzdoba
 de: Sinter
 el: σπηλαιοθέματα
@@ -4107,6 +4495,7 @@ sk: výzdoba
 sq: speleo-tema
 
 therion: theme equipement
+bg: екипиране
 cz: vystrojení
 de: Ausrüstung
 el: εξοπλισμός

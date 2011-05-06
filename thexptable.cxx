@@ -43,6 +43,8 @@
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thconfig.h"
+#include "thcs.h"
+
 
 thexptable::thexptable() {
   this->format = TT_EXPTABLE_FMT_UNKNOWN;
@@ -321,7 +323,7 @@ void thexptable::process_db(class thdatabase * dbp)
               this->m_table.insert_attribute("Survey", ths2txt(survey).c_str());
               this->m_table.insert_attribute("Station", st != NULL ? st->name : NULL);
               if (this->format == TT_EXPTABLE_FMT_KML) { 
-                thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+                thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params,  
                   pt->point->xt, pt->point->yt, pt->point->at, lon, lat, alt);
                 this->m_table.insert_attribute("_LONGITUDE", lon / THPI * 180.0);
                 this->m_table.insert_attribute("_LATITUDE",  lat / THPI * 180.0);
@@ -350,7 +352,7 @@ void thexptable::process_db(class thdatabase * dbp)
             this->m_table.insert_attribute("Survey", ths2txt(survey).c_str());
             this->m_table.insert_attribute("Station", st->name);            
             if (this->format == TT_EXPTABLE_FMT_KML) { 
-              thcs2cs(thcsdata_table[thcfg.outcs].params, thcsdata_table[TTCS_LONG_LAT].params, 
+              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
                 st->x, st->y, st->z, lon, lat, alt);
               this->m_table.insert_attribute("_LONGITUDE", lon / THPI * 180.0);
               this->m_table.insert_attribute("_LATITUDE",  lat / THPI * 180.0);

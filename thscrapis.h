@@ -96,6 +96,24 @@ struct thscrapisolpt {
 
 typedef thscrapisolpt * pthscrapisolpt;
 
+
+#ifdef THSCRAPIS_NEW3D
+
+struct thscrapis3line {
+
+  pthscrapisolpt m_pA, m_pD;
+  lxVec m_ptB, m_ptC, m_dirB, m_dirC;
+  double m_dBup, m_dBdn, m_dCup, dCdn;
+  thdb3dvx *m_A, * m_Aup, * m_Adn,
+    * m_Bup, * m_Bdn, * m_Cup, * m_Cdn, 
+    * m_D, * m_Dup, * m_Ddn;
+
+  
+};
+
+#endif
+
+
 /**
  * Scrap polygon outline class.
  */

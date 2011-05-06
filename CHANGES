@@ -11,6 +11,9 @@ therion:
  * Austrian symbol set added (thanks to Georg Pacher)
  * updated German translation (thanks to Georg Pacher)
  * updated Italian translation (thanks to Marco Corvi)
+ * added bulgarian translation (thanks to Alexander Yanev)
+ * added possibility to define own coordinate system in therion.ini (cs-def)
+ * updated survex img library to version 1.1.15
  * bugs fixed:
    - fixed huge coordinate numbers in extended elevation xvi
    - xvi with sketches export
@@ -28,6 +31,8 @@ therion:
    - hide white background of scraps when the PDF layer containing them
      is invisible
    - constrained Delaunay triangulation engine replaced by poly2tri
+   - passage outline scanning algorithm improved
+   - "nosurvey" shots allowed between unfixed stations
 
    
 xtherion:

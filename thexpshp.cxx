@@ -68,6 +68,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <errno.h>
+#include "thcs.h"
 
 #ifdef THMSVC
 #define snprintf _snprintf
@@ -124,12 +125,12 @@ void thexpshpf::close()
         enc = this->m_xshp->m_expmodel->encoding;
     }
     this->m_attributes.export_dbf(dbfname.c_str(), enc);
-    if ((thcfg.outcs != TTCS_LOCAL) && (strlen(thcsdata_table[thcfg.outcs].prjspec) > 0)) {
+    if ((thcfg.outcs != TTCS_LOCAL) && (strlen(thcs_get_data(thcfg.outcs)->prjspec) > 0)) {
       FILE * prjf;
       std::string prjname(this->m_fpath);
       prjname += ".prj";
       prjf = fopen(prjname.c_str(), "w");
-      fprintf(prjf, "%s", thcsdata_table[thcfg.outcs].prjspec);
+      fprintf(prjf, "%s", thcs_get_data(thcfg.outcs)->prjspec);
       fclose(prjf);
     }
   }
