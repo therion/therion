@@ -29,6 +29,7 @@
 #ifndef thscraplo_h
 #define thscraplo_h
 
+#include <cstddef>
 #include <list>
 
 enum {

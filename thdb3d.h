@@ -31,7 +31,7 @@
 
 #include <list>
 #include <stdio.h>
-#include "extern/lxMath.h"
+#include "loch/lxMath.h"
 
 enum {
   THDB3DFC_POINTS,

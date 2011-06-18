@@ -29,6 +29,7 @@
 #ifndef thwarp_h
 #define thwarp_h
 
+#include <cstddef>
 #include "thpic.h"
 #include "thsketch.h"
 

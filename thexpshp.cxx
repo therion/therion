@@ -60,7 +60,7 @@
 #include "thmapstat.h"
 #include "thsurface.h"
 #include <stdlib.h>
-#include "extern/lxMath.h"
+#include "loch/lxMath.h"
 #include "extern/shapefil.h"
 #include "thexpmodel.h"
 #include "thcsdata.h"

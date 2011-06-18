@@ -45,7 +45,7 @@
 #include "thinit.h"
 #include "thconfig.h"
 #include "thtrans.h"
-#include "extern/lxMath.h"
+#include "loch/lxMath.h"
 #ifdef THMSVC
 #define hypot _hypot
 #endif
@@ -827,7 +827,6 @@ void thdb1d::process_tree()
   }
   
   // go leg by leg and fill arrows  
-  size_t tn_nosurveylegs(0);
   for(iil = this->leg_vec.begin(), a1 = arrows; iil != this->leg_vec.end(); iil++) {
     
     if (iil->leg->infer_equates)
@@ -848,9 +847,8 @@ void thdb1d::process_tree()
 //        ));
 //    }
     if (iil->leg->data_type == TT_DATATYPE_NOSURVEY) {
-        a1->is_discovery = true;
-        a2->is_discovery = true;
-        tn_nosurveylegs++;
+        a1->is_nosurvey = true;
+        a2->is_nosurvey = true;
     }
     
     // hide splay-ed flags from extended elevation2
@@ -891,7 +889,7 @@ void thdb1d::process_tree()
   this->tree_legs = new thdb1dl* [tn_legs];
   thdb1dl ** current_leg = this->tree_legs;
 
-  while ((tarrows + tn_nosurveylegs) < tn_legs) {
+  while (tarrows < tn_legs) {
   
     if (component_break) {
       
@@ -949,9 +947,13 @@ void thdb1d::process_tree()
       current_node->last_arrow = current_node->first_arrow;
     else
       current_node->last_arrow = current_node->last_arrow->next_arrow;
-      
-    while ((current_node->last_arrow != NULL) && 
-        (current_node->last_arrow->is_discovery))
+    
+    // skip discovery arrows or nosurvey arrows, if station on the other site is not connected
+    while ((current_node->last_arrow != NULL) && ( 
+        (current_node->last_arrow->is_discovery) || 
+        ((current_node->last_arrow->is_nosurvey) && 
+        (!current_node->last_arrow->end_node->is_attached))
+        ))
         current_node->last_arrow = current_node->last_arrow->next_arrow;
     
     if (current_node->last_arrow == NULL) {
@@ -1117,10 +1119,10 @@ void thdb1d::process_survey_stat() {
   while (lit != this->leg_vec.end()) {    
 
     // skusi ci je duplikovane
-    if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
-      lit->data->stat_dlength += lit->leg->total_length;
-    else if ((lit->leg->flags & TT_LEGFLAG_SPLAY) != 0)
+    if ((lit->leg->flags & TT_LEGFLAG_SPLAY) != 0)
       lit->data->stat_splaylength += lit->leg->total_length;
+    else if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
+      lit->data->stat_dlength += lit->leg->total_length;
     // ak nie skusi ci je surface
     else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
       lit->data->stat_slength += lit->leg->total_length;
@@ -1132,23 +1134,26 @@ void thdb1d::process_survey_stat() {
       if ((lit->leg->flags & TT_LEGFLAG_APPROXIMATE) != 0)
         lit->data->stat_alength += lit->leg->total_length;
     }
-    // stations
-    if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
-      thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), false);
-      thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), false);
-    } else {
-      thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), true);
-      thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), true);
-    }
 
+    // stations
+    if ((lit->leg->flags & TT_LEGFLAG_SPLAY) == 0) {
+      if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
+        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), false);
+        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), false);
+      } else {
+        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), true);
+        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), true);
+      }
+    }
 
     ss = lit->survey;
     while (ss != NULL) {
-      // skusi ci je duplikovane
-      if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
-        ss->stat.length_duplicate += lit->leg->total_length;
-      else if ((lit->leg->flags & TT_LEGFLAG_SPLAY) != 0)
+      // skusi ci nie je splay
+      if ((lit->leg->flags & TT_LEGFLAG_SPLAY) != 0)
         ss->stat.length_splay += lit->leg->total_length;
+      // skusi ci je duplikovane
+      else if ((lit->leg->flags & TT_LEGFLAG_DUPLICATE) != 0)
+        ss->stat.length_duplicate += lit->leg->total_length;
       // ak nie skusi ci je surface
       else if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0)
         ss->stat.length_surface += lit->leg->total_length;
@@ -1158,12 +1163,14 @@ void thdb1d::process_survey_stat() {
           ss->stat.length_approx += lit->leg->total_length;
         ss->stat.length += lit->leg->total_length;
       }
-      if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
-        thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), false);
-        thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), false);
-      } else {
-        thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), true);
-        thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), true);
+      if ((lit->leg->flags & TT_LEGFLAG_SPLAY) == 0) {
+        if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
+          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), false);
+          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), false);
+        } else {
+          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), true);
+          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), true);
+        }
       }
       ss->stat.num_shots++;
       ss = ss->fsptr;
@@ -2842,7 +2849,7 @@ void thdb1d::postprocess_objects()
   thdb1d_tree_node * node, * nodes = this->get_tree_nodes();
   thdb1ds * s;
   double numl;
-  for(long i = 0; i < (long)this->station_vec.size(); i++) {
+  for(unsigned long i = 0; i < this->station_vec.size(); i++) {
     s = &(this->station_vec[i]);
     if (s->uid < (i + 1)) {
       s->asl = this->station_vec[s->uid - 1].asl;

@@ -186,8 +186,10 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       csmooth = thmatch_token(*args,thtt_onoffauto);
       if (csmooth == TT_UNKNOWN_BOOL)
         ththrow(("invalid smooth switch -- %s",*args))
-      if (this->last_point != NULL)
+      if (this->last_point != NULL) {
         this->last_point->smooth = csmooth;
+        this->last_point->smooth_orig = csmooth;
+      }
       else 
         ththrow(("no line point specified"))
       break;
@@ -433,6 +435,7 @@ void thline::insert_line_point(int nargs, char ** args, double * nums)
   
   plp->subtype = this->csubtype;
   plp->smooth = TT_AUTO;
+  plp->smooth_orig = TT_AUTO;
   
   if (this->last_point == NULL) {
     this->last_point = plp;
@@ -532,7 +535,7 @@ void thline::preprocess()
   // check reversion
   thdb2dlp * c_item, * n_item, * t_item;
   thdb2dpt * t_point;
-  int t_tags, t_subtype, t_smooth;
+  int t_tags, t_subtype, t_smooth, t_smooth_orig;
   double t_rsize, t_lsize, t_orient;
   
   bool tmpreverse = this->reverse;  
@@ -571,6 +574,7 @@ void thline::preprocess()
     t_lsize = this->first_point->lsize;
     t_orient = this->first_point->orient;
     t_smooth = this->first_point->smooth;
+    t_smooth_orig = this->first_point->smooth_orig;
     t_subtype = this->last_point->subtype;
     c_item = this->first_point;
     while (c_item != NULL) {
@@ -581,6 +585,7 @@ void thline::preprocess()
         c_item->rsize = c_item->nextlp->rsize;
         c_item->orient = c_item->nextlp->orient;
         c_item->smooth = c_item->nextlp->smooth;
+        c_item->smooth_orig = c_item->nextlp->smooth_orig;
         c_item->subtype = c_item->nextlp->subtype;
       } else {
         c_item->point = t_point;
@@ -589,6 +594,7 @@ void thline::preprocess()
         c_item->rsize = t_rsize;
         c_item->orient = t_orient;
         c_item->smooth = t_smooth;
+        c_item->smooth_orig = t_smooth_orig;
         c_item->subtype = t_subtype;
       }
       c_item = c_item->nextlp;

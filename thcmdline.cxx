@@ -43,6 +43,7 @@ thcmdline::thcmdline()
 {
   this->version_ds = false;
   this->help_ds = false;
+  this->m_bezier = false;
   this->extern_libs = false;
   this->print_state = THPS_NONE;
 }
@@ -83,12 +84,13 @@ void thcmdline::process(int argc, char * argv[])
     {"print-xtherion-src",no_argument,NULL,THPS_XTHERION_SRC},
     {"use-extern-libs",no_argument,NULL,THPS_EXTERN_LIBS},
     {"version",no_argument,NULL,'v'},
+    {"bezier",no_argument,NULL,'b'},
     {NULL, 0, NULL, 0}
   };
 
   while(1) {
 
-    oc = getopt_long (argc, argv, "dxs:l:qLvhp:",
+    oc = getopt_long (argc, argv, "dxs:l:qLvbhp:",
       thlong_options, &oindex);
     
     // no other options detected
@@ -109,6 +111,10 @@ void thcmdline::process(int argc, char * argv[])
       
       case 'v':
         this->version_ds = true;
+        break;
+      
+      case 'b':
+        this->m_bezier = true;
         break;
         
       case 'q':

@@ -153,6 +153,7 @@ set xth(gui,xvi_walls_oclr) gray60
 set xth(gui,xvi_shot_clr) gray50
 set xth(gui,xvi_station_fclr) black
 set xth(gui,xvi_station_oclr) black
+set xth(gui,xvi_station_size) 3.0
 set xth(gui,xvi_sketch_line_width) 1
 
 set xth(gui,me,nozoom) 1

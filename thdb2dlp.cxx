@@ -43,6 +43,7 @@ thdb2dlp::thdb2dlp () {
 
   this->subtype = TT_LINE_SUBTYPE_UNKNOWN;
   this->smooth = TT_AUTO;
+  this->smooth_orig = TT_AUTO;
   this->mark = NULL;
   
   this->orient = thnan;

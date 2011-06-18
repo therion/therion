@@ -970,7 +970,8 @@ img_read_item(img *pimg, img_point *p)
 		     if (pimg->version < 7) {
 			 img_errno = IMG_BADFORMAT;
 			 return img_BAD;
-		     }
+         } else {
+
 		     int days1 = (int)getu16(pimg->fh);
 		     int days2 = (int)getu16(pimg->fh);
 #if IMG_API_VERSION == 0
@@ -980,7 +981,8 @@ img_read_item(img *pimg, img_point *p)
 		     pimg->days1 = days1;
 		     pimg->days2 = days2;
 #endif
-		     break;
+         }
+         break;
 		 }
 		 case 0x24: { /* v7+: No date info */
 #if IMG_API_VERSION == 0

@@ -29,6 +29,7 @@
 #ifndef thdb2dcp_h
 #define thdb2dcp_h
 
+#include <cstddef>
 #include <list>
 #include "thdb2dpt.h"
 

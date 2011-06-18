@@ -29,6 +29,7 @@
 #ifndef thscraplp_h
 #define thscraplp_h
 
+#include <cstddef>
 #include "thdb1d.h"
 #include <list>
 

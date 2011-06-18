@@ -443,7 +443,7 @@ proc xth_me_imgs_xvi_redraw {imgx} {
     lappend xth(me,imgs,$imgx,XVIstationsX) [list $cx $cy]
     set cx [xth_me_real2canx $cx]
     set cy [xth_me_real2cany $cy]
-    $xth(me,can) coords [format "%sST%d" $id $i] [expr $cx - 3.0] [expr $cy - 3.0] [expr $cx + 3.0] [expr $cy + 3.0]
+    $xth(me,can) coords [format "%sST%d" $id $i] [expr $cx - $xth(gui,xvi_station_size)] [expr $cy - $xth(gui,xvi_station_size)] [expr $cx + $xth(gui,xvi_station_size)] [expr $cy + $xth(gui,xvi_station_size)]
   }
   
   if {$xth(me,imgs,$imgx,vsb) == 1} {
@@ -799,7 +799,7 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
     if {$xth(gui,me,nozoom)} {
       set subimg [image create photo]
       set subcimg [$xth(me,can) create image 0 0 -image $subimg -anchor nw \
-	  -tags "$imgid bgimg"]
+      -tags "$imgid bgimg imgx$imgx"]
       xth_me_bind_area_drag $subcimg $imgx
       xth_me_bind_image_drag $subcimg $imgx
       set iw [image width $imgid]
@@ -807,34 +807,34 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
       lappend xth(me,imgs,$imgx,subimgs) [list $subimg $subcimg 0 0 $iw $ih]
       $xth(me,can) lower $xth(me,imgs,$imgx,image) command
       if {$iidx > 0} {
-	$xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
+        $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
       }
     } else {
       set iw [image width $imgid]
       set ih [image height $imgid]
       set subisize 128
       for {set subx 0} {$subx < $iw} {incr subx $subisize} {
-	for {set suby 0} {$suby < $ih} {incr suby $subisize} {
-	  set subxx [expr $subx + $subisize]
-	  set subyy [expr $suby + $subisize]
-	  if {$subxx > $iw} {
-	    set subxx $iw
-	  }
-	  if {$subyy > $ih} {
-	    set subyy $ih
-	  }
-	  set subimg [image create photo]
-	  set subcimg [$xth(me,can) create image 0 0 -image $subimg -anchor nw \
-	      -tags "$imgid bgimg"]
-	  xth_me_bind_area_drag $subcimg $imgx
-	  xth_me_bind_image_drag $subcimg $imgx
-	  lappend xth(me,imgs,$imgx,subimgs) [list $subimg $subcimg $subx $suby $subxx $subyy]
-	}
+        for {set suby 0} {$suby < $ih} {incr suby $subisize} {
+          set subxx [expr $subx + $subisize]
+          set subyy [expr $suby + $subisize]
+          if {$subxx > $iw} {
+            set subxx $iw
+          }
+          if {$subyy > $ih} {
+            set subyy $ih
+          }
+          set subimg [image create photo]
+          set subcimg [$xth(me,can) create image 0 0 -image $subimg -anchor nw \
+          -tags "$imgid bgimg imgx$imgx"]
+          xth_me_bind_area_drag $subcimg $imgx
+          xth_me_bind_image_drag $subcimg $imgx
+          lappend xth(me,imgs,$imgx,subimgs) [list $subimg $subcimg $subx $suby $subxx $subyy]
+        }
       }
       $xth(me,can) lower $xth(me,imgs,$imgx,image) command
       set iidx [lsearch -exact $xth(me,imgs,xlist) $imgx]
       if {$iidx > 0} {
-	$xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
+        $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
       }
     }  
   }

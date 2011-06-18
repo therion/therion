@@ -31,6 +31,7 @@
 
 // Standard libraries
 #ifndef LXDEPCHECK
+#include <cstddef>
 #include <list>
 #include <vector>
 #include <map>
@@ -38,7 +39,6 @@
 //LXDEPCHECK - standart libraries
 
 #define lxPI 3.1415926535898
-extern double lxVecPrec;
 
 struct lxVec {
 

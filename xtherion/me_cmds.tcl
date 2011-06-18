@@ -1393,6 +1393,11 @@ proc xth_me_cmds_click {id tagOrId x y mx my} {
 	xth_me_cmds_end_line
       } else {
 	# vytvori novy bod
+    # ak sme klikli na XVIbod, tak hodime presne tam
+      if {[regexp {XVIstI(\d+)S(\d+)} [$xth(me,can) itemcget $tagOrId -tags] dum imgx sti]} {
+        set x [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 0]
+        set y [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 1]
+      }    
 	xth_me_cmds_start_create_linept $tagOrId $x $y $mx $my
       }      
     }
@@ -2093,6 +2098,10 @@ proc xth_me_cmds_drag_to {id pid x y} {
     # je vybraty bod na ciare, nastavime suradnice podla neho
     set nx $xth(me,cmds,$nid,$npid,x)
     set ny $xth(me,cmds,$nid,$npid,y)
+    return [list 1 $nx $ny]
+  } elseif {[regexp {(^|\s)XVIstI(\d+)S(\d+)} $tgs d1 d2 imgx sti]} {
+    set nx [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 0]
+    set ny [lindex [lindex $xth(me,imgs,$imgx,XVIstationsX) $sti] 1]
     return [list 1 $nx $ny]
   }
   return 0

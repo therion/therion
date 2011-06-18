@@ -84,6 +84,8 @@ proc xth_me_cmds_update_line_ctrl {id} {
     $xth(ctrl,me,line).themetype configure -state normal    
     $xth(ctrl,me,line).lpa configure -state normal    
     $xth(ctrl,me,line).upd configure -state normal    
+    $xth(ctrl,me,line).trace configure -state normal    
+    $xth(ctrl,me,line).vector configure -state normal    
     $xth(ctrl,me,line).lpa.m entryconfigure [mc "Insert point"] -state normal    
     $xth(ctrl,me,line).lpa.m entryconfigure [mc "Delete point"] -state normal    
     $xth(ctrl,me,line).pl.l configure -takefocus 1 \
@@ -129,6 +131,8 @@ proc xth_me_cmds_update_line_ctrl {id} {
     $xth(ctrl,me,line).themetype configure -state disabled     
     $xth(ctrl,me,line).lpa configure -state disabled    
     $xth(ctrl,me,line).upd configure -state disabled
+    $xth(ctrl,me,line).trace configure -state disabled
+    $xth(ctrl,me,line).vector configure -state disabled
     $xth(ctrl,me,line).lpa.m entryconfigure [mc "Insert point"] -state disabled
     $xth(ctrl,me,line).lpa.m entryconfigure [mc "Delete point"] -state disabled   
     $xth(ctrl,me,line).pl.l configure -takefocus 0 \
@@ -1085,7 +1089,7 @@ proc xth_me_cmds_create_line {ix mode type opts lines} {
       $px $py $px2 $py2 {} {} $smth $rot $rsz $lsz $opts 1.0
   }
 
-  if {$mode} {
+  if {$mode == 1} {
     set xth(me,cmds,$id,close) 0
   } else {
     xth_me_cmds_postprocess_line $id
@@ -1111,13 +1115,17 @@ proc xth_me_cmds_postprocess_line {id} {
   }
 
   # overi uzavretie
+  set postclose 0
   if {$xth(me,cmds,$id,close) != 0} {
       if {($xth(me,cmds,$id,[lindex $xl 0],x) == $xth(me,cmds,$id,[lindex $xl $lix],x)) && \
 	($xth(me,cmds,$id,[lindex $xl 0],y) == $xth(me,cmds,$id,[lindex $xl $lix],y)) && \
 	($lix > 0)} {
 	set xth(me,cmds,$id,close) 1
       } else {
-	set xth(me,cmds,$id,close) 0
+        if {$xth(me,cmds,$id,close) == 1} {
+          set postclose 1
+        }
+        set xth(me,cmds,$id,close) 0
       }
   }
   
@@ -1189,6 +1197,10 @@ proc xth_me_cmds_postprocess_line {id} {
     } elseif {$xth(me,cmds,$id,$pid,smooth) == -1} {
       set xth(me,cmds,$id,$pid,smooth) 0
     }
+  }
+  
+  if {$postclose} {
+    xth_me_cmds_close_line $id 0
   }
   
 }
@@ -2007,7 +2019,7 @@ proc xth_me_cmds_update_linept_list {id pid} {
 }
 
 
-proc xth_me_cmds_close_line {id} {
+proc xth_me_cmds_close_line {id {unredo 1}} {
   global xth
   # prida bod ak treba, ak je novy, oznaci ho
   set xl $xth(me,cmds,$id,xplist)
@@ -2049,10 +2061,11 @@ proc xth_me_cmds_close_line {id} {
     set remode ""
     set unmode ""
   }
-  xth_me_unredo_action [mc "line closing"] \
-  "$unpoint\nset xth(me,cmds,$id,close) 0\nxth_me_cmds_update_line_vars $id $olpid\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd \$xth(me,cmds,$id,data)\n$unmode" \
-  "$repoint\nset xth(me,cmds,$id,close) 1\nxth_me_cmds_update_line_vars $id $nwpid\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd \$xth(me,cmds,$id,data)\n$remode"
-  
+  if {$unredo} {
+    xth_me_unredo_action [mc "line closing"] \
+    "$unpoint\nset xth(me,cmds,$id,close) 0\nxth_me_cmds_update_line_vars $id $olpid\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd \$xth(me,cmds,$id,data)\n$unmode" \
+    "$repoint\nset xth(me,cmds,$id,close) 1\nxth_me_cmds_update_line_vars $id $nwpid\nxth_me_cmds_update_line_data $id\nxth_me_prev_cmd \$xth(me,cmds,$id,data)\n$remode"
+  }
 }
 
 
@@ -3100,11 +3113,11 @@ proc xth_me_cmds_set_colors {} {
       4 - 5 {
 	if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
 	  set xth(me,curscrap) $xth(me,cmds,$id,name)
-#	  if {[string equal $xth(me,cmds,$id,projection) extended]} {
-#	    set xth(me,snai) -1
-#	  } else {
-#	    set xth(me,snai) 1
-#	  }
+#          if {[string equal $xth(me,cmds,$id,projection) extended]} {
+#            set xth(me,snai) -1
+#          } else {
+#            set xth(me,snai) 1
+#          }
     set xth(me,snai) 1
 	}
 	if {$cid != $xid} {
@@ -3301,4 +3314,380 @@ proc xth_me_cmds_line_split {} {
 
 }
 
+# todo - zistovat, ci sme nad inymi, ako prave startovacimi pt a lnpt
+# pridat button na tracovanie a stop
+# pridat vytvorenie bezierovej krivky
+proc xth_me_image_get_color {x y {include {}} {exclude {}}} {
+  global xth
+  # najde obrazok na ktory sme klikli - ak taky ma, spocita suradnice a vrati RGB
+  set iid {}
+  foreach id [$xth(me,can) find overlapping [xth_me_real2canx $x] [xth_me_real2cany $y] [xth_me_real2canx $x] [xth_me_real2cany $y]] {
+    set tags [$xth(me,can) itemcget $id -tags]
+    if {[regexp {bgimg.*imgx(\d+)} $tags dum tmpiid]} {
+      set iid $tmpiid
+    }
+    if {[regexp {command} $tags]} {      
+      if {([string length $include] > 0) && (!([regexp $include $tags])) && ([regexp $exclude $tags])} {
+	return 1
+      }
+    }
+  }
+  if {[string length $iid] == 0} {
+    return {}
+  }
+  # calculate color
+  set img $xth(me,imgs,$iid,image)
+  set iw [image width $img]
+  set ih [image height $img]
+  set ix [expr round($x - [lindex $xth(me,imgs,$iid,position) 0])]
+  set iy [expr round([lindex $xth(me,imgs,$iid,position) 1] - $y)]
+  if {$ix < 0} {set ix 0}
+  if {$ix >= $iw} {set ix [expr $iw - 1]}
+  if {$iy < 0} {set iy 0}
+  if {$iy >= $ih} {set iy [expr $ih - 1]}
+  return [$img get $ix $iy]
+}
 
+proc xth_me_cmds_line_trace_stop {} {
+  global xth
+  set xth(ctrl,me,line,tracecontinue) 0  
+}
+
+proc xth_me_cmds_line_trace_start {} {
+  global xth
+  set xth(ctrl,me,line,tracedist) 0.0
+  xth_me_cmds_line_trace
+}
+
+proc xth_me_cmds_line_trace {} {
+  global xth
+  xth_me_cmds_update {}
+  set xth(ctrl,me,line,tracecontinue) 1
+  if {$xth(ctrl,me,line,tracerow) > 0} {
+    grid $xth(ctrl,me,line).trace -row $xth(ctrl,me,line,tracerow) -column 0 -sticky news
+    grid $xth(ctrl,me,line).vector -row $xth(ctrl,me,line,tracerow) -column 1 -sticky news
+    set xth(ctrl,me,line,tracebtnfg) [$xth(ctrl,me,line).trace cget -fg]
+    set xth(ctrl,me,line,tracebtnbg) [$xth(ctrl,me,line).trace cget -bg]
+    set xth(ctrl,me,line,tracebtnafg) [$xth(ctrl,me,line).trace cget -activeforeground]
+    set xth(ctrl,me,line,tracebtnabg) [$xth(ctrl,me,line).trace cget -activebackground]
+    set xth(ctrl,me,line,tracerow) 0
+  }
+  set id $xth(me,cmds,selid)
+  set npx [llength $xth(me,cmds,$id,xplist)]
+  if {$npx < 3} {return}
+  # zoberieme posledne 2 body na ciare
+  set px0 [lindex $xth(me,cmds,$id,xplist) [expr $npx - 3]]
+  set px1 [lindex $xth(me,cmds,$id,xplist) [expr $npx - 2]]
+  set xth(me,cmds,selpid) 0
+  # spocitame ich vzdialenost
+  set x0 $xth(me,cmds,$id,$px0,x)
+  set y0 $xth(me,cmds,$id,$px0,y)
+  set x1 $xth(me,cmds,$id,$px1,x)
+  set y1 $xth(me,cmds,$id,$px1,y)
+  set dx [expr $x1 - $x0]
+  set dy [expr $y1 - $y0]
+  set l [expr hypot($dx, $dy)]
+  if {($x0 == $x1) && ($y0 == $y1)} {
+    return
+  }
+  if {$l < 1.0} {set l 1.0}
+  set tcol [xth_me_image_get_color $x1 $y1]
+  if {[llength $tcol] != 3} {return}
+  if {$xth(ctrl,me,line,tracedist) == 0.0} {
+    set xth(ctrl,me,line,tracedist) $l
+    set xth(ctrl,me,line,tracecolor) $tcol
+    set dist $l
+  } else {
+    set dist $xth(ctrl,me,line,tracedist)
+    set tcol $xth(ctrl,me,line,tracecolor)
+  }
+  xth_me_cmds_line_trace_point_cycle $dist $tcol
+  return
+}
+
+proc xth_me_cmds_line_trace_point_cycle {dist tcol} {
+    global xth
+    set next [xth_me_cmds_line_trace_point $dist $tcol]
+    set cont [expr [llength $next] > 0]
+    if {(!$cont) && ($dist > 2.0)} {
+      set next [xth_me_cmds_line_trace_point [expr $dist / 2.0] $tcol]
+      set cont [expr [llength $next] > 0]
+    }
+    if {(!$cont)} {
+      set next [xth_me_cmds_line_trace_point [expr $dist * 2.0] $tcol]
+      set cont [expr [llength $next] > 0]
+    }
+    if {$cont && $xth(ctrl,me,line,tracecontinue) && ([llength $next] == 2)} {
+      $xth(ctrl,me,line).trace configure -command {xth_me_cmds_line_trace_stop} -text [mc "Stop tracing"] \
+        -fg white -bg red -activeforeground white -activebackground red
+      set lt 0
+      set ld 100
+      catch {
+        set lt $xth(ctrl,me,line,traceltime)
+        set ld $xth(ctrl,me,line,traceldelay)
+      }
+      set xth(ctrl,me,line,traceltime) [clock clicks -milliseconds]
+      set cd [expr 100 - $xth(ctrl,me,line,traceltime) + $lt]
+      if {$cd < 0} {
+        set cd 0
+      }
+      if {$cd > 100} {
+        set cd 100
+      }
+      set cd [expr int(0.95 * $ld + 0.05 * $cd)]
+      set xth(ctrl,me,line,traceldelay) $cd
+      after $cd "after idle \"xth_me_cmds_line_trace_point_cycle $dist [list $tcol]\""
+    } else {
+      $xth(ctrl,me,line).trace configure -command {xth_me_cmds_line_trace} -text [mc "Continue tracing"] \
+        -fg $xth(ctrl,me,line,tracebtnfg) -bg $xth(ctrl,me,line,tracebtnbg) \
+        -activeforeground $xth(ctrl,me,line,tracebtnafg) -activebackground $xth(ctrl,me,line,tracebtnabg)
+    }
+}
+
+
+proc xth_me_cmds_line_trace_point {dist tcol} {
+
+  global xth
+  set id $xth(me,cmds,selid)
+  if {$xth(me,cmds,$id,ct) != 3} {return}
+  set npx [llength $xth(me,cmds,$id,xplist)]
+  if {$npx < 3} {return}
+  if {$xth(me,cmds,$id,close)} {return}
+
+  # zoberieme posledne 2 body na ciare
+  set pxs [lindex $xth(me,cmds,$id,xplist) 0]
+  set px0 [lindex $xth(me,cmds,$id,xplist) [expr $npx - 3]]
+  set px1 [lindex $xth(me,cmds,$id,xplist) [expr $npx - 2]]
+  set xth(me,cmds,selpid) 0
+  
+  set itags "pt$id\\.$px1|ln$id\\.$px1"
+  set etags "pt$id\\.\\d+|ln$id\\.\\d+"
+  
+  # spocitame ich vzdialenost
+  set xs $xth(me,cmds,$id,$pxs,x)
+  set ys $xth(me,cmds,$id,$pxs,y)
+  set x0 $xth(me,cmds,$id,$px0,x)
+  set y0 $xth(me,cmds,$id,$px0,y)
+  set x1 $xth(me,cmds,$id,$px1,x)
+  set y1 $xth(me,cmds,$id,$px1,y)
+  set dx [expr $x1 - $x0]
+  set dy [expr $y1 - $y0]
+  set l [expr hypot($dx, $dy)]
+  if {($x0 == $x1) && ($y0 == $y1)} {
+    return
+  }
+  set dx [expr $dx / $l * $dist]
+  set dy [expr $dy / $l * $dist]
+  
+  set resol 1.0
+  xth_me_center_to [list $x1 $y1]
+  set da [expr atan2($resol, $dist)]
+  set maxta [expr $da * (2.0 * $dist / $resol)]
+  set minta [expr -1.0 * $maxta]
+  set tR [lindex $tcol 0]
+  set tG [lindex $tcol 1]
+  set tB [lindex $tcol 2]
+  if {[llength $tcol] == 0} {
+    return
+  }
+  
+  # spocitame polkruznicu
+  set mode 0
+  set ta 0.0
+  set sa {}
+  set ea {}
+  set cstep 0.0
+  set goback 0
+  while {$mode >= 0} {
+    set tx [expr $x1 + $dx * cos($ta) + $dy * sin($ta)]
+    set ty [expr $y1 - $dx * sin($ta) + $dy * cos($ta)]
+    set ccol [xth_me_image_get_color $tx $ty $itags $etags]
+    if {[llength $ccol] != 3} {
+      set ceq 0
+    } else {
+      set dR [expr [lindex $ccol 0] - $tR]
+      set dG [expr [lindex $ccol 1] - $tG]
+      set dB [expr [lindex $ccol 2] - $tB]
+      set ceq [expr [expr ($dR * $dR) + ($dG * $dG) + ($dB * $dB)] < 1600]
+    }
+    switch $mode {
+      0 {
+	if {$ceq} {
+	  set sa $ta
+	  set ea $ta
+	  if {$ta == 0.0} {
+	    set mode 1
+	    set goback 1
+	  } elseif {$ta < 0.0} {
+	    set mode 1
+	  } else {
+	    set mode 2
+	  }
+	} else {
+	  if {$ta == 0.0} {
+	    set ta $da
+	  } elseif {$ta < 0.0} {
+	    set ta [expr -1.0 * $ta + $da]
+	  } else {
+	    set ta [expr -1.0 * $ta]
+	  }
+	}
+      }
+      1 {
+	# odratavame
+	if {$ceq} {
+	  set sa $ta
+	  set ta [expr $ta - $da]
+	} else {
+	  if $goback {
+	    set ta [expr $ea + $da]
+	    set mode 2
+	    set goback 0
+	  } else {
+	    set mode -1
+	  }
+	}
+      }
+      2 {
+	# priratavame
+	if {$ceq} {
+	  set ea $ta
+	  set ta [expr $ta + $da]
+	} else {
+	  if $goback {
+	    set ta [expr $sa - $da]
+	    set mode 1
+	    set goback 0
+	  } else {
+	    set mode -1
+	  }
+	}
+      }
+    }    
+    if {($ta > $maxta) || ($ta < $minta)} {
+      set mode -1
+    }
+  }
+  if {[llength $sa] == 0} {
+    return
+  }
+  
+  # vypocitame bod
+  set ta [expr 0.5 * ($sa + $ea)]
+  set tx [expr $x1 + $dx * cos($ta) + $dy * sin($ta)]
+  set ty [expr $y1 - $dx * sin($ta) + $dy * cos($ta)]
+  
+  set ok 0
+  set tryclose [expr ($npx > 3) && (hypot($x1 - $xs, $y1 - $ys) < $dist)]
+  if {$tryclose} {
+    set ttx $tx
+    set tty $ty
+    set tx $xs
+    set ty $ys
+  }
+  while {!$ok} {
+    set nin 0
+    set nto 0
+    for {set t 0.0} {$t <= $dist} {set t [expr $t + 1.0]} {
+      set lx [expr $x1 + ($tx - $x1) / $dist * $t]
+      set ly [expr $y1 + ($ty - $y1) / $dist * $t]
+      if {$tryclose} {
+	set ccol [xth_me_image_get_color $lx $ly]
+      } else {
+	set ccol [xth_me_image_get_color $lx $ly $itags $etags]
+      }
+      if {[llength $ccol] == 1} {
+	return
+      } elseif {[llength $ccol] == 0} {
+	set ceq 0
+      } else {
+	set dR [expr [lindex $ccol 0] - $tR]
+	set dG [expr [lindex $ccol 1] - $tG]
+	set dB [expr [lindex $ccol 2] - $tB]
+	set ceq [expr [expr ($dR * $dR) + ($dG * $dG) + ($dB * $dB)] < 1600]
+      }
+      if {$ceq} {incr nin}
+      incr nto
+    }
+    if {double($nin)/double($nto) < 0.5} {
+      if {$tryclose} {
+	set tryclose 0
+	set tx $ttx
+	set ty $tty
+      } else {
+	return
+      }
+    } else {
+      set ok 1
+    }
+  }
+  
+  # vlozi bod na ciare
+  if {$tryclose} {
+    xth_me_cmds_close_line $id
+    return 1
+  } else {
+    xth_me_cmds_start_create_linept {} [format "%.2f" $tx] [format "%.2f" $ty] 0 0
+    xth_me_cmds_end_create_linept 0 0 0
+    return [list $tx $ty]
+  }
+
+}
+
+proc xth_me_cmds_line_poly2bezier {} {
+  global xth
+  set id $xth(me,cmds,selid)
+  if {$xth(me,cmds,$id,ct) != 3} {return}
+  set npx [llength $xth(me,cmds,$id,xplist)]
+  if {$npx < 4} {return}
+  foreach x $xth(me,cmds,$id,xplist) {
+    if {($x != 0) && ($xth(me,cmds,$id,$x,idn) || $xth(me,cmds,$id,$x,idp))} return
+  }
+  set cdir [pwd]
+  cd $xth(me,fpath)
+  set f [open "therion.bci" w]
+  foreach x $xth(me,cmds,$id,xplist) {
+    if {$x != 0} {
+      puts $f "$xth(me,cmds,$id,$x,x) $xth(me,cmds,$id,$x,y)"
+    }
+  }
+  close $f
+  set f [open "therion.bco" w]
+  close $f
+  update idletasks
+  catch {
+    set thid [open "|$xth(gui,compcmd) -b" r]
+    read $thid
+    close $thid
+  } 
+  set data {}
+  catch {
+    set f [open "therion.bco" r]
+    while {![eof $f]} {
+      set ln [gets $f]
+      if {[regexp {\d+} $ln]} {
+        lappend data $ln
+      }
+    }
+    close $f
+  }
+  catch {
+    file delete therion.bci
+    file delete therion.bco
+  }
+  cd $cdir
+  if {[llength $data] == 0} {return}
+  set type $xth(me,cmds,$id,type)
+  set opts " $xth(me,cmds,$id,options)"
+  if {$xth(me,cmds,$id,reverse)} {
+    set opts "$opts -reverse on"
+  }
+  if {$xth(me,cmds,$id,close)} {
+    set opts "$opts -close on"
+  }
+  xth_me_cmds_delete $id
+  xth_me_cmds_create_line 0 2 $type $opts $data
+  xth_me_cmds_set_mode 0
+  return
+}
+  

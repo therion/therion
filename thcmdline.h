@@ -59,6 +59,7 @@ class thcmdline {
 
   bool version_ds,  ///< Version information display state.
     help_ds,  ///< Help display state.
+    m_bezier,
     extern_libs;  ///< Use extern libs.
   int print_state;  ///< Query state.
 

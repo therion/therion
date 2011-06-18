@@ -75,6 +75,7 @@ enum {
   TT_EXPMAP_FMT_XHTML,
   TT_EXPMAP_FMT_PDF, 
   TT_EXPMAP_FMT_XVI,  
+  TT_EXPMAP_FMT_TH2,  
   TT_EXPMAP_FMT_3D,  
   TT_EXPMAP_FMT_SHP,  
   TT_EXPMAP_FMT_KML,  
@@ -98,6 +99,7 @@ static const thstok thtt_expmap_fmt[] = {
   {"shp", TT_EXPMAP_FMT_SHP},
   {"survex", TT_EXPMAP_FMT_3D},
   {"svg", TT_EXPMAP_FMT_SVG},
+  {"th2", TT_EXPMAP_FMT_TH2},
   {"xhtml", TT_EXPMAP_FMT_XHTML},
   {"xvi", TT_EXPMAP_FMT_XVI},
   {NULL, TT_EXPMAP_FMT_UNKNOWN}
@@ -180,6 +182,7 @@ class thexpmap : public thexport {
   thbuffer layoutopts;  ///< Layout options buffer.
 
   void export_xvi(class thdb2dprj * prj);
+  void export_th2(class thdb2dprj * prj);
   
   void export_pdf(class thdb2dxm * maps, class thdb2dprj * prj);
   thexpmap_xmps export_mp(thexpmapmpxs * out, class thscrap * scrap, unsigned & startnum, bool outline_mode);  

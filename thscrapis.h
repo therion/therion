@@ -29,10 +29,11 @@
 #ifndef thscrapis_h
 #define thscrapis_h
 
+#include <cstddef>
 #include <map>
 #include <list>
 #include "thdb3d.h"
-#include "extern/lxMath.h"
+#include "loch/lxMath.h"
 #define THSCRAPISRES 0.001
 //#define THSCRAPIS_NEW3D 1
 

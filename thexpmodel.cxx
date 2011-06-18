@@ -37,7 +37,7 @@
 #include "thscrap.h"
 #include <map>
 #include "thsurface.h"
-#include "extern/lxFile.h"
+#include "loch/lxFile.h"
 #include "thsurface.h"
 #include "thchenc.h"
 #include "thconfig.h"

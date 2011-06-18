@@ -28,7 +28,7 @@
 #include "thscraplp.h"
 #include "thscrap.h"
 #include "thexpmap.h"
-#include "extern/lxMath.h"
+#include "loch/lxMath.h"
 
 thscraplp::thscraplp() {
 

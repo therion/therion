@@ -46,6 +46,7 @@
 #include "thversion.h"
 #include "thtexfonts.h"
 #include "thlang.h"
+#include "thbezier.h"
 #include "thsymbolset.h"
 
 #include <stdlib.h>
@@ -239,6 +240,13 @@ int main(int argc, char * argv[]) {
       thprintf("\n");
       thexit(EXIT_SUCCESS);
     }
+
+    if (thcmdln.m_bezier)
+    {
+      thbezier_main();
+      thexit(EXIT_SUCCESS);
+    }
+
     
     if (thcmdln.get_help_disp_state()) 
     {

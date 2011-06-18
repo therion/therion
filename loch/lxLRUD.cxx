@@ -10,6 +10,7 @@
 #endif  
 //LXDEPCHECK - standart libraries
 
+static const double lxVecPrec = 0.01;
 
 long lxLRUDData::GetStationID(lxVec pos, bool insert)
 {

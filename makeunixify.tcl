@@ -15,7 +15,7 @@ proc procdir {dir} {
 
 proc dos2unix {fnm} {
   set doit 0
-  if {[regexp {\.(c|cxx|h|tcl|svx|th|thcfg|th2|thc|cof|xpm|txt|pl|mp|tex|TXT|sty|usr|enc|htm|xvi)$} $fnm]} {
+  if {[regexp {\.(c|cxx|h|tcl|svx|th|ini|thcfg|th2|thc|cof|xpm|txt|pl|mp|tex|TXT|sty|usr|enc|htm|xvi)$} $fnm]} {
     set doit 1
   } elseif {[regexp {(Makefile|TODO\.\w|README|COPYING|CHANGES|thconfig|thconfig\..*)$} $fnm]} {
     set doit 1

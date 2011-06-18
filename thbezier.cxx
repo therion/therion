@@ -46,9 +46,9 @@
  */
  
 #include "thbezier.h"
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
+#include <cassert>
+#include <cstring>
+#include <cstdio>
 
 #define __SP_BEZIER_UTILS_C__
 
@@ -1367,11 +1367,9 @@ thbezier_segment * thbezier_curve::get_next_segment()
 void thbezier_curve::copy_polyline(struct thbezier_polyline * line, double err)
 {
   this->clear();
-  // TODO: polyline 2 bezier conversion
-
   size_t i, max = line->get_length();
   long nbp;
-  if (max < 1)
+  if (max < 3)
     return;
 
   NR_Point * poly, * bezier;
@@ -1382,7 +1380,18 @@ void thbezier_curve::copy_polyline(struct thbezier_polyline * line, double err)
     poly[i][0] = p->m_x;
     poly[i][1] = p->m_y;
   }
-  nbp = (long) sp_bezier_fit_cubic_r(bezier, poly, (long) max, err, (unsigned int)max);
+  NR_Point stan(0, 0), etan(0,0);
+  if ((poly[0][0] == poly[max-1][0]) && (poly[0][1] == poly[max-1][1])) {
+    stan = NR_Point(poly[1][0] - poly[0][0], poly[1][1] - poly[0][1]);
+    stan.normalize();
+    etan = NR_Point(poly[max-1][0] - poly[max-2][0], poly[max-1][1] - poly[max-2][1]);
+    etan.normalize();
+    stan += etan;
+    if (is_zero(stan)) stan = etan;
+    else stan.normalize();
+  }
+  //nbp = (long) sp_bezier_fit_cubic_r(bezier, poly, (long) max, err, (unsigned int)max);
+  nbp = (long) sp_bezier_fit_cubic_full(bezier, NULL, poly, (long) max, stan, -stan, err, (unsigned int)max);
   thbezier_segment * s;
   s = this->insert_segment();
   s->m_p = thbezier_point(bezier[0][0], bezier[0][1]);
@@ -1439,3 +1448,37 @@ void thbezier_polyline::copy_curve(struct thbezier_curve * curve, double err)
   // TODO: bezier 2 polyline conversion
 }
 
+
+void thbezier_main() {
+
+  FILE * fin, * fout;
+
+  fin = fopen("therion.bci","r");
+  double x, y, px(0.0), py(0.0);
+  bool xfirst(true);
+  thbezier_polyline line;
+  thbezier_curve curve;
+  thbezier_point * pt;
+  while (fscanf(fin,"%lf%lf",&x,&y) == 2) {
+    if ((xfirst) || (x != px) || (y != py)) {
+      pt = line.insert_point();
+      pt->m_x = px = x;
+      pt->m_y = py = y;
+      pt->m_valid = true;
+    }
+    xfirst = false;
+  }
+  fclose(fin);
+  if (line.m_points.size() < 3) return;
+  
+  curve.copy_polyline(&line, 2.0);
+  thbezier_segment *s;
+  fout = fopen("therion.bco","w");
+  s = curve.get_first_segment();
+  fprintf(fout, "%.2lf %.2lf\n", s->m_p.m_x, s->m_p.m_y);
+  for(s = curve.get_next_segment(); s != NULL; s = curve.get_next_segment()) {
+    fprintf(fout, "%.2lf %.2lf %.2lf %.2lf %.2lf %.2lf\n",s->m_cp1.m_x, s->m_cp1.m_y, s->m_cp2.m_x, s->m_cp2.m_y, s->m_p.m_x, s->m_p.m_y);
+  }
+  fclose(fout);
+
+}

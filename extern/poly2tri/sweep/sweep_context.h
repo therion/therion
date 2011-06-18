@@ -32,6 +32,7 @@
 #ifndef SWEEP_CONTEXT_H
 #define SWEEP_CONTEXT_H
 
+#include <cstddef>
 #include <list>
 #include <vector>
 

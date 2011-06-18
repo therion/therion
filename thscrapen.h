@@ -29,6 +29,7 @@
 #ifndef thscrapen_h
 #define thscrapen_h
 
+#include <cstddef>
 #include <list>
 
 /**

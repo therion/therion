@@ -29,8 +29,10 @@
 #ifndef thbezier_h
 #define thbezier_h
 
+#include <cstddef>
 #include <list>
 #include <vector>
+
 
 
 struct thbezier_point {
@@ -71,6 +73,7 @@ struct thbezier_polyline {
   void copy_curve(struct thbezier_curve * curve, double err);
 };
 
+void thbezier_main();
 
 #endif
 

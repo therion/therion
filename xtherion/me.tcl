@@ -1116,6 +1116,7 @@ proc xth_me_area_motion {x y} {
 proc xth_me_bind_area_drag {tagOrId imgx} {
   global xth
   $xth(me,can) bind $tagOrId <1> "xth_me_cmds_click_area $tagOrId %x %y"
+  $xth(me,can) bind $tagOrId <$xth(kb_control)-1> "xth_me_cmds_click_area $xth(me,canid,area) %x %y"
   $xth(me,can) bind $tagOrId <Motion> "xth_me_area_motion %x %y"
   $xth(me,can) bind $tagOrId <Shift-1> "xth_me_area_start_drag $tagOrId \"$imgx\" %x %y"
   $xth(me,can) bind $tagOrId <$xth(gui,rmb)> "xth_me_area_start_drag $tagOrId \"$imgx\" %x %y"
@@ -2072,12 +2073,18 @@ menubutton $lnc.lpa -text [mc "Edit line"] -anchor w -font $xth(gui,lfont) \
 xth_status_bar me $lnc.lpa [mc "Insert/delete line point. Split line."]
 Button $lnc.upd -text [mc "Update"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_update {}} -width 10
+Button $lnc.trace -text [mc "Continue tracing"] -anchor center -font $xth(gui,lfont) \
+  -state disabled -command {xth_me_cmds_line_trace} -width 10
+Button $lnc.vector -text [mc "Convert to curve"] -anchor center -font $xth(gui,lfont) \
+  -state disabled -command {xth_me_cmds_line_poly2bezier} -width 10
 xth_status_bar me $lnc.upd [mc "Click this button to apply line changes."]
 
 menu $lnc.lpa.m -tearoff 0 -font $xth(gui,lfont)
 $lnc.lpa.m add command -label [mc "Insert point"] -command {xth_me_cmds_start_linept_insert} -state disabled
 $lnc.lpa.m add command -label [mc "Delete point"] -command {xth_me_cmds_delete_linept {} {}} -state disabled
 $lnc.lpa.m add command -label [mc "Split line"] -command {xth_me_cmds_line_split} -state disabled
+$lnc.lpa.m add command -label [mc "Trace line"] -command {xth_me_cmds_line_trace_start}
+$lnc.lpa.m add command -label [mc "Convert to curve"] -command {xth_me_cmds_line_poly2bezier}
 
 #Button $lnc.insp -text "Insert" -anchor center -font $xth(gui,lfont) \
 #  -state disabled -width 10 -command {xth_me_cmds_start_linept_insert}
@@ -2115,6 +2122,8 @@ grid $lnc.rev -row $crow -column 0 -sticky news
 grid $lnc.cls -row $crow -column 1 -sticky news
 incr crow
 grid $plf -row $crow -column 0 -columnspan 2 -sticky news
+incr crow
+set xth(ctrl,me,line,tracerow) $crow
 incr crow
 grid $lnc.lpa -row $crow -column 0 -sticky news
 grid $lnc.upd -row $crow -column 1 -sticky news

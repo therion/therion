@@ -35,6 +35,7 @@
 #include "thscrap.h"
 #include "thpoint.h"
 #include "thline.h"
+#include "tharea.h"
 #include "thlayout.h"
 #include "thmap.h"
 #include "thsketch.h"
@@ -71,7 +72,7 @@
 #include "thproj.h"
 #include "thsurface.h"
 #include <stdlib.h>
-#include "extern/lxMath.h"
+#include "loch/lxMath.h"
 #include "thsvg.h"
 #include "extern/img.h"
 #include "thcs.h"
@@ -172,6 +173,7 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
             case TT_EXPMAP_FMT_SVG:
             case TT_EXPMAP_FMT_XHTML:
             case TT_EXPMAP_FMT_XVI:
+            case TT_EXPMAP_FMT_TH2:
             case TT_EXPMAP_FMT_3D:
             case TT_EXPMAP_FMT_KML:
             case TT_EXPMAP_FMT_DXF:
@@ -305,6 +307,7 @@ void thexpmap::process_db(class thdatabase * dbp)
       thexp_set_ext_fmt(".svg", TT_EXPMAP_FMT_SVG)
       thexp_set_ext_fmt(".xhtml", TT_EXPMAP_FMT_XHTML)
       thexp_set_ext_fmt(".xvi", TT_EXPMAP_FMT_XVI)
+      thexp_set_ext_fmt(".th2", TT_EXPMAP_FMT_TH2)
       thexp_set_ext_fmt(".3d", TT_EXPMAP_FMT_3D)
       thexp_set_ext_fmt(".shp", TT_EXPMAP_FMT_SHP)
       thexp_set_ext_fmt(".kml", TT_EXPMAP_FMT_KML)
@@ -341,6 +344,9 @@ void thexpmap::process_db(class thdatabase * dbp)
       break;
     case TT_EXPMAP_FMT_XVI:
       this->export_xvi(this->projptr);
+      break;
+    case TT_EXPMAP_FMT_TH2:
+      this->export_th2(this->projptr);
       break;
   }
   
@@ -725,6 +731,343 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   thtext_inline = false;
 #endif
 }
+
+
+
+void thexpmap::export_th2(class thdb2dprj * prj)
+{
+  const char * fnm = this->get_output("cave.th2");  
+    
+  switch (prj->type) {
+    case TT_2DPROJ_PLAN:
+    case TT_2DPROJ_ELEV:
+    case TT_2DPROJ_EXTEND:
+      this->db->db2d.process_projection(prj);
+      break;
+    default:
+      thwarning(("projection type not supported in TH2 export"));
+      return;
+  }
+  
+  if (thdb.db1d.station_vec.size() == 0) {
+    thwarning(("no data to export"));
+    return;
+  }
+
+
+  
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif 
+
+  FILE * pltf;
+  pltf = fopen(fnm,"w");
+  if (pltf == NULL) {
+    thwarning(("can't open %s for output",fnm))
+    return;
+  }
+
+  double xmin = thnan, xmax = thnan, ymin = thnan, ymax = thnan, cx, cy, sf;
+  double shx, shy;
+
+  // scale factor: assume 100dpi
+  sf = 3937.00787402 * this->layout->scale;
+  
+#define check_cxy_minmax() \
+  if (thisnan(xmin)) { \
+    xmin = cx; \
+    ymin = cy; \
+    xmax = cx; \
+    ymax = cy; \
+  } else { \
+    if (xmin > cx) xmin = cx; \
+    if (ymin > cy) ymin = cy; \
+    if (xmax < cx) xmax = cx; \
+    if (ymax < cy) ymax = cy; \
+  }
+
+
+  // check all points from selected scraps
+  thdb2dpt_list::iterator pli;
+  for(pli = this->db->db2d.pt_list.begin(); pli != this->db->db2d.pt_list.end(); pli++) {
+    if ((pli->pscrap != NULL) && (pli->pscrap->fsptr->is_selected())) {
+      cx = sf * pli->xt;
+      cy = sf * pli->yt;
+      check_cxy_minmax();
+    }
+  }
+
+  shx = xmin - 2.0;
+  shy = ymin - 2.0;
+  xmin -= shx; xmax -= shx; 
+  ymin -= shy; ymax -= shy;
+
+  thdb_object_list_type::iterator obi;
+  thsketch_list::iterator skit;
+  thpic * skpic;
+  thscrap * scrap;
+  int sknum = 1;
+
+  fprintf(pltf,"encoding utf-8\n");
+  fprintf(pltf,"##XTHERION## xth_me_area_adjust %.0f %.0f %0.f %0.f\n",xmin - 0.1 * (xmax - xmin), ymin - 0.1 * (ymax - ymin),xmax + 0.1 * (xmax - xmin), ymax + 0.1 * (ymax - ymin));
+  fprintf(pltf,"\n\n");
+  
+#define tf(x,y) sf * (x) - shx, sf * (y) - shy
+
+  // export scraps & scrap objects
+  for (obi = thdb.object_list.begin(); obi != thdb.object_list.end(); obi++) {
+    if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi))->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi))->proj->id == prj->id)) {
+      scrap = (thscrap *)(*obi);
+
+
+      // export sketches
+      if (this->layout->sketches) {
+        skit = scrap->sketch_list.begin();
+        while (skit != scrap->sketch_list.end()) {
+          skpic = skit->morph(sf);
+          if (skpic != NULL) {
+            double nx, ny, ns;
+            const char * srcgif;
+            nx = sf * (skpic->x - prj->shift_x) - shx; 
+            ny = sf * (skpic->y - prj->shift_y + skpic->scale * double(skpic->height)) - shy;
+            ns = skpic->scale * sf;
+
+            const char * fn;
+            size_t fnx, fnl;
+            fn = skit->m_pic.fname;
+            fnl = strlen(skit->m_pic.fname);
+            for(fnx = 0; fnx < fnl; fnx++) {
+              if (((skit->m_pic.fname[fnx] == '/') || (skit->m_pic.fname[fnx] == '\\')) && (fnx < fnl - 1)) {
+                fn = &(skit->m_pic.fname[fnx + 1]);
+              }
+            }
+            if (thtext_inline) thprintf("\n");
+            thprintf("converting %s ", fn);
+            thprintf("(%.1f Mpix) ...", double(ns * ns * skpic->width * skpic->height) / 1000000.0);
+            thtext_inline = true;
+
+            if (fabs(ns - 1.0) < 1e-8) {
+              srcgif = skpic->convert("GIF", "gif", "");            
+            } else {
+              srcgif = skpic->convert("GIF", "gif", "-resize %d", 
+                long(ns * double(skpic->width) + 0.5));            
+            }
+            
+            if (srcgif != NULL) {              
+              size_t cpch, retcode;
+              thbuffer com;
+              char prevbf[10];
+              snprintf(&(prevbf[0]),10,"%03d",sknum);
+              // Let's copy results and log-file to working directory
+#ifdef THWIN32
+              com = "copy \"";
+#else
+              com = "cp \"";
+#endif
+              com += srcgif;
+              com += "\" \"";
+              com += fnm;
+              com += ".";
+              com += &(prevbf[0]);
+              com += ".gif\"";
+
+#ifdef THWIN32
+              cpcmd = com.get_buffer();
+              for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
+                if (cpcmd[cpch] == '/') {
+                  cpcmd[cpch] = '\\';
+                }
+              }
+#endif
+
+#ifdef THDEBUG
+              thprintf("copying results\n");
+#endif
+              retcode = system(com.get_buffer());
+              if (retcode != EXIT_SUCCESS)
+                ththrow(("cp exit code -- %d", retcode))
+              for(cpch = strlen(fnm); cpch > 0; cpch--) {
+                if ((fnm[cpch] == '/') || (fnm[cpch] == '\\')) {
+                  cpch++;
+                  break;
+                }
+              }
+              fprintf(pltf,"##XTHERION## xth_me_image_insert {%.2f 1 1.0} {%.2f {}} %s.%03d.gif 0 {}\n", nx, ny, &(fnm[cpch]), sknum++);
+            }
+
+            thprintf(" done\n");
+            thtext_inline = false;
+          }
+          skit++;
+        }
+      }
+
+#define objname(obj) (obj)->get_name(), (strlen((obj)->fsptr->get_full_name()) > 0 ? "." : ""), (obj)->fsptr->get_full_name()
+
+      // export scrap itself
+      fprintf(pltf,"scrap %s%s%s\n\n", objname(scrap));
+    
+      // export scrap objects
+      th2ddataobject * so;
+      for (so = scrap->fs2doptr; so != NULL; so = so->nscrapoptr) {
+        switch (so->get_class_id()) {
+          case TT_POINT_CMD:
+            {
+              thpoint * pt = (thpoint *) so;
+              const char * typestr = thmatch_string(pt->type,thtt_point_types);
+              fprintf(pltf,"  point %.2f %.2f %s", tf(pt->point->xt, pt->point->yt), typestr);
+              if (pt->subtype != TT_POINT_SUBTYPE_UNKNOWN) {
+                switch (pt->type) {
+                  case TT_POINT_TYPE_U:
+                    fprintf(pltf, ":%s", pt->m_subtype_str);
+                    break;
+                  default:
+                    fprintf(pltf, ":%s", thmatch_string(pt->subtype, thtt_point_subtypes));
+                }
+              }
+              if (pt->type == TT_POINT_TYPE_STATION) {
+                if (pt->station_name.id != 0) {
+                  fprintf(pltf," -name %s", pt->station_name.print_name());
+                }
+              }
+              if (strlen(pt->name) > 0) {
+                fprintf(pltf," -id %s%s%s", objname(pt));
+              }
+              fprintf(pltf,"\n\n");
+            }
+            break;
+          case TT_LINE_CMD:
+            {
+              thline * ln = (thline *) so;
+              const char * typestr = thmatch_string(ln->type,thtt_line_types);
+              fprintf(pltf,"  line %s", typestr);
+              int lsubtype = TT_LINE_SUBTYPE_UNKNOWN;
+              int loutline = TT_LINE_OUTLINE_NONE;
+              switch (ln->type) {
+                case TT_LINE_TYPE_WALL:
+                  lsubtype = TT_LINE_SUBTYPE_BEDROCK;  
+                  loutline = TT_LINE_OUTLINE_OUT;
+                  break;
+                case TT_LINE_TYPE_BORDER:
+                  lsubtype = TT_LINE_SUBTYPE_VISIBLE;  
+                  break;
+                case TT_LINE_TYPE_WATER_FLOW:
+                  lsubtype = TT_LINE_SUBTYPE_PERMANENT;  
+                  break;
+                case TT_LINE_TYPE_SURVEY:
+                  lsubtype = TT_LINE_SUBTYPE_CAVE;  
+                  break;
+                case TT_LINE_TYPE_ARROW:
+                  //this->tags |= TT_LINE_TAG_HEAD_END;
+                  break;
+                case TT_LINE_TYPE_CHIMNEY:
+                  //this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
+                  break;
+                case TT_LINE_TYPE_CEILING_STEP:
+                  //this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
+                  break;
+                case TT_LINE_TYPE_CEILING_MEANDER:
+                  //this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
+                  break;
+              }
+              if (ln->type == TT_LINE_TYPE_U) fprintf(pltf, ":%s", ln->m_subtype_str);
+              else if ((ln->first_point != NULL) && (ln->first_point->subtype != lsubtype)) {
+                thdb2dlp * nlp = ln->first_point->nextlp;
+                while (nlp != NULL) {
+                  if (nlp->subtype != ln->first_point->subtype) break;
+                  nlp = nlp->nextlp;
+                }
+                if (nlp == NULL) {
+                  fprintf(pltf, ":%s", thmatch_string(ln->first_point->subtype, thtt_line_subtypes));
+                  lsubtype = ln->first_point->subtype;
+                }
+              }
+              if (ln->closed != TT_AUTO) {
+                if (ln->closed == TT_TRUE) {
+                  fprintf(pltf," -close on");
+                } else {
+                  fprintf(pltf," -close off");
+                }
+              }
+              if (ln->outline != loutline) {
+                fprintf(pltf," -outline %s", thmatch_string(ln->outline,thtt_line_outlines));
+              }
+              if (strlen(ln->name) > 0) {
+                fprintf(pltf," -id %s%s%s", objname(ln));
+              }
+              fprintf(pltf,"\n");
+              thdb2dlp * lpt = ln->first_point;
+              while (lpt != NULL) {
+                fprintf(pltf,"   ");
+                if (lpt->cp1 != NULL) {
+                  fprintf(pltf," %.2f %.2f", tf(lpt->cp1->xt, lpt->cp1->yt));
+                }
+                if (lpt->cp2 != NULL) {
+                  fprintf(pltf," %.2f %.2f", tf(lpt->cp2->xt, lpt->cp2->yt));
+                }
+                fprintf(pltf," %.2f %.2f\n", tf(lpt->point->xt, lpt->point->yt));
+                // change subtype
+                if (lpt->cp1 != NULL) {
+                  if (lpt->smooth_orig != TT_AUTO) {
+                    if (lpt->smooth_orig == TT_TRUE) {
+                      fprintf(pltf,"    smooth on\n");
+                    } else {
+                      fprintf(pltf,"    smooth off\n");
+                    }
+                  }
+                }
+                if (lpt->subtype != lsubtype) {
+                  fprintf(pltf,"    subtype %s\n", thmatch_string(lpt->subtype, thtt_line_subtypes));
+                  lsubtype = lpt->subtype;
+                }
+                if ((lpt->tags | TT_LINEPT_TAG_ALTITUDE) != 0) {
+                  // TODO: altitude tags and others
+                }
+                lpt = lpt->nextlp;
+              }
+              fprintf(pltf,"  endline\n\n");
+            }
+            break;
+          case TT_AREA_CMD:
+            {
+              tharea * ar = (tharea *) so;
+              const char * typestr = thmatch_string(ar->type,thtt_area_types);
+              fprintf(pltf,"  area %s", typestr);
+              if (ar->type == TT_AREA_TYPE_U) fprintf(pltf, ":%s", ar->m_subtype_str);
+              if (strlen(ar->name) > 0) {
+                fprintf(pltf," -id %s%s%s", objname(ar));
+              }
+              fprintf(pltf,"\n");
+              fprintf(pltf,"  endarea\n\n");
+            }
+            break;
+        }
+      }
+
+      // export e
+      fprintf(pltf,"endscrap\n\n");
+    
+    }
+  }
+
+  fclose(pltf);
+
+
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}
+
+
+
+
+
+
 
 
 

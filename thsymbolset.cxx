@@ -1528,3 +1528,4 @@ void thsymbolset::export_mp_symbol_options(FILE * mpf, int sym_id)
     fprintf(mpf,"drawoptions();\n");
   }
 }
+

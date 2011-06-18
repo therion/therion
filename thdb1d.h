@@ -89,7 +89,7 @@ class thdb1d_tree_arrow {
 
   public:
 
-  bool is_discovery, is_reversed;
+  bool is_discovery, is_nosurvey, is_reversed;
   
   thdb1d_tree_node * start_node, * end_node;
   
@@ -101,7 +101,7 @@ class thdb1d_tree_arrow {
   
   thdb1d_tree_arrow * next_arrow;
   
-  thdb1d_tree_arrow() : is_discovery(false), is_reversed(false),
+  thdb1d_tree_arrow() : is_discovery(false), is_nosurvey(false), is_reversed(false),
     start_node(NULL), end_node(NULL), 
     leg(NULL), extend(TT_EXTENDFLAG_NORMAL), negative(NULL), next_arrow(NULL) {}
   
