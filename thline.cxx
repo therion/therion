@@ -703,13 +703,14 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_PRESUMED, SYML_WALL_PRESUMED)
             thline_type_export_mp(TT_LINE_SUBTYPE_PIT, SYML_WALL_PIT)
           }
+          omacroid = macroid;
           if (this->context >= 0) 
             macroid = this->context;
           if (out->symset->assigned[macroid]) {
             if (out->file == NULL)
               return(true);
-            out->symset->export_mp_symbol_options(out->file, macroid);
-            fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+            out->symset->export_mp_symbol_options(out->file, omacroid);
+            fprintf(out->file,"%s(",out->symset->get_mp_macro(omacroid));
             this->export_path_mp(out,from,to);
             fprintf(out->file,");\n");
             if (out->layout->is_debug_joins()) {

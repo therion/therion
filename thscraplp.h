@@ -54,7 +54,7 @@ class thscraplp {
   bool lnio;
   int type;
 
-  void export_mp(class thexpmapmpxs * out, class thscrap * scrap);
+  void export_mp(class thexpmapmpxs * out, class thscrap * scrap, bool background);
   
 };
 

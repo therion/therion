@@ -211,7 +211,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   unsigned long last_st = nstat, cur_st;
   int * s_exp = new int [nstat], * cis_exp, leg_flag, x_exp;
   cis_exp = s_exp; 
-  bool is_surface, is_duplicate;
+  bool is_surface, is_duplicate, is_splay;
   for(i = 0; i < nstat; i++, *cis_exp = 0, cis_exp++);
   for(i = 0; i < nlegs; i++, tlegs++) {
     if ((*tlegs)->survey->is_selected()) {
@@ -219,6 +219,15 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
       cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
       is_surface = (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0);
       is_duplicate = (((*tlegs)->leg->flags & TT_LEGFLAG_DUPLICATE) != 0);
+      is_splay = (((*tlegs)->leg->flags & TT_LEGFLAG_SPLAY) != 0);
+
+      if (((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) == 0) && is_splay)
+        continue;
+      if (((this->items & TT_EXPMODEL_ITEM_SURFACECENTERLINE) == 0) && is_surface)
+        continue;
+      if (((this->items & TT_EXPMODEL_ITEM_CAVECENTERLINE) == 0) && (!is_surface))
+        continue;
+
       if (is_surface)
         s_exp[cur_st] |= img_SFLAG_SURFACE;
       else
@@ -238,7 +247,9 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
         leg_flag |= img_FLAG_SURFACE;
       if (is_duplicate)
         leg_flag |= img_FLAG_DUPLICATE;
-      
+      if (is_splay)
+        leg_flag |= img_FLAG_SPLAY;
+
       img_write_item(pimg, img_LINE, leg_flag, (*tlegs)->survey->get_reverse_full_name(),
           dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z);
       //thprintf("line to %d\n",last_st);
@@ -411,7 +422,7 @@ station_name[8] = 0
   thtext_inline = false;
 #endif
 }
-  
+
 void thexpmodel::export_thm_file(class thdatabase * dbp)
 {
 

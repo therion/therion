@@ -197,6 +197,7 @@ def a_ice_AUT (expr p) =
   T:=identity;
   thclean p;
   thfill p withpattern pattern_ice_AUT;
+  pickup PenC;
   thdraw p;
 enddef;
 
@@ -273,7 +274,6 @@ enddef;
 
 %% lines
 
-
 def l_wall_pit_AUT (expr P) = 
     T:=identity;
     % draw outer path
@@ -286,8 +286,7 @@ def l_wall_pit_AUT (expr P) =
     pair test;
     
     samplingdistance:=max(0.15u,laenge/1500);
-    
-    %show samplingdistance;
+ 
     path testcircle;
     % testcircle, used to test, whether the path makes a 'v'-like bend, 
     % where normal sampling and offsetting gives poor results for the parallel line
@@ -306,7 +305,7 @@ def l_wall_pit_AUT (expr P) =
         cur:=cur+samplingdistance;
         t := max( xpart inter, arctime cur of P);
         %thdraw point t of P withcolor 0.7*green;
-        forever: % FIXXME: not sure if this works!?
+        forever:
           t:= arctime cur of P;
           inter:=P intersectiontimes (testcircle rotated (angle thdir(P,t)) shifted (point t of P));
           exitif (xpart inter <0);
@@ -327,18 +326,18 @@ def l_wall_pit_AUT (expr P) =
       fi;
       exitif (cur >=laenge);
     endfor;
-    
-    % draw inner path
-    pickup PenC;
-    path innerpath;
-    innerpath =
-    for i=0 upto count-2:
-      inner[i]{(innerdir[i])} ..
-    endfor
-    if cycle P: cycle;
-    else:  inner[count-1];
-    fi;
-    thdraw innerpath;
+    if count>2:
+      % draw inner path
+      pickup PenC;
+      path innerpath;
+      innerpath =
+      for i=0 upto count-2:
+        inner[i]{(innerdir[i])} ..
+      endfor
+      if cycle P: cycle;
+      else:  inner[count-1];
+      fi;
+      thdraw innerpath;
         
     % draw the triangles
 
@@ -378,8 +377,9 @@ def l_wall_pit_AUT (expr P) =
 	 fi;
       fi;
     endfor;
+    
+    fi;
 enddef;
-
 
 
 def l_wall_sand_AUT (expr P) = 
@@ -471,11 +471,14 @@ def l_wall_debris_AUT (expr P) =
 	% scale last block to fit in the remaining gap
      scale_factor:=1.5*(laenge-cur)/block_width;
      forever:
+           exitif scale_factor < 0;  % bruces stab at preventing endless loop at large scales
            exitif xpart ( (block rotated angle(-direction t of P) scaled scale_factor shifted (point t of P)) intersectiontimes old_block) < 0;
            scale_factor:=scale_factor-0.01;
      endfor;
-
-     thdraw block rotated angle(-direction t of P) scaled scale_factor shifted (point t of P);
+     if scale_factor > 0:
+       thclean block rotated angle(-direction t of P) scaled scale_factor shifted (point t of P);
+       thdraw block rotated angle(-direction t of P) scaled scale_factor shifted (point t of P);
+     fi;
 enddef;
 
 
@@ -536,14 +539,17 @@ def l_wall_blocks_AUT (expr P) =
     % scale last block to fit in the remaining gap
     scale_factor:=(laenge-cur)/block_width;
     forever:
+	  exitif scale_factor < 0;
       exitif xpart ( ( (block) rotated angle (direction t of P) scaled scale_factor shifted (point t of P) ) intersectiontimes old_block) < 0;
       scale_factor:=scale_factor-0.001;
     endfor;
-    
-    thclean (block--cycle) rotated angle (direction t of P) scaled scale_factor shifted (point t of P);
-    thdraw (block) rotated angle (direction t of P) scaled scale_factor shifted (point t of P);
-    
+    if scale_factor > 0:
+      thclean (block--cycle) rotated angle (direction t of P) scaled scale_factor shifted (point t of P);
+      thdraw (block) rotated angle (direction t of P) scaled scale_factor shifted (point t of P);
+    fi;
 enddef;
+
+
 
 def l_wall_ice_AUT (expr P) = 
   T:=identity;
@@ -826,6 +832,7 @@ enddef;
 def p_debris_AUT (expr pos,theta,sc,al)=
     U:=(.5u,.5u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
+    pickup PenC;
     path block,q;
     block :=  ((-.15u,-.15u)--(.15u,-.15u)--(.3u,0.01u)--(.15u,.15u)--(-.15u,.15u)--cycle) ;
     

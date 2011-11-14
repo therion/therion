@@ -1,5 +1,20 @@
 HOT LIST:
 
++ pridat l:steps, l:rope, l:handrail
++ pridat do TeXu \northsouthrange a \eastwestrange
++ skontrolovat v xtherione stavovy riadok - kde je tam list
++ pridat ignore offsets
++ pridat topofil from-count/to-count/count(er) standardne namiesto dlzky
++ pridat inclination ako percetage
++ pridat ignoreall aj ked multiline
++ color map-fg survey-date, explo-date
++ loch na debiane!!! -> checkovat opengl status + moznost vypnut off-screen, ak je problem tam
++ pozriet co by stalo data dimensions/passage
++ getline a macosx -> vyhodit ho z makefile, podla maximilianovho mailiku
++ urobit dmg podla survexu
++ warning ked chces zmenit popis nejakej group
+
+
 + pridat strukturu na triangulation line
   - vypocitat typ: AB,BCDE,ABCDE,BCDEF,ABCDEF
 + do trojuholnika pridat pointer na t-line + info ci normal/reverse

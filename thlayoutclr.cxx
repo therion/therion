@@ -49,6 +49,7 @@ void thlayout_color::parse(char * str, bool aalpha) {
     case 1:
       if (aalpha && (strcmp(args[0],"transparent") == 0)) {
         this->A = 0.0;
+        this->defined = 2;
         break;
       }
       thparse_double(sv,this->R,args[0]);        

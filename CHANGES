@@ -14,6 +14,7 @@ therion:
  * added bulgarian translation (thanks to Alexander Yanev)
  * added possibility to define own coordinate system in therion.ini (cs-def)
  * updated survex img library to version 1.1.15
+ * added option -enable/disable splay-shots to 3d model export
  * bugs fixed:
    - fixed huge coordinate numbers in extended elevation xvi
    - xvi with sketches export
@@ -33,7 +34,13 @@ therion:
    - constrained Delaunay triangulation engine replaced by poly2tri
    - passage outline scanning algorithm improved
    - "nosurvey" shots allowed between unfixed stations
-
+   - added missing area flowstone and moonmilk into legend
+   - fixed xvi export of extended elevation
+   - fixed symbol-hide/show point remark bug
+   - fixed wall:debris bug in AUT symbol set (thanks to Georg Pacher)
+   - fixed layout color map-bg transparent bug
+   - LRUD area dimensions is drawn for all shots before these shots are drawn
+     (centerline is compact when map is exported from centerline only)
    
 xtherion:
  * bugs fixed:
@@ -42,7 +49,7 @@ xtherion:
 loch:
  * VTK file export changed to binary type (problem with coordinate systems)
  * bugs fixed:
-   - 
+   - vthreshold should work now for LRUD modelling
 
 --------------------------------------------------------------------------------
 Therion 5.3 (2010-02-17):

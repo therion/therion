@@ -209,6 +209,14 @@ case $tcl_platform(platform) {
     set xth(gui,platform) unix
     set xth(gui,cursor) top_left_arrow
     set xth(gui,compshow) 1
+    if {[string equal $tcl_platform(os) Darwin]} {
+        set xth(kb_meta) Meta
+        set xth(kb_control) Alt
+        set xth(gui,controlk) Cmd
+        set xth(gui,platform) macintosh
+        set xth(gui,cursor) arrow
+        set xth(gui,bindinsdel) 0
+    }
   }
   windows {
     package require registry

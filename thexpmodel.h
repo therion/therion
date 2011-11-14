@@ -73,6 +73,7 @@ enum {
   TT_EXPMODEL_ITEM_SURFACECENTERLINE = 4,  
   TT_EXPMODEL_ITEM_CENTERLINE = 6,  
   TT_EXPMODEL_ITEM_SURFACE = 8,
+  TT_EXPMODEL_ITEM_SPLAYSHOTS = 16,
   TT_EXPMODEL_ITEM_ALL = 255,  
 };
 
@@ -86,6 +87,7 @@ static const thstok thtt_expmodel_items[] = {
   {"cave-centreline", TT_EXPMODEL_ITEM_CAVECENTERLINE},
   {"centerline", TT_EXPMODEL_ITEM_CENTERLINE},
   {"centreline", TT_EXPMODEL_ITEM_CENTERLINE},
+  {"splay-shots", TT_EXPMODEL_ITEM_SPLAYSHOTS},
   {"surface", TT_EXPMODEL_ITEM_SURFACE},
   {"surface-centerline", TT_EXPMODEL_ITEM_SURFACECENTERLINE},
   {"surface-centreline", TT_EXPMODEL_ITEM_SURFACECENTERLINE},

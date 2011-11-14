@@ -198,7 +198,7 @@ void tharea::insert_border_line(int npars, char ** pars)
 
 bool tharea::export_mp(class thexpmapmpxs * out)
 {
-  int macroid = SYMA_WATER;
+  int macroid = SYMA_WATER, omacroid;
 #define tharea_type_export_mp(type,mid) case type: \
   macroid = mid; \
   break;
@@ -217,7 +217,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK)
     tharea_type_export_mp(TT_AREA_TYPE_U, SYMA_U)
   }
-  
+  omacroid = macroid;
   if (this->context >= 0) 
     macroid = this->context;
   if (!out->symset->assigned[macroid])
@@ -246,8 +246,8 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     fprintf(out->file,"a_u_%s(buildcycle(",this->m_subtype_str);
     this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
   } else {
-    out->symset->export_mp_symbol_options(out->file, macroid);
-    fprintf(out->file,"%s(buildcycle(",out->symset->get_mp_macro(macroid));
+    out->symset->export_mp_symbol_options(out->file, omacroid);
+    fprintf(out->file,"%s(buildcycle(",out->symset->get_mp_macro(omacroid));
   }
 
   this->first_line->line->export_path_mp(out);

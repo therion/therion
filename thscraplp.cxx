@@ -44,9 +44,9 @@ thscraplp::thscraplp() {
   this->type = 0;
 }
 
-void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
+void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap, bool background) {
 
-  if ((this->arrow != NULL) && (scrap->get_outline() == NULL) && (out->symset->assigned[SYMA_DIMENSIONS])) {
+  if ((this->arrow != NULL) && (scrap->get_outline() == NULL) && (out->symset->assigned[SYMA_DIMENSIONS]) && background) {
 
     lxVec vff, vf1, vf2, vtt, vt1, vt2, rvec;
     double fl, fr, tl, tr;
@@ -127,18 +127,20 @@ void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap) {
   }
   
   // export line
-  bool export_shot = true;
-  if (this->arrow != NULL) {
-    thdataleg * cl = this->arrow->leg->leg;
-    export_shot = ((cl->flags & TT_LEGFLAG_SPLAY) == 0) || scrap->centerline_io;
-  }
-  
-  if (export_shot) {
-    out->symset->export_mp_symbol_options(out->file, this->type);
-    fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
-      out->symset->get_mp_macro(this->type),
-      thxmmxst(out, this->lnx1, this->lny1),
-      thxmmxst(out, this->lnx2, this->lny2));
+  if (!background) {
+    bool export_shot = true;
+    if (this->arrow != NULL) {
+      thdataleg * cl = this->arrow->leg->leg;
+      export_shot = ((cl->flags & TT_LEGFLAG_SPLAY) == 0) || scrap->centerline_io;
+    }
+    
+    if (export_shot) {
+      out->symset->export_mp_symbol_options(out->file, this->type);
+      fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
+        out->symset->get_mp_macro(this->type),
+        thxmmxst(out, this->lnx1, this->lny1),
+        thxmmxst(out, this->lnx2, this->lny2));
+    }
   }
 
 }

@@ -415,27 +415,27 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     case TT_POINT_TYPE_LABEL:  
     case TT_POINT_TYPE_REMARK:  
     case TT_POINT_TYPE_STATION_NAME:
-      if (this->text != NULL) {
-      
+      if (this->text != NULL) {      
         switch (this->type) {
           case TT_POINT_TYPE_LABEL:
             macroid = SYMP_LABEL;
             break;
           case TT_POINT_TYPE_REMARK:
-            macroid = SYMP_LABEL;
+            macroid = SYMP_REMARK;
             break;
           default:
             macroid = SYMP_STATIONNAME;
             break;
         }
+        omacroid = macroid;
         if (this->context >= 0) 
           macroid = this->context;
         if (!out->symset->assigned[macroid])
           return(false);
         if (out->file == NULL)
           return(true);
-        out->symset->get_mp_macro(macroid);
-        out->symset->export_mp_symbol_options(out->file, macroid);
+        out->symset->get_mp_macro(omacroid);
+        out->symset->export_mp_symbol_options(out->file, omacroid);
         fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
         switch (this->type) {
           case TT_POINT_TYPE_STATION_NAME:
@@ -492,11 +492,11 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           cmark = TT_DATAMARK_TEMP;
       }
       
-      expsym = out->symset->assigned[macroid];
       omacroid = macroid;
-
       if (this->context >= 0) 
         macroid = this->context;
+      expsym = out->symset->assigned[macroid];
+      if (expsym) out->symset->get_mp_macro(omacroid);
 
       {
         thdb1ds * pst = NULL;
@@ -529,7 +529,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           commentstr += ths2tex(pst->comment, out->layout->lang);
           commentstr += " etex";
         }
-        out->symset->export_mp_symbol_options(out->file, omacroid);
+        if (out->symset->assigned[macroid])
+          out->symset->export_mp_symbol_options(out->file, omacroid);
         fprintf(out->file,"p_station(");
         this->point->export_mp(out);
         fprintf(out->file,",%d,%s,\"\"",
@@ -613,6 +614,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
             return(false);
         }
         
+        omacroid = macroid;
         if (this->context >= 0) 
           macroid = this->context;
         if (!out->symset->assigned[macroid])
@@ -620,8 +622,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
 
-        out->symset->get_mp_macro(macroid);
-        out->symset->export_mp_symbol_options(out->file, macroid);
+        out->symset->get_mp_macro(omacroid);
+        out->symset->export_mp_symbol_options(out->file, omacroid);
         fprintf(out->file,"p_label%s(btex \\thheight ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
 
         switch (this->scale) {
@@ -719,15 +721,15 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
             return(false);
         }
         
+        omacroid = macroid;
         if (this->context >= 0) 
           macroid = this->context;
         if (!out->symset->assigned[macroid])
           return(false);
         if (out->file == NULL)
-          return(true);
-        
-        out->symset->get_mp_macro(macroid);
-        out->symset->export_mp_symbol_options(out->file, macroid);
+          return(true);        
+        out->symset->get_mp_macro(omacroid);
+        out->symset->export_mp_symbol_options(out->file, omacroid);
         fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
         switch (this->tags & (TT_POINT_TAG_HEIGHT_P |
         TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) {
@@ -922,6 +924,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     fprintf(out->file,",%.1f,%d);\n",(thisnan(this->orient) ? 0 : 360.0 - this->orient - out->rr), postprocess_label);
   }
   
+  omacroid = macroid;
   if (this->context >= 0) 
     macroid = this->context;
 
@@ -937,8 +940,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
          fprintf(out->file,"p_u_%s(",this->m_subtype_str);
          this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
       } else {
-         out->symset->export_mp_symbol_options(out->file, macroid);
-         fprintf(out->file,"%s(",out->symset->get_mp_macro(macroid));
+         out->symset->export_mp_symbol_options(out->file, omacroid);
+         fprintf(out->file,"%s(",out->symset->get_mp_macro(omacroid));
       }
     }
     else

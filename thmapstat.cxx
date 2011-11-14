@@ -337,16 +337,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   }
   
   show_lengths = layout->explo_lens;
-//  ldata->cartodate
-//  ldata->cartoteam
-//  ldata->cartotitle
-//  ldata->topodate
-//  ldata->topoteam
-//  ldata->topotitle
-//  ldata->copyrights
-
-
-
+  
   ldata->explodate = "";
   ldata->exploteam = "";
   ldata->explotitle = "";

@@ -418,12 +418,15 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   }
 
   isexp = new bool [nst];
-  size_t nstvec;
+  size_t nstvec, nstvecsize;
   if (prj->type == TT_2DPROJ_EXTEND)
     nstvec = 2 * nsh;
   else
     nstvec = nst;
-  stvec = new lxVec [nstvec == 0 ? 1 : nstvec];
+  nstvecsize = 1;
+  if (nstvecsize < nstvec) nstvecsize = nstvec;
+  if (nstvecsize < nst) nstvecsize = nst;
+  stvec = new lxVec [nstvecsize];
 
   layoutnan(gxs, 1.0);
   layoutnan(gys, 1.0);
@@ -875,6 +878,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               com += ".gif\"";
 
 #ifdef THWIN32
+              char * cpcmd;
               cpcmd = com.get_buffer();
               for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
                 if (cpcmd[cpch] == '/') {
@@ -2413,18 +2417,23 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   }
 
   // a polygon
-  if (clip_polygon) {
+  if (clip_polygon && (!outline_mode)) {
     slp = scrap->get_polygon();
-    if (outline_mode) slp = NULL;
     while (slp != NULL) {
       if (slp->lnio) {
         if (out->symset->assigned[slp->type]) {
           thexpmap_export_mp_bgif;
-          slp->export_mp(out, scrap);
-          //fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
-          //  out->symset->get_mp_macro(slp->type),
-          //  thxmmxst(out, slp->lnx1, slp->lny1),
-          //  thxmmxst(out, slp->lnx2, slp->lny2));
+          slp->export_mp(out, scrap, true);
+        }
+      }
+      slp = slp->next_item;
+    }
+    slp = scrap->get_polygon();
+    while (slp != NULL) {
+      if (slp->lnio) {
+        if (out->symset->assigned[slp->type]) {
+          thexpmap_export_mp_bgif;
+          slp->export_mp(out, scrap, false);
         }
       }
       slp = slp->next_item;
@@ -2620,14 +2629,23 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   }
 
   // a polygon
-  if (!clip_polygon) {
+  if ((!clip_polygon) && (!outline_mode)) {
     slp = scrap->get_polygon();
-    if (outline_mode) slp = NULL;
     while (slp != NULL) {
       if (slp->lnio) {
         if (out->symset->assigned[slp->type]) {
           thexpmap_export_mp_bgif;
-          slp->export_mp(out, scrap);
+          slp->export_mp(out, scrap, true);
+        }
+      }
+      slp = slp->next_item;
+    }
+    slp = scrap->get_polygon();
+    while (slp != NULL) {
+      if (slp->lnio) {
+        if (out->symset->assigned[slp->type]) {
+          thexpmap_export_mp_bgif;
+          slp->export_mp(out, scrap, false);
         }
       }
       slp = slp->next_item;
