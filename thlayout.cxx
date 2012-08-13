@@ -367,6 +367,7 @@ enum {
   TTL_MAPITEM_TOPO,
   TTL_MAPITEM_EXPLO_LENS,
   TTL_MAPITEM_TOPO_LENS,
+  TTL_MAPITEM_SORT,
   TTL_MAPITEM_UNKNOWN,
 };
 
@@ -375,6 +376,7 @@ static const thstok thlayout__mapitems[] = {
   {"copyright", TTL_MAPITEM_COPYRIGHT},
   {"explo", TTL_MAPITEM_EXPLO},
   {"explo-length", TTL_MAPITEM_EXPLO_LENS},
+  {"sort", TTL_MAPITEM_SORT},
   {"topo", TTL_MAPITEM_TOPO},
   {"topo-length", TTL_MAPITEM_TOPO_LENS},
   {NULL, TTL_MAPITEM_UNKNOWN},
@@ -514,6 +516,9 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
             ththrow(("invalid map-item topo-length switch -- %s",args[1]))
           this->topo_lens = (sv == TT_TRUE);
           this->def_topo_lens = 2;
+          break;
+        case TTL_MAPITEM_SORT:
+          // TODO: sortovanie podla mena alebo metrov
           break;
         case TTL_MAPITEM_EXPLO:
         case TTL_MAPITEM_TOPO:

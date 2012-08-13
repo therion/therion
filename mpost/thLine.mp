@@ -273,6 +273,100 @@ def l_ceilingmeander_SKBB (expr P) =
 enddef;
 
 
+%Bruce Mutton 2012.06.16 uses general code for l_ceilingmeander_SKBB defined in therion source code by Martin Budaj 5.3.9
+% but ticks on outside (rock) side of lines 
+def l_ceilingmeander_UIS (expr P) =
+  pair Pp;
+  pair Pd;
+  pair Pv;
+  T:=identity;
+  cas := 0;                           % cursor to step along path
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 0.8u);  % symbol length nudged to be multiple of path length
+  pickup PenC;
+  forever:
+    t  := arctime (cas + mojkrok/2) of P;
+    Pp := (point t of P);
+    Pd := unitvector(thdir(P,t));
+    Pv := Pd rotated 90;
+    thdraw (Pp + 0.2u * Pv) --
+          (Pp + 0.3u * Pv);              % add 0.1u to each moves ticks outside
+    thdraw (Pp + 0.2u * Pv + 0.2u * Pd) --
+          (Pp + 0.2u * Pv - 0.2u * Pd);  
+    thdraw (Pp - 0.2u * Pv) --
+          (Pp - 0.3u * Pv);              % subtract 0.1u to each moves ticks outside
+    thdraw (Pp - 0.2u * Pv + 0.2u * Pd) --
+          (Pp - 0.2u * Pv - 0.2u * Pd); 
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3);  % for rounding errors
+  endfor;
+enddef;
+
+let l_ceilingmeander_NZSS = l_ceilingmeander_UIS;
+
+%Bruce Mutton 2012.06.16 uses general code for l_ceilingstep_SKBB defined in therion source code by Martin Budaj 5.3.9
+% but ticks on righthand (rock) side of line 
+def l_ceilingstep_UIS (expr P) =
+  T:=identity;
+  cas := 0;                            % cursor to step along path
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 0.8u);   % symbol length nudged to be multiple of path length
+  pickup PenC;
+  forever:
+    t1 := arctime (cas + mojkrok*1/5) of P;
+    t  := arctime (cas + mojkrok/2) of P;
+    t2 := arctime (cas + mojkrok*4/5) of P;
+    thdraw (subpath (t1,t2) of P);
+    mark_ (P,t,-0.2u);                  % change sign to -0.2u
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+  endfor;
+enddef;
+
+let l_ceilingstep_NZSS = l_ceilingstep_UIS;
+
+%Bruce Mutton 2012.06.10 uses general code for l_pit_UIS defined in therion source code by Martin Budaj 5.3.9
+% dots on righthand (rock) side of line spaced 0.2u, 0.2u same as floor-step ticks
+def l_chimney_NZSS (expr P) = 
+	T:=identity;
+	cas := 0;                            % cursor to step along path
+	dlzka := arclength P;
+	mojkrok:=adjust_step(dlzka, 0.25u);  % symbol length nudged to be multiple of path length
+	q:= (0.20u,-0.20u) -- (0.21u,-0.21u);         % dot
+
+	pickup PenC;  %2nd thinnest pen
+	forever:
+	  t := arctime cas of P;
+	thdraw q rotated angle(thdir(P,t)) shifted (point t of P ); % draw dots
+	cas := cas + mojkrok;
+	  exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+	endfor;
+	pickup PenB;   %2nd thickest pen
+	thdraw P;      %continuous line
+enddef;
+
+%Bruce Mutton 2010.06.20 uses general code and adjust_step defined in therion source code by Martin Budaj
+%for Therion 5.3.8
+def l_wall_presumed_NZSS (expr P) =
+	T:=identity;
+	cas := 0;                                 % cursor to step along path
+	dlzka := arclength P;
+	mojkrok:=adjust_step(dlzka, 1.5u);        % symbol length nudged to be multiple of path length
+	q  := (-0.2u,-0.4u)--(0,0)--(0.2u,-0.4u); % define v shape 
+	forever:
+	  t1 := arctime (cas + mojkrok*1/5) of P;
+	  t  := arctime (cas + mojkrok/2) of P;
+	  t2 := arctime (cas + mojkrok*4/5) of P;
+		pickup PenA;                          % thick
+	thdraw (subpath (t1,t2) of P);          % dash
+	  pickup PenC;                          % thin
+	  thdraw q rotated angle(thdir(P,t)) shifted (point t of P ); % v shape
+
+	  cas := cas + mojkrok;
+	  exitif cas > dlzka - (2*mojkrok/3);     % for rounding errors
+	endfor;
+enddef;
+
 def l_floormeander_SKBB (expr P) =
   pair Pp;
   pair Pd;

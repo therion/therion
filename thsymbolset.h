@@ -118,7 +118,7 @@ struct thsymbolset {
 /**
  * Vrati ID z popisu classu a symbolu.
  */
-int thsymbolset__get_id(char * symclass, char * symbol);
+int thsymbolset__get_id(const char * symclass, const char * symbol);
 
 
 /**

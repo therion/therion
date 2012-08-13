@@ -55,7 +55,7 @@ struct lxSetup {
        m_vis_centerline_cave, m_vis_centerline_surface, m_vis_centerline_splay,
        m_vis_centerline_station, m_vis_centerline_entrance, m_vis_centerline_fix, m_vis_centerline_duplicate,
        m_stlabel_comment, m_stlabel_name, m_stlabel_altitude, m_stlabel_survey;
-  bool m_srf_transparency, m_srf_texture;
+  bool m_srf_transparency, m_srf_texture, m_srf_lighting;
   bool m_walls_transparency;
   bool m_colormd_app_centerline,
     m_colormd_app_walls;

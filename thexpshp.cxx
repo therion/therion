@@ -470,7 +470,8 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
     this->m_fscrap.m_attributes.insert_attribute("_ID", (long) scrap->id);
     this->m_fscrap.m_attributes.insert_attribute("_NAME", scrap->name);
     this->m_fscrap.m_attributes.insert_attribute("_TITLE", scrap->title);
-    this->m_fscrap.m_attributes.insert_attribute("_MAP_ID", (long) xmap->output_number);
+    this->m_fscrap.m_attributes.insert_attribute("_MAP_ID", (long) xmap->map->id);
+    this->m_fscrap.m_attributes.insert_attribute("_MAP_LEVEL", (long) xmap->output_number);
     this->m_fscrap.m_attributes.insert_attribute("_MAP_TITLE", xmap->map->title);
     this->m_fscrap.m_attributes.insert_attribute("_SURVEY", scrap->fsptr->get_full_name());
     if (this->m_xproj->type == TT_2DPROJ_PLAN)
@@ -489,11 +490,13 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
       this->m_flines.point_insert(slp->lnx1 + scrap->proj->rshift_x, slp->lny1 + scrap->proj->rshift_y, slp->lnz1 + scrap->proj->rshift_z);
       this->m_flines.point_insert(slp->lnx2 + scrap->proj->rshift_x, slp->lny2 + scrap->proj->rshift_y, slp->lnz2 + scrap->proj->rshift_z);
       this->m_flines.object_insert();
+	  this->m_flines.m_attributes.insert_attribute("_SCRAP_ID",(long) scrap->id);
       this->m_flines.m_attributes.insert_attribute("_TYPE","centerline");
     } else {
       this->m_fpoints.point_insert(slp->stx + scrap->proj->rshift_x,  slp->sty + scrap->proj->rshift_y,  slp->stz + scrap->proj->rshift_z);
       this->m_fpoints.object_insert();
-      this->m_fpoints.m_attributes.insert_attribute("_TYPE","station");
+	  this->m_fpoints.m_attributes.insert_attribute("_SCRAP_ID",(long) scrap->id);
+	  this->m_fpoints.m_attributes.insert_attribute("_TYPE","station");
       this->m_fpoints.m_attributes.insert_attribute("_NAME",slp->station->name);
       this->m_fpoints.m_attributes.insert_attribute("_COMMENT",slp->station->comment);
 		}
@@ -506,9 +509,13 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
 	thline * pln;
   tharea * parea;
   obj = scrap->ls2doptr;
-  long sp, cp;
+  long sp, cp, symid;
   int csubtype;
   thdb2dlp * lp;
+  char typefc[2];
+  typefc[1] = 0;
+  std::string tststr, tstr;
+  const char * ststr;
 
 
   while (obj != NULL) {
@@ -517,7 +524,23 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
 				ppt = ((thpoint*)obj);
         this->m_fpoints.point_insert(ppt->point->xt + scrap->proj->rshift_x,  ppt->point->yt + scrap->proj->rshift_y, ppt->point->zt + scrap->proj->rshift_z, ppt->point->at);
         this->m_fpoints.object_insert();
+		this->m_fpoints.m_attributes.insert_attribute("_SCRAP_ID",(long) ppt->fscrapptr->id);
         this->m_fpoints.m_attributes.insert_attribute("_TYPE",thmatch_string(ppt->type, thtt_point_types));
+		tstr = thmatch_string(ppt->type, thtt_point_types);
+		tststr = tstr;
+		ststr = thmatch_string(ppt->subtype, thtt_point_subtypes);
+		if ((ppt->type != TT_POINT_TYPE_U) && (ststr != NULL)) {
+			tststr += ":";
+			tststr += ststr;
+		}
+		symid = thsymbolset__get_id("point", tststr.c_str());
+		if (symid < 0)
+			symid = thsymbolset__get_id("point", tstr.c_str());
+		if (symid < 0)
+			symid = 0;
+		typefc[0] = thsymbolset__fontchar[symid];
+		this->m_fpoints.m_attributes.insert_attribute("_TYPEFC",(const char *)typefc);
+		this->m_fpoints.m_attributes.insert_attribute("_TYPEFCR", thisnan(ppt->orient) ? 0.0 : 360.0 - ppt->orient);
         this->m_fpoints.m_attributes.insert_attribute("_SUBTYPE", ppt->type != TT_POINT_TYPE_U ?
               (thmatch_string(ppt->subtype, thtt_point_subtypes)) : ppt->m_subtype_str);
         this->m_fpoints.m_attributes.copy_attributes(thdb.attr.get_object(ppt->id));
@@ -549,6 +572,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
           if ((lp->subtype != csubtype) || (lp->nextlp == NULL)) {
             insert_line_segment(pln, false, this->m_flines.m_point_list, sp, cp);
             this->m_flines.object_insert();
+			this->m_flines.m_attributes.insert_attribute("_SCRAP_ID",(long) pln->fscrapptr->id);
             this->m_flines.m_attributes.insert_attribute("_TYPE",thmatch_string(pln->type, thtt_line_types));
             this->m_flines.m_attributes.insert_attribute("_SUBTYPE", pln->type != TT_LINE_TYPE_U ?
               (thmatch_string(csubtype, thtt_line_subtypes)) : pln->m_subtype_str);
@@ -577,6 +601,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
         this->m_fareas.object_insert();
         if (this->m_fareas.m_object_id > -1) {
           // system attributes
+          this->m_fareas.m_attributes.insert_attribute("_SCRAP_ID",(long) parea->fscrapptr->id);
           this->m_fareas.m_attributes.insert_attribute("_TYPE",thmatch_string(parea->type, thtt_area_types));
           this->m_fareas.m_attributes.insert_attribute("_SUBTYPE",parea->m_subtype_str);
           this->m_fareas.m_attributes.copy_attributes(thdb.attr.get_object(parea->id));

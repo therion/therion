@@ -7,7 +7,7 @@
 #include <string>
 
 
-#define thsymsets_size 7
+#define thsymsets_size 8
 
 extern int thsymsets_symbols [thsymbolset_size][thsymsets_size];
 
@@ -25,6 +25,7 @@ static const thsymbolset__char_ptr thsymsets [] = {
 "AUT",
 "BCRA",
 "NSS",
+"NZSS",
 "SKBB",
 "SM",
 "UIS",

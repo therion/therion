@@ -177,6 +177,8 @@ class thexpmodel : public thexport {
   unsigned items,
     wallsrc;
   
+  bool is_leg_exported(class thdb1dl * l); ///< Whether to export leg.
+
   void export_3d_file(class thdatabase * dbp);  ///< Export survex 3d file.
   
   void export_plt_file(class thdatabase * dbp);  ///< Export compass plt file.

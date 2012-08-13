@@ -81,7 +81,8 @@ Node* AdvancingFront::LocatePoint(const Point* point)
       } else if (point == node->next->point) {
         node = node->next;
       } else {
-        assert(0);
+        // assert(0);
+		  throw(0);
       }
     }
   } else if (px < nx) {

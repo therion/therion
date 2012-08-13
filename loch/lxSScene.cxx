@@ -25,6 +25,7 @@ enum {
   lxSS_SRF_TRANSPARENCY,
   lxSS_SRF_OPACITY,
   lxSS_SRF_TEXTURE,
+  lxSS_SRF_LIGHTING,
   lxSS_WALLS_TRANSPARENCY,
   lxSS_WALLS_OPACITY,
   lxSS_COLORMD_ALTITUDE,
@@ -61,6 +62,7 @@ BEGIN_EVENT_TABLE(lxModelSetupDlg, wxMiniFrame)
   EVT_CHECKBOX(lxSS_WALLS_TRANSPARENCY, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_SRF_TRANSPARENCY, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_SRF_TEXTURE, lxModelSetupDlg::OnCommand)
+  EVT_CHECKBOX(lxSS_SRF_LIGHTING, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_CLNVIS_STATION, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_CLNVIS_ENTRANCE, lxModelSetupDlg::OnCommand)
   EVT_CHECKBOX(lxSS_CLNVIS_FIX, lxModelSetupDlg::OnCommand)
@@ -92,6 +94,10 @@ void lxModelSetupDlg::OnCommand(wxCommandEvent& event)
 
     case lxSS_SRF_TEXTURE:
       this->m_mainFrame->ToggleSurfaceTexture();
+      break;
+
+    case lxSS_SRF_LIGHTING:
+      this->m_mainFrame->ToggleSurfaceLighting();
       break;
 
     case lxSS_SRF_TRANSPARENCY:
@@ -381,6 +387,7 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 		new wxSlider(lxPanel, lxSS_SRF_OPACITY, 50, 0, 100, wxDefaultPosition, wxDefaultSize),
     0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxBOTTOM, lxBORDER);
   ADDCB(lxSS_SRF_TEXTURE, _("Texture"))
+  ADDCB(lxSS_SRF_LIGHTING, _("Lighting"))
   // ADDCB(wxID_ANY, _("Fit to underground"))
   
   this->m_controlSizer->Add(lxBoxSizer, 1, wxEXPAND);
@@ -537,6 +544,7 @@ void lxModelSetupDlg::LoadSetup()
 
   lxFCheckBox(lxSS_SRF_TRANSPARENCY)->SetValue(stp->m_srf_transparency);
   lxFCheckBox(lxSS_SRF_TEXTURE)->SetValue(stp->m_srf_texture);
+  lxFCheckBox(lxSS_SRF_LIGHTING)->SetValue(stp->m_srf_lighting);
   lxFSlider(lxSS_SRF_OPACITY)->SetValue(100 - int(stp->m_srf_opacity * 100.0));
 
   lxFCheckBox(lxSS_WALLS_TRANSPARENCY)->SetValue(stp->m_walls_transparency);

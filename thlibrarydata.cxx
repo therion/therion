@@ -139,7 +139,7 @@ void thlibrary_init_layouts()
 	playout->def_topo_lens = 0;
 	playout->topo_lens = false;
 	playout->def_lang = 0;
-	playout->lang = THLANG_CZ;
+	playout->lang = THLANG_EN;
 	playout->def_units = 0;
 	playout->units.units = 1;
 	playout->def_layers = 0;
@@ -295,7 +295,7 @@ void thlibrary_init_layouts()
 	playout->def_topo_lens = 0;
 	playout->topo_lens = false;
 	playout->def_lang = 0;
-	playout->lang = THLANG_CZ;
+	playout->lang = THLANG_EN;
 	playout->def_units = 0;
 	playout->units.units = 1;
 	playout->def_layers = 0;

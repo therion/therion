@@ -27,6 +27,8 @@
  
 #include "thexpdb.h"
 #include "thexception.h"
+#include "thscrap.h"
+#include "thmap.h"
 #include "thdatabase.h"
 #include "thdb1d.h"
 #include "thdata.h"
@@ -143,6 +145,8 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
   thdb1ds * st, * st2;
   thsurvey * sp;
   thdata * dp;
+  thmap * mapp;
+  thscrap * scrapp;
   int pass;
   double adx, ady, adz;
   unsigned survey_name = 1, survey_full_name = 1, centreline_title = 1,
@@ -183,7 +187,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
     shotx = 0;
     IF_PRINTING {
     
-      fprintf(sqlf,"create table SURVEY "
+      fprintf(sqlf,"begin transaction;\ncreate table SURVEY "
         "(ID integer, PARENT_ID integer, NAME varchar(%d), "
         "FULL_NAME varchar(%d), TITLE varchar(%d));\n",
         survey_name, survey_full_name, survey_title);
@@ -196,7 +200,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
       fprintf(sqlf,"create table PERSON "
         "(ID integer, NAME varchar(%d), SURNAME varchar(%d));\n",
         person_name, person_surname);
-        
+
       fprintf(sqlf,"create table EXPLO "
         "(PERSON_ID integer, CENTRELINE_ID integer);\n");
         
@@ -222,6 +226,17 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
       fprintf(sqlf,"create table SHOT_FLAG "
         "(SHOT_ID integer, FLAG char(3));\n");
               
+	  fprintf(sqlf,"create table MAPS "
+        "(ID integer, SURVEY_ID integer, NAME varchar(%d), TITLE varchar(%d), PROJID integer, LENGTH real, DEPTH real);\n",
+        survey_name, survey_title);
+        
+	  fprintf(sqlf,"create table SCRAPS "
+        "(ID integer, SURVEY_ID integer, NAME varchar(%d), PROJID integer);\n",
+        survey_name);
+        
+	  fprintf(sqlf,"create table MAPITEMS "
+        "(ID integer, TYPE integer, ITEMID integer);\n");
+        
     } // END OF TABLE HEADERS
     
     // PRINTING DATA FROM OBJECTS
@@ -243,6 +258,41 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
             CHECK_STRLEN(survey_title,ESTR);
           }
           break;  // SURVEY
+
+		case TT_SCRAP_CMD:
+			scrapp = (thscrap *)(*oi);
+			IF_PRINTING {
+				fprintf(sqlf,"insert into SCRAPS values "
+				  "(%ld, %ld, '%s', %d);\n ",
+				  scrapp->id, (scrapp->fsptr != NULL ? scrapp->fsptr->id : 0), 
+				  scrapp->name, scrapp->proj->id);
+			} else {
+				CHECK_STRLEN(survey_name,scrapp->name);
+			}
+			break;
+
+		case TT_MAP_CMD:
+			mapp = (thmap *)(*oi);
+			mapp->stat.scanmap(mapp);
+			ENCODESTR(mapp->title);
+			IF_PRINTING {
+				fprintf(sqlf,"insert into MAPS values "
+				  "(%ld, %ld, '%s', %s, %d, %.3lf, %.3lf);\n ",
+				  mapp->id, (mapp->fsptr != NULL ? mapp->fsptr->id : 0), 
+				  mapp->name, ESTR, mapp->projection_id, mapp->stat.get_length(), mapp->stat.get_depth()
+				  );
+				thdb2dmi * cit = mapp->first_item;
+				while (cit != NULL) {
+					fprintf(sqlf,"insert into MAPITEMS values "
+					  "(%ld, %d, %ld);\n ",
+					  mapp->id, cit->type, cit->object->id);						
+					cit = cit->next_item;
+				}
+			} else {
+				CHECK_STRLEN(survey_name,mapp->name);
+				CHECK_STRLEN(survey_title,ESTR);
+			}
+			break;
           
         case TT_DATA_CMD:
           dp = (thdata *)(*oi);
@@ -354,6 +404,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 
     
   }  // END OF PASS CYCLE
+  fprintf(sqlf,"commit transaction;\n");
   fclose(sqlf);
   
 #ifdef THDEBUG

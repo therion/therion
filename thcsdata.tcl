@@ -52,17 +52,52 @@ set proj_specs {
   {{ijtsk}   {output} "+proj=krovak +ellps=bessel +towgs84=570.8285,85.6769,462.842,4.9984,1.5867,5.2611,3.5623" {PROJCS["S-JTSK_Krovak_East_North",GEOGCS["GCS_S_JTSK",DATUM["D_S_JTSK",SPHEROID["Bessel_1841",6377397.155,299.1528128]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Krovak"],PARAMETER["False_Easting",0.0],PARAMETER["False_Northing",0.0],PARAMETER["Pseudo_Standard_Parallel_1",78.5],PARAMETER["Scale_Factor",0.9999],PARAMETER["Azimuth",30.28813975277778],PARAMETER["Longitude_Of_Center",24.83333333333333],PARAMETER["Latitude_Of_Center",49.5],PARAMETER["X_Scale",-1.0],PARAMETER["Y_Scale",1.0],PARAMETER["XY_Plane_Rotation",90.0],UNIT["Meter",1.0]]}}
   {{ijtsk03} {output} "+proj=krovak +ellps=bessel +towgs84=485.021,169.465,483.839,7.786342,4.397554,4.102655,0" {PROJCS["S-JTSK_Krovak",GEOGCS["GCS_S_JTSK",DATUM["D_S_JTSK",SPHEROID["Bessel_1841",6377397.155,299.1528128]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Krovak"],PARAMETER["False_Easting",0.0],PARAMETER["False_Northing",0.0],PARAMETER["Pseudo_Standard_Parallel_1",78.5],PARAMETER["Scale_Factor",0.9999],PARAMETER["Azimuth",30.28813975277778],PARAMETER["Longitude_Of_Center",24.83333333333333],PARAMETER["Latitude_Of_Center",49.5],PARAMETER["X_Scale",1.0],PARAMETER["Y_Scale",1.0],PARAMETER["XY_Plane_Rotation",0.0],UNIT["Meter",1.0]]}}
   {{s-merc} {output} {+proj=merc +latts=0 +lon0=0 +k=1 +x0=0 +y0=0 +a=6378137 +b=6378137 +units=m +nadgrids=\\@null +no_defs} {}}
-  {{OSGB:ST} {output} {+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=100000 +y_0=-200000 +ellps=airy +datum=OSGB36 +units=m +no_defs} {}}
-  {{OSGB:SN} {output} {+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=200000 +y_0=-300000 +ellps=airy +datum=OSGB36 +units=m +no_defs} {}}
   {{eur79z30} {output} "+proj=utm +zone=30 +ellps=intl +towgs84=-86,-98,-119,0,0,0,0 +no_defs" {}}
 }
 
+#  {{OSGB:ST} {output} {+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=100000 +y_0=-200000 +ellps=airy +datum=OSGB36 +units=m +no_defs} {}}
+#  {{OSGB:SN} {output} {+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=200000 +y_0=-300000 +ellps=airy +datum=OSGB36 +units=m +no_defs} {}}
 
 # add UTM projections
 for {set zone 1} {$zone <= 60} {incr zone} {
   lappend proj_specs [list [format "utm%dn utm%d" $zone $zone $zone $zone $zone] {output} "+proj=utm +zone=$zone +ellps=WGS84 +datum=WGS84 +units=m" [format {PROJCS["WGS_1984_UTM_Zone_%dN",GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",%.1f],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]} $zone [expr double($zone * 6 - 183)]]]
   lappend proj_specs [list [format "utm%ds" $zone $zone $zone] {output} "+proj=utm +zone=$zone +south +ellps=WGS84 +datum=WGS84 +units=m" [format {PROJCS["WGS_1984_UTM_Zone_%dS",GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",10000000.0],PARAMETER["Central_Meridian",%.1f],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]} $zone [expr double($zone * 6 - 183)]]]
 }
+
+set osgb1 {
+	{S T}
+	{N O}
+    {H}
+}
+set osgb2 {
+	{V W X Y Z}
+	{Q R S T U}
+	{L M N O P}
+	{F G H J K}
+	{A B C D E}
+}
+
+
+set yy -1
+foreach al $osgb1 {
+	set xx 4
+	foreach a $al {
+		set y $yy
+		foreach bl $osgb2 {
+			set x $xx
+			foreach b $bl {
+				lappend proj_specs [list "OSGB:$a$b" {output} "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=[expr $x * 100000] +y_0=[expr $y * 100000] +ellps=airy +datum=OSGB36 +units=m +no_defs" {}]
+				set x [expr $x - 1]
+			}
+			set y [expr $y - 1]
+		}
+		set xx [expr $xx - 5]
+	}
+	set yy [expr $yy - 5]
+}
+
+
+set osgbspecs {{ST 1 -2} {SN 2 -3} {} {} {} {}}
 
 load_proj_init_file extern/proj4/nad/epsg epsg
 load_proj_init_file extern/proj4/nad/esri esri

@@ -330,6 +330,7 @@ void lxGLCanvas::UpdateRenderContents()
     if (this->m_initTextures) {
       glGenTextures(1, & this->m_idTexSurface);
       glGenTextures(1, & this->m_idTexStation);
+	  this->m_initTextures = false;
     }
     glBindTexture(GL_TEXTURE_2D, this->m_idTexSurface);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -908,15 +909,18 @@ void lxGLCanvas::RenderSurface() {
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat2);
   if (srf_tex) {
-    glDisable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
     glTexEnvf(GL_TEXTURE_ENV,  GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glBindTexture(GL_TEXTURE_2D, this->m_idTexSurface);
   } else {
     glDisable(GL_TEXTURE_2D);
-    glEnable(GL_LIGHTING);
   }
+
+  if (this->setup->m_srf_lighting)
+    glEnable(GL_LIGHTING);
+  else 
+    glDisable(GL_LIGHTING);
 
   vtkIdType * cPts, nPts;
   double * nmv, * ptc;

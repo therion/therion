@@ -35,6 +35,7 @@
 #include "thcmdline.h"
 #include "thparse.h"
 #include "thdatastation.h"
+#include "thlookup.h"
 #include "thgrade.h"
 #include "thlayout.h"
 #include "thscrap.h"
@@ -201,7 +202,10 @@ void thdatabase::insert(thdataobject * optr)
       this->insert_layout((thlayout *) optr);
       is_special_o = true;
       break;
-  }
+    case TT_LOOKUP_CMD:
+      this->insert_lookup((thlookup *) optr);
+      is_special_o = true;
+      break;  }
   if (is_special_o)
     return;
   
@@ -697,6 +701,22 @@ void thdatabase::insert_layout(class thlayout * optr)
 //    ththrow(("map layout already exists -- %s",optr->get_name()))
   
 }
+
+void thdatabase::insert_lookup(class thlookup * optr)
+{
+//  thdb_layout_map_type::iterator gi = 
+//    this->layout_map.find(thsurveyname(optr->get_name()));
+    
+//  if ((gi == this->layout_map.end()) || 
+//      (thcmdln.get_print_state() == THPS_LIB_SRC)) {
+    // insert grade
+    this->object_list.push_back(optr);
+    this->lookup_map[thsurveyname(optr->get_name())] = optr;
+//  }
+//  else
+//    ththrow(("map layout already exists -- %s",optr->get_name()))
+  
+}
  
  
 class thgrade * thdatabase::get_grade(char * gname)
@@ -718,6 +738,17 @@ class thlayout * thdatabase::get_layout(const char * gname)
     return NULL;
   else
     return (thlayout *)(gi->second);
+}
+
+
+class thlookup * thdatabase::get_lookup(const char * gname)
+{
+  thdb_layout_map_type::iterator gi = 
+    this->lookup_map.find(gname);
+  if (gi == this->lookup_map.end())
+    return NULL;
+  else
+    return (thlookup *)(gi->second);
 }
 
 

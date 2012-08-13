@@ -192,6 +192,7 @@ class thdatabase {
   thdb_survey_map_type survey_map;   ///< Survey search hash
   thdb_grade_map_type grade_map;   ///< Grade search hash
   thdb_layout_map_type layout_map;   ///< Layout search hash
+  thdb_layout_map_type lookup_map;   ///< Lookup search hash
   thdb_object_list_type object_list;   ///< Object list
   
   
@@ -270,6 +271,12 @@ class thdatabase {
    */
    
   void insert_layout(class thlayout * optr);
+
+  /**
+   * Insert lookup object into database.
+   */
+   
+  void insert_lookup(class thlookup * optr);
   
   
   /**
@@ -284,6 +291,12 @@ class thdatabase {
    */
    
   class thlayout * get_layout(const char * gname);
+
+  /**
+   * Retrieve lookup from database.
+   */
+   
+  class thlookup * get_lookup(const char * gname);
   
   
   /**

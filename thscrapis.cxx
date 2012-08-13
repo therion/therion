@@ -1187,13 +1187,28 @@ void thscrapis::outline_scan(class thscraplo * outln) {
       }
       oline = oline->next_segment;
     }
-    //fclose(f);
-    cdt->Triangulate();
+    
+	//fclose(f);
+	std::vector<p2t::Triangle *> triangles;
+	try {
+		cdt->Triangulate();
 
-    // set triangulation output
-    std::vector<p2t::Triangle *> triangles = cdt->GetTriangles();
+		// set triangulation output
+		triangles = cdt->GetTriangles();
 
-    this->tri_num = (long)triangles.size();
+		this->tri_num = (long)triangles.size();
+	} catch (...) {
+        const char * errscrap = this->m_scrap->name;
+        const char * errdot = "";
+        const char * errsurv = "";
+        if (strlen(this->m_scrap->fsptr->full_name) > 0) {
+          errdot = "@";
+          errsurv = this->m_scrap->fsptr->full_name;
+        }
+        thwarning(("%s%s%s -- scrap 3D reconstruction failed", errscrap, errdot, errsurv));
+        thtext_inline = false;
+		this->tri_num = 0;
+	}
     long trix, newnum;
     if (this->tri_num > 0) {
       this->tri_triangles = new pthscrapisolpt[this->tri_num][3];

@@ -122,6 +122,19 @@ void thexpmodel::dump_header(FILE * xf)
 }
 
 
+bool thexpmodel::is_leg_exported(thdb1dl * l)
+{
+  if (!l->survey->is_selected()) return false;
+  if (((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) == 0) && ((l->leg->flags & TT_LEGFLAG_SPLAY) != 0))
+    return false;
+  if (((this->items & TT_EXPMODEL_ITEM_SURFACECENTERLINE) == 0) && ((l->leg->flags & TT_LEGFLAG_SURFACE) != 0))
+    return false;
+  if (((this->items & TT_EXPMODEL_ITEM_CAVECENTERLINE) == 0) && (!((l->leg->flags & TT_LEGFLAG_SURFACE) != 0)))
+    return false;
+  return true;
+}
+
+
 void thexpmodel::dump_body(FILE * xf)
 {
   thexport::dump_body(xf);
@@ -1745,7 +1758,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
 
   numst = 0;
   for(i = 0; i < nlegs; i++, tlegs++) {
-    if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) == 0)) {
+    if (this->is_leg_exported(*tlegs) && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) == 0)) {
       cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
       if (cur_st != last_st) {
         if (numst > 0)
@@ -1754,14 +1767,14 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
         thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
           dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z,
           x, y, z);
-        fprintf(out, "\t%20.14f,%20.14f,%20.14f\n", x / THPI * 180.0, y / THPI * 180.0, z);
+        fprintf(out, "\t%.14f,%.14f,%.14f\n", x / THPI * 180.0, y / THPI * 180.0, z);
         numst = 1;
       }
       last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
       thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
         dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z,
         x, y, z);
-      fprintf(out, "\t%20.14f,%20.14f,%20.14f\n", x / THPI * 180.0, y / THPI * 180.0, z);
+      fprintf(out, "\t%.14f,%.14f,%.14f\n", x / THPI * 180.0, y / THPI * 180.0, z);
       numst++;
     }
   }

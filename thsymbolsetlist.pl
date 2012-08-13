@@ -7,6 +7,14 @@ while (<I>) {
 }
 close(I);
 
+open(I,"thsymbolsetfont.txt");
+while (<I>) {
+  if (/^\s*(\S+)\s+(\S+)\s+([a-z_]+)/) {
+    $FNTHASH{"p_$3"} = $2;
+  }
+}
+close(I);
+
 $SYMHASH{a_} = "noassign hidden";
 $SYMHASH{a_u} = "";
 $SYMHASH{a_zzz} = "noassign hidden";
@@ -82,12 +90,13 @@ $SYMHASH{x_point_airdraught} = "hidden";
 
 
 $i = 0;
-foreach $k (sort keys(SYMHASH)) {
+foreach $k (sort keys(%SYMHASH)) {
   $TK .= "  SYM" . uc($k). " = $i,\n";
   $TS .= "  \"SYM" . uc($k). "\",\n";
   $MP .= "  \"$k\",\n";
   $EX .= ($SYMHASH{$k} =~ /noassign/ ? "  false,\n" : "  true,\n");
   $HN .= ($SYMHASH{$k} =~ /hidden/ ? "  true,\n" : "  false,\n");
+  $FC .= ($FNTHASH{$k} =~ /\S+/ ? "  $FNTHASH{$k},\n" : "  0,\n");
   $i++;
 }
 
@@ -120,6 +129,9 @@ $HN};
 
 static const thsymbolset__char_ptr thsymbolset__src [] = {
 $TS};
+
+static const char thsymbolset__fontchar [] = {
+$FC};
 
 #endif
 

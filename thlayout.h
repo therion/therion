@@ -488,20 +488,6 @@ static const thstok thtt_layout_opt[] = {
 };
 
 
-/**
- * layout color value class
- */
-
-struct thlayout_color_value {
-  thlayout_color color;
-  double vdbl;
-  thdate vdate;
-  char * vname;
-};
-
-typedef std::list<thlayout_color_value> thlayout_ct;
-
-
 
 struct thlayout_map_image {
   double m_x, m_y;
@@ -542,7 +528,7 @@ class thlayout : public thdataobject {
   int color_crit, // none, altitude, ...
    color_mode, // auto - values and colors, table - colors, manual
    color_table; // hsv, cool, hot ...
-  thlayout_ct color_values; // color table
+
   
   thlayoutln * first_line, * last_line;
   

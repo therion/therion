@@ -125,6 +125,8 @@ class thmapstat {
   
 
   void export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata);
+  double get_length();
+  double get_depth();
   
 };
 

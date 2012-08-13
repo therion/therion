@@ -89,9 +89,9 @@ arrow: SKBB
 border_presumed: SKBB 
 border_temporary: SKBB 
 border_visible: SKBB 
-ceilingmeander: SKBB 
-ceilingstep: SKBB 
-chimney: UIS 
+ceilingmeander: NZSS SKBB UIS 
+ceilingstep: NZSS SKBB UIS 
+chimney: NZSS UIS 
 contour: AUT SKBB UIS 
 floormeander: SKBB 
 floorstep: AUT UIS 
@@ -118,7 +118,7 @@ wall_moonmilk: AUT
 wall_overlying: AUT 
 wall_pebbles: AUT SKBB 
 wall_pit: AUT 
-wall_presumed: UIS 
+wall_presumed: NZSS UIS 
 wall_sand: AUT SKBB 
 wall_underlying: AUT UIS 
 wall_unsurveyed: SKBB 

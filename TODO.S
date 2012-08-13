@@ -1,5 +1,17 @@
 HOT LIST:
-
++ survey level for station-name labels
++ hyperlink
++ KML description and name + bugfix
++ symbol show/hide group texts
++ do KML povrchove flagy sink/spring etc...
++ zobrazovat povrchove flagy v lochu
++ strike and dip
++ alphabetical team sorting
++ symbol hide/show user defined symbols
++ CCNP symbol set
++ team instrument bug
++ pridat strike & dip
++ fills orientation
 + pridat l:steps, l:rope, l:handrail
 + pridat do TeXu \northsouthrange a \eastwestrange
 + skontrolovat v xtherione stavovy riadok - kde je tam list
@@ -8,12 +20,16 @@ HOT LIST:
 + pridat inclination ako percetage
 + pridat ignoreall aj ked multiline
 + color map-fg survey-date, explo-date
+  -pridat layout object lookup
+  -criteria: altitude, depth, map, survey, eplo-date, topo-date
+  - -type continuous / discrete ([x y] [- x] [x -] [- -])
+  - -title text
+  -data: value color (.,-) label
 + loch na debiane!!! -> checkovat opengl status + moznost vypnut off-screen, ak je problem tam
 + pozriet co by stalo data dimensions/passage
-+ getline a macosx -> vyhodit ho z makefile, podla maximilianovho mailiku
++ getline a macosx -> vyhodit ho z makefile, podla maximilianovho mailu
 + urobit dmg podla survexu
 + warning ked chces zmenit popis nejakej group
-
 
 + pridat strukturu na triangulation line
   - vypocitat typ: AB,BCDE,ABCDE,BCDEF,ABCDEF
@@ -21,7 +37,6 @@ HOT LIST:
 + vypocitat intersection-point-up/down alebo central-point-up/down,up,down
 + vypocitat potrebne body (ABCDEF)
 + vytriangulovat
-
 
 + vytvorit thcs.h & thcs.cxx:
 	- vrati int cs podla mena alebo unknown

@@ -269,20 +269,14 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
 //      b += c.get_buffer();
 //      b += thT("units m",layout->lang);
 
-
-void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata) {
-
-  thbuffer b,c;
-  unsigned long i, cnt, tcnt;
-  thmapstat_personmap::iterator pi;
-  thmapstat_copyrightmap::iterator ci;
-  thmapstat_datamap::iterator ii;
-  thmapstat_person_data * pd;
-  bool show_lengths, z_any = false;
-  double clen = 0.0, z_top = 0.0, z_bot = 0.0;
-  c.guarantee(256);
-  b.guarantee(256);
-
+double thmapstat::get_length() {
+	double clen = 0.0;
+	thmapstat_datamap::iterator ii;
+	for(ii = this->data.begin(); ii != this->data.end(); ii++) {
+		clen += ii->first.ptr->stat_length;
+	}
+	return clen;
+}
 
 #define check_z(st) { \
   if (st != NULL) { \
@@ -296,6 +290,31 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
       } \
     } \
   }
+
+double thmapstat::get_depth() {
+	double z_top = 0.0, z_bot = 0.0;  
+	bool z_any = false;
+	thmapstat_datamap::iterator ii;
+	for(ii = this->data.begin(); ii != this->data.end(); ii++) {
+		check_z(ii->first.ptr->stat_st_top);
+		check_z(ii->first.ptr->stat_st_bottom);
+	}
+	return (z_top - z_bot);
+}
+
+
+void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata) {
+
+  thbuffer b,c;
+  unsigned long i, cnt, tcnt;
+  thmapstat_personmap::iterator pi;
+  thmapstat_copyrightmap::iterator ci;
+  thmapstat_datamap::iterator ii;
+  thmapstat_person_data * pd;
+  bool show_lengths, z_any = false;
+  double clen = 0.0, z_top = 0.0, z_bot = 0.0;
+  c.guarantee(256);
+  b.guarantee(256);
   
   for(ii = this->data.begin(); ii != this->data.end(); ii++) {
     check_z(ii->first.ptr->stat_st_top);

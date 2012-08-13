@@ -64,6 +64,8 @@ void Sweep::FinalizationPolygon(SweepContext& tcx)
   Point* p = tcx.front()->head()->next->point;
   while (!t->GetConstrainedEdgeCW(*p)) {
     t = t->NeighborCCW(*p);
+	// TU TO PADLO!
+	if (t == NULL) return;
   }
 
   // Collect interior triangles constrained by edges
@@ -122,14 +124,16 @@ void Sweep::EdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle* triangl
   Orientation o1 = Orient2d(eq, *p1, ep);
   if (o1 == COLLINEAR) {
     //throw new RuntimeException( "EdgeEvent - Collinear not supported" );
-    assert(false);
+    throw(false);
+    //assert(false);
   }
 
   Point* p2 = triangle->PointCW(point);
   Orientation o2 = Orient2d(eq, *p2, ep);
   if (o2 == COLLINEAR) {
     //throw new RuntimeException( "EdgeEvent - Collinear not supported" );
-    assert(false);
+    throw(false);
+	//assert(false);
   }
 
   if (o1 == o2) {
@@ -713,7 +717,7 @@ void Sweep::FlipEdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle* t, 
     // If we want to integrate the fillEdgeEvent do it here
     // With current implementation we should never get here
     //throw new RuntimeException( "[BUG:FIXME] FLIP failed due to missing triangle");
-    assert(0);
+    throw(0); //assert(0);
   }
 
   if (InScanArea(p, *t->PointCCW(p), *t->PointCW(p), op)) {
@@ -774,7 +778,7 @@ Point& Sweep::NextFlipPoint(Point& ep, Point& eq, Triangle& ot, Point& op)
     return *ot.PointCW(op);
   } else{
     //throw new RuntimeException("[Unsupported] Opposing point on constrained edge");
-    assert(0);
+    throw(0); //assert(0);
   }
 }
 
@@ -788,7 +792,7 @@ void Sweep::FlipScanEdgeEvent(SweepContext& tcx, Point& ep, Point& eq, Triangle&
     // If we want to integrate the fillEdgeEvent do it here
     // With current implementation we should never get here
     //throw new RuntimeException( "[BUG:FIXME] FLIP failed due to missing triangle");
-    assert(0);
+    throw(0); //assert(0);
   }
 
   if (InScanArea(eq, *flip_triangle.PointCCW(eq), *flip_triangle.PointCW(eq), op)) {

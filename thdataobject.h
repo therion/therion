@@ -50,7 +50,7 @@ enum {
   TT_SCRAP_CMD, TT_ENDSCRAP_CMD,
   TT_POINT_CMD, TT_LINE_CMD, TT_AREA_CMD,
   TT_JOIN_CMD, TT_MAP_CMD, TT_SURFACE_CMD,
-  TT_DATA_CMD, TT_IMPORT_CMD, TT_SKETCH_CMD,
+  TT_DATA_CMD, TT_IMPORT_CMD, TT_SKETCH_CMD, TT_LOOKUP_CMD,
 };
 
 
@@ -69,6 +69,7 @@ static const thstok thtt_commands[] = {
   {"join", TT_JOIN_CMD},
   {"layout", TT_LAYOUT_CMD},
   {"line", TT_LINE_CMD},
+  {"lookup", TT_LOOKUP_CMD},
   {"map", TT_MAP_CMD},
   {"point", TT_POINT_CMD},
   {"scrap", TT_SCRAP_CMD},

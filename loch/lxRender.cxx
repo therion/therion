@@ -671,6 +671,11 @@ void lxRenderFile::Render() {
       break;
   }
 
+  delete [] this->m_imgBuffLine;
+  delete [] this->m_imgBuffRow;
+  this->m_imgBuffLine = NULL;
+  this->m_imgBuffRow = NULL;
+
 }
 
 void lxRenderFile::ErrorExit(const wxString & err) {

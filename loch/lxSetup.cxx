@@ -78,6 +78,7 @@ lxSetup::lxSetup(lxData * dat)
   this->m_srf_transparency = true;
   this->m_srf_texture = true;
   this->m_srf_opacity = 0.5;
+  this->m_srf_lighting = false;
 
   this->m_walls_transparency = false;
   this->m_walls_opacity = 0.5;
@@ -196,6 +197,7 @@ void lxSetup::ResetCamera()
     this->cam_dist += target.max.y;
   }
   this->UpdatePos();
+	
   //if (this->cam_persp) {
   //  
   //}

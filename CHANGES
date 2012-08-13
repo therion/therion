@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-Already done for future Therion 5.4 (YYYY-MM-DD):
+Therion 5.3.10 (2012-08-13):
 
 therion:
  * added new point types: ice-stalactite, ice-stalagmite, ice-pillar, 
@@ -8,13 +8,19 @@ therion:
  * added new symbol groups: ice, sediments
  * added -height option for pit/wall:pit
  * added new layout option: color map-bg transparent
+ * full OSGB grid coverage (e.g. cs OSGB:ST)
  * Austrian symbol set added (thanks to Georg Pacher)
+ * added New Zealand symbol set (NZSS, thanks to Bruce Mutton)
+ * updated UIS symbol set (thanks to Bruce Mutton)
  * updated German translation (thanks to Georg Pacher)
  * updated Italian translation (thanks to Marco Corvi)
  * added bulgarian translation (thanks to Alexander Yanev)
+ * updated English translation (thanks to Bruce Mutton)
+ * added te reo Maori translation (thanks to Kyle Davis)
  * added possibility to define own coordinate system in therion.ini (cs-def)
  * updated survex img library to version 1.1.15
  * added option -enable/disable splay-shots to 3d model export
+   (works with .3d and .kml file formats) 
  * bugs fixed:
    - fixed huge coordinate numbers in extended elevation xvi
    - xvi with sketches export
@@ -34,7 +40,7 @@ therion:
    - constrained Delaunay triangulation engine replaced by poly2tri
    - passage outline scanning algorithm improved
    - "nosurvey" shots allowed between unfixed stations
-   - added missing area flowstone and moonmilk into legend
+   - added missing area flowstone, moonmilk and bedrock into legend
    - fixed xvi export of extended elevation
    - fixed symbol-hide/show point remark bug
    - fixed wall:debris bug in AUT symbol set (thanks to Georg Pacher)
@@ -48,6 +54,7 @@ xtherion:
    
 loch:
  * VTK file export changed to binary type (problem with coordinate systems)
+ * added checkbox that enables/disables surface lighting (Scene->Surface)
  * bugs fixed:
    - vthreshold should work now for LRUD modelling
 

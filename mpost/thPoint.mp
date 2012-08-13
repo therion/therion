@@ -526,7 +526,7 @@ def p_airdraught_UIS (expr pos,theta,sc,al)=
   U:=(.2u,u);
   T:=identity aligned al rotated theta scaled 1 shifted pos;
   pickup PenC;
-  thdraw (0,u)--(0,-0.75u);
+  thdraw (0,u)--(0,-0.8u);
 	p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
 	thdraw p;
 	thdraw p reflectedabout (origin,(0,u));
@@ -539,7 +539,7 @@ def p_airdraught_winter_UIS (expr pos,theta,sc,al)=
   U:=(.2u,u);
   T:=identity aligned al rotated theta scaled 1 shifted pos;
   pickup PenC;
-  thdraw (0,u)--(0,-0.75u);
+  thdraw (0,u)--(0,-0.8u);
   p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
   thdraw p;
   thdraw p reflectedabout (origin,(0,u));
@@ -556,7 +556,7 @@ def p_airdraught_summer_UIS (expr pos,theta,sc,al)=
   U:=(.2u,u);
   T:=identity aligned al rotated theta scaled 1 shifted pos;
   pickup PenC;
-  thdraw (0,u)--(0,-0.75u);
+  thdraw (0,u)--(0,-0.8u);
   p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
   thdraw p;
   thdraw p reflectedabout (origin,(0,u));

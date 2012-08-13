@@ -3301,8 +3301,12 @@ void thexpmap::export_uni_scrap(FILE * out, class thscrap * scrap)
 
 	if (avn > 0.0) {
 //		stnbuff = "SCRAP.";
-		stnbuff = scrap->fsptr->get_reverse_full_name();
-		stnbuff += ".";
+		if (scrap->fsptr != NULL) { 
+			stnbuff = scrap->fsptr->get_reverse_full_name();
+			stnbuff += ".";
+		} else {
+			stnbuff = "";
+		}
 		stnbuff += scrap->name;
 		img_write_item(pimg, img_LABEL, 0, stnbuff, avx/avn, avy/avn, avz/avn);
 	}
