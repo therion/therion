@@ -69,6 +69,7 @@ enum {
   TT_DATA_VTRESH = 2022,
   TT_DATA_WALLS = 2023,
   TT_DATA_EXTEND = 2024,
+  TT_DATA_GRID_ANGLE = 2025,
 };
 
 
@@ -90,6 +91,7 @@ static const thstok thtt_data_opt[] = {
   {"fix", TT_DATA_FIX},
   {"flags", TT_DATA_FLAGS},
   {"grade", TT_DATA_GRADE},
+  {"grid-angle", TT_DATA_GRID_ANGLE},
   {"group", TT_DATA_GROUP},
   {"infer", TT_DATA_INFER},
   {"instrument", TT_DATA_INSTRUMENT},
@@ -159,7 +161,7 @@ class thdata : public thdataobject {
     di_tocount, di_dx, di_dy, di_dz, di_direction, di_newline, di_interleaved,
     di_up, di_down, di_left, di_right;
   
-  bool dl_survey_declination_on;
+  bool dl_survey_declination_on, dl_declination_north_grid;
   
   int d_type, ///< Type of data.
     d_order[THDATA_MAX_ITEMS],  ///< Data order.

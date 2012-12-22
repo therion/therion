@@ -74,6 +74,7 @@ $SYMHASH{x_speleothems} = "hidden";
 $SYMHASH{x_passagefills} = "hidden";
 $SYMHASH{x_equipment} = "hidden";
 $SYMHASH{x_sections} = "hidden";
+$SYMHASH{x_text} = "hidden";
 $SYMHASH{x_surfacecenterline} = "noassign hidden";
 $SYMHASH{x_cavecenterline} = "noassign hidden";
 

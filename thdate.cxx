@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <locale.h>
 #ifndef THMSVC
 #include <unistd.h>
 #endif
@@ -563,6 +564,35 @@ void thdate::set_years(double sy, double ey)
       this->ehour, this->emin, this->esec);
 }
 
+void date2tm(int y, int m, int d, int hh, int mm, double ss, tm * info)
+{
+  if (y >= 0)
+    info->tm_year = y - 1900;
+  else
+    info->tm_year = 100;
+  if (m > 0)
+    info->tm_mon = m - 1;
+  else
+    info->tm_mon = 0;
+  if (d > 0)
+    info->tm_mday = d;
+  else
+    info->tm_mday = 1;
+  if (hh >= 0)
+    info->tm_hour = hh;
+  else
+    info->tm_hour = 0;
+  if (mm >= 0)
+    info->tm_min = mm;
+  else
+    info->tm_min = 0;
+  if (ss >= 0.0)
+    info->tm_sec = int(ss);
+  else
+    info->tm_sec = 0;
+
+}
+
 void thdate::print_str(int fmt) {
   unsigned int tl = thdate__bufflen - 1;
   long yyyy, mm, dd;
@@ -571,7 +601,7 @@ void thdate::print_str(int fmt) {
 
   switch (fmt) {
     case TT_DATE_FMT_UTF8_Y:
-      sep = "\xe2\x80\x93";
+      sep = " \xe2\x80\x93 ";
     case TT_DATE_FMT_Y:
       if (this->syear >= 0)
         snprintf(dst,tl,"%d",
@@ -604,56 +634,77 @@ void thdate::print_str(int fmt) {
         snprintf(dst,tl,"NULL");
       }
       break;
+
+    case TT_DATE_FMT_LOCALE:
+      {
+        struct tm s, e;
+        date2tm(this->syear, this->smonth, this->sday, this->shour, this->smin, this->ssec, &s);
+        date2tm(this->eyear, this->emonth, this->eday, this->ehour, this->emin, this->esec, &e);
+        setlocale (LC_TIME,"");
+        if (this->shour >= 0)
+          strftime(dst, tl, "%c", &s);
+        else
+          strftime(dst, tl, "%x", &s);
+        tl -= strlen(dst);        
+        dst += strlen(dst);
+        if (this->eyear > 0) {
+          if (this->ehour >= 0)
+            strftime(dst, tl, " - %c", &e);
+          else
+            strftime(dst, tl, " - %x", &e);
+        }
+      }
+      break;
       
       
     case TT_DATE_FMT_UTF8_ISO:
-      sep = "\xe2\x80\x93";
+      sep = " \xe2\x80\x93 ";
     default:
       if (this->ssec >= 0.0)
-        snprintf(dst,tl,"%d-%d-%dT%02d:%02d:%05.2f",
-          this->sday, this->smonth, this->syear,
+        snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d:%05.2f",
+          this->syear, this->smonth, this->sday, 
           this->shour, this->smin, this->ssec);
       else if (this->smin >= 0)
-        snprintf(dst,tl,"%d-%d-%dT%02d:%02d",
-          this->sday, this->smonth, this->syear,
+        snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
+          this->syear, this->smonth, this->sday, 
           this->shour, this->smin);
       else if (this->shour >= 0)
-        snprintf(dst,tl,"%d-%d-%dT%02d:%02d",
-          this->sday, this->smonth, this->syear,
+        snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
+          this->syear, this->smonth, this->sday, 
           this->shour, 0);
       else if (this->sday > 0)
-        snprintf(dst,tl,"%d-%d-%d",
-          this->sday, this->smonth, this->syear);
+        snprintf(dst,tl,"%04d-%02d-%02d",
+          this->syear, this->smonth, this->sday);
       else if (this->smonth > 0)
-        snprintf(dst,tl,"%d-%d",
-          this->smonth, this->syear);
+        snprintf(dst,tl,"%04d-%02d",
+          this->syear, this->smonth);
       else if (this->syear >= 0)
-        snprintf(dst,tl,"%d",
+        snprintf(dst,tl,"%04d",
           this->syear);
           
       tl -= strlen(dst);
       dst += strlen(dst);
       
       if (this->esec >= 0.0)
-        snprintf(dst,tl,"%s%d-%d-%dT%02d:%02d:%05.2f", sep,
-          this->eday, this->emonth, this->eyear,
+        snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d:%05.2f", sep,
+          this->eyear, this->emonth, this->eday, 
           this->ehour, this->emin, this->esec);
       else if (this->emin >= 0)
-        snprintf(dst,tl,"%s%d-%d-%dT%02d:%02d", sep,
-          this->eday, this->emonth, this->eyear,
+        snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
+          this->eyear, this->emonth, this->eday, 
           this->ehour, this->emin);
       else if (this->ehour >= 0)
-        snprintf(dst,tl,"%s%d-%d-%dT%02d:%02d", sep,
-          this->eday, this->emonth, this->eyear,
+        snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
+          this->eyear, this->emonth, this->eday, 
           this->ehour, 0);
       else if (this->eday > 0)
-        snprintf(dst,tl,"%s%d-%d-%d", sep,
-          this->eday, this->emonth, this->eyear);
+        snprintf(dst,tl,"%s%04d-%02d-%02d", sep,
+          this->eyear, this->emonth, this->eday);
       else if (this->emonth > 0)
-        snprintf(dst,tl,"%s%d-%d", sep,
-          this->emonth, this->eyear);
+        snprintf(dst,tl,"%s%04d-%02d", sep,
+          this->eyear, this->emonth);
       else if (this->eyear >= 0)
-        snprintf(dst,tl,"%s%d", sep,
+        snprintf(dst,tl,"%s%04d", sep,
           this->eyear);
       break;
   }    

@@ -26,9 +26,11 @@
 
 % some definitions
 
-vardef adjust_step (expr L, S) =     % krok is stretched a bit
-  if S <= L: L / (floor(L / S))      % according to length of path
-  else: L fi
+% adjust step according to the length of the path; return at least two steps
+
+vardef adjust_step (expr len, s) =
+  if s <= len/2: len / (floor(len / s))
+  else: len/2 fi
 enddef;
 
 def mark_(expr p,t,l) =
@@ -735,6 +737,9 @@ def l_flowstone_UIS (expr P) =
   cas := 0;
   dlzka := arclength P;
   mojkrok:=adjust_step(dlzka, .7u);
+  if (cycle P) and (dlzka < 3.5u):   % make at least 5 curls on a cyclic path
+    mojkrok := dlzka/5;
+  fi;
   pickup PenC;  
   t1:=0;
   forever:
@@ -1017,3 +1022,111 @@ def l_border_presumed_SKBB (expr Path) =
   pickup PenC;
   draw Path dashed evenly scaled (0.25 * optical_zoom);
 enddef;
+
+def l_steps_SKBB (expr P) =
+ if known ATTR_c: c := scantokens ATTR_c; else: c := 2; fi;
+ if ATTR__elevation:
+   if (c < 2):
+     thwarning("Invalid stairs definition (c<2)");
+     pickup PenA;
+     draw P withcolor red;
+   else:
+     path PP;
+     if (ypart point 0 of P) < (ypart point length P of P):
+       PP := P;
+     else:
+       PP := reverse P;
+     fi;
+     path p;     
+     for j:=0 upto ((length PP) - 1):
+       p := (point j of PP) -- (point (j + 1) of PP);
+       c := ceiling(abs((ypart point 0 of p) - (ypart point length p of p)) / (0.2 / Scale * 72 / 2.54));  % 20 cm height
+       if (c < 2): c:=2 fi;
+       pair cp;
+       cp = point length p of p - point 0 of p;
+       dx := (xpart cp) / c;
+       dy := (ypart cp) / c;
+       cp := point 0 of p;
+       for i:= 0 upto c - 1:
+         l_border_visible(cp -- cp + (0,dy) -- cp + (dx,dy));
+         cp := cp + (dx, dy);
+       endfor;
+       %draw P;
+     endfor;
+   fi;
+ else:
+   if known ATTR_l: l := scantokens ATTR_l; else: l := (length(P)-2)/2; fi;
+   if ((length(P) < 4) or (c < 2)) or ((odd length P) and (not known ATTR_l)):
+     thwarning("Invalid stairs definition" if c<2: &" (c<2)" fi);
+     pickup PenA;
+     draw P withcolor red;
+   else:
+     path p, q;
+     p = subpath (1, 1+l) of P;
+     q = reverse subpath (l+2, length(P)) of P;
+     lp := arclength(p);
+     lq := arclength(q);
+     for i=1 upto c:
+       l_border_visible(point(arctime ((i-1)/(c-1)*lp) of p) of p -- point(arctime ((i-1)/(c-1)*lq) of q) of q);
+     endfor;
+     l_border_visible(p);
+     l_border_visible(q);
+     drawoptions(withcolor 0.3*white);
+     %p_label(decimal c, point 0.5 of P, 0, 6);
+     drawoptions();
+   fi;
+ fi;
+enddef;
+
+def l_handrail_SKBB (expr P) = 
+    if ATTR__elevation:
+      T:=identity;
+      cas := 0;
+      dlzka := arclength P;
+      mojkrok:=adjust_step(dlzka, 1u);
+      pickup PenD;  
+      pair tmppoint;
+      tmph := 1 / Scale * 72 / 2.54;  % 1 m height
+      tmppoint:=(point 0 of P) +(0,tmph);
+      forever:
+        t := arctime cas of P;
+        draw point t of P -- (point t of P)+(0,tmph) withpen PenD;
+        if cas > 0:
+          draw tmppoint -- (point t of P)+(0,tmph) withpen PenC;
+          tmppoint := (point t of P)+(0,tmph);
+        fi;
+        cas := cas + mojkrok;
+        exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+      endfor;
+    else:
+      T:=identity;
+      cas := 0;
+      dlzka := arclength P;
+      mojkrok:=adjust_step(dlzka, u);
+      pickup PenD;  
+      forever:
+        t := arctime cas of P;
+        thdraw point t of P withpen pencircle scaled .25u;
+        cas := cas + mojkrok;
+        exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+      endfor;
+      pickup PenC;  
+      thdraw P;
+    fi;
+enddef;
+
+def l_fixedladder_SKBB (expr P) = 
+  pickup PenD;
+  draw P withcolor red;
+enddef;
+
+def l_ropeladder_SKBB (expr P) = 
+  pickup PenD;
+  draw P withcolor red;
+enddef;
+
+def l_viaferrata_SKBB (expr P) = 
+  pickup PenD;
+  draw P withcolor red;
+enddef;
+

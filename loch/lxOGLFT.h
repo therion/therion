@@ -38,8 +38,14 @@
 #ifdef HAVE_MPATROL
 #include <mpdebug.h>
 #endif
+
+#ifdef LXMACOSX
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
 
 #ifndef OGLFT_NO_SOLID
 #define OGLFT_NO_SOLID

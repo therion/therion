@@ -32,6 +32,7 @@
 #include "thconfig.h"
 #include "thparse.h"
 #include "thcsdata.h"
+#include "thdata.h"
 #include "thproj.h"
 #include "thcs.h"
 
@@ -175,8 +176,17 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         if (id == TTCS_UNKNOWN) {
           ththrow(("unknown coordinate system -- %s", *args));
         }
-        this->cs = id;
-        this->cs_source = this->db->csrc;
+        if (this->get_class_id() != TT_DATA_CMD) {
+          this->cs = id;
+          this->cs_source = this->db->csrc;
+        } else {
+          thdata * cobj;
+          cobj = (thdata *) this;
+          if (cobj->cgroup->dl_declination_north_grid && (id == TTCS_LOCAL))
+            ththrow(("grid-angle has beed defined -- local CS not allowed"))
+          cobj->cgroup->cs = id;
+          cobj->cgroup->cs_source = this->db->csrc;
+        }
       }
       break;
     

@@ -557,6 +557,19 @@ void thdb2d::process_area_references(tharea * aptr)
 
 void thdb2d::process_map_references(thmap * mptr)
 {
+  if (!mptr->asoc_survey.is_empty()) {
+		thdataobject * obj = this->db->get_object(mptr->asoc_survey, mptr->asoc_survey.psurvey);
+		if ((obj == NULL) || (obj->get_class_id() != TT_SURVEY_CMD)) {
+			if (mptr->asoc_survey.survey != NULL) 
+        ththrow(("%s [%d] -- invalid survey reference -- %s@%s",
+          mptr->source.name, mptr->source.line, mptr->asoc_survey.name, mptr->asoc_survey.survey))
+			else
+        ththrow(("%s [%d] -- invalid survey reference -- %s",
+          mptr->source.name, mptr->source.line, mptr->asoc_survey.name))
+		}
+		mptr->asoc_survey.psurvey = (thsurvey *) obj;
+	}
+
   if (mptr->projection_id > 0)
     return;
   if (mptr->first_item == NULL) {
@@ -2101,6 +2114,8 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
                   ppoint->throw_source();
                   threthrow2(("unable to determine station name"))
                 } else {
+                  ppoint->station_name.name = neas->name;
+                  ppoint->station_name.psurvey = neas->survey;
                   ppoint->text = neas->name;
                 }
               }

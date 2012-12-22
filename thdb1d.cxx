@@ -46,6 +46,7 @@
 #include "thconfig.h"
 #include "thtrans.h"
 #include "loch/lxMath.h"
+#include "thcs.h"
 #ifdef THMSVC
 #define hypot _hypot
 #endif
@@ -115,7 +116,8 @@ void thdb1d::scan_data()
   thdataextend_list::iterator xi;
   thdataequate_list::iterator eqi;
   thstdims_list::iterator di;
-  double meridian_convergence = thcfg.get_outcs_convergence(), declin;
+  double meridian_convergence = thcfg.get_outcs_convergence(), declin, leggridmc, lastleggridmc(0.0);
+  int lastleggridmccs = TTCS_LOCAL;
   thdata * dp;
   unsigned used_declination = 0;
   double dcc, sindecl, cosdecl, tmpx, tmpy;
@@ -326,8 +328,21 @@ void thdb1d::scan_data()
                 break;
             }
 
-            if ((meridian_convergence != 0.0) || (!thisnan(lei->declination)) || dpdeclindef) {
-              declin = meridian_convergence;
+            leggridmc = 0.0;
+            if (lei->gridcs != TTCS_LOCAL) {
+              if (lei->gridcs != lastleggridmccs) {
+                if (lei->gridcs == thcfg.outcs) {
+                  lastleggridmc = meridian_convergence;
+                } else {
+                  lastleggridmc = thcfg.get_cs_convergence(lei->gridcs);
+                }
+                lastleggridmccs = lei->gridcs;
+              }
+              leggridmc = lastleggridmc;
+            }
+
+            if ((leggridmc != 0.0) || (meridian_convergence != 0.0) || (!thisnan(lei->declination)) || dpdeclindef) {
+              declin = meridian_convergence - leggridmc;
               if (!thisnan(lei->declination)) {
                 declin += lei->declination;
                 used_declination |= 2;
@@ -584,11 +599,13 @@ unsigned long thdb1d::get_station_id(thobjectname on, thsurvey * ps)
         
 }
 
-void thdb1ds::set_parent_data(class thdata * pd, unsigned pd_priority, unsigned pd_slength) {
-  if ((pd_slength > this->data_slength)) 
-    this->data = pd;
-  else if ((pd_slength == this->data_slength) && (pd_priority >= this->data_priority))
-    this->data = pd;
+void thdb1ds::set_parent_data(class thdata * pd, unsigned pd_priority) {
+	if (pd_priority > this->data_priority) {
+		this->data.clear();
+		this->data_priority = pd_priority;
+	}
+	if (pd_priority == this->data_priority)
+		this->data.push_back(pd);
 }
 
 
@@ -602,14 +619,13 @@ unsigned long thdb1d::insert_station(class thobjectname on, class thsurvey * ps,
   // first insert object into database
   ps = this->db->get_survey(on.survey, ps);
   unsigned long csurvey_id = (ps == NULL) ? 0 : ps->id;
-  size_t pd_slength = strlen(ps->full_name);
   on.survey = NULL;
 
   if (!is_temp) {
     thdb1d_station_map_type::iterator sti;
     sti = this->station_map.find(thobjectid(on.name, csurvey_id)); 
     if (sti != this->station_map.end()) {
-      this->station_vec[sti->second - 1].set_parent_data(pd,pd_priority,pd_slength);
+      this->station_vec[sti->second - 1].set_parent_data(pd,pd_priority);
       return sti->second;
     }
     if (!(this->db->insert_datastation(on, ps))) {
@@ -627,7 +643,7 @@ unsigned long thdb1d::insert_station(class thobjectname on, class thsurvey * ps,
   } else {
     cstation->set_temporary(on.name);
   }
-  cstation->set_parent_data(pd,pd_priority,pd_slength);
+  cstation->set_parent_data(pd,pd_priority);
   return this->lsid;  
 }
 

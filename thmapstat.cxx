@@ -68,6 +68,14 @@ thmapstat::thmapstat()
   scanned = false;
 }
 
+void thmapstat::resetdata() {
+	this->data.clear();
+	this->surveyed_by.clear();
+	this->discovered_by.clear();
+	this->surveyed_date.reset();
+	this->discovered_date.reset();
+}
+
 
 void thmapstat::adddata(thmapstat_datamap * dm) {
 
@@ -90,8 +98,7 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
   ii = dm->begin();
   while (ii != dm->end()) {
   
-    if ((ii->second > 1) && 
-        (this->data.find(ii->first) == this->data.end())) {
+    if (this->data.find(ii->first) == this->data.end()) {
       this->data[ii->first] = 2;
 
 #ifdef THDEBUG
@@ -202,6 +209,22 @@ void thmapstat::scanmap(class thmap * map) {
     }
     mi = mi->next_item;
   }
+
+	if (map->asoc_survey.psurvey != NULL) {
+		map->stat.resetdata();
+		thmapstat_datamap dm;
+		thmapstat_dataptr dp;
+		thdataobject * obj;
+		for(thdb_object_list_type::iterator it = thdb.object_list.begin(); it != thdb.object_list.end(); it++) {
+			obj = *it;
+			if ((obj->get_class_id() == TT_DATA_CMD) && (obj->is_in_survey(map->asoc_survey.psurvey))) {
+				dp.ptr = (thdata*)obj;
+				dm[dp] = 1;
+			}
+		}
+		map->stat.adddata(&dm);
+	}
+
   
   // potom prida do map->statu autorov a copyrighty z map
   // map->stat.addobj(map);
@@ -232,14 +255,17 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
     return 1;
 }
 
-#define thmapstat_print_team(team_map, team_name, max_items, teamstr) \
+#define thmapstat_print_team(team_map, team_name, max_items, alphasort, teamstr) \
     fprintf(f,"\\" team_name "={"); \
     pd = new thmapstat_person_data [team_map.size()]; \
     i = 0; \
     for (pi = team_map.begin(); \
           pi != team_map.end(); pi++) { \
       pd[i].person = pi->first; \
-      pd[i].crit = pi->second.crit; \
+      if (alphasort) \
+        pd[i].crit = 0.0; \
+      else \
+        pd[i].crit = pi->second.crit; \
       i++; \
     } \
     qsort(pd,cnt,sizeof(thmapstat_person_data),thmapstat_person_data_compar); \
@@ -355,7 +381,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
 
   }
   
-  show_lengths = layout->explo_lens;
+  show_lengths = (layout->explo_lens == TT_LAYOUT_LENSTAT_ON);
   
   ldata->explodate = "";
   ldata->exploteam = "";
@@ -380,7 +406,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
       ldata->explodate = discovered_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->discovered_by,"exploteam", layout->max_explos, ldata->exploteam);
+    thmapstat_print_team(this->discovered_by,"exploteam", layout->max_explos, (layout->explo_lens == TT_LAYOUT_LENSTAT_OFF) ,ldata->exploteam);
     
   }
   
@@ -388,7 +414,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   ldata->topodate = "";
   ldata->topoteam = "";
   ldata->topotitle = "";
-  show_lengths = layout->topo_lens;
+  show_lengths = (layout->topo_lens == TT_LAYOUT_LENSTAT_ON);
   if ((this->surveyed_by.size() > 0) && (layout->max_topos != 0)) {
   
     cnt = this->surveyed_by.size();
@@ -409,7 +435,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
       ldata->topodate = surveyed_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->surveyed_by,"topoteam", layout->max_topos, ldata->topoteam);
+    thmapstat_print_team(this->surveyed_by,"topoteam", layout->max_topos, (layout->topo_lens == TT_LAYOUT_LENSTAT_OFF), ldata->topoteam);
     
   }
 
@@ -437,7 +463,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
       ldata->cartodate = drawn_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->drawn_by,"cartoteam", layout->max_cartos, ldata->cartoteam);
+    thmapstat_print_team(this->drawn_by,"cartoteam", layout->max_cartos, true, ldata->cartoteam);
     
   }
 

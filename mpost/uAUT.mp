@@ -190,6 +190,7 @@ def a_debris_AUT (expr p) =
      endfor;
   );
   clip tmp_pic to p;
+  drawoptions();
   draw tmp_pic;
 enddef;  
 
@@ -268,6 +269,7 @@ def a_blocks_AUT (expr p) =
      endfor;
   );
   clip tmp_pic to p;
+  drawoptions();
   draw tmp_pic;
 enddef;  
 

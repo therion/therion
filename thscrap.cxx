@@ -1054,16 +1054,18 @@ thscrapen * thscrap::get_ends() {
 
 void thscrap::insert_adata(class thdb1ds * as) {
   // najde ci dane data uz mame
-  if (as->data == NULL)
+  if (as->data.empty())
     return;
   thmapstat_dataptr temp;
-  temp.ptr = as->data;
-  
-  thmapstat_datamap::iterator di = this->adata.find(temp);
-  if (di == adata.end()) {
-    this->adata[temp] = 1;
-  } else {
-    di->second++;
+
+  for(std::list<thdata *>::iterator it = as->data.begin(); it != as->data.end(); it++) {
+	  temp.ptr = *it;
+	  thmapstat_datamap::iterator di = this->adata.find(temp);
+	  if (di == adata.end()) {
+		this->adata[temp] = 1;
+	  } else {
+		di->second++;
+	  }
   }
   
 }

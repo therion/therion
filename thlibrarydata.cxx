@@ -135,9 +135,9 @@ void thlibrary_init_layouts()
 	playout->def_max_copys = 0;
 	playout->max_copys = -1;
 	playout->def_explo_lens = 0;
-	playout->explo_lens = false;
+	playout->explo_lens = 2;
 	playout->def_topo_lens = 0;
-	playout->topo_lens = false;
+	playout->topo_lens = 2;
 	playout->def_lang = 0;
 	playout->lang = THLANG_EN;
 	playout->def_units = 0;
@@ -291,9 +291,9 @@ void thlibrary_init_layouts()
 	playout->def_max_copys = 0;
 	playout->max_copys = -1;
 	playout->def_explo_lens = 0;
-	playout->explo_lens = false;
+	playout->explo_lens = 2;
 	playout->def_topo_lens = 0;
-	playout->topo_lens = false;
+	playout->topo_lens = 2;
 	playout->def_lang = 0;
 	playout->lang = THLANG_EN;
 	playout->def_units = 0;

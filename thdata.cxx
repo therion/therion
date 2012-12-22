@@ -30,6 +30,7 @@
 #include "thchenc.h"
 #include "thinfnan.h"
 #include "thsurvey.h"
+#include "thlayout.h"
 #include "thgrade.h"
 #include "thcsdata.h"
 #include <string.h>
@@ -46,6 +47,7 @@ thdata::thdata()
   this->dl_declination = thnan;
   this->dl_survey_declination = thnan;
   this->dl_survey_declination_on = false;
+  this->dl_declination_north_grid = false;
   this->dl_direction = true;
   this->dli_plumbs = false;
   this->dli_equates = false;
@@ -327,7 +329,15 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       this->cgroup->set_data_infer(cod.nargs, args);
       break;
       
+    case TT_DATA_GRID_ANGLE:
+      this->cgroup->dl_declination_north_grid = true;
+      if (this->cgroup->cs == TTCS_LOCAL)
+        ththrow(("missing coordinate system specification"))
+      this->cgroup->set_data_declination(cod.nargs, args);
+      break;
+
     case TT_DATA_DECLINATION:
+      this->cgroup->dl_declination_north_grid = false;
       this->cgroup->set_data_declination(cod.nargs, args);
       break;
       
@@ -367,6 +377,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       if (cod.nargs > 1) {
         for(prole_i = 1; prole_i < cod.nargs; prole_i++) {
           switch (thmatch_token(args[prole_i], thtt_dataleg_comp)) {
+            case TT_DATALEG_ALTITUDE:
             case TT_DATALEG_LENGTH:
             case TT_DATALEG_BEARING:
             case TT_DATALEG_GRADIENT:
@@ -379,6 +390,8 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
             case TT_DATALEG_COUNT:
             case TT_DATALEG_DEPTH:
             case TT_DATALEG_STATION:
+            case TT_DATALEG_POSITION:
+            case TT_DATALEG_DIMS:
             case TT_DATALEG_UP:
             case TT_DATALEG_DOWN:
             case TT_DATALEG_LEFT:
@@ -840,9 +853,9 @@ void thdata::set_data_declination(int nargs, char ** args)
   }
   else 
     if (nid != TT_SV_NAN)
-      ththrow(("missing declination units"))
+      ththrow(("missing angular units"))
   if ((nid != TT_SV_NUMBER) && (nid != TT_SV_NAN))
-    ththrow(("invalid declination -- %s", args[0]))
+    ththrow(("invalid number -- %s", args[0]))
 }
   
 void thdata::set_data_infer(int nargs, char ** args)
@@ -1283,10 +1296,16 @@ void thdata::set_data_data(int nargs, char ** args)
           err_idanl = true;
           break;
         }
-        if (this->d_type != TT_DATATYPE_NORMAL) {
-          err_itype = true;
-          break;
+        switch (this->d_type) {
+          case TT_DATATYPE_NORMAL:
+          case TT_DATATYPE_DIVING:
+          case TT_DATATYPE_CYLPOLAR:
+            break;
+          default:
+            err_itype = true;
         }
+        if (err_itype)
+          break;
         this->di_count = true;
         this->di_interleaved = true;
         break;
@@ -1300,10 +1319,16 @@ void thdata::set_data_data(int nargs, char ** args)
           err_inimm = true;
           break;
         }
-        if (this->d_type != TT_DATATYPE_NORMAL) {
-          err_itype = true;
-          break;
+        switch (this->d_type) {
+          case TT_DATATYPE_NORMAL:
+          case TT_DATATYPE_DIVING:
+          case TT_DATATYPE_CYLPOLAR:
+            break;
+          default:
+            err_itype = true;
         }
+        if (err_itype)
+          break;
         this->di_fromcount = true;
         break;
 
@@ -1316,10 +1341,16 @@ void thdata::set_data_data(int nargs, char ** args)
           err_inimm = true;
           break;
         }
-        if (this->d_type != TT_DATATYPE_NORMAL) {
-          err_itype = true;
-          break;
+        switch (this->d_type) {
+          case TT_DATATYPE_NORMAL:
+          case TT_DATATYPE_DIVING:
+          case TT_DATATYPE_CYLPOLAR:
+            break;
+          default:
+            err_itype = true;
         }
+        if (err_itype)
+          break;
         this->di_tocount = true;
         break;
 
@@ -1473,7 +1504,9 @@ void thdata::set_data_data(int nargs, char ** args)
       break;
     case TT_DATATYPE_CYLPOLAR:
     case TT_DATATYPE_DIVING:
-      all_data = this->di_length && (this->di_bearing || this->di_backbearing) 
+      all_data = (this->di_count ||
+        (this->di_fromcount && this->di_tocount) ||
+        this->di_length) && (this->di_bearing || this->di_backbearing) 
         && (this->di_depth ||
         (this->di_fromdepth && this->di_todepth) || this->di_depthchange);
       break;
@@ -1643,8 +1676,11 @@ void thdata::insert_data_leg(int nargs, char ** args)
         this->set_survey_declination();
       this->cd_leg->declination = this->dl_survey_declination;
     }
-    else
+    else {
+      if (this->dl_declination_north_grid)
+          this->cd_leg->gridcs = this->cs;
       this->cd_leg->declination = this->dl_declination;
+    }
     this->cd_leg->infer_plumbs = this->dli_plumbs;
     this->cd_leg->infer_equates = this->dli_equates;
     
@@ -2675,6 +2711,9 @@ void thdata::start_group() {
   tmp->dls_y = this->cgroup->dls_y; 
   tmp->dls_z = this->cgroup->dls_z; 
   tmp->dl_declination = this->cgroup->dl_declination;
+  tmp->dl_declination_north_grid = this->cgroup->dl_declination_north_grid;
+  tmp->cs = this->cgroup->cs;
+  tmp->cs_source = this->cgroup->cs_source;
   tmp->dl_survey_declination = this->cgroup->dl_survey_declination;
     
   tmp->dli_plumbs = this->cgroup->dli_plumbs; 

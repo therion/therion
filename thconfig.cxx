@@ -64,6 +64,7 @@ enum {
   TT_AUTO_JOIN,
   TT_SYSTEM,
   TT_SKETCH_WARP,
+  TT_SKETCH_COLORS,
   TT_TEXT,
   TT_LANG,
 };
@@ -78,6 +79,7 @@ static const thstok thtt_cfg[] = {
   {"language", TT_LANG},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
+  {"sketch-colors", TT_SKETCH_COLORS},
   {"sketch-warp", TT_SKETCH_WARP},
   {"source", TT_SOURCE},
   {"system", TT_SYSTEM},
@@ -106,6 +108,8 @@ thconfig::thconfig()
   this->outcs_sumx = 0.0;
   this->outcs_sumy = 0.0;
   this->outcs_sumn = 0.0;
+
+  this->sketch_colors = 256;
 
   this->tmp3dSMP = 1.0;
   this->tmp3dWALLSMP = 0.1;
@@ -426,6 +430,22 @@ void thconfig::load()
             if (sv == THSKETCH_WARP_UNKNOWN)
               ththrow(("invalid sketch-warp switch -- %s", valuemb.get_buffer()[0]));
             this->sketch_warp = sv;
+            break;
+
+          case TT_SKETCH_COLORS:
+            if (valuemb.get_size() != 1)
+              ththrow(("invalid argument - use sketch-colors <number>"));
+            {
+              double dum;
+              thparse_double(sv, dum, valuemb.get_buffer()[0]);
+              if (sv != TT_SV_NUMBER)
+                ththrow(("number expected -- %s", valuemb.get_buffer()[0]));
+              int dumi;
+              dumi = int(dum);
+              if ((dumi < 2) || (dumi > 65536))
+                ththrow(("number out of range -- %s", valuemb.get_buffer()[0]));
+              this->sketch_colors = dumi;
+            }
             break;
 
           case TT_SETUP3D:
@@ -821,6 +841,17 @@ double thconfig::get_outcs_convergence()
   double x, y, z;
   if (this->get_outcs_center(x, y, z)) {
     return thcsconverg(thcs_get_data(this->outcs)->params, x, y);
+  } else {
+    return 0.0;
+  }
+}
+
+double thconfig::get_cs_convergence(int cs)
+{
+  double x, y, z, lx, ly, lz;
+  if (this->get_outcs_center(x, y, z)) {
+    thcs2cs(thcs_get_data(this->outcs)->params, thcs_get_data(cs)->params, x, y, z, lx, ly, lz);
+    return thcsconverg(thcs_get_data(cs)->params, lx, ly);
   } else {
     return 0.0;
   }

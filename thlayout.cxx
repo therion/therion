@@ -192,9 +192,9 @@ thlayout::thlayout()
   this->max_copys = -1;
 
   this->def_explo_lens = 0;
-  this->explo_lens = false;
+  this->explo_lens = TT_LAYOUT_LENSTAT_HIDE;
   this->def_topo_lens = 0;
-  this->topo_lens = false;
+  this->topo_lens = TT_LAYOUT_LENSTAT_HIDE;
 
   this->def_lang = 0;
   this->lang = thcfg.get_lang();
@@ -376,7 +376,6 @@ static const thstok thlayout__mapitems[] = {
   {"copyright", TTL_MAPITEM_COPYRIGHT},
   {"explo", TTL_MAPITEM_EXPLO},
   {"explo-length", TTL_MAPITEM_EXPLO_LENS},
-  {"sort", TTL_MAPITEM_SORT},
   {"topo", TTL_MAPITEM_TOPO},
   {"topo-length", TTL_MAPITEM_TOPO_LENS},
   {NULL, TTL_MAPITEM_UNKNOWN},
@@ -504,21 +503,18 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       sv2 = thmatch_token(args[0],thlayout__mapitems);
       switch (sv2) {
         case TTL_MAPITEM_EXPLO_LENS:
-          sv = thmatch_token(args[1],thtt_bool);
-          if (sv == TT_UNKNOWN_BOOL)
+          sv = thmatch_token(args[1],thtt_layout_lenstat);
+          if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
             ththrow(("invalid map-item explo-length switch -- %s",args[1]))
-          this->explo_lens = (sv == TT_TRUE);
+          this->explo_lens = sv;
           this->def_explo_lens = 2;
           break;
         case TTL_MAPITEM_TOPO_LENS:
-          sv = thmatch_token(args[1],thtt_bool);
-          if (sv == TT_UNKNOWN_BOOL)
+          sv = thmatch_token(args[1],thtt_layout_lenstat);
+          if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
             ththrow(("invalid map-item topo-length switch -- %s",args[1]))
-          this->topo_lens = (sv == TT_TRUE);
+          this->topo_lens = sv;
           this->def_topo_lens = 2;
-          break;
-        case TTL_MAPITEM_SORT:
-          // TODO: sortovanie podla mena alebo metrov
           break;
         case TTL_MAPITEM_EXPLO:
         case TTL_MAPITEM_TOPO:
@@ -1139,9 +1135,9 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->max_copys = %d;\n",this->max_copys);
 
   thprintf("\tplayout->def_explo_lens = %d;\n",this->def_explo_lens);
-  thprintf("\tplayout->explo_lens = %s;\n",(this->explo_lens ? "true" : "false"));
+  thprintf("\tplayout->explo_lens = %d;\n",this->explo_lens);
   thprintf("\tplayout->def_topo_lens = %d;\n",this->def_topo_lens);
-  thprintf("\tplayout->topo_lens = %s;\n",(this->topo_lens ? "true" : "false"));
+  thprintf("\tplayout->topo_lens = %d;\n",this->topo_lens);
 
   thprintf("\tplayout->def_lang = %d;\n", this->def_lang);
   thprintf("\tplayout->lang = %s;\n",thlang_getcxxid(this->lang));

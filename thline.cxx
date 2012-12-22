@@ -706,7 +706,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           omacroid = macroid;
           if (this->context >= 0) 
             macroid = this->context;
-          if (out->symset->assigned[macroid]) {
+          if (out->symset->is_assigned(macroid)) {
             if (out->file == NULL)
               return(true);
             out->symset->export_mp_symbol_options(out->file, omacroid);
@@ -735,7 +735,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       omacroid = macroid;
       if (this->context >= 0) 
         macroid = this->context;
-      if ((this->text == NULL) || (!out->symset->assigned[macroid])) {
+      if ((this->text == NULL) || (!out->symset->is_assigned(macroid))) {
         postprocess = false;
         break;
       } 
@@ -769,7 +769,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       macroid = SYML_CONTOUR;
       if (this->context >= 0) 
         macroid = this->context;
-      if (!out->symset->assigned[macroid]) {
+      if (!out->symset->is_assigned(macroid)) {
         postprocess = false;  
         break;
       }
@@ -801,7 +801,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       macroid = SYML_SLOPE;
       if (this->context >= 0) 
         macroid = this->context;
-      if (!out->symset->assigned[macroid]) {
+      if (!out->symset->is_assigned(macroid)) {
         postprocess = false;  
         break;
       }
@@ -891,11 +891,17 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_EDGE, SYML_ROCKEDGE)
     thline_type_export_mp(TT_LINE_TYPE_GRADIENT, SYML_GRADIENT)
     thline_type_export_mp(TT_LINE_TYPE_U, SYML_U)
+    thline_type_export_mp(TT_LINE_TYPE_HANDRAIL, SYML_HANDRAIL)
+    thline_type_export_mp(TT_LINE_TYPE_ROPE, SYML_ROPE)
+    thline_type_export_mp(TT_LINE_TYPE_ROPE_LADDER, SYML_ROPELADDER)
+    thline_type_export_mp(TT_LINE_TYPE_FIXED_LADDER, SYML_FIXEDLADDER)
+    thline_type_export_mp(TT_LINE_TYPE_STEPS, SYML_STEPS)
+    thline_type_export_mp(TT_LINE_TYPE_VIA_FERRATA, SYML_VIAFERRATA)
     case TT_LINE_TYPE_ARROW:
       macroid = SYML_ARROW;
       if (this->context >= 0) 
         macroid = this->context;
-      if (!out->symset->assigned[macroid]) {
+      if (!out->symset->is_assigned(macroid)) {
         postprocess = false;  
         break;
       }
@@ -917,7 +923,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       macroid = SYML_SECTION;
       if (this->context >= 0) 
         macroid = this->context;
-      if (!out->symset->assigned[macroid]) {
+      if (!out->symset->is_assigned(macroid)) {
         postprocess = false;  
         break;
       }
@@ -974,7 +980,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           omacroid = macroid;
           if (this->context >= 0) 
             macroid = this->context;
-          if (out->symset->assigned[macroid]) {
+          if (out->symset->is_assigned(macroid)) {
             if (out->file == NULL)
               return(true);
             out->symset->export_mp_symbol_options(out->file, omacroid);
@@ -1018,7 +1024,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           omacroid = macroid;
           if (this->context >= 0) 
             macroid = this->context;
-          if (out->symset->assigned[macroid]) {
+          if (out->symset->is_assigned(macroid)) {
             if (out->file == NULL)
               return(true);
             out->symset->export_mp_symbol_options(out->file, omacroid);
@@ -1051,7 +1057,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
           omacroid = macroid;
           if (this->context >= 0) 
             macroid = this->context;
-          if (out->symset->assigned[macroid]) {
+          if (out->symset->is_assigned(macroid)) {
             if (out->file == NULL)
               return(true);
             out->symset->export_mp_symbol_options(out->file, omacroid);
@@ -1078,7 +1084,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       omacroid = macroid;
       if (this->context >= 0) 
         macroid = this->context;
-      if (out->symset->assigned[macroid]) {
+      if (out->symset->is_assigned(macroid)) {
         if (out->file == NULL)
           return(true);
         if (this->type == TT_LINE_TYPE_U) {

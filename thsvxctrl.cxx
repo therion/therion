@@ -38,6 +38,7 @@
 #include <iostream>
 #include <fstream>
 #include "thsurvey.h"
+#include "thcs.h"
 #include "thlogfile.h"
 #include "extern/img.h"
 #include <math.h>
@@ -181,11 +182,26 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
     }
   }
 
+  double leggridmc;
+  leggridmc = 0.0;
+  if (legp->gridcs != TTCS_LOCAL) {
+    if (legp->gridcs != this->lastleggridmccs) {
+      if (legp->gridcs == thcfg.outcs) {
+        this->lastleggridmc = this->meridian_convergence;
+      } else {
+        this->lastleggridmc = thcfg.get_cs_convergence(legp->gridcs);
+      }
+      this->lastleggridmccs = legp->gridcs;
+    }
+    leggridmc = this->lastleggridmc;
+  }
+
+
   // recalculate declination if necessary
   double legp_bearing = legp->bearing;
   double legp_dx = legp->dx;
   double legp_dy = legp->dy;
-  double legp_declin = (this->meridian_convergence + (!thisnan(legp->declination) ? legp->declination : legp->implicit_declination));
+  double legp_declin = (this->meridian_convergence - leggridmc + (!thisnan(legp->declination) ? legp->declination : legp->implicit_declination));
   if (legp_declin != 0.0) {
     switch (legp->data_type) {
       case TT_DATATYPE_NORMAL:
@@ -294,6 +310,9 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
     ththrow(("can't open survex file for output -- %s", svxfn))
 
   this->meridian_convergence = thcfg.get_outcs_convergence();
+  this->lastleggridmccs = TTCS_LOCAL;
+  this->lastleggridmc = 0.0;
+
 
   fprintf(this->svxf,"*units declination clino compass degrees\n");
   fprintf(this->svxf,"*units tape depth counter northing easting altitude metres\n");

@@ -132,7 +132,16 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
       this->context = thsymbolset__get_id(args[0], args[1]);
       if (this->context < 0)
         ththrow(("invalid object context -- %s %s", args[0], args[1]))
-      if (this->context > SYMP_ZZZ)
+      if ((this->context > SYMP_ZZZ) 
+         && (this->context != SYMX_POINT_AIRDRAUGHT)
+         && (this->context != SYMX_POINT_HEIGHT)
+         && (this->context != SYMX_POINT_PASSAGEHEIGHT)
+         && (this->context != SYMX_POINT_STATION)
+         && (this->context != SYMX_POINT_WATERFLOW)
+         && (this->context != SYMX_LINE_BORDER)
+         && (this->context != SYMX_LINE_SURVEY)
+         && (this->context != SYMX_LINE_WALL)
+         && (this->context != SYMX_LINE_WATERFLOW))
         ththrow(("object context not allowed -- %s %s", args[0], args[1]))
       break;
 

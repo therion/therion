@@ -161,6 +161,7 @@ static const thstok thtt_symbol_group[] = {
   {"speleothems", SYMX_SPELEOTHEMS},
   {"surface-centerline", SYMX_SURFACECENTERLINE},
   {"surface-centreline", SYMX_SURFACECENTERLINE},
+  {"text", SYMX_TEXT},
   {"water", SYMX_WATER},
   {NULL, SYMX_}
 };
@@ -323,6 +324,12 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_ROCK_EDGE,SYML_ROCKEDGE);
         cl3(TT_LINE_TYPE_SECTION,SYML_SECTION);
         cl3(TT_LINE_TYPE_SLOPE,SYML_SLOPE);
+        cl3(TT_LINE_TYPE_HANDRAIL,SYML_HANDRAIL);
+        cl3(TT_LINE_TYPE_STEPS,SYML_STEPS);
+        cl3(TT_LINE_TYPE_ROPE,SYML_ROPE);
+        cl3(TT_LINE_TYPE_ROPE_LADDER,SYML_ROPELADDER);
+        cl3(TT_LINE_TYPE_FIXED_LADDER,SYML_FIXEDLADDER);
+        cl3(TT_LINE_TYPE_VIA_FERRATA,SYML_VIAFERRATA);
       }
       break;
     case TT_SYMBOL_POINT:
@@ -450,6 +457,11 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_ICE_STALACTITE,SYMP_ICESTALACTITE);
         cp3(TT_POINT_TYPE_ICE_STALAGMITE,SYMP_ICESTALAGMITE);
         cp3(TT_POINT_TYPE_ICE_PILLAR,SYMP_ICEPILLAR);
+        cp3(TT_POINT_TYPE_HANDRAIL,SYMP_HANDRAIL);
+        cp3(TT_POINT_TYPE_VIA_FERRATA,SYMP_VIAFERRATA);
+        cp3(TT_POINT_TYPE_STALACTITES,SYMP_STALACTITES);
+        cp3(TT_POINT_TYPE_STALAGMITES,SYMP_STALAGMITES);
+        cp3(TT_POINT_TYPE_PILLARS,SYMP_PILLARS);
       }
       break;
   }
@@ -572,6 +584,15 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(3,SYMP_STATIONNAME)
     egroup  
 
+
+    bgroup(SYMX_TEXT)
+    group(0,SYMP_LABEL)
+    group(1,SYMP_REMARK)
+    group(2,SYMP_DATE)
+    group(3,SYML_LABEL)
+    egroup
+
+
     bgroup(SYMX_WATER)
     group(0,SYMX_LINE_WATERFLOW)
     group(1,SYMX_POINT_WATERFLOW)
@@ -593,6 +614,13 @@ int thsymbolset__get_group(int group_id, int cid) {
     group( 7,SYMP_CAMP);
     group( 8,SYMP_NOEQUIPMENT);
     group( 9,SYML_ROPE);
+    group(10,SYML_HANDRAIL);
+    group(11,SYMP_HANDRAIL);
+    group(12,SYML_FIXEDLADDER);
+    group(13,SYML_ROPELADDER);
+		group(14,SYMP_VIAFERRATA);
+    group(15,SYML_VIAFERRATA);
+    group(16,SYML_STEPS);
     egroup
 
     bgroup(SYMX_SPELEOTHEMS)
@@ -783,6 +811,10 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   
   for(int i = 0; i < thsymbolset_size; i++)
     isin[i] = true;
+	if (layout->legend == TT_LAYOUT_LEGEND_ALL) {
+		this->export_symbol_show_group(mpf, SYMX_POINT_FLAG);
+	}
+
 
 // TODO:
 //   + section point (rez), line (ciara), arrow (sipocka)
@@ -799,7 +831,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
 // vlozi figure do metapostu
 #define insfig(mid,txt) \
-  if ((mid == 0) || (isused(mid))) {\
+  if (((mid == 0) || (isused(mid))) && (strlen(txt) > 0)) {\
     isin[mid] = false;\
     LEGENDITEM = LEGENDLIST.insert(LEGENDLIST.end(),dummlr); \
     fprintf(mpf,"beginfig(%d);\n",sfig); \
@@ -841,6 +873,23 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_station(SYMP_STATION_PAINTED,thT("point station:painted",layout->lang));
   legend_station(SYMP_STATION_NATURAL,thT("point station:natural",layout->lang));
   legend_station(SYMP_STATION_FIXED,thT("point station:fixed",layout->lang));
+
+#define legend_station_flag(mid,txt,flag) \
+  insfig(mid,txt); \
+  this->export_mp_symbol_options(mpf, mid); \
+  fprintf(mpf,"p_station((0.5,0.5) inscale, 0, \"\", \"%s\");\n",flag);  \
+  endfig;
+  legend_station_flag(SYMP_FLAG_ENTRANCE,thT("point flag:entrance",layout->lang),"entrance");
+  legend_station_flag(SYMP_FLAG_SINK,thT("point flag:sink",layout->lang),"sink");
+  legend_station_flag(SYMP_FLAG_SPRING,thT("point flag:spring",layout->lang),"spring");
+  legend_station_flag(SYMP_FLAG_DOLINE,thT("point flag:doline",layout->lang),"doline");
+  legend_station_flag(SYMP_FLAG_DIG,thT("point flag:dig",layout->lang),"dig");
+  legend_station_flag(SYMP_FLAG_CONTINUATION,thT("point flag:continuation",layout->lang),"continuation");
+  legend_station_flag(SYMP_FLAG_AIRDRAUGHT,thT("point flag:air-draught",layout->lang),"airdraught");
+  legend_station_flag(SYMP_FLAG_ARCH,thT("point flag:arch",layout->lang),"arch");
+  legend_station_flag(SYMP_FLAG_OVERHANG,thT("point flag:overhang",layout->lang),"overhang");
+
+
 
 #define insert_station(x,y) \
   helpsymbol \
@@ -1233,8 +1282,11 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   }
 
   legend_point(SYMP_STALACTITE,thT("point stalactite",layout->lang));
+  legend_point(SYMP_STALACTITES,thT("point stalactites",layout->lang));
   legend_point(SYMP_STALAGMITE,thT("point stalagmite",layout->lang));
+  legend_point(SYMP_STALAGMITES,thT("point stalagmites",layout->lang));
   legend_point(SYMP_PILLAR,thT("point pillar",layout->lang));
+  legend_point(SYMP_PILLARS,thT("point pillars",layout->lang));
   legend_point(SYMP_ICESTALACTITE,thT("point ice-stalactite",layout->lang));
   legend_point(SYMP_ICESTALAGMITE,thT("point ice-stalagmite",layout->lang));
   legend_point(SYMP_ICEPILLAR,thT("point ice-pillar",layout->lang));
@@ -1263,15 +1315,34 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_VEGETABLEDEBRIS,thT("point vegetable-debris",layout->lang));
   legend_point(SYMP_ROOT,thT("point root",layout->lang));
 
+#define legend_eqline(mid,txt) \
+  insfig(mid,txt); \
+  this->export_mp_symbol_options(mpf, mid); \
+  fprintf(mpf,"%s(((0.1,0.5) .. (0.9,.5)) inscale);\n",thsymbolset__mp[mid]);  \
+  endfig;
+
   // vystroj  
   legend_point(SYMP_NOEQUIPMENT,thT("point no-equipment",layout->lang));
   legend_point(SYMP_ANCHOR,thT("point anchor",layout->lang));
   legend_point(SYMP_ROPE,thT("point rope",layout->lang));
+  legend_eqline(SYML_ROPE,thT("line rope",layout->lang));
   legend_point(SYMP_ROPELADDER,thT("point rope-ladder",layout->lang));
+  legend_eqline(SYML_ROPELADDER,thT("line rope-ladder",layout->lang));
   legend_point(SYMP_FIXEDLADDER,thT("point fixed-ladder",layout->lang));
+  legend_eqline(SYML_FIXEDLADDER,thT("line fixed-ladder",layout->lang));
   legend_point(SYMP_STEPS,thT("point steps",layout->lang));
+	
+	insfig(SYML_STEPS,thT("line steps",layout->lang));
+  this->export_mp_symbol_options(mpf, SYML_STEPS);
+  fprintf(mpf,"%s(((0.1,0.3) -- (0.9,.3) -- (0.9,0.7) -- (0.1,0.7) -- cycle) inscale);\n",thsymbolset__mp[SYML_STEPS]);
+  endfig;
+
+  legend_point(SYMP_VIAFERRATA,thT("point via-ferrata",layout->lang));
+  legend_eqline(SYML_VIAFERRATA,thT("line via-ferrata",layout->lang));
   legend_point(SYMP_TRAVERSE,thT("point traverse",layout->lang));
   legend_point(SYMP_BRIDGE,thT("point bridge",layout->lang));
+  legend_point(SYMP_HANDRAIL,thT("point handrail",layout->lang));
+  legend_eqline(SYML_HANDRAIL,thT("line handrail",layout->lang));
   legend_point(SYMP_CAMP,thT("point camp",layout->lang));
 
   // thT("point remark")  
@@ -1537,3 +1608,18 @@ void thsymbolset::export_mp_symbol_options(FILE * mpf, int sym_id)
   }
 }
 
+
+bool thsymbolset::is_assigned(int symbol)
+{
+  if (symbol < SYMX_)
+    return this->assigned[symbol];
+  if (symbol > SYMX_) {
+    int id = 0;
+    int cid = thsymbolset__get_group(symbol,id++);
+    while (cid >= 0) {
+      if (this->assigned[cid]) return true;
+      cid = thsymbolset__get_group(symbol,id++);
+    }
+  }
+  return false;
+}

@@ -271,7 +271,7 @@ sub update_todo_list {
     @lines = split(/\n/,$ln);
     foreach $ln (@lines) {
       $i++;
-      if ($ln =~ /^thT\(\"(.*)\"/) {
+      if ($ln =~ /^thT\(\"([^"]+)\"/) {
         $hr{$1}{therion} = $i;
       }
     }

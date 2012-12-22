@@ -53,6 +53,10 @@ struct thsymbolset {
    */
   const char * get_mp_macro(int id);
   
+  /**
+   * Return whether symbol is assigned.
+   */
+  bool is_assigned(int symbol);
 
   /**
    * Do MP suboru zapise mapsymbol() makro.

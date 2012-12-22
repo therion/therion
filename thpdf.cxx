@@ -1123,13 +1123,15 @@ void print_map(int layer, ofstream& PAGEDEF,
     // sketches
     PAGEDEF.precision(6);
     for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
-      for (list<surfpictrecord>::iterator I_sk = K->SKETCHLIST.begin();
-                                          I_sk != K->SKETCHLIST.end(); I_sk++) {
-        PAGEDEF << "\\pdfximage{" << (string) I_sk->filename << "}%" << endl;
-        PAGEDEF << "\\bitmap{" <<
-            I_sk->xx << "}{" << I_sk->yx << "}{" << I_sk->xy << "}{" << I_sk->yy << "}{" << 
-            I_sk->dx - HSHIFT << "}{" << I_sk->dy - VSHIFT  << 
-            "}{\\pdflastximage}%" << endl;
+      if (used_scraps.count(K->name) > 0) {
+        for (list<surfpictrecord>::iterator I_sk = K->SKETCHLIST.begin();
+                                            I_sk != K->SKETCHLIST.end(); I_sk++) {
+          PAGEDEF << "\\pdfximage{" << (string) I_sk->filename << "}%" << endl;
+          PAGEDEF << "\\bitmap{" <<
+              I_sk->xx << "}{" << I_sk->yx << "}{" << I_sk->xy << "}{" << I_sk->yy << "}{" << 
+              I_sk->dx - HSHIFT << "}{" << I_sk->dy - VSHIFT  << 
+              "}{\\pdflastximage}%" << endl;
+        };
       };
     }
     PAGEDEF.precision(2);

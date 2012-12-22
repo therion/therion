@@ -137,9 +137,8 @@ class thdb1ds {
   class thdataobject * fixcontext;  ///< Fix context.
   bool tmpselect;
   
-  class thdata * data;  ///< Station data.
-  unsigned data_priority, ///< 0 - undefined, 1 - equate, 2 - leg, 3 - fix
-    data_slength;  ///< Survey specification length
+  std::list<class thdata *> data;  ///< Station data.
+  unsigned data_priority; ///< 0 - undefined, 1 - equate, 2 - leg, 3 - fix
   
   char temps;           ///< Station temporary status.
   unsigned long flags;  ///< Station flags.
@@ -158,7 +157,7 @@ class thdb1ds {
    */
    
   thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), survey(NULL), fixcontext(NULL), 
-    data(NULL), data_priority(0), data_slength(0), temps(TT_TEMPSTATION_NONE),
+    data(NULL), data_priority(0), temps(TT_TEMPSTATION_NONE),
     flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), 
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
     explored(thnan) {}
@@ -170,7 +169,7 @@ class thdb1ds {
    
   thdb1ds(const char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), name(n), 
     comment(NULL), survey(ps), fixcontext(NULL),  
-    data(NULL), data_priority(0), data_slength(0), temps(TT_TEMPSTATION_NONE),
+    data(NULL), data_priority(0), temps(TT_TEMPSTATION_NONE),
     flags(TT_STATIONFLAG_NONE),
     mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), mark_station(false), 
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
@@ -181,7 +180,7 @@ class thdb1ds {
    * Set parent data.
    */
   
-  void set_parent_data(class thdata * pd, unsigned pd_priority, unsigned pd_slength);
+  void set_parent_data(class thdata * pd, unsigned pd_priority);
   
 
   /**

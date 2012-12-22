@@ -7,11 +7,11 @@ CMNOBJECTS = \
   img.o
 
 # VTKVERSION = 5.4
-VTKVERSION = $(shell tclsh getvtkver.tcl version)
+VTKVERSION = $(shell tclsh ./getvtkver.tcl version)
 # VTKPATH = /usr/local/include/vtk-$(VTKVERSION)
-VTKPATH = $(shell tclsh getvtkver.tcl incpath)
+VTKPATH = $(shell tclsh ./getvtkver.tcl incpath)
 # VTKLIBPATH = /usr/local/lib/vtk-$(VTKVERSION)
-VTKLIBPATH = $(shell tclsh getvtkver.tcl libpath)
+VTKLIBPATH = $(shell tclsh ./getvtkver.tcl libpath)
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
 POSTMAKE =
 STRIPFLAG = -s
@@ -54,11 +54,11 @@ LXPLATFORM = LINUX
 # PLATFORM MACOSX
 ##CXX = c++
 ##CC = cc
-##POBJECTS = getline.o
-##CXXPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cxxflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
-##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --static --cflags) -I/usr/X11R6/include
+##POBJECTS = 
+##CXXPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --cxxflags) $(shell freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
+##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --cflags) -I/usr/X11R6/include
 ##LXLIBDIR = 
-##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
+##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##POSTMAKE = cp -f ./loch ./loch.app/Contents/MacOS
 ##STRIPFLAG =
 
@@ -73,14 +73,14 @@ LXPLATFORM = LINUX
 ##LDBFLAGS = $(STRIPFLAG)
 
 # BUILD OXYGEN
-CCBFLAGS = -O2
-CXXBFLAGS = -O2
-LDBFLAGS = $(STRIPFLAG)
+##CCBFLAGS = -O2
+##CXXBFLAGS = -O2
+##LDBFLAGS = $(STRIPFLAG)
 
 # BUILD RELEASE
-##CCBFLAGS = 
-##CXXBFLAGS = 
-##LDBFLAGS = $(STRIPFLAG)
+CCBFLAGS = 
+CXXBFLAGS = 
+LDBFLAGS = $(STRIPFLAG)
 
 # BUILD DEBUG
 ##CCBFLAGS = -ggdb

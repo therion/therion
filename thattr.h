@@ -100,6 +100,8 @@ struct thattr_field {
   std::string m_xmp_name;  ///< Metapost field name.
   //  m_xmp_last;  ///< Last string value exported for given field.
 
+  std::string m_double_format; ///< Double format.
+
 };
 
 typedef std::map<std::string, thattr_field*> thattr_name2field_map;
@@ -172,7 +174,7 @@ struct thattr {
   void export_dbf(const char * fname, int encoding = TT_UTF_8);
   void export_txt(const char * fname, int encoding = TT_UTF_8);
   void export_html(const char * fname, int encoding = TT_UTF_8);
-  void export_kml(const char * fname);
+  void export_kml(const char * fname, const char * name_field);
   void export_mp_header(FILE * f);
   void export_mp_object_begin(FILE * f, long user_id);
   void export_mp_object_end(FILE * f, long user_id);

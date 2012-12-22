@@ -128,6 +128,7 @@ def a_sand_UIS (expr p) =
     endfor;
   );
   clip tmp_pic to p;
+  drawoptions();
   draw tmp_pic;
 enddef;
 
@@ -143,6 +144,8 @@ def a_bedrock_SKBB (expr Path) =
   thclean Path;
 enddef;
 
+
+% used to export centerline LRUD envelope for maps created from surveys
 
 def a_dimensions_SKBB (expr Path) =
   T:=identity;
@@ -166,6 +169,7 @@ def a_debris_SKBB (expr p) =
     endfor;
   );
   clip tmp_pic to p;
+  drawoptions();
   draw tmp_pic;
 enddef;
 
@@ -186,6 +190,7 @@ def a_clay_SKBB (expr p) =
     endfor;
   );
   clip tmp_pic to p;
+  drawoptions();
   draw tmp_pic;
 enddef;
 
@@ -210,6 +215,7 @@ def a_ice_SKBB (expr p) =
     endfor;
   );
   clip tmp_pic to p;
+  drawoptions();
   draw tmp_pic;
 enddef;
 
@@ -241,6 +247,7 @@ def a_snow_SKBB (expr P) =
     endfor;
   );
   clip tmp_pic to P;
+  drawoptions();
   draw tmp_pic;
 enddef;
 
@@ -265,6 +272,7 @@ def a_blocks_SKBB (expr p) =
     endfor;
   );
   clip tmp_pic to p;
+  drawoptions();
   draw tmp_pic;
 enddef;
 
@@ -308,6 +316,7 @@ def a_blocks_SKBB_ (expr p,o,s_beg,s_end,d_beg,d_end) =
     endfor;
   );
 %  clip tmp_pic to p;
+  drawoptions();
   draw tmp_pic;
 enddef;
 
@@ -331,6 +340,7 @@ def a_pebbles_SKBB (expr p) =
     endfor;
   );
   clip tmp_pic to p;
+  drawoptions();
   draw tmp_pic;
 enddef;
 

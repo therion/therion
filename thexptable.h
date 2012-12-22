@@ -153,6 +153,12 @@ class thexptable : public thexport {
    */
 
   std::string * get_tmp_string();
+
+  /**
+   * Add coordinates to table.
+   */
+
+  void add_coordinates(double x, double y, double z, const char * xlabel = "", const char * ylabel = "", const char * zlabel = "");
   
 };
 

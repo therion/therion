@@ -26,10 +26,6 @@
 
 
 
-enum {
-};
-
-
 class lxModelTreeDlg : public wxMiniFrame
 {
 public:

@@ -407,7 +407,7 @@ class thdataleg {
   unsigned int s_mark,  ///< Type of the station mark
     extend;  ///< Extend flags: normal, reverse, left, right, break
 
-  int walls, shape;
+  int walls, shape, gridcs;
   
   thobjectname station, from, to;
   class thsurvey * psurvey;  ///< parent survey

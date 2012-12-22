@@ -248,6 +248,7 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
 		this->m_toolBar->AddTool(LXTB_FULLSCREEN, _("Full screen"), wxBitmap(fullscreen_xpm), _("Full screen"), wxITEM_CHECK);
 		this->m_toolBar->Realize();
 
+
     // Make a menubar
     wxMenu *fileMenu = new wxMenu;
     fileMenu->Append(LXMENU_FILE_OPEN, _("&Open...\tCtrl+O"));
@@ -505,13 +506,14 @@ void lxFrame::ToggleFullScreen() {
 
 
 int lxFrame::GetFileType(wxString fName) {
-#define matchtype(w,t) if (wxMatchWild(_T(w), fName, false)) return t;
-  matchtype("*.lox",1);
-  matchtype("*.LOX",1);
-  matchtype("*.plt",2);
-  matchtype("*.PLT",2);
-  matchtype("*.3d",3);
-  matchtype("*.3D",3);
+#define matchtype(w,t) if (fName.EndsWith((const wxChar *)wxString(_T(w)))) return t;
+  matchtype(".lox",1);
+  matchtype(".LOX",1);
+  matchtype(".plt",2);
+  matchtype(".PLT",2);
+  matchtype(".3d",3);
+  matchtype(".3D",3);
+  return 1;
 }
 
 void lxFrame::DetectFileType()
@@ -659,11 +661,10 @@ void lxFrame::OnAll(wxCommandEvent& event)
        
        if (dialog.ShowModal() == wxID_OK) {
          if (event.GetId() == LXMENU_FILE_IMPORT) {
-            this->ImportFile(dialog.GetPath(), dialog.GetFilterIndex());
+            this->ImportFile(dialog.GetPath(), this->GetFileType(dialog.GetPath()));
           } else {
             this->m_fileName = dialog.GetPath();
             this->m_fileDir  = dialog.GetDirectory();
-            this->m_fileType = dialog.GetFilterIndex();
             this->DetectFileType();
             this->ReloadData();
             this->setup->ResetCamera();
@@ -1200,6 +1201,14 @@ void lxFrame::ExportRotationPictures() {
   delete tmpRD;
 }
 
+
+    
+#ifdef LXMACOSX
+void lxApp::MacOpenFile(const wxString &fileName)
+{
+    this->frame->OpenFile(fileName);
+}
+#endif    
 
 
 

@@ -20,12 +20,13 @@ enum {
   THLANG_FR = 8,
   THLANG_IT = 9,
   THLANG_MI = 10,
-  THLANG_PT = 11,
-  THLANG_PT_BR = 12,
-  THLANG_PT_PT = 13,
-  THLANG_RU = 14,
-  THLANG_SK = 15,
-  THLANG_SQ = 16,
+  THLANG_PL = 11,
+  THLANG_PT = 12,
+  THLANG_PT_BR = 13,
+  THLANG_PT_PT = 14,
+  THLANG_RU = 15,
+  THLANG_SK = 16,
+  THLANG_SQ = 17,
 };
 
  

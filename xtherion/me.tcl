@@ -256,6 +256,10 @@ proc xth_me_create_file {} {
 
   global xth
   xth_status_bar_status me ""
+
+  if {$xth(me,fopen) != 0} {
+    return 0
+  }
   
   # create file variables
   set xth(me,unredook) 0

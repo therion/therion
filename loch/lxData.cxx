@@ -43,7 +43,12 @@
 #include <vtkPointData.h>
 #include <vtkPolyDataWriter.h>
 #include <locale.h>
+#ifdef LXMACOSX
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
+
 #include <map>
 #endif  
 //LXDEPCHECK - standart libraries

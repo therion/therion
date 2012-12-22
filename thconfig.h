@@ -98,6 +98,7 @@ class thconfig {
   thconfig_src_list src;
 
   double tmp3dSMP, tmp3dWALLSMP, tmp3dMAXDIMD;
+  int sketch_colors;
 
   class thdatabase * dbptr;  ///< Associated db.
   thexporter exporter;  ///< Data exporter.
@@ -250,6 +251,8 @@ class thconfig {
    */
   
   double get_outcs_convergence();
+
+  double get_cs_convergence(int cs);
 
   bool get_outcs_center(double & x, double & y, double & z);
 

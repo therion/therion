@@ -36,10 +36,11 @@ fixedladder: SKBB
 flowstone: UIS 
 flowstonechoke: NSS 
 flute: UIS 
-gradient: AUT BCRA NSS UIS 
+gradient: AUT BCRA NSS SKBB UIS 
 guano: UIS 
 gypsum: NSS 
 gypsumflower: NSS 
+handrail: SKBB 
 helictite: UIS 
 ice: AUT UIS 
 icepillar: AUT 
@@ -53,6 +54,7 @@ noequipment: SKBB
 paleomaterial: UIS 
 pebbles: AUT UIS 
 pillar: AUT UIS 
+pillars: UIS 
 popcorn: UIS 
 raft: NSS 
 raftcone: NSS 
@@ -68,7 +70,9 @@ snow: SKBB
 sodastraw: UIS 
 spring: AUT SKBB 
 stalactite: AUT UIS 
+stalactites: UIS 
 stalagmite: AUT UIS 
+stalagmites: UIS 
 station: SKBB 
 station_fixed: ASF AUT 
 station_natural: ASF 
@@ -77,6 +81,7 @@ station_temporary: ASF AUT SKBB
 steps: SKBB 
 traverse: SKBB 
 vegetabledebris: ASF 
+viaferrata: SKBB 
 wallcalcite: UIS 
 water: AUT UIS 
 waterflow_intermittent: UIS 
@@ -93,10 +98,12 @@ ceilingmeander: NZSS SKBB UIS
 ceilingstep: NZSS SKBB UIS 
 chimney: NZSS UIS 
 contour: AUT SKBB UIS 
+fixedladder: SKBB 
 floormeander: SKBB 
 floorstep: AUT UIS 
 flowstone: AUT UIS 
 gradient: BCRA UIS 
+handrail: SKBB 
 mapconnection: SKBB 
 moonmilk: UIS 
 overhang: AUT SKBB 
@@ -104,10 +111,13 @@ pit: AUT UIS
 rockborder: UIS 
 rockedge: UIS 
 rope: SKBB 
+ropeladder: SKBB 
 section: SKBB 
 slope: BCRA SKBB 
+steps: SKBB 
 survey_cave: AUT SKBB UIS 
 survey_surface: SKBB 
+viaferrata: SKBB 
 wall_bedrock: UIS 
 wall_blocks: AUT SKBB 
 wall_clay: AUT SKBB 

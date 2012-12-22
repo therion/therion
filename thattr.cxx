@@ -290,6 +290,8 @@ void thattr::analyze_fields()
     cf->m_xdbf_decimals = 0;
     cf->m_xdbf_width = 1;
     cf->m_xdbf_name = expdbf_field_name(cf->m_name, fnset);
+    if (cf->m_double_format.empty())
+      cf->m_double_format = "%.1f";
     cf->m_xmp_name = "ATTR_";
     cf->m_xmp_name += cf->m_name;
     for(i = 5; i < cf->m_xmp_name.size(); ++i) {
@@ -581,20 +583,23 @@ void thattr::export_txt(const char * fname, int encoding)
 
 
 
-void thattr::export_kml(const char * fname)
+void thattr::export_kml(const char * fname, const char * name_field)
 {
   // Create file.
   FILE * f;
   thattr_attr * ca;
   thattr_field * cf;
-  thattr_obj_list::iterator oi;
+  thattr_obj_list::iterator oi, oinext;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
   thbuffer enc;
 
   this->analyze_fields();
-  thattr_field * lat = get_field("_LATITUDE", false), 
-      * lon = get_field("_LONGITUDE", false);
+  thattr_field * lat = get_field("Latitude", false), 
+      * lon = get_field("Longitude", false),
+      * alt = get_field("Altitude", false),
+      * namef = get_field(name_field, false);
+  double dlon, dlat, dalt;
   
   if ((lat == NULL) || (lon == NULL)) {
     thwarning(("geographical reference is not associated with table"));
@@ -606,27 +611,57 @@ void thattr::export_kml(const char * fname)
     thwarning(("unable to open file for output -- %s", fname));
     return;
   }
+
+  fprintf(f,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n<Document>\n");
+  fprintf(f,"<name>Therion KML export</name>\n<description>Therion KML export.</description>\n");
+
   
   // Insert objects and write fields.
   const char * value;
   bool hasone;
-  for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end(); ++oi) {
-    hasone = false;
-    for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
-      cf = &(*fli);
-      ai = oi->m_attributes.find(cf->m_id);
-      if (ai == oi->m_attributes.end()) {
-        value = "";
-      } else {
-        ca = &(ai->second);
-        value = ca->m_val_string.c_str();
-      }
-      fprintf(f,"%s%s",hasone ? "\t" : "",value);
-      hasone = true;
+  int clevel, nlevel;
+  clevel = 0;
+  for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end();) {
+    oinext = oi;
+    oinext ++;
+    if ((oinext != this->m_obj_list.end()) && (oinext->m_tree_level > oi->m_tree_level)) {
+        ai = oi->m_attributes.find(namef->m_id);
+        fprintf(f,"<Folder>\n<name>%s</name>\n",ai->second.m_val_string.c_str());
+        clevel++;
+    } else {      
+      ai = oi->m_attributes.find(lat->m_id);
+      dlat = ai->second.m_val_double;
+      ai = oi->m_attributes.find(lon->m_id);
+      dlon = ai->second.m_val_double;
+      ai = oi->m_attributes.find(alt->m_id);
+      dalt = ai->second.m_val_double;
+			if (namef != NULL) 
+				ai = oi->m_attributes.find(namef->m_id);
+      fprintf(f,"<Placemark>\n<name>%s</name>\n<Point>\n<coordinates>%.14f,%.14f,%.14f</coordinates>\n</Point>\n</Placemark>\n",
+				(namef != NULL) ? ai->second.m_val_string.c_str() : "", dlon, dlat, dalt);
+    }
+
+    //for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
+    //  cf = &(*fli);
+    //  ai = oi->m_attributes.find(cf->m_id);
+    //  if (ai == oi->m_attributes.end()) {
+    //    value = "";
+    //  } else {
+    //    ca = &(ai->second);
+    //    value = ca->m_val_string.c_str();
+    //  }
+    //  fprintf(f,"%s%s",hasone ? "\t" : "",value);
+    //}
+    oi++;
+    nlevel = 0;
+    if (oi != this->m_obj_list.end()) nlevel = oi->m_tree_level;
+    while (nlevel < clevel) {
+        fprintf(f,"</Folder>\n");
+        clevel--;
     }
   }
   
-  
+  fprintf(f,"</Document>\n</kml>\n");  
   fclose(f);
   
 }
@@ -722,7 +757,7 @@ void thattr::export_html(const char * fname, int encoding)
       } else {
         ca = &(ai->second);
         if (ca->m_type == THATTR_DOUBLE) {
-          snprintf(valb.get_buffer(), 127, "%.1f", ca->m_val_double);
+          snprintf(valb.get_buffer(), 127, cf->m_double_format.c_str(), ca->m_val_double);
           value = valb.get_buffer();
         } else
           value = ca->m_val_string.c_str();

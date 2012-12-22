@@ -76,6 +76,11 @@ let p_airdraught = p_airdraught_UIS;
 let p_airdraught_winter = p_airdraught_winter_UIS;
 let p_airdraught_summer = p_airdraught_summer_UIS;
 let p_station = p_station_SKBB;
+let p_handrail = p_handrail_SKBB;
+let p_viaferrata = p_viaferrata_SKBB;
+let p_stalactites = p_stalactites_UIS;
+let p_stalagmites = p_stalagmites_UIS;
+let p_pillars = p_pillars_UIS;
 
 let l_wall_bedrock = l_wall_bedrock_UIS;
 let l_wall_sand = l_wall_sand_SKBB;
@@ -121,6 +126,12 @@ let l_survey_surface = l_survey_surface_SKBB;
 let l_arrow = l_arrow_SKBB;
 let l_gradient = l_gradient_UIS;
 let l_mapconnection = l_mapconnection_SKBB;
+let l_handrail = l_handrail_SKBB;
+let l_steps = l_steps_SKBB;
+let l_fixedladder = l_fixedladder_SKBB;
+let l_ropeladder = l_ropeladder_SKBB;
+let l_rope = l_rope_SKBB;
+let l_viaferrata = l_viaferrata_SKBB;
 
 let a_water = a_water_UIS;
 let a_sump = a_sump_UIS;

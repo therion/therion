@@ -52,7 +52,7 @@ void lxModelTreeDlg::OnMove(wxMoveEvent& WXUNUSED(event))
 
 
 lxModelTreeDlg::lxModelTreeDlg(wxWindow *parent)
-                : wxMiniFrame(parent, wxID_ANY, _(" Selection"),wxDefaultPosition, wxDefaultSize, (wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxRESIZE_BOX | wxRESIZE_BORDER) & (~(wxMINIMIZE_BOX | wxMAXIMIZE_BOX)))
+                : wxMiniFrame(parent, wxID_ANY, _(" Selection"),wxDefaultPosition, wxDefaultSize, (wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxRESIZE_BORDER) & (~(wxMINIMIZE_BOX | wxMAXIMIZE_BOX)))
 {
 
   this->m_toolBoxPosition.Init(this, parent, 0, 8, 8);

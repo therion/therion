@@ -256,7 +256,7 @@ void thpic::rgba_init(long w, long h)
   for(i = 0; i < s; i++) this->rgba[i] = 0;
 }
 
-void thpic::rgba_save(const char * type, const char * ext)
+void thpic::rgba_save(const char * type, const char * ext, int colors)
 {
   if (this->rgba == NULL) {
     this->width = -1;
@@ -275,7 +275,10 @@ void thpic::rgba_save(const char * type, const char * ext)
   f = fopen(tmp.fname,"wb");
   fwrite(this->rgba,1,4 * this->width * this->height,f);
   fclose(f);
-  this->fname = tmp.convert(type, ext, "-depth 8 -size %dx%d -density 300", this->width, this->height);
+  if (colors > 1) 
+    this->fname = tmp.convert(type, ext, "-depth 8 -size %dx%d -density 300 +dither -colors %d", this->width, this->height, colors);
+  else
+    this->fname = tmp.convert(type, ext, "-depth 8 -size %dx%d -density 300", this->width, this->height);
   sprintf(tmpfn, "pic%04ld.%s", thpic__convert_number - 1, ext);
   this->texfname = thdb.strstore(tmpfn);
 }

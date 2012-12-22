@@ -141,8 +141,10 @@ enum {
   TT_POINT_TYPE_STEPS,
   TT_POINT_TYPE_BRIDGE,
   TT_POINT_TYPE_TRAVERSE,
+	TT_POINT_TYPE_VIA_FERRATA,
   TT_POINT_TYPE_CAMP,
   TT_POINT_TYPE_DIG,
+	TT_POINT_TYPE_HANDRAIL,
 
 // ukoncenia chodby
   TT_POINT_TYPE_CONTINUATION,
@@ -179,6 +181,9 @@ enum {
   TT_POINT_TYPE_ICE_STALACTITE,
   TT_POINT_TYPE_ICE_STALAGMITE,
   TT_POINT_TYPE_ICE_PILLAR,
+  TT_POINT_TYPE_STALACTITES,
+  TT_POINT_TYPE_STALAGMITES,
+  TT_POINT_TYPE_PILLARS,
 
   
 // plosne vyplne
@@ -243,6 +248,7 @@ static const thstok thtt_point_types[] = {
   {"guano",TT_POINT_TYPE_GUANO},
   {"gypsum",TT_POINT_TYPE_GYPSUM},
   {"gypsum-flower",TT_POINT_TYPE_GYPSUM_FLOWER},
+  {"handrail",TT_POINT_TYPE_HANDRAIL},
   {"height",TT_POINT_TYPE_HEIGHT},
   {"helictite",TT_POINT_TYPE_HELICTITE},
   {"ice",TT_POINT_TYPE_ICE},
@@ -260,6 +266,7 @@ static const thstok thtt_point_types[] = {
   {"passage-height",TT_POINT_TYPE_PASSAGE_HEIGHT},
   {"pebbles",TT_POINT_TYPE_PEBBLES},
   {"pillar",TT_POINT_TYPE_PILLAR},
+  {"pillars",TT_POINT_TYPE_PILLARS},
   {"popcorn",TT_POINT_TYPE_POPCORN},
   {"raft",TT_POINT_TYPE_RAFT},
   {"raft-cone",TT_POINT_TYPE_RAFT_CONE},
@@ -277,13 +284,16 @@ static const thstok thtt_point_types[] = {
   {"soda-straw",TT_POINT_TYPE_SODA_STRAW},
   {"spring",TT_POINT_TYPE_SPRING},
   {"stalactite",TT_POINT_TYPE_STALACTITE},
+  {"stalactites",TT_POINT_TYPE_STALACTITES},
   {"stalagmite",TT_POINT_TYPE_STALAGMITE},
+  {"stalagmites",TT_POINT_TYPE_STALAGMITES},
   {"station", TT_POINT_TYPE_STATION},
   {"station-name", TT_POINT_TYPE_STATION_NAME},
   {"steps",TT_POINT_TYPE_STEPS},
   {"traverse",TT_POINT_TYPE_TRAVERSE},
   {"u",TT_POINT_TYPE_U},
   {"vegetable-debris",TT_POINT_TYPE_VEGETABLE_DEBRIS},
+  {"via-ferrata",TT_POINT_TYPE_VIA_FERRATA},
   {"wall-calcite",TT_POINT_TYPE_WALL_CALCITE},
   {"water",TT_POINT_TYPE_WATER},
   {"water-flow",TT_POINT_TYPE_WATER_FLOW},

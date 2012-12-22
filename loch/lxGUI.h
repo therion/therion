@@ -251,6 +251,10 @@ class lxApp: public wxGLApp
   
     bool OnInit();
     
+#ifdef LXMACOSX
+    virtual void MacOpenFile(const wxString &fileName);
+#endif    
+    
 }; // lxApp
 
 #endif

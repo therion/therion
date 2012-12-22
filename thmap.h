@@ -42,6 +42,7 @@ enum {
   TT_MAP_PREVIEW = 2001,
   TT_MAP_BREAK = 2002,
   TT_MAP_PROJECTION = 2003,
+  TT_MAP_SURVEY = 2004,
 };
 
 
@@ -54,6 +55,7 @@ static const thstok thtt_map_opt[] = {
   {"preview", TT_MAP_PREVIEW},
   {"proj", TT_MAP_PROJECTION},
   {"projection", TT_MAP_PROJECTION},
+  {"survey", TT_MAP_SURVEY},
   {NULL, TT_MAP_UNKNOWN},
 };
 
@@ -73,6 +75,7 @@ class thmap : public thdataobject {
   bool is_basic;  ///< Whether map is basic.
   int selection_mode;  ///< How map is maximally selected.
   class thdb2dxs * selection_xs; ///< Maximal ....
+  thobjectname asoc_survey; ///< Associated survey.
     
   void parse_item(int npar, char ** pars);  ///< Parse map item.
   void parse_preview(char ** pars);  ///< Parse preview.

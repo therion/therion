@@ -46,7 +46,7 @@ thscraplp::thscraplp() {
 
 void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap, bool background) {
 
-  if ((this->arrow != NULL) && (scrap->get_outline() == NULL) && (out->symset->assigned[SYMA_DIMENSIONS]) && background) {
+  if ((this->arrow != NULL) && (scrap->get_outline() == NULL) && (out->symset->is_assigned(SYMA_DIMENSIONS)) && background) {
 
     lxVec vff, vf1, vf2, vtt, vt1, vt2, rvec;
     double fl, fr, tl, tr;

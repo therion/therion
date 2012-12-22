@@ -798,4 +798,64 @@ def p_u(expr pos,theta,sc,al) =
   thdraw origin withpen pencircle scaled 4pt withcolor red;
 enddef;
 
+def p_handrail_SKBB(expr pos,theta,sc,al) =
+    tmph := 1 / Scale * 72 / 2.54;  % 1 m height
+    U:=(.1u, tmph);
+    pickup PenC;
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    thdraw (0,0) -- (0,tmph);
+    thdraw (0,tmph) withpen pencircle scaled .25u;    
+enddef;
+
+def p_viaferrata_SKBB(expr pos,r,s,al) = 
+    U:=(.4u, .4u);
+    T:=identity aligned al shifted pos;
+    thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
+    pickup PenC;
+    thdraw (-.15u,.15u)--(-.15u,.1u)--(.15u,.1u)--(.15u,.15u);
+    thdraw (-.15u,-.05u)--(-.15u,-.1u)--(.15u,-.1u)--(.15u,-.05u);
+enddef;
+
+def p_stalagmites_UIS(expr pos,theta,sc,al) =
+    U:=(.3u, .2u);
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    pickup PenC;
+    for i=-1 upto 1:
+        T:=identity aligned al rotated theta scaled (sc * 0.7) shifted (pos + (i * .3u, 0));
+        thdraw (0,.4u) -- (0,-.15u) -- (-.15u,-.4u);
+        thdraw (0,-.15u) -- (.15u,-.4u);
+    endfor;
+enddef;
+
+def p_stalactites_UIS(expr pos,theta,sc,al) =
+    U:=(.3u, .2u);
+    pickup PenC;
+    for i=-1 upto 1:
+        T:=identity aligned al rotated theta scaled (sc * 0.7) shifted (pos + (i * .3u, 0));
+        thdraw (0,-.4u) -- (0,.15u) -- (-.15u,.4u);
+        thdraw (0,.15u) -- (.15u,.4u);
+    endfor;
+enddef;
+
+def p_gradient_SKBB (expr pos,theta,sc,al)=
+    U:=(.3u,.6u);
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    pickup PenC;
+    thdraw (-.3u,-.6u)--(-.3u,.6u);
+    thdraw (0,-.6u)--(0,-0.2u);
+    thdraw (.3u,-.6u)--(.3u,.6u);
+enddef;
+
+def p_pillars_UIS(expr pos,theta,sc,al) =
+    U:=(.3u, .2u);
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    pickup PenC;
+    for i=-1 upto 1:
+        T:=identity aligned al rotated theta scaled (sc * 0.7) shifted (pos + (i * .3u, 0));
+        thdraw (0,.15u)--(0,-.15u);
+        thdraw (-.15u,-.4u)--(0,-.15u)--(.15u,-.4u);
+        thdraw (-.15u,.4u)--(0,.15u)--(.15u,.4u);
+    endfor;
+enddef;
+
 

@@ -49,6 +49,8 @@ void thdate_y2d(double dy, int  & year, int & month, int & day, int & hour, int 
  */
 enum {
   TT_DATE_FMT_ISO,
+  TT_DATE_FMT_LOCALE,
+  TT_DATE_FMT_LOCALE_LONG,
   TT_DATE_FMT_Y,
   TT_DATE_FMT_UTF8_ISO,
   TT_DATE_FMT_UTF8_Y,

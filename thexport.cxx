@@ -30,6 +30,7 @@
 #include "thconfig.h"
 #include "thdatabase.h"
 #include "thexporter.h"
+#include "thcs.h"
 #include <stdio.h>
 
 
@@ -38,6 +39,7 @@ thexport::thexport() {
   this->outpt = "";
   this->outpt_def = false;
   this->export_mode = 0;
+  this->cs = TTCS_LOCAL;
 }
 
 thexport::~thexport() {}
@@ -82,6 +84,21 @@ void thexport::parse_options(int & argx, int nargs, char ** args)
       }
       else
         ththrow(("empty file name not allowed -- \"%s\"",args[optx]))
+      argx++;
+      break;
+    case TT_EXP_OPT_CS:  
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing coordiate system -- \"%s\"",args[optx]))
+      {
+        int id = thcs_parse(args[argx]);
+        if (id == TTCS_UNKNOWN) {
+          ththrow(("unknown coordinate system -- %s", args[argx]));
+        }
+        if ((thcfg.outcs != id) && (id == TTCS_LOCAL))
+          ththrow(("mixing local and global coordinate system -- %s", args[argx]));
+        this->cs = id;
+      }
       argx++;
       break;
     default:

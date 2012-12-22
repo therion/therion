@@ -1357,7 +1357,7 @@ else
               if (export_sections) {
                 if ((op2->get_class_id() == TT_POINT_CMD) &&
                   (((thpoint *)op2)->type == TT_POINT_TYPE_SECTION) &&
-                  (((((thpoint *)op2)->context < 0) && this->symset.assigned[SYMP_SECTION]) || ((((thpoint *)op2)->context > -1) && this->symset.assigned[((thpoint *)op2)->context])) &&
+                  (((((thpoint *)op2)->context < 0) && this->symset.is_assigned(SYMP_SECTION)) || ((((thpoint *)op2)->context > -1) && this->symset.assigned[((thpoint *)op2)->context])) &&
                   (((thpoint *)op2)->text != NULL)) {
                     cs = (thscrap *)((thpoint *)op2)->text;
                     thdb.db2d.process_projection(cs->proj);
@@ -2055,14 +2055,14 @@ else
     ldata.comment = this->layout->doc_comment;
   }
   
-  if ((prj->type != TT_2DPROJ_PLAN) || (!this->symset.assigned[SYMS_NORTHARROW])) {
+  if ((prj->type != TT_2DPROJ_PLAN) || (!this->symset.is_assigned(SYMS_NORTHARROW))) {
     fprintf(tf,"\\northarrowfalse\n");
     ldata.northarrow = false;
   } else {
     fprintf(tf,"\\northarrowtrue\n");
     ldata.northarrow = true;
   }
-  if (!this->symset.assigned[SYMS_SCALEBAR]) {
+  if (!this->symset.is_assigned(SYMS_SCALEBAR)) {
     fprintf(tf,"\\scalebarfalse\n");
     ldata.scalebar = false;
   } else {
@@ -2421,7 +2421,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     slp = scrap->get_polygon();
     while (slp != NULL) {
       if (slp->lnio) {
-        if (out->symset->assigned[slp->type]) {
+        if (out->symset->is_assigned(slp->type)) {
           thexpmap_export_mp_bgif;
           slp->export_mp(out, scrap, true);
         }
@@ -2431,7 +2431,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     slp = scrap->get_polygon();
     while (slp != NULL) {
       if (slp->lnio) {
-        if (out->symset->assigned[slp->type]) {
+        if (out->symset->is_assigned(slp->type)) {
           thexpmap_export_mp_bgif;
           slp->export_mp(out, scrap, false);
         }
@@ -2599,7 +2599,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
               case TT_POINT_TYPE_PASSAGE_HEIGHT:
                 break;
               case TT_POINT_TYPE_MAP_CONNECTION:
-                if (out->symset->assigned[SYML_MAPCONNECTION]) {
+                if (out->symset->is_assigned(SYML_MAPCONNECTION)) {
                   thexpmap_export_mp_bgif;
                   out->symset->export_mp_symbol_options(out->file, SYML_MAPCONNECTION);
                   fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
@@ -2633,7 +2633,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     slp = scrap->get_polygon();
     while (slp != NULL) {
       if (slp->lnio) {
-        if (out->symset->assigned[slp->type]) {
+        if (out->symset->is_assigned(slp->type)) {
           thexpmap_export_mp_bgif;
           slp->export_mp(out, scrap, true);
         }
@@ -2643,7 +2643,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     slp = scrap->get_polygon();
     while (slp != NULL) {
       if (slp->lnio) {
-        if (out->symset->assigned[slp->type]) {
+        if (out->symset->is_assigned(slp->type)) {
           thexpmap_export_mp_bgif;
           slp->export_mp(out, scrap, false);
         }
@@ -2672,7 +2672,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         thexpmat_station_type_export_mp(TT_DATAMARK_PAINTED,SYMP_STATION_PAINTED)
       }
       flagexp = false;
-#define thexpmatselected_stationflag(flag,mid) if (((slp->station->flags & flag) == flag) && out->symset->assigned[mid]) flagexp = true;
+#define thexpmatselected_stationflag(flag,mid) if (((slp->station->flags & flag) == flag) && out->symset->is_assigned(mid)) flagexp = true;
       thexpmatselected_stationflag(TT_STATIONFLAG_ENTRANCE, SYMP_FLAG_ENTRANCE)
       thexpmatselected_stationflag(TT_STATIONFLAG_SINK, SYMP_FLAG_SINK)
       thexpmatselected_stationflag(TT_STATIONFLAG_SPRING, SYMP_FLAG_SPRING)
@@ -2688,7 +2688,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         typid = SYMP_CAVESTATION;
       else
         typid = SYMP_SURFACESTATION;
-      if (out->symset->assigned[typid] || flagexp) {
+      if (out->symset->is_assigned(typid) || flagexp) {
         thexpmap_export_mp_bgif;
         std::string commentstr("0");
         if ((slp->station->comment != NULL) && (strlen(slp->station->comment) > 0)) {
@@ -2700,10 +2700,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         out->symset->export_mp_symbol_options(out->file, macroid);
         fprintf(out->file,"p_station((%.2f,%.2f),%d,%s,\"\"",
           thxmmxst(out, slp->stx, slp->sty),
-          out->symset->assigned[macroid] ? slp->station->mark : 0,
+          out->symset->is_assigned(macroid) ? slp->station->mark : 0,
           commentstr.c_str()
           );
-#define thexpmat_stationflag(flag,mid,str) if (((slp->station->flags & flag) == flag) && out->symset->assigned[mid]) fprintf(out->file,",\"%s\"", str);
+#define thexpmat_stationflag(flag,mid,str) if (((slp->station->flags & flag) == flag) && out->symset->is_assigned(mid)) fprintf(out->file,",\"%s\"", str);
         thexpmat_stationflag(TT_STATIONFLAG_ENTRANCE, SYMP_FLAG_ENTRANCE, "entrance")
         thexpmat_stationflag(TT_STATIONFLAG_SINK, SYMP_FLAG_SINK, "sink")
         thexpmat_stationflag(TT_STATIONFLAG_SPRING, SYMP_FLAG_SPRING, "spring")
@@ -2781,7 +2781,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 typid = SYMP_CAVESTATION;
               else
                 typid = SYMP_SURFACESTATION;
-              expstation = out->symset->assigned[typid];
+              expstation = out->symset->is_assigned(typid);
             }
             if (expstation) {
               if (obj->export_mp(noout)) {
@@ -2850,7 +2850,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
       case TT_LINE_CMD:
         switch (((thline*)obj)->type) {
           case TT_LINE_TYPE_WALL:
-            if (!out->symset->assigned[SYMP_WALLALTITUDE])
+            if (!out->symset->is_assigned(SYMP_WALLALTITUDE))
               break;
             // prescanuje stenu
             lp = ((thline*)obj)->first_point;
@@ -2907,7 +2907,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   }
   
   // nakoniec scrap name, ak mame zapnuty dany debug mod
-  if (out->layout->is_debug_scrapnames() && (scrap->fsptr != NULL)) {
+  if (out->layout->is_debug_scrapnames() && (scrap->fsptr != NULL) && (!thisnan(scrap->lxmin))) {
     thexpmap_export_mp_bgif;
     thdb2dpt tmppt;
     tmppt.xt = (scrap->lxmin + scrap->lxmax) / 2.0;

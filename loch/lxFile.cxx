@@ -9,7 +9,7 @@
 #include <map>
 #include <list>
 
-#if defined LXWIN32 || defined LXMACOSX || defined THWIN32 || defined THMACOSX
+#if defined LXWIN32 || defined THWIN32
 #include "getline.h"
 #endif
 

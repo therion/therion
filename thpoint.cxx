@@ -430,7 +430,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         omacroid = macroid;
         if (this->context >= 0) 
           macroid = this->context;
-        if (!out->symset->assigned[macroid])
+        if (!out->symset->is_assigned(macroid))
           return(false);
         if (out->file == NULL)
           return(true);
@@ -464,7 +464,10 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           default:
             fprintf(out->file,"\\thnormalsize ");
         }
-        fprintf(out->file,"%s etex,",ths2tex(this->text, out->layout->lang).c_str());        
+        fprintf(out->file,"%s etex,",
+          ((this->type == TT_POINT_TYPE_STATION_NAME) && (!this->station_name.is_empty()))
+          ? (const char *) utf2tex(thobjectname__print_full_name(this->station_name.name, this->station_name.psurvey, out->layout->survey_level)) 
+          : ths2tex(this->text, out->layout->lang).c_str());        
         if (this->type == TT_POINT_TYPE_STATION_NAME)
           postprocess_label = 7;
         else
@@ -495,7 +498,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       omacroid = macroid;
       if (this->context >= 0) 
         macroid = this->context;
-      expsym = out->symset->assigned[macroid];
+      expsym = out->symset->is_assigned(macroid);
       if (expsym) out->symset->get_mp_macro(omacroid);
 
       {
@@ -508,7 +511,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           station_attr->export_mp_object_begin(out->file, station_attr_id);
         }
         if (pst != NULL) {
-#define thexpmatselected_stationflag(flag,mid) if (((pst->flags & flag) == flag) && out->symset->assigned[mid]) expsym = true;
+#define thexpmatselected_stationflag(flag,mid) if (((pst->flags & flag) == flag) && out->symset->is_assigned(mid)) expsym = true;
           thexpmatselected_stationflag(TT_STATIONFLAG_ENTRANCE, SYMP_FLAG_ENTRANCE)
           thexpmatselected_stationflag(TT_STATIONFLAG_SINK, SYMP_FLAG_SINK)
           thexpmatselected_stationflag(TT_STATIONFLAG_SPRING, SYMP_FLAG_SPRING)
@@ -529,15 +532,15 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           commentstr += ths2tex(pst->comment, out->layout->lang);
           commentstr += " etex";
         }
-        if (out->symset->assigned[macroid])
+        if (out->symset->is_assigned(macroid))
           out->symset->export_mp_symbol_options(out->file, omacroid);
         fprintf(out->file,"p_station(");
         this->point->export_mp(out);
         fprintf(out->file,",%d,%s,\"\"",
-          out->symset->assigned[macroid] ? cmark : 0,
+          out->symset->is_assigned(macroid) ? cmark : 0,
           commentstr.c_str()
           );
-#define thexpmat_stationflag(flag,mid,str) if (((pst->flags & flag) == flag) && out->symset->assigned[mid]) fprintf(out->file,",\"%s\"", str);
+#define thexpmat_stationflag(flag,mid,str) if (((pst->flags & flag) == flag) && out->symset->is_assigned(mid)) fprintf(out->file,",\"%s\"", str);
         if (pst != NULL) {
           thexpmat_stationflag(TT_STATIONFLAG_ENTRANCE, SYMP_FLAG_ENTRANCE, "entrance")
           thexpmat_stationflag(TT_STATIONFLAG_SINK, SYMP_FLAG_SINK, "sink")
@@ -554,7 +557,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         fprintf(out->file,");\n");
       }
 
-      if (out->symset->assigned[macroid] && out->layout->is_debug_stations()) {
+      if (out->symset->is_assigned(macroid) && out->layout->is_debug_stations()) {
         fprintf(out->file,"p_debug(0,1,");
         this->point->export_mp(out,0);
         fprintf(out->file,");\n");
@@ -566,7 +569,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       macroid = SYMP_ALTITUDE;
       if (this->context >= 0) 
         macroid = this->context;
-      if ((!thisnan(this->xsize)) && (out->symset->assigned[macroid])) {          
+      if ((!thisnan(this->xsize)) && (out->symset->is_assigned(macroid))) {          
         //sprintf(buff,"%.0f",this->xsize - out->layout->goz);
         if (out->file == NULL)
           return(true);
@@ -617,7 +620,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         omacroid = macroid;
         if (this->context >= 0) 
           macroid = this->context;
-        if (!out->symset->assigned[macroid])
+        if (!out->symset->is_assigned(macroid))
           return(false);
         if (out->file == NULL)
           return(true);
@@ -666,7 +669,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       macroid = SYMP_DATE;
       if (this->context >= 0) 
         macroid = this->context;
-      if  ((out->symset->assigned[macroid]) &&
+      if  ((out->symset->is_assigned(macroid)) &&
           ((this->tags & TT_POINT_TAG_DATE) > 0)) {
 //        ((thdate *)this->text)->print_export_str();
 //        fprintf(out->file,"Datelabel%s(\"%s\",",
@@ -693,7 +696,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
             break;
         }
         fprintf(out->file,"%s etex,",
-            utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_UTF8_ISO)));
+            utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_LOCALE)));
         postprocess_label = 0;
       }
       postprocess = false;
@@ -724,7 +727,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         omacroid = macroid;
         if (this->context >= 0) 
           macroid = this->context;
-        if (!out->symset->assigned[macroid])
+        if (!out->symset->is_assigned(macroid))
           return(false);
         if (out->file == NULL)
           return(true);        
@@ -855,6 +858,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_ANCHOR,SYMP_ANCHOR)
     thpoint_type_export_mp(TT_POINT_TYPE_CAMP,SYMP_CAMP)
     thpoint_type_export_mp(TT_POINT_TYPE_DIG,SYMP_DIG)
+    thpoint_type_export_mp(TT_POINT_TYPE_HANDRAIL,SYMP_HANDRAIL)
+    thpoint_type_export_mp(TT_POINT_TYPE_VIA_FERRATA,SYMP_VIAFERRATA)
 
 // ukoncenia chodby
     thpoint_type_export_mp(TT_POINT_TYPE_NARROW_END,SYMP_NARROWEND)
@@ -869,6 +874,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_STALACTITE,SYMP_STALACTITE)
     thpoint_type_export_mp(TT_POINT_TYPE_STALAGMITE,SYMP_STALAGMITE)
     thpoint_type_export_mp(TT_POINT_TYPE_PILLAR,SYMP_PILLAR)
+    thpoint_type_export_mp(TT_POINT_TYPE_STALACTITES,SYMP_STALACTITES)
+    thpoint_type_export_mp(TT_POINT_TYPE_STALAGMITES,SYMP_STALAGMITES)
+    thpoint_type_export_mp(TT_POINT_TYPE_PILLARS,SYMP_PILLARS)
     thpoint_type_export_mp(TT_POINT_TYPE_ICE_STALACTITE,SYMP_ICESTALACTITE)
     thpoint_type_export_mp(TT_POINT_TYPE_ICE_STALAGMITE,SYMP_ICESTALAGMITE)
     thpoint_type_export_mp(TT_POINT_TYPE_ICE_PILLAR,SYMP_ICEPILLAR)
@@ -929,7 +937,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     macroid = this->context;
 
   if ((macroid > 0) && postprocess) {
-    if (out->symset->assigned[macroid]) {
+    if (out->symset->is_assigned(macroid)) {
       if (out->file == NULL)
         return(true);
       if (attr_text.length() > 0) {

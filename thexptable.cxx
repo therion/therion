@@ -149,6 +149,12 @@ void thexptable::export_survey_entraces(thsurvey * survey)
   thdataobject * obj;
   thdb1ds * st;
   double tmpd;
+  const char * xl = NULL;
+  const char * yl = NULL;
+  if (this->exploc) {
+    xl = "";
+    yl = "";
+  }
   bool is_cave = (survey->entrance.id != 0);
   if (!survey->is_selected()) return;
   if (survey->stat.num_entrances == 0) return;
@@ -173,22 +179,11 @@ void thexptable::export_survey_entraces(thsurvey * survey)
     } else {
       this->m_table.insert_attribute("Explored", "");
     }
-    if (exploc) {
-      if (((survey->stat.num_entrances == 1) || (!this->surveys)) && (survey->entrance.id > 0)) {
-        st = &(this->db->db1d.station_vec[survey->entrance.id - 1]);    
-        this->m_table.insert_attribute("X",st->x);
-        this->m_table.insert_attribute("Y",st->y);
-      } else {
-        this->m_table.insert_attribute("X","");
-        this->m_table.insert_attribute("Y","");
-      }
-    }
-
     if (((survey->stat.num_entrances > 0) && ((!exploc) || (survey->stat.num_entrances == 1) || (!this->surveys))) && (survey->entrance.id > 0)) {
       st = &(this->db->db1d.station_vec[survey->entrance.id - 1]);    
-      this->m_table.insert_attribute("Altitude",st->z);
+      this->add_coordinates(st->x, st->y, st->z, xl, yl, "");
     } else {
-      this->m_table.insert_attribute("Altitude","");
+      this->add_coordinates(thnan, thnan, thnan, xl, yl, "");
     }
     if (this->expattr) this->m_table.copy_attributes(this->db->attr.get_object(survey->id));
   }
@@ -223,11 +218,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
             } else {
               this->m_table.insert_attribute("Explored", "");
             }
-            if (exploc) {
-              this->m_table.insert_attribute("X",st->x);
-              this->m_table.insert_attribute("Y",st->y);
-            }
-            this->m_table.insert_attribute("Altitude",st->z);
+            this->add_coordinates(st->x, st->y, st->z, xl, yl, "");            
             if (this->expattr) this->m_table.copy_attributes(this->db->db1d.m_station_attr.get_object((long)i+1));
         }
       }
@@ -253,6 +244,10 @@ void thexptable::process_db(class thdatabase * dbp)
     thexp_set_ext_fmt(".kml", TT_EXPTABLE_FMT_KML)
   }  
   const char * fname;
+
+  if ((this->cs == TTCS_LOCAL) && (thcfg.outcs != TTCS_LOCAL))
+    this->cs = thcfg.outcs;
+
   switch (this->format) {
     case TT_EXPTABLE_FMT_DBF:
       fname = this->get_output("table.dbf");
@@ -261,6 +256,8 @@ void thexptable::process_db(class thdatabase * dbp)
       fname = this->get_output("table.html");
       break;
     case TT_EXPTABLE_FMT_KML:
+      this->cs = TTCS_LONG_LAT;
+			this->exploc = true;
       fname = this->get_output("table.kml");
       break;
     default:
@@ -291,7 +288,6 @@ void thexptable::process_db(class thdatabase * dbp)
         // check all stations and points
         unsigned long nstat = (unsigned long)dbp->db1d.station_vec.size(),
           i;
-        double lon, lat, alt;
         for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
           if ((*oi)->get_class_id() == TT_POINT_CMD) {
             pt = (thpoint*)(*oi);
@@ -323,11 +319,7 @@ void thexptable::process_db(class thdatabase * dbp)
               this->m_table.insert_attribute("Survey", ths2txt(survey).c_str());
               this->m_table.insert_attribute("Station", st != NULL ? st->name : NULL);
               if (this->format == TT_EXPTABLE_FMT_KML) { 
-                thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params,  
-                  pt->point->xt, pt->point->yt, pt->point->at, lon, lat, alt);
-                this->m_table.insert_attribute("_LONGITUDE", lon / THPI * 180.0);
-                this->m_table.insert_attribute("_LATITUDE",  lat / THPI * 180.0);
-                this->m_table.insert_attribute("_ALTITUDE",  alt);
+                this->add_coordinates(pt->point->xt + pt->fscrapptr->proj->rshift_x, pt->point->yt + pt->fscrapptr->proj->rshift_y, pt->point->at);
               }
               if (this->expattr) this->m_table.copy_attributes(this->db->attr.get_object(pt->id));
             }
@@ -352,11 +344,7 @@ void thexptable::process_db(class thdatabase * dbp)
             this->m_table.insert_attribute("Survey", ths2txt(survey).c_str());
             this->m_table.insert_attribute("Station", st->name);            
             if (this->format == TT_EXPTABLE_FMT_KML) { 
-              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
-                st->x, st->y, st->z, lon, lat, alt);
-              this->m_table.insert_attribute("_LONGITUDE", lon / THPI * 180.0);
-              this->m_table.insert_attribute("_LATITUDE",  lat / THPI * 180.0);
-              this->m_table.insert_attribute("_ALTITUDE",  alt);
+              this->add_coordinates(st->x, st->y, st->z);
             }
             if (this->expattr) this->m_table.copy_attributes(this->db->db1d.m_station_attr.get_object(i+1));
           }
@@ -414,7 +402,7 @@ void thexptable::process_db(class thdatabase * dbp)
       this->m_table.export_dbf(fname, this->encoding);
       break;
     case TT_EXPTABLE_FMT_KML:
-      this->m_table.export_kml(fname);
+			this->m_table.export_kml(fname, (this->export_mode == TT_EXP_CONTLIST) ? "Comment" : "Title");
       break;
   }
 
@@ -432,4 +420,67 @@ std::string * thexptable::get_tmp_string() {
 }
 
 
+void thexptable::add_coordinates(double x, double y, double z, const char * xlabel, const char * ylabel, const char * zlabel)
+{
+  double tx(thnan), ty(thnan), tz(thnan);
+  if (!(thisnan(x) || thisnan(y) || thisnan(z))) {
+    if (thcfg.outcs == TTCS_LOCAL) {
+      tx = x;
+      ty = y;
+      tz = z;
+    } else {
+      thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(this->cs)->params, 
+        x, y, z, tx, ty, tz);
+      if (thcs_get_data(this->cs)->dms) {
+        tx = tx / THPI * 180.0;
+        ty = ty / THPI * 180.0;
+      }
+    }
+  }
+  if (xlabel != NULL) {
+    if (strlen(xlabel) == 0) {
+      xlabel = "X";
+      if (thcs_get_data(this->cs)->dms) {
+        if (thcs_get_data(this->cs)->swap)
+          xlabel = "Latitude";
+        else
+          xlabel = "Longitude";
+      }
+    }
+    if (thisnan(tx))
+      this->m_table.insert_attribute(xlabel,  "");
+    else {
+      this->m_table.insert_attribute(xlabel,  tx);
+      if (thcs_get_data(this->cs)->dms)
+        this->m_table.get_field(xlabel)->m_double_format = "%.8f";
+    }
+  }
+  if (ylabel != NULL) {
+    if (strlen(ylabel) == 0) {
+      ylabel = "Y";
+      if (thcs_get_data(this->cs)->dms) {
+        if (thcs_get_data(this->cs)->swap)
+          ylabel = "Longitude";
+        else
+          ylabel = "Latitude";
+      }
+    }
+    if (thisnan(ty))
+      this->m_table.insert_attribute(ylabel,  "");
+    else {
+      this->m_table.insert_attribute(ylabel,  ty);
+      if (thcs_get_data(this->cs)->dms)
+        this->m_table.get_field(ylabel)->m_double_format = "%.8f";
+    }
+  }
+  if (zlabel != NULL) {
+    if (strlen(zlabel) == 0) {
+      zlabel = "Altitude";
+    }
+    if (thisnan(tz))
+      this->m_table.insert_attribute(zlabel,  "");
+    else
+      this->m_table.insert_attribute(zlabel,  tz);
+  }
+}
 

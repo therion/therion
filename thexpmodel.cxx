@@ -348,7 +348,7 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
 
   unsigned long last_st = nstat, cur_st;
   double xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0, 
-    zmin = 0.0, zmax = 0.0, avx, avy, avz;
+    zmin = 0.0, zmax = 0.0;
   
 #define minmaxvar(min,max,var) \
 if (var < min) min = var;\
@@ -379,10 +379,6 @@ if (var > max) max = var
     }
   }
   
-  avx = (xmin + xmax) / 2.0;
-  avy = (ymin + ymax) / 2.0;
-  avz = (zmin + zmax) / 2.0;
-
 #define copy_station_name(stid) \
 strncpy(station_name,dbp->db1d.station_vec[stid].name,8); \
 station_name[8] = 0
@@ -390,8 +386,7 @@ station_name[8] = 0
 #define exppltdim(ffd,ttd) (((*tlegs)->reverse ? thisnan((*tlegs)->leg->ffd) : thisnan((*tlegs)->leg->ttd)) ? -9999.0 : toft((*tlegs)->reverse ? (*tlegs)->leg->ffd : (*tlegs)->leg->ttd))
   
   // now let's print header
-  fprintf(pltf,"Z\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin),toft(zmax));
-//  fprintf(pltf,"Z\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin-avz),toft(zmax-avz));
+  fprintf(pltf,"Z\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n\n",toft(ymin),toft(ymax),toft(xmin),toft(xmax),toft(zmin),toft(zmax));
   fprintf(pltf,"STHERION\n");
   fprintf(pltf,"NX\tD\t3\t12\t1997\tCtherion export\n");
   last_st = nstat;
@@ -402,7 +397,7 @@ station_name[8] = 0
       if (cur_st != last_st) {
         copy_station_name(cur_st);
         fprintf(pltf,"M\t%.2f\t%.2f\t%.2f\tS%s\tP\t%.2f\t%.2f\t%.2f\t%.2f\n",
-          toft(dbp->db1d.station_vec[cur_st].y - avy), toft(dbp->db1d.station_vec[cur_st].x - avx), 
+          toft(dbp->db1d.station_vec[cur_st].y), toft(dbp->db1d.station_vec[cur_st].x), 
           toft(dbp->db1d.station_vec[cur_st].z),station_name,
           exppltdim(to_left, from_left), 
           exppltdim(to_up, from_up), 
@@ -415,18 +410,16 @@ station_name[8] = 0
       if (strcmp(station_name,"VA09") == 0) 
         fflush(pltf);
       fprintf(pltf,"D\t%.2f\t%.2f\t%.2f\tS%s\tP\t%.2f\t%.2f\t%.2f\t%.2f\n",
-        toft(dbp->db1d.station_vec[last_st].y - avy), toft(dbp->db1d.station_vec[last_st].x - avx), 
+        toft(dbp->db1d.station_vec[last_st].y), toft(dbp->db1d.station_vec[last_st].x), 
         toft(dbp->db1d.station_vec[last_st].z),station_name,
         exppltdim(from_left, to_left), 
         exppltdim(from_up, to_up), 
         exppltdim(from_down, to_down), 
         exppltdim(from_right, to_right));
-//        toft(dbp->db1d.station_vec[last_st].z - avz),station_name);
     }
   }
 
-  fprintf(pltf,"X\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n\x1A",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin),toft(zmax));
-//  fprintf(pltf,"X\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n",toft(ymin-avy),toft(ymax-avy),toft(xmin-avx),toft(xmax-avx),toft(zmin-avz),toft(zmax-avz));
+  fprintf(pltf,"X\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n\x1A",toft(ymin),toft(ymax),toft(xmin),toft(xmax),toft(zmin),toft(zmax));
   fclose(pltf);
   
 #ifdef THDEBUG

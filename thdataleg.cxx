@@ -26,6 +26,7 @@
  */
  
 #include "thdataleg.h"
+#include "thcs.h"
 #ifdef THMSVC
 #define hypot _hypot
 #endif
@@ -49,6 +50,7 @@ void thdataleg::clear()
   this->psurvey = NULL;
   this->s_mark = TT_DATAMARK_UNKNOWN;
   this->flags = TT_LEGFLAG_NONE;
+  this->gridcs = TTCS_LOCAL;
   
   this->station.clear();
   this->from.clear();

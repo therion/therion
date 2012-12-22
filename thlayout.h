@@ -334,6 +334,29 @@ static const thstok thtt_layout_north[] = {
   {NULL, TT_LAYOUT_NORTH_UNKNOWN}
 };
 
+/**
+ * Layout length statistics tokens.
+ */
+
+enum {
+  TT_LAYOUT_LENSTAT_UNKNOWN = 0,
+  TT_LAYOUT_LENSTAT_OFF,
+  TT_LAYOUT_LENSTAT_HIDE,
+  TT_LAYOUT_LENSTAT_ON,
+};
+
+
+/**
+ * Layout color token table.
+ */
+ 
+static const thstok thtt_layout_lenstat[] = {
+  {"hide", TT_LAYOUT_LENSTAT_HIDE},
+  {"off", TT_LAYOUT_LENSTAT_OFF},
+  {"on", TT_LAYOUT_LENSTAT_ON},
+  {NULL, TT_LAYOUT_LENSTAT_UNKNOWN}
+};
+
 
 /**
  * Layout color tokens.
@@ -533,7 +556,9 @@ class thlayout : public thdataobject {
   thlayoutln * first_line, * last_line;
   
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
-    explo_lens, topo_lens, map_header_bg, sketches, color_labels;
+    map_header_bg, sketches, color_labels;
+
+  int explo_lens, topo_lens;
 		
 	thlocale units;
 

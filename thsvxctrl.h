@@ -46,7 +46,8 @@ class thsvxctrl {
 
   thdataleg pdl;
 
-  double meridian_convergence;
+  double meridian_convergence, lastleggridmc;
+  int lastleggridmccs;
   
   unsigned long svxf_ln;
   thsvxctrl_src_maptype src_map;

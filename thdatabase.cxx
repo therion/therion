@@ -606,12 +606,13 @@ class thdataobject * thdatabase::revise(char * nn, class thsurvey * fathersptr,
     divname = this->mbuff_tmp.get_buffer();
     objname = divname[0];
     this->buff_tmp.strcpy(divname[1]);
-    if (fathersptr != NULL) {
+    if ((fathersptr != NULL) && (fathersptr->level > 1)) {
       this->buff_tmp.strcat(".");
       this->buff_tmp.strcat(fathersptr->full_name);
     }
     sfullname = this->buff_tmp.get_buffer();
-    iii = this->survey_map.find(thsurveyname(sfullname));
+    thsurveyname xxx = thsurveyname(sfullname);
+    iii = this->survey_map.find(xxx);
     if (iii == this->survey_map.end())
       ththrow(("unknown survey -- %s",nn))
     else {

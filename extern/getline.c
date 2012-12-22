@@ -131,7 +131,8 @@ getstr (lineptr, n, stream, terminator, offset)
   ret = read_pos - (*lineptr + offset);
   return ret;
 }
-
+	
+#ifndef __APPLE__
 int
 getline (lineptr, n, stream)
      char **lineptr;
@@ -150,4 +151,5 @@ getdelim (lineptr, n, delimiter, stream)
 {
   return getstr (lineptr, n, stream, delimiter, 0);
 }
+#endif
 #endif

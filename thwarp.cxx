@@ -32,6 +32,7 @@
 #include "thtrans.h"
 #include "th2ddataobject.h"
 #include "thpoint.h"
+#include "thconfig.h"
 
 thwarp::~thwarp() {}
    
@@ -386,7 +387,7 @@ thpic * thwarplin::morph(thsketch * sketch, double scale)
   }
 
 
-  this->mpic.rgba_save("PNG","png");
+  this->mpic.rgba_save("PNG","png",thcfg.sketch_colors);
   this->mpic.rgba_free();
   sketch->m_pic.rgba_free();
   this->mpic.scale = T3.m_scale;

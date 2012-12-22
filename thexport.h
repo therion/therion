@@ -43,6 +43,7 @@
 enum {
   TT_EXP_OPT_UNKNOWN = 0,  ///< Unknown option
   TT_EXP_OPT_OUTPUT,  ///< Output option.
+  TT_EXP_OPT_CS,  ///< Output coordinate system.
 };
 
 
@@ -51,6 +52,7 @@ enum {
  */
  
 static const thstok thtt_exp_opt[] = {
+  {"-cs", TT_EXP_OPT_CS},
   {"-o", TT_EXP_OPT_OUTPUT},
   {"-output", TT_EXP_OPT_OUTPUT},
   {NULL, TT_EXP_OPT_UNKNOWN}
@@ -74,6 +76,7 @@ class thexport {
   const char * outpt;  ///< Output file name.
   thbuffer cfgpath;  ///< Config path.
   bool outpt_def;  ///< Whether output file defined.  
+  int cs; ///< Output coordinate system.
 
   public:
   

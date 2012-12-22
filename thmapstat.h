@@ -122,6 +122,7 @@ class thmapstat {
   void addobj(class thdataobject * obj);
   void addstat(thmapstat * source);
   void adddata(thmapstat_datamap * dm);
+  void resetdata();
   
 
   void export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata);

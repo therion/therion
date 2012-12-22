@@ -220,7 +220,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
   omacroid = macroid;
   if (this->context >= 0) 
     macroid = this->context;
-  if (!out->symset->assigned[macroid])
+  if (!out->symset->is_assigned(macroid))
     return(false);
   if (this->first_line == NULL)
     return(false);

@@ -28,12 +28,27 @@ if {[string equal $platform WIN32]} {
   copyfile 1 loch/loch.exe "c:/Program files/Therion/loch.exe"
 } elseif {[string equal $platform MACOSX]} {
   copyfile 1 therion /usr/bin/therion
+  file attributes /usr/bin/therion -permissions 0755
   copyfile 1 xtherion/xtherion /usr/bin/xtherion
-  copyfile 1 loch/loch /usr/bin/loch
+  file attributes /usr/bin/xtherion -permissions 0755
+  file delete -force /Applications/loch.app
+  copyfile 1 loch/loch.app /Applications
+  file attributes /Applications/loch.app -permissions 0755
+  file attributes /Applications/loch.app/Contents -permissions 0755
+  file attributes /Applications/loch.app/Contents/Info.plist -permissions 0644
+  file attributes /Applications/loch.app/Contents/PkgInfo -permissions 0644
+  file attributes /Applications/loch.app/Contents/MacOS -permissions 0755
+  file attributes /Applications/loch.app/Contents/MacOS/loch -permissions 0755
+  file attributes /Applications/loch.app/Contents/Resources -permissions 0755
+  file attributes /Applications/loch.app/Contents/Resources/loch.icns -permissions 0644
   copyfile 1 therion.ini /etc/therion.ini.new
+  file attributes /etc/therion.ini.new -permissions 0644
   copyfile 1 xtherion/xtherion.ini /etc/xtherion.ini.new
+  file attributes /etc/xtherion.ini.new -permissions 0644
   copyfile 0 therion.ini /etc/therion.ini
+  file attributes /etc/therion.ini -permissions 0644
   copyfile 0 xtherion/xtherion.ini /etc/xtherion.ini
+  file attributes /etc/xtherion.ini -permissions 0644
 } else {
   copyfile 1 therion $instdir/bin/therion
   copyfile 1 xtherion/xtherion $instdir/bin/xtherion
