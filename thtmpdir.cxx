@@ -76,6 +76,7 @@ void thtmpdir::create()
 {
   if ((!this->exist) && (!this->tried)) {
     thbuffer dir_path;
+    this->tmp_remove_script = thini.tmp_remove_script.get_buffer();
 #ifndef THMSVC
 #ifdef THDEBUG
     // the debugging temp directory
@@ -168,9 +169,9 @@ void thtmpdir::remove()
 {
   if (this->exist && this->delete_all) {
     // remove directory contents
-    if (strlen(thini.tmp_remove_script.get_buffer()) > 0) {
+    if (strlen(this->tmp_remove_script.get_buffer()) > 0) {
       thbuffer tmpfname;
-      tmpfname = thini.tmp_remove_script.get_buffer();
+      tmpfname = this->tmp_remove_script.get_buffer();
       tmpfname += " ";
       tmpfname += this->name;
       system(tmpfname.get_buffer());

@@ -339,6 +339,11 @@ proc xth_cp_read_file {pth} {
   fconfigure $fid -encoding $curenc
   while {![eof $fid]} {
     gets $fid fln
+    if {$flnn == 0} {
+        if {[scan [string index $fln 0] %c] == 65279} {
+            set fln [string range $fln 1 end]
+        }
+    }
     incr flnn
     if {[regexp {^\s*encoding\s+(\S+)\s*$} $fln encln enc]} {
       set encspc 1

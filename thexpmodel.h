@@ -183,7 +183,7 @@ class thexpmodel : public thexport {
   
   void export_plt_file(class thdatabase * dbp);  ///< Export compass plt file.
   
-  void export_thm_file(class thdatabase * dbp);  ///< Export therion model file.
+  //void export_thm_file(class thdatabase * dbp);  ///< Export therion model file.
 
   void export_vrml_file(class thdatabase * dbp);  ///< Export vrml file.
 

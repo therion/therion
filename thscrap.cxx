@@ -65,6 +65,9 @@ thscrap::thscrap()
   this->G = 1.0;
   this->B = 1.0;
   
+	this->z = 0.0;
+	this->a = 0.0;
+
   this->flip = TT_SCRAP_FLIP_NONE;
   
   this->scale = 1.0;
@@ -234,6 +237,7 @@ void thscrap::self_print_properties(FILE * outf)
   fprintf(outf,"\tprojection: %d\n",this->proj->id);
   fprintf(outf,"\tscale: %f\n",this->scale);
   fprintf(outf,"\tz: %f\n",this->z);
+  fprintf(outf,"\ta: %f\n",this->a);
   // insert intended print of object properties here
 }
 
@@ -868,18 +872,22 @@ void thscrap::calc_z()
 {
   thdb2dcp * cp = this->fcpp;
   this->z = 0.0;
+	this->a = 0.0;
   unsigned long numcp = 0;
   while(cp != NULL) {
     if (cp->st != NULL) {
       this->z += cp->tz;
+			this->a += cp->ta;
       numcp++;
     }
     cp = cp->nextcp;
   }
   if (numcp > 0) {
     this->z /= double(numcp);
+    this->a /= double(numcp);
   } else {
     this->z = thnan;
+    this->a = thnan;
   }
 }
 

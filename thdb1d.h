@@ -197,6 +197,12 @@ class thdb1ds {
    * Set temporary status.
    */
   void set_temporary(const char * name);
+
+	/**
+	 * Export station attributes to metapost.
+	 */
+
+	void export_mp_flags(FILE * out);
   
 };
 
@@ -260,7 +266,7 @@ class thdb1d {
   
   thdb1d_tree_node  * tree_nodes;
   
-  thdb3ddata d3_data, d3_surface, d3_walls;
+  thdb3ddata d3_data, d3_surface, d3_walls, d3_splay;
 
   thattr m_station_attr;
 
@@ -388,6 +394,7 @@ class thdb1d {
   void process_xelev();
   
   thdb3ddata * get_3d();
+  thdb3ddata * get_3d_splay();
   thdb3ddata * get_3d_surface();
   thdb3ddata * get_3d_walls();
     

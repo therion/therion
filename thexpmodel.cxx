@@ -168,9 +168,9 @@ void thexpmodel::process_db(class thdatabase * dbp)
     case TT_EXPMODEL_FMT_COMPASS:
       this->export_plt_file(dbp);
       break;
-    case TT_EXPMODEL_FMT_THERION:
-      this->export_thm_file(dbp);
-      break;
+    //case TT_EXPMODEL_FMT_THERION:
+    //  this->export_thm_file(dbp);
+    //  break;
     case TT_EXPMODEL_FMT_3DMF:
       this->export_3dmf_file(dbp);
       break;
@@ -429,6 +429,7 @@ station_name[8] = 0
 #endif
 }
 
+/*
 void thexpmodel::export_thm_file(class thdatabase * dbp)
 {
 
@@ -454,6 +455,7 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   thdb_object_list_type::iterator obi;
   thdb3ddata * pgn = dbp->db1d.get_3d(), 
     * surf_pgn = dbp->db1d.get_3d_surface(),
+		* splay_pgn = dbp->db1d.get_3d_splay(),
     * tmp3d;
   thdb3dlim pgnlimits, finlim;
   switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
@@ -467,6 +469,8 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
     default:    
       pgnlimits.update(&(pgn->limits));
   }
+	if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
+		pgnlimits.update(&(splay_pgn->limits));
   finlim.update(&(pgnlimits));
 
   // update limits from surfaces
@@ -597,7 +601,7 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   thtext_inline = false;
 #endif
 }
-
+*/
 
 void thexpmodel::export_vrml_file(class thdatabase * dbp) {
   const char * fnm;  
@@ -626,6 +630,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
   thdb_object_list_type::iterator obi;
   thdb3ddata * pgn = dbp->db1d.get_3d(), 
     * surf_pgn = dbp->db1d.get_3d_surface(),
+		* splay_pgn = dbp->db1d.get_3d_splay(),
     * tmp3d;
   thdb3dlim pgnlimits, finlim;
   switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
@@ -639,6 +644,9 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
     default:    
       pgnlimits.update(&(pgn->limits));
   }
+	if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
+		pgnlimits.update(&(splay_pgn->limits));
+
   finlim.update(&(pgnlimits));
   // now let's print header
   fprintf(pltf,"#VRML V2.0 utf8\n\n");
@@ -659,6 +667,14 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
        "\tmaterial Material {\n\t\temissiveColor 0.5 0.5 0.5\n\t}" \
        "\n}\ngeometry IndexedLineSet {\n");
        surf_pgn->export_vrml(pltf);
+    fprintf(pltf,"\n}\n}\n");
+  }
+  if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0) {
+    fprintf(pltf,
+       "Shape {\nappearance Appearance {\n" \
+       "\tmaterial Material {\n\t\temissiveColor 0.22 0.22 0.22\n\t}" \
+       "\n}\ngeometry IndexedLineSet {\n");
+       splay_pgn->export_vrml(pltf);
     fprintf(pltf,"\n}\n}\n");
   }
 
@@ -868,6 +884,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   thdb_object_list_type::iterator obi;
   thdb3ddata * pgn = dbp->db1d.get_3d(), 
     * surf_pgn = dbp->db1d.get_3d_surface(),
+		* splay_pgn = dbp->db1d.get_3d_splay(),
     * tmp3d;
   thdb3dlim pgnlimits, finlim;
   switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
@@ -881,6 +898,8 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
     default:    
       pgnlimits.update(&(pgn->limits));
   }
+	if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
+		pgnlimits.update(&(splay_pgn->limits));
   finlim.update(&(pgnlimits));
   avx = (pgnlimits.minx + pgnlimits.maxx) / 2.0;
   avy = (pgnlimits.miny + pgnlimits.maxy) / 2.0;
@@ -903,6 +922,15 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
               "Container ( \n\tAttributeSet ( ) \n"
               "\tDiffuseColor ( 0.3 0.7 1.0)\n)\n");
       pgn->export_3dmf(pltf);
+      fprintf(pltf,"EndGroup ( )\n");
+    }
+  }
+  if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0) {
+    if (pgn->firstfc != NULL) {
+      fprintf(pltf,"BeginGroup (\n\tDisplayGroup ( ) \n)\n"
+              "Container ( \n\tAttributeSet ( ) \n"
+              "\tDiffuseColor ( 0.22 0.22 0.22)\n)\n");
+      splay_pgn->export_3dmf(pltf);
       fprintf(pltf,"EndGroup ( )\n");
     }
   }
@@ -1062,6 +1090,7 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
   thdb_object_list_type::iterator obi;
   thdb3ddata * pgn = dbp->db1d.get_3d(), 
     * surf_pgn = dbp->db1d.get_3d_surface(),
+    * splay_pgn = dbp->db1d.get_3d_splay(),
     * tmp3d;
   thdb3dlim pgnlimits, finlim, extlim;
   switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
@@ -1075,6 +1104,8 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
     default:    
       pgnlimits.update(&(pgn->limits));
   }
+	if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
+		pgnlimits.update(&(splay_pgn->limits));
   finlim.update(&(pgnlimits));
   avx = 0.0;
   avy = 0.0;
@@ -1250,6 +1281,9 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
 
   if ((this->items & TT_EXPMODEL_ITEM_CAVECENTERLINE) != 0) {
     pgn->export_dxf(pltf,"CENTERLINE");
+  }
+  if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0) {
+    splay_pgn->export_dxf(pltf,"SPLAY_SHOTS");
   }
   if ((this->items & TT_EXPMODEL_ITEM_SURFACECENTERLINE) != 0) {
     surf_pgn->export_dxf(pltf,"SURFACE_CENTERLINE");

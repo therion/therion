@@ -447,6 +447,14 @@ class thdataleg {
   void clear();
   
   void calc_total_stds();
+
+
+	/**
+	 * Export station attributes to metapost.
+	 */
+
+	void export_mp_flags(FILE * out);
+
   
 };
 

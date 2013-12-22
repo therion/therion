@@ -135,6 +135,8 @@ void thscraplp::export_mp(thexpmapmpxs * out, thscrap * scrap, bool background) 
     }
     
     if (export_shot) {
+      if (this->arrow != NULL)
+        this->arrow->leg->leg->export_mp_flags(out->file);
       out->symset->export_mp_symbol_options(out->file, this->type);
       fprintf(out->file,"%s(((%.2f,%.2f) -- (%.2f,%.2f)));\n",
         out->symset->get_mp_macro(this->type),

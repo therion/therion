@@ -665,6 +665,7 @@ void lxFrame::OnAll(wxCommandEvent& event)
           } else {
             this->m_fileName = dialog.GetPath();
             this->m_fileDir  = dialog.GetDirectory();
+						this->m_fileType = 0;
             this->DetectFileType();
             this->ReloadData();
             this->setup->ResetCamera();

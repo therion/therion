@@ -549,6 +549,11 @@ proc xth_te_read_file {pth} {
   fconfigure $fid -encoding $curenc
   while {[eof $fid] != 1} {
     gets $fid fln
+    if {$flnn == 0} {
+        if {[scan [string index $fln 0] %c] == 65279} {
+            set fln [string range $fln 1 end]
+        }
+    }
     # replace tabs
     regsub -all {\t} $fln "  " fln
     incr flnn

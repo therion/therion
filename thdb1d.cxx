@@ -71,7 +71,10 @@ thdb1d::thdb1d()
   this->d3_data_parsed = false;
 }
 
-
+void thdb1ds::export_mp_flags(FILE * out)
+{
+	fprintf(out, "ATTR__stationflag_splay := %s;\n", (this->is_temporary() ? "true" : "false"));
+}
 
 void thdb1ds::set_temporary(const char * name)
 {
@@ -120,6 +123,7 @@ void thdb1d::scan_data()
   int lastleggridmccs = TTCS_LOCAL;
   thdata * dp;
   unsigned used_declination = 0;
+	unsigned long prevlsid;
   double dcc, sindecl, cosdecl, tmpx, tmpy;
   thdb1ds * tsp1, * tsp2;  // Temporary stations.
   this->min_year = thnan;
@@ -412,20 +416,32 @@ void thdb1d::scan_data()
       catch (...)
         threthrow(("%s [%d]", fii->srcf.name, fii->srcf.line));
   
+    }
+  
+    obi++;
+  }
+
+	// process equates separately
+  obi = this->db->object_list.begin();
+  while (obi != this->db->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_DATA_CMD) {
+      dp = (thdata *)(*obi);
       // scan data equates
       eqi = dp->equate_list.begin();
       try {
         while(eqi != dp->equate_list.end()) {
+					prevlsid = this->lsid;
           eqi->station.id = this->insert_station(eqi->station, eqi->psurvey, dp, 1);
+					if ((prevlsid < eqi->station.id) && (eqi->station.survey != NULL))
+						thwarning(("%s [%d] -- equate used to define new station (%s@%s)", eqi->srcf.name, eqi->srcf.line, eqi->station.name, eqi->station.survey));
           eqi++;
         }
       }
       catch (...)
         threthrow(("%s [%d]", eqi->srcf.name, eqi->srcf.line));
-    }
-  
+		}
     obi++;
-  }
+	}
 
 
   // after scanning
@@ -2572,6 +2588,12 @@ thdb3ddata * thdb1d::get_3d_surface() {
 }
 
 
+thdb3ddata * thdb1d::get_3d_splay() {
+  this->get_3d();
+  return &(this->d3_splay);
+}
+
+
 thdb3ddata * thdb1d::get_3d_walls() {
   this->get_3d();
   return &(this->d3_walls);
@@ -2617,7 +2639,7 @@ thdb3ddata * thdb1d::get_3d() {
   thdb1ds * fromst, * tost;
   int secn, j, prevj, nextj;
   for(i = 0; i < nlegs; i++, tlegs++) {
-    if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) == 0)) {
+    if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) == 0) && (((*tlegs)->leg->flags & TT_LEGFLAG_SPLAY) == 0)) {
       cur_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
@@ -2829,7 +2851,7 @@ thdb3ddata * thdb1d::get_3d() {
   fc = NULL;
   tlegs = this->get_tree_legs();  
   for(i = 0; i < nlegs; i++, tlegs++) {
-    if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0)) {
+    if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0) && (((*tlegs)->leg->flags & TT_LEGFLAG_SPLAY) == 0)) {
       cur_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
       get_3d_check_station(cur_st);
       if (cur_st != last_st) {
@@ -2842,7 +2864,40 @@ thdb3ddata * thdb1d::get_3d() {
     }
   }
   
-  // meracske body tam vlozi ako body (data na dbdb1ds)
+  // potom splay data
+  for (i = 0; i < nstat; i++) 
+    station_in[i] = NULL;
+#undef get_3d_check_station
+#define get_3d_check_station(id) { \
+      if (station_in[id] == NULL) { \
+        station_in[id] = this->d3_splay.insert_vertex( \
+          this->station_vec[id].x, \
+          this->station_vec[id].y, \
+          this->station_vec[id].z, \
+          (void *) &(this->station_vec[id])); \
+      } \
+    }
+  
+  // polygony tam vlozi ako linestripy (data poojdu na thdb1dl)
+  last_st = nstat;
+  fc = NULL;
+  tlegs = this->get_tree_legs();  
+  for(i = 0; i < nlegs; i++, tlegs++) {
+    if ((*tlegs)->survey->is_selected() && (((*tlegs)->leg->flags & TT_LEGFLAG_SPLAY) != 0)) {
+      cur_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
+      get_3d_check_station(cur_st);
+      if (cur_st != last_st) {
+        fc = this->d3_splay.insert_face(THDB3DFC_LINE_STRIP);
+        fc->insert_vertex(station_in[cur_st], (void *) *tlegs);
+      }
+      last_st = this->station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
+      get_3d_check_station(last_st);
+      fc->insert_vertex(station_in[last_st], (void *) *tlegs);
+    }
+  }
+
+	
+	// meracske body tam vlozi ako body (data na dbdb1ds)
   delete [] station_in;
   return &(this->d3_data);
   

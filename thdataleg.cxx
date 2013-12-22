@@ -260,3 +260,11 @@ void thdataleg::calc_total_stds()
   }
 }
 
+void thdataleg::export_mp_flags(FILE * out)
+{
+	fprintf(out, "ATTR__shotflag_splay := %s;\n", (((this->flags & TT_LEGFLAG_SPLAY) != 0) ? "true" : "false"));
+	fprintf(out, "ATTR__shotflag_duplicate := %s;\n", (((this->flags & TT_LEGFLAG_DUPLICATE) != 0) ? "true" : "false"));
+	fprintf(out, "ATTR__shotflag_approx := %s;\n", (((this->flags & TT_LEGFLAG_APPROXIMATE) != 0) ? "true" : "false"));
+}
+
+

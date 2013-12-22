@@ -47,8 +47,8 @@ class thtmpdir {
   bool delete_all;  ///< ID whether to delete temporary directory.
   bool debug;  ///< ID, whether debugging mode is on.  
   thbuffer name,  ///< Name of temp dir.  
-    file_name;  ///< Name of temporary file.
-
+    file_name,  ///< Name of temporary file.
+    tmp_remove_script;
 
   /**
    * Creates temporary directory.

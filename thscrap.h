@@ -136,7 +136,7 @@ class thscrap : public thdataobject {
 
   thsketch_list sketch_list;
   
-  double z;
+  double z, a;
     
   public:
 

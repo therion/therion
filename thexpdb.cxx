@@ -186,8 +186,8 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
     personmap.clear();
     shotx = 0;
     IF_PRINTING {
-    
-      fprintf(sqlf,"begin transaction;\ncreate table SURVEY "
+//      fprintf(sqlf,"begin transaction;\ncreate table SURVEY "
+      fprintf(sqlf,"create table SURVEY "
         "(ID integer, PARENT_ID integer, NAME varchar(%d), "
         "FULL_NAME varchar(%d), TITLE varchar(%d));\n",
         survey_name, survey_full_name, survey_title);
@@ -404,7 +404,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 
     
   }  // END OF PASS CYCLE
-  fprintf(sqlf,"commit transaction;\n");
+  //fprintf(sqlf,"commit transaction;\n");
   fclose(sqlf);
   
 #ifdef THDEBUG

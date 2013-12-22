@@ -67,6 +67,7 @@ catch {
     regexp {\d+\.\d+(\.\d+)?} $verl vver
     close $fid
     set fid [open ver.tcl w]
+    fconfigure $fid -translation lf
     puts $fid "set xth(about,ver) $vver"
     close $fid
 }

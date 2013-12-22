@@ -77,6 +77,16 @@ ATTR__scrap_centerline := false;
 ATTR__height:=0;
 ATTR__elevation:=false;
 
+boolean ATTR__shotflag_splay;
+ATTR__shotflag_splay:=false;
+boolean ATTR__shotflag_duplicate;
+ATTR__shotflag_duplicate:=false;
+boolean ATTR__shotflag_approx;
+ATTR__shotflag_approx:=false;
+boolean ATTR__stationflag_splay;
+ATTR__stationflag_splay:=false;
+
+
 color label_fill_color, label_fill_color_tmp;
 label_fill_color := (1.0, 1.0, 1.0);
 def push_label_fill_color(expr r,g,b) =
