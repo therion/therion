@@ -1,6 +1,6 @@
 /* img.h
  * Header file for routines to read and write Survex ".3d" image files
- * Copyright (C) Olly Betts 1993,1994,1997,2001,2002,2003,2004,2005,2006,2010
+ * Copyright (C) Olly Betts 1993,1994,1997,2001,2002,2003,2004,2005,2006,2010,2011,2012,2013,2014
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,10 +40,6 @@ extern "C" {
 #include <stdio.h>
 #include <time.h> /* for time_t */
 
-# ifdef IMG_HOSTED
-#  include "useful.h"
-# endif
-
 # define img_BAD   -2
 # define img_STOP  -1
 # define img_MOVE   0
@@ -56,18 +52,34 @@ extern "C" {
 # define img_XSECT_END 5
 # define img_ERROR_INFO 6
 
+/* Leg flags */
 # define img_FLAG_SURFACE   0x01
 # define img_FLAG_DUPLICATE 0x02
 # define img_FLAG_SPLAY     0x04
 
+/* Station flags */
 # define img_SFLAG_SURFACE     0x01
 # define img_SFLAG_UNDERGROUND 0x02
 # define img_SFLAG_ENTRANCE    0x04
 # define img_SFLAG_EXPORTED    0x08
 # define img_SFLAG_FIXED       0x10
+# define img_SFLAG_ANON        0x20
+# define img_SFLAG_WALL        0x40
 
-/* No longer used: */
+/* File-wide flags */
+# define img_FFLAG_EXTENDED 0x80
+
+/* When writing img_XSECT, img_XFLAG_END in pimg->flags means this is the last
+ * img_XSECT in this tube:
+ */
 # define img_XFLAG_END      0x01
+
+# define img_STYLE_UNKNOWN   -1
+# define img_STYLE_NORMAL     0
+# define img_STYLE_DIVING     1
+# define img_STYLE_CARTESIAN  2
+# define img_STYLE_CYLPOLAR   3
+# define img_STYLE_NOSURVEY   4
 
 /* 3D coordinates (in metres) */
 typedef struct {
@@ -79,7 +91,27 @@ typedef struct {
    char *label;
    int flags;
    char *title;
+   /* Older .3d format versions stored a human readable datestamp string.
+    * Format versions >= 8 versions store a string consisting of "@" followed
+    * by the number of seconds since midnight UTC on 1/1/1970.  Some foreign
+    * formats contain a human readable string, others no date information
+    * (which results in "?" being returned).
+    */
    char *datestamp;
+   /* The datestamp as a time_t (or (time_t)-1 if not available).
+    *
+    * For 3d format versions >= 8, this is a reliable value and in UTC.  Older
+    * 3d format versions store a human readable time, which img will attempt
+    * to decode, but it may fail, particularly with handling timezones.  Even
+    * if it does work, beware that times in local time where DST applies are
+    * inherently ambiguous around when the clocks go back.
+    *
+    * CMAP XYZ files contain a timestamp.  It's probably in localtime (but
+    * without any timezone information) and the example files are all pre-2000
+    * and have two digit years.  We do our best to turn these into a useful
+    * time_t value.
+    */
+   time_t datestamp_numeric;
    char separator; /* character used to separate survey levels ('.' usually) */
 #if IMG_API_VERSION == 0
    time_t date1, date2;
@@ -94,16 +126,15 @@ typedef struct {
    /* The filename actually opened (e.g. may have ".3d" added). */
    char * filename_opened;
    int is_extended_elevation;
+   /* The style of the data - one of the img_STYLE_* constants above */
+   int style;
+
    /* all other members are for internal use only */
    FILE *fh;          /* file handle of image file */
    char *label_buf;
    size_t buf_len;
    size_t label_len;
-# ifdef IMG_HOSTED
-   bool fRead;        /* fTrue for reading, fFalse for writing */
-# else
-   int fRead;        /* fTrue for reading, fFalse for writing */
-# endif
+   int fRead;        /* 1 for reading, 0 for writing */
    long start;
    /* version of file format:
     *  -4 => CMAP .xyz file, shot format
@@ -118,6 +149,7 @@ typedef struct {
     *   5 => LRUD info
     *   6 => error info
     *   7 => more compact dates with wider range
+    *   8 => lots of changes
     */
    int version;
    char *survey;
@@ -129,10 +161,17 @@ typedef struct {
 #else /* IMG_API_VERSION == 1 */
    int olddays1, olddays2;
 #endif
+   int oldstyle;
 } img;
 
 /* Which version of the file format to output (defaults to newest) */
 extern unsigned int img_output_version;
+
+/* Minimum supported value for img_output_version: */
+#define IMG_VERSION_MIN 1
+
+/* Maximum supported value for img_output_version: */
+#define IMG_VERSION_MAX 8
 
 /* Open a .3d file for reading
  * fnm is the filename
@@ -150,17 +189,17 @@ img *img_open_survey(const char *fnm, const char *survey);
 
 /* Open a .3d file for output
  * fnm is the filename
- * title_buf is the title
- * fBinary is ignored (it used to select an ASCII variant of the earliest
- * version of the 3d file format)
+ * title is the title
+ * flags contains a bitwise-or of any file-wide flags - currently only one
+ * is available: img_FFLAG_EXTENDED.  (The third parameter used to be
+ * 'fBinary', but has been ignored for many years, so the parameter has
+ * been repurposed for flags - for this reason, img.c deliberately ignores bit
+ * 1 being set, but callers should be written/updated not to set it).
+ *
  * Returns pointer to an img struct or NULL for error (check img_error()
  * for details)
  */
-# ifdef IMG_HOSTED
-img *img_open_write(const char *fnm, char *title_buf, bool fBinary);
-# else
-img *img_open_write(const char *fnm, char *title_buf, int fBinary);
-# endif
+img *img_open_write(const char *fnm, char *title, int flags);
 
 /* Read an item from a .3d file
  * pimg is a pointer to an img struct returned by img_open()
@@ -208,7 +247,6 @@ int img_rewind(img *pimg);
 int img_close(img *pimg);
 
 /* Codes returned by img_error */
-# ifndef IMG_HOSTED
 typedef enum {
    IMG_NONE = 0, IMG_FILENOTFOUND, IMG_OUTOFMEMORY,
    IMG_CANTOPENOUT, IMG_BADFORMAT, IMG_DIRECTORY,
@@ -216,12 +254,11 @@ typedef enum {
 } img_errcode;
 
 /* Read the error code
- * if img_open() or img_open_write() returns NULL, you can call this
- * to discover why */
+ * If img_open(), img_open_survey() or img_open_write() returns NULL, or
+ * img_rewind() or img_close() returns 0, or img_read_item() returns img_BAD
+ * then you can call this function to discover why.
+ */
 img_errcode img_error(void);
-# else
-int img_error(void);
-# endif
 
 #ifdef __cplusplus
 }

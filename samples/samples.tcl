@@ -83,7 +83,7 @@ proc scan_lists {} {
   foreach dn $dirlist {
     set clist {}
     catch {
-      set clist [glob -directory $dn *.log *~ .xth_*]
+      set clist [glob -directory $dn *.log *~ .xth_* .xtherion.dat]
     }
     foreach cf $clist {
       lappend cleanlist $cf
@@ -361,7 +361,7 @@ proc create_docs {} {
     while {[catch {
       eval "exec \"$convpath\" -density $dpi $iisrc $outd/tmp.png"
     }] && ($dpi > 10)} {
-      log_msg "error at $dpi dpi\n"
+      log_msg "error at $dpi dpi processing $iisrc\n"
       set dpi [expr int(double($dpi) * 0.9)]
     }
     eval "exec \"$convpath\" -resize 419x419 $outd/tmp.png $outd/$iiimg"

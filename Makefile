@@ -189,7 +189,7 @@ clean:
 	make -C ./loch clean
 	make -C ./samples clean
 	make -C ./extern/proj4 clean
-	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat
+	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
 	perl makefile.pl rm -q extern/*.o extern/*~ extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
 	perl makefile.pl rm -q symbols.html therion.res

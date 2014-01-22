@@ -1,5 +1,5 @@
 /* XPM */
-static char * visfix_xpm[] = {
+static const char * visfix_xpm[] = {
 "16 15 2 1",
 " 	c None",
 ".	c #500000",

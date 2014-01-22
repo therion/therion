@@ -1,3 +1,11 @@
+Therion 5.3.13 (2014-01-22):
+
+therion:
+ * bugs fixed:
+   - update survex img parser to v8 (should fix various errors)
+   - several patches from Wookey's debian distribution applied
+
+--------------------------------------------------------------------------------
 Therion 5.3.12 (2013-12-22):
 
 therion:

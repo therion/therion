@@ -537,7 +537,7 @@ proc xth_me_imgs_xvi_create {imgx} {
   }
 
   # and change coordinates
-  $xth(me,can) lower $xth(me,imgs,$imgx,image) command
+  catch {$xth(me,can) lower $xth(me,imgs,$imgx,image) command}
   set iidx [lsearch -exact $xth(me,imgs,xlist) $imgx]
   if {$iidx > 0} {
     $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
@@ -805,7 +805,7 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
       set iw [image width $imgid]
       set ih [image height $imgid]
       lappend xth(me,imgs,$imgx,subimgs) [list $subimg $subcimg 0 0 $iw $ih]
-      $xth(me,can) lower $xth(me,imgs,$imgx,image) command
+      catch {$xth(me,can) lower $xth(me,imgs,$imgx,image) command}
       if {$iidx > 0} {
         $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)
       }
@@ -831,7 +831,7 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
           lappend xth(me,imgs,$imgx,subimgs) [list $subimg $subcimg $subx $suby $subxx $subyy]
         }
       }
-      $xth(me,can) lower $xth(me,imgs,$imgx,image) command
+      catch {$xth(me,can) lower $xth(me,imgs,$imgx,image) command}
       set iidx [lsearch -exact $xth(me,imgs,xlist) $imgx]
       if {$iidx > 0} {
         $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) [expr $iidx - 1]],image)

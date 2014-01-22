@@ -457,6 +457,7 @@ void thimport::import_file_img()
   // thprintf("\n\n");
 
   img_point imgpt;
+  img_errcode imgerr;
   int result;
   char * args [4], * stnm, a0[32], a1[32], a2[32], a3[32];
   args[0] = a0;
@@ -473,8 +474,10 @@ void thimport::import_file_img()
     zb.guarantee(128);
   std::string orig_name, new_name;  
   img* pimg = img_open(this->fname);
-  if (pimg == NULL)
-    ththrow(("unable to open file"))    
+  if (pimg == NULL) {	
+    imgerr = img_error();
+    ththrow(("unable to open file %s, error code: %u", this->fname, imgerr))
+  }
   do {
     result = img_read_item(pimg, &imgpt);
     switch (result) {

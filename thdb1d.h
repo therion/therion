@@ -157,7 +157,7 @@ class thdb1ds {
    */
    
   thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), survey(NULL), fixcontext(NULL), 
-    data(NULL), data_priority(0), temps(TT_TEMPSTATION_NONE),
+    data_priority(0), temps(TT_TEMPSTATION_NONE),
     flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), 
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
     explored(thnan) {}
@@ -169,7 +169,7 @@ class thdb1ds {
    
   thdb1ds(const char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), name(n), 
     comment(NULL), survey(ps), fixcontext(NULL),  
-    data(NULL), data_priority(0), temps(TT_TEMPSTATION_NONE),
+    data_priority(0), temps(TT_TEMPSTATION_NONE),
     flags(TT_STATIONFLAG_NONE),
     mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), mark_station(false), 
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),

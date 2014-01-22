@@ -1,5 +1,5 @@
 /* XPM */
-static char * visentrance_xpm[] = {
+static const char * visentrance_xpm[] = {
 "16 15 2 1",
 " 	c None",
 ".	c #1A4C1A",

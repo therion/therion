@@ -654,7 +654,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           //  sprintf(buff,"%.1f",this->xsize);
           //else
           //  sprintf(buff,"%.0f",this->xsize);
-          fprintf(out->file,utf2tex(out->layout->units.format_human_length(this->xsize)));
+          fprintf(out->file,"%s",utf2tex(out->layout->units.format_human_length(this->xsize)));
         }
         this->db->buff_enc.strcpy((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
             TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_UQ)) != 0 ? "?" : "" );
