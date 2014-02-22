@@ -1,3 +1,11 @@
+Therion 5.3.14 (2014-02-22):
+
+xtherion:
+ * added Undo/Redo toolbar buttons
+ * added option Edit->Hide inactive scraps
+ * added context menu, right click on line and point
+      
+--------------------------------------------------------------------------------
 Therion 5.3.13 (2014-01-22):
 
 therion:

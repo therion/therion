@@ -120,6 +120,46 @@ xth_status_bar {te me cp} $xth(gui,tb).closeb [mc "Close file"]
 
 label $xth(gui,tb).sp01 -relief groove -width 0 -padx 0 -pady 0 -bd 1
 
+
+
+
+frame $xth(gui,tb).unredof
+
+button $xth(gui,tb).undob -image {undo_img} -state disabled \
+    -command {
+      switch -- $xth(app,active) {
+        me {
+          xth_me_unredo_undo
+        }
+        default {
+          xth_app_clipboard redo                    
+        }
+      }
+    }
+xth_status_bar $allapps $xth(gui,tb).undob [mc "Undo"]
+
+
+
+button $xth(gui,tb).redob -image {redo_img} -state disabled \
+    -command {
+      switch -- $xth(app,active) {
+        me {
+          xth_me_unredo_redo
+        }
+        default {
+          xth_app_clipboard redo                    
+        }
+      }
+    }
+xth_status_bar $allapps $xth(gui,tb).redob [mc "Redo"]
+
+label $xth(gui,tb).sp01x -relief groove -width 0 -padx 0 -pady 0 -bd 1
+
+
+
+
+
+
 frame $xth(gui,tb).winf
 button $xth(gui,tb).edb -image {edit_img} \
 		-command {
@@ -260,6 +300,13 @@ pack $xth(gui,tb).newb $xth(gui,tb).openb $xth(gui,tb).saveb $xth(gui,tb).savasb
 	 $xth(gui,tb).closeb \
 	-side left -anchor center -in $xth(gui,tb).filf
 pack $xth(gui,tb).sp01 -padx 7 -pady 5 -fill y -side left -anchor center -in $xth(gui,tb).filf
+
+# - undo/redo icons
+pack $xth(gui,tb).unredof -side left
+pack $xth(gui,tb).undob $xth(gui,tb).redob -side left -anchor center -in $xth(gui,tb).unredof
+pack $xth(gui,tb).sp01x -padx 7 -pady 5 -fill y -side left -anchor center -in $xth(gui,tb).unredof
+
+
 # - window icons
 pack $xth(gui,tb).winf -side left
 

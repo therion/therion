@@ -1582,6 +1582,15 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
     }
   }
 
+  if {[regexp {^([^ :]+)\:([^ :]+)$} $ntype dum xntype xstype]} {
+    if {![string equal $xntype u]} {
+      set ntype $xntype
+      set nopts [regsub -all {(^|\s+)\-subtype\s+\S+} $nopts {}]
+      set nopts [regsub -all {^\s+|\s+$} $nopts {}]
+      set nopts "-subtype $xstype $nopts"
+    }
+  }     
+    
   # uprav options
   regsub {^\s*} $nopts "" nopts
   regsub {\s*$} $nopts "" nopts
@@ -2195,6 +2204,7 @@ proc xth_me_cmds_draw_lineln {id ppid pid} {
   set highlight_off "if {\$xth(me,cmds,selid) != $id} {\$xth(me,can) itemconfigure lnln$id -fill \[$xth(me,can) itemcget pt$id.$pid -outline\]}"
   $xth(me,can) bind ln$id.$pid <Enter> "$highlight_on\nxth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \$xth(me,cmds,$id,sbar)\""
   $xth(me,can) bind ln$id.$pid <Leave> "$highlight_off\nxth_status_bar_pop me"
+  $xth(me,can) bind ln$id.$pid <$xth(gui,rmb)> "xth_me_show_context_menu {$id $pid} %x %y"  
   catch {$xth(me,can) lower ln$id.$pid point}
 }
 
@@ -2205,7 +2215,7 @@ proc xth_me_cmds_move_lineln {id ppid pid} {
   set st [lindex $st2crds 0]
   set crds [lindex $st2crds 1]
   $xth(me,can) coords ln$id.$pid [xth_me_cmds_real2can_coords $crds]
-  $xth(me,can) itemconfigure ln$id.$pid -state $st
+  #$xth(me,can) itemconfigure ln$id.$pid -state $st
 }
 
 
@@ -2220,7 +2230,7 @@ proc xth_me_cmds_draw_linept {id pid} {
   $xth(me,can) bind pt$id.$pid <Enter> "$highlight_on\n$xth(me,can) itemconfigure pt$id.$pid -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \[lindex \[regexp -inline -- {^\[^\\n\]*} \$xth(me,cmds,$id,data)\] 0\]\""
   $xth(me,can) bind pt$id.$pid <Leave> "$highlight_off\n$xth(me,can) itemconfigure pt$id.$pid -fill \[$xth(me,can) itemcget ln$id.$pid -fill\]; xth_status_bar_pop me"
   $xth(me,can) bind pt$id.$pid <1> "xth_me_cmds_click {$id $pid} pt$id.$pid \$xth(me,cmds,$id,$pid,x) \$xth(me,cmds,$id,$pid,y) %x %y"
-  $xth(me,can) bind pt$id.$pid <$xth(gui,rmb)> "xth_me_cmds_special_select {$id $pid} %x %y"  
+  $xth(me,can) bind pt$id.$pid <$xth(gui,rmb)> "xth_me_show_context_menu {$id $pid} %x %y"  
   $xth(me,can) bind pt$id.$pid <Shift-1> "xth_me_cmds_special_select {$id $pid} %x %y"  
   $xth(me,can) bind pt$id.$pid <$xth(kb_control)-1> "xth_me_cmds_click_area pt$id.$pid %x %y"
 }
@@ -3080,7 +3090,7 @@ proc xth_me_cmds_set_colors {} {
   set xid [lsearch $xth(me,cmds,xlist) $xth(me,cmds,selid)]
   set llen [llength $xth(me,cmds,xlist)]
   set cid $xid
-  
+
   set dcol #fff222
   set scol $xth(gui,me,pasivefill)
   if {$xth(me,cmds,$xth(me,cmds,selid),ct) == 4} {
@@ -3093,7 +3103,7 @@ proc xth_me_cmds_set_colors {} {
     set col $scol
     set ocol $scol
   }
-  
+
   set xth(me,curscrap) {}
   set godown 1
   if {$cid < 0} {
@@ -3103,35 +3113,41 @@ proc xth_me_cmds_set_colors {} {
   while {(($cid >= 0) && ($cid < $llen)) || ($godown)} {
     set id [lindex $xth(me,cmds,xlist) $cid]
     switch $xth(me,cmds,$id,ct) {
-      2 {
-	$xth(me,can) itemconfigure pt$id -outline $col -fill $col
+      2 {        
+        $xth(me,can) itemconfigure pt$id -outline $col -fill $col -state normal
+        if {$xth(me,hinactives) && ($col == $dcol)} {
+          $xth(me,can) itemconfigure pt$id -state hidden
+        }
       }
       3 {
-	$xth(me,can) itemconfigure lnpt$id -outline $col -fill $col
-	$xth(me,can) itemconfigure lnln$id -fill $col
+        $xth(me,can) itemconfigure lnpt$id -outline $col -fill $col -state normal
+        $xth(me,can) itemconfigure lnln$id -fill $col -state normal
+        if {$xth(me,hinactives) && ($col == $dcol)} {
+          $xth(me,can) itemconfigure ln$id -state hidden  
+        }
       }
       4 - 5 {
-	if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
-	  set xth(me,curscrap) $xth(me,cmds,$id,name)
-#          if {[string equal $xth(me,cmds,$id,projection) extended]} {
-#            set xth(me,snai) -1
-#          } else {
-#            set xth(me,snai) 1
-#          }
-    set xth(me,snai) 1
-	}
-	if {$cid != $xid} {
-	  set col $dcol
-	}
+        if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
+          set xth(me,curscrap) $xth(me,cmds,$id,name)
+          #          if {[string equal $xth(me,cmds,$id,projection) extended]} {
+          #            set xth(me,snai) -1
+          #          } else {
+          #            set xth(me,snai) 1
+          #          }
+          set xth(me,snai) 1
+        }
+        if {$cid != $xid} {
+          set col $dcol
+        }
       }
     }
-    
+
     if {$godown} {
-      incr cid -1      
+      incr cid -1
       if {$cid < 0} {
-	set cid [expr $xid + 1]
-	set godown 0
-	set col $ocol
+        set cid [expr $xid + 1]
+        set godown 0
+        set col $ocol
       }
     } else {
       incr cid 1

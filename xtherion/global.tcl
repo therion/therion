@@ -294,9 +294,8 @@ set xth(me,themes) {
     {line ceiling-step}
     {line floor-step}
     {line pit}
-    {line wall:breakdown}
     {line floor-meander}
-	  {line ceiling-meander}
+    {line ceiling-meander}
     {line contour}
     {line label}
     {line overhang}
@@ -324,8 +323,8 @@ set xth(me,themes) {
     {point snow}
     {point vegetable-debris}
     {point water}
-	  {line border}
-	  {line border:invisible}
+    {line border}
+    {line border:invisible}
     {line rock-border}
     {line rock-edge}
     {area blocks}
@@ -359,7 +358,7 @@ set xth(me,themes) {
     {point stalagmite}
     {point wall-calcite}
     {line flowstone}
-	  {line moonmilk}
+    {line moonmilk}
     {area flowstone}
     {area moonmilk}
   {theme equipement}
@@ -372,6 +371,7 @@ set xth(me,themes) {
     {point rope-ladder}
     {point steps}
     {point traverse}
+    {line rope}
 }
 
 

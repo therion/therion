@@ -531,12 +531,15 @@ proc xth_app_show {aname} {
     pack forget $xth(gui,tb).self
   }
   switch $aname {
-    cp {
-    }
     me {
       # enable map editor tools
       pack $xth(gui,tb).self -side right -anchor nw
       pack $xth(gui,tb).edif -side right
+      xth_me_unredo_update
+    }
+    default {
+      $xth(gui,tb).undob configure -state normal
+      $xth(gui,tb).redob configure -state normal
     }
   }
 }

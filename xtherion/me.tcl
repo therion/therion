@@ -124,17 +124,25 @@ proc xth_me_unredo_update {} {
   if {[llength $xth(me,undolist)] > 0} {
     $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,undo) \
       -label [format [mc "Undo %s"] [lindex [lindex $xth(me,undolist) 0] 0]] -state normal
+    $xth(gui,tb).undob configure -state normal
+    #xth_status_bar me $xth(gui,tb).undob [format [mc "Undo %s"] [lindex [lindex $xth(me,undolist) 0] 0]]    
   } else {
     $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,undo) \
       -label [mc "Undo"] -state disabled
+    #xth_status_bar me $xth(gui,tb).undob [mc "Undo"]    
+    $xth(gui,tb).undob configure -state disabled 
   }
 
   if {[llength $xth(me,redolist)] > 0} {
     $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,redo) \
       -label [format [mc "Redo %s"] [lindex [lindex $xth(me,redolist) 0] 0]] -state normal
+    $xth(gui,tb).redob configure -state normal
+    #xth_status_bar me $xth(gui,tb).redob [format [mc "Redo %s"] [lindex [lindex $xth(me,redolist) 0] 0]]    
   } else {
     $xth(me,menu,edit) entryconfigure $xth(me,menu,edit,redo) \
       -label [mc "Redo"] -state disabled
+    #xth_status_bar me $xth(gui,tb).redob [mc "Redo"]    
+    $xth(gui,tb).redob configure -state disabled 
   }
 
 }
@@ -1219,6 +1227,7 @@ set xth(me,unredook) 0
 set xth(me,unredola) {}
 set xth(me,curscrap) {}
 set xth(me,snai) 1
+set xth(me,hinactives) 0 
 
 set xth(ctrl,me,images,posx) ""
 set xth(ctrl,me,images,posy) ""
@@ -2524,6 +2533,9 @@ $xth(me,menu,edit) add command -label [mc "Insert image"] \
     xth_me_area_auto_adjust
   }
 }
+$xth(me,menu,edit) add separator
+$xth(me,menu,edit) add checkbutton -label [mc "Hide inactive scraps"] -variable xth(me,hinactives) -command xth_me_cmds_toggleishiding
+
 set xth(me,menu,edit,undo) [$xth(me,menu,edit) index [mc "Undo"]]
 set xth(me,menu,edit,redo) [$xth(me,menu,edit) index [mc "Redo"]]
 set xth(me,menu,edit,zoom) [$xth(me,menu,edit) index [mc "Zoom 100 %"]]

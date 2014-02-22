@@ -1865,13 +1865,24 @@ proc xth_me_cmds_update_area {id ntype nopt} {
 
   regsub {^\s*} $nopt "" nopt
   regsub {\s*$} $nopt "" nopt
-
+  
   if {[string length $ntype] < 1} {
     set ntype $otype
   }
+  
   if {(![string equal $ntype $otype]) && [string equal $nopt $oopt]} {
     set nopt {}
   }
+  
+  if {[regexp {^([^ :]+)\:([^ :]+)$} $ntype dum xntype xstype]} {
+    if {![string equal $ntype u]} {
+      set ntype $xntype
+      set nopt [regsub -all {(^|\s+)\-subtype\s+\S+} $nopt {}]
+      set nopt [regsub -all {^\s+|\s+$} $nopt {}]
+      set nopt "-subtype $xstype $nopt"
+      set nopt [regsub -all {^\s+|\s+$} $nopt {}]
+    }
+  }    
   
   if {![string equal "$ntype $nopt" "$otype $oopt"]} {
     xth_me_unredo_action [mc "area changes"] \
@@ -1884,9 +1895,6 @@ proc xth_me_cmds_update_area {id ntype nopt} {
   }
 
 }
-
-
-
 
 proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
 
@@ -1907,11 +1915,23 @@ proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
   if {[string length $ntype] < 1} {
     set ntype $otype
   }
-  if {(![string equal $ntype $otype]) && [string equal $nopt $oopt]} {
+  
+  #reset point options & rotation when type changes
+  if {(![string equal $ntype $otype]) && [string equal $nopt $oopt] && [string equal $nrot $orot] && [string equal $nxs $oxs] && [string equal $nys $oys]} {
     set nopt {}
     set nrot {}
     set nxs {}
     set nys {}
+  }
+  
+  if {[regexp {^([^ :]+)\:([^ :]+)$} $ntype dum xntype xstype]} {
+    if {![string equal $xntype u]} {
+      set ntype $xntype
+      set nopt [regsub -all {(^|\s+)\-subtype\s+\S+} $nopt {}]
+      set nopt [regsub -all {^\s+|\s+$} $nopt {}]
+      set nopt "-subtype $xstype $nopt"
+      set nopt [regsub -all {^\s+|\s+$} $nopt {}]
+    }
   }
   
   if {[string length $nrot] > 0} {
@@ -1991,7 +2011,7 @@ proc xth_me_cmds_draw_point {id} {
   $xth(me,can) bind pt$id <Enter> "$xth(me,can) itemconfigure pt$id -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \$xth(me,cmds,$id,sbar)\""
   $xth(me,can) bind pt$id <Leave> "$xth(me,can) itemconfigure pt$id -fill \[$xth(me,can) itemcget pt$id -outline\]; xth_status_bar_pop me"
   $xth(me,can) bind pt$id <1> "xth_me_cmds_click $id pt$id \$xth(me,cmds,$id,x) \$xth(me,cmds,$id,y) %x %y"
-  $xth(me,can) bind pt$id <$xth(gui,rmb)> "xth_me_cmds_special_select $id %x %y"  
+  $xth(me,can) bind pt$id <$xth(gui,rmb)> "xth_me_show_context_menu $id %x %y"  
   $xth(me,can) bind pt$id <Shift-1> "xth_me_cmds_special_select $id %x %y"  
   $xth(me,can) bind pt$id <$xth(kb_control)-1> "xth_me_cmds_click_area pt$id %x %y"
 }
@@ -2628,7 +2648,6 @@ proc xth_me_cmds_delete_scrap_sketch {id lid} {
 
 
 proc xth_me_cmds_undelete_scrap_sketch {cr id lid ix} {
-
   global xth
   set xth(me,cmds,$id,sklist) [linsert $xth(me,cmds,$id,sklist) $ix $lid]
   xth_me_cmds_update_scrap_data $id
@@ -2639,4 +2658,734 @@ proc xth_me_cmds_undelete_scrap_sketch {cr id lid ix} {
   
 }
 
+proc xth_me_cmds_toggleishiding {} {
+	global xth
+  xth_me_cmds_set_colors
+}
+
+set xth(me,ctxmenu) $xth(gui,main).mectx
+catch {menu $xth(me,ctxmenu) -tearoff 0}
+catch {menu $xth(me,ctxmenu).ptypes -tearoff 0}
+catch {menu $xth(me,ctxmenu).ltypes -tearoff 0}
+
+$xth(me,ctxmenu).ptypes delete 0 end
+$xth(me,ctxmenu).ltypes delete 0 end
+
+for {set j 0} {$j < [llength $xth(me,themes,list)]} {incr j} {
+  set cm [lindex $xth(me,themes,list) $j]
+  set cmn "$xth(me,ctxmenu).ptypes.m$j"
+  catch {destroy $cmn}
+  # vytvorime podmenu
+  menu $cmn -tearoff 0
+  for {set i 0} {$i < [llength $xth(me,themes,$cm,point,showlist)]} {incr i} {
+    $cmn add radiobutton -label [lindex $xth(me,themes,$cm,point,showlist) $i] -variable xth(ctrl,me,point,type) -value [lindex $xth(me,themes,$cm,point,hidelist) $i] -command {xth_me_cmds_update {}}
+  }    
+  # pripneme ho do menu
+  $xth(me,ctxmenu).ptypes add cascade -label [lindex $xth(me,themes,showlist) $j] -menu $cmn
+  
+  set cmn "$xth(me,ctxmenu).ltypes.m$j"
+  catch {destroy $cmn}
+  # vytvorime podmenu
+  menu $cmn -tearoff 0
+  for {set i 0} {$i < [llength $xth(me,themes,$cm,line,showlist)]} {incr i} {
+    $cmn add radiobutton -label [lindex $xth(me,themes,$cm,line,showlist) $i] -variable xth(ctrl,me,line,type) -value [lindex $xth(me,themes,$cm,line,hidelist) $i] -command {xth_me_cmds_update {}}
+  }    
+  # pripneme ho do menu
+  $xth(me,ctxmenu).ltypes add cascade -label [lindex $xth(me,themes,showlist) $j] -menu $cmn  
+}
+
+
+catch {menu $xth(me,ctxmenu).clip -tearoff 0}
+$xth(me,ctxmenu).clip delete 0 end
+$xth(me,ctxmenu).clip add radiobutton -label [mc "on"] -variable xth(me,ctrl,ctx,clip) -value "on" -command {xth_me_set_option_value clip}
+$xth(me,ctxmenu).clip add radiobutton -label [mc "off"] -variable xth(me,ctrl,ctx,clip) -value "off" -command {xth_me_set_option_value clip}
+
+catch {menu $xth(me,ctxmenu).visibility -tearoff 0}
+$xth(me,ctxmenu).visibility delete 0 end
+$xth(me,ctxmenu).visibility add radiobutton -label [mc "on"] -variable xth(me,ctrl,ctx,visibility) -value "on" -command {xth_me_set_option_value visibility}
+$xth(me,ctxmenu).visibility add radiobutton -label [mc "off"] -variable xth(me,ctrl,ctx,visibility) -value "off" -command {xth_me_set_option_value visibility}
+
+catch {menu $xth(me,ctxmenu).place -tearoff 0}
+$xth(me,ctxmenu).place delete 0 end
+$xth(me,ctxmenu).place add radiobutton -label [mc "top"] -variable xth(me,ctrl,ctx,place) -value "top" -command {xth_me_set_option_value place}
+$xth(me,ctxmenu).place add radiobutton -label [mc "bottom"] -variable xth(me,ctrl,ctx,place) -value "bottom" -command {xth_me_set_option_value place}
+
+image create photo align-b.gif -data {R0lGODlhFQASAKECAP8AALi4uP///////yH5BAEKAAMALAAAAAAVABIAAAI/nI+pOwAMjYtwUuRe
+szCE7IFBJ5SCYwojE6SouS6t+ZaxMqfpneS6TfrBgkIVUchD+H7Jw1LXNHim1OnlaigAADs=}
+image create photo align-bl.gif -data {R0lGODlhFQASAKEBAP8AALi4uP///7i4uCH5BAEKAAMALAAAAAAVABIAAAI+nI+pmwAMjYtwUuTe
+yCn472XBZh2BgKZq2amuwCLnm8YmnY7MjOsLT/MpgC9hCycwypBJCNGlNIGmnosVUQAAOw==}
+image create photo align-bls.gif -data {R0lGODlhFQASAKEDAAAAAP8AAP///7i4uCH5BAEKAAMALAAAAAAVABIAAAI+nI+pmxEMjYtwUuTe
+yAn472XAZh2AgKZq2amuwCLnm8YmnY7MjOsLT/MpgC9hCycwypBJCNGlNIGmnosVUQAAOw==}
+image create photo align-br.gif -data {R0lGODlhFQASAKEBAP8AALi4uP///7i4uCH5BAEKAAMALAAAAAAVABIAAAI8nI+pCLDPHIRtqiax
+NTrgAIbg0wjmiQYkgLaCupTuCS/BTEM3/up8/9jhagrhjJgwupAIZYt5EElDm2oBADs=}
+image create photo align-brs.gif -data {R0lGODlhFQASAKEDAAAAAP8AAP///7i4uCH5BAEKAAMALAAAAAAVABIAAAI+nI+pGLHPHIRtqiax
+NRpgAIbg0wjmiQJkgLaCupTuCS/ATEM3/up8/9jhagrhjJgwupAIZYt5AEinVOnmWgAAOw==}
+image create photo align-bs.gif -data {R0lGODlhFQASAKECAAAAAP8AAP///////yH5BAEKAAMALAAAAAAVABIAAAJAnI+pOxEMjYtwUuRe
+sxCA7IFAJ5SCYwojA6SouS6t+ZaxMqfpneS6TfrBgkIVUchD+H7Jw1LXNACm1Or0gjUUAAA7}
+image create photo align-c.gif -data {R0lGODlhFQASAKECAP8AALi4uP///////yH5BAEKAAMALAAAAAAVABIAAAI5nI+py+0fopyxBYGz
+DlYDsHXZFzLXCGacKXypK6zLBbekrJwYqYp7isEldLbSTIOMWSjMh/MJjSIKADs=}
+image create photo align-cs.gif -data {R0lGODlhFQASAKECAAAAAP8AAP///////yH5BAEKAAMALAAAAAAVABIAAAI5nI+py+0PopyxAYGz
+BlaHsHXZFzLXCGacKXypK6zLBbekrJwYqYp7isEldLbSTIOMWSjMh/MJjSIKADs=}
+image create photo align-l.gif -data {R0lGODlhFQASAKECAP8AALi4uP///////yH5BAEKAAMALAAAAAAVABIAAAI2nI+py+0dopwRiotz
+sLkDwASdBy7iiH0h+gFbm5ykO8CIzJYKPqommtLFgJdNiIJ8KJfMpqIAADs=}
+image create photo align-ls.gif -data {R0lGODlhFQASAKECAAAAAP8AAP///////yH5BAEKAAMALAAAAAAVABIAAAI2nI+py+0NopwRiosz
+sLmHwACdBy7iiH0h+gVbm5ykO8CIzJYKPqommtLFgJdNiIJ8KJfMpqIAADs=}
+image create photo align-r.gif -data {R0lGODlhFQASAKECAP8AALi4uP///////yH5BAEKAAMALAAAAAAVABIAAAI5nI+py+1vgpxUtiCy
+3oEBsIVCt3wi54FnRh4fMATv2RpvPIs1Yq5j6vuVVKsdAuMzHipMJeQJjSoKADs=}
+image create photo align-rs.gif -data {R0lGODlhFQASAKECAAAAAP8AAP///////yH5BAEKAAMALAAAAAAVABIAAAI5nI+py+1vgJxUNiCy
+3oCFsIVCt3wi54FnRh5fMADv2RpvPIs1Yq5j6vuVVKsdAuMzHipMJeQJjSoKADs=}
+image create photo align-t.gif -data {R0lGODlhFQASAKECAP8AALi4uP///////yH5BAEKAAMALAAAAAAVABIAAAI+nI+pF+3flgmi2hvk
+oLdnyXXWt4SiQCqmmCarp71YfAHADNb3SFs2XgrYAI1hRDMYGpTIhK0peUIV0qn1UAAAOw==}
+image create photo align-tl.gif -data {R0lGODlhFQASAKEBAP8AALi4uP///7i4uCH5BAEKAAMALAAAAAAVABIAAAJAnI+pE+3flgmi2hsk
+u1xkSXXWt4Sip5kiqagdm7gcjMgXAIBnBeTlLuiBIA2AMWP0aQxJpnGpeEIX0mmiap0WAAA7}
+image create photo align-tls.gif -data {R0lGODlhFQASAKEDAAAAAP8AAP///7i4uCH5BAEKAAMALAAAAAAVABIAAAI9nI+pA+3flgGi2gsk
+u1xkSXXWt4Sip5kiqagdm7gcjMhXEIBnhet7X4I0cIEMUYM4DpTIZK65AEIT0im0AAA7}
+image create photo align-tr.gif -data {R0lGODlhFQASAKEBAP8AALi4uP///7i4uCH5BAEKAAMALAAAAAAVABIAAAI9nI+pGe3flgmi2hvk
+oLdnyXXWt4SiQCqmmDLnqK2eBABv1R71jdL23aoBNkKIIyE0JDWKGlPjfC6i0qqmAAA7}
+image create photo align-trs.gif -data {R0lGODlhFQASAKEDAAAAAP8AAP///7i4uCH5BAEKAAMALAAAAAAVABIAAAI9nI+pCe3flgGi2gvk
+oLdnyXXWt4SiQCqmmDLnqK2eFARv1R71jdL23aoFNkKIIyE0JDWKGlPjfC6i0qqmAAA7}
+image create photo align-ts.gif -data {R0lGODlhFQASAKECAAAAAP8AAP///////yH5BAEKAAMALAAAAAAVABIAAAI+nI+pB+3flgGi2gvk
+oLdnyXXWt4SiQCqmmCarp71YfAXBDNb3SFs2XgLYAo1hRDMYGpTIhK0peUIV0qn1UAAAOw==}
+
+
+catch {menu $xth(me,ctxmenu).align -tearoff 0}
+$xth(me,ctxmenu).align delete 0 end
+$xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-tl.gif -selectimage align-tls.gif -variable xth(me,ctrl,ctx,align) -value "top-left" -command {xth_me_set_option_value align} 
+$xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-l.gif -selectimage align-ls.gif -variable xth(me,ctrl,ctx,align) -value "left" -command {xth_me_set_option_value align}
+$xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-bl.gif -selectimage align-bls.gif -variable xth(me,ctrl,ctx,align) -value "bottom-left" -command {xth_me_set_option_value align}
+$xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-t.gif -selectimage align-ts.gif -columnbreak 1 -variable xth(me,ctrl,ctx,align) -value "top" -command {xth_me_set_option_value align}
+$xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-c.gif -selectimage align-cs.gif -variable xth(me,ctrl,ctx,align) -value "center" -command {xth_me_set_option_value align}
+$xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-b.gif -selectimage align-bs.gif -variable xth(me,ctrl,ctx,align) -value "bottom" -command {xth_me_set_option_value align}
+$xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-tr.gif -selectimage align-trs.gif -columnbreak 1 -variable xth(me,ctrl,ctx,align) -value "top-right" -command {xth_me_set_option_value align}
+$xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-r.gif -selectimage align-rs.gif -variable xth(me,ctrl,ctx,align) -value "right" -command {xth_me_set_option_value align}
+$xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-br.gif -selectimage align-brs.gif -variable xth(me,ctrl,ctx,align) -value "bottom-right" -command {xth_me_set_option_value align}
+
+
+catch {menu $xth(me,ctxmenu).scale -tearoff 0}
+$xth(me,ctxmenu).scale delete 0 end
+$xth(me,ctxmenu).scale add radiobutton -label [mc "tiny (xs)"] -variable xth(me,ctrl,ctx,scale) -value "xs" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "small (s)"] -variable xth(me,ctrl,ctx,scale) -value "s" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "normal (m)"] -variable xth(me,ctrl,ctx,scale) -value "m" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "large (l)"] -variable xth(me,ctrl,ctx,scale) -value "l" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "huge (xl)"] -variable xth(me,ctrl,ctx,scale) -value "xl" -command {xth_me_set_option_value scale}
+
+catch {menu $xth(me,ctxmenu).outline -tearoff 0}
+$xth(me,ctxmenu).outline delete 0 end
+$xth(me,ctxmenu).outline add radiobutton -label [mc "out"] -variable xth(me,ctrl,ctx,outline) -value "out" -command {xth_me_set_option_value outline}
+$xth(me,ctxmenu).outline add radiobutton -label [mc "in"] -variable xth(me,ctrl,ctx,outline) -value "in" -command {xth_me_set_option_value outline}
+$xth(me,ctxmenu).outline add radiobutton -label [mc "none"] -variable xth(me,ctrl,ctx,outline) -value "none" -command {xth_me_set_option_value outline}
+
+catch {menu $xth(me,ctxmenu).cps -tearoff 0}
+$xth(me,ctxmenu).cps delete 0 end
+$xth(me,ctxmenu).cps add checkbutton -label [mc "<<"] -variable xth(ctrl,me,linept,idp) -command xth_me_cmds_toggle_linept
+$xth(me,ctxmenu).cps add checkbutton -label [mc "smooth"] -variable xth(ctrl,me,linept,smooth) -command xth_me_cmds_toggle_linept
+$xth(me,ctxmenu).cps add checkbutton -label [mc ">>"] -variable xth(ctrl,me,linept,idn) -command xth_me_cmds_toggle_linept
+
+
+catch {menu $xth(me,ctxmenu).subtype -tearoff 0}
+catch {menu $xth(me,ctxmenu).segsubtype -tearoff 0}
+
+catch {menu $xth(me,ctxmenu).altitude -tearoff 0}
+$xth(me,ctxmenu).altitude delete 0 end
+$xth(me,ctxmenu).altitude add radiobutton -label [mc "auto"] -variable xth(me,ctrl,ctx,altitude) -value "." -command {xth_me_set_optionline_value altitude}
+$xth(me,ctxmenu).altitude add command -label [mc "edit"] -command {xth_me_ctx_change_text altitude [mc "Altitude"]}
+
+catch {menu $xth(me,ctxmenu).others -tearoff 0}
+
+# return point option
+proc xth_me_get_option_value {key optkey} {
+  global xth
+  set opt $xth($optkey)
+  if {[regexp "(^|.*\\s)-($key)\\s+\\\[(\[^\\\]\]*)\\\]\\s*(.*)\$" $opt dum obeg okey oval oend]} {
+  } elseif {[regexp "(^|.*\\s)-($key)\\s+\\\"(.*)\$" $opt dum obeg okey oval]} {
+    set nx 0
+    set nl [string length $oval]
+    set oend {}
+    for {set xx 0} {$xx < $nl} {incr xx} {
+      if {[string equal [string index $oval $xx] "\""]} {
+        if {[string equal [string index $oval [expr $xx + 1]] "\""]} {
+          incr xx
+        } else {
+          set oend [string range $oval [expr $xx + 1] end]
+          set oval [string range $oval 0 [expr $xx - 1]]
+        } 
+      }
+    }
+  } elseif {[regexp "(^|.*\\s)-($key)\\s+(\\S+)\\s*(.*)\$" $opt dum obeg okey oval oend]} {    
+  } else {return [list {} $opt]}
+  set oend [regsub -all {^\s+|\s+$} $oend {}] 
+  set obeg [regsub -all {^\s+|\s+$} $obeg {}]
+  if {([string length $obeg] > 0) && ([string length $oend] > 0)} {
+    set oend " $oend"
+  }
+  return [list $oval "$obeg$oend"]
+}
+
+
+proc xth_me_get_optionline_value {key} {
+  global xth
+  set opt [$xth(ctrl,me,linept).oe.txt get 1.0 end]
+  set oval {}
+  set orest {}
+  foreach ln [split $opt "\n"] {
+    set oend $ln
+    if {[regexp "^\\s*($key)\\s+\\\[(\[^\\\]\]*)\\\]\\s*(.*)\$" $ln dum okey oval oend]} {
+    } elseif {[regexp "^\\s*($key)\\s+\\\"(.*)\$" $ln dum okey oval]} {
+      set nx 0
+      set nl [string length $oval]
+      set oend {}
+      for {set xx 0} {$xx < $nl} {incr xx} {
+        if {[string equal [string index $oval $xx] "\""]} {
+          if {[string equal [string index $oval [expr $xx + 1]] "\""]} {
+            incr xx
+          } else {
+            set oend [string range $oval [expr $xx + 1] end]
+            set oval [string range $oval 0 [expr $xx - 1]]
+          } 
+        }
+      }
+    } elseif {[regexp "^\\s*($key)\\s+(\\S+)\\s*(.*)\$" $ln dum okey oval oend]} {    
+    }
+    if {([string length $oend] > 0) && [regexp {\S+} $oend]} {
+      if {[string length $orest] > 0} {
+        set orest "$orest\n"
+      }
+      set orest "$orest$oend"
+    }
+  }
+  return [list $oval $orest]
+}
+
+
+
+proc xth_me_optlabel {opt args} {
+  global xth
+  set lab [mc $opt]
+  if {[llength $args] > 0} {
+    set lab [lindex $args 0]
+  }
+  set val $xth(me,ctrl,ctx,$opt)
+  set lval {}
+  switch $opt {
+    name -
+    text -
+    altitude -
+    value {
+      if {[string length $val] > 22} {
+        set lval " ([string range $val 0 18] ...)"
+      } elseif {[string length $val] > 0} {
+        set lval " ([string range $val 0 22])"
+      }
+      if {[string equal $opt altitude] && [string equal $val "."]} {
+        set lval " (auto)"
+      }
+    }
+    default {
+      if {![string equal $val "auto"]} {
+        set lval " ([mc $val])"
+      }
+    }
+  }
+  return "$lab$lval"
+}
+
+proc xth_me_set_option_value {opt} {
+  global xth
+  set nval $xth(me,ctrl,ctx,$opt)
+  set oval $xth(me,ctrl,ctxold,$opt)
+  switch $opt {
+    name -
+    text -
+    value {
+    }
+    default {
+      if {[string equal $nval "auto"] || [string equal $nval $oval]} {
+        set nval {}
+      }
+    }
+  }
+  set oopts $xth(me,ctrl,ctxopt,$opt)
+  if {[string length $nval] > 0} {
+    if {[regexp {^[\w\.\-][^\s\[\]\"]*$} $nval]} {
+      set xth($xth(me,ctrl,ctx,optkey)) "$oopts -$opt $nval" 
+    } elseif {![regexp {[\[\]]} $nval]} {
+      set xth($xth(me,ctrl,ctx,optkey)) "$oopts -$opt \[$nval\]" 
+    } else {
+      set nval [regsub -all {"} $nval {""}]
+      set xth($xth(me,ctrl,ctx,optkey)) "$oopts -$opt \"$nval\"" 
+    }
+  } else {
+    set xth($xth(me,ctrl,ctx,optkey)) $oopts 
+  }
+  xth_me_cmds_update {}  
+}
+
+  
+# option name, option name in therion command  
+proc xth_me_set_optionline_value {opt args} {
+  global xth
+  set nval $xth(me,ctrl,ctx,$opt)
+  set oval $xth(me,ctrl,ctxold,$opt)
+  set oopts $xth(me,ctrl,ctxopt,$opt)
+  set optstr $opt
+  if {[llength $args] > 0} {
+    set optstr [lindex $args 0]
+  }
+  switch $opt {
+    altitude {  
+      if {[string equal $nval "."] && [string equal $nval $oval]} {
+        set nval {}
+      }  
+    }
+    segsubtype {  
+      if {[string equal $nval $oval]} {
+        set nval {}
+      }  
+    }
+    default {      
+    }
+  }
+  if {[string length $nval] > 0} {
+    if {[string length $oopts] > 0} {
+      set oopts "$oopts\n"
+    }
+    if {[regexp {^[\w\.\-][^\s\[\]\"]*$} $nval]} {
+      set nopts "$oopts$optstr $nval" 
+    } elseif {![regexp {[\[\]]} $nval]} {
+      set nopts "$oopts$optstr \[$nval\]" 
+    } else {
+      set nval [regsub -all {"} $nval {""}]
+      set nopts "$oopts$optstr \"$nval\"" 
+    }
+  } else {
+    set nopts $oopts 
+  }
+  $xth(ctrl,me,linept).oe.txt delete 1.0 end
+  $xth(ctrl,me,linept).oe.txt insert 1.0 $nopts
+  $xth(ctrl,me,linept).oe.txt mark set insert end
+  $xth(ctrl,me,linept).oe.txt see end
+  xth_me_cmds_update {}  
+}
+ 
+  
+
+proc xth_me_ctx_change_text {id args} {
+  global xth
+  if {[llength $args] < 1} {
+    set title $id
+  } else {
+    set title [lindex $args 0]
+  }
+  set d $xth(gui,main).ctxdlg
+  catch {destroy $d}
+  set dlg [Dialog $d -side bottom -title $title -transient no -cancel 1 -default 0 -geometry $xth(me,ctrl,ctx,dlggeom)]
+  $d add -text [mc "OK"]
+  $d add -text [mc "Cancel"]
+  set f [$d getframe]
+  Entry $f.stname -font $xth(gui,lfont) -width 0 -textvariable xth(me,ctrl,ctx,$id) -command "Dialog::enddialog $d 0"
+  pack $f.stname -expand 1 -fill both
+  set res [$d draw $f.stname]
+  if {$res == 0} {
+    if {[string equal $id altitude]} {
+      xth_me_set_optionline_value $id
+    } else {
+      xth_me_set_option_value $id
+    }
+  }
+}
+
+
+# Show context menu at given coordinates 
+proc xth_me_show_context_menu {id x y} {
+  global xth
+  if {[llength $id] == 2} {
+    set pid [lindex $id 1]
+    set id [lindex $id 0]
+  } else {
+    set pid 0
+  }
+  $xth(me,can) raise point
+  set some_below {}
+  set select {}
+  # select point, if not selected
+  if {$xth(me,cmds,selid) != $id} {
+    #xth_me_cmds_select "$id $pid"
+    set select [list "$id $pid"]
+    if {$pid != 0} {
+      xth_ctrl_scroll_to me line
+      xth_ctrl_maximize me line
+      xth_ctrl_maximize me linept
+    } else {
+      xth_ctrl_scroll_to me point
+      xth_ctrl_maximize me point
+    }
+  # select line point, if not selected
+  } elseif {($xth(me,cmds,$id,ct) == 3) && ($xth(me,cmds,selpid) != $pid)} {
+    #xth_me_cmds_select_linept $id $pid
+    set select [list $id $pid]
+    xth_ctrl_scroll_to me line
+    xth_ctrl_maximize me line
+    xth_ctrl_maximize me linept
+  } else {
+    # check, whether there is some point below
+    $xth(me,can) dtag all nearest
+    if {$pid != 0} {
+      set utag pt$id.$pid
+    } else {
+      set utag pt$id
+    }
+    $xth(me,can) addtag nearest closest [$xth(me,can) canvasx $x] [$xth(me,can) canvasy $y] 0 $utag
+    set tgs [$xth(me,can) itemcget nearest -tags]
+    #puts $tgs
+    if {[regexp "(^|\\s)pt(\\d+)($|\\s)" $tgs d1 d2 nid]} {
+      set some_below "xth_me_cmds_select $nid; xth_ctrl_scroll_to me point; xth_ctrl_maximize me point; catch {\$xth(me,can) lower $utag point}; catch {\$xth(me,can) raise $utag line}"
+    } elseif {[regexp "(^|\\s)pt(\\d+)\.(\\d+)($|\\s)" $tgs d1 d2 nid npid]} {
+      set some_below "xth_me_cmds_select \"$nid $npid\"; if {$npid != 0} {xth_ctrl_scroll_to me line; xth_ctrl_maximize me line; xth_ctrl_maximize me linept} else {xth_ctrl_scroll_to me point; xth_ctrl_maximize me point}; catch {\$xth(me,can) lower $utag point}; catch {\$xth(me,can) raise $utag line}"
+    }
+  }
+    
+  if {[llength $select] == 1} {
+    xth_me_cmds_select [lindex $select 0]
+  } elseif {[llength $select] == 2} {
+    xth_me_cmds_select_linept [lindex $select 0] [lindex $select 1]
+  }
+  
+  $xth(me,ctxmenu) delete 0 end
+  $xth(me,ctxmenu).others delete 0 end
+  
+  set opts {}
+  if {$xth(me,cmds,$id,ct) == 2} {
+    # add point menu items
+    set opts "ctrl,me,point,opts"
+    $xth(me,ctxmenu) add cascade -label [format "%s (%s)" [mc "type"] [thememc [list point $xth(me,cmds,$id,type)]]] -menu $xth(me,ctxmenu).ptypes
+    
+    # subtype if applicable
+    $xth(me,ctxmenu).subtype delete 0 end
+    if {[lsearch -exact {station air-draught water-flow} $xth(me,cmds,$id,type)] > -1} {
+      set optsubtype [xth_me_get_option_value "subtype" $opts]
+      set xth(me,ctrl,ctx,subtype) [lindex $optsubtype 0]
+      if {[string length $xth(me,ctrl,ctx,subtype)] == 0} {
+        set xth(me,ctrl,ctx,subtype) auto
+      }
+      switch $xth(me,cmds,$id,type) {
+        station {
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "temporary"] -variable xth(me,ctrl,ctx,subtype) -value "temporary" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "painted"] -variable xth(me,ctrl,ctx,subtype) -value "painted" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "natural"] -variable xth(me,ctrl,ctx,subtype) -value "natural" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "fixed"] -variable xth(me,ctrl,ctx,subtype) -value "fixed" -command {xth_me_set_option_value subtype}
+        }
+        air-draught {
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "winter"] -variable xth(me,ctrl,ctx,subtype) -value "winter" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "summer"] -variable xth(me,ctrl,ctx,subtype) -value "summer" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "undefined"] -variable xth(me,ctrl,ctx,subtype) -value "undefined" -command {xth_me_set_option_value subtype}
+        }
+        water-flow {
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "permanent"] -variable xth(me,ctrl,ctx,subtype) -value "permanent" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "intermittent"] -variable xth(me,ctrl,ctx,subtype) -value "intermittent" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "paleo"] -variable xth(me,ctrl,ctx,subtype) -value "paleo" -command {xth_me_set_option_value subtype}
+        }
+      }
+      set xth(me,ctrl,ctxopt,subtype) [lindex $optsubtype 1] 
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype] -menu $xth(me,ctxmenu).subtype
+    }    
+    
+    # change align
+    if {[lsearch -exact {station} $xth(me,cmds,$id,type)] == -1} {
+    	set optalign [xth_me_get_option_value "align" $opts]
+    	# set variable
+    	switch -nocase [lindex $optalign 0] {
+    	  t - top {
+    	    set xth(me,ctrl,ctx,align) "top"
+    	  }
+    	  tr - top-right {
+    	    set xth(me,ctrl,ctx,align) "top-right"
+    	  }
+    	  tl - top-left {
+    	    set xth(me,ctrl,ctx,align) "top-left"
+    	  }
+    	  b - bottom {
+    	    set xth(me,ctrl,ctx,align) "bottom"
+    	  }
+    	  br - bottom-right {
+    	    set xth(me,ctrl,ctx,align) "bottom-right"
+    	  }
+    	  bl - bottom-left {
+    	    set xth(me,ctrl,ctx,align) "bottom-left"
+    	  }
+    	  c - centre - center {
+    	    set xth(me,ctrl,ctx,align) "center"
+    	  }
+    	  r - right {
+    	    set xth(me,ctrl,ctx,align) "right"
+    	  }
+    	  l - left {
+    	    set xth(me,ctrl,ctx,align) "left"
+    	  }
+    	  default {
+    	    set xth(me,ctrl,ctx,align) "auto"
+    	  }
+    	}
+    	# set options
+    	set xth(me,ctrl,ctxopt,align) [lindex $optalign 1] 
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel align] -menu $xth(me,ctxmenu).align
+    }
+	  	  
+    # name
+    if {[lsearch -exact {station} $xth(me,cmds,$id,type)] > -1} {
+      set optname [xth_me_get_option_value "name" $opts]
+      set xth(me,ctrl,ctx,name) [lindex $optname 0]
+      set xth(me,ctrl,ctxopt,name) [lindex $optname 1] 
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel name] -command {xth_me_ctx_change_text name [mc "Station name"]}
+    }
+    # scrap
+    if {[lsearch -exact {section} $xth(me,cmds,$id,type)] > -1} {
+      set optscrap [xth_me_get_option_value "scrap" $opts]
+      set xth(me,ctrl,ctx,scrap) [lindex $optscrap 0]
+      set xth(me,ctrl,ctxopt,scrap) [lindex $optscrap 1] 
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel scrap] -command {xth_me_ctx_change_text scrap [mc "Scrap reference"]}
+    }
+    # text
+    if {[lsearch -exact {label remark continuation} $xth(me,cmds,$id,type)] > -1} {
+      set opttext [xth_me_get_option_value "text" $opts]
+      set xth(me,ctrl,ctx,text) [lindex $opttext 0]
+      set xth(me,ctrl,ctxopt,text) [lindex $opttext 1]
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel text] -command {xth_me_ctx_change_text text}
+    }
+    # value
+    if {[lsearch -exact {height passage-height dimensions} $xth(me,cmds,$id,type)] > -1} {
+      set optvalue [xth_me_get_option_value "value" $opts]
+      set xth(me,ctrl,ctx,value) [lindex $optvalue 0]
+      set xth(me,ctrl,ctxopt,value) [lindex $optvalue 1] 
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel value] -command {xth_me_ctx_change_text value}
+    }
+    # toggle orientation
+    if {[lsearch -exact {station} $xth(me,cmds,$id,type)] == -1} {
+      $xth(me,ctxmenu) add checkbutton -label [mc "orientation"] -variable xth(ctrl,me,point,rotid) -command xth_me_cmds_point_change_state
+    }
+  } elseif {$xth(me,cmds,$id,ct) == 3} {
+  
+    # add line menu items
+    set opts "ctrl,me,line,opts"
+    $xth(me,ctxmenu) add cascade -label [format "%s (%s)" [mc "type"] [thememc [list line $xth(me,cmds,$id,type)]]] -menu $xth(me,ctxmenu).ltypes
+    
+    # subtype if applicable
+    $xth(me,ctxmenu).subtype delete 0 end
+    if {[lsearch -exact {wall border water-flow survey} $xth(me,cmds,$id,type)] > -1} {
+      set optsubtype [xth_me_get_option_value "subtype" $opts]
+      set xth(me,ctrl,ctx,subtype) [lindex $optsubtype 0]
+      if {[string length $xth(me,ctrl,ctx,subtype)] == 0} {
+        set xth(me,ctrl,ctx,subtype) auto
+      }
+      switch $xth(me,cmds,$id,type) {
+        wall {
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "bedrock"] -variable xth(me,ctrl,ctx,subtype) -value "bedrock" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "invisible"] -variable xth(me,ctrl,ctx,subtype) -value "invisible" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "underlying"] -variable xth(me,ctrl,ctx,subtype) -value "underlying" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "overlying"] -variable xth(me,ctrl,ctx,subtype) -value "overlying" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "unsurveyed"] -variable xth(me,ctrl,ctx,subtype) -value "unsurveyed" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "presumed"] -variable xth(me,ctrl,ctx,subtype) -value "presumed" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "pit"] -variable xth(me,ctrl,ctx,subtype) -value "pit" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "sand"] -variable xth(me,ctrl,ctx,subtype) -value "sand" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "clay"] -variable xth(me,ctrl,ctx,subtype) -value "clay" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "pebbles"] -variable xth(me,ctrl,ctx,subtype) -value "pebbles" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "debris"] -variable xth(me,ctrl,ctx,subtype) -value "debris" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "blocks"] -variable xth(me,ctrl,ctx,subtype) -value "blocks" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "ice"] -variable xth(me,ctrl,ctx,subtype) -value "ice" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "flowstone"] -variable xth(me,ctrl,ctx,subtype) -value "flowstone" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "moonmilk"] -variable xth(me,ctrl,ctx,subtype) -value "moonmilk" -command {xth_me_set_option_value subtype}
+        }
+        border {
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "visible"] -variable xth(me,ctrl,ctx,subtype) -value "visible" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "invisible"] -variable xth(me,ctrl,ctx,subtype) -value "invisible" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "temporary"] -variable xth(me,ctrl,ctx,subtype) -value "temporary" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "presumed"] -variable xth(me,ctrl,ctx,subtype) -value "presumed" -command {xth_me_set_option_value subtype}
+        }
+        water-flow {
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "permanent"] -variable xth(me,ctrl,ctx,subtype) -value "permanent" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "intermittent"] -variable xth(me,ctrl,ctx,subtype) -value "intermittent" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "conjectural"] -variable xth(me,ctrl,ctx,subtype) -value "conjectural" -command {xth_me_set_option_value subtype}
+        }
+        survey {
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "cave"] -variable xth(me,ctrl,ctx,subtype) -value "cave" -command {xth_me_set_option_value subtype}
+          $xth(me,ctxmenu).subtype add radiobutton -label [mc "surface"] -variable xth(me,ctrl,ctx,subtype) -value "surface" -command {xth_me_set_option_value subtype}
+        }
+      }
+      set xth(me,ctrl,ctxopt,subtype) [lindex $optsubtype 1] 
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype] -menu $xth(me,ctxmenu).subtype
+    }    
+
+        
+    $xth(me,ctxmenu) add cascade -label [mc "control points"] -menu $xth(me,ctxmenu).cps
+    if {[lsearch -exact {slope} $xth(me,cmds,$id,type)] > -1} {
+      $xth(me,ctxmenu) add checkbutton -label [mc "orientation"] -variable xth(ctrl,me,linept,rotid) -command xth_me_cmds_toggle_linept
+      $xth(me,ctxmenu) add checkbutton -label [mc "l-size"] -variable xth(ctrl,me,linept,lsid) -command xth_me_cmds_toggle_linept
+    }
+
+    update
+    set subtypelen [$xth(me,ctxmenu).subtype index end]
+    if {($subtypelen > 0) && ($subtypelen < 22)} {
+      $xth(me,ctxmenu).segsubtype delete 0 end
+      set optsubtype [xth_me_get_optionline_value "subtype"]
+      set xth(me,ctrl,ctx,segsubtype) [lindex $optsubtype 0]
+      if {[string length $xth(me,ctrl,ctx,segsubtype)] == 0} {
+        set xth(me,ctrl,ctx,segsubtype) auto
+      }      
+      set xth(me,ctrl,ctxopt,segsubtype) [lindex $optsubtype 1]
+      for {set sti 0} {$sti < $subtypelen} {incr sti} {
+        $xth(me,ctxmenu).segsubtype add radiobutton -label [$xth(me,ctxmenu).subtype entrycget $sti -label] -variable xth(me,ctrl,ctx,segsubtype) -value [$xth(me,ctxmenu).subtype entrycget $sti -value] -command {xth_me_set_optionline_value segsubtype subtype}
+      }
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel segsubtype [mc "segment subtype"]] -menu $xth(me,ctxmenu).segsubtype
+    }
+    
+    # wall altitude
+    if {[lsearch -exact {wall} $xth(me,cmds,$id,type)] > -1} {
+      set optalt [xth_me_get_optionline_value "altitude"]
+      set xth(me,ctrl,ctx,altitude) [lindex $optalt 0]
+      if {[lsearch -exact {- nan NaN NAN} xth(me,ctrl,ctx,altitude)] > -1} {
+        set xth(me,ctrl,ctx,altitude) "."  
+      }
+      set xth(me,ctrl,ctxopt,altitude) [lindex $optalt 1]
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel altitude [mc "altitude label"]] -menu $xth(me,ctxmenu).altitude
+    }
+    
+    
+    # outline
+    set optoutline [xth_me_get_option_value "outline" $opts]
+    # set variable
+    switch -nocase [lindex $optoutline 0] {
+      in {
+        set xth(me,ctrl,ctx,outline) "in"
+      }
+      out {
+        set xth(me,ctrl,ctx,outline) "out"
+      }
+      none {
+        set xth(me,ctrl,ctx,outline) "none"
+      }
+      default {
+        set xth(me,ctrl,ctx,outline) "auto"
+      }
+    }
+    # set options
+    set xth(me,ctrl,ctxopt,outline) [lindex $optoutline 1] 
+    $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel outline] -menu $xth(me,ctxmenu).outline
+      
+    # text for label
+    if {[lsearch -exact {label} $xth(me,cmds,$id,type)] > -1} {
+      set opttext [xth_me_get_option_value "text" $opts]
+      set xth(me,ctrl,ctx,text) [lindex $opttext 0]
+      set xth(me,ctrl,ctxopt,text) [lindex $opttext 1]
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel text] -command {xth_me_ctx_change_text text}
+    }
+  }
+  
+  # common options 
+  set xth(me,ctrl,ctx,optkey) $opts
+  set xth(me,ctrl,ctx,dlggeom) "+[expr $x + [winfo rootx $xth(me,can)]]+[expr $y + [winfo rooty $xth(me,can)]]"  
+
+  # clip
+  set optclip [xth_me_get_option_value "clip" $opts]
+  # set variable
+  switch -nocase [lindex $optclip 0] {
+    0 - off - false {
+      set xth(me,ctrl,ctx,clip) "off"
+    }
+    1 - on - true {
+      set xth(me,ctrl,ctx,clip) "on"
+    }
+    default {
+      set xth(me,ctrl,ctx,clip) "auto"
+    }
+  }
+  # set options
+  set xth(me,ctrl,ctxopt,clip) [lindex $optclip 1] 
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel clip] -menu $xth(me,ctxmenu).clip
+
+  $xth(me,ctxmenu) add cascade -label [mc "other options"] -menu $xth(me,ctxmenu).others
+  
+    
+  # place
+  set optplace [xth_me_get_option_value "place" $opts]
+  # set variable
+  switch -nocase [lindex $optplace 0] {
+    top {
+      set xth(me,ctrl,ctx,place) "top"
+    }
+    bottom {
+      set xth(me,ctrl,ctx,place) "bottom"
+    }
+    default {
+      set xth(me,ctrl,ctx,place) "auto"
+    }
+  }
+  # set options
+  set xth(me,ctrl,ctxopt,place) [lindex $optplace 1] 
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel place] -menu $xth(me,ctxmenu).place
+  
+  
+  # scale
+  set optscale [xth_me_get_option_value "scale" $opts]
+  # set variable
+  switch -nocase [lindex $optscale 0] {
+    xs - tiny {
+      set xth(me,ctrl,ctx,scale) "xs"
+    }
+    s - small {
+      set xth(me,ctrl,ctx,scale) "s"
+    }
+    m - normal {
+      set xth(me,ctrl,ctx,scale) "m"
+    }
+    l - large {
+      set xth(me,ctrl,ctx,scale) "l"
+    }
+    xl - huge {
+      set xth(me,ctrl,ctx,scale) "xl"
+    }
+    default {
+      set xth(me,ctrl,ctx,scale) "auto"
+    }
+  }
+  # set options
+  set xth(me,ctrl,ctxopt,scale) [lindex $optscale 1] 
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel scale] -menu $xth(me,ctxmenu).scale
+  
+  
+  # visibility
+  set optvis [xth_me_get_option_value "visible|visibility" $opts]
+  # set variable
+  switch -nocase [lindex $optvis 0] {
+    0 - off - false {
+      set xth(me,ctrl,ctx,visibility) "off"
+    }
+    1 - on - true {
+      set xth(me,ctrl,ctx,visibility) "on"
+    }
+    default {
+      set xth(me,ctrl,ctx,visibility) "auto"
+    }
+  }
+  # set options
+  set xth(me,ctrl,ctxopt,visibility) [lindex $optvis 1]   
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel visibility] -menu $xth(me,ctxmenu).visibility
+      
+  $xth(me,ctxmenu) add separator
+  if {$xth(me,cmds,$id,ct) == 3} {
+    $xth(me,ctxmenu) add cascade -label [mc "Edit line"] -menu $xth(ctrl,me,line).lpa.m
+    $xth(me,ctxmenu).others add checkbutton -label [mc "close"] -variable xth(ctrl,me,line,close) -command xth_me_cmds_toggle_line_close
+    $xth(me,ctxmenu).others add checkbutton -label [mc "reverse"] -variable xth(ctrl,me,line,reverse) -command xth_me_cmds_toggle_line_reverse
+  }
+  if {[string length $some_below] > 0} {
+    $xth(me,ctxmenu) add command -label [mc "Select underlying point"] -command $some_below    
+  }
+  $xth(me,ctxmenu) add command -label [mc "Delete symbol"] -command {xth_me_cmds_delete {}}   
+  	
+  # set original values variables
+  foreach item [array names xth {me,ctrl,ctx,*}] {
+    if {[regexp {^me,ctrl,ctx,([^,]*)$} $item dum key]} {
+      set xth(me,ctrl,ctxold,$key) $xth($item)
+    }
+  }
+  tk_popup $xth(me,ctxmenu) [expr $x + [winfo rootx $xth(me,can)]] [expr $y + [winfo rooty $xth(me,can)]]
+}
 

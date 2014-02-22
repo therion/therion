@@ -926,7 +926,7 @@ bg: височина на праг/комин/кладенец
 cz: výška stupně/komínu/hloubka propasti
 de: Höhe der Stufe oder des Schlotes oder Tiefe des Schachts
 el: ύψος σκαλοπατιού/καμινάδας ή βάθος πηγαδιού
-en: floor step/chimney/pit height/depth
+en: pit/chimney/step depth/height
 es: altura resalte/chimenea/profundidad pozo
 fr: hauteur d’une marche/d’une cheminée/profondeur
 it: altezza
@@ -934,7 +934,7 @@ mi: papa tapuae/tumera/teitei rua/hōhonu
 pl: wysokość progu/komina/głębokość studni
 pt: altura do chão para degrau/chaminé/desnível
 ru: высота уступа/трубы/колодца
-sk: výška/hĺbka stupňa/komína
+sk: hĺbka/výška priepasti/stupňa/komína
 sq: lartesia e shkalles ne dysheme/oxhaku/thellesia e leshimit
 
 therion: point dimensions

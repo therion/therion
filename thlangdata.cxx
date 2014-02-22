@@ -2331,7 +2331,7 @@ static thlang_pchar thlang__translations [180][18] = {
     "výška stupně/komínu/hloubka propasti",
     "Höhe der Stufe oder des Schlotes oder Tiefe des Schachts",
     "ύψος σκαλοπατιού/καμινάδας ή βάθος πηγαδιού",
-    "floor step/chimney/pit height/depth",
+    "pit/chimney/step depth/height",
     NULL,
     NULL,
     "altura resalte/chimenea/profundidad pozo",
@@ -2343,7 +2343,7 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     NULL,
     "высота уступа/трубы/колодца",
-    "výška/hĺbka stupňa/komína",
+    "hĺbka/výška priepasti/stupňa/komína",
     "lartesia e shkalles ne dysheme/oxhaku/thellesia e leshimit",
   },
   {

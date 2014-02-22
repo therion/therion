@@ -781,3 +781,28 @@ H0M6hEhB4wMLExgEQGCyp0EJFDUqKElAgUoPGw48PMjhaMwMSwdGIJBQAICr
 AAaILCChYIAMHmJuEKkBQ1SCARbI1GBgo0QIGQkkgODTZEAAOw==
 }
 
+image create photo undo_img -data {
+R0lGODlhEAASAMZWAAtL0AtN0QtN0gxN0AtN0wxN0QtN1AtO0wtO1AtP1AtP1Q1P0wtQ1gtQ1wtR
+1wpS2ApS2QtS1wpT2ApT2QtT2QtU2QtU2gtV2gtW2wtX2wxX2gtY2wtY3AxY2gtZ3AtZ3Qta3Ata
+3Qpb3wtb3wtb4Apd4A1d3Qpe4gpg4gpg4wph4wpi5A5i4Qtj5Atl5Atm5Qxm5Qtn5Qto5gxo5gtp
+5g1p5Axq5wtr6Atr6Qts6Qtt6Qtu6gxu6Axu6Qpv6wtv6gtv6wpw7Atw6wxw6gpx7Apx7Qpz7Qtz
+7Ap07gp17Qp37wt47wt77wt88At98At+8At+8QuA8QuB8gyD8QuE8guF8v//////////////////
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////yH5
+BAEKAH8ALAAAAAAQABIAAAdtgH+Cg4SFhoeIiYqLghcTDgoHAQUDiB4YFRAOCQYCAIcjIRwYFg8N
+CQQBjBQSDAiMf44RhzWFHxsWhj03hCwkIyCFR0FAOjYzMC0qJyOETktJRT4/OTQxLiuGUE1LSERC
+OzgyiFFPsIJV5+qwgQA7
+}
+
+image create photo redo_img -data {
+R0lGODlhEAASAMZWAAtL0AtN0QtN0gxN0AtN0wxN0QtN1AtO0wtO1AtP1AtP1Q1P0wtQ1gtQ1wtR
+1wpS2ApS2QtS1wpT2ApT2QtT2QtU2QtU2gtV2gtW2wtX2wxX2gtY2wtY3AxY2gtZ3AtZ3Qta3Ata
+3Qpb3wtb3wtb4Apd4A1d3Qpe4gpg4gpg4wph4wpi5A5i4Qtj5Atl5Atm5Qxm5Qtn5Qto5gxo5gtp
+5g1p5Axq5wtr6Atr6Qts6Qtt6Qtu6gxu6Axu6Qpv6wtv6gtv6wpw7Atw6wxw6gpx7Apx7Qpz7Qtz
+7Ap07gp17Qp37wt47wt77wt88At98At+8At+8QuA8QuB8gyD8QuE8guF8v//////////////////
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////yH5
+BAEKAH8ALAAAAAAQABIAAAdtgH+Cg4SFhoeIhlWJhk9RiDI4O0JESEtNUIYrLjE0OT8+RUlLToQj
+JyotMDM2OkBBR4UgIyQshDc9hhYbH4U1hxETF4yDCAwSFMR/AQQJDQ8WGBwhI4cAAgYJDhAVGB6I
+AwUBBwoOwsro6erpgQA7
+}
