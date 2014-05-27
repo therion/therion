@@ -45,6 +45,7 @@
 #include "thgeomag.h"
 #include "thgeomagdata.h"
 #include "thlayout.h"
+#include "thcomment.h"
 #include "thsketch.h"
 #include "thcs.h"
 #ifdef THWIN32
@@ -533,6 +534,7 @@ void thconfig::load()
             switch (thmatch_token(this->cfg_file.get_cmd(),thtt_commands)) {
             
               case TT_LAYOUT_CMD:
+              case TT_COMMENT_CMD:
                 this->load_dbcommand(&valuemb);
                 break;
 

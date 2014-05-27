@@ -1,3 +1,32 @@
+Therion 5.3.15 (2014-05-27):
+
+therion:
+ * multiline comments inside (comment/endcomment) block allowed in
+   data and configuration files
+ * new TeX variables
+   \cave[max|min]z = altitude max|min value
+   \thversion = current therion version
+   \currentdate = current date
+   \outcs[code|name] = output CS code and name
+   \northdir = true or grid
+   \magdecl = magnetic declination in degrees
+   \gridconv = grid meridian convergence in degrees
+ * new metapost variables
+   NorthDir = "true" or "grid"
+   MagDecl = magnetic declination in degrees
+   GridConv = grid meridian convergence in degrees
+ * bugs fixed:
+   - invalid colors for station names and wall altitudes
+      
+xtherion:
+ * resetting symbol options when type is changed can be turned off using
+   xth(gui,me,type_reset_options) variable
+ * you can turn off symbol type translation in dropdown menus using 
+   xth(gui,me,type_dropdown_trans) variable
+ * bugs fixed:
+   - area type u type change bug
+      
+--------------------------------------------------------------------------------
 Therion 5.3.14 (2014-02-22):
 
 xtherion:

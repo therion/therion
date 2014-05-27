@@ -1608,6 +1608,15 @@ void thsymbolset::export_mp_symbol_options(FILE * mpf, int sym_id)
   }
 }
 
+void thsymbolset::export_mp_symbol_options(thexception * x, int sym_id)
+{
+  if ((sym_id >= 0) && (this->color[sym_id].defined)) {
+    x->appspf("drawoptions(withcolor (%.6f,%.6f,%.6f));\n", this->color[sym_id].R, this->color[sym_id].G, this->color[sym_id].B);
+  } else {
+    x->appspf("drawoptions();\n");
+  }
+}
+
 
 bool thsymbolset::is_assigned(int symbol)
 {

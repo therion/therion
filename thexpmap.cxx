@@ -1249,9 +1249,21 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   out.attr_last_id = "";
   out.attr_last_scrap = "";
   out.attr_last_scrap_centerline = false;
-  
+
+  double magdec = 0.0, gridconv = 0.0;
+  if (thcfg.outcs != TTCS_LOCAL) {
+	  thdate dt;
+	  dt.reset_current();
+	  double cy = dt.get_start_year();
+	  gridconv = thcfg.get_outcs_convergence();
+	  thcfg.get_outcs_mag_decl(cy, magdec);
+  }
+
   thexpmap_quick_map_export_scale = this->layout->scale;
   fprintf(mpf,"Scale:=%.2f;\n",0.01 / this->layout->scale);
+  fprintf(mpf,"MagDecl:=%.2f;\n", magdec);
+  fprintf(mpf,"GridConv:=%.2f;\n", gridconv);
+
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / this->layout->base_scale);
   fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n");
@@ -1301,6 +1313,8 @@ else
   fprintf(mpf,"defaultfont:=\"thss00\";\n");
   
 //fprintf(mpf,"defaultscale:=0.8;\n\n");
+
+  fprintf(mpf,"NorthDir:=\"%s\";\n", this->layout->north == TT_LAYOUT_NORTH_GRID ? "grid" : "true");
 
   this->layout->export_mpost(mpf);
   
@@ -2720,6 +2734,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         this->db->db1d.m_station_attr.export_mp_object_end(out->file, slp->station_name.id);
         if (out->layout->is_debug_stationnames() && (slp->station_name.id != 0)) {
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
+          out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
           dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
             (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
             thxmmxst(out, slp->stx, slp->sty));
@@ -2798,9 +2813,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 					        this->db->db1d.m_station_attr.export_mp_object_end(out->file, ptp->station_name.id);
 								}
                 if (out->layout->is_debug_stationnames() && (tmps != NULL)) {
-                  dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
-                    (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
-                    thxmmxst(out, ptp->point->xt, ptp->point->yt));
+					  out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
+					  dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
+                      (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
+                      thxmmxst(out, ptp->point->xt, ptp->point->yt));
                 }
               }
             }
@@ -2867,6 +2883,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
               if (((lp->tags | TT_LINEPT_TAG_ALTITUDE) > 0) &&
                   (!thisnan(lp->rsize))) {
                 thexpmap_export_mp_bgif;
+                out->symset->export_mp_symbol_options(out->file, SYMP_WALLALTITUDE);
                 fprintf(out->file,"%s(",out->symset->get_mp_macro(SYMP_WALLALTITUDE));
                 lp->export_prevcp_mp(out);
                 fprintf(out->file,",");

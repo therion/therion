@@ -1,3 +1,8 @@
+OUTDIR ?= .
+THPLATFORM ?= LINUX
+LOUTDIR = ../$(OUTDIR)/loch
+
+
 # common therion objects
 CMNOBJECTS = \
   lxTR.o lxOGLFT.o lxSetup.o lxRender.o lxWX.o \
@@ -93,33 +98,35 @@ LDBFLAGS = $(STRIPFLAG)
 # compiler settings
 CXXFLAGS = -Wall -D_GNU_SOURCE -DLOCH $(CXXPFLAGS) $(CXXBFLAGS)
 CCFLAGS = -Wall -D_GNU_SOURCE -DLOCH $(CCPFLAGS) $(CCBFLAGS)
-OBJECTS = $(POBJECTS) $(CMNOBJECTS)
+OBJECTS = $(addprefix $(LOUTDIR)/,$(POBJECTS)) $(addprefix $(LOUTDIR)/,$(CMNOBJECTS))
+
 
 # linker settings
 LIBS = $(PLIBS)
 LDFLAGS = $(LDBFLAGS)
 
 
-.SUFFIXES:
-.SUFFIXES: .cxx .o .h .c
-
-.cxx.o:
+$(LOUTDIR)/%.o : %.cxx
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-.c.o:
+$(LOUTDIR)/%.o : %.cc
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+$(LOUTDIR)/%.o : %.c
 	$(CC) -c $(CCFLAGS) -o $@ $<
 
-all: loch hlp
+
+all: $(LOUTDIR)/loch hlp
 
 hlp:
 	make -C ./help
 
-loch:	$(OBJECTS)
-	$(CXX) -o loch -Wall $(OBJECTS) $(LIBS) $(LDFLAGS)
+$(LOUTDIR)/loch: $(OBJECTS)
+	$(CXX) -o $(LOUTDIR)/loch -Wall $(OBJECTS) $(LIBS) $(LDFLAGS)
 	$(POSTMAKE)
 
-loch.res: loch.rc loch.ico
-	windres --include-dir e:/MSVCProjects/wxWidgets-2.6.0/include -i loch.rc -I rc -o loch.res -O coff
+$(LOUTDIR)/loch.res: loch.rc loch.ico
+	windres -i loch.rc -I ../../wxMSW-2.8.10/include -I rc -o $(LOUTDIR)/loch.res -O coff
 
 graphs: 
 	dot -Tps graph-vispipe.dot -o graph-vispipe.ps
@@ -131,6 +138,7 @@ depend:
 	perl makefile.pl mv Makefile.dep Makefile
 	$(CXX) -DLXDEPCHECK -DLOCH -MM *.cxx >> Makefile
 	$(CC) -DLXDEPCHECK -DLOCH -MM *.c >> Makefile
+	perl makedepend2.pl
   
 
 config-debug:
@@ -179,35 +187,38 @@ clean:
 
 
 # DEPENDENCIES
-lxAboutDlg.o: lxAboutDlg.cxx lxWX.h icons/about.xpm ../thversion.h
-lxData.o: lxData.cxx lxData.h lxMath.h lxImgIO.h lxFile.h lxLRUD.h
-lxFile.o: lxFile.cxx lxFile.h lxMath.h img.h
-lxGLC.o: lxGLC.cxx lxGLC.h lxMath.h lxGUI.h lxData.h lxImgIO.h lxFile.h \
-  lxSetup.h lxSView.h lxWX.h lxFNT6x13_bdf.h lxFNT10x20_bdf.h \
-  lxFNTFreeSans_ttf.h lxRender.h lxTR.h
-lxGUI.o: lxGUI.cxx lxGUI.h lxGLC.h lxMath.h lxData.h lxImgIO.h lxFile.h \
-  lxSetup.h lxRender.h lxOptDlg.h lxAboutDlg.h lxSView.h lxWX.h \
-  lxSScene.h icons/open.xpm icons/render.xpm icons/reload.xpm \
-  icons/stereo.xpm icons/rotation.xpm icons/lockrot.xpm icons/fit.xpm \
-  icons/home.xpm icons/rendersetup.xpm icons/plan.xpm icons/profile.xpm \
-  icons/fullscreen.xpm icons/orto.xpm icons/camera.xpm icons/scene.xpm \
-  icons/viscline.xpm icons/vissurface.xpm icons/visbbox.xpm \
-  icons/viswalls.xpm icons/visinds.xpm loch.xpm
-lxImgIO.o: lxImgIO.cxx lxImgIO.h
-lxLRUD.o: lxLRUD.cxx lxLRUD.h lxMath.h
-lxMath.o: lxMath.cxx lxMath.h
-lxOGLFT.o: lxOGLFT.cxx lxOGLFT.h
-lxOptDlg.o: lxOptDlg.cxx lxWX.h lxGUI.h lxGLC.h lxMath.h
-lxRender.o: lxRender.cxx lxRender.h lxWX.h lxGLC.h lxMath.h lxGUI.h \
-  lxSetup.h lxData.h lxImgIO.h lxFile.h lxTR.h
-lxSScene.o: lxSScene.cxx lxSScene.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
-  lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
-lxSView.o: lxSView.cxx lxSView.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
-  lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
-lxSetup.o: lxSetup.cxx lxSetup.h lxData.h lxMath.h lxImgIO.h lxFile.h
-lxWX.o: lxWX.cxx lxWX.h
-getline.o: getline.c
-img.o: img.c img.h
-lxR2D.o: lxR2D.c lxR2D.h
-lxR2P.o: lxR2P.c lxR2P.h
-lxTR.o: lxTR.c lxTR.h
+$(LOUTDIR)/lxAboutDlg.o: lxAboutDlg.cxx lxWX.h icons/about.xpm ../thversion.h
+$(LOUTDIR)/lxData.o: lxData.cxx lxData.h lxMath.h lxImgIO.h lxFile.h lxLRUD.h
+$(LOUTDIR)/lxFile.o: lxFile.cxx lxFile.h lxMath.h img.h
+$(LOUTDIR)/lxGLC.o: lxGLC.cxx lxGLC.h lxMath.h lxGUI.h lxData.h lxImgIO.h lxFile.h \
+ lxSetup.h lxSView.h lxWX.h lxFNT6x13_bdf.h lxFNT10x20_bdf.h \
+ lxFNTFreeSans_ttf.h lxRender.h lxTR.h
+$(LOUTDIR)/lxGUI.o: lxGUI.cxx lxGUI.h lxGLC.h lxMath.h lxData.h lxImgIO.h lxFile.h \
+ lxSetup.h lxRender.h lxOptDlg.h lxAboutDlg.h lxSView.h lxWX.h lxSScene.h \
+ lxSTree.h icons/open.xpm icons/render.xpm icons/reload.xpm \
+ icons/stereo.xpm icons/rotation.xpm icons/lockrot.xpm icons/fit.xpm \
+ icons/home.xpm icons/rendersetup.xpm icons/plan.xpm icons/profile.xpm \
+ icons/fullscreen.xpm icons/orto.xpm icons/camera.xpm icons/scene.xpm \
+ icons/viscline.xpm icons/vissurface.xpm icons/visbbox.xpm \
+ icons/viswalls.xpm icons/visinds.xpm icons/visentrance.xpm \
+ icons/visfix.xpm icons/visstation.xpm icons/vislabel.xpm loch.xpm
+$(LOUTDIR)/lxImgIO.o: lxImgIO.cxx lxImgIO.h
+$(LOUTDIR)/lxLRUD.o: lxLRUD.cxx lxLRUD.h lxMath.h
+$(LOUTDIR)/lxMath.o: lxMath.cxx lxMath.h
+$(LOUTDIR)/lxOGLFT.o: lxOGLFT.cxx lxOGLFT.h
+$(LOUTDIR)/lxOptDlg.o: lxOptDlg.cxx lxWX.h lxGUI.h lxGLC.h lxMath.h
+$(LOUTDIR)/lxRender.o: lxRender.cxx lxRender.h lxWX.h lxGLC.h lxMath.h lxGUI.h \
+ lxSetup.h lxData.h lxImgIO.h lxFile.h lxTR.h
+$(LOUTDIR)/lxSScene.o: lxSScene.cxx lxSScene.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
+ lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
+$(LOUTDIR)/lxSTree.o: lxSTree.cxx lxSTree.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
+ lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
+$(LOUTDIR)/lxSView.o: lxSView.cxx lxSView.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
+ lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
+$(LOUTDIR)/lxSetup.o: lxSetup.cxx lxSetup.h lxData.h lxMath.h lxImgIO.h lxFile.h
+$(LOUTDIR)/lxWX.o: lxWX.cxx lxWX.h
+$(LOUTDIR)/getline.o: getline.c
+$(LOUTDIR)/img.o: img.c img.h
+$(LOUTDIR)/lxR2D.o: lxR2D.c lxR2D.h
+$(LOUTDIR)/lxR2P.o: lxR2P.c lxR2P.h
+$(LOUTDIR)/lxTR.o: lxTR.c lxTR.h

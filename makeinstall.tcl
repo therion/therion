@@ -23,9 +23,9 @@ proc copyfile {force src dst} {
 }
 
 if {[string equal $platform WIN32]} {
-  copyfile 1 therion.exe "c:/Program files/Therion/therion.exe"
-  copyfile 1 xtherion/xtherion.tcl "c:/Program files/Therion/xtherion.tcl"
-  copyfile 1 loch/loch.exe "c:/Program files/Therion/loch.exe"
+  copyfile 1 ../therion.bin/therion.exe "c:/Program files/Therion/therion.exe"
+  copyfile 1 ../therion.bin/xtherion/xtherion.tcl "c:/Program files/Therion/xtherion.tcl"
+  copyfile 1 ../therion.bin/loch/loch.exe "c:/Program files/Therion/loch.exe"
 } elseif {[string equal $platform MACOSX]} {
   copyfile 1 therion /usr/bin/therion
   file attributes /usr/bin/therion -permissions 0755

@@ -1469,12 +1469,14 @@ img_read_item_v3to7(img *pimg, img_point *p)
 		  }
 		  return img_ERROR_INFO;
 	      case 0x23: { /* v7+: Date range (long) */
+			  int days1;
+			  int days2;
 		  if (pimg->version < 7) {
 		      img_errno = IMG_BADFORMAT;
 		      return img_BAD;
 		  }
-		  int days1 = (int)getu16(pimg->fh);
-		  int days2 = (int)getu16(pimg->fh);
+		  days1 = (int)getu16(pimg->fh);
+		  days2 = (int)getu16(pimg->fh);
 		  if (feof(pimg->fh)) {
 		      img_errno = IMG_BADFORMAT;
 		      return img_BAD;
@@ -2202,12 +2204,13 @@ skip_to_N:
 static void
 write_coord(FILE *fh, double x, double y, double z)
 {
+   static INT32_T X_, Y_, Z_;
+   INT32_T X, Y, Z;
    SVX_ASSERT(fh);
    /* Output in cm */
-   static INT32_T X_, Y_, Z_;
-   INT32_T X = my_lround(x * 100.0);
-   INT32_T Y = my_lround(y * 100.0);
-   INT32_T Z = my_lround(z * 100.0);
+   X = my_lround(x * 100.0);
+   Y = my_lround(y * 100.0);
+   Z = my_lround(z * 100.0);
 
    X_ -= X;
    Y_ -= Y;

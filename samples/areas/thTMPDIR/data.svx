@@ -1,6 +1,0 @@
-*units declination clino compass degrees
-*units tape depth counter northing easting altitude metres
-*infer plumbs off
-*infer equates off
-*data	normal	from	to	tape	compass	clino
-	1	2	30.000000	0.000000	0.000000

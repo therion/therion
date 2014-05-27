@@ -79,7 +79,7 @@ const char * thmpost_library =
 "horiz_labels:=true;\n"
 "transparency:=false;\n"
 "\n"
-"string ATTR__id, ATTR__survey, ATTR__scrap;\n"
+"string ATTR__id, ATTR__survey, ATTR__scrap, NorthDir;\n"
 "boolean ATTR__scrap_centerline;\n"
 "picture ATTR__text;\n"
 "numeric ATTR__height;\n"

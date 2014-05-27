@@ -68,7 +68,7 @@ fill_only := false;
 horiz_labels:=true;
 transparency:=false;
 
-string ATTR__id, ATTR__survey, ATTR__scrap;
+string ATTR__id, ATTR__survey, ATTR__scrap, NorthDir;
 boolean ATTR__scrap_centerline;
 picture ATTR__text;
 numeric ATTR__height;

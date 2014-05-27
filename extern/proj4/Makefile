@@ -1,6 +1,16 @@
-all:
-	$(CC) *.c -c -I.
-	ar cr libproj.a *.o
+OUTDIR ?= .
+LOUTDIR = ../../$(OUTDIR)/extern/proj4
+OBJECTS = $(addprefix $(LOUTDIR)/,$(addsuffix .o,$(basename $(shell ls *.c))))
+
+
+$(LOUTDIR)/%.o : %.c
+	$(CC) -c $(CCFLAGS) -I. -o $@ $<
+
+
+all: $(LOUTDIR)/libproj.a
+
+$(LOUTDIR)/libproj.a: $(OBJECTS)
+	ar cr $(LOUTDIR)/libproj.a $(LOUTDIR)/*.o
 
 remove:
 	rm -f proj.c gen_cheb.c p_series.c jniproj.c cs2cs.c \

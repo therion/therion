@@ -115,6 +115,7 @@ struct thsymbolset {
    */
 
   void export_mp_symbol_options(FILE * mpf, int sym_id);
+  void export_mp_symbol_options(class thexception * x, int sym_id);
 
 
 };

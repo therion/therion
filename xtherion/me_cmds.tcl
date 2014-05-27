@@ -25,7 +25,6 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ## --------------------------------------------------------------------
 
-
 proc xth_me_set_theme {x} {
   global xth
   set xth(me,acttheme) $x
@@ -1870,12 +1869,12 @@ proc xth_me_cmds_update_area {id ntype nopt} {
     set ntype $otype
   }
   
-  if {(![string equal $ntype $otype]) && [string equal $nopt $oopt]} {
+  if {$xth(gui,me,type_reset_options) && (![string equal $ntype $otype]) && [string equal $nopt $oopt]} {
     set nopt {}
   }
   
   if {[regexp {^([^ :]+)\:([^ :]+)$} $ntype dum xntype xstype]} {
-    if {![string equal $ntype u]} {
+    if {![string equal $xntype u]} {
       set ntype $xntype
       set nopt [regsub -all {(^|\s+)\-subtype\s+\S+} $nopt {}]
       set nopt [regsub -all {^\s+|\s+$} $nopt {}]
@@ -1917,7 +1916,7 @@ proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
   }
   
   #reset point options & rotation when type changes
-  if {(![string equal $ntype $otype]) && [string equal $nopt $oopt] && [string equal $nrot $orot] && [string equal $nxs $oxs] && [string equal $nys $oys]} {
+  if {$xth(gui,me,type_reset_options) && (![string equal $ntype $otype]) && [string equal $nopt $oopt] && [string equal $nrot $orot] && [string equal $nxs $oxs] && [string equal $nys $oys]} {
     set nopt {}
     set nrot {}
     set nxs {}
@@ -2678,7 +2677,14 @@ for {set j 0} {$j < [llength $xth(me,themes,list)]} {incr j} {
   # vytvorime podmenu
   menu $cmn -tearoff 0
   for {set i 0} {$i < [llength $xth(me,themes,$cm,point,showlist)]} {incr i} {
-    $cmn add radiobutton -label [lindex $xth(me,themes,$cm,point,showlist) $i] -variable xth(ctrl,me,point,type) -value [lindex $xth(me,themes,$cm,point,hidelist) $i] -command {xth_me_cmds_update {}}
+    if {$xth(gui,me,type_dropdown_trans)} {
+      set l [lindex $xth(me,themes,$cm,point,showlist) $i]
+      set v [lindex $xth(me,themes,$cm,point,hidelist) $i]
+    } else {
+      set l [lindex $xth(me,themes,$cm,point,list) $i]
+      set v [lindex $xth(me,themes,$cm,point,list) $i]      
+    }
+    $cmn add radiobutton -label $l -variable xth(ctrl,me,point,type) -value $v -command {xth_me_cmds_update {}}
   }    
   # pripneme ho do menu
   $xth(me,ctxmenu).ptypes add cascade -label [lindex $xth(me,themes,showlist) $j] -menu $cmn
@@ -2688,7 +2694,14 @@ for {set j 0} {$j < [llength $xth(me,themes,list)]} {incr j} {
   # vytvorime podmenu
   menu $cmn -tearoff 0
   for {set i 0} {$i < [llength $xth(me,themes,$cm,line,showlist)]} {incr i} {
-    $cmn add radiobutton -label [lindex $xth(me,themes,$cm,line,showlist) $i] -variable xth(ctrl,me,line,type) -value [lindex $xth(me,themes,$cm,line,hidelist) $i] -command {xth_me_cmds_update {}}
+    if {$xth(gui,me,type_dropdown_trans)} {
+      set l [lindex $xth(me,themes,$cm,line,showlist) $i]
+      set v [lindex $xth(me,themes,$cm,line,hidelist) $i]
+    } else {
+      set l [lindex $xth(me,themes,$cm,line,list) $i]
+      set v [lindex $xth(me,themes,$cm,line,list) $i]      
+    }
+    $cmn add radiobutton -label $l -variable xth(ctrl,me,line,type) -value $v -command {xth_me_cmds_update {}}
   }    
   # pripneme ho do menu
   $xth(me,ctxmenu).ltypes add cascade -label [lindex $xth(me,themes,showlist) $j] -menu $cmn  

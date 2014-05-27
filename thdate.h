@@ -119,6 +119,7 @@ class thdate {
    
   void reset();
 
+  void reset_current();
     
   /**
    * Standard constructor.

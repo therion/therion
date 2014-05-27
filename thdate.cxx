@@ -57,6 +57,24 @@ void thdate::reset()
   this->esec = -1.0;
 }
 
+
+void thdate::reset_current()
+{
+  this->reset();
+  time_t rawtime;
+  struct tm * tim;
+  time ( &rawtime );
+  tim = localtime ( &rawtime );
+  this->syear = 1900 + tim->tm_year;
+  this->smonth = tim->tm_mon + 1;
+  this->sday = tim->tm_mday;
+  this->shour = tim->tm_hour;
+  this->smin = tim->tm_min;
+  this->ssec = double(tim->tm_sec > 59 ? 59 : tim->tm_sec);
+
+}
+
+
 thdate::thdate()
 {
   this->reset();

@@ -32,9 +32,12 @@
 #include "thdataobject.h"
 #include "thlayout.h"
 #include "thlang.h"
+#include "thversion.h"
 #include "thtexfonts.h"
 #include "thsurvey.h"
 #include "thdb1d.h"
+#include "thconfig.h"
+#include "thcs.h"
 #include <string.h>
 
 bool operator < (const thmapstat_data & c1, 
@@ -341,6 +344,29 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   double clen = 0.0, z_top = 0.0, z_bot = 0.0;
   c.guarantee(256);
   b.guarantee(256);
+
+  fprintf(f,"\\thversion={%s}\n",THVERSION);
+  thdate dt;
+  dt.reset_current();
+  double cy = dt.get_start_year();
+  dt.shour = -1;
+  fprintf(f,"\\currentdate={%s}\n",utf2tex(dt.get_str(TT_DATE_FMT_LOCALE)));
+  fprintf(f,"\\northdir={%s}\n",layout->north == TT_LAYOUT_NORTH_GRID ? "grid" : "true");
+
+
+  if (thcfg.outcs == TTCS_LOCAL) {
+	  fprintf(f,"\\outcscode={local}\n");
+	  fprintf(f,"\\outcsname={Local coordinate system}\n");
+	  fprintf(f,"\\magdecl={N/A}\n");
+	  fprintf(f,"\\gridconv={N/A}\n");
+  } else {
+	  fprintf(f,"\\outcscode={%s}\n",utf2tex(thcs_get_name(thcfg.outcs)));
+	  fprintf(f,"\\outcsname={%s}\n",utf2tex(thcs_get_data(thcfg.outcs)->prjname));
+	  double md;
+	  thcfg.get_outcs_mag_decl(cy, md);
+	  fprintf(f,"\\magdecl={%.2f}\n", md);
+	  fprintf(f,"\\gridconv={%.2f}\n", thcfg.get_outcs_convergence());
+  }
   
   for(ii = this->data.begin(); ii != this->data.end(); ii++) {
     check_z(ii->first.ptr->stat_st_top);
@@ -369,13 +395,20 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   if (z_top > z_bot) {
     //b = "";  
     //snprintf(b.get_buffer(),255,"%.0f",z_top-z_bot);
-		b = layout->units.format_length(z_top-z_bot);
+	b = layout->units.format_length(z_top-z_bot);
     b += "<thsp>";
     //b += thT("units m",layout->lang);
     b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavedepthtitle={%s}\n",utf2tex(thT("title cave depth",layout->lang)));
     fprintf(f,"\\cavedepth={%s}\n",utf2tex(b.get_buffer()));
-
+	b = layout->units.format_length(z_top);
+    //b += "<thsp>";
+    //b += layout->units.format_i18n_length_units();
+    fprintf(f,"\\cavemaxz={%s}\n",utf2tex(b.get_buffer()));
+	b = layout->units.format_length(z_bot);
+    //b += "<thsp>";
+    //b += layout->units.format_i18n_length_units();
+    fprintf(f,"\\caveminz={%s}\n",utf2tex(b.get_buffer()));
     ldata->cavedepth = thutf82xhtml(b.get_buffer());
     ldata->cavedepthtitle = thT("title cave depth",layout->lang);
 

@@ -29,7 +29,7 @@
 proc xth_status_bar {aname widg stext} {
   global xth  
   if {$xth(gui,balloons)} {
-    DynamicHelp::register $widg balloon $stext
+    DynamicHelp::add $widg -type balloon -text $stext
   }
   set anml $aname
   foreach aname $anml {

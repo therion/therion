@@ -37,6 +37,7 @@
 #include "thdatastation.h"
 #include "thlookup.h"
 #include "thgrade.h"
+#include "thcomment.h"
 #include "thlayout.h"
 #include "thscrap.h"
 #include "th2ddataobject.h"
@@ -496,6 +497,10 @@ class thdataobject * thdatabase::create(const char * oclass,
       
     case TT_DATA_CMD:
       ret = new thdata;
+      break;
+      
+    case TT_COMMENT_CMD:
+      ret = new thcomment;
       break;
       
     case TT_GRADE_CMD:

@@ -1,13 +1,16 @@
 \ifx\pdfoutput\undefined
 \else
 \ifnum\pdftexversion<110
-  \message{Warning: skipping the case studies} 
+  \message{Warning: skipping the case studies -- PDF version} 
 \expandafter\endinput\expandafter\fi
 \fi
 
+\newtoks\samplepath
 \openin0=../samples.doc/index.tex
+\ifeof0 \openin0=../../therion.bin/samples.doc/index.tex
 \ifeof0 \message{Warning: skipping the case studies} \expandafter\endinput
-\else \closein0 \fi
+\else \samplepath{../../therion.bin/samples.doc/index.tex} \closein0 \fi
+\else \samplepath{../samples.doc/index.tex} \closein0 \fi
 
 \eject
 \vbox{\hsize=93.2mm\baselineskip=12pt
@@ -33,4 +36,4 @@ Therion source code.
 \catcode`\'=\active
 \def'{\ifnum\quoteord=1\global\quoteord=0`\else\global\quoteord=1\char39 \fi}
 
-\input ../samples.doc/index.tex
+\input \the\samplepath

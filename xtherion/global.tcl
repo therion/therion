@@ -163,6 +163,11 @@ destroy .def
 
 # map editor settings
 
+# translate types in dropdown menus
+set xth(gui,me,type_dropdown_trans) 1
+
+# reset options string on type change
+set xth(gui,me,type_reset_options) 1
 
 #########################################
 # SCRAP

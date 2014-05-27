@@ -1,7 +1,20 @@
-all:	xtherion
+OUTDIR ?= .
+THPLATFORM ?= LINUX
+LOUTDIR = ../$(OUTDIR)/xtherion
 
-xtherion: *.tcl
+ifeq ($(THPLATFORM),WIN32)
+TARGET = xtherion.tcl
+else
+TARGET = xtherion
+endif
+
+all: $(LOUTDIR)/$(TARGET)
+
+$(LOUTDIR)/$(TARGET): *.tcl
 	tclsh mkall.tcl
+ifneq ($(OUTDIR),.)
+	perl ../makefile.pl mv ./$(TARGET) $(LOUTDIR)
+endif
 
 survex:
 	tclsh mkall.tcl survex

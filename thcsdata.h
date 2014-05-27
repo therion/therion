@@ -4518,7 +4518,7 @@ enum {
 
 typedef struct {
   bool dms, output, swap;
-  const char * params;  const char * prjspec;
+  const char * params;  const char * prjspec;  const char * prjname;
 } thcsdata;
 
 extern const thstok thtt_cs[6987];

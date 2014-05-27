@@ -1565,7 +1565,7 @@ proc xth_me_cmds_update_line {id pid ntype nname nopts nrev nx ny nxp nyp \
   set optsredo {}
   set optsundo {}
 
-  if {(![string equal $ntype $otype]) && [string equal $nopts $oopts]} {
+  if {$xth(gui,me,type_reset_options) && (![string equal $ntype $otype]) && [string equal $nopts $oopts]} {
     set nopts {}
     set nrs {}
     set nls {}

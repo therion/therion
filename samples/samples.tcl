@@ -4,7 +4,12 @@
 # Usage: samples.tcl
 #        samples.tcl clean
 
-set outd "../samples.doc"
+set outdd "."
+if {[llength $argv] > 0} {
+  set outdd [lindex $argv 0]
+}
+
+set outd "../$outdd/samples.doc"
 set flog [open samples.log w]
 
 proc log_msg {msg} {
@@ -40,7 +45,7 @@ proc scan_files {dir} {
   }
 }
 
-set thcmd [file normalize [file join [pwd] "../therion"]]
+set thcmd [file normalize [file join [pwd] "../$outdd/therion"]]
 set processlist {}
 
 proc scan_lists {} {
@@ -213,7 +218,7 @@ proc get_html_body_for_tex {fn} {
 
 
 proc create_docs {} {
-  global filelist tcl_platform outd
+  global filelist tcl_platform outd outdd
   set cdir {}
   set chid 0
   set imid 0
@@ -297,7 +302,7 @@ proc create_docs {} {
 	  set inparagraph 0
 	}
 	append data($chid,TEXT) "<p>\n<a href=\"$iifnm\"><img border=\"1\" src=\"$iiimg\"/></a>\n</p>\n"
-	append texdata($chid,TEXT) "\n\n\\fitpic{../samples.doc/$iifnm}\n\n"
+	append texdata($chid,TEXT) "\n\n\\fitpic{../$outdd/samples.doc/$iifnm}\n\n"
 	incr imid
       } elseif {[regexp -nocase {^\s*\#\!HTML\s+(\S.*)$} $ln dum ii]} {
 	set html_src [file join [lindex $fr 1] $ii]
@@ -344,7 +349,8 @@ proc create_docs {} {
   }
 
   if {[string compare $tcl_platform(platform) windows] == 0} {
-    set convpath [file normalize "C:/Program files/Therion/bin/convert.exe"]
+    package require registry
+    set convpath [file normalize "[registry get HKEY_CURRENT_USER\\SOFTWARE\\Therion InstallDir]/bin/convert.exe"]
   } else {
     set convpath convert
   }
@@ -512,15 +518,17 @@ td.htmlinput {
 }
 
 
-if {([llength $argv] > 0) && [regexp -nocase {^clean$} [lindex $argv 0]]} {
+
+
+if {([llength $argv] > 1) && [regexp -nocase {^clean$} [lindex $argv 1]]} {
   scan_files ""
   scan_lists
   clean_files
 } else {
-  if {[llength $argv] == 0} {
+  if {[llength $argv] == 1} {
     scan_files ""
   } else {
-    foreach d $argv {
+    foreach d [lrange $argv 1 end] {
       scan_files $d
     }
   }
