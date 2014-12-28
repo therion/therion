@@ -14,7 +14,11 @@ def deg2rad(s):
 
 for i,l in enumerate(open('sample_out_IGRF11.txt')):
   if i==0: continue
+  print '% 2s ' % i,
   (dat, cs, alt, lat, lon, dd, dm) = l.split()[:7]
+  if cs == 'C':
+    print '   (skipping geocentric coordinates)'
+    continue
   m = re.match(r'(\d{4}),(\d{1,2}),(\d{1,2})',dat)
   if m:
     dat = datetime.datetime(*(int(d) for d in m.groups()))
@@ -26,4 +30,11 @@ for i,l in enumerate(open('sample_out_IGRF11.txt')):
   lat = deg2rad(lat)
   lon = deg2rad(lon)
   decl = geomag.thgeomag(lat,lon,alt,dat)
-  print "%s %d %.0f %s %s" % (cs, int(decl), (decl-int(decl)) * 60, dd, dm)
+  if decl < 0: res = '-' 
+  else: res = ''
+  decl = abs(decl)
+  res += "%dd %dm" % (int(decl),round((decl-int(decl)) * 60))
+  correct = "%s %s" % (dd,dm)
+  if res == correct: print '  ',
+  else: print '! ',
+  print "%s %s" % (res, correct)

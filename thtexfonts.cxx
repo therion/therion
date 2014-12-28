@@ -330,6 +330,7 @@ string utf2tex(string str, bool remove_kerning) {
   int laststyle = -1;
   int align = 0;
   bool rtl = false;
+  // bool link_active = false;
   bool is_multiline = false;
 
 //  str = select_lang(str, LAYOUT.langstr);
@@ -345,15 +346,29 @@ string utf2tex(string str, bool remove_kerning) {
   str = replace_all(str,"<centre>","");
   str = replace_all(str,"<left>","");
   str = replace_all(str,"<right>","");
-  str = replace_all(str,"<br>","\033\1");   // \e not accepted in VC++
-  str = replace_all(str,"<thsp>","\033\2");
-  str = replace_all(str,"<rm>","\033\3");
-  str = replace_all(str,"<it>","\033\4");
-  str = replace_all(str,"<bf>","\033\5");
-  str = replace_all(str,"<ss>","\033\6");
-  str = replace_all(str,"<si>","\033\7");
-  str = replace_all(str,"<rtl>","\033\10");
-  str = replace_all(str,"</rtl>","\033\11");
+  str = replace_all(str,"<br>","\x1B\x1");   // \e not accepted in VC++
+  str = replace_all(str,"<thsp>","\x1B\x2");
+  str = replace_all(str,"<rm>","\x1B\x3");
+  str = replace_all(str,"<it>","\x1B\x4");
+  str = replace_all(str,"<bf>","\x1B\x5");
+  str = replace_all(str,"<ss>","\x1B\x6");
+  str = replace_all(str,"<si>","\x1B\x7");
+  str = replace_all(str,"<rtl>","\x1B\x8");
+  str = replace_all(str,"</rtl>","\x1B\x9");
+
+  // An attempt to implement hyperlinks, unsuccessful though:
+  // ! pdfTeX error (ext4): link annotations cannot be inside an XForm.
+  // <recently read> \xxxx 
+  //// links
+//  size_t i=-1,j;
+//  while((i = str.find("<link:",i+1)) != string::npos) {
+//      j = str.find(">",i);
+//      if (j == string::npos) therror(("No closing '>' in <link:...> definition"));
+//      str = str.replace(j,1,"\x1B\x0B");
+//      str = str.replace(i,6,"\x1B\x0A");
+//  }
+//  str = replace_all(str,"</link>","\x1B\x0C");
+  //// endlinks
 
   if (is_multiline) {
     T << "\\vbox{\\halign{";
@@ -367,14 +382,14 @@ string utf2tex(string str, bool remove_kerning) {
 
   for (unistr::iterator I = s.begin(); I != s.end(); I++) {
     wc = *I;
-    if (wc == 32) {                     // space requires special treatment 
-      T << "\\ ";                        // (it's not included in TeX fonts)
+    if (wc == 32 || wc == 9) {          // space requires special treatment 
+      T << "\\ ";                       // (it's not included in TeX fonts)
       continue;                         // so encodings search doesn't help
     }
     else if (wc == 27) {                // escaped chars (special formatting)
       wc = *(++I);
       switch (wc) {
-        case 1: 
+        case 0x1: 
           if (rtl) T << "\\endR";
           T << "\\cr";
           if (rtl) T << "\\beginR";
@@ -387,14 +402,26 @@ string utf2tex(string str, bool remove_kerning) {
           }
           SELFONT; T << " ";
           break;
-        case 2: T << "\\thinspace "; break;
-        case 3: T << "\\rm "; laststyle = 1; SELFONT; break;
-        case 4: T << "\\it "; laststyle = 2; SELFONT; break;
-        case 5: T << "\\bf "; laststyle = 3; SELFONT; break;
-        case 6: T << "\\ss "; laststyle = 4; SELFONT; break;
-        case 7: T << "\\si "; laststyle = 5; SELFONT; break;
-        case 8: T << "\\global\\TeXXeTstate=1\\beginR "; rtl = true; break;
-        case 9: T << "\\endR "; rtl = false; break;
+        case 0x2: T << "\\thinspace "; break;
+        case 0x3: T << "\\rm "; laststyle = 1; SELFONT; break;
+        case 0x4: T << "\\it "; laststyle = 2; SELFONT; break;
+        case 0x5: T << "\\bf "; laststyle = 3; SELFONT; break;
+        case 0x6: T << "\\ss "; laststyle = 4; SELFONT; break;
+        case 0x7: T << "\\si "; laststyle = 5; SELFONT; break;
+        case 0x8: T << "\\global\\TeXXeTstate=1\\beginR "; rtl = true; break;
+        case 0x9: T << "\\endR "; rtl = false; break;
+        //// links
+//        case 0xA: if (link_active) T << "\\pdfendlink ";
+//                 T << "\\pdfstartlink attr {/Border [0 0 0]} goto name {"; 
+//                 link_active = true; 
+//                 break;
+//        case 0xB: T << "}"; break;
+//        case 0xC: if (link_active) {
+//                   T << "\\pdfendlink "; 
+//                   link_active = false; 
+//                 }
+//                 break;
+        //// endlinks
       }
       continue;
     }
@@ -524,6 +551,7 @@ if (ENC_NEW.NFSS==0) {
     T << "\\cr}}";
   }
   T << "\\mainfont{}";
+  if (rtl) T << "\\endR ";  // change from the links experiment
   return T.str();
 }
 
@@ -535,9 +563,16 @@ int tex2uni(string font, int ch) {
         id = J->id;
         break;
       }
-    assert(id != -1);
+    //assert(id != -1);
     ch %= 256;
     if (ch < 0) ch += 256;  // if string is based on signed char
+    if (id == -1) {
+      ostringstream s;
+      s << "can't map character 0x" << std::uppercase << std::setfill('0') << 
+           std::setw(2) << std::hex << ch << 
+           " in font '" << font << "' to unicode";
+      therror((s.str().c_str()));
+    }
     return texenc[ch][id];
   } else {  // NFSS
     string f_ind = font.substr(4,2);

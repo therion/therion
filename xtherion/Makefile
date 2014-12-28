@@ -1,6 +1,11 @@
 OUTDIR ?= .
 THPLATFORM ?= LINUX
-LOUTDIR = ../$(OUTDIR)/xtherion
+ifneq ($(OUTDIR),.)
+LOUTDIR = $(OUTDIR)/xtherion
+else
+LOUTDIR = .
+endif
+
 
 ifeq ($(THPLATFORM),WIN32)
 TARGET = xtherion.tcl

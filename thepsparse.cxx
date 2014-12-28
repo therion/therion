@@ -117,6 +117,12 @@ MP_text::MP_text() {
 
 void MP_transform::clear () {
   command = MP_notransf;
+  transf[0] = 1;
+  transf[1] = 0;
+  transf[2] = 0;
+  transf[3] = 1;
+  transf[4] = 0;
+  transf[5] = 0;
 }
 
 MP_transform::MP_transform () {
@@ -347,6 +353,8 @@ void MP_setting::print_svg (ofstream & F, CGS & gstate) {
   }
 }
 
+map<int,int> tmpclip;
+
 void MP_data::print_svg (ofstream & F, string unique_prefix) {
 //  F << "<g id=\"" << ID <<  // plain MP settings follow
 //       "\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\">" << endl;
@@ -368,6 +376,7 @@ void MP_data::print_svg (ofstream & F, string unique_prefix) {
                                         I!= gstate.clippathdepth.end(); I++) 
               I->second++;
             F << "<g>" << endl;
+            GSTATE_stack.push_back(gstate);
             break;
           case MP_grestore:
             for (map<int,int>::iterator I = gstate.clippathdepth.begin();
@@ -381,6 +390,10 @@ void MP_data::print_svg (ofstream & F, string unique_prefix) {
                                         I!= gstate.clippathdepth.end(); I++) {
               if (I->second < 0) gstate.clippathdepth.erase(I);
             }
+            tmpclip = gstate.clippathdepth;
+            gstate = GSTATE_stack.back();
+            gstate.clippathdepth = tmpclip;
+            GSTATE_stack.pop_back();
             F << "</g>" << endl;
             break;
           case MP_transp_on:
@@ -811,7 +824,7 @@ void parse_eps(string fname, string cname, double dx, double dy,
         data.MP.add(text);
         thbuffer.clear();
       }
-      else if (tok == "THsetpatterncolor") {
+      else if (tok == "THsetpatterncolor") {  // currently unused as it is not completely trivial to implement uncolored patterns in SVG
         pattcolor = thbuffer[0] + " " + thbuffer[1] + " " + thbuffer[2];
         thbuffer.clear();
       }

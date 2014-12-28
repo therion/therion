@@ -57,6 +57,7 @@ thlookup::thlookup()
 {
   this->m_type = TT_LOOKUP_TYPE_UNKNOWN;
   this->m_scale = TT_LOOKUP_SCALE_UNKNOWN;
+  this->m_colorscheme = TT_LOOKUP_COLORSCHEME_UNKNOWN;
   this->m_title = "";
 }
 
@@ -164,11 +165,22 @@ int thlookup::get_context()
   return (THCTX_SURVEY | THCTX_NONE | THCTX_SCRAP);
 }
 
-
-
-
 void thlookup_table_row::parse(char ** args) {
 }
 
+void thlookup::auto_set(double from, double to) {
+}
 
+void thlookup::auto_set(class thdate fromto) {
+}
+
+thlayout_color thlookup::get_color(thdate d) {
+  thlayout_color rv;
+  return rv;
+}
+
+thlayout_color thlookup::get_color(double d) {
+  thlayout_color rv;
+  return rv;
+}
 

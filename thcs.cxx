@@ -99,6 +99,7 @@ void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args)
   projPJ P1;
   if ((P1 = pj_init_plus(proj4id))==NULL) 
     ththrow(("invalid proj4 identifier -- %s", proj4id));
+  pj_free(P1);
   thcsdata * pd = &(*thcs_custom_data.insert(thcs_custom_data.end(), thcsdata()));
   pd->prjspec = "";
   pd->params = thdb.strstore(proj4id);

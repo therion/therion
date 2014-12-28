@@ -1,5 +1,9 @@
 OUTDIR ?= .
-LOUTDIR = ../../$(OUTDIR)/extern/proj4
+ifneq ($(OUTDIR),.)
+LOUTDIR = $(OUTDIR)/extern/proj4
+else
+LOUTDIR = .
+endif
 OBJECTS = $(addprefix $(LOUTDIR)/,$(addsuffix .o,$(basename $(shell ls *.c))))
 
 

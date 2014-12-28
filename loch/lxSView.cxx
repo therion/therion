@@ -309,6 +309,7 @@ lxViewpointSetupDlg::lxViewpointSetupDlg(wxWindow *parent)
 	lxBoxSizer = this->m_controlSizer_Orientation = new wxBoxSizer(wxVERTICAL);
 
 	lxGBSizer = new wxGridBagSizer();
+ 	lxGBSizer->SetCols(2);
 
   lxGBSizer->AddGrowableCol(1, 1);
 
@@ -386,6 +387,7 @@ lxViewpointSetupDlg::lxViewpointSetupDlg(wxWindow *parent)
 	lxBoxSizer = this->m_controlSizer_Camera = new wxBoxSizer(wxVERTICAL);
   
 	lxGBSizer = new wxGridBagSizer();
+ 	lxGBSizer->SetCols(2);
 
   lxGBSizer->AddGrowableCol(1, 1);
 
@@ -430,7 +432,11 @@ lxViewpointSetupDlg::lxViewpointSetupDlg(wxWindow *parent)
   ADDST(wxID_ANY, _("Rotation speed"))
 
   wxSlider * rspeed = new wxSlider(lxPanel, LXVSTP_ROTSPEED, 0, -1000, 1000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
+#if wxCHECK_VERSION(3,0,0)
+  rspeed->SetTickFreq(1000);
+#else
   rspeed->SetTickFreq(1000,0);
+#endif
 
   lxBoxSizer->Add(
 		rspeed,

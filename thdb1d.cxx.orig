@@ -793,6 +793,10 @@ void thdb1d::process_tree()
   size_t tn_legs = this->leg_vec.size();
   size_t tn_stations = this->station_vec.size();
   
+  
+  if ((tn_legs < 0) || (tn_stations < 0))
+    return;
+  
 #ifdef THDEBUG
     thprintf("\n\nscanning centreline tree\n");
 #else
@@ -2954,6 +2958,8 @@ void thdb1d::process_xelev()
 {
   unsigned long tn_legs = this->leg_vec.size();
   unsigned long tn_stations = this->station_vec.size();
+  if ((tn_legs < 0) || (tn_stations < 0))
+    return;
 
 #ifdef THDEBUG
     thprintf("\n\nprocessing extended elevation\n");

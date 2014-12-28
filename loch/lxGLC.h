@@ -65,6 +65,8 @@ class lxGLCanvas: public wxGLCanvas {
     struct lxSetup * setup;   
     class lxFrame * frame;
 
+    wxGLContext ctx;
+
     void UpdateContents();
     
     lxGLCanvas(struct lxSetup * stp, struct lxData * dat, 

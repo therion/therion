@@ -29,12 +29,6 @@ enum {
   lxSETUP_COLORMD_ALTITUDE,
 };
 
-enum {
-  lxSETUP_CAMERA = 1,
-  lxSETUP_SCENE = 2,
-  lxSETUP_ALL = lxSETUP_CAMERA | lxSETUP_SCENE,
-};
-
 struct lxSetup {
 
   // data settings
@@ -85,10 +79,10 @@ struct lxSetup {
   void SelectSurvey(const char * survey);
   bool IsSurveySelected(const char * survey);
   void ClearSurveySelection();
-
-  wxXmlNode * SaveToXML(unsigned long items = lxSETUP_ALL);
-  void LoadFromXML(wxXmlNode * n);
   
+  void SaveToXMLNode(wxXmlNode * n);
+  void LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn = NULL, double t = 0.0);
+
 };
 
 

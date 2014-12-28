@@ -1,9 +1,25 @@
+encoding  utf-8
 source
-comment
-test
-endcomment
-endsource
+survey a
+centerline
+data normal from to compass backcompass clino tape
+0 1 5 175 0 1
 
-comment
-test
-endcomment
+endcenterline
+endsurvey
+
+map a1 -proj plan
+ a
+endmap
+
+map a2 -proj elevation
+ a
+endmap
+
+map a3 -proj [elevation 10 deg]
+ a
+endmap
+
+
+endsource
+export model

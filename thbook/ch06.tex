@@ -261,6 +261,10 @@ supported initialization commands follow.
   Using this option you can change any default therion text translation in output.
   For list of therion texts and available translations, see |thlang/texts.txt| file.
 
+* |cs-def <id> <proj4def>|\NEW{5.4}  %[other options]
+
+  Define a new coordinate system |<id>| using Proj4 syntax.
+
 * |pdf-fonts <rm> <it> <bf> <ss> <si>|\NEW{5.3}
 
   Set-up fonts to be used in PDF maps. 
@@ -442,17 +446,22 @@ process them with Therion.
 
   Nov: start of programming (Perl scripts and \MP\ macros)
 
-  Dec 27: Therion compiles simple map for the first time (32 kB of Perl and 
-       \MP\ source code). This first release had some interesting features
-       such as {\it transformation functions}, which allowed user-specification
-       of the input format for survey data.
+  Dec 27: Therion compiles simple map in PostScript format 
+       for the first time (32 kB of Perl and 7 kB of \MP\ and \TeX\ source code).
+       The map warping model was substantially different
+       from the current one (positions of features were relative to 
+       a particular survey shot, not to positions of all stations in a scrap).
+       This version already included some interesting features
+       such as {\it transformation functions} which allowed user specification
+       of the input format for survey data, or splitting large maps to
+       multiple sheets.
 				
 * {\bf 2000}\nobreak\par\nobreak
   Jan: xthedit (Tcl/Tk), a graphical front-end for Therion
 
-  Feb 18: start of (first?) reprogramming (Perl)
+  Feb 18: start of reprogramming (Perl)
 
-  Apr 1: first hyperlinked PDF cave map 
+  Apr 1: first hyperlinked PDF cave map / atlas
 
   Aug: experiments with PDF, pdf\TeX\ and \MP
 
@@ -460,6 +469,7 @@ process them with Therion.
 
   Nov: start of reimplementation from scratch: 
        Therion (C++ with some Perl scripts inherited from the previous version); 
+       notion of a scrap;
        interactive 2D map editor ThEdit as a replacement of xthedit (Delphi) 
 
   Dec: ThEdit exports simple map for the first time

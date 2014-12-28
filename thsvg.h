@@ -25,4 +25,6 @@
 
 void thsvg(const char * fname, int, legenddata ldata);
 
+std::string escape_html(std::string);
+
 #endif

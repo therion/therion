@@ -48,10 +48,75 @@
 #include "therion.h"
 #include "thversion.h"
 #include "thlegenddata.h"
+#include "thtexfonts.h"
 
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
+
+string escape_html(string s) {
+  s = replace_all(s,"<center>","");  // could be implemented using left-aligned table
+  s = replace_all(s,"<centre>","");
+  s = replace_all(s,"<left>","");
+  s = replace_all(s,"<right>","");
+  s = replace_all(s,"<br>","\x1B\x1");
+  s = replace_all(s,"<thsp>","\x1B\x2");
+  s = replace_all(s,"<rm>","\x1B\x3");
+  s = replace_all(s,"<it>","\x1B\x4");
+  s = replace_all(s,"<bf>","\x1B\x5");
+  s = replace_all(s,"<ss>","\x1B\x6");    // which font should we choose?
+  s = replace_all(s,"<si>","\x1B\x7");
+  s = replace_all(s,"<rtl>","");   // <span dir="rtl"> has no effect
+  s = replace_all(s,"</rtl>","");  // in firefox or chrome
+
+  s = replace_all(s,"&","\x1B\x8");
+  s = replace_all(s,"<","&lt;");
+  s = replace_all(s,">","&gt;");
+  s = replace_all(s,"'","&apos;");
+  s = replace_all(s,"\"","&quot;");
+
+  string t = "";
+  string close_font = "";
+  size_t i,j;
+  for (i=0; i<s.length(); i++) {
+    if ((char) s[i] == 27) {
+      assert(i<s.length()-1);
+      j = (char) s[++i];
+      switch (j) {
+        case 0x1:
+          t += "<br/>"; 
+          break;
+        case 0x2: 
+          t += "&thinsp;"; 
+          break;
+        case 0x3:
+        case 0x6:
+        case 0x7:
+          if (close_font!="") t+= close_font;
+          close_font = ""; 
+          break;
+        case 0x4: 
+          if (close_font!="") t+= close_font;
+          t += "<i>"; 
+          close_font = "</i>"; 
+          break;
+        case 0x5: 
+          if (close_font!="") t+= close_font;
+          t += "<b>"; 
+          close_font = "</b>"; 
+          break;
+        case 0x8: 
+          t += "&amp;";
+          break;
+      }
+    } else {
+      t += s[i];
+    }
+  }
+  if (close_font!="") t+= close_font;
+
+  return t;
+}
 
 static const char base64_tab[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -409,13 +474,13 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
     F << "<html xmlns=\"http://www.w3.org/1999/xhtml\">" << endl;
     F << "<body>" << endl;
     // title
-    if (!ldata.cavename.empty()) F << "<h2>" << ldata.cavename << "</h2>" << endl;
-    if (!ldata.comment.empty()) F << "<p>" << ldata.comment << "</p>" << endl;
+    if (!ldata.cavename.empty()) F << "<h2>" << escape_html(ldata.cavename) << "</h2>" << endl;
+    if (!ldata.comment.empty()) F << "<p>" << escape_html(ldata.comment) << "</p>" << endl;
     // north, scale
     // ...
-    if (!ldata.cavelength.empty()) F << "<p><i>" << ldata.cavelengthtitle << ":</i> " << ldata.cavelength << "</p>" << endl;
-    if (!ldata.cavedepth.empty()) F << "<p><i>" << ldata.cavedepthtitle << ":</i> " << ldata.cavedepth << "</p>" << endl;
-    if (!ldata.copyrights.empty()) F << "<p>" << ldata.copyrights << "</p>" << endl;
+    if (!ldata.cavelength.empty()) F << "<p><i>" << escape_html(ldata.cavelengthtitle) << ":</i> " << ldata.cavelength << "</p>" << endl;
+    if (!ldata.cavedepth.empty()) F << "<p><i>" << escape_html(ldata.cavedepthtitle) << ":</i> " << ldata.cavedepth << "</p>" << endl;
+    if (!ldata.copyrights.empty()) F << "<p>" << escape_html(ldata.copyrights) << "</p>" << endl;
     if (LAYOUT.scalebar != "") {
       F << "<p>" << endl;
       ScBar.print_svg(F,unique_prefix);
@@ -623,16 +688,16 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
 
   if (fmt > 0) {  // legend in xhtml
     // title
-    if (!ldata.exploteam.empty()) F << "<p><i>" << ldata.explotitle << ":</i> " << ldata.exploteam << 
+    if (!ldata.exploteam.empty()) F << "<p><i>" << escape_html(ldata.explotitle) << ":</i> " << escape_html(ldata.exploteam) << 
           " <i>" << ldata.explodate << "</i></p>" << endl;
-    if (!ldata.topoteam.empty()) F << "<p><i>" << ldata.topotitle << ":</i> " << ldata.topoteam << 
+    if (!ldata.topoteam.empty()) F << "<p><i>" << escape_html(ldata.topotitle) << ":</i> " << escape_html(ldata.topoteam) << 
           " <i>" << ldata.topodate << "</i></p>" << endl;
-    if (!ldata.cartoteam.empty()) F << "<p><i>" << ldata.cartotitle << ":</i> " << ldata.cartoteam << 
+    if (!ldata.cartoteam.empty()) F << "<p><i>" << escape_html(ldata.cartotitle) << ":</i> " << escape_html(ldata.cartoteam) << 
           " <i>" << ldata.cartodate << "</i></p>" << endl;
 
     // color legend
     if (!COLORLEGENDLIST.empty()) {
-      F << "<h3>" << ldata.colorlegendtitle << "</h3>" << endl;
+      F << "<h3>" << escape_html(ldata.colorlegendtitle) << "</h3>" << endl;
       F << "<table cellspacing=\"5\">" << endl;
       for(list<colorlegendrecord>::iterator I = COLORLEGENDLIST.begin(); I != COLORLEGENDLIST.end(); I++) {
         F << "<tr>" << endl;
@@ -646,7 +711,7 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
 
     // map symbols
     if (!LEGENDLIST.empty()) {
-      F << "<h3>" << ldata.legendtitle << "</h3>" << endl;
+      F << "<h3>" << escape_html(ldata.legendtitle) << "</h3>" << endl;
 
       vector<legendrecord> L;
       for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 

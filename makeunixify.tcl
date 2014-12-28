@@ -44,7 +44,7 @@ exec chmod 775 makeconvert2.pl
 exec chmod 775 thcsdata.tcl
 exec chmod 775 threpair-files
 exec chmod 775 thsymbolsetlist.pl
-exec chmod 775 geomag/cof11_2c.pl
+exec chmod 775 geomag/igrf2c.py
 exec chmod 775 mpost/genmpost.pl
 exec chmod 775 samples/samples.tcl
 exec chmod 775 tex/gentex.pl
@@ -59,3 +59,6 @@ exec chmod 775 xtherion/dbg.tcl
 exec chmod 775 xtherion/bac.tcl 
 exec chmod 775 xtherion/source.tcl  
 exec chmod 775 xtherion/lang/process.pl
+exec chmod 775 ./abisso2th.py
+exec chmod 775 geomag/test/build.sh
+exec chmod 775 geomag/test/test.py

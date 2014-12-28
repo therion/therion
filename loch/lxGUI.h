@@ -35,6 +35,7 @@
 #include <wx/fileconf.h>
 #include <wx/filename.h>
 #include <wx/docview.h>
+#include <wx/xml/xml.h>
 #endif  
 //LXDEPCHECK - standart libraries
 
@@ -71,6 +72,7 @@ enum {
   LXMENU_VIEW_MODELSTP,
   LXMENU_VIEW_SELECTIONSTP,
   LXMENU_VIEW_VIEWPOINTSTP,
+  LXMENU_VIEW_PRESENTDLG,
   LXMENU_TOOLS_OPTIONS,
 	LXMENU_VIEWEND,
   LXMENU_EDIT_UNDO,
@@ -88,6 +90,19 @@ enum {
   LXMENU_HELP_ABOUT,
   LXMENU_EXPFIT,
   LXMENU_EXPROT,
+  LXMENU_PRES,
+  LXMENU_PRESMARK,
+  LXMENU_PRESUPDATE,
+  LXMENU_PRESMOVEUP,
+  LXMENU_PRESMOVEDOWN,
+  LXMENU_PRESDELETE,
+  LXMENU_PRESNEW,
+  LXMENU_PRESOPEN,
+  LXMENU_PRESSAVE,
+  LXMENU_PRESSAVEAS,
+  LXMENU_PRESACTIVATE,
+  LXMENU_PRESEDIT,
+  LXMENU_PRES_END,
 	LXTB,
 	LXTB_OPEN,
 	LXTB_RELOAD,
@@ -142,12 +157,16 @@ class lxFrame: public wxFrame
     struct lxData * data;
     struct lxSetup * setup;
     struct lxRenderData * m_renderData;
+    wxXmlDocument * m_pres;
+
 
     class lxModelSetupDlg * m_modelSetupDlg;
     bool m_modelSetupDlgOn;
 
     class lxModelTreeDlg * m_selectionSetupDlg;
     bool m_selectionSetupDlgOn;
+    class lxPresentDlg * m_presentationDlg;
+    bool m_presentationDlgOn;
 
 		class lxViewpointSetupDlg * m_viewpointSetupDlg;
     bool m_viewpointSetupDlgOn;
@@ -190,6 +209,7 @@ class lxFrame: public wxFrame
     void ToggleFullScreen();
     void ToggleModelSetup();
     void ToggleSelectionSetup();
+    void TogglePresentationDlg();
     void ToggleViewpointSetup();
 
     void ToggleVisibilityCenterline();

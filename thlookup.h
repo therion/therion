@@ -86,12 +86,9 @@ static const thstok thtt_lookup_scale[] = {
 
 enum {
   TT_LOOKUP_TYPE_UNKNOWN = 0,
-  TT_LOOKUP_TYPE_ALTITUDE,
-  TT_LOOKUP_TYPE_DEPTH,
-  TT_LOOKUP_TYPE_MAP,
-  TT_LOOKUP_TYPE_SURVEY,
-  TT_LOOKUP_TYPE_EXPLODATE,
-  TT_LOOKUP_TYPE_TOPODATE,
+  TT_LOOKUP_TYPE_DATE,
+  TT_LOOKUP_TYPE_NUMERIC,
+  TT_LOOKUP_TYPE_STRING,
 };
 
 
@@ -99,15 +96,23 @@ enum {
  * lookup grid token table.
  */
  
-static const thstok thtt_lookup_gridcoords[] = {
-  {"altitude", TT_LOOKUP_TYPE_ALTITUDE},
-  {"depth", TT_LOOKUP_TYPE_DEPTH},
-  {"explo-date", TT_LOOKUP_TYPE_EXPLODATE},
-  {"map", TT_LOOKUP_TYPE_MAP},
-  {"survey", TT_LOOKUP_TYPE_SURVEY},
-  {"topo-date", TT_LOOKUP_TYPE_TOPODATE},
+static const thstok thtt_lookup_types[] = {
+  {"date", TT_LOOKUP_TYPE_DATE},
+  {"numeric", TT_LOOKUP_TYPE_NUMERIC},
+  {"string", TT_LOOKUP_TYPE_STRING},
   {NULL, TT_LOOKUP_TYPE_UNKNOWN}
 };
+
+
+/**
+ * Supported color lookup schemes.
+ */
+
+enum {
+  TT_LOOKUP_COLORSCHEME_UNKNOWN = 0,
+  TT_LOOKUP_COLORSCHEME_HSV,
+};
+
 
 /**
  * Lookup table row.
@@ -134,7 +139,7 @@ class thlookup : public thdataobject {
 
   public:
 
-  int m_type, m_scale;
+  int m_type, m_scale, m_colorscheme;
   thlookup_table_list m_table;
   const char * m_title;
 
@@ -226,6 +231,22 @@ class thlookup : public thdataobject {
    */
    
   virtual int get_context();
+
+  /**
+   * Automatically lookup range.
+   */
+
+  virtual void auto_set(double from, double to);
+
+  virtual void auto_set(class thdate fromto);
+
+  /**
+   * Get color from the scale.
+   */
+
+  virtual thlayout_color get_color(thdate d);
+
+  virtual thlayout_color get_color(double d);
   
 };
 

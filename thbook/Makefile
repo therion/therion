@@ -1,5 +1,9 @@
 OUTDIR ?= .
-LOUTDIR = ../$(OUTDIR)/thbook
+ifneq ($(OUTDIR),.)
+LOUTDIR = $(OUTDIR)/thbook
+else
+LOUTDIR = .
+endif
 
 all: $(LOUTDIR)/thbook.pdf
 

@@ -55,6 +55,9 @@ Works like the |encoding| command in data files---specifies character sets.
 It is not possible to specify more coordinate systems for different outputs (the 
 last occurence of |cs| is used for all output files).
 
+If no |cs| is defined in the configuration file, the first |cs| therion
+encounters in the data files is used as an output |cs|.
+
 Inside 
 the |layout| specifies coordinate system for subsequent location data (|origin|, 
 |grid-origin|).
@@ -270,7 +273,8 @@ endlayout|
     UIS (International Union of Speleology)\par
     ASF (Australian Speleological Federation)\par
     AUT (Austrian Speleological Association)\par
-    CCNP (Carlsbad Caverns National Park)\par
+    CCNP (Carlsbad Caverns National Park)\NEW{5.4}\par
+    NZSS (New Zealand Symbol Set)\NEW{5.4}\par
     SKBB (Speleoklub Bansk\'a Bystrica)
     
   * {\rightskip 0cm minus 4pt
@@ -299,7 +303,8 @@ endlayout|
     particular symbol or group of symbols. 
     
     You may use |group cave-centerline|, |group surface-centerline|, 
-    |point cave-station| and |point surface-station|
+    |point cave-station|, |point surface-station|
+    and \NEW{5.4}|group text|
     in |symbol-hide| and |symbol-show| commands.
     
     Use |flag:<entrance/continuation/sink/spring/doline/dig>| as a 
@@ -404,8 +409,10 @@ endlayout|
     (M, A; default: |2|)
   * |map-comment <string>| = optional comment displayed at the map header (M)
   * |statistics <explo/topo/carto/copyright all/off/number>| or 
-  * |statistics <explo/topo-length on/off>| = display some basic 
-    statistics (M, A; default: |off|)
+  * |statistics <explo/topo-length on/hide/off>| = display some basic 
+    statistics; if set to off, team members are sorted \NEW{5.4}alphabetically;
+    otherwise according to their contribution to exploration and surveying
+    (M, A; default: |off|)
   * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
   * |language <xx[_YY]>| = set output language. 
     Available languages are listed on the copyright page.
@@ -482,6 +489,18 @@ endlayout|
 
 \NEW{5.3}Temporary hack to set sampling distance in meters when generating 
 piecewise linear 3d model from passage walls made of B\'ezier curves.
+
+
+\subsubchapter `sketch-colors'.
+
+\syntax
+  \list
+    * |sketch-colors <number-of-colors>| 
+  \endlist
+\endsyntax
+
+\NEW{5.4} This option can be used to reduce size of sketch bitmap 
+  images in maps.
 
 
 \subsubchapter `export'.
@@ -570,7 +589,8 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
   {\it common for lists:}\Nobreak
 
   * |format/fmt <format>| = set continuation output format. Currently the following
-    output formats are supported: |html| (default), |txt| and |dbf|.
+    output formats are supported: |html| (default), |txt|,
+    \NEW{5.4}|kml|\[For cave-list and continuation-list.] and |dbf|.
     
   {\it continuation-list:}\Nobreak
 
@@ -601,7 +621,7 @@ model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml\cr
 map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml, \NEW{5.3}bbox\cr
 atlas & pdf\cr
 database & sql\cr
-lists & html, txt, dbf\cr}}\egroup
+lists & html, txt, kml, dbf\cr}}\egroup
 
 
 \subchapter Running Therion.

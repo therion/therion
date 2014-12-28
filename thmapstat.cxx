@@ -401,6 +401,8 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
     b += layout->units.format_i18n_length_units();
     fprintf(f,"\\cavedepthtitle={%s}\n",utf2tex(thT("title cave depth",layout->lang)));
     fprintf(f,"\\cavedepth={%s}\n",utf2tex(b.get_buffer()));
+    ldata->cavedepth = thutf82xhtml(b.get_buffer());
+    ldata->cavedepthtitle = thT("title cave depth",layout->lang);
 	b = layout->units.format_length(z_top);
     //b += "<thsp>";
     //b += layout->units.format_i18n_length_units();
@@ -409,8 +411,6 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
     //b += "<thsp>";
     //b += layout->units.format_i18n_length_units();
     fprintf(f,"\\caveminz={%s}\n",utf2tex(b.get_buffer()));
-    ldata->cavedepth = thutf82xhtml(b.get_buffer());
-    ldata->cavedepthtitle = thT("title cave depth",layout->lang);
 
   }
   

@@ -38,6 +38,7 @@
 #include "lxSView.h"
 #include "lxSScene.h"
 #include "lxSTree.h"
+#include "lxPres.h"
 
 #include "icons/open.xpm"
 #include "icons/render.xpm"
@@ -143,7 +144,7 @@ DnDFile::OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames)
 lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     const wxSize& size, long style)
     : wxFrame(NULL, wxID_ANY, title, pos, size, style),
-    m_modelSetupDlg(NULL), m_modelSetupDlgOn(false), m_selectionSetupDlg(NULL), m_selectionSetupDlgOn(false),
+    m_modelSetupDlg(NULL), m_modelSetupDlgOn(false), m_selectionSetupDlg(NULL), m_selectionSetupDlgOn(false),  m_presentationDlg(NULL),  m_presentationDlgOn(false),
     m_viewpointSetupDlg(NULL), m_viewpointSetupDlgOn(false)
 {
 
@@ -165,6 +166,8 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
 
     this->m_fileConfig = new wxFileConfig(_T("loch"));
     this->m_fileHistory = new wxFileHistory;
+
+    this->m_pres = new wxXmlDocument();
 
     this->m_helpController = new wxHelpController;
     wxString hlpFName = _T("loch"), tmpHlpFName;
@@ -313,6 +316,7 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     winMenu->AppendCheckItem(LXMENU_VIEW_VIEWPOINTSTP, _("&Camera"));
     winMenu->AppendCheckItem(LXMENU_VIEW_MODELSTP, _("&Scene"));
     winMenu->AppendCheckItem(LXMENU_VIEW_SELECTIONSTP, _("&Selection"));
+    winMenu->AppendCheckItem(LXMENU_VIEW_PRESENTDLG, _("&Presentation"));
     winMenu->Append(LXMENU_EXPROT, _("&Animation"));
     winMenu->AppendSeparator();
     winMenu->Append(LXMENU_TOOLS_OPTIONS, _("&Options..."));
@@ -352,12 +356,15 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->m_modelSetupDlgOn = false;
 
     this->m_selectionSetupDlg = new lxModelTreeDlg(this);
+    this->m_presentationDlg = new lxPresentDlg(this);
     this->m_selectionSetupDlgOn = false;
+    this->m_presentationDlgOn = false;
     wxSize csize = this->GetClientSize();
 
 #ifdef __WXMSW__
     lxTBoxPos::m_fsOffset = size.y - csize.y;
     this->m_selectionSetupDlg->m_toolBoxPosition.Set(0, size.x - csize.x, size.y - csize.y);
+    this->m_presentationDlg->m_toolBoxPosition.Set(0, size.x - csize.x, size.y - csize.y);
 #else		
     wxSize tbsize = this->m_toolBar->GetSize();
     lxTBoxPos::m_fsOffset = size.y - csize.y + tbsize.y;
@@ -412,6 +419,7 @@ lxFrame::~lxFrame()
   delete this->data;
   delete this->m_renderData;
   delete this->m_helpController;
+  delete this->m_pres;
 }
 
 
@@ -715,6 +723,10 @@ void lxFrame::OnAll(wxCommandEvent& event)
       this->ToggleSelectionSetup();
       break;
 
+    case LXMENU_VIEW_PRESENTDLG:
+      this->TogglePresentationDlg();
+      break;
+
     case LXMENU_VIEW_VIEWPOINTSTP:
       this->ToggleViewpointSetup();
       break;
@@ -803,6 +815,9 @@ void lxFrame::OnSize(wxSizeEvent& event)
   if (this->m_selectionSetupDlg != NULL) {
     this->m_selectionSetupDlg->m_toolBoxPosition.Restore();
   }
+  if (this->m_presentationDlg != NULL) {
+    this->m_presentationDlg->m_toolBoxPosition.Restore();
+  }
 
 }
 
@@ -818,6 +833,9 @@ void lxFrame::OnMove(wxMoveEvent& event)
     if (this->m_selectionSetupDlg != NULL) {
       this->m_selectionSetupDlg->m_toolBoxPosition.Restore();
     }
+    if (this->m_presentationDlg != NULL) {
+      this->m_presentationDlg->m_toolBoxPosition.Restore();
+    }
   }
 }
 
@@ -829,6 +847,7 @@ void lxFrame::UpdateM2TB() {
 	this->m_menuBar->Check(LXMENU_VIEW_MODELSTP, this->m_modelSetupDlgOn);    
 	this->m_menuBar->Check(LXMENU_VIEW_VIEWPOINTSTP, this->m_viewpointSetupDlgOn);    
 	this->m_menuBar->Check(LXMENU_VIEW_SELECTIONSTP, this->m_selectionSetupDlgOn);    
+	this->m_menuBar->Check(LXMENU_VIEW_PRESENTDLG, this->m_presentationDlgOn);    
 	this->m_toolBar->ToggleTool(LXTB_PERSP, !this->setup->cam_persp); 
 
   // visibility
@@ -1005,6 +1024,20 @@ void lxFrame::ToggleSelectionSetup()
 }
 
 
+void lxFrame::TogglePresentationDlg()
+{
+  if (this->m_presentationDlgOn) {
+    this->m_presentationDlg->m_toolBoxPosition.Save();
+    this->m_presentationDlg->Show(false);
+  } else {
+    this->m_presentationDlg->m_toolBoxPosition.Restore();
+    this->m_presentationDlg->Show(true);
+  }
+  this->m_presentationDlgOn = !this->m_presentationDlgOn;
+  this->UpdateM2TB();
+}
+
+
 void lxFrame::ToggleViewpointSetup()
 {
   if (this->m_viewpointSetupDlgOn) {
@@ -1043,7 +1076,13 @@ void lxFrame::ImportFile(wxString fName, int fType)
 
 
 void lxFrame::LoadData(wxString fName, int fType) {
+#if wxCHECK_VERSION(3,0,0)
+  wxWindowDisabler disableAll;
+#endif
   wxBusyInfo info(_("Building 3D model, please wait..."));
+#if wxCHECK_VERSION(3,0,0)
+  wxTheApp->Yield();
+#endif
   switch (fType) {
     case 1:
       this->data->m_input.ImportLOX(fName.mbc_str());
@@ -1058,6 +1097,9 @@ void lxFrame::LoadData(wxString fName, int fType) {
       this->data->m_input.m_error = "unable to detect file format";
       break;
   }
+#if wxCHECK_VERSION(3,0,0)
+  wxTheApp->Yield();
+#endif
   switch (this->m_iniWallsInterpolate) {
     case LXWALLS_INTERP_ALL_ONLY:
       if (!this->data->m_input.HasAnyWalls())
@@ -1067,14 +1109,22 @@ void lxFrame::LoadData(wxString fName, int fType) {
       this->data->m_input.InterpolateMissingLRUD();
       break;
   }
-
+#if wxCHECK_VERSION(3,0,0)
+  wxTheApp->Yield();
+#endif
   if (this->data->m_input.m_error.length() > 0) {
     wxMessageBox(_("Error reading input file"), _("Error"), wxICON_ERROR | wxOK);
   } else {
     this->m_fileHistory->AddFileToHistory(this->m_fileName);
   }
   this->data->Rebuild();
+#if wxCHECK_VERSION(3,0,0)
+  wxTheApp->Yield();
+#endif  
   this->canvas->UpdateRenderContents();
+#if wxCHECK_VERSION(3,0,0)
+  wxTheApp->Yield();
+#endif
   this->canvas->UpdateRenderList();
 }
 
@@ -1100,7 +1150,12 @@ IMPLEMENT_APP(lxApp)
 bool lxApp::OnInit()
 {
 
+#if wxCHECK_VERSION(3,0,0)
+    m_locale.Init(wxLANGUAGE_DEFAULT, wxLOCALE_LOAD_DEFAULT);
+#else
     m_locale.Init(wxLANGUAGE_DEFAULT, wxLOCALE_LOAD_DEFAULT | wxLOCALE_CONV_ENCODING);
+#endif
+    
     m_locale.AddCatalog(wxT("loch"));
     m_path = wxFileName(this->argv[0]);
 

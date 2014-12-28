@@ -18,12 +18,16 @@ foreach d {/usr /usr/local} {
 	}
     }
 }
+
 switch [lindex $argv 0] {
     incpath {
 	puts $incpath
     }
     libpath {
 	puts $libpath
+    }
+    version6 {
+        puts [expr $vv1 >= 6]
     }
     default {
 	puts $ver

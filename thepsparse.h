@@ -125,6 +125,8 @@ struct MP_data {
   
   CGS gstate;
   
+  list<CGS> GSTATE_stack;
+  
   void add(MP_path);
   void add(MP_text);
   void add(MP_transform);

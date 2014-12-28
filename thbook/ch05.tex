@@ -264,9 +264,16 @@ before or after the |\insertmaps| macro):
   of exported map
 * |\cavelength|, |\cavedepth| = approximate length and depth of displayed map
 * |\cavelengthtitle|, |\cavedepthtitle| = translated labels
+* \NEW{5.4}|\cavemaxz|, |\caveminz| = altitude max/min value
+* \NEW{5.4}|\thversion| = current therion version
+* \NEW{5.4}|\currentdate| = current date
+* \NEW{5.4}|\outcscode|, |\outcsname| = output coordinat system code and name
+* \NEW{5.4}|\northdir| = `true' or `grid'
+* \NEW{5.4}|\magdecl| = magnetic declination in degrees
+* \NEW{5.4}|\gridconv| = grid meridian convergence in degrees
 \endlist
 
-There is a macro |\atlastitlepages| which combines all token registers 
+There is a macro |\atlastitlepages| which combines most of the token registers 
 mentioned above to get simple preformatted atlas introductory pages.
 
 For legend displaying there are
@@ -314,14 +321,19 @@ and with legend at the end:
 
 In the map mode it's possible to use a lot of predefined variables which 
 are described in the previous chapter: 
+
+{\rightskip0cm plus 5cm
 |\cavename|, |\comment|, |\copyrights|, 
 |\explotitle|, |\topotitle|, |\cartotitle|, 
 |\exploteam|, |\topoteam|, |\cartoteam|, 
 |\explodate|, |\topodate|, |\cartodate|, 
 |\cavelength|, |\cavedepth|, |\cavelengthtitle|, |\cavedepthtitle|,
+|\cavemaxz|, |\caveminz|, |\thversion|, |\currentdate|,
+|\outcscode|, |\outcsname|, |\northdir|, |\magdecl|, |\gridconv|,
 |\ifnortharrow|, |\ifscalebar|, |\northarrow|, |\scalebar|, 
 |\iflegend|, |\legendtitle|, |\insertlegend|, |\begmulti <i>|, |\endmulti|, 
 |\formattedlegend|, |\legendcolumns|.
+\par}
 
 In order to place them somewhere on the map page, you have to define 
 |\maplayout| macro in the |code tex-map| section of the |layout| command. 
@@ -344,7 +356,8 @@ comment, copyrights and legend.
 (The |\legendcontent| is also used in the default map layout definition:
 |\def\maplayout{\legendbox{0}{100}{NW}{\the\legendcontent}}|).
 
-Width of the above text may be adjusted by |\legendwidth| dimen register. 
+Width of the above text may be adjusted by |\legendwidth| dimen register 
+(its default value is set by |legend-width| layout option). 
 The color and size of texts in the preformatted legend can be easily changed
 using |\legendtextcolor|, |\legendtextsize|, |\legendtextsectionsize| and 
 |\legendtextheadersize| token registers, 
@@ -434,6 +447,26 @@ There are four predefined pens {\it PenA} (thickest) \dots\ {\it PenD}
 (thinnest), which should be used for all drawings. 
 For drawing and filling use |thdraw| and |thfill| commands instead of \MP's 
 |draw| and |fill|.
+
+\NEW{5.4}The following variables are also available:
+
+\list
+* boolean |ATTR__shotflag_splay|, |ATTR__shotflag_duplicate|,\hfil\break
+  |ATTR__shotflag_approx| = set for line survey
+* boolean |ATTR__stationflag_splay| = set true for endstations of splay shots
+* boolean |ATTR__scrap_centerline| = set true for scraps created from
+  centreline
+* boolean |ATTR__elevation| = true for (extended) elevation, false for
+  plan projection
+* numeric |ATTR__height| = height of a pit or wall:pit
+* string |ATTR__id| = contains current object ID
+* string |ATTR__survey| = contains current survey name
+* string |ATTR__scrap| = contains current scrap name
+* picture |ATTR__text| = contains typeset text e.g.\ for point continuation
+* string |NorthDir| = `true' or `grid'
+* numeric |MagDecl| = magnetic declination in degrees
+* numeric |GridConv| = grid meridian convergence in degrees
+\endlist
 
 \subsubchapter Point symbols.
 

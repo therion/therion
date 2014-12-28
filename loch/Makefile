@@ -1,6 +1,11 @@
 OUTDIR ?= .
 THPLATFORM ?= LINUX
-LOUTDIR = ../$(OUTDIR)/loch
+ifneq ($(OUTDIR),.)
+LOUTDIR = $(OUTDIR)/loch
+else
+LOUTDIR = .
+endif
+
 
 
 # common therion objects
@@ -8,16 +13,21 @@ CMNOBJECTS = \
   lxTR.o lxOGLFT.o lxSetup.o lxRender.o lxWX.o \
   lxImgIO.o lxLRUD.o lxFile.o lxSTree.o \
   lxData.o lxMath.o lxSView.o lxSScene.o \
-  lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o \
+  lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o \
   img.o
 
-# VTKVERSION = 5.4
 VTKVERSION = $(shell tclsh ./getvtkver.tcl version)
-# VTKPATH = /usr/local/include/vtk-$(VTKVERSION)
 VTKPATH = $(shell tclsh ./getvtkver.tcl incpath)
-# VTKLIBPATH = /usr/local/lib/vtk-$(VTKVERSION)
 VTKLIBPATH = $(shell tclsh ./getvtkver.tcl libpath)
+VTKV6 = $(shell tclsh ./getvtkver.tcl version6)
+ifeq ($(VTKV6),1)
+VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION) -lfreetype -lpng -ljpeg
+else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
+endif
+# VTKVERSION = 5.4
+# VTKPATH = /usr/local/include/vtk-$(VTKVERSION)
+# VTKLIBPATH = /usr/local/lib/vtk-$(VTKVERSION)
 POSTMAKE =
 STRIPFLAG = -s
 
@@ -27,21 +37,30 @@ STRIPFLAG = -s
 ##CXX = c++
 ##CC = gcc
 ##POBJECTS = lxR2P.o
+##ifeq ($(VTKV6),1)
+##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION) -lfreetype -lpng -ljpeg
+##else
+##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
+##endif
 ##CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 ##CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 ##LXLIBDIR = linux
-##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lpthread -lz 
+##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz 
 ##LXPLATFORM = LINUX
 
 # PLATFORM DEBIAN
 CXX = c++
 CC = gcc
 POBJECTS = lxR2P.o
+ifeq ($(VTKV6),1)
+VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION) -lfreetype -lpng -ljpeg
+else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
+endif
 CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 LXLIBDIR = linux
-PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lpthread -lz 
+PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz 
 LXPLATFORM = LINUX
 
 # PLATFORM WIN32
@@ -78,14 +97,14 @@ LXPLATFORM = LINUX
 ##LDBFLAGS = $(STRIPFLAG)
 
 # BUILD OXYGEN
-##CCBFLAGS = -O2
-##CXXBFLAGS = -O2
-##LDBFLAGS = $(STRIPFLAG)
+CCBFLAGS = -O2
+CXXBFLAGS = -O2
+LDBFLAGS = $(STRIPFLAG)
 
 # BUILD RELEASE
-CCBFLAGS = 
-CXXBFLAGS = 
-LDBFLAGS = $(STRIPFLAG)
+##CCBFLAGS = 
+##CXXBFLAGS = 
+##LDBFLAGS = $(STRIPFLAG)
 
 # BUILD DEBUG
 ##CCBFLAGS = -ggdb
@@ -195,7 +214,7 @@ $(LOUTDIR)/lxGLC.o: lxGLC.cxx lxGLC.h lxMath.h lxGUI.h lxData.h lxImgIO.h lxFile
  lxFNTFreeSans_ttf.h lxRender.h lxTR.h
 $(LOUTDIR)/lxGUI.o: lxGUI.cxx lxGUI.h lxGLC.h lxMath.h lxData.h lxImgIO.h lxFile.h \
  lxSetup.h lxRender.h lxOptDlg.h lxAboutDlg.h lxSView.h lxWX.h lxSScene.h \
- lxSTree.h icons/open.xpm icons/render.xpm icons/reload.xpm \
+ lxSTree.h lxPres.h icons/open.xpm icons/render.xpm icons/reload.xpm \
  icons/stereo.xpm icons/rotation.xpm icons/lockrot.xpm icons/fit.xpm \
  icons/home.xpm icons/rendersetup.xpm icons/plan.xpm icons/profile.xpm \
  icons/fullscreen.xpm icons/orto.xpm icons/camera.xpm icons/scene.xpm \
@@ -207,6 +226,8 @@ $(LOUTDIR)/lxLRUD.o: lxLRUD.cxx lxLRUD.h lxMath.h
 $(LOUTDIR)/lxMath.o: lxMath.cxx lxMath.h
 $(LOUTDIR)/lxOGLFT.o: lxOGLFT.cxx lxOGLFT.h
 $(LOUTDIR)/lxOptDlg.o: lxOptDlg.cxx lxWX.h lxGUI.h lxGLC.h lxMath.h
+$(LOUTDIR)/lxPres.o: lxPres.cxx lxPres.h lxWX.h lxGUI.h lxGLC.h lxMath.h lxSetup.h \
+ lxData.h lxImgIO.h lxFile.h loch.xpm
 $(LOUTDIR)/lxRender.o: lxRender.cxx lxRender.h lxWX.h lxGLC.h lxMath.h lxGUI.h \
  lxSetup.h lxData.h lxImgIO.h lxFile.h lxTR.h
 $(LOUTDIR)/lxSScene.o: lxSScene.cxx lxSScene.h lxWX.h lxGUI.h lxGLC.h lxMath.h \

@@ -84,7 +84,8 @@ static const GLubyte srf16tex[48] = {
 lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat, 
                        wxWindow *parent, wxWindowID id,
                        const wxPoint& pos, const wxSize& size, long style, const wxString& name)
-                       : wxGLCanvas(parent, (wxGLCanvas*) NULL, id, pos, size, style, name)
+                       : wxGLCanvas(parent, id, NULL, pos, size, style, name),
+                         ctx(this)
 {
   this->frame = NULL;
   this->data = dat;
@@ -211,12 +212,8 @@ void lxGLCanvas::OnPaint( wxPaintEvent& WXUNUSED(event))
 
   wxPaintDC dc(this);
 
-#ifndef __WXMOTIF__
-  if (!GetContext()) return;
-#endif
-
   if (!this->m_isO) {
-    SetCurrent();
+    this->ctx.SetCurrent(*this);
     this->RenderScreen();
     SwapBuffers();
   }
@@ -242,17 +239,12 @@ void lxGLCanvas::OnSize(wxSizeEvent& event)
   // set GL viewport (not called by wxGLCanvas::OnSize on all platforms...)
   int w, h;
   this->GetClientSize(&w, &h);
-#ifndef __WXMOTIF__
-  if (GetContext())
-#endif
-  {
-    this->setup->cam_width = double((GLfloat) w / (GLfloat) h);
-    this->ww = w;
-    this->wh = h;
+  this->setup->cam_width = double((GLfloat) w / (GLfloat) h);
+  this->ww = w;
+  this->wh = h;
 #ifdef __WXMSW__
-    this->ForceRefresh();
+  this->ForceRefresh();
 #endif
-  }
 
 }
 
@@ -282,7 +274,7 @@ void lxGLCanvas::InitializeS()
 
 void lxGLCanvas::UpdateRenderList()
 {
-  SetCurrent();
+  this->ctx.SetCurrent(*this);
   if (this->m_sList == 0) 
     this->m_sList = glGenLists(1);
   glNewList(this->m_sList, GL_COMPILE);
@@ -317,7 +309,7 @@ void lxGLCanvas::UpdateRenderContents()
     if ((this->data->m_textureSurface.texS == NULL) || (this->m_maxTSizeO != newTSizeO) || (this->m_maxTSizeS != newTSizeS)) {
       this->m_maxTSizeS = newTSizeS;
       this->m_maxTSizeO = newTSizeO;
-      this->SetCurrent();
+      this->ctx.SetCurrent(*this);
       this->data->m_textureSurface.CreateTexImages(this->m_maxTSizeS, this->m_maxTSizeO);
       if (this->m_isO)
         this->OSCMakeCurrent();      
@@ -1539,7 +1531,11 @@ void lxGLCanvas::RenderICompass(double size) {
 
   glPopMatrix();
 
+#if wxCHECK_VERSION(3,0,0)
+  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\xc2\xb0"), int(this->setup->cam_dir)));
+#else
   this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\260"), int(this->setup->cam_dir)));
+#endif  
 
 }
 
@@ -1626,7 +1622,11 @@ void lxGLCanvas::RenderIClino(double size)
   glPopMatrix();
   glPopMatrix();
 
+#if wxCHECK_VERSION(3,0,0)
+  this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(_("%+03d\xc2\xb0"), int(this->setup->cam_tilt)));
+#else
   this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(_("%+03d\260"), int(this->setup->cam_tilt)));
+#endif  
 }
 
 

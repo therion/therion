@@ -1,13 +1,14 @@
 \eject
-\vbox{\pic[93.2mm]{agrippa.jpg}
-\kern-3.48cm
-\eightit\baselineskip16.3pt\leftskip2mm\rightskip6.8cm\parindent4.05cm
+\vbox{\rightline{\pic[100mm]{agrippa.jpg}}
+\kern-20mm
+\eightit\baselineskip10pt\rightskip105mm\leftskip0mm\parindent1.05cm
 Only for you, children of doctrine and learning, have we written this work. 
 Examine this book, ponder the meaning we have dispersed in various places 
 and gathered again; 
 what we have concealed in one place we have disclosed in another, 
 that it may be understood by your wisdom.\par
-\hbox to 91.2mm{\hfil\eightrm ---Henricus C. Agrippa ab Nettesheym, \eightmit 1533}
+\kern-10pt
+\rightline{\hfil\eightrm ---Henricus C. Agrippa ab Nettesheym, \eightmit 1533}
 }
 
 \chapter Creating data files.
@@ -74,6 +75,10 @@ in the first line) and the last line contains some more data.
 
 * everything that follows |#|, until the end of line---even inside a command---is 
   considered to be a comment, and is ignored.
+
+* \NEW{5.4}multiline comments inside |comment| ... |endcomment| block are allowed in
+  data and configuration files
+
 \endlist
 
 
@@ -131,8 +136,9 @@ until the end of the current object, whichever comes first.
 Following coordinate systems are supported:
 
 \list
-* |UTM1| -- |UTM60| = universal transverse Mercator in northern hemisphere
+* |UTM1| -- |UTM60| = Universal Transverse Mercator in northern hemisphere
   and given zone, WGS84 datum. 
+* |UTM1N| -- |UTM60N| = same as |UTM1| -- |UTM60|
 * |UTM1S| -- |UTM60S| = UTM in southern hemisphere, WGS84 datum.
 * |lat-long|, |long-lat| = latitude (N positive, S negative) and 
   longitude (E positive, W negative) in given order in degrees 
@@ -143,17 +149,22 @@ Following coordinate systems are supported:
   number of your system, see |extern/proj4/nad/epsg| file in the
   therion source distribution.
 * |ESRI:<number>| = Similar to EPSG, but ESRI standard.
-* |JTSK|, |iJTSK| = Czechoslovak S-JTSK system with south and west
+%* |EUR79Z30| = UTM zone 30, EUR79 datum.  % ad-hoc addition not worth mentioning??
+* |JTSK|, |iJTSK| = Czechoslovak S-JTSK system used since 1920s with south and west
   axis (JTSK) and its modified version with axis 
   pointing east and north and negative numbers (iJTSK). JTSK is
   not supported on output (iJTSK is).
+* |JTSK03|, |iJTSK03| = new S-JTSK realisation introduced in Slovakia in 2011.
+* |OSGB:<H, N, O, S or T><A-Z except I>| = British Ordnance Survey National
+  Grid.\NEW{5.4}
+* |S-MERC| = the spherical Mercator projection, as used by various online mapping sites.
 \endlist
 
 \subchapter Magnetic declination.
 
 Therion contains built-in IGRF\[See \www{http://www.ngdc.noaa.gov/IAGA/vmod/}] 
 Earth geomagnetic field model valid for period 
-1900--2015\NEW{5.3}. It is automatically used if the cave is located in space using 
+1900--2020\NEW{5.4}. It is automatically used if the cave is located in space using 
 any of supported geodetic coordinate systems and no declination is specified by 
 user. The computed declination is listed in the LOG file for information.
 
@@ -335,6 +346,7 @@ the command may be used anywhere.
           sd <quantity list> <value> <units>
           grade <grade list>
           declination <value> <units>
+          grid-angle <value> <units>
           infer <what> <on/off>
           mark <type>
           flags <shot flags>
@@ -395,6 +407,8 @@ the command may be used anywhere.
     If no declination is specified, or the declination is reset (|-|),
     then a valid declination specification is searched for in all surveys
     the data object is in. See declination option of survey command.
+  * |grid-angle <value> <units>| = specifies the magnetic
+    grid angle (declination against grid north).
   * |sd <quantity list> <value> <units>| = sets the 
     standard deviation for the given measurements. The Quantity list can 
     contain the following keywords: length, tape, bearing, compass, 
@@ -606,10 +620,10 @@ the command may be used anywhere.
 
     2. |plan| = basic plan projection (default).
 
-    3. |elevation| = orthogonal projection which optionally takes a view 
+    3. |elevation| = orthogonal projection (a.k.a.\ projected profile) which optionally takes a view 
        direction as an argument (e.g.~|[elevation 10]| or |[elevation 10 deg]|).
 
-    4. |extended| = extended elevation.
+    4. |extended| = extended elevation (a.k.a.\ extended profile).
 
   * |scale <specification>| = 
     is used to pre-scale (convert coordinates from pixels to 
@@ -785,7 +799,9 @@ Point is a command for drawing a point map symbol.
     length of passages explored but not surveyed yet. This value is afterwards
     displayed in survey/cave statistics.
   * |text| = text of the label, remark or continuation. It may contain 
-    following formatting keywords:
+    following formatting keywords:\[For SVG output, only |<br>|, |<thsp>|, 
+    |<it>|, |<bf>|, |<rm>| and |<lang:XX>| keywords are taken into account; 
+    all others are silently ignored.]
     
     |<br>| = line break
     
@@ -1144,6 +1160,9 @@ none, survey
   * |projection/proj <plan/elevation/extended/none>| = required if the map 
     contains survey. 
   * |title <string>| = description of the object
+  * |survey <id>| =\NEW{5.4} associate a survey with map 
+    (e.g.\ all surveying statistics from this survey will be used when
+    this map is selected for output).
 \endoptions
 
 \subsubchapter `surface'.

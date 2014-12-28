@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+#include <locale.h>
 #endif  
 //LXDEPCHECK - standart libraries
 
@@ -298,32 +299,98 @@ void lxSetup::ClearSurveySelection()
 }
 
 
-wxXmlNode * lxSetup::SaveToXML(unsigned long items)
+void lxSetup::SaveToXMLNode(wxXmlNode * n)
 {
-	wxXmlNode * rv, * n, * nn;
-	rv = new wxXmlNode(wxXML_ELEMENT_NODE, _T("Setup"));
-	if (items & lxSETUP_CAMERA) {
-		n = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraTilt"));
-		nn = new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, wxString::Format(_T("%.0f"), this->cam_tilt));
-		n->AddChild(nn);
-		rv->AddChild(n);
-	}
-	return rv;
+  wxXmlNode * tmp, * tmpd;
+  // remove all children
+  tmp = n->GetChildren();
+  while (tmp != NULL) {
+    tmpd = tmp;
+    tmp = tmp->GetNext();
+    if (tmpd->GetName().StartsWith(_T("Camera"))) n->RemoveChild(tmpd);
+    delete tmpd;
+  }
+  // save settings
+  char * prevlocale = setlocale(LC_NUMERIC,NULL);
+  setlocale(LC_NUMERIC,"C");
+	tmp = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraFacing"));
+	tmp->AddChild(new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, wxString::Format(_T("%.4f"), this->cam_dir)));
+	n->AddChild(tmp);
+	tmp = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraTilt"));
+	tmp->AddChild(new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, wxString::Format(_T("%.4f"), this->cam_tilt)));
+	n->AddChild(tmp);
+	tmp = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraCenterX"));
+  tmp->AddChild(new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, wxString::Format(_T("%.4f"), this->cam_center.x)));
+	n->AddChild(tmp);
+	tmp = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraCenterY"));
+	tmp->AddChild(new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, wxString::Format(_T("%.4f"), this->cam_center.y)));
+	n->AddChild(tmp);
+	tmp = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraCenterZ"));
+	tmp->AddChild(new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, wxString::Format(_T("%.4f"), this->cam_center.z)));
+	n->AddChild(tmp);
+	tmp = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraDistance"));
+	tmp->AddChild(new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, wxString::Format(_T("%.4f"), this->cam_dist)));
+	n->AddChild(tmp);
+	tmp = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraFocus"));
+	tmp->AddChild(new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, wxString::Format(_T("%.4f"), this->cam_lens)));
+	n->AddChild(tmp);
+	tmp = new wxXmlNode(wxXML_ELEMENT_NODE, _T("CameraPerspective"));
+  tmp->AddChild(new wxXmlNode(wxXML_TEXT_NODE, wxEmptyString, this->cam_persp ? _T("true") : _T("false")));
+	n->AddChild(tmp);
+  setlocale(LC_NUMERIC,prevlocale);
 }
 
-
-void lxSetup::LoadFromXML(wxXmlNode * n)
+wxString getXmlValue(wxXmlNode * n, const wxString & name)
 {
-	if (n->GetName() != _T("Setup"))
+  wxString rv;
+  if (n != NULL) {
+    wxXmlNode * t = n->GetChildren(), * tt;
+    while(t != NULL) {
+      if (t->GetName() == name) {
+        tt = t->GetChildren();
+        if (tt->GetType() == wxXML_TEXT_NODE)
+          rv = tt->GetContent();
+      }
+      t = t->GetNext();
+    }
+  }
+  return rv;
+}
+
+void interpolateFloat(double * value, wxString v1, wxString v2, double t)
+{
+  if (v1.empty()) return;
+  if (v2.empty()) *value = atof(v1.mbc_str());
+  else *value = (1.0 - t) * atof(v1.mbc_str()) + t * atof(v2.mbc_str());
+}
+
+void interpolateBoolean(bool * value, wxString v1, wxString v2, double t)
+{
+  if (v1.empty()) return;
+  if (v2.empty()) *value = (v1 == _T("true"));
+  else {
+    if (t <= 0.5) *value = (v1 == _T("true"));
+    else *value = (v2 == _T("true"));
+  }
+}
+
+void lxSetup::LoadFromXMLNode(wxXmlNode * n, wxXmlNode * nn, double t)
+{
+	if (n->GetName() != _T("Scene"))
 		return;
-	wxXmlNode * nn;
-  nn = n->GetChildren();
-	while (nn != NULL) {
-		if (nn->GetName() == _T("CameraTilt")) {
-			n = nn->GetChildren();
-			if (n->GetType() == wxXML_TEXT_NODE)
-				this->cam_tilt = atof(n->GetContent().mbc_str());
-		}
-		nn = nn->GetNext();
-	}
+  char * prevlocale = setlocale(LC_NUMERIC,NULL);
+  double d;
+  setlocale(LC_NUMERIC,"C");
+  interpolateFloat(&(this->cam_dir), getXmlValue(n, _T("CameraFacing")), getXmlValue(nn, _T("CameraFacing")), t);
+  interpolateFloat(&(this->cam_tilt), getXmlValue(n, _T("CameraTilt")), getXmlValue(nn, _T("CameraTilt")), t);
+  interpolateFloat(&(this->cam_center.x), getXmlValue(n, _T("CameraCenterX")), getXmlValue(nn, _T("CameraCenterX")), t);
+  interpolateFloat(&(this->cam_center.y), getXmlValue(n, _T("CameraCenterY")), getXmlValue(nn, _T("CameraCenterY")), t);
+  interpolateFloat(&(this->cam_center.z), getXmlValue(n, _T("CameraCenterZ")), getXmlValue(nn, _T("CameraCenterZ")), t);
+  interpolateFloat(&(this->cam_dist), getXmlValue(n, _T("CameraDistance")), getXmlValue(nn, _T("CameraDistance")), t);
+  d = 20.0;
+  interpolateFloat(&d, getXmlValue(n, _T("CameraFocus")), getXmlValue(nn, _T("CameraFocus")), t);
+  this->SetLens(d);
+  interpolateBoolean(&(this->cam_persp), getXmlValue(n, _T("CameraPerspective")), getXmlValue(nn, _T("CameraPerspective")), t);
+  this->UpdatePos();
+  setlocale(LC_NUMERIC,prevlocale);
 }

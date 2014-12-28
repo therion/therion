@@ -1,3 +1,27 @@
+Therion 5.3.16 (2014-12-28):
+
+therion:
+ * scale upper limit changed to 1:10
+ * geomag data updated upto 2020
+ * bugs fixed:
+   - black area displayed instead of some patterns in SVG
+   - broken XHTML output when string formatting keywords are used in map-comment etc.
+   - unescaped special characters in map-comment etc. in XHTML
+   - improved error message when therion can't map custom TeX fonts in
+     MetaPost macros to Unicode
+   - cave depth value in XHTML output
+   - invalid compass/backcompass averaging formula
+      
+xtherion:
+ * elevation orientation in Compiler map structure
+      
+loch:
+ * VTK 6.0 support
+ * wxWidgets 3.0 support
+
+      
+--------------------------------------------------------------------------------
+
 Therion 5.3.15 (2014-05-27):
 
 therion:

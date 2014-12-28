@@ -52,6 +52,7 @@ string utf2texoctal(string s);
 string utf2texhex(string s);
 string utf2tex (string s, bool b=false);
 int tex2uni(string font, int ch);
+string replace_all(string s, string f, string r);
 
 struct encodings_new {
  private:

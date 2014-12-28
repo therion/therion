@@ -45,7 +45,7 @@ proc load_proj_init_file {fn shortcut} {
   load_proj_init_file_add $active_name $active_spec $active_comment
 }
 
-# <indentifiers> <options> <libPROJ definition> <.PRJ definition>
+# <identifiers> <options> <libPROJ definition> <.PRJ definition>
 set proj_specs {
   {{long-lat} {dms} "+proj=latlong  +datum=WGS84" {GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]]} {}}
   {{lat-long} {dms swap} "+proj=latlong +datum=WGS84" {} {}}

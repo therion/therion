@@ -393,6 +393,7 @@ static const thstok thtt_layout_color[] = {
 enum {
   TT_LAYOUT_CCRIT_UNKNOWN = 0,
   TT_LAYOUT_CCRIT_ALTITUDE,
+  TT_LAYOUT_CCRIT_DEPTH,
   TT_LAYOUT_CCRIT_TOPODATE,
   TT_LAYOUT_CCRIT_EXPLODATE,
   TT_LAYOUT_CCRIT_MAP,
@@ -402,8 +403,9 @@ enum {
 static const thstok thtt_layout_ccrit[] = {
   {"altitude", TT_LAYOUT_CCRIT_ALTITUDE},
   {"altitudes", TT_LAYOUT_CCRIT_ALTITUDE},
-//  {"topo-date", TT_LAYOUT_CCRIT_TOPODATE},
-//  {"explo-date", TT_LAYOUT_CCRIT_EXPLODATE},
+  {"depth", TT_LAYOUT_CCRIT_DEPTH},
+  {"topo-date", TT_LAYOUT_CCRIT_TOPODATE},
+  {"explo-date", TT_LAYOUT_CCRIT_EXPLODATE},
   {"map", TT_LAYOUT_CCRIT_MAP},
   {"maps", TT_LAYOUT_CCRIT_MAP},
   {"scrap", TT_LAYOUT_CCRIT_SCRAP},
