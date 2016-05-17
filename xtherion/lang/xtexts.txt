@@ -3420,6 +3420,18 @@ ru: Разделить линию
 sk: Rozdeliť krivku
 sq: ndaje rjeshtin-vijen
 
+therion: Trace line
+bg: Проследяване от картината
+en: Trace line
+
+therion: Convert to curve
+bg: Конвертиране в Безие
+en: Convert to curve
+
+therion: Simplify line
+bg: Опростяване на линия
+en: Simplify line
+
 therion: deleting line point
 bg: Изтрий точка от линията
 cz: mazaní bodu na křivce
