@@ -26,6 +26,8 @@
  * --------------------------------------------------------------------
  */
  
+#include <time.h>
+
 #ifndef thdate_h
 #define thdate_h
 
@@ -199,6 +201,17 @@ class thdate {
 
   void set_file_date(char * fname);
   
+  /**
+   * Get the start or end date as time_t format
+   */
+  time_t get_start_t_time();
+  time_t get_end_t_time();
+  
+  /**
+   * Get the start or end date as number of days since 1 Jan 1900 for Survex export
+   */
+  int get_start_days1900();
+  int get_end_days1900();
 };
 
 
