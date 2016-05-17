@@ -95,13 +95,18 @@ void thexpdb::process_db(class thdatabase * dbp)
 {
   this->db = dbp;
   if (this->format == TT_EXPDB_FMT_UNKNOWN) {
-    this->format = TT_EXPDB_FMT_SQL;
-    // TODO: format parsing according to extension
-  }  
+    thexp_set_ext_fmt(".sql", TT_EXPDB_FMT_SQL)
+    thexp_set_ext_fmt(".csv", TT_EXPDB_FMT_CSV)
+  }
   switch (this->format) {
     case TT_EXPDB_FMT_SQL:
       this->export_sql_file(dbp);
       break;
+    case TT_EXPDB_FMT_CSV:
+      this->export_csv_file(dbp);
+      break;
+    default:
+      ththrow(("unknown database format (use .csv or .sql)"))
   }
 }
 
@@ -415,6 +420,75 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 }
 
 
+void thexpdb::export_csv_file(class thdatabase * dbp) {
 
+  const char * fnm = this->get_output("cave.csv");
 
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif
 
+  FILE * out;
+  out = fopen(fnm, "w");
+  if (out == NULL) {
+    thwarning(("can't open %s for output", fnm))
+    return;
+  }
+
+  thdb_object_list_type::iterator oi;
+  thdataleg_list::iterator lei;
+  thdataequate_list::iterator eqi;
+  thdata * dp;
+
+  oi = dbp->object_list.begin();
+
+  fprintf(out, "From,To,Length(m),Azimuth(deg),Clino(deg)\n");
+
+  while (oi != dbp->object_list.end()) {
+    if ((*oi)->get_class_id() == TT_DATA_CMD) {
+      dp = (thdata *) (*oi);
+
+      for (lei = dp->leg_list.begin(); lei != dp->leg_list.end(); lei++) {
+        if (lei->is_valid) {
+          if ((lei->flags & TT_LEGFLAG_SPLAY) == TT_LEGFLAG_SPLAY)
+            fprintf(out, "%s@%s,-,%.2f,%.2f,%.2f\n",
+              lei->from.name, lei->from.psurvey->get_full_name(),
+              lei->total_length, lei->total_bearing, lei->total_gradient);
+          else
+            fprintf(out, "%s@%s,%s@%s,%.2f,%.2f,%.2f\n",
+              lei->from.name, lei->from.psurvey->get_full_name(), lei->to.name, lei->to.psurvey->get_full_name(),
+              lei->total_length, lei->total_bearing, lei->total_gradient);
+        }
+      }
+
+      // Export equate links between stations 
+      int last_equate = 0;
+      char first_name[MAX_PATH];
+      if (!dp->equate_list.empty()) {
+        fprintf(out, "# Equated stations\n");
+        for (eqi = dp->equate_list.begin(); eqi != dp->equate_list.end(); eqi++) {
+          if (last_equate != eqi->eqid) {
+            snprintf(first_name, MAX_PATH, "%s@%s", eqi->station.name, eqi->station.survey);
+            last_equate = eqi->eqid;
+          } else {
+            if (last_equate != 0)
+              fprintf(out, "%s,%s@%s\n", first_name, eqi->station.name, eqi->station.survey);
+          }
+        }
+        fprintf(out, "# End equated stations\n");
+      }
+    }  // if TT_DATA_CMD
+    oi++;
+  }  // while
+
+  fclose(out);
+
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}
