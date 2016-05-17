@@ -753,6 +753,36 @@ void thdate::set_file_date(char * fname) {
 #endif   
 }
 
+time_t thdate::get_start_t_time() {
+  struct tm temp;
+  date2tm(this->syear, this->smonth, this->sday, this->shour, this->smin, this->ssec, &temp);
+  return mktime(&temp);
+}
+
+time_t thdate::get_end_t_time() {
+  struct tm temp;
+  date2tm(this->eyear, this->emonth, this->eday, this->ehour, this->emin, this->esec, &temp);
+  return mktime(&temp);
+}
+
+int rdn(int y, int m, int d) { /* Rata Die day one is 0001-01-01. Used to calculate number of days since 1.1.1900 */
+  if (m < 3)
+    y--, m += 12;
+  return 365*y + y/4 - y/100 + y/400 + (153*m - 457)/5 + d - 306;
+}
+
+int thdate::get_start_days1900() {
+  int basedays = rdn(1900, 1, 1); 
+  int thdays = rdn(this->syear, this->smonth, this->sday);
+  return thdays - basedays;
+}
+
+int thdate::get_end_days1900() {
+  int basedays = rdn(1900, 1, 1); 
+  int thdays = rdn(this->eyear, this->emonth, this->eday);
+  return thdays - basedays;
+}
+
 #ifdef THMSVC
 #undef stat
 #endif
