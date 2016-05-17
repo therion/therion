@@ -194,6 +194,8 @@ set xth(gui,me,line,clwidth) 2
 set xth(gui,me,line,ticksize) 15
 # width of start line tick
 set xth(gui,me,line,tickwidth) 3
+# simplification limit for lines. Larger simp_limit = less points; smaller simp_limit = more points and smoother line
+set xth(gui,me,line,simp_limit) 10
 
 # for color names, see http://wiki.tcl.tk/37701
 set xth(gui,me,activefill) red

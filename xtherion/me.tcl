@@ -2095,6 +2095,8 @@ Button $lnc.trace -text [mc "Continue tracing"] -anchor center -font $xth(gui,lf
   -state disabled -command {xth_me_cmds_line_trace} -width 10
 Button $lnc.vector -text [mc "Convert to curve"] -anchor center -font $xth(gui,lfont) \
   -state disabled -command {xth_me_cmds_line_poly2bezier} -width 10
+Button $lnc.simpl -text [mc "Simplify line"] -anchor center -font $xth(gui,lfont) \
+  -state disabled -command {xth_me_cmds_line_simplify} -width 10
 xth_status_bar me $lnc.upd [mc "Click this button to apply line changes."]
 
 menu $lnc.lpa.m -tearoff 0 -font $xth(gui,lfont)
@@ -2103,6 +2105,7 @@ $lnc.lpa.m add command -label [mc "Delete point"] -command {xth_me_cmds_delete_l
 $lnc.lpa.m add command -label [mc "Split line"] -command {xth_me_cmds_line_split} -state disabled
 $lnc.lpa.m add command -label [mc "Trace line"] -command {xth_me_cmds_line_trace_start}
 $lnc.lpa.m add command -label [mc "Convert to curve"] -command {xth_me_cmds_line_poly2bezier}
+$lnc.lpa.m add command -label [mc "Simplify line"] -command {xth_me_cmds_line_simplify}
 
 #Button $lnc.insp -text "Insert" -anchor center -font $xth(gui,lfont) \
 #  -state disabled -width 10 -command {xth_me_cmds_start_linept_insert}
