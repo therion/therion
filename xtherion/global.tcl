@@ -183,11 +183,11 @@ set xth(gui,me,point,psize) 4
 #########################################
 # LINE
 # size of line point
-set xth(gui,me,line,psize) 4
+set xth(gui,me,line,psize) 3
 # line width
 set xth(gui,me,line,width) 3
 # size of line control point
-set xth(gui,me,line,cpsize) 4
+set xth(gui,me,line,cpsize) 3
 # width of line between point and control point
 set xth(gui,me,line,clwidth) 2
 # size of start line tick
@@ -195,10 +195,18 @@ set xth(gui,me,line,ticksize) 15
 # width of start line tick
 set xth(gui,me,line,tickwidth) 3
 
+# for color names, see http://wiki.tcl.tk/37701
 set xth(gui,me,activefill) red
-set xth(gui,me,pasivefill) blue
+set xth(gui,me,pasivefill) green
 set xth(gui,me,controlfill) blue
 set xth(gui,me,highlightfill) cyan
+set xth(gui,me,unselectedfill) lightgray
+set xth(gui,me,wallcolor) brown
+set xth(gui,me,pitcolor) magenta
+set xth(gui,me,slopecolor) gold
+set xth(gui,me,rockcolor) snow4
+set xth(gui,me,bordercolor) turquoise
+set xth(gui,me,stationcolor) darkorange
 
 set xth(gui,me,typelistwidth) 16
 set xth(gui,rmb) 3

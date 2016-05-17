@@ -1979,6 +1979,15 @@ proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
     set xth(me,cmds,$id,rotation) $nrot
     set xth(me,cmds,$id,xsize) $nxs
     set xth(me,cmds,$id,ysize) $nys
+    
+    # VG 230216: Erase and recreate the point when the type changes. The new triangular stations use 6 coordinates for a polygon, the circles use 4
+    # so they can not be interchanged. Maybe there is an easier way to just update the coordinates list instead of recreating the point
+    if {![string equal $ntype $otype]} {
+      xth_me_cmds_erase $id
+      xth_me_cmds_draw_point $id
+      xth_me_cmds_set_colors
+    }
+    
     $xth(me,can) coords pt$id [xth_me_cmds_calc_point_coords $id]
     xth_me_cmds_update_point_data $id
     xth_me_cmds_update_list $id
@@ -1989,24 +1998,42 @@ proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
 
 proc xth_me_cmds_calc_point_coords {id} {
   global xth
-  set x1 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)]
-  set y1 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)]
-  set x2 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)]
-  set y2 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
-  return [list $x1 $y1 $x2 $y2]
- # return [list \
- #   [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)] \
- #   [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)] \
- #   [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)] \
- #   [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
- # ]
+  switch $xth(me,cmds,$id,type) {
+    station {
+      # draw a triangle for the station points
+      set x1 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)]
+      set y1 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
+      set x2 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)]
+      set y2 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
+      set x3 [expr [xth_me_real2canx $xth(me,cmds,$id,x)]]
+      set y3 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)/2]
+      return [list $x1 $y1 $x2 $y2 $x3 $y3]
+      }
+    default {
+      set x1 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)]
+      set y1 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)]
+      set x2 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)]
+      set y2 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
+      return [list $x1 $y1 $x2 $y2]
+    }
+  }  
 }
 
 
 proc xth_me_cmds_draw_point {id} {
   global xth
-  $xth(me,can) create oval [xth_me_cmds_calc_point_coords $id] \
-    -tags "command point pt$id" -width 1 -outline blue -fill blue
+  set coords [xth_me_cmds_calc_point_coords $id]
+  switch $xth(me,cmds,$id,type) {
+    station {
+      # draw a triangle for the station points
+      $xth(me,can) create polygon [xth_me_cmds_calc_point_coords $id] \
+        -tags "command point pt$id" -width 1 -outline blue -fill blue
+    }
+    default {
+      $xth(me,can) create oval $coords \
+        -tags "command point pt$id" -width 1 -outline blue -fill blue
+    }
+  }  
   $xth(me,can) bind pt$id <Enter> "$xth(me,can) itemconfigure pt$id -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \$xth(me,cmds,$id,sbar)\""
   $xth(me,can) bind pt$id <Leave> "$xth(me,can) itemconfigure pt$id -fill \[$xth(me,can) itemcget pt$id -outline\]; xth_status_bar_pop me"
   $xth(me,can) bind pt$id <1> "xth_me_cmds_click $id pt$id \$xth(me,cmds,$id,x) \$xth(me,cmds,$id,y) %x %y"
