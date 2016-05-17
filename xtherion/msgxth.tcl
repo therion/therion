@@ -3482,6 +3482,15 @@
   ::msgcat::mcset sq "Split line" [encoding convertfrom utf-8 "ndaje rjeshtin-vijen"]
   ::msgcat::mcset zh_CN "Split line" [encoding convertfrom utf-8 "\345\210\206\345\211\262\347\202\271"]
 
+  ::msgcat::mcset bg "Trace line" [encoding convertfrom utf-8 "\320\237\321\200\320\276\321\201\320\273\320\265\320\264\321\217\320\262\320\260\320\275\320\265 \320\276\321\202 \320\272\320\260\321\200\321\202\320\270\320\275\320\260\321\202\320\260"]
+  ::msgcat::mcset en "Trace line" [encoding convertfrom utf-8 "Trace line"]
+
+  ::msgcat::mcset bg "Convert to curve" [encoding convertfrom utf-8 "\320\232\320\276\320\275\320\262\320\265\321\200\321\202\320\270\321\200\320\260\320\275\320\265 \320\262 \320\221\320\265\320\267\320\270\320\265"]
+  ::msgcat::mcset en "Convert to curve" [encoding convertfrom utf-8 "Convert to curve"]
+
+  ::msgcat::mcset bg "Simplify line" [encoding convertfrom utf-8 "\320\236\320\277\321\200\320\276\321\201\321\202\321\217\320\262\320\260\320\275\320\265 \320\275\320\260 \320\273\320\270\320\275\320\270\321\217"]
+  ::msgcat::mcset en "Simplify line" [encoding convertfrom utf-8 "Simplify line"]
+
   ::msgcat::mcset bg "deleting line point" [encoding convertfrom utf-8 "\320\230\320\267\321\202\321\200\320\270\320\271 \321\202\320\276\321\207\320\272\320\260 \320\276\321\202 \320\273\320\270\320\275\320\270\321\217\321\202\320\260"]
   ::msgcat::mcset cz "deleting line point" [encoding convertfrom utf-8 "mazan\303\255 bodu na k\305\231ivce"]
   ::msgcat::mcset de "deleting line point" [encoding convertfrom utf-8 "Linienpunkt l\303\266schen"]
