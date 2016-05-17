@@ -3091,7 +3091,7 @@ proc xth_me_cmds_set_colors {} {
   set llen [llength $xth(me,cmds,xlist)]
   set cid $xid
 
-  set dcol #fff222
+  set dcol $xth(gui,me,unselectedfill)
   set scol $xth(gui,me,pasivefill)
   if {$xth(me,cmds,$xth(me,cmds,selid),ct) == 4} {
     set col $dcol
@@ -3106,27 +3106,66 @@ proc xth_me_cmds_set_colors {} {
 
   set xth(me,curscrap) {}
   set godown 1
+  set selectedscrap 1
   if {$cid < 0} {
     set cid [expr $xid + 1]
     set godown 0
+    set selectedscrap 0
   }
   while {(($cid >= 0) && ($cid < $llen)) || ($godown)} {
     set id [lindex $xth(me,cmds,xlist) $cid]
     switch $xth(me,cmds,$id,ct) {
-      2 {        
+      2 {   # point     
+        if {$selectedscrap} {
+          switch $xth(me,cmds,$id,type) {
+            station {
+              set col $xth(gui,me,stationcolor)
+            }
+            default {
+              set col $scol
+            }
+          }   
+        }
         $xth(me,can) itemconfigure pt$id -outline $col -fill $col -state normal
         if {$xth(me,hinactives) && ($col == $dcol)} {
           $xth(me,can) itemconfigure pt$id -state hidden
         }
       }
-      3 {
+      
+      3 {  # line/line point
+        if {$selectedscrap} {
+          switch $xth(me,cmds,$id,type) {
+            wall {
+              set col $xth(gui,me,wallcolor)
+            }
+            pit {
+              set col $xth(gui,me,pitcolor)
+            }
+            slope {
+              set col $xth(gui,me,slopecolor)
+            }
+            "rock-border" - "rock-edge" {
+              set col $xth(gui,me,rockcolor)
+            }
+            border {
+              set col $xth(gui,me,bordercolor)
+            }
+            default {
+              set col $scol
+            }
+          }   
+        }
         $xth(me,can) itemconfigure lnpt$id -outline $col -fill $col -state normal
         $xth(me,can) itemconfigure lnln$id -fill $col -state normal
         if {$xth(me,hinactives) && ($col == $dcol)} {
           $xth(me,can) itemconfigure ln$id -state hidden  
         }
       }
-      4 - 5 {
+      
+      4 - 5 { # scrap/endscrap
+        if {(($xth(me,cmds,$id,ct) == 4) && ($godown) && ($selectedscrap)) || (($xth(me,cmds,$id,ct) == 5) && ($selectedscrap))} {
+          set selectedscrap 0
+        }
         if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
           set xth(me,curscrap) $xth(me,cmds,$id,name)
           #          if {[string equal $xth(me,cmds,$id,projection) extended]} {
@@ -3147,6 +3186,7 @@ proc xth_me_cmds_set_colors {} {
       if {$cid < 0} {
         set cid [expr $xid + 1]
         set godown 0
+        set selectedscrap 1
         set col $ocol
       }
     } else {
