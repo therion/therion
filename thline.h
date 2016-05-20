@@ -57,6 +57,8 @@ enum {
   TT_LINE_TEXT = 3017,
   TT_LINE_ADJUST = 3018,
   TT_LINE_HEIGHT = 3019,
+  TT_LINE_ANCHORS = 3020,
+  TT_LINE_REBELAYS = 3021,
 };
 
 
@@ -74,6 +76,9 @@ enum {
 // tags pre arrow
   TT_LINE_TAG_HEAD_BEGIN = 1,
   TT_LINE_TAG_HEAD_END = 2,
+// tags for type rope, indicating to show rebelays and anchors
+  TT_LINE_TAG_ROPE_ANCHORS = 1,
+  TT_LINE_TAG_ROPE_REBELAYS = 2,
 };
 
 
@@ -85,6 +90,7 @@ enum {
 static const thstok thtt_line_opt[] = {
   {"adjust", TT_LINE_ADJUST},
   {"altitude", TT_LINE_ALTITUDE},
+  {"anchors", TT_LINE_ANCHORS},
   {"border", TT_LINE_BORDER},
   {"close", TT_LINE_CLOSED},
   {"direction", TT_LINE_DIRECTION},
@@ -97,6 +103,7 @@ static const thstok thtt_line_opt[] = {
   {"orientation", TT_LINE_ORIENT},
   {"outline", TT_LINE_OUTLINE},
   {"r-size",TT_LINE_RSIZE},
+  {"rebelays", TT_LINE_REBELAYS},
   {"reverse", TT_LINE_REVERSE},
   {"size",TT_LINE_SIZE},
   {"smooth",TT_LINE_SMOOTH},
