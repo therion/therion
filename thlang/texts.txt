@@ -177,11 +177,12 @@ sk: prievan
 sq: rrymim i ajrit
 
 therion: point flag:arch
+bg: арка
 en: arch
 sk: skalný oblúk
 
 therion: point flag:overhang
-bg: скална площадка
+bg: надвес
 cz: převis
 de: Überhang
 el: προέκταση οροφής
@@ -308,6 +309,7 @@ sk: stena nižšej úrovne
 sq: muri I shtrire
 
 therion: line wall:overlying
+bg: по-високо разположена стена
 de: überlagerter Wandverlauf
 en: overlying wall
 it: parete:sovrastante
@@ -348,6 +350,7 @@ sk: predpokladaná stena
 sq: muri I supozuar
 
 therion: line wall:pit
+bg: отвес
 de: Eingangsschacht
 en: entrance pit
 it: parete:pozzo
@@ -452,6 +455,7 @@ sk: stena tvorená ľadom
 sq: akull
 
 therion: line wall:flowstone
+bg: натек
 de: Wand aus Sinter
 en: flowstone wall
 it: colata
@@ -460,6 +464,7 @@ pl: ściana z nacieków
 sk: stena tvorená sintrom
 
 therion: line wall:moonmilk
+bg: пещерно мляко
 de: Wand aus Bergmilch
 en: moonmilk wall
 it: moonmilk
@@ -629,7 +634,7 @@ sk: prievan
 sq: rrymim i ajrit
 
 therion: point air-draught:winter
-bg: зимен въздушно течение
+bg: зимно въздушно течение
 cz: zimní průvan
 de: Luftzug im Winter
 el: χειμερινή ροή αέρα
@@ -643,7 +648,7 @@ sk: zimný prievan
 sq: rrymim ajri-dimeror
 
 therion: point air-draught:summer
-bg: летен въздушно течение
+bg: лятно въздушно течение
 cz: letní průvan
 de: Luftzug im Sommer
 el: θερινή ροή αέρα
@@ -702,7 +707,7 @@ sk: možné pokračovanie
 sq: vazhdim I mundshem
 
 therion: point narrow-end
-bg: непроходимо снижаване
+bg: непроходимо верт. стеснение
 cz: neprůlezné zúžení
 de: Engstelle, zu schmal
 el: κλείσιμο στοάς λόγω στενώματος
@@ -718,7 +723,7 @@ sk: neprielezné zúženie
 sq: kalim I ngushte-fund
 
 therion: point low-end
-bg: хоризонтално стеснение
+bg: непроходимо снижаване
 cz: neprůlezné snížení
 de: Engstelle, zu flach
 el: κλείσιμο στοάς λόγω χαμηλής οροφής
@@ -790,7 +795,7 @@ sk: stupeň
 sq: shkalle ne dysheme
 
 therion: line overhang
-bg: скална площадка
+bg: надвес
 cz: převis
 de: Überhang
 el: προέκταση οροφής
@@ -954,7 +959,7 @@ sk: rozmery
 sq: dimenzionet
 
 therion: point height:unsigned
-bg: височина на ниша в тавана
+bg: височина на праг
 cz: výška stupně
 de: Höhe der Bodenstufe
 el: ύψος σκαλοπατιού
@@ -1034,7 +1039,7 @@ sk: šikmá plocha
 sq: breg
 
 therion: line rock-border
-bg: външен ръб на камък
+bg: очертание на камък
 cz: kameny
 de: Umriss eines Felsens
 el: περίγραμμα βράχου
@@ -1050,7 +1055,7 @@ sk: obrys kameňa
 sq: kufij shkembinjsh
 
 therion: line rock-edge
-bg: вътрешен ръб на камък
+bg: ръбове на камък
 cz: hrany kamenů
 de: Struktur eines Felsens
 el: άκρη βράχου
@@ -1576,7 +1581,7 @@ sk: občasný vodný tok
 sq: rrjedhe uji me force
 
 therion: point water-flow:intermittent
-bg: непостоянно водно течение
+bg: периодично водно течение
 cz: občasný vodní tok
 de: zeitweises Gerinne
 el: διακοπτόμενη υδρορροή
@@ -1734,6 +1739,8 @@ sk: stalaktit
 sq: stalaktit
 
 therion: point stalactites
+bg: сталактити
+en: stalactites
 
 therion: point stalagmite
 bg: сталагмит
@@ -1752,6 +1759,8 @@ sk: stalagmit
 sq: stalagmit
 
 therion: point stalagmites
+bg: сталагмити
+en: stalagmites
 
 therion: point pillar
 bg: сталактон
@@ -1770,8 +1779,11 @@ sk: stalagnát
 sq: shtylle
 
 therion: point pillars
+bg: сталактони
+en: pillars
 
 therion: point ice-stalactite
+bg: леден сталактит
 de: Eisstalaktit
 en: ice stalactite
 it: stalattite di ghiaccio
@@ -1780,6 +1792,7 @@ pl: lodowy stalaktyt
 sk: ľadový stalaktit
 
 therion: point ice-stalagmite
+bg: леден сталагмит
 de: Eisstalagmit
 en: ice stalagmite
 it: stalagmite di ghiaccio
@@ -1788,6 +1801,7 @@ pl: lodowy stalagmit
 sk: ľadový stalagmit
 
 therion: point ice-pillar
+bg: леден сталактон
 de: Eissäule
 en: ice pillar
 it: colonna di ghiaccio
@@ -2201,6 +2215,8 @@ sk: lano
 sq: litar
 
 therion: line rope
+bg: въже
+en: rope
 
 therion: point rope-ladder
 bg: пещерна стълба
@@ -2237,6 +2253,8 @@ sk: fixný rebrík
 sq: shkalle fikse
 
 therion: line fixed-ladder
+bg: стационарна стълба
+en: fixed ladder
 
 therion: point steps
 bg: стъпала
@@ -2255,10 +2273,16 @@ sk: schody
 sq: shkalle
 
 therion: line steps
+bg: стъпала
+en: steps
 
 therion: point via-ferrata
+bg: виа-ферата
+en: via-ferrata
 
 therion: line via-ferrata
+bg: виа-ферата
+en: via-ferrata
 
 therion: point traverse
 bg: траверс
@@ -2293,8 +2317,12 @@ sk: most
 sq: ure
 
 therion: point handrail
+bg: перила
+en: handrail
 
 therion: line handrail
+bg: перила
+en: handrail
 
 therion: point camp
 bg: лагер
@@ -2473,7 +2501,7 @@ sk: Prevýšenie
 sq: thellesia
 
 therion: title explo (plural)
-bg: Изследване
+bg: Изследвали
 cz: Objevili
 de: Entdeckung
 el: Εξερευνητές
@@ -2489,7 +2517,7 @@ sk: Objavili
 sq: hulumtuar nga
 
 therion: title explo
-bg: Изследване
+bg: Изследвал
 cz: Objevil
 de: Entdeckung
 el: Εξερευνητής
@@ -2537,7 +2565,7 @@ sk: Zameral
 sq: matur nga
 
 therion: title carto (plural)
-bg: Гл. картировачи
+bg: Комп. обработка
 cz: Kreslili
 de: Zeichnung
 el: Σκαρίφημα
@@ -2553,7 +2581,7 @@ sk: Kreslili
 sq: vizatuar nga
 
 therion: title carto
-bg: Гл. картировач
+bg: Комп. обработка
 cz: Kreslil
 de: Zeichnung
 el: Σκαρίφημα
