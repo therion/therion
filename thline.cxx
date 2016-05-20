@@ -218,8 +218,22 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_LINE_MARK:
       this->insert_point_mark(*args);
       break;
-      
-    
+
+    case TT_LINE_ANCHORS:
+    case TT_LINE_REBELAYS:
+      if (this->type != TT_LINE_TYPE_ROPE)
+        ththrow(("-anchors and -rebelays not valid with type %s", thmatch_string(this->type,thtt_line_types)))
+      int flag, tagtype;
+      flag = thmatch_token(*args,thtt_bool);
+      if (flag == TT_UNKNOWN_BOOL)
+        ththrow(("logical value expected -- %s",*args))
+      tagtype = (cod.id == TT_LINE_ANCHORS) ? TT_LINE_TAG_ROPE_ANCHORS : TT_LINE_TAG_ROPE_REBELAYS;
+      if (flag == TT_TRUE)
+        this->tags |= tagtype;
+      else
+        this->tags &= ~tagtype;
+      break;
+
     // if not found, try to set fathers properties  
     default:
       th2ddataobject::set(cod, args, argenc, indataline);
@@ -293,6 +307,10 @@ void thline::parse_type(char * ss)
       break;
     case TT_LINE_TYPE_CEILING_MEANDER:
       this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
+      break;
+    case TT_LINE_TYPE_ROPE:  // show anchors and rebelays on line rope by default
+      this->tags |= TT_LINE_TAG_ROPE_ANCHORS;
+      this->tags |= TT_LINE_TAG_ROPE_REBELAYS;
       break;
   }
 }
@@ -892,11 +910,31 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_GRADIENT, SYML_GRADIENT)
     thline_type_export_mp(TT_LINE_TYPE_U, SYML_U)
     thline_type_export_mp(TT_LINE_TYPE_HANDRAIL, SYML_HANDRAIL)
-    thline_type_export_mp(TT_LINE_TYPE_ROPE, SYML_ROPE)
     thline_type_export_mp(TT_LINE_TYPE_ROPE_LADDER, SYML_ROPELADDER)
     thline_type_export_mp(TT_LINE_TYPE_FIXED_LADDER, SYML_FIXEDLADDER)
     thline_type_export_mp(TT_LINE_TYPE_STEPS, SYML_STEPS)
     thline_type_export_mp(TT_LINE_TYPE_VIA_FERRATA, SYML_VIAFERRATA)
+
+    case TT_LINE_TYPE_ROPE:
+      macroid = SYML_ROPE;
+      if (this->context >= 0) 
+        macroid = this->context;
+      if (!out->symset->is_assigned(macroid)) {
+        postprocess = false;  
+        break;
+      }
+      if (out->file == NULL)
+        return(true);
+
+      out->symset->export_mp_symbol_options(out->file, SYML_ROPE);
+      fprintf(out->file,"%s(",out->symset->get_mp_macro(SYML_ROPE));
+      this->export_path_mp(out);
+      fprintf(out->file,",%s,%s);\n", ((this->tags & TT_LINE_TAG_ROPE_ANCHORS) > 0 ? "true" : "false"),
+        ((this->tags & TT_LINE_TAG_ROPE_REBELAYS) > 0 ? "true" : "false"));
+
+      postprocess = false;  
+      break;
+
     case TT_LINE_TYPE_ARROW:
       macroid = SYML_ARROW;
       if (this->context >= 0) 
