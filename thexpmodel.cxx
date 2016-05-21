@@ -44,6 +44,8 @@
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thcs.h"
+#include "thtexfonts.h"
+#include "thlang.h"
 
 
 thexpmodel::thexpmodel() {
@@ -51,9 +53,14 @@ thexpmodel::thexpmodel() {
   this->items = TT_EXPMODEL_ITEM_ALL;
   this->wallsrc = TT_WSRC_ALL;
   this->encoding = TT_UTF_8;
+  this->layout = new thlayout;
+  this->layout->assigndb(&thdb);
+  this->layout->id = ++thdb.objid;
 }
 
-
+thexpmodel::~thexpmodel() {
+  delete this->layout;
+}
 
 void thexpmodel::parse_options(int & argx, int nargs, char ** args)
 {
@@ -1789,14 +1796,38 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   thtext_inline = true;
 #endif     
 
-  fprintf(out,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n<Document>\n");
-  fprintf(out,"<name>Therion KML export</name>\n<description>Therion KML export.</description>\n");
+  fprintf(out,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n");
+  fprintf(out,"<Placemark>\n");
 
+  // Get the main survey, which is at level 2 and is different from the fsurveyptr at level 1
+  thsurvey * mainsrv = dbp->fsurveyptr;
+  thdataobject * obj;
+  for(obj = mainsrv->foptr; obj != NULL; obj = obj->nsptr) 
+    if (obj->get_class_id() == TT_SURVEY_CMD) {
+      mainsrv = (thsurvey *) obj;
+      break;
+    }
+
+  // Export cave name and description in the selected language
+  std::string cavename = ths2txt((strlen(mainsrv->title) > 0) ? mainsrv->title : mainsrv->name, layout->lang);
+  cavename = replace_all(cavename, "<br>", "-");
+  cavename = replace_all(cavename, "<it>", "");
+  cavename = replace_all(cavename, "<bf>", "");
+  fprintf(out,"<name>%s</name>\n", cavename.c_str());
+  double cavedepth = 0;
+  if (mainsrv->stat.station_top != NULL) {
+    cavedepth = mainsrv->stat.station_top->z - mainsrv->stat.station_bottom->z;
+    if (cavedepth > mainsrv->stat.length)
+      cavedepth = mainsrv->stat.length;
+  }
+  layout->units.lang = layout->lang;
+  fprintf(out,"<description><![CDATA[%s %s %s<br>%s %s %s]]></description>\n",
+      thT("title cave length",layout->lang), layout->units.format_length(mainsrv->stat.length), layout->units.format_i18n_length_units(),
+      thT("title cave depth",layout->lang), layout->units.format_length(cavedepth), layout->units.format_i18n_length_units());
 
   unsigned long last_st = nstat, cur_st, numst, i;
   double x, y, z;
 
-  fprintf(out,"<Placemark>\n");
   fprintf(out,"<Style>\n<LineStyle>\n<color>ffffff00</color>\n<width>1</width>\n</LineStyle>\n</Style>\n");
   fprintf(out,"<MultiGeometry>\n");
 
@@ -1826,7 +1857,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   if (numst > 0)
     fprintf(out,"</coordinates>\n</LineString>\n");
   fprintf(out,"</MultiGeometry>\n");
-  fprintf(out,"</Placemark>\n</Document>\n</kml>\n");
+  fprintf(out,"</Placemark>\n</kml>\n");
   fclose(out);
     
 #ifdef THDEBUG
