@@ -67,6 +67,8 @@
 #include "thexpuni.h"
 #include "thproj.h"
 #include "thcs.h"
+#include "thtexfonts.h"
+#include "thlang.h"
 
 
 static const char * DXFpre = 
@@ -468,8 +470,34 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   thscrap * scrap;
   thexpuni xu;
 
-  fprintf(out,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n<Document>\n");
-  fprintf(out,"<name>Therion KML export</name>\n<description>Therion KML export.</description>\n");
+  fprintf(out,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n");
+  fprintf(out,"<Placemark>\n");
+
+  // Get the main survey, which is at level 2 and is different from the fsurveyptr at level 1
+  thsurvey * mainsrv = db->fsurveyptr;
+  thdataobject * obj;
+  for(obj = mainsrv->foptr; obj != NULL; obj = obj->nsptr) 
+    if (obj->get_class_id() == TT_SURVEY_CMD) {
+      mainsrv = (thsurvey *) obj;
+      break;
+    }
+
+  // Export cave name and description in the selected language
+  std::string cavename = ths2txt((strlen(mainsrv->title) > 0) ? mainsrv->title : mainsrv->name, layout->lang);
+  cavename = replace_all(cavename, "<br>", "-");
+  cavename = replace_all(cavename, "<it>", "");
+  cavename = replace_all(cavename, "<bf>", "");
+  fprintf(out,"<name>%s</name>\n", cavename.c_str());
+  double cavedepth = 0;
+  if (mainsrv->stat.station_top != NULL) {
+    cavedepth = mainsrv->stat.station_top->z - mainsrv->stat.station_bottom->z;
+    if (cavedepth > mainsrv->stat.length)
+      cavedepth = mainsrv->stat.length;
+  }
+  layout->units.lang = layout->lang;
+  fprintf(out,"<description><![CDATA[%s %s %s<br>%s %s %s]]></description>\n",
+      thT("title cave length",layout->lang), layout->units.format_length(mainsrv->stat.length), layout->units.format_i18n_length_units(),
+      thT("title cave depth",layout->lang), layout->units.format_length(cavedepth), layout->units.format_i18n_length_units());
 
   int cA, cR, cG, cB;
   cR = int (255.0 * this->layout->color_map_fg.R + 0.5);
@@ -487,7 +515,6 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   checkc(cG);
   checkc(cB);
 
-  fprintf(out,"<Placemark>\n");
   fprintf(out,"<Style>\n<PolyStyle>\n<color>");
   fprintf(out,"%02x%02x%02x%02x",cA,cB,cG,cR);
   fprintf(out,"</color>\n<fill>1</fill>\n<outline>0</outline>\n</PolyStyle>\n</Style>\n");
@@ -538,7 +565,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   }
 
   fprintf(out,"</MultiGeometry>\n</Placemark>\n");
-  fprintf(out,"</Document>\n</kml>\n");
+  fprintf(out,"</kml>\n");
   fclose(out);
     
 #ifdef THDEBUG
