@@ -495,9 +495,10 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
       cavedepth = mainsrv->stat.length;
   }
   layout->units.lang = layout->lang;
-  fprintf(out,"<description><![CDATA[%s %s %s<br>%s %s %s]]></description>\n",
+  fprintf(out,"<description><![CDATA[%s %s %s<br>%s %s %s<br>%s]]></description>\n",
       thT("title cave length",layout->lang), layout->units.format_length(mainsrv->stat.length), layout->units.format_i18n_length_units(),
-      thT("title cave depth",layout->lang), layout->units.format_length(cavedepth), layout->units.format_i18n_length_units());
+      thT("title cave depth",layout->lang), layout->units.format_length(cavedepth), layout->units.format_i18n_length_units(),
+      ths2txt(this->layout->doc_comment, this->layout->lang).c_str());
 
   int cA, cR, cG, cB;
   cR = int (255.0 * this->layout->color_map_fg.R + 0.5);
