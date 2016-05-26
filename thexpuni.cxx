@@ -471,9 +471,11 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   thexpuni xu;
 
   fprintf(out,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n");
-  fprintf(out,"<Placemark>\n");
+  fprintf(out,"<Folder>\n");
+  fprintf(out,"<Icon> <href>https://www.dropbox.com/s/qfou9ptatywklu1/Cave_symbol1.png?dl=1</href> </Icon>\n");
+  fprintf(out,"<Style id=\"ThMapStyle\"> <PolyStyle> <fill>1</fill> <outline>0</outline> </PolyStyle> </Style>\n");
+  // VG 250616: TODO change icon above, maybe upload to therion website after testing
 
-  // Get the main survey, which is at level 2 and is different from the fsurveyptr at level 1
   thsurvey * mainsrv = db->fsurveyptr;
   thdataobject * obj;
   for(obj = mainsrv->foptr; obj != NULL; obj = obj->nsptr) 
@@ -485,9 +487,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   // Export cave name and description in the selected language
   std::string cavename = ths2txt((strlen(mainsrv->title) > 0) ? mainsrv->title : mainsrv->name, layout->lang);
   cavename = replace_all(cavename, "<br>", "-");
-  cavename = replace_all(cavename, "<it>", "");
-  cavename = replace_all(cavename, "<bf>", "");
-  fprintf(out,"<name>%s</name>\n", cavename.c_str());
+  fprintf(out,"<name><![CDATA[%s]]></name>\n", cavename.c_str());
   double cavedepth = 0;
   if (mainsrv->stat.station_top != NULL) {
     cavedepth = mainsrv->stat.station_top->z - mainsrv->stat.station_bottom->z;
@@ -501,31 +501,40 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
       ths2txt(this->layout->doc_comment, this->layout->lang).c_str());
 
   int cA, cR, cG, cB;
-  cR = int (255.0 * this->layout->color_map_fg.R + 0.5);
-  cG = int (255.0 * this->layout->color_map_fg.G + 0.5);
-  cB = int (255.0 * this->layout->color_map_fg.B + 0.5);
-  if (this->layout->transparency) {
-    cA = int (255.0 * this->layout->opacity + 0.5);
-  } else {
-    cA = 255;
-  }
-
-#define checkc(c) if (c < 0) c = 0; if (c > 255) c = 255;
-  checkc(cA);
-  checkc(cR);
-  checkc(cG);
-  checkc(cB);
-
-  fprintf(out,"<Style>\n<PolyStyle>\n<color>");
-  fprintf(out,"%02x%02x%02x%02x",cA,cB,cG,cR);
-  fprintf(out,"</color>\n<fill>1</fill>\n<outline>0</outline>\n</PolyStyle>\n</Style>\n");
-  fprintf(out,"<MultiGeometry>\n");
+  #define checkc(c) if (c < 0) c = 0; if (c > 255) c = 255;
 
   while (cmap != NULL) {
     cbm = cmap->first_bm;
     while (cbm != NULL) {
       cmi = cbm->bm->last_item;
       if (cbm->mode == TT_MAPITEM_NORMAL) {
+        // Export each map as a placemark, with the map name and colour, if defined
+        std::string mapname = ths2txt((strlen(cbm->bm->title) > 0) ? cbm->bm->title : cbm->bm->name, layout->lang);
+        fprintf(out,"<Placemark>\n");
+        fprintf(out,"<styleUrl>#ThMapStyle</styleUrl>\n");
+        fprintf(out,"<name><![CDATA[%s]]></name>\n", mapname.c_str());
+        if ((layout->color_crit == TT_LAYOUT_CCRIT_MAP) && (cmap->map->colour.defined)) {
+          cR = int (255.0 * cmap->map->colour.R + 0.5);
+          cG = int (255.0 * cmap->map->colour.G + 0.5);
+          cB = int (255.0 * cmap->map->colour.B + 0.5);
+        } else {
+          cR = int (255.0 * this->layout->color_map_fg.R + 0.5);
+          cG = int (255.0 * this->layout->color_map_fg.G + 0.5);
+          cB = int (255.0 * this->layout->color_map_fg.B + 0.5);
+        }
+        if (this->layout->transparency) {
+          cA = int (255.0 * this->layout->opacity + 0.5);
+        } else {
+          cA = 255;
+        }
+        checkc(cA);
+        checkc(cR);
+        checkc(cG);
+        checkc(cB);
+
+        fprintf(out,"<Style> <PolyStyle> <color>%02x%02x%02x%02x</color> </PolyStyle> </Style>\n", cA,cB,cG,cR);
+        fprintf(out,"<MultiGeometry>\n");
+
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL) {
             scrap = (thscrap*) cmi->object;
@@ -545,7 +554,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
                 for(ip = it->m_point_list.begin(); ip != it->m_point_list.end(); ip++) {
                   thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
                     ip->m_x, ip->m_y, scrap->z, x, y, z);
-                  fprintf(out, "\t%.14f,%.14f,%.14f\n", x / THPI * 180.0, y / THPI * 180.0, 0.0);
+                  fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, 0.0);
                 }
                 fprintf(out,"</coordinates>\n</LinearRing>\n");
 
@@ -559,16 +568,17 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
           }
           cmi = cmi->prev_item;  
         }
+        fprintf(out,"</MultiGeometry>\n</Placemark>\n");
       }
       cbm = cbm->next_item;
     }
     cmap = cmap->next_item;
   }
 
-  fprintf(out,"</MultiGeometry>\n</Placemark>\n");
+  fprintf(out,"</Folder>\n");
   fprintf(out,"</kml>\n");
   fclose(out);
-    
+
 #ifdef THDEBUG
 #else
   thprintf("done\n");

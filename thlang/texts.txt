@@ -2644,3 +2644,10 @@ ru: [Карта поверхности]
 sk: [Povrchová mapa]
 sq: harta e siperfaqes
 
+therion: title model
+bg: Модел
+en: Model
+
+therion: title map
+bg: Карта
+en: Map

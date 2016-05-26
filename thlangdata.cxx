@@ -79,7 +79,7 @@ static const int thlang__alternatives [] = {
 
 
 
-static const thstok thtt__texts [181] = {
+static const thstok thtt__texts [183] = {
   {"area bedrock",0},
   {"area blocks",1},
   {"area clay",2},
@@ -253,19 +253,21 @@ static const thstok thtt__texts [181] = {
   {"title explo",170},
   {"title explo (plural)",171},
   {"title legend",172},
-  {"title preview above",173},
-  {"title preview below",174},
-  {"title surface bitmap",175},
-  {"title topo",176},
-  {"title topo (plural)",177},
-  {"units ft",178},
-  {"units m",179},
+  {"title map",173},
+  {"title model",174},
+  {"title preview above",175},
+  {"title preview below",176},
+  {"title surface bitmap",177},
+  {"title topo",178},
+  {"title topo (plural)",179},
+  {"units ft",180},
+  {"units m",181},
   {NULL, -1},
 };
 
 
 
-static thlang_pchar thlang__translations [180][18] = {
+static thlang_pchar thlang__translations [182][18] = {
   {
     "основна скала",
     "pevná skála",
@@ -3725,6 +3727,46 @@ static thlang_pchar thlang__translations [180][18] = {
     "Условные обозначения",
     "Legenda",
     "permbajtja",
+  },
+  {
+    "Карта",
+    NULL,
+    NULL,
+    NULL,
+    "Map",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+  },
+  {
+    "Модел",
+    NULL,
+    NULL,
+    NULL,
+    "Model",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
   },
   {
     "Изглед от горе",

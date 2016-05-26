@@ -1797,7 +1797,9 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
 #endif     
 
   fprintf(out,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n");
-  fprintf(out,"<Placemark>\n");
+  fprintf(out,"<Folder>\n");
+  fprintf(out,"<Icon> <href>https://www.dropbox.com/s/knoma3hvr7huvxm/Cave_symbol2.png?dl=1</href> </Icon>\n");
+  // VG 250616: TODO change icon above, maybe upload to therion website after testing
 
   // Get the main survey, which is at level 2 and is different from the fsurveyptr at level 1
   thsurvey * mainsrv = dbp->fsurveyptr;
@@ -1811,9 +1813,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   // Export cave name and description in the selected language
   std::string cavename = ths2txt((strlen(mainsrv->title) > 0) ? mainsrv->title : mainsrv->name, layout->lang);
   cavename = replace_all(cavename, "<br>", "-");
-  cavename = replace_all(cavename, "<it>", "");
-  cavename = replace_all(cavename, "<bf>", "");
-  fprintf(out,"<name>%s</name>\n", cavename.c_str());
+  fprintf(out,"<name><![CDATA[%s]]></name>\n", cavename.c_str());
   double cavedepth = 0;
   if (mainsrv->stat.station_top != NULL) {
     cavedepth = mainsrv->stat.station_top->z - mainsrv->stat.station_bottom->z;
@@ -1828,7 +1828,9 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   unsigned long last_st = nstat, cur_st, numst, i;
   double x, y, z;
 
-  fprintf(out,"<Style>\n<LineStyle>\n<color>ffffff00</color>\n<width>1</width>\n</LineStyle>\n</Style>\n");
+  fprintf(out,"<Placemark>\n");
+  fprintf(out,"<name><![CDATA[%s]]></name>\n", thT("title model",layout->lang));
+  fprintf(out,"<Style> <LineStyle> <color>ffffff00</color> <width>1</width> </LineStyle> </Style>\n");
   fprintf(out,"<MultiGeometry>\n");
 
   numst = 0;
@@ -1857,9 +1859,9 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   if (numst > 0)
     fprintf(out,"</coordinates>\n</LineString>\n");
   fprintf(out,"</MultiGeometry>\n");
-  fprintf(out,"</Placemark>\n</kml>\n");
+  fprintf(out,"</Placemark>\n</Folder>\n</kml>\n");
   fclose(out);
-    
+
 #ifdef THDEBUG
 #else
   thprintf("done\n");
