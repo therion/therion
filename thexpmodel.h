@@ -32,6 +32,7 @@
 
 #include "thexport.h"
 #include "thlayout.h"
+#include "thsurvey.h"
 
 
 /**
@@ -198,6 +199,8 @@ class thexpmodel : public thexport {
   void export_shp_file(class thdatabase * dbp);  ///< Export shp file.
 
   void export_kml_file(class thdatabase * dbp);  ///< Export kml file.
+
+  void export_kml_survey_file(FILE * out, thsurvey * surv);  ///< Helper function to export part of the survey tree
 
   public:
   
