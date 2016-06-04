@@ -1790,6 +1790,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   fprintf(out, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n");
   fprintf(out, "<Folder>\n");
   fprintf(out, "<Style id=\"ThSurveyLine\"> <LineStyle> <color>ffffff00</color> <width>1</width> </LineStyle> </Style>\n");
+  fprintf(out, "<Style id=\"ThEntranceIcon\"> <IconStyle> <Icon> <href>https://www.dropbox.com/s/qfou9ptatywklu1/Cave_symbol1.png?dl=1</href> </Icon> </IconStyle> </Style>\n");
   fprintf(out, "<Icon> <href>https://www.dropbox.com/s/knoma3hvr7huvxm/Cave_symbol2.png?dl=1</href> </Icon>\n");
   // VG 250616: TODO change icon above, maybe upload to therion website after testing
 
@@ -1816,6 +1817,23 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   fprintf(out, "<description><![CDATA[%s %s %s<br>%s %s %s]]></description>\n",
       thT("title cave length", layout->lang), layout->units.format_length(mainsrv->stat.length), layout->units.format_i18n_length_units(),
       thT("title cave depth", layout->lang), layout->units.format_length(cavedepth), layout->units.format_i18n_length_units());
+
+  // Export entrances
+  double x, y, z;
+  thdb1ds * station;
+  size_t nstat = db->db1d.station_vec.size(), i;
+  for(i = 0; i < nstat; i++) {
+    station = &(db->db1d.station_vec[i]);    
+    if ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
+      thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+        station->x, station->y, station->z, x, y, z);
+      fprintf(out, "<Placemark>\n");
+      fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
+      fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->comment, layout->lang).c_str());
+      fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
+      fprintf(out, "</Placemark>\n");
+    }
+  }
 
   // Export the survey and subsurvey data
   export_kml_survey_file(out, mainsrv);

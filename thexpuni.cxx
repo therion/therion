@@ -474,6 +474,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   fprintf(out,"<Folder>\n");
   fprintf(out,"<Icon> <href>https://www.dropbox.com/s/qfou9ptatywklu1/Cave_symbol1.png?dl=1</href> </Icon>\n");
   fprintf(out,"<Style id=\"ThMapStyle\"> <PolyStyle> <fill>1</fill> <outline>0</outline> </PolyStyle> </Style>\n");
+  fprintf(out,"<Style id=\"ThEntranceIcon\"> <IconStyle> <Icon> <href>https://www.dropbox.com/s/qfou9ptatywklu1/Cave_symbol1.png?dl=1</href> </Icon> </IconStyle> </Style>\n");
   // VG 250616: TODO change icon above, maybe upload to therion website after testing
 
   thsurvey * mainsrv = db->fsurveyptr;
@@ -499,6 +500,23 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
       thT("title cave length",layout->lang), layout->units.format_length(mainsrv->stat.length), layout->units.format_i18n_length_units(),
       thT("title cave depth",layout->lang), layout->units.format_length(cavedepth), layout->units.format_i18n_length_units(),
       ths2txt(this->layout->doc_comment, this->layout->lang).c_str());
+
+  // Export entrances
+  double x, y, z;
+  thdb1ds * station;
+  size_t nstat = db->db1d.station_vec.size(), i;
+  for(i = 0; i < nstat; i++) {
+    station = &(db->db1d.station_vec[i]);    
+    if ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
+      thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+        station->x, station->y, station->z, x, y, z);
+      fprintf(out, "<Placemark>\n");
+      fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
+      fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->comment, layout->lang).c_str());
+      fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
+      fprintf(out, "</Placemark>\n");
+    }
+  }
 
   int cA, cR, cG, cB;
   #define checkc(c) if (c < 0) c = 0; if (c > 255) c = 255;
