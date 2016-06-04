@@ -31,6 +31,8 @@
 
 
 #include "thexport.h"
+#include "thlayout.h"
+#include "thsurvey.h"
 
 
 /**
@@ -176,6 +178,7 @@ class thexpmodel : public thexport {
     encoding;  ///< Output encoding.
   unsigned items,
     wallsrc;
+  class thlayout * layout;  ///< Layout pointer.
   
   bool is_leg_exported(class thdb1dl * l); ///< Whether to export leg.
 
@@ -197,9 +200,13 @@ class thexpmodel : public thexport {
 
   void export_kml_file(class thdatabase * dbp);  ///< Export kml file.
 
+  void export_kml_survey_file(FILE * out, thsurvey * surv);  ///< Helper function to export part of the survey tree
+
   public:
   
   thexpmodel(); ///< Default constructor.
+
+  virtual ~thexpmodel(); ///< Default destructor.
 
   /**
    * Parse model export options.
