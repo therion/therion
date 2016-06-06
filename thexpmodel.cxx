@@ -1773,7 +1773,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   fprintf(out, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n");
   fprintf(out, "<Folder>\n");
   fprintf(out, "<Style id=\"ThSurveyLine\"> <LineStyle> <color>ffffff00</color> <width>1</width> </LineStyle> </Style>\n");
-  fprintf(out, "<Style id=\"ThEntranceIcon\"> <IconStyle> <Icon> <href>http://pk-sofia.com/images/stories/IconEntrance.png</href> </Icon> </IconStyle> </Style>\n");
+  fprintf(out, "<Style id=\"ThEntranceIcon\"> <IconStyle> <Icon> <href>http://pk-sofia.com/images/stories/IconEntrance.png</href> </Icon> <hotSpot x=\"0.5\" y=\"0.5\" xunits=\"fraction\" yunits=\"fraction\"> </IconStyle> </Style>\n");
   fprintf(out, "<Icon> <href>http://pk-sofia.com/images/stories/IconMap.png</href> </Icon>\n");
   // VG 250616: TODO change icon above, maybe upload to therion website after testing
 
