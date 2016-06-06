@@ -472,10 +472,10 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
   fprintf(out, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n");
   fprintf(out, "<Folder>\n");
-  fprintf(out, "<Icon> <href>http://pk-sofia.com/images/stories/IconLine.png</href> </Icon>\n");
   fprintf(out, "<Style id=\"ThMapStyle\"> <PolyStyle> <fill>1</fill> <outline>0</outline> </PolyStyle> </Style>\n");
-  fprintf(out, "<Style id=\"ThEntranceIcon\"> <IconStyle> <Icon> <href>http://pk-sofia.com/images/stories/IconEntrance.png</href> </Icon> <hotSpot x=\"0.5\" y=\"0.5\" xunits=\"fraction\" yunits=\"fraction\"> </IconStyle> </Style>\n");
-  // VG 250616: TODO change icon above, maybe upload to therion website after testing
+  fprintf(out, "<Style id=\"ThEntranceIcon\"> <IconStyle> <Icon> <href>http://pk-sofia.com/images/stories/KmlIconEntrance.png</href> </Icon> <hotSpot x=\"0.5\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\" /> </IconStyle> </Style>\n");
+  fprintf(out, "<Icon> <href>http://pk-sofia.com/images/stories/KmlIconMap.png</href> </Icon>\n");
+  // VG 250616: TODO change icons above, maybe upload to therion website after testing
 
   thsurvey * mainsrv = db->fsurveyptr;
   thdataobject * obj;
