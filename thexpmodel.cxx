@@ -1773,6 +1773,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   fprintf(out, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://earth.google.com/kml/2.0\">\n");
   fprintf(out, "<Folder>\n");
   fprintf(out, "<Style id=\"ThSurveyLine\"> <LineStyle> <color>ffffff00</color> <width>1</width> </LineStyle> </Style>\n");
+  fprintf(out, "<Style id=\"ThSurveyLineSurf\"> <LineStyle> <color>ffcccccc</color> <width>1</width> </LineStyle> </Style>\n");
   fprintf(out, "<Style id=\"ThEntranceIcon\"> <IconStyle> <Icon> <href>http://pk-sofia.com/images/stories/KmlIconEntrance.png</href> </Icon> <hotSpot x=\"0.5\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\" /> </IconStyle> </Style>\n");
   fprintf(out, "<Icon> <href>http://pk-sofia.com/images/stories/KmlIconModel.png</href> </Icon>\n");
   // VG 250616: TODO change icons above, maybe upload to therion website after testing
@@ -1816,6 +1817,45 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
       fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
       fprintf(out, "</Placemark>\n");
     }
+  }
+
+  // Export only surface shots in a separate subfolder (placemark)) with distinct color
+  thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
+  unsigned long nlegs, last_st, cur_st, numst;
+  nlegs = dbp->db1d.get_tree_size();
+  nstat = (unsigned long)dbp->db1d.station_vec.size();
+  last_st = nstat;
+  numst = 0;
+  for(i = 0; i < nlegs; i++, tlegs++) {
+    if (this->is_leg_exported(*tlegs) && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0)) {
+      if (numst == 0) {
+        fprintf(out, "<Placemark>\n");
+        fprintf(out, "<name>%s</name>\n", thT("surface legs", layout->lang));
+        fprintf(out, "<styleUrl>#ThSurveyLineSurf</styleUrl>\n");
+        fprintf(out, "<MultiGeometry>\n");
+      }
+      cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
+      if (cur_st != last_st) {
+        if (numst > 0)
+          fprintf(out,"</coordinates></LineString>\n");
+        fprintf(out,"<LineString><coordinates>\n");
+        thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+          dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z,
+          x, y, z);
+        fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
+        numst = 1;
+      }
+      last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
+      thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+        dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z,
+        x, y, z);
+      fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
+      numst++;
+    }
+  }
+  if (numst > 0) {
+    fprintf(out,"</coordinates></LineString>\n");
+    fprintf(out,"</MultiGeometry>\n</Placemark>\n");
   }
 
   // Export the survey and subsurvey data
@@ -1865,6 +1905,8 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
         fprintf(out, "<name>%s</name>\n", survdata->leg_list.front().from.name);
         fprintf(out, "<styleUrl>#ThSurveyLine</styleUrl>\n");
         fprintf(out, "<MultiGeometry>\n");
+
+        // Export underground legs here. Surface ones are already exported in export_kml_file
         last_st = db->db1d.station_vec[survdata->leg_list.back().to.id - 1].uid - 1;
         for(legs = survdata->leg_list.begin(); legs != survdata->leg_list.end(); legs++) {
           if (legs->is_valid && ((legs->flags & TT_LEGFLAG_SURFACE) == 0)) {
@@ -1887,7 +1929,6 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
             fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
             numst++;
           }
-
         }  // for legs
         if (numst > 0)
           fprintf(out, "\n</coordinates></LineString>\n");
