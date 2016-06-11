@@ -2651,3 +2651,7 @@ en: Model
 therion: title map
 bg: Карта
 en: Map
+
+therion: surface legs
+bg: Повърхностна антена
+en: Surface legs

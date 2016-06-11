@@ -79,7 +79,7 @@ static const int thlang__alternatives [] = {
 
 
 
-static const thstok thtt__texts [183] = {
+static const thstok thtt__texts [184] = {
   {"area bedrock",0},
   {"area blocks",1},
   {"area clay",2},
@@ -244,30 +244,31 @@ static const thstok thtt__texts [183] = {
   {"point water-flow:intermittent",161},
   {"point water-flow:paleo",162},
   {"point water-flow:permanent",163},
-  {"title carto",164},
-  {"title carto (plural)",165},
-  {"title cave depth",166},
-  {"title cave length",167},
-  {"title color-legend-altitude",168},
-  {"title color-legend-map",169},
-  {"title explo",170},
-  {"title explo (plural)",171},
-  {"title legend",172},
-  {"title map",173},
-  {"title model",174},
-  {"title preview above",175},
-  {"title preview below",176},
-  {"title surface bitmap",177},
-  {"title topo",178},
-  {"title topo (plural)",179},
-  {"units ft",180},
-  {"units m",181},
+  {"surface legs",164},
+  {"title carto",165},
+  {"title carto (plural)",166},
+  {"title cave depth",167},
+  {"title cave length",168},
+  {"title color-legend-altitude",169},
+  {"title color-legend-map",170},
+  {"title explo",171},
+  {"title explo (plural)",172},
+  {"title legend",173},
+  {"title map",174},
+  {"title model",175},
+  {"title preview above",176},
+  {"title preview below",177},
+  {"title surface bitmap",178},
+  {"title topo",179},
+  {"title topo (plural)",180},
+  {"units ft",181},
+  {"units m",182},
   {NULL, -1},
 };
 
 
 
-static thlang_pchar thlang__translations [182][18] = {
+static thlang_pchar thlang__translations [183][18] = {
   {
     "основна скала",
     "pevná skála",
@@ -3547,6 +3548,26 @@ static thlang_pchar thlang__translations [182][18] = {
     "постоянный водоток",
     "vodný tok",
     "rrjedhe uji e perhershme",
+  },
+  {
+    "Повърхностна антена",
+    NULL,
+    NULL,
+    NULL,
+    "Surface legs",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
   },
   {
     "Комп. обработка",
