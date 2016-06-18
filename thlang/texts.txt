@@ -106,7 +106,7 @@ it: perdita
 mi: tapoko
 pl: ponor
 pt: sumidouro
-ru: сток
+ru: понор
 sk: ponor
 sq: pus
 
@@ -130,6 +130,7 @@ therion: point flag:doline
 cz: závrt
 en: doline
 sk: závrt
+ru: воронка
 
 therion: point flag:dig
 bg: изкоп
@@ -143,6 +144,7 @@ mi: kari
 pl: wykop
 sk: sonda
 sq: mihje
+ru: раскоп
 
 therion: point flag:continuation
 bg: възможно продължение
@@ -180,6 +182,7 @@ therion: point flag:arch
 bg: арка
 en: arch
 sk: skalný oblúk
+ru: арка
 
 therion: point flag:overhang
 bg: надвес
@@ -288,7 +291,7 @@ it: roccia
 mi: tarā
 pl: ściana
 pt: parede
-ru: стена
+ru: коренная стена
 sk: stena
 sq: shkembi-muri
 
@@ -316,6 +319,7 @@ it: parete:sovrastante
 mi: tāra ki runga
 pl: ściana położona wyżej
 sk: stena vyššej úrovne
+ru: вышерасположенная стена
 
 therion: line wall:unsurveyed
 bg: окомерна скица на стените
@@ -357,6 +361,7 @@ it: parete:pozzo
 mi: rua
 pl: studnia wstępna
 sk: vstupná priepasť
+ru: отвес
 
 therion: line wall:blocks
 bg: стена - блокаж
@@ -462,6 +467,7 @@ it: colata
 mi: tāra a pari kōhatu
 pl: ściana z nacieków
 sk: stena tvorená sintrom
+ru: натечная кора
 
 therion: line wall:moonmilk
 bg: пещерно мляко
@@ -471,6 +477,7 @@ it: moonmilk
 mi: tāra a mirika marama
 pl: ściana z miękkich nacieków
 sk: stena tvorená mäkkým sintrom
+ru: лунное молоко
 
 therion: point wall-altitude
 bg: височинна отметка на стената
@@ -533,7 +540,7 @@ it: sezione trasversale
 mi: taha papahanga
 pl: przekrój
 pt: corte
-ru: выносная линия сечения
+ru: линия сечения
 sk: priečny rez
 sq: kryq-ndarje
 
@@ -689,6 +696,7 @@ mi: kari
 pl: wykop
 sk: sonda
 sq: mihje
+ru: раскоп
 
 therion: point continuation
 bg: възможно продължение
@@ -777,6 +785,7 @@ it: chiude su riempimento
 mi: uku pari
 pl: koniec zamknięty gliną
 sk: koniec uzavretý ílom
+ru: блокировано глиной
 
 therion: line floor-step
 bg: праг
@@ -1002,7 +1011,7 @@ it: prodondità pozzo
 mi: rua hōhonu
 pl: głębokosc studni
 pt: profundidade do desnível
-ru: высота колодца
+ru: глубина колодца
 sk: hĺbka priepasti
 sq: thellesia e leshimit
 
@@ -1251,6 +1260,7 @@ de: Lehmbäumchen
 en: clay tree
 it: pini d'argilla
 mi: rakau oneuku
+ru: глиняное деревце
 
 therion: line border
 bg: граница
@@ -1656,7 +1666,7 @@ it: perdita
 mi: tapoko
 pl: ponor
 pt: sumidouro
-ru: сток
+ru: понор
 sk: ponor
 sq: pus
 
@@ -1741,6 +1751,7 @@ sq: stalaktit
 therion: point stalactites
 bg: сталактити
 en: stalactites
+ru: сталактиты
 
 therion: point stalagmite
 bg: сталагмит
@@ -1761,6 +1772,7 @@ sq: stalagmit
 therion: point stalagmites
 bg: сталагмити
 en: stalagmites
+ru: сталагмиты
 
 therion: point pillar
 bg: сталактон
@@ -1781,6 +1793,7 @@ sq: shtylle
 therion: point pillars
 bg: сталактони
 en: pillars
+ru: колонны
 
 therion: point ice-stalactite
 bg: леден сталактит
@@ -1790,6 +1803,7 @@ it: stalattite di ghiaccio
 mi: kōpaka ki te haere ki runga
 pl: lodowy stalaktyt
 sk: ľadový stalaktit
+ru: ледяной сталактит
 
 therion: point ice-stalagmite
 bg: леден сталагмит
@@ -1799,6 +1813,7 @@ it: stalagmite di ghiaccio
 mi: kōpaka ki te haere ki raro
 pl: lodowy stalagmit
 sk: ľadový stalagmit
+ru: ледяной сталагмит
 
 therion: point ice-pillar
 bg: леден сталактон
@@ -1808,6 +1823,7 @@ it: colonna di ghiaccio
 mi: pou Kōpaka
 pl: lodowy stalagnat
 sk: ľadový stalagnát
+ru: ледяная колонна
 
 therion: point curtain
 bg: драперия
@@ -2217,6 +2233,7 @@ sq: litar
 therion: line rope
 bg: въже
 en: rope
+ru: веревка
 
 therion: point rope-ladder
 bg: пещерна стълба
@@ -2235,6 +2252,7 @@ sk: lanový rebrík
 sq: shkalle litari
 
 therion: line rope-ladder
+ru: гибкая лестница
 
 therion: point fixed-ladder
 bg: стационарна стълба
@@ -2248,13 +2266,14 @@ it: scala fissa
 mi: arawhata
 pl: sztywna drabinka
 pt: escada fixa
-ru: жесткая лестница
+ru: стационарная лестница
 sk: fixný rebrík
 sq: shkalle fikse
 
 therion: line fixed-ladder
 bg: стационарна стълба
 en: fixed ladder
+ru: стационарная лестница
 
 therion: point steps
 bg: стъпала
@@ -2275,14 +2294,17 @@ sq: shkalle
 therion: line steps
 bg: стъпала
 en: steps
+ru: ступени
 
 therion: point via-ferrata
 bg: виа-ферата
 en: via-ferrata
+ru: виа ферата
 
 therion: line via-ferrata
 bg: виа-ферата
 en: via-ferrata
+ru: виа ферата
 
 therion: point traverse
 bg: траверс
@@ -2319,10 +2341,12 @@ sq: ure
 therion: point handrail
 bg: перила
 en: handrail
+ru: поручень
 
 therion: line handrail
 bg: перила
 en: handrail
+ru: поручень
 
 therion: point camp
 bg: лагер
@@ -2368,7 +2392,7 @@ it: etichetta
 mi: ingoa
 pl: nazwa
 pt: indicação
-ru: текстовая метка
+ru: подпись
 sk: pomenovanie
 sq: mbishkrim-etiket
 
@@ -2384,7 +2408,7 @@ it: etichetta
 mi: ingoa
 pl: nazwa
 pt: indicação
-ru: текстовая метка
+ru: подпись
 sk: pomenovanie
 sq: mbishkrim
 
@@ -2432,7 +2456,7 @@ it: Mappa
 mi: Mahere whenua
 pl: mapy
 pt: Mapas
-ru: Карты
+ru: Цветовая шкала
 sk: Mapy
 sq: hartat
 
@@ -2544,7 +2568,7 @@ it: Topografia
 mi: Kairūri
 pl: pomierzyli
 pt: Topografadas por
-ru: Съемка
+ru: Съёмка
 sk: Zamerali
 sq: matur nga
 
@@ -2560,7 +2584,7 @@ it: Topografia
 mi: Kairūri
 pl: mierzył
 pt: Topografada por
-ru: Съемка
+ru: Съёмка
 sk: Zameral
 sq: matur nga
 
@@ -2647,11 +2671,14 @@ sq: harta e siperfaqes
 therion: title model
 bg: Модел
 en: Model
+ru: Модель 3D
 
 therion: title map
 bg: Карта
 en: Map
+ru: Карта
 
 therion: surface legs
 bg: Повърхностна антена
 en: Surface legs
+ru: Поверхностная съёмка
