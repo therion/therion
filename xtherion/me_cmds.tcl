@@ -2803,11 +2803,15 @@ $xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-br.gif -select
 
 catch {menu $xth(me,ctxmenu).scale -tearoff 0}
 $xth(me,ctxmenu).scale delete 0 end
+$xth(me,ctxmenu).scale add radiobutton -label [mc "tiny (2xs)"] -variable xth(me,ctrl,ctx,scale) -value "2xs" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "tiny (xs)"] -variable xth(me,ctrl,ctx,scale) -value "xs" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "small (s)"] -variable xth(me,ctrl,ctx,scale) -value "s" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "normal (m)"] -variable xth(me,ctrl,ctx,scale) -value "m" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "large (l)"] -variable xth(me,ctrl,ctx,scale) -value "l" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "huge (xl)"] -variable xth(me,ctrl,ctx,scale) -value "xl" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "huge (2xl)"] -variable xth(me,ctrl,ctx,scale) -value "2xl" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "huge (3xl)"] -variable xth(me,ctrl,ctx,scale) -value "3xl" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "huge (4xl)"] -variable xth(me,ctrl,ctx,scale) -value "4xl" -command {xth_me_set_option_value scale}
 
 catch {menu $xth(me,ctxmenu).outline -tearoff 0}
 $xth(me,ctxmenu).outline delete 0 end
@@ -3367,6 +3371,9 @@ proc xth_me_show_context_menu {id x y} {
   set optscale [xth_me_get_option_value "scale" $opts]
   # set variable
   switch -nocase [lindex $optscale 0] {
+    2xs - tiny {
+      set xth(me,ctrl,ctx,scale) "2xs"
+    }
     xs - tiny {
       set xth(me,ctrl,ctx,scale) "xs"
     }
@@ -3381,6 +3388,18 @@ proc xth_me_show_context_menu {id x y} {
     }
     xl - huge {
       set xth(me,ctrl,ctx,scale) "xl"
+    }
+    xxl - huge {
+      set xth(me,ctrl,ctx,scale) "xl"
+    }
+    xl - huge {
+      set xth(me,ctrl,ctx,scale) "xl"
+    }
+    2xl - huge {
+      set xth(me,ctrl,ctx,scale) "2xl"
+    }
+    3xl - huge {
+      set xth(me,ctrl,ctx,scale) "3xl"
     }
     default {
       set xth(me,ctrl,ctx,scale) "auto"
