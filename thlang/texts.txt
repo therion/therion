@@ -779,6 +779,7 @@ sk: zavalený koniec
 sq: gurre rrjedhes-fund
 
 therion: point clay-choke
+bg: затворено от глина
 de: Fortsetzung verlehmt
 en: clay choke
 it: chiude su riempimento

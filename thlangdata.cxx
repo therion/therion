@@ -1750,7 +1750,7 @@ static thlang_pchar thlang__translations [183][18] = {
     "argjil",
   },
   {
-    NULL,
+    "затворено от глина",
     NULL,
     "Fortsetzung verlehmt",
     NULL,
