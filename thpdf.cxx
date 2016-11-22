@@ -1047,6 +1047,20 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         }
       }
     }
+
+    // Print depth and elevation headers at the top of the grid
+    if (LAYOUT.grid_coord_freq > 0) {
+      PAGEDEF << "\\PL{q}";
+      PAGEDEF << "\\PL{1 0 0 1 " << grid_init_x-LLX << " " << urnew.y-LLY << " cm}";
+      PAGEDEF << "\\gridcoord{" << (3) << "}{\\the\\legendtextsize" << utf2tex(thT("title cave depth", LAYOUT.lang)) << "}";
+      PAGEDEF << "\\PL{Q}%" << endl;
+    }
+    if (LAYOUT.grid_coord_freq == 2) {
+      PAGEDEF << "\\PL{q}";
+      PAGEDEF << "\\PL{1 0 0 1 " << urnew.x-LLX << " " << urnew.y-LLY << " cm}";
+      PAGEDEF << "\\gridcoord{" << (1) << "}{\\the\\legendtextsize" << utf2tex(thT("point altitude", LAYOUT.lang)) << "}";
+      PAGEDEF << "\\PL{Q}%" << endl;
+    }
   }
 
   PAGEDEF << "\\PL{Q}%" << endl;
