@@ -312,8 +312,14 @@ void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY, 
   double grid_init_x = LAYOUT.hgridsize * floor ((llnew.x-origin.x)/LAYOUT.hgridsize) + origin.x;
   double grid_init_y = LAYOUT.vgridsize * floor ((llnew.y-origin.y)/LAYOUT.vgridsize) + origin.y;
 
-double G_real_init_x = LAYOUT.XO + LAYOUT.XS * floor ((llnew.x-origin.x)/LAYOUT.hgridsize);
-double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.vgridsize);
+  double G_real_init_x = LAYOUT.XO + LAYOUT.XS * floor ((llnew.x-origin.x)/LAYOUT.hgridsize);
+  double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.vgridsize);
+
+  // Grid values used only for elevations. Currently elevation maps don't allow rotation,
+  // but if it gets implemented, these values will have to be calculated differently
+  double grid_elev_init_y = LAYOUT.vgridsize * floor (llnew.y/LAYOUT.vgridsize + 1);
+  double G_elev_depth_init_y = LAYOUT.YO + LAYOUT.YS * floor (llnew.y/LAYOUT.vgridsize + 1);  // Depth for elevation grid
+  double G_elev_altitude_init_y = G_real_init_y + (grid_elev_init_y - grid_init_y) * LAYOUT.YS / LAYOUT.vgridsize;  // Altitude for elevation grid
 
   double cosr = cos(-LAYOUT.gridrot * 3.14159265 / 180);
   double sinr = sin(-LAYOUT.gridrot * 3.14159265 / 180);
@@ -328,7 +334,7 @@ double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.
       for (j = grid_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
         col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
         row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
-	elem = col + 3*row;
+        elem = col + 3*row;
         tmp.x = i+LAYOUT.gridcell[elem].x;
         tmp.y = j+LAYOUT.gridcell[elem].y;
         out = rotatedaround(tmp,origin,LAYOUT.gridrot);
@@ -337,7 +343,7 @@ double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.
         PAGEDEF << "<g transform=\"matrix(" << 
                    cosr << " " << sinr << " " << -sinr << " " << cosr << " " << 
                    out.x << " " << out.y << ")\">";
-	PAGEDEF << "<use xlink:href=\"#grid_" << u2str(elem+1) << "_" << unique_prefix << "\" />";
+        PAGEDEF << "<use xlink:href=\"#grid_" << u2str(elem+1) << "_" << unique_prefix << "\" />";
         PAGEDEF << "</g>" << endl;
 
         if (LAYOUT.grid_coord_freq==2 || (LAYOUT.grid_coord_freq==1 && elem!=4)) {
@@ -367,25 +373,25 @@ double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.
     grid_init_x = LLX;
     int jj;
     double i, j;
-    for (j = grid_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
+    for (j = grid_elev_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
       for (i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
         col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
-        row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
-	elem = col + 3*row;
-	PAGEDEF << "<use x=\"" << i/*-LLX*/+LAYOUT.gridcell[elem].x << "\" y=\"" << 
-	                      j/*-LLY*/+LAYOUT.gridcell[elem].y << "\" xlink:href=\"#grid_" << "_" << unique_prefix << 
-			      u2str(elem+1) << "\" />" << endl;
+        row = (j == grid_elev_init_y ? 0 : (j >= urnew.y ? 2 : 1));
+        elem = col + 3*row;
+        PAGEDEF << "<use x=\"" << i/*-LLX*/+LAYOUT.gridcell[elem].x << "\" y=\"" << 
+          j/*-LLY*/+LAYOUT.gridcell[elem].y << "\" xlink:href=\"#grid_" << "_" << unique_prefix << 
+          u2str(elem+1) << "\" />" << endl;
         if (col == 0 && LAYOUT.grid_coord_freq > 0) {
           PAGEDEF << "<text fill=\"black\" stroke=\"none\" font-size=\"8\" " << 
-	      "transform=\"matrix(1,0,0,-1," << i << "," << 
-	      j+1 /* podvihnutie o 1 bp */ << ")\">" << 
-	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS << "</text>" << endl;
-	}
+            "transform=\"matrix(1,0,0,-1," << i << "," << 
+            j+1 /* podvihnutie o 1 bp */ << ")\">" << 
+            setprecision(0) << G_elev_depth_init_y+jj*LAYOUT.YS << "</text>" << endl;
+        }
         if (col == 2 && LAYOUT.grid_coord_freq == 2) {
           PAGEDEF << "<text fill=\"black\" stroke=\"none\" font-size=\"8\" " << 
-	      "transform=\"matrix(1,0,0,-1," << i << "," << 
-	      j+1 /* podvihnutie o 1 bp */ << ")\" text-anchor=\"end\">" << 
-	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS << "</text>" << endl;
+            "transform=\"matrix(1,0,0,-1," << i << "," << 
+            j+1 /* podvihnutie o 1 bp */ << ")\" text-anchor=\"end\">" << 
+            setprecision(0) << G_elev_altitude_init_y+jj*LAYOUT.YS << "</text>" << endl;
         }
       }
     }
