@@ -1104,7 +1104,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   th2ddataobject * op2;
   bool export_sections, export_outlines_only;
   double shx, shy;
-  unsigned long sclevel, bmlevel;
+  // unsigned long sclevel;
+  unsigned long bmlevel;
   legenddata ldata;
 
   bool anyprev, anyprevabove = false, anyprevbelow = false;
@@ -1353,7 +1354,7 @@ else
     bmlevel = 0;
     while (cbm != NULL) {
       cmi = cbm->bm->last_item;
-      sclevel = 0;
+      // sclevel = 0;
       // !!! Tu pridat aj ine druhy - teda ABOVE a BELOW
       export_outlines_only = ((cbm->mode == TT_MAPITEM_ABOVE) ||
         (cbm->mode == TT_MAPITEM_BELOW)) && (!cbm->m_target->previewed)

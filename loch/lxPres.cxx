@@ -143,7 +143,7 @@ void lxPresentDlg::UpdateList() {
 void lxPresentDlg::UpdateControls() {
   wxWindow::FindWindowById(LXMENU_PRESUPDATE, this)->Enable(this->m_posLBox->GetCount() > 0);
   wxWindow::FindWindowById(LXMENU_PRESDELETE, this)->Enable(this->m_posLBox->GetCount() > 0);
-  wxWindow::FindWindowById(LXMENU_PRESMOVEDOWN, this)->Enable((this->m_posLBox->GetCount() > 0) && (this->m_posLBox->GetSelection() != wxNOT_FOUND) && ((this->m_posLBox->GetSelection() + 1) < this->m_posLBox->GetCount()));
+  wxWindow::FindWindowById(LXMENU_PRESMOVEDOWN, this)->Enable((this->m_posLBox->GetCount() > 0) && (this->m_posLBox->GetSelection() != wxNOT_FOUND) && ((this->m_posLBox->GetSelection() + 1) < (int)this->m_posLBox->GetCount()));
   wxWindow::FindWindowById(LXMENU_PRESMOVEUP, this)->Enable((this->m_posLBox->GetCount() > 0) && (this->m_posLBox->GetSelection() != wxNOT_FOUND) && (this->m_posLBox->GetSelection() > 0));
 }
 
@@ -226,7 +226,7 @@ void lxPresentDlg::OnCommand(wxCommandEvent& event)
                 delete n;
                 this->UpdateList();
                 if (this->m_posLBox->GetCount() > 0)
-                  this->m_posLBox->Select(this->m_posLBox->GetCount() > c ? c : c-1);
+                  this->m_posLBox->Select(((long)this->m_posLBox->GetCount() > c) ? c : c-1);
                 break;
               case LXMENU_PRESMOVEUP:
                 if (c > 0) {
@@ -237,7 +237,7 @@ void lxPresentDlg::OnCommand(wxCommandEvent& event)
                 }
                 break;
               case LXMENU_PRESMOVEDOWN:
-                if ((c+1) < this->m_posLBox->GetCount()) {
+                if ((c+1) < (long)this->m_posLBox->GetCount()) {
                   p = n->GetNext();
                   r->RemoveChild(n);
                   r->InsertChildAfter(n, p);

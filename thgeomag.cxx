@@ -58,7 +58,7 @@ double thgeomag(double lat, double lon, double h, double dat) {
   static double roots[nmax+1][nmax+1][2];
 
 
-  double yearfrac,sr,r,theta,c,s,psi,fn,fn_0,B_r,B_theta,B_phi,X,Y,Z;
+  double yearfrac,sr,r,theta,c,s,psi,fn,fn_0,B_r,B_theta,B_phi,X,Y; // ,Z;
   double sinpsi, cospsi, inv_s;
 
   static int been_here = 0;
@@ -195,7 +195,7 @@ double thgeomag(double lat, double lon, double h, double dat) {
   cospsi = cos(psi);
   X = -B_theta * cospsi - B_r * sinpsi;
   Y = B_phi;
-  Z = B_theta * sinpsi - B_r * cospsi;
+  // Z = B_theta * sinpsi - B_r * cospsi;
 
   /*    field[0]=B_r;
   field[1]=B_theta;

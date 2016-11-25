@@ -1172,7 +1172,7 @@ bool lxApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     // Use a double-buffered visual if available, as it will give much smoother
     // animation.
-    bool double_buffered = true;
+    // bool double_buffered = true;
     int wx_gl_attribs[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, 0 };
     if (!InitGLVisual(wx_gl_attribs)) {
 	int wx_gl_attribs_no_db[] = { WX_GL_RGBA, 0 };
@@ -1182,7 +1182,7 @@ bool lxApp::OnInit()
 	    wxMessageBox(m,_T("Loch") , wxOK | wxCENTRE | wxICON_EXCLAMATION);
 	    exit(1);
 	}
-	double_buffered = false;
+	// double_buffered = false;
     }
 
 

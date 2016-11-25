@@ -753,7 +753,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * prj)
             scrap = (thscrap*) cmi->object;
             xu.parse_scrap(scrap);
             if (xu.m_part_list.size() > 0) {
-              double x(0.0), y(0.0), z(0.0), px(0.0), py(0.0), pz(0.0);
+              double x(0.0), y(0.0), z(0.0), px(0.0), py(0.0); // , pz(0.0);
               bool inside;
               std::list<thexpuni_part>::iterator it;
               std::list<thexpuni_data>::iterator ip;
@@ -778,7 +778,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * prj)
                   inside = true;
                   px = x;
                   py = y;
-                  pz = z;
+                  // pz = z;
                 }
                 if (inside) {
                   ip = it->m_point_list.begin();

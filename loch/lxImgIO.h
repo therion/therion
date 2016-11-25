@@ -13,7 +13,7 @@
 typedef unsigned char uchar;
 #endif
 
-extern char * lxImgIOError;
+extern const char * lxImgIOError;
 
 // struct for handling images
 struct lxImageRGB {

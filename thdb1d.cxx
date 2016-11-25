@@ -2505,7 +2505,9 @@ void thdb1d::print_loops() {
   thdb1d_loop_leg * ll;
   thsurvey * ss;   
 	int totlen = 6 - strlen(thdeflocale.format_length_units()) + 1;
-  thdb1ds * ps, * prev_ps, * first_ps;
+  thdb1ds * ps;
+  // thdb1ds * prev_ps;
+  // thdb1ds * first_ps;
   unsigned long psid, prev_psid, first_psid;
   
   thlog.printf("\n\n######################### loop errors ##########################\n");
@@ -2527,14 +2529,14 @@ void thdb1d::print_loops() {
     else
       psid = ll->leg->from.id;
     ps = &(this->station_vec[psid - 1]);
-    first_ps = ps;
+    // first_ps = ps;
     first_psid = psid;
     thlog.printf("%s", ps->name);
     if ((ss == NULL) || (ss->id != ps->survey->id)) {
       ss = ps->survey;
       thlog.printf("@%s", ss->get_full_name());
     }
-    prev_ps = ps;
+    // prev_ps = ps;
     prev_psid = psid;
     while (ll != NULL) {
     
@@ -2575,7 +2577,7 @@ void thdb1d::print_loops() {
         }
       }
 
-      prev_ps = ps;
+      // prev_ps = ps;
       prev_psid = psid;
       ll = ll->next_leg;
     }

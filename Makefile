@@ -34,7 +34,6 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
 ##LDPFLAGS = -s
 ##export THPLATFORM = LINUX
 ##THXTHMKCMD = ./therion
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
 
 
 # PLATFORM DEBIAN
@@ -47,7 +46,6 @@ CCPFLAGS = -DTHLINUX
 LDPFLAGS = -s
 export THPLATFORM = LINUX
 THXTHMKCMD = ./therion
-
 
 # PLATFORM WIN32
 ##CXX = c++
@@ -197,6 +195,7 @@ $(OUTDIR)/thbook/thbook.pdf: thbook/*.tex
 	make -C thbook
   
 clean:
+	$(CLEAN_OUTDIR)
 	make -C ./xtherion clean
 	make -C ./loch clean
 	make -C ./samples clean

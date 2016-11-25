@@ -1170,7 +1170,7 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
       int from, int to, int dbglevel)
 {
   thdb2dlp * lp = this->first_point;
-  thdb2dpt * prev_pt = NULL;
+  // thdb2dpt * prev_pt = NULL;
 //  double xt, yt, d;
   unsigned last = 0;
   bool dnu = false;
@@ -1184,7 +1184,7 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
         fprintf(out->file," -- ");
         lp->point->export_mp(out,dbglevel);
       }
-      prev_pt = lp->point;
+      // prev_pt = lp->point;
     } 
     else if (dnu) {
       if ((lp->cp1 != NULL) && (lp->cp2 != NULL)) {
@@ -1203,7 +1203,7 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
         lp->point->export_mp(out,dbglevel);
       fprintf(out->file,"\n");
     }
-    prev_pt = lp->point;
+    // prev_pt = lp->point;
     lp = lp->nextlp;
     last++;
   }
