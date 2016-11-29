@@ -502,19 +502,21 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
       ths2txt(this->layout->doc_comment, this->layout->lang).c_str());
 
   // Export entrances
-  double x, y, z;
-  thdb1ds * station;
-  size_t nstat = db->db1d.station_vec.size(), i;
-  for(i = 0; i < nstat; i++) {
-    station = &(db->db1d.station_vec[i]);    
-    if ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
-      thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
-        station->x, station->y, station->z, x, y, z);
-      fprintf(out, "<Placemark>\n");
-      fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
-      fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->comment, layout->lang).c_str());
-      fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
-      fprintf(out, "</Placemark>\n");
+  if ((this->items & TT_EXPMODEL_ITEM_ENTRANCES) != 0) {
+    double x, y, z;
+    thdb1ds * station;
+    size_t nstat = db->db1d.station_vec.size(), i;
+    for(i = 0; i < nstat; i++) {
+      station = &(db->db1d.station_vec[i]);
+      if ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
+        thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+          station->x, station->y, station->z, x, y, z);
+        fprintf(out, "<Placemark>\n");
+        fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
+        fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->comment, layout->lang).c_str());
+        fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
+        fprintf(out, "</Placemark>\n");
+      }
     }
   }
 
