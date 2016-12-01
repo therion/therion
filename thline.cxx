@@ -308,9 +308,8 @@ void thline::parse_type(char * ss)
     case TT_LINE_TYPE_CEILING_MEANDER:
       this->place = TT_2DOBJ_PLACE_DEFAULT_TOP;
       break;
-    case TT_LINE_TYPE_ROPE:  // show anchors and rebelays on line rope by default
+    case TT_LINE_TYPE_ROPE:  // show anchors on line rope by default
       this->tags |= TT_LINE_TAG_ROPE_ANCHORS;
-      this->tags |= TT_LINE_TAG_ROPE_REBELAYS;
       break;
   }
 }
