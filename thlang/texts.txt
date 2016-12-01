@@ -1,3 +1,21 @@
+therion: title model
+bg: Модел
+en: Model
+it: modello
+ru: Модель 3D
+
+therion: title map
+bg: Карта
+en: Map
+it: mappa
+ru: Карта
+
+therion: surface legs
+bg: Повърхностна антена
+en: Surface legs
+it: battute esterne
+ru: Поверхностная съёмка
+
 therion: point station
 bg: реперна точка
 cz: měřičský bod
@@ -129,8 +147,9 @@ sq: burim
 therion: point flag:doline
 cz: závrt
 en: doline
-sk: závrt
+it: dolina
 ru: воронка
+sk: závrt
 
 therion: point flag:dig
 bg: изкоп
@@ -142,9 +161,9 @@ fr: désobstruction
 it: disostruzione
 mi: kari
 pl: wykop
+ru: раскоп
 sk: sonda
 sq: mihje
-ru: раскоп
 
 therion: point flag:continuation
 bg: възможно продължение
@@ -181,8 +200,9 @@ sq: rrymim i ajrit
 therion: point flag:arch
 bg: арка
 en: arch
-sk: skalný oblúk
+it: arco di roccia
 ru: арка
+sk: skalný oblúk
 
 therion: point flag:overhang
 bg: надвес
@@ -287,7 +307,7 @@ el: τοίχος
 en: wall
 es: pared
 fr: mur
-it: roccia
+it: parete di roccia
 mi: tarā
 pl: ściana
 pt: parede
@@ -303,7 +323,7 @@ el: υποκείμενος τοίχος
 en: underlying wall
 es: pared subyacente
 fr: mur sousjacent
-it: parete:sottostante
+it: parete sottostante
 mi: tāra ki raro
 pl: ściana położona niżej
 pt: parede subjacente
@@ -315,11 +335,11 @@ therion: line wall:overlying
 bg: по-високо разположена стена
 de: überlagerter Wandverlauf
 en: overlying wall
-it: parete:sovrastante
+it: parete sovrastante
 mi: tāra ki runga
 pl: ściana położona wyżej
-sk: stena vyššej úrovne
 ru: вышерасположенная стена
+sk: stena vyššej úrovne
 
 therion: line wall:unsurveyed
 bg: окомерна скица на стените
@@ -329,7 +349,7 @@ el: τοίχος (μη χαρτογραφημένος)
 en: unsurveyed wall
 es: pared no topografiada
 fr: mur non topographié
-it: parete:stimata
+it: parete stimata
 mi: ka rūri tāra
 pl: ściana nie pomierzona
 pt: parede não-topografada
@@ -345,7 +365,7 @@ el: τοίχος υποθετικός
 en: presumed wall
 es: pared supuesta
 fr: mur supposé
-it: parete:presunta
+it: parete presunta
 mi: tāra whakaaro
 pl: niewidoczna ściana
 pt: parede presumida
@@ -357,11 +377,11 @@ therion: line wall:pit
 bg: отвес
 de: Eingangsschacht
 en: entrance pit
-it: parete:pozzo
+it: parete pozzo
 mi: rua
 pl: studnia wstępna
-sk: vstupná priepasť
 ru: отвес
+sk: vstupná priepasť
 
 therion: line wall:blocks
 bg: стена - блокаж
@@ -466,8 +486,8 @@ en: flowstone wall
 it: colata
 mi: tāra a pari kōhatu
 pl: ściana z nacieków
-sk: stena tvorená sintrom
 ru: натечная кора
+sk: stena tvorená sintrom
 
 therion: line wall:moonmilk
 bg: пещерно мляко
@@ -476,8 +496,8 @@ en: moonmilk wall
 it: moonmilk
 mi: tāra a mirika marama
 pl: ściana z miękkich nacieków
-sk: stena tvorená mäkkým sintrom
 ru: лунное молоко
+sk: stena tvorená mäkkým sintrom
 
 therion: point wall-altitude
 bg: височинна отметка на стената
@@ -494,22 +514,6 @@ pt: altura
 ru: высотная отметка стены
 sk: nadmorská výška bodu na stene
 sq: lartesia mbidetare e murit
-
-therion: point altitude
-bg: н.м. височина
-cz: nadmořská výška bodu v chodbě
-de: Höhe über Koordinatenursprung
-el: ύψος
-en: altitude
-es: altura
-fr: altitude
-it: quota
-mi: teitei, tiketike
-pl: wysokość punktu pomiarowego npm
-pt: altura
-ru: высотная отметка
-sk: nadmorská výška bodu v chodbe
-sq: lartesia mbidetare
 
 therion: point section
 bg: място на сечение
@@ -694,9 +698,9 @@ fr: désobstruction
 it: disostruzione
 mi: kari
 pl: wykop
+ru: раскоп
 sk: sonda
 sq: mihje
-ru: раскоп
 
 therion: point continuation
 bg: възможно продължение
@@ -785,8 +789,8 @@ en: clay choke
 it: chiude su riempimento
 mi: uku pari
 pl: koniec zamknięty gliną
-sk: koniec uzavretý ílom
 ru: блокировано глиной
+sk: koniec uzavretý ílom
 
 therion: line floor-step
 bg: праг
@@ -1752,6 +1756,7 @@ sq: stalaktit
 therion: point stalactites
 bg: сталактити
 en: stalactites
+it: stalattiti
 ru: сталактиты
 
 therion: point stalagmite
@@ -1773,6 +1778,7 @@ sq: stalagmit
 therion: point stalagmites
 bg: сталагмити
 en: stalagmites
+it: stalagmiti
 ru: сталагмиты
 
 therion: point pillar
@@ -1794,6 +1800,7 @@ sq: shtylle
 therion: point pillars
 bg: сталактони
 en: pillars
+it: colonne
 ru: колонны
 
 therion: point ice-stalactite
@@ -1803,8 +1810,8 @@ en: ice stalactite
 it: stalattite di ghiaccio
 mi: kōpaka ki te haere ki runga
 pl: lodowy stalaktyt
-sk: ľadový stalaktit
 ru: ледяной сталактит
+sk: ľadový stalaktit
 
 therion: point ice-stalagmite
 bg: леден сталагмит
@@ -1813,8 +1820,8 @@ en: ice stalagmite
 it: stalagmite di ghiaccio
 mi: kōpaka ki te haere ki raro
 pl: lodowy stalagmit
-sk: ľadový stalagmit
 ru: ледяной сталагмит
+sk: ľadový stalagmit
 
 therion: point ice-pillar
 bg: леден сталактон
@@ -1823,8 +1830,8 @@ en: ice pillar
 it: colonna di ghiaccio
 mi: pou Kōpaka
 pl: lodowy stalagnat
-sk: ľadový stalagnát
 ru: ледяная колонна
+sk: ľadový stalagnát
 
 therion: point curtain
 bg: драперия
@@ -2231,11 +2238,6 @@ ru: линейная опора
 sk: lano
 sq: litar
 
-therion: line rope
-bg: въже
-en: rope
-ru: веревка
-
 therion: point rope-ladder
 bg: пещерна стълба
 cz: lanový žebřík
@@ -2253,6 +2255,7 @@ sk: lanový rebrík
 sq: shkalle litari
 
 therion: line rope-ladder
+it: scala di corda
 ru: гибкая лестница
 
 therion: point fixed-ladder
@@ -2274,6 +2277,7 @@ sq: shkalle fikse
 therion: line fixed-ladder
 bg: стационарна стълба
 en: fixed ladder
+it: scala fissa
 ru: стационарная лестница
 
 therion: point steps
@@ -2292,19 +2296,28 @@ ru: ступени
 sk: schody
 sq: shkalle
 
+therion: line rope
+bg: въже
+en: rope
+it: corda
+ru: веревка
+
 therion: line steps
 bg: стъпала
 en: steps
+it: scalini
 ru: ступени
 
 therion: point via-ferrata
 bg: виа-ферата
 en: via-ferrata
+it: via ferrata
 ru: виа ферата
 
 therion: line via-ferrata
 bg: виа-ферата
 en: via-ferrata
+it: via ferrata
 ru: виа ферата
 
 therion: point traverse
@@ -2342,11 +2355,13 @@ sq: ure
 therion: point handrail
 bg: перила
 en: handrail
+it: corrimano
 ru: поручень
 
 therion: line handrail
 bg: перила
 en: handrail
+it: corrimano
 ru: поручень
 
 therion: point camp
@@ -2509,22 +2524,6 @@ ru: м
 sk: m
 sq: njesia matese-metri
 
-therion: title cave depth
-bg: Денивелация
-cz: Převýšení
-de: Niveaudifferenz
-el: Βάθος
-en: Depth
-es: Desnivel
-fr: Profondeur
-it: Profondità
-mi: Hōhonu a ana, Rētōtanga
-pl: przewyższenie
-pt: Desnível
-ru: Глубина
-sk: Prevýšenie
-sq: thellesia
-
 therion: title explo (plural)
 bg: Изследвали
 cz: Objevili
@@ -2621,6 +2620,38 @@ ru: Камеральная обработка
 sk: Kreslil
 sq: vizatuar nga
 
+therion: title cave depth
+bg: Денивелация
+cz: Převýšení
+de: Niveaudifferenz
+el: Βάθος
+en: Depth
+es: Desnivel
+fr: Profondeur
+it: Profondità
+mi: Hōhonu a ana, Rētōtanga
+pl: przewyższenie
+pt: Desnível
+ru: Глубина
+sk: Prevýšenie
+sq: thellesia
+
+therion: point altitude
+bg: н.м. височина
+cz: nadmořská výška bodu v chodbě
+de: Höhe über Koordinatenursprung
+el: ύψος
+en: altitude
+es: altura
+fr: altitude
+it: quota
+mi: teitei, tiketike
+pl: wysokość punktu pomiarowego npm
+pt: altura
+ru: высотная отметка
+sk: nadmorská výška bodu v chodbe
+sq: lartesia mbidetare
+
 therion: title preview above
 bg: Изглед от горе
 cz: [Náhled horních vrstev]
@@ -2661,7 +2692,7 @@ el: [χάρτης επιφάνειας]
 en: [Surface Image]
 es: Mapa superficie
 fr: [Carte extérieure]
-it: Mappa superficie
+it: Mappa terreno
 mi: Konohi o te whenua
 pl: mapa powierzchni
 pt: [Mapa de superfície]
@@ -2669,17 +2700,3 @@ ru: [Карта поверхности]
 sk: [Povrchová mapa]
 sq: harta e siperfaqes
 
-therion: title model
-bg: Модел
-en: Model
-ru: Модель 3D
-
-therion: title map
-bg: Карта
-en: Map
-ru: Карта
-
-therion: surface legs
-bg: Повърхностна антена
-en: Surface legs
-ru: Поверхностная съёмка
