@@ -449,6 +449,7 @@
   ::msgcat::mcset cz "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset de "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset it "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
+  ::msgcat::mcset ru "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset sk "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
   ::msgcat::mcset sq "Xpdf" [encoding convertfrom utf-8 "Xpdf"]
 
@@ -456,6 +457,7 @@
   ::msgcat::mcset cz "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset de "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset it "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
+  ::msgcat::mcset ru "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset sk "Acrobat Reader" [encoding convertfrom utf-8 "Acrobat Reader"]
   ::msgcat::mcset sq "Acrobat Reader" [encoding convertfrom utf-8 "lexuesi I programit-Akrobat"]
 
@@ -536,17 +538,7 @@
 
   ::msgcat::mcset bg "WARNING" [encoding convertfrom utf-8 "\320\222\320\275\320\270\320\274\320\260\320\275\320\270\320\265!"]
   ::msgcat::mcset de "WARNING" [encoding convertfrom utf-8 "WARNUNG"]
-
-  ::msgcat::mcset bg "OK" [encoding convertfrom utf-8 "\320\236\320\232"]
-  ::msgcat::mcset cz "OK" [encoding convertfrom utf-8 "OK"]
-  ::msgcat::mcset de "OK" [encoding convertfrom utf-8 "OK"]
-  ::msgcat::mcset el "OK" [encoding convertfrom utf-8 "\316\237\316\232"]
-  ::msgcat::mcset en "OK" [encoding convertfrom utf-8 "OK"]
-  ::msgcat::mcset es "OK" [encoding convertfrom utf-8 "OK"]
-  ::msgcat::mcset it "OK" [encoding convertfrom utf-8 "OK"]
-  ::msgcat::mcset ru "OK" [encoding convertfrom utf-8 "\320\243\320\241\320\237\320\225\320\245"]
-  ::msgcat::mcset sk "OK" [encoding convertfrom utf-8 "OK"]
-  ::msgcat::mcset sq "OK" [encoding convertfrom utf-8 "ne rregull-O.K."]
+  ::msgcat::mcset ru "WARNING" [encoding convertfrom utf-8 "\320\237\320\240\320\225\320\224\320\243\320\237\320\240\320\225\320\226\320\224\320\225\320\235\320\230\320\225"]
 
   ::msgcat::mcset bg "Reading therion log file ..." [encoding convertfrom utf-8 "\320\247\320\265\321\202\320\265\320\275\320\265 \320\275\320\260 \320\273\320\276\320\263-\321\204\320\260\320\271\320\273\320\260 \320\275\320\260 therion ..."]
   ::msgcat::mcset cz "Reading therion log file ..." [encoding convertfrom utf-8 "Na\304\215\303\255t\303\241m LOG soubor therionu ..."]
@@ -2021,17 +2013,6 @@
   ::msgcat::mcset sk "Other line options." [encoding convertfrom utf-8 "\304\216al\305\241ie mo\305\276nosti pre krivku."]
   ::msgcat::mcset sq "Other line options." [encoding convertfrom utf-8 "opcionet tjera te rrjeshtit."]
 
-  ::msgcat::mcset bg "reverse" [encoding convertfrom utf-8 "\320\276\320\261\321\200\320\260\321\202\320\275\320\260"]
-  ::msgcat::mcset cz "reverse" [encoding convertfrom utf-8 "obr\303\241tit"]
-  ::msgcat::mcset de "reverse" [encoding convertfrom utf-8 "Umkehren"]
-  ::msgcat::mcset el "reverse" [encoding convertfrom utf-8 "\316\261\316\275\316\261\317\203\317\204\317\201\316\277\317\206\316\256"]
-  ::msgcat::mcset en "reverse" [encoding convertfrom utf-8 "reverse"]
-  ::msgcat::mcset es "reverse" [encoding convertfrom utf-8 "invertir"]
-  ::msgcat::mcset it "reverse" [encoding convertfrom utf-8 "inverti"]
-  ::msgcat::mcset ru "reverse" [encoding convertfrom utf-8 "\320\276\320\261\321\200\320\260\321\202\320\275\320\260\321\217"]
-  ::msgcat::mcset sk "reverse" [encoding convertfrom utf-8 "oto\304\215i\305\245"]
-  ::msgcat::mcset sq "reverse" [encoding convertfrom utf-8 "ktheje pas"]
-
   ::msgcat::mcset bg "Reverse line." [encoding convertfrom utf-8 "\320\236\320\261\321\212\321\200\320\275\320\270 \320\273\320\270\320\275\320\270\321\217\321\202\320\260"]
   ::msgcat::mcset cz "Reverse line." [encoding convertfrom utf-8 "Obr\303\241tit k\305\231ivku."]
   ::msgcat::mcset de "Reverse line." [encoding convertfrom utf-8 "Linie umkehren."]
@@ -2043,17 +2024,6 @@
   ::msgcat::mcset sk "Reverse line." [encoding convertfrom utf-8 "Oto\304\215i\305\245 krivku."]
   ::msgcat::mcset sq "Reverse line." [encoding convertfrom utf-8 "rrjeshti I pasem-I kthyer"]
 
-  ::msgcat::mcset bg "close" [encoding convertfrom utf-8 "\320\267\320\260\321\202\320\262\320\276\321\200\320\270"]
-  ::msgcat::mcset cz "close" [encoding convertfrom utf-8 "zav\305\231\303\255t"]
-  ::msgcat::mcset de "close" [encoding convertfrom utf-8 "schlie\303\237en"]
-  ::msgcat::mcset el "close" [encoding convertfrom utf-8 "\316\272\316\273\316\265\316\257\317\203\316\271\316\274\316\277"]
-  ::msgcat::mcset en "close" [encoding convertfrom utf-8 "close"]
-  ::msgcat::mcset es "close" [encoding convertfrom utf-8 "cerrar"]
-  ::msgcat::mcset it "close" [encoding convertfrom utf-8 "chiudi"]
-  ::msgcat::mcset ru "close" [encoding convertfrom utf-8 "\320\267\320\260\320\274\320\272\320\275\321\203\321\202\321\214"]
-  ::msgcat::mcset sk "close" [encoding convertfrom utf-8 "zavrie\305\245"]
-  ::msgcat::mcset sq "close" [encoding convertfrom utf-8 "mbylle"]
-
   ::msgcat::mcset bg "Close line." [encoding convertfrom utf-8 "\320\227\320\260\321\202\320\262\320\276\321\200\320\270 \320\273\320\270\320\275\320\270\321\217\321\202\320\260 \321\201 \320\275\320\260\321\207\320\260\320\273\320\276\321\202\320\276 \320\270."]
   ::msgcat::mcset cz "Close line." [encoding convertfrom utf-8 "Uzav\305\231\303\255t k\305\231ivku."]
   ::msgcat::mcset de "Close line." [encoding convertfrom utf-8 "Linie schlie\303\237en."]
@@ -2064,17 +2034,6 @@
   ::msgcat::mcset ru "Close line." [encoding convertfrom utf-8 "\320\227\320\260\320\274\320\272\320\275\321\203\321\202\321\214 \320\273\320\270\320\275\320\270\321\216 \320\275\320\260 \320\265\321\221 \320\266\320\265 \320\275\320\260\321\207\320\260\320\273\320\276."]
   ::msgcat::mcset sk "Close line." [encoding convertfrom utf-8 "Uzavrie\305\245 krivku."]
   ::msgcat::mcset sq "Close line." [encoding convertfrom utf-8 "mbylle rrjeshtin."]
-
-  ::msgcat::mcset bg "Edit line" [encoding convertfrom utf-8 "\320\240\320\265\320\264\320\260\320\272\321\202\320\270\321\200\320\260\320\271 \320\273\320\270\320\275\320\270\321\217"]
-  ::msgcat::mcset cz "Edit line" [encoding convertfrom utf-8 "Editovat"]
-  ::msgcat::mcset de "Edit line" [encoding convertfrom utf-8 "Linie bearbeiten"]
-  ::msgcat::mcset el "Edit line" [encoding convertfrom utf-8 "\316\225\317\200\316\265\316\276\316\265\317\201\316\263\316\261\317\203\316\257\316\261 \316\263\317\201\316\261\316\274\316\274\316\256\317\202"]
-  ::msgcat::mcset en "Edit line" [encoding convertfrom utf-8 "Edit line"]
-  ::msgcat::mcset es "Edit line" [encoding convertfrom utf-8 "Editar"]
-  ::msgcat::mcset it "Edit line" [encoding convertfrom utf-8 "Edita"]
-  ::msgcat::mcset ru "Edit line" [encoding convertfrom utf-8 "\320\237\321\200\320\260\320\262\320\270\321\202\321\214 \320\273\320\270\320\275\320\270\321\216"]
-  ::msgcat::mcset sk "Edit line" [encoding convertfrom utf-8 "Upravi\305\245"]
-  ::msgcat::mcset sq "Edit line" [encoding convertfrom utf-8 "permireso rrjeshtin"]
 
   ::msgcat::mcset bg "Insert/delete line point. Split line." [encoding convertfrom utf-8 "\320\222\320\274\321\212\320\272\320\262\320\260\320\275\320\265/\321\202\321\200\320\270\320\265\320\275\320\265 \320\275\320\260 \321\202\320\276\321\207\320\272\320\260. \320\240\320\260\320\267\320\264\320\265\320\273\321\217\320\275\320\265 \320\275\320\260 \320\273\320\270\320\275\320\270\321\217."]
   ::msgcat::mcset cz "Insert/delete line point. Split line." [encoding convertfrom utf-8 "Vlo\305\276en\303\255/smaz\303\241n\303\255 bodu k\305\231ivky. Rozd\304\233len\303\255 k\305\231ivky."]
@@ -2097,6 +2056,18 @@
   ::msgcat::mcset ru "Click this button to apply line changes." [encoding convertfrom utf-8 "\320\235\320\260\320\266\320\274\320\270\321\202\320\265 \321\215\321\202\321\203 \320\272\320\275\320\276\320\277\320\272\321\203 \320\264\320\273\321\217 \320\277\321\200\320\270\320\274\320\265\320\275\320\265\320\275\320\270\321\217 \320\270\320\267\320\274\320\265\320\275\320\265\320\275\320\270\320\271 \320\273\320\270\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Click this button to apply line changes." [encoding convertfrom utf-8 "Aktualizuje krivku."]
   ::msgcat::mcset sq "Click this button to apply line changes." [encoding convertfrom utf-8 "kliko kete buton te aktualizosh nderrimet e rrjeshtit."]
+
+  ::msgcat::mcset bg "Trace line" [encoding convertfrom utf-8 "\320\237\321\200\320\276\321\201\320\273\320\265\320\264\321\217\320\262\320\260\320\275\320\265 \320\276\321\202 \320\272\320\260\321\200\321\202\320\270\320\275\320\260\321\202\320\260"]
+  ::msgcat::mcset en "Trace line" [encoding convertfrom utf-8 "Trace line"]
+  ::msgcat::mcset ru "Trace line" [encoding convertfrom utf-8 "\320\242\321\200\320\260\321\201\321\201\320\270\321\200\320\276\320\262\320\260\321\202\321\214"]
+
+  ::msgcat::mcset bg "Convert to curve" [encoding convertfrom utf-8 "\320\232\320\276\320\275\320\262\320\265\321\200\321\202\320\270\321\200\320\260\320\275\320\265 \320\262 \320\221\320\265\320\267\320\270\320\265"]
+  ::msgcat::mcset en "Convert to curve" [encoding convertfrom utf-8 "Convert to curve"]
+  ::msgcat::mcset ru "Convert to curve" [encoding convertfrom utf-8 "\320\241\320\263\320\273\320\260\320\264\320\270\321\202\321\214 \320\273\320\276\320\274\320\260\320\275\321\203\321\216"]
+
+  ::msgcat::mcset bg "Simplify line" [encoding convertfrom utf-8 "\320\236\320\277\321\200\320\276\321\201\321\202\321\217\320\262\320\260\320\275\320\265 \320\275\320\260 \320\273\320\270\320\275\320\270\321\217"]
+  ::msgcat::mcset en "Simplify line" [encoding convertfrom utf-8 "Simplify line"]
+  ::msgcat::mcset ru "Simplify line" [encoding convertfrom utf-8 "\320\243\320\277\321\200\320\276\321\201\320\270\321\202\320\270\321\202\321\214 \320\273\320\270\320\275\320\270\321\216"]
 
   ::msgcat::mcset bg "Select line point." [encoding convertfrom utf-8 "\320\230\320\267\320\261\320\265\321\200\320\270 \320\265\320\264\320\275\320\260 \320\276\321\202 \321\202\320\276\321\207\320\272\320\270\321\202\320\265 \320\275\320\260 \320\273\320\270\320\275\320\270\321\217\321\202\320\260."]
   ::msgcat::mcset cz "Select line point." [encoding convertfrom utf-8 "V\303\275b\304\233r bodu k\305\231ivky."]
@@ -2219,17 +2190,6 @@
   ::msgcat::mcset sk "Checkbox whether to use previous control point." [encoding convertfrom utf-8 "Pou\305\276i predch\303\241dzaj\303\272ci kontroln\303\275 bod."]
   ::msgcat::mcset sq "Checkbox whether to use previous control point." [encoding convertfrom utf-8 "kutia-kontrollit a duhet te perdoret pika e kontrollit e meparshme"]
 
-  ::msgcat::mcset bg "smooth" [encoding convertfrom utf-8 "\320\270\320\267\320\263\320\273\320\260\320\266\320\264\320\260\320\275\320\265"]
-  ::msgcat::mcset cz "smooth" [encoding convertfrom utf-8 "uhladit"]
-  ::msgcat::mcset de "smooth" [encoding convertfrom utf-8 "gegl\303\244ttet"]
-  ::msgcat::mcset el "smooth" [encoding convertfrom utf-8 "\316\261\317\200\316\261\316\273\316\256"]
-  ::msgcat::mcset en "smooth" [encoding convertfrom utf-8 "smooth"]
-  ::msgcat::mcset es "smooth" [encoding convertfrom utf-8 "suavizar"]
-  ::msgcat::mcset it "smooth" [encoding convertfrom utf-8 "regolarizza"]
-  ::msgcat::mcset ru "smooth" [encoding convertfrom utf-8 "\321\201\320\263\320\273\320\260\320\264\320\270\321\202\321\214"]
-  ::msgcat::mcset sk "smooth" [encoding convertfrom utf-8 "vyhladi\305\245"]
-  ::msgcat::mcset sq "smooth" [encoding convertfrom utf-8 "e bute"]
-
   ::msgcat::mcset bg "Set line to be smooth in given point." [encoding convertfrom utf-8 "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\265\321\202\320\265 \320\267\320\260 \320\270\320\267\320\263\320\273\320\260\320\266\320\264\320\260\320\275\320\265 \320\275\320\260 \320\273\320\270\320\275\320\270\321\217\321\202\320\260 \320\262 \320\264\320\260\320\264\320\265\320\275\320\260\321\202\320\260 \321\202\320\276\321\207\320\272\320\260."]
   ::msgcat::mcset cz "Set line to be smooth in given point." [encoding convertfrom utf-8 "Nastav\303\255 hladkou k\305\231ivku v dan\303\251m bod\304\233."]
   ::msgcat::mcset de "Set line to be smooth in given point." [encoding convertfrom utf-8 "Setze Linie auf gegl\303\244ttet am gegebenen Punkt."]
@@ -2251,17 +2211,6 @@
   ::msgcat::mcset ru "Checkbox whether to use next control point." [encoding convertfrom utf-8 "\320\237\320\276\321\201\321\202\320\260\320\262\321\214\321\202\320\265 \320\263\320\260\320\273\320\276\321\207\320\272\321\203 \320\264\320\273\321\217 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\320\276\320\262\320\260\320\275\320\270\321\217 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\320\265\320\271 \321\203\320\277\321\200\320\260\320\262\320\273\321\217\321\216\321\211\320\265\320\271 \321\202\320\276\321\207\320\272\320\270."]
   ::msgcat::mcset sk "Checkbox whether to use next control point." [encoding convertfrom utf-8 "Pou\305\276i nasleduj\303\272ci kontroln\303\275 bod."]
   ::msgcat::mcset sq "Checkbox whether to use next control point." [encoding convertfrom utf-8 "kutia-kontrollit a duhet te perdoret pika e kontrollit e ardhshme"]
-
-  ::msgcat::mcset bg "orientation" [encoding convertfrom utf-8 "\320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\321\217"]
-  ::msgcat::mcset cz "orientation" [encoding convertfrom utf-8 "orientace"]
-  ::msgcat::mcset de "orientation" [encoding convertfrom utf-8 "Ausrichtung"]
-  ::msgcat::mcset el "orientation" [encoding convertfrom utf-8 "\317\200\317\201\316\277\317\203\316\261\316\275\316\261\317\204\316\277\316\273\316\271\317\203\316\274\317\214\317\202"]
-  ::msgcat::mcset en "orientation" [encoding convertfrom utf-8 "orientation"]
-  ::msgcat::mcset es "orientation" [encoding convertfrom utf-8 "orientaci\303\263n"]
-  ::msgcat::mcset it "orientation" [encoding convertfrom utf-8 "orientazione"]
-  ::msgcat::mcset ru "orientation" [encoding convertfrom utf-8 "\320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\321\217"]
-  ::msgcat::mcset sk "orientation" [encoding convertfrom utf-8 "orient\303\241cia"]
-  ::msgcat::mcset sq "orientation" [encoding convertfrom utf-8 "orientimi"]
 
   ::msgcat::mcset bg "Set line point orientation." [encoding convertfrom utf-8 "\320\243\320\272\320\260\320\266\320\265\321\202\320\265 \320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\321\217\321\202\320\260 \320\275\320\260 \321\202\320\276\321\207\320\272\320\260 \320\275\320\260 \320\273\320\270\320\275\320\270\321\217\321\202\320\260."]
   ::msgcat::mcset cz "Set line point orientation." [encoding convertfrom utf-8 "Nastav\303\255 orientaci bodu."]
@@ -2317,17 +2266,6 @@
   ::msgcat::mcset ru "Enter line size in right direction." [encoding convertfrom utf-8 "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\200\320\260\320\267\320\274\320\265\321\200 \320\273\320\270\320\275\320\270\320\270 \320\262 \320\277\321\200\320\260\320\262\320\276\320\274 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\270."]
   ::msgcat::mcset sk "Enter line size in right direction." [encoding convertfrom utf-8 "Zadaj ve\304\276kos\305\245 symbolov napravo od krivky."]
   ::msgcat::mcset sq "Enter line size in right direction." [encoding convertfrom utf-8 "fute madhesine e rjeshtit ne drejtim te djathte"]
-
-  ::msgcat::mcset bg "l-size" [encoding convertfrom utf-8 "l-\321\200\320\260\320\267\320\274\320\265\321\200"]
-  ::msgcat::mcset cz "l-size" [encoding convertfrom utf-8 "l-rozsah"]
-  ::msgcat::mcset de "l-size" [encoding convertfrom utf-8 "l-Gr\303\266\303\237e"]
-  ::msgcat::mcset el "l-size" [encoding convertfrom utf-8 "\316\264\316\271\316\254\317\203\317\204\316\261\317\203\316\267 (\316\261)"]
-  ::msgcat::mcset en "l-size" [encoding convertfrom utf-8 "l-size"]
-  ::msgcat::mcset es "l-size" [encoding convertfrom utf-8 "anchura-izda"]
-  ::msgcat::mcset it "l-size" [encoding convertfrom utf-8 "dim. sinistra"]
-  ::msgcat::mcset ru "l-size" [encoding convertfrom utf-8 "l-size"]
-  ::msgcat::mcset sk "l-size" [encoding convertfrom utf-8 "rozmer-\304\276"]
-  ::msgcat::mcset sq "l-size" [encoding convertfrom utf-8 "madhesia-l"]
 
   ::msgcat::mcset bg "Set line size in left direction." [encoding convertfrom utf-8 "\320\243\320\272\320\260\320\266\320\265\321\202\320\265 \321\200\320\260\320\267\320\274\320\265\321\200\320\260 \320\275\320\260 \320\273\320\270\320\275\320\270\321\217\321\202\320\260 \320\262 \320\275\320\260\320\277\321\200\320\260\320\262\320\273\320\265\320\275\320\270\320\265 \320\275\320\260\320\273\321\217\320\262\320\276."]
   ::msgcat::mcset cz "Set line size in left direction." [encoding convertfrom utf-8 "Nastav\303\255 rozsah k\305\231ivky v lev\303\251m sm\304\233ru."]
@@ -2403,17 +2341,6 @@
   ::msgcat::mcset ru "Actual symbol theme." [encoding convertfrom utf-8 "\320\244\320\270\320\273\321\214\321\202\321\200 \320\263\321\200\321\203\320\277\320\277\321\213 \321\201\320\270\320\274\320\262\320\276\320\273\320\276\320\262."]
   ::msgcat::mcset sk "Actual symbol theme." [encoding convertfrom utf-8 "Aktu\303\241lna t\303\251ma symbolov."]
   ::msgcat::mcset sq "Actual symbol theme." [encoding convertfrom utf-8 "tema aktuale e simbolit."]
-
-  ::msgcat::mcset bg "type" [encoding convertfrom utf-8 "\321\202\320\270\320\277"]
-  ::msgcat::mcset cz "type" [encoding convertfrom utf-8 "typ"]
-  ::msgcat::mcset de "type" [encoding convertfrom utf-8 "Typ"]
-  ::msgcat::mcset el "type" [encoding convertfrom utf-8 "\316\265\316\257\316\264\316\277\317\202"]
-  ::msgcat::mcset en "type" [encoding convertfrom utf-8 "type"]
-  ::msgcat::mcset es "type" [encoding convertfrom utf-8 "tipo"]
-  ::msgcat::mcset it "type" [encoding convertfrom utf-8 "tipo"]
-  ::msgcat::mcset ru "type" [encoding convertfrom utf-8 "\321\202\320\270\320\277"]
-  ::msgcat::mcset sk "type" [encoding convertfrom utf-8 "typ"]
-  ::msgcat::mcset sq "type" [encoding convertfrom utf-8 "lloji"]
 
   ::msgcat::mcset bg "Area type." [encoding convertfrom utf-8 "\320\242\320\270\320\277 \320\275\320\260 \320\276\320\261\320\273\320\260\321\201\321\202\321\202\320\260"]
   ::msgcat::mcset cz "Area type." [encoding convertfrom utf-8 "Typ oblasti."]
@@ -2677,6 +2604,8 @@
   ::msgcat::mcset ru "Insert image" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265"]
   ::msgcat::mcset sk "Insert image" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 obr\303\241zok"]
   ::msgcat::mcset sq "Insert image" [encoding convertfrom utf-8 "fute imazhin"]
+
+  ::msgcat::mcset ru "Hide inactive scraps" [encoding convertfrom utf-8 "\320\241\320\272\321\200\321\213\321\202\321\214 \320\275\320\265\320\260\320\272\321\202\320\270\320\262\320\275\321\213\320\265 \321\201\320\272\321\200\320\260\320\277\321\213"]
 
   ::msgcat::mcset bg "Zoom 100 %" [encoding convertfrom utf-8 "\320\234\320\260\321\211\320\260\320\261 100%"]
   ::msgcat::mcset cz "Zoom 100 %" [encoding convertfrom utf-8 "Zoom na 100 %"]
@@ -3010,6 +2939,210 @@
   ::msgcat::mcset sk "deleting scrap sketch" [encoding convertfrom utf-8 "odstr\303\241nenie n\303\241\304\215rtku"]
   ::msgcat::mcset sq "deleting scrap sketch" [encoding convertfrom utf-8 "duke fshire skicen e deponise"]
 
+  ::msgcat::mcset ru "on" [encoding convertfrom utf-8 "\320\262\320\272\320\273"]
+
+  ::msgcat::mcset ru "off" [encoding convertfrom utf-8 "\320\262\321\213\320\272\320\273"]
+
+  ::msgcat::mcset ru "top" [encoding convertfrom utf-8 "\320\262\320\265\321\200\321\205"]
+
+  ::msgcat::mcset ru "bottom" [encoding convertfrom utf-8 "\320\275\320\270\320\267"]
+
+  ::msgcat::mcset ru "tiny (2xs)" [encoding convertfrom utf-8 "\320\272\321\200\320\276\321\210\320\265\321\207\320\275\321\213\320\271 (2xs)"]
+
+  ::msgcat::mcset ru "tiny (xs)" [encoding convertfrom utf-8 "\320\272\321\200\320\276\321\210\320\265\321\207\320\275\321\213\320\271 (xs)"]
+
+  ::msgcat::mcset ru "small (s)" [encoding convertfrom utf-8 "\320\274\320\265\320\273\320\272\320\270\320\271 (s)"]
+
+  ::msgcat::mcset ru "normal (m)" [encoding convertfrom utf-8 "\321\201\321\200\320\265\320\264\320\275\320\270\320\271 (m)"]
+
+  ::msgcat::mcset ru "large (l)" [encoding convertfrom utf-8 "\320\261\320\276\320\273\321\214\321\210\320\276\320\271 (l)"]
+
+  ::msgcat::mcset ru "huge (xl)" [encoding convertfrom utf-8 "\320\276\320\263\321\200\320\276\320\274\320\275\321\213\320\271 (xl)"]
+
+  ::msgcat::mcset ru "huge (2xl)" [encoding convertfrom utf-8 "\320\276\320\263\321\200\320\276\320\274\320\275\321\213\320\271 (2xl)"]
+
+  ::msgcat::mcset ru "huge (3xl)" [encoding convertfrom utf-8 "\320\276\320\263\321\200\320\276\320\274\320\275\321\213\320\271 (2xl)"]
+
+  ::msgcat::mcset ru "huge (4xl)" [encoding convertfrom utf-8 "\320\276\320\263\321\200\320\276\320\274\320\275\321\213\320\271 (4xl)"]
+
+  ::msgcat::mcset ru "out" [encoding convertfrom utf-8 "\321\201\320\275\320\260\321\200\321\203\320\266\320\270"]
+
+  ::msgcat::mcset ru "in" [encoding convertfrom utf-8 "\320\262\320\275\321\203\321\202\321\200\320\270"]
+
+  ::msgcat::mcset ru "none" [encoding convertfrom utf-8 "\320\275\320\265\321\202"]
+
+
+  ::msgcat::mcset bg "smooth" [encoding convertfrom utf-8 "\320\270\320\267\320\263\320\273\320\260\320\266\320\264\320\260\320\275\320\265"]
+  ::msgcat::mcset cz "smooth" [encoding convertfrom utf-8 "uhladit"]
+  ::msgcat::mcset de "smooth" [encoding convertfrom utf-8 "gegl\303\244ttet"]
+  ::msgcat::mcset el "smooth" [encoding convertfrom utf-8 "\316\261\317\200\316\261\316\273\316\256"]
+  ::msgcat::mcset en "smooth" [encoding convertfrom utf-8 "smooth"]
+  ::msgcat::mcset es "smooth" [encoding convertfrom utf-8 "suavizar"]
+  ::msgcat::mcset it "smooth" [encoding convertfrom utf-8 "regolarizza"]
+  ::msgcat::mcset ru "smooth" [encoding convertfrom utf-8 "\321\201\320\263\320\273\320\260\320\264\320\270\321\202\321\214"]
+  ::msgcat::mcset sk "smooth" [encoding convertfrom utf-8 "vyhladi\305\245"]
+  ::msgcat::mcset sq "smooth" [encoding convertfrom utf-8 "e bute"]
+
+
+  ::msgcat::mcset ru "auto" [encoding convertfrom utf-8 "\320\260\320\262\321\202\320\276"]
+
+  ::msgcat::mcset ru "edit" [encoding convertfrom utf-8 "\321\200\320\265\320\264\320\260\320\272\321\202\320\270\321\200\320\276\320\262\320\260\321\202\321\214"]
+
+  ::msgcat::mcset ru "Altitude" [encoding convertfrom utf-8 "\320\222\321\213\321\201\320\276\321\202\320\260"]
+
+  ::msgcat::mcset bg "OK" [encoding convertfrom utf-8 "\320\236\320\232"]
+  ::msgcat::mcset cz "OK" [encoding convertfrom utf-8 "OK"]
+  ::msgcat::mcset de "OK" [encoding convertfrom utf-8 "OK"]
+  ::msgcat::mcset el "OK" [encoding convertfrom utf-8 "\316\237\316\232"]
+  ::msgcat::mcset en "OK" [encoding convertfrom utf-8 "OK"]
+  ::msgcat::mcset es "OK" [encoding convertfrom utf-8 "OK"]
+  ::msgcat::mcset it "OK" [encoding convertfrom utf-8 "OK"]
+  ::msgcat::mcset ru "OK" [encoding convertfrom utf-8 "\320\243\320\241\320\237\320\225\320\245"]
+  ::msgcat::mcset sk "OK" [encoding convertfrom utf-8 "OK"]
+  ::msgcat::mcset sq "OK" [encoding convertfrom utf-8 "ne rregull-O.K."]
+
+  ::msgcat::mcset ru "Cancel" [encoding convertfrom utf-8 "\320\236\321\202\320\274\320\265\320\275\320\260"]
+
+  ::msgcat::mcset ru "painted" [encoding convertfrom utf-8 "\320\275\320\260\321\200\320\270\321\201\320\276\320\262\320\260\320\275\320\275\321\213\320\271"]
+
+  ::msgcat::mcset ru "natural" [encoding convertfrom utf-8 "\320\265\321\201\321\202\320\265\321\201\321\202\320\262\320\265\320\275\320\275\321\213\320\271"]
+
+  ::msgcat::mcset ru "fixed" [encoding convertfrom utf-8 "\321\200\320\265\320\277\320\265\321\200"]
+
+  ::msgcat::mcset ru "winter" [encoding convertfrom utf-8 "\320\267\320\270\320\274\320\260"]
+
+  ::msgcat::mcset ru "summer" [encoding convertfrom utf-8 "\320\273\320\265\321\202\320\276"]
+
+  ::msgcat::mcset ru "undefined" [encoding convertfrom utf-8 "\320\275\320\265 \320\276\320\277\321\200\320\265\320\264\320\265\320\273\320\265\320\275\320\276"]
+
+  ::msgcat::mcset ru "paleo" [encoding convertfrom utf-8 "\320\277\320\260\320\273\320\265\320\276"]
+
+  ::msgcat::mcset ru "Station name" [encoding convertfrom utf-8 "\320\235\320\260\320\267\320\262\320\260\320\275\320\270\320\265 \320\277\320\270\320\272\320\265\321\202\320\260"]
+
+  ::msgcat::mcset ru "Scrap reference" [encoding convertfrom utf-8 "\320\241\320\272\321\200\320\260\320\277 (\321\201\321\201\321\213\320\273\320\272\320\260)"]
+
+  ::msgcat::mcset bg "type" [encoding convertfrom utf-8 "\321\202\320\270\320\277"]
+  ::msgcat::mcset cz "type" [encoding convertfrom utf-8 "typ"]
+  ::msgcat::mcset de "type" [encoding convertfrom utf-8 "Typ"]
+  ::msgcat::mcset el "type" [encoding convertfrom utf-8 "\316\265\316\257\316\264\316\277\317\202"]
+  ::msgcat::mcset en "type" [encoding convertfrom utf-8 "type"]
+  ::msgcat::mcset es "type" [encoding convertfrom utf-8 "tipo"]
+  ::msgcat::mcset it "type" [encoding convertfrom utf-8 "tipo"]
+  ::msgcat::mcset ru "type" [encoding convertfrom utf-8 "\321\202\320\270\320\277"]
+  ::msgcat::mcset sk "type" [encoding convertfrom utf-8 "typ"]
+  ::msgcat::mcset sq "type" [encoding convertfrom utf-8 "lloji"]
+
+  ::msgcat::mcset ru "bedrock" [encoding convertfrom utf-8 "\320\272\320\276\321\200\320\265\320\275\320\275\320\260\321\217 \321\201\321\202\320\265\320\275\320\260"]
+
+  ::msgcat::mcset ru "underlying" [encoding convertfrom utf-8 "\320\275\320\270\320\266\320\265-\321\200\320\260\321\201\320\277\320\276\320\273\320\276\320\266\320\265\320\275\320\275\320\260\321\217"]
+
+  ::msgcat::mcset ru "overlying" [encoding convertfrom utf-8 "\320\262\321\213\321\210\320\265-\321\200\320\260\321\201\320\277\320\276\320\273\320\276\320\266\320\265\320\275\320\275\320\260\321\217"]
+
+  ::msgcat::mcset ru "unsurveyed" [encoding convertfrom utf-8 "\320\263\320\273\320\260\320\267\320\276\320\274\320\265\321\200\320\275\320\260\321\217 \321\201\321\212\320\265\320\274\320\272\320\260"]
+
+  ::msgcat::mcset ru "pit" [encoding convertfrom utf-8 "\320\272\320\276\320\273\320\276\320\264\320\265\321\206"]
+
+  ::msgcat::mcset ru "sand" [encoding convertfrom utf-8 "\320\277\320\265\321\201\320\276\320\272"]
+
+  ::msgcat::mcset ru "clay" [encoding convertfrom utf-8 "\320\263\320\273\320\270\320\275\320\260"]
+
+  ::msgcat::mcset ru "pebbles" [encoding convertfrom utf-8 "\320\263\320\260\320\273\321\214\320\272\320\260"]
+
+  ::msgcat::mcset ru "debris" [encoding convertfrom utf-8 "\321\211\320\265\320\261\320\265\320\275\321\214, \320\263\320\273\321\213\320\261\321\213"]
+
+  ::msgcat::mcset ru "blocks" [encoding convertfrom utf-8 "\320\263\320\273\321\213\320\261\321\213 (\320\272\321\200\321\203\320\277\320\275\321\213\320\265)"]
+
+  ::msgcat::mcset ru "ice" [encoding convertfrom utf-8 "\320\273\320\265\320\264"]
+
+  ::msgcat::mcset ru "flowstone" [encoding convertfrom utf-8 "\320\275\320\260\321\202\320\265\320\272"]
+
+  ::msgcat::mcset ru "moonmilk" [encoding convertfrom utf-8 "\320\273\321\203\320\275\320\275\320\276\320\265 \320\274\320\276\320\273\320\276\320\272\320\276"]
+
+  ::msgcat::mcset ru "visible" [encoding convertfrom utf-8 "\320\262\320\270\320\264\320\270\320\274\320\260\321\217"]
+
+  ::msgcat::mcset ru "invisible" [encoding convertfrom utf-8 "\320\275\320\265\320\262\320\270\320\264\320\270\320\274\320\260\321\217"]
+
+  ::msgcat::mcset ru "temporary" [encoding convertfrom utf-8 "\320\262\321\200\320\265\320\274\320\265\320\275\320\275\320\260\321\217"]
+
+  ::msgcat::mcset ru "presumed" [encoding convertfrom utf-8 "\320\277\321\200\320\265\320\264\320\277\320\276\320\273\320\260\320\263\320\260\320\265\320\274\320\260\321\217"]
+
+  ::msgcat::mcset ru "permanent" [encoding convertfrom utf-8 "\320\277\320\276\321\201\321\202\320\276\321\217\320\275\320\275\321\213\320\271"]
+
+  ::msgcat::mcset ru "intermittent" [encoding convertfrom utf-8 "\320\277\320\265\321\200\320\265\320\274\320\275\320\275\321\213\320\271"]
+
+  ::msgcat::mcset ru "conjectural" [encoding convertfrom utf-8 "\320\277\321\200\320\265\320\264\320\277\320\276\320\273\320\276\320\266\320\270\321\202\320\265\320\273\321\214\320\275\321\213\320\271"]
+
+  ::msgcat::mcset ru "cave" [encoding convertfrom utf-8 "\320\277\320\265\321\211\320\265\321\200\320\260"]
+
+  ::msgcat::mcset ru "surface" [encoding convertfrom utf-8 "\320\277\320\276\320\262\320\265\321\200\321\205\320\275\320\276\321\201\321\202\321\214"]
+
+  ::msgcat::mcset ru "control points" [encoding convertfrom utf-8 "\321\203\320\277\321\200\320\260\320\262\320\273. \321\202\320\276\321\207\320\272\320\270"]
+
+  ::msgcat::mcset bg "orientation" [encoding convertfrom utf-8 "\320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\321\217"]
+  ::msgcat::mcset cz "orientation" [encoding convertfrom utf-8 "orientace"]
+  ::msgcat::mcset de "orientation" [encoding convertfrom utf-8 "Ausrichtung"]
+  ::msgcat::mcset el "orientation" [encoding convertfrom utf-8 "\317\200\317\201\316\277\317\203\316\261\316\275\316\261\317\204\316\277\316\273\316\271\317\203\316\274\317\214\317\202"]
+  ::msgcat::mcset en "orientation" [encoding convertfrom utf-8 "orientation"]
+  ::msgcat::mcset es "orientation" [encoding convertfrom utf-8 "orientaci\303\263n"]
+  ::msgcat::mcset it "orientation" [encoding convertfrom utf-8 "orientazione"]
+  ::msgcat::mcset ru "orientation" [encoding convertfrom utf-8 "\320\276\321\200\320\270\320\265\320\275\321\202\320\260\321\206\320\270\321\217"]
+  ::msgcat::mcset sk "orientation" [encoding convertfrom utf-8 "orient\303\241cia"]
+  ::msgcat::mcset sq "orientation" [encoding convertfrom utf-8 "orientimi"]
+
+  ::msgcat::mcset bg "l-size" [encoding convertfrom utf-8 "l-\321\200\320\260\320\267\320\274\320\265\321\200"]
+  ::msgcat::mcset cz "l-size" [encoding convertfrom utf-8 "l-rozsah"]
+  ::msgcat::mcset de "l-size" [encoding convertfrom utf-8 "l-Gr\303\266\303\237e"]
+  ::msgcat::mcset el "l-size" [encoding convertfrom utf-8 "\316\264\316\271\316\254\317\203\317\204\316\261\317\203\316\267 (\316\261)"]
+  ::msgcat::mcset en "l-size" [encoding convertfrom utf-8 "l-size"]
+  ::msgcat::mcset es "l-size" [encoding convertfrom utf-8 "anchura-izda"]
+  ::msgcat::mcset it "l-size" [encoding convertfrom utf-8 "dim. sinistra"]
+  ::msgcat::mcset ru "l-size" [encoding convertfrom utf-8 "\321\200\320\260\320\267\320\274\320\265\321\200"]
+  ::msgcat::mcset sk "l-size" [encoding convertfrom utf-8 "rozmer-\304\276"]
+  ::msgcat::mcset sq "l-size" [encoding convertfrom utf-8 "madhesia-l"]
+
+  ::msgcat::mcset ru "segment subtype" [encoding convertfrom utf-8 "\321\202\320\270\320\277 \321\201\320\265\320\263\320\274\320\265\320\275\321\202\320\260"]
+
+  ::msgcat::mcset ru "altitude label" [encoding convertfrom utf-8 "\320\276\321\202\320\274\320\265\321\202\320\272\320\260 \320\262\321\213\321\201\320\276\321\202\321\213"]
+
+  ::msgcat::mcset ru "other options" [encoding convertfrom utf-8 "\320\277\321\200\320\276\321\207\320\265\320\265"]
+
+  ::msgcat::mcset bg "Edit line" [encoding convertfrom utf-8 "\320\240\320\265\320\264\320\260\320\272\321\202\320\270\321\200\320\260\320\271 \320\273\320\270\320\275\320\270\321\217"]
+  ::msgcat::mcset cz "Edit line" [encoding convertfrom utf-8 "Editovat"]
+  ::msgcat::mcset de "Edit line" [encoding convertfrom utf-8 "Linie bearbeiten"]
+  ::msgcat::mcset el "Edit line" [encoding convertfrom utf-8 "\316\225\317\200\316\265\316\276\316\265\317\201\316\263\316\261\317\203\316\257\316\261 \316\263\317\201\316\261\316\274\316\274\316\256\317\202"]
+  ::msgcat::mcset en "Edit line" [encoding convertfrom utf-8 "Edit line"]
+  ::msgcat::mcset es "Edit line" [encoding convertfrom utf-8 "Editar"]
+  ::msgcat::mcset it "Edit line" [encoding convertfrom utf-8 "Edita"]
+  ::msgcat::mcset ru "Edit line" [encoding convertfrom utf-8 "\320\237\321\200\320\260\320\262\320\270\321\202\321\214 \320\273\320\270\320\275\320\270\321\216"]
+  ::msgcat::mcset sk "Edit line" [encoding convertfrom utf-8 "Upravi\305\245"]
+  ::msgcat::mcset sq "Edit line" [encoding convertfrom utf-8 "permireso rrjeshtin"]
+
+  ::msgcat::mcset bg "close" [encoding convertfrom utf-8 "\320\267\320\260\321\202\320\262\320\276\321\200\320\270"]
+  ::msgcat::mcset cz "close" [encoding convertfrom utf-8 "zav\305\231\303\255t"]
+  ::msgcat::mcset de "close" [encoding convertfrom utf-8 "schlie\303\237en"]
+  ::msgcat::mcset el "close" [encoding convertfrom utf-8 "\316\272\316\273\316\265\316\257\317\203\316\271\316\274\316\277"]
+  ::msgcat::mcset en "close" [encoding convertfrom utf-8 "close"]
+  ::msgcat::mcset es "close" [encoding convertfrom utf-8 "cerrar"]
+  ::msgcat::mcset it "close" [encoding convertfrom utf-8 "chiudi"]
+  ::msgcat::mcset ru "close" [encoding convertfrom utf-8 "\320\267\320\260\320\274\320\272\320\275\321\203\321\202\321\214"]
+  ::msgcat::mcset sk "close" [encoding convertfrom utf-8 "zavrie\305\245"]
+  ::msgcat::mcset sq "close" [encoding convertfrom utf-8 "mbylle"]
+
+  ::msgcat::mcset bg "reverse" [encoding convertfrom utf-8 "\320\276\320\261\321\200\320\260\321\202\320\275\320\260"]
+  ::msgcat::mcset cz "reverse" [encoding convertfrom utf-8 "obr\303\241tit"]
+  ::msgcat::mcset de "reverse" [encoding convertfrom utf-8 "Umkehren"]
+  ::msgcat::mcset el "reverse" [encoding convertfrom utf-8 "\316\261\316\275\316\261\317\203\317\204\317\201\316\277\317\206\316\256"]
+  ::msgcat::mcset en "reverse" [encoding convertfrom utf-8 "reverse"]
+  ::msgcat::mcset es "reverse" [encoding convertfrom utf-8 "invertir"]
+  ::msgcat::mcset it "reverse" [encoding convertfrom utf-8 "inverti"]
+  ::msgcat::mcset ru "reverse" [encoding convertfrom utf-8 "\320\276\320\261\321\200\320\260\321\202\320\275\320\260\321\217"]
+  ::msgcat::mcset sk "reverse" [encoding convertfrom utf-8 "oto\304\215i\305\245"]
+  ::msgcat::mcset sq "reverse" [encoding convertfrom utf-8 "ktheje pas"]
+
+  ::msgcat::mcset ru "Select underlying point" [encoding convertfrom utf-8 "\320\222\321\213\320\264\320\265\320\273\320\270\321\202\321\214 \320\264\321\200\321\203\320\263\321\203\321\216 \321\202\320\276\321\207\320\272\321\203 (\320\276\320\275\320\260 \320\267\320\260\321\201\320\273\320\276\320\275\321\217\320\265\321\202\321\201\321\217 \321\202\320\265\320\272\321\203\321\211\320\265\320\271 \321\202\320\276\321\207\320\272\320\276\320\271)"]
+
+  ::msgcat::mcset ru "Delete symbol" [encoding convertfrom utf-8 "\320\243\320\264\320\260\320\273\320\270\321\202\321\214 \320\276\320\261\321\212\320\265\320\272\321\202"]
+
   ::msgcat::mcset bg "toggle image visibility" [encoding convertfrom utf-8 "\320\277\321\200\320\265\320\262\320\272\320\273\321\216\321\207\320\262\320\260\320\275\320\265 \320\275\320\260 \320\262\320\270\320\264\320\270\320\274\320\276\321\201\321\202\321\202\320\260 \320\275\320\260 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265"]
   ::msgcat::mcset cz "toggle image visibility" [encoding convertfrom utf-8 "p\305\231epnut\303\255 viditelnosti obr\303\241zku"]
   ::msgcat::mcset de "toggle image visibility" [encoding convertfrom utf-8 "Bildsichtbarkeit umschalten"]
@@ -3130,15 +3263,6 @@
   ::msgcat::mcset ru "Split line" [encoding convertfrom utf-8 "\320\240\320\260\320\267\320\264\320\265\320\273\320\270\321\202\321\214 \320\273\320\270\320\275\320\270\321\216"]
   ::msgcat::mcset sk "Split line" [encoding convertfrom utf-8 "Rozdeli\305\245 krivku"]
   ::msgcat::mcset sq "Split line" [encoding convertfrom utf-8 "ndaje rjeshtin-vijen"]
-
-  ::msgcat::mcset bg "Trace line" [encoding convertfrom utf-8 "\320\237\321\200\320\276\321\201\320\273\320\265\320\264\321\217\320\262\320\260\320\275\320\265 \320\276\321\202 \320\272\320\260\321\200\321\202\320\270\320\275\320\260\321\202\320\260"]
-  ::msgcat::mcset en "Trace line" [encoding convertfrom utf-8 "Trace line"]
-
-  ::msgcat::mcset bg "Convert to curve" [encoding convertfrom utf-8 "\320\232\320\276\320\275\320\262\320\265\321\200\321\202\320\270\321\200\320\260\320\275\320\265 \320\262 \320\221\320\265\320\267\320\270\320\265"]
-  ::msgcat::mcset en "Convert to curve" [encoding convertfrom utf-8 "Convert to curve"]
-
-  ::msgcat::mcset bg "Simplify line" [encoding convertfrom utf-8 "\320\236\320\277\321\200\320\276\321\201\321\202\321\217\320\262\320\260\320\275\320\265 \320\275\320\260 \320\273\320\270\320\275\320\270\321\217"]
-  ::msgcat::mcset en "Simplify line" [encoding convertfrom utf-8 "Simplify line"]
 
   ::msgcat::mcset bg "deleting line point" [encoding convertfrom utf-8 "\320\230\320\267\321\202\321\200\320\270\320\271 \321\202\320\276\321\207\320\272\320\260 \320\276\321\202 \320\273\320\270\320\275\320\270\321\217\321\202\320\260"]
   ::msgcat::mcset cz "deleting line point" [encoding convertfrom utf-8 "mazan\303\255 bodu na k\305\231ivce"]
@@ -3271,6 +3395,10 @@
   ::msgcat::mcset ru "split line" [encoding convertfrom utf-8 "\321\200\320\260\320\267\320\264\320\265\320\273\320\265\320\275\320\270\320\265 \320\273\320\270\320\275\320\270\320\270"]
   ::msgcat::mcset sk "split line" [encoding convertfrom utf-8 "rozdelenie \304\215iary"]
   ::msgcat::mcset sq "split line" [encoding convertfrom utf-8 "ndarja e pikes-rjeshtit"]
+
+  ::msgcat::mcset ru "Stop tracing" [encoding convertfrom utf-8 "\320\237\321\200\320\265\320\272\321\200\320\260\321\202\320\270\321\202\321\214 \321\202\321\200\320\260\321\201\321\201\320\270\321\200\320\276\320\262\320\272\321\203"]
+
+  ::msgcat::mcset ru "Continue tracing" [encoding convertfrom utf-8 "\320\237\321\200\320\276\320\264\320\276\320\273\320\266\320\270\321\202\321\214 \321\202\321\200\320\260\321\201\321\201\320\270\321\200\320\276\320\262\320\272\321\203"]
 
   ::msgcat::mcset bg "loading text editor ..." [encoding convertfrom utf-8 "\320\267\320\260\321\200\320\265\320\266\320\264\320\260\320\275\320\265 \320\275\320\260 \321\202\320\265\320\272\321\201\321\202\320\276\320\262\320\270\321\217 \321\200\320\265\320\264\320\260\320\272\321\202\320\276\321\200 ..."]
   ::msgcat::mcset cz "loading text editor ..." [encoding convertfrom utf-8 "nahr\303\241v\303\241m text editor ..."]
@@ -3786,28 +3914,6 @@
   ::msgcat::mcset sk "Edit" [encoding convertfrom utf-8 "Upravi\305\245"]
   ::msgcat::mcset sq "Edit" [encoding convertfrom utf-8 "permireso"]
 
-  ::msgcat::mcset bg "Undo" [encoding convertfrom utf-8 "\320\236\321\202\320\274\321\217\320\275\320\260"]
-  ::msgcat::mcset cz "Undo" [encoding convertfrom utf-8 "Zp\304\233t"]
-  ::msgcat::mcset de "Undo" [encoding convertfrom utf-8 "R\303\274ckg\303\244ngig"]
-  ::msgcat::mcset el "Undo" [encoding convertfrom utf-8 "\316\221\316\275\316\261\316\257\317\201\316\265\317\203\316\267"]
-  ::msgcat::mcset en "Undo" [encoding convertfrom utf-8 "Undo"]
-  ::msgcat::mcset es "Undo" [encoding convertfrom utf-8 "Deshacer"]
-  ::msgcat::mcset it "Undo" [encoding convertfrom utf-8 "Indietro"]
-  ::msgcat::mcset ru "Undo" [encoding convertfrom utf-8 "\320\236\321\202\320\274\320\265\320\275\320\270\321\202\321\214"]
-  ::msgcat::mcset sk "Undo" [encoding convertfrom utf-8 "Sp\303\244\305\245"]
-  ::msgcat::mcset sq "Undo" [encoding convertfrom utf-8 "prishe-undo"]
-
-  ::msgcat::mcset bg "Redo" [encoding convertfrom utf-8 "\320\222\321\212\320\267\321\201\321\202\320\260\320\275\320\276\320\262\321\217\320\262\320\260\320\275\320\265"]
-  ::msgcat::mcset cz "Redo" [encoding convertfrom utf-8 "Opakovat"]
-  ::msgcat::mcset de "Redo" [encoding convertfrom utf-8 "Wiederholen"]
-  ::msgcat::mcset el "Redo" [encoding convertfrom utf-8 "\316\225\317\200\316\261\316\275\316\254\316\273\316\267\317\210\316\267"]
-  ::msgcat::mcset en "Redo" [encoding convertfrom utf-8 "Redo"]
-  ::msgcat::mcset es "Redo" [encoding convertfrom utf-8 "Rehacer"]
-  ::msgcat::mcset it "Redo" [encoding convertfrom utf-8 "Rifai"]
-  ::msgcat::mcset ru "Redo" [encoding convertfrom utf-8 "\320\222\320\265\321\200\320\275\321\203\321\202\321\214"]
-  ::msgcat::mcset sk "Redo" [encoding convertfrom utf-8 "Opakova\305\245"]
-  ::msgcat::mcset sq "Redo" [encoding convertfrom utf-8 "beje prape-redo"]
-
   ::msgcat::mcset bg "Cut" [encoding convertfrom utf-8 "\320\230\320\267\321\200\320\265\320\266\320\270"]
   ::msgcat::mcset cz "Cut" [encoding convertfrom utf-8 "Vyjmout"]
   ::msgcat::mcset de "Cut" [encoding convertfrom utf-8 "Ausschneiden"]
@@ -3910,6 +4016,7 @@
   ::msgcat::mcset bg "Calibrate bitmap..." [encoding convertfrom utf-8 "\320\232\320\260\320\273\320\270\320\261\321\200\320\270\321\200\320\260\320\275\320\265 \320\275\320\260 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265 ..."]
   ::msgcat::mcset de "Calibrate bitmap..." [encoding convertfrom utf-8 "Bild kalibrieren..."]
   ::msgcat::mcset it "Calibrate bitmap..." [encoding convertfrom utf-8 "Mappa georeferenziata..."]
+  ::msgcat::mcset ru "Calibrate bitmap..." [encoding convertfrom utf-8 "\320\232\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\260\321\202\321\214 \320\270\320\267\320\276\320\261\321\200\320\260\320\266\320\265\320\275\320\270\320\265..."]
 
   ::msgcat::mcset bg "About..." [encoding convertfrom utf-8 "\320\227\320\260 \320\277\321\200\320\276\320\263\321\200\320\260\320\274\320\260\321\202\320\260 ..."]
   ::msgcat::mcset cz "About..." [encoding convertfrom utf-8 "O programu..."]
@@ -3957,6 +4064,7 @@
   ::msgcat::mcset de "New file" [encoding convertfrom utf-8 "Neue Datei"]
   ::msgcat::mcset el "New file" [encoding convertfrom utf-8 "\316\235\316\255\316\277 \316\261\317\201\317\207\316\265\316\257\316\277"]
   ::msgcat::mcset it "New file" [encoding convertfrom utf-8 "Nuovo"]
+  ::msgcat::mcset ru "New file" [encoding convertfrom utf-8 "\320\235\320\276\320\262\321\213\320\271 \321\204\320\260\320\271\320\273"]
   ::msgcat::mcset sk "New file" [encoding convertfrom utf-8 "Nov\303\275 s\303\272bor"]
   ::msgcat::mcset sq "New file" [encoding convertfrom utf-8 "arkivi-fajlli I ri"]
 
@@ -3964,6 +4072,7 @@
   ::msgcat::mcset de "Open file" [encoding convertfrom utf-8 "Datei \303\266ffnen"]
   ::msgcat::mcset el "Open file" [encoding convertfrom utf-8 "\316\206\316\275\316\277\316\271\316\263\316\274\316\261"]
   ::msgcat::mcset it "Open file" [encoding convertfrom utf-8 "Apri"]
+  ::msgcat::mcset ru "Open file" [encoding convertfrom utf-8 "\320\236\321\202\320\272\321\200\321\213\321\202\321\214 \321\204\320\260\320\271\320\273"]
   ::msgcat::mcset sk "Open file" [encoding convertfrom utf-8 "Otvori\305\245 s\303\272bor"]
   ::msgcat::mcset sq "Open file" [encoding convertfrom utf-8 "hape fajllin"]
 
@@ -3971,6 +4080,7 @@
   ::msgcat::mcset de "Save file" [encoding convertfrom utf-8 "Datei speichern"]
   ::msgcat::mcset el "Save file" [encoding convertfrom utf-8 "\316\221\317\200\316\277\316\270\316\256\316\272\316\265\317\205\317\203\316\267"]
   ::msgcat::mcset it "Save file" [encoding convertfrom utf-8 "Salva"]
+  ::msgcat::mcset ru "Save file" [encoding convertfrom utf-8 "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214 \321\204\320\260\320\271\320\273"]
   ::msgcat::mcset sk "Save file" [encoding convertfrom utf-8 "Ulo\305\276i\305\245 s\303\272bor"]
   ::msgcat::mcset sq "Save file" [encoding convertfrom utf-8 "ruaje fajllin"]
 
@@ -3978,6 +4088,7 @@
   ::msgcat::mcset de "Save file as" [encoding convertfrom utf-8 "Datei speichern als"]
   ::msgcat::mcset el "Save file as" [encoding convertfrom utf-8 "\316\221\317\200\316\277\316\270\316\256\316\272\316\265\317\205\317\203\316\267 \317\211\317\202"]
   ::msgcat::mcset it "Save file as" [encoding convertfrom utf-8 "Salva come"]
+  ::msgcat::mcset ru "Save file as" [encoding convertfrom utf-8 "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214 \321\204\320\260\320\271\320\273 \320\272\320\260\320\272"]
   ::msgcat::mcset sk "Save file as" [encoding convertfrom utf-8 "Ulo\305\276i\305\245 s\303\272bor ako"]
   ::msgcat::mcset sq "Save file as" [encoding convertfrom utf-8 "ruaje fajllin si"]
 
@@ -3985,13 +4096,37 @@
   ::msgcat::mcset de "Close file" [encoding convertfrom utf-8 "Datei schlie\303\237en"]
   ::msgcat::mcset el "Close file" [encoding convertfrom utf-8 "\316\232\316\273\316\265\316\257\317\203\316\271\316\274\316\277 \316\261\317\201\317\207\316\265\316\257\316\277\317\205"]
   ::msgcat::mcset it "Close file" [encoding convertfrom utf-8 "Chiudi"]
+  ::msgcat::mcset ru "Close file" [encoding convertfrom utf-8 "\320\227\320\260\320\272\321\200\321\213\321\202\321\214 \321\204\320\260\320\271\320\273"]
   ::msgcat::mcset sk "Close file" [encoding convertfrom utf-8 "Zatvori\305\245 s\303\272bor"]
   ::msgcat::mcset sq "Close file" [encoding convertfrom utf-8 "mbylle fajllin"]
+
+  ::msgcat::mcset bg "Undo" [encoding convertfrom utf-8 "\320\236\321\202\320\274\321\217\320\275\320\260"]
+  ::msgcat::mcset cz "Undo" [encoding convertfrom utf-8 "Zp\304\233t"]
+  ::msgcat::mcset de "Undo" [encoding convertfrom utf-8 "R\303\274ckg\303\244ngig"]
+  ::msgcat::mcset el "Undo" [encoding convertfrom utf-8 "\316\221\316\275\316\261\316\257\317\201\316\265\317\203\316\267"]
+  ::msgcat::mcset en "Undo" [encoding convertfrom utf-8 "Undo"]
+  ::msgcat::mcset es "Undo" [encoding convertfrom utf-8 "Deshacer"]
+  ::msgcat::mcset it "Undo" [encoding convertfrom utf-8 "Indietro"]
+  ::msgcat::mcset ru "Undo" [encoding convertfrom utf-8 "\320\236\321\202\320\274\320\265\320\275\320\270\321\202\321\214"]
+  ::msgcat::mcset sk "Undo" [encoding convertfrom utf-8 "Sp\303\244\305\245"]
+  ::msgcat::mcset sq "Undo" [encoding convertfrom utf-8 "prishe-undo"]
+
+  ::msgcat::mcset bg "Redo" [encoding convertfrom utf-8 "\320\222\321\212\320\267\321\201\321\202\320\260\320\275\320\276\320\262\321\217\320\262\320\260\320\275\320\265"]
+  ::msgcat::mcset cz "Redo" [encoding convertfrom utf-8 "Opakovat"]
+  ::msgcat::mcset de "Redo" [encoding convertfrom utf-8 "Wiederholen"]
+  ::msgcat::mcset el "Redo" [encoding convertfrom utf-8 "\316\225\317\200\316\261\316\275\316\254\316\273\316\267\317\210\316\267"]
+  ::msgcat::mcset en "Redo" [encoding convertfrom utf-8 "Redo"]
+  ::msgcat::mcset es "Redo" [encoding convertfrom utf-8 "Rehacer"]
+  ::msgcat::mcset it "Redo" [encoding convertfrom utf-8 "Rifai"]
+  ::msgcat::mcset ru "Redo" [encoding convertfrom utf-8 "\320\222\320\265\321\200\320\275\321\203\321\202\321\214"]
+  ::msgcat::mcset sk "Redo" [encoding convertfrom utf-8 "Opakova\305\245"]
+  ::msgcat::mcset sq "Redo" [encoding convertfrom utf-8 "beje prape-redo"]
 
   ::msgcat::mcset bg "Switch to text editor" [encoding convertfrom utf-8 "\320\237\321\200\320\265\320\262\320\272\320\273\321\216\321\207\320\270 \320\275\320\260 \321\202\320\265\320\272\321\201\321\202\320\276\320\262 \321\200\320\265\320\264\320\260\320\272\321\202\320\276\321\200"]
   ::msgcat::mcset de "Switch to text editor" [encoding convertfrom utf-8 "Zum Texteditor wechseln"]
   ::msgcat::mcset el "Switch to text editor" [encoding convertfrom utf-8 "\316\234\316\265\317\204\316\254\316\262\316\261\317\203\316\267 \317\203\316\265 \316\265\317\200\316\265\316\276\316\265\317\201\316\263\316\261\317\203\317\204\316\256 \316\272\316\265\316\271\316\274\316\255\316\275\316\277\317\205"]
   ::msgcat::mcset it "Switch to text editor" [encoding convertfrom utf-8 "Editor di testi"]
+  ::msgcat::mcset ru "Switch to text editor" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\271\321\202\320\270 \320\272 \320\276\320\272\320\275\321\203 \321\202\320\265\320\272\321\201\321\202\320\276\320\262\320\276\320\263\320\276 \321\200\320\265\320\264\320\260\320\272\321\202\320\276\321\200\320\260"]
   ::msgcat::mcset sk "Switch to text editor" [encoding convertfrom utf-8 "Prepn\303\272\305\245 na textov\303\275 editor"]
   ::msgcat::mcset sq "Switch to text editor" [encoding convertfrom utf-8 "kalo tek editori i tekstit"]
 
@@ -3999,6 +4134,7 @@
   ::msgcat::mcset de "Switch to map editor" [encoding convertfrom utf-8 "Zum Karteneditor wechseln"]
   ::msgcat::mcset el "Switch to map editor" [encoding convertfrom utf-8 "\316\234\316\265\317\204\316\254\316\262\316\261\317\203\316\267 \317\203\316\265 \316\265\317\200\316\265\316\276\316\265\317\201\316\263\316\261\317\203\317\204\316\256 \317\203\317\207\316\265\316\264\316\257\316\277\317\205"]
   ::msgcat::mcset it "Switch to map editor" [encoding convertfrom utf-8 "Editor di mappe"]
+  ::msgcat::mcset ru "Switch to map editor" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\271\321\202\320\270 \320\272 \320\276\320\272\320\275\321\203 \321\200\320\265\320\264\320\260\320\272\321\202\320\276\321\200\320\260 \320\272\320\260\321\200\321\202\321\213"]
   ::msgcat::mcset sk "Switch to map editor" [encoding convertfrom utf-8 "Prepn\303\272\305\245 na mapov\303\275 editor"]
   ::msgcat::mcset sq "Switch to map editor" [encoding convertfrom utf-8 "kalo tek editori I hartes"]
 
@@ -4006,6 +4142,7 @@
   ::msgcat::mcset de "Switch to compiler" [encoding convertfrom utf-8 "Zum Compiler wechseln"]
   ::msgcat::mcset el "Switch to compiler" [encoding convertfrom utf-8 "\316\234\316\265\317\204\316\254\316\262\316\261\317\203\316\267 \317\203\316\265 \317\203\317\205\316\275\317\204\316\254\316\272\317\204\316\267"]
   ::msgcat::mcset it "Switch to compiler" [encoding convertfrom utf-8 "Compilatore"]
+  ::msgcat::mcset ru "Switch to compiler" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\271\321\202\320\270 \320\272 \320\276\320\272\320\275\321\203 \320\272\320\276\320\274\320\277\320\270\320\273\321\217\321\202\320\276\321\200\320\260"]
   ::msgcat::mcset sk "Switch to compiler" [encoding convertfrom utf-8 "Prepn\303\272\305\245 na kompil\303\241tor"]
   ::msgcat::mcset sq "Switch to compiler" [encoding convertfrom utf-8 "kalo tek kompilatori"]
 
@@ -4024,6 +4161,7 @@
   ::msgcat::mcset de "Switch to select mode" [encoding convertfrom utf-8 "In Auswahlmodus wechseln"]
   ::msgcat::mcset el "Switch to select mode" [encoding convertfrom utf-8 "\316\234\316\265\317\204\316\254\316\262\316\261\317\203\316\267 \317\203\316\265 \316\273\316\265\316\271\317\204\316\277\317\205\317\201\316\263\316\257\316\261 \316\265\317\200\316\271\316\273\316\277\316\263\316\256\317\202"]
   ::msgcat::mcset it "Switch to select mode" [encoding convertfrom utf-8 "Modalit\303\240 di selezione"]
+  ::msgcat::mcset ru "Switch to select mode" [encoding convertfrom utf-8 "\320\237\320\265\321\200\320\265\320\272\320\273\321\216\321\207\320\270\321\202\321\214\321\201\321\217 \320\262 \321\200\320\265\320\266\320\270\320\274 \320\262\321\213\320\261\320\276\321\200\320\260"]
   ::msgcat::mcset sk "Switch to select mode" [encoding convertfrom utf-8 "Prepn\303\272\305\245 do m\303\263du na v\303\275ber objektu"]
   ::msgcat::mcset sq "Switch to select mode" [encoding convertfrom utf-8 "kalo tek moduli per selekcionim"]
 
@@ -4031,6 +4169,7 @@
   ::msgcat::mcset de "Select next scrap" [encoding convertfrom utf-8 "N\303\244chste Skizze ausw\303\244hlen"]
   ::msgcat::mcset el "Select next scrap" [encoding convertfrom utf-8 "\316\225\317\200\316\271\316\273\316\277\316\263\316\256 \316\265\317\200\317\214\316\274\316\265\316\275\316\277\317\205 \317\203\316\272\317\201\316\261\317\200"]
   ::msgcat::mcset it "Select next scrap" [encoding convertfrom utf-8 "Seleziona il prossimo scrap"]
+  ::msgcat::mcset ru "Select next scrap" [encoding convertfrom utf-8 "\320\222\321\213\320\261\321\200\320\260\321\202\321\214 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\320\270\320\271 \321\201\320\272\321\200\320\260\320\277"]
   ::msgcat::mcset sk "Select next scrap" [encoding convertfrom utf-8 "Vyber nasleduj\303\272ci scrap"]
   ::msgcat::mcset sq "Select next scrap" [encoding convertfrom utf-8 "zgjedhe deponin e ardhshme"]
 
@@ -4038,6 +4177,7 @@
   ::msgcat::mcset de "Select next area" [encoding convertfrom utf-8 "N\303\244chste Fl\303\244che ausw\303\244hlen"]
   ::msgcat::mcset el "Select next area" [encoding convertfrom utf-8 "\316\225\317\200\316\271\316\273\316\277\316\263\316\256 \316\265\317\200\317\214\316\274\316\265\316\275\316\267\317\202 \316\265\317\200\316\271\317\206\316\254\316\275\316\265\316\271\316\261\317\202"]
   ::msgcat::mcset it "Select next area" [encoding convertfrom utf-8 "Seleziona la prossima area"]
+  ::msgcat::mcset ru "Select next area" [encoding convertfrom utf-8 "\320\222\321\213\320\261\321\200\320\260\321\202\321\214 \321\201\320\273\320\265\320\264\321\203\321\216\321\211\321\203\321\216 \320\276\320\261\320\273\320\260\321\201\321\202\321\214"]
   ::msgcat::mcset sk "Select next area" [encoding convertfrom utf-8 "Vyber nasleduj\303\272cu plochu"]
   ::msgcat::mcset sq "Select next area" [encoding convertfrom utf-8 "zgjedhe-selekto fushen e ardhshme"]
 
@@ -4045,6 +4185,7 @@
   ::msgcat::mcset de "Zoom in" [encoding convertfrom utf-8 "Vergr\303\266\303\237ern"]
   ::msgcat::mcset el "Zoom in" [encoding convertfrom utf-8 "\316\234\316\265\316\263\316\255\316\270\317\205\316\275\317\203\316\267"]
   ::msgcat::mcset it "Zoom in" [encoding convertfrom utf-8 "Zoom in"]
+  ::msgcat::mcset ru "Zoom in" [encoding convertfrom utf-8 "\320\243\320\262\320\265\320\273\320\270\321\207\320\270\321\202\321\214"]
   ::msgcat::mcset sk "Zoom in" [encoding convertfrom utf-8 "Zv\303\244\304\215\305\241i\305\245"]
   ::msgcat::mcset sq "Zoom in" [encoding convertfrom utf-8 "zmadho"]
 
@@ -4052,6 +4193,7 @@
   ::msgcat::mcset de "Zoom out" [encoding convertfrom utf-8 "Verkleinern"]
   ::msgcat::mcset el "Zoom out" [encoding convertfrom utf-8 "\316\243\316\274\316\257\316\272\317\201\317\205\316\275\317\203\316\267"]
   ::msgcat::mcset it "Zoom out" [encoding convertfrom utf-8 "Zoom out"]
+  ::msgcat::mcset ru "Zoom out" [encoding convertfrom utf-8 "\320\243\320\274\320\265\320\275\321\214\321\210\320\270\321\202\321\214"]
   ::msgcat::mcset sk "Zoom out" [encoding convertfrom utf-8 "Zmen\305\241i\305\245"]
   ::msgcat::mcset sq "Zoom out" [encoding convertfrom utf-8 "zvogelo"]
 
@@ -4059,6 +4201,7 @@
   ::msgcat::mcset de "Insert new scrap" [encoding convertfrom utf-8 "Neue Skizze einf\303\274gen"]
   ::msgcat::mcset el "Insert new scrap" [encoding convertfrom utf-8 "\316\225\316\271\317\203\316\261\316\263\317\211\316\263\316\256 \316\275\316\255\316\277\317\205 \317\203\316\272\317\201\316\261\317\200"]
   ::msgcat::mcset it "Insert new scrap" [encoding convertfrom utf-8 "Inserisci un nuovo scrap"]
+  ::msgcat::mcset ru "Insert new scrap" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\275\320\276\320\262\321\213\320\271 \321\201\320\272\321\200\320\260\320\277"]
   ::msgcat::mcset sk "Insert new scrap" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\275 scrap"]
   ::msgcat::mcset sq "Insert new scrap" [encoding convertfrom utf-8 "fute deponin e re"]
 
@@ -4066,6 +4209,7 @@
   ::msgcat::mcset de "Insert new point" [encoding convertfrom utf-8 "Neuen Punkt einf\303\274gen"]
   ::msgcat::mcset el "Insert new point" [encoding convertfrom utf-8 "\316\225\316\271\317\203\316\261\316\263\317\211\316\263\316\256 \316\275\316\255\316\277\317\205 \317\203\316\267\316\274\316\265\316\257\316\277\317\205"]
   ::msgcat::mcset it "Insert new point" [encoding convertfrom utf-8 "Inserisci un nuovo punto"]
+  ::msgcat::mcset ru "Insert new point" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\275\320\276\320\262\321\203\321\216 \321\202\320\276\321\207\320\272\321\203"]
   ::msgcat::mcset sk "Insert new point" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\275 bod"]
   ::msgcat::mcset sq "Insert new point" [encoding convertfrom utf-8 "fute piken e re"]
 
@@ -4073,6 +4217,7 @@
   ::msgcat::mcset de "Insert new line" [encoding convertfrom utf-8 "Neue Linie einf\303\274gen"]
   ::msgcat::mcset el "Insert new line" [encoding convertfrom utf-8 "\316\225\316\271\317\203\316\261\316\263\317\211\316\263\316\256 \316\275\316\255\316\261\317\202 \316\263\317\201\316\261\316\274\316\274\316\256\317\202"]
   ::msgcat::mcset it "Insert new line" [encoding convertfrom utf-8 "Inserisci una nuova linea"]
+  ::msgcat::mcset ru "Insert new line" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\260\320\262\320\270\321\202\321\214 \320\275\320\276\320\262\321\203\321\216 \320\273\320\270\320\275\320\270\321\216"]
   ::msgcat::mcset sk "Insert new line" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\272 krivku"]
   ::msgcat::mcset sq "Insert new line" [encoding convertfrom utf-8 "fute rrjeshtin e ri"]
 
@@ -4080,6 +4225,7 @@
   ::msgcat::mcset de "Insert new area" [encoding convertfrom utf-8 "Neue Fl\303\244che einf\303\274gen"]
   ::msgcat::mcset el "Insert new area" [encoding convertfrom utf-8 "\316\225\316\271\317\203\316\261\316\263\317\211\316\263\316\256 \316\275\316\255\316\261\317\202 \316\265\317\200\316\271\317\206\316\254\316\275\316\265\316\271\316\261\317\202"]
   ::msgcat::mcset it "Insert new area" [encoding convertfrom utf-8 "Inserisci una nuova area"]
+  ::msgcat::mcset ru "Insert new area" [encoding convertfrom utf-8 "\320\222\321\201\321\202\320\262\320\260\320\270\321\202\321\214 \320\275\320\276\320\262\321\203\321\216 \320\276\320\261\320\273\320\260\321\201\321\202\321\214"]
   ::msgcat::mcset sk "Insert new area" [encoding convertfrom utf-8 "Vlo\305\276i\305\245 nov\303\272 plochu"]
   ::msgcat::mcset sq "Insert new area" [encoding convertfrom utf-8 "fute fushen e re"]
 
@@ -4087,6 +4233,7 @@
   ::msgcat::mcset de "Delete selected object" [encoding convertfrom utf-8 "Ausgew\303\244hltes Objekt l\303\266schen"]
   ::msgcat::mcset el "Delete selected object" [encoding convertfrom utf-8 "\316\264\316\271\316\261\316\263\317\201\316\261\317\206\316\256 \316\265\317\200\316\271\316\273\316\265\316\263\316\274\316\255\316\275\316\277\317\205"]
   ::msgcat::mcset it "Delete selected object" [encoding convertfrom utf-8 "Rimuovi l'oggetto selezionato"]
+  ::msgcat::mcset ru "Delete selected object" [encoding convertfrom utf-8 "\320\243\320\264\320\260\320\273\320\270\321\202\321\214 \320\262\321\213\320\264\320\265\320\273\320\265\320\275\320\275\321\213\320\271 \320\276\320\261\321\212\320\265\320\272\321\202"]
   ::msgcat::mcset sk "Delete selected object" [encoding convertfrom utf-8 "Zma\305\276 ozna\304\215en\303\251 objekty"]
   ::msgcat::mcset sq "Delete selected object" [encoding convertfrom utf-8 "fshije objektin e selektuar"]
 

@@ -489,6 +489,7 @@ bg: Xpdf
 cz: Xpdf
 de: Xpdf
 it: Xpdf
+ru: Xpdf
 sk: Xpdf
 sq: Xpdf
 
@@ -497,6 +498,7 @@ bg: Acrobat Reader
 cz: Acrobat Reader
 de: Acrobat Reader
 it: Acrobat Reader
+ru: Acrobat Reader
 sk: Acrobat Reader
 sq: lexuesi I programit-Akrobat
 
@@ -585,18 +587,7 @@ sq: gabim
 therion: WARNING
 bg: Внимание!
 de: WARNUNG
-
-therion: OK
-bg: ОК
-cz: OK
-de: OK
-el: ΟΚ
-en: OK
-es: OK
-it: OK
-ru: УСПЕХ
-sk: OK
-sq: ne rregull-O.K.
+ru: ПРЕДУПРЕЖДЕНИЕ
 
 therion: Reading therion log file ...
 bg: Четене на лог-файла на therion ...
@@ -2207,18 +2198,6 @@ ru: Прочие опции линии
 sk: Ďalšie možnosti pre krivku.
 sq: opcionet tjera te rrjeshtit.
 
-therion: reverse
-bg: обратна
-cz: obrátit
-de: Umkehren
-el: αναστροφή
-en: reverse
-es: invertir
-it: inverti
-ru: обратная
-sk: otočiť
-sq: ktheje pas
-
 therion: Reverse line.
 bg: Обърни линията
 cz: Obrátit křivku.
@@ -2231,18 +2210,6 @@ ru: Задать обратное направление для линии.
 sk: Otočiť krivku.
 sq: rrjeshti I pasem-I kthyer
 
-therion: close
-bg: затвори
-cz: zavřít
-de: schließen
-el: κλείσιμο
-en: close
-es: cerrar
-it: chiudi
-ru: замкнуть
-sk: zavrieť
-sq: mbylle
-
 therion: Close line.
 bg: Затвори линията с началото и.
 cz: Uzavřít křivku.
@@ -2254,18 +2221,6 @@ it: Chiudi la linea.
 ru: Замкнуть линию на её же начало.
 sk: Uzavrieť krivku.
 sq: mbylle rrjeshtin.
-
-therion: Edit line
-bg: Редактирай линия
-cz: Editovat
-de: Linie bearbeiten
-el: Επεξεργασία γραμμής
-en: Edit line
-es: Editar
-it: Edita
-ru: Править линию
-sk: Upraviť
-sq: permireso rrjeshtin
 
 therion: Insert/delete line point. Split line.
 bg: Вмъкване/триене на точка. Разделяне на линия.
@@ -2290,6 +2245,21 @@ it: Primi questo bottone per fare modifiche alla linea.
 ru: Нажмите эту кнопку для применения изменений линии.
 sk: Aktualizuje krivku.
 sq: kliko kete buton te aktualizosh nderrimet e rrjeshtit.
+
+therion: Trace line
+bg: Проследяване от картината
+en: Trace line
+ru: Трассировать
+
+therion: Convert to curve
+bg: Конвертиране в Безие
+en: Convert to curve
+ru: Сгладить ломаную
+
+therion: Simplify line
+bg: Опростяване на линия
+en: Simplify line
+ru: Упроситить линию
 
 therion: Select line point.
 bg: Избери една от точките на линията.
@@ -2423,18 +2393,6 @@ ru: Поставьте галочку для использования пред
 sk: Použi predchádzajúci kontrolný bod.
 sq: kutia-kontrollit a duhet te perdoret pika e kontrollit e meparshme
 
-therion: smooth
-bg: изглаждане
-cz: uhladit
-de: geglättet
-el: απαλή
-en: smooth
-es: suavizar
-it: regolarizza
-ru: сгладить
-sk: vyhladiť
-sq: e bute
-
 therion: Set line to be smooth in given point.
 bg: Установете за изглаждане на линията в дадената точка.
 cz: Nastaví hladkou křivku v daném bodě.
@@ -2458,18 +2416,6 @@ it: Checkbox per usare il prossimo punto di controllo.
 ru: Поставьте галочку для использования следующей управляющей точки.
 sk: Použi nasledujúci kontrolný bod.
 sq: kutia-kontrollit a duhet te perdoret pika e kontrollit e ardhshme
-
-therion: orientation
-bg: ориентация
-cz: orientace
-de: Ausrichtung
-el: προσανατολισμός
-en: orientation
-es: orientación
-it: orientazione
-ru: ориентация
-sk: orientácia
-sq: orientimi
 
 therion: Set line point orientation.
 bg: Укажете ориентацията на точка на линията.
@@ -2530,18 +2476,6 @@ it: Scrivi la dimensione della linea a destra.
 ru: Введите размер линии в правом направлении.
 sk: Zadaj veľkosť symbolov napravo od krivky.
 sq: fute madhesine e rjeshtit ne drejtim te djathte
-
-therion: l-size
-bg: l-размер
-cz: l-rozsah
-de: l-Größe
-el: διάσταση (α)
-en: l-size
-es: anchura-izda
-it: dim. sinistra
-ru: l-size
-sk: rozmer-ľ
-sq: madhesia-l
 
 therion: Set line size in left direction.
 bg: Укажете размера на линията в направление наляво.
@@ -2624,18 +2558,6 @@ it: Simboli.
 ru: Фильтр группы символов.
 sk: Aktuálna téma symbolov.
 sq: tema aktuale e simbolit.
-
-therion: type
-bg: тип
-cz: typ
-de: Typ
-el: είδος
-en: type
-es: tipo
-it: tipo
-ru: тип
-sk: typ
-sq: lloji
 
 therion: Area type.
 bg: Тип на областта
@@ -2923,6 +2845,9 @@ it: Inserisci immagine
 ru: Вставить изображение
 sk: Vložiť obrázok
 sq: fute imazhin
+
+therion: Hide inactive scraps
+ru: Скрыть неактивные скрапы
 
 therion: Zoom 100 %
 bg: Мащаб 100%
@@ -3288,6 +3213,277 @@ ru: удаление фона скрапа
 sk: odstránenie náčrtku
 sq: duke fshire skicen e deponise
 
+therion: on
+ru: вкл
+
+therion: off
+ru: выкл
+
+therion: top
+ru: верх
+
+therion: bottom
+ru: низ
+
+therion: tiny (2xs)
+ru: крошечный (2xs)
+
+therion: tiny (xs)
+ru: крошечный (xs)
+
+therion: small (s)
+ru: мелкий (s)
+
+therion: normal (m)
+ru: средний (m)
+
+therion: large (l)
+ru: большой (l)
+
+therion: huge (xl)
+ru: огромный (xl)
+
+therion: huge (2xl)
+ru: огромный (2xl)
+
+therion: huge (3xl)
+ru: огромный (2xl)
+
+therion: huge (4xl)
+ru: огромный (4xl)
+
+therion: out
+ru: снаружи
+
+therion: in
+ru: внутри
+
+therion: none
+ru: нет
+
+therion: <<
+
+therion: smooth
+bg: изглаждане
+cz: uhladit
+de: geglättet
+el: απαλή
+en: smooth
+es: suavizar
+it: regolarizza
+ru: сгладить
+sk: vyhladiť
+sq: e bute
+
+therion: >>
+
+therion: auto
+ru: авто
+
+therion: edit
+ru: редактировать
+
+therion: Altitude
+ru: Высота
+
+therion: OK
+bg: ОК
+cz: OK
+de: OK
+el: ΟΚ
+en: OK
+es: OK
+it: OK
+ru: УСПЕХ
+sk: OK
+sq: ne rregull-O.K.
+
+therion: Cancel
+ru: Отмена
+
+therion: painted
+ru: нарисованный
+
+therion: natural
+ru: естественный
+
+therion: fixed
+ru: репер
+
+therion: winter
+ru: зима
+
+therion: summer
+ru: лето
+
+therion: undefined
+ru: не определено
+
+therion: paleo
+ru: палео
+
+therion: Station name
+ru: Название пикета
+
+therion: Scrap reference
+ru: Скрап (ссылка)
+
+therion: type
+bg: тип
+cz: typ
+de: Typ
+el: είδος
+en: type
+es: tipo
+it: tipo
+ru: тип
+sk: typ
+sq: lloji
+
+therion: bedrock
+ru: коренная стена
+
+therion: underlying
+ru: ниже-расположенная
+
+therion: overlying
+ru: выше-расположенная
+
+therion: unsurveyed
+ru: глазомерная съемка
+
+therion: pit
+ru: колодец
+
+therion: sand
+ru: песок
+
+therion: clay
+ru: глина
+
+therion: pebbles
+ru: галька
+
+therion: debris
+ru: щебень, глыбы
+
+therion: blocks
+ru: глыбы (крупные)
+
+therion: ice
+ru: лед
+
+therion: flowstone
+ru: натек
+
+therion: moonmilk
+ru: лунное молоко
+
+therion: visible
+ru: видимая
+
+therion: invisible
+ru: невидимая
+
+therion: temporary
+ru: временная
+
+therion: presumed
+ru: предполагаемая
+
+therion: permanent
+ru: постоянный
+
+therion: intermittent
+ru: перемнный
+
+therion: conjectural
+ru: предположительный
+
+therion: cave
+ru: пещера
+
+therion: surface
+ru: поверхность
+
+therion: control points
+ru: управл. точки
+
+therion: orientation
+bg: ориентация
+cz: orientace
+de: Ausrichtung
+el: προσανατολισμός
+en: orientation
+es: orientación
+it: orientazione
+ru: ориентация
+sk: orientácia
+sq: orientimi
+
+therion: l-size
+bg: l-размер
+cz: l-rozsah
+de: l-Größe
+el: διάσταση (α)
+en: l-size
+es: anchura-izda
+it: dim. sinistra
+ru: размер
+sk: rozmer-ľ
+sq: madhesia-l
+
+therion: segment subtype
+ru: тип сегмента
+
+therion: altitude label
+ru: отметка высоты
+
+therion: other options
+ru: прочее
+
+therion: Edit line
+bg: Редактирай линия
+cz: Editovat
+de: Linie bearbeiten
+el: Επεξεργασία γραμμής
+en: Edit line
+es: Editar
+it: Edita
+ru: Править линию
+sk: Upraviť
+sq: permireso rrjeshtin
+
+therion: close
+bg: затвори
+cz: zavřít
+de: schließen
+el: κλείσιμο
+en: close
+es: cerrar
+it: chiudi
+ru: замкнуть
+sk: zavrieť
+sq: mbylle
+
+therion: reverse
+bg: обратна
+cz: obrátit
+de: Umkehren
+el: αναστροφή
+en: reverse
+es: invertir
+it: inverti
+ru: обратная
+sk: otočiť
+sq: ktheje pas
+
+therion: Select underlying point
+ru: Выделить другую точку (она заслоняется текущей точкой)
+
+therion: Delete symbol
+ru: Удалить объект
+
 therion: toggle image visibility
 bg: превключване на видимостта на изображение
 cz: přepnutí viditelnosti obrázku
@@ -3419,18 +3615,6 @@ it: Dividi
 ru: Разделить линию
 sk: Rozdeliť krivku
 sq: ndaje rjeshtin-vijen
-
-therion: Trace line
-bg: Проследяване от картината
-en: Trace line
-
-therion: Convert to curve
-bg: Конвертиране в Безие
-en: Convert to curve
-
-therion: Simplify line
-bg: Опростяване на линия
-en: Simplify line
 
 therion: deleting line point
 bg: Изтрий точка от линията
@@ -3575,6 +3759,12 @@ it: dividi la linea
 ru: разделение линии
 sk: rozdelenie čiary
 sq: ndarja e pikes-rjeshtit
+
+therion: Stop tracing
+ru: Прекратить трассировку
+
+therion: Continue tracing
+ru: Продолжить трассировку
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
@@ -4137,30 +4327,6 @@ ru: Редактировать
 sk: Upraviť
 sq: permireso
 
-therion: Undo
-bg: Отмяна
-cz: Zpět
-de: Rückgängig
-el: Αναίρεση
-en: Undo
-es: Deshacer
-it: Indietro
-ru: Отменить
-sk: Späť
-sq: prishe-undo
-
-therion: Redo
-bg: Възстановяване
-cz: Opakovat
-de: Wiederholen
-el: Επανάληψη
-en: Redo
-es: Rehacer
-it: Rifai
-ru: Вернуть
-sk: Opakovať
-sq: beje prape-redo
-
 therion: Cut
 bg: Изрежи
 cz: Vyjmout
@@ -4273,6 +4439,7 @@ therion: Calibrate bitmap...
 bg: Калибриране на изображение ...
 de: Bild kalibrieren...
 it: Mappa georeferenziata...
+ru: Калибровать изображение...
 
 therion: About...
 bg: За програмата ...
@@ -4325,6 +4492,7 @@ bg: Нов файл
 de: Neue Datei
 el: Νέο αρχείο
 it: Nuovo
+ru: Новый файл
 sk: Nový súbor
 sq: arkivi-fajlli I ri
 
@@ -4333,6 +4501,7 @@ bg: Отвори файл
 de: Datei öffnen
 el: Άνοιγμα
 it: Apri
+ru: Открыть файл
 sk: Otvoriť súbor
 sq: hape fajllin
 
@@ -4341,6 +4510,7 @@ bg: Запиши файл
 de: Datei speichern
 el: Αποθήκευση
 it: Salva
+ru: Сохранить файл
 sk: Uložiť súbor
 sq: ruaje fajllin
 
@@ -4349,6 +4519,7 @@ bg: Запиши файл като
 de: Datei speichern als
 el: Αποθήκευση ως
 it: Salva come
+ru: Сохранить файл как
 sk: Uložiť súbor ako
 sq: ruaje fajllin si
 
@@ -4357,14 +4528,40 @@ bg: Затвори файл
 de: Datei schließen
 el: Κλείσιμο αρχείου
 it: Chiudi
+ru: Закрыть файл
 sk: Zatvoriť súbor
 sq: mbylle fajllin
+
+therion: Undo
+bg: Отмяна
+cz: Zpět
+de: Rückgängig
+el: Αναίρεση
+en: Undo
+es: Deshacer
+it: Indietro
+ru: Отменить
+sk: Späť
+sq: prishe-undo
+
+therion: Redo
+bg: Възстановяване
+cz: Opakovat
+de: Wiederholen
+el: Επανάληψη
+en: Redo
+es: Rehacer
+it: Rifai
+ru: Вернуть
+sk: Opakovať
+sq: beje prape-redo
 
 therion: Switch to text editor
 bg: Превключи на текстов редактор
 de: Zum Texteditor wechseln
 el: Μετάβαση σε επεξεργαστή κειμένου
 it: Editor di testi
+ru: Перейти к окну текстового редактора
 sk: Prepnúť na textový editor
 sq: kalo tek editori i tekstit
 
@@ -4373,6 +4570,7 @@ bg: Превключи на редактор на карти
 de: Zum Karteneditor wechseln
 el: Μετάβαση σε επεξεργαστή σχεδίου
 it: Editor di mappe
+ru: Перейти к окну редактора карты
 sk: Prepnúť na mapový editor
 sq: kalo tek editori I hartes
 
@@ -4381,6 +4579,7 @@ bg: Превключи на компилатор
 de: Zum Compiler wechseln
 el: Μετάβαση σε συντάκτη
 it: Compilatore
+ru: Перейти к окну компилятора
 sk: Prepnúť na kompilátor
 sq: kalo tek kompilatori
 
@@ -4401,6 +4600,7 @@ bg: Превключи на режим 'Избиране'
 de: In Auswahlmodus wechseln
 el: Μετάβαση σε λειτουργία επιλογής
 it: Modalità di selezione
+ru: Переключиться в режим выбора
 sk: Prepnúť do módu na výber objektu
 sq: kalo tek moduli per selekcionim
 
@@ -4409,6 +4609,7 @@ bg: Избери следващият скрап
 de: Nächste Skizze auswählen
 el: Επιλογή επόμενου σκραπ
 it: Seleziona il prossimo scrap
+ru: Выбрать следующий скрап
 sk: Vyber nasledujúci scrap
 sq: zgjedhe deponin e ardhshme
 
@@ -4417,6 +4618,7 @@ bg: Избери следващата област
 de: Nächste Fläche auswählen
 el: Επιλογή επόμενης επιφάνειας
 it: Seleziona la prossima area
+ru: Выбрать следующую область
 sk: Vyber nasledujúcu plochu
 sq: zgjedhe-selekto fushen e ardhshme
 
@@ -4425,6 +4627,7 @@ bg: Приближи
 de: Vergrößern
 el: Μεγέθυνση
 it: Zoom in
+ru: Увеличить
 sk: Zväčšiť
 sq: zmadho
 
@@ -4433,6 +4636,7 @@ bg: Отдалечи
 de: Verkleinern
 el: Σμίκρυνση
 it: Zoom out
+ru: Уменьшить
 sk: Zmenšiť
 sq: zvogelo
 
@@ -4441,6 +4645,7 @@ bg: Вмъкни нов скрап
 de: Neue Skizze einfügen
 el: Εισαγωγή νέου σκραπ
 it: Inserisci un nuovo scrap
+ru: Вставить новый скрап
 sk: Vložiť nový scrap
 sq: fute deponin e re
 
@@ -4449,6 +4654,7 @@ bg: Вмъкни нова точка
 de: Neuen Punkt einfügen
 el: Εισαγωγή νέου σημείου
 it: Inserisci un nuovo punto
+ru: Вставить новую точку
 sk: Vložiť nový bod
 sq: fute piken e re
 
@@ -4457,6 +4663,7 @@ bg: Вмъкни нова линия
 de: Neue Linie einfügen
 el: Εισαγωγή νέας γραμμής
 it: Inserisci una nuova linea
+ru: Вставить новую линию
 sk: Vložiť novú krivku
 sq: fute rrjeshtin e ri
 
@@ -4465,6 +4672,7 @@ bg: Вмъкни нова област
 de: Neue Fläche einfügen
 el: Εισαγωγή νέας επιφάνειας
 it: Inserisci una nuova area
+ru: Встваить новую область
 sk: Vložiť novú plochu
 sq: fute fushen e re
 
@@ -4473,6 +4681,7 @@ bg: Изтрий избраният обект
 de: Ausgewähltes Objekt löschen
 el: διαγραφή επιλεγμένου
 it: Rimuovi l'oggetto selezionato
+ru: Удалить выделенный объект
 sk: Zmaž označené objekty
 sq: fshije objektin e selektuar
 
