@@ -1422,18 +1422,6 @@ ru: Убрать вырбанное изображение.
 sk: Odstráni označený obrázok.
 sq: hiqe imazhin e zgjedhur.
 
-therion: visibility
-bg: Покажи
-cz: viditelnost
-de: Sichtbarkeit
-el: ορατότητα
-en: visibility
-es: visibilidad
-it: visibilità
-ru: показать
-sk: viditeľnosť
-sq: shiqueshmeria-vizibiliteti
-
 therion: Switch image visibility.
 bg: Покажи/скрий изображение
 cz: Přepíná viditelnost obrázku.
@@ -2810,18 +2798,6 @@ ru: скрап
 sk: scrap
 sq: deponia
 
-therion: text
-bg: текст
-cz: text
-de: Text
-el: κείμενο
-en: text
-es: texto
-it: testo
-ru: текст
-sk: text
-sq: teksti
-
 therion: Auto adjust area
 bg: Автоматична настройка на област
 cz: Auto přizpůsobit
@@ -3220,10 +3196,10 @@ therion: off
 ru: выкл
 
 therion: top
-ru: верх
+ru: выше
 
 therion: bottom
-ru: низ
+ru: ниже
 
 therion: tiny (2xs)
 ru: крошечный (2xs)
@@ -3253,10 +3229,10 @@ therion: huge (4xl)
 ru: огромный (4xl)
 
 therion: out
-ru: снаружи
+ru: внешняя
 
 therion: in
-ru: внутри
+ru: внутренняя
 
 therion: none
 ru: нет
@@ -3322,11 +3298,17 @@ ru: не определено
 therion: paleo
 ru: палео
 
+therion: align
+ru: выравнивание
+
 therion: Station name
 ru: Название пикета
 
 therion: Scrap reference
 ru: Скрап (ссылка)
+
+therion: value
+ru: значение
 
 therion: type
 bg: тип
@@ -3406,6 +3388,9 @@ ru: пещера
 therion: surface
 ru: поверхность
 
+therion: subtype
+ru: подтип
+
 therion: control points
 ru: управл. точки
 
@@ -3439,8 +3424,44 @@ ru: тип сегмента
 therion: altitude label
 ru: отметка высоты
 
+therion: outline
+ru: граница скрапа
+
+therion: text
+bg: текст
+cz: text
+de: Text
+el: κείμενο
+en: text
+es: texto
+it: testo
+ru: текст
+sk: text
+sq: teksti
+
+therion: clip
+ru: обрезание
+
 therion: other options
 ru: прочее
+
+therion: place
+ru: расположение
+
+therion: scale
+ru: масштаб
+
+therion: visibility
+bg: Покажи
+cz: viditelnost
+de: Sichtbarkeit
+el: ορατότητα
+en: visibility
+es: visibilidad
+it: visibilità
+ru: показать
+sk: viditeľnosť
+sq: shiqueshmeria-vizibiliteti
 
 therion: Edit line
 bg: Редактирай линия
