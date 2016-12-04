@@ -3427,10 +3427,11 @@ proc xth_me_show_context_menu {id x y} {
   # set options
   set xth(me,ctrl,ctxopt,visibility) [lindex $optvis 1]   
   $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel visibility [mc "visibility"]] -menu $xth(me,ctxmenu).visibility
-      
+
   $xth(me,ctxmenu) add separator
   if {$xth(me,cmds,$id,ct) == 3} {
-    $xth(me,ctxmenu) add cascade -label [mc "Edit line"] -menu $xth(ctrl,me,line).lpa.m
+    catch { $xth(ctrl,me,line).lpa.m clone $xth(me,ctxmenu).editline normal }
+    $xth(me,ctxmenu) add cascade -label [mc "Edit line"] -menu $xth(me,ctxmenu).editline
     $xth(me,ctxmenu).others add checkbutton -label [mc "close"] -variable xth(ctrl,me,line,close) -command xth_me_cmds_toggle_line_close
     $xth(me,ctxmenu).others add checkbutton -label [mc "reverse"] -variable xth(ctrl,me,line,reverse) -command xth_me_cmds_toggle_line_reverse
   }
