@@ -739,4 +739,77 @@ proc xth_app_autosave {} {
   xth_app_autosave_schedule
 }
 
+proc tk_textPaste w {
+  global tcl_platform
+  if {![catch {::tk::GetSelection $w CLIPBOARD} sel]} then {
+    set oldSeparator [$w cget -autoseparators]
+    if {$oldSeparator} then {
+      $w configure -autoseparators 0
+      $w edit separator
+    }
+    foreach {to from} [lreverse [$w tag ranges sel]] {
+      $w delete $from $to
+    }
+    $w insert insert $sel
+    if {$oldSeparator} then {
+      $w edit separator
+      $w configure -autoseparators 1
+    }
+  }
+}
 
+proc tk_textDelete w {
+  global tcl_platform
+  set text_sel_removed 0
+  if {![catch {::tk::GetSelection $w CLIPBOARD} sel]} then {
+    set oldSeparator [$w cget -autoseparators]
+    if {$oldSeparator} then {
+      $w configure -autoseparators 0
+      $w edit separator
+    }
+    foreach {to from} [lreverse [$w tag ranges sel]] {
+      set text_sel_removed 1
+      $w delete $from $to
+    }
+    if {$oldSeparator} then {
+      $w edit separator
+      $w configure -autoseparators 1
+    }
+  }
+  if {!$text_sel_removed} then {
+    $w delete insert
+    $w see insert
+  }
+}
+
+proc tk_entryPaste w {
+  global tcl_platform
+  if {![catch {::tk::GetSelection $w CLIPBOARD} sel]} then {
+    if {[$w selection present]} then { $w delete sel.first sel.last }
+    $w insert insert $sel
+  }
+}
+
+proc tk_entryDelete w {
+  global tcl_platform
+  if {[$w selection present]} then {
+    $w delete sel.first sel.last
+  } else {
+    $w delete insert
+  }
+}
+
+proc xth_app_text_copy_paste_binds {w {cond {if {1}}}} {
+  global xth
+  bind $w <$xth(kb_control)-Key-x> "$cond {tk_textCut %W}"
+  bind $w <$xth(kb_control)-Key-c> "$cond {tk_textCopy %W}"
+  bind $w <$xth(kb_control)-Key-v> "$cond {tk_textPaste %W}"
+  bind $w <$xth(kb_control)-Key-z> "$cond {catch {%W edit undo}}"
+  bind $w <$xth(kb_control)-Key-y> "$cond {catch {%W edit redo}}"
+  if {$xth(gui,bindinsdel)} {
+    bind $w <Delete>                      "$cond {tk_textDelete %W}"
+    bind $w <Shift-Key-Delete>            "$cond {tk_textCut %W}"
+    bind $w <$xth(kb_control)-Key-Insert> "$cond {tk_textCopy %W}"
+    bind $w <Shift-Key-Insert>            "$cond {tk_textPaste %W}"
+  }
+}

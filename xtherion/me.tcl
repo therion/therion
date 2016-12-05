@@ -1559,24 +1559,7 @@ grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
 grid $txb.upd -column 0 -row 2 -columnspan 2 -sticky news
 xth_status_bar me $txb.txt [mc "Editor for free text in therion 2D file."]
-bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
-
-if {$xth(gui,bindinsdel)} {
-  bind $txb.txt <Delete> {
-    %W delete insert
-    %W see insert
-  }
-  bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
-  bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
-#  catch {
-#    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
-#    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
-#  }
-}
+xth_app_text_copy_paste_binds $txb.txt
 
 if {[info exists xth(gui,te)]} {
 #  bind $txb.txt <$xth(kb_control)-Key-a> "xth_te_text_select_all %W"
@@ -2250,24 +2233,7 @@ grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
 xth_status_bar me $txb [mc "Editor for line point options."]
-bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
-
-if {$xth(gui,bindinsdel)} {
-  bind $txb.txt <Delete> {
-    %W delete insert
-    %W see insert
-  }
-  bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
-  bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
-#  catch {
-#    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
-#    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
-#  }
-}
+xth_app_text_copy_paste_binds $txb.txt
 
 if {[info exists xth(gui,te)]} {
   bind $txb.txt <Tab> $xth(te,bind,text_tab)
