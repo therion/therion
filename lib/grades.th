@@ -1,3 +1,9 @@
+encoding utf-8
+
+###############################################################################
+# BRCA GRADES
+# see: http://bcra.org.uk/surveying/
+#
 grade BCRA3 -title "BCRA grade 3"
   
   # 95.44% of readings are within 0.5m (2 S.D.)
@@ -31,3 +37,170 @@ grade BCRA5 -title "BCRA grade 5"
   
 endgrade
 
+
+
+###############################################################################
+# UIS Grades - International standard grades specification
+#   from: http://www.uisic.uis-speleo.org/UISmappingGrades.pdf
+# Version 2 from 14 Sep 2012 (cosmetic update; UISv1 values still apply)
+#
+# Note: UIS standards says nothing about accuracy of the stations
+#       positions, so it is probably good practice to include a
+#       "sd position <value> <units>" definition in your centrelines.
+#
+
+# Grade -1: no map available
+# Only for database purposes: It means that the cave map has not been drawn yet.
+grade "UISv1_-1" -title "UISv1 ungraded survey without map"
+  # Not applicaple for therion data.
+  # It is mainly here to support automated data exports from
+  # databases wich may export such a number.
+endgrade
+
+
+# Grade 0: ungraded
+# Only for database purposes. If a cave survey is ungraded, its quality cannot be
+# assessed. This is most usually true for historic or otherwise old maps.
+grade "UISv1_0" -title "UISv1 ungraded survey"
+  # Nothing defined here.
+  # Specifying such an grade may be useful to document that the survey was
+  # not graded. As it is documented in the *.th-datafiles it may easily be
+  # searched for. Use it as a kind of "todo" flag...
+endgrade
+
+
+# Grade 1: sketch from memory, not to scale
+grade "UISv1_1" -title "UISv1 survey grade 1"
+  # nothing defined here.
+  # Specifying such an grade may be useful to document that the survey was
+  # just the result of a sketch and shpuld be redone.
+endgrade
+
+
+# Grade 2: No instruments, from annotations/sketches/estimates
+# Map compiled from annotations, sketches and estimates made
+# in the cave. No instruments used.
+grade "UISv1_2" -title "UISv1 survey grade 2"
+  # nothing defined here.
+  # Specifying such an grade may be useful to document that the survey
+  # was the result of sketches/annotations in the cave.
+endgrade
+
+
+# Grade 3: Rough magnetic/analogue survey
+# Directions measured by compass, distances measured by chord,
+# pace, or body dimensions. Significant slopes estimated.
+#
+# A Silva clinometer or comparable, relatively simple means without precise
+# readings qualify for grade 3. Mapping from head to head of the surveyors
+# qualifies only for grade 3. Topofil measurements qualify generally for
+# grade 3 or 4.
+grade "UISv1_3" -title "UISv1 survey grade 3"
+
+  # 95.44% of readings are within 0.5m (2 S.D.)
+  length 0.25 metres
+
+  # 95.44% of readings are within 5.0 degrees (2 S.D.)
+  bearing 2.50 degrees
+
+  # 95.44% of readings are within 30.0 degrees (2 S.D.)
+  # (estimating is allowed, no measurement needed - value guessed by me)
+  gradient 15.0 degrees
+
+  # UIS specifications say nothing about station position accuracy.
+  # Add "sd position <value> <units>" to your centreline.
+
+endgrade
+
+
+# Grade 4: Magnetic survey
+# Compass and tape survey, using deliberately chosen and fixed
+# stations. Slopes measured by clinometer or horizontal and vertical
+# components of line.
+#
+# Topofil measurements may qualify for grade 4 if the survey shots are not too 
+# long and care is given to correctly read all data. Laser rangefinder can be
+# used throughout grades 4 to 5. In order to attain grade 4, fixed and
+# re-findable survey stations must be made. They have not to be necessarily on
+# the walls; tripod-mounted points with a defined length above the floor are
+# also accepted
+grade "UISv1_4" -title "UISv1 survey grade 4"
+
+  # 95.44% of readings are within 0.1m (2 S.D.)
+  length 0.05 metres
+
+  # 95.44% of readings are within 2.0 degrees (2 S.D.)
+  bearing 1.00 degrees
+
+  # 95.44% of readings are within 2.0 degrees (2 S.D.)
+  gradient 1.00 degrees
+
+  # UIS specifications say nothing about station position accuracy.
+  # Add "sd position <value> <units>" to your centreline.
+
+endgrade
+
+
+# Grade 5:
+# Compass and tape survey. Directions and slope by calibrated
+# instruments, distances by fibreglass or metallic tape, or tachometry.
+#
+# Calibrated DistoX, DUSI or comparable instruments attain grade 5. With a
+# calibration of the length measurement, they attain grade 6. If they are
+# uncalibrated, they are to be graded with 1! Topofil used for vertical pits
+# may reach grade 5. In order to reach grade 5, the survey coordinates have to
+# be calculated (xyz coordinates, no polar coordinates plotted with scale rule
+# a d protactor).
+grade "UISv1_5" -title "UISv1 survey grade 5"
+
+  # 95.44% of readings are within 0.05m (2 S.D.)
+  length 0.025 metres
+
+  # 95.44% of readings are within 1.0 degrees (2 S.D.)
+  bearing 0.5 degrees
+
+  # 95.44% of readings are within 1.0 degrees (2 S.D.)
+  gradient 0.5 degrees
+
+  # UIS specifications say nothing about station position accuracy.
+  # Add "sd position <value> <units>" to your centreline.
+
+endgrade
+
+
+# Grade 6:
+# Survey or triangulation using calibrated, tripod-mounted instruments
+# for directions and slope. Distances by calibrated tape, precise
+# tacheometry, or calibrated DistoX type (angles and length).
+grade "UISv1_6" -title "UISv1 survey grade 6"
+
+  # 95.44% of readings are within 0.02m (2 S.D.)
+  length 0.01 metres
+
+  # 95.44% of readings are within 0.25 degrees (2 S.D.)
+  bearing 0.125 degrees
+
+  # 95.44% of readings are within 0.25 degrees (2 S.D.)
+  gradient 0.125 degrees
+
+  # UIS specifications say nothing about station position accuracy.
+  # Add "sd position <value> <units>" to your centreline.
+
+endgrade
+
+
+# Grade X: Survey by theodolite or comparable means
+# Theodolite models or other similar equipment may vary as well as the measuring
+# techniques. Therefore, all grade X surveys must include, in the written
+# description of the cave, descriptions of the instruments and techniques used
+# as well as an estimate of the probable accuracy of the survey.
+grade "UISv1_X" -title "UISv1 survey grade X"
+  # Details must be laid out at the survey.
+  # custom "sd ... <value> <units>" have to be specified for your centrelines!
+  #
+  # That said, a construction site thedolite is about 0.08 gon
+  # and a engineering theodolite about 0.02 gon.
+  # Example: "sd bearing gradient 0.08 grad" # theodolite
+endgrade
+
+#
