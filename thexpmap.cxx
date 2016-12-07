@@ -84,6 +84,7 @@
 
 thexpmap::thexpmap() {
   this->format = TT_EXPMAP_FMT_UNKNOWN;
+  this->items = TT_EXPMAP_ITEM_ALL;
   this->projstr = "plan";
   this->layoutstr = "";
   this->layout = new thlayout;
