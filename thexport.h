@@ -35,6 +35,7 @@
 #endif
 #include "thparse.h"
 #include "thobjectsrc.h"
+#include "thlayout.h"
 
 /**
  * General export options.
@@ -67,6 +68,7 @@ class thexport {
 
   public:
 
+  class thlayout * layout;  ///< Layout pointer.
   friend class thexporter;
   class thconfig * cfgptr;  ///< Current config pointer.
   int export_mode;  ///< Export mode.
