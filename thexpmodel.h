@@ -31,7 +31,6 @@
 
 
 #include "thexport.h"
-#include "thlayout.h"
 #include "thsurvey.h"
 
 
@@ -180,8 +179,7 @@ class thexpmodel : public thexport {
     encoding;  ///< Output encoding.
   unsigned items,
     wallsrc;
-  class thlayout * layout;  ///< Layout pointer.
-  
+
   bool is_leg_exported(class thdb1dl * l); ///< Whether to export leg.
 
   void export_3d_file(class thdatabase * dbp);  ///< Export survex 3d file.
