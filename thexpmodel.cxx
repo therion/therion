@@ -53,13 +53,9 @@ thexpmodel::thexpmodel() {
   this->items = TT_EXPMODEL_ITEM_ALL;
   this->wallsrc = TT_WSRC_ALL;
   this->encoding = TT_UTF_8;
-  this->layout = new thlayout;
-  this->layout->assigndb(&thdb);
-  this->layout->id = ++thdb.objid;
 }
 
 thexpmodel::~thexpmodel() {
-  delete this->layout;
 }
 
 void thexpmodel::parse_options(int & argx, int nargs, char ** args)

@@ -32,7 +32,6 @@
 
 #include "thexport.h"
 #include "thsymbolset.h"
-#include "thlayout.h"
 #include "thlang.h"
 
 /**
@@ -199,7 +198,6 @@ class thexpmap : public thexport {
   const char * projstr,  ///< Projection string.
     * layoutstr;  ///< Layout string.
   class thdb2dprj * projptr;  ///< Projection pointer.
-  class thlayout * layout;  ///< Layout pointer.
   thsymbolset symset;
   
   thbuffer layoutopts;  ///< Layout options buffer.
