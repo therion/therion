@@ -53,13 +53,9 @@ thexpmodel::thexpmodel() {
   this->items = TT_EXPMODEL_ITEM_ALL;
   this->wallsrc = TT_WSRC_ALL;
   this->encoding = TT_UTF_8;
-  this->layout = new thlayout;
-  this->layout->assigndb(&thdb);
-  this->layout->id = ++thdb.objid;
 }
 
 thexpmodel::~thexpmodel() {
-  delete this->layout;
 }
 
 void thexpmodel::parse_options(int & argx, int nargs, char ** args)
@@ -1823,60 +1819,65 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
       thT("title cave length", layout->lang), layout->units.format_length(mainsrv->stat.length), layout->units.format_i18n_length_units(),
       thT("title cave depth", layout->lang), layout->units.format_length(cavedepth), layout->units.format_i18n_length_units());
 
-  // Export entrances
   double x, y, z;
   thdb1ds * station;
   size_t nstat = db->db1d.station_vec.size(), i;
-  for(i = 0; i < nstat; i++) {
-    station = &(db->db1d.station_vec[i]);    
-    if ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
-      thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
-        station->x, station->y, station->z, x, y, z);
-      fprintf(out, "<Placemark>\n");
-      fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
-      fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->comment, layout->lang).c_str());
-      fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
-      fprintf(out, "</Placemark>\n");
+
+  // Export entrances
+  if ((this->items & TT_EXPMODEL_ITEM_ENTRANCES) != 0) {
+    for(i = 0; i < nstat; i++) {
+      station = &(db->db1d.station_vec[i]);
+      if ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
+        thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+          station->x, station->y, station->z, x, y, z);
+        fprintf(out, "<Placemark>\n");
+        fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
+        fprintf(out, "<name><![CDATA[%s]]></name>\n", ths2txt(station->comment, layout->lang).c_str());
+        fprintf(out, "<Point> <coordinates>%.14f,%.14f,%.14f</coordinates> </Point>\n", x / THPI * 180.0, y / THPI * 180.0, z);
+        fprintf(out, "</Placemark>\n");
+      }
     }
   }
 
   // Export only surface shots in a separate subfolder (placemark)) with distinct color
-  thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
-  unsigned long nlegs, last_st, cur_st, numst;
-  nlegs = dbp->db1d.get_tree_size();
-  nstat = (unsigned long)dbp->db1d.station_vec.size();
-  last_st = nstat;
-  numst = 0;
-  for(i = 0; i < nlegs; i++, tlegs++) {
-    if (this->is_leg_exported(*tlegs) && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0)) {
-      if (numst == 0) {
-        fprintf(out, "<Placemark>\n");
-        fprintf(out, "<name>%s</name>\n", thT("surface legs", layout->lang));
-        fprintf(out, "<styleUrl>#ThSurveyLineSurf</styleUrl>\n");
-        fprintf(out, "<MultiGeometry>\n");
-      }
-      cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
-      if (cur_st != last_st) {
-        if (numst > 0)
-          fprintf(out,"</coordinates></LineString>\n");
-        fprintf(out,"<LineString><coordinates>\n");
+  if ((this->items & TT_EXPMODEL_ITEM_SURFACECENTERLINE) != 0) {
+    thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
+    unsigned long nlegs, last_st, cur_st, numst;
+    nlegs = dbp->db1d.get_tree_size();
+    nstat = (unsigned long)dbp->db1d.station_vec.size();
+    last_st = nstat;
+    numst = 0;
+    for(i = 0; i < nlegs; i++, tlegs++) {
+      if (this->is_leg_exported(*tlegs) && (((*tlegs)->leg->flags & TT_LEGFLAG_SURFACE) != 0)) {
+        if (numst == 0) {
+          fprintf(out, "<Placemark>\n");
+          fprintf(out, "<name>%s</name>\n", thT("surface legs", layout->lang));
+          fprintf(out, "<styleUrl>#ThSurveyLineSurf</styleUrl>\n");
+          fprintf(out, "<MultiGeometry>\n");
+        }
+        cur_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->to.id : (*tlegs)->leg->from.id) - 1].uid - 1;
+        if (cur_st != last_st) {
+          if (numst > 0)
+            fprintf(out,"</coordinates></LineString>\n");
+          fprintf(out,"<LineString><coordinates>\n");
+          thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+            dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z,
+            x, y, z);
+          fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
+          numst = 1;
+        }
+        last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
         thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
-          dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z,
+          dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z,
           x, y, z);
         fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
-        numst = 1;
+        numst++;
       }
-      last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
-      thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
-        dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z,
-        x, y, z);
-      fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
-      numst++;
     }
-  }
-  if (numst > 0) {
-    fprintf(out,"</coordinates></LineString>\n");
-    fprintf(out,"</MultiGeometry>\n</Placemark>\n");
+    if (numst > 0) {
+      fprintf(out,"</coordinates></LineString>\n");
+      fprintf(out,"</MultiGeometry>\n</Placemark>\n");
+    }
   }
 
   // Export the survey and subsurvey data
@@ -1930,8 +1931,11 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
         // Export underground legs here. Surface ones are already exported in export_kml_file
         last_st = db->db1d.station_vec[survdata->leg_list.back().to.id - 1].uid - 1;
         for(legs = survdata->leg_list.begin(); legs != survdata->leg_list.end(); legs++) {
-          if (legs->is_valid && ((legs->flags & TT_LEGFLAG_SURFACE) == 0)) {
+          bool is_surface = (legs->flags & TT_LEGFLAG_SURFACE) != 0;
+          bool is_splay = (legs->flags & TT_LEGFLAG_SPLAY) != 0;
 
+          if ((legs->is_valid && !is_surface) &&
+              (((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0) || !is_splay)) {
             cur_st = db->db1d.station_vec[legs->from.id - 1].uid - 1;
             if (cur_st != last_st) {
               if (numst > 0)
