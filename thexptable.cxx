@@ -44,6 +44,8 @@
 #include "thproj.h"
 #include "thconfig.h"
 #include "thcs.h"
+#include "thtexfonts.h"
+#include "thlang.h"
 
 
 thexptable::thexptable() {
@@ -163,7 +165,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
     this->m_table.insert_object(NULL);          
     this->m_table.get_object()->m_tree_level = (this->surveys ? (size_t)(survey->level - 2) : 0);
     this->m_table.get_object()->m_tree_node_id = (this->surveys ? survey->get_reverse_full_name() : "");
-    this->m_table.insert_attribute("Title", ths2txt((strlen(survey->title) > 0) ? survey->title : survey->name).c_str());
+    this->m_table.insert_attribute("Title", ths2txt((strlen(survey->title) > 0) ? survey->title : survey->name, layout->lang).c_str());
     this->m_table.insert_attribute("Length",(long)(survey->stat.length + 0.5));
     if (!is_cave) this->m_table.get_attribute()->set_flag(THATTRFLAG_HIDDEN, true);
     if (survey->stat.station_top != NULL) {
@@ -294,7 +296,7 @@ void thexptable::process_db(class thdatabase * dbp)
             if ((pt->type == TT_POINT_TYPE_CONTINUATION) && ((pt->text != NULL) || (!this->filter)) && (pt->fsptr->is_selected())) {
               this->db->db2d.process_projection(pt->fscrapptr->proj);
               this->m_table.insert_object(NULL);
-              this->m_table.insert_attribute("Comment",ths2txt(pt->text).c_str());
+              this->m_table.insert_attribute("Comment",ths2txt(pt->text, layout->lang).c_str());
 	            if (!thisnan(pt->xsize))
                       this->m_table.insert_attribute("Explored",pt->xsize);
 	            else
@@ -316,7 +318,7 @@ void thexptable::process_db(class thdatabase * dbp)
                 if (strlen(survey) == 0)
                   survey = NULL;
               }
-              this->m_table.insert_attribute("Survey", ths2txt(survey).c_str());
+              this->m_table.insert_attribute("Survey", ths2txt(survey, layout->lang).c_str());
               this->m_table.insert_attribute("Station", st != NULL ? st->name : NULL);
               if (this->format == TT_EXPTABLE_FMT_KML) { 
                 this->add_coordinates(pt->point->xt + pt->fscrapptr->proj->rshift_x, pt->point->yt + pt->fscrapptr->proj->rshift_y, pt->point->at);
@@ -329,7 +331,7 @@ void thexptable::process_db(class thdatabase * dbp)
           st = &(dbp->db1d.station_vec[i]);
           if (((st->flags & TT_STATIONFLAG_CONT) != 0) && ((st->comment != NULL) || (!this->filter)) && (st->survey->is_selected())) {
             this->m_table.insert_object(NULL);
-            this->m_table.insert_attribute("Comment",ths2txt(st->comment).c_str());
+            this->m_table.insert_attribute("Comment",ths2txt(st->comment, layout->lang).c_str());
 	          if (!thisnan(st->explored))
                     this->m_table.insert_attribute("Explored",st->explored);
 	          else
@@ -341,14 +343,14 @@ void thexptable::process_db(class thdatabase * dbp)
               if (strlen(survey) == 0)
                 survey = NULL;
             }
-            this->m_table.insert_attribute("Survey", ths2txt(survey).c_str());
-            this->m_table.insert_attribute("Station", st->name);            
+            this->m_table.insert_attribute("Survey", ths2txt(survey, layout->lang).c_str());
+            this->m_table.insert_attribute("Station", st->name);
             if (this->format == TT_EXPTABLE_FMT_KML) { 
               this->add_coordinates(st->x, st->y, st->z);
             }
             if (this->expattr) this->m_table.copy_attributes(this->db->db1d.m_station_attr.get_object(i+1));
           }
-        }        
+        }
       }
       break;
     case TT_EXP_SURVEYLIST:
@@ -366,7 +368,7 @@ void thexptable::process_db(class thdatabase * dbp)
             this->m_table.insert_object(NULL);          
             this->m_table.get_object()->m_tree_level = (size_t)(srv->level - 2);
             this->m_table.get_object()->m_tree_node_id = srv->get_reverse_full_name();
-            this->m_table.insert_attribute("Title", ths2txt((strlen(srv->title) > 0) ? srv->title : srv->name).c_str());
+            this->m_table.insert_attribute("Title", ths2txt((strlen(srv->title) > 0) ? srv->title : srv->name, layout->lang).c_str());
             this->m_table.insert_attribute("Length",(long)(srv->stat.length + 0.5));
             if (srv->stat.station_top != NULL) {
               tmpd = srv->stat.station_top->z - srv->stat.station_bottom->z;
@@ -391,18 +393,25 @@ void thexptable::process_db(class thdatabase * dbp)
   }
 
 
+#ifdef THLINUX
+  const char * title = basename( this->outpt );
+#else
+  char title[_MAX_FNAME];
+  _splitpath(this->outpt, NULL, NULL, title, NULL);
+#endif
+
   switch (this->format) {
     case TT_EXPTABLE_FMT_TXT:
       this->m_table.export_txt(fname, this->encoding);
       break;
     case TT_EXPTABLE_FMT_HTML:
-      this->m_table.export_html(fname, this->encoding);
+      this->m_table.export_html(fname, title, this->encoding);
       break;
     case TT_EXPTABLE_FMT_DBF:
       this->m_table.export_dbf(fname, this->encoding);
       break;
     case TT_EXPTABLE_FMT_KML:
-			this->m_table.export_kml(fname, (this->export_mode == TT_EXP_CONTLIST) ? "Comment" : "Title");
+      this->m_table.export_kml(fname, (this->export_mode == TT_EXP_CONTLIST) ? "Comment" : "Title", title);
       break;
   }
 

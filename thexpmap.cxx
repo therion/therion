@@ -87,15 +87,11 @@ thexpmap::thexpmap() {
   this->items = TT_EXPMAP_ITEM_ALL;
   this->projstr = "plan";
   this->layoutstr = "";
-  this->layout = new thlayout;
-  this->layout->assigndb(&thdb);
-  this->layout->id = ++thdb.objid;
   this->projptr = NULL;
   this->encoding = TT_UTF_8;
 }
 
 thexpmap::~thexpmap() {
-  delete this->layout;
 }
 
 void thexpmap_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug) {
