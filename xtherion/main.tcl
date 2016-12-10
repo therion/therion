@@ -52,6 +52,13 @@ if {[llength $xth(app,list)] > 2} {
 }
 
 
+foreach idir $xth(idirs) {
+  catch {source [file join $idir xtherion.ini]}
+}
+catch {source xtherion.ini}
+
+set xth(gui,initdir) [file normalize $xth(gui,initdir)]
+
 set th2open 1
 set cfgopen 1
 
@@ -72,10 +79,5 @@ foreach fname $argv {
     xth_te_open_file 0 $fname 0
   }
 }
-
-foreach idir $xth(idirs) {
-  catch {source [file join $idir xtherion.ini]}
-}
-catch {source xtherion.ini}
 
 
