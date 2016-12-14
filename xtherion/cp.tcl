@@ -81,26 +81,7 @@ grid rowconf $txb 0 -weight 1
 grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
-bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-z> "catch {$txb.txt edit undo}"
-bind $txb.txt <$xth(kb_control)-Key-y> "catch {$txb.txt edit redo}"
-
-if {$xth(gui,bindinsdel)} {
-  bind $txb.txt <Delete> {
-    %W delete insert
-    %W see insert
-  }
-  bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
-  bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
-#  catch {
-#    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
-#    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
-#  }
-}
+xth_app_text_copy_paste_binds $txb.txt
 
 # nechame tab, return originalny
 if {[info exists xth(gui,te)]} {
@@ -136,24 +117,7 @@ grid rowconf $txb 0 -weight 1
 grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
-bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
-
-if {$xth(gui,bindinsdel)} {
-  bind $txb.txt <Delete> {
-    %W delete insert
-    %W see insert
-  }
-  bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
-  bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
-#  catch {
-#    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
-#    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
-#  }
-}
+xth_app_text_copy_paste_binds $txb.txt
 
 xth_status_bar cp $txb.txt "Therion log file."
 
@@ -282,24 +246,7 @@ grid $txb.txt -column 0 -row 0 -sticky news
 grid $txb.sv -column 1 -row 0 -sticky news
 grid $txb.sh -column 0 -row 1 -sticky news
 xth_status_bar me $txb.txt [mc "Survey informations."]
-bind $txb.txt <$xth(kb_control)-Key-x> "tk_textCut $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-c> "tk_textCopy $txb.txt"
-bind $txb.txt <$xth(kb_control)-Key-v> "tk_textPaste $txb.txt"
-
-if {$xth(gui,bindinsdel)} {
-  bind $txb.txt <Delete> {
-    %W delete insert
-    %W see insert
-  }
-  bind $txb.txt <Shift-Key-Delete> "tk_textCut $txb.txt"
-  bind $txb.txt <$xth(kb_control)-Key-Insert> "tk_textCopy $txb.txt"
-  bind $txb.txt <Shift-Key-Insert> "tk_textPaste $txb.txt"
-#  catch {
-#    bind $txb.txt <Shift-Key-KP_Decimal> "tk_textCut $txb.txt"
-#    bind $txb.txt <$xth(kb_control)-Key-KP_Insert> "tk_textCopy $txb.txt"
-#    bind $txb.txt <Shift-Key-KP_0> "tk_textPaste $txb.txt"
-#  }
-}
+xth_app_text_copy_paste_binds $txb.txt
 
 
 

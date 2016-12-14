@@ -44,7 +44,7 @@ it: caposaldo termporaneo
 mi: kaimataara mo te wā
 pl: punkt pomiarowy (niezastabilizowany)
 pt: base temporária
-ru: временный пикет
+ru: пикет
 sk: meračský bod (nestabilizovaný)
 sq: stacion mates I perkohshem
 
@@ -60,7 +60,7 @@ it: caposaldo verniciato
 mi: kaimataara tohi
 pl: punkt pomiarowy (oznaczony farbą)
 pt: base pintada
-ru: нарисованный пикет
+ru: пикет (нарисованный)
 sk: meračský bod (zafarbený)
 sq: stacion mates I ngjyrosur
 
@@ -76,7 +76,7 @@ it: caposaldo naturale
 mi: kaimataara a papa
 pl: punkt pomiarowy naturalny
 pt: base natural
-ru: естественная точка привязки
+ru: пикет (естественная точка привязки)
 sk: meračský bod (prírodný)
 sq: stacion mates natyral
 
@@ -124,7 +124,7 @@ it: perdita
 mi: tapoko
 pl: ponor
 pt: sumidouro
-ru: понор
+ru: поглощение воды
 sk: ponor
 sq: pus
 
@@ -140,7 +140,7 @@ it: sorgente
 mi: waipuna
 pl: wywierzysko
 pt: nascente
-ru: исток
+ru: источник
 sk: výver
 sq: burim
 
@@ -148,7 +148,7 @@ therion: point flag:doline
 cz: závrt
 en: doline
 it: dolina
-ru: воронка
+ru: воронка, проседание
 sk: závrt
 
 therion: point flag:dig
@@ -249,7 +249,7 @@ it: node del caposaldo
 mi: kaimatara ingoa
 pl: numer punktu pomiarowego
 pt: nome de base
-ru: номер пикета
+ru: название пикета
 sk: číslo meračského bodu
 sq: emri I stacionit-mates
 
@@ -279,7 +279,7 @@ fr: jonction de carte
 it: riporto di mappa
 mi: mahere whenua ki te hui
 pl: połączenie map
-ru: линия выноса
+ru: линия стыковки
 sk: prepojenie máp
 sq: lidhjet ne harta
 
@@ -311,7 +311,7 @@ it: parete di roccia
 mi: tarā
 pl: ściana
 pt: parede
-ru: коренная стена
+ru: стена
 sk: stena
 sq: shkembi-muri
 
@@ -327,7 +327,7 @@ it: parete sottostante
 mi: tāra ki raro
 pl: ściana położona niżej
 pt: parede subjacente
-ru: нижерасположенная стена
+ru: стена (нижерасположенная)
 sk: stena nižšej úrovne
 sq: muri I shtrire
 
@@ -338,7 +338,7 @@ en: overlying wall
 it: parete sovrastante
 mi: tāra ki runga
 pl: ściana położona wyżej
-ru: вышерасположенная стена
+ru: стена (вышерасположенная)
 sk: stena vyššej úrovne
 
 therion: line wall:unsurveyed
@@ -353,7 +353,7 @@ it: parete stimata
 mi: ka rūri tāra
 pl: ściana nie pomierzona
 pt: parede não-topografada
-ru: глазомерная съемка стен
+ru: глазомерная съемка
 sk: nezameraná stena
 sq: muri I pamatur
 
@@ -369,7 +369,7 @@ it: parete presunta
 mi: tāra whakaaro
 pl: niewidoczna ściana
 pt: parede presumida
-ru: предпологаемая стена
+ru: стена (предпологаемая)
 sk: predpokladaná stena
 sq: muri I supozuar
 
@@ -380,7 +380,7 @@ en: entrance pit
 it: parete pozzo
 mi: rua
 pl: studnia wstępna
-ru: отвес
+ru: входной колодец
 sk: vstupná priepasť
 
 therion: line wall:blocks
@@ -395,7 +395,7 @@ it: massi
 mi: pakaru
 pl: ściana utworzona przez zawalisko
 pt: desmoronamento
-ru: глыбы
+ru: стена (крупноглыбовый завал)
 sk: stena tvorená závalom
 sq: blloqe
 
@@ -411,7 +411,7 @@ it: detriti
 mi: otaota
 pl: ściana utworzona przez żwir
 pt: escombros
-ru: щебень
+ru: стена (глыбы, щебень)
 sk: stena tvorená suťou
 sq: depozitime/mbetje gurresh
 
@@ -427,7 +427,7 @@ it: ciotoli
 mi: nga kōhatu iti
 pl: ściana utworzona przez okręglaki
 pt: seixos
-ru: галька
+ru: стена (галька)
 sk: stena tvorená okruhliakmi
 sq: gurralece
 
@@ -443,7 +443,7 @@ it: sabbia
 mi: onepū
 pl: ściana utworzona przez piasek
 pt: areia
-ru: песок
+ru: стена (песок)
 sk: stena tvorená pieskom
 sq: rane
 
@@ -459,7 +459,7 @@ it: argilla
 mi: oneuku
 pl: ściana z gliny
 pt: lama
-ru: глина
+ru: стена (глина)
 sk: stena tvorená ílom
 sq: argjil
 
@@ -475,7 +475,7 @@ it: ghiaccio
 mi: kōpaka
 pl: ściana z lodu
 pt: gelo
-ru: лед, фирн
+ru: стена (лед, фирн)
 sk: stena tvorená ľadom
 sq: akull
 
@@ -486,7 +486,7 @@ en: flowstone wall
 it: colata
 mi: tāra a pari kōhatu
 pl: ściana z nacieków
-ru: натечная кора
+ru: стена (натек)
 sk: stena tvorená sintrom
 
 therion: line wall:moonmilk
@@ -496,7 +496,7 @@ en: moonmilk wall
 it: moonmilk
 mi: tāra a mirika marama
 pl: ściana z miękkich nacieków
-ru: лунное молоко
+ru: стена (лунное молоко)
 sk: stena tvorená mäkkým sintrom
 
 therion: point wall-altitude
@@ -654,7 +654,7 @@ fr: courant d’air d’hiver
 it: circolazione invernale
 mi: tawhiri a takurua
 pl: przewiew w zimie
-ru: ток воздуха зимний
+ru: ток воздуха (зимний)
 sk: zimný prievan
 sq: rrymim ajri-dimeror
 
@@ -668,7 +668,7 @@ fr: courant d’air d’été
 it: circolazione estiva
 mi: tawhiri a raumati
 pl: przewiew w lecie
-ru: ток воздуха летний
+ru: ток воздуха (летний)
 sk: letný prievan
 sq: rrymim ajri-veror
 
@@ -730,7 +730,7 @@ it: chiude su strettoia
 mi: putanga kuiti mutunga
 pl: zwężenie nie do przejścia
 pt: passagem com final estreito
-ru: вертикальная узость
+ru: узость (вертикальная)
 sk: neprielezné zúženie
 sq: kalim I ngushte-fund
 
@@ -746,7 +746,7 @@ it: chiude su laminatoio
 mi: putanga pāpaku mutunga
 pl: obniżenie nie do przejścia
 pt: passagem com final baixo
-ru: горизонтальная узость
+ru: узость (горизонтальная)
 sk: neprielezné zníženie
 sq: kalim I poshtem-fund
 
@@ -1064,7 +1064,7 @@ it: bordo masso
 mi: rohe kōhatu
 pl: obrys kamienia
 pt: lateral da rocha
-ru: внешний кромка глыбы
+ru: глыба (контур)
 sk: obrys kameňa
 sq: kufij shkembinjsh
 
@@ -1080,7 +1080,7 @@ it: spigolo masso
 mi: mata kohatu
 pl: krawędzie kamienia
 pt: bordas da rocha
-ru: внутренняя кромка глыбы
+ru: глыба (ребро)
 sk: hrany kameňa
 sq: skaji I shkembit
 
@@ -1265,7 +1265,7 @@ de: Lehmbäumchen
 en: clay tree
 it: pini d'argilla
 mi: rakau oneuku
-ru: глиняное деревце
+ru: глинянный натек
 
 therion: line border
 bg: граница
@@ -1295,7 +1295,7 @@ it: bordo
 mi: rohe
 pl: granica
 pt: borda
-ru: видимая граница
+ru: граница (видимая)
 sk: ohraničenie
 sq: vije kufiri-e dukshme
 
@@ -1311,7 +1311,7 @@ it: bordo temporaneo
 mi: rohe mo te wā
 pl: tymczasowa granica
 pt: borda temporária
-ru: временная граница
+ru: граница (временная)
 sk: nestále ohraničenie
 sq: kufij i perkohshem
 
@@ -1327,7 +1327,7 @@ it: bordo presunto
 mi: rohe whakaaringa whakaaro
 pl: niewidoczna granica
 pt: borda presumida
-ru: предполагаемая граница
+ru: граница (предполагаемая)
 sk: predpokladané ohraničenie
 sq: kufij I supozuar
 
@@ -1469,7 +1469,7 @@ es: concreción
 fr: concrétion
 it: concrezione
 pt: escorrimento
-ru: натечный каскад
+ru: натеки
 sk: sintrové náteky
 sq: gurre-rrjedhes
 
@@ -1559,7 +1559,7 @@ it: corso d'acqua permanente
 mi: wairere
 pl: ciek wodny
 pt: fluxo de água permanente
-ru: постоянный водоток
+ru: водоток (постоянный)
 sk: vodný tok
 sq: rrjedhe uji e perhershme
 
@@ -1575,7 +1575,7 @@ it: corso d'acqua permanente
 mi: wairere
 pl: ciek wodny
 pt: fluxo de água permanente
-ru: постоянный водоток
+ru: водоток (постоянный)
 sk: vodný tok
 sq: rrjedhe uji e perhershme
 
@@ -1591,7 +1591,7 @@ it: corso d'acqua temporaneo
 mi: wairere taumutumutu
 pl: okresowy ciek wodny
 pt: fluxo de água intermitente
-ru: непостоянный водоток
+ru: водоток (непостоянный)
 sk: občasný vodný tok
 sq: rrjedhe uji me force
 
@@ -1607,7 +1607,7 @@ it: corso d'acqua temporaneo
 mi: wairere taumutumutu
 pl: okresowy ciek wodny
 pt: fluxo de água intermitente
-ru: непостоянный водоток
+ru: водоток (непостоянный)
 sk: občasný vodný tok
 sq: rrjedhe uji me force
 
@@ -1623,7 +1623,7 @@ it: corso d'acqua presunto
 mi: wairere a pātai
 pl: przewidywany ciek wodny
 pt: fluxo de água suposto
-ru: предполагаемый водоток
+ru: водоток (предполагаемый)
 sk: predpokladaný vodný tok
 sq: rrjedhe uji e supozuar
 
@@ -1639,7 +1639,7 @@ it: paleocorso d'acqua
 mi: wairere nehera
 pl: stary ciek wodny
 pt: paleo-fluxo de água
-ru: палео-поток
+ru: водоток (древний)
 sk: paleoriečisko
 sq: rrjedhe uji e vjeter
 
@@ -1671,7 +1671,7 @@ it: perdita
 mi: tapoko
 pl: ponor
 pt: sumidouro
-ru: понор
+ru: поглощение воды
 sk: ponor
 sq: pus
 
@@ -1810,7 +1810,7 @@ en: ice stalactite
 it: stalattite di ghiaccio
 mi: kōpaka ki te haere ki runga
 pl: lodowy stalaktyt
-ru: ледяной сталактит
+ru: сталактит (ледовый)
 sk: ľadový stalaktit
 
 therion: point ice-stalagmite
@@ -1820,7 +1820,7 @@ en: ice stalagmite
 it: stalagmite di ghiaccio
 mi: kōpaka ki te haere ki raro
 pl: lodowy stalagmit
-ru: ледяной сталагмит
+ru: сталагмит (ледовый)
 sk: ľadový stalagmit
 
 therion: point ice-pillar
@@ -1830,7 +1830,7 @@ en: ice pillar
 it: colonna di ghiaccio
 mi: pou Kōpaka
 pl: lodowy stalagnat
-ru: ледяная колонна
+ru: колонна (ледовая)
 sk: ľadový stalagnát
 
 therion: point curtain
@@ -2026,7 +2026,7 @@ it: gour
 mi: kōhatu matatara
 pl: naciekowa przegroda
 pt: travertino
-ru: гуры без воды
+ru: гуры (без воды)
 sk: sintrová hrádza
 sq: penda guri
 
@@ -2042,7 +2042,7 @@ it: vasca
 mi: kōhatu kopua wai
 pl: jeziorko naciekowe
 pt: lago travertino
-ru: гуры с водой
+ru: гуры (с водой)
 sk: sintrové jazierko
 sq: vaska uji
 
@@ -2218,7 +2218,7 @@ it: ancoraggio
 mi: punga
 pl: punkt asekuracyjny
 pt: ancoragem
-ru: ИТО
+ru: крюк
 sk: kotvenie
 sq: pike-sigurimi
 
@@ -2234,7 +2234,7 @@ it: corda
 mi: taura
 pl: lina
 pt: corda
-ru: линейная опора
+ru: веревка
 sk: lano
 sq: litar
 
@@ -2250,13 +2250,13 @@ it: scala di corda
 mi: arawhata taura
 pl: drabinka linowa
 pt: escada de corda
-ru: гибкая лестница
+ru: лестница (гибкая)
 sk: lanový rebrík
 sq: shkalle litari
 
 therion: line rope-ladder
 it: scala di corda
-ru: гибкая лестница
+ru: лестница (гибкая)
 
 therion: point fixed-ladder
 bg: стационарна стълба
@@ -2270,7 +2270,7 @@ it: scala fissa
 mi: arawhata
 pl: sztywna drabinka
 pt: escada fixa
-ru: стационарная лестница
+ru: лестница (жесткая)
 sk: fixný rebrík
 sq: shkalle fikse
 
@@ -2278,7 +2278,7 @@ therion: line fixed-ladder
 bg: стационарна стълба
 en: fixed ladder
 it: scala fissa
-ru: стационарная лестница
+ru: лестница (жесткая)
 
 therion: point steps
 bg: стъпала
@@ -2312,13 +2312,13 @@ therion: point via-ferrata
 bg: виа-ферата
 en: via-ferrata
 it: via ferrata
-ru: виа ферата
+ru: виа-феррата
 
 therion: line via-ferrata
 bg: виа-ферата
 en: via-ferrata
 it: via ferrata
-ru: виа ферата
+ru: виа-феррата
 
 therion: point traverse
 bg: траверс
@@ -2376,7 +2376,7 @@ it: campo
 mi: topuni
 pl: biwak
 pt: acampamento
-ru: ПБЛ
+ru: подземный лагерь
 sk: bivak
 sq: vend-pushim
 
@@ -2408,7 +2408,7 @@ it: etichetta
 mi: ingoa
 pl: nazwa
 pt: indicação
-ru: подпись
+ru: текст
 sk: pomenovanie
 sq: mbishkrim-etiket
 
@@ -2424,7 +2424,7 @@ it: etichetta
 mi: ingoa
 pl: nazwa
 pt: indicação
-ru: подпись
+ru: текст
 sk: pomenovanie
 sq: mbishkrim
 

@@ -1,0 +1,29 @@
+#
+# IDEs, build systems, editors, etc
+#
+/.idea/
+/cmake-build-*/
+*.orig
+*.bak
+*~
+
+
+#
+# Build results files
+#
+*.o
+*.a
+*.htb
+*.chm
+/therion
+/xtherion/xtherion
+/xtherion/ver.tcl
+/thbook/thbook.pdf
+/loch/loch
+
+
+#
+# Therion-generated files
+#
+/therion.log
+/thlibrarydata.log

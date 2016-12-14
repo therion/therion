@@ -173,8 +173,8 @@ struct thattr {
   void analyze_fields();
   void export_dbf(const char * fname, int encoding = TT_UTF_8);
   void export_txt(const char * fname, int encoding = TT_UTF_8);
-  void export_html(const char * fname, int encoding = TT_UTF_8);
-  void export_kml(const char * fname, const char * name_field);
+  void export_html(const char * fname, const char * title, int encoding = TT_UTF_8);
+  void export_kml(const char * fname, const char * name_field, const char * title);
   void export_mp_header(FILE * f);
   void export_mp_object_begin(FILE * f, long user_id);
   void export_mp_object_end(FILE * f, long user_id);

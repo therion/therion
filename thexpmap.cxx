@@ -84,17 +84,14 @@
 
 thexpmap::thexpmap() {
   this->format = TT_EXPMAP_FMT_UNKNOWN;
+  this->items = TT_EXPMAP_ITEM_ALL;
   this->projstr = "plan";
   this->layoutstr = "";
-  this->layout = new thlayout;
-  this->layout->assigndb(&thdb);
-  this->layout->id = ++thdb.objid;
   this->projptr = NULL;
   this->encoding = TT_UTF_8;
 }
 
 thexpmap::~thexpmap() {
-  delete this->layout;
 }
 
 void thexpmap_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug) {
@@ -142,7 +139,7 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
 
 void thexpmap::parse_options(int & argx, int nargs, char ** args)
 {
-
+  unsigned utmp;
   int optid, optx; //,sv;
 //  double dv;
   bool supform;
@@ -218,6 +215,23 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
       this->layoutopts += this->cfgptr->bf2.get_buffer();
       argx++;
       break;
+
+    case TT_EXPMAP_OPT_ENABLE:
+    case TT_EXPMAP_OPT_DISABLE:
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing map entity -- \"%s\"",args[optx]))
+      utmp = thmatch_token(args[argx], thtt_expmap_items);
+      if (utmp == TT_EXPMAP_ITEM_UNKNOWN)
+        ththrow(("unknown map entity -- \"%s\"", args[argx]))
+      if (optid == TT_EXPMAP_OPT_ENABLE) {
+        this->items |= utmp;
+      } else {
+        this->items &= (~utmp);
+      }
+      argx++;
+      break;
+
     default:
       // skusi ci je to -layout-xxx
       if (strncmp(args[optx],"-layout-",8) == 0)
