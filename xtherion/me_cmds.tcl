@@ -1998,22 +1998,86 @@ proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
 
 proc xth_me_cmds_calc_point_coords {id} {
   global xth
+  set x0 [xth_me_real2canx $xth(me,cmds,$id,x)];
+  set y0 [xth_me_real2cany $xth(me,cmds,$id,y)];
+  set s0 $xth(gui,me,point,psize);
   switch $xth(me,cmds,$id,type) {
     station {
       # draw a triangle for the station points
-      set x1 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)]
-      set y1 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
-      set x2 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)]
-      set y2 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
-      set x3 [expr [xth_me_real2canx $xth(me,cmds,$id,x)]]
-      set y3 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)/2]
+      set x1 [expr $x0 - $s0]
+      set y1 [expr $y0 + $s0]
+      set x2 [expr $x0 + $s0]
+      set y2 [expr $y0 + $s0]
+      set x3 [expr $x0 + 0 ]
+      set y3 [expr $y0 - $s0/2]
       return [list $x1 $y1 $x2 $y2 $x3 $y3]
       }
+    "stalactite" - "stalactites" {
+      set x1 [expr $x0 - 0]
+      set y1 [expr $y0 - 0]
+      set x2 [expr $x0 - $s0]
+      set y2 [expr $y0 - $s0]
+      set x3 [expr $x0 + 0]
+      set y3 [expr $y0 + $s0*2]
+      set x4 [expr $x0 + $s0]
+      set y4 [expr $y0 - $s0]
+      return [list $x1 $y1 $x2 $y2 $x1 $y1 $x3 $y3 $x1 $y1 $x4 $y4 $x1 $y1]
+    }
+    "stalagmite" - "stalactites" {
+      set x1 [expr $x0 + 0]
+      set y1 [expr $y0 + 0]
+      set x2 [expr $x0 + $s0]
+      set y2 [expr $y0 + $s0]
+      set x3 [expr $x0 - 0]
+      set y3 [expr $y0 - $s0*2]
+      set x4 [expr $x0 - $s0]
+      set y4 [expr $y0 + $s0]
+      return [list $x1 $y1 $x2 $y2 $x1 $y1 $x3 $y3 $x1 $y1 $x4 $y4 $x1 $y1]
+    }
+    "pillar" - "pillars" {
+      set x1 [expr $x0 - 0]
+      set y1 [expr $y0 + $s0]
+      set x2 [expr $x0 - $s0]
+      set y2 [expr $y0 + $s0*2]
+      set x3 [expr $x0 + $s0]
+      set y3 [expr $y0 + $s0*2]
+      set x4 [expr $x0 - 0]
+      set y4 [expr $y0 - $s0]
+      set x5 [expr $x0 - $s0]
+      set y5 [expr $y0 - $s0*2]
+      set x6 [expr $x0 + $s0]
+      set y6 [expr $y0 - $s0*2]
+      return [list $x1 $y1 $x2 $y2 $x1 $y1 $x3 $y3 $x1 $y1 $x4 $y4 $x5 $y5 $x4 $y4 $x6 $y6 $x4 $y4 $x1 $y1]
+    }
+    "helictite" - "soda-straw" - "popcorn" {
+      # draw a thin square for these formations
+      set x1 [expr $x0 - $s0/2]
+      set y1 [expr $y0 - $s0]
+      set x2 [expr $x0 - $s0/2]
+      set y2 [expr $y0 + $s0]
+      set x3 [expr $x0 + $s0/2]
+      set y3 [expr $y0 + $s0]
+      set x4 [expr $x0 + $s0/2]
+      set y4 [expr $y0 - $s0]
+      return [list $x1 $y1 $x2 $y2 $x3 $y3 $x4 $y4]
+    }
+    "flowstone" - "curtain" - "disk" {
+      # draw a square for these formations
+      set x1 [expr $x0 - $s0]
+      set y1 [expr $y0 - $s0]
+      set x2 [expr $x0 - $s0]
+      set y2 [expr $y0 + $s0]
+      set x3 [expr $x0 + $s0]
+      set y3 [expr $y0 + $s0]
+      set x4 [expr $x0 + $s0]
+      set y4 [expr $y0 - $s0]
+      return [list $x1 $y1 $x2 $y2 $x3 $y3 $x4 $y4]
+    }
     default {
-      set x1 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)]
-      set y1 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)]
-      set x2 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)]
-      set y2 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
+      set x1 [expr $x0 - $s0]
+      set y1 [expr $y0 - $s0]
+      set x2 [expr $x0 + $s0]
+      set y2 [expr $y0 + $s0]
       return [list $x1 $y1 $x2 $y2]
     }
   }  
@@ -2026,12 +2090,16 @@ proc xth_me_cmds_draw_point {id} {
   switch $xth(me,cmds,$id,type) {
     station {
       # draw a triangle for the station points
-      $xth(me,can) create polygon [xth_me_cmds_calc_point_coords $id] \
-        -tags "command point pt$id" -width 1 -outline blue -fill blue
+      $xth(me,can) create polygon [xth_me_cmds_calc_point_coords $id] -tags "command point pt$id" -width 1 -outline blue -fill blue
+    }
+    "stalactite" - "stalagmite" - "pillar" - "helictite" - "stalagmites" - "stalactites" - "soda-straw" - "popcorn" - "pillars" {
+      $xth(me,can) create polygon [xth_me_cmds_calc_point_coords $id] -tags "command point pt$id" -width 2
+    }
+    "flowstone" - "curtain" - "disk" {
+      $xth(me,can) create polygon [xth_me_cmds_calc_point_coords $id] -tags "command point pt$id" -width 1 -outline black -fill blue
     }
     default {
-      $xth(me,can) create oval $coords \
-        -tags "command point pt$id" -width 1 -outline blue -fill blue
+      $xth(me,can) create oval $coords -tags "command point pt$id" -width 1 -outline blue -fill blue
     }
   }  
   $xth(me,can) bind pt$id <Enter> "$xth(me,can) itemconfigure pt$id -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \$xth(me,cmds,$id,sbar)\""

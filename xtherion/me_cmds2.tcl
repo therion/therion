@@ -3121,6 +3121,21 @@ proc xth_me_cmds_set_colors {} {
             station {
               set col $xth(gui,me,stationcolor)
             }
+            "stalactite" - "stalagmite" - "pillar" - "helictite" - "flowstone" - "stalagmites" - "stalactites" - "soda-straw" - "popcorn" - "pillars" - "curtain" - "disk" {
+              set col $xth(gui,me,formationcolor)
+            }
+            "blocks" - "debris" - "sand" - "clay" - "pebbles" {
+              set col $xth(gui,me,depositcolor)
+            }
+            "water" - "water-flow" - "sink" - "spring" {
+              set col $xth(gui,me,watercolor)
+            }
+            "air-draught" {
+              set col $xth(gui,me,aircolor)
+            }
+            "ice" - "snow" {
+              set col $xth(gui,me,icecolor)
+            }
             default {
               set col $scol
             }

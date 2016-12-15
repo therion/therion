@@ -208,7 +208,13 @@ set xth(gui,me,pitcolor) magenta
 set xth(gui,me,slopecolor) gold
 set xth(gui,me,rockcolor) snow4
 set xth(gui,me,bordercolor) turquoise
+
 set xth(gui,me,stationcolor) darkorange
+set xth(gui,me,formationcolor) orange
+set xth(gui,me,depositcolor) brown
+set xth(gui,me,watercolor) blue
+set xth(gui,me,aircolor) lightblue
+set xth(gui,me,icecolor) grey
 
 set xth(gui,me,typelistwidth) 16
 set xth(gui,rmb) 3
