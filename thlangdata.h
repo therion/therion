@@ -27,6 +27,8 @@ enum {
   THLANG_RU = 15,
   THLANG_SK = 16,
   THLANG_SQ = 17,
+  THLANG_ZH = 18,
+  THLANG_ZH_CN = 19,
 };
 
  

@@ -28,6 +28,8 @@ static const thstok thtt_lang [] = {
   {"ru", THLANG_RU},
   {"sk", THLANG_SK},
   {"sq", THLANG_SQ},
+  {"zh", THLANG_ZH},
+  {"zh_CN", THLANG_ZH_CN},
   {NULL, THLANG_UNKNOWN},
 };
 
@@ -52,6 +54,8 @@ static const thlang_pchar thlang__cxxids []  = {
   "THLANG_RU",
   "THLANG_SK",
   "THLANG_SQ",
+  "THLANG_ZH",
+  "THLANG_ZH_CN",
 };
 
 
@@ -75,6 +79,8 @@ static const int thlang__alternatives [] = {
   THLANG_UNKNOWN,
   THLANG_UNKNOWN,
   THLANG_UNKNOWN,
+  THLANG_UNKNOWN,
+  THLANG_ZH,
 };
 
 
@@ -265,7 +271,7 @@ static const thstok thtt__texts [181] = {
 
 
 
-static thlang_pchar thlang__translations [180][18] = {
+static thlang_pchar thlang__translations [180][20] = {
   {
     "основна скала",
     "pevná skála",
@@ -285,6 +291,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "коренная порода",
     "pevná skala",
     "shtrat shkembi",
+    "基岩区",
+    "基岩区",
   },
   {
     "блокаж",
@@ -305,6 +313,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "навал глыб",
     "skalné bloky",
     "blloqe",
+    "块石堆积区",
+    "块石堆积区",
   },
   {
     "глина",
@@ -325,6 +335,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "глина",
     "íl",
     "argjil",
+    "粘土区",
+    "粘土区",
   },
   {
     "чакъл",
@@ -345,6 +357,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "щебень",
     "štrk",
     "mbetje-gurresh",
+    "碎屑沉积区",
+    "碎屑沉积区",
   },
   {
     "каменен водопад",
@@ -365,6 +379,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "натечный каскад",
     "sintrové náteky",
     "gurre-rrjedhes",
+    "流石区",
+    "流石区",
   },
   {
     "лед",
@@ -385,6 +401,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "лёд",
     "ľad",
     "akull",
+    "冰区",
+    "冰区",
   },
   {
     "пещерно мляко",
@@ -405,6 +423,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "лунное молоко",
     "náteky mäkkého sintra",
     "qumesht-hena",
+    "月奶石区",
+    "月奶石区",
   },
   {
     "камъчета",
@@ -425,6 +445,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "галька",
     "okrúhliaky",
     "gurralece",
+    "卵石区",
+    "卵石区",
   },
   {
     "пясък",
@@ -445,6 +467,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "песок",
     "piesok",
     "rane",
+    "砂区",
+    "砂区",
   },
   {
     "сняг",
@@ -465,6 +489,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "снег",
     "sneh",
     "bore",
+    "雪区",
+    "雪区",
   },
   {
     "сифон",
@@ -485,6 +511,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "сифон",
     "zatopená plocha (sifón)",
     "sifoni",
+    "潜水塘区",
+    "潜水塘区",
   },
   {
     "вода",
@@ -505,6 +533,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "вода",
     "vodná plocha",
     "uje",
+    "水体区",
+    "水体区",
   },
   {
     "граница",
@@ -525,6 +555,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "граница",
     "ohraničenie",
     "kufiri",
+    "边界线",
+    "边界线",
   },
   {
     "предполагаема граница",
@@ -545,6 +577,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "предполагаемая граница",
     "predpokladané ohraničenie",
     "kufij I supozuar",
+    "推测边界",
+    "推测边界",
   },
   {
     "временна граница",
@@ -565,6 +599,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "временная граница",
     "nestále ohraničenie",
     "kufij i perkohshem",
+    "暂时边界",
+    "暂时边界",
   },
   {
     "видима граница",
@@ -585,6 +621,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "видимая граница",
     "ohraničenie",
     "vije kufiri-e dukshme",
+    "可见边界",
+    "可见边界",
   },
   {
     "меандър, канал в тавана",
@@ -605,6 +643,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "меандр, канал в потолке",
     "stropný meander",
     "rrjedhe uji gjarperore ne tavan",
+    "天沟",
+    "天沟",
   },
   {
     "ниша в тавана",
@@ -625,6 +665,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "уступ потолка",
     "zmena výšky stropu",
     "shkalle ne tavan",
+    "梯坎状洞顶",
+    "梯坎状洞顶",
   },
   {
     "комин",
@@ -645,6 +687,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "труба",
     "komín",
     "oxhak",
+    "烟囱式洞道",
+    "烟囱式洞道",
   },
   {
     "контур",
@@ -665,8 +709,12 @@ static thlang_pchar thlang__translations [180][18] = {
     "контур",
     "vrstevnica",
     "kontura",
+    "等高线",
+    "等高线",
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -705,6 +753,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "меандр, канал в полу",
     "meander v dne",
     "rrjedhe uji gjarperore",
+    "洞底蛇曲",
+    "洞底蛇曲",
   },
   {
     "праг",
@@ -725,6 +775,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "уступ пола",
     "stupeň",
     "shkalle ne dysheme",
+    "梯坎状洞底",
+    "梯坎状洞底",
   },
   {
     "каменен водопад",
@@ -745,6 +797,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "натечный каскад",
     "sintrové náteky",
     "gurre-rrjedhes",
+    "流石",
+    "流石",
   },
   {
     "наклон на галерията",
@@ -765,8 +819,12 @@ static thlang_pchar thlang__translations [180][18] = {
     "уклон хода",
     "sklon chodby",
     "pjertesia e kalimit",
+    "洞道坡度",
+    "洞道坡度",
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -805,6 +863,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "текстовая метка",
     "pomenovanie",
     "mbishkrim",
+    "标记",
+    "标记",
   },
   {
     "свързване на карти",
@@ -825,6 +885,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "линия выноса",
     "prepojenie máp",
     "lidhjet ne harta",
+    "图形连接",
+    "图形连接",
   },
   {
     "пещерно мляко",
@@ -845,6 +907,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "лунное молоко",
     "náteky mäkkého sintra",
     "qumesht-hena",
+    "月奶石",
+    "月奶石",
   },
   {
     "скална площадка",
@@ -865,6 +929,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "нависание потолка",
     "previs",
     "varese",
+    "倒倾斜",
+    "倒倾斜",
   },
   {
     "кладенец",
@@ -885,6 +951,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "колодец",
     "priepasť",
     "ngjitje",
+    "竖井",
+    "竖井",
   },
   {
     "външен ръб на камък",
@@ -905,6 +973,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "внешний кромка глыбы",
     "obrys kameňa",
     "kufij shkembinjsh",
+    "块石边界",
+    "块石边界",
   },
   {
     "вътрешен ръб на камък",
@@ -925,6 +995,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "внутренняя кромка глыбы",
     "hrany kameňa",
     "skaji I shkembit",
+    "块石边缘",
+    "块石边缘",
   },
   {
     NULL,
@@ -945,8 +1017,12 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     NULL,
     NULL,
+    NULL,
+    NULL,
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -985,6 +1061,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "выносная линия сечения",
     "priečny rez",
     "kryq-ndarje",
+    "横断面",
+    "横断面",
   },
   {
     "склон",
@@ -1005,8 +1083,12 @@ static thlang_pchar thlang__translations [180][18] = {
     "склон",
     "šikmá plocha",
     "breg",
+    "斜坡",
+    "斜坡",
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -1045,8 +1127,12 @@ static thlang_pchar thlang__translations [180][18] = {
     "нитка хода",
     "polygónový ťah",
     "vijat matese-vrojtuese",
+    "测线",
+    "测线",
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -1085,6 +1171,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "стена",
     "stena",
     "muri",
+    "洞道边界",
+    "洞道边界",
   },
   {
     "стена (основна скала)",
@@ -1105,6 +1193,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "стена",
     "stena",
     "shkembi-muri",
+    "基岩边界",
+    "基岩边界",
   },
   {
     "стена - блокаж",
@@ -1125,6 +1215,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "глыбы",
     "stena tvorená závalom",
     "blloqe",
+    "崩塌块石边界",
+    "崩塌块石边界",
   },
   {
     "глина",
@@ -1145,6 +1237,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "глина",
     "stena tvorená ílom",
     "argjil",
+    "粘土边界",
+    "粘土边界",
   },
   {
     "чакъл",
@@ -1165,6 +1259,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "щебень",
     "stena tvorená suťou",
     "depozitime/mbetje gurresh",
+    "碎屑沉积边界",
+    "碎屑沉积边界",
   },
   {
     NULL,
@@ -1185,6 +1281,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "stena tvorená sintrom",
     NULL,
+    "流石边界",
+    "流石边界",
   },
   {
     "лед/фирн",
@@ -1205,6 +1303,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "лед, фирн",
     "stena tvorená ľadom",
     "akull",
+    "冰边界",
+    "冰边界",
   },
   {
     NULL,
@@ -1225,6 +1325,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "stena tvorená mäkkým sintrom",
     NULL,
+    "月奶石边界",
+    "月奶石边界",
   },
   {
     NULL,
@@ -1245,6 +1347,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "stena vyššej úrovne",
     NULL,
+    "洞顶边界",
+    "洞顶边界",
   },
   {
     "камъчета",
@@ -1265,6 +1369,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "галька",
     "stena tvorená okruhliakmi",
     "gurralece",
+    "卵砾石边界",
+    "卵砾石边界",
   },
   {
     NULL,
@@ -1285,6 +1391,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "vstupná priepasť",
     NULL,
+    "竖井洞口",
+    "竖井洞口",
   },
   {
     "предполагаема стена",
@@ -1305,6 +1413,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "предпологаемая стена",
     "predpokladaná stena",
     "muri I supozuar",
+    "推测洞道边界",
+    "推测洞道边界",
   },
   {
     "пясък",
@@ -1325,6 +1435,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "песок",
     "stena tvorená pieskom",
     "rane",
+    "砂边界",
+    "砂边界",
   },
   {
     "по-ниско разположена стена",
@@ -1345,6 +1457,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "нижерасположенная стена",
     "stena nižšej úrovne",
     "muri I shtrire",
+    "洞底边界",
+    "洞底边界",
   },
   {
     "окомерна скица на стените",
@@ -1365,6 +1479,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "глазомерная съемка стен",
     "nezameraná stena",
     "muri I pamatur",
+    "未测量洞道边界",
+    "未测量洞道边界",
   },
   {
     "водно течение",
@@ -1385,6 +1501,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "водоток",
     "vodný tok",
     "rrjedhe uji",
+    "水流",
+    "水流",
   },
   {
     "предполагаемо водно течение",
@@ -1405,6 +1523,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "предполагаемый водоток",
     "predpokladaný vodný tok",
     "rrjedhe uji e supozuar",
+    "推测流水",
+    "推测流水",
   },
   {
     "периодично водно течение",
@@ -1425,6 +1545,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "непостоянный водоток",
     "občasný vodný tok",
     "rrjedhe uji me force",
+    "季节性流水",
+    "季节性流水",
   },
   {
     "постоянно водно течение",
@@ -1445,6 +1567,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "постоянный водоток",
     "vodný tok",
     "rrjedhe uji e perhershme",
+    "常流水",
+    "常流水",
   },
   {
     "въздушно течение",
@@ -1465,6 +1589,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "ток воздуха",
     "prievan",
     "rrymim i ajrit",
+    "气流",
+    "气流",
   },
   {
     "летен въздушно течение",
@@ -1485,6 +1611,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "ток воздуха летний",
     "letný prievan",
     "rrymim ajri-veror",
+    "暖气流",
+    "暖气流",
   },
   {
     "зимен въздушно течение",
@@ -1505,6 +1633,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "ток воздуха зимний",
     "zimný prievan",
     "rrymim ajri-dimeror",
+    "冷气流",
+    "冷气流",
   },
   {
     "н.м. височина",
@@ -1525,6 +1655,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высотная отметка",
     "nadmorská výška bodu v chodbe",
     "lartesia mbidetare",
+    "海拔",
+    "海拔",
   },
   {
     "анастомоза",
@@ -1545,6 +1677,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "анастомозис",
     "anastomóza",
     "anastomosa(kuartz)",
+    "溶沟",
+    "溶沟",
   },
   {
     "закрепване",
@@ -1565,6 +1699,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "ИТО",
     "kotvenie",
     "pike-sigurimi",
+    "锚点",
+    "锚点",
   },
   {
     "арагонит",
@@ -1585,6 +1721,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "арагонит",
     "aragonit",
     "aragonite",
+    "文石",
+    "文石",
   },
   {
     "археологическа находка",
@@ -1605,6 +1743,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "археологическая находка",
     "archeologické nálezy",
     "material arkeologjik",
+    "考古遗物",
+    "考古遗物",
   },
   {
     "основна скала",
@@ -1625,6 +1765,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "коренная порода",
     "pevná skala",
     "shtrat shkembi",
+    "基岩",
+    "基岩",
   },
   {
     "камъни, блокаж",
@@ -1645,6 +1787,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "глыбы, завал",
     "kamenné bloky",
     "blloqe, shembje",
+    "崩塌块石",
+    "崩塌块石",
   },
   {
     "затворено от срутище",
@@ -1665,6 +1809,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "блокировано обвалом",
     "zavalený koniec",
     "gurre rrjedhes-fund",
+    "崩塌堵塞",
+    "崩塌堵塞",
   },
   {
     "мост",
@@ -1685,6 +1831,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "мост",
     "most",
     "ure",
+    "桥",
+    "桥",
   },
   {
     "лагер",
@@ -1705,6 +1853,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "ПБЛ",
     "bivak",
     "vend-pushim",
+    "营地",
+    "营地",
   },
   {
     "пещерен бисер",
@@ -1725,6 +1875,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "пещерный жемчуг",
     "jaskynné perly",
     "margaritar te shpelles",
+    "穴珠",
+    "穴珠",
   },
   {
     "глина",
@@ -1745,6 +1897,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "глина",
     "íl",
     "argjil",
+    "粘土",
+    "粘土",
   },
   {
     NULL,
@@ -1765,6 +1919,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "koniec uzavretý ílom",
     NULL,
+    "粘土堵赛",
+    "粘土堵赛",
   },
   {
     NULL,
@@ -1785,6 +1941,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     NULL,
     NULL,
+    "粘土层",
+    "粘土层",
   },
   {
     "възможно продължение",
@@ -1805,6 +1963,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "возможное продолжение",
     "možné pokračovanie",
     "vazhdim I mundshem",
+    "可能延伸洞道",
+    "可能延伸洞道",
   },
   {
     "кристал",
@@ -1825,6 +1985,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "кристаллы",
     "kryštál",
     "kristale",
+    "晶花",
+    "晶花",
   },
   {
     "драперия",
@@ -1845,6 +2007,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "натечный занавес",
     "sintrové záclony",
     "perde",
+    "石幕",
+    "石幕",
   },
   {
     "дата на наблюдението",
@@ -1865,6 +2029,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "дата наблюдения",
     "dátum pozorovania",
     "data e vrojtimit",
+    "观测日期",
+    "观测日期",
   },
   {
     "чакъл",
@@ -1885,6 +2051,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "щебень",
     "sutina",
     "mbetje-mbeturina",
+    "碎屑堆积",
+    "碎屑堆积",
   },
   {
     "изкоп",
@@ -1905,6 +2073,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "sonda",
     "mihje",
+    NULL,
+    NULL,
   },
   {
     "размери на галерията",
@@ -1925,6 +2095,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "размеры хода",
     "rozmery",
     "dimenzionet",
+    "规模",
+    "规模",
   },
   {
     "диск",
@@ -1945,6 +2117,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "диск",
     "disk",
     "pllake",
+    "石盘",
+    "石盘",
   },
   {
     "вход",
@@ -1965,6 +2139,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "вход",
     "vchod",
     "hyrja",
+    "洞口",
+    "洞口",
   },
   {
     "стационарна стълба",
@@ -1985,6 +2161,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "жесткая лестница",
     "fixný rebrík",
     "shkalle fikse",
+    "固定梯子",
+    "固定梯子",
   },
   {
     "въздушно течение",
@@ -2005,6 +2183,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "ток воздуха",
     "prievan",
     "rrymim i ajrit",
+    "气流",
+    "气流",
   },
   {
     NULL,
@@ -2024,6 +2204,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     NULL,
     "skalný oblúk",
+    NULL,
+    NULL,
     NULL,
   },
   {
@@ -2045,6 +2227,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "возможное продолжение",
     "možné pokračovanie",
     "vazhdim I mundshem",
+    "可能延伸洞道",
+    "可能延伸洞道",
   },
   {
     "изкоп",
@@ -2065,6 +2249,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "sonda",
     "mihje",
+    NULL,
+    NULL,
   },
   {
     NULL,
@@ -2084,6 +2270,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     NULL,
     "závrt",
+    NULL,
+    NULL,
     NULL,
   },
   {
@@ -2105,6 +2293,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "вход",
     "vchod",
     "hyrja",
+    "洞口",
+    "洞口",
   },
   {
     "скална площадка",
@@ -2125,6 +2315,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "нависание потолка",
     "previs",
     "varese",
+    "倒倾斜",
+    "倒倾斜",
   },
   {
     "понор",
@@ -2145,6 +2337,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "сток",
     "ponor",
     "pus",
+    "渗水点",
+    "渗水点",
   },
   {
     "извор",
@@ -2165,6 +2359,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "исток",
     "výver",
     "burim",
+    "泉点",
+    "泉点",
   },
   {
     "натек",
@@ -2185,6 +2381,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "натек",
     "sinter",
     "gurre-rrjedhes",
+    "流石",
+    "流石",
   },
   {
     "блокирано от натеци",
@@ -2205,6 +2403,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "блокировано натеками",
     "zasintrený koniec",
     "mbyllje me gurre-rrjedhes",
+    "流石堵塞",
+    "流石堵塞",
   },
   {
     "карни жлебове",
@@ -2225,6 +2425,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "канавки",
     "píšťaly",
     "flauta",
+    "溶槽",
+    "溶槽",
   },
   {
     "наклон на галерията",
@@ -2245,6 +2447,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "уклон хода",
     "sklon chodby",
     "pjertesia e kalimit",
+    "洞道坡度",
+    "洞道坡度",
   },
   {
     "гуано",
@@ -2265,6 +2469,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "гуано",
     "guáno",
     "jashteqitje e lakuriqeve-guano",
+    "粪类堆积",
+    "粪类堆积",
   },
   {
     "гипс",
@@ -2285,6 +2491,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "гипс",
     "sádrovec",
     "gjips",
+    "石膏",
+    "石膏",
   },
   {
     "гипсово цвете",
@@ -2305,8 +2513,12 @@ static thlang_pchar thlang__translations [180][18] = {
     "гипсовые цветы",
     "sádrovcový kvet",
     "lule gjipsi",
+    "石膏花",
+    "石膏花",
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -2345,6 +2557,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высота уступа/трубы/колодца",
     "hĺbka/výška priepasti/stupňa/komína",
     "lartesia e shkalles ne dysheme/oxhaku/thellesia e leshimit",
+    "洞底梯坎高/烟囱洞道高/竖洞深度",
+    "洞底梯坎高/烟囱洞道高/竖洞深度",
   },
   {
     "Дълбочина на кладенец",
@@ -2365,6 +2579,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высота колодца",
     "hĺbka priepasti",
     "thellesia e leshimit",
+    "竖直洞道深度",
+    "竖直洞道深度",
   },
   {
     "височина на комин",
@@ -2385,6 +2601,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высота трубы",
     "výška komína",
     "lartesia e oxhakut",
+    "烟囱式洞道高",
+    "烟囱式洞道高",
   },
   {
     "височина на ниша в тавана",
@@ -2405,6 +2623,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высота уступа",
     "výška stupňa",
     "lartesia e shkalles se dyshemes",
+    "洞底梯坎高",
+    "洞底梯坎高",
   },
   {
     "хеликтити",
@@ -2425,6 +2645,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "геликтиты",
     "heliktit",
     "heliktite",
+    "卷曲石",
+    "卷曲石",
   },
   {
     "лед",
@@ -2445,6 +2667,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "лёд",
     "ľad",
     "akull",
+    "冰",
+    "冰",
   },
   {
     NULL,
@@ -2465,6 +2689,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "ľadový stalagnát",
     NULL,
+    "冰柱",
+    "冰柱",
   },
   {
     NULL,
@@ -2485,6 +2711,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "ľadový stalaktit",
     NULL,
+    "冰乳",
+    "冰乳",
   },
   {
     NULL,
@@ -2505,6 +2733,8 @@ static thlang_pchar thlang__translations [180][18] = {
     NULL,
     "ľadový stalagmit",
     NULL,
+    "冰笋",
+    "冰笋",
   },
   {
     "кари",
@@ -2525,6 +2755,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "карры",
     "škrapy",
     "karreni",
+    "溶痕",
+    "溶痕",
   },
   {
     "етикет",
@@ -2545,6 +2777,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "текстовая метка",
     "pomenovanie",
     "mbishkrim-etiket",
+    "标记",
+    "标记",
   },
   {
     "хоризонтално стеснение",
@@ -2565,6 +2799,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "горизонтальная узость",
     "neprielezné zníženie",
     "kalim I poshtem-fund",
+    "低矮洞道尽头",
+    "低矮洞道尽头",
   },
   {
     "пещерно мляко",
@@ -2585,6 +2821,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "лунное молоко",
     "mäkký sinter",
     "qumesht-hena",
+    "月奶石",
+    "月奶石",
   },
   {
     "непроходимо снижаване",
@@ -2605,6 +2843,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "вертикальная узость",
     "neprielezné zúženie",
     "kalim I ngushte-fund",
+    "狭窄洞道尽头",
+    "狭窄洞道尽头",
   },
   {
     "липсва екипировка!",
@@ -2625,6 +2865,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "снаряжение отутствует!",
     "nevystrojené miesto",
     "vend pa pajisje",
+    "无需装备点",
+    "无需装备点",
   },
   {
     "палеонтологична находка",
@@ -2645,6 +2887,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "палео-находка",
     "paleontologické nálezy",
     "paleo-material",
+    "原始堆积",
+    "原始堆积",
   },
   {
     "височина на галерията",
@@ -2665,6 +2909,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высота хода",
     "výška chodby",
     "lartesia e kalimit",
+    "洞道高度",
+    "洞道高度",
   },
   {
     "височина над и дълбочина под водата",
@@ -2685,6 +2931,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высота над и глубина ниже уровня воды",
     "výška nad a hĺbka pod hladinou",
     "lartesia mbi dhe nen nivelin e ujit",
+    "水面洞高和水体深度",
+    "水面洞高和水体深度",
   },
   {
     "дълбочина на галерията под водата",
@@ -2705,6 +2953,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "глубина ниже уровня воды",
     "hĺbka pod hladinou",
     "thellesia nen nivelin e ujit",
+    "水体深度",
+    "水体深度",
   },
   {
     "височина на галерията над водата",
@@ -2725,6 +2975,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высота над уровнем воды",
     "výška nad hladinou",
     "lartesia mbi nivelin e ujit",
+    "水面洞高",
+    "水面洞高",
   },
   {
     "височина на галерията",
@@ -2745,6 +2997,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высота хода",
     "výška chodby",
     "lartesia e kalimit-e pashenuar",
+    "洞道高度:无标记的点",
+    "洞道高度:无标记的点",
   },
   {
     "камъчета",
@@ -2765,6 +3019,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "галька",
     "okruhliaky",
     "gurralece",
+    "卵石",
+    "卵石",
   },
   {
     "сталактон",
@@ -2785,8 +3041,12 @@ static thlang_pchar thlang__translations [180][18] = {
     "колонна",
     "stalagnát",
     "shtylle",
+    "石柱",
+    "石柱",
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -2825,6 +3085,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "коралиты",
     "pizolity",
     "palagaqa-kokorroshka",
+    "石珊瑚",
+    "石珊瑚",
   },
   {
     "насип",
@@ -2845,6 +3107,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высыпка",
     "náplav",
     "trap-skele",
+    "石筏",
+    "石筏",
   },
   {
     "насипен конус",
@@ -2865,6 +3129,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высыпной конус",
     "náplavový kužeľ",
     "rrjedhe uji konike",
+    "钙膜晶锥",
+    "钙膜晶锥",
   },
   {
     "забележка",
@@ -2885,6 +3151,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "заметка",
     "poznámka",
     "shenim",
+    "备注",
+    "备注",
   },
   {
     "сухо синтрово езеро",
@@ -2905,6 +3173,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "гуры без воды",
     "sintrová hrádza",
     "penda guri",
+    "边石坝",
+    "边石坝",
   },
   {
     "синтрово езеро",
@@ -2925,6 +3195,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "гуры с водой",
     "sintrové jazierko",
     "vaska uji",
+    "边石潭",
+    "边石潭",
   },
   {
     "корени",
@@ -2945,6 +3217,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "корни растений",
     "korene",
     "rrenje",
+    "树根",
+    "树根",
   },
   {
     "въже",
@@ -2965,6 +3239,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "линейная опора",
     "lano",
     "litar",
+    "绳子",
+    "绳子",
   },
   {
     "пещерна стълба",
@@ -2985,6 +3261,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "гибкая лестница",
     "lanový rebrík",
     "shkalle litari",
+    "绳梯",
+    "绳梯",
   },
   {
     "пясък",
@@ -3005,6 +3283,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "песок",
     "piesok",
     "rane",
+    "砂",
+    "砂",
   },
   {
     "фасетки",
@@ -3025,6 +3305,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "фасетки",
     "lastúrovité jamky",
     "guacat",
+    "贝窝",
+    "贝窝",
   },
   {
     "място на сечение",
@@ -3045,6 +3327,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "сечение",
     "priečny rez",
     "pike-ndarje",
+    "断面",
+    "断面",
   },
   {
     "понор",
@@ -3065,6 +3349,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "сток",
     "ponor",
     "pus",
+    "渗水点",
+    "渗水点",
   },
   {
     "сняг",
@@ -3085,6 +3371,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "снег",
     "sneh",
     "bore",
+    "雪",
+    "雪",
   },
   {
     "цевичен сталактит",
@@ -3105,6 +3393,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "сталактиты-соломины",
     "brčká",
     "shkopinje sode",
+    "鹅管",
+    "鹅管",
   },
   {
     "извор",
@@ -3125,6 +3415,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "исток",
     "výver",
     "burim",
+    "泉点",
+    "泉点",
   },
   {
     "сталактит",
@@ -3145,8 +3437,12 @@ static thlang_pchar thlang__translations [180][18] = {
     "сталактит",
     "stalaktit",
     "stalaktit",
+    "石钟乳",
+    "石钟乳",
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -3185,8 +3481,12 @@ static thlang_pchar thlang__translations [180][18] = {
     "сталагмит",
     "stalagmit",
     "stalagmit",
+    "石笋",
+    "石笋",
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -3225,6 +3525,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "пикет",
     "meračský bod",
     "stacioni I matjes",
+    "测点",
+    "测点",
   },
   {
     "име на реперна точка",
@@ -3245,6 +3547,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "номер пикета",
     "číslo meračského bodu",
     "emri I stacionit-mates",
+    "测点名称",
+    "测点名称",
   },
   {
     "реперна точка (стабилизирана)",
@@ -3265,6 +3569,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "репер",
     "meračský bod (stabilizovaný)",
     "stacion mates I palevizshem",
+    "固定测点",
+    "固定测点",
   },
   {
     "реперна точка (естествена)",
@@ -3285,6 +3591,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "естественная точка привязки",
     "meračský bod (prírodný)",
     "stacion mates natyral",
+    "天然测点",
+    "天然测点",
   },
   {
     "реперна точка (боядисана)",
@@ -3305,6 +3613,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "нарисованный пикет",
     "meračský bod (zafarbený)",
     "stacion mates I ngjyrosur",
+    "人工测点",
+    "人工测点",
   },
   {
     "временна реперна точка",
@@ -3325,6 +3635,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "временный пикет",
     "meračský bod (nestabilizovaný)",
     "stacion mates I perkohshem",
+    "临时测点",
+    "临时测点",
   },
   {
     "стъпала",
@@ -3345,6 +3657,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "ступени",
     "schody",
     "shkalle",
+    "梯坎",
+    "梯坎",
   },
   {
     "траверс",
@@ -3365,6 +3679,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "троллей",
     "traverz",
     "kalim anesore",
+    "横越",
+    "横越",
   },
   {
     "останки от растителност",
@@ -3385,8 +3701,12 @@ static thlang_pchar thlang__translations [180][18] = {
     "останки растительности",
     "zvyšky rastlín",
     "mbetje perimesh",
+    "生物碎屑堆积",
+    "生物碎屑堆积",
   },
   {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
@@ -3425,6 +3745,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "высотная отметка стены",
     "nadmorská výška bodu na stene",
     "lartesia mbidetare e murit",
+    "海拔",
+    "海拔",
   },
   {
     "повлек",
@@ -3445,6 +3767,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "настенный кальцит",
     "vápencový povlak",
     "kalcit-muri",
+    "洞壁石花",
+    "洞壁石花",
   },
   {
     "вода",
@@ -3465,6 +3789,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "вода",
     "voda",
     "uje",
+    "水",
+    "水",
   },
   {
     "водно течение",
@@ -3485,6 +3811,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "водоток",
     "vodný tok",
     "rrjedhe uji",
+    "流水点",
+    "流水点",
   },
   {
     "непостоянно водно течение",
@@ -3505,6 +3833,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "непостоянный водоток",
     "občasný vodný tok",
     "rrjedhe uji me force",
+    "季节性流水",
+    "季节性流水",
   },
   {
     "палео речно легло",
@@ -3525,6 +3855,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "палео-поток",
     "paleoriečisko",
     "rrjedhe uji e vjeter",
+    "古水流",
+    "古水流",
   },
   {
     "постоянно водно течение",
@@ -3545,6 +3877,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "постоянный водоток",
     "vodný tok",
     "rrjedhe uji e perhershme",
+    "常流水",
+    "常流水",
   },
   {
     "Гл. картировач",
@@ -3565,6 +3899,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Камеральная обработка",
     "Kreslil",
     "vizatuar nga",
+    "绘图",
+    "绘图",
   },
   {
     "Гл. картировачи",
@@ -3585,6 +3921,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Камеральная обработка",
     "Kreslili",
     "vizatuar nga",
+    "绘图",
+    "绘图",
   },
   {
     "Денивелация",
@@ -3605,6 +3943,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Глубина",
     "Prevýšenie",
     "thellesia",
+    "洞道深度",
+    "洞道深度",
   },
   {
     "Дължина",
@@ -3625,6 +3965,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Длина",
     "Dĺžka",
     "gjatesia",
+    "洞道长度",
+    "洞道长度",
   },
   {
     "Височинна скала",
@@ -3645,6 +3987,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Высотная шкала",
     "Nadmorské výšky",
     "titulli ngjyra-permbajtja-lartesia mbidetare",
+    "海拔",
+    "海拔",
   },
   {
     "Карти",
@@ -3665,6 +4009,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Карты",
     "Mapy",
     "hartat",
+    "地图",
+    "地图",
   },
   {
     "Изследване",
@@ -3685,6 +4031,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Исследование",
     "Objavil",
     "hulumtuar nga",
+    "探测",
+    "探测",
   },
   {
     "Изследване",
@@ -3705,6 +4053,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Исследование",
     "Objavili",
     "hulumtuar nga",
+    "探测",
+    "探测",
   },
   {
     "Легенда",
@@ -3725,6 +4075,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Условные обозначения",
     "Legenda",
     "permbajtja",
+    "图例",
+    "图例",
   },
   {
     "Изглед от горе",
@@ -3745,6 +4097,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "[Вид выше]",
     "[Náhľad horných vrstiev]",
     "parashiqimi lart",
+    "往上预览",
+    "往上预览",
   },
   {
     "Изглед от долу",
@@ -3765,6 +4119,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "[Вид ниже]",
     "[Náhľad spodných vrstiev]",
     "parashiqimi perfundi",
+    "往下预览",
+    "往下预览",
   },
   {
     "Карта на повърхността",
@@ -3785,6 +4141,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "[Карта поверхности]",
     "[Povrchová mapa]",
     "harta e siperfaqes",
+    "外观图",
+    "外观图",
   },
   {
     "Картирал",
@@ -3805,6 +4163,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Съемка",
     "Zameral",
     "matur nga",
+    "测量",
+    "测量",
   },
   {
     "Картирали",
@@ -3825,6 +4185,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "Съемка",
     "Zamerali",
     "matur nga",
+    "测量",
+    "测量",
   },
   {
     "футове",
@@ -3845,6 +4207,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "футов",
     "ft",
     "njesia matese-kembe",
+    "英尺",
+    "英尺",
   },
   {
     "м",
@@ -3865,6 +4229,8 @@ static thlang_pchar thlang__translations [180][18] = {
     "м",
     "m",
     "njesia matese-metri",
+    "米",
+    "米",
   },
 };
 
