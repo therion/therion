@@ -552,7 +552,16 @@ the command may be used anywhere.
   (i.e.~all the passages may be drawn on the paper without overlapping).
   For small and simple caves, the whole cave may belong to one scrap. 
   In complicated systems, a scrap is usually one chamber or one passage. 
-  Ideally, a scrap contains about 100~m of the cave. Each scrap is processed 
+  Ideally, a scrap contains about 100~m of the cave.\[If necessary, 
+  scraps may be much smaller---just to display a few meters of the cave.
+  {\it When deciding about scrap size please take into account the following:}
+  Using small scraps may take more time for cartographer to optimize 
+  scrap joins. On the other hand smaller scraps will probably be less distorted
+  by map warping algorithms than larger scraps. 
+  Using too large scraps may exhaust \MP's memory if passage fills
+  are frequently used and the map editor in XTherion is much less
+  responsive when editing huge scraps.]
+  Each scrap is processed 
   separately by \MP; scraps which are too large may exceed \MP's memory and 
   cause errors.
   

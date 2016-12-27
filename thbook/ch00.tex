@@ -17,7 +17,7 @@
 Therion is copyrighted software. Distributed under the GNU General Public 
 License.
 
-Copyright \copyright\ 1999--2014 Stacho Mudr\'ak, Martin Budaj
+Copyright \copyright\ 1999--2016 Stacho Mudr\'ak, Martin Budaj
 
 This book describes Therion \input version
 
@@ -79,7 +79,11 @@ in the Cave of Dead Bats in Slovakia and the map of it produced by Therion.
 \font\rm=cmr10\rm
 \baselineskip=12.5pt
 \def\Line#1{\line{\hskip2cm#1\hskip2cm}}
-\input etc/contents
+
+\openin0=etc/contents.tex
+\ifeof0 \message{Warning: re-run to input a newly generated TOC file}%
+\else \closein0 \input etc/contents \fi
+
 \egroup
 \vfil\eject
 \ifodd\pageno\else\hbox{}\eject\fi
