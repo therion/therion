@@ -26,6 +26,7 @@ samples/**/*.html
 screendump
 symbols.html
 therion.res
+thbook/etc/contents.tex
 thbook/thbook.pdf
 thTMPDIR/
 xtherion/ver.tcl
