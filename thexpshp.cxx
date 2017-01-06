@@ -526,6 +526,8 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
         this->m_fpoints.object_insert();
 		this->m_fpoints.m_attributes.insert_attribute("_SCRAP_ID",(long) ppt->fscrapptr->id);
         this->m_fpoints.m_attributes.insert_attribute("_TYPE",thmatch_string(ppt->type, thtt_point_types));
+        this->m_fpoints.m_attributes.insert_attribute("_CLIP",
+            ((obj->tags & TT_2DOBJ_TAG_CLIP_AUTO) ? "auto" : ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) ? "on" : "off")));
 		tstr = thmatch_string(ppt->type, thtt_point_types);
 		tststr = tstr;
 		ststr = thmatch_string(ppt->subtype, thtt_point_subtypes);
@@ -574,6 +576,8 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
             this->m_flines.object_insert();
 			this->m_flines.m_attributes.insert_attribute("_SCRAP_ID",(long) pln->fscrapptr->id);
             this->m_flines.m_attributes.insert_attribute("_TYPE",thmatch_string(pln->type, thtt_line_types));
+            this->m_flines.m_attributes.insert_attribute("_CLIP",
+                ((obj->tags & TT_2DOBJ_TAG_CLIP_AUTO) ? "auto" : ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) ? "on" : "off")));
             this->m_flines.m_attributes.insert_attribute("_SUBTYPE", pln->type != TT_LINE_TYPE_U ?
               (thmatch_string(csubtype, thtt_line_subtypes)) : pln->m_subtype_str);
             this->m_flines.m_attributes.copy_attributes(thdb.attr.get_object(pln->id));
@@ -603,6 +607,8 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
           // system attributes
           this->m_fareas.m_attributes.insert_attribute("_SCRAP_ID",(long) parea->fscrapptr->id);
           this->m_fareas.m_attributes.insert_attribute("_TYPE",thmatch_string(parea->type, thtt_area_types));
+          this->m_fareas.m_attributes.insert_attribute("_CLIP",
+              ((obj->tags & TT_2DOBJ_TAG_CLIP_AUTO) ? "auto" : ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) ? "on" : "off")));
           this->m_fareas.m_attributes.insert_attribute("_SUBTYPE",parea->m_subtype_str);
           this->m_fareas.m_attributes.copy_attributes(thdb.attr.get_object(parea->id));
         }
