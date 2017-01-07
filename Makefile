@@ -22,6 +22,9 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   extern/poly2tri/common/shapes.o extern/poly2tri/sweep/advancing_front.o extern/poly2tri/sweep/sweep.o extern/poly2tri/sweep/cdt.o extern/poly2tri/sweep/sweep_context.o \
   therion.o extern/proj4/libproj.a 
 
+CROSS =
+EXT =
+
 # PLATFORM CONFIG
 
 # PLATFORM LINUX
@@ -52,6 +55,21 @@ THXTHMKCMD = ./therion
 # PLATFORM WIN32
 ##CXX = c++
 ##CC = gcc
+##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o 
+##LOCHEXE = loch/loch
+##CXXPFLAGS = -DTHWIN32
+##CCPFLAGS = -DTHWIN32
+##LDPFLAGS = -static-libgcc -static -s
+##export THPLATFORM = WIN32
+##THXTHMKCMD = therion
+##OUTDIR = $(abspath $(PWD)/../therion.bin)
+
+# PLATFORM WIN32CROSS
+##CROSS = i686-w64-mingw32.static-
+##EXT = .exe
+##CXX = $(CROSS)c++
+##export CC = $(CROSS)gcc
+##export AR = $(CROSS)ar
 ##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o 
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
@@ -134,11 +152,11 @@ $(OUTDIR)/extern/proj4/libproj.a: extern/proj4/*.c extern/proj4/*.h
 	make -C ./extern/proj4
 
 $(OUTDIR)/therion:	$(OBJECTS)
-	$(CXX) -Wall -o $(OUTDIR)/therion $(OBJECTS) $(LDFLAGS) $(LIBS) 
+	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS) 
 
 
 $(OUTDIR)/therion.res: therion.rc
-	windres -i therion.rc -J rc -o $(OUTDIR)/therion.res -O coff
+	$(CROSS)windres -i therion.rc -J rc -o $(OUTDIR)/therion.res -O coff
 
 init:
 	./therion --print-init-file > therion.ini
@@ -150,7 +168,7 @@ install: all
 minor-release:
 	perl makerelease.pl
 
-archive: clean
+archive: config-debian unixify
 	perl makearchive2.pl
 
 release: clean
@@ -207,6 +225,7 @@ clean:
 	perl makefile.pl rm -q symbols.html therion.res
 	perl makefile.pl rm -q tri/*.o tri/*~
 	perl makefile.pl rm -q tex/*~
+	perl makefile.pl rm -q us.stackdump loch/us.stackdump samples/us.stackdump xtherion/us.stackdump
 	perl makefile.pl rm -q mpost/*~ examples/*~ examples/therion.log
 	perl makefile.pl rm -q core symbols.xhtml cave.kml
 	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
@@ -262,6 +281,10 @@ config-linux:
 config-win32:
 	perl makeconfig.pl PLATFORM WIN32
 	make -C ./loch config-win32
+
+config-win32cross:
+	perl makeconfig.pl PLATFORM WIN32CROSS
+	make -C ./loch config-win32cross
   
 config-macosx:
 	perl makeconfig.pl PLATFORM MACOSX
