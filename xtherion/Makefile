@@ -16,7 +16,7 @@ endif
 all: $(LOUTDIR)/$(TARGET)
 
 $(LOUTDIR)/$(TARGET): *.tcl
-	tclsh mkall.tcl
+	tclsh mkall.tcl $(THPLATFORM)
 ifneq ($(OUTDIR),.)
 	perl ../makefile.pl mv ./$(TARGET) $(LOUTDIR)
 endif
