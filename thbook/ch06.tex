@@ -92,6 +92,22 @@ Therion's {\it makefile} may take some optional parameters.
 * |clean| = delete all temporary files
 \endlist
 
+{\it Cross-compilation for Windows}\NEW{5.4}
+
+Therion supports compilation of Win32 executables in Linux using MXE cross
+compiler (\www{http://mxe.cc}). 
+
+\list
+* install the following static/win32 packages (i686-w64-mingw32.static-\char42) to
+the directory |/usr/lib/mxe/|: binutils, bzip2, expat, freetype-bootstrap,
+gcc, gettext, glib, harfbuzz, jpeg, libiconv, libpng, tiff, vtk, wxwidgets,
+xz, zlib.
+* modify PATH: {\catcode`\=12|export PATH=/usr/lib/mxe/usr/bin:$PATH|}
+* |cd therion|
+* |make config-win32cross|
+* |make|
+\endlist
+
 {\it Adding new translations}
 
 Therion supports translation of map labels. 
