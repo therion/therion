@@ -14,6 +14,7 @@
 *.stackdump
 *.tar.gz
 *.xhtml
+*.xvi
 *.zip
 core
 geomag/test/geomag.i
