@@ -2203,6 +2203,7 @@ else
 
       thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
 
+  print_fonts_setup();
   ENC_NEW.write_enc_files();
 
       com = "\"";

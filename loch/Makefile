@@ -16,6 +16,9 @@ CMNOBJECTS = \
   lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o \
   img.o
 
+CROSS =
+EXT =
+
 VTKVERSION = $(shell tclsh ./getvtkver.tcl version)
 VTKPATH = $(shell tclsh ./getvtkver.tcl incpath)
 VTKLIBPATH = $(shell tclsh ./getvtkver.tcl libpath)
@@ -78,6 +81,21 @@ LXPLATFORM = LINUX
 ##LXPLATFORM = WIN32
 ##STRIPFLAG = -static-libgcc -static -s
 
+# PLATFORM WIN32CROSS
+##CROSS= i686-w64-mingw32.static-
+##EXT = .exe
+##VTKPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/include/vtk-5.8
+##VTKLIBPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/lib/vtk-5.8
+##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtksys -lharfbuzz -lbz2 -lglib-2.0 -lintl -liconv -lws2_32 -lwinmm
+##CXX = $(CROSS)c++
+##CC = $(CROSS)gcc
+##POBJECTS = loch.res lxR2D.o getline.o
+##CXXPFLAGS = -W -Wall -std=gnu++11 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated
+##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(CROSS)wx-config --static --cflags)
+##LXLIBDIR = 
+##PLIBS = $(shell $(CROSS)freetype-config --libs) $(shell $(CROSS)wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
+##LXPLATFORM = WIN32
+##STRIPFLAG = -static-libgcc -static -s
 
 # PLATFORM MACOSX
 ##CXX = c++
@@ -145,11 +163,11 @@ hlp:
 	make -C ./help
 
 $(LOUTDIR)/loch: $(OBJECTS)
-	$(CXX) -o $(LOUTDIR)/loch -Wall $(OBJECTS) $(LIBS) $(LDFLAGS)
+	$(CXX) -o $(LOUTDIR)/loch$(EXT) -Wall $(OBJECTS) $(LIBS) $(LDFLAGS)
 	$(POSTMAKE)
 
 $(LOUTDIR)/loch.res: loch.rc loch.ico
-	windres -i loch.rc -I ../../wxMSW-2.8.10/include -I rc -o $(LOUTDIR)/loch.res -O coff
+	$(CROSS)windres -i loch.rc $(shell $(CROSS)wx-config --cflags | tr ' ' '\n' | grep "^-I" | tr '\n' ' ') -J rc -o $(LOUTDIR)/loch.res -O coff
 
 graphs: 
 	dot -Tps graph-vispipe.dot -o graph-vispipe.ps
@@ -187,6 +205,9 @@ config-debian:
   
 config-win32:
 	perl makeconfig.pl PLATFORM WIN32
+
+config-win32cross:
+	perl makeconfig.pl PLATFORM WIN32CROSS
   
 config-macosx:
 	perl makeconfig.pl PLATFORM MACOSX

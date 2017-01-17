@@ -1,3 +1,5 @@
+AR ?= ar
+CC ?= cc
 OUTDIR ?= .
 ifneq ($(OUTDIR),.)
 LOUTDIR = $(OUTDIR)/extern/proj4
@@ -14,7 +16,7 @@ $(LOUTDIR)/%.o : %.c
 all: $(LOUTDIR)/libproj.a
 
 $(LOUTDIR)/libproj.a: $(OBJECTS)
-	ar cr $(LOUTDIR)/libproj.a $(LOUTDIR)/*.o
+	$(AR) cr $(LOUTDIR)/libproj.a $(LOUTDIR)/*.o
 
 remove:
 	rm -f proj.c gen_cheb.c p_series.c jniproj.c cs2cs.c \

@@ -92,6 +92,22 @@ Therion's {\it makefile} may take some optional parameters.
 * |clean| = delete all temporary files
 \endlist
 
+{\it Cross-compilation for Windows}\NEW{5.4}
+
+Therion supports compilation of Win32 executables in Linux using MXE cross
+compiler (\www{http://mxe.cc}). 
+
+\list
+* install the following static/win32 packages (i686-w64-mingw32.static-\char42) to
+the directory |/usr/lib/mxe/|: binutils, bzip2, expat, freetype-bootstrap,
+gcc, gettext, glib, harfbuzz, jpeg, libiconv, libpng, tiff, vtk, wxwidgets,
+xz, zlib.
+* modify PATH: {\catcode`\=12|export PATH=/usr/lib/mxe/usr/bin:$PATH|}
+* |cd therion|
+* |make config-win32cross|
+* |make|
+\endlist
+
 {\it Adding new translations}
 
 Therion supports translation of map labels. 
@@ -456,12 +472,15 @@ process them with Therion.
        of the input format for survey data, or splitting large maps to
        multiple sheets.
 				
+  Dec 30: the first web page (with data examples but without source
+       code)
+  
 * {\bf 2000}\nobreak\par\nobreak
   Jan: xthedit (Tcl/Tk), a graphical front-end for Therion
 
   Feb 18: start of reprogramming (Perl)
 
-  Apr 1: first hyperlinked PDF cave map / atlas
+  Apr 1: the first hyperlinked PDF cave map / atlas
 
   Aug: experiments with PDF, pdf\TeX\ and \MP
 
@@ -493,7 +512,7 @@ process them with Therion.
 
 * {\bf 2003}\nobreak
 
-  Mar: First version of The Therion Book finished
+  Mar: the first version of The Therion Book finished
 
   Apr: Therion included in Debian GNU/Linux
 

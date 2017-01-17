@@ -9,6 +9,14 @@ xtherion:
  * fix setup initial directory with "initdir" defined at xtherion.ini
 
 --------------------------------------------------------------------------------
+already done for the future Therion 5.4:
+
+therion:
+ * Chinese translation added -- manual setup of fonts in the ini file (pdf-fonts) is necessary 
+   (thanks to Zhang Yuan Hai and Duncan Collis)
+
+--------------------------------------------------------------------------------
+
 Therion 5.3.16 (2014-12-28):
 
 therion:

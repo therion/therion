@@ -35,8 +35,8 @@ switch $what {
 ##}
   }
   default {
-    case $tcl_platform(platform) {
-      windows {
+    case $what {
+      WIN32 {
         set oid [open "xtherion.tcl" w]
       }
       default {
