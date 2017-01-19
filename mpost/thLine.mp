@@ -976,10 +976,10 @@ def l_gradient_BCRA (expr P) =
 enddef;
 
 
-def l_rope_SKBB (expr P,exact) =
+def l_rope_SKBB (expr P, show_anchors, show_rebelays) =
   T:=identity;
   pickup PenC;
-  if exact:
+  if not show_rebelays:
     draw P;
   else:
     d:=0.5u;
@@ -1007,14 +1007,15 @@ def l_rope_SKBB (expr P,exact) =
       endfor;
     endfor;
     pair x;
-    x = point (length P)-1 of P + whatewer * down;
+    x = point (length P)-1 of P + whatever * down;
     x = point (length P) of P + whatever * right;
     draw point (length P)-1 of P -- x;
-%    thdraw point length P of P withpen pencircle scaled 0.3u withcolor red;
   fi;
-  for i:=0 upto length P if not exact: -1 fi:
-    thdraw point i of P withpen pencircle scaled 0.3u;
-  endfor;
+  if show_anchors:
+    for i:=0 upto length P if show_rebelays: -1 fi:
+      thdraw point i of P withpen pencircle scaled 0.25u;
+    endfor;
+  fi;
 enddef;
 
 def l_border_presumed_SKBB (expr Path) =
@@ -1101,12 +1102,15 @@ def l_handrail_SKBB (expr P) =
     else:
       T:=identity;
       cas := 0;
+      pair coord;
+      sq_size:=0.12u;
       dlzka := arclength P;
       mojkrok:=adjust_step(dlzka, u);
       pickup PenD;  
       forever:
         t := arctime cas of P;
-        thdraw point t of P withpen pencircle scaled .25u;
+        coord := point t of P;
+        thfill coord+(-sq_size,-sq_size)--coord+(sq_size,-sq_size)--coord+(sq_size,sq_size)--coord+(-sq_size,sq_size)--cycle;
         cas := cas + mojkrok;
         exitif cas > dlzka + (mojkrok / 3); % for rounding errors
       endfor;

@@ -3091,7 +3091,7 @@ proc xth_me_cmds_set_colors {} {
   set llen [llength $xth(me,cmds,xlist)]
   set cid $xid
 
-  set dcol #fff222
+  set dcol $xth(gui,me,unselectedfill)
   set scol $xth(gui,me,pasivefill)
   if {$xth(me,cmds,$xth(me,cmds,selid),ct) == 4} {
     set col $dcol
@@ -3106,27 +3106,81 @@ proc xth_me_cmds_set_colors {} {
 
   set xth(me,curscrap) {}
   set godown 1
+  set selectedscrap 1
   if {$cid < 0} {
     set cid [expr $xid + 1]
     set godown 0
+    set selectedscrap 0
   }
   while {(($cid >= 0) && ($cid < $llen)) || ($godown)} {
     set id [lindex $xth(me,cmds,xlist) $cid]
     switch $xth(me,cmds,$id,ct) {
-      2 {        
+      2 {   # point     
+        if {$selectedscrap} {
+          switch $xth(me,cmds,$id,type) {
+            station {
+              set col $xth(gui,me,stationcolor)
+            }
+            "stalactite" - "stalagmite" - "pillar" - "helictite" - "flowstone" - "stalagmites" - "stalactites" - "soda-straw" - "popcorn" - "pillars" - "curtain" - "disk" {
+              set col $xth(gui,me,formationcolor)
+            }
+            "blocks" - "debris" - "sand" - "clay" - "pebbles" {
+              set col $xth(gui,me,depositcolor)
+            }
+            "water" - "water-flow" - "sink" - "spring" {
+              set col $xth(gui,me,watercolor)
+            }
+            "air-draught" {
+              set col $xth(gui,me,aircolor)
+            }
+            "ice" - "snow" {
+              set col $xth(gui,me,icecolor)
+            }
+            default {
+              set col $scol
+            }
+          }   
+        }
         $xth(me,can) itemconfigure pt$id -outline $col -fill $col -state normal
         if {$xth(me,hinactives) && ($col == $dcol)} {
           $xth(me,can) itemconfigure pt$id -state hidden
         }
       }
-      3 {
+      
+      3 {  # line/line point
+        if {$selectedscrap} {
+          switch $xth(me,cmds,$id,type) {
+            wall {
+              set col $xth(gui,me,wallcolor)
+            }
+            pit {
+              set col $xth(gui,me,pitcolor)
+            }
+            slope {
+              set col $xth(gui,me,slopecolor)
+            }
+            "rock-border" - "rock-edge" {
+              set col $xth(gui,me,rockcolor)
+            }
+            border {
+              set col $xth(gui,me,bordercolor)
+            }
+            default {
+              set col $scol
+            }
+          }   
+        }
         $xth(me,can) itemconfigure lnpt$id -outline $col -fill $col -state normal
         $xth(me,can) itemconfigure lnln$id -fill $col -state normal
         if {$xth(me,hinactives) && ($col == $dcol)} {
           $xth(me,can) itemconfigure ln$id -state hidden  
         }
       }
-      4 - 5 {
+      
+      4 - 5 { # scrap/endscrap
+        if {(($xth(me,cmds,$id,ct) == 4) && ($godown) && ($selectedscrap)) || (($xth(me,cmds,$id,ct) == 5) && ($selectedscrap))} {
+          set selectedscrap 0
+        }
         if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
           set xth(me,curscrap) $xth(me,cmds,$id,name)
           #          if {[string equal $xth(me,cmds,$id,projection) extended]} {
@@ -3147,6 +3201,7 @@ proc xth_me_cmds_set_colors {} {
       if {$cid < 0} {
         set cid [expr $xid + 1]
         set godown 0
+        set selectedscrap 1
         set col $ocol
       }
     } else {
@@ -3648,6 +3703,93 @@ proc xth_me_cmds_line_trace_point {dist tcol} {
     return [list $tx $ty]
   }
 
+}
+
+# Line simplification using the Ramer-Douglas-Peucker algorithm
+# P is a list of points. Epsilon controls the point removal accuracy. Larger E means less points remaining
+proc simplify_line_RDP {P epsilon} {
+  set P0 [lindex $P 0]
+  set P1 [lindex $P end]
+  set dmax 0
+  set idx 0
+  for {set i 1} {$i < [llength $P]-1} {incr i} {
+    set d [DistanceToLine [lindex $P $i] $P0 $P1]
+    if {$d > $dmax} {
+        set dmax $d
+        set idx $i
+    }
+  }
+
+  if {$dmax >= $epsilon} {
+    set leg1 [simplify_line_RDP [lrange $P 0 $idx] $epsilon]
+    set leg2 [simplify_line_RDP [lrange $P $idx end] $epsilon]
+    set leg [concat [lrange $leg1 0 end-1] $leg2]
+  } else {
+    return [list $P0 $P1]
+  }
+}
+
+# Given a point and a line segment, return distance between the point and the segment
+# Perpendicular or euclidean distance
+# can probably be replaced with ::math::geometry::findClosestPointOnLine, but not tested
+proc DistanceToLine {P P0 P1} {
+  lassign $P PX PY
+  lassign $P0 x0 y0
+  lassign $P1 x1 y1
+  
+  set lx [expr {$x1 - $x0}]
+  set ly [expr {$y1 - $y0}]
+  set d [expr {hypot($lx, $ly)}]              ;# To normalize line vector
+  if {$d == 0} { return 99999 }               ;# Degenerate line
+
+  set px [expr {$PX - $x0}]                   ;# Vector to our point
+  set py [expr {$PY - $y0}]
+  set hdist [expr {($px*$lx + $py*$ly) / $d}] ;# Distance along line vector
+  set vdist [expr {($py*$lx - $px*$ly) / $d}] ;# Distance along perpendicular
+
+  if {$hdist < 0} {                           ;# Point behind line segment
+    set rdist [expr {hypot($px, $py)}]
+  } elseif {$hdist <= $d} {                   ;# Point within line segment
+    set rdist [expr {abs($vdist)}]
+  } else {                                    ;# Point beyond line segment
+    set px [expr {$PX - $x1}]
+    set py [expr {$PY - $y1}]
+    set rdist [expr {hypot($px, $py)}]
+  }
+  return $rdist
+}
+
+# Replace the selected line with one with less points
+proc xth_me_cmds_line_simplify {} {
+  global xth
+  set id $xth(me,cmds,selid)
+  if {$xth(me,cmds,$id,ct) != 3} {return}
+  set npx [llength $xth(me,cmds,$id,xplist)]
+  if {$npx < 4} {return}
+  
+  # copy line points to a new list
+  set points {}
+  foreach x $xth(me,cmds,$id,xplist) {
+    if {$x != 0} {
+      lappend points [concat $xth(me,cmds,$id,$x,x) $xth(me,cmds,$id,$x,y)]
+    }
+  }
+  
+  # reduce points
+  set points [simplify_line_RDP $points $xth(gui,me,line,simp_limit)]
+  
+  set type $xth(me,cmds,$id,type)
+  set opts " $xth(me,cmds,$id,options)"
+  if {$xth(me,cmds,$id,reverse)} {
+    set opts "$opts -reverse on"
+  }
+  if {$xth(me,cmds,$id,close)} {
+    set opts "$opts -close on"
+  }
+  xth_me_cmds_delete $id
+  xth_me_cmds_create_line 0 2 $type $opts $points
+  xth_me_cmds_set_mode 0
+  return
 }
 
 proc xth_me_cmds_line_poly2bezier {} {

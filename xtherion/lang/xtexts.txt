@@ -530,6 +530,7 @@ bg: Xpdf
 cz: Xpdf
 de: Xpdf
 it: Xpdf
+ru: Xpdf
 sk: Xpdf
 sq: Xpdf
 zh_CN: Xpdf
@@ -539,6 +540,7 @@ bg: Acrobat Reader
 cz: Acrobat Reader
 de: Acrobat Reader
 it: Acrobat Reader
+ru: Acrobat Reader
 sk: Acrobat Reader
 sq: lexuesi I programit-Akrobat
 zh_CN: Acrobat Reader
@@ -635,6 +637,7 @@ zh_CN: 出错
 therion: WARNING
 bg: Внимание!
 de: WARNUNG
+ru: ПРЕДУПРЕЖДЕНИЕ
 zh_CN: 警告
 
 therion: Reading therion log file ...
@@ -2438,6 +2441,21 @@ therion: Trace line
 
 therion: Convert to curve
 
+therion: Trace line
+bg: Проследяване от картината
+en: Trace line
+ru: Трассировать
+
+therion: Convert to curve
+bg: Конвертиране в Безие
+en: Convert to curve
+ru: Сгладить ломаную
+
+therion: Simplify line
+bg: Опростяване на линия
+en: Simplify line
+ru: Упроситить линию
+
 therion: Select line point.
 bg: Избери една от точките на линията.
 cz: Výběr bodu křivky.
@@ -3074,6 +3092,9 @@ zh_CN: 插入图像
 
 therion: Hide inactive scraps
 
+therion: Hide inactive scraps
+ru: Скрыть неактивные скрапы
+
 therion: Zoom 100 %
 bg: Мащаб 100%
 cz: Zoom na 100 %
@@ -3688,6 +3709,298 @@ therion: Select underlying point
 
 therion: Delete symbol
 
+therion: on
+ru: вкл
+
+therion: off
+ru: выкл
+
+therion: top
+ru: выше
+
+therion: bottom
+ru: ниже
+
+therion: tiny (2xs)
+ru: крошечный (2xs)
+
+therion: tiny (xs)
+ru: крошечный (xs)
+
+therion: small (s)
+ru: мелкий (s)
+
+therion: normal (m)
+ru: средний (m)
+
+therion: large (l)
+ru: большой (l)
+
+therion: huge (xl)
+ru: огромный (xl)
+
+therion: huge (2xl)
+ru: огромный (2xl)
+
+therion: huge (3xl)
+ru: огромный (2xl)
+
+therion: huge (4xl)
+ru: огромный (4xl)
+
+therion: out
+ru: внешняя
+
+therion: in
+ru: внутренняя
+
+therion: none
+ru: нет
+
+therion: <<
+
+therion: smooth
+bg: изглаждане
+cz: uhladit
+de: geglättet
+el: απαλή
+en: smooth
+es: suavizar
+it: regolarizza
+ru: сгладить
+sk: vyhladiť
+sq: e bute
+
+therion: >>
+
+therion: auto
+ru: авто
+
+therion: edit
+ru: редактировать
+
+therion: Altitude
+ru: Высота
+
+therion: OK
+bg: ОК
+cz: OK
+de: OK
+el: ΟΚ
+en: OK
+es: OK
+it: OK
+ru: УСПЕХ
+sk: OK
+sq: ne rregull-O.K.
+
+therion: Cancel
+ru: Отмена
+
+therion: painted
+ru: нарисованный
+
+therion: natural
+ru: естественный
+
+therion: fixed
+ru: репер
+
+therion: winter
+ru: зима
+
+therion: summer
+ru: лето
+
+therion: undefined
+ru: не определено
+
+therion: paleo
+ru: палео
+
+therion: align
+ru: выравнивание
+
+therion: Station name
+ru: Название пикета
+
+therion: Scrap reference
+ru: Скрап (ссылка)
+
+therion: value
+ru: значение
+
+therion: type
+bg: тип
+cz: typ
+de: Typ
+el: είδος
+en: type
+es: tipo
+it: tipo
+ru: тип
+sk: typ
+sq: lloji
+
+therion: bedrock
+ru: коренная стена
+
+therion: underlying
+ru: ниже-расположенная
+
+therion: overlying
+ru: выше-расположенная
+
+therion: unsurveyed
+ru: глазомерная съемка
+
+therion: pit
+ru: колодец
+
+therion: sand
+ru: песок
+
+therion: clay
+ru: глина
+
+therion: pebbles
+ru: галька
+
+therion: debris
+ru: щебень, глыбы
+
+therion: blocks
+ru: глыбы (крупные)
+
+therion: ice
+ru: лед
+
+therion: flowstone
+ru: натек
+
+therion: moonmilk
+ru: лунное молоко
+
+therion: visible
+ru: видимая
+
+therion: invisible
+ru: невидимая
+
+therion: temporary
+ru: временная
+
+therion: presumed
+ru: предполагаемая
+
+therion: permanent
+ru: постоянный
+
+therion: intermittent
+ru: перемнный
+
+therion: conjectural
+ru: предположительный
+
+therion: cave
+ru: пещера
+
+therion: surface
+ru: поверхность
+
+therion: subtype
+ru: подтип
+
+therion: control points
+ru: управл. точки
+
+therion: orientation
+bg: ориентация
+cz: orientace
+de: Ausrichtung
+el: προσανατολισμός
+en: orientation
+es: orientación
+it: orientazione
+ru: ориентация
+sk: orientácia
+sq: orientimi
+
+therion: l-size
+bg: l-размер
+cz: l-rozsah
+de: l-Größe
+el: διάσταση (α)
+en: l-size
+es: anchura-izda
+it: dim. sinistra
+ru: размер
+sk: rozmer-ľ
+sq: madhesia-l
+
+therion: segment subtype
+ru: тип сегмента
+
+therion: altitude label
+ru: отметка высоты
+
+therion: outline
+ru: граница скрапа
+
+therion: clip
+ru: обрезание
+
+therion: other options
+ru: прочее
+
+therion: place
+ru: расположение
+
+therion: scale
+ru: масштаб
+
+therion: Edit line
+bg: Редактирай линия
+cz: Editovat
+de: Linie bearbeiten
+el: Επεξεργασία γραμμής
+en: Edit line
+es: Editar
+it: Edita
+ru: Править линию
+sk: Upraviť
+sq: permireso rrjeshtin
+
+therion: close
+bg: затвори
+cz: zavřít
+de: schließen
+el: κλείσιμο
+en: close
+es: cerrar
+it: chiudi
+ru: замкнуть
+sk: zavrieť
+sq: mbylle
+
+therion: reverse
+bg: обратна
+cz: obrátit
+de: Umkehren
+el: αναστροφή
+en: reverse
+es: invertir
+it: inverti
+ru: обратная
+sk: otočiť
+sq: ktheje pas
+
+therion: Select underlying point
+ru: Выделить другую точку (она заслоняется текущей точкой)
+
+therion: Delete symbol
+ru: Удалить объект
+
 therion: toggle image visibility
 bg: превключване на видимостта на изображение
 cz: přepnutí viditelnosti obrázku
@@ -3990,6 +4303,12 @@ zh_CN: 分割线
 therion: Stop tracing
 
 therion: Continue tracing
+
+therion: Stop tracing
+ru: Прекратить трассировку
+
+therion: Continue tracing
+ru: Продолжить трассировку
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
@@ -4720,6 +5039,7 @@ therion: Calibrate bitmap...
 bg: Калибриране на изображение ...
 de: Bild kalibrieren...
 it: Mappa georeferenziata...
+ru: Калибровать изображение...
 zh_CN: 校准图片...
 
 therion: About...
@@ -4777,6 +5097,7 @@ bg: Нов файл
 de: Neue Datei
 el: Νέο αρχείο
 it: Nuovo
+ru: Новый файл
 sk: Nový súbor
 sq: arkivi-fajlli I ri
 zh_CN: 新文件
@@ -4786,6 +5107,7 @@ bg: Отвори файл
 de: Datei öffnen
 el: Άνοιγμα
 it: Apri
+ru: Открыть файл
 sk: Otvoriť súbor
 sq: hape fajllin
 zh_CN: 打开文件
@@ -4795,6 +5117,7 @@ bg: Запиши файл
 de: Datei speichern
 el: Αποθήκευση
 it: Salva
+ru: Сохранить файл
 sk: Uložiť súbor
 sq: ruaje fajllin
 zh_CN: 存储文件
@@ -4804,6 +5127,7 @@ bg: Запиши файл като
 de: Datei speichern als
 el: Αποθήκευση ως
 it: Salva come
+ru: Сохранить файл как
 sk: Uložiť súbor ako
 sq: ruaje fajllin si
 zh_CN: 文件存储为
@@ -4813,6 +5137,7 @@ bg: Затвори файл
 de: Datei schließen
 el: Κλείσιμο αρχείου
 it: Chiudi
+ru: Закрыть файл
 sk: Zatvoriť súbor
 sq: mbylle fajllin
 zh_CN: 关闭文件
@@ -4843,11 +5168,36 @@ sk: Opakovať
 sq: beje prape-redo
 zh_CN: 恢复
 
+therion: Undo
+bg: Отмяна
+cz: Zpět
+de: Rückgängig
+el: Αναίρεση
+en: Undo
+es: Deshacer
+it: Indietro
+ru: Отменить
+sk: Späť
+sq: prishe-undo
+
+therion: Redo
+bg: Възстановяване
+cz: Opakovat
+de: Wiederholen
+el: Επανάληψη
+en: Redo
+es: Rehacer
+it: Rifai
+ru: Вернуть
+sk: Opakovať
+sq: beje prape-redo
+
 therion: Switch to text editor
 bg: Превключи на текстов редактор
 de: Zum Texteditor wechseln
 el: Μετάβαση σε επεξεργαστή κειμένου
 it: Editor di testi
+ru: Перейти к окну текстового редактора
 sk: Prepnúť na textový editor
 sq: kalo tek editori i tekstit
 zh_CN: 文本编辑器开关
@@ -4857,6 +5207,7 @@ bg: Превключи на редактор на карти
 de: Zum Karteneditor wechseln
 el: Μετάβαση σε επεξεργαστή σχεδίου
 it: Editor di mappe
+ru: Перейти к окну редактора карты
 sk: Prepnúť na mapový editor
 sq: kalo tek editori I hartes
 zh_CN: 地图编辑器开关
@@ -4866,6 +5217,7 @@ bg: Превключи на компилатор
 de: Zum Compiler wechseln
 el: Μετάβαση σε συντάκτη
 it: Compilatore
+ru: Перейти к окну компилятора
 sk: Prepnúť na kompilátor
 sq: kalo tek kompilatori
 zh_CN: 程序编译开关
@@ -4888,6 +5240,7 @@ bg: Превключи на режим 'Избиране'
 de: In Auswahlmodus wechseln
 el: Μετάβαση σε λειτουργία επιλογής
 it: Modalità di selezione
+ru: Переключиться в режим выбора
 sk: Prepnúť do módu na výber objektu
 sq: kalo tek moduli per selekcionim
 zh_CN: 模块选择开关
@@ -4897,6 +5250,7 @@ bg: Избери следващият скрап
 de: Nächste Skizze auswählen
 el: Επιλογή επόμενου σκραπ
 it: Seleziona il prossimo scrap
+ru: Выбрать следующий скрап
 sk: Vyber nasledujúci scrap
 sq: zgjedhe deponin e ardhshme
 zh_CN: 选定下一个草图
@@ -4906,6 +5260,7 @@ bg: Избери следващата област
 de: Nächste Fläche auswählen
 el: Επιλογή επόμενης επιφάνειας
 it: Seleziona la prossima area
+ru: Выбрать следующую область
 sk: Vyber nasledujúcu plochu
 sq: zgjedhe-selekto fushen e ardhshme
 zh_CN: 选择下一个区
@@ -4915,6 +5270,7 @@ bg: Приближи
 de: Vergrößern
 el: Μεγέθυνση
 it: Zoom in
+ru: Увеличить
 sk: Zväčšiť
 sq: zmadho
 zh_CN: 放大
@@ -4924,6 +5280,7 @@ bg: Отдалечи
 de: Verkleinern
 el: Σμίκρυνση
 it: Zoom out
+ru: Уменьшить
 sk: Zmenšiť
 sq: zvogelo
 zh_CN: 缩小
@@ -4933,6 +5290,7 @@ bg: Вмъкни нов скрап
 de: Neue Skizze einfügen
 el: Εισαγωγή νέου σκραπ
 it: Inserisci un nuovo scrap
+ru: Вставить новый скрап
 sk: Vložiť nový scrap
 sq: fute deponin e re
 zh_CN: 插入新的草图
@@ -4942,6 +5300,7 @@ bg: Вмъкни нова точка
 de: Neuen Punkt einfügen
 el: Εισαγωγή νέου σημείου
 it: Inserisci un nuovo punto
+ru: Вставить новую точку
 sk: Vložiť nový bod
 sq: fute piken e re
 zh_CN: 插入新的点
@@ -4951,6 +5310,7 @@ bg: Вмъкни нова линия
 de: Neue Linie einfügen
 el: Εισαγωγή νέας γραμμής
 it: Inserisci una nuova linea
+ru: Вставить новую линию
 sk: Vložiť novú krivku
 sq: fute rrjeshtin e ri
 zh_CN: 插入新的线
@@ -4960,6 +5320,7 @@ bg: Вмъкни нова област
 de: Neue Fläche einfügen
 el: Εισαγωγή νέας επιφάνειας
 it: Inserisci una nuova area
+ru: Встваить новую область
 sk: Vložiť novú plochu
 sq: fute fushen e re
 zh_CN: 插入新的区
@@ -4969,6 +5330,7 @@ bg: Изтрий избраният обект
 de: Ausgewähltes Objekt löschen
 el: διαγραφή επιλεγμένου
 it: Rimuovi l'oggetto selezionato
+ru: Удалить выделенный объект
 sk: Zmaž označené objekty
 sq: fshije objektin e selektuar
 zh_CN: 删除选定对象

@@ -1,3 +1,14 @@
+Therion development version:
+
+xtherion:
+ * fix disabled line actions submenu of context menu
+ * adopt common user experience for "copy&paste"
+   1) Paste/Del remove selection
+   2) fix Ctrl+Ins doubled paste
+   3) enable Ctrl+Ins/Shift+Ins for single line text editors (at panel)
+ * fix setup initial directory with "initdir" defined at xtherion.ini
+
+--------------------------------------------------------------------------------
 already done for the future Therion 5.4:
 
 therion:

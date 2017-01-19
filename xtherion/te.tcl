@@ -488,28 +488,9 @@ proc xth_te_create_file {} {
   bind $cfr.txt <$xth(kb_control)-Key-i> "$iac {xth_te_auto_indent}"
   bind $cfr.txt <$xth(kb_control)-Key-s> "$iac {xth_te_save_file 0 $cfid}"
   bind $cfr.txt <Destroy> "xth_te_before_close_file $cfid yesno"  
-#  if {$xth(gui,bindclip) == 1} {
-    bind $cfr.txt <$xth(kb_control)-Key-x> "$iac {tk_textCut $cfr.txt}"
-    bind $cfr.txt <$xth(kb_control)-Key-c> "$iac {tk_textCopy $cfr.txt}"
-    bind $cfr.txt <$xth(kb_control)-Key-v> "$iac {tk_textPaste $cfr.txt}"
-    bind $cfr.txt <$xth(kb_control)-Key-z> "$iac {catch {$cfr.txt edit undo}}"
-    bind $cfr.txt <$xth(kb_control)-Key-y> "$iac {catch {$cfr.txt edit redo}}"
-  if {$xth(gui,bindinsdel)} {
-    bind $cfr.txt <Delete> {
-      %W delete insert
-      %W see insert
-    }
-    bind $cfr.txt <Shift-Key-Delete> "$iac {tk_textCut $cfr.txt}"
-    bind $cfr.txt <$xth(kb_control)-Key-Insert> "$iac {tk_textCopy $cfr.txt}"
-    bind $cfr.txt <Shift-Key-Insert> "$iac {tk_textPaste $cfr.txt}"
-#    catch {
-#      bind $cfr.txt <Shift-Key-KP_Decimal> "$iac {tk_textCut $cfr.txt}"
-#      bind $cfr.txt <$xth(kb_control)-Key-KP_Insert> "$iac {tk_textCopy $cfr.txt}"
-#      bind $cfr.txt <Shift-Key-KP_0> "$iac {tk_textPaste $cfr.txt}"
-#    }
-  }
-#  }
-    
+
+  xth_app_text_copy_paste_binds $cfr.txt $iac
+
   grid columnconf $cfr 0 -weight 1
   grid rowconf $cfr 0 -weight 1
   grid $cfr.txt -column 0 -row 0 -sticky news

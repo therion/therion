@@ -24,10 +24,14 @@ VTKPATH = $(shell tclsh ./getvtkver.tcl incpath)
 VTKLIBPATH = $(shell tclsh ./getvtkver.tcl libpath)
 VTKV6 = $(shell tclsh ./getvtkver.tcl version6)
 ifeq ($(VTKV6),1)
-VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION) -lfreetype -lpng -ljpeg
+VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION)
+VTKLIBS += -lvtkjpeg-$(VTKVERSION) -lvtkpng-$(VTKVERSION)
 else
-VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
+VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys
 endif
+VTKLIBS += -lfreetype -lpng -ljpeg
+
+
 # VTKVERSION = 5.4
 # VTKPATH = /usr/local/include/vtk-$(VTKVERSION)
 # VTKLIBPATH = /usr/local/lib/vtk-$(VTKVERSION)
@@ -55,11 +59,11 @@ STRIPFLAG = -s
 CXX = c++
 CC = gcc
 POBJECTS = lxR2P.o
-ifeq ($(VTKV6),1)
-VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION) -lfreetype -lpng -ljpeg
-else
-VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
-endif
+# ifeq ($(VTKV6),1)
+# VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION) -lfreetype -lpng -ljpeg
+# else
+# VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
+# endif
 CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 LXLIBDIR = linux

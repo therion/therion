@@ -319,11 +319,15 @@ void thinit::load()
   DWORD type(0), length = 1024;
   HKEY key;
   bool loaded_ok = true;
-	if (RegOpenKey(HKEY_CLASSES_ROOT,"survex.source\\shell\\Process\\command",&key) != ERROR_SUCCESS)
+  if (RegOpenKey(HKEY_CLASSES_ROOT,"survex.source\\shell\\Process\\command",&key) != ERROR_SUCCESS)
     loaded_ok = false;
-	if (!loaded_ok || (RegQueryValueEx(key,NULL,NULL,&type,(BYTE *)this->path_cavern.get_buffer(),&length) != ERROR_SUCCESS)) {
+  if (!loaded_ok) {  // VG120416: search also the HKCU in case an old Survex versions was installed as non-admin
+    if (RegOpenKey(HKEY_CURRENT_USER,"survex.source\\shell\\Process\\command",&key) != ERROR_SUCCESS)
+      loaded_ok = false;
+  }
+  if (!loaded_ok || (RegQueryValueEx(key,NULL,NULL,&type,(BYTE *)this->path_cavern.get_buffer(),&length) != ERROR_SUCCESS)) {
     loaded_ok = false;
-  	RegCloseKey(key);
+  RegCloseKey(key);
   }
   if (loaded_ok)
   	RegCloseKey(key);
@@ -332,6 +336,11 @@ void thinit::load()
   if (loaded_ok) {
     thsplit_args(&mbf,this->path_cavern.get_buffer());
     this->path_cavern = *(mbf.get_buffer());
+    // VG 120416: Replace "aven.exe" with "cavern.exe". New Survex versions write up aven, but therion needs cavern
+    // See http://mailman.speleo.sk/pipermail/therion/2015-September/006072.html
+    int pathlen = strlen(this->path_cavern.get_buffer());
+    this->path_cavern.get_buffer()[pathlen - strlen("aven.exe")] = 0;
+    this->path_cavern.strcat("cavern.exe");
   } else {
     this->path_cavern = "cavern";
   }

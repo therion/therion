@@ -258,12 +258,16 @@ proc xth_app_finish {} {
   bind $xth(gui,main) <$xth(kb_control)-Key-l> xth_app_control_l 
   bind $xth(gui,main) <$xth(kb_control)-Key-d> xth_app_control_d
   bind $xth(gui,main) <$xth(kb_control)-Key-a> xth_app_control_a
+  bind $xth(gui,main) <$xth(kb_control)-Key-D> xth_app_control_shift_d
   bind $xth(gui,main) <Prior> xth_app_pgup
   bind $xth(gui,main) <Next> xth_app_pgdn
   bind $xth(gui,main) <Shift-Prior> xth_app_shift_pgup
   bind $xth(gui,main) <Shift-Next> xth_app_shift_pgdn
   bind $xth(gui,main) <Key-Escape> xth_app_escape 
   bind $xth(gui,main) <F9> xth_app_make
+  bind $xth(gui,main) <$xth(kb_control)-Up> xth_app_control_up
+  bind $xth(gui,main) <$xth(kb_control)-Down> xth_app_control_down
+  
   foreach aname $xth(app,list) {
     $xth($aname,menu) add cascade -label [mc "Window"] -menu $m -underline 0 \
       -font $xth(gui,lfont)
@@ -465,6 +469,12 @@ proc xth_app_control_d {} {
   }
 }  
 
+proc xth_app_control_shift_d {} {
+  global xth
+  switch $xth(app,active) {
+    me  {xth_me_cmds_delete_linept {} {}}
+  }
+}  
 
 proc xth_app_control_l {} {
   global xth
@@ -483,6 +493,26 @@ proc xth_app_escape {} {
   global xth
   switch $xth(app,active) {
     me  {xth_me_cmds_set_mode 0}
+  }
+}
+
+proc xth_app_control_up {} {
+  global xth
+  switch $xth(app,active) {
+    me {  
+			if {$xth(me,zoom)*2 > 800} return;
+      xth_me_area_zoom_to [ expr {$xth(me,zoom) * 2} ]
+    }  
+  }
+}
+
+proc xth_app_control_down {} {
+  global xth
+  switch $xth(app,active) {
+    me {  
+			if {$xth(me,zoom)*2 < 12} return;
+			xth_me_area_zoom_to [ expr {$xth(me,zoom) / 2} ]
+    }  
   }
 }
 
@@ -709,4 +739,77 @@ proc xth_app_autosave {} {
   xth_app_autosave_schedule
 }
 
+proc tk_textPaste w {
+  global tcl_platform
+  if {![catch {::tk::GetSelection $w CLIPBOARD} sel]} then {
+    set oldSeparator [$w cget -autoseparators]
+    if {$oldSeparator} then {
+      $w configure -autoseparators 0
+      $w edit separator
+    }
+    foreach {to from} [lreverse [$w tag ranges sel]] {
+      $w delete $from $to
+    }
+    $w insert insert $sel
+    if {$oldSeparator} then {
+      $w edit separator
+      $w configure -autoseparators 1
+    }
+  }
+}
 
+proc tk_textDelete w {
+  global tcl_platform
+  set text_sel_removed 0
+  if {![catch {::tk::GetSelection $w CLIPBOARD} sel]} then {
+    set oldSeparator [$w cget -autoseparators]
+    if {$oldSeparator} then {
+      $w configure -autoseparators 0
+      $w edit separator
+    }
+    foreach {to from} [lreverse [$w tag ranges sel]] {
+      set text_sel_removed 1
+      $w delete $from $to
+    }
+    if {$oldSeparator} then {
+      $w edit separator
+      $w configure -autoseparators 1
+    }
+  }
+  if {!$text_sel_removed} then {
+    $w delete insert
+    $w see insert
+  }
+}
+
+proc tk_entryPaste w {
+  global tcl_platform
+  if {![catch {::tk::GetSelection $w CLIPBOARD} sel]} then {
+    if {[$w selection present]} then { $w delete sel.first sel.last }
+    $w insert insert $sel
+  }
+}
+
+proc tk_entryDelete w {
+  global tcl_platform
+  if {[$w selection present]} then {
+    $w delete sel.first sel.last
+  } else {
+    $w delete insert
+  }
+}
+
+proc xth_app_text_copy_paste_binds {w {cond {if {1}}}} {
+  global xth
+  bind $w <$xth(kb_control)-Key-x> "$cond {tk_textCut %W}"
+  bind $w <$xth(kb_control)-Key-c> "$cond {tk_textCopy %W}"
+  bind $w <$xth(kb_control)-Key-v> "$cond {tk_textPaste %W}"
+  bind $w <$xth(kb_control)-Key-z> "$cond {catch {%W edit undo}}"
+  bind $w <$xth(kb_control)-Key-y> "$cond {catch {%W edit redo}}"
+  if {$xth(gui,bindinsdel)} {
+    bind $w <Delete>                      "$cond {tk_textDelete %W}"
+    bind $w <Shift-Key-Delete>            "$cond {tk_textCut %W}"
+    bind $w <$xth(kb_control)-Key-Insert> "$cond {tk_textCopy %W}"
+    bind $w <Shift-Key-Insert>            "$cond {tk_textPaste %W}"
+  }
+}

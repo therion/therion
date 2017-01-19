@@ -93,30 +93,42 @@ bind $xth(gui,main) <Configure> {
 set xth(gui,clock) "00:00"
 
 # redefine some public key bindigs
+bind Text <$xth(kb_control)-Key-c> "#"
+bind Text <$xth(kb_control)-Key-v> "#"
+bind Text <$xth(kb_control)-Key-x> "#"
+bind Text <$xth(kb_control)-Key-z> "#"
+bind Text <$xth(kb_control)-Key-y> "#"
+
 if {$xth(gui,bindinsdel)} {
-  bind Text <Delete> { }
+  bind Text <Delete>                      "#"
+  bind Text <Shift-Key-Delete>            "#"
+  bind Text <$xth(kb_control)-Key-Insert> "#"
+  bind Text <Shift-Key-Insert>            "#"
 }
+
 bind Text <$xth(kb_control)-Key-o> "#"
 bind Text <$xth(kb_control)-Key-a> "#"
 bind Text <$xth(kb_control)-Key-i> "#"
 bind Text <$xth(kb_control)-Key-s> "#"
 bind Text <$xth(kb_control)-Key-w> "#"
 bind Text <$xth(kb_control)-Key-q> "#"
-bind Text <$xth(kb_control)-Key-x> "#"
 bind Text <$xth(kb_control)-Key-n> "#"
 bind Text <$xth(kb_control)-Key-p> "#"
-bind Text <$xth(kb_control)-Key-c> "#"
-bind Text <$xth(kb_control)-Key-v> "#"
 bind Text <$xth(kb_control)-Key-f> "#"
 bind Text <$xth(kb_control)-Key-h> "#"
-bind Text <$xth(kb_control)-Key-z> "#"
-bind Text <$xth(kb_control)-Key-y> "#"
 bind Text <$xth(kb_control)-Key-d> "#"
 bind Text <$xth(kb_control)-Key-k> "#"
 bind Text <$xth(kb_control)-Key-r> "#"
 
 bind Entry <$xth(kb_control)-Key-d> "#"
 bind Entry <$xth(kb_control)-Key-k> "#"
+bind Entry <$xth(kb_control)-Key-v> "tk_entryPaste %W"
+if {$xth(gui,bindinsdel)} {
+  bind Entry <Delete>                      "tk_entryDelete %W"
+  bind Entry <Shift-Key-Delete>            "tk_textCut %W"
+  bind Entry <$xth(kb_control)-Key-Insert> "tk_textCopy %W"
+  bind Entry <Shift-Key-Insert>            "tk_entryPaste %W"
+}
 
 set xth(gui,bind,text_tab) [bind Text <Tab>]
 set xth(gui,bind,text_return) [bind Text <Return>]

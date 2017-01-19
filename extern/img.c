@@ -307,8 +307,10 @@ my_strdup(const char *str)
    return p;
 }
 
+#define getline_alloc(FH) getline_alloc_len(FH, NULL)
+
 static char *
-getline_alloc(FILE *fh)
+getline_alloc_len(FILE *fh, size_t * p_len)
 {
    int ch;
    size_t i = 0;
@@ -337,7 +339,8 @@ getline_alloc(FILE *fh)
       /* if it's not the other eol character, put it back */
       if (ch != otherone) ungetc(ch, fh);
    }
-   buf[i++] = '\0';
+   buf[i] = '\0';
+   if (p_len) *p_len = i;
    return buf;
 }
 
@@ -426,7 +429,7 @@ img_open_survey(const char *fnm, const char *survey)
 
    pimg->l = pimg->r = pimg->u = pimg->d = -1.0;
 
-   pimg->title = pimg->datestamp = NULL;
+   pimg->title = pimg->datestamp = pimg->cs = NULL;
    pimg->datestamp_numeric = (time_t)-1;
 
    if (survey) {
@@ -750,15 +753,32 @@ bad_cmap_date:
    }
 
 v03d:
-   if (!pimg->title)
-       pimg->title = getline_alloc(pimg->fh);
-   else
-       osfree(getline_alloc(pimg->fh));
+   {
+       size_t title_len;
+       char * title = getline_alloc_len(pimg->fh, &title_len);
+       if (pimg->version == 8 && title) {
+	   /* We sneak in an extra field after a zero byte here, containing the
+	    * specified coordinate system (if any).  Older readers will just
+	    * not see it (which is fine), and this trick avoids us having to
+	    * bump the 3d format version.
+	    */
+	   size_t real_len = strlen(title);
+	   if (real_len != title_len) {
+	       pimg->cs = my_strdup(title + real_len + 1);
+	   }
+       }
+       if (!pimg->title) {
+	   pimg->title = title;
+       } else {
+	   osfree(title);
+       }
+   }
    pimg->datestamp = getline_alloc(pimg->fh);
    if (!pimg->title || !pimg->datestamp) {
       img_errno = IMG_OUTOFMEMORY;
       error:
       osfree(pimg->title);
+      osfree(pimg->cs);
       osfree(pimg->datestamp);
       osfree(pimg->filename_opened);
       fclose(pimg->fh);
@@ -868,7 +888,7 @@ img_rewind(img *pimg)
 }
 
 img *
-img_open_write(const char *fnm, char *title, int flags)
+img_open_write_cs(const char *fnm, const char *title, const char * cs, int flags)
 {
    time_t tm;
    img *pimg;
@@ -919,6 +939,15 @@ img_open_write(const char *fnm, char *title, int flags)
       size_t len = strlen(title);
       if (len < 11 || strcmp(title + len - 11, " (extended)") != 0)
 	 fputs(" (extended)", pimg->fh);
+   }
+   if (pimg->version == 8 && cs && *cs) {
+      /* We sneak in an extra field after a zero byte here, containing the
+       * specified coordinate system (if any).  Older readers will just not
+       * see it (which is fine), and this trick avoids us having to bump the
+       * 3d format version.
+       */
+      PUTC('\0', pimg->fh);
+      fputs(cs, pimg->fh);
    }
    PUTC('\n', pimg->fh);
 
@@ -1469,14 +1498,12 @@ img_read_item_v3to7(img *pimg, img_point *p)
 		  }
 		  return img_ERROR_INFO;
 	      case 0x23: { /* v7+: Date range (long) */
-			  int days1;
-			  int days2;
 		  if (pimg->version < 7) {
 		      img_errno = IMG_BADFORMAT;
 		      return img_BAD;
 		  }
-		  days1 = (int)getu16(pimg->fh);
-		  days2 = (int)getu16(pimg->fh);
+		  int days1 = (int)getu16(pimg->fh);
+		  int days2 = (int)getu16(pimg->fh);
 		  if (feof(pimg->fh)) {
 		      img_errno = IMG_BADFORMAT;
 		      return img_BAD;
@@ -2204,13 +2231,12 @@ skip_to_N:
 static void
 write_coord(FILE *fh, double x, double y, double z)
 {
-   static INT32_T X_, Y_, Z_;
-   INT32_T X, Y, Z;
    SVX_ASSERT(fh);
    /* Output in cm */
-   X = my_lround(x * 100.0);
-   Y = my_lround(y * 100.0);
-   Z = my_lround(z * 100.0);
+   static INT32_T X_, Y_, Z_;
+   INT32_T X = my_lround(x * 100.0);
+   INT32_T Y = my_lround(y * 100.0);
+   INT32_T Z = my_lround(z * 100.0);
 
    X_ -= X;
    Y_ -= Y;
@@ -2695,6 +2721,7 @@ img_close(img *pimg)
 	 if (pimg->fRead) {
 	    osfree(pimg->survey);
 	    osfree(pimg->title);
+	    osfree(pimg->cs);
 	    osfree(pimg->datestamp);
 	 } else {
 	    /* write end of data marker */

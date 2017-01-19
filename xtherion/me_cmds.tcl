@@ -1979,6 +1979,15 @@ proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
     set xth(me,cmds,$id,rotation) $nrot
     set xth(me,cmds,$id,xsize) $nxs
     set xth(me,cmds,$id,ysize) $nys
+    
+    # VG 230216: Erase and recreate the point when the type changes. The new triangular stations use 6 coordinates for a polygon, the circles use 4
+    # so they can not be interchanged. Maybe there is an easier way to just update the coordinates list instead of recreating the point
+    if {![string equal $ntype $otype]} {
+      xth_me_cmds_erase $id
+      xth_me_cmds_draw_point $id
+      xth_me_cmds_set_colors
+    }
+    
     $xth(me,can) coords pt$id [xth_me_cmds_calc_point_coords $id]
     xth_me_cmds_update_point_data $id
     xth_me_cmds_update_list $id
@@ -1989,24 +1998,110 @@ proc xth_me_cmds_update_point {id nx ny ntype nname nopt nrot nxs nys} {
 
 proc xth_me_cmds_calc_point_coords {id} {
   global xth
-  set x1 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)]
-  set y1 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)]
-  set x2 [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)]
-  set y2 [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
-  return [list $x1 $y1 $x2 $y2]
- # return [list \
- #   [expr [xth_me_real2canx $xth(me,cmds,$id,x)] - $xth(gui,me,point,psize)] \
- #   [expr [xth_me_real2cany $xth(me,cmds,$id,y)] - $xth(gui,me,point,psize)] \
- #   [expr [xth_me_real2canx $xth(me,cmds,$id,x)] + $xth(gui,me,point,psize)] \
- #   [expr [xth_me_real2cany $xth(me,cmds,$id,y)] + $xth(gui,me,point,psize)]
- # ]
+  set x0 [xth_me_real2canx $xth(me,cmds,$id,x)];
+  set y0 [xth_me_real2cany $xth(me,cmds,$id,y)];
+  set s0 $xth(gui,me,point,psize);
+  switch $xth(me,cmds,$id,type) {
+    station {
+      # draw a triangle for the station points
+      set x1 [expr $x0 - $s0]
+      set y1 [expr $y0 + $s0]
+      set x2 [expr $x0 + $s0]
+      set y2 [expr $y0 + $s0]
+      set x3 [expr $x0 + 0 ]
+      set y3 [expr $y0 - $s0/2]
+      return [list $x1 $y1 $x2 $y2 $x3 $y3]
+      }
+    "stalactite" - "stalactites" {
+      set x1 [expr $x0 - 0]
+      set y1 [expr $y0 - 0]
+      set x2 [expr $x0 - $s0]
+      set y2 [expr $y0 - $s0]
+      set x3 [expr $x0 + 0]
+      set y3 [expr $y0 + $s0*2]
+      set x4 [expr $x0 + $s0]
+      set y4 [expr $y0 - $s0]
+      return [list $x1 $y1 $x2 $y2 $x1 $y1 $x3 $y3 $x1 $y1 $x4 $y4 $x1 $y1]
+    }
+    "stalagmite" - "stalactites" {
+      set x1 [expr $x0 + 0]
+      set y1 [expr $y0 + 0]
+      set x2 [expr $x0 + $s0]
+      set y2 [expr $y0 + $s0]
+      set x3 [expr $x0 - 0]
+      set y3 [expr $y0 - $s0*2]
+      set x4 [expr $x0 - $s0]
+      set y4 [expr $y0 + $s0]
+      return [list $x1 $y1 $x2 $y2 $x1 $y1 $x3 $y3 $x1 $y1 $x4 $y4 $x1 $y1]
+    }
+    "pillar" - "pillars" {
+      set x1 [expr $x0 - 0]
+      set y1 [expr $y0 + $s0]
+      set x2 [expr $x0 - $s0]
+      set y2 [expr $y0 + $s0*2]
+      set x3 [expr $x0 + $s0]
+      set y3 [expr $y0 + $s0*2]
+      set x4 [expr $x0 - 0]
+      set y4 [expr $y0 - $s0]
+      set x5 [expr $x0 - $s0]
+      set y5 [expr $y0 - $s0*2]
+      set x6 [expr $x0 + $s0]
+      set y6 [expr $y0 - $s0*2]
+      return [list $x1 $y1 $x2 $y2 $x1 $y1 $x3 $y3 $x1 $y1 $x4 $y4 $x5 $y5 $x4 $y4 $x6 $y6 $x4 $y4 $x1 $y1]
+    }
+    "helictite" - "soda-straw" - "popcorn" {
+      # draw a thin square for these formations
+      set x1 [expr $x0 - $s0/2]
+      set y1 [expr $y0 - $s0]
+      set x2 [expr $x0 - $s0/2]
+      set y2 [expr $y0 + $s0]
+      set x3 [expr $x0 + $s0/2]
+      set y3 [expr $y0 + $s0]
+      set x4 [expr $x0 + $s0/2]
+      set y4 [expr $y0 - $s0]
+      return [list $x1 $y1 $x2 $y2 $x3 $y3 $x4 $y4]
+    }
+    "flowstone" - "curtain" - "disk" {
+      # draw a square for these formations
+      set x1 [expr $x0 - $s0]
+      set y1 [expr $y0 - $s0]
+      set x2 [expr $x0 - $s0]
+      set y2 [expr $y0 + $s0]
+      set x3 [expr $x0 + $s0]
+      set y3 [expr $y0 + $s0]
+      set x4 [expr $x0 + $s0]
+      set y4 [expr $y0 - $s0]
+      return [list $x1 $y1 $x2 $y2 $x3 $y3 $x4 $y4]
+    }
+    default {
+      set x1 [expr $x0 - $s0]
+      set y1 [expr $y0 - $s0]
+      set x2 [expr $x0 + $s0]
+      set y2 [expr $y0 + $s0]
+      return [list $x1 $y1 $x2 $y2]
+    }
+  }  
 }
 
 
 proc xth_me_cmds_draw_point {id} {
   global xth
-  $xth(me,can) create oval [xth_me_cmds_calc_point_coords $id] \
-    -tags "command point pt$id" -width 1 -outline blue -fill blue
+  set coords [xth_me_cmds_calc_point_coords $id]
+  switch $xth(me,cmds,$id,type) {
+    station {
+      # draw a triangle for the station points
+      $xth(me,can) create polygon [xth_me_cmds_calc_point_coords $id] -tags "command point pt$id" -width 1 -outline blue -fill blue
+    }
+    "stalactite" - "stalagmite" - "pillar" - "helictite" - "stalagmites" - "stalactites" - "soda-straw" - "popcorn" - "pillars" {
+      $xth(me,can) create polygon [xth_me_cmds_calc_point_coords $id] -tags "command point pt$id" -width 2
+    }
+    "flowstone" - "curtain" - "disk" {
+      $xth(me,can) create polygon [xth_me_cmds_calc_point_coords $id] -tags "command point pt$id" -width 1 -outline black -fill blue
+    }
+    default {
+      $xth(me,can) create oval $coords -tags "command point pt$id" -width 1 -outline blue -fill blue
+    }
+  }  
   $xth(me,can) bind pt$id <Enter> "$xth(me,can) itemconfigure pt$id -fill cyan; xth_status_bar_push me; xth_status_bar_status me \"\$xth(me,cmds,$id,listix): \$xth(me,cmds,$id,sbar)\""
   $xth(me,can) bind pt$id <Leave> "$xth(me,can) itemconfigure pt$id -fill \[$xth(me,can) itemcget pt$id -outline\]; xth_status_bar_pop me"
   $xth(me,can) bind pt$id <1> "xth_me_cmds_click $id pt$id \$xth(me,cmds,$id,x) \$xth(me,cmds,$id,y) %x %y"
@@ -2776,11 +2871,15 @@ $xth(me,ctxmenu).align add radiobutton -hidemargin 1 -image align-br.gif -select
 
 catch {menu $xth(me,ctxmenu).scale -tearoff 0}
 $xth(me,ctxmenu).scale delete 0 end
+$xth(me,ctxmenu).scale add radiobutton -label [mc "tiny (2xs)"] -variable xth(me,ctrl,ctx,scale) -value "2xs" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "tiny (xs)"] -variable xth(me,ctrl,ctx,scale) -value "xs" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "small (s)"] -variable xth(me,ctrl,ctx,scale) -value "s" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "normal (m)"] -variable xth(me,ctrl,ctx,scale) -value "m" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "large (l)"] -variable xth(me,ctrl,ctx,scale) -value "l" -command {xth_me_set_option_value scale}
 $xth(me,ctxmenu).scale add radiobutton -label [mc "huge (xl)"] -variable xth(me,ctrl,ctx,scale) -value "xl" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "huge (2xl)"] -variable xth(me,ctrl,ctx,scale) -value "2xl" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "huge (3xl)"] -variable xth(me,ctrl,ctx,scale) -value "3xl" -command {xth_me_set_option_value scale}
+$xth(me,ctxmenu).scale add radiobutton -label [mc "huge (4xl)"] -variable xth(me,ctrl,ctx,scale) -value "4xl" -command {xth_me_set_option_value scale}
 
 catch {menu $xth(me,ctxmenu).outline -tearoff 0}
 $xth(me,ctxmenu).outline delete 0 end
@@ -2873,7 +2972,7 @@ proc xth_me_get_optionline_value {key} {
 
 proc xth_me_optlabel {opt args} {
   global xth
-  set lab [mc $opt]
+  set lab {$args == "" ? {mc $opt} : $args}
   if {[llength $args] > 0} {
     set lab [lindex $args 0]
   }
@@ -3099,7 +3198,7 @@ proc xth_me_show_context_menu {id x y} {
         }
       }
       set xth(me,ctrl,ctxopt,subtype) [lindex $optsubtype 1] 
-      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype] -menu $xth(me,ctxmenu).subtype
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype [mc "subtype"]] -menu $xth(me,ctxmenu).subtype
     }    
     
     # change align
@@ -3140,7 +3239,7 @@ proc xth_me_show_context_menu {id x y} {
     	}
     	# set options
     	set xth(me,ctrl,ctxopt,align) [lindex $optalign 1] 
-      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel align] -menu $xth(me,ctxmenu).align
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel align [mc "align"]] -menu $xth(me,ctxmenu).align
     }
 	  	  
     # name
@@ -3148,28 +3247,28 @@ proc xth_me_show_context_menu {id x y} {
       set optname [xth_me_get_option_value "name" $opts]
       set xth(me,ctrl,ctx,name) [lindex $optname 0]
       set xth(me,ctrl,ctxopt,name) [lindex $optname 1] 
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel name] -command {xth_me_ctx_change_text name [mc "Station name"]}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel name [mc "Station name"]] -command {xth_me_ctx_change_text name [mc "Station name"]}
     }
     # scrap
     if {[lsearch -exact {section} $xth(me,cmds,$id,type)] > -1} {
       set optscrap [xth_me_get_option_value "scrap" $opts]
       set xth(me,ctrl,ctx,scrap) [lindex $optscrap 0]
       set xth(me,ctrl,ctxopt,scrap) [lindex $optscrap 1] 
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel scrap] -command {xth_me_ctx_change_text scrap [mc "Scrap reference"]}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel scrap [mc "Scrap reference"]] -command {xth_me_ctx_change_text scrap [mc "Scrap reference"]}
     }
     # text
     if {[lsearch -exact {label remark continuation} $xth(me,cmds,$id,type)] > -1} {
       set opttext [xth_me_get_option_value "text" $opts]
       set xth(me,ctrl,ctx,text) [lindex $opttext 0]
       set xth(me,ctrl,ctxopt,text) [lindex $opttext 1]
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel text] -command {xth_me_ctx_change_text text}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel text [mc "text"]] -command {xth_me_ctx_change_text text}
     }
     # value
     if {[lsearch -exact {height passage-height dimensions} $xth(me,cmds,$id,type)] > -1} {
       set optvalue [xth_me_get_option_value "value" $opts]
       set xth(me,ctrl,ctx,value) [lindex $optvalue 0]
       set xth(me,ctrl,ctxopt,value) [lindex $optvalue 1] 
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel value] -command {xth_me_ctx_change_text value}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel value [mc "value"]] -command {xth_me_ctx_change_text value}
     }
     # toggle orientation
     if {[lsearch -exact {station} $xth(me,cmds,$id,type)] == -1} {
@@ -3224,7 +3323,7 @@ proc xth_me_show_context_menu {id x y} {
         }
       }
       set xth(me,ctrl,ctxopt,subtype) [lindex $optsubtype 1] 
-      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype] -menu $xth(me,ctxmenu).subtype
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype [mc "subtype"]] -menu $xth(me,ctxmenu).subtype
     }    
 
         
@@ -3281,14 +3380,14 @@ proc xth_me_show_context_menu {id x y} {
     }
     # set options
     set xth(me,ctrl,ctxopt,outline) [lindex $optoutline 1] 
-    $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel outline] -menu $xth(me,ctxmenu).outline
+    $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel outline [mc "outline"]] -menu $xth(me,ctxmenu).outline
       
     # text for label
     if {[lsearch -exact {label} $xth(me,cmds,$id,type)] > -1} {
       set opttext [xth_me_get_option_value "text" $opts]
       set xth(me,ctrl,ctx,text) [lindex $opttext 0]
       set xth(me,ctrl,ctxopt,text) [lindex $opttext 1]
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel text] -command {xth_me_ctx_change_text text}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel text [mc "text"]] -command {xth_me_ctx_change_text text}
     }
   }
   
@@ -3312,7 +3411,7 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,clip) [lindex $optclip 1] 
-  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel clip] -menu $xth(me,ctxmenu).clip
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel clip [mc "clip"]] -menu $xth(me,ctxmenu).clip
 
   $xth(me,ctxmenu) add cascade -label [mc "other options"] -menu $xth(me,ctxmenu).others
   
@@ -3333,13 +3432,16 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,place) [lindex $optplace 1] 
-  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel place] -menu $xth(me,ctxmenu).place
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel place [mc "place"]] -menu $xth(me,ctxmenu).place
   
   
   # scale
   set optscale [xth_me_get_option_value "scale" $opts]
   # set variable
   switch -nocase [lindex $optscale 0] {
+    2xs - tiny {
+      set xth(me,ctrl,ctx,scale) "2xs"
+    }
     xs - tiny {
       set xth(me,ctrl,ctx,scale) "xs"
     }
@@ -3355,13 +3457,25 @@ proc xth_me_show_context_menu {id x y} {
     xl - huge {
       set xth(me,ctrl,ctx,scale) "xl"
     }
+    xxl - huge {
+      set xth(me,ctrl,ctx,scale) "xl"
+    }
+    xl - huge {
+      set xth(me,ctrl,ctx,scale) "xl"
+    }
+    2xl - huge {
+      set xth(me,ctrl,ctx,scale) "2xl"
+    }
+    3xl - huge {
+      set xth(me,ctrl,ctx,scale) "3xl"
+    }
     default {
       set xth(me,ctrl,ctx,scale) "auto"
     }
   }
   # set options
   set xth(me,ctrl,ctxopt,scale) [lindex $optscale 1] 
-  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel scale] -menu $xth(me,ctxmenu).scale
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel scale [mc "scale"]] -menu $xth(me,ctxmenu).scale
   
   
   # visibility
@@ -3380,11 +3494,12 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,visibility) [lindex $optvis 1]   
-  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel visibility] -menu $xth(me,ctxmenu).visibility
-      
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel visibility [mc "visibility"]] -menu $xth(me,ctxmenu).visibility
+
   $xth(me,ctxmenu) add separator
   if {$xth(me,cmds,$id,ct) == 3} {
-    $xth(me,ctxmenu) add cascade -label [mc "Edit line"] -menu $xth(ctrl,me,line).lpa.m
+    catch { $xth(ctrl,me,line).lpa.m clone $xth(me,ctxmenu).editline normal }
+    $xth(me,ctxmenu) add cascade -label [mc "Edit line"] -menu $xth(me,ctxmenu).editline
     $xth(me,ctxmenu).others add checkbutton -label [mc "close"] -variable xth(ctrl,me,line,close) -command xth_me_cmds_toggle_line_close
     $xth(me,ctxmenu).others add checkbutton -label [mc "reverse"] -variable xth(ctrl,me,line,reverse) -command xth_me_cmds_toggle_line_reverse
   }

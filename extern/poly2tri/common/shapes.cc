@@ -86,11 +86,11 @@ void Triangle::ClearDelunayEdges()
 Point* Triangle::OppositePoint(Triangle& t, Point& p)
 {
   Point *cw = t.PointCW(p);
-  double x = cw->x;
-  double y = cw->y;
-  x = p.x;
-  y = p.y;
-  Point* ham = PointCW(*cw);
+  // double x = cw->x;
+  // double y = cw->y;
+  // x = p.x;
+  // y = p.y;
+  // Point* ham = PointCW(*cw);
   return PointCW(*cw);
 }
 

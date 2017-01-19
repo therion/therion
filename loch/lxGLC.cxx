@@ -234,8 +234,10 @@ void lxGLCanvas::OnSize(wxSizeEvent& event)
 {
 
   // this is also necessary to update the context on some platforms
-  wxGLCanvas::OnSize(event);
-
+  #ifdef THLINUX
+  #lse 
+    wxGLCanvas::OnSize(event);
+  #endif
   // set GL viewport (not called by wxGLCanvas::OnSize on all platforms...)
   int w, h;
   this->GetClientSize(&w, &h);

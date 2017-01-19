@@ -28,6 +28,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <sys/types.h>
+
 #include "sweep_context.h"
 #include <algorithm>
 #include "advancing_front.h"
@@ -47,7 +49,7 @@ SweepContext::SweepContext(std::vector<Point*> polyline)
 void SweepContext::AddHole(std::vector<Point*> polyline)
 {
   InitEdges(polyline);
-  for(int i = 0; i < polyline.size(); i++) {
+  for(size_t i = 0; i < polyline.size(); i++) {
     points_.push_back(polyline[i]);
   }
 }
@@ -72,7 +74,7 @@ void SweepContext::InitTriangulation()
   double ymax(points_[0]->y), ymin(points_[0]->y);
 
   // Calculate bounds.
-  for (int i = 0; i < points_.size(); i++) {
+  for (size_t i = 0; i < points_.size(); i++) {
     Point& p = *points_[i];
     if (p.x > xmax)
       xmax = p.x;
@@ -96,9 +98,9 @@ void SweepContext::InitTriangulation()
 
 void SweepContext::InitEdges(std::vector<Point*> polyline)
 {
-  int num_points = polyline.size();
-  for (int i = 0; i < num_points; i++) {
-    int j = i < num_points - 1 ? i + 1 : 0;
+  size_t num_points = polyline.size();
+  for (size_t i = 0; i < num_points; i++) {
+    size_t j = (i+1 < num_points) ? i + 1 : 0;
     edge_list.push_back(new Edge(*polyline[i], *polyline[j]));
   }
 }
@@ -192,7 +194,7 @@ SweepContext::~SweepContext()
         delete ptr;
     }
 
-     for(int i = 0; i < edge_list.size(); i++) {
+     for(size_t i = 0; i < edge_list.size(); i++) {
         delete edge_list[i];
     }
 

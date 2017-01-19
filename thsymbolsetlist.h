@@ -678,7 +678,7 @@ static const bool thsymbolset__hidden [] = {
   false,
   false,
   false,
-  true,
+  false,
   false,
   false,
   false,

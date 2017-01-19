@@ -84,17 +84,14 @@
 
 thexpmap::thexpmap() {
   this->format = TT_EXPMAP_FMT_UNKNOWN;
+  this->items = TT_EXPMAP_ITEM_ALL;
   this->projstr = "plan";
   this->layoutstr = "";
-  this->layout = new thlayout;
-  this->layout->assigndb(&thdb);
-  this->layout->id = ++thdb.objid;
   this->projptr = NULL;
   this->encoding = TT_UTF_8;
 }
 
 thexpmap::~thexpmap() {
-  delete this->layout;
 }
 
 void thexpmap_log_log_file(const char * logfpath, const char * on_title, const char * off_title, bool mpbug) {
@@ -142,7 +139,7 @@ void thexpmap_log_log_file(const char * logfpath, const char * on_title, const c
 
 void thexpmap::parse_options(int & argx, int nargs, char ** args)
 {
-
+  unsigned utmp;
   int optid, optx; //,sv;
 //  double dv;
   bool supform;
@@ -218,6 +215,23 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
       this->layoutopts += this->cfgptr->bf2.get_buffer();
       argx++;
       break;
+
+    case TT_EXPMAP_OPT_ENABLE:
+    case TT_EXPMAP_OPT_DISABLE:
+      argx++;
+      if (argx >= nargs)
+        ththrow(("missing map entity -- \"%s\"",args[optx]))
+      utmp = thmatch_token(args[argx], thtt_expmap_items);
+      if (utmp == TT_EXPMAP_ITEM_UNKNOWN)
+        ththrow(("unknown map entity -- \"%s\"", args[argx]))
+      if (optid == TT_EXPMAP_OPT_ENABLE) {
+        this->items |= utmp;
+      } else {
+        this->items &= (~utmp);
+      }
+      argx++;
+      break;
+
     default:
       // skusi ci je to -layout-xxx
       if (strncmp(args[optx],"-layout-",8) == 0)
@@ -1104,7 +1118,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   th2ddataobject * op2;
   bool export_sections, export_outlines_only;
   double shx, shy;
-  unsigned long sclevel, bmlevel;
+  // unsigned long sclevel;
+  unsigned long bmlevel;
   legenddata ldata;
 
   bool anyprev, anyprevabove = false, anyprevbelow = false;
@@ -1353,7 +1368,7 @@ else
     bmlevel = 0;
     while (cbm != NULL) {
       cmi = cbm->bm->last_item;
-      sclevel = 0;
+      // sclevel = 0;
       // !!! Tu pridat aj ine druhy - teda ABOVE a BELOW
       export_outlines_only = ((cbm->mode == TT_MAPITEM_ABOVE) ||
         (cbm->mode == TT_MAPITEM_BELOW)) && (!cbm->m_target->previewed)
@@ -3088,7 +3103,13 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
             case TT_LAYOUT_CCRIT_MAP:
               // vsetkym scrapom v kazdej priradi farbu
               if (firstmapscrap) {
-                thset_color(0, (double) (nmap - cmn), (double) nmap, cR, cG, cB);
+                if (cmap->map->colour.defined) {
+                  cR = cmap->map->colour.R;
+                  cG = cmap->map->colour.G;
+                  cB = cmap->map->colour.B;
+                } else {
+                  thset_color(0, (double) (nmap - cmn), (double) nmap, cR, cG, cB);
+                }
                 std::string maptitle("");
                 if (strlen(cmap->map->title) > 0) {
                   maptitle = ths2txt(cmap->map->title, this->layout->lang);
