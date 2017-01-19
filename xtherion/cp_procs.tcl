@@ -791,19 +791,19 @@ proc xth_cp_show_errors {} {
   set w $xth(cp,log).txt
   $w tag remove xtherr 1.0 end
 
-  set rx {\S*[^\]\s]\s+\[\d+\]}
+  set rx {\-- \S*[^\]\s]\s+\[\d+\]}
   set fnd [$w search -regexp -count cnt $rx 1.0 end]
   
   set i 0
   while {([string length $fnd] > 0) && ($i < 10000)} {
     
     set enx [$w index "$fnd + $cnt chars"]
-    set ctext [$w get $fnd "$fnd lineend"]
+    set ctext [$w get "$fnd + 3 chars" "$fnd lineend"]
     set cfnm {}
     regexp {\S+} $ctext cfnm
   
     if {![regexp {(\.mp|\.tex)\)?$} $cfnm]} {
-      $w tag add xtherr $fnd $enx
+      $w tag add xtherr "$fnd + 3 chars" $enx
     }
 
     set fnd [$w search -regexp -count cnt $rx $enx end]
