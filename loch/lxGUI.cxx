@@ -1076,6 +1076,7 @@ void lxFrame::ImportFile(wxString fName, int fType)
 
 
 void lxFrame::LoadData(wxString fName, int fType) {
+  {
 #if wxCHECK_VERSION(3,0,0)
   wxWindowDisabler disableAll;
 #endif
@@ -1109,14 +1110,6 @@ void lxFrame::LoadData(wxString fName, int fType) {
       this->data->m_input.InterpolateMissingLRUD();
       break;
   }
-#if wxCHECK_VERSION(3,0,0)
-  wxTheApp->Yield();
-#endif
-  if (this->data->m_input.m_error.length() > 0) {
-    wxMessageBox(_("Error reading input file"), _("Error"), wxICON_ERROR | wxOK);
-  } else {
-    this->m_fileHistory->AddFileToHistory(this->m_fileName);
-  }
   this->data->Rebuild();
 #if wxCHECK_VERSION(3,0,0)
   wxTheApp->Yield();
@@ -1126,6 +1119,14 @@ void lxFrame::LoadData(wxString fName, int fType) {
   wxTheApp->Yield();
 #endif
   this->canvas->UpdateRenderList();
+  }
+  // We need to have disengaged the wxWindowDisabler here or else we get an
+  // assertion failure for the wxMessageBox.
+  if (this->data->m_input.m_error.length() > 0) {
+    wxMessageBox(_("Error reading input file"), _("Error"), wxICON_ERROR | wxOK);
+  } else {
+    this->m_fileHistory->AddFileToHistory(this->m_fileName);
+  }
 }
 
 

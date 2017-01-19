@@ -232,10 +232,6 @@ void lxGLCanvas::ForceRefresh(bool updateTB)
 
 void lxGLCanvas::OnSize(wxSizeEvent& event)
 {
-
-  // this is also necessary to update the context on some platforms
-  wxGLCanvas::OnSize(event);
-
   // set GL viewport (not called by wxGLCanvas::OnSize on all platforms...)
   int w, h;
   this->GetClientSize(&w, &h);
@@ -246,6 +242,8 @@ void lxGLCanvas::OnSize(wxSizeEvent& event)
   this->ForceRefresh();
 #endif
 
+  // this is also necessary to update the context on some platforms
+  event.Skip();
 }
 
 
