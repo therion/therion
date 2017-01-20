@@ -52,9 +52,9 @@ endgrade
 # Grade -1: no map available
 # Only for database purposes: It means that the cave map has not been drawn yet.
 grade "UISv1_-1" -title "UISv1 ungraded survey without map"
-  # Not applicaple for therion data.
+  # Not applicable for therion data.
   # It is mainly here to support automated data exports from
-  # databases wich may export such a number.
+  # databases which may export such a number.
 endgrade
 
 
@@ -73,7 +73,7 @@ endgrade
 grade "UISv1_1" -title "UISv1 survey grade 1"
   # nothing defined here.
   # Specifying such an grade may be useful to document that the survey was
-  # just the result of a sketch and shpuld be redone.
+  # just the result of a sketch and should be redone.
 endgrade
 
 
@@ -150,7 +150,7 @@ endgrade
 # uncalibrated, they are to be graded with 1! Topofil used for vertical pits
 # may reach grade 5. In order to reach grade 5, the survey coordinates have to
 # be calculated (xyz coordinates, no polar coordinates plotted with scale rule
-# a d protactor).
+# and protractor).
 grade "UISv1_5" -title "UISv1 survey grade 5"
 
   # 95.44% of readings are within 0.05m (2 S.D.)
@@ -198,7 +198,7 @@ grade "UISv1_X" -title "UISv1 survey grade X"
   # Details must be laid out at the survey.
   # custom "sd ... <value> <units>" have to be specified for your centrelines!
   #
-  # That said, a construction site thedolite is about 0.08 gon
+  # That said, a construction site theodolite is about 0.08 gon
   # and a engineering theodolite about 0.02 gon.
   # Example: "sd bearing gradient 0.08 grad" # theodolite
 endgrade
