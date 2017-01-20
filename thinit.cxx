@@ -339,8 +339,11 @@ void thinit::load()
     // VG 120416: Replace "aven.exe" with "cavern.exe". New Survex versions write up aven, but therion needs cavern
     // See http://mailman.speleo.sk/pipermail/therion/2015-September/006072.html
     int pathlen = strlen(this->path_cavern.get_buffer());
-    this->path_cavern.get_buffer()[pathlen - strlen("aven.exe")] = 0;
-    this->path_cavern.strcat("cavern.exe");
+    int suflen = strlen("aven.exe");
+    if ((pathlen > suflen) && (strncmp(this->path_cavern.get_buffer() + pathlen - suflen, "aven.exe", suflen ) == 0)) {
+      this->path_cavern.get_buffer()[pathlen - strlen("aven.exe")] = 0;
+      this->path_cavern.strcat("cavern.exe");
+    }
   } else {
     this->path_cavern = "cavern";
   }
