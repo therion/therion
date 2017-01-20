@@ -807,10 +807,8 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   thbuffer texb;
   texb.guarantee(128);
   unsigned symn = 0;
-  bool isin[thsymbolset_size];
   
   for(int i = 0; i < thsymbolset_size; i++)
-    isin[i] = true;
 	if (layout->legend == TT_LAYOUT_LEGEND_ALL) {
 		this->export_symbol_show_group(mpf, SYMX_POINT_FLAG);
 	}
@@ -832,7 +830,6 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 // vlozi figure do metapostu
 #define insfig(mid,txt) \
   if (((mid == 0) || (isused(mid))) && (strlen(txt) > 0)) {\
-    isin[mid] = false;\
     LEGENDITEM = LEGENDLIST.insert(LEGENDLIST.end(),dummlr); \
     fprintf(mpf,"beginfig(%d);\n",sfig); \
     fprintf(mpf,"clean_legend_box;\n"); \

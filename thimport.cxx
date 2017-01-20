@@ -269,7 +269,6 @@ const char * thimport::station_name(const char * sn, const char separator, struc
   static thmbuffer psurv, csurv;
   static long active_survey;
   static thsurvey * prevpsurvey;
-  thdataobject * prevobjptr;
   long i, l;
   bx = sn;
   char * buff = bx.get_buffer(), * rv;
@@ -319,7 +318,6 @@ const char * thimport::station_name(const char * sn, const char separator, struc
               // if not, create this survey
               prevcsptr = this->db->csurveyptr;
               prevctx = this->db->ccontext;
-              prevobjptr = 
               this->db->csurveyptr = csurvey;
               if (csurvey == NULL) {
                 this->db->lcsobjectptr = this;

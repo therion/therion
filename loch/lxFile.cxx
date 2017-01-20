@@ -754,6 +754,7 @@ void lxFile::ImportPLT(const char * fn)
   while (!feof(this->m_file)) {
     getline(&lnp, &lns, this->m_file);
     nt = lxFile__SplitTokens((unsigned char *) lnp, &(tok[0]), 16);
+    (void)nt;
     switch (*(tok[0])) {
       case 'M':
       case 'D':
@@ -881,7 +882,6 @@ void lxFile::Import3D(const char * fn)
   tmpSurvey->m_namePtr = this->m_surveysData.AppendStr(sname);
   delete [] sname;
 
-  int last_result;
   std::map<std::string, lxFileStation*> label_map;
   std::map<std::string, lxFileStation*>::iterator lmi;
   std::map<imp3Dpos, lxFileStation*> pos_map;
@@ -955,7 +955,6 @@ void lxFile::Import3D(const char * fn)
           }
         }
         stPtrPrev = stPtr;
-        last_result = result;
         break;
 
       case img_XSECT:

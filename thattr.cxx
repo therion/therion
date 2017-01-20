@@ -587,8 +587,6 @@ void thattr::export_kml(const char * fname, const char * name_field)
 {
   // Create file.
   FILE * f;
-  thattr_attr * ca;
-  thattr_field * cf;
   thattr_obj_list::iterator oi, oinext;
   thattr_id2attr_map::iterator ai;
   thattr_field_list::iterator fli;
@@ -617,8 +615,6 @@ void thattr::export_kml(const char * fname, const char * name_field)
 
   
   // Insert objects and write fields.
-  const char * value;
-  bool hasone;
   int clevel, nlevel;
   clevel = 0;
   for(oi = this->m_obj_list.begin(); oi != this->m_obj_list.end();) {
@@ -764,7 +760,7 @@ void thattr::export_html(const char * fname, int encoding)
       }
       fprintf(f,"<td align=\"%s\"", alstr);
       if (m_tree && header_value) {
-        fprintf(f," style=\"padding-left:+%u\"", 12 * oi->m_tree_level);
+        fprintf(f," style=\"padding-left:+%u\"", 12 * (unsigned)oi->m_tree_level);
         oinext = oi;
         oinext++;
         if ((oinext != this->m_obj_list.end()) && (oinext->m_tree_level > oi->m_tree_level)) {

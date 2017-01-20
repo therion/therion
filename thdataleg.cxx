@@ -172,13 +172,12 @@ void thdataleg::calc_total_stds()
 //    }
 //  }
   
-  double dx, dy, dz, dL, dl, dT, dC, ddx, ddy, ddz, dh, dZ;
+  double dx, dy, dz, dL, dl, dT, dC, ddx, ddy, ddz, dZ;
 #define setd(a,b,v) if (thisnan(b)) a = v; else a = b;
   setd(dx, this->x_sd, 0.057735026919);
   setd(dy, this->y_sd, 0.057735026919);
   setd(dz, this->z_sd, 0.057735026919);
   setd(dL, this->length_sd, 0.1);
-  setd(dh, this->length_sd, 0.1);
   setd(dl, this->counter_sd, 0.1);
   setd(dZ, this->depth_sd, 0.1);
   setd(dT, this->bearing_sd, 1.0);
