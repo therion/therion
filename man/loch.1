@@ -1,0 +1,86 @@
+.TH "THERION" "1"
+.SH "NAME"
+loch \(em Therion model viewer
+.SH "SYNOPSIS"
+.PP
+\fBloch\fR [FILE]
+.SH "DESCRIPTION"
+.PP
+This manual page documents
+\fBloch\fR, which is part of the therion-viewer package.
+.PP
+\fBloch\fR is a 3D viewer which displays .lox files produced
+by therion and allows them to be examined.
+.SH "OPTIONS"
+.PP
+loch optionally takes a .lox, Survex .3d or Compass .plt file to open.
+.SH "BASIC CONTROL"
+.PP
+\fBKey and Mouse Controls\fR
+.TS
+tab();
+l l l.
+FunctionMouse actionKey
+Zoom & RotateLeft click + drag
+Zoom onlyLeft click + drag up/down, then hold left and click rightCtrl + Up/Down
+Rotate onlyLeft click + drag left/right, then hold left and click rightLeft/Right
+PanRight click + dragShift + Arrows
+TiltMiddle (wheel) click + drag  or wheel rotateUp/Down
+Full screenLeft double click F11
+Context menuRight click
+.TE
+.PP
+If continuous rotation is turned on, then rotation mouse movements
+change the speed or direction of rotation. If rotation is locked, then
+rotation mouse movements have no effect.
+.SH "OFF SCREEN RENDERING"
+.PP
+Loch is able to render large bitmaps that can be afterwards post
+processed and printed. Bitmaps can be exported in PDF, PNG or BMP
+formats. Configuration of export is done via the Rendering setup dialog.
+You can set the following features:
+.PP
+\fISize and Scaling\fP
+.PP
+Screen shot: Screen copy will be saved into a file with no other changes.
+.PP
+Image width:  The screen image will be exported with the specified width.
+.PP
+Image height: The screen image will be exported with the specified height.
+.PP
+Scale: The screen image will be exported with the specified scale.
+.PP
+\fIImage options\fP
+.PP
+Rendering resolution: Resolution of the image file used when image size
+or scale are specified.
+.PP
+Image size: Image size in pixels and uncompressed bytes calculated from
+previous settings.
+.PP
+White background: Force white background in exported image.
+.SH "KNOWN BUGS"
+.PP
+Sometimes empty rectangles appear in off screen rendered file.
+Changing the window size usually helps.
+.PP
+* Crashes have been observed on intel graphics cards unless the
+ texture initialisations are removed in the code.
+.PP
+* Stereo mode does not work correctly on some graphics adapters.
+.PP
+* This help does not work.
+.SH "SEE ALSO"
+.PP
+therion(1), xtherion(1)
+.PP
+For full information see the Therion Manual in /usr/share/doc/therion-doc/thbook.pdf
+which describes therion-viewer and its use in detail.
+.SH "AUTHOR"
+.PP
+This manual page was adapted from existing docs by Wookey wookey@debian.org for
+the \fBDebian\fP system (but may be used by others).  Permission is
+granted to copy, distribute and/or modify this document under
+the terms of the GNU General Public Licence,
+Version 2 or any later version published by the Free
+Software Foundation.
