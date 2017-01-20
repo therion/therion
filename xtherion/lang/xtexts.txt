@@ -634,6 +634,7 @@ zh_CN: 出错
 
 therion: WARNING
 bg: Внимание!
+cz: VAROVÁNÍ
 de: WARNUNG
 zh_CN: 警告
 
@@ -2435,8 +2436,10 @@ sq: kliko kete buton te aktualizosh nderrimet e rrjeshtit.
 zh_CN: 点此按钮，应用线改动。
 
 therion: Trace line
+cz: Trasovat linii
 
 therion: Convert to curve
+cz: Přeměnit na křivku
 
 therion: Select line point.
 bg: Избери една от точките на линията.
@@ -3048,7 +3051,7 @@ zh_CN: 文本
 
 therion: Auto adjust area
 bg: Автоматична настройка на област
-cz: Auto přizpůsobit
+cz: Přizpůsobit plochu
 de: Fläche automatisch anpassen
 el: Αυτόματη ρύθμιση επιφάνειας
 en: Auto adjust area
@@ -3073,10 +3076,11 @@ sq: fute imazhin
 zh_CN: 插入图像
 
 therion: Hide inactive scraps
+cz: Skrýt neaktivní scrapy
 
 therion: Zoom 100 %
 bg: Мащаб 100%
-cz: Zoom na 100 %
+cz: Zoom 100 %
 el: Μεγέθυνση 100%
 en: Zoom 100 %
 es: Zoom 100%
@@ -3518,8 +3522,10 @@ therion: >>
 therion: auto"] -variable xth(me,ctrl,ctx,altitude) -value ".
 
 therion: edit
+cz: editovat
 
 therion: Altitude
+cz: Nadmořská výška
 
 therion: OK
 bg: ОК
@@ -3535,6 +3541,7 @@ sq: ne rregull-O.K.
 zh_CN: 成功
 
 therion: Cancel
+cz: Zrušit
 
 therion: painted"] -variable xth(me,ctrl,ctx,subtype) -value "painted
 
@@ -3551,6 +3558,7 @@ therion: undefined"] -variable xth(me,ctrl,ctx,subtype) -value "undefined
 therion: paleo"] -variable xth(me,ctrl,ctx,subtype) -value "paleo
 
 therion: Station name
+cz: Název bodu
 
 therion: Scrap reference
 
@@ -3644,6 +3652,7 @@ therion: segment subtype
 therion: altitude label
 
 therion: other options
+cz: další možnosti
 
 therion: Edit line
 bg: Редактирай линия
@@ -3687,6 +3696,7 @@ zh_CN: 反向
 therion: Select underlying point
 
 therion: Delete symbol
+cz: Smazat symbol
 
 therion: toggle image visibility
 bg: превключване на видимостта на изображение
@@ -3833,14 +3843,17 @@ zh_CN: 分割点
 
 therion: Trace line
 bg: Проследяване от картината
+cz: Trasovat linii
 en: Trace line
 
 therion: Convert to curve
 bg: Конвертиране в Безие
+cz: Konvertovat na křivku
 en: Convert to curve
 
 therion: Simplify line
 bg: Опростяване на линия
+cz: Zjednodušit linii
 en: Simplify line
 
 therion: deleting line point
@@ -4000,8 +4013,10 @@ sq: ndarja e pikes-rjeshtit
 zh_CN: 分割线
 
 therion: Stop tracing
+cz: Ukončit trasování
 
 therion: Continue tracing
+cz: Pokračovat v trasování
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
@@ -4730,6 +4745,7 @@ zh_CN: 血液酒精浓度计算器
 
 therion: Calibrate bitmap...
 bg: Калибриране на изображение ...
+cz: Kalibrovat bitmapu ...
 de: Bild kalibrieren...
 it: Mappa georeferenziata...
 zh_CN: 校准图片...
@@ -4786,6 +4802,7 @@ zh_CN: 所有字符
 
 therion: New file
 bg: Нов файл
+cz: Nový soubor
 de: Neue Datei
 el: Νέο αρχείο
 it: Nuovo
@@ -4795,6 +4812,7 @@ zh_CN: 新文件
 
 therion: Open file
 bg: Отвори файл
+cz: Otevřít soubor
 de: Datei öffnen
 el: Άνοιγμα
 it: Apri
@@ -4804,6 +4822,7 @@ zh_CN: 打开文件
 
 therion: Save file
 bg: Запиши файл
+cz: Uložit soubor
 de: Datei speichern
 el: Αποθήκευση
 it: Salva
@@ -4813,6 +4832,7 @@ zh_CN: 存储文件
 
 therion: Save file as
 bg: Запиши файл като
+cz: Uložit soubor jako
 de: Datei speichern als
 el: Αποθήκευση ως
 it: Salva come
@@ -4822,6 +4842,7 @@ zh_CN: 文件存储为
 
 therion: Close file
 bg: Затвори файл
+cz: Zavřít soubor
 de: Datei schließen
 el: Κλείσιμο αρχείου
 it: Chiudi
@@ -4857,6 +4878,7 @@ zh_CN: 恢复
 
 therion: Switch to text editor
 bg: Превключи на текстов редактор
+cz: Přepnout na textový editor
 de: Zum Texteditor wechseln
 el: Μετάβαση σε επεξεργαστή κειμένου
 it: Editor di testi
@@ -4866,6 +4888,7 @@ zh_CN: 文本编辑器开关
 
 therion: Switch to map editor
 bg: Превключи на редактор на карти
+cz: Přepnout na mapový editor
 de: Zum Karteneditor wechseln
 el: Μετάβαση σε επεξεργαστή σχεδίου
 it: Editor di mappe
@@ -4875,6 +4898,7 @@ zh_CN: 地图编辑器开关
 
 therion: Switch to compiler
 bg: Превключи на компилатор
+cz: Přepnout na kompilátor
 de: Zum Compiler wechseln
 el: Μετάβαση σε συντάκτη
 it: Compilatore
@@ -4897,6 +4921,7 @@ zh_CN: 程序编译
 
 therion: Switch to select mode
 bg: Превключи на режим 'Избиране'
+cz: Přepnout do módu na výběr objektu
 de: In Auswahlmodus wechseln
 el: Μετάβαση σε λειτουργία επιλογής
 it: Modalità di selezione
@@ -4906,6 +4931,7 @@ zh_CN: 模块选择开关
 
 therion: Select next scrap
 bg: Избери следващият скрап
+cz: Vyber následující scrap
 de: Nächste Skizze auswählen
 el: Επιλογή επόμενου σκραπ
 it: Seleziona il prossimo scrap
@@ -4915,6 +4941,7 @@ zh_CN: 选定下一个草图
 
 therion: Select next area
 bg: Избери следващата област
+cz: Vyber následující plochu
 de: Nächste Fläche auswählen
 el: Επιλογή επόμενης επιφάνειας
 it: Seleziona la prossima area
@@ -4924,6 +4951,7 @@ zh_CN: 选择下一个区
 
 therion: Zoom in
 bg: Приближи
+cz: Zvětšit
 de: Vergrößern
 el: Μεγέθυνση
 it: Zoom in
@@ -4933,6 +4961,7 @@ zh_CN: 放大
 
 therion: Zoom out
 bg: Отдалечи
+cz: Zmenšit
 de: Verkleinern
 el: Σμίκρυνση
 it: Zoom out
@@ -4942,6 +4971,7 @@ zh_CN: 缩小
 
 therion: Insert new scrap
 bg: Вмъкни нов скрап
+cz: Vložit nový scrap
 de: Neue Skizze einfügen
 el: Εισαγωγή νέου σκραπ
 it: Inserisci un nuovo scrap
@@ -4951,6 +4981,7 @@ zh_CN: 插入新的草图
 
 therion: Insert new point
 bg: Вмъкни нова точка
+cz: Vložit nový bod
 de: Neuen Punkt einfügen
 el: Εισαγωγή νέου σημείου
 it: Inserisci un nuovo punto
@@ -4960,6 +4991,7 @@ zh_CN: 插入新的点
 
 therion: Insert new line
 bg: Вмъкни нова линия
+cz: Vložit novou křivku
 de: Neue Linie einfügen
 el: Εισαγωγή νέας γραμμής
 it: Inserisci una nuova linea
@@ -4969,6 +5001,7 @@ zh_CN: 插入新的线
 
 therion: Insert new area
 bg: Вмъкни нова област
+cz: Vložit novou plochu
 de: Neue Fläche einfügen
 el: Εισαγωγή νέας επιφάνειας
 it: Inserisci una nuova area
@@ -4978,6 +5011,7 @@ zh_CN: 插入新的区
 
 therion: Delete selected object
 bg: Изтрий избраният обект
+cz: Smaž označené objekty
 de: Ausgewähltes Objekt löschen
 el: διαγραφή επιλεγμένου
 it: Rimuovi l'oggetto selezionato
