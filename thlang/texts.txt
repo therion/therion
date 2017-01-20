@@ -2529,7 +2529,7 @@ zh_CN: 图例
 therion: title color-legend-altitude
 bg: Височинна скала
 cz: Nadmořské výšky
-de: Höhe des Titelfeldes
+de: Höhe
 el: Υψομετρικά
 en: Altitudes
 es: color (altitud)
