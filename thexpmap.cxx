@@ -3087,7 +3087,13 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
             case TT_LAYOUT_CCRIT_MAP:
               // vsetkym scrapom v kazdej priradi farbu
               if (firstmapscrap) {
-                thset_color(0, (double) (nmap - cmn), (double) nmap, cR, cG, cB);
+                if (cmap->map->colour.defined) {
+                  cR = cmap->map->colour.R;
+                  cG = cmap->map->colour.G;
+                  cB = cmap->map->colour.B;
+                } else {
+                  thset_color(0, (double) (nmap - cmn), (double) nmap, cR, cG, cB);
+                }
                 std::string maptitle("");
                 if (strlen(cmap->map->title) > 0) {
                   maptitle = ths2txt(cmap->map->title, this->layout->lang);

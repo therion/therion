@@ -65,6 +65,7 @@ static const thstok thtt_expdb_opt[] = {
 enum {
   TT_EXPDB_FMT_UNKNOWN = 0,  ///< Unknown option
   TT_EXPDB_FMT_SQL,  ///< sql
+  TT_EXPDB_FMT_CSV,  ///< list of shots in CSV format
 };
 
 
@@ -74,6 +75,7 @@ enum {
  
 static const thstok thtt_expdb_fmt[] = {
   {"sql", TT_EXPDB_FMT_SQL},
+  {"csv", TT_EXPDB_FMT_CSV},
   {NULL, TT_EXPDB_FMT_UNKNOWN}
 };
 
@@ -90,6 +92,8 @@ class thexpdb : public thexport {
     encoding;
   
   void export_sql_file(class thdatabase * dbp);
+  
+  void export_csv_file(class thdatabase * dbp);
 
   public:
   

@@ -211,10 +211,15 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
       
   unsigned long i;
   img * pimg;
-  img_output_version = 4;
+  img_output_version = 8;
   thbuffer fnmb;
-  fnmb.strcpy("cave");
-  pimg = img_open_write(fnm, fnmb.get_buffer(), 1);
+  char title[_MAX_FNAME];
+  _splitpath(this->outpt, NULL, NULL, title, NULL);
+  fnmb.strcpy(title);  // VG 290316: Set the filename as a cave name instead of "cave". The top-level survey name will be even better
+  if ((thcfg.outcs >= 0) || (thcfg.outcs < TTCS_UNKNOWN))  // Export the coordinate system data if one is set
+    pimg = img_open_write_cs(fnm, fnmb.get_buffer(), thcs_get_data(thcfg.outcs)->params, 1);
+  else
+    pimg = img_open_write(fnm, fnmb.get_buffer(), 1);
      
   if (!pimg) {
     thwarning(("can't open %s for output",fnm))
@@ -240,6 +245,18 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
         continue;
       if (((this->items & TT_EXPMODEL_ITEM_CAVECENTERLINE) == 0) && (!is_surface))
         continue;
+
+      // Set start and end date of the survey
+      if ((*tlegs)->data->date.syear != -1) {
+        pimg->days1 = (*tlegs)->data->date.get_start_days1900();
+        if ((*tlegs)->data->date.eyear == -1)
+          pimg->days2 = (*tlegs)->data->date.get_start_days1900();
+        else
+          pimg->days2 = (*tlegs)->data->date.get_end_days1900();
+      } else {
+        pimg->days1 = -1;  // Unknown dates
+        pimg->days2 = -1;
+      }
 
       if (is_surface)
         s_exp[cur_st] |= img_SFLAG_SURFACE;

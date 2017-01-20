@@ -187,11 +187,12 @@ sq: rrymim i ajrit
 zh_CN: 气流
 
 therion: point flag:arch
+bg: арка
 en: arch
 sk: skalný oblúk
 
 therion: point flag:overhang
-bg: скална площадка
+bg: надвес
 cz: převis
 de: Überhang
 el: προέκταση οροφής
@@ -326,6 +327,7 @@ sq: muri I shtrire
 zh_CN: 洞底边界
 
 therion: line wall:overlying
+bg: по-високо разположена стена
 de: überlagerter Wandverlauf
 en: overlying wall
 it: parete:sovrastante
@@ -369,6 +371,7 @@ sq: muri I supozuar
 zh_CN: 推测洞道边界
 
 therion: line wall:pit
+bg: отвес
 de: Eingangsschacht
 en: entrance pit
 it: parete:pozzo
@@ -480,6 +483,7 @@ sq: akull
 zh_CN: 冰边界
 
 therion: line wall:flowstone
+bg: натек
 de: Wand aus Sinter
 en: flowstone wall
 it: colata
@@ -489,6 +493,7 @@ sk: stena tvorená sintrom
 zh_CN: 流石边界
 
 therion: line wall:moonmilk
+bg: пещерно мляко
 de: Wand aus Bergmilch
 en: moonmilk wall
 it: moonmilk
@@ -669,7 +674,7 @@ sq: rrymim i ajrit
 zh_CN: 气流
 
 therion: point air-draught:winter
-bg: зимен въздушно течение
+bg: зимно въздушно течение
 cz: zimní průvan
 de: Luftzug im Winter
 el: χειμερινή ροή αέρα
@@ -684,7 +689,7 @@ sq: rrymim ajri-dimeror
 zh_CN: 冷气流
 
 therion: point air-draught:summer
-bg: летен въздушно течение
+bg: лятно въздушно течение
 cz: letní průvan
 de: Luftzug im Sommer
 el: θερινή ροή αέρα
@@ -746,7 +751,7 @@ sq: vazhdim I mundshem
 zh_CN: 可能延伸洞道
 
 therion: point narrow-end
-bg: непроходимо снижаване
+bg: непроходимо верт. стеснение
 cz: neprůlezné zúžení
 de: Engstelle, zu schmal
 el: κλείσιμο στοάς λόγω στενώματος
@@ -763,7 +768,7 @@ sq: kalim I ngushte-fund
 zh_CN: 狭窄洞道尽头
 
 therion: point low-end
-bg: хоризонтално стеснение
+bg: непроходимо снижаване
 cz: neprůlezné snížení
 de: Engstelle, zu flach
 el: κλείσιμο στοάς λόγω χαμηλής οροφής
@@ -840,7 +845,7 @@ sq: shkalle ne dysheme
 zh_CN: 梯坎状洞底
 
 therion: line overhang
-bg: скална площадка
+bg: надвес
 cz: převis
 de: Überhang
 el: προέκταση οροφής
@@ -1014,7 +1019,7 @@ sq: dimenzionet
 zh_CN: 规模
 
 therion: point height:unsigned
-bg: височина на ниша в тавана
+bg: височина на праг
 cz: výška stupně
 de: Höhe der Bodenstufe
 el: ύψος σκαλοπατιού
@@ -1099,7 +1104,7 @@ sq: breg
 zh_CN: 斜坡
 
 therion: line rock-border
-bg: външен ръб на камък
+bg: очертание на камък
 cz: kameny
 de: Umriss eines Felsens
 el: περίγραμμα βράχου
@@ -1116,7 +1121,7 @@ sq: kufij shkembinjsh
 zh_CN: 块石边界
 
 therion: line rock-edge
-bg: вътрешен ръб на камък
+bg: ръбове на камък
 cz: hrany kamenů
 de: Struktur eines Felsens
 el: άκρη βράχου
@@ -1676,7 +1681,7 @@ sq: rrjedhe uji me force
 zh_CN: 季节性流水
 
 therion: point water-flow:intermittent
-bg: непостоянно водно течение
+bg: периодично водно течение
 cz: občasný vodní tok
 de: zeitweises Gerinne
 el: διακοπτόμενη υδρορροή
@@ -1844,6 +1849,8 @@ sq: stalaktit
 zh_CN: 石钟乳
 
 therion: point stalactites
+bg: сталактити
+en: stalactites
 
 therion: point stalagmite
 bg: сталагмит
@@ -1863,6 +1870,8 @@ sq: stalagmit
 zh_CN: 石笋
 
 therion: point stalagmites
+bg: сталагмити
+en: stalagmites
 
 therion: point pillar
 bg: сталактон
@@ -1882,8 +1891,11 @@ sq: shtylle
 zh_CN: 石柱
 
 therion: point pillars
+bg: сталактони
+en: pillars
 
 therion: point ice-stalactite
+bg: леден сталактит
 de: Eisstalaktit
 en: ice stalactite
 it: stalattite di ghiaccio
@@ -1893,6 +1905,7 @@ sk: ľadový stalaktit
 zh_CN: 冰乳
 
 therion: point ice-stalagmite
+bg: леден сталагмит
 de: Eisstalagmit
 en: ice stalagmite
 it: stalagmite di ghiaccio
@@ -1902,6 +1915,7 @@ sk: ľadový stalagmit
 zh_CN: 冰笋
 
 therion: point ice-pillar
+bg: леден сталактон
 de: Eissäule
 en: ice pillar
 it: colonna di ghiaccio
@@ -2341,6 +2355,8 @@ sq: litar
 zh_CN: 绳子
 
 therion: line rope
+bg: въже
+en: rope
 
 therion: point rope-ladder
 bg: пещерна стълба
@@ -2379,6 +2395,8 @@ sq: shkalle fikse
 zh_CN: 固定梯子
 
 therion: line fixed-ladder
+bg: стационарна стълба
+en: fixed ladder
 
 therion: point steps
 bg: стъпала
@@ -2398,10 +2416,16 @@ sq: shkalle
 zh_CN: 梯坎
 
 therion: line steps
+bg: стъпала
+en: steps
 
 therion: point via-ferrata
+bg: виа-ферата
+en: via-ferrata
 
 therion: line via-ferrata
+bg: виа-ферата
+en: via-ferrata
 
 therion: point traverse
 bg: траверс
@@ -2438,8 +2462,12 @@ sq: ure
 zh_CN: 桥
 
 therion: point handrail
+bg: перила
+en: handrail
 
 therion: line handrail
+bg: перила
+en: handrail
 
 therion: point camp
 bg: лагер
@@ -2629,7 +2657,7 @@ sq: thellesia
 zh_CN: 洞道深度
 
 therion: title explo (plural)
-bg: Изследване
+bg: Изследвали
 cz: Objevili
 de: Entdeckung
 el: Εξερευνητές
@@ -2646,7 +2674,7 @@ sq: hulumtuar nga
 zh_CN: 探测
 
 therion: title explo
-bg: Изследване
+bg: Изследвал
 cz: Objevil
 de: Entdeckung
 el: Εξερευνητής
@@ -2697,7 +2725,7 @@ sq: matur nga
 zh_CN: 测量
 
 therion: title carto (plural)
-bg: Гл. картировачи
+bg: Комп. обработка
 cz: Kreslili
 de: Zeichnung
 el: Σκαρίφημα
@@ -2714,7 +2742,7 @@ sq: vizatuar nga
 zh_CN: 绘图
 
 therion: title carto
-bg: Гл. картировач
+bg: Комп. обработка
 cz: Kreslil
 de: Zeichnung
 el: Σκαρίφημα
