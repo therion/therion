@@ -256,9 +256,8 @@ void lxData::Rebuild()
 {
 
   wxString inpln, flags, filename;
-  wxUint32 id1, id2, nid, lnNum, scrapWallsNpt, currentXpt = 0,
+  wxUint32 id1, id2, nid, scrapWallsNpt, currentXpt = 0,
 		surfaceNpt;
-  wxInt32 xMode;
   double fpos[3], norm[3];
 
   lxLRUD lrud;
@@ -266,7 +265,6 @@ void lxData::Rebuild()
   lxDataStation st;
   lxDataShot sh;
   lxDataSurvey sv;
-  bool err;
 
   this->Clear();
 
@@ -279,9 +277,6 @@ void lxData::Rebuild()
   //vtkVoidArray * cldata_array = vtkVoidArray::New();
   vtkIntArray * cldata_array = vtkIntArray::New();
   cldata_array->SetName("Temp");
-  err = false;
-  lnNum = 0;
-  xMode = -1;
 	surfaceNpt = 0;
   lxVec tmpVec;
   

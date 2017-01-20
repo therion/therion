@@ -446,6 +446,6 @@ void lxImageRGBFree(lxImageRGB & img)
 }
 
 
-char * lxImgIOError = "unknown";
+const char * lxImgIOError = "unknown";
 
 
