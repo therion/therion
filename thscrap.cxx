@@ -65,8 +65,8 @@ thscrap::thscrap()
   this->G = 1.0;
   this->B = 1.0;
   
-	this->z = 0.0;
-	this->a = 0.0;
+  this->z = thnan;
+  this->a = thnan;
 
   this->flip = TT_SCRAP_FLIP_NONE;
   
