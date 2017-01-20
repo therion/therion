@@ -188,6 +188,7 @@ zh_CN: 气流
 
 therion: point flag:arch
 bg: арка
+cz: skalní oblouk
 en: arch
 sk: skalný oblúk
 
@@ -328,6 +329,7 @@ zh_CN: 洞底边界
 
 therion: line wall:overlying
 bg: по-високо разположена стена
+cz: stěna vyšší úrovně
 de: überlagerter Wandverlauf
 en: overlying wall
 it: parete:sovrastante
@@ -372,6 +374,7 @@ zh_CN: 推测洞道边界
 
 therion: line wall:pit
 bg: отвес
+cz: vstupní propast
 de: Eingangsschacht
 en: entrance pit
 it: parete:pozzo
@@ -484,6 +487,7 @@ zh_CN: 冰边界
 
 therion: line wall:flowstone
 bg: натек
+cz: stěna tvořená sintrem
 de: Wand aus Sinter
 en: flowstone wall
 it: colata
@@ -494,6 +498,7 @@ zh_CN: 流石边界
 
 therion: line wall:moonmilk
 bg: пещерно мляко
+cz: stěna tvořená měkkým sintrem
 de: Wand aus Bergmilch
 en: moonmilk wall
 it: moonmilk
@@ -819,6 +824,7 @@ sq: gurre rrjedhes-fund
 zh_CN: 崩塌堵塞
 
 therion: point clay-choke
+cz: konec uzavřený jílem
 de: Fortsetzung verlehmt
 en: clay choke
 it: chiude su riempimento
@@ -1850,6 +1856,7 @@ zh_CN: 石钟乳
 
 therion: point stalactites
 bg: сталактити
+cz: stalaktity
 en: stalactites
 
 therion: point stalagmite
@@ -1871,6 +1878,7 @@ zh_CN: 石笋
 
 therion: point stalagmites
 bg: сталагмити
+cz: stalagmity
 en: stalagmites
 
 therion: point pillar
@@ -1892,10 +1900,12 @@ zh_CN: 石柱
 
 therion: point pillars
 bg: сталактони
+cz: stanagnáty
 en: pillars
 
 therion: point ice-stalactite
 bg: леден сталактит
+cz: ledový stalaktit
 de: Eisstalaktit
 en: ice stalactite
 it: stalattite di ghiaccio
@@ -1906,6 +1916,7 @@ zh_CN: 冰乳
 
 therion: point ice-stalagmite
 bg: леден сталагмит
+cz: ledový stalagmit
 de: Eisstalagmit
 en: ice stalagmite
 it: stalagmite di ghiaccio
@@ -1916,6 +1927,7 @@ zh_CN: 冰笋
 
 therion: point ice-pillar
 bg: леден сталактон
+cz: ledový stalagnát
 de: Eissäule
 en: ice pillar
 it: colonna di ghiaccio
@@ -2356,6 +2368,7 @@ zh_CN: 绳子
 
 therion: line rope
 bg: въже
+cz: lano
 en: rope
 
 therion: point rope-ladder
@@ -2376,6 +2389,7 @@ sq: shkalle litari
 zh_CN: 绳梯
 
 therion: line rope-ladder
+cz: lanový žebřík
 
 therion: point fixed-ladder
 bg: стационарна стълба
@@ -2396,6 +2410,7 @@ zh_CN: 固定梯子
 
 therion: line fixed-ladder
 bg: стационарна стълба
+cz: pevný žebřík
 en: fixed ladder
 
 therion: point steps
@@ -2417,6 +2432,7 @@ zh_CN: 梯坎
 
 therion: line steps
 bg: стъпала
+cz: schody
 en: steps
 
 therion: point via-ferrata
@@ -2463,10 +2479,12 @@ zh_CN: 桥
 
 therion: point handrail
 bg: перила
+cz: zábradlí
 en: handrail
 
 therion: line handrail
 bg: перила
+cz: zábradlí
 en: handrail
 
 therion: point camp
