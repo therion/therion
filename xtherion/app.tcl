@@ -258,12 +258,16 @@ proc xth_app_finish {} {
   bind $xth(gui,main) <$xth(kb_control)-Key-l> xth_app_control_l 
   bind $xth(gui,main) <$xth(kb_control)-Key-d> xth_app_control_d
   bind $xth(gui,main) <$xth(kb_control)-Key-a> xth_app_control_a
+  bind $xth(gui,main) <$xth(kb_control)-Key-D> xth_app_control_shift_d
   bind $xth(gui,main) <Prior> xth_app_pgup
   bind $xth(gui,main) <Next> xth_app_pgdn
   bind $xth(gui,main) <Shift-Prior> xth_app_shift_pgup
   bind $xth(gui,main) <Shift-Next> xth_app_shift_pgdn
   bind $xth(gui,main) <Key-Escape> xth_app_escape 
   bind $xth(gui,main) <F9> xth_app_make
+  bind $xth(gui,main) <$xth(kb_control)-Up> xth_app_control_up
+  bind $xth(gui,main) <$xth(kb_control)-Down> xth_app_control_down
+  
   foreach aname $xth(app,list) {
     $xth($aname,menu) add cascade -label [mc "Window"] -menu $m -underline 0 \
       -font $xth(gui,lfont)
@@ -465,6 +469,12 @@ proc xth_app_control_d {} {
   }
 }  
 
+proc xth_app_control_shift_d {} {
+  global xth
+  switch $xth(app,active) {
+    me  {xth_me_cmds_delete_linept {} {}}
+  }
+}  
 
 proc xth_app_control_l {} {
   global xth
@@ -483,6 +493,26 @@ proc xth_app_escape {} {
   global xth
   switch $xth(app,active) {
     me  {xth_me_cmds_set_mode 0}
+  }
+}
+
+proc xth_app_control_up {} {
+  global xth
+  switch $xth(app,active) {
+    me {  
+			if {$xth(me,zoom)*2 > 800} return;
+      xth_me_area_zoom_to [ expr {$xth(me,zoom) * 2} ]
+    }  
+  }
+}
+
+proc xth_app_control_down {} {
+  global xth
+  switch $xth(app,active) {
+    me {  
+			if {$xth(me,zoom)*2 < 12} return;
+			xth_me_area_zoom_to [ expr {$xth(me,zoom) / 2} ]
+    }  
   }
 }
 
