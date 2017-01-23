@@ -1,6 +1,6 @@
 /* img.h
  * Header file for routines to read and write Survex ".3d" image files
- * Copyright (C) Olly Betts 1993,1994,1997,2001,2002,2003,2004,2005,2006,2010,2011,2012,2013,2014
+ * Copyright (C) Olly Betts 1993,1994,1997,2001,2002,2003,2004,2005,2006,2010,2011,2012,2013,2014,2016
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ typedef struct {
 } img_point;
 
 typedef struct {
-   /* members you can access when reading (don't touch when writing) */
+   /* Members you can access when reading (don't touch when writing): */
    char *label;
    int flags;
    char *title;
@@ -120,23 +120,31 @@ typedef struct {
     */
    time_t datestamp_numeric;
    char separator; /* character used to separate survey levels ('.' usually) */
+
+   /* Members that can be set when writing: */
 #if IMG_API_VERSION == 0
    time_t date1, date2;
 #else /* IMG_API_VERSION == 1 */
    int days1, days2;
 #endif
    double l, r, u, d;
+
    /* Error information - valid when img_ERROR_INFO is returned: */
    int n_legs;
    double length;
    double E, H, V;
-   /* The filename actually opened (e.g. may have ".3d" added). */
+
+   /* The filename actually opened (e.g. may have ".3d" added): */
    char * filename_opened;
+
+   /* Non-zero if reading an extended elevation: */
    int is_extended_elevation;
+
+   /* Members that can be set when writing: */
    /* The style of the data - one of the img_STYLE_* constants above */
    int style;
 
-   /* all other members are for internal use only */
+   /* All other members are for internal use only: */
    FILE *fh;          /* file handle of image file */
    char *label_buf;
    size_t buf_len;
