@@ -41,7 +41,7 @@
 #include <wx/string.h>
 #include <vector>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 #include "lxMath.h"

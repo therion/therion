@@ -14,7 +14,7 @@
 #endif
 
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 #ifdef __WXGTK__

@@ -18,7 +18,7 @@
 #ifndef LXDEPCHECK
 #include <wx/wx.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 void lxShowAboutDialog(wxWindow * parent);
 

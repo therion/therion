@@ -16,7 +16,7 @@
 #endif
 
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 /******************** JPEG COMPRESSION SAMPLE INTERFACE *******************/

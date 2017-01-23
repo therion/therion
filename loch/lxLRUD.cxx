@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <math.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 static const double lxVecPrec = 0.01;
 

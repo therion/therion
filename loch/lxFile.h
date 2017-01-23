@@ -7,7 +7,7 @@
 #include <string>
 #include <cstdio>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 typedef char * lxFileBuff;

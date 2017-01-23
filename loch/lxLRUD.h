@@ -4,7 +4,7 @@
 // Standard libraries
 #ifndef LXDEPCHECK
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #include "lxMath.h"
 

@@ -3,7 +3,7 @@
 #include <wx/choice.h>
 #include <math.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 #include "lxSView.h"

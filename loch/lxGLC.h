@@ -36,7 +36,7 @@
 #include <wx/image.h>
 #include "lxOGLFT.h"
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 enum {
   LXGLCML_NONE,

@@ -37,7 +37,7 @@
 #include <wx/docview.h>
 #include <wx/xml/xml.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 #include "lxGLC.h"

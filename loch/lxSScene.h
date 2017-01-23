@@ -18,7 +18,7 @@
 #ifndef LXDEPCHECK
 #include <wx/minifram.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 #include "lxWX.h"

@@ -51,7 +51,7 @@
 
 #include <map>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #include "lxData.h"
 #include "lxLRUD.h"
