@@ -232,6 +232,8 @@ clean:
 	perl makefile.pl rm -q cave.3d cave.lox cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
 	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
 	perl makefile.pl rmdir -q doc thTMPDIR samples.doc symbols cave.shp tests/.doc
+	perl makefile.pl rmdir -q doc samples.doc symbols cave.shp tests/.doc
+	perl makefile.pl rmdir -q thTMPDIR samples/*/thTMPDIR samples/*/*/thTMPDIR
 
 thmpost.h: mpost/*.mp
 	make -C ./mpost
