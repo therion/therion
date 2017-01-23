@@ -6,12 +6,20 @@ compiler:
 os:
   - linux
 before_install:
+  - test "$TRAVIS_OS_NAME" == "linux" && echo "deb http://pkg.mxe.cc/repos/apt/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mxeapt.list
+  - test "$TRAVIS_OS_NAME" == "linux" && sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D43A795B73B16ABE9643FE1AFD8FFF16DB45C6AB
   - test "$TRAVIS_OS_NAME" == "linux" && sudo apt-get -qq update
   - test "$TRAVIS_OS_NAME" == "linux" && sudo apt-get install -y texlive-binaries texlive-metapost texlive-lang-czechslovak texlive-lang-cyrillic libwxgtk3.0-dev libvtk6-dev survex imagemagick
+  - test "$TRAVIS_OS_NAME" == "linux" && sudo apt-get install -y mxe-i686-w64-mingw32.static-binutils mxe-i686-w64-mingw32.static-bzip2 mxe-i686-w64-mingw32.static-expat mxe-i686-w64-mingw32.static-freetype-bootstrap mxe-i686-w64-mingw32.static-gcc mxe-i686-w64-mingw32.static-gettext mxe-i686-w64-mingw32.static-glib mxe-i686-w64-mingw32.static-harfbuzz mxe-i686-w64-mingw32.static-jpeg mxe-i686-w64-mingw32.static-libiconv mxe-i686-w64-mingw32.static-libpng mxe-i686-w64-mingw32.static-tiff mxe-i686-w64-mingw32.static-vtk mxe-i686-w64-mingw32.static-wxwidgets mxe-i686-w64-mingw32.static-xz mxe-i686-w64-mingw32.static-zlib
+before_script:
+  - test "$TRAVIS_OS_NAME" == "linux" && export PATH=/usr/lib/mxe/usr/bin:$PATH
 script:
   - test "$TRAVIS_OS_NAME" == "linux" && make config-debian
   - test "$TRAVIS_OS_NAME" == "linux" && make
   - test "$TRAVIS_OS_NAME" == "linux" && make samples
+  - test "$TRAVIS_OS_NAME" == "linux" && make clean
+  - test "$TRAVIS_OS_NAME" == "linux" && make config-win32cross
+  - test "$TRAVIS_OS_NAME" == "linux" && make
 branches:
   only:
     - master
