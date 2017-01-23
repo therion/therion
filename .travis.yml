@@ -1,0 +1,17 @@
+dist: trusty
+sudo: required
+language: cpp
+compiler:
+  - gcc
+os:
+  - linux
+before_install:
+  - test "$TRAVIS_OS_NAME" == "linux" && sudo apt-get -qq update
+  - test "$TRAVIS_OS_NAME" == "linux" && sudo apt-get install -y texlive-binaries texlive-metapost texlive-lang-czechslovak texlive-lang-cyrillic libwxgtk3.0-dev libvtk6-dev survex imagemagick
+script:
+  - test "$TRAVIS_OS_NAME" == "linux" && make config-debian
+  - test "$TRAVIS_OS_NAME" == "linux" && make
+  - test "$TRAVIS_OS_NAME" == "linux" && make samples
+branches:
+  only:
+    - master
