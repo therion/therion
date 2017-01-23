@@ -466,12 +466,13 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
 
       // Export equate links between stations 
       int last_equate = 0;
-      char first_name[MAX_PATH];
+      long MAX_LEN = 500;
+      char first_name[MAX_LEN];
       if (!dp->equate_list.empty()) {
         fprintf(out, "# Equated stations\n");
         for (eqi = dp->equate_list.begin(); eqi != dp->equate_list.end(); eqi++) {
           if (last_equate != eqi->eqid) {
-            snprintf(first_name, MAX_PATH, "%s@%s", eqi->station.name, eqi->station.survey);
+            snprintf(first_name, MAX_LEN, "%s@%s", eqi->station.name, eqi->station.survey);
             last_equate = eqi->eqid;
           } else {
             if (last_equate != 0)
