@@ -213,8 +213,12 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   img * pimg;
   img_output_version = 8;
   thbuffer fnmb;
-  char title[_MAX_FNAME];
-  _splitpath(this->outpt, NULL, NULL, title, NULL);
+  #ifdef THWIN32
+    char title[_MAX_FNAME];
+    _splitpath(this->outpt, NULL, NULL, title, NULL);
+  #else
+    const char * title = basename( this->outpt );
+  #endif
   fnmb.strcpy(title);  // VG 290316: Set the filename as a cave name instead of "cave". The top-level survey name will be even better
   if ((thcfg.outcs >= 0) || (thcfg.outcs < TTCS_UNKNOWN))  // Export the coordinate system data if one is set
     pimg = img_open_write_cs(fnm, fnmb.get_buffer(), thcs_get_data(thcfg.outcs)->params, 1);
