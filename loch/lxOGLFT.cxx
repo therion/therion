@@ -1491,7 +1491,7 @@ namespace OGLFT {
     GLubyte* inverse = new GLubyte[ bitmap.rows * width ];
     GLubyte* inverse_ptr = inverse;
 
-    for ( int r = 0; r < bitmap.rows; r++ ) {
+    for ( unsigned r = 0; r < bitmap.rows; r++ ) {
 
       GLubyte* bitmap_ptr = &bitmap.buffer[bitmap.pitch * ( bitmap.rows - r - 1 )];
 
@@ -1614,7 +1614,7 @@ namespace OGLFT {
     GLubyte* inverse = new GLubyte[ bitmap.rows * bitmap.pitch ];
     GLubyte* inverse_ptr = inverse;
 
-    for ( int r = 0; r < bitmap.rows; r++ ) {
+    for ( unsigned r = 0; r < bitmap.rows; r++ ) {
 
       GLubyte* bitmap_ptr = &bitmap.buffer[bitmap.pitch * ( bitmap.rows - r - 1 )];
 
@@ -1753,7 +1753,7 @@ namespace OGLFT {
     GLubyte* inverse = new GLubyte[ 2 * bitmap.rows * bitmap.pitch ];
     GLubyte* inverse_ptr = inverse;
 
-    for ( int r = 0; r < bitmap.rows; r++ ) {
+    for ( unsigned r = 0; r < bitmap.rows; r++ ) {
 
       GLubyte* bitmap_ptr = &bitmap.buffer[bitmap.pitch * ( bitmap.rows - r - 1 )];
 
@@ -3487,7 +3487,7 @@ namespace OGLFT {
 
     memset( inverse, 0, sizeof( GLubyte )*( *width + 7 ) / 8 * *height );
 
-    for ( int r = 0; r < bitmap.rows; r++ ) {
+    for ( unsigned r = 0; r < bitmap.rows; r++ ) {
 
       GLubyte* bitmap_ptr = &bitmap.buffer[bitmap.pitch * ( bitmap.rows - r - 1 )];
 
@@ -3592,11 +3592,11 @@ namespace OGLFT {
     GLubyte* inverse = new GLubyte[ *width * *height ];
     GLubyte* inverse_ptr = inverse;
 
-    for ( int r = 0; r < bitmap.rows; r++ ) {
+    for ( unsigned r = 0; r < bitmap.rows; r++ ) {
 
       GLubyte* bitmap_ptr = &bitmap.buffer[bitmap.pitch * ( bitmap.rows - r - 1 )];
 
-      for ( int p = 0; p < bitmap.width; p++ ) {
+      for ( unsigned p = 0; p < bitmap.width; p++ ) {
 	*inverse_ptr++ = *bitmap_ptr++;
       }
 
@@ -3696,11 +3696,11 @@ namespace OGLFT {
     GLubyte* inverse = new GLubyte[ 2 * *width * *height ];
     GLubyte* inverse_ptr = inverse;
 
-    for ( int r = 0; r < bitmap.rows; r++ ) {
+    for ( unsigned r = 0; r < bitmap.rows; r++ ) {
 
       GLubyte* bitmap_ptr = &bitmap.buffer[bitmap.pitch * ( bitmap.rows - r - 1 )];
 
-      for ( int p = 0; p < bitmap.width; p++ ) {
+      for ( unsigned p = 0; p < bitmap.width; p++ ) {
 	*inverse_ptr++ = 0xff;
 	*inverse_ptr++ = *bitmap_ptr++;
       }
