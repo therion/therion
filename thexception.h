@@ -42,7 +42,7 @@
 #ifdef THDEBUG
 #define ththrow(P) {\
   thexc.strcpy("");\
-  thexc.appspf("("__FILE__":%d): ", __LINE__);\
+  thexc.appspf("(" __FILE__ ":%d): ", __LINE__);\
   thexc.appspf P;\
   throw(0);\
   }
@@ -65,7 +65,7 @@
     thexc.strcpy("unknown exception");\
   thexc.insspf(" -- ");\
   thexc.insspf P;\
-  thexc.insspf("("__FILE__":%d): ", __LINE__);\
+  thexc.insspf("(" __FILE__ ":%d): ", __LINE__);\
   throw(0);\
   }
 #else
@@ -88,7 +88,7 @@
   if (*(thexc.get_buffer()) == 0)\
     thexc.strcpy("unknown exception");\
   thexc.appspf(" -- ");\
-  thexc.appspf("("__FILE__":%d): ", __LINE__);\
+  thexc.appspf("(" __FILE__ ":%d): ", __LINE__);\
   thexc.appspf P;\
   throw(0);\
   }

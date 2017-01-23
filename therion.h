@@ -38,14 +38,14 @@
 #include <stdarg.h>
 
 #ifdef THDEBUG
-#define thprint_error_src() thprintf2err("%s%s ("__FILE__":%d): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__)
+#define thprint_error_src() thprintf2err("%s%s (" __FILE__ ":%d): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__)
 #else
 #define thprint_error_src() thprintf2err("%s%s: error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd)
 #endif
 
 
 #ifdef THDEBUG
-#define thprint_warning_src() thprintf2err("%s%s ("__FILE__":%d): warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__)
+#define thprint_warning_src() thprintf2err("%s%s (" __FILE__ ":%d): warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__)
 #else
 #define thprint_warning_src() thprintf2err("%s%s: warning -- ", (thtext_inline ? "\n" : ""), thexecute_cmd)
 #endif
@@ -91,7 +91,7 @@
     thexc.strcpy("unknown exception");\
   thexc.insspf(" -- ");\
   thexc.insspf P;\
-  thexc.insspf("("__FILE__":%d): ", __LINE__);\
+  thexc.insspf("(" __FILE__ ":%d): ", __LINE__);\
   thwarning((thexc.get_desc()));\
   thexc.strcpy("");\
   }
@@ -118,7 +118,7 @@
   if (*(thexc.get_buffer()) == 0)\
     thexc.strcpy("unknown exception");\
   thexc.appspf(" -- ");\
-  thexc.appspf("("__FILE__":%d): ", __LINE__);\
+  thexc.appspf("(" __FILE__ ":%d): ", __LINE__);\
   thexc.appspf P;\
   thwarning((thexc.get_desc()));\
   thexc.strcpy("");\
