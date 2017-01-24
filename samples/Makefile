@@ -20,4 +20,3 @@ endif
     
 clean:
 	tclsh samples.tcl . clean
-    

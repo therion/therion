@@ -3833,4 +3833,3 @@ proc xth_me_cmds_line_poly2bezier {} {
   xth_me_cmds_set_mode 0
   return
 }
-  
