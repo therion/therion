@@ -1629,10 +1629,6 @@ void thdata::insert_data_leg(int nargs, char ** args)
   thdataleg dumm;
   thstdims * cdims = NULL;
   
-#ifdef THDEBUG
-  thdataleg * cdleg;
-#endif
-
   int carg;
   
   if ((this->d_current == 0) && (this->d_type != TT_DATATYPE_DIMS)) {
@@ -1641,10 +1637,6 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->pd_leg_def = this->cd_leg_def;
     this->cd_leg = this->leg_list.insert(this->leg_list.end(),dumm);
 
-#ifdef THDEBUG
-    cdleg = &(*this->cd_leg);
-#endif
-    
     // set all the data
     this->cd_leg->srcf = this->db->csrc;
     this->cd_leg->is_valid = !(this->di_interleaved);

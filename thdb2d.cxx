@@ -1223,6 +1223,8 @@ void thdb2d::process_projection(thdb2dprj * prj)
   this->pp_calc_distortion(prj);
   
 #ifdef THDEBUG
+  // Suppress "unused variable" warning.
+  (void)old_thtext_inline;
 #else
   thprintf("done\n");
   thtext_inline = old_thtext_inline;
