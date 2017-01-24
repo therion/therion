@@ -32,7 +32,6 @@
 
 #include "thexport.h"
 #include "thsymbolset.h"
-#include "thlayout.h"
 #include "thlang.h"
 
 /**
@@ -45,6 +44,8 @@ enum {
   TT_EXPMAP_OPT_PROJECTION,  ///< Output projection.
   TT_EXPMAP_OPT_LAYOUT,  ///< Layout.
   TT_EXPMAP_OPT_ENCODING,  ///< Output encoding.
+  TT_EXPMAP_OPT_ENABLE,  ///< Output option.
+  TT_EXPMAP_OPT_DISABLE,  ///< Output option.
 };
 
 
@@ -53,6 +54,8 @@ enum {
  */
  
 static const thstok thtt_expmap_opt[] = {
+  {"-disable", TT_EXPMAP_OPT_DISABLE},
+  {"-enable", TT_EXPMAP_OPT_ENABLE},
   {"-enc", TT_EXPMAP_OPT_ENCODING},
   {"-encoding", TT_EXPMAP_OPT_ENCODING},
   {"-fmt", TT_EXPMAP_OPT_FORMAT},
@@ -63,6 +66,25 @@ static const thstok thtt_expmap_opt[] = {
   {NULL, TT_EXPMAP_OPT_UNKNOWN}
 };
 
+/**
+ * Model export item options.
+ */
+
+enum {
+  TT_EXPMAP_ITEM_UNKNOWN = 0, 
+  TT_EXPMAP_ITEM_ENTRANCES = 32,
+  TT_EXPMAP_ITEM_ALL = 255,  
+};
+
+/**
+ * Options parsing table.
+ */
+ 
+static const thstok thtt_expmap_items[] = {
+  {"all", TT_EXPMAP_ITEM_ALL},
+  {"entrances", TT_EXPMAP_ITEM_ENTRANCES},
+  {NULL, TT_EXPMAP_ITEM_UNKNOWN}
+};
 
 
 /**
@@ -176,11 +198,12 @@ class thexpmap : public thexport {
   const char * projstr,  ///< Projection string.
     * layoutstr;  ///< Layout string.
   class thdb2dprj * projptr;  ///< Projection pointer.
-  class thlayout * layout;  ///< Layout pointer.
   thsymbolset symset;
   
   thbuffer layoutopts;  ///< Layout options buffer.
 
+  unsigned items;  ///< Item types to be exported (As of 29/11/2016 affects only KML entrances)
+  
   void export_xvi(class thdb2dprj * prj);
   void export_th2(class thdb2dprj * prj);
   

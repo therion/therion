@@ -2827,3 +2827,14 @@ sk: [Povrchová mapa]
 sq: harta e siperfaqes
 zh_CN: 外观图
 
+therion: title model
+bg: Модел
+en: Model
+
+therion: title map
+bg: Карта
+en: Map
+
+therion: surface legs
+bg: Повърхностна антена
+en: Surface legs
