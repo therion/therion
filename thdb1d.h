@@ -198,11 +198,11 @@ class thdb1ds {
    */
   void set_temporary(const char * name);
 
-	/**
-	 * Export station attributes to metapost.
-	 */
+  /**
+   * Export station attributes to metapost.
+   */
 
-	void export_mp_flags(FILE * out);
+  void export_mp_flags(FILE * out);
   
 };
 

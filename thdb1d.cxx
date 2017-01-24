@@ -73,7 +73,7 @@ thdb1d::thdb1d()
 
 void thdb1ds::export_mp_flags(FILE * out)
 {
-	fprintf(out, "ATTR__stationflag_splay := %s;\n", (this->is_temporary() ? "true" : "false"));
+  fprintf(out, "ATTR__stationflag_splay := %s;\n", (this->is_temporary() ? "true" : "false"));
 }
 
 void thdb1ds::set_temporary(const char * name)
@@ -123,7 +123,7 @@ void thdb1d::scan_data()
   int lastleggridmccs = TTCS_LOCAL;
   thdata * dp;
   unsigned used_declination = 0;
-	unsigned long prevlsid;
+  unsigned long prevlsid;
   double dcc, sindecl, cosdecl, tmpx, tmpy;
   thdb1ds * tsp1, * tsp2;  // Temporary stations.
   this->min_year = thnan;
@@ -428,7 +428,7 @@ void thdb1d::scan_data()
     obi++;
   }
 
-	// process equates separately
+  // process equates separately
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
@@ -437,10 +437,10 @@ void thdb1d::scan_data()
       eqi = dp->equate_list.begin();
       try {
         while(eqi != dp->equate_list.end()) {
-					prevlsid = this->lsid;
+          prevlsid = this->lsid;
           eqi->station.id = this->insert_station(eqi->station, eqi->psurvey, dp, 1);
-					if ((prevlsid < eqi->station.id) && (eqi->station.survey != NULL))
-						thwarning(("%s [%d] -- equate used to define new station (%s@%s)", eqi->srcf.name, eqi->srcf.line, eqi->station.name, eqi->station.survey));
+          if ((prevlsid < eqi->station.id) && (eqi->station.survey != NULL))
+            thwarning(("%s [%d] -- equate used to define new station (%s@%s)", eqi->srcf.name, eqi->srcf.line, eqi->station.name, eqi->station.survey));
           eqi++;
         }
       }
