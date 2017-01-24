@@ -57,7 +57,7 @@ class thdb2dlp {
   public:
   
   thdb2dlp * nextlp, ///< Next line point.
-    * prevlp; ///< Previos line point.  
+    * prevlp; ///< Previous line point.
     
   thdb2dpt * point, ///< The point it self.
     * cp1, ///< Control point 1.

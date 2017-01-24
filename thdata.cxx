@@ -1037,7 +1037,7 @@ void thdata::set_data_sd(int nargs, char ** args)
 
 void thdata::set_data_data(int nargs, char ** args)
 {
-  // OK, finish the data previosly specified
+  // OK, finish the data previously specified
   this->complete_interleaved_data();
   // first let's detect data type
   this->reset_data();
@@ -2416,7 +2416,7 @@ void thdata::set_data_station(int nargs, char ** args, int argenc)
               ththrow(("too few flags - missing attribute name"));
             ai++;
             if (strlen(args[ai]) == 0)
-              ththrow(("epmty attribute name not allowed"))
+              ththrow(("empty attribute name not allowed"))
             if (args[ai][0] == '_')
               ththrow(("attribute name starting with '_' not allowed -- %s", args[ai]))
             if (!th_is_attr_name(args[ai]))

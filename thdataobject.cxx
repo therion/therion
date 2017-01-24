@@ -183,7 +183,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
           thdata * cobj;
           cobj = (thdata *) this;
           if (cobj->cgroup->dl_declination_north_grid && (id == TTCS_LOCAL))
-            ththrow(("grid-angle has beed defined -- local CS not allowed"))
+            ththrow(("grid-angle has been defined -- local CS not allowed"))
           cobj->cgroup->cs = id;
           cobj->cgroup->cs_source = this->db->csrc;
         }
@@ -415,7 +415,7 @@ void thdataobject::start_insert()
 
 void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double & dst_y)
 {
-  // 1. Check kompatibility with output CS.
+  // 1. Check compatibility with output CS.
   if (thcfg.outcs_def.is_valid()) {
     if (((this->cs == TTCS_LOCAL) && (thcfg.outcs != TTCS_LOCAL)) ||
       ((this->cs != TTCS_LOCAL) && (thcfg.outcs == TTCS_LOCAL)))
@@ -508,7 +508,7 @@ void thdataobject::parse_attribute(char * name, char * value) {
 
   // check name
   if ((name == NULL) || (strlen(name) == 0))
-    ththrow(("epmty attribute name not allowed"))
+    ththrow(("empty attribute name not allowed"))
   if (name[0] == '_')
     ththrow(("attribute name starting with '_' not allowed"))
   if (!th_is_attr_name(name))

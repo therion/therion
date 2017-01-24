@@ -148,7 +148,7 @@ class thjoin : public thdataobject {
    * Set command option.
    *
    * @param cod Command option description.
-   * @param args Option arguments arry.
+   * @param args Option arguments array.
    * @param argenc Arguments encoding.
    */
    
