@@ -30,7 +30,7 @@
 #ifndef LXDEPCHECK
 #include <math.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #include "lxMath.h"
 

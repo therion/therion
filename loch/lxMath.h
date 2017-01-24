@@ -36,7 +36,7 @@
 #include <vector>
 #include <map>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #define lxPI 3.1415926535898
 

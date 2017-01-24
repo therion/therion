@@ -33,7 +33,7 @@
 #include <stdio.h>
 #include <locale.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #include "lxSetup.h"
 #include "lxData.h"

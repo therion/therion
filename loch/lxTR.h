@@ -88,7 +88,7 @@
 #include <GL/glu.h>
 #endif
 #endif  
-/* LXDEPCHECK - standart libraries */
+/* LXDEPCHECK - standard libraries */
 
 
 #ifdef __cplusplus

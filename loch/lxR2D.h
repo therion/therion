@@ -6,7 +6,7 @@ extern "C" {
 #ifndef LXDEPCHECK
 #include <windows.h>
 #endif  
-/*LXDEPCHECK - standart libraries*/
+/*LXDEPCHECK - standard libraries*/
 
 typedef struct _R2DCTX R2DContext;
 

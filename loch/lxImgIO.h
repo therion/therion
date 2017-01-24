@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #ifndef UCHAR
 #define UCHAR

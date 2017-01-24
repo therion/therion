@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #endif  
-/*LXDEPCHECK - standart libraries*/
+/*LXDEPCHECK - standard libraries*/
 
 #include "lxR2P.h"
 

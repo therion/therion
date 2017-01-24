@@ -17,7 +17,7 @@
 #ifndef LXDEPCHECK
 #include <wx/xml/xml.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 #include "lxData.h"

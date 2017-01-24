@@ -27,7 +27,7 @@
 #include <vtkObject.h>
 
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #include "lxGUI.h"
 #include "lxData.h"

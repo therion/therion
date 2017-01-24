@@ -4,7 +4,7 @@
 #include <wx/xml/xml.h>
 #include <wx/filedlg.h>
 #endif
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #include "lxPres.h"
 #include "lxGUI.h"

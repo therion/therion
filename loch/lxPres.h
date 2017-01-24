@@ -19,7 +19,7 @@
 #include <wx/minifram.h>
 #include <wx/treectrl.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 #include "lxWX.h"

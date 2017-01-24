@@ -2,7 +2,7 @@
 #ifndef LXDEPCHECK
 #include <wx/statline.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #include "lxSScene.h"
 #include "lxGUI.h"

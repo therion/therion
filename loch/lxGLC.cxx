@@ -28,7 +28,7 @@
 #include <GL/glu.h>
 #endif
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 #include "lxGLC.h"
 #include "lxGUI.h"

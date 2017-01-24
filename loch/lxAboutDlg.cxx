@@ -6,7 +6,7 @@
 #ifndef LXDEPCHECK
 #include <wx/panel.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 class lxAboutDlg : public wxDialog {

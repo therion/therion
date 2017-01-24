@@ -6,7 +6,7 @@
 #include <wx/dirdlg.h>
 #include <wx/valgen.h>
 #endif  
-//LXDEPCHECK - standart libraries
+//LXDEPCHECK - standard libraries
 
 
 enum {
