@@ -1,0 +1,2 @@
+all:
+	perl generate.pl

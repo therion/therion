@@ -1,3 +1,15 @@
+thmpost.cxx
+thtex.h
+thlangdata.h
+thchencdata.cxx
+thcsdata.h
+thmpost.h
+thcsdata.cxx
+thtex.cxx
+thsymbolsetlist.h
+thlangdata.cxx
+thchencdata.h
+SYMBOLS.txt
 .*
 !.gitignore
 *~
