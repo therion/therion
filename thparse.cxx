@@ -370,8 +370,8 @@ void thsplit_args(thmbuffer * dest, const char * src)
     case 3:
       if (idx > (idx0 + 1))
         postp_ptr = dest->appendn((char *) s1 + 1, idx - idx0 - 1);
-        if (postp_quotes)
-          thsplit_args_postp_quotes(postp_ptr);
+      if (postp_quotes)
+        thsplit_args_postp_quotes(postp_ptr);
       else
         dest->appendn("",0);
       break;
