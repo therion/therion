@@ -141,10 +141,12 @@ void lxPresentDlg::UpdateList() {
 
 
 void lxPresentDlg::UpdateControls() {
-  wxWindow::FindWindowById(LXMENU_PRESUPDATE, this)->Enable(this->m_posLBox->GetCount() > 0);
-  wxWindow::FindWindowById(LXMENU_PRESDELETE, this)->Enable(this->m_posLBox->GetCount() > 0);
-  wxWindow::FindWindowById(LXMENU_PRESMOVEDOWN, this)->Enable((this->m_posLBox->GetCount() > 0) && (this->m_posLBox->GetSelection() != wxNOT_FOUND) && ((this->m_posLBox->GetSelection() + 1) < this->m_posLBox->GetCount()));
-  wxWindow::FindWindowById(LXMENU_PRESMOVEUP, this)->Enable((this->m_posLBox->GetCount() > 0) && (this->m_posLBox->GetSelection() != wxNOT_FOUND) && (this->m_posLBox->GetSelection() > 0));
+  int sel = this->m_posLBox->GetSelection();
+  size_t count = this->m_posLBox->GetCount();
+  wxWindow::FindWindowById(LXMENU_PRESUPDATE, this)->Enable(count > 0);
+  wxWindow::FindWindowById(LXMENU_PRESDELETE, this)->Enable(count > 0);
+  wxWindow::FindWindowById(LXMENU_PRESMOVEDOWN, this)->Enable((count > 0) && (sel != wxNOT_FOUND) && (size_t(sel + 1) < count));
+  wxWindow::FindWindowById(LXMENU_PRESMOVEUP, this)->Enable((count > 0) && (sel != wxNOT_FOUND) && (sel > 0));
 }
 
 

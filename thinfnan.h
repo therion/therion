@@ -56,7 +56,8 @@
 
 #ifdef THLINUX
 #define thinf INFINITY
-#define thisinf isinf
+// Linux C isinf() returns -1/0/1, but C++11 isinf() returns bool.
+#define thisinf(number) (isinf(number) ? (number < 0 ? -1 : 1) : 0)
 #else
 #define thinf 1e100
 #define thisinf(number) (number >= thinf ? 1 : (number <= -thinf ? -1 : 0))

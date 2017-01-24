@@ -357,11 +357,11 @@ therion::warp::plaquette_algo::backward(
   }
   if ( imin == (size_t)(-1) ) 
     return false;
-    thvec2 z;
-    mPlaquettes[imin]->backward( w, z );
-    if ( z.is_nan( ) ) 
-      return false;
-    src = mX0 + z * mXUnit;
+  thvec2 z;
+  mPlaquettes[imin]->backward( w, z );
+  if ( z.is_nan( ) )
+    return false;
+  src = mX0 + z * mXUnit;
   return true;
 }
 
