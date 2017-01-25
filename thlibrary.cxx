@@ -26,15 +26,7 @@
  */
  
 #include "thlibrary.h"
-
-#ifdef THNOLIBRARY
-void thlibrary_init_grades() {
-}
-void thlibrary_init_layouts() {
-}
-#else
 #include "thlibrarydata.cxx"
-#endif
 
 void thlibrary_init()
 {

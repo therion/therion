@@ -153,8 +153,11 @@ $(OUTDIR)/extern/proj4/libproj.a: extern/proj4/*.c extern/proj4/*.h
 
 $(OUTDIR)/therion:	$(OBJECTS)
 	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
+ifneq ($(THPLATFORM),WIN32)
 	make library
+	make $(OUTDIR)/thlibrary.o
 	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
+endif
 
 
 $(OUTDIR)/therion.res: therion.rc
@@ -165,7 +168,6 @@ init:
 
 install: all
 	tclsh makeinstall.tcl $(THPLATFORM)
-
 
 minor-release:
 	perl makerelease.pl
@@ -187,8 +189,8 @@ depend:
 	perl makedepend2.pl
 
 library:
-	$(OUTDIR)/$(THXTHMKCMD)$(EXT) --print-library-src thlibrarydata.thcfg > thlibrarydata.log
-	$(OUTDIR)/$(THXTHMKCMD)$(EXT) --print-xtherion-src > xtherion/therion.tcl
+	$(THXTHMKCMD) --print-library-src thlibrarydata.thcfg > thlibrarydata.log
+	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
 	perl makelibrary.pl thlibrarydata.log > thlibrarydata.tmp
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
@@ -214,12 +216,17 @@ $(OUTDIR)/thbook/thbook.pdf: thbook/*.tex
 	make -C thbook
 
 clean:
+	perl makefile.pl rm -q thlibrarydata.cxx ./xtherion/therion.tcl
+	perl makefile.pl rmdir -q samples.doc
+	make -C ./samples clean
+	make cleanrest
+
+cleanrest:
 	make -C ./xtherion clean
 	make -C ./loch clean
-	make -C ./samples clean
 	make -C ./extern/proj4 clean
-	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thlangdata.cxx thchencdata.h thlibrarydata.cxx
-	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl ./xtherion/therion.tcl
+	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thlangdata.cxx thchencdata.h
+	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
 	perl makefile.pl rm -q extern/*.o extern/*~ extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
 	perl makefile.pl rm -q symbols.html therion.res
@@ -232,7 +239,7 @@ clean:
 	perl makefile.pl rm -q cave.3d cave.lox cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
 	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
 	perl makefile.pl rmdir -q doc thTMPDIR samples.doc symbols cave.shp tests/.doc
-	perl makefile.pl rmdir -q doc samples.doc symbols cave.shp tests/.doc
+	perl makefile.pl rmdir -q doc symbols cave.shp tests/.doc
 	perl makefile.pl rmdir -q thTMPDIR samples/*/thTMPDIR samples/*/*/thTMPDIR
 
 thmpost.h: mpost/*.mp
@@ -713,8 +720,25 @@ $(OUTDIR)/thlayoutln.o: thlayoutln.cxx thlayoutln.h thlayoutclr.h thlayout.h \
  thdb2dxm.h thscraplo.h thscrapen.h thscraplp.h thsymbolset.h \
  thsymbolsetlist.h thlocale.h
 $(OUTDIR)/thlegenddata.o: thlegenddata.cxx thlegenddata.h
-$(OUTDIR)/thlibrary.o: thlibrary.cxx thlibrary.h thlibrarydata.cxx
-$(OUTDIR)/thlibrarydata.o: thlibrarydata.cxx
+$(OUTDIR)/thlibrary.o: thlibrary.cxx thlibrary.h thlibrarydata.cxx thdatabase.h \
+ thdataobject.h thperson.h thparse.h thbuffer.h thmbuffer.h thdate.h \
+ thdataleg.h thobjectname.h therion.h thobjectsrc.h thinfnan.h thdb1d.h \
+ thobjectid.h thdb3d.h loch/lxMath.h thattr.h thchenc.h thchencdata.h \
+ thdb2d.h thdb2dprj.h thmapstat.h thlegenddata.h thdb2dpt.h thdb2dlp.h \
+ thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
+ thscraplo.h thlayoutln.h thlayoutclr.h thscrapen.h thscraplp.h \
+ thlayout.h thsymbolset.h thsymbolsetlist.h thlocale.h thlang.h \
+ thlangdata.h thgrade.h thdata.h thtfangle.h thtf.h thtflength.h \
+ thtfpwf.h
+$(OUTDIR)/thlibrarydata.o: thlibrarydata.cxx thdatabase.h thdataobject.h thperson.h \
+ thparse.h thbuffer.h thmbuffer.h thdate.h thdataleg.h thobjectname.h \
+ therion.h thobjectsrc.h thinfnan.h thdb1d.h thobjectid.h thdb3d.h \
+ loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h thdb2dprj.h \
+ thmapstat.h thlegenddata.h thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h \
+ thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h \
+ thlayoutclr.h thscrapen.h thscraplp.h thlayout.h thsymbolset.h \
+ thsymbolsetlist.h thlocale.h thlang.h thlangdata.h thgrade.h thdata.h \
+ thtfangle.h thtf.h thtflength.h thtfpwf.h
 $(OUTDIR)/thline.o: thline.cxx thline.h th2ddataobject.h thdataobject.h \
  thdatabase.h thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h \
  thdataleg.h thparse.h thobjectname.h therion.h thobjectsrc.h thdb3d.h \
