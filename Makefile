@@ -20,7 +20,7 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   extern/lxMath.o extern/lxFile.o thdb3d.o thsurface.o thimport.o thsvg.o thepsparse.o \
   thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
   extern/poly2tri/common/shapes.o extern/poly2tri/sweep/advancing_front.o extern/poly2tri/sweep/sweep.o extern/poly2tri/sweep/cdt.o extern/poly2tri/sweep/sweep_context.o \
-  therion.o extern/proj4/libproj.a 
+  therion.o extern/proj4/libproj.a
 
 CROSS =
 EXT =
@@ -55,7 +55,7 @@ THXTHMKCMD = ./therion
 # PLATFORM WIN32
 ##CXX = c++
 ##CC = gcc
-##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o 
+##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
@@ -70,7 +70,7 @@ THXTHMKCMD = ./therion
 ##CXX = $(CROSS)c++
 ##export CC = $(CROSS)gcc
 ##export AR = $(CROSS)ar
-##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o 
+##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
@@ -106,14 +106,14 @@ CXXBFLAGS = -O2
 LDBFLAGS = $(LDPFLAGS)
 
 # BUILD RELEASE
-##CCBFLAGS = 
-##CXXBFLAGS = 
+##CCBFLAGS =
+##CXXBFLAGS =
 ##LDBFLAGS = $(LDPFLAGS)
 
 # BUILD DEBUG
 ##CCBFLAGS = -ggdb
 ##CXXBFLAGS = -ggdb -DTHDEBUG
-##LDBFLAGS = 
+##LDBFLAGS =
 
 # BUILD ENDCONFIG
 
@@ -125,7 +125,7 @@ OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECT
 
 
 # linker settings
-LIBS = 
+LIBS =
 LDFLAGS = $(LDBFLAGS)
 
 
@@ -152,7 +152,7 @@ $(OUTDIR)/extern/proj4/libproj.a: extern/proj4/*.c extern/proj4/*.h
 	make -C ./extern/proj4
 
 $(OUTDIR)/therion:	$(OBJECTS)
-	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS) 
+	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
 
 
 $(OUTDIR)/therion.res: therion.rc
@@ -176,7 +176,7 @@ release: clean
 
 binary: all doc
 	perl makebinary.pl $(THPLATFORM)
-  
+
 depend:
 	perl makedepend.pl > Makefile.dep
 	perl maketest.pl Makefile.dep
@@ -209,11 +209,11 @@ samples: $(OUTDIR)/samples.doc/index.tex
 $(OUTDIR)/samples.doc/index.tex:
 	make -C samples
 	touch thbook/version.tex
-	make -C thbook    
+	make -C thbook
 
 $(OUTDIR)/thbook/thbook.pdf: thbook/*.tex
 	make -C thbook
-  
+
 clean:
 	make -C ./xtherion clean
 	make -C ./loch clean
@@ -244,7 +244,7 @@ thmpost.cxx: mpost/*.mp
 
 thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 	perl thsymbolsetlist.pl
-  
+
 thtex.h: tex/*.tex
 	make -C ./tex
 
@@ -256,20 +256,20 @@ thchencdata.h: thchencdata/*.TXT
 
 thcsdata.h: thcsdata.tcl
 	tclsh thcsdata.tcl
-  
+
 update:
 	make -C ./thlang update
 
 unixify: clean
 	tclsh makeunixify.tcl
-  
+
 thlangdata.h: thlang/texts.txt
 	make -C ./thlang
 
 config-debug:
 	perl makeconfig.pl BUILD DEBUG
 	make -C ./loch config-debug
-  
+
 config-release:
 	perl makeconfig.pl BUILD RELEASE
 	make -C ./loch config-release
@@ -277,7 +277,7 @@ config-release:
 config-oxygen:
 	perl makeconfig.pl BUILD OXYGEN
 	make -C ./loch config-oxygen
-  
+
 config-ozone:
 	perl makeconfig.pl BUILD OZONE
 	make -C ./loch config-ozone
@@ -285,11 +285,11 @@ config-ozone:
 config-debian:
 	perl makeconfig.pl PLATFORM DEBIAN
 	make -C ./loch config-debian
-  
+
 config-linux:
 	perl makeconfig.pl PLATFORM LINUX
 	make -C ./loch config-linux
-  
+
 config-win32:
 	perl makeconfig.pl PLATFORM WIN32
 	make -C ./loch config-win32
@@ -297,7 +297,7 @@ config-win32:
 config-win32cross:
 	perl makeconfig.pl PLATFORM WIN32CROSS
 	make -C ./loch config-win32cross
-  
+
 config-macosx:
 	perl makeconfig.pl PLATFORM MACOSX
 	make -C ./loch config-macosx
@@ -305,7 +305,7 @@ config-macosx:
 # external sources
 $(OUTDIR)/extern/lxMath.o: loch/lxMath.h loch/lxMath.cxx
 	$(CXX) -c $(CXXFLAGS) -o $(OUTDIR)/extern/lxMath.o loch/lxMath.cxx
-    
+
 $(OUTDIR)/extern/lxFile.o: loch/lxFile.h loch/lxFile.cxx
 	$(CXX) -c $(CXXFLAGS) -o $(OUTDIR)/extern/lxFile.o loch/lxFile.cxx
 

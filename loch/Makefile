@@ -48,7 +48,7 @@ STRIPFLAG = -s
 ##CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 ##CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 ##LXLIBDIR = linux
-##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz 
+##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
 ##LXPLATFORM = LINUX
 
 # PLATFORM DEBIAN
@@ -63,7 +63,7 @@ endif
 CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 LXLIBDIR = linux
-PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz 
+PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
 LXPLATFORM = LINUX
 
 # PLATFORM WIN32
@@ -88,7 +88,7 @@ LXPLATFORM = LINUX
 ##POBJECTS = loch.res lxR2D.o getline.o
 ##CXXPFLAGS = -W -Wall -std=gnu++11 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(CROSS)wx-config --static --cflags)
-##LXLIBDIR = 
+##LXLIBDIR =
 ##PLIBS = $(shell $(CROSS)freetype-config --libs) $(shell $(CROSS)wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##LXPLATFORM = WIN32
 ##STRIPFLAG = -static-libgcc -static -s
@@ -96,10 +96,10 @@ LXPLATFORM = LINUX
 # PLATFORM MACOSX
 ##CXX = c++
 ##CC = cc
-##POBJECTS = 
+##POBJECTS =
 ##CXXPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --cxxflags) $(shell freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
 ##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --cflags) -I/usr/X11R6/include
-##LXLIBDIR = 
+##LXLIBDIR =
 ##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##POSTMAKE = cp -f ./loch ./loch.app/Contents/MacOS
 ##STRIPFLAG =
@@ -120,14 +120,14 @@ CXXBFLAGS = -O2
 LDBFLAGS = $(STRIPFLAG)
 
 # BUILD RELEASE
-##CCBFLAGS = 
-##CXXBFLAGS = 
+##CCBFLAGS =
+##CXXBFLAGS =
 ##LDBFLAGS = $(STRIPFLAG)
 
 # BUILD DEBUG
 ##CCBFLAGS = -ggdb
 ##CXXBFLAGS = -ggdb -DLXDEBUG
-##LDBFLAGS = 
+##LDBFLAGS =
 
 # BUILD ENDCONFIG
 
@@ -165,7 +165,7 @@ $(LOUTDIR)/loch: $(OBJECTS)
 $(LOUTDIR)/loch.res: loch.rc loch.ico
 	$(CROSS)windres -i loch.rc $(shell $(CROSS)wx-config --cflags | tr ' ' '\n' | grep "^-I" | tr '\n' ' ') -J rc -o $(LOUTDIR)/loch.res -O coff
 
-graphs: 
+graphs:
 	dot -Tps graph-vispipe.dot -o graph-vispipe.ps
 
 
@@ -176,40 +176,40 @@ depend:
 	$(CXX) -DLXDEPCHECK -DLOCH -D'wxCHECK_VERSION(X,Y,Z)=1' -MM *.cxx >> Makefile
 	$(CC) -DLXDEPCHECK -DLOCH -MM *.c >> Makefile
 	perl makedepend2.pl
-  
+
 
 config-debug:
 	perl makeconfig.pl BUILD DEBUG
 
 test-release:
 	zip -9 loch.zip loch.exe test.th test.jpg thconfig
-  
+
 config-release:
 	perl makeconfig.pl BUILD RELEASE
 
 config-oxygen:
 	perl makeconfig.pl BUILD OXYGEN
-  
+
 config-ozone:
 	perl makeconfig.pl BUILD OZONE
-  
+
 config-linux:
 	perl makeconfig.pl PLATFORM LINUX
 
 config-debian:
 	perl makeconfig.pl PLATFORM DEBIAN
-  
+
 config-win32:
 	perl makeconfig.pl PLATFORM WIN32
 
 config-win32cross:
 	perl makeconfig.pl PLATFORM WIN32CROSS
-  
+
 config-macosx:
 	perl makeconfig.pl PLATFORM MACOSX
 
 clean:
-	perl makefile.pl rm -q *~     
+	perl makefile.pl rm -q *~
 	perl makefile.pl rm -q help/*/*~
 	perl makefile.pl rm -q loch.exe
 	perl makefile.pl rm -q loch
@@ -223,7 +223,7 @@ clean:
 	perl makefile.pl rm -q *.zip
 	perl makefile.pl rm -q *.pdf
 	perl makefile.pl rm -q *.png
-  
+
 
 
 # DEPENDENCIES
