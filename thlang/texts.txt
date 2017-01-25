@@ -2369,7 +2369,19 @@ zh_CN: 绳子
 therion: line rope
 bg: въже
 cz: lano
+de: Seil
+el: σχοινί
 en: rope
+es: cuerda
+fr: corde
+it: corda
+mi: taura
+pl: lina
+pt: corda
+ru: линейная опора
+sk: lano
+sq: litar
+zh_CN: 绳子
 
 therion: point rope-ladder
 bg: пещерна стълба
@@ -2389,7 +2401,21 @@ sq: shkalle litari
 zh_CN: 绳梯
 
 therion: line rope-ladder
+bg: пещерна стълба
 cz: lanový žebřík
+de: Drahtseilleiter
+el: ανεμόσκαλα
+en: rope ladder
+es: escala
+fr: échelle de corde
+it: scala di corda
+mi: arawhata taura
+pl: drabinka linowa
+pt: escada de corda
+ru: гибкая лестница
+sk: lanový rebrík
+sq: shkalle litari
+zh_CN: 绳梯
 
 therion: point fixed-ladder
 bg: стационарна стълба
@@ -2411,7 +2437,19 @@ zh_CN: 固定梯子
 therion: line fixed-ladder
 bg: стационарна стълба
 cz: pevný žebřík
+de: feste Leiter
+el: μόνιμη σκάλα
 en: fixed ladder
+es: escala fija
+fr: échelle fixe
+it: scala fissa
+mi: arawhata
+pl: sztywna drabinka
+pt: escada fixa
+ru: жесткая лестница
+sk: fixný rebrík
+sq: shkalle fikse
+zh_CN: 固定梯子
 
 therion: point steps
 bg: стъпала
@@ -2433,14 +2471,28 @@ zh_CN: 梯坎
 therion: line steps
 bg: стъпала
 cz: schody
+de: Stufen
+el: σκαλοπάτια
 en: steps
+es: escalones
+fr: marches
+it: scalini
+mi: nga tapuae
+pl: schody
+pt: degraus
+ru: ступени
+sk: schody
+sq: shkalle
+zh_CN: 梯坎
 
 therion: point via-ferrata
 bg: виа-ферата
+de: Klettersteig
 en: via-ferrata
 
 therion: line via-ferrata
 bg: виа-ферата
+de: Klettersteig
 en: via-ferrata
 
 therion: point traverse
@@ -2480,11 +2532,13 @@ zh_CN: 桥
 therion: point handrail
 bg: перила
 cz: zábradlí
+de: Geländer
 en: handrail
 
 therion: line handrail
 bg: перила
 cz: zábradlí
+de: Geländer
 en: handrail
 
 therion: point camp
