@@ -2725,7 +2725,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           commentstr += " etex";
         }
         this->db->db1d.m_station_attr.export_mp_object_begin(out->file, slp->station_name.id);
-				slp->station->export_mp_flags(out->file);
+        slp->station->export_mp_flags(out->file);
         out->symset->export_mp_symbol_options(out->file, macroid);
         fprintf(out->file,"p_station((%.2f,%.2f),%d,%s,\"\"",
           thxmmxst(out, slp->stx, slp->sty),
@@ -2816,19 +2816,19 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             if (expstation) {
               if (obj->export_mp(noout)) {
                 thexpmap_export_mp_bgif;
-								if (ptp->station_name.id != 0) {
+                if (ptp->station_name.id != 0) {
                   tmps = &(thdb.db1d.station_vec[ptp->station_name.id - 1]);
-									tmps->export_mp_flags(out->file);
-					        this->db->db1d.m_station_attr.export_mp_object_begin(out->file, ptp->station_name.id);
-								} else
-									tmps = NULL;
+                  tmps->export_mp_flags(out->file);
+                  this->db->db1d.m_station_attr.export_mp_object_begin(out->file, ptp->station_name.id);
+                } else
+                  tmps = NULL;
                 obj->export_mp(out);
-								if (tmps != NULL) {
-					        this->db->db1d.m_station_attr.export_mp_object_end(out->file, ptp->station_name.id);
-								}
+                if (tmps != NULL) {
+                  this->db->db1d.m_station_attr.export_mp_object_end(out->file, ptp->station_name.id);
+                }
                 if (out->layout->is_debug_stationnames() && (tmps != NULL)) {
-					  out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
-					  dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
+                      out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
+                      dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
                       (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
                       thxmmxst(out, ptp->point->xt, ptp->point->yt));
                 }

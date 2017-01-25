@@ -479,7 +479,7 @@ void thexpmodel::export_thm_file(class thdatabase * dbp)
   thdb_object_list_type::iterator obi;
   thdb3ddata * pgn = dbp->db1d.get_3d(), 
     * surf_pgn = dbp->db1d.get_3d_surface(),
-		* splay_pgn = dbp->db1d.get_3d_splay(),
+    * splay_pgn = dbp->db1d.get_3d_splay(),
     * tmp3d;
   thdb3dlim pgnlimits, finlim;
   switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
@@ -654,7 +654,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
   thdb_object_list_type::iterator obi;
   thdb3ddata * pgn = dbp->db1d.get_3d(), 
     * surf_pgn = dbp->db1d.get_3d_surface(),
-		* splay_pgn = dbp->db1d.get_3d_splay(),
+    * splay_pgn = dbp->db1d.get_3d_splay(),
     * tmp3d;
   thdb3dlim pgnlimits, finlim;
   switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
@@ -668,8 +668,8 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
     default:    
       pgnlimits.update(&(pgn->limits));
   }
-	if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
-		pgnlimits.update(&(splay_pgn->limits));
+  if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
+    pgnlimits.update(&(splay_pgn->limits));
 
   finlim.update(&(pgnlimits));
   // now let's print header
@@ -908,7 +908,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
   thdb_object_list_type::iterator obi;
   thdb3ddata * pgn = dbp->db1d.get_3d(), 
     * surf_pgn = dbp->db1d.get_3d_surface(),
-		* splay_pgn = dbp->db1d.get_3d_splay(),
+    * splay_pgn = dbp->db1d.get_3d_splay(),
     * tmp3d;
   thdb3dlim pgnlimits, finlim;
   switch (this->items & TT_EXPMODEL_ITEM_CENTERLINE) {
@@ -922,8 +922,8 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
     default:    
       pgnlimits.update(&(pgn->limits));
   }
-	if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
-		pgnlimits.update(&(splay_pgn->limits));
+  if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
+    pgnlimits.update(&(splay_pgn->limits));
   finlim.update(&(pgnlimits));
   avx = (pgnlimits.minx + pgnlimits.maxx) / 2.0;
   avy = (pgnlimits.miny + pgnlimits.maxy) / 2.0;
@@ -1128,8 +1128,8 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
     default:    
       pgnlimits.update(&(pgn->limits));
   }
-	if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
-		pgnlimits.update(&(splay_pgn->limits));
+  if ((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0)
+    pgnlimits.update(&(splay_pgn->limits));
   finlim.update(&(pgnlimits));
   avx = 0.0;
   avy = 0.0;
