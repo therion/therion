@@ -1901,6 +1901,7 @@ zh_CN: 石柱
 therion: point pillars
 bg: сталактони
 cz: stanagnáty
+de: Säulen
 en: pillars
 
 therion: point ice-stalactite
