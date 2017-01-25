@@ -142,7 +142,7 @@ class th2ddataobject : public thdataobject {
   
   const char * m_subtype_str;
 
-  th2ddataobject * pscrapoptr, ///< Previos object in the scrap.
+  th2ddataobject * pscrapoptr, ///< Previous object in the scrap.
       * nscrapoptr;  ///< Next object in the scrap.
       
   class thscrap * fscrapptr;  ///< Father scrap pointer.
@@ -198,7 +198,7 @@ class th2ddataobject : public thdataobject {
    * Set command option.
    *
    * @param cod Command option description.
-   * @param args Option arguments arry.
+   * @param args Option arguments array.
    * @param argenc Arguments encoding.
    */
    

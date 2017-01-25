@@ -58,7 +58,7 @@ class thtmpdir {
   
   
   /**
-   * Removes temporaty directory.
+   * Removes temporary directory.
    */
    
   void remove();
