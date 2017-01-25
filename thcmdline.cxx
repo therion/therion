@@ -142,9 +142,9 @@ void thcmdline::process(int argc, char * argv[])
       //  thcfg.set_file_state(THCFG_UPDATE);
       //  break;
         
-      case 'i':
-        thcfg.comments_skip_on();
-        break;
+      //case 'i':
+      //  thcfg.comments_skip_on();
+      //  break;
         
       case 's':     
         thcfg.append_source(optarg);
