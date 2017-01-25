@@ -1,4 +1,5 @@
 % Austrian Symbol Set, author Georg Pacher
+% enhanced 2017 by Benedikt Hallinger
 
 % color (for Austrian symbol-set)
 
@@ -117,6 +118,13 @@ beginpattern(pattern_ice_AUT);
     draw p shifted (0.0u,0.45u) rotated (90);
     patternxstep(.9u);
     patternystep(0.5u);
+endpattern;
+
+beginpattern(pattern_flowstone_AUT);
+    pickup PenC;
+    draw (0.0u, 0.01u)--(0.33u, 0.01u);
+    draw (0.33u, 0.33u)--(0.66u, 0.33u);
+    patternbbox(0u,0u, 0.66u, 0.66u); % definiert Rechteckgroesse des Symbols
 endpattern;
 
 def a_water_AUT (expr Path) =
@@ -272,6 +280,14 @@ def a_blocks_AUT (expr p) =
   drawoptions();
   draw tmp_pic;
 enddef;  
+
+
+def a_flowstone_AUT (expr Path) =
+  T:=identity;
+  thclean Path;
+  thfill Path withpattern pattern_flowstone_AUT ;
+enddef;
+
 
 
 %% lines
