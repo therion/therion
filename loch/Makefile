@@ -229,7 +229,7 @@ clean:
 # DEPENDENCIES
 $(LOUTDIR)/lxAboutDlg.o: lxAboutDlg.cxx lxWX.h icons/about.xpm ../thversion.h
 $(LOUTDIR)/lxData.o: lxData.cxx lxData.h lxMath.h lxImgIO.h lxFile.h lxLRUD.h
-$(LOUTDIR)/lxFile.o: lxFile.cxx lxFile.h lxMath.h img.h
+$(LOUTDIR)/lxFile.o: lxFile.cxx lxFile.h lxMath.h img.h ../extern/img.h
 $(LOUTDIR)/lxGLC.o: lxGLC.cxx lxGLC.h lxMath.h lxGUI.h lxData.h lxImgIO.h lxFile.h \
  lxSetup.h lxSView.h lxWX.h lxFNT6x13_bdf.h lxFNT10x20_bdf.h \
  lxFNTFreeSans_ttf.h lxRender.h lxTR.h
@@ -260,7 +260,7 @@ $(LOUTDIR)/lxSView.o: lxSView.cxx lxSView.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
 $(LOUTDIR)/lxSetup.o: lxSetup.cxx lxSetup.h lxData.h lxMath.h lxImgIO.h lxFile.h
 $(LOUTDIR)/lxWX.o: lxWX.cxx lxWX.h
 $(LOUTDIR)/getline.o: getline.c
-$(LOUTDIR)/img.o: img.c img.h
+$(LOUTDIR)/img.o: img.c ../extern/img.c ../extern/img.h
 $(LOUTDIR)/lxR2D.o: lxR2D.c lxR2D.h
 $(LOUTDIR)/lxR2P.o: lxR2P.c lxR2P.h
 $(LOUTDIR)/lxTR.o: lxTR.c lxTR.h
