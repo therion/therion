@@ -1120,13 +1120,80 @@ def l_handrail_SKBB (expr P) =
 enddef;
 
 def l_fixedladder_SKBB (expr P) = 
-  pickup PenD;
-  draw P withcolor red;
+  pair Pp;
+  pair Pd;
+  pair Pv;
+  T:=identity;
+  cas := 0;                          % loop-variable (current iteration through path)
+  dlzka := arclength P;              % base for iterations (the length of the drawn line)
+  mojkrok:=adjust_step(dlzka, 0.3u); % ammount of iterations / count of individual steps (segments)
+
+  % get shift coordinates based on initial angleof path;
+  % this gets us the left and right rail of the ladder.
+  % PLEASE NOTE: this currently only works properly with straight lines.
+  %              for beziers, the tension points must be recalculated / path shortened+lengthened
+  %              based on next angle in the path.
+  %              Maybe play with http://tex.stackexchange.com/questions/309830/draw-a-curve-as-an-outline-to-another-curve
+  pair offsetLeft;
+  pair offsetRight;
+  offsetLeft  := 0.25u * (dir (angle direction 0.0001 of P-90));
+  offsetRight := 0.25u * (dir (angle direction 0.0001 of P+90));
+  thdraw P shifted offsetLeft;
+  thdraw P shifted offsetRight;
+
+   % draw rungs
+   pickup PenC;
+   forever:
+     t  := arctime (cas + mojkrok/2) of P;
+     Pp := (point t of P);         % center of current step
+     Pd := unitvector(thdir(P,t)); % Point in direction of line (x,y)
+     Pv := Pd rotated 90;          % direction of line, rotated 90° to the right
+
+     % draw one rung segment in direction of the path. Absolute Point coordinates are
+     % calculated from the current directions Pd and Pv.
+     thdraw (Pp - 0.25u * Pv) --
+            (Pp + 0.25u * Pv);
+     cas := cas + mojkrok;
+     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+   endfor;
 enddef;
 
 def l_ropeladder_SKBB (expr P) = 
-  pickup PenD;
-  draw P withcolor red;
+  pair Pp;
+  pair Pd;
+  pair Pv;
+  T:=identity;
+  cas := 0;                          % loop-variable (current iteration through path)
+  dlzka := arclength P;              % base for iterations (the length of the drawn line)
+  mojkrok:=adjust_step(dlzka, 0.3u); % ammount of iterations / count of individual steps (segments)
+
+  % get shift coordinates based on initial angleof path;
+  % this gets us the left and right rail of the ladder.
+  % PLEASE NOTE: this currently only works properly with straight lines.
+  %              for beziers, the tension points must be recalculated / path shortened+lengthened
+  %              based on next angle in the path.
+  %              Maybe play with http://tex.stackexchange.com/questions/309830/draw-a-curve-as-an-outline-to-another-curve
+  pair offsetLeft;
+  pair offsetRight;
+  offsetLeft  := 0.25u * (dir (angle direction 0.0001 of P-90));
+  offsetRight := 0.25u * (dir (angle direction 0.0001 of P+90));
+  thdraw P shifted offsetLeft;
+  thdraw P shifted offsetRight;
+
+  pickup PenC;
+  forever:
+    t  := arctime (cas + mojkrok/2) of P;
+    Pp := (point t of P);         % center of current step
+    Pd := unitvector(thdir(P,t)); % Point in direction of line
+    Pv := Pd rotated 90;          % direction of line, rotated 90° to the right
+
+    % draw one rung segment in direction of the path. Absolute Point coordinates are
+    % calculated from the current directions Pd and Pv.
+    thdraw (Pp - 0.25u * Pv){down+0.25u*Pd} ..  % rung (".." -> draw curve)
+           (Pp + 0.25u * Pv);
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+  endfor;
 enddef;
 
 def l_viaferrata_SKBB (expr P) = 
