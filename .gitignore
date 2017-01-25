@@ -22,7 +22,9 @@ xtherion/therion.tcl
 *.log
 *.lox
 *.o
+*.orig
 *.pyc
+*.rej
 *.shp
 *.so
 *.stackdump
