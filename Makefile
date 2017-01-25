@@ -187,8 +187,8 @@ depend:
 	perl makedepend2.pl
 
 library:
-	$(THXTHMKCMD) --print-library-src thlibrarydata.thcfg > thlibrarydata.log
-	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
+	$(OUTDIR)/$(THXTHMKCMD)$(EXT) --print-library-src thlibrarydata.thcfg > thlibrarydata.log
+	$(OUTDIR)/$(THXTHMKCMD)$(EXT) --print-xtherion-src > xtherion/therion.tcl
 	perl makelibrary.pl thlibrarydata.log > thlibrarydata.tmp
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
