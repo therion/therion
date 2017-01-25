@@ -17,7 +17,7 @@ script:
   - test "$TRAVIS_OS_NAME" == "linux" && make config-debian
   - test "$TRAVIS_OS_NAME" == "linux" && make
   - test "$TRAVIS_OS_NAME" == "linux" && make samples
-  - test "$TRAVIS_OS_NAME" == "linux" && make clean
+  - test "$TRAVIS_OS_NAME" == "linux" && make cleanrest
   - test "$TRAVIS_OS_NAME" == "linux" && make config-win32cross
   - test "$TRAVIS_OS_NAME" == "linux" && make
 branches:
