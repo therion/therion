@@ -1,9 +1,9 @@
-.TH "THERION" "1" "2003/07/15"
+.TH "THERION" "1" "2017/02/25"
 .SH "NAME" 
 XTherion \(em Graphical drawing editor for Therion 
 .SH "SYNOPSIS" 
 .PP 
-\fBxtherion\fP 
+\fBxtherion\fP [FILE...]
 .SH "DESCRIPTION" 
 .PP 
 This manual page documents \fBXTherion\fP, which is part of the therion package. 
@@ -13,19 +13,25 @@ front end for Therion. Therion itself works entirely with text-based files, but
 much of the data needs to be generated graphically, so XTherion is one example of  
 how it might be done.  It is written in Tcl/Tk. 
 .PP 
-\fBXTherion\fP lets you load a background GIF, PPM or PNM  
-(a scan of the cave segment or to-scale notes), scale it, then draw Therion 'scraps' over  
-the image, and relate it to survey stations and save the resulting data. 
+\fBXTherion\fP lets you load a background image (a scan of the cave segment or
+to-scale notes), scale it, then draw Therion 'scraps' over the image, and
+relate it to survey stations and save the resulting data.
+.PP
+Image formats GIF, PNM and PPM are supported by default, plus PNG and JPEG if
+the libtk-img package is installed.
 .PP 
 For full information see The Therion Book which describes the application and 
 its use in detail. 
 .SH "OPTIONS" 
 .PP 
-XTherion takes no options. 
+XTherion optionally takes a list of .th, .th2, thconfig or thcfg files to open.
 .SH "SEE ALSO" 
 .PP 
 loch(1), therion(1)
 .SH "AUTHOR" 
 .PP 
-Stacho Mudrak. This manual page was written by Wookey wookey@debian.org for 
-the \fBDebian\fP system. Modified by MB.
+Stacho Mudrak. This manual page was originally written by Wookey
+wookey@debian.org for the \fBDebian\fP system. Modified by MB and Olly Betts.
+.PP
+Copyright Wookey 2003, Martin Budaj 2003, Olly Betts 2015, 2017
+This file is licensed under the GNU General Public Licence.
