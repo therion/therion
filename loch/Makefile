@@ -173,7 +173,7 @@ depend:
 	perl makedepend.pl > Makefile.dep
 	perl maketest.pl Makefile.dep
 	perl makefile.pl mv Makefile.dep Makefile
-	$(CXX) -DLXDEPCHECK -DLOCH -MM *.cxx >> Makefile
+	$(CXX) -DLXDEPCHECK -DLOCH -D'wxCHECK_VERSION(X,Y,Z)=1' -MM *.cxx >> Makefile
 	$(CC) -DLXDEPCHECK -DLOCH -MM *.c >> Makefile
 	perl makedepend2.pl
   
