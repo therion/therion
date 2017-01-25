@@ -10,6 +10,8 @@ thsymbolsetlist.h
 thlangdata.cxx
 thchencdata.h
 SYMBOLS.txt
+thlibrarydata.cxx
+xtherion/therion.tcl
 .*
 !.gitignore
 *~

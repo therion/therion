@@ -153,6 +153,8 @@ $(OUTDIR)/extern/proj4/libproj.a: extern/proj4/*.c extern/proj4/*.h
 
 $(OUTDIR)/therion:	$(OBJECTS)
 	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
+	make library
+	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
 
 
 $(OUTDIR)/therion.res: therion.rc
@@ -191,9 +193,6 @@ library:
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
-thlibrarydata.cxx: thlang/texts.txt
-	make library
-
 xtherion/xtherion: xtherion/*.tcl
 	make -C ./xtherion
 
@@ -219,8 +218,8 @@ clean:
 	make -C ./loch clean
 	make -C ./samples clean
 	make -C ./extern/proj4 clean
-	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thlangdata.cxx thchencdata.h
-	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl
+	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thlangdata.cxx thchencdata.h thlibrarydata.cxx
+	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl ./xtherion/therion.tcl
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
 	perl makefile.pl rm -q extern/*.o extern/*~ extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
 	perl makefile.pl rm -q symbols.html therion.res
@@ -241,6 +240,9 @@ thmpost.h: mpost/*.mp
 
 thmpost.cxx: mpost/*.mp
 	make -C ./mpost
+
+thlibrarydata.cxx:
+	perl makefile.pl cp thlibrarydata.src thlibrarydata.cxx
 
 thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 	perl thsymbolsetlist.pl
@@ -711,25 +713,8 @@ $(OUTDIR)/thlayoutln.o: thlayoutln.cxx thlayoutln.h thlayoutclr.h thlayout.h \
  thdb2dxm.h thscraplo.h thscrapen.h thscraplp.h thsymbolset.h \
  thsymbolsetlist.h thlocale.h
 $(OUTDIR)/thlegenddata.o: thlegenddata.cxx thlegenddata.h
-$(OUTDIR)/thlibrary.o: thlibrary.cxx thlibrary.h thlibrarydata.cxx thdatabase.h \
- thdataobject.h thperson.h thparse.h thbuffer.h thmbuffer.h thdate.h \
- thdataleg.h thobjectname.h therion.h thobjectsrc.h thinfnan.h thdb1d.h \
- thobjectid.h thdb3d.h loch/lxMath.h thattr.h thchenc.h thchencdata.h \
- thdb2d.h thdb2dprj.h thmapstat.h thlegenddata.h thdb2dpt.h thdb2dlp.h \
- thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
- thscraplo.h thlayoutln.h thlayoutclr.h thscrapen.h thscraplp.h \
- thlayout.h thsymbolset.h thsymbolsetlist.h thlocale.h thlang.h \
- thlangdata.h thgrade.h thdata.h thtfangle.h thtf.h thtflength.h \
- thtfpwf.h
-$(OUTDIR)/thlibrarydata.o: thlibrarydata.cxx thdatabase.h thdataobject.h thperson.h \
- thparse.h thbuffer.h thmbuffer.h thdate.h thdataleg.h thobjectname.h \
- therion.h thobjectsrc.h thinfnan.h thdb1d.h thobjectid.h thdb3d.h \
- loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h thdb2dprj.h \
- thmapstat.h thlegenddata.h thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h \
- thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h \
- thlayoutclr.h thscrapen.h thscraplp.h thlayout.h thsymbolset.h \
- thsymbolsetlist.h thlocale.h thlang.h thlangdata.h thgrade.h thdata.h \
- thtfangle.h thtf.h thtflength.h thtfpwf.h
+$(OUTDIR)/thlibrary.o: thlibrary.cxx thlibrary.h thlibrarydata.cxx
+$(OUTDIR)/thlibrarydata.o: thlibrarydata.cxx
 $(OUTDIR)/thline.o: thline.cxx thline.h th2ddataobject.h thdataobject.h \
  thdatabase.h thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h \
  thdataleg.h thparse.h thobjectname.h therion.h thobjectsrc.h thdb3d.h \

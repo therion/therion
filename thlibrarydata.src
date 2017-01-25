@@ -1,5 +1,5 @@
 /**
- * @file thlibrary.cxx
+ * @file thlibrarydata.cxx
  */
   
 /* Copyright (C) 2000 Stacho Mudrak
@@ -25,22 +25,8 @@
  * --------------------------------------------------------------------
  */
  
-#include "thlibrary.h"
-
-#ifdef THNOLIBRARY
 void thlibrary_init_grades() {
 }
+
 void thlibrary_init_layouts() {
 }
-#else
-#include "thlibrarydata.cxx"
-#endif
-
-void thlibrary_init()
-{
-  thlibrary_init_grades();
-  thlibrary_init_layouts();
-}
-
-
-
