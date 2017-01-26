@@ -1900,7 +1900,7 @@ zh_CN: 石柱
 
 therion: point pillars
 bg: сталактони
-cz: stanagnáty
+cz: stalagnáty
 de: Säulen
 en: pillars
 
