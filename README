@@ -12,6 +12,9 @@ Documentation is in the Therion Book (file thbook.pdf), which can either be
 downloaded from the internet or compiled in the `thbook' directory using pdfTeX.
 Installation (compilation) is described in the Appendix of the Therion Book.
 
+There is also much excellent documentation contributed by users on the wiki at:
+https://therion.speleo.sk/wiki/doku.php
+
 Web page: https://therion.speleo.sk
 
 Copyright (c) 1999-2014 Stacho Mudrak, Martin Budaj
