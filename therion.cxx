@@ -67,14 +67,17 @@ char * thexecute_cmd = NULL;
 const char * thhelp_text =
       "\ntherion [-q] [-L] [-l log-file]\n"
       "\t[-s source-file] [-p search-path]\n"
+      "\t[-b|--bezier]\n"
       "\t[-d] [-x] [cfg-file]\n\n"
       "therion [-h|--help]\n"
       "        [-v|--version]\n"
       "        [--print-encodings]\n"
-      "        [--print-init-file]\n"
-      "        [--print-tex-encodings]\n"
       "        [--print-environment]\n"
-      "        [--print-symbols]\n\n";
+      "        [--print-init-file]\n"
+      "        [--print-library-src]\n"
+      "        [--print-symbols]\n"
+      "        [--print-tex-encodings]\n"
+      "        [--print-xtherion-src]\n\n";
 
 const char * thversion_text = THVERSION;
 const char * thversion_format = "therion %s";
