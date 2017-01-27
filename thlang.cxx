@@ -63,7 +63,12 @@ typedef std::map<thlang_str, const char *> thlang_str_map;
 
 thlang_str_map ulang_map;
 
-int thlang_parse(char * str) {
+int thlang_parse(const char * str) {
+  // Therion used to use the incorrect code "en_UK" for British English, so
+  // map this to the correct code for backward compatibility.
+  if (strcmp(str, "en_UK") == 0) {
+    str = "en_GB";
+  }
   return thmatch_token(str, thtt_lang);
 }
 
