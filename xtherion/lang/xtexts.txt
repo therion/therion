@@ -559,7 +559,7 @@ bg: Информация за картировката
 cz: Informace o jednotlivých měřeních (survey).
 de: Infos zur Vermessung.
 el: Στοιχεία χαρτογράφησης
-en: Survey informations.
+en: Survey information.
 es: Estadísticas de la poligonal.
 it: Informazioni del rilievo
 ru: Информация о съемке.
@@ -2232,7 +2232,7 @@ bg: Някои типове символи трябва да бъдат орие
 cz: Jsou symboly, kterým musíte specifikovat orientaci (např. gradient). Zaklikněte tuto volbu a nastavte jim orientaci myší nebo z klávesnice.
 de: Es gibt Symbole, die eine Ausrichtung haben müssen (z.B. Gefälle). Klicke hier, um sie mit der Maus oder der Tastatur auszurichten.
 el: Κάποια είδη συμβόλων πρέπει να προσανατολιστούν (π.χ. κλίσεις). Κάντε κλικ εδώ να ορισθεί ο προσανατολισμός είτε από το πληκτρολόγιο είτε με το ποντίκι.
-en: Some symbol types must be orientated (i.e: gradients). Click here to giv'em orientation by mouse or keyboard.
+en: Some symbol types must be orientated (i.e: gradients). Click here to orientate them using mouse or keyboard.
 es: Hay tipos de símbolo que deben ser orientados (p.ej, pendientes). Haz clic aquí para orientarlos con ratón o teclado.
 it: Ci sono tipi di simboli che sono orientati (per es. gradiente). Premi qui per orientarli col mouse o la tastiera
 ru: Некоторые типы символов должны быть ориентированы (например gradient). Нажмите здесь для придания им ориентации с помощью мыши или клавиатуры.
@@ -2745,7 +2745,7 @@ bg: зареждане на модула за области ...
 cz: nahrávám modul pro oblasti ...
 de: Lade Flächenmodul ...
 el: φορτίζεται η ενότητα επιφανειών...
-en: oading area module ...
+en: loading area module ...
 es: áreas...
 it: modulo aree ...
 ru: загрузка модуля областей ...
@@ -4347,7 +4347,7 @@ bg: Сложете отбелязка за да ае търси само в из
 cz: Zaškrtněte pokud chcete vyhledávat pouze ve vybraném textu.
 de: Ankreuzen, wenn nur im ausgewählten Text gesucht werden soll.
 el: Επιλέξετε για να γίνει η αναζήτηση μόνο στο επιλεγμένο κείμενο.
-en: Check whether to do search only in selected text.
+en: Check whether to search only in selected text.
 es: Marcar para buscar solo dentro del texto seleccionado.
 it: Attiva per cercare solo nel testo selezionato.
 ru: Установите отметку, чтобы искать только в выделенном тексте.
@@ -5057,6 +5057,7 @@ bg: екипиране
 cz: vystrojení
 de: Ausrüstung
 el: εξοπλισμός
+en: theme equipment
 it: armo
 ru: оборудование
 sk: vystrojenie
