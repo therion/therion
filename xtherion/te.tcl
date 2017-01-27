@@ -656,7 +656,7 @@ proc xth_te_open_file {dialogid fname fline} {
   if {$dialogid} {
     set fname [tk_getOpenFile -filetypes $xth(app,te,filetypes) \
       -parent $xth(gui,main) \
-      -initialdir $xth(gui,initdir) -defaultextension $xth(app,te,fileext)]
+      -initialdir $xth(gui,initdir) ]
   }
   
   if {[string length $fname] == 0} {
