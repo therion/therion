@@ -34,7 +34,7 @@
 
 const char * thT(const char * txt, int lng = THLANG_UNKNOWN);
 
-int thlang_parse(char * str);
+int thlang_parse(const char * str);
 
 const char * thlang_getid(int id);
 

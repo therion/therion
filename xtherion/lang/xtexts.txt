@@ -30,6 +30,7 @@ cz: Maximalizovat
 de: Maximieren
 el: Μεγιστοποίηση
 en: Maximize
+en_GB: Maximise
 es: Maximizar
 it: Massimizza
 ru: Развернуть
@@ -43,6 +44,7 @@ cz: Normální velikost
 de: Normalgröße
 el: Κανονικό μέγεθος
 en: Normalize
+en_GB: Normalise
 es: Normalizar
 it: Normalizza
 ru: Свернуть
@@ -4180,6 +4182,7 @@ cz: Zaškrtněte pokud chcete zadávat název pro každý měřičský bod.
 de: Ankreuzen, wenn du Messpunktnamen für jede Strecke eingeben willst.
 el: Επιλέξτε για εισαγωγή των ονομάτων των σημείων χαρτογράφησης για το κάθε διάνυσμα.
 en: Check if you want to insert station names for each shot.
+en_GB: Check if you want to insert station names for each leg.
 es: Marcar si se quiere dar un nombre a cada tirada topo.
 it: Attiva per inserire i nomi dei capisaldi per ogni tratta.
 ru: Установите отметку, если хотите, чтобы происходил автоматический ввод номера следующего пикета.

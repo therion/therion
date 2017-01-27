@@ -377,6 +377,7 @@ bg: отвес
 cz: vstupní propast
 de: Eingangsschacht
 en: entrance pit
+en_GB: entrance pitch
 it: parete:pozzo
 mi: rua
 pl: studnia wstępna
@@ -890,7 +891,7 @@ bg: кладенец
 cz: propast
 de: Schacht
 el: πηγάδι
-en_UK: pitch
+en_GB: pitch
 en_US: pit
 es: pozo
 fr: puits
@@ -996,6 +997,7 @@ cz: výška stupně/komínu/hloubka propasti
 de: Höhe der Stufe oder des Schlotes oder Tiefe des Schachts
 el: ύψος σκαλοπατιού/καμινάδας ή βάθος πηγαδιού
 en: pit/chimney/step depth/height
+en_GB: pitch/chimney/step depth/height
 es: altura resalte/chimenea/profundidad pozo
 fr: hauteur d’une marche/d’une cheminée/profondeur
 it: altezza
@@ -1064,6 +1066,7 @@ cz: hloubka propasti
 de: Tiefe des Schachts
 el: βάθος πηγαδιού
 en: pit depth
+en_GB: pitch depth
 es: profundidad pozo
 fr: profondeur
 it: prodondità pozzo
