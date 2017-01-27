@@ -6,7 +6,7 @@ It's particularly well suitable for documenting large and complicated cave
 systems.
 
 Therion creates realistic 3D models from 2D maps without quantity of additional
-informations. LRUD dimensions are also supported.
+information. LRUD dimensions are also supported.
 
 Documentation is in the Therion Book (file thbook.pdf), which can either be 
 downloaded from the internet or compiled in the `thbook' directory using pdfTeX.
