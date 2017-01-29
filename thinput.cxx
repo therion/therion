@@ -58,8 +58,7 @@ thinput::ifile::ifile(ifile * fp)
 thinput::ifile::~ifile()
 {
   this->close();
-  if (this->next_ptr != NULL)
-    delete this->next_ptr;
+  delete this->next_ptr;
 }
 
 

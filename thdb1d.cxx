@@ -94,12 +94,9 @@ void thdb1ds::set_temporary(const char * name)
 
 thdb1d::~thdb1d()
 {
-  if (this->tree_legs != NULL)
-    delete [] this->tree_legs;
-  if (this->tree_arrows != NULL)
-    delete [] this->tree_arrows;
-  if (this->tree_nodes != NULL)
-    delete [] this->tree_nodes;
+  delete [] this->tree_legs;
+  delete [] this->tree_arrows;
+  delete [] this->tree_nodes;
 }
 
 
@@ -2034,14 +2031,10 @@ void thdb1d::find_loops()
   
   LC_COORD_CALC:
   
-  if (crossst != NULL)
-    delete [] crossst;
-  if (lclegs != NULL)
-    delete [] lclegs;
-  if (lccrosses != NULL)
-    delete [] lccrosses;
-  if (lccrossarrows != NULL)
-    delete [] lccrossarrows;
+  delete [] crossst;
+  delete [] lclegs;
+  delete [] lccrosses;
+  delete [] lccrossarrows;
 
 #ifdef THDEBUG    
   thprintf("\nEND OF LOOP CLOSURE DEBUG\n");

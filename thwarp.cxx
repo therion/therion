@@ -263,7 +263,7 @@ thpic * thwarplin::morph(thsketch * sketch, double scale)
           thprintf(" [%.0f%%]", double(counter) / double(mw * mh) * 100.0);
       }
     }
-    if (ss != NULL) delete [] ss;
+    delete [] ss;
 
   } else {
 
@@ -383,7 +383,7 @@ thpic * thwarplin::morph(thsketch * sketch, double scale)
     //  }
     //}
 
-    if (ss != NULL) delete [] ss;
+    delete [] ss;
   }
 
 

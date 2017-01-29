@@ -386,10 +386,8 @@ lxRenderFile::~lxRenderFile()
 {
   if (m_file != NULL)
     fclose(m_file);
-  if (this->m_imgBuffLine != NULL)
-    delete [] this->m_imgBuffLine;
-  if (this->m_imgBuffRow != NULL)
-    delete [] this->m_imgBuffRow;
+  delete [] this->m_imgBuffLine;
+  delete [] this->m_imgBuffRow;
   this->m_glc->TRCDestroy();
   this->m_glc->m_renderData = NULL;
   this->m_glc->ForceRefresh();
@@ -658,9 +656,7 @@ void lxRenderFile::Render() {
   m_glc->setup->cam_width = tmpcw;
   //pngtst;
 
-  if (dialog != NULL) {
-    delete dialog;
-  }
+  delete dialog;
 
   switch (this->m_pData->m_imgFileType) {
     case 0:

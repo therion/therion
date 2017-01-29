@@ -238,10 +238,8 @@ void thpic::rgba_load()
 
 void thpic::rgba_free()
 {
-  if (this->rgba != NULL) {
-    delete [] this->rgba;
-    this->rgba = NULL;
-  }
+  delete [] this->rgba;
+  this->rgba = NULL;
 }
 
 

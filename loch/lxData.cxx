@@ -178,10 +178,10 @@ bool lxDataTexture::InitCalibNormal(double idx, double idy, double ixx, double i
 void lxDataTexture::ClearTexImages()
 {
 #define lxDataTextureClear(i) \
-  if (this->i != NULL) { \
+  do { \
     delete [] this->i; \
     this->i = NULL; \
-  }
+  } while (false)
   lxDataTextureClear(texS);
   lxDataTextureClear(texSbw);
   lxDataTextureClear(texO);

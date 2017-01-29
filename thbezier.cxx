@@ -79,7 +79,7 @@
 #define g_return_val_if_fail(C,V) if (!(C)) return (V);
 #define g_return_if_fail(C) if (!(C)) return;
 #define g_new(T,L) new T [L];
-#define g_free(V) if (V != NULL) delete [] V
+#define g_free(V) delete [] V
 #define g_assert(X) assert(X)
 
 /* You might try changing the above to <cmath> if you have problems.

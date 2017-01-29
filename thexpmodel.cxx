@@ -1746,8 +1746,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
     
   } // WALLS  
   
-  if (stnum != NULL)
-    delete [] stnum;
+  delete [] stnum;
 
   expf.ExportLOX(fnm);
 
