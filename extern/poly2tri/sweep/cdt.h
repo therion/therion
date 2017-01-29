@@ -1,4 +1,4 @@
-/* 
+/*
  * Poly2Tri Copyright (c) 2009-2010, Poly2Tri Contributors
  * http://code.google.com/p/poly2tri/
  *
@@ -28,7 +28,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 #ifndef CDT_H
 #define CDT_H
 
@@ -36,31 +36,67 @@
 #include "sweep_context.h"
 #include "sweep.h"
 
+/**
+ *
+ * @author Mason Green <mason.green@gmail.com>
+ *
+ */
+
 namespace p2t {
 
 class CDT
 {
 public:
 
-/// Constructor
-CDT(std::vector<Point*> polyline);
-/// Destructor
-~CDT();
-/// Add a hole
-void AddHole(std::vector<Point*> polyline);
-/// Add a single point
-void AddPoint(Point* point);
-/// Triangulate points
-void Triangulate();
-/// Get Delaunay triangles
-std::vector<Triangle*> GetTriangles();
-/// Get triangle map
-std::list<Triangle*> GetMap();
+  /**
+   * Constructor - add polyline with non repeating points
+   *
+   * @param polyline
+   */
+  CDT(const std::vector<Point*>& polyline);
 
-private:
+   /**
+   * Destructor - clean up memory
+   */
+  ~CDT();
 
-SweepContext* sweep_context_;
-Sweep* sweep_;
+  /**
+   * Add a hole
+   *
+   * @param polyline
+   */
+  void AddHole(const std::vector<Point*>& polyline);
+
+  /**
+   * Add a steiner point
+   *
+   * @param point
+   */
+  void AddPoint(Point* point);
+
+  /**
+   * Triangulate - do this AFTER you've added the polyline, holes, and Steiner points
+   */
+  void Triangulate();
+
+  /**
+   * Get CDT triangles
+   */
+  std::vector<Triangle*> GetTriangles();
+
+  /**
+   * Get triangle map
+   */
+  std::list<Triangle*> GetMap();
+
+  private:
+
+  /**
+   * Internals
+   */
+
+  SweepContext* sweep_context_;
+  Sweep* sweep_;
 
 };
 
