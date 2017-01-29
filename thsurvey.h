@@ -207,7 +207,7 @@ class thsurvey : public thdataobject {
   /**
    * Delete this object.
    *
-   * @warn Always use this methos instead of delete function.
+   * @warn Always use this method instead of delete function.
    */
    
   virtual void self_delete();

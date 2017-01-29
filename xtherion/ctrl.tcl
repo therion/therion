@@ -1,7 +1,7 @@
 ##
 ## ctrl.tcl --
 ##
-##     Controler module.   
+##     Controller module.
 ##
 ## Copyright (C) 2002 Stacho Mudrak
 ## 

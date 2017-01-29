@@ -192,7 +192,7 @@ namespace therion
          * @param src     point in the "from" frame (sketch)
          * @param origin  origin in the "to" frame
          * @param unit    unit in the "to" frame
-         * @return true if successfulA
+         * @return true if successful
          */
         bool backward( const thvec2 & dst, thvec2 & src, const thvec2 & origin, double unit );
         
@@ -209,7 +209,7 @@ namespace therion
          * @param src  source image (RGB)
          * @param ws   source image width
          * @param hs   source image height 
-         * @param dst  destination image (RGB) must be preallocaed by the caller
+         * @param dst  destination image (RGB) must be preallocated by the caller
          * @param wd   destination image width
          * @param hd   destination image height
          * @param origin target origin in the warped image frame
@@ -280,14 +280,14 @@ namespace therion
         void add_triangle( point_pair * A, point_pair * B, point_pair * C,
           warp_proj proj = THWARP_PLAN );
         
-        /** add a quadrilater
+        /** add a quadrilateral
          * @param A   first point 
          * @param B   second point
          * @param C   third point 
          * @param D   fourth point 
          * @param proj warp projection type
          */
-        void add_quadrilater( point_pair * A, point_pair * B, point_pair * C, point_pair * D,
+        void add_quadrilateral( point_pair * A, point_pair * B, point_pair * C, point_pair * D,
           warp_proj proj = THWARP_PLAN );
     };
 

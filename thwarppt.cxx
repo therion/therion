@@ -526,7 +526,7 @@ therion::warp::plaquette_algo::make_plaquettes( warp_proj proj )
           therion::warp::point_pair * D = line1->other_end( A );
           therion::warp::line * line2 = B->next_line( line );
           therion::warp::point_pair * C = line2->other_end( B );
-          add_quadrilater( A, B, C, D, proj );
+          add_quadrilateral( A, B, C, D, proj );
           node1 = B;
           node2 = C;
           line = line2;
@@ -597,7 +597,7 @@ therion::warp::plaquette_algo::add_triangle( point_pair * A, point_pair * B, poi
 }
 
 void
-therion::warp::plaquette_algo::add_quadrilater( 
+therion::warp::plaquette_algo::add_quadrilateral(
      point_pair * A, point_pair * B, point_pair * C, point_pair * D,
      warp_proj proj )
 {

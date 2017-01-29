@@ -68,7 +68,7 @@ class thmbuffer {
     /**
      * Destructor.
      *
-     * Dealocates data memory.
+     * Deallocates data memory.
      */
      
     ~mblock();

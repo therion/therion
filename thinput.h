@@ -269,7 +269,7 @@ struct stat
    * - join lines ended with backslash
    * - if command sensitivity is on, process also <TT>input</TT> and
    *   <TT>encoding</TT> commands.
-   * - if also serach path is enabled, program search input files
+   * - if also search path is enabled, program search input files
    *   also there
    * - if some suffixes are set, program tries to find files
    *   by adding these suffixes.

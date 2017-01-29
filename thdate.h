@@ -71,7 +71,7 @@ class thdate {
 
   int syear,  ///< Start date year
     smonth,  ///< Start date month
-    sday,  ///< Stard date day
+    sday,  ///< Start date day
     shour,  ///< Star date hour
     smin,  ///< Star date minute
     eyear,  ///< End date year
@@ -94,7 +94,7 @@ class thdate {
 
 
   /**
-   * Compare two dates if first is less than sencond, item by item.
+   * Compare two dates if first is less than second, item by item.
    */
    
   static bool is_less(int y1, int m1, int d1, int h1, int n1, double s1,
@@ -102,7 +102,7 @@ class thdate {
 
 
   /**
-   * Compare two dates if first is greater than sencond, item by item.
+   * Compare two dates if first is greater than second, item by item.
    */
    
   static bool is_greater(int y1, int m1, int d1, int h1, int n1, double s1,

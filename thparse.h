@@ -55,7 +55,7 @@ typedef struct {
  * Match string token.
  *
  * Scan array of token definitions (stok) for given string. If not found,
- * last element of array is returned. This array should allways be 
+ * last element of array is returned. This array should always be
  * alphabetically sorted and last element should be set to
  * like TT_UNKNOWN.
  *
@@ -107,7 +107,7 @@ enum {
   TT_UNKNOWN_BOOL = 0,  ///< Not match.
   TT_TRUE,  ///< yes, on, 1, true.
   TT_FALSE,  ///< no, off, 0, false.
-  TT_AUTO,  ///< automatical setting
+  TT_AUTO,  ///< automatic setting
 };
 
 
