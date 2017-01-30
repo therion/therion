@@ -395,6 +395,8 @@ void thexptable::process_db(class thdatabase * dbp)
 
 #ifdef THLINUX
   const char * title = basename( this->outpt );
+#elif THMACOSX
+  const char * title = "cave";
 #else
   char title[_MAX_FNAME];
   _splitpath(this->outpt, NULL, NULL, title, NULL);

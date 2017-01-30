@@ -219,8 +219,10 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   #ifdef THWIN32
     char title[_MAX_FNAME];
     _splitpath(this->outpt, NULL, NULL, title, NULL);
-  #else
+  #elif THLINUX
     const char * title = basename( this->outpt );
+  #else
+    const char * title = "cave";
   #endif
   fnmb.strcpy(title);  // VG 290316: Set the filename as a cave name instead of "cave". The top-level survey name will be even better
   if ((thcfg.outcs >= 0) || (thcfg.outcs < TTCS_UNKNOWN))  // Export the coordinate system data if one is set
