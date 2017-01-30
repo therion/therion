@@ -50,6 +50,30 @@ vardef thdir (expr p,t) =    % 1 * epsilon caused problems in scales < 1:1000
   fi
 enddef;
 
+vardef polygon_offset(expr p, amount, direction) =
+  % direction should be 90 or -90
+  save P;
+  path P,R;
+  P = punked p;
+  pair za, zb;
+  R = point 0 of P + amount*unitvector(thdir(P,0) rotated direction);
+  for i=1 upto length P:
+    za := unitvector(point i of P - point i-1 of P);      % direction of the previous segment
+    if i < length P:
+      zb := unitvector(point i+1 of P - point i of P);    % direction of the next segment
+    else:
+      zb := za;
+    fi;
+    A := 180-(angle(za)-angle(zb));
+    R := R -- point i of P + amount*unitvector(((za+zb)/2) rotated direction)/abs(sind(A/2));
+  endfor;
+  if cycle P:
+    R := R -- cycle;
+  fi;
+  R
+enddef;
+
+
 % walls:
 
 def l_wall_bedrock_UIS (expr P) = 
@@ -1119,9 +1143,27 @@ def l_handrail_SKBB (expr P) =
     fi;
 enddef;
 
-def l_fixedladder_SKBB (expr P) = 
-  pickup PenD;
-  draw P withcolor red;
+def l_fixedladder_SKBB (expr Q) = 
+  % TODO: support side view in elevation (front view could be the same as in the plan view)
+  T:=identity;
+  path P, P_left, P_right;
+  P := punked Q;     % ensure that there is no bezier curve
+  pair p_tmp, za, zb;
+  len := arclength P;
+  dt:=adjust_step(len, 0.3u);
+  t := dt/2;
+  wdth := 0.25u;     % half-width of the ladder
+  pickup PenC;
+  % draw the steps
+  forever:
+    p_tmp := point arctime t of P of P;
+    draw p_tmp+wdth*unitvector(thdir(P,arctime t of P) rotated -90) --
+         p_tmp+wdth*unitvector(thdir(P,arctime t of P) rotated  90);
+    t := t + dt;
+    exitif t > len + 10*epsilon;
+  endfor;
+  draw polygon_offset(P,wdth, 90);
+  draw polygon_offset(P,wdth,-90);
 enddef;
 
 def l_ropeladder_SKBB (expr P) = 
