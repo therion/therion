@@ -40,10 +40,8 @@ thmbuffer::mblock::mblock(size_t min_size, size_t last_size)
 
 thmbuffer::mblock::~mblock()
 {
-  if (this->data)
-    delete [] this->data;
-  if (this->next_ptr != NULL)
-    delete this->next_ptr;
+  delete [] this->data;
+  delete this->next_ptr;
 }
 
 
@@ -61,10 +59,8 @@ thmbuffer::thmbuffer()
 
 thmbuffer::~thmbuffer()
 {
-  if (this->buf)
-    delete [] this->buf;
-  if (this->first_ptr)
-    delete this->first_ptr;
+  delete [] this->buf;
+  delete this->first_ptr;
 }
 
 

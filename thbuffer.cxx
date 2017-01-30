@@ -38,8 +38,7 @@ thbuffer::thbuffer()
 
 thbuffer::~thbuffer()
 {
-  if (this->buff)
-    delete [] this->buff;
+  delete [] this->buff;
 }
 
 

@@ -84,8 +84,7 @@ thscrapis::thscrapis(class thscrap * scrap) {
 
 
 thscrapis::~thscrapis() {
-  if (this->tri_triangles != NULL)
-    delete [] this->tri_triangles;
+  delete [] this->tri_triangles;
 }
 
 

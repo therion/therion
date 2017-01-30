@@ -63,8 +63,7 @@ thpoint::~thpoint()
 {
   if (this->type == TT_POINT_TYPE_DATE) {
     thdate * dp = (thdate *) this->text;
-    if (dp != NULL)
-      delete dp;
+    delete dp;
     this->text = NULL;
   }
 }

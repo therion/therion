@@ -3647,7 +3647,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
     }
   }
 
-  if (cln != NULL) delete cln;
+  delete cln;
 
   chdir(wdir.get_buffer());
 

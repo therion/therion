@@ -44,8 +44,7 @@ tharea::tharea()
 
 tharea::~tharea()
 {
-  if (this->m_outline_line != NULL)
-    delete this->m_outline_line;
+  delete this->m_outline_line;
 }
 
 

@@ -104,8 +104,7 @@ thsurface::thsurface()
 
 thsurface::~thsurface()
 {
-  if (this->grid != NULL)
-    delete [] this->grid;
+  delete [] this->grid;
 }
 
 
