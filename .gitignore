@@ -7,6 +7,8 @@ thmpost.h
 thcsdata.cxx
 thtex.cxx
 thsymbolsetlist.h
+thsymbolsets.cxx
+thsymbolsets.h
 thlangdata.cxx
 thchencdata.h
 SYMBOLS.txt
