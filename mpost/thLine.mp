@@ -50,26 +50,36 @@ vardef thdir (expr p,t) =    % 1 * epsilon caused problems in scales < 1:1000
   fi
 enddef;
 
-vardef polygon_offset(expr p, amount, direction) =
+vardef polyline_offset(expr p, amount, direction) =
   % direction should be 90 or -90
   save P;
   path P,R;
-  P = punked p;
+  P = punked p;   % convert to polyline
   pair za, zb;
-  R = point 0 of P + amount*unitvector(thdir(P,0) rotated direction);
-  for i=1 upto length P:
-    za := unitvector(point i of P - point i-1 of P);      % direction of the previous segment
+  for i=0 upto length P:
+    if i > 0:
+      za := unitvector(point i of P - point i-1 of P);      % direction of the previous segment
+    else:                       % the first segment
+      if cycle P:
+        za := unitvector(point length P of P - point (length P)-1 of P);
+      else:
+        za := unitvector(point 1 of P - point 0 of P);    % za == zb 
+      fi;
+    fi;
     if i < length P:
       zb := unitvector(point i+1 of P - point i of P);    % direction of the next segment
-    else:
-      zb := za;
+    else:                       % the last segment
+      if cycle P:
+        % zb is unused as the path is closed by "-- cycle"
+      else:
+        zb := za;
+      fi;
     fi;
     A := 180-(angle(za)-angle(zb));
-    R := R -- point i of P + amount*unitvector(((za+zb)/2) rotated direction)/abs(sind(A/2));
+    R := if i>0: R -- fi 
+         if (i=length P) and cycle P: cycle else:
+         point i of P + amount*unitvector(((za+zb)/2) rotated direction)/abs(sind(A/2)) fi;
   endfor;
-  if cycle P:
-    R := R -- cycle;
-  fi;
   R
 enddef;
 
@@ -1162,8 +1172,8 @@ def l_fixedladder_SKBB (expr Q) =
     t := t + dt;
     exitif t > len + 10*epsilon;
   endfor;
-  draw polygon_offset(P,wdth, 90);
-  draw polygon_offset(P,wdth,-90);
+  draw polyline_offset(P,wdth, 90);
+  draw polyline_offset(P,wdth,-90);
 enddef;
 
 def l_ropeladder_SKBB (expr P) = 
