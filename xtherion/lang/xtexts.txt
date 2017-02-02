@@ -3524,10 +3524,29 @@ therion: >>
 therion: auto"] -variable xth(me,ctrl,ctx,altitude) -value ".
 
 therion: edit
+bg: редактиране
 cz: editovat
+de: bearbeiten
+el: διόρθωση
+en: edit
+es: editar
+it: edita
+ru: редактировать
+sk: upraviť
+sq: permireso
+zh_CN: 编辑
 
 therion: Altitude
+bg: Надморска височина
 cz: Nadmořská výška
+de: Höhe
+el: Υψόμετρο
+en: Altitude
+es: Altitud
+it: Quota
+ru: Высота
+sk: Nadmorská výška
+zh_CN: 海拔
 
 therion: OK
 bg: ОК
