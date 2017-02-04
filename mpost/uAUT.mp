@@ -708,6 +708,10 @@ let l_floorstep_AUT = l_floorstep_UIS;
 
 let l_contour_AUT =l_contour_SKBB;
 
+let l_ceilingstep_AUT = l_ceilingstep_UIS;
+
+let l_ceilingmeander_AUT = l_ceilingmeander_UIS;
+
 def l_flowstone_AUT (expr P) = 
   T:=identity;
   pickup PenC;
