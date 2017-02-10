@@ -762,6 +762,15 @@ bool thline::export_mp(class thexpmapmpxs * out)
       out->symset->export_mp_symbol_options(out->file, omacroid);
       fprintf(out->file,"l_label(btex ");
       switch (this->scale) {
+        case TT_2DOBJ_SCALE_4XL:
+          fprintf(out->file,"\\thhugesizexxxxl ");
+          break;
+        case TT_2DOBJ_SCALE_3XL:
+          fprintf(out->file,"\\thhugesizexxxl ");
+          break;
+        case TT_2DOBJ_SCALE_2XL:
+          fprintf(out->file,"\\thhugesizexxl ");
+          break;
         case TT_2DOBJ_SCALE_XL:
           fprintf(out->file,"\\thhugesize ");
           break;
@@ -773,6 +782,9 @@ bool thline::export_mp(class thexpmapmpxs * out)
           break;
         case TT_2DOBJ_SCALE_XS:
           fprintf(out->file,"\\thtinysize ");
+          break;
+        case TT_2DOBJ_SCALE_2XS:
+          fprintf(out->file,"\\thtinysizexxs ");
           break;
         default:
           fprintf(out->file,"\\thnormalsize ");
