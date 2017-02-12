@@ -37,8 +37,8 @@ clean:
 	perl ../makefile.pl rm -q err.log
 
 update:
-	make -C ./lang update
+	$(MAKE) -C ./lang update
   
 msgxth.tcl: lang/xtexts.txt
-	make -C ./lang
+	$(MAKE) -C ./lang
 

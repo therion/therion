@@ -156,7 +156,7 @@ $(LOUTDIR)/%.o : %.c
 all: $(LOUTDIR)/loch hlp
 
 hlp:
-	make -C ./help
+	$(MAKE) -C ./help
 
 $(LOUTDIR)/loch: $(OBJECTS)
 	$(CXX) -o $(LOUTDIR)/loch$(EXT) -Wall $(OBJECTS) $(LIBS) $(LDFLAGS)

@@ -149,13 +149,13 @@ outdirs:
 	mkdir -p $(OUTDIR)/thbook
 
 $(OUTDIR)/extern/proj4/libproj.a: extern/proj4/*.c extern/proj4/*.h
-	make -C ./extern/proj4
+	$(MAKE) -C ./extern/proj4
 
 $(OUTDIR)/therion:	$(OBJECTS)
 	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
 ifneq ($(THPLATFORM),WIN32)
-	make library
-	make $(OUTDIR)/thlibrary.o
+	$(MAKE) library
+	$(MAKE) $(OUTDIR)/thlibrary.o
 	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
 endif
 
@@ -196,10 +196,10 @@ library:
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
 xtherion/xtherion: xtherion/*.tcl
-	make -C ./xtherion
+	$(MAKE) -C ./xtherion
 
 loch/loch: loch/*.h loch/*.cxx loch/*.c
-	make -C ./loch
+	$(MAKE) -C ./loch
 
 doc: $(OUTDIR)/thbook/thbook.pdf
 
@@ -208,23 +208,23 @@ thbook: $(OUTDIR)/thbook/thbook.pdf
 samples: $(OUTDIR)/samples.doc/index.tex
 
 $(OUTDIR)/samples.doc/index.tex:
-	make -C samples
+	$(MAKE) -C samples
 	touch thbook/version.tex
-	make -C thbook
+	$(MAKE) -C thbook
 
 $(OUTDIR)/thbook/thbook.pdf: thbook/*.tex
-	make -C thbook
+	$(MAKE) -C thbook
 
 clean:
 	perl makefile.pl rm -q thlibrarydata.cxx ./xtherion/therion.tcl
 	perl makefile.pl rmdir -q samples.doc
-	make -C ./samples clean
-	make cleanrest
+	$(MAKE) -C ./samples clean
+	$(MAKE) cleanrest
 
 cleanrest:
-	make -C ./xtherion clean
-	make -C ./loch clean
-	make -C ./extern/proj4 clean
+	$(MAKE) -C ./xtherion clean
+	$(MAKE) -C ./loch clean
+	$(MAKE) -C ./extern/proj4 clean
 	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thsymbolsets.cxx thsymbolsets.h thlangdata.cxx thchencdata.h
 	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
@@ -243,10 +243,10 @@ cleanrest:
 	perl makefile.pl rmdir -q thTMPDIR samples/*/thTMPDIR samples/*/*/thTMPDIR
 
 thmpost.h: mpost/*.mp
-	make -C ./mpost
+	$(MAKE) -C ./mpost
 
 thmpost.cxx: mpost/*.mp
-	make -C ./mpost
+	$(MAKE) -C ./mpost
 
 thlibrarydata.cxx:
 	perl makefile.pl cp thlibrarydata.src thlibrarydata.cxx
@@ -255,61 +255,61 @@ thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 	perl thsymbolsetlist.pl
 
 thtex.h: tex/*.tex
-	make -C ./tex
+	$(MAKE) -C ./tex
 
 thtex.cxx: tex/*.tex
-	make -C ./tex
+	$(MAKE) -C ./tex
 
 thchencdata.h: thchencdata/*.TXT
-	make -C ./thchencdata
+	$(MAKE) -C ./thchencdata
 
 thcsdata.h: thcsdata.tcl
 	tclsh thcsdata.tcl
 
 update:
-	make -C ./thlang update
+	$(MAKE) -C ./thlang update
 
 unixify: clean
 	tclsh makeunixify.tcl
 
 thlangdata.h: thlang/texts.txt
-	make -C ./thlang
+	$(MAKE) -C ./thlang
 
 config-debug:
 	perl makeconfig.pl BUILD DEBUG
-	make -C ./loch config-debug
+	$(MAKE) -C ./loch config-debug
 
 config-release:
 	perl makeconfig.pl BUILD RELEASE
-	make -C ./loch config-release
+	$(MAKE) -C ./loch config-release
 
 config-oxygen:
 	perl makeconfig.pl BUILD OXYGEN
-	make -C ./loch config-oxygen
+	$(MAKE) -C ./loch config-oxygen
 
 config-ozone:
 	perl makeconfig.pl BUILD OZONE
-	make -C ./loch config-ozone
+	$(MAKE) -C ./loch config-ozone
 
 config-debian:
 	perl makeconfig.pl PLATFORM DEBIAN
-	make -C ./loch config-debian
+	$(MAKE) -C ./loch config-debian
 
 config-linux:
 	perl makeconfig.pl PLATFORM LINUX
-	make -C ./loch config-linux
+	$(MAKE) -C ./loch config-linux
 
 config-win32:
 	perl makeconfig.pl PLATFORM WIN32
-	make -C ./loch config-win32
+	$(MAKE) -C ./loch config-win32
 
 config-win32cross:
 	perl makeconfig.pl PLATFORM WIN32CROSS
-	make -C ./loch config-win32cross
+	$(MAKE) -C ./loch config-win32cross
 
 config-macosx:
 	perl makeconfig.pl PLATFORM MACOSX
-	make -C ./loch config-macosx
+	$(MAKE) -C ./loch config-macosx
 
 # external sources
 $(OUTDIR)/extern/lxMath.o: loch/lxMath.h loch/lxMath.cxx
