@@ -953,8 +953,8 @@ def p_station_temporary_AUT (expr pos)=
     thdraw fullcircle scaled 0.15u;
 enddef;
 
-let p_station_painted_AUT = p_station_temporary_AUT ;
-let p_station_fixed_AUT = p_station_temporary_AUT ;
+let p_station_painted_AUT = p_station_fixed_ASF ;
+let p_station_fixed_AUT = p_station_fixed_ASF ;
 
 def p_claychoke_AUT (expr pos,theta,sc,al)=
     U:=(.4u,.4u);
