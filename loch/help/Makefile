@@ -1,3 +1,3 @@
 all:
-	make -i -C ./en
-	make -i -C ./sk
+	$(MAKE) -i -C ./en
+	$(MAKE) -i -C ./sk
