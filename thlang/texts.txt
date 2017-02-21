@@ -1365,7 +1365,7 @@ de: Lehmbäumchen
 en: clay tree
 it: pini d'argilla
 mi: rakau oneuku
-pt: cobertura de lama/argila
+pt: cones de lama/argila
 zh_CN: 粘土层
 
 therion: line border
@@ -2281,7 +2281,7 @@ fr: cone
 it: calcite flottante
 mi: korere a mōkihi kōhatu hōhonu
 pl: nanios
-pt: cone de jangada
+pt: cone de jangadas
 ru: высыпной конус
 sk: náplavový kužeľ
 sq: rrjedhe uji konike
@@ -2630,7 +2630,7 @@ fr: libellé
 it: etichetta
 mi: ingoa
 pl: nazwa
-pt: indicação
+pt: informação
 ru: текстовая метка
 sk: pomenovanie
 sq: mbishkrim-etiket
@@ -2647,7 +2647,7 @@ fr: libellé
 it: etichetta
 mi: ingoa
 pl: nazwa
-pt: indicação
+pt: informação
 ru: текстовая метка
 sk: pomenovanie
 sq: mbishkrim
