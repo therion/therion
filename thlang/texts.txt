@@ -1,3 +1,18 @@
+therion: title model
+bg: Модел
+en: Model
+pt: Modelo
+
+therion: title map
+bg: Карта
+en: Map
+pt: Mapa
+
+therion: surface legs
+bg: Повърхностна антена
+en: Surface legs
+pt: Visadas na superfície
+
 therion: point station
 bg: реперна точка
 cz: měřičský bod
@@ -137,6 +152,7 @@ zh_CN: 泉点
 therion: point flag:doline
 cz: závrt
 en: doline
+pt: dolina
 sk: závrt
 
 therion: point flag:dig
@@ -149,6 +165,7 @@ fr: désobstruction
 it: disostruzione
 mi: kari
 pl: wykop
+pt: desobstrução
 sk: sonda
 sq: mihje
 
@@ -190,6 +207,7 @@ therion: point flag:arch
 bg: арка
 cz: skalní oblouk
 en: arch
+pt: arco
 sk: skalný oblúk
 
 therion: point flag:overhang
@@ -221,7 +239,7 @@ fr: visée topo
 it: poligonale
 mi: ruri rārangi
 pl: ciąg pomiarowy
-pt: linha de topografia
+pt: linha de topo
 ru: нитка хода
 sk: polygónový ťah
 sq: vijat matese-vrojtuese
@@ -271,6 +289,7 @@ fr: jonction de carte
 it: riporto di mappa
 mi: mahere whenua ki te hui
 pl: połączenie map
+pt: conexão entre mapas
 ru: линия выноса
 sk: prepojenie máp
 sq: lidhjet ne harta
@@ -304,7 +323,7 @@ fr: mur
 it: roccia
 mi: tarā
 pl: ściana
-pt: parede
+pt: parede de rocha matriz
 ru: стена
 sk: stena
 sq: shkembi-muri
@@ -321,7 +340,7 @@ fr: mur sousjacent
 it: parete:sottostante
 mi: tāra ki raro
 pl: ściana położona niżej
-pt: parede subjacente
+pt: parede conduto inferior
 ru: нижерасположенная стена
 sk: stena nižšej úrovne
 sq: muri I shtrire
@@ -335,6 +354,7 @@ en: overlying wall
 it: parete:sovrastante
 mi: tāra ki runga
 pl: ściana położona wyżej
+pt: parede conduto superior
 sk: stena vyššej úrovne
 zh_CN: 洞顶边界
 
@@ -381,6 +401,7 @@ en_GB: entrance pitch
 it: parete:pozzo
 mi: rua
 pl: studnia wstępna
+pt: acesso poço
 sk: vstupná priepasť
 zh_CN: 竖井洞口
 
@@ -395,7 +416,7 @@ fr: effrondrement
 it: massi
 mi: pakaru
 pl: ściana utworzona przez zawalisko
-pt: desmoronamento
+pt: parede de blocos
 ru: глыбы
 sk: stena tvorená závalom
 sq: blloqe
@@ -412,7 +433,7 @@ fr: débris de roche
 it: detriti
 mi: otaota
 pl: ściana utworzona przez żwir
-pt: escombros
+pt: parede de escombros
 ru: щебень
 sk: stena tvorená suťou
 sq: depozitime/mbetje gurresh
@@ -429,7 +450,7 @@ fr: cailloux
 it: ciotoli
 mi: nga kōhatu iti
 pl: ściana utworzona przez okręglaki
-pt: seixos
+pt: parede de seixos
 ru: галька
 sk: stena tvorená okruhliakmi
 sq: gurralece
@@ -446,7 +467,7 @@ fr: sable
 it: sabbia
 mi: onepū
 pl: ściana utworzona przez piasek
-pt: areia
+pt: parede de areia
 ru: песок
 sk: stena tvorená pieskom
 sq: rane
@@ -463,7 +484,7 @@ fr: argile
 it: argilla
 mi: oneuku
 pl: ściana z gliny
-pt: lama
+pt: parede de lama/argila
 ru: глина
 sk: stena tvorená ílom
 sq: argjil
@@ -480,7 +501,7 @@ fr: glace
 it: ghiaccio
 mi: kōpaka
 pl: ściana z lodu
-pt: gelo
+pt: parede de gelo
 ru: лед, фирн
 sk: stena tvorená ľadom
 sq: akull
@@ -494,6 +515,7 @@ en: flowstone wall
 it: colata
 mi: tāra a pari kōhatu
 pl: ściana z nacieków
+pt: parede de escorrimento
 sk: stena tvorená sintrom
 zh_CN: 流石边界
 
@@ -505,6 +527,7 @@ en: moonmilk wall
 it: moonmilk
 mi: tāra a mirika marama
 pl: ściana z miękkich nacieków
+pt: parede de leite de lua
 sk: stena tvorená mäkkým sintrom
 zh_CN: 月奶石边界
 
@@ -519,7 +542,7 @@ fr: altitude
 it: altezza
 mi: teitei, tiketike
 pl: wysokość punktu pomiarowego npm
-pt: altura
+pt: altura da parede
 ru: высотная отметка стены
 sk: nadmorská výška bodu na stene
 sq: lartesia mbidetare e murit
@@ -553,7 +576,7 @@ fr: section
 it: sezione
 mi: roherohenga
 pl: przkrój
-pt_BR: seção
+pt_BR: corte
 pt_PT: secção
 ru: сечение
 sk: priečny rez
@@ -605,7 +628,7 @@ fr: hauteur du passage
 it: altezza galleria
 mi: ara teitei
 pl: wysokość korytarza
-pt: altura da galeria
+pt: altura da galeria (valor absoluto)
 ru: высота хода
 sk: výška chodby
 sq: lartesia e kalimit-e pashenuar
@@ -656,7 +679,7 @@ fr: hauteur au dessous et au dessus de l’eau
 it: altezza sopra e sotto il livello dell'acqua
 mi: karewa ki runga ki raro
 pl: wysokość korytarza nad powierzchnią wody i głębokość poniżej poziomu wody
-pt: altura acima e profundidade abaixo do nível da água
+pt: altura acima mais profundidade abaixo do nível da água
 ru: высота над и глубина ниже уровня воды
 sk: výška nad a hĺbka pod hladinou
 sq: lartesia mbi dhe nen nivelin e ujit
@@ -673,7 +696,7 @@ fr: courant d’air
 it: corrente d'aria
 mi: tawhiri
 pl: przewiew
-pt: presença de vento
+pt: corrente de ar
 ru: ток воздуха
 sk: prievan
 sq: rrymim i ajrit
@@ -689,6 +712,7 @@ fr: courant d’air d’hiver
 it: circolazione invernale
 mi: tawhiri a takurua
 pl: przewiew w zimie
+pt: corrente de ar no inverno
 ru: ток воздуха зимний
 sk: zimný prievan
 sq: rrymim ajri-dimeror
@@ -704,6 +728,7 @@ fr: courant d’air d’été
 it: circolazione estiva
 mi: tawhiri a raumati
 pl: przewiew w lecie
+pt: corrente de ar no verão
 ru: ток воздуха летний
 sk: letný prievan
 sq: rrymim ajri-veror
@@ -720,7 +745,7 @@ fr: date
 it: data d'osservazione
 mi: rā o te titiro
 pl: data obserwacji
-pt: data de observação
+pt: data do registro
 ru: дата наблюдения
 sk: dátum pozorovania
 sq: data e vrojtimit
@@ -736,6 +761,7 @@ fr: désobstruction
 it: disostruzione
 mi: kari
 pl: wykop
+pt: desobstrução
 sk: sonda
 sq: mihje
 
@@ -831,6 +857,7 @@ en: clay choke
 it: chiude su riempimento
 mi: uku pari
 pl: koniec zamknięty gliną
+pt: obstrução por lama/argila
 sk: koniec uzavretý ílom
 zh_CN: 粘土堵赛
 
@@ -862,7 +889,7 @@ fr: surplomb
 it: sporgenza
 mi: tauwharenga
 pl: przewieszka
-pt_BR: projeção
+pt_BR: marquise
 pt_PT: projecção
 ru: нависание потолка
 sk: previs
@@ -898,7 +925,7 @@ fr: puits
 it: pozzo
 mi: tupari
 pl: studnia
-pt: desnível
+pt: poço
 ru: колодец
 sk: priepasť
 sq: ngjitje
@@ -915,7 +942,7 @@ fr: marche de plafond
 it: gradino a soffitto
 mi: tapuae ki te tuanui
 pl: zmiana wysokości stropu
-pt_BR: degrau no teto
+pt_BR: desnível no teto
 pt_PT: degrau no tecto
 ru: уступ потолка
 sk: zmena výšky stropu
@@ -1037,7 +1064,7 @@ fr: hauteur d’une marche
 it: altezza camino
 mi: teitei papa tapuae
 pl: wysokość progu
-pt: altura do degrau no chão
+pt: altura do degrau no chão (valor absoluto)
 ru: высота уступа
 sk: výška stupňa
 sq: lartesia e shkalles se dyshemes
@@ -1072,7 +1099,7 @@ fr: profondeur
 it: prodondità pozzo
 mi: rua hōhonu
 pl: głębokosc studni
-pt: profundidade do desnível
+pt: profundidade do poço
 ru: высота колодца
 sk: hĺbka priepasti
 sq: thellesia e leshimit
@@ -1123,7 +1150,7 @@ fr: bord d’un rocher
 it: bordo masso
 mi: rohe kōhatu
 pl: obrys kamienia
-pt: lateral da rocha
+pt: contorno da rocha
 ru: внешний кромка глыбы
 sk: obrys kameňa
 sq: kufij shkembinjsh
@@ -1157,7 +1184,7 @@ fr: roche
 it: roccia
 mi: koiwi a papa
 pl: lita skała
-pt: rocha encaixante
+pt: rocha matriz
 ru: коренная порода
 sk: pevná skala
 sq: shtrat shkembi
@@ -1174,7 +1201,7 @@ fr: blocs
 it: massi
 mi: pakaru
 pl: kamienne bloki
-pt: blocos, desmoronamento
+pt: blocos
 ru: глыбы, завал
 sk: kamenné bloky
 sq: blloqe, shembje
@@ -1225,7 +1252,7 @@ fr: argile
 it: argilla
 mi: oneuku
 pl: glina
-pt: lama
+pt: lama/argila
 ru: глина
 sk: íl
 sq: argjil
@@ -1338,6 +1365,7 @@ de: Lehmbäumchen
 en: clay tree
 it: pini d'argilla
 mi: rakau oneuku
+pt: cobertura de lama/argila
 zh_CN: 粘土层
 
 therion: line border
@@ -1504,7 +1532,7 @@ fr: argile
 it: argilla
 mi: oneuku
 pl: glina
-pt: lama
+pt: lama/argila
 ru: глина
 sk: íl
 sq: argjil
@@ -1567,6 +1595,7 @@ el: γάλα σπηλαίου
 en: moonmilk
 fr: mondmilch
 it: moonmilk
+pt: leite de lua
 ru: лунное молоко
 sk: náteky mäkkého sintra
 sq: qumesht-hena
@@ -1598,7 +1627,7 @@ en: bedrock
 es: roca madre
 fr: roche
 it: roccia
-pt: rocha encaixante
+pt: rocha matriz
 ru: коренная порода
 sk: pevná skala
 sq: shtrat shkembi
@@ -1819,7 +1848,7 @@ fr: mondmilch
 it: moonmilk
 mi: mirika marama
 pl: miękkie nacieki
-pt: leite-de-lua
+pt: leite de lua
 ru: лунное молоко
 sk: mäkký sinter
 sq: qumesht-hena
@@ -1835,6 +1864,7 @@ fr: mondmilch
 it: moonmilk
 mi: mirika marama
 pl: miękkie nacieki
+pt: leite de lua
 ru: лунное молоко
 sk: náteky mäkkého sintra
 sq: qumesht-hena
@@ -1861,6 +1891,7 @@ therion: point stalactites
 bg: сталактити
 cz: stalaktity
 en: stalactites
+pt: estalactites
 
 therion: point stalagmite
 bg: сталагмит
@@ -1883,6 +1914,7 @@ therion: point stalagmites
 bg: сталагмити
 cz: stalagmity
 en: stalagmites
+pt: estalagmites
 
 therion: point pillar
 bg: сталактон
@@ -1906,6 +1938,7 @@ bg: сталактони
 cz: stalagnáty
 de: Säulen
 en: pillars
+pt: colunas
 
 therion: point ice-stalactite
 bg: леден сталактит
@@ -1915,6 +1948,7 @@ en: ice stalactite
 it: stalattite di ghiaccio
 mi: kōpaka ki te haere ki runga
 pl: lodowy stalaktyt
+pt: estalactite de gelo
 sk: ľadový stalaktit
 zh_CN: 冰乳
 
@@ -1926,6 +1960,7 @@ en: ice stalagmite
 it: stalagmite di ghiaccio
 mi: kōpaka ki te haere ki raro
 pl: lodowy stalagmit
+pt: estalagmite de gelo
 sk: ľadový stalagmit
 zh_CN: 冰笋
 
@@ -1937,6 +1972,7 @@ en: ice pillar
 it: colonna di ghiaccio
 mi: pou Kōpaka
 pl: lodowy stalagnat
+pt: coluna de gelo
 sk: ľadový stalagnát
 zh_CN: 冰柱
 
@@ -1968,7 +2004,7 @@ fr: fistuleuse
 it: tubolare
 mi: pū ngote
 pl: nacieki
-pt: canudos
+pt: canudo
 pt_PT: tubulares
 ru: сталактиты-соломины
 sk: brčká
@@ -2143,7 +2179,7 @@ fr: gours
 it: gour
 mi: kōhatu matatara
 pl: naciekowa przegroda
-pt: travertino
+pt: travertino vazio
 ru: гуры без воды
 sk: sintrová hrádza
 sq: penda guri
@@ -2160,7 +2196,7 @@ fr: gour
 it: vasca
 mi: kōhatu kopua wai
 pl: jeziorko naciekowe
-pt: lago travertino
+pt: travertino cheio
 ru: гуры с водой
 sk: sintrové jazierko
 sq: vaska uji
@@ -2228,7 +2264,7 @@ fr: marmites
 it: scanalatura
 mi: koauau
 pl: marmity
-pt: marcas de fluxo
+pt: marmita
 ru: канавки
 sk: píšťaly
 sq: flauta
@@ -2330,7 +2366,7 @@ fr: pas d’équipement
 it: senza armo
 mi: wahi a taonga mahi kore
 pl: miejsce bez punktu asekuracyjnego
-pt: local sem equipamento
+pt: sem equipamento
 ru: снаряжение отутствует!
 sk: nevystrojené miesto
 sq: vend pa pajisje
@@ -2354,23 +2390,6 @@ sq: pike-sigurimi
 zh_CN: 锚点
 
 therion: point rope
-bg: въже
-cz: lano
-de: Seil
-el: σχοινί
-en: rope
-es: cuerda
-fr: corde
-it: corda
-mi: taura
-pl: lina
-pt: corda
-ru: линейная опора
-sk: lano
-sq: litar
-zh_CN: 绳子
-
-therion: line rope
 bg: въже
 cz: lano
 de: Seil
@@ -2472,6 +2491,23 @@ sk: schody
 sq: shkalle
 zh_CN: 梯坎
 
+therion: line rope
+bg: въже
+cz: lano
+de: Seil
+el: σχοινί
+en: rope
+es: cuerda
+fr: corde
+it: corda
+mi: taura
+pl: lina
+pt: corda
+ru: линейная опора
+sk: lano
+sq: litar
+zh_CN: 绳子
+
 therion: line steps
 bg: стъпала
 cz: schody
@@ -2493,11 +2529,13 @@ therion: point via-ferrata
 bg: виа-ферата
 de: Klettersteig
 en: via-ferrata
+pt: via ferrata
 
 therion: line via-ferrata
 bg: виа-ферата
 de: Klettersteig
 en: via-ferrata
+pt: via ferrata
 
 therion: point traverse
 bg: траверс
@@ -2538,12 +2576,14 @@ bg: перила
 cz: zábradlí
 de: Geländer
 en: handrail
+pt: corrimão
 
 therion: line handrail
 bg: перила
 cz: zábradlí
 de: Geländer
 en: handrail
+pt: corrimão
 
 therion: point camp
 bg: лагер
@@ -2573,7 +2613,7 @@ fr: remarque
 it: nota
 mi: korero
 pl: uwaga
-pt: anotação
+pt: observação
 ru: заметка
 sk: poznámka
 sq: shenim
@@ -2726,7 +2766,7 @@ fr: Profondeur
 it: Profondità
 mi: Hōhonu a ana, Rētōtanga
 pl: przewyższenie
-pt: Desnível
+pt: Profundidade
 ru: Глубина
 sk: Prevýšenie
 sq: thellesia
@@ -2885,14 +2925,3 @@ sk: [Povrchová mapa]
 sq: harta e siperfaqes
 zh_CN: 外观图
 
-therion: title model
-bg: Модел
-en: Model
-
-therion: title map
-bg: Карта
-en: Map
-
-therion: surface legs
-bg: Повърхностна антена
-en: Surface legs
