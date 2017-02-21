@@ -67,7 +67,8 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# tex-env off\n"
 "# tex-fonts <encoding> <roman> <italic> <bold> <sansserif> <sansserifoblique>\n"
 "# tex-fonts raw cmr10 cmti10 cmbx10 cmss10 cmssi10\n"
-"# tex-fonts xl2 csr10 csti10 csbx10 csss10 csssi10\n\n"
+"# tex-fonts-optional xl2 csr10 csti10 csbx10 csss10 csssi10\n\n"
+"# tex-fonts-optional cmcyr cmcyr10 cmcti10 cmcbx10 cmcss10 cmcssi10\n\n"
 "### PDF fonts initialization\n"
 "# otf2pfb off\n"
 "# pdf-fonts <roman> <italic> <bold> <sansserif> <sansserifoblique>\n\n"
@@ -107,6 +108,7 @@ enum {
   TTIC_TMP_REMOVE_SCRIPT,
   TTIC_LANG,
   TTIC_TEX_FONTS,
+  TTIC_TEX_FONTS_OPTIONAL,
   TTIC_TEX_ENV,
   TTIC_UNITS,
   TTIC_LOOPC,
@@ -141,6 +143,7 @@ static const thstok thtt_initcmd[] = {
   {"source-path", TTIC_PATH_SOURCE},
   {"tex-env",TTIC_TEX_ENV},
   {"tex-fonts",TTIC_TEX_FONTS},
+  {"tex-fonts-optional",TTIC_TEX_FONTS_OPTIONAL},
   {"text",TTIC_TEXT},
   {"tmp-path",TTIC_TMP_PATH},
   {"tmp-remove",TTIC_TMP_REMOVE_SCRIPT},
@@ -448,6 +451,7 @@ void thinit::load()
             ththrow(("invalid number of command arguments"));
           break;
         case TTIC_TEX_FONTS:
+        case TTIC_TEX_FONTS_OPTIONAL:
           if (nargs != 7)
             ththrow(("invalid number of command arguments"));
           break;
@@ -540,6 +544,7 @@ void thinit::load()
           thcfg.set_search_path(args[1]);
           break;
         
+        case TTIC_TEX_FONTS_OPTIONAL:
         case TTIC_TEX_FONTS:
           frec.id = get_enc_id(args[1]);
           if (frec.id < 0)
@@ -549,6 +554,7 @@ void thinit::load()
           frec.bf = args[4];
           frec.ss = args[5];
           frec.si = args[6];
+          frec.opt = (argid == TTIC_TEX_FONTS_OPTIONAL);
           FONTS.push_back(frec);
           some_tex_fonts = true;
           break;
@@ -602,6 +608,92 @@ void thinit::load()
   thinit__make_short_path(&this->path_mpost);
   thinit__make_short_path(&this->path_pdftex);
 #endif
+
+  // check if optional fonts are in the system, remove them if not
+#ifdef THWIN32
+  if (!thini.tex_env) {
+    putenv("TEXMFCNF=");
+    putenv("DVIPSHEADERS=");
+    putenv("GFFONTS=");
+    putenv("GLYPHFONTS=");
+    putenv("MFBASES=");
+    putenv("MFINPUTS=");
+    putenv("MFPOOL=");
+    putenv("MPINPUTS=");
+    putenv("MPMEMS=");
+    putenv("MPPOOL=");
+    putenv("MPSUPPORT=");
+    putenv("PKFONTS=");
+    putenv("PSHEADERS=");
+    putenv("T1FONTS=");
+    putenv("T1INPUTS=");
+    putenv("T42FONTS=");
+    putenv("TEXCONFIG=");
+    putenv("TEXDOCS=");
+    putenv("TEXFONTMAPS=");
+    putenv("TEXFONTS=");
+    putenv("TEXFORMATS=");
+    putenv("TEXINPUTS=");
+    putenv("TEXMFDBS=");
+    putenv("TEXMFINI=");
+    putenv("TEXPICTS=");
+    putenv("TEXPKS=");
+    putenv("TEXPOOL=");
+    putenv("TEXPSHEADERS=");
+    putenv("TEXSOURCES=");
+    putenv("TFMFONTS=");
+    putenv("TTFONTS=");
+    putenv("VFFONTS=");
+    putenv("WEB2C=");
+#ifdef THMSVC
+    putenv("TEXINPUTS=../tex;../../therion.prj/Setup/texmf/tex;.");
+    putenv("MPINPUTS=../mpost;.");
+    if (ENC_NEW.NFSS == 1) {
+      putenv("TEXFONTS=.");
+      putenv("T1FONTS=.");
+      putenv("TTFFONTS=.");
+    }
+#endif
+  }
+#endif
+
+  list<fontrecord> TMPFONTS;
+
+  for (list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++) {
+    if (J->opt) {
+      FILE * ff = fopen(thtmp.get_file_name("fonttest.tex"),"w");
+      fprintf(ff,"\\nopagenumbers\n\\batchmode\n\\def\\fonttest#1{\\font\\a=#1\\a}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\end", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
+      fclose(ff);
+
+      thbuffer com, wdir;
+      wdir.guarantee(1024);
+      getcwd(wdir.get_buffer(),1024);
+      chdir(thtmp.get_dir_name());
+      int retcode;
+
+      com = "\"";
+      com += this->get_path_pdftex();
+      com += "\"";
+    //  com += " --interaction nonstopmode data.tex";
+      com += " fonttest.tex";
+      retcode = system(com.get_buffer());
+      thprintf("checking optional fonts %s %s %s %s %s ...", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
+      if (retcode != EXIT_SUCCESS) {
+        thprintf(" NOT INSTALLED\n");
+      } else {
+        TMPFONTS.push_back(*J);
+        thprintf(" OK\n");
+      }
+      chdir(wdir.get_buffer());
+    } else {
+      TMPFONTS.push_back(*J);
+    }
+  }
+
+  FONTS.clear();
+  for (list<fontrecord>::iterator J = TMPFONTS.begin(); J != TMPFONTS.end(); J++) {
+    FONTS.push_back(*J);
+  }
 
 }
 

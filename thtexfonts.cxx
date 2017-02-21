@@ -191,6 +191,7 @@ void init_encodings() {
   F.bf = "cmbx10";
   F.ss = "cmss10";
   F.si = "cmssi10";
+  F.opt = false;
   FONTS.push_back(F);
   F.id = get_enc_id("xl2");
   F.rm = "csr10";
@@ -198,6 +199,11 @@ void init_encodings() {
   F.bf = "csbx10";
   F.ss = "csss10";
   F.si = "csssi10";
+#ifdef THWIN32
+  F.opt = false;
+#else
+  F.opt = true;
+#endif
   FONTS.push_back(F);
   F.id = get_enc_id("cmcyr");
   F.rm = "cmcyr10";
@@ -205,6 +211,11 @@ void init_encodings() {
   F.bf = "cmcbx10";
   F.ss = "cmcss10";
   F.si = "cmcssi10";
+#ifdef THWIN32
+  F.opt = false;
+#else
+  F.opt = true;
+#endif
   FONTS.push_back(F);
 }
 
