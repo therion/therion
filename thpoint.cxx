@@ -896,7 +896,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_KARREN,SYMP_KARREN)
     thpoint_type_export_mp(TT_POINT_TYPE_SCALLOP,SYMP_SCALLOP)
     thpoint_type_export_mp(TT_POINT_TYPE_FLUTE,SYMP_FLUTE)
-    thpoint_type_export_mp(TT_POINT_TYPE_RAFT_CONE,SYMP_RAFT)
+    thpoint_type_export_mp(TT_POINT_TYPE_RAFT_CONE,SYMP_RAFTCONE)
     thpoint_type_export_mp(TT_POINT_TYPE_CLAY_TREE,SYMP_CLAYTREE)
 
   
