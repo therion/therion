@@ -469,42 +469,47 @@ double thdate_d2y(int year, int month, int day, int hour, int min, double sec)
 {
 
   double ret = (double) year;
-  double nmd = 31.0;
-  static const double mdays[12] = {31.0,29.0,31.0,30.0,31.0,30.0,
-      31.0,31.0,30.0,31.0,30.0,31.0};
 
-  if ((month > 0) && (month < 13)) {
-    ret += ((double) month - 1.0) / 12.0;
-    nmd = mdays[month - 1];
-    if ((month == 2) && 
-        (((year % 400) == 0) || (((year % 4) == 0) && ((year % 100) != 0))))
-      nmd = 28.0;    
-  }
-  else
-    return ret;
- 
-  if ((day > 0) && (day < 32)) {
-    ret += (double) (day - 1) / (12.0 * nmd);
-  }
-  else
-    return ret;
-   
-  if (hour >= 0) {
-    ret += (double) hour / (12.0 * nmd * 24.0);
-  }
-  else
-    return ret;
-   
-  if (min >= 0) {
-    ret += (double) min / (12.0 * nmd * 24.0 * 60);
-  }
-  else
-    return ret;
-  
-  if (sec >= 0) {
-    ret += (double) sec / (12.0 * nmd * 24.0 * 3600);
+  if (month < 1 || month > 12) {
+    // Use midpoint of year if no month specified.
+    return ret + 0.5;
   }
 
+  static const double start_day[12] = {
+    0.0, 31.0, 59.0, 90.0, 120.0, 151.0,
+    181.0, 212.0, 243.0, 273.0, 304.0, 334.0
+  };
+
+  double msd = start_day[month - 1];
+  double yl = 365.0;
+  if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
+    // Leap year.
+    yl = 366.0;
+    if (month > 2) ++msd;
+  }
+
+  // Calculate the (possibly fractional) day of the year.
+  double doy = msd;
+  if (day >= 1 && day <= 32) {
+    doy += (double) (day - 1);
+    if (hour >= 0) {
+      doy += (double) hour / 24.0;
+      if (min >= 0) {
+        doy += (double) min / (24.0 * 60.0);
+        if (sec >= 0) {
+          doy += (double) sec / (24.0 * 60.0 * 60.0);
+        }
+      }
+    } else {
+      // Use midday if no hour specified.
+      doy += 0.5;
+    }
+  } else {
+    // Use 15th of the month if no day specified.
+    doy += (double) (15 - 1);
+  }
+
+  ret += doy / yl;
   return ret;
 }
 
