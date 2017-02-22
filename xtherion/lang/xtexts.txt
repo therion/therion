@@ -3760,33 +3760,29 @@ sk: odstránenie náčrtku
 sq: duke fshire skicen e deponise
 zh_CN: 删除草图素描
 
-therion: on"] -variable xth(me,ctrl,ctx,clip) -value "on
+therion: on
 
-therion: off"] -variable xth(me,ctrl,ctx,clip) -value "off
+therion: off
 
-therion: on"] -variable xth(me,ctrl,ctx,visibility) -value "on
+therion: top
 
-therion: off"] -variable xth(me,ctrl,ctx,visibility) -value "off
+therion: bottom
 
-therion: top"] -variable xth(me,ctrl,ctx,place) -value "top
+therion: tiny (xs)
 
-therion: bottom"] -variable xth(me,ctrl,ctx,place) -value "bottom
+therion: small (s)
 
-therion: tiny (xs)"] -variable xth(me,ctrl,ctx,scale) -value "xs
+therion: normal (m)
 
-therion: small (s)"] -variable xth(me,ctrl,ctx,scale) -value "s
+therion: large (l)
 
-therion: normal (m)"] -variable xth(me,ctrl,ctx,scale) -value "m
+therion: huge (xl)
 
-therion: large (l)"] -variable xth(me,ctrl,ctx,scale) -value "l
+therion: out
 
-therion: huge (xl)"] -variable xth(me,ctrl,ctx,scale) -value "xl
+therion: in
 
-therion: out"] -variable xth(me,ctrl,ctx,outline) -value "out
-
-therion: in"] -variable xth(me,ctrl,ctx,outline) -value "in
-
-therion: none"] -variable xth(me,ctrl,ctx,outline) -value "none
+therion: none
 
 therion: <<
 pt: <<
@@ -3808,7 +3804,7 @@ zh_CN: 平滑
 therion: >>
 pt: >>
 
-therion: auto"] -variable xth(me,ctrl,ctx,altitude) -value ".
+therion: auto
 
 therion: edit
 bg: редактиране
@@ -3855,19 +3851,19 @@ therion: Cancel
 cz: Zrušit
 pt: Cancelar
 
-therion: painted"] -variable xth(me,ctrl,ctx,subtype) -value "painted
+therion: painted
 
-therion: natural"] -variable xth(me,ctrl,ctx,subtype) -value "natural
+therion: natural
 
-therion: fixed"] -variable xth(me,ctrl,ctx,subtype) -value "fixed
+therion: fixed
 
-therion: winter"] -variable xth(me,ctrl,ctx,subtype) -value "winter
+therion: winter
 
-therion: summer"] -variable xth(me,ctrl,ctx,subtype) -value "summer
+therion: summer
 
-therion: undefined"] -variable xth(me,ctrl,ctx,subtype) -value "undefined
+therion: undefined
 
-therion: paleo"] -variable xth(me,ctrl,ctx,subtype) -value "paleo
+therion: paleo
 
 therion: Station name
 cz: Název bodu
@@ -3890,49 +3886,49 @@ sk: typ
 sq: lloji
 zh_CN: 类型
 
-therion: bedrock"] -variable xth(me,ctrl,ctx,subtype) -value "bedrock
+therion: bedrock
 
-therion: underlying"] -variable xth(me,ctrl,ctx,subtype) -value "underlying
+therion: underlying
 
-therion: overlying"] -variable xth(me,ctrl,ctx,subtype) -value "overlying
+therion: overlying
 
-therion: unsurveyed"] -variable xth(me,ctrl,ctx,subtype) -value "unsurveyed
+therion: unsurveyed
 
-therion: pit"] -variable xth(me,ctrl,ctx,subtype) -value "pit
+therion: pit
 
-therion: sand"] -variable xth(me,ctrl,ctx,subtype) -value "sand
+therion: sand
 
-therion: clay"] -variable xth(me,ctrl,ctx,subtype) -value "clay
+therion: clay
 
-therion: pebbles"] -variable xth(me,ctrl,ctx,subtype) -value "pebbles
+therion: pebbles
 
-therion: debris"] -variable xth(me,ctrl,ctx,subtype) -value "debris
+therion: debris
 
-therion: blocks"] -variable xth(me,ctrl,ctx,subtype) -value "blocks
+therion: blocks
 
-therion: ice"] -variable xth(me,ctrl,ctx,subtype) -value "ice
+therion: ice
 
-therion: flowstone"] -variable xth(me,ctrl,ctx,subtype) -value "flowstone
+therion: flowstone
 
-therion: moonmilk"] -variable xth(me,ctrl,ctx,subtype) -value "moonmilk
+therion: moonmilk
 
-therion: visible"] -variable xth(me,ctrl,ctx,subtype) -value "visible
+therion: visible
 
-therion: invisible"] -variable xth(me,ctrl,ctx,subtype) -value "invisible
+therion: invisible
 
-therion: temporary"] -variable xth(me,ctrl,ctx,subtype) -value "temporary
+therion: temporary
 
-therion: presumed"] -variable xth(me,ctrl,ctx,subtype) -value "presumed
+therion: presumed
 
-therion: permanent"] -variable xth(me,ctrl,ctx,subtype) -value "permanent
+therion: permanent
 
-therion: intermittent"] -variable xth(me,ctrl,ctx,subtype) -value "intermittent
+therion: intermittent
 
-therion: conjectural"] -variable xth(me,ctrl,ctx,subtype) -value "conjectural
+therion: conjectural
 
-therion: cave"] -variable xth(me,ctrl,ctx,subtype) -value "cave
+therion: cave
 
-therion: surface"] -variable xth(me,ctrl,ctx,subtype) -value "surface
+therion: surface
 
 therion: control points
 pt: pontos de controle
