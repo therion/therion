@@ -2631,13 +2631,13 @@ therion: Trace line
 bg: Проследяване от картината
 cz: Trasovat linii
 en: Trace line
-pt: Traçar de imagem
+pt: Traçar linha
 
 therion: Convert to curve
 bg: Конвертиране в Безие
 cz: Konvertovat na křivku
 en: Convert to curve
-pt: Converter para curva
+pt: Converter em curva
 
 therion: Simplify line
 bg: Опростяване на линия
@@ -4348,11 +4348,11 @@ zh_CN: 分割线
 
 therion: Stop tracing
 cz: Ukončit trasování
-pt: Parar tracejamento
+pt: Parar tracejo
 
 therion: Continue tracing
 cz: Pokračovat v trasování
-pt: Continuar tracejamento
+pt: Seguir tracejo
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
