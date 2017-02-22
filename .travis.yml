@@ -10,7 +10,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   echo "deb http://pkg.mxe.cc/repos/apt/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mxeapt.list      ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D43A795B73B16ABE9643FE1AFD8FFF16DB45C6AB      ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo apt-get -qq update         ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo apt-get install -y texlive-binaries texlive-metapost texlive-lang-czechslovak texlive-lang-cyrillic libwxgtk3.0-dev libvtk6-dev survex imagemagick      ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo apt-get install -y texlive-binaries texlive-metapost libwxgtk3.0-dev libvtk6-dev survex imagemagick      ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo apt-get install -y mxe-i686-w64-mingw32.static-binutils mxe-i686-w64-mingw32.static-bzip2 mxe-i686-w64-mingw32.static-expat mxe-i686-w64-mingw32.static-freetype-bootstrap mxe-i686-w64-mingw32.static-gcc mxe-i686-w64-mingw32.static-gettext mxe-i686-w64-mingw32.static-glib mxe-i686-w64-mingw32.static-harfbuzz mxe-i686-w64-mingw32.static-jpeg mxe-i686-w64-mingw32.static-libiconv mxe-i686-w64-mingw32.static-libpng mxe-i686-w64-mingw32.static-tiff mxe-i686-w64-mingw32.static-vtk mxe-i686-w64-mingw32.static-wxwidgets mxe-i686-w64-mingw32.static-xz mxe-i686-w64-mingw32.static-zlib      ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   brew update                     ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   brew tap homebrew/science       ; fi
