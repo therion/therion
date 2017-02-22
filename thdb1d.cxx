@@ -1518,7 +1518,7 @@ void thdb1d::find_loops()
 
   size_t nlegs = this->get_tree_size(),
     nstations = this->station_vec.size(), numseries,
-    i, lastcross, nseries, nloops;
+    i, lastcross, nseries, nloops, loopid;
     
   thdb1dl ** legs = this->get_tree_legs(), ** curleg, * cleg;
   thdb1d_tree_node * nodes = this->get_tree_nodes(), * from_node;
@@ -1962,6 +1962,7 @@ void thdb1d::find_loops()
   
   // zapise si okruhy do premennych databazy
   lsi = all_loop_set.begin();
+  loopid = 0;
   while (lsi != all_loop_set.end()) {
     // vypise ci je open alebo close, nastavi
     tdbloop.from = &(this->station_vec[lsi->from_cross->station_uid - 1]);
@@ -1998,6 +1999,7 @@ void thdb1d::find_loops()
       }
       cca = cca->next_arrow;
     }
+    tdbloop.id = ++loopid;
     this->loop_list.insert(this->loop_list.end(), tdbloop);
     lsi++;
   }
@@ -2199,8 +2201,16 @@ void thdb1d::close_loops()
         li->err_dz = dst_dz - src_dz;
         li->err_length = sqrt(li->err_dx * li->err_dx + li->err_dy * li->err_dy + li->err_dz * li->err_dz);
         if (sum_length > 0.0) {
-          avg_error += 100.0 * sumlegs * (li->err_length / sum_length);
+          li->err = 100.0 * (li->err_length / sum_length);
+          avg_error += sumlegs * li->err;
           avg_error_sum += sumlegs;
+          ll = li->first_leg;
+          while (ll != NULL) {
+            if ((ll->leg->loop == NULL) || (ll->leg->loop->err < li->err)) {
+              ll->leg->loop = &(*li);
+            }
+            ll = ll->next_leg;
+          }
         }
       // vyrovna okruh
       } else {

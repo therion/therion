@@ -55,8 +55,9 @@ struct thdb1d_loop {
   thdb1d_loop_leg * first_leg, * last_leg;
   class thdb1ds * from, * to;
   unsigned long nlegs;
+  unsigned long id;
   bool open;
-  double err_dx, err_dy, err_dz, err_length, src_length;
+  double err_dx, err_dy, err_dz, err_length, src_length, err;
 };
 
 class thdb1d_tree_node {

@@ -122,6 +122,8 @@ void thdataleg::clear()
   this->to_be_adjusted = false;
   this->topofil = false;
   this->plumbed = false;
+
+  this->loop = NULL;
 }
 
 
