@@ -347,6 +347,19 @@ supported initialization commands follow.
     
   If you want to add some unsupported encodings, 
   read the chapter {\it Compilation / Hacker's guide}. 
+
+* |tex-fonts-optional <encoding> <rm> <it> <bf> <ss> <si>|
+
+  Similar to |tex-fonts|, but tests if the \TeX\ fonts are installed in the
+  system. It does nothing if any of the specified fonts is not present.
+  
+  This setting is used by default for Czech/Slovak and cyrillic fonts
+  to avoid \MP\ errors on systems without these fonts present.
+  
+  As the test takes some time (pdfTeX instance is run), you might
+  disable the default behaviour completely by setting |tex-fonts| in the
+  INI file.
+
 \endlist
 
 
