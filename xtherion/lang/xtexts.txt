@@ -343,7 +343,7 @@ en: BAC
 es: tasa alcoholemia
 it: BAC
 pt: TAS
-ru: BAC
+ru: Концентрация алкоголя в крови
 sk: Hladina alkoholu
 sq: perqindja e alkoolit ne gjak-BAC
 zh_CN: 血液中酒精浓度
@@ -356,7 +356,7 @@ en: ETA
 es: TBE (Tiempo Bajada Estimado)
 it: ETA
 pt: TEC
-ru: ETA
+ru: Время до отрезвления
 sk: Čas do vytriezvenia
 sq: ETA
 zh_CN: 预计清醒时间
@@ -575,6 +575,7 @@ it: Xpdf
 pt: Xpdf
 sk: Xpdf
 sq: Xpdf
+ru: Xpdf
 zh_CN: Xpdf
 
 therion: Acrobat Reader
@@ -584,6 +585,7 @@ de: Acrobat Reader
 it: Acrobat Reader
 pt: Acrobat Reader
 sk: Acrobat Reader
+ru: Acrobat Reader
 sq: lexuesi I programit-Akrobat
 zh_CN: Acrobat Reader
 
@@ -687,6 +689,7 @@ therion: WARNING
 bg: Внимание!
 cz: VAROVÁNÍ
 de: WARNUNG
+ru: ПРЕДУПРЕЖДЕНИЕ
 pt: AVISO
 zh_CN: 警告
 
@@ -2538,7 +2541,7 @@ en: id
 es: ID
 it: Identificativo
 pt: id
-ru: Ид
+ru: id - индетификатор
 sk: id
 sq: ID-identifikimi
 zh_CN: ID
@@ -2632,18 +2635,21 @@ bg: Проследяване от картината
 cz: Trasovat linii
 en: Trace line
 pt: Traçar de imagem
+ru: Проследить линию
 
 therion: Convert to curve
 bg: Конвертиране в Безие
 cz: Konvertovat na křivku
 en: Convert to curve
 pt: Converter para curva
+ru: Конвертировать в кривую
 
 therion: Simplify line
 bg: Опростяване на линия
 cz: Zjednodušit linii
 en: Simplify line
 pt: Simplificar
+ru: Упростить линию
 
 therion: Select line point.
 bg: Избери една от точките на линията.
@@ -3071,7 +3077,7 @@ en: Delete selected line from list (will not be part of area borders)
 es: Borrar la línea seleccionada de la lista (dejará de limitar este área).
 it: Rimuovi identificativo dall'area.
 pt: Remova ID da área.
-ru: Удалить линию по ИД из области.
+ru: Удалить линию по ID из области.
 sk: Odstrániť krivku z daným ID z plochy.
 sq: fshije ID prej fushes
 zh_CN: 从列表中删除给定的线（不属于区边界的部分）
@@ -3085,7 +3091,7 @@ en: Insert ID
 es: Insertar ID
 it: Identificativo
 pt: Inserir ID
-ru: Вставить по ИД
+ru: Вставить по ID
 sk: Vlož ID
 sq: fute ID-ne
 zh_CN: 插入ID
@@ -3099,7 +3105,7 @@ en: Insert given id instead of Xtherion default.
 es: Insertar nombre (ID) indicado, no el nombre que therion crea automáticamente
 it: Inserisci l'identificativo specificato
 pt: Insira o id indicado.
-ru: Вставить линию-границу по заданному ИД.
+ru: Вставить линию-границу по заданному ID.
 sk: Vložiť ID krivky do zoznamu kriviek ohraničujúcich plochu.
 sq: fute ID-n e dhene ne vend te X-therion
 zh_CN: 插入指定的ID
@@ -3113,7 +3119,7 @@ en: ID to insert.
 es: Escribir el nombre (ID) a insertar.
 it: Identificativo da inserire.
 pt: ID a ser inserido.
-ru: ИД линии для вставки
+ru: ID линии для вставки
 sk: ID na vloženie.
 sq: ID-ja per tu futur.
 zh_CN: 插入的ID
@@ -3225,7 +3231,7 @@ en: Insert ...
 es: Insertar ...
 it: Inserisci ...
 pt: Inserir...
-ru: Вставка
+ru: Вставка...
 sk: Vložiť ...
 sq: fute…
 zh_CN: 插入 ...
@@ -3507,7 +3513,7 @@ en: creating endscrap
 es: creando línea final de croquis (endscrap)
 it: creazione endscrap
 pt: criando endscrap (marca de fim de trecho)
-ru: создание конца скрапа
+ru: создание окончания скрапа
 sk: vytvorenie konca scrapu
 sq: duke kriju fundin e deponise
 zh_CN: 创建草图收尾
@@ -3872,9 +3878,11 @@ therion: paleo"] -variable xth(me,ctrl,ctx,subtype) -value "paleo
 therion: Station name
 cz: Název bodu
 pt: Nome da base
+ru: Номер пикета
 
 therion: Scrap reference
 pt: Referência do trecho
+ru: Привязка скрапа
 
 therion: type
 bg: тип
@@ -3936,6 +3944,7 @@ therion: surface"] -variable xth(me,ctrl,ctx,subtype) -value "surface
 
 therion: control points
 pt: pontos de controle
+ru: контрольные точки
 
 therion: orientation
 bg: ориентация
@@ -3967,13 +3976,16 @@ zh_CN: l-大小
 
 therion: segment subtype
 pt: subtipo do segmento
+ru: подтип сегмента
 
 therion: altitude label
 pt: indicador de altitude
+ru: отметка высоты
 
 therion: other options
 cz: další možnosti
 pt: outras opções
+ru: другие опции
 
 therion: Edit line
 bg: Редактирай линия
@@ -4019,10 +4031,12 @@ zh_CN: 反向
 
 therion: Select underlying point
 pt: Selecionar o ponto inferior
+ru: Выбрать нижележащую точку
 
 therion: Delete symbol
 cz: Smazat symbol
 pt: Apagar símbolo
+ru: Удалить символ
 
 therion: toggle image visibility
 bg: превключване на видимостта на изображение
@@ -4349,10 +4363,12 @@ zh_CN: 分割线
 therion: Stop tracing
 cz: Ukončit trasování
 pt: Parar tracejamento
+ru: Прекратить трассировку
 
 therion: Continue tracing
 cz: Pokračovat v trasování
 pt: Continuar tracejamento
+ru: Продолжить трассировку
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
@@ -5141,6 +5157,7 @@ bg: Калибриране на изображение ...
 cz: Kalibrovat bitmapu ...
 de: Bild kalibrieren...
 it: Mappa georeferenziata...
+ru: Привязать изображение
 pt: Calibrar imagem...
 zh_CN: 校准图片...
 
@@ -5205,6 +5222,7 @@ de: Neue Datei
 el: Νέο αρχείο
 it: Nuovo
 pt: Novo arquivo
+ru: Новый файл
 sk: Nový súbor
 sq: arkivi-fajlli I ri
 zh_CN: 新文件
@@ -5216,6 +5234,7 @@ de: Datei öffnen
 el: Άνοιγμα
 it: Apri
 pt: Abrir arquivo
+ru: Открыть файл
 sk: Otvoriť súbor
 sq: hape fajllin
 zh_CN: 打开文件
@@ -5227,6 +5246,7 @@ de: Datei speichern
 el: Αποθήκευση
 it: Salva
 pt: Salvar arquivo
+ru: Сохранить файл
 sk: Uložiť súbor
 sq: ruaje fajllin
 zh_CN: 存储文件
@@ -5238,6 +5258,7 @@ de: Datei speichern als
 el: Αποθήκευση ως
 it: Salva come
 pt: Salvar arquivo como
+ru: Сохранить файл как
 sk: Uložiť súbor ako
 sq: ruaje fajllin si
 zh_CN: 文件存储为
@@ -5249,6 +5270,7 @@ de: Datei schließen
 el: Κλείσιμο αρχείου
 it: Chiudi
 pt: Fechar arquivo
+ru: Закрыть файл
 sk: Zatvoriť súbor
 sq: mbylle fajllin
 zh_CN: 关闭文件
@@ -5288,6 +5310,7 @@ de: Zum Texteditor wechseln
 el: Μετάβαση σε επεξεργαστή κειμένου
 it: Editor di testi
 pt: Mudar para editor de texto
+ru: Переключится в текстовый редактор
 sk: Prepnúť na textový editor
 sq: kalo tek editori i tekstit
 zh_CN: 文本编辑器开关
@@ -5299,6 +5322,7 @@ de: Zum Karteneditor wechseln
 el: Μετάβαση σε επεξεργαστή σχεδίου
 it: Editor di mappe
 pt: Mudar para editor de mapa
+ru: Переключится в редактор карт
 sk: Prepnúť na mapový editor
 sq: kalo tek editori I hartes
 zh_CN: 地图编辑器开关
@@ -5310,6 +5334,7 @@ de: Zum Compiler wechseln
 el: Μετάβαση σε συντάκτη
 it: Compilatore
 pt: Mudar para compilador
+ru: Переключится в компилятор
 sk: Prepnúť na kompilátor
 sq: kalo tek kompilatori
 zh_CN: 程序编译开关
@@ -5335,6 +5360,7 @@ de: In Auswahlmodus wechseln
 el: Μετάβαση σε λειτουργία επιλογής
 it: Modalità di selezione
 pt: Mudar para modo de seleção
+ru: Переключится в режим выбора
 sk: Prepnúť do módu na výber objektu
 sq: kalo tek moduli per selekcionim
 zh_CN: 模块选择开关
@@ -5346,6 +5372,7 @@ de: Nächste Skizze auswählen
 el: Επιλογή επόμενου σκραπ
 it: Seleziona il prossimo scrap
 pt: Selecionar próximo trecho
+ru: Выбрать слеующий скрап
 sk: Vyber nasledujúci scrap
 sq: zgjedhe deponin e ardhshme
 zh_CN: 选定下一个草图
@@ -5357,6 +5384,7 @@ de: Nächste Fläche auswählen
 el: Επιλογή επόμενης επιφάνειας
 it: Seleziona la prossima area
 pt: Selecionar próxima área
+ru: Выбрать слеующую область
 sk: Vyber nasledujúcu plochu
 sq: zgjedhe-selekto fushen e ardhshme
 zh_CN: 选择下一个区
@@ -5368,6 +5396,7 @@ de: Vergrößern
 el: Μεγέθυνση
 it: Zoom in
 pt: Fechar zoom
+ru: Увеличить
 sk: Zväčšiť
 sq: zmadho
 zh_CN: 放大
@@ -5379,6 +5408,7 @@ de: Verkleinern
 el: Σμίκρυνση
 it: Zoom out
 pt: Abrir zoom
+ru: Уменьшить
 sk: Zmenšiť
 sq: zvogelo
 zh_CN: 缩小
@@ -5390,6 +5420,7 @@ de: Neue Skizze einfügen
 el: Εισαγωγή νέου σκραπ
 it: Inserisci un nuovo scrap
 pt: Inserir novo trecho
+ru: Вставить новый скрап
 sk: Vložiť nový scrap
 sq: fute deponin e re
 zh_CN: 插入新的草图
@@ -5401,6 +5432,7 @@ de: Neuen Punkt einfügen
 el: Εισαγωγή νέου σημείου
 it: Inserisci un nuovo punto
 pt: Inserir novo ponto
+ru: Вставить новую точку
 sk: Vložiť nový bod
 sq: fute piken e re
 zh_CN: 插入新的点
@@ -5412,6 +5444,7 @@ de: Neue Linie einfügen
 el: Εισαγωγή νέας γραμμής
 it: Inserisci una nuova linea
 pt: Inserir nova linha
+ru: Вставить новую линию
 sk: Vložiť novú krivku
 sq: fute rrjeshtin e ri
 zh_CN: 插入新的线
@@ -5423,6 +5456,7 @@ de: Neue Fläche einfügen
 el: Εισαγωγή νέας επιφάνειας
 it: Inserisci una nuova area
 pt: Inserir nova área
+ru: Вставить новую область
 sk: Vložiť novú plochu
 sq: fute fushen e re
 zh_CN: 插入新的区
@@ -5434,6 +5468,7 @@ de: Ausgewähltes Objekt löschen
 el: διαγραφή επιλεγμένου
 it: Rimuovi l'oggetto selezionato
 pt: Apagar objeto selecionado
+ru: Удалить выбранный объект
 sk: Zmaž označené objekty
 sq: fshije objektin e selektuar
 zh_CN: 删除选定对象
