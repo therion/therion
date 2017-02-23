@@ -3126,7 +3126,7 @@ proc xth_me_show_context_menu {id x y} {
         }
       }
       set xth(me,ctrl,ctxopt,subtype) [lindex $optsubtype 1] 
-      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype] -menu $xth(me,ctxmenu).subtype
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype [mc "subtype"]] -menu $xth(me,ctxmenu).subtype
     }    
     
     # change align
@@ -3136,38 +3136,48 @@ proc xth_me_show_context_menu {id x y} {
     	switch -nocase [lindex $optalign 0] {
     	  t - top {
     	    set xth(me,ctrl,ctx,align) "top"
+          set just_to_be_caught_for_translation [mc "top"]
     	  }
     	  tr - top-right {
     	    set xth(me,ctrl,ctx,align) "top-right"
+          set just_to_be_caught_for_translation [mc "top-right"]
     	  }
     	  tl - top-left {
     	    set xth(me,ctrl,ctx,align) "top-left"
+          set just_to_be_caught_for_translation [mc "top-left"]
     	  }
     	  b - bottom {
     	    set xth(me,ctrl,ctx,align) "bottom"
+          set just_to_be_caught_for_translation [mc "bottom"]
     	  }
     	  br - bottom-right {
     	    set xth(me,ctrl,ctx,align) "bottom-right"
+          set just_to_be_caught_for_translation [mc "bottom-right"]
     	  }
     	  bl - bottom-left {
     	    set xth(me,ctrl,ctx,align) "bottom-left"
+          set just_to_be_caught_for_translation [mc "bottom-left"]
     	  }
     	  c - centre - center {
     	    set xth(me,ctrl,ctx,align) "center"
+          set just_to_be_caught_for_translation [mc "center"]
     	  }
     	  r - right {
     	    set xth(me,ctrl,ctx,align) "right"
+          set just_to_be_caught_for_translation [mc "right"]
     	  }
     	  l - left {
     	    set xth(me,ctrl,ctx,align) "left"
+          set just_to_be_caught_for_translation [mc "left"]
     	  }
     	  default {
     	    set xth(me,ctrl,ctx,align) "auto"
+          set just_to_be_caught_for_translation [mc "auto"]
     	  }
     	}
     	# set options
     	set xth(me,ctrl,ctxopt,align) [lindex $optalign 1] 
-      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel align] -menu $xth(me,ctxmenu).align
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel align [mc "align"]] -menu $xth(me,ctxmenu).align
     }
 	  	  
     # name
@@ -3175,28 +3185,28 @@ proc xth_me_show_context_menu {id x y} {
       set optname [xth_me_get_option_value "name" $opts]
       set xth(me,ctrl,ctx,name) [lindex $optname 0]
       set xth(me,ctrl,ctxopt,name) [lindex $optname 1] 
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel name] -command {xth_me_ctx_change_text name [mc "Station name"]}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel name [mc "name"]] -command {xth_me_ctx_change_text name [mc "Station name"]}
     }
     # scrap
     if {[lsearch -exact {section} $xth(me,cmds,$id,type)] > -1} {
       set optscrap [xth_me_get_option_value "scrap" $opts]
       set xth(me,ctrl,ctx,scrap) [lindex $optscrap 0]
       set xth(me,ctrl,ctxopt,scrap) [lindex $optscrap 1] 
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel scrap] -command {xth_me_ctx_change_text scrap [mc "Scrap reference"]}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel scrap [mc "scrap"]] -command {xth_me_ctx_change_text scrap [mc "Scrap reference"]}
     }
     # text
     if {[lsearch -exact {label remark continuation} $xth(me,cmds,$id,type)] > -1} {
       set opttext [xth_me_get_option_value "text" $opts]
       set xth(me,ctrl,ctx,text) [lindex $opttext 0]
       set xth(me,ctrl,ctxopt,text) [lindex $opttext 1]
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel text] -command {xth_me_ctx_change_text text}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel text [mc "text"]] -command {xth_me_ctx_change_text text}
     }
     # value
     if {[lsearch -exact {height passage-height dimensions} $xth(me,cmds,$id,type)] > -1} {
       set optvalue [xth_me_get_option_value "value" $opts]
       set xth(me,ctrl,ctx,value) [lindex $optvalue 0]
       set xth(me,ctrl,ctxopt,value) [lindex $optvalue 1] 
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel value] -command {xth_me_ctx_change_text value}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel value [mc "value"]] -command {xth_me_ctx_change_text value}
     }
     # toggle orientation
     if {[lsearch -exact {station} $xth(me,cmds,$id,type)] == -1} {
@@ -3251,7 +3261,7 @@ proc xth_me_show_context_menu {id x y} {
         }
       }
       set xth(me,ctrl,ctxopt,subtype) [lindex $optsubtype 1] 
-      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype] -menu $xth(me,ctxmenu).subtype
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype [mc "subtype"]] -menu $xth(me,ctxmenu).subtype
     }    
 
         
@@ -3308,14 +3318,14 @@ proc xth_me_show_context_menu {id x y} {
     }
     # set options
     set xth(me,ctrl,ctxopt,outline) [lindex $optoutline 1] 
-    $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel outline] -menu $xth(me,ctxmenu).outline
+    $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel outline [mc "outline"]] -menu $xth(me,ctxmenu).outline
       
     # text for label
     if {[lsearch -exact {label} $xth(me,cmds,$id,type)] > -1} {
       set opttext [xth_me_get_option_value "text" $opts]
       set xth(me,ctrl,ctx,text) [lindex $opttext 0]
       set xth(me,ctrl,ctxopt,text) [lindex $opttext 1]
-      $xth(me,ctxmenu) add command -label [xth_me_optlabel text] -command {xth_me_ctx_change_text text}
+      $xth(me,ctxmenu) add command -label [xth_me_optlabel text [mc "text"]] -command {xth_me_ctx_change_text text}
     }
   }
   
@@ -3339,7 +3349,7 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,clip) [lindex $optclip 1] 
-  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel clip] -menu $xth(me,ctxmenu).clip
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel clip [mc "clip"]] -menu $xth(me,ctxmenu).clip
 
   $xth(me,ctxmenu) add cascade -label [mc "other options"] -menu $xth(me,ctxmenu).others
   
@@ -3360,7 +3370,7 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,place) [lindex $optplace 1] 
-  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel place] -menu $xth(me,ctxmenu).place
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel place [mc "place"]] -menu $xth(me,ctxmenu).place
   
   
   # scale
@@ -3388,7 +3398,7 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,scale) [lindex $optscale 1] 
-  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel scale] -menu $xth(me,ctxmenu).scale
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel scale [mc "scale"]] -menu $xth(me,ctxmenu).scale
   
   
   # visibility
@@ -3407,7 +3417,7 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,visibility) [lindex $optvis 1]   
-  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel visibility] -menu $xth(me,ctxmenu).visibility
+  $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel visibility [mc "visibility"]] -menu $xth(me,ctxmenu).visibility
       
   $xth(me,ctxmenu) add separator
   if {$xth(me,cmds,$id,ct) == 3} {
