@@ -3136,33 +3136,43 @@ proc xth_me_show_context_menu {id x y} {
     	switch -nocase [lindex $optalign 0] {
     	  t - top {
     	    set xth(me,ctrl,ctx,align) "top"
+          set just_to_be_caught_for_translation [mc "top"]
     	  }
     	  tr - top-right {
     	    set xth(me,ctrl,ctx,align) "top-right"
+          set just_to_be_caught_for_translation [mc "top-right"]
     	  }
     	  tl - top-left {
     	    set xth(me,ctrl,ctx,align) "top-left"
+          set just_to_be_caught_for_translation [mc "top-left"]
     	  }
     	  b - bottom {
     	    set xth(me,ctrl,ctx,align) "bottom"
+          set just_to_be_caught_for_translation [mc "bottom"]
     	  }
     	  br - bottom-right {
     	    set xth(me,ctrl,ctx,align) "bottom-right"
+          set just_to_be_caught_for_translation [mc "bottom-right"]
     	  }
     	  bl - bottom-left {
     	    set xth(me,ctrl,ctx,align) "bottom-left"
+          set just_to_be_caught_for_translation [mc "bottom-left"]
     	  }
     	  c - centre - center {
     	    set xth(me,ctrl,ctx,align) "center"
+          set just_to_be_caught_for_translation [mc "center"]
     	  }
     	  r - right {
     	    set xth(me,ctrl,ctx,align) "right"
+          set just_to_be_caught_for_translation [mc "right"]
     	  }
     	  l - left {
     	    set xth(me,ctrl,ctx,align) "left"
+          set just_to_be_caught_for_translation [mc "left"]
     	  }
     	  default {
     	    set xth(me,ctrl,ctx,align) "auto"
+          set just_to_be_caught_for_translation [mc "auto"]
     	  }
     	}
     	# set options
