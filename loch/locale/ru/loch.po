@@ -1,0 +1,853 @@
+#
+# Andrey Kozhenkov <akozhenkov@gmail.com>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Loch\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2017-02-24 16:22+0000\n"
+"Last-Translator: \n"
+"Language-Team: russian <akozhenkov@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: iso-8859-1\n"
+"X-Poedit-Basepath: ../..\n"
+"Plural-Forms: и;\n"
+"Language: ru\n"
+"X-Generator: Poedit 1.8.12\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:53
+#: lxAboutDlg.cxx:54
+msgid "About Loch"
+msgstr "О программе Loch"
+
+# C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:76
+#: lxAboutDlg.cxx:77
+msgid "3D visualization tool for caves"
+msgstr "Програма для 3D визуализации пещер"
+
+# C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:78
+#: lxAboutDlg.cxx:79
+msgid "Version: "
+msgstr "Версия:"
+
+#: lxData.cxx:84
+msgid "No file open"
+msgstr "Файл не загружен"
+
+# c:/cave/loch/loch/lxGLCs.cxx:381
+#: lxGLCs.cxx:412
+#, c-format
+msgid "Rendering at %.1f fps."
+msgstr "Рендеринг на %.1f fps."
+
+# c:/cave/loch/loch/lxGLCx.cxx:542
+#: lxGLCx.cxx:605
+#, c-format
+msgid "%03d°"
+msgstr "%03d°"
+
+# c:/cave/loch/loch/lxGLCx.cxx:633
+#: lxGLCx.cxx:696
+#, c-format
+msgid "%+03d°"
+msgstr "%+03d°"
+
+# c:/cave/loch/loch/lxSScene.cxx:222
+# c:/cave/loch/loch/lxSScene.cxx:324
+#: lxGLCx.cxx:736 lxSScene.cxx:273
+msgid "Altitude"
+msgstr "Альтитуда"
+
+# c:/cave/loch/loch/lxGUI.cxx:94
+#: lxGUI.cxx:155
+msgid "noname"
+msgstr "нет названия"
+
+# c:/cave/loch/loch/lxGUI.cxx:98
+# c:/cave/loch/loch/lxGUI.cxx:354
+#: lxGUI.cxx:206 lxGUI.cxx:575
+msgid "Open"
+msgstr "Открыть"
+
+# c:/cave/loch/loch/lxGUI.cxx:98
+#: lxGUI.cxx:206
+msgid "Open file"
+msgstr "Открыть файл"
+
+# c:/cave/loch/loch/lxGUI.cxx:99
+#: lxGUI.cxx:207
+msgid "Reload"
+msgstr "Презагрузить"
+
+# c:/cave/loch/loch/lxGUI.cxx:99
+#: lxGUI.cxx:207
+msgid "Reload file"
+msgstr "Презагрузить файл"
+
+# c:/cave/loch/loch/lxGUI.cxx:100
+#: lxGUI.cxx:209
+msgid "Render"
+msgstr "Рендерить"
+
+# c:/cave/loch/loch/lxGUI.cxx:100
+#: lxGUI.cxx:209
+msgid "Render to file"
+msgstr "Рендерить в файл"
+
+# c:/cave/loch/loch/lxPrint.cxx:291
+# c:/cave/loch/loch/lxRender.cxx:237
+#: lxGUI.cxx:210 lxRender.cxx:236
+msgid "Rendering setup"
+msgstr "Настройки Рендеринга"
+
+# c:/cave/loch/loch/lxGUI.cxx:102
+# c:/cave/loch/loch/lxGUI.cxx:152
+# c:/cave/loch/loch/lxSView.cxx:257
+#: lxGUI.cxx:212 lxGUI.cxx:275 lxGUI.cxx:283 lxSView.cxx:262
+msgid "Rotation"
+msgstr "Вращение"
+
+# c:/cave/loch/loch/lxGUI.cxx:103
+# c:/cave/loch/loch/lxGUI.cxx:153
+# c:/cave/loch/loch/lxSView.cxx:400
+# c:/cave/loch/loch/lxSView.cxx:526
+#: lxGUI.cxx:213 lxGUI.cxx:276 lxGUI.cxx:284 lxSView.cxx:405 lxSView.cxx:532
+msgid "Lock rotation"
+msgstr "Блокировка вращения"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:217
+#: lxGUI.cxx:214
+msgid "Ortho"
+msgstr "Ортогонально"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:217
+# C:/Projects/MSVCProjects/loch/lxSView.cxx:380
+#: lxGUI.cxx:214 lxSView.cxx:380
+msgid "Orthogonal view"
+msgstr "Ортогонально проекции"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:218
+#: lxGUI.cxx:215
+msgid "Stereo"
+msgstr "Стерео"
+
+# c:/cave/loch/loch/lxGUI.cxx:107
+# c:/cave/loch/loch/lxSView.cxx:258
+#: lxGUI.cxx:215 lxSView.cxx:263
+msgid "Stereo mode"
+msgstr "Стерео режим"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:220
+#: lxGUI.cxx:217
+msgid "Plan"
+msgstr "План"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:220
+#: lxGUI.cxx:217
+msgid "Plan view"
+msgstr "План"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:221
+#: lxGUI.cxx:218
+msgid "Profile"
+msgstr "Разрез"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:221
+#: lxGUI.cxx:218
+msgid "Profile view"
+msgstr "Разрез"
+
+# c:/cave/loch/loch/lxGUI.cxx:104
+#: lxGUI.cxx:219
+msgid "Fit zoom"
+msgstr "Оптимально приблизить"
+
+# c:/cave/loch/loch/lxGUI.cxx:104
+#: lxGUI.cxx:219
+msgid "Zoom to fit"
+msgstr "Вместить"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:223
+#: lxGUI.cxx:220
+msgid "Reset"
+msgstr "Сброс"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:223
+#: lxGUI.cxx:220
+msgid "Reset viewpoint"
+msgstr "Сброс точки наблюдентя"
+
+# c:/cave/loch/loch/lxSScene.cxx:169
+# c:/cave/loch/loch/lxSScene.cxx:200
+# c:/cave/loch/loch/lxSScene.cxx:231
+# c:/cave/loch/loch/lxSScene.cxx:362
+#: lxGUI.cxx:222 lxSScene.cxx:218 lxSScene.cxx:249 lxSScene.cxx:286
+msgid "Centerline"
+msgstr "Нитка хода"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:225
+#: lxGUI.cxx:222
+msgid "Show centerline"
+msgstr "Показать нитку хода"
+
+# c:/cave/loch/loch/lxSScene.cxx:170
+# c:/cave/loch/loch/lxSScene.cxx:201
+# c:/cave/loch/loch/lxSScene.cxx:232
+# c:/cave/loch/loch/lxSScene.cxx:363
+#: lxGUI.cxx:223 lxSScene.cxx:219 lxSScene.cxx:250 lxSScene.cxx:287
+msgid "Walls"
+msgstr "Стены"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:226
+#: lxGUI.cxx:223
+msgid "Show walls"
+msgstr "Показать стены"
+
+# c:/cave/loch/loch/lxSScene.cxx:171
+# c:/cave/loch/loch/lxSScene.cxx:202
+# c:/cave/loch/loch/lxSScene.cxx:233
+# c:/cave/loch/loch/lxSScene.cxx:245
+# c:/cave/loch/loch/lxSScene.cxx:364
+#: lxGUI.cxx:224 lxSScene.cxx:220 lxSScene.cxx:251 lxSScene.cxx:300
+msgid "Surface"
+msgstr "Поверхность"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:227
+#: lxGUI.cxx:224
+msgid "Show surface"
+msgstr "Показать поверхность"
+
+# c:/cave/loch/loch/lxSScene.cxx:204
+# c:/cave/loch/loch/lxSScene.cxx:365
+#: lxGUI.cxx:225 lxSScene.cxx:253
+msgid "Bounding box"
+msgstr "Рамка"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:228
+#: lxGUI.cxx:225
+msgid "Show bounding box"
+msgstr "Показать рамку"
+
+# c:/cave/loch/loch/lxSScene.cxx:174
+#: lxGUI.cxx:226 lxSScene.cxx:223 lxSScene.cxx:255
+msgid "Indicators"
+msgstr "Индикаторы"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:229
+#: lxGUI.cxx:226
+msgid "Show indicators"
+msgstr "Показать индикаторы"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:231
+#: lxGUI.cxx:228
+msgid "Camera setup"
+msgstr "Настройки камеры"
+
+# c:/cave/loch/loch/lxGUI.cxx:110
+#: lxGUI.cxx:229
+msgid "Scene setup"
+msgstr "Настройки сцены"
+
+# c:/cave/loch/loch/lxGUI.cxx:112
+#: lxGUI.cxx:231
+msgid "Full screen"
+msgstr "На весь экран"
+
+# c:/cave/loch/loch/lxGUI.cxx:117
+#: lxGUI.cxx:236
+msgid "&Open...\tCtrl+O"
+msgstr "&Открыть...\tCtrl+O"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:240
+#: lxGUI.cxx:237
+msgid "&Reload\tCtrl+R"
+msgstr "&Перезагрузить\tCtrl+R"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:242
+#: lxGUI.cxx:239
+msgid "&Render to file\tCtrl+P"
+msgstr "&Рендер в файл\tCtrl+P"
+
+# c:/cave/loch/loch/lxGUI.cxx:121
+#: lxGUI.cxx:240
+msgid "Rendering &setup..."
+msgstr "Настройка &рендеринга..."
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:245
+#: lxGUI.cxx:242
+msgid "E&xit\tCtrl+Q"
+msgstr "&Выход\tCtrl+Q"
+
+# c:/cave/loch/loch/lxGUI.cxx:126
+#: lxGUI.cxx:247
+msgid "Rotate left\tRight"
+msgstr "Вращение слева\tВправо"
+
+# c:/cave/loch/loch/lxGUI.cxx:127
+#: lxGUI.cxx:248
+msgid "Rotate right\tLeft"
+msgstr "Вращение справа\tВлево"
+
+# c:/cave/loch/loch/lxGUI.cxx:129
+#: lxGUI.cxx:250
+msgid "Upper viewpoint\tDown"
+msgstr "Просмотр сверху\tВниз"
+
+# c:/cave/loch/loch/lxGUI.cxx:130
+#: lxGUI.cxx:251
+msgid "Lower viewpoint\tUp"
+msgstr "Просмотр снизу\tВверх"
+
+# c:/cave/loch/loch/lxGUI.cxx:132
+#: lxGUI.cxx:253
+msgid "Move up\tShift+Down"
+msgstr "Сдвиг вниз\tShift+Вниз"
+
+# c:/cave/loch/loch/lxGUI.cxx:133
+#: lxGUI.cxx:254
+msgid "Move down\tShift+Up"
+msgstr "Сдвиг вверх\tShift+Вверх"
+
+# c:/cave/loch/loch/lxGUI.cxx:134
+#: lxGUI.cxx:255
+msgid "Move left\tShift+Right"
+msgstr "Сдвиг слева\tShift+Вправо"
+
+# c:/cave/loch/loch/lxGUI.cxx:135
+#: lxGUI.cxx:256
+msgid "Move right\tShift+Left"
+msgstr "Сдвиг справа\tShift+Влево"
+
+# c:/cave/loch/loch/lxGUI.cxx:137
+#: lxGUI.cxx:258
+msgid "Zoom in\tCtrl+Up"
+msgstr "Увеличить\tCtrl+Вверх"
+
+# c:/cave/loch/loch/lxGUI.cxx:138
+#: lxGUI.cxx:259
+msgid "Zoom out\tCtrl+Down"
+msgstr "Уменьшить\tCtrl+Вниз"
+
+# c:/cave/loch/loch/lxGUI.cxx:139
+#: lxGUI.cxx:260
+msgid "Zoom to fit\tSpace"
+msgstr "Вместить\tПробел"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:266
+#: lxGUI.cxx:263
+msgid "&Plan"
+msgstr "&План"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:267
+#: lxGUI.cxx:264
+msgid "Pro&file"
+msgstr "&Разрез"
+
+# c:/cave/loch/loch/lxGUI.cxx:144
+#: lxGUI.cxx:266
+msgid "&North"
+msgstr "&Север"
+
+# c:/cave/loch/loch/lxGUI.cxx:145
+#: lxGUI.cxx:267
+msgid "&West"
+msgstr "&Запад"
+
+# c:/cave/loch/loch/lxGUI.cxx:146
+#: lxGUI.cxx:268
+msgid "&East"
+msgstr "&Восток"
+
+# c:/cave/loch/loch/lxGUI.cxx:147
+#: lxGUI.cxx:269
+msgid "&South"
+msgstr "&Юг"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:274
+#: lxGUI.cxx:271
+msgid "&Reset"
+msgstr "&Сброс"
+
+# c:/cave/loch/loch/lxSView.cxx:256
+#: lxGUI.cxx:278
+msgid "Camera"
+msgstr "Камера"
+
+# c:/cave/loch/loch/lxGUI.cxx:161
+#: lxGUI.cxx:279
+msgid "Scene"
+msgstr "Сцена"
+
+# c:/cave/loch/loch/lxGUI.cxx:151
+#: lxGUI.cxx:282
+msgid "Action"
+msgstr "Действие"
+
+# c:/cave/loch/loch/lxSView.cxx:254
+#: lxGUI.cxx:285 lxSView.cxx:259
+msgid "Orientation"
+msgstr "Ориентация"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:289
+#: lxGUI.cxx:286
+msgid "Orthogonal"
+msgstr "Ортогонально"
+
+# c:/cave/loch/loch/lxGUI.cxx:157
+#: lxGUI.cxx:288
+msgid "Full screen\tF11"
+msgstr "На весь экран\tF11"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:294
+#: lxGUI.cxx:291
+msgid "&Camera"
+msgstr "&Камера"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:295
+#: lxGUI.cxx:292
+msgid "&Scene"
+msgstr "&Сцена"
+
+# c:/cave/loch/loch/lxGUI.cxx:117
+#: lxGUI.cxx:294
+msgid "&Options..."
+msgstr "&Настройки..."
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:300
+#: lxGUI.cxx:297
+msgid "&Contents...\tF1"
+msgstr "&Содержание...\tF1"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:301
+#: lxGUI.cxx:298
+msgid "&Control"
+msgstr "&Управление"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:302
+#: lxGUI.cxx:299
+msgid "&Rendering"
+msgstr "&Рендеринг"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:303
+#: lxGUI.cxx:300
+msgid "&Bugs"
+msgstr "&Ошибки"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:305
+#: lxGUI.cxx:302
+msgid "&About..."
+msgstr "О &программе..."
+
+# c:/cave/loch/loch/lxGUI.cxx:165
+#: lxGUI.cxx:305
+msgid "&File"
+msgstr "&Файл"
+
+# c:/cave/loch/loch/lxGUI.cxx:166
+#: lxGUI.cxx:306
+msgid "&View"
+msgstr "&Просмотр"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:310
+#: lxGUI.cxx:307
+msgid "&Tools"
+msgstr "&Инструменты"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:311
+#: lxGUI.cxx:308
+msgid "&Help"
+msgstr "По&мощь"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:581
+#: lxGUI.cxx:578
+msgid "All supported files (*.lox;*.plt;*.3d)|*.lox;*.plt;*.3d|Loch files (*.lox)|*.lox|Compass PLT files (*.plt)|*.plt|Survex 3D files (*.3d)|*.3d"
+msgstr "Все поддерживаемые форматы (*.lox;*.plt;*.3d)|*.lox;*.plt;*.3d|Loch файлы (*.lox)|*.lox|Compass PLT файлы (*.plt)|*.plt|Survex 3D файлы (*.3d)|*.3d"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:870
+#: lxGUI.cxx:867
+msgid "Building 3D model, please wait..."
+msgstr "Создание 3D модели, пожалуйста подождите..."
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:899
+#: lxGUI.cxx:896
+msgid "Error reading input file"
+msgstr "Ощибка рендеринга входного файла"
+
+# c:/cave/loch/loch/lxData.cxx:360
+# c:/cave/loch/loch/lxPrint.cxx:466
+# c:/cave/loch/loch/lxPrint.cxx:995
+# c:/cave/loch/loch/lxRender.cxx:655
+#: lxGUI.cxx:896 lxRender.cxx:664
+msgid "Error"
+msgstr "Ошибка"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:43
+#: lxOptDlg.cxx:43
+msgid "Options"
+msgstr "Настройки"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:50
+#: lxOptDlg.cxx:50
+msgid "General options"
+msgstr "Основные настройки"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:54
+#: lxOptDlg.cxx:54
+msgid "Default data files directory"
+msgstr "Путь к данным по умолчанию"
+
+# c:/cave/loch/loch/lxPrint.cxx:349
+#: lxOptDlg.cxx:60
+msgid "Browse..."
+msgstr "Выбрать..."
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:65
+#: lxOptDlg.cxx:64
+msgid "Default stereo colors"
+msgstr "Стандартные цвета стерео"
+
+# c:/cave/loch/loch/lxSView.cxx:430
+#: lxOptDlg.cxx:68 lxSView.cxx:435
+msgid "red & cyan"
+msgstr "красный & голубой"
+
+# c:/cave/loch/loch/lxSView.cxx:431
+#: lxOptDlg.cxx:69 lxSView.cxx:436
+msgid "red & green"
+msgstr "красный & зеленый"
+
+# c:/cave/loch/loch/lxSView.cxx:432
+#: lxOptDlg.cxx:70 lxSView.cxx:437
+msgid "red & blue"
+msgstr "красный & синий"
+
+# c:/cave/loch/loch/lxSView.cxx:433
+#: lxOptDlg.cxx:71 lxSView.cxx:438
+msgid "yellow & blue"
+msgstr "желтый & синий"
+
+# c:/cave/loch/loch/lxSView.cxx:434
+#: lxOptDlg.cxx:72 lxSView.cxx:439
+msgid "cyan & red"
+msgstr "голубой & красный"
+
+# c:/cave/loch/loch/lxSView.cxx:435
+#: lxOptDlg.cxx:73 lxSView.cxx:440
+msgid "green & red"
+msgstr "зеленый & красный"
+
+# c:/cave/loch/loch/lxSView.cxx:436
+#: lxOptDlg.cxx:74 lxSView.cxx:441
+msgid "blue & red"
+msgstr "синий & красный"
+
+# c:/cave/loch/loch/lxSView.cxx:437
+#: lxOptDlg.cxx:75 lxSView.cxx:442
+msgid "blue & yellow"
+msgstr "синий & желтый"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:77
+#: lxOptDlg.cxx:76
+msgid "remember last used channels"
+msgstr "запомнить последние изпользованые каналы"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:85
+#: lxOptDlg.cxx:84
+msgid "Walls extrapolation"
+msgstr "Экстраполировать стены"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:89
+#: lxOptDlg.cxx:88
+msgid "Do not extrapolate walls"
+msgstr "Не экстраполировать стены"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:92
+#: lxOptDlg.cxx:91
+msgid "Extrapolate only files without walls information"
+msgstr "Экстраполировать только для файлов без информации о стенах"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:95
+#: lxOptDlg.cxx:94
+msgid "Extrapolate all missing walls information"
+msgstr "Экстраполировать всю недостающую информацию о стенах"
+
+# c:/cave/loch/loch/lxPrint.cxx:387
+# c:/cave/loch/loch/lxRender.cxx:322
+#: lxOptDlg.cxx:102 lxRender.cxx:321
+msgid "OK"
+msgstr "OK"
+
+# c:/cave/loch/loch/lxPrint.cxx:388
+# c:/cave/loch/loch/lxPrint.cxx:775
+# c:/cave/loch/loch/lxRender.cxx:323
+#: lxOptDlg.cxx:103 lxRender.cxx:322
+msgid "Cancel"
+msgstr "Отмена"
+
+# c:/cave/loch/loch/lxRender.cxx:247
+#: lxRender.cxx:246
+msgid "Size and scaling"
+msgstr "Размер и масшаб"
+
+# c:/cave/loch/loch/lxRender.cxx:251
+#: lxRender.cxx:250
+msgid "Screen shot"
+msgstr "Снимок экрана"
+
+# c:/cave/loch/loch/lxRender.cxx:257
+#: lxRender.cxx:256
+msgid "Image width"
+msgstr "Ширина изображения"
+
+# c:/cave/loch/loch/lxRender.cxx:260
+# c:/cave/loch/loch/lxRender.cxx:271
+#: lxRender.cxx:259 lxRender.cxx:270
+msgid "(mm)"
+msgstr "(mm)"
+
+# c:/cave/loch/loch/lxRender.cxx:268
+#: lxRender.cxx:267
+msgid "Image height"
+msgstr "Высота изображения"
+
+# c:/cave/loch/loch/lxRender.cxx:279
+#: lxRender.cxx:278
+msgid "Scale"
+msgstr "Масштаб"
+
+# c:/cave/loch/loch/lxRender.cxx:282
+#: lxRender.cxx:281
+msgid "1 :"
+msgstr "1 :"
+
+# c:/cave/loch/loch/lxRender.cxx:293
+#: lxRender.cxx:292
+msgid "Image options"
+msgstr "Настройки изображения"
+
+# c:/cave/loch/loch/lxPrint.cxx:302
+# c:/cave/loch/loch/lxRender.cxx:297
+#: lxRender.cxx:296
+msgid "Rendering resolution (dpi)"
+msgstr "Разрешние рендера (dpi)"
+
+# c:/cave/loch/loch/lxRender.cxx:307
+#: lxRender.cxx:306
+msgid "Image size:"
+msgstr "Размер изображения:"
+
+# c:/cave/loch/loch/lxRender.cxx:310
+#: lxRender.cxx:309
+msgid "00 x 00 (00.0 MB)"
+msgstr "00 x 00 (00.0 MB)"
+
+# c:/cave/loch/loch/lxPrint.cxx:295
+# c:/cave/loch/loch/lxRender.cxx:315
+#: lxRender.cxx:314
+msgid "White background"
+msgstr "Белый фон"
+
+# c:/cave/loch/loch/lxRender.cxx:437
+#: lxRender.cxx:436
+msgid "Save rendering as"
+msgstr "Сохранить рендер как"
+
+# c:/cave/loch/loch/lxPrint.cxx:183
+# c:/cave/loch/loch/lxRender.cxx:439
+#: lxRender.cxx:438
+msgid "PPM files (*.ppm)|*.ppm"
+msgstr "PPM файл (*.ppm)|*.ppm"
+
+# c:/cave/loch/loch/lxRender.cxx:441
+#: lxRender.cxx:440
+msgid "PDF files (*.pdf)|*.pdf|PNG files (*.png)|*.png|BMP files (*.bmp)|*.bmp"
+msgstr "PDF файл (*.pdf)|*.pdf|PNG файл (*.png)|*.png|BMP файл (*.bmp)|*.bmp"
+
+# c:/cave/loch/loch/lxPrint.cxx:627
+# c:/cave/loch/loch/lxPrint.cxx:647
+# c:/cave/loch/loch/lxPrint.cxx:872
+# c:/cave/loch/loch/lxPrint.cxx:892
+# c:/cave/loch/loch/lxRender.cxx:455
+#: lxRender.cxx:454
+msgid "Unable to open file for output."
+msgstr "Невозможно открыть файл для записи."
+
+# c:/cave/loch/loch/lxPrint.cxx:921
+# c:/cave/loch/loch/lxRender.cxx:493
+#: lxRender.cxx:492
+#, c-format
+msgid "Rendering (%d x %d, %.1f MB) ..."
+msgstr "Рендеринг (%d x %d, %.1f MB) ..."
+
+# c:/cave/loch/loch/lxRender.cxx:494
+#: lxRender.cxx:493
+msgid "Rendering to bitmap"
+msgstr "Рендеринг в изображение"
+
+# c:/cave/loch/loch/lxSScene.cxx:147
+#: lxSScene.cxx:196
+msgid " Scene"
+msgstr "Сцена"
+
+# c:/cave/loch/loch/lxSScene.cxx:167
+# c:/cave/loch/loch/lxSScene.cxx:335
+#: lxSScene.cxx:216
+msgid "Visibility"
+msgstr "Видимость"
+
+# c:/cave/loch/loch/lxSScene.cxx:168
+#: lxSScene.cxx:217 lxSScene.cxx:271
+msgid "Color mode"
+msgstr "Режим цвета"
+
+# c:/cave/loch/loch/lxSScene.cxx:199
+#: lxSScene.cxx:248
+msgid "Scene items"
+msgstr "Объекты в сцене"
+
+# c:/cave/loch/loch/lxSScene.cxx:224
+#: lxSScene.cxx:279
+msgid "Default"
+msgstr "По умолчанию"
+
+# c:/cave/loch/loch/lxSScene.cxx:230
+#: lxSScene.cxx:285
+msgid "Applies to"
+msgstr "Применить к"
+
+# c:/cave/loch/loch/lxSScene.cxx:243
+#: lxSScene.cxx:298
+msgid "Centerline visibility"
+msgstr "Показ нитки хода"
+
+# c:/cave/loch/loch/lxSScene.cxx:244
+#: lxSScene.cxx:299
+msgid "Underground"
+msgstr "Подземелье"
+
+# c:/cave/loch/loch/lxSScene.cxx:265
+# c:/cave/loch/loch/lxSScene.cxx:278
+#: lxSScene.cxx:317 lxSScene.cxx:330
+msgid "Transparency"
+msgstr "Прозрачность"
+
+# c:/cave/loch/loch/lxSScene.cxx:282
+#: lxSScene.cxx:334
+msgid "Texture"
+msgstr "Текстура"
+
+# C:/Projects/MSVCProjects/loch/lxSScene.cxx:398
+#: lxSScene.cxx:392
+msgid "Project title"
+msgstr "Название проекта"
+
+# c:/cave/loch/loch/lxSScene.cxx:389
+# c:/cave/loch/loch/lxSView.cxx:464
+#: lxSScene.cxx:424 lxSView.cxx:470
+msgid "Close"
+msgstr "Зкрыть"
+
+# C:/Projects/MSVCProjects/loch/lxSView.cxx:228
+#: lxSView.cxx:228
+msgid " Camera"
+msgstr "Камера"
+
+# c:/cave/loch/loch/lxSView.cxx:255
+#: lxSView.cxx:260
+msgid "Center"
+msgstr "Центр"
+
+# C:/Projects/MSVCProjects/loch/lxSView.cxx:261
+#: lxSView.cxx:261
+msgid "Focus"
+msgstr "Фокус"
+
+# c:/cave/loch/loch/lxSView.cxx:287
+#: lxSView.cxx:292
+msgid "Facing (deg)"
+msgstr "Азимут (градусы)"
+
+# c:/cave/loch/loch/lxSView.cxx:298
+#: lxSView.cxx:303
+msgid "Tilt (deg)"
+msgstr "Наклон (градусы)"
+
+# c:/cave/loch/loch/lxSView.cxx:323
+#: lxSView.cxx:328
+msgid "Rotation center"
+msgstr "Центр вращения"
+
+# c:/cave/loch/loch/lxSView.cxx:327
+#: lxSView.cxx:332
+msgid "Easting (m)"
+msgstr "X - В-З (m)"
+
+# c:/cave/loch/loch/lxSView.cxx:335
+#: lxSView.cxx:340
+msgid "Northing (m)"
+msgstr "Y - С-Ю (m)"
+
+# c:/cave/loch/loch/lxSView.cxx:343
+#: lxSView.cxx:348
+msgid "Altitude (m)"
+msgstr "Альтитуда (m)"
+
+# c:/cave/loch/loch/lxSView.cxx:364
+#: lxSView.cxx:369
+msgid "Distance (m)"
+msgstr "Расстояние (m)"
+
+# c:/cave/loch/loch/lxSView.cxx:379
+#: lxSView.cxx:384
+msgid "Focus (mm)"
+msgstr "Фокус (mm)"
+
+# c:/cave/loch/loch/lxSView.cxx:399
+#: lxSView.cxx:404
+msgid "Enable rotation"
+msgstr "Включить вращение"
+
+# c:/cave/loch/loch/lxSView.cxx:401
+#: lxSView.cxx:406
+msgid "Rotation speed"
+msgstr "Скорость вращения"
+
+# c:/cave/loch/loch/lxSView.cxx:422
+#: lxSView.cxx:427
+msgid "Enable stereo mode"
+msgstr "Стерео изображение"
+
+# c:/cave/loch/loch/lxSView.cxx:423
+#: lxSView.cxx:428
+msgid "Eye separation"
+msgstr "Разнос глаз"
+
+# C:/Projects/MSVCProjects/loch/lxSView.cxx:445
+#: lxSView.cxx:445
+msgid "Disable color textures"
+msgstr "Отключить цветовые текстуры"
+
+# c:/cave/loch/loch/lxSView.cxx:441
+#: lxSView.cxx:447
+msgid "Color channels"
+msgstr "Каналы цветов"
+
+# c:/cave/loch/loch/lxSView.cxx:524
+#: lxSView.cxx:530
+msgid "Lock rotation speed"
+msgstr "Зафиксировать скорость вращения"
+
+# c:/cave/loch/loch/lxWX.cxx:200
+#: lxWX.cxx:200
+#, c-format
+msgid "%ld"
+msgstr "%ld"
+
+# c:/cave/loch/loch/lxWX.cxx:206
+#: lxWX.cxx:206
+#, c-format
+msgid "%.14e"
+msgstr "%.14e"
