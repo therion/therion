@@ -236,7 +236,9 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   }
 
   unsigned long last_st = nstat, cur_st, cnlegs = 0;
+  bool check_traverses = (dbp->db1d.traverse_list.size() > 0);
   thdb1d_loop * last_loop = NULL;
+  thdb1d_traverse * last_traverse = NULL;
   int * s_exp = new int [nstat], * cis_exp, leg_flag, x_exp;
   cis_exp = s_exp; 
   bool is_surface, is_duplicate, is_splay, newtraverse;
@@ -275,10 +277,20 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
 
       newtraverse = false;
       if (cur_st != last_st) newtraverse = true;
-      if ((*tlegs)->leg->loop != last_loop) newtraverse = true;
+      if (check_traverses) {
+        if ((*tlegs)->leg->traverse != last_traverse) newtraverse = true;
+      } else {
+        if ((*tlegs)->leg->loop != last_loop) newtraverse = true;
+      }
       if (newtraverse) {
-        if ((cnlegs > 0) && (last_loop != NULL)) {
-          img_write_errors(pimg, cnlegs, last_loop->src_length, 2.0 * last_loop->err, 2.0 * last_loop->err, 2.0 * last_loop->err);
+        if (check_traverses) {
+          if ((cnlegs > 0) && (last_traverse != NULL)) {
+            img_write_errors(pimg, cnlegs, last_traverse->src_length, last_traverse->E, last_traverse->H, last_traverse->V);
+          }
+        } else {
+          if ((cnlegs > 0) && (last_loop != NULL)) {
+            img_write_errors(pimg, cnlegs, last_loop->src_length, last_loop->err, last_loop->err, last_loop->err);
+          }
         }
         img_write_item(pimg, img_MOVE, 0, NULL, 
           dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z);
@@ -302,6 +314,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
           dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z);
       cnlegs++;
       last_loop = (*tlegs)->leg->loop;
+      last_traverse = (*tlegs)->leg->traverse;
       //thprintf("line to %d\n",last_st);
     }
   }

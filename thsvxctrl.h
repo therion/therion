@@ -62,6 +62,8 @@ class thsvxctrl {
   
   void transcript_log_file(class thdatabase * dbp, const char * lfnm);
 
+  void load_err_file(class thdatabase * dbp, const char * lfnm);
+
   public:  
   
   /**

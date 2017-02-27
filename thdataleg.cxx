@@ -124,6 +124,7 @@ void thdataleg::clear()
   this->plumbed = false;
 
   this->loop = NULL;
+  this->traverse =  NULL;
 }
 
 
