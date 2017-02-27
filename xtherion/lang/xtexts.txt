@@ -1,6 +1,3 @@
-therion: arrow
-pt: seta
-
 therion: Drag to resize control panel.
 bg: Плъзнете, за да промените размера на контролния панел
 cz: Změnit šířku panelu.
@@ -694,6 +691,7 @@ cz: VAROVÁNÍ
 de: WARNUNG
 pt: AVISO
 ru: ПРЕДУПРЕЖДЕНИЕ
+sk: VAROVANIE
 zh_CN: 警告
 
 therion: Reading therion log file ...
@@ -3305,6 +3303,7 @@ zh_CN: 插入图像
 therion: Hide inactive scraps
 cz: Skrýt neaktivní scrapy
 pt: Esconder trechos inativos
+sk: Skryť neaktívne scrapy
 
 therion: Zoom 100 %
 bg: Мащаб 100%
@@ -3736,36 +3735,47 @@ zh_CN: 删除草图素描
 
 therion: on
 pt: sim
+sk: on
 
 therion: off
 pt: não
+sk: off
 
 therion: tiny (xs)
 pt: ínfimo (pp)
+sk: XS
 
 therion: small (s)
 pt: pequeno (p)
+sk: S
 
 therion: normal (m)
 pt: normal (m)
+sk: M
 
 therion: large (l)
 pt: grande (g)
+sk: L
 
 therion: huge (xl)
 pt: enorme (xl)
+sk: XL
 
 therion: out
 pt: fora
+sk: vonkajší
 
 therion: in
 pt: dentro
+sk: vnútorný
 
 therion: none
 pt: nenhum
+sk: žiadny
 
 therion: <<
 pt: <<
+sk: <<
 
 therion: smooth
 bg: изглаждане
@@ -3783,6 +3793,7 @@ zh_CN: 平滑
 
 therion: >>
 pt: >>
+sk: >>
 
 therion: Trace line
 bg: Проследяване от картината
@@ -3790,6 +3801,7 @@ cz: Trasovat linii
 en: Trace line
 pt: Traçar linha
 ru: Проследить линию
+sk: Oklikať čiaru
 
 therion: Convert to curve
 bg: Конвертиране в Безие
@@ -3797,6 +3809,7 @@ cz: Konvertovat na křivku
 en: Convert to curve
 pt: Converter em curva
 ru: Конвертировать в кривую
+sk: Konvertovať na krivku
 
 therion: Simplify line
 bg: Опростяване на линия
@@ -3804,6 +3817,7 @@ cz: Zjednodušit linii
 en: Simplify line
 pt: Simplificar
 ru: Упростить линию
+sk: Zjednodušiť
 
 therion: edit
 bg: редактиране
@@ -3849,75 +3863,98 @@ zh_CN: 成功
 therion: Cancel
 cz: Zrušit
 pt: Cancelar
+sk: Zrušiť
 
 therion: painted
 pt: pintada
+sk: namaľovaný
 
 therion: natural
 pt: natural
+sk: prírodný
 
 therion: fixed
 pt: fixa
+sk: fixovaný
 
 therion: winter
 pt: inverno
+sk: zimný
 
 therion: summer
 pt: verão
+sk: letný
 
 therion: undefined
 pt: indefinido
+sk: nedefinovaný
 
 therion: paleo
 pt: paleo
+sk: paleo
 
 therion: top
 pt: topo
+sk: hore
 
 therion: top-right
 pt: topo-direita
+sk: vpravo-hore
 
 therion: top-left
 pt: topo-esquerda
+sk: vľavo-hore
 
 therion: bottom
 pt: fundo
+sk: dole
 
 therion: bottom-right
 pt: fundo-direita
+sk: vpravo-dole
 
 therion: bottom-left
 pt: fundo-esquerda
+sk: vľavo-dole
 
 therion: center
 pt: centro
+sk: stred
 
 therion: right
 pt: direita
+sk: vpravo
 
 therion: left
 pt: esquerda
+sk: vľavo
 
 therion: auto
 pt: auto
+sk: automaticky
 
 therion: align
 pt: alinhar
+sk: zarovnanie
 
 therion: name
 pt: nome
+sk: meno
 
 therion: Station name
 cz: Název bodu
 pt: Nome da base
 ru: Номер пикета
+sk: Meno bodu
 
 therion: Scrap reference
 pt: Referência do trecho
 ru: Привязка скрапа
+sk: Odkaz na scrap
 
 therion: value
 pt: valor
+sk: hodnota
 
 therion: type
 bg: тип
@@ -3935,76 +3972,100 @@ zh_CN: 类型
 
 therion: bedrock
 pt: rocha matriz
+sk: masív
 
 therion: underlying
 pt: inferior
+sk: ležiaci pod
 
 therion: overlying
 pt: superior
+sk: ležiaci nad
 
 therion: unsurveyed
 pt: não explorado
+sk: nezameraný
 
 therion: pit
 pt: poço
+sk: priepasť
 
 therion: sand
 pt: areia
+sk: piesok
 
 therion: clay
 pt: lama/argila
+sk: blato
 
 therion: pebbles
 pt: seixos
+sk: okrúhliaky
 
 therion: debris
 pt: escombros
+sk: štrk
 
 therion: blocks
 pt: blocos
+sk: bloky
 
 therion: ice
 pt: gelo
+sk: ľad
 
 therion: flowstone
 pt: escorrimento
+sk: sinter
 
 therion: moonmilk
 pt: leite de lua
+sk: mäkký sinter
 
 therion: visible
 pt: visível
+sk: viditeľný
 
 therion: invisible
 pt: invisível
+sk: neviditeľný
 
 therion: temporary
 pt: temporária
+sk: dočasný
 
 therion: presumed
 pt: presumida
+sk: predpokladaný
 
 therion: permanent
 pt: permanente
+sk: permanentný
 
 therion: intermittent
 pt: intermitente
+sk: občasný
 
 therion: conjectural
 pt: suposta
+sk: predpokladaný
 
 therion: cave
 pt: subterrânea
+sk: jaskyňa
 
 therion: surface
 pt: superfície
+sk: povrch
 
 therion: subtype
 pt: subtipo
+sk: podtyp
 
 therion: control points
 pt: pontos de controle
 ru: контрольные точки
+sk: kontrolné body
 
 therion: orientation
 bg: ориентация
@@ -4037,13 +4098,16 @@ zh_CN: l-大小
 therion: segment subtype
 pt: subtipo do segmento
 ru: подтип сегмента
+sk: podtyp segmentu
 
 therion: altitude label
 pt: indicador de altitude
 ru: отметка высоты
+sk: nadmorská výška
 
 therion: outline
 pt: contorno
+sk: obrys
 
 therion: text
 bg: текст
@@ -4061,11 +4125,13 @@ zh_CN: 文本
 
 therion: clip
 pt: mascarar
+sk: orezanie
 
 therion: other options
 cz: další možnosti
 pt: outras opções
 ru: другие опции
+sk: ostatné možnosti
 
 therion: Edit line
 bg: Редактирай линия
@@ -4112,11 +4178,13 @@ zh_CN: 反向
 therion: Select underlying point
 pt: Selecionar o ponto inferior
 ru: Выбрать нижележащую точку
+sk: Vyber bod ležiaci pod
 
 therion: Delete symbol
 cz: Smazat symbol
 pt: Apagar símbolo
 ru: Удалить символ
+sk: Odstráň symbol
 
 therion: toggle image visibility
 bg: превключване на видимостта на изображение
@@ -4444,11 +4512,13 @@ therion: Stop tracing
 cz: Ukončit trasování
 pt: Parar tracejo
 ru: Прекратить трассировку
+sk: Zastaviť digitalizáciu
 
 therion: Continue tracing
 cz: Pokračovat v trasování
 pt: Seguir tracejo
 ru: Продолжить трассировку
+sk: Pokračovať digitalizácii
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
@@ -5239,6 +5309,7 @@ de: Bild kalibrieren...
 it: Mappa georeferenziata...
 pt: Calibrar imagem...
 ru: Привязать изображение
+sk: Kalibrovať obrázok...
 zh_CN: 校准图片...
 
 therion: About...
@@ -5601,4 +5672,8 @@ ru: оборудование
 sk: vystrojenie
 sq: tema pajisjet
 zh_CN: 主要装备
+
+therion: arrow
+pt: seta
+sk: šípka
 
