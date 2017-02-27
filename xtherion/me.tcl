@@ -1193,6 +1193,45 @@ proc xth_me_bind_image_drag {tagOrId imgx} {
   $xth(me,can) bind $tagOrId <Double-$xth(gui,rmb)> "xth_me_image_start_drag $tagOrId $imgx %x %y"
 }
 
+proc xth_me_mousewheel_up {} {
+  global xth
+  switch $xth(app,active) {
+    me {
+      if {$xth(me,zoom)*2 > 800} return;
+      xth_me_area_zoom_to [ expr round([expr {$xth(me,zoom) * 1.1}]) ]
+    }
+  }
+}
+
+proc xth_me_mousewheel_down {} {
+  global xth
+  switch $xth(app,active) {
+    me {
+      if {$xth(me,zoom)*2 < 12} return;
+      xth_me_area_zoom_to [ expr round([expr {$xth(me,zoom) / 1.1}]) ]
+    }
+  }
+}
+
+# Windows and Mac have only one binding for the mouse wheel, no matter if it's going up or down
+# so we have to figure it out ourselves.
+proc xth_me_mousewheel {widget delta} {
+  if { $delta >= 0 } {
+    set cmd [list yview scroll [expr {-$delta/3}] pixels]
+    set cms_canvas xth_me_mousewheel_up
+  } else {
+    set cmd [list yview scroll [expr {(2-$delta)/3}] pixels]
+    set cms_canvas xth_me_mousewheel_down
+  }
+  set over [winfo containing -displayof $widget {*}[winfo pointerxy $widget]]
+  if { $over eq ".xth.me.af.apps.cf.c"} {
+    catch {$cms_canvas}
+  } elseif { $over == "" || [catch {$over {*}$cmd}] } {
+    catch {$widget {*}$cmd}
+  }
+  return;
+}
+
 xth_app_create me [mc "Map Editor"]
 
 xth_ctrl_add me cmds [mc "File commands"]
@@ -2586,6 +2625,14 @@ Label $xth(me,pbar) -text "" -width 15 -relief sunken -font $xth(gui,lfont) \
   -anchor center -state disabled
 pack $xth(me,pbar) -side left
 xth_status_bar me $xth(me,pbar) [mc "Current mouse position."]
+
+# For Windows and Mac there is only one MouseWheel event to bond to.
+bind all <MouseWheel> [list xth_me_mousewheel %W %D]
+# In Linux we have the button 4 and 5 to bind to get mouse wheel movements.
+if {[tk windowingsystem] eq "x11"} {
+  bind all <4> [list xth_me_mousewheel %W 120]
+  bind all <5> [list xth_me_mousewheel %W -120]
+}
 
 xth_ctrl_minimize me cmds
 xth_ctrl_minimize me prev
