@@ -2821,6 +2821,18 @@ $xth(me,ctxmenu).cps add checkbutton -label [mc "<<"] -variable xth(ctrl,me,line
 $xth(me,ctxmenu).cps add checkbutton -label [mc "smooth"] -variable xth(ctrl,me,linept,smooth) -command xth_me_cmds_toggle_linept
 $xth(me,ctxmenu).cps add checkbutton -label [mc ">>"] -variable xth(ctrl,me,linept,idn) -command xth_me_cmds_toggle_linept
 
+proc xth_me_create_line_point_edit_menu { lpem_father {state normal} } {
+    upvar $lpem_father f
+    global xth
+    
+    catch {menu $f.m -tearoff 0 -font $xth(gui,lfont)}
+    $f.m add command -label [mc "Insert point"] -command {xth_me_cmds_start_linept_insert} -state $state
+    $f.m add command -label [mc "Delete point"] -command {xth_me_cmds_delete_linept {} {}} -state $state
+    $f.m add command -label [mc "Split line"] -command {xth_me_cmds_line_split} -state $state
+    $f.m add command -label [mc "Trace line"] -command {xth_me_cmds_line_trace_start}
+    $f.m add command -label [mc "Convert to curve"] -command {xth_me_cmds_line_poly2bezier}
+    $f.m add command -label [mc "Simplify line"] -command {xth_me_cmds_line_simplify}    
+}
 
 catch {menu $xth(me,ctxmenu).subtype -tearoff 0}
 catch {menu $xth(me,ctxmenu).segsubtype -tearoff 0}
@@ -2831,6 +2843,7 @@ $xth(me,ctxmenu).altitude add radiobutton -label [mc "auto"] -variable xth(me,ct
 $xth(me,ctxmenu).altitude add command -label [mc "edit"] -command {xth_me_ctx_change_text altitude [mc "Altitude"]}
 
 catch {menu $xth(me,ctxmenu).others -tearoff 0}
+xth_me_create_line_point_edit_menu xth(me,ctxmenu)
 
 # return point option
 proc xth_me_get_option_value {key optkey} {
@@ -3411,7 +3424,7 @@ proc xth_me_show_context_menu {id x y} {
       
   $xth(me,ctxmenu) add separator
   if {$xth(me,cmds,$id,ct) == 3} {
-    $xth(me,ctxmenu) add cascade -label [mc "Edit line"] -menu $xth(ctrl,me,line).lpa.m
+    $xth(me,ctxmenu) add cascade -label [mc "Edit line"] -menu $xth(me,ctxmenu).m
     $xth(me,ctxmenu).others add checkbutton -label [mc "close"] -variable xth(ctrl,me,line,close) -command xth_me_cmds_toggle_line_close
     $xth(me,ctxmenu).others add checkbutton -label [mc "reverse"] -variable xth(ctrl,me,line,reverse) -command xth_me_cmds_toggle_line_reverse
   }
