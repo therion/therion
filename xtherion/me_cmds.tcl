@@ -2821,6 +2821,18 @@ $xth(me,ctxmenu).cps add checkbutton -label [mc "<<"] -variable xth(ctrl,me,line
 $xth(me,ctxmenu).cps add checkbutton -label [mc "smooth"] -variable xth(ctrl,me,linept,smooth) -command xth_me_cmds_toggle_linept
 $xth(me,ctxmenu).cps add checkbutton -label [mc ">>"] -variable xth(ctrl,me,linept,idn) -command xth_me_cmds_toggle_linept
 
+proc xth_me_create_line_point_edit_menu { lpem_father {state normal} } {
+    upvar $lpem_father f
+    global xth
+    
+    catch {menu $f.m -tearoff 0 -font $xth(gui,lfont)}
+    $f.m add command -label [mc "Insert point"] -command {xth_me_cmds_start_linept_insert} -state $state
+    $f.m add command -label [mc "Delete point"] -command {xth_me_cmds_delete_linept {} {}} -state $state
+    $f.m add command -label [mc "Split line"] -command {xth_me_cmds_line_split} -state $state
+    $f.m add command -label [mc "Trace line"] -command {xth_me_cmds_line_trace_start}
+    $f.m add command -label [mc "Convert to curve"] -command {xth_me_cmds_line_poly2bezier}
+    $f.m add command -label [mc "Simplify line"] -command {xth_me_cmds_line_simplify}    
+}
 
 catch {menu $xth(me,ctxmenu).subtype -tearoff 0}
 catch {menu $xth(me,ctxmenu).segsubtype -tearoff 0}
@@ -2831,6 +2843,7 @@ $xth(me,ctxmenu).altitude add radiobutton -label [mc "auto"] -variable xth(me,ct
 $xth(me,ctxmenu).altitude add command -label [mc "edit"] -command {xth_me_ctx_change_text altitude [mc "Altitude"]}
 
 catch {menu $xth(me,ctxmenu).others -tearoff 0}
+xth_me_create_line_point_edit_menu xth(me,ctxmenu)
 
 # return point option
 proc xth_me_get_option_value {key optkey} {
@@ -3135,38 +3148,49 @@ proc xth_me_show_context_menu {id x y} {
     	# set variable
     	switch -nocase [lindex $optalign 0] {
     	  t - top {
+          #DON'T REMOVE - for translation. [mc "top"]
     	    set xth(me,ctrl,ctx,align) "top"
     	  }
     	  tr - top-right {
+          #DON'T REMOVE - for translation. [mc "top-right"]
     	    set xth(me,ctrl,ctx,align) "top-right"
     	  }
     	  tl - top-left {
+          #DON'T REMOVE - for translation. [mc "top-left"]
     	    set xth(me,ctrl,ctx,align) "top-left"
     	  }
     	  b - bottom {
+          #DON'T REMOVE - for translation. [mc "bottom"]
     	    set xth(me,ctrl,ctx,align) "bottom"
     	  }
     	  br - bottom-right {
+          #DON'T REMOVE - for translation. [mc "bottom-right"]
     	    set xth(me,ctrl,ctx,align) "bottom-right"
     	  }
     	  bl - bottom-left {
+          #DON'T REMOVE - for translation. [mc "bottom-left"]
     	    set xth(me,ctrl,ctx,align) "bottom-left"
     	  }
     	  c - centre - center {
+          #DON'T REMOVE - for translation. [mc "center"]
     	    set xth(me,ctrl,ctx,align) "center"
     	  }
     	  r - right {
+          #DON'T REMOVE - for translation. [mc "right"]
     	    set xth(me,ctrl,ctx,align) "right"
     	  }
     	  l - left {
+          #DON'T REMOVE - for translation. [mc "left"]
     	    set xth(me,ctrl,ctx,align) "left"
     	  }
     	  default {
+          #DON'T REMOVE - for translation. [mc "auto"]
     	    set xth(me,ctrl,ctx,align) "auto"
     	  }
     	}
     	# set options
-    	set xth(me,ctrl,ctxopt,align) [lindex $optalign 1] 
+      set xth(me,ctrl,ctxopt,align) [lindex $optalign 1]
+      #DON'T REMOVE - for translation. [mc "align"]
       $xth(me,ctxmenu) add cascade -label [xth_me_optlabel align] -menu $xth(me,ctxmenu).align
     }
 	  	  
@@ -3175,6 +3199,7 @@ proc xth_me_show_context_menu {id x y} {
       set optname [xth_me_get_option_value "name" $opts]
       set xth(me,ctrl,ctx,name) [lindex $optname 0]
       set xth(me,ctrl,ctxopt,name) [lindex $optname 1] 
+      #DON'T REMOVE - for translation. [mc "name"]
       $xth(me,ctxmenu) add command -label [xth_me_optlabel name] -command {xth_me_ctx_change_text name [mc "Station name"]}
     }
     # scrap
@@ -3196,6 +3221,7 @@ proc xth_me_show_context_menu {id x y} {
       set optvalue [xth_me_get_option_value "value" $opts]
       set xth(me,ctrl,ctx,value) [lindex $optvalue 0]
       set xth(me,ctrl,ctxopt,value) [lindex $optvalue 1] 
+      #DON'T REMOVE - for translation. [mc "value"]
       $xth(me,ctxmenu) add command -label [xth_me_optlabel value] -command {xth_me_ctx_change_text value}
     }
     # toggle orientation
@@ -3251,6 +3277,7 @@ proc xth_me_show_context_menu {id x y} {
         }
       }
       set xth(me,ctrl,ctxopt,subtype) [lindex $optsubtype 1] 
+      #DON'T REMOVE - for translation. [mc "subtype"]
       $xth(me,ctxmenu) add cascade -label [xth_me_optlabel subtype] -menu $xth(me,ctxmenu).subtype
     }    
 
@@ -3308,6 +3335,7 @@ proc xth_me_show_context_menu {id x y} {
     }
     # set options
     set xth(me,ctrl,ctxopt,outline) [lindex $optoutline 1] 
+    #DON'T REMOVE - for translation. [mc "outline"]
     $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel outline] -menu $xth(me,ctxmenu).outline
       
     # text for label
@@ -3315,6 +3343,7 @@ proc xth_me_show_context_menu {id x y} {
       set opttext [xth_me_get_option_value "text" $opts]
       set xth(me,ctrl,ctx,text) [lindex $opttext 0]
       set xth(me,ctrl,ctxopt,text) [lindex $opttext 1]
+      #DON'T REMOVE - for translation. [mc "text"]
       $xth(me,ctxmenu) add command -label [xth_me_optlabel text] -command {xth_me_ctx_change_text text}
     }
   }
@@ -3339,6 +3368,7 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,clip) [lindex $optclip 1] 
+  #DON'T REMOVE - for translation. [mc "clip"]
   $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel clip] -menu $xth(me,ctxmenu).clip
 
   $xth(me,ctxmenu) add cascade -label [mc "other options"] -menu $xth(me,ctxmenu).others
@@ -3411,7 +3441,7 @@ proc xth_me_show_context_menu {id x y} {
       
   $xth(me,ctxmenu) add separator
   if {$xth(me,cmds,$id,ct) == 3} {
-    $xth(me,ctxmenu) add cascade -label [mc "Edit line"] -menu $xth(ctrl,me,line).lpa.m
+    $xth(me,ctxmenu) add cascade -label [mc "Edit line"] -menu $xth(me,ctxmenu).m
     $xth(me,ctxmenu).others add checkbutton -label [mc "close"] -variable xth(ctrl,me,line,close) -command xth_me_cmds_toggle_line_close
     $xth(me,ctxmenu).others add checkbutton -label [mc "reverse"] -variable xth(ctrl,me,line,reverse) -command xth_me_cmds_toggle_line_reverse
   }

@@ -1193,6 +1193,44 @@ proc xth_me_bind_image_drag {tagOrId imgx} {
   $xth(me,can) bind $tagOrId <Double-$xth(gui,rmb)> "xth_me_image_start_drag $tagOrId $imgx %x %y"
 }
 
+proc xth_me_mousewheel_up {} {
+  global xth
+  switch $xth(app,active) {
+    me {
+      if {$xth(me,zoom)*2 > 800} return;
+      xth_me_area_zoom_to [ expr round([expr {$xth(me,zoom) * 1.1}]) ]
+    }
+  }
+}
+
+proc xth_me_mousewheel_down {} {
+  global xth
+  switch $xth(app,active) {
+    me {
+      if {$xth(me,zoom)*2 < 12} return;
+      xth_me_area_zoom_to [ expr round([expr {$xth(me,zoom) / 1.1}]) ]
+    }
+  }
+}
+
+# Windows and Mac have only one binding for the mouse wheel, no matter if it's going up or down
+# so we have to figure it out ourselves.
+proc xth_me_mousewheel {widget delta} {
+  if { $delta >= 0 } {
+    set cmd [list yview scroll [expr {-$delta/3}] pixels]
+    set cms_canvas xth_me_mousewheel_up
+  } else {
+    set cmd [list yview scroll [expr {(2-$delta)/3}] pixels]
+    set cms_canvas xth_me_mousewheel_down
+  }
+  set over [winfo containing -displayof $widget {*}[winfo pointerxy $widget]]
+  if { $over eq ".xth.me.af.apps.cf.c"} {
+    catch {$cms_canvas}
+  } elseif { $over == "" || [catch {$over {*}$cmd}] } {
+    catch {$widget {*}$cmd}
+  }
+  return;
+}
 
 xth_app_create me [mc "Map Editor"]
 
@@ -2099,13 +2137,8 @@ Button $lnc.simpl -text [mc "Simplify line"] -anchor center -font $xth(gui,lfont
   -state disabled -command {xth_me_cmds_line_simplify} -width 10
 xth_status_bar me $lnc.upd [mc "Click this button to apply line changes."]
 
-menu $lnc.lpa.m -tearoff 0 -font $xth(gui,lfont)
-$lnc.lpa.m add command -label [mc "Insert point"] -command {xth_me_cmds_start_linept_insert} -state disabled
-$lnc.lpa.m add command -label [mc "Delete point"] -command {xth_me_cmds_delete_linept {} {}} -state disabled
-$lnc.lpa.m add command -label [mc "Split line"] -command {xth_me_cmds_line_split} -state disabled
-$lnc.lpa.m add command -label [mc "Trace line"] -command {xth_me_cmds_line_trace_start}
-$lnc.lpa.m add command -label [mc "Convert to curve"] -command {xth_me_cmds_line_poly2bezier}
-$lnc.lpa.m add command -label [mc "Simplify line"] -command {xth_me_cmds_line_simplify}
+set tmp $lnc.lpa
+xth_me_create_line_point_edit_menu tmp disabled
 
 #Button $lnc.insp -text "Insert" -anchor center -font $xth(gui,lfont) \
 #  -state disabled -width 10 -command {xth_me_cmds_start_linept_insert}
@@ -2592,6 +2625,14 @@ Label $xth(me,pbar) -text "" -width 15 -relief sunken -font $xth(gui,lfont) \
   -anchor center -state disabled
 pack $xth(me,pbar) -side left
 xth_status_bar me $xth(me,pbar) [mc "Current mouse position."]
+
+# For Windows and Mac there is only one MouseWheel event to bond to.
+bind all <MouseWheel> [list xth_me_mousewheel %W %D]
+# In Linux we have the button 4 and 5 to bind to get mouse wheel movements.
+if {[tk windowingsystem] eq "x11"} {
+  bind all <4> [list xth_me_mousewheel %W 120]
+  bind all <5> [list xth_me_mousewheel %W -120]
+}
 
 xth_ctrl_minimize me cmds
 xth_ctrl_minimize me prev

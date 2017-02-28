@@ -292,6 +292,9 @@ set tmp [mc "theme basic-symbols"]
 set tmp [mc "theme passage-fills"]
 set tmp [mc "theme speleothems"]
 set tmp [mc "theme equipement"]
+# This line type is special. It even doesn't appears on map legend.
+# Couldn't find a better place to include this
+set tmp [mc "arrow"]
 
 set xth(me,themes) {
   {theme basic-symbols}

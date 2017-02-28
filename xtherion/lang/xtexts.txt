@@ -76,7 +76,7 @@ cz: Vypnout/zapnout lištu nástrojů
 de: Werkzeugleiste anzeigen/verbergen
 el: Εμφάνιση / μη-εμφάνιση γραμμής εργαλείων
 it: Mostra/Nascondi la barra strumenti
-pt: Visibilidade da barra de ferramentas
+pt: Barra de ferramentas
 ru: Переключить панель инструментов
 sk: Zapnúť/vypnúť panel
 sq: dritarja aktivizuese
@@ -547,7 +547,7 @@ el: Εδώ μπορείτε να περάσετε τις επιλογές γρα
 en: Here you can pass command line options to Therion.
 es: Aquí se pueden pasar a therion opciones de línea de comandos
 it: Opzioni del comando therion
-pt: Opções da linha de comando usadas na chamada ao Therion.
+pt: Opções de linha de comando para chamar o Therion.
 ru: Опции командной строки Therion.
 sk: Argumenty programu v príkazovom riadku.
 sq: ketu ju mund te bartni vijen komanduese te arkivit tek Therion-i
@@ -573,9 +573,9 @@ cz: Xpdf
 de: Xpdf
 it: Xpdf
 pt: Xpdf
+ru: Xpdf
 sk: Xpdf
 sq: Xpdf
-ru: Xpdf
 zh_CN: Xpdf
 
 therion: Acrobat Reader
@@ -584,8 +584,8 @@ cz: Acrobat Reader
 de: Acrobat Reader
 it: Acrobat Reader
 pt: Acrobat Reader
-sk: Acrobat Reader
 ru: Acrobat Reader
+sk: Acrobat Reader
 sq: lexuesi I programit-Akrobat
 zh_CN: Acrobat Reader
 
@@ -689,8 +689,9 @@ therion: WARNING
 bg: Внимание!
 cz: VAROVÁNÍ
 de: WARNUNG
-ru: ПРЕДУПРЕЖДЕНИЕ
 pt: AVISO
+ru: ПРЕДУПРЕЖДЕНИЕ
+sk: VAROVANIE
 zh_CN: 警告
 
 therion: Reading therion log file ...
@@ -2630,27 +2631,6 @@ sk: Aktualizuje krivku.
 sq: kliko kete buton te aktualizosh nderrimet e rrjeshtit.
 zh_CN: 点此按钮，应用线改动。
 
-therion: Trace line
-bg: Проследяване от картината
-cz: Trasovat linii
-en: Trace line
-pt: Traçar linha
-ru: Проследить линию
-
-therion: Convert to curve
-bg: Конвертиране в Безие
-cz: Konvertovat na křivku
-en: Convert to curve
-pt: Converter em curva
-ru: Конвертировать в кривую
-
-therion: Simplify line
-bg: Опростяване на линия
-cz: Zjednodušit linii
-en: Simplify line
-pt: Simplificar
-ru: Упростить линию
-
 therion: Select line point.
 bg: Избери една от точките на линията.
 cz: Výběr bodu křivky.
@@ -3292,20 +3272,6 @@ sk: scrap
 sq: deponia
 zh_CN: 草图
 
-therion: text
-bg: текст
-cz: text
-de: Text
-el: κείμενο
-en: text
-es: texto
-it: testo
-pt: texto
-ru: текст
-sk: text
-sq: teksti
-zh_CN: 文本
-
 therion: Auto adjust area
 bg: Автоматична настройка на област
 cz: Přizpůsobit plochu
@@ -3337,6 +3303,7 @@ zh_CN: 插入图像
 therion: Hide inactive scraps
 cz: Skrýt neaktivní scrapy
 pt: Esconder trechos inativos
+sk: Skryť neaktívne scrapy
 
 therion: Zoom 100 %
 bg: Мащаб 100%
@@ -3766,36 +3733,49 @@ sk: odstránenie náčrtku
 sq: duke fshire skicen e deponise
 zh_CN: 删除草图素描
 
-therion: on"] -variable xth(me,ctrl,ctx,clip) -value "on
+therion: on
+pt: sim
+sk: on
 
-therion: off"] -variable xth(me,ctrl,ctx,clip) -value "off
+therion: off
+pt: não
+sk: off
 
-therion: on"] -variable xth(me,ctrl,ctx,visibility) -value "on
+therion: tiny (xs)
+pt: ínfimo (pp)
+sk: XS
 
-therion: off"] -variable xth(me,ctrl,ctx,visibility) -value "off
+therion: small (s)
+pt: pequeno (p)
+sk: S
 
-therion: top"] -variable xth(me,ctrl,ctx,place) -value "top
+therion: normal (m)
+pt: normal (m)
+sk: M
 
-therion: bottom"] -variable xth(me,ctrl,ctx,place) -value "bottom
+therion: large (l)
+pt: grande (g)
+sk: L
 
-therion: tiny (xs)"] -variable xth(me,ctrl,ctx,scale) -value "xs
+therion: huge (xl)
+pt: enorme (xl)
+sk: XL
 
-therion: small (s)"] -variable xth(me,ctrl,ctx,scale) -value "s
+therion: out
+pt: fora
+sk: vonkajší
 
-therion: normal (m)"] -variable xth(me,ctrl,ctx,scale) -value "m
+therion: in
+pt: dentro
+sk: vnútorný
 
-therion: large (l)"] -variable xth(me,ctrl,ctx,scale) -value "l
-
-therion: huge (xl)"] -variable xth(me,ctrl,ctx,scale) -value "xl
-
-therion: out"] -variable xth(me,ctrl,ctx,outline) -value "out
-
-therion: in"] -variable xth(me,ctrl,ctx,outline) -value "in
-
-therion: none"] -variable xth(me,ctrl,ctx,outline) -value "none
+therion: none
+pt: nenhum
+sk: žiadny
 
 therion: <<
 pt: <<
+sk: <<
 
 therion: smooth
 bg: изглаждане
@@ -3813,8 +3793,31 @@ zh_CN: 平滑
 
 therion: >>
 pt: >>
+sk: >>
 
-therion: auto"] -variable xth(me,ctrl,ctx,altitude) -value ".
+therion: Trace line
+bg: Проследяване от картината
+cz: Trasovat linii
+en: Trace line
+pt: Traçar linha
+ru: Проследить линию
+sk: Oklikať čiaru
+
+therion: Convert to curve
+bg: Конвертиране в Безие
+cz: Konvertovat na křivku
+en: Convert to curve
+pt: Converter em curva
+ru: Конвертировать в кривую
+sk: Konvertovať na krivku
+
+therion: Simplify line
+bg: Опростяване на линия
+cz: Zjednodušit linii
+en: Simplify line
+pt: Simplificar
+ru: Упростить линию
+sk: Zjednodušiť
 
 therion: edit
 bg: редактиране
@@ -3860,29 +3863,98 @@ zh_CN: 成功
 therion: Cancel
 cz: Zrušit
 pt: Cancelar
+sk: Zrušiť
 
-therion: painted"] -variable xth(me,ctrl,ctx,subtype) -value "painted
+therion: painted
+pt: pintada
+sk: namaľovaný
 
-therion: natural"] -variable xth(me,ctrl,ctx,subtype) -value "natural
+therion: natural
+pt: natural
+sk: prírodný
 
-therion: fixed"] -variable xth(me,ctrl,ctx,subtype) -value "fixed
+therion: fixed
+pt: fixa
+sk: fixovaný
 
-therion: winter"] -variable xth(me,ctrl,ctx,subtype) -value "winter
+therion: winter
+pt: inverno
+sk: zimný
 
-therion: summer"] -variable xth(me,ctrl,ctx,subtype) -value "summer
+therion: summer
+pt: verão
+sk: letný
 
-therion: undefined"] -variable xth(me,ctrl,ctx,subtype) -value "undefined
+therion: undefined
+pt: indefinido
+sk: nedefinovaný
 
-therion: paleo"] -variable xth(me,ctrl,ctx,subtype) -value "paleo
+therion: paleo
+pt: paleo
+sk: paleo
+
+therion: top
+pt: topo
+sk: hore
+
+therion: top-right
+pt: topo-direita
+sk: vpravo-hore
+
+therion: top-left
+pt: topo-esquerda
+sk: vľavo-hore
+
+therion: bottom
+pt: fundo
+sk: dole
+
+therion: bottom-right
+pt: fundo-direita
+sk: vpravo-dole
+
+therion: bottom-left
+pt: fundo-esquerda
+sk: vľavo-dole
+
+therion: center
+pt: centro
+sk: stred
+
+therion: right
+pt: direita
+sk: vpravo
+
+therion: left
+pt: esquerda
+sk: vľavo
+
+therion: auto
+pt: auto
+sk: automaticky
+
+therion: align
+pt: alinhar
+sk: zarovnanie
+
+therion: name
+pt: nome
+sk: meno
 
 therion: Station name
 cz: Název bodu
 pt: Nome da base
 ru: Номер пикета
+sk: Meno bodu
 
 therion: Scrap reference
 pt: Referência do trecho
 ru: Привязка скрапа
+sk: Odkaz na scrap
+
+therion: value
+pt: valor
+sk: hodnota
 
 therion: type
 bg: тип
@@ -3898,53 +3970,102 @@ sk: typ
 sq: lloji
 zh_CN: 类型
 
-therion: bedrock"] -variable xth(me,ctrl,ctx,subtype) -value "bedrock
+therion: bedrock
+pt: rocha matriz
+sk: masív
 
-therion: underlying"] -variable xth(me,ctrl,ctx,subtype) -value "underlying
+therion: underlying
+pt: inferior
+sk: ležiaci pod
 
-therion: overlying"] -variable xth(me,ctrl,ctx,subtype) -value "overlying
+therion: overlying
+pt: superior
+sk: ležiaci nad
 
-therion: unsurveyed"] -variable xth(me,ctrl,ctx,subtype) -value "unsurveyed
+therion: unsurveyed
+pt: não explorado
+sk: nezameraný
 
-therion: pit"] -variable xth(me,ctrl,ctx,subtype) -value "pit
+therion: pit
+pt: poço
+sk: priepasť
 
-therion: sand"] -variable xth(me,ctrl,ctx,subtype) -value "sand
+therion: sand
+pt: areia
+sk: piesok
 
-therion: clay"] -variable xth(me,ctrl,ctx,subtype) -value "clay
+therion: clay
+pt: lama/argila
+sk: blato
 
-therion: pebbles"] -variable xth(me,ctrl,ctx,subtype) -value "pebbles
+therion: pebbles
+pt: seixos
+sk: okrúhliaky
 
-therion: debris"] -variable xth(me,ctrl,ctx,subtype) -value "debris
+therion: debris
+pt: escombros
+sk: štrk
 
-therion: blocks"] -variable xth(me,ctrl,ctx,subtype) -value "blocks
+therion: blocks
+pt: blocos
+sk: bloky
 
-therion: ice"] -variable xth(me,ctrl,ctx,subtype) -value "ice
+therion: ice
+pt: gelo
+sk: ľad
 
-therion: flowstone"] -variable xth(me,ctrl,ctx,subtype) -value "flowstone
+therion: flowstone
+pt: escorrimento
+sk: sinter
 
-therion: moonmilk"] -variable xth(me,ctrl,ctx,subtype) -value "moonmilk
+therion: moonmilk
+pt: leite de lua
+sk: mäkký sinter
 
-therion: visible"] -variable xth(me,ctrl,ctx,subtype) -value "visible
+therion: visible
+pt: visível
+sk: viditeľný
 
-therion: invisible"] -variable xth(me,ctrl,ctx,subtype) -value "invisible
+therion: invisible
+pt: invisível
+sk: neviditeľný
 
-therion: temporary"] -variable xth(me,ctrl,ctx,subtype) -value "temporary
+therion: temporary
+pt: temporária
+sk: dočasný
 
-therion: presumed"] -variable xth(me,ctrl,ctx,subtype) -value "presumed
+therion: presumed
+pt: presumida
+sk: predpokladaný
 
-therion: permanent"] -variable xth(me,ctrl,ctx,subtype) -value "permanent
+therion: permanent
+pt: permanente
+sk: permanentný
 
-therion: intermittent"] -variable xth(me,ctrl,ctx,subtype) -value "intermittent
+therion: intermittent
+pt: intermitente
+sk: občasný
 
-therion: conjectural"] -variable xth(me,ctrl,ctx,subtype) -value "conjectural
+therion: conjectural
+pt: suposta
+sk: predpokladaný
 
-therion: cave"] -variable xth(me,ctrl,ctx,subtype) -value "cave
+therion: cave
+pt: subterrânea
+sk: jaskyňa
 
-therion: surface"] -variable xth(me,ctrl,ctx,subtype) -value "surface
+therion: surface
+pt: superfície
+sk: povrch
+
+therion: subtype
+pt: subtipo
+sk: podtyp
 
 therion: control points
 pt: pontos de controle
 ru: контрольные точки
+sk: kontrolné body
 
 therion: orientation
 bg: ориентация
@@ -3977,15 +4098,40 @@ zh_CN: l-大小
 therion: segment subtype
 pt: subtipo do segmento
 ru: подтип сегмента
+sk: podtyp segmentu
 
 therion: altitude label
 pt: indicador de altitude
 ru: отметка высоты
+sk: nadmorská výška
+
+therion: outline
+pt: contorno
+sk: obrys
+
+therion: text
+bg: текст
+cz: text
+de: Text
+el: κείμενο
+en: text
+es: texto
+it: testo
+pt: texto
+ru: текст
+sk: text
+sq: teksti
+zh_CN: 文本
+
+therion: clip
+pt: mascarar
+sk: orezanie
 
 therion: other options
 cz: další možnosti
 pt: outras opções
 ru: другие опции
+sk: ostatné možnosti
 
 therion: Edit line
 bg: Редактирай линия
@@ -4032,11 +4178,13 @@ zh_CN: 反向
 therion: Select underlying point
 pt: Selecionar o ponto inferior
 ru: Выбрать нижележащую точку
+sk: Vyber bod ležiaci pod
 
 therion: Delete symbol
 cz: Smazat symbol
 pt: Apagar símbolo
 ru: Удалить символ
+sk: Odstráň symbol
 
 therion: toggle image visibility
 bg: превключване на видимостта на изображение
@@ -4364,11 +4512,13 @@ therion: Stop tracing
 cz: Ukončit trasování
 pt: Parar tracejo
 ru: Прекратить трассировку
+sk: Zastaviť digitalizáciu
 
 therion: Continue tracing
 cz: Pokračovat v trasování
 pt: Seguir tracejo
 ru: Продолжить трассировку
+sk: Pokračovať digitalizácii
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
@@ -5157,8 +5307,9 @@ bg: Калибриране на изображение ...
 cz: Kalibrovat bitmapu ...
 de: Bild kalibrieren...
 it: Mappa georeferenziata...
-ru: Привязать изображение
 pt: Calibrar imagem...
+ru: Привязать изображение
+sk: Kalibrovať obrázok...
 zh_CN: 校准图片...
 
 therion: About...
@@ -5521,4 +5672,8 @@ ru: оборудование
 sk: vystrojenie
 sq: tema pajisjet
 zh_CN: 主要装备
+
+therion: arrow
+pt: seta
+sk: šípka
 

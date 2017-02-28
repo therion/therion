@@ -60,6 +60,14 @@ struct thdb1d_loop {
   double err_dx, err_dy, err_dz, err_length, src_length, err;
 };
 
+struct thdb1d_traverse {
+  thdb1d_loop_leg * first_leg, * last_leg;
+  class thdb1ds * from, * to;
+  unsigned long nlegs;
+  unsigned long id;
+  double src_length, E, H, V;
+};
+
 class thdb1d_tree_node {
 
   public:
@@ -248,6 +256,7 @@ class thdb1dl {
 typedef std::vector < thdb1dl > thdb1d_leg_vec_type;
 typedef std::list < thdb1d_loop_leg > thdb1d_loop_leg_list_type;
 typedef std::list < thdb1d_loop > thdb1d_loop_list_type;
+typedef std::list < thdb1d_traverse > thdb1d_traverse_list_type;
 
 
 
@@ -318,6 +327,8 @@ class thdb1d {
   thdb1d_loop_leg_list_type loop_leg_list;
 
   thdb1d_loop_list_type loop_list;
+
+  thdb1d_traverse_list_type traverse_list;
 
   /**
    * Standard constructor.
