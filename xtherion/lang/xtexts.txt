@@ -3303,6 +3303,7 @@ zh_CN: 插入图像
 therion: Hide inactive scraps
 cz: Skrýt neaktivní scrapy
 pt: Esconder trechos inativos
+ru: Скрыть неактивные скрапы
 sk: Skryť neaktívne scrapy
 
 therion: Zoom 100 %
@@ -3735,46 +3736,57 @@ zh_CN: 删除草图素描
 
 therion: on
 pt: sim
+ru: вкл
 sk: on
 
 therion: off
 pt: não
+ru: выкл
 sk: off
 
 therion: tiny (xs)
 pt: ínfimo (pp)
+ru: оч.маленький (xs)
 sk: XS
 
 therion: small (s)
 pt: pequeno (p)
+ru: маленький (s)
 sk: S
 
 therion: normal (m)
 pt: normal (m)
+ru: нормальный (m)
 sk: M
 
 therion: large (l)
 pt: grande (g)
+ru: большой (l)
 sk: L
 
 therion: huge (xl)
 pt: enorme (xl)
+ru: оч.большой (xl)
 sk: XL
 
 therion: out
 pt: fora
+ru: наружный
 sk: vonkajší
 
 therion: in
 pt: dentro
+ru: внутренний
 sk: vnútorný
 
 therion: none
 pt: nenhum
+ru: нет
 sk: žiadny
 
 therion: <<
 pt: <<
+ru: <<
 sk: <<
 
 therion: smooth
@@ -3793,6 +3805,7 @@ zh_CN: 平滑
 
 therion: >>
 pt: >>
+ru: >>
 sk: >>
 
 therion: Trace line
@@ -3863,82 +3876,102 @@ zh_CN: 成功
 therion: Cancel
 cz: Zrušit
 pt: Cancelar
+ru: Отмена
 sk: Zrušiť
 
 therion: painted
 pt: pintada
+ru: нарисованный
 sk: namaľovaný
 
 therion: natural
 pt: natural
+ru: естественный
 sk: prírodný
 
 therion: fixed
 pt: fixa
+ru: репер
 sk: fixovaný
 
 therion: winter
 pt: inverno
+ru: зима
 sk: zimný
 
 therion: summer
 pt: verão
+ru: лето
 sk: letný
 
 therion: undefined
 pt: indefinido
+ru: не определено
 sk: nedefinovaný
 
 therion: paleo
 pt: paleo
+ru: палео
 sk: paleo
 
 therion: top
 pt: topo
+ru: сверху
 sk: hore
 
 therion: top-right
 pt: topo-direita
+ru: сверху-справа
 sk: vpravo-hore
 
 therion: top-left
 pt: topo-esquerda
+ru: сверху-слева
 sk: vľavo-hore
 
 therion: bottom
 pt: fundo
+ru: снизу
 sk: dole
 
 therion: bottom-right
 pt: fundo-direita
+ru: снизу-справа
 sk: vpravo-dole
 
 therion: bottom-left
 pt: fundo-esquerda
+ru: снизу-слева
 sk: vľavo-dole
 
 therion: center
 pt: centro
+ru: по центру
 sk: stred
 
 therion: right
 pt: direita
+ru: справа
 sk: vpravo
 
 therion: left
 pt: esquerda
+ru: слева
 sk: vľavo
 
 therion: auto
 pt: auto
+ru: авто
 sk: automaticky
 
 therion: align
 pt: alinhar
+ru: выровнить
 sk: zarovnanie
 
 therion: name
 pt: nome
+ru: имя
 sk: meno
 
 therion: Station name
@@ -3954,6 +3987,7 @@ sk: Odkaz na scrap
 
 therion: value
 pt: valor
+ru: значение
 sk: hodnota
 
 therion: type
@@ -3972,94 +4006,117 @@ zh_CN: 类型
 
 therion: bedrock
 pt: rocha matriz
+ru: коренная порода
 sk: masív
 
 therion: underlying
 pt: inferior
+ru: нижележащий
 sk: ležiaci pod
 
 therion: overlying
 pt: superior
+ru: вышележащий
 sk: ležiaci nad
 
 therion: unsurveyed
 pt: não explorado
+ru: не отснято
 sk: nezameraný
 
 therion: pit
 pt: poço
+ru: колодец
 sk: priepasť
 
 therion: sand
 pt: areia
+ru: песок
 sk: piesok
 
 therion: clay
 pt: lama/argila
+ru: глина
 sk: blato
 
 therion: pebbles
 pt: seixos
+ru: галька
 sk: okrúhliaky
 
 therion: debris
 pt: escombros
+ru: щебень
 sk: štrk
 
 therion: blocks
 pt: blocos
+ru: глыбы
 sk: bloky
 
 therion: ice
 pt: gelo
+ru: лед
 sk: ľad
 
 therion: flowstone
 pt: escorrimento
+ru: натеки
 sk: sinter
 
 therion: moonmilk
 pt: leite de lua
+ru: лунное молоко
 sk: mäkký sinter
 
 therion: visible
 pt: visível
+ru: видимый
 sk: viditeľný
 
 therion: invisible
 pt: invisível
+ru: невидимый
 sk: neviditeľný
 
 therion: temporary
 pt: temporária
+ru: временный
 sk: dočasný
 
 therion: presumed
 pt: presumida
+ru: предпологаемый
 sk: predpokladaný
 
 therion: permanent
 pt: permanente
+ru: постоянный
 sk: permanentný
 
 therion: intermittent
 pt: intermitente
+ru: временный
 sk: občasný
 
 therion: conjectural
 pt: suposta
+ru: предпологаемый
 sk: predpokladaný
 
 therion: cave
 pt: subterrânea
+ru: пещера
 sk: jaskyňa
 
 therion: surface
 pt: superfície
+ru: поверхность
 sk: povrch
 
 therion: subtype
 pt: subtipo
+ru: подтип
 sk: podtyp
 
 therion: control points
@@ -4107,6 +4164,7 @@ sk: nadmorská výška
 
 therion: outline
 pt: contorno
+ru: контур
 sk: obrys
 
 therion: text
@@ -4125,6 +4183,7 @@ zh_CN: 文本
 
 therion: clip
 pt: mascarar
+ru: обрезка
 sk: orezanie
 
 therion: other options
@@ -5675,5 +5734,6 @@ zh_CN: 主要装备
 
 therion: arrow
 pt: seta
+ru: стрелка
 sk: šípka
 
