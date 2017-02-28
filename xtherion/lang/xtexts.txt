@@ -1,3 +1,17 @@
+therion: altitude
+pt: altitude
+
+therion: place
+pt: local
+
+therion: scale
+pt: tamanho
+
+therion: line arrow
+pt: seta
+ru: стрелка
+sk: šípka
+
 therion: Drag to resize control panel.
 bg: Плъзнете, за да промените размера на контролния панел
 cz: Změnit šířku panelu.
@@ -5731,9 +5745,4 @@ ru: оборудование
 sk: vystrojenie
 sq: tema pajisjet
 zh_CN: 主要装备
-
-therion: arrow
-pt: seta
-ru: стрелка
-sk: šípka
 
