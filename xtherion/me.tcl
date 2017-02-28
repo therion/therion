@@ -2041,10 +2041,14 @@ grid $ptc.rotc -row $crow -column 0 -columnspan 2 -sticky news
 grid $ptc.rot -row $crow -column 2 -columnspan 2 -sticky news -padx 2 -pady 1
 incr crow
 ## DISABLED
-#grid $ptc.xszc -row 6 -column 0 -columnspan 2 -sticky news
-#grid $ptc.xsz -row 6 -column 2 -columnspan 2 -sticky news -padx 1
-#grid $ptc.yszc -row 7 -column 0 -columnspan 2 -sticky news
-#grid $ptc.ysz -row 7 -column 2 -columnspan 2 -sticky news -padx 1
+if $xth(gui,me,pointsizectrl) {
+  grid $ptc.xszc -row $crow -column 0 -columnspan 2 -sticky news
+  grid $ptc.xsz -row $crow -column 2 -columnspan 2 -sticky news -padx 1
+  incr crow 
+  grid $ptc.yszc -row $crow -column 0 -columnspan 2 -sticky news
+  grid $ptc.ysz -row $crow -column 2 -columnspan 2 -sticky news -padx 1
+  incr crow
+}
 grid $ptc.upd -row $crow -column 0 -columnspan 4 -sticky news
 incr crow
 

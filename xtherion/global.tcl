@@ -214,6 +214,7 @@ set xth(gui,me,typelistwidth) 16
 set xth(gui,rmb) 3
 
 set xth(gui,bindinsdel) 1
+set xth(gui,me,pointsizectrl) 0
 
 # platform dependend settings
 case $tcl_platform(platform) {

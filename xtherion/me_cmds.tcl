@@ -2205,8 +2205,9 @@ proc xth_me_cmds_end_point_drag {id x y dragto} {
 proc xth_me_cmds_configure_point_fill_xctrl {id sid} {
   global xth
   if {[string length $id] > 0} {
-    ## DISABLED
-    # $xth(me,can) itemconfigure $xth(me,canid,point,fx) -state normal
+    if $xth(gui,me,pointsizectrl) {
+        $xth(me,can) itemconfigure $xth(me,canid,point,fx) -state normal
+    }
     $xth(me,can) bind $xth(me,canid,point,fx) <1> \
       "xth_me_cmds_start_point_fdrag $xth(me,canid,point,fx) $id x %x %y"
     $xth(me,can) bind $xth(me,canid,point,fx) <Enter> \
@@ -2318,10 +2319,10 @@ proc xth_me_cmds_move_point_fill_xctrl {id rot sx sy} {
   $xth(me,can) coords $xth(me,canid,point,fx) $x $y [expr $x + $xvx] [expr $y + $xvy]
   set xth(me,canid,point,fx_tox) [expr $x + $xvx]
   set xth(me,canid,point,fx_toy) [expr $y + $xvy]
-  #$xth(me,can) coords $xth(me,canid,point,fxc) [expr $x + $xvx - $xth(gui,me,point,cpsize)] [expr $y + $xvy - $xth(gui,me,point,cpsize)] [expr $x + $xvx + $xth(gui,me,point,cpsize)] [expr $y + $xvy + $xth(gui,me,point,cpsize)]
   $xth(me,can) coords $xth(me,canid,point,fy) $x $y [expr $x + $yvx] [expr $y + $yvy]
   set xth(me,canid,point,fy_tox) [expr $x + $yvx]
   set xth(me,canid,point,fy_toy) [expr $y + $yvy]
+  #$xth(me,can) coords $xth(me,canid,point,fxc) [expr $x + $xvx - $xth(gui,me,point,cpsize)] [expr $y + $xvy - $xth(gui,me,point,cpsize)] [expr $x + $xvx + $xth(gui,me,point,cpsize)] [expr $y + $xvy + $xth(gui,me,point,cpsize)]
   #$xth(me,can) coords $xth(me,canid,point,fyc) [expr $x + $yvx - $xth(gui,me,point,cpsize)] [expr $y + $yvy - $xth(gui,me,point,cpsize)] [expr $x + $yvx + $xth(gui,me,point,cpsize)] [expr $y + $yvy + $xth(gui,me,point,cpsize)]
   $xth(me,can) coords $xth(me,canid,point,fill) [expr $x + $fxvx + $fyvx] [expr $y + $fxvy + $fyvy] \
     [expr $x + $fxvx - $fyvx] [expr $y + $fxvy - $fyvy] [expr $x - $fxvx - $fyvx] [expr $y - $fxvy - $fyvy] \
@@ -2486,9 +2487,9 @@ proc xth_me_cmds_drag_point_config_xctrl {id} {
   $xth(me,can) itemconfigure $xth(me,canid,point,selector) -state hidden
   set xth(me,point,drag_stfx) [$xth(me,can) itemcget $xth(me,canid,point,fx) -state]
   $xth(me,can) itemconfigure $xth(me,canid,point,fx) -width 1 -arrow none
-  #$xth(me,can) itemconfigure $xth(me,canid,point,fxc) -state hidden
   set xth(me,point,drag_stfy) [$xth(me,can) itemcget $xth(me,canid,point,fy) -state]
   $xth(me,can) itemconfigure $xth(me,canid,point,fy) -width 1 -arrow none
+  #$xth(me,can) itemconfigure $xth(me,canid,point,fxc) -state hidden
   #$xth(me,can) itemconfigure $xth(me,canid,point,fyc) -state hidden
   $xth(me,can) itemconfigure $xth(me,canid,point,fill) -fill {} -outline red
 }
@@ -2498,8 +2499,8 @@ proc xth_me_cmds_end_drag_point_config_xctrl {id} {
   global xth
   $xth(me,can) itemconfigure $xth(me,canid,point,selector) -state $xth(me,point,drag_stsel)
   $xth(me,can) itemconfigure $xth(me,canid,point,fx) -width 5 -arrow last
-  #$xth(me,can) itemconfigure $xth(me,canid,point,fxc) -state $xth(me,point,drag_stfx)
   $xth(me,can) itemconfigure $xth(me,canid,point,fy) -width 5 -arrow last
+  #$xth(me,can) itemconfigure $xth(me,canid,point,fxc) -state $xth(me,point,drag_stfx)
   #$xth(me,can) itemconfigure $xth(me,canid,point,fyc) -state $xth(me,point,drag_stfy)
   $xth(me,can) itemconfigure $xth(me,canid,point,fill) -fill red -outline {}
 }
