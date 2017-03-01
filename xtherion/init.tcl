@@ -192,7 +192,7 @@ proc xth_me_sortxlist {cl} {
 	global xth
 
   set lang [string range [::msgcat::mclocale] 0 1]
-  set map [expr {[info exists "xth(collations,$lang)"] ? $xth(collations,$lang) : {}}]
+  set map [expr {[info exists "xth(collation-maps,$lang)"] ? $xth(collation-maps,$lang) : {}}]
 
   set l2 {}
   foreach {sort} $cl {
