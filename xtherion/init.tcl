@@ -189,10 +189,21 @@ foreach itm $xth(me,themes) {
 }
 
 proc xth_me_sortxlist {cl} {
-  set cl [lsort -index 0 $cl]
+	global xth
+
+  set lang [string range [::msgcat::mclocale] 0 1]
+  set map [expr {[info exists "xth(collations,$lang)"] ? $xth(collations,$lang) : {}}]
+
+  set l2 {}
+  foreach {sort} $cl {
+    lappend l2 [list [lrange $sort 0 1] [string map $map [lindex $sort 0]]]
+  }
+  set res {}
+  foreach e [lsort -dictionary -index 1 $l2] {lappend res [lindex $e 0]}
+
   set hl {}
   set sl {}
-  foreach xl $cl {
+  foreach xl $res {
     lappend sl [lindex $xl 0]
     lappend hl [lindex $xl 1]
   }

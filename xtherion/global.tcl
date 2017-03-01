@@ -64,6 +64,11 @@ if {[lsearch -exact $xth(kbencodings) [encoding system]] < 0} {
   lappend xth(kbencodings) [encoding system]
 }
 
+#The collation code used by xtherion takes a map in which collation differences can be listed as 
+# {from to from to...}, sorts the mapped items, and retrieves only the original elements.
+set xth(collations,pt) { á a à a ã a â a é e ê e í i î i ó o ô o õ o ú u ù u û u ç c \
+  Á A À A Ã A Â A É E Ê E Í I Î I Ó O Ô O Õ O Ú U Û U Ç C }
+
 set xth(length_units) {m cm in ft yd}
 set xth(angle_units) {deg min grad}
 set xth(point_types) {}
