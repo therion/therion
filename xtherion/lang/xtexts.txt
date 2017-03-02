@@ -5745,4 +5745,3 @@ ru: оборудование
 sk: vystrojenie
 sq: tema pajisjet
 zh_CN: 主要装备
-
