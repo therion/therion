@@ -291,4 +291,3 @@ if ($ARGV[0] =~ /^update$/i) {
 } else {
   write_sources($rf);
 }
-
