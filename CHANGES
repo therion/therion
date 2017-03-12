@@ -1,9 +1,73 @@
-already done for the future Therion 5.4:
+Therion 5.4.0 (in progress):
+
+infrastructure:
+ * github.com/therion repos created
+ * added support for mxe.cc cross-compiler
+ * travis-ci.org integration
 
 therion:
- * Chinese translation added -- manual setup of fonts in the ini file (pdf-fonts) is necessary 
-   (thanks to Zhang Yuan Hai and Duncan Collis)
+ * include UISv1 grade definitions [PR#6]
  * new ini file option: tex-fonts-optional
+ * simple CSV database export with shot and equate lists [PR#9,19]
+ * explicit colour setting for individual maps [PR#9]
+ * KML export improved (survey title, map comment, folder icons, entrances,
+   survey names...) [PR#13]
+ * added loop error info to .3d model
+ * sync up img.c and img.h with latest Survex versions [PR#16]
+ * update to latest poly2tri code [PR#43]
+ * documentation improvements [PR#29,38,42]
+ * Chinese translation added -- manual setup of fonts in the ini file
+   (pdf-fonts) is necessary (thanks to Zhang Yuan Hai and Duncan Collis)
+ * updated Bulgarian, Czech, English, German, Portuguese, Russian and Slovak
+   translations [PR#9,12,18,34,41,46,55,56,58,60,65,67,68,69,70]
+ * new and updated map symbols:
+   - added line rope symbol, updated line handrail in MP [PR#9]
+   - added area flowstone to AUT symbolset [PR#35]
+   - added line fixed-ladder
+   - added polyline_offset macro in MP
+   - fixed AUT ceiling-step and ceiling-meander [PR#47]
+   - changed AUT painted/fixed station to ASF:fixed layout [PR#48]
+ * bugs and issues fixed:
+   - fix missing font declarations when using pdf-fonts with more than 256 chars
+   - added export of CLIP attribute in SHP export
+   - include coordinate system and date-surveyed in the .3d export [PR#9,19]
+   - fix warning "Can't Open Cavern Log File For Input" [PR#9]
+   - fix compiler warnings [PR#10,22,24]
+   - fix altitude colours with centreline [PR#11]
+   - fix survex path detection
+   - ensure text files end with a new line [PR#14]
+   - fix typos in messages and comments [PR#17,23,25,39,40,45]
+   - make "make clean" work fully for debug build [PR#20]
+   - regularise indentation to use spaces [PR#26]
+   - whitespace clean-up [PR#27]
+   - sync divergent docs of therion command line [PR#28]
+   - eliminate second copy of Survex img code [PR#33]
+   - remove accidentally committed files [PR#37]
+   - remove redundant NULL checks [PR#44]
+   - use $(MAKE) instead of make [PR#51]
+   - improve calculation of fractional year [PR#52]
+   - fixing raft-cone point being drawn as raft [PR#54]
+
+xtherion:
+ * shortcuts to delete a line point (Ctrl-Shift-D) and zoom (Ctrl-Up/Down)
+ * colouring of lines based on type
+ * station point shown with triangle instead of dot
+ * Line simplification command to reduce number of points without converting 
+   to Bezier [PR#8]
+ * bugs fixed:
+   - fix long delay processing large log files [PR#2]
+   - fix loading of files with no extension in text editor [PR#30]
+   - fix line point contextual menu [PR#61]
+   - fix xtherion/lang/process.pl regex [PR#62]
+   - include missing translatable texts [PR#63,66]
+   - enable canvas zoom with the mouse wheel [PR#64]
+
+loch:
+ * manual page added [PR#15]
+ * bugs fixed:
+   - fix assertions with wxWidgets 3.0 [PR#1]
+   - remove redundant NULL checks [PR#44]
+   - fix loch "make depend" [PR#32]
 
 --------------------------------------------------------------------------------
 
