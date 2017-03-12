@@ -3208,6 +3208,7 @@ proc xth_me_show_context_menu {id x y} {
       set optscrap [xth_me_get_option_value "scrap" $opts]
       set xth(me,ctrl,ctx,scrap) [lindex $optscrap 0]
       set xth(me,ctrl,ctxopt,scrap) [lindex $optscrap 1] 
+      #DON'T REMOVE - for translation. [mc "scrap"]
       $xth(me,ctxmenu) add command -label [xth_me_optlabel scrap] -command {xth_me_ctx_change_text scrap [mc "Scrap reference"]}
     }
     # text
@@ -3215,6 +3216,7 @@ proc xth_me_show_context_menu {id x y} {
       set opttext [xth_me_get_option_value "text" $opts]
       set xth(me,ctrl,ctx,text) [lindex $opttext 0]
       set xth(me,ctrl,ctxopt,text) [lindex $opttext 1]
+      #DON'T REMOVE - for translation. [mc "text"]
       $xth(me,ctxmenu) add command -label [xth_me_optlabel text] -command {xth_me_ctx_change_text text}
     }
     # value
@@ -3307,6 +3309,7 @@ proc xth_me_show_context_menu {id x y} {
     
     # wall altitude
     if {[lsearch -exact {wall} $xth(me,cmds,$id,type)] > -1} {
+      #DON'T REMOVE - for translation. [mc "altitude"]
       set optalt [xth_me_get_optionline_value "altitude"]
       set xth(me,ctrl,ctx,altitude) [lindex $optalt 0]
       if {[lsearch -exact {- nan NaN NAN} xth(me,ctrl,ctx,altitude)] > -1} {
@@ -3391,6 +3394,7 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,place) [lindex $optplace 1] 
+  #DON'T REMOVE - for translation. [mc "place"]
   $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel place] -menu $xth(me,ctxmenu).place
   
   
@@ -3419,6 +3423,7 @@ proc xth_me_show_context_menu {id x y} {
   }
   # set options
   set xth(me,ctrl,ctxopt,scale) [lindex $optscale 1] 
+  #DON'T REMOVE - for translation. [mc "scale"]
   $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel scale] -menu $xth(me,ctxmenu).scale
   
   
