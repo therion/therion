@@ -38,11 +38,15 @@
 
 enum {
   TT_2DOBJ_SCALE_UNKNOWN,
+  TT_2DOBJ_SCALE_2XS,
   TT_2DOBJ_SCALE_XS,
   TT_2DOBJ_SCALE_S,
   TT_2DOBJ_SCALE_M,
   TT_2DOBJ_SCALE_L,
   TT_2DOBJ_SCALE_XL,
+  TT_2DOBJ_SCALE_2XL,
+  TT_2DOBJ_SCALE_3XL,
+  TT_2DOBJ_SCALE_4XL,
 };
 
 
@@ -51,6 +55,14 @@ enum {
  */
  
 static const thstok thtt_2dobj_scales[] = {
+  {"2XL", TT_2DOBJ_SCALE_2XL},
+  {"2XS", TT_2DOBJ_SCALE_2XS},
+  {"2xl", TT_2DOBJ_SCALE_2XL},
+  {"2xs", TT_2DOBJ_SCALE_2XS},
+  {"3XL", TT_2DOBJ_SCALE_3XL},
+  {"3xl", TT_2DOBJ_SCALE_3XL},
+  {"4XL", TT_2DOBJ_SCALE_4XL},
+  {"4xl", TT_2DOBJ_SCALE_4XL},
   {"L", TT_2DOBJ_SCALE_L},
   {"M", TT_2DOBJ_SCALE_M},
   {"S", TT_2DOBJ_SCALE_S},
