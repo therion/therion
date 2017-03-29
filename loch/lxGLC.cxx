@@ -69,6 +69,9 @@ EVT_ERASE_BACKGROUND(lxGLCanvas::OnEraseBackground)
 EVT_ENTER_WINDOW(lxGLCanvas::OnEnterWindow )
 EVT_CHAR(lxGLCanvas::OnKeyPress)
 EVT_IDLE(lxGLCanvas::OnIdle)
+#if wxCHECK_VERSION(2,9,0)
+EVT_MOUSE_CAPTURE_LOST(lxGLCanvas::OnMouseCaptureLost)
+#endif
 END_EVENT_TABLE()
 
 
@@ -205,6 +208,12 @@ void lxGLCanvas::RenderScreen()
     this->RenderInds();
 
 }
+
+#if wxCHECK_VERSION(2,9,0)
+void lxGLCanvas::OnMouseCaptureLost(wxMouseCaptureLostEvent& WXUNUSED(event)) {}
+#endif
+
+
 
 
 void lxGLCanvas::OnPaint( wxPaintEvent& WXUNUSED(event))
