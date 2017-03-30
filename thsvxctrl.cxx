@@ -693,86 +693,101 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
 
 void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 
-  std::string line;
-  std::ifstream infile(lfnm);
-  thmbuffer b;
-  unsigned long sf, st, prev_st;
-  long i;
+	std::string line;
+	std::ifstream infile(lfnm);
+	thmbuffer b;
+	unsigned long sf, st, prev_st, nst;
+	long i;
 
-  while(std::getline(infile, line)) {
+	while(std::getline(infile, line)) {
 
-    thsplit_args(&b, line.c_str());
-    thdb1d_traverse t, * ct;
-    thdb1d_loop_leg l;
-    thdb1d_loop_leg * cl;
-    thdb1d_tree_node * cn;
-    thdb1d_tree_arrow * ca;
+		thprintf("SCANNING: %s\n", line.c_str());
+		thsplit_args(&b, line.c_str());
+		thdb1d_traverse t, * ct;
+		thdb1d_loop_leg l;
+		thdb1d_loop_leg * cl;
+		thdb1d_tree_node * cn;
+		thdb1d_tree_arrow * ca;
+		bool has_legs;
+		has_legs = false;
+		nst = 0;
+		cl = NULL;
+		prev_st = 0;
 
-    if ((b.get_size() > 2) && sscanf(b.get_buffer()[0], "%lu", &sf)) {
-      //thprintf("\nFROM: %lu\n", sf);
-      t.first_leg = NULL;
-      t.last_leg = NULL;
-      t.from = & (dbp->db1d.station_vec[sf-1]);
-      t.nlegs = 0;
-      prev_st = sf;
-      cl = NULL;
-      for(i = 1; i < b.get_size(); i += 2) {
-        sscanf(b.get_buffer()[i+1], "%lu", &st);
-        t.to = & (dbp->db1d.station_vec[st-1]);
-        if (strcmp(b.get_buffer()[i],"-") == 0) {
-          l.prev_leg = cl;
-          l.next_leg = NULL;
-          l.leg = NULL;
-          l.reverse = false; //TODO
-          // find appropriate leg
-          cn = &(dbp->db1d.tree_nodes[dbp->db1d.station_vec[prev_st-1].uid - 1]);
-          for(ca = cn->first_arrow; ca != NULL; ca = ca->next_arrow) {
-            if (ca->end_node->uid == dbp->db1d.station_vec[st-1].uid) {
-              l.leg = ca->leg->leg;
-              l.reverse = ca->leg->reverse;
-              break;
-            }
-          }
-          if (l.leg != NULL) {
-            cl = &(*dbp->db1d.loop_leg_list.insert(dbp->db1d.loop_leg_list.end(), l));
-            if (t.nlegs == 0) {
-              t.first_leg = cl;
-            }
-            if (cl->prev_leg != NULL) {
-              cl->prev_leg->next_leg = cl;
-            }
-            t.last_leg = cl;
-            t.nlegs++;
-          }
-          //else {
-          //  thprintf("LEG not found!!!\n");
-          //}
-          //thprintf("TO: %s %lu\n", b.get_buffer()[i], st);
-        }
-        //else {
-        //  thprintf("EQ: %s %lu\n", b.get_buffer()[i], st);
-        //}
-        prev_st = st;
-      }
-      t.id = dbp->db1d.traverse_list.size() + 1;
-      // TODO: read original length
-      std::getline(infile, line);
-      // read E
-      std::getline(infile, line);
-      sscanf(line.c_str(), "%lf", &t.E);
-      // TODO: read H, V
-      std::getline(infile, line);
-      //thprintf("E: %.2lf\n", t.E);
-      ct = &(*dbp->db1d.traverse_list.insert(dbp->db1d.traverse_list.end(), t));
-      for(cl = ct->first_leg; cl != NULL; cl = cl->next_leg) {
-        cl->leg->traverse = ct;
-      }
-    }
-
-
-
-
-  }
+		i = 0;
+		if (b.get_size() > 2) {
+			i = 0;
+			while (i < b.get_size()) {
+				thprintf("%s\n", b.get_buffer()[i]);
+				if (sscanf(b.get_buffer()[i], "%lu", &st)) {
+					nst++;
+					if (nst == 1) {
+						sf = st;
+						thprintf("\nFROM: %lu\n", sf);
+						t.first_leg = NULL;
+						t.last_leg = NULL;
+						t.from = & (dbp->db1d.station_vec[sf-1]);
+						t.nlegs = 0;
+						prev_st = sf;
+						cl = NULL;
+					} else {
+						t.to = & (dbp->db1d.station_vec[st-1]);
+						if (strcmp(b.get_buffer()[i-1],"-") == 0) {
+							has_legs = true;
+							l.prev_leg = cl;
+							l.next_leg = NULL;
+							l.leg = NULL;
+							l.reverse = false; //TODO
+							// find appropriate leg
+							cn = &(dbp->db1d.tree_nodes[dbp->db1d.station_vec[prev_st-1].uid - 1]);
+							for(ca = cn->first_arrow; ca != NULL; ca = ca->next_arrow) {
+								if (ca->end_node->uid == dbp->db1d.station_vec[st-1].uid) {
+									l.leg = ca->leg->leg;
+									l.reverse = ca->leg->reverse;
+									break;
+								}
+							}
+							if (l.leg != NULL) {
+								cl = &(*dbp->db1d.loop_leg_list.insert(dbp->db1d.loop_leg_list.end(), l));
+								if (t.nlegs == 0) {
+									t.first_leg = cl;
+								}
+								if (cl->prev_leg != NULL) {
+									cl->prev_leg->next_leg = cl;
+								}
+								t.last_leg = cl;
+								t.nlegs++;
+							}
+							else {
+								thprintf("LEG not found!!!\n");
+							}
+							thprintf("TO: %s %lu\n", b.get_buffer()[i], st);
+						}
+						else if (strcmp(b.get_buffer()[i-1],"=") == 0) {
+							thprintf("EQ: %s %lu\n", b.get_buffer()[i], st);
+						}
+						prev_st = st;
+					}
+				}
+				i++;
+			}
+		}
+		if (has_legs) {
+			t.id = dbp->db1d.traverse_list.size() + 1;
+			// TODO: read original length
+			std::getline(infile, line);
+			// read E
+			std::getline(infile, line);
+			sscanf(line.c_str(), "%lf", &t.E);
+			// TODO: read H, V
+			std::getline(infile, line);
+			thprintf("E: %.2lf\n", t.E);
+			ct = &(*dbp->db1d.traverse_list.insert(dbp->db1d.traverse_list.end(), t));
+			for(cl = ct->first_leg; cl != NULL; cl = cl->next_leg) {
+				cl->leg->traverse = ct;
+			}
+		}
+	}
 
 
 }

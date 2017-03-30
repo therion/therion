@@ -38,6 +38,7 @@
 
 enum {
   TT_2DOBJ_SCALE_UNKNOWN,
+  TT_2DOBJ_SCALE_NUMBERIC,
   TT_2DOBJ_SCALE_XS,
   TT_2DOBJ_SCALE_S,
   TT_2DOBJ_SCALE_M,
@@ -148,6 +149,7 @@ class th2ddataobject : public thdataobject {
   class thscrap * fscrapptr;  ///< Father scrap pointer.
   
   int scale;  ///< 2D map object scaling.
+  double scale_numeric;  ///< 2D map object numeric exact scaling.
   unsigned tags;  ///< 2D map object tags.
   int place, context;
 

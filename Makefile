@@ -36,8 +36,8 @@ EXT =
 ##CCPFLAGS = -DTHLINUX
 ##LDPFLAGS = -s
 ##export THPLATFORM = LINUX
-##THXTHMKCMD = ./therion
 ##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##THXTHMKCMD = $(OUTDIR)/therion
 
 
 # PLATFORM DEBIAN
@@ -61,8 +61,8 @@ THXTHMKCMD = ./therion
 ##CCPFLAGS = -DTHWIN32
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
-##THXTHMKCMD = therion
 ##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##THXTHMKCMD = $(OUTDIR)/therion
 
 # PLATFORM WIN32CROSS
 ##CROSS = i686-w64-mingw32.static-
