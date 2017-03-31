@@ -149,7 +149,7 @@ fr: source
 it: sorgente
 mi: waipuna
 pl: wywierzysko
-pt: nascente
+pt: ressurgência
 ru: источник
 sk: výver
 sq: burim
@@ -205,7 +205,7 @@ fr: courant d’air
 it: corrente d'aria
 mi: tawhiri
 pl: przewiew
-pt: presença de vento
+pt: corrente de ar
 ru: ток воздуха
 sk: prievan
 sq: rrymim i ajrit
@@ -230,7 +230,7 @@ fr: surplomb
 it: sporgenza
 mi: tauwharenga
 pl: przewieszka
-pt_BR: projeção
+pt_BR: marquise
 pt_PT: projecção
 ru: нависание потолка
 sk: previs
@@ -248,7 +248,7 @@ fr: visée topo
 it: poligonale
 mi: ruri rārangi
 pl: ciąg pomiarowy
-pt: linha de topo
+pt: linha de visada
 ru: нитка хода
 sk: polygónový ťah
 sq: vijat matese-vrojtuese
@@ -332,7 +332,7 @@ fr: mur
 it: roccia
 mi: tarā
 pl: ściana
-pt: parede de rocha matriz
+pt: parede (rocha matriz)
 ru: стена (коренная)
 sk: stena
 sq: shkembi-muri
@@ -349,7 +349,7 @@ fr: mur sousjacent
 it: parete:sottostante
 mi: tāra ki raro
 pl: ściana położona niżej
-pt: parede conduto inferior
+pt: parede (conduto inferior)
 ru: нижерасположенная стена
 sk: stena nižšej úrovne
 sq: muri I shtrire
@@ -363,7 +363,7 @@ en: overlying wall
 it: parete:sovrastante
 mi: tāra ki runga
 pl: ściana położona wyżej
-pt: parede conduto superior
+pt: parede (conduto superior)
 ru: вышерасположенная стена
 sk: stena vyššej úrovne
 zh_CN: 洞顶边界
@@ -411,7 +411,7 @@ en_GB: entrance pitch
 it: parete:pozzo
 mi: rua
 pl: studnia wstępna
-pt: acesso poço
+pt: parede (poço)
 ru: отвес
 sk: vstupná priepasť
 zh_CN: 竖井洞口
@@ -624,7 +624,7 @@ fr: hauteur du passage
 it: altezza galleria
 mi: ara teitei
 pl: wysokość korytarza
-pt: altura da galeria
+pt: altura do conduto
 ru: высота хода
 sk: výška chodby
 sq: lartesia e kalimit
@@ -725,7 +725,7 @@ fr: courant d’air d’hiver
 it: circolazione invernale
 mi: tawhiri a takurua
 pl: przewiew w zimie
-pt: corrente de ar no inverno
+pt: corrente de ar (inverno)
 ru: ток воздуха зимний
 sk: zimný prievan
 sq: rrymim ajri-dimeror
@@ -741,7 +741,7 @@ fr: courant d’air d’été
 it: circolazione estiva
 mi: tawhiri a raumati
 pl: przewiew w lecie
-pt: corrente de ar no verão
+pt: corrente de ar (verão)
 ru: ток воздуха летний
 sk: letný prievan
 sq: rrymim ajri-veror
@@ -807,7 +807,7 @@ fr: passage impénétrable
 it: chiude su strettoia
 mi: putanga kuiti mutunga
 pl: zwężenie nie do przejścia
-pt: passagem com final estreito
+pt: passagem (final estreito)
 ru: вертикальная узость
 sk: neprielezné zúženie
 sq: kalim I ngushte-fund
@@ -824,7 +824,7 @@ fr: passage bas
 it: chiude su laminatoio
 mi: putanga pāpaku mutunga
 pl: obniżenie nie do przejścia
-pt: passagem com final baixo
+pt: passagem (final teto baixo_
 ru: горизонтальная узость
 sk: neprielezné zníženie
 sq: kalim I poshtem-fund
@@ -1797,7 +1797,7 @@ fr: source
 it: sorgente
 mi: waipuna
 pl: wywierzysko
-pt: nascente
+pt: ressurgência
 ru: источник
 sk: výver
 sq: burim
@@ -2664,7 +2664,7 @@ fr: libellé
 it: etichetta
 mi: ingoa
 pl: nazwa
-pt: informação
+pt: rótulo
 ru: подпись
 sk: pomenovanie
 sq: mbishkrim-etiket
@@ -2681,7 +2681,7 @@ fr: libellé
 it: etichetta
 mi: ingoa
 pl: nazwa
-pt: informação
+pt: rótulo
 ru: текстовая метка
 sk: pomenovanie
 sq: mbishkrim
@@ -2817,7 +2817,7 @@ fr: Explorateurs
 it: Esplorazione
 mi: Kaipokai whenua
 pl: odkryli
-pt: Exploradas por
+pt: Explorada por
 ru: Исследование
 sk: Objavili
 sq: hulumtuar nga
@@ -2851,7 +2851,7 @@ fr: Topographes
 it: Topografia
 mi: Kairūri
 pl: pomierzyli
-pt: Topografadas por
+pt: Topografada por
 ru: Съемка
 sk: Zamerali
 sq: matur nga
@@ -2885,7 +2885,7 @@ fr: Dessinateurs
 it: Cartografia
 mi: Kaituhi
 pl: rysowali
-pt: Desenhadas por
+pt: Desenhada por
 ru: Камеральная обработка
 sk: Kreslili
 sq: vizatuar nga
@@ -2953,7 +2953,7 @@ fr: [Carte extérieure]
 it: Mappa superficie
 mi: Konohi o te whenua
 pl: mapa powierzchni
-pt: [Mapa de superfície]
+pt: [Imagem da superfície]
 ru: [Карта поверхности]
 sk: [Povrchová mapa]
 sq: harta e siperfaqes
