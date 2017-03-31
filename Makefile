@@ -138,7 +138,7 @@ $(OUTDIR)/%.o : %.cc
 $(OUTDIR)/%.o : %.c
 	$(CC) -c $(CCFLAGS) -o $@ $<
 
-all: outdirs $(OUTDIR)/therion doc xtherion/xtherion $(LOCHEXE)
+all: version outdirs $(OUTDIR)/therion doc xtherion/xtherion $(LOCHEXE)
 
 outdirs:
 	mkdir -p $(OUTDIR)/extern/proj4
@@ -148,10 +148,14 @@ outdirs:
 	mkdir -p $(OUTDIR)/xtherion
 	mkdir -p $(OUTDIR)/thbook
 
+version:
+	python set_version.py
+
+
 $(OUTDIR)/extern/proj4/libproj.a: extern/proj4/*.c extern/proj4/*.h
 	$(MAKE) -C ./extern/proj4
 
-$(OUTDIR)/therion:	$(OBJECTS)
+$(OUTDIR)/therion: version $(OBJECTS)
 	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
 ifneq ($(THPLATFORM),WIN32)
 	$(MAKE) library
@@ -195,15 +199,15 @@ library:
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
-xtherion/xtherion: xtherion/*.tcl
+xtherion/xtherion: version xtherion/*.tcl
 	$(MAKE) -C ./xtherion
 
-loch/loch: loch/*.h loch/*.cxx loch/*.c
+loch/loch: version loch/*.h loch/*.cxx loch/*.c
 	$(MAKE) -C ./loch
 
 doc: $(OUTDIR)/thbook/thbook.pdf
 
-thbook: $(OUTDIR)/thbook/thbook.pdf
+thbook: version $(OUTDIR)/thbook/thbook.pdf
 
 samples: $(OUTDIR)/samples.doc/index.tex
 
@@ -226,7 +230,7 @@ cleanrest:
 	$(MAKE) -C ./loch clean
 	$(MAKE) -C ./extern/proj4 clean
 	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thsymbolsets.cxx thsymbolsets.h thlangdata.cxx thchencdata.h
-	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl
+	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl thversion.h thbook/version.tex
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
 	perl makefile.pl rm -q extern/*.o extern/*~ extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
 	perl makefile.pl rm -q symbols.html therion.res
