@@ -44,7 +44,7 @@ enum {
   TT_MAP_BREAK = 2002,
   TT_MAP_PROJECTION = 2003,
   TT_MAP_SURVEY = 2004,
-  TT_MAP_COLOUR = 2005,
+//  TT_MAP_COLOUR = 2005,
 };
 
 
@@ -54,8 +54,8 @@ enum {
  
 static const thstok thtt_map_opt[] = {
   {"break", TT_MAP_BREAK},
-  {"color", TT_MAP_COLOUR},
-  {"colour", TT_MAP_COLOUR},
+//  {"color", TT_MAP_COLOUR},
+//  {"colour", TT_MAP_COLOUR},
   {"preview", TT_MAP_PREVIEW},
   {"proj", TT_MAP_PROJECTION},
   {"projection", TT_MAP_PROJECTION},
@@ -92,7 +92,7 @@ class thmap : public thdataobject {
   
   thmapstat stat;
 
-  thlayout_color colour;
+//  thlayout_color colour;
 
   /**
    * Standard constructor.

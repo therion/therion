@@ -133,9 +133,9 @@ void thmap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long i
       this->last_level++;
       break;
 
-    case TT_MAP_COLOUR:
-      this->colour.parse(args[0]);
-      break;
+//    case TT_MAP_COLOUR:
+//      this->colour.parse(args[0]);
+//      break;
 
 	case TT_MAP_SURVEY:
 	  thparse_objectname(this->asoc_survey, &(this->db->buff_stations), args[0], this);
