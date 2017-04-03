@@ -733,9 +733,13 @@ proc xth_me_image_insert {xx yy fname iidx imgx} {
   
   if {[string length $imgid] < 1} {
     if {$xth(me,unredook)} {
+      set imgerr [mc "Unable to load image file.\n(Progressive JPEG encoding?)"]
+      catch {
+        set imgerr "$imgerr\n$ffname"
+      } errorinf2
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
 	-icon error -type ok \
-	-message "$errorinf" \
+	-message "$imgerr" \
 	-font $xth(gui,lfont)
     }
     xth_status_bar_pop me
