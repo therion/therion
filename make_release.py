@@ -49,15 +49,15 @@ if raw_input(banner) == 'yes':
   subprocess.check_call('git tag -a v%s -m "%s"' % (ver,msg), shell=True)
   subprocess.check_call('git push origin v%s' % ver, shell=True)
   # update CHANGES to assure that subsequent commits would not be mistaken for a release by set_version.py 
-  m = re.match(r'(.+\.)(\d+)$', ver)
-  assert m
-  ver = '%s%d' % (m.group(1), int(m.group(2))+1)
-  with open('CHANGES') as f:
-    oldchanges = f.read()
-  with open('CHANGES', 'w') as f:
-    f.write("Therion %s (in progress):\n\n\n%s\n\n" % (ver, '-'*80) + oldchanges)
-  subprocess.check_call('git add CHANGES', shell=True)
-  subprocess.check_call('git commit -m "update CHANGES"', shell=True)
-  subprocess.check_call('git push', shell=True)
+#  m = re.match(r'(.+\.)(\d+)$', ver)
+#  assert m
+#  ver = '%s%d' % (m.group(1), int(m.group(2))+1)
+#  with open('CHANGES') as f:
+#    oldchanges = f.read()
+#  with open('CHANGES', 'w') as f:
+#    f.write("Therion %s (in progress):\n\n\n%s\n\n" % (ver, '-'*80) + oldchanges)
+#  subprocess.check_call('git add CHANGES', shell=True)
+#  subprocess.check_call('git commit -m "update CHANGES"', shell=True)
+#  subprocess.check_call('git push', shell=True)
 else:
   print('bye')
