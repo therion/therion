@@ -534,13 +534,13 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
         fprintf(out,"<styleUrl>#ThMapStyle</styleUrl>\n");
         fprintf(out,"<name><![CDATA[%s]]></name>\n", mapname.c_str());
         //if ((layout->color_crit == TT_LAYOUT_CCRIT_MAP) && (cmap->map->colour.defined)) {
-          cR = int (255.0 * cmap->map->colour.R + 0.5);
-          cG = int (255.0 * cmap->map->colour.G + 0.5);
-          cB = int (255.0 * cmap->map->colour.B + 0.5);
+        //  cR = int (255.0 * cmap->map->colour.R + 0.5);
+        //  cG = int (255.0 * cmap->map->colour.G + 0.5);
+        //  cB = int (255.0 * cmap->map->colour.B + 0.5);
         //} else {
-        //  cR = int (255.0 * this->layout->color_map_fg.R + 0.5);
-        //  cG = int (255.0 * this->layout->color_map_fg.G + 0.5);
-        //  cB = int (255.0 * this->layout->color_map_fg.B + 0.5);
+          cR = int (255.0 * this->layout->color_map_fg.R + 0.5);
+          cG = int (255.0 * this->layout->color_map_fg.G + 0.5);
+          cB = int (255.0 * this->layout->color_map_fg.B + 0.5);
         //}
         if (this->layout->transparency) {
           cA = int (255.0 * this->layout->opacity + 0.5);
