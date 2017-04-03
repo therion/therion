@@ -1,4 +1,4 @@
-Therion 5.4.0 (in progress):
+Therion 5.4.0 (2017-04-03):
 
 infrastructure:
  * github.com/therion repos created
@@ -9,7 +9,6 @@ therion:
  * include UISv1 grade definitions [PR#6]
  * new ini file option: tex-fonts-optional
  * simple CSV database export with shot and equate lists [PR#9,19]
- * explicit colour setting for individual maps [PR#9]
  * KML export improved (survey title, map comment, folder icons, entrances,
    survey names...) [PR#13]
  * added loop error info to .3d model
@@ -19,7 +18,7 @@ therion:
  * Chinese translation added -- manual setup of fonts in the ini file
    (pdf-fonts) is necessary (thanks to Zhang Yuan Hai and Duncan Collis)
  * updated Bulgarian, Czech, English, German, Portuguese, Russian and Slovak
-   translations [PR#9,12,18,34,41,46,55,56,58,60,65,67,68,69,70]
+   translations [PR#9,12,18,34,41,46,55,56,58,60,65,67,68,69,70,72]
  * new and updated map symbols:
    - added line rope symbol, updated line handrail in MP [PR#9]
    - added area flowstone to AUT symbolset [PR#35]
@@ -54,6 +53,7 @@ xtherion:
  * station point shown with triangle instead of dot
  * Line simplification command to reduce number of points without converting 
    to Bezier [PR#8]
+ * apply proper collation when sorting [PR#71]
  * bugs fixed:
    - fix long delay processing large log files [PR#2]
    - fix loading of files with no extension in text editor [PR#30]
@@ -61,6 +61,7 @@ xtherion:
    - fix xtherion/lang/process.pl regex [PR#62]
    - include missing translatable texts [PR#63,66]
    - enable canvas zoom with the mouse wheel [PR#64]
+   - uncomprehensible error message while loading unsupported progressive JPEGs
 
 loch:
  * manual page added [PR#15]
