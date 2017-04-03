@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
-import subprocess, datetime
+# set version information based on
+#   1) git data
+#   2) the first line of the file CHANGES
+#   3) use at least current date
+
+import subprocess, datetime, re
 
 def run(s):
   return subprocess.check_output(s, shell=True).strip().decode('ascii')
@@ -15,7 +20,16 @@ try:
     commit = run('git rev-parse --short HEAD')
     ver = "%s+%s (%s)" % (prevver[1:], commit, date)
 except:
-  ver = "[no version info] (%s)" % datetime.date.today().isoformat()
+  try:   # check the file CHANGES for version info on the first line
+    with open('CHANGES') as f:
+      txt = f.readline().strip()
+    m = re.match(r'Therion (\d+\.\d+(?:\.\d+)?) \((\d{4}-\d\d-\d\d)\):$',txt)
+    if m:
+      ver = '%s (%s)' % (m.group(1),m.group(2))
+    else:
+      raise ValueError()
+  except:
+    ver = "[no version info] (%s)" % datetime.date.today().isoformat()
 
 with open('thversion.h','w') as f:
   f.write('#define THVERSION "%s"\n' % ver)
