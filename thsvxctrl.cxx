@@ -701,7 +701,7 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 
 	while(std::getline(infile, line)) {
 
-		thprintf("SCANNING: %s\n", line.c_str());
+//		thprintf("SCANNING: %s\n", line.c_str());
 		thsplit_args(&b, line.c_str());
 		thdb1d_traverse t, * ct;
 		thdb1d_loop_leg l;
@@ -718,12 +718,12 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 		if (b.get_size() > 2) {
 			i = 0;
 			while (i < b.get_size()) {
-				thprintf("%s\n", b.get_buffer()[i]);
+//				thprintf("%s\n", b.get_buffer()[i]);
 				if (sscanf(b.get_buffer()[i], "%lu", &st)) {
 					nst++;
 					if (nst == 1) {
 						sf = st;
-						thprintf("\nFROM: %lu\n", sf);
+//						thprintf("\nFROM: %lu\n", sf);
 						t.first_leg = NULL;
 						t.last_leg = NULL;
 						t.from = & (dbp->db1d.station_vec[sf-1]);
@@ -759,12 +759,12 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 								t.nlegs++;
 							}
 							else {
-								thprintf("LEG not found!!!\n");
+//								thprintf("LEG not found!!!\n");
 							}
-							thprintf("TO: %s %lu\n", b.get_buffer()[i], st);
+//							thprintf("TO: %s %lu\n", b.get_buffer()[i], st);
 						}
 						else if (strcmp(b.get_buffer()[i-1],"=") == 0) {
-							thprintf("EQ: %s %lu\n", b.get_buffer()[i], st);
+//							thprintf("EQ: %s %lu\n", b.get_buffer()[i], st);
 						}
 						prev_st = st;
 					}
@@ -781,7 +781,7 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 			sscanf(line.c_str(), "%lf", &t.E);
 			// TODO: read H, V
 			std::getline(infile, line);
-			thprintf("E: %.2lf\n", t.E);
+//			thprintf("E: %.2lf\n", t.E);
 			ct = &(*dbp->db1d.traverse_list.insert(dbp->db1d.traverse_list.end(), t));
 			for(cl = ct->first_leg; cl != NULL; cl = cl->next_leg) {
 				cl->leg->traverse = ct;
