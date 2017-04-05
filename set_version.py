@@ -2,8 +2,8 @@
 
 # set version information based on
 #   1) git data
-#   2) the first line of the file CHANGES
-#   3) use at least current date
+#   2) the first line of the file CHANGES (valid for releases)
+#   3) use at least previous release info + current date
 
 import subprocess, datetime, re
 
@@ -19,17 +19,24 @@ try:
     prevver = run('git describe --abbrev=0 --tags master')
     commit = run('git rev-parse --short HEAD')
     ver = "%s+%s (%s)" % (prevver[1:], commit, date)
-except:
-  try:   # check the file CHANGES for version info on the first line
+except:   # no git version available
+  patt = r'Therion (\d+\.\d+(?:\.\d+)?) \((\d{4}-\d\d-\d\d)\):$'
+  try:   # check the file CHANGES for version info on the first line (this would be a released version)
     with open('CHANGES') as f:
       txt = f.readline().strip()
-    m = re.match(r'Therion (\d+\.\d+(?:\.\d+)?) \((\d{4}-\d\d-\d\d)\):$',txt)
+    m = re.match(patt,txt)
     if m:
       ver = '%s (%s)' % (m.group(1),m.group(2))
     else:
       raise ValueError()
-  except:
-    ver = "[no version info] (%s)" % datetime.date.today().isoformat()
+  except:   # find the most recent release in the file CHANGES
+    with open('CHANGES') as f:
+      for l in f:
+        m = re.match(patt,l.strip())
+        if m:
+          ver1 = m.group(1)
+          break
+    ver = "%s+? (compiled on %s)" % (ver1, datetime.date.today().isoformat())
 
 with open('thversion.h','w') as f:
   f.write('#define THVERSION "%s"\n' % ver)
