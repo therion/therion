@@ -11,7 +11,7 @@ def run(s):
   return subprocess.check_output(s, shell=True).strip().decode('ascii')
 
 try:
-  release = run('git tag --points-at HEAD') # check for a TAG in the current commit
+  release = run('git tag --points-at HEAD 2> /dev/null') # check for a TAG in the current commit
   date = run('git show -s --format="%cd" --date=short HEAD')
   if release.startswith('v'):   # release number if the commit is tagged
     ver = "%s (%s)" % (release[1:], date) 
