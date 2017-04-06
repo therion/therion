@@ -37,6 +37,7 @@
 #include "thlang.h"
 #include "thcsdata.h"
 #include "thconfig.h"
+#include "th2ddataobject.h"
 #include <string.h>
 #ifdef THMSVC
 #include <direct.h>
@@ -98,6 +99,12 @@ thlayout::thlayout()
   this->gys = thnan;
   this->gzs = thnan;
   
+  this->def_min_symbol_scale = 0;
+  this->min_symbol_scale = 0.0;
+
+  this->def_font_setup = 0;
+  this->font_setup[0] = thnan;
+
   this->def_origin_label = 0;
   this->olx = "0";
   this->oly = "0";
@@ -305,6 +312,8 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
     case TT_LAYOUT_GRID_SIZE:
     case TT_LAYOUT_GRID_ORIGIN:
       return thcmd_option_desc(id,4);
+    case TT_LAYOUT_FONT_SETUP:
+      return thcmd_option_desc(id,5);
     case TT_LAYOUT_PAGE_SETUP:
       return thcmd_option_desc(id,7);
     default:
@@ -624,6 +633,26 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_GRID_SIZE:
       this->parse_len(this->gxs, this->gys, this->gzs, 3, args, 1);
       this->def_grid_size = 2;
+      break;
+
+    case TT_LAYOUT_FONT_SETUP:
+      for(sv2 = 0; sv2 < 5; sv2++) {
+        thparse_double(sv,dum,args[sv2]);
+        if ((sv != TT_SV_NUMBER) || (dum <= 0.0)) {
+          ththrow(("invalid font size -- %s", args[sv2]))
+        } else {
+          if ((sv2 > 0) && (dum < this->font_setup[sv2-1])) {
+            ththrow(("font size should be increasing by scale -- %s", args[sv2]))
+          }
+          this->font_setup[sv2] = dum;
+        }
+      }
+      this->def_font_setup = 2;
+      break;
+
+    case TT_LAYOUT_MIN_SYMBOL_SCALE:
+      th2parse_scale(args[0], sv, this->min_symbol_scale);
+      this->def_min_symbol_scale = 2;
       break;
 
     case TT_LAYOUT_COLOR:
@@ -1218,6 +1247,21 @@ void thlayout::self_print_library() {
     thdecode_c(&(this->db->buff_enc), this->excl_list);
     thprintf("\tplayout->excl_list = \"%s\";\n", this->db->buff_enc.get_buffer());
   }
+
+  thprintf("\tplayout->def_font_setup = %d;\n", this->def_font_setup);
+  if (!thisnan(this->font_setup[0])) {
+    thprintf("\tplayout->font_setup[0] = %lg;\n",this->font_setup[0]);
+    thprintf("\tplayout->font_setup[1] = %lg;\n",this->font_setup[1]);
+    thprintf("\tplayout->font_setup[2] = %lg;\n",this->font_setup[2]);
+    thprintf("\tplayout->font_setup[3] = %lg;\n",this->font_setup[3]);
+    thprintf("\tplayout->font_setup[4] = %lg;\n",this->font_setup[4]);
+  }
+
+  thprintf("\tplayout->def_min_symbol_scale = %d;\n", this->def_min_symbol_scale);
+  if (this->min_symbol_scale > 0.0) {
+    thprintf("\tplayout->min_symbol_scale = %lg;\n",this->min_symbol_scale);
+  }
+
   
   thprintf("\tplayout->def_grid_size = %d;\n", this->def_grid_size);
   if (!thisnan(this->gxs)) {
@@ -1765,6 +1809,18 @@ void thlayout::process_copy() {
         this->gxs = srcl->gxs;
         this->gys = srcl->gys;
         this->gzs = srcl->gzs;
+      endcopy
+
+      begcopy(def_font_setup)
+        this->font_setup[0] = srcl->font_setup[0];
+        this->font_setup[1] = srcl->font_setup[1];
+        this->font_setup[2] = srcl->font_setup[2];
+        this->font_setup[3] = srcl->font_setup[3];
+        this->font_setup[4] = srcl->font_setup[4];
+      endcopy
+
+      begcopy(def_min_symbol_scale)
+        this->min_symbol_scale = srcl->min_symbol_scale;
       endcopy
   
       begcopy(def_origin_label)

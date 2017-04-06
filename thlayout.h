@@ -96,6 +96,8 @@ enum {
   TT_LAYOUT_MAP_IMAGE = 2051,
   TT_LAYOUT_GRID_COORDS = 2052,
   TT_LAYOUT_SYMBOL_COLOR = 2053,
+  TT_LAYOUT_FONT_SETUP = 2054,
+  TT_LAYOUT_MIN_SYMBOL_SCALE = 2055,
 };
 
 
@@ -467,6 +469,7 @@ static const thstok thtt_layout_opt[] = {
   {"doc-title",TT_LAYOUT_DOC_TITLE},
   {"endcode",TT_LAYOUT_ENDCODE},
   {"exclude-pages",TT_LAYOUT_EXCLUDE_PAGES},
+  {"font-setup", TT_LAYOUT_FONT_SETUP},
   {"grid",TT_LAYOUT_GRID},
   {"grid-coords",TT_LAYOUT_GRID_COORDS},
   {"grid-origin",TT_LAYOUT_GRID_ORIGIN},
@@ -480,6 +483,7 @@ static const thstok thtt_layout_opt[] = {
   {"map-header",TT_LAYOUT_MAP_HEADER},
   {"map-header-bg",TT_LAYOUT_MAP_HEADER_BG},
   {"map-image",TT_LAYOUT_MAP_IMAGE},
+  {"min-symbol-scale", TT_LAYOUT_MIN_SYMBOL_SCALE},
   {"nav-factor",TT_LAYOUT_NAV_FACTOR},
   {"nav-size",TT_LAYOUT_NAV_SIZE},
   {"north",TT_LAYOUT_NORTH},
@@ -554,6 +558,8 @@ class thlayout : public thdataobject {
    color_mode, // auto - values and colors, table - colors, manual
    color_table; // hsv, cool, hot ...
 
+  double min_symbol_scale, font_setup[5];
+
   
   thlayoutln * first_line, * last_line;
   
@@ -577,7 +583,8 @@ class thlayout : public thdataobject {
     def_map_header, def_lang, def_scale_bar, def_map_header_bg,
     def_max_explos, def_max_topos, def_max_cartos,
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_survey_level, def_surface,
-    def_surface_opacity, def_units, def_grid_coords, def_color_labels;
+    def_surface_opacity, def_units, def_grid_coords, def_color_labels,
+    def_font_setup, def_min_symbol_scale;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;

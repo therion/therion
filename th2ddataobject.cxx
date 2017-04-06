@@ -84,9 +84,7 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
   switch (cod.id) {
   
     case TT_2DOBJ_SCALE:
-      this->scale = thmatch_token(*args, thtt_2dobj_scales);
-      if (this->scale == TT_2DOBJ_SCALE_UNKNOWN)
-        ththrow(("invalid scale -- %s",*args))
+      th2parse_scale(*args, this->scale, this->scale_numeric);
       if (this->get_class_id() == TT_AREA_CMD)
         ththrow(("scale specification for area not allowed"))
       break;    
@@ -209,3 +207,34 @@ void th2ddataobject::parse_u_subtype(const char * subtype)
     ththrow(("invalid subtype name -- %s", subtype))
 }
 
+void th2parse_scale(const char * spec, int & type, double & value)
+{
+  type = thmatch_token(spec, thtt_2dobj_scales);
+  if (type == TT_2DOBJ_SCALE_UNKNOWN) {
+    // try to parse numeric value
+    thparse_double(type, value, spec);
+    if ((type != TT_SV_NUMBER) || (value <= 0.0)) {
+      ththrow(("invalid scale -- %s", spec));
+    } else {
+      type = TT_2DOBJ_SCALE_NUMBERIC;
+    }
+  } else {
+    switch(type) {
+      case TT_2DOBJ_SCALE_XS:
+        value = 0.5;
+        break;
+      case TT_2DOBJ_SCALE_S:
+        value = 0.707;
+        break;
+      case TT_2DOBJ_SCALE_M:
+        value = 1.0;
+        break;
+      case TT_2DOBJ_SCALE_L:
+        value = 1.414;
+        break;
+      case TT_2DOBJ_SCALE_XL:
+        value = 2.0;
+        break;
+    }
+  }
+}
