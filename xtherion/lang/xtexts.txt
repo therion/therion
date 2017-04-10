@@ -1,11 +1,14 @@
 therion: altitude
 pt: altitude
+ru: альтитуда
 
 therion: place
 pt: local
+ru: местопложение
 
 therion: scale
 pt: tamanho
+ru: масштаб
 
 therion: line arrow
 pt: seta
@@ -4035,7 +4038,7 @@ sk: ležiaci nad
 
 therion: unsurveyed
 pt: não explorado
-ru: не отснято
+ru: неотснято
 sk: nezameraný
 
 therion: pit
