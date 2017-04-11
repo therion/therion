@@ -36,6 +36,7 @@ th2ddataobject::th2ddataobject()
   this->nscrapoptr = NULL;
   this->fscrapptr = NULL;
   this->scale = TT_2DOBJ_SCALE_M;
+  this->scale_numeric = 1.0;
   this->tags = TT_2DOBJ_TAG_CLIP_AUTO | TT_2DOBJ_TAG_VISIBILITY_ON;
   this->place = TT_2DOBJ_PLACE_DEFAULT;
   this->context = -1;
@@ -84,7 +85,7 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
   switch (cod.id) {
   
     case TT_2DOBJ_SCALE:
-      th2parse_scale(*args, this->scale, this->scale_numeric);
+      th2dparse_scale(*args, this->scale, this->scale_numeric);
       if (this->get_class_id() == TT_AREA_CMD)
         ththrow(("scale specification for area not allowed"))
       break;    
@@ -207,7 +208,7 @@ void th2ddataobject::parse_u_subtype(const char * subtype)
     ththrow(("invalid subtype name -- %s", subtype))
 }
 
-void th2parse_scale(const char * spec, int & type, double & value)
+void th2dparse_scale(const char * spec, int & type, double & value)
 {
   type = thmatch_token(spec, thtt_2dobj_scales);
   if (type == TT_2DOBJ_SCALE_UNKNOWN) {

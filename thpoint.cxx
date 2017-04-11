@@ -404,6 +404,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 //  char * buff = this->db->buff_enc.get_buffer();
   double xrr = (thisnan(this->orient) ? out->rr : 0.0);
 
+  if (this->scale_numeric < out->layout->min_symbol_scale) return(false);
+
   switch(this->type) {
 
     case TT_POINT_TYPE_DIMENSIONS:
@@ -447,22 +449,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
             fprintf(out->file,"\\thremark ");
             break;
         }
-        switch (this->scale) {
-          case TT_2DOBJ_SCALE_XL:
-            fprintf(out->file,"\\thhugesize ");
-            break;
-          case TT_2DOBJ_SCALE_L:
-            fprintf(out->file,"\\thlargesize ");
-            break;
-          case TT_2DOBJ_SCALE_S:
-            fprintf(out->file,"\\thsmallsize ");
-            break;
-          case TT_2DOBJ_SCALE_XS:
-            fprintf(out->file,"\\thtinysize ");
-            break;
-          default:
-            fprintf(out->file,"\\thnormalsize ");
-        }
+        out->layout->export_mptex_font_size(out->file, this, true);
         fprintf(out->file,"%s etex,",
           ((this->type == TT_POINT_TYPE_STATION_NAME) && (!this->station_name.is_empty()))
           ? (const char *) utf2tex(thobjectname__print_full_name(this->station_name.name, this->station_name.psurvey, out->layout->survey_level)) 
@@ -576,20 +563,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         out->symset->export_mp_symbol_options(out->file, SYMP_ALTITUDE);
         fprintf(out->file,"p_label%s(btex \\thaltitude ",
 					thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
-        switch (this->scale) {
-          case TT_2DOBJ_SCALE_XL:
-            fprintf(out->file,"\\thhugesize ");
-            break;
-          case TT_2DOBJ_SCALE_L:
-            fprintf(out->file,"\\thlargesize ");
-            break;
-          case TT_2DOBJ_SCALE_S:
-            fprintf(out->file,"\\thsmallsize ");
-            break;
-          case TT_2DOBJ_SCALE_XS:
-            fprintf(out->file,"\\thtinysize ");
-            break;
-        }
+        out->layout->export_mptex_font_size(out->file, this, false);
         fprintf(out->file,"%s etex,",
 					utf2tex(out->layout->units.format_length(this->xsize - out->layout->goz)));
         postprocess_label = 1;
@@ -627,21 +601,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         out->symset->get_mp_macro(omacroid);
         out->symset->export_mp_symbol_options(out->file, omacroid);
         fprintf(out->file,"p_label%s(btex \\thheight ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
+        out->layout->export_mptex_font_size(out->file, this, false);
 
-        switch (this->scale) {
-          case TT_2DOBJ_SCALE_XL:
-            fprintf(out->file,"\\thhugesize ");
-            break;
-          case TT_2DOBJ_SCALE_L:
-            fprintf(out->file,"\\thlargesize ");
-            break;
-          case TT_2DOBJ_SCALE_S:
-            fprintf(out->file,"\\thsmallsize ");
-            break;
-          case TT_2DOBJ_SCALE_XS:
-            fprintf(out->file,"\\thtinysize ");
-            break;
-        }
 
         if ((this->tags & TT_POINT_TAG_HEIGHT_P) != 0)
           fprintf(out->file,"\\thheightpos ");
@@ -680,20 +641,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         out->symset->export_mp_symbol_options(out->file, SYMP_DATE);
         fprintf(out->file,"p_label%s(btex \\thdate ",
             thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
-        switch (this->scale) {
-          case TT_2DOBJ_SCALE_XL:
-            fprintf(out->file,"\\thhugesize ");
-            break;
-          case TT_2DOBJ_SCALE_L:
-            fprintf(out->file,"\\thlargesize ");
-            break;
-          case TT_2DOBJ_SCALE_S:
-            fprintf(out->file,"\\thsmallsize ");
-            break;
-          case TT_2DOBJ_SCALE_XS:
-            fprintf(out->file,"\\thtinysize ");
-            break;
-        }
+        out->layout->export_mptex_font_size(out->file, this, false);
+
         fprintf(out->file,"%s etex,",
             utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_LOCALE)));
         postprocess_label = 0;
@@ -755,39 +704,15 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
         if (!thisnan(this->xsize)) {
           fprintf(out->file,"{");
-          switch (this->scale) {
-            case TT_2DOBJ_SCALE_XL:
-              fprintf(out->file,"\\thhugesize ");
-              break;
-            case TT_2DOBJ_SCALE_L:
-              fprintf(out->file,"\\thlargesize ");
-              break;
-            case TT_2DOBJ_SCALE_S:
-              fprintf(out->file,"\\thsmallsize ");
-              break;
-            case TT_2DOBJ_SCALE_XS:
-              fprintf(out->file,"\\thtinysize ");
-              break;
-          }
+          out->layout->export_mptex_font_size(out->file, this, false);
+
           fprintf(out->file,"%s}", utf2tex(out->layout->units.format_human_length(this->xsize)));
         }
         
         if (!thisnan(this->ysize)) {
           fprintf(out->file,"{");
-          switch (this->scale) {
-            case TT_2DOBJ_SCALE_XL:
-              fprintf(out->file,"\\thhugesize ");
-              break;
-            case TT_2DOBJ_SCALE_L:
-              fprintf(out->file,"\\thlargesize ");
-              break;
-            case TT_2DOBJ_SCALE_S:
-              fprintf(out->file,"\\thsmallsize ");
-              break;
-            case TT_2DOBJ_SCALE_XS:
-              fprintf(out->file,"\\thtinysize ");
-              break;
-          }
+          out->layout->export_mptex_font_size(out->file, this, false);
+
           fprintf(out->file,"%s}", utf2tex(out->layout->units.format_human_length(this->ysize)));
         }        
         
@@ -957,21 +882,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   
   if (postprocess) {
     this->point->export_mp(out);
-    double scl = 1.0;
-    switch (this->scale) {
-      case TT_2DOBJ_SCALE_L:
-        scl = 1.414;
-        break;
-      case TT_2DOBJ_SCALE_XL:
-        scl = 2.0;
-        break;
-      case TT_2DOBJ_SCALE_S:
-        scl = 0.707;
-        break;
-      case TT_2DOBJ_SCALE_XS:
-        scl = 0.5;
-        break;
-    }
+    double scl = this->scale_numeric;
     const char * al = "(0,0)";
     switch (thdb2d_rotate_align(this->align, xrr)) {
       case TT_POINT_ALIGN_B:

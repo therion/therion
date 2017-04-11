@@ -651,7 +651,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       break;
 
     case TT_LAYOUT_MIN_SYMBOL_SCALE:
-      th2parse_scale(args[0], sv, this->min_symbol_scale);
+      th2dparse_scale(args[0], sv, this->min_symbol_scale);
       this->def_min_symbol_scale = 2;
       break;
 
@@ -2155,6 +2155,43 @@ void thlayout_map_image::parse(char ** args, const char * cpath) {
   else
     fpath += args[3];
   this->m_fn = thdb.strstore(fpath.c_str());
+
+}
+
+
+void thlayout::export_mptex_font_size(FILE * o, th2ddataobject * obj, bool print_default_scale) {
+  switch (obj->scale) {
+    case TT_2DOBJ_SCALE_XL:
+      fprintf(o,"\\thhugesize ");
+      break;
+    case TT_2DOBJ_SCALE_L:
+      fprintf(o,"\\thlargesize ");
+      break;
+    case TT_2DOBJ_SCALE_S:
+      fprintf(o,"\\thsmallsize ");
+      break;
+    case TT_2DOBJ_SCALE_XS:
+      fprintf(o,"\\thtinysize ");
+      break;
+    case TT_2DOBJ_SCALE_NUMBERIC:
+    	{
+    		double optical_zoom = this->scale / this->base_scale;
+    		if (obj->scale_numeric <= 0.5)
+    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 0.5 * this->font_setup[0]);
+				else if (obj->scale_numeric <= 0.707)
+    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 0.707 * this->font_setup[1]);
+				else if (obj->scale_numeric >= 2.0)
+    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 2.0 * this->font_setup[4]);
+				else if (obj->scale_numeric >= 1.414)
+    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 1.414 * this->font_setup[3]);
+				else
+    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric * this->font_setup[2]);
+    	}
+    	break;
+    default:
+    	if (print_default_scale) fprintf(o,"\\thnormalsize ");
+    	break;
+  }
 
 }
 

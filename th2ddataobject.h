@@ -243,8 +243,7 @@ class th2ddataobject : public thdataobject {
 
 void th2dsplitTT(char * src, char ** type, char ** subtype);
 
-void th2parse_scale(const char * spec, int & type, double & value);
-
+void th2dparse_scale(const char * spec, int & type, double & value);
 
 #endif
 
