@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Loch\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-02-24 16:22+0000\n"
+"PO-Revision-Date: 2017-04-10 17:01+0100\n"
 "Last-Translator: \n"
 "Language-Team: russian <akozhenkov@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Poedit-Basepath: ../..\n"
 "Plural-Forms: и;\n"
 "Language: ru\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.0\n"
 "X-Poedit-SearchPath-0: .\n"
 
 # C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:53
@@ -26,12 +26,12 @@ msgstr "О программе Loch"
 # C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:76
 #: lxAboutDlg.cxx:77
 msgid "3D visualization tool for caves"
-msgstr "Програма для 3D визуализации пещер"
+msgstr "Инструмент для 3D визуализации пещер"
 
 # C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:78
 #: lxAboutDlg.cxx:79
 msgid "Version: "
-msgstr "Версия:"
+msgstr "Версия: "
 
 #: lxData.cxx:84
 msgid "No file open"
@@ -224,12 +224,12 @@ msgstr "Показать поверхность"
 # c:/cave/loch/loch/lxSScene.cxx:365
 #: lxGUI.cxx:225 lxSScene.cxx:253
 msgid "Bounding box"
-msgstr "Рамка"
+msgstr "Границы"
 
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:228
 #: lxGUI.cxx:225
 msgid "Show bounding box"
-msgstr "Показать рамку"
+msgstr "Показать границы модели"
 
 # c:/cave/loch/loch/lxSScene.cxx:174
 #: lxGUI.cxx:226 lxSScene.cxx:223 lxSScene.cxx:255
@@ -284,12 +284,12 @@ msgstr "&Выход\tCtrl+Q"
 # c:/cave/loch/loch/lxGUI.cxx:126
 #: lxGUI.cxx:247
 msgid "Rotate left\tRight"
-msgstr "Вращение слева\tВправо"
+msgstr "Вращение против часовой\tВправо"
 
 # c:/cave/loch/loch/lxGUI.cxx:127
 #: lxGUI.cxx:248
 msgid "Rotate right\tLeft"
-msgstr "Вращение справа\tВлево"
+msgstr "Вращение по часовой\tВлево"
 
 # c:/cave/loch/loch/lxGUI.cxx:129
 #: lxGUI.cxx:250
@@ -314,12 +314,12 @@ msgstr "Сдвиг вверх\tShift+Вверх"
 # c:/cave/loch/loch/lxGUI.cxx:134
 #: lxGUI.cxx:255
 msgid "Move left\tShift+Right"
-msgstr "Сдвиг слева\tShift+Вправо"
+msgstr "Сдвиг вправо\tShift+Вправо"
 
 # c:/cave/loch/loch/lxGUI.cxx:135
 #: lxGUI.cxx:256
 msgid "Move right\tShift+Left"
-msgstr "Сдвиг справа\tShift+Влево"
+msgstr "Сдвиг влево\tShift+Влево"
 
 # c:/cave/loch/loch/lxGUI.cxx:137
 #: lxGUI.cxx:258
@@ -459,7 +459,7 @@ msgstr "&Инструменты"
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:311
 #: lxGUI.cxx:308
 msgid "&Help"
-msgstr "По&мощь"
+msgstr "&Помощь"
 
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:581
 #: lxGUI.cxx:578
@@ -507,7 +507,7 @@ msgstr "Выбрать..."
 # C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:65
 #: lxOptDlg.cxx:64
 msgid "Default stereo colors"
-msgstr "Стандартные цвета стерео"
+msgstr "Стандартные цвета для стерео"
 
 # c:/cave/loch/loch/lxSView.cxx:430
 #: lxOptDlg.cxx:68 lxSView.cxx:435
@@ -690,7 +690,7 @@ msgstr "Рендеринг в изображение"
 # c:/cave/loch/loch/lxSScene.cxx:147
 #: lxSScene.cxx:196
 msgid " Scene"
-msgstr "Сцена"
+msgstr " Сцена"
 
 # c:/cave/loch/loch/lxSScene.cxx:167
 # c:/cave/loch/loch/lxSScene.cxx:335
@@ -753,7 +753,7 @@ msgstr "Зкрыть"
 # C:/Projects/MSVCProjects/loch/lxSView.cxx:228
 #: lxSView.cxx:228
 msgid " Camera"
-msgstr "Камера"
+msgstr " Камера"
 
 # c:/cave/loch/loch/lxSView.cxx:255
 #: lxSView.cxx:260
@@ -783,27 +783,27 @@ msgstr "Центр вращения"
 # c:/cave/loch/loch/lxSView.cxx:327
 #: lxSView.cxx:332
 msgid "Easting (m)"
-msgstr "X - В-З (m)"
+msgstr "X - В-З (м)"
 
 # c:/cave/loch/loch/lxSView.cxx:335
 #: lxSView.cxx:340
 msgid "Northing (m)"
-msgstr "Y - С-Ю (m)"
+msgstr "Y - С-Ю (м)"
 
 # c:/cave/loch/loch/lxSView.cxx:343
 #: lxSView.cxx:348
 msgid "Altitude (m)"
-msgstr "Альтитуда (m)"
+msgstr "Альтитуда (м)"
 
 # c:/cave/loch/loch/lxSView.cxx:364
 #: lxSView.cxx:369
 msgid "Distance (m)"
-msgstr "Расстояние (m)"
+msgstr "Расстояние (м)"
 
 # c:/cave/loch/loch/lxSView.cxx:379
 #: lxSView.cxx:384
 msgid "Focus (mm)"
-msgstr "Фокус (mm)"
+msgstr "Фокус (мм)"
 
 # c:/cave/loch/loch/lxSView.cxx:399
 #: lxSView.cxx:404
