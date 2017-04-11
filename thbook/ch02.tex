@@ -777,7 +777,10 @@ Point is a command for drawing a point map symbol.
     are accepted: center, c, top, t, bottom, b, left, l, right, r,
     top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br.
   * |scale| = symbol scale, can be: 
-    tiny (xs), small (s), normal (m), large (l), huge (xl). Normal is default.
+    tiny (xs), small (s), normal (m), large (l), huge (xl) or a 
+    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+    $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
+    $xl \equiv 2.0$.
   * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,

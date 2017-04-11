@@ -376,22 +376,8 @@ dimen register to positive value, e.g. |0.5mm|.
 
 \subchapter Customizing text labels.
 
-There is a preliminary interface to changing font sizes for labels via the \MP\ 
-macro
-
-|fonts_setup(<tinysize>,<smallsize>,<normalsize>,<largesize>,<hugesize>);|
-
-which may be used inside of the |code metapost| section of the |layout| 
-command. |<normalsize>| applies to point label, |<smallsize>| applies to 
-remark and all other point labels. Each of them may apply to line label 
-according to its |-size| option.
-
-Example:
-
-|code metapost
-  fonts_setup(6,8,10,14,20);  
-      % default values depend on scale; for 1:200 they are 7,8,10,12,14|
-  
+Starting with release 5.4.1 you can use |fonts-setup| layout option
+instead of |fonts_setup()| macro in \MP.
 
 \subchapter New map symbols.
 

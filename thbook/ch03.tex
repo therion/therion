@@ -203,6 +203,7 @@ available translations, see |thlang/texts.txt| file.
     symbol-hide <point/line/area/group/special> <symbol-type>
     symbol-show <point/line/area/group/special> <symbol-type>
     symbol-colour <point/line/area/group/special> <symbol-type> <colour>
+    fonts-setup <tinysize> <smallsize> <normalsize> <largesize> <hugesize>
     size <width> <height> <units>
     overlap <value> <units>
     page-setup <dimensions> <units>
@@ -320,6 +321,17 @@ endlayout|
     currently applies to pattern fills only if (1) output format is PDF and
     (2)~\MP\ version is at least 1.000] (M, A)
 
+  * \NEW{5.5}|fonts-setup <tinysize> <smallsize> <normalsize> <largesize> <hugesize>| =
+    specify size of the text in points. 
+    |<normalsize>| applies to point label, |<smallsize>| applies to 
+    remark and all other point labels. Each of them may apply to line label 
+    according to its |-size| option.
+    
+    The defaults are 
+    |8 10 12 16 24| for scales upto 1:100; 
+    |7 8 10 14 20| for scales upto 1:200; 
+    |6 7 8 10 14| for scales upto 1:500 and 
+    |5 6 7 8 10| for scales smaller than 1:500.
 
   {\it page layout related:}\Nobreak
 
