@@ -227,7 +227,13 @@
     \pdfendlink
   \fi}
 
-\def\NEW#1{\ifdim#1pt>5.3pt%
+\def\twotonum#1.#2 {\numexpr(#1*1000000+#2*1000)}
+\def\threetonum#1.#2.#3 {\numexpr(#1*1000000+#2*1000+#3)}
+\def\versiontonum#1{\ifnum\pdfmatch{[0-9]+[.][0-9]+[.][0-9]+}{#1}=1
+       \threetonum#1 \else \twotonum#1 \fi}
+
+\def\NEW#1{\ifnum\versiontonum{#1}<\versiontonum{5.3}% don't display too old news
+       \else
        \leavevmode\vadjust{%
           \vbox to 0pt{%
 	    \vss
