@@ -1,4 +1,4 @@
-Therion 5.4.1 (in progress):
+Therion 5.4.1 (2017-04-18):
 
 therion:
  * added fonts-setup layout option
@@ -8,6 +8,7 @@ therion:
  * updated Russian translation [PR#73,74]
  * bugs fixed:
    - remove debugging output when reading Survex err files
+   - don't accept stddev <= 0
 
 --------------------------------------------------------------------------------
 
