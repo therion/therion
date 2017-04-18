@@ -1560,7 +1560,7 @@ Button $ccbox.mt -text [mc "Move to"] -anchor center -font $xth(gui,lfont) \
 xth_status_bar me $ccbox.mt [mc "Move file command to given position."]
 ComboBox $ccbox.tt -postcommand xth_me_cmds_set_move_to_list \
   -modifycmd xth_me_cmds_set_move_to \
-  -font $xth(gui,lfont) -height 4 -state disabled -width 8 \
+  -font $xth(gui,lfont) -height 16 -state disabled -width 8 \
   -textvariable xth(ctrl,me,cmds,moveto)
 xth_status_bar me $ccbox.tt [mc "Select destination scrap and position in it."]
 grid columnconf $ccbox 0 -weight 1
