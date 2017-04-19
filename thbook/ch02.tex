@@ -1284,7 +1284,13 @@ survey / all\[only with .3d files, where survey structure is specified]
 
 \description
    This command is used to store predefined precisions of centreline data.
-   See |sd| option description for |centreline| command. 
+   Built in grades are: BRCA\[see \www{http://bcra.org.uk/surveying/};
+     syntax is: |BRCA{\it n}|, where |{\it n}| may be |3| or |5|]
+   and UISv1\[see \www{http://www.uisic.uis-speleo.org/UISmappingGrades.pdf};
+     syntax is: |UISv1\_{\it n}|\NEW{5.4}, where |{\it n}| is |-1| to |6| or |X|; whereas 
+     |-1| to |2| are only declaratory and |X| need |sd| data in |centerline|)].
+
+   See |sd| option description for |centreline| command to define your own grades.
 \enddescription
 
 \syntax:
