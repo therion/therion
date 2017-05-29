@@ -959,7 +959,13 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
 
   double G_real_init_x = LAYOUT.XO + LAYOUT.XS * floor ((llnew.x-origin.x)/LAYOUT.hgridsize);
   double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.vgridsize);
-  
+
+  // Grid values used only for elevations. Currently elevation maps don't allow rotation,
+  // but if it gets implemented, these values will have to be calculated differently
+  double grid_elev_init_y = LAYOUT.vgridsize * floor (llnew.y/LAYOUT.vgridsize + 1);
+  double G_elev_depth_init_y = LAYOUT.YO + LAYOUT.YS * floor (llnew.y/LAYOUT.vgridsize + 1);  // Depth for elevation grid
+  double G_elev_altitude_init_y = G_real_init_y + (grid_elev_init_y - grid_init_y) * LAYOUT.YS / LAYOUT.vgridsize;  // Altitude for elevation grid
+
   double cosr = cos(-LAYOUT.gridrot * 3.14159265 / 180);
   double sinr = sin(-LAYOUT.gridrot * 3.14159265 / 180);
 
@@ -973,7 +979,7 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
       for (j = grid_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
         col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
         row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
-	elem = col + 3*row;
+        elem = col + 3*row;
 /*        tmp.x = i;
         tmp.y = j;
         out = rotatedaround(tmp,origin,LAYOUT.gridrot);
@@ -987,8 +993,8 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         out.x -= LLX;
         out.y -= LLY;
         PAGEDEF << "\\PL{q}";
-	PAGEDEF << "\\PL{" << cosr << " " << sinr << " " << -sinr << " " << cosr << " " << out.x << " " << out.y << " cm}";
-	PAGEDEF << "\\PB{0}{0}{\\" << tex_Wname("grid") << u2str(elem+1) << "}";
+        PAGEDEF << "\\PL{" << cosr << " " << sinr << " " << -sinr << " " << cosr << " " << out.x << " " << out.y << " cm}";
+        PAGEDEF << "\\PB{0}{0}{\\" << tex_Wname("grid") << u2str(elem+1) << "}";
         PAGEDEF << "\\PL{Q}%" << endl;
 
         if (LAYOUT.grid_coord_freq==2 || (LAYOUT.grid_coord_freq==1 && elem!=4)) {
@@ -999,7 +1005,7 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
           out.y -= LLY;
           PAGEDEF << "\\PL{q}";
           PAGEDEF << "\\PL{" << cosr << " " << sinr << " " << -sinr << " " << cosr << " " << out.x << " " << out.y << " cm}";
-	  PAGEDEF << "\\gridcoord{" << (row == 2 ? (col == 2 ? 1 : 3) : (col == 2 ? 7 : 9)) << 
+          PAGEDEF << "\\gridcoord{" << (row == 2 ? (col == 2 ? 1 : 3) : (col == 2 ? 7 : 9)) << 
 	      "}{$(" << setprecision(0) << 
 	      G_real_init_x+ii*LAYOUT.XS << "," << 
               G_real_init_y+jj*LAYOUT.YS << setprecision(2) << ")$}%" << endl;
@@ -1013,36 +1019,49 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
     grid_init_x = LLX;
     int jj;
     double j;
-    for (j = grid_init_y,jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize,jj++) {
+    for (j = grid_elev_init_y,jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize,jj++) {
 //      PAGEDEF << "\\PL{q 3 w 0 0 1 RG 0 " << j-LLY << "  m " << HS << " " << j-LLY << " l S Q}";
       for (double i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
         col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
-        row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
-	elem = col + 3*row;
-	PAGEDEF << "\\PB{" << i-LLX+LAYOUT.gridcell[elem].x << "}{" << 
-	                      j-LLY+LAYOUT.gridcell[elem].y << "}{\\" << 
-			      tex_Wname("grid") << u2str(elem+1) << "}%" << endl;
+        row = (j == grid_elev_init_y ? 0 : (j >= urnew.y ? 2 : 1));
+        elem = col + 3*row;
+        PAGEDEF << "\\PB{" << i-LLX+LAYOUT.gridcell[elem].x << "}{" << 
+                              j-LLY+LAYOUT.gridcell[elem].y << "}{\\" << 
+          tex_Wname("grid") << u2str(elem+1) << "}%" << endl;
 
         if (col == 0 && LAYOUT.grid_coord_freq > 0) {
           PAGEDEF << "\\PL{q}";
           PAGEDEF << "\\PL{1 0 0 1 " << i-LLX << " " << j-LLY << " cm}";
           PAGEDEF << "\\gridcoord{" << (row==2?3:9) << "}{$" << 
-	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS << 
+	      setprecision(0) << G_elev_depth_init_y+jj*LAYOUT.YS << 
 	      setprecision(2)<< "$}";
           PAGEDEF << "\\PL{Q}%" << endl;
-	}
+        }
         if (col == 2 && LAYOUT.grid_coord_freq == 2) {
           PAGEDEF << "\\PL{q}";
           PAGEDEF << "\\PL{1 0 0 1 " << i-LLX << " " << j-LLY << " cm}";
           PAGEDEF << "\\gridcoord{" << (row==2?1:7) << "}{$" << 
-	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS <<
+	      setprecision(0) << G_elev_altitude_init_y+jj*LAYOUT.YS <<
 	      setprecision(2)<< "$}";
           PAGEDEF << "\\PL{Q}%" << endl;
         }
-
       }
     }
-  } 
+
+    // Print depth and elevation headers at the top of the grid
+    if (LAYOUT.grid_coord_freq > 0) {
+      PAGEDEF << "\\PL{q}";
+      PAGEDEF << "\\PL{1 0 0 1 " << grid_init_x-LLX << " " << urnew.y-LLY << " cm}";
+      PAGEDEF << "\\gridcoord{" << (3) << "}{\\the\\legendtextsize" << utf2tex(thT("title cave depth", LAYOUT.lang)) << "}";
+      PAGEDEF << "\\PL{Q}%" << endl;
+    }
+    if (LAYOUT.grid_coord_freq == 2) {
+      PAGEDEF << "\\PL{q}";
+      PAGEDEF << "\\PL{1 0 0 1 " << urnew.x-LLX << " " << urnew.y-LLY << " cm}";
+      PAGEDEF << "\\gridcoord{" << (1) << "}{\\the\\legendtextsize" << utf2tex(thT("point altitude", LAYOUT.lang)) << "}";
+      PAGEDEF << "\\PL{Q}%" << endl;
+    }
+  }
 
   PAGEDEF << "\\PL{Q}%" << endl;
 }
