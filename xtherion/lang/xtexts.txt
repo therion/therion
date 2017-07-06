@@ -8,7 +8,7 @@ ru: местопложение
 
 therion: scale
 pt: tamanho
-ru: масштаб
+ru: размер
 
 therion: line arrow
 pt: seta
@@ -24,7 +24,7 @@ en: Drag to resize control panel.
 es: Arrastar para cambiar el tamaño del panel de control.
 it: Trascina per ridimensionare il pannello dei controlli
 pt: Arraste para redimensionar o painel de controle.
-ru: Перетаскивайте для изменения размера панели
+ru: Перетащите для изменения размера панели
 sk: Rozšíriť alebo zúžiť okno kontrolných panelov.
 sq: levize per te rritur dritaren kontrolluese
 zh_CN: 拖动调整控制面板大小
@@ -627,7 +627,7 @@ en: Survey information.
 es: Estadísticas de la poligonal.
 it: Informazioni del rilievo
 pt: Informações sobre o mapeamento.
-ru: Информация о съемке.
+ru: Информация о съёмке.
 sk: Informácie o častiach.
 sq: informatat e matjeve
 zh_CN: 测绘信息
@@ -3988,7 +3988,7 @@ sk: zarovnanie
 
 therion: name
 pt: nome
-ru: имя
+ru: номер
 sk: meno
 
 therion: Station name
@@ -4113,7 +4113,7 @@ sk: permanentný
 
 therion: intermittent
 pt: intermitente
-ru: временный
+ru: периодический
 sk: občasný
 
 therion: conjectural
