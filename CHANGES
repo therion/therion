@@ -1,5 +1,19 @@
-Therion 5.4.1 (in progress):
+Therion 5.4.2 (in progress):
 
+
+--------------------------------------------------------------------------------
+
+Therion 5.4.1 (2017-04-18):
+
+therion:
+ * added fonts-setup layout option
+ * added min-symbol-scale layout option
+ * added support for -scale <number> for point and line symbols
+   (1.0 ≡ medium symbol size)
+ * updated Russian translation [PR#73,74]
+ * bugs fixed:
+   - remove debugging output when reading Survex err files
+   - don't accept stddev <= 0
 
 --------------------------------------------------------------------------------
 

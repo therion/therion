@@ -1280,6 +1280,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / this->layout->base_scale);
+  else
+		this->layout->base_scale = this->layout->scale;
   fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n");
   fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
     this->layout->color_map_fg.R,
@@ -1292,6 +1294,38 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(mpf,"input therion;\n");
   else
     fprintf(mpf,"%s\n",thmpost_library);
+
+  // insert font setup
+  if (this->layout->def_font_setup > 0) {
+    fprintf(mpf,"fonts_setup(%.1f,%.1f,%.1f,%.1f,%.1f);\n", this->layout->font_setup[0], this->layout->font_setup[1], this->layout->font_setup[2], this->layout->font_setup[3], this->layout->font_setup[4]);
+  } else {
+  	if ((0.01 / this->layout->base_scale) <= 1.0) {
+  		this->layout->font_setup[0] = 8.0;
+  		this->layout->font_setup[1] = 10.0;
+  		this->layout->font_setup[2] = 12.0;
+  		this->layout->font_setup[3] = 16.0;
+  		this->layout->font_setup[4] = 24.0;
+  	} else if ((0.01 / this->layout->base_scale) <= 2.0) {
+  		this->layout->font_setup[0] = 7.0;
+  		this->layout->font_setup[1] = 8.0;
+  		this->layout->font_setup[2] = 10.0;
+  		this->layout->font_setup[3] = 14.0;
+  		this->layout->font_setup[4] = 20.0;
+  	} else if ((0.01 / this->layout->base_scale) <= 5.0) {
+  		this->layout->font_setup[0] = 6.0;
+  		this->layout->font_setup[1] = 7.0;
+  		this->layout->font_setup[2] = 8.0;
+  		this->layout->font_setup[3] = 10.0;
+  		this->layout->font_setup[4] = 14.0;
+  	} else {
+  		this->layout->font_setup[0] = 5.0;
+  		this->layout->font_setup[1] = 6.0;
+  		this->layout->font_setup[2] = 7.0;
+  		this->layout->font_setup[3] = 8.0;
+  		this->layout->font_setup[4] = 10.0;
+  	}
+  }
+
   fprintf(mpf,"lang:=\"%s\";\n",thlang_getid(this->layout->lang));
   fprintf(mpf,"ATTR__elevation:=%s;\n",((prj->type == TT_2DPROJ_ELEV) || (prj->type == TT_2DPROJ_EXTEND) ? "true" : "false"));
 

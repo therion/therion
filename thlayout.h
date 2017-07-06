@@ -469,7 +469,7 @@ static const thstok thtt_layout_opt[] = {
   {"doc-title",TT_LAYOUT_DOC_TITLE},
   {"endcode",TT_LAYOUT_ENDCODE},
   {"exclude-pages",TT_LAYOUT_EXCLUDE_PAGES},
-  {"font-setup", TT_LAYOUT_FONT_SETUP},
+  {"fonts-setup", TT_LAYOUT_FONT_SETUP},
   {"grid",TT_LAYOUT_GRID},
   {"grid-coords",TT_LAYOUT_GRID_COORDS},
   {"grid-origin",TT_LAYOUT_GRID_ORIGIN},
@@ -706,6 +706,13 @@ class thlayout : public thdataobject {
    
   void export_config(FILE * o, thdb2dprj * prj, double x_scale, double x_origin_shx, double x_origin_shy);
   
+
+  /**
+   * Export font size.
+   */
+  void export_mptex_font_size(FILE * o, class th2ddataobject * obj, bool print_default_scale);
+
+
   /**
    * Export main tex file.
    */

@@ -2260,6 +2260,9 @@ void thdata::set_data_fix(int nargs, char ** args)
         break;
       case 4:
         val = this->dlu_x.transform(val);
+        if (val <= 0.0) {
+          ththrow(("standard deviation must be positive -- %s", args[ai]))
+        }
         it->sdx = val;
         it->sdy = val;
         it->sdz = val;
@@ -2267,15 +2270,24 @@ void thdata::set_data_fix(int nargs, char ** args)
       case 5:
         if (nargs == 6) {
           val = this->dlu_z.transform(val);
+          if (val <= 0.0) {
+            ththrow(("standard deviation must be positive -- %s", args[ai]))
+          }
           it->sdz = val;
         }
         else {
           val = this->dlu_y.transform(val);
+          if (val <= 0.0) {
+            ththrow(("standard deviation must be positive -- %s", args[ai]))
+          }
           it->sdy = val;
         }
         break;
       case 6:
         val = this->dlu_z.transform(val);
+        if (val <= 0.0) {
+          ththrow(("standard deviation must be positive -- %s", args[ai]))
+        }
         it->sdz = val;
         break;
       case 7:

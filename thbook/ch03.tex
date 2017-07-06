@@ -203,6 +203,8 @@ available translations, see |thlang/texts.txt| file.
     symbol-hide <point/line/area/group/special> <symbol-type>
     symbol-show <point/line/area/group/special> <symbol-type>
     symbol-colour <point/line/area/group/special> <symbol-type> <colour>
+    min-symbol-scale <scale>
+    fonts-setup <tinysize> <smallsize> <normalsize> <largesize> <hugesize>
     size <width> <height> <units>
     overlap <value> <units>
     page-setup <dimensions> <units>
@@ -320,6 +322,22 @@ endlayout|
     currently applies to pattern fills only if (1) output format is PDF and
     (2)~\MP\ version is at least 1.000] (M, A)
 
+  * \NEW{5.4.1}|min-symbol-scale <scale>| = 
+    define minimal |<scale>|, from which points and lines are displayed on the map. E.g. for
+    |min-symbol-scale M|, no points or lines scaled |S| and |XS| will be shown on the map.
+    |<scale>| has the same format, as |scale| option for points and lines.
+
+  * \NEW{5.4.1}|fonts-setup <tinysize> <smallsize> <normalsize> <largesize> <hugesize>| =
+    specify size of the text in points. 
+    |<normalsize>| applies to point label, |<smallsize>| applies to 
+    remark and all other point labels. Each of them may apply to line label 
+    according to its |-size| option.
+    
+    The defaults are 
+    |8 10 12 16 24| for scales upto 1:100; 
+    |7 8 10 14 20| for scales upto 1:200; 
+    |6 7 8 10 14| for scales upto 1:500 and 
+    |5 6 7 8 10| for scales smaller than 1:500.
 
   {\it page layout related:}\Nobreak
 
@@ -396,9 +414,10 @@ endlayout|
      header is filled with background color (e.g.~to hide map grid). 
      (M; default: off)
   * |map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>| = 
-    include image specified by |<filename>| into map at location 
-    specified by |<x> <y>|. For coordinates and alignment details, see
-    |map-header| specification.
+    include image\[Note that you can include PDF too, which may be used to
+    combine plan and extended elevation into one nice looking PDF file.] specified
+    by |<filename>| into map at location specified by |<x> <y>|. For coordinates 
+    and alignment details, see |map-header| specification.
   * |legend-width <n> <units>| = legend width (M, A; default: |14 cm|)
   * |legend <on/off/all>| = display list of used map symbols in the map header. 
     If set to |all|, all symbols from the current symbol set are displayed. 

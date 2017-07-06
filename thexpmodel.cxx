@@ -1816,8 +1816,8 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
   fprintf(out, "<Folder>\n");
   fprintf(out, "<Style id=\"ThSurveyLine\"> <LineStyle> <color>ffffff00</color> <width>1</width> </LineStyle> </Style>\n");
   fprintf(out, "<Style id=\"ThSurveyLineSurf\"> <LineStyle> <color>ffcccccc</color> <width>1</width> </LineStyle> </Style>\n");
-  fprintf(out, "<Style id=\"ThEntranceIcon\"> <IconStyle> <Icon> <href>http://pk-sofia.com/images/stories/KmlIconEntrance.png</href> </Icon> <hotSpot x=\"0.5\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\" /> </IconStyle> </Style>\n");
-  fprintf(out, "<Icon> <href>http://pk-sofia.com/images/stories/KmlIconModel.png</href> </Icon>\n");
+  fprintf(out, "<Style id=\"ThEntranceIcon\"> <IconStyle> <Icon> <href>https://therion.speleo.sk/downloads/KmlIconEntrance.png</href> </Icon> <hotSpot x=\"0.5\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\" /> </IconStyle> </Style>\n");
+  fprintf(out, "<Icon> <href>https://therion.speleo.sk/downloads/KmlIconModel.png</href> </Icon>\n");
   // VG 250616: TODO change icons above, maybe upload to therion website after testing
 
   // Get the main survey, which is at level 2 and is different from the fsurveyptr at level 1

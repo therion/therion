@@ -1,19 +1,24 @@
 therion: altitude
 pt: altitude
 ru: альтитуда
+de: Höhe
 
 therion: place
 pt: local
 ru: местопложение
+de: Platzierung
 
 therion: scale
 pt: tamanho
 ru: размер
+de: Maßstab
+
 
 therion: line arrow
 pt: seta
 ru: стрелка
 sk: šípka
+de: Pfeil
 
 therion: Drag to resize control panel.
 bg: Плъзнете, за да промените размера на контролния панел
@@ -377,6 +382,7 @@ ru: Время до отрезвления
 sk: Čas do vytriezvenia
 sq: ETA
 zh_CN: 预计清醒时间
+de: Restzeit
 
 therion: hours
 bg: часове
@@ -403,6 +409,7 @@ ru: MRR
 sk: Rýchlosť odburávania
 sq: MRR
 zh_CN: 降解酒精速度
+de: Abbaurate
 
 therion: Compiler
 bg: Компилатор
@@ -770,7 +777,7 @@ zh_CN: 地图编辑器载入中…
 therion: Undo %s
 bg: Отмяна
 cz: Zpět - %s
-de: Rückgängig %s
+de: Rückgängig: %s
 el: Αναίρεση %s
 en: Undo %s
 es: Deshacer %s
@@ -784,7 +791,7 @@ zh_CN: 取消%s
 therion: Redo %s
 bg: Възстановяване
 cz: Znovu - %s
-de: Wiederholen %s
+de: Wiederholen: %s
 el: Επανάληψη %s
 en: Redo %s
 es: Rehacer %s
@@ -807,6 +814,7 @@ ru: %s \[%s\] -- несколько команд encoding в файле
 sk: %s \[%s\] -- viac encoding príkazov v jednom súbore
 sq: %s \[%s\] –shumezo komandat te deshifrimit ne arkiv
 zh_CN: %s \[%s\] --文件中多重编码命令
+de: %s \[%s\] -- mehrfache encoding Kommandos in der Datei
 
 therion: %s \[%s\] -- unknown encoding -- %s
 bg: %s \[%s\] -- неизвестна кодировка -- %s
@@ -820,6 +828,7 @@ ru: %s \[%s\] -- неизвестная кодировка -- %s
 sk: %s \[%s\] -- neznáme kódovanie znakov -- %s
 sq: %s \[%s\] – deshifrim I panjohur -- %s
 zh_CN: %s \[%s\] – 未知编码 -- %s
+de: %s \[%s\] -- unbekanntes encoding -- %s
 
 therion: adjusting area
 bg: регулиране на областта
@@ -1084,6 +1093,7 @@ ru: X min.
 sk: Minimum X.
 sq: minimum X.
 zh_CN: 最小 X.
+de: X min.
 
 therion: Y min.
 bg: Y min.
@@ -1097,6 +1107,7 @@ ru: Y min.
 sk: Minimum Y.
 sq: minimum Y.
 zh_CN: 最小 Y.
+de: Y min.
 
 therion: X max.
 bg: X max.
@@ -1110,6 +1121,7 @@ ru: X max.
 sk: Maximum X.
 sq: maksimum X.
 zh_CN: 最大 X.
+de: X max.
 
 therion: Y max.
 bg: Y max.
@@ -1123,6 +1135,7 @@ ru: Y max.
 sk: Maximum Y.
 sq: maksimum Y.
 zh_CN: 最大 Y.
+de: Y max.
 
 therion: Adjust
 bg: Определи
@@ -2196,6 +2209,7 @@ ru: X1 реальное.
 sk: X1 skutočný
 sq: X1 I vertet-real
 zh_CN: X1值
+de: X1 real.
 
 therion: Y1 real.
 bg: Y1 реално.
@@ -2209,6 +2223,7 @@ ru: Y1 реальное.
 sk: Y1 skutočný
 sq: Y1 I vertet-real
 zh_CN: Y1值
+de: Y1 real.
 
 therion: X2 real.
 bg: X2 реално.
@@ -2222,6 +2237,7 @@ ru: X2 реальное.
 sk: X2 skutočný
 sq: X2 I vertet-real
 zh_CN: X2值
+de: X2 real.
 
 therion: Y2 real.
 bg: Y2 реално.
@@ -2235,6 +2251,7 @@ ru: Y2 реальное.
 sk: Y2 skutočný
 sq: Y2 I vertet-real
 zh_CN: Y2值
+de: Y2 real.
 
 therion: units
 bg: единици
@@ -3064,6 +3081,7 @@ ru: Переключится в режим вставки линий-грани�
 sk: Po stlačení môžete začať vkladať krivky ohraničujúce plochu.
 sq: pasi te klikoni ketu, selekto me mi rjeshtat e kufirit te fushes (ato duhet te nderlidhen)
 zh_CN: 切换线插区模块
+de: Linienselektion für Flächenauswahl umschalten.
 
 therion: Delete ID from area.
 bg: Изтрий линия по ID от областта.
@@ -3322,6 +3340,7 @@ cz: Skrýt neaktivní scrapy
 pt: Esconder trechos inativos
 ru: Скрыть неактивные скрапы
 sk: Skryť neaktívne scrapy
+de: Inaktive Skizzen ausblenden
 
 therion: Zoom 100 %
 bg: Мащаб 100%
@@ -3335,6 +3354,7 @@ ru: Масштаб 100 %
 sk: Zoom 100%
 sq: zmadho 100%
 zh_CN: 缩放100 %
+de: Zoom 100%
 
 therion: Mouse mode.
 bg: Режим 'мишка'.
@@ -3376,6 +3396,7 @@ ru: загрузка процедур для линий ...
 sk: načitavam modul kriviek ...
 sq: duke lexuar proceduren rjeshtit…
 zh_CN: 线程序载入中 ...
+de: Lade Linienprozeduren ...
 
 therion: Map editor is not active. To activate it, open existing file or create new one.
 bg: Редактора на карти не е активен. За активиране отворете съществуващ файл или създайте нов.
@@ -3390,6 +3411,7 @@ ru: Редактор карты не активен. Для активации �
 sk: Mapový editor nie je aktívny. Otvorte existujúci súbor alebo vytvorte nový.
 sq: permiresuesi I hartes nuk eshte aktiv. Qe ta aktivizosh, hape fajlin egzistues ose krijo nje te ri
 zh_CN: 地图编辑器没有启动。打开现有文件或创建新文件启动它。
+de: Der Karteneditor ist nicht aktiv. Um ihn zu aktivieren, öffne eine bestehende Datei oder erzeuge eine neue.
 
 therion: Insert line
 bg: Вмъкни линия
@@ -3755,56 +3777,67 @@ therion: on
 pt: sim
 ru: вкл
 sk: on
+de: an
 
 therion: off
 pt: não
 ru: выкл
 sk: off
+de: aus
 
 therion: tiny (xs)
 pt: ínfimo (pp)
 ru: оч.маленький (xs)
 sk: XS
+de: winzig (xs)
 
 therion: small (s)
 pt: pequeno (p)
 ru: маленький (s)
 sk: S
+de: klein (s)
 
 therion: normal (m)
 pt: normal (m)
 ru: нормальный (m)
 sk: M
+de: normal (m)
 
 therion: large (l)
 pt: grande (g)
 ru: большой (l)
 sk: L
+de: groß (l)
 
 therion: huge (xl)
 pt: enorme (xl)
 ru: оч.большой (xl)
 sk: XL
+de: riesig (xl)
 
 therion: out
 pt: fora
 ru: наружный
 sk: vonkajší
+de: außen
 
 therion: in
 pt: dentro
 ru: внутренний
 sk: vnútorný
+de: innen
 
 therion: none
 pt: nenhum
 ru: нет
 sk: žiadny
+de: kein
 
 therion: <<
 pt: <<
 ru: <<
 sk: <<
+de: <<
 
 therion: smooth
 bg: изглаждане
@@ -3824,6 +3857,7 @@ therion: >>
 pt: >>
 ru: >>
 sk: >>
+de: >>
 
 therion: Trace line
 bg: Проследяване от картината
@@ -3832,6 +3866,7 @@ en: Trace line
 pt: Traçar linha
 ru: Проследить линию
 sk: Oklikať čiaru
+de: Linie verfolgen
 
 therion: Convert to curve
 bg: Конвертиране в Безие
@@ -3840,6 +3875,7 @@ en: Convert to curve
 pt: Converter em curva
 ru: Конвертировать в кривую
 sk: Konvertovať na krivku
+de: In Kurve umwandeln
 
 therion: Simplify line
 bg: Опростяване на линия
@@ -3848,6 +3884,7 @@ en: Simplify line
 pt: Simplificar
 ru: Упростить линию
 sk: Zjednodušiť
+de: Line vereinfachen
 
 therion: edit
 bg: редактиране
@@ -3895,117 +3932,140 @@ cz: Zrušit
 pt: Cancelar
 ru: Отмена
 sk: Zrušiť
+de: Abbruch
 
 therion: painted
 pt: pintada
 ru: нарисованный
 sk: namaľovaný
+de: gefärbt
 
 therion: natural
 pt: natural
 ru: естественный
 sk: prírodný
+de: natürlich
 
 therion: fixed
 pt: fixa
 ru: репер
 sk: fixovaný
+de: fixiert
 
 therion: winter
 pt: inverno
 ru: зима
 sk: zimný
+de: Winter
 
 therion: summer
 pt: verão
 ru: лето
 sk: letný
+de: Sommer
 
 therion: undefined
 pt: indefinido
 ru: не определено
 sk: nedefinovaný
+de: undefiniert
 
 therion: paleo
 pt: paleo
 ru: палео
 sk: paleo
+de: paleo
 
 therion: top
 pt: topo
 ru: сверху
 sk: hore
+de: oben
 
 therion: top-right
 pt: topo-direita
 ru: сверху-справа
 sk: vpravo-hore
+de: oben rechts
 
 therion: top-left
 pt: topo-esquerda
 ru: сверху-слева
 sk: vľavo-hore
+de: oben links
 
 therion: bottom
 pt: fundo
 ru: снизу
 sk: dole
+de: unten
 
 therion: bottom-right
 pt: fundo-direita
 ru: снизу-справа
 sk: vpravo-dole
+de: unten rechts
 
 therion: bottom-left
 pt: fundo-esquerda
 ru: снизу-слева
 sk: vľavo-dole
+de: unten links
 
 therion: center
 pt: centro
 ru: по центру
 sk: stred
+de: mitte
 
 therion: right
 pt: direita
 ru: справа
 sk: vpravo
+de: rechts
 
 therion: left
 pt: esquerda
 ru: слева
 sk: vľavo
+de: links
 
 therion: auto
 pt: auto
 ru: авто
 sk: automaticky
+de: automatisch
 
 therion: align
 pt: alinhar
 ru: выровнить
 sk: zarovnanie
+de: Anordnung
 
 therion: name
 pt: nome
 ru: номер
 sk: meno
+de: Name
 
 therion: Station name
 cz: Název bodu
 pt: Nome da base
 ru: Номер пикета
 sk: Meno bodu
+de: Messpunktname
 
 therion: Scrap reference
 pt: Referência do trecho
 ru: Привязка скрапа
 sk: Odkaz na scrap
+de: Skizzenreferenz
 
 therion: value
 pt: valor
 ru: значение
 sk: hodnota
+de: Wert
 
 therion: type
 bg: тип
@@ -4025,121 +4085,145 @@ therion: bedrock
 pt: rocha matriz
 ru: коренная порода
 sk: masív
+de: Fels
 
 therion: underlying
 pt: inferior
 ru: нижележащий
 sk: ležiaci pod
+de: Unterlagernd
 
 therion: overlying
 pt: superior
 ru: вышележащий
 sk: ležiaci nad
+de: Überlagernd
 
 therion: unsurveyed
 pt: não explorado
 ru: неотснято
 sk: nezameraný
+de: Unvermessen
 
 therion: pit
 pt: poço
 ru: колодец
 sk: priepasť
+de: Schacht
 
 therion: sand
 pt: areia
 ru: песок
 sk: piesok
+de: Sand
 
 therion: clay
 pt: lama/argila
 ru: глина
 sk: blato
+de: Lehm
 
 therion: pebbles
 pt: seixos
 ru: галька
 sk: okrúhliaky
+de: Kies
 
 therion: debris
 pt: escombros
 ru: щебень
 sk: štrk
+de: Schutt
 
 therion: blocks
 pt: blocos
 ru: глыбы
 sk: bloky
+de: Blöcke
 
 therion: ice
 pt: gelo
 ru: лед
 sk: ľad
+de: Eis
 
 therion: flowstone
 pt: escorrimento
 ru: натеки
 sk: sinter
+de: Sinter
 
 therion: moonmilk
 pt: leite de lua
 ru: лунное молоко
 sk: mäkký sinter
+de: Bergmilch
 
 therion: visible
 pt: visível
 ru: видимый
 sk: viditeľný
+de: sichtbar
 
 therion: invisible
 pt: invisível
 ru: невидимый
 sk: neviditeľný
+de: unsichtbar
 
 therion: temporary
 pt: temporária
 ru: временный
 sk: dočasný
+de: temporär
 
 therion: presumed
 pt: presumida
 ru: предпологаемый
 sk: predpokladaný
+de: vermutet
 
 therion: permanent
 pt: permanente
 ru: постоянный
 sk: permanentný
+de: dauerhaft
 
 therion: intermittent
 pt: intermitente
 ru: периодический
 sk: občasný
+de: zeitweise
 
 therion: conjectural
 pt: suposta
 ru: предпологаемый
 sk: predpokladaný
+de: mutmaßlich
 
 therion: cave
 pt: subterrânea
 ru: пещера
 sk: jaskyňa
+de: Höhle
 
 therion: surface
 pt: superfície
 ru: поверхность
 sk: povrch
+de: Oberfläche
 
 therion: subtype
 pt: subtipo
 ru: подтип
 sk: podtyp
+de: Subtyp
 
 therion: control points
 pt: pontos de controle
 ru: контрольные точки
 sk: kontrolné body
+de: Kontrollpunkte
 
 therion: orientation
 bg: ориентация
@@ -4173,16 +4257,19 @@ therion: segment subtype
 pt: subtipo do segmento
 ru: подтип сегмента
 sk: podtyp segmentu
+de: Segment Subtyp
 
 therion: altitude label
 pt: indicador de altitude
 ru: отметка высоты
 sk: nadmorská výška
+de: Höhenmarkierung
 
 therion: outline
 pt: contorno
 ru: контур
 sk: obrys
+de: Umriss
 
 therion: text
 bg: текст
@@ -4202,12 +4289,14 @@ therion: clip
 pt: mascarar
 ru: обрезка
 sk: orezanie
+de: Beschneiden
 
 therion: other options
 cz: další možnosti
 pt: outras opções
 ru: другие опции
 sk: ostatné možnosti
+de: weitere Optionen
 
 therion: Edit line
 bg: Редактирай линия
@@ -4255,12 +4344,14 @@ therion: Select underlying point
 pt: Selecionar o ponto inferior
 ru: Выбрать нижележащую точку
 sk: Vyber bod ležiaci pod
+de: Unterlagernden Punkt auswählen
 
 therion: Delete symbol
 cz: Smazat symbol
 pt: Apagar símbolo
 ru: Удалить символ
 sk: Odstráň symbol
+de: Symbol entfernen
 
 therion: toggle image visibility
 bg: превключване на видимостта на изображение
@@ -4589,12 +4680,14 @@ cz: Ukončit trasování
 pt: Parar tracejo
 ru: Прекратить трассировку
 sk: Zastaviť digitalizáciu
+de: Verfolgung anhalten
 
 therion: Continue tracing
 cz: Pokračovat v trasování
 pt: Seguir tracejo
 ru: Продолжить трассировку
 sk: Pokračovať digitalizácii
+de: Verfolgung fortsetzen
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
@@ -4861,6 +4954,7 @@ ru: Установите отметку, если хотите произвес�
 sk: Zaškrtnúť pokiaľ sa má nájdený výraz nahradiť iným.
 sq: kontrollo a duhet te ndrohet fjalia e gjetur
 zh_CN: 检查，是否替换现有内容。
+de: Ankreuzen, wenn die Fundstelle ersetzt werden soll.
 
 therion: Replace expression.
 bg: Израз за замяна.

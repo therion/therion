@@ -1,7 +1,7 @@
 encoding utf-8
 
 ###############################################################################
-# BRCA GRADES
+# BCRA GRADES
 # see: http://bcra.org.uk/surveying/
 #
 grade BCRA3 -title "BCRA grade 3"

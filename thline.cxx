@@ -688,8 +688,9 @@ bool thline::export_mp(class thexpmapmpxs * out)
       fprintf(out->file,"ATTR__height := %.2f;\n", this->m_height);
     }
   }
-
   
+  if (this->scale_numeric < out->layout->min_symbol_scale) return(false);
+
   switch (this->type) {
     case TT_LINE_TYPE_WALL:
       from = 0;
@@ -761,22 +762,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
         return(true);
       out->symset->export_mp_symbol_options(out->file, omacroid);
       fprintf(out->file,"l_label(btex ");
-      switch (this->scale) {
-        case TT_2DOBJ_SCALE_XL:
-          fprintf(out->file,"\\thhugesize ");
-          break;
-        case TT_2DOBJ_SCALE_L:
-          fprintf(out->file,"\\thlargesize ");
-          break;
-        case TT_2DOBJ_SCALE_S:
-          fprintf(out->file,"\\thsmallsize ");
-          break;
-        case TT_2DOBJ_SCALE_XS:
-          fprintf(out->file,"\\thtinysize ");
-          break;
-        default:
-          fprintf(out->file,"\\thnormalsize ");
-      }
+      out->layout->export_mptex_font_size(out->file, this, true);
       //thdecode(&(this->db->buff_enc),TT_ISO8859_2,this->text);
       fprintf(out->file,"%s etex,",ths2tex(this->text, out->layout->lang, true).c_str());
       this->export_path_mp(out);

@@ -146,7 +146,7 @@ Following coordinate systems are supported:
   supported on output.
 * |EPSG:<number>| = Most of EPSG coordinate systems. Almost every 
   coordinate system used worldwide has its own EPSG number. To find
-  number of your system, see |extern/proj4/nad/epsg| file in the
+  the number of your system, see |extern/proj4/nad/epsg| file in the
   therion source distribution.
 * |ESRI:<number>| = Similar to EPSG, but ESRI standard.
 %* |EUR79Z30| = UTM zone 30, EUR79 datum.  % ad-hoc addition not worth mentioning??
@@ -164,9 +164,13 @@ Following coordinate systems are supported:
 
 Therion contains built-in IGRF\[See \www{https://www.ngdc.noaa.gov/IAGA/vmod/}]
 Earth geomagnetic field model valid for period 
-1900--2020\NEW{5.4}. It is automatically used if the cave is located in space using 
-any of supported geodetic coordinate systems and no declination is specified by 
-user. The computed declination is listed in the LOG file for information.
+1900--2020\NEW{5.4}. It is automatically used if the cave is located in space with a
+|fix| station using any of the supported geodetic coordinate systems and in time with the
+centerlines |date| command. The computed declination is listed in the LOG file for
+information.
+
+If the user specified a |declination| in the centerline, that value takes
+precedence over the automatic calculation.
 
 \subchapter Data format.
 
@@ -777,7 +781,10 @@ Point is a command for drawing a point map symbol.
     are accepted: center, c, top, t, bottom, b, left, l, right, r,
     top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br.
   * |scale| = symbol scale, can be: 
-    tiny (xs), small (s), normal (m), large (l), huge (xl). Normal is default.
+    tiny (xs), small (s), normal (m), large (l), huge (xl) or a 
+    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+    $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
+    $xl \equiv 2.0$.
   * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,
@@ -1074,6 +1081,13 @@ You may use invisible border to achieve this inside of the passage.
   which should be joined.
   \[If you want some object which is clipped by a scrap boundary to continue
   to a neighbouring scrap, use |-clip off| option for that object.]
+
+  When joining more than two scraps at the same scrap border, a manual
+  join must be performed where the connection points must be entered
+  in one join statement.
+  \[Like |join origScrapLineWest:end upperScrapLineWest:0 lowerScrapLineWest:0| % line was too long
+    and another similar join command for the three east wall lines.]
+
 \enddescription
 
 \syntax
@@ -1281,7 +1295,13 @@ survey / all\[only with .3d files, where survey structure is specified]
 
 \description
    This command is used to store predefined precisions of centreline data.
-   See |sd| option description for |centreline| command. 
+   Built in grades are: BCRA\[see \www{http://bcra.org.uk/surveying/};
+     syntax is: |BCRA{\it n}|, where |{\it n}| may be |3| or |5|]
+   and UISv1\[see \www{http://www.uisic.uis-speleo.org/UISmappingGrades.pdf};
+     syntax is: |UISv1\_{\it n}|\NEW{5.4}, where |{\it n}| is |-1| to |6| or |X|; whereas 
+     |-1| to |2| are only declaratory and |X| requires |sd| data in |centerline|)].
+
+   See |sd| option description for |centreline| command to define your own grades.
 \enddescription
 
 \syntax:
