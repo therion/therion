@@ -1353,7 +1353,7 @@ it: calcite flottante
 mi: mōkihi o kōhatu hōhonu
 pl: nanios
 pt: jangada
-ru: высыпка
+ru: плавающий кальцит
 sk: náplav
 sq: trap-skele
 zh_CN: 石筏
@@ -2308,7 +2308,7 @@ it: calcite flottante
 mi: korere a mōkihi kōhatu hōhonu
 pl: nanios
 pt: cone de jangadas
-ru: высыпной конус
+ru: насыпной конус
 sk: náplavový kužeľ
 sq: rrjedhe uji konike
 zh_CN: 钙膜晶锥
