@@ -45,7 +45,7 @@ STRIPFLAG = -s
 ##else
 ##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 ##endif
-##CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
+##CXXPFLAGS = -DLXLINUX -std=c++11 $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 ##CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 ##LXLIBDIR = linux
 ##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
@@ -60,7 +60,7 @@ VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERS
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 endif
-CXXPFLAGS = -DLXLINUX $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
+CXXPFLAGS = -DLXLINUX -std=c++11 $(shell wx-config --cxxflags) -Wno-deprecated $(shell freetype-config --cflags) -I$(VTKPATH)
 CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 LXLIBDIR = linux
 PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
@@ -97,7 +97,7 @@ LXPLATFORM = LINUX
 ##CXX = c++
 ##CC = cc
 ##POBJECTS =
-##CXXPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --cxxflags) $(shell freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
+##CXXPFLAGS = -W -Wall -std=c++11 -DLXMACOSX $(shell wx-config --cxxflags) $(shell freetype-config --cflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
 ##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --cflags) -I/usr/X11R6/include
 ##LXLIBDIR =
 ##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
