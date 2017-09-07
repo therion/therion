@@ -227,10 +227,10 @@ set xth(gui,me,pasivefill) green
 set xth(gui,me,controlfill) blue
 set xth(gui,me,highlightfill) cyan
 set xth(gui,me,unselectedfill) lightgray
-set xth(gui,me,wallcolor) brown
+set xth(gui,me,wallcolor) blue
 set xth(gui,me,pitcolor) magenta
 set xth(gui,me,slopecolor) gold
-set xth(gui,me,rockcolor) snow4
+set xth(gui,me,rockcolor) purple
 set xth(gui,me,bordercolor) turquoise
 set xth(gui,me,stationcolor) darkorange
 

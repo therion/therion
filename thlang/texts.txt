@@ -156,6 +156,7 @@ sq: burim
 zh_CN: 泉点
 
 therion: point flag:doline
+bg: въртоп/пропадане
 cz: závrt
 en: doline
 pt: dolina
@@ -865,6 +866,7 @@ sq: gurre rrjedhes-fund
 zh_CN: 崩塌堵塞
 
 therion: point clay-choke
+bg: затворено от глина
 cz: konec uzavřený jílem
 de: Fortsetzung verlehmt
 en: clay choke
@@ -1103,7 +1105,7 @@ sq: lartesia e oxhakut
 zh_CN: 烟囱式洞道高
 
 therion: point height:negative
-bg: Дълбочина на кладенец
+bg: дълбочина на кладенец
 cz: hloubka propasti
 de: Tiefe des Schachts
 el: βάθος πηγαδιού
@@ -1376,6 +1378,7 @@ sq: jashteqitje e lakuriqeve-guano
 zh_CN: 粪类堆积
 
 therion: point clay-tree
+bg: глинено/кално дърво
 de: Lehmbäumchen
 en: clay tree
 it: pini d'argilla
