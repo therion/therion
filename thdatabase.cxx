@@ -511,6 +511,10 @@ class thdataobject * thdatabase::create(const char * oclass,
       ret = new thlayout;
       break;
       
+    case TT_LOOKUP_CMD:
+      ret = new thlookup;
+      break;
+
     case TT_POINT_CMD:
       ret = new thpoint;
       break;

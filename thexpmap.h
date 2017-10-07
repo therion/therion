@@ -209,7 +209,9 @@ class thexpmap : public thexport {
   
   void export_pdf(class thdb2dxm * maps, class thdb2dprj * prj);
   thexpmap_xmps export_mp(thexpmapmpxs * out, class thscrap * scrap, unsigned & startnum, bool outline_mode);  
-	void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
+
+  void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
+  void export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj * prj);
 
   void export_uni(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_uni_scrap(FILE * out, class thscrap * scrap);  

@@ -31,6 +31,10 @@
 #include "thexception.h"
 
 
+bool thlayout_color::is_defined() {
+  return (this->defined > 0);
+}
+
 void thlayout_color::parse(char * str, bool aalpha) {
   thsplit_words(&(thdb.mbuff_tmp), str);
   int nargs = thdb.mbuff_tmp.get_size(), sv;

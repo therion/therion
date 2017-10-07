@@ -535,6 +535,7 @@ void thconfig::load()
             
               case TT_LAYOUT_CMD:
               case TT_COMMENT_CMD:
+              case TT_LOOKUP_CMD:
                 this->load_dbcommand(&valuemb);
                 break;
 

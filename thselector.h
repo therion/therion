@@ -31,6 +31,7 @@
 
 #include <list>
 #include <stdio.h>
+#include "thlayoutclr.h"
 
 
 /**
@@ -46,6 +47,7 @@ class thselector_item {
   unsigned long number;
   bool unselect, recursive;  
   long map_level, chapter_level;
+  thlayout_color m_color;
   class thdataobject * optr;
   
   thselector_item () : name(""), src_name(""), src_ln(0), unselect(false), recursive(true),

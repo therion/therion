@@ -31,6 +31,7 @@
 
 #include <list>
 #include "thdb2dmi.h"
+#include "thlayoutclr.h"
 
 /**
  * 2D export map class.
@@ -51,6 +52,8 @@ class thdb2dxm {
   unsigned long selection_level, output_number;    
   bool title, expand;
   
+  thlayout_color selection_color;
+
   thdb2dxm();  ///< Default constructor.
   
 };

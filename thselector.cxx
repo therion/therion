@@ -57,11 +57,14 @@ enum {
   TT_SELECTOR_RECURSIVE,
   TT_SELECTOR_MAP_LEVEL,
   TT_SELECTOR_CHAPTER_LEVEL,
+  TT_SELECTOR_COLOR,
   TT_SELECTOR_UNKNOWN,
 };
 
 static const thstok thtt_selector_opts[] = {
   {"-chapter-level", TT_SELECTOR_CHAPTER_LEVEL},
+  {"-color", TT_SELECTOR_COLOR},
+  {"-colour", TT_SELECTOR_COLOR},
   {"-map-level", TT_SELECTOR_MAP_LEVEL},
   {"-recursive", TT_SELECTOR_RECURSIVE},
   {NULL, TT_SELECTOR_UNKNOWN}
@@ -90,6 +93,7 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
   int aid;
   for(aid = 1; aid < nargs; aid++) {
     switch (thmatch_token(args[aid],thtt_selector_opts)) {
+
       case TT_SELECTOR_RECURSIVE:
         aid++;
         switch (thmatch_token(args[aid],thtt_bool)) {
@@ -102,6 +106,11 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
           case TT_UNKNOWN_BOOL:
             ththrow(("logical value expected -- %s", args[aid]))
         }
+        break;
+
+      case TT_SELECTOR_COLOR:
+        aid++;
+        itm.m_color.parse(args[aid]);
         break;
 
       case TT_SELECTOR_MAP_LEVEL:
@@ -545,9 +554,11 @@ void thselector::select_object(thselector_item * pitm, class thdataobject * optr
   if (pitm->unselect) {
     optr->selected = false;
     optr->selected_number = pitm->number;
+    optr->selected_color.defined = 0;
   } else {
     optr->selected = true;
     optr->selected_number = pitm->number;
+    optr->selected_color = pitm->m_color;
   }
 }
 

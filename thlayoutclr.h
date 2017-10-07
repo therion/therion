@@ -40,6 +40,7 @@ struct thlayout_color {
   thlayout_color() : R(1.0), G(1.0), B(1.0), A(1.0), defined(0) {}
   thlayout_color(double v) : R(v), G(v), B(v), A(1.0), defined(0) {}
   thlayout_color(double r, double g, double b) : R(r), G(g), B(b), A(1.0), defined(0) {}
+  bool is_defined();
 };
 
 #endif

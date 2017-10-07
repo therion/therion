@@ -32,6 +32,7 @@
 
 #include "thdataobject.h"
 #include "thlocale.h"
+#include "thmapstat.h"
 #include <list>
 
 /**
@@ -40,9 +41,7 @@
  
 enum {
   TT_LOOKUP_UNKNOWN = 2000,
-  TT_LOOKUP_TYPE = 2001,
-  TT_LOOKUP_SCALE = 2001,
-  TT_LOOKUP_TITLE = 2002,
+  TT_LOOKUP_TITLE = 2001,
 };
 
 
@@ -51,68 +50,9 @@ enum {
  */
  
 static const thstok thtt_lookup_opt[] = {
-  {"scale", TT_LOOKUP_SCALE},
   {"title", TT_LOOKUP_TITLE},
-  {"type", TT_LOOKUP_TYPE},
   {NULL, TT_LOOKUP_UNKNOWN},
 };
-
-
-/**
- * lookup scale tokens.
- */
-
-enum {
-  TT_LOOKUP_SCALE_UNKNOWN = 0,
-  TT_LOOKUP_SCALE_CONTINUOUS,
-  TT_LOOKUP_SCALE_DISCRETE,
-};
-
-
-/**
- * lookup scale token table.
- */
- 
-static const thstok thtt_lookup_scale[] = {
-  {"continuous", TT_LOOKUP_SCALE_CONTINUOUS},
-  {"discrete", TT_LOOKUP_SCALE_DISCRETE},
-  {NULL, TT_LOOKUP_SCALE_UNKNOWN}
-};
-
-
-/**
- * lookup type tokens.
- */
-
-enum {
-  TT_LOOKUP_TYPE_UNKNOWN = 0,
-  TT_LOOKUP_TYPE_DATE,
-  TT_LOOKUP_TYPE_NUMERIC,
-  TT_LOOKUP_TYPE_STRING,
-};
-
-
-/**
- * lookup grid token table.
- */
- 
-static const thstok thtt_lookup_types[] = {
-  {"date", TT_LOOKUP_TYPE_DATE},
-  {"numeric", TT_LOOKUP_TYPE_NUMERIC},
-  {"string", TT_LOOKUP_TYPE_STRING},
-  {NULL, TT_LOOKUP_TYPE_UNKNOWN}
-};
-
-
-/**
- * Supported color lookup schemes.
- */
-
-enum {
-  TT_LOOKUP_COLORSCHEME_UNKNOWN = 0,
-  TT_LOOKUP_COLORSCHEME_HSV,
-};
-
 
 /**
  * Lookup table row.
@@ -120,16 +60,23 @@ enum {
 
 struct thlookup_table_row {
   double m_valueDbl, m_valueDblFrom;
-  thdate m_valueDate;
+  thdate m_valueDate, m_valueDateFrom;
   const char * m_valueString;
+  class thdataobject * m_ref;
   const char * m_label;
   thlayout_color m_color;
-  thlookup_table_row() : m_valueDbl(thnan), m_valueDblFrom(thnan), m_valueString(""), m_label("") {}
-  void parse(char ** args);
+  thlookup_table_row() : m_valueDbl(thnan), m_valueDblFrom(thnan), m_valueString(""), m_ref(NULL), m_label("") {}
+  void parse(class thlookup * lkp, char * args);
 };
 
 typedef std::list<thlookup_table_row> thlookup_table_list;
 
+
+/**
+ * Parse lookup name,.
+ */
+
+void thlookup_parse_reference(const char * arg, int * type, const char ** index, const char ** nname);
 
 /**
  * lookup class.
@@ -139,9 +86,11 @@ class thlookup : public thdataobject {
 
   public:
 
-  int m_type, m_scale, m_colorscheme;
+  int m_type;
+  bool m_intervals, m_ascending;
   thlookup_table_list m_table;
   const char * m_title;
+  thmapstat m_autoStat;
 
   /**
    * Standard constructor.
@@ -233,21 +182,47 @@ class thlookup : public thdataobject {
   virtual int get_context();
 
   /**
-   * Automatically lookup range.
+   * Set scrap color.
    */
 
-  virtual void auto_set(double from, double to);
+  virtual void color_scrap(thscrap * s);
+  
+  /**
+   * Postprocess lookup.
+   */
 
-  virtual void auto_set(class thdate fromto);
+  virtual void postprocess_object_references();
 
   /**
-   * Get color from the scale.
+   * Process scrap statistics.
    */
 
-  virtual thlayout_color get_color(thdate d);
+  virtual void add_auto_item(class thdataobject * o, thlayout_color c);
 
-  virtual thlayout_color get_color(double d);
-  
+  /**
+   * Process scrap statistics.
+   */
+
+  virtual void scan_map(class thmap * m);
+
+  /**
+   * Generate automatical legend.
+   */
+
+  virtual void auto_generate_items();
+
+  /**
+   * Generate automatical legend.
+   */
+
+  virtual void postprocess();
+
+  /**
+   * Export color legend, if applicable.
+   */
+
+  virtual void export_color_legend(thlayout * layout);
+
 };
 
 #endif

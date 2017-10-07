@@ -332,6 +332,20 @@ double thmapstat::get_depth() {
 }
 
 
+void thmapstat::get_min_max_alt(double & min, double & max) {
+    double z_top = 0.0, z_bot = 0.0;
+    bool z_any = false;
+    thmapstat_datamap::iterator ii;
+    for(ii = this->data.begin(); ii != this->data.end(); ii++) {
+        check_z(ii->first.ptr->stat_st_top);
+        check_z(ii->first.ptr->stat_st_bottom);
+    }
+    min = z_bot;
+    max = z_top;
+}
+
+
+
 void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata) {
 
   thbuffer b,c;

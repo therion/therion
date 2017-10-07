@@ -400,40 +400,20 @@ enum {
   TT_LAYOUT_CCRIT_EXPLODATE,
   TT_LAYOUT_CCRIT_MAP,
   TT_LAYOUT_CCRIT_SCRAP,
+  TT_LAYOUT_CCRIT_SURVEY,
 };
 
 static const thstok thtt_layout_ccrit[] = {
   {"altitude", TT_LAYOUT_CCRIT_ALTITUDE},
   {"altitudes", TT_LAYOUT_CCRIT_ALTITUDE},
   {"depth", TT_LAYOUT_CCRIT_DEPTH},
-  {"topo-date", TT_LAYOUT_CCRIT_TOPODATE},
   {"explo-date", TT_LAYOUT_CCRIT_EXPLODATE},
   {"map", TT_LAYOUT_CCRIT_MAP},
   {"maps", TT_LAYOUT_CCRIT_MAP},
   {"scrap", TT_LAYOUT_CCRIT_SCRAP},
   {"scraps", TT_LAYOUT_CCRIT_SCRAP},
+  {"topo-date", TT_LAYOUT_CCRIT_TOPODATE},
   {NULL, TT_LAYOUT_CCRIT_UNKNOWN}
-};
-
-
-/**
- * Layout color tables.
- */
-
-enum {
-  TT_LAYOUT_CTABLE_UNKNOWN = 0,
-  TT_LAYOUT_CTABLE_HSV,
-};
-
-static const thstok thtt_layout_ctable[] = {
-  {"hsv", TT_LAYOUT_CTABLE_HSV},
-  {NULL, TT_LAYOUT_CTABLE_UNKNOWN}
-};
-
-enum {
-  TT_LAYOUT_CMODE_AUTO,
-  TT_LAYOUT_CMODE_TABLE,
-  TT_LAYOUT_CMODE_MANUAL,
 };
 
 
@@ -554,9 +534,8 @@ class thlayout : public thdataobject {
     debug, survey_level, surface, grid_coords;
   
   thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
-  int color_crit, // none, altitude, ...
-   color_mode, // auto - values and colors, table - colors, manual
-   color_table; // hsv, cool, hot ...
+  int color_crit; // none, altitude, ...
+  const char * color_crit_fname;
 
   double min_symbol_scale, font_setup[5];
 

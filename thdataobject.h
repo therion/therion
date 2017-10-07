@@ -35,6 +35,7 @@
 #include "thparse.h"
 #include "thdate.h"
 #include "thdataleg.h"
+#include "thlayoutclr.h"
 #include <stdio.h>
 #include <map>
 
@@ -254,6 +255,8 @@ class thdataobject {
   
   bool selected,  ///< Whether object is selected.
     tmp_bool;  ///< Temporary variable for some algorithms
+
+  thlayout_color selected_color; ///< Selection color.
     
   unsigned long selected_number,  ///< Number of selection.
     tmp_ulong;  ///< Temporary variable for some algorithms

@@ -5,7 +5,7 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   thparse.o thcmdline.o thconfig.o thinput.o thchenc.o thdatabase.o \
   thdataobject.o thdatareader.o thsurvey.o thendsurvey.o thdata.o \
   thperson.o thtf.o thtfangle.o thtflength.o thtfpwf.o \
-  thdataleg.o thobjectname.o thinfnan.o thlayout.o thcomment.o \
+  thdataleg.o thobjectname.o thinfnan.o thlayout.o thlookup.o thcomment.o \
   thinit.o thdb1d.o thsvxctrl.o thdatastation.o thobjectid.o \
   thobjectsrc.o thgrade.o thlibrary.o thgeomag.o thbezier.o \
   thexport.o thexporter.o thselector.o extern/img.o \

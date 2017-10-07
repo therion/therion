@@ -26,6 +26,7 @@
  */
  
 #include "thlayout.h"
+#include "thlookup.h"
 #include "thexception.h"
 #include "thchenc.h"
 #include "thdata.h"
@@ -241,9 +242,7 @@ thlayout::thlayout()
   this->color_preview_above.B = 0;
   
   this->color_crit = TT_LAYOUT_CCRIT_UNKNOWN;
-  this->color_mode = TT_LAYOUT_CMODE_AUTO;
-  this->color_table = TT_LAYOUT_CTABLE_HSV;  
-  
+  this->color_crit_fname = NULL;
 }
 
 
@@ -397,6 +396,8 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
   double dum;
   thlayout_copy_src dumm;
   int sv, sv2, dum_int;
+  const char * tmp1;
+  const char * tmp2;
   //bool parsed;
   thlayout_copy_src * lcp;
   thcmd_option_desc defcod = this->get_default_cod(cod.id);
@@ -668,11 +669,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           }
 	  break;
         case TT_LAYOUT_COLOR_MAP_FG:
-          this->color_crit = thmatch_token(args[1], thtt_layout_ccrit);
+          thlookup_parse_reference(args[1], &(this->color_crit), &tmp1, &tmp2);
+          //this->color_crit = thmatch_token(args[1], thtt_layout_ccrit);
           if (this->color_crit == TT_LAYOUT_CCRIT_UNKNOWN)
             this->color_map_fg.parse(args[1]);
-          else
+          else {
+            this->color_crit_fname = thdb.strstore(args[1]);
             this->color_map_fg.defined = 2;
+          }
           break;
         case TT_LAYOUT_COLOR_MAP_BG:
           this->color_map_bg.parse(args[1], true);
@@ -1099,6 +1103,8 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->color_map_fg.defined = %d;\n", this->color_map_fg.defined);
   thprintf("\tplayout->color_crit = %d;\n", this->color_crit);
+  if (this->color_crit_fname != NULL)
+    thprintf("\tplayout->color_crit_fname = \"%s\";\n", this->color_crit_fname);
   thprintf("\tplayout->color_map_fg.R = %lg;\n",this->color_map_fg.R);
   thprintf("\tplayout->color_map_fg.G = %lg;\n",this->color_map_fg.G);
   thprintf("\tplayout->color_map_fg.B = %lg;\n",this->color_map_fg.B);
@@ -1751,6 +1757,7 @@ void thlayout::process_copy() {
       
       begcopy(color_map_fg.defined)
         this->color_crit = srcl->color_crit;
+        this->color_crit_fname = srcl->color_crit_fname;
         this->color_map_fg.R = srcl->color_map_fg.R;
         this->color_map_fg.G = srcl->color_map_fg.G;
         this->color_map_fg.B = srcl->color_map_fg.B;

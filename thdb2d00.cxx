@@ -316,12 +316,19 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
         ((ii->map_level >= 0) && (ii->chapter_level > ii->map_level) ? ii->map_level : ii->chapter_level),ii->map_level);
       prj->stat.scanmap((thmap*)(ii->optr));  
       prj->stat.addstat(&(((thmap*)(ii->optr))->stat));
+      // set selection color
+      lxm = selection;
+      while (lxm != NULL) {
+        lxm->selection_color = ii->m_color;
+        lxm = lxm->next_item;
+      }
       while ((cxm != NULL) && (cxm->next_item != NULL))
         cxm = cxm->next_item;
     }
     ii++;
   }
   
+  lxm = NULL;
   // no map selected, let's add all basic maps
   if (selection == NULL) {
     nmaps = 0;
@@ -335,6 +342,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
         prj->stat.scanmap((thmap*)(*obi));  
         prj->stat.addstat(&(((thmap*)(*obi))->stat));
         cxm = this->insert_xm();
+        cxm->selection_color = ((thmap*)(*obi))->fsptr->selected_color;
         cxm->title = false;
         cxm->expand = true;
         cxm->map = (thmap*)(*obi);
