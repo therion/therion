@@ -2094,18 +2094,36 @@ else
   ldata.legendtitle = thT("title legend",this->layout->lang);
 
   ldata.colorlegendtitle = "";
-  if ((this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->color_crit != TT_LAYOUT_CCRIT_SCRAP)) {
-    fprintf(tf,"\\colorlegendtitle={");
+  if (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) {
     switch (this->layout->color_crit) {
       case TT_LAYOUT_CCRIT_ALTITUDE:
-        fprintf(tf,"%s", utf2tex(thT("title color-legend-altitude",this->layout->lang)));
         ldata.colorlegendtitle = thT("title color-legend-altitude",this->layout->lang);
         break;
-      default: //TT_LAYOUT_CCRIT_MAP:
-        fprintf(tf,"%s", utf2tex(thT("title color-legend-map",this->layout->lang)));
+      case TT_LAYOUT_CCRIT_DEPTH:
+        ldata.colorlegendtitle = thT("title color-legend-depth",this->layout->lang);
+        break;
+      case TT_LAYOUT_CCRIT_MAP:
         ldata.colorlegendtitle = thT("title color-legend-map",this->layout->lang);
+        break;
+      case TT_LAYOUT_CCRIT_SCRAP:
+        ldata.colorlegendtitle = thT("title color-legend-scrap",this->layout->lang);
+        break;
+      case TT_LAYOUT_CCRIT_SURVEY:
+        ldata.colorlegendtitle = thT("title color-legend-survey",this->layout->lang);
+        break;
+      case TT_LAYOUT_CCRIT_EXPLODATE:
+        ldata.colorlegendtitle = thT("title color-legend-explodate",this->layout->lang);
+        break;
+      case TT_LAYOUT_CCRIT_TOPODATE:
+        ldata.colorlegendtitle = thT("title color-legend-topodate",this->layout->lang);
+        break;
+      default:
+        ldata.colorlegendtitle = thT("title color-legend-default",this->layout->lang);
     }
-    fprintf(tf,"}\n");
+    if ((this->layout->m_lookup != NULL) && (strlen(this->layout->m_lookup->m_title) > 0)) {
+      ldata.colorlegendtitle = this->layout->m_lookup->m_title;
+    }
+    fprintf(tf,"\\colorlegendtitle={%s}\n", utf2tex(ldata.colorlegendtitle.c_str()));
   }
 
   // ak neni atlas, tak nastavi legendcavename

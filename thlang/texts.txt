@@ -2741,6 +2741,26 @@ sk: Mapy
 sq: hartat
 zh_CN: 地图
 
+
+therion: title color-legend-explodate
+en: Exploration date
+
+therion: title color-legend-topodate
+en: Surveying date
+
+therion: title color-legend-depth
+en: Depth
+
+therion: title color-legend-survey
+en: Surveys
+
+therion: title color-legend-scrap
+en: Scraps
+
+therion: title color-legend-default
+en: Color legend
+
+
 therion: units ft
 bg: футове
 cz: ft

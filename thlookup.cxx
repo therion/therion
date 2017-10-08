@@ -399,6 +399,7 @@ void thlookup::color_scrap(thscrap * s) {
 
 
 void thlookup::export_color_legend(thlayout * layout) {
+  layout->m_lookup = this;
   if (layout->color_legend == TT_TRUE) {
     COLORLEGENDLIST.clear();
     thlookup_table_list::iterator tli;
@@ -432,13 +433,13 @@ void thlookup::export_color_legend(thlayout * layout) {
               if (!thisnan(tli->m_valueDblFrom)) {
                 thdate tmpdate;
                 tmpdate.set_years(tli->m_valueDblFrom, -1);
-                clrec.name = tmpdate.get_str(TT_DATE_FMT_LOCALE);
+                clrec.name = tmpdate.get_str(TT_DATE_FMT_UTF8_Y);
                 if (!thisnan(tli->m_valueDbl))
                   clrec.name += " - ";
               }
             }
             if (!thisnan(tli->m_valueDbl))
-              clrec.name += tli->m_valueDate.get_str(TT_DATE_FMT_LOCALE);
+              clrec.name += tli->m_valueDate.get_str(TT_DATE_FMT_UTF8_Y);
             if (clrec.name.size() == 0)
               clrec.name = thT("not specified",layout->lang);
             clrec.texname = utf2tex(clrec.name.c_str());
@@ -537,6 +538,7 @@ void thlookup::auto_generate_items() {
       to = interval.get_end_year();
       for(z = 0; z < 7; z++) {
         tr.m_valueDate.set_years(from + double(z) * ((to - from) / 6), -1.0);
+        tr.m_valueDbl = tr.m_valueDate.get_start_year();
         this->m_table.push_back(tr);
       }
       break;

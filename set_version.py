@@ -38,7 +38,10 @@ except:   # no git version available
           break
     ver = "%s+? (compiled on %s)" % (ver1, datetime.date.today().isoformat())
 
-with open('thversion.h','w') as f:
-  f.write('#define THVERSION "%s"\n' % ver)
-with open('thbook/version.tex','w') as f:
-  f.write('%s\n' % ver)
+oldver = open('thversion.h').read()
+newver = '#define THVERSION "%s"\n' % ver
+if (oldver != newver):
+  with open('thversion.h','w') as f:
+    f.write(newver)
+  with open('thbook/version.tex','w') as f:
+    f.write('%s\n' % ver)

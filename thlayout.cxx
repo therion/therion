@@ -60,6 +60,7 @@ thlayout::thlayout()
 
   this->ccode = TT_LAYOUT_CODE_UNKNOWN;
   this->m_pconfig = NULL;
+  this->m_lookup = NULL;
 
   this->def_scale = 0;
   this->scale = 0.005;
