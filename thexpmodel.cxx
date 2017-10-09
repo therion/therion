@@ -220,7 +220,9 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
     char title[_MAX_FNAME];
     _splitpath(this->outpt, NULL, NULL, title, NULL);
   #elif THLINUX
-    const char * title = basename( this->outpt );
+    thbuffer bnb;
+    bnb.strcpy(this->outpt);
+    const char * title = basename(bnb.get_buffer());
   #else
     const char * title = "cave";
   #endif

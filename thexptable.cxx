@@ -46,6 +46,7 @@
 #include "thcs.h"
 #include "thtexfonts.h"
 #include "thlang.h"
+#include <libgen.h>
 
 
 thexptable::thexptable() {
@@ -393,14 +394,17 @@ void thexptable::process_db(class thdatabase * dbp)
   }
 
 
-#ifdef THLINUX
-  const char * title = basename( this->outpt );
-#elif THMACOSX
-  const char * title = "cave";
-#else
+#ifdef THWIN32
   char title[_MAX_FNAME];
   _splitpath(this->outpt, NULL, NULL, title, NULL);
+#elif THLINUX
+  thbuffer bnb;
+  bnb.strcpy(this->outpt);
+  const char * title = basename(bnb.get_buffer());
+#else
+  const char * title = "cave";
 #endif
+
 
   switch (this->format) {
     case TT_EXPTABLE_FMT_TXT:

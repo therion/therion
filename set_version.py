@@ -38,7 +38,11 @@ except:   # no git version available
           break
     ver = "%s+? (compiled on %s)" % (ver1, datetime.date.today().isoformat())
 
-oldver = open('thversion.h').read()
+try:
+    oldver = open('thversion.h').read()
+except:
+    oldver = ""
+
 newver = '#define THVERSION "%s"\n' % ver
 if (oldver != newver):
   with open('thversion.h','w') as f:
