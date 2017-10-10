@@ -3833,3 +3833,39 @@ proc xth_me_cmds_line_poly2bezier {} {
   xth_me_cmds_set_mode 0
   return
 }
+
+
+proc xth_me_cmds_shift_active_scrap {fromx fromy tox toy} {
+  global xth
+  # prejde vsetky prikazy a najde scrapy a endscrapy
+  set hcmd 0
+  set fcmd 0
+  set tcmd [expr [llength $xth(me,cmds,xlist)] -1]
+  for {set ii 0} {$ii <= $tcmd} {incr ii} {
+    set id [lindex $xth(me,cmds,xlist) $ii]
+    if {($hcmd == 0) && ($xth(me,cmds,$id,ct) == 4)} {
+          set fcmd $ii
+          set hcmd 1
+    }
+    if {($hcmd == 1) && ($id == $xth(me,cmds,selid))} {
+          set hcmd 2
+    }
+    if {($hcmd == 2) && ($xth(me,cmds,$id,ct) == 5)} {
+          set tcmd $ii
+          set hcmd 3
+    }
+  }
+  set deltax [expr double($tox) - double($fromx)]
+  set deltay [expr double($toy) - double($fromy)]
+  for {set ii $fcmd} {$ii <= $tcmd} {incr ii} {
+    set id [lindex $xth(me,cmds,xlist) $ii]
+    if {$xth(me,cmds,$id,ct) == 2} {
+      # shift point
+      # 3 line
+    }
+    if {$xth(me,cmds,$id,ct) == 3} {
+      # shift line
+    }
+  }
+  update idletasks
+}
