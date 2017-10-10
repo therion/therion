@@ -131,7 +131,7 @@ void lxPresentDlg::UpdateList() {
     long time = 0;
     while (n != NULL) {
       if (n->GetName() == _T("Scene")) {
-        this->m_posLBox->AppendString(wxString::Format(_T("%04d"), time));
+        this->m_posLBox->AppendString(wxString::Format(_T("%04ld"), time));
         time++;
       }
       n = n->GetNext();
