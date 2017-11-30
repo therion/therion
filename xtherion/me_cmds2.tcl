@@ -1122,10 +1122,10 @@ proc xth_me_cmds_postprocess_line {id} {
 	($lix > 0)} {
 	set xth(me,cmds,$id,close) 1
       } else {
-        if {$xth(me,cmds,$id,close) == 1} {
-          set postclose 1
-        }
-        set xth(me,cmds,$id,close) 0
+	if {$xth(me,cmds,$id,close) == 1} {
+	  set postclose 1
+	}
+	set xth(me,cmds,$id,close) 0
       }
   }
   
@@ -3116,78 +3116,78 @@ proc xth_me_cmds_set_colors {} {
     set id [lindex $xth(me,cmds,xlist) $cid]
     switch $xth(me,cmds,$id,ct) {
       2 {   # point     
-        if {$selectedscrap} {
-          switch $xth(me,cmds,$id,type) {
-            station {
-              set col $xth(gui,me,stationcolor)
-            }
-            default {
-              set col $scol
-            }
-          }   
-        }
-        $xth(me,can) itemconfigure pt$id -outline $col -fill $col -state normal
-        if {$xth(me,hinactives) && ($col == $dcol)} {
-          $xth(me,can) itemconfigure pt$id -state hidden
-        }
+	if {$selectedscrap} {
+	  switch $xth(me,cmds,$id,type) {
+	    station {
+	      set col $xth(gui,me,stationcolor)
+	    }
+	    default {
+	      set col $scol
+	    }
+	  }   
+	}
+	$xth(me,can) itemconfigure pt$id -outline $col -fill $col -state normal
+	if {$xth(me,hinactives) && ($col == $dcol)} {
+	  $xth(me,can) itemconfigure pt$id -state hidden
+	}
       }
       
       3 {  # line/line point
-        if {$selectedscrap} {
-          switch $xth(me,cmds,$id,type) {
-            wall {
-              set col $xth(gui,me,wallcolor)
-            }
-            pit {
-              set col $xth(gui,me,pitcolor)
-            }
-            slope {
-              set col $xth(gui,me,slopecolor)
-            }
-            "rock-border" - "rock-edge" {
-              set col $xth(gui,me,rockcolor)
-            }
-            border {
-              set col $xth(gui,me,bordercolor)
-            }
-            default {
-              set col $scol
-            }
-          }   
-        }
-        $xth(me,can) itemconfigure lnpt$id -outline $col -fill $col -state normal
-        $xth(me,can) itemconfigure lnln$id -fill $col -state normal
-        if {$xth(me,hinactives) && ($col == $dcol)} {
-          $xth(me,can) itemconfigure ln$id -state hidden  
-        }
+	if {$selectedscrap} {
+	  switch $xth(me,cmds,$id,type) {
+	    wall {
+	      set col $xth(gui,me,wallcolor)
+	    }
+	    pit {
+	      set col $xth(gui,me,pitcolor)
+	    }
+	    slope {
+	      set col $xth(gui,me,slopecolor)
+	    }
+	    "rock-border" - "rock-edge" {
+	      set col $xth(gui,me,rockcolor)
+	    }
+	    border {
+	      set col $xth(gui,me,bordercolor)
+	    }
+	    default {
+	      set col $scol
+	    }
+	  }   
+	}
+	$xth(me,can) itemconfigure lnpt$id -outline $col -fill $col -state normal
+	$xth(me,can) itemconfigure lnln$id -fill $col -state normal
+	if {$xth(me,hinactives) && ($col == $dcol)} {
+	  $xth(me,can) itemconfigure ln$id -state hidden  
+	}
       }
       
       4 - 5 { # scrap/endscrap
-        if {(($xth(me,cmds,$id,ct) == 4) && ($godown) && ($selectedscrap)) || (($xth(me,cmds,$id,ct) == 5) && ($selectedscrap))} {
-          set selectedscrap 0
-        }
-        if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
-          set xth(me,curscrap) $xth(me,cmds,$id,name)
-          #          if {[string equal $xth(me,cmds,$id,projection) extended]} {
-          #            set xth(me,snai) -1
-          #          } else {
-          #            set xth(me,snai) 1
-          #          }
-          set xth(me,snai) 1
-        }
-        if {$cid != $xid} {
-          set col $dcol
-        }
+	if {(($xth(me,cmds,$id,ct) == 4) && ($godown) && ($selectedscrap)) || (($xth(me,cmds,$id,ct) == 5) && ($selectedscrap))} {
+	  set selectedscrap 0
+	}
+	if {(![string equal $col $dcol]) && ($xth(me,cmds,$id,ct) == 4)} {
+	  set xth(me,curscrap) $xth(me,cmds,$id,name)
+	  #          if {[string equal $xth(me,cmds,$id,projection) extended]} {
+	  #            set xth(me,snai) -1
+	  #          } else {
+	  #            set xth(me,snai) 1
+	  #          }
+	  set xth(me,snai) 1
+	}
+	if {$cid != $xid} {
+	  set col $dcol
+	}
       }
     }
 
     if {$godown} {
       incr cid -1
       if {$cid < 0} {
-        set cid [expr $xid + 1]
-        set godown 0
-        set selectedscrap 1
-        set col $ocol
+	set cid [expr $xid + 1]
+	set godown 0
+	set selectedscrap 1
+	set col $ocol
       }
     } else {
       incr cid 1
@@ -3475,28 +3475,28 @@ proc xth_me_cmds_line_trace_point_cycle {dist tcol} {
     }
     if {$cont && $xth(ctrl,me,line,tracecontinue) && ([llength $next] == 2)} {
       $xth(ctrl,me,line).trace configure -command {xth_me_cmds_line_trace_stop} -text [mc "Stop tracing"] \
-        -fg white -bg red -activeforeground white -activebackground red
+	-fg white -bg red -activeforeground white -activebackground red
       set lt 0
       set ld 100
       catch {
-        set lt $xth(ctrl,me,line,traceltime)
-        set ld $xth(ctrl,me,line,traceldelay)
+	set lt $xth(ctrl,me,line,traceltime)
+	set ld $xth(ctrl,me,line,traceldelay)
       }
       set xth(ctrl,me,line,traceltime) [clock clicks -milliseconds]
       set cd [expr 100 - $xth(ctrl,me,line,traceltime) + $lt]
       if {$cd < 0} {
-        set cd 0
+	set cd 0
       }
       if {$cd > 100} {
-        set cd 100
+	set cd 100
       }
       set cd [expr int(0.95 * $ld + 0.05 * $cd)]
       set xth(ctrl,me,line,traceldelay) $cd
       after $cd "after idle \"xth_me_cmds_line_trace_point_cycle $dist [list $tcol]\""
     } else {
       $xth(ctrl,me,line).trace configure -command {xth_me_cmds_line_trace} -text [mc "Continue tracing"] \
-        -fg $xth(ctrl,me,line,tracebtnfg) -bg $xth(ctrl,me,line,tracebtnbg) \
-        -activeforeground $xth(ctrl,me,line,tracebtnafg) -activebackground $xth(ctrl,me,line,tracebtnabg)
+	-fg $xth(ctrl,me,line,tracebtnfg) -bg $xth(ctrl,me,line,tracebtnbg) \
+	-activeforeground $xth(ctrl,me,line,tracebtnafg) -activebackground $xth(ctrl,me,line,tracebtnabg)
     }
 }
 
@@ -3700,8 +3700,8 @@ proc simplify_line_RDP {P epsilon} {
   for {set i 1} {$i < [llength $P]-1} {incr i} {
     set d [DistanceToLine [lindex $P $i] $P0 $P1]
     if {$d > $dmax} {
-        set dmax $d
-        set idx $i
+	set dmax $d
+	set idx $i
     }
   }
 
@@ -3809,7 +3809,7 @@ proc xth_me_cmds_line_poly2bezier {} {
     while {![eof $f]} {
       set ln [gets $f]
       if {[regexp {\d+} $ln]} {
-        lappend data $ln
+	lappend data $ln
       }
     }
     close $f
@@ -3834,38 +3834,108 @@ proc xth_me_cmds_line_poly2bezier {} {
   return
 }
 
-
-proc xth_me_cmds_shift_active_scrap {fromx fromy tox toy} {
+proc xth_me_cmds_shift_get_ac {} {
   global xth
-  # prejde vsetky prikazy a najde scrapy a endscrapy
+  set id $xth(me,cmds,selid)
+  set pid $xth(me,cmds,selpid)
+  set rv {"" ""}
+  catch {
+    if {[string length $pid]} {
+      set rv [list $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y)]
+    } else {
+      set rv [list $xth(me,cmds,$id,x) $xth(me,cmds,$id,$y)]
+    }
+  }
+  return $rv
+}
+
+proc xth_me_cmds_shift_setf {} {
+  global xth
+  set c [xth_me_cmds_shift_get_ac]
+  set xth(ctrl,me,cmds,fx) [lindex $c 0]
+  set xth(ctrl,me,cmds,fy) [lindex $c 1]
+}
+
+proc xth_me_cmds_shift_sett {} {
+  global xth
+  set c [xth_me_cmds_shift_get_ac]
+  set xth(ctrl,me,cmds,tx) [lindex $c 0]
+  set xth(ctrl,me,cmds,ty) [lindex $c 1]
+}
+
+proc xth_me_cmds_shift_swap {} {
+  global xth
+  set x $xth(ctrl,me,cmds,tx)
+  set y $xth(ctrl,me,cmds,ty)
+  set xth(ctrl,me,cmds,tx) $xth(ctrl,me,cmds,fx)
+  set xth(ctrl,me,cmds,ty) $xth(ctrl,me,cmds,fy)
+  set xth(ctrl,me,cmds,fx) $x
+  set xth(ctrl,me,cmds,fy) $y
+}
+
+proc xth_me_cmds_shift {} {
+  global xth
+  xth_me_cmds_update {}
+  set selid $xth(me,cmds,selid)
+  set selpid $xth(me,cmds,selpid)
+  xth_me_cmds_select 0
   set hcmd 0
   set fcmd 0
+  set ccmd 0
   set tcmd [expr [llength $xth(me,cmds,xlist)] -1]
   for {set ii 0} {$ii <= $tcmd} {incr ii} {
     set id [lindex $xth(me,cmds,xlist) $ii]
     if {($hcmd == 0) && ($xth(me,cmds,$id,ct) == 4)} {
-          set fcmd $ii
-          set hcmd 1
+	  set fcmd $ii
     }
-    if {($hcmd == 1) && ($id == $xth(me,cmds,selid))} {
-          set hcmd 2
+    if {($hcmd == 0) && ($id == $selid)} {
+	  set hcmd 1
+	  set ccmd $ii
     }
-    if {($hcmd == 2) && ($xth(me,cmds,$id,ct) == 5)} {
-          set tcmd $ii
-          set hcmd 3
+    if {($hcmd == 1) && ($xth(me,cmds,$id,ct) == 5)} {
+	  set tcmd $ii
+	  set hcmd 2
     }
   }
-  set deltax [expr double($tox) - double($fromx)]
-  set deltay [expr double($toy) - double($fromy)]
+  if {$hcmd == 0} return
+  if {[catch {
+      set deltax [expr double($xth(ctrl,me,cmds,tx)) - double($xth(ctrl,me,cmds,fx))]
+      set deltay [expr double($xth(ctrl,me,cmds,ty)) - double($xth(ctrl,me,cmds,fy))]
+  }]} return
+  if {($xth(me,cmds,$selid,ct) == 2) || ($xth(me,cmds,$selid,ct) == 3)} {
+    set fcmd $ccmd
+    set tcmd $ccmd                    
+  }
   for {set ii $fcmd} {$ii <= $tcmd} {incr ii} {
     set id [lindex $xth(me,cmds,xlist) $ii]
     if {$xth(me,cmds,$id,ct) == 2} {
-      # shift point
-      # 3 line
+      # shift point        
+      set xth(me,cmds,$id,x) [expr  $xth(me,cmds,$id,x) + $deltax ]
+      set xth(me,cmds,$id,y) [expr  $xth(me,cmds,$id,y) + $deltay ]
+      $xth(me,can) coords pt$id [xth_me_cmds_calc_point_coords $id]
+      xth_me_cmds_update_point_data $id
+      xth_me_cmds_update_list $id
     }
     if {$xth(me,cmds,$id,ct) == 3} {
-      # shift line
+      foreach pId $xth(me,cmds,$id,xplist) {
+       if {$pId > 0} {
+	set xth(me,cmds,$id,$pId,x) [expr  $xth(me,cmds,$id,$pId,x) + $deltax ]
+	set xth(me,cmds,$id,$pId,y) [expr  $xth(me,cmds,$id,$pId,y) + $deltay ]
+	if {$xth(me,cmds,$id,$pId,idp)} {
+	  set xth(me,cmds,$id,$pId,xp) [expr  $xth(me,cmds,$id,$pId,xp) + $deltax ]
+	  set xth(me,cmds,$id,$pId,yp) [expr  $xth(me,cmds,$id,$pId,yp) + $deltay ]
+	}
+	if {$xth(me,cmds,$id,$pId,idn)} {
+	  set xth(me,cmds,$id,$pId,xn) [expr  $xth(me,cmds,$id,$pId,xn) + $deltax ]
+	  set xth(me,cmds,$id,$pId,yn) [expr  $xth(me,cmds,$id,$pId,yn) + $deltay ]
+	}
+       }
+      }
+      xth_me_cmds_update_line_data $id
+      xth_me_cmds_move_line $id
+      xth_me_cmds_update_list $id                        
     }
   }
+  xth_me_cmds_select [list $selid $selpid]
   update idletasks
 }

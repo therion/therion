@@ -1280,6 +1280,12 @@ set xth(ctrl,me,area,ymax) ""
 
 set xth(ctrl,me,cmds,moveto) ""
 
+set xth(ctrl,me,cmds,fx) ""
+set xth(ctrl,me,cmds,fy) ""
+set xth(ctrl,me,cmds,tx) ""
+set xth(ctrl,me,cmds,ty) ""
+
+
 set xth(ctrl,me,scrap,name) ""
 set xth(ctrl,me,scrap,projection) ""
 set xth(ctrl,me,scrap,options) ""
@@ -1563,12 +1569,35 @@ ComboBox $ccbox.tt -postcommand xth_me_cmds_set_move_to_list \
   -font $xth(gui,lfont) -height 16 -state disabled -width 8 \
   -textvariable xth(ctrl,me,cmds,moveto)
 xth_status_bar me $ccbox.tt [mc "Select destination scrap and position in it."]
+Button $ccbox.shf -text [mc "Shift from"] -anchor center -font $xth(gui,lfont) \
+-state disabled -width 8 -command "xth_me_cmds_shift_setf"
+Button $ccbox.sht -text [mc "Shift to"] -anchor center -font $xth(gui,lfont) \
+-state disabled -width 8 -command "xth_me_cmds_shift_sett"
+Entry $ccbox.shfx -font $xth(gui,lfont) -state disabled -width 4 \
+-textvariable xth(ctrl,me,cmds,fx)
+Entry $ccbox.shfy -font $xth(gui,lfont) -state disabled -width 4 \
+-textvariable xth(ctrl,me,cmds,fy)
+Entry $ccbox.shtx -font $xth(gui,lfont) -state disabled -width 4 \
+-textvariable xth(ctrl,me,cmds,tx)
+Entry $ccbox.shty -font $xth(gui,lfont) -state disabled -width 4 \
+-textvariable xth(ctrl,me,cmds,ty)
+Button $ccbox.shswap -text [mc "Swap"] -anchor center -font $xth(gui,lfont) \
+-state disabled -width 8 -command "xth_me_cmds_shift_swap"
+Button $ccbox.shift -text [mc "Shift object"] -anchor center -font $xth(gui,lfont) \
+-state disabled -width 8 -command "xth_me_cmds_shift"
+
+
 grid columnconf $ccbox 0 -weight 1
 grid columnconf $ccbox 1 -weight 1
-grid $ccbox.go -column 0 -row 0 -columnspan 2 -sticky news
-grid $ccbox.cfg $ccbox.sel -row 1 -sticky news
-grid $ccbox.mu $ccbox.md -row 2 -sticky news
-grid $ccbox.mt $ccbox.tt -row 3 -sticky news
+grid columnconf $ccbox 2 -weight 1
+grid columnconf $ccbox 3 -weight 1
+grid $ccbox.go -column 0 -row 0 -columnspan 4 -sticky news
+grid $ccbox.cfg $ccbox.sel -row 1 -sticky news -columnspan 2
+grid $ccbox.mu $ccbox.md -row 2 -sticky news -columnspan 2
+grid $ccbox.mt $ccbox.tt -row 3 -sticky news -columnspan 2
+grid $ccbox.shf $ccbox.sht -row 4 -sticky news -columnspan 2
+grid $ccbox.shfx $ccbox.shfy $ccbox.shtx $ccbox.shty -row 5 -sticky news
+grid $ccbox.shswap $ccbox.shift -row 6 -sticky news -columnspan 2
 
 # initialize text editor
 set txb $xth(ctrl,me,text)

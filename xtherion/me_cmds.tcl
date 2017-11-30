@@ -172,11 +172,27 @@ proc xth_me_cmds_update_buttons {} {
 	$ccbox.md configure -state normal
 	$ccbox.mt configure -state normal
 	$ccbox.tt configure -state normal
-     } else {
+	$ccbox.shf configure -state normal
+	$ccbox.sht configure -state normal
+        $ccbox.shfx configure -state normal
+        $ccbox.shfy configure -state normal
+        $ccbox.shtx configure -state normal
+        $ccbox.shty configure -state normal
+        $ccbox.shswap configure -state normal
+        $ccbox.shift configure -state normal
+      } else {
 	$ccbox.mu configure -state disabled
 	$ccbox.md configure -state disabled
 	$ccbox.mt configure -state disabled
 	$ccbox.tt configure -state disabled
+	$ccbox.shf configure -state disabled
+	$ccbox.sht configure -state disabled
+	$ccbox.shfx configure -state disabled
+	$ccbox.shfy configure -state disabled
+	$ccbox.shtx configure -state disabled
+	$ccbox.shty configure -state disabled
+	$ccbox.shswap configure -state disabled
+	$ccbox.shift configure -state disabled
       }
       $ccbox.cfg.m entryconfigure [mc "Delete"] -state normal
       $xth(me,menu,edit) entryconfigure [mc "Delete"] -state normal
