@@ -1121,6 +1121,7 @@ proc xth_me_area_end_drag {tagOrId imgx x y} {
   }
   xth_me_images_rescandraw
   update idletasks 
+  set xth(ctrl,me,lastclick) [list [xth_me_can2realx [$xth(me,can) canvasx $x]] [xth_me_can2realy [$xth(me,can) canvasy $y]]]  
 }
 
 
@@ -1280,6 +1281,7 @@ set xth(ctrl,me,area,ymax) ""
 
 set xth(ctrl,me,cmds,moveto) ""
 
+set xth(ctrl,me,lastclick) {"" ""}
 set xth(ctrl,me,cmds,fx) ""
 set xth(ctrl,me,cmds,fy) ""
 set xth(ctrl,me,cmds,tx) ""
@@ -1571,20 +1573,28 @@ ComboBox $ccbox.tt -postcommand xth_me_cmds_set_move_to_list \
 xth_status_bar me $ccbox.tt [mc "Select destination scrap and position in it."]
 Button $ccbox.shf -text [mc "Shift from"] -anchor center -font $xth(gui,lfont) \
 -state disabled -width 8 -command "xth_me_cmds_shift_setf"
+xth_status_bar me $ccbox.shf [mc "Set start point of object shifting vector. Either selected point or place of last right-click."]
 Button $ccbox.sht -text [mc "Shift to"] -anchor center -font $xth(gui,lfont) \
 -state disabled -width 8 -command "xth_me_cmds_shift_sett"
+xth_status_bar me $ccbox.sht [mc "Set end point of object shifting vector. Either selected point or place of last right-click."]
 Entry $ccbox.shfx -font $xth(gui,lfont) -state disabled -width 4 \
 -textvariable xth(ctrl,me,cmds,fx)
+xth_status_bar me $ccbox.shfx [mc "X coordinate of start point of object shifting vector."]
 Entry $ccbox.shfy -font $xth(gui,lfont) -state disabled -width 4 \
 -textvariable xth(ctrl,me,cmds,fy)
+xth_status_bar me $ccbox.shfy [mc "Y coordinate of start point of object shifting vector."]
 Entry $ccbox.shtx -font $xth(gui,lfont) -state disabled -width 4 \
 -textvariable xth(ctrl,me,cmds,tx)
+xth_status_bar me $ccbox.shtx [mc "X coordinate of end point of object shifting vector."]
 Entry $ccbox.shty -font $xth(gui,lfont) -state disabled -width 4 \
 -textvariable xth(ctrl,me,cmds,ty)
+xth_status_bar me $ccbox.shty [mc "Y coordinate of end point of object shifting vector."]
 Button $ccbox.shswap -text [mc "Swap"] -anchor center -font $xth(gui,lfont) \
 -state disabled -width 8 -command "xth_me_cmds_shift_swap"
+xth_status_bar me $ccbox.shty [mc "Swap points of object shifting vector."]
 Button $ccbox.shift -text [mc "Shift object"] -anchor center -font $xth(gui,lfont) \
 -state disabled -width 8 -command "xth_me_cmds_shift"
+xth_status_bar me $ccbox.shty [mc "Shift currently selected point, line or scrap according to specified vector."]
 
 
 grid columnconf $ccbox 0 -weight 1

@@ -3837,14 +3837,15 @@ proc xth_me_cmds_line_poly2bezier {} {
 proc xth_me_cmds_shift_get_ac {} {
   global xth
   set id $xth(me,cmds,selid)
-  set pid $xth(me,cmds,selpid)
+  set pId $xth(me,cmds,selpid)
   set rv {"" ""}
   catch {
-    if {[string length $pid]} {
-      set rv [list $xth(me,cmds,$id,$pid,x) $xth(me,cmds,$id,$pid,y)]
-    } else {
-      set rv [list $xth(me,cmds,$id,x) $xth(me,cmds,$id,$y)]
-    }
+    set rv [list $xth(me,cmds,$id,$pId,x) $xth(me,cmds,$id,$pId,y)]
+    return rv
+  }
+  catch {
+    set rv [list $xth(me,cmds,$id,x) $xth(me,cmds,$id,y)]
+    return rv
   }
   return $rv
 }
@@ -3852,6 +3853,9 @@ proc xth_me_cmds_shift_get_ac {} {
 proc xth_me_cmds_shift_setf {} {
   global xth
   set c [xth_me_cmds_shift_get_ac]
+  if {[string equal $xth(ctrl,me,cmds,fx) [lindex $c 0]] && [string equal $xth(ctrl,me,cmds,fy) [lindex $c 1]]} {
+    set c $xth(ctrl,me,lastclick)
+  }
   set xth(ctrl,me,cmds,fx) [lindex $c 0]
   set xth(ctrl,me,cmds,fy) [lindex $c 1]
 }
@@ -3859,6 +3863,9 @@ proc xth_me_cmds_shift_setf {} {
 proc xth_me_cmds_shift_sett {} {
   global xth
   set c [xth_me_cmds_shift_get_ac]
+  if {[string equal $xth(ctrl,me,cmds,tx) [lindex $c 0]] && [string equal $xth(ctrl,me,cmds,ty) [lindex $c 1]]} {
+    set c $xth(ctrl,me,lastclick)
+  }
   set xth(ctrl,me,cmds,tx) [lindex $c 0]
   set xth(ctrl,me,cmds,ty) [lindex $c 1]
 }
@@ -3875,7 +3882,27 @@ proc xth_me_cmds_shift_swap {} {
 
 proc xth_me_cmds_shift {} {
   global xth
-  xth_me_cmds_update {}
+  if {$xth(me,unredook)} {
+    xth_me_cmds_update {}
+  }
+  set id $xth(me,cmds,selid)
+  set oldurok $xth(me,unredook)
+  set xth(me,unredook) 0
+  xth_me_cmds_shiftft $xth(ctrl,me,cmds,fx) $xth(ctrl,me,cmds,fy) $xth(ctrl,me,cmds,tx) $xth(ctrl,me,cmds,ty)
+  set xth(me,unredook) $oldurok
+    set respec [list xth_me_cmds_shiftft $xth(ctrl,me,cmds,fx) $xth(ctrl,me,cmds,fy) $xth(ctrl,me,cmds,tx) $xth(ctrl,me,cmds,ty)]
+  set unspec [list xth_me_cmds_shiftft $xth(ctrl,me,cmds,tx) $xth(ctrl,me,cmds,ty) $xth(ctrl,me,cmds,fx) $xth(ctrl,me,cmds,fy)]
+  xth_me_unredo_action [mc "shift object"] \
+  "xth_me_cmds_select $id\n$unspec" \
+  "xth_me_cmds_select $id\n$respec"
+}
+
+proc xth_me_cmds_shiftft {fromx fromy tox toy} {
+  global xth
+  if {[catch {
+        set deltax [expr double($tox) - double($fromx)]
+        set deltay [expr double($toy) - double($fromy)]
+      }]} return
   set selid $xth(me,cmds,selid)
   set selpid $xth(me,cmds,selpid)
   xth_me_cmds_select 0
@@ -3886,30 +3913,26 @@ proc xth_me_cmds_shift {} {
   for {set ii 0} {$ii <= $tcmd} {incr ii} {
     set id [lindex $xth(me,cmds,xlist) $ii]
     if {($hcmd == 0) && ($xth(me,cmds,$id,ct) == 4)} {
-	  set fcmd $ii
+      set fcmd $ii
     }
     if {($hcmd == 0) && ($id == $selid)} {
-	  set hcmd 1
-	  set ccmd $ii
+      set hcmd 1
+      set ccmd $ii
     }
     if {($hcmd == 1) && ($xth(me,cmds,$id,ct) == 5)} {
-	  set tcmd $ii
-	  set hcmd 2
+      set tcmd $ii
+      set hcmd 2
     }
   }
   if {$hcmd == 0} return
-  if {[catch {
-      set deltax [expr double($xth(ctrl,me,cmds,tx)) - double($xth(ctrl,me,cmds,fx))]
-      set deltay [expr double($xth(ctrl,me,cmds,ty)) - double($xth(ctrl,me,cmds,fy))]
-  }]} return
   if {($xth(me,cmds,$selid,ct) == 2) || ($xth(me,cmds,$selid,ct) == 3)} {
     set fcmd $ccmd
-    set tcmd $ccmd                    
+    set tcmd $ccmd
   }
   for {set ii $fcmd} {$ii <= $tcmd} {incr ii} {
     set id [lindex $xth(me,cmds,xlist) $ii]
     if {$xth(me,cmds,$id,ct) == 2} {
-      # shift point        
+      # shift point
       set xth(me,cmds,$id,x) [expr  $xth(me,cmds,$id,x) + $deltax ]
       set xth(me,cmds,$id,y) [expr  $xth(me,cmds,$id,y) + $deltay ]
       $xth(me,can) coords pt$id [xth_me_cmds_calc_point_coords $id]
@@ -3918,22 +3941,22 @@ proc xth_me_cmds_shift {} {
     }
     if {$xth(me,cmds,$id,ct) == 3} {
       foreach pId $xth(me,cmds,$id,xplist) {
-       if {$pId > 0} {
-	set xth(me,cmds,$id,$pId,x) [expr  $xth(me,cmds,$id,$pId,x) + $deltax ]
-	set xth(me,cmds,$id,$pId,y) [expr  $xth(me,cmds,$id,$pId,y) + $deltay ]
-	if {$xth(me,cmds,$id,$pId,idp)} {
-	  set xth(me,cmds,$id,$pId,xp) [expr  $xth(me,cmds,$id,$pId,xp) + $deltax ]
-	  set xth(me,cmds,$id,$pId,yp) [expr  $xth(me,cmds,$id,$pId,yp) + $deltay ]
-	}
-	if {$xth(me,cmds,$id,$pId,idn)} {
-	  set xth(me,cmds,$id,$pId,xn) [expr  $xth(me,cmds,$id,$pId,xn) + $deltax ]
-	  set xth(me,cmds,$id,$pId,yn) [expr  $xth(me,cmds,$id,$pId,yn) + $deltay ]
-	}
-       }
+        if {$pId > 0} {
+          set xth(me,cmds,$id,$pId,x) [expr  $xth(me,cmds,$id,$pId,x) + $deltax ]
+          set xth(me,cmds,$id,$pId,y) [expr  $xth(me,cmds,$id,$pId,y) + $deltay ]
+          if {$xth(me,cmds,$id,$pId,idp)} {
+            set xth(me,cmds,$id,$pId,xp) [expr  $xth(me,cmds,$id,$pId,xp) + $deltax ]
+            set xth(me,cmds,$id,$pId,yp) [expr  $xth(me,cmds,$id,$pId,yp) + $deltay ]
+          }
+          if {$xth(me,cmds,$id,$pId,idn)} {
+            set xth(me,cmds,$id,$pId,xn) [expr  $xth(me,cmds,$id,$pId,xn) + $deltax ]
+            set xth(me,cmds,$id,$pId,yn) [expr  $xth(me,cmds,$id,$pId,yn) + $deltay ]
+          }
+        }
       }
       xth_me_cmds_update_line_data $id
       xth_me_cmds_move_line $id
-      xth_me_cmds_update_list $id                        
+      xth_me_cmds_update_list $id
     }
   }
   xth_me_cmds_select [list $selid $selpid]
