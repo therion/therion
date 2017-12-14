@@ -296,7 +296,7 @@ void thlookup::color_scrap(thscrap * s) {
         }
         if (tli->m_ref == NULL) continue;
         // if map contains scrap - set color and break
-        thprintf("%s", s->name);
+        // thprintf("%s", s->name);
         if (scrap_in_map(s, (thmap *) tli->m_ref)) {
           clr = tli->m_color;
           break;
@@ -547,7 +547,10 @@ void thlookup::auto_generate_items() {
       this->m_autoStat.get_min_max_alt(from, to);
       for(z = 0; z < 7; z++) {
         tr.m_valueDbl = from + double(z) * ((to - from) / 6);
-        this->m_table.push_back(tr);
+        if (this->m_type == TT_LAYOUT_CCRIT_ALTITUDE)
+            this->m_table.push_front(tr);
+        else
+        	this->m_table.push_back(tr);
       }
       break;
   }
@@ -604,7 +607,7 @@ void thlookup::postprocess() {
 
   // doplni farby, ak ich nemame na zaklade value, poctu
   thlookup_table_list::iterator lvalid = this->m_table.end(), nvalid = this->m_table.end();
-  double lvalidp(0.0), nvalidp(0.0), cp, ratio, cR, cG, cB;
+  double lvalidp(0.0), nvalidp(0.0), cp, totalp, ratio, cR, cG, cB;
   int cnt;
   cp = 0.0;
   for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
@@ -638,12 +641,19 @@ void thlookup::postprocess() {
             cnt++;
           }
         } else {
-          cp = (double) this->m_table.size() - 1.0;
+          totalp = (double) this->m_table.size() - 1.0;
+          if (this->m_ascending)
+        	  cp = totalp;
+          else
+        	  cp = 0;
           for(nvalid = this->m_table.begin(); nvalid != this->m_table.end(); nvalid++) {
-            thset_color(0, cp, double(this->m_table.size()) - 1.0, nvalid->m_color.R, nvalid->m_color.G, nvalid->m_color.B);
+            thset_color(0, cp, totalp, nvalid->m_color.R, nvalid->m_color.G, nvalid->m_color.B);
             nvalid->m_color.defined = 1;
             alpha_correction(tmp_alpha, nvalid->m_color.R, nvalid->m_color.G, nvalid->m_color.B)
-            cp -= 1.0;
+            if (this->m_ascending)
+            	cp -= 1.0;
+            else
+            	cp += 1.0;
           }
         }
         break;

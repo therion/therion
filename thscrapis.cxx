@@ -1158,56 +1158,56 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     //FILE * f = fopen("data.dat","w");
     double xx, yy; bool duplpts = false;
     oline = this->firstolseg;
-    while (oline != NULL) {    
-      olineln = oline;
-      while (olineln != NULL) {
-        xx = olineln->x;
-        yy = olineln->y;
-        while (ptmap.find(pt2d(xx, yy)) != ptmap.end()) {
-          xx = xx + 0.0001;
-          duplpts = true;
-        }
-        ptmap[pt2d(xx, yy)] = olineln;
-        //fprintf(f,"%.6f\t%.6f\n", xx, yy);
-        polyline.push_back(new p2t::Point(xx, yy));
-        olineln = olineln->next;
-        numpts++;
-      }
-      if (cdt == NULL) {
-        cdt = new p2t::CDT(polyline);
-        polyline.clear();
-      } else {
-        if (oline->outer) {
-          mult_outer = true;
-          break;
-        }
-        cdt->AddHole(polyline);
-        polyline.clear();
-      }
-      oline = oline->next_segment;
-    }
-    
-	//fclose(f);
 	std::vector<p2t::Triangle *> triangles;
-	try {
-		cdt->Triangulate();
+    try {
+    	while (oline != NULL) {
+    		olineln = oline;
+    		while (olineln != NULL) {
+    			xx = olineln->x;
+    			yy = olineln->y;
+    			while (ptmap.find(pt2d(xx, yy)) != ptmap.end()) {
+    				xx = xx + 0.0001;
+    				duplpts = true;
+    			}
+    			ptmap[pt2d(xx, yy)] = olineln;
+    			//fprintf(f,"%.6f\t%.6f\n", xx, yy);
+    			polyline.push_back(new p2t::Point(xx, yy));
+    			olineln = olineln->next;
+    			numpts++;
+    		}
+    		if (cdt == NULL) {
+    			cdt = new p2t::CDT(polyline);
+    			polyline.clear();
+    		} else {
+    			if (oline->outer) {
+    				mult_outer = true;
+    				break;
+    			}
+    			cdt->AddHole(polyline);
+    			polyline.clear();
+    		}
+    		oline = oline->next_segment;
+    	}
 
-		// set triangulation output
-		triangles = cdt->GetTriangles();
+    	//fclose(f);
+    	cdt->Triangulate();
 
-		this->tri_num = (long)triangles.size();
-	} catch (...) {
-        const char * errscrap = this->m_scrap->name;
-        const char * errdot = "";
-        const char * errsurv = "";
-        if (strlen(this->m_scrap->fsptr->full_name) > 0) {
-          errdot = "@";
-          errsurv = this->m_scrap->fsptr->full_name;
-        }
-        thwarning(("%s%s%s -- scrap 3D reconstruction failed", errscrap, errdot, errsurv));
-        thtext_inline = false;
-		this->tri_num = 0;
-	}
+    	// set triangulation output
+    	triangles = cdt->GetTriangles();
+
+    	this->tri_num = (long)triangles.size();
+    } catch (...) {
+    	const char * errscrap = this->m_scrap->name;
+    	const char * errdot = "";
+    	const char * errsurv = "";
+    	if (strlen(this->m_scrap->fsptr->full_name) > 0) {
+    		errdot = "@";
+    		errsurv = this->m_scrap->fsptr->full_name;
+    	}
+    	thwarning(("%s%s%s -- scrap 3D reconstruction failed", errscrap, errdot, errsurv));
+    	thtext_inline = false;
+    	this->tri_num = 0;
+    }
     long trix, newnum;
     if (this->tri_num > 0) {
       this->tri_triangles = new pthscrapisolpt[this->tri_num][3];
