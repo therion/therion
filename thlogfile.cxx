@@ -30,6 +30,8 @@
 #include "therion.h"
 #include <string.h>
 
+const char * logfilemode = "w";
+
 thlogfile::thlogfile()
 {
   this->file_name = "therion.log";
@@ -50,7 +52,7 @@ void thlogfile::open_file()
 
   bool should_warn = false;
   if ((!this->is_open) && (!this->is_warned)) {
-    this->fileh = fopen(this->get_file_name(),"w");
+    this->fileh = fopen(this->get_file_name(), logfilemode);
     if (this->fileh == NULL) {
       if (!this->is_warned) {
         should_warn = true;
@@ -58,6 +60,7 @@ void thlogfile::open_file()
       }
     }
     else {
+      logfilemode = "a";
       this->is_open = true;
       this->is_warned = false;
     }

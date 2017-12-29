@@ -590,6 +590,10 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(1,SYMP_REMARK)
     group(2,SYMP_DATE)
     group(3,SYML_LABEL)
+    group(4,SYMP_STATIONNAME)
+    group(5,SYMP_CONTINUATION)
+    group(6,SYMP_FLAG_CONTINUATION)
+    group(7,SYMP_WALLALTITUDE)
     egroup
 
 
@@ -618,7 +622,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(11,SYMP_HANDRAIL);
     group(12,SYML_FIXEDLADDER);
     group(13,SYML_ROPELADDER);
-		group(14,SYMP_VIAFERRATA);
+    group(14,SYMP_VIAFERRATA);
     group(15,SYML_VIAFERRATA);
     group(16,SYML_STEPS);
     egroup
