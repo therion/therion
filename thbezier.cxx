@@ -49,6 +49,7 @@
 #include <cassert>
 #include <cstring>
 #include <cstdio>
+#include <cmath>
 
 #define __SP_BEZIER_UTILS_C__
 

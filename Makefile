@@ -84,8 +84,8 @@ THXTHMKCMD = ./therion
 ##CC = cc
 ##LOCHEXE = loch/loch
 ##POBJECTS = extern/getopt.o extern/getopt1.o extern/getline.o
-##CXXPFLAGS = -DTHMACOSX
-##CCPFLAGS = -DTHMACOSX
+##CXXPFLAGS = -DTHMACOSX -std=c++11
+##CCPFLAGS = -DTHMACOSX -std=c++11
 ##LDPFLAGS =
 ##export THPLATFORM = MACOSX
 ##THXTHMKCMD = ./therion
