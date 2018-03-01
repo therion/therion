@@ -2752,6 +2752,7 @@ zh_CN: 海拔
 
 therion: title color-legend-depth
 en: Depth
+pt: Profundidade
 
 therion: title color-legend-map
 bg: Карти
@@ -2772,18 +2773,23 @@ zh_CN: 地图
 
 therion: title color-legend-scrap
 en: Scraps
+pt: Croquis
 
 therion: title color-legend-survey
 en: Surveys
+pt: Topos
 
 therion: title color-legend-explodate
 en: Exploration date
+pt: Data da exploração
 
 therion: title color-legend-topodate
 en: Surveying date
+pt: Data da topo
 
 therion: title color-legend-default
 en: Color legend
+pt: Cores
 
 therion: units ft
 bg: футове
