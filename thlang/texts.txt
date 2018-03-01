@@ -2819,7 +2819,7 @@ fr: Longueur
 it: Sviluppo
 mi: Roa a ana
 pl: długość
-pt: Extensão
+pt: Desenv. linear
 ru: Длина
 sk: Dĺžka
 sq: gjatesia
@@ -2853,7 +2853,7 @@ fr: Profondeur
 it: Profondità
 mi: Hōhonu a ana, Rētōtanga
 pl: przewyższenie
-pt: Profundidade
+pt: Desnível
 ru: Глубина
 sk: Prevýšenie
 sq: thellesia
