@@ -385,6 +385,7 @@ el: MRR
 en: MRR
 es: tasa de descenso
 it: MRR
+pt: Taxa de redução
 ru: MRR
 sk: Rýchlosť odburávania
 sq: MRR

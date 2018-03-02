@@ -2819,7 +2819,7 @@ fr: Longueur
 it: Sviluppo
 mi: Roa a ana
 pl: długość
-pt: Desenv. linear
+pt: Extensão total visadas
 ru: Длина
 sk: Dĺžka
 sq: gjatesia
