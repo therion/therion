@@ -385,6 +385,7 @@ el: MRR
 en: MRR
 es: tasa de descenso
 it: MRR
+pt: Taxa de redução
 ru: MRR
 sk: Rýchlosť odburávania
 sq: MRR
@@ -1374,28 +1375,40 @@ sq: zgjedhe destinacionin per deponi dhe poziciono ne te.
 zh_CN: 在其中选择目标草图和位置
 
 therion: Shift from
+pt: Deslocar de
 
 therion: Set start point of object shifting vector. Either selected point or place of last right-click.
+pt: Defina ponto inicial do vetor de deslocamento do objeto. Selecione ou um ponto ou o local do último clique com o botão direito do mouse.
 
 therion: Shift to
+pt: Deslocar para
 
 therion: Set end point of object shifting vector. Either selected point or place of last right-click.
+pt: Defina ponto final do vetor de deslocamento do objeto. Selecione ou um ponto ou o local do último clique com o botão direito do mouse.
 
 therion: X coordinate of start point of object shifting vector.
+pt: Coordenada X do ponto inicial do vetor de deslocamento do objeto.
 
 therion: Y coordinate of start point of object shifting vector.
+pt: Coordenada Y do ponto inicial do vetor de deslocamento do objeto.
 
 therion: X coordinate of end point of object shifting vector.
+pt: Coordenada X do ponto final do vetor de deslocamento do objeto.
 
 therion: Y coordinate of end point of object shifting vector.
+pt: Coordenada Y do ponto final do vetor de deslocamento do objeto.
 
 therion: Swap
+pt: Inverter
 
 therion: Swap points of object shifting vector.
+pt: Inverter pontos do vetor de deslocamento do objeto.
 
 therion: Shift object
+pt: Deslocar objeto
 
 therion: Shift currently selected point, line or scrap according to specified vector.
+pt: Deslocar ponto, linha ou croqui selecionado de acordo com o vetor definido.
 
 therion: Update text
 bg: Обнови текста
@@ -4520,6 +4533,7 @@ sq: arkivi I ri *.th2 duhet te ruhet para se te futet imazhi I prapavise.Te ruhe
 zh_CN: 插入底图前，须存储新的*.th2文件。要存储吗？
 
 therion: Unable to load image file.\n(Progressive JPEG encoding?)
+pt: Erro ao ler arquivo de imagem.\n(JPEG com codificação progressiva?)
 
 therion: inserting image
 bg: вмъкване на изображение
@@ -4804,6 +4818,7 @@ ru: Продолжить трассировку
 sk: Pokračovať digitalizácii
 
 therion: shift object
+pt: deslocar objeto
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
