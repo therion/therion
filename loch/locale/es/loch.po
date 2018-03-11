@@ -1,0 +1,856 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Loch\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2017-04-20 21:25+0200\n"
+"Language-Team: Evaristo Quiroga\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Generator: Poedit 1.8.11\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:53
+#: lxAboutDlg.cxx:54
+msgid "About Loch"
+msgstr "Acerca de Loch"
+
+# C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:76
+#: lxAboutDlg.cxx:77
+msgid "3D visualization tool for caves"
+msgstr "Herramienta de visualización 3D de cavidades"
+
+# C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:78
+#: lxAboutDlg.cxx:79
+msgid "Version: "
+msgstr "Versión: "
+
+#: lxData.cxx:84
+msgid "No file open"
+msgstr "Ningún archivo abierto"
+
+# c:/cave/loch/loch/lxGLCs.cxx:381
+#: lxGLCs.cxx:412
+#, c-format
+msgid "Rendering at %.1f fps."
+msgstr "Representación a %.1f fps."
+
+# c:/cave/loch/loch/lxGLCx.cxx:542
+#: lxGLCx.cxx:605
+#, c-format
+msgid "%03d°"
+msgstr "%03d°"
+
+# c:/cave/loch/loch/lxGLCx.cxx:633
+#: lxGLCx.cxx:696
+#, c-format
+msgid "%+03d°"
+msgstr "%+03d°"
+
+# c:/cave/loch/loch/lxSScene.cxx:222
+# c:/cave/loch/loch/lxSScene.cxx:324
+#: lxGLCx.cxx:736 lxSScene.cxx:273
+msgid "Altitude"
+msgstr "Altitud"
+
+# c:/cave/loch/loch/lxGUI.cxx:94
+#: lxGUI.cxx:155
+msgid "noname"
+msgstr "Sin nombre"
+
+# c:/cave/loch/loch/lxGUI.cxx:98
+# c:/cave/loch/loch/lxGUI.cxx:354
+#: lxGUI.cxx:206 lxGUI.cxx:575
+msgid "Open"
+msgstr "Abrir"
+
+# c:/cave/loch/loch/lxGUI.cxx:98
+#: lxGUI.cxx:206
+msgid "Open file"
+msgstr "Abrir archivo"
+
+# c:/cave/loch/loch/lxGUI.cxx:99
+#: lxGUI.cxx:207
+msgid "Reload"
+msgstr "Recargar"
+
+# c:/cave/loch/loch/lxGUI.cxx:99
+#: lxGUI.cxx:207
+msgid "Reload file"
+msgstr "Recarga archivo"
+
+# c:/cave/loch/loch/lxGUI.cxx:100
+#: lxGUI.cxx:209
+msgid "Render"
+msgstr "Representar"
+
+# c:/cave/loch/loch/lxGUI.cxx:100
+#: lxGUI.cxx:209
+msgid "Render to file"
+msgstr "Representar en archivo"
+
+# c:/cave/loch/loch/lxPrint.cxx:291
+# c:/cave/loch/loch/lxRender.cxx:237
+#: lxGUI.cxx:210 lxRender.cxx:236
+msgid "Configurar Representación"
+msgstr "OpRenderingeinstellungen"
+
+# c:/cave/loch/loch/lxGUI.cxx:102
+# c:/cave/loch/loch/lxGUI.cxx:152
+# c:/cave/loch/loch/lxSView.cxx:257
+#: lxGUI.cxx:212 lxGUI.cxx:275 lxGUI.cxx:283 lxSView.cxx:262
+msgid "Rotation"
+msgstr "Rotación"
+
+# c:/cave/loch/loch/lxGUI.cxx:103
+# c:/cave/loch/loch/lxGUI.cxx:153
+# c:/cave/loch/loch/lxSView.cxx:400
+# c:/cave/loch/loch/lxSView.cxx:526
+#: lxGUI.cxx:213 lxGUI.cxx:276 lxGUI.cxx:284 lxSView.cxx:405 lxSView.cxx:532
+msgid "Lock rotation"
+msgstr "Bloquear rotación"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:217
+#: lxGUI.cxx:214
+msgid "Ortho"
+msgstr "Orto"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:217
+# C:/Projects/MSVCProjects/loch/lxSView.cxx:380
+#: lxGUI.cxx:214 lxSView.cxx:380
+msgid "Orthogonal view"
+msgstr "Vista ortogonal"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:218
+#: lxGUI.cxx:215
+msgid "Stereo"
+msgstr "Estereo"
+
+# c:/cave/loch/loch/lxGUI.cxx:107
+# c:/cave/loch/loch/lxSView.cxx:258
+#: lxGUI.cxx:215 lxSView.cxx:263
+msgid "Stereo mode"
+msgstr "Modo estereo"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:220
+#: lxGUI.cxx:217
+msgid "Plan"
+msgstr "Planta"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:220
+#: lxGUI.cxx:217
+msgid "Plan view"
+msgstr "Vista Planta"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:221
+#: lxGUI.cxx:218
+msgid "Profile"
+msgstr "Alzado"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:221
+#: lxGUI.cxx:218
+msgid "Vista Alzado"
+msgstr "Profilansicht"
+
+# c:/cave/loch/loch/lxGUI.cxx:104
+#: lxGUI.cxx:219
+msgid "Fit zoom"
+msgstr "Ajustar Zoom"
+
+# c:/cave/loch/loch/lxGUI.cxx:104
+#: lxGUI.cxx:219
+msgid "Zoom to fit"
+msgstr "Zoom extensión"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:223
+#: lxGUI.cxx:220
+msgid "Reset"
+msgstr "Reiniciar"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:223
+#: lxGUI.cxx:220
+msgid "Reset viewpoint"
+msgstr "Reiniciar punto de vista"
+
+# c:/cave/loch/loch/lxSScene.cxx:169
+# c:/cave/loch/loch/lxSScene.cxx:200
+# c:/cave/loch/loch/lxSScene.cxx:231
+# c:/cave/loch/loch/lxSScene.cxx:362
+#: lxGUI.cxx:222 lxSScene.cxx:218 lxSScene.cxx:249 lxSScene.cxx:286
+msgid "Centerline"
+msgstr "Poligonal"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:225
+#: lxGUI.cxx:222
+msgid "Show centerline"
+msgstr "Mostrar poligonal"
+
+# c:/cave/loch/loch/lxSScene.cxx:170
+# c:/cave/loch/loch/lxSScene.cxx:201
+# c:/cave/loch/loch/lxSScene.cxx:232
+# c:/cave/loch/loch/lxSScene.cxx:363
+#: lxGUI.cxx:223 lxSScene.cxx:219 lxSScene.cxx:250 lxSScene.cxx:287
+msgid "Walls"
+msgstr "Paredes"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:226
+#: lxGUI.cxx:223
+msgid "Show walls"
+msgstr "Mostrar paredes"
+
+# c:/cave/loch/loch/lxSScene.cxx:171
+# c:/cave/loch/loch/lxSScene.cxx:202
+# c:/cave/loch/loch/lxSScene.cxx:233
+# c:/cave/loch/loch/lxSScene.cxx:245
+# c:/cave/loch/loch/lxSScene.cxx:364
+#: lxGUI.cxx:224 lxSScene.cxx:220 lxSScene.cxx:251 lxSScene.cxx:300
+msgid "Surface"
+msgstr "Superficie"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:227
+#: lxGUI.cxx:224
+msgid "Show surface"
+msgstr "Mostrar superficie"
+
+# c:/cave/loch/loch/lxSScene.cxx:204
+# c:/cave/loch/loch/lxSScene.cxx:365
+#: lxGUI.cxx:225 lxSScene.cxx:253
+msgid "Bounding box"
+msgstr "Caja delimitadora"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:228
+#: lxGUI.cxx:225
+msgid "Show bounding box"
+msgstr "Mostrar caja delimitadora"
+
+# c:/cave/loch/loch/lxSScene.cxx:174
+#: lxGUI.cxx:226 lxSScene.cxx:223 lxSScene.cxx:255
+msgid "Indicators"
+msgstr "Indicadores"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:229
+#: lxGUI.cxx:226
+msgid "Mostrar indicadores"
+msgstr "Richtungsanzeiger anzeigen"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:231
+#: lxGUI.cxx:228
+msgid "Camera setup"
+msgstr "Configuración Camara"
+
+# c:/cave/loch/loch/lxGUI.cxx:110
+#: lxGUI.cxx:229
+msgid "Scene setup"
+msgstr "Configuración Escena"
+
+# c:/cave/loch/loch/lxGUI.cxx:112
+#: lxGUI.cxx:231
+msgid "Full screen"
+msgstr "Pantalla completa"
+
+# c:/cave/loch/loch/lxGUI.cxx:117
+#: lxGUI.cxx:236
+msgid "&Open...\tCtrl+O"
+msgstr "&Abrir...\tCtrl+O"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:240
+#: lxGUI.cxx:237
+msgid "&Reload\tCtrl+R"
+msgstr "&Recargar\tCtrol+R"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:242
+#: lxGUI.cxx:239
+msgid "&Render to file\tCtrl+P"
+msgstr "&Representar en archvo\tCtrl+P"
+
+# c:/cave/loch/loch/lxGUI.cxx:121
+#: lxGUI.cxx:240
+msgid "Rendering &setup..."
+msgstr "Configuración &representación"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:245
+#: lxGUI.cxx:242
+msgid "E&xit\tCtrl+Q"
+msgstr "S&alir\tCtrl+Q"
+
+# c:/cave/loch/loch/lxGUI.cxx:126
+#: lxGUI.cxx:247
+msgid "Rotate left\tRight"
+msgstr "Rotar izquierda\tDerecha"
+
+# c:/cave/loch/loch/lxGUI.cxx:127
+#: lxGUI.cxx:248
+msgid "Rotate right\tLeft"
+msgstr "Rotar derecha\tIzquierda"
+
+# c:/cave/loch/loch/lxGUI.cxx:129
+#: lxGUI.cxx:250
+msgid "Upper viewpoint\tDown"
+msgstr "Punto de Vista Superior\tInferior"
+
+# c:/cave/loch/loch/lxGUI.cxx:130
+#: lxGUI.cxx:251
+msgid "Lower viewpoint\tUp"
+msgstr "Punto de vista Inferior\tSuperior"
+
+# c:/cave/loch/loch/lxGUI.cxx:132
+#: lxGUI.cxx:253
+msgid "Move up\tShift+Down"
+msgstr "Mover arriba\tShift+Abajo"
+
+# c:/cave/loch/loch/lxGUI.cxx:133
+#: lxGUI.cxx:254
+msgid "Move down\tShift+Up"
+msgstr "Mover abajo\tShift+Arriba"
+
+# c:/cave/loch/loch/lxGUI.cxx:134
+#: lxGUI.cxx:255
+msgid "Move left\tShift+Right"
+msgstr "Mover izquierda\tShift+Derecha"
+
+# c:/cave/loch/loch/lxGUI.cxx:135
+#: lxGUI.cxx:256
+msgid "Move right\tShift+Left"
+msgstr "Mover derecha\tShift+Izquierda"
+
+# c:/cave/loch/loch/lxGUI.cxx:137
+#: lxGUI.cxx:258
+msgid "Zoom in\tCtrl+Up"
+msgstr "Zoom  +\tCtrl+Arriba"
+
+# c:/cave/loch/loch/lxGUI.cxx:138
+#: lxGUI.cxx:259
+msgid "Zoom out\tCtrl+Down"
+msgstr "Zoom -\tCtrl+Abajo"
+
+# c:/cave/loch/loch/lxGUI.cxx:139
+#: lxGUI.cxx:260
+msgid "Zoom to fit\tSpace"
+msgstr "Zoom extensión\tEspacio"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:266
+#: lxGUI.cxx:263
+msgid "&Plan"
+msgstr "&Planta"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:267
+#: lxGUI.cxx:264
+msgid "Pro&file"
+msgstr "&Alzado"
+
+# c:/cave/loch/loch/lxGUI.cxx:144
+#: lxGUI.cxx:266
+msgid "&North"
+msgstr "&Norte"
+
+# c:/cave/loch/loch/lxGUI.cxx:145
+#: lxGUI.cxx:267
+msgid "&West"
+msgstr "&Oeste"
+
+# c:/cave/loch/loch/lxGUI.cxx:146
+#: lxGUI.cxx:268
+msgid "&East"
+msgstr "&Este"
+
+# c:/cave/loch/loch/lxGUI.cxx:147
+#: lxGUI.cxx:269
+msgid "&South"
+msgstr "&Sud"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:274
+#: lxGUI.cxx:271
+msgid "&Reset"
+msgstr "&Reiniciar"
+
+# c:/cave/loch/loch/lxSView.cxx:256
+#: lxGUI.cxx:278
+msgid "Camera"
+msgstr "Camara"
+
+# c:/cave/loch/loch/lxGUI.cxx:161
+#: lxGUI.cxx:279
+msgid "Scene"
+msgstr "Escena"
+
+# c:/cave/loch/loch/lxGUI.cxx:151
+#: lxGUI.cxx:282
+msgid "Action"
+msgstr "Acción"
+
+# c:/cave/loch/loch/lxSView.cxx:254
+#: lxGUI.cxx:285 lxSView.cxx:259
+msgid "Orientation"
+msgstr "Orientación"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:289
+#: lxGUI.cxx:286
+msgid "Orthogonal"
+msgstr "Ortogonal"
+
+# c:/cave/loch/loch/lxGUI.cxx:157
+#: lxGUI.cxx:288
+msgid "Full screen\tF11"
+msgstr "Pantalla Completa\tF11"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:294
+#: lxGUI.cxx:291
+msgid "&Camera"
+msgstr "&Camara"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:295
+#: lxGUI.cxx:292
+msgid "&Scene"
+msgstr "&Escena"
+
+# c:/cave/loch/loch/lxGUI.cxx:117
+#: lxGUI.cxx:294
+msgid "&Options..."
+msgstr "&Opciones..."
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:300
+#: lxGUI.cxx:297
+msgid "&Contents...\tF1"
+msgstr "&Contenidos...\tF1"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:301
+#: lxGUI.cxx:298
+msgid "&Control"
+msgstr "%Controles"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:302
+#: lxGUI.cxx:299
+msgid "&Rendering"
+msgstr "&Visualización"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:303
+#: lxGUI.cxx:300
+msgid "&Bugs"
+msgstr "&Errores"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:305
+#: lxGUI.cxx:302
+msgid "&About..."
+msgstr "&Acerca..."
+
+# c:/cave/loch/loch/lxGUI.cxx:165
+#: lxGUI.cxx:305
+msgid "&File"
+msgstr "&Archivo"
+
+# c:/cave/loch/loch/lxGUI.cxx:166
+#: lxGUI.cxx:306
+msgid "&View"
+msgstr "&Vista"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:310
+#: lxGUI.cxx:307
+msgid "&Tools"
+msgstr "&Herramientas"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:311
+#: lxGUI.cxx:308
+msgid "&Help"
+msgstr "&Ayuda"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:581
+#: lxGUI.cxx:578
+msgid ""
+"All supported files (*.lox;*.plt;*.3d)|*.lox;*.plt;*.3d|Loch files (*.lox)|*."
+"lox|Compass PLT files (*.plt)|*.plt|Survex 3D files (*.3d)|*.3d"
+msgstr ""
+"Tosos los archivos admitidos (*.lox;*.plt;*.3d)|*.lox;*.plt;*.3d|Loch "
+"Archivos (*.lox)|*.lox| Archivo Compass PLT (*.plt)|*.plt| Archivo Survex 3D "
+"(*.3d)|*.3d"
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:870
+#: lxGUI.cxx:867
+msgid "Building 3D model, please wait..."
+msgstr "Construyendo modelo 3D, esperar por favor..."
+
+# C:/Projects/MSVCProjects/loch/lxGUI.cxx:899
+#: lxGUI.cxx:896
+msgid "Error reading input file"
+msgstr "Error leyendo el archivo de entrada"
+
+# c:/cave/loch/loch/lxData.cxx:360
+# c:/cave/loch/loch/lxPrint.cxx:466
+# c:/cave/loch/loch/lxPrint.cxx:995
+# c:/cave/loch/loch/lxRender.cxx:655
+#: lxGUI.cxx:896 lxRender.cxx:664
+msgid "Error"
+msgstr "Error"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:43
+#: lxOptDlg.cxx:43
+msgid "Options"
+msgstr "Opciones"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:50
+#: lxOptDlg.cxx:50
+msgid "General options"
+msgstr "Opciones Generales"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:54
+#: lxOptDlg.cxx:54
+msgid "Default data files directory"
+msgstr "Directorio por defecto de los archivos de datos"
+
+# c:/cave/loch/loch/lxPrint.cxx:349
+#: lxOptDlg.cxx:60
+msgid "Browse..."
+msgstr "Buscar..."
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:65
+#: lxOptDlg.cxx:64
+msgid "Default stereo colors"
+msgstr "Colores estereo por defecto"
+
+# c:/cave/loch/loch/lxSView.cxx:430
+#: lxOptDlg.cxx:68 lxSView.cxx:435
+msgid "red & cyan"
+msgstr "rojo & cian"
+
+# c:/cave/loch/loch/lxSView.cxx:431
+#: lxOptDlg.cxx:69 lxSView.cxx:436
+msgid "red & green"
+msgstr "rot & grün"
+
+# c:/cave/loch/loch/lxSView.cxx:432
+#: lxOptDlg.cxx:70 lxSView.cxx:437
+msgid "red & blue"
+msgstr "rojo & azul"
+
+# c:/cave/loch/loch/lxSView.cxx:433
+#: lxOptDlg.cxx:71 lxSView.cxx:438
+msgid "yellow & blue"
+msgstr "amarillo & azul"
+
+# c:/cave/loch/loch/lxSView.cxx:434
+#: lxOptDlg.cxx:72 lxSView.cxx:439
+msgid "cyan & red"
+msgstr "cian & rojo"
+
+# c:/cave/loch/loch/lxSView.cxx:435
+#: lxOptDlg.cxx:73 lxSView.cxx:440
+msgid "green & red"
+msgstr "verde & rojo"
+
+# c:/cave/loch/loch/lxSView.cxx:436
+#: lxOptDlg.cxx:74 lxSView.cxx:441
+msgid "blue & red"
+msgstr "azul & rojo"
+
+# c:/cave/loch/loch/lxSView.cxx:437
+#: lxOptDlg.cxx:75 lxSView.cxx:442
+msgid "blue & yellow"
+msgstr "azul & amarillo"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:77
+#: lxOptDlg.cxx:76
+msgid "remember last used channels"
+msgstr "Recordar el ultimo canal usado"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:85
+#: lxOptDlg.cxx:84
+msgid "Walls extrapolation"
+msgstr "Extrapolación de las paredes"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:89
+#: lxOptDlg.cxx:88
+msgid "Do not extrapolate walls"
+msgstr "No extrapolar las paredes"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:92
+#: lxOptDlg.cxx:91
+msgid "Extrapolate only files without walls information"
+msgstr "Extrapolar solo archivos sin información de paredes"
+
+# C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:95
+#: lxOptDlg.cxx:94
+msgid "Extrapolate all missing walls information"
+msgstr "Extrapolar toda la información de paredes ausentes"
+
+# c:/cave/loch/loch/lxPrint.cxx:387
+# c:/cave/loch/loch/lxRender.cxx:322
+#: lxOptDlg.cxx:102 lxRender.cxx:321
+msgid "OK"
+msgstr "OK"
+
+# c:/cave/loch/loch/lxPrint.cxx:388
+# c:/cave/loch/loch/lxPrint.cxx:775
+# c:/cave/loch/loch/lxRender.cxx:323
+#: lxOptDlg.cxx:103 lxRender.cxx:322
+msgid "Cancel"
+msgstr "Cancelar"
+
+# c:/cave/loch/loch/lxRender.cxx:247
+#: lxRender.cxx:246
+msgid "Size and scaling"
+msgstr "Tamaño y escalado"
+
+# c:/cave/loch/loch/lxRender.cxx:251
+#: lxRender.cxx:250
+msgid "Screen shot"
+msgstr "Captura de pantalla"
+
+# c:/cave/loch/loch/lxRender.cxx:257
+#: lxRender.cxx:256
+msgid "Image width"
+msgstr "Anchura de imagen"
+
+# c:/cave/loch/loch/lxRender.cxx:260
+# c:/cave/loch/loch/lxRender.cxx:271
+#: lxRender.cxx:259 lxRender.cxx:270
+msgid "(mm)"
+msgstr "(mm)"
+
+# c:/cave/loch/loch/lxRender.cxx:268
+#: lxRender.cxx:267
+msgid "Image height"
+msgstr "Altura de imagen"
+
+# c:/cave/loch/loch/lxRender.cxx:279
+#: lxRender.cxx:278
+msgid "Scale"
+msgstr "Escala"
+
+# c:/cave/loch/loch/lxRender.cxx:282
+#: lxRender.cxx:281
+msgid "1 :"
+msgstr "1 :"
+
+# c:/cave/loch/loch/lxRender.cxx:293
+#: lxRender.cxx:292
+msgid "Image options"
+msgstr "Opciones de imagen"
+
+# c:/cave/loch/loch/lxPrint.cxx:302
+# c:/cave/loch/loch/lxRender.cxx:297
+#: lxRender.cxx:296
+msgid "Rendering resolution (dpi)"
+msgstr "Resolución de visualización (dpi)"
+
+# c:/cave/loch/loch/lxRender.cxx:307
+#: lxRender.cxx:306
+msgid "Image size:"
+msgstr "Tamaño de imagen:"
+
+# c:/cave/loch/loch/lxRender.cxx:310
+#: lxRender.cxx:309
+msgid "00 x 00 (00.0 MB)"
+msgstr "00 x 00 (00.0 MB)"
+
+# c:/cave/loch/loch/lxPrint.cxx:295
+# c:/cave/loch/loch/lxRender.cxx:315
+#: lxRender.cxx:314
+msgid "White background"
+msgstr "Fondo blanco"
+
+# c:/cave/loch/loch/lxRender.cxx:437
+#: lxRender.cxx:436
+msgid "Save rendering as"
+msgstr "Guardar visualización como"
+
+# c:/cave/loch/loch/lxPrint.cxx:183
+# c:/cave/loch/loch/lxRender.cxx:439
+#: lxRender.cxx:438
+msgid "PPM files (*.ppm)|*.ppm"
+msgstr "Archivos PPM (*.ppm)|*.ppm"
+
+# c:/cave/loch/loch/lxRender.cxx:441
+#: lxRender.cxx:440
+msgid "PDF files (*.pdf)|*.pdf |PNG files (*.png)|*.png|BMP files (*.bmp)|*.bmp"
+msgstr ""
+"Archivos PDF (*.pdf)|*.pdf|Archivos PNG (*.png)|*.png|Archivos BMP (*.bmp)|*.bmp"
+
+# c:/cave/loch/loch/lxPrint.cxx:627
+# c:/cave/loch/loch/lxPrint.cxx:647
+# c:/cave/loch/loch/lxPrint.cxx:872
+# c:/cave/loch/loch/lxPrint.cxx:892
+# c:/cave/loch/loch/lxRender.cxx:455
+#: lxRender.cxx:454
+msgid "Unable to open file for output."
+msgstr "Permitir abrir archivo para salida."
+
+# c:/cave/loch/loch/lxPrint.cxx:921
+# c:/cave/loch/loch/lxRender.cxx:493
+#: lxRender.cxx:492
+#, c-format
+msgid "Rendering (%d x %d, %.1f MB) ..."
+msgstr "Visualizando (%d x %d, %.1f MB) ..."
+
+# c:/cave/loch/loch/lxRender.cxx:494
+#: lxRender.cxx:493
+msgid "Rendering to bitmap"
+msgstr "Visualizar a bitmap"
+
+# c:/cave/loch/loch/lxSScene.cxx:147
+#: lxSScene.cxx:196
+msgid " Scene"
+msgstr " Escena"
+
+# c:/cave/loch/loch/lxSScene.cxx:167
+# c:/cave/loch/loch/lxSScene.cxx:335
+#: lxSScene.cxx:216
+msgid "Visibility"
+msgstr "Visibilidad"
+
+# c:/cave/loch/loch/lxSScene.cxx:168
+#: lxSScene.cxx:217 lxSScene.cxx:271
+msgid "Color mode"
+msgstr "Modo Color"
+
+# c:/cave/loch/loch/lxSScene.cxx:199
+#: lxSScene.cxx:248
+msgid "Scene items"
+msgstr "Detalles de escena"
+
+# c:/cave/loch/loch/lxSScene.cxx:224
+#: lxSScene.cxx:279
+msgid "Default"
+msgstr "Por defecto"
+
+# c:/cave/loch/loch/lxSScene.cxx:230
+#: lxSScene.cxx:285
+msgid "Applies to"
+msgstr "Aplicar a"
+
+# c:/cave/loch/loch/lxSScene.cxx:243
+#: lxSScene.cxx:298
+msgid "Centerline visibility"
+msgstr "Visibilidad de la poligonal"
+
+# c:/cave/loch/loch/lxSScene.cxx:244
+#: lxSScene.cxx:299
+msgid "Underground"
+msgstr "Subterráneo"
+
+# c:/cave/loch/loch/lxSScene.cxx:265
+# c:/cave/loch/loch/lxSScene.cxx:278
+#: lxSScene.cxx:317 lxSScene.cxx:330
+msgid "Transparency"
+msgstr "Transpariencia"
+
+# c:/cave/loch/loch/lxSScene.cxx:282
+#: lxSScene.cxx:334
+msgid "Texture"
+msgstr "Textura"
+
+# C:/Projects/MSVCProjects/loch/lxSScene.cxx:398
+#: lxSScene.cxx:392
+msgid "Project title"
+msgstr "Titulo del Proyecto"
+
+# c:/cave/loch/loch/lxSScene.cxx:389
+# c:/cave/loch/loch/lxSView.cxx:464
+#: lxSScene.cxx:424 lxSView.cxx:470
+msgid "Close"
+msgstr "Cerrar"
+
+# C:/Projects/MSVCProjects/loch/lxSView.cxx:228
+#: lxSView.cxx:228
+msgid " Camera"
+msgstr " Camara"
+
+# c:/cave/loch/loch/lxSView.cxx:255
+#: lxSView.cxx:260
+msgid "Center"
+msgstr "Centro"
+
+# C:/Projects/MSVCProjects/loch/lxSView.cxx:261
+#: lxSView.cxx:261
+msgid "Focus"
+msgstr "Foco"
+
+# c:/cave/loch/loch/lxSView.cxx:287
+#: lxSView.cxx:292
+msgid "Facing (deg)"
+msgstr "Orientación (Grados)"
+
+# c:/cave/loch/loch/lxSView.cxx:298
+#: lxSView.cxx:303
+msgid "Tilt (deg)"
+msgstr "Inclinación (Grados)"
+
+# c:/cave/loch/loch/lxSView.cxx:323
+#: lxSView.cxx:328
+msgid "Rotation center"
+msgstr "Centro de rotación"
+
+# c:/cave/loch/loch/lxSView.cxx:327
+#: lxSView.cxx:332
+msgid "Easting (m)"
+msgstr "Dirección Este (m)"
+
+# c:/cave/loch/loch/lxSView.cxx:335
+#: lxSView.cxx:340
+msgid "Northing (m)"
+msgstr "Dirección Norte (m)"
+
+# c:/cave/loch/loch/lxSView.cxx:343
+#: lxSView.cxx:348
+msgid "Altitude (m)"
+msgstr "Altitud (m)"
+
+# c:/cave/loch/loch/lxSView.cxx:364
+#: lxSView.cxx:369
+msgid "Distance (m)"
+msgstr "Distancia (m)"
+
+# c:/cave/loch/loch/lxSView.cxx:379
+#: lxSView.cxx:384
+msgid "Focus (mm)"
+msgstr "Foco (mm)"
+
+# c:/cave/loch/loch/lxSView.cxx:399
+#: lxSView.cxx:404
+msgid "Enable rotation"
+msgstr "Permitir rotación"
+
+# c:/cave/loch/loch/lxSView.cxx:401
+#: lxSView.cxx:406
+msgid "Rotation speed"
+msgstr "Velocidad de rotación"
+
+# c:/cave/loch/loch/lxSView.cxx:422
+#: lxSView.cxx:427
+msgid "Enable stereo mode"
+msgstr "Habilitar modo estereo"
+
+# c:/cave/loch/loch/lxSView.cxx:423
+#: lxSView.cxx:428
+msgid "Eye separation"
+msgstr "Separación de ojos"
+
+# C:/Projects/MSVCProjects/loch/lxSView.cxx:445
+#: lxSView.cxx:445
+msgid "Disable color textures"
+msgstr "Deshabilitar texturas de color"
+
+# c:/cave/loch/loch/lxSView.cxx:441
+#: lxSView.cxx:447
+msgid "Color channels"
+msgstr "Canales de color"
+
+# c:/cave/loch/loch/lxSView.cxx:524
+#: lxSView.cxx:530
+msgid "Lock rotation speed"
+msgstr "Bloquear la velocidad de rotación"
+
+# c:/cave/loch/loch/lxWX.cxx:200
+#: lxWX.cxx:200
+#, c-format
+msgid "%ld"
+msgstr "%ld"
+
+# c:/cave/loch/loch/lxWX.cxx:206
+#: lxWX.cxx:206
+#, c-format
+msgid "%.14e"
+msgstr "%.14e"
