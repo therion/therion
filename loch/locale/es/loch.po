@@ -82,7 +82,7 @@ msgstr "Recargar"
 # c:/cave/loch/loch/lxGUI.cxx:99
 #: lxGUI.cxx:207
 msgid "Reload file"
-msgstr "Recarga archivo"
+msgstr "Recargar archivo"
 
 # c:/cave/loch/loch/lxGUI.cxx:100
 #: lxGUI.cxx:209
@@ -97,8 +97,8 @@ msgstr "Representar en archivo"
 # c:/cave/loch/loch/lxPrint.cxx:291
 # c:/cave/loch/loch/lxRender.cxx:237
 #: lxGUI.cxx:210 lxRender.cxx:236
-msgid "Configurar Representación"
-msgstr "OpRenderingeinstellungen"
+msgid "Rendering setup"
+msgstr "Configurar Representación"
 
 # c:/cave/loch/loch/lxGUI.cxx:102
 # c:/cave/loch/loch/lxGUI.cxx:152
@@ -154,8 +154,8 @@ msgstr "Alzado"
 
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:221
 #: lxGUI.cxx:218
-msgid "Vista Alzado"
-msgstr "Profilansicht"
+msgid "Profile view"
+msgstr "Vista Alzado"
 
 # c:/cave/loch/loch/lxGUI.cxx:104
 #: lxGUI.cxx:219
@@ -261,7 +261,7 @@ msgstr "&Abrir...\tCtrl+O"
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:240
 #: lxGUI.cxx:237
 msgid "&Reload\tCtrl+R"
-msgstr "&Recargar\tCtrol+R"
+msgstr "&Recargar\tCtrl+R"
 
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:242
 #: lxGUI.cxx:239
@@ -464,8 +464,8 @@ msgid ""
 "All supported files (*.lox;*.plt;*.3d)|*.lox;*.plt;*.3d|Loch files (*.lox)|*."
 "lox|Compass PLT files (*.plt)|*.plt|Survex 3D files (*.3d)|*.3d"
 msgstr ""
-"Tosos los archivos admitidos (*.lox;*.plt;*.3d)|*.lox;*.plt;*.3d|Loch "
-"Archivos (*.lox)|*.lox| Archivo Compass PLT (*.plt)|*.plt| Archivo Survex 3D "
+"Todos los archivos admitidos (*.lox;*.plt;*.3d)|*.lox;*.plt;*.3d|Loch "
+"Archivos (*.lox)|*.lox| Archivos Compass PLT (*.plt)|*.plt| Archivos Survex 3D "
 "(*.3d)|*.3d"
 
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:870
@@ -514,42 +514,42 @@ msgstr "Colores estereo por defecto"
 # c:/cave/loch/loch/lxSView.cxx:430
 #: lxOptDlg.cxx:68 lxSView.cxx:435
 msgid "red & cyan"
-msgstr "rojo & cian"
+msgstr "rojo y cian"
 
 # c:/cave/loch/loch/lxSView.cxx:431
 #: lxOptDlg.cxx:69 lxSView.cxx:436
 msgid "red & green"
-msgstr "rot & grün"
+msgstr "rojo y verde"
 
 # c:/cave/loch/loch/lxSView.cxx:432
 #: lxOptDlg.cxx:70 lxSView.cxx:437
 msgid "red & blue"
-msgstr "rojo & azul"
+msgstr "rojo y azul"
 
 # c:/cave/loch/loch/lxSView.cxx:433
 #: lxOptDlg.cxx:71 lxSView.cxx:438
 msgid "yellow & blue"
-msgstr "amarillo & azul"
+msgstr "amarillo y azul"
 
 # c:/cave/loch/loch/lxSView.cxx:434
 #: lxOptDlg.cxx:72 lxSView.cxx:439
 msgid "cyan & red"
-msgstr "cian & rojo"
+msgstr "cian y rojo"
 
 # c:/cave/loch/loch/lxSView.cxx:435
 #: lxOptDlg.cxx:73 lxSView.cxx:440
 msgid "green & red"
-msgstr "verde & rojo"
+msgstr "verde y rojo"
 
 # c:/cave/loch/loch/lxSView.cxx:436
 #: lxOptDlg.cxx:74 lxSView.cxx:441
 msgid "blue & red"
-msgstr "azul & rojo"
+msgstr "azul y rojo"
 
 # c:/cave/loch/loch/lxSView.cxx:437
 #: lxOptDlg.cxx:75 lxSView.cxx:442
 msgid "blue & yellow"
-msgstr "azul & amarillo"
+msgstr "azul y amarillo"
 
 # C:/Projects/MSVCProjects/loch/lxOptDlg.cxx:77
 #: lxOptDlg.cxx:76
@@ -666,8 +666,7 @@ msgstr "Archivos PPM (*.ppm)|*.ppm"
 # c:/cave/loch/loch/lxRender.cxx:441
 #: lxRender.cxx:440
 msgid "PDF files (*.pdf)|*.pdf |PNG files (*.png)|*.png|BMP files (*.bmp)|*.bmp"
-msgstr ""
-"Archivos PDF (*.pdf)|*.pdf|Archivos PNG (*.png)|*.png|Archivos BMP (*.bmp)|*.bmp"
+msgstr "Archivos PDF (*.pdf)|*.pdf|Archivos PNG (*.png)|*.png|Archivos BMP (*.bmp)|*.bmp"
 
 # c:/cave/loch/loch/lxPrint.cxx:627
 # c:/cave/loch/loch/lxPrint.cxx:647
@@ -729,13 +728,13 @@ msgstr "Visibilidad de la poligonal"
 # c:/cave/loch/loch/lxSScene.cxx:244
 #: lxSScene.cxx:299
 msgid "Underground"
-msgstr "Subterráneo"
+msgstr "Subterránea"
 
 # c:/cave/loch/loch/lxSScene.cxx:265
 # c:/cave/loch/loch/lxSScene.cxx:278
 #: lxSScene.cxx:317 lxSScene.cxx:330
 msgid "Transparency"
-msgstr "Transpariencia"
+msgstr "Transparencia"
 
 # c:/cave/loch/loch/lxSScene.cxx:282
 #: lxSScene.cxx:334

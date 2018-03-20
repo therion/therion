@@ -244,12 +244,12 @@ sk: skalný oblúk
 
 therion: point flag:overhang
 bg: надвес
-ca: extraplom 
+ca: desplom 
 cz: převis
 de: Überhang
 el: προέκταση οροφής
 en: overhang
-es: desplom 
+es: extraplomo 
 fr: surplomb
 it: sporgenza
 mi: tauwharenga
@@ -583,7 +583,7 @@ ca: paret de mondmilch
 cz: stěna tvořená měkkým sintrem
 de: Wand aus Bergmilch
 en: moonmilk wall
-es: pared de moonmilk
+es: pared de mondmilch
 it: moonmilk
 mi: tāra a mirika marama
 pl: ściana z miękkich nacieków
@@ -599,7 +599,7 @@ cz: nadmořská výška bodu na stěně
 de: Höhe über Koordinatenursprung
 el: ύψος τοίχου
 en: altitude
-es: altura pared
+es: altitud pared
 fr: altitude
 it: altezza
 mi: teitei, tiketike
@@ -617,7 +617,7 @@ cz: nadmořská výška bodu v chodbě
 de: Höhe über Koordinatenursprung
 el: ύψος
 en: altitude
-es: altitud (altura?)
+es: altitud
 fr: altitude
 it: quota
 mi: teitei, tiketike
@@ -1250,7 +1250,7 @@ cz: kameny
 de: Umriss eines Felsens
 el: περίγραμμα βράχου
 en: rock border
-es: contorno bloque
+es: bloque (contorno)
 fr: bord d’un rocher
 it: bordo masso
 mi: rohe kōhatu
@@ -1268,7 +1268,7 @@ cz: hrany kamenů
 de: Struktur eines Felsens
 el: άκρη βράχου
 en: rock edges
-es: arista bloque
+es: bloque (arista)
 fr: arête d’un rocher
 it: spigolo masso
 mi: mata kohatu
@@ -2739,6 +2739,7 @@ bg: виа-ферата
 ca: via-ferrata
 de: Klettersteig
 en: via-ferrata
+es: via-ferrata
 pt: via ferrata
 ru: виа-ферата
 sk: via ferrata
