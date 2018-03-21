@@ -145,7 +145,7 @@ cz: Alkohol tester
 de: Blutalkoholrechner
 el: Αλκοτέστ
 en: BAC calculator
-es: Borrachímetro
+es: Test de alcoholemia
 it: Calcolatore BAC
 pt: Calculadora TAS
 ru: Калькулятор алкоголя
@@ -299,7 +299,7 @@ cz: koncentrace alkoholu
 de: Alkoholgehalt
 el: περιεκτικότητα σε αλκοόλ
 en: alcohol level
-es: contenido alcohólico
+es: contenido etílico
 it: tasso alcolico
 pt: nível de álcool
 ru: Крепость
@@ -341,7 +341,7 @@ cz: Hladina alkoholu v krvi
 de: Blutalkoholpegel
 el: Περιεκτικότητα αίματος σε αλκοόλ
 en: BAC
-es: tasa alcoholemia
+es: tasa de alcoholemia
 it: BAC
 pt: TAS
 ru: Концентрация алкоголя в крови
@@ -355,7 +355,7 @@ cz: Čas do vystřízlivění
 de: Restzeit
 el: Αναμενόμενη ώρα άφιξης
 en: ETA
-es: TBE (Tiempo Bajada Estimado)
+es: TBE (Tiempo Estimado Bajada)
 it: ETA
 pt: TEC
 ru: Время до отрезвления
@@ -988,7 +988,7 @@ cz: Oblast
 de: Flächen bearbeiten
 el: Επιφάνειες
 en: Areas
-es: Areas
+es: Áreas
 it: Aree
 pt: Área
 ru: Область
@@ -1030,7 +1030,7 @@ cz: Kreslící plocha
 de: Zeichenfläche
 el: Επιφάνεια σχεδιασμού
 en: Drawing area
-es: Area de dibujo
+es: Área de dibujo
 it: Area di disegno
 pt: Área de desenho
 ru: Зона рисования
@@ -1058,7 +1058,7 @@ cz: Současná kreslící plocha.
 de: Aktuelle Zeichenfläche
 el: Ενεργή επιφάνεια σχεδιασμού
 en: Current drawing area.
-es: Area de dibujo actual.
+es: Área de dibujo actual.
 it: Area di disegno attiva
 pt: Área de desenho atual
 ru: Текущая зона рисования.
@@ -1072,7 +1072,7 @@ cz: X min.
 de: X min.
 el: Ελάχιστο Χ
 en: X min.
-es: X minima
+es: X mínima
 it: Minimo X
 pt: X mín.
 ru: X min.
@@ -1086,7 +1086,7 @@ cz: Y min.
 de: Y min.
 el: Ελάχιστο Υ
 en: Y min.
-es: Y minima
+es: Y mínima
 it: Minimo Y
 pt: Y mín.
 ru: Y min.
@@ -1100,7 +1100,7 @@ cz: X max.
 de: X max.
 el: Μέγιστο Χ
 en: X max.
-es: X maxima
+es: X máxima
 it: Massimo X
 pt: X máx.
 ru: X max.
@@ -1114,7 +1114,7 @@ cz: Y max.
 de: Y max.
 el: Μέγιστο Υ
 en: Y max.
-es: Y maxima
+es: Y máxima
 it: Massimo Y
 pt: Y máx.
 ru: Y max.
@@ -1296,7 +1296,7 @@ cz: Přesun výš
 de: Schiebe nach oben
 el: Μετακίνηση προς τα πάνω
 en: Move up
-es: Arriba
+es: Mover Arriba
 it: Sposta sù
 pt: Mover para cima
 ru: Вверх
@@ -1324,7 +1324,7 @@ cz: Přesun níž
 de: Schiebe nach unten
 el: Μετακίνηση προς τα κάτω
 en: Move down
-es: Abajo
+es: Mover Abajo
 it: Sposta giù
 pt: Mover para baixo
 ru: Вниз
@@ -1375,39 +1375,51 @@ sq: zgjedhe destinacionin per deponi dhe poziciono ne te.
 zh_CN: 在其中选择目标草图和位置
 
 therion: Shift from
+es: Desplazar desde
 pt: Deslocar de
 
 therion: Set start point of object shifting vector. Either selected point or place of last right-click.
+es: Definir el punto origen del vector de desplazamiento. Seleccionar un punto o el lugar del ultimo click con el boton derecho.
 pt: Defina ponto inicial do vetor de deslocamento do objeto. Selecione ou um ponto ou o local do último clique com o botão direito do mouse.
 
 therion: Shift to
+es: Desplazar hasta
 pt: Deslocar para
 
 therion: Set end point of object shifting vector. Either selected point or place of last right-click.
+es: Definir el punto destino del vector de desplazamiento. Seleccionar un punto o el lugar del ultimo click con el boton derecho.
 pt: Defina ponto final do vetor de deslocamento do objeto. Selecione ou um ponto ou o local do último clique com o botão direito do mouse.
 
 therion: X coordinate of start point of object shifting vector.
+es: Coordenada X del punto origen del vector de desplazamiento de objetos. 
 pt: Coordenada X do ponto inicial do vetor de deslocamento do objeto.
 
 therion: Y coordinate of start point of object shifting vector.
+es: Coordenada Y del punto origen del vector de desplazamiento de objetos. 
 pt: Coordenada Y do ponto inicial do vetor de deslocamento do objeto.
 
 therion: X coordinate of end point of object shifting vector.
+es: Coordenada X del punto destino del vector de desplazamiento de objetos. 
 pt: Coordenada X do ponto final do vetor de deslocamento do objeto.
 
 therion: Y coordinate of end point of object shifting vector.
+es: Coordenada Y del punto destino del vector de desplazamiento de objetos. 
 pt: Coordenada Y do ponto final do vetor de deslocamento do objeto.
 
 therion: Swap
+es: Intercambiar
 pt: Inverter
 
 therion: Swap points of object shifting vector.
+es Intercambiar los puntos del vector de desplazamiento de objetos
 pt: Inverter pontos do vetor de deslocamento do objeto.
 
 therion: Shift object
+es: Desplazar objeto 
 pt: Deslocar objeto
 
 therion: Shift currently selected point, line or scrap according to specified vector.
+es: Desplaza el punto, línea o trozo actualmente seleccionado con el vector especificado. 
 pt: Deslocar ponto, linha ou croqui selecionado de acordo com o vetor definido.
 
 therion: Update text
@@ -1780,7 +1792,7 @@ cz: Resetuje nastavenou hodnotu gamma.
 de: Gammawert zurücksetzen.
 el: Επαναφορά τιμής gamma της εικόνας.
 en: Click here to go back to original gamma value.
-es: Click aquí para volver a los ajustes de gamma iniciales.
+es: Clicar aquí para volver a los ajustes de gamma iniciales.
 it: Ripristina il valore di gamma dell'immagine.
 pt: Restaurar valor gamma original para a imagem.
 ru: Сбросить значение гаммы для изображения.
@@ -2046,7 +2058,7 @@ cz: Další volby pro scrap.
 de: Andere Skizzenoptionen.
 el: Άλλες επιλογές των σκραπ - βλέπετε το thbook.pdf
 en: Other scrap options (more on this on thbook.pdf)
-es: Otras opciones del trozo (mas en el thbook.pdf
+es: Otras opciones del trozo (mas en el thbook.pdf)
 it: Altre opzioni dello scrap
 pt: Outras opções do trecho.
 ru: Другие опции скрапа.
@@ -2059,6 +2071,7 @@ bg: Мащаб
 cz: Měřítko
 de: Maßstab
 el: Κλίμακας
+es: Escalar
 it: Scala
 pt: Escala
 ru: Масштаб
@@ -2308,7 +2321,7 @@ bg: Фонова скица.
 cz: náčrtky na pozadí
 de: Hintergrundskizzen
 el: Σχέδια του φόντου
-es: croquis de fondo
+es: Croquis de fondo
 it: Immagini di background
 pt: croquis de fundo
 ru: Фоновые изображения
@@ -2697,7 +2710,7 @@ cz: Výběr bodu křivky.
 de: Punkt auf Linie auswählen.
 el: Αυτά είναι τα επιλεγμένα σημεία γραμμών. Κάντε κλικ σε όποιο σας ενδιαφέρει για να εμφανιστεί ως επιλεγμένο στον καμβά.
 en: These are selected line points. Click on any to get it selected on canvas.
-es: Estos son los puntos selecionados de la linea. Clic en uno para seleccionarlo en el lienzo.
+es: Estos son los puntos selecionados de la linea. Clicar en uno para seleccionarlo en el lienzo.
 it: Seleziona un punto della linea.
 pt: Selecione ponto da linha.
 ru: Выбрать одну из точек линии.
@@ -2949,7 +2962,7 @@ cz: Nastaví rozsah křivky v levém směru.
 de: Setze Liniengröße nach links.
 el: Ορισμός διάστασης γραμμής προς τα αριστερά
 en: Set line size in left direction.
-es: Ajustar anchura de línea (lado izquierdo de la línea). El tipo slope necesita este valor.
+es: Ajustar anchura de línea (lado izquierdo de la línea). El tipo "slope" necesita este valor.
 it: Imposta la dimensione della linea a sinistra.
 pt: Definir o tamanho da linha na direção esqierda.
 ru: Установите размер линии в левом направлении.
@@ -2963,7 +2976,7 @@ cz: Zadejte rozsah křivky v levém směru.
 de: Liniengröße nach links eingeben.
 el: Εισαγωγή διάσταση γραμμής προς τα αριστερά
 en: Enter line size in left direction.
-es: Introducir anchura de línea (lado izquierdo de la línea). El tipo slope necesita este valor.
+es: Introducir anchura de línea (lado izquierdo de la línea). El tipo "slope" necesita este valor.
 it: Scrivi la dimensione della linea a sinistra.
 pt: Entre o tamanho da linha na direção esquerda.
 ru: Введите размер линии в левом направлении.
@@ -2977,7 +2990,7 @@ cz: Volby bodu křivky.
 de: Linienpunktoptionen bearbeiten.
 el: Επεξεργαστής επιλογών σημείων γραμμών
 en: Line point options editor.
-es: Editor de opciones de puntos de linea. Consultar thbook.pdf
+es: Editor de opciones de puntos de linea. (Consultar thbook.pdf)
 it: Editor delle opzioni del punto della linea.
 pt: Editor de opções de ponto de linha.
 ru: Редактор опций точки линии.
@@ -2991,7 +3004,7 @@ cz: Aktualizovat bod křivky.
 de: Klicke diesen Knopf, um Änderungen am Linienpunkt anzuwenden.
 el: Πατήστε εδώ για να γίνει εφαρμογή των αλλαγών στο σημείο της γραμμής.
 en: Click this button to apply line point changes.
-es: Clicar para aplicar los cambios a los puntos de linea.
+es: Clicar para aplicar los cambios a los puntos de línea.
 it: Premi questo bottone per fare modifiche ai punti della linea.
 pt: Aplicar as mudanças ao ponto de linha atual.
 ru: Нажмите эту кнопку для применения изменений точки линии.
@@ -3032,7 +3045,7 @@ bg: Актуален набир на символи
 cz: Aktuální téma symbolů.
 de: Aktueller Symbolsatz.
 el: Σύμβολο
-es: Conjunto actual de simbolos
+es: Conjunto actual de símbolos
 it: Simboli.
 pt: Conjunto de símbolos atual.
 ru: Фильтр группы символов.
@@ -3074,7 +3087,7 @@ cz: Další volby pro oblast.
 de: Andere Flächenoptionen.
 el: Άλλες επιλογές επιφανειών. Βλ. thbook.pdf
 en: Other area options. See thbook.pdf
-es: Otras opciones de área. Consultar thbook.pdf
+es: Otras opciones de área. (Consultar thbook.pdf)
 it: Altre opzioni dell'area.
 pt: Outras opções de área.
 ru: Другие опции области.
@@ -3088,7 +3101,7 @@ cz: Vyber křivky
 de: Linien auswählen
 el: Επιλογή γραμμών
 en: Select lines
-es: Seleccionar lineas
+es: Seleccionar líneas
 it: Selezione linee
 pt: Selecione linhas
 ru: Выбор линий.
@@ -3228,7 +3241,7 @@ cz: Výběr křivky ohraničující oblast
 de: Wähle Linie in Fläche.
 el: Κάντε κλικ σε οποιαδήποτε γραμμή του καταλόγου για να επιλεχθεί η αντίστοιχη γραμμή ορίου επιφάνειας στον καμβά.
 en: Click on any list line to get corresponding area border line selected on canvas.
-es: Clicar en cada renglón de la lista para seleccionar en el lienzo la linea de limite correspondiente.
+es: Clicar en cada renglón de la lista para seleccionar en el lienzo la línea de limite correspondiente.
 it: Seleziona una linea nell'area.
 pt: Selecionar linha da área.
 ru: Выбор линии.
@@ -3351,7 +3364,7 @@ zh_CN: 插入图像
 therion: Hide inactive scraps
 cz: Skrýt neaktivní scrapy
 de: Inaktive Skizzen ausblenden
-es: esconder trozos inactivos
+es: Esconder trozos inactivos
 pt: Esconder trechos inativos
 ru: Скрыть неактивные скрапы
 sk: Skryť neaktívne scrapy
@@ -3898,7 +3911,7 @@ bg: Проследяване от картината
 cz: Trasovat linii
 de: Linie verfolgen
 en: Trace line
-es: Trazar linea
+es: Trazar línea
 pt: Traçar linha
 ru: Проследить линию
 sk: Oklikať čiaru
@@ -3918,7 +3931,7 @@ bg: Опростяване на линия
 cz: Zjednodušit linii
 de: Line vereinfachen
 en: Simplify line
-es: Simplicar linea
+es: Simplicar línea
 pt: Simplificar
 ru: Упростить линию
 sk: Zjednodušiť
@@ -4178,7 +4191,7 @@ sk: ležiaci nad
 
 therion: unsurveyed
 de: Unvermessen
-es: no topografiado
+es: no topografiada
 pt: não explorado
 ru: неотснято
 sk: nezameraný
@@ -4269,7 +4282,7 @@ sk: dočasný
 
 therion: presumed
 de: vermutet
-es: presunto
+es: presunta
 pt: presumida
 ru: предпологаемый
 sk: predpokladaný
@@ -4425,7 +4438,7 @@ cz: Editovat
 de: Linie bearbeiten
 el: Επεξεργασία γραμμής
 en: Edit line
-es: Editar linea
+es: Editar línea
 it: Edita
 pt: Editar linha
 ru: Править линию
@@ -4471,7 +4484,7 @@ sk: Vyber bod ležiaci pod
 therion: Delete symbol
 cz: Smazat symbol
 de: Symbol entfernen
-es: Borrar simbolo
+es: Borrar símbolo
 pt: Apagar símbolo
 ru: Удалить символ
 sk: Odstráň symbol
@@ -4533,6 +4546,7 @@ sq: arkivi I ri *.th2 duhet te ruhet para se te futet imazhi I prapavise.Te ruhe
 zh_CN: 插入底图前，须存储新的*.th2文件。要存储吗？
 
 therion: Unable to load image file.\n(Progressive JPEG encoding?)
+es: Imposible cargar el archivo de imagen. \n(JPEG con codificación progresiva?)
 pt: Erro ao ler arquivo de imagem.\n(JPEG com codificação progressiva?)
 
 therion: inserting image
@@ -4583,7 +4597,7 @@ cz: gamma korekce
 de: Gammakorrektur
 el: gamma correction
 en: gamma correction
-es: corección gamma
+es: corrección gamma
 it: gamma
 pt: correção gamma
 ru: коррекция гаммы
@@ -4818,6 +4832,7 @@ ru: Продолжить трассировку
 sk: Pokračovať digitalizácii
 
 therion: shift object
+es: desplazar objeto
 pt: deslocar objeto
 
 therion: loading text editor ...
@@ -5107,7 +5122,7 @@ cz: rozlišovat velikost písmen
 de: Groß- und Kleinschreibung bei Suche berücksichtigen
 el: case sensitive αναζήτηση
 en: case sensitive search
-es: busqueda sensible a mayúsculas/minúsculas
+es: búsqueda sensible a mayúsculas/minúsculas
 it: ricerca case-sensitive
 pt: busca diferencia MAIÚSCULAS/minúsculas
 ru: учитывать регистр
@@ -5596,7 +5611,7 @@ cz: Alkohol tester...
 de: Blutalkoholrechner
 el: Αλκοτέστ...
 en: BAC calculator...
-es: Borrachímetro...
+es: Calculador Test Alcoholemia...
 it: Calcolatore BAC ...
 pt: Calculadora TAS...
 ru: Калькулятор алкоголя...
@@ -5662,7 +5677,7 @@ bg: всички символи
 cz: všechny symboly
 de: Alle Zeichen
 el: όλα
-es: todos los simbolos
+es: todos los símbolos
 it: tutti
 pt: todos os símbolos
 ru: все
@@ -5951,7 +5966,7 @@ bg: основни символи
 cz: základní symboly
 de: Grundsymbole
 el: βασικά σύμβολα
-es: simbolos básicos
+es: símbolos básicos
 it: base
 pt: símbolos básicos
 ru: основные
