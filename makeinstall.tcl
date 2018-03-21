@@ -27,10 +27,10 @@ if {[string equal $platform WIN32]} {
   copyfile 1 ../therion.bin/xtherion/xtherion.tcl "c:/Program files/Therion/xtherion.tcl"
   copyfile 1 ../therion.bin/loch/loch.exe "c:/Program files/Therion/loch.exe"
 } elseif {[string equal $platform MACOSX]} {
-  copyfile 1 therion /usr/bin/therion
-  file attributes /usr/bin/therion -permissions 0755
-  copyfile 1 xtherion/xtherion /usr/bin/xtherion
-  file attributes /usr/bin/xtherion -permissions 0755
+  copyfile 1 therion /usr/local/bin/therion
+  file attributes /usr/local/bin/therion -permissions 0755
+  copyfile 1 xtherion/xtherion /usr/local/bin/xtherion
+  file attributes /usr/local/bin/xtherion -permissions 0755
   file delete -force /Applications/loch.app
   copyfile 1 loch/loch.app /Applications
   file attributes /Applications/loch.app -permissions 0755
