@@ -82,7 +82,7 @@ xtherion:
    - fix xtherion/lang/process.pl regex [PR#62]
    - include missing translatable texts [PR#63,66]
    - enable canvas zoom with the mouse wheel [PR#64]
-   - uncomprehensible error message while loading unsupported progressive JPEGs
+   - incomprehensible error message while loading unsupported progressive JPEGs
 
 loch:
  * manual page added [PR#15]
@@ -97,7 +97,7 @@ Therion 5.3.16 (2014-12-28):
 
 therion:
  * scale upper limit changed to 1:10
- * geomag data updated upto 2020
+ * geomag data updated up to 2020
  * bugs fixed:
    - black area displayed instead of some patterns in SVG
    - broken XHTML output when string formatting keywords are used in map-comment etc.
@@ -329,7 +329,7 @@ xtherion:
    (Help->Calibrate bitmap)
  * added import functions for PocketTopo export
    - centerline in text editor: File->Import->PocketTopo therion export
-   - sketches in map editor: Backgroud Images->Insert->PocketTopo therion export
+   - sketches in map editor: Background Images->Insert->PocketTopo therion export
  * bugs fixed:
    - increasing of station numbers with leading zeros or trailing letters
    

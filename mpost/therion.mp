@@ -59,7 +59,7 @@ if known Background: background:=Background fi;
 %
 % <I>boolean</I>, used in <A HREF="#thdraw">thdraw</A> and
 % <A HREF="#thpattfill">thpattfill</A> commands. When set to false, it has 
-% no effect, when it is true, it supresses all drawing 
+% no effect, when it is true, it suppresses all drawing
 % commands with exception of <I>thpermanentfill</I>, so that only filled 
 % areas are drawn
 
@@ -390,7 +390,7 @@ enddef;
 % @MACRO
 % process_updownlabel --
 %
-% draws a label splitted into down and up oriented semicircular boxes and 
+% draws a label split into down and up oriented semicircular boxes and 
 % writes clipping path to a file
 
 def process_updownlabel =
@@ -639,7 +639,7 @@ enddef;
 
 % macros for drawing scraps in upper and lower levels; filled lower scraps 
 % require special treatment (MetaPost doesn't support non-continuous paths).
-% We can't use one file for both, while PDF XObject has to be explicitely 
+% We can't use one file for both, while PDF XObject has to be explicitly
 % filled or stroked. Second macro writes also pseudo-pdf code of a clipping 
 % path for given scrap
 
