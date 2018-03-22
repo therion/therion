@@ -2962,7 +2962,7 @@ cz: Nastaví rozsah křivky v levém směru.
 de: Setze Liniengröße nach links.
 el: Ορισμός διάστασης γραμμής προς τα αριστερά
 en: Set line size in left direction.
-es: Ajustar anchura de línea (lado izquierdo de la línea). El tipo "slope" necesita este valor.
+es: Ajustar anchura de línea (lado izquierdo de la línea). El tipo slope necesita este valor.
 it: Imposta la dimensione della linea a sinistra.
 pt: Definir o tamanho da linha na direção esqierda.
 ru: Установите размер линии в левом направлении.
@@ -2976,7 +2976,7 @@ cz: Zadejte rozsah křivky v levém směru.
 de: Liniengröße nach links eingeben.
 el: Εισαγωγή διάσταση γραμμής προς τα αριστερά
 en: Enter line size in left direction.
-es: Introducir anchura de línea (lado izquierdo de la línea). El tipo "slope" necesita este valor.
+es: Introducir anchura de línea (lado izquierdo de la línea). El tipo slope necesita este valor.
 it: Scrivi la dimensione della linea a sinistra.
 pt: Entre o tamanho da linha na direção esquerda.
 ru: Введите размер линии в левом направлении.
