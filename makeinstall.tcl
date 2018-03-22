@@ -41,14 +41,14 @@ if {[string equal $platform WIN32]} {
   file attributes /Applications/loch.app/Contents/MacOS/loch -permissions 0755
   file attributes /Applications/loch.app/Contents/Resources -permissions 0755
   file attributes /Applications/loch.app/Contents/Resources/loch.icns -permissions 0644
-  copyfile 1 therion.ini /etc/therion.ini.new
-  file attributes /etc/therion.ini.new -permissions 0644
-  copyfile 1 xtherion/xtherion.ini /etc/xtherion.ini.new
-  file attributes /etc/xtherion.ini.new -permissions 0644
-  copyfile 0 therion.ini /etc/therion.ini
-  file attributes /etc/therion.ini -permissions 0644
-  copyfile 0 xtherion/xtherion.ini /etc/xtherion.ini
-  file attributes /etc/xtherion.ini -permissions 0644
+  copyfile 1 therion.ini /usr/local/etc/therion.ini.new
+  file attributes /usr/local/etc/therion.ini.new -permissions 0644
+  copyfile 1 xtherion/xtherion.ini /usr/local/etc/xtherion.ini.new
+  file attributes /usr/local/etc/xtherion.ini.new -permissions 0644
+  copyfile 0 therion.ini /usr/local/etc/therion.ini
+  file attributes /usr/local/etc/therion.ini -permissions 0644
+  copyfile 0 xtherion/xtherion.ini /usr/local/etc/xtherion.ini
+  file attributes /usr/local/etc/xtherion.ini -permissions 0644
 } else {
   copyfile 1 therion $instdir/bin/therion
   copyfile 1 xtherion/xtherion $instdir/bin/xtherion
