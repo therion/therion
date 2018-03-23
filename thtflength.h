@@ -50,6 +50,7 @@ static const thstok thtt_tfunits_length[] = {
   {"m", TT_TFU_M},
   {"meter", TT_TFU_M},
   {"meters", TT_TFU_M},
+  {"metre", TT_TFU_M},
   {"metres", TT_TFU_M},
   {"metric", TT_TFU_M},
   {"millimeter", TT_TFU_MM},
