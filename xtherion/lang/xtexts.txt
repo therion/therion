@@ -1240,7 +1240,7 @@ de: Automatisch anpassen
 el: Αυτόματη προσαρμογή
 en: Auto adjust
 es: Auto-ajustar
-fr: Ajustement automatique
+fr: Ajustement auto
 it: Auto-ridimensiona
 pt: Ajuste automático
 ru: Авто
@@ -1390,7 +1390,7 @@ de: Schiebe nach oben
 el: Μετακίνηση προς τα πάνω
 en: Move up
 es: Mover Arriba
-fr: Déplacer vers le haut
+fr: Déplacer dessus
 it: Sposta sù
 pt: Mover para cima
 ru: Вверх
@@ -1420,7 +1420,7 @@ de: Schiebe nach unten
 el: Μετακίνηση προς τα κάτω
 en: Move down
 es: Mover Abajo
-fr: Déplacer en dessous
+fr: Déplacer dessous
 it: Sposta giù
 pt: Mover para baixo
 ru: Вниз
@@ -1475,7 +1475,7 @@ zh_CN: 在其中选择目标草图和位置
 
 therion: Shift from
 es: Desplazar desde
-fr: Déplacer à partir de
+fr: Déplacer à partir
 pt: Deslocar de
 
 therion: Set start point of object shifting vector. Either selected point or place of last right-click.
@@ -2287,7 +2287,7 @@ de: Bildskalierungspunkte
 el: σημεία για καλιμπράρισμα (πίξελ)
 en: picture scale points (pixels)
 es: puntos de escala de la imagen (pixels)
-fr: Points de mise à l'échelle de l'image (pixels)
+fr: Points de mise à l'échelle (pixels)
 it: punti nella scala del disegno
 pt: pontos escala imagem
 ru: масштабирующие точки для картинки
@@ -5864,7 +5864,7 @@ de: Automatisch speichern
 el: Αυτόματη αποθήκευση
 en: Auto save
 es: Autoguardar
-fr: Enregistrer automatiquement
+fr: Enregistrer auto
 it: Auto salva
 pt: SAlvamento automático
 ru: Автосохранение
