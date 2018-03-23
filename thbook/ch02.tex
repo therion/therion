@@ -104,7 +104,7 @@ Therion uses following data types:
     (where |XX| is the language selected in initialization 
     or configuration file) and the next |<lang:YY>| 
     tag is displayed on the output. 
-    If no match is found, everything before any occurence of
+    If no match is found, everything before any occurrence of
     |<lang:ZZ>| tag is displayed.
 * {\it units} = length units supported: 
            meter[s], centimeter[s], inch[es], feet[s], yard[s]
@@ -1259,8 +1259,8 @@ endsurface|
 \description
   Reads survey data in different formats (currently processed centreline in 
   *.3d, *.plt, *.xyz formats). Survey stations may be referenced in scraps 
-  etc. When importing Survex' 3D file, stations are inserted in survey 
-  hierarchy, if there exists identical hierarchy to that in 3D file.
+  etc. When importing a Survex 3D file, stations are inserted in the survey
+  hierarchy if there exists an identical hierarchy to that in 3D file.
 \enddescription
 
 \syntax
@@ -1612,7 +1612,7 @@ nine distinct points is present if centreline contains
 station(s) fixed using geodetic coordinate system(s)]. 
 
 If the map in PDF format has been converted to raster using external program,
-convertor uses raster image {\it and} pdf map with the same base name 
+converter uses raster image {\it and} pdf map with the same base name
 located in the same directory to calculate the calibration data.
 
 If the PDF file is used directly, you have to set DPI and output format 
@@ -1625,7 +1625,7 @@ format which needs to be imported using XTherion and can not be processed
 by Therion directly.]
 from PocketTopo application can be imported in text editor as well as in map 
 editor ({\it File $\to$ Import $\to$ PocketTopo therion export} and 
-{\it Backgroud Images $\to$ Insert $\to$ PocketTopo therion export}). The
+{\it Background Images $\to$ Insert $\to$ PocketTopo therion export}). The
 same file is used for both imports. Importing sketch does not create scrap
 data directly. The drawing is just displayed on the background like scanned
 bitmaps and should be digitized manually.
