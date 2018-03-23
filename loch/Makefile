@@ -101,7 +101,8 @@ LXPLATFORM = LINUX
 ##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --cflags) -I/usr/X11R6/include
 ##LXLIBDIR =
 ##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
-##POSTMAKE = cp -f ./loch ./loch.app/Contents/MacOS
+##LOCHAPPBINDIR := $(shell mkdir -p ./loch.app/Contents/MacOS)
+##POSTMAKE = cp -f ./loch ./loch.app/Contents/MacOS/loch
 ##STRIPFLAG =
 
 # PLATFORM ENDCONFIG
