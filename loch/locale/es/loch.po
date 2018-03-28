@@ -901,7 +901,7 @@ msgstr "Mostrar estaciones fijas"
 # c:/cave/loch/loch/lxGUI.cxx:239
 #: lxGUI.cxx:239
 msgid "Show all stations"
-msgstr "Mostrar todas las estaciones
+msgstr "Mostrar todas las estaciones"
 
 # c:/cave/loch/loch/lxGUI.cxx:240
 #: lxGUI.cxx:240
@@ -986,7 +986,7 @@ msgstr "Radiante"
 # c:/cave/loch/loch/lxSScene.cxx:362
 #: lxSScene.cxx:362
 msgid "Duplicate"
-msgstr "Duplicada
+msgstr "Duplicada"
 
 # c:/cave/loch/loch/lxOptDlg.cxx:81
 #: lxOptDlg.cxx:81
@@ -1071,7 +1071,7 @@ msgstr "Archivo de presentación Loch (*.lxp)|*.lxp"
 # c:/cave/loch/loch/lxPres.cxx:78
 #: lxPres.cxx:78
 msgid "Presentation was changed. Save it?"
-msgstr "La presentación ha cambiado. Guardarla?
+msgstr "La presentación ha cambiado. Guardarla?"
 
 # c:/cave/loch/loch/lxPres.cxx:78
 #: lxPres.cxx:78
