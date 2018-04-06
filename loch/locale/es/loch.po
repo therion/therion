@@ -853,3 +853,233 @@ msgstr "%ld"
 #, c-format
 msgid "%.14e"
 msgstr "%.14e"
+
+
+
+#----------------------------------------------------------------------------------------------
+
+# c:/cave/loch/loch/lxGUI.cxx:263
+#: lxGUI.cxx:263
+msgid "&Import...\tCtrl+I"
+msgstr "&Importar...\tCtrl+I"
+
+# c:/cave/loch/loch/lxGUI.cxx:264
+#: lxGUI.cxx:264
+msgid "&Export...\tCtrl+X"
+msgstr ""&Exportar...\tCtrl+X"
+
+# c:/cave/loch/loch/lxGUI.cxx:313
+#: lxGUI.cxx:313
+msgid "&Size..."
+msgstr "&Tamaño..."
+
+# c:/cave/loch/loch/lxGUI.cxx:318
+#: lxGUI.cxx:318
+msgid "&Selection"
+msgstr "&Selección"
+
+# c:/cave/loch/loch/lxGUI.cxx:319
+#: lxGUI.cxx:319
+msgid "&Presentation"
+msgstr "&Presentación"
+
+# c:/cave/loch/loch/lxGUI.cxx:320
+#: lxGUI.cxx:320
+msgid "&Animation"
+msgstr "&Animación"
+
+# c:/cave/loch/loch/lxGUI.cxx:237
+#: lxGUI.cxx:237
+msgid "Show entrances"
+msgstr "Mostrar entradas"
+
+# c:/cave/loch/loch/lxGUI.cxx:238
+#: lxGUI.cxx:238
+msgid "Show fixed stations"
+msgstr "Mostrar estaciones fijas"
+
+# c:/cave/loch/loch/lxGUI.cxx:239
+#: lxGUI.cxx:239
+msgid "Show all stations"
+msgstr "Mostrar todas las estaciones"
+
+# c:/cave/loch/loch/lxGUI.cxx:240
+#: lxGUI.cxx:240
+msgid "Toggle station labeling"
+msgstr "Alternar etiquetado estación"
+
+# c:/cave/loch/loch/lxGUI.cxx:246
+#: lxGUI.cxx:246
+msgid "Show indicators"
+msgstr "Mostrar indicadores"
+
+# c:/cave/loch/loch/lxGUI.cxx:225
+#: lxGUI.cxx:225
+msgid "Rendering setup"
+msgstr "Configuración renderizado"
+
+# c:/cave/loch/loch/lxGUI.cxx:233
+#: lxGUI.cxx:233
+msgid "Profile view"
+msgstr "Vista alzado"
+
+# c:/cave/loch/loch/lxSScene.cxx:402
+#: lxSScene.cxx:402
+msgid "Marked stations"
+msgstr "Estaciones marcadas"
+
+# c:/cave/loch/loch/lxSScene.cxx:403
+#: lxSScene.cxx:403
+msgid "Entrances"
+msgstr "Entradas"
+
+# c:/cave/loch/loch/lxSScene.cxx:404
+#: lxSScene.cxx:404
+msgid "Fixed stations"
+msgstr "Estaciones fijas"
+
+# c:/cave/loch/loch/lxSScene.cxx:404
+#: lxSScene.cxx:404
+msgid "All"
+msgstr "Todas"
+
+# c:/cave/loch/loch/lxSScene.cxx:408
+#: lxSScene.cxx:408
+msgid "Labels"
+msgstr "Etiquetas"
+
+# c:/cave/loch/loch/lxSScene.cxx:409
+#: lxSScene.cxx:409
+msgid "Comment"
+msgstr "Comentario"
+
+# c:/cave/loch/loch/lxSScene.cxx:410
+#: lxSScene.cxx:410
+msgid "Name"
+msgstr "Nombre"
+
+# c:/cave/loch/loch/lxSScene.cxx:411
+#: lxSScene.cxx:411
+msgid "Survey"
+msgstr "Topografias"
+
+# c:/cave/loch/loch/lxSScene.cxx:412
+#: lxSScene.cxx:412
+msgid "Altitude"
+msgstr "Altitud"
+
+# c:/cave/loch/loch/lxSScene.cxx:279
+#: lxSScene.cxx:279
+msgid "Stations"
+msgstr "Estaciones"
+
+# c:/cave/loch/loch/lxSScene.cxx:390
+#: lxSScene.cxx:390
+msgid "Lighting"
+msgstr "Iluminación"
+
+# c:/cave/loch/loch/lxSScene.cxx:361
+#: lxSScene.cxx:361
+msgid "Splay"
+msgstr "Radiante"
+
+# c:/cave/loch/loch/lxSScene.cxx:362
+#: lxSScene.cxx:362
+msgid "Duplicate"
+msgstr "Duplicada"
+
+# c:/cave/loch/loch/lxOptDlg.cxx:81
+#: lxOptDlg.cxx:81
+msgid "Measurement system"
+msgstr "Sistema de medida"
+
+# c:/cave/loch/loch/lxOptDlg.cxx:84
+#: lxOptDlg.cxx:84
+msgid "Metric"
+msgstr "Metrico"
+
+# c:/cave/loch/loch/lxOptDlg.cxx:86
+#: lxOptDlg.cxx:86
+msgid "Imperial"
+msgstr "Imperial"
+
+# c:/cave/loch/loch/lxPres.cxx:295
+#: lxPres.cxx:295
+msgid "Presentation"
+msgstr "Presentación"
+
+# c:/cave/loch/loch/lxPres.cxx:317
+#: lxPres.cxx:317
+msgid "Mark"
+msgstr "Marcar"
+
+# c:/cave/loch/loch/lxPres.cxx:320
+#: lxPres.cxx:320
+msgid "Update"
+msgstr "Actualizar"
+
+# c:/cave/loch/loch/lxPres.cxx:323
+#: lxPres.cxx:323
+msgid "Move up"
+msgstr "Mover arriba"
+
+# c:/cave/loch/loch/lxPres.cxx:326
+#: lxPres.cxx:326
+msgid "Move down"
+msgstr "Mover abajo"
+
+# c:/cave/loch/loch/lxPres.cxx:329
+#: lxPres.cxx:329
+msgid "Delete"
+msgstr "Borrar"
+
+# c:/cave/loch/loch/lxPres.cxx:335
+#: lxPres.cxx:335
+msgid "New"
+msgstr "Nueva"
+
+# c:/cave/loch/loch/lxPres.cxx:338
+#: lxPres.cxx:338
+msgid "Open..."
+msgstr "Abrir..."
+
+# c:/cave/loch/loch/lxPres.cxx:341
+#: lxPres.cxx:341
+msgid "Save"
+msgstr "Guardar"
+
+# c:/cave/loch/loch/lxPres.cxx:344
+#: lxPres.cxx:344
+msgid "Save as..."
+msgstr "Guardar como..."
+
+# c:/cave/loch/loch/lxPres.cxx:36
+#: lxPres.cxx:36
+msgid "presentation.lxp"
+msgstr "presentación.lxp"
+
+# c:/cave/loch/loch/lxPres.cxx:48
+#: lxPres.cxx:48
+msgid "Save presentation"
+msgstr "Guardar presentación"
+
+# c:/cave/loch/loch/lxPres.cxx:51
+#: lxPres.cxx:51
+msgid "Loch presentation file (*.lxp)|*.lxp"
+msgstr "Archivo de presentación Loch (*.lxp)|*.lxp"
+
+# c:/cave/loch/loch/lxPres.cxx:78
+#: lxPres.cxx:78
+msgid "Presentation was changed. Save it?"
+msgstr "La presentación ha cambiado. Guardarla?"
+
+# c:/cave/loch/loch/lxPres.cxx:78
+#: lxPres.cxx:78
+msgid "Warning"
+msgstr "Cuidado"
+
+# c:/cave/loch/loch/lxPres.cxx:133
+#: lxPres.cxx:133
+msgid "Scene"
+msgstr "Escena"
+
