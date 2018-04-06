@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Loch\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-10 17:01+0100\n"
+"PO-Revision-Date: 2018-04-06 20:13+0100\n"
 "Last-Translator: \n"
 "Language-Team: russian <akozhenkov@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Poedit-Basepath: ../..\n"
 "Plural-Forms: и;\n"
 "Language: ru\n"
-"X-Generator: Poedit 2.0\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-SearchPath-0: .\n"
 
 # C:/Projects/MSVCProjects/loch/lxAboutDlg.cxx:53
@@ -57,7 +57,8 @@ msgstr "%+03d°"
 
 # c:/cave/loch/loch/lxSScene.cxx:222
 # c:/cave/loch/loch/lxSScene.cxx:324
-#: lxGLCx.cxx:736 lxSScene.cxx:273
+# c:/cave/loch/loch/lxSScene.cxx:412
+#: lxGLCx.cxx:736 lxSScene.cxx:273 lxSScene.cxx:412
 msgid "Altitude"
 msgstr "Альтитуда"
 
@@ -99,7 +100,8 @@ msgstr "Рендерить в файл"
 
 # c:/cave/loch/loch/lxPrint.cxx:291
 # c:/cave/loch/loch/lxRender.cxx:237
-#: lxGUI.cxx:210 lxRender.cxx:236
+# c:/cave/loch/loch/lxGUI.cxx:225
+#: lxGUI.cxx:210 lxRender.cxx:236 lxGUI.cxx:225
 msgid "Rendering setup"
 msgstr "Настройки Рендеринга"
 
@@ -156,7 +158,8 @@ msgid "Profile"
 msgstr "Разрез"
 
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:221
-#: lxGUI.cxx:218
+# c:/cave/loch/loch/lxGUI.cxx:233
+#: lxGUI.cxx:218 lxGUI.cxx:233
 msgid "Profile view"
 msgstr "Разрез"
 
@@ -237,7 +240,8 @@ msgid "Indicators"
 msgstr "Индикаторы"
 
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:229
-#: lxGUI.cxx:226
+# c:/cave/loch/loch/lxGUI.cxx:246
+#: lxGUI.cxx:226 lxGUI.cxx:246
 msgid "Show indicators"
 msgstr "Показать индикаторы"
 
@@ -377,7 +381,8 @@ msgid "Camera"
 msgstr "Камера"
 
 # c:/cave/loch/loch/lxGUI.cxx:161
-#: lxGUI.cxx:279
+# c:/cave/loch/loch/lxPres.cxx:133
+#: lxGUI.cxx:279 lxPres.cxx:133
 msgid "Scene"
 msgstr "Сцена"
 
@@ -851,3 +856,204 @@ msgstr "%ld"
 #, c-format
 msgid "%.14e"
 msgstr "%.14e"
+
+# ----------------------------------------------------------------------------------------------
+# c:/cave/loch/loch/lxGUI.cxx:263
+#: lxGUI.cxx:263
+msgid "&Import...\tCtrl+I"
+msgstr "&Импорт...\tCtrl+I"
+
+# c:/cave/loch/loch/lxGUI.cxx:264
+#: lxGUI.cxx:264
+msgid "&Export...\tCtrl+X"
+msgstr "\"&Экспорт...\tCtrl+X"
+
+# c:/cave/loch/loch/lxGUI.cxx:313
+#: lxGUI.cxx:313
+msgid "&Size..."
+msgstr "&Размер..."
+
+# c:/cave/loch/loch/lxGUI.cxx:318
+#: lxGUI.cxx:318
+msgid "&Selection"
+msgstr "&Выбор"
+
+# c:/cave/loch/loch/lxGUI.cxx:319
+#: lxGUI.cxx:319
+msgid "&Presentation"
+msgstr "&Презентация"
+
+# c:/cave/loch/loch/lxGUI.cxx:320
+#: lxGUI.cxx:320
+msgid "&Animation"
+msgstr "&Анимация"
+
+# c:/cave/loch/loch/lxGUI.cxx:237
+#: lxGUI.cxx:237
+msgid "Show entrances"
+msgstr "Показать входы"
+
+# c:/cave/loch/loch/lxGUI.cxx:238
+#: lxGUI.cxx:238
+msgid "Show fixed stations"
+msgstr "Показать реперы"
+
+# c:/cave/loch/loch/lxGUI.cxx:239
+#: lxGUI.cxx:239
+msgid "Show all stations"
+msgstr "Показать все пикеты"
+
+# c:/cave/loch/loch/lxGUI.cxx:240
+#: lxGUI.cxx:240
+msgid "Toggle station labeling"
+msgstr "Переключить подписи пикетов"
+
+# c:/cave/loch/loch/lxSScene.cxx:402
+#: lxSScene.cxx:402
+msgid "Marked stations"
+msgstr "Помеченые пикеты"
+
+# c:/cave/loch/loch/lxSScene.cxx:403
+#: lxSScene.cxx:403
+msgid "Entrances"
+msgstr "Входы"
+
+# c:/cave/loch/loch/lxSScene.cxx:404
+#: lxSScene.cxx:404
+msgid "Fixed stations"
+msgstr "Реперы"
+
+# c:/cave/loch/loch/lxSScene.cxx:404
+#: lxSScene.cxx:404
+msgid "All"
+msgstr "Все"
+
+# c:/cave/loch/loch/lxSScene.cxx:408
+#: lxSScene.cxx:408
+msgid "Labels"
+msgstr "Подписи"
+
+# c:/cave/loch/loch/lxSScene.cxx:409
+#: lxSScene.cxx:409
+msgid "Comment"
+msgstr "Коментарий"
+
+# c:/cave/loch/loch/lxSScene.cxx:410
+#: lxSScene.cxx:410
+msgid "Name"
+msgstr "Название"
+
+# c:/cave/loch/loch/lxSScene.cxx:411
+#: lxSScene.cxx:411
+msgid "Survey"
+msgstr "Съёмка"
+
+# c:/cave/loch/loch/lxSScene.cxx:279
+#: lxSScene.cxx:279
+msgid "Stations"
+msgstr "Пикеты"
+
+# c:/cave/loch/loch/lxSScene.cxx:390
+#: lxSScene.cxx:390
+msgid "Lighting"
+msgstr "Освещение"
+
+# c:/cave/loch/loch/lxSScene.cxx:361
+#: lxSScene.cxx:361
+msgid "Splay"
+msgstr "Сплеи"
+
+# c:/cave/loch/loch/lxSScene.cxx:362
+#: lxSScene.cxx:362
+msgid "Duplicate"
+msgstr "Дубликаты"
+
+# c:/cave/loch/loch/lxOptDlg.cxx:81
+#: lxOptDlg.cxx:81
+msgid "Measurement system"
+msgstr "Система измерений"
+
+# c:/cave/loch/loch/lxOptDlg.cxx:84
+#: lxOptDlg.cxx:84
+msgid "Metric"
+msgstr "Метрическая"
+
+# c:/cave/loch/loch/lxOptDlg.cxx:86
+#: lxOptDlg.cxx:86
+msgid "Imperial"
+msgstr "Имперская"
+
+# c:/cave/loch/loch/lxPres.cxx:295
+#: lxPres.cxx:295
+msgid "Presentation"
+msgstr "Презентация"
+
+# c:/cave/loch/loch/lxPres.cxx:317
+#: lxPres.cxx:317
+msgid "Mark"
+msgstr "Пометить"
+
+# c:/cave/loch/loch/lxPres.cxx:320
+#: lxPres.cxx:320
+msgid "Update"
+msgstr "Обновить"
+
+# c:/cave/loch/loch/lxPres.cxx:323
+#: lxPres.cxx:323
+msgid "Move up"
+msgstr "Сдвиг вверх"
+
+# c:/cave/loch/loch/lxPres.cxx:326
+#: lxPres.cxx:326
+msgid "Move down"
+msgstr "Сдвиг вниз"
+
+# c:/cave/loch/loch/lxPres.cxx:329
+#: lxPres.cxx:329
+msgid "Delete"
+msgstr "Удалить"
+
+# c:/cave/loch/loch/lxPres.cxx:335
+#: lxPres.cxx:335
+msgid "New"
+msgstr "Новый"
+
+# c:/cave/loch/loch/lxPres.cxx:338
+#: lxPres.cxx:338
+msgid "Open..."
+msgstr "Открыть..."
+
+# c:/cave/loch/loch/lxPres.cxx:341
+#: lxPres.cxx:341
+msgid "Save"
+msgstr "Сохранить"
+
+# c:/cave/loch/loch/lxPres.cxx:344
+#: lxPres.cxx:344
+msgid "Save as..."
+msgstr "Сохранить как..."
+
+# c:/cave/loch/loch/lxPres.cxx:36
+#: lxPres.cxx:36
+msgid "presentation.lxp"
+msgstr "презентация.lxp"
+
+# c:/cave/loch/loch/lxPres.cxx:48
+#: lxPres.cxx:48
+msgid "Save presentation"
+msgstr "Сохранить презентацию"
+
+# c:/cave/loch/loch/lxPres.cxx:51
+#: lxPres.cxx:51
+msgid "Loch presentation file (*.lxp)|*.lxp"
+msgstr "Презентация Loch (*.lxp)|*.lxp"
+
+# c:/cave/loch/loch/lxPres.cxx:78
+#: lxPres.cxx:78
+msgid "Presentation was changed. Save it?"
+msgstr "Презентация была изменена. Сохранить?"
+
+# c:/cave/loch/loch/lxPres.cxx:78
+#: lxPres.cxx:78
+msgid "Warning"
+msgstr "Предупреждение"
