@@ -3,6 +3,7 @@ bg: Модел
 ca: Model
 en: Model
 es: Modelo
+fr: Modèle
 pt: Modelo
 ru: Модель
 sk: Model
@@ -12,6 +13,7 @@ bg: Карта
 ca: Mapa
 en: Map
 es: Mapa
+fr: Carte
 pt: Mapa
 ru: Карта
 sk: Mapa
@@ -21,6 +23,7 @@ bg: Повърхностна антена
 ca: Visual de superficie
 en: Surface legs
 es: Visual de superficie
+fr: Visée de surface
 pt: Visadas na superfície
 ru: Поверхностная съёмка
 sk: povrchové zámery
@@ -175,6 +178,7 @@ ca: dolina
 cz: závrt
 en: doline
 es: dolina
+fr: doline
 pt: dolina
 ru: воронка
 sk: závrt
@@ -238,6 +242,7 @@ ca: arc
 cz: skalní oblouk
 en: arch
 es: arco
+fr: arche
 pt: arco
 ru: арка
 sk: skalný oblúk
@@ -394,6 +399,7 @@ cz: stěna vyšší úrovně
 de: überlagerter Wandverlauf
 en: overlying wall
 es: pared galeria superior
+fr: mur susjacent
 it: parete:sovrastante
 mi: tāra ki runga
 pl: ściana położona wyżej
@@ -446,6 +452,7 @@ de: Eingangsschacht
 en: entrance pit
 en_GB: entrance pitch
 es: pozo de entrada
+fr: mur-puits
 it: parete:pozzo
 mi: rua
 pl: studnia wstępna
@@ -584,6 +591,7 @@ cz: stěna tvořená měkkým sintrem
 de: Wand aus Bergmilch
 en: moonmilk wall
 es: pared de mondmilch
+fr: mur de mondmilch
 it: moonmilk
 mi: tāra a mirika marama
 pl: ściana z miękkich nacieków
@@ -941,6 +949,7 @@ cz: konec uzavřený jílem
 de: Fortsetzung verlehmt
 en: clay choke
 es: colmatado por arcilla
+fr: colmaté par de l'argille
 it: chiude su riempimento
 mi: uku pari
 pl: koniec zamknięty gliną
@@ -1197,7 +1206,7 @@ el: βάθος πηγαδιού
 en: pit depth
 en_GB: pitch depth
 es: profundidad pozo
-fr: profondeur
+fr: profondeur d'un puits
 it: prodondità pozzo
 mi: rua hōhonu
 pl: głębokosc studni
@@ -1483,6 +1492,7 @@ ca: avet d'argila
 de: Lehmbäumchen
 en: clay tree
 es: abetos arcilla
+fr: sapins d'argile
 it: pini d'argilla
 mi: rakau oneuku
 pt: cones de lama/argila
@@ -2047,6 +2057,7 @@ ca: estalactites
 cz: stalaktity
 en: stalactites
 es: estalactitas
+fr: stalactites
 pt: estalactites
 ru: сталактиты
 sk: stalaktity
@@ -2075,6 +2086,7 @@ ca: estalagmites
 cz: stalagmity
 en: stalagmites
 es: estalagmitas
+fr: stalagmites
 pt: estalagmites
 ru: сталагмиты
 sk: stalagmity
@@ -2104,6 +2116,7 @@ cz: stalagnáty
 de: Säulen
 en: pillars
 es: columnas
+fr: pilliers
 pt: colunas
 ru: колонны
 sk: stalagnáty
@@ -2115,6 +2128,7 @@ cz: ledový stalaktit
 de: Eisstalaktit
 en: ice stalactite
 es: estalactita de hielo
+fr: stalactite de glace
 it: stalattite di ghiaccio
 mi: kōpaka ki te haere ki runga
 pl: lodowy stalaktyt
@@ -2130,6 +2144,7 @@ cz: ledový stalagmit
 de: Eisstalagmit
 en: ice stalagmite
 es: estalagmita de hielo
+fr: stalagmite de glace
 it: stalagmite di ghiaccio
 mi: kōpaka ki te haere ki raro
 pl: lodowy stalagmit
@@ -2145,6 +2160,7 @@ cz: ledový stalagnát
 de: Eissäule
 en: ice pillar
 es: columna de hielo
+fr: colonne de glace
 it: colonna di ghiaccio
 mi: pou Kōpaka
 pl: lodowy stalagnat
@@ -2161,7 +2177,7 @@ de: Sinterfahne
 el: κουρτίνα
 en: curtain
 es: bandera
-fr: rideau
+fr: rideau, draperie
 it: cortina
 mi: araia
 pl: draperie naciekowe
@@ -2740,6 +2756,7 @@ ca: via-ferrata
 de: Klettersteig
 en: via-ferrata
 es: via-ferrata
+fr: via-ferrata
 pt: via ferrata
 ru: виа-ферата
 sk: via ferrata
@@ -2750,6 +2767,7 @@ ca: via-ferrata
 de: Klettersteig
 en: via-ferrata
 es: via-ferrata
+fr: via-ferrata
 pt: via ferrata
 ru: виа-ферата
 sk: via ferrata
@@ -2797,6 +2815,7 @@ cz: zábradlí
 de: Geländer
 en: handrail
 es: barandilla
+fr: rampe
 pt: corrimão
 ru: перила
 sk: zábradlie
@@ -2808,6 +2827,7 @@ cz: zábradlí
 de: Geländer
 en: handrail
 es: barrandilla
+fr: rampe
 pt: corrimão
 ru: перила
 sk: zábradlie
@@ -2924,6 +2944,7 @@ therion: title color-legend-depth
 ca: Desnivell
 en: Depth
 es: Desnivel
+fr: Profondeur
 pt: Profundidade
 
 therion: title color-legend-map
@@ -2948,30 +2969,35 @@ therion: title color-legend-scrap
 ca: Trossos
 en: Scraps
 es: Trozos/cachos
+fr: Scraps
 pt: Croquis
 
 therion: title color-legend-survey
 ca: Topos
 en: Surveys
 es: Topos
+fr: Topos
 pt: Topos
 
 therion: title color-legend-explodate
 ca: Data d'exploració
 en: Exploration date
 es: Fecha de exploración
+fr: Date d'exploration
 pt: Data da exploração
 
 therion: title color-legend-topodate
 ca: Data de topografia
 en: Surveying date
 es: Fecha de topografia
+fr: Date de topographie
 pt: Data da topo
 
 therion: title color-legend-default
 ca: Llegenda de colors
 en: Color legend
 es: Leyenda de colores
+fr: Légende colorée
 pt: Cores
 
 therion: units ft
