@@ -866,7 +866,7 @@ msgstr "&Importar...\tCtrl+I"
 # c:/cave/loch/loch/lxGUI.cxx:264
 #: lxGUI.cxx:264
 msgid "&Export...\tCtrl+X"
-msgstr ""&Exportar...\tCtrl+X"
+msgstr "&Exportar...\tCtrl+X"
 
 # c:/cave/loch/loch/lxGUI.cxx:313
 #: lxGUI.cxx:313
