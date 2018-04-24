@@ -1198,8 +1198,8 @@ proc xth_me_mousewheel_up {} {
   global xth
   switch $xth(app,active) {
     me {
-      if {$xth(me,zoom)*2 > 800} return;
-      xth_me_area_zoom_to [ expr round([expr {$xth(me,zoom) * 1.1}]) ]
+      if {$xth(me,zoom) > 200} return;
+      xth_me_area_zoom_to [expr 2*$xth(me,zoom)]
     }
   }
 }
@@ -1208,8 +1208,8 @@ proc xth_me_mousewheel_down {} {
   global xth
   switch $xth(app,active) {
     me {
-      if {$xth(me,zoom)*2 < 12} return;
-      xth_me_area_zoom_to [ expr round([expr {$xth(me,zoom) / 1.1}]) ]
+      if {$xth(me,zoom) < 50} return;
+      xth_me_area_zoom_to [expr $xth(me,zoom) / 2]
     }
   }
 }

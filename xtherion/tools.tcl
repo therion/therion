@@ -219,14 +219,14 @@ frame $xth(gui,tb).edif
 
 button $xth(gui,tb).edif.zoo+b -image {zoom+_img} \
 		-command {
-			if {$::xth(me,zoom)*2 > 800} return
-			xth_me_area_zoom_to [expr {$::xth(me,zoom) * 2}]
+			if {$::xth(me,zoom) > 200} return
+			xth_me_area_zoom_to [expr $::xth(me,zoom) * 2]
 		} -state disabled
   xth_status_bar me $xth(gui,tb).edif.zoo+b [mc "Zoom in"]
 button $xth(gui,tb).edif.zoo-b -image {zoom-_img} \
 		-command {
-			if {$::xth(me,zoom)/2 < 12} return
-			xth_me_area_zoom_to [expr {$::xth(me,zoom) / 2}]
+			if {$::xth(me,zoom) < 50} return
+			xth_me_area_zoom_to [expr $::xth(me,zoom) / 2]
 		} -state disabled
 xth_status_bar me $xth(gui,tb).edif.zoo-b [mc "Zoom out"]
 label $xth(gui,tb).edif.spZoom -relief groove -width 0 -padx 0 -pady 0 -bd 1
