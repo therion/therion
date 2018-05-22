@@ -47,6 +47,7 @@
 #include "thtrans.h"
 #include "loch/lxMath.h"
 #include "thcs.h"
+#include "extern/quickhull/QuickHull.hpp"
 #ifdef THMSVC
 #define hypot _hypot
 #endif
@@ -3344,4 +3345,59 @@ void thdb1d::process_xelev()
 }
 
 
+thdb3ddata * thdb1ds::get_3d_outline() {
+  if (this->d3_parsed)
+    return &(this->d3_outline);
+  this->d3_parsed = true;
+	using namespace quickhull;
+	QuickHull<double> qh; // Could be double as well
+	std::vector<Vector3<double>> pointCloud, originalPointCloud;
+	std::vector<thdb3dvx*> originalPointCloudUse;
+  thdb1d_tree_node * n;
+  thdb1d_tree_arrow * a;
+  thdb1ds * tt;
+  n = &(thdb.db1d.tree_nodes[this->uid - 1]);
+  Vector3<double> fv(this->x, this->y, this->z), tv, txv;
+
+  // TODO: Add points to point cloud
+	// traverse all splay shots from given station, calculate normalized position and add
+	pointCloud.push_back(Vector3<double>(0.0, 0.0, 0.0));
+	originalPointCloud.push_back(fv);
+	originalPointCloudUse.push_back(NULL);
+  for(a = n->first_arrow; a != NULL; a = a->next_arrow) {
+		tt = &(thdb.db1d.station_vec[a->end_node->uid - 1]);
+		tv = Vector3<double>(tt->x, tt->y, tt->z);
+		txv = tv - fv;
+		try {
+			txv.normalize();
+			pointCloud.push_back(txv);
+			originalPointCloud.push_back(tv);
+			originalPointCloudUse.push_back(NULL);
+		} catch (...) {}
+  }
+
+	if (pointCloud.size() > 3) {
+		auto hull = qh.getConvexHull(pointCloud, true, true);
+		auto indexBuffer = hull.getIndexBuffer();
+		thdb3dvx * cvx;
+		thdb3dfc * cfc;
+		// Read vertices & triangles to d3_outline
+		if (indexBuffer.size() > 2) {
+			for(size_t i = 0; i < indexBuffer.size(); i++) {
+				if (originalPointCloudUse[indexBuffer[i]] == 0) {
+					Vector3<double> origpos = originalPointCloud[indexBuffer[i]];
+					cvx = this->d3_outline.insert_vertex(origpos.x, origpos.y, origpos.z);
+					originalPointCloudUse[indexBuffer[i]] = cvx;
+				}
+			}
+			cfc = this->d3_outline.insert_face(THDB3DFC_TRIANGLES);
+			for(size_t i = 0; i < indexBuffer.size(); i++) {
+				cfc->insert_vertex(originalPointCloudUse[indexBuffer[i]]);
+			}
+		}
+	}
+
+	return &(this->d3_outline);
+
+}
 

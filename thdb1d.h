@@ -161,6 +161,10 @@ class thdb1ds {
   
   double explored;
   
+  bool d3_parsed; ///< Whether splay shots have been parsed.
+  thdb3ddata d3_outline; ///< splay 3d outline.
+
+
   /**
    * Default constructor.
    */
@@ -169,7 +173,7 @@ class thdb1ds {
     data_priority(0), temps(TT_TEMPSTATION_NONE),
     flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), 
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
-    explored(thnan) {}
+    explored(thnan), d3_parsed(false) {}
   
 
   /**
@@ -182,7 +186,7 @@ class thdb1ds {
     flags(TT_STATIONFLAG_NONE),
     mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), mark_station(false), 
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
-    explored(thnan) {}
+    explored(thnan), d3_parsed(false) {}
     
   
   /**
@@ -213,6 +217,14 @@ class thdb1ds {
 
   void export_mp_flags(FILE * out);
   
+
+  /**
+   * Return 3D splay outline. Process if necessary.
+   */
+
+  thdb3ddata * get_3d_outline();
+
+
 };
 
 

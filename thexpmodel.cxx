@@ -1497,9 +1497,10 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   unsigned long nlegs = dbp->db1d.get_tree_size(),
     nstat = (unsigned long)dbp->db1d.station_vec.size(), i, j;
   thdb1dl ** tlegs = dbp->db1d.get_tree_legs();
-  long * stnum = NULL;
+  long * stnum = NULL, * stnum_orig = NULL;
   if (nstat > 0) {
     stnum = new long[nstat];
+    stnum_orig = new long[nstat];
     for (i = 0; i < nstat; i++)
       stnum[i] = (dbp->db1d.station_vec[i].survey->is_selected() ? 1 : -1); //;-1
   }
@@ -1572,6 +1573,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   thdb1ds * pst;
   for (i = 0; i < nstat; i++) {
     if (stnum[i] > 0) {
+    	stnum_orig[i] = stnum[i];
       stnum[i] = survnum;
       pst = &(dbp->db1d.station_vec[i]);
       //fprintf(pltf,"T %ld %ld %s %.3f %.3f %.3f G%s%s%s\n", survnum, pst->survey->num1, pst->name, pst->x, pst->y, pst->z, (pst->flags & TT_STATIONFLAG_ENTRANCE) != 0 ? "E" : "", (pst->flags & TT_STATIONFLAG_FIXED) != 0 ? "F" : "", (pst->flags & TT_STATIONFLAG_CONT) != 0 ? "C" : "");
@@ -1695,6 +1697,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   }
 
   lxFileScrap expf_scrap;
+	thdb3ddata * d3d;
   survnum = 0;
 
   // export stien
@@ -1703,8 +1706,6 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
     // 3D DATA 
     thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
     thscrap * cs;
-    thdb3ddata * d3d;
-    
     if (!prjid.newprj) {
       thdb.db2d.process_projection(prjid.prj);
       cs = prjid.prj->first_scrap;
@@ -1774,7 +1775,74 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
     
   } // WALLS  
   
+  // SPLAY walls export
+  if (((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) && ((this->wallsrc & TT_WSRC_SPLAYS) != 0)) {
+    for (size_t ii = 0; ii < nstat; ii++) {
+      if (stnum_orig[ii] > 0) {
+        pst = &(dbp->db1d.station_vec[ii]);
+        d3d = pst->get_3d_outline();
+        if ((d3d != NULL) && (d3d->nfaces > 0)) {
+          expf_scrap.m_id = survnum;
+          expf_scrap.m_surveyId = pst->survey->num1;
+          // points & triangles
+          lxFile3Point * pdata = new lxFile3Point [d3d->nvertices];
+          thdb3dvx * vxp;
+          std::list<lxFile3Angle> tlist;
+          lxFile3Angle t3;
+          for(i = 0, vxp = d3d->firstvx; vxp != NULL; vxp = vxp->next, i++) {
+            pdata[i].m_c[0] = vxp->x;
+            pdata[i].m_c[1] = vxp->y;
+            pdata[i].m_c[2] = vxp->z;
+          }
+          expf_scrap.m_numPoints = d3d->nvertices;
+          expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
+          thdb3dfc * fcp;
+          thdb3dfx * fxp;
+          for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
+            switch (fcp->type) {
+              case THDB3DFC_TRIANGLE_STRIP:
+                for(j = 0, fxp = fcp->firstfx; fxp->next->next != NULL; j++, fxp = fxp->next) {
+                  t3.m_v[0] = fxp->vertex->id;
+                  switch (j % 2) {
+                    case 0:
+                      t3.m_v[1] = fxp->next->vertex->id;
+                      t3.m_v[2] = fxp->next->next->vertex->id;
+                    default:
+                      t3.m_v[2] = fxp->next->vertex->id;
+                      t3.m_v[1] = fxp->next->next->vertex->id;
+                  }
+                  tlist.insert(tlist.end(), t3);
+                }
+                break;
+              case THDB3DFC_TRIANGLES:
+                for(j = 0, fxp = fcp->firstfx; fxp != NULL; j++, fxp = fxp->next->next->next) {
+                  t3.m_v[0] = fxp->vertex->id;
+                  t3.m_v[1] = fxp->next->vertex->id;
+                  t3.m_v[2] = fxp->next->next->vertex->id;
+                  tlist.insert(tlist.end(), t3);
+                }
+                break;
+            }
+          }
+          lxFile3Angle * tdata = new lxFile3Angle[tlist.size()];
+          std::list<lxFile3Angle>::iterator tli;
+          for(i = 0, tli = tlist.begin(); tli != tlist.end(); tli++, i++) {
+            tdata[i] = *tli;
+          }
+          expf_scrap.m_num3Angles = tlist.size();
+          expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(tdata, i * sizeof(lxFile3Angle));
+          delete [] pdata;
+          delete [] tdata;
+          expf.m_scraps.push_back(expf_scrap);
+          survnum++;
+        }
+      }
+    }
+  }
+
+
   delete [] stnum;
+  delete [] stnum_orig;
 
   expf.ExportLOX(fnm);
 

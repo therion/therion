@@ -29,7 +29,7 @@
 #ifndef thinfnan_h
 #define thinfnan_h
 
-#include <math.h>
+#include <cmath>
 
 
 // nan handling
@@ -37,7 +37,7 @@
 
 #ifdef THLINUX
 #define thnan NAN
-#define thisnan isnan
+#define thisnan std::isnan
 #else
 #define thnan -9e99
 #define thisnan(number) (number == thnan)
@@ -57,7 +57,7 @@
 #ifdef THLINUX
 #define thinf INFINITY
 // Linux C isinf() returns -1/0/1, but C++11 isinf() returns bool.
-#define thisinf(number) (isinf(number) ? (number < 0 ? -1 : 1) : 0)
+#define thisinf(number) (std::isinf(number) ? (number < 0 ? -1 : 1) : 0)
 #else
 #define thinf 1e100
 #define thisinf(number) (number >= thinf ? 1 : (number <= -thinf ? -1 : 0))
