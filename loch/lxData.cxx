@@ -540,7 +540,7 @@ void lxData::Rebuild()
 #else
   this->scrapWallsNormals->SetInput(this->scrapWalls);
 #endif
-  this->scrapWallsNormals->SetFeatureAngle(360.0);
+  this->scrapWallsNormals->SetFeatureAngle(120.0);
   this->scrapWallsNormals->SetAutoOrientNormals(false);
   this->scrapWallsNormals->Update();
 
