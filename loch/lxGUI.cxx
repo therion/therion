@@ -1172,7 +1172,10 @@ bool lxApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     // Use a double-buffered visual if available, as it will give much smoother
     // animation.
-    int wx_gl_attribs[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, 0 };
+    int wx_gl_attribs[] = { 
+			WX_GL_RGBA,
+			WX_GL_DOUBLEBUFFER,
+			0 };
     if (!InitGLVisual(wx_gl_attribs)) {
 	int wx_gl_attribs_no_db[] = { WX_GL_RGBA, 0 };
 	if (!InitGLVisual(wx_gl_attribs_no_db)) {

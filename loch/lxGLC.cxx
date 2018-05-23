@@ -82,12 +82,17 @@ static const GLubyte srf16tex[48] = {
     0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0
 };
 
+int wx_gl_window_attribs[] = {
+	WX_GL_RGBA,
+	WX_GL_DOUBLEBUFFER,
+	WX_GL_DEPTH_SIZE, 16,
+	0 };
 
 
 lxGLCanvas::lxGLCanvas(struct lxSetup * stp, struct lxData * dat, 
                        wxWindow *parent, wxWindowID id,
                        const wxPoint& pos, const wxSize& size, long style, const wxString& name)
-                       : wxGLCanvas(parent, id, NULL, pos, size, style, name),
+                       : wxGLCanvas(parent, id, wx_gl_window_attribs, pos, size, style, name),
                          ctx(this)
 {
   this->frame = NULL;
@@ -197,7 +202,7 @@ void lxGLCanvas::RenderScreen()
   } else {
 
     this->SetCamera();
-    glCallList(this->m_sList);  
+    glCallList(this->m_sList);
 
   }
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -807,11 +812,13 @@ void lxGLCanvas::RenderScrapWalls() {
     viewDir.Normalize();
     this->data->allWallsSorted->SetVector(viewDir.x, viewDir.y, viewDir.z);
     glDepthMask(GL_FALSE);
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     useTransparency = true;
   } else {
-    glDepthMask(GL_TRUE);
     glDisable(GL_BLEND);
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
   }
   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
   glEnable(GL_COLOR_MATERIAL);
@@ -892,10 +899,12 @@ void lxGLCanvas::RenderSurface() {
     this->data->surfaceSorted->SetVector(viewDir.x, viewDir.y, viewDir.z);
 
     glDepthMask(GL_FALSE);
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
   } else {
-    glDepthMask(GL_TRUE);
     glDisable(GL_BLEND);
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
   }
   glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0);
@@ -1311,13 +1320,14 @@ void lxGLCanvas::RenderAll() {
   // vyrendruje outline
   glDisable(GL_LIGHTING);
   glShadeModel(GL_FLAT);
+  glDisable(GL_BLEND);
   glDepthMask(GL_TRUE);
+  glEnable(GL_DEPTH_TEST);
   if (this->m_isO) {
     glLineWidth(this->m_renderData->m_scaleMode == LXRENDER_FIT_SCREEN ? 1.0 : this->m_renderData->m_imgResolution / 96.0);
   } else {
     glLineWidth(1.0);
   }
-  glDisable(GL_BLEND);
   if (this->setup->cam_anaglyph)
     glColor3f(0.7, 0.7, 0.7);
   else
@@ -1339,6 +1349,7 @@ void lxGLCanvas::RenderAll() {
   if (this->setup->m_vis_surface)
     this->RenderSurface();
   glDepthMask(GL_TRUE);
+  glEnable(GL_DEPTH_TEST);
   glDisable(GL_BLEND);
   glShadeModel(GL_FLAT);
 
