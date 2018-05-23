@@ -147,6 +147,7 @@ outdirs:
 	mkdir -p $(OUTDIR)/extern/proj4
 	mkdir -p $(OUTDIR)/extern/poly2tri/sweep/
 	mkdir -p $(OUTDIR)/extern/poly2tri/common/
+	mkdir -p $(OUTDIR)/extern/quickhull
 	mkdir -p $(OUTDIR)/loch
 	mkdir -p $(OUTDIR)/xtherion
 	mkdir -p $(OUTDIR)/thbook
