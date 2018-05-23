@@ -3361,22 +3361,30 @@ thdb3ddata * thdb1ds::get_3d_outline() {
 
   // TODO: Add points to point cloud
 	// traverse all splay shots from given station, calculate normalized position and add
-	pointCloud.push_back(Vector3<double>(0.0, 0.0, 0.0));
-	originalPointCloud.push_back(fv);
-	originalPointCloudUse.push_back(NULL);
+  size_t splaycnt = 0, undercnt = 0;
   for(a = n->first_arrow; a != NULL; a = a->next_arrow) {
-		tt = &(thdb.db1d.station_vec[a->end_node->uid - 1]);
-		tv = Vector3<double>(tt->x, tt->y, tt->z);
-		txv = tv - fv;
-		try {
-			txv.normalize();
-			pointCloud.push_back(txv);
-			originalPointCloud.push_back(tv);
-			originalPointCloudUse.push_back(NULL);
-		} catch (...) {}
+		if ((a->leg->leg->flags & TT_LEGFLAG_SURFACE) == 0) {
+			tt = &(thdb.db1d.station_vec[a->end_node->uid - 1]);
+			tv = Vector3<double>(tt->x, tt->y, tt->z);
+			txv = tv - fv;
+			try {
+				txv.normalize();
+				pointCloud.push_back(txv);
+				originalPointCloud.push_back(tv);
+				originalPointCloudUse.push_back(NULL);
+				if ((a->leg->leg->flags & TT_LEGFLAG_SPLAY) != 0) splaycnt++;
+				else undercnt++;
+			} catch (...) {}
+  	}
+  }
+  // if there are more then 1 underground shots from this station, add it
+  if (undercnt > 0) {
+		pointCloud.push_back(Vector3<double>(0.0, 0.0, 0.0));
+		originalPointCloud.push_back(fv);
+		originalPointCloudUse.push_back(NULL);
   }
 
-	if (pointCloud.size() > 3) {
+	if (splaycnt > 0) {
 		auto hull = qh.getConvexHull(pointCloud, true, true);
 		auto indexBuffer = hull.getIndexBuffer();
 		thdb3dvx * cvx;
