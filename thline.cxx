@@ -762,6 +762,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
         return(true);
       out->symset->export_mp_symbol_options(out->file, omacroid);
       fprintf(out->file,"l_label(btex ");
+      fprintf(out->file,"\\thlabel ");
       out->layout->export_mptex_font_size(out->file, this, true);
       //thdecode(&(this->db->buff_enc),TT_ISO8859_2,this->text);
       fprintf(out->file,"%s etex,",ths2tex(this->text, out->layout->lang, true).c_str());
