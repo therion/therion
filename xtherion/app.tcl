@@ -533,7 +533,6 @@ proc xth_app_show {aname} {
   pack $xth(gui,$aname) -expand yes -fill both
 
   xth_app_title $aname
-
   $xth(gui,main) configure -menu $xth($aname,menu)
   
   regexp {([0-9]+)x([0-9]+)} [winfo geometry $xth(gui,main)] geom xsize ysize
@@ -572,6 +571,9 @@ proc xth_app_show {aname} {
       $xth(gui,tb).redob configure -state normal
     }
   }
+
+  update idletasks
+  wm geometry $xth(gui,main) [wm geometry $xth(gui,main)]
 }
 
 
