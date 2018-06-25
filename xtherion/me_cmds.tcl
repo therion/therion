@@ -3481,3 +3481,42 @@ proc xth_me_show_context_menu {id x y} {
   tk_popup $xth(me,ctxmenu) [expr $x + [winfo rootx $xth(me,can)]] [expr $y + [winfo rooty $xth(me,can)]]
 }
 
+
+proc xth_me_mousewheel_up {} {
+  global xth
+  switch $xth(app,active) {
+    me {
+      if {[expr [clock seconds] - $xth(me,wheel,clk)] < 2.0} {
+        incr xth(me,wheel,position) 1
+      } else {
+        set xth(me,wheel,position) 1
+      }
+      set xth(me,wheel,clk) [clock seconds]
+      if {$xth(me,wheel,position) > $xth(me,wheel,sensitivity)} {
+        set xth(me,wheel,position) 0
+        if {$xth(me,zoom) > 200} return;
+        xth_me_area_zoom_to [expr 2*$xth(me,zoom)]
+      }
+    }
+  }
+}
+
+proc xth_me_mousewheel_down {} {
+  global xth
+  switch $xth(app,active) {
+    me {
+      if {[expr [clock seconds] - $xth(me,wheel,clk)] < 2.0} {
+        incr xth(me,wheel,position) -1
+      } else {
+        set xth(me,wheel,position) -1
+      }
+      set xth(me,wheel,clk) [clock seconds]
+      if {$xth(me,wheel,position) < -$xth(me,wheel,sensitivity)} {
+        set xth(me,wheel,position) 0
+        if {$xth(me,zoom) < 50} return;
+        xth_me_area_zoom_to [expr $xth(me,zoom) / 2]
+      }
+    }
+  }
+}
+

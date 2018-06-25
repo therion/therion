@@ -30,9 +30,9 @@ xth_about_status [mc "loading map editor ..."]
 catch {package require Img}
 
 set xth(me,dflt,scrap,scale) {}
-set xth(me,wheel,clock) [clock seconds]
+set xth(me,wheel,clk) [clock seconds]
 set xth(me,wheel,position) 0
-set xth(me,wheel,sesitivity) 5
+set xth(me,wheel,sensitivity) 22
 
 proc xth_me_reset_defaults {} {
   global xth
@@ -1197,43 +1197,6 @@ proc xth_me_bind_image_drag {tagOrId imgx} {
   $xth(me,can) bind $tagOrId <Double-$xth(gui,rmb)> "xth_me_image_start_drag $tagOrId $imgx %x %y"
 }
 
-proc xth_me_mousewheel_up {} {
-  global xth
-  switch $xth(app,active) {
-    me {
-      if {[expr [clock seconds] - $xht(me,wheel,clock)] < 4.0} {
-        incr xth(me,wheel,position) 1
-      } else {
-        set xth(me,wheel,position) 1
-      }
-      set xht(me,wheel,clock) [clock seconds]
-      if {$xth(me,wheel,position) == $xth(me,wheel,sesitivity)} {
-        set xth(me,wheel,position) 0
-        if {$xth(me,zoom) > 200} return;
-        xth_me_area_zoom_to [expr 2*$xth(me,zoom)]
-      }
-    }
-  }
-}
-
-proc xth_me_mousewheel_down {} {
-  global xth
-  switch $xth(app,active) {
-    me {
-      if {[expr [clock seconds] - $xht(me,wheel,clock)] < 4.0} {
-        incr xth(me,wheel,position) -1
-      } else {
-        set xth(me,wheel,position) -1
-      }
-      set xht(me,wheel,clock) [clock seconds]
-      if {$xth(me,wheel,position) == -$xth(me,wheel,sesitivity)} {
-        set xth(me,wheel,position) 0
-        if {$xth(me,zoom) < 50} return;
-        xth_me_area_zoom_to [expr $xth(me,zoom) / 2]
-      }
-    }
-  }
-}
 
 # Windows and Mac have only one binding for the mouse wheel, no matter if it's going up or down
 # so we have to figure it out ourselves.
