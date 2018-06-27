@@ -522,6 +522,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
   int cA, cR, cG, cB;
   #define checkc(c) if (c < 0) c = 0; if (c > 255) c = 255;
+  bool first_outer;
 
   while (cmap != NULL) {
     cbm = cmap->first_bm;
@@ -561,15 +562,19 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
             xu.parse_scrap(scrap);
             if (xu.m_part_list.size() > 0) {
               fprintf(out,"<Polygon>\n");
+              first_outer = true;
               std::list<thexpuni_part>::iterator it;
               std::list<thexpuni_data>::iterator ip;
               double x,y,z;
               for(it = xu.m_part_list.begin(); it != xu.m_part_list.end(); it++) {
-                if (it->m_outer)
+                if (it->m_outer) {
+                  if (!first_outer) {
+                      fprintf(out,"</Polygon>\n<Polygon>\n");
+                  }
                   fprintf(out,"<outerBoundaryIs>\n");
-                else
+                  first_outer = false;
+                } else
                   fprintf(out,"<innerBoundaryIs>\n");
-
                 fprintf(out,"<LinearRing>\n<coordinates>\n");
                 for(ip = it->m_point_list.begin(); ip != it->m_point_list.end(); ip++) {
                   thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
