@@ -320,11 +320,11 @@ void thlookup::color_scrap(thscrap * s) {
         ms.adddata(&(s->adata));
         sval = s->a;
         if (this->m_type == TT_LAYOUT_CCRIT_EXPLODATE) {
-          sval = ms.discovered_date.get_average_year();
+          sval = ms.discovered_date.get_start_year();
           if (sval < 0) sval = thnan;
         }
         if (this->m_type == TT_LAYOUT_CCRIT_TOPODATE) {
-          sval = ms.surveyed_date.get_average_year();
+          sval = ms.surveyed_date.get_start_year();
           if (sval < 0) sval = thnan;
         }
         if (this->m_intervals) {
