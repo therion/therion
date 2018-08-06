@@ -365,12 +365,12 @@ proc create_docs {} {
     log_msg "$iisrc\n"
     set dpi 300
     while {[catch {
-      eval "exec \"$convpath\" -density $dpi $iisrc $outd/tmp.png"
+      eval "exec \"$convpath\" -colorspace RGB -density $dpi $iisrc $outd/tmp.png"
     }] && ($dpi > 10)} {
       log_msg "error at $dpi dpi processing $iisrc\n"
       set dpi [expr int(double($dpi) * 0.9)]
     }
-    eval "exec \"$convpath\" -resize 419x419 $outd/tmp.png $outd/$iiimg"
+    eval "exec \"$convpath\" -colorspace RGB -resize 419x419 $outd/tmp.png $outd/$iiimg"
     file delete -force $outd/tmp.png
     file copy -force -- $iisrc "$outd/$iifnm"
   }
