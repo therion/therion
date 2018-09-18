@@ -913,16 +913,6 @@ msgstr "Alternar etiquetado estación"
 msgid "Show indicators"
 msgstr "Mostrar indicadores"
 
-# c:/cave/loch/loch/lxGUI.cxx:225
-#: lxGUI.cxx:225
-msgid "Rendering setup"
-msgstr "Configuración renderizado"
-
-# c:/cave/loch/loch/lxGUI.cxx:233
-#: lxGUI.cxx:233
-msgid "Profile view"
-msgstr "Vista alzado"
-
 # c:/cave/loch/loch/lxSScene.cxx:402
 #: lxSScene.cxx:402
 msgid "Marked stations"
@@ -962,11 +952,6 @@ msgstr "Nombre"
 #: lxSScene.cxx:411
 msgid "Survey"
 msgstr "Topografias"
-
-# c:/cave/loch/loch/lxSScene.cxx:412
-#: lxSScene.cxx:412
-msgid "Altitude"
-msgstr "Altitud"
 
 # c:/cave/loch/loch/lxSScene.cxx:279
 #: lxSScene.cxx:279
@@ -1078,8 +1063,4 @@ msgstr "La presentación ha cambiado. Guardarla?"
 msgid "Warning"
 msgstr "Cuidado"
 
-# c:/cave/loch/loch/lxPres.cxx:133
-#: lxPres.cxx:133
-msgid "Scene"
-msgstr "Escena"
 
