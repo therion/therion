@@ -236,7 +236,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
         survey_name, survey_title);
         
 	  fprintf(sqlf,"create table SCRAPS "
-        "(ID integer, SURVEY_ID integer, NAME varchar(%d), PROJID integer);\n",
+        "(ID integer, SURVEY_ID integer, NAME varchar(%d), PROJID integer, MAX_DISTORTION real, AVG_DISTORTION real);\n",
         survey_name);
         
 	  fprintf(sqlf,"create table MAPITEMS "
@@ -268,9 +268,9 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 			scrapp = (thscrap *)(*oi);
 			IF_PRINTING {
 				fprintf(sqlf,"insert into SCRAPS values "
-				  "(%ld, %ld, '%s', %d);\n ",
+				  "(%ld, %ld, '%s', %d, %.5lf, %.5lf);\n ",
 				  scrapp->id, (scrapp->fsptr != NULL ? scrapp->fsptr->id : 0), 
-				  scrapp->name, scrapp->proj->id);
+				  scrapp->name, scrapp->proj->id, scrapp->maxdist, scrapp->avdist);
 			} else {
 				CHECK_STRLEN(survey_name,scrapp->name);
 			}
