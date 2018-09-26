@@ -81,6 +81,29 @@ def l_label(expr txt,path) =
   % draw path;
 enddef;
 
+
+% Label processing modes
+% 0 = generic label
+% 1 = altitude with dot
+% 2 = semi circle up
+% 3 = semi circle down
+% 4 = semi circle up + semi circle down
+% 5 = circle
+% 6 = boxed label
+% 7 = generic label for station name;
+% 8 = filled label???
+p_label_mode_label:=0;%
+p_label_mode_station:=7;%
+p_label_mode_altitude:=1;%
+p_label_mode_date:=0;%
+p_label_mode_passageheight:=5;%
+p_label_mode_passageheightpos:=2;%
+p_label_mode_passageheightneg:=3;%
+p_label_mode_passageheightposneg:=4;%
+p_label_mode_height:=7;%
+p_label_mode_debugscrap:=1;
+p_label_mode_debugstation:=2;
+
 vardef p_label@#(expr txt,pos,rot,mode) =
   if (mode=1) or (mode=7): interim labeloffset:=(u/8) fi;
   lab:=thelabel@#(txt, pos);
