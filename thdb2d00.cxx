@@ -319,7 +319,8 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       // set selection color
       lxm = selection;
       while (lxm != NULL) {
-        lxm->selection_color = ii->m_color;
+    	if ((lxm->selection_level == ii->number) && (ii->m_color.defined))
+    		lxm->selection_color = ii->m_color;
         lxm = lxm->next_item;
       }
       while ((cxm != NULL) && (cxm->next_item != NULL))

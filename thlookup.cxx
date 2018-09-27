@@ -182,6 +182,8 @@ void thlookup_table_row::parse(class thlookup * lkp, char * args) {
       case TT_LAYOUT_CCRIT_SURVEY:
       case TT_LAYOUT_CCRIT_MAP:
         this->m_valueString = thdb.strstore(mbf.get_buffer()[0]);
+        if ((strcmp(this->m_valueString,"-") == 0) || (strcmp(this->m_valueString,".") == 0))
+        	this->m_valueString = "";
         lkp->m_intervals = true;
         break;
       default:
@@ -243,7 +245,7 @@ void thlookup::postprocess_object_references() {
         case TT_LAYOUT_CCRIT_MAP:
         case TT_LAYOUT_CCRIT_SCRAP:
         case TT_LAYOUT_CCRIT_SURVEY:
-          if (tr->m_ref == NULL) {
+          if ((tr->m_ref == NULL) && (strlen(tr->m_valueString) > 0)) {
             tmp = tr->m_valueString;
             thparse_objectname(on, &(thdb.buff_strings), tmp.get_buffer(), NULL);
             tr->m_ref = thdb.get_object(on, NULL);
@@ -418,11 +420,14 @@ void thlookup::export_color_legend(thlayout * layout) {
           case TT_LAYOUT_CCRIT_MAP:
           case TT_LAYOUT_CCRIT_SCRAP:
           case TT_LAYOUT_CCRIT_SURVEY:
-            title = ths2txt(tli->m_ref->title, layout->lang).c_str();
-            if (strlen(title) == 0)
-              title = tli->m_ref->name;
-            else
-              title = tli->m_ref->title;
+        	if (tli->m_ref) {
+        		title = ths2txt(tli->m_ref->title, layout->lang).c_str();
+				if (strlen(title) == 0)
+				  title = tli->m_ref->name;
+				else
+				  title = tli->m_ref->title;
+        	} else
+				title = "";
             clrec.texname = ths2tex(title, layout->lang);
             clrec.name = ths2txt(title, layout->lang);
             break;

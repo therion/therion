@@ -3216,7 +3216,12 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
               }
             break;
             default:
-              if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
+              if (cmap->selection_color.defined) {
+            	cs->R = cmap->selection_color.R;
+            	cs->G = cmap->selection_color.G;
+            	cs->B = cmap->selection_color.B;
+              }
+              else if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
                 cs->R = cs->fsptr->selected_color.R;
                 cs->G = cs->fsptr->selected_color.G;
                 cs->B = cs->fsptr->selected_color.B;
@@ -3487,6 +3492,27 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
   bool firstmapscrap, nolkpitems;
   thlayout_color csc;
 
+  // 1. reset scrap colors
+  cmap = maps;
+  while (cmap != NULL) {
+    cbm = cmap->first_bm;
+    firstmapscrap = true;
+    while (cbm != NULL) {
+      cmi = cbm->bm->last_item;
+      if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
+        if (cmi->type == TT_MAPITEM_NORMAL) {
+          cs = (thscrap *) cmi->object;
+          cs->RGBsrc = 0;
+        }
+        cmi = cmi->prev_item;
+      }
+      cbm = cbm->next_item;
+    }
+    cmap = cmap->next_item;
+  }
+
+
+
   // najprv to nascanuje
   nolkpitems = false;
   if (lkp != NULL)
@@ -3521,11 +3547,18 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
           }
 
           // set default color
-          if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
+          if (cmap->selection_color.defined) {
+        	cs->R = cmap->selection_color.R;
+        	cs->G = cmap->selection_color.G;
+        	cs->B = cmap->selection_color.B;
+        	cs->RGBsrc = 2;
+          }
+          else if (((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) && (cs->RGBsrc < 2)) {
             cs->R = cs->fsptr->selected_color.R;
             cs->G = cs->fsptr->selected_color.G;
             cs->B = cs->fsptr->selected_color.B;
-          } else {
+        	cs->RGBsrc = 1;
+          } else if (cs->RGBsrc < 1) {
             cs->R = this->layout->color_map_fg.R;
             cs->G = this->layout->color_map_fg.G;
             cs->B = this->layout->color_map_fg.B;
