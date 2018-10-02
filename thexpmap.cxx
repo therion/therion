@@ -3009,7 +3009,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     thdb.buff_tmp = utf2tex(thobjectname__print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
     fprintf(out->file,"p_label(btex \\thlargesize %s etex,",thdb.buff_tmp.get_buffer());
     tmppt.export_mp(out);
-    fprintf(out->file,",0.0,p_label_mode_dbgscrap);\n");
+    fprintf(out->file,",0.0,p_label_mode_debugscrap);\n");
   }
 
 
