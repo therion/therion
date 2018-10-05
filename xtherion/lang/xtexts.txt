@@ -1518,7 +1518,7 @@ fr: Interchager
 pt: Inverter
 
 therion: Swap points of object shifting vector.
-es Intercambiar los puntos del vector de desplazamiento de objetos.
+es: Intercambiar los puntos del vector de desplazamiento de objetos.
 fr: Interchanger les points du vecteur déplacement des objets.
 pt: Inverter pontos do vetor de deslocamento do objeto.
 
