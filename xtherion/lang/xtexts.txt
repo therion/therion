@@ -673,7 +673,7 @@ bg: Потребителският интерфейс е неактивен. З�
 cz: Uživatelské rozhraní není aktivní. Pro jeho aktivaci otevřete existující soubor nebo vytvořte nový.
 de: Fenster nicht aktiv. Um es zu benutzen, öffne eine existierende Datei oder lege eine neue an.
 el: Διασύνδεση χρήστη ανενεργή. Για να ενεργοποιηθεί, ανοίξτε υπάρχον αρχείο ή δημιουργήστε νέο.
-en: User interface is not active. To activate it, open existing file or create new one.
+en: User interface is not active. To activate it, open an existing file or create a new one.
 es: El interfaz está inactivo. Para activarlo, abre un archivo existente o crea uno nuevo.
 fr: L'interface n'est pas active. Pour l'activer, ouvrez un fichier existant ou créez-en un nouveau.
 it: L'interfaccia utente non è attiva. Per attivarla apri un file o creane uno.
@@ -1328,7 +1328,7 @@ bg: Действие
 cz: Tlačítko Akce.
 de: Aktionsknopf.
 el: Πατώντας εδώ μπορείτε να εισάγετε αντικείμενα με το ποντίκι. Πατήστε την εντολή να δείτε το μενού.
-en: After clicking this button, you can insert objects by mouse. Click on action to see menu.
+en: After clicking this button, you can insert objects using the mouse. Click on action to see menu.
 es: Tras pulsar este botón, se pueden insertar objetos con el ratón. Clic en acción para ver menú.
 fr: Après avoir cliquer sur ce bouton, vous pouvez insérer des objects à la souris. Clic en action pour afficher le menu.
 it: Bottone di azione.
@@ -1343,7 +1343,7 @@ bg: Преминете на мишка за да избирате обекти
 cz: Přepnutí myši do výběrového módu.
 de: Maus umschalten um Objekte auszuwählen.
 el: Αφού πατήστε εδώ μπορείτε να συλλέξετε αντικείμενα στον καμβά με το ποντίκι.
-en: After clicking this button, you can select objects on canvas by mouse.
+en: After clicking this button, you can select objects on the canvas using the mouse.
 es: Tras clicar aquí, podrás seleccionar objetos en la topo con el ratón.
 fr: En cliquant sur ce bouton, vous pouvez sélectionner les objects sur la topo avec la souris.
 it: Cambia la modalità del mouse per selezionare oggetti.
@@ -1403,7 +1403,7 @@ bg: Премести нагоре в списъка файла с команди
 cz: Přesune příkaz výš v seznamu příkazů.
 de: In der Liste nach oben schieben.
 el: Μετακίνηση αντικειμένου ψηλότερα στην λίστα. Χρήσιμο σε περίπτωση που είναι σε λάθος σκράπ το αντικείμενο.
-en: Move object up in the list. Use if object is in wrong scrap.
+en: Move object up in the list. Use if an object is in the wrong scrap.
 es: Desplaza el objeto hacia arriba en la lista. Usar si el objeto está en trozo erróneo.
 fr: Déplacer l'objet jusqu'en haut de la liste. A utiliser si l'objet est dans le mauvais scrap.
 it: Sposta il comando in sù nella lista.
@@ -1433,7 +1433,7 @@ bg: Премести надолу в списъка файла с команди
 cz: Přesune příkaz níž v seznamu příkazů.
 de: In der Liste nach unten schieben.
 el: Μετακίνηση αντικειμένου χαμηλότερα στην λίστα. Χρήσιμο σε περίπτωση που είναι σε λάθος σκράπ το αντικείμενο.
-en: Move object down in the list. Use if object is in wrong scrap.
+en: Move object down in the list. Use if an object is in the wrong scrap.
 es: Desplaza el objeto hacia abajo en la lista. Usar si el objeto está en trozo erróneo.
 fr: Déplacer l'objet jusqu'en bas de la liste. A utiliser si l'objet est dans un mauvais scrap.
 it: Sposta il comando in giù nella lista.
@@ -1552,7 +1552,7 @@ bg: Натиснете този бутон за да запазите напис
 cz: Stiskněte toto tlačítko pro uložení Vámi zapsaného kódu.
 de: Diesen Knopf drücken, um Daten zu speichern.
 el: Πατήστε το κουμπί να αποθηκευτεί ο κώδικας που γράψατε
-en: Press this button to save code you have written.
+en: Press this button to save your code changes.
 es: Clicar aquí para guardar los cambios hechos en el código.
 fr: Cliquer ici pour guarder les modifications du code.
 it: Premi questo bottone per salvare il codice che hai scritto.
@@ -2212,7 +2212,7 @@ bg: Други опции на скрапа.
 cz: Další volby pro scrap.
 de: Andere Skizzenoptionen.
 el: Άλλες επιλογές των σκραπ - βλέπετε το thbook.pdf
-en: Other scrap options (more on this on thbook.pdf)
+en: Other scrap options (more on this in thbook.pdf)
 es: Otras opciones del trozo (mas en el thbook.pdf)
 fr: Autres options du scrap (voir les options dans le thbook.pdf)
 it: Altre opzioni dello scrap
@@ -2270,7 +2270,7 @@ bg: Натиснете този бутон за да приложите пром
 cz: Stiskněte toto tlačítko po uplatnění změn aktuálního scrapu.
 de: Drücke diesen Knopf, um deine Änderungen auf diese Skizze anzuwenden.
 el: Πατήστε εδώ για να γίνει εφαρμογή των αλλαγών σας στο τρέχον σκραπ.
-en: Press this button to apply your changes to current scrap.
+en: Press this button to apply your changes to the current scrap.
 es: Clicar aquí tras modificar las propiedades del trozo.
 fr: Cliquer ici pour modifier les propriétés du scrap
 it: Premi questo bottone per applicare le tue modifiche allo scrap.
@@ -2641,7 +2641,7 @@ bg: Например, ако типът на точката е label (етике
 cz: Příklad: pokud type je label, zadejte: -text \042this will be displayed (P100)\042
 de: d.h., wenn der Typ Beschriftung ist, schreibe hier: -text \042das wird hier angezeigt (P100)\042
 el: Δηλαδή, αν το είδος είναι ταμπέλα, εδώ γράφετε: -text \042αυτό εμφανίζεται (P100)\042
-en: I.e, if type is label, write here: -text \042this will be displayed (P100)\042
+en: E.g, if type is label, write here: -text \042this will be displayed (P100)\042
 es: P.ej, si el tipo es label, escribe: -text \042lo que se verá (P100)\042.
 fr: I.e., si le type est libellé, écrit ici : -text \042ce sera affiché (P100à\042
 it: Cioé, se il tipo è etichetta, scrivi: -text \042questo sarà visualizzato (P100)\042
@@ -2671,7 +2671,7 @@ bg: Някои типове символи трябва да бъдат орие
 cz: Jsou symboly, kterým musíte specifikovat orientaci (např. gradient). Zaklikněte tuto volbu a nastavte jim orientaci myší nebo z klávesnice.
 de: Es gibt Symbole, die eine Ausrichtung haben müssen (z.B. Gefälle). Klicke hier, um sie mit der Maus oder der Tastatur auszurichten.
 el: Κάποια είδη συμβόλων πρέπει να προσανατολιστούν (π.χ. κλίσεις). Κάντε κλικ εδώ να ορισθεί ο προσανατολισμός είτε από το πληκτρολόγιο είτε με το ποντίκι.
-en: Some symbol types must be orientated (i.e: gradients). Click here to orientate them using mouse or keyboard.
+en: Some symbol types must be orientated (e.g: gradients). Click here to orientate them using mouse or keyboard.
 es: Algunos símbolo que deben estar orientados (p.ej, pendientes). Haz clic aquí para orientarlos con el ratón o el teclado.
 fr: Certains symboles doivent être orientés (i.e. gradients). Cliquer ici permettra l'orientation des symboles avec la souris ou le clavier.
 it: Ci sono tipi di simboli che sono orientati (per es. gradiente). Premi qui per orientarli col mouse o la tastiera
@@ -2836,7 +2836,7 @@ bg: Други опции на линията
 cz: Další volby pro křivku.
 de: Andere Linienoptionen.
 el: Άλλες επιλογές γραμμής. Δηλαδή για μη-εμφάνιση γραμμής γράφετε εδώ: -subtype invisible. Βλέπετε το thbook.pdf
-en: Other line options. I.e., to make line invisible, write here: -subtype invisible. See thbook.pdf
+en: Other line options. E.g., to make line invisible, write here: -subtype invisible. See thbook.pdf
 es: Otras opciones de línea. P. ej: para hacerla invisible, escribe: -subtype invisible (consultar thbook.pdf)
 fr: Autres options de ligne. I.e., pour afficher une ligne invisible, écrire ici : -subtype invisible. Se référer au thbook.pdf pour les autres options.
 it: Altre opzioni della linea.
@@ -2851,7 +2851,7 @@ bg: Обърни линията
 cz: Obrátit křivku.
 de: Linie umkehren.
 el: Αναστροφή γραμμής. Σε περίπτωση που τα σημαδάκια είναι ανάποδα, κάντε κλικ εδώ.
-en: Reverse line. If symbol's ticks are on bad side, click here.
+en: Reverse line. If symbol's ticks are on the wrong side, click here.
 es: Invertir línea. Si la marca de sentido del simbolo esta en el lado erroneo, haz clic aquí.
 fr: Inverser le sens de la ligne. Si la marque du sens est du mauvais côté, cliquer ici.
 it: Inverti la linea.
@@ -3076,7 +3076,7 @@ bg: Установете за изглаждане на линията в дад
 cz: Nastaví hladkou křivku v daném bodě.
 de: Setze Linie auf geglättet am gegebenen Punkt.
 el: Ορισμός απαλής καμπύλης στο επόμενο σημείο της γραμμής
-en: Set line to be smooth in given point.
+en: Set line to be smooth at given point.
 es: Suavizar la línea en el punto seleccionado.
 fr: Arrondi la ligne au point sélectionné.
 it: Imposta la linea ad essere regolare nelpunto specificato.
@@ -3345,7 +3345,7 @@ bg: Превключи в режим поставяне на линии-гран
 cz: Výběr ohraničujících křivek oblasti.
 de: Linienselektion für Flächenauswahl umschalten.
 el: Αφού πατήστε εδώ, επιλέγετε με το ποντίκι τις γραμμές ορίων της επιφάνειας (πρέπει να τέμνονται)
-en: After clicking here, select by mouse this area border lines (they must intersect).
+en: After clicking here, select border lines for this area using the mouse (they must intersect).
 es: Tras clicar aquí, seleccionar con el ratón las líneas que limiten un área (deben cortarse entre sí).
 fr: Après avoir cliquer ici, sélectionnez à la souris les lignes qui vont délimiter l'aire. Elles doivent s'intercepter.
 it: Cambia per inserire linee nell'area.
@@ -3684,7 +3684,7 @@ bg: Редактора на карти не е активен. За активи
 cz: Mapový editor není aktivní. Pro jeho aktivaci otevřete existující soubor nebo vytvořte nový.
 de: Der Karteneditor ist nicht aktiv. Um ihn zu aktivieren, öffne eine bestehende Datei oder erzeuge eine neue.
 el: Ο επεξεργαστής σχεδίου δεν είναι ενεργός. Για να τον ενεργοποιήσετε, ανοίξτε ένα αρχείο ή δημιουργήστε νέο.
-en: Map editor is not active. To activate it, open existing file or create new one.
+en: Map editor is not active. To activate it, open an existing file or create a new one.
 es: El editor de mapas está inactivo. Para activarlo, abre un archivo existente o crea uno nuevo.
 fr: L'éditeur de cartes est inactif. Pour l'activer, ouvrez un fichier existant ou créez-en un nouveau.
 it: L'editor di mappa non è attivo. Per attivarlo apri un file o creane uno.
@@ -4392,6 +4392,7 @@ sk: vľavo-dole
 
 therion: center
 de: mitte
+en_GB: centre
 es: centro
 fr: centre
 pt: centro
@@ -6026,7 +6027,7 @@ bg: Текстовият редактор не е активен. За акти�
 cz: Textový editor není aktivní. Pro jeho aktivaci otevřete existující soubor nebo vytvořte nový.
 de: Texteditor ist nicht aktiv. Um ihn zu aktivieren, öffne eine existierende Datei oder lege eine neue an.
 el: Ο επεξεργαστής κειμένου δεν είναι ενεργός. Για να τον ενεργοποιήσετε, ανοίξτε αρχείο, ή δημιουργήστε νέο.
-en: Text editor is not active. To activate it, open existing file or create new one.
+en: Text editor is not active. To activate it, open an existing file or create a new one.
 es: El editor de texto está inactivo. Para activarlo, abre un archivo existente o crea uno nuevo.
 fr: L'éditeur de texte est inactif. Pour l'activer, ouvrez un fichier existant ou créez-un un nouveau.
 it: L'editor di testo non è attivo. Per attivarlo apri un file o creane uno.
