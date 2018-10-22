@@ -224,6 +224,7 @@ clean:
 	perl makefile.pl rm -q *.zip
 	perl makefile.pl rm -q *.pdf
 	perl makefile.pl rm -q *.png
+	$(MAKE) -C help clean
 
 
 
