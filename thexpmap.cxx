@@ -1042,7 +1042,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   fprintf(pltf,"    subtype %s\n", thmatch_string(lpt->subtype, thtt_line_subtypes));
                   lsubtype = lpt->subtype;
                 }
-                if ((lpt->tags | TT_LINEPT_TAG_ALTITUDE) != 0) {
+                if ((lpt->tags & TT_LINEPT_TAG_ALTITUDE) != 0) {
                   // TODO: altitude tags and others
                 }
                 lpt = lpt->nextlp;
@@ -2948,7 +2948,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             // prescanuje stenu
             lp = ((thline*)obj)->first_point;
             while(lp != NULL) {
-              if (((lp->tags | TT_LINEPT_TAG_ALTITUDE) > 0) &&
+              if (((lp->tags & TT_LINEPT_TAG_ALTITUDE) > 0) &&
                   (!thisnan(lp->rsize))) {
                 thexpmap_export_mp_bgif;
                 out->symset->export_mp_symbol_options(out->file, SYMP_WALLALTITUDE);

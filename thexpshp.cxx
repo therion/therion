@@ -708,10 +708,10 @@ void thexpmodel::export_shp_file(class thdatabase * dbp)
     xs.m_fstations3D.m_attributes.insert_attribute("_UID", (long) st->uid);
     xs.m_fstations3D.m_attributes.insert_attribute("_NAME", st->name);
     xs.m_fstations3D.m_attributes.insert_attribute("_SURVEY", st->survey->get_full_name());
-    xs.m_fstations3D.m_attributes.insert_attribute("_SURFACE", long(((st->flags | TT_STATIONFLAG_UNDERGROUND) == 0) ? 1 : 0));
-    xs.m_fstations3D.m_attributes.insert_attribute("_FIXED", long(((st->flags | TT_STATIONFLAG_FIXED) != 0) ? 1 : 0));
-    xs.m_fstations3D.m_attributes.insert_attribute("_ENTRANCE", long(((st->flags | TT_STATIONFLAG_ENTRANCE) != 0) ? 1 : 0));
-    xs.m_fstations3D.m_attributes.insert_attribute("_CONTINUATION", long(((st->flags | TT_STATIONFLAG_CONT) != 0) ? 1 : 0));
+    xs.m_fstations3D.m_attributes.insert_attribute("_SURFACE", long(((st->flags & TT_STATIONFLAG_UNDERGROUND) == 0) ? 1 : 0));
+    xs.m_fstations3D.m_attributes.insert_attribute("_FIXED", long(((st->flags & TT_STATIONFLAG_FIXED) != 0) ? 1 : 0));
+    xs.m_fstations3D.m_attributes.insert_attribute("_ENTRANCE", long(((st->flags & TT_STATIONFLAG_ENTRANCE) != 0) ? 1 : 0));
+    xs.m_fstations3D.m_attributes.insert_attribute("_CONTINUATION", long(((st->flags & TT_STATIONFLAG_CONT) != 0) ? 1 : 0));
     if ((st->comment != NULL) && (strlen(st->comment) > 0))
       xs.m_fstations3D.m_attributes.insert_attribute("_COMMENT", st->comment);
     xs.m_fstations3D.m_attributes.copy_attributes(dbp->db1d.m_station_attr.get_object(i+1));
@@ -732,10 +732,10 @@ void thexpmodel::export_shp_file(class thdatabase * dbp)
     xs.m_fshots3D.m_attributes.insert_attribute("_FROM", (long) lg->leg->from.id);
     xs.m_fshots3D.m_attributes.insert_attribute("_TO", (long) lg->leg->to.id);
     xs.m_fshots3D.m_attributes.insert_attribute("_SURVEY", lg->leg->psurvey->get_full_name());
-    xs.m_fshots3D.m_attributes.insert_attribute("_SURFACE", long(((lg->leg->flags | TT_LEGFLAG_SURFACE) != 0) ? 1 : 0));
-    xs.m_fshots3D.m_attributes.insert_attribute("_DUPLICATE", long(((lg->leg->flags | TT_LEGFLAG_DUPLICATE) != 0) ? 1 : 0));
-    xs.m_fshots3D.m_attributes.insert_attribute("_APPROXIMATE", long(((lg->leg->flags | TT_LEGFLAG_APPROXIMATE) != 0) ? 1 : 0));
-    xs.m_fshots3D.m_attributes.insert_attribute("_SPLAY", long(((lg->leg->flags | TT_LEGFLAG_SPLAY) != 0) ? 1 : 0));
+    xs.m_fshots3D.m_attributes.insert_attribute("_SURFACE", long(((lg->leg->flags & TT_LEGFLAG_SURFACE) != 0) ? 1 : 0));
+    xs.m_fshots3D.m_attributes.insert_attribute("_DUPLICATE", long(((lg->leg->flags & TT_LEGFLAG_DUPLICATE) != 0) ? 1 : 0));
+    xs.m_fshots3D.m_attributes.insert_attribute("_APPROXIMATE", long(((lg->leg->flags & TT_LEGFLAG_APPROXIMATE) != 0) ? 1 : 0));
+    xs.m_fshots3D.m_attributes.insert_attribute("_SPLAY", long(((lg->leg->flags & TT_LEGFLAG_SPLAY) != 0) ? 1 : 0));
   }
 
 
