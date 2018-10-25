@@ -2181,7 +2181,7 @@ void thlayout::export_mptex_font_size(FILE * o, th2ddataobject * obj, bool print
     case TT_2DOBJ_SCALE_XS:
       fprintf(o,"\\thtinysize ");
       break;
-    case TT_2DOBJ_SCALE_NUMBERIC:
+    case TT_2DOBJ_SCALE_NUMERIC:
     	{
     		double optical_zoom = this->scale / this->base_scale;
     		if (obj->scale_numeric <= 0.5)
