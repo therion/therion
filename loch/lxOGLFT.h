@@ -403,7 +403,7 @@ namespace OGLFT {
     Face ( FT_Face face, float point_size = 12, FT_UInt resolution = 100 );
 
     /*!
-     * Deleting a Face frees its FreeType face (and anything else it's
+     * Deleting a Face frees its FreeType face (and anything else its
      * styles have allocated).
      */
     virtual ~Face ( void );
