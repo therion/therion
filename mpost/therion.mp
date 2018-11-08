@@ -41,6 +41,10 @@
 tracingstats:=1;
 prologues:=0;
 
+% Set the random seed to a fixed value so therion reproducibly produces the
+% same output for a given input.
+randomseed:=42;
+
 if known Background: background:=Background fi;
 %TrueScale:=Scale;
 
