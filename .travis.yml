@@ -22,6 +22,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make                            ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   ./therion --print-symbols       ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make samples                    ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make library                    ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make cleanrest                  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make config-win32cross          ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make                            ; fi
