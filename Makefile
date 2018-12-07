@@ -120,13 +120,13 @@ LDBFLAGS = $(LDPFLAGS)
 # PROJ CONFIG
 
 # PROJ BUNDLED
-CMNOBJECTS += extern/proj4/libproj.a
-PROJ_LIBS =
-PROJ_API_H = extern/proj4/proj_api.h
+##CMNOBJECTS += extern/proj4/libproj.a
+##PROJ_LIBS =
+##PROJ_API_H = extern/proj4/proj_api.h
 
 # PROJ SYSTEM
-##PROJ_LIBS = $(shell pkg-config proj --libs)
-##PROJ_API_H = $(shell pkg-config proj --variable=includedir)/proj_api.h
+PROJ_LIBS = $(shell pkg-config proj --libs)
+PROJ_API_H = $(shell pkg-config proj --variable=includedir)/proj_api.h
 
 # PROJ ENDCONFIG
 
