@@ -26,7 +26,7 @@
  */
 
 #include "thexception.h"
-#include "extern/proj4/proj_api.h"
+#include <proj_api.h>
 #include <string>
 #include <cassert>
 

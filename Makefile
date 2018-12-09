@@ -121,17 +121,17 @@ LDBFLAGS = $(LDPFLAGS)
 
 # PROJ BUNDLED
 ##CMNOBJECTS += extern/proj4/libproj.a
-##PROJ_LIBS =
-##PROJ_API_H = extern/proj4/proj_api.h
+##CXXJFLAGS = -Iextern/proj4
 
 # PROJ SYSTEM
 PROJ_LIBS = $(shell $(CROSS)pkg-config proj --libs)
-PROJ_API_H = $(shell $(CROSS)pkg-config proj --variable=includedir)/proj_api.h
+CXXJFLAGS = -I$(shell $(CROSS)pkg-config proj --variable=includedir)
+
 
 # PROJ ENDCONFIG
 
 # compiler settings
-CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) -std=c++11
+CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -std=c++11
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
 
@@ -405,7 +405,7 @@ $(OUTDIR)/thconfig.o: thconfig.cxx thconfig.h thbuffer.h thmbuffer.h thinput.h \
 $(OUTDIR)/thconvert.o: thconvert.cxx thpdfdbg.h thexception.h therion.h thbuffer.h \
  thpdfdata.h thepsparse.h thtexfonts.h
 $(OUTDIR)/thcs.o: thcs.cxx thcs.h thcsdata.h thparse.h thbuffer.h thmbuffer.h \
- thexception.h therion.h $(PROJ_API_H) thdatabase.h \
+ thexception.h therion.h thdatabase.h \
  thdataobject.h thperson.h thdate.h thdataleg.h thobjectname.h \
  thobjectsrc.h thinfnan.h thlayoutclr.h thdb1d.h thobjectid.h thdb3d.h \
  loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h thdb2dprj.h \
@@ -848,8 +848,7 @@ $(OUTDIR)/thpoint.o: thpoint.cxx thpoint.h th2ddataobject.h thdataobject.h \
  thexception.h thexpmap.h thexport.h thlayout.h thsymbolset.h \
  thsymbolsetlist.h thlocale.h thlang.h thlangdata.h thtflength.h thtf.h \
  thtexfonts.h thscrap.h thsketch.h thpic.h thtrans.h
-$(OUTDIR)/thproj.o: thproj.cxx thexception.h therion.h thbuffer.h \
- $(PROJ_API_H)
+$(OUTDIR)/thproj.o: thproj.cxx thexception.h therion.h thbuffer.h
 $(OUTDIR)/thscrap.o: thscrap.cxx thscrap.h thdataobject.h thdatabase.h thmbuffer.h \
  thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h thparse.h \
  thobjectname.h therion.h thobjectsrc.h thdb3d.h loch/lxMath.h thattr.h \
