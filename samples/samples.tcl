@@ -26,7 +26,7 @@ proc scan_files {dir} {
   global filelist dirnum farray cleanlist dirlist
   set subdirs {}
   catch {
-    set subdirs [glob -directory $dir -types d *]
+    set subdirs [lsort [glob -directory $dir -types d *]]
   }
   foreach sd $subdirs {
     scan_files $sd
@@ -36,7 +36,7 @@ proc scan_files {dir} {
   log_msg "Scanning directory: $dir\n"
   set flist {}
   catch {
-    set flist [glob -directory $dir *.th *.th2 *.tc thconfig*]
+    set flist [lsort [glob -directory $dir *.th *.th2 *.tc thconfig*]]
   }
   foreach fn $flist {
     set fn [file tail $fn]
@@ -88,7 +88,7 @@ proc scan_lists {} {
   foreach dn $dirlist {
     set clist {}
     catch {
-      set clist [glob -directory $dn *.log *~ .xth_* .xtherion.dat]
+      set clist [lsort [glob -directory $dn *.log *~ .xth_* .xtherion.dat]]
     }
     foreach cf $clist {
       lappend cleanlist $cf

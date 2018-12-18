@@ -364,7 +364,7 @@ msgstr ""
 # C:/Projects/MSVCProjects/loch/lxGUI.cxx:267
 #: lxGUI.cxx:264
 msgid "Pro&file"
-msgstr ""
+msgstr "E&levation"
 
 # c:/cave/loch/loch/lxGUI.cxx:144
 #: lxGUI.cxx:266

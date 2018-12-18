@@ -399,7 +399,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
   bool postprocess = true, expsym = false;
   std::string attr_text;
   int macroid = -1, omacroid = -1, cmark;
-  int postprocess_label = -1;
+  const char * postprocess_label = NULL;
   this->db->buff_enc.guarantee(8128);
 //  char * buff = this->db->buff_enc.get_buffer();
   double xrr = (thisnan(this->orient) ? out->rr : 0.0);
@@ -455,9 +455,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           ? (const char *) utf2tex(thobjectname__print_full_name(this->station_name.name, this->station_name.psurvey, out->layout->survey_level)) 
           : ths2tex(this->text, out->layout->lang).c_str());        
         if (this->type == TT_POINT_TYPE_STATION_NAME)
-          postprocess_label = 7;
+          postprocess_label = "p_label_mode_station";
         else
-          postprocess_label = 0;
+          postprocess_label = "p_label_mode_label";
       }
       postprocess = false;
       break;
@@ -566,7 +566,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         out->layout->export_mptex_font_size(out->file, this, false);
         fprintf(out->file,"%s etex,",
 					utf2tex(out->layout->units.format_length(this->xsize - out->layout->goz)));
-        postprocess_label = 1;
+        postprocess_label = "p_label_mode_altitude";
       }
       postprocess = false;
       break;
@@ -619,7 +619,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         this->db->buff_enc.strcpy((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
             TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_UQ)) != 0 ? "?" : "" );
         fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc.get_buffer()));
-        postprocess_label = 7;
+        postprocess_label = "p_label_mode_height";
       }
       postprocess = false;
       break;
@@ -645,7 +645,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
         fprintf(out->file,"%s etex,",
             utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_LOCALE)));
-        postprocess_label = 0;
+        postprocess_label = "p_label_mode_date";
       }
       postprocess = false;
       break;
@@ -686,19 +686,19 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) {
           case (TT_POINT_TAG_HEIGHT_P | TT_POINT_TAG_HEIGHT_N):
             fprintf(out->file,"\\thframed \\updown");
-            postprocess_label = 4;
+            postprocess_label = "p_label_mode_passageheightposneg";
             break;
           case TT_POINT_TAG_HEIGHT_P:
             fprintf(out->file,"\\thframed ");
-            postprocess_label = 2;
+            postprocess_label = "p_label_mode_passageheightpos";
             break;
           case TT_POINT_TAG_HEIGHT_N:
             fprintf(out->file,"\\thframed ");
-            postprocess_label = 3;
+            postprocess_label = "p_label_mode_passageheightneg";
             break;
           default:
             fprintf(out->file,"\\thframed ");
-            postprocess_label = 5;
+            postprocess_label = "p_label_mode_passageheight";
             break;
         }
 
@@ -851,9 +851,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       break;
   }
   
-  if (postprocess_label >= 0) {
+  if (postprocess_label != NULL) {
     this->point->export_mp(out);
-    fprintf(out->file,",%.1f,%d);\n",(thisnan(this->orient) ? 0 : 360.0 - this->orient - out->rr), postprocess_label);
+    fprintf(out->file,",%.1f,%s);\n",(thisnan(this->orient) ? 0 : 360.0 - this->orient - out->rr), postprocess_label);
   }
   
   omacroid = macroid;

@@ -1,7 +1,32 @@
 Therion 5.4.2 (in progress):
 
 therion:
- * updated Spanish translation (thanks to Evaristo Quiroga)
+ * added -color option to select command
+ * added lookup command to configuration
+ * support for 3D models generated from splay shots
+ * added support for label customization
+ * added scrap distortions to SQL export
+ * therion uses system libproj by default [PR#118,121]
+ * metapost output is reproducible now [PR#117]
+ * updated Spanish, German, Russian, Bulgarian, Portuguese, Catalan, French,
+   Czech and English translations and messages
+   [PR#77,78,82,83,94,95,102,103,105,107,108,109,112]
+ * thbook updates [PR#76,98]
+ * bugs fixed:
+   - KML with multiple outer polygon outlines
+   - other minor bugfixes
+
+xtherion:
+ * support for scrap shifting
+ * bugs fixed:
+   - fix problems with selection/copy/paste for text editors [PR#86]
+   - mouse zooming fixed
+   - disappearing menu fixed
+
+loch:
+ * bugs fixed:
+   - displaying LRUD envelope for surface & splay shots
+   - surface transparency rendering
 
 --------------------------------------------------------------------------------
 

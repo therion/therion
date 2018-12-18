@@ -64,6 +64,7 @@ thscrap::thscrap()
   this->R = 1.0;
   this->G = 1.0;
   this->B = 1.0;
+  this->RGBsrc = 0;
   
   this->z = thnan;
   this->a = thnan;

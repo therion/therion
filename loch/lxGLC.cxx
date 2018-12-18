@@ -899,7 +899,7 @@ void lxGLCanvas::RenderSurface() {
     this->data->surfaceSorted->SetVector(viewDir.x, viewDir.y, viewDir.z);
 
     glDepthMask(GL_FALSE);
-    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
   } else {
     glDisable(GL_BLEND);

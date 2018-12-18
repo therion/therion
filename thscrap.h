@@ -95,6 +95,8 @@ class thscrap : public thdataobject {
     
   double lxmin, lxmax, lymin, lymax, ///< Coordinate limits.
     R, G, B; ///< Scrap color.
+
+  unsigned long RGBsrc;
     
   thdb2dcp * fcpp, * lcpp; ///< Scrap control points.
   unsigned int ncp; ///< Number of control points.

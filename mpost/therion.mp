@@ -41,6 +41,10 @@
 tracingstats:=1;
 prologues:=0;
 
+% Set the random seed to a fixed value so therion reproducibly produces the
+% same output for a given input.
+randomseed:=42;
+
 if known Background: background:=Background fi;
 %TrueScale:=Scale;
 
@@ -445,10 +449,13 @@ enddef;
 % clipping path to a file
 
 def process_boxedlabel =
+  begingroup;
+    interim bboxmargin:=1.0bp;
     q:=bbox lab;
     draw lab;
     draw q;
     write_bbox(q);
+  endgroup;
 enddef;
 
 % @MACRO

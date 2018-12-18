@@ -217,7 +217,7 @@ void th2dparse_scale(const char * spec, int & type, double & value)
     if ((type != TT_SV_NUMBER) || (value <= 0.0)) {
       ththrow(("invalid scale -- %s", spec));
     } else {
-      type = TT_2DOBJ_SCALE_NUMBERIC;
+      type = TT_2DOBJ_SCALE_NUMERIC;
     }
   } else {
     switch(type) {

@@ -915,7 +915,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 
   insfig(SYMP_STATIONNAME,thT("point station-name",layout->lang));
   this->export_mp_symbol_options(mpf, SYMP_STATIONNAME);
-  fprintf(mpf,"p_label.urt(btex \\thstationname %s etex,((0.3,0.3) inscale),0,7);\n",utf2tex("173"));
+  fprintf(mpf,"p_label.urt(btex \\thstationname %s etex,((0.3,0.3) inscale),0,p_label_mode_station);\n",utf2tex("173"));
   insert_station(0.3,0.3);
   endfig;
 
@@ -960,7 +960,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   
   insfig(SYMP_ALTITUDE,thT("point altitude",layout->lang));
   this->export_mp_symbol_options(mpf, SYMP_ALTITUDE);
-  fprintf(mpf,"p_label.rt(btex \\thaltitude %s etex,((0.3,0.5) inscale),0,1);\n",utf2tex("1510"));
+  fprintf(mpf,"p_label.rt(btex \\thaltitude %s etex,((0.3,0.5) inscale),0,p_label_mode_altitude);\n",utf2tex("1510"));
   endfig;
 
   // thT("point section")  
@@ -1002,26 +1002,26 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   insfig(SYMP_PASSAGEHEIGHT_UNSIGNED,thT("point passage-height:unsigned",layout->lang));
   //insert_big_passage
   this->export_mp_symbol_options(mpf, SYMP_PASSAGEHEIGHT_UNSIGNED);
-  fprintf(mpf,"p_label(btex \\thframed %s etex,((0.5,0.5) inscale),0,5);\n",utf2tex("5"));
+  fprintf(mpf,"p_label(btex \\thframed %s etex,((0.5,0.5) inscale),0,p_label_mode_passageheight);\n",utf2tex("5"));
   endfig;
 
   insfig(SYMP_PASSAGEHEIGHT_POSITIVE,thT("point passage-height:positive",layout->lang));
   //insert_big_water_passage
   this->export_mp_symbol_options(mpf, SYMP_PASSAGEHEIGHT_POSITIVE);
-  fprintf(mpf,"p_label(btex \\thframed %s etex,((0.5,0.5) inscale),0,2);\n",utf2tex("3"));
+  fprintf(mpf,"p_label(btex \\thframed %s etex,((0.5,0.5) inscale),0,p_label_mode_passageheightpos);\n",utf2tex("3"));
   endfig;
 
   insfig(SYMP_PASSAGEHEIGHT_NEGATIVE,thT("point passage-height:negative",layout->lang));
   //insert_big_water_passage
   this->export_mp_symbol_options(mpf, SYMP_PASSAGEHEIGHT_NEGATIVE);
-  fprintf(mpf,"p_label(btex \\thframed %s etex,((0.5,0.5) inscale),0,3);\n",utf2tex("2"));
+  fprintf(mpf,"p_label(btex \\thframed %s etex,((0.5,0.5) inscale),0,p_label_mode_passageheightneg);\n",utf2tex("2"));
   endfig;
 
   insfig(SYMP_PASSAGEHEIGHT_BOTH,thT("point passage-height:both",layout->lang));
   //insert_big_water_passage
   this->export_mp_symbol_options(mpf, SYMP_PASSAGEHEIGHT_BOTH);
   fprintf(mpf,"p_label(btex \\thframed \\updown{%s}",utf2tex("3"));
-  fprintf(mpf,"{%s} etex,((0.5,0.5) inscale),0,4);\n",utf2tex("2"));
+  fprintf(mpf,"{%s} etex,((0.5,0.5) inscale),0,p_label_mode_passageheightposneg);\n",utf2tex("2"));
   endfig;
 
   legend_hpoint(SYMP_AIRDRAUGHT,thT("point air-draught",layout->lang));
@@ -1033,7 +1033,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   insfig(SYMP_DATE,thT("point date",layout->lang));
   //insert_big_water_passage
   this->export_mp_symbol_options(mpf, SYMP_DATE);
-  fprintf(mpf,"p_label(btex \\thdate %s etex,((0.5,0.5) inscale),0,0);\n",utf2tex(d.get_str(TT_DATE_FMT_UTF8_ISO)));
+  fprintf(mpf,"p_label(btex \\thdate %s etex,((0.5,0.5) inscale),0,p_label_mode_date);\n",utf2tex(d.get_str(TT_DATE_FMT_UTF8_ISO)));
   endfig;
 
   
@@ -1113,7 +1113,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   }
   endhelpsymbol;
   this->export_mp_symbol_options(mpf, SYMP_HEIGHT_UNSIGNED);
-  fprintf(mpf,"p_label.rt(btex \\thheight %s etex,((0.5,0.5) inscale),0,7);\n",utf2tex("4"));
+  fprintf(mpf,"p_label.rt(btex \\thheight %s etex,((0.5,0.5) inscale),0,p_label_mode_height);\n",utf2tex("4"));
   endfig;
 
   insfig(SYMP_HEIGHT_POSITIVE,thT("point height:positive",layout->lang));
@@ -1122,7 +1122,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     fprintf(mpf,"%s(%s);\n",thsymbolset__mp[SYML_CHIMNEY],legend_scline);
   endhelpsymbol;
   this->export_mp_symbol_options(mpf, SYMP_HEIGHT_POSITIVE);
-  fprintf(mpf,"p_label.rt(btex \\thheightpos %s etex,((0.5,0.5) inscale),0,7);\n",utf2tex("15"));
+  fprintf(mpf,"p_label.rt(btex \\thheightpos %s etex,((0.5,0.5) inscale),0,p_label_mode_height);\n",utf2tex("15"));
   endfig;
 
   insfig(SYMP_HEIGHT_NEGATIVE,thT("point height:negative",layout->lang));
@@ -1131,7 +1131,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     fprintf(mpf,"%s(%s);\n",thsymbolset__mp[SYML_PIT],legend_scline);
   endhelpsymbol;
   this->export_mp_symbol_options(mpf, SYMP_HEIGHT_NEGATIVE);
-  fprintf(mpf,"p_label.rt(btex \\thheightneg %s etex,((0.5,0.5) inscale),0,7);\n",utf2tex("30"));
+  fprintf(mpf,"p_label.rt(btex \\thheightneg %s etex,((0.5,0.5) inscale),0,p_label_mode_height);\n",utf2tex("30"));
   endfig;
 
   insfig(SYML_CONTOUR,thT("line contour",layout->lang));

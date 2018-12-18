@@ -1042,7 +1042,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
                   fprintf(pltf,"    subtype %s\n", thmatch_string(lpt->subtype, thtt_line_subtypes));
                   lsubtype = lpt->subtype;
                 }
-                if ((lpt->tags | TT_LINEPT_TAG_ALTITUDE) != 0) {
+                if ((lpt->tags & TT_LINEPT_TAG_ALTITUDE) != 0) {
                   // TODO: altitude tags and others
                 }
                 lpt = lpt->nextlp;
@@ -2803,7 +2803,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         if (out->layout->is_debug_stationnames() && (slp->station_name.id != 0)) {
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
           out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
-          dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
+          dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);\n",
             (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
             thxmmxst(out, slp->stx, slp->sty));
         }
@@ -2882,7 +2882,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 }
                 if (out->layout->is_debug_stationnames() && (tmps != NULL)) {
                       out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
-                      dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, 7);\n",
+                      dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);\n",
                       (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
                       thxmmxst(out, ptp->point->xt, ptp->point->yt));
                 }
@@ -2948,7 +2948,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             // prescanuje stenu
             lp = ((thline*)obj)->first_point;
             while(lp != NULL) {
-              if (((lp->tags | TT_LINEPT_TAG_ALTITUDE) > 0) &&
+              if (((lp->tags & TT_LINEPT_TAG_ALTITUDE) > 0) &&
                   (!thisnan(lp->rsize))) {
                 thexpmap_export_mp_bgif;
                 out->symset->export_mp_symbol_options(out->file, SYMP_WALLALTITUDE);
@@ -3009,7 +3009,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     thdb.buff_tmp = utf2tex(thobjectname__print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
     fprintf(out->file,"p_label(btex \\thlargesize %s etex,",thdb.buff_tmp.get_buffer());
     tmppt.export_mp(out);
-    fprintf(out->file,",0.0,6);\n");
+    fprintf(out->file,",0.0,p_label_mode_debugscrap);\n");
   }
 
 
@@ -3216,7 +3216,12 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
               }
             break;
             default:
-              if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
+              if (cmap->selection_color.defined) {
+            	cs->R = cmap->selection_color.R;
+            	cs->G = cmap->selection_color.G;
+            	cs->B = cmap->selection_color.B;
+              }
+              else if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
                 cs->R = cs->fsptr->selected_color.R;
                 cs->G = cs->fsptr->selected_color.G;
                 cs->B = cs->fsptr->selected_color.B;
@@ -3487,6 +3492,27 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
   bool firstmapscrap, nolkpitems;
   thlayout_color csc;
 
+  // 1. reset scrap colors
+  cmap = maps;
+  while (cmap != NULL) {
+    cbm = cmap->first_bm;
+    firstmapscrap = true;
+    while (cbm != NULL) {
+      cmi = cbm->bm->last_item;
+      if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
+        if (cmi->type == TT_MAPITEM_NORMAL) {
+          cs = (thscrap *) cmi->object;
+          cs->RGBsrc = 0;
+        }
+        cmi = cmi->prev_item;
+      }
+      cbm = cbm->next_item;
+    }
+    cmap = cmap->next_item;
+  }
+
+
+
   // najprv to nascanuje
   nolkpitems = false;
   if (lkp != NULL)
@@ -3521,11 +3547,18 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
           }
 
           // set default color
-          if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
+          if (cmap->selection_color.defined) {
+        	cs->R = cmap->selection_color.R;
+        	cs->G = cmap->selection_color.G;
+        	cs->B = cmap->selection_color.B;
+        	cs->RGBsrc = 2;
+          }
+          else if (((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) && (cs->RGBsrc < 2)) {
             cs->R = cs->fsptr->selected_color.R;
             cs->G = cs->fsptr->selected_color.G;
             cs->B = cs->fsptr->selected_color.B;
-          } else {
+        	cs->RGBsrc = 1;
+          } else if (cs->RGBsrc < 1) {
             cs->R = this->layout->color_map_fg.R;
             cs->G = this->layout->color_map_fg.G;
             cs->B = this->layout->color_map_fg.B;
