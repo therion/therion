@@ -713,7 +713,7 @@ enddef;
 
 def p_continuation_UIS(expr pos,theta,sc,al) =
   U:=(.15u,.3u);
-  T:=identity aligned al shifted pos;
+  T:=identity aligned al rotated theta scaled sc shifted pos;
   pickup PenC;
   thdraw (-.1u,.2u){up}..{down}(.1u,.2u)..{down}(0,-.05u);
   pickup PenX;
