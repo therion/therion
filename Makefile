@@ -25,6 +25,11 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
 CROSS =
 EXT =
 
+# Prefix to install to (override like so: make PREFIX=/usr)
+PREFIX = /usr/local
+# Directory to install config files in (override like so: make SYSCONFDIR=/etc)
+SYSCONFDIR = $(PREFIX)/etc
+
 # PLATFORM CONFIG
 
 # PLATFORM LINUX
@@ -187,7 +192,7 @@ init:
 	./therion --print-init-file > therion.ini
 
 install: all
-	tclsh makeinstall.tcl $(THPLATFORM)
+	tclsh makeinstall.tcl $(THPLATFORM) $(PREFIX) $(SYSCONFDIR)
 
 minor-release:
 	perl makerelease.pl
