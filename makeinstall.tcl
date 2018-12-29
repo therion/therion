@@ -7,6 +7,14 @@ if {$argc > 0} {
     set platform WIN32
   }
 }
+if {$argc > 1} {
+  set instdir [lindex $argv 1]
+}
+if {$argc > 2} {
+  set sysconfdir [lindex $argv 2]
+} else {
+  set sysconfdir $instdir/etc
+}
 
 proc copyfile {force src dst} {
   if {$force} {
@@ -53,8 +61,8 @@ if {[string equal $platform WIN32]} {
   copyfile 1 therion $instdir/bin/therion
   copyfile 1 xtherion/xtherion $instdir/bin/xtherion
   copyfile 1 loch/loch $instdir/bin/loch
-  copyfile 1 therion.ini $instdir/etc/therion.ini.new
-  copyfile 1 xtherion/xtherion.ini $instdir/etc/xtherion.ini.new
-  copyfile 0 therion.ini $instdir/etc/therion.ini
-  copyfile 0 xtherion/xtherion.ini $instdir/etc/xtherion.ini
+  copyfile 1 therion.ini $sysconfdir/therion.ini.new
+  copyfile 1 xtherion/xtherion.ini $sysconfdir/xtherion.ini.new
+  copyfile 0 therion.ini $sysconfdir/therion.ini
+  copyfile 0 xtherion/xtherion.ini $sysconfdir/xtherion.ini
 }
