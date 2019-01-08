@@ -80,9 +80,14 @@ LXPLATFORM = LINUX
 # PLATFORM WIN32CROSS
 ##CROSS= i686-w64-mingw32.static-
 ##EXT = .exe
-##VTKPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/include/vtk-5.8
-##VTKLIBPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/lib/vtk-5.8
-##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtksys -lharfbuzz -lbz2 -lglib-2.0 -lintl -liconv -lws2_32 -lwinmm
+##VTKVERSION = 8.0
+##VTKPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/include/vtk-8.0
+##VTKLIBPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/lib
+##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) \
+##  -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) \
+##  -lvtkIOLegacy-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkIOCore-$(VTKVERSION) \
+##  -lvtkCommonTransforms-$(VTKVERSION) -lvtkCommonMisc-$(VTKVERSION) -lvtkCommonMath-$(VTKVERSION) -lvtkCommonSystem-$(VTKVERSION) \
+##  -lvtksys-$(VTKVERSION) -lvtkfreetype-$(VTKVERSION) -lvtkpng-$(VTKVERSION) -lvtkjpeg-$(VTKVERSION) -lvtkzlib-$(VTKVERSION)
 ##CXX = $(CROSS)c++
 ##CC = $(CROSS)gcc
 ##POBJECTS = loch.res lxR2D.o getline.o

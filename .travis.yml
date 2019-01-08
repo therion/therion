@@ -7,7 +7,8 @@ os:
   - linux
   - osx
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   echo "deb http://pkg.mxe.cc/repos/apt/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mxeapt.list      ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9  ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt xenial main'  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D43A795B73B16ABE9643FE1AFD8FFF16DB45C6AB      ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo apt-get -qq update         ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo apt-get install -y texlive-binaries texlive-metapost libproj-dev libwxgtk3.0-dev libvtk6-dev survex imagemagick ghostscript     ; fi
