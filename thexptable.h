@@ -143,10 +143,10 @@ class thexptable : public thexport {
   virtual void process_db(class thdatabase * dbp);
 
   /**
-   * Export entraces from survey.
+   * Export entrances from survey.
    */
 
-  void export_survey_entraces(class thsurvey * survey);
+  void export_survey_entrances(class thsurvey * survey);
 
   /**
    * Return string for temporary use.

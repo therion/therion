@@ -174,7 +174,7 @@ class thdata : public thdataobject {
     d_last_equate,  ///< Last data equate.
     d_extend;  ///< Extend flags.
     
-  double d_vtresh; ///< Vertical treshold.
+  double d_vtresh; ///< Vertical threshold.
     
   void reset_data_sd();  ///< Reset data sd
   
@@ -215,7 +215,7 @@ class thdata : public thdataobject {
 	  
   void set_data_mark(int nargs, char ** args);  ///< Set type of station mark.
 
-  void set_data_vtresh(int nargs, char ** args);  ///< Set vertical treshold
+  void set_data_vtresh(int nargs, char ** args);  ///< Set vertical threshold
 
   void set_survey_declination();  ///< Set survey declination.
   
@@ -329,7 +329,7 @@ class thdata : public thdataobject {
   /**
    * Delete this object.
    *
-   * @warn Always use this methos instead of delete function.
+   * @warn Always use this method instead of delete function.
    */
    
   virtual void self_delete();

@@ -169,7 +169,7 @@ class thlookup : public thdataobject {
   /**
    * Delete this object.
    *
-   * @warn Always use this methos instead of delete function.
+   * @warn Always use this method instead of delete function.
    */
    
   virtual void self_delete();
@@ -206,13 +206,13 @@ class thlookup : public thdataobject {
   virtual void scan_map(class thmap * m);
 
   /**
-   * Generate automatical legend.
+   * Generate automatic legend.
    */
 
   virtual void auto_generate_items();
 
   /**
-   * Generate automatical legend.
+   * Generate automatic legend.
    */
 
   virtual void postprocess();

@@ -89,7 +89,7 @@ class thexporter {
   
   thexporter();  ///< Default constructor.
 
-  ~thexporter();  ///< Default deconstructor.
+  ~thexporter();  ///< Default destructor.
   
   void assign_config(class thconfig * cptr);  ///< ??
   

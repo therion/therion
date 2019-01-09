@@ -1,6 +1,6 @@
 /**
  * @file thsvxctrl.h
- * Survex controler.
+ * Survex controller.
  */
   
 /* Copyright (C) 2000 Stacho Mudrak
@@ -39,7 +39,7 @@ typedef std::map < unsigned long, thobjectsrc * > thsvxctrl_src_maptype;  ///< S
 
 
 /**
- * Survex controler.
+ * Survex controller.
  */
  
 class thsvxctrl {

@@ -72,7 +72,7 @@ struct thvec2 {
  * </PRE>
  */
 struct thmat2 {
-  double m_xx, m_xy, m_yx, m_yy;                       //!< matric coefficients
+  double m_xx, m_xy, m_yx, m_yy;                       //!< matrix coefficients
 
   thmat2() : m_xx(1.0), m_xy(0.0), m_yx(0.0), m_yy(1.0) {}  //!< cstr
   thmat2(double xx, double xy, double yx, double yy) : m_xx(xx), m_xy(xy), m_yx(yx), m_yy(yy) {}
@@ -96,7 +96,7 @@ struct thline2 {
   thline2(double a, double b, double c) : m_a(a), m_b(b), m_c(c) {}
 
   thline2(thvec2 from, thvec2 to);                     //!< cstr: line joining two vectors
-  double eval(thvec2 p);                               //!< evalate the line eq. on the vector
+  double eval(thvec2 p);                               //!< evaluate the line eq. on the vector
 };
 
 /** linear algebra operations

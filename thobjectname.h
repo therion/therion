@@ -55,7 +55,7 @@ class thobjectname {
   
   
   /**
-   * Two argument contructor.
+   * Two argument constructor.
    */
    
   thobjectname(char * n, char * s) : name(n), survey(s), id(0) {}

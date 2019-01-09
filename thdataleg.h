@@ -155,7 +155,7 @@ enum {
 
 
 /**
- * Dataleg infer componets.
+ * Dataleg infer components.
  */
  
 static const thstok thtt_dataleg_infer[] = {

@@ -111,7 +111,7 @@ class thdb2dprjid {
 
   public:
   
-  char type;  ///< Projetion type.
+  char type;  ///< Projection type.
   const char * index;  ///< Projection index.
   
   thdb2dprjid();  ///< Default constructor.

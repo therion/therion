@@ -45,7 +45,7 @@ class thlogfile {
   FILE* fileh;  ///< File handler.
   bool is_open;  ///< File is open ID.
   bool is_warned;  ///< File couldn't be opened ID.
-  bool is_logging;  ///< Loggind ID.
+  bool is_logging;  ///< Logging ID.
   
   /**
    * Open log file for output.

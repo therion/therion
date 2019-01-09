@@ -128,7 +128,7 @@ void encodings_new::write_enc_files() {
     for (int i=0; i<5; i++) {
       string fname_tfm = "th"+style[i]+fc;  // convention used also in tex2uni
       
-      // we don't use -fliga to turn ligatures on, beacause between
+      // we don't use -fliga to turn ligatures on, because between
       // subsequent runs (metapost, pdftex) the meaning of ligatures 
       // positioned at the end of the encoding would change
       // if more characters are present at the second run
@@ -608,7 +608,7 @@ const char * utf2tex (const char * s, bool b) {
 }
 #endif
 
-// For simlicity we suppose that all characters which are set by TeX macros
+// For simplicity we suppose that all characters which are set by TeX macros
 // are included in the first encoding specified. This concerns especially 
 // page numbers, labels, and scalebar legend. Therefore we switch to \thfa
 // after each size/style change
