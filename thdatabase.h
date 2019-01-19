@@ -75,7 +75,7 @@ class thsurveyname {
   thsurveyname(): n("") {}  ///< Standard constructor.
   
   /**
-   * Default contructor.
+   * Default constructor.
    *
    * @param n Survey name.
    */
@@ -108,7 +108,7 @@ class threvision {
   threvision(): id(0), r(0) {}  ///< Standard constructor.
   
   /**
-   * Default contructor.
+   * Default constructor.
    *
    * @param rid Revision object id.
    * @param rr Revision number.
@@ -118,7 +118,7 @@ class threvision {
       : id(rid), r(rr) {}
 
   /**
-   * Default contructor.
+   * Default constructor.
    *
    * @param rid Revision object id.
    * @param rr Revision number.

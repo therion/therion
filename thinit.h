@@ -35,7 +35,7 @@
 #include "thinput.h"
 
 /**
- * Therion system dependend properties initializer.
+ * Therion system dependent properties initializer.
  */
  
 enum {

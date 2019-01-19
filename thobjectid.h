@@ -43,7 +43,7 @@ class thobjectid {
   thobjectid() : name(""), sid(0) {};  ///< Standard constructor.
   
   /**
-   * Default contructor.
+   * Default constructor.
    *
    * @param n Object name.
    * @param svid Survey identifier.

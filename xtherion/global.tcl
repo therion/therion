@@ -240,7 +240,7 @@ set xth(gui,rmb) 3
 set xth(gui,bindinsdel) 1
 set xth(gui,me,pointsizectrl) 0
 
-# platform dependend settings
+# platform dependent settings
 case $tcl_platform(platform) {
   unix {
     set xth(gui,sbwidth) 9
@@ -310,7 +310,7 @@ case $tcl_platform(os) {
 }
 
 
-# end of platform dependend settings
+# end of platform dependent settings
 
 # words to translate
 set tmp [mc "theme basic-symbols"]

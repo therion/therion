@@ -609,6 +609,11 @@ void thinit::load()
   thinit__make_short_path(&this->path_pdftex);
 #endif
 
+  // set PROJ library resources path
+#ifdef THWIN32
+  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj").c_str());
+#endif
+
   // check if optional fonts are in the system, remove them if not
 #ifdef THWIN32
   if (!thini.tex_env) {

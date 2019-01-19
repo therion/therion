@@ -1,5 +1,9 @@
 Therion 5.4.3 (in progress):
 
+therion:
+ * bugs fixed:
+   - add and use PROJ grid files in the windows distribution
+   - fix comment and code typos [PR#127]
 
 --------------------------------------------------------------------------------
 

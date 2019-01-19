@@ -68,7 +68,7 @@ namespace therion
       ,,,,,|                      | .....
  [1]  -----+------ B    [2]  -----+------- B
       ,,,,,|                      | ,,,,, 
-      ,,,,,|                      | ,,,,, <-- not lss_than_pi
+      ,,,,,|                      | ,,,,, <-- not less_than_pi
  
       .....|                      | ..... <-- less_than_pi
       .....|                      | .....
@@ -374,7 +374,7 @@ namespace therion
         virtual void st_map( const thvec2 & p, thvec2 & ret ) const = 0;
 
 	/** inverse S-T map
-	 * @param coordinates in trasformed domain
+	 * @param coordinates in transformed domain
 	 * @return 2D point
 	 */
         virtual void inv_st_map( const thvec2 & p, thvec2 & ret ) const = 0;
@@ -390,7 +390,7 @@ namespace therion
         virtual void bn_map( const thvec2 & p, thvec2 & ret ) const = 0;
 
 	/** inverse B-N map
-	 * @param coordinates in trasformed domain
+	 * @param coordinates in transformed domain
 	 * @return 2D point
 	 */
         virtual void inv_bn_map( const thvec2 & p, thvec2 & ret ) const = 0;
@@ -822,7 +822,7 @@ namespace therion
       bool m_ltpi;           //!< "less than pi": whether theta is less than pi
     
       /** cstr
-       * @note there is aproblem if the three points are aligned,
+       * @note there is a problem if the three points are aligned,
        * ie, A ^ (B-C) = 0, because the matrix M1 is not invertible.
        */
       triangle( thvec2 & a, thvec2 & b, thvec2 & c )
@@ -882,7 +882,7 @@ namespace therion
     
       /** compute a point from its polar coords
        * @param p   input point (polar coords)
-       * @return cartesiona coord of the point
+       * @return cartesian coord of the point
        *
        * @note in VERSION 0.5.1: MORPH_USE_TRI_F
        */
@@ -943,7 +943,7 @@ namespace therion
           return p1.length();
         }
 
-        /** line distance of apoint from the triangle
+        /** line distance of a point from the triangle
          * @param p 2D point
          * @return the line distance
          *
@@ -1069,7 +1069,7 @@ namespace therion
     }; // class triangle
 
     // ----------------------------------------------------------------------
-    /** four corners plaquette (quadrilater)
+    /** four corners plaquette (quadrilateral)
      * 
      * The geometry is
      * <PRE>  

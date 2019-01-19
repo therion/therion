@@ -302,7 +302,7 @@ class thdb2d {
   
   
   /**
-   * Return efault projection.
+   * Return default projection.
    */
    
   thdb2dprj * get_default_projection() {return this->prj_default;}
@@ -337,7 +337,7 @@ class thdb2d {
 
 
   /**
-   * Return user defined symbol properites.
+   * Return user defined symbol properties.
    */
 
   thdb2d_udef_prop * get_u_symbol_prop(int cmd, const char * type);

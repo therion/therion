@@ -113,7 +113,7 @@ class thscrap : public thdataobject {
     scale_r2x, scale_r2y, scale_p2x, scale_p2y;  ///< Scrap scale.
   bool scale_p9; ///< 9 parameters scaling
   
-  double mx, my, mxx, mxy, myx, myy, mr, ms;  ///< Calibration coeficients.
+  double mx, my, mxx, mxy, myx, myy, mr, ms;  ///< Calibration coefficients.
   
   double maxdist, avdist;
   thdb2dpt * maxdistp1, * maxdistp2;
@@ -226,7 +226,7 @@ class thscrap : public thdataobject {
   /**
    * Delete this object.
    *
-   * @warn Always use this methos instead of delete function.
+   * @warn Always use this method instead of delete function.
    */
    
   virtual void self_delete();

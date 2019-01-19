@@ -33,7 +33,7 @@ enddef;
 
 % get number of intersection between paths p (length 1!) and q
 % recnum is needed for limitation of recursions. 
-% If the number of allowed recursions is reached, a negativ number of intersections is returned
+% If the number of allowed recursions is reached, a negative number of intersections is returned
 vardef recgetnumintersections(expr p,q,recnum)=
   
   pair inter;

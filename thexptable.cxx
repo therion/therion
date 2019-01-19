@@ -147,7 +147,7 @@ void thexptable::dump_body(FILE * xf)
 
 
 
-void thexptable::export_survey_entraces(thsurvey * survey)
+void thexptable::export_survey_entrances(thsurvey * survey)
 {
   thdataobject * obj;
   thdb1ds * st;
@@ -194,7 +194,7 @@ void thexptable::export_survey_entraces(thsurvey * survey)
   if (!is_cave) {
     for(obj = survey->foptr; obj != NULL; obj = obj->nsptr) {
       if (obj->get_class_id() == TT_SURVEY_CMD) {
-        this->export_survey_entraces((thsurvey *) obj);
+        this->export_survey_entrances((thsurvey *) obj);
       }
     }
   }
@@ -283,7 +283,7 @@ void thexptable::process_db(class thdatabase * dbp)
 
   switch (this->export_mode) {
     case TT_EXP_CAVELIST:
-      this->export_survey_entraces(this->db->fsurveyptr);
+      this->export_survey_entrances(this->db->fsurveyptr);
       this->m_table.m_tree = true;
       break;
     case TT_EXP_CONTLIST:
