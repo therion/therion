@@ -27,6 +27,9 @@
 
 #include "thcsdata.h"
 
+const int TTCS_EPSG = 1000000;
+const int TTCS_ESRI = 2000000;
+
 int thcs_parse(const char * name);
 
 const char * thcs_get_name(int cs);

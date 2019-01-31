@@ -101,8 +101,8 @@ foreach al $osgb1 {
 
 set osgbspecs {{ST 1 -2} {SN 2 -3} {} {} {} {}}
 
-load_proj_init_file extern/proj4/nad/epsg epsg
-load_proj_init_file extern/proj4/nad/esri esri
+#load_proj_init_file extern/proj4/nad/epsg epsg
+#load_proj_init_file extern/proj4/nad/esri esri
 
 # join identical projections
 array set proj_defs {}
