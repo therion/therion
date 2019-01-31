@@ -46,6 +46,28 @@ int thcs_parse(const char * name)
 {
   int sv = thcasematch_token(name, thtt_cs);
   if (sv == TTCS_UNKNOWN) {
+  	bool esri = false;
+  	bool epsg = false;
+  	if (strlen(name) > 5) {
+  		if (((name[0] == 'e') || (name[0] == 'E')) && ((name[1] == 's') || (name[1] == 'S')) && ((name[2] == 'r') || (name[2] == 'R')) && ((name[3] == 'i') || (name[3] == 'I'))) esri = true;
+  		if (((name[0] == 'e') || (name[0] == 'E')) && ((name[1] == 'p') || (name[1] == 'P')) && ((name[2] == 's') || (name[2] == 'S')) && ((name[3] == 'g') || (name[3] == 'G'))) epsg = true;
+  		if ((esri || epsg) && (name[4] == ':')) {
+  			int num;
+  			try {
+  				num = atoi(&(name[5]));
+  			} catch (...) {
+  				return TTCS_UNKNOWN;
+  			}
+  			if (esri)
+  				return (TTCS_ESRI + num);
+  			else
+  				return (TTCS_EPSG + num);
+  		}
+  	}
+
+  }
+
+  if (sv == TTCS_UNKNOWN) {
     std::map<std::string, int>::iterator it = thcs_custom_name2int.find(std::string(name));
     if (it != thcs_custom_name2int.end()) return it->second;
   }
@@ -60,19 +82,19 @@ const char * thcs_get_name(int cs)
   long i, ii;
   i = 0;
   ii = -1;
+  static char buff[20];
+	if (cs > TTCS_ESRI) {
+	  snprintf(buff, sizeof(buff), "ESRI:%d", cs - TTCS_ESRI);
+	  return buff;
+	}
+	if (cs > TTCS_EPSG) {
+	  snprintf(buff, sizeof(buff), "EPSG:%d", cs - TTCS_EPSG);
+	  return buff;
+	}
   while (i < (long)tab_size) {
     if (thtt_cs[i].tok == cs) {
       ii = i;
       if (strlen(thtt_cs[ii].s) < 6)
-        break;
-      if (!(((thtt_cs[ii].s[0] == 'e' || thtt_cs[ii].s[0] == 'E') && 
-        (thtt_cs[ii].s[1] == 's' || thtt_cs[ii].s[1] == 'S') && 
-        (thtt_cs[ii].s[2] == 'r' || thtt_cs[ii].s[2] == 'R') && 
-        (thtt_cs[ii].s[3] == 'i' || thtt_cs[ii].s[3] == 'I')) || 
-        ((thtt_cs[ii].s[0] == 'e' || thtt_cs[ii].s[0] == 'E') && 
-        (thtt_cs[ii].s[1] == 'p' || thtt_cs[ii].s[1] == 'P') && 
-        (thtt_cs[ii].s[2] == 's' || thtt_cs[ii].s[2] == 'S') && 
-        (thtt_cs[ii].s[3] == 'g' || thtt_cs[ii].s[3] == 'G'))))
         break;
     }
     i++;
@@ -87,6 +109,24 @@ const char * thcs_get_name(int cs)
 }
 
 const thcsdata * thcs_get_data(int cs) {
+	static thcsdata rv;
+	static char params[200];
+	static char prjname[20];
+	rv.dms = false;
+	rv.output = true;
+	rv.params = params;
+	rv.prjname = prjname;
+	strcpy(prjname, thcs_get_name(cs));
+	rv.prjspec = "";
+	rv.swap = false;
+	if (cs > TTCS_ESRI) {
+	  snprintf(params, sizeof(params), "+init=esri:%d", cs - TTCS_ESRI);
+		return &rv;
+	}
+	if (cs > TTCS_EPSG) {
+	  snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
+		return &rv;
+	}
   if (cs >= 0) return &(thcsdata_table[cs]);
   if (cs < TTCS_UNKNOWN) return thcs_custom_int2data[cs];
   return NULL;
