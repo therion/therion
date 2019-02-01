@@ -122,18 +122,9 @@ LDBFLAGS = $(LDPFLAGS)
 
 # BUILD ENDCONFIG
 
-# PROJ CONFIG
-
-# PROJ BUNDLED
-##CMNOBJECTS += extern/proj4/libproj.a
-##CXXJFLAGS = -Iextern/proj4
-
-# PROJ SYSTEM
+# proj4 settings
 PROJ_LIBS = $(shell $(CROSS)pkg-config proj --libs)
 CXXJFLAGS = -I$(shell $(CROSS)pkg-config proj --variable=includedir)
-
-
-# PROJ ENDCONFIG
 
 # compiler settings
 CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -std=c++11
@@ -171,10 +162,6 @@ outdirs:
 version:
 	python set_version.py
 
-
-$(OUTDIR)/extern/proj4/libproj.a: extern/proj4/*.c extern/proj4/*.h
-	mkdir -p $(OUTDIR)/extern/proj4
-	$(MAKE) -C ./extern/proj4
 
 $(OUTDIR)/therion: version $(OBJECTS)
 	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
@@ -249,7 +236,6 @@ clean:
 cleanrest:
 	$(MAKE) -C ./xtherion clean
 	$(MAKE) -C ./loch clean
-	$(MAKE) -C ./extern/proj4 clean
 	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thsymbolsets.cxx thsymbolsets.h thlangdata.cxx thchencdata.h
 	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl thversion.h thbook/version.tex
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
