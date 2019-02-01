@@ -1,6 +1,9 @@
 Therion 5.4.3 (in progress):
 
 therion:
+ * input line length increased to allow reading larger elevation datasets
+ * built-in Proj.4 removed; internal mapping of EPSG and ESRI codes replaced
+   by +init=epsg|esri:... libproj initialization string
  * bugs fixed:
    - add and use PROJ grid files in the windows distribution
    - fix comment and code typos [PR#127]
