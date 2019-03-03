@@ -386,9 +386,11 @@ void MP_data::print_svg (ofstream & F, string unique_prefix) {
             }
             // nemoze ist do predch. cyklu, lebo zmazanie smernika
             // urobi chaos
-            for (map<int,int>::iterator I = gstate.clippathdepth.begin();
-                                        I!= gstate.clippathdepth.end(); I++) {
-              if (I->second < 0) gstate.clippathdepth.erase(I);
+            {auto I = gstate.clippathdepth.begin();
+              while (I!= gstate.clippathdepth.end()) {
+                if (I->second < 0) I = gstate.clippathdepth.erase(I);
+                else I++;
+              }
             }
             tmpclip = gstate.clippathdepth;
             gstate = GSTATE_stack.back();
