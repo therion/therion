@@ -147,6 +147,7 @@ void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args)
   thcsdata * pd = &(*thcs_custom_data.insert(thcs_custom_data.end(), thcsdata()));
   pd->prjspec = "";
   pd->params = thdb.strstore(proj4id);
+  pd->prjname = thdb.strstore(id);
   pd->swap = false;
   pd->output = true;
   pd->dms = false;
