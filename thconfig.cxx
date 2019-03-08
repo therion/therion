@@ -843,7 +843,7 @@ double thconfig::get_outcs_convergence()
 {
   double x, y, z;
   if (this->get_outcs_center(x, y, z)) {
-    return thcsconverg(thcs_get_data(this->outcs)->params, x, y);
+    return thcsconverg(thcs_get_params(this->outcs), x, y);
   } else {
     return 0.0;
   }
@@ -853,8 +853,8 @@ double thconfig::get_cs_convergence(int cs)
 {
   double x, y, z, lx, ly, lz;
   if (this->get_outcs_center(x, y, z)) {
-    thcs2cs(thcs_get_data(this->outcs)->params, thcs_get_data(cs)->params, x, y, z, lx, ly, lz);
-    return thcsconverg(thcs_get_data(cs)->params, lx, ly);
+    thcs2cs(thcs_get_params(this->outcs), thcs_get_params(cs), x, y, z, lx, ly, lz);
+    return thcsconverg(thcs_get_params(cs), lx, ly);
   } else {
     return 0.0;
   }
@@ -868,7 +868,7 @@ bool thconfig::get_outcs_mag_decl(double year, double & decl)
     return false;
   if ((year < double(thgeomag_minyear)) || (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1))))
     return false;
-  thcs2cs(thcs_get_data(this->outcs)->params, "+proj=latlong +datum=WGS84", x, y, z, lon, lat, alt);
+  thcs2cs(thcs_get_params(this->outcs), "+proj=latlong +datum=WGS84", x, y, z, lon, lat, alt);
   decl = thgeomag(lat, lon, alt, year);
   return true;
 }

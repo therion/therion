@@ -228,7 +228,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   #endif
   fnmb.strcpy(title);  // VG 290316: Set the filename as a cave name instead of "cave". The top-level survey name will be even better
   if ((thcfg.outcs >= 0) || (thcfg.outcs < TTCS_UNKNOWN))  // Export the coordinate system data if one is set
-    pimg = img_open_write_cs(fnm, fnmb.get_buffer(), thcs_get_data(thcfg.outcs)->params, 1);
+    pimg = img_open_write_cs(fnm, fnmb.get_buffer(), thcs_get_params(thcfg.outcs).c_str(), 1);
   else
     pimg = img_open_write(fnm, fnmb.get_buffer(), 1);
      
@@ -1923,7 +1923,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
     for(i = 0; i < nstat; i++) {
       station = &(db->db1d.station_vec[i]);
       if ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
-        thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+        thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
           station->x, station->y, station->z, x, y, z);
         fprintf(out, "<Placemark>\n");
         fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
@@ -1955,14 +1955,14 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
           if (numst > 0)
             fprintf(out,"</coordinates></LineString>\n");
           fprintf(out,"<LineString><coordinates>\n");
-          thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+          thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
             dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z,
             x, y, z);
           fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
           numst = 1;
         }
         last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
-        thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+        thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
           dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z,
           x, y, z);
         fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
@@ -2036,14 +2036,14 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
               if (numst > 0)
                 fprintf(out, "\n</coordinates></LineString>\n");
               fprintf(out, "<LineString><coordinates>\n");
-              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+              thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
                 db->db1d.station_vec[cur_st].x, db->db1d.station_vec[cur_st].y, db->db1d.station_vec[cur_st].z,
                 x, y, z);
               fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
               numst = 1;
             }
             last_st = db->db1d.station_vec[legs->to.id - 1].uid - 1;
-            thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+            thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
               db->db1d.station_vec[last_st].x, db->db1d.station_vec[last_st].y, db->db1d.station_vec[last_st].z,
               x, y, z);
             fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);

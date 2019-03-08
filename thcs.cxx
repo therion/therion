@@ -108,6 +108,10 @@ const char * thcs_get_name(int cs)
   return csstr;
 }
 
+std::string thcs_get_params(int cs) {
+	return std::string(thcs_get_data(cs)->params);
+}
+
 const thcsdata * thcs_get_data(int cs) {
 	static thcsdata rv;
 	static char params[200];
