@@ -36,6 +36,8 @@ const char * thcs_get_name(int cs);
 
 const thcsdata * thcs_get_data(int cs);
 
+std::string thcs_get_params(int cs);
+
 void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args);
 
 #endif

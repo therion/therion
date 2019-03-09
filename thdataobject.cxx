@@ -423,11 +423,10 @@ void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double
   };
 
   // 1. Conversion to numbers.
-  const thcsdata * csdata = thcs_get_data(this->cs);
   int sv;
   double tx(0.0), ty(0.0), tz(0.0), dst_z(0.0);
   bool initcs(false);
-  if ((this->cs != TTCS_LOCAL) && csdata->dms) {
+  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
     thparse_double_dms(sv, tx, src_x);
     tx /= 180.0 / THPI;
   } else {
@@ -436,7 +435,7 @@ void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double
   if (sv != TT_SV_NUMBER)
     ththrow(("invalid X coordinate -- %s", src_x));
 
-  if ((this->cs != TTCS_LOCAL) && csdata->dms) {
+  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
     thparse_double_dms(sv, ty, src_y);
     ty /= 180.0 / THPI;
   } else {
@@ -445,30 +444,30 @@ void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double
   if (sv != TT_SV_NUMBER)
     ththrow(("invalid Y coordinate -- %s", src_y));
 
-  if ((this->cs != TTCS_LOCAL) && csdata->swap) {
+  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->swap) {
     tz = tx;
     tx = ty;
     ty = tz;
     tz = 0.0;
   }
 
-  if ((this->cs != TTCS_LOCAL) && csdata->dms) {
+  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
     if ((tx < - THPI) || (tx > THPI))
-      ththrow(("longitude out of range -- %s", csdata->swap ? src_y : src_x));
+      ththrow(("longitude out of range -- %s", thcs_get_data(this->cs)->swap ? src_y : src_x));
 
     if ((ty < (- THPI / 2)) || (ty > (THPI / 2)))
-      ththrow(("latitude out of range -- %s", csdata->swap ? src_x : src_y));
+      ththrow(("latitude out of range -- %s", thcs_get_data(this->cs)->swap ? src_x : src_y));
   }
 
   if (!thcfg.outcs_def.is_valid()) {
-    if ((this->cs != TTCS_LOCAL) && (!csdata->output)) {
+    if ((this->cs != TTCS_LOCAL) && (!thcs_get_data(this->cs)->output)) {
       // TODO: get NS
       double dumx, dumy, dumz;
       int south = 0;
-      thcs2cs(csdata->params, thcs_get_data(TTCS_LAT_LONG)->params, tx, ty, tz, dumx, dumy, dumz);
+      thcs2cs(thcs_get_params(this->cs), thcs_get_params(TTCS_LAT_LONG), tx, ty, tz, dumx, dumy, dumz);
       if (dumy < 0.0)
         south = 1;
-      thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(csdata->params, tx, ty, tz) - 1) + south;
+      thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(thcs_get_params(this->cs), tx, ty, tz) - 1) + south;
     } else {
       thcfg.outcs = this->cs;
     }
@@ -484,7 +483,7 @@ void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double
     dst_y = ty;
     dst_z = tz;
   } else {
-    thcs2cs(csdata->params, thcs_get_data(thcfg.outcs)->params, tx, ty, tz, dst_x, dst_y, dst_z);
+    thcs2cs(thcs_get_params(this->cs), thcs_get_params(thcfg.outcs), tx, ty, tz, dst_x, dst_y, dst_z);
   }
 
   if (thcfg.outcs != TTCS_LOCAL) {
