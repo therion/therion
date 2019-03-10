@@ -1,5 +1,6 @@
 #! /usr/bin/tclsh
 
+
 proc load_proj_init_file_add {name spec desc} {
   global proj_specs
   regsub -all {\+?no\_defs} $spec {} spec
@@ -44,6 +45,40 @@ proc load_proj_init_file {fn shortcut} {
   close $fid
   load_proj_init_file_add $active_name $active_spec $active_comment
 }
+
+
+
+proc load_proj_init_file_for_labels {fn shortcut} {
+  global projlabels
+  set projlabels($shortcut) "map<int, const char *> $shortcut\_labels = {\n"
+  set active_comment {}
+  set active_name {}
+  set active_spec { }
+  set fid [open $fn r]
+  while {![eof $fid]} {
+    gets $fid line
+    regexp {^\s*\#\s*(.*)$} $line dum active_comment
+    regsub -all {"} $active_comment active_comment
+    regsub {\s*\#.*$} $line {} line
+    if {[string length $active_name] == 0} {
+      if {[regexp {^\s*\<(\S+)\>} $line dum id]} {
+	set active_name [expr int($id)]
+	regsub {^\s*\<\S+\>\s*} $line {} line
+      }
+    }
+    if {[string length $active_name] > 0} {
+      append active_spec $line
+      if {[regexp {\s+\<\>} $line]} {
+	append projlabels($shortcut) "  {$active_name, \"$active_comment\"},\n"
+	set active_name {}
+	set active_spec { }
+      }
+    }
+  }
+  close $fid
+  append projlabels($shortcut) "};\n\n\n"
+}
+
 
 # <identifiers> <options> <libPROJ definition> <.PRJ definition>
 set proj_specs {
@@ -103,6 +138,9 @@ set osgbspecs {{ST 1 -2} {SN 2 -3} {} {} {} {}}
 
 #load_proj_init_file extern/proj4/nad/epsg epsg
 #load_proj_init_file extern/proj4/nad/esri esri
+set prefix [exec pkg-config proj --variable=prefix]
+load_proj_init_file_for_labels $prefix/share/proj/epsg epsg
+load_proj_init_file_for_labels $prefix/share/proj/esri esri
 
 # join identical projections
 array set proj_defs {}
@@ -161,11 +199,18 @@ puts $fid {/**
  
 #include "thparse.h"
  
+#include <map>
+using namespace std;
+
 /**
  * CS tokens.
  */
 }
+
 puts $fid "enum \{\n  TTCS_UNKNOWN = -2,\n  TTCS_LOCAL = -1,"
+
+
+
 
  
 foreach e $proj_enum {
@@ -173,6 +218,7 @@ foreach e $proj_enum {
 } 
  
 puts $fid "\};"
+
  
 puts $fid {
 
@@ -185,6 +231,11 @@ puts $fid "typedef struct \{\n  bool dms, output, swap;\n  const char * params; 
 puts $fid "extern const thstok thtt_cs\[[expr [llength $proj_parse] + 1]\];\n";
 
 puts $fid "extern const thcsdata thcsdata_table\[[llength $proj_specs]\];\n"
+
+puts $fid {
+extern map<int, const char *> esri_labels;
+extern map<int, const char *> epsg_labels;
+}
 
 
 puts $fid {
@@ -203,7 +254,9 @@ puts $fid {/**
  */
        
 #include "thcsdata.h"
+
 }
+
 
 puts $fid {
 
@@ -248,6 +301,9 @@ foreach p $proj_specs {
   puts $fid "  \{$o_dms, $o_output, $o_swap, \"[lindex $p 2]\", \"$prjspec\"\, \"$prjname\"\},"
 } 
 puts $fid "\};"
+
+puts $fid $projlabels(esri)
+puts $fid $projlabels(epsg)
 
 
 close $fid
