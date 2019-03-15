@@ -29,7 +29,7 @@
 #include "thparse.h"
 #include "thcsdata.h"
 #include "thexception.h"
-#include <proj_api.h>
+#include "thproj.h"
 #include "thdatabase.h"
 #include <map>
 #include <string>
@@ -146,17 +146,14 @@ void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args)
 {
   if (thcs_parse(id) != TTCS_UNKNOWN) ththrow(("cs already exists -- %s", id));
   if (!th_is_extkeyword(id)) ththrow(("invalid cs identifier -- %s", id));
-  projPJ P1;
-  if ((P1 = pj_init_plus(proj4id))==NULL) 
-    ththrow(("invalid proj4 identifier -- %s", proj4id));
-  pj_free(P1);
+  thcs_check(proj4id);
   thcsdata * pd = &(*thcs_custom_data.insert(thcs_custom_data.end(), thcsdata()));
   pd->prjspec = "";
   pd->params = thdb.strstore(proj4id);
   pd->prjname = thdb.strstore(id);
-  pd->swap = false;
-  pd->output = true;
-  pd->dms = false;
+  pd->dms = thcs_islatlong(proj4id);
+  pd->swap = pd->dms;
+  pd->output = !pd->dms;
   thcs_custom_id--;
   thcs_custom_name2int[std::string(id)] = thcs_custom_id;
   thcs_custom_int2name[thcs_custom_id] = std::string(id);

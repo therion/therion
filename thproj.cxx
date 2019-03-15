@@ -26,11 +26,15 @@
  */
 
 #include "thexception.h"
-#include <proj_api.h>
+#include "thproj.h"
 #include <string>
 #include <cassert>
 
 using namespace std;
+
+#if PROJ_VER < 5
+
+#include <proj_api.h>
 
 void thcs2utm(string s, signed int zone,
               double a, double b, double c, double &x, double &y, double &z) {
@@ -107,4 +111,99 @@ double thcsconverg(string s, double a, double b) {
   return atan2(a-x,b-y)/3.1415926536*180;
 }
 
+bool thcs_islatlong(string s) {
+  projPJ P;
+  if ((P = pj_init_plus(s.c_str()))==NULL)
+     therror(("Can't initialize input projection!"));
+  bool res = pj_is_latlong(P);
+  pj_free(P);
+  return res;
+}
 
+bool thcs_check(string s) {
+  projPJ P;
+  if ((P = pj_init_plus(s.c_str()))==NULL)
+    ththrow(("invalid proj4 identifier -- %s", s.c_str()));
+  pj_free(P);
+  return true;
+}
+
+#else
+
+  #include <proj.h>
+  #include <math.h>
+  #include <sstream>
+
+  void th_init_proj(PJ * &P, string s) {
+    P = proj_create(PJ_DEFAULT_CTX, s.c_str());
+    if (P==0) {
+      ostringstream u;
+      u << "PROJ4 library: " << proj_errno(P);
+      PJ_INFO info = proj_info();
+      if (!(info.major==5 && info.minor==0))
+          u << " (" << proj_errno_string(proj_errno(P)) << ")";
+      proj_destroy(P);
+      therror((u.str().c_str()));
+    }
+  }
+
+  void thcs2cs(string s, string t,
+              double a, double b, double c, double &x, double &y, double &z) {
+    // TODO: support user-defined pipelines for a combination of CRSs
+    // for high-precision transformations
+
+    //  Proj (at least 5.2.0) doesn't accept custom proj strings in
+    //  proj_create_crs_to_crs(); just +init=epsg:NNN and similar init strings
+    //  PJ* P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, s.c_str(), t.c_str(), NULL);
+
+    ostringstream p;
+    p << "+proj=pipeline +step +inv " << s.c_str() << " +step " << t.c_str();
+    PJ* P = NULL;
+    th_init_proj(P, p.str().c_str());
+    PJ_COORD res;
+    res = proj_trans(P, PJ_FWD, proj_coord(a, b, c, 0));
+    x = res.xyz.x;
+    y = res.xyz.y;
+    z = res.xyz.z;
+    proj_destroy(P);
+  }
+
+  void thcs2utm(string s, signed int zone,
+              double a, double b, double c, double &x, double &y, double &z) {
+    char ch[50];
+    sprintf(ch, "+proj=utm +datum=WGS84 +zone=%d", zone);
+    thcs2cs(s,ch,a,b,c,x,y,z);
+  }
+
+  signed int thcs2zone(string s, double a, double b, double c) {
+    double x, y, z;
+    thcs2cs(s,"+proj=latlong +datum=WGS84",a,b,c,x,y,z);
+    return (int) (x*180/3.1415926536+180)/6 + 1;
+  }
+
+  double thcsconverg(string s, double a, double b) {
+    double c = 0, x, y, z, x2, y2, z2;
+    if (thcs_islatlong(s))
+      therror(("can't determine meridian convergence for lat-long systems"));
+    thcs2cs(s,"+proj=latlong +datum=WGS84",a,b,c,x,y,z);
+    y += 1e-6;
+    thcs2cs("+proj=latlong +datum=WGS84",s,x,y,z,x2,y2,z2);
+    return atan2(x2-a,y2-b)/3.1415926536*180;
+  }
+
+  bool thcs_islatlong(string s) {
+    PJ* P;
+    th_init_proj(P, s.c_str());
+    int angular = proj_angular_output(P,PJ_FWD);
+    proj_destroy(P);
+    return angular;
+  }
+
+  bool thcs_check(string s) {
+    PJ* P;
+    th_init_proj(P, s.c_str());
+    proj_destroy(P);
+    return true;
+  }
+
+#endif

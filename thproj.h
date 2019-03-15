@@ -31,6 +31,7 @@ void thcs2utm(std::string, signed int, double, double, double, double &, double 
 void thcs2cs(std::string, std::string, double, double, double, double &, double &, double &);
 signed int thcs2zone(std::string, double, double, double);
 double thcsconverg(std::string, double, double);
-
+bool thcs_islatlong(std::string);
+bool thcs_check(std::string);
 
 #endif
