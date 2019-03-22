@@ -124,7 +124,9 @@ LDBFLAGS = $(LDPFLAGS)
 
 # proj4 settings
 PROJ_LIBS = $(shell $(CROSS)pkg-config proj --libs)
-CXXJFLAGS = -I$(shell $(CROSS)pkg-config proj --variable=includedir)
+PROJ_MVER = $(shell $(CROSS)pkg-config proj --modversion | sed 's/\..*//')
+CXXJFLAGS = -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable=includedir)
+
 
 # compiler settings
 CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -std=c++11

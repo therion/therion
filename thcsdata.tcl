@@ -57,6 +57,7 @@ proc load_proj_init_file_for_labels {fn shortcut} {
   set fid [open $fn r]
   while {![eof $fid]} {
     gets $fid line
+    if {[regexp {^\<metadata\> } $line]} {continue}
     regexp {^\s*\#\s*(.*)$} $line dum active_comment
     regsub -all {"} $active_comment active_comment
     regsub {\s*\#.*$} $line {} line
