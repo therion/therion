@@ -80,8 +80,8 @@ LXPLATFORM = LINUX
 # PLATFORM WIN32CROSS
 ##CROSS= i686-w64-mingw32.static-
 ##EXT = .exe
-##VTKVERSION = 8.0
-##VTKPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/include/vtk-8.0
+##VTKVERSION = 8.2
+##VTKPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/include/vtk-$(VTKVERSION)
 ##VTKLIBPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/lib
 ##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) \
 ##  -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) \
