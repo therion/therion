@@ -1,5 +1,12 @@
 Therion 5.4.4 (in progress):
 
+therion:
+ * support for Proj 5.0 and newer API (proj.h)
+ * bugs fixed:
+   - segfault while generating SVG when compiled by newer g++
+   - incorrect EPSG projections handling if more than one EPSG codes are used
+   - custom projection name missing
+   - missing Proj4 human readable projection names
 
 --------------------------------------------------------------------------------
 
