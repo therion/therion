@@ -1,4 +1,9 @@
 #! /usr/bin/tclsh
+set proj4v6file "proj.db-no-sqlite3"
+catch {
+  package require sqlite3
+  set proj4v6file "proj.db"
+}
 
 
 proc load_proj_init_file_add {name spec desc} {
@@ -140,8 +145,28 @@ set osgbspecs {{ST 1 -2} {SN 2 -3} {} {} {} {}}
 #load_proj_init_file extern/proj4/nad/epsg epsg
 #load_proj_init_file extern/proj4/nad/esri esri
 set prefix [exec pkg-config proj --variable=prefix]
-load_proj_init_file_for_labels $prefix/share/proj/epsg epsg
-load_proj_init_file_for_labels $prefix/share/proj/esri esri
+set projlabels(esri) "\nmap<int, const char *> esri_labels = {};\n\n"
+set projlabels(epsg) "\nmap<int, const char *> epsg_labels = {};\n\n"
+if {[file exists $prefix/share/proj/$proj4v6file]} {
+  sqlite3 projdb $prefix/share/proj/$proj4v6file
+  set projlabels(esri) "\n\nmap<int, const char *> esri_labels = {\n"
+  set projlabels(epsg) "\n\nmap<int, const char *> epsg_labels = {\n"
+  projdb eval {select auth_name, code, name from projected_crs where auth_name in ('EPSG', 'ESRI') order by cast(code as integer);} pdef {
+    set name $pdef(name)
+    if {![regexp {\s+} $name]} {
+      set name [regsub -all "\\_" $name " "]
+    }
+    set name [regsub -all "\\\"" $name "'"]
+    append projlabels([string tolower $pdef(auth_name)]) "\t{$pdef(code), \"$name\"},\n"
+  }
+  append projlabels(esri) "};\n\n"
+  append projlabels(epsg) "};\n\n"
+} elseif {[file exists $prefix/share/proj/epsg]} {
+  load_proj_init_file_for_labels $prefix/share/proj/epsg epsg
+  load_proj_init_file_for_labels $prefix/share/proj/esri esri
+} else {
+  puts "No PROJ system definitions found."
+}
 
 # join identical projections
 array set proj_defs {}
