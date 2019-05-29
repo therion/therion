@@ -10,6 +10,7 @@ it: Trascina per ridimensionare il pannello dei controlli
 pt: Arraste para redimensionar o painel de controle.
 ru: Перетащите для изменения размера панели
 sk: Rozšíriť alebo zúžiť okno kontrolných panelov.
+sl: Povleci za razširitev nadzorne plošče.
 sq: levize per te rritur dritaren kontrolluese
 zh_CN: 拖动调整控制面板大小
 
@@ -25,6 +26,7 @@ it: File
 pt: Arquivo
 ru: Файл
 sk: Súbor
+sl: Datoteka
 sq: fajlli
 zh_CN: 文件
 
@@ -41,6 +43,7 @@ it: Massimizza
 pt: Maximizar
 ru: Развернуть
 sk: Maximalizovať
+sl: Povečaj
 sq: rrite ne maksimum
 zh_CN: 最大化
 
@@ -57,6 +60,7 @@ it: Normalizza
 pt: Normalizar
 ru: Свернуть
 sk: Normálna veľkosť
+sl: Normalna velikost
 sq: normalizo
 zh_CN: 正常化
 
@@ -72,6 +76,7 @@ it: Cambia posto al pannello
 pt: Trocar de painel
 ru: Переключить панели
 sk: Prehoď panely
+sl: Prestavi okna
 sq: nderro panelat
 zh_CN: 切换面板
 
@@ -86,6 +91,7 @@ it: Mostra/Nascondi la barra strumenti
 pt: Barra de ferramentas
 ru: Переключить панель инструментов
 sk: Zapnúť/vypnúť panel
+sl: Preklopi orodno vstico
 sq: dritarja aktivizuese
 zh_CN: 工具栏开关
 
@@ -101,6 +107,7 @@ it: Encoding della tastiera
 pt: Codificação de caracteres
 ru: Кодировка клавиатуры
 sk: Kódovanie klávesnice
+sl: Koda tipkovnice
 sq: KBD-kodimi
 zh_CN: 键盘编码
 
@@ -116,6 +123,7 @@ it: Finestra
 pt: Janela
 ru: Окно
 sk: Okno
+sl: Okno
 sq: dritarja
 zh_CN: 窗口
 
@@ -131,6 +139,7 @@ it: Esci
 pt: Encerrar
 ru: Выход
 sk: Ukončiť
+sl: Izhod
 sq: mbylle
 zh_CN: 关闭
 
@@ -146,6 +155,7 @@ it: Aiuto
 pt: Ajuda
 ru: Помощь
 sk: Pomoc
+sl: Pomoč
 sq: ndihma
 zh_CN: 帮助
 
@@ -161,6 +171,7 @@ it: Calcolatore BAC
 pt: Calculadora TAS
 ru: Калькулятор алкоголя
 sk: Alkohol tester
+sl: Izračun opitosti
 sq: llogaritesi I alkoolit
 zh_CN: 血液中酒精浓度计算器
 
@@ -176,6 +187,7 @@ it: Dati biometrici
 pt: Informações biométricas
 ru: Биометрические данные
 sk: Biometrické údaje
+sl: Biometrični podatki
 sq: shenimet biometrike
 zh_CN: 生物识别数据
 
@@ -191,6 +203,7 @@ it: età
 pt: idade
 ru: Возраст
 sk: vek
+sl: starost
 sq: mosha
 zh_CN: 年龄
 
@@ -206,6 +219,7 @@ it: anni
 pt: anos
 ru: лет
 sk: rokov
+sl: let
 sq: vitet
 zh_CN: 年
 
@@ -221,6 +235,7 @@ it: sesso
 pt: gênero
 ru: Пол
 sk: pohlavie
+sl: spol
 sq: gjinia
 zh_CN: 性别
 
@@ -236,6 +251,7 @@ it: maschio
 pt: masculino
 ru: мужчина
 sk: muž
+sl: moški
 sq: mashkull
 zh_CN: 男性
 
@@ -251,6 +267,7 @@ it: femmina
 pt: feminino
 ru: женщина
 sk: žena
+sl: ženski
 sq: femer
 zh_CN: 女性
 
@@ -266,6 +283,7 @@ it: altezza
 pt: altura
 ru: Рост
 sk: výška
+sl: višina
 sq: gjatesia
 zh_CN: 身高
 
@@ -281,6 +299,7 @@ it: peso
 pt: peso
 ru: Вес
 sk: váha
+sl: teža
 sq: pesha
 zh_CN: 体重
 
@@ -296,6 +315,7 @@ it: Bevande assunte
 pt: Informações de consumo
 ru: Характеристика принятого
 sk: Údaje o spotrebe
+sl: Podatki vnosa
 sq: shenimet e hargjimeve
 zh_CN: 消耗数据
 
@@ -311,6 +331,7 @@ it: volume
 pt: volume
 ru: Объем
 sk: objem
+sl: količina
 sq: volumi
 zh_CN: 容量
 
@@ -326,6 +347,7 @@ it: tasso alcolico
 pt: nível de álcool
 ru: Крепость
 sk: koncentrácia
+sl: stopnja alkohola
 sq: sasia e alkoolit
 zh_CN: 酒精浓度
 
@@ -341,6 +363,7 @@ it: tempo trascorso
 pt: tempo transcorrido
 ru: Прошло времени
 sk: uplynutý čas
+sl: pretečen čas
 sq: koha e duhur
 zh_CN: 用时
 
@@ -356,6 +379,7 @@ it: Calcola
 pt: Calcular
 ru: Посчитать
 sk: Vypočítať
+sl: Izračunaj
 sq: llogarit
 zh_CN: 计算
 
@@ -371,6 +395,7 @@ it: BAC
 pt: TAS
 ru: Концентрация алкоголя в крови
 sk: Hladina alkoholu
+sl: Vrednost alkohola v krvi
 sq: perqindja e alkoolit ne gjak-BAC
 zh_CN: 血液中酒精浓度
 
@@ -386,6 +411,7 @@ it: ETA
 pt: TEC
 ru: Время до отрезвления
 sk: Čas do vytriezvenia
+sl: Čas do streznitve
 sq: ETA
 zh_CN: 预计清醒时间
 
@@ -401,6 +427,7 @@ it: ore
 pt: horas
 ru: часов
 sk: hodín
+sl: ur
 sq: oret
 zh_CN: 小时
 
@@ -416,6 +443,7 @@ it: MRR
 pt: Taxa de redução
 ru: MRR
 sk: Rýchlosť odburávania
+sl: MRR
 sq: MRR
 zh_CN: 降解酒精速度
 
@@ -431,6 +459,7 @@ it: Compilatore
 pt: Compilador
 ru: Компилятор
 sk: Kompilátor
+sl: Prevajalnik
 sq: kompilatori
 zh_CN: 编译程序
 
@@ -446,6 +475,7 @@ it: Impostazioni
 pt: Configurações
 ru: Настройки
 sk: Nastavenia
+sl: Nastavitve
 sq: setingu
 zh_CN: 设置
 
@@ -461,6 +491,7 @@ it: Struttura rilievi
 pt: Estrutura da topografia
 ru: Структура съемки
 sk: Štruktúra dát
+sl: Struktura meritev
 sq: struktura e matjeve
 zh_CN: 测绘数据结构
 
@@ -476,6 +507,7 @@ it: Informazioni rilievi
 pt: Informações da topografia
 ru: Информация
 sk: Informácie
+sl: Podatki meritev
 sq: informatat e matjeve
 zh_CN: 测绘信息
 
@@ -491,6 +523,7 @@ it: Struttura mappe
 pt: Estrutura dos mapas
 ru: Структура карты
 sk: Mapová štruktúra
+sl: Struktura načrta
 sq: struktura e hartes
 zh_CN: 地图数据结构
 
@@ -505,6 +538,7 @@ it: Anteprima
 pt: Visualização
 ru: Предпросмотр
 sk: Náhľad
+sl: Predogled
 sq: parashiqimi
 zh_CN: 预览
 
@@ -520,6 +554,7 @@ it: Cartella di lavoro
 pt: Diretório de trabalho
 ru: Рабочий каталог
 sk: Pracovný adresár
+sl: Delovna mapa
 sq: direktorati i punes
 zh_CN: 工作目录
 
@@ -535,6 +570,7 @@ it: Path della cartella di lavoro
 pt: Caminho completo do diretório de trabalho.
 ru: Путь к рабочему каталогу.
 sk: Cesta k pracovnému adresáru.
+sl: Pot delovne mape
 sq: tregon shtegun e direktoratit punues
 zh_CN: 工作目录路径
 
@@ -550,6 +586,7 @@ it: File di configurazione
 pt: Arquivo de configuração
 ru: Конфигурационный файл
 sk: Konfiguračný súbor
+sl: Konfiguracijska datoteka
 sq: arkivi I konfiguracionit
 zh_CN: 配置文件
 
@@ -565,6 +602,7 @@ it: Nome del file di configurazione
 pt: Nome do arquivo de configuração.
 ru: Имя конфигурационного файла.
 sk: Meno konfiguračného súboru.
+sl: Ime konfiguracijske datoteke
 sq: tregon emrin e arkivit te konfiguracionit
 zh_CN: 配置文件名
 
@@ -580,6 +618,7 @@ it: Opzioni del comando
 pt: Opções linha de comando
 ru: Опции командной строки
 sk: Argumenty programu
+sl: Možnosti opravilne vrstice
 sq: opcionet e vijes komanduese
 zh_CN: 命令行选项
 
@@ -595,6 +634,7 @@ it: Opzioni del comando Therion
 pt: Opções de linha de comando para chamar o Therion.
 ru: Опции командной строки Therion.
 sk: Argumenty programu v príkazovom riadku.
+sl: Therion možnosti opravilne vrstice
 sq: ketu ju mund te bartni vijen komanduese te arkivit tek Therion-i
 zh_CN: 泰里翁命令行选项
 
@@ -610,6 +650,7 @@ it: Esegui Therion
 pt: Rodar o Therion.
 ru: Запуск Therion.
 sk: Spustiť Therion.
+sl: Poženi therion
 sq: aktivizo Therion-in
 zh_CN: 运行泰里翁
 
@@ -623,6 +664,7 @@ it: Xpdf
 pt: Xpdf
 ru: Xpdf
 sk: Xpdf
+sl: Xpdf
 sq: Xpdf
 zh_CN: Xpdf
 
@@ -636,6 +678,7 @@ it: Acrobat Reader
 pt: Acrobat Reader
 ru: Acrobat Reader
 sk: Acrobat Reader
+sl: Acrobat Reader
 sq: lexuesi I programit-Akrobat
 zh_CN: Acrobat Reader
 
@@ -650,6 +693,7 @@ it: File PDF
 pt: Caminho completo para arquivo PDF gerado.
 ru: PDF-файл для просмотра
 sk: Cesta k PDF súboru.
+sl: Pot PDF datoteke.
 sq: arkivi-PDF
 zh_CN: PDF文件路径
 
@@ -665,6 +709,7 @@ it: Informazioni del rilievo
 pt: Informações sobre o mapeamento.
 ru: Информация о съёмке.
 sk: Informácie o častiach.
+sl: Podatki meritev.
 sq: informatat e matjeve
 zh_CN: 测绘信息
 
@@ -680,6 +725,7 @@ it: L'interfaccia utente non è attiva. Per attivarla apri un file o creane uno.
 pt: A interface do usuário não está ativa. Para ativá-la, abra um arquivo existente ou crie um novo arquivo.
 ru: Интерфейс неактивен. Для активации откройте существующий файл или создайте новый.
 sk: XTherion momentálne nie je aktívny. Otvorte existujúci konfiguračný súbor alebo vytvorte nový.
+sl: Uporabniški vmesnik ni aktiven. Za aktiviranje je potrebno odpreti obstoječo datoteko ali kreirati novo.
 sq: interfejsi I perdoruesit nuk eshte aktiv. Ta aktivizosh, hape arkivin egzistues apo hape nje te ri.
 zh_CN: 用户界面没有启动，打开现有文件或创建新文件启动它。
 
@@ -695,6 +741,7 @@ it: compilatore ...
 pt: carregando o compilador...
 ru: загрузка компилятора...
 sk: kompilátor...
+sl: nalaganje prevajalnika...
 sq: duke lexuar kompiluesin…
 zh_CN: 程序编译载入中…
 
@@ -710,6 +757,7 @@ it: esecuzione Therion ...
 pt: Rodando o Therion...
 ru: Запуск Therion ...
 sk: Prebieha výpočet...
+sl: Zaganjanje theriona ...
 sq: duke ve ne pune Therion-in…
 zh_CN: 泰里翁运行中…
 
@@ -725,6 +773,7 @@ it: ESECUZIONE
 pt: PROCESSANDO
 ru: ОБРАБОТКА
 sk: VÝPOČET
+sl: IZVAJANJE
 sq: ne punim e siper
 zh_CN: 运行中
 
@@ -740,6 +789,7 @@ it: ERRORE
 pt: ERRO
 ru: ОШИБКА
 sk: CHYBA
+sl: NAPAKA
 sq: gabim
 zh_CN: 出错
 
@@ -752,6 +802,7 @@ fr: WARNING
 pt: AVISO
 ru: ПРЕДУПРЕЖДЕНИЕ
 sk: VAROVANIE
+sl: OPOZORILO
 zh_CN: 警告
 
 therion: Reading therion log file ...
@@ -766,6 +817,7 @@ it: Lettura file di log di Therion ...
 pt: Lendo o arquivo log do Therion...
 ru: Чтение лог-файла Therion...
 sk: Načitávam LOG súbor.
+sl: Branje therionove dnevnik datoteke ...
 sq: duke lexuar arkivin hyres te Therion-it
 zh_CN: 泰里翁记录文件读取中 ...
 
@@ -781,6 +833,7 @@ it: \nerrore in apertura del file therion.log
 pt: \nerro ao abrir arquivo therion.log\n
 ru: \nошибка открытия файла therion.log\n
 sk: \nchyba pri čítaní súboru therion.log\n
+sl: \nnapaka pri odpiranju therion.log datoteke\n
 sq: gabim gjate hapjes se Therion-it.arkivin hyres/n
 zh_CN: \n打开泰里翁文件出错\n
 
@@ -796,6 +849,7 @@ it: Visualizza o nascondi questo pannello
 pt: Alternar visualização deste painel de controle
 ru: Показать или спрятать панель
 sk: Stlačte ak chcete zobraziť alebo skryť tento panel
+sl: Prikaži ali skrij to nadzorno ploščo
 sq: kliko te hapesh ose te mbyllesh kete panel te kontrollit
 zh_CN: 显示或隐藏此控制面板
 
@@ -811,6 +865,7 @@ it: editor di mappa ...
 pt: carregando o editor de mapas...
 ru: загрузка редактора карт...
 sk: Mapový editor
+sl: nalagam urejevalnik načrta ...
 sq: duke lexuar permiresuesin e hartave…
 zh_CN: 地图编辑器载入中…
 
@@ -826,6 +881,7 @@ it: Indietro %s
 pt: Desfazer %s
 ru: Отменить %s
 sk: Späť - %s
+sl: Razveljavi %s
 sq: prishe %s
 zh_CN: 取消%s
 
@@ -841,6 +897,7 @@ it: Rifai %s
 pt: Refazer %s
 ru: Вернуть %s
 sk: Opakovať- %s
+sl: Ponovi %s
 sq: beje perseri %s
 zh_CN: 恢复 %s
 
@@ -856,6 +913,7 @@ it: %s \[%s\] -- encoding ripetuto nel file di comandi
 pt: %s \[%s\] -- mais de um elemento de codificação no mesmo arquivo
 ru: %s \[%s\] -- несколько команд encoding в файле
 sk: %s \[%s\] -- viac encoding príkazov v jednom súbore
+sl: %s \[%s\] -- večje število kodirnih ukazov v datoteki
 sq: %s \[%s\] –shumezo komandat te deshifrimit ne arkiv
 zh_CN: %s \[%s\] --文件中多重编码命令
 
@@ -871,6 +929,7 @@ it: %s \[%s\] -- encoding non conosciuto -- %s
 pt: %s \[%s\] -- codificação desconhecida -- %s
 ru: %s \[%s\] -- неизвестная кодировка -- %s
 sk: %s \[%s\] -- neznáme kódovanie znakov -- %s
+sl: %s \[%s\] -- neznano kodiranje -- %s
 sq: %s \[%s\] – deshifrim I panjohur -- %s
 zh_CN: %s \[%s\] – 未知编码 -- %s
 
@@ -886,6 +945,7 @@ it: aggiustamento area
 pt: ajustando área
 ru: регулирование области
 sk: prispôsobenie pracovnej plochy
+sl: prilagajanje površine
 zh_CN: 自定义工作区
 
 therion: zooming
@@ -900,6 +960,7 @@ it: zooming
 pt: dando zoom
 ru: масштабирование
 sk: zoomovanie
+sl: povečevanje
 sq: zmadhimi
 zh_CN: 缩放
 
@@ -915,6 +976,7 @@ it: Zomm %d %%
 pt: Zoom %d %%
 ru: Масштаб %d %%
 sk: Zoom %d %%
+sl: Povečava %d %%
 sq: zmadho %d %%
 zh_CN: 缩放 %d %%
 
@@ -930,6 +992,7 @@ it: Zoom degli oggetti ...
 pt: Dando zoom nos objetos...
 ru: Масштабирование объектов...
 sk: Zoomovanie objektov ...
+sl: Povečevanje objektov ...
 sq: objektet e zmadhimit…
 zh_CN: 目标缩放中...
 
@@ -945,6 +1008,7 @@ it: trascinamento immagine
 pt: arrastando imagem
 ru: перетаскивание изображения
 sk: Presúvanie obrázku
+sl: premikanje slike
 sq: imazhi per tu vizatuar
 zh_CN: 拖动图像
 
@@ -960,6 +1024,7 @@ it: Editor di mappa
 pt: Editor de Mapas
 ru: Редактор карт
 sk: Mapový Editor
+sl: Urejevalnik načrta
 sq: permiresuesi I hartave
 zh_CN: 地图编辑器
 
@@ -975,6 +1040,7 @@ it: Oggetti
 pt: Elementos do arquivo
 ru: Команды в файле
 sk: Príkazy v súbore
+sl: Datotečni ukazi
 sq: objektet
 zh_CN: 文件命令
 
@@ -990,6 +1056,7 @@ it: Cerca e seleziona
 pt: Buscar & Selecionar
 ru: Поиск и Выделение
 sk: Hľadaj a Vyber
+sl: Poišči in izberi
 sq: kerko dhe zgjidh
 zh_CN: 查找和选择
 
@@ -1005,6 +1072,7 @@ it: Anteprima comando
 pt: Elemento
 ru: Просмотр команды
 sk: Náhľad príkazu
+sl: Predogled ukaza
 sq: komanda e parashiqimit
 zh_CN: 命令预览
 
@@ -1020,6 +1088,7 @@ it: Punti
 pt: Ponto
 ru: Точка
 sk: Bod
+sl: Točke
 sq: pikat
 zh_CN: 点编辑
 
@@ -1035,6 +1104,7 @@ it: Linee
 pt: Linha
 ru: Линия
 sk: Krivka
+sl: Krivulje
 sq: rjeshtat
 zh_CN: 线编辑
 
@@ -1050,6 +1120,7 @@ it: Punti della linea
 pt: Ponto de linha
 ru: Точка линии
 sk: Bod krivky
+sl: Točke krivulj
 sq: pikat e rjeshtit
 zh_CN: 点线编辑
 
@@ -1065,6 +1136,7 @@ it: Aree
 pt: Área
 ru: Область
 sk: Plocha
+sl: Površine
 sq: fushat
 zh_CN: 区编辑
 
@@ -1080,6 +1152,7 @@ it: Scrap
 pt: Trecho
 ru: Скрап
 sk: Scrap
+sl: Rezi
 sq: mbeturinat
 zh_CN: 草图编辑
 
@@ -1095,6 +1168,7 @@ it: Editor di testo
 pt: Editor de texto
 ru: Редактор
 sk: Textový editor
+sl: Urejevalnik besedila
 sq: permirsuesi I tekstit
 zh_CN: 文本编辑
 
@@ -1110,6 +1184,7 @@ it: Area di disegno
 pt: Área de desenho
 ru: Зона рисования
 sk: Pracovná plocha
+sl: Površina risanja
 sq: fusha e vizatimit
 zh_CN: 绘图工作区
 
@@ -1125,6 +1200,7 @@ it: Immagini di background
 pt: Imagens de fundo
 ru: Фоновые изображения
 sk: Obrázky pozadia
+sl: Slika ozadja
 sq: imazhet ne prapavije
 zh_CN: 底图
 
@@ -1140,6 +1216,7 @@ it: Area di disegno attiva
 pt: Área de desenho atual
 ru: Текущая зона рисования.
 sk: Súčasná pracovná plocha.
+sl: Trenutna površina risanja
 sq: fusha momentale e vizatimit
 zh_CN: 当前绘图区
 
@@ -1155,6 +1232,7 @@ it: Minimo X
 pt: X mín.
 ru: X min.
 sk: Minimum X.
+sl: X min.
 sq: minimum X.
 zh_CN: 最小 X.
 
@@ -1170,6 +1248,7 @@ it: Minimo Y
 pt: Y mín.
 ru: Y min.
 sk: Minimum Y.
+sl: Y min.
 sq: minimum Y.
 zh_CN: 最小 Y.
 
@@ -1185,6 +1264,7 @@ it: Massimo X
 pt: X máx.
 ru: X max.
 sk: Maximum X.
+sl: X maks.
 sq: maksimum X.
 zh_CN: 最大 X.
 
@@ -1200,6 +1280,7 @@ it: Massimo Y
 pt: Y máx.
 ru: Y max.
 sk: Maximum Y.
+sl: Y maks.
 sq: maksimum Y.
 zh_CN: 最大 Y.
 
@@ -1215,6 +1296,7 @@ it: Ridimensiona
 pt: Aplicar
 ru: Установить
 sk: Prispôsob
+sl: Prilagodi
 sq: permireso
 zh_CN: 调整
 
@@ -1230,6 +1312,7 @@ it: Ridimensiona l'area di disegno ai limiti dati
 pt: Ajustar área de desenho para os valores acima.
 ru: Установить зону рисования в заданных границах.
 sk: Prispôsobiť pracovnú plochu daným limitom.
+sl: Prilagodi površino risanja danim omejitvam.
 sq: permireso fushen e vizatimit deri ne kufijt e dhene.
 zh_CN: 调整绘图区至指定区域
 
@@ -1245,6 +1328,7 @@ it: Auto-ridimensiona
 pt: Ajuste automático
 ru: Авто
 sk: Automaticky
+sl: Avtomatsko prilagajanje
 sq: permiresimi automatik
 zh_CN: 自动调整
 
@@ -1260,6 +1344,7 @@ it: Ridimensiona l'area di disegno ai limiti calcolati
 pt: Ajustar área de desenho para valores calculados automaticamente.
 ru: Автоматически установить зону рисования.
 sk: Automaticky prispôsobiť pracovnú plochu všetkým objektom.
+sl: Prilagodi površino risanja avtomatsko izračunanim omejitvam.
 sq: permireso fushen e vizatimit ne kufirin e llogaritur automatikisht.
 zh_CN: 调整自动计算绘图区
 
@@ -1275,6 +1360,7 @@ it: zoom
 pt: zoom
 ru: масштаб
 sk: zoom
+sl: povečaj
 sq: zmadho
 zh_CN: 缩放
 
@@ -1290,6 +1376,7 @@ it: Zoom area di disegno
 pt: Zoom na área de desenho.
 ru: Масштабировать зону рисования.
 sk: Zoom pracovnej plochy.
+sl: Povečaj površino risanja.
 sq: kontrolli I zmadhimit. Kliko ne gjashtekendesh te shohesh menyn
 zh_CN: 缩放绘图区
 
@@ -1305,6 +1392,7 @@ it: modulo comandi ...
 pt: carregando o módulo de elementos...
 ru: загрузка модуля команд...
 sk: príkazový modul...
+sl: nalaganje ukaznega modula ...
 sq: duke lexuar modulin komandues…
 zh_CN: 命令模块载入中…
 
@@ -1320,6 +1408,7 @@ it: Seleziona comando.
 pt: Selecione o elemento.
 ru: Выберите команду.
 sk: Vyber príkaz.
+sl: Izberi krivuljo za prikaz ustreznega izbranega objekta na površini ali obratno.
 sq: kliko ne resht qe te fitosh objektin e deshiruar I zgjedhur ne pelhure ose anasjelltas.
 zh_CN: 选择命令
 
@@ -1335,6 +1424,7 @@ it: Bottone di azione.
 pt: Botão da ação selecionada.
 ru: Действия.
 sk: Gombík - akcia.
+sl: Po kliku na ta gumb, lahko vnesete objekt s pomočjo miške. Izberi ukaz za prikaz menija.
 sq: pasi te klikoni kete buton, ju mund te futni objekte me mi. kliko ne aksion qe te shohesh menyn.
 zh_CN: 操作按钮
 
@@ -1350,6 +1440,7 @@ it: Cambia la modalità del mouse per selezionare oggetti.
 pt: Troque o modo do mouse para selecionar objetos.
 ru: Переключитесь на мышь, чтобы выбирать объекты.
 sk: Nastav mód myši na vyberanie objektov.
+sl: Po kliku na ta gumb, lahko izberete objekt na površini s pomočjo miške
 sq: pasi te klikosh kete buton, ju mund te zgjedhni objektet ne pelhure me mi.
 zh_CN: 切换鼠标选择对象
 
@@ -1365,6 +1456,7 @@ it: Azione
 pt: Ação
 ru: Действие
 sk: Akcia
+sl: Ukaz
 sq: aksion
 zh_CN: 动作
 
@@ -1380,6 +1472,7 @@ it: Configura l'azione assegnata al bottone d'azione.
 pt: Escolha a ação atribuída ao botão de ação.
 ru: Выберите действие, назначенное для кнопки.
 sk: Nakonfiguruj akciu pre gombík - akcia.
+sl: S klikom na gumb Vnesi <object> se bo zagnal izbrani ukaz.
 sq: aksionin qe e zgjedhni do te egzekutohet me klikimin ne butonin Fute <objektin>
 zh_CN: 动作按钮动作指派配置
 
@@ -1395,6 +1488,7 @@ it: Sposta sù
 pt: Mover para cima
 ru: Вверх
 sk: Presuň vyššie
+sl: Premakni gor
 sq: levize lart
 zh_CN: 上移
 
@@ -1410,6 +1504,7 @@ it: Sposta il comando in sù nella lista.
 pt: Mover elemento selecionado uma posição para cima.
 ru: Переместить команду вверх по файлу.
 sk: Presuň príkaz vyššie v zozname príkazov.
+sl: Premakni objekt višje v seznamu. Uporabi, če je objekt v napačnem rezu.
 sq: levize objektin lart ne liste. Perdor nese objekti eshte ne deponi te gabuar.
 zh_CN: 上移文件命令至列表
 
@@ -1425,6 +1520,7 @@ it: Sposta giù
 pt: Mover para baixo
 ru: Вниз
 sk: Presuň nižšie
+sl: Premakni dol
 sq: levize poshte
 zh_CN: 下移
 
@@ -1440,6 +1536,7 @@ it: Sposta il comando in giù nella lista.
 pt: Mover elemento selecionado uma posição para baixo.
 ru: Переместить команду вниз по файлу.
 sk: Presuň príkaz nižšie v zozname príkazov.
+sl: Premakni objekt nižje v seznamu. Uporabi, če je objekt v napačnem rezu.
 sq: levize objektin poshte ne liste. Perdore nese objekti eshte ne deponi te gabuar.
 zh_CN: 下移文件命令至列表
 
@@ -1455,6 +1552,7 @@ it: Sposta il comando nella posizione specificata.
 pt: Mover elemento selecionado para posição indicada.
 ru: Переместить команду в указанную позицию в файле.
 sk: Presuň príkaz na danú pozíciu v zozname.
+sl: Premakni objekt na dano pozicijo (pozicija = št. na vsaki alineji)
 sq: levize objektin ne pozicion te dhanun( pozicioni = numri ne secilen rjesht).
 zh_CN: 移动文件命令至制定位置
 
@@ -1470,6 +1568,7 @@ it: Selezione lo scrap di destinazione e posizionati in esso.
 pt: Selecione trecho de destino e posicione-o.
 ru: Укажите целевой скрап и позицию в нем.
 sk: Nastav cieľový scrap a pozíciu v ňom.
+sl: Izberi rez in prestavi vanj.
 sq: zgjedhe destinacionin per deponi dhe poziciono ne te.
 zh_CN: 在其中选择目标草图和位置
 
@@ -1477,60 +1576,72 @@ therion: Shift from
 es: Desplazar desde
 fr: Déplacer à partir
 pt: Deslocar de
+sl: Prestavi iz
 
 therion: Set start point of object shifting vector. Either selected point or place of last right-click.
 es: Definir el punto origen del vector de desplazamiento. Seleccionar un punto o el lugar del ultimo click con el boton derecho.
 pt: Defina ponto inicial do vetor de deslocamento do objeto. Selecione ou um ponto ou o local do último clique com o botão direito do mouse.
+sl: Izberi začetno točko vektorja objekta. Ali izbrana točka ali zadnje mesto desnega klika.
 
 therion: Shift to
 es: Desplazar hasta
 fr: Déplacer jusqu'à
 pt: Deslocar para
+sl: Prestavi v
 
 therion: Set end point of object shifting vector. Either selected point or place of last right-click.
 es: Definir el punto destino del vector de desplazamiento. Seleccionar un punto o el lugar del ultimo click con el boton derecho.
 fr: Définir le point de destination du vecteur de déplacement. Sélectionner un point ou le lieu du dernier clic avec le bouton droit.
 pt: Defina ponto final do vetor de deslocamento do objeto. Selecione ou um ponto ou o local do último clique com o botão direito do mouse.
+sl: Izberi končno točko vektorja objekta. Ali izbrana točka ali zadnje mesto desnega klika.
 
 therion: X coordinate of start point of object shifting vector.
 es: Coordenada X del punto origen del vector de desplazamiento de objetos. 
 fr: Coordonnée X du point d'origine du vecteur de déplacement des objets.
 pt: Coordenada X do ponto inicial do vetor de deslocamento do objeto.
+sl: X koordinata začetne točke vektorja objekta.
 
 therion: Y coordinate of start point of object shifting vector.
 es: Coordenada Y del punto origen del vector de desplazamiento de objetos. 
 fr: Coordonnée Y du point d'origine du vecteur de déplacement des objets.
 pt: Coordenada Y do ponto inicial do vetor de deslocamento do objeto.
+sl: Y koordinata začetne točke vektorja objekta.
 
 therion: X coordinate of end point of object shifting vector.
 es: Coordenada X del punto destino del vector de desplazamiento de objetos. 
 fr: Coordonnée X du point de destination du vecteur déplacement des objets.
 pt: Coordenada X do ponto final do vetor de deslocamento do objeto.
+sl: X koordinata končne točke vektorja objekta.
 
 therion: Y coordinate of end point of object shifting vector.
 es: Coordenada Y del punto destino del vector de desplazamiento de objetos. 
 fr: Coordonnée Y du point de destination du vecteur déplacement des objets.
 pt: Coordenada Y do ponto final do vetor de deslocamento do objeto.
+sl: Y koordinata končne točke vektorja objekta.
 
 therion: Swap
 es: Intercambiar
 fr: Interchager
 pt: Inverter
+sl: Zamenjaj
 
 therion: Swap points of object shifting vector.
 es: Intercambiar los puntos del vector de desplazamiento de objetos.
 fr: Interchanger les points du vecteur déplacement des objets.
 pt: Inverter pontos do vetor de deslocamento do objeto.
+sl: Zamenjaj točke vektorja objekta.
 
 therion: Shift object
 es: Desplazar objeto 
 fr: Déplacer l'objet
 pt: Deslocar objeto
+sl: Prestavi objekt
 
 therion: Shift currently selected point, line or scrap according to specified vector.
 es: Desplaza el punto, línea o trozo actualmente seleccionado con el vector especificado. 
 fr: Déplacer le point, la ligne ou le scrap actuellement sélectionné avec le vecteur spécifié.
 pt: Deslocar ponto, linha ou croqui selecionado de acordo com o vetor definido.
+sl: Prestavi trenutno izbrano točko, krivuljo ali rez glede na določen vektor.
 
 therion: Update text
 bg: Обнови текста
@@ -1544,6 +1655,7 @@ it: Aggiorna testo
 pt: Atualizar texto
 ru: Сохранить текст
 sk: Aktualizuj text
+sl: Obnovi besedilo
 sq: aktualizo tekstin
 zh_CN: 文本更新
 
@@ -1559,6 +1671,7 @@ it: Premi questo bottone per salvare il codice che hai scritto.
 pt: Pressione este botão para salvar o código que escreveu.
 ru: Нажмите эту кнопку для сохранения написанного кода.
 sk: Stlačte toto tlačítko pre uloženie Vami zapísaného kódu.
+sl: Klikni gumb za shrambo sprememb v kodi.
 sq: shtype kete buton ta ruajsh kodin te cilin e ke shkru.
 zh_CN: 按下此按钮保存代码数据
 
@@ -1574,6 +1687,7 @@ it: Editor di testo libero per il file 2D di therion.
 pt: Editor para texto livre no arquivo 2d do therion.
 ru: Редактор произвольного текста в 2D файле.
 sk: Editor pre špeciálne príkazy v 2D súboroch.
+sl: Uporabi to okno urejevalnika za urejanje .th2 datoteke.
 sq: perdore kete dritare per permiresim qe te modofikosh. Th2 arkivin.
 zh_CN: 修改.th2文件编辑器
 
@@ -1589,6 +1703,7 @@ it: testo
 pt: expressão
 ru: выражение
 sk: výraz
+sl: izraz
 sq: kerko per
 zh_CN: 表达式
 
@@ -1604,6 +1719,7 @@ it: Scrivi il testo da cercare.
 pt: Entre a expressão a ser buscada.
 ru: Введите выражение поиска.
 sk: Vložte hľadaný výraz.
+sl: Vnesi iskani izraz.
 sq: fute fjalin qe do ta kerkosh.
 zh_CN: 输入查找表达式
 
@@ -1619,6 +1735,7 @@ it: espressione regolare
 pt: expressão regular
 ru: регулярное выражение
 sk: regulárny výraz
+sl: regular expression
 sq: shprehje e rregullt
 zh_CN: 正则表达式
 
@@ -1634,6 +1751,7 @@ it: Cerca espressione regolare.
 pt: Buscar por expressão regular
 ru: Искать по регулярному выражению.
 sk: Vyhľadávanie regulárneho výrazu.
+sl: Išči regular expression.
 sq: kerko per shprehje te rregullt.
 zh_CN: 查找正则表达式
 
@@ -1649,6 +1767,7 @@ it: case-sensitive
 pt: diferenciar MAIÚSCULAS/minúsculas
 ru: учитывать регистр
 sk: rozlišovať veľkosť
+sl: loči velike in male črke
 sq: rast I ndjeshem-senzitiv
 zh_CN: 区分大小写
 
@@ -1664,6 +1783,7 @@ it: Ricerca case-sensistive
 pt: Busca deve diferenciar letras MAIÚSCULAS das minúsculas.
 ru: Поиск с учетом регистра.
 sk: Vyhľadávanie s rozlišovaním veľkých a malých písmen.
+sl: Išči upoštevajoč velike in male črke.
 sq: kerko rast senzitiv
 zh_CN: 区分大小写查找
 
@@ -1679,6 +1799,7 @@ it: Prossimo
 pt: Próximo
 ru: Следующий
 sk: Nasledujúci
+sl: Najdi naslednje
 sq: gjeje tjetren me radhe
 zh_CN: 查找下一处
 
@@ -1694,6 +1815,7 @@ it: Seleziona il prossimo oggetto trovato
 pt: Selecionar o próximo objeto que atenda à expressão.
 ru: Выбрать следующий объект, соответствующий выражению поиска.
 sk: Nájdi ďalší objekt zodpovedajúci hľadanému výrazu.
+sl: Izberi naslednji objekt iskanega izraza.
 sq: zgjedhe objektin tjeter me radhe te shprehjes qe pershtatet
 zh_CN: 选择匹配表达式的下一对象
 
@@ -1709,6 +1831,7 @@ it: Cerca
 pt: Primeiro
 ru: Первый
 sk: Nájdi prvý
+sl: Najdi prvo
 sq: kerko te parin
 zh_CN: 查找第一项
 
@@ -1724,6 +1847,7 @@ it: Seleziona il primo oggetto trovato
 pt: Selecionar o primeiro objeto que atenda à expressão.
 ru: Выбрать первый объект, соответствующий выражению поиска.
 sk: Nájdi prvý objekt zodpovedajúci hľadanému výrazu.
+sl: Izberi prvi objekt iskanega izraza.
 sq: zgjedh objektin e pare te shprehjes qe pershtatet
 zh_CN: 选择匹配表达式的第一对象
 
@@ -1739,6 +1863,7 @@ it: Tutti
 pt: Todos
 ru: Показать все
 sk: Označ všetky
+sl: Pokaži vse
 sq: tregoji te gjitha
 zh_CN: 显示所有对象
 
@@ -1754,6 +1879,7 @@ it: Evidenzia tutti gli oggetti trovati
 pt: Destacar todos os objetos que atedam à expressão.
 ru: Подсветить все объекты, соответствующие выражению поиска.
 sk: Zvýrazní všetky objekty zodpovedajúce hľadanému výrazu.
+sl: Označi vse objekte iskanega izraza.
 sq: zghedh te gjitha objektet qe pershtaten me shprehjen
 zh_CN: 突出显示匹配表达式的所有对象
 
@@ -1769,6 +1895,7 @@ it: Cancella
 pt: Limpar
 ru: Очистить все
 sk: Zruš výber
+sl: Počisti vse
 sq: fshij krejt
 zh_CN: 清除所有对象
 
@@ -1784,6 +1911,7 @@ it: Togli l'evidenziazione degli oggetti.
 pt: Remover todos os destaques nos objetos.
 ru: Снять подсветку со всех объектов.
 sk: Zruší zvýraznenie vybratých objektov.
+sl: Počisti označen objekt.
 sq: fshij objektet e zgjedhura-te hijezuara
 zh_CN: 清除突出显示对象
 
@@ -1799,6 +1927,7 @@ it: modulo immagini ...
 pt: carregando módulo de imagens...
 ru: загрузка модуля изображений...
 sk: nahrávam obrázkový modul...
+sl: nalagam modul slik ...
 sq: duke lexuar modulin e imazhit…
 zh_CN: 图形模块载入中...
 
@@ -1814,6 +1943,7 @@ it: Seleziona l'immagine di background.
 pt: Selecione a image de fundo.
 ru: Выбор фонового изображения.
 sk: Označ obrázok na pozadí.
+sl: Klikni na vrstico v seznamu za izbor pripadajoče slike.
 sq: kliko rreshtin ne liste qe te zgjedhesh imazhin qe pershtatet.
 zh_CN: 选择底图
 
@@ -1829,6 +1959,7 @@ it: Inserisci una nuova immagine di background.
 pt: Insira uma nova imagem de fundo.
 ru: Вставить новое фоновое изображение.
 sk: Vloženie nového podkladového obrázku.
+sl: Vnesi novo ozadje (npr. .xvi sliko ali skico)
 sq: fute imazhin e ri ne prapavije (p.sh., . xvi imazhin apo vizatimin e skanuar).
 zh_CN: 插入底图
 
@@ -1844,6 +1975,7 @@ it: Rimuovi
 pt: Remover
 ru: Убрать
 sk: Odstrániť
+sl: Odstrani
 sq: hiqe
 zh_CN: 删除
 
@@ -1859,6 +1991,7 @@ it: Rimuovi l'immagine selezionata.
 pt: Remover a imagem selecionada.
 ru: Убрать вырбанное изображение.
 sk: Odstráni označený obrázok.
+sl: Odstrani izbrano sliko.
 sq: hiqe imazhin e zgjedhur.
 zh_CN: 删除选择图像
 
@@ -1874,6 +2007,7 @@ it: visibilità
 pt: visibilidade
 ru: показать
 sk: viditeľnosť
+sl: vidnost
 sq: shiqueshmeria-vizibiliteti
 zh_CN: 能见度
 
@@ -1889,6 +2023,7 @@ it: Cambia la visibilità dell'immagine.
 pt: Alternar visibilidade da imagem.
 ru: Показать/спрятать изображение.
 sk: Prepínač viditeľnosti obrázku.
+sl: Preklopi vidnost slike.
 sq: lesho shiqueshmerine-vizibilitetin e imazhit.
 zh_CN: 切换图形能见度
 
@@ -1904,6 +2039,7 @@ it: Controlla il valore di gamma.
 pt: Valor gamma de referência.
 ru: Управление гаммой.
 sk: Nastavenie gamma korekcie obrázku (farebného podania).
+sl: Uravnavaj gamma vrednost.
 sq: kontrollo vleren-gamma
 zh_CN: 伽玛值校正图像设置
 
@@ -1919,6 +2055,7 @@ it: Ripristina
 pt: Restaurar
 ru: Сброс
 sk: Reset
+sl: Poenostavi
 sq: reseto
 zh_CN: 重新设置
 
@@ -1934,6 +2071,7 @@ it: Ripristina il valore di gamma dell'immagine.
 pt: Restaurar valor gamma original para a imagem.
 ru: Сбросить значение гаммы для изображения.
 sk: Resetuje nastavenú gamma korekciu obrázku.
+sl: Poenostavi gamma vrednosti slike.
 sq: kliko ketu qe te kthehesh prapa tek vlera origjinale-gamma.
 zh_CN: 重新设置图像伽马值
 
@@ -1949,6 +2087,7 @@ it: Imposta il valore di gamma dell'immagine.
 pt: Definir valor gamma para a imagem.
 ru: Установить гамму для изображения.
 sk: Nastavuje gamma korekciu obrázku.
+sl: Določi gamma vrednosti slike.
 sq: vendos vleren gamma te imazhit.
 zh_CN: 设置图像伽马值
 
@@ -1964,6 +2103,7 @@ it: Posizione dell'immagine selezionata.
 pt: Posição atual da imagem selecionada.
 ru: Текущая позиция выбранного изображения.
 sk: Súčasná pozícia obrázku.
+sl: Trenutna pozicija izbrane slike (točke platna spodnjega levega kota)
 sq: pozicioni momental I imazhit te zgjedhur(pikat apo pikselat prej pelhures kendi I poshtem I majte).
 zh_CN: 选择图像当前位置
 
@@ -1979,6 +2119,7 @@ it: Sposta a
 pt: Mover para
 ru: Переместить
 sk: Presuň na
+sl: Prestavi na
 sq: levize tek
 zh_CN: 移动到
 
@@ -1994,6 +2135,7 @@ it: Sposta l'immagine nella posizione specificata.
 pt: Mover imagem para posição indicada.
 ru: Переместить изображение к указанной позиции.
 sk: Presunie obrázok na zadanú pozíciu.
+sl: Prestavi sliko na dano pozicijo (zgornji levi kot bo postavljen na dano točko).
 sq: levize imazhin ne poziten e dhene(kendi I eperm I majte I imazhit do te jete ne pikselin e japur).
 zh_CN: 移动图像至指定位置
 
@@ -2009,6 +2151,7 @@ it: Nuova coordinata X dell'immagine.
 pt: Nova coordenada X da imagem.
 ru: Новая координата X.
 sk: Nová X súradnica obrázku.
+sl: Nova X koordinata slike.
 sq: X-koordinata e re e imazhit
 zh_CN: 图像的新X坐标
 
@@ -2024,6 +2167,7 @@ it: Nuova coordinata Y dell'immagine.
 pt: Nova coordenada Y da imagem.
 ru: Новая координата Y.
 sk: Nový Y súradnica obrázku.
+sl: Nova Y koordinata slike.
 sq: koordinata Y e re e imazhit.
 zh_CN: 图像的新Y坐标
 
@@ -2039,6 +2183,7 @@ it: Davanti
 pt: Frente
 ru: Поверх всех
 sk: Navrch
+sl: Prestavi naprej
 sq: levize perpara
 zh_CN: 向前移动
 
@@ -2054,6 +2199,7 @@ it: Sposta l'immagine davanti a tutte le immagini.
 pt: Mover imagem para a frente de todas as imagens.
 ru: Вывести изображение поверх всех остальных.
 sk: Presunie obrázok nad všetky ostatné.
+sl: Prestavi sliko pred vse slike.
 sq: levize imazhin para te gjitha imazheve.
 zh_CN: 移动图像至顶层
 
@@ -2069,6 +2215,7 @@ it: Dietro
 pt: Fundo
 ru: Под всеми
 sk: Naspodok
+sl: Prestavi nazaj
 sq: levize prapa
 zh_CN: 向后移动
 
@@ -2084,6 +2231,7 @@ it: Sposta l'immagine davanti a tutte le immagini.
 pt: Mover imagem para trás de todas as imagens.
 ru: Вывести изображение за всеми остальными.
 sk: Presunie obrázok pod všetky ostatné.
+sl: Prestavi sliko za vse slike.
 sq: levize imazhin prapa te gjitha imazheve.
 zh_CN: 移动图像至底层
 
@@ -2099,6 +2247,7 @@ it: modulo anteprima ...
 pt: carregando módulo de visualização...
 ru: загрузка модуля предпросмотра...
 sk: nahrávam náhľadový modul ...
+sl: nalagam modul predogleda ...
 sq: duke lexuar modulin e perkohshem…
 zh_CN: 预览模块载入中…
 
@@ -2114,6 +2263,7 @@ it: Aggiorna comando
 pt: Atualizar
 ru: Обновить команду
 sk: Aktualizovať
+sl: Ukaz posodobitve
 sq: urdheri-komanda e aktualizimit
 zh_CN: 命令更新
 
@@ -2129,6 +2279,7 @@ it: Premi questo bottone se hai fatto modifiche che non sono visualizzate.
 pt: Pressione este botão se você alterou algo mas essas mudanças não aparecem aqui.
 ru: Нажмите эту кнопку, если вы что-то изменили, но не увидели здесь своих изменений.
 sk: Stlačte toto tlačítko, ak ste niečo zmenili a zmeny nie su v tomto okne viditeľné.
+sl: Klikni, če si napravil spremembe in jih ne vidiš.
 sq: shtype kete buton, nese ke ndryshuar diqka te cilin ndryshim nuk mund ta shohesh ketu.
 zh_CN: 点击按钮，不见你所做的改动
 
@@ -2144,6 +2295,7 @@ it: Anteprima comando.
 pt: Visualização do elemento.
 ru: Просмотр команды.
 sk: Náhľad príkazu.
+sl: Ukaz predogleda.
 sq: ketu mund te shohesh komandat komplete me opcionet e vendosura.
 zh_CN: 命令预览
 
@@ -2159,6 +2311,7 @@ it: modulo scrap ...
 pt: carregando módulo de trechos...
 ru: загрузка скрап-модуля...
 sk: nahrávam scrap modul ...
+sl: nalagam modul reza ...
 sq: duke lexuar modulin e deponise…
 zh_CN: 草图模块载入中…
 
@@ -2174,6 +2327,7 @@ it: Nome dello scrap.
 pt: Nome do trecho.
 ru: Имя скрапа.
 sk: Identifikátor (meno) scrapu.
+sl: Ime reza.
 sq: emri I deponise.
 zh_CN: 草图名称
 
@@ -2189,6 +2343,7 @@ it: proiezione
 pt: projeção
 ru: проекция
 sk: projekcia
+sl: projekcija
 sq: projekcioni
 zh_CN: 投影
 
@@ -2204,6 +2359,7 @@ it: Proiezione dello scrap.
 pt: Projeção do trecho.
 ru: Проекция скрапа.
 sk: Projekcia scrapu.
+sl: Projekcija reza.
 sq: projeksioni I deponise (kliko ne trekendesh te shohesh menyne).
 zh_CN: 草图投影
 
@@ -2219,6 +2375,7 @@ it: Altre opzioni dello scrap
 pt: Outras opções do trecho.
 ru: Другие опции скрапа.
 sk: Ostatné možnosti scrapu.
+sl: Ostale nastavitve reza.
 sq: opcionet tjera te deponise (me shume per kete ne librin e therion-it.pdf)
 zh_CN: 其它草图选项
 
@@ -2233,6 +2390,7 @@ it: Scala
 pt: Escala
 ru: Масштаб
 sk: Mierka
+sl: Merilo
 sq: matesi
 zh_CN: 比例尺
 
@@ -2247,6 +2405,7 @@ it: Rescalamento - premi per selezionare i punti di calibrazione.
 pt: Defina a escala do trecho clicando nos pontos de calibração da imagem.
 ru: Масштабирование скрапа - нажимте эту кнопку и выставите точки масштабирования мышью
 sk: Škálovanie scrapu - po stlačení klikni na škálovacie body.
+sl: Merilo reza - klikni za izbor kalibracijskih točk slike.
 sq: matja e deponise-shtyp te klikosh pikat kalibruese te fotos.
 zh_CN: 草图比例 – 点击鼠标，调整图像
 
@@ -2262,6 +2421,7 @@ it: Aggiorna scrap
 pt: Atualizar
 ru: Обновить скрап
 sk: Aktualizuj scrap
+sl: Posodobi rez.
 sq: aktualizo deponine
 zh_CN: 草图更新
 
@@ -2277,6 +2437,7 @@ it: Premi questo bottone per applicare le tue modifiche allo scrap.
 pt: Aplicar as mudanças ao trecho atual.
 ru: Нажмите эту кнопку для введения в действие ваших изменений для текущего скрапа
 sk: Stlačte tento gombík, aby sa vaše zmeny v scrape uložili.
+sl: Klikni za posodobitev sprememb trenutnega reza.
 sq: shtype kete buton qe te besh ndrimet ne deponine momentale.
 zh_CN: 点击按钮，将改变保存到当前草图
 
@@ -2292,6 +2453,7 @@ it: punti nella scala del disegno
 pt: pontos escala imagem
 ru: масштабирующие точки для картинки
 sk: kalibračné body (obrazovka)
+sl: kalibracijske točke slike
 sq: pikat matese te fotos-pikselat
 zh_CN: 图片缩放点
 
@@ -2307,6 +2469,7 @@ it: Punti di calibrazione sul disegno (X1:Y1 - X2:Y2).
 pt: Pontos limite de calibração na imagem (X1:Y1 - X2:Y2).
 ru: Калибровочные точки на картинке (X1:Y1 - X2:Y2).
 sk: Súradnice kalibračných bodov na obrazovke (X1:Y1 - X2:Y2)
+sl: Kalibracijske točke na sliki (X1:Y1 - X2:Y2)
 sq: pikat e kalibrimit ne foto (X1:Y1 - X2:Y2)
 zh_CN: 图片校准点(X1:Y1 - X2:Y2)
 
@@ -2322,6 +2485,7 @@ it: X1 del disegno.
 pt: X1 na imagem.
 ru: X1 картинки.
 sk: X1 na obrázku.
+sl: X1 na sliki.
 sq: x1 fotoja
 zh_CN: X1 图
 
@@ -2337,6 +2501,7 @@ it: Y1 del disegno.
 pt: Y1 na imagem.
 ru: Y1 картинки.
 sk: Y1 na obrázku.
+sl: Y1 na sliki.
 sq: Y1 fotoja
 zh_CN: Y1 图
 
@@ -2352,6 +2517,7 @@ it: X2 del disegno.
 pt: X2 na imagem.
 ru: X2 картинки.
 sk: X2 na obrázku.
+sl: X2 na sliki.
 sq: X2 fotoja
 zh_CN: X2 图
 
@@ -2367,6 +2533,7 @@ it: Y2 del disegno.
 pt: Y2 na imagem.
 ru: Y2 картинки.
 sk: Y2 na obrázku.
+sl: Y2 na sliki.
 sq: Y2 fotoja
 zh_CN: Y2 图
 
@@ -2382,6 +2549,7 @@ it: punti nella scala effettiva
 pt: pontos escala real
 ru: реальные масштабирующие точки
 sk: kalibračné body (skutočné)
+sl: prave kalibracijske točke
 sq: pikat reale te matjes
 zh_CN: 点的实际比例
 
@@ -2397,6 +2565,7 @@ it: Coordinate reali dei punti di calibrazione (x1:y1 - x2:y2).
 pt: Pontos limite de calibração tamanho real (X1:Y1 - X2:Y2).
 ru: Реальные координаты калибровочных точек (X1:Y1 - X2:Y2).
 sk: Skutočné súradnice kalibračných bodov (X1:Y1 - X2:Y2).
+sl: Prave koordinate kalibracijskih točk (X1:Y1 - X2:Y2).
 sq: koordinatat reale te pikave te kalibrimit (X1:Y1 - X2:Y2).
 zh_CN: 校正点的实际坐标(X1:Y1 - X2:Y2)
 
@@ -2412,6 +2581,7 @@ it: x1 reale.
 pt: X1 real.
 ru: X1 реальное.
 sk: X1 skutočný
+sl: Pravi X1.
 sq: X1 I vertet-real
 zh_CN: X1值
 
@@ -2427,6 +2597,7 @@ it: y1 reale.
 pt: Y1 real.
 ru: Y1 реальное.
 sk: Y1 skutočný
+sl: Pravi Y1.
 sq: Y1 I vertet-real
 zh_CN: Y1值
 
@@ -2442,6 +2613,7 @@ it: x2 reale.
 pt: X2 real.
 ru: X2 реальное.
 sk: X2 skutočný
+sl: Pravi X2.
 sq: X2 I vertet-real
 zh_CN: X2值
 
@@ -2457,6 +2629,7 @@ it: y2 reale.
 pt: Y2 real.
 ru: Y2 реальное.
 sk: Y2 skutočný
+sl: Pravi Y2.
 sq: Y2 I vertet-real
 zh_CN: Y2值
 
@@ -2472,6 +2645,7 @@ it: unità
 pt: unidade
 ru: единицы
 sk: jednotky
+sl: enote
 sq: njesite
 zh_CN: 单位
 
@@ -2487,6 +2661,7 @@ it: Unità delle coordinate reali.
 pt: Unidade das medidas reais.
 ru: Единицы измерения реальных координат.
 sk: Jednotky reálnych súradníc.
+sl: Enote pravih koordinat.
 sq: njesite e koordinatave te verteta.
 zh_CN: 实际坐标单位
 
@@ -2501,6 +2676,7 @@ it: Immagini di background
 pt: croquis de fundo
 ru: Фоновые изображения
 sk: náčrtky na pozadí.
+sl: skica ozadja
 sq: skicat e prapavise.
 zh_CN: 背景素描
 
@@ -2515,6 +2691,7 @@ it: Files usati come background dello scrap
 pt: Lista de imagens de croquis usadas como fundo neste trecho.
 ru: Список графических файлов, используемых в качестве фоновых изображений скрапа
 sk: Zoznam obrázkov použitých ako pozadie.
+sl: Seznam datotek slik, uporabljenih za ozadja rezov.
 sq: lista e foto-arkivit te perdorura si prapavije e deponise.
 zh_CN: 作为草图背景的图像文件列表
 
@@ -2529,6 +2706,7 @@ it: Premi per inserire il disegno che scegli col mouse
 pt: Inserir neste trecho o próximo croqui clicado.
 ru: Эта кнопка вставляет фон скрапа в список
 sk: Po stlačení klikni na náčrtok, ktorý treba vložiť do scrapu.
+sl: Klikni na ta gumb za vnos skice.
 sq: shtype kete buton te fusesh skicen duke klikuar ne te.
 zh_CN: 点击按钮，点击插入素描
 
@@ -2543,6 +2721,7 @@ it: Rimuovi un disegno dallo scrap
 pt: Remover croqui deste trecho.
 ru: Эта кнопка удаляет фон скрапа из списка
 sk: Odstráň náčrtok zo scrapu.
+sl: Izbriši skico iz reza.
 sq: fshije skicen nga deponia
 zh_CN: 从草图中删除素描
 
@@ -2558,6 +2737,7 @@ it: modolo punti ...
 pt: carregando módulo de pontos...
 ru: загрузка модуля точек...
 sk: nahrávam editor bodov ...
+sl: nalagam modul točk ...
 sq: duke lexuar modulin e pikes…
 zh_CN: 点模块载入中…
 
@@ -2573,6 +2753,7 @@ it: Aggiorna punto
 pt: Atualizar
 ru: Обновить точку
 sk: Akualizuj bod
+sl: Posodobi točko
 sq: pika e aktualizimit
 zh_CN: 点更新
 
@@ -2588,6 +2769,7 @@ it: Premi il bottone per fare modifiche al punto.
 pt: Aplicar as mudanças ao ponto atual.
 ru: Нажмите эту кнопку для применения изменений точки.
 sk: Stlačte aby sa aktualizovali zmenené údaje bodu.
+sl: Klikni za posodobitev sprememb točke.
 sq: kliko kete buton te aktualizosh nderrimet e pikes.
 zh_CN: 点击按钮，应用点改动
 
@@ -2603,6 +2785,7 @@ it: Tipo di punto
 pt: Tipo de ponto.
 ru: Тип точки.
 sk: Typ bodu.
+sl: Tip točke (klikni na trikotnik za meni).
 sq: lloji I pikave (kliko ne trekendesh te shohesh menun).
 zh_CN: 点类型
 
@@ -2618,6 +2801,7 @@ it: Identificatore del punto.
 pt: Identificador do ponto.
 ru: Идентификатор точки.
 sk: Identifikátor bodu.
+sl: Identifikator točke.
 sq: identifikuesi I pikes.
 zh_CN: 点识别
 
@@ -2633,6 +2817,7 @@ it: Altre opzioni del punto.
 pt: Outras opções do ponto.
 ru: Другие опции точки.
 sk: Ostatné špecifikácie bodu.
+sl: Druge nastavitve točke.
 sq: opcionet tjera te pikes.
 zh_CN: 其它点选项
 
@@ -2648,6 +2833,7 @@ it: Cioé, se il tipo è etichetta, scrivi: -text \042questo sarà visualizzato 
 pt: Exemplo: se for do tipo 'informação' escreva aqui -text \042texto no mapa (B3)\042
 ru: Например, если тип точки label, здесь можно набрать: -text \042это напечатается (P100)\042
 sk: Príklad: ak je typ label, zadajte: -text \042tento text bude zobrazený\042
+sl: Npr. če je tip napis, tukaj napiši: -text \042to bo prikazano (P100)\042
 sq: p.sh. nese lloji eshte etikete, shkruaj ketu: -teksti \042 kjo do te lajmerohet (P100)\042
 zh_CN: 如果该类型是标签，写在这里：-text \042在此显示(P100)\042
 
@@ -2663,6 +2849,7 @@ it: Scrivi l'angolo di orientazione del simbolo.
 pt: Defina o ângulo de orientação deste símbolo.
 ru: Введите ориентацию символа.
 sk: Zadajte orientáciu bodu.
+sl: Vnesi smer (kot) simbola.
 sq: fute simbolin e kendit te orientimit.
 zh_CN: 按指示角度输入符号
 
@@ -2678,6 +2865,7 @@ it: Ci sono tipi di simboli che sono orientati (per es. gradiente). Premi qui pe
 pt: Há tipos de símbolos que devem ser orientados (exemplo: declividade da galeria). Você poderá definir a orientação com o mouse ou digitando um valor.
 ru: Некоторые типы символов должны быть ориентированы (например gradient). Нажмите здесь для придания им ориентации с помощью мыши или клавиатуры.
 sk: Sú symboly, ktorým treba zadať orientáciu (napr. gradiet). Označte túto voľbu a nastavte orientáciu myšou alebo z klávesnice.
+sl: Nekateri tipi simbolov morajo biti orientirani (npr.: preliv). Klikni tukaj za orientiranje z miško ali tipkovnico.
 sq: disa lloje te simboleve duhet te orientohen (p.sh.:gradienti). Kliko ketu qe ti orientosh me mi apo tastature.
 zh_CN: 有些符号类型具有特定方向性，如坡度。点击此处用鼠标或键盘给定方向。
 
@@ -2693,6 +2881,7 @@ it: dim. x
 pt: tamanho x
 ru: x-size
 sk: veľkosť-x
+sl: x-velikost
 sq: madhesia-X
 zh_CN: x-大小
 
@@ -2708,6 +2897,7 @@ it: Imposta la dimensione del punto nella direzione principale.
 pt: Defina o tamamho do ponto na direção principal.
 ru: Установить размер точки в главном направлении.
 sk: Nastavte veľkosť bodu v hlavnom (X) smere.
+sl: Določi velikost točke v glavni smeri.
 sq: vene madhesine e pikes ne drejtimin kryesor.
 zh_CN: 在主向设置点大小
 
@@ -2723,6 +2913,7 @@ it: Scrivi la dimensione del punto nella direzione principale.
 pt: Entre o tamanho do ponto na direção principal.
 ru: Введите размер точки в главном направлении.
 sk: Zadajte veľkosť bodu v hlavnom (X) smere.
+sl: Vnesi velikost točke v glavni smeri.
 sq: fute madhesine e pikes ne drejtimin kryesor.
 zh_CN: 在主向输入点大小
 
@@ -2738,6 +2929,7 @@ it: dim. y
 pt: tamanho y
 ru: y-size
 sk: veľkosť-y
+sl: y-velikost
 sq: madhesia-Y
 zh_CN: y-大小
 
@@ -2753,6 +2945,7 @@ it: Imposta la dimensione del punto nella direzione trasversale.
 pt: Defina o tamamho do ponto na direção lateral.
 ru: Установить размер точки в боковом направлении.
 sk: Nastavte veľkosť bodu vo vedľajšom smere.
+sl: Določi velikost točke v stranski smeri.
 sq: vene madhesine e pikes ne drejtim anesore.
 zh_CN: 在侧向设置点大小
 
@@ -2768,6 +2961,7 @@ it: Scrivi la dimensione del punto nella direzione trasversale.
 pt: Entre o tamanho do ponto na direção lateral.
 ru: Введите размер точки в боковом направлении.
 sk: Zadajte veľkosť bodu vo vedľajšom smere.
+sl: Vnesi velikost točke v stranski smeri.
 sq: fute madhesine e pikes ne drejtim anesore.
 zh_CN: 在侧向输入点大小
 
@@ -2783,6 +2977,7 @@ it: modulo linee ...
 pt: carregando módulo de linhas...
 ru: загрузка модуля линий ...
 sk: nahrávam modul kriviek ...
+sl: nalagam modul krivulj ...
 sq: duke lexuar modulin e rrjeshtit…
 zh_CN: 线模块载入中…
 
@@ -2798,6 +2993,7 @@ it: Tipo di linea.
 pt: Tipo de linha.
 ru: Тип линии.
 sk: Typ krivky.
+sl: Tip krivulje.
 sq: lloji I rrjeshtit.
 zh_CN: 线类型
 
@@ -2813,6 +3009,7 @@ it: Identificativo
 pt: id
 ru: id - индетификатор
 sk: id
+sl: id
 sq: ID-identifikimi
 zh_CN: ID
 
@@ -2828,6 +3025,7 @@ it: Identificativo della linea.
 pt: Identificador da linha.
 ru: Идентификатор линии
 sk: Identifikátor krivky.
+sl: Identifikator krivulje.
 sq: identifikimi I rrjeshtit.
 zh_CN: 线识别
 
@@ -2843,6 +3041,7 @@ it: Altre opzioni della linea.
 pt: Outras opções da linha.
 ru: Прочие опции линии
 sk: Ďalšie možnosti pre krivku.
+sl: Ostale nastavitve krivulje.
 sq: opcionet tjera te rrjeshtit.
 zh_CN: 其它线选项
 
@@ -2858,6 +3057,7 @@ it: Inverti la linea.
 pt: Inverter linha.
 ru: Задать обратное направление для линии.
 sk: Otočiť krivku.
+sl: Obrni linijo. Če so konice simbola na napačni strani, klikni tukaj.
 sq: rrjeshti I pasem-I kthyer
 zh_CN: 反向线
 
@@ -2873,6 +3073,7 @@ it: Chiudi la linea.
 pt: Fechar a linha.
 ru: Замкнуть линию на её же начало.
 sk: Uzavrieť krivku.
+sl: Zapri krivuljo.
 sq: mbylle rrjeshtin.
 zh_CN: 关闭线
 
@@ -2888,6 +3089,7 @@ it: Inserisci/rimuovi un punto della linea. Dividi la linea.
 pt: Inserir/apagar ponto da linha. Quebrar linha.
 ru: Вставка/удаление точки, разделение линии.
 sk: Vloženie/odstránenie bodu krivky. Rozdelenie krivky.
+sl: Vnesi/briši točko krivulje. Razdeli krivuljo.
 sq: fute/fshije piken e rrjeshtit. Ndaje rrjeshtin.
 zh_CN: 插入/删除点线。分割线。
 
@@ -2903,6 +3105,7 @@ it: Primi questo bottone per fare modifiche alla linea.
 pt: Aplicar as mudanças à linha atual.
 ru: Нажмите эту кнопку для применения изменений линии.
 sk: Aktualizuje krivku.
+sl: Klikni za posodobitev sprememb krivulje.
 sq: kliko kete buton te aktualizosh nderrimet e rrjeshtit.
 zh_CN: 点此按钮，应用线改动。
 
@@ -2918,6 +3121,7 @@ it: Seleziona un punto della linea.
 pt: Selecione ponto da linha.
 ru: Выбрать одну из точек линии.
 sk: Výber bodu krivky.
+sl: To so izbrane točke na krivulji. Izberi kakšno za prikaz na platnu.
 sq: selekto piken e rrjeshtit.
 zh_CN: 选择点线
 
@@ -2933,6 +3137,7 @@ it: caricando il modulo dei punti di linea ...
 pt: carregando módulo de pontos de linha...
 ru: загрузка модуля точек линии ...
 sk: nahrávam modul pre body krivky ...
+sl: nalagam modul točk krivulj ...
 sq: duke lexuar modulin e pikes se rrjeshtit.
 zh_CN: 点线模块载入中...
 
@@ -2948,6 +3153,7 @@ it: posizione
 pt: posição
 ru: позиция
 sk: poloha
+sl: pozicija
 sq: pozicioni
 zh_CN: 位置
 
@@ -2963,6 +3169,7 @@ it: Posizione del punto.
 pt: Posição do ponto.
 ru: Позиция точки.
 sk: Poloha bodu.
+sl: Pozicija točke.
 sq: pozicioni I pikes.
 zh_CN: 点位置
 
@@ -2978,6 +3185,7 @@ it: Coordinata X del punto.
 pt: Coordenada X do ponto.
 ru: X координата точки.
 sk: X súradnica bodu.
+sl: X koordinata točke.
 sq: pika X e koordinates.
 zh_CN: 点X坐标
 
@@ -2993,6 +3201,7 @@ it: Coordinata Y del punto.
 pt: Coordenada Y do ponto.
 ru: Y координата точки.
 sk: Y súradnica bodu.
+sl: Y koordinata točke.
 sq: pika Y e koordinates.
 zh_CN: 点Y坐标
 
@@ -3008,6 +3217,7 @@ it: Coordinata X del punto di controllo precedente.
 pt: Coordenada X do ponto de controle anterior.
 ru: X координата предыдущей управляющей точки.
 sk: X súradnica predchádzajúceho kontrolného bodu.
+sl: X koordinata prejšnje kontrolne točke.
 sq: pika e kontrollit te meparshem te koordinates X
 zh_CN: 上一处X坐标控制点
 
@@ -3023,6 +3233,7 @@ it: Coordinata Y del punto di controllo precedente.
 pt: Coordenada Y do ponto de controle anterior.
 ru: Y координата предыдущей управляющей точки.
 sk: Y súradnica predchádzajúceho kontrolného bodu.
+sl: Y koordinata prejšnje kontrolne točke.
 sq: pika e kontrollit te meparshem te koordinates-Y
 zh_CN: 上一处Y坐标控制点
 
@@ -3038,6 +3249,7 @@ it: Coordinata X del prossimo punto.
 pt: Coordenada X do ponto de controle posterior.
 ru: X координата следующей управляющей точки.
 sk: X súradnica nasledujúceho kontrolného bodu.
+sl: X koordinata naslednje kontrolne točke.
 sq: pika e ardhshme kontrollit te coordinates X
 zh_CN: 下一处X坐标控制点
 
@@ -3053,6 +3265,7 @@ it: Coordinata Y del prossimo punto.
 pt: Coordenada y do ponto de controle posterior.
 ru: Y координата следующей управляющей точки.
 sk: Y súradnica nasledujúceho kontrolného bodu.
+sl: Y koordinata naslednje kontrolne točke.
 sq: pika e ardhshme kontrollit te coordinates Y
 zh_CN: 下一处Y坐标控制点
 
@@ -3068,6 +3281,7 @@ it: Checkbox per usare il punto di controllo precedente.
 pt: Habilitar ponto de controle anterior.
 ru: Поставьте галочку для использования предыдущей управляющей точки.
 sk: Použi predchádzajúci kontrolný bod.
+sl: Izberi v primeru uporabe prejšnje kontrolne točke.
 sq: kutia-kontrollit a duhet te perdoret pika e kontrollit e meparshme
 zh_CN: 复选框，是否使用上一处控制点
 
@@ -3083,6 +3297,7 @@ it: Imposta la linea ad essere regolare nelpunto specificato.
 pt: Forçar que a linha seja suave.
 ru: Установите для сглаживания линии в данной точке.
 sk: Nastaví kontrolné body tak, aby krivka bola v danom bode hladká.
+sl: Določi gladkost krivulje pri dani točki.
 sq: vene rrjeshtin per te qene I bute ne piken e dhanun
 zh_CN: 设置控制点，使该曲线平滑。
 
@@ -3098,6 +3313,7 @@ it: Checkbox per usare il prossimo punto di controllo.
 pt: Habilitar ponto de controle posterior.
 ru: Поставьте галочку для использования следующей управляющей точки.
 sk: Použi nasledujúci kontrolný bod.
+sl: Izberi v primeru uporabe naslednje kontrolne točke.
 sq: kutia-kontrollit a duhet te perdoret pika e kontrollit e ardhshme
 zh_CN: 复选框，是否使用下一处控制点
 
@@ -3113,6 +3329,7 @@ it: Imposta l'orientazione del punto della linea.
 pt: Definir uma orientação para este ponto da linha.
 ru: Установите ориентацию точки линии.
 sk: Nastaví orientáciu symbolov v bode krivky.
+sl: Določi smer točke krivulje.
 sq: vene orientimin e pikes se rrjeshtit
 zh_CN: 设置点线指向
 
@@ -3128,6 +3345,7 @@ it: Scrivi l'orientazione del punto della linea.
 pt: Entre um ângulo (orientação) para este ponto da linha.
 ru: Введите ориентацию точки линии.
 sk: Zadaj orientáciu symbolov v bode krivky.
+sl: Vnesi smer točke krivulje.
 sq: fute orientimin e pikes se rrjeshtit
 zh_CN: 输入点线指向
 
@@ -3143,6 +3361,7 @@ it: dim. destra
 pt: tam. dir.
 ru: r-size
 sk: rozmer-p
+sl: r-velikost
 sq: r-madhesia
 zh_CN: r-大小
 
@@ -3158,6 +3377,7 @@ it: Imposta la dimensione della linea a destra.
 pt: Definir o tamanho da linha na direção direita.
 ru: Установите размер линии в правом направлении.
 sk: Nastaví veľkosť symbolov napravo od krivky.
+sl: Določi velikost krivulje v desno smer.
 sq: cakto madhesine e rrjeshtit ne drejtim te djathte
 zh_CN: 在右向设置线大小
 
@@ -3173,6 +3393,7 @@ it: Scrivi la dimensione della linea a destra.
 pt: Entre o tamanho da linha na direção direita.
 ru: Введите размер линии в правом направлении.
 sk: Zadaj veľkosť symbolov napravo od krivky.
+sl: Vnesi velikost krivulje v desno smer.
 sq: fute madhesine e rjeshtit ne drejtim te djathte
 zh_CN: 在右向输入线大小
 
@@ -3188,6 +3409,7 @@ it: Imposta la dimensione della linea a sinistra.
 pt: Definir o tamanho da linha na direção esqierda.
 ru: Установите размер линии в левом направлении.
 sk: Nastaví veľkosť symbolov naľavo od krivky.
+sl: Določi velikost krivulje v levo smer.
 sq: cakto madhesine e rjeshtit ne drejtim te majte
 zh_CN: 在左向设置线大小
 
@@ -3203,6 +3425,7 @@ it: Scrivi la dimensione della linea a sinistra.
 pt: Entre o tamanho da linha na direção esquerda.
 ru: Введите размер линии в левом направлении.
 sk: Zadaj veľkosť symbolov naľavo od krivky.
+sl: Vnesi velikost krivulje v levo smer.
 sq: fute madhesine e rjeshtit ne drejtim te majte
 zh_CN: 在左向输入线大小
 
@@ -3218,6 +3441,7 @@ it: Editor delle opzioni del punto della linea.
 pt: Editor de opções de ponto de linha.
 ru: Редактор опций точки линии.
 sk: Editor ďalších možností bodu krivky.
+sl: Urejevalnik nastavitev točk krivulje.
 sq: opcioni I editimit te pikes se rjeshtit
 zh_CN: 点线选项编辑器
 
@@ -3233,6 +3457,7 @@ it: Premi questo bottone per fare modifiche ai punti della linea.
 pt: Aplicar as mudanças ao ponto de linha atual.
 ru: Нажмите эту кнопку для применения изменений точки линии.
 sk: Aktializácia bodu krivky.
+sl: Klikni za posodobitev sprememb točk krivulje.
 sq: kliko kete buton per te bere ndrimet e pikes se rjeshtit
 zh_CN: 点击按钮，应用点线改动
 
@@ -3248,6 +3473,7 @@ it: Editor delle opzioni del punto della linea.
 pt: Editor de opções de ponto de linha.
 ru: Редактор опций точки линии.
 sk: Editor ďalších možností bodu krivky.
+sl: Tukaj lahko vnesete nastavitve, ki bodo vplivale na točke krivulje.
 sq: ketu mund te futni opcionet te cilat do te vlejne per pikat e rrjeshtit
 zh_CN: 点线选项编辑器
 
@@ -3263,6 +3489,7 @@ it: modulo aree ...
 pt: carregando módulo de área...
 ru: загрузка модуля областей ...
 sk: nahrávam modul pre plochy ...
+sl: nalagam modul površine ...
 sq: duke lexuar modulin e fushes…
 zh_CN: 区模块载入中…
 
@@ -3277,6 +3504,7 @@ it: Simboli.
 pt: Conjunto de símbolos atual.
 ru: Фильтр группы символов.
 sk: Aktuálna téma symbolov.
+sl: Tema izbranega simbola.
 sq: tema aktuale e simbolit.
 zh_CN: 当前符号集
 
@@ -3292,6 +3520,7 @@ it: Tipo dell'area
 pt: Tipo de área.
 ru: Тип области.
 sk: Typ plochy.
+sl: Tip površine.
 sq: lloji I fushes.
 zh_CN: 区类型
 
@@ -3307,6 +3536,7 @@ it: opzioni
 pt: opções
 ru: опции
 sk: možnosti
+sl: možnosti
 sq: opcionet
 zh_CN: 选项
 
@@ -3322,6 +3552,7 @@ it: Altre opzioni dell'area.
 pt: Outras opções de área.
 ru: Другие опции области.
 sk: Ďalšie možnosti plochy.
+sl: Druge možnosti površine.
 sq: opcionet tjera te fushes.
 zh_CN: 其它区选项
 
@@ -3337,6 +3568,7 @@ it: Selezione linee
 pt: Selecione linhas
 ru: Выбор линий.
 sk: Vyber krivky
+sl: Izberi krivulje
 sq: selekto rjeshtat
 zh_CN: 选择线
 
@@ -3352,6 +3584,7 @@ it: Cambia per inserire linee nell'area.
 pt: Ative o modo de inserção de linhas
 ru: Переключится в режим вставки линий-границ в область.
 sk: Po stlačení môžete začať vkladať krivky ohraničujúce plochu.
+sl: Po kliku tukaj, z miško izberi meje te površine (morajo se križati).
 sq: pasi te klikoni ketu, selekto me mi rjeshtat e kufirit te fushes (ato duhet te nderlidhen)
 zh_CN: 切换线插区模块
 
@@ -3367,6 +3600,7 @@ it: Rimuovi identificativo dall'area.
 pt: Remova ID da área.
 ru: Удалить линию по ID из области.
 sk: Odstrániť krivku z daným ID z plochy.
+sl: Izbriši izbrano krivuljo iz seznama (ne bo del meje površine).
 sq: fshije ID prej fushes
 zh_CN: 从列表中删除给定的线（不属于区边界的部分）
 
@@ -3382,6 +3616,7 @@ it: Identificativo
 pt: Inserir ID
 ru: Вставить по ID
 sk: Vlož ID
+sl: Vnesi ID
 sq: fute ID-ne
 zh_CN: 插入ID
 
@@ -3397,6 +3632,7 @@ it: Inserisci l'identificativo specificato
 pt: Insira o id indicado.
 ru: Вставить линию-границу по заданному ID.
 sk: Vložiť ID krivky do zoznamu kriviek ohraničujúcich plochu.
+sl: Vnesi željen ID namesto Xtherion prednastavljenega.
 sq: fute ID-n e dhene ne vend te X-therion
 zh_CN: 插入指定的ID
 
@@ -3412,6 +3648,7 @@ it: Identificativo da inserire.
 pt: ID a ser inserido.
 ru: ID линии для вставки
 sk: ID na vloženie.
+sl: ID za vnos.
 sq: ID-ja per tu futur.
 zh_CN: 插入的ID
 
@@ -3427,6 +3664,7 @@ it: Aggiorna
 pt: Atualizar
 ru: Обновить
 sk: Aktualizovať
+sl: Posodobi.
 sq: aktualizo
 zh_CN: 更新
 
@@ -3442,6 +3680,7 @@ it: Premi questo bottone per fare modifiche all'area.
 pt: Aplicar as mudanças à área atual.
 ru: Нажмите эту кнопку для применения изменений сделанных для области.
 sk: Aktualizovať plochu.
+sl: Klikni za posodobitev sprememb površine.
 sq: kliko kete buton te aktualizosh ndrimet te cilat I ke bere ne fushe
 zh_CN: 点此按钮，将改动应用到区。
 
@@ -3457,6 +3696,7 @@ it: Mostra
 pt: Mostrar
 ru: Показать
 sk: Zobraziť
+sl: Prikaži
 sq: trego
 zh_CN: 显示
 
@@ -3472,6 +3712,7 @@ it: Mostra le linee del bordo dell'area.
 pt: Mostrar as linhas limítrofes da área.
 ru: Показать линии-границы для области.
 sk: Zobraz hranice plochy.
+sl: Prikaži meje površine. 
 sq: trego kufirin e vijave te fushes.
 zh_CN: 显示区边界线
 
@@ -3487,6 +3728,7 @@ it: Seleziona una linea nell'area.
 pt: Selecionar linha da área.
 ru: Выбор линии.
 sk: Vyber hraničnú krivku.
+sl: Izberi katerokoli krivuljo iz seznama, za izbor pripadajoče meje površine na platnu.
 sq: kliko ne cilindo rrjesht te listes qe te kesh rrjeshtin kufizues te fushes pershtatese, I zgjedhur ne pelhure
 zh_CN: 选择区中线
 
@@ -3502,6 +3744,7 @@ it: menù principale ...
 pt: carregando menu principal...
 ru: загрузка главного меню ...
 sk: nahrávam hlavné menu ...
+sl: nalagam glavni meni ...
 sq: duke lexuar menyn kryesore...
 zh_CN: 主菜单载入中 ...
 
@@ -3517,6 +3760,7 @@ it: Apri (no pics)
 pt: Abrir (menos imagens)
 ru: Открыть (без картинок)
 sk: Otvoriť (bez obrázkov)
+sl: Odpri (brez slik)
 sq: hape (pa foto)
 zh_CN: 打开（无图片）
 
@@ -3532,6 +3776,7 @@ it: Inserisci ...
 pt: Inserir...
 ru: Вставка...
 sk: Vložiť ...
+sl: Vnesi ...
 sq: fute...
 zh_CN: 插入 ...
 
@@ -3547,6 +3792,7 @@ it: punto
 pt: ponto
 ru: точка
 sk: bod
+sl: točka
 sq: pika
 zh_CN: 点
 
@@ -3562,6 +3808,7 @@ it: linea
 pt: linha
 ru: линия
 sk: krivku
+sl: krivulja
 sq: vija apo rjeshti
 zh_CN: 线
 
@@ -3577,6 +3824,7 @@ it: area
 pt: área
 ru: область
 sk: plochu
+sl: površina
 sq: fusha
 zh_CN: 区
 
@@ -3592,6 +3840,7 @@ it: Auto-ridimensiona area
 pt: Ajuste automático de área
 ru: Автоподгонка границ зоны рисования.
 sk: Prispôsob plochu
+sl: Avtomatsko prilagodi površino
 sq: fusha automatikisht e pershtatur
 zh_CN: 自动调整区
 
@@ -3607,6 +3856,7 @@ it: Inserisci immagine
 pt: Inserir imagem
 ru: Вставить изображение
 sk: Vložiť obrázok
+sl: Vnesi sliko
 sq: fute imazhin
 zh_CN: 插入图像
 
@@ -3618,6 +3868,7 @@ fr: Cacher les scraps inactifs
 pt: Esconder trechos inativos
 ru: Скрыть неактивные скрапы
 sk: Skryť neaktívne scrapy
+sl: Skrij neaktivne reze
 
 therion: Zoom 100 %
 bg: Мащаб 100%
@@ -3631,6 +3882,7 @@ it: Zoom 100 %
 pt: Zoom 100%
 ru: Масштаб 100 %
 sk: Zoom 100%
+sl: Povečava 100%
 sq: zmadho 100%
 zh_CN: 缩放100 %
 
@@ -3646,6 +3898,7 @@ it: Modalità del mouse.
 pt: Modo do mouse.
 ru: Режим мыши.
 sk: Mód myši.
+sl: Miškin način.
 sq: miu ne funkcion
 zh_CN: 鼠标模块
 
@@ -3661,6 +3914,7 @@ it: Posizione del mouse.
 pt: Posição atual do mouse.
 ru: Текущая позиция указателя мыши.
 sk: Aktuálna poloha myši.
+sl: Trenutna lokacija miške.
 sq: pozicioni aktual I miut.
 zh_CN: 当前鼠标位置
 
@@ -3676,6 +3930,7 @@ it: procedure di linea ...
 pt: carregando procedimentos relacionados a linhas...
 ru: загрузка процедур для линий ...
 sk: načitavam modul kriviek ...
+sl: nalagam proces krivulje ...
 sq: duke lexuar proceduren rjeshtit...
 zh_CN: 线程序载入中 ...
 
@@ -3691,6 +3946,7 @@ it: L'editor di mappa non è attivo. Per attivarlo apri un file o creane uno.
 pt: O editor de mapas não está ativo. Para ativá-lo, abra um arquivo existente ou crie um novo.
 ru: Редактор карты не активен. Для активации откройте существующий файл или создайте новый.
 sk: Mapový editor nie je aktívny. Otvorte existujúci súbor alebo vytvorte nový.
+sl: Urejevalnik načrta ni aktiven. Za aktivacijo, odpri obstoječi dokument ali ustvari novega.
 sq: permiresuesi I hartes nuk eshte aktiv. Qe ta aktivizosh, hape fajlin egzistues ose krijo nje te ri
 zh_CN: 地图编辑器没有启动。打开现有文件或创建新文件启动它。
 
@@ -3706,6 +3962,7 @@ it: Inserisci linea
 pt: Inserir linha
 ru: Вставить линию
 sk: Vložiť krivku
+sl: Vnesi krivuljo
 sq: fute rjeshtin-vijen
 zh_CN: 插入线
 
@@ -3721,6 +3978,7 @@ it: Inserisci scrap
 pt: Inserir trecho
 ru: Вставить скрап
 sk: Vložiť scrap
+sl: Vnesi rez
 sq: fute deponin
 zh_CN: 插入草图
 
@@ -3736,6 +3994,7 @@ it: Inserisci testo
 pt: Inserir texto
 ru: Вставить текст
 sk: Vložiť text
+sl: Vnesi besedilo
 sq: fute tekstin
 zh_CN: 插入文本
 
@@ -3751,6 +4010,7 @@ it: Inserisci area
 pt: Inserir área
 ru: Вставить область
 sk: Vložiť plochu
+sl: Vnesi površino
 sq: fute fushen
 zh_CN: 插入区
 
@@ -3766,6 +4026,7 @@ it: Rimuovi
 pt: Apagar
 ru: Удалить
 sk: Odstrániť
+sl: Izbriši
 sq: fshije
 zh_CN: 删除
 
@@ -3781,6 +4042,7 @@ it: rimuovendo
 pt: apagando
 ru: удаление
 sk: mazanie
+sl: brišem
 sq: duke fshire
 zh_CN: 正在删除
 
@@ -3796,6 +4058,7 @@ it: comando di spostamento
 pt: movendo elemento
 ru: перемещение команд
 sk: presun príkazu
+sl: ukaz premakni
 sq: komanda e levizjes
 zh_CN: 移动命令
 
@@ -3811,6 +4074,7 @@ it: creazione endscrap
 pt: criando endscrap (marca de fim de trecho)
 ru: создание окончания скрапа
 sk: vytvorenie konca scrapu
+sl: zapiranje reza
 sq: duke kriju fundin e deponise
 zh_CN: 创建草图收尾
 
@@ -3826,6 +4090,7 @@ it: modifiche dello scrap
 pt: alterações no trecho
 ru: изменение скрапа
 sk: zmena parametrov scrapu
+sl: spremembe reza
 sq: ndryshimet ne deponi
 zh_CN: 草图改动
 
@@ -3841,6 +4106,7 @@ it: creazione scrap
 pt: criando trecho
 ru: создание скрапа
 sk: vytvorenie scrapu
+sl: izdelava reza
 sq: duke kriju deponin
 zh_CN: 创建草图
 
@@ -3856,6 +4122,7 @@ it: creazione testo
 pt: criando texto
 ru: создание текста
 sk: vytvorenie textu
+sl: izdelava besedila
 sq: duke kriju tekstin
 zh_CN: 创建文本
 
@@ -3871,6 +4138,7 @@ it: modifiche del testo
 pt: alterações no texto
 ru: изменение текста
 sk: zmena textu
+sl: spremembe besedila
 sq: ndrimet e tekstit
 zh_CN: 文本改动
 
@@ -3886,6 +4154,7 @@ it: inserimento punto finale
 pt: inserção de ponto final
 ru: вставка конечной точки
 sk: koniec vkladania bodov
+sl: vnos končne točke
 sq: perfundo futjet e pikave
 zh_CN: 结束点插入
 
@@ -3900,6 +4169,7 @@ it: seleziona oggetto
 pt: selecione objeto
 ru: выбор объекта
 sk: označ objekt
+sl: izberi objekt
 sq: selekto objektin
 zh_CN: 选择对象
 
@@ -3915,6 +4185,7 @@ it: Inserisci
 pt: Inserir
 ru: Вставка
 sk: Vložiť
+sl: Vnesi
 sq: fute
 zh_CN: 插入
 
@@ -3929,6 +4200,7 @@ it: inserisci punto
 pt: insira ponto
 ru: вставка точки
 sk: vlož bod
+sl: vnesi točko
 sq: fute piken
 zh_CN: 插入点
 
@@ -3943,6 +4215,7 @@ it: inserisci punto di linea
 pt: insira ponto de linha
 ru: вставка точки линии
 sk: vlož bod krivky
+sl: vnosi točko krivulje
 sq: fute piken e rjeshtit
 zh_CN: 插入点线
 
@@ -3957,6 +4230,7 @@ it: inserisci bordo dell'area
 pt: insira limite de área
 ru: вставка границы области
 sk: vlož okraj plochy
+sl: vnesi mejo površine
 sq: fute kufirin e fushes
 zh_CN: 插入区界
 
@@ -3972,6 +4246,7 @@ it: Seleziona
 pt: Selecione
 ru: Выбор
 sk: Vybrať
+sl: Izberi
 sq: selekto
 zh_CN: 选择
 
@@ -3986,6 +4261,7 @@ it: riscala lo scrap
 pt: dimensionar trecho
 ru: масштабирование скрапа
 sk: mierka scrapu
+sl: povečava reza
 sq: deponia e matjeve
 zh_CN: 草图比例
 
@@ -4000,6 +4276,7 @@ it: inserisci disegno
 pt: insira croqui
 ru: вставка фона
 sk: vlož náčrtok
+sl: vstavi rez
 sq: fute skicen
 zh_CN: 插入素描
 
@@ -4015,6 +4292,7 @@ it: creazione punto
 pt: criando ponto
 ru: создание точки
 sk: vytvorenie bodu
+sl: izdelava točke
 sq: duke kriju piken
 zh_CN: 创建点
 
@@ -4030,6 +4308,7 @@ it: modifiche di area
 pt: alterações na área
 ru: изменение области
 sk: zmena parametrov plochy
+sl: spremembe površine
 sq: ndrimet e fushes
 zh_CN: 区改动
 
@@ -4045,6 +4324,7 @@ it: modifiche di punto
 pt: alterações no ponto
 ru: изменение точки
 sk: zmena parametrov bodu
+sl: spremembe točke
 sq: ndrimet e pikes
 zh_CN: 点改动
 
@@ -4059,6 +4339,7 @@ it: Disegno non inerito.
 pt: Croqui não foi inserido no trecho.
 ru: Фон скрапа не вставлен.
 sk: Náčrtok nebol vložený.
+sl: Skica reza ni vnešena.
 sq: skica e deponise nuk eshte futur
 zh_CN: 没有插入的草图素描
 
@@ -4072,6 +4353,7 @@ it: inserimento disegno
 pt: inserindo croqui no trecho
 ru: вставка фона скрапа
 sk: vloženie náčrtku
+sl: vnašam skico reza
 sq: duke future skicen e deponise
 zh_CN: 插入草图素描
 
@@ -4086,6 +4368,7 @@ it: rimozione disegno
 pt: apagando croqui do trecho
 ru: удаление фона скрапа
 sk: odstránenie náčrtku
+sl: brišem skico reza
 sq: duke fshire skicen e deponise
 zh_CN: 删除草图素描
 
@@ -4096,6 +4379,7 @@ fr: on
 pt: sim
 ru: вкл
 sk: on
+sl: vklopljeno
 
 therion: off
 de: aus
@@ -4104,6 +4388,7 @@ fr: off
 pt: não
 ru: выкл
 sk: off
+sl: izklopljeno
 
 therion: tiny (xs)
 de: winzig (xs)
@@ -4112,6 +4397,7 @@ fr: minuscule (xs)
 pt: ínfimo (pp)
 ru: оч.маленький (xs)
 sk: XS
+sl: zelo majhno (xs)
 
 therion: small (s)
 de: klein (s)
@@ -4120,6 +4406,7 @@ fr: petit (s)
 pt: pequeno (p)
 ru: маленький (s)
 sk: S
+sl: majhno (s)
 
 therion: normal (m)
 de: normal (m)
@@ -4128,6 +4415,7 @@ fr: normal (m)
 pt: normal (m)
 ru: нормальный (m)
 sk: M
+sl: normalno (m)
 
 therion: large (l)
 de: groß (l)
@@ -4136,6 +4424,7 @@ fr: grand (l)
 pt: grande (g)
 ru: большой (l)
 sk: L
+sl: veliko (l)
 
 therion: huge (xl)
 de: riesig (xl)
@@ -4144,6 +4433,7 @@ fr: énorme (xl)
 pt: enorme (xl)
 ru: оч.большой (xl)
 sk: XL
+sl: zelo veliko (xl)
 
 therion: out
 de: außen
@@ -4152,6 +4442,7 @@ fr: a l'extérieur
 pt: fora
 ru: наружный
 sk: vonkajší
+sl: ven
 
 therion: in
 de: innen
@@ -4160,6 +4451,7 @@ fr: à l'intérieur
 pt: dentro
 ru: внутренний
 sk: vnútorný
+sl: not
 
 therion: none
 de: kein
@@ -4168,6 +4460,7 @@ fr: aucun
 pt: nenhum
 ru: нет
 sk: žiadny
+sl: nič
 
 therion: <<
 de: <<
@@ -4176,6 +4469,7 @@ fr: <<
 pt: <<
 ru: <<
 sk: <<
+sl: <<
 
 therion: smooth
 bg: изглаждане
@@ -4189,6 +4483,7 @@ it: regolarizza
 pt: suave
 ru: сгладить
 sk: vyhladiť
+sl: gladko
 sq: e bute
 zh_CN: 平滑
 
@@ -4199,6 +4494,7 @@ fr: >>
 pt: >>
 ru: >>
 sk: >>
+sl: >>
 
 therion: Trace line
 bg: Проследяване от картината
@@ -4210,6 +4506,7 @@ fr: Tracer la ligne
 pt: Traçar linha
 ru: Проследить линию
 sk: Oklikať čiaru
+sl: Črtkana krivulja
 
 therion: Convert to curve
 bg: Конвертиране в Безие
@@ -4221,6 +4518,7 @@ fr: Convertir la ligne en courbes
 pt: Converter em curva
 ru: Конвертировать в кривую
 sk: Konvertovať na krivku
+sl: Pretvori v krivuljo
 
 therion: Simplify line
 bg: Опростяване на линия
@@ -4232,6 +4530,7 @@ fr: Simplifier la ligne
 pt: Simplificar
 ru: Упростить линию
 sk: Zjednodušiť
+sl: Poenostavi krivuljo
 
 therion: edit
 bg: редактиране
@@ -4245,6 +4544,7 @@ it: edita
 pt: editar
 ru: редактировать
 sk: upraviť
+sl: uredi
 sq: permireso
 zh_CN: 编辑
 
@@ -4260,6 +4560,7 @@ it: Quota
 pt: Altitude
 ru: Высота
 sk: Nadmorská výška
+sl: Nadmorska višina
 zh_CN: 海拔
 
 therion: OK
@@ -4274,6 +4575,7 @@ it: OK
 pt: OK
 ru: УСПЕХ
 sk: OK
+sl: Vredu
 sq: ne rregull-O.K.
 zh_CN: 成功
 
@@ -4285,6 +4587,7 @@ fr: Annuler
 pt: Cancelar
 ru: Отмена
 sk: Zrušiť
+sl: Prekliči
 
 therion: painted
 de: gefärbt
@@ -4293,6 +4596,7 @@ fr: Paint
 pt: pintada
 ru: нарисованный
 sk: namaľovaný
+sl: obarvano
 
 therion: natural
 de: natürlich
@@ -4301,6 +4605,7 @@ fr: naturel
 pt: natural
 ru: естественный
 sk: prírodný
+sl: naravno
 
 therion: fixed
 de: fixiert
@@ -4309,6 +4614,7 @@ fr: fixe
 pt: fixa
 ru: репер
 sk: fixovaný
+sl: fiksno
 
 therion: winter
 de: Winter
@@ -4317,6 +4623,7 @@ fr: hiver
 pt: inverno
 ru: зима
 sk: zimný
+sl: zima
 
 therion: summer
 de: Sommer
@@ -4325,6 +4632,7 @@ fr: été
 pt: verão
 ru: лето
 sk: letný
+sl: poletje
 
 therion: undefined
 de: undefiniert
@@ -4333,6 +4641,7 @@ fr: indéfini
 pt: indefinido
 ru: не определено
 sk: nedefinovaný
+sl: nedoločeno
 
 therion: paleo
 de: paleo
@@ -4341,6 +4650,7 @@ fr: paléo
 pt: paleo
 ru: палео
 sk: paleo
+sl: paleo
 
 therion: top
 de: oben
@@ -4349,6 +4659,7 @@ fr: supérieur (top)
 pt: topo
 ru: сверху
 sk: hore
+sl: zgoraj
 
 therion: top-right
 de: oben rechts
@@ -4357,6 +4668,7 @@ fr: supérieur-droit (top-right)
 pt: topo-direita
 ru: сверху-справа
 sk: vpravo-hore
+sl: zgoraj-desno
 
 therion: top-left
 de: oben links
@@ -4365,6 +4677,7 @@ fr: supérieur-gauche (top-left)
 pt: topo-esquerda
 ru: сверху-слева
 sk: vľavo-hore
+sl: zgoraj-levo
 
 therion: bottom
 de: unten
@@ -4373,6 +4686,7 @@ fr: inférieur (bottom)
 pt: fundo
 ru: снизу
 sk: dole
+sl: spodaj
 
 therion: bottom-right
 de: unten rechts
@@ -4381,6 +4695,7 @@ fr: inférieur-droit (bottom-right)
 pt: fundo-direita
 ru: снизу-справа
 sk: vpravo-dole
+sl: spodaj-desno
 
 therion: bottom-left
 de: unten links
@@ -4389,6 +4704,7 @@ fr: inférieur gauche (bottom-left)
 pt: fundo-esquerda
 ru: снизу-слева
 sk: vľavo-dole
+sl: spodaj-levo
 
 therion: center
 de: mitte
@@ -4398,6 +4714,7 @@ fr: centre
 pt: centro
 ru: по центру
 sk: stred
+sl: sredina
 
 therion: right
 de: rechts
@@ -4406,6 +4723,7 @@ fr: droit
 pt: direita
 ru: справа
 sk: vpravo
+sl: desno
 
 therion: left
 de: links
@@ -4414,6 +4732,7 @@ fr: gauche
 pt: esquerda
 ru: слева
 sk: vľavo
+sl: levo
 
 therion: auto
 de: automatisch
@@ -4422,6 +4741,7 @@ fr: auto
 pt: auto
 ru: авто
 sk: automaticky
+sl: avtomatsko
 
 therion: align
 de: Anordnung
@@ -4430,6 +4750,7 @@ fr: aligner
 pt: alinhar
 ru: выровнить
 sk: zarovnanie
+sl: poravnaj
 
 therion: name
 de: Name
@@ -4438,6 +4759,7 @@ fr: nom
 pt: nome
 ru: номер
 sk: meno
+sl: ime
 
 therion: Station name
 cz: Název bodu
@@ -4447,6 +4769,7 @@ fr: nom de la station topo
 pt: Nome da base
 ru: Номер пикета
 sk: Meno bodu
+sl: Ime merilne točke
 
 therion: scrap
 bg: скрап
@@ -4460,6 +4783,7 @@ it: scrap
 pt: trecho
 ru: скрап
 sk: scrap
+sl: rez
 sq: deponia
 zh_CN: 草图
 
@@ -4470,6 +4794,7 @@ fr: Référence du scrap
 pt: Referência do trecho
 ru: Привязка скрапа
 sk: Odkaz na scrap
+sl: Sklic reza
 
 therion: value
 de: Wert
@@ -4478,6 +4803,7 @@ fr: valeur
 pt: valor
 ru: значение
 sk: hodnota
+sl: vrednost
 
 therion: type
 bg: тип
@@ -4491,6 +4817,7 @@ it: tipo
 pt: tipo
 ru: тип
 sk: typ
+sl: tip
 sq: lloji
 zh_CN: 类型
 
@@ -4501,6 +4828,7 @@ fr: roche
 pt: rocha matriz
 ru: коренная порода
 sk: masív
+sl: kamnita stena
 
 therion: underlying
 de: Unterlagernd
@@ -4509,6 +4837,7 @@ fr: inférieur
 pt: inferior
 ru: нижележащий
 sk: ležiaci pod
+sl: stena nižje ravni
 
 therion: overlying
 de: Überlagernd
@@ -4517,6 +4846,7 @@ fr: superieur
 pt: superior
 ru: вышележащий
 sk: ležiaci nad
+sl: stena višje ravni
 
 therion: unsurveyed
 de: Unvermessen
@@ -4525,6 +4855,7 @@ fr: non topographié
 pt: não explorado
 ru: неотснято
 sk: nezameraný
+sl: neizmerjeno
 
 therion: pit
 de: Schacht
@@ -4533,6 +4864,7 @@ fr: puits
 pt: poço
 ru: колодец
 sk: priepasť
+sl: brezno
 
 therion: sand
 de: Sand
@@ -4541,6 +4873,7 @@ fr: sable
 pt: areia
 ru: песок
 sk: piesok
+sl: pesek
 
 therion: clay
 de: Lehm
@@ -4549,6 +4882,7 @@ fr: argille
 pt: lama/argila
 ru: глина
 sk: blato
+sl: glina
 
 therion: pebbles
 de: Kies
@@ -4557,6 +4891,7 @@ fr: galets
 pt: seixos
 ru: галька
 sk: okrúhliaky
+sl: kamenčki
 
 therion: debris
 de: Schutt
@@ -4565,6 +4900,7 @@ fr: débris
 pt: escombros
 ru: щебень
 sk: štrk
+sl: šoder
 
 therion: blocks
 de: Blöcke
@@ -4573,6 +4909,7 @@ fr: blocs
 pt: blocos
 ru: глыбы
 sk: bloky
+sl: skalni bloki
 
 therion: ice
 de: Eis
@@ -4581,6 +4918,7 @@ fr: glace
 pt: gelo
 ru: лед
 sk: ľad
+sl: led
 
 therion: flowstone
 de: Sinter
@@ -4589,6 +4927,7 @@ fr: coulée de calcite
 pt: escorrimento
 ru: натеки
 sk: sinter
+sl: siga
 
 therion: moonmilk
 de: Bergmilch
@@ -4597,6 +4936,7 @@ fr: mondmilch
 pt: leite de lua
 ru: лунное молоко
 sk: mäkký sinter
+sl: jamsko mleko
 
 therion: visible
 de: sichtbar
@@ -4605,6 +4945,7 @@ fr: visible
 pt: visível
 ru: видимый
 sk: viditeľný
+sl: vidno
 
 therion: invisible
 de: unsichtbar
@@ -4613,6 +4954,7 @@ fr: invisible
 pt: invisível
 ru: невидимый
 sk: neviditeľný
+sl: nevidno
 
 therion: temporary
 de: temporär
@@ -4621,6 +4963,7 @@ fr: temporaire
 pt: temporária
 ru: временный
 sk: dočasný
+sl: začasno
 
 therion: presumed
 de: vermutet
@@ -4629,6 +4972,7 @@ fr: présumé
 pt: presumida
 ru: предпологаемый
 sk: predpokladaný
+sl: predvideno
 
 therion: permanent
 de: dauerhaft
@@ -4637,6 +4981,7 @@ fr: permanent
 pt: permanente
 ru: постоянный
 sk: permanentný
+sl: stalno
 
 therion: intermittent
 de: zeitweise
@@ -4645,6 +4990,7 @@ fr: intermittent
 pt: intermitente
 ru: периодический
 sk: občasný
+sl: občasno
 
 therion: conjectural
 de: mutmaßlich
@@ -4653,6 +4999,7 @@ fr: suposé
 pt: suposta
 ru: предпологаемый
 sk: predpokladaný
+sl: domnevno
 
 therion: cave
 de: Höhle
@@ -4661,6 +5008,7 @@ fr: grotte
 pt: subterrânea
 ru: пещера
 sk: jaskyňa
+sl: jama
 
 therion: surface
 de: Oberfläche
@@ -4669,6 +5017,7 @@ fr: superficie
 pt: superfície
 ru: поверхность
 sk: povrch
+sl: površje
 
 therion: subtype
 de: Subtyp
@@ -4677,6 +5026,7 @@ fr: sous-type
 pt: subtipo
 ru: подтип
 sk: podtyp
+sl: podtip
 
 therion: control points
 de: Kontrollpunkte
@@ -4685,6 +5035,7 @@ fr: point de controle
 pt: pontos de controle
 ru: контрольные точки
 sk: kontrolné body
+sl: kontrolne točke
 
 therion: orientation
 bg: ориентация
@@ -4698,6 +5049,7 @@ it: orientazione
 pt: orientação
 ru: ориентация
 sk: orientácia
+sl: smer
 sq: orientimi
 zh_CN: 方向
 
@@ -4713,6 +5065,7 @@ it: dim. sinistra
 pt: tam. esq.
 ru: l-size
 sk: rozmer-ľ
+sl: l-velikost
 sq: madhesia-l
 zh_CN: l-大小
 
@@ -4723,6 +5076,7 @@ fr: sous-type de segment
 pt: subtipo do segmento
 ru: подтип сегмента
 sk: podtyp segmentu
+sl: Segment podtipa
 
 therion: altitude
 de: Höhe
@@ -4730,6 +5084,7 @@ es: altitud
 fr: altitude
 pt: altitude
 ru: альтитуда
+sl: nadmorska višina
 
 therion: altitude label
 de: Höhenmarkierung
@@ -4738,6 +5093,7 @@ fr: étiquette d'altitude
 pt: indicador de altitude
 ru: отметка высоты
 sk: nadmorská výška
+sl: napis nadmorske višine
 
 therion: outline
 de: Umriss
@@ -4746,6 +5102,7 @@ fr: contour
 pt: contorno
 ru: контур
 sk: obrys
+sl: obris
 
 therion: text
 bg: текст
@@ -4759,6 +5116,7 @@ it: testo
 pt: texto
 ru: текст
 sk: text
+sl: besedilo
 sq: teksti
 zh_CN: 文本
 
@@ -4769,6 +5127,7 @@ fr: clip
 pt: mascarar
 ru: обрезка
 sk: orezanie
+sl: posnetek
 
 therion: other options
 cz: další možnosti
@@ -4778,6 +5137,7 @@ fr: autres options
 pt: outras opções
 ru: другие опции
 sk: ostatné možnosti
+sl: druge nastavitve
 
 therion: place
 de: Platzierung
@@ -4785,12 +5145,14 @@ es: posición
 fr: position
 pt: local
 ru: местопложение
+sl: lokacija
 
 therion: scale
 de: Maßstab
 es: escalar
 pt: tamanho
 ru: размер
+sl: merilo
 
 therion: Edit line
 bg: Редактирай линия
@@ -4804,6 +5166,7 @@ it: Edita
 pt: Editar linha
 ru: Править линию
 sk: Upraviť
+sl: Uredi krivuljo
 sq: permireso rrjeshtin
 zh_CN: 编辑线
 
@@ -4819,6 +5182,7 @@ it: chiudi
 pt: fechar
 ru: замкнуть
 sk: zavrieť
+sl: zapri
 sq: mbylle
 zh_CN: 关闭
 
@@ -4834,6 +5198,7 @@ it: inverti
 pt: inverter
 ru: обратная
 sk: otočiť
+sl: obrni
 sq: ktheje pas
 zh_CN: 反向
 
@@ -4844,6 +5209,7 @@ fr: Sélectionner le point inférieur
 pt: Selecionar o ponto inferior
 ru: Выбрать нижележащую точку
 sk: Vyber bod ležiaci pod
+sl: Izberi spodnjo točko
 
 therion: Delete symbol
 cz: Smazat symbol
@@ -4853,6 +5219,7 @@ fr: Effacer le symbole
 pt: Apagar símbolo
 ru: Удалить символ
 sk: Odstráň symbol
+sl: Izbriši simbol
 
 therion: toggle image visibility
 bg: превключване на видимостта на изображение
@@ -4866,6 +5233,7 @@ it: cambia visibilità immagine
 pt: inverter visibilidade da imagem
 ru: переключение видимости изображения
 sk: prepni viditeľnosť obrázku
+sl: preklopi vidnost slike
 sq: shikueshmeria e toggle-imazhit
 zh_CN: 图像能见度开关
 
@@ -4881,6 +5249,7 @@ it: reticolato - passo %s
 pt: grade - espaçamento %s
 ru: сетка - шаг %s
 sk: sieť - rozostupy %s
+sl: mreža - razmak %s
 sq: %s hapesira e katroreve
 zh_CN: 栅格间距 %s
 
@@ -4896,6 +5265,7 @@ it: caposaldo - %s
 pt: base - %s
 ru: пикет - %s
 sk: měračský bod - %s
+sl: merilna točka - %s
 sq: stacioni - %s
 zh_CN: 测点 - %s
 
@@ -4911,6 +5281,7 @@ it: Il nuovo file *.th2 deve essere salvato prima di inserire immagini di backgr
 pt: Novo arquivo *.th2 precisa ser salvo antes que possa receber uma imagem de fundo. Salvá-lo agora?
 ru: Новый *.th2 файл нуждается в сохранении перед вставкой фонового изображения. Записать сейчас?
 sk: Pred vložením obrázku musíte nový *.th2 súbor uložiť. Chcete tak urobiť?
+sl: Nova *.th2 datoteka mora biti shranjena pred vstavitvijo slike ozadja. Shranim?
 sq: arkivi I ri *.th2 duhet te ruhet para se te futet imazhi I prapavise.Te ruhet tani?
 zh_CN: 插入底图前，须存储新的*.th2文件。要存储吗？
 
@@ -4918,6 +5289,7 @@ therion: Unable to load image file.\n(Progressive JPEG encoding?)
 es: Imposible cargar el archivo de imagen. \n(JPEG con codificación progresiva?)
 fr: Impossible de charger l'image.\n(JPEG avec un encodage progressif ?)
 pt: Erro ao ler arquivo de imagem.\n(JPEG com codificação progressiva?)
+sl: Slike ni možno naložiti.\n(Progresivno JPEG kodiranje?)
 
 therion: inserting image
 bg: вмъкване на изображение
@@ -4931,6 +5303,7 @@ it: inserimento immagine
 pt: inserindo imagem
 ru: вставка изображения
 sk: vkladám obrázok
+sl: vstavljanje slike
 sq: duke futur imazhin
 zh_CN: 插入图像
 
@@ -4946,6 +5319,7 @@ it: rimozione immagine
 pt: removendo imagem
 ru: удаление изображения
 sk: odstránenie obrázku
+sl: odstranjevanje slike
 sq: duke hequr imazhin
 zh_CN: 删除图像
 
@@ -4961,6 +5335,7 @@ it: spostamento immagine
 pt: movendo imagem
 ru: перемещение изображения
 sk: posun obrázku
+sl: prestavitev slike
 sq: duke levizur imazhin
 zh_CN: 移动图像
 
@@ -4976,6 +5351,7 @@ it: gamma
 pt: correção gamma
 ru: коррекция гаммы
 sk: gamma korekcia
+sl: gamma korekcija
 sq: korekcioni gamma
 zh_CN: 伽马校正
 
@@ -4991,6 +5367,7 @@ it: Inserisci punto
 pt: Inserir ponto
 ru: Вставить точку
 sk: Vložiť bod
+sl: Vstavi točko
 sq: fute piken
 zh_CN: 插入点
 
@@ -5006,6 +5383,7 @@ it: Rimuovi
 pt: Apagar ponto
 ru: Удалить точку
 sk: Odstrániť bod
+sl: Izbriši točko
 sq: fshije piken
 zh_CN: 删除点
 
@@ -5021,6 +5399,7 @@ it: Dividi
 pt: Quebrar linha
 ru: Разделить линию
 sk: Rozdeliť krivku
+sl: Razdeli krivuljo
 sq: ndaje rjeshtin-vijen
 zh_CN: 分割点
 
@@ -5036,6 +5415,7 @@ it: rimozione punto di linea
 pt: apagando ponto de linha
 ru: Удалить точку линии
 sk: mazanie bodu na čiare
+sl: brisanje točke krivulje
 sq: duke fshire piken e rjeshtit-vijes
 zh_CN: 删除点线
 
@@ -5051,6 +5431,7 @@ it: inserimento bordo area
 pt: inserindo limite de área
 ru: вставка границы области
 sk: vloženie okraja plochy
+sl: vstavljanje meje površine
 sq: duke future kufirin e fushes
 zh_CN: 插入区边界
 
@@ -5066,6 +5447,7 @@ it: rimozione bordo area
 pt: apagando limite de área
 ru: удаление границы области
 sk: mazanie okraja plochy
+sl: brisanje meje površine
 sq: duke fshire kufirin e fushes
 zh_CN: 删除区边界
 
@@ -5081,6 +5463,7 @@ it: creazione area
 pt: criando área
 ru: создание области
 sk: vytvorenie plochy
+sl: izdelava površine
 sq: duke kriju fushen
 zh_CN: 创建区
 
@@ -5096,6 +5479,7 @@ it: creazione linea
 pt: criando linha
 ru: создание линии
 sk: vytvorenie krivky
+sl: izdelava krivulje
 sq: duke kriju vijen apo rrjeshtin
 zh_CN: 创建线
 
@@ -5111,6 +5495,7 @@ it: modifiche di linea
 pt: alterações na linha
 ru: изменение линии
 sk: zmena parametrov krivky
+sl: spremembe krivulje
 sq: ndrimet e vijes
 zh_CN: 线改动
 
@@ -5126,6 +5511,7 @@ it: chiusura linea
 pt: fechamento de linha
 ru: замыкание линии
 sk: uzavretie krivky
+sl: zapiranje krivulje
 sq: mbyllja e vijes-rjeshtit
 zh_CN: 线关闭
 
@@ -5141,6 +5527,7 @@ it: apertura linea
 pt: abertura de linha
 ru: размыкание линии
 sk: otvorenie krivky
+sl: odpiranje krivulje
 sq: hapja e vijes-rjeshtit
 zh_CN: 线打开
 
@@ -5156,6 +5543,7 @@ it: inserimento punto di linea
 pt: inserção de ponto de linha
 ru: вставка точки в линию
 sk: vloženie bodu krivky
+sl: vstavljanje točke krivulje
 sq: duke futur piken e vijes
 zh_CN: 插入线点
 
@@ -5171,6 +5559,7 @@ it: fine linea
 pt: finalização de limha
 ru: завершение линии
 sk: ukončenie krivky
+sl: zaključevanje krivulje
 sq: rjeshti ne perfundim
 zh_CN: 线结束
 
@@ -5186,6 +5575,7 @@ it: spostamento punto di controllo
 pt: movimentação de ponto de controle
 ru: перемещение управляющей точки
 sk: posun kontrolného bodu
+sl: prestavljanje kontrolne točke
 sq: duke levize piken e kontrollit
 zh_CN: 移动控制点
 
@@ -5201,6 +5591,7 @@ it: dividi la linea
 pt: quebra de linha
 ru: разделение линии
 sk: rozdelenie čiary
+sl: razdeli krivuljo
 sq: ndarja e pikes-rjeshtit
 zh_CN: 分割线
 
@@ -5212,6 +5603,7 @@ fr: arrêt du dessin
 pt: Parar tracejo
 ru: Прекратить трассировку
 sk: Zastaviť digitalizáciu
+sl: Prekini digitalizacijo
 
 therion: Continue tracing
 cz: Pokračovat v trasování
@@ -5221,11 +5613,13 @@ fr: continuer le dessin
 pt: Seguir tracejo
 ru: Продолжить трассировку
 sk: Pokračovať digitalizácii
+sl: Nadaljuj digitalizacijo
 
 therion: shift object
 es: desplazar objeto
 fr: déplacer un objet
 pt: deslocar objeto
+sl: prestavi objekt
 
 therion: loading text editor ...
 bg: зареждане на текстовия редактор ...
@@ -5239,6 +5633,7 @@ it: editor di testo ...
 pt: carregando editor de texto...
 ru: загрузка текстового редактора ...
 sk: načítavam textový editor
+sl: nalagam urejevalnik besedila ...
 sq: duke lexuar editorin e tekstit...
 zh_CN: 文本编辑器载入中 ...
 
@@ -5254,6 +5649,7 @@ it: Editor di testo
 pt: Editor de texto
 ru: Текстовой редактор
 sk: Textový editor
+sl: Urejevalnik besedila
 sq: editori I tekstit
 zh_CN: 文本编辑器
 
@@ -5269,6 +5665,7 @@ it: File
 pt: Arquivos
 ru: Файлы
 sk: Súbory
+sl: Datoteke
 sq: fajlat-arkivi
 zh_CN: 文件
 
@@ -5284,6 +5681,7 @@ it: Tabella dei dati
 pt: Tabela de dados
 ru: Таблица данных
 sk: Dátová tabuľka
+sl: Podatkovna tabela
 sq: tabela e te dhenave
 zh_CN: 数据表
 
@@ -5299,6 +5697,7 @@ it: Cerca e sostituisci
 pt: Buscar & Substituir
 ru: Поиск и Замена
 sk: Nájdi a Nahraď
+sl: Išči in zamenjaj
 sq: kerko dhe ndero vendin
 zh_CN: 查找/替换
 
@@ -5314,6 +5713,7 @@ it: Cambia tra i file aperti.
 pt: Trocar arquivo aberto
 ru: Поменять открытый файл.
 sk: Prepínač medzi otvorenými súbormi.
+sl: Seznam odprtih datotek. Izberi katera te zanima.
 sq: kjo liste tregon fajlat e hapura. Kliko ne ate te cilen je I interesuar.
 zh_CN: 打开文件开关
 
@@ -5329,6 +5729,7 @@ it: Encoding
 pt: Codificando
 ru: Кодировка
 sk: Kódovanie
+sl: Dekodiranje
 sq: de-kodimi
 zh_CN: 编码
 
@@ -5344,6 +5745,7 @@ it: Cambia a
 pt: Mudar para
 ru: Изменить на
 sk: Zmeniť na
+sl: Spremeni v
 sq: ndero ne
 zh_CN: 改为
 
@@ -5359,6 +5761,7 @@ it: Per impostare l'encoding, scrivi il nome dell'encoding e premi il bottone <C
 pt: Para definir codificação do arquivo, digite o nome da codificação e pressione o botão <Mudar para>.
 ru: Для задания кодировки файла введите имя кодировки и нажмите кнопку <Изменить>.
 sk: Na nastavenie kódovania, vložte identifikátor kódovania a stlačte <Zmeniť>.
+sl: Za določitev kodiranja datoteke, vnesi ime kodiranja in klikni gumb <Spremeni>.
 sq: per te vendos fajlin per dekodim, shtype emrin per dekodim dhe kliko butonin <ndroje>
 zh_CN: 设置文件编码，输入编码名词并点击改动按钮。
 
@@ -5374,6 +5777,7 @@ it: Imposta formato dati
 pt: Analisar formato dos dados
 ru: Определить формат данных
 sk: Nájdi formát dát
+sl: Preglej podatkovno datoteko
 sq: skano formatin e shenimeve
 zh_CN: 读取数据格式
 
@@ -5389,6 +5793,7 @@ it: Imposta il formato dati e ricostruisci la tabella inserimento dati.
 pt: Analisar formato dos dados e reconstruir a ferramenta de inserção de dados da linha de trena.
 ru: Автоматически определить формат данных и перестроить поля ввода.
 sk: Načíta formát dát z predchádzajúcich riadkov a príslušne zmení panel na vkladanie dát.
+sl: Pregleda zaporedje podatkov in ponastavi vnosna polja.
 sq: skanon formatin e shenimeve dhe rinderton tekst-katroret per futjen e shenimeve net e njejten kohe
 zh_CN: 读取数据格式，依次重建数据输入文本框。
 
@@ -5404,6 +5809,7 @@ it: Scrivi nomi capisaldi
 pt: Entrar nomes das bases
 ru: Ввод номера следующего пикета
 sk: Zadávanie názvov bodov
+sl: Vnesi imena merilnih točk
 sq: futi emrat e stacioneve
 zh_CN: 输入测点名称
 
@@ -5420,6 +5826,7 @@ it: Attiva per inserire i nomi dei capisaldi per ogni tratta.
 pt: Se quiser inserir nomes de bases para cada medida.
 ru: Установите отметку, если хотите, чтобы происходил автоматический ввод номера следующего пикета.
 sk: Zaškrtnite pokiaľ chcete vkladať aj mená bodov pre každú zámeru.
+sl: Izberi če želiš vnesti ime merilne točke za vsako meritev.
 sq: kontrollo nese deshiron ti fusesh emrat e stacioneve per secilin foto
 zh_CN: 检查每一测程，输入测点名称。
 
@@ -5435,6 +5842,7 @@ it: Selezione formato automatico.
 pt: Auto formatar seleção
 ru: Перестроить выделенные данные
 sk: Naformátuj výber
+sl: Avtomatsko oblikovanje izbora
 sq: zgjedhja automatike e formatit
 zh_CN: 自动格式选择
 
@@ -5450,6 +5858,7 @@ it: Imposta selezione alla tabella specificata.
 pt: Formatar seleção para tabela definida.
 ru: Привести выделенные данные к заданному формату.
 sk: Naformátuje výber do dátovej tabuľky.
+sl: Oblikoj izbor na dano tabelo.
 sq: zgjedhja e formatit per tabelen e dhene
 zh_CN: 指定表格的格式选择
 
@@ -5465,6 +5874,7 @@ it: cerca
 pt: buscar
 ru: поиск
 sk: hľadaj
+sl: išči
 sq: kerko
 zh_CN: 查找
 
@@ -5480,6 +5890,7 @@ it: Testo da cercare.
 pt: Expressão de busca
 ru: Выражение поиска.
 sk: Hľadaný výraz.
+sl: Išči izraz.
 sq: shkruaje fjalen per tu kerkuar
 zh_CN: 查找内容
 
@@ -5495,6 +5906,7 @@ it: sostituisci
 pt: substituir
 ru: замена
 sk: nahradiť
+sl: zamenjaj
 sq: ndero vendin
 zh_CN: 替换
 
@@ -5510,6 +5922,7 @@ it: Attiva per sostituire il testo trovato.
 pt: Para substituir a expressão encontrada.
 ru: Установите отметку, если хотите произвести замену.
 sk: Zaškrtnúť pokiaľ sa má nájdený výraz nahradiť iným.
+sl: Izberi za zamenjavo najdenega izraza.
 sq: kontrollo a duhet te ndrohet fjalia e gjetur
 zh_CN: 检查，是否替换现有内容。
 
@@ -5525,6 +5938,7 @@ it: Sostituisci testo.
 pt: Expressão de substituição
 ru: Выражение замены.
 sk: Výraz na nahradenie.
+sl: Zamenjaj izraz.
 sq: rezultatet e gjetura do te ndrohen nga fjalia e future ketu
 zh_CN: 替换内容
 
@@ -5540,6 +5954,7 @@ it: ricerca case-sensitive
 pt: busca diferencia MAIÚSCULAS/minúsculas
 ru: учитывать регистр
 sk: rozlišovať malé a veľké
+sl: išči upoštevajoč velike in male črke
 sq: kerkimi -rast sensitiv
 zh_CN: 区分大小写查找
 
@@ -5555,6 +5970,7 @@ it: Attiva se la ricerca deve essere case-sensitive.
 pt: Faz com que a busca diferencie letras MAIÚSCULAS e minúsculas.
 ru: Установите отметку, чтобы поиск происходил с учетом регистра.
 sk: Zaškrtnite pokiaľ pri hľadaní chcete rozlišovať malé a veľké písmená.
+sl: Izberi če želiš da iskanje upošteva male in velike črke.
 sq: kontrollo nese kerkimi do te jete rast-sensitiv
 zh_CN: 检查，查找（区分大小写）。
 
@@ -5570,6 +5986,7 @@ it: esperssioni regolari
 pt: expressões regulares
 ru: регулярные выражения
 sk: regulárny výraz
+sl: regular expression
 sq: shprehje te rregullta
 zh_CN: 正则表达式
 
@@ -5585,6 +6002,7 @@ it: Attiva per ricerca e sostituzione con espressioni regolari.
 pt: Fazer com que a busca trate as expressões de busca e de substituição como expressões regulares.
 ru: Установите отметку, чтобы обрабатывать регулярные выражения при поиске и замене.
 sk: Zaškrtnite ak sa má hľadanie a nahradenie vykonávať v móde regulárnych výrazov.
+sl: Izberi če želiš ovrednotiti išči in zamenjaj z regular expression.
 sq: kontrollo a do te kerkosh duke perdor shprehje te zakonta-rregullta
 zh_CN: 检查是否用正则表达式查找和替换
 
@@ -5600,6 +6018,7 @@ it: cerca solo nella selezione
 pt: buscar somente na seleção
 ru: искать в выделенном
 sk: iba vo vybratom texte
+sl: išči samo v izboru
 sq: kerko vetem selekcionet
 zh_CN: 只查找选定内容
 
@@ -5615,6 +6034,7 @@ it: Attiva per cercare solo nel testo selezionato.
 pt: Faz com que a busca atue somente no texto selecionado.
 ru: Установите отметку, чтобы искать только в выделенном тексте.
 sk: Zaškrtnite pokiaľ hladanie má prebehnúť len v označenom texte.
+sl: Izberi če želiš iskati samo v izbranem besedilu.
 sq: kontrollo a do te perdoresh kerkimin vetem ne tekstin e selekcionuar
 zh_CN: 检查，是否仅在选择文本中查找。
 
@@ -5630,6 +6050,7 @@ it: Primo
 pt: Primeira
 ru: Первый
 sk: Prvý
+sl: Prvi
 sq: e para
 zh_CN: 第一项
 
@@ -5645,6 +6066,7 @@ it: Cerca o sostituisci la prima istanza del testo nel file.
 pt: Buscar ou substituir a primeira ocorrência da expressão no arquivo.
 ru: Поиск или замена первого вхождения в файле.
 sk: Nájte poprípade nahradí prvý výskyt hľadaného výrazu v súbore.
+sl: Išči in zamenjaj prvi izraz v datoteki.
 sq: kerko ose ndro shprehjet e para ne fajlla
 zh_CN: 查找或替换文件中第一项内容
 
@@ -5660,6 +6082,7 @@ it: Cerca o sostituisci la prossima istanza del testo nel file dopo il cursore.
 pt: Buscar ou substituir a próxima ocorrência da expressão no arquivo.
 ru: Поиск или замена следующего после курсора вхождения в файле.
 sk: Nájdi alebo nahraď nasledujúci výraz v súbore.
+sl: Išči in zamenjaj naslednji izraz za utripalko v datoteki.
 sq: kerko ose ndroje shprehjen e ardhshme pas kursorit ne fajll
 zh_CN: 在文件中指针后，查找或替换下一处内容。
 
@@ -5675,6 +6098,7 @@ it: Tutti
 pt: Todas
 ru: Все
 sk: Všetko
+sl: Vse
 sq: te gjithat
 zh_CN: 选择全部
 
@@ -5690,6 +6114,7 @@ it: Cerca o sostituisci tuute le frasi nel file.
 pt: Buscar ou substituir todas as ocorrência da expressão no arquivo.
 ru: Поиск или замена всех вхождений в файле.
 sk: Nájdi alebo nahraď všetky výrazy v súbore.
+sl: Išči in zamenjaj vse izraze v datoteki.
 sq: kerko ose ndroji te gjitha shprehjet ne fajlla
 zh_CN: 查找或替换文件中所有内容
 
@@ -5705,6 +6130,7 @@ it: Cancella
 pt: Limpar
 ru: Очистка
 sk: Vyčisti
+sl: Počisti
 sq: e paster
 zh_CN: 清除选定
 
@@ -5720,6 +6146,7 @@ it: Cancella tutte le evidenziazioni nel file.
 pt: Remover todos os destaques no arquivo.
 ru: Очистка всех подсвеченных участков текста.
 sk: Zruší zvýraznenie nájdených výrazov v súbore.
+sl: Počisti ves izbor v datoteki.
 sq: fshij te gjitha selekcionimet apo hijezimet ne fajlla
 zh_CN: 删除文件中所有突出显示。
 
@@ -5735,6 +6162,7 @@ it: Apertura %s ...
 pt: Abrindo %s...
 ru: Открытие %s ...
 sk: Oteváram %s ...
+sl: Odpiram %s ...
 sq: duke hap %s ...
 zh_CN: 打开%s ...
 
@@ -5750,6 +6178,7 @@ it: Il file %s non è salvato. Salva ora?
 pt: Arqivo %s não está salvo. Salvar agora?
 ru: Файл %s не сохранен. Сохранить его сейчас?
 sk: Súbor %s nie je uložený. Uložiť teraz?
+sl: Datoteka %s ni shranjena. Shranim?
 sq: fajlli %s nuk eshte I ruajtur. Ta ruajm tani?
 zh_CN: 文件 %s没有存储. 要存储吗?
 
@@ -5765,6 +6194,7 @@ it: Il file %s è stato modificato fuori da Xtherion. Salva comunque?
 pt: Arquivo %s foi modificado fora do Xtherion. Ainda assim quer salvá-lo?
 ru: Файл %s был изменен другим приложением. Сохранить не смотря на это?
 sk: Súbor %s bol modifikovaný mimo programu. Uložiť aj tak?
+sl: Datoteka %s je bila spremenjena izven Xtherion-a. Vseeno shranim?
 sq: fajlli %s eshte ndryshuar jashte X therion-it. Ta ruajm sido qe te jete?
 zh_CN: 文件 %s 被修改，除xtherion外. 要存储吗?
 
@@ -5780,6 +6210,7 @@ it: Salvataggio %s ...
 pt: Salvando %s ...
 ru: Сохранение %s ...
 sk: Ukladám %s ...
+sl: Shranjujem %s ...
 sq: duke ruajtur %s ...
 zh_CN: 存储 %s ...
 
@@ -5795,6 +6226,7 @@ it: Nuovo
 pt: Novo
 ru: Новый
 sk: Nový
+sl: Nova
 sq: e re
 zh_CN: 新建
 
@@ -5810,6 +6242,7 @@ it: Apri
 pt: Abrir
 ru: Открыть
 sk: Otvoriť
+sl: Odpri
 sq: hape
 zh_CN: 打开
 
@@ -5825,6 +6258,7 @@ it: Salva
 pt: Salvar
 ru: Сохранить
 sk: Uložiť
+sl: Shrani
 sq: ruaje
 zh_CN: 存储
 
@@ -5840,6 +6274,7 @@ it: Salva come
 pt: Salvar como
 ru: Сохранить как
 sk: Uložiť ako
+sl: Shrani kot
 sq: ruaje si
 zh_CN: 存储为...
 
@@ -5855,6 +6290,7 @@ it: Salva tutti
 pt: Salvar todos
 ru: Сохранить всё
 sk: Uložiť všetko
+sl: Shrani vse
 sq: ruaji te gjitha
 zh_CN: 全部存储
 
@@ -5870,6 +6306,7 @@ it: Auto salva
 pt: SAlvamento automático
 ru: Автосохранение
 sk: Ukladať automaticky
+sl: Avtomatsko shrani
 sq: ruajtja automatike
 zh_CN: 自动存储
 
@@ -5884,6 +6321,7 @@ it: Importa
 pt: Importar
 ru: Импорт
 sk: Import
+sl: Uvozi
 sq: importi
 zh_CN: 导入
 
@@ -5899,6 +6337,7 @@ it: Prossima
 pt: Próximo
 ru: Следующий
 sk: Nasledujúci
+sl: Naslednja
 sq: tjetra
 zh_CN: 下一处
 
@@ -5914,6 +6353,7 @@ it: Precedente
 pt: Anterior
 ru: Предыдущий
 sk: Predchádzajúci
+sl: Prejšnja
 sq: e perparmja
 zh_CN: 上一处
 
@@ -5929,6 +6369,7 @@ it: Edita
 pt: Editar
 ru: Редактировать
 sk: Upraviť
+sl: Uredi
 sq: permireso
 zh_CN: 编辑
 
@@ -5944,6 +6385,7 @@ it: Taglia
 pt: Cortar
 ru: Вырезать
 sk: Vystrihnúť
+sl: Izreži
 sq: preje
 zh_CN: 剪切
 
@@ -5959,6 +6401,7 @@ it: Copia
 pt: Copiar
 ru: Копировать
 sk: Kopírovať
+sl: Kopiraj
 sq: kopjo
 zh_CN: 复制
 
@@ -5974,6 +6417,7 @@ it: Incolla
 pt: Colar
 ru: Вставить
 sk: Vložiť
+sl: Prilepi
 sq: vendose-paste
 zh_CN: 粘贴
 
@@ -5989,6 +6433,7 @@ it: Seleziona tutto
 pt: Selecionar tudo
 ru: Выделить всё
 sk: Vyber všetko
+sl: Izberi vse
 sq: zghedhi-selekciono te gjitha
 zh_CN: 选定全部
 
@@ -6004,6 +6449,7 @@ it: Indentazione automatica
 pt: Indentação automática
 ru: Автоотступ
 sk: Automatické odsadenie
+sl: Avtomatsko zamakni
 sq: indenti automatik
 zh_CN: 自动缩进
 
@@ -6019,6 +6465,7 @@ it: Elaborazione linea %s ...
 pt: Processando linha %s...
 ru: Обработка строки %s ...
 sk: Spracúvam riadok %s ...
+sl: Obdelovanje vrstice %s ...
 sq: rrjeshti %s ne proces...
 zh_CN: 运行线 %s ...
 
@@ -6034,6 +6481,7 @@ it: L'editor di testo non è attivo. Per attivarlo apri un file o creane uno.
 pt: O editor de texto não está ativo. Para ativá-lo, abra um arquivo existente ou crie um novo arquivo.
 ru: Текстовый редактор неактивен. Для активации откройте существующий файл или создайте новый.
 sk: Textový editor nie je aktívny. Otvorte existujúci súbor alebo vytvorte nový.
+sl: Urejevalnik besedila ni aktiviran. Za aktivacijo odpri obstoječo datoteko ali kreiraj novo.
 sq: editori I tekstit nuk eshte aktiv. Qe ta aktivizosh, hape fajllin egzistues ose krijo nje tjeter.
 zh_CN: 文本编辑器没有启动。打开现有文件或创建新文件启动。
 
@@ -6049,6 +6497,7 @@ it: Controlli ...
 pt: Controle...
 ru: Управление...
 sk: Ovládanie...
+sl: Ukazi...
 sq: kontrolli ...
 zh_CN: 控制中...
 
@@ -6064,6 +6513,7 @@ it: Calcolatore BAC ...
 pt: Calculadora TAS...
 ru: Калькулятор алкоголя...
 sk: Alkohol tester...
+sl: Izračun opitosti...
 sq: matesi I alkoolit-BAC
 zh_CN: 血液酒精浓度计算器
 
@@ -6077,6 +6527,7 @@ it: Mappa georeferenziata...
 pt: Calibrar imagem...
 ru: Привязать изображение
 sk: Kalibrovať obrázok...
+sl: Kalibrator slike...
 zh_CN: 校准图片...
 
 therion: About...
@@ -6091,6 +6542,7 @@ it: Versione ...
 pt: Sobre...
 ru: О программе...
 sk: O programe...
+sl: O programu...
 sq: per programin…
 zh_CN: 关于...
 
@@ -6106,6 +6558,7 @@ it: Cerca
 pt: Buscar
 ru: Поиск
 sk: Hľadať
+sl: Išči
 sq: kerko
 zh_CN: 查找
 
@@ -6121,6 +6574,7 @@ it: Chiudi
 pt: Fechar
 ru: Закрыть
 sk: Zavrieť
+sl: Zapri
 sq: mbyll
 zh_CN: 关闭
 
@@ -6135,6 +6589,7 @@ it: tutti
 pt: todos os símbolos
 ru: все
 sk: všetky symboly
+sl: vsi simboli
 sq: tematizo te gjitha simbolet-shenjat
 zh_CN: 所有字符
 
@@ -6149,6 +6604,7 @@ it: Nuovo
 pt: Novo arquivo
 ru: Новый файл
 sk: Nový súbor
+sl: Nova datoteka
 sq: arkivi-fajlli I ri
 zh_CN: 新文件
 
@@ -6163,6 +6619,7 @@ it: Apri
 pt: Abrir arquivo
 ru: Открыть файл
 sk: Otvoriť súbor
+sl: Odpri datoteko
 sq: hape fajllin
 zh_CN: 打开文件
 
@@ -6177,6 +6634,7 @@ it: Salva
 pt: Salvar arquivo
 ru: Сохранить файл
 sk: Uložiť súbor
+sl: Shrani datoteko
 sq: ruaje fajllin
 zh_CN: 存储文件
 
@@ -6191,6 +6649,7 @@ it: Salva come
 pt: Salvar arquivo como
 ru: Сохранить файл как
 sk: Uložiť súbor ako
+sl: Shrani datoteko kot
 sq: ruaje fajllin si
 zh_CN: 文件存储为
 
@@ -6205,6 +6664,7 @@ it: Chiudi
 pt: Fechar arquivo
 ru: Закрыть файл
 sk: Zatvoriť súbor
+sl: Zapri datoteko
 sq: mbylle fajllin
 zh_CN: 关闭文件
 
@@ -6220,6 +6680,7 @@ it: Indietro
 pt: Desfazer
 ru: Отменить
 sk: Späť
+sl: Razveljavi
 sq: prishe-undo
 zh_CN: 取消
 
@@ -6235,6 +6696,7 @@ it: Rifai
 pt: Refazer
 ru: Вернуть
 sk: Opakovať
+sl: Ponovi
 sq: beje prape-redo
 zh_CN: 恢复
 
@@ -6249,6 +6711,7 @@ it: Editor di testi
 pt: Mudar para editor de texto
 ru: Переключится в текстовый редактор
 sk: Prepnúť na textový editor
+sl: Preklopi na urejevalnik besedila
 sq: kalo tek editori i tekstit
 zh_CN: 文本编辑器开关
 
@@ -6263,6 +6726,7 @@ it: Editor di mappe
 pt: Mudar para editor de mapa
 ru: Переключится в редактор карт
 sk: Prepnúť na mapový editor
+sl: Preklopi na urejevalnik načrta
 sq: kalo tek editori I hartes
 zh_CN: 地图编辑器开关
 
@@ -6277,6 +6741,7 @@ it: Compilatore
 pt: Mudar para compilador
 ru: Переключится в компилятор
 sk: Prepnúť na kompilátor
+sl: Preklopi na prevajalnik
 sq: kalo tek kompilatori
 zh_CN: 程序编译开关
 
@@ -6292,6 +6757,7 @@ it: Compila
 pt: Compilar
 ru: Компилировать
 sk: Kompilovať
+sl: Prevedi
 sq: kompilo
 zh_CN: 程序编译
 
@@ -6306,6 +6772,7 @@ it: Modalità di selezione
 pt: Mudar para modo de seleção
 ru: Переключится в режим выбора
 sk: Prepnúť do módu na výber objektu
+sl: Preklopi na način izbiranja
 sq: kalo tek moduli per selekcionim
 zh_CN: 模块选择开关
 
@@ -6320,6 +6787,7 @@ it: Seleziona il prossimo scrap
 pt: Selecionar próximo trecho
 ru: Выбрать слеующий скрап
 sk: Vyber nasledujúci scrap
+sl: Izberi naslednji rez
 sq: zgjedhe deponin e ardhshme
 zh_CN: 选定下一个草图
 
@@ -6334,6 +6802,7 @@ it: Seleziona la prossima area
 pt: Selecionar próxima área
 ru: Выбрать слеующую область
 sk: Vyber nasledujúcu plochu
+sl: Izberi naslednjo površino
 sq: zgjedhe-selekto fushen e ardhshme
 zh_CN: 选择下一个区
 
@@ -6348,6 +6817,7 @@ it: Zoom in
 pt: Fechar zoom
 ru: Увеличить
 sk: Zväčšiť
+sl: Približaj
 sq: zmadho
 zh_CN: 放大
 
@@ -6362,6 +6832,7 @@ it: Zoom out
 pt: Abrir zoom
 ru: Уменьшить
 sk: Zmenšiť
+sl: Oddalji
 sq: zvogelo
 zh_CN: 缩小
 
@@ -6376,6 +6847,7 @@ fr: Insérer un nouveau scrap
 pt: Inserir novo trecho
 ru: Вставить новый скрап
 sk: Vložiť nový scrap
+sl: Vnesi novi rez
 sq: fute deponin e re
 zh_CN: 插入新的草图
 
@@ -6390,6 +6862,7 @@ it: Inserisci un nuovo punto
 pt: Inserir novo ponto
 ru: Вставить новую точку
 sk: Vložiť nový bod
+sl: Vnesi novo točko
 sq: fute piken e re
 zh_CN: 插入新的点
 
@@ -6404,6 +6877,7 @@ it: Inserisci una nuova linea
 pt: Inserir nova linha
 ru: Вставить новую линию
 sk: Vložiť novú krivku
+sl: Vnesi novo krivuljo
 sq: fute rrjeshtin e ri
 zh_CN: 插入新的线
 
@@ -6418,6 +6892,7 @@ it: Inserisci una nuova area
 pt: Inserir nova área
 ru: Вставить новую область
 sk: Vložiť novú plochu
+sl: Vnesi novo površino
 sq: fute fushen e re
 zh_CN: 插入新的区
 
@@ -6432,6 +6907,7 @@ it: Rimuovi l'oggetto selezionato
 pt: Apagar objeto selecionado
 ru: Удалить выбранный объект
 sk: Zmaž označené objekty
+sl: Izbriši izbrani objekt
 sq: fshije objektin e selektuar
 zh_CN: 删除选定对象
 
@@ -6446,6 +6922,7 @@ it: base
 pt: símbolos básicos
 ru: основные
 sk: základné symboly
+sl: osnovni simboli
 sq: tema simbolet-baze
 zh_CN: 基本符号
 
@@ -6460,6 +6937,7 @@ it: riempimenti
 pt: passagens
 ru: рельеф хода
 sk: výplň
+sl: polnila prehoda
 sq: tema mbushjet e kalimeve
 zh_CN: 一般洞道充填物
 
@@ -6474,6 +6952,7 @@ it: speleotemi
 pt: espeleotemas
 ru: спелео-формы
 sk: výzdoba
+sl: jamske tvorbe
 sq: speleo-tema
 zh_CN: 主要次生化学沉积物
 
@@ -6489,6 +6968,7 @@ it: armo
 pt: equipamento
 ru: оборудование
 sk: vystrojenie
+sl: oprema
 sq: tema pajisjet
 zh_CN: 主要装备
 
@@ -6499,4 +6979,4 @@ fr: flèche
 pt: seta
 ru: стрелка
 sk: šípka
-
+sl: puščica krivulje
