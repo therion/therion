@@ -1157,6 +1157,51 @@ void thdb2d::log_distortions() {
 }
 
 
+void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
+  thdb2dxm * cmap = maps;
+  thdb2dxs * cbm;
+  thdb2dmi * cmi;
+  thscrap * cs;
+  double z;
+  thmap * cm;
+  thmap * bm;
+  thlog.printf("\n\n############### export maps & scraps selection #################\n");
+  while (cmap != NULL) {
+    cm = (thmap *) cmap->map;
+    z = cm->z;
+    if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
+    if (strlen(cm->name) > 0)
+    	thlog.printf("M %8.2f %s@%s (%s)\n", z, cm->name, cm->fsptr ? cm->fsptr->full_name : "",  cm->title ? cm->title : "");
+	cbm = cmap->first_bm;
+    while (cbm != NULL) {
+   	  if (cbm->mode != TT_MAPITEM_NORMAL) {
+		cbm = cbm->next_item;
+		continue;
+	  }
+      bm = cbm->bm;
+      z = bm->z;
+      if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
+      cmi = cbm->bm->first_item;
+      if ((cm->id != bm->id) && (strlen(bm->name) > 0))
+    	  thlog.printf("M %8.2f %s@%s (%s)\n", z, bm->name, bm->fsptr ? bm->fsptr->full_name : "",  bm->title ? bm->title : "");
+      if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
+        if (cmi->type == TT_MAPITEM_NORMAL) {
+          cs = (thscrap *) cmi->object;
+          z = cs->z;
+          if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
+          thlog.printf("S %8.2f  %s@%s (%s)\n",z, cs->name, cs->fsptr ? cs->fsptr->full_name : "", cs->title ? cs->title : "");
+        }
+        cmi = cmi->next_item;
+      }
+      cbm = cbm->next_item;
+    }
+    cmap = cmap->next_item;
+  }
+  thlog.printf("########## end of export maps & scraps selection ###############\n");
+}
+
+
+
 void thdb2d::process_projection(thdb2dprj * prj)
 {
   if (prj->processed)

@@ -1103,7 +1103,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       this->src.name, this->src.line, this->projstr))
     return;
   }
-    
+
+  this->db->db2d.log_selection(maps, prj);
+
 
   double meridian_conv = thcfg.get_outcs_convergence();
   double rotate_plus = 0.0;

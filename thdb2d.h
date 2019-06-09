@@ -378,6 +378,8 @@ class thdb2d {
   
   void log_distortions();
   
+  void log_selection(thdb2dxm * selection, thdb2dprj * prj);
+
   thdb2dprj * get_projection(int id);
   
 };

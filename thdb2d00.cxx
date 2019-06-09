@@ -308,7 +308,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
   thselector_list::iterator ii = thcfg.selector.data.begin();
   cxm = selection;
   while (ii != thcfg.selector.data.end()) {
-    if ((!ii->unselect) && (ii->optr != NULL) && 
+    if ((!ii->unselect) && (ii->optr != NULL) && thcfg.use_maps &&
         (ii->optr->get_class_id() == TT_MAP_CMD) &&
         (((thmap*)(ii->optr))->projection_id == prj->id)) {
       selection = this->insert_maps(selection,cxm,(thmap*)(ii->optr),
@@ -336,6 +336,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
     obi = this->db->object_list.begin();
     while (obi != this->db->object_list.end()) {
       if (((*obi)->get_class_id() == TT_MAP_CMD) &&
+		  thcfg.use_maps &&
           (((thmap*)(*obi))->projection_id == prj->id) &&
           (((thmap*)(*obi))->is_basic) &&
           (((thmap*)(*obi))->fsptr != NULL) &&
