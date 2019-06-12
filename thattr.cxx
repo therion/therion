@@ -760,7 +760,7 @@ void thattr::export_html(const char * fname, const char * title, int encoding)
       }
       fprintf(f,"<td align=\"%s\"", alstr);
       if (m_tree && header_value) {
-        fprintf(f," style=\"padding-left:+%u\"", 12 * (unsigned)oi->m_tree_level);
+        fprintf(f," style=\"padding-left: %upx\"", 12 * (unsigned)oi->m_tree_level);
         oinext = oi;
         oinext++;
         if ((oinext != this->m_obj_list.end()) && (oinext->m_tree_level > oi->m_tree_level)) {
