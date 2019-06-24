@@ -1359,14 +1359,14 @@ line}, {\it area}, {\it map} and {\it surface} can contain user-defined
 attributes in a form |-attr <name> <value>|. |<name>| may contain 
 alphanumeric characters, |<value>| is a string. 
 
-The custom attributes are used in map export depending on output 
+The custom attributes are used in map exports depending on the output 
 format:
 \list
 * in {\it shapefile} export they are written directly to the associated 
   dbf file,
 * in maps generated using \MP\ (PDF, SVG) the attributes are written in 
   the \MP\ source file as strings (named like |ATTR_<name>|) and can be 
-  evaluated and used by user in symbols definition macros.
+  evaluated and used by the user to define symbols in macros.
   
   You can test presence of such a variable using |if known ATTR_<name>: ... fi|. 
   
@@ -1378,7 +1378,7 @@ format:
 XTherion is a GUI (Graphical User Interface) for Therion. 
 It helps a lot with creating input data files. Currently it works in 
 three main modes: text editor, map editor and compiler.
-\[Here we're concerned with creating data, so only the two first modes are 
+\[Here we're concerned with creating data, so only the first two modes are 
 described in this section. For compiler features see the chapter 
 {\it Processing data}.]
 
@@ -1390,7 +1390,7 @@ more robust and easier to use. Any volunteers?
 
 This manual does not describe such familiar things as `if you want to save a file, go to 
 menu File and select Save, or press Ctrl-s'. Browse the top menu for a minute 
-to get feeling of XTherion. 
+to get the feeling of XTherion. 
 
 For each mode of operation, there is an additional 
 right or left menu. The submenus may be packed; you may unpack them by 
@@ -1410,7 +1410,7 @@ line is hidden by XTherion and may be accessed only indirectly using the right-h
 menu.]
 
 To make entering data easy, it supports table formatting of centreline data. 
-There is a menu {\it Data table} for typing the data. It may be customized to 
+There is a menu {\it Data table} for typing the data. It may be customized to the
 user's data order by pressing a {\it Scan data format} button when the cursor 
 is below the data order specification (`data' option in the `centreline' 
 command).
@@ -1418,7 +1418,7 @@ command).
 
 \subsubchapter XTherion---map editor.
 
-Map editor allows you to draw and edit map fully interactively.
+Map editor allows you to draw and edit maps fully interactively.
 But don't expect too much. XTherion is not a truly WYSIWYG editor. It 
 displays only the position, not the actual shape, of drawn point or line 
 symbols. Visually there is no difference between a helictite and a text 
@@ -1435,12 +1435,12 @@ object are specified only in the {\it Point control} and {\it Line control} menu
 }}} \qquad}\fi
 {\it Exercise:} Find two substantial reasons, why the map drawn in XTherion can't be 
 identical with Therion output. (If you answer this, you'll know, why XTherion 
-will never be true WYSIWYG editor. Authors' laziness is not the correct 
+will never be a true WYSIWYG editor. Authors' laziness is not the correct 
 answer.)
 
 Let's begin by describing typical use of the map editor. First, you have 
 to decide which part of the cave (which scrap) you'll draw.\[It's possible to 
-draw more than one scrap in one file, in which case all inactive scraps are rendered 
+draw more than one scrap in each file, in which case all inactive scraps are rendered 
 yellow.]
 
 After creating a new file in the map editor, you may load one or more 
@@ -1458,7 +1458,7 @@ the working area. Move them by double clicking and dragging with the right
 mouse button or through a menu. For better performance on slower computers, 
 it's possible to temporarily unload a currently unused image from memory 
 by unchecking its {\it Visibility} check-box. It's possible to open an existing 
-file without loading of background images using {\it Open XP} menu.
+file without loading background images using {\it Open XP} menu.
 \[{\it Note:} Therion doesn't use background images in any way unless you 
 assign them to some scrap using |-sketch| option.]
 
@@ -1472,7 +1472,7 @@ that you're actually creating a text file which should conform to the syntax
 described in the chapter {\it Data format}. Actually, only a subset of the 
 Therion commands are used in the Map editor: multi-line |scrap ... endscrap|
 commands which may contain |point|, |line| and |area| commands. (Cf.~chapter 
-{\it Data format}). This corresponds with a section of hand-drawn map, which is 
+{\it Data format}). This corresponds with a section of hand-drawn maps, which are 
 built up from points, lines and filled areas.
 
 So, the first step is defining the {\bf scrap} by a |scrap ... endscrap| 
@@ -1490,7 +1490,7 @@ simplified outline of the text file, which will be saved by XTherion. Only
 the command (|scrap|, |point|, |line|, |text|---why text see below) and its 
 type (for |point| and |line|) or ID (for |scrap|) are shown. 
 
-The full contents of any command is displayed in the {\it Command preview} 
+The full contents of any command are displayed in the {\it Command preview} 
 menu.
 
 For modifying previously-created commands, there are additional 
@@ -1510,7 +1510,7 @@ two point symbols in the same place!
 To escape from `insert' to `select' mode, press {\it Esc} key 
 on the keyboard or {\it Select} button in the {\it File commands} menu.
 
-What will the order of commands in the output file? Exactly the same as in the 
+What will be the order of commands in the output file? Exactly the same as in the 
 outline in the {\it File commands} menu. Newly created point, line and text objects 
 are added before the currently marked line in the outline. It is possible to 
 change the order by selecting a line and pressing {\it Move down}, 
@@ -1522,7 +1522,7 @@ vector editing programs, which work with B\'ezier curves.
 (Guess how to enter the line insertion mode, other than 
 using the shortcut Ctrl-l.) Click where the first point should be, then drag the 
 mouse with pressed left button and release it where the first control point 
-should be. Than click somewhere else (this point will be the second point of 
+should be. Then click somewhere else (this point will be the second point of 
 the curve) and drag the mouse (adjusting the second control point of the 
 previous arc and the first control point of the next one simultaneously.) If 
 this explanation sounds too obscure, you can 
@@ -1545,7 +1545,7 @@ and then click on the lines surrounding the desired area. They are
 automatically inserted in the {\it Area control} and named (if not already 
 named). An alternate way is to insert them as a |text|%
 \[CAUTION! The command |text| is not a Therion command! It's only a nickname for a 
-block of an arbitrary text in 
+block of arbitrary text in 
 XTherion. In the file saved by XTherion, there'll only be 
 whatever you type into the {\it Text editor} or see in the {\it Command preview}.
 It may be an area definition or whatever you want, such as a comment beginning 
@@ -1561,7 +1561,7 @@ coordinates of two points (specified both in the picture coordinate system and
 in the `real' coordinate system). 
 
 After selecting a scrap (click on its header in the 
-{\it File commands} menu) two small red squares connected by red arrow
+{\it File commands} menu) two small red squares connected by a red arrow
 will appear (by default, they'll be in the lower corners of drawing area). 
 You have to drag them to points with known coordinates---usually intersections 
 of mm grid lines on the scanned drawing. If you can not see these points, 
@@ -1569,7 +1569,7 @@ you can either
 \list
 * press {\it Scale} button in the {\it Scraps} menu and click on two different 
 places on the image where the endpoints of calibration arrow should be, or
-* move mouse pointer to desired position, read pointer coordinates from 
+* move the mouse pointer to the desired position, read pointer coordinates from 
 the status bar and enter these coordinates into {\it picture scale points}
 boxes in the {\it Scraps} control. After filling X1,Y1 and
 X2,Y2 coordinate pairs the calibration arrow will be moved correspondingly. 
@@ -1593,13 +1593,13 @@ attributes to a text file. Any errors are detected only when you process these
 files with Therion.
 
 TIP: Entering symbols of the same type at once saves you a lot of time 
-because you need not change symbol type and fill options for each new symbol.
+because you need not to change the symbol type and fill options for each new symbol.
 {\it Options} box preserves the old value and it's enough to change a few 
 characters. \[In the case of survey stations, XTherion automatically 
 increases the station number for the next symbol inserted.] 
 It is a good idea to start with drawing all survey stations (don't forget to 
-give them names according to real names in the centreline command), than all 
-passage walls followed by all other point symbols, lines and areas. Finally 
+give them names according to the real names in the centreline command), than all 
+passage walls followed by all other point symbols, lines and areas. Finally, 
 draw cross-sections.
 
 
@@ -1607,26 +1607,26 @@ draw cross-sections.
 \subsubchapter Additional tools.
 
 \NEW{5.3}{\bf Help/Calibrate bitmap} produces OziExplorer-compatible MAP file based
-on georeferencig data included in a PDF map\[Calibration information for 
-nine distinct points is present if centreline contains
-station(s) fixed using geodetic coordinate system(s)]. 
+on georeferencig data included in a PDF map.\[Calibration information for 
+nine distinct points is present if the centreline contains
+station(s) fixed using geodetic coordinate system(s).]
 
-If the map in PDF format has been converted to raster using external program,
-converter uses raster image {\it and} pdf map with the same base name
+If the map in PDF format has been converted to raster using an external program,
+the converter uses raster image {\it and} pdf map with the same base name
 located in the same directory to calculate the calibration data.
 
-If the PDF file is used directly, you have to set DPI and output format 
+If the PDF file is used directly, you have to set the DPI and output format 
 before automatic conversion\[|ghostscript| and |convert| should be installed
-on your system. Note, that Windows installation does not include |ghostscript|] 
+on your system. Note, that Windows installation does not include |ghostscript|.] 
 to a raster format.
 
 \NEW{5.3}{\bf PocketTopo data} exported in Therion format\[This is a special text
 format which needs to be imported using XTherion and can not be processed
 by Therion directly.]
-from PocketTopo application can be imported in text editor as well as in map 
+from PocketTopo application can be imported in the text editor as well as in the map 
 editor ({\it File $\to$ Import $\to$ PocketTopo therion export} and 
 {\it Background Images $\to$ Insert $\to$ PocketTopo therion export}). The
-same file is used for both imports. Importing sketch does not create scrap
+same file is used for both imports. Importing the sketch does not create scrap
 data directly. The drawing is just displayed on the background like scanned
 bitmaps and should be digitized manually.
 
@@ -1638,64 +1638,64 @@ bitmaps and should be digitized manually.
  * Ctrl+Z = undo
  * Ctrl+Y = redo
  * F9 = compile current project
- * to select object in the listbox using keyboard:
-    switch using `Tab' into desired listbox;
-    move with underlined cursor to desired object;
+ * to select an object in the listbox using the keyboard:
+    switch using `Tab' into the desired listbox;
+    move with the underlined cursor to the desired object;
     press `Space'
  * PageUp/PageDown = scroll up/down in the side panel
- * Shift+PageUp/PageDown = scroll up/down in file commands window
+ * Shift+PageUp/PageDown = scroll up/down in the file commands window
 \endlist
 
 {\it Drawing area and background images}
 \list
- * RightClick = scroll drawing area
+ * RightClick = scroll the drawing area
  * Double RightClick on the image = move the image
 \endlist
 
-{\it Inserting scrap}
+{\it Inserting a scrap}
 \list
  * Ctrl+R = insert scrap
 \endlist
 
-{\it Inserting line}
+{\it Inserting a line}
 \list
- * Crtl+L = insert new line and enter an `insert line point' mode
- * LeftClick = insert line point (without control points)
- * Ctrl+LeftClick = insert line point very close to existing point 
+ * Crtl+L = insert a new line and enter an `insert line point' mode
+ * LeftClick = insert a line point (without control points)
+ * Ctrl+LeftClick = insert a line point very close to the existing point 
     (normally it's inserted right above closest existing point)
  * LeftClick + drag = insert line point (with control points)
- * hold Ctrl while dragging = fix the distance of previous control point
+ * hold Ctrl while dragging = fix the distance of the previous control point
  * LeftClick + drag on the control point = move its position
- * RightClick on one of the previous points = selects the previous point while 
+ * RightClick on one of the previous points = select the previous point while 
     in insert mode (useful if you want to change also the direction of
-    previous control point)
+    the previous control point)
  * Esc or LeftClick on the last point = end the line insertion
- * LeftClick on the first line point = close the line and end line insertion
+ * LeftClick on the first line point = close the line and end the line insertion
 \endlist
 
-{\it Editing line}
+{\it Editing a line}
 \list
- * LeftClick + drag = move line point
- * Ctrl+LeftClick + drag = move line point close to the existing
-    point (normally it is moved right above closest existing point)
- * LeftClick on control point + drag = move control point
+ * LeftClick + drag = move the line point
+ * Ctrl+LeftClick + drag = move the line point close to the existing
+    point (normally it is moved right above the closest existing point)
+ * LeftClick on control point + drag = move the control point
 \endlist
 
-{\it Adding line point}
+{\it Adding a line point}
 \list
   * select the point before which you want to insert points;
     insert required points;
     press Esc or left-click on the point you selected at the beginning
 \endlist
   
-{\it Deleting line point}
+{\it Deleting a line point}
 \list
   * select the point you want to delete;
     press {\it Edit line} $\to$ {\it Delete point} in the {\it Line control} 
     panel
 \endlist
 
-{\it Splitting line}
+{\it Splitting a line}
 \list
  * select the point at which you want to split the line;
     press {\it Edit line} $\to$ {\it Split line} in the {\it Line control} 
@@ -1703,46 +1703,46 @@ bitmaps and should be digitized manually.
 \endlist
 
 
-{\it Inserting point}
+{\it Inserting a point}
 \list
  * Ctrl+P = switch to `insert point' mode
- * LeftClick = insert point at given position
- * Ctrl+LeftClick = insert point very close to existing point (normally it
+ * LeftClick = insert point at a given position
+ * Ctrl+LeftClick = insert point very close to the existing point (normally it
     will be inserted right above the closest point)
  * Esc = escape from the `inset point' mode
 \endlist
 
-{\it Editing point}
+{\it Editing a point}
 \list
- * LeftClick + drag = move point
- * Ctrl+LeftClick + drag = move point close to the existing
-    point (normally it is moved right above closest existing point)
- * LeftClick + drag on point arrows = change point orientation or
-    sizes (according to given switches in Point control panel)
+ * LeftClick + drag = move the point
+ * Ctrl+LeftClick + drag = move the point close to the existing
+    point (normally it is moved right above the closest existing point)
+ * LeftClick + drag on the point arrow = change point orientation or
+    size (according to the given switches in the {\it Point control} panel)
 \endlist
 
-{\it Inserting area}
+{\it Inserting an area}
 \list
  * press Ctrl+A or {\it File commands} $\to$ {\it Insert} $\to$ {\it area} 
   to switch to the `insert area border' mode
- * RightClick on the lines, that surround desired area
- * Esc to finish area border lines insertion
+ * RightClick on the lines, that surround the desired area
+ * Esc to finish the area border lines insertion
 \endlist
 
-{\it Editing area}
+{\it Editing an area}
 \list
- * select area you want to edit
- * pres `Insert' in the {\it Area control} to insert other border lines
-    at current cursor position
- * pres `Insert ID' to insert border with given ID at current cursor position
- * pres `Delete' to remove selected area border line
+ * select the area you want to edit
+ * press `Insert' in the {\it Area control} to insert other border lines
+    at the current cursor position
+ * press `Insert ID' to insert a border with a given ID at the current cursor position
+ * press `Delete' to remove the selected area border line
 \endlist
 
 
 {\it Selecting an existing object}
 \list
- * LeftClick = select object on the top
- * RightClick = select object right below the top object (useful when several
+ * LeftClick = select the object at the top
+ * RightClick = select the object right below the top object (useful when several
     points lie above each other)
 \endlist
 
@@ -1751,15 +1751,15 @@ bitmaps and should be digitized manually.
 \subchapter Thinking in Therion.
 
 Although everything (well, almost everything) about Therion input files has been explained, this chapter 
-offers some additional tips and hints.
+offers some additional hints and tips.
 
-\subsubchapter How to enter centreline?.
+\subsubchapter How to enter a centreline.
 
 The basic building block is the |centreline| command.
-If the cave is larger than a few meters it's a good idea to split data in more 
-files and separate centreline data from map data. 
+If the cave is larger than a few meters it's a good idea to split the data into more 
+files and separate the centreline data from the map data. 
 
-We usually use one |*.th| file containing centreline per survey trip. 
+We usually use one |*.th| file containing a centreline per survey trip. 
 It's handy to 
 start with an empty template file as shown below, where dots will be replaced 
 with appropriate texts.
@@ -1779,62 +1779,62 @@ endsurvey|
 To create a unique namespace the |centreline| command is enclosed in 
 |survey| ... |endsurvey| command.
 It's useful when the survey has the same name as the file which contains it. 
-\[E.g.~|survey entrance| in the file |entrance.th|.] The points will than be
-referenced using |@| character---see the |survey| command description.
+\[E.g.~|survey entrance| in the file |entrance.th|.] The points will then be
+referenced using the |@| character---see the |survey| command description.
 
 For really large caves it's possible to build a hierarchical structure of 
 directories. In such a case we create one special file called |INDEX.th| which 
-includes all other |*.th| files from given directory and contains |equate| 
+includes all other |*.th| files from a given directory and contains |equate| 
 commands to define connections between surveys.
 
-\subsubchapter How to draw maps?.
+\subsubchapter How to draw maps.
 
-The most important thing is to devise division of the cave into scraps. Scrap is
+The most important thing is to devise a division of the cave into scraps. Scrap is
 the basic building block of the map.
 It's almost always a {\it bad\/} idea to try to fit each scrap to corresponding
-|*.th| file with centreline from one survey trip. The reason is that 
-connections between scraps should be as simple as possible. 
-Scraps in general are independent on centreline hierarchy so try to forget
-the survey hierarchy when drawing maps and choose best scrap joins. 
+|*.th| file with a centreline from one survey trip. The reason is that 
+the connections between scraps should be as simple as possible. 
+Scraps in general are independent on the centreline hierarchy so try to forget
+the survey hierarchy when drawing maps and choose the best scrap joins. 
 
 We usually insert maps in the last-but-one level in survey hierarchy.\[Remember 
-that surveys create namespaces, so you may reference only objects in the given 
+that surveys create namespaces, so you may reference only the objects in the given 
 survey and all subsurveys.] Each 
-scrap may than contain arbitrary part of any survey in the last level of 
-hierarchy. For example, there is a survey |main| which contains surveys |a|, 
+scrap may than contain arbitrary parts of any survey in the last level of 
+the hierarchy. For example, there is a survey |main| which contains surveys |a|, 
 |b|, |c| and |d|. Surveys |a| -- |d| contain centreline data from four survey 
 trips and each of them is in a separate file. There is a map |main_map| which 
 contains scraps |s1| and |s2|. If the |main_map| is located in the |main| 
 survey, scrap |s1| may cover part of the centreline from survey |a|, complete 
 survey |b| and part of |c|; |s2| will cover part of the |a| and |c| surveys
 and a complete |d| survey. The survey stations names will be referenced using 
-|@| symbol (e.g.~|1@a|) in the scraps.\[If you include maps in the top-level 
+the |@| symbol (e.g.~|1@a|) in the scraps.\[If you include maps in the top-level 
 survey, you may reference any survey station in any scrap, which is very 
-flexible. On the other side you have than use longer names in stations 
-references, like |3@dno.katakomby.jmn.dumbier|]
+flexible. On the other hand you then have to use longer names in station 
+references, like |3@dno.katakomby.jmn.dumbier|.]
 
 Scraps are usually stored in |*.th2| files. Each file may contain more scraps. 
-To keep data well organized, we have some naming conventions: in the file 
+To keep the data well organized, there are some naming conventions: in the file 
 |foo.th2| all scraps are named |foo_si|, where |i| is |1|, |2| an so on. 
 Cross-sections are named |foo_ci|, lines |foo_li| etc. This helps a lot with 
 large cave systems: if some scrap is referenced, you immediately know in which 
-file it had been defined.
+file it has been defined.
 
 Similar to |*.th| files, there may be one file |INDEX.th2| per directory which 
-includes all |*.th2| files, defines scrap joins and maps.
+includes all the |*.th2| files, and defines scrap joins and maps.
 
 When drawing scraps you should check if the outline is properly defined: all 
 lines creating the outer border should have |-outline out| option; all lines 
-surrounding inner pillars |-outline in| option. Scrap outlines can't intersect 
+surrounding inner pillars \hbox{|-outline in|} option. Scrap outlines can't intersect 
 themselves---otherwise the inner side of the scrap can't be determined. There 
-are two simple tests that scrap outline is correct:
+are two simple tests that the scrap outline is correct:
 \list
 * there is no \MP\ warning ``|scrap outline intersects itself|''
-* when you set passage fill to any color (|color map-fg <number>| option in 
-|layout|), you may see what Therion considers to be inside of the scrap.
+* when you set a passage fill to any color (|color map-fg <number>| option in 
+|layout|), you may see what Therion considers to be inside the scrap.
 \endlist
 
-\subsubchapter How to create models?.
+\subsubchapter How to create models.
 
 The model is created from scrap outlines. The height and depth of the passage 
 are computed from |passage-height| and |dimensions| point map symbols. 
@@ -1845,7 +1845,7 @@ are computed from |passage-height| and |dimensions| point map symbols.
 \subsubchapter How the map is put together.
 
 This chapter explains how |-clip|, |-place|, |-visibility| and |-context| 
-options of |point|, |line| and |area| commands exactly work. It gives also 
+options of |point|, |line| and |area| commands work exactly. It also gives an
 explanation of |color|, |transparency|, |symbol-hide| and |symbol-show| options 
 of the |layout| command.
 
@@ -1855,40 +1855,40 @@ point, line or area symbol: visibility, clipping and ordering.
 (1) Symbol is visible if all of the following is true:
 
 \list
-* it has |-visibility| option set |on| (all symbols by default), 
-* it hasn't been hidden by the |-symbol-hide| option in layout,
+* it has the |-visibility| option set |on| (all symbols by default), 
+* it hasn't been hidden by the |-symbol-hide| option in the layout,
 * if its |-context| option is set, the corresponding symbol hasn't been 
-  hidden by the |-symbol-hide| option in layout.
+  hidden by the |-symbol-hide| option in the layout.
 \endlist
 
-Only visible symbols are exported.
+Only the visible symbols are exported.
 
-(2) Some symbols are clipped by the scrap outline. These are by default all the 
+(2) Some symbols are clipped by the scrap outline. These are by default all of the 
 following:
 \list
 * {\it point symbols:} symbolic passage fills (bedrock\dots guano),
-* {\it line symbols:} all line symbols which don't have |-outline| option set 
+* {\it line symbols:} all line symbols which don't have the |-outline| option set 
   with the exception of |section|, |arrow|, |label|, |gradient| and 
   |water-flow|
 * {\it area symbols:} all.
 \endlist
 
 The default setting may be changed using the |-clip option|, if this is allowed 
-for particular symbol. All other symbols are not clipped by the scrap boundary.
+for a particular symbol. All other symbols are not clipped by the scrap boundary.
 
 (3) Ordering: Each symbol belongs to one of the following groups which are 
 drawn consecutively:
 
 \list
-* bottom = all symbols with |-place bottom| option set
+* bottom = all symbols with the |-place bottom| option set
 * default-bottom = all |area| symbols by default
 * default = symbols which don't belong to any other group
 * default-top = |ceiling-step| and |chimney| by default
 * top = all symbols with |-place top| option set
 \endlist
 
-Ordering of symbols inside of each group follows the order of commands in the 
-input file\[Or {\it File commands} menu in XTherion]: symbols which come first 
+Ordering of symbols inside each group follows the order of commands in the 
+input file\[Or {\it File commands} menu in XTherion.]: symbols which come first 
 are drawn last (i.e.~they are displayed at the top of each group).
 
 Now we are ready to describe how the map (or atlas chapter) is constructed:
@@ -1898,10 +1898,10 @@ Now we are ready to describe how the map (or atlas chapter) is constructed:
 *surface bitmaps are displayed if |surface| is set |bottom|
 *FOR each scrap: outline is filled white
 *grid is displayed if |grid| is set |bottom|
-*preview below\[As specified using the |preview| option in the |map| command]%
+*preview below\[As specified using the |preview| option in the |map| command.]%
  is filled with |color preview-below|
 *FOR each level\[Level is a collection of scraps not separated by a |break|%
- in the |map| command]:
+ in the |map| command.]:
   BEGIN of transparency
     FOR each scrap: outline is filled with |color map-fg|
     FOR each scrap: |area| symbols are filled and clipped to scrap boundary
