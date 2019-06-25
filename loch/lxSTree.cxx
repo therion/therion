@@ -13,6 +13,7 @@
 #include "loch.xpm"
 #endif
 
+#include <cstdio>
 
 enum {
   lxSS_SURVEY_TREE = 4000,
@@ -104,9 +105,15 @@ void lxModelTreeDlg::LoadData()
   if (i == data->surveys.end()) return;
   wxTreeItemId tmpId = this->m_treeControl->AddRoot(_T("Surveys"));
   parents.push_back(tmpId);
-  i++;
+  int add;
+  add = 1;
+  if (strlen(i->m_name) == 0) {
+    i++;
+    add = 0;
+  }
   for(; i != data->surveys.end(); i++) {
-    parents.push_back(this->m_treeControl->AppendItem(parents[i->m_parent], wxConvUTF8.cMB2WX(strlen(i->m_title) > 0 ? i->m_title : i->m_name)));
+    //printf("%s - parent %d\n",strlen(i->m_title) > 0 ? i->m_title : i->m_name,i->m_parent);
+    parents.push_back(this->m_treeControl->AppendItem(parents[(i->m_parent + add) < parents.size() ? (i->m_parent + add) : 0], wxConvUTF8.cMB2WX(strlen(i->m_title) > 0 ? i->m_title : i->m_name)));
   }
 }
 
