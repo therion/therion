@@ -47,7 +47,7 @@ For pdf\TeX's extensions there is a short manual
 		\www{http://www.pdftex.org}
 \endlist
 
-The \TeX\ macros are used inside of |code tex-atlas| part of the |layout| 
+The \TeX\ macros are used inside the |code tex-atlas| part of the |layout| 
 command (see the chapter 
 {\it Processing data} for details). The basic one predefined by Therion is the
 
@@ -57,7 +57,7 @@ macro. The idea is simple: for each page Therion defines \TeX\ variables
 (count, token, and box registers) which contain the page elements (map, 
 navigator, page name etc.). At the end of each page macro |\dopage| is invoked. 
 This defines the position of each element on the page. By redefining this macro 
-you'll get desired page layout. Without this redefinition you'll get the 
+you'll get the desired page layout. Without this redefinition you'll get a 
 standard layout.
 
 Here is the list of variables defined for each page:
@@ -84,7 +84,7 @@ Here is the list of variables defined for each page:
 
   * |\pointerE|, |\pointerW|, |\pointerN|, |\pointerS| contain the page number 
     of the neighbouring pages in the E, W, N and S directions. If there is no 
-    such a page its page number is set to 0.
+    such page its page number is set to 0.
 
   * |\pagenum| current page number
 
@@ -101,7 +101,7 @@ Here is the list of variables defined for each page:
     See the description of the |\processpointeritem| macro below for how to 
     extract and use this information.
 
-  * |\pagename| = name of the current map according to options of the |map|
+  * |\pagename| = the name of the current map according to the options of the |map|
     command.
 
   * |\pagelabel| = the page label as specified by |origin| and |origin-label|
@@ -114,7 +114,7 @@ The following variables are set at the beginning of the document:
 \list
   * |\hsize|, |\vsize| = \TeX\ page dimensions, set according to |page-width|
     and |page-height| parameters of the |page-setup| option of the |layout|
-    command. They determine our playground when defining page layout using 
+    command. They determine our playground when defining the page layout using 
     the |\dopage| macro.
 
   * |\ifpagenumbering| = This conditional is set true or false according to
@@ -242,12 +242,12 @@ Using other plain \TeX\ macros or \TeX\ primitives it's possible to add other
 features, e.g.~a different layout for odd and even pages; headers and footers;
 or adding a logo to each page. 
 
-In addition to map pages contains atlas additional items: title page, basic 
+In addition to the map pages, the atlas contains additional items: title page, basic 
 facts about the cave, legend with used map symbols etc.
 
-Therion automatically generates list of used map symbols and lists of persons
-who have discovered, surveyed and drawn selected part of the cave. 
-Following token registers may be used (according to user's requirements 
+Therion automatically generates a list of used map symbols and lists of people
+who have discovered, surveyed and drawn the selected part of the cave. 
+Following token registers may be used (according to the user's requirements 
 before or after the |\insertmaps| macro):
 
 \list
@@ -261,8 +261,8 @@ before or after the |\insertmaps| macro):
 * |\copyrights| = is set according to copyright options for surveys and other
   objects
 * |\cavename| = name of the exported map; set according to |-title| option
-  of exported map
-* |\cavelength|, |\cavedepth| = approximate length and depth of displayed map
+  of the exported map
+* |\cavelength|, |\cavedepth| = approximate length and depth of the displayed map
 * |\cavelengthtitle|, |\cavedepthtitle| = translated labels
 * \NEW{5.4}|\cavemaxz|, |\caveminz| = altitude max/min value
 * \NEW{5.4}|\thversion| = current therion version
@@ -287,7 +287,7 @@ For legend displaying there are
   layout option)
 * |\formattedlegend| = combines all three above commands to get
   preformatted legend with header and symbols typeset in two\[Default; 
-  adjust the |legend-columns| layout option to get them more or less]
+  adjust the |legend-columns| layout option to get more or less of them.]
   columns if |legend| option is set |on|
 \endlist
 
@@ -296,7 +296,7 @@ North arrow and scale bar may be displayed using
 \list
 * |\ifnortharrow| = conditional; true if map projection is plan and
   symbol north-arrow is not hidden in |layout|
-* |\ifscalebar| = conditional; true if scalebar is not hidden
+* |\ifscalebar| = conditional; true if the scalebar is not hidden
 * |\northarrow| = PDF form with the north arrow
 * |\scalebar| = PDF form with the scale bar
 \endlist
@@ -309,7 +309,7 @@ used with map legend, where multiple columns are to be adjusted by
   |<i>| columns
 \endlist
 
-Example how to create atlas with lists of surveyors etc.\ followed by map pages 
+An example of how to create an atlas with lists of surveyors etc.\ followed by map pages 
 and with legend at the end:
 
 |code tex-atlas
@@ -350,15 +350,15 @@ A simple example is
 
 which displays north arrow in the upper-left corner of the map sheet.
 
-For user's convenience, there is |\legendcontent| token register. It contains 
+For the user's convenience, there is |\legendcontent| token register. It contains 
 preformatted cave name, north arrow, scale bar, explo/topo/carto teams, 
 comment, copyrights and legend.
 (The |\legendcontent| is also used in the default map layout definition:
 |\def\maplayout{\legendbox{0}{100}{NW}{\the\legendcontent}}|).
 
-Width of the above text may be adjusted by |\legendwidth| dimen register 
+The width of the above text may be adjusted by |\legendwidth| dimen register 
 (its default value is set by |legend-width| layout option). 
-The color and size of texts in the preformatted legend can be easily changed
+The colour and size of texts in the preformatted legend can be easily changed
 using |\legendtextcolor|, |\legendtextsize|, |\legendtextsectionsize| and 
 |\legendtextheadersize| token registers, 
 e.g. for large blue text:
@@ -371,12 +371,12 @@ e.g. for large blue text:
 
 
 It is possible to display the whole map framed by setting the |\framethickness| 
-dimen register to positive value, e.g. |0.5mm|.
+dimen register to a positive value, e.g. |0.5mm|.
 
 
 \subchapter Customizing text labels.
 
-Starting with the release 5.4.1 you can use |fonts-setup| layout option
+Starting with the release 5.4.1\NEW{5.4.1} you can use |fonts-setup| layout option
 instead of the \MP\ macro |fonts_setup()|.
 
 \subchapter New map symbols.
@@ -393,7 +393,7 @@ visualization. It's described in
      \www{http://cm.bell-labs.com/cm/cs/cstr/162.ps.gz}
 \endlist
 
-User may also benefit from comprehensive reference to the {\manfnt METAFONT} 
+The user may also benefit from comprehensive reference to the {\manfnt METAFONT} 
 language, which is quite similar to \MP:
 
 \list
@@ -404,9 +404,9 @@ language, which is quite similar to \MP:
 New symbols may be defined in the |code metapost| section of the |layout| 
 command. This makes it easy to add new symbols at the run-time. It is also 
 possible to add symbols permanently by compiling them into Therion executable 
-(see the {\it Appendix} for instructions how to do this).
+(see the {\it Appendix} for instructions on how to do this).
 
-Each symbol has to have a unique name, which consists of following items:
+Each symbol has to have a unique name, which consists of the following items:
 
 \list 
 * one of the letters `p', `l', `a', `s' for point, line, area or special 
@@ -414,7 +414,7 @@ Each symbol has to have a unique name, which consists of following items:
 * underscore character;
 * symbol type as listed in the chapter {\it Data format\/} with all dashes
   removed;
-* if the symbol has a subtype, add underscore character and subtype;
+* if the symbol has a subtype, add an underscore character and subtype;
 * underscore character;
 * symbol set identifier in uppercase
 \endlist
@@ -457,7 +457,7 @@ For drawing and filling use |thdraw| and |thfill| commands instead of \MP's
 \subsubchapter Point symbols.
 
 Point symbols are defined as macros using |def ... enddef;| commands.
-Majority of point symbol definitions has four arguments: 
+The majority of point symbol definitions have four arguments: 
 position (pair), rotation (numeric), scale (numeric) and alignment (pair). 
 Exceptions are {\it section} which has no visual representation; 
 all {\it labels}, which require special treatment as described in the
@@ -470,12 +470,12 @@ should be centered at the coordinates' origin.
 For the final map, all drawings are transformed as specified in the {\it T\/} 
 transformation variable, so it's necessary to set this variable before drawing. 
 
-This is usually done in two steps (assume that four arguments are 
+This is usually done in two steps (assume that the four arguments are 
 {\it P}, {\it R}, {\it S}, {\it A}): 
   
 \list
 * set the {\it U} pair variable to $\left({width\over2},{height\over2}\right)$ 
-  of the symbol for correct alignment. The alignment argument {\it A} is a pair 
+  of the symbol for the correct alignment. The alignment argument {\it A} is a pair 
   representing ratios $\left(shift_x\over U_x\right)$ and
   $\left(shift_y\over U_y\right)$. 
   
@@ -486,7 +486,7 @@ This is usually done in two steps (assume that four arguments are
 \endlist
 
 For drawing and filling use |thdraw| and |thfill| commands instead of \MP's 
-|draw| and |fill|. These take automatically care of {\it T} transformation.
+|draw| and |fill|. These automatically take care of {\it T} transformation.
 
 An example definition may be
 
@@ -504,7 +504,7 @@ coordinate system. Each line symbol gets the {\it path} in absolute coordinates
 as the first argument. Therefore it's necessary to set {\it T} variable to 
 |identity| before drawing.
 
-Following symbols take additional arguments: 
+The following symbols take additional arguments: 
 \list
 * arrow = numeric: 0 is no arrows, 1 arrow at the end, 2 begin, 3 both ends
 * contour = text: list of points which get the tick or one of 
@@ -533,9 +533,9 @@ absolute coordinates.
 You may fill them in three ways:
 
 \list
- * fill an uniform or randomised grid in a temporary picture 
+ * fill a uniform or randomised grid in a temporary picture 
    (having dimensions |bbox path|) with some point symbols; clip it according 
-   to |path| and add to the |currentpicture|
+   to the |path| and add to the |currentpicture|
  * fill |path| with a solid colour
  * fill |path| with a predefined pattern using a |withpattern| keyword.
 \endlist
@@ -550,9 +550,9 @@ Patterns are defined using the same user interface (without the
 \endlist
 
 You may use standard \MP\ |draw| and similar macros without setting of {\it T} 
-variable in pattern definitions.
+variable in the pattern definitions.
 
-Example on how to define and use patterns:
+An example of how to define and use patterns:
 
 |beginpattern(pattern_water_UIS);
   draw origin--10up withpen pensquare scaled (0.02u);

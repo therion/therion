@@ -1,5 +1,5 @@
 \eject
-\chapter What we get?.
+\chapter What do we get.
 
 \subchapter Information files.
 
@@ -14,7 +14,7 @@ $\Delta x$ is the difference between the identical start and end points of
 the loop before the error distribution measured along the $x$ coordinate axis; 
 similarly for $y$ and
 $z$. Percentage loop error is calculated as {\it absolute error / loop length}. 
-Average error is simple arithmetic average of all loop errors.
+Average error is the simple arithmetic average of all loop errors.
 
 Scrap distortion is calculated using the distortion measure defined for
 all pairs of points (point symbols, points and control points of line symbols)
@@ -35,7 +35,7 @@ is selected.
 \subsubchapter SQL export.
 
 SQL export makes it easy to get very detailed and subtle information about
-centreline. It is a text file starting with tables declaration (where `?' 
+the centreline. It is a text file starting with a tables declaration (where `?' 
 stands in the following listing for a maximal value required by the column 
 data)
 
@@ -58,9 +58,9 @@ create table SHOT_FLAG (SHOT_ID integer, FLAG char(3));|
 
 which is followed by a mass of SQL insert commands. This file may be loaded 
 into any SQL database (after some database-dependent initialization, which may 
-include running a SQL server and connecting to it, creating a database and 
+include running an SQL server and connecting to it, creating a database and 
 connecting to it. A good idea is to start a transaction before loading this 
-file, if database doesn't start a transaction automatically.) 
+file, if the database doesn't start a transaction automatically.) 
 It's important to set-up database encoding to match the one 
 specified in Therion |export database| command.
 
@@ -70,7 +70,7 @@ specified in Therion |export database| command.
 \endinsert
 
 
-Table and column names are self-explaining; for undefined or non-existing 
+Table and column names are self-explanatory; for undefined or non-existing 
 values |NULL| is used. |FLAG| in |SHOT_FLAG| table is |dpl| or |srf| for duplicated
 or surface shots; in |STATION_FLAG| table |ent|, |con|, |fix|, 
 |spr|, |sin|, |dol|, |dig|, |air|, |ove|, |arc| for stations
@@ -79,8 +79,8 @@ overhang or arch attributes, respectively.
 
 Examples of simple queries follow:
 
-\penalty-100{\it List of survey team members with an information how
-much has each of them surveyed:}
+\penalty-100{\it List of survey team members with information about how
+much each of them has surveyed:}
 
 |select sum(LENGTH), sum(SURFACE_LENGTH), NAME, SURNAME 
   from CENTRELINE, TOPO, PERSON 
@@ -93,7 +93,7 @@ much has each of them surveyed:}
   (select SURVEY_ID from CENTRELINE 
   where TOPO_DATE between '1998-01-01' and '1998-12-31');|
 
-{\it How long are passages lying between 1500 and 1550 m a.s.l.?}
+{\it How long are the passages lying between 1500 and 1550 m a.s.l.?}
 
 |select sum(LENGTH) from SHOT, STATION S1, STATION S2 
   where (S1.Z+S2.Z)/2 between 1500 and 1550 and 
@@ -102,8 +102,8 @@ much has each of them surveyed:}
 \subsubchapter Lists---caves, surveys, continuations.
 
 Using |export continuation-list| you get an overview of all points in the
-centreline and scraps marked \[using |station| attribute for centreline point
-and |point continuation| in scraps] as a possible continuation.
+centreline and scraps marked \[Using |station| attribute for centreline points
+and |point continuation| in scraps.] as a possible continuation.
 
 |export cave-list| gives you a tabular information about surveyed caves (you need
 to specify |entrance| flags in your data) including length, depth and entrance(s)
@@ -124,14 +124,14 @@ option if you want to print in the exact scale.
 In atlas mode some additional information is put on each page: page 
 number, map name, and page label.
 
-Especially useful are the numbers of neighbouring pages in N, S, E and W 
-directions, as well as in upper and lower levels. There are also hyperlinks at 
+The numbers of neighbouring pages in N, S, E and W 
+directions, as well as in upper and lower levels are especially useful. There are also hyperlinks at 
 the border of the map if the cave continues on the next page and on the 
 appropriate cells of the Navigator.
 
 PDF files are highly optimized---scraps are stored in XObject forms only once 
-in the document and than referenced on appropriate pages. 
-Therion uses most advanced PDF features like transparency and layers.
+in the document and then referenced on appropriate pages. 
+Therion uses advanced PDF features like transparency and layers.
 
 Created PDF files may be optionally post-processed in applications like 
 pdf\TeX\ or Adobe Acrobat---it's possible to extract or change some pages, add 
@@ -151,7 +151,7 @@ appropriate software. These maps do not contain visualized map symbols
 
 \subsubchapter Special-purpose maps.
 
-Map in XVI format contains centreline with LRUD (and optionally morphed 
+Map in XVI format contains centreline with LRUD information (and optionally morphed 
 sketches) and can be imported in XTherion to serve as a background for 
 digitization.
 
@@ -160,7 +160,7 @@ Map in Survex format is intended for a quick preview in Aven.
 
 \subchapter 3D models.
 
-Therion may export 3D model in various formats besides its native format. These 
+Therion may export 3D models in various formats besides its native format. These 
 may be loaded in appropriate viewing, editing or raytracing programs to be 
 printed or further processed. If the format doesn't support arbitrary passage 
 shape definition, only the centreline is included.
