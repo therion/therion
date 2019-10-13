@@ -31,7 +31,7 @@ Editing point
  * Ctrl+LeftClick + drag = move point close to the existing
     point (normally it is moved right above closest existing point)
  * LeftClick + drag on point arrows = change point orientation or
-    sizes (according to given switches in Point cotrol panel)
+    sizes (according to given switches in Point control panel)
 
 Inserting line
  * Crtl+L = insert new line and enter an `insert line point' mode
@@ -74,10 +74,10 @@ Inserting area
 
 Editing area
  * select area you want to edit
- * pres "Insert" in the area control to insert other border lines
+ * press "Insert" in the area control to insert other border lines
     at current cursor position
- * pres "Insert ID" to insert border with given ID at current cursor position
- * pres "Delete" to remove selected area border line
+ * press "Insert ID" to insert border with given ID at current cursor position
+ * press "Delete" to remove selected area border line
     
 Selecting an existing object
  * LeftClick = select object on the top
@@ -263,6 +263,97 @@ Selezionare un oggetto
    (utile quando parecchi punti giaciono uno sopra l'altro)
 }
 
+::msgcat::mcset pt "xtherion_help_control" {
+
+ATALHOS DO EDITOR DE MAPAS EDITOR SHORTCUTS
+  
+Diversos
+ * Ctrl+Z = desfazer
+ * Ctrl+Y = refazer
+ * F9 = compilar o projeto atual
+ * para selecionar o objeto na lista usando o teclado:
+    troque a lista ativa usando a tecla "Tab";
+    move o curso sublinhado até o objeto desejado;
+    pressione "Espaço"
+
+Desenhar áreas e imagens de fundo
+ * CliqueBotãoDireito = deslize imagem para baixo/para cima
+ * CliqueBotãoDireito duplo na imagem = mover a imagem
+ 
+Inserir trecho
+ * pressione "Ctrl-r" ou "Editar" > "Inserir" > "trecho" para inserir novo trecho
+ * o novo trecho é inserido imediatamente após o trecho atual
+
+Inserir ponto
+ * Ctrl+P = alternar para modo `inserção de ponto`
+ * CliqueBotãoEsquerdo = inserir ponto na posição atual
+ * Ctrl+CliqueBotãoEsquerdo = inserir ponto bem perto a um ponto pré-existente (normalmente 
+    é inserido logo acima do ponto mais próximo)
+ * Esc = sair do modo `inserção de ponto`
+
+Editar ponto
+ * CliqueBotãoEsquerdo + arrastar = mover ponto
+ * Ctrl+CliqueBotãoEsquerdo + arrastar = mover ponto para uma posição próxima
+    a um ponto pré-existente (normalmente é movido para uma posição logo acima
+    do ponto mais próximo)
+ * CliqueBotãoEsquerdo + arrastar as setas do ponto = alterar a orientação do ponto ou seu 
+    tamanho (de acordo com as configurações definidas no painel de controle Ponto)
+
+Inserir linha
+ * Crtl+L = inserir nova linha e alterar para modo `inserir ponto de linha`
+ * CliqueBotãoEsquerdo = inserir ponto de linha SEM pontos de controle
+ * Ctrl+CliqueBotãoEsquerdo = inserir ponto de linha bem perto a um ponto pré-existente 
+    (normalmente é inserido logo acima do ponto mais próximo)
+ * CliqueBotãoEsquerdo + arrastar = inserir ponto de linha COM pontos de controle
+ * manter Ctrl pressionado enquanto arrasta = corrigir a distância do ponto de controle 
+    anterior
+ * CliqueBotãoEsquerdo + arrastar ponto de controle = mover o ponto de controle
+ * CliqueBotãoDireito em algum dos pontos anteriores = seleciona o ponto anterior quanto 
+    estiver no modo de inserção (é útil se você quer alterar também a direção de um ponto
+    de controle anterior)
+ * Esc ou CliqueBotãoEsquerdo no último ponto = finalizar a inserção de linha
+ * CliqueBotãoEsquerdo no primeiro ponto da linha = fechar a linha e finalizar a inserção de 
+    linha
+
+Editar linha
+ * CliqueBotãoEsquerdo + arrastar = mover o ponto da linha
+ * Ctrl+CliqueBotãoEsquerdo + arrastar = mover o ponto da linha para uma posição próxima
+    a um ponto pré-existente (normalmente é movido para uma posição logo acima
+    do ponto mais próximo)
+ * CliqueBotãoEsquerdo no ponto de controle + arrastar = mover ponto de controle
+
+Adicionar ponto de linha
+ * selecione o ponto de referência (o novo ponto será inserido imediatamente antes dele);
+    insira os pontos desejados;
+    pressione Esc ou clique com o botão esquerdo no ponto que você selecionou no início
+  
+Apagar ponto de linha
+ * selecione o ponto que quer apagar;
+    pressione "Editar linha" > "Apagar ponto" no painel de controle Linha
+    
+Quebrar linha
+ * selecione o ponto onde quer quebrar a linha;
+    pressione "Editar linha" > "Quebrar linha" no painel de controle Linha
+    
+Inserir área
+ * pressione "Ctrl-a" ou "Editar" > "Inseriri" > "área" para alternar para o modo 'inserir borda 
+    de área'
+ * CliqueBotãoDireito nas linhas que definirão a borda da área desejada
+ * Esc para terminar a inserção das linhas que definem a borda da área
+
+Editar área
+ * selecione a área que quer editar
+ * pressione "Inserir" no painel de controle Área para inserir outras linhas de borda na posição
+    atual do cursor
+ * pressione "Inserir ID" para inserir linha de borda com o ID informado na posição atual do 
+    cursor
+ * pressione "Apagar" para remover a linha de borda de área selecionada
+    
+Selecionar um objeto existente
+ * CliqueBotãoEsquerdo = seleciona o objeto no topo da posição clicada
+ * CliqueBotãoDireito = seleciona o objeto imediatamente abaixo do objeto no topo (útil quando 
+    diversos objetos estão sobrepostos)
+}
 
 ::msgcat::mcset ru "xtherion_help_control" {
 ﻿КЛАВИАТУРНЫЕ СОКРАЩЕНИЯ И ОПЕРАЦИИ В РЕДАКТОРЕ КАРТ
