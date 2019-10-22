@@ -19,12 +19,23 @@ CMNOBJECTS = \
 CROSS =
 EXT =
 
+WX_CONFIG = wx-config
+
+VTKSUFFIX = $(shell tclsh ./getvtkver.tcl suffix)
 VTKVERSION = $(shell tclsh ./getvtkver.tcl version)
 VTKPATH = $(shell tclsh ./getvtkver.tcl incpath)
 VTKLIBPATH = $(shell tclsh ./getvtkver.tcl libpath)
 VTKV6 = $(shell tclsh ./getvtkver.tcl version6)
 ifeq ($(VTKV6),1)
-VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION) -lfreetype -lpng -ljpeg
+VTKLIBS = \
+    -lvtkCommonExecutionModel$(VTKSUFFIX) \
+    -lvtkCommonDataModel$(VTKSUFFIX) \
+    -lvtkCommonCore$(VTKSUFFIX) \
+    -lvtkFiltersCore$(VTKSUFFIX) \
+    -lvtkFiltersHybrid$(VTKSUFFIX) \
+    -lvtkIOLegacy$(VTKSUFFIX) \
+    $(shell pkg-config --libs freetype2) \
+    -lpng -ljpeg
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
 endif
@@ -54,17 +65,27 @@ STRIPFLAG = -s
 # PLATFORM DEBIAN
 CXX = c++
 CC = gcc
-POBJECTS = lxR2P.o
 ifeq ($(VTKV6),1)
-VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION) -lfreetype -lpng -ljpeg
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 endif
-CXXPFLAGS = -DLXLINUX -std=c++11 $(shell wx-config --cxxflags) -Wno-deprecated $(shell pkg-config freetype2 --cflags) -I$(VTKPATH)
-CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
+CXXPFLAGS = \
+    -std=c++11 \
+    -Wno-deprecated \
+    $(shell $(WX_CONFIG) --cxxflags) \
+    $(shell pkg-config freetype2 --cflags) \
+    -I$(VTKPATH)
+CCPFLAGS = $(shell $(WX_CONFIG) --cflags)
 LXLIBDIR = linux
 PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
 LXPLATFORM = LINUX
+
+# LXLINUX doesn't work with Arch Linux
+ifneq ($(shell lsb_release -si),Arch)
+  POBJECTS = lxR2P.o
+  CXXPFLAGS += -DLXLINUX
+  CCPFLAGS += -DLXLINUX
+endif
 
 # PLATFORM WIN32
 ##CXX = c++
@@ -139,8 +160,8 @@ LDBFLAGS = $(STRIPFLAG)
 
 
 # compiler settings
-CXXFLAGS = -Wall -D_GNU_SOURCE -DLOCH $(CXXPFLAGS) $(CXXBFLAGS)
-CCFLAGS = -Wall -D_GNU_SOURCE -DLOCH $(CCPFLAGS) $(CCBFLAGS)
+CXXFLAGS := -Wall -D_GNU_SOURCE -DLOCH $(CXXPFLAGS) $(CXXBFLAGS)
+CCFLAGS := -Wall -D_GNU_SOURCE -DLOCH $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(LOUTDIR)/,$(POBJECTS)) $(addprefix $(LOUTDIR)/,$(CMNOBJECTS))
 
 
