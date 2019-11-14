@@ -1,7 +1,7 @@
 To compile loch, you will need following packages:
 
-freetype (version 2 and above, freetype-config must work)
-wxWidgets (version 2.6 and above, wx-config must work)
+freetype (version 2 and above, 'pkg-config freetype2' must work)
+wxWidgets (version 2.6 and above, 'wx-config' must work)
 VTK (version 5.0 and above installed at /usr/local or
      modify VTKPATH and VTKLIBPATH in Makefile)
 

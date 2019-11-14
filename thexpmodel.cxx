@@ -2042,6 +2042,8 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
               fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
               numst = 1;
             }
+            if (numst == 0)
+              fprintf(out,"<LineString><coordinates>\n");
             last_st = db->db1d.station_vec[legs->to.id - 1].uid - 1;
             thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
               db->db1d.station_vec[last_st].x, db->db1d.station_vec[last_st].y, db->db1d.station_vec[last_st].z,

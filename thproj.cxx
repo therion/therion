@@ -135,6 +135,9 @@ bool thcs_check(string s) {
   #include <sstream>
 
   void th_init_proj(PJ * &P, string s) {
+#if PROJ_VER > 5
+    proj_context_use_proj4_init_rules(PJ_DEFAULT_CTX, true);
+#endif
     P = proj_create(PJ_DEFAULT_CTX, s.c_str());
     if (P==0) {
       ostringstream u;

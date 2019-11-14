@@ -166,7 +166,7 @@ de: Blutalkoholrechner
 el: Αλκοτέστ
 en: BAC calculator
 es: Test de alcoholemia
-Fr: Test d'alcoolémie
+fr: Test d'alcoolémie
 it: Calcolatore BAC
 pt: Calculadora TAS
 ru: Калькулятор алкоголя
@@ -754,7 +754,7 @@ en: Running Therion ...
 es: Ejecutando Therion ...
 fr: Therion en cours d'exécution...
 it: esecuzione Therion ...
-pt: Rodando o Therion...
+pt: Executando o Therion...
 ru: Запуск Therion ...
 sk: Prebieha výpočet...
 sl: Zaganjanje theriona ...
@@ -1596,25 +1596,25 @@ pt: Defina ponto final do vetor de deslocamento do objeto. Selecione ou um ponto
 sl: Izberi končno točko vektorja objekta. Ali izbrana točka ali zadnje mesto desnega klika.
 
 therion: X coordinate of start point of object shifting vector.
-es: Coordenada X del punto origen del vector de desplazamiento de objetos. 
+es: Coordenada X del punto origen del vector de desplazamiento de objetos.
 fr: Coordonnée X du point d'origine du vecteur de déplacement des objets.
 pt: Coordenada X do ponto inicial do vetor de deslocamento do objeto.
 sl: X koordinata začetne točke vektorja objekta.
 
 therion: Y coordinate of start point of object shifting vector.
-es: Coordenada Y del punto origen del vector de desplazamiento de objetos. 
+es: Coordenada Y del punto origen del vector de desplazamiento de objetos.
 fr: Coordonnée Y du point d'origine du vecteur de déplacement des objets.
 pt: Coordenada Y do ponto inicial do vetor de deslocamento do objeto.
 sl: Y koordinata začetne točke vektorja objekta.
 
 therion: X coordinate of end point of object shifting vector.
-es: Coordenada X del punto destino del vector de desplazamiento de objetos. 
+es: Coordenada X del punto destino del vector de desplazamiento de objetos.
 fr: Coordonnée X du point de destination du vecteur déplacement des objets.
 pt: Coordenada X do ponto final do vetor de deslocamento do objeto.
 sl: X koordinata končne točke vektorja objekta.
 
 therion: Y coordinate of end point of object shifting vector.
-es: Coordenada Y del punto destino del vector de desplazamiento de objetos. 
+es: Coordenada Y del punto destino del vector de desplazamiento de objetos.
 fr: Coordonnée Y du point de destination du vecteur déplacement des objets.
 pt: Coordenada Y do ponto final do vetor de deslocamento do objeto.
 sl: Y koordinata končne točke vektorja objekta.
@@ -1632,13 +1632,13 @@ pt: Inverter pontos do vetor de deslocamento do objeto.
 sl: Zamenjaj točke vektorja objekta.
 
 therion: Shift object
-es: Desplazar objeto 
+es: Desplazar objeto
 fr: Déplacer l'objet
 pt: Deslocar objeto
 sl: Prestavi objekt
 
 therion: Shift currently selected point, line or scrap according to specified vector.
-es: Desplaza el punto, línea o trozo actualmente seleccionado con el vector especificado. 
+es: Desplaza el punto, línea o trozo actualmente seleccionado con el vector especificado.
 fr: Déplacer le point, la ligne ou le scrap actuellement sélectionné avec le vecteur spécifié.
 pt: Deslocar ponto, linha ou croqui selecionado de acordo com o vetor definido.
 sl: Prestavi trenutno izbrano točko, krivuljo ali rez glede na določen vektor.
@@ -2161,8 +2161,8 @@ cz: Nová souřadnice Y obrázku.
 de: Neue Y-Koordinate des Bildes.
 el: Νέα συντεταγμένη Υ εικόνας
 en: New Y coordinate of image.
-fr: Nouvelle Coordonnée Y de l'image.
 es: Nueva coordenada Y de la imagen.
+fr: Nouvelle Coordonnée Y de l'image.
 it: Nuova coordinata Y dell'immagine.
 pt: Nova coordenada Y da imagem.
 ru: Новая координата Y.
@@ -3712,7 +3712,7 @@ it: Mostra le linee del bordo dell'area.
 pt: Mostrar as linhas limítrofes da área.
 ru: Показать линии-границы для области.
 sk: Zobraz hranice plochy.
-sl: Prikaži meje površine. 
+sl: Prikaži meje površine.
 sq: trego kufirin e vijave te fushes.
 zh_CN: 显示区边界线
 
@@ -4515,7 +4515,7 @@ de: In Kurve umwandeln
 en: Convert to curve
 es: Convertir a curva
 fr: Convertir la ligne en courbes
-pt: Converter em curva
+pt: Converter para curva
 ru: Конвертировать в кривую
 sk: Konvertovať na krivku
 sl: Pretvori v krivuljo
@@ -4527,7 +4527,7 @@ de: Line vereinfachen
 en: Simplify line
 es: Simplicar línea
 fr: Simplifier la ligne
-pt: Simplificar
+pt: Simplificar linha
 ru: Упростить линию
 sk: Zjednodušiť
 sl: Poenostavi krivuljo
@@ -6236,8 +6236,8 @@ cz: Otevřít...
 de: Öffnen
 el: Άνοιγμα
 en: Open
-fr: Ouvrir
 es: Abrir
+fr: Ouvrir
 it: Apri
 pt: Abrir
 ru: Открыть
@@ -6443,8 +6443,8 @@ cz: Automaticky odsazovat
 de: Automatisch einrücken
 el: Αυτόματη παραγραφοποίηση
 en: Auto indent
-fr: Indentation auto
 es: Auto-indentar
+fr: Indentation auto
 it: Indentazione automatica
 pt: Indentação automática
 ru: Автоотступ
@@ -6842,8 +6842,8 @@ cz: Vložit nový scrap
 de: Neue Skizze einfügen
 el: Εισαγωγή νέου σκραπ
 es: Insertar nuevo trozo
-it: Inserisci un nuovo scrap
 fr: Insérer un nouveau scrap
+it: Inserisci un nuovo scrap
 pt: Inserir novo trecho
 ru: Вставить новый скрап
 sk: Vložiť nový scrap
@@ -6980,3 +6980,4 @@ pt: seta
 ru: стрелка
 sk: šípka
 sl: puščica krivulje
+

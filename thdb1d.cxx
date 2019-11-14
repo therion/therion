@@ -3042,7 +3042,7 @@ void thdb1d::process_xelev()
                 while (carrow != NULL) {
                   carrow->leg->leg->extend |= TT_EXTENDFLAG_IGNORE;
                   carrow->extend |= TT_EXTENDFLAG_IGNORE;
-                  carrow->negative->extend |= TT_EXTENDFLAG_IGNORE;
+                  //carrow->negative->extend |= TT_EXTENDFLAG_IGNORE;
                   carrow = carrow->next_arrow;
                 }
               }
