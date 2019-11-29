@@ -69,6 +69,7 @@ enum {
   TT_TEXT,
   TT_LANG,
   TT_MAPS,
+  TT_MAPS_OFFSET,
 };
 
 
@@ -80,6 +81,7 @@ static const thstok thtt_cfg[] = {
   {"lang", TT_LANG},
   {"language", TT_LANG},
   {"maps", TT_MAPS},
+  {"maps-offset", TT_MAPS},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
   {"sketch-colors", TT_SKETCH_COLORS},
@@ -114,6 +116,7 @@ thconfig::thconfig()
 
   this->sketch_colors = 256;
   this->use_maps = true;
+  this->use_maps_offset = true;
 
   this->tmp3dSMP = 1.0;
   this->tmp3dWALLSMP = 0.1;
@@ -488,6 +491,17 @@ void thconfig::load()
               if (sv == TT_UNKNOWN_BOOL)
                 ththrow(("invalid maps switch -- %s", valuemb.get_buffer()[0]))
               this->use_maps = (sv == TT_TRUE);
+            } else {
+              ththrow(("missing maps switch"))
+            }
+            break;
+            
+          case TT_MAPS_OFFSET:
+            if (valuemb.get_size() > 0) {
+              sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
+              if (sv == TT_UNKNOWN_BOOL)
+                ththrow(("invalid maps switch -- %s", valuemb.get_buffer()[0]))
+              this->use_maps_offset = (sv == TT_TRUE);
             } else {
               ththrow(("missing maps switch"))
             }

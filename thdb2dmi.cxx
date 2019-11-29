@@ -27,6 +27,7 @@
  
 #include "thdb2dmi.h"
 #include "thexception.h"
+#include "thconfig.h"
 
 thdb2dmi::thdb2dmi()
 {
@@ -88,7 +89,7 @@ bool operator < (const thdb2dmi_shift & s1, const thdb2dmi_shift & s2)
 
 
 bool thdb2dmi_shift::is_active() const {
-  return (this->m_preview != TT_MAPITEM_UNKNOWN);
+  return ((this->m_preview != TT_MAPITEM_UNKNOWN) && thcfg.use_maps_offset);
 } 
 
 
