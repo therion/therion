@@ -503,7 +503,7 @@ void thconfig::load()
                 ththrow(("invalid maps switch -- %s", valuemb.get_buffer()[0]))
               this->use_maps_offset = (sv == TT_TRUE);
             } else {
-              ththrow(("missing maps switch"))
+              ththrow(("missing maps-offset switch"))
             }
             break;
 
