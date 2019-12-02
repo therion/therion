@@ -81,7 +81,7 @@ static const thstok thtt_cfg[] = {
   {"lang", TT_LANG},
   {"language", TT_LANG},
   {"maps", TT_MAPS},
-  {"maps-offset", TT_MAPS},
+  {"maps-offset", TT_MAPS_OFFSET},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
   {"sketch-colors", TT_SKETCH_COLORS},
