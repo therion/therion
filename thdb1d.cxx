@@ -2961,6 +2961,9 @@ void thdb1d::process_xelev()
 #else
     thprintf("processing extended elevation ... ");
     thtext_inline = true;
+    if (thcfg.log_extend) {
+      thprintf("\n");
+    }
 #endif 
     
   // PREPROCESS
@@ -3102,6 +3105,7 @@ void thdb1d::process_xelev()
   // until everything is calculated
 
   unsigned long tarrows = 0;
+  unsigned long prev_id = 0;
   bool component_break = true;
   bool ignorant_mode = false, just_started = true;
   int default_left(1), go_left; // -1 - left, 1 - right, 0 - vertical
@@ -3185,6 +3189,12 @@ void thdb1d::process_xelev()
         this->station_vec[current_node->id - 1].name,
         this->station_vec[current_node->id - 1].survey->get_full_name());
 #endif
+      if (thcfg.log_extend) {
+        thprintf("START %s@%s\n",
+        this->station_vec[current_node->id - 1].name,
+        this->station_vec[current_node->id - 1].survey->get_full_name());
+        prev_id = current_node->id;
+      }
       
     }
     
@@ -3231,6 +3241,13 @@ void thdb1d::process_xelev()
           this->station_vec[current_node->id - 1].name,
           this->station_vec[current_node->id - 1].survey->get_full_name());
 #endif
+        if (thcfg.log_extend) {
+          if (prev_id != current_node->id) thprintf("BACK %s@%s\n",
+            this->station_vec[current_node->id - 1].name,
+            this->station_vec[current_node->id - 1].survey->get_full_name());
+          prev_id = current_node->id;
+        }
+        
       }
 
     } else {
@@ -3315,6 +3332,13 @@ void thdb1d::process_xelev()
         this->station_vec[current_node->last_arrow->end_node->id - 1].name,
         this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name());
 #endif
+      if (thcfg.log_extend) {
+        if (prev_id != current_node->id) thprintf("%s %s@%s\n",
+          (go_left == 1 ? "LEFT" : (go_left == -1 ? "RIGHT" : "VERTICAL")), 
+          this->station_vec[current_node->id - 1].name,
+          this->station_vec[current_node->id - 1].survey->get_full_name());
+        prev_id = current_node->id;
+      }
 
       if (!current_node->last_arrow->end_node->is_attached) {
         current_node->last_arrow->end_node->back_arrow = 
