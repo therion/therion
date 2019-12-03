@@ -265,7 +265,7 @@ def a_blocks_AUT (expr p) =
                thdraw qq;
              fi;
            else:
-             qq:= qq scaled (uniformdeviate(.2)+.5 )
+             qq:= qq scaled (uniformdeviate(.2)+.5 );
              if xpart (p intersectiontimes qq) < 0:
                if pointinside((i,j),p,outside):
                  thclean qq;
