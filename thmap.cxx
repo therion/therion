@@ -33,6 +33,8 @@
 #include "thobjectname.h"
 #include "thdb2dmi.h"
 #include "thtflength.h"
+#include "thconfig.h"
+
 
 thmap::thmap()
 {
@@ -196,7 +198,7 @@ void thmap::parse_item(int npar, char ** pars)
     citem->prev_item = this->last_item;
     this->last_item = citem;
   }
-  if (npar == 3) {
+  if ((npar == 3) && (thcfg.use_maps_offset)) {
     thsplit_words(&mapitmmb, pars[1]);
     char ** ss;
     size_t nw;

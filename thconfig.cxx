@@ -69,6 +69,8 @@ enum {
   TT_TEXT,
   TT_LANG,
   TT_MAPS,
+  TT_MAPS_OFFSET,
+  TT_LOG,
 };
 
 
@@ -79,7 +81,9 @@ static const thstok thtt_cfg[] = {
   {"export", TT_EXPORT},
   {"lang", TT_LANG},
   {"language", TT_LANG},
+  {"log", TT_LOG},
   {"maps", TT_MAPS},
+  {"maps-offset", TT_MAPS_OFFSET},
   {"select", TT_SELECT},
   {"setup3d", TT_SETUP3D},
   {"sketch-colors", TT_SKETCH_COLORS},
@@ -90,6 +94,23 @@ static const thstok thtt_cfg[] = {
   {"unselect", TT_UNSELECT},
   {NULL, TT_UNKNOWN_CFG}
 };
+
+
+enum {
+  TT_LOG_ALL,
+  TT_LOG_NONE,
+  TT_LOG_UNKNOWN, 
+  TT_LOG_EXTEND, 
+};
+
+
+static const thstok thtt_cfg_log[] = {
+  {"all", TT_LOG_ALL},
+  {"extend", TT_LOG_EXTEND},
+  {"none", TT_LOG_NONE},
+  {NULL, TT_LOG_UNKNOWN}
+};
+
 
 
 //const char * THCCC_ENCODING = "# Character encoding of this configuration "//  "file.\n";
@@ -114,6 +135,9 @@ thconfig::thconfig()
 
   this->sketch_colors = 256;
   this->use_maps = true;
+  this->use_maps_offset = true;
+  
+  this->log_extend = false;
 
   this->tmp3dSMP = 1.0;
   this->tmp3dWALLSMP = 0.1;
@@ -490,6 +514,38 @@ void thconfig::load()
               this->use_maps = (sv == TT_TRUE);
             } else {
               ththrow(("missing maps switch"))
+            }
+            break;
+            
+          case TT_MAPS_OFFSET:
+            if (valuemb.get_size() > 0) {
+              sv = thmatch_token(valuemb.get_buffer()[0], thtt_bool);
+              if (sv == TT_UNKNOWN_BOOL)
+                ththrow(("invalid maps switch -- %s", valuemb.get_buffer()[0]))
+              this->use_maps_offset = (sv == TT_TRUE);
+            } else {
+              ththrow(("missing maps-offset switch"))
+            }
+            break;
+
+          case TT_LOG:
+            if (valuemb.get_size() > 0) {
+              sv = thmatch_token(valuemb.get_buffer()[0], thtt_cfg_log);
+              if (sv == TT_LOG_UNKNOWN)
+                ththrow(("invalid log switch -- %s", valuemb.get_buffer()[0]))
+              switch (sv) {
+                case TT_LOG_ALL:
+                    this->log_extend = true;
+                    break;
+                case TT_LOG_NONE:
+                    this->log_extend = false;
+                    break;
+                case TT_LOG_EXTEND:
+                    this->log_extend = true;
+                    break;
+              }
+            } else {
+              ththrow(("missing log switch"))
             }
             break;
 

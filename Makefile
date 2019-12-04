@@ -398,13 +398,12 @@ $(OUTDIR)/thconfig.o: thconfig.cxx thconfig.h thbuffer.h thmbuffer.h thinput.h \
 $(OUTDIR)/thconvert.o: thconvert.cxx thpdfdbg.h thexception.h therion.h thbuffer.h \
  thpdfdata.h thepsparse.h thtexfonts.h
 $(OUTDIR)/thcs.o: thcs.cxx thcs.h thcsdata.h thparse.h thbuffer.h thmbuffer.h \
- thexception.h therion.h thdatabase.h \
- thdataobject.h thperson.h thdate.h thdataleg.h thobjectname.h \
- thobjectsrc.h thinfnan.h thlayoutclr.h thdb1d.h thobjectid.h thdb3d.h \
- loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h thdb2dprj.h \
- thmapstat.h thlegenddata.h thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h \
- thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h \
- thscrapen.h thscraplp.h
+ thexception.h therion.h thproj.h thdatabase.h thdataobject.h thperson.h \
+ thdate.h thdataleg.h thobjectname.h thobjectsrc.h thinfnan.h \
+ thlayoutclr.h thdb1d.h thobjectid.h thdb3d.h loch/lxMath.h thattr.h \
+ thchenc.h thchencdata.h thdb2d.h thdb2dprj.h thmapstat.h thlegenddata.h \
+ thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h \
+ thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h
 $(OUTDIR)/thcsdata.o: thcsdata.cxx thcsdata.h thparse.h thbuffer.h thmbuffer.h
 $(OUTDIR)/thdata.o: thdata.cxx thdata.h thdataleg.h thparse.h thbuffer.h \
  thmbuffer.h thobjectname.h therion.h thobjectsrc.h thinfnan.h \
@@ -743,8 +742,25 @@ $(OUTDIR)/thlayoutln.o: thlayoutln.cxx thlayoutln.h thlayoutclr.h thlayout.h \
  thdb2dxm.h thscraplo.h thscrapen.h thscraplp.h thsymbolset.h \
  thsymbolsetlist.h thlocale.h
 $(OUTDIR)/thlegenddata.o: thlegenddata.cxx thlegenddata.h
-$(OUTDIR)/thlibrary.o: thlibrary.cxx thlibrary.h thlibrarydata.cxx
-$(OUTDIR)/thlibrarydata.o: thlibrarydata.cxx
+$(OUTDIR)/thlibrary.o: thlibrary.cxx thlibrary.h thlibrarydata.cxx thdatabase.h \
+ thdataobject.h thperson.h thparse.h thbuffer.h thmbuffer.h thdate.h \
+ thdataleg.h thobjectname.h therion.h thobjectsrc.h thinfnan.h \
+ thlayoutclr.h thdb1d.h thobjectid.h thdb3d.h loch/lxMath.h thattr.h \
+ thchenc.h thchencdata.h thdb2d.h thdb2dprj.h thmapstat.h thlegenddata.h \
+ thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h \
+ thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
+ thlayout.h thsymbolset.h thsymbolsetlist.h thlocale.h thlang.h \
+ thlangdata.h thgrade.h thdata.h thtfangle.h thtf.h thtflength.h \
+ thtfpwf.h
+$(OUTDIR)/thlibrarydata.o: thlibrarydata.cxx thdatabase.h thdataobject.h thperson.h \
+ thparse.h thbuffer.h thmbuffer.h thdate.h thdataleg.h thobjectname.h \
+ therion.h thobjectsrc.h thinfnan.h thlayoutclr.h thdb1d.h thobjectid.h \
+ thdb3d.h loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h \
+ thdb2dprj.h thmapstat.h thlegenddata.h thdb2dpt.h thdb2dlp.h thdb2dab.h \
+ thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h \
+ thlayoutln.h thscrapen.h thscraplp.h thlayout.h thsymbolset.h \
+ thsymbolsetlist.h thlocale.h thlang.h thlangdata.h thgrade.h thdata.h \
+ thtfangle.h thtf.h thtflength.h thtfpwf.h
 $(OUTDIR)/thline.o: thline.cxx thline.h th2ddataobject.h thdataobject.h \
  thdatabase.h thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h \
  thdataleg.h thparse.h thobjectname.h therion.h thobjectsrc.h thdb3d.h \
@@ -777,7 +793,9 @@ $(OUTDIR)/thmap.o: thmap.cxx thmap.h thdataobject.h thdatabase.h thmbuffer.h \
  thperson.h thlegenddata.h thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h \
  thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thlayoutclr.h thscraplo.h \
  thlayoutln.h thscrapen.h thscraplp.h thexception.h thscrap.h thsketch.h \
- thpic.h thtrans.h thtflength.h thtf.h
+ thpic.h thtrans.h thtflength.h thtf.h thconfig.h thinput.h thexporter.h \
+ thexport.h thlayout.h thsymbolset.h thsymbolsetlist.h thlocale.h \
+ thselector.h
 $(OUTDIR)/thmapstat.o: thmapstat.cxx thmapstat.h thdate.h thperson.h thlegenddata.h \
  thscrap.h thdataobject.h thdatabase.h thmbuffer.h thbuffer.h thdb1d.h \
  thobjectid.h thinfnan.h thdataleg.h thparse.h thobjectname.h therion.h \
@@ -841,7 +859,7 @@ $(OUTDIR)/thpoint.o: thpoint.cxx thpoint.h th2ddataobject.h thdataobject.h \
  thexception.h thexpmap.h thexport.h thlayout.h thsymbolset.h \
  thsymbolsetlist.h thlocale.h thlang.h thlangdata.h thtflength.h thtf.h \
  thtexfonts.h thscrap.h thsketch.h thpic.h thtrans.h
-$(OUTDIR)/thproj.o: thproj.cxx thexception.h therion.h thbuffer.h
+$(OUTDIR)/thproj.o: thproj.cxx thexception.h therion.h thbuffer.h thproj.h
 $(OUTDIR)/thscrap.o: thscrap.cxx thscrap.h thdataobject.h thdatabase.h thmbuffer.h \
  thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h thparse.h \
  thobjectname.h therion.h thobjectsrc.h thdb3d.h loch/lxMath.h thattr.h \
@@ -984,3 +1002,5 @@ $(OUTDIR)/thwarppme.o: thwarppme.cxx thinfnan.h thwarppme.h thwarppdef.h therion
  thtrans.h
 $(OUTDIR)/thwarppt.o: thwarppt.cxx thwarppt.h thtrans.h thinfnan.h thwarppme.h \
  thwarppdef.h therion.h
+
+

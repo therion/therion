@@ -345,6 +345,14 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
       if (!tmps->is_temporary())
         img_write_item(pimg, img_LABEL, x_exp, stnbuf,
           dbp->db1d.station_vec[i].x, dbp->db1d.station_vec[i].y, dbp->db1d.station_vec[i].z);
+      else {
+        x_exp |= img_SFLAG_ANON;
+        if (tmps->temps == TT_TEMPSTATION_WALL)
+          x_exp |= img_SFLAG_WALL;        
+        img_write_item(pimg, img_LABEL, x_exp, "",
+          dbp->db1d.station_vec[i].x, dbp->db1d.station_vec[i].y, dbp->db1d.station_vec[i].z);
+      
+      }
     }
   }
   

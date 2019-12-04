@@ -85,7 +85,9 @@ class thconfig {
     install_tex, ///< Whether TeX is installed with therion.
     install_im, ///< Whether ImageMagick is installed with therion.
     auto_join,  ///< Whether scraps in one file should be automatically joined
-    use_maps;  ///< Whether to use map structure for output
+    use_maps,  ///< Whether to use map structure for output
+    use_maps_offset,  ///< Whether to use map's offset
+    log_extend; ///< Log extended elevation construction.
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.
   int cfg_fenc;  ///< Configuration file encoding.
