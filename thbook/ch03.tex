@@ -543,24 +543,23 @@ endlayout|
 
 \example Banded altitudes. It should generate red-blue scale with desired values.
 
-|lookup altitude -title "Altitude legend"
-700 [100 0 0] "700 m a.s.l."
-680
-660
-640
-620
-600 [0 0 100] "below 600 m"
-endlookup|
+\ \ \ \ \ |lookup altitude -title "Altitude legend"
+      700 [100 0 0] "700 m a.s.l."
+      680
+      660
+      640
+      620
+      600 [0 0 100] "below 600 m"
+    endlookup|
 \endexample
 
 \example Using banded altitude specification (with index ”banded”). Notice that if the
 text is omitted, then the default will display the range, ie 1600 m - 1500 m
 
-|lookup altitude:banded
-[1500 1600] []
- # <- displays "1600 m - 1500 m"
-[1800 1900] [] "cave floor 2"
-endlookup|
+\ \ \ \ \ |lookup altitude:banded
+      [1500 1600] []          # <- displays "1600 m - 1500 m"
+      [1800 1900] [] "cave floor 2"
+    endlookup|
 \endexample
 
 \midinsert
