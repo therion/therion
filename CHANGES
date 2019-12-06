@@ -2,6 +2,8 @@ Therion 5.4.5 (in progress):
 therion:
  * maps-offset <on|off> feature in thconfig file to disable maps drawn in offset
  * log extend feature in thconfig to log extended elevation construction
+ * added point mudcrack symbol (thanks to Rodrigo Severo)
+   
 
 --------------------------------------------------------------------------------
 

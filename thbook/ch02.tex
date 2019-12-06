@@ -728,7 +728,7 @@ Point is a command for drawing a point map symbol.
     {\it symbolic passage fills:}\[Unlike other point symbols, these are
       clipped by the scrap border. See the chapter {\it How the map is 
       put together}.]
-    |bedrock|, |sand|, |raft|, |clay|, |pebbles|,
+    |bedrock|, |sand|, |raft|, |clay|, |pebbles|, |mudcrack|,
     |debris|, |blocks|, |water|, |ice|, |guano|, |snow|;
 
     {\it speleothems:} |flowstone|, |moonmilk|, |stalactite|, |stalagmite|,
@@ -1141,6 +1141,9 @@ none, survey
   Map object simplifies the data management when selecting data for output.
   See the chapter {\it How the map is put together} for more thorough 
   explanation.
+
+  (Note: |break| only changes level of maps of scraps and has no function when
+   used with maps of maps, as they will cause a |break| implicitely)
 \enddescription
 
 \syntax
@@ -1167,7 +1170,8 @@ none, survey
     sub-map will be displayed together with preview type of its
     original position. Syntax is following:\hfil\break
     |<map reference> [<offset X> <offset Y> <units>] <above/below/none>|
-  * scraps following the |break| will be placed on another level
+  * scraps following the |break| will be placed on another level (only
+    applies to maps consisting of scraps)
   * |preview <above/below> <other map id>| will put the outline of
     the other map in the specified preview position relative to the
     current map. 

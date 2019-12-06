@@ -1463,6 +1463,10 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: point mudcrack
+en: mudcrack
+sk: popraskané blato
+
 therion: point water
 bg: вода
 ca: aigua

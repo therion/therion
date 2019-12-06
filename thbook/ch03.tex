@@ -513,6 +513,55 @@ endlayout|
   * |endcode| = should end the TeX\ and \MP\ sections
 \endcomopt
 
+\subsubchapter `lookup'.
+
+\description
+  \NEW{5.4.4} Allows to define lookup maps. They are used for defining custom coloring
+  of maps.\[see |colour| command.]
+\enddescription
+
+\syntax |lookup <type>[:<index>] [-title "custom title text"]
+  <parameter(s)> [colour] ["text in legend"]
+  ...
+endlayout|
+\endsyntax
+
+\arguments
+  * |<type>| = May be |altitude|, |explo-date|, |topo-date|, |map| or |scrap|.
+
+  * |<index>| = the index is a user defined string that allows to distinguish
+        different lookup maps for the same |type|.
+
+  * |<parameter>| = the thing, you want to set the color for, e.g. an altitude
+        with type |altitude|. May be distinct values or (if appropriate) bands.
+
+  * |[colour]| = RGB triplet. Use empty brackets (|[]|) if you want Therion to
+        use it’s default colour palette together with a text label.
+
+  * |[text in legend]| = some optional text to show in the legend.
+\endarguments
+
+\example Banded altitudes. It should generate red-blue scale with desired values.
+
+\ \ \ \ \ |lookup altitude -title "Altitude legend"
+      700 [100 0 0] "700 m a.s.l."
+      680
+      660
+      640
+      620
+      600 [0 0 100] "below 600 m"
+    endlookup|
+\endexample
+
+\example Using banded altitude specification (with index ”banded”). Notice that if the
+text is omitted, then the default will display the range, ie 1600 m - 1500 m
+
+\ \ \ \ \ |lookup altitude:banded
+      [1500 1600] []          # <- displays "1600 m - 1500 m"
+      [1800 1900] [] "cave floor 2"
+    endlookup|
+\endexample
+
 \midinsert
 %  \ifx\pdfoutput\undefined\else
 %    \pdfximage {pic/page.pdf}%

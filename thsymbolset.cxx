@@ -417,6 +417,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_FLUTE,SYMP_FLUTE);
         cp3(TT_POINT_TYPE_GRADIENT,SYMP_GRADIENT);
         cp3(TT_POINT_TYPE_GUANO,SYMP_GUANO);
+        cp3(TT_POINT_TYPE_MUDCRACK,SYMP_MUDCRACK);
         cp3(TT_POINT_TYPE_GYPSUM,SYMP_GYPSUM);
         cp3(TT_POINT_TYPE_GYPSUM_FLOWER,SYMP_GYPSUMFLOWER);
         cp3(TT_POINT_TYPE_HELICTITE,SYMP_HELICTITE);
@@ -676,6 +677,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(7,SYMP_RAFT);
     group(8,SYMP_RAFTCONE);
     group(9,SYMP_GUANO);
+    group(10,SYMP_MUDCRACK);
     egroup
 
 
@@ -705,6 +707,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(22,SYMA_PEBBLES)
     group(23,SYMA_SAND)
     group(24,SYMA_SNOW)
+    group(25,SYMP_MUDCRACK)
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -1165,6 +1168,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_DEBRIS,thT("point debris",layout->lang));
   legend_point(SYMP_SAND,thT("point sand",layout->lang));
   legend_point(SYMP_CLAY,thT("point clay",layout->lang));
+  legend_point(SYMP_MUDCRACK,thT("point mudcrack",layout->lang));
   legend_point(SYMP_WATER,thT("point water",layout->lang));
   legend_point(SYMP_ICE,thT("point ice",layout->lang));
   legend_point(SYMP_SNOW,thT("point snow",layout->lang));
