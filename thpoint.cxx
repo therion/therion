@@ -837,6 +837,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_ICE,SYMP_ICE)
     thpoint_type_export_mp(TT_POINT_TYPE_SNOW,SYMP_SNOW)
     thpoint_type_export_mp(TT_POINT_TYPE_GUANO,SYMP_GUANO)
+    thpoint_type_export_mp(TT_POINT_TYPE_MUDCRACK,SYMP_MUDCRACK)
 
 // ina vypln
     thpoint_type_export_mp(TT_POINT_TYPE_ARCHEO_MATERIAL,SYMP_ARCHEOMATERIAL)

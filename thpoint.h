@@ -199,6 +199,7 @@ enum {
   TT_POINT_TYPE_SNOW,
   TT_POINT_TYPE_GUANO,
   TT_POINT_TYPE_CLAY_TREE,
+  TT_POINT_TYPE_MUDCRACK,
 
 
 // ina vypln
@@ -260,6 +261,7 @@ static const thstok thtt_point_types[] = {
   {"low-end",TT_POINT_TYPE_LOW_END},
   {"map-connection",TT_POINT_TYPE_MAP_CONNECTION},
   {"moonmilk",TT_POINT_TYPE_MOONMILK},
+  {"mudcrack",TT_POINT_TYPE_MUDCRACK},
   {"narrow-end",TT_POINT_TYPE_NARROW_END},
   {"no-equipment",TT_POINT_TYPE_NO_EQUIPMENT},
   {"paleo-material",TT_POINT_TYPE_PALEO_MATERIAL},

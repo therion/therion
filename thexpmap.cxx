@@ -2448,6 +2448,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             case TT_POINT_TYPE_WATER:
             case TT_POINT_TYPE_ICE:
             case TT_POINT_TYPE_GUANO:
+            case TT_POINT_TYPE_MUDCRACK:
               obj->tags |= TT_2DOBJ_TAG_CLIP_ON;
               break;
           }
