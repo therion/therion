@@ -621,7 +621,7 @@ proc xth_app_maximize {} {
   set shg [winfo screenheight $xth(gui,main)]
   wm geometry $xth(gui,main) [format "%dx%d+0+0" $swd $shg]
   update idletasks
-  regexp {([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)} [winfo geometry $xth(gui,main)] geom xsize ysize xshft yshft
+  regexp {([0-9]+)x([0-9]+)\+(-?[0-9]+)\+(-?[0-9]+)} [winfo geometry $xth(gui,main)] geom xsize ysize xshft yshft
   wm geometry $xth(gui,main) [format "%dx%d+0+0" [expr $swd - $xshft] [expr $shg - $yshft]]
   update idletasks
 }
@@ -640,7 +640,7 @@ proc xth_app_normalize {} {
   set tpy [expr int(0.5 * ([winfo screenheight $xth(gui,main)] - $thg))]
   wm geometry $xth(gui,main) [format "%dx%d+%d+%d" $twd $thg $tpx $tpy]
   update idletasks
-  regexp {([0-9]+)x([0-9]+)\+([0-9]+)\+([0-9]+)} [winfo geometry $xth(gui,main)] geom xsize ysize xshft yshft
+  regexp {([0-9]+)x([0-9]+)\+(-?[0-9]+)\+(-?[0-9]+)} [winfo geometry $xth(gui,main)] geom xsize ysize xshft yshft
   wm geometry $xth(gui,main) [format "%dx%d+%d+%d" [expr $twd - $xshft + $tpx] \
     [expr $thg - $yshft + $tpy] $tpx $tpy]
   update idletasks
