@@ -1463,6 +1463,10 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: point masonry
+en: masonry
+pt: alvenaria
+
 therion: point mudcrack
 en: mudcrack
 pt: lama rachada
