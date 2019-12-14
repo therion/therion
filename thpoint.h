@@ -265,7 +265,7 @@ static const thstok thtt_point_types[] = {
   {"mudcrack",TT_POINT_TYPE_MUDCRACK},
   {"narrow-end",TT_POINT_TYPE_NARROW_END},
   {"no-equipment",TT_POINT_TYPE_NO_EQUIPMENT},
-  {"not wheelchair accessible",TT_POINT_TYPE_NOTWHEELCHAIR},
+  {"notwheelchair",TT_POINT_TYPE_NOTWHEELCHAIR},
   {"paleo-material",TT_POINT_TYPE_PALEO_MATERIAL},
   {"passage-height",TT_POINT_TYPE_PASSAGE_HEIGHT},
   {"pebbles",TT_POINT_TYPE_PEBBLES},
