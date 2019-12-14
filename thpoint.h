@@ -145,6 +145,7 @@ enum {
   TT_POINT_TYPE_CAMP,
   TT_POINT_TYPE_DIG,
 	TT_POINT_TYPE_HANDRAIL,
+  TT_POINT_TYPE_NOTWHEELCHAIR,
 
 // ukoncenia chodby
   TT_POINT_TYPE_CONTINUATION,
@@ -264,6 +265,7 @@ static const thstok thtt_point_types[] = {
   {"mudcrack",TT_POINT_TYPE_MUDCRACK},
   {"narrow-end",TT_POINT_TYPE_NARROW_END},
   {"no-equipment",TT_POINT_TYPE_NO_EQUIPMENT},
+  {"not wheelchair accessible",TT_POINT_TYPE_NOTWHEELCHAIR},
   {"paleo-material",TT_POINT_TYPE_PALEO_MATERIAL},
   {"passage-height",TT_POINT_TYPE_PASSAGE_HEIGHT},
   {"pebbles",TT_POINT_TYPE_PEBBLES},
