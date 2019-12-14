@@ -102,7 +102,7 @@ EGB_mud_crack := EGB_mud_crack_raw shifted (-(llcorner EGB_mud_crack_raw)-(urcor
 
 def p_mudcrack_EGB(expr pos, theta, sc, al) =
     U:=(.5u,.5u);
-	T:=identity aligned al rotated theta scaled sc shifted pos;
+	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_mud_crack;
 enddef;
 
