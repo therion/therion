@@ -785,6 +785,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_HANDRAIL,SYMP_HANDRAIL)
     thpoint_type_export_mp(TT_POINT_TYPE_VIA_FERRATA,SYMP_VIAFERRATA)
     thpoint_type_export_mp(TT_POINT_TYPE_NOTWHEELCHAIR,SYMP_NOTWHEELCHAIR)
+    thpoint_type_export_mp(TT_POINT_TYPE_WHEELCHAIR,SYMP_WHEELCHAIR)
 
 // ukoncenia chodby
     thpoint_type_export_mp(TT_POINT_TYPE_NARROW_END,SYMP_NARROWEND)
