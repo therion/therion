@@ -107,6 +107,27 @@ def p_mudcrack_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+picture EGB_nameplate_raw;
+EGB_nameplate_raw := image(
+	pickup pencircle scaled 24bp;
+	linecap := butt;
+	linejoin := mitered;
+	draw (77.027298,563.448975)--(505.574005,563.448975)--(505.574005,340.082001)
+		--(77.027298,340.082001)--cycle;
+	pickup pencircle scaled 10bp;
+	draw (208.195007,496.167999)--(422.667999,496.167999);
+	draw (117.796997,450.808990)--(358.480011,450.808990);
+	draw (264.453003,401.781006)--(470.472992,401.781006);
+);
+picture EGB_nameplate;
+EGB_nameplate := EGB_nameplate_raw shifted (-(llcorner EGB_nameplate_raw)-(urcorner EGB_nameplate_raw - llcorner EGB_nameplate_raw)/2) scaled (u / max((xpart urcorner EGB_nameplate_raw) - (xpart llcorner EGB_nameplate_raw), (ypart urcorner EGB_nameplate_raw) - (ypart llcorner EGB_nameplate_raw)));
+
+def p_nameplate_EGB(expr pos, theta, sc, al) = 
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	thdraw EGB_nameplate;
+enddef;
+
+
 picture EGB_notwheelchair_raw;
 EGB_notwheelchair_raw := image(
 	linecap := butt;

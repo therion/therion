@@ -1468,6 +1468,10 @@ en: mudcrack
 pt: lama rachada
 sk: popraskané blato
 
+therion: point nameplate
+en: nameplate
+pt: placa de identificação
+
 therion: point notwheelchair
 en: not wheelchair accessible
 pt: não acessível com cadeira de rodas
