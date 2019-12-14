@@ -1465,6 +1465,7 @@ zh_CN: 粘土
 
 therion: point mudcrack
 en: mudcrack
+pt: lama rachada
 sk: popraskané blato
 
 therion: point notwheelchair
