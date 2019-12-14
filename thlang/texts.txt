@@ -1463,6 +1463,10 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: point gate
+en: gate
+pt: portão
+
 therion: point masonry
 en: masonry
 pt: alvenaria
