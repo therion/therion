@@ -1463,6 +1463,10 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: point ex-voto
+en: ex-voto
+pt: ex-voto
+
 therion: point gate
 en: gate
 pt: portão
