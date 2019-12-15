@@ -57,6 +57,7 @@ let p_archeomaterial = p_archeomaterial_UIS;
 let p_paleomaterial = p_paleomaterial_UIS;
 let p_guano = p_guano_UIS;
 let p_altar = p_altar_EGB;
+let p_danger = p_danger_EGB;
 let p_electriclight = p_electriclight_EGB;
 let p_exvoto = p_exvoto_EGB;
 let p_gate = p_gate_EGB;
