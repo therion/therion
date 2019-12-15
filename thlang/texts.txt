@@ -1479,6 +1479,10 @@ therion: point gate
 en: gate
 pt: portão
 
+therion: point human-bone
+en: human bone
+pt: osso humano
+
 therion: point masonry
 en: masonry
 pt: alvenaria
