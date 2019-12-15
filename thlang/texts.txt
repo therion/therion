@@ -1475,6 +1475,10 @@ therion: point audio
 en: audio
 pt: áudio
 
+therion: point bat
+en: bat
+pt: morcego
+
 therion: point danger
 en: danger
 pt: perigo
