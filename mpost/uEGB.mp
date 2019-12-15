@@ -1073,6 +1073,24 @@ def p_treetrunk_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+picture EGB_volcano_raw;
+EGB_volcano_raw := image(
+	pickup pencircle scaled 21.160601bp;
+	linecap := butt;
+	linejoin := beveled;
+	draw (36.671902,222.897995)--(169.684006,567.409973)..controls (177.815994,510.679993) and (212.089996,485.109009)..(265.714996,485.109009)
+		..controls (319.335999,485.109009) and (353.609009,510.679993)..(361.742004,567.409973)
+		--(494.753998,222.897995);
+);
+picture EGB_volcano;
+EGB_volcano := EGB_volcano_raw shifted (-(llcorner EGB_volcano_raw)-(urcorner EGB_volcano_raw - llcorner EGB_volcano_raw)/2) scaled (u / max((xpart urcorner EGB_volcano_raw) - (xpart llcorner EGB_volcano_raw), (ypart urcorner EGB_volcano_raw) - (ypart llcorner EGB_volcano_raw)));
+
+def p_volcano_EGB(expr pos, theta, sc, al) =
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	thdraw EGB_volcano;
+enddef;
+
+
 picture EGB_walkway_raw;
 EGB_walkway_raw := image(
 	linecap := butt;
