@@ -213,6 +213,7 @@ enum {
   TT_POINT_TYPE_SNOW,
   TT_POINT_TYPE_GUANO,
   TT_POINT_TYPE_CLAY_TREE,
+  TT_POINT_TYPE_MUD,
   TT_POINT_TYPE_MUDCRACK,
 
 
@@ -283,6 +284,7 @@ static const thstok thtt_point_types[] = {
   {"masonry",TT_POINT_TYPE_MASONRY},
   {"minus",TT_POINT_TYPE_MINUS},
   {"moonmilk",TT_POINT_TYPE_MOONMILK},
+  {"mud",TT_POINT_TYPE_MUD},
   {"mudcrack",TT_POINT_TYPE_MUDCRACK},
   {"nameplate",TT_POINT_TYPE_NAMEPLATE},
   {"narrow-end",TT_POINT_TYPE_NARROW_END},

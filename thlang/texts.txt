@@ -1495,6 +1495,10 @@ therion: point minus
 en: minus
 pt: segue abaixo
 
+therion: point mud
+en: mud
+pt: lama
+
 therion: point mudcrack
 en: mudcrack
 pt: lama rachada
