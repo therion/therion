@@ -1491,6 +1491,10 @@ therion: point danger
 en: danger
 pt: perigo
 
+therion: point disc-stalactite
+en: disc on stalactite
+pt: disco em estalactite
+
 therion: point electric-light
 en: electric light
 pt: luz elétrica

@@ -424,6 +424,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_BONE,SYMP_BONE);
         cp3(TT_POINT_TYPE_CURTAINS,SYMP_CURTAINS);
         cp3(TT_POINT_TYPE_DANGER,SYMP_DANGER);
+        cp3(TT_POINT_TYPE_DISCSTALACTITE,SYMP_DISCSTALACTITE);
         cp3(TT_POINT_TYPE_ELECTRICLIGHT,SYMP_ELECTRICLIGHT);
         cp3(TT_POINT_TYPE_EXVOTO,SYMP_EXVOTO);
         cp3(TT_POINT_TYPE_GATE,SYMP_GATE);
@@ -693,10 +694,11 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(24,SYMP_HELICTITES);
     group(25,SYMP_STALACTITESTALAGMITE);
     group(26,SYMP_STALACTITESSTALAGMITES);
-    group(27,SYML_FLOWSTONE);
-    group(28,SYML_MOONMILK);
-    group(29,SYMA_FLOWSTONE)
-    group(30,SYMA_MOONMILK)
+    group(27,SYMP_DISCSTALACTITE);
+    group(28,SYML_FLOWSTONE);
+    group(29,SYML_MOONMILK);
+    group(30,SYMA_FLOWSTONE)
+    group(31,SYMA_MOONMILK)
     egroup
 
 
@@ -1391,6 +1393,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_BONE,thT("point bone",layout->lang));
   legend_point(SYMP_CURTAINS,thT("point curtains",layout->lang));
   legend_point(SYMP_DANGER,thT("point danger",layout->lang));
+  legend_point(SYMP_DISCSTALACTITE,thT("point disc-stalactite",layout->lang));
   legend_point(SYMP_ELECTRICLIGHT,thT("point electric-light",layout->lang));
   legend_point(SYMP_EXVOTO,thT("point ex-voto",layout->lang));
   legend_point(SYMP_GATE,thT("point gate",layout->lang));
