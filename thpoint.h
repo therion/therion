@@ -155,6 +155,8 @@ enum {
   TT_POINT_TYPE_MINUS,
   TT_POINT_TYPE_NAMEPLATE,
   TT_POINT_TYPE_NOTWHEELCHAIR,
+  TT_POINT_TYPE_PLUS,
+  TT_POINT_TYPE_PLUSMINUS,
   TT_POINT_TYPE_WALKWAY,
   TT_POINT_TYPE_WHEELCHAIR,
 
@@ -291,6 +293,8 @@ static const thstok thtt_point_types[] = {
   {"pebbles",TT_POINT_TYPE_PEBBLES},
   {"pillar",TT_POINT_TYPE_PILLAR},
   {"pillars",TT_POINT_TYPE_PILLARS},
+  {"plus",TT_POINT_TYPE_PLUS},
+  {"plus-minus",TT_POINT_TYPE_PLUSMINUS},
   {"popcorn",TT_POINT_TYPE_POPCORN},
   {"raft",TT_POINT_TYPE_RAFT},
   {"raft-cone",TT_POINT_TYPE_RAFT_CONE},
