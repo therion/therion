@@ -204,7 +204,7 @@ enum {
   TT_POINT_TYPE_STALACTITES,
   TT_POINT_TYPE_STALAGMITES,
   TT_POINT_TYPE_PILLARS,
-
+  TT_POINT_TYPE_PENDANT,
   
 // plosne vyplne
   TT_POINT_TYPE_BEDROCK,
@@ -303,6 +303,7 @@ static const thstok thtt_point_types[] = {
   {"paleo-material",TT_POINT_TYPE_PALEO_MATERIAL},
   {"passage-height",TT_POINT_TYPE_PASSAGE_HEIGHT},
   {"pebbles",TT_POINT_TYPE_PEBBLES},
+  {"pendant",TT_POINT_TYPE_PENDANT},
   {"photo",TT_POINT_TYPE_PHOTO},
   {"pillar",TT_POINT_TYPE_PILLAR},
   {"pillars",TT_POINT_TYPE_PILLARS},

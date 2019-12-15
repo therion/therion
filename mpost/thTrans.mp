@@ -72,6 +72,7 @@ let p_mud = p_mud_EGB;
 let p_mudcrack = p_mudcrack_EGB;
 let p_nameplate = p_nameplate_EGB;
 let p_notwheelchair = p_notwheelchair_EGB;
+let p_pendant = p_pendant_EGB;
 let p_photo = p_photo_EGB;
 let p_plus = p_plus_EGB;
 let p_plusminus = p_plusminus_EGB;

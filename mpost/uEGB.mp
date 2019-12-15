@@ -872,6 +872,27 @@ def p_notwheelchair_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+picture EGB_pendant_raw;
+EGB_pendant_raw := image(
+	pickup pencircle scaled 22.011000bp;
+	linecap := butt;
+	linejoin := mitered;
+	draw (476.980011,639.585999)..controls (471.453003,639.585999) and (422.562988,621.965027)..(428.812988,575.375000)
+		..controls (434.457001,533.296997) and (506.785004,503.894989)..(505.894989,457.292999)
+		..controls (502.128998,260.425995) and (383.000000,164.895004)..(289.718994,164.895004)
+		..controls (196.440994,164.895004) and (77.312500,260.425995)..(73.546898,457.292999)
+		..controls (72.656303,503.894989) and (144.983994,533.296997)..(150.628998,575.375000)
+		..controls (156.875000,621.965027) and (107.987999,639.585999)..(102.460999,639.585999);
+);
+picture EGB_pendant;
+EGB_pendant := EGB_pendant_raw shifted (-(llcorner EGB_pendant_raw)-(urcorner EGB_pendant_raw - llcorner EGB_pendant_raw)/2) scaled (u / max((xpart urcorner EGB_pendant_raw) - (xpart llcorner EGB_pendant_raw), (ypart urcorner EGB_pendant_raw) - (ypart llcorner EGB_pendant_raw)));
+
+def p_pendant_EGB(expr pos, theta, sc, al) =
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	thdraw EGB_pendant;
+enddef;
+
+
 picture EGB_photo_raw;
 EGB_photo_raw := image(
 	linecap := butt;

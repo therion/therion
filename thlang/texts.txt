@@ -1528,6 +1528,10 @@ therion: point notwheelchair
 en: not wheelchair accessible
 pt: não acessível com cadeira de rodas
 
+therion: point pendant
+en: pendant
+pt: pendente
+
 therion: point photo
 en: photo
 pt: foto
