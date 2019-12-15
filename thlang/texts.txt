@@ -1491,6 +1491,10 @@ therion: point danger
 en: danger
 pt: perigo
 
+therion: point disc-pillar
+en: disc on pillar
+pt: disco em coluna
+
 therion: point disc-stalactite
 en: disc on stalactite
 pt: disco em estalactite
