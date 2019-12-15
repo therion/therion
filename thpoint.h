@@ -145,6 +145,7 @@ enum {
   TT_POINT_TYPE_CAMP,
   TT_POINT_TYPE_DIG,
 	TT_POINT_TYPE_HANDRAIL,
+  TT_POINT_TYPE_ALTAR,
   TT_POINT_TYPE_ELECTRICLIGHT,
   TT_POINT_TYPE_EXVOTO,
   TT_POINT_TYPE_GATE,
@@ -225,6 +226,7 @@ enum {
  
 static const thstok thtt_point_types[] = {
   {"air-draught",TT_POINT_TYPE_AIR_DRAUGHT},
+  {"altar",TT_POINT_TYPE_ALTAR},
   {"altitude",TT_POINT_TYPE_ALTITUDE},
   {"anastomosis",TT_POINT_TYPE_ANASTOMOSIS},
   {"anchor",TT_POINT_TYPE_ANCHOR},
