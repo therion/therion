@@ -1076,6 +1076,17 @@ def p_seedgermination_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+def p_stalactitestalagmite_EGB(expr pos,theta,sc,al) =
+	U:=(.15u, .4u);
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	pickup PenC;
+	thdraw (-.15u,.4u) -- (0,.2u) -- (.15u,.4u);
+	thdraw (.15u,-.4u) -- (0,-.2u) -- (-.15u,-.4u);
+	thdraw (0,-.2u) -- (0,-.05u);
+	thdraw (0,.2u) -- (0,.05u);
+enddef;
+
+
 picture EGB_tree_trunk_raw;
 EGB_tree_trunk_raw := image(
 	linecap := butt;

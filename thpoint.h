@@ -210,6 +210,7 @@ enum {
   TT_POINT_TYPE_PENDANT,
   TT_POINT_TYPE_PILLARWITHCURTAINS,
   TT_POINT_TYPE_PILLARSWITHCURTAINS,
+  TT_POINT_TYPE_STALACTITESTALAGMITE,
   TT_POINT_TYPE_VOLCANO,
   
 // plosne vyplne
@@ -337,6 +338,7 @@ static const thstok thtt_point_types[] = {
   {"soda-straw",TT_POINT_TYPE_SODA_STRAW},
   {"spring",TT_POINT_TYPE_SPRING},
   {"stalactite",TT_POINT_TYPE_STALACTITE},
+  {"stalactite-stalagmite",TT_POINT_TYPE_STALACTITESTALAGMITE},
   {"stalactites",TT_POINT_TYPE_STALACTITES},
   {"stalagmite",TT_POINT_TYPE_STALAGMITE},
   {"stalagmites",TT_POINT_TYPE_STALAGMITES},
