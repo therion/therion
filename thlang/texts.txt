@@ -1524,6 +1524,10 @@ therion: point walkway
 en: walkway
 pt: passarela
 
+therion: point water-drip
+en: water-drip
+pt: gotejamento
+
 therion: point wheelchair
 en: wheelchair accessible
 pt: acessível com cadeira de rodas
