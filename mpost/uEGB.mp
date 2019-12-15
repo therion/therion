@@ -397,6 +397,26 @@ def p_masonry_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+picture EGB_minus_raw;
+EGB_minus_raw := image(
+	fill (294.660004,411.578003)--(307.644989,411.578003)--(307.644989,407.625000)
+		--(294.660004,407.625000)--cycle;
+	pickup pencircle scaled 1.285130bp;
+	draw (314.710999,409.601990)..controls (314.710999,402.113007) and (308.640991,396.042999)..(301.152008,396.042999)
+		..controls (293.664001,396.042999) and (287.593994,402.113007)..(287.593994,409.601990)
+		..controls (287.593994,417.089996) and (293.664001,423.160004)..(301.152008,423.160004)
+		..controls (308.640991,423.160004) and (314.710999,417.089996)..(314.710999,409.601990)
+		--cycle withcolor black;
+);
+picture EGB_minus;
+EGB_minus := EGB_minus_raw shifted (-(llcorner EGB_minus_raw)-(urcorner EGB_minus_raw - llcorner EGB_minus_raw)/2) scaled (u / max((xpart urcorner EGB_minus_raw) - (xpart llcorner EGB_minus_raw), (ypart urcorner EGB_minus_raw) - (ypart llcorner EGB_minus_raw)));
+
+def p_minus_EGB(expr pos, theta, sc, al) =
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	thdraw EGB_minus;
+enddef;
+
+
 picture EGB_mud_crack_raw;
 EGB_mud_crack_raw := image(
 	linecap := butt;

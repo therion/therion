@@ -1491,6 +1491,10 @@ therion: point masonry
 en: masonry
 pt: alvenaria
 
+therion: point minus
+en: minus
+pt: segue abaixo
+
 therion: point mudcrack
 en: mudcrack
 pt: lama rachada

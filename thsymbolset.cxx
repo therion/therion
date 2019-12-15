@@ -424,6 +424,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_GATE,SYMP_GATE);
         cp3(TT_POINT_TYPE_HUMANBONE,SYMP_HUMANBONE);
         cp3(TT_POINT_TYPE_MASONRY,SYMP_MASONRY);
+        cp3(TT_POINT_TYPE_MINUS,SYMP_MINUS);
         cp3(TT_POINT_TYPE_MUDCRACK,SYMP_MUDCRACK);
         cp3(TT_POINT_TYPE_NAMEPLATE,SYMP_NAMEPLATE);
         cp3(TT_POINT_TYPE_NOTWHEELCHAIR,SYMP_NOTWHEELCHAIR);
@@ -1359,6 +1360,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_GATE,thT("point gate",layout->lang));
   legend_point(SYMP_HUMANBONE,thT("point human-bone",layout->lang));
   legend_point(SYMP_MASONRY,thT("point masonry",layout->lang));
+  legend_point(SYMP_MINUS,thT("point minus",layout->lang));
   legend_point(SYMP_NAMEPLATE,thT("point nameplate",layout->lang));
   legend_point(SYMP_NOTWHEELCHAIR,thT("point notwheelchair",layout->lang));
   legend_point(SYMP_WALKWAY,thT("point walkway",layout->lang));
