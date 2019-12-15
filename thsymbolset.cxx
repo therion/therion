@@ -639,10 +639,8 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(18,SYMP_WHEELCHAIR);
     group(19,SYMP_WALKWAY);
     group(20,SYMP_NAMEPLATE);
-    group(21,SYMP_MASONRY);
-    group(22,SYMP_GATE);
-    group(23,SYMP_EXVOTO);
-    group(24,SYMP_ELECTRICLIGHT);
+    group(21,SYMP_GATE);
+    group(22,SYMP_ELECTRICLIGHT);
     egroup
 
     bgroup(SYMX_SPELEOTHEMS)
