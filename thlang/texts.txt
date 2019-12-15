@@ -1479,6 +1479,10 @@ therion: point bat
 en: bat
 pt: morcego
 
+therion: point bone
+en: bone
+pt: osso
+
 therion: point danger
 en: danger
 pt: perigo
