@@ -1568,6 +1568,10 @@ therion: point stalactite-stalagmite
 en: stalactite-stalagmite
 pt: estalactite-estalagmite
 
+therion: point stalactites-stalagmites
+en: stalactites-stalagmites
+pt: estalactites-estalagmites
+
 therion: point tree-trunk
 en: tree-trunk
 pt: tronco de árvore

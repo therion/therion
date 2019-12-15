@@ -442,6 +442,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_PLUSMINUS,SYMP_PLUSMINUS);
         cp3(TT_POINT_TYPE_SEEDGERMINATION,SYMP_SEEDGERMINATION);
         cp3(TT_POINT_TYPE_STALACTITESTALAGMITE,SYMP_STALACTITESTALAGMITE);
+        cp3(TT_POINT_TYPE_STALACTITESSTALAGMITES,SYMP_STALACTITESSTALAGMITES);
         cp3(TT_POINT_TYPE_TREETRUNK,SYMP_TREETRUNK);
         cp3(TT_POINT_TYPE_VOLCANO,SYMP_VOLCANO);
         cp3(TT_POINT_TYPE_WALKWAY,SYMP_WALKWAY);
@@ -691,10 +692,11 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(23,SYMP_CURTAINS);
     group(24,SYMP_HELICTITES);
     group(25,SYMP_STALACTITESTALAGMITE);
-    group(26,SYML_FLOWSTONE);
-    group(27,SYML_MOONMILK);
-    group(28,SYMA_FLOWSTONE)
-    group(29,SYMA_MOONMILK)
+    group(26,SYMP_STALACTITESSTALAGMITES);
+    group(27,SYML_FLOWSTONE);
+    group(28,SYML_MOONMILK);
+    group(29,SYMA_FLOWSTONE)
+    group(30,SYMA_MOONMILK)
     egroup
 
 
@@ -1406,6 +1408,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_PLUSMINUS,thT("point plus-minus",layout->lang));
   legend_point(SYMP_SEEDGERMINATION,thT("point seed-germination",layout->lang));
   legend_point(SYMP_STALACTITESTALAGMITE,thT("point stalactite-stalagmite",layout->lang));
+  legend_point(SYMP_STALACTITESSTALAGMITES,thT("point stalactites-stalagmites",layout->lang));
   legend_point(SYMP_TREETRUNK,thT("point tree-trunk",layout->lang));
   legend_point(SYMP_VOLCANO,thT("point volcano",layout->lang));
   legend_point(SYMP_WALKWAY,thT("point walkway",layout->lang));
