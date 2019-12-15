@@ -893,6 +893,16 @@ def p_pendant_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+def p_pillarwithcurtains_EGB(expr pos, theta, sc, al) =
+	U:=(.15u,.5u);
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	pickup PenC;
+	thdraw (0,.25u)--(0,.1u){dir 180}..(-.1u,0)..{dir 0}(0,-.1u)--(0,-.25u);
+	thdraw (-.15u,-.5u)--(0,-.25u)--(.15u,-.5u);
+	thdraw (-.15u,.5u)--(0,.25u)--(.15u,.5u);
+enddef;
+
+
 def p_pillarswithcurtains_EGB(expr pos, theta, sc, al) =
 	U:=(.3u,u);
 	pickup PenC;
