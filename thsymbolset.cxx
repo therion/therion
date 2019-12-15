@@ -422,6 +422,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_AUDIO,SYMP_AUDIO);
         cp3(TT_POINT_TYPE_BAT,SYMP_BAT);
         cp3(TT_POINT_TYPE_BONE,SYMP_BONE);
+        cp3(TT_POINT_TYPE_CURTAINS,SYMP_CURTAINS);
         cp3(TT_POINT_TYPE_DANGER,SYMP_DANGER);
         cp3(TT_POINT_TYPE_ELECTRICLIGHT,SYMP_ELECTRICLIGHT);
         cp3(TT_POINT_TYPE_EXVOTO,SYMP_EXVOTO);
@@ -685,10 +686,11 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(20,SYMP_PILLARS);
     group(21,SYMP_PILLARSWITHCURTAINS);
     group(22,SYMP_PILLARWITHCURTAINS);
-    group(23,SYML_FLOWSTONE);
-    group(24,SYML_MOONMILK);
-    group(25,SYMA_FLOWSTONE)
-    group(26,SYMA_MOONMILK)
+    group(23,SYMP_CURTAINS);
+    group(24,SYML_FLOWSTONE);
+    group(25,SYML_MOONMILK);
+    group(26,SYMA_FLOWSTONE)
+    group(27,SYMA_MOONMILK)
     egroup
 
 
@@ -1380,6 +1382,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_AUDIO,thT("point audio",layout->lang));
   legend_point(SYMP_BAT,thT("point bat",layout->lang));
   legend_point(SYMP_BONE,thT("point bone",layout->lang));
+  legend_point(SYMP_CURTAINS,thT("point curtains",layout->lang));
   legend_point(SYMP_DANGER,thT("point danger",layout->lang));
   legend_point(SYMP_ELECTRICLIGHT,thT("point electric-light",layout->lang));
   legend_point(SYMP_EXVOTO,thT("point ex-voto",layout->lang));

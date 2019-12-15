@@ -227,6 +227,17 @@ def p_bone_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+def p_curtains_EGB(expr pos, theta, sc, al) =
+	U:=(.3u, .8u);
+	pickup PenC;
+	for i=-1 upto 1:
+		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		thdraw (-.15u,.4u)--(0,.15u)--(.15u,.4u);
+		thdraw (0,.15u)--(0,0){dir 180}..(-.12u,-.11u)..{dir 0}(0,-.22u)--(0,-.4u);
+	endfor;
+enddef;
+
+
 picture EGB_danger_raw;
 EGB_danger_raw := image(
 	linecap := butt;
