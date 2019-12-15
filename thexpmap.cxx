@@ -877,8 +877,8 @@ void thexpmap::export_th2(class thdb2dprj * prj)
             if (srcgif != NULL) {              
               size_t cpch, retcode;
               thbuffer com;
-              char prevbf[10];
-              snprintf(&(prevbf[0]),10,"%03d",sknum);
+              char prevbf[11];
+              snprintf(&(prevbf[0]),11,"%03d",sknum);
               // Let's copy results and log-file to working directory
 #ifdef THWIN32
               com = "copy \"";
