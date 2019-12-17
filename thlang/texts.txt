@@ -1495,6 +1495,10 @@ therion: point disc-pillar
 en: disc on pillar
 pt: disco em coluna
 
+therion: point discs-pillars
+en: discs on pillars
+pt: discos em colunas
+
 therion: point disc-stalactite
 en: disc on stalactite
 pt: disco em estalactite

@@ -285,6 +285,19 @@ def p_discpillar_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
+def p_discspillars_EGB(expr pos,theta,sc,al) =
+	U:=(.3u, .8u);
+	pickup PenC;
+	for i=-1 upto 1:
+		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		thdraw (-.15u,.4u) -- (0,.15u) -- (0,-.15u) -- (-.15u,-.4u);
+		thdraw (0,-.15u) -- (.15u,-.4u);
+		thdraw (0,.15u) -- (.15u,.4u);
+		thdraw (-.15u,0) -- (.15u,0);
+	endfor;
+enddef;
+
+
 def p_discsstalactites_EGB(expr pos,theta,sc,al) =
 	U:=(.3u, .8u);
 	pickup PenC;

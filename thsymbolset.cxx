@@ -425,6 +425,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_CURTAINS,SYMP_CURTAINS);
         cp3(TT_POINT_TYPE_DANGER,SYMP_DANGER);
         cp3(TT_POINT_TYPE_DISCPILLAR,SYMP_DISCPILLAR);
+        cp3(TT_POINT_TYPE_DISCSPILLARS,SYMP_DISCSPILLARS);
         cp3(TT_POINT_TYPE_DISCSSTALACTITES,SYMP_DISCSSTALACTITES);
         cp3(TT_POINT_TYPE_DISCSSTALAGMITES,SYMP_DISCSSTALAGMITES);
         cp3(TT_POINT_TYPE_DISCSTALACTITE,SYMP_DISCSTALACTITE);
@@ -703,10 +704,11 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(29,SYMP_DISCPILLAR);
     group(30,SYMP_DISCSSTALACTITES);
     group(31,SYMP_DISCSSTALAGMITES);
-    group(32,SYML_FLOWSTONE);
-    group(33,SYML_MOONMILK);
-    group(34,SYMA_FLOWSTONE)
-    group(35,SYMA_MOONMILK)
+    group(32,SYMP_DISCSPILLARS);
+    group(33,SYML_FLOWSTONE);
+    group(34,SYML_MOONMILK);
+    group(35,SYMA_FLOWSTONE);
+    group(36,SYMA_MOONMILK);
     egroup
 
 
@@ -1402,6 +1404,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_CURTAINS,thT("point curtains",layout->lang));
   legend_point(SYMP_DANGER,thT("point danger",layout->lang));
   legend_point(SYMP_DISCPILLAR,thT("point disc-pillar",layout->lang));
+  legend_point(SYMP_DISCSPILLARS,thT("point discs-pillars",layout->lang));
   legend_point(SYMP_DISCSSTALACTITES,thT("point discs-stalactites",layout->lang));
   legend_point(SYMP_DISCSSTALAGMITES,thT("point discs-stalagmites",layout->lang));
   legend_point(SYMP_DISCSTALACTITE,thT("point disc-stalactite",layout->lang));
