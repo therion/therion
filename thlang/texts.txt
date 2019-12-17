@@ -1507,6 +1507,10 @@ therion: point disc-stalagmite
 en: disc on stalagmite
 pt: disco em estalagmite
 
+therion: point discs-stalagmites
+en: discs on stalagmites
+pt: discos em estalagmites
+
 therion: point electric-light
 en: electric light
 pt: luz elétrica
