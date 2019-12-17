@@ -458,6 +458,23 @@ def p_gate_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+def p_helictites_EGB(expr pos,theta,sc,al) =
+	U:=(.4u,.8u);
+	pickup PenC;
+	for i=-1 upto 1:
+		if i < 0:
+			T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .45u, abs(i) * .15u));
+		else:
+			T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		fi;
+		thdraw (0,.4u)--(0,-.4u);
+		p := (-.2u,.4u)---(-.2u,.1u){down}..{dir -10}(-.1u,0.02u)---origin;
+		thdraw p;
+		thdraw p reflectedabout (origin,(0,u)) reflectedabout (origin,(u,0));
+	endfor;
+enddef;
+
+
 picture EGB_human_bone_raw;
 EGB_human_bone_raw := image(
 	% Bottom left bone

@@ -1503,6 +1503,10 @@ therion: point gate
 en: gate
 pt: portão
 
+therion: point helictites
+en: helictites
+pt: helictites
+
 therion: point human-bone
 en: human bone
 pt: osso humano

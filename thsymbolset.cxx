@@ -449,6 +449,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_GYPSUM,SYMP_GYPSUM);
         cp3(TT_POINT_TYPE_GYPSUM_FLOWER,SYMP_GYPSUMFLOWER);
         cp3(TT_POINT_TYPE_HELICTITE,SYMP_HELICTITE);
+        cp3(TT_POINT_TYPE_HELICTITES,SYMP_HELICTITES);
         cp3(TT_POINT_TYPE_ICE,SYMP_ICE);
         cp3(TT_POINT_TYPE_SNOW,SYMP_SNOW);
         cp3(TT_POINT_TYPE_KARREN,SYMP_KARREN);
@@ -687,10 +688,11 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(21,SYMP_PILLARSWITHCURTAINS);
     group(22,SYMP_PILLARWITHCURTAINS);
     group(23,SYMP_CURTAINS);
-    group(24,SYML_FLOWSTONE);
-    group(25,SYML_MOONMILK);
-    group(26,SYMA_FLOWSTONE)
-    group(27,SYMA_MOONMILK)
+    group(24,SYMP_HELICTITES);
+    group(25,SYML_FLOWSTONE);
+    group(26,SYML_MOONMILK);
+    group(27,SYMA_FLOWSTONE)
+    group(28,SYMA_MOONMILK)
     egroup
 
 
@@ -1343,6 +1345,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_CAVEPEARL,thT("point cave-pearl",layout->lang));
   legend_point(SYMP_DISK,thT("point disk",layout->lang));
   legend_point(SYMP_HELICTITE,thT("point helictite",layout->lang));
+  legend_point(SYMP_HELICTITES,thT("point helictites",layout->lang));
   legend_point(SYMP_ARAGONITE,thT("point aragonite",layout->lang));
   legend_point(SYMP_CRYSTAL,thT("point crystal",layout->lang));
   legend_point(SYMP_WALLCALCITE,thT("point wall-calcite",layout->lang));

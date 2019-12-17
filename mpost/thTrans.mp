@@ -66,6 +66,7 @@ let p_danger = p_danger_EGB;
 let p_electriclight = p_electriclight_EGB;
 let p_exvoto = p_exvoto_EGB;
 let p_gate = p_gate_EGB;
+let p_helictites = p_helictites_EGB;
 let p_humanbone = p_humanbone_EGB;
 let p_masonry = p_masonry_EGB;
 let p_minus = p_minus_EGB;
