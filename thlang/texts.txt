@@ -1564,6 +1564,10 @@ therion: point seed-germination
 en: seed-germination
 pt: germinação de semente
 
+therion: point stalactite-stalagmite
+en: stalactite-stalagmite
+pt: estalactite-estalagmite
+
 therion: point tree-trunk
 en: tree-trunk
 pt: tronco de árvore
