@@ -1483,6 +1483,10 @@ therion: point bone
 en: bone
 pt: osso
 
+therion: point curtains
+en: curtains
+pt: cortinas
+
 therion: point danger
 en: danger
 pt: perigo

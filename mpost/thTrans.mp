@@ -61,6 +61,7 @@ let p_archeoexcavation = p_archeoexcavation_EGB;
 let p_audio = p_audio_EGB;
 let p_bat = p_bat_EGB;
 let p_bone = p_bone_EGB;
+let p_curtains = p_curtains_EGB;
 let p_danger = p_danger_EGB;
 let p_electriclight = p_electriclight_EGB;
 let p_exvoto = p_exvoto_EGB;
