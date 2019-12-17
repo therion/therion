@@ -60,6 +60,7 @@ let p_altar = p_altar_EGB;
 let p_electriclight = p_electriclight_EGB;
 let p_exvoto = p_exvoto_EGB;
 let p_gate = p_gate_EGB;
+let p_humanbone = p_humanbone_EGB;
 let p_masonry = p_masonry_EGB;
 let p_mudcrack = p_mudcrack_EGB;
 let p_nameplate = p_nameplate_EGB;
