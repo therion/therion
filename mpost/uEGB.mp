@@ -274,6 +274,17 @@ def p_danger_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+def p_discpillar_EGB(expr pos,theta,sc,al) =
+	U:=(.15u, .4u);
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	pickup PenC;
+	thdraw (-.15u,.4u) -- (0,.15u) -- (0,-.15u) -- (-.15u,-.4u);
+	thdraw (0,-.15u) -- (.15u,-.4u);
+	thdraw (0,.15u) -- (.15u,.4u);
+	thdraw (-.15u,0) -- (.15u,0);
+enddef;
+
+
 def p_discstalactite_EGB(expr pos,theta,sc,al) =
 	U:=(.15u, .4u);
 	T:=identity rotated theta aligned al scaled sc shifted pos;
