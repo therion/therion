@@ -56,6 +56,7 @@ let p_snow = p_snow_SKBB;
 let p_archeomaterial = p_archeomaterial_UIS;
 let p_paleomaterial = p_paleomaterial_UIS;
 let p_guano = p_guano_UIS;
+let p_masonry = p_masonry_EGB;
 let p_mudcrack = p_mudcrack_EGB;
 let p_nameplate = p_nameplate_EGB;
 let p_notwheelchair = p_notwheelchair_EGB;
