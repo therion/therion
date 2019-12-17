@@ -1463,6 +1463,10 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: point electric-light
+en: electric light
+pt: luz elétrica
+
 therion: point ex-voto
 en: ex-voto
 pt: ex-voto
