@@ -417,6 +417,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_FLUTE,SYMP_FLUTE);
         cp3(TT_POINT_TYPE_GRADIENT,SYMP_GRADIENT);
         cp3(TT_POINT_TYPE_GUANO,SYMP_GUANO);
+        cp3(TT_POINT_TYPE_EXVOTO,SYMP_EXVOTO);
         cp3(TT_POINT_TYPE_GATE,SYMP_GATE);
         cp3(TT_POINT_TYPE_MASONRY,SYMP_MASONRY);
         cp3(TT_POINT_TYPE_MUDCRACK,SYMP_MUDCRACK);
@@ -638,6 +639,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(20,SYMP_NAMEPLATE);
     group(21,SYMP_MASONRY);
     group(22,SYMP_GATE);
+    group(23,SYMP_EXVOTO);
     egroup
 
     bgroup(SYMX_SPELEOTHEMS)
@@ -1347,6 +1349,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_FIXEDLADDER,thT("point fixed-ladder",layout->lang));
   legend_eqline(SYML_FIXEDLADDER,thT("line fixed-ladder",layout->lang));
   legend_point(SYMP_STEPS,thT("point steps",layout->lang));
+  legend_point(SYMP_EXVOTO,thT("point ex-voto",layout->lang));
   legend_point(SYMP_GATE,thT("point gate",layout->lang));
   legend_point(SYMP_MASONRY,thT("point masonry",layout->lang));
   legend_point(SYMP_NAMEPLATE,thT("point nameplate",layout->lang));
