@@ -1087,6 +1087,19 @@ def p_stalactitestalagmite_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
+def p_stalactitesstalagmites_EGB(expr pos,theta,sc,al) =
+	U:=(.3u, .8u);
+	pickup PenC;
+	for i=-1 upto 1:
+		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		thdraw (-.15u,.4u) -- (0,.2u) -- (.15u,.4u);
+		thdraw (.15u,-.4u) -- (0,-.2u) -- (-.15u,-.4u);
+		thdraw (0,-.2u) -- (0,-.05u);
+		thdraw (0,.2u) -- (0,.05u);
+	endfor;
+enddef;
+
+
 picture EGB_tree_trunk_raw;
 EGB_tree_trunk_raw := image(
 	linecap := butt;

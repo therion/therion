@@ -82,6 +82,7 @@ let p_plus = p_plus_EGB;
 let p_plusminus = p_plusminus_EGB;
 let p_seedgermination = p_seedgermination_EGB;
 let p_stalactitestalagmite = p_stalactitestalagmite_EGB;
+let p_stalactitesstalagmites = p_stalactitesstalagmites_EGB;
 let p_treetrunk = p_treetrunk_EGB;
 let p_volcano = p_volcano_EGB;
 let p_walkway = p_walkway_EGB;
