@@ -221,7 +221,7 @@ EGB_bone_raw := image(
 picture EGB_bone;
 EGB_bone := EGB_bone_raw shifted (-(llcorner EGB_bone_raw)-(urcorner EGB_bone_raw - llcorner EGB_bone_raw)/2) scaled (u / max((xpart urcorner EGB_bone_raw) - (xpart llcorner EGB_bone_raw), (ypart urcorner EGB_bone_raw) - (ypart llcorner EGB_bone_raw)));
 
-def p_bone_EGB(expr pos, theta, sc, al) =
+def p_bones_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_bone;
 enddef;
@@ -644,7 +644,7 @@ EGB_human_bone_raw := image(
 picture EGB_human_bone;
 EGB_human_bone := EGB_human_bone_raw shifted (-(llcorner EGB_human_bone_raw)-(urcorner EGB_human_bone_raw - llcorner EGB_human_bone_raw)/2) scaled (u / max((xpart urcorner EGB_human_bone_raw) - (xpart llcorner EGB_human_bone_raw), (ypart urcorner EGB_human_bone_raw) - (ypart llcorner EGB_human_bone_raw)));
 
-def p_humanbone_EGB(expr pos, theta, sc, al) =
+def p_humanbones_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_human_bone;
 enddef;
@@ -962,7 +962,7 @@ EGB_notwheelchair_raw := image(
 picture EGB_notwheelchair;
 EGB_notwheelchair := EGB_notwheelchair_raw shifted (-(llcorner EGB_notwheelchair_raw)-(urcorner EGB_notwheelchair_raw - llcorner EGB_notwheelchair_raw)/2) scaled (u / max((xpart urcorner EGB_notwheelchair_raw) - (xpart llcorner EGB_notwheelchair_raw), (ypart urcorner EGB_notwheelchair_raw) - (ypart llcorner EGB_notwheelchair_raw)));
 
-def p_notwheelchair_EGB(expr pos, theta, sc, al) =
+def p_nowheelchair_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_notwheelchair;
 enddef;
