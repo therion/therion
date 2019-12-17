@@ -206,6 +206,7 @@ enum {
   TT_POINT_TYPE_STALAGMITES,
   TT_POINT_TYPE_PILLARS,
   TT_POINT_TYPE_PENDANT,
+  TT_POINT_TYPE_PILLARSWITHCURTAINS,
   TT_POINT_TYPE_VOLCANO,
   
 // plosne vyplne
@@ -310,6 +311,7 @@ static const thstok thtt_point_types[] = {
   {"photo",TT_POINT_TYPE_PHOTO},
   {"pillar",TT_POINT_TYPE_PILLAR},
   {"pillars",TT_POINT_TYPE_PILLARS},
+  {"pillars-with-curtains",TT_POINT_TYPE_PILLARSWITHCURTAINS},
   {"plus",TT_POINT_TYPE_PLUS},
   {"plus-minus",TT_POINT_TYPE_PLUSMINUS},
   {"popcorn",TT_POINT_TYPE_POPCORN},

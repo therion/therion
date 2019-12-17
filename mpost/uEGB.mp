@@ -893,6 +893,19 @@ def p_pendant_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+def p_pillarswithcurtains_EGB(expr pos, theta, sc, al) =
+	U:=(.3u,u);
+	pickup PenC;
+	pickup PenC;
+	for i=-1 upto 1:
+		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		thdraw (0,.25u)--(0,.1u){dir 180}..(-.1u,0)..{dir 0}(0,-.1u)--(0,-.25u);
+		thdraw (-.15u,-.5u)--(0,-.25u)--(.15u,-.5u);
+		thdraw (-.15u,.5u)--(0,.25u)--(.15u,.5u);
+	endfor;
+enddef;
+
+
 picture EGB_photo_raw;
 EGB_photo_raw := image(
 	linecap := butt;
