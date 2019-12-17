@@ -439,6 +439,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_PLUSMINUS,SYMP_PLUSMINUS);
         cp3(TT_POINT_TYPE_SEEDGERMINATION,SYMP_SEEDGERMINATION);
         cp3(TT_POINT_TYPE_TREETRUNK,SYMP_TREETRUNK);
+        cp3(TT_POINT_TYPE_VOLCANO,SYMP_VOLCANO);
         cp3(TT_POINT_TYPE_WALKWAY,SYMP_WALKWAY);
         cp3(TT_POINT_TYPE_WATERDRIP,SYMP_WATERDRIP);
         cp3(TT_POINT_TYPE_WHEELCHAIR,SYMP_WHEELCHAIR);
@@ -678,10 +679,11 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(16,SYMP_RIMSTONEPOOL);
     group(17,SYMP_RIMSTONEDAM);
     group(18,SYMP_PENDANT);
-    group(19,SYML_FLOWSTONE);
-    group(20,SYML_MOONMILK);
-    group(21,SYMA_FLOWSTONE)
-    group(22,SYMA_MOONMILK)
+    group(19,SYMP_VOLCANO);
+    group(20,SYML_FLOWSTONE);
+    group(21,SYML_MOONMILK);
+    group(22,SYMA_FLOWSTONE)
+    group(23,SYMA_MOONMILK)
     egroup
 
 
@@ -1389,6 +1391,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_PLUSMINUS,thT("point plus-minus",layout->lang));
   legend_point(SYMP_SEEDGERMINATION,thT("point seed-germination",layout->lang));
   legend_point(SYMP_TREETRUNK,thT("point tree-trunk",layout->lang));
+  legend_point(SYMP_VOLCANO,thT("point volcano",layout->lang));
   legend_point(SYMP_WALKWAY,thT("point walkway",layout->lang));
   legend_point(SYMP_WATERDRIP,thT("point water-drip",layout->lang));
   legend_point(SYMP_WHEELCHAIR,thT("point wheelchair",layout->lang));

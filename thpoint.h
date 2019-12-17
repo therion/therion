@@ -206,6 +206,7 @@ enum {
   TT_POINT_TYPE_STALAGMITES,
   TT_POINT_TYPE_PILLARS,
   TT_POINT_TYPE_PENDANT,
+  TT_POINT_TYPE_VOLCANO,
   
 // plosne vyplne
   TT_POINT_TYPE_BEDROCK,
@@ -340,6 +341,7 @@ static const thstok thtt_point_types[] = {
   {"u",TT_POINT_TYPE_U},
   {"vegetable-debris",TT_POINT_TYPE_VEGETABLE_DEBRIS},
   {"via-ferrata",TT_POINT_TYPE_VIA_FERRATA},
+  {"volcano",TT_POINT_TYPE_VOLCANO},
   {"walkway",TT_POINT_TYPE_WALKWAY},
   {"wall-calcite",TT_POINT_TYPE_WALL_CALCITE},
   {"water",TT_POINT_TYPE_WATER},

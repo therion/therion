@@ -1552,6 +1552,10 @@ therion: point tree-trunk
 en: tree-trunk
 pt: tronco de árvore
 
+therion: point volcano
+en: volcano
+pt: vulcão
+
 therion: point walkway
 en: walkway
 pt: passarela
