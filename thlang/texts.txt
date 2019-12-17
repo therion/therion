@@ -1499,6 +1499,10 @@ therion: point disc-stalactite
 en: disc on stalactite
 pt: disco em estalactite
 
+therion: point discs-stalactites
+en: discs on stalactites
+pt: discos em estalactites
+
 therion: point disc-stalagmite
 en: disc on stalagmite
 pt: disco em estalagmite
