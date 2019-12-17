@@ -76,6 +76,7 @@ let p_pendant = p_pendant_EGB;
 let p_photo = p_photo_EGB;
 let p_plus = p_plus_EGB;
 let p_plusminus = p_plusminus_EGB;
+let p_seedgermination = p_seedgermination_EGB;
 let p_walkway = p_walkway_EGB;
 let p_waterdrip = p_waterdrip_EGB;
 let p_wheelchair = p_wheelchair_EGB;

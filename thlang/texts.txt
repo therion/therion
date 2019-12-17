@@ -1544,6 +1544,10 @@ therion: point plus-minus
 en: plus/minus
 pt: segue acima e abaixo
 
+therion: point seed-germination
+en: seed-germination
+pt: germinação de semente
+
 therion: point walkway
 en: walkway
 pt: passarela

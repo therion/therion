@@ -437,6 +437,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_PHOTO,SYMP_PHOTO);
         cp3(TT_POINT_TYPE_PLUS,SYMP_PLUS);
         cp3(TT_POINT_TYPE_PLUSMINUS,SYMP_PLUSMINUS);
+        cp3(TT_POINT_TYPE_SEEDGERMINATION,SYMP_SEEDGERMINATION);
         cp3(TT_POINT_TYPE_WALKWAY,SYMP_WALKWAY);
         cp3(TT_POINT_TYPE_WATERDRIP,SYMP_WATERDRIP);
         cp3(TT_POINT_TYPE_WHEELCHAIR,SYMP_WHEELCHAIR);
@@ -1385,6 +1386,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_PHOTO,thT("point photo",layout->lang));
   legend_point(SYMP_PLUS,thT("point plus",layout->lang));
   legend_point(SYMP_PLUSMINUS,thT("point plus-minus",layout->lang));
+  legend_point(SYMP_SEEDGERMINATION,thT("point seed-germination",layout->lang));
   legend_point(SYMP_WALKWAY,thT("point walkway",layout->lang));
   legend_point(SYMP_WATERDRIP,thT("point water-drip",layout->lang));
   legend_point(SYMP_WHEELCHAIR,thT("point wheelchair",layout->lang));
