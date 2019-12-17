@@ -417,8 +417,9 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_FLUTE,SYMP_FLUTE);
         cp3(TT_POINT_TYPE_GRADIENT,SYMP_GRADIENT);
         cp3(TT_POINT_TYPE_GUANO,SYMP_GUANO);
-        cp3(TT_POINT_TYPE_ARCHEOEXCAVATION,SYMP_ARCHEOEXCAVATION);
         cp3(TT_POINT_TYPE_ALTAR,SYMP_ALTAR);
+        cp3(TT_POINT_TYPE_ARCHEOEXCAVATION,SYMP_ARCHEOEXCAVATION);
+        cp3(TT_POINT_TYPE_AUDIO,SYMP_AUDIO);
         cp3(TT_POINT_TYPE_DANGER,SYMP_DANGER);
         cp3(TT_POINT_TYPE_ELECTRICLIGHT,SYMP_ELECTRICLIGHT);
         cp3(TT_POINT_TYPE_EXVOTO,SYMP_EXVOTO);
@@ -1361,8 +1362,9 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_FIXEDLADDER,thT("point fixed-ladder",layout->lang));
   legend_eqline(SYML_FIXEDLADDER,thT("line fixed-ladder",layout->lang));
   legend_point(SYMP_STEPS,thT("point steps",layout->lang));
-  legend_point(SYMP_ARCHEOEXCAVATION,thT("point archeo-excavation",layout->lang));
   legend_point(SYMP_ALTAR,thT("point altar",layout->lang));
+  legend_point(SYMP_ARCHEOEXCAVATION,thT("point archeo-excavation",layout->lang));
+  legend_point(SYMP_AUDIO,thT("point audio",layout->lang));
   legend_point(SYMP_DANGER,thT("point danger",layout->lang));
   legend_point(SYMP_ELECTRICLIGHT,thT("point electric-light",layout->lang));
   legend_point(SYMP_EXVOTO,thT("point ex-voto",layout->lang));

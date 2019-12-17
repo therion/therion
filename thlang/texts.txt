@@ -1463,13 +1463,17 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: point altar
+en: altar
+pt: altar
+
 therion: point archeo-excavation
 en: archeo-excavation
 pt: escavação arqueológica
 
-therion: point altar
-en: altar
-pt: altar
+therion: point audio
+en: audio
+pt: áudio
 
 therion: point danger
 en: danger
