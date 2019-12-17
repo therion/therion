@@ -71,6 +71,7 @@ let p_notwheelchair = p_notwheelchair_EGB;
 let p_plus = p_plus_EGB;
 let p_plusminus = p_plusminus_EGB;
 let p_walkway = p_walkway_EGB;
+let p_waterdrip = p_waterdrip_EGB;
 let p_wheelchair = p_wheelchair_EGB;
 let p_vegetabledebris = p_vegetabledebris_ASF;
 let p_root = p_root_ASF;

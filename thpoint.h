@@ -158,6 +158,7 @@ enum {
   TT_POINT_TYPE_PLUS,
   TT_POINT_TYPE_PLUSMINUS,
   TT_POINT_TYPE_WALKWAY,
+  TT_POINT_TYPE_WATERDRIP,
   TT_POINT_TYPE_WHEELCHAIR,
 
 // ukoncenia chodby
@@ -327,6 +328,7 @@ static const thstok thtt_point_types[] = {
   {"walkway",TT_POINT_TYPE_WALKWAY},
   {"wall-calcite",TT_POINT_TYPE_WALL_CALCITE},
   {"water",TT_POINT_TYPE_WATER},
+  {"water-drip",TT_POINT_TYPE_WATERDRIP},
   {"water-flow",TT_POINT_TYPE_WATER_FLOW},
   {"wheelchair",TT_POINT_TYPE_WHEELCHAIR},
 	{NULL, TT_POINT_TYPE_UNKNOWN},
