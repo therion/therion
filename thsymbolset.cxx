@@ -434,6 +434,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_NAMEPLATE,SYMP_NAMEPLATE);
         cp3(TT_POINT_TYPE_NOTWHEELCHAIR,SYMP_NOTWHEELCHAIR);
         cp3(TT_POINT_TYPE_PENDANT,SYMP_PENDANT);
+        cp3(TT_POINT_TYPE_PILLARWITHCURTAINS,SYMP_PILLARWITHCURTAINS);
         cp3(TT_POINT_TYPE_PILLARSWITHCURTAINS,SYMP_PILLARSWITHCURTAINS);
         cp3(TT_POINT_TYPE_PHOTO,SYMP_PHOTO);
         cp3(TT_POINT_TYPE_PLUS,SYMP_PLUS);
@@ -683,10 +684,11 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(19,SYMP_VOLCANO);
     group(20,SYMP_PILLARS);
     group(21,SYMP_PILLARSWITHCURTAINS);
-    group(22,SYML_FLOWSTONE);
-    group(23,SYML_MOONMILK);
-    group(24,SYMA_FLOWSTONE)
-    group(25,SYMA_MOONMILK)
+    group(22,SYMP_PILLARWITHCURTAINS);
+    group(23,SYML_FLOWSTONE);
+    group(24,SYML_MOONMILK);
+    group(25,SYMA_FLOWSTONE)
+    group(26,SYMA_MOONMILK)
     egroup
 
 
@@ -1389,6 +1391,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_NAMEPLATE,thT("point nameplate",layout->lang));
   legend_point(SYMP_NOTWHEELCHAIR,thT("point notwheelchair",layout->lang));
   legend_point(SYMP_PENDANT,thT("point pendant",layout->lang));
+  legend_point(SYMP_PILLARWITHCURTAINS,thT("point pillar-with-curtains",layout->lang));
   legend_point(SYMP_PILLARSWITHCURTAINS,thT("point pillars-with-curtains",layout->lang));
   legend_point(SYMP_PHOTO,thT("point photo",layout->lang));
   legend_point(SYMP_PLUS,thT("point plus",layout->lang));

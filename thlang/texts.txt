@@ -1532,6 +1532,10 @@ therion: point pendant
 en: pendant
 pt: pendente
 
+therion: point pillar-with-curtains
+en: pillar with curtains
+pt: coluna com cortinas
+
 therion: point pillars-with-curtains
 en: pillars with curtains
 pt: colunas com cortinas
