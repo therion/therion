@@ -794,6 +794,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_MINUS,SYMP_MINUS)
     thpoint_type_export_mp(TT_POINT_TYPE_NAMEPLATE,SYMP_NAMEPLATE)
     thpoint_type_export_mp(TT_POINT_TYPE_NOTWHEELCHAIR,SYMP_NOTWHEELCHAIR)
+    thpoint_type_export_mp(TT_POINT_TYPE_PLUS,SYMP_PLUS)
+    thpoint_type_export_mp(TT_POINT_TYPE_PLUSMINUS,SYMP_PLUSMINUS)
     thpoint_type_export_mp(TT_POINT_TYPE_WALKWAY,SYMP_WALKWAY)
     thpoint_type_export_mp(TT_POINT_TYPE_WHEELCHAIR,SYMP_WHEELCHAIR)
 

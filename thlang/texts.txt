@@ -1508,6 +1508,14 @@ therion: point notwheelchair
 en: not wheelchair accessible
 pt: não acessível com cadeira de rodas
 
+therion: point plus
+en: plus
+pt: segue acima
+
+therion: point plus-minus
+en: plus/minus
+pt: segue acima e abaixo
+
 therion: point walkway
 en: walkway
 pt: passarela

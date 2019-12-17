@@ -646,6 +646,67 @@ def p_notwheelchair_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+picture EGB_plus_raw;
+EGB_plus_raw := image(
+	fill (394.687988,411.277008)--(394.687988,403.121002)--(402.843994,403.121002)
+		--(402.843994,400.621002)--(394.687988,400.621002)--(394.687988,392.464996)
+		--(392.234009,392.464996)--(392.234009,400.621002)--(384.062988,400.621002)
+		--(384.062988,403.121002)--(392.234009,403.121002)--(392.234009,411.277008)
+		--cycle withcolor black;
+	pickup pencircle scaled 0.750000bp;
+	draw (394.687988,411.277008)--(394.687988,403.121002)--(402.843994,403.121002)
+		--(402.843994,400.621002)--(394.687988,400.621002)--(394.687988,392.464996)
+		--(392.234009,392.464996)--(392.234009,400.621002)--(384.062988,400.621002)
+		--(384.062988,403.121002)--(392.234009,403.121002)--(392.234009,411.277008)
+		--cycle withcolor black;
+	pickup pencircle scaled 1.333610bp;
+	draw (407.531006,401.867004)..controls (407.531006,394.097992) and (401.230011,387.796997)..(393.460999,387.796997)
+		..controls (385.687988,387.796997) and (379.390991,394.097992)..(379.390991,401.867004)
+		..controls (379.390991,409.636993) and (385.687988,415.937988)..(393.460999,415.937988)
+		..controls (401.230011,415.937988) and (407.531006,409.636993)..(407.531006,401.867004)
+		--cycle withcolor black;
+);
+picture EGB_plus;
+EGB_plus := EGB_plus_raw shifted (-(llcorner EGB_plus_raw)-(urcorner EGB_plus_raw - llcorner EGB_plus_raw)/2) scaled (u / max((xpart urcorner EGB_plus_raw) - (xpart llcorner EGB_plus_raw), (ypart urcorner EGB_plus_raw) - (ypart llcorner EGB_plus_raw)));
+
+def p_plus_EGB(expr pos, theta, sc, al) =
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	thdraw EGB_plus;
+enddef;
+
+
+picture EGB_plus_minus_raw;
+EGB_plus_minus_raw := image(
+	fill (482.812988,451.992004)--(482.812988,443.835999)--(490.968994,443.835999)
+		--(490.968994,441.335999)--(482.812988,441.335999)--(482.812988,433.179993)
+		--(480.359009,433.179993)--(480.359009,441.335999)--(472.187988,441.335999)
+		--(472.187988,443.835999)--(480.359009,443.835999)--(480.359009,451.992004)
+		--cycle withcolor black;
+	pickup pencircle scaled 0.750000bp;
+	draw (482.812988,451.992004)--(482.812988,443.835999)--(490.968994,443.835999)
+		--(490.968994,441.335999)--(482.812988,441.335999)--(482.812988,433.179993)
+		--(480.359009,433.179993)--(480.359009,441.335999)--(472.187988,441.335999)
+		--(472.187988,443.835999)--(480.359009,443.835999)--(480.359009,451.992004)
+		--cycle withcolor black;
+	pickup pencircle scaled 0.000000bp;
+	fill (475.089996,425.414001)--(488.074005,425.414001)--(488.074005,421.460999)
+		--(475.089996,421.460999)--cycle withcolor black;
+	pickup pencircle scaled 1.332280bp;
+	draw (481.585999,412.011993)..controls (473.812988,412.011993) and (467.515991,418.312988)..(467.515991,426.082001)
+		--(467.515991,442.582001)..controls (467.515991,450.351990) and (473.812988,456.652008)..(481.585999,456.652008)
+		..controls (489.355011,456.652008) and (495.656006,450.351990)..(495.656006,442.582001)
+		--(495.656006,426.082001)..controls (495.656006,418.312988) and (489.355011,412.011993)..(481.585999,412.011993)
+		--cycle withcolor black;
+);
+picture EGB_plus_minus;
+EGB_plus_minus := EGB_plus_minus_raw shifted (-(llcorner EGB_plus_minus_raw)-(urcorner EGB_plus_minus_raw - llcorner EGB_plus_minus_raw)/2) scaled (u / ((xpart urcorner EGB_plus_minus_raw) - (xpart llcorner EGB_plus_minus_raw)));
+
+def p_plusminus_EGB(expr pos, theta, sc, al) =
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	thdraw EGB_plus_minus;
+enddef;
+
+
 picture EGB_walkway_raw;
 EGB_walkway_raw := image(
 	linecap := butt;
