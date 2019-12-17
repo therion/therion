@@ -107,8 +107,7 @@ set xth(app,me,filetypes) {
 }
 
 set xth(app,cp,filetypes) {    
-  {{Therion config files}       {thconfig*}}    
-  {{Therion config files }       {.thcfg .thconfig}}    
+  {{Therion config files }       {.thcfg .thconfig thconfig*}}    
   {{All files}       {*}}    
 }
 
