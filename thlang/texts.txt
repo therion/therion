@@ -1472,6 +1472,10 @@ therion: point notwheelchair
 en: not wheelchair accessible
 pt: não acessível com cadeira de rodas
 
+therion: point walkway
+en: walkway
+pt: passarela
+
 therion: point wheelchair
 en: wheelchair accessible
 pt: acessível com cadeira de rodas
