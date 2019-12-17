@@ -228,6 +228,7 @@ enum {
   TT_POINT_TYPE_ARCHEO_MATERIAL,
   TT_POINT_TYPE_PALEO_MATERIAL,
   TT_POINT_TYPE_VEGETABLE_DEBRIS,
+  TT_POINT_TYPE_TREETRUNK,
   TT_POINT_TYPE_ROOT,
 
 };
@@ -335,6 +336,7 @@ static const thstok thtt_point_types[] = {
   {"station-name", TT_POINT_TYPE_STATION_NAME},
   {"steps",TT_POINT_TYPE_STEPS},
   {"traverse",TT_POINT_TYPE_TRAVERSE},
+  {"tree-trunk",TT_POINT_TYPE_TREETRUNK},
   {"u",TT_POINT_TYPE_U},
   {"vegetable-debris",TT_POINT_TYPE_VEGETABLE_DEBRIS},
   {"via-ferrata",TT_POINT_TYPE_VIA_FERRATA},

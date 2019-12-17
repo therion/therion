@@ -1548,6 +1548,10 @@ therion: point seed-germination
 en: seed-germination
 pt: germinação de semente
 
+therion: point tree-trunk
+en: tree-trunk
+pt: tronco de árvore
+
 therion: point walkway
 en: walkway
 pt: passarela
