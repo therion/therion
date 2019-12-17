@@ -805,6 +805,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_FLOWSTONE_CHOKE,SYMP_FLOWSTONECHOKE)
     thpoint_type_export_mp(TT_POINT_TYPE_BREAKDOWN_CHOKE,SYMP_BREAKDOWNCHOKE)
     thpoint_type_export_mp(TT_POINT_TYPE_CLAY_CHOKE,SYMP_CLAYCHOKE)
+    thpoint_type_export_mp(TT_POINT_TYPE_MUD,SYMP_MUD)
 
 // vypln
     thpoint_type_export_mp(TT_POINT_TYPE_FLOWSTONE,SYMP_FLOWSTONE)

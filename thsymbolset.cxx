@@ -425,6 +425,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_HUMANBONE,SYMP_HUMANBONE);
         cp3(TT_POINT_TYPE_MASONRY,SYMP_MASONRY);
         cp3(TT_POINT_TYPE_MINUS,SYMP_MINUS);
+        cp3(TT_POINT_TYPE_MUD,SYMP_MUD);
         cp3(TT_POINT_TYPE_MUDCRACK,SYMP_MUDCRACK);
         cp3(TT_POINT_TYPE_NAMEPLATE,SYMP_NAMEPLATE);
         cp3(TT_POINT_TYPE_NOTWHEELCHAIR,SYMP_NOTWHEELCHAIR);
@@ -698,6 +699,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(8,SYMP_RAFTCONE);
     group(9,SYMP_GUANO);
     group(10,SYMP_MUDCRACK);
+    group(11,SYMP_MUD);
     egroup
 
 
@@ -728,6 +730,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(23,SYMA_SAND)
     group(24,SYMA_SNOW)
     group(25,SYMP_MUDCRACK)
+    group(26,SYMP_MUD)
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -1363,6 +1366,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_HUMANBONE,thT("point human-bone",layout->lang));
   legend_point(SYMP_MASONRY,thT("point masonry",layout->lang));
   legend_point(SYMP_MINUS,thT("point minus",layout->lang));
+  legend_point(SYMP_MUD,thT("point mud",layout->lang));
   legend_point(SYMP_NAMEPLATE,thT("point nameplate",layout->lang));
   legend_point(SYMP_NOTWHEELCHAIR,thT("point notwheelchair",layout->lang));
   legend_point(SYMP_PLUS,thT("point plus",layout->lang));
