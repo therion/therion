@@ -1463,6 +1463,10 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: point archeo-excavation
+en: archeo-excavation
+pt: escavação arqueológica
+
 therion: point altar
 en: altar
 pt: altar
