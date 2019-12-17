@@ -1495,6 +1495,10 @@ therion: point disc-stalactite
 en: disc on stalactite
 pt: disco em estalactite
 
+therion: point disc-stalagmite
+en: disc on stalagmite
+pt: disco em estalagmite
+
 therion: point electric-light
 en: electric light
 pt: luz elétrica

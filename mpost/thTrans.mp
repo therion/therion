@@ -64,6 +64,7 @@ let p_bone = p_bone_EGB;
 let p_curtains = p_curtains_EGB;
 let p_danger = p_danger_EGB;
 let p_discstalactite = p_discstalactite_EGB;
+let p_discstalagmite = p_discstalagmite_EGB;
 let p_electriclight = p_electriclight_EGB;
 let p_exvoto = p_exvoto_EGB;
 let p_gate = p_gate_EGB;
