@@ -169,7 +169,7 @@ class thdb1ds {
    * Default constructor.
    */
    
-  thdb1ds() : uid(0), x(0), y(0), z(0), name(NULL), comment(NULL), survey(NULL), fixcontext(NULL), 
+  thdb1ds() : uid(0), x(0), y(0), z(0), xx(0), asl(0), name(NULL), comment(NULL), survey(NULL), fixcontext(NULL), tmpselect(false),
     data_priority(0), temps(TT_TEMPSTATION_NONE),
     flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), 
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
@@ -180,8 +180,8 @@ class thdb1ds {
    * Default constructor with 2 parameters.
    */
    
-  thdb1ds(const char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), name(n), 
-    comment(NULL), survey(ps), fixcontext(NULL),  
+  thdb1ds(const char * n, class thsurvey * ps) : uid(0), x(0), y(0), z(0), xx(0), asl(0), name(n), 
+    comment(NULL), survey(ps), fixcontext(NULL), tmpselect(false),
     data_priority(0), temps(TT_TEMPSTATION_NONE),
     flags(TT_STATIONFLAG_NONE),
     mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), mark_station(false), 
