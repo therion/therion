@@ -1467,6 +1467,10 @@ therion: point mudcrack
 en: mudcrack
 sk: popraskané blato
 
+therion: point notwheelchair
+en: not wheelchair accessible
+pt: não acessível com cadeira de rodas
+
 therion: point water
 bg: вода
 ca: aigua
