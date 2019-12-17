@@ -57,6 +57,7 @@ let p_archeomaterial = p_archeomaterial_UIS;
 let p_paleomaterial = p_paleomaterial_UIS;
 let p_guano = p_guano_UIS;
 let p_mudcrack = p_mudcrack_EGB;
+let p_nameplate = p_nameplate_EGB;
 let p_notwheelchair = p_notwheelchair_EGB;
 let p_walkway = p_walkway_EGB;
 let p_wheelchair = p_wheelchair_EGB;
