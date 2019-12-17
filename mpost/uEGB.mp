@@ -42,6 +42,42 @@ def p_altar_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
+picture EGB_danger_raw;
+EGB_danger_raw := image(
+	linecap := butt;
+	linejoin := mitered;
+	fill (296.210999,396.785004)
+		..controls (295.957001,393.730011) and (295.378998,392.101990)..(294.050995,390.679993)
+		..controls (290.140991,386.492004) and (291.902008,386.628998)..(242.203003,386.628998)
+		..controls (199.147995,386.628998) and (196.050995,386.718994)..(193.602005,388.000000)..controls (190.085999,389.839996) and (187.391006,394.972992)..(187.882996,398.906006)
+		..controls (188.082001,400.500000) and (189.796997,405.015991)..(191.695007,408.941010)
+		..controls (197.016006,419.949005) and (230.910004,482.273010)..(233.671997,486.125000)
+		..controls (234.309006,487.015991) and (236.343994,488.320007)..(238.190994,489.027008)
+		..controls (242.563004,490.695007) and (246.210999,490.011993)..(249.546997,486.898010)
+		..controls (251.727005,484.859009) and (270.371002,450.863007)..(293.917999,405.980011)
+		..controls (296.246002,401.542999) and (296.515991,400.460999)..(296.210999,396.785004)
+		--cycle withcolor red;
+	fill (244.227005,419.902008)..controls (245.160004,424.167999) and (249.863007,452.070007)..(249.863007,453.328003)
+		..controls (249.863007,455.347992) and (246.492004,459.121002)..(244.164001,459.707001)
+		..controls (241.417999,460.394989) and (237.468994,458.906006)..(235.964996,456.613007)
+		..controls (235.031006,455.191010) and (234.792999,453.656006)..(235.059006,450.839996)
+		..controls (235.703003,444.046997) and (240.223007,419.285004)..(240.983994,418.363007)
+		..controls (242.011993,417.121002) and (243.809006,417.972992)..(244.227005,419.902008)
+		--cycle withcolor white;
+	fill (246.882996,399.777008)..controls (250.835999,403.980011) and (247.852005,410.628998)..(242.016006,410.628998)
+		..controls (238.882996,410.628998) and (235.613007,407.136993)..(235.613007,403.789001)
+		..controls (235.613007,398.433990) and (243.113007,395.761993)..(246.882996,399.777008)
+		--cycle withcolor white;
+);
+picture EGB_danger;
+EGB_danger := EGB_danger_raw shifted (-(llcorner EGB_danger_raw)-(urcorner EGB_danger_raw - llcorner EGB_danger_raw)/2) scaled (u / max((xpart urcorner EGB_danger_raw) - (xpart llcorner EGB_danger_raw), (ypart urcorner EGB_danger_raw) - (ypart llcorner EGB_danger_raw)));
+
+def p_danger_EGB(expr pos, theta, sc, al) =
+	T:=identity rotated theta aligned al scaled sc shifted pos;
+	thdraw EGB_danger;
+enddef;
+
+
 picture EGB_electric_light_raw;
 EGB_electric_light_raw := image(
 	linecap := butt;

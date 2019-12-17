@@ -1467,6 +1467,10 @@ therion: point altar
 en: altar
 pt: altar
 
+therion: point danger
+en: danger
+pt: perigo
+
 therion: point electric-light
 en: electric light
 pt: luz elétrica
