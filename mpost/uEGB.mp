@@ -6,8 +6,9 @@
 
 picture EGB_altar_raw;
 EGB_altar_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (145.929993,152.074005)..controls (119.844002,155.223007) and (104.292999,187.843994)..(119.487999,209.804993)
 		..controls (128.968994,227.102005) and (149.988007,228.949005)..(167.574005,227.832001)
 		..controls (189.348007,228.070007) and (211.121002,228.229996)..(232.895004,228.425995)
@@ -32,6 +33,7 @@ EGB_altar_raw := image(
 		..controls (474.378998,573.823975) and (471.449005,525.729980)..(440.906006,507.558990)
 		..controls (428.398010,499.003998) and (412.289001,497.089996)..(397.687988,500.261993)
 		--cycle;
+	endgroup;
 );
 picture EGB_altar;
 EGB_altar := EGB_altar_raw shifted (-(llcorner EGB_altar_raw)-(urcorner EGB_altar_raw - llcorner EGB_altar_raw)/2) scaled (u / max((xpart urcorner EGB_altar_raw) - (xpart llcorner EGB_altar_raw), (ypart urcorner EGB_altar_raw) - (ypart llcorner EGB_altar_raw)));
@@ -44,8 +46,9 @@ enddef;
 
 picture EGB_archeo_excavation_raw;
 EGB_archeo_excavation_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (287.707001,416.679993)--(292.015991,416.695007)..controls (292.015991,416.695007) and (299.628998,406.097992)..(300.054993,392.695007)
 		..controls (300.476990,379.363007) and (292.015991,368.695007)..(292.015991,368.695007)
 		..controls (292.015991,368.695007) and (281.699005,375.929993)..(263.625000,375.660004)
@@ -84,6 +87,7 @@ EGB_archeo_excavation_raw := image(
 		..controls (380.382996,455.531006) and (361.765991,456.445007)..(361.765991,456.445007)
 		..controls (366.421997,465.175995) and (365.875000,463.652008)..(361.765991,472.195007)
 		--cycle withcolor black;
+	endgroup;
 );
 picture EGB_archeo_excavation;
 EGB_archeo_excavation := EGB_archeo_excavation_raw shifted (-(llcorner EGB_archeo_excavation_raw)-(urcorner EGB_archeo_excavation_raw - llcorner EGB_archeo_excavation_raw)/2) scaled (u / max((xpart urcorner EGB_archeo_excavation_raw) - (xpart llcorner EGB_archeo_excavation_raw), (ypart urcorner EGB_archeo_excavation_raw) - (ypart llcorner EGB_archeo_excavation_raw)));
@@ -96,8 +100,9 @@ enddef;
 
 picture EGB_audio_raw;
 EGB_audio_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (314.640991,130.460999)--(133.929993,283.558990)--(-27.480499,284.308990)
 		..controls (-48.035198,290.410004) and (-45.867199,312.503998)..(-45.480499,329.410004)
 		--(-45.480499,511.558990)..controls (-45.480499,526.468994) and (-42.972698,529.745972)..(-30.328100,529.848022)
@@ -129,6 +134,7 @@ EGB_audio_raw := image(
 		..controls (478.277008,412.656006) and (469.113007,335.140991)..(427.738007,278.167999)
 		..controls (421.359009,271.335999) and (411.015991,269.113007)..(402.136993,271.460999)
 		--cycle withcolor black;
+	endgroup;
 );
 picture EGB_audio;
 EGB_audio := EGB_audio_raw shifted (-(llcorner EGB_audio_raw)-(urcorner EGB_audio_raw - llcorner EGB_audio_raw)/2) scaled (u / max((xpart urcorner EGB_audio_raw) - (xpart llcorner EGB_audio_raw), (ypart urcorner EGB_audio_raw) - (ypart llcorner EGB_audio_raw)));
@@ -141,8 +147,9 @@ enddef;
 
 picture EGB_bat_raw;
 EGB_bat_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (277.488007,424.792999)..controls (272.894989,434.519989) and (263.367004,443.429993)..(251.983994,442.863007)
 		..controls (248.464996,443.199005) and (244.320007,441.933990)..(241.292999,441.675995)
 		..controls (237.809006,449.964996) and (232.425995,458.625000)..(223.214996,461.117004)
@@ -165,6 +172,7 @@ EGB_bat_raw := image(
 		..controls (289.593994,435.000000) and (284.984009,428.664001)..(281.613007,422.046997)
 		..controls (280.562988,416.171997) and (278.707001,423.121002)..(277.488007,424.792999)
 		--cycle withcolor black;
+	endgroup;
 );
 picture EGB_bat;
 EGB_bat := EGB_bat_raw shifted (-(llcorner EGB_bat_raw)-(urcorner EGB_bat_raw - llcorner EGB_bat_raw)/2) scaled (u / max((xpart urcorner EGB_bat_raw) - (xpart llcorner EGB_bat_raw), (ypart urcorner EGB_bat_raw) - (ypart llcorner EGB_bat_raw)));
@@ -177,8 +185,9 @@ enddef;
 
 picture EGB_bone_raw;
 EGB_bone_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (431.519989,355.367004)..controls (439.332001,357.773010) and (446.367004,363.406006)..(448.746002,371.472992)
 		..controls (451.675995,379.433990) and (454.441010,387.687988)..(460.398010,393.996002)
 		..controls (465.445007,399.121002) and (466.722992,407.750000)..(461.375000,413.125000)
@@ -217,6 +226,7 @@ EGB_bone_raw := image(
 		..controls (234.632996,481.855011) and (240.516006,476.054993)..(246.613007,476.421997)
 		..controls (251.171997,478.839996) and (255.656006,481.398010)..(260.144989,483.949005)
 		--cycle withcolor black;
+	endgroup;
 );
 picture EGB_bone;
 EGB_bone := EGB_bone_raw shifted (-(llcorner EGB_bone_raw)-(urcorner EGB_bone_raw - llcorner EGB_bone_raw)/2) scaled (u / max((xpart urcorner EGB_bone_raw) - (xpart llcorner EGB_bone_raw), (ypart urcorner EGB_bone_raw) - (ypart llcorner EGB_bone_raw)));
@@ -240,8 +250,9 @@ enddef;
 
 picture EGB_danger_raw;
 EGB_danger_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (296.210999,396.785004)
 		..controls (295.957001,393.730011) and (295.378998,392.101990)..(294.050995,390.679993)
 		..controls (290.140991,386.492004) and (291.902008,386.628998)..(242.203003,386.628998)
@@ -264,6 +275,7 @@ EGB_danger_raw := image(
 		..controls (238.882996,410.628998) and (235.613007,407.136993)..(235.613007,403.789001)
 		..controls (235.613007,398.433990) and (243.113007,395.761993)..(246.882996,399.777008)
 		--cycle withcolor white;
+	endgroup;
 );
 picture EGB_danger;
 EGB_danger := EGB_danger_raw shifted (-(llcorner EGB_danger_raw)-(urcorner EGB_danger_raw - llcorner EGB_danger_raw)/2) scaled (u / max((xpart urcorner EGB_danger_raw) - (xpart llcorner EGB_danger_raw), (ypart urcorner EGB_danger_raw) - (ypart llcorner EGB_danger_raw)));
@@ -344,8 +356,9 @@ enddef;
 
 picture EGB_electric_light_raw;
 EGB_electric_light_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (312.281006,246.093994)--(338.015991,246.093994)--(338.015991,178.391006)
 		--(312.281006,178.391006)--cycle;
 	fill (218.410004,315.015991)--(233.921997,294.480011)--(159.772995,238.473007)
@@ -395,6 +408,7 @@ EGB_electric_light_raw := image(
 		..controls (355.625000,536.254028) and (365.164001,536.229980)..(374.699005,536.112976)
 		..controls (375.773010,535.715027) and (376.718994,535.020020)..(377.675995,534.401978)
 		--cycle;
+	endgroup;
 );
 picture EGB_electric_light;
 EGB_electric_light := EGB_electric_light_raw shifted (-(llcorner EGB_electric_light_raw)-(urcorner EGB_electric_light_raw - llcorner EGB_electric_light_raw)/2) scaled (u / max((xpart urcorner EGB_electric_light_raw) - (xpart llcorner EGB_electric_light_raw), (ypart urcorner EGB_electric_light_raw) - (ypart llcorner EGB_electric_light_raw)));
@@ -407,8 +421,9 @@ enddef;
 
 picture EGB_exvoto_raw;
 EGB_exvoto_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (144.440994,285.171997)..controls (142.253998,285.957001) and (138.085999,289.632996)..(128.938004,298.835999)
 	    ..controls (118.323997,309.511993) and (116.344002,311.863007)..(115.894997,314.308990)
 	    ..controls (114.848000,319.980011) and (118.344002,326.144989)..(125.605003,331.421997)
@@ -476,6 +491,7 @@ EGB_exvoto_raw := image(
 	    --(430.074005,537.523010)--(426.386993,532.473022)..controls (416.437988,518.854980) and (384.097992,480.550995)..(382.546997,480.550995)
 	    ..controls (382.316010,480.550995) and (381.542999,481.539001)..(380.828003,482.750000)
 	    --cycle;
+	endgroup;
 );
 picture EGB_exvoto;
 EGB_exvoto := EGB_exvoto_raw shifted (-(llcorner EGB_exvoto_raw)-(urcorner EGB_exvoto_raw - llcorner EGB_exvoto_raw)/2) scaled (u / max((xpart urcorner EGB_exvoto_raw) - (xpart llcorner EGB_exvoto_raw), (ypart urcorner EGB_exvoto_raw) - (ypart llcorner EGB_exvoto_raw)));
@@ -488,8 +504,9 @@ enddef;
 
 picture EGB_gate_raw;
 EGB_gate_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (338.621002,237.011993)--(339.371002,587.020020)..controls (403.007996,573.179993) and (458.531006,520.043030)..(483.359009,475.855011)
 		..controls (487.066010,469.152008) and (490.230011,462.218994)..(493.308990,455.218994)
 		--(492.746002,209.358994)--cycle;
@@ -516,6 +533,7 @@ EGB_gate_raw := image(
 		--(427.953003,330.257996)--(460.500000,324.851990)--cycle withcolor white;
 	fill (399.902008,526.476990)..controls (391.945007,537.781006) and (376.863007,547.804993)..(367.359009,552.101990)
 		--(367.359009,342.710999)--(399.902008,337.304993)--cycle withcolor white;
+	endgroup;
 );
 picture EGB_gate;
 EGB_gate := EGB_gate_raw shifted (-(llcorner EGB_gate_raw)-(urcorner EGB_gate_raw - llcorner EGB_gate_raw)/2) scaled (u / max((xpart urcorner EGB_gate_raw) - (xpart llcorner EGB_gate_raw), (ypart urcorner EGB_gate_raw) - (ypart llcorner EGB_gate_raw)));
@@ -652,8 +670,9 @@ enddef;
 
 picture EGB_masonry_raw;
 EGB_masonry_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (247.164001,458.144989)--(317.664001,458.144989)--(317.664001,426.644989)
 		--(247.164001,426.644989)--cycle;
 	fill (286.914001,416.894989)--(358.164001,416.894989)--(358.164001,385.394989)
@@ -668,6 +687,7 @@ EGB_masonry_raw := image(
 		--(327.414001,426.695007)--cycle;
 	fill (286.914001,499.234009)--(358.164001,499.234009)--(358.164001,467.734009)
 		--(286.914001,467.734009)--cycle;
+	endgroup;
 );
 picture EGB_masonry;
 EGB_masonry := EGB_masonry_raw shifted (-(llcorner EGB_masonry_raw)-(urcorner EGB_masonry_raw - llcorner EGB_masonry_raw)/2) scaled (u / max((xpart urcorner EGB_masonry_raw) - (xpart llcorner EGB_masonry_raw), (ypart urcorner EGB_masonry_raw) - (ypart llcorner EGB_masonry_raw)));
@@ -741,8 +761,9 @@ enddef;
 
 picture EGB_mud_crack_raw;
 EGB_mud_crack_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (320.054993,501.851990)..controls (322.796997,501.726990) and (328.453003,493.746002)..(334.628998,481.273010)
 		..controls (337.898010,474.671997) and (340.339996,469.050995)..(340.050995,468.777008)
 		..controls (339.765991,468.500000) and (335.308990,467.199005)..(330.152008,465.878998)
@@ -835,6 +856,7 @@ EGB_mud_crack_raw := image(
 		..controls (336.777008,483.074005) and (332.867004,489.160004)..(330.105011,493.296997)
 		..controls (327.878998,496.636993) and (326.085999,499.476990)..(324.699005,501.851990)
 		--cycle withcolor black;
+	endgroup;
 );
 picture EGB_mud_crack;
 EGB_mud_crack := EGB_mud_crack_raw shifted (-(llcorner EGB_mud_crack_raw)-(urcorner EGB_mud_crack_raw - llcorner EGB_mud_crack_raw)/2) scaled (u / max((xpart urcorner EGB_mud_crack_raw) - (xpart llcorner EGB_mud_crack_raw), (ypart urcorner EGB_mud_crack_raw) - (ypart llcorner EGB_mud_crack_raw)));
@@ -849,14 +871,16 @@ enddef;
 picture EGB_nameplate_raw;
 EGB_nameplate_raw := image(
 	pickup pencircle scaled 24bp;
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	draw (77.027298,563.448975)--(505.574005,563.448975)--(505.574005,340.082001)
 		--(77.027298,340.082001)--cycle;
 	pickup pencircle scaled 10bp;
 	draw (208.195007,496.167999)--(422.667999,496.167999);
 	draw (117.796997,450.808990)--(358.480011,450.808990);
 	draw (264.453003,401.781006)--(470.472992,401.781006);
+	endgroup;
 );
 picture EGB_nameplate;
 EGB_nameplate := EGB_nameplate_raw shifted (-(llcorner EGB_nameplate_raw)-(urcorner EGB_nameplate_raw - llcorner EGB_nameplate_raw)/2) scaled (u / max((xpart urcorner EGB_nameplate_raw) - (xpart llcorner EGB_nameplate_raw), (ypart urcorner EGB_nameplate_raw) - (ypart llcorner EGB_nameplate_raw)));
@@ -869,8 +893,9 @@ enddef;
 
 picture EGB_notwheelchair_raw;
 EGB_notwheelchair_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (591.965027,447.699005)..controls (591.965027,295.476990) and (465.324005,172.074005)..(309.105011,172.074005)
 		..controls (152.891006,172.074005) and (26.250000,295.476990)..(26.250000,447.699005)
 		..controls (26.250000,599.921997) and (152.891006,723.323975)..(309.105011,723.323975)
@@ -958,6 +983,7 @@ EGB_notwheelchair_raw := image(
 		..controls (497.867004,312.640991) and (494.429993,307.582001)..(494.328003,307.582001)
 		..controls (494.226990,307.582001) and (419.472992,382.250000)..(328.210999,473.515991)
 		--cycle withcolor red;
+	endgroup;
 );
 picture EGB_notwheelchair;
 EGB_notwheelchair := EGB_notwheelchair_raw shifted (-(llcorner EGB_notwheelchair_raw)-(urcorner EGB_notwheelchair_raw - llcorner EGB_notwheelchair_raw)/2) scaled (u / max((xpart urcorner EGB_notwheelchair_raw) - (xpart llcorner EGB_notwheelchair_raw), (ypart urcorner EGB_notwheelchair_raw) - (ypart llcorner EGB_notwheelchair_raw)));
@@ -971,14 +997,16 @@ enddef;
 picture EGB_pendant_raw;
 EGB_pendant_raw := image(
 	pickup pencircle scaled 22.011000bp;
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	draw (476.980011,639.585999)..controls (471.453003,639.585999) and (422.562988,621.965027)..(428.812988,575.375000)
 		..controls (434.457001,533.296997) and (506.785004,503.894989)..(505.894989,457.292999)
 		..controls (502.128998,260.425995) and (383.000000,164.895004)..(289.718994,164.895004)
 		..controls (196.440994,164.895004) and (77.312500,260.425995)..(73.546898,457.292999)
 		..controls (72.656303,503.894989) and (144.983994,533.296997)..(150.628998,575.375000)
 		..controls (156.875000,621.965027) and (107.987999,639.585999)..(102.460999,639.585999);
+	endgroup;
 );
 picture EGB_pendant;
 EGB_pendant := EGB_pendant_raw shifted (-(llcorner EGB_pendant_raw)-(urcorner EGB_pendant_raw - llcorner EGB_pendant_raw)/2) scaled (u / max((xpart urcorner EGB_pendant_raw) - (xpart llcorner EGB_pendant_raw), (ypart urcorner EGB_pendant_raw) - (ypart llcorner EGB_pendant_raw)));
@@ -1014,8 +1042,9 @@ enddef;
 
 picture EGB_photo_raw;
 EGB_photo_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (196.261993,477.843994)..controls (190.938004,477.574005) and (190.414001,477.390991)..(188.386993,475.125000)
 	    --(186.214996,472.695007)--(186.214996,445.718994)--(111.441002,445.718994)
 	    --(108.515999,443.550995)..controls (103.637001,439.941010) and (75.367203,410.992004)..(74.511703,408.730011)
@@ -1034,10 +1063,11 @@ EGB_photo_raw := image(
 	    ..controls (325.265991,477.390991) and (324.738007,477.574005)..(319.417999,477.843994)
 	    --cycle withcolor black;
 	pickup pencircle scaled 14.173200bp;
-	linecap := rounded;
-	linejoin := beveled;
+	interim linecap := rounded;
+	interim linejoin := beveled;
 	draw (193.949005,500.894989)--(108.339996,620.598022) withcolor black;
 	draw (320.472992,500.894989)--(406.082001,620.598022) withcolor black;
+	endgroup;
 );
 picture EGB_photo;
 EGB_photo := EGB_photo_raw shifted (-(llcorner EGB_photo_raw)-(urcorner EGB_photo_raw - llcorner EGB_photo_raw)/2) scaled (u / max((xpart urcorner EGB_photo_raw) - (xpart llcorner EGB_photo_raw), (ypart urcorner EGB_photo_raw) - (ypart llcorner EGB_photo_raw)));
@@ -1111,8 +1141,9 @@ enddef;
 
 picture EGB_seed_germination_raw;
 EGB_seed_germination_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (307.054993,644.315979)..controls (300.976990,644.448975) and (294.867004,639.804993)..(294.738007,630.190979)
 		--(294.335999,599.620972)..controls (284.722992,608.976990) and (274.328003,617.726990)..(262.230011,623.710999)
 		..controls (233.117004,639.257996) and (197.210999,637.718994)..(168.223007,622.632996)
@@ -1134,6 +1165,7 @@ EGB_seed_germination_raw := image(
 		--cycle;
 	pickup pencircle scaled 17.511600bp;
 	draw (101.250000,276.343994)..controls (177.468994,243.992004) and (396.476990,296.585999)..(502.667999,269.492004);
+	endgroup;
 );
 picture EGB_seed_germination;
 EGB_seed_germination := EGB_seed_germination_raw shifted (-(llcorner EGB_seed_germination_raw)-(urcorner EGB_seed_germination_raw - llcorner EGB_seed_germination_raw)/2) scaled (u / max((xpart urcorner EGB_seed_germination_raw) - (xpart llcorner EGB_seed_germination_raw), (ypart urcorner EGB_seed_germination_raw) - (ypart llcorner EGB_seed_germination_raw)));
@@ -1170,8 +1202,9 @@ enddef;
 
 picture EGB_tree_trunk_raw;
 EGB_tree_trunk_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (223.335999,206.113007)..controls (172.589996,211.957001) and (132.348007,248.246002)..(122.214996,297.292999)
 		..controls (114.875000,332.824005) and (124.875000,370.128998)..(148.983994,397.140991)
 		--(382.371002,582.289001)..controls (387.332001,585.539001) and (393.710999,578.987976)..(390.109009,574.343994)
@@ -1206,6 +1239,7 @@ EGB_tree_trunk_raw := image(
 	fill (386.296997,487.449005)..controls (384.804993,488.625000) and (384.320007,489.675995)..(384.320007,491.753998)
 		--(454.964996,562.395020)..controls (457.039001,562.395020) and (458.093994,561.914001)..(459.265991,560.418030)
 		--cycle;
+	endgroup;
 );
 picture EGB_tree_trunk;
 EGB_tree_trunk := EGB_tree_trunk_raw shifted (-(llcorner EGB_tree_trunk_raw)-(urcorner EGB_tree_trunk_raw - llcorner EGB_tree_trunk_raw)/2) scaled (u / max((xpart urcorner EGB_tree_trunk_raw) - (xpart llcorner EGB_tree_trunk_raw), (ypart urcorner EGB_tree_trunk_raw) - (ypart llcorner EGB_tree_trunk_raw)));
@@ -1219,11 +1253,13 @@ enddef;
 picture EGB_volcano_raw;
 EGB_volcano_raw := image(
 	pickup pencircle scaled 21.160601bp;
-	linecap := butt;
-	linejoin := beveled;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	draw (36.671902,222.897995)--(169.684006,567.409973)..controls (177.815994,510.679993) and (212.089996,485.109009)..(265.714996,485.109009)
 		..controls (319.335999,485.109009) and (353.609009,510.679993)..(361.742004,567.409973)
 		--(494.753998,222.897995);
+	endgroup;
 );
 picture EGB_volcano;
 EGB_volcano := EGB_volcano_raw shifted (-(llcorner EGB_volcano_raw)-(urcorner EGB_volcano_raw - llcorner EGB_volcano_raw)/2) scaled (u / max((xpart urcorner EGB_volcano_raw) - (xpart llcorner EGB_volcano_raw), (ypart urcorner EGB_volcano_raw) - (ypart llcorner EGB_volcano_raw)));
@@ -1236,8 +1272,9 @@ enddef;
 
 picture EGB_walkway_raw;
 EGB_walkway_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (100.746002,152.141006)..controls (107.078003,151.656006) and (112.616997,156.395004)..(113.121002,162.688004)
 		..controls (113.625000,169.022995) and (108.905998,174.559006)..(102.573997,175.063004)
 		..controls (96.242203,175.546997) and (90.683601,170.848007)..(90.199203,164.516006)
@@ -1288,6 +1325,7 @@ EGB_walkway_raw := image(
 		--(136.608994,21.937500)--cycle;
 	fill (159.979996,31.339800)--(171.809006,31.339800)--(171.809006,21.937500)
 		--(159.979996,21.937500)--cycle;
+	endgroup;
 );
 picture EGB_walkway;
 EGB_walkway := EGB_walkway_raw shifted (-(llcorner EGB_walkway_raw)-(urcorner EGB_walkway_raw - llcorner EGB_walkway_raw)/2) scaled (u / max((xpart urcorner EGB_walkway_raw) - (xpart llcorner EGB_walkway_raw), (ypart urcorner EGB_walkway_raw) - (ypart llcorner EGB_walkway_raw)));
@@ -1383,8 +1421,9 @@ enddef;
 
 picture EGB_wheelchair_raw;
 EGB_wheelchair_raw := image(
-	linecap := butt;
-	linejoin := mitered;
+	begingroup;
+	interim linecap := butt;
+	interim linejoin := mitered;
 	fill (260.250000,282.113007)..controls (248.195007,283.492004) and (243.151993,284.300995)..(236.863007,285.871002)
 		..controls (185.647995,298.648010) and (145.852005,340.722992)..(137.608994,390.808990)
 		..controls (128.695007,444.988007) and (155.022995,497.621002)..(204.750000,525.034973)
@@ -1433,6 +1472,7 @@ EGB_wheelchair_raw := image(
 		..controls (299.457001,597.734009) and (295.539001,594.612976)..(293.414001,593.460999)
 		..controls (286.046997,589.465027) and (273.917999,588.125000)..(265.523010,590.382996)
 		--cycle;
+	endgroup;
 );
 picture EGB_wheelchair;
 EGB_wheelchair := EGB_wheelchair_raw shifted (-(llcorner EGB_wheelchair_raw)-(urcorner EGB_wheelchair_raw - llcorner EGB_wheelchair_raw)/2) scaled (u / max((xpart urcorner EGB_wheelchair_raw) - (xpart llcorner EGB_wheelchair_raw), (ypart urcorner EGB_wheelchair_raw) - (ypart llcorner EGB_wheelchair_raw)));
