@@ -225,6 +225,18 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
         break;
     }
   }
+  
+  if (legp->flags != this->pdl.flags) {
+    fprintf(this->svxf,"*flags");
+    if ((legp->flags & TT_LEGFLAG_DUPLICATE) == TT_LEGFLAG_NONE) fprintf(this->svxf," not");
+    fprintf(this->svxf," duplicate");
+    if ((legp->flags & TT_LEGFLAG_SURFACE) == TT_LEGFLAG_NONE) fprintf(this->svxf," not");
+    fprintf(this->svxf," surface");
+    if ((legp->flags & TT_LEGFLAG_SPLAY) == TT_LEGFLAG_NONE) fprintf(this->svxf," not");
+    fprintf(this->svxf," splay");
+    fprintf(this->svxf,"\n");
+    this->svxf_ln++;
+  }
 
   // now print the data
   // first stations
