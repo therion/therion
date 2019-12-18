@@ -285,7 +285,7 @@ def p_discpillar_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
-def p_discspillars_EGB(expr pos,theta,sc,al) =
+def p_discpillars_EGB(expr pos,theta,sc,al) =
 	U:=(.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
@@ -298,7 +298,7 @@ def p_discspillars_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
-def p_discsstalactites_EGB(expr pos,theta,sc,al) =
+def p_discstalactites_EGB(expr pos,theta,sc,al) =
 	U:=(.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
@@ -310,7 +310,7 @@ def p_discsstalactites_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
-def p_discsstalagmites_EGB(expr pos,theta,sc,al) =
+def p_discstalagmites_EGB(expr pos,theta,sc,al) =
 	U:=(.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
