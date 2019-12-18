@@ -286,7 +286,7 @@ def p_danger_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
-def p_discpillar_EGB(expr pos,theta,sc,al) =
+def p_discpillar_UIS(expr pos,theta,sc,al) =
 	U:=(.15u, .4u);
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
@@ -297,7 +297,7 @@ def p_discpillar_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
-def p_discpillars_EGB(expr pos,theta,sc,al) =
+def p_discpillars_UIS(expr pos,theta,sc,al) =
 	U:=(.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
@@ -310,7 +310,7 @@ def p_discpillars_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
-def p_discstalactites_EGB(expr pos,theta,sc,al) =
+def p_discstalactites_UIS(expr pos,theta,sc,al) =
 	U:=(.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
@@ -322,7 +322,7 @@ def p_discstalactites_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
-def p_discstalagmites_EGB(expr pos,theta,sc,al) =
+def p_discstalagmites_UIS(expr pos,theta,sc,al) =
 	U:=(.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
@@ -334,7 +334,7 @@ def p_discstalagmites_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
-def p_discstalactite_EGB(expr pos,theta,sc,al) =
+def p_discstalactite_UIS(expr pos,theta,sc,al) =
 	U:=(.15u, .4u);
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
@@ -344,7 +344,7 @@ def p_discstalactite_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
-def p_discstalagmite_EGB(expr pos,theta,sc,al) =
+def p_discstalagmite_UIS(expr pos,theta,sc,al) =
 	U:=(.15u, .4u);
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
@@ -544,7 +544,7 @@ def p_gate_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
-def p_helictites_EGB(expr pos,theta,sc,al) =
+def p_helictites_UIS(expr pos,theta,sc,al) =
 	U:=(.4u,.8u);
 	pickup PenC;
 	for i=-1 upto 1:
@@ -698,8 +698,8 @@ def p_masonry_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
-picture EGB_minus_raw;
-EGB_minus_raw := image(
+picture UIS_minus_raw;
+UIS_minus_raw := image(
 	fill (294.660004,411.578003)--(307.644989,411.578003)--(307.644989,407.625000)
 		--(294.660004,407.625000)--cycle;
 	pickup pencircle scaled 1.285130bp;
@@ -709,12 +709,12 @@ EGB_minus_raw := image(
 		..controls (308.640991,423.160004) and (314.710999,417.089996)..(314.710999,409.601990)
 		--cycle withcolor black;
 );
-picture EGB_minus;
-EGB_minus := EGB_minus_raw shifted (-(llcorner EGB_minus_raw)-(urcorner EGB_minus_raw - llcorner EGB_minus_raw)/2) scaled (u / max((xpart urcorner EGB_minus_raw) - (xpart llcorner EGB_minus_raw), (ypart urcorner EGB_minus_raw) - (ypart llcorner EGB_minus_raw)));
+picture UIS_minus;
+UIS_minus := UIS_minus_raw shifted (-(llcorner UIS_minus_raw)-(urcorner UIS_minus_raw - llcorner UIS_minus_raw)/2) scaled (u / max((xpart urcorner UIS_minus_raw) - (xpart llcorner UIS_minus_raw), (ypart urcorner UIS_minus_raw) - (ypart llcorner UIS_minus_raw)));
 
-def p_minus_EGB(expr pos, theta, sc, al) =
+def p_minus_UIS(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_minus;
+	thdraw UIS_minus;
 enddef;
 
 
@@ -1017,7 +1017,7 @@ def p_pendant_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
-def p_pillarwithcurtains_EGB(expr pos, theta, sc, al) =
+def p_pillarwithcurtains_UIS(expr pos, theta, sc, al) =
 	U:=(.15u,.5u);
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
@@ -1027,7 +1027,7 @@ def p_pillarwithcurtains_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
-def p_pillarswithcurtains_EGB(expr pos, theta, sc, al) =
+def p_pillarswithcurtains_UIS(expr pos, theta, sc, al) =
 	U:=(.3u,u);
 	pickup PenC;
 	pickup PenC;
@@ -1078,8 +1078,8 @@ def p_photo_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
-picture EGB_plus_raw;
-EGB_plus_raw := image(
+picture UIS_plus_raw;
+UIS_plus_raw := image(
 	fill (394.687988,411.277008)--(394.687988,403.121002)--(402.843994,403.121002)
 		--(402.843994,400.621002)--(394.687988,400.621002)--(394.687988,392.464996)
 		--(392.234009,392.464996)--(392.234009,400.621002)--(384.062988,400.621002)
@@ -1098,17 +1098,17 @@ EGB_plus_raw := image(
 		..controls (401.230011,415.937988) and (407.531006,409.636993)..(407.531006,401.867004)
 		--cycle withcolor black;
 );
-picture EGB_plus;
-EGB_plus := EGB_plus_raw shifted (-(llcorner EGB_plus_raw)-(urcorner EGB_plus_raw - llcorner EGB_plus_raw)/2) scaled (u / max((xpart urcorner EGB_plus_raw) - (xpart llcorner EGB_plus_raw), (ypart urcorner EGB_plus_raw) - (ypart llcorner EGB_plus_raw)));
+picture UIS_plus;
+UIS_plus := UIS_plus_raw shifted (-(llcorner UIS_plus_raw)-(urcorner UIS_plus_raw - llcorner UIS_plus_raw)/2) scaled (u / max((xpart urcorner UIS_plus_raw) - (xpart llcorner UIS_plus_raw), (ypart urcorner UIS_plus_raw) - (ypart llcorner UIS_plus_raw)));
 
-def p_plus_EGB(expr pos, theta, sc, al) =
+def p_plus_UIS(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_plus;
+	thdraw UIS_plus;
 enddef;
 
 
-picture EGB_plus_minus_raw;
-EGB_plus_minus_raw := image(
+picture UIS_plus_minus_raw;
+UIS_plus_minus_raw := image(
 	fill (482.812988,451.992004)--(482.812988,443.835999)--(490.968994,443.835999)
 		--(490.968994,441.335999)--(482.812988,441.335999)--(482.812988,433.179993)
 		--(480.359009,433.179993)--(480.359009,441.335999)--(472.187988,441.335999)
@@ -1130,12 +1130,12 @@ EGB_plus_minus_raw := image(
 		--(495.656006,426.082001)..controls (495.656006,418.312988) and (489.355011,412.011993)..(481.585999,412.011993)
 		--cycle withcolor black;
 );
-picture EGB_plus_minus;
-EGB_plus_minus := EGB_plus_minus_raw shifted (-(llcorner EGB_plus_minus_raw)-(urcorner EGB_plus_minus_raw - llcorner EGB_plus_minus_raw)/2) scaled (u / ((xpart urcorner EGB_plus_minus_raw) - (xpart llcorner EGB_plus_minus_raw)));
+picture UIS_plus_minus;
+UIS_plus_minus := UIS_plus_minus_raw shifted (-(llcorner UIS_plus_minus_raw)-(urcorner UIS_plus_minus_raw - llcorner UIS_plus_minus_raw)/2) scaled (u / ((xpart urcorner UIS_plus_minus_raw) - (xpart llcorner UIS_plus_minus_raw)));
 
-def p_plusminus_EGB(expr pos, theta, sc, al) =
+def p_plusminus_UIS(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_plus_minus;
+	thdraw UIS_plus_minus;
 enddef;
 
 
@@ -1176,7 +1176,7 @@ def p_seedgermination_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
-def p_stalactitestalagmite_EGB(expr pos,theta,sc,al) =
+def p_stalactitestalagmite_UIS(expr pos,theta,sc,al) =
 	U:=(.15u, .4u);
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
@@ -1187,7 +1187,7 @@ def p_stalactitestalagmite_EGB(expr pos,theta,sc,al) =
 enddef;
 
 
-def p_stalactitesstalagmites_EGB(expr pos,theta,sc,al) =
+def p_stalactitesstalagmites_UIS(expr pos,theta,sc,al) =
 	U:=(.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
