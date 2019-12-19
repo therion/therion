@@ -1479,9 +1479,9 @@ therion: point bat
 en: bat
 pt: morcego
 
-therion: point bone
-en: bone
-pt: osso
+therion: point bones
+en: bones
+pt: ossos
 
 therion: point curtains
 en: curtains
@@ -1495,7 +1495,7 @@ therion: point disc-pillar
 en: disc on pillar
 pt: disco em coluna
 
-therion: point discs-pillars
+therion: point disc-pillars
 en: discs on pillars
 pt: discos em colunas
 
@@ -1503,7 +1503,7 @@ therion: point disc-stalactite
 en: disc on stalactite
 pt: disco em estalactite
 
-therion: point discs-stalactites
+therion: point disc-stalactites
 en: discs on stalactites
 pt: discos em estalactites
 
@@ -1511,7 +1511,7 @@ therion: point disc-stalagmite
 en: disc on stalagmite
 pt: disco em estalagmite
 
-therion: point discs-stalagmites
+therion: point disc-stalagmites
 en: discs on stalagmites
 pt: discos em estalagmites
 
@@ -1531,9 +1531,9 @@ therion: point helictites
 en: helictites
 pt: helictites
 
-therion: point human-bone
-en: human bone
-pt: osso humano
+therion: point human-bones
+en: human bones
+pt: ossos humanos
 
 therion: point masonry
 en: masonry
@@ -1556,7 +1556,7 @@ therion: point nameplate
 en: nameplate
 pt: placa de identificação
 
-therion: point notwheelchair
+therion: point no-wheelchair
 en: not wheelchair accessible
 pt: não acessível com cadeira de rodas
 
