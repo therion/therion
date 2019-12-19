@@ -1238,9 +1238,13 @@ void lxFrame::ExportRotationPictures() {
   this->canvas->setup->cam_orig_center = this->canvas->setup->cam_center;
   this->canvas->setup->cam_orig_pos = this->canvas->setup->cam_pos;
   for(i = 0; i < 600; i++) {
-    tmpRD->m_imgFileName = this->m_fileDir;
-	tmpRD->m_imgFileName += _T("/");
-	tmpRD->m_imgFileName += wxString::Format(_T("ROT%04d.png"), i);
+  	if (!this->m_fileDir.IsEmpty()) {
+			tmpRD->m_imgFileName = this->m_fileDir;
+			tmpRD->m_imgFileName += _T("/");
+  	} else {
+  		tmpRD->m_imgFileName = _T("");
+  	}
+    tmpRD->m_imgFileName += wxString::Format(_T("ROT%04d.png"), i);
     tmpRD->Render(this, this->canvas);
 	this->canvas->SwapBuffers();
 	if (i == 0) {

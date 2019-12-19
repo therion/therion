@@ -417,10 +417,47 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_FLUTE,SYMP_FLUTE);
         cp3(TT_POINT_TYPE_GRADIENT,SYMP_GRADIENT);
         cp3(TT_POINT_TYPE_GUANO,SYMP_GUANO);
+        cp3(TT_POINT_TYPE_ALTAR,SYMP_ALTAR);
+        cp3(TT_POINT_TYPE_ARCHEOEXCAVATION,SYMP_ARCHEOEXCAVATION);
+        cp3(TT_POINT_TYPE_AUDIO,SYMP_AUDIO);
+        cp3(TT_POINT_TYPE_BAT,SYMP_BAT);
+        cp3(TT_POINT_TYPE_BONES,SYMP_BONES);
+        cp3(TT_POINT_TYPE_CURTAINS,SYMP_CURTAINS);
+        cp3(TT_POINT_TYPE_DANGER,SYMP_DANGER);
+        cp3(TT_POINT_TYPE_DISCPILLAR,SYMP_DISCPILLAR);
+        cp3(TT_POINT_TYPE_DISCPILLARS,SYMP_DISCPILLARS);
+        cp3(TT_POINT_TYPE_DISCSTALACTITES,SYMP_DISCSTALACTITES);
+        cp3(TT_POINT_TYPE_DISCSTALAGMITES,SYMP_DISCSTALAGMITES);
+        cp3(TT_POINT_TYPE_DISCSTALACTITE,SYMP_DISCSTALACTITE);
+        cp3(TT_POINT_TYPE_DISCSTALAGMITE,SYMP_DISCSTALAGMITE);
+        cp3(TT_POINT_TYPE_ELECTRICLIGHT,SYMP_ELECTRICLIGHT);
+        cp3(TT_POINT_TYPE_EXVOTO,SYMP_EXVOTO);
+        cp3(TT_POINT_TYPE_GATE,SYMP_GATE);
+        cp3(TT_POINT_TYPE_HUMANBONES,SYMP_HUMANBONES);
+        cp3(TT_POINT_TYPE_MASONRY,SYMP_MASONRY);
+        cp3(TT_POINT_TYPE_MINUS,SYMP_MINUS);
+        cp3(TT_POINT_TYPE_MUD,SYMP_MUD);
         cp3(TT_POINT_TYPE_MUDCRACK,SYMP_MUDCRACK);
+        cp3(TT_POINT_TYPE_NAMEPLATE,SYMP_NAMEPLATE);
+        cp3(TT_POINT_TYPE_NO_WHEELCHAIR,SYMP_NOWHEELCHAIR);
+        cp3(TT_POINT_TYPE_PENDANT,SYMP_PENDANT);
+        cp3(TT_POINT_TYPE_PILLARWITHCURTAINS,SYMP_PILLARWITHCURTAINS);
+        cp3(TT_POINT_TYPE_PILLARSWITHCURTAINS,SYMP_PILLARSWITHCURTAINS);
+        cp3(TT_POINT_TYPE_PHOTO,SYMP_PHOTO);
+        cp3(TT_POINT_TYPE_PLUS,SYMP_PLUS);
+        cp3(TT_POINT_TYPE_PLUSMINUS,SYMP_PLUSMINUS);
+        cp3(TT_POINT_TYPE_SEEDGERMINATION,SYMP_SEEDGERMINATION);
+        cp3(TT_POINT_TYPE_STALACTITESTALAGMITE,SYMP_STALACTITESTALAGMITE);
+        cp3(TT_POINT_TYPE_STALACTITESSTALAGMITES,SYMP_STALACTITESSTALAGMITES);
+        cp3(TT_POINT_TYPE_TREETRUNK,SYMP_TREETRUNK);
+        cp3(TT_POINT_TYPE_VOLCANO,SYMP_VOLCANO);
+        cp3(TT_POINT_TYPE_WALKWAY,SYMP_WALKWAY);
+        cp3(TT_POINT_TYPE_WATERDRIP,SYMP_WATERDRIP);
+        cp3(TT_POINT_TYPE_WHEELCHAIR,SYMP_WHEELCHAIR);
         cp3(TT_POINT_TYPE_GYPSUM,SYMP_GYPSUM);
         cp3(TT_POINT_TYPE_GYPSUM_FLOWER,SYMP_GYPSUMFLOWER);
         cp3(TT_POINT_TYPE_HELICTITE,SYMP_HELICTITE);
+        cp3(TT_POINT_TYPE_HELICTITES,SYMP_HELICTITES);
         cp3(TT_POINT_TYPE_ICE,SYMP_ICE);
         cp3(TT_POINT_TYPE_SNOW,SYMP_SNOW);
         cp3(TT_POINT_TYPE_KARREN,SYMP_KARREN);
@@ -626,6 +663,12 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(14,SYMP_VIAFERRATA);
     group(15,SYML_VIAFERRATA);
     group(16,SYML_STEPS);
+    group(17,SYMP_NOWHEELCHAIR);
+    group(18,SYMP_WHEELCHAIR);
+    group(19,SYMP_WALKWAY);
+    group(20,SYMP_NAMEPLATE);
+    group(21,SYMP_GATE);
+    group(22,SYMP_ELECTRICLIGHT);
     egroup
 
     bgroup(SYMX_SPELEOTHEMS)
@@ -647,10 +690,25 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(15,SYMP_CAVEPEARL);
     group(16,SYMP_RIMSTONEPOOL);
     group(17,SYMP_RIMSTONEDAM);
-    group(19,SYML_FLOWSTONE);
-    group(20,SYML_MOONMILK);
-    group(21,SYMA_FLOWSTONE)
-    group(22,SYMA_MOONMILK)
+    group(18,SYMP_PENDANT);
+    group(19,SYMP_VOLCANO);
+    group(20,SYMP_PILLARS);
+    group(21,SYMP_PILLARSWITHCURTAINS);
+    group(22,SYMP_PILLARWITHCURTAINS);
+    group(23,SYMP_CURTAINS);
+    group(24,SYMP_HELICTITES);
+    group(25,SYMP_STALACTITESTALAGMITE);
+    group(26,SYMP_STALACTITESSTALAGMITES);
+    group(27,SYMP_DISCSTALACTITE);
+    group(28,SYMP_DISCSTALAGMITE);
+    group(29,SYMP_DISCPILLAR);
+    group(30,SYMP_DISCSTALACTITES);
+    group(31,SYMP_DISCSTALAGMITES);
+    group(32,SYMP_DISCPILLARS);
+    group(33,SYML_FLOWSTONE);
+    group(34,SYML_MOONMILK);
+    group(35,SYMA_FLOWSTONE);
+    group(36,SYMA_MOONMILK);
     egroup
 
 
@@ -678,6 +736,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(8,SYMP_RAFTCONE);
     group(9,SYMP_GUANO);
     group(10,SYMP_MUDCRACK);
+    group(11,SYMP_MUD);
     egroup
 
 
@@ -708,6 +767,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(23,SYMA_SAND)
     group(24,SYMA_SNOW)
     group(25,SYMP_MUDCRACK)
+    group(26,SYMP_MUD)
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -1301,6 +1361,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_CAVEPEARL,thT("point cave-pearl",layout->lang));
   legend_point(SYMP_DISK,thT("point disk",layout->lang));
   legend_point(SYMP_HELICTITE,thT("point helictite",layout->lang));
+  legend_point(SYMP_HELICTITES,thT("point helictites",layout->lang));
   legend_point(SYMP_ARAGONITE,thT("point aragonite",layout->lang));
   legend_point(SYMP_CRYSTAL,thT("point crystal",layout->lang));
   legend_point(SYMP_WALLCALCITE,thT("point wall-calcite",layout->lang));
@@ -1335,6 +1396,42 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_FIXEDLADDER,thT("point fixed-ladder",layout->lang));
   legend_eqline(SYML_FIXEDLADDER,thT("line fixed-ladder",layout->lang));
   legend_point(SYMP_STEPS,thT("point steps",layout->lang));
+  legend_point(SYMP_ALTAR,thT("point altar",layout->lang));
+  legend_point(SYMP_ARCHEOEXCAVATION,thT("point archeo-excavation",layout->lang));
+  legend_point(SYMP_AUDIO,thT("point audio",layout->lang));
+  legend_point(SYMP_BAT,thT("point bat",layout->lang));
+  legend_point(SYMP_BONES,thT("point bones",layout->lang));
+  legend_point(SYMP_CURTAINS,thT("point curtains",layout->lang));
+  legend_point(SYMP_DANGER,thT("point danger",layout->lang));
+  legend_point(SYMP_DISCPILLAR,thT("point disc-pillar",layout->lang));
+  legend_point(SYMP_DISCSTALACTITE,thT("point disc-stalactite",layout->lang));
+  legend_point(SYMP_DISCSTALAGMITE,thT("point disc-stalagmite",layout->lang));
+  legend_point(SYMP_DISCPILLARS,thT("point disc-pillars",layout->lang));
+  legend_point(SYMP_DISCSTALACTITES,thT("point disc-stalactites",layout->lang));
+  legend_point(SYMP_DISCSTALAGMITES,thT("point disc-stalagmites",layout->lang));
+  legend_point(SYMP_ELECTRICLIGHT,thT("point electric-light",layout->lang));
+  legend_point(SYMP_EXVOTO,thT("point ex-voto",layout->lang));
+  legend_point(SYMP_GATE,thT("point gate",layout->lang));
+  legend_point(SYMP_HUMANBONES,thT("point human-bones",layout->lang));
+  legend_point(SYMP_MASONRY,thT("point masonry",layout->lang));
+  //legend_point(SYMP_MINUS,thT("point minus",layout->lang));
+  legend_point(SYMP_MUD,thT("point mud",layout->lang));
+  legend_point(SYMP_NAMEPLATE,thT("point nameplate",layout->lang));
+  legend_point(SYMP_NOWHEELCHAIR,thT("point no-wheelchair",layout->lang));
+  legend_point(SYMP_PENDANT,thT("point pendant",layout->lang));
+  legend_point(SYMP_PILLARWITHCURTAINS,thT("point pillar-with-curtains",layout->lang));
+  legend_point(SYMP_PILLARSWITHCURTAINS,thT("point pillars-with-curtains",layout->lang));
+  legend_point(SYMP_PHOTO,thT("point photo",layout->lang));
+  //legend_point(SYMP_PLUS,thT("point plus",layout->lang));
+  //legend_point(SYMP_PLUSMINUS,thT("point plus-minus",layout->lang));
+  legend_point(SYMP_SEEDGERMINATION,thT("point seed-germination",layout->lang));
+  legend_point(SYMP_STALACTITESTALAGMITE,thT("point stalactite-stalagmite",layout->lang));
+  legend_point(SYMP_STALACTITESSTALAGMITES,thT("point stalactites-stalagmites",layout->lang));
+  legend_point(SYMP_TREETRUNK,thT("point tree-trunk",layout->lang));
+  legend_point(SYMP_VOLCANO,thT("point volcano",layout->lang));
+  legend_point(SYMP_WALKWAY,thT("point walkway",layout->lang));
+  legend_point(SYMP_WATERDRIP,thT("point water-drip",layout->lang));
+  legend_point(SYMP_WHEELCHAIR,thT("point wheelchair",layout->lang));
 
   insfig(SYML_ROPE,thT("line rope",layout->lang));
   this->export_mp_symbol_options(mpf, SYML_ROPE);

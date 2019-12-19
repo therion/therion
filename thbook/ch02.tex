@@ -701,56 +701,148 @@ Point is a command for drawing a point map symbol.
     types are supported: 
 
     {\it special objects:} 
-    |station|\[Survey station. For each scrap (with the exception of scraps 
-      in `none' projection) at least one station with station reference 
-      (|-name| option) has to be specified.],  
+    |dimensions|\[Use |-value| option to
+      specify passage dimensions above/below centerline 
+      plane used while creating 3D model.],
     |section|\[|section| is an anchor for placing the cross-section at this 
       point.  This symbol has no visual representation. The cross section
       must be in the separate scrap with `none' projection specified. 
       You can specify it through the |-scrap| option.],
-     |dimensions|\[Use |-value| option to
-      specify passage dimensions above/below centerline 
-      plane used while creating 3D model.];
+    |station|\[Survey station. For each scrap (with the exception of scraps 
+      in `none' projection) at least one station with station reference 
+      (|-name| option) has to be specified.]; 
 
-    {\it labels:} |label|, |remark|, 
+    {\it labels:}
     |altitude|\[General altitude label. 
     All altitudes are exported as a difference against grid $Z$ origin
    (which is 0 by default).
     To display altitude on the passage 
-    wall, use |altitude| option for any line point of the passage wall], 
+    wall, use |altitude| option for any line point of the passage wall],
+    |date|,
     |height|\[Height of formations inside of the passage (like pit etc.);
     see below for details.], 
-    |passage-height|\[Height of the passage; see below for details.], 
+    |label|,
+    |passage-height|\[Height of the passage; see below for details.],
+    |remark|,
     |station-name|\[If no text is specified, the name of the nearest
-      station is used.], \penalty-100
-    |date|;
+      station is used.]; \penalty-100
 
     {\it symbolic passage fills:}\[Unlike other point symbols, these are
       clipped by the scrap border. See the chapter {\it How the map is 
       put together}.]
-    |bedrock|, |sand|, |raft|, |clay|, |pebbles|, |mudcrack|,
-    |debris|, |blocks|, |water|, |ice|, |guano|, |snow|;
+    |bedrock|,
+    |blocks|,
+    |clay|,
+    |debris|,
+    |guano|,
+    |ice|,
+    |mudcrack|,
+    |mud|,
+    |pebbles|,
+    |raft|,
+    |sand|,
+    |snow|,
+    |water|;
 
-    {\it speleothems:} |flowstone|, |moonmilk|, |stalactite|, |stalagmite|,
-    |pillar|, |curtain|, |helictite|, |soda-straw|, |crystal|, |wall-calcite|,
-    |popcorn|, |disk|, |gypsum|, |gypsum-flower|, |aragonite|, |cave-pearl|,
-    |rimstone-pool|, |rimstone-dam|, |anastomosis|, |karren|, |scallop|,
-    |flute|, |raft-cone|, \NEW{5.4}|clay-tree|;
+    {\it speleothems:}
+    |anastomosis|,
+    |aragonite|,
+    |cave-pearl|,
+    \NEW{5.4}|clay-tree|,
+    |crystal|,
+    |curtains|,
+    |curtain|,
+    |disc-pillar|,
+    |disc-stalactite|,
+    |disc-stalagmite|,
+    |disc-pillars|,
+    |disc-stalactites|,
+    |disc-stalagmites|,
+    |disk|,
+    |flowstone|,
+    |flute|,
+    |gypsum-flower|,
+    |gypsum|,
+    |helictites|,
+    |helictite|,
+    |karren|,
+    |moonmilk|,
+    |pendant|,
+    |pillar-with-curtains|,
+    |pillars-with-curtains|,
+    |pillar|,
+    |popcorn|,
+    |raft-cone|,
+    |rimstone-dam|,
+    |rimstone-pool|,
+    |scallop|,
+    |soda-straw|,
+    |stalactite-stalagmite|,
+    |stalactites-stalagmites|,
+    |stalactite|,
+    |stalagmite|,
+    |volcano|,
+    |wall-calcite|;
 
-    {\it equipment:} |anchor|, |rope|, |fixed-ladder|, |rope-ladder|, |steps|,
-    |bridge|, |traverse|, |camp|, |no-equipment|;
+    {\it equipment:}
+    |anchor|,
+    |bridge|,
+    |camp|,
+    |fixed-ladder|,
+    |gate|,
+    |masonry|,
+    |nameplate|,
+    |no-equipment|,
+    |no-wheelchair|,
+    |rope-ladder|,
+    |rope|,
+    |steps|,
+    |traverse|,
+    |walkway|,
+    |wheelchair|;
 
-    {\it passage ends:} |continuation|, |narrow-end|, |low-end|, 
-    |flowstone-choke|, |breakdown-choke|, \NEW{5.4}|clay-choke|, |entrance|;
+    {\it passage ends:}
+    |breakdown-choke|,
+    \NEW{5.4}|clay-choke|,
+    |continuation|,
+    |entrance|,
+    |flowstone-choke|,
+    |low-end|,
+    |narrow-end|;
 
-    {\it others:} |dig|, |archeo-material|, |paleo-material|, |vegetable-debris|, 
-    |root|, |water-flow|, 
+    {\it others:}
+    |air-draught|\[Number of ticks is set according to |-scale| option],
+    |altar|,
+    |archeo-excavation|,
+    |archeo-material|,
+    |audio|,
+    |bat|,
+    |bones|,
+    |danger|,
+    |dig|,
+    |electric-light|,
+    |ex-voto|,
+    |extra|\[Additional morphing point.],
+    |gradient|,
+    |human-bones|,
+    |ice-pillar|,
+    \NEW{5.4}|ice-stalactite|,
+    |ice-stalagmite|,
+    |map-connection|\[Virtual point, used to indicate connection between shifted maps (extended elevation, map offset).],
+    %|minus|,
+    |paleo-material|,
+    |photo|,
+    %|plus-minus|,
+    %|plus|,
+    |root|,
+    |seed-germination|,
+    |sink|,
     |spring|\[Always use |spring| and |sink| symbols with a |water-flow| arrow.], 
-    |sink|, \NEW{5.4}|ice-stalactite|, |ice-stalagmite|, |ice-pillar|,
-    |gradient|, |air-draught|\[Number of ticks is set according to |-scale| option],
-    |map-connection|\[Virtual point, used to indicate connection
-    between shifted maps (extended elevation, map offset).], |extra|\[Additional morphing point.], 
-    |u|\[For user defined point symbols.].
+    |tree-trunk|,
+    |u|\[For user defined point symbols.],
+    |vegetable-debris|,
+    |water-drip|,
+    |water-flow|.
 
 \endarguments
 

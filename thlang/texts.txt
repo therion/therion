@@ -1463,9 +1463,158 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: point altar
+en: altar
+pt: altar
+
+therion: point archeo-excavation
+en: archeo-excavation
+pt: escavação arqueológica
+
+therion: point audio
+en: audio
+pt: áudio
+
+therion: point bat
+en: bat
+pt: morcego
+
+therion: point bones
+en: bones
+pt: ossos
+
+therion: point curtains
+en: curtains
+pt: cortinas
+
+therion: point danger
+en: danger
+pt: perigo
+
+therion: point disc-pillar
+en: disc on pillar
+pt: disco em coluna
+
+therion: point disc-pillars
+en: discs on pillars
+pt: discos em colunas
+
+therion: point disc-stalactite
+en: disc on stalactite
+pt: disco em estalactite
+
+therion: point disc-stalactites
+en: discs on stalactites
+pt: discos em estalactites
+
+therion: point disc-stalagmite
+en: disc on stalagmite
+pt: disco em estalagmite
+
+therion: point disc-stalagmites
+en: discs on stalagmites
+pt: discos em estalagmites
+
+therion: point electric-light
+en: electric light
+pt: luz elétrica
+
+therion: point ex-voto
+en: ex-voto
+pt: ex-voto
+
+therion: point gate
+en: gate
+pt: portão
+
+therion: point helictites
+en: helictites
+pt: helictites
+
+therion: point human-bones
+en: human bones
+pt: ossos humanos
+
+therion: point masonry
+en: masonry
+pt: alvenaria
+
+therion: point minus
+en: minus
+pt: segue abaixo
+
+therion: point mud
+en: mud
+pt: lama
+
 therion: point mudcrack
 en: mudcrack
+pt: lama rachada
 sk: popraskané blato
+
+therion: point nameplate
+en: nameplate
+pt: placa de identificação
+
+therion: point no-wheelchair
+en: not wheelchair accessible
+pt: não acessível com cadeira de rodas
+
+therion: point pendant
+en: pendant
+pt: pendente
+
+therion: point pillar-with-curtains
+en: pillar with curtains
+pt: coluna com cortinas
+
+therion: point pillars-with-curtains
+en: pillars with curtains
+pt: colunas com cortinas
+
+therion: point photo
+en: photo
+pt: foto
+
+therion: point plus
+en: plus
+pt: segue acima
+
+therion: point plus-minus
+en: plus/minus
+pt: segue acima e abaixo
+
+therion: point seed-germination
+en: seed-germination
+pt: germinação de semente
+
+therion: point stalactite-stalagmite
+en: stalactite-stalagmite
+pt: estalactite-estalagmite
+
+therion: point stalactites-stalagmites
+en: stalactites-stalagmites
+pt: estalactites-estalagmites
+
+therion: point tree-trunk
+en: tree-trunk
+pt: tronco de árvore
+
+therion: point volcano
+en: volcano
+pt: vulcão
+
+therion: point walkway
+en: walkway
+pt: passarela
+
+therion: point water-drip
+en: water-drip
+pt: gotejamento
+
+therion: point wheelchair
+en: wheelchair accessible
+pt: acessível com cadeira de rodas
 
 therion: point water
 bg: вода

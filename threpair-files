@@ -13,7 +13,7 @@ proc repair_file {fnm} {
 
 proc scan_directory {dnm} {
   puts "scanning directory $dnm"
-  set files [glob -nocomplain -directory $dnm *.th *.th2 *.th3 *.thcfg thconfig*]
+  set files [glob -nocomplain -directory $dnm *.th *.th2 *.th3 *.thcfg thconfig* *.thconfig]
   set dirs [glob -nocomplain -directory $dnm -type d *]
   foreach sfl $files {
     repair_file $sfl

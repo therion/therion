@@ -3242,12 +3242,13 @@ void thdb1d::process_xelev()
           this->station_vec[current_node->id - 1].survey->get_full_name());
 #endif
         if (thcfg.log_extend) {
-          if (prev_id != current_node->id) thprintf("BACK %s@%s\n",
-            this->station_vec[current_node->id - 1].name,
-            this->station_vec[current_node->id - 1].survey->get_full_name());
-          prev_id = current_node->id;
-        }
-        
+          if (prev_id != current_node->id) {
+            thprintf("BACK %s@%s\n",
+              this->station_vec[current_node->id - 1].name,
+              this->station_vec[current_node->id - 1].survey->get_full_name());
+            prev_id = current_node->id;
+          }
+        }        
       }
 
     } else {
@@ -3333,11 +3334,13 @@ void thdb1d::process_xelev()
         this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name());
 #endif
       if (thcfg.log_extend) {
-        if (prev_id != current_node->last_arrow->end_node->id) thprintf("%s %s@%s\n",
-          (go_left == -1 ? "LEFT" : (go_left == 1 ? "RIGHT" : "VERTICAL")),
-          this->station_vec[current_node->last_arrow->end_node->id - 1].name,
-          this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name());
-        prev_id = current_node->last_arrow->end_node->id;
+        if ((prev_id != current_node->last_arrow->end_node->id) && !this->station_vec[current_node->last_arrow->end_node->id - 1].is_temporary()) {
+          thprintf("%s %s@%s\n",
+            (go_left == -1 ? "LEFT" : (go_left == 1 ? "RIGHT" : "VERTICAL")),
+            this->station_vec[current_node->last_arrow->end_node->id - 1].name,
+            this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name());
+          prev_id = current_node->last_arrow->end_node->id;
+        }
       }
 
       if (!current_node->last_arrow->end_node->is_attached) {

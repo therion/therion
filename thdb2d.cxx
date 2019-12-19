@@ -1172,7 +1172,7 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
     if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
     if (strlen(cm->name) > 0)
     	thlog.printf("M %8.2f %s@%s (%s)\n", z, cm->name, cm->fsptr ? cm->fsptr->full_name : "",  cm->title ? cm->title : "");
-	cbm = cmap->first_bm;
+    cbm = cmap->first_bm;
     while (cbm != NULL) {
    	  if (cbm->mode != TT_MAPITEM_NORMAL) {
 		cbm = cbm->next_item;

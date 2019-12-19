@@ -1905,6 +1905,14 @@ struct OSC {
 bool lxGLCanvas::OSCMakeCurrent()
 {
 
+	if (!this->m_OSC->m_OK) {
+	  int w, h;
+		this->GetClientSize(&w, &h);
+		this->m_OSC->m_Width = w;
+		this->m_OSC->m_Height = h;
+		return true;
+	}
+
   // urobime context current
 #ifdef LXWIN32  
   if (this->m_OSC->m_r2d) {
@@ -1929,13 +1937,15 @@ bool lxGLCanvas::OSCInit(GLint w, GLint h)
   this->m_OSC = new OSC();
   this->m_OSC->m_Width = w;
   this->m_OSC->m_Height = h;
-  this->m_OSC->m_OK = true;
+  this->m_OSC->m_OK = false;
 
 #ifdef LXWIN32
   this->m_OSC->m_r2d = R2DCreate(w, h);
+  if (this->m_OSC->m_r2d) this->m_OSC->m_OK = true;
 #endif
 #ifdef LXLINUX
-  this->m_OSC->m_r2p = R2PCreate(w, h);
+  //this->m_OSC->m_r2p = R2PCreate(w, h);
+  if (this->m_OSC->m_r2p) this->m_OSC->m_OK = true;
 #endif
   return this->m_OSC->m_OK;
 }
