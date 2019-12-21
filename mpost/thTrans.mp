@@ -159,6 +159,7 @@ let l_floorstep = l_floorstep_UIS;
 let l_flowstone = l_flowstone_UIS;
 let l_gradient = l_gradient_UIS;
 let l_handrail = l_handrail_SKBB;
+let l_joint = l_joint_EGB;
 let l_mapconnection = l_mapconnection_SKBB;
 let l_moonmilk = l_moonmilk_UIS;
 let l_overhang = l_overhang_SKBB;

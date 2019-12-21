@@ -320,6 +320,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_FLOWSTONE,SYML_FLOWSTONE);
         cl3(TT_LINE_TYPE_GRADIENT,SYML_GRADIENT);
         cl3(TT_LINE_TYPE_HANDRAIL,SYML_HANDRAIL);
+        cl3(TT_LINE_TYPE_JOINT,SYML_JOINT);
         cl3(TT_LINE_TYPE_LABEL,SYML_LABEL);
         cl3(TT_LINE_TYPE_MAP_CONNECTION,SYML_MAPCONNECTION);
         cl3(TT_LINE_TYPE_MOONMILK,SYML_MOONMILK);
@@ -1456,6 +1457,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_eqline(SYML_DRIPLINE,thT("line dripline",layout->lang));
   legend_eqline(SYML_FAULT,thT("line fault",layout->lang));
   legend_eqline(SYML_HANDRAIL,thT("line handrail",layout->lang));
+  legend_eqline(SYML_JOINT,thT("line joint",layout->lang));
   legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
   legend_eqline(SYML_RIMSTONEPOOL,thT("line rimstone-pool",layout->lang));
   legend_eqline(SYML_VIAFERRATA,thT("line via-ferrata",layout->lang));

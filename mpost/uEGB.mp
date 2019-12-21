@@ -1582,6 +1582,28 @@ def l_fault_EGB(expr P) =
 enddef;
 
 
+def l_joint_EGB(expr P) =
+	T := identity;
+
+	cursor := 0;
+	totalLength := arclength P;
+	elementSize := adjust_step(totalLength, u); % symbol length nudged to be multiple of path length
+	pickup PenC;
+	forever:
+		t0 := arctime (cursor + elementSize * 3/22) of P;
+		t1 := arctime (cursor + elementSize * 10/22) of P;
+		t2 := arctime (cursor + elementSize * 16/22) of P;
+		t3 := arctime (cursor + elementSize * 19/22) of P;
+
+		thdraw (subpath (t0,t1) of P);
+		thdraw (subpath (t2,t3) of P);
+
+		cursor := cursor + elementSize;
+		exitif cursor > totalLength - (elementSize / 2);
+	endfor;
+enddef;
+
+
 def l_rimstonedam_EGB(expr P) =
 	cas := 0;
 	distance := arclength P;

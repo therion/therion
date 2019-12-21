@@ -1475,6 +1475,10 @@ therion: line fault
 en: fault
 pt: falha
 
+therion: line joint
+en: joint
+pt: fratura
+
 therion: line rimstone-dam
 bg: сухо синтрово езеро
 ca: gour sec
