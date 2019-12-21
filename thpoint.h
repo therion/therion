@@ -2,14 +2,14 @@
  * @file thpoint.h
  * point module.
  */
-  
+
 /* Copyright (C) 2000 Stacho Mudrak
- * 
+ *
  * $Date: $
  * $RCSfile: $
  * $Revision: $
  *
- * -------------------------------------------------------------------- 
+ * --------------------------------------------------------------------
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,13 +19,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --------------------------------------------------------------------
  */
- 
+
 #ifndef thpoint_h
 #define thpoint_h
 
@@ -37,7 +37,7 @@
 /**
  * point command options tokens.
  */
- 
+
 enum {
   TT_POINT_UNKNOWN = 3000,
   TT_POINT_TYPE = 3001,
@@ -60,7 +60,7 @@ enum {
 /**
  * point command options parsing table.
  */
- 
+
 static const thstok thtt_point_opt[] = {
   {"align", TT_POINT_ALIGN},
   {"dist", TT_POINT_DIST},
@@ -99,7 +99,7 @@ enum {
 
 // date
   TT_POINT_TAG_DATE = 1,
-  
+
 };
 
 
@@ -111,137 +111,137 @@ enum {
   TT_POINT_TYPE_UNKNOWN,
 
 // specialne typy
-  TT_POINT_TYPE_U,
-  TT_POINT_TYPE_STATION,
-  TT_POINT_TYPE_SECTION,
-  TT_POINT_TYPE_WATER_FLOW,
-  TT_POINT_TYPE_SPRING,
-  TT_POINT_TYPE_SINK,
-  TT_POINT_TYPE_LABEL,
-  TT_POINT_TYPE_REMARK,
-  TT_POINT_TYPE_ALTITUDE,
-  TT_POINT_TYPE_HEIGHT,
-  TT_POINT_TYPE_PASSAGE_HEIGHT,
-  TT_POINT_TYPE_STATION_NAME,
-  TT_POINT_TYPE_DATE,
   TT_POINT_TYPE_AIR_DRAUGHT,
+  TT_POINT_TYPE_ALTITUDE,
+  TT_POINT_TYPE_DATE,
   TT_POINT_TYPE_ENTRANCE,
   TT_POINT_TYPE_GRADIENT,
+  TT_POINT_TYPE_HEIGHT,
+  TT_POINT_TYPE_LABEL,
+  TT_POINT_TYPE_PASSAGE_HEIGHT,
+  TT_POINT_TYPE_REMARK,
+  TT_POINT_TYPE_SECTION,
+  TT_POINT_TYPE_SINK,
+  TT_POINT_TYPE_SPRING,
+  TT_POINT_TYPE_STATION,
+  TT_POINT_TYPE_STATION_NAME,
+  TT_POINT_TYPE_U,
+  TT_POINT_TYPE_WATER_FLOW,
 
   TT_POINT_TYPE_DIMENSIONS,
-  TT_POINT_TYPE_MAP_CONNECTION,
   TT_POINT_TYPE_EXTRA,
-  
+  TT_POINT_TYPE_MAP_CONNECTION,
+
 // vystroj
-  TT_POINT_TYPE_NO_EQUIPMENT,
-  TT_POINT_TYPE_ANCHOR,
-  TT_POINT_TYPE_ROPE,
-  TT_POINT_TYPE_FIXED_LADDER,
-  TT_POINT_TYPE_ROPE_LADDER,
-  TT_POINT_TYPE_STEPS,
-  TT_POINT_TYPE_BRIDGE,
-  TT_POINT_TYPE_TRAVERSE,
-	TT_POINT_TYPE_VIA_FERRATA,
-  TT_POINT_TYPE_CAMP,
-  TT_POINT_TYPE_DIG,
-  TT_POINT_TYPE_HANDRAIL,
+  TT_POINT_TYPE_VIA_FERRATA,
   TT_POINT_TYPE_ALTAR,
+  TT_POINT_TYPE_ANCHOR,
   TT_POINT_TYPE_ARCHEOEXCAVATION,
   TT_POINT_TYPE_AUDIO,
   TT_POINT_TYPE_BAT,
   TT_POINT_TYPE_BONES,
+  TT_POINT_TYPE_BRIDGE,
+  TT_POINT_TYPE_CAMP,
   TT_POINT_TYPE_DANGER,
+  TT_POINT_TYPE_DIG,
   TT_POINT_TYPE_ELECTRICLIGHT,
   TT_POINT_TYPE_EXVOTO,
+  TT_POINT_TYPE_FIXED_LADDER,
   TT_POINT_TYPE_GATE,
+  TT_POINT_TYPE_HANDRAIL,
   TT_POINT_TYPE_HUMANBONES,
   TT_POINT_TYPE_MASONRY,
   TT_POINT_TYPE_MINUS,
   TT_POINT_TYPE_NAMEPLATE,
+  TT_POINT_TYPE_NO_EQUIPMENT,
   TT_POINT_TYPE_NO_WHEELCHAIR,
   TT_POINT_TYPE_PHOTO,
   TT_POINT_TYPE_PLUS,
   TT_POINT_TYPE_PLUSMINUS,
+  TT_POINT_TYPE_ROPE,
+  TT_POINT_TYPE_ROPE_LADDER,
   TT_POINT_TYPE_SEEDGERMINATION,
+  TT_POINT_TYPE_STEPS,
+  TT_POINT_TYPE_TRAVERSE,
   TT_POINT_TYPE_WALKWAY,
   TT_POINT_TYPE_WATERDRIP,
   TT_POINT_TYPE_WHEELCHAIR,
 
 // ukoncenia chodby
-  TT_POINT_TYPE_CONTINUATION,
-  TT_POINT_TYPE_NARROW_END,
-  TT_POINT_TYPE_LOW_END,
-  TT_POINT_TYPE_FLOWSTONE_CHOKE,
   TT_POINT_TYPE_BREAKDOWN_CHOKE,
   TT_POINT_TYPE_CLAY_CHOKE,
+  TT_POINT_TYPE_CONTINUATION,
+  TT_POINT_TYPE_FLOWSTONE_CHOKE,
+  TT_POINT_TYPE_LOW_END,
+  TT_POINT_TYPE_NARROW_END,
 
 // vypln
-  TT_POINT_TYPE_FLOWSTONE,
-  TT_POINT_TYPE_MOONMILK,
-  TT_POINT_TYPE_STALACTITE,
-  TT_POINT_TYPE_STALAGMITE,
-  TT_POINT_TYPE_PILLAR,
-  TT_POINT_TYPE_CURTAIN,
-  TT_POINT_TYPE_HELICTITE,
-  TT_POINT_TYPE_HELICTITES,
-  TT_POINT_TYPE_SODA_STRAW,
-  TT_POINT_TYPE_CRYSTAL,
-  TT_POINT_TYPE_WALL_CALCITE,
-  TT_POINT_TYPE_POPCORN,
-  TT_POINT_TYPE_DISK,
-  TT_POINT_TYPE_GYPSUM,
-  TT_POINT_TYPE_GYPSUM_FLOWER,
+  TT_POINT_TYPE_ANASTOMOSIS,
   TT_POINT_TYPE_ARAGONITE,
   TT_POINT_TYPE_CAVE_PEARL,
-  TT_POINT_TYPE_RIMSTONE_POOL,
-  TT_POINT_TYPE_RIMSTONE_DAM,
-  TT_POINT_TYPE_ANASTOMOSIS,
-  TT_POINT_TYPE_KARREN,
-  TT_POINT_TYPE_SCALLOP,
-  TT_POINT_TYPE_FLUTE,
-  TT_POINT_TYPE_RAFT_CONE,
-  TT_POINT_TYPE_ICE_STALACTITE,
-  TT_POINT_TYPE_ICE_STALAGMITE,
-  TT_POINT_TYPE_ICE_PILLAR,
-  TT_POINT_TYPE_STALACTITES,
-  TT_POINT_TYPE_STALAGMITES,
-  TT_POINT_TYPE_PILLARS,
+  TT_POINT_TYPE_CRYSTAL,
+  TT_POINT_TYPE_CURTAIN,
   TT_POINT_TYPE_CURTAINS,
   TT_POINT_TYPE_DISCPILLAR,
   TT_POINT_TYPE_DISCPILLARS,
-  TT_POINT_TYPE_DISCSTALACTITES,
-  TT_POINT_TYPE_DISCSTALAGMITES,
   TT_POINT_TYPE_DISCSTALACTITE,
+  TT_POINT_TYPE_DISCSTALACTITES,
   TT_POINT_TYPE_DISCSTALAGMITE,
+  TT_POINT_TYPE_DISCSTALAGMITES,
+  TT_POINT_TYPE_DISK,
+  TT_POINT_TYPE_FLOWSTONE,
+  TT_POINT_TYPE_FLUTE,
+  TT_POINT_TYPE_GYPSUM,
+  TT_POINT_TYPE_GYPSUM_FLOWER,
+  TT_POINT_TYPE_HELICTITE,
+  TT_POINT_TYPE_HELICTITES,
+  TT_POINT_TYPE_ICE_PILLAR,
+  TT_POINT_TYPE_ICE_STALACTITE,
+  TT_POINT_TYPE_ICE_STALAGMITE,
+  TT_POINT_TYPE_KARREN,
+  TT_POINT_TYPE_MOONMILK,
   TT_POINT_TYPE_PENDANT,
-  TT_POINT_TYPE_PILLARWITHCURTAINS,
+  TT_POINT_TYPE_PILLAR,
+  TT_POINT_TYPE_PILLARS,
   TT_POINT_TYPE_PILLARSWITHCURTAINS,
-  TT_POINT_TYPE_STALACTITESTALAGMITE,
+  TT_POINT_TYPE_PILLARWITHCURTAINS,
+  TT_POINT_TYPE_POPCORN,
+  TT_POINT_TYPE_RAFT_CONE,
+  TT_POINT_TYPE_RIMSTONE_DAM,
+  TT_POINT_TYPE_RIMSTONE_POOL,
+  TT_POINT_TYPE_SCALLOP,
+  TT_POINT_TYPE_SODA_STRAW,
+  TT_POINT_TYPE_STALACTITE,
+  TT_POINT_TYPE_STALACTITES,
   TT_POINT_TYPE_STALACTITESSTALAGMITES,
+  TT_POINT_TYPE_STALACTITESTALAGMITE,
+  TT_POINT_TYPE_STALAGMITE,
+  TT_POINT_TYPE_STALAGMITES,
   TT_POINT_TYPE_VOLCANO,
-  
+  TT_POINT_TYPE_WALL_CALCITE,
+
 // plosne vyplne
   TT_POINT_TYPE_BEDROCK,
-  TT_POINT_TYPE_SAND,
-  TT_POINT_TYPE_RAFT,
-  TT_POINT_TYPE_CLAY,
-  TT_POINT_TYPE_PEBBLES,
-  TT_POINT_TYPE_DEBRIS,
   TT_POINT_TYPE_BLOCKS,
-  TT_POINT_TYPE_WATER,
-  TT_POINT_TYPE_ICE,
-  TT_POINT_TYPE_SNOW,
-  TT_POINT_TYPE_GUANO,
+  TT_POINT_TYPE_CLAY,
   TT_POINT_TYPE_CLAY_TREE,
+  TT_POINT_TYPE_DEBRIS,
+  TT_POINT_TYPE_GUANO,
+  TT_POINT_TYPE_ICE,
   TT_POINT_TYPE_MUD,
   TT_POINT_TYPE_MUDCRACK,
+  TT_POINT_TYPE_PEBBLES,
+  TT_POINT_TYPE_RAFT,
+  TT_POINT_TYPE_SAND,
+  TT_POINT_TYPE_SNOW,
+  TT_POINT_TYPE_WATER,
 
 // ina vypln
   TT_POINT_TYPE_ARCHEO_MATERIAL,
   TT_POINT_TYPE_PALEO_MATERIAL,
-  TT_POINT_TYPE_VEGETABLE_DEBRIS,
-  TT_POINT_TYPE_TREETRUNK,
   TT_POINT_TYPE_ROOT,
+  TT_POINT_TYPE_TREETRUNK,
+  TT_POINT_TYPE_VEGETABLE_DEBRIS,
 
 };
 
@@ -249,7 +249,7 @@ enum {
 /**
  * Point types parsing table.
  */
- 
+
 static const thstok thtt_point_types[] = {
   {"air-draught",TT_POINT_TYPE_AIR_DRAUGHT},
   {"altar",TT_POINT_TYPE_ALTAR},
@@ -395,7 +395,7 @@ enum {
 /**
  * Point align parsing table.
  */
- 
+
 static const thstok thtt_point_aligns[] = {
   {"b", TT_POINT_ALIGN_B},
   {"bl", TT_POINT_ALIGN_BL},
@@ -447,7 +447,7 @@ enum {
 /**
  * Point types parsing table.
  */
- 
+
 static const thstok thtt_point_subtypes[] = {
   {"both", TT_POINT_SUBTYPE_BOTH},
   {"fixed", TT_POINT_SUBTYPE_FIXED},
@@ -474,33 +474,33 @@ static const thstok thtt_point_subtypes[] = {
 class thpoint : public th2ddataobject {
 
   public:
-  
+
   friend class thdb2d;
 
   int type,  ///< Point type.
     subtype,  ///< Point subtype.
     align;  ///< Point align.
   double orient, xsize, ysize;  ///<...
-  
+
   const char * text;  ///< Point text.
-    
+
   thdb2dpt * point;  ///< Point coordinates.
-  
+
   class thdb2dcp * cpoint; ///< Control point.
-  
+
   thobjectname station_name,  ///< Station name.
     from_name;  ///< Extend name.
 
   char extend_opts;  ///< Extend options.
 
   virtual void start_insert();
-    
+
   void parse_type(char * tstr);  ///< Parse point type.
 
   void parse_align(char * tstr);  ///< Parse point align.
-  
+
   void parse_subtype(char * ststr);  ///< Parse point subtype.
-  
+
   void parse_from(char * estr);  ///< Parse station extend.
 
   void parse_text(char * ss);  ///< Parse point text.
@@ -514,66 +514,66 @@ class thpoint : public th2ddataobject {
   /**
    * Standard constructor.
    */
-  
+
   thpoint();
-  
-  
+
+
   /**
    * Standard destructor.
    */
-   
+
   ~thpoint();
-  
-  
+
+
   /**
    * Return class identifier.
    */
-  
+
   virtual int get_class_id();
-  
-  
+
+
   /**
    * Return class name.
    */
-   
+
   virtual const char * get_class_name() {return "thpoint";};
-  
-  
+
+
   /**
    * Return true, if son of given class.
    */
-  
+
   virtual bool is(int class_id);
-  
-  
+
+
   /**
    * Return number of command arguments.
    */
-   
+
   virtual int get_cmd_nargs();
-  
-  
+
+
   /**
    * Return command name.
    */
-   
+
   virtual const char * get_cmd_name();
-  
-  
+
+
   /**
    * Return command end option.
    */
-   
+
   virtual const char * get_cmd_end();
-  
-  
+
+
   /**
    * Return option description.
    */
-   
+
   virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
-  
-  
+
+
   /**
    * Set command option.
    *
@@ -581,7 +581,7 @@ class thpoint : public th2ddataobject {
    * @param args Option arguments array.
    * @param argenc Arguments encoding.
    */
-   
+
   virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
 
 
@@ -590,22 +590,22 @@ class thpoint : public th2ddataobject {
    *
    * @warn Always use this method instead of delete function.
    */
-   
+
   virtual void self_delete();
 
 
   /**
    * Print object properties.
    */
-   
-  virtual void self_print_properties(FILE * outf); 
+
+  virtual void self_print_properties(FILE * outf);
 
   /**
    * Export to metapost file.
    */
-   
+
   virtual bool export_mp(class thexpmapmpxs * out);
-  
+
 };
 
 #endif
