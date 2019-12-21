@@ -1642,6 +1642,10 @@ therion: point volcano
 en: volcano
 pt: vulcão
 
+therion: line walkway
+en: walkway
+pt: passarela
+
 therion: point walkway
 en: walkway
 pt: passarela

@@ -172,6 +172,7 @@ let l_steps = l_steps_SKBB;
 let l_survey_cave = l_survey_cave_SKBB;
 let l_survey_surface = l_survey_surface_SKBB;
 let l_viaferrata = l_viaferrata_SKBB;
+let l_walkway = l_walkway_EGB;
 
 let a_bedrock = a_bedrock_SKBB;
 let a_blocks = a_blocks_SKBB;

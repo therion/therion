@@ -195,6 +195,7 @@ enum {
   TT_LINE_TYPE_U,
   TT_LINE_TYPE_VIA_FERRATA,
   TT_LINE_TYPE_WALL,
+  TT_LINE_TYPE_WALKWAY,
   TT_LINE_TYPE_WATER_FLOW,
 };
 
@@ -233,6 +234,7 @@ static const thstok thtt_line_types[] = {
   {"survey", TT_LINE_TYPE_SURVEY},
   {"u",TT_LINE_TYPE_U},
   {"via-ferrata",TT_LINE_TYPE_VIA_FERRATA},
+  {"walkway", TT_LINE_TYPE_WALKWAY},
   {"wall", TT_LINE_TYPE_WALL},
   {"water-flow", TT_LINE_TYPE_WATER_FLOW},
   {NULL, TT_LINE_TYPE_UNKNOWN},

@@ -332,6 +332,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_SLOPE,SYML_SLOPE);
         cl3(TT_LINE_TYPE_STEPS,SYML_STEPS);
         cl3(TT_LINE_TYPE_VIA_FERRATA,SYML_VIAFERRATA);
+        cl3(TT_LINE_TYPE_WALKWAY,SYML_WALKWAY);
       }
       break;
     case TT_SYMBOL_POINT:
@@ -624,7 +625,6 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(3,SYMP_STATIONNAME)
     egroup
 
-
     bgroup(SYMX_TEXT)
     group(0,SYMP_LABEL)
     group(1,SYMP_REMARK)
@@ -635,7 +635,6 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(6,SYMP_FLAG_CONTINUATION)
     group(7,SYMP_WALLALTITUDE)
     egroup
-
 
     bgroup(SYMX_WATER)
     group(0,SYMX_LINE_WATERFLOW)
@@ -713,7 +712,6 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(36,SYMA_MOONMILK);
     egroup
 
-
     bgroup(SYMX_ICE)
     group(0,SYML_WALL_ICE);
     group(1,SYMP_ICE);
@@ -724,7 +722,6 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(6,SYMA_ICE);
     group(7,SYMA_SNOW);
     egroup
-
 
     bgroup(SYMX_SEDIMENTS)
     group(0,SYML_WALL_SAND);
@@ -740,7 +737,6 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(10,SYMP_MUDCRACK);
     group(11,SYMP_MUD);
     egroup
-
 
     bgroup(SYMX_PASSAGEFILLS)
     group(0,SYMX_POINT_WATERFLOW)
@@ -772,6 +768,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(26,SYMA_SNOW);
     group(27,SYMP_MUDCRACK);
     group(28,SYMP_MUD);
+    group(29,SYML_WALKWAY);
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -862,8 +859,6 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(1,SYMP_HEIGHT_NEGATIVE)
     group(2,SYMP_HEIGHT_UNSIGNED)
     egroup
-
-
   }
   return rv;
 }
@@ -1350,34 +1345,34 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
 	  legend_step(SYML_MOONMILK,thT("line moonmilk",layout->lang));
   }
 
+  legend_point(SYMP_ANASTOMOSIS,thT("point anastomosis",layout->lang));
+  legend_point(SYMP_ARAGONITE,thT("point aragonite",layout->lang));
+  legend_point(SYMP_CAVEPEARL,thT("point cave-pearl",layout->lang));
+  legend_point(SYMP_CRYSTAL,thT("point crystal",layout->lang));
+  legend_point(SYMP_CURTAIN,thT("point curtain",layout->lang));
+  legend_point(SYMP_DISK,thT("point disk",layout->lang));
+  legend_point(SYMP_FLUTE,thT("point flute",layout->lang));
+  legend_point(SYMP_GYPSUM,thT("point gypsum",layout->lang));
+  legend_point(SYMP_GYPSUMFLOWER,thT("point gypsum-flower",layout->lang));
+  legend_point(SYMP_HELICTITE,thT("point helictite",layout->lang));
+  legend_point(SYMP_HELICTITES,thT("point helictites",layout->lang));
+  legend_point(SYMP_ICEPILLAR,thT("point ice-pillar",layout->lang));
+  legend_point(SYMP_ICESTALACTITE,thT("point ice-stalactite",layout->lang));
+  legend_point(SYMP_ICESTALAGMITE,thT("point ice-stalagmite",layout->lang));
+  legend_point(SYMP_KARREN,thT("point karren",layout->lang));
+  legend_point(SYMP_PILLAR,thT("point pillar",layout->lang));
+  legend_point(SYMP_PILLARS,thT("point pillars",layout->lang));
+  legend_point(SYMP_POPCORN,thT("point popcorn",layout->lang));
+  legend_point(SYMP_RAFTCONE,thT("point raft-cone",layout->lang));
+  legend_point(SYMP_RIMSTONEDAM,thT("point rimstone-dam",layout->lang));
+  legend_point(SYMP_RIMSTONEPOOL,thT("point rimstone-pool",layout->lang));
+  legend_point(SYMP_SCALLOP,thT("point scallop",layout->lang));
+  legend_point(SYMP_SODASTRAW,thT("point soda-straw",layout->lang));
   legend_point(SYMP_STALACTITE,thT("point stalactite",layout->lang));
   legend_point(SYMP_STALACTITES,thT("point stalactites",layout->lang));
   legend_point(SYMP_STALAGMITE,thT("point stalagmite",layout->lang));
   legend_point(SYMP_STALAGMITES,thT("point stalagmites",layout->lang));
-  legend_point(SYMP_PILLAR,thT("point pillar",layout->lang));
-  legend_point(SYMP_PILLARS,thT("point pillars",layout->lang));
-  legend_point(SYMP_ICESTALACTITE,thT("point ice-stalactite",layout->lang));
-  legend_point(SYMP_ICESTALAGMITE,thT("point ice-stalagmite",layout->lang));
-  legend_point(SYMP_ICEPILLAR,thT("point ice-pillar",layout->lang));
-  legend_point(SYMP_CURTAIN,thT("point curtain",layout->lang));
-  legend_point(SYMP_SODASTRAW,thT("point soda-straw",layout->lang));
-  legend_point(SYMP_POPCORN,thT("point popcorn",layout->lang));
-  legend_point(SYMP_CAVEPEARL,thT("point cave-pearl",layout->lang));
-  legend_point(SYMP_DISK,thT("point disk",layout->lang));
-  legend_point(SYMP_HELICTITE,thT("point helictite",layout->lang));
-  legend_point(SYMP_HELICTITES,thT("point helictites",layout->lang));
-  legend_point(SYMP_ARAGONITE,thT("point aragonite",layout->lang));
-  legend_point(SYMP_CRYSTAL,thT("point crystal",layout->lang));
   legend_point(SYMP_WALLCALCITE,thT("point wall-calcite",layout->lang));
-  legend_point(SYMP_GYPSUM,thT("point gypsum",layout->lang));
-  legend_point(SYMP_GYPSUMFLOWER,thT("point gypsum-flower",layout->lang));
-  legend_point(SYMP_RIMSTONEDAM,thT("point rimstone-dam",layout->lang));
-  legend_point(SYMP_RIMSTONEPOOL,thT("point rimstone-pool",layout->lang));
-  legend_point(SYMP_ANASTOMOSIS,thT("point anastomosis",layout->lang));
-  legend_point(SYMP_KARREN,thT("point karren",layout->lang));
-  legend_point(SYMP_SCALLOP,thT("point scallop",layout->lang));
-  legend_point(SYMP_FLUTE,thT("point flute",layout->lang));
-  legend_point(SYMP_RAFTCONE,thT("point raft-cone",layout->lang));
 
   // ostatne materialy
   legend_point(SYMP_ARCHEOMATERIAL,thT("point archeo-material",layout->lang));
@@ -1457,6 +1452,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
   legend_eqline(SYML_RIMSTONEPOOL,thT("line rimstone-pool",layout->lang));
   legend_eqline(SYML_VIAFERRATA,thT("line via-ferrata",layout->lang));
+  legend_eqline(SYML_WALKWAY,thT("line walkway",layout->lang));
 
   // thT("point remark")
   // thT("point label")
