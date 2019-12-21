@@ -161,6 +161,7 @@ let l_moonmilk = l_moonmilk_UIS;
 let l_overhang = l_overhang_SKBB;
 let l_pit = l_pit_UIS;
 let l_rimstonedam = l_rimstonedam_EGB;
+let l_rimstonepool = l_rimstonepool_EGB;
 let l_rockborder = l_rockborder_UIS;
 let l_rockedge = l_rockedge_UIS;
 let l_rope = l_rope_SKBB;

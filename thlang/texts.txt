@@ -1603,6 +1603,25 @@ sl: suha ponvica
 sq: penda guri
 zh_CN: 边石坝
 
+therion: line rimstone-pool
+bg: синтрово езеро
+ca: gour amb aigua
+cz: sintrové jezírko
+de: Sinterbecken
+el: γκουρ (λιθωματική λεκάνη)
+en: rimstone pool
+es: gour con agua
+fr: gour
+it: vasca
+mi: kōhatu kopua wai
+pl: jeziorko naciekowe
+pt: travertino cheio
+ru: гуры с водой
+sk: sintrové jazierko
+sl: ponvica
+sq: vaska uji
+zh_CN: 边石潭
+
 therion: point seed-germination
 en: seed-germination
 pt: germinação de semente

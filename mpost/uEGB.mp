@@ -1499,3 +1499,20 @@ def l_rimstonedam_EGB(expr P) =
 		exitif cas > distance - (2*mystep/3); % for rounding errors
 	endfor;
 enddef;
+
+
+def l_rimstonepool_EGB(expr P) =
+	cas := 0;
+	distance := arclength P;
+	mystep := adjust_step(distance, 0.9u);
+	pickup PenC;
+	forever:
+		t  := arctime (cas + mystep/2) of P;
+		T := identity rotated angle(thdir(P,t)) scaled 0.7 shifted (point t of P);
+		p := (-.45u,.2u){dir -80}..{dir -50}(-.15u,-.1u){dir 30}..{dir -30}(.15u,.1u){dir -50}..{dir 70}(.45u,.2u);
+		thfill buildcycle(p,((.5u,.15u)--(-.5u,.15u)));
+		thdraw p;
+		cas := cas + mystep;
+		exitif cas > distance - (2*mystep/3); % for rounding errors
+	endfor;
+enddef;

@@ -324,6 +324,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_PIT,SYML_PIT);
         cl3(TT_LINE_TYPE_ROCK_BORDER,SYML_ROCKBORDER);
         cl3(TT_LINE_TYPE_RIMSTONEDAM,SYML_RIMSTONEDAM);
+        cl3(TT_LINE_TYPE_RIMSTONEPOOL,SYML_RIMSTONEPOOL);
         cl3(TT_LINE_TYPE_ROCK_EDGE,SYML_ROCKEDGE);
         cl3(TT_LINE_TYPE_ROPE,SYML_ROPE);
         cl3(TT_LINE_TYPE_ROPE_LADDER,SYML_ROPELADDER);
@@ -757,19 +758,20 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(12,SYML_ROCKBORDER);
     group(13,SYML_ROCKEDGE);
     group(14,SYML_RIMSTONEDAM);
-    group(15,SYMX_LINE_WATERFLOW);
-    group(16,SYMA_WATER);
-    group(17,SYMA_SUMP);
-    group(18,SYMA_BEDROCK);
-    group(19,SYMA_BLOCKS);
-    group(20,SYMA_CLAY);
-    group(21,SYMA_DEBRIS);
-    group(22,SYMA_ICE);
-    group(23,SYMA_PEBBLES);
-    group(24,SYMA_SAND);
-    group(25,SYMA_SNOW);
-    group(26,SYMP_MUDCRACK);
-    group(27,SYMP_MUD);
+    group(15,SYML_RIMSTONEPOOL);
+    group(16,SYMX_LINE_WATERFLOW);
+    group(17,SYMA_WATER);
+    group(18,SYMA_SUMP);
+    group(19,SYMA_BEDROCK);
+    group(20,SYMA_BLOCKS);
+    group(21,SYMA_CLAY);
+    group(22,SYMA_DEBRIS);
+    group(23,SYMA_ICE);
+    group(24,SYMA_PEBBLES);
+    group(25,SYMA_SAND);
+    group(26,SYMA_SNOW);
+    group(27,SYMP_MUDCRACK);
+    group(28,SYMP_MUD);
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -1446,14 +1448,15 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   fprintf(mpf,"%s(((0.1,0.3) -- (0.9,.3) -- (0.9,0.7) -- (0.1,0.7) -- cycle) inscale);\n",thsymbolset__mp[SYML_STEPS]);
   endfig;
 
-  legend_eqline(SYML_HANDRAIL,thT("line handrail",layout->lang));
-  legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
-  legend_eqline(SYML_VIAFERRATA,thT("line via-ferrata",layout->lang));
   legend_point(SYMP_BRIDGE,thT("point bridge",layout->lang));
   legend_point(SYMP_CAMP,thT("point camp",layout->lang));
   legend_point(SYMP_HANDRAIL,thT("point handrail",layout->lang));
   legend_point(SYMP_TRAVERSE,thT("point traverse",layout->lang));
   legend_point(SYMP_VIAFERRATA,thT("point via-ferrata",layout->lang));
+  legend_eqline(SYML_HANDRAIL,thT("line handrail",layout->lang));
+  legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
+  legend_eqline(SYML_RIMSTONEPOOL,thT("line rimstone-pool",layout->lang));
+  legend_eqline(SYML_VIAFERRATA,thT("line via-ferrata",layout->lang));
 
   // thT("point remark")
   // thT("point label")
