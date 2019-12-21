@@ -942,17 +942,17 @@ Point is a command for drawing a point map symbol.
   * |subtype <keyword>| = determines the object's subtype. The following
     subtypes for given types are supported:
 
-    {\it station:}\[if station subtype is not specified, Therion reads it from centreline,
-   if it's specified there]
-    |fixed|,
-    |natural|,
-    |painted|,
-    |temporary| (default);
-
     {\it air-draught:}
     |summer|,
     |undefined| (default),
     |winter|;
+
+    {\it station:}\[if station subtype is not specified, Therion reads it from
+    centreline, if it's specified there]
+    |fixed|,
+    |natural|,
+    |painted|,
+    |temporary| (default);
 
     {\it water-flow:}
     |intermittent|,
@@ -1103,6 +1103,17 @@ respectively.
    * |subtype <keyword>| = determines line subtype. The following
      subtypes are supported for given types:
 
+     {\it border:}
+     |invisible|,
+     |presumed|,
+     |temporary|,
+     |visible| (default);
+
+     {\it survey:}
+     |cave| (default),
+     |surface| (default if centreline has
+      surface flag);
+
      {\it wall:}
      |bedrock| (default),
      |blocks|,
@@ -1120,21 +1131,10 @@ respectively.
      |underlying|,
      |unsurveyed|;
 
-     {\it border:}
-     |invisible|,
-     |presumed|,
-     |temporary|,
-     |visible| (default);
-
      {\it water-flow:}
      |conjectural|,
      |intermittent|.
-     |permanent| (default);
-
-	 {\it survey:}
-   |cave| (default),
-   |surface| (default if centreline has
-	    surface flag).
+     |permanent| (default).
 
     The subtype may be specified also directly in |<type>| specification using
     `|:|' as a separator.\[E.g.~|border:invisible|]
