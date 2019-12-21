@@ -327,6 +327,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_MOONMILK,SYML_MOONMILK);
         cl3(TT_LINE_TYPE_OVERHANG,SYML_OVERHANG);
         cl3(TT_LINE_TYPE_PIT,SYML_PIT);
+        cl3(TT_LINE_TYPE_PITCHIMNEY,SYML_PITCHIMNEY);
         cl3(TT_LINE_TYPE_ROCK_BORDER,SYML_ROCKBORDER);
         cl3(TT_LINE_TYPE_RIMSTONEDAM,SYML_RIMSTONEDAM);
         cl3(TT_LINE_TYPE_RIMSTONEPOOL,SYML_RIMSTONEPOOL);
@@ -1459,6 +1460,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_eqline(SYML_FAULT,thT("line fault",layout->lang));
   legend_eqline(SYML_HANDRAIL,thT("line handrail",layout->lang));
   legend_eqline(SYML_JOINT,thT("line joint",layout->lang));
+  legend_eqline(SYML_PITCHIMNEY,thT("line pit-chimney",layout->lang));
   legend_eqline(SYML_LOWCEILING,thT("line low-ceiling",layout->lang));
   legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
   legend_eqline(SYML_RIMSTONEPOOL,thT("line rimstone-pool",layout->lang));

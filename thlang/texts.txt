@@ -1483,6 +1483,10 @@ therion: line low-ceiling
 en: low-ceiling
 pt: teto baixo
 
+therion: line pit-chimney
+en: pit/chimney
+pt: poço e clarabóia
+
 therion: line rimstone-dam
 bg: сухо синтрово езеро
 ca: gour sec
