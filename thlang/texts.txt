@@ -1519,6 +1519,10 @@ therion: point disc-stalagmites
 en: discs on stalagmites
 pt: discos em estalagmites
 
+therion: line dripline
+en: dripline
+pt: linha de gotejamento
+
 therion: point electric-light
 en: electric light
 pt: luz elétrica

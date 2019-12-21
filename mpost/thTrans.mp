@@ -151,6 +151,7 @@ let l_ceilingmeander = l_ceilingmeander_SKBB;
 let l_ceilingstep = l_ceilingstep_SKBB;
 let l_chimney = l_chimney_UIS;
 let l_contour = l_contour_SKBB;
+let l_dripline = l_dripline_EGB;
 let l_fixedladder = l_fixedladder_SKBB;
 let l_floormeander = l_floormeander_SKBB;
 let l_floorstep = l_floorstep_UIS;

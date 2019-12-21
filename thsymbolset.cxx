@@ -312,6 +312,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_CEILING_STEP,SYML_CEILINGSTEP);
         cl3(TT_LINE_TYPE_CHIMNEY,SYML_CHIMNEY);
         cl3(TT_LINE_TYPE_CONTOUR,SYML_CONTOUR);
+        cl3(TT_LINE_TYPE_DRIPLINE,SYML_DRIPLINE);
         cl3(TT_LINE_TYPE_FIXED_LADDER,SYML_FIXEDLADDER);
         cl3(TT_LINE_TYPE_FLOOR_MEANDER,SYML_FLOORMEANDER);
         cl3(TT_LINE_TYPE_FLOOR_STEP,SYML_FLOORSTEP);
@@ -1451,6 +1452,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_VIAFERRATA,thT("point via-ferrata",layout->lang));
 
   legend_eqline(SYML_ABYSSENTRANCE,thT("line abyss-entrance",layout->lang));
+  legend_eqline(SYML_DRIPLINE,thT("line dripline",layout->lang));
   legend_eqline(SYML_HANDRAIL,thT("line handrail",layout->lang));
   legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
   legend_eqline(SYML_RIMSTONEPOOL,thT("line rimstone-pool",layout->lang));
