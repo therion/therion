@@ -340,32 +340,32 @@ the command may be used anywhere.
 
 \syntax
       |centreline [OPTIONS]
+          break
+          calibrate <quantity list> <zero error> [<scale>]
+          cs <coordinate system>
+          data <style> <readings order>
           date <date>
-          team <person> [<roles>]
+          declination <value> <units>
+          endgroup
+          equate <station list>
           explo-date <date>
           explo-team <person>
-          instrument <quantity list> <description>
-          calibrate <quantity list> <zero error> [<scale>]
-          units <quantity list> [<factor>] <units>
-          sd <quantity list> <value> <units>
-          grade <grade list>
-          declination <value> <units>
-          grid-angle <value> <units>
-          infer <what> <on/off>
-          mark <type>
-          flags <shot flags>
-          station <station> <comment> [<flags>]
-          cs <coordinate system>
-          fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]
-          equate <station list>
-          data <style> <readings order>
-          break
-          group
-          endgroup
-          walls <auto/on/off>
-          vthreshold <number> <units>
           extend <spec> [<station> [<station>]]
+          fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]
+          flags <shot flags>
+          grade <grade list>
+          grid-angle <value> <units>
+          group
+          infer <what> <on/off>
+          instrument <quantity list> <description>
+          mark <type>
+          sd <quantity list> <value> <units>
+          station <station> <comment> [<flags>]
           station-names <prefix> <suffix>
+          team <person> [<roles>]
+          units <quantity list> [<factor>] <units>
+          vthreshold <number> <units>
+          walls <auto/on/off>
           ...
           [SURVEY DATA]
           ...
@@ -377,81 +377,149 @@ the command may be used anywhere.
 \endcontext
 
 \options
-  * |id <ext_keyword>| = id of the object
   * |author <date> <person>| = author of the data and its creation date
   * |copyright <date> <string>| = copyright date and name
+  * |id <ext_keyword>| = id of the object
   * |title <string>| = description of the object
 \endoptions
 
 
 \comopt
-  * |date <date>| = survey date. If multiple dates are specified,
-    a time interval is created.
-  * |explo-date <date>| = discovery date. If multiple dates are specified,
-    a time interval is created.
-  * |team <person> [<roles>]| = a survey team member. The first argument
-    is his/her name, the others describe the roles of the person in
-    the team (optional---currently not used). The following role keywords are
-    supported: station, length, tape, [back]compass, [back]bearing, [back]clino,
-    [back]gradient, counter, depth, station, position, notes, pictures, pics,
-    instruments (insts), assistant (dog).
-  * |explo-team <person>| = a discovery team member.
-  * |instrument <quantity list> <description>| = description
-    of the instrument that was used to survey the given quantities (same
-    keywords as team person's role)
-  * |infer <what> <on/off>| = `|infer plumbs on|' tells the
-    program to interpret gradients $\pm90\,^\circ$
-    as UP/DOWN (this means
-    no clino corrections are applied). `|infer equates on|' will case program to
-    interpret shots with 0 length as equate commands (which means that no
-    tape corrections are applied)
-  * |declination <value> <units>| = sets the declination for subsequent
-    shots $$true\ bearing = measured\ bearing + declination.$$
-    The declination is positive when the magnetic north is east of true north.
-    If no declination is specified, or the declination is reset (|-|),
-    then a valid declination specification is searched for in all surveys
-    the data object is in. See declination option of survey command.
-  * |grid-angle <value> <units>| = specifies the magnetic
-    grid angle (declination against grid north).
-  * |sd <quantity list> <value> <units>| = sets the
-    standard deviation for the given measurements. The Quantity list can
-    contain the following keywords: length, tape, bearing, compass,
-    gradient, clino, counter, depth, x, y, z, position, easting, dx,
-    northing, dy, altitude, dz.
-  * |grade <grade list>| = sets standard deviations according to the
-    survey grade specification (see grade command). All previously
-    specified standard deviations or grades are lost. If you want
-    to change an SD, use the sd option after this command. If multiple
-    grades are specified, only the last one applies. You can specify
-    grades only for position or only for surveys. If you want to
-    combine them, you must use them in one grade line.
-  * |units <quantity list> [<factor>] <units>| = set the units
-    for given measurements (same quantities as for sd).
-  * |calibrate <quantity list> <zero error> [<scale>]| = set the
-    instrument calibration. The measured value is calculated using the
-    following formula:
-    $measured\ value = (read\ value - zero\ error) \times scale$.
-    The supported quantities are the same as sd.
   * |break| = can be used with interleaved data to separate two traverses
-  * |mark [<station list>] <type>| =
-    set the type of named stations. |<type>| is one of: fixed,
-    painted and temporary (default). If there is no station list,
-    all subsequent stations are marked.
-  * |flags <shot flags>| = set flags for following shots. The supported
-    flags are: |surface| (for surface measurements), |duplicate| (for
-    duplicated surveys), |splay| (for short side legs that are hidden
-    in maps and models by default). These are excluded from length
-    calculations.
+  * |calibrate <quantity list> <zero error> [<scale>]| = set the instrument
+  calibration. The measured value is calculated using the following formula:
+  $measured\ value = (read\ value - zero\ error) \times scale$.
+  The supported quantities are the same as sd.
+  * |cs <coordinate system>| = coordinate system for stations with fixed
+  coordinates.
+  * |data <style> <readings order>| = set data style
+    (cartesian,
+    cylpolar,
+    dimensions,
+    diving,
+    normal,
+    nosurvey,
+    topofil)
+    and readings order. Reading is one of the following keywords:
+    altitude,
+    [back]clino/
+    [back]compass/[back]bearing,
+    \penalty0[back]gradient,
+    counter,
+    depth,
+    depthchange,
+    down/floor,
+    easting,
+    from,
+    fromcount,
+    fromdepth,
+    ignore,
+    ignoreall,
+    left,
+    northing,
+    right,
+    station,
+    tape/length,
+    to,
+    tocount,
+    todepth,
+    up/ceiling\[dimension may be specified as a pair |[<from> <to>\char"5D|,
+    meaning the size at the beginning and end of the shot].
 
-    All shots having one of the stations named either `|.|' or `|-|' are
-    |splay| shots by default (see also |data| command).
+    See Survex manual for details.
 
-    If flag is set to |approx[imate]|, it is included to total length
-    calculations, but also displayed separately in survey statistics.
-    It should be used for shots, that were not surveyed properly and need
-    to be resurveyed.
+    For interleaved data both newline and direction keywords
+    are supported. If backward and forward compass or clino
+    reading are given, the average of them is computed.
 
-    Also ``|not|'' is allowed before a flag.
+\NEW{5.3}    If one of the shot stations is named either `|.|' or `|-|', the shot has
+    |splay| attribute set. {\it Dot} should be used for shots ending on
+    features inside passage, {\it dash} for shots ending on passage walls, floor
+    or ceiling. Although Therion makes no distinction between them yet, it
+    should be used to improve 3D modeling in the future.
+  * |date <date>| = survey date. If multiple dates are specified, a time
+  interval is created.
+  * |declination <value> <units>| = sets the declination for subsequent shots
+  $$true\ bearing = measured\ bearing + declination.$$
+  The declination is positive when the magnetic north is east of true north.
+  If no declination is specified, or the declination is reset (|-|), then a
+  valid declination specification is searched for in all surveys the data
+  object is in. See declination option of survey command.
+  * |endgroup| = |group/endgroup| pair enables the user to make temporary
+  changes in almost any setting (calibrate, units, sd, data, flags...).
+  * |equate <station list>| = set points that are equivalent.
+  * |explo-date <date>| = discovery date. If multiple dates are specified, a
+  time interval is created.
+  * |explo-team <person>| = a discovery team member.
+  * |extend <spec> [<station> [<station>]]| =
+    control how the centerline is extended. |<spec>| is one of the following
+
+    |hide| = do not show specified station (shot) in extended elevation.
+
+    |ignore| = ignore specified station (shot), continue extended elevation with
+    other station (shot) if possible.
+
+    |left/right| = same as above, but direction is specified explicitly.
+
+    |normal/reverse| = extend given and following stations to the same/reverse
+    direction as previous station. If two stations are given---direction is
+    applied only to given shot.
+
+    |start| = specify starting station (shot).
+
+    |vertical| = do not move station (shot) in $X$ direction, use only $Z$
+    component of the shot.
+
+    If no stations are specified, |<spec>| is valid for following shots
+    specified.
+  * |fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]|
+    = fix station coordinates (with specified errors---only the units
+    transformation, not calibration, is applied to them).
+  * |flags <shot flags>| = set flags for following shots. The supported flags
+  are:
+  |duplicate| (for duplicated surveys),
+  |splay| (for short side legs that are hidden in maps and models by default),
+  |surface| (for surface measurements).
+  These are excluded from length calculations.
+  * |grade <grade list>| = sets standard deviations according to the survey
+  grade specification (see grade command). All previously specified standard
+  deviations or grades are lost. If you want to change an SD, use the sd option
+  after this command. If multiple grades are specified, only the last one
+  applies. You can specify grades only for position or only for surveys. If you
+  want to combine them, you must use them in one grade line.
+  * |grid-angle <value> <units>| = specifies the magnetic grid angle
+  (declination against grid north).
+  * |group|
+  * |infer <what> <on/off>| = `|infer plumbs on|' tells the program to interpret
+  gradients $\pm90\,^\circ$ as UP/DOWN (this means no clino corrections are
+  applied). `|infer equates on|' will case program to interpret shots with 0
+  length as equate commands (which means that no tape corrections are applied).
+  * |instrument <quantity list> <description>| = description of the instrument
+  that was used to survey the given quantities (same keywords as team person's
+  role).
+  * |mark [<station list>] <type>| = set the type of named stations. |<type>| is
+  one of: fixed, painted and temporary (default). If there is no station list,
+  all subsequent stations are marked.
+  * |sd <quantity list> <value> <units>| = sets the standard deviation for the
+  given measurements. The Quantity list can contain the following keywords:
+  altitude,
+  bearing,
+  clino,
+  compass,
+  counter,
+  depth,
+  dx,
+  dy,
+  dz,
+  easting,
+  gradient,
+  length,
+  northing,
+  position,
+  tape,
+  x,
+  y,
+  z.
   * |station <station> <comment> [<flags>]| = set the station comment
     and its flags. If |""| is specified as a comment, it is ignored.
 
@@ -469,42 +537,39 @@ the command may be used anywhere.
     station flags. Explored lengths are a part of survey/cave statistics,
     displayed separately. Example:\hfil\break
     |station 40 "ugly crollway" continuation explored 100m|
+  * |station-names <prefix> <suffix>| = adds given prefix/suffix to
+    all survey stations in the current centreline. Saves some typing.
+  * |team <person> [<roles>]| = a survey team member. The first argument is
+  his/her name, the others describe the roles of the person in the team
+  (optional---currently not used). The following role keywords are supported:
+  assistant (dog),
+  [back]bearing,
+  [back]clino,
+  [back]compass,
+  [back]gradient,
+  counter,
+  depth,
+  instruments (insts),
+  length,
+  notes,
+  pics,
+  pictures,
+  position,
+  station,
+  station,
+  tape.
+  * |units <quantity list> [<factor>] <units>| = set the units for given
+  measurements (same quantities as for sd).
 
-  * |cs <coordinate system>| = coordinate system for stations with
-    fixed coordinates
-  * |fix <station> [<x> <y> <z> [<std x> <std y> <std z>]]|
-    = fix station coordinates (with specified errors---only
-    the units transformation, not calibration, is applied to them).
-  * |equate <station list>| = set points that are equivalent
-  * |data <style> <readings order>| = set data style (normal, topofil,
-    diving, cartesian, cylpolar, dimensions, nosurvey) and readings order. Reading
-    is one of the following keywords: station, from, to, tape/length,
-    [back]compass/[back]bearing, [back]clino/\penalty0[back]gradient,
-    depth, fromdepth, todepth, depthchange, counter,
-    fromcount, tocount, northing, easting, altitude,
-    up/ceiling\[dimension may be specified as a pair |[<from> <to>\char"5D|,
-    meaning the size at the beginning and end of the shot],
-    down/floor, left, right, ignore, ignoreall.
+    All shots having one of the stations named either `|.|' or `|-|' are
+    |splay| shots by default (see also |data| command).
 
-    See Survex manual for details.
+    If flag is set to |approx[imate]|, it is included to total length
+    calculations, but also displayed separately in survey statistics.
+    It should be used for shots, that were not surveyed properly and need
+    to be resurveyed.
 
-    For interleaved data both newline and direction keywords
-    are supported. If backward and forward compass or clino
-    reading are given, the average of them is computed.
-
-\NEW{5.3}    If one of the shot stations is named either `|.|' or `|-|', the shot has
-    |splay| attribute set. {\it Dot} should be used for shots ending on
-    features inside passage, {\it dash} for shots ending on passage walls, floor
-    or ceiling. Although Therion makes no distinction between them yet, it
-    should be used to improve 3D modeling in the future.
-
-  * |group|
-  * |endgroup| = |group/endgroup| pair enables the user to make
-    temporary changes
-    in almost any setting (calibrate, units, sd, data, flags...)
-  * |walls <auto/on/off>| = turn on/off passage shape generation from
-    LRUD data for subsequent shots. If set |auto|, passage is generated
-    only if there is no scrap referencing given centreline.
+    Also ``|not|'' is allowed before a flag.
   * |vthreshold <number> <units>| = threshold for interpreting LRUD readings
     as left-right-front-back reading perpendicular to the shot.
 
@@ -515,32 +580,9 @@ the command may be used anywhere.
     becomes perpendicular to the shot -- otherwise passages would not look very
     good. In the case of vertical shots, UD is interpreted as north-south
     dimension from the station to allow tube-like modelling of verticals.
-
-  * |extend <spec> [<station> [<station>]]| =
-    control how the centerline is extended. |<spec>| is one of the following
-
-    |normal/reverse| = extend given and following stations
-     to the same/reverse direction as previous station. If two
-     stations are given---direction is applied only to given shot.
-
-    |left/right| = same as above, but direction is specified explicitly.
-
-    |vertical| = do not move station (shot) in $X$ direction, use only $Z$
-    component of the shot
-
-    |start| = specify starting station (shot)
-
-    |ignore| = ignore specified station (shot), continue extended elevation
-    with other station (shot) if possible
-
-    |hide| = do not show specified station (shot) in extended elevation
-
-
-    If no stations are specified, |<spec>| is valid for following shots
-    specified.
-
-  * |station-names <prefix> <suffix>| = adds given prefix/suffix to
-    all survey stations in the current centreline. Saves some typing.
+  * |walls <auto/on/off>| = turn on/off passage shape generation from
+    LRUD data for subsequent shots. If set |auto|, passage is generated
+    only if there is no scrap referencing given centreline.
 
 \endcomopt
 
@@ -621,6 +663,14 @@ the command may be used anywhere.
 \endarguments
 
 \options
+  * |author <date> <person>| = author of the data and its creation date.
+  * |copyright <date> <string>| = copyright date and name.
+  * |cs <coordinate system>| = assumes that (calibrated) local scrap coordinates are given
+    in specified coordinate system. It is useful for absolute placing of
+    imported sketches where no survey stations are specified.\[If there are
+    some survey stations in the scrap, the |cs| specification is ignored.]
+  * |flip (none)/horizontal/vertical| = flips the scrap after
+    scale transformation.
   * |projection <specification>| = specifies the drawing projection.
     Each projection is identified by a type and optionally by an index
     in the form |type[:index]|. The index can be any keyword. The following
@@ -657,25 +707,16 @@ the command may be used anywhere.
        of two points in the scrap and two points in reality.
        Optionally, you can also specify units for the coordinates of the `points in reality'.
        This form allows you to apply both scaling and rotation to the scrap.
-  * |cs <coordinate system>| = assumes that (calibrated) local scrap coordinates are given
-    in specified coordinate system. It is useful for absolute placing of
-    imported sketches where no survey stations are specified.\[If there are
-    some survey stations in the scrap, the |cs| specification is ignored.]
-  * |stations <list of station names>| = stations you want to plot
-    to the scrap, but which are not used for scrap transformation. You don't have
-    to specify (draw) them with the |point station| command.
   * |sketch <filename> <x> <y>| = underlying sketch bitmap specification
     (lower left corner coordinates).
-  * |walls <on/off/auto>| = specify if the scrap should be used in 3D model
-    reconstruction
-  * |flip (none)/horizontal/vertical| = flips the scrap after
-    scale transformation
   * |station-names <prefix> <suffix>| = adds given prefix/suffix to
     all survey stations in the current scrap. Saves some typing.
-
-  * |author <date> <person>| = author of the data and its creation date
-  * |copyright <date> <string>| = copyright date and name
-  * |title <string>| = description of the object
+  * |stations <list of station names>| = stations you want to plot to the scrap,
+  but which are not used for scrap transformation. You don't have to specify
+  (draw) them with the |point station| command.
+  * |title <string>| = description of the object.
+  * |walls <on/off/auto>| = specify if the scrap should be used in 3D model
+    reconstruction.
 \endoptions
 
 
@@ -700,17 +741,22 @@ Point is a command for drawing a point map symbol.
   * |<type>| determines the type of an object. The following
     types are supported:
 
-    {\it special objects:}
-    |dimensions|\[Use |-value| option to
-      specify passage dimensions above/below centerline
-      plane used while creating 3D model.],
-    |section|\[|section| is an anchor for placing the cross-section at this
-      point.  This symbol has no visual representation. The cross section
-      must be in the separate scrap with `none' projection specified.
-      You can specify it through the |-scrap| option.],
-    |station|\[Survey station. For each scrap (with the exception of scraps
-      in `none' projection) at least one station with station reference
-      (|-name| option) has to be specified.];
+    {\it equipment:}
+    |anchor|,
+    |bridge|,
+    |camp|,
+    |fixed-ladder|,
+    |gate|,
+    |masonry|,
+    |nameplate|,
+    |no-equipment|,
+    |no-wheelchair|,
+    |rope-ladder|,
+    |rope|,
+    |steps|,
+    |traverse|,
+    |walkway|,
+    |wheelchair|;
 
     {\it labels:}
     |altitude|\[General altitude label.
@@ -727,22 +773,60 @@ Point is a command for drawing a point map symbol.
     |station-name|\[If no text is specified, the name of the nearest
       station is used.]; \penalty-100
 
-    {\it symbolic passage fills:}\[Unlike other point symbols, these are
-      clipped by the scrap border. See the chapter {\it How the map is
-      put together}.]
-    |bedrock|,
-    |blocks|,
-    |clay|,
-    |debris|,
-    |guano|,
-    |ice|,
-    |mudcrack|,
-    |mud|,
-    |pebbles|,
-    |raft|,
-    |sand|,
-    |snow|,
-    |water|;
+    {\it others:}
+    |air-draught|\[Number of ticks is set according to |-scale| option],
+    |altar|,
+    |archeo-excavation|,
+    |archeo-material|,
+    |audio|,
+    |bat|,
+    |bones|,
+    |danger|,
+    |dig|,
+    |electric-light|,
+    |ex-voto|,
+    |extra|\[Additional morphing point.],
+    |gradient|,
+    |human-bones|,
+    |ice-pillar|,
+    \NEW{5.4}|ice-stalactite|,
+    |ice-stalagmite|,
+    |map-connection|\[Virtual point, used to indicate connection between shifted maps (extended elevation, map offset).],
+    %|minus|,
+    |paleo-material|,
+    |photo|,
+    %|plus-minus|,
+    %|plus|,
+    |root|,
+    |seed-germination|,
+    |sink|,
+    |spring|\[Always use |spring| and |sink| symbols with a |water-flow| arrow.],
+    |tree-trunk|,
+    |u|\[For user defined point symbols.],
+    |vegetable-debris|,
+    |water-drip|,
+    |water-flow|;
+
+    {\it passage ends:}
+    |breakdown-choke|,
+    \NEW{5.4}|clay-choke|,
+    |continuation|,
+    |entrance|,
+    |flowstone-choke|,
+    |low-end|,
+    |narrow-end|;
+
+    {\it special objects:}
+    |dimensions|\[Use |-value| option to
+      specify passage dimensions above/below centerline
+      plane used while creating 3D model.],
+    |section|\[|section| is an anchor for placing the cross-section at this
+      point.  This symbol has no visual representation. The cross section
+      must be in the separate scrap with `none' projection specified.
+      You can specify it through the |-scrap| option.],
+    |station|\[Survey station. For each scrap (with the exception of scraps
+      in `none' projection) at least one station with station reference
+      (|-name| option) has to be specified.];
 
     {\it speleothems:}
     |anastomosis|,
@@ -784,80 +868,96 @@ Point is a command for drawing a point map symbol.
     |volcano|,
     |wall-calcite|;
 
-    {\it equipment:}
-    |anchor|,
-    |bridge|,
-    |camp|,
-    |fixed-ladder|,
-    |gate|,
-    |masonry|,
-    |nameplate|,
-    |no-equipment|,
-    |no-wheelchair|,
-    |rope-ladder|,
-    |rope|,
-    |steps|,
-    |traverse|,
-    |walkway|,
-    |wheelchair|;
-
-    {\it passage ends:}
-    |breakdown-choke|,
-    \NEW{5.4}|clay-choke|,
-    |continuation|,
-    |entrance|,
-    |flowstone-choke|,
-    |low-end|,
-    |narrow-end|;
-
-    {\it others:}
-    |air-draught|\[Number of ticks is set according to |-scale| option],
-    |altar|,
-    |archeo-excavation|,
-    |archeo-material|,
-    |audio|,
-    |bat|,
-    |bones|,
-    |danger|,
-    |dig|,
-    |electric-light|,
-    |ex-voto|,
-    |extra|\[Additional morphing point.],
-    |gradient|,
-    |human-bones|,
-    |ice-pillar|,
-    \NEW{5.4}|ice-stalactite|,
-    |ice-stalagmite|,
-    |map-connection|\[Virtual point, used to indicate connection between shifted maps (extended elevation, map offset).],
-    %|minus|,
-    |paleo-material|,
-    |photo|,
-    %|plus-minus|,
-    %|plus|,
-    |root|,
-    |seed-germination|,
-    |sink|,
-    |spring|\[Always use |spring| and |sink| symbols with a |water-flow| arrow.],
-    |tree-trunk|,
-    |u|\[For user defined point symbols.],
-    |vegetable-debris|,
-    |water-drip|,
-    |water-flow|.
+    {\it symbolic passage fills:}\[Unlike other point symbols, these are
+      clipped by the scrap border. See the chapter {\it How the map is
+      put together}.]
+    |bedrock|,
+    |blocks|,
+    |clay|,
+    |debris|,
+    |guano|,
+    |ice|,
+    |mudcrack|,
+    |mud|,
+    |pebbles|,
+    |raft|,
+    |sand|,
+    |snow|,
+    |water|.
 
 \endarguments
 
 
 \options
+  * |align| = alignment of the symbol or text. The following values
+    are accepted:
+    bottom,
+    b,
+    bottom-left,
+    bl,
+    bottom-right,
+    br,
+    center,
+    c,
+    left,
+    l,
+    right,
+    r,
+    top,
+    t,
+    top-left,
+    tl,
+    top-right,
+    tr.
+  * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
+    You cannot specify this option for the following symbols:
+    altitude,
+    date,
+    height,
+    label,
+    passage-height,
+    remark,
+    station,
+    station-name.
+  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
+    and |symbol-show| layout options) symbol will be hidden/shown according
+    to rules for specified |<symbol-type>|.\[Example: if you specify
+    |-context point air-draught| to a label which displays the observation
+    date, the |symbol-hide point air-draught| command would hide both
+    air-draught arrow and the corresponding label.]
+  * |dist <distance>| =  valid for extra points, specifies the distance to the nearest
+    station (or station specified using |-from| option. If not specified,
+    appropriate value from LRUD data is used.
+  * |from <station>| =  valid for extra points, specifies reference station.
+  * |id <ext_keyword>| = ID of the symbol.
+  * |orientation/orient <number>| = defines the orientation
+    of the symbol. If not specified, it's oriented to north.
+    0 $\le$ |number| $<$ 360.
+  * |place <bottom/default/top>| = changes displaying order in the map.
+  * |scale| = symbol scale, can be:
+    tiny (xs), small (s), normal (m), large (l), huge (xl) or a
+    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+    $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
+    $xl \equiv 2.0$.
   * |subtype <keyword>| = determines the object's subtype. The following
     subtypes for given types are supported:
 
     {\it station:}\[if station subtype is not specified, Therion reads it from centreline,
    if it's specified there]
-    |temporary| (default), |painted|, |natural|, |fixed|;
+    |fixed|,
+    |natural|,
+    |painted|,
+    |temporary| (default);
 
-    {\it air-draught:} |winter|, |summer|, |undefined| (default);
+    {\it air-draught:}
+    |summer|,
+    |undefined| (default),
+    |winter|;
 
-    {\it water-flow:} |permanent| (default), |intermittent|, |paleo|.
+    {\it water-flow:}
+    |intermittent|,
+    |paleo|,
+    |permanent| (default).
 
     The subtype may be specified also directly in |<type>| specification using
     `|:|' as a separator.\[E.g.~|station:fixed|]
@@ -865,47 +965,20 @@ Point is a command for drawing a point map symbol.
     Any subtype specification can be used with user defined type (|u|).
     In this case you need also to define corresponding metapost symbol
     (see the chapter {\it New map symbols}).
-
-  * |orientation/orient <number>| = defines the orientation
-    of the symbol. If not specified, it's oriented to north.
-    0 $\le$ |number| $<$ 360.
-  * |align| = alignment of the symbol or text. The following values
-    are accepted: center, c, top, t, bottom, b, left, l, right, r,
-    top-left, tl, top-right, tr, bottom-left, bl, bottom-right, br.
-  * |scale| = symbol scale, can be:
-    tiny (xs), small (s), normal (m), large (l), huge (xl) or a
-    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
-    $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
-    $xl \equiv 2.0$.
-  * |place <bottom/default/top>| = changes displaying order in the map.
-  * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-    You cannot specify this option for the following symbols: station,
-    station-name, label, remark, date, altitude, height, passage-height.
-  * |dist <distance>| =  valid for extra points, specifies the distance to the nearest
-    station (or station specified using |-from| option. If not specified,
-    appropriate value from LRUD data is used.
-  * |from <station>| =  valid for extra points, specifies reference station.
   * |visibility <on/off>| = displays/hides the symbol.
-  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
-    and |symbol-show| layout options) symbol will be hidden/shown according
-    to rules for specified |<symbol-type>|.\[Example: if you specify
-    |-context point air-draught| to a label which displays the observation
-    date, the |symbol-hide point air-draught| command would hide both
-    air-draught arrow and the corresponding label.]
-  * |id <ext_keyword>| = ID of the symbol.
 
     {\it Type-specific options:}\Nobreak
 
-  * |name <reference>| = if the point type is station, this
-    option gives the reference to the real survey station.
-  * |extend [prev[ious] <station>]| = if the point type is station and scrap
-    projection is extended elevation, you can
-    adjust the extension of the centreline using this option.
-  * |scrap <reference>| = if the point type is section, this is a
-    reference to a cross-section scrap.
   * |explored <length>| = if the point type is continuation, you can specify
     length of passages explored but not surveyed yet. This value is afterwards
     displayed in survey/cave statistics.
+  * |extend [prev[ious] <station>]| = if the point type is station and scrap
+    projection is extended elevation, you can
+    adjust the extension of the centreline using this option.
+  * |name <reference>| = if the point type is station, this
+    option gives the reference to the real survey station.
+  * |scrap <reference>| = if the point type is section, this is a
+    reference to a cross-section scrap.
   * |text| = text of the label, remark or continuation. It may contain
     following formatting keywords:\[For SVG output, only |<br>|, |<thsp>|,
     |<it>|, |<bf>|, |<rm>| and |<lang:XX>| keywords are taken into account;
@@ -985,50 +1058,82 @@ respectively.
    * |<type>| is a keyword that determines the type of line.
      The following types are supported:
 
-     {\it passages:} |wall|, |contour|,
+     {\it passages:}
+     |ceiling-meander|,
+     |ceiling-step|,
+     |chimney|,
+     |contour|,
+     |floor-meander|,
+     |floor-step|,
+     |overhang|,
+     |pit|,
      |slope|\[Slope line marks upper border of the sloping area. It's
        necessary to specify |l-size| in at least one point. Gradient lines
        length and orientation is an average of specified |l-size|s and
        |orientation|s in the nearest points. If there is no orientation
        specification, gradient marks are perpendicular to the slope line.],
-     |floor-step|, |pit|,
-     |ceiling-step|, |chimney|, |overhang|, |ceiling-meander|,
-     |floor-meander|;
+     |wall|;
 
-     {\it passage fills:} |flowstone|, |moonmilk|,
+     {\it passage fills:}
+     |flowstone|,
+     |moonmilk|,
+     |rimstone-dam|;
      |rock-border|\[Outer outline of large boulders. If the line is closed,
-       it is filled with the background colour.],
+        it is filled with the background colour.],
      |rock-edge|\[Inner edges of large boulders.],
-     |water-flow|, |rimstone-dam|;
+     |water-flow|,
 
-     {\it labels:} |label|;
+     {\it labels:}
+     |label|;
 
-     {\it special:} |border|, |arrow|,
+     {\it special:}
+     |arrow|,
+     |border|,
+     |map-connection|\[Used to indicate connection between maps (in offset, or the same points in extended elevation).], |u|\[For user defined line symbols.],
      |section|\[Line showing cross-section position.\NEW{5.3}\
        If both control points (red dots) of a B\'ezier curve (grey line) are given
        then the section line (blue) is drawn up to the perpendicular projection (dotted) of
        the first control point and from the projection (dotted) of the section control
        point. No section curve is displayed.\hfil\break\MPpic{xsect.1}],
-     |survey|\[Survey line is automatically drawn by Therion.],
-     |map-connection|\[Used to indicate connection between maps (in offset,
-     or the same points in extended elevation).], |u|\[For user defined line symbols.].
+     |survey|\[Survey line is automatically drawn by Therion.].
 \endarguments
 
 
 \comopt
-       * |subtype <keyword>| = determines line subtype. The following
-         subtypes are supported for given types:
+   * |subtype <keyword>| = determines line subtype. The following
+     subtypes are supported for given types:
 
-         {\it wall:} |invisible|, |bedrock| (default), |sand|, |clay|,
-         |pebbles|, |debris|, |blocks|, |ice|, |underlying|, \NEW{5.4}|overlying|, |unsurveyed|,
-         |presumed|, |pit|\[Usually open to surface.], |flowstone|, |moonmilk|;
+     {\it wall:}
+     |bedrock| (default),
+     |blocks|,
+     |clay|,
+     |debris|,
+     |flowstone|,
+     |ice|,
+     |invisible|,
+     |moonmilk|,
+     \NEW{5.4}|overlying|,
+     |pebbles|,
+     |pit|\[Usually open to surface.],
+     |presumed|,
+     |sand|,
+     |underlying|,
+     |unsurveyed|;
 
-         {\it border:} |visible| (default), |invisible|, |temporary|,
-         |presumed|;
+     {\it border:}
+     |invisible|,
+     |presumed|,
+     |temporary|,
+     |visible| (default);
 
-         {\it water-flow:} |permanent| (default), |conjectural|, |intermittent|;
+     {\it water-flow:}
+     |conjectural|,
+     |intermittent|.
+     |permanent| (default);
 
-	 {\it survey:} |cave| (default), |surface| (default if centreline has
+	 {\it survey:}
+   |cave| (default),
+   |surface| (default if centreline has
 	    surface flag).
 
     The subtype may be specified also directly in |<type>| specification using
@@ -1038,40 +1143,40 @@ respectively.
     In this case you need also to define corresponding metapost symbol
     (see the chapter {\it New map symbols}).
 
-       * |[LINE DATA]| specify either the coordinates of a line segment
-         |<x> <y>|, or coordinates of a B\'ezier curve arc
-         |<c1x> <c1y> <c2x> <c2y> <x> <y>|, where |c| indicates the control
-         point.
-       * |close <on/off/auto>| = determines whether a line is closed
-         or not
-       * |mark <keyword>| = is used to mark the point on the line (see
-         |join| command).
-       * |orientation/orient <number>| = orientation of the symbols
-         on the line. If not specified, it's perpendicular to the
-         line on its left side. 0 $\le$ |number| $<$ 360.
-       * |outline <in/out/none>| = determines whether the line serves as
-         a border line for a scrap. Default value is `|out|' for
-         walls, `|none|' for all other lines. Use |-outline in| for
-         large pillars etc.
-       * |reverse <on/off>| = whether points are given in reverse order.
-       * |size <number>| = line width (left and right sizes are set to
-         one half of this value)
-       * |r-size <number>| = size of the line to the right
-       * |l-size <number>| = same to the left. Required for |slope| type.
-       * |smooth <on/off/auto>| = whether the line is smooth at the given point.
-         Auto is default.
-  * |adjust <horizontal/vertical>| = shifts the line point to be aligned
-    horizontally/ver\-ti\-cally with the previous point (or next point if there is
-    no previous point). The result is horizontal/vertical line segment).
-    If all line points have this option, they are aligned to the
-    average $y$ or $x$ coordinate, respectively. This option is not allowed
-    in the |plan| projection.
+     * |[LINE DATA]| specify either the coordinates of a line segment
+       |<x> <y>|, or coordinates of a B\'ezier curve arc
+       |<c1x> <c1y> <c2x> <c2y> <x> <y>|, where |c| indicates the control
+       point.
+    * |adjust <horizontal/vertical>| = shifts the line point to be aligned
+        horizontally/ver\-ti\-cally with the previous point (or next point if there is
+        no previous point). The result is horizontal/vertical line segment).
+        If all line points have this option, they are aligned to the
+        average $y$ or $x$ coordinate, respectively. This option is not allowed
+        in the |plan| projection.
+    * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
+     * |close <on/off/auto>| = determines whether a line is closed
+       or not.
+    * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
+      and |symbol-show| layout options) symbol will be hidden/shown according
+      to rules for specified |<symbol-type>|.
+     * |mark <keyword>| = is used to mark the point on the line (see
+       |join| command).
+     * |orientation/orient <number>| = orientation of the symbols
+       on the line. If not specified, it's perpendicular to the
+       line on its left side. 0 $\le$ |number| $<$ 360.
+     * |outline <in/out/none>| = determines whether the line serves as
+       a border line for a scrap. Default value is `|out|' for
+       walls, `|none|' for all other lines. Use |-outline in| for
+       large pillars etc.
   * |place <bottom/default/top>| = changes displaying order in the map.
-  * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
+     * |reverse <on/off>| = whether points are given in reverse order.
+     * |size <number>| = line width (left and right sizes are set to
+       one half of this value)
+     * |r-size <number>| = size of the line to the right
+     * |l-size <number>| = same to the left. Required for |slope| type.
+     * |smooth <on/off/auto>| = whether the line is smooth at the given point.
+       Auto is default.
   * |visibility <on/off>| = displays/hides the symbol.
-  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
-    and |symbol-show| layout options) symbol will be hidden/shown according
-    to rules for specified |<symbol-type>|.
 
     {\it Type-specific options:}\Nobreak
 
@@ -1135,21 +1240,31 @@ You may use invisible border to achieve this inside of the passage.
 \endcontext
 
 \arguments
-  * |<type>| is one of following: |water|, |sump|, |sand|, |debris|,
-    |blocks|, |flowstone|, |moonmilk|, |snow|, |ice|, |clay|, |pebbles|,
-    |bedrock|\[An empty area which
+  * |<type>| is one of following:
+  |bedrock|\[An empty area which
     can be used to clean the background.], |u|\[For user defined area symbols,
-    may be followed by arbitrary subtype.].
+    may be followed by arbitrary subtype.],
+  |blocks|,
+  |clay|,
+  |debris|,
+  |flowstone|,
+  |ice|,
+  |moonmilk|,
+  |pebbles|,
+  |sand|,
+  |snow|,
+  |sump|,
+  |water|.
 \endarguments
 
 \comopt
   * the data lines consist of border line references (IDs)
-  * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
-  * |visibility <on/off>| = displays/hides the symbol.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
     to rules for specified |<symbol-type>|.
+  * |place <bottom/default/top>| = changes displaying order in the map.
+  * |visibility <on/off>| = displays/hides the symbol.
 \endcomopt
 
 \options
@@ -1202,10 +1317,10 @@ You may use invisible border to achieve this inside of the passage.
 \endarguments
 
 \options
-  * |smooth <on/off>| indicates whether two lines are to be connected
-    smoothly.
   * |count <N>| (when used with scraps) = Therion will try to join scraps
     which connect in |N| locations/passages.
+  * |smooth <on/off>| indicates whether two lines are to be connected
+    smoothly.
 \endoptions
 
 
@@ -1312,8 +1427,6 @@ endsurface|
 \endcontext
 
 \comopt
-* |cs <coordinate system>| = coordinate system for bitmap calibration
-  and grid origin specification
 * |bitmap <filename> <calibration>| = scanned topographical map.
 
   |calibration| may have two forms:
@@ -1326,6 +1439,9 @@ endsurface|
   2. |[X1 Y1 station1 X2 Y2 station2]|, where upper case X/Y variables
   are picture coordinates and |station1| and |station2| are survey
   stations names.
+
+* |cs <coordinate system>| = coordinate system for bitmap calibration
+  and grid origin specification.
 
 * |grid-units <units>| = units in which grid is specified. Metres by default.
 
@@ -1368,6 +1484,10 @@ survey / all\[only with .3d files, where survey structure is specified]
 \endcontext
 
 \options
+  * |calibrate [<x> <y> <z> <X> <Y> <Z>]| = coordinates in the imported
+    file are shifted from lower-case coordinates to upper-case coordinates.
+  * |cs <coordinate system>| = coordinate system for stations with
+    fixed coordinates.
   * |filter <prefix>| = if specified, only stations with given prefix
     and shots between  them will be imported. Prefix will be removed
     from station names.
@@ -1377,13 +1497,9 @@ survey / all\[only with .3d files, where survey structure is specified]
      |create| = split stations into subsurveys, if subsurveys do not
                 exist, create them
 
-     |use| = split stations into existing subsurveys
-
      |ignore| = do not split stations into sub-surveys
-  * |cs <coordinate system>| = coordinate system for stations with
-    fixed coordinates
-  * |calibrate [<x> <y> <z> <X> <Y> <Z>]| = coordinates in the imported
-    file are shifted from lower-case coordinates to upper-case coordinates.
+
+     |use| = split stations into existing subsurveys
 \endoptions
 
 
