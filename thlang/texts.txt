@@ -1584,6 +1584,25 @@ therion: point plus-minus
 en: plus/minus
 pt: segue acima e abaixo
 
+therion: line rimstone-dam
+bg: сухо синтрово езеро
+ca: gour sec
+cz: sintrová hrázka
+de: Sinterbarriere
+el: γκουρ (λιθωματικό φράγμα)
+en: rimstone dam
+es: gour seco
+fr: gours
+it: gour
+mi: kōhatu matatara
+pl: naciekowa przegroda
+pt: travertino vazio
+ru: гуры без воды
+sk: sintrová hrádza
+sl: suha ponvica
+sq: penda guri
+zh_CN: 边石坝
+
 therion: point seed-germination
 en: seed-germination
 pt: germinação de semente

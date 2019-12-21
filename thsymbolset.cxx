@@ -323,6 +323,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_OVERHANG,SYML_OVERHANG);
         cl3(TT_LINE_TYPE_PIT,SYML_PIT);
         cl3(TT_LINE_TYPE_ROCK_BORDER,SYML_ROCKBORDER);
+        cl3(TT_LINE_TYPE_RIMSTONEDAM,SYML_RIMSTONEDAM);
         cl3(TT_LINE_TYPE_ROCK_EDGE,SYML_ROCKEDGE);
         cl3(TT_LINE_TYPE_ROPE,SYML_ROPE);
         cl3(TT_LINE_TYPE_ROPE_LADDER,SYML_ROPELADDER);
@@ -755,19 +756,20 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(11,SYMP_SNOW);
     group(12,SYML_ROCKBORDER);
     group(13,SYML_ROCKEDGE);
-    group(14,SYMX_LINE_WATERFLOW)
-    group(15,SYMA_WATER)
-    group(16,SYMA_SUMP)
-    group(17,SYMA_BEDROCK)
-    group(18,SYMA_BLOCKS)
-    group(19,SYMA_CLAY)
-    group(20,SYMA_DEBRIS)
-    group(21,SYMA_ICE)
-    group(22,SYMA_PEBBLES)
-    group(23,SYMA_SAND)
-    group(24,SYMA_SNOW)
-    group(25,SYMP_MUDCRACK)
-    group(26,SYMP_MUD)
+    group(14,SYML_RIMSTONEDAM);
+    group(15,SYMX_LINE_WATERFLOW);
+    group(16,SYMA_WATER);
+    group(17,SYMA_SUMP);
+    group(18,SYMA_BEDROCK);
+    group(19,SYMA_BLOCKS);
+    group(20,SYMA_CLAY);
+    group(21,SYMA_DEBRIS);
+    group(22,SYMA_ICE);
+    group(23,SYMA_PEBBLES);
+    group(24,SYMA_SAND);
+    group(25,SYMA_SNOW);
+    group(26,SYMP_MUDCRACK);
+    group(27,SYMP_MUD);
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -1445,6 +1447,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   endfig;
 
   legend_eqline(SYML_HANDRAIL,thT("line handrail",layout->lang));
+  legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
   legend_eqline(SYML_VIAFERRATA,thT("line via-ferrata",layout->lang));
   legend_point(SYMP_BRIDGE,thT("point bridge",layout->lang));
   legend_point(SYMP_CAMP,thT("point camp",layout->lang));

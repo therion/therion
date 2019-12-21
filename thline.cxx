@@ -1,14 +1,14 @@
 /**
  * @file thline.cxx
  */
-  
+
 /* Copyright (C) 2000 Stacho Mudrak
- * 
+ *
  * $Date: $
  * $RCSfile: $
  * $Revision: $
  *
- * -------------------------------------------------------------------- 
+ * --------------------------------------------------------------------
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --------------------------------------------------------------------
  */
- 
+
 #include "thline.h"
 #include "thexception.h"
 #include "thparse.h"
@@ -45,12 +45,12 @@ thline::thline()
   this->closed = TT_AUTO;
   this->reverse = false;
   this->is_closed = false;
-  
+
   this->csubtype = TT_LINE_SUBTYPE_UNKNOWN;
-  
+
   this->first_point = NULL;
   this->last_point = NULL;
-  
+
   this->text = NULL;
   this->m_height = thnan;
 }
@@ -61,7 +61,7 @@ thline::~thline()
 }
 
 
-int thline::get_class_id() 
+int thline::get_class_id()
 {
   return TT_LINE_CMD;
 }
@@ -75,7 +75,7 @@ bool thline::is(int class_id)
     return th2ddataobject::is(class_id);
 }
 
-int thline::get_cmd_nargs() 
+int thline::get_cmd_nargs()
 {
   return 1;
 }
@@ -110,12 +110,12 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
   char * type, * subtype;
   if (cod.id == 1)
     cod.id = TT_LINE_TYPE;
-    
+
   switch (cod.id) {
-  
+
     case 0:
       thsplit_args(& this->db->db2d.mbf, *args);
-      this->insert_line_point(this->db->db2d.mbf.get_size(), 
+      this->insert_line_point(this->db->db2d.mbf.get_size(),
         this->db->db2d.mbf.get_buffer());
       break;
 
@@ -125,26 +125,26 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
       if (strlen(subtype) > 0)
         this->parse_subtype(subtype);
       break;
-    
+
     case TT_LINE_OUTLINE:
       this->outline = thmatch_token(*args,thtt_line_outlines);
       if (this->outline == TT_LINE_OUTLINE_UNKNOWN)
         ththrow(("unknown line outline -- %s",*args))
       break;
-    
+
     case TT_LINE_CLOSED:
       this->closed = thmatch_token(*args,thtt_onoffauto);
       if (this->closed == TT_UNKNOWN_BOOL)
         ththrow(("invalid closure switch -- %s",*args))
       break;
-    
+
     case TT_LINE_REVERSE:
       reversion = thmatch_token(*args,thtt_bool);
       if (reversion == TT_UNKNOWN_BOOL)
         ththrow(("invalid reversion switch -- %s",*args))
       this->reverse = (reversion == TT_TRUE);
       break;
-    
+
     case TT_LINE_SUBTYPE:
       this->parse_subtype(*args);
       break;
@@ -152,31 +152,31 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
 	case TT_LINE_HEIGHT:
 	  this->parse_height(*args);
 	  break;
-    
+
     case TT_LINE_BORDER:
       this->parse_border(*args);
       break;
-    
+
     case TT_LINE_GRADIENT:
       this->parse_gradient(*args);
       break;
-    
+
     case TT_LINE_DIRECTION:
       this->parse_direction(*args);
       break;
-    
+
     case TT_LINE_HEAD:
       this->parse_head(*args);
       break;
-    
+
     case TT_LINE_ADJUST:
       this->parse_adjust(*args);
       break;
-    
+
     case TT_LINE_ALTITUDE:
       this->parse_altitude(*args);
       break;
-    
+
     case TT_LINE_TEXT:
       thencode(&(this->db->buff_enc), *args, argenc);
       this->parse_text(this->db->buff_enc.get_buffer());
@@ -190,13 +190,13 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
         this->last_point->smooth = csmooth;
         this->last_point->smooth_orig = csmooth;
       }
-      else 
+      else
         ththrow(("no line point specified"))
       break;
-      
+
     case TT_LINE_ORIENT:
       if (this->last_point != NULL) {
-        if (this->type != TT_LINE_TYPE_SLOPE) 
+        if (this->type != TT_LINE_TYPE_SLOPE)
           ththrow(("orientation not valid with type %s", thmatch_string(this->type,thtt_line_types)))
         thparse_double(sv,this->last_point->orient,*args);
         if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
@@ -214,7 +214,7 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
     case TT_LINE_LSIZE:
       this->parse_size(cod.id,*args);
       break;
-      
+
     case TT_LINE_MARK:
       this->insert_point_mark(*args);
       break;
@@ -234,7 +234,7 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
         this->tags &= ~tagtype;
       break;
 
-    // if not found, try to set fathers properties  
+    // if not found, try to set fathers properties
     default:
       th2ddataobject::set(cod, args, argenc, indataline);
   }
@@ -260,23 +260,23 @@ void thline::self_print_properties(FILE * outf)
     while(cpt != NULL) {
       fprintf(outf,"\t");
       if (cpt->cp1 != NULL)
-        fprintf(outf,"\t -- %f,%f (%f,%f,%f,%f)\n\t",cpt->cp1->x, cpt->cp1->y, 
+        fprintf(outf,"\t -- %f,%f (%f,%f,%f,%f)\n\t",cpt->cp1->x, cpt->cp1->y,
           cpt->cp1->xt, cpt->cp1->yt, cpt->cp1->zt, cpt->cp1->at);
       if (cpt->cp2 != NULL)
-        fprintf(outf,"\t -- %f,%f (%f,%f,%f,%f)\n\t",cpt->cp2->x, cpt->cp2->y, cpt->cp2->xt, 
+        fprintf(outf,"\t -- %f,%f (%f,%f,%f,%f)\n\t",cpt->cp2->x, cpt->cp2->y, cpt->cp2->xt,
           cpt->cp2->yt, cpt->cp2->zt, cpt->cp2->at);
-      fprintf(outf,"\t%f,%f (%f,%f,%f,%f)",cpt->point->x, cpt->point->y,        
+      fprintf(outf,"\t%f,%f (%f,%f,%f,%f)",cpt->point->x, cpt->point->y,
         cpt->point->xt, cpt->point->yt, cpt->point->zt, cpt->point->at);
       fprintf(outf,"\t(subtype:%d smooth:%d orient:%f r-size:%f l-size:%f)\n",cpt->subtype,cpt->smooth,
         cpt->orient, cpt->rsize, cpt->lsize);
-      cpt = cpt->nextlp;  
+      cpt = cpt->nextlp;
     }
   }
   // insert intended print of object properties here
 }
 
 
-void thline::parse_type(char * ss) 
+void thline::parse_type(char * ss)
 {
   this->type = thmatch_token(ss,thtt_line_types);
   switch (this->type) {
@@ -284,17 +284,17 @@ void thline::parse_type(char * ss)
       ththrow(("unknown line type -- %s",ss))
       break;
     case TT_LINE_TYPE_WALL:
-      this->csubtype = TT_LINE_SUBTYPE_BEDROCK;  
+      this->csubtype = TT_LINE_SUBTYPE_BEDROCK;
       this->outline = TT_LINE_OUTLINE_OUT;
       break;
     case TT_LINE_TYPE_BORDER:
-      this->csubtype = TT_LINE_SUBTYPE_VISIBLE;  
+      this->csubtype = TT_LINE_SUBTYPE_VISIBLE;
       break;
     case TT_LINE_TYPE_WATER_FLOW:
-      this->csubtype = TT_LINE_SUBTYPE_PERMANENT;  
+      this->csubtype = TT_LINE_SUBTYPE_PERMANENT;
       break;
     case TT_LINE_TYPE_SURVEY:
-      this->csubtype = TT_LINE_SUBTYPE_CAVE;  
+      this->csubtype = TT_LINE_SUBTYPE_CAVE;
       break;
     case TT_LINE_TYPE_ARROW:
       this->tags |= TT_LINE_TAG_HEAD_END;
@@ -316,7 +316,7 @@ void thline::parse_type(char * ss)
 }
 
 
-void thline::parse_subtype(char * ss) 
+void thline::parse_subtype(char * ss)
 {
 //  int prevcsubtype = this->csubtype;
   if (this->type == TT_LINE_TYPE_U) {
@@ -393,12 +393,12 @@ void thline::insert_line_point(int nargs, char ** args, double * nums)
   // check number of parameters
   if ((nargs != 6) && (nargs != 2))
     ththrow(("invalid number of coordinates -- %d", nargs))
-  
+
   double cp1x, cp1y, cp2x, cp2y, x, y;
   int pidx = 0, sv;
   char * invs = NULL;
   bool invnum = false;
-  
+
   if (nargs == 6) {
     pidx = 4;
     if (args != NULL) {
@@ -450,11 +450,11 @@ void thline::insert_line_point(int nargs, char ** args, double * nums)
 
   // let's insert point into database
   thdb2dlp * plp = this->db->db2d.insert_line_point();
-  
+
   plp->subtype = this->csubtype;
   plp->smooth = TT_AUTO;
   plp->smooth_orig = TT_AUTO;
-  
+
   if (this->last_point == NULL) {
     this->last_point = plp;
     this->first_point = plp;
@@ -466,15 +466,15 @@ void thline::insert_line_point(int nargs, char ** args, double * nums)
     plp->nextlp = NULL;
     this->last_point = plp;
   }
-  
+
   thdb2dpt * cp1, * cp2, * pt;
   pt = this->db->db2d.insert_point();
   pt->x = x;
   pt->y = y;
   pt->pscrap = this->db->get_current_scrap();
-  
+
   plp->point = pt;
-  
+
   if (nargs == 6) {
     cp1 = this->db->db2d.insert_point();
     cp1->x = cp1x;
@@ -539,53 +539,53 @@ void thline::preprocess()
 
   if (this->first_point == NULL)
     return;
-    
+
   // check closure
-  this->is_closed = ((this->closed == TT_TRUE) || 
-      ((this->closed == TT_AUTO) && 
-      (this->first_point->point->x == this->last_point->point->x) && 
+  this->is_closed = ((this->closed == TT_TRUE) ||
+      ((this->closed == TT_AUTO) &&
+      (this->first_point->point->x == this->last_point->point->x) &&
       (this->first_point->point->y == this->last_point->point->y)));
   if (this->is_closed) {
       this->last_point->point->x = this->first_point->point->x;
       this->last_point->point->y = this->first_point->point->y;
   }
-  
+
   // check reversion
   thdb2dlp * c_item, * n_item, * t_item;
   thdb2dpt * t_point;
   int t_tags, t_subtype, t_smooth, t_smooth_orig;
   double t_rsize, t_lsize, t_orient;
-  
-  bool tmpreverse = this->reverse;  
+
+  bool tmpreverse = this->reverse;
   if (this->fscrapptr->flip != TT_SCRAP_FLIP_NONE)
     tmpreverse = !tmpreverse;
-  
+
   if (tmpreverse && (this->first_point->nextlp != NULL)) {
-  
+
     // najprv prehodi podtypy
     c_item = this->first_point;
     while (c_item != NULL) {
-      
+
       n_item = c_item->nextlp;
 
       // switch next - prev
       t_item = c_item->nextlp;
       c_item->nextlp = c_item->prevlp;
       c_item->prevlp = t_item;
-      
+
       // switch control points
       t_point = c_item->cp1;
       c_item->cp1 = c_item->cp2;
       c_item->cp2 = t_point;
-      
+
       c_item = n_item;
-      
+
     }
-    
+
     t_item = this->first_point;
     this->first_point = this->last_point;
     this->last_point = t_item;
-    
+
     t_point = this->first_point->point;
     t_tags = this->first_point->tags;
     t_rsize = this->first_point->rsize;
@@ -617,7 +617,7 @@ void thline::preprocess()
       }
       c_item = c_item->nextlp;
     }
-    
+
     t_item = this->last_point;
     this->last_point = t_item->prevlp;
     this->last_point->nextlp = NULL;
@@ -625,7 +625,7 @@ void thline::preprocess()
     t_item->nextlp = this->first_point;
     this->first_point->prevlp = t_item;
     this->first_point = t_item;
-        
+
     t_subtype = this->first_point->subtype;
     c_item = this->first_point;
     while (c_item != NULL) {
@@ -636,9 +636,9 @@ void thline::preprocess()
       }
       c_item = c_item->nextlp;
     }
-    
+
   }
-  
+
   // check smoothness
   c_item = this->first_point;
   double d1, d2, a1, a2;
@@ -651,7 +651,7 @@ void thline::preprocess()
         d1 = hypot(c_item->cp2->x - c_item->point->x, c_item->cp2->y - c_item->point->y);
         d2 = hypot(c_item->nextlp->cp1->x - c_item->point->x, c_item->nextlp->cp1->y - c_item->point->y);
         if ((d2 > 0) && (d1 > 0)) {
-          a1 = atan2(c_item->cp2->y - c_item->point->y, c_item->cp2->x - c_item->point->x) / 3.14159265358979323338 * 180.0;                        
+          a1 = atan2(c_item->cp2->y - c_item->point->y, c_item->cp2->x - c_item->point->x) / 3.14159265358979323338 * 180.0;
           a2 = atan2(c_item->point->y - c_item->nextlp->cp1->y, c_item->point->x - c_item->nextlp->cp1->x) / 3.14159265358979323338 * 180.0;
           if (a2 - a1 > 180.0)
             a2 -= 360;
@@ -688,7 +688,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       fprintf(out->file,"ATTR__height := %.2f;\n", this->m_height);
     }
   }
-  
+
   if (this->scale_numeric < out->layout->min_symbol_scale) return(false);
 
   switch (this->type) {
@@ -723,7 +723,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_PIT, SYML_WALL_PIT)
           }
           omacroid = macroid;
-          if (this->context >= 0) 
+          if (this->context >= 0)
             macroid = this->context;
           if (out->symset->is_assigned(macroid)) {
             if (out->file == NULL)
@@ -746,18 +746,18 @@ bool thline::export_mp(class thexpmapmpxs * out)
         }
         from = to;
       }
-      postprocess = false;  
+      postprocess = false;
       break;
 
     case TT_LINE_TYPE_LABEL:
       macroid = SYML_LABEL;
       omacroid = macroid;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
       if ((this->text == NULL) || (!out->symset->is_assigned(macroid))) {
         postprocess = false;
         break;
-      } 
+      }
       if (out->file == NULL)
         return(true);
       out->symset->export_mp_symbol_options(out->file, omacroid);
@@ -772,10 +772,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
       break;
     case TT_LINE_TYPE_CONTOUR:
       macroid = SYML_CONTOUR;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
       if (!out->symset->is_assigned(macroid)) {
-        postprocess = false;  
+        postprocess = false;
         break;
       }
       if (out->file == NULL)
@@ -800,14 +800,14 @@ bool thline::export_mp(class thexpmapmpxs * out)
           fprintf(out->file,",-1");
       }
       fprintf(out->file,");\n");
-      postprocess = false;  
+      postprocess = false;
       break;
     case TT_LINE_TYPE_SLOPE:
       macroid = SYML_SLOPE;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
       if (!out->symset->is_assigned(macroid)) {
-        postprocess = false;  
+        postprocess = false;
         break;
       }
       s1 = 0.0;
@@ -836,10 +836,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
       this->export_path_mp(out);
       fprintf(out->file,",%d",
           ((this->tags & TT_LINE_TAG_BORDER) > 0 ? 1 : 0));
-          
+
       // vypise prvy bod
       fprintf(out->file,",(0,%g,%g)",(r1 < 0.0 ? -1 : r1),s1 * out->ms);
-      
+
       // vypise ostatne body
       lp = this->first_point->nextlp;
       from = 1;
@@ -854,22 +854,22 @@ bool thline::export_mp(class thexpmapmpxs * out)
             r1 = lp->orient + out->rr;
             fprintf(out->file,"%g,",lp->orient + out->rr);
           } else {
-            if (lp->nextlp != NULL)                        
+            if (lp->nextlp != NULL)
               fprintf(out->file,"-1,");
             else
               fprintf(out->file,"%g,",(r1 < 0.0 ? -1.0 : r1));
           }
-          
+
           // velkost
           if ((lp->tags & TT_LINEPT_TAG_SIZE) > 0) {
             s1 = lp->lsize;
             fprintf(out->file,"%g)",lp->lsize * out->ms);
           } else {
-            if (lp->nextlp != NULL)                        
+            if (lp->nextlp != NULL)
               fprintf(out->file,"-1)");
             else
               fprintf(out->file,"%g)",s1 * out->ms);
-          }          
+          }
         } else if (lp->nextlp == NULL) {
           // vypise posledny bod
           fprintf(out->file,",(%d,%g,%g)",from,(r1 < 0.0 ? -1.0 : r1),s1 * out->ms);
@@ -879,7 +879,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       }
       // vypise prvy bod
       fprintf(out->file,");\n");
-      postprocess = false;  
+      postprocess = false;
       break;
 
     thline_type_export_mp(TT_LINE_TYPE_PIT, SYML_PIT)
@@ -901,13 +901,14 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_FIXED_LADDER, SYML_FIXEDLADDER)
     thline_type_export_mp(TT_LINE_TYPE_STEPS, SYML_STEPS)
     thline_type_export_mp(TT_LINE_TYPE_VIA_FERRATA, SYML_VIAFERRATA)
+    thline_type_export_mp(TT_LINE_TYPE_RIMSTONEDAM, SYML_RIMSTONEDAM)
 
     case TT_LINE_TYPE_ROPE:
       macroid = SYML_ROPE;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
       if (!out->symset->is_assigned(macroid)) {
-        postprocess = false;  
+        postprocess = false;
         break;
       }
       if (out->file == NULL)
@@ -919,15 +920,15 @@ bool thline::export_mp(class thexpmapmpxs * out)
       fprintf(out->file,",%s,%s);\n", ((this->tags & TT_LINE_TAG_ROPE_ANCHORS) > 0 ? "true" : "false"),
         ((this->tags & TT_LINE_TAG_ROPE_REBELAYS) > 0 ? "true" : "false"));
 
-      postprocess = false;  
+      postprocess = false;
       break;
 
     case TT_LINE_TYPE_ARROW:
       macroid = SYML_ARROW;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
       if (!out->symset->is_assigned(macroid)) {
-        postprocess = false;  
+        postprocess = false;
         break;
       }
       if (out->file == NULL)
@@ -941,15 +942,15 @@ bool thline::export_mp(class thexpmapmpxs * out)
       if ((this->tags & TT_LINE_TAG_HEAD_END) > 0)
         from += 2;
       fprintf(out->file,",%d);\n",from);
-      postprocess = false;  
+      postprocess = false;
       break;
 
     case TT_LINE_TYPE_SECTION:
       macroid = SYML_SECTION;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
       if (!out->symset->is_assigned(macroid)) {
-        postprocess = false;  
+        postprocess = false;
         break;
       }
       if (out->file == NULL)
@@ -965,7 +966,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       from = 0;
       lp = this->first_point;
       while (lp != NULL) {
-        if (((lp->tags & TT_LINEPT_TAG_DIRECTION) > 0) && 
+        if (((lp->tags & TT_LINEPT_TAG_DIRECTION) > 0) &&
             ((this->tags & TT_LINE_TAG_DIRECTION_POINT) > 0)) {
           fprintf(out->file,",%d",from);
           anypt = true;
@@ -980,10 +981,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
       if (!anypt)
         fprintf(out->file,",");
       fprintf(out->file,");\n");
-      postprocess = false;  
+      postprocess = false;
       break;
 
-      
+
     case TT_LINE_TYPE_BORDER:
       from = 0;
       to = 0;
@@ -1003,7 +1004,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_INVISIBLE, SYML_BORDER_INVISIBLE)
           }
           omacroid = macroid;
-          if (this->context >= 0) 
+          if (this->context >= 0)
             macroid = this->context;
           if (out->symset->is_assigned(macroid)) {
             if (out->file == NULL)
@@ -1026,8 +1027,8 @@ bool thline::export_mp(class thexpmapmpxs * out)
         }
         from = to;
       }
-      postprocess = false;  
-      break;    
+      postprocess = false;
+      break;
 
     case TT_LINE_TYPE_WATER_FLOW:
       from = 0;
@@ -1047,7 +1048,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_CONJECTURAL, SYML_WATERFLOW_CONJECTURAL)
           }
           omacroid = macroid;
-          if (this->context >= 0) 
+          if (this->context >= 0)
             macroid = this->context;
           if (out->symset->is_assigned(macroid)) {
             if (out->file == NULL)
@@ -1060,8 +1061,8 @@ bool thline::export_mp(class thexpmapmpxs * out)
         }
         from = to;
       }
-      postprocess = false;  
-      break;    
+      postprocess = false;
+      break;
 
     case TT_LINE_TYPE_SURVEY:
       from = 0;
@@ -1080,7 +1081,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
             thline_type_export_mp(TT_LINE_SUBTYPE_SURFACE, SYML_SURVEY_SURFACE)
           }
           omacroid = macroid;
-          if (this->context >= 0) 
+          if (this->context >= 0)
             macroid = this->context;
           if (out->symset->is_assigned(macroid)) {
             if (out->file == NULL)
@@ -1093,21 +1094,21 @@ bool thline::export_mp(class thexpmapmpxs * out)
         }
         from = to;
       }
-      postprocess = false;  
-      break;    
+      postprocess = false;
+      break;
 
     default:
       macroid = SYML_UNDEFINED;
       break;
   }
-  
+
   if (postprocess) {
     if (macroid < 0) {
       this->export_path_mp(out);
       fprintf(out->file,");\n");
     } else {
       omacroid = macroid;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
       if (out->symset->is_assigned(macroid)) {
         if (out->file == NULL)
@@ -1158,7 +1159,7 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
         fprintf(out->file," -- ");
         lp->point->export_mp(out,dbglevel);
       }
-    } 
+    }
     else if (dnu) {
       if ((lp->cp1 != NULL) && (lp->cp2 != NULL)) {
         fprintf(out->file," .. controls ");
@@ -1166,7 +1167,7 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
         fprintf(out->file," and ");
         lp->cp2->export_mp(out,dbglevel);
         fprintf(out->file," .. ");
-      } 
+      }
       else {
         fprintf(out->file," -- ");
       }
@@ -1182,7 +1183,7 @@ unsigned thline::export_path_mp(class thexpmapmpxs * out,
   if (long(last) > long(from)) {
     fprintf(out->file,")");
     return (last - from);
-  } 
+  }
   else {
     return 0;
   }
@@ -1316,12 +1317,12 @@ void thline::parse_head(char * ss) {
 void thline::parse_adjust(char * ss) {
   if (this->last_point != NULL)
     this->last_point->adjust = thmatch_token(ss,thtt_line_adjusts);
-  else 
+  else
     ththrow(("no line point specified"))
   if (this->last_point->adjust == TT_LINE_ADJUST_UNKNOWN)
     ththrow(("invalid adjust specification -- %s",ss))
-  if ((thdb.cscrapptr->proj->type == TT_2DPROJ_PLAN) && 
-      (this->last_point->adjust != TT_LINE_ADJUST_NONE)) 
+  if ((thdb.cscrapptr->proj->type == TT_2DPROJ_PLAN) &&
+      (this->last_point->adjust != TT_LINE_ADJUST_NONE))
     ththrow(("adjustment and projection not compatible -- %s",ss))
 }
 
@@ -1350,7 +1351,7 @@ void thline::parse_size(int w, char * ss) {
           ok = true;
       break;
   }
-  if (!ok) 
+  if (!ok)
     ththrow(("%s not valid with type %s", sizestr,
         thmatch_string(this->type,thtt_line_types)))
 
@@ -1359,7 +1360,7 @@ void thline::parse_size(int w, char * ss) {
     ththrow(("invalid number -- %s",ss))
   if (sz < 0.0)
     ththrow(("negative size -- %s",ss))
-  
+
   switch (this->type) {
     case TT_LINE_TYPE_SLOPE:
       this->last_point->lsize = sz;
@@ -1378,7 +1379,7 @@ void thline::parse_altitude(char * ss) {
     ththrow(("no line point specified"))
 
   thparse_altitude(ss, this->last_point->rsize, this->last_point->lsize);
-    
+
   this->last_point->tags |= TT_LINEPT_TAG_ALTITUDE;
 }
 
@@ -1394,7 +1395,7 @@ void thline::start_insert() {
 
   thdb2dlp * lp;
   bool fsize;
-  
+
   switch (this->type) {
     case TT_LINE_TYPE_U:
       if (this->m_subtype_str == NULL)
@@ -1439,7 +1440,7 @@ void thline::parse_height(char * ss) {
   int sv, ux;
   double dv;
   thtflength lentf;
-  
+
   ux = 0;
   switch (npar) {
     case 1:

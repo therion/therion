@@ -38,7 +38,7 @@ EGB_altar_raw := image(
 picture EGB_altar;
 EGB_altar := EGB_altar_raw shifted (-(llcorner EGB_altar_raw)-(urcorner EGB_altar_raw - llcorner EGB_altar_raw)/2) scaled (u / max((xpart urcorner EGB_altar_raw) - (xpart llcorner EGB_altar_raw), (ypart urcorner EGB_altar_raw) - (ypart llcorner EGB_altar_raw)));
 
-def p_altar_EGB(expr pos, theta, sc, al) = 
+def p_altar_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_altar;
 enddef;
@@ -413,7 +413,7 @@ EGB_electric_light_raw := image(
 picture EGB_electric_light;
 EGB_electric_light := EGB_electric_light_raw shifted (-(llcorner EGB_electric_light_raw)-(urcorner EGB_electric_light_raw - llcorner EGB_electric_light_raw)/2) scaled (u / max((xpart urcorner EGB_electric_light_raw) - (xpart llcorner EGB_electric_light_raw), (ypart urcorner EGB_electric_light_raw) - (ypart llcorner EGB_electric_light_raw)));
 
-def p_electriclight_EGB(expr pos, theta, sc, al) = 
+def p_electriclight_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_electric_light;
 enddef;
@@ -496,7 +496,7 @@ EGB_exvoto_raw := image(
 picture EGB_exvoto;
 EGB_exvoto := EGB_exvoto_raw shifted (-(llcorner EGB_exvoto_raw)-(urcorner EGB_exvoto_raw - llcorner EGB_exvoto_raw)/2) scaled (u / max((xpart urcorner EGB_exvoto_raw) - (xpart llcorner EGB_exvoto_raw), (ypart urcorner EGB_exvoto_raw) - (ypart llcorner EGB_exvoto_raw)));
 
-def p_exvoto_EGB(expr pos, theta, sc, al) = 
+def p_exvoto_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_exvoto;
 enddef;
@@ -538,7 +538,7 @@ EGB_gate_raw := image(
 picture EGB_gate;
 EGB_gate := EGB_gate_raw shifted (-(llcorner EGB_gate_raw)-(urcorner EGB_gate_raw - llcorner EGB_gate_raw)/2) scaled (u / max((xpart urcorner EGB_gate_raw) - (xpart llcorner EGB_gate_raw), (ypart urcorner EGB_gate_raw) - (ypart llcorner EGB_gate_raw)));
 
-def p_gate_EGB(expr pos, theta, sc, al) = 
+def p_gate_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_gate;
 enddef;
@@ -692,7 +692,7 @@ EGB_masonry_raw := image(
 picture EGB_masonry;
 EGB_masonry := EGB_masonry_raw shifted (-(llcorner EGB_masonry_raw)-(urcorner EGB_masonry_raw - llcorner EGB_masonry_raw)/2) scaled (u / max((xpart urcorner EGB_masonry_raw) - (xpart llcorner EGB_masonry_raw), (ypart urcorner EGB_masonry_raw) - (ypart llcorner EGB_masonry_raw)));
 
-def p_masonry_EGB(expr pos, theta, sc, al) = 
+def p_masonry_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_masonry;
 enddef;
@@ -753,7 +753,7 @@ EGB_mud_raw := image(
 picture EGB_mud;
 EGB_mud := EGB_mud_raw shifted (-(llcorner EGB_mud_raw)-(urcorner EGB_mud_raw - llcorner EGB_mud_raw)/2) scaled (u / max((xpart urcorner EGB_mud_raw) - (xpart llcorner EGB_mud_raw), (ypart urcorner EGB_mud_raw) - (ypart llcorner EGB_mud_raw)));
 
-def p_mud_EGB(expr pos, theta, sc, al) = 
+def p_mud_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_mud;
 enddef;
@@ -885,7 +885,7 @@ EGB_nameplate_raw := image(
 picture EGB_nameplate;
 EGB_nameplate := EGB_nameplate_raw shifted (-(llcorner EGB_nameplate_raw)-(urcorner EGB_nameplate_raw - llcorner EGB_nameplate_raw)/2) scaled (u / max((xpart urcorner EGB_nameplate_raw) - (xpart llcorner EGB_nameplate_raw), (ypart urcorner EGB_nameplate_raw) - (ypart llcorner EGB_nameplate_raw)));
 
-def p_nameplate_EGB(expr pos, theta, sc, al) = 
+def p_nameplate_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_nameplate;
 enddef;
@@ -1072,7 +1072,7 @@ EGB_photo_raw := image(
 picture EGB_photo;
 EGB_photo := EGB_photo_raw shifted (-(llcorner EGB_photo_raw)-(urcorner EGB_photo_raw - llcorner EGB_photo_raw)/2) scaled (u / max((xpart urcorner EGB_photo_raw) - (xpart llcorner EGB_photo_raw), (ypart urcorner EGB_photo_raw) - (ypart llcorner EGB_photo_raw)));
 
-def p_photo_EGB(expr pos, theta, sc, al) = 
+def p_photo_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_photo;
 enddef;
@@ -1330,7 +1330,7 @@ EGB_walkway_raw := image(
 picture EGB_walkway;
 EGB_walkway := EGB_walkway_raw shifted (-(llcorner EGB_walkway_raw)-(urcorner EGB_walkway_raw - llcorner EGB_walkway_raw)/2) scaled (u / max((xpart urcorner EGB_walkway_raw) - (xpart llcorner EGB_walkway_raw), (ypart urcorner EGB_walkway_raw) - (ypart llcorner EGB_walkway_raw)));
 
-def p_walkway_EGB(expr pos, theta, sc, al) = 
+def p_walkway_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw EGB_walkway;
 enddef;
@@ -1480,4 +1480,22 @@ EGB_wheelchair := EGB_wheelchair_raw shifted (-(llcorner EGB_wheelchair_raw)-(ur
 def p_wheelchair_EGB(expr pos, theta, sc, al) =
 	T:=identity aligned al rotated theta scaled sc shifted pos;
 	thdraw EGB_wheelchair;
+enddef;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Lines %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+def l_rimstonedam_EGB(expr P) =
+	cas := 0;
+	distance := arclength P;
+	mystep := adjust_step(distance, 0.9u);
+	pickup PenC;
+	forever:
+		t  := arctime (cas + mystep/2) of P;
+		T := identity rotated angle(thdir(P,t)) scaled 0.7 shifted (point t of P);
+		thdraw (-.45u,.2u){dir -80}..{dir -50}(-.15u,0){dir 30}..{dir -30}(.15u,.1u){dir -50}..{dir 70}(.45u,.2u);
+		cas := cas + mystep;
+		exitif cas > distance - (2*mystep/3); % for rounding errors
+	endfor;
 enddef;
