@@ -882,6 +882,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
       postprocess = false;
       break;
 
+    thline_type_export_mp(TT_LINE_TYPE_ABYSSENTRANCE, SYML_ABYSSENTRANCE)
     thline_type_export_mp(TT_LINE_TYPE_CEILING_MEANDER, SYML_CEILINGMEANDER)
     thline_type_export_mp(TT_LINE_TYPE_CEILING_STEP, SYML_CEILINGSTEP)
     thline_type_export_mp(TT_LINE_TYPE_CHIMNEY, SYML_CHIMNEY)

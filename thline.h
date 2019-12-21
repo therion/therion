@@ -165,6 +165,7 @@ static const thstok thtt_line_adjusts[] = {
 
 enum {
   TT_LINE_TYPE_UNKNOWN,
+  TT_LINE_TYPE_ABYSSENTRANCE,
   TT_LINE_TYPE_ARROW,
   TT_LINE_TYPE_BORDER,
   TT_LINE_TYPE_CEILING_MEANDER,
@@ -204,6 +205,7 @@ enum {
  */
 
 static const thstok thtt_line_types[] = {
+  {"abyss-entrance", TT_LINE_TYPE_ABYSSENTRANCE},
   {"arrow", TT_LINE_TYPE_ARROW},
   {"border", TT_LINE_TYPE_BORDER},
   {"ceiling-meander", TT_LINE_TYPE_CEILING_MEANDER},

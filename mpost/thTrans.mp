@@ -145,6 +145,7 @@ let l_border_presumed = l_border_presumed_SKBB;
 let l_border_temporary = l_border_temporary_SKBB;
 let l_border_visible = l_border_visible_SKBB;
 
+let l_abyssentrance = l_abyssentrance_EGB;
 let l_arrow = l_arrow_SKBB;
 let l_ceilingmeander = l_ceilingmeander_SKBB;
 let l_ceilingstep = l_ceilingstep_SKBB;

@@ -1463,6 +1463,10 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: line abyss-entrance
+en: abyss-entrance
+pt: entrada em abismo
+
 therion: point altar
 en: altar
 pt: altar
