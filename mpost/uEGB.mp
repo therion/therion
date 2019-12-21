@@ -1543,6 +1543,45 @@ def l_dripline_EGB(expr P) =
 enddef;
 
 
+def l_fault_EGB(expr P) =
+	path myDot;
+	pair Ppb, Pdb, Pvb, Ppe, Pde, Pve;
+
+	T := identity;
+
+	pickup PenA;
+	thdraw P;
+
+	cursor := 0;
+	totalLength := arclength P;
+	elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+	myDot := (0,-0.05u) -- (0,0.05u);
+	pickup PenC;
+	distance := 0.2u;
+	forever:
+		t0 := arctime (cursor + elementSize * 1/8) of P;
+		t1 := arctime (cursor + elementSize * 5/8) of P;
+		t2 := arctime (cursor + elementSize * 7/8) of P;
+
+		Ppb := (point t0 of P);
+		Pdb := unitvector(thdir(P,t0));
+		Pvb := Pdb rotated -90;
+		Ppe := (point t1 of P);
+		Pde := unitvector(thdir(P,t1));
+		Pve := Pde rotated -90;
+
+		if cursor > 0:
+			thdraw (Ppb - distance * Pvb) -- (Ppe - distance * Pve);
+		fi;
+
+		thdraw myDot rotated (angle(thdir(P,t2))+90) shifted (point t2 of P + distance * unitvector(thdir(P,t2) rotated 90));
+
+		cursor := cursor + elementSize;
+		exitif cursor > totalLength - (elementSize / 2);
+	endfor;
+enddef;
+
+
 def l_rimstonedam_EGB(expr P) =
 	cas := 0;
 	distance := arclength P;
