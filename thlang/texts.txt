@@ -1479,6 +1479,10 @@ therion: line joint
 en: joint
 pt: fratura
 
+therion: line low-ceiling
+en: low-ceiling
+pt: teto baixo
+
 therion: line rimstone-dam
 bg: сухо синтрово езеро
 ca: gour sec
