@@ -267,6 +267,76 @@ endlayout|
   * |copy <source layout id>| = set properties here that are not
     modified based on the given source layout.
 
+  {\it customization:}\Nobreak
+
+  * |code <metapost/tex-map/tex-atlas>| = Add/redefine \TeX\ and \MP\
+    macros here. This allows user to configure various things
+    (like user defined symbols, map and atlas layout at one place \&c.)
+    See the chapter {\it Changing layout} for details.
+  * |endcode| = should end the TeX\ and \MP\ sections
+
+  {\it map legend related:}\Nobreak
+  * |colo[u]r <item> <colour>| = customize colour for special map
+    items (label, map-bg, map-fg, preview-above, preview-below).
+    Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
+    for RGB colours.
+
+    For |label|, you can switch colour |on/off|. If |on|, labels are coloured
+    using the colour of associated scrap.
+
+    For |map-bg|, you can use |transparent| to omit page background
+    completely.
+
+    For |map-fg|, you can use |altitude|, |scrap| or |map| as colours.
+    In this case the map is coloured according to altitude, scraps or maps.
+  * |colo[u]r-legend <on/off>| = turn on/off legend of map-fg colours
+    when map-fg is set to altitude, scrap or map (M, A)
+  * |debug <on/all/first/second/scrap-names/station-names/off>| =
+    draw scrap in different stages
+    of transformation in different colours to see how Therion distorts
+    map data. See the description of |scrap| command for details.
+    The points with distance changed most during transformation are displayed
+    orange. If |scrap-names| is specified, scrap names are shown for each scrap,
+    |station-names| displays name of each survey station.
+  * |language <xx[_YY]>| = set output language.
+    Available languages are listed on the copyright page.
+    See the {\it Appendix} if
+    you want to  add or customize translations. (M, A)
+  * |legend <on/off/all>| = display list of used map symbols in the map header.
+    If set to |all|, all symbols from the current symbol set are displayed.
+    (M, A; default: |off|)
+  * |legend-columns <number>| = adjusts the number of legend columns
+    (M, A; default: |2|)
+  * |legend-width <n> <units>| = legend width (M, A; default: |14 cm|)
+  * |map-comment <string>| = optional comment displayed at the map header (M)
+  * |map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>| =
+    print map header at location specified by |<x> <y>|.
+    Predefined map header contains some basic information about
+    cave: name, scale, north arrow, list of surveyors etc. It is fully
+    customizable (see the chapter {\it Changing layout} for details).
+    |<x>| is easting (left-right on page). |<y>| is northing (up/down page).
+    Ranges for |<x>| and |<y>| are -100--200. Lower-left corner of the map
+    is |0 0|,
+    upper-right corner is |100 100|. The header is aligned with the specified
+    corner or side to this anchor point.
+    (M; default: |0 100 nw|)
+  * |map-header-bg <on/off>| = when on, background of map
+     header is filled with background color (e.g.~to hide map grid).
+     (M; default: off)
+  * |map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>| =
+    include image\[Note that you can include PDF too, which may be used to
+    combine plan and extended elevation into one nice looking PDF file.] specified
+    by |<filename>| into map at location specified by |<x> <y>|. For coordinates
+    and alignment details, see |map-header| specification.
+  * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
+  * |statistics <explo/topo/carto/copyright all/off/number>| or
+  * |statistics <explo/topo-length on/hide/off>| = display some basic
+    statistics; if set to off, team members are sorted \NEW{5.4}alphabetically;
+    otherwise according to their contribution to exploration and surveying
+    (M, A; default: |off|)
+  * |survey-level <N/all>| = |N| is the number of survey levels displayed
+                             next to the station name (M, A; default: |0|).
+
   {\it map presentation-related:}\Nobreak
 
   * |base-scale <picture length> <real length>| = if set, Therion will
@@ -415,84 +485,12 @@ endlayout|
   * |transparency <on/off>| = set transparency for the passages (underlying
     passages are also visible) (M, A; default: |on|)
 
-  {\it map legend related:}\Nobreak
-
-  * |map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>| =
-    print map header at location specified by |<x> <y>|.
-    Predefined map header contains some basic information about
-    cave: name, scale, north arrow, list of surveyors etc. It is fully
-    customizable (see the chapter {\it Changing layout} for details).
-    |<x>| is easting (left-right on page). |<y>| is northing (up/down page).
-    Ranges for |<x>| and |<y>| are -100--200. Lower-left corner of the map
-    is |0 0|,
-    upper-right corner is |100 100|. The header is aligned with the specified
-    corner or side to this anchor point.
-    (M; default: |0 100 nw|)
-  * |map-header-bg <on/off>| = when on, background of map
-     header is filled with background color (e.g.~to hide map grid).
-     (M; default: off)
-  * |map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>| =
-    include image\[Note that you can include PDF too, which may be used to
-    combine plan and extended elevation into one nice looking PDF file.] specified
-    by |<filename>| into map at location specified by |<x> <y>|. For coordinates
-    and alignment details, see |map-header| specification.
-  * |legend-width <n> <units>| = legend width (M, A; default: |14 cm|)
-  * |legend <on/off/all>| = display list of used map symbols in the map header.
-    If set to |all|, all symbols from the current symbol set are displayed.
-    (M, A; default: |off|)
-  * |colo[u]r-legend <on/off>| = turn on/off legend of map-fg colours
-    when map-fg is set to altitude, scrap or map (M, A)
-  * |legend-columns <number>| = adjusts the number of legend columns
-    (M, A; default: |2|)
-  * |map-comment <string>| = optional comment displayed at the map header (M)
-  * |statistics <explo/topo/carto/copyright all/off/number>| or
-  * |statistics <explo/topo-length on/hide/off>| = display some basic
-    statistics; if set to off, team members are sorted \NEW{5.4}alphabetically;
-    otherwise according to their contribution to exploration and surveying
-    (M, A; default: |off|)
-  * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
-  * |language <xx[_YY]>| = set output language.
-    Available languages are listed on the copyright page.
-    See the {\it Appendix} if
-    you want to  add or customize translations. (M, A)
-  * |colo[u]r <item> <colour>| = customize colour for special map
-    items (map-fg, map-bg, preview-above, preview-below, label).
-    Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
-    for RGB colours.
-
-    For |map-fg|, you can use |altitude|, |scrap| or |map| as colours.
-    In this case the map is coloured according to altitude, scraps or maps.
-
-    For |map-bg|, you can use |transparent| to omit page background
-    completely.
-
-    For labels, you can switch colour |on/off|. If |on|, labels are coloured
-    using the colour of associated scrap.
-
-  * |debug <on/all/first/second/scrap-names/station-names/off>| =
-    draw scrap in different stages
-    of transformation in different colours to see how Therion distorts
-    map data. See the description of |scrap| command for details.
-    The points with distance changed most during transformation are displayed
-    orange. If |scrap-names| is specified, scrap names are shown for each scrap,
-    |station-names| displays name of each survey station.
-  * |survey-level <N/all>| = |N| is the number of survey levels displayed
-                             next to the station name (M, A; default: |0|).
-
   {\it PDF related:}\Nobreak
 
   * |doc-author <string>| = set document author (M, A)
   * |doc-keywords <string>| = set document keywords (M, A)
   * |doc-subject <string>| = set document subject (M, A)
   * |doc-title <string>| = set document title (M, A)
-
-  {\it customization:}\Nobreak
-
-  * |code <metapost/tex-map/tex-atlas>| = Add/redefine \TeX\ and \MP\
-    macros here. This allows user to configure various things
-    (like user defined symbols, map and atlas layout at one place \&c.)
-    See the chapter {\it Changing layout} for details.
-  * |endcode| = should end the TeX\ and \MP\ sections
 \endcomopt
 
 
@@ -626,9 +624,11 @@ text is omitted, then the default will display the range, ie 1600 m - 1500 m
 \endarguments
 
 \options
-  * |recursive <on/off>| = valid only when a survey is selected. If set
-    on (by default) all subsurveys of the given survey are recursively
-    selected/unselected.
+  * |chapter-level <number>| = valid only when a map is selected. Determines
+    the level at which chapter expansion for atlas export is stopped.
+    By default 0 is used, if `|-|' or `|.|' is specified, no chapter is
+    exported for this map. If |title-pages| option in |layout| is on,
+    each chapter starts with a title page.
 
   * |map-level <number>| = valid only when a map is selected. Determines
     the level at which map expansion for atlas export is stopped.
@@ -637,11 +637,9 @@ text is omitted, then the default will display the range, ie 1600 m - 1500 m
     {\it Note:} Map previews are displayed only as specified in maps in the
     current |map-level|.
 
-  * |chapter-level <number>| = valid only when a map is selected. Determines
-    the level at which chapter expansion for atlas export is stopped.
-    By default 0 is used, if `|-|' or `|.|' is specified, no chapter is
-    exported for this map. If |title-pages| option in |layout| is on,
-    each chapter starts with a title page.
+  * |recursive <on/off>| = valid only when a survey is selected. If set
+    on (by default) all subsurveys of the given survey are recursively
+    selected/unselected.
 \endoptions
 
 
@@ -818,26 +816,26 @@ or
 	colon-separated paths) which therion uses to find its source
         files (if it doesn't find them in the working directory).
 
-* |-q| =
-        Run therion in quiet mode. It will print only warning
-        and error messages to STDERR.
-
 * |--print-encodings| =
         Print a list of all supported input encodings.
 
-* |--print-tex-encodings| =
-        Print a list of all supported encodings for PDF output.
+* |--print-environment| =
+        Print environment settings for therion.
 
 * |--print-init-file| =
         Print a default initialization file. For more details
         see the {\it Initialization} section in the {\it Appendix}.
 
-* |--print-environment| =
-        Print environment settings for therion.
-
 * |--print-symbols| =
         Print a list of all therion supported map symbols in
         |symbols.xhtml| file.
+
+* |--print-tex-encodings| =
+        Print a list of all supported encodings for PDF output.
+
+* |-q| =
+        Run therion in quiet mode. It will print only warning
+        and error messages to STDERR.
 
 * |-s <source-file>| =
         Set the name of the source file.
