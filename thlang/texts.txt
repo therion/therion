@@ -1467,6 +1467,25 @@ therion: area mudcrack
 en: mudcrack
 pt: lama rachada
 
+therion: area stalagmite
+bg: сталагмит
+ca: estalagmita
+cz: stalagmit
+de: Stalagmit
+el: σταλαγμίτης
+en: stalagmite
+es: estalagmita
+fr: stalagmite
+it: stalagmite
+mi: kōhatu ki te haere ki raro
+pl: stalagmit
+pt: estalagmite
+ru: сталагмит
+sk: stalagmit
+sl: stalagmit
+sq: stalagmit
+zh_CN: 石笋
+
 therion: line abyss-entrance
 en: abyss-entrance
 pt: entrada em abismo

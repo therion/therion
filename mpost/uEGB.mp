@@ -1769,3 +1769,14 @@ def a_mudcrack_EGB(expr Path) =
 	thfill Path withpattern pattern_mudcrack_EGB;
 enddef;
 
+
+def a_stalagmite_EGB(expr P) =
+	rgbcolor myOrange;
+	T := identity;
+
+	myOrange := (1,0.6,0);
+
+	pickup PenA;
+	thfill P withcolor myOrange;
+enddef;
+
