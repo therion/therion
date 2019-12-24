@@ -1486,6 +1486,10 @@ sl: steber
 sq: shtylle
 zh_CN: 石柱
 
+therion: area pillar-with-curtains
+en: pillar with curtains
+pt: coluna com cortinas
+
 therion: area stalactite
 bg: сталактит
 ca: estalactita

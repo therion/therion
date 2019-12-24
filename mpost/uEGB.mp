@@ -1813,6 +1813,32 @@ def a_pillar_EGB(expr P) =
 enddef;
 
 
+def a_pillarwithcurtains_EGB(expr P) =
+	picture myPillar;
+	path myCurtain;
+
+	myPillar := image(pillar_main_EGB(P));
+
+	thdraw myPillar;
+
+	myCurtain := (0,-.4u){dir 180}..(-0.1u,-0.3u)..{dir 0}(0,-0.2u)..(0.1u,-0.1u)..{dir -180}(0,0);
+	myCurtain := myCurtain scaled (0.2 / 0.4);
+	cursor := 0;
+	totalLength := arclength P;
+	elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+
+	pickup PenD;
+	forever:
+		t1 := arctime (cursor + elementSize / 2) of P;
+
+		thdraw myCurtain rotated (180+angle(thdir(P,t1))) shifted (point t1 of P) withcolor (1,0.6,0);
+
+		cursor := cursor + elementSize;
+		exitif cursor > totalLength - (elementSize / 3);
+	endfor;
+enddef;
+
+
 def a_stalactite_EGB(expr P) =
 	rgbcolor myOrange, myLightOrange;
 	T := identity;
