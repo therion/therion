@@ -1262,19 +1262,19 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   this->export_mp_symbol_options(mpf, mid); \
   fprintf(mpf,"%s(buildcycle((((-4,-4) -- (4,-4) -- (4,4) -- (-4,4) -- (-4,-4))  inscale)));\n",thsymbolset__mp[mid]); \
   endfig;
-  legend_area(SYMA_WATER,thT("area water",layout->lang));
-  legend_area(SYMA_SUMP,thT("area sump",layout->lang));
-  legend_area(SYMA_SNOW,thT("area snow",layout->lang));
-  legend_area(SYMA_ICE,thT("area ice",layout->lang));
-  legend_area(SYMA_SAND,thT("area sand",layout->lang));
   legend_area(SYMA_CLAY,thT("area clay",layout->lang));
-  legend_area(SYMA_PEBBLES,thT("area pebbles",layout->lang));
   legend_area(SYMA_DEBRIS,thT("area debris",layout->lang));
   legend_area(SYMA_FLOWSTONE,thT("area flowstone",layout->lang));
+  legend_area(SYMA_ICE,thT("area ice",layout->lang));
   legend_area(SYMA_MOONMILK,thT("area moonmilk",layout->lang));
   legend_area(SYMA_MUDCRACK,thT("area mudcrack",layout->lang));
-  legend_nocliparea(SYMA_BLOCKS,thT("area blocks",layout->lang));
+  legend_area(SYMA_PEBBLES,thT("area pebbles",layout->lang));
+  legend_area(SYMA_SAND,thT("area sand",layout->lang));
+  legend_area(SYMA_SNOW,thT("area snow",layout->lang));
+  legend_area(SYMA_SUMP,thT("area sump",layout->lang));
+  legend_area(SYMA_WATER,thT("area water",layout->lang));
   legend_nocliparea(SYMA_BEDROCK,thT("area bedrock",layout->lang));
+  legend_nocliparea(SYMA_BLOCKS,thT("area blocks",layout->lang));
 
   // vodne toky (ciary, body)
 #define legend_waterflow(mid,txt) \
