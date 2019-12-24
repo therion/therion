@@ -1467,6 +1467,25 @@ therion: area mudcrack
 en: mudcrack
 pt: lama rachada
 
+therion: area stalactite
+bg: сталактит
+ca: estalactita
+cz: stalaktit
+de: Stalaktit
+el: σταλακτίτης
+en: stalactite
+es: estalactita
+fr: stalactite
+it: stalattite
+mi: kōhatu ki te haere ki runga
+pl: stalaktyt
+pt: estalactite
+ru: сталактит
+sk: stalaktit
+sl: stalaktit
+sq: stalaktit
+zh_CN: 石钟乳
+
 therion: area stalactite-stalagmite
 en: stalactite-stalagmite
 pt: estalactite-estalagmite

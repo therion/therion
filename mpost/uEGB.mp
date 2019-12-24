@@ -1770,6 +1770,19 @@ def a_mudcrack_EGB(expr Path) =
 enddef;
 
 
+def a_stalactite_EGB(expr P) =
+	rgbcolor myOrange, myLightOrange;
+	T := identity;
+
+	myLightOrange := (1,0.9,0.67);
+	myOrange := (1,0.6,0);
+
+	pickup PenA;
+	thfill P withcolor myLightOrange;
+	thdraw P withcolor myOrange;
+enddef;
+
+
 def a_stalactitestalagmite_EGB(expr P) =
 	rgbcolor myOrange, myLightOrange;
 
