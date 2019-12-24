@@ -1770,6 +1770,41 @@ def a_mudcrack_EGB(expr Path) =
 enddef;
 
 
+def a_stalactitestalagmite_EGB(expr P) =
+	rgbcolor myOrange, myLightOrange;
+
+	picture tmpPicFill, tmpPicDraw;
+	path bboxP, clipFill, clipDraw;
+
+	T := identity;
+
+	myLightOrange := (1,0.9,0.67);
+	myOrange := (1,0.6,0);
+	bboxP := bbox P;
+	clipFill := ulcorner bboxP -- llcorner bboxP -- lrcorner bboxP -- cycle;
+	clipDraw := ulcorner bboxP -- urcorner bboxP -- lrcorner bboxP -- cycle;
+
+	pickup PenA;
+	thclean P;
+
+	tmpPicFill := image(
+		fill P withcolor myOrange;
+		draw P withcolor myOrange;
+	);
+	clip tmpPicFill to clipFill;
+	drawoptions();
+	draw tmpPicFill;
+
+	tmpPicDraw := image(
+		fill P withcolor myLightOrange;
+		draw P withcolor myOrange;
+	);
+	clip tmpPicDraw to clipDraw;
+	drawoptions();
+	draw tmpPicDraw;
+enddef;
+
+
 def a_stalagmite_EGB(expr P) =
 	rgbcolor myOrange;
 	T := identity;

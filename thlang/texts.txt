@@ -1467,6 +1467,10 @@ therion: area mudcrack
 en: mudcrack
 pt: lama rachada
 
+therion: area stalactite-stalagmite
+en: stalactite-stalagmite
+pt: estalactite-estalagmite
+
 therion: area stalagmite
 bg: сталагмит
 ca: estalagmita

@@ -192,6 +192,7 @@ let a_mudcrack = a_mudcrack_EGB;
 let a_pebbles = a_pebbles_SKBB;
 let a_sand = a_sand_UIS;
 let a_snow = a_snow_SKBB;
+let a_stalactitestalagmite = a_stalactitestalagmite_EGB;
 let a_stalagmite = a_stalagmite_EGB;
 let a_sump = a_sump_UIS;
 let a_water = a_water_UIS;
