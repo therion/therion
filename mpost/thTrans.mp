@@ -190,6 +190,7 @@ let a_ice = a_ice_SKBB;
 let a_moonmilk = a_moonmilk_SKBB;
 let a_mudcrack = a_mudcrack_EGB;
 let a_pebbles = a_pebbles_SKBB;
+let a_pillar = a_pillar_EGB;
 let a_sand = a_sand_UIS;
 let a_snow = a_snow_SKBB;
 let a_stalactite = a_stalactite_EGB;

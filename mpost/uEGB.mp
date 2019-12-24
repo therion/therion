@@ -1770,6 +1770,49 @@ def a_mudcrack_EGB(expr Path) =
 enddef;
 
 
+def pillar_main_EGB(expr P) =
+	rgbcolor myOrange;
+	pair d[], p[];
+
+	T := identity;
+
+	myOrange := (1,0.6,0);
+
+	pickup PenD;
+	thfill P withcolor myOrange;
+
+	cursor := 0;
+	totalLength := arclength P;
+	elementSize := adjust_step(totalLength, 0.01u); % symbol length nudged to be multiple of path length
+	borderWidth := 0.3u;
+
+	pickup PenA;
+	forever:
+		t1 := arctime (cursor + elementSize / 2) of P;
+
+		p1 := point t1 of P;
+
+		d1 := unitvector(thdir(P,t1)) * borderWidth;
+
+		thdraw p1 -- p1 + (d1 rotated 90) withcolor white;;
+
+		cursor := cursor + elementSize;
+		exitif cursor > totalLength - (elementSize / 2);
+	endfor;
+
+	pickup PenA;
+	thdraw P withcolor myOrange;
+enddef;
+
+def a_pillar_EGB(expr P) =
+	picture myPillar;
+
+	myPillar := image(pillar_main_EGB(P));
+
+	thdraw myPillar;
+enddef;
+
+
 def a_stalactite_EGB(expr P) =
 	rgbcolor myOrange, myLightOrange;
 	T := identity;

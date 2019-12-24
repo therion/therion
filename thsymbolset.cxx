@@ -253,6 +253,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         c2(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK);
         c2(TT_AREA_TYPE_MUDCRACK, SYMA_MUDCRACK);
         c2(TT_AREA_TYPE_PEBBLES, SYMA_PEBBLES);
+        c2(TT_AREA_TYPE_PILLAR, SYMA_PILLAR);
         c2(TT_AREA_TYPE_SAND, SYMA_SAND);
         c2(TT_AREA_TYPE_SNOW, SYMA_SNOW);
         c2(TT_AREA_TYPE_STALACTITE, SYMA_STALACTITE);
@@ -723,6 +724,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(37,SYMA_STALAGMITE);
     group(38,SYMA_STALACTITESTALAGMITE);
     group(39,SYMA_STALACTITE);
+    group(40,SYMA_PILLAR);
     egroup
 
     bgroup(SYMX_ICE)
@@ -1275,6 +1277,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_area(SYMA_MOONMILK,thT("area moonmilk",layout->lang));
   legend_area(SYMA_MUDCRACK,thT("area mudcrack",layout->lang));
   legend_area(SYMA_PEBBLES,thT("area pebbles",layout->lang));
+  legend_area(SYMA_PILLAR,thT("area pillar",layout->lang));
   legend_area(SYMA_SAND,thT("area sand",layout->lang));
   legend_area(SYMA_SNOW,thT("area snow",layout->lang));
   legend_area(SYMA_STALACTITE,thT("area stalactite",layout->lang));
