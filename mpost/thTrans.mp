@@ -188,6 +188,7 @@ let a_dimensions = a_dimensions_SKBB;
 let a_flowstone = a_flowstone_ASF;
 let a_ice = a_ice_SKBB;
 let a_moonmilk = a_moonmilk_SKBB;
+let a_mudcrack = a_mudcrack_EGB;
 let a_pebbles = a_pebbles_SKBB;
 let a_sand = a_sand_UIS;
 let a_snow = a_snow_SKBB;

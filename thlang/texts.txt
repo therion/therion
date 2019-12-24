@@ -1463,6 +1463,10 @@ sl: glina
 sq: argjil
 zh_CN: 粘土
 
+therion: area mudcrack
+en: mudcrack
+pt: lama rachada
+
 therion: line abyss-entrance
 en: abyss-entrance
 pt: entrada em abismo

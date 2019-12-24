@@ -251,6 +251,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         c2(TT_AREA_TYPE_FLOWSTONE, SYMA_FLOWSTONE);
         c2(TT_AREA_TYPE_ICE, SYMA_ICE);
         c2(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK);
+        c2(TT_AREA_TYPE_MUDCRACK, SYMA_MUDCRACK);
         c2(TT_AREA_TYPE_PEBBLES, SYMA_PEBBLES);
         c2(TT_AREA_TYPE_SAND, SYMA_SAND);
         c2(TT_AREA_TYPE_SNOW, SYMA_SNOW);
@@ -742,6 +743,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(9,SYMP_GUANO);
     group(10,SYMP_MUDCRACK);
     group(11,SYMP_MUD);
+    group(12,SYMA_MUDCRACK);
     egroup
 
     bgroup(SYMX_PASSAGEFILLS)
@@ -775,6 +777,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(27,SYMP_MUDCRACK);
     group(28,SYMP_MUD);
     group(29,SYML_WALKWAY);
+    group(30,SYMA_MUDCRACK);
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -1269,6 +1272,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_area(SYMA_DEBRIS,thT("area debris",layout->lang));
   legend_area(SYMA_FLOWSTONE,thT("area flowstone",layout->lang));
   legend_area(SYMA_MOONMILK,thT("area moonmilk",layout->lang));
+  legend_area(SYMA_MUDCRACK,thT("area mudcrack",layout->lang));
   legend_nocliparea(SYMA_BLOCKS,thT("area blocks",layout->lang));
   legend_nocliparea(SYMA_BEDROCK,thT("area bedrock",layout->lang));
 

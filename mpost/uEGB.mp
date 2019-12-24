@@ -1725,3 +1725,47 @@ def l_walkway_EGB(expr P) =
 		exitif cursor > totalLength - (elementSize / 2);
 	endfor;
 enddef;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Areas %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+picture EGB_a_mudcrack_raw;
+EGB_a_mudcrack_raw := image(
+	begingroup;
+		interim linecap := butt;
+		interim linejoin := mitered;
+		pickup pencircle scaled 8bp;
+		draw (172.531006,466.222992)--(225.104996,425.453003)--(271.855011,440.605011)
+			--(323.921997,390.414001)--(346.839996,423.699005)--(414.757996,363.097992)
+			--(390.753998,275.722992)--(414.515991,281.648010)--(438.726990,322.277008);
+		pickup pencircle scaled 4bp;
+		draw (244.710999,252.141006)--(232.354996,272.496002)--(308.351990,293.101990)
+			--(257.156006,310.019989)--(266.289001,357.613007)--(291.085999,380.539001)
+			--(303.242004,428.855011)--(282.320007,477.753998)--(393.207001,502.281006)
+			--(380.324005,518.754028);
+		pickup pencircle scaled 6bp;
+		draw (172.531006,466.222992)--(244.710999,518.554993);
+		pickup pencircle scaled 8bp;
+		draw (173.410004,322.277008)--(205.151993,357.402008)--(244.710999,322.277008)
+			--(266.289001,357.613007);
+		pickup pencircle scaled 8bp;
+		draw (380.324005,252.992004)--(364.523010,292.832001)--(380.324005,322.277008)
+			--(346.839996,423.699005)--(417.410004,491.484009)--(393.207001,502.281006);
+		pickup pencircle scaled 8bp;
+		draw (437.769989,466.222992)--(417.410004,491.484009)--(380.324005,392.070007);
+	endgroup;
+);
+picture EGB_a_mudcrack;
+EGB_a_mudcrack := EGB_a_mudcrack_raw shifted (-(llcorner EGB_a_mudcrack_raw)-(urcorner EGB_a_mudcrack_raw - llcorner EGB_a_mudcrack_raw)/2) scaled (1.5u / max((xpart urcorner EGB_a_mudcrack_raw) - (xpart llcorner EGB_a_mudcrack_raw), (ypart urcorner EGB_a_mudcrack_raw) - (ypart llcorner EGB_a_mudcrack_raw)));
+
+beginpattern(pattern_mudcrack_EGB);
+	draw EGB_a_mudcrack;
+endpattern;
+
+def a_mudcrack_EGB(expr Path) =
+	T := identity;
+	thclean Path;
+	thfill Path withpattern pattern_mudcrack_EGB;
+enddef;
+
