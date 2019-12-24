@@ -3,189 +3,497 @@
 \rightline{\eightit We both step and do not step in the same rivers.}
 \pic{herakl.pdf}
 \vskip1pt
-\eightrm 
+\eightrm
 \rightline{---Heraclitus of Ephesus, {\eightmit 6}th/{\eightmit 5}th century BC}
 }
 
 
 \chapter Processing data.
 
-Besides data files, which contain survey data, Therion uses a configuration file, 
+Besides data files, which contain survey data, Therion uses a configuration file,
 which contains instructions on how the data should be presented.
 
 \subchapter Configuration file.
 
 The configuration filename can be given as an
 argument to therion. By default Therion searches for file named |thconfig|
-in the current working directory. It is read like any other therion file 
+in the current working directory. It is read like any other therion file
 (i.e.~one command per line; empty lines or lines starting with `|#|' are ignored;
-lines ended with a backslash continue on the next line.) A list of currently 
+lines ended with a backslash continue on the next line.) A list of currently
 supported commands follow.
 
 
-\subsubchapter `system'.
-Allows to execute system commands during therion compilation.\[E.g. to open or 
-refresh external PDF viewer.] Normally Therion waits until the subprocess is 
-finished. If you want to continue compilation without break, use |<command> &| 
-syntax on Linux and |start <command>| syntax on Windows.
+\subsubchapter `cs'.
+
+\syntax
+  \list
+    * |cs <coordinate system>|
+  \endlist
+\endsyntax
+
+\NEW{5.3}Outside of |layout| command specifies the coordinate system for output.
+It is not possible to specify more coordinate systems for different outputs (the
+last occurrence of |cs| is used for all output files).
+
+If no |cs| is defined in the configuration file, the first |cs| therion
+encounters in the data files is used as an output |cs|.
+
+Inside
+the |layout| specifies coordinate system for subsequent location data (|origin|,
+|grid-origin|).
 
 
 \subsubchapter `encoding'.
 
 Works like the |encoding| command in data files---specifies character sets.
 
-\subsubchapter `language'.
-\syntax
-  \list
-    * |language <xx_[YY]>| 
-  \endlist
-\endsyntax
 
-\NEW{5.3}Sets the output language for translatable texts.
+\subsubchapter `export'.
 
-\subsubchapter `cs'.
+\description
+  Exports selected surveys or maps.
+\enddescription
 
 \syntax
   \list
-    * |cs <coordinate system>| 
+    * |export <type> [OPTIONS]|
   \endlist
 \endsyntax
 
-\NEW{5.3}Outside of |layout| command specifies the coordinate system for output. 
-It is not possible to specify more coordinate systems for different outputs (the 
-last occurrence of |cs| is used for all output files).
+\arguments
+  * |<type>| = The following export types are supported:
 
-If no |cs| is defined in the configuration file, the first |cs| therion
-encounters in the data files is used as an output |cs|.
+    |atlas| = 2D atlas in more pages
 
-Inside 
-the |layout| specifies coordinate system for subsequent location data (|origin|, 
-|grid-origin|).
+    |cave-list| = summary table of caves
 
-\subsubchapter `sketch-warp'.
+    |continuation-list| = list of possible continuations
 
-\syntax
-  \list
-    * |sketch-warp <algorithm>| 
-  \endlist
-\endsyntax
+    |database| = SQL database with centreline
 
-Specifies which scrap warping (morphing) algorithm to use. 
-Possible algorithms are |line|---the default; |plaquette|---invented by
-Marco Corvi.
+    |map| = one page 2D map
+
+    |model| = 3D model of the cave
+
+    |survey-list| = summary table of surveys
+\endarguments
+
+\penalty0
+
+\options
+  {\it common:}\Nobreak
+  * |encoding/enc <encoding>| = set output encoding
+  * |output/o <file>| = set output file name. If no file name is
+    given the prefix ``|cave.|'' is used with an extension corresponding to
+    output format.
+
+    If the output filename is given and no output format is specified,
+    the format is determined from the filename extension.
+
+
+  {\it common for lists:}\Nobreak
+
+  * |format/fmt <format>| = set continuation output format. Currently the following
+    output formats are supported: |html| (default), |txt|,
+    \NEW{5.4}|kml|\[For cave-list and continuation-list.] and |dbf|.
+
+
+  {\it cave-list:}\Nobreak
+
+  * |location <on/(off)>| = set whether to export coordinates of cave entrances in
+    the table.
+  * \NEW{5.3}|surveys (on)/off| = exports raw list of caves when set |off|. Otherwise
+    survey structure with aggregated statistics is also displayed.
+
+
+  {\it continuation-list:}\Nobreak
+
+  * |attributes <(on)/off>| = set whether to export user defined attributes
+    in continuation list table.
+  * \NEW{5.3}|filter <(on)/off>| = set whether continuations without comment/text
+    should be filtered out.
+
+
+  {\it database:}\Nobreak
+
+  * |encoding/enc <encoding>| = set output encoding
+  * |format/fmt <format>| = currently |sql| and |csv|
+
+
+  {\it map/atlas:}\Nobreak
+
+  * |encoding/enc <encoding>| = set output encoding.
+  * |format/fmt <format>| = set map format. Currently |pdf|, |svg|,
+    |xhtml|\[SVG embedded in XHTML file which contains also legend],
+    |survex|, |dxf|, |esri|\[ESRI shapefiles. Multiple files are written to a
+    directory with the specified filename.], |kml| (Google Earth),
+    |xvi|\[Xtherion vector image. XVI images may be used in
+    xtherion to draw in-scale maps. Scale (100\,DPI image resolution is
+    assumed) and grid-size from layout are used in export.] and
+    \NEW{5.3}|bbox|\[Text file containing geographic coordinates of
+    lower-left and upper-right corners of the map area.]
+    for map; |pdf| for atlas are supported.
+  * |layout <id>| = use predefined map or atlas layout.
+  * |layout-xxx| = where |xxx| stands for other layout options. Using this
+    you can change some layout properties directly within the export command.
+  * |projection <id>| = unique identifier that specifies the map projection type.
+    (See the |scrap| command for details.)
+
+    If there is no map defined, all scraps in the given projection are
+    exported.
+
+    If there are no scraps with
+    the specified projection then Therion will display centreline from selected
+    surveys.
+
+
+    {\it model:}\Nobreak
+
+  * |disable <walls/all/[cave/surface-]centerline/splay-shots/surface>| and
+  * |enable <walls/all/[cave/surface-]centerline/splay-shots/surface>| =
+     \hfil\break
+     selects which features to export, if the format supports it. Surface
+     is currently exported in |therion| format only.
+  * |format/fmt <format>| = set model output format. Currently the following
+    output formats are supported: |loch| (native format; default),
+    |compass| (plt file), |survex| (3d file), |dxf|,
+    |esri| (3d shapefiles), |vrml|, |3dmf| and |kml| (Google Earth).
+  * |wall-source <all/centerline/maps/splays>| = set source data for passage
+    wall modeling.
+
+\endoptions
+
+{\it File formats summary:}
+\nobreak\medskip
+\bgroup
+\leavevmode\kern1em\vbox{\advance\hsize-1em\halign{#\hfil\quad&#\hfil\cr
+{\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
+atlas & pdf\cr
+database & sql, \NEW{5.4}csv\cr
+lists & html, txt, kml, dbf\cr
+map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml, \NEW{5.3}bbox\cr
+model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml\cr}}
+\egroup
+
 
 \subsubchapter `input'.
 
 Works like |input| command in data files---includes other files.
 
-\subsubchapter `source'.
+
+\subsubchapter `language'.
+\syntax
+  \list
+    * |language <xx_[YY]>|
+  \endlist
+\endsyntax
+
+\NEW{5.3}Sets the output language for translatable texts.
+
+
+\subsubchapter `layout'.
 
 \description
-   Specifies which source (data) files Therion should read. You can 
-   specify several files here; one per line. 
-   You can also specify them using the |-s| command
-   line option (see below). 
-   
-   It is also possible to type (some small snippets of) code directly in 
-   configuration file using the multi-line syntax.
+  Specifies layout for 2D maps. Settings which apply to atlas mode
+  are marked `A'; map mode `M'.
 \enddescription
 
 \syntax
-  \hfill\break|source <file-name>|\hfill\break
-  or\hfill\break
-  |source|\hfill\break
-  {\qquad\it\dots therion commands\dots}\hfill\break
-  |endsource|
+|layout <id> [OPTIONS]
+    base-scale <picture length> <real length>
+    code <metapost/tex-map/tex-atlas>
+    endcode
+    colour/color <item> <colour>
+    copy <source layout id>
+    cs <coordinate system>
+    debug <on/all/first/second/scrap-names/station-names/off>
+    doc-author <string>
+    doc-keywords <string>
+    doc-subject <string>
+    doc-title <string>
+    exclude-pages <on/off> <list>
+    fonts-setup <tinysize> <smallsize> <normalsize> <largesize> <hugesize>
+    grid <off/top/bottom>
+    grid-coords <off/border/all>
+    grid-origin <x> <y> <x> <units>
+    grid-size <x> <y> <z> <units>
+    language <xx[_YY]>
+    layers <on/off>
+    legend <on/off/all>
+    legend-columns <number>
+    legend-width <n> <units>
+    map-comment <string>
+    map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>
+    map-header-bg <on/off>
+    map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>
+    min-symbol-scale <scale>
+    nav-factor <factor>
+    nav-size <x-size> <y-size>
+    north <true/grid>
+    opacity <value>
+    origin <x> <y> <z> <units>
+    origin-label <x-label> <y-label>
+    overlap <value> <units>
+    own-pages <number>
+    page-grid <on/off>
+    page-numbers <on/off>
+    page-setup <dimensions> <units>
+    rotate <number>
+    scale <picture length> <real length>
+    scale-bar <length> <units>
+    size <width> <height> <units>
+    sketches <on/off>
+    statistics <explo/topo/carto/copyright all/off/number>
+               <explo/topo-length on/off>
+    surface <top/bottom/off>
+    surface-opacity <value>
+    survey-level <N/all>
+    symbol-assign <point/line/area/group/special> <symbol-type> <symbol-set>
+    symbol-colour <point/line/area/group/special> <symbol-type> <colour>
+    symbol-hide <point/line/area/group/special> <symbol-type>
+    symbol-set <symbol-set>
+    symbol-show <point/line/area/group/special> <symbol-type>
+    title-pages <on/off>
+    transparency <on/off>
+    units <metric/imperial>
+endlayout|
 \endsyntax
 
 \arguments
-*  |<file-name>| 
+  |<id>| = layout identifier (to be used in the |export| command)
 \endarguments
 
-\subsubchapter `select'.
+\comopt
+  * |copy <source layout id>| = set properties here that are not
+    modified based on the given source layout.
 
-\description
-  selects objects (surveys and maps) for export. By default, all survey objects 
-  are selected. If there is no map selected, all scraps belonging to
-  selected surveys are selected by default for map export.
+  {\it map presentation-related:}\Nobreak
 
-  If there are no scraps or maps in the data, centreline from all surveys is 
-  exported in the map.
-  
-  When exporting maps in different projections, you need to select
-  them for each projection separately.
-\enddescription
+  * |base-scale <picture length> <real length>| = if set, Therion will
+    optically scale the map by a (|scale/base-scale|) factor.
+    This has the same effect as if the map printed in |base-scale| would be
+    photo-reduced to the |scale|. (M, A)
+  * \NEW{5.4.1}|fonts-setup <tinysize> <smallsize> <normalsize> <largesize> <hugesize>| =
+    specify size of the text in points.
+    |<normalsize>| applies to point label, |<smallsize>| applies to
+    remark and all other point labels. Each of them may apply to line label
+    according to its |-size| option.
 
-\syntax
-  |select <object> [OPTIONS]|
-\endsyntax
+    The defaults are
+    |8 10 12 16 24| for scales upto 1:100;
+    |7 8 10 14 20| for scales upto 1:200;
+    |6 7 8 10 14| for scales upto 1:500 and
+    |5 6 7 8 10| for scales smaller than 1:500.
+  * \NEW{5.4.1}|min-symbol-scale <scale>| =
+    define minimal |<scale>|, from which points and lines are displayed on the map. E.g. for
+    |min-symbol-scale M|, no points or lines scaled |S| and |XS| will be shown on the map.
+    |<scale>| has the same format, as |scale| option for points and lines.
+  * |rotate <value>| = rotates the map (M, A; default: |0|)
+  * |scale <picture length> <real length>| = set scale of
+    output map or map atlas (M, A; default: |1 200|)
+  * {\rightskip 0cm minus 4pt
+    |symbol-assign <point/line/area/group/special> <symbol-type> <symbol-set>| =
+    display a
+    particular symbol in the given symbol-set. This option overrides
+    |symbol-set| option.\par}
 
-\arguments
-*  |<object>| = any survey or map, identified by its ID.
-\endarguments
+    If the symbol has a subtype, |<symbol-type>| argument may have one
+    of the following forms: |type:subtype| or simply |type|, which
+    assigns new symbol set to all subtypes of a given symbol.
 
-\options
-  * |recursive <on/off>| = valid only when a survey is selected. If set
-    on (by default) all subsurveys of the given survey are recursively
-    selected/unselected.
-  
-  * |map-level <number>| = valid only when a map is selected. Determines
-    the level at which map expansion for atlas export is stopped. 
-    By default 0 is used; if `basic' is specified, 
-    expansion is done up to the basic maps.
-    {\it Note:} Map previews are displayed only as specified in maps in the 
-    current |map-level|.
+    Following symbols may not be used with this option: point {\it section}
+    (which isn't rendered at all) and all point and line labels (
+    {\it altitude},
+    {\it date},
+    {\it height},
+    {\it label},
+    {\it passage-height},
+    {\it remark},
+    {\it station-name}
+    ). See the chapter
+    {\it Changing layout/Customizing text labels} for details how to change
+    labels' appearance. (M, A)
 
-  * |chapter-level <number>| = valid only when a map is selected. Determines
-    the level at which chapter expansion for atlas export is stopped. 
-    By default 0 is used, if `|-|' or `|.|' is specified, no chapter is
-    exported for this map. If |title-pages| option in |layout| is on,
-    each chapter starts with a title page.
-\endoptions
+    Group may be one of the following:
+    all,
+    centerline,
+    equipment,
+    \NEW{5.4}ice,
+    passage-fills,
+    sections,
+    sediments,
+    speleothems,
+    \NEW{5.3}water.
 
+    There are two special symbols: north-arrow, scale-bar.
+  * \NEW{5.3}|symbol-colo[u]r <area/group/line/point/special> <symbol-type> <colour>| =
+    change colour of particular symbol or group of symbols.\[Note: colour change
+    currently applies to pattern fills only if (1) output format is PDF and
+    (2)~\MP\ version is at least 1.000] (M, A)
+  * |symbol-hide <area/group/line/point/special> <symbol-type>| = don't display
+    particular symbol or group of symbols.
 
+    You may use |group cave-centerline|, |group surface-centerline|,
+    \NEW{5.4}|group text|, |point cave-station| and |point surface-station| in
+    |symbol-hide| and |symbol-show| commands.
 
-\subsubchapter `unselect'.
+    Use |flag:<continuation/dig/doline/entrance/sink/spring>| as a
+    |<symbol-type>| to hide stations with particular flags
+    (e.g. |symbol-hide point flag:entrance|).
 
-\description
-  Unselects objects from export.
-\enddescription
+    May be combined with |symbol-show|.(M, A)
+  * |symbol-set <symbol-set>| = use |symbol-set| for all map symbols,
+    if available. Be aware, that symbol set name is case sensitive. (M, A)
 
-\syntax
-  |unselect <object> [OPTIONS]|
-\endsyntax
+    Therion uses following predefined symbol sets:\par
+    UIS (International Union of Speleology)\par
+    ASF (Australian Speleological Federation)\par
+    AUT (Austrian Speleological Association)\par
+    CCNP (Carlsbad Caverns National Park)\NEW{5.4}\par
+    EGB (Espeleo Grupo de Bras\'ilia - {\it Bras\'ilia's Speleo Group})\NEW{5.4}\par
+    NZSS (New Zealand Symbol Set)\NEW{5.4}\par
+    SKBB (Speleoklub Bansk\'a Bystrica)
+  * |symbol-show <area/group/line/point/special> <symbol-type>| = display particular
+    symbol or group of symbols. May be combined with |symbol-hide|. (M, A)
+  * |units <imperial/metric>| = set output units (M, A; default: |metric|)
 
-\arguments
-  The same as the |select| command.
-\endarguments
+  {\it page layout related:}\Nobreak
 
-\options
-  The same as the |select| command. 
-\endoptions
+  * |cs <coordinate system>| = coordinate system for |origin| and
+    |grid-origin|
+  * |exclude-pages <on/off> <list>| = exclude specified pages from cave
+    atlas. The list may contain page numbers separated by a comma or dash
+    (for intervals) e.g.~|2,4-7,9,23| means, that pages 2, 4, 5, 6, 7, 9 and 23
+    should be omitted. Only the map pages should be counted. (Set |own-pages 0|
+    and |title-pages off| to get the correct page numbers to be excluded.)
+    Changes of |own-pages| or |title-pages| options don't affect page
+    excluding. (A)
+  * |grid <off/bottom/top>| = enable/disable grid (optionally coordinates'
+    values may be also displayed)
+    (M, A; default: |off|)
+  * |grid-coords <off/border/all>| = specify where to label grid with
+    coordinates. (M, A; default: |off|)
+  * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
+    origin (M, A)
+  * |grid-size <x> <y> <z> <units>| = set grid size in real
+    units (M, A; default is equal to scalebar size)
+  * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
+  * |nav-factor <factor>| = set atlas navigator zoom factor (A; default: |30|)
+  * |nav-size <x-size> <y-size>| = set number of atlas pages in
+    both directions of navigator (A; default: |2 2|)
+  * |north <true/grid>| = specify default orientation of the map.
+    By default, true (astronomical) north is used. It is ignored when used with
+    local coordinate system.
+  * |opacity <value>| = set opacity value (used if |transparency| is |on|).
+    Value range is 0--100. (M, A; default: |70|)
+  * |origin <x> <y> <z> <units>| = set origin of atlas pages (M, A)
+  * |origin-label <x-label> <y-label>| = set label for atlas page
+    which has the lower left corner at the given origin coordinates.
+    May be either a number or a character. (M, A; default: |0 0|)
+  * |overlap <value> <units>| = set overlap size in paper units in the atlas
+    mode or map margin in the map mode (M, A; default: |1 cm|)
+  * |own-pages <number>| = set number of own pages added before
+    the first page of automatically generated pages in atlas mode
+    (currently required for correct page numbering) (A; default: |0|)
+  * |page-grid <on/off>| = show pages key plan (M; default: |off|)
+  * |page-numbers <on/off>| = turn on/off page numbering (A; default: |true|)
+  * |page-setup <dimensions> <units>| = set page dimensions in
+    this order: paper-width, paper-height, page-width, page-height,
+    left-margin and top-margin. If not specified, it will be computed
+    from |size| and |overlap| (A; default: |21 29.7 20 28.7 0.5 0.5 cm|)
+  * |size <width> <height> <units>| = set map size in the atlas mode. If
+    not specified, it will be calculated from |page-setup| and |overlap|.
+    In map mode applies iff |page-grid| is |on| (M, A; default: |18 22.2 cm|)
+  * |sketches <on/off>| = turn on/off displaying of morphed sketch bitmaps.
+    (M, A; default: |off|)
+  * |surface <top/bottom/off>| = set the position of the surface bitmap
+    above/below the map. (M, A; default: |off|)
+  * |surface-opacity <value>| = set the surface bitmap opacity (used if
+    |transparency| is |on|).  Value range is 0--100. (M, A; default: |70|)
+  * |title-pages <on/off>| = turn on/off title pages before each atlas chapter
+    (A; default: |off|)
+  * |transparency <on/off>| = set transparency for the passages (underlying
+    passages are also visible) (M, A; default: |on|)
 
-\subsubchapter `maps'.
+  {\it map legend related:}\Nobreak
 
-\description
-  Turns processing of maps on (default) or off. If you turn if off, 
-  all scraps from selected surveys will be used in the output, no map
-  definitions are taken into account. Usefull for debugging map definitions.  
-\enddescription
+  * |map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>| =
+    print map header at location specified by |<x> <y>|.
+    Predefined map header contains some basic information about
+    cave: name, scale, north arrow, list of surveyors etc. It is fully
+    customizable (see the chapter {\it Changing layout} for details).
+    |<x>| is easting (left-right on page). |<y>| is northing (up/down page).
+    Ranges for |<x>| and |<y>| are -100--200. Lower-left corner of the map
+    is |0 0|,
+    upper-right corner is |100 100|. The header is aligned with the specified
+    corner or side to this anchor point.
+    (M; default: |0 100 nw|)
+  * |map-header-bg <on/off>| = when on, background of map
+     header is filled with background color (e.g.~to hide map grid).
+     (M; default: off)
+  * |map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>| =
+    include image\[Note that you can include PDF too, which may be used to
+    combine plan and extended elevation into one nice looking PDF file.] specified
+    by |<filename>| into map at location specified by |<x> <y>|. For coordinates
+    and alignment details, see |map-header| specification.
+  * |legend-width <n> <units>| = legend width (M, A; default: |14 cm|)
+  * |legend <on/off/all>| = display list of used map symbols in the map header.
+    If set to |all|, all symbols from the current symbol set are displayed.
+    (M, A; default: |off|)
+  * |colo[u]r-legend <on/off>| = turn on/off legend of map-fg colours
+    when map-fg is set to altitude, scrap or map (M, A)
+  * |legend-columns <number>| = adjusts the number of legend columns
+    (M, A; default: |2|)
+  * |map-comment <string>| = optional comment displayed at the map header (M)
+  * |statistics <explo/topo/carto/copyright all/off/number>| or
+  * |statistics <explo/topo-length on/hide/off>| = display some basic
+    statistics; if set to off, team members are sorted \NEW{5.4}alphabetically;
+    otherwise according to their contribution to exploration and surveying
+    (M, A; default: |off|)
+  * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
+  * |language <xx[_YY]>| = set output language.
+    Available languages are listed on the copyright page.
+    See the {\it Appendix} if
+    you want to  add or customize translations. (M, A)
+  * |colo[u]r <item> <colour>| = customize colour for special map
+    items (map-fg, map-bg, preview-above, preview-below, label).
+    Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
+    for RGB colours.
 
-\syntax
-  |maps <on/off>|
-\endsyntax
+    For |map-fg|, you can use |altitude|, |scrap| or |map| as colours.
+    In this case the map is coloured according to altitude, scraps or maps.
 
-\subsubchapter `maps-offset'.
+    For |map-bg|, you can use |transparent| to omit page background
+    completely.
 
-\description
-  Turns drawing maps in offset on (default) or off. If you turn if off, 
-  all cave passages will be displayed in detail in their actual position.
-  All offset specifications will be completely ignored.
-\enddescription
+    For labels, you can switch colour |on/off|. If |on|, labels are coloured
+    using the colour of associated scrap.
 
-\syntax
-  |maps-offset <on/off>|
-\endsyntax
+  * |debug <on/all/first/second/scrap-names/station-names/off>| =
+    draw scrap in different stages
+    of transformation in different colours to see how Therion distorts
+    map data. See the description of |scrap| command for details.
+    The points with distance changed most during transformation are displayed
+    orange. If |scrap-names| is specified, scrap names are shown for each scrap,
+    |station-names| displays name of each survey station.
+  * |survey-level <N/all>| = |N| is the number of survey levels displayed
+                             next to the station name (M, A; default: |0|).
+
+  {\it PDF related:}\Nobreak
+
+  * |doc-author <string>| = set document author (M, A)
+  * |doc-keywords <string>| = set document keywords (M, A)
+  * |doc-subject <string>| = set document subject (M, A)
+  * |doc-title <string>| = set document title (M, A)
+
+  {\it customization:}\Nobreak
+
+  * |code <metapost/tex-map/tex-atlas>| = Add/redefine \TeX\ and \MP\
+    macros here. This allows user to configure various things
+    (like user defined symbols, map and atlas layout at one place \&c.)
+    See the chapter {\it Changing layout} for details.
+  * |endcode| = should end the TeX\ and \MP\ sections
+\endcomopt
 
 
 \subsubchapter `log'.
@@ -199,319 +507,6 @@ Works like |input| command in data files---includes other files.
   |log extend|
 \endsyntax
 
-
-\subsubchapter `text'.
-
-\description
-  Specifies translation of any default therion text in output.
-\enddescription
-
-\syntax
-  |text <language ID> <therion text> <my text>|
-\endsyntax
-
-\arguments
-*  |<language ID>| = standard ISO language identifier (e.g. |en| or |en_GB|)
-*  |<therion text>| = therion text to translate. For list of therion texts and 
-available translations, see |thlang/texts.txt| file.
-\endarguments
-
-
-\subsubchapter `layout'.
-
-\description
-  Specifies layout for 2D maps. Settings which apply to atlas mode
-  are marked `A'; map mode `M'.
-\enddescription
-
-\syntax
-|layout <id> [OPTIONS]
-    copy <source layout id>
-    cs <coordinate system>
-    north <true/grid>
-    scale <picture length> <real length>
-    base-scale <picture length> <real length>
-    units <metric/imperial>
-    rotate <number>
-    symbol-set <symbol-set>
-    symbol-assign <point/line/area/group/special> <symbol-type> \ 
-                                                  <symbol-set>
-    symbol-hide <point/line/area/group/special> <symbol-type>
-    symbol-show <point/line/area/group/special> <symbol-type>
-    symbol-colour <point/line/area/group/special> <symbol-type> <colour>
-    min-symbol-scale <scale>
-    fonts-setup <tinysize> <smallsize> <normalsize> <largesize> <hugesize>
-    size <width> <height> <units>
-    overlap <value> <units>
-    page-setup <dimensions> <units>
-    page-numbers <on/off>
-    exclude-pages <on/off> <list>
-    title-pages <on/off>
-    nav-factor <factor>
-    nav-size <x-size> <y-size>
-    transparency <on/off>
-    opacity <value>
-    surface <top/bottom/off>
-    surface-opacity <value>
-    sketches <on/off>
-    layers <on/off>
-    grid <off/top/bottom>
-    grid-origin <x> <y> <x> <units>
-    grid-size <x> <y> <z> <units>
-    grid-coords <off/border/all>
-    origin <x> <y> <z> <units>
-    origin-label <x-label> <y-label>
-    own-pages <number>
-    page-grid <on/off>
-    legend <on/off/all>
-    legend-columns <number>
-    legend-width <n> <units>
-    map-comment <string>
-    map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>
-    map-header-bg <on/off>
-    map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>
-    statistics <explo/topo/carto/copyright all/off/number>
-               <explo/topo-length on/off>
-    scale-bar <length> <units>
-    survey-level <N/all>
-    language <xx[_YY]>
-    colour/color <item> <colour>
-    debug <on/all/first/second/scrap-names/station-names/off>
-    doc-author <string>
-    doc-keywords <string>
-    doc-subject <string>
-    doc-title <string>
-    code <metapost/tex-map/tex-atlas>
-    endcode
-endlayout|
-\endsyntax
-
-\arguments
-  |<id>| = layout identifier (to be used in the |export| command)
-\endarguments
-
-\comopt 
-  * |copy <source layout id>| = set properties here that are not
-    modified based on the given source layout.
-  
-  {\it map presentation-related:}\Nobreak
-
-  * |scale <picture length> <real length>| = set scale of
-    output map or map atlas (M, A; default: |1 200|)
-  * |base-scale <picture length> <real length>| = if set, Therion will
-    optically scale the map by a (|scale/base-scale|) factor.
-    This has the same effect as if the map printed in |base-scale| would be
-    photo-reduced to the |scale|. (M, A)
-  * |rotate <value>| = rotates the map (M, A; default: |0|)
-  * |units <metric/imperial>| = set output units (M, A; default: |metric|)
-  * |symbol-set <symbol-set>| = use |symbol-set| for all map symbols,
-    if available. Be aware, that symbol set name is case sensitive. (M, A)
-    
-    Therion uses following predefined symbol sets:\par
-    UIS (International Union of Speleology)\par
-    ASF (Australian Speleological Federation)\par
-    AUT (Austrian Speleological Association)\par
-    CCNP (Carlsbad Caverns National Park)\NEW{5.4}\par
-    NZSS (New Zealand Symbol Set)\NEW{5.4}\par
-    SKBB (Speleoklub Bansk\'a Bystrica)
-    
-  * {\rightskip 0cm minus 4pt
-    |symbol-assign <point/line/area/group/special> <symbol-type> <symbol-set>| = 
-    display a
-    particular symbol in the given symbol-set. This option overrides 
-    |symbol-set| option.\par}
-    
-    If the symbol has a subtype, |<symbol-type>| argument may have one
-    of the following forms: |type:subtype| or simply |type|, which
-    assigns new symbol set to all subtypes of a given symbol.
-    
-    Following symbols may not be used with this option: point {\it section} 
-    (which isn't rendered at all) and all point and line labels ({\it label}, 
-    {\it remark}, {\it altitude}, {\it height}, {\it passage-height}, 
-    {\it station-name}, {\it date}). See the chapter
-    {\it Changing layout/Customizing text labels} for details how to change
-    labels' appearance. (M, A)
-
-    Group may be one of the following: all, centerline, sections, \NEW{5.3}water,
-    speleothems, passage-fills, \NEW{5.4}ice, sediments, equipment.
-    
-    There are two special symbols: north-arrow, scale-bar.
-
-  * |symbol-hide <point/line/area/group/special>  <symbol-type>| = don't display 
-    particular symbol or group of symbols. 
-    
-    You may use |group cave-centerline|, |group surface-centerline|, 
-    |point cave-station|, |point surface-station|
-    and \NEW{5.4}|group text|
-    in |symbol-hide| and |symbol-show| commands.
-    
-    Use |flag:<entrance/continuation/sink/spring/doline/dig>| as a 
-    |<symbol-type>| to hide stations with particular flags 
-    (e.g. |symbol-hide point flag:entrance|).
-    
-    May be combined with |symbol-show|.(M, A)
-  * |symbol-show <point/line/area/group/special> <symbol-type>| = display particular 
-    symbol or group of symbols. May be combined with |symbol-hide|. (M, A)
-
-  * \NEW{5.3}|symbol-colo[u]r <point/line/area/group/special> <symbol-type> <colour>| = 
-    change colour of particular symbol or group of symbols.\[Note: colour change
-    currently applies to pattern fills only if (1) output format is PDF and
-    (2)~\MP\ version is at least 1.000] (M, A)
-
-  * \NEW{5.4.1}|min-symbol-scale <scale>| = 
-    define minimal |<scale>|, from which points and lines are displayed on the map. E.g. for
-    |min-symbol-scale M|, no points or lines scaled |S| and |XS| will be shown on the map.
-    |<scale>| has the same format, as |scale| option for points and lines.
-
-  * \NEW{5.4.1}|fonts-setup <tinysize> <smallsize> <normalsize> <largesize> <hugesize>| =
-    specify size of the text in points. 
-    |<normalsize>| applies to point label, |<smallsize>| applies to 
-    remark and all other point labels. Each of them may apply to line label 
-    according to its |-size| option.
-    
-    The defaults are 
-    |8 10 12 16 24| for scales upto 1:100; 
-    |7 8 10 14 20| for scales upto 1:200; 
-    |6 7 8 10 14| for scales upto 1:500 and 
-    |5 6 7 8 10| for scales smaller than 1:500.
-
-  {\it page layout related:}\Nobreak
-
-  * |size <width> <height> <units>| = set map size in the atlas mode. If
-    not specified, it will be calculated from |page-setup| and |overlap|.
-    In map mode applies iff |page-grid| is |on| (M, A; default: |18 22.2 cm|)
-  * |overlap <value> <units>| = set overlap size in paper units in the atlas 
-    mode or map margin in the map mode (M, A; default: |1 cm|)
-  * |page-setup <dimensions> <units>| = set page dimensions in
-    this order: paper-width, paper-height, page-width, page-height,
-    left-margin and top-margin. If not specified, it will be computed
-    from |size| and |overlap| (A; default: |21 29.7 20 28.7 0.5 0.5 cm|)
-  * |page-numbers <on/off>| = turn on/off page numbering (A; default: |true|)
-  * |exclude-pages <on/off> <list>| = exclude specified pages from cave
-    atlas. The list may contain page numbers separated by a comma or dash 
-    (for intervals) e.g.~|2,4-7,9,23| means, that pages 2, 4, 5, 6, 7, 9 and 23 
-    should be omitted. Only the map pages should be counted. (Set |own-pages 0| 
-    and |title-pages off| to get the correct page numbers to be excluded.) 
-    Changes of |own-pages| or |title-pages| options don't affect page 
-    excluding. (A)
-  * |title-pages <on/off>| = turn on/off title pages before each atlas chapter
-    (A; default: |off|)
-  * |nav-factor <factor>| = set atlas navigator zoom factor (A; default: |30|)
-  * |nav-size <x-size> <y-size>| = set number of atlas pages in 
-    both directions of navigator (A; default: |2 2|)
-  * |transparency <on/off>| = set transparency for the passages (underlying 
-    passages are also visible) (M, A; default: |on|)
-  * |opacity <value>| = set opacity value (used if |transparency| is |on|). 
-    Value range is 0--100. (M, A; default: |70|)
-  * |surface-opacity <value>| = set the surface bitmap opacity (used if 
-    |transparency| is |on|).  Value range is 0--100. (M, A; default: |70|)
-  * |surface <top/bottom/off>| = set the position of the surface bitmap
-    above/below the map. (M, A; default: |off|)
-  * |sketches <on/off>| = turn on/off displaying of morphed sketch bitmaps. 
-    (M, A; default: |off|)
-  * |layers <on/off>| = enable/disable PDF~1.5 layers (M, A; default: |on|)
-  * |grid <off/bottom/top>| = enable/disable grid (optionally coordinates' 
-    values may be also displayed)
-    (M, A; default: |off|)
-  * |cs <coordinate system>| = coordinate system for |origin| and
-    |grid-origin|
-  * |north <true/grid>| = specify default orientation of the map. 
-    By default, true (astronomical) north is used. It is ignored when used with
-    local coordinate system.
-  * |grid-origin <x> <y> <x> <units>| = set coordinates of grid
-    origin (M, A)
-  * |grid-size <x> <y> <z> <units>| = set grid size in real
-    units (M, A; default is equal to scalebar size)
-  * |grid-coords <off/border/all>| = specify where to label grid with
-    coordinates. (M, A; default: |off|)
-  * |origin <x> <y> <z> <units>| = set origin of atlas pages (M, A)
-  * |origin-label <x-label> <y-label>| = set label for atlas page
-    which has the lower left corner at the given origin coordinates.
-    May be either a number or a character. (M, A; default: |0 0|)
-  * |own-pages <number>| = set number of own pages added before 
-    the first page of automatically generated pages in atlas mode
-    (currently required for correct page numbering) (A; default: |0|)
-  * |page-grid <on/off>| = show pages key plan (M; default: |off|)
-
-  {\it map legend related:}\Nobreak
-
-  * |map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>| = 
-    print map header at location specified by |<x> <y>|. 
-    Predefined map header contains some basic information about
-    cave: name, scale, north arrow, list of surveyors etc. It is fully 
-    customizable (see the chapter {\it Changing layout} for details).
-    |<x>| is easting (left-right on page). |<y>| is northing (up/down page).
-    Ranges for |<x>| and |<y>| are -100--200. Lower-left corner of the map 
-    is |0 0|, 
-    upper-right corner is |100 100|. The header is aligned with the specified 
-    corner or side to this anchor point.
-    (M; default: |0 100 nw|)
-  * |map-header-bg <on/off>| = when on, background of map 
-     header is filled with background color (e.g.~to hide map grid). 
-     (M; default: off)
-  * |map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>| = 
-    include image\[Note that you can include PDF too, which may be used to
-    combine plan and extended elevation into one nice looking PDF file.] specified
-    by |<filename>| into map at location specified by |<x> <y>|. For coordinates 
-    and alignment details, see |map-header| specification.
-  * |legend-width <n> <units>| = legend width (M, A; default: |14 cm|)
-  * |legend <on/off/all>| = display list of used map symbols in the map header. 
-    If set to |all|, all symbols from the current symbol set are displayed. 
-    (M, A; default: |off|)
-  * |colo[u]r-legend <on/off>| = turn on/off legend of map-fg colours 
-    when map-fg is set to altitude, scrap or map (M, A)
-  * |legend-columns <number>| = adjusts the number of legend columns 
-    (M, A; default: |2|)
-  * |map-comment <string>| = optional comment displayed at the map header (M)
-  * |statistics <explo/topo/carto/copyright all/off/number>| or 
-  * |statistics <explo/topo-length on/hide/off>| = display some basic 
-    statistics; if set to off, team members are sorted \NEW{5.4}alphabetically;
-    otherwise according to their contribution to exploration and surveying
-    (M, A; default: |off|)
-  * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
-  * |language <xx[_YY]>| = set output language. 
-    Available languages are listed on the copyright page.
-    See the {\it Appendix} if 
-    you want to  add or customize translations. (M, A)
-  * |colo[u]r <item> <colour>| = customize colour for special map
-    items (map-fg, map-bg, preview-above, preview-below, label). 
-    Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
-    for RGB colours. 
-    
-    For |map-fg|, you can use |altitude|, |scrap| or |map| as colours. 
-    In this case the map is coloured according to altitude, scraps or maps.
-
-    For |map-bg|, you can use |transparent| to omit page background 
-    completely. 
-
-    For labels, you can switch colour |on/off|. If |on|, labels are coloured
-    using the colour of associated scrap.
-    
-  * |debug <on/all/first/second/scrap-names/station-names/off>| = 
-    draw scrap in different stages
-    of transformation in different colours to see how Therion distorts
-    map data. See the description of |scrap| command for details.
-    The points with distance changed most during transformation are displayed
-    orange. If |scrap-names| is specified, scrap names are shown for each scrap,
-    |station-names| displays name of each survey station.
-  * |survey-level <N/all>| = |N| is the number of survey levels displayed 
-                             next to the station name (M, A; default: |0|).
-
-  {\it PDF related:}\Nobreak
-
-  * |doc-author <string>| = set document author (M, A)
-  * |doc-keywords <string>| = set document keywords (M, A)
-  * |doc-subject <string>| = set document subject (M, A)
-  * |doc-title <string>| = set document title (M, A)
-
-  {\it customization:}\Nobreak
-
-  * |code <metapost/tex-map/tex-atlas>| = Add/redefine \TeX\ and \MP\
-    macros here. This allows user to configure various things 
-    (like user defined symbols, map and atlas layout at one place \&c.)
-    See the chapter {\it Changing layout} for details.
-  * |endcode| = should end the TeX\ and \MP\ sections
-\endcomopt
 
 \subsubchapter `lookup'.
 
@@ -583,15 +578,82 @@ text is omitted, then the default will display the range, ie 1600 m - 1500 m
 \endinsert
 
 
+\subsubchapter `maps'.
+
+\description
+  Turns processing of maps on (default) or off. If you turn if off,
+  all scraps from selected surveys will be used in the output, no map
+  definitions are taken into account. Usefull for debugging map definitions.
+\enddescription
+
+\syntax
+  |maps <on/off>|
+\endsyntax
+
+\subsubchapter `maps-offset'.
+
+\description
+  Turns drawing maps in offset on (default) or off. If you turn if off,
+  all cave passages will be displayed in detail in their actual position.
+  All offset specifications will be completely ignored.
+\enddescription
+
+\syntax
+  |maps-offset <on/off>|
+\endsyntax
+
+
+\subsubchapter `select'.
+
+\description
+  selects objects (surveys and maps) for export. By default, all survey objects
+  are selected. If there is no map selected, all scraps belonging to
+  selected surveys are selected by default for map export.
+
+  If there are no scraps or maps in the data, centreline from all surveys is
+  exported in the map.
+
+  When exporting maps in different projections, you need to select
+  them for each projection separately.
+\enddescription
+
+\syntax
+  |select <object> [OPTIONS]|
+\endsyntax
+
+\arguments
+*  |<object>| = any survey or map, identified by its ID.
+\endarguments
+
+\options
+  * |recursive <on/off>| = valid only when a survey is selected. If set
+    on (by default) all subsurveys of the given survey are recursively
+    selected/unselected.
+
+  * |map-level <number>| = valid only when a map is selected. Determines
+    the level at which map expansion for atlas export is stopped.
+    By default 0 is used; if `basic' is specified,
+    expansion is done up to the basic maps.
+    {\it Note:} Map previews are displayed only as specified in maps in the
+    current |map-level|.
+
+  * |chapter-level <number>| = valid only when a map is selected. Determines
+    the level at which chapter expansion for atlas export is stopped.
+    By default 0 is used, if `|-|' or `|.|' is specified, no chapter is
+    exported for this map. If |title-pages| option in |layout| is on,
+    each chapter starts with a title page.
+\endoptions
+
+
 \subsubchapter `setup3d'.
 
 \syntax
   \list
-    * |setup3d <value>| 
+    * |setup3d <value>|
   \endlist
 \endsyntax
 
-\NEW{5.3}Temporary hack to set sampling distance in meters when generating 
+\NEW{5.3}Temporary hack to set sampling distance in meters when generating
 piecewise linear 3d model from passage walls made of B\'ezier curves.
 
 
@@ -599,138 +661,99 @@ piecewise linear 3d model from passage walls made of B\'ezier curves.
 
 \syntax
   \list
-    * |sketch-colors <number-of-colors>| 
+    * |sketch-colors <number-of-colors>|
   \endlist
 \endsyntax
 
-\NEW{5.4} This option can be used to reduce size of sketch bitmap 
+\NEW{5.4} This option can be used to reduce size of sketch bitmap
   images in maps.
 
 
-\subsubchapter `export'.
-
-\description
-  Exports selected surveys or maps. 
-\enddescription
+\subsubchapter `sketch-warp'.
 
 \syntax
   \list
-    * |export <type> [OPTIONS]| 
+    * |sketch-warp <algorithm>|
   \endlist
 \endsyntax
 
+Specifies which scrap warping (morphing) algorithm to use.
+Possible algorithms are |line|---the default; |plaquette|---invented by
+Marco Corvi.
+
+
+\subsubchapter `source'.
+
+\description
+   Specifies which source (data) files Therion should read. You can
+   specify several files here; one per line.
+   You can also specify them using the |-s| command
+   line option (see below).
+
+   It is also possible to type (some small snippets of) code directly in
+   configuration file using the multi-line syntax.
+\enddescription
+
+\syntax
+  \hfill\break|source <file-name>|\hfill\break
+  or\hfill\break
+  |source|\hfill\break
+  {\qquad\it\dots therion commands\dots}\hfill\break
+  |endsource|
+\endsyntax
+
 \arguments
-  * |<type>| = The following export types are supported:
-
-    |model| = 3D model of the cave
-
-    |map| = one page 2D map
-
-    |atlas| = 2D atlas in more pages
-    
-    |cave-list| = summary table of caves
-    
-    |survey-list| = summary table of surveys
-    
-    |continuation-list| = list of possible continuations
-
-    |database| = SQL database with centreline
+*  |<file-name>|
 \endarguments
 
-\penalty0
+
+\subsubchapter `system'.
+Allows to execute system commands during therion compilation.\[E.g. to open or
+refresh external PDF viewer.] Normally Therion waits until the subprocess is
+finished. If you want to continue compilation without break, use |<command> &|
+syntax on Linux and |start <command>| syntax on Windows.
+
+
+\subsubchapter `text'.
+
+\description
+  Specifies translation of any default therion text in output.
+\enddescription
+
+\syntax
+  |text <language ID> <therion text> <my text>|
+\endsyntax
+
+\arguments
+*  |<language ID>| = standard ISO language identifier (e.g. |en| or |en_GB|)
+*  |<therion text>| = therion text to translate. For list of therion texts and
+available translations, see |thlang/texts.txt| file.
+\endarguments
+
+
+\subsubchapter `unselect'.
+
+\description
+  Unselects objects from export.
+\enddescription
+
+\syntax
+  |unselect <object> [OPTIONS]|
+\endsyntax
+
+\arguments
+  The same as the |select| command.
+\endarguments
 
 \options
-  {\it common:}\Nobreak
-  * |encoding/enc <encoding>| = set output encoding
-  * |output/o <file>| = set output file name. If no file name is
-    given the prefix ``|cave.|'' is used with an extension corresponding to
-    output format.
-    
-    If the output filename is given and no output format is specified,
-    the format is determined from the filename extension.
-
-
-  {\it model:}\Nobreak
-
-  * |format/fmt <format>| = set model output format. Currently the following
-    output formats are supported: |loch| (native format; default),
-    |compass| (plt file), |survex| (3d file), |dxf|,
-    |esri| (3d shapefiles), |vrml|, |3dmf| and |kml| (Google Earth).
-  * |enable <walls/[cave/surface-]centerline/splay-shots/surface/all>| and
-  * |disable <walls/[cave/surface-]centerline/splay-shots/surface/all>| = 
-     \hfil\break
-     selects which features to export, if the format supports it. Surface
-     is currently exported in |therion| format only.
-  * |wall-source <maps/centerline/all/splays>| = set source data for passage
-    wall modeling.
-
-  {\it map/atlas:}\Nobreak
-  
-  * |format/fmt <format>| = set map format. Currently |pdf|, |svg|, 
-    |xhtml|\[SVG embedded in XHTML file which contains also legend],
-    |survex|, |dxf|, |esri|\[ESRI shapefiles. Multiple files are written to a 
-    directory with the specified filename.], |kml| (Google Earth), 
-    |xvi|\[Xtherion vector image. XVI images may be used in
-    xtherion to draw in-scale maps. Scale (100\,DPI image resolution is 
-    assumed) and grid-size from layout are used in export.] and
-    \NEW{5.3}|bbox|\[Text file containing geographic coordinates of 
-    lower-left and upper-right corners of the map area.]
-    for map; |pdf| for atlas are supported.
-  * |projection <id>| = unique identifier that specifies the map projection type.
-    (See the |scrap| command for details.) 
-    
-    If there is no map defined, all scraps in the given projection are 
-    exported.
-    
-    If there are no scraps with 
-    the specified projection then Therion will display centreline from selected
-    surveys.
-  * |layout <id>| = use predefined map or atlas layout.
-  * |layout-xxx| = where |xxx| stands for other layout options. Using this
-    you can change some layout properties directly within the export command.
-  * |encoding/enc <encoding>| = set output encoding
-
-  {\it common for lists:}\Nobreak
-
-  * |format/fmt <format>| = set continuation output format. Currently the following
-    output formats are supported: |html| (default), |txt|,
-    \NEW{5.4}|kml|\[For cave-list and continuation-list.] and |dbf|.
-    
-  {\it continuation-list:}\Nobreak
-
-  * |attributes <(on)/off>| = set whether to export user defined attributes
-    in continuation list table.
-  * \NEW{5.3}|filter <(on)/off>| = set whether continuations without comment/text
-    should be filtered out.
-
-  {\it cave-list:}\Nobreak
-
-  * |location <on/(off)>| = set whether to export coordinates of cave entrances in
-    the table.
-  * \NEW{5.3}|surveys (on)/off| = exports raw list of caves when set |off|. Otherwise 
-    survey structure with aggregated statistics is also displayed.
-    
-  {\it database:}\Nobreak
-  
-  * |format/fmt <format>| = currently |sql| and |csv|
-  * |encoding/enc <encoding>| = set output encoding
+  The same as the |select| command.
 \endoptions
 
-{\it File formats summary:}
-\nobreak\medskip
-\bgroup
-\leavevmode\kern1em\vbox{\advance\hsize-1em\halign{#\hfil\quad&#\hfil\cr
-{\it export type}&{\it available formats}\cr\noalign{\smallskip\hrule\smallskip}
-model & loch, dxf, esri, compass, survex, vrml, 3dmf, kml\cr
-map  & pdf, svg, xhtml, dxf, esri, survex, xvi, kml, \NEW{5.3}bbox\cr
-atlas & pdf\cr
-database & sql, \NEW{5.4}csv\cr
-lists & html, txt, kml, dbf\cr}}\egroup
 
 
 \subchapter Running Therion.
 
-Now, after mastering data and configuration files, we're ready to run Therion. 
+Now, after mastering data and configuration files, we're ready to run Therion.
 Usually this is done from the command line in the data directory by typing
 
 |therion|
@@ -756,27 +779,27 @@ or
 
 \penalty-200
 \arguments
-  |<cfg-file>| 
+  |<cfg-file>|
   Therion takes only one optional argument: the name of a configuration
-  file. If no name is specified |thconfig| in the current directory is used. 
-  If there is no |thconfig| file (e.g.~current directory is not a data 
+  file. If no name is specified |thconfig| in the current directory is used.
+  If there is no |thconfig| file (e.g.~current directory is not a data
   directory), Therion exits with an error message.
 \endarguments
 
 \options
 * |-d| =
-  Turn on debugging mode. The current implementation creates a 
-  temporary directory named |thTMPDIR| (in your system temporary 
-  directory) and does not delete any temporary files. 
+  Turn on debugging mode. The current implementation creates a
+  temporary directory named |thTMPDIR| (in your system temporary
+  directory) and does not delete any temporary files.
 
 %* |-g| =
 %  Using this option you can generate a new configuration file.
 %  If |cfg-file| is not specified therion will use the |thconfig|
 %  file. If the destination file exists, it'll be overwritten.
-%  Generate a new configuration file. This will be the given 
-%  |<cfg-file>| if specified, or |thconfig| in the current directory if not. 
+%  Generate a new configuration file. This will be the given
+%  |<cfg-file>| if specified, or |thconfig| in the current directory if not.
 %  If the file already exists, it will be overwritten.
-%        
+%
 * |-h, --help| =
         Display short help.
 
@@ -786,12 +809,12 @@ or
 * |-L| =
         Do not create a log-file. Normally therion writes all the messages
         into a therion.log file in the current directory.
-        
+
 * |-l <log-file>| =
         Change the name of the log file.
-        
+
 * |-p <search-path>| =
-        This option is used to set the search path (or list of 
+        This option is used to set the search path (or list of
 	colon-separated paths) which therion uses to find its source
         files (if it doesn't find them in the working directory).
 
@@ -801,10 +824,10 @@ or
 
 * |--print-encodings| =
         Print a list of all supported input encodings.
-        
+
 * |--print-tex-encodings| =
         Print a list of all supported encodings for PDF output.
-        
+
 * |--print-init-file| =
         Print a default initialization file. For more details
         see the {\it Initialization} section in the {\it Appendix}.
@@ -813,40 +836,40 @@ or
         Print environment settings for therion.
 
 * |--print-symbols| =
-        Print a list of all therion supported map symbols in 
+        Print a list of all therion supported map symbols in
         |symbols.xhtml| file.
-        
+
 * |-s <source-file>| =
         Set the name of the source file.
-        
+
 %* |-u| =
 %        Upgrade the configuration file.
 %
 * |--use-extern-libs| =
-  Don't copy \TeX\ and \MP\ macros to working directory. \TeX\ and \MP\ 
+  Don't copy \TeX\ and \MP\ macros to working directory. \TeX\ and \MP\
   should search for them on their own. Use with caution.
 
 * |-v, --version| =
-  Display version information.        
-        
+  Display version information.
+
 * |-x| =
   Generate file `.xtherion.dat' with additional information for XTherion.
 \endoptions
 
 \subsubchapter XTherion---compiler.
 
-XTherion makes it easier to run Therion especially on systems without a command 
-line prompt. Compiler window is the default window of XTherion. To run Therion 
-it's enough to open a configuration file and press `F9' or `Compile' button. 
+XTherion makes it easier to run Therion especially on systems without a command
+line prompt. Compiler window is the default window of XTherion. To run Therion
+it's enough to open a configuration file and press `F9' or `Compile' button.
 
 XTherion displays messages from Therion in the lower part of the screen.
 Each error message is highlighted and is hyperlinked to the source file
 where the error occurred.
 
-After a first run there are activated additional menus {\it Survey 
-structure} and {\it Map structure}. User may comfortably select a survey or map 
-for export by double clicking on some of the items in the tree. Simple click in 
-the {\it Survey structure} tree displays some basic information about the 
+After a first run there are activated additional menus {\it Survey
+structure} and {\it Map structure}. User may comfortably select a survey or map
+for export by double clicking on some of the items in the tree. Simple click in
+the {\it Survey structure} tree displays some basic information about the
 survey in the {\it Survey info} menu.
 
 \endinput
