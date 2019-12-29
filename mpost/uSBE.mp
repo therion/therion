@@ -770,37 +770,25 @@ enddef;
 picture SBE_seed_germination_raw;
 SBE_seed_germination_raw := image(
 	begingroup;
-	interim linecap := butt;
-	interim linejoin := mitered;
-	fill (307.054993,644.315979)..controls (300.976990,644.448975) and (294.867004,639.804993)..(294.738007,630.190979)
-		--(294.335999,599.620972)..controls (284.722992,608.976990) and (274.328003,617.726990)..(262.230011,623.710999)
-		..controls (233.117004,639.257996) and (197.210999,637.718994)..(168.223007,622.632996)
-		..controls (168.651993,602.362976) and (174.352005,582.090027)..(185.996002,565.354980)
-		..controls (208.809006,530.617004) and (253.582001,512.960999)..(294.003998,522.429993)
-		--(294.472992,470.847992)--(266.761993,439.105011)--(306.425995,346.949005)
-		--(346.359009,438.929993)--(319.855011,469.644989)--(319.179993,502.457001)
-		..controls (319.179993,502.457001) and (334.320007,493.828003)..(350.433990,495.203003)
-		..controls (400.753998,499.503998) and (444.437988,544.109009)..(444.414001,594.953003)
-		..controls (435.062988,605.223022) and (415.863007,608.715027)..(401.238007,609.000000)
-		..controls (370.246002,611.851990) and (339.906006,597.054993)..(319.179993,574.590027)
-		--(319.179993,629.757996)..controls (319.179993,639.273010) and (313.132996,644.184021)..(307.054993,644.315979)
-		--cycle;
-	fill (378.417999,450.589996)--(317.867004,297.796997)..controls (313.351990,286.406006) and (305.851990,284.824005)..(299.785004,298.843994)
-		--(234.445007,449.886993)..controls (205.804993,427.437988) and (190.828003,389.375000)..(194.429993,353.316010)
-		..controls (197.300995,318.671997) and (218.117004,287.230011)..(247.104996,268.855011)
-		--(375.769989,275.878998)..controls (390.304993,287.136993) and (402.128998,301.910004)..(409.453003,319.289001)
-		..controls (429.414001,363.664001) and (416.367004,419.933990)..(378.417999,450.589996)
-		--cycle;
-	pickup pencircle scaled 17.511600bp;
-	draw (101.250000,276.343994)..controls (177.468994,243.992004) and (396.476990,296.585999)..(502.667999,269.492004);
+		interim linecap := butt;
+		interim linejoin := mitered;
+		fill (443,464)..controls (441,492) and (411,512)..(389,501)
+			..controls (406,574) and (355,622)..(378,509)
+			..controls (350,513) and (331,473)..(333,452)
+			..controls (350,440) and (374,461)..(381,474)
+			..controls (382,466) and (417,441)..(443,464)
+			--cycle;
+		pickup pencircle scaled 25bp;
+		draw (101,276)..controls (177,243) and (396,296)..(502,269);
+		pickup pencircle scaled 19bp;
+		interim linecap := rounded;
+		draw (194,270)..controls (160,669) and (364,759)..(382,543);
 	endgroup;
 );
-picture SBE_seed_germination;
-SBE_seed_germination := SBE_seed_germination_raw shifted (-(llcorner SBE_seed_germination_raw)-(urcorner SBE_seed_germination_raw - llcorner SBE_seed_germination_raw)/2) scaled (u / max((xpart urcorner SBE_seed_germination_raw) - (xpart llcorner SBE_seed_germination_raw), (ypart urcorner SBE_seed_germination_raw) - (ypart llcorner SBE_seed_germination_raw)));
 
 def p_seedgermination_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_seed_germination;
+	thdraw SBE_seed_germination_raw shifted (-(llcorner SBE_seed_germination_raw)-(urcorner SBE_seed_germination_raw - llcorner SBE_seed_germination_raw)/2) scaled (u / max((xpart urcorner SBE_seed_germination_raw) - (xpart llcorner SBE_seed_germination_raw), (ypart urcorner SBE_seed_germination_raw) - (ypart llcorner SBE_seed_germination_raw)));
 enddef;
 
 
