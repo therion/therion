@@ -179,38 +179,32 @@ enddef;
 picture SBE_danger_raw;
 SBE_danger_raw := image(
 	begingroup;
-	interim linecap := butt;
-	interim linejoin := mitered;
-	fill (296.210999,396.785004)
-		..controls (295.957001,393.730011) and (295.378998,392.101990)..(294.050995,390.679993)
-		..controls (290.140991,386.492004) and (291.902008,386.628998)..(242.203003,386.628998)
-		..controls (199.147995,386.628998) and (196.050995,386.718994)..(193.602005,388.000000)..controls (190.085999,389.839996) and (187.391006,394.972992)..(187.882996,398.906006)
-		..controls (188.082001,400.500000) and (189.796997,405.015991)..(191.695007,408.941010)
-		..controls (197.016006,419.949005) and (230.910004,482.273010)..(233.671997,486.125000)
-		..controls (234.309006,487.015991) and (236.343994,488.320007)..(238.190994,489.027008)
-		..controls (242.563004,490.695007) and (246.210999,490.011993)..(249.546997,486.898010)
-		..controls (251.727005,484.859009) and (270.371002,450.863007)..(293.917999,405.980011)
-		..controls (296.246002,401.542999) and (296.515991,400.460999)..(296.210999,396.785004)
-		--cycle withcolor red;
-	fill (244.227005,419.902008)..controls (245.160004,424.167999) and (249.863007,452.070007)..(249.863007,453.328003)
-		..controls (249.863007,455.347992) and (246.492004,459.121002)..(244.164001,459.707001)
-		..controls (241.417999,460.394989) and (237.468994,458.906006)..(235.964996,456.613007)
-		..controls (235.031006,455.191010) and (234.792999,453.656006)..(235.059006,450.839996)
-		..controls (235.703003,444.046997) and (240.223007,419.285004)..(240.983994,418.363007)
-		..controls (242.011993,417.121002) and (243.809006,417.972992)..(244.227005,419.902008)
-		--cycle withcolor white;
-	fill (246.882996,399.777008)..controls (250.835999,403.980011) and (247.852005,410.628998)..(242.016006,410.628998)
-		..controls (238.882996,410.628998) and (235.613007,407.136993)..(235.613007,403.789001)
-		..controls (235.613007,398.433990) and (243.113007,395.761993)..(246.882996,399.777008)
-		--cycle withcolor white;
+		interim linecap := butt;
+		interim linejoin := mitered;
+		fill (331,489)..controls (330,489) and (328,489)..(326,488)
+			--(291,422)..controls (291,422) and (291,421)..(291,421)
+			..controls (291,417) and (294,414)..(297,413)
+			--(365,413)..controls (369,414) and (371,417)..(371,421)
+			..controls (371,422) and (371,422)..(371,423)
+			--(336,488)..controls (335,489) and (333,489)..(331,489)
+			..controls (331,489) and (331,489)..(331,489)
+			--cycle withcolor red;
+		fill (336,427)..controls (336,430) and (334,432)..(331,432)
+			..controls (328,432) and (326,430)..(326,427)
+			..controls (326,424) and (328,422)..(331,422)
+			..controls (334,422) and (336,424)..(336,427)
+			--cycle withcolor white;
+		fill (335,464)..controls (336,466) and (332,466)..(331,466)
+			..controls (330,466) and (327,466)..(327,464)
+			--(330,436)..controls (330,435) and (330,435)..(331,435)
+			..controls (332,435) and (332,435)..(332,436)
+			--cycle withcolor white;
 	endgroup;
 );
-picture SBE_danger;
-SBE_danger := SBE_danger_raw shifted (-(llcorner SBE_danger_raw)-(urcorner SBE_danger_raw - llcorner SBE_danger_raw)/2) scaled (u / max((xpart urcorner SBE_danger_raw) - (xpart llcorner SBE_danger_raw), (ypart urcorner SBE_danger_raw) - (ypart llcorner SBE_danger_raw)));
 
 def p_danger_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_danger;
+	thdraw SBE_danger_raw shifted (-(llcorner SBE_danger_raw)-(urcorner SBE_danger_raw - llcorner SBE_danger_raw)/2) scaled (u / max((xpart urcorner SBE_danger_raw) - (xpart llcorner SBE_danger_raw), (ypart urcorner SBE_danger_raw) - (ypart llcorner SBE_danger_raw)));
 enddef;
 
 
