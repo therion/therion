@@ -344,42 +344,25 @@ enddef;
 picture SBE_gate_raw;
 SBE_gate_raw := image(
 	begingroup;
-	interim linecap := butt;
-	interim linejoin := mitered;
-	fill (338.621002,237.011993)--(339.371002,587.020020)..controls (403.007996,573.179993) and (458.531006,520.043030)..(483.359009,475.855011)
-		..controls (487.066010,469.152008) and (490.230011,462.218994)..(493.308990,455.218994)
-		--(492.746002,209.358994)--cycle;
-	fill (109.308998,455.218994)--(112.019997,461.382996)..controls (113.512001,464.773010) and (116.769997,471.289001)..(119.262001,475.855011)
-		..controls (147.313004,527.296997) and (187.516006,563.835999)..(233.320007,579.523010)
-		..controls (241.257996,582.237976) and (253.089996,585.348022)..(258.558990,586.151978)
-		..controls (260.417999,586.426025) and (262.527008,586.815979)..(263.246002,587.020020)
-		--(264.558990,436.539001)--(282.558990,436.539001)--(282.558990,372.039001)
-		--(264.558990,372.039001)--(264.558990,237.160004)--(262.496002,236.742004)
-		--(110.996002,209.647995)--(109.308998,209.261993)--cycle;
-	fill (138.190994,293.816010)--(170.738007,299.394989)--(170.738007,240.852005)
-		--(138.190994,235.445007)--cycle withcolor white;
-	fill (198.789001,304.433990)--(231.332001,310.011993)--(231.332001,251.468994)
-		--(198.789001,246.063004)--cycle withcolor white;
-	fill (138.190994,460.031006)..controls (147.214996,481.824005) and (158.628998,495.542999)..(170.738007,506.910004)
-		--(170.738007,330.257996)--(138.190994,324.851990)--cycle withcolor white;
-	fill (198.789001,526.476990)..controls (206.746002,537.781006) and (221.828003,547.804993)..(231.332001,552.101990)
-		--(231.332001,342.710999)--(198.789001,337.304993)--cycle withcolor white;
-	fill (460.500000,293.816010)--(427.953003,299.394989)--(427.953003,240.852005)
-		--(460.500000,235.445007)--cycle withcolor white;
-	fill (399.902008,304.433990)--(367.359009,310.011993)--(367.359009,251.468994)
-		--(399.902008,246.063004)--cycle withcolor white;
-	fill (460.500000,460.031006)..controls (451.476990,481.824005) and (440.062988,495.542999)..(427.953003,506.910004)
-		--(427.953003,330.257996)--(460.500000,324.851990)--cycle withcolor white;
-	fill (399.902008,526.476990)..controls (391.945007,537.781006) and (376.863007,547.804993)..(367.359009,552.101990)
-		--(367.359009,342.710999)--(399.902008,337.304993)--cycle withcolor white;
+		pickup pencircle scaled 28bp;
+		interim linecap := butt;
+		interim linejoin := rounded;
+		draw (121,221)--(249,244)--(249,546)
+			--(121,454)--cycle;
+		draw (466,221)--(337,244)--(337,546)
+			--(465,454)--cycle;
+		pickup pencircle scaled 22bp;
+		interim linejoin := mitered;
+		draw (121,307)--(249,330);
+		draw (184,496)--(184,234);
+		draw (466,307)--(337,330);
+		draw (402,496)--(402,234);
 	endgroup;
 );
-picture SBE_gate;
-SBE_gate := SBE_gate_raw shifted (-(llcorner SBE_gate_raw)-(urcorner SBE_gate_raw - llcorner SBE_gate_raw)/2) scaled (u / max((xpart urcorner SBE_gate_raw) - (xpart llcorner SBE_gate_raw), (ypart urcorner SBE_gate_raw) - (ypart llcorner SBE_gate_raw)));
 
 def p_gate_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_gate;
+	thdraw SBE_gate_raw shifted (-(llcorner SBE_gate_raw)-(urcorner SBE_gate_raw - llcorner SBE_gate_raw)/2) scaled (u / max((xpart urcorner SBE_gate_raw) - (xpart llcorner SBE_gate_raw), (ypart urcorner SBE_gate_raw) - (ypart llcorner SBE_gate_raw)));
 enddef;
 
 
