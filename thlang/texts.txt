@@ -4,6 +4,7 @@ ca: Model
 en: Model
 es: Modelo
 fr: Modèle
+mi: 
 pt: Modelo
 ru: Модель
 sk: Model
@@ -15,6 +16,7 @@ ca: Mapa
 en: Map
 es: Mapa
 fr: Carte
+mi: 
 pt: Mapa
 ru: Карта
 sk: Mapa
@@ -26,6 +28,7 @@ ca: Visual de superficie
 en: Surface legs
 es: Visual de superficie
 fr: Visée de surface
+mi: 
 pt: Visadas na superfície
 ru: Поверхностная съёмка
 sk: povrchové zámery
@@ -190,6 +193,7 @@ cz: závrt
 en: doline
 es: dolina
 fr: doline
+mi: 
 pt: dolina
 ru: воронка
 sk: závrt
@@ -258,6 +262,7 @@ cz: skalní oblouk
 en: arch
 es: arco
 fr: arche
+mi: 
 pt: arco
 ru: арка
 sk: skalný oblúk
@@ -1465,70 +1470,87 @@ zh_CN: 粘土
 
 therion: point altar
 en: altar
+mi: 
 pt: altar
 
 therion: point archeo-excavation
 en: archeo-excavation
+mi: 
 pt: escavação arqueológica
 
 therion: point audio
 en: audio
+mi: 
 pt: áudio
 
 therion: point bat
 en: bat
+mi: 
 pt: morcego
 
 therion: point bones
 en: bones
+mi: 
 pt: ossos
 
 therion: point curtains
 en: curtains
+mi: 
 pt: cortinas
 
 therion: point danger
 en: danger
+mi: 
 pt: perigo
 
 therion: point disc-pillar
 en: disc on pillar
+mi: 
 pt: disco em coluna
 
 therion: point disc-pillars
 en: discs on pillars
+mi: 
 pt: discos em colunas
 
 therion: point disc-stalactite
 en: disc on stalactite
+mi: 
 pt: disco em estalactite
 
 therion: point disc-stalactites
 en: discs on stalactites
+mi: 
 pt: discos em estalactites
 
 therion: point disc-stalagmite
 en: disc on stalagmite
+mi: 
 pt: disco em estalagmite
 
 therion: point disc-stalagmites
 en: discs on stalagmites
+mi: 
 pt: discos em estalagmites
 
 therion: point electric-light
 en: electric light
+mi: 
 pt: luz elétrica
 
 therion: point ex-voto
 en: ex-voto
+mi: 
 pt: ex-voto
 
 therion: point gate
 en: gate
+mi: 
 pt: portão
 
 therion: point helictites
 en: helictites
+mi: 
 pt: helictites
 
 therion: point human-bones
@@ -2334,6 +2356,7 @@ cz: stalaktity
 en: stalactites
 es: estalactitas
 fr: stalactites
+mi:
 pt: estalactites
 ru: сталактиты
 sk: stalaktity
@@ -2365,6 +2388,7 @@ cz: stalagmity
 en: stalagmites
 es: estalagmitas
 fr: stalagmites
+mi:
 pt: estalagmites
 ru: сталагмиты
 sk: stalagmity
@@ -2397,6 +2421,7 @@ de: Säulen
 en: pillars
 es: columnas
 fr: pilliers
+mi:
 pt: colunas
 ru: колонны
 sk: stalagnáty
@@ -3138,6 +3163,7 @@ de: Geländer
 en: handrail
 es: barandilla
 fr: rampe
+mi: 
 pt: corrimão
 ru: перила
 sk: zábradlie
@@ -3151,6 +3177,7 @@ de: Geländer
 en: handrail
 es: barrandilla
 fr: rampe
+mi: 
 pt: corrimão
 ru: перила
 sk: zábradlie
@@ -3275,6 +3302,7 @@ ca: Desnivell
 en: Depth
 es: Desnivel
 fr: Profondeur
+mi: 
 pt: Profundidade
 sl: Globina
 
@@ -3302,6 +3330,7 @@ ca: Trossos
 en: Scraps
 es: Trozos/cachos
 fr: Scraps
+mi:
 pt: Croquis
 sl: Izrez
 
@@ -3310,6 +3339,7 @@ ca: Topos
 en: Surveys
 es: Topos
 fr: Topos
+mi:
 pt: Topos
 sl: Meritve
 
@@ -3318,6 +3348,7 @@ ca: Data d'exploració
 en: Exploration date
 es: Fecha de exploración
 fr: Date d'exploration
+mi: 
 pt: Data da exploração
 sl: Datum raziskovanja
 
@@ -3326,6 +3357,7 @@ ca: Data de topografia
 en: Surveying date
 es: Fecha de topografia
 fr: Date de topographie
+mi:
 pt: Data da topo
 sl: Datum merjenja
 
@@ -3334,6 +3366,7 @@ ca: Llegenda de colors
 en: Color legend
 es: Leyenda de colores
 fr: Légende colorée
+mi:
 pt: Cores
 sl: Legenda barv
 
