@@ -480,6 +480,7 @@ cz: vstupní propast
 de: Eingangsschacht
 en: entrance pit
 en_GB: entrance pitch
+en_US: entrance pit
 es: pozo de entrada
 fr: mur-puits
 it: parete:pozzo
@@ -1080,6 +1081,7 @@ ca: pou
 cz: propast
 de: Schacht
 el: πηγάδι
+en: pit
 en_GB: pitch
 en_US: pit
 es: pozo
