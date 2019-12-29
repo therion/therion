@@ -3333,7 +3333,9 @@ sl: Datum merjenja
 
 therion: title color-legend-default
 ca: Llegenda de colors
-en: Color legend
+en: Colour legend
+en_GB: Colour legend
+en_US: Color legend
 es: Leyenda de colores
 fr: Légende colorée
 pt: Cores
