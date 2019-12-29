@@ -7,18 +7,16 @@
 picture EGB_altar_raw;
 EGB_altar_raw := image(
 	begingroup;
-		fill (401,501)..controls (368,508) and (349,549)..(365,579)
-			..controls (379,610) and (424,620)..(450,597)
-			..controls (478,575) and (475,527)..(444,508)
-			..controls (432,500) and (416,498)..(401,501)
+		fill (406,482)..controls (364,491) and (340,542)..(360,581)
+			..controls (378,621) and (436,633)..(469,603)
+			..controls (504,575) and (500,514)..(461,491)
+			..controls (445,480) and (425,478)..(406,482)
 			--cycle;
+		pickup pencircle scaled 99bp;
+		draw (225,307)--(319,460);
 		pickup pencircle scaled 70bp;
-		interim linecap := rounded;
-		interim linejoin := rounded;
 		draw (329,472)--(391,364)--(466,419);
 		draw (154,188)--(326,188)--(224,290);
-		pickup pencircle scaled 99bp;
-		draw (227,306)--(317,462);
 	endgroup;
 );
 
