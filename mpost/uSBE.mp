@@ -566,13 +566,11 @@ SBE_mud_crack_raw := image(
 			--(324,501)--cycle;
 	endgroup;
 );
-picture SBE_mud_crack;
-SBE_mud_crack := SBE_mud_crack_raw shifted (-(llcorner SBE_mud_crack_raw)-(urcorner SBE_mud_crack_raw - llcorner SBE_mud_crack_raw)/2) scaled (u / max((xpart urcorner SBE_mud_crack_raw) - (xpart llcorner SBE_mud_crack_raw), (ypart urcorner SBE_mud_crack_raw) - (ypart llcorner SBE_mud_crack_raw)));
 
 def p_mudcrack_SBE(expr pos, theta, sc, al) =
     U:=(.5u,.5u);
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_mud_crack;
+	thdraw SBE_mud_crack_raw shifted (-(llcorner SBE_mud_crack_raw)-(urcorner SBE_mud_crack_raw - llcorner SBE_mud_crack_raw)/2) scaled (u / max((xpart urcorner SBE_mud_crack_raw) - (xpart llcorner SBE_mud_crack_raw), (ypart urcorner SBE_mud_crack_raw) - (ypart llcorner SBE_mud_crack_raw)));
 enddef;
 
 
