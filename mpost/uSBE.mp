@@ -686,38 +686,23 @@ enddef;
 picture SBE_photo_raw;
 SBE_photo_raw := image(
 	begingroup;
-	interim linecap := butt;
-	interim linejoin := mitered;
-	fill (196.261993,477.843994)..controls (190.938004,477.574005) and (190.414001,477.390991)..(188.386993,475.125000)
-	    --(186.214996,472.695007)--(186.214996,445.718994)--(111.441002,445.718994)
-	    --(108.515999,443.550995)..controls (103.637001,439.941010) and (75.367203,410.992004)..(74.511703,408.730011)
-	    ..controls (73.980499,407.316010) and (73.714798,390.519989)..(73.714798,357.843994)
-	    ..controls (73.714798,314.980011) and (73.859398,308.765991)..(74.898399,306.578003)
-	    ..controls (75.546898,305.207001) and (76.644501,303.804993)..(77.335899,303.464996)
-	    ..controls (78.023399,303.121002) and (102.719002,302.671997)..(132.214996,302.468994)
-	    --(185.839996,302.093994)--(186.214996,296.355011)..controls (186.604996,290.378998) and (187.781006,288.039001)..(191.089996,286.671997)
-	    --(191.089996,286.667999)..controls (191.914001,286.328003) and (222.401993,286.117004)..(258.835999,286.195007)
-	    --(325.089996,286.343994)--(327.273010,288.792999)..controls (329.281006,291.035004) and (329.464996,291.710999)..(329.464996,296.855011)
-	    --(329.464996,302.468994)--(436.828003,302.468994)--(439.023010,304.660004)
-	    --(441.214996,306.851990)--(441.214996,409.234009)--(424.527008,426.148010)
-	    ..controls (415.347992,435.453003) and (406.996002,443.660004)..(405.964996,444.386993)
-	    ..controls (404.234009,445.605011) and (401.195007,445.707001)..(366.777008,445.710999)
-	    --(329.464996,445.718994)--(329.464996,472.695007)--(327.292999,475.125000)
-	    ..controls (325.265991,477.390991) and (324.738007,477.574005)..(319.417999,477.843994)
-	    --cycle withcolor black;
-	pickup pencircle scaled 14.173200bp;
-	interim linecap := rounded;
-	interim linejoin := beveled;
-	draw (193.949005,500.894989)--(108.339996,620.598022) withcolor black;
-	draw (320.472992,500.894989)--(406.082001,620.598022) withcolor black;
+		interim linecap := butt;
+		interim linejoin := mitered;
+		fill (186,476)--(186,445)--(111,445)
+			--(75,408)--(75,302)--(188,302)
+			--(188,286)--(329,286)--(329,302)
+			--(440,302)--(440,408)--(405,445)
+			--(328,445)--(328,476)--cycle;
+		pickup pencircle scaled 14bp;
+		interim linecap := rounded;
+		draw (194,499)--(107,621);
+		draw (320,499)--(407,621);
 	endgroup;
 );
-picture SBE_photo;
-SBE_photo := SBE_photo_raw shifted (-(llcorner SBE_photo_raw)-(urcorner SBE_photo_raw - llcorner SBE_photo_raw)/2) scaled (u / max((xpart urcorner SBE_photo_raw) - (xpart llcorner SBE_photo_raw), (ypart urcorner SBE_photo_raw) - (ypart llcorner SBE_photo_raw)));
 
 def p_photo_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_photo;
+	thdraw SBE_photo_raw shifted (-(llcorner SBE_photo_raw)-(urcorner SBE_photo_raw - llcorner SBE_photo_raw)/2) scaled (u / max((xpart urcorner SBE_photo_raw) - (xpart llcorner SBE_photo_raw), (ypart urcorner SBE_photo_raw) - (ypart llcorner SBE_photo_raw)));
 enddef;
 
 
