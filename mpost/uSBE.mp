@@ -1,11 +1,12 @@
-% Symbol set of Espeleo Grupo de Brasília, author Rodrigo Severo
+% Symbol set of Brazilian Speleological Society (SBE - Sociedade Brasileira de 
+% Espeleologia), author Rodrigo Severo.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%% Points %%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-picture EGB_altar_raw;
-EGB_altar_raw := image(
+picture SBE_altar_raw;
+SBE_altar_raw := image(
 	begingroup;
 		fill (406,482)..controls (364,491) and (340,542)..(360,581)
 			..controls (378,621) and (436,633)..(469,603)
@@ -20,14 +21,14 @@ EGB_altar_raw := image(
 	endgroup;
 );
 
-def p_altar_EGB(expr pos, theta, sc, al) = 
+def p_altar_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_altar_raw shifted (-(llcorner EGB_altar_raw)-(urcorner EGB_altar_raw - llcorner EGB_altar_raw)/2) scaled (u / max((xpart urcorner EGB_altar_raw) - (xpart llcorner EGB_altar_raw), (ypart urcorner EGB_altar_raw) - (ypart llcorner EGB_altar_raw)));
+	thdraw SBE_altar_raw shifted (-(llcorner SBE_altar_raw)-(urcorner SBE_altar_raw - llcorner SBE_altar_raw)/2) scaled (u / max((xpart urcorner SBE_altar_raw) - (xpart llcorner SBE_altar_raw), (ypart urcorner SBE_altar_raw) - (ypart llcorner SBE_altar_raw)));
 enddef;
 
 
-picture EGB_archeo_excavation_raw;
-EGB_archeo_excavation_raw := image(
+picture SBE_archeo_excavation_raw;
+SBE_archeo_excavation_raw := image(
 	begingroup;
 		interim linecap := butt;
 		interim linejoin := mitered;
@@ -48,14 +49,14 @@ EGB_archeo_excavation_raw := image(
 	endgroup;
 );
 
-def p_archeoexcavation_EGB(expr pos, theta, sc, al) =
+def p_archeoexcavation_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_archeo_excavation_raw shifted (-(llcorner EGB_archeo_excavation_raw)-(urcorner EGB_archeo_excavation_raw - llcorner EGB_archeo_excavation_raw)/2) scaled (u / max((xpart urcorner EGB_archeo_excavation_raw) - (xpart llcorner EGB_archeo_excavation_raw), (ypart urcorner EGB_archeo_excavation_raw) - (ypart llcorner EGB_archeo_excavation_raw)));
+	thdraw SBE_archeo_excavation_raw shifted (-(llcorner SBE_archeo_excavation_raw)-(urcorner SBE_archeo_excavation_raw - llcorner SBE_archeo_excavation_raw)/2) scaled (u / max((xpart urcorner SBE_archeo_excavation_raw) - (xpart llcorner SBE_archeo_excavation_raw), (ypart urcorner SBE_archeo_excavation_raw) - (ypart llcorner SBE_archeo_excavation_raw)));
 enddef;
 
 
-picture EGB_audio_raw;
-EGB_audio_raw := image(
+picture SBE_audio_raw;
+SBE_audio_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -92,17 +93,17 @@ EGB_audio_raw := image(
 		--cycle withcolor black;
 	endgroup;
 );
-picture EGB_audio;
-EGB_audio := EGB_audio_raw shifted (-(llcorner EGB_audio_raw)-(urcorner EGB_audio_raw - llcorner EGB_audio_raw)/2) scaled (u / max((xpart urcorner EGB_audio_raw) - (xpart llcorner EGB_audio_raw), (ypart urcorner EGB_audio_raw) - (ypart llcorner EGB_audio_raw)));
+picture SBE_audio;
+SBE_audio := SBE_audio_raw shifted (-(llcorner SBE_audio_raw)-(urcorner SBE_audio_raw - llcorner SBE_audio_raw)/2) scaled (u / max((xpart urcorner SBE_audio_raw) - (xpart llcorner SBE_audio_raw), (ypart urcorner SBE_audio_raw) - (ypart llcorner SBE_audio_raw)));
 
-def p_audio_EGB(expr pos, theta, sc, al) =
+def p_audio_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_audio;
+	thdraw SBE_audio;
 enddef;
 
 
-picture EGB_bat_raw;
-EGB_bat_raw := image(
+picture SBE_bat_raw;
+SBE_bat_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -130,17 +131,17 @@ EGB_bat_raw := image(
 		--cycle withcolor black;
 	endgroup;
 );
-picture EGB_bat;
-EGB_bat := EGB_bat_raw shifted (-(llcorner EGB_bat_raw)-(urcorner EGB_bat_raw - llcorner EGB_bat_raw)/2) scaled (u / max((xpart urcorner EGB_bat_raw) - (xpart llcorner EGB_bat_raw), (ypart urcorner EGB_bat_raw) - (ypart llcorner EGB_bat_raw)));
+picture SBE_bat;
+SBE_bat := SBE_bat_raw shifted (-(llcorner SBE_bat_raw)-(urcorner SBE_bat_raw - llcorner SBE_bat_raw)/2) scaled (u / max((xpart urcorner SBE_bat_raw) - (xpart llcorner SBE_bat_raw), (ypart urcorner SBE_bat_raw) - (ypart llcorner SBE_bat_raw)));
 
-def p_bat_EGB(expr pos, theta, sc, al) =
+def p_bat_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_bat;
+	thdraw SBE_bat;
 enddef;
 
 
-picture EGB_bone_raw;
-EGB_bone_raw := image(
+picture SBE_bone_raw;
+SBE_bone_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -184,16 +185,16 @@ EGB_bone_raw := image(
 		--cycle withcolor black;
 	endgroup;
 );
-picture EGB_bone;
-EGB_bone := EGB_bone_raw shifted (-(llcorner EGB_bone_raw)-(urcorner EGB_bone_raw - llcorner EGB_bone_raw)/2) scaled (u / max((xpart urcorner EGB_bone_raw) - (xpart llcorner EGB_bone_raw), (ypart urcorner EGB_bone_raw) - (ypart llcorner EGB_bone_raw)));
+picture SBE_bone;
+SBE_bone := SBE_bone_raw shifted (-(llcorner SBE_bone_raw)-(urcorner SBE_bone_raw - llcorner SBE_bone_raw)/2) scaled (u / max((xpart urcorner SBE_bone_raw) - (xpart llcorner SBE_bone_raw), (ypart urcorner SBE_bone_raw) - (ypart llcorner SBE_bone_raw)));
 
-def p_bones_EGB(expr pos, theta, sc, al) =
+def p_bones_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_bone;
+	thdraw SBE_bone;
 enddef;
 
 
-def p_curtains_EGB(expr pos, theta, sc, al) =
+def p_curtains_SBE(expr pos, theta, sc, al) =
 	U:=(.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
@@ -204,8 +205,8 @@ def p_curtains_EGB(expr pos, theta, sc, al) =
 enddef;
 
 
-picture EGB_danger_raw;
-EGB_danger_raw := image(
+picture SBE_danger_raw;
+SBE_danger_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -233,12 +234,12 @@ EGB_danger_raw := image(
 		--cycle withcolor white;
 	endgroup;
 );
-picture EGB_danger;
-EGB_danger := EGB_danger_raw shifted (-(llcorner EGB_danger_raw)-(urcorner EGB_danger_raw - llcorner EGB_danger_raw)/2) scaled (u / max((xpart urcorner EGB_danger_raw) - (xpart llcorner EGB_danger_raw), (ypart urcorner EGB_danger_raw) - (ypart llcorner EGB_danger_raw)));
+picture SBE_danger;
+SBE_danger := SBE_danger_raw shifted (-(llcorner SBE_danger_raw)-(urcorner SBE_danger_raw - llcorner SBE_danger_raw)/2) scaled (u / max((xpart urcorner SBE_danger_raw) - (xpart llcorner SBE_danger_raw), (ypart urcorner SBE_danger_raw) - (ypart llcorner SBE_danger_raw)));
 
-def p_danger_EGB(expr pos, theta, sc, al) =
+def p_danger_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_danger;
+	thdraw SBE_danger;
 enddef;
 
 
@@ -310,8 +311,8 @@ def p_discstalagmite_UIS(expr pos,theta,sc,al) =
 enddef;
 
 
-picture EGB_electric_light_raw;
-EGB_electric_light_raw := image(
+picture SBE_electric_light_raw;
+SBE_electric_light_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -366,17 +367,17 @@ EGB_electric_light_raw := image(
 		--cycle;
 	endgroup;
 );
-picture EGB_electric_light;
-EGB_electric_light := EGB_electric_light_raw shifted (-(llcorner EGB_electric_light_raw)-(urcorner EGB_electric_light_raw - llcorner EGB_electric_light_raw)/2) scaled (u / max((xpart urcorner EGB_electric_light_raw) - (xpart llcorner EGB_electric_light_raw), (ypart urcorner EGB_electric_light_raw) - (ypart llcorner EGB_electric_light_raw)));
+picture SBE_electric_light;
+SBE_electric_light := SBE_electric_light_raw shifted (-(llcorner SBE_electric_light_raw)-(urcorner SBE_electric_light_raw - llcorner SBE_electric_light_raw)/2) scaled (u / max((xpart urcorner SBE_electric_light_raw) - (xpart llcorner SBE_electric_light_raw), (ypart urcorner SBE_electric_light_raw) - (ypart llcorner SBE_electric_light_raw)));
 
-def p_electriclight_EGB(expr pos, theta, sc, al) = 
+def p_electriclight_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_electric_light;
+	thdraw SBE_electric_light;
 enddef;
 
 
-picture EGB_exvoto_raw;
-EGB_exvoto_raw := image(
+picture SBE_exvoto_raw;
+SBE_exvoto_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -449,17 +450,17 @@ EGB_exvoto_raw := image(
 	    --cycle;
 	endgroup;
 );
-picture EGB_exvoto;
-EGB_exvoto := EGB_exvoto_raw shifted (-(llcorner EGB_exvoto_raw)-(urcorner EGB_exvoto_raw - llcorner EGB_exvoto_raw)/2) scaled (u / max((xpart urcorner EGB_exvoto_raw) - (xpart llcorner EGB_exvoto_raw), (ypart urcorner EGB_exvoto_raw) - (ypart llcorner EGB_exvoto_raw)));
+picture SBE_exvoto;
+SBE_exvoto := SBE_exvoto_raw shifted (-(llcorner SBE_exvoto_raw)-(urcorner SBE_exvoto_raw - llcorner SBE_exvoto_raw)/2) scaled (u / max((xpart urcorner SBE_exvoto_raw) - (xpart llcorner SBE_exvoto_raw), (ypart urcorner SBE_exvoto_raw) - (ypart llcorner SBE_exvoto_raw)));
 
-def p_exvoto_EGB(expr pos, theta, sc, al) = 
+def p_exvoto_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_exvoto;
+	thdraw SBE_exvoto;
 enddef;
 
 
-picture EGB_gate_raw;
-EGB_gate_raw := image(
+picture SBE_gate_raw;
+SBE_gate_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -491,12 +492,12 @@ EGB_gate_raw := image(
 		--(367.359009,342.710999)--(399.902008,337.304993)--cycle withcolor white;
 	endgroup;
 );
-picture EGB_gate;
-EGB_gate := EGB_gate_raw shifted (-(llcorner EGB_gate_raw)-(urcorner EGB_gate_raw - llcorner EGB_gate_raw)/2) scaled (u / max((xpart urcorner EGB_gate_raw) - (xpart llcorner EGB_gate_raw), (ypart urcorner EGB_gate_raw) - (ypart llcorner EGB_gate_raw)));
+picture SBE_gate;
+SBE_gate := SBE_gate_raw shifted (-(llcorner SBE_gate_raw)-(urcorner SBE_gate_raw - llcorner SBE_gate_raw)/2) scaled (u / max((xpart urcorner SBE_gate_raw) - (xpart llcorner SBE_gate_raw), (ypart urcorner SBE_gate_raw) - (ypart llcorner SBE_gate_raw)));
 
-def p_gate_EGB(expr pos, theta, sc, al) = 
+def p_gate_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_gate;
+	thdraw SBE_gate;
 enddef;
 
 
@@ -517,8 +518,8 @@ def p_helictites_UIS(expr pos,theta,sc,al) =
 enddef;
 
 
-picture EGB_human_bone_raw;
-EGB_human_bone_raw := image(
+picture SBE_human_bone_raw;
+SBE_human_bone_raw := image(
 	% Bottom left bone
 	fill (185.089996,328.191010)..controls (169.820007,332.183990) and (162.934006,349.234009)..(171.276993,362.394989)
 		..controls (174.022995,366.722992) and (174.065994,366.539001)..(170.276993,366.539001)
@@ -615,17 +616,17 @@ EGB_human_bone_raw := image(
 		..controls (451.121002,445.636993) and (443.523010,443.652008)..(436.023010,445.707001)
 		--cycle withcolor black;
 );
-picture EGB_human_bone;
-EGB_human_bone := EGB_human_bone_raw shifted (-(llcorner EGB_human_bone_raw)-(urcorner EGB_human_bone_raw - llcorner EGB_human_bone_raw)/2) scaled (u / max((xpart urcorner EGB_human_bone_raw) - (xpart llcorner EGB_human_bone_raw), (ypart urcorner EGB_human_bone_raw) - (ypart llcorner EGB_human_bone_raw)));
+picture SBE_human_bone;
+SBE_human_bone := SBE_human_bone_raw shifted (-(llcorner SBE_human_bone_raw)-(urcorner SBE_human_bone_raw - llcorner SBE_human_bone_raw)/2) scaled (u / max((xpart urcorner SBE_human_bone_raw) - (xpart llcorner SBE_human_bone_raw), (ypart urcorner SBE_human_bone_raw) - (ypart llcorner SBE_human_bone_raw)));
 
-def p_humanbones_EGB(expr pos, theta, sc, al) =
+def p_humanbones_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_human_bone;
+	thdraw SBE_human_bone;
 enddef;
 
 
-picture EGB_masonry_raw;
-EGB_masonry_raw := image(
+picture SBE_masonry_raw;
+SBE_masonry_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -645,12 +646,12 @@ EGB_masonry_raw := image(
 		--(286.914001,467.734009)--cycle;
 	endgroup;
 );
-picture EGB_masonry;
-EGB_masonry := EGB_masonry_raw shifted (-(llcorner EGB_masonry_raw)-(urcorner EGB_masonry_raw - llcorner EGB_masonry_raw)/2) scaled (u / max((xpart urcorner EGB_masonry_raw) - (xpart llcorner EGB_masonry_raw), (ypart urcorner EGB_masonry_raw) - (ypart llcorner EGB_masonry_raw)));
+picture SBE_masonry;
+SBE_masonry := SBE_masonry_raw shifted (-(llcorner SBE_masonry_raw)-(urcorner SBE_masonry_raw - llcorner SBE_masonry_raw)/2) scaled (u / max((xpart urcorner SBE_masonry_raw) - (xpart llcorner SBE_masonry_raw), (ypart urcorner SBE_masonry_raw) - (ypart llcorner SBE_masonry_raw)));
 
-def p_masonry_EGB(expr pos, theta, sc, al) = 
+def p_masonry_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_masonry;
+	thdraw SBE_masonry;
 enddef;
 
 
@@ -674,8 +675,8 @@ def p_minus_UIS(expr pos, theta, sc, al) =
 enddef;
 
 
-picture EGB_mud_raw;
-EGB_mud_raw := image(
+picture SBE_mud_raw;
+SBE_mud_raw := image(
 	fill (240.020004,321.050995)..controls (212.699005,328.613007) and (226.684006,361.878998)..(222.171997,381.847992)
 	    ..controls (214.440994,404.570007) and (184.723007,402.421997)..(166.770004,394.550995)
 	    ..controls (151.820007,385.625000) and (135.848007,374.914001)..(117.355003,378.273010)
@@ -706,17 +707,17 @@ EGB_mud_raw := image(
 	    ..controls (266.410004,317.527008) and (252.507996,318.488007)..(240.020004,321.050995)
 	    --cycle withcolor (0.53, 0.24, 0.02);
 );
-picture EGB_mud;
-EGB_mud := EGB_mud_raw shifted (-(llcorner EGB_mud_raw)-(urcorner EGB_mud_raw - llcorner EGB_mud_raw)/2) scaled (u / max((xpart urcorner EGB_mud_raw) - (xpart llcorner EGB_mud_raw), (ypart urcorner EGB_mud_raw) - (ypart llcorner EGB_mud_raw)));
+picture SBE_mud;
+SBE_mud := SBE_mud_raw shifted (-(llcorner SBE_mud_raw)-(urcorner SBE_mud_raw - llcorner SBE_mud_raw)/2) scaled (u / max((xpart urcorner SBE_mud_raw) - (xpart llcorner SBE_mud_raw), (ypart urcorner SBE_mud_raw) - (ypart llcorner SBE_mud_raw)));
 
-def p_mud_EGB(expr pos, theta, sc, al) = 
+def p_mud_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_mud;
+	thdraw SBE_mud;
 enddef;
 
 
-picture EGB_mud_crack_raw;
-EGB_mud_crack_raw := image(
+picture SBE_mud_crack_raw;
+SBE_mud_crack_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -814,18 +815,18 @@ EGB_mud_crack_raw := image(
 		--cycle withcolor black;
 	endgroup;
 );
-picture EGB_mud_crack;
-EGB_mud_crack := EGB_mud_crack_raw shifted (-(llcorner EGB_mud_crack_raw)-(urcorner EGB_mud_crack_raw - llcorner EGB_mud_crack_raw)/2) scaled (u / max((xpart urcorner EGB_mud_crack_raw) - (xpart llcorner EGB_mud_crack_raw), (ypart urcorner EGB_mud_crack_raw) - (ypart llcorner EGB_mud_crack_raw)));
+picture SBE_mud_crack;
+SBE_mud_crack := SBE_mud_crack_raw shifted (-(llcorner SBE_mud_crack_raw)-(urcorner SBE_mud_crack_raw - llcorner SBE_mud_crack_raw)/2) scaled (u / max((xpart urcorner SBE_mud_crack_raw) - (xpart llcorner SBE_mud_crack_raw), (ypart urcorner SBE_mud_crack_raw) - (ypart llcorner SBE_mud_crack_raw)));
 
-def p_mudcrack_EGB(expr pos, theta, sc, al) =
+def p_mudcrack_SBE(expr pos, theta, sc, al) =
     U:=(.5u,.5u);
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_mud_crack;
+	thdraw SBE_mud_crack;
 enddef;
 
 
-picture EGB_nameplate_raw;
-EGB_nameplate_raw := image(
+picture SBE_nameplate_raw;
+SBE_nameplate_raw := image(
 	pickup pencircle scaled 24bp;
 	begingroup;
 	interim linecap := butt;
@@ -838,17 +839,17 @@ EGB_nameplate_raw := image(
 	draw (264.453003,401.781006)--(470.472992,401.781006);
 	endgroup;
 );
-picture EGB_nameplate;
-EGB_nameplate := EGB_nameplate_raw shifted (-(llcorner EGB_nameplate_raw)-(urcorner EGB_nameplate_raw - llcorner EGB_nameplate_raw)/2) scaled (u / max((xpart urcorner EGB_nameplate_raw) - (xpart llcorner EGB_nameplate_raw), (ypart urcorner EGB_nameplate_raw) - (ypart llcorner EGB_nameplate_raw)));
+picture SBE_nameplate;
+SBE_nameplate := SBE_nameplate_raw shifted (-(llcorner SBE_nameplate_raw)-(urcorner SBE_nameplate_raw - llcorner SBE_nameplate_raw)/2) scaled (u / max((xpart urcorner SBE_nameplate_raw) - (xpart llcorner SBE_nameplate_raw), (ypart urcorner SBE_nameplate_raw) - (ypart llcorner SBE_nameplate_raw)));
 
-def p_nameplate_EGB(expr pos, theta, sc, al) = 
+def p_nameplate_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_nameplate;
+	thdraw SBE_nameplate;
 enddef;
 
 
-picture EGB_notwheelchair_raw;
-EGB_notwheelchair_raw := image(
+picture SBE_notwheelchair_raw;
+SBE_notwheelchair_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -941,17 +942,17 @@ EGB_notwheelchair_raw := image(
 		--cycle withcolor red;
 	endgroup;
 );
-picture EGB_notwheelchair;
-EGB_notwheelchair := EGB_notwheelchair_raw shifted (-(llcorner EGB_notwheelchair_raw)-(urcorner EGB_notwheelchair_raw - llcorner EGB_notwheelchair_raw)/2) scaled (u / max((xpart urcorner EGB_notwheelchair_raw) - (xpart llcorner EGB_notwheelchair_raw), (ypart urcorner EGB_notwheelchair_raw) - (ypart llcorner EGB_notwheelchair_raw)));
+picture SBE_notwheelchair;
+SBE_notwheelchair := SBE_notwheelchair_raw shifted (-(llcorner SBE_notwheelchair_raw)-(urcorner SBE_notwheelchair_raw - llcorner SBE_notwheelchair_raw)/2) scaled (u / max((xpart urcorner SBE_notwheelchair_raw) - (xpart llcorner SBE_notwheelchair_raw), (ypart urcorner SBE_notwheelchair_raw) - (ypart llcorner SBE_notwheelchair_raw)));
 
-def p_nowheelchair_EGB(expr pos, theta, sc, al) =
+def p_nowheelchair_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_notwheelchair;
+	thdraw SBE_notwheelchair;
 enddef;
 
 
-picture EGB_pendant_raw;
-EGB_pendant_raw := image(
+picture SBE_pendant_raw;
+SBE_pendant_raw := image(
 	pickup pencircle scaled 22.011000bp;
 	begingroup;
 	interim linecap := butt;
@@ -964,12 +965,12 @@ EGB_pendant_raw := image(
 		..controls (156.875000,621.965027) and (107.987999,639.585999)..(102.460999,639.585999);
 	endgroup;
 );
-picture EGB_pendant;
-EGB_pendant := EGB_pendant_raw shifted (-(llcorner EGB_pendant_raw)-(urcorner EGB_pendant_raw - llcorner EGB_pendant_raw)/2) scaled (u / max((xpart urcorner EGB_pendant_raw) - (xpart llcorner EGB_pendant_raw), (ypart urcorner EGB_pendant_raw) - (ypart llcorner EGB_pendant_raw)));
+picture SBE_pendant;
+SBE_pendant := SBE_pendant_raw shifted (-(llcorner SBE_pendant_raw)-(urcorner SBE_pendant_raw - llcorner SBE_pendant_raw)/2) scaled (u / max((xpart urcorner SBE_pendant_raw) - (xpart llcorner SBE_pendant_raw), (ypart urcorner SBE_pendant_raw) - (ypart llcorner SBE_pendant_raw)));
 
-def p_pendant_EGB(expr pos, theta, sc, al) =
+def p_pendant_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_pendant;
+	thdraw SBE_pendant;
 enddef;
 
 
@@ -996,8 +997,8 @@ def p_pillarswithcurtains_UIS(expr pos, theta, sc, al) =
 enddef;
 
 
-picture EGB_photo_raw;
-EGB_photo_raw := image(
+picture SBE_photo_raw;
+SBE_photo_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -1025,12 +1026,12 @@ EGB_photo_raw := image(
 	draw (320.472992,500.894989)--(406.082001,620.598022) withcolor black;
 	endgroup;
 );
-picture EGB_photo;
-EGB_photo := EGB_photo_raw shifted (-(llcorner EGB_photo_raw)-(urcorner EGB_photo_raw - llcorner EGB_photo_raw)/2) scaled (u / max((xpart urcorner EGB_photo_raw) - (xpart llcorner EGB_photo_raw), (ypart urcorner EGB_photo_raw) - (ypart llcorner EGB_photo_raw)));
+picture SBE_photo;
+SBE_photo := SBE_photo_raw shifted (-(llcorner SBE_photo_raw)-(urcorner SBE_photo_raw - llcorner SBE_photo_raw)/2) scaled (u / max((xpart urcorner SBE_photo_raw) - (xpart llcorner SBE_photo_raw), (ypart urcorner SBE_photo_raw) - (ypart llcorner SBE_photo_raw)));
 
-def p_photo_EGB(expr pos, theta, sc, al) = 
+def p_photo_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_photo;
+	thdraw SBE_photo;
 enddef;
 
 
@@ -1095,8 +1096,8 @@ def p_plusminus_UIS(expr pos, theta, sc, al) =
 enddef;
 
 
-picture EGB_seed_germination_raw;
-EGB_seed_germination_raw := image(
+picture SBE_seed_germination_raw;
+SBE_seed_germination_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -1123,12 +1124,12 @@ EGB_seed_germination_raw := image(
 	draw (101.250000,276.343994)..controls (177.468994,243.992004) and (396.476990,296.585999)..(502.667999,269.492004);
 	endgroup;
 );
-picture EGB_seed_germination;
-EGB_seed_germination := EGB_seed_germination_raw shifted (-(llcorner EGB_seed_germination_raw)-(urcorner EGB_seed_germination_raw - llcorner EGB_seed_germination_raw)/2) scaled (u / max((xpart urcorner EGB_seed_germination_raw) - (xpart llcorner EGB_seed_germination_raw), (ypart urcorner EGB_seed_germination_raw) - (ypart llcorner EGB_seed_germination_raw)));
+picture SBE_seed_germination;
+SBE_seed_germination := SBE_seed_germination_raw shifted (-(llcorner SBE_seed_germination_raw)-(urcorner SBE_seed_germination_raw - llcorner SBE_seed_germination_raw)/2) scaled (u / max((xpart urcorner SBE_seed_germination_raw) - (xpart llcorner SBE_seed_germination_raw), (ypart urcorner SBE_seed_germination_raw) - (ypart llcorner SBE_seed_germination_raw)));
 
-def p_seedgermination_EGB(expr pos, theta, sc, al) =
+def p_seedgermination_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_seed_germination;
+	thdraw SBE_seed_germination;
 enddef;
 
 
@@ -1156,8 +1157,8 @@ def p_stalactitesstalagmites_UIS(expr pos,theta,sc,al) =
 enddef;
 
 
-picture EGB_tree_trunk_raw;
-EGB_tree_trunk_raw := image(
+picture SBE_tree_trunk_raw;
+SBE_tree_trunk_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -1197,17 +1198,17 @@ EGB_tree_trunk_raw := image(
 		--cycle;
 	endgroup;
 );
-picture EGB_tree_trunk;
-EGB_tree_trunk := EGB_tree_trunk_raw shifted (-(llcorner EGB_tree_trunk_raw)-(urcorner EGB_tree_trunk_raw - llcorner EGB_tree_trunk_raw)/2) scaled (u / max((xpart urcorner EGB_tree_trunk_raw) - (xpart llcorner EGB_tree_trunk_raw), (ypart urcorner EGB_tree_trunk_raw) - (ypart llcorner EGB_tree_trunk_raw)));
+picture SBE_tree_trunk;
+SBE_tree_trunk := SBE_tree_trunk_raw shifted (-(llcorner SBE_tree_trunk_raw)-(urcorner SBE_tree_trunk_raw - llcorner SBE_tree_trunk_raw)/2) scaled (u / max((xpart urcorner SBE_tree_trunk_raw) - (xpart llcorner SBE_tree_trunk_raw), (ypart urcorner SBE_tree_trunk_raw) - (ypart llcorner SBE_tree_trunk_raw)));
 
-def p_treetrunk_EGB(expr pos, theta, sc, al) =
+def p_treetrunk_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_tree_trunk;
+	thdraw SBE_tree_trunk;
 enddef;
 
 
-picture EGB_volcano_raw;
-EGB_volcano_raw := image(
+picture SBE_volcano_raw;
+SBE_volcano_raw := image(
 	pickup pencircle scaled 21.160601bp;
 	begingroup;
 	interim linecap := butt;
@@ -1217,17 +1218,17 @@ EGB_volcano_raw := image(
 		--(494.753998,222.897995);
 	endgroup;
 );
-picture EGB_volcano;
-EGB_volcano := EGB_volcano_raw shifted (-(llcorner EGB_volcano_raw)-(urcorner EGB_volcano_raw - llcorner EGB_volcano_raw)/2) scaled (u / max((xpart urcorner EGB_volcano_raw) - (xpart llcorner EGB_volcano_raw), (ypart urcorner EGB_volcano_raw) - (ypart llcorner EGB_volcano_raw)));
+picture SBE_volcano;
+SBE_volcano := SBE_volcano_raw shifted (-(llcorner SBE_volcano_raw)-(urcorner SBE_volcano_raw - llcorner SBE_volcano_raw)/2) scaled (u / max((xpart urcorner SBE_volcano_raw) - (xpart llcorner SBE_volcano_raw), (ypart urcorner SBE_volcano_raw) - (ypart llcorner SBE_volcano_raw)));
 
-def p_volcano_EGB(expr pos, theta, sc, al) =
+def p_volcano_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_volcano;
+	thdraw SBE_volcano;
 enddef;
 
 
-picture EGB_walkway_raw;
-EGB_walkway_raw := image(
+picture SBE_walkway_raw;
+SBE_walkway_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -1283,17 +1284,17 @@ EGB_walkway_raw := image(
 		--(159.979996,21.937500)--cycle;
 	endgroup;
 );
-picture EGB_walkway;
-EGB_walkway := EGB_walkway_raw shifted (-(llcorner EGB_walkway_raw)-(urcorner EGB_walkway_raw - llcorner EGB_walkway_raw)/2) scaled (u / max((xpart urcorner EGB_walkway_raw) - (xpart llcorner EGB_walkway_raw), (ypart urcorner EGB_walkway_raw) - (ypart llcorner EGB_walkway_raw)));
+picture SBE_walkway;
+SBE_walkway := SBE_walkway_raw shifted (-(llcorner SBE_walkway_raw)-(urcorner SBE_walkway_raw - llcorner SBE_walkway_raw)/2) scaled (u / max((xpart urcorner SBE_walkway_raw) - (xpart llcorner SBE_walkway_raw), (ypart urcorner SBE_walkway_raw) - (ypart llcorner SBE_walkway_raw)));
 
-def p_walkway_EGB(expr pos, theta, sc, al) = 
+def p_walkway_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_walkway;
+	thdraw SBE_walkway;
 enddef;
 
 
-picture EGB_water_drip_raw;
-EGB_water_drip_raw := image(
+picture SBE_water_drip_raw;
+SBE_water_drip_raw := image(
 	% Central
 	fill (255.750000,242.003998)..controls (228.809006,245.266006) and (206.550995,257.015991)..(187.141006,278.226990)
 		..controls (173.824005,292.773010) and (168.175995,305.441010)..(166.531006,324.441010)
@@ -1366,17 +1367,17 @@ EGB_water_drip_raw := image(
 		..controls (383.257996,297.859009) and (382.500000,297.484009)..(382.500000,297.710999)
 		--cycle withcolor black;
 );
-picture EGB_water_drip;
-EGB_water_drip := EGB_water_drip_raw shifted (-(llcorner EGB_water_drip_raw)-(urcorner EGB_water_drip_raw - llcorner EGB_water_drip_raw)/2) scaled (u / max((xpart urcorner EGB_water_drip_raw) - (xpart llcorner EGB_water_drip_raw), (ypart urcorner EGB_water_drip_raw) - (ypart llcorner EGB_water_drip_raw)));
+picture SBE_water_drip;
+SBE_water_drip := SBE_water_drip_raw shifted (-(llcorner SBE_water_drip_raw)-(urcorner SBE_water_drip_raw - llcorner SBE_water_drip_raw)/2) scaled (u / max((xpart urcorner SBE_water_drip_raw) - (xpart llcorner SBE_water_drip_raw), (ypart urcorner SBE_water_drip_raw) - (ypart llcorner SBE_water_drip_raw)));
 
-def p_waterdrip_EGB(expr pos, theta, sc, al) =
+def p_waterdrip_SBE(expr pos, theta, sc, al) =
 	T:=identity aligned al rotated theta scaled sc shifted pos;
-	thdraw EGB_water_drip;
+	thdraw SBE_water_drip;
 enddef;
 
 
-picture EGB_wheelchair_raw;
-EGB_wheelchair_raw := image(
+picture SBE_wheelchair_raw;
+SBE_wheelchair_raw := image(
 	begingroup;
 	interim linecap := butt;
 	interim linejoin := mitered;
@@ -1430,10 +1431,10 @@ EGB_wheelchair_raw := image(
 		--cycle;
 	endgroup;
 );
-picture EGB_wheelchair;
-EGB_wheelchair := EGB_wheelchair_raw shifted (-(llcorner EGB_wheelchair_raw)-(urcorner EGB_wheelchair_raw - llcorner EGB_wheelchair_raw)/2) scaled (u / max((xpart urcorner EGB_wheelchair_raw) - (xpart llcorner EGB_wheelchair_raw), (ypart urcorner EGB_wheelchair_raw) - (ypart llcorner EGB_wheelchair_raw)));
+picture SBE_wheelchair;
+SBE_wheelchair := SBE_wheelchair_raw shifted (-(llcorner SBE_wheelchair_raw)-(urcorner SBE_wheelchair_raw - llcorner SBE_wheelchair_raw)/2) scaled (u / max((xpart urcorner SBE_wheelchair_raw) - (xpart llcorner SBE_wheelchair_raw), (ypart urcorner SBE_wheelchair_raw) - (ypart llcorner SBE_wheelchair_raw)));
 
-def p_wheelchair_EGB(expr pos, theta, sc, al) =
+def p_wheelchair_SBE(expr pos, theta, sc, al) =
 	T:=identity aligned al rotated theta scaled sc shifted pos;
-	thdraw EGB_wheelchair;
+	thdraw SBE_wheelchair;
 enddef;

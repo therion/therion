@@ -1068,7 +1068,7 @@ input thArea;
 input thText;
 input thSpecial;
 input uAUT;
-input uEGB;
+input uSBE;
 
 input thTrans;
 
