@@ -1470,7 +1470,7 @@ en: altar
 pt: altar
 
 therion: point archeo-excavation
-en: archeo-excavation
+en: archaeological excavation
 pt: escavação arqueológica
 
 therion: point audio
