@@ -578,22 +578,20 @@ picture SBE_nameplate_raw;
 SBE_nameplate_raw := image(
 	pickup pencircle scaled 24bp;
 	begingroup;
-	interim linecap := butt;
-	interim linejoin := mitered;
-	draw (77.027298,563.448975)--(505.574005,563.448975)--(505.574005,340.082001)
-		--(77.027298,340.082001)--cycle;
-	pickup pencircle scaled 10bp;
-	draw (208.195007,496.167999)--(422.667999,496.167999);
-	draw (117.796997,450.808990)--(358.480011,450.808990);
-	draw (264.453003,401.781006)--(470.472992,401.781006);
+		interim linecap := butt;
+		interim linejoin := mitered;
+		draw (77,563)--(505,563)--(505,340)
+			--(77,340)--cycle;
+		pickup pencircle scaled 10bp;
+		draw (208,496)--(422,496);
+		draw (117,450)--(358,450);
+		draw (264,401)--(470,401);
 	endgroup;
 );
-picture SBE_nameplate;
-SBE_nameplate := SBE_nameplate_raw shifted (-(llcorner SBE_nameplate_raw)-(urcorner SBE_nameplate_raw - llcorner SBE_nameplate_raw)/2) scaled (u / max((xpart urcorner SBE_nameplate_raw) - (xpart llcorner SBE_nameplate_raw), (ypart urcorner SBE_nameplate_raw) - (ypart llcorner SBE_nameplate_raw)));
 
 def p_nameplate_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_nameplate;
+	thdraw SBE_nameplate_raw shifted (-(llcorner SBE_nameplate_raw)-(urcorner SBE_nameplate_raw - llcorner SBE_nameplate_raw)/2) scaled (u / max((xpart urcorner SBE_nameplate_raw) - (xpart llcorner SBE_nameplate_raw), (ypart urcorner SBE_nameplate_raw) - (ypart llcorner SBE_nameplate_raw)));
 enddef;
 
 
