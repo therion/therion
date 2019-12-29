@@ -467,30 +467,22 @@ enddef;
 picture SBE_masonry_raw;
 SBE_masonry_raw := image(
 	begingroup;
-	interim linecap := butt;
-	interim linejoin := mitered;
-	fill (247.164001,458.144989)--(317.664001,458.144989)--(317.664001,426.644989)
-		--(247.164001,426.644989)--cycle;
-	fill (286.914001,416.894989)--(358.164001,416.894989)--(358.164001,385.394989)
-		--(286.914001,385.394989)--cycle;
-	fill (206.664001,416.894989)--(277.914001,416.894989)--(277.914001,385.394989)
-		--(206.664001,385.394989)--cycle;
-	fill (327.414001,375.644989)--(397.914001,375.644989)--(397.914001,344.144989)
-		--(327.414001,344.144989)--cycle;
-	fill (247.164001,375.644989)--(317.664001,375.644989)--(317.664001,344.144989)
-		--(247.164001,344.144989)--cycle;
-	fill (327.414001,458.195007)--(397.914001,458.195007)--(397.914001,426.695007)
-		--(327.414001,426.695007)--cycle;
-	fill (286.914001,499.234009)--(358.164001,499.234009)--(358.164001,467.734009)
-		--(286.914001,467.734009)--cycle;
+		pickup pencircle scaled 28bp;
+		interim linecap := butt;
+		interim linejoin := mitered;
+		draw (287,482)--(355,482);
+		draw (247,442)--(315,442);
+		draw (327,442)--(395,442);
+		draw (206,401)--(275,401);
+		draw (287,401)--(355,401);
+		draw (247,360)--(315,360);
+		draw (327,360)--(395,360);
 	endgroup;
 );
-picture SBE_masonry;
-SBE_masonry := SBE_masonry_raw shifted (-(llcorner SBE_masonry_raw)-(urcorner SBE_masonry_raw - llcorner SBE_masonry_raw)/2) scaled (u / max((xpart urcorner SBE_masonry_raw) - (xpart llcorner SBE_masonry_raw), (ypart urcorner SBE_masonry_raw) - (ypart llcorner SBE_masonry_raw)));
 
 def p_masonry_SBE(expr pos, theta, sc, al) = 
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_masonry;
+	thdraw SBE_masonry_raw shifted (-(llcorner SBE_masonry_raw)-(urcorner SBE_masonry_raw - llcorner SBE_masonry_raw)/2) scaled (u / max((xpart urcorner SBE_masonry_raw) - (xpart llcorner SBE_masonry_raw), (ypart urcorner SBE_masonry_raw) - (ypart llcorner SBE_masonry_raw)));
 enddef;
 
 
