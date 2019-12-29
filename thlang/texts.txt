@@ -1477,7 +1477,7 @@ pt: áudio
 
 therion: point bat
 en: bat
-pt: morcego
+pt: morcegos
 
 therion: point bones
 en: bones
