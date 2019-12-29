@@ -29,54 +29,28 @@ enddef;
 picture EGB_archeo_excavation_raw;
 EGB_archeo_excavation_raw := image(
 	begingroup;
-	interim linecap := butt;
-	interim linejoin := mitered;
-	fill (287.707001,416.679993)--(292.015991,416.695007)..controls (292.015991,416.695007) and (299.628998,406.097992)..(300.054993,392.695007)
-		..controls (300.476990,379.363007) and (292.015991,368.695007)..(292.015991,368.695007)
-		..controls (292.015991,368.695007) and (281.699005,375.929993)..(263.625000,375.660004)
-		..controls (251.324005,375.476990) and (243.804993,368.695007)..(243.804993,368.695007)
-		..controls (243.270004,397.148010) and (262.109009,416.285004)..(287.707001,416.679993)
-		--cycle withcolor black;
-	fill (416.839996,408.375000)..controls (415.539001,417.968994) and (412.015991,424.195007)..(412.015991,424.195007)
-		--(425.039001,431.160004)..controls (435.449005,436.726990) and (444.488007,424.195007)..(444.488007,424.195007)
-		..controls (443.171997,398.437988) and (434.550995,393.347992)..(412.015991,392.554993)
-		..controls (412.015991,392.554993) and (418.355011,397.179993)..(416.839996,408.375000)
-		--cycle withcolor black;
-	fill (335.730011,420.445007)..controls (334.972992,431.511993) and (340.015991,440.695007)..(340.015991,440.695007)
-		..controls (369.687988,440.789001) and (379.765991,426.910004)..(379.765991,400.195007)
-		..controls (379.765991,400.195007) and (363.777008,404.859009)..(355.605011,404.480011)
-		..controls (350.222992,404.230011) and (340.015991,400.195007)..(340.015991,400.195007)
-		..controls (340.015991,400.195007) and (336.203003,413.562988)..(335.730011,420.445007)
-		--cycle withcolor black;
-	fill (199.766006,415.632996)--(242.074005,555.250000)--(312.640991,574.762024)
-		--(329.164001,558.448975)--(351.621002,580.940979)--(335.527008,597.085999)
-		--(422.898010,683.695007)--(466.386993,640.940979)--(379.031006,553.581970)
-		--(362.871002,569.690979)--(340.414001,547.195007)--(359.035004,528.531006)
-		--(339.640991,457.628998)--cycle withcolor black;
-	fill (139.770004,472.195007)..controls (139.770004,472.195007) and (162.136993,469.976990)..(171.679993,469.976990)
-		..controls (181.223007,469.976990) and (194.520004,472.195007)..(194.520004,472.195007)
-		..controls (189.628998,464.796997) and (187.457001,464.328003)..(194.520004,456.445007)
-		..controls (194.520004,456.445007) and (181.223007,454.226990)..(171.679993,454.226990)
-		..controls (162.136993,454.226990) and (139.770004,456.445007)..(139.770004,456.445007)
-		..controls (133.964996,463.789001) and (129.507996,464.847992)..(139.770004,472.195007)
-		--cycle withcolor black;
-	fill (361.765991,472.195007)..controls (361.765991,472.195007) and (380.382996,471.281006)..(392.410004,470.589996)
-		..controls (409.238007,469.617004) and (426.968994,468.011993)..(447.996002,469.859009)
-		..controls (469.019989,471.710999) and (492.265991,472.195007)..(492.265991,472.195007)
-		..controls (498.632996,465.046997) and (502.011993,464.191010)..(492.265991,456.445007)
-		..controls (492.265991,456.445007) and (469.019989,455.960999)..(447.996002,454.109009)
-		..controls (426.968994,452.261993) and (409.238007,453.867004)..(392.410004,454.839996)
-		..controls (380.382996,455.531006) and (361.765991,456.445007)..(361.765991,456.445007)
-		..controls (366.421997,465.175995) and (365.875000,463.652008)..(361.765991,472.195007)
-		--cycle withcolor black;
+		interim linecap := butt;
+		interim linejoin := mitered;
+		fill (199,415)--(242,555)--(312,574)
+			--(329,558)--(351,580)--(335,597)
+			--(422,683)--(466,640)--(379,553)
+			--(362,569)--(340,547)--(359,528)
+			--(339,457)--cycle;
+		pickup pencircle scaled 17bp;
+		interim linecap := rounded;
+		draw (138,464)..controls (152,460) and (169,461)..(187,461);
+		draw (368,463)..controls (411,458) and (449,461)..(489,464);
+		pickup pencircle scaled 11bp;
+		interim linecap := squared;
+		draw (291,403)..controls (279,402) and (262,395)..(253,372);
+		draw (371,409)..controls (370,422) and (359,429)..(346,430);
+		draw (423,399)..controls (432,402) and (437,411)..(437,418);
 	endgroup;
 );
-picture EGB_archeo_excavation;
-EGB_archeo_excavation := EGB_archeo_excavation_raw shifted (-(llcorner EGB_archeo_excavation_raw)-(urcorner EGB_archeo_excavation_raw - llcorner EGB_archeo_excavation_raw)/2) scaled (u / max((xpart urcorner EGB_archeo_excavation_raw) - (xpart llcorner EGB_archeo_excavation_raw), (ypart urcorner EGB_archeo_excavation_raw) - (ypart llcorner EGB_archeo_excavation_raw)));
 
 def p_archeoexcavation_EGB(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw EGB_archeo_excavation;
+	thdraw EGB_archeo_excavation_raw shifted (-(llcorner EGB_archeo_excavation_raw)-(urcorner EGB_archeo_excavation_raw - llcorner EGB_archeo_excavation_raw)/2) scaled (u / max((xpart urcorner EGB_archeo_excavation_raw) - (xpart llcorner EGB_archeo_excavation_raw), (ypart urcorner EGB_archeo_excavation_raw) - (ypart llcorner EGB_archeo_excavation_raw)));
 enddef;
 
 
