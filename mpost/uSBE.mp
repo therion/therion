@@ -641,24 +641,22 @@ enddef;
 
 picture SBE_pendant_raw;
 SBE_pendant_raw := image(
-	pickup pencircle scaled 22.011000bp;
+	pickup pencircle scaled 22bp;
 	begingroup;
-	interim linecap := butt;
-	interim linejoin := mitered;
-	draw (476.980011,639.585999)..controls (471.453003,639.585999) and (422.562988,621.965027)..(428.812988,575.375000)
-		..controls (434.457001,533.296997) and (506.785004,503.894989)..(505.894989,457.292999)
-		..controls (502.128998,260.425995) and (383.000000,164.895004)..(289.718994,164.895004)
-		..controls (196.440994,164.895004) and (77.312500,260.425995)..(73.546898,457.292999)
-		..controls (72.656303,503.894989) and (144.983994,533.296997)..(150.628998,575.375000)
-		..controls (156.875000,621.965027) and (107.987999,639.585999)..(102.460999,639.585999);
+		interim linecap := butt;
+		interim linejoin := mitered;
+		draw (476,639)..controls (471,639) and (422,621)..(428,575)
+			..controls (434,533) and (506,503)..(505,457)
+			..controls (502,260) and (383,164)..(289,164)
+			..controls (196,164) and (77,260)..(73,457)
+			..controls (72,503) and (144,533)..(150,575)
+			..controls (156,621) and (107,639)..(102,639);
 	endgroup;
 );
-picture SBE_pendant;
-SBE_pendant := SBE_pendant_raw shifted (-(llcorner SBE_pendant_raw)-(urcorner SBE_pendant_raw - llcorner SBE_pendant_raw)/2) scaled (u / max((xpart urcorner SBE_pendant_raw) - (xpart llcorner SBE_pendant_raw), (ypart urcorner SBE_pendant_raw) - (ypart llcorner SBE_pendant_raw)));
 
 def p_pendant_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_pendant;
+	thdraw SBE_pendant_raw shifted (-(llcorner SBE_pendant_raw)-(urcorner SBE_pendant_raw - llcorner SBE_pendant_raw)/2) scaled (u / max((xpart urcorner SBE_pendant_raw) - (xpart llcorner SBE_pendant_raw), (ypart urcorner SBE_pendant_raw) - (ypart llcorner SBE_pendant_raw)));
 enddef;
 
 
