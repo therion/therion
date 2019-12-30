@@ -7,18 +7,16 @@
 
 picture SBE_altar_raw;
 SBE_altar_raw := image(
-	begingroup;
-		fill (406,482)..controls (364,491) and (340,542)..(360,581)
-			..controls (378,621) and (436,633)..(469,603)
-			..controls (504,575) and (500,514)..(461,491)
-			..controls (445,480) and (425,478)..(406,482)
-			--cycle;
-		pickup pencircle scaled 99bp;
-		draw (225,307)--(319,460);
-		pickup pencircle scaled 70bp;
-		draw (329,472)--(391,364)--(466,419);
-		draw (154,188)--(326,188)--(224,290);
-	endgroup;
+	fill (406,482)..controls (364,491) and (340,542)..(360,581)
+		..controls (378,621) and (436,633)..(469,603)
+		..controls (504,575) and (500,514)..(461,491)
+		..controls (445,480) and (425,478)..(406,482)
+		--cycle;
+	pickup pencircle scaled 99bp;
+	draw (225,307)--(319,460);
+	pickup pencircle scaled 70bp;
+	draw (329,472)--(391,364)--(466,419);
+	draw (154,188)--(326,188)--(224,290);
 );
 
 def p_altar_SBE(expr pos, theta, sc, al) =
