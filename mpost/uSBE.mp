@@ -162,28 +162,24 @@ enddef;
 
 picture SBE_danger_raw;
 SBE_danger_raw := image(
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		fill (331,489)..controls (330,489) and (328,489)..(326,488)
-			--(291,422)..controls (291,422) and (291,421)..(291,421)
-			..controls (291,417) and (294,414)..(297,413)
-			--(365,413)..controls (369,414) and (371,417)..(371,421)
-			..controls (371,422) and (371,422)..(371,423)
-			--(336,488)..controls (335,489) and (333,489)..(331,489)
-			..controls (331,489) and (331,489)..(331,489)
-			--cycle withcolor red;
-		fill (336,427)..controls (336,430) and (334,432)..(331,432)
-			..controls (328,432) and (326,430)..(326,427)
-			..controls (326,424) and (328,422)..(331,422)
-			..controls (334,422) and (336,424)..(336,427)
-			--cycle withcolor white;
-		fill (335,464)..controls (336,466) and (332,466)..(331,466)
-			..controls (330,466) and (327,466)..(327,464)
-			--(330,436)..controls (330,435) and (330,435)..(331,435)
-			..controls (332,435) and (332,435)..(332,436)
-			--cycle withcolor white;
-	endgroup;
+	fill (331,489)..controls (330,489) and (328,489)..(326,488)
+		--(291,422)..controls (291,422) and (291,421)..(291,421)
+		..controls (291,417) and (294,414)..(297,413)
+		--(365,413)..controls (369,414) and (371,417)..(371,421)
+		..controls (371,422) and (371,422)..(371,423)
+		--(336,488)..controls (335,489) and (333,489)..(331,489)
+		..controls (331,489) and (331,489)..(331,489)
+		--cycle withcolor red;
+	fill (336,427)..controls (336,430) and (334,432)..(331,432)
+		..controls (328,432) and (326,430)..(326,427)
+		..controls (326,424) and (328,422)..(331,422)
+		..controls (334,422) and (336,424)..(336,427)
+		--cycle withcolor white;
+	fill (335,464)..controls (336,466) and (332,466)..(331,466)
+		..controls (330,466) and (327,466)..(327,464)
+		--(330,436)..controls (330,435) and (330,435)..(331,435)
+		..controls (332,435) and (332,435)..(332,436)
+		--cycle withcolor white;
 );
 
 def p_danger_SBE(expr pos, theta, sc, al) =
