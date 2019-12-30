@@ -259,8 +259,6 @@ enddef;
 picture SBE_electric_light_raw;
 SBE_electric_light_raw := image(
 	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
 		fill (334,564)..controls (341,561) and (346,556)..(349,550)
 			..controls (350,548) and (351,546)..(351,543)
 			..controls (349,543) and (347,543)..(345,543)
