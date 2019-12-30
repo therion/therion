@@ -8,7 +8,7 @@
 %%
 %% Copyright (C) 2000 Martin Budaj
 %%
-%% -------------------------------------------------------------------- 
+%% --------------------------------------------------------------------
 %% This program is free software; you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
 %% the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 %% GNU General Public License for more details.
-%% 
+%%
 %% You should have received a copy of the GNU General Public License
 %% along with this program; if not, write to the Free Software
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -63,7 +63,7 @@ vardef polyline_offset(expr p, amount, direction) =
       if cycle P:
         za := unitvector(point length P of P - point (length P)-1 of P);
       else:
-        za := unitvector(point 1 of P - point 0 of P);    % za == zb 
+        za := unitvector(point 1 of P - point 0 of P);    % za == zb
       fi;
     fi;
     if i < length P:
@@ -76,7 +76,7 @@ vardef polyline_offset(expr p, amount, direction) =
       fi;
     fi;
     A := 180-(angle(za)-angle(zb));
-    R := if i>0: R -- fi 
+    R := if i>0: R -- fi
          if (i=length P) and cycle P: cycle else:
          point i of P + amount*unitvector(((za+zb)/2) rotated direction)/abs(sind(A/2)) fi;
   endfor;
@@ -86,30 +86,30 @@ enddef;
 
 % walls:
 
-def l_wall_bedrock_UIS (expr P) = 
+def l_wall_bedrock_UIS (expr P) =
   T:=identity;
   pickup PenA;
   thdraw P;
 enddef;
 
-def l_wall_sand_SKBB (expr P) = 
+def l_wall_sand_SKBB (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
   mojkrok:=adjust_step(dlzka, 0.1u);
-  pickup PenB;  
+  pickup PenB;
   forever:
     t := arctime cas of P;
-    thdraw ((point t of P) + (uniformdeviate 1) * .4u 
+    thdraw ((point t of P) + (uniformdeviate 1) * .4u
             * unitvector(thdir(P,t) rotated -90));
     cas := cas + mojkrok;
     exitif cas > dlzka + (mojkrok / 3); % for rounding errors
   endfor;
-  pickup PenA;  
+  pickup PenA;
   thdraw P;
 enddef;
 
-def l_wall_pebbles_SKBB (expr P) = 
+def l_wall_pebbles_SKBB (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -124,7 +124,7 @@ def l_wall_pebbles_SKBB (expr P) =
   endfor;
 enddef;
 
-def l_wall_clay_SKBB (expr P) = 
+def l_wall_clay_SKBB (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -137,11 +137,11 @@ def l_wall_clay_SKBB (expr P) =
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
   endfor;
-  pickup PenA;  
+  pickup PenA;
   thdraw P;
 enddef;
 
-def l_wall_debris_SKBB (expr P) = 
+def l_wall_debris_SKBB (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -157,7 +157,7 @@ def l_wall_debris_SKBB (expr P) =
   endfor;
 enddef;
 
-def l_wall_blocks_SKBB (expr P) = 
+def l_wall_blocks_SKBB (expr P) =
 %  pickup PenD;
 %  draw P withcolor red;
 
@@ -180,7 +180,7 @@ if dlzka > 0:
 fi;
 enddef;
 
-def l_wall_ice_SKBB (expr P) = 
+def l_wall_ice_SKBB (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -195,23 +195,23 @@ def l_wall_ice_SKBB (expr P) =
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
   endfor;
-  pickup PenA;  
+  pickup PenA;
   thdraw P;
 enddef;
 
-def l_wall_underlying_UIS (expr P) = 
+def l_wall_underlying_UIS (expr P) =
   T:=identity;
   pickup PenA;
   thdraw P dashed evenly scaled optical_zoom;
 enddef;
 
-def l_wall_unsurveyed_SKBB (expr P) = 
+def l_wall_unsurveyed_SKBB (expr P) =
   T:=identity;
   pickup PenC;
   thdraw P;
 enddef;
 
-def l_wall_presumed_UIS (expr P) = 
+def l_wall_presumed_UIS (expr P) =
   T:=identity;
   pickup PenA;
   thdraw P dashed evenly scaled (2*optical_zoom);
@@ -219,19 +219,19 @@ enddef;
 
 % other line symbols
 
-def l_pit_UIS (expr P) = 
+def l_pit_UIS (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
   mojkrok:=adjust_step(dlzka, 0.25u);
-  pickup PenD;  
+  pickup PenD;
   forever:
     t := arctime cas of P;
     mark_ (P,t,0.2u);
     cas := cas + mojkrok;
     exitif cas > dlzka + (mojkrok / 3); % for rounding errors
   endfor;
-  pickup PenC;  
+  pickup PenC;
   thdraw P;
 enddef;
 
@@ -247,8 +247,8 @@ def l_overhang_SKBB (expr P) =
   forever:
     t := arctime (cas + mojkrok/2) of P;
     t2 := arctime (cas + mojkrok) of P;
-    thfill (subpath (t1,t2) of P) -- 
-      ((point t of P) + .3u * unitvector(thdir(P,t) rotated 90)) -- 
+    thfill (subpath (t1,t2) of P) --
+      ((point t of P) + .3u * unitvector(thdir(P,t) rotated 90)) --
       cycle;
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
@@ -258,7 +258,7 @@ def l_overhang_SKBB (expr P) =
 enddef;
 
 
-def l_chimney_UIS (expr P) = 
+def l_chimney_UIS (expr P) =
   T:=identity;
   pickup PenC;
   thdraw P dashed evenly scaled optical_zoom;
@@ -310,7 +310,7 @@ enddef;
 
 
 %Bruce Mutton 2012.06.16 uses general code for l_ceilingmeander_SKBB defined in therion source code by Martin Budaj 5.3.9
-% but ticks on outside (rock) side of lines 
+% but ticks on outside (rock) side of lines
 def l_ceilingmeander_UIS (expr P) =
   pair Pp;
   pair Pd;
@@ -328,11 +328,11 @@ def l_ceilingmeander_UIS (expr P) =
     thdraw (Pp + 0.2u * Pv) --
           (Pp + 0.3u * Pv);              % add 0.1u to each moves ticks outside
     thdraw (Pp + 0.2u * Pv + 0.2u * Pd) --
-          (Pp + 0.2u * Pv - 0.2u * Pd);  
+          (Pp + 0.2u * Pv - 0.2u * Pd);
     thdraw (Pp - 0.2u * Pv) --
           (Pp - 0.3u * Pv);              % subtract 0.1u to each moves ticks outside
     thdraw (Pp - 0.2u * Pv + 0.2u * Pd) --
-          (Pp - 0.2u * Pv - 0.2u * Pd); 
+          (Pp - 0.2u * Pv - 0.2u * Pd);
     cas := cas + mojkrok;
     exitif cas > dlzka - (2*mojkrok/3);  % for rounding errors
   endfor;
@@ -341,7 +341,7 @@ enddef;
 let l_ceilingmeander_NZSS = l_ceilingmeander_UIS;
 
 %Bruce Mutton 2012.06.16 uses general code for l_ceilingstep_SKBB defined in therion source code by Martin Budaj 5.3.9
-% but ticks on righthand (rock) side of line 
+% but ticks on righthand (rock) side of line
 def l_ceilingstep_UIS (expr P) =
   T:=identity;
   cas := 0;                            % cursor to step along path
@@ -363,7 +363,7 @@ let l_ceilingstep_NZSS = l_ceilingstep_UIS;
 
 %Bruce Mutton 2012.06.10 uses general code for l_pit_UIS defined in therion source code by Martin Budaj 5.3.9
 % dots on righthand (rock) side of line spaced 0.2u, 0.2u same as floor-step ticks
-def l_chimney_NZSS (expr P) = 
+def l_chimney_NZSS (expr P) =
 	T:=identity;
 	cas := 0;                            % cursor to step along path
 	dlzka := arclength P;
@@ -388,7 +388,7 @@ def l_wall_presumed_NZSS (expr P) =
 	cas := 0;                                 % cursor to step along path
 	dlzka := arclength P;
 	mojkrok:=adjust_step(dlzka, 1.5u);        % symbol length nudged to be multiple of path length
-	q  := (-0.2u,-0.4u)--(0,0)--(0.2u,-0.4u); % define v shape 
+	q  := (-0.2u,-0.4u)--(0,0)--(0.2u,-0.4u); % define v shape
 	forever:
 	  t1 := arctime (cas + mojkrok*1/5) of P;
 	  t  := arctime (cas + mojkrok/2) of P;
@@ -437,11 +437,11 @@ def l_floormeander_SKBB (expr P) =
     cas := cas + mojkrok;
     exitif cas > dlzka + (mojkrok / 3); % for rounding errors
   endfor;
-enddef;    
+enddef;
 
 boolean alw_perpendicular;
 
-def l_slope_SKBB (expr P,S)(text Q) = 
+def l_slope_SKBB (expr P,S)(text Q) =
 %show Q;
   T:=identity;
   numeric dirs[];
@@ -449,7 +449,7 @@ def l_slope_SKBB (expr P,S)(text Q) =
   for i=Q:
     dirs[redpart i]:=greenpart i;
     lengths[redpart i]:=bluepart i;
-  endfor;  
+  endfor;
 
 
   li:=length(P); % last
@@ -457,10 +457,10 @@ def l_slope_SKBB (expr P,S)(text Q) =
   alw_perpendicular:=true;
 
   for i=0 upto li:
-    if unknown dirs[i]: dirs[i]:=-1; 
-    else: 
+    if unknown dirs[i]: dirs[i]:=-1;
+    else:
       if dirs[i]>-1:
-        dirs[i]:=((90-dirs[i]) - angle(thdir(P,i))) mod 360; 
+        dirs[i]:=((90-dirs[i]) - angle(thdir(P,i))) mod 360;
         alw_perpendicular:=false;
       fi;
     fi;
@@ -485,7 +485,7 @@ def l_slope_SKBB (expr P,S)(text Q) =
 	    exitif dirs[j]>-1;
 	  endfor;
 	fi;
-	w:=arclength(subpath(pi,i) of P) / 
+	w:=arclength(subpath(pi,i) of P) /
 	   arclength(subpath(pi,ni) of P);
 	dirs[i]:=w[dirs[pi],dirs[ni]];
 %        if (dirs[i]-angle(thdir(P,i))) mod 360>180:
@@ -517,7 +517,7 @@ def l_slope_SKBB (expr P,S)(text Q) =
 	    exitif lengths[j]>-1;
 	  endfor;
 	fi;
-	w:=arclength(subpath(pi,i) of P) / 
+	w:=arclength(subpath(pi,i) of P) /
 	   arclength(subpath(pi,ni) of P);
 	lengths[i]:=w[lengths[pi],lengths[ni]];
 	pi:=i;
@@ -533,7 +533,7 @@ def l_slope_SKBB (expr P,S)(text Q) =
   boolean par;
   offset:=0;
   dlzka := (arclength P);
-  if dlzka>3u: 
+  if dlzka>3u:
     offset := 0.3u;
   elseif dlzka>u:
     offset := 0.1u;
@@ -542,11 +542,11 @@ def l_slope_SKBB (expr P,S)(text Q) =
   cas := offset;
   mojkrok:=adjust_step(dlzka,1.4u) / 2;
   pickup PenD;
-  par := false; 
+  par := false;
   forever:
     t := arctime cas of P;
     if t mod 1>0:  % not a key point
-      w := (arclength(subpath(floor t,t) of P) / 
+      w := (arclength(subpath(floor t,t) of P) /
             arclength(subpath(floor t,ceiling t) of P));
       if alw_perpendicular:
         a := 90;
@@ -559,13 +559,13 @@ def l_slope_SKBB (expr P,S)(text Q) =
         a := 90;
       else:
         a:= dirs[t];
-      fi; 
+      fi;
       l:=lengths[t];
     fi;
-    
+
     a := a + angle(thdir(P,t));
-    
-    thdraw (point t of P) -- 
+
+    thdraw (point t of P) --
       ((point t of P) + if par: 0.333 * fi l * unitvector(dir(a)));
     cas := cas + mojkrok;
     par := not par;
@@ -577,7 +577,7 @@ def l_slope_SKBB (expr P,S)(text Q) =
 enddef;
 
 
-def l_slope_BCRA (expr P,S)(text Q) = 
+def l_slope_BCRA (expr P,S)(text Q) =
 %show Q;
   T:=identity;
   numeric dirs[];
@@ -585,7 +585,7 @@ def l_slope_BCRA (expr P,S)(text Q) =
   for i=Q:
     dirs[redpart i]:=greenpart i;
     lengths[redpart i]:=bluepart i;
-  endfor;  
+  endfor;
 
 
   li:=length(P); % last
@@ -593,10 +593,10 @@ def l_slope_BCRA (expr P,S)(text Q) =
   alw_perpendicular:=true;
 
   for i=0 upto li:
-    if unknown dirs[i]: dirs[i]:=-1; 
-    else: 
+    if unknown dirs[i]: dirs[i]:=-1;
+    else:
       if dirs[i]>-1:
-        dirs[i]:=((90-dirs[i]) - angle(thdir(P,i))) mod 360; 
+        dirs[i]:=((90-dirs[i]) - angle(thdir(P,i))) mod 360;
         alw_perpendicular:=false;
       fi;
     fi;
@@ -621,7 +621,7 @@ def l_slope_BCRA (expr P,S)(text Q) =
 	    exitif dirs[j]>-1;
 	  endfor;
 	fi;
-	w:=arclength(subpath(pi,i) of P) / 
+	w:=arclength(subpath(pi,i) of P) /
 	   arclength(subpath(pi,ni) of P);
 	dirs[i]:=w[dirs[pi],dirs[ni]];
 %        if (dirs[i]-angle(thdir(P,i))) mod 360>180:
@@ -653,7 +653,7 @@ def l_slope_BCRA (expr P,S)(text Q) =
 	    exitif lengths[j]>-1;
 	  endfor;
 	fi;
-	w:=arclength(subpath(pi,i) of P) / 
+	w:=arclength(subpath(pi,i) of P) /
 	   arclength(subpath(pi,ni) of P);
 	lengths[i]:=w[lengths[pi],lengths[ni]];
 	pi:=i;
@@ -669,7 +669,7 @@ def l_slope_BCRA (expr P,S)(text Q) =
   boolean par;
   offset:=0;
   dlzka := (arclength P);
-  if dlzka>3u: 
+  if dlzka>3u:
     offset := 0.3u;
   elseif dlzka>u:
     offset := 0.1u;
@@ -678,11 +678,11 @@ def l_slope_BCRA (expr P,S)(text Q) =
   cas := offset;
   mojkrok:=adjust_step(dlzka,1.4u) / 2;
   pickup PenD;
-  par := false; 
+  par := false;
   forever:
     t := arctime cas of P;
     if t mod 1>0:  % not a key point
-      w := (arclength(subpath(floor t,t) of P) / 
+      w := (arclength(subpath(floor t,t) of P) /
             arclength(subpath(floor t,ceiling t) of P));
       if alw_perpendicular:
         a := 90;
@@ -695,14 +695,14 @@ def l_slope_BCRA (expr P,S)(text Q) =
         a := 90;
       else:
         a:= dirs[t];
-      fi; 
+      fi;
       l:=lengths[t];
     fi;
-    
+
     a := a + angle(thdir(P,t));
-    
+
     if par:
-      thfill (point t of P) + mojkrok/2.5 * unitvector(dir(a+90))-- 
+      thfill (point t of P) + mojkrok/2.5 * unitvector(dir(a+90))--
         ((point t of P) + l * unitvector(dir(a))) --
         (point t of P) + mojkrok/2.5 * unitvector(dir(a-90)) -- cycle;
     fi;
@@ -741,14 +741,14 @@ def l_contour_SKBB(expr P)(text txt) =
   endfor;
 enddef;
 
-def l_rockborder_UIS (expr P) = 
+def l_rockborder_UIS (expr P) =
   T:=identity;
   pickup PenC;
   if cycle P: thclean P fi;
   thdraw P;
 enddef;
 
-def l_rockedge_UIS (expr P) = 
+def l_rockedge_UIS (expr P) =
   T:=identity;
   pickup PenD;
   thdraw P;
@@ -766,7 +766,7 @@ def l_border_temporary_SKBB (expr Path) =
   draw Path dashed evenly scaled optical_zoom;
 enddef;
 
-def l_flowstone_UIS (expr P) = 
+def l_flowstone_UIS (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -774,7 +774,7 @@ def l_flowstone_UIS (expr P) =
   if (cycle P) and (dlzka < 3.5u):   % make at least 5 curls on a cyclic path
     mojkrok := dlzka/5;
   fi;
-  pickup PenC;  
+  pickup PenC;
   t1:=0;
   forever:
     t2 := arctime (cas + mojkrok) of P;
@@ -787,12 +787,12 @@ def l_flowstone_UIS (expr P) =
 enddef;
 
 
-def l_moonmilk_UIS (expr P) = 
+def l_moonmilk_UIS (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
   mojkrok:=adjust_step(dlzka, .3u);
-  pickup PenC;  
+  pickup PenC;
   t1:=0;
   forever:
     t2 := arctime (cas + mojkrok) of P;
@@ -850,7 +850,7 @@ def l_waterflow_permanent_UIS (expr Path) =
   cas := 0;
   dlzka := arclength Path;
   mojkrok:=adjust_step(dlzka, 0.5u);
-    pickup PenD;  
+    pickup PenD;
     vardef azim = 50 + 15*normaldeviate enddef;
     az1 := azim;
     sgn := 1;
@@ -893,10 +893,10 @@ def l_waterflow_conjectural_SKBB (expr Path) =
   thdrawoptions();
 enddef;
 
-def l_invisible (expr P) = 
+def l_invisible (expr P) =
 enddef;
 
-def l_undefined (expr P) = 
+def l_undefined (expr P) =
   T:=identity;
   pickup PenC;
   thdraw P withcolor red;
@@ -917,7 +917,7 @@ def l_arrow_SKBB (expr P, Q) =
     draw p rotated (angle(thdir(P,0))+90) shifted (point 0 of P);
   fi;
   if Q>1:
-    draw p rotated (angle(thdir(P,length P))-90) 
+    draw p rotated (angle(thdir(P,length P))-90)
          shifted (point infinity of P);
   fi;
 enddef;
@@ -969,10 +969,10 @@ let l_wall_invisible = l_invisible;
 def l_debug (expr col, pen, P) =
   T:=identity;
   pickup if pen=0: PenD else: PenB fi;
-  thdraw P 
+  thdraw P
     withcolor if col=-2: (1,.85,0)
-          elseif col=-1: black 
-           elseif col=0: red 
+          elseif col=-1: black
+           elseif col=0: red
                    else: blue fi;
 enddef;
 
@@ -989,9 +989,9 @@ def l_gradient_UIS (expr P) =
   pickup PenC;
   thdraw P;
   p:=(-.15u,-.4u)--(0,0)--(.15u,-.4u)--cycle;
-  thfill (p rotated (angle(thdir(P,length P))-90) 
+  thfill (p rotated (angle(thdir(P,length P))-90)
          shifted (point infinity of P));
-  thdraw (p rotated (angle(thdir(P,length P))-90) 
+  thdraw (p rotated (angle(thdir(P,length P))-90)
          shifted (point infinity of P));
 enddef;
 
@@ -1022,7 +1022,7 @@ def l_rope_SKBB (expr P, show_anchors, show_rebelays) =
       y1 := ypart point i of P;
       x2 := xpart point i+1 of P;
       y2 := ypart point i+1 of P;
-    
+
       dx1:=x1; dy1:=y1; x1:=0; y1:=0; x2:=x2-dx1; y2:=y2-dy1;
       if y2 > y1:
         y3 := y1 - d;
@@ -1072,7 +1072,7 @@ def l_steps_SKBB (expr P) =
      else:
        PP := reverse P;
      fi;
-     path p;     
+     path p;
      for j:=0 upto ((length PP) - 1):
        p := (point j of PP) -- (point (j + 1) of PP);
        c := ceiling(abs((ypart point 0 of p) - (ypart point length p of p)) / (0.2 / Scale * 72 / 2.54));  % 20 cm height
@@ -1113,13 +1113,13 @@ def l_steps_SKBB (expr P) =
  fi;
 enddef;
 
-def l_handrail_SKBB (expr P) = 
+def l_handrail_SKBB (expr P) =
     if ATTR__elevation:
       T:=identity;
       cas := 0;
       dlzka := arclength P;
       mojkrok:=adjust_step(dlzka, 1u);
-      pickup PenD;  
+      pickup PenD;
       pair tmppoint;
       tmph := 1 / Scale * 72 / 2.54;  % 1 m height
       tmppoint:=(point 0 of P) +(0,tmph);
@@ -1140,7 +1140,7 @@ def l_handrail_SKBB (expr P) =
       sq_size:=0.12u;
       dlzka := arclength P;
       mojkrok:=adjust_step(dlzka, u);
-      pickup PenD;  
+      pickup PenD;
       forever:
         t := arctime cas of P;
         coord := point t of P;
@@ -1148,12 +1148,12 @@ def l_handrail_SKBB (expr P) =
         cas := cas + mojkrok;
         exitif cas > dlzka + (mojkrok / 3); % for rounding errors
       endfor;
-      pickup PenC;  
+      pickup PenC;
       thdraw P;
     fi;
 enddef;
 
-def l_fixedladder_SKBB (expr Q) = 
+def l_fixedladder_SKBB (expr Q) =
   % TODO: support side view in elevation (front view could be the same as in the plan view)
   T:=identity;
   path P, P_left, P_right;
@@ -1176,12 +1176,12 @@ def l_fixedladder_SKBB (expr Q) =
   draw polyline_offset(P,wdth,-90);
 enddef;
 
-def l_ropeladder_SKBB (expr P) = 
+def l_ropeladder_SKBB (expr P) =
   pickup PenD;
   draw P withcolor red;
 enddef;
 
-def l_viaferrata_SKBB (expr P) = 
+def l_viaferrata_SKBB (expr P) =
   pickup PenD;
   draw P withcolor red;
 enddef;
