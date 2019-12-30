@@ -560,8 +560,6 @@ enddef;
 picture SBE_wheelchair_raw;
 SBE_wheelchair_raw := image(
 	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
 		fill (363,192)..controls (363,97) and (286,20)..(192,20)
 			..controls (97,20) and (20,97)..(20,192)
 			..controls (20,287) and (97,364)..(192,364)
@@ -575,7 +573,6 @@ SBE_wheelchair_raw := image(
 			..controls (20,287) and (97,364)..(192,364)
 			..controls (286,364) and (363,287)..(363,192)
 			--cycle withcolor red;
-		pickup pencircle scaled 0.1bp;
 		fill (202,301)..controls (202,286) and (190,274)..(175,274)
 			..controls (160,274) and (148,286)..(148,301)
 			..controls (148,316) and (160,328)..(175,328)
