@@ -860,47 +860,43 @@ enddef;
 
 picture SBE_water_drip_raw;
 SBE_water_drip_raw := image(
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		fill (493,1196)..controls (535,1234) and (583,1266)..(635,1290)
-			..controls (595,1233) and (566,1160)..(588,1091)
-			..controls (622,981) and (733,912)..(757,796)
-			..controls (789,684) and (728,556)..(622,509)
-			..controls (524,461) and (398,489)..(328,572)
-			..controls (278,629) and (259,710)..(272,785)
-			..controls (293,942) and (375,1090)..(493,1196)
-			--cycle;
-		fill (495,1159)..controls (403,1066) and (329,950)..(299,821)
-			..controls (287,761) and (285,694)..(314,637)
-			..controls (354,571) and (425,522)..(502,512)
-			..controls (513,511) and (550,509)..(522,518)
-			..controls (449,551) and (384,613)..(366,694)
-			..controls (342,794) and (371,898)..(411,990)
-			..controls (441,1059) and (481,1123)..(524,1185)
-			..controls (514,1177) and (505,1168)..(495,1159)
-			--cycle withcolor white;
-		fill (353,484)..controls (341,488) and (325,494)..(316,504)
-			..controls (300,537) and (261,574)..(232,540)
-			..controls (209,503) and (241,469)..(276,471)
-			..controls (299,473) and (344,478)..(353,484)
-			--cycle;
-		fill (702,500)..controls (714,503) and (731,509)..(739,520)
-			..controls (756,553) and (795,591)..(825,557)
-			..controls (848,519) and (816,485)..(780,486)
-			..controls (757,488) and (711,493)..(702,500)
-			--cycle;
-		fill (290,571)..controls (279,580) and (262,592)..(246,594)
-			..controls (203,588) and (140,602)..(154,654)
-			..controls (176,701) and (231,693)..(253,656)
-			..controls (266,632) and (291,584)..(290,571)
-			--cycle;
-		fill (761,591)..controls (772,601) and (789,613)..(805,614)
-			..controls (848,609) and (911,623)..(897,674)
-			..controls (875,721) and (820,713)..(798,676)
-			..controls (785,652) and (760,604)..(761,591)
-			--cycle;
-	endgroup;
+	fill (493,1196)..controls (535,1234) and (583,1266)..(635,1290)
+		..controls (595,1233) and (566,1160)..(588,1091)
+		..controls (622,981) and (733,912)..(757,796)
+		..controls (789,684) and (728,556)..(622,509)
+		..controls (524,461) and (398,489)..(328,572)
+		..controls (278,629) and (259,710)..(272,785)
+		..controls (293,942) and (375,1090)..(493,1196)
+		--cycle;
+	fill (495,1159)..controls (403,1066) and (329,950)..(299,821)
+		..controls (287,761) and (285,694)..(314,637)
+		..controls (354,571) and (425,522)..(502,512)
+		..controls (513,511) and (550,509)..(522,518)
+		..controls (449,551) and (384,613)..(366,694)
+		..controls (342,794) and (371,898)..(411,990)
+		..controls (441,1059) and (481,1123)..(524,1185)
+		..controls (514,1177) and (505,1168)..(495,1159)
+		--cycle withcolor white;
+	fill (353,484)..controls (341,488) and (325,494)..(316,504)
+		..controls (300,537) and (261,574)..(232,540)
+		..controls (209,503) and (241,469)..(276,471)
+		..controls (299,473) and (344,478)..(353,484)
+		--cycle;
+	fill (702,500)..controls (714,503) and (731,509)..(739,520)
+		..controls (756,553) and (795,591)..(825,557)
+		..controls (848,519) and (816,485)..(780,486)
+		..controls (757,488) and (711,493)..(702,500)
+		--cycle;
+	fill (290,571)..controls (279,580) and (262,592)..(246,594)
+		..controls (203,588) and (140,602)..(154,654)
+		..controls (176,701) and (231,693)..(253,656)
+		..controls (266,632) and (291,584)..(290,571)
+		--cycle;
+	fill (761,591)..controls (772,601) and (789,613)..(805,614)
+		..controls (848,609) and (911,623)..(897,674)
+		..controls (875,721) and (820,713)..(798,676)
+		..controls (785,652) and (760,604)..(761,591)
+		--cycle;
 );
 
 def p_waterdrip_SBE(expr pos, theta, sc, al) =
