@@ -873,32 +873,24 @@ SBE_walkway_raw := image(
 		pickup pencircle scaled 9bp;
 		interim linecap := butt;
 		interim linejoin := mitered;
-		draw (19,26)--(30,26);
-		draw (42,26)--(54,26);
-		draw (89,26)--(101,26);
-		draw (136,26)--(148,26);
-		draw (159,26)--(171,26);
-		draw (65,26)--(77,26);
-		draw (112,26)--(124,26);
-		draw (19,61)--(30,61);
-		draw (42,61)--(54,61);
-		draw (89,61)--(101,61);
-		draw (136,61)--(148,61);
-		draw (159,61)--(171,61);
-		pickup pencircle scaled 13bp;
+		draw (19,26)--(171,26);
+		draw (135,61)--(171,61);
+		draw (19,61)--(55,61);
+		draw (89,61)--(104,61);
+		pickup pencircle scaled 12bp;
 		interim linecap := rounded;
 		draw (63,43)--(79,72)--(93,135);
-		draw (120,43)--(115,72)--(93,97)
+		draw (124,44)--(115,72)--(93,97)
 			--(100,133);
 		pickup pencircle scaled 9bp;
 		interim linejoin := rounded;
-		draw (132,105)--(115,117)--(99,144)
-			--(71,125)--(66,102);
+		draw (133,109)--(115,117)--(99,144)
+			--(72,128)--(62,107);
 		pickup pencircle scaled 0.1bp;
-		fill (112,163)..controls (112,157) and (107,153)..(101,153)
-			..controls (95,153) and (90,157)..(90,163)
-			..controls (90,169) and (95,174)..(101,174)
-			..controls (107,174) and (112,169)..(112,163)
+		fill (113,162)..controls (113,157) and (108,152)..(102,152)
+			..controls (96,152) and (91,157)..(91,162)
+			..controls (91,168) and (96,173)..(102,173)
+			..controls (108,173) and (113,168)..(113,162)
 			--cycle;
 	endgroup;
 );
