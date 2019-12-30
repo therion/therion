@@ -478,29 +478,25 @@ enddef;
 
 picture SBE_mud_raw;
 SBE_mud_raw := image(
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		fill (240,321)..controls (232,352) and (217,388)..(183,397)
-			..controls (156,398) and (135,369)..(108,381)
-			..controls (82,388) and (66,417)..(74,442)
-			..controls (78,479) and (59,518)..(79,552)
-			..controls (87,582) and (41,598)..(52,628)
-			..controls (68,653) and (99,634)..(121,630)
-			..controls (147,623) and (162,645)..(172,664)
-			..controls (200,685) and (236,674)..(267,676)
-			..controls (290,675) and (312,676)..(333,685)
-			..controls (352,692) and (380,696)..(394,676)
-			..controls (406,653) and (421,627)..(450,623)
-			..controls (474,620) and (506,635)..(520,605)
-			..controls (536,576) and (533,543)..(533,512)
-			..controls (531,476) and (511,442)..(521,407)
-			..controls (523,374) and (483,370)..(459,370)
-			..controls (431,371) and (407,359)..(382,348)
-			..controls (357,337) and (326,324)..(300,340)
-			..controls (277,343) and (264,298)..(241,320)
-			--(240,320)--cycle withcolor (0.53, 0.24, 0.02);
-	endgroup;
+	fill (240,321)..controls (232,352) and (217,388)..(183,397)
+		..controls (156,398) and (135,369)..(108,381)
+		..controls (82,388) and (66,417)..(74,442)
+		..controls (78,479) and (59,518)..(79,552)
+		..controls (87,582) and (41,598)..(52,628)
+		..controls (68,653) and (99,634)..(121,630)
+		..controls (147,623) and (162,645)..(172,664)
+		..controls (200,685) and (236,674)..(267,676)
+		..controls (290,675) and (312,676)..(333,685)
+		..controls (352,692) and (380,696)..(394,676)
+		..controls (406,653) and (421,627)..(450,623)
+		..controls (474,620) and (506,635)..(520,605)
+		..controls (536,576) and (533,543)..(533,512)
+		..controls (531,476) and (511,442)..(521,407)
+		..controls (523,374) and (483,370)..(459,370)
+		..controls (431,371) and (407,359)..(382,348)
+		..controls (357,337) and (326,324)..(300,340)
+		..controls (277,343) and (264,298)..(241,320)
+		--(240,320)--cycle withcolor (0.53, 0.24, 0.02);
 );
 
 def p_mud_SBE(expr pos, theta, sc, al) =
