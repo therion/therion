@@ -53,20 +53,16 @@ enddef;
 
 picture SBE_audio_raw;
 SBE_audio_raw := image(
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		fill (125,196)--(81,171)--(44,171)
-			..controls (34,171) and (27,163)..(27,154)
-			--(27,115)..controls (27,106) and (34,98)..(44,98)
-			--(81,98)--(125,73)..controls (133,68) and (140,72)..(140,81)
-			--(140,188)..controls (140,197) and (133,201)..(125,196)
-			--cycle;
-		pickup pencircle scaled 11bp;
-		draw (158,186)..controls (178,152) and (179,118)..(158,82);
-		draw (185,202)..controls (208,166) and (213,112)..(185,67);
-		draw (213,218)..controls (248,150) and (243,105)..(213,50);
-	endgroup;
+	fill (125,196)--(81,171)--(44,171)
+		..controls (34,171) and (27,163)..(27,154)
+		--(27,115)..controls (27,106) and (34,98)..(44,98)
+		--(81,98)--(125,73)..controls (133,68) and (140,72)..(140,81)
+		--(140,188)..controls (140,197) and (133,201)..(125,196)
+		--cycle;
+	pickup pencircle scaled 11bp;
+	draw (158,186)..controls (178,152) and (179,118)..(158,82);
+	draw (185,202)..controls (208,166) and (213,112)..(185,67);
+	draw (213,218)..controls (248,150) and (243,105)..(213,50);
 );
 
 def p_audio_SBE(expr pos, theta, sc, al) =
