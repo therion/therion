@@ -28,8 +28,6 @@ enddef;
 picture SBE_archeo_excavation_raw;
 SBE_archeo_excavation_raw := image(
 	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
 		fill (199,415)--(242,555)--(312,574)
 			--(329,558)--(351,580)--(335,597)
 			--(422,683)--(466,640)--(379,553)
