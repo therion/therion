@@ -73,28 +73,24 @@ enddef;
 
 picture SBE_bat_raw;
 SBE_bat_raw := image(
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		fill (538,34)..controls (484,144) and (350,326)..(287,197)
-			..controls (249,375) and (141,347)..(83,352)
-			..controls (58,356) and (10,339)..(53,371)
-			..controls (100,409) and (147,451)..(204,474)
-			..controls (286,503) and (318,471)..(376,407)
-			..controls (439,342) and (510,278)..(599,252)
-			..controls (601,278) and (580,480)..(623,338)
-			..controls (621,373) and (696,393)..(707,345)
-			..controls (719,377) and (741,417)..(737,370)
-			..controls (732,310) and (745,281)..(749,252)
-			..controls (837,323) and (902,458)..(1017,478)
-			..controls (1114,499) and (1201,436)..(1266,371)
-			..controls (1285,353) and (1316,330)..(1270,343)
-			..controls (1174,357) and (1033,396)..(1018,231)
-			..controls (905,326) and (818,126)..(798,41)
-			..controls (718,124) and (662,-13)..(637,34)
-			..controls (621,76) and (562,52)..(538,34)
-			--cycle;
-	endgroup;
+	fill (538,34)..controls (484,144) and (350,326)..(287,197)
+		..controls (249,375) and (141,347)..(83,352)
+		..controls (58,356) and (10,339)..(53,371)
+		..controls (100,409) and (147,451)..(204,474)
+		..controls (286,503) and (318,471)..(376,407)
+		..controls (439,342) and (510,278)..(599,252)
+		..controls (601,278) and (580,480)..(623,338)
+		..controls (621,373) and (696,393)..(707,345)
+		..controls (719,377) and (741,417)..(737,370)
+		..controls (732,310) and (745,281)..(749,252)
+		..controls (837,323) and (902,458)..(1017,478)
+		..controls (1114,499) and (1201,436)..(1266,371)
+		..controls (1285,353) and (1316,330)..(1270,343)
+		..controls (1174,357) and (1033,396)..(1018,231)
+		..controls (905,326) and (818,126)..(798,41)
+		..controls (718,124) and (662,-13)..(637,34)
+		..controls (621,76) and (562,52)..(538,34)
+		--cycle;
 );
 
 def p_bat_SBE(expr pos, theta, sc, al) =
