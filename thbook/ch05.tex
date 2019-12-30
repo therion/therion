@@ -10,54 +10,54 @@ troubled, he will be astonished, and he will rule over the all.'
 
 \chapter Changing layout of PDF maps.
 
-This chapter is extremely useful if you're not satisfied with the predefined 
+This chapter is extremely useful if you're not satisfied with the predefined
 layout of map symbols and maps provided, and want to adapt them to your needs.
 However, you need to know how to write plain \TeX\ and \MP\ macros to do this.
 
 
 \subchapter Page layout in the atlas mode.
 
-The |layout| command allows basic page setup in the atlas mode. This is done 
-through its options such as |page-setup| or |overlap|. But there are no 
-options which would specify the position of map, navigator and other elements 
-inside the area defined by |page-width| and |page-height| dimensions; e.g., 
+The |layout| command allows basic page setup in the atlas mode. This is done
+through its options such as |page-setup| or |overlap|. But there are no
+options which would specify the position of map, navigator and other elements
+inside the area defined by |page-width| and |page-height| dimensions; e.g.,
 why is the navigator below the map and not on its right or left side?
 
 There are many possible arrangements for a page. Rather than offer even more
-options for the |layout| command, Therion uses the \TeX\ language to 
-describe other page layouts. 
-%(See the section `layout' where to put \TeX\ commands.) 
-This approach has the advantage that the user has 
-direct access to the advanced typesetting engine without making the language of 
+options for the |layout| command, Therion uses the \TeX\ language to
+describe other page layouts.
+%(See the section `layout' where to put \TeX\ commands.)
+This approach has the advantage that the user has
+direct access to the advanced typesetting engine without making the language of
 Therion overly complex.
 
-Therion uses pdf\TeX\ with the {\it plain} format for typesetting. So you 
+Therion uses pdf\TeX\ with the {\it plain} format for typesetting. So you
 should be familiar with the plain \TeX\ if you wish to define new layouts.
 
 The ultimate reference for plain \TeX\ is
 \list
-  Knuth, D. E.: {\it The \TeX book}, 
+  Knuth, D. E.: {\it The \TeX book},
                 Reading, Massachusetts, Addison-Wesley $^1$1984 %[...]
 \endlist
 
 For pdf\TeX's extensions there is a short manual
 \list
-  Th\`anh, H. T.---Rahtz, S.---Hagen, H.: {\it The pdf\TeX\ user manual}, 
-                available at  \hfil\break 
+  Th\`anh, H. T.---Rahtz, S.---Hagen, H.: {\it The pdf\TeX\ user manual},
+                available at  \hfil\break
 		\www{http://www.pdftex.org}
 \endlist
 
-The \TeX\ macros are used inside the |code tex-atlas| part of the |layout| 
-command (see the chapter 
+The \TeX\ macros are used inside the |code tex-atlas| part of the |layout|
+command (see the chapter
 {\it Processing data} for details). The basic one predefined by Therion is the
 
 |\dopage|
 
-macro. The idea is simple: for each page Therion defines \TeX\ variables 
-(count, token, and box registers) which contain the page elements (map, 
-navigator, page name etc.). At the end of each page macro |\dopage| is invoked. 
-This defines the position of each element on the page. By redefining this macro 
-you'll get the desired page layout. Without this redefinition you'll get a 
+macro. The idea is simple: for each page Therion defines \TeX\ variables
+(count, token, and box registers) which contain the page elements (map,
+navigator, page name etc.). At the end of each page macro |\dopage| is invoked.
+This defines the position of each element on the page. By redefining this macro
+you'll get the desired page layout. Without this redefinition you'll get a
 standard layout.
 
 Here is the list of variables defined for each page:
@@ -65,11 +65,11 @@ Here is the list of variables defined for each page:
 \list
   {\it Boxes:}
 
-  * |\mapbox| = The box containing the map. Its width (height) is set 
-    according to the |size| and |overlap| options of the |layout| command to 
+  * |\mapbox| = The box containing the map. Its width (height) is set
+    according to the |size| and |overlap| options of the |layout| command to
 
-    |size_width + 2*overlap| or 
-    
+    |size_width + 2*overlap| or
+
     |size_height + 2*overlap|, respectively
 
   * |\navbox| = The box containing the navigator, with dimensions
@@ -82,8 +82,8 @@ Here is the list of variables defined for each page:
 
   {\it Count registers:}
 
-  * |\pointerE|, |\pointerW|, |\pointerN|, |\pointerS| contain the page number 
-    of the neighbouring pages in the E, W, N and S directions. If there is no 
+  * |\pointerE|, |\pointerW|, |\pointerN|, |\pointerS| contain the page number
+    of the neighbouring pages in the E, W, N and S directions. If there is no
     such page its page number is set to 0.
 
   * |\pagenum| current page number
@@ -91,14 +91,14 @@ Here is the list of variables defined for each page:
   {\it Token registers:}
 
   * |\pointerU|, |\pointerD| contain information about pages above and below
-    the current page. It consists of one or more concatenated records. Each 
+    the current page. It consists of one or more concatenated records. Each
     record has a special format
-    
+
     {\tt|page-name|\char124|page-number|\char124|destination|\char124\char124}
-    
+
     If there are no such pages, the value is set to |notdef|.
 
-    See the description of the |\processpointeritem| macro below for how to 
+    See the description of the |\processpointeritem| macro below for how to
     extract and use this information.
 
   * |\pagename| = the name of the current map according to the options of the |map|
@@ -114,45 +114,45 @@ The following variables are set at the beginning of the document:
 \list
   * |\hsize|, |\vsize| = \TeX\ page dimensions, set according to |page-width|
     and |page-height| parameters of the |page-setup| option of the |layout|
-    command. They determine our playground when defining the page layout using 
+    command. They determine our playground when defining the page layout using
     the |\dopage| macro.
 
   * |\ifpagenumbering| = This conditional is set true or false according to
     the |page-numbers| option of the |layout| command.
 \endlist
 
-There are also some predefined macros which help with the processing of 
+There are also some predefined macros which help with the processing of
 |\pointer*| variables:
 
 \list
-  * |\showpointer| with one of the |\pointerE|, |\pointerW|, |\pointerN| or 
+  * |\showpointer| with one of the |\pointerE|, |\pointerW|, |\pointerN| or
     |\pointerS| as an argument displays the value of the argument. If the value
     is 0 it doesn't display anything. This is useful because
     the zero value (no neighbouring page) shouldn't be displayed.
-    
-  * |\showpointerlist| with one of the |\pointerU| or |\pointerD| as an argument 
-    presents the content of this argument. (Which contains 
-    |\pointerU| or |\pointerD|, see above.) For each record it calls the macro 
-    |\processpointeritem|, which is responsible for data formatting. 
-    
+
+  * |\showpointerlist| with one of the |\pointerU| or |\pointerD| as an argument
+    presents the content of this argument. (Which contains
+    |\pointerU| or |\pointerD|, see above.) For each record it calls the macro
+    |\processpointeritem|, which is responsible for data formatting.
+
     Macro |\showpointerlist| should be used without redefinition in the place
     where you want to display the content of its argument; for custom data
     formatting redefine |\processpointeritem| macro.
-         
-  * |\processpointeritem| has three arguments (page-name, page-number, 
-    destination) and visualizes these data. The arguments are delimited as 
+
+  * |\processpointeritem| has three arguments (page-name, page-number,
+    destination) and visualizes these data. The arguments are delimited as
     follows
-    
+
     {\tt|\def\processpointeritem#1|\char124|#2|\char124|#3\endarg{...}|}
 
     An example definition may be
 
     {\tt|\def\processpointeritem#1|\char124|#2|\char124}|#3\endarg{%
-  \hbox{\pdfstartlink attr {/Border [0 0 0]}% 
+  \hbox{\pdfstartlink attr {/Border [0 0 0]}%
         goto name {#3} #2 (#1)\pdfendlink}%
 }|
 
-   (note how to use the {\it destination} argument), 
+   (note how to use the {\it destination} argument),
    or much simpler (if we don't need hyperlink features):
 
     {\tt|\def\processpointeritem#1|\char124|#2|\char124}|#3\endarg{%
@@ -160,7 +160,7 @@ There are also some predefined macros which help with the processing of
 }|
 \endlist
 
-For font management there are macros 
+For font management there are macros
 
 \list
 * |\size[#1]| for size changes,
@@ -170,18 +170,18 @@ For font management there are macros
 * |\rm|, |\it|, |\bf|, |\ss|, |\si| for type face switching.
 \endlist
 
-%If you use own texts in \TeX\ macros (like a label for the scale bar), these 
-%font switches work only in restricted manner: it's supposed that all characters 
-%are present in the first encoding specified in the initialization file. 
+%If you use own texts in \TeX\ macros (like a label for the scale bar), these
+%font switches work only in restricted manner: it's supposed that all characters
+%are present in the first encoding specified in the initialization file.
 
 See below for a list of predefined texts which may be used in the atlas.
 
-There is also a |\framed| macro which takes a box as an argument and displays the 
-box framed. The frame style can be customized by redefining the |\linestyle| 
+There is also a |\framed| macro which takes a box as an argument and displays the
+box framed. The frame style can be customized by redefining the |\linestyle|
 macro which defaults to |1 J 1 j 1.5 w|.
 
 
-Now we're ready to define the |\dopage| macro. You may choose which of the 
+Now we're ready to define the |\dopage| macro. You may choose which of the
 predefined elements to use. A very simple example would be
 
 |layout my_layout
@@ -191,15 +191,15 @@ predefined elements to use. A very simple example would be
   overlap 0.5 cm
   code tex-atlas
     \def\dopage{\box\mapbox}
-    \insertmaps 
+    \insertmaps
 endlayout|
 
-which defines the landscape A4 layout without the navigator nor any texts. There 
+which defines the landscape A4 layout without the navigator nor any texts. There
 is only a map on the page.
 
-Note the |\insertmaps| macro. Map pages are inserted at its position. 
-This is not done automatically because you may wish to insert some other pages 
-before the first map page. 
+Note the |\insertmaps| macro. Map pages are inserted at its position.
+This is not done automatically because you may wish to insert some other pages
+before the first map page.
 
 More advanced is the default definition of the |\dopage| macro:
 
@@ -238,24 +238,24 @@ More advanced is the default definition of the |\dopage| macro:
  }
 }|
 
-Using other plain \TeX\ macros or \TeX\ primitives it's possible to add other 
+Using other plain \TeX\ macros or \TeX\ primitives it's possible to add other
 features, e.g.~a different layout for odd and even pages; headers and footers;
-or adding a logo to each page. 
+or adding a logo to each page.
 
-In addition to the map pages, the atlas contains additional items: title page, basic 
+In addition to the map pages, the atlas contains additional items: title page, basic
 facts about the cave, legend with used map symbols etc.
 
 Therion automatically generates a list of used map symbols and lists of people
-who have discovered, surveyed and drawn the selected part of the cave. 
-Following token registers may be used (according to the user's requirements 
+who have discovered, surveyed and drawn the selected part of the cave.
+Following token registers may be used (according to the user's requirements
 before or after the |\insertmaps| macro):
 
 \list
 * |\explotitle|, |\topotitle|, |\cartotitle| = translated titles
-* |\exploteam|, |\topoteam|, |\cartoteam| = participating members 
+* |\exploteam|, |\topoteam|, |\cartoteam| = participating members
   (according to |team|, |explo-team| options for |centreline| and |author|
   option of scraps)
-* |\explodate|, |\topodate|, |\cartodate| = corresponding dates 
+* |\explodate|, |\topodate|, |\cartodate| = corresponding dates
 * |\comment| = is set according to |map-comment| option of the |layout|
   command
 * |\copyrights| = is set according to copyright options for surveys and other
@@ -273,7 +273,7 @@ before or after the |\insertmaps| macro):
 * \NEW{5.4}|\gridconv| = grid meridian convergence in degrees
 \endlist
 
-There is a macro |\atlastitlepages| which combines most of the token registers 
+There is a macro |\atlastitlepages| which combines most of the token registers
 mentioned above to get simple preformatted atlas introductory pages.
 
 For legend displaying there are
@@ -286,7 +286,7 @@ For legend displaying there are
   descriptions in the specified number of columns (according to |legend-columns|
   layout option)
 * |\formattedlegend| = combines all three above commands to get
-  preformatted legend with header and symbols typeset in two\[Default; 
+  preformatted legend with header and symbols typeset in two\[Default;
   adjust the |legend-columns| layout option to get more or less of them.]
   columns if |legend| option is set |on|
 \endlist
@@ -301,15 +301,15 @@ North arrow and scale bar may be displayed using
 * |\scalebar| = PDF form with the scale bar
 \endlist
 
-There is a general-purpose macro for typesetting in multiple columns\[Not to be 
-used with map legend, where multiple columns are to be adjusted by 
+There is a general-purpose macro for typesetting in multiple columns\[Not to be
+used with map legend, where multiple columns are to be adjusted by
 |legend-columns| layout option]:
 \list
 * |\begmulti <i>|, |\endmulti| = text between these macros is typeset in
   |<i>| columns
 \endlist
 
-An example of how to create an atlas with lists of surveyors etc.\ followed by map pages 
+An example of how to create an atlas with lists of surveyors etc.\ followed by map pages
 and with legend at the end:
 
 |code tex-atlas
@@ -319,27 +319,27 @@ and with legend at the end:
 
 \subchapter Page layout in the map mode.
 
-In the map mode it's possible to use a lot of predefined variables which 
-are described in the previous chapter: 
+In the map mode it's possible to use a lot of predefined variables which
+are described in the previous chapter:
 
 {\rightskip0cm plus 5cm
-|\cavename|, |\comment|, |\copyrights|, 
-|\explotitle|, |\topotitle|, |\cartotitle|, 
-|\exploteam|, |\topoteam|, |\cartoteam|, 
-|\explodate|, |\topodate|, |\cartodate|, 
+|\cavename|, |\comment|, |\copyrights|,
+|\explotitle|, |\topotitle|, |\cartotitle|,
+|\exploteam|, |\topoteam|, |\cartoteam|,
+|\explodate|, |\topodate|, |\cartodate|,
 |\cavelength|, |\cavedepth|, |\cavelengthtitle|, |\cavedepthtitle|,
 |\cavemaxz|, |\caveminz|, |\thversion|, |\currentdate|,
 |\outcscode|, |\outcsname|, |\northdir|, |\magdecl|, |\gridconv|,
-|\ifnortharrow|, |\ifscalebar|, |\northarrow|, |\scalebar|, 
-|\iflegend|, |\legendtitle|, |\insertlegend|, |\begmulti <i>|, |\endmulti|, 
+|\ifnortharrow|, |\ifscalebar|, |\northarrow|, |\scalebar|,
+|\iflegend|, |\legendtitle|, |\insertlegend|, |\begmulti <i>|, |\endmulti|,
 |\formattedlegend|, |\legendcolumns|.
 \par}
 
-In order to place them somewhere on the map page, you have to define 
-|\maplayout| macro in the |code tex-map| section of the |layout| command. 
+In order to place them somewhere on the map page, you have to define
+|\maplayout| macro in the |code tex-map| section of the |layout| command.
 It should contain one or more |\legendbox| invocations.
-The |\legendbox| macro has four parameters: 
-coordinates ranging 0--100, alignment specification 
+The |\legendbox| macro has four parameters:
+coordinates ranging 0--100, alignment specification
 (N, E, S, W, NE, SE, SW, NW or C) and the content to be displayed.
 
 A simple example is
@@ -350,17 +350,17 @@ A simple example is
 
 which displays north arrow in the upper-left corner of the map sheet.
 
-For the user's convenience, there is |\legendcontent| token register. It contains 
-preformatted cave name, north arrow, scale bar, explo/topo/carto teams, 
+For the user's convenience, there is |\legendcontent| token register. It contains
+preformatted cave name, north arrow, scale bar, explo/topo/carto teams,
 comment, copyrights and legend.
 (The |\legendcontent| is also used in the default map layout definition:
 |\def\maplayout{\legendbox{0}{100}{NW}{\the\legendcontent}}|).
 
-The width of the above text may be adjusted by |\legendwidth| dimen register 
-(its default value is set by |legend-width| layout option). 
+The width of the above text may be adjusted by |\legendwidth| dimen register
+(its default value is set by |legend-width| layout option).
 The colour and size of texts in the preformatted legend can be easily changed
-using |\legendtextcolor|, |\legendtextsize|, |\legendtextsectionsize| and 
-|\legendtextheadersize| token registers, 
+using |\legendtextcolor|, |\legendtextsize|, |\legendtextsectionsize| and
+|\legendtextheadersize| token registers,
 e.g. for large blue text:
 
 |code tex-map
@@ -370,7 +370,7 @@ e.g. for large blue text:
   \legendtextheadersize={\size[60]}|
 
 
-It is possible to display the whole map framed by setting the |\framethickness| 
+It is possible to display the whole map framed by setting the |\framethickness|
 dimen register to a positive value, e.g. |0.5mm|.
 
 
@@ -381,19 +381,19 @@ instead of the \MP\ macro |fonts_setup()|.
 
 \subchapter New map symbols.
 
-Therion's layout command makes it easy to switch among various predefined map 
-symbol sets. If there is no such symbol or symbol set you want, it's possible 
-to design new map symbols. 
+Therion's layout command makes it easy to switch among various predefined map
+symbol sets. If there is no such symbol or symbol set you want, it's possible
+to design new map symbols.
 
-However, this requires knowledge of the \MP\ language, which is used for map 
-visualization. It's described in 
+However, this requires knowledge of the \MP\ language, which is used for map
+visualization. It's described in
 
 \list
   Hobby, J. D.: {\it A User's Manual for MetaPost}, available at \hfil\break
      \www{https://www.tug.org/docs/metapost/mpman.pdf}
 \endlist
 
-The user may also benefit from comprehensive reference to the {\manfnt METAFONT} 
+The user may also benefit from comprehensive reference to the {\manfnt METAFONT}
 language, which is quite similar to \MP:
 
 \list
@@ -401,15 +401,15 @@ language, which is quite similar to \MP:
     $^1$1986
 \endlist
 
-New symbols may be defined in the |code metapost| section of the |layout| 
-command. This makes it easy to add new symbols at the run-time. It is also 
-possible to add symbols permanently by compiling them into Therion executable 
+New symbols may be defined in the |code metapost| section of the |layout|
+command. This makes it easy to add new symbols at the run-time. It is also
+possible to add symbols permanently by compiling them into Therion executable
 (see the {\it Appendix} for instructions on how to do this).
 
 Each symbol has to have a unique name, which consists of the following items:
 
-\list 
-* one of the letters `p', `l', `a', `s' for point, line, area or special 
+\list
+* one of the letters `p', `l', `a', `s' for point, line, area or special
   symbols, respectively;
 * underscore character;
 * symbol type as listed in the chapter {\it Data format\/} with all dashes
@@ -419,7 +419,7 @@ Each symbol has to have a unique name, which consists of the following items:
 * symbol set identifier in uppercase
 \endlist
 
-Example: standard name for a point `water-flow' symbol with a `permanent' 
+Example: standard name for a point `water-flow' symbol with a `permanent'
 subtype in the `MY' set is |p_waterflow_permanent_MY|. Standard name for user-defined
 symbol types should not include symbol set identifier, e.g.~|p_u_bat|.
 
@@ -427,11 +427,11 @@ Each new symbol has to be registered by a macro call
 
 |initsymbol("<standard-name>");|
 
-unless it's compiled into Therion executable. 
+unless it's compiled into Therion executable.
 
-There are four predefined pens {\it PenA} (thickest) \dots\ {\it PenD} 
-(thinnest), which should be used for all drawings. 
-For drawing and filling use |thdraw| and |thfill| commands instead of \MP's 
+There are four predefined pens {\it PenA} (thickest) \dots\ {\it PenD}
+(thinnest), which should be used for all drawings.
+For drawing and filling use |thdraw| and |thfill| commands instead of \MP's
 |draw| and |fill|.
 
 \NEW{5.4}The following variables are also available:
@@ -457,35 +457,35 @@ For drawing and filling use |thdraw| and |thfill| commands instead of \MP's
 \subsubchapter Point symbols.
 
 Point symbols are defined as macros using |def ... enddef;| commands.
-The majority of point symbol definitions have four arguments: 
-position (pair), rotation (numeric), scale (numeric) and alignment (pair). 
-Exceptions are {\it section} which has no visual representation; 
+The majority of point symbol definitions have four arguments:
+position (pair), rotation (numeric), scale (numeric) and alignment (pair).
+Exceptions are {\it section} which has no visual representation;
 all {\it labels}, which require special treatment as described in the
-previous chapter, and 
+previous chapter, and
 {\it station} which takes only one argument: position (pair).
 
-All point symbols are drawn in local coordinates with the length unit {\it u}. 
-Recommended ranges are $\left<-0.5u,0.5u\right>$ in both axes. The symbol 
+All point symbols are drawn in local coordinates with the length unit {\it u}.
+Recommended ranges are $\left<-0.5u,0.5u\right>$ in both axes. The symbol
 should be centered at the coordinates' origin.
-For the final map, all drawings are transformed as specified in the {\it T\/} 
-transformation variable, so it's necessary to set this variable before drawing. 
+For the final map, all drawings are transformed as specified in the {\it T\/}
+transformation variable, so it's necessary to set this variable before drawing.
 
-This is usually done in two steps (assume that the four arguments are 
-{\it P}, {\it R}, {\it S}, {\it A}): 
-  
+This is usually done in two steps (assume that the four arguments are
+{\it P}, {\it R}, {\it S}, {\it A}):
+
 \list
-* set the {\it U} pair variable to $\left({width\over2},{height\over2}\right)$ 
-  of the symbol for the correct alignment. The alignment argument {\it A} is a pair 
+* set the {\it U} pair variable to $\left({width\over2},{height\over2}\right)$
+  of the symbol for the correct alignment. The alignment argument {\it A} is a pair
   representing ratios $\left(shift_x\over U_x\right)$ and
-  $\left(shift_y\over U_y\right)$. 
-  
+  $\left(shift_y\over U_y\right)$.
+
   (Hence |aligned A| means |shifted (xpart A * xpart U, ypart A * ypart U)|.)
-* set the {\it T} transformation variable 
+* set the {\it T} transformation variable
 
   {\catcode`\=12|T:=identity aligned A rotated R scaled S shifted P;|}
 \endlist
 
-For drawing and filling use |thdraw| and |thfill| commands instead of \MP's 
+For drawing and filling use |thdraw| and |thfill| commands instead of \MP's
 |draw| and |fill|. These automatically take care of {\it T} transformation.
 
 An example definition may be
@@ -499,26 +499,26 @@ initsymbol("p_entrance_UIS");|
 
 \subsubchapter Line symbols.
 
-Line symbols differ from point symbols in respect that there is no local 
-coordinate system. Each line symbol gets the {\it path} in absolute coordinates 
-as the first argument. Therefore it's necessary to set {\it T} variable to 
+Line symbols differ from point symbols in respect that there is no local
+coordinate system. Each line symbol gets the {\it path} in absolute coordinates
+as the first argument. Therefore it's necessary to set {\it T} variable to
 |identity| before drawing.
 
-The following symbols take additional arguments: 
+The following symbols take additional arguments:
 \list
 * arrow = numeric: 0 is no arrows, 1 arrow at the end, 2 begin, 3 both ends
-* contour = text: list of points which get the tick or one of 
-  $-1$, $-2$ or $-3$ to mark undefined tick, tick in the middle or 
+* contour = text: list of points which get the tick or one of
+  $-1$, $-2$ or $-3$ to mark undefined tick, tick in the middle or
   no tick, respectively
-* section = text: list of points which get the orientation arrow or 
+* section = text: list of points which get the orientation arrow or
   $-1$ to indicate no arrows
-* slope = numeric: 0 no border, 1 border; text: list of (point,direction,length) 
+* slope = numeric: 0 no border, 1 border; text: list of (point,direction,length)
   triplets
 \endlist
 
 Usage example:
 
-|def l_wall_bedrock_UIS (expr P) = 
+|def l_wall_bedrock_UIS (expr P) =
   T:=identity;
   pickup PenA;
   thdraw P;
@@ -527,20 +527,20 @@ initsymbol("l_wall_bedrock_UIS");|
 
 \subsubchapter Area symbols.
 
-Areas are similar to lines: they take only one argument -- {\it path} in 
-absolute coordinates. 
+Areas are similar to lines: they take only one argument -- {\it path} in
+absolute coordinates.
 
 You may fill them in three ways:
 
 \list
- * fill a uniform or randomised grid in a temporary picture 
-   (having dimensions |bbox path|) with some point symbols; clip it according 
+ * fill a uniform or randomised grid in a temporary picture
+   (having dimensions |bbox path|) with some point symbols; clip it according
    to the |path| and add to the |currentpicture|
  * fill |path| with a solid colour
  * fill |path| with a predefined pattern using a |withpattern| keyword.
 \endlist
 
-Patterns are defined using the same user interface (without the 
+Patterns are defined using the same user interface (without the
 |patterncolor| macro) as described in the article
 
 \list
@@ -549,7 +549,7 @@ Patterns are defined using the same user interface (without the
   \www{https://www.tug.org/TUGboat/Articles/tb19-3/tb60bolek.pdf}
 \endlist
 
-You may use standard \MP\ |draw| and similar macros without setting of {\it T} 
+You may use standard \MP\ |draw| and similar macros without setting of {\it T}
 variable in the pattern definitions.
 
 An example of how to define and use patterns:
@@ -569,7 +569,7 @@ initsymbol("a_water_UIS");|
 
 \subsubchapter Special symbols.
 
-There are currently two special symbols: scale bar and north arrow. 
+There are currently two special symbols: scale bar and north arrow.
 Both are experimental and subject to change.
 
 \endinput
