@@ -1,4 +1,4 @@
-% Symbol set of Brazilian Speleological Society (SBE - Sociedade Brasileira de 
+% Symbol set of Brazilian Speleological Society (SBE - Sociedade Brasileira de
 % Espeleologia), author Rodrigo Severo.
 
 
@@ -21,7 +21,7 @@ SBE_altar_raw := image(
 	endgroup;
 );
 
-def p_altar_SBE(expr pos, theta, sc, al) = 
+def p_altar_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw SBE_altar_raw shifted (-(llcorner SBE_altar_raw)-(urcorner SBE_altar_raw - llcorner SBE_altar_raw)/2) scaled (u / max((xpart urcorner SBE_altar_raw) - (xpart llcorner SBE_altar_raw), (ypart urcorner SBE_altar_raw) - (ypart llcorner SBE_altar_raw)));
 enddef;
@@ -310,7 +310,7 @@ SBE_electric_light_raw := image(
 	endgroup;
 );
 
-def p_electriclight_SBE(expr pos, theta, sc, al) = 
+def p_electriclight_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw SBE_electric_light_raw shifted (-(llcorner SBE_electric_light_raw)-(urcorner SBE_electric_light_raw - llcorner SBE_electric_light_raw)/2) scaled (u / max((xpart urcorner SBE_electric_light_raw) - (xpart llcorner SBE_electric_light_raw), (ypart urcorner SBE_electric_light_raw) - (ypart llcorner SBE_electric_light_raw)));
 enddef;
@@ -335,7 +335,7 @@ SBE_exvoto_raw := image(
 	endgroup;
 );
 
-def p_exvoto_SBE(expr pos, theta, sc, al) = 
+def p_exvoto_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw SBE_exvoto_raw shifted (-(llcorner SBE_exvoto_raw)-(urcorner SBE_exvoto_raw - llcorner SBE_exvoto_raw)/2) scaled (u / max((xpart urcorner SBE_exvoto_raw) - (xpart llcorner SBE_exvoto_raw), (ypart urcorner SBE_exvoto_raw) - (ypart llcorner SBE_exvoto_raw)));
 enddef;
@@ -360,7 +360,7 @@ SBE_gate_raw := image(
 	endgroup;
 );
 
-def p_gate_SBE(expr pos, theta, sc, al) = 
+def p_gate_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw SBE_gate_raw shifted (-(llcorner SBE_gate_raw)-(urcorner SBE_gate_raw - llcorner SBE_gate_raw)/2) scaled (u / max((xpart urcorner SBE_gate_raw) - (xpart llcorner SBE_gate_raw), (ypart urcorner SBE_gate_raw) - (ypart llcorner SBE_gate_raw)));
 enddef;
@@ -480,7 +480,7 @@ SBE_masonry_raw := image(
 	endgroup;
 );
 
-def p_masonry_SBE(expr pos, theta, sc, al) = 
+def p_masonry_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw SBE_masonry_raw shifted (-(llcorner SBE_masonry_raw)-(urcorner SBE_masonry_raw - llcorner SBE_masonry_raw)/2) scaled (u / max((xpart urcorner SBE_masonry_raw) - (xpart llcorner SBE_masonry_raw), (ypart urcorner SBE_masonry_raw) - (ypart llcorner SBE_masonry_raw)));
 enddef;
@@ -533,7 +533,7 @@ SBE_mud_raw := image(
 	endgroup;
 );
 
-def p_mud_SBE(expr pos, theta, sc, al) = 
+def p_mud_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw SBE_mud_raw shifted (-(llcorner SBE_mud_raw)-(urcorner SBE_mud_raw - llcorner SBE_mud_raw)/2) scaled (u / max((xpart urcorner SBE_mud_raw) - (xpart llcorner SBE_mud_raw), (ypart urcorner SBE_mud_raw) - (ypart llcorner SBE_mud_raw)));
 enddef;
@@ -589,14 +589,14 @@ SBE_nameplate_raw := image(
 	endgroup;
 );
 
-def p_nameplate_SBE(expr pos, theta, sc, al) = 
+def p_nameplate_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw SBE_nameplate_raw shifted (-(llcorner SBE_nameplate_raw)-(urcorner SBE_nameplate_raw - llcorner SBE_nameplate_raw)/2) scaled (u / max((xpart urcorner SBE_nameplate_raw) - (xpart llcorner SBE_nameplate_raw), (ypart urcorner SBE_nameplate_raw) - (ypart llcorner SBE_nameplate_raw)));
 enddef;
 
 
-picture SBE_nowheelchair_raw;
-SBE_nowheelchair_raw := image(
+picture SBE_wheelchair_raw;
+SBE_wheelchair_raw := image(
 	begingroup;
 		interim linecap := butt;
 		interim linejoin := mitered;
@@ -626,6 +626,13 @@ SBE_nowheelchair_raw := image(
 		draw (177,254)--(177,178)--(259,178)
 			--(278,129)--(299,134);
 		draw (177,233)--(239,233);
+	endgroup;
+);
+
+picture SBE_nowheelchair_raw;
+SBE_nowheelchair_raw := image(
+	draw SBE_wheelchair_raw;
+	begingroup;
 		pickup pencircle scaled 30bp;
 		interim linecap := butt;
 		interim linejoin := mitered;
@@ -635,7 +642,7 @@ SBE_nowheelchair_raw := image(
 
 def p_nowheelchair_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_nowheelchair_raw shifted (-(llcorner SBE_nowheelchair_raw)-(urcorner SBE_nowheelchair_raw - llcorner SBE_nowheelchair_raw)/2) scaled (1.5u / max((xpart urcorner SBE_nowheelchair_raw) - (xpart llcorner SBE_nowheelchair_raw), (ypart urcorner SBE_nowheelchair_raw) - (ypart llcorner SBE_nowheelchair_raw)));
+	thdraw SBE_nowheelchair_raw shifted (-(llcorner SBE_nowheelchair_raw)-(urcorner SBE_nowheelchair_raw - llcorner SBE_nowheelchair_raw)/2) scaled (u / max((xpart urcorner SBE_nowheelchair_raw) - (xpart llcorner SBE_nowheelchair_raw), (ypart urcorner SBE_nowheelchair_raw) - (ypart llcorner SBE_nowheelchair_raw)));
 enddef;
 
 
@@ -700,7 +707,7 @@ SBE_photo_raw := image(
 	endgroup;
 );
 
-def p_photo_SBE(expr pos, theta, sc, al) = 
+def p_photo_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw SBE_photo_raw shifted (-(llcorner SBE_photo_raw)-(urcorner SBE_photo_raw - llcorner SBE_photo_raw)/2) scaled (u / max((xpart urcorner SBE_photo_raw) - (xpart llcorner SBE_photo_raw), (ypart urcorner SBE_photo_raw) - (ypart llcorner SBE_photo_raw)));
 enddef;
@@ -896,7 +903,7 @@ SBE_walkway_raw := image(
 	endgroup;
 );
 
-def p_walkway_SBE(expr pos, theta, sc, al) = 
+def p_walkway_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
 	thdraw SBE_walkway_raw shifted (-(llcorner SBE_walkway_raw)-(urcorner SBE_walkway_raw - llcorner SBE_walkway_raw)/2) scaled (u / max((xpart urcorner SBE_walkway_raw) - (xpart llcorner SBE_walkway_raw), (ypart urcorner SBE_walkway_raw) - (ypart llcorner SBE_walkway_raw)));
 enddef;
@@ -951,29 +958,6 @@ def p_waterdrip_SBE(expr pos, theta, sc, al) =
 	T:=identity aligned al rotated theta scaled sc shifted pos;
 	thdraw SBE_water_drip_raw shifted (-(llcorner SBE_water_drip_raw)-(urcorner SBE_water_drip_raw - llcorner SBE_water_drip_raw)/2) scaled (u / max((xpart urcorner SBE_water_drip_raw) - (xpart llcorner SBE_water_drip_raw), (ypart urcorner SBE_water_drip_raw) - (ypart llcorner SBE_water_drip_raw)));
 enddef;
-
-
-picture SBE_wheelchair_raw;
-SBE_wheelchair_raw := image(
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		fill (56,100)..controls (56,93) and (51,88)..(45,88)
-			..controls (39,88) and (33,93)..(33,100)
-			..controls (33,106) and (39,111)..(45,111)
-			..controls (51,111) and (56,106)..(56,100)
-			--cycle;
-		pickup pencircle scaled 9bp;
-		interim linecap := rounded;
-		interim linejoin := rounded;
-		draw (30,65)..controls (17,61) and (8,49)..(8,36)
-			..controls (8,19) and (22,5)..(39,5)
-			..controls (52,5) and (65,14)..(68,28);
-		draw (46,80)--(46,47)--(81,47)
-			--(89,26)--(98,28);
-		draw (46,71)--(72,71);
-	endgroup;
-);
 
 def p_wheelchair_SBE(expr pos, theta, sc, al) =
 	T:=identity aligned al rotated theta scaled sc shifted pos;
