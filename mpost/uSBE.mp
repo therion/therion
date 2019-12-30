@@ -652,14 +652,12 @@ enddef;
 picture SBE_photo_raw;
 SBE_photo_raw := image(
 	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
 		fill (186,476)--(186,445)--(111,445)
 			--(75,408)--(75,302)--(188,302)
 			--(188,286)--(329,286)--(329,302)
 			--(440,302)--(440,408)--(405,445)
 			--(328,445)--(328,476)--cycle;
-		pickup pencircle scaled 14bp;
+		pickup pencircle scaled 18bp;
 		interim linecap := rounded;
 		draw (194,499)--(107,621);
 		draw (320,499)--(407,621);
