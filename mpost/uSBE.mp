@@ -774,8 +774,8 @@ def p_stalactitesstalagmites_UIS(expr pos,theta,sc,al) =
 		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (-.15u,.4u) -- (0,.2u) -- (.15u,.4u);
 		thdraw (.15u,-.4u) -- (0,-.2u) -- (-.15u,-.4u);
-		thdraw (0,-.2u) -- (0,-.05u);
-		thdraw (0,.2u) -- (0,.05u);
+		thdraw (0,-.2u) -- (0,-.1u);
+		thdraw (0,.2u) -- (0,.1u);
 	endfor;
 enddef;
 
