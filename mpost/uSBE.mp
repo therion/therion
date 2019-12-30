@@ -762,8 +762,8 @@ def p_stalactitestalagmite_UIS(expr pos,theta,sc,al) =
 	pickup PenC;
 	thdraw (-.15u,.4u) -- (0,.2u) -- (.15u,.4u);
 	thdraw (.15u,-.4u) -- (0,-.2u) -- (-.15u,-.4u);
-	thdraw (0,-.2u) -- (0,-.05u);
-	thdraw (0,.2u) -- (0,.05u);
+	thdraw (0,-.2u) -- (0,-.1u);
+	thdraw (0,.2u) -- (0,.1u);
 enddef;
 
 
