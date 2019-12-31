@@ -457,12 +457,13 @@ SBE_masonry_raw := image(
 		draw (287,401)--(355,401);
 		draw (247,360)--(315,360);
 		draw (327,360)--(395,360);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 	endgroup;
 );
 
 def p_masonry_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_masonry_raw shifted (-(llcorner SBE_masonry_raw)-(urcorner SBE_masonry_raw - llcorner SBE_masonry_raw)/2) scaled (u / max((xpart urcorner SBE_masonry_raw) - (xpart llcorner SBE_masonry_raw), (ypart urcorner SBE_masonry_raw) - (ypart llcorner SBE_masonry_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_masonry_raw;
 enddef;
 
 
