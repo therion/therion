@@ -195,8 +195,8 @@ enddef;
 
 
 def p_discpillar_UIS(expr pos,theta,sc,al) =
-	U:=(.15u, .4u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
+	U := (.15u, .4u);
+	T := identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
 	thdraw (-.15u,.4u) -- (0,.15u) -- (0,-.15u) -- (-.15u,-.4u);
 	thdraw (0,-.15u) -- (.15u,-.4u);
@@ -206,10 +206,10 @@ enddef;
 
 
 def p_discpillars_UIS(expr pos,theta,sc,al) =
-	U:=(.3u, .8u);
+	U := (.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
-		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		T := identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (-.15u,.4u) -- (0,.15u) -- (0,-.15u) -- (-.15u,-.4u);
 		thdraw (0,-.15u) -- (.15u,-.4u);
 		thdraw (0,.15u) -- (.15u,.4u);
@@ -219,10 +219,10 @@ enddef;
 
 
 def p_discstalactites_UIS(expr pos,theta,sc,al) =
-	U:=(.3u, .8u);
+	U := (.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
-		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		T := identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (0,-.4u) -- (0,.15u) -- (-.15u,.4u);
 		thdraw (0,.15u) -- (.15u,.4u);
 		thdraw (-.15u,-.1u) -- (.15u,-.1u);
@@ -231,10 +231,10 @@ enddef;
 
 
 def p_discstalagmites_UIS(expr pos,theta,sc,al) =
-	U:=(.3u, .8u);
+	U := (.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
-		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		T := identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (0,.4u) -- (0,-.15u) -- (-.15u,-.4u);
 		thdraw (0,-.15u) -- (.15u,-.4u);
 		thdraw (-.15u,.1u) -- (.15u,.1u);
@@ -243,8 +243,8 @@ enddef;
 
 
 def p_discstalactite_UIS(expr pos,theta,sc,al) =
-	U:=(.15u, .4u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
+	U := (.15u, .4u);
+	T := identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
 	thdraw (0,-.4u) -- (0,.15u) -- (-.15u,.4u);
 	thdraw (0,.15u) -- (.15u,.4u);
@@ -253,8 +253,8 @@ enddef;
 
 
 def p_discstalagmite_UIS(expr pos,theta,sc,al) =
-	U:=(.15u, .4u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
+	U := (.15u, .4u);
+	T := identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
 	thdraw (0,.4u) -- (0,-.15u) -- (-.15u,-.4u);
 	thdraw (0,-.15u) -- (.15u,-.4u);
