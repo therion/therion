@@ -65,11 +65,12 @@ SBE_audio_raw := image(
 	draw (158,186)..controls (178,152) and (179,118)..(158,82);
 	draw (185,202)..controls (208,166) and (213,112)..(185,67);
 	draw (213,218)..controls (248,150) and (243,105)..(213,50);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_audio_SBE(expr pos, theta, sc, al) =
 	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_audio_raw shifted (-(llcorner SBE_audio_raw)-(urcorner SBE_audio_raw - llcorner SBE_audio_raw)/2) scaled (u / max((xpart urcorner SBE_audio_raw) - (xpart llcorner SBE_audio_raw), (ypart urcorner SBE_audio_raw) - (ypart llcorner SBE_audio_raw)));
+	thdraw SBE_audio_raw;
 enddef;
 
 
