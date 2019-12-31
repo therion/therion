@@ -567,33 +567,29 @@ enddef;
 
 picture SBE_wheelchair_raw;
 SBE_wheelchair_raw := image(
-	begingroup;
-		fill (363,192)..controls (363,97) and (286,20)..(192,20)
-			..controls (97,20) and (20,97)..(20,192)
-			..controls (20,287) and (97,364)..(192,364)
-			..controls (286,364) and (363,287)..(363,192)
-			--cycle withcolor white;
-		pickup pencircle scaled 39bp;
-		interim linecap := rounded;
-		interim linejoin := rounded;
-		draw (363,192)..controls (363,97) and (286,20)..(192,20)
-			..controls (97,20) and (20,97)..(20,192)
-			..controls (20,287) and (97,364)..(192,364)
-			..controls (286,364) and (363,287)..(363,192)
-			--cycle withcolor red;
-		fill (202,301)..controls (202,286) and (190,274)..(175,274)
-			..controls (160,274) and (148,286)..(148,301)
-			..controls (148,316) and (160,328)..(175,328)
-			..controls (190,328) and (202,316)..(202,301)
-			--cycle;
-		pickup pencircle scaled 21bp;
-		draw (139,221)..controls (109,212) and (88,184)..(88,152)
-			..controls (88,113) and (120,81)..(160,81)
-			..controls (192,81) and (221,102)..(229,133);
-		draw (177,254)--(177,178)--(259,178)
-			--(278,129)--(299,134);
-		draw (177,233)--(239,233);
-	endgroup;
+	fill (363,192)..controls (363,97) and (286,20)..(192,20)
+		..controls (97,20) and (20,97)..(20,192)
+		..controls (20,287) and (97,364)..(192,364)
+		..controls (286,364) and (363,287)..(363,192)
+		--cycle withcolor white;
+	pickup pencircle scaled 39bp;
+	draw (363,192)..controls (363,97) and (286,20)..(192,20)
+		..controls (97,20) and (20,97)..(20,192)
+		..controls (20,287) and (97,364)..(192,364)
+		..controls (286,364) and (363,287)..(363,192)
+		--cycle withcolor red;
+	fill (202,301)..controls (202,286) and (190,274)..(175,274)
+		..controls (160,274) and (148,286)..(148,301)
+		..controls (148,316) and (160,328)..(175,328)
+		..controls (190,328) and (202,316)..(202,301)
+		--cycle;
+	pickup pencircle scaled 21bp;
+	draw (139,221)..controls (109,212) and (88,184)..(88,152)
+		..controls (88,113) and (120,81)..(160,81)
+		..controls (192,81) and (221,102)..(229,133);
+	draw (177,254)--(177,178)--(259,178)
+		--(278,129)--(299,134);
+	draw (177,233)--(239,233);
 );
 
 picture SBE_nowheelchair_raw;
