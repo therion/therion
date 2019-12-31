@@ -653,17 +653,14 @@ enddef;
 
 picture SBE_photo_raw;
 SBE_photo_raw := image(
-	begingroup;
-		fill (186,476)--(186,445)--(111,445)
-			--(75,408)--(75,302)--(188,302)
-			--(188,286)--(329,286)--(329,302)
-			--(440,302)--(440,408)--(405,445)
-			--(328,445)--(328,476)--cycle;
-		pickup pencircle scaled 18bp;
-		interim linecap := rounded;
-		draw (194,499)--(107,621);
-		draw (320,499)--(407,621);
-	endgroup;
+	fill (186,476)--(186,445)--(111,445)
+		--(75,408)--(75,302)--(188,302)
+		--(188,286)--(329,286)--(329,302)
+		--(440,302)--(440,408)--(405,445)
+		--(328,445)--(328,476)--cycle;
+	pickup pencircle scaled 18bp;
+	draw (194,499)--(107,621);
+	draw (320,499)--(407,621);
 	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
