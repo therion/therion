@@ -1164,3 +1164,45 @@ def l_walkway_SBE(expr P) =
 		endfor;
 	endgroup;
 enddef;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Areas %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+picture SBE_a_mudcrack_raw;
+SBE_a_mudcrack_raw := image(
+	begingroup;
+		interim linecap := butt;
+		interim linejoin := mitered;
+		pickup pencircle scaled 8bp;
+		draw (172,466)--(225,425)--(271,440)
+			--(323,390)--(346,423)--(414,363)
+			--(390,275)--(414,281)--(438,322);
+		pickup pencircle scaled 4bp;
+		draw (244,252)--(232,272)--(308,293)
+			--(257,310)--(266,357)--(291,380)
+			--(303,428)--(282,477)--(393,502)
+			--(380,518);
+		pickup pencircle scaled 6bp;
+		draw (172,466)--(244,518);
+		pickup pencircle scaled 8bp;
+		draw (173,322)--(205,357)--(244,322)
+			--(266,357);
+		pickup pencircle scaled 8bp;
+		draw (380,252)--(364,292)--(380,322)
+			--(346,423)--(417,491)--(393,502);
+		pickup pencircle scaled 8bp;
+		draw (437,466)--(417,491)--(380,392);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (1.5u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
+	endgroup;
+);
+
+beginpattern(pattern_mudcrack_SBE);
+	draw SBE_a_mudcrack_raw;
+endpattern;
+
+def a_mudcrack_SBE(expr Path) =
+	T := identity;
+	thclean Path;
+	thfill Path withpattern pattern_mudcrack_SBE;
+enddef;

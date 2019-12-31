@@ -3653,3 +3653,7 @@ zh_CN: 边石潭
 therion: line walkway
 en: walkway
 pt: passarela
+
+therion: area mudcrack
+en: mudcrack
+pt: lama rachada

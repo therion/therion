@@ -72,6 +72,7 @@ enum {
   TT_AREA_TYPE_FLOWSTONE,
   TT_AREA_TYPE_MOONMILK,
   TT_AREA_TYPE_DIMENSIONS,
+  TT_AREA_TYPE_MUDCRACK,
 };
 
 
@@ -88,6 +89,7 @@ static const thstok thtt_area_types[] = {
   {"flowstone", TT_AREA_TYPE_FLOWSTONE},
   {"ice", TT_AREA_TYPE_ICE},
   {"moonmilk", TT_AREA_TYPE_MOONMILK},
+  {"mudcrack", TT_AREA_TYPE_MUDCRACK},
   {"pebbles", TT_AREA_TYPE_PEBBLES},
   {"sand", TT_AREA_TYPE_SAND},
   {"snow", TT_AREA_TYPE_SNOW},

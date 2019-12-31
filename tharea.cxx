@@ -215,6 +215,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_FLOWSTONE, SYMA_FLOWSTONE)
     tharea_type_export_mp(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK)
     tharea_type_export_mp(TT_AREA_TYPE_U, SYMA_U)
+    tharea_type_export_mp(TT_AREA_TYPE_MUDCRACK, SYMA_MUDCRACK)
   }
   omacroid = macroid;
   if (this->context >= 0)
