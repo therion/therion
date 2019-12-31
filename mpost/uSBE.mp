@@ -185,11 +185,12 @@ SBE_danger_raw := image(
 		--(330,436)..controls (330,435) and (330,435)..(331,435)
 		..controls (332,435) and (332,435)..(332,436)
 		--cycle withcolor white;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_danger_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_danger_raw shifted (-(llcorner SBE_danger_raw)-(urcorner SBE_danger_raw - llcorner SBE_danger_raw)/2) scaled (u / max((xpart urcorner SBE_danger_raw) - (xpart llcorner SBE_danger_raw), (ypart urcorner SBE_danger_raw) - (ypart llcorner SBE_danger_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_danger_raw;
 enddef;
 
 
