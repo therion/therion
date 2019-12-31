@@ -729,7 +729,7 @@ UIS_plusminus_raw := image(
 			--(407,401)..controls (407,394) and (401,387)..(393,387)
 			--cycle;
 	endgroup;
-	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / (xpart urcorner currentpicture) - (xpart llcorner currentpicture));
 );
 
 def p_plusminus_UIS(expr pos, theta, sc, al) =
