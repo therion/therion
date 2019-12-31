@@ -198,6 +198,7 @@ enum {
   TT_LINE_TYPE_DRIPLINE,
   TT_LINE_TYPE_FAULT,
   TT_LINE_TYPE_JOINT,
+  TT_LINE_TYPE_LOWCEILING,
 };
 
 /**
@@ -222,6 +223,7 @@ static const thstok thtt_line_types[] = {
   {"handrail", TT_LINE_TYPE_HANDRAIL},
   {"joint", TT_LINE_TYPE_JOINT},
   {"label", TT_LINE_TYPE_LABEL},
+  {"low-ceiling", TT_LINE_TYPE_LOWCEILING},
   {"map-connection", TT_LINE_TYPE_MAP_CONNECTION},
   {"moonmilk", TT_LINE_TYPE_MOONMILK},
   {"overhang", TT_LINE_TYPE_OVERHANG},

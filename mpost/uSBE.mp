@@ -1030,3 +1030,29 @@ def l_joint_SBE(expr P) =
 	endfor;
 enddef;
 
+
+def l_lowceiling_SBE(expr P) =
+	path myT;
+
+	T := identity;
+
+	cursor := 0;
+	totalLength := arclength P;
+	elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+	myT := (0,0) -- (0,-0.1u);
+	pickup PenD;
+	forever:
+		t1 := arctime (cursor + elementSize * 1/7) of P;
+		t2 := arctime (cursor + elementSize * 3/7) of P;
+		t3 := arctime (cursor + elementSize * 4/7) of P;
+		t4 := arctime (cursor + elementSize * 6/7) of P;
+
+		thdraw (subpath (t1,t4) of P);
+		thdraw myT rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
+		thdraw myT rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+
+		cursor := cursor + elementSize;
+		exitif cursor > totalLength - (elementSize / 2);
+	endfor;
+enddef;
+
