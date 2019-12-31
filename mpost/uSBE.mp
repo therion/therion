@@ -490,31 +490,6 @@ def p_minus_UIS(expr pos, theta, sc, al) =
 enddef;
 
 
-picture UIS_minusplus_raw;
-UIS_minusplus_raw := image(
-	begingroup
-		pickup pencircle scaled 3bp;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		draw (383,427)--(403,427);
-		draw (393,418)--(393,437);
-		draw (383,401)--(403,401);
-		pickup pencircle scaled 2bp;
-		draw (393,387)..controls (385,387) and (379,394)..(379,401)
-			--(379,427)..controls (379,435) and (385,441)..(393,441)
-			..controls (401,441) and (407,435)..(407,427)
-			--(407,401)..controls (407,394) and (401,387)..(393,387)
-			--cycle;
-	endgroup;
-	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
-);
-
-def p_minusplus_UIS(expr pos, theta, sc, al) =
-	T := identity rotated theta aligned al scaled sc shifted pos;
-	thdraw UIS_minusplus_raw;
-enddef;
-
-
 picture SBE_mud_raw;
 SBE_mud_raw := image(
 	fill (240,321)..controls (232,352) and (217,388)..(183,397)
@@ -738,35 +713,28 @@ def p_plus_UIS(expr pos, theta, sc, al) =
 enddef;
 
 
-picture UIS_plus_minus_raw;
-UIS_plus_minus_raw := image(
-	fill (482.812988,451.992004)--(482.812988,443.835999)--(490.968994,443.835999)
-		--(490.968994,441.335999)--(482.812988,441.335999)--(482.812988,433.179993)
-		--(480.359009,433.179993)--(480.359009,441.335999)--(472.187988,441.335999)
-		--(472.187988,443.835999)--(480.359009,443.835999)--(480.359009,451.992004)
-		--cycle withcolor black;
-	pickup pencircle scaled 0.750000bp;
-	draw (482.812988,451.992004)--(482.812988,443.835999)--(490.968994,443.835999)
-		--(490.968994,441.335999)--(482.812988,441.335999)--(482.812988,433.179993)
-		--(480.359009,433.179993)--(480.359009,441.335999)--(472.187988,441.335999)
-		--(472.187988,443.835999)--(480.359009,443.835999)--(480.359009,451.992004)
-		--cycle withcolor black;
-	pickup pencircle scaled 0.000000bp;
-	fill (475.089996,425.414001)--(488.074005,425.414001)--(488.074005,421.460999)
-		--(475.089996,421.460999)--cycle withcolor black;
-	pickup pencircle scaled 1.332280bp;
-	draw (481.585999,412.011993)..controls (473.812988,412.011993) and (467.515991,418.312988)..(467.515991,426.082001)
-		--(467.515991,442.582001)..controls (467.515991,450.351990) and (473.812988,456.652008)..(481.585999,456.652008)
-		..controls (489.355011,456.652008) and (495.656006,450.351990)..(495.656006,442.582001)
-		--(495.656006,426.082001)..controls (495.656006,418.312988) and (489.355011,412.011993)..(481.585999,412.011993)
-		--cycle withcolor black;
+picture UIS_plusminus_raw;
+UIS_plusminus_raw := image(
+	begingroup
+		pickup pencircle scaled 3bp;
+		interim linecap := butt;
+		interim linejoin := mitered;
+		draw (383,427)--(403,427);
+		draw (393,418)--(393,437);
+		draw (383,401)--(403,401);
+		pickup pencircle scaled 2bp;
+		draw (393,387)..controls (385,387) and (379,394)..(379,401)
+			--(379,427)..controls (379,435) and (385,441)..(393,441)
+			..controls (401,441) and (407,435)..(407,427)
+			--(407,401)..controls (407,394) and (401,387)..(393,387)
+			--cycle;
+	endgroup;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
-picture UIS_plus_minus;
-UIS_plus_minus := UIS_plus_minus_raw shifted (-(llcorner UIS_plus_minus_raw)-(urcorner UIS_plus_minus_raw - llcorner UIS_plus_minus_raw)/2) scaled (u / ((xpart urcorner UIS_plus_minus_raw) - (xpart llcorner UIS_plus_minus_raw)));
 
 def p_plusminus_UIS(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw UIS_plus_minus;
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw UIS_plusminus_raw;
 enddef;
 
 
