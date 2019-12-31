@@ -889,15 +889,15 @@ enddef;
 
 def l_abyssentrance_SBE(expr P) =
 	begingroup
-		path myTick, myT;
+		path SBE_Tick, SBE_T;
 
 		T := identity;
 
 		cursor := 0;
 		totalLength := arclength P;
 		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
-		myTick := (0,0.1u) -- (0,-0.1u);
-		myT := (0,0) -- (0,-0.1u);
+		SBE_Tick := (0,0.1u) -- (0,-0.1u);
+		SBE_T := (0,0) -- (0,-0.1u);
 		pickup PenD;
 		forever:
 			t1 := arctime (cursor + elementSize * 1/8) of P;
@@ -906,10 +906,10 @@ def l_abyssentrance_SBE(expr P) =
 			t4 := arctime (cursor + elementSize * 6/8) of P;
 			t5 := arctime (cursor + elementSize * 7/8) of P;
 
-			thdraw myTick rotated angle(thdir(P,t1)) shifted (point t1 of P);
+			thdraw SBE_Tick rotated angle(thdir(P,t1)) shifted (point t1 of P);
 			thdraw (subpath (t2,t4) of P);
-			thdraw myT rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
-			thdraw myTick rotated angle(thdir(P,t5)) shifted (point t5 of P);
+			thdraw SBE_T rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+			thdraw SBE_Tick rotated angle(thdir(P,t5)) shifted (point t5 of P);
 
 			cursor := cursor + elementSize;
 			exitif cursor > totalLength - (elementSize / 2);
@@ -920,14 +920,14 @@ enddef;
 
 def l_dripline_SBE(expr P) =
 	begingroup
-		path myTick;
+		path SBE_Tick;
 
 		T := identity;
 
 		cursor := 0;
 		totalLength := arclength P;
 		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
-		myTick := (0,0.1u) -- (0,-0.1u);
+		SBE_Tick := (0,0.1u) -- (0,-0.1u);
 		pickup PenD;
 		forever:
 			t1 := arctime (cursor + elementSize * 1/8) of P;
@@ -936,9 +936,9 @@ def l_dripline_SBE(expr P) =
 			t4 := arctime (cursor + elementSize * 6/8) of P;
 			t5 := arctime (cursor + elementSize * 7/8) of P;
 
-			thdraw myTick rotated angle(thdir(P,t1)) shifted (point t1 of P);
+			thdraw SBE_Tick rotated angle(thdir(P,t1)) shifted (point t1 of P);
 			thdraw (subpath (t2,t4) of P);
-			thdraw myTick rotated angle(thdir(P,t5)) shifted (point t5 of P);
+			thdraw SBE_Tick rotated angle(thdir(P,t5)) shifted (point t5 of P);
 
 			cursor := cursor + elementSize;
 			exitif cursor > totalLength - (elementSize / 2);
@@ -949,8 +949,8 @@ enddef;
 
 def l_fault_SBE(expr P) =
 	begingroup
-		path myDot;
-		pair Ppb, Pdb, Pvb, Ppe, Pde, Pve;
+		path SBE_Dot;
+		pair SBE_Ppb, SBE_Pdb, SBE_Pvb, SBE_Ppe, SBE_Pde, SBE_Pve;
 
 		T := identity;
 
@@ -960,7 +960,7 @@ def l_fault_SBE(expr P) =
 		cursor := 0;
 		totalLength := arclength P;
 		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
-		myDot := (0,-0.05u) -- (0,0.05u);
+		SBE_Dot := (0,-0.05u) -- (0,0.05u);
 		pickup PenC;
 		distance := 0.2u;
 		forever:
@@ -968,18 +968,18 @@ def l_fault_SBE(expr P) =
 			t1 := arctime (cursor + elementSize * 5/8) of P;
 			t2 := arctime (cursor + elementSize * 7/8) of P;
 
-			Ppb := (point t0 of P);
-			Pdb := unitvector(thdir(P,t0));
-			Pvb := Pdb rotated -90;
-			Ppe := (point t1 of P);
-			Pde := unitvector(thdir(P,t1));
-			Pve := Pde rotated -90;
+			SBE_Ppb := (point t0 of P);
+			SBE_Pdb := unitvector(thdir(P,t0));
+			SBE_Pvb := SBE_Pdb rotated -90;
+			SBE_Ppe := (point t1 of P);
+			SBE_Pde := unitvector(thdir(P,t1));
+			SBE_Pve := SBE_Pde rotated -90;
 
 			if cursor > 0:
-				thdraw (Ppb - distance * Pvb) -- (Ppe - distance * Pve);
+				thdraw (SBE_Ppb - distance * SBE_Pvb) -- (SBE_Ppe - distance * SBE_Pve);
 			fi;
 
-			thdraw myDot rotated (angle(thdir(P,t2))+90) shifted (point t2 of P + distance * unitvector(thdir(P,t2) rotated 90));
+			thdraw SBE_Dot rotated (angle(thdir(P,t2))+90) shifted (point t2 of P + distance * unitvector(thdir(P,t2) rotated 90));
 
 			cursor := cursor + elementSize;
 			exitif cursor > totalLength - (elementSize / 2);
@@ -1012,14 +1012,14 @@ enddef;
 
 def l_lowceiling_SBE(expr P) =
 	begingroup
-		path myT;
+		path SBE_T;
 
 		T := identity;
 
 		cursor := 0;
 		totalLength := arclength P;
 		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
-		myT := (0,0) -- (0,-0.1u);
+		SBE_T := (0,0) -- (0,-0.1u);
 		pickup PenD;
 		forever:
 			t1 := arctime (cursor + elementSize * 1/7) of P;
@@ -1028,8 +1028,8 @@ def l_lowceiling_SBE(expr P) =
 			t4 := arctime (cursor + elementSize * 6/7) of P;
 
 			thdraw (subpath (t1,t4) of P);
-			thdraw myT rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
-			thdraw myT rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+			thdraw SBE_T rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
+			thdraw SBE_T rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
 
 			cursor := cursor + elementSize;
 			exitif cursor > totalLength - (elementSize / 2);
@@ -1040,15 +1040,15 @@ enddef;
 
 def l_pitchimney_SBE(expr P) =
 	begingroup
-		path myTsmall, myTlarge;
+		path SBE_Tsmall, SBE_Tlarge;
 
 		T := identity;
 
 		cursor := 0;
 		totalLength := arclength P;
 		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
-		myTsmall := (0,0) -- (0,-0.1u);
-		myTlarge := (0,0) -- (0,-0.175u);
+		SBE_Tsmall := (0,0) -- (0,-0.1u);
+		SBE_Tlarge := (0,0) -- (0,-0.175u);
 		pickup PenD;
 		forever:
 			t1 := arctime (cursor + elementSize * 1/6) of P;
@@ -1059,9 +1059,9 @@ def l_pitchimney_SBE(expr P) =
 
 			thdraw (subpath (t1,t5) of P);
 
-			thdraw myTsmall rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
-			thdraw myTlarge rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
-			thdraw myTsmall rotated (180+angle(thdir(P,t4))) shifted (point t4 of P);
+			thdraw SBE_Tsmall rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
+			thdraw SBE_Tlarge rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+			thdraw SBE_Tsmall rotated (180+angle(thdir(P,t4))) shifted (point t4 of P);
 
 			cursor := cursor + elementSize;
 			exitif cursor > totalLength - (elementSize / 2);
@@ -1104,7 +1104,7 @@ enddef;
 
 def l_walkway_SBE(expr P) =
 	begingroup
-		pair da, db, pa, pb, ta, tb, tc, td;
+		pair SBE_da, SBE_db, SBE_pa, SBE_pb, SBE_ta, SBE_tb, SBE_tc, SBE_td;
 
 		T := identity;
 
@@ -1118,19 +1118,19 @@ def l_walkway_SBE(expr P) =
 			t1 := arctime (cursor + elementSize * 1/5) of P;
 			t2 := arctime (cursor + elementSize * 4/5) of P;
 
-			pa := point t1 of P;
-			pb := point t2 of P;
+			SBE_pa := point t1 of P;
+			SBE_pb := point t2 of P;
 
-			da := unitvector(thdir(P,t1)) * distance;
-			db := unitvector(thdir(P,t2)) * distance;
+			SBE_da := unitvector(thdir(P,t1)) * distance;
+			SBE_db := unitvector(thdir(P,t2)) * distance;
 
-			ta := pa + (da rotated 90);
-			tb := pb + (db rotated 90);
-			tc := pa + (da rotated -90);
-			td := pb + (db rotated -90);
+			SBE_ta := SBE_pa + (SBE_da rotated 90);
+			SBE_tb := SBE_pb + (SBE_db rotated 90);
+			SBE_tc := SBE_pa + (SBE_da rotated -90);
+			SBE_td := SBE_pb + (SBE_db rotated -90);
 
-			thdraw ta -- tb;
-			thdraw tc -- td;
+			thdraw SBE_ta -- SBE_tb;
+			thdraw SBE_tc -- SBE_td;
 
 			cursor := cursor + elementSize;
 			exitif cursor > totalLength - (elementSize / 2);
