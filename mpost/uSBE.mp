@@ -17,11 +17,12 @@ SBE_altar_raw := image(
 	pickup pencircle scaled 70bp;
 	draw (329,472)--(391,364)--(466,419);
 	draw (154,188)--(326,188)--(224,290);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_altar_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_altar_raw shifted (-(llcorner SBE_altar_raw)-(urcorner SBE_altar_raw - llcorner SBE_altar_raw)/2) scaled (u / max((xpart urcorner SBE_altar_raw) - (xpart llcorner SBE_altar_raw), (ypart urcorner SBE_altar_raw) - (ypart llcorner SBE_altar_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_altar_raw;
 enddef;
 
 
