@@ -1304,3 +1304,11 @@ def a_stalactitestalagmite_SBE(expr P) =
 		draw SBE_PicDraw;
 	endgroup;
 enddef;
+
+
+def a_stalagmite_SBE(expr P) =
+	T := identity;
+
+	pickup PenA;
+	thfill P withcolor (1, 0.6, 0);
+enddef;
