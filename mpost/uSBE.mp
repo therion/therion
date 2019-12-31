@@ -687,30 +687,25 @@ enddef;
 
 picture UIS_plus_raw;
 UIS_plus_raw := image(
-	fill (394.687988,411.277008)--(394.687988,403.121002)--(402.843994,403.121002)
-		--(402.843994,400.621002)--(394.687988,400.621002)--(394.687988,392.464996)
-		--(392.234009,392.464996)--(392.234009,400.621002)--(384.062988,400.621002)
-		--(384.062988,403.121002)--(392.234009,403.121002)--(392.234009,411.277008)
-		--cycle withcolor black;
-	pickup pencircle scaled 0.750000bp;
-	draw (394.687988,411.277008)--(394.687988,403.121002)--(402.843994,403.121002)
-		--(402.843994,400.621002)--(394.687988,400.621002)--(394.687988,392.464996)
-		--(392.234009,392.464996)--(392.234009,400.621002)--(384.062988,400.621002)
-		--(384.062988,403.121002)--(392.234009,403.121002)--(392.234009,411.277008)
-		--cycle withcolor black;
-	pickup pencircle scaled 1.333610bp;
-	draw (407.531006,401.867004)..controls (407.531006,394.097992) and (401.230011,387.796997)..(393.460999,387.796997)
-		..controls (385.687988,387.796997) and (379.390991,394.097992)..(379.390991,401.867004)
-		..controls (379.390991,409.636993) and (385.687988,415.937988)..(393.460999,415.937988)
-		..controls (401.230011,415.937988) and (407.531006,409.636993)..(407.531006,401.867004)
-		--cycle withcolor black;
+	begingroup
+		pickup pencircle scaled 3bp;
+		interim linecap := butt;
+		interim linejoin := mitered;
+		draw (383,401)--(403,401);
+		draw (393,411)--(393,392);
+		pickup pencircle scaled 2bp;
+		draw (407,401)..controls (407,394) and (401,387)..(393,387)
+			..controls (385,387) and (379,394)..(379,401)
+			..controls (379,409) and (385,415)..(393,415)
+			..controls (401,415) and (407,409)..(407,401)
+			--cycle;
+	endgroup;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
-picture UIS_plus;
-UIS_plus := UIS_plus_raw shifted (-(llcorner UIS_plus_raw)-(urcorner UIS_plus_raw - llcorner UIS_plus_raw)/2) scaled (u / max((xpart urcorner UIS_plus_raw) - (xpart llcorner UIS_plus_raw), (ypart urcorner UIS_plus_raw) - (ypart llcorner UIS_plus_raw)));
 
 def p_plus_UIS(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw UIS_plus;
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw UIS_plus_raw;
 enddef;
 
 
