@@ -3680,3 +3680,22 @@ zh_CN: 石柱
 therion: area pillar-with-curtains
 en: pillar with curtains
 pt: coluna com cortinas
+
+therion: area stalactite
+bg: сталактит
+ca: estalactita
+cz: stalaktit
+de: Stalaktit
+el: σταλακτίτης
+en: stalactite
+es: estalactita
+fr: stalactite
+it: stalattite
+mi: kōhatu ki te haere ki runga
+pl: stalaktyt
+pt: estalactite
+ru: сталактит
+sk: stalaktit
+sl: stalaktit
+sq: stalaktit
+zh_CN: 石钟乳

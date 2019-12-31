@@ -1252,3 +1252,18 @@ def a_pillarwithcurtains_SBE(expr P) =
 		endfor;
 	endgroup;
 enddef;
+
+
+def a_stalactite_SBE(expr P) =
+	begingroup
+		rgbcolor SBE_Orange, SBE_LightOrange;
+		T := identity;
+
+		SBE_LightOrange := (1, 0.9, 0.67);
+		SBE_Orange := (1, 0.6, 0);
+
+		pickup PenA;
+		thfill P withcolor SBE_LightOrange;
+		thdraw P withcolor SBE_Orange;
+	endgroup;
+enddef;
