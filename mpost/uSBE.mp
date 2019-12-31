@@ -145,11 +145,12 @@ SBE_bones_raw := image(
 		..controls (648,134) and (652,126)..(644,121)
 		..controls (612,110) and (594,134)..(584,155)
 		--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_bones_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_bones_raw shifted (-(llcorner SBE_bones_raw)-(urcorner SBE_bones_raw - llcorner SBE_bones_raw)/2) scaled (u / max((xpart urcorner SBE_bones_raw) - (xpart llcorner SBE_bones_raw), (ypart urcorner SBE_bones_raw) - (ypart llcorner SBE_bones_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_bones_raw;
 enddef;
 
 
