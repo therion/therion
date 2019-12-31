@@ -43,12 +43,13 @@ SBE_archeo_excavation_raw := image(
 		draw (291,403)..controls (279,402) and (262,395)..(253,372);
 		draw (371,409)..controls (370,422) and (359,429)..(346,430);
 		draw (423,399)..controls (432,402) and (437,411)..(437,418);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 	endgroup;
 );
 
 def p_archeoexcavation_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_archeo_excavation_raw shifted (-(llcorner SBE_archeo_excavation_raw)-(urcorner SBE_archeo_excavation_raw - llcorner SBE_archeo_excavation_raw)/2) scaled (u / max((xpart urcorner SBE_archeo_excavation_raw) - (xpart llcorner SBE_archeo_excavation_raw), (ypart urcorner SBE_archeo_excavation_raw) - (ypart llcorner SBE_archeo_excavation_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_archeo_excavation_raw;
 enddef;
 
 
