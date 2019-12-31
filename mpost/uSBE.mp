@@ -818,18 +818,15 @@ enddef;
 picture SBE_volcano_raw;
 SBE_volcano_raw := image(
 	pickup pencircle scaled 21bp;
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		draw (36,222)--(169,567)..controls (177,510) and (212,485)..(265,485)
-			..controls (319,485) and (353,510)..(361,567)
-			--(494,222);
-	endgroup;
+	draw (36,222)--(169,567)..controls (177,510) and (212,485)..(265,485)
+		..controls (319,485) and (353,510)..(361,567)
+		--(494,222);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_volcano_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_volcano_raw shifted (-(llcorner SBE_volcano_raw)-(urcorner SBE_volcano_raw - llcorner SBE_volcano_raw)/2) scaled (u / max((xpart urcorner SBE_volcano_raw) - (xpart llcorner SBE_volcano_raw), (ypart urcorner SBE_volcano_raw) - (ypart llcorner SBE_volcano_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_volcano_raw;
 enddef;
 
 
