@@ -554,16 +554,12 @@ enddef;
 picture SBE_nameplate_raw;
 SBE_nameplate_raw := image(
 	pickup pencircle scaled 24bp;
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		draw (77,563)--(505,563)--(505,340)
-			--(77,340)--cycle;
-		pickup pencircle scaled 10bp;
-		draw (208,496)--(422,496);
-		draw (117,450)--(358,450);
-		draw (264,401)--(470,401);
-	endgroup;
+	draw (77,563)--(505,563)--(505,340)
+		--(77,340)--cycle;
+	pickup pencircle scaled 10bp;
+	draw (208,496)--(422,496);
+	draw (117,450)--(358,450);
+	draw (264,401)--(470,401);
 	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
