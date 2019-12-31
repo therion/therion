@@ -195,6 +195,7 @@ let a_moonmilk = a_moonmilk_SKBB;
 let a_dimensions = a_dimensions_SKBB;
 let a_mudcrack = a_mudcrack_SBE;
 let a_pillar = a_pillar_SBE;
+let a_pillarwithcurtains = a_pillarwithcurtains_SBE;
 
 let s_northarrow = s_northarrow_SKBB;
 let s_scalebar = s_scalebar_SKBB;

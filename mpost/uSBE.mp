@@ -1224,3 +1224,31 @@ def a_pillar_SBE(expr P) =
 
 	thdraw SBE_Pillar;
 enddef;
+
+
+def a_pillarwithcurtains_SBE(expr P) =
+	begingroup
+		picture SBE_Pillar;
+		path SBE_Curtain;
+
+		SBE_Pillar := image(pillar_main_SBE(P));
+
+		thdraw SBE_Pillar;
+
+		SBE_Curtain := (0,-.4u){dir 180}..(-0.1u,-0.3u)..{dir 0}(0,-0.2u)..(0.1u,-0.1u)..{dir -180}(0,0);
+		SBE_Curtain := SBE_Curtain scaled (0.2 / 0.4);
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+
+		pickup PenD;
+		forever:
+			t1 := arctime (cursor + elementSize / 2) of P;
+
+			thdraw SBE_Curtain rotated (180+angle(thdir(P,t1))) shifted (point t1 of P) withcolor (1,0.6,0);
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 3);
+		endfor;
+	endgroup;
+enddef;
