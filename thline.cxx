@@ -904,6 +904,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_ABYSSENTRANCE, SYML_ABYSSENTRANCE)
     thline_type_export_mp(TT_LINE_TYPE_DRIPLINE, SYML_DRIPLINE)
     thline_type_export_mp(TT_LINE_TYPE_FAULT, SYML_FAULT)
+    thline_type_export_mp(TT_LINE_TYPE_JOINT, SYML_JOINT)
 
     case TT_LINE_TYPE_ROPE:
       macroid = SYML_ROPE;

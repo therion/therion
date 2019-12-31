@@ -333,6 +333,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_ABYSSENTRANCE,SYML_ABYSSENTRANCE);
         cl3(TT_LINE_TYPE_DRIPLINE,SYML_DRIPLINE);
         cl3(TT_LINE_TYPE_FAULT,SYML_FAULT);
+        cl3(TT_LINE_TYPE_JOINT,SYML_JOINT);
       }
       break;
     case TT_SYMBOL_POINT:
@@ -1457,6 +1458,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_eqline(SYML_ABYSSENTRANCE,thT("line abyss-entrance",layout->lang));
   legend_eqline(SYML_DRIPLINE,thT("line dripline",layout->lang));
   legend_eqline(SYML_FAULT,thT("line fault",layout->lang));
+  legend_eqline(SYML_JOINT,thT("line joint",layout->lang));
 
   // thT("point remark")
   // thT("point label")

@@ -197,6 +197,7 @@ enum {
   TT_LINE_TYPE_ABYSSENTRANCE,
   TT_LINE_TYPE_DRIPLINE,
   TT_LINE_TYPE_FAULT,
+  TT_LINE_TYPE_JOINT,
 };
 
 /**
@@ -219,6 +220,7 @@ static const thstok thtt_line_types[] = {
   {"flowstone", TT_LINE_TYPE_FLOWSTONE},
   {"gradient", TT_LINE_TYPE_GRADIENT},
   {"handrail", TT_LINE_TYPE_HANDRAIL},
+  {"joint", TT_LINE_TYPE_JOINT},
   {"label", TT_LINE_TYPE_LABEL},
   {"map-connection", TT_LINE_TYPE_MAP_CONNECTION},
   {"moonmilk", TT_LINE_TYPE_MOONMILK},

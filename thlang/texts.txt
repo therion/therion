@@ -3599,3 +3599,7 @@ pt: linha de gotejamento
 therion: line fault
 en: fault
 pt: falha
+
+therion: line joint
+en: joint
+pt: fratura
