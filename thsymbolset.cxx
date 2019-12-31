@@ -332,6 +332,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_VIA_FERRATA,SYML_VIAFERRATA);
         cl3(TT_LINE_TYPE_ABYSSENTRANCE,SYML_ABYSSENTRANCE);
         cl3(TT_LINE_TYPE_DRIPLINE,SYML_DRIPLINE);
+        cl3(TT_LINE_TYPE_FAULT,SYML_FAULT);
       }
       break;
     case TT_SYMBOL_POINT:
@@ -1455,6 +1456,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_CAMP,thT("point camp",layout->lang));
   legend_eqline(SYML_ABYSSENTRANCE,thT("line abyss-entrance",layout->lang));
   legend_eqline(SYML_DRIPLINE,thT("line dripline",layout->lang));
+  legend_eqline(SYML_FAULT,thT("line fault",layout->lang));
 
   // thT("point remark")
   // thT("point label")

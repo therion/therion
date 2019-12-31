@@ -3595,3 +3595,7 @@ pt: entrada em abismo
 therion: line dripline
 en: dripline
 pt: linha de gotejamento
+
+therion: line fault
+en: fault
+pt: falha
