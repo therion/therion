@@ -949,8 +949,8 @@ enddef;
 
 def l_fault_SBE(expr P) =
 	begingroup
-		path myDot;
-		pair Ppb, Pdb, Pvb, Ppe, Pde, Pve;
+		path SBE_Dot;
+		pair SBE_Ppb, SBE_Pdb, SBE_Pvb, SBE_Ppe, SBE_Pde, SBE_Pve;
 
 		T := identity;
 
@@ -960,7 +960,7 @@ def l_fault_SBE(expr P) =
 		cursor := 0;
 		totalLength := arclength P;
 		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
-		myDot := (0,-0.05u) -- (0,0.05u);
+		SBE_Dot := (0,-0.05u) -- (0,0.05u);
 		pickup PenC;
 		distance := 0.2u;
 		forever:
@@ -968,18 +968,18 @@ def l_fault_SBE(expr P) =
 			t1 := arctime (cursor + elementSize * 5/8) of P;
 			t2 := arctime (cursor + elementSize * 7/8) of P;
 
-			Ppb := (point t0 of P);
-			Pdb := unitvector(thdir(P,t0));
-			Pvb := Pdb rotated -90;
-			Ppe := (point t1 of P);
-			Pde := unitvector(thdir(P,t1));
-			Pve := Pde rotated -90;
+			SBE_Ppb := (point t0 of P);
+			SBE_Pdb := unitvector(thdir(P,t0));
+			SBE_Pvb := SBE_Pdb rotated -90;
+			SBE_Ppe := (point t1 of P);
+			SBE_Pde := unitvector(thdir(P,t1));
+			SBE_Pve := SBE_Pde rotated -90;
 
 			if cursor > 0:
-				thdraw (Ppb - distance * Pvb) -- (Ppe - distance * Pve);
+				thdraw (SBE_Ppb - distance * SBE_Pvb) -- (SBE_Ppe - distance * SBE_Pve);
 			fi;
 
-			thdraw myDot rotated (angle(thdir(P,t2))+90) shifted (point t2 of P + distance * unitvector(thdir(P,t2) rotated 90));
+			thdraw SBE_Dot rotated (angle(thdir(P,t2))+90) shifted (point t2 of P + distance * unitvector(thdir(P,t2) rotated 90));
 
 			cursor := cursor + elementSize;
 			exitif cursor > totalLength - (elementSize / 2);
