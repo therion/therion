@@ -257,6 +257,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         c2(TT_AREA_TYPE_FLOWSTONE, SYMA_FLOWSTONE);
         c2(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK);
         c2(TT_AREA_TYPE_MUDCRACK, SYMA_MUDCRACK);
+        c2(TT_AREA_TYPE_PILLAR, SYMA_PILLAR);
       }
       break;
     case TT_SYMBOL_LINE:
@@ -722,6 +723,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(36,SYMA_FLOWSTONE);
     group(37,SYMA_MOONMILK);
     group(38,SYML_RIMSTONEPOOL);
+    group(39,SYMA_PILLAR);
     egroup
 
 
@@ -1282,7 +1284,8 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_area(SYMA_DEBRIS,thT("area debris",layout->lang));
   legend_area(SYMA_FLOWSTONE,thT("area flowstone",layout->lang));
   legend_area(SYMA_MOONMILK,thT("area moonmilk",layout->lang));
-  legend_point(SYMP_MUDCRACK,thT("point mudcrack",layout->lang));
+  legend_area(SYMA_MUDCRACK,thT("area mudcrack",layout->lang));
+  legend_area(SYMA_PILLAR,thT("area pillar",layout->lang));
   legend_nocliparea(SYMA_BLOCKS,thT("area blocks",layout->lang));
   legend_nocliparea(SYMA_BEDROCK,thT("area bedrock",layout->lang));
 

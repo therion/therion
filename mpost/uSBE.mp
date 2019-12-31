@@ -1179,3 +1179,48 @@ def a_mudcrack_SBE(expr Path) =
 	thclean Path;
 	thfill Path withpattern pattern_mudcrack_SBE;
 enddef;
+
+
+def pillar_main_SBE(expr P) =
+	begingroup
+		rgbcolor SBE_Orange;
+		pair SBE_d, SBE_p;
+
+		T := identity;
+
+		SBE_Orange := (1, 0.6, 0);
+
+		pickup PenD;
+		thfill P withcolor SBE_Orange;
+
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.01u); % symbol length nudged to be multiple of path length
+		borderWidth := 0.3u;
+
+		pickup PenA;
+		forever:
+			t1 := arctime (cursor + elementSize / 2) of P;
+
+			SBE_p := point t1 of P;
+
+			SBE_d := unitvector(thdir(P,t1)) * borderWidth;
+
+			thdraw SBE_p -- SBE_p + (SBE_d rotated 90) withcolor white;;
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 2);
+		endfor;
+
+		pickup PenA;
+		thdraw P withcolor SBE_Orange;
+	endgroup;
+enddef;
+
+def a_pillar_SBE(expr P) =
+	picture SBE_Pillar;
+
+	SBE_Pillar := image(pillar_main_SBE(P));
+
+	thdraw SBE_Pillar;
+enddef;

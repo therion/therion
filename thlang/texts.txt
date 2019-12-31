@@ -3657,3 +3657,22 @@ pt: passarela
 therion: area mudcrack
 en: mudcrack
 pt: lama rachada
+
+therion: area pillar
+bg: сталактон
+ca: columna
+cz: stalagnát
+de: Säule
+el: κολόνα
+en: pillar
+es: columna
+fr: pillier
+it: colonna
+mi: pou
+pl: stalagnat
+pt: coluna
+ru: колонна
+sk: stalagnát
+sl: steber
+sq: shtylle
+zh_CN: 石柱
