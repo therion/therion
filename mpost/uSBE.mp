@@ -942,3 +942,30 @@ def l_abyssentrance_SBE(expr P) =
 	endfor;
 enddef;
 
+
+def l_dripline_SBE(expr P) =
+	path myTick;
+
+	T := identity;
+
+	cursor := 0;
+	totalLength := arclength P;
+	elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+	myTick := (0,0.1u) -- (0,-0.1u);
+	pickup PenD;
+	forever:
+		t1 := arctime (cursor + elementSize * 1/8) of P;
+		t2 := arctime (cursor + elementSize * 2/8) of P;
+		t3 := arctime (cursor + elementSize * 4/8) of P;
+		t4 := arctime (cursor + elementSize * 6/8) of P;
+		t5 := arctime (cursor + elementSize * 7/8) of P;
+
+		thdraw myTick rotated angle(thdir(P,t1)) shifted (point t1 of P);
+		thdraw (subpath (t2,t4) of P);
+		thdraw myTick rotated angle(thdir(P,t5)) shifted (point t5 of P);
+
+		cursor := cursor + elementSize;
+		exitif cursor > totalLength - (elementSize / 2);
+	endfor;
+enddef;
+

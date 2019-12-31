@@ -3591,3 +3591,7 @@ zh_CN: 外观图
 therion: line abyss-entrance
 en: abyss-entrance
 pt: entrada em abismo
+
+therion: line dripline
+en: dripline
+pt: linha de gotejamento

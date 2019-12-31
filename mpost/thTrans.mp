@@ -120,6 +120,7 @@ let p_stalactites = p_stalactites_UIS;
 let p_stalagmites = p_stalagmites_UIS;
 let p_pillars = p_pillars_UIS;
 let l_abyssentrance = l_abyssentrance_SBE;
+let l_dripline = l_dripline_SBE;
 
 let l_wall_bedrock = l_wall_bedrock_UIS;
 let l_wall_sand = l_wall_sand_SKBB;

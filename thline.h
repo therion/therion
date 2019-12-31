@@ -195,6 +195,7 @@ enum {
 	TT_LINE_TYPE_ROPE,
 	TT_LINE_TYPE_STEPS,
   TT_LINE_TYPE_ABYSSENTRANCE,
+  TT_LINE_TYPE_DRIPLINE,
 };
 
 /**
@@ -209,6 +210,7 @@ static const thstok thtt_line_types[] = {
   {"ceiling-step", TT_LINE_TYPE_CEILING_STEP},
   {"chimney", TT_LINE_TYPE_CHIMNEY},
   {"contour", TT_LINE_TYPE_CONTOUR},
+  {"dripline", TT_LINE_TYPE_DRIPLINE},
   {"fixed-ladder", TT_LINE_TYPE_FIXED_LADDER},
   {"floor-meander", TT_LINE_TYPE_FLOOR_MEANDER},
   {"floor-step", TT_LINE_TYPE_FLOOR_STEP},
