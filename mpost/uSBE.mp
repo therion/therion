@@ -1058,32 +1058,34 @@ enddef;
 
 
 def l_pitchimney_SBE(expr P) =
-	path myTsmall, myTlarge;
+	begingroup
+		path myTsmall, myTlarge;
 
-	T := identity;
+		T := identity;
 
-	cursor := 0;
-	totalLength := arclength P;
-	elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
-	myTsmall := (0,0) -- (0,-0.1u);
-	myTlarge := (0,0) -- (0,-0.175u);
-	pickup PenD;
-	forever:
-		t1 := arctime (cursor + elementSize * 1/6) of P;
-		t2 := arctime (cursor + elementSize * 2/6) of P;
-		t3 := arctime (cursor + elementSize * 3/6) of P;
-		t4 := arctime (cursor + elementSize * 4/6) of P;
-		t5 := arctime (cursor + elementSize * 5/6) of P;
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+		myTsmall := (0,0) -- (0,-0.1u);
+		myTlarge := (0,0) -- (0,-0.175u);
+		pickup PenD;
+		forever:
+			t1 := arctime (cursor + elementSize * 1/6) of P;
+			t2 := arctime (cursor + elementSize * 2/6) of P;
+			t3 := arctime (cursor + elementSize * 3/6) of P;
+			t4 := arctime (cursor + elementSize * 4/6) of P;
+			t5 := arctime (cursor + elementSize * 5/6) of P;
 
-		thdraw (subpath (t1,t5) of P);
+			thdraw (subpath (t1,t5) of P);
 
-		thdraw myTsmall rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
-		thdraw myTlarge rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
-		thdraw myTsmall rotated (180+angle(thdir(P,t4))) shifted (point t4 of P);
+			thdraw myTsmall rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
+			thdraw myTlarge rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+			thdraw myTsmall rotated (180+angle(thdir(P,t4))) shifted (point t4 of P);
 
-		cursor := cursor + elementSize;
-		exitif cursor > totalLength - (elementSize / 2);
-	endfor;
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 2);
+		endfor;
+	endgroup;
 enddef;
 
 
