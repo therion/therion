@@ -477,13 +477,12 @@ UIS_minus_raw := image(
 		..controls (287.593994,417.089996) and (293.664001,423.160004)..(301.152008,423.160004)
 		..controls (308.640991,423.160004) and (314.710999,417.089996)..(314.710999,409.601990)
 		--cycle withcolor black;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
-picture UIS_minus;
-UIS_minus := UIS_minus_raw shifted (-(llcorner UIS_minus_raw)-(urcorner UIS_minus_raw - llcorner UIS_minus_raw)/2) scaled (u / max((xpart urcorner UIS_minus_raw) - (xpart llcorner UIS_minus_raw), (ypart urcorner UIS_minus_raw) - (ypart llcorner UIS_minus_raw)));
 
 def p_minus_UIS(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw UIS_minus;
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw UIS_minus_raw;
 enddef;
 
 
