@@ -3649,3 +3649,7 @@ sk: sintrové jazierko
 sl: ponvica
 sq: vaska uji
 zh_CN: 边石潭
+
+therion: line walkway
+en: walkway
+pt: passarela

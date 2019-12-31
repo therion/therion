@@ -338,6 +338,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_PITCHIMNEY,SYML_PITCHIMNEY);
         cl3(TT_LINE_TYPE_RIMSTONEDAM,SYML_RIMSTONEDAM);
         cl3(TT_LINE_TYPE_RIMSTONEPOOL,SYML_RIMSTONEPOOL);
+        cl3(TT_LINE_TYPE_WALKWAY,SYML_WALKWAY);
       }
       break;
     case TT_SYMBOL_POINT:
@@ -677,6 +678,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(20,SYMP_NAMEPLATE);
     group(21,SYMP_GATE);
     group(22,SYMP_ELECTRICLIGHT);
+    group(23,SYML_WALKWAY);
     egroup
 
     bgroup(SYMX_SPELEOTHEMS)
@@ -780,6 +782,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(26,SYMP_MUD)
     group(27,SYML_RIMSTONEDAM)
     group(28,SYML_RIMSTONEPOOL)
+    group(29,SYML_WALKWAY);
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -1471,6 +1474,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_eqline(SYML_PITCHIMNEY,thT("line pit-chimney",layout->lang));
   legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
   legend_eqline(SYML_RIMSTONEPOOL,thT("line rimstone-pool",layout->lang));
+  legend_eqline(SYML_WALKWAY,thT("line walkway",layout->lang));
 
   // thT("point remark")
   // thT("point label")

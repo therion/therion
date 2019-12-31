@@ -1118,3 +1118,39 @@ def l_rimstonepool_SBE(expr P) =
 	endfor;
 enddef;
 
+
+def l_walkway_SBE(expr P) =
+	pair d[], p[], tick[];
+
+	T := identity;
+
+	cursor := 0;
+	totalLength := arclength P;
+	elementSize := adjust_step(totalLength, 0.2u); % symbol length nudged to be multiple of path length
+	distance := 0.1u;
+
+	pickup PenD;
+	forever:
+		t1 := arctime (cursor + elementSize * 1/5) of P;
+		t2 := arctime (cursor + elementSize * 4/5) of P;
+
+		p1 := point t1 of P;
+		p2 := point t2 of P;
+
+		d1 := unitvector(thdir(P,t1)) * distance;
+		d2 := unitvector(thdir(P,t2)) * distance;
+
+		tick1 := p1 + (d1 rotated 90);
+		tick2 := p2 + (d2 rotated 90);
+		tick3 := p1 + (d1 rotated -90);
+		tick4 := p2 + (d2 rotated -90);
+
+		thdraw tick1 -- tick2;
+		thdraw tick3 -- tick4;
+
+		cursor := cursor + elementSize;
+		exitif cursor > totalLength - (elementSize / 2);
+	endfor;
+
+	pair d[], p[], tick[];
+enddef;

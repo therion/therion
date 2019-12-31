@@ -909,6 +909,7 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_PITCHIMNEY, SYML_PITCHIMNEY)
     thline_type_export_mp(TT_LINE_TYPE_RIMSTONEDAM, SYML_RIMSTONEDAM)
     thline_type_export_mp(TT_LINE_TYPE_RIMSTONEPOOL, SYML_RIMSTONEPOOL)
+    thline_type_export_mp(TT_LINE_TYPE_WALKWAY, SYML_WALKWAY)
 
     case TT_LINE_TYPE_ROPE:
       macroid = SYML_ROPE;
