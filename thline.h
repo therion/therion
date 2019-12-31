@@ -194,6 +194,7 @@ enum {
 	TT_LINE_TYPE_VIA_FERRATA,
 	TT_LINE_TYPE_ROPE,
 	TT_LINE_TYPE_STEPS,
+  TT_LINE_TYPE_ABYSSENTRANCE,
 };
 
 /**
@@ -201,6 +202,7 @@ enum {
  */
 
 static const thstok thtt_line_types[] = {
+  {"abyss-entrance", TT_LINE_TYPE_ABYSSENTRANCE},
   {"arrow", TT_LINE_TYPE_ARROW},
   {"border", TT_LINE_TYPE_BORDER},
   {"ceiling-meander", TT_LINE_TYPE_CEILING_MEANDER},

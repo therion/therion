@@ -904,7 +904,41 @@ def p_waterdrip_SBE(expr pos, theta, sc, al) =
 	thdraw SBE_water_drip_raw shifted (-(llcorner SBE_water_drip_raw)-(urcorner SBE_water_drip_raw - llcorner SBE_water_drip_raw)/2) scaled (u / max((xpart urcorner SBE_water_drip_raw) - (xpart llcorner SBE_water_drip_raw), (ypart urcorner SBE_water_drip_raw) - (ypart llcorner SBE_water_drip_raw)));
 enddef;
 
+
 def p_wheelchair_SBE(expr pos, theta, sc, al) =
 	T:=identity aligned al rotated theta scaled sc shifted pos;
 	thdraw SBE_wheelchair_raw shifted (-(llcorner SBE_wheelchair_raw)-(urcorner SBE_wheelchair_raw - llcorner SBE_wheelchair_raw)/2) scaled (u / max((xpart urcorner SBE_wheelchair_raw) - (xpart llcorner SBE_wheelchair_raw), (ypart urcorner SBE_wheelchair_raw) - (ypart llcorner SBE_wheelchair_raw)));
 enddef;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Lines %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+def l_abyssentrance_SBE(expr P) =
+	path myTick, myT;
+
+	T := identity;
+
+	cursor := 0;
+	totalLength := arclength P;
+	elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+	myTick := (0,0.1u) -- (0,-0.1u);
+	myT := (0,0) -- (0,-0.1u);
+	pickup PenD;
+	forever:
+		t1 := arctime (cursor + elementSize * 1/8) of P;
+		t2 := arctime (cursor + elementSize * 2/8) of P;
+		t3 := arctime (cursor + elementSize * 4/8) of P;
+		t4 := arctime (cursor + elementSize * 6/8) of P;
+		t5 := arctime (cursor + elementSize * 7/8) of P;
+
+		thdraw myTick rotated angle(thdir(P,t1)) shifted (point t1 of P);
+		thdraw (subpath (t2,t4) of P);
+		thdraw myT rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+		thdraw myTick rotated angle(thdir(P,t5)) shifted (point t5 of P);
+
+		cursor := cursor + elementSize;
+		exitif cursor > totalLength - (elementSize / 2);
+	endfor;
+enddef;
+

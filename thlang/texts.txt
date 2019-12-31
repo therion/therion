@@ -3588,3 +3588,6 @@ sl: Slika površja
 sq: harta e siperfaqes
 zh_CN: 外观图
 
+therion: line abyss-entrance
+en: abyss-entrance
+pt: entrada em abismo
