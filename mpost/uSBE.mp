@@ -1086,3 +1086,18 @@ def l_pitchimney_SBE(expr P) =
 	endfor;
 enddef;
 
+
+def l_rimstonedam_SBE(expr P) =
+	cas := 0;
+	distance := arclength P;
+	mystep := adjust_step(distance, 0.9u);
+	pickup PenC;
+	forever:
+		t  := arctime (cas + mystep/2) of P;
+		T := identity rotated angle(thdir(P,t)) scaled 0.7 shifted (point t of P);
+		thdraw (-.45u,.2u){dir -80}..{dir -50}(-.15u,0){dir 30}..{dir -30}(.15u,.1u){dir -50}..{dir 70}(.45u,.2u);
+		cas := cas + mystep;
+		exitif cas > distance - (2*mystep/3); % for rounding errors
+	endfor;
+enddef;
+

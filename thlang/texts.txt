@@ -3611,3 +3611,22 @@ pt: teto baixo
 therion: line pit-chimney
 en: pit/chimney
 pt: poço e clarabóia
+
+therion: line rimstone-dam
+bg: сухо синтрово езеро
+ca: gour sec
+cz: sintrová hrázka
+de: Sinterbarriere
+el: γκουρ (λιθωματικό φράγμα)
+en: rimstone dam
+es: gour seco
+fr: gours
+it: gour
+mi: kōhatu matatara
+pl: naciekowa przegroda
+pt: travertino vazio
+ru: гуры без воды
+sk: sintrová hrádza
+sl: suha ponvica
+sq: penda guri
+zh_CN: 边石坝

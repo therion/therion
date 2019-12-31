@@ -336,6 +336,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_JOINT,SYML_JOINT);
         cl3(TT_LINE_TYPE_LOWCEILING,SYML_LOWCEILING);
         cl3(TT_LINE_TYPE_PITCHIMNEY,SYML_PITCHIMNEY);
+        cl3(TT_LINE_TYPE_RIMSTONEDAM,SYML_RIMSTONEDAM);
       }
       break;
     case TT_SYMBOL_POINT:
@@ -713,8 +714,9 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(32,SYMP_DISCPILLARS);
     group(33,SYML_FLOWSTONE);
     group(34,SYML_MOONMILK);
-    group(35,SYMA_FLOWSTONE);
-    group(36,SYMA_MOONMILK);
+    group(35,SYML_RIMSTONEDAM);
+    group(36,SYMA_FLOWSTONE);
+    group(37,SYMA_MOONMILK);
     egroup
 
 
@@ -774,6 +776,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(24,SYMA_SNOW)
     group(25,SYMP_MUDCRACK)
     group(26,SYMP_MUD)
+    group(27,SYML_RIMSTONEDAM)
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -1463,6 +1466,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_eqline(SYML_JOINT,thT("line joint",layout->lang));
   legend_eqline(SYML_LOWCEILING,thT("line low-ceiling",layout->lang));
   legend_eqline(SYML_PITCHIMNEY,thT("line pit-chimney",layout->lang));
+  legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
 
   // thT("point remark")
   // thT("point label")

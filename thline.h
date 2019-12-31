@@ -200,6 +200,7 @@ enum {
   TT_LINE_TYPE_JOINT,
   TT_LINE_TYPE_LOWCEILING,
   TT_LINE_TYPE_PITCHIMNEY,
+  TT_LINE_TYPE_RIMSTONEDAM,
 };
 
 /**
@@ -231,6 +232,7 @@ static const thstok thtt_line_types[] = {
   {"pit", TT_LINE_TYPE_PIT},
   {"pit-chimney", TT_LINE_TYPE_PITCHIMNEY},
   {"pitch", TT_LINE_TYPE_PIT},
+  {"rimstone-dam", TT_LINE_TYPE_RIMSTONEDAM},
   {"rock-border", TT_LINE_TYPE_ROCK_BORDER},
   {"rock-edge", TT_LINE_TYPE_ROCK_EDGE},
   {"rope", TT_LINE_TYPE_ROPE},
