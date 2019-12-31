@@ -758,22 +758,19 @@ enddef;
 
 picture SBE_tree_trunk_raw;
 SBE_tree_trunk_raw := image(
-	begingroup;
-		pickup pencircle scaled 11bp;
-		interim linejoin := mitered;
-		draw (338,554)--(153,393)..controls (64,292) and (204,143)..(312,243)
-			--(504,488);
-		pickup pencircle scaled 0.1bp;
-		fill (313,318)..controls (313,274) and (277,238)..(232,238)
-			..controls (188,238) and (152,274)..(152,318)
-			..controls (152,363) and (188,398)..(232,398)
-			..controls (277,398) and (313,363)..(313,318)
-			--cycle;
-		pickup pencircle scaled 5bp;
-		draw (290,453)--(348,506);
-		draw (375,406)--(445,481);
-		draw (316,397)--(348,429);
-	endgroup;
+	pickup pencircle scaled 11bp;
+	draw (338,554)--(153,393)..controls (64,292) and (204,143)..(312,243)
+		--(504,488);
+	pickup pencircle scaled 0.1bp;
+	fill (313,318)..controls (313,274) and (277,238)..(232,238)
+		..controls (188,238) and (152,274)..(152,318)
+		..controls (152,363) and (188,398)..(232,398)
+		..controls (277,398) and (313,363)..(313,318)
+		--cycle;
+	pickup pencircle scaled 5bp;
+	draw (290,453)--(348,506);
+	draw (375,406)--(445,481);
+	draw (316,397)--(348,429);
 	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
