@@ -1104,7 +1104,7 @@ enddef;
 
 def l_walkway_SBE(expr P) =
 	begingroup
-		pair da, db, pa, pb, ta, tb, tc, td;
+		pair SBE_da, SBE_db, SBE_pa, SBE_pb, SBE_ta, SBE_tb, SBE_tc, SBE_td;
 
 		T := identity;
 
@@ -1118,19 +1118,19 @@ def l_walkway_SBE(expr P) =
 			t1 := arctime (cursor + elementSize * 1/5) of P;
 			t2 := arctime (cursor + elementSize * 4/5) of P;
 
-			pa := point t1 of P;
-			pb := point t2 of P;
+			SBE_pa := point t1 of P;
+			SBE_pb := point t2 of P;
 
-			da := unitvector(thdir(P,t1)) * distance;
-			db := unitvector(thdir(P,t2)) * distance;
+			SBE_da := unitvector(thdir(P,t1)) * distance;
+			SBE_db := unitvector(thdir(P,t2)) * distance;
 
-			ta := pa + (da rotated 90);
-			tb := pb + (db rotated 90);
-			tc := pa + (da rotated -90);
-			td := pb + (db rotated -90);
+			SBE_ta := SBE_pa + (SBE_da rotated 90);
+			SBE_tb := SBE_pb + (SBE_db rotated 90);
+			SBE_tc := SBE_pa + (SBE_da rotated -90);
+			SBE_td := SBE_pb + (SBE_db rotated -90);
 
-			thdraw ta -- tb;
-			thdraw tc -- td;
+			thdraw SBE_ta -- SBE_tb;
+			thdraw SBE_tc -- SBE_td;
 
 			cursor := cursor + elementSize;
 			exitif cursor > totalLength - (elementSize / 2);
