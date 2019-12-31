@@ -692,20 +692,16 @@ enddef;
 
 picture UIS_plusminus_raw;
 UIS_plusminus_raw := image(
-	begingroup
-		pickup pencircle scaled 3bp;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		draw (383,427)--(403,427);
-		draw (393,418)--(393,437);
-		draw (383,401)--(403,401);
-		pickup pencircle scaled 2bp;
-		draw (393,387)..controls (385,387) and (379,394)..(379,401)
-			--(379,427)..controls (379,435) and (385,441)..(393,441)
-			..controls (401,441) and (407,435)..(407,427)
-			--(407,401)..controls (407,394) and (401,387)..(393,387)
-			--cycle;
-	endgroup;
+	pickup pencircle scaled 3bp;
+	draw (383,427)--(403,427);
+	draw (393,418)--(393,437);
+	draw (383,401)--(403,401);
+	pickup pencircle scaled 2bp;
+	draw (393,387)..controls (385,387) and (379,394)..(379,401)
+		--(379,427)..controls (379,435) and (385,441)..(393,441)
+		..controls (401,441) and (407,435)..(407,427)
+		--(407,401)..controls (407,394) and (401,387)..(393,387)
+		--cycle;
 	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / (xpart urcorner currentpicture) - (xpart llcorner currentpicture));
 );
 
