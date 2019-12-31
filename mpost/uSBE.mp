@@ -609,11 +609,12 @@ SBE_nowheelchair_raw := image(
 		interim linejoin := mitered;
 		draw (60,307)--(323,77) withcolor red;
 	endgroup;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_nowheelchair_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_nowheelchair_raw shifted (-(llcorner SBE_nowheelchair_raw)-(urcorner SBE_nowheelchair_raw - llcorner SBE_nowheelchair_raw)/2) scaled (u / max((xpart urcorner SBE_nowheelchair_raw) - (xpart llcorner SBE_nowheelchair_raw), (ypart urcorner SBE_nowheelchair_raw) - (ypart llcorner SBE_nowheelchair_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_nowheelchair_raw;
 enddef;
 
 
@@ -918,7 +919,7 @@ enddef;
 
 
 def p_wheelchair_SBE(expr pos, theta, sc, al) =
-	T:=identity aligned al rotated theta scaled sc shifted pos;
+	T := identity aligned al rotated theta scaled sc shifted pos;
 	thdraw SBE_wheelchair_raw shifted (-(llcorner SBE_wheelchair_raw)-(urcorner SBE_wheelchair_raw - llcorner SBE_wheelchair_raw)/2) scaled (u / max((xpart urcorner SBE_wheelchair_raw) - (xpart llcorner SBE_wheelchair_raw), (ypart urcorner SBE_wheelchair_raw) - (ypart llcorner SBE_wheelchair_raw)));
 enddef;
 
