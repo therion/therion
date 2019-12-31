@@ -199,6 +199,7 @@ enum {
   TT_LINE_TYPE_FAULT,
   TT_LINE_TYPE_JOINT,
   TT_LINE_TYPE_LOWCEILING,
+  TT_LINE_TYPE_PITCHIMNEY,
 };
 
 /**
@@ -228,6 +229,7 @@ static const thstok thtt_line_types[] = {
   {"moonmilk", TT_LINE_TYPE_MOONMILK},
   {"overhang", TT_LINE_TYPE_OVERHANG},
   {"pit", TT_LINE_TYPE_PIT},
+  {"pit-chimney", TT_LINE_TYPE_PITCHIMNEY},
   {"pitch", TT_LINE_TYPE_PIT},
   {"rock-border", TT_LINE_TYPE_ROCK_BORDER},
   {"rock-edge", TT_LINE_TYPE_ROCK_EDGE},

@@ -335,6 +335,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_FAULT,SYML_FAULT);
         cl3(TT_LINE_TYPE_JOINT,SYML_JOINT);
         cl3(TT_LINE_TYPE_LOWCEILING,SYML_LOWCEILING);
+        cl3(TT_LINE_TYPE_PITCHIMNEY,SYML_PITCHIMNEY);
       }
       break;
     case TT_SYMBOL_POINT:
@@ -1461,6 +1462,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_eqline(SYML_FAULT,thT("line fault",layout->lang));
   legend_eqline(SYML_JOINT,thT("line joint",layout->lang));
   legend_eqline(SYML_LOWCEILING,thT("line low-ceiling",layout->lang));
+  legend_eqline(SYML_PITCHIMNEY,thT("line pit-chimney",layout->lang));
 
   // thT("point remark")
   // thT("point label")
