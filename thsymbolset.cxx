@@ -256,6 +256,12 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         c2(TT_AREA_TYPE_DIMENSIONS, SYMA_DIMENSIONS);
         c2(TT_AREA_TYPE_FLOWSTONE, SYMA_FLOWSTONE);
         c2(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK);
+        c2(TT_AREA_TYPE_MUDCRACK, SYMA_MUDCRACK);
+        c2(TT_AREA_TYPE_PILLAR, SYMA_PILLAR);
+        c2(TT_AREA_TYPE_PILLARWITHCURTAINS, SYMA_PILLARWITHCURTAINS);
+        c2(TT_AREA_TYPE_STALACTITE, SYMA_STALACTITE);
+        c2(TT_AREA_TYPE_STALACTITESTALAGMITE, SYMA_STALACTITESTALAGMITE);
+        c2(TT_AREA_TYPE_STALAGMITE, SYMA_STALAGMITE);
       }
       break;
     case TT_SYMBOL_LINE:
@@ -278,7 +284,7 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
             c2(TT_LINE_SUBTYPE_UNSURVEYED,SYML_WALL_UNSURVEYED)
             c2(TT_LINE_SUBTYPE_FLOWSTONE,SYML_WALL_FLOWSTONE)
             c2(TT_LINE_SUBTYPE_MOONMILK,SYML_WALL_MOONMILK)
-			c2(TT_LINE_SUBTYPE_PIT,SYML_WALL_PIT)
+            c2(TT_LINE_SUBTYPE_PIT,SYML_WALL_PIT)
             c2(TT_LINE_SUBTYPE_OVERLYING,SYML_WALL_OVERLYING)
 
           }
@@ -330,6 +336,15 @@ int thsymbolset__get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_ROPE_LADDER,SYML_ROPELADDER);
         cl3(TT_LINE_TYPE_FIXED_LADDER,SYML_FIXEDLADDER);
         cl3(TT_LINE_TYPE_VIA_FERRATA,SYML_VIAFERRATA);
+        cl3(TT_LINE_TYPE_ABYSSENTRANCE,SYML_ABYSSENTRANCE);
+        cl3(TT_LINE_TYPE_DRIPLINE,SYML_DRIPLINE);
+        cl3(TT_LINE_TYPE_FAULT,SYML_FAULT);
+        cl3(TT_LINE_TYPE_JOINT,SYML_JOINT);
+        cl3(TT_LINE_TYPE_LOWCEILING,SYML_LOWCEILING);
+        cl3(TT_LINE_TYPE_PITCHIMNEY,SYML_PITCHIMNEY);
+        cl3(TT_LINE_TYPE_RIMSTONEDAM,SYML_RIMSTONEDAM);
+        cl3(TT_LINE_TYPE_RIMSTONEPOOL,SYML_RIMSTONEPOOL);
+        cl3(TT_LINE_TYPE_WALKWAY,SYML_WALKWAY);
       }
       break;
     case TT_SYMBOL_POINT:
@@ -669,6 +684,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(20,SYMP_NAMEPLATE);
     group(21,SYMP_GATE);
     group(22,SYMP_ELECTRICLIGHT);
+    group(23,SYML_WALKWAY);
     egroup
 
     bgroup(SYMX_SPELEOTHEMS)
@@ -707,8 +723,15 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(32,SYMP_DISCPILLARS);
     group(33,SYML_FLOWSTONE);
     group(34,SYML_MOONMILK);
-    group(35,SYMA_FLOWSTONE);
-    group(36,SYMA_MOONMILK);
+    group(35,SYML_RIMSTONEDAM);
+    group(36,SYMA_FLOWSTONE);
+    group(37,SYMA_MOONMILK);
+    group(38,SYML_RIMSTONEPOOL);
+    group(39,SYMA_PILLAR);
+    group(40,SYMA_PILLARWITHCURTAINS);
+    group(41,SYMA_STALACTITE);
+    group(42,SYMA_STALACTITESTALAGMITE);
+    group(43,SYMA_STALAGMITE);
     egroup
 
 
@@ -737,6 +760,7 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(9,SYMP_GUANO);
     group(10,SYMP_MUDCRACK);
     group(11,SYMP_MUD);
+    group(12,SYMA_MUDCRACK);
     egroup
 
 
@@ -768,6 +792,10 @@ int thsymbolset__get_group(int group_id, int cid) {
     group(24,SYMA_SNOW)
     group(25,SYMP_MUDCRACK)
     group(26,SYMP_MUD)
+    group(27,SYML_RIMSTONEDAM)
+    group(28,SYML_RIMSTONEPOOL)
+    group(29,SYML_WALKWAY);
+    group(30,SYMA_MUDCRACK);
     egroup
 
     bgroup(SYMX_SURFACECENTERLINE)
@@ -1264,6 +1292,12 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_area(SYMA_DEBRIS,thT("area debris",layout->lang));
   legend_area(SYMA_FLOWSTONE,thT("area flowstone",layout->lang));
   legend_area(SYMA_MOONMILK,thT("area moonmilk",layout->lang));
+  legend_area(SYMA_MUDCRACK,thT("area mudcrack",layout->lang));
+  legend_area(SYMA_PILLAR,thT("area pillar",layout->lang));
+  legend_area(SYMA_PILLARWITHCURTAINS,thT("area pillar-with-curtains",layout->lang));
+  legend_area(SYMA_STALACTITE,thT("area stalactite",layout->lang));
+  legend_area(SYMA_STALACTITESTALAGMITE,thT("area stalactite-stalagmite",layout->lang));
+  legend_area(SYMA_STALAGMITE,thT("area stalagmite",layout->lang));
   legend_nocliparea(SYMA_BLOCKS,thT("area blocks",layout->lang));
   legend_nocliparea(SYMA_BEDROCK,thT("area bedrock",layout->lang));
 
@@ -1451,6 +1485,15 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_HANDRAIL,thT("point handrail",layout->lang));
   legend_eqline(SYML_HANDRAIL,thT("line handrail",layout->lang));
   legend_point(SYMP_CAMP,thT("point camp",layout->lang));
+  legend_eqline(SYML_ABYSSENTRANCE,thT("line abyss-entrance",layout->lang));
+  legend_eqline(SYML_DRIPLINE,thT("line dripline",layout->lang));
+  legend_eqline(SYML_FAULT,thT("line fault",layout->lang));
+  legend_eqline(SYML_JOINT,thT("line joint",layout->lang));
+  legend_eqline(SYML_LOWCEILING,thT("line low-ceiling",layout->lang));
+  legend_eqline(SYML_PITCHIMNEY,thT("line pit-chimney",layout->lang));
+  legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
+  legend_eqline(SYML_RIMSTONEPOOL,thT("line rimstone-pool",layout->lang));
+  legend_eqline(SYML_WALKWAY,thT("line walkway",layout->lang));
 
   // thT("point remark")
   // thT("point label")

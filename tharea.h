@@ -72,6 +72,12 @@ enum {
   TT_AREA_TYPE_FLOWSTONE,
   TT_AREA_TYPE_MOONMILK,
   TT_AREA_TYPE_DIMENSIONS,
+  TT_AREA_TYPE_MUDCRACK,
+  TT_AREA_TYPE_PILLAR,
+  TT_AREA_TYPE_PILLARWITHCURTAINS,
+  TT_AREA_TYPE_STALACTITE,
+  TT_AREA_TYPE_STALACTITESTALAGMITE,
+  TT_AREA_TYPE_STALAGMITE,
 };
 
 
@@ -88,9 +94,15 @@ static const thstok thtt_area_types[] = {
   {"flowstone", TT_AREA_TYPE_FLOWSTONE},
   {"ice", TT_AREA_TYPE_ICE},
   {"moonmilk", TT_AREA_TYPE_MOONMILK},
+  {"mudcrack", TT_AREA_TYPE_MUDCRACK},
   {"pebbles", TT_AREA_TYPE_PEBBLES},
+  {"pillar", TT_AREA_TYPE_PILLAR},
+  {"pillar-with-curtains", TT_AREA_TYPE_PILLARWITHCURTAINS},
   {"sand", TT_AREA_TYPE_SAND},
   {"snow", TT_AREA_TYPE_SNOW},
+  {"stalactite", TT_AREA_TYPE_STALACTITE},
+  {"stalactite-stalagmite", TT_AREA_TYPE_STALACTITESTALAGMITE},
+  {"stalagmite", TT_AREA_TYPE_STALAGMITE},
   {"sump", TT_AREA_TYPE_SUMP},
   {"u",TT_AREA_TYPE_U},
   {"water", TT_AREA_TYPE_WATER},

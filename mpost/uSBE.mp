@@ -17,11 +17,12 @@ SBE_altar_raw := image(
 	pickup pencircle scaled 70bp;
 	draw (329,472)--(391,364)--(466,419);
 	draw (154,188)--(326,188)--(224,290);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_altar_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_altar_raw shifted (-(llcorner SBE_altar_raw)-(urcorner SBE_altar_raw - llcorner SBE_altar_raw)/2) scaled (u / max((xpart urcorner SBE_altar_raw) - (xpart llcorner SBE_altar_raw), (ypart urcorner SBE_altar_raw) - (ypart llcorner SBE_altar_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_altar_raw;
 enddef;
 
 
@@ -42,12 +43,13 @@ SBE_archeo_excavation_raw := image(
 		draw (291,403)..controls (279,402) and (262,395)..(253,372);
 		draw (371,409)..controls (370,422) and (359,429)..(346,430);
 		draw (423,399)..controls (432,402) and (437,411)..(437,418);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 	endgroup;
 );
 
 def p_archeoexcavation_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_archeo_excavation_raw shifted (-(llcorner SBE_archeo_excavation_raw)-(urcorner SBE_archeo_excavation_raw - llcorner SBE_archeo_excavation_raw)/2) scaled (u / max((xpart urcorner SBE_archeo_excavation_raw) - (xpart llcorner SBE_archeo_excavation_raw), (ypart urcorner SBE_archeo_excavation_raw) - (ypart llcorner SBE_archeo_excavation_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_archeo_excavation_raw;
 enddef;
 
 
@@ -63,11 +65,12 @@ SBE_audio_raw := image(
 	draw (158,186)..controls (178,152) and (179,118)..(158,82);
 	draw (185,202)..controls (208,166) and (213,112)..(185,67);
 	draw (213,218)..controls (248,150) and (243,105)..(213,50);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_audio_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_audio_raw shifted (-(llcorner SBE_audio_raw)-(urcorner SBE_audio_raw - llcorner SBE_audio_raw)/2) scaled (u / max((xpart urcorner SBE_audio_raw) - (xpart llcorner SBE_audio_raw), (ypart urcorner SBE_audio_raw) - (ypart llcorner SBE_audio_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_audio_raw;
 enddef;
 
 
@@ -91,11 +94,12 @@ SBE_bat_raw := image(
 		..controls (718,124) and (662,-13)..(637,34)
 		..controls (621,76) and (562,52)..(538,34)
 		--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_bat_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_bat_raw shifted (-(llcorner SBE_bat_raw)-(urcorner SBE_bat_raw - llcorner SBE_bat_raw)/2) scaled (u / max((xpart urcorner SBE_bat_raw) - (xpart llcorner SBE_bat_raw), (ypart urcorner SBE_bat_raw) - (ypart llcorner SBE_bat_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_bat_raw;
 enddef;
 
 
@@ -141,19 +145,20 @@ SBE_bones_raw := image(
 		..controls (648,134) and (652,126)..(644,121)
 		..controls (612,110) and (594,134)..(584,155)
 		--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_bones_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_bones_raw shifted (-(llcorner SBE_bones_raw)-(urcorner SBE_bones_raw - llcorner SBE_bones_raw)/2) scaled (u / max((xpart urcorner SBE_bones_raw) - (xpart llcorner SBE_bones_raw), (ypart urcorner SBE_bones_raw) - (ypart llcorner SBE_bones_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_bones_raw;
 enddef;
 
 
 def p_curtains_SBE(expr pos, theta, sc, al) =
-	U:=(.3u, .8u);
+	U := (.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
-		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		T := identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (-.15u,.4u)--(0,.15u)--(.15u,.4u);
 		thdraw (0,.15u)--(0,0){dir 180}..(-.12u,-.11u)..{dir 0}(0,-.22u)--(0,-.4u);
 	endfor;
@@ -180,17 +185,18 @@ SBE_danger_raw := image(
 		--(330,436)..controls (330,435) and (330,435)..(331,435)
 		..controls (332,435) and (332,435)..(332,436)
 		--cycle withcolor white;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_danger_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_danger_raw shifted (-(llcorner SBE_danger_raw)-(urcorner SBE_danger_raw - llcorner SBE_danger_raw)/2) scaled (u / max((xpart urcorner SBE_danger_raw) - (xpart llcorner SBE_danger_raw), (ypart urcorner SBE_danger_raw) - (ypart llcorner SBE_danger_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_danger_raw;
 enddef;
 
 
 def p_discpillar_UIS(expr pos,theta,sc,al) =
-	U:=(.15u, .4u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
+	U := (.15u, .4u);
+	T := identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
 	thdraw (-.15u,.4u) -- (0,.15u) -- (0,-.15u) -- (-.15u,-.4u);
 	thdraw (0,-.15u) -- (.15u,-.4u);
@@ -200,10 +206,10 @@ enddef;
 
 
 def p_discpillars_UIS(expr pos,theta,sc,al) =
-	U:=(.3u, .8u);
+	U := (.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
-		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		T := identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (-.15u,.4u) -- (0,.15u) -- (0,-.15u) -- (-.15u,-.4u);
 		thdraw (0,-.15u) -- (.15u,-.4u);
 		thdraw (0,.15u) -- (.15u,.4u);
@@ -213,10 +219,10 @@ enddef;
 
 
 def p_discstalactites_UIS(expr pos,theta,sc,al) =
-	U:=(.3u, .8u);
+	U := (.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
-		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		T := identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (0,-.4u) -- (0,.15u) -- (-.15u,.4u);
 		thdraw (0,.15u) -- (.15u,.4u);
 		thdraw (-.15u,-.1u) -- (.15u,-.1u);
@@ -225,10 +231,10 @@ enddef;
 
 
 def p_discstalagmites_UIS(expr pos,theta,sc,al) =
-	U:=(.3u, .8u);
+	U := (.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
-		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		T := identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (0,.4u) -- (0,-.15u) -- (-.15u,-.4u);
 		thdraw (0,-.15u) -- (.15u,-.4u);
 		thdraw (-.15u,.1u) -- (.15u,.1u);
@@ -237,8 +243,8 @@ enddef;
 
 
 def p_discstalactite_UIS(expr pos,theta,sc,al) =
-	U:=(.15u, .4u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
+	U := (.15u, .4u);
+	T := identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
 	thdraw (0,-.4u) -- (0,.15u) -- (-.15u,.4u);
 	thdraw (0,.15u) -- (.15u,.4u);
@@ -247,8 +253,8 @@ enddef;
 
 
 def p_discstalagmite_UIS(expr pos,theta,sc,al) =
-	U:=(.15u, .4u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
+	U := (.15u, .4u);
+	T := identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
 	thdraw (0,.4u) -- (0,-.15u) -- (-.15u,-.4u);
 	thdraw (0,-.15u) -- (.15u,-.4u);
@@ -285,12 +291,13 @@ SBE_electric_light_raw := image(
 		interim linecap := rounded;
 		draw (282,489)--(370,489);
 		draw (280,524)--(371,524);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 	endgroup;
 );
 
 def p_electriclight_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_electric_light_raw shifted (-(llcorner SBE_electric_light_raw)-(urcorner SBE_electric_light_raw - llcorner SBE_electric_light_raw)/2) scaled (u / max((xpart urcorner SBE_electric_light_raw) - (xpart llcorner SBE_electric_light_raw), (ypart urcorner SBE_electric_light_raw) - (ypart llcorner SBE_electric_light_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_electric_light_raw;
 enddef;
 
 
@@ -309,11 +316,12 @@ SBE_exvoto_raw := image(
 	draw (508,638)--(363,457)--(373,417)
 		--(412,418)--(558,602);
 	draw (421,524)--(452,482);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_exvoto_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_exvoto_raw shifted (-(llcorner SBE_exvoto_raw)-(urcorner SBE_exvoto_raw - llcorner SBE_exvoto_raw)/2) scaled (u / max((xpart urcorner SBE_exvoto_raw) - (xpart llcorner SBE_exvoto_raw), (ypart urcorner SBE_exvoto_raw) - (ypart llcorner SBE_exvoto_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_exvoto_raw;
 enddef;
 
 
@@ -333,12 +341,13 @@ SBE_gate_raw := image(
 		draw (184,496)--(184,234);
 		draw (466,307)--(337,330);
 		draw (402,496)--(402,234);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 	endgroup;
 );
 
 def p_gate_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_gate_raw shifted (-(llcorner SBE_gate_raw)-(urcorner SBE_gate_raw - llcorner SBE_gate_raw)/2) scaled (u / max((xpart urcorner SBE_gate_raw) - (xpart llcorner SBE_gate_raw), (ypart urcorner SBE_gate_raw) - (ypart llcorner SBE_gate_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_gate_raw;
 enddef;
 
 
@@ -426,11 +435,12 @@ SBE_human_bones_raw := image(
 		..controls (199,173) and (200,174)..(200,174)
 		..controls (200,183) and (197,213)..(187,212)
 		--cycle withcolor white;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_humanbones_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_human_bones_raw shifted (-(llcorner SBE_human_bones_raw)-(urcorner SBE_human_bones_raw - llcorner SBE_human_bones_raw)/2) scaled (u / max((xpart urcorner SBE_human_bones_raw) - (xpart llcorner SBE_human_bones_raw), (ypart urcorner SBE_human_bones_raw) - (ypart llcorner SBE_human_bones_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_human_bones_raw;
 enddef;
 
 
@@ -447,32 +457,32 @@ SBE_masonry_raw := image(
 		draw (287,401)--(355,401);
 		draw (247,360)--(315,360);
 		draw (327,360)--(395,360);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 	endgroup;
 );
 
 def p_masonry_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_masonry_raw shifted (-(llcorner SBE_masonry_raw)-(urcorner SBE_masonry_raw - llcorner SBE_masonry_raw)/2) scaled (u / max((xpart urcorner SBE_masonry_raw) - (xpart llcorner SBE_masonry_raw), (ypart urcorner SBE_masonry_raw) - (ypart llcorner SBE_masonry_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_masonry_raw;
 enddef;
 
 
 picture UIS_minus_raw;
 UIS_minus_raw := image(
-	fill (294.660004,411.578003)--(307.644989,411.578003)--(307.644989,407.625000)
-		--(294.660004,407.625000)--cycle;
-	pickup pencircle scaled 1.285130bp;
-	draw (314.710999,409.601990)..controls (314.710999,402.113007) and (308.640991,396.042999)..(301.152008,396.042999)
-		..controls (293.664001,396.042999) and (287.593994,402.113007)..(287.593994,409.601990)
-		..controls (287.593994,417.089996) and (293.664001,423.160004)..(301.152008,423.160004)
-		..controls (308.640991,423.160004) and (314.710999,417.089996)..(314.710999,409.601990)
-		--cycle withcolor black;
+	pickup pencircle scaled 3bp;
+	draw (383,401)--(403,401);
+	pickup pencircle scaled 2bp;
+	draw (407,401)..controls (407,394) and (401,387)..(393,387)
+		..controls (385,387) and (379,394)..(379,401)
+		..controls (379,409) and (385,415)..(393,415)
+		..controls (401,415) and (407,409)..(407,401)
+		--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
-picture UIS_minus;
-UIS_minus := UIS_minus_raw shifted (-(llcorner UIS_minus_raw)-(urcorner UIS_minus_raw - llcorner UIS_minus_raw)/2) scaled (u / max((xpart urcorner UIS_minus_raw) - (xpart llcorner UIS_minus_raw), (ypart urcorner UIS_minus_raw) - (ypart llcorner UIS_minus_raw)));
 
 def p_minus_UIS(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw UIS_minus;
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw UIS_minus_raw;
 enddef;
 
 
@@ -497,16 +507,17 @@ SBE_mud_raw := image(
 		..controls (357,337) and (326,324)..(300,340)
 		..controls (277,343) and (264,298)..(241,320)
 		--(240,320)--cycle withcolor (0.53, 0.24, 0.02);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_mud_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_mud_raw shifted (-(llcorner SBE_mud_raw)-(urcorner SBE_mud_raw - llcorner SBE_mud_raw)/2) scaled (u / max((xpart urcorner SBE_mud_raw) - (xpart llcorner SBE_mud_raw), (ypart urcorner SBE_mud_raw) - (ypart llcorner SBE_mud_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_mud_raw;
 enddef;
 
 
-picture SBE_mud_crack_raw;
-SBE_mud_crack_raw := image(
+picture SBE_mudcrack_raw;
+SBE_mudcrack_raw := image(
 	fill (320,501)--(340,468)--(320,462)
 		--(320,462)--(320,457)--(348,464)
 		--(387,451)--(371,434)--(345,421)
@@ -527,65 +538,58 @@ SBE_mud_crack_raw := image(
 		--(403,468)--(391,457)--(351,467)
 		--(378,501)--(370,501)--(346,468)
 		--(324,501)--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_mudcrack_SBE(expr pos, theta, sc, al) =
-    U:=(.5u,.5u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_mud_crack_raw shifted (-(llcorner SBE_mud_crack_raw)-(urcorner SBE_mud_crack_raw - llcorner SBE_mud_crack_raw)/2) scaled (u / max((xpart urcorner SBE_mud_crack_raw) - (xpart llcorner SBE_mud_crack_raw), (ypart urcorner SBE_mud_crack_raw) - (ypart llcorner SBE_mud_crack_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_mudcrack_raw;
 enddef;
 
 
 picture SBE_nameplate_raw;
 SBE_nameplate_raw := image(
 	pickup pencircle scaled 24bp;
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		draw (77,563)--(505,563)--(505,340)
-			--(77,340)--cycle;
-		pickup pencircle scaled 10bp;
-		draw (208,496)--(422,496);
-		draw (117,450)--(358,450);
-		draw (264,401)--(470,401);
-	endgroup;
+	draw (77,563)--(505,563)--(505,340)
+		--(77,340)--cycle;
+	pickup pencircle scaled 10bp;
+	draw (208,496)--(422,496);
+	draw (117,450)--(358,450);
+	draw (264,401)--(470,401);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_nameplate_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_nameplate_raw shifted (-(llcorner SBE_nameplate_raw)-(urcorner SBE_nameplate_raw - llcorner SBE_nameplate_raw)/2) scaled (u / max((xpart urcorner SBE_nameplate_raw) - (xpart llcorner SBE_nameplate_raw), (ypart urcorner SBE_nameplate_raw) - (ypart llcorner SBE_nameplate_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_nameplate_raw;
 enddef;
 
 
 picture SBE_wheelchair_raw;
 SBE_wheelchair_raw := image(
-	begingroup;
-		fill (363,192)..controls (363,97) and (286,20)..(192,20)
-			..controls (97,20) and (20,97)..(20,192)
-			..controls (20,287) and (97,364)..(192,364)
-			..controls (286,364) and (363,287)..(363,192)
-			--cycle withcolor white;
-		pickup pencircle scaled 39bp;
-		interim linecap := rounded;
-		interim linejoin := rounded;
-		draw (363,192)..controls (363,97) and (286,20)..(192,20)
-			..controls (97,20) and (20,97)..(20,192)
-			..controls (20,287) and (97,364)..(192,364)
-			..controls (286,364) and (363,287)..(363,192)
-			--cycle withcolor red;
-		fill (202,301)..controls (202,286) and (190,274)..(175,274)
-			..controls (160,274) and (148,286)..(148,301)
-			..controls (148,316) and (160,328)..(175,328)
-			..controls (190,328) and (202,316)..(202,301)
-			--cycle;
-		pickup pencircle scaled 21bp;
-		draw (139,221)..controls (109,212) and (88,184)..(88,152)
-			..controls (88,113) and (120,81)..(160,81)
-			..controls (192,81) and (221,102)..(229,133);
-		draw (177,254)--(177,178)--(259,178)
-			--(278,129)--(299,134);
-		draw (177,233)--(239,233);
-	endgroup;
+	fill (363,192)..controls (363,97) and (286,20)..(192,20)
+		..controls (97,20) and (20,97)..(20,192)
+		..controls (20,287) and (97,364)..(192,364)
+		..controls (286,364) and (363,287)..(363,192)
+		--cycle withcolor white;
+	pickup pencircle scaled 39bp;
+	draw (363,192)..controls (363,97) and (286,20)..(192,20)
+		..controls (97,20) and (20,97)..(20,192)
+		..controls (20,287) and (97,364)..(192,364)
+		..controls (286,364) and (363,287)..(363,192)
+		--cycle withcolor red;
+	fill (202,301)..controls (202,286) and (190,274)..(175,274)
+		..controls (160,274) and (148,286)..(148,301)
+		..controls (148,316) and (160,328)..(175,328)
+		..controls (190,328) and (202,316)..(202,301)
+		--cycle;
+	pickup pencircle scaled 21bp;
+	draw (139,221)..controls (109,212) and (88,184)..(88,152)
+		..controls (88,113) and (120,81)..(160,81)
+		..controls (192,81) and (221,102)..(229,133);
+	draw (177,254)--(177,178)--(259,178)
+		--(278,129)--(299,134);
+	draw (177,233)--(239,233);
 );
 
 picture SBE_nowheelchair_raw;
@@ -597,38 +601,36 @@ SBE_nowheelchair_raw := image(
 		interim linejoin := mitered;
 		draw (60,307)--(323,77) withcolor red;
 	endgroup;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_nowheelchair_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_nowheelchair_raw shifted (-(llcorner SBE_nowheelchair_raw)-(urcorner SBE_nowheelchair_raw - llcorner SBE_nowheelchair_raw)/2) scaled (u / max((xpart urcorner SBE_nowheelchair_raw) - (xpart llcorner SBE_nowheelchair_raw), (ypart urcorner SBE_nowheelchair_raw) - (ypart llcorner SBE_nowheelchair_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_nowheelchair_raw;
 enddef;
 
 
 picture SBE_pendant_raw;
 SBE_pendant_raw := image(
 	pickup pencircle scaled 22bp;
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		draw (476,639)..controls (471,639) and (422,621)..(428,575)
-			..controls (434,533) and (506,503)..(505,457)
-			..controls (502,260) and (383,164)..(289,164)
-			..controls (196,164) and (77,260)..(73,457)
-			..controls (72,503) and (144,533)..(150,575)
-			..controls (156,621) and (107,639)..(102,639);
-	endgroup;
+	draw (476,639)..controls (471,639) and (422,621)..(428,575)
+		..controls (434,533) and (506,503)..(505,457)
+		..controls (502,260) and (383,164)..(289,164)
+		..controls (196,164) and (77,260)..(73,457)
+		..controls (72,503) and (144,533)..(150,575)
+		..controls (156,621) and (107,639)..(102,639);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_pendant_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_pendant_raw shifted (-(llcorner SBE_pendant_raw)-(urcorner SBE_pendant_raw - llcorner SBE_pendant_raw)/2) scaled (u / max((xpart urcorner SBE_pendant_raw) - (xpart llcorner SBE_pendant_raw), (ypart urcorner SBE_pendant_raw) - (ypart llcorner SBE_pendant_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_pendant_raw;
 enddef;
 
 
 def p_pillarwithcurtains_UIS(expr pos, theta, sc, al) =
-	U:=(.15u,.5u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
+	U := (.15u,.5u);
+	T := identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
 	thdraw (0,.25u)--(0,.1u){dir 180}..(-.1u,0)..{dir 0}(0,-.1u)--(0,-.25u);
 	thdraw (-.15u,-.5u)--(0,-.25u)--(.15u,-.5u);
@@ -637,11 +639,11 @@ enddef;
 
 
 def p_pillarswithcurtains_UIS(expr pos, theta, sc, al) =
-	U:=(.3u,u);
+	U := (.3u,u);
 	pickup PenC;
 	pickup PenC;
 	for i=-1 upto 1:
-		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		T := identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (0,.25u)--(0,.1u){dir 180}..(-.1u,0)..{dir 0}(0,-.1u)--(0,-.25u);
 		thdraw (-.15u,-.5u)--(0,-.25u)--(.15u,-.5u);
 		thdraw (-.15u,.5u)--(0,.25u)--(.15u,.5u);
@@ -651,114 +653,88 @@ enddef;
 
 picture SBE_photo_raw;
 SBE_photo_raw := image(
-	begingroup;
-		fill (186,476)--(186,445)--(111,445)
-			--(75,408)--(75,302)--(188,302)
-			--(188,286)--(329,286)--(329,302)
-			--(440,302)--(440,408)--(405,445)
-			--(328,445)--(328,476)--cycle;
-		pickup pencircle scaled 18bp;
-		interim linecap := rounded;
-		draw (194,499)--(107,621);
-		draw (320,499)--(407,621);
-	endgroup;
+	fill (186,476)--(186,445)--(111,445)
+		--(75,408)--(75,302)--(188,302)
+		--(188,286)--(329,286)--(329,302)
+		--(440,302)--(440,408)--(405,445)
+		--(328,445)--(328,476)--cycle;
+	pickup pencircle scaled 18bp;
+	draw (194,499)--(107,621);
+	draw (320,499)--(407,621);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_photo_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_photo_raw shifted (-(llcorner SBE_photo_raw)-(urcorner SBE_photo_raw - llcorner SBE_photo_raw)/2) scaled (u / max((xpart urcorner SBE_photo_raw) - (xpart llcorner SBE_photo_raw), (ypart urcorner SBE_photo_raw) - (ypart llcorner SBE_photo_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_photo_raw;
 enddef;
 
 
 picture UIS_plus_raw;
 UIS_plus_raw := image(
-	fill (394.687988,411.277008)--(394.687988,403.121002)--(402.843994,403.121002)
-		--(402.843994,400.621002)--(394.687988,400.621002)--(394.687988,392.464996)
-		--(392.234009,392.464996)--(392.234009,400.621002)--(384.062988,400.621002)
-		--(384.062988,403.121002)--(392.234009,403.121002)--(392.234009,411.277008)
-		--cycle withcolor black;
-	pickup pencircle scaled 0.750000bp;
-	draw (394.687988,411.277008)--(394.687988,403.121002)--(402.843994,403.121002)
-		--(402.843994,400.621002)--(394.687988,400.621002)--(394.687988,392.464996)
-		--(392.234009,392.464996)--(392.234009,400.621002)--(384.062988,400.621002)
-		--(384.062988,403.121002)--(392.234009,403.121002)--(392.234009,411.277008)
-		--cycle withcolor black;
-	pickup pencircle scaled 1.333610bp;
-	draw (407.531006,401.867004)..controls (407.531006,394.097992) and (401.230011,387.796997)..(393.460999,387.796997)
-		..controls (385.687988,387.796997) and (379.390991,394.097992)..(379.390991,401.867004)
-		..controls (379.390991,409.636993) and (385.687988,415.937988)..(393.460999,415.937988)
-		..controls (401.230011,415.937988) and (407.531006,409.636993)..(407.531006,401.867004)
-		--cycle withcolor black;
+	pickup pencircle scaled 3bp;
+	draw (383,401)--(403,401);
+	draw (393,411)--(393,392);
+	pickup pencircle scaled 2bp;
+	draw (407,401)..controls (407,394) and (401,387)..(393,387)
+		..controls (385,387) and (379,394)..(379,401)
+		..controls (379,409) and (385,415)..(393,415)
+		..controls (401,415) and (407,409)..(407,401)
+		--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
-picture UIS_plus;
-UIS_plus := UIS_plus_raw shifted (-(llcorner UIS_plus_raw)-(urcorner UIS_plus_raw - llcorner UIS_plus_raw)/2) scaled (u / max((xpart urcorner UIS_plus_raw) - (xpart llcorner UIS_plus_raw), (ypart urcorner UIS_plus_raw) - (ypart llcorner UIS_plus_raw)));
 
 def p_plus_UIS(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw UIS_plus;
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw UIS_plus_raw;
 enddef;
 
 
-picture UIS_plus_minus_raw;
-UIS_plus_minus_raw := image(
-	fill (482.812988,451.992004)--(482.812988,443.835999)--(490.968994,443.835999)
-		--(490.968994,441.335999)--(482.812988,441.335999)--(482.812988,433.179993)
-		--(480.359009,433.179993)--(480.359009,441.335999)--(472.187988,441.335999)
-		--(472.187988,443.835999)--(480.359009,443.835999)--(480.359009,451.992004)
-		--cycle withcolor black;
-	pickup pencircle scaled 0.750000bp;
-	draw (482.812988,451.992004)--(482.812988,443.835999)--(490.968994,443.835999)
-		--(490.968994,441.335999)--(482.812988,441.335999)--(482.812988,433.179993)
-		--(480.359009,433.179993)--(480.359009,441.335999)--(472.187988,441.335999)
-		--(472.187988,443.835999)--(480.359009,443.835999)--(480.359009,451.992004)
-		--cycle withcolor black;
-	pickup pencircle scaled 0.000000bp;
-	fill (475.089996,425.414001)--(488.074005,425.414001)--(488.074005,421.460999)
-		--(475.089996,421.460999)--cycle withcolor black;
-	pickup pencircle scaled 1.332280bp;
-	draw (481.585999,412.011993)..controls (473.812988,412.011993) and (467.515991,418.312988)..(467.515991,426.082001)
-		--(467.515991,442.582001)..controls (467.515991,450.351990) and (473.812988,456.652008)..(481.585999,456.652008)
-		..controls (489.355011,456.652008) and (495.656006,450.351990)..(495.656006,442.582001)
-		--(495.656006,426.082001)..controls (495.656006,418.312988) and (489.355011,412.011993)..(481.585999,412.011993)
-		--cycle withcolor black;
+picture UIS_plusminus_raw;
+UIS_plusminus_raw := image(
+	pickup pencircle scaled 3bp;
+	draw (383,427)--(403,427);
+	draw (393,418)--(393,437);
+	draw (383,401)--(403,401);
+	pickup pencircle scaled 2bp;
+	draw (393,387)..controls (385,387) and (379,394)..(379,401)
+		--(379,427)..controls (379,435) and (385,441)..(393,441)
+		..controls (401,441) and (407,435)..(407,427)
+		--(407,401)..controls (407,394) and (401,387)..(393,387)
+		--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / (xpart urcorner currentpicture) - (xpart llcorner currentpicture));
 );
-picture UIS_plus_minus;
-UIS_plus_minus := UIS_plus_minus_raw shifted (-(llcorner UIS_plus_minus_raw)-(urcorner UIS_plus_minus_raw - llcorner UIS_plus_minus_raw)/2) scaled (u / ((xpart urcorner UIS_plus_minus_raw) - (xpart llcorner UIS_plus_minus_raw)));
 
 def p_plusminus_UIS(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw UIS_plus_minus;
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw UIS_plusminus_raw;
 enddef;
 
 
 picture SBE_seed_germination_raw;
 SBE_seed_germination_raw := image(
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		fill (443,464)..controls (441,492) and (411,512)..(389,501)
-			..controls (406,574) and (355,622)..(378,509)
-			..controls (350,513) and (331,473)..(333,452)
-			..controls (350,440) and (374,461)..(381,474)
-			..controls (382,466) and (417,441)..(443,464)
-			--cycle;
-		pickup pencircle scaled 25bp;
-		draw (101,276)..controls (177,243) and (396,296)..(502,269);
-		pickup pencircle scaled 19bp;
-		interim linecap := rounded;
-		draw (194,270)..controls (160,669) and (364,759)..(382,543);
-	endgroup;
+	fill (443,464)..controls (441,492) and (411,512)..(389,501)
+		..controls (406,574) and (355,622)..(378,509)
+		..controls (350,513) and (331,473)..(333,452)
+		..controls (350,440) and (374,461)..(381,474)
+		..controls (382,466) and (417,441)..(443,464)
+		--cycle;
+	pickup pencircle scaled 25bp;
+	draw (101,276)..controls (177,243) and (396,296)..(502,269);
+	pickup pencircle scaled 19bp;
+	draw (194,270)..controls (160,669) and (364,759)..(382,543);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_seedgermination_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_seed_germination_raw shifted (-(llcorner SBE_seed_germination_raw)-(urcorner SBE_seed_germination_raw - llcorner SBE_seed_germination_raw)/2) scaled (u / max((xpart urcorner SBE_seed_germination_raw) - (xpart llcorner SBE_seed_germination_raw), (ypart urcorner SBE_seed_germination_raw) - (ypart llcorner SBE_seed_germination_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_seed_germination_raw;
 enddef;
 
 
 def p_stalactitestalagmite_UIS(expr pos,theta,sc,al) =
-	U:=(.15u, .4u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
+	U := (.15u, .4u);
+	T := identity rotated theta aligned al scaled sc shifted pos;
 	pickup PenC;
 	thdraw (-.15u,.4u) -- (0,.2u) -- (.15u,.4u);
 	thdraw (.15u,-.4u) -- (0,-.2u) -- (-.15u,-.4u);
@@ -768,10 +744,10 @@ enddef;
 
 
 def p_stalactitesstalagmites_UIS(expr pos,theta,sc,al) =
-	U:=(.3u, .8u);
+	U := (.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
-		T:=identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
+		T := identity rotated theta aligned al scaled (sc * 0.7) shifted (pos + (i * .3u, abs(i) * .15u));
 		thdraw (-.15u,.4u) -- (0,.2u) -- (.15u,.4u);
 		thdraw (.15u,-.4u) -- (0,-.2u) -- (-.15u,-.4u);
 		thdraw (0,-.2u) -- (0,-.1u);
@@ -782,45 +758,40 @@ enddef;
 
 picture SBE_tree_trunk_raw;
 SBE_tree_trunk_raw := image(
-	begingroup;
-		pickup pencircle scaled 11bp;
-		interim linejoin := mitered;
-		draw (338,554)--(153,393)..controls (64,292) and (204,143)..(312,243)
-			--(504,488);
-		pickup pencircle scaled 0.1bp;
-		fill (313,318)..controls (313,274) and (277,238)..(232,238)
-			..controls (188,238) and (152,274)..(152,318)
-			..controls (152,363) and (188,398)..(232,398)
-			..controls (277,398) and (313,363)..(313,318)
-			--cycle;
-		pickup pencircle scaled 5bp;
-		draw (290,453)--(348,506);
-		draw (375,406)--(445,481);
-		draw (316,397)--(348,429);
-	endgroup;
+	pickup pencircle scaled 11bp;
+	draw (338,554)--(153,393)..controls (64,292) and (204,143)..(312,243)
+		--(504,488);
+	pickup pencircle scaled 0.1bp;
+	fill (313,318)..controls (313,274) and (277,238)..(232,238)
+		..controls (188,238) and (152,274)..(152,318)
+		..controls (152,363) and (188,398)..(232,398)
+		..controls (277,398) and (313,363)..(313,318)
+		--cycle;
+	pickup pencircle scaled 5bp;
+	draw (290,453)--(348,506);
+	draw (375,406)--(445,481);
+	draw (316,397)--(348,429);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_treetrunk_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_tree_trunk_raw shifted (-(llcorner SBE_tree_trunk_raw)-(urcorner SBE_tree_trunk_raw - llcorner SBE_tree_trunk_raw)/2) scaled (u / max((xpart urcorner SBE_tree_trunk_raw) - (xpart llcorner SBE_tree_trunk_raw), (ypart urcorner SBE_tree_trunk_raw) - (ypart llcorner SBE_tree_trunk_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_tree_trunk_raw;
 enddef;
 
 
 picture SBE_volcano_raw;
 SBE_volcano_raw := image(
 	pickup pencircle scaled 21bp;
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		draw (36,222)--(169,567)..controls (177,510) and (212,485)..(265,485)
-			..controls (319,485) and (353,510)..(361,567)
-			--(494,222);
-	endgroup;
+	draw (36,222)--(169,567)..controls (177,510) and (212,485)..(265,485)
+		..controls (319,485) and (353,510)..(361,567)
+		--(494,222);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_volcano_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_volcano_raw shifted (-(llcorner SBE_volcano_raw)-(urcorner SBE_volcano_raw - llcorner SBE_volcano_raw)/2) scaled (u / max((xpart urcorner SBE_volcano_raw) - (xpart llcorner SBE_volcano_raw), (ypart urcorner SBE_volcano_raw) - (ypart llcorner SBE_volcano_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_volcano_raw;
 enddef;
 
 
@@ -850,11 +821,12 @@ SBE_walkway_raw := image(
 			..controls (108,173) and (113,168)..(113,162)
 			--cycle;
 	endgroup;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_walkway_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_walkway_raw shifted (-(llcorner SBE_walkway_raw)-(urcorner SBE_walkway_raw - llcorner SBE_walkway_raw)/2) scaled (u / max((xpart urcorner SBE_walkway_raw) - (xpart llcorner SBE_walkway_raw), (ypart urcorner SBE_walkway_raw) - (ypart llcorner SBE_walkway_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_walkway_raw;
 enddef;
 
 
@@ -897,14 +869,440 @@ SBE_water_drip_raw := image(
 		..controls (875,721) and (820,713)..(798,676)
 		..controls (785,652) and (760,604)..(761,591)
 		--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_waterdrip_SBE(expr pos, theta, sc, al) =
-	T:=identity aligned al rotated theta scaled sc shifted pos;
-	thdraw SBE_water_drip_raw shifted (-(llcorner SBE_water_drip_raw)-(urcorner SBE_water_drip_raw - llcorner SBE_water_drip_raw)/2) scaled (u / max((xpart urcorner SBE_water_drip_raw) - (xpart llcorner SBE_water_drip_raw), (ypart urcorner SBE_water_drip_raw) - (ypart llcorner SBE_water_drip_raw)));
+	T := identity aligned al rotated theta scaled sc shifted pos;
+	thdraw SBE_water_drip_raw;
 enddef;
 
+
 def p_wheelchair_SBE(expr pos, theta, sc, al) =
-	T:=identity aligned al rotated theta scaled sc shifted pos;
+	T := identity aligned al rotated theta scaled sc shifted pos;
 	thdraw SBE_wheelchair_raw shifted (-(llcorner SBE_wheelchair_raw)-(urcorner SBE_wheelchair_raw - llcorner SBE_wheelchair_raw)/2) scaled (u / max((xpart urcorner SBE_wheelchair_raw) - (xpart llcorner SBE_wheelchair_raw), (ypart urcorner SBE_wheelchair_raw) - (ypart llcorner SBE_wheelchair_raw)));
+enddef;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Lines %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+def l_abyssentrance_SBE(expr P) =
+	begingroup
+		path myTick, myT;
+
+		T := identity;
+
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+		myTick := (0,0.1u) -- (0,-0.1u);
+		myT := (0,0) -- (0,-0.1u);
+		pickup PenD;
+		forever:
+			t1 := arctime (cursor + elementSize * 1/8) of P;
+			t2 := arctime (cursor + elementSize * 2/8) of P;
+			t3 := arctime (cursor + elementSize * 4/8) of P;
+			t4 := arctime (cursor + elementSize * 6/8) of P;
+			t5 := arctime (cursor + elementSize * 7/8) of P;
+
+			thdraw myTick rotated angle(thdir(P,t1)) shifted (point t1 of P);
+			thdraw (subpath (t2,t4) of P);
+			thdraw myT rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+			thdraw myTick rotated angle(thdir(P,t5)) shifted (point t5 of P);
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 2);
+		endfor;
+	endgroup;
+enddef;
+
+
+def l_dripline_SBE(expr P) =
+	begingroup
+		path myTick;
+
+		T := identity;
+
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+		myTick := (0,0.1u) -- (0,-0.1u);
+		pickup PenD;
+		forever:
+			t1 := arctime (cursor + elementSize * 1/8) of P;
+			t2 := arctime (cursor + elementSize * 2/8) of P;
+			t3 := arctime (cursor + elementSize * 4/8) of P;
+			t4 := arctime (cursor + elementSize * 6/8) of P;
+			t5 := arctime (cursor + elementSize * 7/8) of P;
+
+			thdraw myTick rotated angle(thdir(P,t1)) shifted (point t1 of P);
+			thdraw (subpath (t2,t4) of P);
+			thdraw myTick rotated angle(thdir(P,t5)) shifted (point t5 of P);
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 2);
+		endfor;
+	endgroup;
+enddef;
+
+
+def l_fault_SBE(expr P) =
+	begingroup
+		path myDot;
+		pair Ppb, Pdb, Pvb, Ppe, Pde, Pve;
+
+		T := identity;
+
+		pickup PenA;
+		thdraw P;
+
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+		myDot := (0,-0.05u) -- (0,0.05u);
+		pickup PenC;
+		distance := 0.2u;
+		forever:
+			t0 := arctime (cursor + elementSize * 1/8) of P;
+			t1 := arctime (cursor + elementSize * 5/8) of P;
+			t2 := arctime (cursor + elementSize * 7/8) of P;
+
+			Ppb := (point t0 of P);
+			Pdb := unitvector(thdir(P,t0));
+			Pvb := Pdb rotated -90;
+			Ppe := (point t1 of P);
+			Pde := unitvector(thdir(P,t1));
+			Pve := Pde rotated -90;
+
+			if cursor > 0:
+				thdraw (Ppb - distance * Pvb) -- (Ppe - distance * Pve);
+			fi;
+
+			thdraw myDot rotated (angle(thdir(P,t2))+90) shifted (point t2 of P + distance * unitvector(thdir(P,t2) rotated 90));
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 2);
+		endfor;
+	endgroup;
+enddef;
+
+
+def l_joint_SBE(expr P) =
+	T := identity;
+
+	cursor := 0;
+	totalLength := arclength P;
+	elementSize := adjust_step(totalLength, u); % symbol length nudged to be multiple of path length
+	pickup PenC;
+	forever:
+		t0 := arctime (cursor + elementSize * 3/22) of P;
+		t1 := arctime (cursor + elementSize * 10/22) of P;
+		t2 := arctime (cursor + elementSize * 16/22) of P;
+		t3 := arctime (cursor + elementSize * 19/22) of P;
+
+		thdraw (subpath (t0,t1) of P);
+		thdraw (subpath (t2,t3) of P);
+
+		cursor := cursor + elementSize;
+		exitif cursor > totalLength - (elementSize / 2);
+	endfor;
+enddef;
+
+
+def l_lowceiling_SBE(expr P) =
+	begingroup
+		path myT;
+
+		T := identity;
+
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+		myT := (0,0) -- (0,-0.1u);
+		pickup PenD;
+		forever:
+			t1 := arctime (cursor + elementSize * 1/7) of P;
+			t2 := arctime (cursor + elementSize * 3/7) of P;
+			t3 := arctime (cursor + elementSize * 4/7) of P;
+			t4 := arctime (cursor + elementSize * 6/7) of P;
+
+			thdraw (subpath (t1,t4) of P);
+			thdraw myT rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
+			thdraw myT rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 2);
+		endfor;
+	endgroup;
+enddef;
+
+
+def l_pitchimney_SBE(expr P) =
+	begingroup
+		path myTsmall, myTlarge;
+
+		T := identity;
+
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+		myTsmall := (0,0) -- (0,-0.1u);
+		myTlarge := (0,0) -- (0,-0.175u);
+		pickup PenD;
+		forever:
+			t1 := arctime (cursor + elementSize * 1/6) of P;
+			t2 := arctime (cursor + elementSize * 2/6) of P;
+			t3 := arctime (cursor + elementSize * 3/6) of P;
+			t4 := arctime (cursor + elementSize * 4/6) of P;
+			t5 := arctime (cursor + elementSize * 5/6) of P;
+
+			thdraw (subpath (t1,t5) of P);
+
+			thdraw myTsmall rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
+			thdraw myTlarge rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+			thdraw myTsmall rotated (180+angle(thdir(P,t4))) shifted (point t4 of P);
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 2);
+		endfor;
+	endgroup;
+enddef;
+
+
+def l_rimstonedam_SBE(expr P) =
+	cas := 0;
+	distance := arclength P;
+	mystep := adjust_step(distance, 0.9u);
+	pickup PenC;
+	forever:
+		t  := arctime (cas + mystep/2) of P;
+		T := identity rotated angle(thdir(P,t)) scaled 0.7 shifted (point t of P);
+		thdraw (-.45u,.2u){dir -80}..{dir -50}(-.15u,0){dir 30}..{dir -30}(.15u,.1u){dir -50}..{dir 70}(.45u,.2u);
+		cas := cas + mystep;
+		exitif cas > distance - (2*mystep/3); % for rounding errors
+	endfor;
+enddef;
+
+
+def l_rimstonepool_SBE(expr P) =
+	cas := 0;
+	distance := arclength P;
+	mystep := adjust_step(distance, 0.9u);
+	pickup PenC;
+	forever:
+		t  := arctime (cas + mystep/2) of P;
+		T := identity rotated angle(thdir(P,t)) scaled 0.7 shifted (point t of P);
+		p := (-.45u,.2u){dir -80}..{dir -50}(-.15u,-.1u){dir 30}..{dir -30}(.15u,.1u){dir -50}..{dir 70}(.45u,.2u);
+		thfill buildcycle(p,((.5u,.15u)--(-.5u,.15u)));
+		thdraw p;
+		cas := cas + mystep;
+		exitif cas > distance - (2*mystep/3); % for rounding errors
+	endfor;
+enddef;
+
+
+def l_walkway_SBE(expr P) =
+	begingroup
+		pair da, db, pa, pb, ta, tb, tc, td;
+
+		T := identity;
+
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.2u); % symbol length nudged to be multiple of path length
+		distance := 0.1u;
+
+		pickup PenD;
+		forever:
+			t1 := arctime (cursor + elementSize * 1/5) of P;
+			t2 := arctime (cursor + elementSize * 4/5) of P;
+
+			pa := point t1 of P;
+			pb := point t2 of P;
+
+			da := unitvector(thdir(P,t1)) * distance;
+			db := unitvector(thdir(P,t2)) * distance;
+
+			ta := pa + (da rotated 90);
+			tb := pb + (db rotated 90);
+			tc := pa + (da rotated -90);
+			td := pb + (db rotated -90);
+
+			thdraw ta -- tb;
+			thdraw tc -- td;
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 2);
+		endfor;
+	endgroup;
+enddef;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Areas %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+picture SBE_a_mudcrack_raw;
+SBE_a_mudcrack_raw := image(
+	begingroup;
+		interim linecap := butt;
+		interim linejoin := mitered;
+		pickup pencircle scaled 8bp;
+		draw (172,466)--(225,425)--(271,440)
+			--(323,390)--(346,423)--(414,363)
+			--(390,275)--(414,281)--(438,322);
+		pickup pencircle scaled 4bp;
+		draw (244,252)--(232,272)--(308,293)
+			--(257,310)--(266,357)--(291,380)
+			--(303,428)--(282,477)--(393,502)
+			--(380,518);
+		pickup pencircle scaled 6bp;
+		draw (172,466)--(244,518);
+		pickup pencircle scaled 8bp;
+		draw (173,322)--(205,357)--(244,322)
+			--(266,357);
+		pickup pencircle scaled 8bp;
+		draw (380,252)--(364,292)--(380,322)
+			--(346,423)--(417,491)--(393,502);
+		pickup pencircle scaled 8bp;
+		draw (437,466)--(417,491)--(380,392);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (1.5u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
+	endgroup;
+);
+
+beginpattern(pattern_mudcrack_SBE);
+	draw SBE_a_mudcrack_raw;
+endpattern;
+
+def a_mudcrack_SBE(expr Path) =
+	T := identity;
+	thclean Path;
+	thfill Path withpattern pattern_mudcrack_SBE;
+enddef;
+
+
+def pillar_main_SBE(expr P) =
+	begingroup
+		rgbcolor SBE_Orange;
+		pair SBE_d, SBE_p;
+
+		T := identity;
+
+		SBE_Orange := (1, 0.6, 0);
+
+		pickup PenD;
+		thfill P withcolor SBE_Orange;
+
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.01u); % symbol length nudged to be multiple of path length
+		borderWidth := 0.3u;
+
+		pickup PenA;
+		forever:
+			t1 := arctime (cursor + elementSize / 2) of P;
+
+			SBE_p := point t1 of P;
+
+			SBE_d := unitvector(thdir(P,t1)) * borderWidth;
+
+			thdraw SBE_p -- SBE_p + (SBE_d rotated 90) withcolor white;;
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 2);
+		endfor;
+
+		pickup PenA;
+		thdraw P withcolor SBE_Orange;
+	endgroup;
+enddef;
+
+def a_pillar_SBE(expr P) =
+	picture SBE_Pillar;
+
+	SBE_Pillar := image(pillar_main_SBE(P));
+
+	thdraw SBE_Pillar;
+enddef;
+
+
+def a_pillarwithcurtains_SBE(expr P) =
+	begingroup
+		picture SBE_Pillar;
+		path SBE_Curtain;
+
+		SBE_Pillar := image(pillar_main_SBE(P));
+
+		thdraw SBE_Pillar;
+
+		SBE_Curtain := (0,-.4u){dir 180}..(-0.1u,-0.3u)..{dir 0}(0,-0.2u)..(0.1u,-0.1u)..{dir -180}(0,0);
+		SBE_Curtain := SBE_Curtain scaled (0.2 / 0.4);
+		cursor := 0;
+		totalLength := arclength P;
+		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
+
+		pickup PenD;
+		forever:
+			t1 := arctime (cursor + elementSize / 2) of P;
+
+			thdraw SBE_Curtain rotated (180+angle(thdir(P,t1))) shifted (point t1 of P) withcolor (1,0.6,0);
+
+			cursor := cursor + elementSize;
+			exitif cursor > totalLength - (elementSize / 3);
+		endfor;
+	endgroup;
+enddef;
+
+
+def a_stalactite_SBE(expr P) =
+	T := identity;
+
+	pickup PenA;
+	thfill P withcolor (1, 0.9, 0.67);
+	thdraw P withcolor (1, 0.6, 0);
+enddef;
+
+
+def a_stalactitestalagmite_SBE(expr P) =
+	begingroup
+		rgbcolor SBE_Orange, SBE_LightOrange;
+
+		picture SBE_PicFill, SBE_PicDraw;
+		path SBE_bboxP, SBE_clipFill, SBE_clipDraw;
+
+		T := identity;
+
+		SBE_LightOrange := (1, 0.9, 0.67);
+		SBE_Orange := (1, 0.6, 0);
+		SBE_bboxP := bbox P;
+		SBE_clipFill := ulcorner SBE_bboxP -- llcorner SBE_bboxP -- lrcorner SBE_bboxP -- cycle;
+		SBE_clipDraw := ulcorner SBE_bboxP -- urcorner SBE_bboxP -- lrcorner SBE_bboxP -- cycle;
+
+		pickup PenA;
+		thclean P;
+
+		SBE_PicFill := image(
+			fill P withcolor SBE_Orange;
+			draw P withcolor SBE_Orange;
+		);
+		clip SBE_PicFill to SBE_clipFill;
+		drawoptions();
+		draw SBE_PicFill;
+
+		SBE_PicDraw := image(
+			fill P withcolor SBE_LightOrange;
+			draw P withcolor SBE_Orange;
+		);
+		clip SBE_PicDraw to SBE_clipDraw;
+		drawoptions();
+		draw SBE_PicDraw;
+	endgroup;
+enddef;
+
+
+def a_stalagmite_SBE(expr P) =
+	T := identity;
+
+	pickup PenA;
+	thfill P withcolor (1, 0.6, 0);
 enddef;

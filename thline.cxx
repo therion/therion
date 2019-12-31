@@ -901,6 +901,15 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_FIXED_LADDER, SYML_FIXEDLADDER)
     thline_type_export_mp(TT_LINE_TYPE_STEPS, SYML_STEPS)
     thline_type_export_mp(TT_LINE_TYPE_VIA_FERRATA, SYML_VIAFERRATA)
+    thline_type_export_mp(TT_LINE_TYPE_ABYSSENTRANCE, SYML_ABYSSENTRANCE)
+    thline_type_export_mp(TT_LINE_TYPE_DRIPLINE, SYML_DRIPLINE)
+    thline_type_export_mp(TT_LINE_TYPE_FAULT, SYML_FAULT)
+    thline_type_export_mp(TT_LINE_TYPE_JOINT, SYML_JOINT)
+    thline_type_export_mp(TT_LINE_TYPE_LOWCEILING, SYML_LOWCEILING)
+    thline_type_export_mp(TT_LINE_TYPE_PITCHIMNEY, SYML_PITCHIMNEY)
+    thline_type_export_mp(TT_LINE_TYPE_RIMSTONEDAM, SYML_RIMSTONEDAM)
+    thline_type_export_mp(TT_LINE_TYPE_RIMSTONEPOOL, SYML_RIMSTONEPOOL)
+    thline_type_export_mp(TT_LINE_TYPE_WALKWAY, SYML_WALKWAY)
 
     case TT_LINE_TYPE_ROPE:
       macroid = SYML_ROPE;
