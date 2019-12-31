@@ -869,11 +869,12 @@ SBE_water_drip_raw := image(
 		..controls (875,721) and (820,713)..(798,676)
 		..controls (785,652) and (760,604)..(761,591)
 		--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_waterdrip_SBE(expr pos, theta, sc, al) =
-	T:=identity aligned al rotated theta scaled sc shifted pos;
-	thdraw SBE_water_drip_raw shifted (-(llcorner SBE_water_drip_raw)-(urcorner SBE_water_drip_raw - llcorner SBE_water_drip_raw)/2) scaled (u / max((xpart urcorner SBE_water_drip_raw) - (xpart llcorner SBE_water_drip_raw), (ypart urcorner SBE_water_drip_raw) - (ypart llcorner SBE_water_drip_raw)));
+	T := identity aligned al rotated theta scaled sc shifted pos;
+	thdraw SBE_water_drip_raw;
 enddef;
 
 
