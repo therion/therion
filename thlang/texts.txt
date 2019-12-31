@@ -3699,3 +3699,7 @@ sk: stalaktit
 sl: stalaktit
 sq: stalaktit
 zh_CN: 石钟乳
+
+therion: area stalactite-stalagmite
+en: stalactite-stalagmite
+pt: estalactite-estalagmite

@@ -1267,3 +1267,40 @@ def a_stalactite_SBE(expr P) =
 		thdraw P withcolor SBE_Orange;
 	endgroup;
 enddef;
+
+
+def a_stalactitestalagmite_SBE(expr P) =
+	begingroup
+		rgbcolor SBE_Orange, SBE_LightOrange;
+
+		picture SBE_PicFill, SBE_PicDraw;
+		path SBE_bboxP, SBE_clipFill, SBE_clipDraw;
+
+		T := identity;
+
+		SBE_LightOrange := (1, 0.9, 0.67);
+		SBE_Orange := (1, 0.6, 0);
+		SBE_bboxP := bbox P;
+		SBE_clipFill := ulcorner SBE_bboxP -- llcorner SBE_bboxP -- lrcorner SBE_bboxP -- cycle;
+		SBE_clipDraw := ulcorner SBE_bboxP -- urcorner SBE_bboxP -- lrcorner SBE_bboxP -- cycle;
+
+		pickup PenA;
+		thclean P;
+
+		SBE_PicFill := image(
+			fill P withcolor SBE_Orange;
+			draw P withcolor SBE_Orange;
+		);
+		clip SBE_PicFill to SBE_clipFill;
+		drawoptions();
+		draw SBE_PicFill;
+
+		SBE_PicDraw := image(
+			fill P withcolor SBE_LightOrange;
+			draw P withcolor SBE_Orange;
+		);
+		clip SBE_PicDraw to SBE_clipDraw;
+		drawoptions();
+		draw SBE_PicDraw;
+	endgroup;
+enddef;

@@ -76,6 +76,7 @@ enum {
   TT_AREA_TYPE_PILLAR,
   TT_AREA_TYPE_PILLARWITHCURTAINS,
   TT_AREA_TYPE_STALACTITE,
+  TT_AREA_TYPE_STALACTITESTALAGMITE,
 };
 
 
@@ -99,6 +100,7 @@ static const thstok thtt_area_types[] = {
   {"sand", TT_AREA_TYPE_SAND},
   {"snow", TT_AREA_TYPE_SNOW},
   {"stalactite", TT_AREA_TYPE_STALACTITE},
+  {"stalactite-stalagmite", TT_AREA_TYPE_STALACTITESTALAGMITE},
   {"sump", TT_AREA_TYPE_SUMP},
   {"u",TT_AREA_TYPE_U},
   {"water", TT_AREA_TYPE_WATER},
