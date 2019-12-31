@@ -560,11 +560,12 @@ SBE_nameplate_raw := image(
 		draw (117,450)--(358,450);
 		draw (264,401)--(470,401);
 	endgroup;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_nameplate_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_nameplate_raw shifted (-(llcorner SBE_nameplate_raw)-(urcorner SBE_nameplate_raw - llcorner SBE_nameplate_raw)/2) scaled (u / max((xpart urcorner SBE_nameplate_raw) - (xpart llcorner SBE_nameplate_raw), (ypart urcorner SBE_nameplate_raw) - (ypart llcorner SBE_nameplate_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_nameplate_raw;
 enddef;
 
 
