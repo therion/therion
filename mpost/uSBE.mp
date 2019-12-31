@@ -676,11 +676,12 @@ SBE_photo_raw := image(
 		draw (194,499)--(107,621);
 		draw (320,499)--(407,621);
 	endgroup;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_photo_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_photo_raw shifted (-(llcorner SBE_photo_raw)-(urcorner SBE_photo_raw - llcorner SBE_photo_raw)/2) scaled (u / max((xpart urcorner SBE_photo_raw) - (xpart llcorner SBE_photo_raw), (ypart urcorner SBE_photo_raw) - (ypart llcorner SBE_photo_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_photo_raw;
 enddef;
 
 
