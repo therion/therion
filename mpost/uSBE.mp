@@ -1040,15 +1040,15 @@ enddef;
 
 def l_pitchimney_SBE(expr P) =
 	begingroup
-		path myTsmall, myTlarge;
+		path SBE_Tsmall, SBE_Tlarge;
 
 		T := identity;
 
 		cursor := 0;
 		totalLength := arclength P;
 		elementSize := adjust_step(totalLength, 0.5u); % symbol length nudged to be multiple of path length
-		myTsmall := (0,0) -- (0,-0.1u);
-		myTlarge := (0,0) -- (0,-0.175u);
+		SBE_Tsmall := (0,0) -- (0,-0.1u);
+		SBE_Tlarge := (0,0) -- (0,-0.175u);
 		pickup PenD;
 		forever:
 			t1 := arctime (cursor + elementSize * 1/6) of P;
@@ -1059,9 +1059,9 @@ def l_pitchimney_SBE(expr P) =
 
 			thdraw (subpath (t1,t5) of P);
 
-			thdraw myTsmall rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
-			thdraw myTlarge rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
-			thdraw myTsmall rotated (180+angle(thdir(P,t4))) shifted (point t4 of P);
+			thdraw SBE_Tsmall rotated (180+angle(thdir(P,t2))) shifted (point t2 of P);
+			thdraw SBE_Tlarge rotated (180+angle(thdir(P,t3))) shifted (point t3 of P);
+			thdraw SBE_Tsmall rotated (180+angle(thdir(P,t4))) shifted (point t4 of P);
 
 			cursor := cursor + elementSize;
 			exitif cursor > totalLength - (elementSize / 2);
