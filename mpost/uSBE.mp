@@ -516,8 +516,8 @@ def p_mud_SBE(expr pos, theta, sc, al) =
 enddef;
 
 
-picture SBE_mud_crack_raw;
-SBE_mud_crack_raw := image(
+picture SBE_mudcrack_raw;
+SBE_mudcrack_raw := image(
 	fill (320,501)--(340,468)--(320,462)
 		--(320,462)--(320,457)--(348,464)
 		--(387,451)--(371,434)--(345,421)
@@ -538,12 +538,12 @@ SBE_mud_crack_raw := image(
 		--(403,468)--(391,457)--(351,467)
 		--(378,501)--(370,501)--(346,468)
 		--(324,501)--cycle;
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_mudcrack_SBE(expr pos, theta, sc, al) =
-    U:=(.5u,.5u);
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_mud_crack_raw shifted (-(llcorner SBE_mud_crack_raw)-(urcorner SBE_mud_crack_raw - llcorner SBE_mud_crack_raw)/2) scaled (u / max((xpart urcorner SBE_mud_crack_raw) - (xpart llcorner SBE_mud_crack_raw), (ypart urcorner SBE_mud_crack_raw) - (ypart llcorner SBE_mud_crack_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_mudcrack_raw;
 enddef;
 
 
