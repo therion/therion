@@ -341,12 +341,13 @@ SBE_gate_raw := image(
 		draw (184,496)--(184,234);
 		draw (466,307)--(337,330);
 		draw (402,496)--(402,234);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 	endgroup;
 );
 
 def p_gate_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_gate_raw shifted (-(llcorner SBE_gate_raw)-(urcorner SBE_gate_raw - llcorner SBE_gate_raw)/2) scaled (u / max((xpart urcorner SBE_gate_raw) - (xpart llcorner SBE_gate_raw), (ypart urcorner SBE_gate_raw) - (ypart llcorner SBE_gate_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_gate_raw;
 enddef;
 
 
