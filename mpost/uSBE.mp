@@ -507,11 +507,12 @@ SBE_mud_raw := image(
 		..controls (357,337) and (326,324)..(300,340)
 		..controls (277,343) and (264,298)..(241,320)
 		--(240,320)--cycle withcolor (0.53, 0.24, 0.02);
+	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
 def p_mud_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_mud_raw shifted (-(llcorner SBE_mud_raw)-(urcorner SBE_mud_raw - llcorner SBE_mud_raw)/2) scaled (u / max((xpart urcorner SBE_mud_raw) - (xpart llcorner SBE_mud_raw), (ypart urcorner SBE_mud_raw) - (ypart llcorner SBE_mud_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_mud_raw;
 enddef;
 
 
