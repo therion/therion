@@ -625,16 +625,12 @@ enddef;
 picture SBE_pendant_raw;
 SBE_pendant_raw := image(
 	pickup pencircle scaled 22bp;
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		draw (476,639)..controls (471,639) and (422,621)..(428,575)
-			..controls (434,533) and (506,503)..(505,457)
-			..controls (502,260) and (383,164)..(289,164)
-			..controls (196,164) and (77,260)..(73,457)
-			..controls (72,503) and (144,533)..(150,575)
-			..controls (156,621) and (107,639)..(102,639);
-	endgroup;
+	draw (476,639)..controls (471,639) and (422,621)..(428,575)
+		..controls (434,533) and (506,503)..(505,457)
+		..controls (502,260) and (383,164)..(289,164)
+		..controls (196,164) and (77,260)..(73,457)
+		..controls (72,503) and (144,533)..(150,575)
+		..controls (156,621) and (107,639)..(102,639);
 	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
