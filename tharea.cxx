@@ -1,14 +1,14 @@
 /*
  * @file tharea.cxx
  */
-  
+
 /* Copyright (C) 2000 Stacho Mudrak
- * 
+ *
  * $Date: $
  * $RCSfile: $
  * $Revision: $
  *
- * -------------------------------------------------------------------- 
+ * --------------------------------------------------------------------
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --------------------------------------------------------------------
  */
- 
+
 #include "tharea.h"
 #include "thexception.h"
 #include "thobjectname.h"
@@ -58,7 +58,7 @@ void tharea::start_insert() {
 
 
 
-int tharea::get_class_id() 
+int tharea::get_class_id()
 {
   return TT_AREA_CMD;
 }
@@ -72,7 +72,7 @@ bool tharea::is(int class_id)
     return th2ddataobject::is(class_id);
 }
 
-int tharea::get_cmd_nargs() 
+int tharea::get_cmd_nargs()
 {
   return 1;
 }
@@ -102,28 +102,28 @@ thcmd_option_desc tharea::get_cmd_option_desc(const char * opts)
 
 void tharea::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
-  char * type, * subtype;  
+  char * type, * subtype;
   if (cod.id == 1)
     cod.id = TT_AREA_TYPE;
-    
+
   switch (cod.id) {
-  
+
     case 0:
       thsplit_args(& this->db->db2d.mbf, *args);
-      this->insert_border_line(this->db->db2d.mbf.get_size(), 
+      this->insert_border_line(this->db->db2d.mbf.get_size(),
         this->db->db2d.mbf.get_buffer());
       break;
-  
+
     case TT_AREA_TYPE:
       th2dsplitTT(*args, &type, &subtype);
       this->parse_type(type);
       if (strlen(subtype) > 0)
         this->parse_subtype(subtype);
       break;
-    
+
     default:
       th2ddataobject::set(cod, args, argenc, indataline);
-      
+
   }
 }
 
@@ -217,7 +217,7 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_U, SYMA_U)
   }
   omacroid = macroid;
-  if (this->context >= 0) 
+  if (this->context >= 0)
     macroid = this->context;
   if (!out->symset->is_assigned(macroid))
     return(false);
@@ -226,11 +226,11 @@ bool tharea::export_mp(class thexpmapmpxs * out)
 
   if (out->file == NULL)
     return(true);
-    
+
   th2ddataobject::export_mp(out);
-  thdb_revision_set_type::iterator ri = 
+  thdb_revision_set_type::iterator ri =
       this->db->revision_set.find(threvision(this->id, 0));
-  fprintf(out->file,"current_src := \"%s [%ld]\";\n", ri->srcf.name, ri->srcf.line);  
+  fprintf(out->file,"current_src := \"%s [%ld]\";\n", ri->srcf.name, ri->srcf.line);
   fprintf(out->file,"string area_border[];\n");
   thdb2dab * bl = this->first_line;
   int blnum = 1;
@@ -256,12 +256,12 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     bl->line->export_path_mp(out);
     bl = bl->next_line;
   }
-  
+
   fprintf(out->file,"));\n");
-  
+
   th2ddataobject::export_mp_end(out);
-  return(false);  
-  
+  return(false);
+
 }
 
 

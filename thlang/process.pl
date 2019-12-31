@@ -1,7 +1,7 @@
 #!/usr/bin/perl
-## usage: 
+## usage:
 ## ./process.pl - generate .cxx,.h sources from texts.txt
-## ./process.pl update - find new strings to translate and load all 
+## ./process.pl update - find new strings to translate and load all
 ##   texts_xy.txt into texts.txt
 ## ./process.pl export[-empty] xy - export texts_xy.txt with texts
 ##   for translation. If export-empty is used, only untranslated strings
@@ -87,13 +87,13 @@ sub write_lang_file {
   my %hr = %{$href};
 
   open(OUT,">$fn") || die("error: can't open $fn for output\n");
-  
+
   my %sh = ();
   for $key (keys %hr) {
 #    print "SORTING: $key -> $hr{$key}{therion}\n";
     $sh{$hr{$key}{therion}} = $key;
   }
-  
+
   @nkeys = sort {$a <=> $b} (keys %sh);
   for $key (@nkeys) {
     print OUT $hr{$sh{$key}}{"therion-cmnt"};
@@ -106,15 +106,15 @@ sub write_lang_file {
     }
     print OUT "\n";
   }
-  
+
   close(OUT);
-  
+
 }
 
 sub write_sources {
   my $href = shift;
   my %hr = %{$href};
-  
+
   # vytvorime si zoznam jazykov a ich alternativ
   my %lngs = ();
   my $key;
@@ -130,7 +130,7 @@ sub write_sources {
       }
     }
   }
-  
+
   my @langs = (sort keys %lngs);
   my $i;
   my $lcode;
@@ -140,14 +140,14 @@ sub write_sources {
   for ($i = 0; $i <= $#langs; $i++) {
     $lcode = "THLANG_" . uc($langs[$i]);
     $langcxxid .= "  \"$lcode\",\n";
-    $langparse .= "  {\"$langs[$i]\", $lcode},\n"; 
+    $langparse .= "  {\"$langs[$i]\", $lcode},\n";
     $languages .= "  $lcode = $i,\n";
     $lngs{$langs[$i]} = $lcode;
   }
   $languages .= "};\n";
   $langcxxid .= "};\n";
   $langparse .= "  {NULL, THLANG_UNKNOWN},\n};\n";
-  
+
   my $alternatives = "static const int thlang__alternatives [] = {\n";
   for ($i = 0; $i <= $#langs; $i++) {
     $lkey = $langs[$i];
@@ -158,7 +158,7 @@ sub write_sources {
     }
   }
   $alternatives .= "};\n";
-  
+
   @texts = sort keys %hr;
 
   $textparse = "static const thstok thtt__texts [" . ($#texts + 2) . "] = {\n";
@@ -189,7 +189,7 @@ sub write_sources {
   }
   $textparse .= "  {NULL, -1},\n};\n";
   $texttable .= "};\n";
-  
+
   # exportujeme h subor
   open(OUT,">../thlangdata.h") || die("error: can't open thlangdata.h for output\n");
   print OUT <<ENDOUT;
@@ -199,14 +199,14 @@ sub write_sources {
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */
-  
- 
+
+
 $languages
- 
- 
+
+
 ENDOUT
   close(OUT);
-  
+
   # exportujeme cxx subor
   open(OUT,">../thlangdata.cxx") || die("error: can't open thlangdata.cxx for output\n");
   print OUT <<ENDOUT;
@@ -217,7 +217,7 @@ ENDOUT
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */
 
- 
+
 typedef const char * thlang_pchar;
 
 
@@ -234,19 +234,19 @@ $textparse
 
 
 $texttable
- 
- 
+
+
 ENDOUT
-  
+
   close(OUT);
-  
+
 }
 
 
 sub update_todo_list {
   my $href = shift;
   my %hr = %{$href};
-  
+
   # prejde vsetky kluce a priradi im vysoke cisla
   my $maxnm = -1;
   foreach $key (keys %hr) {
@@ -255,11 +255,11 @@ sub update_todo_list {
     }
   }
   $maxnm = -1 - $maxnm;
-  
+
   foreach $key (keys %hr) {
     $hr{$key}{therion} += $maxnm;
   }
-  
+
   my $i = 0;
   foreach $fn (@trans_sources) {
     print "updating definitions from $fn ...";
@@ -277,21 +277,21 @@ sub update_todo_list {
     }
     print " done\n";
   }
-  
+
   #vypise warningy
   foreach $key (keys %hr) {
     if ($hr{$key}{therion} < 0) {
       warn("warning: expression \"$key\" doesn't need to be translated\n");
     }
   }
-  
+
   return \%hr;
 }
 
 
 sub backup_file {
   my $fn = shift;
-  
+
   open(INP,"$fn") || die("error: can't open $fn for input\n");
   my @lines = <INP>;
   close(INP);
@@ -308,11 +308,11 @@ sub export_language {
   open(OUT,">$fn") || die("error: can't open $fn for output\n");
 
   my %sh = ();
-  
+
   for $key (keys %hr) {
     $sh{$hr{$key}{therion}} = $key;
   }
-  
+
   my @nkeys = sort {$a <=> $b} (keys %sh);
   for $key (@nkeys) {
     my $toexp = 1;
@@ -340,7 +340,7 @@ sub export_language {
   }
 
   close(OUT);
-  
+
 }
 
 

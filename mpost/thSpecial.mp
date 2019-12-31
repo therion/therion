@@ -8,7 +8,7 @@
 %%
 %% Copyright (C) 2004 Martin Budaj
 %%
-%% -------------------------------------------------------------------- 
+%% --------------------------------------------------------------------
 %% This program is free software; you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
 %% the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,13 @@
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 %% GNU General Public License for more details.
-%% 
+%%
 %% You should have received a copy of the GNU General Public License
 %% along with this program; if not, write to the Free Software
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% --------------------------------------------------------------------
 
-def s_northarrow_SKBB_old (expr rot) = 
+def s_northarrow_SKBB_old (expr rot) =
   T:=identity;
   picture tmp_pic;
   tmp_pic = image (
@@ -43,7 +43,7 @@ def s_northarrow_SKBB (expr rot) =
   thfill (-.5cm,-1cm)--(0,1.5cm)--(0,-.5cm)--cycle;
 enddef;
 
-def s_scalebar_SKBB (expr l, units, txt) = 
+def s_scalebar_SKBB (expr l, units, txt) =
   begingroup
     interim warningcheck:=0;
     tmpl:=l / Scale * cm * units / 2;
@@ -58,7 +58,7 @@ def s_scalebar_SKBB (expr l, units, txt) =
   endgroup
 enddef;
 
-def s_scalebar_SM (expr l, units, txt) = 
+def s_scalebar_SM (expr l, units, txt) =
   begingroup
     interim warningcheck:=0;
     tmpl:=l / Scale * cm * units / 2;

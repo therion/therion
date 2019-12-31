@@ -8,7 +8,7 @@
 %%
 %% Copyright (C) 2000-2004 Martin Budaj
 %%
-%% -------------------------------------------------------------------- 
+%% --------------------------------------------------------------------
 %% This program is free software; you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
 %% the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 %% GNU General Public License for more details.
-%% 
+%%
 %% You should have received a copy of the GNU General Public License
 %% along with this program; if not, write to the Free Software
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -47,7 +47,7 @@ def l_label(expr txt,path) =
   zoom := pathl / strl;
 
   for p within pic:
-    if textual p:                                
+    if textual p:
       ss := textpart p;
       dx1 := xpart p;
       dy1 := ypart p;
@@ -65,7 +65,7 @@ def l_label(expr txt,path) =
         dy2 := ypart lrcorner pict / txtzoom;
         ptime := (dx2 - dx0 + 0.5*charwidth) * zoom;
         t := arctime ptime of (path);
-        pos := point t of path + 
+        pos := point t of path +
           (dy1+dy2)*txtzoom*unitvector((direction t of path) rotated 90);
         begingroup
 %          interim labeloffset:=0bp;
@@ -112,7 +112,7 @@ vardef p_label@#(expr txt,pos,rot,mode) =
     pickup pencircle scaled (u/6);
     drawdot(pos);
     process_label(pos,0);
-  elseif mode=2: process_uplabel;       
+  elseif mode=2: process_uplabel;
   elseif mode=3: process_downlabel;
   elseif mode=4: process_updownlabel;
   elseif mode=5: process_circledlabel;
@@ -137,7 +137,7 @@ def p_smartlabel (expr txt, pos) =
     smart_quit := true;
     smart_inner_quit := false;
     for i=1 upto smart_count:
-      if smart_overlap(((point 0 of q) shifted (0,smart_D)), 
+      if smart_overlap(((point 0 of q) shifted (0,smart_D)),
                        ((point 2 of q) shifted (0,smart_D)),
                        smartll[i], smartur[i]) = 1:
         smart_quit := false;
@@ -153,7 +153,7 @@ def p_smartlabel (expr txt, pos) =
     smart_quit := true;
     smart_inner_quit := false;
     for i=1 upto smart_count:
-      if smart_overlap(((point 0 of q) shifted (0,smart_U)), 
+      if smart_overlap(((point 0 of q) shifted (0,smart_U)),
                        ((point 2 of q) shifted (0,smart_U)),
                        smartll[i], smartur[i]) = 1:
         smart_quit := false;
@@ -183,7 +183,7 @@ def smart_overlap (expr llA, urA, llB, urB) =
      ((ypart llA < ypart urB) and (ypart urA > ypart llB)):
     1
   else:
-    0 
+    0
   fi
 enddef;
 
@@ -197,7 +197,7 @@ def p_wallaltitude (expr pprev,pos,pnext,txt) =
 %  zz:=(pos + 3*unitvector(dir rot));
   zz:=(pos + (u/4)*unitvector(dir rot));
   draw (pos)--zz;
-  begingroup 
+  begingroup
 %    interim labeloffset:=2pt;
     interim labeloffset:=(u/12);
     if horiz_labels:

@@ -2,7 +2,7 @@
 
 let p_station_fixed = p_station_fixed_ASF;
 let p_station_painted = p_station_painted_SKBB;
-let p_station_natural = p_station_natural_ASF;              
+let p_station_natural = p_station_natural_ASF;
 let p_station_temporary = p_station_temporary_ASF;
 
 let p_waterflow_paleo = p_waterflow_paleo_UIS;
@@ -98,11 +98,11 @@ let p_vegetabledebris = p_vegetabledebris_ASF;
 let p_root = p_root_ASF;
 let p_entrance = p_entrance_UIS;
 let p_gradient = p_gradient_UIS;
-let p_rope = p_rope_SKBB;          
-let p_fixedladder = p_fixedladder_SKBB;   
-let p_ropeladder = p_ropeladder_SKBB;    
-let p_steps = p_steps_SKBB;         
-let p_bridge = p_bridge_SKBB;        
+let p_rope = p_rope_SKBB;
+let p_fixedladder = p_fixedladder_SKBB;
+let p_ropeladder = p_ropeladder_SKBB;
+let p_steps = p_steps_SKBB;
+let p_bridge = p_bridge_SKBB;
 let p_traverse = p_traverse_SKBB;
 let p_anchor = p_anchor_SKBB;
 let p_camp = p_camp_SKBB;
