@@ -713,21 +713,16 @@ enddef;
 
 picture SBE_seed_germination_raw;
 SBE_seed_germination_raw := image(
-	begingroup;
-		interim linecap := butt;
-		interim linejoin := mitered;
-		fill (443,464)..controls (441,492) and (411,512)..(389,501)
-			..controls (406,574) and (355,622)..(378,509)
-			..controls (350,513) and (331,473)..(333,452)
-			..controls (350,440) and (374,461)..(381,474)
-			..controls (382,466) and (417,441)..(443,464)
-			--cycle;
-		pickup pencircle scaled 25bp;
-		draw (101,276)..controls (177,243) and (396,296)..(502,269);
-		pickup pencircle scaled 19bp;
-		interim linecap := rounded;
-		draw (194,270)..controls (160,669) and (364,759)..(382,543);
-	endgroup;
+	fill (443,464)..controls (441,492) and (411,512)..(389,501)
+		..controls (406,574) and (355,622)..(378,509)
+		..controls (350,513) and (331,473)..(333,452)
+		..controls (350,440) and (374,461)..(381,474)
+		..controls (382,466) and (417,441)..(443,464)
+		--cycle;
+	pickup pencircle scaled 25bp;
+	draw (101,276)..controls (177,243) and (396,296)..(502,269);
+	pickup pencircle scaled 19bp;
+	draw (194,270)..controls (160,669) and (364,759)..(382,543);
 	currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 );
 
