@@ -291,12 +291,13 @@ SBE_electric_light_raw := image(
 		interim linecap := rounded;
 		draw (282,489)--(370,489);
 		draw (280,524)--(371,524);
+		currentpicture := currentpicture shifted (-(llcorner currentpicture)-(urcorner currentpicture - llcorner currentpicture)/2) scaled (u / max((xpart urcorner currentpicture) - (xpart llcorner currentpicture), (ypart urcorner currentpicture) - (ypart llcorner currentpicture)));
 	endgroup;
 );
 
 def p_electriclight_SBE(expr pos, theta, sc, al) =
-	T:=identity rotated theta aligned al scaled sc shifted pos;
-	thdraw SBE_electric_light_raw shifted (-(llcorner SBE_electric_light_raw)-(urcorner SBE_electric_light_raw - llcorner SBE_electric_light_raw)/2) scaled (u / max((xpart urcorner SBE_electric_light_raw) - (xpart llcorner SBE_electric_light_raw), (ypart urcorner SBE_electric_light_raw) - (ypart llcorner SBE_electric_light_raw)));
+	T := identity rotated theta aligned al scaled sc shifted pos;
+	thdraw SBE_electric_light_raw;
 enddef;
 
 
