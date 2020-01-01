@@ -2,14 +2,14 @@
  * @file thpoint.h
  * point module.
  */
-  
+
 /* Copyright (C) 2000 Stacho Mudrak
- * 
+ *
  * $Date: $
  * $RCSfile: $
  * $Revision: $
  *
- * -------------------------------------------------------------------- 
+ * --------------------------------------------------------------------
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,13 +19,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --------------------------------------------------------------------
  */
- 
+
 #ifndef thpoint_h
 #define thpoint_h
 
@@ -37,7 +37,7 @@
 /**
  * point command options tokens.
  */
- 
+
 enum {
   TT_POINT_UNKNOWN = 3000,
   TT_POINT_TYPE = 3001,
@@ -60,7 +60,7 @@ enum {
 /**
  * point command options parsing table.
  */
- 
+
 static const thstok thtt_point_opt[] = {
   {"align", TT_POINT_ALIGN},
   {"dist", TT_POINT_DIST},
@@ -99,7 +99,7 @@ enum {
 
 // date
   TT_POINT_TAG_DATE = 1,
-  
+
 };
 
 
@@ -131,7 +131,7 @@ enum {
   TT_POINT_TYPE_DIMENSIONS,
   TT_POINT_TYPE_MAP_CONNECTION,
   TT_POINT_TYPE_EXTRA,
-  
+
 // vystroj
   TT_POINT_TYPE_NO_EQUIPMENT,
   TT_POINT_TYPE_ANCHOR,
@@ -219,7 +219,7 @@ enum {
   TT_POINT_TYPE_STALACTITESTALAGMITE,
   TT_POINT_TYPE_STALACTITESSTALAGMITES,
   TT_POINT_TYPE_VOLCANO,
-  
+
 // plosne vyplne
   TT_POINT_TYPE_BEDROCK,
   TT_POINT_TYPE_SAND,
@@ -249,7 +249,7 @@ enum {
 /**
  * Point types parsing table.
  */
- 
+
 static const thstok thtt_point_types[] = {
   {"air-draught",TT_POINT_TYPE_AIR_DRAUGHT},
   {"altar",TT_POINT_TYPE_ALTAR},
@@ -395,7 +395,7 @@ enum {
 /**
  * Point align parsing table.
  */
- 
+
 static const thstok thtt_point_aligns[] = {
   {"b", TT_POINT_ALIGN_B},
   {"bl", TT_POINT_ALIGN_BL},
@@ -447,7 +447,7 @@ enum {
 /**
  * Point types parsing table.
  */
- 
+
 static const thstok thtt_point_subtypes[] = {
   {"both", TT_POINT_SUBTYPE_BOTH},
   {"fixed", TT_POINT_SUBTYPE_FIXED},
@@ -474,33 +474,33 @@ static const thstok thtt_point_subtypes[] = {
 class thpoint : public th2ddataobject {
 
   public:
-  
+
   friend class thdb2d;
 
   int type,  ///< Point type.
     subtype,  ///< Point subtype.
     align;  ///< Point align.
   double orient, xsize, ysize;  ///<...
-  
+
   const char * text;  ///< Point text.
-    
+
   thdb2dpt * point;  ///< Point coordinates.
-  
+
   class thdb2dcp * cpoint; ///< Control point.
-  
+
   thobjectname station_name,  ///< Station name.
     from_name;  ///< Extend name.
 
   char extend_opts;  ///< Extend options.
 
   virtual void start_insert();
-    
+
   void parse_type(char * tstr);  ///< Parse point type.
 
   void parse_align(char * tstr);  ///< Parse point align.
-  
+
   void parse_subtype(char * ststr);  ///< Parse point subtype.
-  
+
   void parse_from(char * estr);  ///< Parse station extend.
 
   void parse_text(char * ss);  ///< Parse point text.
@@ -514,66 +514,66 @@ class thpoint : public th2ddataobject {
   /**
    * Standard constructor.
    */
-  
+
   thpoint();
-  
-  
+
+
   /**
    * Standard destructor.
    */
-   
+
   ~thpoint();
-  
-  
+
+
   /**
    * Return class identifier.
    */
-  
+
   virtual int get_class_id();
-  
-  
+
+
   /**
    * Return class name.
    */
-   
+
   virtual const char * get_class_name() {return "thpoint";};
-  
-  
+
+
   /**
    * Return true, if son of given class.
    */
-  
+
   virtual bool is(int class_id);
-  
-  
+
+
   /**
    * Return number of command arguments.
    */
-   
+
   virtual int get_cmd_nargs();
-  
-  
+
+
   /**
    * Return command name.
    */
-   
+
   virtual const char * get_cmd_name();
-  
-  
+
+
   /**
    * Return command end option.
    */
-   
+
   virtual const char * get_cmd_end();
-  
-  
+
+
   /**
    * Return option description.
    */
-   
+
   virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
-  
-  
+
+
   /**
    * Set command option.
    *
@@ -581,7 +581,7 @@ class thpoint : public th2ddataobject {
    * @param args Option arguments array.
    * @param argenc Arguments encoding.
    */
-   
+
   virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
 
 
@@ -590,22 +590,22 @@ class thpoint : public th2ddataobject {
    *
    * @warn Always use this method instead of delete function.
    */
-   
+
   virtual void self_delete();
 
 
   /**
    * Print object properties.
    */
-   
-  virtual void self_print_properties(FILE * outf); 
+
+  virtual void self_print_properties(FILE * outf);
 
   /**
    * Export to metapost file.
    */
-   
+
   virtual bool export_mp(class thexpmapmpxs * out);
-  
+
 };
 
 #endif

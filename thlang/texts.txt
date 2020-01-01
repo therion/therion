@@ -480,6 +480,7 @@ cz: vstupní propast
 de: Eingangsschacht
 en: entrance pit
 en_GB: entrance pitch
+en_US: entrance pit
 es: pozo de entrada
 fr: mur-puits
 it: parete:pozzo
@@ -1080,6 +1081,7 @@ ca: pou
 cz: propast
 de: Schacht
 el: πηγάδι
+en: pit
 en_GB: pitch
 en_US: pit
 es: pozo
@@ -1468,7 +1470,7 @@ en: altar
 pt: altar
 
 therion: point archeo-excavation
-en: archeo-excavation
+en: archaeological excavation
 pt: escavação arqueológica
 
 therion: point audio
@@ -1477,7 +1479,7 @@ pt: áudio
 
 therion: point bat
 en: bat
-pt: morcego
+pt: morcegos
 
 therion: point bones
 en: bones
@@ -3331,7 +3333,9 @@ sl: Datum merjenja
 
 therion: title color-legend-default
 ca: Llegenda de colors
-en: Color legend
+en: Colour legend
+en_GB: Colour legend
+en_US: Color legend
 es: Leyenda de colores
 fr: Légende colorée
 pt: Cores
@@ -3584,3 +3588,137 @@ sl: Slika površja
 sq: harta e siperfaqes
 zh_CN: 外观图
 
+therion: line abyss-entrance
+en: abyss-entrance
+pt: entrada em abismo
+
+therion: line dripline
+en: dripline
+pt: linha de gotejamento
+
+therion: line fault
+en: fault
+pt: falha
+
+therion: line joint
+en: joint
+pt: fratura
+
+therion: line low-ceiling
+en: low-ceiling
+pt: teto baixo
+
+therion: line pit-chimney
+en: pit/chimney
+pt: poço e clarabóia
+
+therion: line rimstone-dam
+bg: сухо синтрово езеро
+ca: gour sec
+cz: sintrová hrázka
+de: Sinterbarriere
+el: γκουρ (λιθωματικό φράγμα)
+en: rimstone dam
+es: gour seco
+fr: gours
+it: gour
+mi: kōhatu matatara
+pl: naciekowa przegroda
+pt: travertino vazio
+ru: гуры без воды
+sk: sintrová hrádza
+sl: suha ponvica
+sq: penda guri
+zh_CN: 边石坝
+
+therion: line rimstone-pool
+bg: синтрово езеро
+ca: gour amb aigua
+cz: sintrové jezírko
+de: Sinterbecken
+el: γκουρ (λιθωματική λεκάνη)
+en: rimstone pool
+es: gour con agua
+fr: gour
+it: vasca
+mi: kōhatu kopua wai
+pl: jeziorko naciekowe
+pt: travertino cheio
+ru: гуры с водой
+sk: sintrové jazierko
+sl: ponvica
+sq: vaska uji
+zh_CN: 边石潭
+
+therion: line walkway
+en: walkway
+pt: passarela
+
+therion: area mudcrack
+en: mudcrack
+pt: lama rachada
+
+therion: area pillar
+bg: сталактон
+ca: columna
+cz: stalagnát
+de: Säule
+el: κολόνα
+en: pillar
+es: columna
+fr: pillier
+it: colonna
+mi: pou
+pl: stalagnat
+pt: coluna
+ru: колонна
+sk: stalagnát
+sl: steber
+sq: shtylle
+zh_CN: 石柱
+
+therion: area pillar-with-curtains
+en: pillar with curtains
+pt: coluna com cortinas
+
+therion: area stalactite
+bg: сталактит
+ca: estalactita
+cz: stalaktit
+de: Stalaktit
+el: σταλακτίτης
+en: stalactite
+es: estalactita
+fr: stalactite
+it: stalattite
+mi: kōhatu ki te haere ki runga
+pl: stalaktyt
+pt: estalactite
+ru: сталактит
+sk: stalaktit
+sl: stalaktit
+sq: stalaktit
+zh_CN: 石钟乳
+
+therion: area stalactite-stalagmite
+en: stalactite-stalagmite
+pt: estalactite-estalagmite
+
+therion: area stalagmite
+bg: сталагмит
+ca: estalagmita
+cz: stalagmit
+de: Stalagmit
+el: σταλαγμίτης
+en: stalagmite
+es: estalagmita
+fr: stalagmite
+it: stalagmite
+mi: kōhatu ki te haere ki raro
+pl: stalagmit
+pt: estalagmite
+ru: сталагмит
+sk: stalagmit
+sl: stalagmit
+sq: stalagmit
+zh_CN: 石笋

@@ -5,15 +5,15 @@
 
 \subsubchapter Log file.
 
-Besides the messages from Therion and other programs used, the log file 
-contains information about computed values of magnetic declination and meridian 
+Besides the messages from Therion and other programs used, the log file
+contains information about computed values of magnetic declination and meridian
 convergence, loop errors and scrap distortions.
 
-Absolute loop error is $\sqrt{\Delta x^2+\Delta y^2+\Delta z^2}$, where 
+Absolute loop error is $\sqrt{\Delta x^2+\Delta y^2+\Delta z^2}$, where
 $\Delta x$ is the difference between the identical start and end points of
-the loop before the error distribution measured along the $x$ coordinate axis; 
+the loop before the error distribution measured along the $x$ coordinate axis;
 similarly for $y$ and
-$z$. Percentage loop error is calculated as {\it absolute error / loop length}. 
+$z$. Percentage loop error is calculated as {\it absolute error / loop length}.
 Average error is the simple arithmetic average of all loop errors.
 
 Scrap distortion is calculated using the distortion measure defined for
@@ -27,7 +27,7 @@ or average of such measures applied to all pairs of points.
 \subsubchapter XTherion.
 
 Therion provides some basic facts about each survey (length, vertical range,
-N--S range, E--W range, number of shots and stations) if |-x| option is given. 
+N--S range, E--W range, number of shots and stations) if |-x| option is given.
 This information is displayed in XTherion, {\it Compiler} window,
 {\it Survey info} menu, when some survey from the {\it Survey structure} menu
 is selected.
@@ -35,33 +35,33 @@ is selected.
 \subsubchapter SQL export.
 
 SQL export makes it easy to get very detailed and subtle information about
-the centreline. It is a text file starting with a tables declaration (where `?' 
-stands in the following listing for a maximal value required by the column 
+the centreline. It is a text file starting with a tables declaration (where `?'
+stands in the following listing for a maximal value required by the column
 data)
 
-|create table SURVEY (ID integer, PARENT_ID integer, 
+|create table SURVEY (ID integer, PARENT_ID integer,
   NAME varchar(?), FULL_NAME varchar(?), TITLE varchar(?));
-create table CENTRELINE (ID integer, SURVEY_ID integer, 
-  TITLE varchar(?), TOPO_DATE date, EXPLO_DATE date, 
+create table CENTRELINE (ID integer, SURVEY_ID integer,
+  TITLE varchar(?), TOPO_DATE date, EXPLO_DATE date,
   LENGTH real, SURFACE_LENGTH real, DUPLICATE_LENGTH real);
 create table PERSON (ID integer, NAME varchar(?), SURNAME varchar(?));
 create table EXPLO (PERSON_ID integer, CENTRELINE_ID integer);
 create table TOPO (PERSON_ID integer, CENTRELINE_ID integer);
-create table STATION (ID integer, NAME varchar(?), 
+create table STATION (ID integer, NAME varchar(?),
   SURVEY_ID integer, X real, Y real, Z real);
 create table STATION_FLAG (STATION_ID integer, FLAG char(3));
-create table SHOT (ID integer, FROM_ID integer, TO_ID integer, 
-  CENTRELINE_ID integer, LENGTH real, BEARING real, GRADIENT real, 
-  ADJ_LENGTH real, ADJ_BEARING real, ADJ_GRADIENT real, 
+create table SHOT (ID integer, FROM_ID integer, TO_ID integer,
+  CENTRELINE_ID integer, LENGTH real, BEARING real, GRADIENT real,
+  ADJ_LENGTH real, ADJ_BEARING real, ADJ_GRADIENT real,
   ERR_LENGTH real, ERR_BEARING real, ERR_GRADIENT real);
 create table SHOT_FLAG (SHOT_ID integer, FLAG char(3));|
 
-which is followed by a mass of SQL insert commands. This file may be loaded 
-into any SQL database (after some database-dependent initialization, which may 
-include running an SQL server and connecting to it, creating a database and 
-connecting to it. A good idea is to start a transaction before loading this 
-file, if the database doesn't start a transaction automatically.) 
-It's important to set-up database encoding to match the one 
+which is followed by a mass of SQL insert commands. This file may be loaded
+into any SQL database (after some database-dependent initialization, which may
+include running an SQL server and connecting to it, creating a database and
+connecting to it. A good idea is to start a transaction before loading this
+file, if the database doesn't start a transaction automatically.)
+It's important to set-up database encoding to match the one
 specified in Therion |export database| command.
 
 
@@ -70,11 +70,11 @@ specified in Therion |export database| command.
 \endinsert
 
 
-Table and column names are self-explanatory; for undefined or non-existing 
+Table and column names are self-explanatory; for undefined or non-existing
 values |NULL| is used. |FLAG| in |SHOT_FLAG| table is |dpl| or |srf| for duplicated
-or surface shots; in |STATION_FLAG| table |ent|, |con|, |fix|, 
+or surface shots; in |STATION_FLAG| table |ent|, |con|, |fix|,
 |spr|, |sin|, |dol|, |dig|, |air|, |ove|, |arc| for stations
-with entrance, continuation, fixed, spring, sink, doline, dig, air-draught, 
+with entrance, continuation, fixed, spring, sink, doline, dig, air-draught,
 overhang or arch attributes, respectively.
 
 Examples of simple queries follow:
@@ -82,21 +82,21 @@ Examples of simple queries follow:
 \penalty-100{\it List of survey team members with information about how
 much each of them has surveyed:}
 
-|select sum(LENGTH), sum(SURFACE_LENGTH), NAME, SURNAME 
-  from CENTRELINE, TOPO, PERSON 
-  where CENTRELINE.ID = TOPO.CENTRELINE_ID and PERSON.ID = PERSON_ID 
+|select sum(LENGTH), sum(SURFACE_LENGTH), NAME, SURNAME
+  from CENTRELINE, TOPO, PERSON
+  where CENTRELINE.ID = TOPO.CENTRELINE_ID and PERSON.ID = PERSON_ID
   group by NAME, SURNAME order by 1 desc, 4 asc;|
 
 {\it Which parts of the cave were surveyed in the year 1998?}
 
-|select TITLE from SURVEY where ID in 
-  (select SURVEY_ID from CENTRELINE 
+|select TITLE from SURVEY where ID in
+  (select SURVEY_ID from CENTRELINE
   where TOPO_DATE between '1998-01-01' and '1998-12-31');|
 
 {\it How long are the passages lying between 1500 and 1550 m a.s.l.?}
 
-|select sum(LENGTH) from SHOT, STATION S1, STATION S2 
-  where (S1.Z+S2.Z)/2 between 1500 and 1550 and 
+|select sum(LENGTH) from SHOT, STATION S1, STATION S2
+  where (S1.Z+S2.Z)/2 between 1500 and 1550 and
   SHOT.FROM_ID = S1.ID and SHOT.TO_ID = S2.ID;|
 
 \subsubchapter Lists---caves, surveys, continuations.
@@ -110,31 +110,31 @@ to specify |entrance| flags in your data) including length, depth and entrance(s
 location.
 
 Detailed information about each sub-survey gives |export survey-list| command.
-The length includes shots with |approximate| flags, but not |explored|, 
+The length includes shots with |approximate| flags, but not |explored|,
 |duplicate| or |surface|.
 
 \subchapter 2D maps.
 
 \subsubchapter Maps for printing.
 
-Maps are produced in PDF and SVG formats, which may be viewed or printed in a wide 
-variety of viewers. Be sure to uncheck {\it Fit page to paper} or similar 
+Maps are produced in PDF and SVG formats, which may be viewed or printed in a wide
+variety of viewers. Be sure to uncheck {\it Fit page to paper} or similar
 option if you want to print in the exact scale.
 
-In atlas mode some additional information is put on each page: page 
+In atlas mode some additional information is put on each page: page
 number, map name, and page label.
 
-The numbers of neighbouring pages in N, S, E and W 
-directions, as well as in upper and lower levels are especially useful. There are also hyperlinks at 
-the border of the map if the cave continues on the next page and on the 
+The numbers of neighbouring pages in N, S, E and W
+directions, as well as in upper and lower levels are especially useful. There are also hyperlinks at
+the border of the map if the cave continues on the next page and on the
 appropriate cells of the Navigator.
 
-PDF files are highly optimized---scraps are stored in XObject forms only once 
-in the document and then referenced on appropriate pages. 
+PDF files are highly optimized---scraps are stored in XObject forms only once
+in the document and then referenced on appropriate pages.
 Therion uses advanced PDF features like transparency and layers.
 
-Created PDF files may be optionally post-processed in applications like 
-pdf\TeX\ or Adobe Acrobat---it's possible to extract or change some pages, add 
+Created PDF files may be optionally post-processed in applications like
+pdf\TeX\ or Adobe Acrobat---it's possible to extract or change some pages, add
 comments or encryption, etc.
 
 \NEW{5.3}If the map was produced using georeferenced data then it also contains
@@ -145,14 +145,14 @@ details).
 
 \subsubchapter Maps for GIS.
 
-Maps produced in DXF, ESRI or KML formats may be further processed in 
+Maps produced in DXF, ESRI or KML formats may be further processed in
 appropriate software. These maps do not contain visualized map symbols
 
 
 \subsubchapter Special-purpose maps.
 
-Map in XVI format contains centreline with LRUD information (and optionally morphed 
-sketches) and can be imported in XTherion to serve as a background for 
+Map in XVI format contains centreline with LRUD information (and optionally morphed
+sketches) and can be imported in XTherion to serve as a background for
 digitization.
 
 Map in Survex format is intended for a quick preview in Aven.
@@ -160,14 +160,14 @@ Map in Survex format is intended for a quick preview in Aven.
 
 \subchapter 3D models.
 
-Therion may export 3D models in various formats besides its native format. These 
-may be loaded in appropriate viewing, editing or raytracing programs to be 
-printed or further processed. If the format doesn't support arbitrary passage 
+Therion may export 3D models in various formats besides its native format. These
+may be loaded in appropriate viewing, editing or raytracing programs to be
+printed or further processed. If the format doesn't support arbitrary passage
 shape definition, only the centreline is included.
 
 \subsubchapter Loch.
 
-Loch is a 3D model viewer included in the Therion distribution. It supports 
+Loch is a 3D model viewer included in the Therion distribution. It supports
 e.g.~high-resolution rendering to file and stereo view using 3D-glasses.
 
 \endinput

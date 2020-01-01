@@ -1,14 +1,14 @@
 /**
  * @file thpoint.cxx
  */
-  
+
 /* Copyright (C) 2000 Stacho Mudrak
- * 
+ *
  * $Date: $
  * $RCSfile: $
  * $Revision: $
  *
- * -------------------------------------------------------------------- 
+ * --------------------------------------------------------------------
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --------------------------------------------------------------------
  */
- 
+
 #include "thpoint.h"
 #include "thexception.h"
 #include "thchenc.h"
@@ -46,15 +46,15 @@ thpoint::thpoint()
   this->point = thdb.db2d.insert_point();
   this->cpoint = NULL;
   this->point->pscrap = thdb.get_current_scrap();
-  
+
   this->station_name.clear();
   this->from_name.clear();
-  
+
   this->orient = thnan;
   this->xsize = thnan;
   this->ysize = thnan;
   this->align = TT_POINT_ALIGN_C;
-  
+
   this->text = NULL;
 }
 
@@ -69,7 +69,7 @@ thpoint::~thpoint()
 }
 
 
-int thpoint::get_class_id() 
+int thpoint::get_class_id()
 {
   return TT_POINT_CMD;
 }
@@ -83,7 +83,7 @@ bool thpoint::is(int class_id)
     return th2ddataobject::is(class_id);
 }
 
-int thpoint::get_cmd_nargs() 
+int thpoint::get_cmd_nargs()
 {
   // replace by real number of arguments
   return 3;
@@ -129,12 +129,12 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
   double dv;
   int sv;
   char * type, * subtype;
-  
+
   if (cod.id == 3)
     cod.id = TT_POINT_TYPE;
-    
+
   switch (cod.id) {
-  
+
     case 1:
     case 2:
       thparse_double(sv,dv,*args);
@@ -196,9 +196,9 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
         ththrow(("invalid number -- %s",*args))
       if (this->xsize <= 0.0)
         ththrow(("size not positive -- %s",*args))
-      this->ysize = this->xsize;  
+      this->ysize = this->xsize;
       break;
-      
+
     case TT_POINT_YSIZE:
       ththrow(("-y-size not valid with type %s", thmatch_string(this->type,thtt_point_types)))
       thparse_double(sv,this->ysize,*args);
@@ -219,11 +219,11 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
       if ((this->orient < 0.0) || (this->orient >= 360.0))
         ththrow(("orientation out of range -- %s",*args))
       break;
-    
+
     case TT_POINT_SUBTYPE:
       this->parse_subtype(*args);
       break;
-      
+
     case TT_POINT_STATION:
       switch (this->type) {
         case TT_POINT_TYPE_STATION:
@@ -234,12 +234,12 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
           ththrow(("station reference not allowed with this point type"))
       }
       break;
-      
+
     case TT_POINT_FROM:
       this->parse_from(*args);
       break;
-    
-    // if not found, try to set fathers properties  
+
+    // if not found, try to set fathers properties
     default:
       if (cod.id == TT_2DOBJ_CLIP) {
         switch (this->type) {
@@ -297,7 +297,7 @@ void thpoint::parse_type(char * tstr)
   this->ysize = thnan;
   switch (this->type) {
     case TT_POINT_TYPE_DATE:
-      if (this->type == TT_POINT_TYPE_DATE) 
+      if (this->type == TT_POINT_TYPE_DATE)
         this->text = (char *) new thdate;
       break;
     case TT_POINT_TYPE_ALTITUDE:
@@ -306,8 +306,8 @@ void thpoint::parse_type(char * tstr)
       break;
   }
 }
- 
- 
+
+
 void thpoint::parse_subtype(char * ststr)
 {
   if (this->type == TT_POINT_TYPE_UNKNOWN)
@@ -413,10 +413,10 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     case TT_POINT_TYPE_MAP_CONNECTION:
       postprocess = false;
       break;
-    case TT_POINT_TYPE_LABEL:  
-    case TT_POINT_TYPE_REMARK:  
+    case TT_POINT_TYPE_LABEL:
+    case TT_POINT_TYPE_REMARK:
     case TT_POINT_TYPE_STATION_NAME:
-      if (this->text != NULL) {      
+      if (this->text != NULL) {
         switch (this->type) {
           case TT_POINT_TYPE_LABEL:
             macroid = SYMP_LABEL;
@@ -429,7 +429,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
             break;
         }
         omacroid = macroid;
-        if (this->context >= 0) 
+        if (this->context >= 0)
           macroid = this->context;
         if (!out->symset->is_assigned(macroid))
           return(false);
@@ -452,8 +452,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         out->layout->export_mptex_font_size(out->file, this, true);
         fprintf(out->file,"%s etex,",
           ((this->type == TT_POINT_TYPE_STATION_NAME) && (!this->station_name.is_empty()))
-          ? (const char *) utf2tex(thobjectname__print_full_name(this->station_name.name, this->station_name.psurvey, out->layout->survey_level)) 
-          : ths2tex(this->text, out->layout->lang).c_str());        
+          ? (const char *) utf2tex(thobjectname__print_full_name(this->station_name.name, this->station_name.psurvey, out->layout->survey_level))
+          : ths2tex(this->text, out->layout->lang).c_str());
         if (this->type == TT_POINT_TYPE_STATION_NAME)
           postprocess_label = "p_label_mode_station";
         else
@@ -480,9 +480,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           macroid = SYMP_STATION_TEMPORARY;
           cmark = TT_DATAMARK_TEMP;
       }
-      
+
       omacroid = macroid;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
       expsym = out->symset->is_assigned(macroid);
       if (expsym) out->symset->get_mp_macro(omacroid);
@@ -547,19 +547,19 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         fprintf(out->file,"p_debug(0,1,");
         this->point->export_mp(out,0);
         fprintf(out->file,");\n");
-      }        
+      }
       postprocess = false;
       break;
 
     case TT_POINT_TYPE_ALTITUDE:
       macroid = SYMP_ALTITUDE;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
-      if ((!thisnan(this->xsize)) && (out->symset->is_assigned(macroid))) {          
+      if ((!thisnan(this->xsize)) && (out->symset->is_assigned(macroid))) {
         //sprintf(buff,"%.0f",this->xsize - out->layout->goz);
         if (out->file == NULL)
           return(true);
-        out->symset->get_mp_macro(SYMP_ALTITUDE);    
+        out->symset->get_mp_macro(SYMP_ALTITUDE);
         out->symset->export_mp_symbol_options(out->file, SYMP_ALTITUDE);
         fprintf(out->file,"p_label%s(btex \\thaltitude ",
 					thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
@@ -573,7 +573,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
     case TT_POINT_TYPE_HEIGHT:
       if ((this->tags & (TT_POINT_TAG_HEIGHT_P |
-          TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) != 0) {        
+          TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) != 0) {
 
         switch (this->tags & (TT_POINT_TAG_HEIGHT_P |
         TT_POINT_TAG_HEIGHT_N | TT_POINT_TAG_HEIGHT_U)) {
@@ -589,9 +589,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           default:
             return(false);
         }
-        
+
         omacroid = macroid;
-        if (this->context >= 0) 
+        if (this->context >= 0)
           macroid = this->context;
         if (!out->symset->is_assigned(macroid))
           return(false);
@@ -627,7 +627,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
     case TT_POINT_TYPE_DATE:
       macroid = SYMP_DATE;
-      if (this->context >= 0) 
+      if (this->context >= 0)
         macroid = this->context;
       if  ((out->symset->is_assigned(macroid)) &&
           ((this->tags & TT_POINT_TAG_DATE) > 0)) {
@@ -637,7 +637,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 //            ((thdate *)this->text)->get_str());
         if (out->file == NULL)
           return(true);
-        out->symset->get_mp_macro(SYMP_DATE);    
+        out->symset->get_mp_macro(SYMP_DATE);
         out->symset->export_mp_symbol_options(out->file, SYMP_DATE);
         fprintf(out->file,"p_label%s(btex \\thdate ",
             thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
@@ -671,14 +671,14 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           default:
             return(false);
         }
-        
+
         omacroid = macroid;
-        if (this->context >= 0) 
+        if (this->context >= 0)
           macroid = this->context;
         if (!out->symset->is_assigned(macroid))
           return(false);
         if (out->file == NULL)
-          return(true);        
+          return(true);
         out->symset->get_mp_macro(omacroid);
         out->symset->export_mp_symbol_options(out->file, omacroid);
         fprintf(out->file,"p_label%s(btex ",thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
@@ -708,19 +708,19 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 
           fprintf(out->file,"%s}", utf2tex(out->layout->units.format_human_length(this->xsize)));
         }
-        
+
         if (!thisnan(this->ysize)) {
           fprintf(out->file,"{");
           out->layout->export_mptex_font_size(out->file, this, false);
 
           fprintf(out->file,"%s}", utf2tex(out->layout->units.format_human_length(this->ysize)));
-        }        
-        
+        }
+
         fprintf(out->file," etex,");
       }
       postprocess = false;
       break;
-      
+
     case TT_POINT_TYPE_SECTION:
       postprocess = false;
       break;
@@ -728,8 +728,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 #define thpoint_type_export_mp(type,mid) case type: \
   macroid = mid; \
   break;
-      
-// ostatne typy      
+
+// ostatne typy
     case TT_POINT_TYPE_WATER_FLOW:
       switch (this->subtype) {
         thpoint_type_export_mp(TT_POINT_SUBTYPE_PALEO,SYMP_WATERFLOW_PALEO);
@@ -770,7 +770,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_SINK,SYMP_SINK)
     thpoint_type_export_mp(TT_POINT_TYPE_ENTRANCE,SYMP_ENTRANCE)
     thpoint_type_export_mp(TT_POINT_TYPE_GRADIENT,SYMP_GRADIENT)
-  
+
 // vystroj
     thpoint_type_export_mp(TT_POINT_TYPE_ROPE,SYMP_ROPE)
     thpoint_type_export_mp(TT_POINT_TYPE_FIXED_LADDER,SYMP_FIXEDLADDER)
@@ -861,7 +861,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_RAFT_CONE,SYMP_RAFTCONE)
     thpoint_type_export_mp(TT_POINT_TYPE_CLAY_TREE,SYMP_CLAYTREE)
 
-  
+
 // plosne vyplne
     thpoint_type_export_mp(TT_POINT_TYPE_BEDROCK,SYMP_BEDROCK)
     thpoint_type_export_mp(TT_POINT_TYPE_SAND,SYMP_SAND)
@@ -883,19 +883,19 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_ROOT,SYMP_ROOT)
 
     thpoint_type_export_mp(TT_POINT_TYPE_U,SYMP_U)
-      
+
     default:
       macroid = SYMP_UNDEFINED;
       break;
   }
-  
+
   if (postprocess_label != NULL) {
     this->point->export_mp(out);
     fprintf(out->file,",%.1f,%s);\n",(thisnan(this->orient) ? 0 : 360.0 - this->orient - out->rr), postprocess_label);
   }
-  
+
   omacroid = macroid;
-  if (this->context >= 0) 
+  if (this->context >= 0)
     macroid = this->context;
 
   if ((macroid > 0) && postprocess) {
@@ -917,7 +917,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     else
       postprocess = false;
   }
-  
+
   if (postprocess) {
     this->point->export_mp(out);
     double scl = this->scale_numeric;
@@ -971,7 +971,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
       fprintf(out->file, "save ATTR__text;\n");
     }
   }
-  
+
   if (station_attr != NULL) {
     station_attr->export_mp_object_end(out->file, station_attr_id);
   }
@@ -1054,7 +1054,7 @@ void thpoint_parse_value(int & sv, double & dv, bool & qw, int & sign, char * st
       qw = true;
     }
   }
-  
+
   // parsne cislo
   if (strlen(str)) {
     thparse_double(sv,dv,str);
@@ -1063,13 +1063,13 @@ void thpoint_parse_value(int & sv, double & dv, bool & qw, int & sign, char * st
     else if ((sv != TT_SV_NAN) && (dv < 0.0))
       error = true;
   }
-  
+
   if ((sv == TT_SV_NAN) && (sign == 0))
     error = true;
-  
+
   if (error)
     ththrow(("invalid value -- %s",str))
-    
+
 }
 
 
@@ -1097,7 +1097,7 @@ void thpoint::parse_value(char * ss) {
   int sign, sign2;
   thtflength lentf;
   thdate * dp;
-  
+
   switch (this->type) {
 
     case TT_POINT_TYPE_EXTRA:
@@ -1121,12 +1121,12 @@ void thpoint::parse_value(char * ss) {
       }
       this->xsize = dv;
       break;
-  
+
     // let's parse altitude
     case TT_POINT_TYPE_ALTITUDE:
       thparse_altitude(ss, this->xsize, this->ysize);
       break;
-      
+
     case TT_POINT_TYPE_HEIGHT:
       ux = 0;
       switch (npar) {
@@ -1162,7 +1162,7 @@ void thpoint::parse_value(char * ss) {
       }
       this->xsize = dv;
       break;
-      
+
     case TT_POINT_TYPE_DIMENSIONS:
       this->xsize = thnan;
       this->ysize = thnan;
@@ -1174,7 +1174,7 @@ void thpoint::parse_value(char * ss) {
           thparse_double(sv,dv,pars[0]);
           if (sv != TT_SV_NUMBER) {
             ththrow(("invalid above dimension -- %s",pars[0]))
-          } 
+          }
           this->xsize = lentf.transform(dv);
           if (this->xsize < 0.0)
             ththrow(("negative above dimension -- %s",pars[0]))
@@ -1182,7 +1182,7 @@ void thpoint::parse_value(char * ss) {
           thparse_double(sv,dv,pars[1]);
           if (sv != TT_SV_NUMBER) {
             ththrow(("invalid below dimension -- %s",pars[1]))
-          } 
+          }
           this->ysize = lentf.transform(dv);
           if (this->ysize < 0.0)
             ththrow(("negative below dimension -- %s",pars[1]))
@@ -1266,7 +1266,7 @@ void thpoint::parse_value(char * ss) {
         }
       }
       break;
-      
+
     case TT_POINT_TYPE_DATE:
       if (npar != 1)
         ththrow(("invalid date -- %s",ss))
@@ -1337,7 +1337,7 @@ void thpoint::check_extra()
               thvec2(cp->pt->x, cp->pt->y),
               thvec2(mycp->pt->x, mycp->pt->y));
             }
-            
+
             ccount++;
             switch (this->fscrapptr->proj->type) {
               case TT_2DPROJ_ELEV:

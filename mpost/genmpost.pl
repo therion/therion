@@ -28,9 +28,9 @@ sub process_symbols {
   open(OUT, ">../SYMBOLS.txt");
   $thmpost_library .= "\n";
   foreach $s1 (reverse sort keys %SYMBOLS) {
-    print OUT "\n\n[", 
-          ($s1 eq "p") ? "Point" : (($s1 eq "l") ? "Line" : 
-	  (($s1 eq "s") ? "Special" : "Area")), 
+    print OUT "\n\n[",
+          ($s1 eq "p") ? "Point" : (($s1 eq "l") ? "Line" :
+	  (($s1 eq "s") ? "Special" : "Area")),
               " symbols]\n";
     foreach $s2 (sort keys %{$SYMBOLS{$s1}}) {
       print OUT "\n$s2: ";
@@ -84,7 +84,7 @@ sub process_symbols {
       }
     }
   }
-  print OUT "}\n";  
+  print OUT "}\n";
   close(OUT);
 }
 
@@ -124,17 +124,17 @@ print OUTPT <<ENDOUTPT;
  * \@file thmpost.h
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
- */  
- 
+ */
+
 #ifndef thmpost_h
 #define thmpost_h
 
 /**
  * Metapost source file.
  */
- 
+
 extern const char * thmpost_library;
- 
+
 
 #endif
 ENDOUTPT
@@ -146,8 +146,8 @@ print OUTPT <<ENDOUTPT;
  * \@file thmpost.cxx
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
- */  
- 
+ */
+
 #include "thmpost.h"
 
 #ifndef THMSVC
