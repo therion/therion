@@ -12,7 +12,7 @@ def deg2rad(s):
     tmp = float(s)
   return tmp/180*math.pi
 
-for i,l in enumerate(open('sample_out_IGRF11.txt')):
+for i,l in enumerate(open('sample_out_IGRF13.txt')):
   if i==0: continue
   print '% 2s ' % i,
   (dat, cs, alt, lat, lon, dd, dm) = l.split()[:7]
