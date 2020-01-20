@@ -154,7 +154,7 @@ def p_bones_SBE(expr pos, theta, sc, al) =
 enddef;
 
 
-def p_curtains_SBE(expr pos, theta, sc, al) =
+def p_curtains_UIS(expr pos, theta, sc, al) =
 	U := (.3u, .8u);
 	pickup PenC;
 	for i=-1 upto 1:
