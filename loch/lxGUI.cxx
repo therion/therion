@@ -514,7 +514,11 @@ void lxFrame::ToggleFullScreen() {
 
 
 int lxFrame::GetFileType(wxString fName) {
+#if wxCHECK_VERSION(3, 0, 0)
+#define matchtype(w,t) if (fName.EndsWith(wxString(_T(w)).wx_str())) return t;
+#else
 #define matchtype(w,t) if (fName.EndsWith((const wxChar *)wxString(_T(w)))) return t;
+#endif
   matchtype(".lox",1);
   matchtype(".LOX",1);
   matchtype(".plt",2);
