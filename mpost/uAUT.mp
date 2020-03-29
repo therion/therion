@@ -151,7 +151,11 @@ def a_sand_AUT (expr Path) =
   thfill Path withpattern pattern_sand_AUT ;
 enddef;
 
-let a_clay_AUT = a_sand_AUT;
+def a_clay_AUT (expr Path) =
+  T:=identity;
+%  thclean Path;
+  thfill Path withpattern pattern_sand_AUT;
+enddef;
 
 
 def a_pebbles_AUT (expr p) =
