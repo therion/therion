@@ -6,6 +6,8 @@ therion:
  * geomag data updated up to 2025
  * add support for reproducible generation of PDF and SVG output
    (command-line option --reproducible-output)
+ * make thbook.pdf build reproducible (derive the created/modified dates
+   of the PDF file from the commit date)
 
 --------------------------------------------------------------------------------
 
