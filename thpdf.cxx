@@ -46,6 +46,7 @@
 // #endif
 
 #include "thpdfdbg.h"
+#include "thconfig.h"
 #include "thpdfdata.h"
 #include "thtexfonts.h"
 #include "thlang.h"
@@ -1396,10 +1397,17 @@ void build_pages() {
       (LAYOUT.OCG ? "1.5" : "1.4") << " }" << 
       (LAYOUT.OCG ? "\\else\\pdfoptionpdfminorversion=5" : "") << "\\fi" << endl;
   }
-  
-  PDFRES << "\\pdfinfo{/Creator (Therion " << THVERSION << ", MetaPost, TeX)}%" << endl;
+
+  if (thcfg.reproducible_output) {
+    PDFRES << "\\ifx\\pdfsuppressptexinfo\\undefined\\else%" << endl;
+    PDFRES << "  \\pdfsuppressptexinfo=-1\\pdftrailerid{}\\pdfinfoomitdate=1%" << endl;
+    PDFRES << "\\fi%" << endl;
+    PDFRES << "\\pdfinfo{/Producer (pdfTeX)}%" << endl;
+  } else {
+    PDFRES << "\\pdfinfo{/Creator (Therion " << THVERSION << ", MetaPost, TeX)}%" << endl;
+  }
   PDFRES << "\\pdfcatalog{ /ViewerPreferences << /DisplayDocTitle true /PrintScaling /None >> }" << endl;
-  
+
   if(ENC_NEW.NFSS != 0) PDFRES << "\\input thfonts.map" << endl;
 
   PDFRES << "\\ifnum\\pdftexversion>139" << endl;

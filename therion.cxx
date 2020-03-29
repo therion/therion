@@ -77,7 +77,8 @@ const char * thhelp_text =
       "        [--print-library-src]\n"
       "        [--print-symbols]\n"
       "        [--print-tex-encodings]\n"
-      "        [--print-xtherion-src]\n\n";
+      "        [--print-xtherion-src]\n"
+      "        [--reproducible-output]\n\n";
 
 const char * thversion_text = THVERSION;
 const char * thversion_format = "therion %s";

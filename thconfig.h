@@ -87,6 +87,7 @@ class thconfig {
     auto_join,  ///< Whether scraps in one file should be automatically joined
     use_maps,  ///< Whether to use map structure for output
     use_maps_offset,  ///< Whether to use map's offset
+    reproducible_output, ///< Generate reproducible output files.
     log_extend; ///< Log extended elevation construction.
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.

@@ -4,6 +4,8 @@ therion:
  * log extend feature in thconfig to log extended elevation construction
  * added point mudcrack symbol (thanks to Rodrigo Severo)
  * geomag data updated up to 2025
+ * add support for reproducible generation of PDF and SVG output
+   (command-line option --reproducible-output)
 
 --------------------------------------------------------------------------------
 
