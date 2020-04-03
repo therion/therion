@@ -182,6 +182,9 @@ extern bool thtext_inline;
 
 extern int therion_exit_state;
 
+void thprint_environment();
+void thprint_xtherion();
+
 #endif
 
 

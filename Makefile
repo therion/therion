@@ -21,6 +21,7 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
   extern/poly2tri/common/shapes.o extern/poly2tri/sweep/advancing_front.o extern/poly2tri/sweep/sweep.o extern/poly2tri/sweep/cdt.o extern/poly2tri/sweep/sweep_context.o \
   therion.o extern/quickhull/QuickHull.o
+TESTOBJECTS = utest-main.o utest-proj.o
 
 CROSS =
 EXT =
@@ -151,7 +152,7 @@ $(OUTDIR)/%.o : %.cc
 $(OUTDIR)/%.o : %.c
 	$(CC) -c $(CCFLAGS) -o $@ $<
 
-all: version outdirs $(OUTDIR)/therion doc xtherion/xtherion $(LOCHEXE)
+all: version outdirs $(OUTDIR)/therion tests doc xtherion/xtherion $(LOCHEXE)
 
 outdirs:
 	mkdir -p $(OUTDIR)/extern/poly2tri/sweep/
@@ -166,13 +167,16 @@ version:
 
 
 $(OUTDIR)/therion: version $(OBJECTS)
-	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
+	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
 ifneq ($(THPLATFORM),WIN32)
 	$(MAKE) library
 	$(MAKE) $(OUTDIR)/thlibrary.o
-	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
+	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
 endif
 
+tests: version $(OBJECTS) $(TESTOBJECTS)
+	$(CXX) -Wall -o $(OUTDIR)/utest$(EXT) $(OBJECTS) $(TESTOBJECTS) $(LDFLAGS) $(LIBS)
+	$(OUTDIR)/utest$(EXT)
 
 $(OUTDIR)/therion.res: therion.rc
 	$(CROSS)windres -i therion.rc -J rc -o $(OUTDIR)/therion.res -O coff
