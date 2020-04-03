@@ -133,6 +133,7 @@ CXXJFLAGS = -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable
 CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -std=c++11
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
+TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
 
 
 # linker settings
@@ -174,9 +175,11 @@ ifneq ($(THPLATFORM),WIN32)
 	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
 endif
 
-tests: version $(OBJECTS) $(TESTOBJECTS)
-	$(CXX) -Wall -o $(OUTDIR)/utest$(EXT) $(OBJECTS) $(TESTOBJECTS) $(LDFLAGS) $(LIBS)
+tests: version $(OBJECTS) $(TESTOBJECTS_P)
+	$(CXX) -Wall -o $(OUTDIR)/utest$(EXT) $(OBJECTS) $(TESTOBJECTS_P) $(LDFLAGS) $(LIBS)
+ifneq ($(THPLATFORM),WIN32)
 	$(OUTDIR)/utest$(EXT)
+endif
 
 $(OUTDIR)/therion.res: therion.rc
 	$(CROSS)windres -i therion.rc -J rc -o $(OUTDIR)/therion.res -O coff
