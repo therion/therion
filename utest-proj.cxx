@@ -5,6 +5,10 @@
 #include "thcsdata.h"
 #include "thcs.h"
 
+#ifndef M_PI
+#define M_PI       3.14159265358979323846
+#endif
+
 // tests for coordinate systems transformations using Proj library
 
 double th_eps = 0.05;
