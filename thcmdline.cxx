@@ -83,6 +83,7 @@ void thcmdline::process(int argc, char * argv[])
     {"print-tex-encodings",no_argument,NULL,THPS_TEX_ENCODINGS},
     {"print-xtherion-src",no_argument,NULL,THPS_XTHERION_SRC},
     {"use-extern-libs",no_argument,NULL,THPS_EXTERN_LIBS},
+    {"reproducible-output",no_argument,NULL,THPS_REPRODUCIBLE},
     {"version",no_argument,NULL,'v'},
     {"bezier",no_argument,NULL,'b'},
     {NULL, 0, NULL, 0}
@@ -138,6 +139,10 @@ void thcmdline::process(int argc, char * argv[])
         thcfg.generate_xthcfg = true;
         break;
         
+      case THPS_REPRODUCIBLE:
+        thcfg.reproducible_output = true;
+        break;
+
       //case 'u':
       //  thcfg.set_file_state(THCFG_UPDATE);
       //  break;

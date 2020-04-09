@@ -45,7 +45,7 @@ proc scan_files {dir} {
   }
 }
 
-set thcmd [file normalize [file join [pwd] "$outdd/therion"]]
+set thcmd [file normalize [file join [pwd] "$outdd/therion --reproducible-output"]]
 set processlist {}
 
 proc scan_lists {} {

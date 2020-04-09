@@ -136,7 +136,9 @@ thconfig::thconfig()
   this->sketch_colors = 256;
   this->use_maps = true;
   this->use_maps_offset = true;
-  
+
+  this->reproducible_output = false;
+
   this->log_extend = false;
 
   this->tmp3dSMP = 1.0;
