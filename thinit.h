@@ -64,7 +64,7 @@ class thinit {
 
   std::string font_src[5], font_dst[5];
   
-  bool tex_env, fonts_ok;
+  bool tex_env, fonts_ok, proj_auto;
   int lang, loopc;
   
   thmbuffer cmb;  ///< Command parsing mbuffer.
@@ -139,7 +139,8 @@ class thinit {
   void check_font_path(const char * fname, int index);
   
   int get_encoding(int type = THINIT_ENCODING_DEFAULT);
-  
+
+  bool get_proj_auto();
   
 };
 

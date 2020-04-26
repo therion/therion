@@ -76,6 +76,8 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# tmp-path  \"\"\n\n"
 "### User defined coordinate system ###\n"
 "# cs-def <id> <proj4id> [other options]\n\n"
+"### Let PROJ v6+ find the optimal transformation ###\n"
+"# proj-auto off\n\n"
 "### Command to remove temporary directory ###\n"
 "# tmp-remove  \"\"\n\n";
 
@@ -83,6 +85,7 @@ thinit::thinit()
 {
   this->fonts_ok = false;
   this->tex_env = false;
+  this->proj_auto = false;
   this->lang = THLANG_UNKNOWN;
 	this->loopc = THINIT_LOOPC_UNKNOWN;
 }
@@ -114,6 +117,7 @@ enum {
   TTIC_LOOPC,
   TTIC_TEXT,	
   TTIC_PDF_FONTS,
+  TTIC_PROJ_AUTO,
   TTIC_OTF2PFB,
   TTIC_CS_DEF,
   TTIC_UNKNOWN,
@@ -140,6 +144,7 @@ static const thstok thtt_initcmd[] = {
   {"otf2pfb", TTIC_OTF2PFB},
   {"pdf-fonts", TTIC_PDF_FONTS},
   {"pdftex-path", TTIC_PATH_PDFTEX},
+  {"proj-auto", TTIC_PROJ_AUTO},
   {"source-path", TTIC_PATH_SOURCE},
   {"tex-env",TTIC_TEX_ENV},
   {"tex-fonts",TTIC_TEX_FONTS},
@@ -439,6 +444,7 @@ void thinit::load()
         case TTIC_PATH_SOURCE:
         case TTIC_OTF2PFB:
         case TTIC_TEX_ENV:
+        case TTIC_PROJ_AUTO:
           if (nargs != 2)
             ththrow(("invalid number of command arguments"));
           break;
@@ -514,6 +520,13 @@ void thinit::load()
           if (sv == TT_UNKNOWN_BOOL)
             ththrow(("invalid otf2pfb switch -- %s", args[1]))
           ENC_NEW.t1_convert = (sv == TT_TRUE);
+          break;
+
+        case TTIC_PROJ_AUTO:
+          sv = thmatch_token(args[1], thtt_bool);
+          if (sv == TT_UNKNOWN_BOOL)
+            ththrow(("invalid proj-auto switch -- %s", args[1]))
+          this->proj_auto = (sv == TT_TRUE);
           break;
 
         case TTIC_TEXT:
@@ -743,6 +756,11 @@ char * thinit::get_path_pdftex()
 char * thinit::get_path_otftotfm()
 {
   return this->path_otftotfm.get_buffer();
+}
+
+bool thinit::get_proj_auto()
+{
+  return this->proj_auto;
 }
 
 
