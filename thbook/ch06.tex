@@ -309,6 +309,13 @@ supported initialization commands follow.
 
   Define a new coordinate system |<id>| using Proj4 syntax.
 
+* |proj-auto <on/off>|\NEW{5.5}
+
+  If set |on|, let PROJ v6+ decide which transformation is optimal. In this case
+  the function |proj_create_crs_to_crs()| is used. Otherwise Therion calls
+  |proj_create()| function in the PROJ library.
+  
+
 * |pdf-fonts <rm> <it> <bf> <ss> <si>|\NEW{5.3}
 
   Set-up fonts to be used in PDF maps.
