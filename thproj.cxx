@@ -195,7 +195,7 @@ bool thcs_check(string s) {
 #endif
 
   void thcs2cs(string s, string t,
-              double a, double b, double c, double &x, double &y, double &z, bool proj_auto) {
+              double a, double b, double c, double &x, double &y, double &z, bool proj_auto) {   // proj_auto is used for automated tests and pressuposes that proj-auto in the init file is false
     // TODO: support user-defined pipelines for a combination of CRSs
     // for high-precision transformations
 
@@ -240,9 +240,9 @@ bool thcs_check(string s) {
     double c = 0, x, y, z, x2, y2, z2;
     if (thcs_islatlong(s))
       therror(("can't determine meridian convergence for lat-long systems"));
-    thcs2cs(s,"+proj=latlong +datum=WGS84",a,b,c,x,y,z,false);
+    thcs2cs(s,"+proj=latlong +datum=WGS84",a,b,c,x,y,z);
     y += 1e-6;
-    thcs2cs("+proj=latlong +datum=WGS84",s,x,y,z,x2,y2,z2,false);
+    thcs2cs("+proj=latlong +datum=WGS84",s,x,y,z,x2,y2,z2);
     return atan2(x2-a,y2-b)/M_PI*180;
   }
 
@@ -261,14 +261,7 @@ bool thcs_check(string s) {
 
   bool thcs_check(string s) {
     PJ* P;
-#if PROJ_VER > 5
-    proj_context_use_proj4_init_rules(PJ_DEFAULT_CTX, true);
-#endif
-    P = proj_create(PJ_DEFAULT_CTX, sanitize_crs(s).c_str());
-    if (P==0) {
-      proj_destroy(P);
-      return false;
-    }
+    th_init_proj(P, s);
     proj_destroy(P);
     return true;
   }
