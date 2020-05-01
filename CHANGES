@@ -9,6 +9,7 @@ therion:
  * make thbook.pdf build reproducible (derive the created/modified dates
    of the PDF file from the commit date)
  * improve support for Proj 6.0 and 7.0 (see proj-auto init file option)
+ * all python scripts use Python 3 now
  * added Serbian translation (thanks to Ivana Miskovic)
 
 --------------------------------------------------------------------------------

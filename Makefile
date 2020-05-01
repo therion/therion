@@ -164,7 +164,7 @@ outdirs:
 	mkdir -p $(OUTDIR)/thbook
 
 version:
-	python set_version.py
+	python3 set_version.py
 
 
 $(OUTDIR)/therion: version $(OBJECTS)
