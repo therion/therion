@@ -1,16 +1,42 @@
-Therion 5.4.5 (in progress):
+Therion 5.5.0 (2020-05-01):
+
 therion:
- * maps-offset <on|off> feature in thconfig file to disable maps drawn in offset
+ * maps-offset <on|off> feature in thconfig file to disable maps drawn
+   in offset [#159]
+ * maps <on|off> feature in thconfig file to produce map just from scraps,
+   ignoring the maps definition
  * log extend feature in thconfig to log extended elevation construction
- * added point mudcrack symbol (thanks to Rodrigo Severo)
+ * added point mudcrack (thanks to Rodrigo Severo)
+ * added an extensive SBE symbol set (thanks to Rodrigo Severo)
  * geomag data updated up to 2025
- * add support for reproducible generation of PDF and SVG output
+ * added support for reproducible generation of PDF and SVG output
    (command-line option --reproducible-output)
  * make thbook.pdf build reproducible (derive the created/modified dates
    of the PDF file from the commit date)
- * improve support for Proj 6.0 and 7.0 (see proj-auto init file option)
+ * improved support for Proj 6.0 and 7.0 (see proj-auto init file option)
+ * Catch2 unit testing library and Proj test cases added
  * all python scripts use Python 3 now
- * added Serbian translation (thanks to Ivana Miskovic)
+ * added Serbian (thanks to Ivana Miskovic) and Slovenian [PR#142] translations
+ * updated Portuguese translation [PR#170,220]
+ * thbook improvements by Benedikt Hallinger [PR#161,162]
+ * bugs fixed
+   - spelling in some thbook chapters
+   - html and kml output [PR#145,150]
+   - extend ingore <station> fixed
+   - Survex 3D output is missing the nodes on the end of anonymous
+     splay legs [#157]
+   - a_blocks_AUT missing semi-colon [#126]
+
+xtherion:
+ * add thconfig* to selectable config file list [PR#168]
+ * bugs fixed:
+   - Windows xtherion window geometry bugfix
+
+loch:
+ * bugs fixed:
+   - MacOS X compilation [PR#144]
+   - multiple minor fixes
+   - Linux off-screen rendering bugfix
 
 --------------------------------------------------------------------------------
 
