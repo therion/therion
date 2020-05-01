@@ -74,6 +74,10 @@ TEST_CASE( "projections: UTM zones", "[proj]" ) {
     CHECK(thcs2zone(thcs_get_params(TTCS_JTSK03), 509063.963, 1303089.823,0)==33);
 }
 
+TEST_CASE( "projections: EPSG label", "[proj]" ) {
+    CHECK((epsg_labels.count(32634) > 0 && strcmp(epsg_labels[32634],"WGS 84 / UTM zone 34N") == 0));
+}
+
 
 TEST_CASE( "projections: JTSK03 -- utm, auto=true", "[proj]" ) {
     thcs2cs(thcs_get_params(TTCS_JTSK03), thcs_get_params(TTCS_UTM34N),

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3 -B
 import re,datetime,math,geomag
 
 units = {'K':1000, 'M':1, 'F':.3048}
@@ -14,10 +14,10 @@ def deg2rad(s):
 
 for i,l in enumerate(open('sample_out_IGRF13.txt')):
   if i==0: continue
-  print '% 2s ' % i,
+  print('% 2s ' % i, end='')
   (dat, cs, alt, lat, lon, dd, dm) = l.split()[:7]
   if cs == 'C':
-    print '   (skipping geocentric coordinates)'
+    print('   (skipping geocentric coordinates)')
     continue
   m = re.match(r'(\d{4}),(\d{1,2}),(\d{1,2})',dat)
   if m:
@@ -35,6 +35,6 @@ for i,l in enumerate(open('sample_out_IGRF13.txt')):
   decl = abs(decl)
   res += "%dd %dm" % (int(decl),round((decl-int(decl)) * 60))
   correct = "%s %s" % (dd,dm)
-  if res == correct: print '  ',
-  else: print '! ',
-  print "%s %s" % (res, correct)
+  if res == correct: print('  ', end='')
+  else: print('! ', end='')
+  print ("%s %s" % (res, correct))
