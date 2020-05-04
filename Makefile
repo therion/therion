@@ -313,7 +313,8 @@ config-ozone:
 
 config-debian:
 	perl makeconfig.pl PLATFORM DEBIAN
-	$(MAKE) -C ./loch config-debian
+	cd loch; perl makeconfig.pl PLATFORM DEBIAN
+#	$(MAKE) -C ./loch config-debian
 
 config-linux:
 	perl makeconfig.pl PLATFORM LINUX
