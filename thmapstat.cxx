@@ -91,9 +91,10 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
   double sumsum = 0.0;
   thprintf("\nBEFORE:\n");
   for(ii = this->data.begin(); ii != this->data.end(); ii++) {
-    sumsum += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
+    sumsum += ii->first.ptr->stat_length; // + ii->first.ptr->stat_dlength;
     thprintf("   %d (+ %.0f = %.0f) [%s]\n",ii->first.ptr->id,
-      ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, sumsum, ii->first.ptr->fsptr->full_name);
+      ii->first.ptr->stat_length, // + ii->first.ptr->stat_dlength, 
+      sumsum, ii->first.ptr->fsptr->full_name);
   }
   thprintf("\n");
 #endif  
@@ -105,23 +106,24 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
       this->data[ii->first] = 2;
 
 #ifdef THDEBUG
-  sumsum += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
+  sumsum += ii->first.ptr->stat_length; // + ii->first.ptr->stat_dlength;
     thprintf(" + %d (+ %.0f = %.0f) [%s]\n",ii->first.ptr->id,
-      ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, sumsum, ii->first.ptr->fsptr->full_name);
+      ii->first.ptr->stat_length, //+ ii->first.ptr->stat_dlength, 
+      sumsum, ii->first.ptr->fsptr->full_name);
 #endif  
 
       thdata_team_set_type::iterator ti;
       
       for(ti = ii->first.ptr->team_set.begin();
         ti != ii->first.ptr->team_set.end(); ti++) {
-        this->surveyed_by[*ti].crit += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
+        this->surveyed_by[*ti].crit += ii->first.ptr->stat_length; // + ii->first.ptr->stat_dlength;
         this->surveyed_by[*ti].date.join(ii->first.ptr->date);
       }
       this->surveyed_date.join(ii->first.ptr->date);
 
       for(ti = ii->first.ptr->discovery_team_set.begin();
         ti != ii->first.ptr->discovery_team_set.end(); ti++) {
-        this->discovered_by[*ti].crit += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
+        this->discovered_by[*ti].crit += ii->first.ptr->stat_length; // + ii->first.ptr->stat_dlength;
         this->discovered_by[*ti].date.join(ii->first.ptr->discovery_date);
       }
       this->discovered_date.join(ii->first.ptr->discovery_date);
