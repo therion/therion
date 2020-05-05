@@ -297,39 +297,39 @@ thlangdata.h: thlang/texts.txt
 
 config-debug:
 	perl makeconfig.pl BUILD DEBUG
-	$(MAKE) -C ./loch config-debug
+	cd loch; perl makeconfig.pl BUILD DEBUG
 
 config-release:
 	perl makeconfig.pl BUILD RELEASE
-	$(MAKE) -C ./loch config-release
+	cd loch; perl makeconfig.pl BUILD RELEASE
 
 config-oxygen:
 	perl makeconfig.pl BUILD OXYGEN
-	$(MAKE) -C ./loch config-oxygen
+	cd loch; perl makeconfig.pl BUILD OXYGEN
 
 config-ozone:
 	perl makeconfig.pl BUILD OZONE
-	$(MAKE) -C ./loch config-ozone
+	cd loch; perl makeconfig.pl BUILD OZONE
 
 config-debian:
 	perl makeconfig.pl PLATFORM DEBIAN
-	$(MAKE) -C ./loch config-debian
+	cd loch; perl makeconfig.pl PLATFORM DEBIAN
 
 config-linux:
 	perl makeconfig.pl PLATFORM LINUX
-	$(MAKE) -C ./loch config-linux
+	cd loch; perl makeconfig.pl PLATFORM LINUX
 
 config-win32:
 	perl makeconfig.pl PLATFORM WIN32
-	$(MAKE) -C ./loch config-win32
+	cd loch; perl makeconfig.pl PLATFORM WIN32
 
 config-win32cross:
 	perl makeconfig.pl PLATFORM WIN32CROSS
-	$(MAKE) -C ./loch config-win32cross
+	cd loch; perl makeconfig.pl PLATFORM WIN32CROSS
 
 config-macosx:
 	perl makeconfig.pl PLATFORM MACOSX
-	$(MAKE) -C ./loch config-macosx
+	cd loch; perl makeconfig.pl PLATFORM MACOSX
 
 # external sources
 $(OUTDIR)/extern/lxMath.o: loch/lxMath.h loch/lxMath.cxx

@@ -93,7 +93,8 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
   for(ii = this->data.begin(); ii != this->data.end(); ii++) {
     sumsum += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
     thprintf("   %d (+ %.0f = %.0f) [%s]\n",ii->first.ptr->id,
-      ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, sumsum, ii->first.ptr->fsptr->full_name);
+      ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, 
+      sumsum, ii->first.ptr->fsptr->full_name);
   }
   thprintf("\n");
 #endif  
@@ -107,7 +108,8 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
 #ifdef THDEBUG
   sumsum += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
     thprintf(" + %d (+ %.0f = %.0f) [%s]\n",ii->first.ptr->id,
-      ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, sumsum, ii->first.ptr->fsptr->full_name);
+      ii->first.ptr->stat_length + ii->first.ptr->stat_dlength, 
+      sumsum, ii->first.ptr->fsptr->full_name);
 #endif  
 
       thdata_team_set_type::iterator ti;
@@ -121,7 +123,7 @@ void thmapstat::adddata(thmapstat_datamap * dm) {
 
       for(ti = ii->first.ptr->discovery_team_set.begin();
         ti != ii->first.ptr->discovery_team_set.end(); ti++) {
-        this->discovered_by[*ti].crit += ii->first.ptr->stat_length + ii->first.ptr->stat_dlength;
+        this->discovered_by[*ti].crit += ii->first.ptr->stat_length; // + ii->first.ptr->stat_dlength;
         this->discovered_by[*ti].date.join(ii->first.ptr->discovery_date);
       }
       this->discovered_date.join(ii->first.ptr->discovery_date);
