@@ -57,7 +57,7 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "### Paths to called executable files ###\n"
 "# mpost-path  \"mpost\"\n"
 "# mpost-options  \"-tex=etex\"\n"
-"# pdftex-path  \"pdfetex\"\n"
+"# pdftex-path  \"pdftex\"\n"
 "# cavern-path  \"cavern\"\n"
 "# convert-path  \"convert\"\n"
 "# identify-path  \"identify\"\n\n"
@@ -380,12 +380,12 @@ void thinit::load()
     this->path_pdftex = thcfg.install_path.get_buffer();
     this->path_otftotfm = thcfg.install_path.get_buffer();
     this->path_mpost += "\\bin\\win32\\mpost.exe";
-    this->path_pdftex += "\\bin\\win32\\pdfetex.exe";
+    this->path_pdftex += "\\bin\\win32\\pdftex.exe";
     this->path_otftotfm += "\\bin\\win32\\otftotfm.exe";
   } else {
 #endif  
     this->path_mpost = "mpost";
-    this->path_pdftex = "pdfetex";
+    this->path_pdftex = "pdftex";
     this->path_otftotfm = "otftotfm";
 #ifdef THWIN32
   }
