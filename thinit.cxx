@@ -405,6 +405,11 @@ void thinit::load()
   }
 #endif  
 
+  // set PROJ library resources path
+#ifdef THWIN32
+  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj").c_str());
+#endif
+
   this->tmp_path = "";
   this->tmp_remove_script = "";
   this->lang = THLANG_UNKNOWN;
@@ -620,11 +625,6 @@ void thinit::load()
   thinit__make_short_path(&this->path_identify);
   thinit__make_short_path(&this->path_mpost);
   thinit__make_short_path(&this->path_pdftex);
-#endif
-
-  // set PROJ library resources path
-#ifdef THWIN32
-  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj").c_str());
 #endif
 
   // check if optional fonts are in the system, remove them if not
