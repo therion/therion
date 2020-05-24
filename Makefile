@@ -47,8 +47,8 @@ SYSCONFDIR = $(PREFIX)/etc
 
 
 # PLATFORM DEBIAN
-CXX = c++
-CC = gcc
+CXX ?= c++
+CC ?= gcc
 POBJECTS =
 LOCHEXE = loch/loch
 CXXPFLAGS = -DTHLINUX
