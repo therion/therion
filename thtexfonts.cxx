@@ -97,7 +97,7 @@ void encodings_new::write_enc_files() {
   if (NFSS==0) return;
 
   thprintf("generating TeX metrics ... ");
-  char fc[10];
+  char fc[12];
   string style[5] = {"rm", "it", "bf", "ss", "si"};
   string s;
 
@@ -140,7 +140,7 @@ void encodings_new::write_enc_files() {
         " -fkern --no-default-ligkern --no-virtual --name " + fname_tfm +
 //        " -fkern --no-default-ligkern --name " + fname_tfm +
 //        type1 + " --warn-missing "+otf_file[i]+" > thotftfm.tmp").c_str()) > 0)
-        type1 + otf_file[i]+" > thotftfm.tmp").c_str()) > 0)
+        type1 + otf_file[i]+" > thotftfm.tmp").c_str()) != 0)
           therror((("can't generate TFM file from "+otf_file[i]+" (LCDF typetools not installed?)").c_str()));
       ifstream G ("thotftfm.tmp");
       if (!G) therror(("could not read font mapping data\n"));
@@ -148,6 +148,7 @@ void encodings_new::write_enc_files() {
         getline(G,s);
         if (s.find("<") != string::npos) break;
       }
+      if (s.size() < 10) therror(("no usable otftotfm output"));
       if (s.substr(s.size()-3,3)=="otf" || s.substr(s.size()-3,3)=="OTF") {
         s.replace(s.rfind("<"), 1, "<<");  // OTF fonts must be fully embedded
       }
