@@ -73,7 +73,7 @@ sub process_symbols {
   print OUT "int thsymsets_count[thsymsets_size];\n\n";
   print OUT "std::map<unsigned, std::string> thsymsets_comment;\n\n";
   print OUT "\n\n\nvoid thsymsets_symbols_init() {\n";
-  print OUT "\tsize_t i, j;\n\tfor(i = 0; i <= thsymbolset_size; i++)\n";
+  print OUT "\tsize_t i, j;\n\tfor(i = 0; i < thsymbolset_size; i++)\n";
   print OUT "\t\tfor(j = 0; j < thsymsets_size; j++) \n\t\t\tthsymsets_symbols[i][j] = 0;\n\t\t\n\t\n";
   foreach $s1 (reverse sort keys %SYMBOLS) {
     if (($s1 eq "p") || ($s1 eq "a") || ($s1 eq "l")) {
