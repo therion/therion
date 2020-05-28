@@ -105,7 +105,7 @@ thinput::thinput()
 thinput::~thinput()
 {
   delete this->first_ptr;
-  delete this->lnbuffer;
+  delete[] this->lnbuffer;
 }
 
 
