@@ -172,15 +172,15 @@ version:
 
 
 $(OUTDIR)/therion: version $(OBJECTS)
-	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
 ifneq ($(THPLATFORM),WIN32)
 	$(MAKE) library
 	$(MAKE) $(OUTDIR)/thlibrary.o
-	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
 endif
 
 tests: version $(OBJECTS) $(TESTOBJECTS_P)
-	$(CXX) -Wall -o $(OUTDIR)/utest$(EXT) $(OBJECTS) $(TESTOBJECTS_P) $(LDFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/utest$(EXT) $(OBJECTS) $(TESTOBJECTS_P) $(LDFLAGS) $(LIBS)
 ifneq ($(THPLATFORM),WIN32)
 	$(OUTDIR)/utest$(EXT)
 endif
