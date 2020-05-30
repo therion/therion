@@ -141,7 +141,9 @@ class thinit {
   int get_encoding(int type = THINIT_ENCODING_DEFAULT);
 
   bool get_proj_auto();
-  
+
+  void set_proj_lib_path();
+
 };
 
 

@@ -405,10 +405,7 @@ void thinit::load()
   }
 #endif  
 
-  // set PROJ library resources path
-#ifdef THWIN32
-  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj").c_str());
-#endif
+  set_proj_lib_path();
 
   this->tmp_path = "";
   this->tmp_remove_script = "";
@@ -761,6 +758,12 @@ char * thinit::get_path_otftotfm()
 bool thinit::get_proj_auto()
 {
   return this->proj_auto;
+}
+
+void thinit::set_proj_lib_path() {  // set PROJ library resources path
+#ifdef THWIN32
+  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj").c_str());
+#endif
 }
 
 

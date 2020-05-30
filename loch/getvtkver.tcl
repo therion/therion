@@ -5,7 +5,7 @@ set libpath "/usr/local/lib/vtk-$ver"
 set vv1 0
 set vv2 0
 
-foreach d {/usr /usr/local} {
+foreach d {/usr /usr/local c:/msys64/mingw32} {
     set ll [glob -nocomplain -directory "$d/include" -types d vtk*]
     foreach l $ll {
 	if {[regexp {vtk-(\d+)\.(\d+)$} $l dum v1 v2]} {
