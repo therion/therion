@@ -63,8 +63,8 @@ STRIPFLAG = -s
 ##LXPLATFORM = LINUX
 
 # PLATFORM DEBIAN
-CXX = c++
-CC = gcc
+CXX ?= c++
+CC ?= gcc
 ifeq ($(VTKV6),1)
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype

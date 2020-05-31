@@ -47,8 +47,8 @@ SYSCONFDIR = $(PREFIX)/etc
 
 
 # PLATFORM DEBIAN
-CXX = c++
-CC = gcc
+CXX ?= c++
+CC ?= gcc
 POBJECTS =
 LOCHEXE = loch/loch
 CXXPFLAGS = -DTHLINUX
@@ -59,8 +59,9 @@ THXTHMKCMD = ./therion
 
 
 # PLATFORM WIN32
-##CXX = c++
-##CC = gcc
+##EXT = .exe
+##CXX ?= c++
+##CC ?= gcc
 ##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
@@ -126,6 +127,9 @@ LDBFLAGS = $(LDPFLAGS)
 # proj4 settings
 PROJ_LIBS = $(shell $(CROSS)pkg-config proj --libs)
 PROJ_MVER = $(shell $(CROSS)pkg-config proj --modversion | sed 's/\..*//')
+ifeq ($(shell [ "$(PROJ_MVER)" -gt 5 ] && [ "$(THPLATFORM)" = "WIN32" ] && [ -z "$(CROSS)" ]; echo $$?),0)
+  PROJ_LIBS += -lsqlite3
+endif
 CXXJFLAGS = -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable=includedir)
 
 
@@ -168,15 +172,15 @@ version:
 
 
 $(OUTDIR)/therion: version $(OBJECTS)
-	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
 ifneq ($(THPLATFORM),WIN32)
 	$(MAKE) library
 	$(MAKE) $(OUTDIR)/thlibrary.o
-	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
 endif
 
 tests: version $(OBJECTS) $(TESTOBJECTS_P)
-	$(CXX) -Wall -o $(OUTDIR)/utest$(EXT) $(OBJECTS) $(TESTOBJECTS_P) $(LDFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/utest$(EXT) $(OBJECTS) $(TESTOBJECTS_P) $(LDFLAGS) $(LIBS)
 ifneq ($(THPLATFORM),WIN32)
 	$(OUTDIR)/utest$(EXT)
 endif
