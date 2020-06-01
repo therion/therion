@@ -288,7 +288,7 @@ thchencdata.h: thchencdata/*.TXT
 	$(MAKE) -C ./thchencdata
 
 thcsdata.h: thcsdata.tcl
-	tclsh thcsdata.tcl
+	tclsh thcsdata.tcl $(CROSS)
 
 update:
 	$(MAKE) -C ./thlang update
