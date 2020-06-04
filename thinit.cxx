@@ -762,7 +762,7 @@ bool thinit::get_proj_auto()
 
 void thinit::set_proj_lib_path() {  // set PROJ library resources path
 #ifdef THWIN32
-  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj").c_str());
+  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj-" + std::to_string(PROJ_VER)).c_str());
 #endif
 }
 

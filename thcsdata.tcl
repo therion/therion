@@ -5,6 +5,10 @@ catch {
   set proj4v6file "proj.db"
 }
 
+set pkg_cnf "pkg-config"
+if {$argc == 1} {
+  set pkg_cnf [lindex $argv 0]$pkg_cnf
+}
 
 proc load_proj_init_file_add {name spec desc} {
   global proj_specs
@@ -144,7 +148,7 @@ set osgbspecs {{ST 1 -2} {SN 2 -3} {} {} {} {}}
 
 #load_proj_init_file extern/proj4/nad/epsg epsg
 #load_proj_init_file extern/proj4/nad/esri esri
-set prefix [exec pkg-config proj --variable=prefix]
+set prefix [exec $pkg_cnf proj --variable=prefix]
 set projlabels(esri) "\nmap<int, const char *> esri_labels = {};\n\n"
 set projlabels(epsg) "\nmap<int, const char *> epsg_labels = {};\n\n"
 if {[file exists $prefix/share/proj/$proj4v6file]} {
