@@ -63,7 +63,7 @@ using namespace std;
 } */
 
 void thcs2cs(string s, string t,
-              double a, double b, double c, double &x, double &y, double &z, double unused[], bool unused) {
+              double a, double b, double c, double &x, double &y, double &z, double unused1[], bool unused2) {
   projPJ P1, P2;
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
      therror(("Can't initialize input projection!"));
@@ -234,7 +234,7 @@ bool thcs_check(string s) {
     if (bbox != nullptr) {
       proj_area_set_bbox(PA, bbox[0], bbox[1], bbox[2], bbox[3]);
     }
-    P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, sanitize_crs(s).c_str(), sanitize_crs(t).c_str(), NULL);
+    P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, sanitize_crs(s).c_str(), sanitize_crs(t).c_str(), PA);
     proj_operation_factory_context_destroy(operation_factory_context);
     proj_area_destroy(PA);
     if (P==0) {
