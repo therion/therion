@@ -262,7 +262,7 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
 
 #define thmapstat_print_team(team_map, team_name, max_items, alphasort, teamstr) \
     fprintf(f,"\\" team_name "={"); \
-    pd = new thmapstat_person_data [team_map.size()]; \
+    pd.reset(new thmapstat_person_data [team_map.size()]); \
     i = 0; \
     for (pi = team_map.begin(); \
           pi != team_map.end(); pi++) { \
@@ -273,7 +273,7 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
         pd[i].crit = pi->second.crit; \
       i++; \
     } \
-    qsort(pd,cnt,sizeof(thmapstat_person_data),thmapstat_person_data_compar); \
+    qsort(pd.get(),cnt,sizeof(thmapstat_person_data),thmapstat_person_data_compar); \
     if (max_items >= 0) \
       tcnt = (unsigned long)(max_items); \
     else \
@@ -355,7 +355,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   thmapstat_personmap::iterator pi;
   thmapstat_copyrightmap::iterator ci;
   thmapstat_datamap::iterator ii;
-  thmapstat_person_data * pd;
+  std::unique_ptr<thmapstat_person_data[]> pd;
   bool show_lengths, z_any = false;
   double clen = 0.0, z_top = 0.0, z_bot = 0.0;
   c.guarantee(256);
