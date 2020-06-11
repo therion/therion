@@ -63,7 +63,7 @@ using namespace std;
 } */
 
 void thcs2cs(string s, string t,
-              double a, double b, double c, double &x, double &y, double &z, bool unused) {
+              double a, double b, double c, double &x, double &y, double &z, double unused[], bool unused) {
   projPJ P1, P2;
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
      therror(("Can't initialize input projection!"));
@@ -173,8 +173,70 @@ bool thcs_check(string s) {
   }
 
 #if PROJ_VER > 5
-  void th_init_proj_auto(PJ * &P, string s, string t) {
+//#include <iostream>
+
+  void th_init_proj_auto(PJ * &P, string s, string t, double bbox[]) {
+
+    PJ_OPERATION_FACTORY_CONTEXT *operation_factory_context = proj_create_operation_factory_context(PJ_DEFAULT_CTX, nullptr);
+    // allow PROJ to find more potential transformations
+    proj_operation_factory_context_set_spatial_criterion(PJ_DEFAULT_CTX, operation_factory_context, PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION);
+    // set area of interest
+    if (bbox != nullptr) {
+      proj_operation_factory_context_set_area_of_interest(PJ_DEFAULT_CTX, operation_factory_context, 
+           bbox[0], bbox[1], bbox[2], bbox[3]);
+    }
+    // find if a grid is missing; see https://north-road.com/wp-content/uploads/2020/01/on_gda2020_proj6_and_qgis_lessons_learnt_and_recommendations.pdf
+    proj_operation_factory_context_set_grid_availability_use(PJ_DEFAULT_CTX, operation_factory_context, PROJ_GRID_AVAILABILITY_IGNORED);
+    PJ_OBJ_LIST *ops = proj_create_operations(PJ_DEFAULT_CTX,
+         proj_create(PJ_DEFAULT_CTX, sanitize_crs(s).c_str()),
+         proj_create(PJ_DEFAULT_CTX, sanitize_crs(t).c_str()), operation_factory_context);
+    const char * short_name, * url;
+    int c5 = 0, c6 = 0, c7 = 0;
+    int proj_auto_grid = GRID_WARN;  // TODO
+
+    if (proj_list_get_count(ops) < 1)
+      therror(("no usable coordinate transformation found"));
+
+//    for (int i = 0; i < proj_list_get_count(ops); i++) {
+    for (int i = 0; i < 1; i++) {   // let's look just at the first operation
+      PJ* P_tmp = proj_list_get(PJ_DEFAULT_CTX, ops, i);
+      if (proj_coordoperation_has_ballpark_transformation(PJ_DEFAULT_CTX, P_tmp))
+        therror(("no reasonably precise coordinate transformation found"));
+//      PJ_PROJ_INFO pinfo = proj_pj_info(P_tmp);
+//      cout << endl << "i " << i << " " << pinfo.description << " " << pinfo.definition << " [" << pinfo.accuracy << "m]" << endl;
+      if (!proj_coordoperation_is_instantiable(PJ_DEFAULT_CTX, P_tmp)) {
+        for (int j = 0; j < proj_coordoperation_get_grid_used_count(PJ_DEFAULT_CTX, P_tmp); j++) {
+          proj_coordoperation_get_grid_used(PJ_DEFAULT_CTX, P_tmp, j, 
+              &short_name, nullptr, nullptr, &url, &c5, &c6, &c7);
+//          cout << " j " << j << "  grid: 1=" << short_name << " 4="<< url << " 5="<< c5 
+//                   << " 6="<< c6 << " 7=" << c7 << endl;
+          string s_tmp = (string) "Missing PROJ transformation grid '" + short_name + "'; you can download it from " + 
+                         url + " and install it to a location where PROJ finds it\n";
+          switch (proj_auto_grid) {
+            case GRID_WARN:
+              thwarning((s_tmp.c_str()));
+              break;
+            case GRID_FAIL:
+              therror((s_tmp.c_str()));
+              break;
+            case GRID_DOWNLOAD:
+              therror((s_tmp.c_str()));  // TODO
+              break;
+          }
+        }
+      }
+
+      proj_destroy(P_tmp);
+    }
+    // end of grid handling
+
+    PJ_AREA* PA = proj_area_create();
+    if (bbox != nullptr) {
+      proj_area_set_bbox(PA, bbox[0], bbox[1], bbox[2], bbox[3]);
+    }
     P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, sanitize_crs(s).c_str(), sanitize_crs(t).c_str(), NULL);
+    proj_operation_factory_context_destroy(operation_factory_context);
+    proj_area_destroy(PA);
     if (P==0) {
       ostringstream u;
       u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << ")";
@@ -195,7 +257,10 @@ bool thcs_check(string s) {
 #endif
 
   void thcs2cs(string s, string t,
-              double a, double b, double c, double &x, double &y, double &z, bool proj_auto) {   // proj_auto is used for automated tests and pressuposes that proj-auto in the init file is false
+              double a, double b, double c, double &x, double &y, double &z, 
+              double bbox[], bool proj_auto) {
+              // proj_auto is used for automated tests and pressuposes that proj-auto in the init file is false
+
     // TODO: support user-defined pipelines for a combination of CRSs
     // for high-precision transformations
 
@@ -209,7 +274,7 @@ bool thcs_check(string s) {
     PJ* P = NULL;
 #if PROJ_VER > 5
     if (proj_auto || thini.get_proj_auto()) {  // let PROJ find the best transformation
-      th_init_proj_auto(P, s, t);
+      th_init_proj_auto(P, s, t, bbox);
       if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
         undo_radians = 180.0 / M_PI;
       }

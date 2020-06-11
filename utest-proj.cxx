@@ -81,7 +81,7 @@ TEST_CASE( "projections: EPSG label", "[proj]" ) {
 
 TEST_CASE( "projections: JTSK03 -- utm, auto=true", "[proj]" ) {
     thcs2cs(thcs_get_params(TTCS_JTSK03), thcs_get_params(TTCS_UTM34N),
-            p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z, true);
+            p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z, nullptr, true);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
     CHECK(coord_equal(z, p1_utm_h, 0.1));
@@ -89,15 +89,16 @@ TEST_CASE( "projections: JTSK03 -- utm, auto=true", "[proj]" ) {
 
 TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
     thcs2cs(thcs_get_params(TTCS_JTSK03), thcs_get_params(TTCS_UTM34N),
-            p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z, false);
+            p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z, nullptr, false);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
     CHECK(coord_equal(z, p1_utm_h, 0.1));
 }
 
 TEST_CASE( "projections: iJTSK03 -- utm, auto=true", "[proj]" ) {
+double bbox[] = {19, 48, 19, 48};
     thcs2cs(thcs_get_params(TTCS_IJTSK03), thcs_get_params(TTCS_UTM34N),
-            -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z, true);
+            -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z, bbox, true);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
     CHECK(coord_equal(z, p1_utm_h, 0.2));
@@ -105,7 +106,7 @@ TEST_CASE( "projections: iJTSK03 -- utm, auto=true", "[proj]" ) {
 
 TEST_CASE( "projections: iJTSK03 -- utm, auto=false", "[proj]" ) {
     thcs2cs(thcs_get_params(TTCS_IJTSK03), thcs_get_params(TTCS_UTM34N),
-            -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z, false);
+            -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z, nullptr, false);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
     CHECK(coord_equal(z, p1_utm_h, 0.2));
@@ -120,7 +121,7 @@ TEST_CASE( "projections: latlong -- JTSK03", "[proj]" ) {
 
 TEST_CASE( "projections: JTSK03 -- EPSG_4417, auto=false", "[proj]" ) {
     thcs2cs(thcs_get_params(TTCS_JTSK03), thcs_get_params(TTCS_EPSG + 4417),
-        p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z, false);
+        p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z, nullptr, false);
 #if PROJ_VER < 6
     CHECK(coord_equal(x, p1_s42_y, 1.3));
     CHECK(coord_equal(y, p1_s42_x, 0.05));
@@ -152,7 +153,7 @@ cout << x << " " << y << " " << p1_s42_y << " " << p1_s42_x << endl;
 
 TEST_CASE( "projections: iJTSK03 -- EPSG_4417, auto=true", "[proj]" ) {
     thcs2cs(thcs_get_params(TTCS_IJTSK03), thcs_get_params(TTCS_EPSG + 4417),
-        -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z, true);
+        -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z, nullptr, true);
 #if PROJ_VER < 6
     CHECK(coord_equal(x, p1_s42_y, 1.3));
     CHECK(coord_equal(y, p1_s42_x, 0.05));
@@ -166,21 +167,21 @@ TEST_CASE( "projections: iJTSK03 -- EPSG_4417, auto=true", "[proj]" ) {
 
 TEST_CASE( "UTM34N -- EPSG_4417 auto=true", "[proj]" ) {    // UTM34N -> S42
     thcs2cs(thcs_get_params(TTCS_UTM34N), thcs_get_params(TTCS_EPSG + 4417),
-        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z, true);
+        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z, nullptr, true);
     CHECK(coord_equal(x, p1_s42_y, 1.3));
     CHECK(coord_equal(y, p1_s42_x, 0.05));
 }
 
 TEST_CASE( "EPSG_32634 -- EPSG_4417 auto=true", "[proj]" ) {    // UTM34N -> S42
     thcs2cs(thcs_get_params(TTCS_EPSG + 32634), thcs_get_params(TTCS_EPSG + 4417),
-        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z, true);
+        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z, nullptr, true);
     CHECK(coord_equal(x, p1_s42_y, 1.3));
     CHECK(coord_equal(y, p1_s42_x, 0.05));
 }
 
 TEST_CASE( "EPSG_32634 -- EPSG_4417 auto=false", "[proj]" ) {   // UTM34N -> S42
     thcs2cs(thcs_get_params(TTCS_EPSG + 32634), thcs_get_params(TTCS_EPSG + 4417),
-        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z, false);
+        p1_utm_e, p1_utm_n, p1_utm_h, x, y, z, nullptr, false);
     CHECK(coord_equal(x, p1_s42_y, 130));
     CHECK(coord_equal(y, p1_s42_x, 40));
 }
@@ -188,14 +189,14 @@ TEST_CASE( "EPSG_32634 -- EPSG_4417 auto=false", "[proj]" ) {   // UTM34N -> S42
 
 TEST_CASE( "EPSG_4326 -- EPSG_32634 auto=true", "[proj]" ) {  // LATLON -> UTM34N
     thcs2cs(thcs_get_params(TTCS_EPSG + 4326), thcs_get_params(TTCS_EPSG + 32634),
-        p1_ll_lambda, p1_ll_phi, p1_ll_h, x, y, z, true);
+        p1_ll_lambda, p1_ll_phi, p1_ll_h, x, y, z, nullptr, true);
     CHECK(coord_equal(x, p1_utm_e, 0.4));
     CHECK(coord_equal(y, p1_utm_n, 0.02));
 }
 
 TEST_CASE( "EPSG_4326 -- EPSG_32634 auto=false", "[proj]" ) {  // LATLON -> UTM34N
     thcs2cs(thcs_get_params(TTCS_EPSG + 4326), thcs_get_params(TTCS_EPSG + 32634),
-        p1_ll_lambda, p1_ll_phi, p1_ll_h, x, y, z, false);
+        p1_ll_lambda, p1_ll_phi, p1_ll_h, x, y, z, nullptr, false);
     CHECK(coord_equal(x, p1_utm_e, 0.4));
     CHECK(coord_equal(y, p1_utm_n, 0.02));
 }
