@@ -35,6 +35,7 @@
 #include "thversion.h"
 #include "thtexfonts.h"
 #include "thbezier.h"
+#include "thlogfile.h"
 
 extern const thstok thtt__texts [];
 
