@@ -412,64 +412,92 @@ void thdataobject::start_insert()
 }
 
 
-
-void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double & dst_y)
+void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & dst_y, bool adj_bbox)
 {
-  // 1. Check compatibility with output CS.
-  if (thcfg.outcs_def.is_valid()) {
-    if (((this->cs == TTCS_LOCAL) && (thcfg.outcs != TTCS_LOCAL)) ||
-      ((this->cs != TTCS_LOCAL) && (thcfg.outcs == TTCS_LOCAL)))
-      ththrow(("mixing local and global coordinate systems not allowed -- conflict with cs specification at %s [%d]", thcfg.outcs_def.name, thcfg.outcs_def.line));
-  };
+	  // 1. Check compatibility with output CS.
+	  if (thcfg.outcs_def.is_valid()) {
+	    if (((this->cs == TTCS_LOCAL) && (thcfg.outcs != TTCS_LOCAL)) ||
+	      ((this->cs != TTCS_LOCAL) && (thcfg.outcs == TTCS_LOCAL)))
+	      ththrow(("mixing local and global coordinate systems not allowed -- conflict with cs specification at %s [%d]", thcfg.outcs_def.name, thcfg.outcs_def.line));
+	  };
 
-  // 1. Conversion to numbers.
-  int sv;
-  double tx(0.0), ty(0.0), tz(0.0), dst_z(0.0);
+	  // 1. Conversion to numbers.
+	  int sv;
+	  double tx(0.0), ty(0.0), tz(0.0);
+	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
+	    thparse_double_dms(sv, tx, src_x);
+	    tx /= 180.0 / THPI;
+	  } else {
+	    thparse_double(sv, tx, src_x);
+	  }
+	  if (sv != TT_SV_NUMBER)
+	    ththrow(("invalid X coordinate -- %s", src_x));
+
+	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
+	    thparse_double_dms(sv, ty, src_y);
+	    ty /= 180.0 / THPI;
+	  } else {
+	    thparse_double(sv, ty, src_y);
+	  }
+	  if (sv != TT_SV_NUMBER)
+	    ththrow(("invalid Y coordinate -- %s", src_y));
+
+	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->swap) {
+	    tz = tx;
+	    tx = ty;
+	    ty = tz;
+	    tz = 0.0;
+	  }
+
+	  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
+	    if ((tx < - THPI) || (tx > THPI))
+	      ththrow(("longitude out of range -- %s", thcs_get_data(this->cs)->swap ? src_y : src_x));
+
+	    if ((ty < (- THPI / 2)) || (ty > (THPI / 2)))
+	      ththrow(("latitude out of range -- %s", thcs_get_data(this->cs)->swap ? src_x : src_y));
+	  }
+
+	  dst_x = tx;
+	  dst_y = ty;
+
+	  if (adj_bbox && (thcfg.outcs != TTCS_LOCAL)) {
+		double dumx, dumy, dumz;
+		thcs2cs(thcs_get_params(this->cs), thcs_get_params(TTCS_LAT_LONG), tx, ty, tz, dumx, dumy, dumz);
+	    if (thcfg.ibbx_def) {
+	      thcfg.ibbx[0] = dumx;
+	      thcfg.ibbx[1] = dumx;
+	      thcfg.ibbx[2] = dumy;
+	      thcfg.ibbx[3] = dumy;
+	    } else {
+	      if (dumx < thcfg.ibbx[0]) thcfg.ibbx[0] = dumx;
+	      if (dumx > thcfg.ibbx[1]) thcfg.ibbx[1] = dumx;
+	      if (dumy < thcfg.ibbx[2]) thcfg.ibbx[2] = dumy;
+	      if (dumy > thcfg.ibbx[3]) thcfg.ibbx[3] = dumy;
+	    }
+	  }
+
+}
+
+
+
+void thdataobject::convert_cs(int src_cs, double src_x, double src_y, double & dst_x, double & dst_y)
+{
   bool initcs(false);
-  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
-    thparse_double_dms(sv, tx, src_x);
-    tx /= 180.0 / THPI;
-  } else {
-    thparse_double(sv, tx, src_x);
-  }
-  if (sv != TT_SV_NUMBER)
-    ththrow(("invalid X coordinate -- %s", src_x));
-
-  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
-    thparse_double_dms(sv, ty, src_y);
-    ty /= 180.0 / THPI;
-  } else {
-    thparse_double(sv, ty, src_y);
-  }
-  if (sv != TT_SV_NUMBER)
-    ththrow(("invalid Y coordinate -- %s", src_y));
-
-  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->swap) {
-    tz = tx;
-    tx = ty;
-    ty = tz;
-    tz = 0.0;
-  }
-
-  if ((this->cs != TTCS_LOCAL) && thcs_get_data(this->cs)->dms) {
-    if ((tx < - THPI) || (tx > THPI))
-      ththrow(("longitude out of range -- %s", thcs_get_data(this->cs)->swap ? src_y : src_x));
-
-    if ((ty < (- THPI / 2)) || (ty > (THPI / 2)))
-      ththrow(("latitude out of range -- %s", thcs_get_data(this->cs)->swap ? src_x : src_y));
-  }
+  double tx(0.0), ty(0.0), tz(0.0), dst_z(0.0);
+  tx = src_x;
+  ty = src_y;
 
   if (!thcfg.outcs_def.is_valid()) {
-    if ((this->cs != TTCS_LOCAL) && (!thcs_get_data(this->cs)->output)) {
+    if ((src_cs != TTCS_LOCAL) && (!thcs_get_data(src_cs)->output)) {
       // TODO: get NS
       double dumx, dumy, dumz;
       int south = 0;
-      thcs2cs(thcs_get_params(this->cs), thcs_get_params(TTCS_LAT_LONG), tx, ty, tz, dumx, dumy, dumz);
+      thcs2cs(thcs_get_params(src_cs), thcs_get_params(TTCS_LAT_LONG), tx, ty, tz, dumx, dumy, dumz);
       if (dumy < 0.0)
         south = 1;
-      thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(thcs_get_params(this->cs), tx, ty, tz) - 1) + south;
+      thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(thcs_get_params(src_cs), tx, ty, tz) - 1) + south;
     } else {
-      thcfg.outcs = this->cs;
+      thcfg.outcs = src_cs;
     }
     if (this->cs_source.is_valid())
       thcfg.outcs_def = this->cs_source;
@@ -478,12 +506,12 @@ void thdataobject::convert_cs(char * src_x, char * src_y, double & dst_x, double
     initcs = true;
   }
 
-  if (this->cs == TTCS_LOCAL) {
+  if (src_cs == TTCS_LOCAL) {
     dst_x = tx;
     dst_y = ty;
     dst_z = tz;
   } else {
-    thcs2cs(thcs_get_params(this->cs), thcs_get_params(thcfg.outcs), tx, ty, tz, dst_x, dst_y, dst_z);
+    thcs2cs(thcs_get_params(src_cs), thcs_get_params(thcfg.outcs), tx, ty, tz, dst_x, dst_y, dst_z);
   }
 
   if (thcfg.outcs != TTCS_LOCAL) {
@@ -516,4 +544,7 @@ void thdataobject::parse_attribute(char * name, char * value) {
   this->db->attr.insert_attribute(name, value, long(this->id));
 }
 
+
+void thdataobject::convert_all_cs() {
+}
 

@@ -2228,7 +2228,8 @@ void thdata::set_data_fix(int nargs, char ** args)
   it->sdx = thnan;
   it->sdy = thnan;
   it->sdz = thnan;
-  this->convert_cs(args[1], args[2], it->x, it->y);
+  it->cs = this->cs;
+  this->read_cs(args[1], args[2], it->x, it->y);
   for(ai = 0; ai < nargs; ai++) {
     if (ai > 2) {
       thparse_double(vid, val, args[ai]);
@@ -2932,7 +2933,13 @@ void thdata::complete_dimensions()
 }
 
 
+void thdata::convert_all_cs() {
+  thdatafix_list::iterator it;
+  for(it = this->fix_list.begin(); it != this->fix_list.end(); it++) {
+	  this->convert_cs(it->cs, it->x, it->y, it->x, it->y);
+  }
 
+}
 
 
 

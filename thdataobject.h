@@ -462,11 +462,25 @@ class thdataobject {
  
   bool is_in_survey(thsurvey * psearch);
 
+
+  /**
+   * Read coordinates and estimate approximate location for PROJ conversions.
+   */
+
+  void read_cs(char * src_x, char * src_y, double & dst_x, double & dst_y, bool adj_bbox = true);
+
+
   /**
    * Convert coordinates according to current CS specification.
    */
 
-  void convert_cs(char * src_x, char * src_y, double & dst_x, double & dst_y);
+  void convert_cs(int src_cs, double src_x, double src_y, double & dst_x, double & dst_y);
+
+  /**
+   * Convert all points in object.
+   */
+
+  virtual void convert_all_cs();
 
   /**
    * Parse object attributes.

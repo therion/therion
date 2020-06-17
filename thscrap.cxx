@@ -82,6 +82,7 @@ thscrap::thscrap()
   this->scale_p2y = 0.0;
   this->scale_p9 = false;
   this->reset_limits();
+  this->scale_cs = TTCS_LOCAL;
 
   this->reset_transformation();
 
@@ -299,8 +300,9 @@ void thscrap::parse_scale(char * ss)
         this->scale_r2y = lentf.transform(this->scale_r2y);
       }
     } else {
-      this->convert_cs(pars[4], pars[5], this->scale_r1x, this->scale_r1y);
-      this->convert_cs(pars[6], pars[7], this->scale_r2x, this->scale_r2y);
+      this->scale_cs = this->cs;
+      this->read_cs(pars[4], pars[5], this->scale_r1x, this->scale_r1y);
+      this->read_cs(pars[6], pars[7], this->scale_r2x, this->scale_r2y);
     }
     if (hypot(this->scale_r1x - this->scale_r2x,
       this->scale_r1y - this->scale_r2y) == 0.0)
@@ -1499,8 +1501,12 @@ void thscrap::start_insert() {
 }
 
 
-
-
+void thscrap::convert_all_cs() {
+    if (this->scale_cs != TTCS_LOCAL) {
+        this->convert_cs(this->scale_cs, this->scale_r1x, this->scale_r1y, this->scale_r1x, this->scale_r1y);
+        this->convert_cs(this->scale_cs, this->scale_r2x, this->scale_r2y, this->scale_r2x, this->scale_r2y);
+	}
+}
 
 
 

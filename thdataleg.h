@@ -469,6 +469,8 @@ class thdataleg {
 class thdatafix {
   
   public:
+
+  int cs; ///< Fix CS.
   
   thobjectname station;  ///< Station name.
 

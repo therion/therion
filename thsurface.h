@@ -84,6 +84,7 @@ class thsurface : public thdataobject {
   double * grid;
   thdb3ddata d3d;
   bool d3dok;
+  int pict_cs, grid_cs;
 
   void parse_grid(char * spec);
   void parse_grid_setup(char ** args);
@@ -189,6 +190,13 @@ class thsurface : public thdataobject {
   virtual void start_insert();
   
   thdb3ddata * get_3d();
+
+  /**
+   * Convert all points in object.
+   */
+
+  virtual void convert_all_cs();
+
 
 };
 

@@ -525,6 +525,8 @@ class thlayout : public thdataobject {
   double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gzs, gox, goy, goz, navf, overlap, opacity,
     map_header_x, map_header_y, legend_width, surface_opacity, rotate;
   
+  int o_cs, go_cs;
+
   const char * olx, * oly, 
     * doc_title, * doc_comment, * doc_author, * doc_subject, * doc_keywords, * excl_list;
   
@@ -719,6 +721,12 @@ class thlayout : public thdataobject {
    */
    
   void set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin_shx, double x_origin_shy);
+
+  /**
+   * Convert all points in object.
+   */
+
+  virtual void convert_all_cs();
    
 
 };

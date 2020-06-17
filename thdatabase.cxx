@@ -50,6 +50,8 @@
 #include "thimport.h"
 #include "thsurface.h"
 #include "thendscrap.h"
+#include "thconfig.h"
+#include "thproj.h"
 
 
 const char * thlibrarydata_init_text =
@@ -889,6 +891,20 @@ void thdatabase::preprocess() {
     obi++;
   }
   
+
+  // CS conversions
+  if (thcfg.ibbx_def) {
+	  thcs_bbox.push_back(thcfg.ibbx[0]);
+	  thcs_bbox.push_back(thcfg.ibbx[2]);
+	  thcs_bbox.push_back(thcfg.ibbx[1]);
+	  thcs_bbox.push_back(thcfg.ibbx[3]);
+  }
+  obi = this->object_list.begin();
+  while (obi != this->object_list.end()) {
+	(*obi)->convert_all_cs();
+    obi++;
+  }
+
 
 
   thsurvey * cs = this->fsurveyptr;

@@ -98,6 +98,10 @@ thsurface::thsurface()
   this->s1.clear();
   this->s2.clear();
   this->d3dok = false;
+
+  this->pict_cs = TTCS_LOCAL;
+  this->grid_cs = TTCS_LOCAL;
+
     
 }
 
@@ -276,14 +280,15 @@ void thsurface::parse_picture(char ** args)
       
       surfpiccaldbl(pict_X1,0);
       surfpiccaldbl(pict_Y1,1);
-      this->convert_cs(cals[2], cals[3], this->pict_x1, this->pict_y1);
+      this->pict_cs = this->cs;
+      this->read_cs(cals[2], cals[3], this->pict_x1, this->pict_y1);
       if (this->cs == TTCS_LOCAL) {
         this->pict_x1 = ltr.transform(this->pict_x1);
         this->pict_y1 = ltr.transform(this->pict_y1);
       }
       surfpiccaldbl(pict_X2,4);
       surfpiccaldbl(pict_Y2,5);
-      this->convert_cs(cals[6], cals[7], this->pict_x2, this->pict_y2);
+      this->read_cs(cals[6], cals[7], this->pict_x2, this->pict_y2);
       if (this->cs == TTCS_LOCAL) {
         this->pict_x2 = ltr.transform(this->pict_x2);
         this->pict_y2 = ltr.transform(this->pict_y2);
@@ -407,7 +412,8 @@ void thsurface::parse_grid_setup(char ** args)
         ththrow(("integer expected -- %s", args[YYY])) \
       XXX = long(dblv);
   
-  this->convert_cs(args[0], args[1], this->grid_ox, this->grid_oy);
+  this->grid_cs = this->cs;
+  this->read_cs(args[0], args[1], this->grid_ox, this->grid_oy);
   if (this->cs == TTCS_LOCAL) {
     this->grid_ox = this->grid_units.transform(this->grid_ox);
     this->grid_oy = this->grid_units.transform(this->grid_oy);
@@ -562,5 +568,15 @@ thdb3ddata * thsurface::get_3d() {
 }
 
 
-
+void thsurface::convert_all_cs() {
+	if (!thisnan(this->pict_x1)) {
+		this->convert_cs(this->pict_cs, this->pict_x1, this->pict_y1, this->pict_x1, this->pict_y1);
+	}
+	if (!thisnan(this->pict_x2)) {
+		this->convert_cs(this->pict_cs, this->pict_x2, this->pict_y2, this->pict_x2, this->pict_y2);
+	}
+	if (!thisnan(this->grid_ox)) {
+		this->convert_cs(this->grid_cs, this->grid_ox, this->grid_oy, this->grid_ox, this->grid_oy);
+	}
+}
 

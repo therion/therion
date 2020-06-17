@@ -111,6 +111,7 @@ class thscrap : public thdataobject {
   
   double scale, scale_r1x, scale_r1y, scale_p1x, scale_p1y,
     scale_r2x, scale_r2y, scale_p2x, scale_p2y;  ///< Scrap scale.
+  int scale_cs;
   bool scale_p9; ///< 9 parameters scaling
   
   double mx, my, mxx, mxy, myx, myy, mr, ms;  ///< Calibration coefficients.
@@ -309,6 +310,13 @@ class thscrap : public thdataobject {
  void update_limits(double x, double y);
 
  virtual void start_insert();
+
+ /**
+  * Convert all points in object.
+  */
+
+ virtual void convert_all_cs();
+
 
 
 };
