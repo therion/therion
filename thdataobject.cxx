@@ -463,11 +463,12 @@ void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & 
 	  if (adj_bbox && (thcfg.outcs != TTCS_LOCAL)) {
 		double dumx, dumy, dumz;
 		thcs2cs(thcs_get_params(this->cs), thcs_get_params(TTCS_LAT_LONG), tx, ty, tz, dumx, dumy, dumz);
-	    if (thcfg.ibbx_def) {
+	    if (!thcfg.ibbx_def) {
 	      thcfg.ibbx[0] = dumx;
 	      thcfg.ibbx[1] = dumx;
 	      thcfg.ibbx[2] = dumy;
 	      thcfg.ibbx[3] = dumy;
+	      thcfg.ibbx_def = true;
 	    } else {
 	      if (dumx < thcfg.ibbx[0]) thcfg.ibbx[0] = dumx;
 	      if (dumx > thcfg.ibbx[1]) thcfg.ibbx[1] = dumx;
