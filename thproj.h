@@ -37,6 +37,8 @@ signed int thcs2zone(std::string, double, double, double);
 double thcsconverg(std::string, double, double);
 bool thcs_islatlong(std::string);
 bool thcs_check(std::string);
+void thcs_log_transf_used();
+void thcs_destroy_transf_used();
 
 extern std::vector<double> thcs_bbox;
 

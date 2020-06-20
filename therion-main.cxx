@@ -36,6 +36,7 @@
 #include "thtexfonts.h"
 #include "thbezier.h"
 #include "thlogfile.h"
+#include "thproj.h"
 
 extern const thstok thtt__texts [];
 
@@ -229,7 +230,10 @@ int main(int argc, char * argv[]) {
     // log statistics
     thdb.db1d.print_loops();
     thdb.db2d.log_distortions();
-    
+    // log CRS transformations & destroy them
+    thcs_log_transf_used();
+    thcs_destroy_transf_used();
+
 //#ifdef THMSVC
 //    getchar();
 //#endif

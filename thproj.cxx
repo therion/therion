@@ -27,9 +27,12 @@
 
 #include "thexception.h"
 #include "thproj.h"
+#include "thlogfile.h"
 #include <string>
 #include <cassert>
 #include <cmath>
+#include <map>
+#include <set>
 
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
@@ -63,6 +66,9 @@ vector<double> thcs_bbox;
   pj_free(P1);
   pj_free(P2);
 } */
+
+void thcs_log_transf_used() {};
+void thcs_destroy_transf_used() {};
 
 void thcs2cs(string s, string t,
               double a, double b, double c, double &x, double &y, double &z, bool unused) {
@@ -135,7 +141,7 @@ bool thcs_check(string s) {
   return true;
 }
 
-#else
+#else    // PROJ 5 and newer
 
   #include <proj.h>
   #include <math.h>
@@ -143,11 +149,39 @@ bool thcs_check(string s) {
   #include <regex>
   #include "thinit.h"
 
+
+  map<tuple<string,string,vector<double> >, PJ*> transf_cache;
+  set<PJ*> PJ_cache;
+
+  void thcs_log_transf_used() {
+#if PROJ_VER >= 6
+    if (transf_cache.size() == 0) return;
+    thlog.printf("\n############# CRS transformations chosen by PROJ ###############\n");
+    thlog.printf("  Area of Use (AoU): (%.3f, %.3f) (%.3f, %.3f)\n", thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
+    for (const auto & i : transf_cache) {
+      PJ_PROJ_INFO pinfo = proj_pj_info(i.second);
+      thlog.printf("  from: [%s] to: [%s] AoU: [%s] transformation: [%s] definition: [%s] accuracy: [%.3f m]\n",
+                                                    get<0>(i.first).c_str(),
+                                                    get<1>(i.first).c_str(),
+                                                    get<2>(i.first).size()>0 ? "yes" : "no",
+                                                    pinfo.description,
+                                                    pinfo.definition,
+                                                    pinfo.accuracy);
+    }
+    thlog.printf("########## end of CRS transformations chosen by PROJ ###########\n");
+#endif
+  };
+
+  void thcs_destroy_transf_used() {
+    for (const auto & i : PJ_cache) proj_destroy(i);
+  }
+
   string sanitize_crs(string s) {
 #if PROJ_VER > 5
     regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
     regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
     regex reg_type(R"(\+type\s*=\s*crs\b)");
+    s = regex_replace(s, regex(R"(\s+)"), " ");
     if (regex_match(s,reg_epsg_ok)) return s;
     else if (regex_match(s,reg_init)) return regex_replace(s, reg_init, "$1:$2");   // get epsg:nnnn format
     else if (!regex_search(s,reg_type)) return s + " +type=crs";                    // add +type=crs to explicitly declare CRS
@@ -164,20 +198,22 @@ bool thcs_check(string s) {
     P = proj_create(PJ_DEFAULT_CTX, s.c_str());
     if (P==0) {
       ostringstream u;
-      u << "PROJ library: " << proj_errno(P);
-      PJ_INFO info = proj_info();
-      if (!(info.major==5 && info.minor==0))
-          u << " (" << proj_errno_string(proj_errno(P)) << ")";
-      u << ": " << s;
+      u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << "): " << s;
       proj_destroy(P);
       therror((u.str().c_str()));
     }
   }
 
 #if PROJ_VER > 5
-//#include <iostream>
 
   void th_init_proj_auto(PJ * &P, string s, string t) {
+
+    // check the cache first
+    tuple<string,string,vector<double> > tr_c {sanitize_crs(s), sanitize_crs(t), thcs_bbox};
+    if (transf_cache.count(tr_c) == 1) {
+      P = transf_cache[tr_c];
+      return;
+    }
 
     PJ_OPERATION_FACTORY_CONTEXT *operation_factory_context = proj_create_operation_factory_context(PJ_DEFAULT_CTX, nullptr);
     // allow PROJ to find more potential transformations
@@ -186,7 +222,6 @@ bool thcs_check(string s) {
     if (thcs_bbox.size() == 4) {
       proj_operation_factory_context_set_area_of_interest(PJ_DEFAULT_CTX, operation_factory_context, 
            thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
-//cout << " BBOX " <<  thcs_bbox[0] << " " << thcs_bbox[1] << " " << thcs_bbox[2] << " " << thcs_bbox[3] << endl;
     }
     // find if a grid is missing; see https://north-road.com/wp-content/uploads/2020/01/on_gda2020_proj6_and_qgis_lessons_learnt_and_recommendations.pdf
     proj_operation_factory_context_set_grid_availability_use(PJ_DEFAULT_CTX, operation_factory_context, PROJ_GRID_AVAILABILITY_IGNORED);
@@ -203,10 +238,8 @@ bool thcs_check(string s) {
 //    for (int i = 0; i < proj_list_get_count(ops); i++) {
     for (int i = 0; i < 1; i++) {   // let's look just at the first operation
       PJ* P_tmp = proj_list_get(PJ_DEFAULT_CTX, ops, i);
-      if (proj_coordoperation_has_ballpark_transformation(PJ_DEFAULT_CTX, P_tmp))
-        therror(("no reasonably precise coordinate transformation found"));
-//      PJ_PROJ_INFO pinfo = proj_pj_info(P_tmp);
-//      cout << endl << "i " << i << " " << pinfo.description << " " << pinfo.definition << " [" << pinfo.accuracy << "m]" << endl;
+//      if (proj_coordoperation_has_ballpark_transformation(PJ_DEFAULT_CTX, P_tmp))
+//        therror(("no reasonably precise coordinate transformation found"));
       if (!proj_coordoperation_is_instantiable(PJ_DEFAULT_CTX, P_tmp)) {
         for (int j = 0; j < proj_coordoperation_get_grid_used_count(PJ_DEFAULT_CTX, P_tmp); j++) {
           proj_coordoperation_get_grid_used(PJ_DEFAULT_CTX, P_tmp, j, 
@@ -256,6 +289,9 @@ bool thcs_check(string s) {
     }
     proj_destroy(P);
     P = P_for_GIS;
+
+    transf_cache[tr_c] = P;
+    PJ_cache.insert(P);
   }
 #endif
 
@@ -295,7 +331,7 @@ bool thcs_check(string s) {
     x = res.xyz.x*redo_radians;
     y = res.xyz.y*redo_radians;
     z = res.xyz.z;
-    proj_destroy(P);
+    if (PJ_cache.count(P) == 0) proj_destroy(P);  // cached Ps are destroyed in thcs_destroy_transf_used()
   }
 
   signed int thcs2zone(string s, double a, double b, double c) {
