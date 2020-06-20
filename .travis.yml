@@ -33,6 +33,3 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   make loch/loch                  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   make tests                      ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   ./therion --version             ; fi
-branches:
-  only:
-    - master
