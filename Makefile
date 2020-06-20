@@ -125,12 +125,12 @@ LDBFLAGS = $(LDPFLAGS)
 # BUILD ENDCONFIG
 
 # proj4 settings
-PROJ_LIBS = $(shell $(CROSS)pkg-config proj --libs)
-PROJ_MVER = $(shell $(CROSS)pkg-config proj --modversion | sed 's/\..*//')
+PROJ_LIBS ?= $(shell $(CROSS)pkg-config proj --libs)
+PROJ_MVER ?= $(shell $(CROSS)pkg-config proj --modversion | sed 's/\..*//')
 ifeq ($(shell [ "$(PROJ_MVER)" -gt 5 ] && [ "$(THPLATFORM)" = "WIN32" ] && [ -z "$(CROSS)" ]; echo $$?),0)
   PROJ_LIBS += -lsqlite3
 endif
-CXXJFLAGS = -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable=includedir)
+CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable=includedir)
 
 
 # compiler settings
