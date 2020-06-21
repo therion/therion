@@ -2,6 +2,12 @@ Therion 5.5.1 (in progress):
 
 therion:
  * duplicate shot length removed from expored individual team member statistics
+ * improved Proj support in auto mode (automatic specification of the area of use;
+   caching and logging of the used transformations)
+ * added support for handling of missing coordinate transformation grids
+   (see the proj-missing-grid init file option)
+ * support for linking with multiple Proj versions to improve testing
+   (see test_proj.sh)
 
 --------------------------------------------------------------------------------
 

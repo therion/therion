@@ -21,7 +21,7 @@ If you want to compile Therion from source code and run it, you need
 * GNU make
 * Perl
 * Python 3
-* PROJ library (\www{https://proj4.org/})
+* PROJ library (\www{https://proj.org/})
 * Tcl/Tk 8.4.3 and newer (\www{https://www.tcl.tk}) with
   {\it BWidget} widget set  \hfil\break
   (\www{https://sourceforge.net/projects/tcllib/}),
@@ -314,10 +314,58 @@ supported initialization commands follow.
 
 * |proj-auto <on/off>|\NEW{5.5}
 
-  If set |on|, let PROJ v6+ decide which transformation is optimal. In this case
-  the function |proj_create_crs_to_crs()| is used. Otherwise Therion calls
-  |proj_create()| function in the PROJ library.
-  
+  \penalty50
+  If set |on|, let PROJ v6+ decide which transformation between coordinate systems
+  is optimal.\[In this case
+  the function |proj\_create\_crs\_to\_crs()| is used. Otherwise Therion calls
+  |proj\_create()| function in the PROJ library.] The selected transformations
+  are listed in the |log| file. It is recommended to specify coordinate systems
+  using the EPSG codes directly (e.g.~EPSG:4258).
+
+  If set |off| or if Therion uses PROJ older than v6, the source coordinates are
+  first transformed to |wgs-84|, then from |wgs-84| to the target coordinate
+  system. This might result in a suboptimal precision.
+
+  The default setting is |off|.
+
+* |proj-missing-grid <ignore/warn/fail/cache/download>|\NEW{5.5.1}
+
+  Set missing transformation grids handling if |proj-auto| is |on|. The grids
+  are used to achieve a better transformation precision between some
+  coordinate systems.
+
+  |ignore| silently lets Proj to choose other transformation which doesn't use the missing
+  grid(s); this usually leads to decreased transformation accuracy
+  (say metres instead of centimetres). See the |log| file for a list of
+  the used transformations and their precisions.
+
+  |warn| behaves like |ignore|, but prints warnings about missing grids (the
+  download links are usually displayed as well).\[See
+  \www{https://proj.org/resource\_files.html} for the instructions
+  where to put the downloaded grids.]
+
+  |fail| stops after the first missing grid is detected and displays
+  the download link.
+
+  |cache| enables the network connectivity and
+  lets Proj to download the missing parts of grids from the
+  Internet. The information is stored in a local
+  cache.\[See \www{https://proj.org/usage/network.html}]
+  As only parts of grids covering the current area are downloaded,
+  it's potentially faster and less space consuming then |download|. The
+  downside is that the local cache is not used by Proj if the network
+  is disabled (in Therion you have to use the |cache| mode to
+  use the local cache).
+
+  |download| temporarily enables the network connectivity and
+  lets Proj to download the missing grids from the
+  Internet. The grids are used in subsequent runs (in any mode).
+
+  The default setting is |warn|. The option |proj-missing-grid| is ignored if
+  |proj-auto| is |off| or Proj v5 or older is used.
+  If Proj v6 is used by Therion, the settings
+  |cache| and |download| are equivalent to |fail|, as the network
+  connectivity is a feature of Proj v7 and later.
 
 * |pdf-fonts <rm> <it> <bf> <ss> <si>|\NEW{5.3}
 

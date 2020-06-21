@@ -30,7 +30,7 @@
 
 //void thcs2utm(std::string, signed int, double, double, double, double &, double &, double &);
 
-enum {GRID_WARN, GRID_FAIL, GRID_DOWNLOAD};
+enum {GRID_INVALID, GRID_IGNORE, GRID_WARN, GRID_FAIL, GRID_CACHE, GRID_DOWNLOAD};
 
 void thcs2cs(std::string, std::string, double, double, double, double &, double &, double &, bool=false);
 signed int thcs2zone(std::string, double, double, double);
@@ -39,6 +39,7 @@ bool thcs_islatlong(std::string);
 bool thcs_check(std::string);
 void thcs_log_transf_used();
 void thcs_destroy_transf_used();
+int thcs_parse_gridhandling(const char *);
 
 extern std::vector<double> thcs_bbox;
 

@@ -204,8 +204,7 @@ bool thcs_check(string s) {
     }
   }
 
-#if PROJ_VER > 5
-
+#if PROJ_VER >= 6
   void th_init_proj_auto(PJ * &P, string s, string t) {
 
     // check the cache first
@@ -215,63 +214,80 @@ bool thcs_check(string s) {
       return;
     }
 
-    PJ_OPERATION_FACTORY_CONTEXT *operation_factory_context = proj_create_operation_factory_context(PJ_DEFAULT_CTX, nullptr);
-    // allow PROJ to find more potential transformations
-    proj_operation_factory_context_set_spatial_criterion(PJ_DEFAULT_CTX, operation_factory_context, PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION);
-    // set area of interest
-    if (thcs_bbox.size() == 4) {
-      proj_operation_factory_context_set_area_of_interest(PJ_DEFAULT_CTX, operation_factory_context, 
-           thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
-    }
-    // find if a grid is missing; see https://north-road.com/wp-content/uploads/2020/01/on_gda2020_proj6_and_qgis_lessons_learnt_and_recommendations.pdf
-    proj_operation_factory_context_set_grid_availability_use(PJ_DEFAULT_CTX, operation_factory_context, PROJ_GRID_AVAILABILITY_IGNORED);
-    PJ_OBJ_LIST *ops = proj_create_operations(PJ_DEFAULT_CTX,
-         proj_create(PJ_DEFAULT_CTX, sanitize_crs(s).c_str()),
-         proj_create(PJ_DEFAULT_CTX, sanitize_crs(t).c_str()), operation_factory_context);
-    const char * short_name, * url;
-    int c5 = 0, c6 = 0, c7 = 0;
-    int proj_auto_grid = GRID_WARN;  // TODO
+    int proj_auto_grid = thini.get_proj_missing_grid();
 
-    if (proj_list_get_count(ops) < 1)
-      therror(("no usable coordinate transformation found"));
-
-//    for (int i = 0; i < proj_list_get_count(ops); i++) {
-    for (int i = 0; i < 1; i++) {   // let's look just at the first operation
-      PJ* P_tmp = proj_list_get(PJ_DEFAULT_CTX, ops, i);
-//      if (proj_coordoperation_has_ballpark_transformation(PJ_DEFAULT_CTX, P_tmp))
-//        therror(("no reasonably precise coordinate transformation found"));
-      if (!proj_coordoperation_is_instantiable(PJ_DEFAULT_CTX, P_tmp)) {
-        for (int j = 0; j < proj_coordoperation_get_grid_used_count(PJ_DEFAULT_CTX, P_tmp); j++) {
-          proj_coordoperation_get_grid_used(PJ_DEFAULT_CTX, P_tmp, j, 
-              &short_name, nullptr, nullptr, &url, &c5, &c6, &c7);
-//          cout << " j " << j << "  grid: 1=" << short_name << " 4="<< url << " 5="<< c5 
-//                   << " 6="<< c6 << " 7=" << c7 << endl;
-          string s_tmp = (string) "Missing PROJ transformation grid '" + short_name + "'; you can download it from " + 
-                         url + " and install it to a location where PROJ finds it\n";
-          switch (proj_auto_grid) {
-            case GRID_WARN:
-              thwarning((s_tmp.c_str()));
-              break;
-            case GRID_FAIL:
-              therror((s_tmp.c_str()));
-              break;
-            case GRID_DOWNLOAD:
-              therror((s_tmp.c_str()));  // TODO
-              break;
+    if
+#if PROJ_VER >= 7
+    (proj_auto_grid == GRID_CACHE && !proj_context_is_network_enabled(PJ_DEFAULT_CTX)) {
+      if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
+        therror(("couldn't enable network access for Proj"));
+      }
+      proj_grid_cache_set_enable(PJ_DEFAULT_CTX, 1);
+      thprintf("network access for Proj library enabled...\n");
+    } else if
+#endif
+    (proj_auto_grid == GRID_WARN || proj_auto_grid == GRID_FAIL || proj_auto_grid == GRID_DOWNLOAD) {
+      // start of missing grid detection
+      PJ_OPERATION_FACTORY_CONTEXT *operation_factory_context = proj_create_operation_factory_context(PJ_DEFAULT_CTX, nullptr);
+      // allow PROJ to find more potential transformations
+      proj_operation_factory_context_set_spatial_criterion(PJ_DEFAULT_CTX, operation_factory_context, PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION);
+      // set area of interest
+      if (thcs_bbox.size() == 4) {
+        proj_operation_factory_context_set_area_of_interest(PJ_DEFAULT_CTX, operation_factory_context,
+            thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
+      }
+      // find if a grid is missing; see https://north-road.com/wp-content/uploads/2020/01/on_gda2020_proj6_and_qgis_lessons_learnt_and_recommendations.pdf
+      proj_operation_factory_context_set_grid_availability_use(PJ_DEFAULT_CTX, operation_factory_context, PROJ_GRID_AVAILABILITY_IGNORED);
+      PJ_OBJ_LIST *ops = proj_create_operations(PJ_DEFAULT_CTX,
+          proj_create(PJ_DEFAULT_CTX, sanitize_crs(s).c_str()),
+          proj_create(PJ_DEFAULT_CTX, sanitize_crs(t).c_str()), operation_factory_context);
+      const char * short_name, * url;
+      if (proj_list_get_count(ops) < 1)
+        therror(("no usable coordinate transformation found"));
+      for (int i = 0; i < 1; i++) {   // let's look just at the first operation instead of up to proj_list_get_count(ops)
+        PJ* P_tmp = proj_list_get(PJ_DEFAULT_CTX, ops, i);
+  //      if (proj_coordoperation_has_ballpark_transformation(PJ_DEFAULT_CTX, P_tmp))
+  //        therror(("no reasonably precise coordinate transformation found"));
+        if (!proj_coordoperation_is_instantiable(PJ_DEFAULT_CTX, P_tmp)) {
+          for (int j = 0; j < proj_coordoperation_get_grid_used_count(PJ_DEFAULT_CTX, P_tmp); j++) {
+            proj_coordoperation_get_grid_used(PJ_DEFAULT_CTX, P_tmp, j,
+                &short_name, nullptr, nullptr, &url, nullptr, nullptr, nullptr);
+            string s_tmp = (string) "missing PROJ transformation grid '" + short_name + "'; you can download it from " +
+                          url + " and install it to a location where PROJ finds it";
+            switch (proj_auto_grid) {
+              case GRID_WARN:
+                thwarning((s_tmp.c_str()));
+                break;
+              case GRID_FAIL:
+                therror((s_tmp.c_str()));
+                break;
+#if PROJ_VER >= 7
+              case GRID_DOWNLOAD:
+                if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1))
+                  therror(("couldn't enable network access for Proj"));
+                thprintf("downloading the grid %s... ", url);
+                if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL))
+                  therror(("couldn't download the grid"));
+                if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0))  // disable the network to prevent Proj from automatic caching
+                  therror(("couldn't disable network access for Proj"));
+                thprintf("done\n", url);
+                break;
+#endif
+            }
           }
         }
+        proj_destroy(P_tmp);
       }
-
-      proj_destroy(P_tmp);
+      proj_operation_factory_context_destroy(operation_factory_context);
+      proj_list_destroy(ops);
+      // end of missing grid handling
     }
-    // end of grid handling
 
     PJ_AREA* PA = proj_area_create();
     if (thcs_bbox.size() == 4) {
       proj_area_set_bbox(PA, thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
     }
     P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, sanitize_crs(s).c_str(), sanitize_crs(t).c_str(), PA);
-    proj_operation_factory_context_destroy(operation_factory_context);
     proj_area_destroy(PA);
     if (P==0) {
       ostringstream u;
@@ -371,3 +387,23 @@ bool thcs_check(string s) {
   }
 
 #endif
+
+map<string,int> grid_map {
+  {"ignore", GRID_IGNORE},
+  {"warn", GRID_WARN},
+  {"fail", GRID_FAIL},
+  {"cache", GRID_CACHE},
+  {"download", GRID_DOWNLOAD},
+};
+int thcs_parse_gridhandling(const char * s) {
+  auto i = grid_map.find(string(s));
+  if (i != grid_map.end()) {
+    int res = i->second;
+#if PROJ_VER < 7
+    if (res == GRID_CACHE || res == GRID_DOWNLOAD)
+      res = GRID_FAIL;
+#endif
+    return res;
+  } else
+    return GRID_INVALID;
+}

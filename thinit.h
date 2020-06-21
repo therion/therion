@@ -65,7 +65,7 @@ class thinit {
   std::string font_src[5], font_dst[5];
   
   bool tex_env, fonts_ok, proj_auto;
-  int lang, loopc;
+  int lang, loopc, proj_missing_grid;
   
   thmbuffer cmb;  ///< Command parsing mbuffer.
   
@@ -141,6 +141,8 @@ class thinit {
   int get_encoding(int type = THINIT_ENCODING_DEFAULT);
 
   bool get_proj_auto();
+
+  int get_proj_missing_grid();
 
   void set_proj_lib_path();
 
