@@ -176,6 +176,11 @@ bool thcs_check(string s) {
     for (const auto & i : PJ_cache) proj_destroy(i);
   }
 
+#define DESTROY_NECESSARY \
+                proj_destroy(P_tmp); \
+                proj_list_destroy(ops); \
+                thcs_destroy_transf_used();
+
   string sanitize_crs(string s) {
 #if PROJ_VER > 5
     regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
@@ -238,12 +243,18 @@ bool thcs_check(string s) {
       }
       // find if a grid is missing; see https://north-road.com/wp-content/uploads/2020/01/on_gda2020_proj6_and_qgis_lessons_learnt_and_recommendations.pdf
       proj_operation_factory_context_set_grid_availability_use(PJ_DEFAULT_CTX, operation_factory_context, PROJ_GRID_AVAILABILITY_IGNORED);
-      PJ_OBJ_LIST *ops = proj_create_operations(PJ_DEFAULT_CTX,
-          proj_create(PJ_DEFAULT_CTX, sanitize_crs(s).c_str()),
-          proj_create(PJ_DEFAULT_CTX, sanitize_crs(t).c_str()), operation_factory_context);
+      PJ* P_1 = proj_create(PJ_DEFAULT_CTX, sanitize_crs(s).c_str());
+      PJ* P_2 = proj_create(PJ_DEFAULT_CTX, sanitize_crs(t).c_str());
+      PJ_OBJ_LIST *ops = proj_create_operations(PJ_DEFAULT_CTX, P_1, P_2, operation_factory_context);
+      proj_destroy(P_1);
+      proj_destroy(P_2);
+      proj_operation_factory_context_destroy(operation_factory_context);
       const char * short_name, * url;
-      if (proj_list_get_count(ops) < 1)
+      if (proj_list_get_count(ops) < 1) {
+        proj_list_destroy(ops);
+        thcs_destroy_transf_used();
         therror(("no usable coordinate transformation found"));
+      }
       for (int i = 0; i < 1; i++) {   // let's look just at the first operation instead of up to proj_list_get_count(ops)
         PJ* P_tmp = proj_list_get(PJ_DEFAULT_CTX, ops, i);
   //      if (proj_coordoperation_has_ballpark_transformation(PJ_DEFAULT_CTX, P_tmp))
@@ -259,17 +270,24 @@ bool thcs_check(string s) {
                 thwarning((s_tmp.c_str()));
                 break;
               case GRID_FAIL:
+                DESTROY_NECESSARY
                 therror((s_tmp.c_str()));
                 break;
 #if PROJ_VER >= 7
               case GRID_DOWNLOAD:
-                if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1))
+                if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
+                  DESTROY_NECESSARY
                   therror(("couldn't enable network access for Proj"));
+                }
                 thprintf("downloading the grid %s... ", url);
-                if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL))
+                if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL)) {
+                  DESTROY_NECESSARY
                   therror(("couldn't download the grid"));
-                if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0))  // disable the network to prevent Proj from automatic caching
+                }
+                if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
+                  DESTROY_NECESSARY
                   therror(("couldn't disable network access for Proj"));
+                }
                 thprintf("done\n", url);
                 break;
 #endif
@@ -278,7 +296,6 @@ bool thcs_check(string s) {
         }
         proj_destroy(P_tmp);
       }
-      proj_operation_factory_context_destroy(operation_factory_context);
       proj_list_destroy(ops);
       // end of missing grid handling
     }
