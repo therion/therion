@@ -37,6 +37,8 @@
 
 using namespace std;
 
+vector<double> thcs_bbox;
+
 #if PROJ_VER < 5
 
 #include <proj_api.h>
@@ -63,7 +65,7 @@ using namespace std;
 } */
 
 void thcs2cs(string s, string t,
-              double a, double b, double c, double &x, double &y, double &z, double unused1[], bool unused2) {
+              double a, double b, double c, double &x, double &y, double &z, bool unused) {
   projPJ P1, P2;
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
      therror(("Can't initialize input projection!"));
@@ -175,15 +177,16 @@ bool thcs_check(string s) {
 #if PROJ_VER > 5
 //#include <iostream>
 
-  void th_init_proj_auto(PJ * &P, string s, string t, double bbox[]) {
+  void th_init_proj_auto(PJ * &P, string s, string t) {
 
     PJ_OPERATION_FACTORY_CONTEXT *operation_factory_context = proj_create_operation_factory_context(PJ_DEFAULT_CTX, nullptr);
     // allow PROJ to find more potential transformations
     proj_operation_factory_context_set_spatial_criterion(PJ_DEFAULT_CTX, operation_factory_context, PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION);
     // set area of interest
-    if (bbox != nullptr) {
+    if (thcs_bbox.size() == 4) {
       proj_operation_factory_context_set_area_of_interest(PJ_DEFAULT_CTX, operation_factory_context, 
-           bbox[0], bbox[1], bbox[2], bbox[3]);
+           thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
+//cout << " BBOX " <<  thcs_bbox[0] << " " << thcs_bbox[1] << " " << thcs_bbox[2] << " " << thcs_bbox[3] << endl;
     }
     // find if a grid is missing; see https://north-road.com/wp-content/uploads/2020/01/on_gda2020_proj6_and_qgis_lessons_learnt_and_recommendations.pdf
     proj_operation_factory_context_set_grid_availability_use(PJ_DEFAULT_CTX, operation_factory_context, PROJ_GRID_AVAILABILITY_IGNORED);
@@ -231,8 +234,8 @@ bool thcs_check(string s) {
     // end of grid handling
 
     PJ_AREA* PA = proj_area_create();
-    if (bbox != nullptr) {
-      proj_area_set_bbox(PA, bbox[0], bbox[1], bbox[2], bbox[3]);
+    if (thcs_bbox.size() == 4) {
+      proj_area_set_bbox(PA, thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
     }
     P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, sanitize_crs(s).c_str(), sanitize_crs(t).c_str(), PA);
     proj_operation_factory_context_destroy(operation_factory_context);
@@ -258,7 +261,7 @@ bool thcs_check(string s) {
 
   void thcs2cs(string s, string t,
               double a, double b, double c, double &x, double &y, double &z, 
-              double bbox[], bool proj_auto) {
+              bool proj_auto) {
               // proj_auto is used for automated tests and pressuposes that proj-auto in the init file is false
 
     // TODO: support user-defined pipelines for a combination of CRSs
@@ -274,7 +277,7 @@ bool thcs_check(string s) {
     PJ* P = NULL;
 #if PROJ_VER > 5
     if (proj_auto || thini.get_proj_auto()) {  // let PROJ find the best transformation
-      th_init_proj_auto(P, s, t, bbox);
+      th_init_proj_auto(P, s, t);
       if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
         undo_radians = 180.0 / M_PI;
       }
