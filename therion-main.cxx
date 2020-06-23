@@ -230,9 +230,8 @@ int main(int argc, char * argv[]) {
     // log statistics
     thdb.db1d.print_loops();
     thdb.db2d.log_distortions();
-    // log CRS transformations & destroy them
+    // log CRS transformations
     thcs_log_transf_used();
-    thcs_destroy_transf_used();
 
 //#ifdef THMSVC
 //    getchar();

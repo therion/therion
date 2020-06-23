@@ -67,8 +67,6 @@ vector<double> thcs_bbox;
   pj_free(P2);
 } */
 
-void thcs_log_transf_used() {};
-void thcs_destroy_transf_used() {};
 
 void thcs2cs(string s, string t,
               double a, double b, double c, double &x, double &y, double &z, bool unused) {
@@ -146,40 +144,9 @@ bool thcs_check(string s) {
   #include <proj.h>
   #include <math.h>
   #include <sstream>
+  #include <iomanip>
   #include <regex>
   #include "thinit.h"
-
-
-  map<tuple<string,string,vector<double> >, PJ*> transf_cache;
-  set<PJ*> PJ_cache;
-
-  void thcs_log_transf_used() {
-#if PROJ_VER >= 6
-    if (transf_cache.size() == 0) return;
-    thlog.printf("\n############# CRS transformations chosen by PROJ ###############\n");
-    thlog.printf("  Area of Use (AoU): (%.3f, %.3f) (%.3f, %.3f)\n", thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
-    for (const auto & i : transf_cache) {
-      PJ_PROJ_INFO pinfo = proj_pj_info(i.second);
-      thlog.printf("  from: [%s] to: [%s] AoU: [%s] transformation: [%s] definition: [%s] accuracy: [%.3f m]\n",
-                                                    get<0>(i.first).c_str(),
-                                                    get<1>(i.first).c_str(),
-                                                    get<2>(i.first).size()>0 ? "yes" : "no",
-                                                    pinfo.description,
-                                                    pinfo.definition,
-                                                    pinfo.accuracy);
-    }
-    thlog.printf("########## end of CRS transformations chosen by PROJ ###########\n");
-#endif
-  };
-
-  void thcs_destroy_transf_used() {
-    for (const auto & i : PJ_cache) proj_destroy(i);
-  }
-
-#define DESTROY_NECESSARY \
-                proj_destroy(P_tmp); \
-                proj_list_destroy(ops); \
-                thcs_destroy_transf_used();
 
   string sanitize_crs(string s) {
 #if PROJ_VER > 5
@@ -195,6 +162,68 @@ bool thcs_check(string s) {
     return s;
 #endif
   }
+
+#if PROJ_VER >= 6
+class proj_cache {
+    map<tuple<string,string,vector<double> >, PJ*> transf_cache;
+    set<PJ*> PJ_cache;
+  public:
+    bool contains(PJ*);
+    PJ* get(string,string,vector<double>);
+    bool add(string,string,vector<double>, PJ*);
+    string log();
+    ~proj_cache();
+};
+
+PJ* proj_cache::get(string s, string t, vector<double> bbox) {
+  tuple<string,string,vector<double> > tr_c {sanitize_crs(s), sanitize_crs(t), bbox};
+  if (transf_cache.count(tr_c) == 1)
+    return transf_cache[tr_c];
+  else
+    return nullptr;
+}
+
+bool proj_cache::add(string s, string t, vector<double> bbox, PJ* P) {
+  tuple<string,string,vector<double> > tr_c {sanitize_crs(s), sanitize_crs(t), bbox};
+  if (transf_cache.count(tr_c) == 1) {
+    return false;
+  } else {
+    transf_cache[tr_c] = P;
+    PJ_cache.insert(P);
+    return true;
+  }
+}
+
+bool proj_cache::contains(PJ* P) {
+  return (PJ_cache.count(P) > 0);
+}
+
+string proj_cache::log() {
+    if (transf_cache.size() == 0) return "";
+    ostringstream s;
+    s << setprecision(3) << std::fixed;
+    s << endl << "############# CRS transformations chosen by PROJ ###############" << endl;
+    s << "  Area of Use (AoU): (" << thcs_bbox[0] << ", " << thcs_bbox[1] << ") (" <<
+                                     thcs_bbox[2] << ", " << thcs_bbox[3] << ")" << endl;
+    for (const auto & i : transf_cache) {
+      PJ_PROJ_INFO pinfo = proj_pj_info(i.second);
+      s << "  from: [" << std::get<0>(i.first).c_str() <<
+              "] to: [" << std::get<1>(i.first).c_str() <<
+              "] AoU: [" << (std::get<2>(i.first).size()>0 ? "yes" : "no") <<
+              "] transformation: [" << pinfo.description <<
+              "] definition: [" << pinfo.definition <<
+              "] accuracy: [" << pinfo.accuracy << " m]" << endl;
+    }
+    s << "########## end of CRS transformations chosen by PROJ ###########" << endl;
+    return s.str();
+}
+
+proj_cache::~proj_cache() {
+    for (const auto & i : PJ_cache) proj_destroy(i);
+}
+
+proj_cache cache;
+#endif
 
   void th_init_proj(PJ * &P, string s) {
 #if PROJ_VER > 5
@@ -213,14 +242,9 @@ bool thcs_check(string s) {
   void th_init_proj_auto(PJ * &P, string s, string t) {
 
     // check the cache first
-    tuple<string,string,vector<double> > tr_c {sanitize_crs(s), sanitize_crs(t), thcs_bbox};
-    if (transf_cache.count(tr_c) == 1) {
-      P = transf_cache[tr_c];
-      return;
-    }
+    if ((P = cache.get(s,t,thcs_bbox)) != nullptr) return;
 
     int proj_auto_grid = thini.get_proj_missing_grid();
-
     if
 #if PROJ_VER >= 7
     (proj_auto_grid == GRID_CACHE && !proj_context_is_network_enabled(PJ_DEFAULT_CTX)) {
@@ -252,7 +276,6 @@ bool thcs_check(string s) {
       const char * short_name, * url;
       if (proj_list_get_count(ops) < 1) {
         proj_list_destroy(ops);
-        thcs_destroy_transf_used();
         therror(("no usable coordinate transformation found"));
       }
       for (int i = 0; i < 1; i++) {   // let's look just at the first operation instead of up to proj_list_get_count(ops)
@@ -270,22 +293,26 @@ bool thcs_check(string s) {
                 thwarning((s_tmp.c_str()));
                 break;
               case GRID_FAIL:
-                DESTROY_NECESSARY
+                proj_destroy(P_tmp);
+                proj_list_destroy(ops);
                 therror((s_tmp.c_str()));
                 break;
 #if PROJ_VER >= 7
               case GRID_DOWNLOAD:
                 if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
-                  DESTROY_NECESSARY
+                  proj_destroy(P_tmp);
+                  proj_list_destroy(ops);
                   therror(("couldn't enable network access for Proj"));
                 }
                 thprintf("downloading the grid %s... ", url);
                 if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL)) {
-                  DESTROY_NECESSARY
+                  proj_destroy(P_tmp);
+                  proj_list_destroy(ops);
                   therror(("couldn't download the grid"));
                 }
                 if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
-                  DESTROY_NECESSARY
+                  proj_destroy(P_tmp);
+                  proj_list_destroy(ops);
                   therror(("couldn't disable network access for Proj"));
                 }
                 thprintf("done\n", url);
@@ -323,8 +350,8 @@ bool thcs_check(string s) {
     proj_destroy(P);
     P = P_for_GIS;
 
-    transf_cache[tr_c] = P;
-    PJ_cache.insert(P);
+    if (!cache.add(s,t,thcs_bbox,P))
+      therror(("could not add projection to the cache, it's already there -- should not happen"));
   }
 #endif
 
@@ -364,7 +391,10 @@ bool thcs_check(string s) {
     x = res.xyz.x*redo_radians;
     y = res.xyz.y*redo_radians;
     z = res.xyz.z;
-    if (PJ_cache.count(P) == 0) proj_destroy(P);  // cached Ps are destroyed in thcs_destroy_transf_used()
+#if PROJ_VER >= 6
+    if (!cache.contains(P))   // cached Ps are destroyed in proj_cache's destructor
+#endif
+      proj_destroy(P);
   }
 
   signed int thcs2zone(string s, double a, double b, double c) {
@@ -403,7 +433,7 @@ bool thcs_check(string s) {
     return true;
   }
 
-#endif
+#endif   // end of Proj 5+ branch
 
 map<string,int> grid_map {
   {"ignore", GRID_IGNORE},
@@ -423,4 +453,10 @@ int thcs_parse_gridhandling(const char * s) {
     return res;
   } else
     return GRID_INVALID;
+}
+
+void thcs_log_transf_used() {
+#if PROJ_VER >= 6
+  thlog.printf(cache.log().c_str());
+#endif
 }

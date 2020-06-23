@@ -38,7 +38,6 @@ double thcsconverg(std::string, double, double);
 bool thcs_islatlong(std::string);
 bool thcs_check(std::string);
 void thcs_log_transf_used();
-void thcs_destroy_transf_used();
 int thcs_parse_gridhandling(const char *);
 
 extern std::vector<double> thcs_bbox;

@@ -9,7 +9,5 @@ int main( int argc, char* argv[] ) {
 
   int result = Catch::Session().run( argc, argv );
 
-  thcs_destroy_transf_used();
-
   return result;
 }
