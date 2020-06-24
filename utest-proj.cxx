@@ -200,6 +200,14 @@ TEST_CASE( "EPSG_4326 -- EPSG_32634 auto=false", "[proj]" ) {  // LATLON -> UTM3
     CHECK(coord_equal(y, p1_utm_n, 0.02));
 }
 
+// null grid
+TEST_CASE( "s-merc -- EPSG_32634", "[proj]" ) {  // Pseudo Mercator -> UTM34N
+    thcs2cs(thcs_get_params(TTCS_S_MERC), thcs_get_params(TTCS_EPSG + 32634),
+        2187796.40, 6264051.68, 2025.44, x, y, z, false);
+    CHECK(coord_equal(x, p1_utm_e, 0.01));
+    CHECK(coord_equal(y, p1_utm_n, 0.01));
+    CHECK(coord_equal(z, p1_utm_h, 0.01));
+}
 
 /*
 // GRID
