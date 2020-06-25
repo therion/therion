@@ -409,8 +409,8 @@ class thdataleg {
 
   int walls, shape, gridcs;
   
-  class thdb1d_loop * loop; ///< Worst loop leg is a part of.
-  class thdb1d_traverse * traverse; ///< Centreline traverse, leg is a part of.
+  struct thdb1d_loop * loop; ///< Worst loop leg is a part of.
+  struct thdb1d_traverse * traverse; ///< Centreline traverse, leg is a part of.
 
   thobjectname station, from, to;
   class thsurvey * psurvey;  ///< parent survey
