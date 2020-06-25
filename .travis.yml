@@ -15,7 +15,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   brew update                     ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   brew tap homebrew/core          ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   brew unlink python@2            ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   brew install freetype wxmac vtk ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   brew install wxmac vtk          ; fi
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   export PATH=/usr/lib/mxe/usr/bin:$PATH   ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo sed -i '/pattern="PDF"/d' /etc/ImageMagick-6/policy.xml ; fi   # turn off policy preventing PDF conversion
