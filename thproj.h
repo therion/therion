@@ -28,8 +28,6 @@
 #include <string>
 #include <vector>
 
-//void thcs2utm(std::string, signed int, double, double, double, double &, double &, double &);
-
 enum {GRID_INVALID, GRID_IGNORE, GRID_WARN, GRID_FAIL, GRID_CACHE, GRID_DOWNLOAD};
 
 void thcs2cs(std::string, std::string, double, double, double, double &, double &, double &, bool=false);
