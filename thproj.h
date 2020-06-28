@@ -30,7 +30,7 @@
 
 enum {GRID_INVALID, GRID_IGNORE, GRID_WARN, GRID_FAIL, GRID_CACHE, GRID_DOWNLOAD};
 
-void thcs2cs(std::string, std::string, double, double, double, double &, double &, double &, bool=false);
+void thcs2cs(std::string, std::string, double, double, double, double &, double &, double &);
 signed int thcs2zone(std::string, double, double, double);
 double thcsconverg(std::string, double, double);
 bool thcs_islatlong(std::string);
@@ -39,6 +39,13 @@ void thcs_log_transf_used();
 int thcs_parse_gridhandling(const char *);
 std::string thcs_get_proj_version();
 
-extern std::vector<double> thcs_bbox;
+struct thcs_config {
+  thcs_config();
+  std::vector<double> bbox;
+  bool proj_auto;
+  int proj_auto_grid;
+};
+
+extern thcs_config thcs_cfg;
 
 #endif

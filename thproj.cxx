@@ -41,14 +41,19 @@
 
 using namespace std;
 
-vector<double> thcs_bbox;
+thcs_config::thcs_config() {
+  proj_auto = false;
+  proj_auto_grid = GRID_WARN;
+}
+
+thcs_config thcs_cfg;
 
 #if PROJ_VER < 5
 
 #include <proj_api.h>
 
 void thcs2cs(string s, string t,
-              double a, double b, double c, double &x, double &y, double &z, bool unused) {
+              double a, double b, double c, double &x, double &y, double &z) {
   projPJ P1, P2;
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
      therror(("Can't initialize input projection!"));
@@ -125,7 +130,6 @@ string thcs_get_proj_version() {
   #include <math.h>
   #include <sstream>
   #include <iomanip>
-  #include "thinit.h"
 
   string sanitize_crs(string s) {
 #if PROJ_VER > 5
@@ -182,8 +186,8 @@ string proj_cache::log() {
     ostringstream s;
     s << setprecision(3) << std::fixed;
     s << endl << "############# CRS transformations chosen by PROJ ###############" << endl;
-    s << "  Area of Use (AoU): (" << thcs_bbox[0] << ", " << thcs_bbox[1] << ") (" <<
-                                     thcs_bbox[2] << ", " << thcs_bbox[3] << ")" << endl;
+    s << "  Area of Use (AoU): (" << thcs_cfg.bbox[0] << ", " << thcs_cfg.bbox[1] << ") (" <<
+                                     thcs_cfg.bbox[2] << ", " << thcs_cfg.bbox[3] << ")" << endl;
     for (const auto & i : transf_cache) {
       PJ_PROJ_INFO pinfo = proj_pj_info(i.second);
       s << "  from: [" << std::get<0>(i.first).c_str() <<
@@ -221,12 +225,11 @@ proj_cache cache;
   void th_init_proj_auto(PJ * &P, string s, string t) {
 
     // check the cache first
-    if ((P = cache.get(s,t,thcs_bbox)) != nullptr) return;
+    if ((P = cache.get(s,t,thcs_cfg.bbox)) != nullptr) return;
 
-    int proj_auto_grid = thini.get_proj_missing_grid();
     if
 #if PROJ_VER >= 7
-    (proj_auto_grid == GRID_CACHE && !proj_context_is_network_enabled(PJ_DEFAULT_CTX)) {
+    (thcs_cfg.proj_auto_grid == GRID_CACHE && !proj_context_is_network_enabled(PJ_DEFAULT_CTX)) {
       if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
         therror(("couldn't enable network access for Proj"));
       }
@@ -234,15 +237,15 @@ proj_cache cache;
       thprintf("network access for Proj library enabled...\n");
     } else if
 #endif
-    (proj_auto_grid == GRID_WARN || proj_auto_grid == GRID_FAIL || proj_auto_grid == GRID_DOWNLOAD) {
+    (thcs_cfg.proj_auto_grid == GRID_WARN || thcs_cfg.proj_auto_grid == GRID_FAIL || thcs_cfg.proj_auto_grid == GRID_DOWNLOAD) {
       // start of missing grid detection
       PJ_OPERATION_FACTORY_CONTEXT *operation_factory_context = proj_create_operation_factory_context(PJ_DEFAULT_CTX, nullptr);
       // allow PROJ to find more potential transformations
       proj_operation_factory_context_set_spatial_criterion(PJ_DEFAULT_CTX, operation_factory_context, PROJ_SPATIAL_CRITERION_PARTIAL_INTERSECTION);
       // set area of interest
-      if (thcs_bbox.size() == 4) {
+      if (thcs_cfg.bbox.size() == 4) {
         proj_operation_factory_context_set_area_of_interest(PJ_DEFAULT_CTX, operation_factory_context,
-            thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
+            thcs_cfg.bbox[0], thcs_cfg.bbox[1], thcs_cfg.bbox[2], thcs_cfg.bbox[3]);
       }
       // find if a grid is missing; see https://north-road.com/wp-content/uploads/2020/01/on_gda2020_proj6_and_qgis_lessons_learnt_and_recommendations.pdf
       proj_operation_factory_context_set_grid_availability_use(PJ_DEFAULT_CTX, operation_factory_context, PROJ_GRID_AVAILABILITY_IGNORED);
@@ -267,7 +270,7 @@ proj_cache cache;
                 &short_name, nullptr, nullptr, &url, nullptr, nullptr, nullptr);
             string s_tmp = (string) "missing PROJ transformation grid '" + short_name + "'; you can download it from " +
                           url + " and install it to a location where PROJ finds it";
-            switch (proj_auto_grid) {
+            switch (thcs_cfg.proj_auto_grid) {
               case GRID_WARN:
                 thwarning((s_tmp.c_str()));
                 break;
@@ -307,8 +310,8 @@ proj_cache cache;
     }
 
     PJ_AREA* PA = proj_area_create();
-    if (thcs_bbox.size() == 4) {
-      proj_area_set_bbox(PA, thcs_bbox[0], thcs_bbox[1], thcs_bbox[2], thcs_bbox[3]);
+    if (thcs_cfg.bbox.size() == 4) {
+      proj_area_set_bbox(PA, thcs_cfg.bbox[0], thcs_cfg.bbox[1], thcs_cfg.bbox[2], thcs_cfg.bbox[3]);
     }
     P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, sanitize_crs(s).c_str(), sanitize_crs(t).c_str(), PA);
     proj_area_destroy(PA);
@@ -329,15 +332,13 @@ proj_cache cache;
     proj_destroy(P);
     P = P_for_GIS;
 
-    if (!cache.add(s,t,thcs_bbox,P))
+    if (!cache.add(s,t,thcs_cfg.bbox,P))
       therror(("could not add projection to the cache, it's already there -- should not happen"));
   }
 #endif
 
   void thcs2cs(string s, string t,
-              double a, double b, double c, double &x, double &y, double &z, 
-              bool proj_auto) {
-              // proj_auto is used for automated tests and pressuposes that proj-auto in the init file is false
+              double a, double b, double c, double &x, double &y, double &z) {
 
     // TODO: support user-defined pipelines for a combination of CRSs
     // for high-precision transformations
@@ -351,7 +352,7 @@ proj_cache cache;
     double undo_radians = 1.0, redo_radians = 1.0;
     PJ* P = NULL;
 #if PROJ_VER > 5
-    if (proj_auto || thini.get_proj_auto()) {  // let PROJ find the best transformation
+    if (thcs_cfg.proj_auto) {  // let PROJ find the best transformation
       th_init_proj_auto(P, s, t);
       if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
         undo_radians = 180.0 / M_PI;
@@ -444,3 +445,4 @@ void thcs_log_transf_used() {
   thlog.printf(cache.log().c_str());
 #endif
 }
+
