@@ -33,6 +33,7 @@
 #include <cmath>
 #include <map>
 #include <set>
+#include <regex>
 
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
@@ -111,13 +112,19 @@ bool thcs_check(string s) {
   return true;
 }
 
+string thcs_get_proj_version() {
+  string s = pj_get_release();
+  smatch match;
+  regex_search(s, match, regex(R"(\d+\.\d+\.\d+)"));
+  return match[0];
+}
+
 #else    // PROJ 5 and newer
 
   #include <proj.h>
   #include <math.h>
   #include <sstream>
   #include <iomanip>
-  #include <regex>
   #include "thinit.h"
 
   string sanitize_crs(string s) {
@@ -403,6 +410,11 @@ proj_cache cache;
     th_init_proj(P, s);
     proj_destroy(P);
     return true;
+  }
+
+  string thcs_get_proj_version() {
+    PJ_INFO info = proj_info();
+    return string(info.version);
   }
 
 #endif   // end of Proj 5+ branch

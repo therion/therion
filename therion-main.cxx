@@ -85,6 +85,7 @@ int main(int argc, char * argv[]) {
     {
       thprintf(thversion_format, thversion_text);
       thprintf("\n");
+      thprintf("  - using Proj %s\n", thcs_get_proj_version().c_str());
       thexit(EXIT_SUCCESS);
     }
 
@@ -119,6 +120,7 @@ int main(int argc, char * argv[]) {
     // print version information
     thprintf(thversion_format, thversion_text);
     thprintf("\n");
+    thlog.printf("  - using Proj %s\n", thcs_get_proj_version().c_str());
     
     // load initialization file
     thini.load();

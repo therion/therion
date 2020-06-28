@@ -37,6 +37,7 @@ bool thcs_islatlong(std::string);
 bool thcs_check(std::string);
 void thcs_log_transf_used();
 int thcs_parse_gridhandling(const char *);
+std::string thcs_get_proj_version();
 
 extern std::vector<double> thcs_bbox;
 
