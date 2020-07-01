@@ -124,6 +124,16 @@ string thcs_get_proj_version() {
   return match[0];
 }
 
+string thcs_get_proj_version_headers() {
+  ostringstream s;
+  string ver = to_string(PJ_VERSION);
+  for(int i = 0; i < 3; i++) {
+    s << ver[i];
+    if (i < 2) s << ".";
+  }
+  return s.str();
+}
+
 #else    // PROJ 5 and newer
 
   #include <proj.h>
@@ -416,6 +426,10 @@ proj_cache cache;
   string thcs_get_proj_version() {
     PJ_INFO info = proj_info();
     return string(info.version);
+  }
+
+  string thcs_get_proj_version_headers() {
+    return to_string(PROJ_VERSION_MAJOR)+"."+to_string(PROJ_VERSION_MINOR)+"."+to_string(PROJ_VERSION_PATCH);
   }
 
 #endif   // end of Proj 5+ branch
