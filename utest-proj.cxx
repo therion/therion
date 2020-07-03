@@ -86,7 +86,7 @@ TEST_CASE( "projections: JTSK03 -- utm, auto=true", "[proj]" ) {
     thcs_cfg.proj_auto = false;
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_utm_h, 0.1));
+    CHECK(coord_equal(z, p1_utm_h, 0.2));
 }
 
 TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
