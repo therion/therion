@@ -249,12 +249,13 @@ clean:
 cleanrest:
 	$(MAKE) -C ./xtherion clean
 	$(MAKE) -C ./loch clean
-	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thsymbolsets.cxx thsymbolsets.h thlangdata.cxx thchencdata.h
+	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thsymbolsets.cxx thsymbolsets.h thlangdata.cxx thchencdata.h SYMBOLS.txt
 	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl thversion.h thbook/version.tex
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
-	perl makefile.pl rm -q extern/*.o extern/*~ extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
+	perl makefile.pl rm -q extern/*.o extern/*~ extern/quickhull/*.o extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
 	perl makefile.pl rm -q symbols.html therion.res
 	perl makefile.pl rm -q tri/*.o tri/*~
+	perl makefile.pl rm -q utest
 	perl makefile.pl rm -q tex/*~
 	perl makefile.pl rm -q us.stackdump loch/us.stackdump samples/us.stackdump xtherion/us.stackdump
 	perl makefile.pl rm -q mpost/*~ examples/*~ examples/therion.log
