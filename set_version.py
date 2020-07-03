@@ -16,7 +16,7 @@ try:
   if release.startswith('v'):   # release number if the commit is tagged
     ver = "%s (%s)" % (release[1:], date) 
   else:                         # otherwise last known tag + short commit hash
-    prevver = run('git describe --abbrev=0 --tags master')
+    prevver = run('git describe --abbrev=0 --tags HEAD')
     commit = run('git rev-parse --short HEAD')
     ver = "%s+%s (%s)" % (prevver[1:], commit, date)
 except:   # no git version available

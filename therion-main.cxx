@@ -85,6 +85,8 @@ int main(int argc, char * argv[]) {
     {
       thprintf(thversion_format, thversion_text);
       thprintf("\n");
+      thprintf("  - using Proj %s, compiled against %s\n", thcs_get_proj_version().c_str(),
+                                                         thcs_get_proj_version_headers().c_str());
       thexit(EXIT_SUCCESS);
     }
 
@@ -119,6 +121,11 @@ int main(int argc, char * argv[]) {
     // print version information
     thprintf(thversion_format, thversion_text);
     thprintf("\n");
+    thlog.printf("  - using Proj %s, compiled against %s\n", thcs_get_proj_version().c_str(),
+                                                         thcs_get_proj_version_headers().c_str());
+    if (thcs_get_proj_version() != thcs_get_proj_version_headers())
+      thwarning(("Proj version mismatch: using %s, compiled against %s", thcs_get_proj_version().c_str(),
+                                                         thcs_get_proj_version_headers().c_str()));
     
     // load initialization file
     thini.load();

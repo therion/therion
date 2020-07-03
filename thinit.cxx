@@ -88,8 +88,6 @@ thinit::thinit()
 {
   this->fonts_ok = false;
   this->tex_env = false;
-  this->proj_auto = false;
-  this->proj_missing_grid = GRID_WARN;
   this->lang = THLANG_UNKNOWN;
 	this->loopc = THINIT_LOOPC_UNKNOWN;
 }
@@ -535,14 +533,14 @@ void thinit::load()
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
             ththrow(("invalid proj-auto switch -- %s", args[1]))
-          this->proj_auto = (sv == TT_TRUE);
+          thcs_cfg.proj_auto = (sv == TT_TRUE);
           break;
 
         case TTIC_PROJ_MISSING_GRID:
           sv = thcs_parse_gridhandling(args[1]);
           if (sv == GRID_INVALID)
             ththrow(("invalid proj-missing-grid switch -- %s", args[1]))
-          this->proj_missing_grid = sv;
+          thcs_cfg.proj_auto_grid = sv;
           break;
 
         case TTIC_TEXT:
@@ -769,15 +767,6 @@ char * thinit::get_path_otftotfm()
   return this->path_otftotfm.get_buffer();
 }
 
-bool thinit::get_proj_auto()
-{
-  return this->proj_auto;
-}
-
-int thinit::get_proj_missing_grid()
-{
-  return this->proj_missing_grid;
-}
 
 void thinit::set_proj_lib_path() {  // set PROJ library resources path
 #ifdef THWIN32
