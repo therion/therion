@@ -1,13 +1,17 @@
-Therion 5.5.1 (in progress):
+Therion 5.5.1 (2020-07-03):
 
 therion:
  * duplicate shot length removed from expored individual team member statistics
  * improved Proj support in auto mode (automatic specification of the area of use;
-   caching and logging of the used transformations)
+   caching and logging of the used transformations) and in the Windows build
  * added support for handling of missing coordinate transformation grids
    (see the proj-missing-grid init file option)
  * support for linking with multiple Proj versions to improve testing
    (see test_proj.sh)
+ * improved mingw-w64 compatibility
+ * bux fixed
+   - various memory-related fixes by Matěj Plch
+   - workaround for Proj 7.1.0 axes swap in Krovak's projection
 
 --------------------------------------------------------------------------------
 
