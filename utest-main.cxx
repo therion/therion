@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_RUNNER
-#include "extern/catch2/catch.hpp"
+#include <catch2/catch.hpp>
 #include "thinit.h"
 
 int main( int argc, char* argv[] ) {

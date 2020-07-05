@@ -1,4 +1,4 @@
-#include "extern/catch2/catch.hpp"
+#include <catch2/catch.hpp>
 #include <cmath>
 
 #include "thproj.h"
