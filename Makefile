@@ -253,7 +253,7 @@ cleanrest:
 	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl thversion.h thbook/version.tex
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
 	perl makefile.pl rm -q extern/*.o extern/*~ extern/quickhull/*.o extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
-	perl makefile.pl rm -q symbols.html therion.res
+	perl makefile.pl rm -q symbols.html therion.res innosetup.ini
 	perl makefile.pl rm -q tri/*.o tri/*~
 	perl makefile.pl rm -q utest
 	perl makefile.pl rm -q tex/*~
