@@ -4,6 +4,8 @@ therion:
  * bux fixed
    - use proper ISO code for Czech language ('cs' instead of 'cz') [#251];
      'cz' is still allowed in the map layout for backwards compatibility
+   - pdftex included in the windows installer failed to find images with
+     '/./' or '/../' in the file path
 
 --------------------------------------------------------------------------------
 
