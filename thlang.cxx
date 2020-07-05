@@ -68,6 +68,8 @@ int thlang_parse(const char * str) {
   // map this to the correct code for backward compatibility.
   if (strcmp(str, "en_UK") == 0) {
     str = "en_GB";
+  } else if (strcmp(str, "cz") == 0) {  // incorect code "cz" used for Czech since 2004
+    str = "cs";
   }
   return thmatch_token(str, thtt_lang);
 }

@@ -30,7 +30,7 @@ def s_northarrow_SKBB_old (expr rot) =
   tmp_pic = image (
     begingroup
       interim defaultscale:=3;
-      label(if (lang="sk") or (lang="cz"): "S" else: "N" fi, origin);
+      label(if (lang="sk") or (lang="cs"): "S" else: "N" fi, origin);
     endgroup;
     drawarrow (0,-1cm)--(0,1cm);
   );
