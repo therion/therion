@@ -97,6 +97,16 @@ TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
     CHECK(coord_equal(z, p1_utm_h, 0.1));
 }
 
+TEST_CASE( "projections: +krovak +czech -- utm, auto=true", "[proj]" ) {
+    thcs_cfg.proj_auto = true;
+    thcs2cs("+proj=krovak +czech +ellps=bessel +lat_0=49.5 +lon_0=24.833333333333333333 +k=0.9999 +towgs84=485.021,169.465,483.839,7.786342,4.397554,4.102655,0", thcs_get_params(TTCS_UTM34N),
+            p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
+    thcs_cfg.proj_auto = false;
+    CHECK(coord_equal(x, p1_utm_e, 0.01));
+    CHECK(coord_equal(y, p1_utm_n, 0.01));
+    CHECK(coord_equal(z, p1_utm_h, 0.2));
+}
+
 TEST_CASE( "projections: iJTSK03 -- utm, auto=true", "[proj]" ) {
     thcs_cfg.proj_auto = true;
     thcs2cs(thcs_get_params(TTCS_IJTSK03), thcs_get_params(TTCS_UTM34N),
