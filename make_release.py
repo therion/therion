@@ -41,6 +41,9 @@ if raw_input(banner) == 'yes':
           break
         else:
           msg += l.replace('"',r'\"').replace('$',r'\$')
+  # check the branch
+  if subprocess.check_output('git rev-parse --abbrev-ref HEAD', shell=True) != b'master\n':
+    err('you are not on master branch')
   # check for uncommited changes
   subprocess.check_call('git pull', shell=True)
   if subprocess.check_output('git status -s', shell=True):

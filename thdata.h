@@ -362,6 +362,13 @@ class thdata : public thdataobject {
    
   void complete_dimensions();
   
+  /**
+   * Convert all points in object.
+   */
+
+  virtual void convert_all_cs();
+
+
 };
 
 

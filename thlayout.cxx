@@ -74,6 +74,7 @@ thlayout::thlayout()
   this->ox = thnan;
   this->oy = thnan;
   this->oz = thnan;
+  this->o_cs = TTCS_LOCAL;
 
   this->def_size = 0;
   this->hsize = 0.18;
@@ -95,6 +96,8 @@ thlayout::thlayout()
   this->gox = thnan;
   this->goy = thnan;
   this->goz = thnan;
+  this->go_cs = TTCS_LOCAL;
+
   
   this->def_grid_size = 0;
   this->gxs = thnan;
@@ -623,7 +626,8 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 
     case TT_LAYOUT_ORIGIN:
       //this->parse_len(this->ox, this->oy, this->oz, 3, args, -1);
-      this->convert_cs(args[0], args[1], this->ox, this->oy);
+      this->o_cs = this->cs;
+      this->read_cs(args[0], args[1], this->ox, this->oy, false);
       if (this->cs == TTCS_LOCAL) {
         this->parse_len(this->ox, this->oy, this->oz, 3, args, -1);
       } else {
@@ -695,7 +699,8 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     
 
     case TT_LAYOUT_GRID_ORIGIN:
-      this->convert_cs(args[0], args[1], this->gox, this->goy);
+      this->go_cs = this->cs;
+      this->read_cs(args[0], args[1], this->gox, this->goy, false);
       if (this->cs == TTCS_LOCAL) {
         this->parse_len(this->gox, this->goy, this->goz, 3, args, -1);
       } else {
@@ -1717,7 +1722,8 @@ void thlayout::process_copy() {
         this->base_scale = srcl->base_scale;
       endcopy
 
-      begcopy(def_origin) 
+      begcopy(def_origin)
+        this->o_cs = srcl->o_cs;
         this->ox = srcl->ox;
         this->oy = srcl->oy;
         this->oz = srcl->oz;
@@ -1746,6 +1752,7 @@ void thlayout::process_copy() {
       endcopy
   
       begcopy(def_grid_origin)
+        this->go_cs = srcl->go_cs;
         this->gox = srcl->gox;
         this->goy = srcl->goy;
         this->goz = srcl->goz;
@@ -2203,5 +2210,11 @@ void thlayout::export_mptex_font_size(FILE * o, th2ddataobject * obj, bool print
 
 }
 
+void thlayout::convert_all_cs() {
+	if (!thisnan(this->ox))
+		this->convert_cs(this->o_cs, this->ox, this->oy, this->ox, this->oy);
+	if (!thisnan(this->gox))
+		this->convert_cs(this->go_cs, this->gox, this->goy, this->gox, this->goy);
+}
 
 

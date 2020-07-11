@@ -146,6 +146,12 @@ thconfig::thconfig()
   this->tmp3dMAXDIMD = 5.0;
   this->sketch_warp = THSKETCH_WARP_IDLINE;
 
+  this->ibbx[0] = thnan;
+  this->ibbx[1] = thnan;
+  this->ibbx[2] = thnan;
+  this->ibbx[3] = thnan;
+  this->ibbx_def = false;
+
 #ifdef THWIN32
   thbuffer * tmpbf = &(this->bf1);
   // set search path according to Windows registers

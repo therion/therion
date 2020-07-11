@@ -108,6 +108,9 @@ class thconfig {
   thexporter exporter;  ///< Data exporter.
   thselector selector;  ///< Database selector.
 
+  double ibbx[4]; ///< Input bounding box.
+  bool ibbx_def; ///< Input bounding box defined.
+
   /**
    * Standard constructor.
    */

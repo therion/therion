@@ -141,6 +141,7 @@ thdatafix::thdatafix()
   this->cxy = thnan;
   this->cyz = thnan;
   this->cxz = thnan;
+  this->cs = TTCS_LOCAL;
 }
 
 
