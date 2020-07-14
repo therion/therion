@@ -199,7 +199,7 @@ sub write_sources {
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */
-
+#pragma once
 
 $languages
 
@@ -217,6 +217,9 @@ ENDOUT
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */
 
+#include "thlangdata.h"
+#include "thparse.h"
+#include <cstddef>
 
 typedef const char * thlang_pchar;
 
