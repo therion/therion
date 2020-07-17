@@ -168,7 +168,7 @@ outdirs:
 	mkdir -p $(OUTDIR)/thbook
 
 version:
-	python3 set_version.py
+	python3 set_version.py .
 	echo "[PROJ]" > innosetup.ini && echo "version=$(PROJ_MVER)" >> innosetup.ini
 
 $(OUTDIR)/therion: version $(OBJECTS)
