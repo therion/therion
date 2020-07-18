@@ -92,7 +92,7 @@ struct MP_text {
 
 struct MP_setting {
   int command;
-  double data[3];
+  double data[4];
 //  string str;
   list<float> dasharray;
   float dashoffset;
@@ -104,7 +104,7 @@ struct MP_setting {
 enum {MP_lineto, MP_moveto, MP_curveto, MP_rlineto};
 enum {MP_fill, MP_stroke, MP_fillstroke, MP_clip};
 
-enum {MP_linejoin, MP_linecap, MP_miterlimit, MP_gray, MP_rgb,
+enum {MP_linejoin, MP_linecap, MP_miterlimit, MP_gray, MP_rgb, MP_cmyk,
       MP_pattern, MP_transp, MP_dash, MP_linewidth};
 
 enum {MP_notransf, MP_scale, MP_translate, MP_concat};
