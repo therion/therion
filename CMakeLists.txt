@@ -1,0 +1,98 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(Therion)
+set(CMAKE_CXX_STANDARD 14)
+
+include(cmake/Dependencies.cmake)
+include(cmake/TherionSources.cmake)
+
+set(CROSS "")
+
+# copy files needed by some build steps
+file(COPY thcsdata.tcl thsymbolsetfont.txt DESTINATION ${CMAKE_BINARY_DIR})
+
+# generate thcsdata sources
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thcsdata.h
+                          ${CMAKE_BINARY_DIR}/thcsdata.cxx
+                   COMMAND tclsh 
+                   ARGS thcsdata.tcl ${CROSS}
+                   DEPENDS ${CMAKE_BINARY_DIR}/thcsdata.tcl
+                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+add_custom_target(generate_thcsdata DEPENDS
+    ${CMAKE_BINARY_DIR}/thcsdata.h
+    ${CMAKE_BINARY_DIR}/thcsdata.cxx
+)
+
+# generate thlibrarydata sources
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thlibrarydata.cxx
+                   COMMAND perl
+                   ARGS ${CMAKE_SOURCE_DIR}/makefile.pl cp ${CMAKE_SOURCE_DIR}/thlibrarydata.src ${CMAKE_BINARY_DIR}/thlibrarydata.cxx
+                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+add_custom_target(generate_thlibrarydata DEPENDS ${CMAKE_BINARY_DIR}/thlibrarydata.cxx)
+
+# generate thsymbolsetlist sources
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
+    COMMAND perl
+    ARGS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl
+    DEPENDS ${CMAKE_SOURCE_DIR}/thsymbolsetlist.pl 
+            ${CMAKE_BINARY_DIR}/mpost/thTrans.mp
+            ${CMAKE_BINARY_DIR}/thsymbolsetfont.txt
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
+
+# generate version files
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thversion.h
+                          ${CMAKE_BINARY_DIR}/thbook/version.tex
+                   COMMAND python3
+                   ARGS set_version.py ${CMAKE_BINARY_DIR}
+                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+add_custom_target(generate_version DEPENDS ${CMAKE_BINARY_DIR}/thversion.h ${CMAKE_BINARY_DIR}/thbook/version.tex)
+add_custom_target(version python3 ${CMAKE_SOURCE_DIR}/set_version.py
+                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+# tell CMake which files must be generated
+set_source_files_properties(
+    ${CMAKE_BINARY_DIR}/thversion.h
+    ${CMAKE_BINARY_DIR}/thcsdata.h
+    ${CMAKE_BINARY_DIR}/thcsdata.cxx
+    ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
+    PROPERTIES GENERATED TRUE 
+)
+
+# therion lib
+add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
+target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" ${PROJ_INCLUDE_DIRS})
+target_link_libraries(therion-common PUBLIC ${PROJ4_LIBRARIES} loch-common)
+target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER})
+add_dependencies(therion-common 
+    generate_thsymbolsetlist
+    generate_thlang
+    generate_tex
+    generate_thlibrarydata
+    generate_mpost
+    generate_thchencdata
+    generate_thcsdata
+    generate_version
+)
+
+# therion executable
+add_executable(therion therion-main.cxx)
+target_link_libraries(therion PUBLIC therion-common)
+
+# unit tests
+add_executable(utest utest-proj.cxx utest-main.cxx)
+target_link_libraries(utest PUBLIC therion-common)
+enable_testing()
+add_test(NAME utest COMMAND ${CMAKE_BINARY_DIR}/utest WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+
+# add subdirectories to the build
+add_subdirectory(mpost)
+add_subdirectory(thchencdata)
+add_subdirectory(tex)
+add_subdirectory(thlang)
+add_subdirectory(loch)
