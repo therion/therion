@@ -10,7 +10,10 @@ import subprocess, datetime, re, sys, pathlib
 def run(s):
   return subprocess.check_output(s, shell=True).strip().decode('ascii')
 
-output_folder = pathlib.PurePath(sys.argv[1])
+if len(sys.argv) > 1:
+  output_folder = pathlib.PurePath(sys.argv[1])
+else:
+  output_folder = pathlib.PurePath('.')
 
 try:
   release = run('git tag --points-at HEAD') # check for a TAG in the current commit
