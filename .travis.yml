@@ -32,6 +32,7 @@ before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo sed -i '/pattern="PDF"/d' /etc/ImageMagick-6/policy.xml ; fi   # turn off policy preventing PDF conversion
 script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make config-debian              ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   mkdir build; cd build; cmake ..; make -j4; make test; cd ..  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make                            ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   ./therion --print-symbols       ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make samples                    ; fi
@@ -40,6 +41,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make config-win32cross          ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make                            ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   make config-macosx              ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   mkdir build; cd build; cmake ..; make -j4; make test; cd ..  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   make ./therion                  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   make loch/loch                  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   make tests                      ; fi
