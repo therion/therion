@@ -6,6 +6,25 @@ set(CMAKE_CXX_STANDARD 14)
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
 
+# tell CMake which files must be generated now, doing so in subfolders is too late
+set_source_files_properties(
+    ${CMAKE_BINARY_DIR}/thchencdata.h
+    ${CMAKE_BINARY_DIR}/thchencdata.cxx
+    ${CMAKE_BINARY_DIR}/thlangdata.h
+    ${CMAKE_BINARY_DIR}/thlangdata.cxx
+    ${CMAKE_BINARY_DIR}/thmpost.h 
+    ${CMAKE_BINARY_DIR}/thmpost.cxx
+    ${CMAKE_BINARY_DIR}/thsymbolsets.h
+    ${CMAKE_BINARY_DIR}/thsymbolsets.cxx
+    ${CMAKE_BINARY_DIR}/thversion.h
+    ${CMAKE_BINARY_DIR}/thcsdata.h
+    ${CMAKE_BINARY_DIR}/thcsdata.cxx
+    ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
+    ${CMAKE_BINARY_DIR}/thtex.h
+    ${CMAKE_BINARY_DIR}/thtex.cxx
+    PROPERTIES GENERATED TRUE 
+)
+
 set(CROSS "")
 
 # copy files needed by some build steps
@@ -53,15 +72,6 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thversion.h
 add_custom_target(generate_version DEPENDS ${CMAKE_BINARY_DIR}/thversion.h ${CMAKE_BINARY_DIR}/thbook/version.tex)
 add_custom_target(version python3 ${CMAKE_SOURCE_DIR}/set_version.py
                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-
-# tell CMake which files must be generated
-set_source_files_properties(
-    ${CMAKE_BINARY_DIR}/thversion.h
-    ${CMAKE_BINARY_DIR}/thcsdata.h
-    ${CMAKE_BINARY_DIR}/thcsdata.cxx
-    ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
-    PROPERTIES GENERATED TRUE 
 )
 
 # therion lib

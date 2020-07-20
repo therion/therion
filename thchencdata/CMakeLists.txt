@@ -6,11 +6,6 @@ set(GENERATED_SOURCES
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
 )
 
-set_source_files_properties(
-    ${GENERATED_SOURCES}
-    PROPERTIES GENERATED TRUE 
-)
-
 add_custom_command(OUTPUT ${GENERATED_SOURCES}
                    COMMAND perl 
                    ARGS generate.pl
