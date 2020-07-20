@@ -11,9 +11,9 @@ def run(s):
   return subprocess.check_output(s, shell=True).strip().decode('ascii')
 
 if len(sys.argv) > 1:
-  output_folder = pathlib.PurePath(sys.argv[1])
+  output_folder = pathlib.Path(sys.argv[1])
 else:
-  output_folder = pathlib.PurePath('.')
+  output_folder = pathlib.Path('.')
 
 try:
   release = run('git tag --points-at HEAD') # check for a TAG in the current commit
@@ -52,5 +52,6 @@ newver = '#define THVERSION "%s"\n' % ver
 if (oldver != newver):
   with open(output_folder / 'thversion.h','w') as f:
     f.write(newver)
+  (output_folder / 'thbook/').mkdir(parents=True, exist_ok=True)
   with open(output_folder / 'thbook/version.tex','w') as f:
     f.write('%s\n' % ver)
