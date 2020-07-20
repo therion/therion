@@ -76,7 +76,7 @@ add_custom_target(version python3 ${CMAKE_SOURCE_DIR}/set_version.py
 
 # therion lib
 add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
-target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" ${PROJ_INCLUDE_DIRS})
+target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern" ${PROJ_INCLUDE_DIRS})
 target_link_libraries(therion-common PUBLIC ${PROJ4_LIBRARIES} loch-common)
 target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER})
 add_dependencies(therion-common 
