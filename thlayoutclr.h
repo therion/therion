@@ -29,18 +29,28 @@
 #ifndef thlayoutclr_h
 #define thlayoutclr_h
 
+enum {
+  TT_LAYOUTCLRMODEL_GRAY = 1,
+  TT_LAYOUTCLRMODEL_RGB = 2,
+  TT_LAYOUTCLRMODEL_CMYK = 4,
+};
+
+
+
 /**
  * layout color class.
  */
 
 struct thlayout_color {
-  double R, G, B, A;
+  double R, G, B, A, C, M, Y, K, W;
   int defined;
+  unsigned model;
   void parse(char * str, bool aalpha = false);
-  thlayout_color() : R(1.0), G(1.0), B(1.0), A(1.0), defined(0) {}
-  thlayout_color(double v) : R(v), G(v), B(v), A(1.0), defined(0) {}
-  thlayout_color(double r, double g, double b) : R(r), G(g), B(b), A(1.0), defined(0) {}
+  thlayout_color() : R(1.0), G(1.0), B(1.0), A(1.0), C(0.0), M(0.0), Y(0.0), K(0.0), W(1.0), defined(0), model(TT_LAYOUTCLRMODEL_RGB) {}
+  thlayout_color(double v) : R(v), G(v), B(v), A(1.0), C(0.0), M(0.0), Y(0.0), K(1.0 - v), W(v), defined(0), model(TT_LAYOUTCLRMODEL_GRAY) {}
+  thlayout_color(double r, double g, double b) : R(r), G(g), B(b), A(1.0), C(0.0), M(0.0), Y(0.0), K(0.0), W(0.0), defined(0), model(TT_LAYOUTCLRMODEL_RGB) {}
   bool is_defined();
+  void RGBtoGRAYSCALE();
 };
 
 #endif
