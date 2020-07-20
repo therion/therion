@@ -557,7 +557,7 @@ class thdataextend {
 	
 	public:
 	
-	thobjectname to, from;
+	thobjectname to, from, before;
 
   class thsurvey * psurvey;  ///< parent survey
 

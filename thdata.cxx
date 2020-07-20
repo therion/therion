@@ -2516,6 +2516,9 @@ void thdata::set_data_flags(int nargs, char ** args)
 void thdata::set_data_extend(int nargs, char ** args)
 {
   int cextend;
+  unsigned from_index, to_index;
+  from_index = 1;
+  to_index = 2;
   thdataextend dumm;
   cextend = thmatch_token(args[0], thtt_extendflag);
   if (cextend == TT_EXTENDFLAG_UNKNOWN)
@@ -2527,12 +2530,16 @@ void thdata::set_data_extend(int nargs, char ** args)
       }
       this->d_extend |= cextend;
       break;
+    case 4:
+	    thparse_objectname(dumm.before, & this->db->buff_stations, args[1], this);
+	    to_index = 3;
+	    from_index = 2;
     case 3:
       // parsnut mena to bodu
-	    thparse_objectname(dumm.to, & this->db->buff_stations, args[2], this);
+	    thparse_objectname(dumm.to, & this->db->buff_stations, args[to_index], this);
     case 2:
       // parsnut meno from bodu a prida
-	    thparse_objectname(dumm.from, & this->db->buff_stations, args[1], this);
+	    thparse_objectname(dumm.from, & this->db->buff_stations, args[from_index], this);
       dumm.extend = cextend;
       dumm.srcf = this->db->csrc;
       dumm.psurvey = this->db->get_current_survey();
