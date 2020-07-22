@@ -128,15 +128,6 @@ numeric last_write;
 last_write = -1;
 
 % @VARIABLE
-% strut_string --
-%
-% <I>string</I> containing combination of the "highest" and "lowest" character
-% in used font; it's used by <A HREF="">free_text</A> macro.
-
-%string strut_string;
-%strut_string = "(È";
-
-% @VARIABLE
 % file_name --
 %
 % <I>string</I>, name of file, where <I>write_bbox</I> macro writes

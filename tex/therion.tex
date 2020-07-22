@@ -559,30 +559,30 @@
 %% Petr Olsak's multicolumn macros (slightly modified)
 
 \newdimen\colsep  \colsep=1em % horiz. mezera mezi sloupci
-\newcount\tempnum             % pracovní promìnná
+\newcount\tempnum             % pracovnÃ­ promÄ›nnÃ¡
 \splittopskip=\baselineskip
-\def\roundtolines #1{%% zaokrouhlí na celé násobky vel. øádku
+\def\roundtolines #1{%% zaokrouhlÃ­ na celÃ© nÃ¡sobky vel. Å™Ã¡dku
    \divide #1 by\baselineskip \multiply #1 by\baselineskip}
 \def\corrsize #1{%% #1 := #1 + \splittopskip - \topskip
    \advance #1 by \splittopskip \advance #1 by-\topskip}
 
 \def\begmulti#1{\par\bigskip\penalty0 \def\Ncols{#1}
    \setbox0=\vbox\bgroup\penalty0
-   %% \hsize := ¹íøka sloupce = (\hsize+\colsep) / n - \colsep
+   %% \hsize := Å¡Ã­Å™ka sloupce = (\hsize+\colsep) / n - \colsep
    \advance\hsize by\colsep
    \divide\hsize by\Ncols  \advance\hsize by-\colsep}
 \def\endmulti{\vfil\egroup \setbox1=\vsplit0 to0pt
-   %% \dimen1 := velikost zbylého místa na stránce
+   %% \dimen1 := velikost zbylÃ©ho mÃ­sta na strÃ¡nce
    \ifdim\pagegoal=\maxdimen \dimen1=\vsize \corrsize{\dimen1}
    \else \dimen1=\pagegoal \advance\dimen1 by-\pagetotal \fi
    \ifdim \dimen1<2\baselineskip
      \vfil\break \dimen1=\vsize \corrsize{\dimen1} \fi
-   %% \dimen0 := vı¹ka n sloupcové sazby po rozdìlení do sloupcù
-   %% = (\ht0 + (n-1)\baselineskip) / n, zaokruhleno na øádky
+   %% \dimen0 := vÃ½Å¡ka n sloupcovÃ© sazby po rozdÄ›lenÃ­ do sloupcÅ¯
+   %% = (\ht0 + (n-1)\baselineskip) / n, zaokruhleno na Å™Ã¡dky
    \dimen0=\Ncols\baselineskip \advance\dimen0 by-\baselineskip
    \advance\dimen0 by \ht0 \divide\dimen0 by\Ncols
    \roundtolines{\dimen0}
-   %% Rozdìlit sazbu n sloupcù do stránek nebo nerozdìlit ?
+   %% RozdÄ›lit sazbu n sloupcÅ¯ do strÃ¡nek nebo nerozdÄ›lit ?
    \ifdim \dimen0>\dimen1 \splitpart
    \else \makecolumns{\dimen0} \fi
    \ifvoid0 \else \errmessage{Lost text in multiple columns?} \fi
@@ -596,11 +596,11 @@
    \line{\unhbox1\unskip}}
 \def\splitpart{\roundtolines{\dimen1}
    \makecolumns{\dimen1} \advance\dimen0 by-\dimen1
-   %% \dimen0 := vı¹ka _zbylé_ n sloupcové sazby
-   %% \dimen1 := prázdné místo na stránce = (cca) \vsize
+   %% \dimen0 := vÃ½Å¡ka _zbylÃ©_ n sloupcovÃ© sazby
+   %% \dimen1 := prÃ¡zdnÃ© mÃ­sto na strÃ¡nce = (cca) \vsize
    \vfil\break
    \dimen1=\vsize \corrsize{\dimen1}
-   %% Rozdìlit zbylou sazbu n sloupcù do více stránek ?
+   %% RozdÄ›lit zbylou sazbu n sloupcÅ¯ do vÃ­ce strÃ¡nek ?
    \ifvoid0 \else
       \ifdim \dimen0>\dimen1 \splitpart
       \else \makecolumns{\dimen0} \fi \fi}
