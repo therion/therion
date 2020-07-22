@@ -600,16 +600,12 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
 //  PAGEDEF << (up ? "\\PL{q .1 w}%" : "\\PL{q .8 g}%") << endl;
   
   if (up) { 
-    PAGEDEF << "\\PL{q .1 w " << LAYOUT.preview_above_r << " " <<
-                                 LAYOUT.preview_above_g << " " <<
-                                 LAYOUT.preview_above_b << " " <<
-                                                           " RG}%" << endl;
+    PAGEDEF << "\\PL{q .1 w " << LAYOUT.col_preview_above.to_pdfliteral(fillstroke::stroke) <<
+               "}%" << endl;
   }
   else { 
-    PAGEDEF << "\\PL{q " << LAYOUT.preview_below_r << " " <<
-                            LAYOUT.preview_below_g << " " <<
-                            LAYOUT.preview_below_b << " " <<
-                                                      " rg}%" << endl;
+    PAGEDEF << "\\PL{q " << LAYOUT.col_preview_below.to_pdfliteral(fillstroke::fill) <<
+               "}%" << endl;
   }
 
   if (mode == ATLAS) {
@@ -791,16 +787,11 @@ void compose_page(list<sheetrecord>::iterator sheet_it, ofstream& PAGE) {
 }
 
 void print_page_bg(ofstream& PAGEDEF) {
-/*  if ((LAYOUT.background_r != 1) || 
-      (LAYOUT.background_g != 1) || 
-      (LAYOUT.background_b != 1)) { */
   if (! LAYOUT.transparent_map_bg) {
 
     // bg rectangle
-    PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
-                            LAYOUT.background_g << " " << 
-                            LAYOUT.background_b << " rg 0 0 " << 
-                            HS << " " << VS << " re f Q}%" << endl;
+    PAGEDEF << "\\PL{q " << LAYOUT.col_background.to_pdfliteral(fillstroke::fill) <<
+                     " 0 0 " << HS << " " << VS << " re f Q}%" << endl;
   }
 }
 
@@ -1103,9 +1094,8 @@ void print_map(int layer, ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->I != "") {
         PAGEDEF << "\\PL{q ";
         if (K->r < 0 || K->g < 0 || K->b < 0) {
-          PAGEDEF << LAYOUT.foreground_r << " " <<   // background of the scrap
-                     LAYOUT.foreground_g << " " << 
-                     LAYOUT.foreground_b << " rg}%" << endl;
+          PAGEDEF << LAYOUT.col_foreground.to_pdfliteral(fillstroke::fill) <<   // background of the scrap
+                     "}%" << endl;
         }
         else {
           PAGEDEF << K->r << " " <<   // background of the scrap
@@ -1520,9 +1510,7 @@ void build_pages() {
   PDFRES << "\\legendwidth=" << LAYOUT.legend_width << "bp" << endl;
 
   if (LAYOUT.map_header_bg) {
-    PDFRES << "\\bgcolor={" << LAYOUT.background_r << " " << 
-                               LAYOUT.background_g << " " <<
-                               LAYOUT.background_b << "}" << endl;
+    PDFRES << "\\bgcolor={" << LAYOUT.col_background.to_pdfliteral(fillstroke::fill) << "}" << endl;
     PDFRES << "\\legendbgfilltrue" << endl;
   } 
   else PDFRES << "\\legendbgfillfalse" << endl;
@@ -1675,13 +1663,8 @@ void build_pages() {
     PAGEDEF << "\\tmpdimen=\\extraS\\advance\\tmpdimen by \\overlap" << endl;
     PAGEDEF << "\\dimtobp{\\tmpdimen}\\edef\\adjustedY{\\tmpdef}%" << endl;
 
-/*    if ((LAYOUT.background_r != 1) || 
-      (LAYOUT.background_g != 1) || 
-      (LAYOUT.background_b != 1)) {  */
     if (! LAYOUT.transparent_map_bg) {
-        PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
-                            LAYOUT.background_g << " " << 
-                            LAYOUT.background_b << " rg -" << 
+        PAGEDEF << "\\PL{q " << LAYOUT.col_background.to_pdfliteral(fillstroke::fill) << " -" <<
 			    "\\wsize\\space"  << "-" << 
 			    "\\nsize\\space" << 
 			    "\\xsize\\space" << 

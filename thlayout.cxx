@@ -2094,21 +2094,13 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   
   LAYOUT.colored_text = this->color_labels;
   
-  LAYOUT.background_r = this->color_map_bg.R;
-  LAYOUT.background_g = this->color_map_bg.G;
-  LAYOUT.background_b = this->color_map_bg.B;
+  LAYOUT.col_background.set(this->color_map_bg.R, this->color_map_bg.G, this->color_map_bg.B);
 
-  LAYOUT.foreground_r = this->color_map_fg.R;
-  LAYOUT.foreground_g = this->color_map_fg.G;
-  LAYOUT.foreground_b = this->color_map_fg.B;
+  LAYOUT.col_foreground.set(this->color_map_fg.R, this->color_map_fg.G, this->color_map_fg.B);
 
-  LAYOUT.preview_above_r = this->color_preview_above.R;
-  LAYOUT.preview_above_g = this->color_preview_above.G;
-  LAYOUT.preview_above_b = this->color_preview_above.B;
+  LAYOUT.col_preview_above.set(this->color_preview_above.R, this->color_preview_above.G, this->color_preview_above.B);
 
-  LAYOUT.preview_below_r = this->color_preview_below.R;
-  LAYOUT.preview_below_g = this->color_preview_below.G;
-  LAYOUT.preview_below_b = this->color_preview_below.B;
+  LAYOUT.col_preview_below.set(this->color_preview_below.R, this->color_preview_below.G, this->color_preview_below.B);
   
   LAYOUT.lang = this->lang;
   LAYOUT.langstr = thlang_getid(this->lang);

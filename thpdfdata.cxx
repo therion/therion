@@ -29,8 +29,10 @@
 #include <map>
 #include <set>
 #include <string>
+#include <sstream>
 
 
+#include "thexception.h"
 #include "thpdfdata.h"
 #include "thlang.h"
 
@@ -64,6 +66,89 @@ layerrecord::layerrecord() {
   bookmark = false;
 }
 
+color::color() {
+  model = colormodel::no;
+  a = b = c = d = -1;
+}
+
+void color::set(double a) {
+  model = colormodel::grey;
+  this->a = a;
+}
+
+void color::set(double a, double b, double c) {
+  model = colormodel::rgb;
+  this->a = a;
+  this->b = b;
+  this->c = c;
+}
+
+void color::set(double a, double b, double c, double d) {
+  model = colormodel::cmyk;
+  this->a = a;
+  this->b = b;
+  this->c = c;
+  this->d = d;
+}
+
+bool color::is_white() {
+  if ((model == colormodel::grey && a == 1.0) ||
+      (model == colormodel::rgb && (a == 1.0 && b == 1.0 && c == 1.0)) ||
+      (model == colormodel::cmyk && (a == 0 && b == 0 && c == 0 && d == 0))) return true;
+  else return false;
+}
+
+string color::to_svg() {
+  double r = 0, g = 0, b = 0;
+  if (model == colormodel::grey)
+    r = g = b = this->a;
+  else if (model == colormodel::rgb) {
+    r = this->a;
+    g = this->b;
+    b = this->c;
+  }
+  else if (model == colormodel::cmyk) {
+    r = 1.0 - min(1.0, this->a + this->d);
+    g = 1.0 - min(1.0, this->b + this->d);
+    b = 1.0 - min(1.0, this->c + this->d);
+  }
+  else therror(("undefined color used"));
+  char ch[8];
+  sprintf(ch,"#%02x%02x%02x",int(255*r) % 256,
+                             int(255*g) % 256,
+                             int(255*b) % 256);
+  return (string) ch;
+}
+
+string color::to_pdfliteral(fillstroke fs) {
+  ostringstream s;
+  if (model == colormodel::grey) {
+    if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
+      s << this->a << " g";
+    if (fs == fillstroke::fillstroke)
+      s << " ";
+    if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
+      s << this->a << " G";
+  }
+  else if (model == colormodel::rgb) {
+    if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c << " rg";
+    if (fs == fillstroke::fillstroke)
+      s << " ";
+    if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c << " RG";
+  }
+  else if (model == colormodel::cmyk) {
+    if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c <<  " " << this->d << " k";
+    if (fs == fillstroke::fillstroke)
+      s << " ";
+    if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c <<  " " << this->d << " K";
+  }
+  return s.str();
+}
+
 layout::layout() {
   transparency = true;
   overlap = 20;
@@ -80,18 +165,10 @@ layout::layout() {
   nav_up = 2;
   nav_factor = 30;
   title_pages = false;
-  background_r = 1; 
-  background_g = 1; 
-  background_b = 1;
-  foreground_r = 1; 
-  foreground_g = 1; 
-  foreground_b = 1;
-  preview_below_r = .8; 
-  preview_below_g = .8; 
-  preview_below_b = .8;
-  preview_above_r = 0; 
-  preview_above_g = 0; 
-  preview_above_b = 0;
+  col_background.set(1,1,1);
+  col_foreground.set(1,1,1);
+  col_preview_below.set(.8,.8,.8);
+  col_preview_above.set(0,0,0);
   own_pages = 0;
   OCG = true;
   lang = THLANG_UNKNOWN;

@@ -88,6 +88,22 @@ struct paired {
 
 paired rotatedaround(paired x,paired o, double th);
 
+enum class fillstroke {none, fill, stroke, fillstroke, fill2, clip, mask};
+enum class colormodel {no, grey, rgb, cmyk};
+
+struct color{
+  double a, b, c, d, alpha;
+  colormodel model;
+
+  color();
+  void set(double);
+  void set(double,double,double);
+  void set(double,double,double,double);
+  bool is_white();
+  string to_svg();
+  string to_pdfliteral(fillstroke = fillstroke::fillstroke);
+};
+
 struct layout {
   string excl_list,labelx,labely,
          doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
@@ -100,10 +116,8 @@ struct layout {
         nav_factor, XS,YS,XO,YO;
   int nav_right,nav_up,own_pages,lang,legend_columns;
   double hoffset, voffset, opacity, legend_width;
-  double background_r, background_g, background_b;
-  double foreground_r, foreground_g, foreground_b;
-  double preview_below_r, preview_below_g, preview_below_b;
-  double preview_above_r, preview_above_g, preview_above_b;
+  color col_background, col_foreground, col_preview_below, col_preview_above;
+  colormodel output_colormodel;
   
   int surface, grid, proj, grid_coord_freq; // freq 0 no, 1 border, 2 all
   string gridAA, gridAB, gridAC, 

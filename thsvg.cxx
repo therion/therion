@@ -247,16 +247,12 @@ void print_preview(int up,ofstream& F, string unique_prefix) {
   set<string> used_scraps;
   
   if (up) { 
-    F << "<g fill=\"none\" stroke=\"" << 
-       rgb2svg(LAYOUT.preview_above_r,
-               LAYOUT.preview_above_g,
-               LAYOUT.preview_above_b) << "\" stroke-width=\"0.1\">" << endl;
+    F << "<g fill=\"none\" stroke=\"" <<
+       LAYOUT.col_preview_above.to_svg() << "\" stroke-width=\"0.1\">" << endl;
   }
   else { 
-    F << "<g stroke=\"none\" fill=\"" << 
-       rgb2svg(LAYOUT.preview_below_r,
-               LAYOUT.preview_below_g,
-               LAYOUT.preview_below_b) << "\">" << endl;
+    F << "<g stroke=\"none\" fill=\"" <<
+       LAYOUT.col_preview_below.to_svg() << "\">" << endl;
   }
   used_layers = (up ? MAP_PREVIEW_UP : MAP_PREVIEW_DOWN);
   for (set<int>::iterator I=used_layers.begin(); I != used_layers.end(); I++) {
@@ -559,13 +555,10 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
 
   F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox)\">" << endl;
   // page background:
-  if ((LAYOUT.background_r != 1) || 
-      (LAYOUT.background_g != 1) || 
-      (LAYOUT.background_b != 1)) {
-    bgcol=rgb2svg(LAYOUT.background_r, LAYOUT.background_g, LAYOUT.background_b);
+  if (!LAYOUT.col_background.is_white()) {
     F << "<rect x=\"" << llx << "\" y=\"" << lly << 
          "\" width=\"" << urx-llx << "\" height=\"" << ury-lly << 
-         "\" stroke=\"none\" fill=\"" << bgcol << "\" />" << endl;
+         "\" stroke=\"none\" fill=\"" << LAYOUT.col_background.to_svg() << "\" />" << endl;
   }
     
   // surface:
@@ -602,7 +595,7 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
         for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (K->r < 0 || K->g < 0 || K->b < 0) {
-            bgcol=rgb2svg(LAYOUT.foreground_r, LAYOUT.foreground_g, LAYOUT.foreground_b);
+            bgcol=LAYOUT.col_foreground.to_svg();
           }
           else {
             bgcol=rgb2svg(K->r, K->g, K->b);
