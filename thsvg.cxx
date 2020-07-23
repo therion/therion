@@ -594,11 +594,11 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
         // background
         for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
-          if (K->r < 0 || K->g < 0 || K->b < 0) {
+          if (!K->col_scrap.is_defined()) {
             bgcol=LAYOUT.col_foreground.to_svg();
           }
           else {
-            bgcol=rgb2svg(K->r, K->g, K->b);
+            bgcol=K->col_scrap.to_svg();
           }
           if (used_scraps.count(K->name) > 0 && K->I != "") {
             F << "<g fill=\"" << bgcol << "\">" << endl;

@@ -1604,9 +1604,10 @@ else
                   SCRAPITEM->sect = 0;
                   SCRAPITEM->name = thexpmap_u2string(sscrap);
 
-                  SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
-                  SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
-                  SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+//                  SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
+//                  SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
+//                  SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+                  SCRAPITEM->col_scrap.set(ascR, ascG, ascB);
                   
                   if (export_sections) {
                     fprintf(plf,"\t\t Z => 1,\n");    
@@ -1683,9 +1684,10 @@ else
                     SCRAPITEM->sect = 0;
                     SCRAPITEM->name = thexpmap_u2string(sscrap + 1);
       
-                    SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
-                    SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
-                    SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+//                    SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
+//                    SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
+//                    SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+                    SCRAPITEM->col_scrap.set(ascR, ascG, ascB);
       
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     sprintf(texb.get_buffer(),"data.%ld",exps.B);

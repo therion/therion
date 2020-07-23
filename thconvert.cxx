@@ -238,7 +238,7 @@ string process_pdf_string(string s, string font) {
 //                30 -- legend
 //                31 -- northarrow, scalebar
 
-void distill_eps(string name, string fname, string cname, int mode, ofstream& TEX, double r = -1, double g = -1, double b = -1) {
+void distill_eps(string name, string fname, string cname, int mode, ofstream& TEX, color col = color()) {
   string form_id;
   string tok, lastmovex, lastmovey, buffer;
   string font, patt, fntmatr;
@@ -255,8 +255,8 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
   convert_mode = mode;
   
   ostringstream text_attr;
-  if (LAYOUT.colored_text && r >= 0 && g >= 0 && b >= 0) {
-    text_attr << "0.1 w " << r << " " << g << " " << b << " rg 2 Tr ";
+  if (LAYOUT.colored_text && col.is_defined()) {
+    text_attr << "0.1 w " << col.to_pdfliteral() << " 2 Tr ";
   };
 
   ifstream F(fname.c_str());
@@ -651,12 +651,12 @@ void convert_scraps() {
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
 //    cout << "*" << flush;
-    if (I->F != "") distill_eps(I->name, I->F, I->C, 10, TEX, I->r, I->g, I->b);
+    if (I->F != "") distill_eps(I->name, I->F, I->C, 10, TEX, I->col_scrap);
     if (I->G != "") distill_eps(I->name, I->G, I->C, 11, TEX);
     if (I->B != "") distill_eps(I->name, I->B, "", 12, TEX);
     if (I->I != "") distill_eps(I->name, I->I, "", 13, TEX);
-    if (I->E != "") distill_eps(I->name, I->E, "", 14, TEX, I->r, I->g, I->b);
-    if (I->X != "") distill_eps(I->name, I->X, "", 20, TEX, I->r, I->g, I->b);
+    if (I->E != "") distill_eps(I->name, I->E, "", 14, TEX, I->col_scrap);
+    if (I->X != "") distill_eps(I->name, I->X, "", 20, TEX, I->col_scrap);
   }
 
   // similarly with legend (distill_eps( , , , 30, TEX))

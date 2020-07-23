@@ -38,7 +38,6 @@ struct surfpictrecord {
   double dx, dy, xx, xy, yx, yy, width, height;
 };
 
-
 struct scraprecord {
   string name,F,B,I,E,X,G,C,P;      // name + files
   converted_data Fc, Bc, Ic, Ec, Xc, Gc;
@@ -50,8 +49,8 @@ struct scraprecord {
         I1,I2,I3,I4,
         E1,E2,E3,E4,
         X1,X2,X3,X4;
-        
-  double r,g,b;
+
+  color col_scrap;
   list<surfpictrecord> SKETCHLIST;
   scraprecord();
 };
@@ -87,22 +86,6 @@ struct paired {
 };
 
 paired rotatedaround(paired x,paired o, double th);
-
-enum class fillstroke {none, fill, stroke, fillstroke, fill2, clip, mask};
-enum class colormodel {no, grey, rgb, cmyk};
-
-struct color{
-  double a, b, c, d, alpha;
-  colormodel model;
-
-  color();
-  void set(double);
-  void set(double,double,double);
-  void set(double,double,double,double);
-  bool is_white();
-  string to_svg();
-  string to_pdfliteral(fillstroke = fillstroke::fillstroke);
-};
 
 struct layout {
   string excl_list,labelx,labely,

@@ -62,6 +62,98 @@ extern unsigned font_id, patt_id;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+color::color() {
+  model = colormodel::no;
+  a = b = c = d = -1;
+}
+
+void color::reset() {
+  model = colormodel::no;
+  a = b = c = d = -1;
+}
+
+void color::set(double a) {
+  model = colormodel::grey;
+  this->a = a;
+}
+
+void color::set(double a, double b, double c) {
+  model = colormodel::rgb;
+  this->a = a;
+  this->b = b;
+  this->c = c;
+}
+
+void color::set(double a, double b, double c, double d) {
+  model = colormodel::cmyk;
+  this->a = a;
+  this->b = b;
+  this->c = c;
+  this->d = d;
+}
+
+bool color::is_white() {
+  if ((model == colormodel::grey && a == 1.0) ||
+      (model == colormodel::rgb && (a == 1.0 && b == 1.0 && c == 1.0)) ||
+      (model == colormodel::cmyk && (a == 0 && b == 0 && c == 0 && d == 0))) return true;
+  else return false;
+}
+
+bool color::is_defined() {
+  return model != colormodel::no;
+}
+
+string color::to_svg() {
+  double r = 0, g = 0, b = 0;
+  if (model == colormodel::grey)
+    r = g = b = this->a;
+  else if (model == colormodel::rgb) {
+    r = this->a;
+    g = this->b;
+    b = this->c;
+  }
+  else if (model == colormodel::cmyk) {
+    r = 1.0 - min(1.0, this->a + this->d);
+    g = 1.0 - min(1.0, this->b + this->d);
+    b = 1.0 - min(1.0, this->c + this->d);
+  }
+  else therror(("undefined color used"));
+  char ch[8];
+  sprintf(ch,"#%02x%02x%02x",int(255*r) % 256,
+                             int(255*g) % 256,
+                             int(255*b) % 256);
+  return (string) ch;
+}
+
+string color::to_pdfliteral(fillstroke fs) {
+  ostringstream s;
+  if (model == colormodel::grey) {
+    if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
+      s << this->a << " g";
+    if (fs == fillstroke::fillstroke)
+      s << " ";
+    if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
+      s << this->a << " G";
+  }
+  else if (model == colormodel::rgb) {
+    if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c << " rg";
+    if (fs == fillstroke::fillstroke)
+      s << " ";
+    if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c << " RG";
+  }
+  else if (model == colormodel::cmyk) {
+    if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c <<  " " << this->d << " k";
+    if (fs == fillstroke::fillstroke)
+      s << " ";
+    if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c <<  " " << this->d << " K";
+  }
+  return s.str();
+}
+
 CGS::CGS () {
   color[0] = -1;
   color[1] = -1;
@@ -93,14 +185,14 @@ void MP_text::clear() {
   xx = yy = 1;
   xy = yx = 0;
   size = 0;
-  r = g = b = -1;
+  col.reset();
   transformed = false;
 }
 
 void MP_text::print_svg(ofstream & F, CGS & gstate) {
   F << "<text font-family=\"" << font << "\" font-size=\"" << size << "\" ";
-  if (LAYOUT.colored_text && r>=0 && g>=0 && b>=0) F << 
-    "fill=\"" << rgb2svg(r,g,b) << "\" " <<
+  if (LAYOUT.colored_text && col.is_defined()) F << 
+    "fill=\"" << col.to_svg() << "\" " <<
     "stroke=\"black\" stroke-width=\"0.1\" ";
   else F << "fill=\"black\" stroke=\"none\" ";
   F << "transform=\"matrix(" << xx << " " << xy << " " << -yx << " " << -yy <<
@@ -538,7 +630,7 @@ string process_pdf_string2(string s, string font) {
 
 void parse_eps(string fname, string cname, double dx, double dy, 
                double & c1, double & c2, double & c3, double & c4, 
-               converted_data & data, double R, double G, double B) {
+               converted_data & data, color col) {
   string tok, buffer;
   string font, patt;
   string pattcolor = "0 0 0";
@@ -838,9 +930,7 @@ void parse_eps(string fname, string cname, double dx, double dy,
         text.yy = fntmatr.transf[3];
         text.x = fntmatr.transf[4];
         text.y = fntmatr.transf[5];
-	text.r = R;
-	text.g = G;
-	text.b = B;
+        text.col = col;
         concat = false;
         data.MP.add(text);
         thbuffer.clear();
@@ -868,12 +958,12 @@ void convert_scraps_new() {
   
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
-    if (I->F != "") parse_eps(I->F, I->C, I->S1, I->S2, I->F1, I->F2, I->F3, I->F4, I->Fc, I->r, I->g, I->b);
+    if (I->F != "") parse_eps(I->F, I->C, I->S1, I->S2, I->F1, I->F2, I->F3, I->F4, I->Fc, I->col_scrap);
     if (I->G != "") parse_eps(I->G, I->C, I->S1, I->S2, I->G1, I->G2, I->G3, I->G4, I->Gc);
     if (I->B != "") parse_eps(I->B, "", I->S1, I->S2, I->B1, I->B2, I->B3, I->B4, I->Bc);
     if (I->I != "") parse_eps(I->I, "", I->S1, I->S2, I->I1, I->I2, I->I3, I->I4, I->Ic);
-    if (I->E != "") parse_eps(I->E, "", I->S1, I->S2, I->E1, I->E2, I->E3, I->E4, I->Ec, I->r, I->g, I->b);
-    if (I->X != "") parse_eps(I->X, "", I->S1, I->S2, I->X1, I->X2, I->X3, I->X4, I->Xc, I->r, I->g, I->b);
+    if (I->E != "") parse_eps(I->E, "", I->S1, I->S2, I->E1, I->E2, I->E3, I->E4, I->Ec, I->col_scrap);
+    if (I->X != "") parse_eps(I->X, "", I->S1, I->S2, I->X1, I->X2, I->X3, I->X4, I->Xc, I->col_scrap);
   }
 
   for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
