@@ -7,6 +7,15 @@ lxAboutDlg.cxx  lxFile.cxx  lxGUI.cxx    lxLRUD.cxx  lxOGLFT.cxx   lxPres.cxx   
 lxData.cxx      lxGLC.cxx   lxImgIO.cxx  lxMath.cxx  lxOptDlg.cxx  lxRender.cxx  lxSScene.cxx  lxSView.cxx
 )
 
+# determine platform
+if(UNIX AND NOT APPLE)
+    set(LXPLATFORM LXLINUX)
+elseif(APPLE)
+    set(LXPLATFORM LXMACOSX)
+else()
+    set(LXPLATFORM LXWIN32)
+endif()
+
 add_library(loch-common STATIC ${LOCH_HEADERS} ${LOCH_SOURCES} img.c lxTR.c
 # loch/lxR2D.c loch/getline.c TODO WIN only
 )
@@ -20,7 +29,7 @@ target_link_libraries(loch-common PUBLIC
     ${OPENGL_glu_LIBRARY}
     ${X11_LIBRARIES}
 )
-target_compile_definitions(loch-common PUBLIC LOCH LXLINUX)
+target_compile_definitions(loch-common PUBLIC LOCH ${LXPLATFORM})
 target_include_directories(loch-common BEFORE PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")
 
 add_executable(loch lxR2P.c)

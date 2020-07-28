@@ -63,15 +63,8 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
 add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
 
 # generate version files
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thversion.h
-                          ${CMAKE_BINARY_DIR}/thbook/version.tex
-                   COMMAND python3
-                   ARGS set_version.py ${CMAKE_BINARY_DIR}
-                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-add_custom_target(generate_version DEPENDS ${CMAKE_BINARY_DIR}/thversion.h ${CMAKE_BINARY_DIR}/thbook/version.tex)
-add_custom_target(version python3 ${CMAKE_SOURCE_DIR}/set_version.py
-                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 # therion lib
@@ -87,7 +80,6 @@ add_dependencies(therion-common
     generate_mpost
     generate_thchencdata
     generate_thcsdata
-    generate_version
 )
 
 # therion executable
@@ -106,3 +98,4 @@ add_subdirectory(thchencdata)
 add_subdirectory(tex)
 add_subdirectory(thlang)
 add_subdirectory(loch)
+add_subdirectory(thbook)
