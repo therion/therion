@@ -29,10 +29,20 @@
 #ifndef thlayoutclr_h
 #define thlayoutclr_h
 
+#include "thdataobject.h"
+
 enum {
+  TT_LAYOUTCLRMODEL_UNKNOWN = 0,
   TT_LAYOUTCLRMODEL_GRAY = 1,
   TT_LAYOUTCLRMODEL_RGB = 2,
   TT_LAYOUTCLRMODEL_CMYK = 4,
+};
+
+static const thstok thtt_layoutclr_model[] = {
+  {"cmyk", TT_LAYOUTCLRMODEL_CMYK},
+  {"grayscale", TT_LAYOUTCLRMODEL_GRAY},
+  {"rgb", TT_LAYOUTCLRMODEL_RGB},
+  {NULL, TT_LAYOUTCLRMODEL_UNKNOWN}
 };
 
 

@@ -178,7 +178,10 @@ thlayout::thlayout()
 
   this->def_color_legend = 0;
   this->color_legend = TT_TRUE;
-  
+
+  this->def_color_model = 0;
+  this->color_model = TT_LAYOUTCLRMODEL_CMYK;
+
   this->def_scale_bar = 0;
   this->scale_bar = -1.0;
 
@@ -740,6 +743,15 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->color_legend = sv;
       this->def_color_legend = 2;
       break;
+
+    case TT_LAYOUT_COLOR_MODEL:
+      sv = thmatch_token(args[0],thtt_layoutclr_model);
+      if (sv == TT_LAYOUTCLRMODEL_UNKNOWN)
+        ththrow(("invalid color-model switch -- %s",args[0]))
+      this->color_model = sv;
+      this->def_color_model = 2;
+      break;
+
     
     case TT_LAYOUT_SCALE_BAR:
       this->parse_len(this->scale_bar, dum, dum, 1, args, 1);
@@ -1150,7 +1162,11 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->survey_level = %d;\n", this->survey_level);
 
   thprintf("\tplayout->def_color_legend = %d;\n", this->def_color_legend);
-  thprintf("\tplayout->legend = %d;\n", this->color_legend);
+  thprintf("\tplayout->color_legend = %d;\n", this->color_legend);
+
+  thprintf("\tplayout->def_color_model = %d;\n", this->def_color_model);
+  thprintf("\tplayout->color_model = %d;\n", this->color_model);
+
 
   thprintf("\tplayout->def_legend_width = %d;\n", this->def_legend_width);
   thprintf("\tplayout->legend_width = %lg;\n",this->legend_width);
@@ -1902,6 +1918,10 @@ void thlayout::process_copy() {
 
       begcopy(def_color_legend)
         this->color_legend = srcl->color_legend;
+      endcopy
+
+      begcopy(def_color_model)
+        this->color_model = srcl->color_model;
       endcopy
 
       begcopy(def_legend_width)

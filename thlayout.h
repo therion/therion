@@ -98,6 +98,7 @@ enum {
   TT_LAYOUT_SYMBOL_COLOR = 2053,
   TT_LAYOUT_FONT_SETUP = 2054,
   TT_LAYOUT_MIN_SYMBOL_SCALE = 2055,
+  TT_LAYOUT_COLOR_MODEL = 2056,
 };
 
 
@@ -439,8 +440,10 @@ static const thstok thtt_layout_opt[] = {
   {"code",TT_LAYOUT_CODE},
   {"color",TT_LAYOUT_COLOR},
   {"color-legend",TT_LAYOUT_COLOR_LEGEND},
+  {"color-model", TT_LAYOUT_COLOR_MODEL},
   {"colour",TT_LAYOUT_COLOR},
   {"colour-legend",TT_LAYOUT_COLOR_LEGEND},
+  {"colour-model", TT_LAYOUT_COLOR_MODEL},
   {"copy",TT_LAYOUT_COPY},
   {"debug",TT_LAYOUT_DEBUG},
   {"doc-author",TT_LAYOUT_DOC_AUTHOR},
@@ -535,7 +538,7 @@ class thlayout : public thdataobject {
   char grid, ccode;
   
   int legend, color_legend, map_header, lang, north, max_explos, max_topos, max_cartos, max_copys,
-    debug, survey_level, surface, grid_coords;
+    debug, survey_level, surface, grid_coords, color_model;
   
   thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
   int color_crit; // none, altitude, ...
@@ -567,7 +570,7 @@ class thlayout : public thdataobject {
     def_max_explos, def_max_topos, def_max_cartos,
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_survey_level, def_surface,
     def_surface_opacity, def_units, def_grid_coords, def_color_labels,
-    def_font_setup, def_min_symbol_scale;
+    def_font_setup, def_min_symbol_scale, def_color_model;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;
