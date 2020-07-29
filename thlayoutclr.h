@@ -29,7 +29,7 @@
 #ifndef thlayoutclr_h
 #define thlayoutclr_h
 
-#include "thdataobject.h"
+#include "thparse.h"
 
 enum {
   TT_LAYOUTCLRMODEL_UNKNOWN = 0,
