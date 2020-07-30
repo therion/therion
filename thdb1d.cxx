@@ -2959,6 +2959,9 @@ void thdb1d::postprocess_objects()
 }
 
 
+double diffdir(double dir1, double dir2) {
+  return acos(cos(dir1) * cos(dir2) + sin(dir1) * sin(dir2));
+}
 
 
 void thdb1d::process_xelev()
@@ -3350,7 +3353,11 @@ void thdb1d::process_xelev()
         }
       }
  
-      cxx += double(go_left) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy) * current_node->last_arrow->leg->leg->extend_ratio;
+      if ((current_node->last_arrow->leg->leg->flags & TT_LEGFLAG_SPLAY) > 0) {
+    	  cxx += 0;
+      } else {
+    	  cxx += double(go_left) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy) * current_node->last_arrow->leg->leg->extend_ratio;
+      }
       
       // set end x
       if (current_node->last_arrow->is_reversed)
@@ -3394,6 +3401,49 @@ void thdb1d::process_xelev()
   
   } // END OF TREMAUX
   
+  // postprocess splay shots
+  double splay_dir, shot_dir, shot_dx, minshot_dir, minshot_x, minshot_rx, minshot_dx;
+  thdb1d_tree_node * src_node;
+  for(i = 0; i < tn_stations; i++) {
+	  current_node = nodes + i;
+	  if (this->station_vec[i].is_temporary()) {
+	    minshot_dir = thnan;
+	    minshot_x = current_node->first_arrow->leg->leg->fxx;
+	    minshot_rx = current_node->first_arrow->leg->leg->extend_ratio;
+	    minshot_dx = 1.0;
+	    src_node = current_node->first_arrow->end_node;
+	    splay_dir = atan2(this->station_vec[i].y - this->station_vec[src_node->id - 1].y, this->station_vec[i].x - this->station_vec[src_node->id - 1].x);
+	    carrow = src_node->first_arrow;
+	    while (carrow != NULL) {
+	      if ((carrow->leg->leg->flags & TT_LEGFLAG_SPLAY) == 0) { // not a splay shot
+          shot_dx = carrow->leg->leg->txx - carrow->leg->leg->fxx;
+	        shot_dir = atan2(this->station_vec[carrow->end_node->id - 1].y - this->station_vec[src_node->id - 1].y, this->station_vec[carrow->end_node->id - 1].x - this->station_vec[src_node->id - 1].x);
+	        if ((minshot_dx > 0) &&(thisnan(minshot_dir) || (diffdir(shot_dir, splay_dir) < diffdir(minshot_dir, splay_dir)))) {
+	          minshot_dir = shot_dir;
+	          minshot_rx = carrow->leg->leg->extend_ratio;
+	          if (shot_dx > 0)
+	            minshot_dx = 1.0;
+	          else
+	            minshot_dx = -1.0;
+	          if (carrow->is_reversed) {
+	            minshot_x = carrow->leg->leg->txx;
+	            minshot_dx *= -1.0;
+	          } else {
+              minshot_x = carrow->leg->leg->fxx;
+	          }
+	        }
+	      }
+	      carrow = carrow->next_arrow;
+	    }
+	    if (thisnan(minshot_dir)) minshot_dir = 0.0;
+      if (current_node->first_arrow->is_reversed) {
+        current_node->first_arrow->leg->leg->fxx = minshot_x;
+        current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
+      } else
+        ththrow(("Code should go here!"))
+	  }
+  }
+
 #ifdef THDEBUG
     thprintf("\nend of extended elevation\n");
 #else
