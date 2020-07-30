@@ -55,6 +55,7 @@ thdata::thdata()
   this->d_flags = TT_LEGFLAG_NONE;
   this->d_extend = TT_EXTENDFLAG_NORMAL;
   this->d_vtresh = 67.5;
+  this->d_extend_ratio = 1.0;
   this->d_shape = TT_DATALEG_SHAPE_OCTAGON;
   this->d_walls = TT_AUTO;
   this->d_last_equate = 0;
