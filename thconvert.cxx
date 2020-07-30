@@ -786,9 +786,7 @@ void convert_scraps() {
   colorlegendrecord lcr;
   for(list<colorlegendrecord>::iterator I = COLORLEGENDLIST.begin(); 
                                    I != COLORLEGENDLIST.end(); I++) {
-    lcr.R = I->R;
-    lcr.G = I->G;
-    lcr.B = I->B;
+    lcr.col_legend = I->col_legend;
     lcr.texname = I->texname;
     legend_color.push_back(lcr);
   }
@@ -807,10 +805,9 @@ void convert_scraps() {
     for (int j = 0; j < columns; j++) {
       pos = i + j * rows;
       if (pos < legendbox_num) {
-        LEGCOLOR << "  \\colorlegendbox{" << 
-	legend_color[pos].R << "}{" <<
-	legend_color[pos].G << "}{" << 
-	legend_color[pos].B << "}%" << endl;
+        LEGCOLOR << "  \\colorlegendbox{";
+        if (LAYOUT.transparency) LEGCOLOR << "/GS1 gs ";   // colorlegendbox argument is enclosed in q ... Q
+        LEGCOLOR << legend_color[pos].col_legend.to_pdfliteral(fillstroke::fill) << "}%" << endl;
         LEGCOLOR << "  \\legendsymbolbox{\\pdflastxform}{" <<
 	legend_color[pos].texname << "}\\hskip10pt" << endl;
       }

@@ -62,11 +62,6 @@ extern unsigned font_id, patt_id;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-color::color() {
-  model = colormodel::no;
-  a = b = c = d = -1;
-}
-
 void color::reset() {
   model = colormodel::no;
   a = b = c = d = -1;

@@ -75,7 +75,7 @@ struct legendrecord {
 };
 
 struct colorlegendrecord {
-  double R, G, B;
+  color col_legend;
   string texname, name;
 };
 

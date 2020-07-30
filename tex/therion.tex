@@ -109,10 +109,10 @@
        \hsize=\tmpdimen\rightskip=0pt plus \tmpdimen minus 0pt\relax\the\legendtextsize #2\vskip1dd}\hss}%
 }
 
-\def\colorlegendbox#1#2#3{%
-  \setbox\xxx=\hbox to 36bp{\PL{q #1 #2 #3 rg 0 0 36 24 re f Q}\hfil}%
+\def\colorlegendbox#1{%
+  \setbox\xxx=\hbox to 36bp{\PL{q #1 0 0 36 24 re f Q}\hfil}%
   \ht\xxx=25bp\dp\xxx=0bp
-  \immediate\pdfxform\xxx
+  \immediate\pdfxform resources{/ExtGState \the\resid\space 0 R}\xxx
 }
 
 

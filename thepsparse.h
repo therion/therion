@@ -33,10 +33,9 @@ enum class fillstroke {none, fill, stroke, fillstroke, fill2, clip, mask};
 enum class colormodel {no, grey, rgb, cmyk};
 
 struct color{
-  double a, b, c, d, alpha;
-  colormodel model;
+  double a = -1, b = -1, c = -1, d = -1;
+  colormodel model = colormodel::no;
 
-  color();
   void reset();
   void set(double);
   void set(double,double,double);

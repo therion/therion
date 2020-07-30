@@ -699,7 +699,7 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
       F << "<table cellspacing=\"5\">" << endl;
       for(list<colorlegendrecord>::iterator I = COLORLEGENDLIST.begin(); I != COLORLEGENDLIST.end(); I++) {
         F << "<tr>" << endl;
-        F << "<td style=\"background-color: " << rgb2svg(I->R,I->G,I->B) <<
+        F << "<td style=\"background-color: " << I->col_legend.to_svg() <<
              "; height: 24px; width: 36px;\">" << endl;
         F << "</td><td>" << I->name << "</td>" << endl;
         F << "</tr>" << endl;
