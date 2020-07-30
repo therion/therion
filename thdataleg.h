@@ -273,6 +273,7 @@ enum {
   TT_EXTENDFLAG_START = 64,
   TT_EXTENDFLAG_IGNORE = 128,
   TT_EXTENDFLAG_HIDE = 256,
+  TT_EXTENDFLAG_CNDIGNORE = 512,
 };
 
 
@@ -420,7 +421,7 @@ class thdataleg {
     backbearing, backgradient, total_length, total_bearing, total_gradient,
     total_dx, total_dy, total_dz, adj_dx, adj_dy, adj_dz,
     from_up, from_down, from_left, from_right,
-    to_up, to_down, to_left, to_right, vtresh;
+    to_up, to_down, to_left, to_right, vtresh, extend_ratio;
     
   double length_sd, counter_sd, depth_sd, bearing_sd, gradient_sd,
     dx_sd, dy_sd, dz_sd, x_sd, y_sd, z_sd, declination, implicit_declination, 

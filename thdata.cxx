@@ -1643,7 +1643,8 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->cd_leg->data_type = this->d_type;
     this->cd_leg->s_mark = this->d_mark;
     this->cd_leg->flags = this->d_flags;
-    this->cd_leg->extend = (unsigned char) this->d_extend;
+    this->cd_leg->extend = (unsigned int) this->d_extend;
+    this->cd_leg->extend_ratio = this->d_extend_ratio;
     this->d_extend &= (TT_EXTENDFLAG_DIRECTION | TT_EXTENDFLAG_IGNORE | TT_EXTENDFLAG_HIDE);
 
     this->cd_leg->psurvey = this->db->get_current_survey();
@@ -2515,14 +2516,25 @@ void thdata::set_data_flags(int nargs, char ** args)
   
 void thdata::set_data_extend(int nargs, char ** args)
 {
-  int cextend;
+  int cextend, exn;
+  double tmpdbl;
   unsigned from_index, to_index;
   from_index = 1;
   to_index = 2;
   thdataextend dumm;
   cextend = thmatch_token(args[0], thtt_extendflag);
-  if (cextend == TT_EXTENDFLAG_UNKNOWN)
-    ththrow(("unknown extend flag -- %s", args[0]))
+  if (cextend == TT_EXTENDFLAG_UNKNOWN) {
+	  if (nargs == 1) {
+	  thparse_double(exn, tmpdbl, args[0]);
+		  if (exn == TT_SV_NUMBER) {
+			  if ((tmpdbl < 0.0) || (tmpdbl > 100.0))
+				  ththrow(("extend ration out of range [0..100] -- %s", args[0]))
+		      this->d_extend_ratio = tmpdbl / 100.0;
+			  return;
+		  }
+	  }
+	  ththrow(("unknown extend flag -- %s", args[0]))
+  }
   switch (nargs) {
     case 1:
       if ((cextend & TT_EXTENDFLAG_DIRECTION) != 0) {

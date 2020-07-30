@@ -1,6 +1,7 @@
 Therion 5.5.2 (in progress):
 
 therion:
+ * added ratio of extended elevation -- extend <0..100>
  * bugs fixed
    - use proper ISO code for Czech language ('cs' instead of 'cz') [#251];
      'cz' is still allowed in the map layout for backwards compatibility

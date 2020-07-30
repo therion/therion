@@ -3320,7 +3320,7 @@ void thdb1d::process_xelev()
         }
       }
  
-      cxx += double(go_left) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy);
+      cxx += double(go_left) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy) * current_node->last_arrow->leg->leg->extend_ratio;
       
       // set end x
       if (current_node->last_arrow->is_reversed)
