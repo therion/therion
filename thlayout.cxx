@@ -2113,14 +2113,30 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.opacity = this->opacity;
   
   LAYOUT.colored_text = this->color_labels;
+  switch (this->color_model) {
+  case TT_LAYOUTCLRMODEL_GRAY:
+	  LAYOUT.output_colormodel = colormodel::grey;
+	  break;
+  case TT_LAYOUTCLRMODEL_RGB:
+	  LAYOUT.output_colormodel = colormodel::rgb;
+	  break;
+  default:
+	  LAYOUT.output_colormodel = colormodel::cmyk;
+	  break;
+  }
   
-  LAYOUT.col_background.set(this->color_map_bg.R, this->color_map_bg.G, this->color_map_bg.B);
+  this->color_map_bg.set_color(this->color_model, LAYOUT.col_background);
+  this->color_map_fg.set_color(this->color_model, LAYOUT.col_foreground);
+  this->color_preview_above.set_color(this->color_model, LAYOUT.col_preview_above);
+  this->color_preview_below.set_color(this->color_model, LAYOUT.col_preview_below);
 
-  LAYOUT.col_foreground.set(this->color_map_fg.R, this->color_map_fg.G, this->color_map_fg.B);
+  //LAYOUT.col_background.set(this->color_map_bg.R, this->color_map_bg.G, this->color_map_bg.B);
 
-  LAYOUT.col_preview_above.set(this->color_preview_above.R, this->color_preview_above.G, this->color_preview_above.B);
+  //LAYOUT.col_foreground.set(this->color_map_fg.R, this->color_map_fg.G, this->color_map_fg.B);
 
-  LAYOUT.col_preview_below.set(this->color_preview_below.R, this->color_preview_below.G, this->color_preview_below.B);
+  //LAYOUT.col_preview_above.set(this->color_preview_above.R, this->color_preview_above.G, this->color_preview_above.B);
+
+  //LAYOUT.col_preview_below.set(this->color_preview_below.R, this->color_preview_below.G, this->color_preview_below.B);
   
   LAYOUT.lang = this->lang;
   LAYOUT.langstr = thlang_getid(this->lang);

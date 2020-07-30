@@ -36,6 +36,50 @@ bool thlayout_color::is_defined() {
   return (this->defined > 0);
 }
 
+
+void thlayout_color::set_color(int output_model, color & clr) {
+	if ((this->model & output_model) > 0) {
+		switch(output_model) {
+		case TT_LAYOUTCLRMODEL_GRAY:
+			clr.set(this->W);
+			break;
+		case TT_LAYOUTCLRMODEL_RGB:
+			clr.set(this->R, this->G, this->B);
+			break;
+		default:
+			clr.set(this->C, this->M, this->Y, this->K);
+		}
+	}
+	else if ((this->model & TT_LAYOUTCLRMODEL_CMYK) > 0)
+		clr.set(this->C, this->M, this->Y, this->K);
+	else if ((this->model & TT_LAYOUTCLRMODEL_RGB) > 0)
+		clr.set(this->R, this->G, this->B);
+	else
+		clr.set(this->W);
+}
+
+void thlayout_color::print_to_file(int output_model, FILE * f) {
+	if ((this->model & output_model) > 0) {
+		switch(output_model) {
+		case TT_LAYOUTCLRMODEL_GRAY:
+			fprintf(f, "(%.5f)", this->W);
+			break;
+		case TT_LAYOUTCLRMODEL_RGB:
+			fprintf(f, "(%.5f,%.5f,%.5f)", this->R, this->G, this->B);
+			break;
+		default:
+			fprintf(f, "(%.5f,%.5f,%.5f,%.5f)", this->C, this->M, this->Y, this->K);
+		}
+	}
+	else if ((this->model & TT_LAYOUTCLRMODEL_CMYK) > 0)
+		fprintf(f, "(%.5f,%.5f,%.5f,%.5f)", this->C, this->M, this->Y, this->K);
+	else if ((this->model & TT_LAYOUTCLRMODEL_RGB) > 0)
+		fprintf(f, "(%.5f,%.5f,%.5f)", this->R, this->G, this->B);
+	else
+		fprintf(f, "(%.5f)", this->W);
+}
+
+
 void thlayout_color::RGBtoGRAYSCALE() {
 	this->W = 0.2126 * this->R + 0.7152 * this->G + 0.0722 * this->B;
 	if (this->W <= 0.0031308) {

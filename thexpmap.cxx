@@ -1280,16 +1280,16 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   fprintf(mpf,"Scale:=%.2f;\n",0.01 / this->layout->scale);
   fprintf(mpf,"MagDecl:=%.2f;\n", magdec);
   fprintf(mpf,"GridConv:=%.2f;\n", gridconv);
+  fprintf(mpf,"output_colormodel:=%s;\n", thmatch_string(this->layout->color_model, thtt_layoutclr_model));
 
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / this->layout->base_scale);
   else
 		this->layout->base_scale = this->layout->scale;
   fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n");
-  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
-    this->layout->color_map_fg.R,
-    this->layout->color_map_fg.G,
-    this->layout->color_map_fg.B);
+  fprintf(mpf,"background:=");
+  this->layout->color_map_fg.print_to_file(this->layout->color_model, mpf);
+  fprintf(mpf,";\n");
   fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
 //  fprintf(mpf,"def user_initialize = enddef;\n");
 //this->layout->export_mpost(mpf);
@@ -1748,10 +1748,13 @@ else
   // sem pride zapisanie legendy do MP suboru
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"Scale:=%.2f;\ninitialize(Scale);\n",0.01 / this->layout->base_scale);
-  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
-    this->layout->color_map_fg.R,
-    this->layout->color_map_fg.G,
-    this->layout->color_map_fg.B);
+  fprintf(mpf,"background:=");
+  this->layout->color_map_fg.print_to_file(this->layout->color_model, mpf);
+  fprintf(mpf,";\n");
+//  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
+//    this->layout->color_map_fg.R,
+//    this->layout->color_map_fg.G,
+//    this->layout->color_map_fg.B);
   //fprintf(mpf,"background:=white;\n");
   fprintf(mpf,"transparency:=false;\n");
   
