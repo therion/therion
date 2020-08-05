@@ -37,6 +37,10 @@
 %    `prologues' is set to 1 by this file. This module loads also
 %    symbol libraries.
 
+if unknown mpversion: string mpversion; mpversion := "0.0"; fi
+if scantokens(mpversion) < 1.0:
+  errmessage "MetaPost 1.0 or later required";
+fi
 
 tracingstats:=1;
 prologues:=0;
@@ -90,6 +94,28 @@ ATTR__shotflag_approx:=false;
 boolean ATTR__stationflag_splay;
 ATTR__stationflag_splay:=false;
 
+save black, white, red, green, blue;
+if OutputColormodel = "cmyk":
+  cmykcolor black, white, red, green, blue;
+  black := (0,0,0,1);
+  white := (0,0,0,0);
+  red   := (0,0.9,0.9,0.2);
+  green := (0.7,0,0.8,0.4);
+  blue  := (0.6,0.4,0,0.1);
+elseif OutputColormodel = "rgb":
+  rgbcolor black, white, red, green, blue;
+  black := (0,0,0);
+  white := (1,1,1);
+  red   := (1,0,0);
+  green := (0,1,0);
+  blue  := (0,0,1);
+else:
+  black := 0;
+  white := 1;
+  red   := 0.3;
+  green := 0.59;
+  blue  := 0.11;
+fi;
 
 color label_fill_color, label_fill_color_tmp;
 label_fill_color := (1.0, 1.0, 1.0);
@@ -594,7 +620,7 @@ enddef;
 
 def thclean expr c =
   if transparency:
-    thfill c withtransparentcolor tr_bg
+    thfill c withcolor background withtransparency 0.5
   else:
     thunfill c
   fi;
@@ -819,6 +845,13 @@ string Pname_, PXYsteps_;
 string Pmatrix_;
 
 numeric Pnum_; Pnum_=0;
+numeric pattern_file_offset;
+pattern_file_offset = 4000;
+if known numbersystem:                  % known since v1.770
+  if numbersystem <> "scaled":
+    pattern_file_offset := scantokens("1000000");
+  fi
+fi
 
 def PmakeBB_=
    PBBox_ := "[" & decimal Plft_ & " " & decimal Plow_ & " "
@@ -841,7 +874,7 @@ vardef Pfindbounds_=
 enddef;
 
 def PmakePattern_(expr name)=
-  write decimal (Pnum_*epsilon) & ":"
+  write Pname_ & ":"
     & jobname & "." & decimal charcode & ":"
     & PBBox_ & ":"
     & PXYsteps_ & ":"
@@ -876,7 +909,7 @@ def beginpattern(suffix name)=
   Pmatrix_:="[1 0 0 1 0 0]";
   Pname_:=str name;
   Pnum_:=Pnum_+1;
-  beginfig(Pnum_+4000);
+  beginfig(Pnum_+pattern_file_offset);
 enddef;
 
 def endpattern=
@@ -886,31 +919,31 @@ def endpattern=
   endfig;
   Psteps_;
   PmakePattern_(Pname_);
-  scantokens(Pname_ & "=Pnum_;");
+  scantokens("string " & Pname_ & "; "&Pname_&"="&ditto&Pname_&ditto&";");
 enddef;
 
 picture pattpict;
-color patterncolor_;
-patterncolor_ := black;
+string patterncolor_;
+patterncolor_ := "0 0 0 1";
 
 primarydef p withpattern s=
   if known s:
-
+    p
     hide(pattpict := image(draw (0,0)--(10,10));
       for i within pattpict:
-        patterncolor_ := (redpart i, greenpart i, bluepart i);
+        if colormodel i = 1:
+          patterncolor_ := decimal greypart i;
+        elseif colormodel i = 5:
+          patterncolor_ := decimal redpart i & " " & decimal greenpart i & " " & decimal bluepart i;
+        elseif colormodel i = 7:
+          patterncolor_ := decimal cyanpart i & " " & decimal magentapart i & " " & decimal yellowpart i & " " & decimal blackpart i;
+        fi
       endfor;)
-
-    p withcolor (epsilon, 10*epsilon, s*epsilon)
-    if known mpversion:
-      if scantokens(mpversion)>=1.000:
-        withprescript(decimal redpart   patterncolor_ & " " &
-                      decimal greenpart patterncolor_ & " " &
-                      decimal bluepart  patterncolor_ & " THsetpatterncolor")
-      fi;
-    fi;
+    withprescript(" " & s & " THsetpattern")
+    withprescript(" " & patterncolor_ & " THsetpatterncolor")
+    withoutcolor
   else:
-    p withcolor (1,0,0);
+    p withcolor red;
     message("Warning: undefined pattern ignored");
   fi;
 enddef;
@@ -949,31 +982,11 @@ enddef;
 % end of pattern macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% transparent rgb colors
+% transparent colors
 
-numeric RGBnum; RGBnum=0;
-string RGBname;
-
-def def_transparent_rgb (suffix name)(expr r, g, b) =
-  RGBnum := RGBnum+1;
-  RGBname := str name;
-  write decimal (RGBnum*epsilon) & ":"
-    & decimal r & " "
-    & decimal g & " "
-    & decimal b
-  to "rgbcolors.dat";
-  scantokens(RGBname & ":=RGBnum;");
+primarydef p withtransparency t =     % TODO: t currently ignored
+   p withprescript(" THsettransparency");
 enddef;
-
-primarydef p withtransparentcolor s=
-   p withcolor (epsilon, 12*epsilon, s*epsilon);
-enddef;
-
-def_transparent_rgb(tr_white, 1, 1, 1);
-def_transparent_rgb(tr_blue, 0, 0, 1);
-def_transparent_rgb(tr_black, 0, 0, 0);
-def_transparent_rgb(tr_bg,
-               redpart background, greenpart background, bluepart background);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % some useful macros from H. Hagen's MetaFun package

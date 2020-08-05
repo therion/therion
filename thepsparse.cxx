@@ -51,7 +51,7 @@ using namespace std;
 
 #define IOerr(F) ((string)"Can't open file "+F+"!\n").c_str()
 
-extern map<string,string> RGB, ALL_FONTS, ALL_PATTERNS;
+extern map<string,string> ALL_FONTS, ALL_PATTERNS;
 typedef set<unsigned char> FONTCHARS;
 extern map<string,FONTCHARS> USED_CHARS;
 list<pattern> PATTERNLIST;
@@ -153,7 +153,9 @@ CGS::CGS () {
   color[0] = -1;
   color[1] = -1;
   color[2] = -1;
-  
+  color[3] = -1;
+
+  linejoin = linecap = 1;
 //  clippathID = random();
 //  clippath = false;
 }
@@ -289,7 +291,7 @@ void MP_path::print_svg(ofstream & F, CGS & gstate, string unique_prefix) {
       }
       if (gstate.linejoin != MP_rounded) {
         F << "stroke-linejoin=";
-        if (gstate.linecap == MP_mitered) F << "\"miter\" ";
+        if (gstate.linejoin == MP_mitered) F << "\"miter\" ";
         else F << "\"bevel\" ";
       }
       if (gstate.miterlimit != 10) F << "stroke-miterlimit=\"" << 
@@ -630,7 +632,7 @@ void parse_eps(string fname, string cname, double dx, double dy,
   string font, patt;
   string pattcolor = "0 0 0";
   bool comment = true, concat = false, 
-       already_transp = false, transp_used = false, before_group_transp = false;
+       already_transp = false, transp_used = false, before_group_transp = false, cancel_transp = true;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
   deque<string> thbuffer;
   set<string> FORM_FONTS, FORM_PATTERNS;
@@ -773,55 +775,56 @@ void parse_eps(string fname, string cname, double dx, double dy,
         thbuffer.clear();
       }
       else if (tok == "setgray") {
-        if (already_transp) {  // transp off
+        if (already_transp && cancel_transp) {  // transp off
           data.MP.add(MP_transp_off);
           already_transp = false;
         }
+        cancel_transp = true;
         data.MP.add(MP_gray, thbuffer[0]);
         thbuffer.clear();
       }
       else if (tok == "setrgbcolor") {
-        if ((!((thbuffer[0] == "0.00002") && (thbuffer[1] == "0.00018"))) 
-              && already_transp) {           // transp off
+        if (already_transp && cancel_transp) {  // transp off
           data.MP.add(MP_transp_off);
           already_transp = false;
         };
-        if (thbuffer[0] == "0.00002") {        // special commands
-          if (thbuffer[1] == "0.00015") {          // patterns
-            patt = thbuffer[2];
-            if (FORM_PATTERNS.find(patt) == FORM_PATTERNS.end()) {
-              FORM_PATTERNS.insert(patt);
-            }
-            if (ALL_PATTERNS.find(patt) == ALL_PATTERNS.end()) {
-              ALL_PATTERNS.insert(make_pair(patt,u2str(patt_id)));
-              patt_id++;
-            }
-            data.MP.add(MP_pattern, patt);
-          }
-          else if (thbuffer[1] == "0.00018") {     // transparency
-            transp_used = true;
-            if (!already_transp) {
-              data.MP.add(MP_transp_on);
-              already_transp = true;
-            }
-            map<string,string>::iterator I = RGB.find(thbuffer[2]);
-            if (I != RGB.end()) {
-              data.MP.add(MP_rgb, I->second);
-            } else cerr << "Unknown color!" << endl;
-          }
-          else cerr << "Unknown special!" << endl;
-	}
-	else {                               // regular RGB color
-          data.MP.add(MP_rgb, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]);
-	}
+        cancel_transp = true;
+        data.MP.add(MP_rgb, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]);
         thbuffer.clear();
       }
       else if (tok == "setcmykcolor") {
-        if (already_transp) {  // transp off
+        if (already_transp && cancel_transp) {  // transp off
           data.MP.add(MP_transp_off);
           already_transp = false;
         }
+        cancel_transp = true;
         data.MP.add(MP_cmyk, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]+" "+thbuffer[3]);
+        thbuffer.clear();
+      }
+      else if (tok == "THsetpattern") {
+        if (already_transp && cancel_transp) {  // transp off
+          data.MP.add(MP_transp_off);
+          already_transp = false;
+        }
+        cancel_transp = true;
+        patt = thbuffer[0];
+        if (FORM_PATTERNS.find(patt) == FORM_PATTERNS.end()) {
+          FORM_PATTERNS.insert(patt);
+        }
+        if (ALL_PATTERNS.find(patt) == ALL_PATTERNS.end()) {
+          ALL_PATTERNS.insert(make_pair(patt,u2str(patt_id)));
+          patt_id++;
+        }
+        data.MP.add(MP_pattern, patt);
+        thbuffer.clear();
+      }
+      else if (tok == "THsettransparency") {
+        transp_used = true;
+        if (!already_transp) {
+          data.MP.add(MP_transp_on);
+          already_transp = true;
+          cancel_transp = false;
+        }
         thbuffer.clear();
       }
       else if (tok == "setdash") {
@@ -1013,10 +1016,10 @@ void convert_scraps_new() {
 
   ifstream P("patterns.dat");
   if(!P) therror(("Can't open patterns definition file!"));
-  char buf[500];
+  char buf[5000];
   char delim[] = ":";
   string line,num,pfile,bbox,xstep,ystep,matr;
-  while(P.getline(buf,500,'\n')) {
+  while(P.getline(buf,5000,'\n')) {
     num = strtok(buf,delim);
     pfile = strtok(NULL,delim);
     bbox = strtok(NULL,delim);
@@ -1060,8 +1063,7 @@ void convert_scraps_new() {
 int thconvert_new() { 
 
   thprintf("converting scraps* ... ");
-  
-  RGB.clear();
+
   ALL_FONTS.clear();
   ALL_PATTERNS.clear();
   USED_CHARS.clear();
@@ -1070,7 +1072,6 @@ int thconvert_new() {
   font_id = 1;
   patt_id = 1;
 
-  read_rgb();
   convert_scraps_new();
 
 //  thpdfdbg();  // in the debugging mode only

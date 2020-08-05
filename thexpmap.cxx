@@ -1456,7 +1456,7 @@ else
                   ascB = cs->B;
                   if ((ascR != pscR) || (ascG != pscG) || (ascB != pscB)) {
                     fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n", ascR, ascG, ascB);
-                    fprintf(mpf,"def_transparent_rgb(tr_bg, %.5f, %.5f, %.5f);\n", ascR, ascG, ascB);
+//                    fprintf(mpf,"def_transparent_rgb(tr_bg, %.5f, %.5f, %.5f);\n", ascR, ascG, ascB);
                     pscR = ascR;
                     pscG = ascG;
                     pscB = ascB;

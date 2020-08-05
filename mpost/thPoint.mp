@@ -734,7 +734,7 @@ def p_station_SKBB(expr pos,mark,txt)(text flags) =
   for i=flags:
     pickup PenX;
     if i="entrance":
-%      thfill fullcircle scaled 1 cm withtransparentcolor tr_blue;
+%      thfill fullcircle scaled 1 cm withcolor blue withtransparency 0.5;
       thdraw path_cave;
 %      p_label.urt(txt,pos+(0.4u,0),0,0);
       if not numeric txt:
