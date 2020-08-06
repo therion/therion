@@ -1559,6 +1559,8 @@ void export_all_symbols()
 //    fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / tmplayout.base_scale);
   fprintf(mpf,"Scale:=0.8;\n");
   fprintf(mpf,"BaseScale:=2;\n");
+  fprintf(mpf,"string OutputColormodel;\n");
+  fprintf(mpf,"OutputColormodel:=\"rgb\";\n"); // fixed to RGB, as the output is in xhtml+svg format
   fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n");
   fprintf(mpf,"background:=(1.0, 1.0, 1.0);\n");
   fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
