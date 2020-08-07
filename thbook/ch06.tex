@@ -462,15 +462,21 @@ XTherion starts. The file is commented; see the comments for details.
 \subchapter Limitations.
 
 \list
-*  scrap size = $\approx 2.8 \times 2.8$ m in the output scale (\MP\ limit)
+*  scrap size = $\approx 2.8 \times 2.8$ m in the output scale (\MP\ limit in the default
+   `scaled' mode; there is practically no limit\[It's high enough to be reached.] 
+   in the `double' mode\[To run \MP\ in the `double' mode, set
+   |mpost-options  "-numbersystem\eq double"| in the initialization file. It's not recommended
+   to use arbitrary-precision modes `decimal' and `binary', as there are still bugs in their
+   implementation and they are much slower than the `double' mode.])
 *  page size =
 
    PDF map or atlas: $\approx 5 \times 5$ m (pdf\TeX\ limit)
 
-   SVG map: unlimited
+   SVG map: limits depend on the viewing application
 *  scraps count = approx. 500--6000, depending on frequency of cross-sections
 
-   current \MP\ limit: $4 (scraps + sections) < 4096$ (may be arbitrarily increased)
+   \MP\ limit: $4 (scraps + sections) < 4000$ (in the `scaled' mode;
+   there is practically no limit in the `double' mode)
 
    pdf\TeX\ limit: $2\times pages + images + patterns +
                             6 (scraps + sections) < 32500$
