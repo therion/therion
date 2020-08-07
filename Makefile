@@ -27,9 +27,9 @@ CROSS =
 EXT =
 
 # Prefix to install to (override like so: make PREFIX=/usr)
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 # Directory to install config files in (override like so: make SYSCONFDIR=/etc)
-SYSCONFDIR = $(PREFIX)/etc
+SYSCONFDIR ?= $(PREFIX)/etc
 
 # PLATFORM CONFIG
 
@@ -192,7 +192,7 @@ init:
 	./therion --print-init-file > therion.ini
 
 install: all
-	tclsh makeinstall.tcl $(THPLATFORM) $(PREFIX) $(SYSCONFDIR)
+	tclsh makeinstall.tcl $(THPLATFORM) $(DESTDIR)$(PREFIX) $(DESTDIR)$(SYSCONFDIR)
 
 minor-release:
 	perl makerelease.pl
