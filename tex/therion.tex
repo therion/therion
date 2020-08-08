@@ -1,4 +1,4 @@
-%% 
+%%
 %% therion.tex
 %%
 %% Copyright (C) 2001-2004 Martin Budaj
@@ -18,6 +18,111 @@
 %% along with this program; if not, write to the Free Software
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% -------------------------------------------------------------------- 
+
+% LuaTex compatibility definitions taken from the LuaTeX manual:
+\ifx\directlua\undefined\else
+    \protected\def\pdfliteral             {\pdfextension literal}
+    \protected\def\pdfcolorstack          {\pdfextension colorstack}
+    \protected\def\pdfsetmatrix           {\pdfextension setmatrix}
+    \protected\def\pdfsave                {\pdfextension save\relax}
+    \protected\def\pdfrestore             {\pdfextension restore\relax}
+    \protected\def\pdfobj                 {\pdfextension obj }
+    \protected\def\pdfrefobj              {\pdfextension refobj }
+    \protected\def\pdfannot               {\pdfextension annot }
+    \protected\def\pdfstartlink           {\pdfextension startlink }
+    \protected\def\pdfendlink             {\pdfextension endlink\relax}
+    \protected\def\pdfoutline             {\pdfextension outline }
+    \protected\def\pdfdest                {\pdfextension dest }
+    \protected\def\pdfthread              {\pdfextension thread }
+    \protected\def\pdfstartthread         {\pdfextension startthread }
+    \protected\def\pdfendthread           {\pdfextension endthread\relax}
+    \protected\def\pdfinfo                {\pdfextension info }
+    \protected\def\pdfcatalog             {\pdfextension catalog }
+    \protected\def\pdfnames               {\pdfextension names }
+    \protected\def\pdfincludechars        {\pdfextension includechars }
+    \protected\def\pdffontattr            {\pdfextension fontattr }
+    \protected\def\pdfmapfile             {\pdfextension mapfile }
+    \protected\def\pdfmapline             {\pdfextension mapline }
+    \protected\def\pdftrailer             {\pdfextension trailer }
+    \protected\def\pdfglyphtounicode      {\pdfextension glyphtounicode }
+    \def\pdftexversion    {\numexpr\pdffeedback version\relax}
+    \def\pdftexrevision           {\pdffeedback revision}
+    \def\pdflastlink      {\numexpr\pdffeedback lastlink\relax}
+    \def\pdfretval        {\numexpr\pdffeedback retval\relax}
+    \def\pdflastobj       {\numexpr\pdffeedback lastobj\relax}
+    \def\pdflastannot     {\numexpr\pdffeedback lastannot\relax}
+    \def\pdfxformname     {\numexpr\pdffeedback xformname\relax}
+    \def\pdfcreationdate          {\pdffeedback creationdate}
+    \def\pdffontname      {\pdffeedback fontname}    % modified
+    \def\pdffontobjnum    {\pdffeedback fontobjnum}  % modified
+    \def\pdffontsize      {\dimexpr\pdffeedback fontsize\relax}
+    \def\pdfpageref       {\numexpr\pdffeedback pageref\relax}
+    \def\pdfcolorstackinit        {\pdffeedback colorstackinit}
+    \edef\pdfcompresslevel            {\pdfvariable compresslevel}
+    \edef\pdfobjcompresslevel         {\pdfvariable objcompresslevel}
+    \edef\pdfdecimaldigits            {\pdfvariable decimaldigits}
+    \edef\pdfgamma                    {\pdfvariable gamma}
+    \edef\pdfimageresolution          {\pdfvariable imageresolution}
+    \edef\pdfimageapplygamma          {\pdfvariable imageapplygamma}
+    \edef\pdfimagegamma               {\pdfvariable imagegamma}
+    \edef\pdfimagehicolor             {\pdfvariable imagehicolor}
+    \edef\pdfimageaddfilename         {\pdfvariable imageaddfilename}
+    \edef\pdfpkresolution             {\pdfvariable pkresolution}
+    \edef\pdfpkfixeddpi               {\pdfvariable pkfixeddpi}
+    \edef\pdfinclusioncopyfonts       {\pdfvariable inclusioncopyfonts}
+    \edef\pdfinclusionerrorlevel      {\pdfvariable inclusionerrorlevel}
+    \edef\pdfignoreunknownimages      {\pdfvariable ignoreunknownimages}
+    \edef\pdfgentounicode             {\pdfvariable gentounicode}
+    \edef\pdfomitcidset               {\pdfvariable omitcidset}
+    \edef\pdfpagebox                  {\pdfvariable pagebox}
+    \edef\pdfminorversion             {\pdfvariable minorversion}
+    \edef\pdfuniqueresname            {\pdfvariable uniqueresname}
+    \edef\pdfhorigin                  {\pdfvariable horigin}
+    \edef\pdfvorigin                  {\pdfvariable vorigin}
+    \edef\pdflinkmargin               {\pdfvariable linkmargin}
+    \edef\pdfdestmargin               {\pdfvariable destmargin}
+    \edef\pdfthreadmargin             {\pdfvariable threadmargin}
+    \edef\pdfxformmargin              {\pdfvariable xformmargin}
+    \edef\pdfpagesattr                {\pdfvariable pagesattr}
+    \edef\pdfpageattr                 {\pdfvariable pageattr}
+    \edef\pdfpageresources            {\pdfvariable pageresources}
+    \edef\pdfxformattr                {\pdfvariable xformattr}
+    \edef\pdfxformresources           {\pdfvariable xformresources}
+    \edef\pdfpkmode                   {\pdfvariable pkmode}
+    \edef\pdfsuppressoptionalinfo     {\pdfvariable suppressoptionalinfo }
+    \edef\pdftrailerid                {\pdfvariable trailerid }
+    \let\pdfpagewidth      \pagewidth
+    \let\pdfpageheight     \pageheight
+    \let\pdfadjustspacing  \adjustspacing
+    \let\pdfprotrudechars  \protrudechars
+    \let\pdfnoligatures    \ignoreligaturesinfont
+    \let\pdffontexpand     \expandglyphsinfont
+    \let\pdfcopyfont       \copyfont
+    \let\pdfxform          \saveboxresource
+    \let\pdflastxform      \lastsavedboxresourceindex
+    \let\pdfrefxform       \useboxresource
+    \let\pdfximage         \saveimageresource
+    \let\pdflastximage     \lastsavedimageresourceindex
+    \let\pdflastximagepages\lastsavedimageresourcepages
+    \let\pdfrefximage      \useimageresource
+    \let\pdfsavepos        \savepos
+    \let\pdflastxpos       \lastxpos
+    \let\pdflastypos       \lastypos
+    \let\pdfoutput         \outputmode
+    \let\pdfdraftmode      \draftmode
+    \let\pdfpxdimen        \pxdimen
+    \let\pdfinsertht       \insertht
+    \let\pdfnormaldeviate  \normaldeviate
+    \let\pdfuniformdeviate \uniformdeviate
+    \let\pdfsetrandomseed  \setrandomseed
+    \let\pdfrandomseed     \randomseed
+    \let\pdfprimitive      \primitive
+    % the next three can't be defined inside \ifx..\fi;
+    % if required, they could be loaded from external file
+    %\let\ifpdfprimitive    \ifprimitive
+    %\let\ifpdfabsnum       \ifabsnum
+    %\let\ifpdfabsdim       \ifabsdim
+\fi
 
 \ifx\pdfoutput\undefined
      \newlinechar`\^^J

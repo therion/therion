@@ -1383,7 +1383,7 @@ void build_pages() {
   if (LAYOUT.transparency || LAYOUT.OCG) {
     PDFRES << "\\ifnum\\pdftexversion<110\\pdfcatalog{ /Version /" <<
       (LAYOUT.OCG ? "1.5" : "1.4") << " }" << 
-      (LAYOUT.OCG ? "\\else\\pdfoptionpdfminorversion=5" : "") << "\\fi" << endl;
+      (LAYOUT.OCG ? "\\else\\pdfminorversion=5" : "") << "\\fi" << endl;
   }
 
   if (thcfg.reproducible_output) {

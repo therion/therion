@@ -715,10 +715,12 @@ void convert_scraps() {
     for (FONTCHARS::iterator J = ((*I).second).begin();
                              J != ((*I).second).end(); J++) {
       c = *J;
-      if (c > 31) {
+      if (c > 31 && c < 128) {
 //        if (c==37) F << "\\";    // % remains a comment
         F << c;
         if (c==92) F << " ";     // \ has to be followed by space
+      } else if (c >= 128) {
+        F << "^^" << hex << (int)c;
       }
       else {
         F << "^^" << char(c+64);

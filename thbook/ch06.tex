@@ -473,13 +473,16 @@ XTherion starts. The file is commented; see the comments for details.
    PDF map or atlas: $\approx 5 \times 5$ m (pdf\TeX\ limit)
 
    SVG map: limits depend on the viewing application
-*  scraps count = approx. 500--6000, depending on frequency of cross-sections
+*  scraps count = approx. 1000--10\,000, depending on frequency of cross-sections
 
    \MP\ limit: $4 (scraps + sections) < 4000$ (in the `scaled' mode;
    there is practically no limit in the `double' mode)
 
    pdf\TeX\ limit: $2\times pages + images + patterns +
-                            6 (scraps + sections) < 32500$
+                            6 (scraps + sections) < 32\,500$
+            (or approximately $65\,000$ when using Lua\TeX\[To use Lua\TeX,
+            set |pdftex-path  "luatex"| in the initialization file.] 
+            instead of pdf\TeX)
 \endlist
 
 
