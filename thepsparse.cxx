@@ -277,6 +277,13 @@ void MP_data::add(int i, string s) {
     ss >> set.data[1];
     ss >> set.data[2];
   }
+  else if (i == MP_cmyk) {
+    istringstream ss(s);
+    ss >> set.data[0];
+    ss >> set.data[1];
+    ss >> set.data[2];
+    ss >> set.data[3];
+  }
   else if (i == MP_pattern) {
     set.pattern = s;
   }
@@ -329,6 +336,10 @@ void MP_setting::print_svg (ofstream & F, CGS & gstate) {
       break;
     case MP_gray:
       for (int i=0; i<3; i++) gstate.color[i] = data[0];
+      gstate.pattern = "";
+      break;
+    case MP_cmyk:  // cmyk to rgb conversion necessary in SVG
+      for (int i=0; i<3; i++) gstate.color[i] = 1.0 - min(1.0, data[i] + data[3]);
       gstate.pattern = "";
       break;
     case MP_pattern:
@@ -716,6 +727,14 @@ void parse_eps(string fname, string cname, double dx, double dy,
 	else {                               // regular RGB color
           data.MP.add(MP_rgb, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]);
 	}
+        thbuffer.clear();
+      }
+      else if (tok == "setcmykcolor") {
+        if (already_transp) {  // transp off
+          data.MP.add(MP_transp_off);
+          already_transp = false;
+        }
+        data.MP.add(MP_cmyk, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]+" "+thbuffer[3]);
         thbuffer.clear();
       }
       else if (tok == "setdash") {

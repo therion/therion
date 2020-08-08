@@ -1,11 +1,14 @@
 Therion 5.5.2 (in progress):
 
 therion:
+ * added extend ignore path -- extend ignore <station1> <station2> <station3>
+ * added ratio of extended elevation -- extend <0..100>
  * bugs fixed
    - use proper ISO code for Czech language ('cs' instead of 'cz') [#251];
      'cz' is still allowed in the map layout for backwards compatibility
    - pdftex included in the windows installer failed to find images with
      '/./' or '/../' in the file path
+   - splay shots extended elevation processing
 
 --------------------------------------------------------------------------------
 

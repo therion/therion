@@ -462,6 +462,19 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
 	}
         thstack.clear();
       }
+      else if (tok == "setcmykcolor") {
+        if (mode == 0) {
+          thstack.clear();
+          continue;            // ignore color for uncolored patterns
+        }
+        if (already_transp) {           // transp off
+          print_str("/GS0 gs",TEX);
+          already_transp = false;
+        }
+        print_str(thstack[0]+" "+thstack[1]+" "+thstack[2]+" "+thstack[3]+" k "
+                 +thstack[0]+" "+thstack[1]+" "+thstack[2]+" "+thstack[3]+" K",TEX);
+        thstack.clear();
+      }
       else if (tok == "setdash") {
         buffer = "";
         for(unsigned i=0; i<thstack.size(); i++) {

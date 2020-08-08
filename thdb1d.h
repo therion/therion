@@ -84,6 +84,9 @@ class thdb1d_tree_node {
   double xx, extendx;
   
   class thdb1d_tree_arrow * first_arrow, * last_arrow, * back_arrow;
+  std::list<class thdb1d_tree_arrow * > back_buffer;
+  void push_back_arrow(class thdb1d_tree_arrow * arrow);
+  class thdb1d_tree_arrow * pop_back_arrow();
   
   thdb1d_tree_node() : is_attached(false), is_fixed(false), xx_left(1), xx_touched(false), extendx_ok(false),
     next_eq(NULL), prev_eq(NULL),
@@ -104,7 +107,9 @@ class thdb1d_tree_arrow {
   
   class thdb1dl * leg;
   
-  unsigned char extend;
+  unsigned extend;
+
+  std::list<unsigned long> extend_ignore_before;
   
   thdb1d_tree_arrow * negative;
   
