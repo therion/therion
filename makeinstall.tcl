@@ -17,6 +17,7 @@ if {$argc > 2} {
 }
 
 proc copyfile {force src dst} {
+  file mkdir [file dirname $dst]
   if {$force} {
     if {[catch { 
       file copy -force -- $src $dst
