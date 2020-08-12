@@ -178,7 +178,10 @@ thlayout::thlayout()
 
   this->def_color_legend = 0;
   this->color_legend = TT_TRUE;
-  
+
+  this->def_color_model = 0;
+  this->color_model = TT_LAYOUTCLRMODEL_CMYK;
+
   this->def_scale_bar = 0;
   this->scale_bar = -1.0;
 
@@ -740,6 +743,15 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->color_legend = sv;
       this->def_color_legend = 2;
       break;
+
+    case TT_LAYOUT_COLOR_MODEL:
+      sv = thmatch_token(args[0],thtt_layoutclr_model);
+      if (sv == TT_LAYOUTCLRMODEL_UNKNOWN)
+        ththrow(("invalid color-model switch -- %s",args[0]))
+      this->color_model = sv;
+      this->def_color_model = 2;
+      break;
+
     
     case TT_LAYOUT_SCALE_BAR:
       this->parse_len(this->scale_bar, dum, dum, 1, args, 1);
@@ -1150,7 +1162,11 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->survey_level = %d;\n", this->survey_level);
 
   thprintf("\tplayout->def_color_legend = %d;\n", this->def_color_legend);
-  thprintf("\tplayout->legend = %d;\n", this->color_legend);
+  thprintf("\tplayout->color_legend = %d;\n", this->color_legend);
+
+  thprintf("\tplayout->def_color_model = %d;\n", this->def_color_model);
+  thprintf("\tplayout->color_model = %d;\n", this->color_model);
+
 
   thprintf("\tplayout->def_legend_width = %d;\n", this->def_legend_width);
   thprintf("\tplayout->legend_width = %lg;\n",this->legend_width);
@@ -1904,6 +1920,10 @@ void thlayout::process_copy() {
         this->color_legend = srcl->color_legend;
       endcopy
 
+      begcopy(def_color_model)
+        this->color_model = srcl->color_model;
+      endcopy
+
       begcopy(def_legend_width)
         this->legend_width = srcl->legend_width;
       endcopy
@@ -2093,22 +2113,30 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.opacity = this->opacity;
   
   LAYOUT.colored_text = this->color_labels;
+  switch (this->color_model) {
+  case TT_LAYOUTCLRMODEL_GRAY:
+	  LAYOUT.output_colormodel = colormodel::grey;
+	  break;
+  case TT_LAYOUTCLRMODEL_RGB:
+	  LAYOUT.output_colormodel = colormodel::rgb;
+	  break;
+  default:
+	  LAYOUT.output_colormodel = colormodel::cmyk;
+	  break;
+  }
   
-  LAYOUT.background_r = this->color_map_bg.R;
-  LAYOUT.background_g = this->color_map_bg.G;
-  LAYOUT.background_b = this->color_map_bg.B;
+  this->color_map_bg.set_color(this->color_model, LAYOUT.col_background);
+  this->color_map_fg.set_color(this->color_model, LAYOUT.col_foreground);
+  this->color_preview_above.set_color(this->color_model, LAYOUT.col_preview_above);
+  this->color_preview_below.set_color(this->color_model, LAYOUT.col_preview_below);
 
-  LAYOUT.foreground_r = this->color_map_fg.R;
-  LAYOUT.foreground_g = this->color_map_fg.G;
-  LAYOUT.foreground_b = this->color_map_fg.B;
+  //LAYOUT.col_background.set(this->color_map_bg.R, this->color_map_bg.G, this->color_map_bg.B);
 
-  LAYOUT.preview_above_r = this->color_preview_above.R;
-  LAYOUT.preview_above_g = this->color_preview_above.G;
-  LAYOUT.preview_above_b = this->color_preview_above.B;
+  //LAYOUT.col_foreground.set(this->color_map_fg.R, this->color_map_fg.G, this->color_map_fg.B);
 
-  LAYOUT.preview_below_r = this->color_preview_below.R;
-  LAYOUT.preview_below_g = this->color_preview_below.G;
-  LAYOUT.preview_below_b = this->color_preview_below.B;
+  //LAYOUT.col_preview_above.set(this->color_preview_above.R, this->color_preview_above.G, this->color_preview_above.B);
+
+  //LAYOUT.col_preview_below.set(this->color_preview_below.R, this->color_preview_below.G, this->color_preview_below.B);
   
   LAYOUT.lang = this->lang;
   LAYOUT.langstr = thlang_getid(this->lang);

@@ -51,7 +51,7 @@ using namespace std;
 
 #define IOerr(F) ((string)"Can't open file "+F+"!\n").c_str()
 
-extern map<string,string> RGB, ALL_FONTS, ALL_PATTERNS;
+extern map<string,string> ALL_FONTS, ALL_PATTERNS;
 typedef set<unsigned char> FONTCHARS;
 extern map<string,FONTCHARS> USED_CHARS;
 list<pattern> PATTERNLIST;
@@ -62,11 +62,100 @@ extern unsigned font_id, patt_id;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+void color::reset() {
+  model = colormodel::no;
+  a = b = c = d = -1;
+}
+
+void color::set(double a) {
+  model = colormodel::grey;
+  this->a = a;
+}
+
+void color::set(double a, double b, double c) {
+  model = colormodel::rgb;
+  this->a = a;
+  this->b = b;
+  this->c = c;
+}
+
+void color::set(double a, double b, double c, double d) {
+  model = colormodel::cmyk;
+  this->a = a;
+  this->b = b;
+  this->c = c;
+  this->d = d;
+}
+
+bool color::is_white() {
+  if ((model == colormodel::grey && a == 1.0) ||
+      (model == colormodel::rgb && (a == 1.0 && b == 1.0 && c == 1.0)) ||
+      (model == colormodel::cmyk && (a == 0 && b == 0 && c == 0 && d == 0))) return true;
+  else return false;
+}
+
+bool color::is_defined() {
+  return model != colormodel::no;
+}
+
+string color::to_svg() {
+  double r = 0, g = 0, b = 0;
+  if (model == colormodel::grey)
+    r = g = b = this->a;
+  else if (model == colormodel::rgb) {
+    r = this->a;
+    g = this->b;
+    b = this->c;
+  }
+  else if (model == colormodel::cmyk) {
+    r = 1.0 - min(1.0, this->a + this->d);
+    g = 1.0 - min(1.0, this->b + this->d);
+    b = 1.0 - min(1.0, this->c + this->d);
+  }
+  else therror(("undefined color used"));
+  char ch[8];
+  sprintf(ch,"#%02x%02x%02x",int(255*r) % 256,
+                             int(255*g) % 256,
+                             int(255*b) % 256);
+  return (string) ch;
+}
+
+string color::to_pdfliteral(fillstroke fs) {
+  ostringstream s;
+  if (model == colormodel::grey) {
+    if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
+      s << this->a << " g";
+    if (fs == fillstroke::fillstroke)
+      s << " ";
+    if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
+      s << this->a << " G";
+  }
+  else if (model == colormodel::rgb) {
+    if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c << " rg";
+    if (fs == fillstroke::fillstroke)
+      s << " ";
+    if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c << " RG";
+  }
+  else if (model == colormodel::cmyk) {
+    if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c <<  " " << this->d << " k";
+    if (fs == fillstroke::fillstroke)
+      s << " ";
+    if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
+      s << this->a << " " << this->b << " " << this->c <<  " " << this->d << " K";
+  }
+  return s.str();
+}
+
 CGS::CGS () {
   color[0] = -1;
   color[1] = -1;
   color[2] = -1;
-  
+  color[3] = -1;
+
+  linejoin = linecap = 1;
 //  clippathID = random();
 //  clippath = false;
 }
@@ -93,14 +182,14 @@ void MP_text::clear() {
   xx = yy = 1;
   xy = yx = 0;
   size = 0;
-  r = g = b = -1;
+  col.reset();
   transformed = false;
 }
 
 void MP_text::print_svg(ofstream & F, CGS & gstate) {
   F << "<text font-family=\"" << font << "\" font-size=\"" << size << "\" ";
-  if (LAYOUT.colored_text && r>=0 && g>=0 && b>=0) F << 
-    "fill=\"" << rgb2svg(r,g,b) << "\" " <<
+  if (LAYOUT.colored_text && col.is_defined()) F << 
+    "fill=\"" << col.to_svg() << "\" " <<
     "stroke=\"black\" stroke-width=\"0.1\" ";
   else F << "fill=\"black\" stroke=\"none\" ";
   F << "transform=\"matrix(" << xx << " " << xy << " " << -yx << " " << -yy <<
@@ -202,7 +291,7 @@ void MP_path::print_svg(ofstream & F, CGS & gstate, string unique_prefix) {
       }
       if (gstate.linejoin != MP_rounded) {
         F << "stroke-linejoin=";
-        if (gstate.linecap == MP_mitered) F << "\"miter\" ";
+        if (gstate.linejoin == MP_mitered) F << "\"miter\" ";
         else F << "\"bevel\" ";
       }
       if (gstate.miterlimit != 10) F << "stroke-miterlimit=\"" << 
@@ -277,6 +366,13 @@ void MP_data::add(int i, string s) {
     ss >> set.data[1];
     ss >> set.data[2];
   }
+  else if (i == MP_cmyk) {
+    istringstream ss(s);
+    ss >> set.data[0];
+    ss >> set.data[1];
+    ss >> set.data[2];
+    ss >> set.data[3];
+  }
   else if (i == MP_pattern) {
     set.pattern = s;
   }
@@ -329,6 +425,10 @@ void MP_setting::print_svg (ofstream & F, CGS & gstate) {
       break;
     case MP_gray:
       for (int i=0; i<3; i++) gstate.color[i] = data[0];
+      gstate.pattern = "";
+      break;
+    case MP_cmyk:  // cmyk to rgb conversion necessary in SVG
+      for (int i=0; i<3; i++) gstate.color[i] = 1.0 - min(1.0, data[i] + data[3]);
       gstate.pattern = "";
       break;
     case MP_pattern:
@@ -527,12 +627,12 @@ string process_pdf_string2(string s, string font) {
 
 void parse_eps(string fname, string cname, double dx, double dy, 
                double & c1, double & c2, double & c3, double & c4, 
-               converted_data & data, double R, double G, double B) {
+               converted_data & data, color col) {
   string tok, buffer;
   string font, patt;
   string pattcolor = "0 0 0";
   bool comment = true, concat = false, 
-       already_transp = false, transp_used = false, before_group_transp = false;
+       already_transp = false, transp_used = false, before_group_transp = false, cancel_transp = true;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
   deque<string> thbuffer;
   set<string> FORM_FONTS, FORM_PATTERNS;
@@ -675,47 +775,56 @@ void parse_eps(string fname, string cname, double dx, double dy,
         thbuffer.clear();
       }
       else if (tok == "setgray") {
-        if (already_transp) {  // transp off
+        if (already_transp && cancel_transp) {  // transp off
           data.MP.add(MP_transp_off);
           already_transp = false;
         }
+        cancel_transp = true;
         data.MP.add(MP_gray, thbuffer[0]);
         thbuffer.clear();
       }
       else if (tok == "setrgbcolor") {
-        if ((!((thbuffer[0] == "0.00002") && (thbuffer[1] == "0.00018"))) 
-              && already_transp) {           // transp off
+        if (already_transp && cancel_transp) {  // transp off
           data.MP.add(MP_transp_off);
           already_transp = false;
         };
-        if (thbuffer[0] == "0.00002") {        // special commands
-          if (thbuffer[1] == "0.00015") {          // patterns
-            patt = thbuffer[2];
-            if (FORM_PATTERNS.find(patt) == FORM_PATTERNS.end()) {
-              FORM_PATTERNS.insert(patt);
-            }
-            if (ALL_PATTERNS.find(patt) == ALL_PATTERNS.end()) {
-              ALL_PATTERNS.insert(make_pair(patt,u2str(patt_id)));
-              patt_id++;
-            }
-            data.MP.add(MP_pattern, patt);
-          }
-          else if (thbuffer[1] == "0.00018") {     // transparency
-            transp_used = true;
-            if (!already_transp) {
-              data.MP.add(MP_transp_on);
-              already_transp = true;
-            }
-            map<string,string>::iterator I = RGB.find(thbuffer[2]);
-            if (I != RGB.end()) {
-              data.MP.add(MP_rgb, I->second);
-            } else cerr << "Unknown color!" << endl;
-          }
-          else cerr << "Unknown special!" << endl;
-	}
-	else {                               // regular RGB color
-          data.MP.add(MP_rgb, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]);
-	}
+        cancel_transp = true;
+        data.MP.add(MP_rgb, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]);
+        thbuffer.clear();
+      }
+      else if (tok == "setcmykcolor") {
+        if (already_transp && cancel_transp) {  // transp off
+          data.MP.add(MP_transp_off);
+          already_transp = false;
+        }
+        cancel_transp = true;
+        data.MP.add(MP_cmyk, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]+" "+thbuffer[3]);
+        thbuffer.clear();
+      }
+      else if (tok == "THsetpattern") {
+        if (already_transp && cancel_transp) {  // transp off
+          data.MP.add(MP_transp_off);
+          already_transp = false;
+        }
+        cancel_transp = true;
+        patt = thbuffer[0];
+        if (FORM_PATTERNS.find(patt) == FORM_PATTERNS.end()) {
+          FORM_PATTERNS.insert(patt);
+        }
+        if (ALL_PATTERNS.find(patt) == ALL_PATTERNS.end()) {
+          ALL_PATTERNS.insert(make_pair(patt,u2str(patt_id)));
+          patt_id++;
+        }
+        data.MP.add(MP_pattern, patt);
+        thbuffer.clear();
+      }
+      else if (tok == "THsettransparency") {
+        transp_used = true;
+        if (!already_transp) {
+          data.MP.add(MP_transp_on);
+          already_transp = true;
+          cancel_transp = false;
+        }
         thbuffer.clear();
       }
       else if (tok == "setdash") {
@@ -819,9 +928,7 @@ void parse_eps(string fname, string cname, double dx, double dy,
         text.yy = fntmatr.transf[3];
         text.x = fntmatr.transf[4];
         text.y = fntmatr.transf[5];
-	text.r = R;
-	text.g = G;
-	text.b = B;
+        text.col = col;
         concat = false;
         data.MP.add(text);
         thbuffer.clear();
@@ -849,12 +956,12 @@ void convert_scraps_new() {
   
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
-    if (I->F != "") parse_eps(I->F, I->C, I->S1, I->S2, I->F1, I->F2, I->F3, I->F4, I->Fc, I->r, I->g, I->b);
+    if (I->F != "") parse_eps(I->F, I->C, I->S1, I->S2, I->F1, I->F2, I->F3, I->F4, I->Fc, I->col_scrap);
     if (I->G != "") parse_eps(I->G, I->C, I->S1, I->S2, I->G1, I->G2, I->G3, I->G4, I->Gc);
     if (I->B != "") parse_eps(I->B, "", I->S1, I->S2, I->B1, I->B2, I->B3, I->B4, I->Bc);
     if (I->I != "") parse_eps(I->I, "", I->S1, I->S2, I->I1, I->I2, I->I3, I->I4, I->Ic);
-    if (I->E != "") parse_eps(I->E, "", I->S1, I->S2, I->E1, I->E2, I->E3, I->E4, I->Ec, I->r, I->g, I->b);
-    if (I->X != "") parse_eps(I->X, "", I->S1, I->S2, I->X1, I->X2, I->X3, I->X4, I->Xc, I->r, I->g, I->b);
+    if (I->E != "") parse_eps(I->E, "", I->S1, I->S2, I->E1, I->E2, I->E3, I->E4, I->Ec, I->col_scrap);
+    if (I->X != "") parse_eps(I->X, "", I->S1, I->S2, I->X1, I->X2, I->X3, I->X4, I->Xc, I->col_scrap);
   }
 
   for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
@@ -909,10 +1016,10 @@ void convert_scraps_new() {
 
   ifstream P("patterns.dat");
   if(!P) therror(("Can't open patterns definition file!"));
-  char buf[500];
+  char buf[5000];
   char delim[] = ":";
   string line,num,pfile,bbox,xstep,ystep,matr;
-  while(P.getline(buf,500,'\n')) {
+  while(P.getline(buf,5000,'\n')) {
     num = strtok(buf,delim);
     pfile = strtok(NULL,delim);
     bbox = strtok(NULL,delim);
@@ -956,8 +1063,7 @@ void convert_scraps_new() {
 int thconvert_new() { 
 
   thprintf("converting scraps* ... ");
-  
-  RGB.clear();
+
   ALL_FONTS.clear();
   ALL_PATTERNS.clear();
   USED_CHARS.clear();
@@ -966,7 +1072,6 @@ int thconvert_new() {
   font_id = 1;
   patt_id = 1;
 
-  read_rgb();
   convert_scraps_new();
 
 //  thpdfdbg();  // in the debugging mode only

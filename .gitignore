@@ -15,7 +15,6 @@ thlangdata.cxx
 thchencdata.h
 SYMBOLS.txt
 innosetup.ini
-thlibrarydata.cxx
 xtherion/therion.tcl
 .*
 !.gitignore

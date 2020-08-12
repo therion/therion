@@ -540,7 +540,7 @@ You may fill them in three ways:
  * fill |path| with a predefined pattern using a |withpattern| keyword.
 \endlist
 
-Patterns are defined using the same user interface (without the
+Patterns are defined using the same user interface (except the
 |patterncolor| macro) as described in the article
 
 \list
@@ -551,6 +551,9 @@ Patterns are defined using the same user interface (without the
 
 You may use standard \MP\ |draw| and similar macros without setting of {\it T}
 variable in the pattern definitions.
+In PDF output, all patterns are {\it uncolored}---this means that any colour
+information specified in the pattern definition is ignored and the colour is
+assigned later, when the pattern is used (using |symbol-colour| layout option).
 
 An example of how to define and use patterns:
 

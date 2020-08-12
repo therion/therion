@@ -247,6 +247,7 @@ def l_overhang_SKBB (expr P) =
   forever:
     t := arctime (cas + mojkrok/2) of P;
     t2 := arctime (cas + mojkrok) of P;
+    if cas + mojkrok >= dlzka: t2 := arctime (dlzka-epsilon) of P; fi
     thfill (subpath (t1,t2) of P) --
       ((point t of P) + .3u * unitvector(thdir(P,t) rotated 90)) --
       cycle;

@@ -174,7 +174,8 @@ class thdata : public thdataobject {
     d_last_equate,  ///< Last data equate.
     d_extend;  ///< Extend flags.
     
-  double d_vtresh; ///< Vertical threshold.
+  double d_vtresh, ///< Vertical threshold.
+   d_extend_ratio; ///< Extend ratio.
     
   void reset_data_sd();  ///< Reset data sd
   

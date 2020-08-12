@@ -27,9 +27,9 @@ CROSS =
 EXT =
 
 # Prefix to install to (override like so: make PREFIX=/usr)
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 # Directory to install config files in (override like so: make SYSCONFDIR=/etc)
-SYSCONFDIR = $(PREFIX)/etc
+SYSCONFDIR ?= $(PREFIX)/etc
 
 # PLATFORM CONFIG
 
@@ -171,16 +171,15 @@ version:
 	python3 set_version.py .
 	echo "[PROJ]" > innosetup.ini && echo "version=$(PROJ_MVER)" >> innosetup.ini
 
-$(OUTDIR)/therion: version $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
-ifneq ($(THPLATFORM),WIN32)
-	$(MAKE) library
-	$(MAKE) $(OUTDIR)/thlibrary.o
-	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
-endif
+thversion.h: version
 
-tests: version $(OBJECTS) $(TESTOBJECTS_P)
+$(OUTDIR)/therion: $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
+
+$(OUTDIR)/utest$(EXT): $(OBJECTS) $(TESTOBJECTS_P) 
 	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/utest$(EXT) $(OBJECTS) $(TESTOBJECTS_P) $(LDFLAGS) $(LIBS)
+
+tests: $(OUTDIR)/utest$(EXT)
 ifneq ($(THPLATFORM),WIN32)
 	$(OUTDIR)/utest$(EXT)
 endif
@@ -192,7 +191,7 @@ init:
 	./therion --print-init-file > therion.ini
 
 install: all
-	tclsh makeinstall.tcl $(THPLATFORM) $(PREFIX) $(SYSCONFDIR)
+	tclsh makeinstall.tcl $(THPLATFORM) $(DESTDIR)$(PREFIX) $(DESTDIR)$(SYSCONFDIR)
 
 minor-release:
 	perl makerelease.pl
@@ -215,12 +214,14 @@ depend:
 
 library:
 	$(THXTHMKCMD) --print-library-src thlibrarydata.thcfg > thlibrarydata.log
-	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
 	perl makelibrary.pl thlibrarydata.log > thlibrarydata.tmp
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
-xtherion/xtherion: version xtherion/*.tcl
+xtherion/therion.tcl:
+	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
+
+xtherion/xtherion: version xtherion/therion.tcl xtherion/*.tcl
 	$(MAKE) -C ./xtherion
 
 loch/loch: version loch/*.h loch/*.cxx loch/*.c
@@ -241,7 +242,7 @@ $(OUTDIR)/thbook/thbook.pdf: thbook/*.tex
 	$(MAKE) -C thbook
 
 clean:
-	perl makefile.pl rm -q thlibrarydata.cxx ./xtherion/therion.tcl
+	perl makefile.pl rm -q ./xtherion/therion.tcl
 	perl makefile.pl rmdir -q samples.doc
 	$(MAKE) -C ./samples clean
 	$(MAKE) cleanrest
@@ -272,9 +273,6 @@ thmpost.h: mpost/*.mp
 
 thmpost.cxx: mpost/*.mp
 	$(MAKE) -C ./mpost
-
-thlibrarydata.cxx:
-	perl makefile.pl cp thlibrarydata.src thlibrarydata.cxx
 
 thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 	perl thsymbolsetlist.pl
@@ -438,7 +436,8 @@ $(OUTDIR)/thdatabase.o: thdatabase.cxx thdatabase.h thdataobject.h thperson.h \
  thdatastation.h thlookup.h thlocale.h thgrade.h thcomment.h thlayout.h \
  thsymbolset.h thsymbolsetlist.h thscrap.h thsketch.h thpic.h thtrans.h \
  th2ddataobject.h thpoint.h thline.h tharea.h thjoin.h thmap.h thimport.h \
- thsurface.h thendscrap.h
+ thsurface.h thendscrap.h thconfig.h thinput.h thexporter.h thexport.h \
+ thselector.h thproj.h
 $(OUTDIR)/thdataleg.o: thdataleg.cxx thdataleg.h thparse.h thbuffer.h thmbuffer.h \
  thobjectname.h therion.h thobjectsrc.h thinfnan.h thcs.h thcsdata.h
 $(OUTDIR)/thdataobject.o: thdataobject.cxx thdataobject.h thdatabase.h thmbuffer.h \
@@ -564,7 +563,7 @@ $(OUTDIR)/thendsurvey.o: thendsurvey.cxx thendsurvey.h thdataobject.h thdatabase
  thscraplo.h thlayoutln.h thscrapen.h thscraplp.h thexception.h
 $(OUTDIR)/thepsparse.o: thepsparse.cxx thepsparse.h thpdfdbg.h thexception.h \
  therion.h thbuffer.h thpdfdata.h thtexfonts.h thconvert.h
-$(OUTDIR)/therion-main.o: therion-main.cxx therion.h thcmdline.h thconfig.h \
+therion-main.o: therion-main.cxx therion.h thcmdline.h thconfig.h \
  thbuffer.h thmbuffer.h thinput.h thparse.h thexporter.h thexport.h \
  thobjectsrc.h thlayout.h thdataobject.h thdatabase.h thdb1d.h \
  thobjectid.h thinfnan.h thdataleg.h thobjectname.h thdb3d.h \
@@ -573,7 +572,8 @@ $(OUTDIR)/therion-main.o: therion-main.cxx therion.h thcmdline.h thconfig.h \
  thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
  thlayoutclr.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
  thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h thdatareader.h \
- thexception.h thlibrary.h thinit.h thversion.h thtexfonts.h thbezier.h
+ thexception.h thlibrary.h thinit.h thversion.h thtexfonts.h thbezier.h \
+ thlogfile.h thproj.h
 $(OUTDIR)/therion.o: therion.cxx therion.h thlogfile.h thbuffer.h thtmpdir.h \
  thcmdline.h thconfig.h thmbuffer.h thinput.h thparse.h thexporter.h \
  thexport.h thobjectsrc.h thlayout.h thdataobject.h thdatabase.h thdb1d.h \
@@ -717,7 +717,7 @@ $(OUTDIR)/thinit.o: thinit.cxx thinit.h thbuffer.h thmbuffer.h thinput.h thparse
  thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thlayoutclr.h thscraplo.h \
  thlayoutln.h thscrapen.h thscraplp.h thsymbolset.h thsymbolsetlist.h \
  thlocale.h thselector.h thexception.h thtexfonts.h thlang.h thlangdata.h \
- thtmpdir.h thcs.h thcsdata.h
+ thtmpdir.h thcs.h thcsdata.h thproj.h
 $(OUTDIR)/thinput.o: thinput.cxx thinput.h thbuffer.h thmbuffer.h thparse.h \
  thchenc.h thchencdata.h therion.h thexception.h
 $(OUTDIR)/thjoin.o: thjoin.cxx thjoin.h thdataobject.h thdatabase.h thmbuffer.h \
@@ -888,7 +888,8 @@ $(OUTDIR)/thpoint.o: thpoint.cxx thpoint.h th2ddataobject.h thdataobject.h \
  thexception.h thexpmap.h thexport.h thlayout.h thsymbolset.h \
  thsymbolsetlist.h thlocale.h thlang.h thlangdata.h thtflength.h thtf.h \
  thtexfonts.h thscrap.h thsketch.h thpic.h thtrans.h
-$(OUTDIR)/thproj.o: thproj.cxx thexception.h therion.h thbuffer.h thproj.h
+$(OUTDIR)/thproj.o: thproj.cxx thexception.h therion.h thbuffer.h thproj.h \
+ thlogfile.h
 $(OUTDIR)/thscrap.o: thscrap.cxx thscrap.h thdataobject.h thdatabase.h thmbuffer.h \
  thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h thparse.h \
  thobjectname.h therion.h thobjectsrc.h thdb3d.h loch/lxMath.h thattr.h \
@@ -1039,6 +1040,7 @@ $(OUTDIR)/thwarppme.o: thwarppme.cxx thinfnan.h thwarppme.h thwarppdef.h therion
  thtrans.h
 $(OUTDIR)/thwarppt.o: thwarppt.cxx thwarppt.h thtrans.h thinfnan.h thwarppme.h \
  thwarppdef.h therion.h
-$(OUTDIR)/utest-main.o: utest-main.cxx extern/catch2/catch.hpp
-$(OUTDIR)/utest-proj.o: utest-proj.cxx extern/catch2/catch.hpp thproj.h thcsdata.h \
+utest-main.o: utest-main.cxx extern/catch2/catch.hpp thinit.h thbuffer.h \
+ thmbuffer.h thinput.h thparse.h
+utest-proj.o: utest-proj.cxx extern/catch2/catch.hpp thproj.h thcsdata.h \
  thparse.h thbuffer.h thmbuffer.h thcs.h

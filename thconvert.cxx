@@ -50,7 +50,7 @@ using namespace std;
 
 #define IOerr(F) ((string)"Can't open file "+F+"!\n").c_str()
 
-map<string,string> RGB, ALL_FONTS, ALL_PATTERNS;
+map<string,string> ALL_FONTS, ALL_PATTERNS;
 typedef set<unsigned char> FONTCHARS;
 map<string,FONTCHARS> USED_CHARS;
 
@@ -238,13 +238,13 @@ string process_pdf_string(string s, string font) {
 //                30 -- legend
 //                31 -- northarrow, scalebar
 
-void distill_eps(string name, string fname, string cname, int mode, ofstream& TEX, double r = -1, double g = -1, double b = -1) {
+void distill_eps(string name, string fname, string cname, int mode, ofstream& TEX, color col = color()) {
   string form_id;
   string tok, lastmovex, lastmovey, buffer;
   string font, patt, fntmatr;
-  string pattcolor = "0 0 0";
+  string pattcolor = "/CS2 cs 0 0 0 1";
   bool comment = true, concat = false, 
-       already_transp = false, transp_used = false, before_group_transp = false;
+       already_transp = false, transp_used = false, before_group_transp = false, cancel_transp = true;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
   double dx, dy;
   char x[20],y[20];
@@ -255,8 +255,8 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
   convert_mode = mode;
   
   ostringstream text_attr;
-  if (LAYOUT.colored_text && r >= 0 && g >= 0 && b >= 0) {
-    text_attr << "0.1 w " << r << " " << g << " " << b << " rg 2 Tr ";
+  if (LAYOUT.colored_text && col.is_defined()) {
+    text_attr << "0.1 w " << col.to_pdfliteral() << " 2 Tr ";
   };
 
   ifstream F(fname.c_str());
@@ -414,10 +414,11 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
           thstack.clear();
           continue;            // ignore color for uncolored patterns
         }
-        if (already_transp) {  // transp off
+        if (already_transp && cancel_transp) {  // transp off
           print_str("/GS0 gs",TEX);
           already_transp = false;
         }
+        cancel_transp = true;
         print_str(thstack[0]+" g "+thstack[0]+" G",TEX);
         thstack.clear();
       }
@@ -426,40 +427,53 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
           thstack.clear();
           continue;            // ignore color for uncolored patterns
         }
-        if ((!((thstack[0] == "0.00002") && (thstack[1] == "0.00018"))) 
-              && already_transp) {           // transp off
+        if (already_transp && cancel_transp) {           // transp off
           print_str("/GS0 gs",TEX);
           already_transp = false;
         };
-        if (thstack[0] == "0.00002") {        // special commands
-          if (thstack[1] == "0.00015") {          // patterns
-            patt = thstack[2];
-            if (FORM_PATTERNS.find(patt) == FORM_PATTERNS.end()) {
-              FORM_PATTERNS.insert(patt);
-            }
-            if (ALL_PATTERNS.find(patt) == ALL_PATTERNS.end()) {
-              ALL_PATTERNS.insert(make_pair(patt,u2str(patt_id)));
-              patt_id++;
-            }
-            print_str("/CS1 cs "+pattcolor+" /"+patt+" scn",TEX);
-          }
-          else if (thstack[1] == "0.00018") {     // transparency
-            transp_used = true;
-            if (!already_transp) {
-              print_str("/GS1 gs",TEX);
-              already_transp = true;
-            }
-            map<string,string>::iterator I = RGB.find(thstack[2]);
-            if (I != RGB.end()) {
-              print_str((*I).second+" rg "+(*I).second+" RG",TEX);
-            } else cerr << "Unknown color!" << endl;
-          }
-          else cerr << "Unknown special!" << endl;
-	}
-	else {                               // regular RGB color
-          print_str(thstack[0]+" "+thstack[1]+" "+thstack[2]+" rg "
-                   +thstack[0]+" "+thstack[1]+" "+thstack[2]+" RG",TEX);
-	}
+        cancel_transp = true;
+        print_str(thstack[0]+" "+thstack[1]+" "+thstack[2]+" rg "
+                 +thstack[0]+" "+thstack[1]+" "+thstack[2]+" RG",TEX);
+        thstack.clear();
+      }
+      else if (tok == "setcmykcolor") {
+        if (mode == 0) {
+          thstack.clear();
+          continue;            // ignore color for uncolored patterns
+        }
+        if (already_transp && cancel_transp) {           // transp off
+          print_str("/GS0 gs",TEX);
+          already_transp = false;
+        }
+        cancel_transp = true;
+        print_str(thstack[0]+" "+thstack[1]+" "+thstack[2]+" "+thstack[3]+" k "
+                 +thstack[0]+" "+thstack[1]+" "+thstack[2]+" "+thstack[3]+" K",TEX);
+        thstack.clear();
+      }
+      else if (tok == "THsetpattern") {
+        if (already_transp && cancel_transp) {  // transp off
+          print_str("/GS0 gs",TEX);
+          already_transp = false;
+        }
+        cancel_transp = true;
+        patt = thstack[0];
+        if (FORM_PATTERNS.find(patt) == FORM_PATTERNS.end()) {
+          FORM_PATTERNS.insert(patt);
+        }
+        if (ALL_PATTERNS.find(patt) == ALL_PATTERNS.end()) {
+          ALL_PATTERNS.insert(make_pair(patt,u2str(patt_id)));
+          patt_id++;
+        }
+        print_str(pattcolor+" /"+patt+" scn",TEX);
+        thstack.clear();
+      }
+      else if (tok == "THsettransparency") {
+        transp_used = true;
+        if (!already_transp) {
+          print_str("/GS1 gs",TEX);
+          already_transp = true;
+          cancel_transp = false;
+        }
         thstack.clear();
       }
       else if (tok == "setdash") {
@@ -566,7 +580,12 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         thstack.clear();
       }
       else if (tok == "THsetpatterncolor") {
-        pattcolor = thstack[0] + " " + thstack[1] + " " + thstack[2];
+        if (thstack.size() == 1)
+          pattcolor = "/CS3 cs " + thstack[0];
+        else if (thstack.size() == 3)
+          pattcolor = "/CS1 cs " + thstack[0] + " " + thstack[1] + " " + thstack[2];
+        else if (thstack.size() == 4)
+          pattcolor = "/CS2 cs " + thstack[0] + " " + thstack[1] + " " + thstack[2] + " " + thstack[3];
         thstack.clear();
       }
       else {
@@ -616,7 +635,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
                  "\\space 0 R ";
         }
         TEX << ">> ";
-        TEX << "/ColorSpace << /CS1 [/Pattern /DeviceRGB] >> ";
+        TEX << "/ColorSpace << /CS1 [/Pattern /DeviceRGB] /CS2 [/Pattern /DeviceCMYK] /CS3 [/Pattern /DeviceGray] >> ";
       }
       TEX << "} ";
     }
@@ -638,12 +657,12 @@ void convert_scraps() {
   for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
 //    cout << "*" << flush;
-    if (I->F != "") distill_eps(I->name, I->F, I->C, 10, TEX, I->r, I->g, I->b);
+    if (I->F != "") distill_eps(I->name, I->F, I->C, 10, TEX, I->col_scrap);
     if (I->G != "") distill_eps(I->name, I->G, I->C, 11, TEX);
     if (I->B != "") distill_eps(I->name, I->B, "", 12, TEX);
     if (I->I != "") distill_eps(I->name, I->I, "", 13, TEX);
-    if (I->E != "") distill_eps(I->name, I->E, "", 14, TEX, I->r, I->g, I->b);
-    if (I->X != "") distill_eps(I->name, I->X, "", 20, TEX, I->r, I->g, I->b);
+    if (I->E != "") distill_eps(I->name, I->E, "", 14, TEX, I->col_scrap);
+    if (I->X != "") distill_eps(I->name, I->X, "", 20, TEX, I->col_scrap);
   }
 
   // similarly with legend (distill_eps( , , , 30, TEX))
@@ -674,6 +693,7 @@ void convert_scraps() {
 
   ofstream F("th_fontdef.tex");
   if(!F) therror((IOerr("th_fontdef.tex")));
+  F << "% FONTS:" << endl;
   F.setf(ios::fixed, ios::floatfield);
   F.precision(2);
   for (map<string,string>::iterator I = ALL_FONTS.begin(); 
@@ -695,10 +715,12 @@ void convert_scraps() {
     for (FONTCHARS::iterator J = ((*I).second).begin();
                              J != ((*I).second).end(); J++) {
       c = *J;
-      if (c > 31) {
+      if (c > 31 && c < 128) {
 //        if (c==37) F << "\\";    // % remains a comment
         F << c;
         if (c==92) F << " ";     // \ has to be followed by space
+      } else if (c >= 128) {
+        F << "^^" << hex << (int)c;
       }
       else {
         F << "^^" << char(c+64);
@@ -707,12 +729,13 @@ void convert_scraps() {
     F << "\\endinclude";
   }
   F << "\\endgroup" << endl;
+  F << "% PATTERNS:" << endl;
   ifstream P("patterns.dat");
   if(!P) therror((IOerr("patterns.dat")));
-  char buf[200];
+  char buf[5000];
   char delim[] = ":";
   string line,num,pfile,bbox,xstep,ystep,matr;
-  while(P.getline(buf,200,'\n')) {
+  while(P.getline(buf,5000,'\n')) {
     num = strtok(buf,delim);
     pfile = strtok(NULL,delim);
     bbox = strtok(NULL,delim);
@@ -773,9 +796,7 @@ void convert_scraps() {
   colorlegendrecord lcr;
   for(list<colorlegendrecord>::iterator I = COLORLEGENDLIST.begin(); 
                                    I != COLORLEGENDLIST.end(); I++) {
-    lcr.R = I->R;
-    lcr.G = I->G;
-    lcr.B = I->B;
+    lcr.col_legend = I->col_legend;
     lcr.texname = I->texname;
     legend_color.push_back(lcr);
   }
@@ -794,10 +815,9 @@ void convert_scraps() {
     for (int j = 0; j < columns; j++) {
       pos = i + j * rows;
       if (pos < legendbox_num) {
-        LEGCOLOR << "  \\colorlegendbox{" << 
-	legend_color[pos].R << "}{" <<
-	legend_color[pos].G << "}{" << 
-	legend_color[pos].B << "}%" << endl;
+        LEGCOLOR << "  \\colorlegendbox{";
+        if (LAYOUT.transparency) LEGCOLOR << "/GS1 gs ";   // colorlegendbox argument is enclosed in q ... Q
+        LEGCOLOR << legend_color[pos].col_legend.to_pdfliteral(fillstroke::fill) << "}%" << endl;
         LEGCOLOR << "  \\legendsymbolbox{\\pdflastxform}{" <<
 	legend_color[pos].texname << "}\\hskip10pt" << endl;
       }
@@ -809,20 +829,6 @@ void convert_scraps() {
 
 }
 
-void read_rgb() {
-  ifstream F("rgbcolors.dat");
-  if(!F) therror((IOerr("rgbcolors.dat")));
-  char buf[100];
-  string line, color, value;
-  while(F.getline(buf,100,'\n')) {
-    line = buf;
-    color = line.substr(0,line.find(':'));
-    value = line.substr(line.find(':')+1,line.size()-line.find(':')-1);
-    RGB.insert(make_pair(color,value));
-  }
-  F.close();
-}
-
 int thconvert() { 
 
 #ifdef NOTHERION
@@ -830,8 +836,7 @@ int thconvert() {
 #else
   thprintf("converting scraps ... ");
 #endif
-  
-  RGB.clear();
+
   ALL_FONTS.clear();
   ALL_PATTERNS.clear();
   USED_CHARS.clear();
@@ -841,7 +846,6 @@ int thconvert() {
 #ifdef NOTHERION
   read_hash();
 #endif
-  read_rgb();
   convert_scraps();
 
   thpdfdbg();  // in the debugging mode only

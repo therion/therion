@@ -1280,16 +1280,17 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   fprintf(mpf,"Scale:=%.2f;\n",0.01 / this->layout->scale);
   fprintf(mpf,"MagDecl:=%.2f;\n", magdec);
   fprintf(mpf,"GridConv:=%.2f;\n", gridconv);
+  fprintf(mpf,"string OutputColormodel;\n");
+  fprintf(mpf,"OutputColormodel:=\"%s\";\n", thmatch_string(this->layout->color_model, thtt_layoutclr_model));
 
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / this->layout->base_scale);
   else
 		this->layout->base_scale = this->layout->scale;
-  fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n");
-  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
-    this->layout->color_map_fg.R,
-    this->layout->color_map_fg.G,
-    this->layout->color_map_fg.B);
+  fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n"); // TODO: colormodel support
+  fprintf(mpf,"background:=");
+  this->layout->color_map_fg.print_to_file(this->layout->color_model, mpf);
+  fprintf(mpf,";\n");
   fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
 //  fprintf(mpf,"def user_initialize = enddef;\n");
 //this->layout->export_mpost(mpf);
@@ -1393,7 +1394,7 @@ else
     fprintf(plf,"# COLOR LEGEND\n");
     for (list<colorlegendrecord>::iterator cli = COLORLEGENDLIST.begin();
       cli != COLORLEGENDLIST.end(); cli++) {
-      fprintf(plf,"# %4.0f %4.0f %4.0f %s\n", 100.0 * cli->R, 100.0 * cli->G, 100.0 * cli->B, cli->texname.c_str());
+      fprintf(plf,"# %4.0f %4.0f %4.0f %4.0f %s\n", 100.0 * cli->col_legend.a, 100.0 * cli->col_legend.b, 100.0 * cli->col_legend.c, 100.0 * cli->col_legend.d, cli->texname.c_str());
     }
     fprintf(plf,"\n\n\n");
   }
@@ -1455,7 +1456,7 @@ else
                   ascB = cs->B;
                   if ((ascR != pscR) || (ascG != pscG) || (ascB != pscB)) {
                     fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n", ascR, ascG, ascB);
-                    fprintf(mpf,"def_transparent_rgb(tr_bg, %.5f, %.5f, %.5f);\n", ascR, ascG, ascB);
+//                    fprintf(mpf,"def_transparent_rgb(tr_bg, %.5f, %.5f, %.5f);\n", ascR, ascG, ascB);
                     pscR = ascR;
                     pscG = ascG;
                     pscB = ascB;
@@ -1604,9 +1605,10 @@ else
                   SCRAPITEM->sect = 0;
                   SCRAPITEM->name = thexpmap_u2string(sscrap);
 
-                  SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
-                  SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
-                  SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+//                  SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
+//                  SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
+//                  SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+                  SCRAPITEM->col_scrap.set(ascR, ascG, ascB);
                   
                   if (export_sections) {
                     fprintf(plf,"\t\t Z => 1,\n");    
@@ -1683,9 +1685,10 @@ else
                     SCRAPITEM->sect = 0;
                     SCRAPITEM->name = thexpmap_u2string(sscrap + 1);
       
-                    SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
-                    SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
-                    SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+//                    SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
+//                    SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
+//                    SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+                    SCRAPITEM->col_scrap.set(ascR, ascG, ascB);
       
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     sprintf(texb.get_buffer(),"data.%ld",exps.B);
@@ -1746,10 +1749,13 @@ else
   // sem pride zapisanie legendy do MP suboru
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"Scale:=%.2f;\ninitialize(Scale);\n",0.01 / this->layout->base_scale);
-  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
-    this->layout->color_map_fg.R,
-    this->layout->color_map_fg.G,
-    this->layout->color_map_fg.B);
+  fprintf(mpf,"background:=");
+  this->layout->color_map_fg.print_to_file(this->layout->color_model, mpf);
+  fprintf(mpf,";\n");
+//  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
+//    this->layout->color_map_fg.R,
+//    this->layout->color_map_fg.G,
+//    this->layout->color_map_fg.B);
   //fprintf(mpf,"background:=white;\n");
   fprintf(mpf,"transparency:=false;\n");
   
@@ -3128,10 +3134,8 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
       curz = double(xalt) / 5.0 * (maxz - minz) + minz;
       thset_color(0, double(5 - xalt), 5.0, cR, cG, cB);
       alpha_correction(tmp_alpha, cR, cG, cB);
-      clrec.R = cR;
-      clrec.G = cG; 
-      clrec.B = cB;
-      opacity_correction(clrec.R, clrec.G, clrec.B);
+      clrec.col_legend.set(cR, cG, cB);
+//      opacity_correction(clrec.R, clrec.G, clrec.B);
       //sprintf(tmpb.get_buffer(), "%.0f", curz - this->layout->goz);
       clrec.texname = utf2tex(this->layout->units.format_length(curz - this->layout->goz));
       clrec.texname += "\\thinspace ";			
@@ -3178,10 +3182,8 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
                 clrec.texname = ths2tex(maptitle.length() > 0 ? cmap->map->title : cmap->map->name, this->layout->lang);
                 clrec.name = (maptitle.length() > 0 ? maptitle : std::string(cmap->map->name));
                 alpha_correction(tmp_alpha, cR, cG, cB);
-                clrec.R = cR;
-                clrec.G = cG; 
-                clrec.B = cB;
-                opacity_correction(clrec.R, clrec.G, clrec.B);
+                clrec.col_legend.set(cR, cG, cB);
+//                opacity_correction(clrec.R, clrec.G, clrec.B);
                 COLORLEGENDLIST.insert(COLORLEGENDLIST.begin(), clrec);
                 firstmapscrap = false;
                 cmn++;

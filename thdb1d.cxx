@@ -38,6 +38,7 @@
 #include "thinfnan.h"
 #include <math.h>
 #include <set>
+#include <algorithm>
 #include "thpoint.h"
 #include "thlogfile.h"
 #include "thsurface.h"
@@ -535,6 +536,15 @@ void thdb1d::scan_data()
       xi = dp->extend_list.begin();
       try {
         while(xi != dp->extend_list.end()) {
+          if (!xi->before.is_empty()) {
+            xi->before.id = this->get_station_id(xi->before, xi->psurvey);
+            if (xi->before.id == 0) {
+              if (xi->before.survey == NULL)
+                ththrow(("station doesn't exist -- %s", xi->before.name))
+              else
+                ththrow(("station doesn't exist -- %s@%s", xi->before.name, xi->before.survey))
+            }
+          }
           if (!xi->to.is_empty()) {
             xi->to.id = this->get_station_id(xi->to, xi->psurvey);
             if (xi->to.id == 0) {
@@ -2949,6 +2959,9 @@ void thdb1d::postprocess_objects()
 }
 
 
+double diffdir(double dir1, double dir2) {
+  return acos(cos(dir1) * cos(dir2) + sin(dir1) * sin(dir2));
+}
 
 
 void thdb1d::process_xelev()
@@ -3010,7 +3023,15 @@ void thdb1d::process_xelev()
                   carrow->leg->leg->extend &= ~TT_EXTENDFLAG_DIRECTION;
                   carrow->extend &= ~TT_EXTENDFLAG_DIRECTION;
                 }
-                carrow->extend |= xi->extend;
+                if (!xi->before.is_empty()) {
+                	carrow->extend |= xi->extend;
+                	if ((carrow->extend & TT_EXTENDFLAG_IGNORE) > 0) {
+						carrow->extend |= TT_EXTENDFLAG_CNDIGNORE;
+						carrow->extend &= ~TT_EXTENDFLAG_IGNORE;
+						carrow->extend_ignore_before.push_back(nodes[xi->before.id - 1].uid);
+                	}
+                } else
+                	carrow->extend |= xi->extend;
                 switch (xi->extend) {
                   case TT_EXTENDFLAG_LEFT:
                     if (carrow->is_reversed)
@@ -3203,8 +3224,9 @@ void thdb1d::process_xelev()
     } else {
 
       // let's make move
-      bool try_first;
+      bool try_first, before_cnd;
       try_first = true;
+      std::list<unsigned long>::iterator before_it;
 
       if (current_node->last_arrow == NULL) {
         try_first = false;
@@ -3214,8 +3236,19 @@ void thdb1d::process_xelev()
       // find arrow that is not discovery and not ignored (if not ignorant mode)
       while (current_node->last_arrow != NULL) {
 
+    	before_cnd = true;
+    	if (current_node->back_arrow) {
+    		before_it = std::find(current_node->last_arrow->extend_ignore_before.begin(), current_node->last_arrow->extend_ignore_before.end(), current_node->back_arrow->end_node->uid);
+    		if (before_it != current_node->last_arrow->extend_ignore_before.end())
+    			before_cnd = false;
+    	}
+
         if ((!current_node->last_arrow->is_discovery) &&
-           (ignorant_mode || (((current_node->last_arrow->extend & TT_EXTENDFLAG_IGNORE) == 0) && ((current_node->last_arrow->extend & TT_EXTENDFLAG_BREAK) == 0))))
+           (ignorant_mode || (
+        		   ((current_node->last_arrow->extend & TT_EXTENDFLAG_IGNORE) == 0) &&
+				   ((current_node->last_arrow->extend & TT_EXTENDFLAG_BREAK) == 0) &&
+				   (((current_node->last_arrow->extend & TT_EXTENDFLAG_CNDIGNORE) == 0) || before_cnd)
+           	   )))
            break;
 
         current_node->last_arrow = current_node->last_arrow->next_arrow;
@@ -3233,7 +3266,7 @@ void thdb1d::process_xelev()
       if (current_node->back_arrow == NULL)
         component_break = true;
       else {
-        current_node = current_node->back_arrow->end_node;
+        current_node = current_node->pop_back_arrow()->end_node;
         cxx = current_node->xx;
         default_left = current_node->xx_left;
 #ifdef THDEBUG
@@ -3320,7 +3353,11 @@ void thdb1d::process_xelev()
         }
       }
  
-      cxx += double(go_left) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy);
+      if ((current_node->last_arrow->leg->leg->flags & TT_LEGFLAG_SPLAY) > 0) {
+    	  cxx += 0;
+      } else {
+    	  cxx += double(go_left) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy) * current_node->last_arrow->leg->leg->extend_ratio;
+      }
       
       // set end x
       if (current_node->last_arrow->is_reversed)
@@ -3343,9 +3380,11 @@ void thdb1d::process_xelev()
         }
       }
 
-      if (!current_node->last_arrow->end_node->is_attached) {
-        current_node->last_arrow->end_node->back_arrow = 
-          current_node->last_arrow->negative;
+      //if (!current_node->last_arrow->end_node->is_attached) {
+      if (true) {
+        //current_node->last_arrow->end_node->back_arrow =
+        //  current_node->last_arrow->negative;
+        current_node->last_arrow->end_node->push_back_arrow(current_node->last_arrow->negative);
         current_node = current_node->last_arrow->end_node;
         current_node->xx = cxx;
         if (!current_node->extendx_ok) {
@@ -3362,6 +3401,49 @@ void thdb1d::process_xelev()
   
   } // END OF TREMAUX
   
+  // postprocess splay shots
+  double splay_dir, shot_dir, shot_dx, minshot_dir, minshot_x, minshot_rx, minshot_dx;
+  thdb1d_tree_node * src_node;
+  for(i = 0; i < tn_stations; i++) {
+	  current_node = nodes + i;
+	  if (this->station_vec[i].is_temporary()) {
+	    minshot_dir = thnan;
+	    minshot_x = current_node->first_arrow->leg->leg->fxx;
+	    minshot_rx = current_node->first_arrow->leg->leg->extend_ratio;
+	    minshot_dx = 1.0;
+	    src_node = current_node->first_arrow->end_node;
+	    splay_dir = atan2(this->station_vec[i].y - this->station_vec[src_node->id - 1].y, this->station_vec[i].x - this->station_vec[src_node->id - 1].x);
+	    carrow = src_node->first_arrow;
+	    while (carrow != NULL) {
+	      if ((carrow->leg->leg->flags & TT_LEGFLAG_SPLAY) == 0) { // not a splay shot
+          shot_dx = carrow->leg->leg->txx - carrow->leg->leg->fxx;
+	        shot_dir = atan2(this->station_vec[carrow->end_node->id - 1].y - this->station_vec[src_node->id - 1].y, this->station_vec[carrow->end_node->id - 1].x - this->station_vec[src_node->id - 1].x);
+	        if ((minshot_dx > 0) &&(thisnan(minshot_dir) || (diffdir(shot_dir, splay_dir) < diffdir(minshot_dir, splay_dir)))) {
+	          minshot_dir = shot_dir;
+	          minshot_rx = carrow->leg->leg->extend_ratio;
+	          if (shot_dx > 0)
+	            minshot_dx = 1.0;
+	          else
+	            minshot_dx = -1.0;
+	          if (carrow->is_reversed) {
+	            minshot_x = carrow->leg->leg->txx;
+	            minshot_dx *= -1.0;
+	          } else {
+              minshot_x = carrow->leg->leg->fxx;
+	          }
+	        }
+	      }
+	      carrow = carrow->next_arrow;
+	    }
+	    if (thisnan(minshot_dir)) minshot_dir = 0.0;
+      if (current_node->first_arrow->is_reversed) {
+        current_node->first_arrow->leg->leg->fxx = minshot_x;
+        current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
+      } else
+        ththrow(("Code should go here!"))
+	  }
+  }
+
 #ifdef THDEBUG
     thprintf("\nend of extended elevation\n");
 #else
@@ -3434,5 +3516,25 @@ thdb3ddata * thdb1ds::get_3d_outline() {
 
 	return &(this->d3_outline);
 
+}
+
+void thdb1d_tree_node::push_back_arrow(thdb1d_tree_arrow * arrow) {
+	if (this->back_arrow == NULL) {
+		this->back_arrow = arrow;
+	} else {
+		this->back_buffer.push_back(arrow);
+		this->back_arrow = arrow;
+	}
+}
+
+thdb1d_tree_arrow * thdb1d_tree_node::pop_back_arrow() {
+	thdb1d_tree_arrow * rv = this->back_arrow;
+	if (!this->back_buffer.empty()) {
+		this->back_arrow = this->back_buffer.back();
+		this->back_buffer.pop_back();
+	} else {
+		this->back_arrow = NULL;
+	}
+	return rv;
 }
 

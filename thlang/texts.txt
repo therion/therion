@@ -1,6 +1,7 @@
 therion: title model
 bg: Модел
 ca: Model
+de: Modell
 en: Model
 es: Modelo
 fr: Modèle
@@ -13,6 +14,7 @@ sl: Model
 therion: title map
 bg: Карта
 ca: Mapa
+de: Karte
 en: Map
 es: Mapa
 fr: Carte
@@ -25,6 +27,7 @@ sl: Načrt
 therion: surface legs
 bg: Повърхностна антена
 ca: Visual de superficie
+de: Oberflächenmesszug
 en: Surface legs
 es: Visual de superficie
 fr: Visée de surface
@@ -198,6 +201,7 @@ therion: point flag:doline
 bg: въртоп/пропадане
 ca: dolina
 cs: závrt
+de: Doline
 en: doline
 es: dolina
 fr: doline
@@ -271,6 +275,7 @@ bg: арка
 ca: arc
 cs: skalní oblouk
 en: arch
+de: Bogen
 es: arco
 fr: arche
 pt: arco
@@ -1545,6 +1550,7 @@ sq: argjil
 zh_CN: 粘土
 
 therion: point mudcrack
+de: Trockenriss
 en: mudcrack
 pt: lama rachada
 sk: popraskané blato
@@ -1962,6 +1968,7 @@ sq: qumesht-hena
 zh_CN: 月奶石区
 
 therion: area mudcrack
+de: Trockenrisse
 en: mudcrack
 pt: lama rachada
 
@@ -1985,6 +1992,7 @@ sq: shtylle
 zh_CN: 石柱
 
 therion: area pillar-with-curtains
+de: Säule mit Vorhängen
 en: pillar with curtains
 pt: coluna com cortinas
 
@@ -2008,6 +2016,7 @@ sq: stalaktit
 zh_CN: 石钟乳
 
 therion: area stalactite-stalagmite
+de: Stalaktit-Stalagmit
 en: stalactite-stalagmite
 pt: estalactite-estalagmite
 
@@ -2371,6 +2380,7 @@ therion: point stalactites
 bg: сталактити
 ca: estalactites
 cs: stalaktity
+de: Stalaktiten
 en: stalactites
 es: estalactitas
 fr: stalactites
@@ -2404,6 +2414,7 @@ therion: point stalagmites
 bg: сталагмити
 ca: estalagmites
 cs: stalagmity
+de: Stalagmiten
 en: stalagmites
 es: estalagmitas
 fr: stalagmites
@@ -2625,6 +2636,7 @@ sq: heliktite
 zh_CN: 卷曲石
 
 therion: point helictites
+de: Heliktiten
 en: helictites
 pt: helictites
 
@@ -3113,146 +3125,182 @@ sq: shkalle
 zh_CN: 梯坎
 
 therion: point altar
+de: Altar
 en: altar
 pt: altar
 
 therion: point archeo-excavation
+de: Archäologische Ausgrabung
 en: archaeological excavation
 pt: escavação arqueológica
 
 therion: point audio
+de: Ton
 en: audio
 pt: áudio
 
 therion: point bat
+de: Fledermaus
 en: bat
 pt: morcegos
 
 therion: point bones
+de: Knochen
 en: bones
 pt: ossos
 
 therion: point curtains
+de: Vorhänge
 en: curtains
 pt: cortinas
 
 therion: point danger
+de: Gefahr
 en: danger
 pt: perigo
 
 therion: point disc-pillar
+de: Scheibe auf Säule
 en: disc on pillar
 pt: disco em coluna
 
 therion: point disc-stalactite
+de: Scheibe auf Stalaktit
 en: disc on stalactite
 pt: disco em estalactite
 
 therion: point disc-stalagmite
+de: Scheibe auf Stalagmit
 en: disc on stalagmite
 pt: disco em estalagmite
 
 therion: point disc-pillars
+de: Säulen mit Scheiben
 en: discs on pillars
 pt: discos em colunas
 
 therion: point disc-stalactites
+de: Stalaktiten mit Scheiben
 en: discs on stalactites
 pt: discos em estalactites
 
 therion: point disc-stalagmites
+de: Stalagmiten mit Scheiben
 en: discs on stalagmites
 pt: discos em estalagmites
 
 therion: point electric-light
+de: Elektrisches Licht
 en: electric light
 pt: luz elétrica
 
 therion: point ex-voto
+de: Votiv
 en: ex-voto
 pt: ex-voto
 
 therion: point gate
+de: Tor
 en: gate
 pt: portão
 
 therion: point human-bones
+de: Menschliche Knochen
 en: human bones
 pt: ossos humanos
 
 therion: point masonry
+de: Mauerwerk
 en: masonry
 pt: alvenaria
 
 therion: point minus
+de: Minus
 en: minus
 pt: segue abaixo
 
 therion: point mud
+de: Schlamm
 en: mud
 pt: lama
 
 therion: point nameplate
+de: Namensschild
 en: nameplate
 pt: placa de identificação
 
 therion: point no-wheelchair
+de: Kein Rollstuhlzugang
 en: not wheelchair accessible
 pt: não acessível com cadeira de rodas
 
 therion: point pendant
+de: Pendant
 en: pendant
 pt: pendente
 
 therion: point pillar-with-curtains
+de: Säule mit Vorhängen
 en: pillar with curtains
 pt: coluna com cortinas
 
 therion: point pillars-with-curtains
+de: Säulen mit Vorhängen
 en: pillars with curtains
 pt: colunas com cortinas
 
 therion: point photo
+de: Foto
 en: photo
 pt: foto
 
 therion: point plus
+de: Plus
 en: plus
 pt: segue acima
 
 therion: point plus-minus
+de: Plus/Minus
 en: plus/minus
 pt: segue acima e abaixo
 
 therion: point seed-germination
+de: Samenkeimung
 en: seed-germination
 pt: germinação de semente
 
 therion: point stalactite-stalagmite
+de: Stalaktit-Stalagmit
 en: stalactite-stalagmite
 pt: estalactite-estalagmite
 
 therion: point stalactites-stalagmites
+de: Stalaktiten-Stalagmiten
 en: stalactites-stalagmites
 pt: estalactites-estalagmites
 
 therion: point tree-trunk
+de: Baumstamm
 en: tree-trunk
 pt: tronco de árvore
 
 therion: point volcano
+de: Vulkan
 en: volcano
 pt: vulcão
 
 therion: point walkway
+de: Gehweg
 en: walkway
 pt: passarela
 
 therion: point water-drip
+de: Wassertropfen
 en: water-drip
 pt: gotejamento
 
 therion: point wheelchair
+de: Rollstuhlzugang
 en: wheelchair accessible
 pt: acessível com cadeira de rodas
 
@@ -3411,26 +3459,32 @@ sq: vend-pushim
 zh_CN: 营地
 
 therion: line abyss-entrance
+de: Abgrund
 en: abyss-entrance
 pt: entrada em abismo
 
 therion: line dripline
+de: Trauflinie
 en: dripline
 pt: linha de gotejamento
 
 therion: line fault
+de: Störung
 en: fault
 pt: falha
 
 therion: line joint
+de: Kluft
 en: joint
 pt: fratura
 
 therion: line low-ceiling
+de: Niedrige Decke
 en: low-ceiling
 pt: teto baixo
 
 therion: line pit-chimney
+de: Schacht-Schlot
 en: pit/chimney
 pt: poço e clarabóia
 
@@ -3473,6 +3527,7 @@ sq: vaska uji
 zh_CN: 边石潭
 
 therion: line walkway
+de: Gehweg
 en: walkway
 pt: passarela
 
@@ -3578,6 +3633,7 @@ zh_CN: 海拔
 
 therion: title color-legend-depth
 ca: Desnivell
+de: Tiefe
 en: Depth
 es: Desnivel
 fr: Profondeur
@@ -3607,6 +3663,7 @@ zh_CN: 地图
 
 therion: title color-legend-scrap
 ca: Trossos
+de: Skizzen
 en: Scraps
 es: Trozos/cachos
 fr: Scraps
@@ -3616,6 +3673,7 @@ sl: Izrez
 
 therion: title color-legend-survey
 ca: Topos
+de: Vermessung
 en: Surveys
 es: Topos
 fr: Topos
@@ -3625,6 +3683,7 @@ sl: Meritve
 
 therion: title color-legend-explodate
 ca: Data d'exploració
+de: Erforschungsdatum
 en: Exploration date
 es: Fecha de exploración
 fr: Date d'exploration
@@ -3634,6 +3693,7 @@ sl: Datum raziskovanja
 
 therion: title color-legend-topodate
 ca: Data de topografia
+de: Vermessungsdatum
 en: Surveying date
 es: Fecha de topografia
 fr: Date de topographie
@@ -3643,6 +3703,7 @@ sl: Datum merjenja
 
 therion: title color-legend-default
 ca: Llegenda de colors
+de: Farblegende
 en: Colour legend
 en_GB: Colour legend
 en_US: Color legend

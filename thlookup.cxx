@@ -408,9 +408,7 @@ void thlookup::export_color_legend(thlayout * layout) {
     colorlegendrecord clrec;
     const char * title;
     for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
-      clrec.R = tli->m_color.R;
-      clrec.G = tli->m_color.G;
-      clrec.B = tli->m_color.B;
+      clrec.col_legend.set(tli->m_color.R, tli->m_color.G, tli->m_color.B);
       if (strlen(tli->m_label) > 0) {
         clrec.texname = ths2tex(tli->m_label, layout->lang);
         clrec.name = ths2txt(tli->m_label, layout->lang);
