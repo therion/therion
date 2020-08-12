@@ -3049,7 +3049,10 @@ void thdb1d::process_xelev()
                     carrow->leg->leg->extend |= TT_EXTENDFLAG_VERTICAL;
                     carrow->negative->extend |= TT_EXTENDFLAG_VERTICAL;
                     break;
-				  default:
+                  case TT_EXTENDFLAG_UNKNOWN:
+                    carrow->leg->leg->extend_ratio = xi->extend_ratio;
+                    break;
+                  default:
                     carrow->leg->leg->extend |= xi->extend;
                 }
               }
@@ -3372,11 +3375,14 @@ void thdb1d::process_xelev()
 #endif
       if (thcfg.log_extend) {
         if ((prev_id != current_node->last_arrow->end_node->id) && !this->station_vec[current_node->last_arrow->end_node->id - 1].is_temporary()) {
-          thprintf("%s %s@%s\n",
+          thprintf("%s %s@%s",
             (go_left == -1 ? "LEFT" : (go_left == 1 ? "RIGHT" : "VERTICAL")),
             this->station_vec[current_node->last_arrow->end_node->id - 1].name,
             this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name());
           prev_id = current_node->last_arrow->end_node->id;
+          if (current_node->last_arrow->leg->leg->extend_ratio != 1.0)
+            thprintf(" (%.0f%%)", current_node->last_arrow->leg->leg->extend_ratio * 100.0);
+          thprintf("\n");
         }
       }
 
@@ -3440,7 +3446,7 @@ void thdb1d::process_xelev()
         current_node->first_arrow->leg->leg->fxx = minshot_x;
         current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
       } else
-        ththrow(("Code should go here!"))
+        ththrow(("Code should not go here!"))
 	  }
   }
 

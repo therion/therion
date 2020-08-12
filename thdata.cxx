@@ -2524,17 +2524,25 @@ void thdata::set_data_extend(int nargs, char ** args)
   to_index = 2;
   thdataextend dumm;
   cextend = thmatch_token(args[0], thtt_extendflag);
+  bool ratio_ok;
+  ratio_ok = false;
   if (cextend == TT_EXTENDFLAG_UNKNOWN) {
-	  if (nargs == 1) {
-	  thparse_double(exn, tmpdbl, args[0]);
+	  if ((nargs == 1) || (nargs == 3)) {
+	    thparse_double(exn, tmpdbl, args[0]);
 		  if (exn == TT_SV_NUMBER) {
-			  if ((tmpdbl < 0.0) || (tmpdbl > 100.0))
-				  ththrow(("extend ration out of range [0..100] -- %s", args[0]))
-		      this->d_extend_ratio = tmpdbl / 100.0;
-			  return;
+			  if ((tmpdbl < 0.0) || (tmpdbl > 200.0))
+				  ththrow(("extend ratio out of range [0..200] -- %s", args[0]))
+				ratio_ok = true;
+        if (nargs == 1) {
+          this->d_extend_ratio = tmpdbl / 100.0;
+          return;
+        }
+        else
+          dumm.extend_ratio = tmpdbl / 100.0;
 		  }
 	  }
-	  ththrow(("unknown extend flag -- %s", args[0]))
+	  if (!ratio_ok)
+	    ththrow(("unknown extend flag -- %s", args[0]))
   }
   switch (nargs) {
     case 1:
