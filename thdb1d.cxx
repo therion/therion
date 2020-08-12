@@ -3064,6 +3064,8 @@ void thdb1d::process_xelev()
                 st1->extend &= ~TT_EXTENDFLAG_DIRECTION;
               }              
               st1->extend |= xi->extend;
+              if (xi->extend == TT_EXTENDFLAG_UNKNOWN)
+                st1->extend_ratio = xi->extend_ratio;
               if ((xi->extend & TT_EXTENDFLAG_IGNORE) != 0) {
                 carrow = from_node->first_arrow;
                 while (carrow != NULL) {
@@ -3134,6 +3136,7 @@ void thdb1d::process_xelev()
   bool ignorant_mode = false, just_started = true;
   int default_left(1), go_left; // -1 - left, 1 - right, 0 - vertical
   int start_level, clevel;
+  double default_ratio(1.0), go_ratio;
   double cxx = 0.0;
 
   while (tarrows < tn_legs) {
@@ -3204,8 +3207,11 @@ void thdb1d::process_xelev()
             current_node->xx_left = 0;
             break;
         }
+        if (!thisnan(this->station_vec[current_node->uid - 1].extend_ratio))
+          current_node->xx_ratio = this->station_vec[current_node->uid - 1].extend_ratio;
       }
       default_left = current_node->xx_left;
+      default_ratio = current_node->xx_ratio;
       just_started = true;
 
 #ifdef THDEBUG
@@ -3272,6 +3278,7 @@ void thdb1d::process_xelev()
         current_node = current_node->pop_back_arrow()->end_node;
         cxx = current_node->xx;
         default_left = current_node->xx_left;
+        default_ratio = current_node->xx_ratio;
 #ifdef THDEBUG
         thprintf("%d (%s@%s) <-\n", current_node->id,
           this->station_vec[current_node->id - 1].name,
@@ -3315,8 +3322,13 @@ void thdb1d::process_xelev()
           default_left = 0;
           break;
       }
+      if (!thisnan(this->station_vec[current_node->last_arrow->end_node->uid - 1].extend_ratio))
+        default_ratio = this->station_vec[current_node->last_arrow->end_node->uid - 1].extend_ratio;
+
       current_node->last_arrow->end_node->xx_left = default_left;
+      current_node->last_arrow->end_node->xx_ratio = default_ratio;
       go_left = default_left;
+      go_ratio = default_ratio;
       
       if ((current_node->last_arrow->extend & 
           (TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_RIGHT
@@ -3355,6 +3367,10 @@ void thdb1d::process_xelev()
             break;
         }
       }
+      if (!thisnan(current_node->last_arrow->leg->leg->extend_ratio))
+        go_ratio = current_node->last_arrow->leg->leg->extend_ratio;
+      else
+        current_node->last_arrow->leg->leg->extend_ratio = go_ratio;
  
       if ((current_node->last_arrow->leg->leg->flags & TT_LEGFLAG_SPLAY) > 0) {
     	  cxx += 0;

@@ -55,7 +55,7 @@ thdata::thdata()
   this->d_flags = TT_LEGFLAG_NONE;
   this->d_extend = TT_EXTENDFLAG_NORMAL;
   this->d_vtresh = 67.5;
-  this->d_extend_ratio = 1.0;
+  this->d_extend_ratio = thnan;
   this->d_shape = TT_DATALEG_SHAPE_OCTAGON;
   this->d_walls = TT_AUTO;
   this->d_last_equate = 0;
@@ -2527,7 +2527,7 @@ void thdata::set_data_extend(int nargs, char ** args)
   bool ratio_ok;
   ratio_ok = false;
   if (cextend == TT_EXTENDFLAG_UNKNOWN) {
-	  if ((nargs == 1) || (nargs == 3)) {
+	  if ((nargs >= 1) && (nargs <= 3)) {
 	    thparse_double(exn, tmpdbl, args[0]);
 		  if (exn == TT_SV_NUMBER) {
 			  if ((tmpdbl < 0.0) || (tmpdbl > 200.0))
