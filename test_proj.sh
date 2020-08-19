@@ -20,7 +20,8 @@ do
   else
     export PROJ_LIB="$PREFIX/proj-$ver/nad";
   fi
+  tclsh thcsdata.tcl $PREFIX/proj-$ver/nad
   make therion
   make tests
-  rm thproj.o utest-proj.o
+  rm thproj.o utest-proj.o thcsdata.o thcsdata.h
 done

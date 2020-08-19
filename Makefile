@@ -287,7 +287,7 @@ thchencdata.h: thchencdata/*.TXT
 	$(MAKE) -C ./thchencdata
 
 thcsdata.h: thcsdata.tcl
-	tclsh thcsdata.tcl $(CROSS)
+	tclsh thcsdata.tcl $(shell $(CROSS)pkg-config proj --variable=prefix)/share/proj
 
 update:
 	$(MAKE) -C ./thlang update

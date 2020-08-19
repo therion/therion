@@ -463,3 +463,16 @@ void thcs_log_transf_used() {
 #endif
 }
 
+string thcs_get_label(string s) {
+#if PROJ_VER >= 6
+    PJ* P;
+    string res;
+    th_init_proj(P, sanitize_crs(s));
+    PJ_PROJ_INFO pinfo = proj_pj_info(P);
+    res = (string) pinfo.description;
+    proj_destroy(P);
+    return res;
+#else
+    return "";
+#endif
+}

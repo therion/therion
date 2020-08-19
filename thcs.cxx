@@ -124,17 +124,21 @@ const thcsdata * thcs_get_data(int cs) {
 	rv.prjspec = "";
 	rv.swap = false;
 	if (cs > TTCS_ESRI) {
+	  snprintf(params, sizeof(params), "+init=esri:%d", cs - TTCS_ESRI);
       if (esri_labels.find(cs - TTCS_ESRI) != esri_labels.end()) {
         rv.prjname = esri_labels[cs - TTCS_ESRI];
+      } else {
+        rv.prjname = thcs_get_label(params).c_str();
       }
-	  snprintf(params, sizeof(params), "+init=esri:%d", cs - TTCS_ESRI);
 		return &rv;
 	}
 	if (cs > TTCS_EPSG) {
+	  snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
       if (epsg_labels.find(cs - TTCS_EPSG) != epsg_labels.end()) {
         rv.prjname = epsg_labels[cs - TTCS_EPSG];
+      } else {
+        rv.prjname = thcs_get_label(params).c_str();
       }
-	  snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
 		return &rv;
 	}
   if (cs >= 0) return &(thcsdata_table[cs]);
