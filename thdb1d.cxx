@@ -1088,7 +1088,7 @@ void thdb1d__scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_und
     ss->stat.station_east = st;
     ss->stat.station_west = st;
   } else if (is_under || (ss->stat.station_state == 1)) {
-    ss->stat.station_state = 2;
+    //ss->stat.station_state = 2;
     if (ss->stat.station_top->z < st->z)
       ss->stat.station_top = st;
     if (ss->stat.station_bottom->z > st->z)
@@ -1126,7 +1126,7 @@ void thdb1d__scan_data_station_limits(thdata * ss, thdb1ds * st, bool is_under) 
 //    ss->stat_st_east = st;
 //    ss->stat_st_west = st;
   } else if (is_under || (ss->stat_st_state == 1)) {
-    ss->stat_st_state = 2;
+    //ss->stat_st_state = 2;
     if (ss->stat_st_top->z < st->z)
       ss->stat_st_top = st;
     if (ss->stat_st_bottom->z > st->z)
