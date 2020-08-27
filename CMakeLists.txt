@@ -43,14 +43,6 @@ add_custom_target(generate_thcsdata DEPENDS
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
 )
 
-# generate thlibrarydata sources
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thlibrarydata.cxx
-                   COMMAND perl
-                   ARGS ${CMAKE_SOURCE_DIR}/makefile.pl cp ${CMAKE_SOURCE_DIR}/thlibrarydata.src ${CMAKE_BINARY_DIR}/thlibrarydata.cxx
-                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-)
-add_custom_target(generate_thlibrarydata DEPENDS ${CMAKE_BINARY_DIR}/thlibrarydata.cxx)
-
 # generate thsymbolsetlist sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
     COMMAND perl
@@ -76,7 +68,6 @@ add_dependencies(therion-common
     generate_thsymbolsetlist
     generate_thlang
     generate_tex
-    generate_thlibrarydata
     generate_mpost
     generate_thchencdata
     generate_thcsdata
