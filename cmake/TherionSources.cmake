@@ -114,7 +114,6 @@ set(THERION_SOURCES
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
     ${CMAKE_BINARY_DIR}/thlangdata.cxx
-    ${CMAKE_BINARY_DIR}/thlibrarydata.cxx
     ${CMAKE_BINARY_DIR}/thmpost.cxx
     ${CMAKE_BINARY_DIR}/thsymbolsets.cxx
     ${CMAKE_BINARY_DIR}/thtex.cxx
@@ -176,6 +175,7 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thlayoutln.cxx
     ${CMAKE_SOURCE_DIR}/thlegenddata.cxx
     ${CMAKE_SOURCE_DIR}/thlibrary.cxx
+    ${CMAKE_SOURCE_DIR}/thlibrarydata.cxx
     ${CMAKE_SOURCE_DIR}/thline.cxx
     ${CMAKE_SOURCE_DIR}/thlocale.cxx
     ${CMAKE_SOURCE_DIR}/thlogfile.cxx
