@@ -6,6 +6,15 @@ set(CMAKE_CXX_STANDARD 14)
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
 
+# determine platform
+if(UNIX AND NOT APPLE)
+    set(THPLATFORM LINUX)
+elseif(APPLE)
+    set(THPLATFORM MACOSX)
+else()
+    set(THPLATFORM WIN32)
+endif()
+
 # tell CMake which files must be generated now, doing so in subfolders is too late
 set_source_files_properties(
     ${CMAKE_BINARY_DIR}/thchencdata.h
@@ -90,3 +99,4 @@ add_subdirectory(tex)
 add_subdirectory(thlang)
 add_subdirectory(loch)
 add_subdirectory(thbook)
+add_subdirectory(xtherion)
