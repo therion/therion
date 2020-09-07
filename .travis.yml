@@ -42,7 +42,7 @@ script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make config-win32cross          ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   make                            ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   make config-macosx              ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   mkdir build && cd build && cmake .. && make -j4 && make test ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   mkdir build && cd build && cmake .. && make therion && make loch && make utest && make test && ./therion --version ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   cd ..                           ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   make ./therion                  ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   make loch/loch                  ; fi
