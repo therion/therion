@@ -1,4 +1,4 @@
-if(${THPLATFORM} EQUAL "WIN32")
+if(${THPLATFORM} STREQUAL "WIN32")
   set(XTHERION_EXECUTABLE "xtherion.tcl")
 else()
   set(XTHERION_EXECUTABLE "xtherion")
@@ -39,3 +39,5 @@ add_custom_target(
 
 add_custom_target(xtherion-tcl ALL
                   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${XTHERION_EXECUTABLE})
+
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${XTHERION_EXECUTABLE} DESTINATION bin)
