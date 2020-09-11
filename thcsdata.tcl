@@ -149,7 +149,7 @@ if {[file exists $labels_path/epsg]} {
   load_proj_init_file_for_labels $labels_path/epsg epsg
   load_proj_init_file_for_labels $labels_path/esri esri
 } else {
-  puts "No PROJ system definitions imported."
+  puts "No PROJ system definitions imported (this is OK for Proj v6 and newer)."
 }
 
 # join identical projections
