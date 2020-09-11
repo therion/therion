@@ -34,3 +34,7 @@ target_include_directories(loch-common BEFORE PUBLIC "${CMAKE_CURRENT_BINARY_DIR
 
 add_executable(loch lxR2P.c)
 target_link_libraries(loch PUBLIC loch-common)
+
+install(TARGETS loch RUNTIME DESTINATION bin)
+
+add_subdirectory(help)

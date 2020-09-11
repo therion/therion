@@ -86,6 +86,8 @@ add_dependencies(therion-common
 add_executable(therion therion-main.cxx)
 target_link_libraries(therion PUBLIC therion-common)
 
+install(TARGETS therion RUNTIME DESTINATION bin)
+
 # unit tests
 add_executable(utest utest-proj.cxx utest-main.cxx)
 target_link_libraries(utest PUBLIC therion-common)
