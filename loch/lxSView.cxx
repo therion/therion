@@ -7,9 +7,9 @@
 
 
 #include "lxSView.h"
+#include "lxSetup.h"
 #include "lxGUI.h"
 #include "lxGLC.h"
-#include "lxSetup.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"

@@ -48,6 +48,9 @@ switch [lindex $argv 0] {
     version6 {
         puts [expr $vv1 >= 6]
     }
+    version9 {
+        puts [expr $vv1 >= 9]
+    }
     suffix {
 	puts $suffix
     }
