@@ -731,7 +731,9 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 			i = 0;
 			while (i < b.get_size()) {
 //				thprintf("%s\n", b.get_buffer()[i]);
-				if (sscanf(b.get_buffer()[i], "%lu", &st)) {
+			  st = 0;
+			  sscanf(b.get_buffer()[i], "%lu", &st);
+				if (st > 0) {
 					nst++;
 					if (nst == 1) {
 						sf = st;

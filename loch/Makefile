@@ -26,6 +26,7 @@ VTKVERSION = $(shell tclsh ./getvtkver.tcl version)
 VTKPATH = $(shell tclsh ./getvtkver.tcl incpath)
 VTKLIBPATH = $(shell tclsh ./getvtkver.tcl libpath)
 VTKV6 = $(shell tclsh ./getvtkver.tcl version6)
+VTKV9 = $(shell tclsh ./getvtkver.tcl version9)
 ifeq ($(VTKV6),1)
 VTKLIBS = \
     -lvtkCommonExecutionModel$(VTKSUFFIX) \
@@ -34,11 +35,19 @@ VTKLIBS = \
     -lvtkFiltersCore$(VTKSUFFIX) \
     -lvtkFiltersHybrid$(VTKSUFFIX) \
     -lvtkIOLegacy$(VTKSUFFIX) \
-    $(shell pkg-config --libs freetype2) \
-    -lpng -ljpeg
+    $(shell pkg-config --libs freetype2)
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
 endif
+
+ifeq ($(VTKV9),1)
+VTKLIBS+= -lvtkpng$(VTKSUFFIX) -lvtkjpeg$(VTKSUFFIX)
+else
+VTKLIBS+= -lpng -ljpeg
+endif
+
+
+
 # VTKVERSION = 5.4
 # VTKPATH = /usr/local/include/vtk-$(VTKVERSION)
 # VTKLIBPATH = /usr/local/lib/vtk-$(VTKVERSION)

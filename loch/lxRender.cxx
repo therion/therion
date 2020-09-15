@@ -33,10 +33,10 @@
 
 #include "lxRender.h"
 #include "lxWX.h"
-#include "lxGLC.h"
-#include "lxGUI.h"
 #include "lxSetup.h"
 #include "lxTR.h"
+#include "lxGLC.h"
+#include "lxGUI.h"
 
 #define lxRENDERBORDER this->m_glc->TRCGet(TR_TILE_BORDER)
 

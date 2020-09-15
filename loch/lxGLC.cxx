@@ -828,7 +828,12 @@ void lxGLCanvas::RenderScrapWalls() {
   glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
   glColor4fv(clr);
 
-  vtkIdType * cPts, nPts, xP;
+#if VTK_MAJOR_VERSION >= 9
+  const vtkIdType * cPts;
+#else
+  vtkIdType * cPts;
+#endif
+  vtkIdType nPts, xP;
   double * nmv, * ptc, nmvv[3];
 
   this->data->scrapWallsNormals->Update();
@@ -925,7 +930,12 @@ void lxGLCanvas::RenderSurface() {
   else 
     glDisable(GL_LIGHTING);
 
-  vtkIdType * cPts, nPts;
+#if VTK_MAJOR_VERSION >= 9
+  const vtkIdType * cPts;
+#else
+  vtkIdType * cPts;
+#endif
+  vtkIdType nPts;
   double * nmv, * ptc;
 
   this->data->surfaceSorted->Update();

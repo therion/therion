@@ -81,7 +81,7 @@ class thdb1d_tree_node {
   
   unsigned long id, uid, narrows;
   
-  double xx, extendx;
+  double xx, extendx, xx_ratio;
   
   class thdb1d_tree_arrow * first_arrow, * last_arrow, * back_arrow;
   std::list<class thdb1d_tree_arrow * > back_buffer;
@@ -90,7 +90,7 @@ class thdb1d_tree_node {
   
   thdb1d_tree_node() : is_attached(false), is_fixed(false), xx_left(1), xx_touched(false), extendx_ok(false),
     next_eq(NULL), prev_eq(NULL),
-    id(0), uid(0), narrows(0), xx(0.0), extendx(0.0),
+    id(0), uid(0), narrows(0), xx(0.0), extendx(0.0), xx_ratio(1.0),
     first_arrow(NULL), last_arrow(NULL), back_arrow(NULL) {}
   
 };
@@ -158,6 +158,7 @@ class thdb1ds {
   unsigned long flags;  ///< Station flags.
   int mark,             ///< Mark type.
     extend;             ///< Extend flags: normal, reverse, left, right, break
+  double extend_ratio;
   bool mark_station;
   
   bool adjusted, fixed;
@@ -176,7 +177,7 @@ class thdb1ds {
    
   thdb1ds() : uid(0), x(0), y(0), z(0), xx(0), asl(0), name(NULL), comment(NULL), survey(NULL), fixcontext(NULL), tmpselect(false),
     data_priority(0), temps(TT_TEMPSTATION_NONE),
-    flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), 
+    flags(TT_STATIONFLAG_NONE), mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), extend_ratio(thnan), mark_station(false),
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
     explored(thnan), d3_parsed(false) {}
   
@@ -189,7 +190,7 @@ class thdb1ds {
     comment(NULL), survey(ps), fixcontext(NULL), tmpselect(false),
     data_priority(0), temps(TT_TEMPSTATION_NONE),
     flags(TT_STATIONFLAG_NONE),
-    mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), mark_station(false), 
+    mark(TT_DATAMARK_TEMP), extend(TT_EXTENDFLAG_NORMAL), extend_ratio(thnan), mark_station(false),
     adjusted(false), fixed(false), placed(0), sdx(0.0), sdy(0.0), sdz(0.0),
     explored(thnan), d3_parsed(false) {}
     

@@ -114,7 +114,7 @@ void thdataleg::clear()
   this->walls = TT_AUTO;
   this->shape = TT_DATALEG_SHAPE_UNKNOWN;
   this->vtresh = thnan;
-  this->extend_ratio = 1.0;
+  this->extend_ratio = thnan;
     
   this->infer_plumbs = false;
   this->infer_equates = false;

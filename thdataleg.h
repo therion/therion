@@ -566,7 +566,9 @@ class thdataextend {
 	
 	int extend;
 	
-	thdataextend() {}
+	double extend_ratio;
+
+	thdataextend() : extend_ratio(1.0) {}
 	
 };
 
