@@ -34,6 +34,7 @@
 #include <wx/strconv.h>
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
+#include <vtkVersionMacros.h>
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
 #include <vtkPoints.h>

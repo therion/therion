@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <wx/wx.h>
 #include <stdio.h>
+#include <vtkVersionMacros.h>
 #include <vtkCellArray.h>
 #include <vtkPointData.h>
 #include <vtkDataArray.h>
