@@ -6,8 +6,6 @@ string(SUBSTRING ${PROJ4_VERSION} 0 ${MVER_SEP} PROJ_MVER)
 
 # loch dependencies
 find_package(wxWidgets REQUIRED COMPONENTS core base gl xml html)
-include(${wxWidgets_USE_FILE})
-
 find_package(VTK REQUIRED COMPONENTS 
     vtkCommonExecutionModel
     vtkCommonDataModel
@@ -15,9 +13,9 @@ find_package(VTK REQUIRED COMPONENTS
     vtkFiltersCore
     vtkFiltersHybrid
     vtkIOLegacy
+    vtkjpeg
+    vtkpng
 )
-include(${VTK_USE_FILE})
-
 find_package(Freetype REQUIRED)
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
