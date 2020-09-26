@@ -71,8 +71,8 @@ execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
 # therion lib
 add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
 target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern" ${PROJ_INCLUDE_DIRS})
-target_link_libraries(therion-common PUBLIC ${PROJ4_LIBRARIES} loch-common)
-target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER})
+target_link_libraries(therion-common PUBLIC ${PROJ4_LIBRARIES} PRIVATE loch-common)
+target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}")
 add_dependencies(therion-common 
     generate_thsymbolsetlist
     generate_thlang
@@ -92,7 +92,7 @@ install(TARGETS therion RUNTIME DESTINATION bin)
 add_executable(utest utest-proj.cxx utest-main.cxx)
 target_link_libraries(utest PUBLIC therion-common)
 enable_testing()
-add_test(NAME utest COMMAND ${CMAKE_BINARY_DIR}/utest WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # add subdirectories to the build
 add_subdirectory(mpost)

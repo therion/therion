@@ -1,4 +1,4 @@
-if(${THPLATFORM} STREQUAL "WIN32")
+if(${THPLATFORM} STREQUAL WIN32)
   set(XTHERION_EXECUTABLE "xtherion.tcl")
 else()
   set(XTHERION_EXECUTABLE "xtherion")
@@ -16,7 +16,7 @@ add_custom_command(
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/therion.tcl
-  COMMAND ${CMAKE_BINARY_DIR}/therion ARGS --print-xtherion-src > therion.tcl
+  COMMAND $<TARGET_FILE:therion> ARGS --print-xtherion-src > therion.tcl
   DEPENDS therion
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
