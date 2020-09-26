@@ -90,6 +90,11 @@ proc xth_calibrate_bitmap {} {
     }
   }
   close $fid
+
+  set fid [open $pdfname r]
+  set cln [read $fid]
+  close $fid
+
   xth_calibrate_prog_hide
 
   # find calibration points

@@ -5,9 +5,9 @@
 //LXDEPCHECK - standard libraries
 
 #include "lxSTree.h"
+#include "lxSetup.h"
 #include "lxGUI.h"
 #include "lxGLC.h"
-#include "lxSetup.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"

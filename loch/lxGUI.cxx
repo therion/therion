@@ -29,7 +29,6 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
-#include "lxGUI.h"
 #include "lxData.h"
 #include "lxSetup.h"
 #include "lxRender.h"
@@ -39,6 +38,7 @@
 #include "lxSScene.h"
 #include "lxSTree.h"
 #include "lxPres.h"
+#include "lxGUI.h"
 
 #include "icons/open.xpm"
 #include "icons/render.xpm"

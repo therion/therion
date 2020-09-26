@@ -125,8 +125,13 @@ LDBFLAGS = $(LDPFLAGS)
 # BUILD ENDCONFIG
 
 # proj4 settings
+PROJ_UNSUPPORTED = 5.0.0 5.0.1 6.0.0 6.1.0 6.1.1 6.2.0
+PROJ_VER = $(shell $(CROSS)pkg-config proj --modversion)
+ifneq ($(filter $(PROJ_VER),$(PROJ_UNSUPPORTED)),)
+    $(error unsupported Proj version: $(PROJ_VER))
+endif
 PROJ_LIBS ?= $(shell $(CROSS)pkg-config proj --libs)
-PROJ_MVER ?= $(shell $(CROSS)pkg-config proj --modversion | sed 's/\..*//')
+PROJ_MVER ?= $(shell echo $(PROJ_VER) | sed 's/\..*//')
 ifeq ($(shell [ "$(PROJ_MVER)" -gt 5 ] && [ "$(THPLATFORM)" = "WIN32" ] && [ -z "$(CROSS)" ]; echo $$?),0)
   PROJ_LIBS += -lsqlite3
 endif
@@ -287,7 +292,7 @@ thchencdata.h: thchencdata/*.TXT
 	$(MAKE) -C ./thchencdata
 
 thcsdata.h: thcsdata.tcl
-	tclsh thcsdata.tcl $(CROSS)
+	tclsh thcsdata.tcl $(shell $(CROSS)pkg-config proj --variable=prefix)/share/proj
 
 update:
 	$(MAKE) -C ./thlang update

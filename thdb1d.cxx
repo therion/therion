@@ -1088,7 +1088,7 @@ void thdb1d__scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_und
     ss->stat.station_east = st;
     ss->stat.station_west = st;
   } else if (is_under || (ss->stat.station_state == 1)) {
-    ss->stat.station_state = 2;
+    //ss->stat.station_state = 2;
     if (ss->stat.station_top->z < st->z)
       ss->stat.station_top = st;
     if (ss->stat.station_bottom->z > st->z)
@@ -1126,7 +1126,7 @@ void thdb1d__scan_data_station_limits(thdata * ss, thdb1ds * st, bool is_under) 
 //    ss->stat_st_east = st;
 //    ss->stat_st_west = st;
   } else if (is_under || (ss->stat_st_state == 1)) {
-    ss->stat_st_state = 2;
+    //ss->stat_st_state = 2;
     if (ss->stat_st_top->z < st->z)
       ss->stat_st_top = st;
     if (ss->stat_st_bottom->z > st->z)
@@ -3049,7 +3049,10 @@ void thdb1d::process_xelev()
                     carrow->leg->leg->extend |= TT_EXTENDFLAG_VERTICAL;
                     carrow->negative->extend |= TT_EXTENDFLAG_VERTICAL;
                     break;
-				  default:
+                  case TT_EXTENDFLAG_UNKNOWN:
+                    carrow->leg->leg->extend_ratio = xi->extend_ratio;
+                    break;
+                  default:
                     carrow->leg->leg->extend |= xi->extend;
                 }
               }
@@ -3061,6 +3064,8 @@ void thdb1d::process_xelev()
                 st1->extend &= ~TT_EXTENDFLAG_DIRECTION;
               }              
               st1->extend |= xi->extend;
+              if (xi->extend == TT_EXTENDFLAG_UNKNOWN)
+                st1->extend_ratio = xi->extend_ratio;
               if ((xi->extend & TT_EXTENDFLAG_IGNORE) != 0) {
                 carrow = from_node->first_arrow;
                 while (carrow != NULL) {
@@ -3131,6 +3136,7 @@ void thdb1d::process_xelev()
   bool ignorant_mode = false, just_started = true;
   int default_left(1), go_left; // -1 - left, 1 - right, 0 - vertical
   int start_level, clevel;
+  double default_ratio(1.0), go_ratio;
   double cxx = 0.0;
 
   while (tarrows < tn_legs) {
@@ -3201,8 +3207,11 @@ void thdb1d::process_xelev()
             current_node->xx_left = 0;
             break;
         }
+        if (!thisnan(this->station_vec[current_node->uid - 1].extend_ratio))
+          current_node->xx_ratio = this->station_vec[current_node->uid - 1].extend_ratio;
       }
       default_left = current_node->xx_left;
+      default_ratio = current_node->xx_ratio;
       just_started = true;
 
 #ifdef THDEBUG
@@ -3269,6 +3278,7 @@ void thdb1d::process_xelev()
         current_node = current_node->pop_back_arrow()->end_node;
         cxx = current_node->xx;
         default_left = current_node->xx_left;
+        default_ratio = current_node->xx_ratio;
 #ifdef THDEBUG
         thprintf("%d (%s@%s) <-\n", current_node->id,
           this->station_vec[current_node->id - 1].name,
@@ -3312,8 +3322,13 @@ void thdb1d::process_xelev()
           default_left = 0;
           break;
       }
+      if (!thisnan(this->station_vec[current_node->last_arrow->end_node->uid - 1].extend_ratio))
+        default_ratio = this->station_vec[current_node->last_arrow->end_node->uid - 1].extend_ratio;
+
       current_node->last_arrow->end_node->xx_left = default_left;
+      current_node->last_arrow->end_node->xx_ratio = default_ratio;
       go_left = default_left;
+      go_ratio = default_ratio;
       
       if ((current_node->last_arrow->extend & 
           (TT_EXTENDFLAG_LEFT | TT_EXTENDFLAG_RIGHT
@@ -3352,6 +3367,10 @@ void thdb1d::process_xelev()
             break;
         }
       }
+      if (!thisnan(current_node->last_arrow->leg->leg->extend_ratio))
+        go_ratio = current_node->last_arrow->leg->leg->extend_ratio;
+      else
+        current_node->last_arrow->leg->leg->extend_ratio = go_ratio;
  
       if ((current_node->last_arrow->leg->leg->flags & TT_LEGFLAG_SPLAY) > 0) {
     	  cxx += 0;
@@ -3372,11 +3391,14 @@ void thdb1d::process_xelev()
 #endif
       if (thcfg.log_extend) {
         if ((prev_id != current_node->last_arrow->end_node->id) && !this->station_vec[current_node->last_arrow->end_node->id - 1].is_temporary()) {
-          thprintf("%s %s@%s\n",
+          thprintf("%s %s@%s",
             (go_left == -1 ? "LEFT" : (go_left == 1 ? "RIGHT" : "VERTICAL")),
             this->station_vec[current_node->last_arrow->end_node->id - 1].name,
             this->station_vec[current_node->last_arrow->end_node->id - 1].survey->get_full_name());
           prev_id = current_node->last_arrow->end_node->id;
+          if (current_node->last_arrow->leg->leg->extend_ratio != 1.0)
+            thprintf(" (%.0f%%)", current_node->last_arrow->leg->leg->extend_ratio * 100.0);
+          thprintf("\n");
         }
       }
 
@@ -3440,7 +3462,7 @@ void thdb1d::process_xelev()
         current_node->first_arrow->leg->leg->fxx = minshot_x;
         current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
       } else
-        ththrow(("Code should go here!"))
+        ththrow(("Code should not go here!"))
 	  }
   }
 

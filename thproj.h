@@ -39,6 +39,7 @@ void thcs_log_transf_used();
 int thcs_parse_gridhandling(const char *);
 std::string thcs_get_proj_version();
 std::string thcs_get_proj_version_headers();
+std::string thcs_get_label(std::string s);
 
 struct thcs_config {
   thcs_config();

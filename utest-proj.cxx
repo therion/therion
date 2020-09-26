@@ -75,7 +75,11 @@ TEST_CASE( "projections: UTM zones", "[proj]" ) {
 }
 
 TEST_CASE( "projections: EPSG label", "[proj]" ) {
+#if PROJ_VER < 6
     CHECK((epsg_labels.count(32634) > 0 && strcmp(epsg_labels[32634],"WGS 84 / UTM zone 34N") == 0));
+#else
+    CHECK(thcs_get_label("+init=epsg:32634") == "WGS 84 / UTM zone 34N");
+#endif
 }
 
 
