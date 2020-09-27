@@ -326,9 +326,9 @@ void thdataobject::throw_source()
 void thdataobject::self_print(FILE * outf)
 {
   if (strlen(this->name) > 0)
-    fprintf(outf,"%s (%ld:0x%lx) -- %s\n", this->get_class_name(), this->id, (unsigned long) this, this->name);
+    fprintf(outf,"%s (%ld:0x%lx) -- %s\n", this->get_class_name(), this->id, (intptr_t) this, this->name);
   else
-    fprintf(outf,"%s (%ld:0x%lx)\n", this->get_class_name(), this->id, (unsigned long) this);  
+    fprintf(outf,"%s (%ld:0x%lx)\n", this->get_class_name(), this->id, (intptr_t) this);  
 
   this->self_print_properties(outf);
 
