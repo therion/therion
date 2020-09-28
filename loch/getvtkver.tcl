@@ -15,7 +15,7 @@ foreach d {/usr /usr/local c:/msys64/mingw32} {
 		set ver $vv1.$vv2
 		set suffix -$ver
 		set incpath "$d/include/vtk-$vv1.$vv2"
-		set libpath "$d/lib/vtk-$vv1.$vv2"
+		set libpath "$d/lib"
 	    }
 	} elseif {[regexp {vtk$} $l]} {
 	    if [catch {set fp [open $l/vtkVersionMacros.h]}] {
