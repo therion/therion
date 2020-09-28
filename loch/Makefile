@@ -40,11 +40,11 @@ else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
 endif
 
-ifeq ($(VTKV9),1)
-VTKLIBS+= -lvtkpng$(VTKSUFFIX) -lvtkjpeg$(VTKSUFFIX)
-else
+#ifeq ($(VTKV9),1)
+#VTKLIBS+= -lvtkpng$(VTKSUFFIX) -lvtkjpeg$(VTKSUFFIX)
+#else
 VTKLIBS+= -lpng -ljpeg
-endif
+#endif
 
 
 
