@@ -8,18 +8,13 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
-#ifndef UCHAR
-#define UCHAR
-typedef unsigned char uchar;
-#endif
-
 extern const char * lxImgIOError;
 
 // struct for handling images
 struct lxImageRGB {
-	uchar* data; //pixel data in RGB format. sizeof(data) == 3 * width * height;
+	unsigned char * data; //pixel data in RGB format. sizeof(data) == 3 * width * height;
 	int width, height;
-  lxImageRGB() : data(NULL), width(0), height(0) {}
+	lxImageRGB() : data(NULL), width(0), height(0) {}
 };
 
 /* Compress image into JPEG, and save it to disk

@@ -19,20 +19,12 @@ target_compile_definitions(loch-common PRIVATE ${LOCH_DEFINITIONS})
 
 # loch resource file
 if (${IS_WINDOWS})
-    # determine toolchain prefix, for example i686-w64-mingw32.static
-    string(FIND ${CMAKE_INSTALL_PREFIX} "/" INDEX REVERSE)
-    math(EXPR INDEX ${INDEX}+1)
-    string(SUBSTRING ${CMAKE_INSTALL_PREFIX} ${INDEX} -1 PREFIX)
-    # find windres
-    find_program(RC_COMPILER ${PREFIX}-windres)
-    if (RC_COMPILER)
-        add_custom_command(COMMAND ${RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc "-I$<JOIN:${wxWidgets_INCLUDE_DIRS},;-I>" -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/loch.res -O coff
-                           OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/loch.res
-                           DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc ${CMAKE_CURRENT_SOURCE_DIR}/loch.ico
-                           WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                           COMMAND_EXPAND_LISTS)
-        add_custom_target(generate_resource DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/loch.res)
-    endif()
+    add_custom_command(COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc "-I$<JOIN:${wxWidgets_INCLUDE_DIRS},;-I>" -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/loch.res -O coff
+                        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/loch.res
+                        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc ${CMAKE_CURRENT_SOURCE_DIR}/loch.ico
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        COMMAND_EXPAND_LISTS)
+    add_custom_target(generate_resource DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/loch.res)
 endif()
 
 # loch executable
