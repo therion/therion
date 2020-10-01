@@ -20,7 +20,7 @@ CROSS =
 EXT =
 
 WX_CONFIG_DEF=$(shell command -v wx-config 2> /dev/null)
-ifndef WX_CONFIG_DEF
+ifdef WX_CONFIG_DEF
 WX_CONFIG = wx-config
 else
 WX_CONFIG = wx-config-3.1
