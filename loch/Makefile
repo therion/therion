@@ -19,7 +19,12 @@ CMNOBJECTS = \
 CROSS =
 EXT =
 
+WX_CONFIG_DEF=$(shell command -v wx-config 2> /dev/null)
+ifndef WX_CONFIG_DEF
 WX_CONFIG = wx-config
+else
+WX_CONFIG = wx-config-3.1
+endif
 
 VTKSUFFIX = $(shell tclsh ./getvtkver.tcl suffix)
 VTKVERSION = $(shell tclsh ./getvtkver.tcl version)
@@ -27,24 +32,21 @@ VTKPATH = $(shell tclsh ./getvtkver.tcl incpath)
 VTKLIBPATH = $(shell tclsh ./getvtkver.tcl libpath)
 VTKV6 = $(shell tclsh ./getvtkver.tcl version6)
 VTKV9 = $(shell tclsh ./getvtkver.tcl version9)
+VTKLIBS = $(shell tclsh ./getvtkver.tcl libs)
+VTKLIBSUFFIX=$(shell tclsh ./getvtkver.tcl libsuffix)
 ifeq ($(VTKV6),1)
 VTKLIBS = \
-    -lvtkCommonExecutionModel$(VTKSUFFIX) \
-    -lvtkCommonDataModel$(VTKSUFFIX) \
-    -lvtkCommonCore$(VTKSUFFIX) \
-    -lvtkFiltersCore$(VTKSUFFIX) \
-    -lvtkFiltersHybrid$(VTKSUFFIX) \
-    -lvtkIOLegacy$(VTKSUFFIX) \
+    -lvtkCommonExecutionModel$(VTKLIBSUFFIX) \
+    -lvtkCommonDataModel$(VTKLIBSUFFIX) \
+    -lvtkCommonCore$(VTKLIBSUFFIX) \
+    -lvtkFiltersCore$(VTKLIBSUFFIX) \
+    -lvtkFiltersHybrid$(VTKLIBSUFFIX) \
+    -lvtkIOLegacy$(VTKLIBSUFFIX) \
     $(shell pkg-config --libs freetype2)
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
 endif
-
-#ifeq ($(VTKV9),1)
-#VTKLIBS+= -lvtkpng$(VTKSUFFIX) -lvtkjpeg$(VTKSUFFIX)
-#else
 VTKLIBS+= -lpng -ljpeg
-#endif
 
 
 
@@ -100,10 +102,10 @@ endif
 ##CXX = c++
 ##CC = gcc
 ##POBJECTS = loch.res lxR2D.o getline.o
-##CXXPFLAGS = -W -Wall -DLXWIN32 $(shell wx-config --static --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
-##CCPFLAGS = -W -Wall -DLXWIN32 $(shell wx-config --static --cflags)
+##CXXPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
+##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cflags)
 ##LXLIBDIR = mingw
-##PLIBS = $(shell pkg-config freetype2 --libs) $(shell wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
+##PLIBS = $(shell pkg-config freetype2 --libs) -lharfbuzz -lbrotlidec-static -lbrotlicommon-static -lgraphite2 -lusp10 -lbz2 $(shell $(WX_CONFIG) --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##LXPLATFORM = WIN32
 ##STRIPFLAG = -static-libgcc -static -s
 
@@ -199,7 +201,7 @@ $(LOUTDIR)/loch: $(OBJECTS)
 	$(POSTMAKE)
 
 $(LOUTDIR)/loch.res: loch.rc loch.ico
-	$(CROSS)windres -i loch.rc $(shell $(CROSS)wx-config --cflags | tr ' ' '\n' | grep "^-I" | tr '\n' ' ') -J rc -o $(LOUTDIR)/loch.res -O coff
+	$(CROSS)windres -i loch.rc $(shell $(CROSS)$(WX_CONFIG) --cflags | tr ' ' '\n' | grep "^-I" | tr '\n' ' ') -J rc -o $(LOUTDIR)/loch.res -O coff
 
 graphs:
 	dot -Tps graph-vispipe.dot -o graph-vispipe.ps
