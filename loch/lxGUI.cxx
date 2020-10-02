@@ -29,6 +29,7 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
+#include "lxGUI.h"
 #include "lxData.h"
 #include "lxSetup.h"
 #include "lxRender.h"
@@ -38,7 +39,6 @@
 #include "lxSScene.h"
 #include "lxSTree.h"
 #include "lxPres.h"
-#include "lxGUI.h"
 
 #include "icons/open.xpm"
 #include "icons/render.xpm"
@@ -1163,7 +1163,7 @@ bool lxApp::OnInit()
 
 #if wxUSE_DISPLAY
     //multi screen support
-    wxDisplay display(0); //Get the settings for screen 0
+    wxDisplay display((unsigned int)0); //Get the settings for screen 0
     wxRect displayRect = display.GetGeometry();
 #else
     wxSize scr = wxGetDisplaySize();
