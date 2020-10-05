@@ -48,6 +48,8 @@
 #include "thtrans.h"
 #include "loch/lxMath.h"
 #include "thcs.h"
+#include "thgeomag.h"
+#include "thgeomagdata.h"
 #include "extern/quickhull/QuickHull.hpp"
 #ifdef THMSVC
 #define hypot _hypot
@@ -130,10 +132,8 @@ void thdb1d::scan_data()
 
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
-  
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
       dp = (thdata *)(*obi);
-
       if (dp->date.is_defined()) {
         double syear, eyear;
         syear = dp->date.get_start_year();
@@ -148,7 +148,23 @@ void thdb1d::scan_data()
           if (this->max_year < eyear) this->max_year = eyear;
         }
       }
+    }
+    obi++;
+  }
 
+  double default_dpdeclin;
+  bool default_dpdeclinused;
+  default_dpdeclin = 0.0;
+  default_dpdeclinused = false;
+  if (!thisnan(this->min_year)) {
+    thcfg.get_outcs_mag_decl(this->min_year, default_dpdeclin);
+    default_dpdeclinused = true;
+  }
+
+  obi = this->db->object_list.begin();
+  while (obi != this->db->object_list.end()) {
+    if ((*obi)->get_class_id() == TT_DATA_CMD) {
+      dp = (thdata *)(*obi);
       bool dpdeclindef;
       double dpdeclin;
 
@@ -361,6 +377,8 @@ void thdb1d::scan_data()
                 declin += dpdeclin;
                 used_declination |= 4;
               } else {
+                lei->implicit_declination = default_dpdeclin;
+                declin += default_dpdeclin;
                 used_declination |= 1;
               }
               lei->total_bearing += declin;
@@ -590,8 +608,15 @@ void thdb1d::scan_data()
     obi++;
   }
 
-  if (((used_declination & 1) != 0) && ((used_declination & 4) != 0))
-    thwarning(("unable to determine magnetic declination for undated surveys"))
+  if (((used_declination & 1) != 0) && ((used_declination & 4) != 0)) {
+    if (default_dpdeclinused)
+      thwarning(("year %.0f magnetic declination used for undated surveys", this->min_year))
+    else
+      thwarning(("unable to determine magnetic declination used for undated surveys"))
+  }
+
+  if (thcfg.m_decl_out_of_geomag_range)
+    thwarning(("magnetic declination calculated for dates outside of optimal model range (%d - %d)", thgeomag_minyear, thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1) - 1))
 
   thcfg.log_outcs(this->min_year, this->max_year);
 
