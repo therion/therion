@@ -29,8 +29,8 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
-#include "lxGUI.h"
 #include "lxData.h"
+#include "lxGUI.h"
 #include "lxSetup.h"
 #include "lxRender.h"
 #include "lxOptDlg.h"
