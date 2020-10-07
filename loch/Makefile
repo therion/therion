@@ -63,7 +63,7 @@ STRIPFLAG = -s
 ##CC = gcc
 ##POBJECTS = lxR2P.o
 ##ifeq ($(VTKV6),1)
-##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) -lvtkIOLegacy-$(VTKVERSION) -lfreetype -lpng -ljpeg
+##VTKLIBS = -lvtkCommonExecutionModel -lvtkCommonDataModel -lvtkCommonCore -lvtkFiltersCore -lvtkFiltersHybrid -lvtkIOLegacy -lfreetype -lpng -ljpeg
 ##else
 ##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 ##endif
