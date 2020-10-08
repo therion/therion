@@ -161,6 +161,8 @@ void thdb1d::scan_data()
     default_dpdeclinused = true;
   }
 
+  std::set<std::string> undated_surveys_set;
+
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
@@ -377,6 +379,7 @@ void thdb1d::scan_data()
                 declin += dpdeclin;
                 used_declination |= 4;
               } else {
+                undated_surveys_set.insert(dp->fsptr->full_name);
                 lei->implicit_declination = default_dpdeclin;
                 declin += default_dpdeclin;
                 used_declination |= 1;
@@ -613,6 +616,11 @@ void thdb1d::scan_data()
       thwarning(("year %.0f magnetic declination used for undated surveys", this->min_year))
     else
       thwarning(("unable to determine magnetic declination used for undated surveys"))
+    thprintf("undated surveys:\n");
+    for(auto usi = undated_surveys_set.begin(); usi != undated_surveys_set.end(); usi++) {
+      thprintf(usi->c_str());
+      thprintf("\n");
+    }
   }
 
   if (thcfg.m_decl_out_of_geomag_range)
