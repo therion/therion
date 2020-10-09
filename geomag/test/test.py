@@ -1,5 +1,9 @@
 #!/usr/bin/python3 -B
-import re,datetime,math,geomag
+import re,datetime,math,geomag, sys
+
+if len(sys.argv) == 1:
+  print('usage: %s <sample_out_IGRFXY.txt>' % sys.argv[0])
+  sys.exit(1)
 
 units = {'K':1000, 'M':1, 'F':.3048}
 
@@ -12,7 +16,7 @@ def deg2rad(s):
     tmp = float(s)
   return tmp/180*math.pi
 
-for i,l in enumerate(open('sample_out_IGRF13.txt')):
+for i,l in enumerate(open(sys.argv[1])):
   if i==0: continue
   print('% 2s ' % i, end='')
   (dat, cs, alt, lat, lon, dd, dm) = l.split()[:7]
@@ -37,4 +41,4 @@ for i,l in enumerate(open('sample_out_IGRF13.txt')):
   correct = "%s %s" % (dd,dm)
   if res == correct: print('  ', end='')
   else: print('! ', end='')
-  print ("%s %s" % (res, correct))
+  print ("calc: %8s, corr: %8s" % (res, correct))
