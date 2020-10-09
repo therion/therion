@@ -152,6 +152,8 @@ thconfig::thconfig()
   this->ibbx[3] = thnan;
   this->ibbx_def = false;
 
+  this->m_decl_out_of_geomag_range = false;
+
 #ifdef THWIN32
   thbuffer * tmpbf = &(this->bf1);
   // set search path according to Windows registers
@@ -945,8 +947,12 @@ bool thconfig::get_outcs_mag_decl(double year, double & decl)
   double x, y, z, lat, lon, alt;
   if (!this->get_outcs_center(x, y, z))
     return false;
+  if (year < 1900.0)
+    ththrow(("automatic declination calculation before 1900 not supported, please specify declination explicitly"))
+  if (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3)))
+    ththrow(("automatic declination calculation after %d not supported, please specify declination explicitly", thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3)))
   if ((year < double(thgeomag_minyear)) || (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1))))
-    return false;
+    this->m_decl_out_of_geomag_range = true;
   thcs2cs(thcs_get_params(this->outcs), "+proj=latlong +datum=WGS84", x, y, z, lon, lat, alt);
   decl = thgeomag(lat, lon, alt, year);
   return true;

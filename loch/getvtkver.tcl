@@ -1,11 +1,21 @@
 set ver 5.4
 set suffix -$ver
 set incpath "/usr/local/include/vtk-$ver"
-set libpath "/usr/local/lib/vtk-$ver"
+set libpath "/usr/local/lib"
 set vv1 0
 set vv2 0
 
-foreach d {/usr /usr/local c:/msys64/mingw32} {
+set searchdirs {/usr /usr/local}
+set gccstr ""
+catch {
+    set gccstr [exec sh -c "command -v gcc"]
+}
+set mingwpath ""
+if {[regexp {^(.*/mingw\d+).*} $gccstr dum mingwpath]} {
+  lappend searchdirs "$env(WD)/../..$mingwpath"
+}
+
+foreach d $searchdirs {
     set ll [glob -nocomplain -directory "$d/include" -types d vtk*]
     foreach l $ll {
 	if {[regexp {vtk-(\d+)\.(\d+)$} $l dum v1 v2]} {
@@ -53,6 +63,14 @@ switch [lindex $argv 0] {
     }
     suffix {
 	puts $suffix
+    }
+    libsuffix {
+        if {[string length $mingwpath]} {
+	  puts $suffix.dll
+        } else {
+	  puts $suffix
+	}
+	
     }
     default {
 	puts $ver
