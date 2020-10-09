@@ -1,14 +1,38 @@
-Therion 5.5.2 (in progress):
+Therion 5.5.2 (2020-10-09):
 
 therion:
  * added extend ignore path -- extend ignore <station1> <station2> <station3>
  * added ratio of extended elevation -- extend <0..100>
+ * support CMYK colors in MetaPost symbols (this is not yet a complete
+   CMYK support)
+ * updated WKT definitions for some built-in projections
+ * the names of projections defined by EPSG/ESRI are loaded dynamically
+   from the Proj database if Proj version >= 6
+ * undated surveys are listed in the Therion messages
+ * documentation updates
+ * updated German translation [#258]
  * bugs fixed
    - use proper ISO code for Czech language ('cs' instead of 'cz') [#251];
      'cz' is still allowed in the map layout for backwards compatibility
    - pdftex included in the windows installer failed to find images with
      '/./' or '/../' in the file path
    - splay shots extended elevation processing
+   - another fix for Proj 7.1.0 axes swap in Krovak's projection
+   - refuse to compile with unsupported Proj versions
+   - depth is incorrectly taken from surface legs
+   - Survex err reading bugfix
+   - VTK9 compatibility fixes
+   - Xtherion map georeferencing bugfix
+   - mingw-w64 compatibility fixes
+   - wxWidgets compilation issues
+   - declination set to 0 outside of the geomag model range
+     (now the declination is extrapolated 15 years after the model date;
+     error is produced after that and before 1900)
+   - other minor fixes
+
+infrastructure:
+ * add more Travis CI targets, update the libraries used
+ * removed Therion library rebuilding
 
 --------------------------------------------------------------------------------
 
