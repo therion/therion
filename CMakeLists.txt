@@ -35,16 +35,13 @@ set_source_files_properties(
     PROPERTIES GENERATED TRUE 
 )
 
-set(CROSS "")
-
 # copy files needed by some build steps
 file(COPY thcsdata.tcl thsymbolsetfont.txt DESTINATION ${CMAKE_BINARY_DIR})
 
 # generate thcsdata sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thcsdata.h
                           ${CMAKE_BINARY_DIR}/thcsdata.cxx
-                   COMMAND tclsh 
-                   ARGS thcsdata.tcl ${CROSS}
+                   COMMAND tclsh thcsdata.tcl ${PROJ4_PREFIX}/share/proj
                    DEPENDS ${CMAKE_BINARY_DIR}/thcsdata.tcl
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
