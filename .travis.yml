@@ -34,7 +34,6 @@ before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo rm /usr/lib/mxe/usr/x86_64-pc-linux-gnu/bin/i686-w64-mingw32.static-gcc   ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo ln -s /usr/lib/mxe/usr/bin/i686-w64-mingw32.static-g++ /usr/lib/mxe/usr/x86_64-pc-linux-gnu/bin/i686-w64-mingw32.static-g++   ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo ln -s /usr/lib/mxe/usr/bin/i686-w64-mingw32.static-gcc /usr/lib/mxe/usr/x86_64-pc-linux-gnu/bin/i686-w64-mingw32.static-gcc   ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo curl https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindJPEG.cmake -o /usr/lib/mxe/usr/x86_64-pc-linux-gnu/share/cmake-3.10/Modules/FindJPEG.cmake   ; fi  # outdated JPEG finder
 script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   mkdir build && cd build && cmake .. && make -j4 && make test ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   cd ..                           ; fi
