@@ -38,6 +38,7 @@ thtfangle::thtfangle() {
 
 }
 
+bool mils_warning(true);
 
 void thtfangle::parse_units(char * ustr)
 {
@@ -52,6 +53,11 @@ void thtfangle::parse_units(char * ustr)
     case TT_TFU_MIN:
       this->ufactor = 0.0166666666666666666666666666666666666666666;
       break;
+    case TT_TFU_MILS:
+      if (mils_warning) {
+        thwarning(("using mil/mils as angle unit is deprecated"));
+        mils_warning = false;
+      }
     case TT_TFU_GRAD:
       this->ufactor = 0.9;
       break;
