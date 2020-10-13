@@ -16,7 +16,7 @@ add_custom_command(
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/therion.tcl
-  COMMAND $<TARGET_FILE:therion> ARGS --print-xtherion-src > therion.tcl
+  COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:therion> --print-xtherion-src > therion.tcl
   DEPENDS therion
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
