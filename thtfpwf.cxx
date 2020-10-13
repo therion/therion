@@ -90,6 +90,7 @@ void thtfpwf::parse(int nfact, char ** sfact)
       thparse_double(sv, this->b, *sfact);
       if (sv != TT_SV_NUMBER)
         ththrow(("invalid number -- %s", *sfact))
+      this->a = 1.0;
       break;
     case 2:
       thparse_double(sv, this->b, sfact[0]);
