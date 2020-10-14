@@ -29,6 +29,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then   brew install wxmac vtk          ; fi
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   export PATH=/usr/lib/mxe/usr/bin:$PATH   ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   export WINESERVER=/usr/lib/wine/wineserver64   ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo sed -i '/pattern="PDF"/d' /etc/ImageMagick-6/policy.xml ; fi   # turn off policy preventing PDF conversion
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo rm /usr/lib/mxe/usr/x86_64-pc-linux-gnu/bin/i686-w64-mingw32.static-g++   ; fi  # fix broken symlinks
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then   sudo rm /usr/lib/mxe/usr/x86_64-pc-linux-gnu/bin/i686-w64-mingw32.static-gcc   ; fi
