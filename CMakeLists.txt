@@ -90,7 +90,9 @@ install(TARGETS therion RUNTIME DESTINATION bin)
 add_executable(utest utest-proj.cxx utest-main.cxx)
 target_link_libraries(utest PUBLIC therion-common)
 enable_testing()
-add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+if (NOT WIN32)
+    add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+endif()
 
 # add subdirectories to the build
 add_subdirectory(mpost)
