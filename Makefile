@@ -483,11 +483,12 @@ $(OUTDIR)/thdb1d.o: thdb1d.cxx thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
  thdata.h thtfangle.h thtf.h thtflength.h thpoint.h th2ddataobject.h \
  thlogfile.h thsurface.h thlocale.h thinit.h thinput.h thconfig.h \
  thexporter.h thexport.h thlayout.h thsymbolset.h thsymbolsetlist.h \
- thselector.h thtrans.h thcs.h thcsdata.h extern/quickhull/QuickHull.hpp \
- extern/quickhull/Structs/Vector3.hpp extern/quickhull/Structs/Plane.hpp \
- extern/quickhull/Structs/Vector3.hpp extern/quickhull/Structs/Pool.hpp \
- extern/quickhull/Structs/Mesh.hpp extern/quickhull/Structs/Plane.hpp \
- extern/quickhull/Structs/Pool.hpp extern/quickhull/Structs/../Types.hpp \
+ thselector.h thtrans.h thcs.h thcsdata.h thgeomag.h thgeomagdata.h \
+ extern/quickhull/QuickHull.hpp extern/quickhull/Structs/Vector3.hpp \
+ extern/quickhull/Structs/Plane.hpp extern/quickhull/Structs/Vector3.hpp \
+ extern/quickhull/Structs/Pool.hpp extern/quickhull/Structs/Mesh.hpp \
+ extern/quickhull/Structs/Plane.hpp extern/quickhull/Structs/Pool.hpp \
+ extern/quickhull/Structs/../Types.hpp \
  extern/quickhull/Structs/VertexDataSource.hpp \
  extern/quickhull/ConvexHull.hpp \
  extern/quickhull/Structs/VertexDataSource.hpp \

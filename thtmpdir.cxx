@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <errno.h>
+#include <cassert>
 
 #ifdef THWIN32
 #include <process.h>
@@ -107,7 +108,7 @@ void thtmpdir::create()
       if (this->debug) {
         thbuffer wdir;
         wdir.guarantee(1024);
-        getcwd(wdir.get_buffer(),1024);
+        assert(getcwd(wdir.get_buffer(),1024) != NULL);
         wdir += "/thTMPDIR";
         dir_path = wdir;
         //dir_path += "thTMPDIR";
