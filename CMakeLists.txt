@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD 14)
 
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
+include(cmake/ECMEnableSanitizers.cmake)
+
+set(ECM_ENABLE_SANITIZERS "" CACHE STRING 
+    "Enable runtime sanitizers, available options: address,memory,thread,leak,undefined." )
 
 # determine platform
 if(UNIX AND NOT APPLE)
