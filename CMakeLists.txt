@@ -10,6 +10,7 @@ include(cmake/ECMEnableSanitizers.cmake)
 
 set(ECM_ENABLE_SANITIZERS "" CACHE STRING 
     "Enable runtime sanitizers, available options: address,memory,thread,leak,undefined." )
+set(ENABLE_THDEBUG OFF CACHE BOOL "Print debug information.")
 
 # determine platform
 if(UNIX AND NOT APPLE)
@@ -74,7 +75,7 @@ execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
 add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
 target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern" ${PROJ_INCLUDE_DIRS})
 target_link_libraries(therion-common PUBLIC ${PROJ4_LIBRARIES} PRIVATE loch-common)
-target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}")
+target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
 add_dependencies(therion-common 
     generate_thsymbolsetlist
     generate_thlang
