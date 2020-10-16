@@ -84,7 +84,7 @@ double thcsconverg(string s, double a, double b) {
   projPJ P1, P2;
   double c = 0;
   double x = a, y = b;
-  assert (s.find("+proj=latlong") == s.npos);
+  thassert (s.find("+proj=latlong") == s.npos);
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
      therror(("Can't initialize input projection!"));
   if ((P2 = pj_init_plus("+proj=latlong +datum=WGS84"))==NULL) 
