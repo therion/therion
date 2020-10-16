@@ -19,11 +19,11 @@ CMNOBJECTS = \
 CROSS =
 EXT =
 
-WX_CONFIG_DEF=$(shell command -v wx-config 2> /dev/null)
+WX_CONFIG_DEF=$(shell command -v wx-config-3.1 2> /dev/null)
 ifneq ($(WX_CONFIG_DEF),)
-WX_CONFIG = wx-config
-else
 WX_CONFIG = wx-config-3.1
+else
+WX_CONFIG = wx-config
 endif
 
 VTKSUFFIX = $(shell tclsh ./getvtkver.tcl suffix)
