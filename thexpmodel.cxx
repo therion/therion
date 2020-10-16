@@ -46,7 +46,6 @@
 #include "thcs.h"
 #include "thtexfonts.h"
 #include "thlang.h"
-#include <cassert>
 
 
 thexpmodel::thexpmodel() {
@@ -775,7 +774,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
                   fseek(xf, 0, SEEK_SET);
                   if (fsz > 0) {
                     char * cdata = new char [fsz];
-                    assert(fread((void *) cdata, 1, fsz, xf) == fsz);
+                    thassert(fread((void *) cdata, 1, fsz, xf) == fsz);
                     fwrite((void *) cdata, 1, fsz, texf);
                     delete [] cdata;
                   }

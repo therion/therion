@@ -46,7 +46,6 @@
 #include "thtmpdir.h"
 #include "thinit.h"
 #include <list>
-#include <cassert>
 #include <cstdio>
 #ifndef THMSVC
 #include <unistd.h>
@@ -3604,8 +3603,8 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
   thbuffer com, wdir;
   wdir.guarantee(1024);
-  assert(getcwd(wdir.get_buffer(),1024) != NULL);
-  assert(chdir(thtmp.get_dir_name()) == 0);
+  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
+  thassert(chdir(thtmp.get_dir_name()) == 0);
   int retcode;
 
   com = "\"";
@@ -3621,7 +3620,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   "####################### metapost log file ########################\n",
   "#################### end of metapost log file ####################\n",true);
   if (retcode != EXIT_SUCCESS) {
-    assert(chdir(wdir.get_buffer()) == 0);
+    thassert(chdir(wdir.get_buffer()) == 0);
     ththrow(("metapost exit code -- %d", retcode))
   }
 
@@ -3695,7 +3694,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
   delete cln;
 
-  assert(chdir(wdir.get_buffer()) == 0);
+  thassert(chdir(wdir.get_buffer()) == 0);
 
 }
 

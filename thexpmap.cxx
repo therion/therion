@@ -77,7 +77,6 @@
 #include "thsvg.h"
 #include "extern/img.h"
 #include "thcs.h"
-#include <cassert>
 
 #ifdef THMSVC
 #define snprintf _snprintf
@@ -2159,8 +2158,8 @@ else
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
   thbuffer com, wdir;
   wdir.guarantee(1024);
-  assert(getcwd(wdir.get_buffer(),1024) != NULL);
-  assert(chdir(thtmp.get_dir_name()) == 0);
+  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
+  thassert(chdir(thtmp.get_dir_name()) == 0);
   
   // vypise kodovania
   print_fonts_setup();
@@ -2230,7 +2229,7 @@ else
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);
     if (retcode != EXIT_SUCCESS) {
-      assert(chdir(wdir.get_buffer()) == 0);
+      thassert(chdir(wdir.get_buffer()) == 0);
       ththrow(("metapost exit code -- %d", retcode))
     }
   }
@@ -2274,12 +2273,12 @@ else
       "######################## pdftex log file #########################\n",
       "##################### end of pdftex log file #####################\n",false);
       if (retcode != EXIT_SUCCESS) {
-        assert(chdir(wdir.get_buffer()) == 0);
+        thassert(chdir(wdir.get_buffer()) == 0);
         ththrow(("pdftex exit code -- %d", retcode))
       }
 
       // Let's copy results and log-file to working directory
-      assert(chdir(wdir.get_buffer()) == 0);
+      thassert(chdir(wdir.get_buffer()) == 0);
 #ifdef THWIN32
       com = "copy \"";
 #else
@@ -2310,14 +2309,14 @@ else
 
     case TT_EXPMAP_FMT_SVG:
       thconvert_new();
-      assert(chdir(wdir.get_buffer()) == 0);
+      thassert(chdir(wdir.get_buffer()) == 0);
       thsvg(fnm, 0, ldata);
       break;
       
 
     case TT_EXPMAP_FMT_XHTML:
       thconvert_new();
-      assert(chdir(wdir.get_buffer()) == 0);
+      thassert(chdir(wdir.get_buffer()) == 0);
       thsvg(fnm, 1, ldata);
       break;
 

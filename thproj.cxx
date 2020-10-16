@@ -29,7 +29,6 @@
 #include "thproj.h"
 #include "thlogfile.h"
 #include <string>
-#include <cassert>
 #include <cmath>
 #include <map>
 #include <set>

@@ -8,7 +8,6 @@
 #include <locale.h>
 #include <map>
 #include <list>
-#include <cassert>
 
 #if defined LXWIN32 || defined THWIN32
 #include "getline.h"
@@ -24,6 +23,8 @@
 #define strcasecmp stricmp
 #endif
 
+
+#define lxassert(expr) if (!(expr)) throw;
 
 lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 {
@@ -198,7 +199,7 @@ lxFileDataPtr lxFileData::AppendFile(const char * fnm)
     fseek(xf, 0, SEEK_SET);
     if (fsz > 0) {
       char * cdata = new char [fsz];
-      assert(fread((void *) cdata, 1, fsz, xf) == fsz);
+      lxassert(fread((void *) cdata, 1, fsz, xf) == fsz);
       res = this->AppendData(cdata, fsz);
       delete [] cdata;
     }
@@ -753,7 +754,7 @@ void lxFile::ImportPLT(const char * fn)
   delete [] sname;
 
   while (!feof(this->m_file)) {
-    assert(getline(&lnp, &lns, this->m_file) != -1);
+    lxassert(getline(&lnp, &lns, this->m_file) != -1);
     nt = lxFile__SplitTokens((unsigned char *) lnp, &(tok[0]), 16);
     (void)nt;
     switch (*(tok[0])) {

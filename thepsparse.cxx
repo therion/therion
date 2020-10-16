@@ -39,7 +39,6 @@
 #include <cstring>
 #include <cstdio>
 #include <cmath>
-#include <cassert>
 
 #include "thepsparse.h"
 #include "thpdfdbg.h"
@@ -421,7 +420,7 @@ void MP_data::print_svg (ofstream & F, string unique_prefix) {
   }
 //  F << "</g>" << endl;
   
-  assert(gstate.clippathdepth.empty());
+  thassert(gstate.clippathdepth.empty());
 }
 
 void converted_data::print_svg (ofstream & F, string unique_prefix) { 
@@ -493,7 +492,7 @@ string process_pdf_string2(string s, string font) {
   map<string,FONTCHARS>::iterator I; 
 
   I = USED_CHARS.find(font);
-  assert (I != USED_CHARS.end());
+  thassert (I != USED_CHARS.end());
   s = s.substr(1,s.length()-3);  // delete surrounding parentheses and final space
   for (unsigned i=0; i<s.size(); i++) {
     c = s[i];

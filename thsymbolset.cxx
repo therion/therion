@@ -43,7 +43,6 @@
 #include "thsymbolsets.h"
 #include "thlogfile.h"
 #include "thepsparse.h"
-#include <cassert>
 #ifndef THMSVC
 #include <unistd.h>
 #else
@@ -1624,8 +1623,8 @@ void export_all_symbols()
   // run MP
   thbuffer com, wdir;
   wdir.guarantee(1024);
-  assert(getcwd(wdir.get_buffer(),1024) != NULL);
-  assert(chdir(thtmp.get_dir_name()) == 0);
+  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
+  thassert(chdir(thtmp.get_dir_name()) == 0);
 
   // vypise kodovania
   print_fonts_setup();
@@ -1689,13 +1688,13 @@ void export_all_symbols()
   "####################### metapost log file ########################\n",
   "#################### end of metapost log file ####################\n",true);
   if (retcode != EXIT_SUCCESS) {
-    assert(chdir(wdir.get_buffer()) == 0);
+    thassert(chdir(wdir.get_buffer()) == 0);
     ththrow(("metapost exit code -- %d", retcode))
   }
 
   thconvert_new();
 
-  assert(chdir(wdir.get_buffer()) == 0);
+  thassert(chdir(wdir.get_buffer()) == 0);
   ofstream hf ("symbols.xhtml");
   hf << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   hf << "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>Therion symbols</title>\n<body>\n";

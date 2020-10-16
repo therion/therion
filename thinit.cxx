@@ -37,7 +37,6 @@
 #include "thtmpdir.h"
 #include "thcs.h"
 #include "thproj.h"
-#include <cassert>
 
 #ifdef THWIN32
 #include <windows.h>
@@ -695,8 +694,8 @@ void thinit::load()
 
       thbuffer com, wdir;
       wdir.guarantee(1024);
-      assert(getcwd(wdir.get_buffer(),1024) != NULL);
-      assert(chdir(thtmp.get_dir_name()) == 0);
+      thassert(getcwd(wdir.get_buffer(),1024) != NULL);
+      thassert(chdir(thtmp.get_dir_name()) == 0);
       int retcode;
 
       com = "\"";
@@ -712,7 +711,7 @@ void thinit::load()
         TMPFONTS.push_back(*J);
         thprintf(" OK\n");
       }
-      assert(chdir(wdir.get_buffer()) == 0);
+      thassert(chdir(wdir.get_buffer()) == 0);
     } else {
       TMPFONTS.push_back(*J);
     }

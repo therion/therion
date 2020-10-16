@@ -185,6 +185,8 @@ extern int therion_exit_state;
 void thprint_environment();
 void thprint_xtherion();
 
+#define thassert(expr) {if (!(expr)) thprintf2err("%s%s (" __FILE__ ":%d): assertion failed ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__);}
+
 #endif
 
 

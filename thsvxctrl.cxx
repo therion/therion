@@ -42,7 +42,6 @@
 #include "thlogfile.h"
 #include "extern/img.h"
 #include <math.h>
-#include <cassert>
 #include <string>
 #include <fstream>
 
@@ -399,7 +398,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   // run survex
   thbuffer svxcom, wdir;
   wdir.guarantee(1024);
-  assert(getcwd(wdir.get_buffer(),1024) != NULL);
+  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
   int retcode;
   svxcom = "\"";
   svxcom += thini.get_path_cavern();

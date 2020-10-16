@@ -40,7 +40,6 @@
 #include "thparse.h"
 #include "thdb1d.h"
 #include "thinfnan.h"
-#include <cassert>
 #ifdef THMSVC
 #include <direct.h>
 #define getcwd _getcwd
@@ -222,7 +221,7 @@ void thsurface::parse_picture(char ** args)
 
   thbuffer pict_path;
   pict_path.guarantee(1024);
-  assert(getcwd(pict_path.get_buffer(),1024) != NULL);
+  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
   
   long i;
   if (strlen(args[0]) == 0)
