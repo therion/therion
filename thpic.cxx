@@ -72,7 +72,7 @@ void thpic::init(const char * pfname, const char * incfnm)
   long i;
   thbuffer pict_path;
   pict_path.guarantee(1024);
-  getcwd(pict_path.get_buffer(),1024);  
+  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
 
   if (strlen(pfname) == 0)
     ththrow(("picture file name not specified"));

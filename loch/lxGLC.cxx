@@ -997,40 +997,52 @@ void lxGLCanvas::RenderCenterline() {
 
   clrs[0] = 0.5; clrs[1] = 0.5; clrs[2] = 0.5; 
 
-  bool prevsurface = false;
+  bool prevsurface = false, prevsplay = false;
   lxDataShot * psh;
   lxVec * stv;
-  double clr[3];
+  double clr[3], spla, splm;
   unsigned long id, nid;
   nid = this->data->shots.size();
   glColor3f(clrc[0],clrc[1],clrc[2]);
   glBegin(GL_LINES);
   for(id = 0; id < nid; id++) {
 
+    spla = 0.0;
+    splm = 1.0;
     psh = &(this->data->shots[id]);
     if (psh->invisible)
       continue;
-    if (psh->splay && (!this->setup->m_vis_centerline_splay))
-      continue;
+    if (psh->splay) {
+      if (!this->setup->m_vis_centerline_splay)
+        continue;
+      if ((this->m_renderData != NULL) && (this->m_renderData->m_imgWhiteBg)) {
+        spla = 0.5;
+        splm = 0.5;
+      } else {
+        spla = 0.0;
+        splm = 0.5;
+      }
+    }
+
     if (psh->duplicate && (!this->setup->m_vis_centerline_duplicate))
       continue;
 
-
+#define splc(n) (spla + splm * (n))
 #define drawLvert(N) \
   stv = &(this->data->stations[N].pos); \
   if ((!psh->surface) && (!this->setup->cam_anaglyph) && (this->setup->m_colormd != lxSETUP_COLORMD_DEFAULT) && (this->setup->m_colormd_app_centerline)) { \
   this->data->luTable->GetColor(stv->z, clr); \
-  glColor3f(clr[0],clr[1],clr[2]); \
+  glColor3f(splc(clr[0]),splc(clr[1]),splc(clr[2])); \
   } \
   glVertex3f(lxShiftVecPXYZ(stv, this->shift));
 
     if ((psh->surface && this->setup->m_vis_centerline_surface) 
       || ((!psh->surface) && this->setup->m_vis_centerline_cave)) {
-        if (prevsurface != psh->surface) {
+        if ((prevsurface != psh->surface) || (prevsplay != psh->splay)) {
           if (psh->surface) {
-            glColor3f(clrs[0],clrs[1],clrs[2]);
+            glColor3f(splc(clrs[0]),splc(clrs[1]),splc(clrs[2]));
           } else {
-            glColor3f(clrc[0],clrc[1],clrc[2]);
+            glColor3f(splc(clrc[0]),splc(clrc[1]),splc(clrc[2]));
           }
         }
         drawLvert(psh->from);
@@ -1038,6 +1050,7 @@ void lxGLCanvas::RenderCenterline() {
       }
 
       prevsurface = psh->surface;
+      prevsplay = psh->splay;
   } 
   glEnd();
 
@@ -1561,9 +1574,9 @@ void lxGLCanvas::RenderICompass(double size) {
   glPopMatrix();
 
 #if wxCHECK_VERSION(3,0,0)
-  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\xc2\xb0"), int(this->setup->cam_dir)));
+  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(wxString::FromUTF8(_("%03d\xc2\xb0")), int(this->setup->cam_dir)));
 #else
-  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\260"), int(this->setup->cam_dir)));
+  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\260)", int(this->setup->cam_dir)));
 #endif  
 
 }
@@ -1652,7 +1665,7 @@ void lxGLCanvas::RenderIClino(double size)
   glPopMatrix();
 
 #if wxCHECK_VERSION(3,0,0)
-  this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(_("%+03d\xc2\xb0"), int(this->setup->cam_tilt)));
+  this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(wxString::FromUTF8(_("%03d\xc2\xb0")), int(this->setup->cam_tilt)));
 #else
   this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(_("%+03d\260"), int(this->setup->cam_tilt)));
 #endif  

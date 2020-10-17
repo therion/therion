@@ -1,4 +1,4 @@
-Therion 5.5.3 (in progress):
+Therion 5.5.4 (in progress):
 
 therion:
  * support for colour models: cmyk, rgb, gray (see [TODO])
@@ -6,7 +6,30 @@ therion:
    MetaPost
  * support for double number system in MetaPost (this eliminates the current
    MetaPost limits; see the chapter Limitations in the Appendix of the Thbook)
+ * support for LuaTeX as an alternative to pdfTeX
+ * bugs fixed:
+   - ISO8859-2 literals in the source code caused clang warnings
+   - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
+   - fixed numerical instability in l_overhang_SKBB
+   - other minor fixes
 
+--------------------------------------------------------------------------------
+
+Therion 5.5.3 (2020-10-17):
+
+therion:
+ * mil/mils angle unit deprecation warning [#129]
+ * sql export shot length precision increase [#147]
+ * bugs fixed
+   - incorect calculation of station position when fixed multiple times
+     [#269,270]
+   - memory leaks causing some random behaviour [#278]
+   - scale value should default to 1 when omitted from "calibrate" [#263]
+
+loch:
+ * splay shots are rendered with darker colour
+ * duplicate shots displayed by default
+ * small bug fixes
 
 --------------------------------------------------------------------------------
 

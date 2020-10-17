@@ -36,7 +36,6 @@
 
 #include <cstring>
 #include <cstdio>
-#include <cassert>
 
 #include "thtexfonts.h"
 #include "thtexenc.cxx"
@@ -575,7 +574,7 @@ int tex2uni(string font, int ch) {
         id = J->id;
         break;
       }
-    //assert(id != -1);
+    //thassert(id != -1);
     ch %= 256;
     if (ch < 0) ch += 256;  // if string is based on signed char
     if (id == -1) {
@@ -589,7 +588,7 @@ int tex2uni(string font, int ch) {
   } else {  // NFSS
     string f_ind = font.substr(4,2);
     // basic check that we have a number
-    assert(f_ind[0] >= '0' && f_ind[0] <= '9' && f_ind[1] >= '0' && f_ind[1] <= '9');
+    thassert(f_ind[0] >= '0' && f_ind[0] <= '9' && f_ind[1] >= '0' && f_ind[1] <= '9');
     if (ch < 0) ch += 256;  // if string is based on signed char
     return ENC_NEW.get_uni(atoi(f_ind.c_str()),ch);
   }

@@ -38,7 +38,6 @@
 #include <cstring>
 #include <cstdio>
 #include <cfloat>
-#include <cassert>
 #include <cmath>
 
 #include "thepsparse.h"
@@ -81,7 +80,7 @@ string escape_html(string s) {
   size_t i,j;
   for (i=0; i<s.length(); i++) {
     if ((char) s[i] == 27) {
-      assert(i<s.length()-1);
+      thassert(i<s.length()-1);
       j = (char) s[++i];
       switch (j) {
         case 0x1:
@@ -220,7 +219,7 @@ void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
       therror(("This can't happen -- no data for a scrap!"));
     
     map<int,layerrecord>::iterator J = LAYERHASH.find(I->layer);
-    assert(J != LAYERHASH.end());
+    thassert(J != LAYERHASH.end());
 
     map<int,set<string> >::iterator K = (((*J).second).scraps).find(I->level);
     if (K == (((*J).second).scraps).end()) {
@@ -257,7 +256,7 @@ void print_preview(int up,ofstream& F, string unique_prefix) {
   used_layers = (up ? MAP_PREVIEW_UP : MAP_PREVIEW_DOWN);
   for (set<int>::iterator I=used_layers.begin(); I != used_layers.end(); I++) {
     map<int,layerrecord>::iterator J = LAYERHASH.find(*I);
-    assert (J != LAYERHASH.end());
+    thassert (J != LAYERHASH.end());
     used_scraps = J->second.allscraps;
     if (!used_scraps.empty()) {
       for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {

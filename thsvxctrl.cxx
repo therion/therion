@@ -341,8 +341,8 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   //thdatass_list::iterator ssi;
   thdataequate_list::iterator eqi;
   thdata * dp;
-  thdataobject * cx1, * cx2;
-  thdb1ds * tmps;
+  //thdataobject * cx1, * cx2;
+  //thdb1ds * tmps;
   
   while (obi != dbp->object_list.end()) {
   
@@ -361,12 +361,12 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
       // scan data fixes
       fii = dp->fix_list.begin();
       while(fii != dp->fix_list.end()) {
-        tmps = &(dbp->db1d.station_vec[fii->station.id - 1]);
-        cx1 = tmps->fixcontext;
-        cx2 = fii->srcf.context;
-        if (((cx1 == NULL) && (cx2 == NULL)) || ((cx1 != NULL) && (cx2 != NULL) && (cx1->id == cx2->id))) {
+        //tmps = &(dbp->db1d.station_vec[fii->station.id - 1]);
+        //cx1 = tmps->fixcontext;
+        //cx2 = fii->srcf.context;
+        //if (((cx1 == NULL) && (cx2 == NULL)) || ((cx1 != NULL) && (cx2 != NULL) && (cx1->id == cx2->id))) {
           this->write_survey_fix(&(*fii));
-        }
+        //}
         fii++;
       }
   
@@ -398,7 +398,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   // run survex
   thbuffer svxcom, wdir;
   wdir.guarantee(1024);
-  getcwd(wdir.get_buffer(),1024);
+  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
   int retcode;
   svxcom = "\"";
   svxcom += thini.get_path_cavern();

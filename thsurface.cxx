@@ -221,7 +221,7 @@ void thsurface::parse_picture(char ** args)
 
   thbuffer pict_path;
   pict_path.guarantee(1024);
-  getcwd(pict_path.get_buffer(),1024);
+  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
   
   long i;
   if (strlen(args[0]) == 0)
