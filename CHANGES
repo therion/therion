@@ -1,4 +1,4 @@
-Therion 5.5.3 (in progress):
+Therion 5.5.3 (2020-10-17):
 
 therion:
  * mil/mils angle unit deprecation warning [#129]
@@ -12,6 +12,7 @@ therion:
 loch:
  * splay shots are rendered with darker colour
  * duplicate shots displayed by default
+ * small bug fixes
 
 --------------------------------------------------------------------------------
 
