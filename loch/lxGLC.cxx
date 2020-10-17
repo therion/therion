@@ -1665,7 +1665,7 @@ void lxGLCanvas::RenderIClino(double size)
   glPopMatrix();
 
 #if wxCHECK_VERSION(3,0,0)
-  this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(_("%+03d\xc2\xb0"), int(this->setup->cam_tilt)));
+  this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(wxString::FromUTF8(_("%03d\xc2\xb0")), int(this->setup->cam_tilt)));
 #else
   this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(_("%+03d\260"), int(this->setup->cam_tilt)));
 #endif  

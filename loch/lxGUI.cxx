@@ -1150,10 +1150,6 @@ IMPLEMENT_APP(lxApp)
 bool lxApp::OnInit()
 {
 
-#ifndef LXDEBUG
-    wxDISABLE_DEBUG_SUPPORT();
-#endif
-    
 #if wxCHECK_VERSION(3,0,0)
     m_locale.Init(wxLANGUAGE_DEFAULT, wxLOCALE_LOAD_DEFAULT);
 #else
