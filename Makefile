@@ -217,13 +217,13 @@ depend:
 	$(CXX) -MM $(CXXFLAGS) *.cxx >> Makefile
 	perl makedepend2.pl
 
-library:
+library: thversion.h
 	$(THXTHMKCMD) --print-library-src thlibrarydata.thcfg > thlibrarydata.log
 	perl makelibrary.pl thlibrarydata.log > thlibrarydata.tmp
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
-xtherion/therion.tcl:
+xtherion/therion.tcl: thversion.h
 	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
 
 xtherion/xtherion: version xtherion/therion.tcl xtherion/*.tcl
