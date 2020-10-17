@@ -1583,7 +1583,7 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
   char * pp;
   long i;
   pict_path.guarantee(1024);
-  getcwd(pict_path.get_buffer(),1024);
+  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
   pp = pict_path.get_buffer();
   pl = strlen(pp);
   if ((pl > 0) && ((pp[pl-1] == '/') || (pp[pl-1] == '\\'))) {

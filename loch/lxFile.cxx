@@ -24,6 +24,8 @@
 #endif
 
 
+#define lxassert(expr) if (!(expr)) std::exit(1);
+
 lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(uint32_t));
@@ -197,7 +199,7 @@ lxFileDataPtr lxFileData::AppendFile(const char * fnm)
     fseek(xf, 0, SEEK_SET);
     if (fsz > 0) {
       char * cdata = new char [fsz];
-      fread((void *) cdata, 1, fsz, xf);
+      lxassert(fread((void *) cdata, 1, fsz, xf) == fsz);
       res = this->AppendData(cdata, fsz);
       delete [] cdata;
     }
@@ -752,7 +754,7 @@ void lxFile::ImportPLT(const char * fn)
   delete [] sname;
 
   while (!feof(this->m_file)) {
-    getline(&lnp, &lns, this->m_file);
+    lxassert(getline(&lnp, &lns, this->m_file) != -1);
     nt = lxFile__SplitTokens((unsigned char *) lnp, &(tok[0]), 16);
     (void)nt;
     switch (*(tok[0])) {

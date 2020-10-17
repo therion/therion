@@ -1005,7 +1005,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
       int marker;
       size_t len;
       pictf = fopen(fname, "rb");      
-      fread(&(picth[0]), 1, 2, pictf);
+      thassert(fread(&(picth[0]), 1, 2, pictf) == 2);
       height = -1.0;
       width = -1.0;
       while(getc(pictf) == 255) {

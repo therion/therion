@@ -62,7 +62,7 @@ lxSetup::lxSetup(lxData * dat)
   this->m_vis_centerline_cave = true;
   this->m_vis_centerline_surface = true;
   this->m_vis_centerline_splay = false;
-  this->m_vis_centerline_duplicate = false;
+  this->m_vis_centerline_duplicate = true;
   this->m_vis_centerline_entrance = false;
   this->m_vis_centerline_fix = false;
   this->m_vis_centerline_station = false;
