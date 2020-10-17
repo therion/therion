@@ -1574,9 +1574,9 @@ void lxGLCanvas::RenderICompass(double size) {
   glPopMatrix();
 
 #if wxCHECK_VERSION(3,0,0)
-  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\xc2\xb0"), int(this->setup->cam_dir)));
+  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(wxString::FromUTF8(_("%03d\xc2\xb0")), int(this->setup->cam_dir)));
 #else
-  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\260"), int(this->setup->cam_dir)));
+  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\260)", int(this->setup->cam_dir)));
 #endif  
 
 }
