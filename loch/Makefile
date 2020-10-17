@@ -23,7 +23,7 @@ WX_CONFIG_DEF=$(shell command -v wx-config-3.1 2> /dev/null)
 ifneq ($(WX_CONFIG_DEF),)
 WX_CONFIG = wx-config-3.1
 else
-WX_CONFIG = wx-config
+WX_CONFIG ?= wx-config
 endif
 
 VTKSUFFIX = $(shell tclsh ./getvtkver.tcl suffix)
@@ -88,7 +88,7 @@ CXXPFLAGS = \
     -I$(VTKPATH)
 CCPFLAGS = $(shell $(WX_CONFIG) --cflags)
 LXLIBDIR = linux
-PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
+PLIBS = $(shell $(WX_CONFIG) --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
 LXPLATFORM = LINUX
 
 # LXLINUX doesn't work with Arch Linux
