@@ -1,12 +1,13 @@
 Therion 5.5.3 (in progress):
 
 therion:
- * mil/mils angle unit deprecation warning
- * sql export shot length precision increase
+ * mil/mils angle unit deprecation warning [#129]
+ * sql export shot length precision increase [#147]
  * bugs fixed
    - incorect calculation of station position when fixed multiple times
-   - memory leaks causing some random behaviour
-   - scale value should default to 1 when omitted from "calibrate"
+     [#269,270]
+   - memory leaks causing some random behaviour [#278]
+   - scale value should default to 1 when omitted from "calibrate" [#263]
 
 loch:
  * splay shots are rendered with darker colour
