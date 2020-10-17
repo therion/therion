@@ -223,7 +223,7 @@ library: thversion.h
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
-xtherion/therion.tcl:
+xtherion/therion.tcl: $(OUTDIR)/therion
 	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
 
 xtherion/xtherion: version xtherion/therion.tcl xtherion/*.tcl
@@ -243,7 +243,7 @@ $(OUTDIR)/samples.doc/index.tex:
 	touch thbook/version.tex
 	$(MAKE) -C thbook
 
-$(OUTDIR)/thbook/thbook.pdf: thbook/*.tex
+$(OUTDIR)/thbook/thbook.pdf: thbook/*.tex thversion.h
 	$(MAKE) -C thbook
 
 clean:
@@ -276,8 +276,9 @@ cleanrest:
 thmpost.h: mpost/*.mp
 	$(MAKE) -C ./mpost
 
-thmpost.cxx: mpost/*.mp
-	$(MAKE) -C ./mpost
+thmpost.cxx: thmpost.h
+thsymbolsets.h: thmpost.h thsymbolsetlist.h
+thsymbolsets.cxx: thsymbolsets.h
 
 thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 	perl thsymbolsetlist.pl
@@ -285,9 +286,9 @@ thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 thtex.h: tex/*.tex
 	$(MAKE) -C ./tex
 
-thtex.cxx: tex/*.tex
-	$(MAKE) -C ./tex
+thtex.cxx: thtex.h
 
+thchencdata.cxx: thchencdata.h
 thchencdata.h: thchencdata/*.TXT
 	$(MAKE) -C ./thchencdata
 
