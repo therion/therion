@@ -24,7 +24,7 @@
 #endif
 
 
-#define lxassert(expr) if (!(expr)) throw;
+#define lxassert(expr) if (!(expr)) std::exit(1);
 
 lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 {
