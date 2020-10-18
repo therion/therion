@@ -952,6 +952,9 @@ void lxFile::Import3D(const char * fn)
           if ((pimg->flags & img_FLAG_DUPLICATE) != 0)  {
             shPtr->SetFlag(LXFILE_SHOT_FLAG_DUPLICATE, true);
           }
+          if ((pimg->flags & img_FLAG_SPLAY) != 0)  {
+            shPtr->SetFlag(LXFILE_SHOT_FLAG_SPLAY, true);
+          }
           if (stPtr->GetFlag(LXFILE_STATION_FLAG_HAS_WALLS) || stPtrPrev->GetFlag(LXFILE_STATION_FLAG_HAS_WALLS)) {
             shPtr->SetFlag(LXFILE_SHOT_FLAG_NOT_LRUD, true);
           }
