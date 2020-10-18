@@ -223,7 +223,11 @@ library: thversion.h
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
-xtherion/therion.tcl: $(OUTDIR)/therion
+ifeq ($(THXTHMKCMD),$(OUTDIR)/therion)
+  THERION_TCL_DEPS += $(OUTDIR)/therion
+endif
+
+xtherion/therion.tcl: $(THERION_TCL_DEPS)
 	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
 
 xtherion/xtherion: version xtherion/therion.tcl xtherion/*.tcl
