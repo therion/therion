@@ -1,5 +1,4 @@
 # common therion objects
-export OUTDIR = .
 CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   thexception.o thbuffer.o thmbuffer.o thlogfile.o thtmpdir.o thlocale.o \
   thparse.o thcmdline.o thconfig.o thinput.o thchenc.o thdatabase.o \
@@ -41,7 +40,7 @@ SYSCONFDIR ?= $(PREFIX)/etc
 ##CCPFLAGS = -DTHLINUX
 ##LDPFLAGS = -s
 ##export THPLATFORM = LINUX
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##export OUTDIR = $(abspath $(PWD)/../therion.bin)
 ##THXTHMKCMD = $(OUTDIR)/therion
 
 
@@ -54,6 +53,7 @@ CXXPFLAGS = -DTHLINUX
 CCPFLAGS = -DTHLINUX
 LDPFLAGS = -s
 export THPLATFORM = LINUX
+export OUTDIR = .
 THXTHMKCMD = ./therion
 
 
@@ -67,7 +67,7 @@ THXTHMKCMD = ./therion
 ##CCPFLAGS = -DTHWIN32
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
-##OUTDIR ?= $(abspath $(PWD)/../therion.bin)
+##export OUTDIR ?= $(abspath $(PWD)/../therion.bin)
 ##THXTHMKCMD = $(OUTDIR)/therion
 
 # PLATFORM WIN32CROSS
@@ -83,7 +83,7 @@ THXTHMKCMD = ./therion
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
 ##THXTHMKCMD = therion
-##OUTDIR ?= $(abspath $(PWD)/../therion.bin)
+##export OUTDIR ?= $(abspath $(PWD)/../therion.bin)
 
 # PLATFORM MACOSX
 ##CXX = c++
@@ -94,6 +94,7 @@ THXTHMKCMD = ./therion
 ##CCPFLAGS = -DTHMACOSX
 ##LDPFLAGS =
 ##export THPLATFORM = MACOSX
+##export OUTDIR = .
 ##THXTHMKCMD = ./therion
 
 # PLATFORM ENDCONFIG
