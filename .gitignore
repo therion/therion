@@ -18,6 +18,7 @@ innosetup.ini
 xtherion/therion.tcl
 .*
 !.gitignore
+!.github/
 *~
 *.3d
 *.a
@@ -56,6 +57,7 @@ xtherion/xtherion
 xtherion/xtherion.tcl
 xtherion/msgxth.tcl
 /loch/loch
+/loch/loch.res
 /therion
 /thbook/
 /utest

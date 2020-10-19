@@ -16,7 +16,6 @@ CMNOBJECTS = \
   lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o \
   img.o
 
-CROSS =
 EXT =
 
 WX_CONFIG_DEF=$(shell command -v wx-config-3.1 2> /dev/null)
@@ -110,11 +109,12 @@ endif
 ##STRIPFLAG = -static-libgcc -static -s
 
 # PLATFORM WIN32CROSS
-##CROSS= i686-w64-mingw32.static-
+##CROSS ?= i686-w64-mingw32.static-
+##CROSS2 = $(shell echo $(CROSS) | sed 's/-$$//')
 ##EXT = .exe
 ##VTKVERSION = 8.2
-##VTKPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/include/vtk-$(VTKVERSION)
-##VTKLIBPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/lib
+##VTKPATH = /usr/lib/mxe/usr/$(CROSS2)/include/vtk-$(VTKVERSION)
+##VTKLIBPATH = /usr/lib/mxe/usr/$(CROSS2)/lib
 ##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) \
 ##  -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) \
 ##  -lvtkIOLegacy-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkIOCore-$(VTKVERSION) \
@@ -250,6 +250,7 @@ clean:
 	perl makefile.pl rm -q *~
 	perl makefile.pl rm -q help/*/*~
 	perl makefile.pl rm -q loch.exe
+	perl makefile.pl rm -q loch.res
 	perl makefile.pl rm -q loch
 	perl makefile.pl rm -q loch.app/Contents/MacOS/loch
 	perl makefile.pl rm -q *.o

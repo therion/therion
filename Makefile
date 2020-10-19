@@ -23,7 +23,6 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   therion.o extern/quickhull/QuickHull.o
 TESTOBJECTS = utest-main.o utest-proj.o
 
-CROSS =
 EXT =
 
 # Prefix to install to (override like so: make PREFIX=/usr)
@@ -68,11 +67,11 @@ THXTHMKCMD = ./therion
 ##CCPFLAGS = -DTHWIN32
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##OUTDIR ?= $(abspath $(PWD)/../therion.bin)
 ##THXTHMKCMD = $(OUTDIR)/therion
 
 # PLATFORM WIN32CROSS
-##CROSS = i686-w64-mingw32.static-
+##CROSS ?= i686-w64-mingw32.static-
 ##EXT = .exe
 ##CXX = $(CROSS)c++
 ##export CC = $(CROSS)gcc
@@ -84,7 +83,7 @@ THXTHMKCMD = ./therion
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
 ##THXTHMKCMD = therion
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##OUTDIR ?= $(abspath $(PWD)/../therion.bin)
 
 # PLATFORM MACOSX
 ##CXX = c++
