@@ -28,6 +28,6 @@ jobs:
         with:
           msystem: MINGW64
           update: true
-          install: make mingw-w64-x86_64-cmake mingw-w64-x86_64-proj mingw-w64-x86_64-vtk mingw-w64-x86_64-wxWidgets mingw-w64-x86_64-gcc mingw-w64-x86_64-make mingw-w64-x86_64-bwidget
+          install: make git mingw-w64-x86_64-cmake mingw-w64-x86_64-proj mingw-w64-x86_64-vtk mingw-w64-x86_64-wxWidgets mingw-w64-x86_64-gcc mingw-w64-x86_64-make mingw-w64-x86_64-bwidget
       - run: mkdir build && cd build && /mingw64/bin/cmake -G "MSYS Makefiles" ..
-      - run: /mingw64/bin/cmake --build . -t therion loch utest -- -j 4
+      - run: /mingw64/bin/cmake --build build -t therion loch utest -- -j 4
