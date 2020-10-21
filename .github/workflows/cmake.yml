@@ -26,8 +26,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: MSYS
           update: true
           install: mingw-w64-x86_64-cmake mingw-w64-x86_64-proj mingw-w64-x86_64-vtk mingw-w64-x86_64-wxWidgets mingw-w64-x86_64-gcc mingw-w64-x86_64-make mingw-w64-x86_64-bwidget
+      - run: mkdir build && cd build && /mingw64/bin/cmake -G "MSYS Makefiles" ..
       - run: |
-          mkdir build && cd build && /mingw64/bin/cmake -G "MinGW Makefiles" .. && /mingw64/bin/cmake --build . -t therion loch utest -- -j 4
+          set MSYSTEM=MINGW64
+          msys2 -c '/mingw64/bin/cmake --build . -t therion loch utest -- -j 4'
