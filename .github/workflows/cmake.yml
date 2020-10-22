@@ -19,6 +19,12 @@ jobs:
 
   windows:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        include: [
+          { msystem: MINGW64, arch: x86_64 },
+          { msystem: MINGW32, arch: i686   }
+        ]
     defaults:
       run:
         shell: msys2 {0}
@@ -26,8 +32,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: ${{ matrix.msystem }}
           update: true
-          install: make git mingw-w64-x86_64-cmake mingw-w64-x86_64-proj mingw-w64-x86_64-vtk mingw-w64-x86_64-wxWidgets mingw-w64-x86_64-gcc mingw-w64-x86_64-make mingw-w64-x86_64-bwidget
-      - run: mkdir build && cd build && /mingw64/bin/cmake -G "MSYS Makefiles" ..
-      - run: /mingw64/bin/cmake --build build -t therion loch utest -- -j 4
+          install: make git mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-bwidget
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" ..
+      - run: cmake --build build -t therion loch utest -- -j 4
