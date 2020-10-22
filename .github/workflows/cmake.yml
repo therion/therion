@@ -12,10 +12,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-18.04, ubuntu-20.04]
+        type: [Debug, Release]
+        sanitizer: ["", address, undefined]
     steps:
       - uses: actions/checkout@v2
       - run: sudo apt install -y texlive-binaries texlive-metapost libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript ninja-build
-      - run: mkdir build && cd build && cmake -G Ninja .. && ninja && ninja test
+      - run: mkdir build && cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.type }} -DECM_ENABLE_SANITIZERS=${{ matrix.sanitizer }} ..
+      - run: cmake --build build
+      - run: cmake --build build -t test
 
   windows:
     runs-on: windows-latest
