@@ -100,7 +100,7 @@ endif
 # PLATFORM WIN32
 ##CXX = c++
 ##CC = gcc
-##POBJECTS = loch.res lxR2D.o getline.o
+##POBJECTS = loch.res lxR2D.o
 ##CXXPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cflags)
 ##LXLIBDIR = mingw
@@ -122,7 +122,7 @@ endif
 ##  -lvtksys-$(VTKVERSION) -lvtkfreetype-$(VTKVERSION) -lvtkpng-$(VTKVERSION) -lvtkjpeg-$(VTKVERSION) -lvtkzlib-$(VTKVERSION)
 ##CXX = $(CROSS)c++
 ##CC = $(CROSS)gcc
-##POBJECTS = loch.res lxR2D.o getline.o
+##POBJECTS = loch.res lxR2D.o
 ##CXXPFLAGS = -W -Wall -std=gnu++11 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(CROSS)wx-config --static --cflags)
 ##LXLIBDIR =
@@ -299,7 +299,6 @@ $(LOUTDIR)/lxSView.o: lxSView.cxx lxSView.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
  lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
 $(LOUTDIR)/lxSetup.o: lxSetup.cxx lxSetup.h lxData.h lxMath.h lxImgIO.h lxFile.h
 $(LOUTDIR)/lxWX.o: lxWX.cxx lxWX.h
-$(LOUTDIR)/getline.o: getline.c
 $(LOUTDIR)/img.o: img.c ../extern/img.c ../extern/img.h
 $(LOUTDIR)/lxR2D.o: lxR2D.c lxR2D.h
 $(LOUTDIR)/lxR2P.o: lxR2P.c lxR2P.h
