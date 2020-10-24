@@ -54,7 +54,9 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        arch: [i686, x86-64]
+        arch: 
+          - { pkg: i686,   cmd: i686   }
+          - { pkg: x86-64, cmd: x86_64 }
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
@@ -62,10 +64,10 @@ jobs:
           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
           sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt bionic main'
           sudo apt -qq update
-          sudo apt install -y ninja-build mxe-${{ matrix.arch }}-w64-mingw32.static-binutils mxe-${{ matrix.arch }}-w64-mingw32.static-bzip2 mxe-${{ matrix.arch }}-w64-mingw32.static-expat mxe-${{ matrix.arch }}-w64-mingw32.static-freetype-bootstrap mxe-${{ matrix.arch }}-w64-mingw32.static-gcc mxe-${{ matrix.arch }}-w64-mingw32.static-gettext mxe-${{ matrix.arch }}-w64-mingw32.static-glib mxe-${{ matrix.arch }}-w64-mingw32.static-harfbuzz mxe-${{ matrix.arch }}-w64-mingw32.static-jpeg mxe-${{ matrix.arch }}-w64-mingw32.static-libiconv mxe-${{ matrix.arch }}-w64-mingw32.static-libpng mxe-${{ matrix.arch }}-w64-mingw32.static-tiff mxe-${{ matrix.arch }}-w64-mingw32.static-vtk mxe-${{ matrix.arch }}-w64-mingw32.static-wxwidgets mxe-${{ matrix.arch }}-w64-mingw32.static-xz mxe-${{ matrix.arch }}-w64-mingw32.static-zlib mxe-${{ matrix.arch }}-w64-mingw32.static-proj
+          sudo apt install -y ninja-build mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-binutils mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-bzip2 mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-expat mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-freetype-bootstrap mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-gcc mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-gettext mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-glib mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-harfbuzz mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-jpeg mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-libiconv mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-libpng mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-tiff mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-vtk mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-wxwidgets mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-xz mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-zlib mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-proj
       - name: run build
         run: |
           export PATH=/usr/lib/mxe/usr/bin:$PATH
           mkdir build && cd build
-          ${{ matrix.arch }}-w64-mingw32.static-cmake -G Ninja -DMXE_USE_CCACHE=OFF ..
+          ${{ matrix.arch.cmd }}-w64-mingw32.static-cmake -G Ninja -DMXE_USE_CCACHE=OFF ..
           ninja therion loch utest
