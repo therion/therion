@@ -7,7 +7,7 @@ on:
     branches:
       - cmake
 jobs:
-  linux:
+  Ubuntu:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -30,7 +30,7 @@ jobs:
       - run: cmake --build build
       - run: cmake --build build -t test
 
-  windows:
+  Windows:
     runs-on: windows-latest
     strategy:
       matrix:
@@ -50,10 +50,11 @@ jobs:
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" ..
       - run: cmake --build build -t therion loch utest -- -j 4
 
-  crosscompiler:
-    runs-on: ubuntu-18.04
+  MXE:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
         arch: 
           - { pkg: i686,   cmd: i686   }
           - { pkg: x86-64, cmd: x86_64 }
