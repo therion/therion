@@ -56,8 +56,8 @@ jobs:
       matrix:
         os: [ubuntu-18.04, ubuntu-20.04]
         arch: 
-          - { pkg: i686,   cmd: i686   }
-          - { pkg: x86-64, cmd: x86_64 }
+          - { pkg: i686,   cmd: i686,   wine: wine32 }
+          - { pkg: x86-64, cmd: x86_64, wine: wine64 }
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
@@ -72,5 +72,5 @@ jobs:
         run: |
           export PATH=/usr/lib/mxe/usr/bin:$PATH
           mkdir build && cd build
-          ${{ matrix.arch.cmd }}-w64-mingw32.static-cmake -G Ninja -DMXE_USE_CCACHE=OFF -DCMAKE_CROSSCOMPILING_EMULATOR=wine ..
+          ${{ matrix.arch.cmd }}-w64-mingw32.static-cmake -G Ninja -DMXE_USE_CCACHE=OFF -DCMAKE_CROSSCOMPILING_EMULATOR=${{ matrix.arch.wine }} ..
           ninja
