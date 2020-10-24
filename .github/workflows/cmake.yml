@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        arch: [i686, x86_64]
+        arch: [i686, x86-64]
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
