@@ -63,5 +63,5 @@ jobs:
       - name: run build
         run: |
           export PATH=/usr/lib/mxe/usr/bin:$PATH
-          mkdir build && cd build && i686-w64-mingw32.static-cmake ..
+          mkdir build && cd build && i686-w64-mingw32.static-cmake -DMXE_USE_CCACHE=OFF ..
           i686-w64-mingw32.static-cmake --build build -t therion loch utest -- -j 4
