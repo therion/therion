@@ -49,3 +49,19 @@ jobs:
           install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" ..
       - run: cmake --build build -t therion loch utest -- -j 4
+
+  crosscompiler:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
+          sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt bionic main'
+          sudo apt -qq update
+          sudo apt install -y mxe-i686-w64-mingw32.static-binutils mxe-i686-w64-mingw32.static-bzip2 mxe-i686-w64-mingw32.static-expat mxe-i686-w64-mingw32.static-freetype-bootstrap mxe-i686-w64-mingw32.static-gcc mxe-i686-w64-mingw32.static-gettext mxe-i686-w64-mingw32.static-glib mxe-i686-w64-mingw32.static-harfbuzz mxe-i686-w64-mingw32.static-jpeg mxe-i686-w64-mingw32.static-libiconv mxe-i686-w64-mingw32.static-libpng mxe-i686-w64-mingw32.static-tiff mxe-i686-w64-mingw32.static-vtk mxe-i686-w64-mingw32.static-wxwidgets mxe-i686-w64-mingw32.static-xz mxe-i686-w64-mingw32.static-zlib mxe-i686-w64-mingw32.static-proj
+      - name: run build
+        run: |
+          export PATH=/usr/lib/mxe/usr/bin:$PATH
+          mkdir build && cd build && mxe-i686-w64-mingw32.static-cmake ..
+          mxe-i686-w64-mingw32.static-cmake --build build -t therion loch utest -- -j 4
