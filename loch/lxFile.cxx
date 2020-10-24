@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string.h>
+#include <locale.h>
 #include <map>
 #include <list>
 #include <fstream>
@@ -702,6 +703,9 @@ lxFileShot * lxFile::NewShot()
 void lxFile::ImportPLT(const char * fn)
 {
   this->m_error.clear();
+  char* prevlocale_ptr = setlocale(LC_NUMERIC,NULL);
+  const std::string prevlocale = prevlocale_ptr ? prevlocale_ptr : "";
+  setlocale(LC_NUMERIC,"C");
 
   bool lrudOK, lrudOKPrev = false;
   char * tok[16];
@@ -802,6 +806,8 @@ void lxFile::ImportPLT(const char * fn)
         break;
     }
   }
+
+  setlocale(LC_NUMERIC,prevlocale.c_str());
 }
 
 struct imp3Dpos {
