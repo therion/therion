@@ -14,10 +14,9 @@ jobs:
         os: [ubuntu-18.04, ubuntu-20.04]
         type: [Debug, Release]
         sanitizer: ["", address]
-        include: [
-          { cc: gcc,   cxx: g++     },
-          { cc: clang, cxx: clang++ }
-        ]
+        compiler: 
+          - { cc: gcc,   cxx: g++     }
+          - { cc: clang, cxx: clang++ }
     steps:
       - uses: actions/checkout@v2
       - run: sudo apt install -y texlive-binaries texlive-metapost libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript ninja-build
@@ -25,8 +24,8 @@ jobs:
           mkdir build && cd build && \
           cmake -G Ninja \
                 -DCMAKE_BUILD_TYPE=${{ matrix.type }} \
-                -DCMAKE_C_COMPILER=${{ matrix.cc }} \
-                -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
+                -DCMAKE_C_COMPILER=${{ matrix.compiler.cc }} \
+                -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cxx }} \
                 -DECM_ENABLE_SANITIZERS=${{ matrix.sanitizer }} ..
       - run: cmake --build build
       - run: cmake --build build -t test
@@ -35,10 +34,9 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        include: [
-          { msystem: MINGW64, arch: x86_64 },
-          { msystem: MINGW32, arch: i686   }
-        ]
+        config:
+          - { msystem: MINGW64, arch: x86_64 }
+          - { msystem: MINGW32, arch: i686   }
     defaults:
       run:
         shell: msys2 {0}
@@ -48,6 +46,6 @@ jobs:
         with:
           msystem: ${{ matrix.msystem }}
           update: true
-          install: make git mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-bwidget
+          install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" ..
       - run: cmake --build build -t therion loch utest -- -j 4
