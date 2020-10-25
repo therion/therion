@@ -1,4 +1,4 @@
-name: cmake
+name: CMake
 on: 
   push:
     branches:
@@ -20,7 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: sudo apt install -y texlive-binaries texlive-metapost libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript ninja-build
-      - run: |
+      - name: Configure CMake
+        run: |
           mkdir build && cd build && \
           cmake -G Ninja \
                 -DCMAKE_BUILD_TYPE=${{ matrix.type }} \
