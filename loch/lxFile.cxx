@@ -8,10 +8,7 @@
 #include <locale.h>
 #include <map>
 #include <list>
-
-#if defined LXWIN32 || defined THWIN32
-#include "getline.h"
-#endif
+#include <fstream>
 
 #endif  
 //LXDEPCHECK - standard libraries
@@ -596,23 +593,21 @@ void lxFile::ImportLOX(const char * fn)
 }
 
 
-lxFileSizeT lxFile__SplitTokens(unsigned char * str, unsigned char ** tokens, lxFileSizeT max_tokens)
+lxFileSizeT lxFileSplitTokens(std::string& str, char ** tokens, lxFileSizeT max_tokens)
 {
-  lxFileSizeT nt = 0, sl, sp;
-  unsigned char * cc;
+  lxFileSizeT nt = 0, sp = 0;
   bool inside = false;
-  if ((str == NULL) || (max_tokens == 0))
+  if (max_tokens == 0)
     return 0;
-  sl = strlen((char *)str);
   max_tokens--;
-  for (sp = 0, cc = str; (sp < sl) && (nt < max_tokens); sp++, cc++) {
+  for (auto cc = str.begin(); (sp < str.size()) && (nt < max_tokens); sp++, cc++) {
     if (inside && (*cc < 33)) {
       *cc = 0;
       inside = false;
       nt++;
     } else if ((!inside) && (*cc > 32)) {
       inside = true;
-      tokens[nt] = cc;
+      tokens[nt] = &*cc;
     }
   }
   return nt;
@@ -708,22 +703,18 @@ lxFileShot * lxFile::NewShot()
 void lxFile::ImportPLT(const char * fn)
 {
   this->m_error.clear();
-  char * prevlocale = setlocale(LC_NUMERIC,NULL);
+  char* prevlocale_ptr = setlocale(LC_NUMERIC,NULL);
+  const std::string prevlocale = prevlocale_ptr ? prevlocale_ptr : "";
   setlocale(LC_NUMERIC,"C");
 
-  size_t lns;
-  char * lnp;
-  char ln[1024];
-  lns = 1024;
-  lnp = &(ln[0]);
   bool lrudOK, lrudOKPrev = false;
-  unsigned char * tok[16];
+  char * tok[16];
   lxFileDbl lrud[4], lrudPrev[4];
   lrudPrev[0] = lrudPrev[1] = lrudPrev[2] = lrudPrev[3] = -1.0;
   lxFileSizeT nt;
 
-  this->m_file = fopen(fn,"r");
-  if (this->m_file == NULL) {
+  std::ifstream input(fn);
+  if (!input.is_open()) {
     this->m_error = "unable to open file for input";
     return;
   }
@@ -753,9 +744,10 @@ void lxFile::ImportPLT(const char * fn)
   tmpSurvey->m_namePtr = this->m_surveysData.AppendStr(sname);
   delete [] sname;
 
-  while (!feof(this->m_file)) {
-    lxassert(getline(&lnp, &lns, this->m_file) != -1);
-    nt = lxFile__SplitTokens((unsigned char *) lnp, &(tok[0]), 16);
+  std::string line;
+  while (!input.eof()) {
+    lxassert(std::getline(input, line));
+    nt = lxFileSplitTokens(line, &(tok[0]), 16);
     (void)nt;
     switch (*(tok[0])) {
       case 'M':
@@ -815,8 +807,7 @@ void lxFile::ImportPLT(const char * fn)
     }
   }
 
-  fclose(this->m_file);
-  setlocale(LC_NUMERIC,prevlocale);
+  setlocale(LC_NUMERIC,prevlocale.c_str());
 }
 
 struct imp3Dpos {
