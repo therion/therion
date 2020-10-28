@@ -22,8 +22,8 @@ jobs:
             type: Release
             sanitizer: ""
             compiler:
-              - cc: gcc
-                cxx: g++
+              cc: gcc
+              cxx: g++
     steps:
       - uses: actions/checkout@v2
       - run: sudo apt install -y texlive-binaries texlive-metapost libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript ninja-build
