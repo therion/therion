@@ -31,6 +31,7 @@ jobs:
         run: |
           brew update
           brew tap homebrew/core
+          brew unlink python@3.8
           brew install wxmac vtk proj
       - name: compile therion
         run: |
