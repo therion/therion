@@ -40,7 +40,7 @@ jobs:
           brew update
           brew tap homebrew/core
           brew unlink python@3.8
-          brew install wxmac vtk proj
+          brew install wxmac vtk proj xquartz
       - name: Configure CMake
         run: mkdir build && cd build && cmake ..
       - run: cmake --build build -- -j 4
