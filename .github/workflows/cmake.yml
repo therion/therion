@@ -31,6 +31,20 @@ jobs:
       - run: cmake --build build
       - run: cmake --build build -t test
 
+  macOS:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+          brew update
+          brew tap homebrew/core
+          brew install wxmac vtk proj
+      - name: Configure CMake
+        run: mkdir build && cd build && cmake ..
+      - run: cmake --build build -- -j 4
+      - run: cmake --build build -t test
+
   Windows:
     runs-on: windows-latest
     strategy:
