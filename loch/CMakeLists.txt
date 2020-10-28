@@ -28,7 +28,7 @@ if (${IS_WINDOWS})
 endif()
 
 # loch executable
-add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES} $<IF:$<BOOL:${IS_WINDOWS}>,lxR2D.c,lxR2P.c>)
+add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES} $<$<BOOL:${IS_WINDOWS}>:lxR2D.c> $<$<STREQUAL:${THPLATFORM},LINUX>:lxR2P.c>)
 target_compile_options(loch PRIVATE ${wxWidgets_CXX_FLAGS_LIST})
 target_compile_definitions(loch PRIVATE ${LOCH_DEFINITIONS})
 target_include_directories(loch PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${FREETYPE_INCLUDE_DIRS} ${wxWidgets_INCLUDE_DIRS} ${VTK_INCLUDE_DIRS} ${X11_INCLUDE_DIR})
