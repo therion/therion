@@ -191,6 +191,21 @@ modifying the files in the |mpost| and |tex| directories it's necessary to run
 Perl scripts |genmpost.pl| and |gentex.pl|, which generate C++ header files,
 and compile Therion executable again.
 
+{\it Updating the geomagnetic model}
+
+Therion uses the IGRF model to calculate the magnetic declination. Download the
+model in a txt format from \www{https://www.ngdc.noaa.gov/IAGA/vmod/igrf.html}
+and save it in the |geomag/| directory (e.g. |igrfXYcoeffs.txt|).
+Run |./igrf2c.py igrfXYcoeffs.txt| which creates |thgeomagdata.h| in the
+Therion source directory and recompile Therion.
+
+To test the model, extract the file |sample_out_IGRFXY.txt|, which is included
+in the Geomag distribution available on the same web page. Put it into the
+|geomag/test/| directory, run |./build.sh sample_out_IGRFXY.txt| and check the
+lines with an exclamation mark in the output.
+
+
+
 \subchapter Environment variables.
 
 Therion reads following environment variables:

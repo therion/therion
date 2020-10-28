@@ -1,0 +1,77 @@
+name: CMake
+on: 
+  push:
+    branches:
+      - cmake
+  pull_request:
+    branches:
+      - cmake
+jobs:
+  Ubuntu:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+        type: [Debug, Release]
+        sanitizer: ["", address]
+        compiler: 
+          - { cc: gcc,   cxx: g++     }
+          - { cc: clang, cxx: clang++ }
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt install -y texlive-binaries texlive-metapost libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript ninja-build
+      - name: Configure CMake
+        run: |
+          mkdir build && cd build && \
+          cmake -G Ninja \
+                -DCMAKE_BUILD_TYPE=${{ matrix.type }} \
+                -DCMAKE_C_COMPILER=${{ matrix.compiler.cc }} \
+                -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cxx }} \
+                -DECM_ENABLE_SANITIZERS=${{ matrix.sanitizer }} ..
+      - run: cmake --build build
+      - run: cmake --build build -t test
+
+  Windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        config:
+          - { msystem: MINGW64, arch: x86_64 }
+          - { msystem: MINGW32, arch: i686   }
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.config.msystem }}
+          update: true
+          install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" ..
+      - run: cmake --build build -t therion loch utest -- -j 4
+
+  MXE:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, ubuntu-20.04]
+        arch: 
+          - { pkg: i686,   cmd: i686,   wine-pkg: wine32, wine: wine }
+          - { pkg: x86-64, cmd: x86_64, wine-pkg: wine64, wine: wine64-stable }
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
+          sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt bionic main'
+          sudo apt -qq update
+          sudo apt install -y texlive-binaries texlive-metapost libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript
+          sudo apt install -y ${{ matrix.arch.wine-pkg }} ninja-build mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-binutils mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-bzip2 mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-expat mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-freetype-bootstrap mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-gcc mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-gettext mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-glib mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-harfbuzz mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-jpeg mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-libiconv mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-libpng mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-tiff mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-vtk mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-wxwidgets mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-xz mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-zlib mxe-${{ matrix.arch.pkg }}-w64-mingw32.static-proj
+      - name: run build
+        run: |
+          export PATH=/usr/lib/mxe/usr/bin:$PATH
+          mkdir build && cd build
+          ${{ matrix.arch.cmd }}-w64-mingw32.static-cmake -G Ninja -DMXE_USE_CCACHE=OFF -DCMAKE_CROSSCOMPILING_EMULATOR=${{ matrix.arch.wine }} ..
+          ninja

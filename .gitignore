@@ -16,8 +16,6 @@ thchencdata.h
 SYMBOLS.txt
 innosetup.ini
 xtherion/therion.tcl
-.*
-!.gitignore
 *~
 *.3d
 *.a

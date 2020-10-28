@@ -128,7 +128,7 @@ const thcsdata * thcs_get_data(int cs) {
       if (esri_labels.find(cs - TTCS_ESRI) != esri_labels.end()) {
         rv.prjname = esri_labels[cs - TTCS_ESRI];
       } else {
-        rv.prjname = thcs_get_label(params).c_str();
+        thcs_get_label(params).copy(prjname, 20, 0);
       }
 		return &rv;
 	}
@@ -137,7 +137,7 @@ const thcsdata * thcs_get_data(int cs) {
       if (epsg_labels.find(cs - TTCS_EPSG) != epsg_labels.end()) {
         rv.prjname = epsg_labels[cs - TTCS_EPSG];
       } else {
-        rv.prjname = thcs_get_label(params).c_str();
+        thcs_get_label(params).copy(prjname, 20, 0);
       }
 		return &rv;
 	}

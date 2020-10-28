@@ -37,8 +37,6 @@ target_link_libraries(loch PRIVATE
     ${wxWidgets_LIBRARIES}
     ${VTK_LIBRARIES} 
     ${FREETYPE_LIBRARIES}
-    PNG::PNG
-    JPEG::JPEG
     OpenGL::GL
     OpenGL::GLU
     ${X11_LIBRARIES}

@@ -176,7 +176,7 @@ void thimport::set_file_name(char * fnm)
   
   thbuffer impf_path;
   impf_path.guarantee(1024);
-  getcwd(impf_path.get_buffer(),1024);
+  thassert(getcwd(impf_path.get_buffer(),1024) != NULL);
   
   this->mysrc = this->db->csrc;
   

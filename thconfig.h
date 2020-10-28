@@ -111,6 +111,8 @@ class thconfig {
   double ibbx[4]; ///< Input bounding box.
   bool ibbx_def; ///< Input bounding box defined.
 
+  bool m_decl_out_of_geomag_range; ///< Whether declination out of geomag model range.
+
   /**
    * Standard constructor.
    */

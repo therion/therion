@@ -339,7 +339,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
                 ady = st2->y - st->y;
                 adz = st2->z - st->z;
                 fprintf(sqlf,"insert into SHOT values ("
-                  "%ld, %ld, %ld, %ld, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f);\n",
+                  "%ld, %ld, %ld, %ld, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f, %.3f, %.2f, %.2f);\n",
                   ++shotx, lei->from.id, lei->to.id, dp->id,
                   lei->total_length, lei->total_bearing, lei->total_gradient,
                   thdxyz2length(adx, ady, adz), thdxyz2bearing(adx, ady, adz), thdxyz2clino(adx, ady, adz),

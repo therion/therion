@@ -29,8 +29,8 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
-#include "lxGUI.h"
 #include "lxData.h"
+#include "lxGUI.h"
 #include "lxSetup.h"
 #include "lxRender.h"
 #include "lxOptDlg.h"
@@ -514,7 +514,7 @@ void lxFrame::ToggleFullScreen() {
 
 
 int lxFrame::GetFileType(wxString fName) {
-#define matchtype(w,t) if (fName.EndsWith((const wxChar *)wxString(_T(w)))) return t;
+#define matchtype(w,t) if (fName.EndsWith(wxString(_T(w)))) return t;
   matchtype(".lox",1);
   matchtype(".LOX",1);
   matchtype(".plt",2);

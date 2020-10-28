@@ -139,7 +139,7 @@ CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variabl
 
 
 # compiler settings
-CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -std=c++11
+CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -std=c++14
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
 TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
@@ -217,7 +217,7 @@ depend:
 	$(CXX) -MM $(CXXFLAGS) *.cxx >> Makefile
 	perl makedepend2.pl
 
-library:
+library: thversion.h
 	$(THXTHMKCMD) --print-library-src thlibrarydata.thcfg > thlibrarydata.log
 	perl makelibrary.pl thlibrarydata.log > thlibrarydata.tmp
 	perl maketest.pl thlibrarydata.tmp
@@ -483,11 +483,12 @@ $(OUTDIR)/thdb1d.o: thdb1d.cxx thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
  thdata.h thtfangle.h thtf.h thtflength.h thpoint.h th2ddataobject.h \
  thlogfile.h thsurface.h thlocale.h thinit.h thinput.h thconfig.h \
  thexporter.h thexport.h thlayout.h thsymbolset.h thsymbolsetlist.h \
- thselector.h thtrans.h thcs.h thcsdata.h extern/quickhull/QuickHull.hpp \
- extern/quickhull/Structs/Vector3.hpp extern/quickhull/Structs/Plane.hpp \
- extern/quickhull/Structs/Vector3.hpp extern/quickhull/Structs/Pool.hpp \
- extern/quickhull/Structs/Mesh.hpp extern/quickhull/Structs/Plane.hpp \
- extern/quickhull/Structs/Pool.hpp extern/quickhull/Structs/../Types.hpp \
+ thselector.h thtrans.h thcs.h thcsdata.h thgeomag.h thgeomagdata.h \
+ extern/quickhull/QuickHull.hpp extern/quickhull/Structs/Vector3.hpp \
+ extern/quickhull/Structs/Plane.hpp extern/quickhull/Structs/Vector3.hpp \
+ extern/quickhull/Structs/Pool.hpp extern/quickhull/Structs/Mesh.hpp \
+ extern/quickhull/Structs/Plane.hpp extern/quickhull/Structs/Pool.hpp \
+ extern/quickhull/Structs/../Types.hpp \
  extern/quickhull/Structs/VertexDataSource.hpp \
  extern/quickhull/ConvexHull.hpp \
  extern/quickhull/Structs/VertexDataSource.hpp \

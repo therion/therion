@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
+include(cmake/PreventInSourceBuilds.cmake)
 
 project(Therion)
 set(CMAKE_CXX_STANDARD 14)
 
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
+include(cmake/ECMEnableSanitizers.cmake)
+
+set(ECM_ENABLE_SANITIZERS "" CACHE STRING 
+    "Enable runtime sanitizers, available options: address,memory,thread,leak,undefined." )
+set(ENABLE_THDEBUG OFF CACHE BOOL "Print debug information.")
 
 # determine platform
 if(UNIX AND NOT APPLE)
@@ -34,16 +40,13 @@ set_source_files_properties(
     PROPERTIES GENERATED TRUE 
 )
 
-set(CROSS "")
-
 # copy files needed by some build steps
 file(COPY thcsdata.tcl thsymbolsetfont.txt DESTINATION ${CMAKE_BINARY_DIR})
 
 # generate thcsdata sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thcsdata.h
                           ${CMAKE_BINARY_DIR}/thcsdata.cxx
-                   COMMAND tclsh 
-                   ARGS thcsdata.tcl ${CROSS}
+                   COMMAND tclsh thcsdata.tcl ${PROJ4_PREFIX}/share/proj
                    DEPENDS ${CMAKE_BINARY_DIR}/thcsdata.tcl
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
@@ -72,7 +75,7 @@ execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
 add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
 target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern" ${PROJ_INCLUDE_DIRS})
 target_link_libraries(therion-common PUBLIC ${PROJ4_LIBRARIES} PRIVATE loch-common)
-target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}")
+target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
 add_dependencies(therion-common 
     generate_thsymbolsetlist
     generate_thlang
@@ -92,7 +95,9 @@ install(TARGETS therion RUNTIME DESTINATION bin)
 add_executable(utest utest-proj.cxx utest-main.cxx)
 target_link_libraries(utest PUBLIC therion-common)
 enable_testing()
-add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+if (NOT WIN32)
+    add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+endif()
 
 # add subdirectories to the build
 add_subdirectory(mpost)
