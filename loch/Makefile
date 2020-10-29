@@ -16,14 +16,13 @@ CMNOBJECTS = \
   lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o \
   img.o
 
-CROSS =
 EXT =
 
 WX_CONFIG_DEF=$(shell command -v wx-config-3.1 2> /dev/null)
 ifneq ($(WX_CONFIG_DEF),)
 WX_CONFIG = wx-config-3.1
 else
-WX_CONFIG = wx-config
+WX_CONFIG ?= wx-config
 endif
 
 VTKSUFFIX = $(shell tclsh ./getvtkver.tcl suffix)
@@ -88,7 +87,7 @@ CXXPFLAGS = \
     -I$(VTKPATH)
 CCPFLAGS = $(shell $(WX_CONFIG) --cflags)
 LXLIBDIR = linux
-PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
+PLIBS = $(shell $(WX_CONFIG) --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
 LXPLATFORM = LINUX
 
 # LXLINUX doesn't work with Arch Linux
@@ -101,7 +100,7 @@ endif
 # PLATFORM WIN32
 ##CXX = c++
 ##CC = gcc
-##POBJECTS = loch.res lxR2D.o getline.o
+##POBJECTS = loch.res lxR2D.o
 ##CXXPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cflags)
 ##LXLIBDIR = mingw
@@ -110,11 +109,12 @@ endif
 ##STRIPFLAG = -static-libgcc -static -s
 
 # PLATFORM WIN32CROSS
-##CROSS= i686-w64-mingw32.static-
+##CROSS ?= i686-w64-mingw32.static-
+##CROSS2 = $(shell echo $(CROSS) | sed 's/-$$//')
 ##EXT = .exe
 ##VTKVERSION = 8.2
-##VTKPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/include/vtk-$(VTKVERSION)
-##VTKLIBPATH = /usr/lib/mxe/usr/i686-w64-mingw32.static/lib
+##VTKPATH = /usr/lib/mxe/usr/$(CROSS2)/include/vtk-$(VTKVERSION)
+##VTKLIBPATH = /usr/lib/mxe/usr/$(CROSS2)/lib
 ##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) \
 ##  -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) \
 ##  -lvtkIOLegacy-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkIOCore-$(VTKVERSION) \
@@ -122,7 +122,7 @@ endif
 ##  -lvtksys-$(VTKVERSION) -lvtkfreetype-$(VTKVERSION) -lvtkpng-$(VTKVERSION) -lvtkjpeg-$(VTKVERSION) -lvtkzlib-$(VTKVERSION)
 ##CXX = $(CROSS)c++
 ##CC = $(CROSS)gcc
-##POBJECTS = loch.res lxR2D.o getline.o
+##POBJECTS = loch.res lxR2D.o
 ##CXXPFLAGS = -W -Wall -std=gnu++11 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(CROSS)wx-config --static --cflags)
 ##LXLIBDIR =
@@ -250,6 +250,7 @@ clean:
 	perl makefile.pl rm -q *~
 	perl makefile.pl rm -q help/*/*~
 	perl makefile.pl rm -q loch.exe
+	perl makefile.pl rm -q loch.res
 	perl makefile.pl rm -q loch
 	perl makefile.pl rm -q loch.app/Contents/MacOS/loch
 	perl makefile.pl rm -q *.o
@@ -298,7 +299,6 @@ $(LOUTDIR)/lxSView.o: lxSView.cxx lxSView.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
  lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
 $(LOUTDIR)/lxSetup.o: lxSetup.cxx lxSetup.h lxData.h lxMath.h lxImgIO.h lxFile.h
 $(LOUTDIR)/lxWX.o: lxWX.cxx lxWX.h
-$(LOUTDIR)/getline.o: getline.c
 $(LOUTDIR)/img.o: img.c ../extern/img.c ../extern/img.h
 $(LOUTDIR)/lxR2D.o: lxR2D.c lxR2D.h
 $(LOUTDIR)/lxR2P.o: lxR2P.c lxR2P.h
