@@ -14,7 +14,7 @@ if (${THPLATFORM} STREQUAL WIN32)
 endif()
 
 # library common with therion
-add_library(loch-common STATIC lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c $<$<BOOL:${IS_WINDOWS}>:getline.h getline.c>)
+add_library(loch-common STATIC lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c)
 target_compile_definitions(loch-common PRIVATE ${LOCH_DEFINITIONS})
 
 # loch resource file
