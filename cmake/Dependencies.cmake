@@ -8,7 +8,10 @@ option(BUILD_SHAPELIB "Build internal version of shapelib." ON)
 if (BUILD_SHAPELIB)
     add_subdirectory(extern/shapelib)
 else()
-    pkg_check_modules(SHAPELIB REQUIRED IMPORTED_TARGET shapelib)
+    find_package(shp QUIET)
+    if (NOT shp_FOUND)
+        pkg_check_modules(SHAPELIB REQUIRED IMPORTED_TARGET shapelib)
+    endif()
 endif()
 
 # loch dependencies
