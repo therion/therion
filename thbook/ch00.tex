@@ -1,13 +1,19 @@
+\iffulloutput
 \vbox to 0pt{\kern-1in\kern-10pt\hbox to 0pt{\kern-1in
   \pic{thbook.jpg}\hss}\vss}
+\fi
 
 {\footline={}
 \hbox{}
 \vskip0pt
-\font\tit=cmssdc10 at 36pt
+\font\tit=cmssdc10 at\ifnum\outputsize=1 32pt\else36pt\fi
 \font\subtit=cmssdc10 at 24pt
 \rightline{\tit The Therion Book\hskip0pt}
-\vskip365pt
+\iffulloutput
+  \vskip365pt
+\else
+  \vskip20pt
+\fi
 \rightline{\subtit Stacho Mudr\'ak\hskip0pt}
 \vskip20pt
 \rightline{\subtit Martin Budaj\hskip0pt}
@@ -26,13 +32,15 @@ This book describes Therion \input version \unskip.
 
 Code contributions by {\it Olly Betts}, {\it Marco Corvi}, {\it Vladimir Georgiev}, {\it Georg Pacher} and {\it Dimitrios Zachariadis}.
 \bigskip
-\leftline{We owe thanks to}
+We owe thanks to
 %\leftline{{\it Martin Sluka\/}} % for his support concerning not only Therion,}
 %\leftline{{\it Martin Heller\/}} % for criticism on first implementation of scrap distortion,}
 %\leftline{{\it Olly Betts\/}} % for idea of importing processed centreline instead of raw survey data,}
 %\leftline{{\it Wookey\/}} % for improving the documentation.}
-\leftline{{\it Martin Sluka}, {\it Ladislav Bla\v zek}, {\it Martin Heller}, {\it Wookey}, {\it Olly Betts}}
-\leftline{and all users for their feedback, support and suggestions.}
+{\it Martin Sluka}, {\it Ladislav Bla\v zek}, {\it Martin Heller}, {\it Wookey}, {\it Olly Betts}
+and all users for their feedback, support and suggestions.
+
+\iffulloutput
 \vskip1.2cm
 \leftline{Translations (\%):}
 \medskip
@@ -58,10 +66,10 @@ sq                 & 80 & 69 & -- & Fatos Katallozi\cr
 zh                 & 81 & 71 & -- & Zhang Yuan Hai, Duncan Collis\cr
 }}
 
-
 \vfill
 The cover picture shows survey sketch of {\it Hrozn\'y kame\v nolom} Chamber
 in the Cave of Dead Bats in Slovakia and the map of it produced by Therion.
+\fi
 \eject
 
 \def\write#1#2{}

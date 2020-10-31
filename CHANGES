@@ -1,5 +1,8 @@
 Therion 5.5.4 (in progress):
 
+thbook:
+ * support smaller page formats (configuration at the line 5 of the file
+   thbook/thbook.tex)
 
 --------------------------------------------------------------------------------
 
