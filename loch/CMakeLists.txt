@@ -14,7 +14,7 @@ if (${THPLATFORM} STREQUAL WIN32)
 endif()
 
 # library common with therion
-add_library(loch-common STATIC lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c $<$<BOOL:${IS_WINDOWS}>:getline.h getline.c>)
+add_library(loch-common STATIC lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c)
 target_compile_definitions(loch-common PRIVATE ${LOCH_DEFINITIONS})
 
 # loch resource file
@@ -28,10 +28,10 @@ if (${IS_WINDOWS})
 endif()
 
 # loch executable
-add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES} $<IF:$<BOOL:${IS_WINDOWS}>,lxR2D.c,lxR2P.c>)
+add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES} $<$<BOOL:${IS_WINDOWS}>:lxR2D.c> $<$<STREQUAL:${THPLATFORM},LINUX>:lxR2P.c>)
 target_compile_options(loch PRIVATE ${wxWidgets_CXX_FLAGS_LIST})
 target_compile_definitions(loch PRIVATE ${LOCH_DEFINITIONS})
-target_include_directories(loch PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${FREETYPE_INCLUDE_DIRS} ${wxWidgets_INCLUDE_DIRS} ${VTK_INCLUDE_DIRS})
+target_include_directories(loch PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${FREETYPE_INCLUDE_DIRS} ${wxWidgets_INCLUDE_DIRS} ${VTK_INCLUDE_DIRS} ${X11_INCLUDE_DIR})
 target_link_libraries(loch PRIVATE
     loch-common
     ${wxWidgets_LIBRARIES}
