@@ -220,7 +220,5 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thwarppt.cxx
     ${CMAKE_SOURCE_DIR}/extern/quickhull/QuickHull.cpp
     ${CMAKE_SOURCE_DIR}/extern/img.c
-    ${CMAKE_SOURCE_DIR}/extern/dbfopen.c
-    ${CMAKE_SOURCE_DIR}/extern/shpopen.c
     ${POLY2TRI_SRCS}
 )

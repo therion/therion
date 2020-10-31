@@ -27,7 +27,7 @@
 
  
 #include "thattr.h"
-#include "extern/shapefil.h"
+#include "shapefil.h"
 #include "thexception.h"
 #include "thchenc.h"
 #include <cctype>

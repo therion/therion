@@ -1,5 +1,5 @@
 # common therion objects
-CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
+CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern/shapelib/safileio.o  \
   thexception.o thbuffer.o thmbuffer.o thlogfile.o thtmpdir.o thlocale.o \
   thparse.o thcmdline.o thconfig.o thinput.o thchenc.o thdatabase.o \
   thdataobject.o thdatareader.o thsurvey.o thendsurvey.o thdata.o \
@@ -139,7 +139,7 @@ CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variabl
 
 
 # compiler settings
-CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -std=c++14
+CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -std=c++14
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
 TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
@@ -379,7 +379,7 @@ $(OUTDIR)/tharea.o: tharea.cxx tharea.h th2ddataobject.h thdataobject.h \
  thexception.h thexpmap.h thexport.h thlayout.h thsymbolset.h \
  thsymbolsetlist.h thlocale.h thlang.h thlangdata.h thline.h
 $(OUTDIR)/thattr.o: thattr.cxx thattr.h thmbuffer.h thchenc.h thchencdata.h \
- thparse.h thbuffer.h extern/shapefil.h thexception.h therion.h
+ thparse.h thbuffer.h extern/shapelib/shapefil.h thexception.h therion.h
 $(OUTDIR)/thbezier.o: thbezier.cxx thbezier.h
 $(OUTDIR)/thbuffer.o: thbuffer.cxx thbuffer.h
 $(OUTDIR)/thchenc.o: thchenc.cxx thchenc.h thchencdata.h thparse.h thbuffer.h \
@@ -664,7 +664,7 @@ $(OUTDIR)/thexpshp.o: thexpshp.cxx thexpmap.h thexport.h thparse.h thbuffer.h \
  thlangdata.h thexporter.h thexception.h thmap.h thsketch.h thpic.h \
  thconfig.h thinput.h thselector.h thtmpdir.h thinit.h thlogfile.h \
  thcmdline.h thsurvey.h thtfpwf.h thsurface.h thtflength.h thtf.h \
- extern/shapefil.h thexpmodel.h thcsdata.h thcs.h thexpshp.h thscrap.h \
+ extern/shapelib/shapefil.h thexpmodel.h thcsdata.h thcs.h thexpshp.h thscrap.h \
  thtrans.h thpoint.h th2ddataobject.h thline.h tharea.h
 $(OUTDIR)/thexpsys.o: thexpsys.cxx thexpsys.h thexport.h thparse.h thbuffer.h \
  thmbuffer.h thobjectsrc.h thlayout.h thdataobject.h thdatabase.h \
@@ -697,7 +697,7 @@ $(OUTDIR)/thexpuni.o: thexpuni.cxx thexpmap.h thexport.h thparse.h thbuffer.h \
  thlangdata.h thexporter.h thexception.h thmap.h thsketch.h thpic.h \
  thconfig.h thinput.h thselector.h thtmpdir.h thcsdata.h thinit.h \
  thlogfile.h thcmdline.h thsurvey.h thtfpwf.h thsurface.h thtflength.h \
- thtf.h extern/shapefil.h thexpmodel.h thexpuni.h thscrap.h thtrans.h \
+ thtf.h extern/shapelib/shapefil.h thexpmodel.h thexpuni.h thscrap.h thtrans.h \
  thpoint.h th2ddataobject.h thline.h tharea.h thproj.h thcs.h \
  thtexfonts.h
 $(OUTDIR)/thgeomag.o: thgeomag.cxx thgeomagdata.h
