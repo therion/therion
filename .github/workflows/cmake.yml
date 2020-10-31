@@ -51,13 +51,10 @@ jobs:
           brew update
           brew tap homebrew/core
           brew unlink python@3.8
-          brew install wxmac vtk proj shapelib xquartz ninja
+          brew install wxmac vtk proj xquartz ninja
       - name: Configure CMake
         run: |
-          mkdir build && cd build && cmake -G Ninja \
-              -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib \
-              -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib \
-              -DBUILD_SHAPELIB=OFF ..
+          mkdir build && cd build && cmake -G Ninja -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib ..
       - run: cmake --build build -t therion loch utest
       - run: cmake --build build -t test
 

@@ -87,8 +87,6 @@ add_dependencies(therion-common
 if (BUILD_SHAPELIB)
     target_include_directories(therion-common PUBLIC extern/shapelib)
     target_link_libraries(therion-common PUBLIC shp)
-elseif(TARGET shp)
-    target_link_libraries(therion-common PUBLIC shp)
 else()
     target_link_libraries(therion-common PUBLIC PkgConfig::SHAPELIB)
 endif()
