@@ -1,8 +1,15 @@
 # therion dependencies
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(PROJ4 REQUIRED proj)
-string(FIND ${PROJ4_VERSION} "." MVER_SEP)
-string(SUBSTRING ${PROJ4_VERSION} 0 ${MVER_SEP} PROJ_MVER)
+pkg_check_modules(PROJ REQUIRED IMPORTED_TARGET proj)
+string(FIND ${PROJ_VERSION} "." MVER_SEP)
+string(SUBSTRING ${PROJ_VERSION} 0 ${MVER_SEP} PROJ_MVER)
+
+option(BUILD_SHAPELIB "Build internal version of shapelib." ON)
+if (BUILD_SHAPELIB)
+    add_subdirectory(extern/shapelib)
+else()
+    pkg_check_modules(SHAPELIB REQUIRED IMPORTED_TARGET shapelib)
+endif()
 
 # loch dependencies
 find_package(wxWidgets REQUIRED COMPONENTS core base gl xml html)

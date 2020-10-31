@@ -58,7 +58,7 @@
 #include "thsurface.h"
 #include <stdlib.h>
 #include "loch/lxMath.h"
-#include "extern/shapefil.h"
+#include "shapefil.h"
 #include "thexpmodel.h"
 #include <fcntl.h>
 #include <stdlib.h>

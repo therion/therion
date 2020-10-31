@@ -26,7 +26,7 @@ jobs:
               cxx: g++
     steps:
       - uses: actions/checkout@v2
-      - run: sudo apt install -y texlive-binaries texlive-metapost libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript ninja-build
+      - run: sudo apt install -y texlive-binaries texlive-metapost libproj-dev libshp-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript ninja-build
       - name: Configure CMake
         run: |
           mkdir build && cd build && \
@@ -34,7 +34,8 @@ jobs:
                 -DCMAKE_BUILD_TYPE=${{ matrix.type }} \
                 -DCMAKE_C_COMPILER=${{ matrix.compiler.cc }} \
                 -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cxx }} \
-                -DECM_ENABLE_SANITIZERS=${{ matrix.sanitizer }} ..
+                -DECM_ENABLE_SANITIZERS=${{ matrix.sanitizer }} \
+                -DBUILD_SHAPELIB=OFF ..
       - run: cmake --build build
       - run: cmake --build build -t test
 
@@ -50,9 +51,13 @@ jobs:
           brew update
           brew tap homebrew/core
           brew unlink python@3.8
-          brew install wxmac vtk proj xquartz ninja
+          brew install wxmac vtk proj shapelib xquartz ninja
       - name: Configure CMake
-        run: mkdir build && cd build && cmake -G Ninja -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib ..
+        run: |
+          mkdir build && cd build && cmake -G Ninja \
+              -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib \
+              -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib \
+              -DBUILD_SHAPELIB=OFF ..
       - run: cmake --build build -t therion loch utest
       - run: cmake --build build -t test
 
@@ -72,8 +77,8 @@ jobs:
         with:
           msystem: ${{ matrix.config.msystem }}
           update: true
-          install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget
-      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" ..
+          install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DBUILD_SHAPELIB=OFF ..
       - run: cmake --build build -t therion loch utest -- -j 4
 
   MXE:
@@ -98,5 +103,8 @@ jobs:
         run: |
           export PATH=/usr/lib/mxe/usr/bin:$PATH
           mkdir build && cd build
-          ${{ matrix.arch.cmd }}-w64-mingw32.static-cmake -G Ninja -DMXE_USE_CCACHE=OFF -DCMAKE_CROSSCOMPILING_EMULATOR=${{ matrix.arch.wine }} ..
+          ${{ matrix.arch.cmd }}-w64-mingw32.static-cmake -G Ninja \
+              -DMXE_USE_CCACHE=OFF \
+              -DCMAKE_CROSSCOMPILING_EMULATOR=${{ matrix.arch.wine }} \
+              -DBUILD_SHARED_LIBS=OFF ..
           ninja

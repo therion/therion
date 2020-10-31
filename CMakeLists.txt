@@ -46,7 +46,7 @@ file(COPY thcsdata.tcl thsymbolsetfont.txt DESTINATION ${CMAKE_BINARY_DIR})
 # generate thcsdata sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thcsdata.h
                           ${CMAKE_BINARY_DIR}/thcsdata.cxx
-                   COMMAND tclsh thcsdata.tcl ${PROJ4_PREFIX}/share/proj
+                   COMMAND tclsh thcsdata.tcl ${PROJ_PREFIX}/share/proj
                    DEPENDS ${CMAKE_BINARY_DIR}/thcsdata.tcl
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
@@ -73,8 +73,8 @@ execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
 
 # therion lib
 add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
-target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern" ${PROJ4_INCLUDE_DIRS})
-target_link_libraries(therion-common PUBLIC ${PROJ4_LDFLAGS} PRIVATE loch-common)
+target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern")
+target_link_libraries(therion-common PUBLIC PkgConfig::PROJ PRIVATE loch-common)
 target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
 add_dependencies(therion-common 
     generate_thsymbolsetlist
@@ -84,6 +84,12 @@ add_dependencies(therion-common
     generate_thchencdata
     generate_thcsdata
 )
+if (BUILD_SHAPELIB)
+    target_include_directories(therion-common PUBLIC extern/shapelib)
+    target_link_libraries(therion-common PUBLIC shp)
+else()
+    target_link_libraries(therion-common PUBLIC PkgConfig::SHAPELIB)
+endif()
 
 # therion executable
 add_executable(therion therion-main.cxx)
