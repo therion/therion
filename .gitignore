@@ -19,6 +19,7 @@ xtherion/therion.tcl
 .*
 !.gitignore
 !.github/
+!.gitattributes
 *~
 *.3d
 *.a
