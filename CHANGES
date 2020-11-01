@@ -13,6 +13,9 @@ therion:
    - fixed numerical instability in l_overhang_SKBB
    - other minor fixes
 
+infrastructure:
+ * support for CMake builds (thanks to Matěj Plch)
+
 --------------------------------------------------------------------------------
 
 Therion 5.5.4 (in progress):
