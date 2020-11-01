@@ -1,11 +1,5 @@
 name: CMake
-on: 
-  push:
-    branches:
-      - cmake
-  pull_request:
-    branches:
-      - cmake
+on: [push, pull_request]
 jobs:
   Ubuntu:
     runs-on: ${{ matrix.os }}
