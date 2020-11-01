@@ -19,6 +19,7 @@ xtherion/therion.tcl
 .*
 !.gitignore
 !.github/
+!.gitattributes
 *~
 *.3d
 *.a
@@ -59,5 +60,5 @@ xtherion/msgxth.tcl
 /loch/loch
 /loch/loch.res
 /therion
-/thbook/thbook.log
+/thbook/
 /utest

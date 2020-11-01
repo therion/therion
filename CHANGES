@@ -1,4 +1,4 @@
-Therion 5.5.4 (in progress):
+Therion 5.6.0 (in progress):
 
 therion:
  * support for colour models: cmyk, rgb, gray (see [TODO])
@@ -12,6 +12,14 @@ therion:
    - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
    - fixed numerical instability in l_overhang_SKBB
    - other minor fixes
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.4 (in progress):
+
+thbook:
+ * support smaller page formats (configuration at the line 5 of the file
+   thbook/thbook.tex)
 
 --------------------------------------------------------------------------------
 
