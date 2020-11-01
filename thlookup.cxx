@@ -406,7 +406,7 @@ void thlookup::export_color_legend(thlayout * layout) {
     COLORLEGENDLIST.clear();
     thlookup_table_list::iterator tli;
     colorlegendrecord clrec;
-    const char * title;
+    std::string title;
     for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
       clrec.R = tli->m_color.R;
       clrec.G = tli->m_color.G;
@@ -421,8 +421,8 @@ void thlookup::export_color_legend(thlayout * layout) {
           case TT_LAYOUT_CCRIT_SCRAP:
           case TT_LAYOUT_CCRIT_SURVEY:
         	if (tli->m_ref) {
-        		title = ths2txt(tli->m_ref->title, layout->lang).c_str();
-				if (strlen(title) == 0)
+        		title = ths2txt(tli->m_ref->title, layout->lang);
+				if (title.empty())
 				  title = tli->m_ref->name;
 				else
 				  title = tli->m_ref->title;
