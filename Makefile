@@ -1,5 +1,4 @@
 # common therion objects
-export OUTDIR = .
 CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   thexception.o thbuffer.o thmbuffer.o thlogfile.o thtmpdir.o thlocale.o \
   thparse.o thcmdline.o thconfig.o thinput.o thchenc.o thdatabase.o \
@@ -23,7 +22,6 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   therion.o extern/quickhull/QuickHull.o
 TESTOBJECTS = utest-main.o utest-proj.o
 
-CROSS =
 EXT =
 
 # Prefix to install to (override like so: make PREFIX=/usr)
@@ -42,7 +40,7 @@ SYSCONFDIR ?= $(PREFIX)/etc
 ##CCPFLAGS = -DTHLINUX
 ##LDPFLAGS = -s
 ##export THPLATFORM = LINUX
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##export OUTDIR = $(abspath $(PWD)/../therion.bin)
 ##THXTHMKCMD = $(OUTDIR)/therion
 
 
@@ -55,6 +53,7 @@ CXXPFLAGS = -DTHLINUX
 CCPFLAGS = -DTHLINUX
 LDPFLAGS = -s
 export THPLATFORM = LINUX
+export OUTDIR = .
 THXTHMKCMD = ./therion
 
 
@@ -62,39 +61,40 @@ THXTHMKCMD = ./therion
 ##EXT = .exe
 ##CXX ?= c++
 ##CC ?= gcc
-##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o
+##POBJECTS = extern/getopt.o extern/getopt1.o therion.res
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##export OUTDIR ?= $(abspath $(PWD)/../therion.bin)
 ##THXTHMKCMD = $(OUTDIR)/therion
 
 # PLATFORM WIN32CROSS
-##CROSS = i686-w64-mingw32.static-
+##CROSS ?= i686-w64-mingw32.static-
 ##EXT = .exe
 ##CXX = $(CROSS)c++
 ##export CC = $(CROSS)gcc
 ##export AR = $(CROSS)ar
-##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o
+##POBJECTS = extern/getopt.o extern/getopt1.o therion.res
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
 ##THXTHMKCMD = therion
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##export OUTDIR ?= $(abspath $(PWD)/../therion.bin)
 
 # PLATFORM MACOSX
 ##CXX = c++
 ##CC = cc
 ##LOCHEXE = loch/loch
-##POBJECTS = extern/getopt.o extern/getopt1.o extern/getline.o
+##POBJECTS = extern/getopt.o extern/getopt1.o
 ##CXXPFLAGS = -DTHMACOSX
 ##CCPFLAGS = -DTHMACOSX
 ##LDPFLAGS =
 ##export THPLATFORM = MACOSX
+##export OUTDIR = .
 ##THXTHMKCMD = ./therion
 
 # PLATFORM ENDCONFIG
@@ -223,7 +223,11 @@ library: thversion.h
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
-xtherion/therion.tcl:
+ifeq ($(THXTHMKCMD),$(OUTDIR)/therion)
+  THERION_TCL_DEPS += $(OUTDIR)/therion
+endif
+
+xtherion/therion.tcl: $(THERION_TCL_DEPS)
 	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
 
 xtherion/xtherion: version xtherion/therion.tcl xtherion/*.tcl
@@ -243,7 +247,7 @@ $(OUTDIR)/samples.doc/index.tex:
 	touch thbook/version.tex
 	$(MAKE) -C thbook
 
-$(OUTDIR)/thbook/thbook.pdf: thbook/*.tex
+$(OUTDIR)/thbook/thbook.pdf: thbook/*.tex thversion.h
 	$(MAKE) -C thbook
 
 clean:
@@ -276,8 +280,9 @@ cleanrest:
 thmpost.h: mpost/*.mp
 	$(MAKE) -C ./mpost
 
-thmpost.cxx: mpost/*.mp
-	$(MAKE) -C ./mpost
+thmpost.cxx: thmpost.h
+thsymbolsets.h: thmpost.h thsymbolsetlist.h
+thsymbolsets.cxx: thsymbolsets.h
 
 thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 	perl thsymbolsetlist.pl
@@ -285,9 +290,9 @@ thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 thtex.h: tex/*.tex
 	$(MAKE) -C ./tex
 
-thtex.cxx: tex/*.tex
-	$(MAKE) -C ./tex
+thtex.cxx: thtex.h
 
+thchencdata.cxx: thchencdata.h
 thchencdata.h: thchencdata/*.TXT
 	$(MAKE) -C ./thchencdata
 
