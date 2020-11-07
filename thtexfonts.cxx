@@ -90,7 +90,7 @@ int encodings_new::get_enc_pos (int ch) {
   }
 //cout << "==FP== " << m_fon[style][ch] << endl;
   return m_fon[ch];
-};
+}
 
 void encodings_new::write_enc_files() {
   if (NFSS==0) return;
