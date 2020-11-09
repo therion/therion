@@ -49,7 +49,7 @@ unsigned long thdatareader__get_opos(bool inlineid, bool cfgid)
 
 void thdatareader::read(const char * ifname, long lnstart, long lnend, const char * spath, thdatabase * dbptr)
 {
-
+  std::unique_ptr<thdataobject> unique_objptr;
   thdataobject * objptr = NULL;  // pointer to the newly created object
   thcmd_option_desc optd;  // option descriptor
   bool inside_cmd = false;
@@ -107,7 +107,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           inside_cmd = false;
           //this->inp.cmd_sensitivity_on();
           if (!configure_cmd)
-            dbptr->insert(objptr);
+            dbptr->insert(std::move(unique_objptr));
           else {
             objptr->start_insert();
             configure_cmd = false;
@@ -156,7 +156,8 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           continue;
         } 
         else {
-          objptr = dbptr->create(this->inp.get_cmd(), osrc);
+          unique_objptr = dbptr->create(this->inp.get_cmd(), osrc);
+          objptr = unique_objptr.get();
           if (objptr == NULL)
             ththrow(("unknown command -- %s", this->inp.get_cmd()))
           else
@@ -221,7 +222,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
         // else insert object into database
         if ((endlnopt = objptr->get_cmd_end()) == NULL)
           if (!configure_cmd)
-            dbptr->insert(objptr);
+            dbptr->insert(std::move(unique_objptr));
           else {
             objptr->start_insert();
             configure_cmd = false;

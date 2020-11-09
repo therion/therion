@@ -461,10 +461,10 @@ void thdb2d::process_references()
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
       case TT_LINE_CMD:
-        ((thline *)(*obi))->preprocess();
+        ((thline *)(*obi).get())->preprocess();
         break;
       case TT_LAYOUT_CMD:
-        ((thlayout *)(*obi))->process_copy();
+        ((thlayout *)(*obi).get())->process_copy();
         break;
     }
     obi++;
@@ -475,19 +475,19 @@ void thdb2d::process_references()
     if ((*obi)->fsptr != NULL) {
       switch ((*obi)->get_class_id()) {
         case TT_AREA_CMD:
-          this->process_area_references((tharea *) *obi);
+          this->process_area_references((tharea *) obi->get());
           break;
         case TT_POINT_CMD:
-          this->process_point_references((thpoint *) *obi);
+          this->process_point_references((thpoint *) obi->get());
           break;
         case TT_MAP_CMD:
-          this->process_map_references((thmap *) *obi);
+          this->process_map_references((thmap *) obi->get());
           break;
         case TT_JOIN_CMD:
-          this->process_join_references((thjoin *) *obi);
+          this->process_join_references((thjoin *) obi->get());
           break;
         case TT_SCRAP_CMD:
-          this->process_scrap_references((thscrap *) *obi);
+          this->process_scrap_references((thscrap *) obi->get());
       }
     }
     obi++;
@@ -499,7 +499,7 @@ void thdb2d::process_references()
     if ((*obi)->fsptr != NULL) {
       switch ((*obi)->get_class_id()) {
         case TT_MAP_CMD:
-          this->postprocess_map_references((thmap *) *obi);
+          this->postprocess_map_references((thmap *) obi->get());
           break;
       }
     }
@@ -640,25 +640,30 @@ void thdb2d::process_map_references(thmap * mptr)
         
         // vytvorime specialnu mapu s jednym scrapom,
         // ktoremu nastavime centerline io a survey
-        scrapp = new thscrap;
-        scrapp->centerline_io = true;
-        scrapp->centerline_survey = survp;
-        scrapp->z = thnan;
-        if ((survp->stat.station_top != NULL) && (survp->stat.station_bottom != NULL)) {
-          scrapp->z = (survp->stat.station_top->z + survp->stat.station_bottom->z) / 2.0;
+        {
+          auto unique_scrapp = std::make_unique<thscrap>();
+          scrapp = unique_scrapp.get();
+          scrapp->centerline_io = true;
+          scrapp->centerline_survey = survp;
+          scrapp->z = thnan;
+          if ((survp->stat.station_top != NULL) && (survp->stat.station_bottom != NULL)) {
+            scrapp->z = (survp->stat.station_top->z + survp->stat.station_bottom->z) / 2.0;
+          }
+          scrapp->fsptr = NULL;
+          scrapp->db = this->db;
+          scrapp->proj = this->get_projection(proj_id);
+          thdb.object_list.push_back(std::move(unique_scrapp));
         }
-        scrapp->fsptr = NULL;
-        scrapp->db = this->db;
-        scrapp->proj = this->get_projection(proj_id);
-        thdb.object_list.push_back(scrapp);
-
-        mapp = new thmap;
-        mapp->projection_id = proj_id;
-        mapp->id = ++this->db->objid;
-        mapp->db = this->db;
-        mapp->z = scrapp->z;
-        mapp->fsptr = NULL;
-        thdb.object_list.push_back(mapp);
+        {
+          auto unique_mapp = std::make_unique<thmap>();
+          mapp = unique_mapp.get();
+          mapp->projection_id = proj_id;
+          mapp->id = ++this->db->objid;
+          mapp->db = this->db;
+          mapp->z = scrapp->z;
+          mapp->fsptr = NULL;
+          thdb.object_list.push_back(std::move(unique_mapp));
+        }
 
         xcitem = this->db->db2d.insert_map_item();
         xcitem->itm_level = mapp->last_level;
@@ -1299,7 +1304,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
 //  unsigned long searchid;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_POINT_CMD) {
-      ppp = (thpoint *)(*obi);
+      ppp = (thpoint *)(*obi).get();
       if ((ppp->fscrapptr->proj->id == prj->id) && (ppp->type == TT_POINT_TYPE_STATION) && (ppp->station_name.id != 0)) {
         // let's add control point to given scrap
         cp = ppp->fscrapptr->insert_control_point();
@@ -1884,8 +1889,8 @@ void thdb2d::pp_find_scraps_and_joins(thdb2dprj * prj)
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_SCRAP_CMD)) {
-      if (((thscrap *)(*obi))->proj->id == prj->id) {
-        cscrap = (thscrap *)(*obi);
+      if (((thscrap *)(*obi).get())->proj->id == prj->id) {
+        cscrap = (thscrap *)(*obi).get();
         if (pscrap != NULL)
           pscrap->proj_next_scrap = cscrap;
         else {
@@ -1899,9 +1904,9 @@ void thdb2d::pp_find_scraps_and_joins(thdb2dprj * prj)
     }
     
     if (((*obi)->get_class_id() == TT_JOIN_CMD) &&
-        (((thjoin *)(*obi))->proj != NULL) &&
-        (((thjoin *)(*obi))->proj->id == prj->id)) {    
-      cjoin = (thjoin *)(*obi);
+        (((thjoin *)(*obi).get())->proj != NULL) &&
+        (((thjoin *)(*obi).get())->proj->id == prj->id)) {    
+      cjoin = (thjoin *)(*obi).get();
       if (pjoin != NULL)
         pjoin->proj_next_join = cjoin;
       else {
@@ -2422,7 +2427,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
 	thdb_object_list_type::iterator obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SCRAP_CMD) {
-			scp = (thscrap *)(*obi);
+			scp = (thscrap *)(*obi).get();
 			if ((scp->proj->type != TT_2DPROJ_NONE) && (scp->proj->id == prj->id)) {
  			o2d = scp->fs2doptr;
 			while (o2d != NULL) {
@@ -2483,8 +2488,11 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
           (jci->pt->x == njci->pt->x) &&
           (jci->pt->y == njci->pt->y)) {
          // add automatic join here
-        tjptr = (thjoin*) thdb.create("join",thobjectsrc());
-        thdb.insert(tjptr);
+        {
+          auto unique_tjptr = thdb.create("join",thobjectsrc());
+          tjptr = dynamic_cast<thjoin*>(unique_tjptr.get());
+          thdb.insert(std::move(unique_tjptr));
+        }
         tjptr->proj = jci->obj->fscrapptr->proj;
          // TODO: check smoothness???
         tjptr->smooth = TT_FALSE;
@@ -2653,14 +2661,19 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
                 fse1->l2->id, fse1->lp2->point->xt, fse1->lp2->point->yt, 
                 fse2->l2->id, fse2->lp2->point->xt, fse2->lp2->point->yt);
 #endif
-            
-            tjptr = (thjoin*) thdb.create("join",thobjectsrc());
-            thdb.insert(tjptr);
+            {
+              auto unique_tjptr = thdb.create("join",thobjectsrc());
+              tjptr = dynamic_cast<thjoin*>(unique_tjptr.get());
+              thdb.insert(std::move(unique_tjptr));
+            }
             tjptr->proj = jptr->proj;
             tjptr->smooth = jptr->smooth;
             tjptr->proj_prev_join = jptr;
-            tjptr->proj_next_join = (thjoin*) thdb.create("join",thobjectsrc());
-            thdb.insert(tjptr->proj_next_join);
+            {
+              auto unique_join = thdb.create("join",thobjectsrc());
+              tjptr->proj_next_join = dynamic_cast<thjoin*>(unique_join.get());
+              thdb.insert(std::move(unique_join));
+            }
             tjptr->proj_next_join->proj_prev_join = tjptr;
             tjptr->proj_next_join->proj_next_join = jptr->proj_next_join;
             if (jptr->proj_next_join != NULL)

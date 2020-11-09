@@ -32,6 +32,7 @@
 #include <map>
 #include <list>
 #include <set>
+#include <memory>
 
 #include "thdataobject.h"
 #include "thmbuffer.h"
@@ -145,7 +146,7 @@ typedef std::map < thobjectid, class thdataobject * > thdb_object_map_type;  ///
 typedef std::map < thsurveyname, class thsurvey * > thdb_survey_map_type;   ///< Survey map  
 typedef std::map < thsurveyname, class thdataobject * > thdb_grade_map_type;   ///< Grade map  
 typedef thdb_grade_map_type thdb_layout_map_type;   ///< Layout map  
-typedef std::list < class thdataobject * > thdb_object_list_type;   ///< Object list
+typedef std::list < std::unique_ptr<thdataobject> > thdb_object_list_type;   ///< Object list
 
   
 /**
@@ -221,7 +222,7 @@ class thdatabase {
    * Create an data object linked to the database.
    */
    
-  class thdataobject * create(const char * oclass, thobjectsrc osrc);
+  std::unique_ptr<thdataobject> create(const char * oclass, thobjectsrc osrc);
   
   
   /**
@@ -256,27 +257,27 @@ class thdatabase {
    * Insert data object into database.
    */
    
-  void insert(class thdataobject * optr);
+  void insert(std::unique_ptr<thdataobject> unique_optr);
   
   
   /**
    * Insert survey grade object into database.
    */
    
-  void insert_grade(class thgrade * optr);
+  void insert_grade(std::unique_ptr<thdataobject> optr);
 
 
   /**
    * Insert map layout object into database.
    */
    
-  void insert_layout(class thlayout * optr);
+  void insert_layout(std::unique_ptr<thdataobject> optr);
 
   /**
    * Insert lookup object into database.
    */
    
-  void insert_lookup(class thlookup * optr);
+  void insert_lookup(std::unique_ptr<thdataobject> optr);
   
   
   /**

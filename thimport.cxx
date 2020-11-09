@@ -327,10 +327,14 @@ const char * thimport::station_name(const char * sn, const char separator, struc
               else
                 this->db->lcsobjectptr = this->db->csurveyptr->loptr;
               this->db->ccontext = THCTX_SURVEY;
-              nsurvey = (thsurvey*) this->db->create("survey", this->mysrc);
-              // TODO - nastavit mu meno cez set
-              nsurvey->name = this->db->strstore(cbf[active_survey]);
-              this->db->insert(nsurvey);
+
+              {
+                auto unique_nsurvey = this->db->create("survey", this->mysrc);
+                nsurvey = dynamic_cast<thsurvey*>(unique_nsurvey.get());
+                // TODO - nastavit mu meno cez set
+                nsurvey->name = this->db->strstore(cbf[active_survey]);
+                this->db->insert(std::move(unique_nsurvey));
+              }
               this->db->csrc.context = this;
               this->db->csurveylevel--;
 //              nendsurvey = (thendsurvey*) this->db->create("endsurvey", this->mysrc);

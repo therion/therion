@@ -32,7 +32,9 @@
 #include "thdataobject.h"
 #include "thtfpwf.h"
 #include "thperson.h"
+#include "thdata.h"
 #include <map>
+#include <memory>
 
 /**
  * survey command options tokens.
@@ -113,7 +115,8 @@ class thsurvey : public thdataobject {
 
   unsigned level;
     
-  class thdata * data;
+  std::unique_ptr<class thdata> tmp_data_holder;
+  thdata * data;
   
   void parse_declination(char * str);
   

@@ -293,7 +293,7 @@ void thexptable::process_db(class thdatabase * dbp)
           i;
         for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
           if ((*oi)->get_class_id() == TT_POINT_CMD) {
-            pt = (thpoint*)(*oi);
+            pt = (thpoint*)(*oi).get();
             if ((pt->type == TT_POINT_TYPE_CONTINUATION) && ((pt->text != NULL) || (!this->filter)) && (pt->fsptr->is_selected())) {
               this->db->db2d.process_projection(pt->fscrapptr->proj);
               this->m_table.insert_object(NULL);
@@ -364,7 +364,7 @@ void thexptable::process_db(class thdatabase * dbp)
       //duplicate
       for(oi = this->db->object_list.begin(); oi != this->db->object_list.end(); oi++) {
         if (((*oi)->get_class_id() == TT_SURVEY_CMD) && (strlen((*oi)->name) > 0)) {
-          srv = (thsurvey*)(*oi);
+          srv = (thsurvey*)(*oi).get();
           if (srv->is_selected()) {
             this->m_table.insert_object(NULL);          
             this->m_table.get_object()->m_tree_level = (size_t)(srv->level - 2);

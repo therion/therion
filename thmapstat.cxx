@@ -221,7 +221,7 @@ void thmapstat::scanmap(class thmap * map) {
 		thmapstat_dataptr dp;
 		thdataobject * obj;
 		for(thdb_object_list_type::iterator it = thdb.object_list.begin(); it != thdb.object_list.end(); it++) {
-			obj = *it;
+			obj = it->get();
 			if ((obj->get_class_id() == TT_DATA_CMD) && (obj->is_in_survey(map->asoc_survey.psurvey))) {
 				dp.ptr = (thdata*)obj;
 				dm[dp] = 1;

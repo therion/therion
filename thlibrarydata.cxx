@@ -16,10 +16,12 @@
 
 void thlibrary_init_grades()
 {
+	std::unique_ptr<thdataobject> unique_grade;
 	thgrade * pgrade;
 	thbuffer oname;
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "BCRA3";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "BCRA grade 3";
@@ -35,9 +37,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = 0.25;
 	pgrade->dls_y = 0.25;
 	pgrade->dls_z = 0.25;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "BCRA5";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "BCRA grade 5";
@@ -53,9 +56,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = 0.05;
 	pgrade->dls_y = 0.05;
 	pgrade->dls_z = 0.05;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "UISv1_-1";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "UISv1 ungraded survey without map";
@@ -71,9 +75,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = thnan;
 	pgrade->dls_y = thnan;
 	pgrade->dls_z = thnan;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "UISv1_0";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "UISv1 ungraded survey";
@@ -89,9 +94,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = thnan;
 	pgrade->dls_y = thnan;
 	pgrade->dls_z = thnan;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "UISv1_1";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "UISv1 survey grade 1";
@@ -107,9 +113,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = thnan;
 	pgrade->dls_y = thnan;
 	pgrade->dls_z = thnan;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "UISv1_2";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "UISv1 survey grade 2";
@@ -125,9 +132,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = thnan;
 	pgrade->dls_y = thnan;
 	pgrade->dls_z = thnan;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "UISv1_3";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "UISv1 survey grade 3";
@@ -143,9 +151,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = thnan;
 	pgrade->dls_y = thnan;
 	pgrade->dls_z = thnan;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "UISv1_4";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "UISv1 survey grade 4";
@@ -161,9 +170,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = thnan;
 	pgrade->dls_y = thnan;
 	pgrade->dls_z = thnan;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "UISv1_5";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "UISv1 survey grade 5";
@@ -179,9 +189,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = thnan;
 	pgrade->dls_y = thnan;
 	pgrade->dls_z = thnan;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "UISv1_6";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "UISv1 survey grade 6";
@@ -197,9 +208,10 @@ void thlibrary_init_grades()
 	pgrade->dls_x = thnan;
 	pgrade->dls_y = thnan;
 	pgrade->dls_z = thnan;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 
-	pgrade = (thgrade *) thdb.create("grade", thobjectsrc("therion",0));
+	unique_grade = thdb.create("grade", thobjectsrc("therion",0));
+	pgrade = dynamic_cast<thgrade*>(unique_grade.get());
 	oname = "UISv1_X";
 	pgrade->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,0,0);
 	oname = "UISv1 survey grade X";
@@ -215,15 +227,17 @@ void thlibrary_init_grades()
 	pgrade->dls_x = thnan;
 	pgrade->dls_y = thnan;
 	pgrade->dls_z = thnan;
-	thdb.insert(pgrade);
+	thdb.insert(std::move(unique_grade));
 }
 
 void thlibrary_init_layouts()
 {
+	std::unique_ptr<thdataobject> unique_layout;
 	thlayout * playout;
 	thbuffer oname;
 
-	playout = (thlayout *) thdb.create("layout", thobjectsrc("therion",0));
+	unique_layout = thdb.create("layout", thobjectsrc("therion",0));
+	playout = dynamic_cast<thlayout*>(unique_layout.get());
 	oname = "AUT";
 	playout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);
 	oname = "Austrian symbol set";
@@ -379,9 +393,10 @@ void thlibrary_init_layouts()
 	playout->last_line->smid = SYMX_ICE;
 	playout->last_line->sclr = thlayout_color(0.000000,0.680000,0.940000);
 	playout->def_tex_lines = 2;
-	thdb.insert(playout);
+	thdb.insert(std::move(unique_layout));
 
-	playout = (thlayout *) thdb.create("layout", thobjectsrc("therion",0));
+	unique_layout = thdb.create("layout", thobjectsrc("therion",0));
+	playout = dynamic_cast<thlayout*>(unique_layout.get());
 	oname = "SCR200";
 	playout->set(thcmd_option_desc(TT_DATAOBJECT_NAME,1),oname,TT_UTF_8,0);
 	oname = "Computer screen layout";
@@ -520,6 +535,6 @@ void thlibrary_init_layouts()
 	oname = "SKBB";
 	playout->set(thcmd_option_desc(TT_LAYOUT_SYMBOL_DEFAULTS,1),oname,TT_UTF_8,0);
 	playout->def_tex_lines = 2;
-	thdb.insert(playout);
+	thdb.insert(std::move(unique_layout));
 }
 

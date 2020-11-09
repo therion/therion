@@ -520,7 +520,7 @@ class thlayout : public thdataobject {
 
   class thconfig * m_pconfig;
 
-  class thlookup * m_lookup;
+  std::unique_ptr<thlookup> m_lookup;
     
   double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gzs, gox, goy, goz, navf, overlap, opacity,
     map_header_x, map_header_y, legend_width, surface_opacity, rotate;
