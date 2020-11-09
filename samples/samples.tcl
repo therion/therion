@@ -173,10 +173,10 @@ proc process_files {} {
     set d [lindex $ps 1]
     cd $d
     log_msg "$d: $p\n"
-    catch {
+    #catch {
       eval "exec $p >&@ stdout"
 #      eval exec "cmd /c $p"
-    }
+    #}
     log_msg "\n\n"
     cd $cdir
   }
