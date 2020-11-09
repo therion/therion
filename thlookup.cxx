@@ -160,12 +160,6 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 }
 
 
-void thlookup::self_delete()
-{
-  delete this;
-}
-
-
 int thlookup::get_context()
 {
   return (THCTX_SURVEY | THCTX_NONE | THCTX_SCRAP);

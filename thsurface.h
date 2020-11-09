@@ -166,15 +166,6 @@ class thsurface : public thdataobject {
 
 
   /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
-
-
-  /**
    * Print object properties.
    */
    

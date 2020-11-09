@@ -31,14 +31,13 @@
 
 #include <cstddef>
 #include "thpic.h"
-#include "thsketch.h"
 
 
 class thwarp {
 
   protected:
 
-  thsketch * m_sketch;
+  class thsketch * m_sketch;
 
   public:
 
@@ -52,15 +51,6 @@ class thwarp {
    */
    
   virtual thpic * morph(thsketch * sketch, double scale);
-
-
-  /**
-   * Delete warp object.
-   */
-   
-  virtual void self_delete();
-
-   
 };
 
 
@@ -82,9 +72,6 @@ class thwarplin : public thwarp {
   thwarplin() : morphed(false), method(0) {}
    
   virtual thpic * morph(thsketch * sketch, double scale);
-
-  virtual void self_delete();
-   
 };
 
 
@@ -100,9 +87,6 @@ class thwarpinvdist : public thwarplin {
   thwarpinvdist() {
     this->method = 1;
   }
-
-  virtual void self_delete();
-   
 };
 
 
@@ -118,9 +102,6 @@ class thwarpinvdistln : public thwarplin {
   thwarpinvdistln() {
     this->method = 2;
   }
-
-  virtual void self_delete();
-   
 };
 
 
@@ -135,9 +116,6 @@ class thwarpfastinvdistln : public thwarplin {
   thwarpfastinvdistln() {
     this->method = 3;
   }
-
-  virtual void self_delete();
-   
 };
 
 

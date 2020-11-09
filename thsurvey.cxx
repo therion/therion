@@ -186,12 +186,6 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 }
 
 
-void thsurvey::self_delete()
-{
-  delete this;
-}
-
-
 void thsurvey::self_print_properties(FILE * outf)
 {
   size_t nval, idx;

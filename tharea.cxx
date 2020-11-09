@@ -150,12 +150,6 @@ void tharea::parse_subtype(char * ststr)
     ththrow(("invalid type - subtype combination"))
 }
 
-
-void tharea::self_delete()
-{
-  delete this;
-}
-
 void tharea::self_print_properties(FILE * outf)
 {
   th2ddataobject::self_print_properties(outf);

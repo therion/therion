@@ -364,10 +364,6 @@ void thexpmap::process_db(class thdatabase * dbp)
       this->export_th2(this->projptr);
       break;
   }
-  
-  //if (tmp != NULL) {
-  //  tmp->self_delete();
-  //}
 }
 
 

@@ -155,11 +155,6 @@ void thmap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long i
 }
 
 
-void thmap::self_delete()
-{
-  delete this;
-}
-
 void thmap::self_print_properties(FILE * outf)
 {
   thdataobject::self_print_properties(outf);

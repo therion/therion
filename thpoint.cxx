@@ -261,11 +261,6 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
 }
 
 
-void thpoint::self_delete()
-{
-  delete this;
-}
-
 void thpoint::self_print_properties(FILE * outf)
 {
   th2ddataobject::self_print_properties(outf);

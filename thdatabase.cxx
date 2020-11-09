@@ -171,7 +171,6 @@ void thdatabase::check_context(class thdataobject * optr) {
         misscmd = "scrap";
         break;
     }
-    optr->self_delete();
     ththrow(("missing %s before %s command", misscmd, cmdname));
   }
 }

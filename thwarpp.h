@@ -95,9 +95,6 @@ public:
   virtual ~thwarpp();
 
   virtual thpic * morph(thsketch * sketch, double scale);
-
-  virtual void self_delete();
-
 };
 
 

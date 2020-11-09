@@ -159,11 +159,6 @@ void thimport::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 }
 
 
-void thimport::self_delete()
-{
-  delete this;
-}
-
 void thimport::self_print_properties(FILE * outf)
 {
   thdataobject::self_print_properties(outf);
