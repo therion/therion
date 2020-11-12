@@ -1,5 +1,9 @@
 Therion 5.5.4 (in progress):
 
+therion:
+ * bugs fixed
+   - scrap -walls off not working [#297]
+
 thbook:
  * support smaller page formats (configuration at the line 5 of the file
    thbook/thbook.tex)
