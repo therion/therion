@@ -364,10 +364,6 @@ void thexpmap::process_db(class thdatabase * dbp)
       this->export_th2(this->projptr);
       break;
   }
-  
-  //if (tmp != NULL) {
-  //  tmp->self_delete();
-  //}
 }
 
 
@@ -603,8 +599,8 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
     thpic * skpic;
     thscrap * scrap;
     for (obi = thdb.object_list.begin(); obi != thdb.object_list.end(); obi++) {
-      if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi))->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi))->proj->id == prj->id)) {
-        scrap = (thscrap *)(*obi);
+      if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi).get())->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi).get())->proj->id == prj->id)) {
+        scrap = (thscrap *)(*obi).get();
         skit = scrap->sketch_list.begin();
         while (skit != scrap->sketch_list.end()) {
           skpic = skit->morph(sf);
@@ -837,8 +833,8 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 
   // export scraps & scrap objects
   for (obi = thdb.object_list.begin(); obi != thdb.object_list.end(); obi++) {
-    if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi))->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi))->proj->id == prj->id)) {
-      scrap = (thscrap *)(*obi);
+    if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi).get())->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi).get())->proj->id == prj->id)) {
+      scrap = (thscrap *)(*obi).get();
 
 
       // export sketches
@@ -1781,7 +1777,7 @@ else
     obi = thdb.object_list.begin();
     while (obi != thdb.object_list.end()) {
       if ((*obi)->get_class_id() == TT_SURFACE_CMD) {
-        surf = (thsurface *)(*obi);
+        surf = (thsurface *)(*obi).get();
         if (surf->pict_name != NULL) {
           surf->calibrate();
           srfpr.filename = surf->pict_name;
@@ -3462,6 +3458,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
 {
 
   // parsneme lookup a najdeme ho
+  std::unique_ptr<thdataobject> unique_lkp;
   thlookup * lkp = NULL;
   if (this->layout->color_crit_fname != NULL) {
     int cc;
@@ -3473,7 +3470,8 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       if (strlen(ccidx) > 0) {
         thwarning(("missing lookup -- %s", this->layout->color_crit_fname));
       }
-      lkp = (thlookup *) this->db->create("lookup", this->src);
+      unique_lkp = this->db->create("lookup", this->src);
+      lkp = dynamic_cast<thlookup*>(unique_lkp.get());
       lkp->m_type = this->layout->color_crit;
     }
   }
@@ -3598,7 +3596,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
     cmap = cmap->next_item;
   }
 
-  lkp->export_color_legend(this->layout);
+  lkp->export_color_legend(this->layout, std::unique_ptr<thlookup>(dynamic_cast<thlookup*>(unique_lkp.release())));
 
 }
 

@@ -560,12 +560,6 @@ void thdata::self_print_properties(FILE * outf)
 }
 
 
-void thdata::self_delete()
-{
-  delete this;
-}
-
-
 void thdata::set_data_calibration(int nargs, char ** args)
 {
   static int items[THDATA_MAX_ITEMS];
@@ -2847,7 +2841,7 @@ void thdata::end_group() {
     this->cgroup->dims_list.insert(this->cgroup->dims_list.end(), (*di));
   }
   
-  tmp->self_delete();
+  delete tmp;
 }
 
 

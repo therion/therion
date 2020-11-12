@@ -298,7 +298,7 @@ void thselector__prepare_map_tree_export (thdatabase * db) {
   obi = db->object_list.begin();
   while (obi != db->object_list.end()) {
     if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_MAP_CMD)) {
-      mi = ((thmap*)(*obi))->first_item;
+      mi = ((thmap*)(*obi).get())->first_item;
       while (mi != NULL) {
         if (mi->type == TT_MAPITEM_NORMAL) {
           mi->object->tmp_bool = false;
@@ -399,14 +399,14 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
   thdb_object_list_type::iterator obi = db->object_list.begin();
   while (obi != db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_MAP_CMD)
-      ((thmap*)(*obi))->nz = 0;
+      ((thmap*)(*obi).get())->nz = 0;
     obi++;
   }
 
   obi = db->object_list.begin();
   while (obi != db->object_list.end()) {
-    if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_MAP_CMD) && (((thmap*)(*obi))->tmp_bool))
-      thselector__export_map_tree_node(cf,1,(*obi)->id,(*obi),NULL);
+    if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_MAP_CMD) && (((thmap*)(*obi).get())->tmp_bool))
+      thselector__export_map_tree_node(cf,1,(*obi)->id,obi->get(),NULL);
     obi++;
   }
   
@@ -569,7 +569,7 @@ void thselector::select_all(thselector_item * pitm, class thdatabase * db)
   while (ii != db->object_list.end()) {
     switch((*ii)->get_class_id()) {
       case TT_SURVEY_CMD:
-        this->select_object(pitm,*ii);
+        this->select_object(pitm,ii->get());
       default:
         break;
     }

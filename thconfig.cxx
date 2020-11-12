@@ -654,7 +654,6 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
   // vlozi ho do databazy
   // kazdy riadok prida do prikazov na ulozenie
 
-  thdataobject * objptr;  // pointer to the newly created object
   thcmd_option_desc optd;  // option descriptor
   char * ln, * opt;
   char ** opts;
@@ -673,12 +672,12 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     dbptr->csrc.name = osrc.name;
 
 
-    objptr = dbptr->create(this->cfg_file.get_cmd(), osrc);
+    auto objptr = dbptr->create(this->cfg_file.get_cmd(), osrc);
     if (objptr == NULL)
       ththrow(("unknown command -- %s", this->cfg_file.get_cmd()));
 
     if (objptr->get_class_id() == TT_LAYOUT_CMD) {
-      ((thlayout*)objptr)->m_pconfig = this;
+      ((thlayout*)objptr.get())->m_pconfig = this;
     }
 
     thencode(&this->bf1, this->cfg_file.get_line(), this->cfg_file.get_cif_encoding());  
@@ -774,7 +773,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     }
     
     // vlozi objekt do databazy
-    dbptr->insert(objptr);
+    dbptr->insert(std::move(objptr));
   }
     
   // put everything into try block and throw exception, if error

@@ -160,12 +160,6 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 }
 
 
-void thlookup::self_delete()
-{
-  delete this;
-}
-
-
 int thlookup::get_context()
 {
   return (THCTX_SURVEY | THCTX_NONE | THCTX_SCRAP);
@@ -400,8 +394,8 @@ void thlookup::color_scrap(thscrap * s) {
 }
 
 
-void thlookup::export_color_legend(thlayout * layout) {
-  layout->m_lookup = this;
+void thlookup::export_color_legend(thlayout * layout, std::unique_ptr<thlookup> lookup_holder) {
+  layout->m_lookup = std::move(lookup_holder);
   if (layout->color_legend == TT_TRUE) {
     COLORLEGENDLIST.clear();
     thlookup_table_list::iterator tli;
