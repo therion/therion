@@ -602,6 +602,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
     char * start_ch = NULL; //, * test_ch;
     int num_type;
     thsvxctrl_src_maptype::iterator srcmi;
+    const auto prev_char_is = [&lnbuff, &start_ch](const char c) { return (start_ch - 1) >= lnbuff && start_ch[-1] == c; };
 //    if (*lnbuff == 13) lnbuff++;
 //    if (strncmp(lnbuff,"There were",10) == 0)
 //      chidx = 2049;
@@ -637,7 +638,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
         else {
           num_type = THSVXLOGNUM_STATION;
           if ((chidx > 0) && (chidx <= nchs)) {
-            if ((start_ch[-1] == ':') && (*chch == ':'))
+            if (prev_char_is(':') && (*chch == ':'))
               num_type = THSVXLOGNUM_LINE;
           }
           if (num_type == THSVXLOGNUM_STATION) {
@@ -645,7 +646,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
               if ((*chch == '.') || (*chch == ',') || (*chch == ')') || (*chch == 'm')
                 || (*chch == '-') || (*chch == '/'))
                 num_type = THSVXLOGNUM_NONE;
-              if ((start_ch[-1] == '.') || (start_ch[-1] == '-'))
+              if (prev_char_is('.') || prev_char_is('-'))
                 num_type = THSVXLOGNUM_NONE;
             }
           }
