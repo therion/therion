@@ -1089,6 +1089,9 @@ void thscrap::process_3d() {
     
   this->d3_parsed = true;
 
+  if (this->d3 == TT_FALSE)
+	  return;
+
   thprintf(".");
 
   thscrapis is(this);
