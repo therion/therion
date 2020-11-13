@@ -201,11 +201,6 @@ void thsurface::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lo
 }
 
 
-void thsurface::self_delete()
-{
-  delete this;
-}
-
 void thsurface::self_print_properties(FILE * outf)
 {
   thdataobject::self_print_properties(outf);

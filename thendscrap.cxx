@@ -98,11 +98,6 @@ void thendscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned l
 }
 
 
-void thendscrap::self_delete()
-{
-  delete this;
-}
-
 void thendscrap::self_print_properties(FILE * outf)
 {
   thdataobject::self_print_properties(outf);

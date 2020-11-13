@@ -241,11 +241,6 @@ void thline::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
 }
 
 
-void thline::self_delete()
-{
-  delete this;
-}
-
 void thline::self_print_properties(FILE * outf)
 {
   th2ddataobject::self_print_properties(outf);

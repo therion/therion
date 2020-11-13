@@ -1065,11 +1065,6 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 }
 
 
-void thlayout::self_delete()
-{
-  delete this;
-}
-
 void thlayout::self_print_properties(FILE * outf)
 {
   thdataobject::self_print_properties(outf);

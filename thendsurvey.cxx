@@ -105,12 +105,6 @@ void thendsurvey::self_print_properties(FILE * outf)
 }
 
 
-void thendsurvey::self_delete()
-{
-  delete this;
-}
-
-
 int thendsurvey::get_context()
 {
   return THCTX_SURVEY;

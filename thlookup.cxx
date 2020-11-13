@@ -160,12 +160,6 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 }
 
 
-void thlookup::self_delete()
-{
-  delete this;
-}
-
-
 int thlookup::get_context()
 {
   return (THCTX_SURVEY | THCTX_NONE | THCTX_SCRAP);
@@ -400,13 +394,13 @@ void thlookup::color_scrap(thscrap * s) {
 }
 
 
-void thlookup::export_color_legend(thlayout * layout) {
-  layout->m_lookup = this;
+void thlookup::export_color_legend(thlayout * layout, std::unique_ptr<thlookup> lookup_holder) {
+  layout->m_lookup = std::move(lookup_holder);
   if (layout->color_legend == TT_TRUE) {
     COLORLEGENDLIST.clear();
     thlookup_table_list::iterator tli;
     colorlegendrecord clrec;
-    const char * title;
+    std::string title;
     for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
       clrec.col_legend.set(tli->m_color.R, tli->m_color.G, tli->m_color.B);
       if (strlen(tli->m_label) > 0) {
@@ -419,8 +413,8 @@ void thlookup::export_color_legend(thlayout * layout) {
           case TT_LAYOUT_CCRIT_SCRAP:
           case TT_LAYOUT_CCRIT_SURVEY:
         	if (tli->m_ref) {
-        		title = ths2txt(tli->m_ref->title, layout->lang).c_str();
-				if (strlen(title) == 0)
+        		title = ths2txt(tli->m_ref->title, layout->lang);
+				if (title.empty())
 				  title = tli->m_ref->name;
 				else
 				  title = tli->m_ref->title;

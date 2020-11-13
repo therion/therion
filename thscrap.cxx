@@ -226,12 +226,6 @@ void thscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
   }
 }
 
-void thscrap::self_delete()
-{
-  delete this;
-}
-
-
 void thscrap::self_print_properties(FILE * outf)
 {
   thdataobject::self_print_properties(outf);
@@ -1089,6 +1083,9 @@ void thscrap::process_3d() {
     
   this->d3_parsed = true;
 
+  if (this->d3 == TT_FALSE)
+	  return;
+
   thprintf(".");
 
   thscrapis is(this);
@@ -1487,7 +1484,7 @@ void thscrap::parse_sketch(char ** args, int argenc)
   thparse_double(sv,sk.m_y,args[2]);
   if ((sv	!= TT_SV_NUMBER) &&	(sv	!= TT_SV_NAN))
     ththrow(("invalid	number --	%s", args[2]))
-  this->sketch_list.push_back(sk);
+  this->sketch_list.push_back(std::move(sk));
 }
 
 

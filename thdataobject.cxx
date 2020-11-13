@@ -292,12 +292,6 @@ int thdataobject::get_id()
 }
 
 
-void thdataobject::self_delete()
-{
-  delete this;
-}
-
-
 int thdataobject::get_context()
 {
   return THCTX_SURVEY;

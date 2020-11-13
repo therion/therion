@@ -523,7 +523,7 @@ class thlayout : public thdataobject {
 
   class thconfig * m_pconfig;
 
-  class thlookup * m_lookup;
+  std::unique_ptr<thlookup> m_lookup;
     
   double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gzs, gox, goy, goz, navf, overlap, opacity,
     map_header_x, map_header_y, legend_width, surface_opacity, rotate;
@@ -647,15 +647,6 @@ class thlayout : public thdataobject {
    */
    
   virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
-
-
-  /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
 
 
   /**

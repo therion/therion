@@ -1151,7 +1151,8 @@ void thscrapis::outline_scan(class thscraplo * outln) {
 
   // TRIANGULACIA PO NOVOM
   if (numpts > 2) {
-    p2t::CDT * cdt = NULL;
+    std::vector<std::unique_ptr<p2t::Point>> points_holder;
+    std::unique_ptr<p2t::CDT> cdt;
     std::vector<p2t::Point *> polyline;
     pt2d2olptmap ptmap;
     bool mult_outer = false;
@@ -1171,12 +1172,14 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     			}
     			ptmap[pt2d(xx, yy)] = olineln;
     			//fprintf(f,"%.6f\t%.6f\n", xx, yy);
-    			polyline.push_back(new p2t::Point(xx, yy));
+          auto new_point = std::make_unique<p2t::Point>(xx, yy);
+    			polyline.push_back(new_point.get());
+          points_holder.push_back(std::move(new_point)); // owner of all the allocated points
     			olineln = olineln->next;
     			numpts++;
     		}
-    		if (cdt == NULL) {
-    			cdt = new p2t::CDT(polyline);
+    		if (!cdt) {
+    			cdt = std::make_unique<p2t::CDT>(polyline);
     			polyline.clear();
     		} else {
     			if (oline->outer) {
@@ -1256,8 +1259,6 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     } else {
       this->tri_triangles = NULL;
     }
-
-    delete cdt;
   }
 
 #ifdef THSCRAPIS_NEW3D

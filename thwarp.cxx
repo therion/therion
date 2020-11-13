@@ -41,11 +41,6 @@ thpic * thwarp::morph(thsketch * sketch, double scale) {
   return NULL;
 }
 
-void thwarp::self_delete()
-{
-  delete this;
-}
-
 
 /**
  * Sketch station structure.
@@ -398,24 +393,4 @@ thpic * thwarplin::morph(thsketch * sketch, double scale)
   thtext_inline = false;
   return &(this->mpic);
 
-}
-
-void thwarplin::self_delete()
-{
-  delete this;
-}
-
-void thwarpinvdist::self_delete()
-{
-  delete this;
-}
-
-void thwarpinvdistln::self_delete()
-{
-  delete this;
-}
-
-void thwarpfastinvdistln::self_delete()
-{
-  delete this;
 }
