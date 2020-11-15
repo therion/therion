@@ -1007,8 +1007,7 @@ $(OUTDIR)/thsymbolset.o: thsymbolset.cxx thsymbolset.h thsymbolsetlist.h \
  thinit.h thinput.h thsymbolsets.h thlogfile.h
 $(OUTDIR)/thsymbolsets.o: thsymbolsets.cxx thsymbolsets.h thsymbolsetlist.h
 $(OUTDIR)/thtex.o: thtex.cxx thtex.h
-$(OUTDIR)/thtexenc.o: thtexenc.cxx
-$(OUTDIR)/thtexfonts.o: thtexfonts.cxx thtexfonts.h thtexenc.cxx thpdfdbg.h \
+$(OUTDIR)/thtexfonts.o: thtexfonts.cxx thtexfonts.h thtexenc.h thpdfdbg.h \
  thexception.h therion.h thbuffer.h thinit.h thmbuffer.h thinput.h \
  thparse.h thpdfdata.h thepsparse.h
 $(OUTDIR)/thtf.o: thtf.cxx thtf.h thexception.h therion.h thbuffer.h thparse.h \
