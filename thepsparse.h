@@ -144,7 +144,7 @@ struct MP_data {
 struct converted_data {
   MP_data MP;
   set<string> fonts, patterns;
-  bool transparency;
+  bool transparency = false;
 //  double hsize, vsize;
   double llx, lly, urx, ury;
   
