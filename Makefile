@@ -308,6 +308,9 @@ unixify: clean
 thlangdata.h: thlang/texts.txt
 	$(MAKE) -C ./thlang
 
+thlangdatafields.h: thlangdata.h
+	$(MAKE) -C ./thlang
+
 config-debug:
 	perl makeconfig.pl BUILD DEBUG
 	cd loch; perl makeconfig.pl BUILD DEBUG
