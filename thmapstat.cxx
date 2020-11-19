@@ -302,9 +302,14 @@ int thmapstat_copyright_data_compar(const void * d1, const void * d2) {
       b += pd[i].person.get_n2(); \
       if (show_lengths) { \
         b += " ("; \
+		if (!show_count) { \
 				b += layout->units.format_length(pd[i].crit); \
-        b += "<thsp>"; \
-		    b += layout->units.format_i18n_length_units(); \
+				b += "<thsp>"; \
+				b += layout->units.format_i18n_length_units(); \
+		} else { \
+      	  	    snprintf(c.get_buffer(),127,"%.0f",pd[i].crit); \
+      	  	    b += c.get_buffer(); \
+		}\
         b += ")"; \
       } \
       if (i < (tcnt-1)) \
@@ -343,9 +348,8 @@ int thmapstat_copyright_data_compar(const void * d1, const void * d2) {
       b += pdc[i].data.date.get_str(TT_DATE_FMT_UTF8_Y); \
       if (show_lengths) { \
         b += " ("; \
-				b += layout->units.format_length(pdc[i].crit); \
-        b += "<thsp>"; \
-		    b += layout->units.format_i18n_length_units(); \
+		snprintf(c.get_buffer(),127,"%.0f",pd[i].crit); \
+		b += c.get_buffer(); \
         b += ")"; \
       } \
       if (i < (tcnt-1)) \
@@ -415,6 +419,8 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   std::unique_ptr<thmapstat_person_data[]> pd;
   std::unique_ptr<thmapstat_copyright_data[]> pdc;
   bool show_lengths, z_any = false;
+  bool show_count;
+  show_count = false;
   double clen = 0.0, z_top = 0.0, z_bot = 0.0;
   c.guarantee(256);
   b.guarantee(256);
@@ -549,7 +555,8 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   ldata->cartodate = "";
   ldata->cartoteam = "";
   ldata->cartotitle = "";
-  show_lengths = false; //(layout->carto_lens == TT_LAYOUT_LENSTAT_ON);;
+  show_count = true;
+  show_lengths = (layout->carto_lens == TT_LAYOUT_LENSTAT_ON);;
   if ((this->drawn_by.size() > 0) && (layout->max_cartos != 0)) {
 
     cnt = this->drawn_by.size();
@@ -575,7 +582,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   }
 
   ldata->copyrights = "";
-  show_lengths = false; //(layout->copy_lens == TT_LAYOUT_LENSTAT_ON);;
+  show_lengths = (layout->copy_lens == TT_LAYOUT_LENSTAT_ON);;
   if ((this->copyright.size() > 0) && (layout->max_copys != 0)) {
     cnt = this->copyright.size();
     //fprintf(f,"\\copyrights={%s",utf2tex("(c) "));

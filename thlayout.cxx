@@ -391,9 +391,9 @@ enum {
 
 static const thstok thlayout__mapitems[] = {
   {"carto", TTL_MAPITEM_CARTO},
-  {"carto-length", TTL_MAPITEM_CARTO_LENS},
+  {"carto-count", TTL_MAPITEM_CARTO_LENS},
   {"copyright", TTL_MAPITEM_COPYRIGHT},
-  {"copyright-length", TTL_MAPITEM_COPY_LENS},
+  {"copyright-count", TTL_MAPITEM_COPY_LENS},
   {"explo", TTL_MAPITEM_EXPLO},
   {"explo-length", TTL_MAPITEM_EXPLO_LENS},
   {"topo", TTL_MAPITEM_TOPO},
