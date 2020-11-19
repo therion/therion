@@ -549,7 +549,7 @@ class thlayout : public thdataobject {
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
     map_header_bg, sketches, color_labels;
 
-  int explo_lens, topo_lens;
+  int explo_lens, topo_lens, carto_lens, copy_lens;
 		
 	thlocale units;
 
@@ -567,7 +567,7 @@ class thlayout : public thdataobject {
     def_max_explos, def_max_topos, def_max_cartos,
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_survey_level, def_surface,
     def_surface_opacity, def_units, def_grid_coords, def_color_labels,
-    def_font_setup, def_min_symbol_scale;
+    def_font_setup, def_min_symbol_scale, def_carto_lens, def_copy_lens;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;
