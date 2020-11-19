@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 ## usage:
-## ./process.pl - generate .cxx,.h sources from texts.txt
+## ./process.pl - generate .h sources from texts.txt
 ## ./process.pl update - find new strings to translate and load all
 ##   texts_xy.txt into texts.txt
 ## ./process.pl export[-empty] xy - export texts_xy.txt with texts
@@ -190,7 +190,7 @@ sub write_sources {
   $textparse .= "  {NULL, -1},\n};\n";
   $texttable .= "};\n";
 
-  # exportujeme h subor
+  # exportujeme thlangdata.h
   open(OUT,">../thlangdata.h") || die("error: can't open thlangdata.h for output\n");
   print OUT <<ENDOUT;
 /**
@@ -207,11 +207,11 @@ $languages
 ENDOUT
   close(OUT);
 
-  # exportujeme cxx subor
-  open(OUT,">../thlangdata.cxx") || die("error: can't open thlangdata.cxx for output\n");
+  # exportujeme thlangdatafields.h
+  open(OUT,">../thlangdatafields.h") || die("error: can't open thlangdatafields.h for output\n");
   print OUT <<ENDOUT;
 /**
- * \@file thlangdata.cxx
+ * \@file thlangdatafields.h
  * Therion language translations module.
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
