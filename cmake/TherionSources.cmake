@@ -2,6 +2,7 @@ set(THERION_HEADERS
     ${CMAKE_BINARY_DIR}/thcsdata.h
     ${CMAKE_BINARY_DIR}/thchencdata.h
     ${CMAKE_BINARY_DIR}/thlangdata.h
+    ${CMAKE_BINARY_DIR}/thlangdatafields.h
     ${CMAKE_BINARY_DIR}/thmpost.h
     ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
     ${CMAKE_BINARY_DIR}/thsymbolsets.h
@@ -95,6 +96,7 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thsvg.h
     ${CMAKE_SOURCE_DIR}/thsvxctrl.h
     ${CMAKE_SOURCE_DIR}/thsymbolset.h
+    ${CMAKE_SOURCE_DIR}/thtexenc.h
     ${CMAKE_SOURCE_DIR}/thtexfonts.h
     ${CMAKE_SOURCE_DIR}/thtf.h
     ${CMAKE_SOURCE_DIR}/thtfangle.h
@@ -113,7 +115,6 @@ file(GLOB_RECURSE POLY2TRI_SRCS ${CMAKE_SOURCE_DIR}/extern/poly2tri/*.cc)
 set(THERION_SOURCES
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
-    ${CMAKE_BINARY_DIR}/thlangdata.cxx
     ${CMAKE_BINARY_DIR}/thmpost.cxx
     ${CMAKE_BINARY_DIR}/thsymbolsets.cxx
     ${CMAKE_BINARY_DIR}/thtex.cxx
@@ -206,7 +207,6 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thsvg.cxx
     ${CMAKE_SOURCE_DIR}/thsvxctrl.cxx
     ${CMAKE_SOURCE_DIR}/thsymbolset.cxx
-    ${CMAKE_SOURCE_DIR}/thtexenc.cxx
     ${CMAKE_SOURCE_DIR}/thtexfonts.cxx
     ${CMAKE_SOURCE_DIR}/thtf.cxx
     ${CMAKE_SOURCE_DIR}/thtfangle.cxx

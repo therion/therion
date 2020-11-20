@@ -26,7 +26,7 @@ set_source_files_properties(
     ${CMAKE_BINARY_DIR}/thchencdata.h
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
     ${CMAKE_BINARY_DIR}/thlangdata.h
-    ${CMAKE_BINARY_DIR}/thlangdata.cxx
+    ${CMAKE_BINARY_DIR}/thlangdatafields.h
     ${CMAKE_BINARY_DIR}/thmpost.h 
     ${CMAKE_BINARY_DIR}/thmpost.cxx
     ${CMAKE_BINARY_DIR}/thsymbolsets.h
