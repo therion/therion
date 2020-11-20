@@ -27,7 +27,7 @@
  
 #include "thlang.h"
 #include "thparse.h"
-#include "thlangdata.cxx"
+#include "thlangdatafields.h"
 #include "thinit.h"
 #include "thconfig.h"
 #include "thdatabase.h"

@@ -4,7 +4,7 @@
 #ifndef LXDEPCHECK
 #include <cstdlib>
 #include <cstdio>
-#include <string.h>
+#include <cstring>
 #include <locale.h>
 #include <map>
 #include <list>
@@ -26,7 +26,7 @@
 lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(uint32_t));
-  *((uint32_t *)(ptr)) = (uint32_t) this->m_size;
+  std::memcpy(ptr, &m_size, s);
   lxFile::switchEndian(ptr, s);
   ptr += s;
   return s;
@@ -36,7 +36,7 @@ lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 lxFileSizeT lxFileSize::Load(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(lxFileSizeT));
-  this->m_size = (lxFileSizeT) *((uint32_t *)(ptr));
+  std::memcpy(&m_size, ptr, s);
   lxFile::switchEndian((char *)(&this->m_size), s);
   ptr += s;
   return s;
@@ -46,7 +46,7 @@ lxFileSizeT lxFileSize::Load(lxFileBuff & ptr)
 lxFileSizeT lxFileDbl::Save(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(this->m_num));
-  *((double *)(ptr)) = this->m_num;
+  std::memcpy(ptr, &m_num, s);
   lxFile::switchEndian(ptr, s);
   ptr += s;
   return s;
@@ -56,7 +56,7 @@ lxFileSizeT lxFileDbl::Save(lxFileBuff & ptr)
 lxFileSizeT lxFileDbl::Load(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(this->m_num));
-  this->m_num = *((double *)(ptr));
+  std::memcpy(&m_num, ptr, s);
   lxFile::switchEndian((char *)(&this->m_num), s);
   ptr += s;
   return s;
