@@ -111,6 +111,12 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thwarppt.h
 )
 
+# TODO rename these files to .h
+set_source_files_properties(
+    ${CMAKE_BINARY_DIR}/thchencdata.cxx
+    ${CMAKE_SOURCE_DIR}/thlibrarydata.cxx
+    PROPERTIES HEADER_FILE_ONLY TRUE)
+
 file(GLOB_RECURSE POLY2TRI_SRCS ${CMAKE_SOURCE_DIR}/extern/poly2tri/*.cc)
 set(THERION_SOURCES
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
