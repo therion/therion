@@ -71,6 +71,12 @@ execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+# updates thlibrarydata.cxx
+add_custom_target(library 
+    ${CMAKE_COMMAND} -D THERION=$<TARGET_FILE:therion> -P cmake/Library.cmake
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 # therion lib
 add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
 target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern")
