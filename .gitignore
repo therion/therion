@@ -11,7 +11,7 @@ thtex.cxx
 thsymbolsetlist.h
 thsymbolsets.cxx
 thsymbolsets.h
-thlangdata.cxx
+thlangdatafields.h
 thchencdata.h
 SYMBOLS.txt
 innosetup.ini

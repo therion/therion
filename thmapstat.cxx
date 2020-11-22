@@ -260,6 +260,24 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
     return 1;
 }
 
+struct thmapstat_copyright_data {
+  thmapstat_copyright copy;
+  thmapstat_data data;
+  double crit;
+};
+
+int thmapstat_copyright_data_compar(const void * d1, const void * d2) {
+  thmapstat_copyright_data * p1 = (thmapstat_copyright_data *) d1,
+    * p2 = (thmapstat_copyright_data *) d2;
+  if (p1->crit < p2->crit)
+    return 1;
+  else if (p1->crit > p2->crit)
+    return -1;
+  else
+	return strcmp(p1->copy.str, p2->copy.str);
+}
+
+
 #define thmapstat_print_team(team_map, team_name, max_items, alphasort, teamstr) \
     fprintf(f,"\\" team_name "={"); \
     pd.reset(new thmapstat_person_data [team_map.size()]); \
@@ -284,9 +302,14 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
       b += pd[i].person.get_n2(); \
       if (show_lengths) { \
         b += " ("; \
+		if (!show_count) { \
 				b += layout->units.format_length(pd[i].crit); \
-        b += "<thsp>"; \
-		    b += layout->units.format_i18n_length_units(); \
+				b += "<thsp>"; \
+				b += layout->units.format_i18n_length_units(); \
+		} else { \
+      	  	    snprintf(c.get_buffer(),127,"%.0f",pd[i].crit); \
+      	  	    b += c.get_buffer(); \
+		}\
         b += ")"; \
       } \
       if (i < (tcnt-1)) \
@@ -295,10 +318,48 @@ int thmapstat_person_data_compar(const void * d1, const void * d2) {
       teamstr += thutf82xhtml(b.get_buffer()); \
     } \
     fprintf(f,"}\n");
-  
+
 //      snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
 //      b += c.get_buffer();
 //      b += thT("units m",layout->lang);
+
+
+#define thmapstat_print_copy(team_map, team_name, max_items, alphasort, teamstr) \
+    fprintf(f,"\\" team_name "={%s", utf2tex(teamstr).c_str()); \
+    pdc.reset(new thmapstat_copyright_data [team_map.size()]); \
+    i = 0; \
+    for (ci = team_map.begin(); ci != team_map.end(); ci++) { \
+      pdc[i].copy = ci->first; \
+      pdc[i].data = ci->second; \
+      if (alphasort) \
+        pdc[i].crit = 0.0; \
+      else \
+        pdc[i].crit = ci->second.crit; \
+      i++; \
+    } \
+    qsort(pdc.get(),cnt,sizeof(thmapstat_copyright_data),thmapstat_copyright_data_compar); \
+    if (max_items >= 0) \
+      tcnt = (unsigned long)(max_items); \
+    else \
+      tcnt = cnt; \
+    for (i = 0; i < tcnt; i++) { \
+      b = pdc[i].copy.str; \
+      b += " "; \
+      b += pdc[i].data.date.get_str(TT_DATE_FMT_UTF8_Y); \
+      if (show_lengths) { \
+        b += " ("; \
+		snprintf(c.get_buffer(),127,"%.0f",pd[i].crit); \
+		b += c.get_buffer(); \
+        b += ")"; \
+      } \
+      if (i < (tcnt-1)) \
+        b += ","; \
+      fprintf(f,"%s%s",utf2tex(b.get_buffer()),(i < (tcnt-1) ? "\n" : "")); \
+      teamstr += thutf82xhtml(b.get_buffer()); \
+    } \
+    fprintf(f,"}\n");
+
+
 
 double thmapstat::get_length() {
 	double clen = 0.0;
@@ -356,7 +417,10 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   thmapstat_copyrightmap::iterator ci;
   thmapstat_datamap::iterator ii;
   std::unique_ptr<thmapstat_person_data[]> pd;
+  std::unique_ptr<thmapstat_copyright_data[]> pdc;
   bool show_lengths, z_any = false;
+  bool show_count;
+  show_count = false;
   double clen = 0.0, z_top = 0.0, z_bot = 0.0;
   c.guarantee(256);
   b.guarantee(256);
@@ -491,7 +555,8 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   ldata->cartodate = "";
   ldata->cartoteam = "";
   ldata->cartotitle = "";
-  show_lengths = false;
+  show_count = true;
+  show_lengths = (layout->carto_lens == TT_LAYOUT_LENSTAT_ON);;
   if ((this->drawn_by.size() > 0) && (layout->max_cartos != 0)) {
 
     cnt = this->drawn_by.size();
@@ -512,28 +577,30 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
       ldata->cartodate = drawn_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->drawn_by,"cartoteam", layout->max_cartos, true, ldata->cartoteam);
+    thmapstat_print_team(this->drawn_by,"cartoteam", layout->max_cartos, (layout->carto_lens == TT_LAYOUT_LENSTAT_OFF), ldata->cartoteam);
     
   }
 
   ldata->copyrights = "";
+  show_lengths = (layout->copy_lens == TT_LAYOUT_LENSTAT_ON);;
   if ((this->copyright.size() > 0) && (layout->max_copys != 0)) {
     cnt = this->copyright.size();
-    fprintf(f,"\\copyrights={%s",utf2tex("(c) "));
+    //fprintf(f,"\\copyrights={%s",utf2tex("(c) "));
     ldata->copyrights = "(c) ";
-    i = 0;
-    for (ci = this->copyright.begin();
-          (ci != this->copyright.end()) && ((layout->max_copys < 0) || (i < ((unsigned long)layout->max_copys))); ci++) {
-      i++;
-      b = ci->first.str;
-      b += " ";
-      b += ci->second.date.get_str(TT_DATE_FMT_UTF8_Y);
-      if (i < cnt)
-        b += ", ";
-      ldata->copyrights += thutf82xhtml(b.get_buffer());
-      fprintf(f,"%s%s",utf2tex(b.get_buffer()),(i < cnt ? "\n" : ""));
-    }
-    fprintf(f,"}\n");
+    thmapstat_print_copy(this->copyright, "copyrights", layout->max_copys, (layout->copy_lens == TT_LAYOUT_LENSTAT_OFF), ldata->copyrights);
+//    i = 0;
+//    for (ci = this->copyright.begin();
+//          (ci != this->copyright.end()) && ((layout->max_copys < 0) || (i < ((unsigned long)layout->max_copys))); ci++) {
+//      i++;
+//      b = ci->first.str;
+//      b += " ";
+//      b += ci->second.date.get_str(TT_DATE_FMT_UTF8_Y);
+//      if (i < cnt)
+//        b += ", ";
+//      ldata->copyrights += thutf82xhtml(b.get_buffer());
+//      fprintf(f,"%s%s",utf2tex(b.get_buffer()),(i < cnt ? "\n" : ""));
+//    }
+//    fprintf(f,"}\n");
   }
   
 }

@@ -1,9 +1,11 @@
 // This file is generated automatically; don't modify it
 
+#pragma once
+
 static const int max_enc = 3;
 static const int max_base = 579;
 
-static const char* encodings[3] = {
+static constexpr const char* encodings[3] = {
   "cmcyr",
   "raw",
   "xl2",

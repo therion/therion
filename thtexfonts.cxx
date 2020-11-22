@@ -38,7 +38,7 @@
 #include <cstdio>
 
 #include "thtexfonts.h"
-#include "thtexenc.cxx"
+#include "thtexenc.h"
 #include "thpdfdbg.h"
 #include "thinit.h"
 #include "thpdfdata.h"

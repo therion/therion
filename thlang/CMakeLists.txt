@@ -2,7 +2,7 @@ file(COPY process.pl texts.txt thlang_stats.pl DESTINATION ${CMAKE_CURRENT_BINAR
 
 set(GENERATED_SOURCES
     ${CMAKE_BINARY_DIR}/thlangdata.h
-    ${CMAKE_BINARY_DIR}/thlangdata.cxx
+    ${CMAKE_BINARY_DIR}/thlangdatafields.h
 )
 
 add_custom_command(OUTPUT ${GENERATED_SOURCES}

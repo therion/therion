@@ -26,7 +26,7 @@ set_source_files_properties(
     ${CMAKE_BINARY_DIR}/thchencdata.h
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
     ${CMAKE_BINARY_DIR}/thlangdata.h
-    ${CMAKE_BINARY_DIR}/thlangdata.cxx
+    ${CMAKE_BINARY_DIR}/thlangdatafields.h
     ${CMAKE_BINARY_DIR}/thmpost.h 
     ${CMAKE_BINARY_DIR}/thmpost.cxx
     ${CMAKE_BINARY_DIR}/thsymbolsets.h
@@ -69,6 +69,12 @@ add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbols
 # generate version files
 execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+# updates thlibrarydata.cxx
+add_custom_target(library 
+    ${CMAKE_COMMAND} -D THERION=$<TARGET_FILE:therion> -P cmake/Library.cmake
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 # therion lib

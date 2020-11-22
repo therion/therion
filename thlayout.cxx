@@ -210,6 +210,10 @@ thlayout::thlayout()
   this->explo_lens = TT_LAYOUT_LENSTAT_HIDE;
   this->def_topo_lens = 0;
   this->topo_lens = TT_LAYOUT_LENSTAT_HIDE;
+  this->def_carto_lens = 0;
+  this->carto_lens = TT_LAYOUT_LENSTAT_HIDE;
+  this->def_copy_lens = 0;
+  this->copy_lens = TT_LAYOUT_LENSTAT_HIDE;
 
   this->def_lang = 0;
   this->lang = thcfg.get_lang();
@@ -382,13 +386,17 @@ enum {
   TTL_MAPITEM_TOPO,
   TTL_MAPITEM_EXPLO_LENS,
   TTL_MAPITEM_TOPO_LENS,
+  TTL_MAPITEM_CARTO_LENS,
+  TTL_MAPITEM_COPY_LENS,
   TTL_MAPITEM_SORT,
   TTL_MAPITEM_UNKNOWN,
 };
 
 static const thstok thlayout__mapitems[] = {
   {"carto", TTL_MAPITEM_CARTO},
+  {"carto-count", TTL_MAPITEM_CARTO_LENS},
   {"copyright", TTL_MAPITEM_COPYRIGHT},
+  {"copyright-count", TTL_MAPITEM_COPY_LENS},
   {"explo", TTL_MAPITEM_EXPLO},
   {"explo-length", TTL_MAPITEM_EXPLO_LENS},
   {"topo", TTL_MAPITEM_TOPO},
@@ -532,6 +540,20 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
             ththrow(("invalid map-item topo-length switch -- %s",args[1]))
           this->topo_lens = sv;
           this->def_topo_lens = 2;
+          break;
+        case TTL_MAPITEM_CARTO_LENS:
+          sv = thmatch_token(args[1],thtt_layout_lenstat);
+          if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
+            ththrow(("invalid map-item carto-length switch -- %s",args[1]))
+          this->carto_lens = sv;
+          this->def_carto_lens = 2;
+          break;
+        case TTL_MAPITEM_COPY_LENS:
+          sv = thmatch_token(args[1],thtt_layout_lenstat);
+          if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
+            ththrow(("invalid map-item copyright-length switch -- %s",args[1]))
+          this->copy_lens = sv;
+          this->def_copy_lens = 2;
           break;
         case TTL_MAPITEM_EXPLO:
         case TTL_MAPITEM_TOPO:
@@ -1190,6 +1212,10 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->explo_lens = %d;\n",this->explo_lens);
   thprintf("\tplayout->def_topo_lens = %d;\n",this->def_topo_lens);
   thprintf("\tplayout->topo_lens = %d;\n",this->topo_lens);
+  thprintf("\tplayout->def_carto_lens = %d;\n",this->def_carto_lens);
+  thprintf("\tplayout->carto_lens = %d;\n",this->carto_lens);
+  thprintf("\tplayout->def_copy_lens = %d;\n",this->def_copy_lens);
+  thprintf("\tplayout->copy_lens = %d;\n",this->copy_lens);
 
   thprintf("\tplayout->def_lang = %d;\n", this->def_lang);
   thprintf("\tplayout->lang = %s;\n",thlang_getcxxid(this->lang));
@@ -1959,6 +1985,14 @@ void thlayout::process_copy() {
 
       begcopy(def_topo_lens)
         this->topo_lens = srcl->topo_lens;
+      endcopy
+
+	  begcopy(def_carto_lens)
+        this->carto_lens = srcl->carto_lens;
+      endcopy
+
+      begcopy(def_copy_lens)
+        this->copy_lens = srcl->copy_lens;
       endcopy
 
       begcopy(def_lang)

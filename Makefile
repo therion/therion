@@ -259,7 +259,7 @@ clean:
 cleanrest:
 	$(MAKE) -C ./xtherion clean
 	$(MAKE) -C ./loch clean
-	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thsymbolsets.cxx thsymbolsets.h thlangdata.cxx thchencdata.h SYMBOLS.txt
+	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thsymbolsets.cxx thsymbolsets.h thlangdatafields.h thchencdata.h SYMBOLS.txt
 	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl thversion.h thbook/version.tex
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
 	perl makefile.pl rm -q extern/*.o extern/*~ extern/quickhull/*.o extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
@@ -306,6 +306,9 @@ unixify: clean
 	tclsh makeunixify.tcl
 
 thlangdata.h: thlang/texts.txt
+	$(MAKE) -C ./thlang
+
+thlangdatafields.h: thlangdata.h
 	$(MAKE) -C ./thlang
 
 config-debug:
@@ -739,7 +742,7 @@ $(OUTDIR)/thjoin.o: thjoin.cxx thjoin.h thdataobject.h thdatabase.h thmbuffer.h 
  thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thlayoutclr.h thscraplo.h \
  thlayoutln.h thscrapen.h thscraplp.h thexception.h
 $(OUTDIR)/thlang.o: thlang.cxx thlang.h thlangdata.h thparse.h thbuffer.h \
- thmbuffer.h thlangdata.cxx thinit.h thinput.h thconfig.h thexporter.h \
+ thmbuffer.h thlangdatafields.h thinit.h thinput.h thconfig.h thexporter.h \
  thexport.h thobjectsrc.h thlayout.h thdataobject.h thdatabase.h thdb1d.h \
  thobjectid.h thinfnan.h thdataleg.h thobjectname.h therion.h thdb3d.h \
  loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h thdb2dprj.h \
@@ -747,7 +750,6 @@ $(OUTDIR)/thlang.o: thlang.cxx thlang.h thlangdata.h thparse.h thbuffer.h \
  thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
  thlayoutclr.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
  thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h thexception.h
-$(OUTDIR)/thlangdata.o: thlangdata.cxx
 $(OUTDIR)/thlayout.o: thlayout.cxx thlayout.h thdataobject.h thdatabase.h \
  thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
  thparse.h thobjectname.h therion.h thobjectsrc.h thdb3d.h loch/lxMath.h \
@@ -1007,8 +1009,7 @@ $(OUTDIR)/thsymbolset.o: thsymbolset.cxx thsymbolset.h thsymbolsetlist.h \
  thinit.h thinput.h thsymbolsets.h thlogfile.h
 $(OUTDIR)/thsymbolsets.o: thsymbolsets.cxx thsymbolsets.h thsymbolsetlist.h
 $(OUTDIR)/thtex.o: thtex.cxx thtex.h
-$(OUTDIR)/thtexenc.o: thtexenc.cxx
-$(OUTDIR)/thtexfonts.o: thtexfonts.cxx thtexfonts.h thtexenc.cxx thpdfdbg.h \
+$(OUTDIR)/thtexfonts.o: thtexfonts.cxx thtexfonts.h thtexenc.h thpdfdbg.h \
  thexception.h therion.h thbuffer.h thinit.h thmbuffer.h thinput.h \
  thparse.h thpdfdata.h thepsparse.h
 $(OUTDIR)/thtf.o: thtf.cxx thtf.h thexception.h therion.h thbuffer.h thparse.h \
