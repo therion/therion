@@ -819,10 +819,10 @@ void thdecode_utf2tex(thbuffer * dest, const char * src)
 void thdecode_sql(thbuffer * dest, const char * src)
 {
 
-  size_t srcln = strlen(src), srcx = 0;
+  size_t srcln, srcx = 0;
   unsigned char * srcp, * dstp;
 //  unsigned num;
-  if ((src == NULL) || (srcln == 0)) {
+  if ((src == NULL) || ((srcln = strlen(src)) == 0)) {
     *dest = "NULL";
     return;
   }
