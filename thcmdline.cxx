@@ -30,13 +30,12 @@
 #include "therion.h"
 #include "thlogfile.h"
 #include "thconfig.h"
-//#include <getopt.h>
 #include "thtmpdir.h"
 
 #ifdef THMSVC
 #define __STDC__ 1
 #endif
-#include "extern/getopt.h"
+#include <getopt.h>
 
 
 thcmdline::thcmdline()
