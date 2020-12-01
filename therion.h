@@ -176,7 +176,7 @@ void thpause_exit();
  * @param exit_code Exit code of the program
  */
 
-void thexit(int exit_code);
+[[noreturn]] void thexit(int exit_code);
 
 extern bool thtext_inline;
 
