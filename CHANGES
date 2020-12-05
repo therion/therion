@@ -1,12 +1,29 @@
 Therion 5.5.4 (in progress):
 
 therion:
+ * added layout-statistics carto|copyright-length and carto|copyright-count
+ * use unique pointers in thdatabase [#296]
  * bugs fixed
    - scrap -walls off not working [#297]
+   - various fixes [#293,294,295,296,298,299,301,302,303,305]
 
 thbook:
  * support smaller page formats (configuration at the line 5 of the file
    thbook/thbook.tex)
+
+loch:
+  * bugs fixed:
+    - fix display of Survex 3D with LRUD [#286]
+    - read splay flag from Survex 3D files [#287]
+
+make:
+ * allow -j$N [#283]
+ * allow passing of WX_CONFIG variable [#284]
+ * remove local copies of getline and getopt [#290,306]
+ * small fixes
+
+infrastructure
+ * use Github actions instead of Travis CI
 
 --------------------------------------------------------------------------------
 
