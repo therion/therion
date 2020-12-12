@@ -1,7 +1,7 @@
 Therion 5.5.4 (in progress):
 
 therion:
- * added layout-statistics carto|copyright-length and carto|copyright-count
+ * added layout-statistics carto|copyright-count
  * use unique pointers in thdatabase [#296]
  * bugs fixed
    - scrap -walls off not working [#297]
