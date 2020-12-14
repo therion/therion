@@ -1819,10 +1819,15 @@ void thdata::insert_data_leg(int nargs, char ** args)
           case TT_SV_NUMBER:
             val = this->dlc_gradient.evaluate(val);
             val = this->dlu_gradient.transform(val);
+            if ((val >= 269.99999) && (val <= 360.00001))
+            	val -= 360.0;
             if ((val <= -90.00001) || (val >= 90.00001))
               ththrow(("gradient reading out of range -- %s", args[carg]))
-            else
+            else {
+              if (val < -90.0) val = -90.0;
+              if (val >  90.0) val =  90.0;
               this->cd_leg->gradient = val;
+            }
             break;
 //          case TT_SV_NAN:
           case TT_SV_UP:
