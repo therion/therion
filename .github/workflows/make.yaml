@@ -19,6 +19,7 @@ jobs:
           make
           make tests
           make samples
+          sudo make install
           ./therion --print-symbols
   mac:
     runs-on: ${{ matrix.os }}
