@@ -1999,7 +1999,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
 
 void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
 {
-  if ((strlen(surv->name) == 0) || !(surv->is_selected()) || (surv == NULL))
+  if (!surv || (strlen(surv->name) == 0) || !(surv->is_selected()))
     return;
 
   thdataobject * obj;

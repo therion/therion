@@ -61,7 +61,7 @@ THXTHMKCMD = ./therion
 ##EXT = .exe
 ##CXX ?= c++
 ##CC ?= gcc
-##POBJECTS = extern/getopt.o extern/getopt1.o therion.res
+##POBJECTS = therion.res
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
@@ -76,7 +76,7 @@ THXTHMKCMD = ./therion
 ##CXX = $(CROSS)c++
 ##export CC = $(CROSS)gcc
 ##export AR = $(CROSS)ar
-##POBJECTS = extern/getopt.o extern/getopt1.o therion.res
+##POBJECTS = therion.res
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
@@ -89,7 +89,7 @@ THXTHMKCMD = ./therion
 ##CXX = c++
 ##CC = cc
 ##LOCHEXE = loch/loch
-##POBJECTS = extern/getopt.o extern/getopt1.o
+##POBJECTS =
 ##CXXPFLAGS = -DTHMACOSX
 ##CCPFLAGS = -DTHMACOSX
 ##LDPFLAGS =
@@ -354,8 +354,6 @@ $(OUTDIR)/extern/lxMath.o: loch/lxMath.h loch/lxMath.cxx
 $(OUTDIR)/extern/lxFile.o: loch/lxFile.h loch/lxFile.cxx
 	$(CXX) -c $(CXXFLAGS) -o $(OUTDIR)/extern/lxFile.o loch/lxFile.cxx
 
-extern/getopt.o: extern/getopt.c extern/getopt.h
-extern/getopt1.o: extern/getopt1.c
 extern/img.o: extern/img.c extern/img.h
 extern/poly2tri/common/shapes.o: extern/poly2tri/common/shapes.cc extern/poly2tri/common/shapes.h
 extern/poly2tri/sweep/advancing_front.o: extern/poly2tri/sweep/advancing_front.cc
@@ -396,8 +394,7 @@ $(OUTDIR)/thcmdline.o: thcmdline.cxx thcmdline.h therion.h thlogfile.h thbuffer.
  thmapstat.h thdate.h thperson.h thlegenddata.h thdb2dpt.h thdb2dlp.h \
  thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
  thlayoutclr.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
- thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h thtmpdir.h \
- extern/getopt.h
+ thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h thtmpdir.h
 $(OUTDIR)/thcomment.o: thcomment.cxx thcomment.h thdataobject.h thdatabase.h \
  thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
  thparse.h thobjectname.h therion.h thobjectsrc.h thdb3d.h loch/lxMath.h \

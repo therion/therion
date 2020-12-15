@@ -272,7 +272,8 @@ available translations, see |thlang/texts.txt| file.
     map-header-bg <on/off>
     map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>
     statistics <explo/topo/carto/copyright all/off/number>
-               <explo/topo-length on/off>
+               <explo/topo-length on/hide/off>
+               <carto/copyright-count on/hide/off>
     scale-bar <length> <units>
     survey-level <N/all>
     language <xx[_YY]>
@@ -470,7 +471,11 @@ endlayout|
   * |statistics <explo/topo-length on/hide/off>| = display some basic
     statistics; if set to off, team members are sorted \NEW{5.4}alphabetically;
     otherwise according to their contribution to exploration and surveying
-    (M, A; default: |off|)
+    (M, A; default: |hide|)
+  * |statistics <carto/copyright-count on/hide/off>| = \NEW{5.6} display number of scraps
+    for given author/copyright string; if set to off, items are sorted 
+    alphabetically; otherwise by number of scraps
+    (M, A; default: |hide|)
   * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
   * |language <xx[_YY]>| = set output language.
     Available languages are listed on the copyright page.

@@ -38,6 +38,8 @@
 #include "thdb1d.h"
 #include "thconfig.h"
 #include "thcs.h"
+#include <vector>
+#include <algorithm>
 #include <string.h>
 
 bool operator < (const thmapstat_data & c1, 
@@ -243,122 +245,126 @@ void thmapstat::scanmap(class thmap * map) {
 struct thmapstat_person_data {
   thperson person;
   double crit;
+  bool operator < (const thmapstat_person_data& x) const
+  {
+	  if (crit > x.crit)
+	    return true;
+	  else if (crit < x.crit)
+	    return false;
+	  else if (person < x.person)
+	    return true;
+	  else
+	    return false;
+  }
 };
-
-int thmapstat_person_data_compar(const void * d1, const void * d2) {
-  thmapstat_person_data * p1 = (thmapstat_person_data *) d1, 
-    * p2 = (thmapstat_person_data *) d2;
-  if (p1->crit < p2->crit)
-    return 1;
-  else if (p1->crit > p2->crit)
-    return -1;
-  else if (p1->person < p2->person)
-    return -1;
-  else if (p1->person == p2->person)
-    return 0;
-  else
-    return 1;
-}
 
 struct thmapstat_copyright_data {
   thmapstat_copyright copy;
   thmapstat_data data;
   double crit;
+  bool operator < (const thmapstat_copyright_data& x) const
+  {
+	  if (crit > x.crit)
+	    return true;
+	  else if (crit < x.crit)
+	    return false;
+	  else if (strcmp(copy.str, x.copy.str) < 0)
+	    return true;
+	  else
+	    return false;
+  }
 };
 
-int thmapstat_copyright_data_compar(const void * d1, const void * d2) {
-  thmapstat_copyright_data * p1 = (thmapstat_copyright_data *) d1,
-    * p2 = (thmapstat_copyright_data *) d2;
-  if (p1->crit < p2->crit)
-    return 1;
-  else if (p1->crit > p2->crit)
-    return -1;
-  else
-	return strcmp(p1->copy.str, p2->copy.str);
+void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, bool show_count, thlayout * layout, thbuffer & c){
+    fprintf(f, "\\%s={", team_name);
+    std::vector<thmapstat_person_data> pd;
+    for (auto pi = team_map.begin(); pi != team_map.end(); pi++) {
+		thmapstat_person_data ditem;
+		ditem.person = pi->first;
+		if (alphasort)
+			ditem.crit = 0.0;
+		else
+			ditem.crit = pi->second.crit;
+		pd.push_back(ditem);
+    }
+    if ((pd.size() > 0) && (max_items != 0)) {
+    	std::sort(pd.begin(), pd.end());
+    	unsigned long maxcnt;
+    	if (max_items > 0)
+    		maxcnt = (unsigned long) max_items;
+    	else
+    		maxcnt = pd.size();
+    	std::string b;
+    	size_t i;
+        for (i = 0; i < maxcnt; i++) {
+          b = pd[i].person.get_n1();
+          if (b.length() > 0) b += " ";
+          b += pd[i].person.get_n2();
+          if (show_lengths) {
+            b += " (";
+    		if (!show_count) {
+    				b += layout->units.format_length(pd[i].crit);
+    				b += "<thsp>";
+    				b += layout->units.format_i18n_length_units();
+    		} else {
+          	  	    snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
+          	  	    b += c.get_buffer();
+    		}
+            b += ")";
+          }
+          if (i < (maxcnt-1))
+            b += ", ";
+          fprintf(f,"%s%s",utf2tex(b).c_str(),(i < (maxcnt-1) ? "\n" : ""));
+          teamstr += thutf82xhtml(b.c_str());
+        }
+    }
+    fprintf(f,"}\n");
 }
 
 
-#define thmapstat_print_team(team_map, team_name, max_items, alphasort, teamstr) \
-    fprintf(f,"\\" team_name "={"); \
-    pd.reset(new thmapstat_person_data [team_map.size()]); \
-    i = 0; \
-    for (pi = team_map.begin(); \
-          pi != team_map.end(); pi++) { \
-      pd[i].person = pi->first; \
-      if (alphasort) \
-        pd[i].crit = 0.0; \
-      else \
-        pd[i].crit = pi->second.crit; \
-      i++; \
-    } \
-    qsort(pd.get(),cnt,sizeof(thmapstat_person_data),thmapstat_person_data_compar); \
-    if (max_items >= 0) \
-      tcnt = (unsigned long)(max_items); \
-    else \
-      tcnt = cnt; \
-    for (i = 0; i < tcnt; i++) { \
-      b = pd[i].person.get_n1(); \
-      b += " "; \
-      b += pd[i].person.get_n2(); \
-      if (show_lengths) { \
-        b += " ("; \
-		if (!show_count) { \
-				b += layout->units.format_length(pd[i].crit); \
-				b += "<thsp>"; \
-				b += layout->units.format_i18n_length_units(); \
-		} else { \
-      	  	    snprintf(c.get_buffer(),127,"%.0f",pd[i].crit); \
-      	  	    b += c.get_buffer(); \
-		}\
-        b += ")"; \
-      } \
-      if (i < (tcnt-1)) \
-        b += ","; \
-      fprintf(f,"%s%s",utf2tex(b.get_buffer()),(i < (tcnt-1) ? "\n" : "")); \
-      teamstr += thutf82xhtml(b.get_buffer()); \
-    } \
+void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, thlayout * layout, thbuffer & c){
+    fprintf(f, "\\%s={", team_name);
+    std::vector<thmapstat_copyright_data> pd;
+    for (auto pi = copy_map.begin(); pi != copy_map.end(); pi++) {
+		thmapstat_copyright_data ditem;
+		ditem.copy = pi->first;
+		ditem.data = pi->second;
+		if (alphasort)
+			ditem.crit = 0.0;
+		else
+			ditem.crit = pi->second.crit;
+		pd.push_back(ditem);
+    }
+    if ((pd.size() > 0) && (max_items != 0)) {
+        fprintf(f, "%s", utf2tex(teamstr).c_str());
+    	std::sort(pd.begin(), pd.end());
+    	unsigned long maxcnt;
+    	if (max_items > 0)
+    		maxcnt = (unsigned long) max_items;
+    	else
+    		maxcnt = pd.size();
+    	std::string b;
+    	size_t i;
+        for (i = 0; i < maxcnt; i++) {
+			b = pd[i].copy.str;
+			b += " ";
+			b += pd[i].data.date.get_str(TT_DATE_FMT_UTF8_Y);
+			if (show_lengths) {
+			  b += " (";
+			  snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
+			  b += c.get_buffer();
+			  b += ")";
+			}
+            if (i < (maxcnt-1))
+              b += ", ";
+            fprintf(f,"%s%s",utf2tex(b).c_str(),(i < (maxcnt-1) ? "\n" : ""));
+            teamstr += thutf82xhtml(b.c_str());
+        }
+    } else {
+    	teamstr = "";
+    }
     fprintf(f,"}\n");
-
-//      snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
-//      b += c.get_buffer();
-//      b += thT("units m",layout->lang);
-
-
-#define thmapstat_print_copy(team_map, team_name, max_items, alphasort, teamstr) \
-    fprintf(f,"\\" team_name "={%s", utf2tex(teamstr).c_str()); \
-    pdc.reset(new thmapstat_copyright_data [team_map.size()]); \
-    i = 0; \
-    for (ci = team_map.begin(); ci != team_map.end(); ci++) { \
-      pdc[i].copy = ci->first; \
-      pdc[i].data = ci->second; \
-      if (alphasort) \
-        pdc[i].crit = 0.0; \
-      else \
-        pdc[i].crit = ci->second.crit; \
-      i++; \
-    } \
-    qsort(pdc.get(),cnt,sizeof(thmapstat_copyright_data),thmapstat_copyright_data_compar); \
-    if (max_items >= 0) \
-      tcnt = (unsigned long)(max_items); \
-    else \
-      tcnt = cnt; \
-    for (i = 0; i < tcnt; i++) { \
-      b = pdc[i].copy.str; \
-      b += " "; \
-      b += pdc[i].data.date.get_str(TT_DATE_FMT_UTF8_Y); \
-      if (show_lengths) { \
-        b += " ("; \
-		snprintf(c.get_buffer(),127,"%.0f",pd[i].crit); \
-		b += c.get_buffer(); \
-        b += ")"; \
-      } \
-      if (i < (tcnt-1)) \
-        b += ","; \
-      fprintf(f,"%s%s",utf2tex(b.get_buffer()),(i < (tcnt-1) ? "\n" : "")); \
-      teamstr += thutf82xhtml(b.get_buffer()); \
-    } \
-    fprintf(f,"}\n");
-
+}
 
 
 double thmapstat::get_length() {
@@ -412,7 +418,7 @@ void thmapstat::get_min_max_alt(double & min, double & max) {
 void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ldata) {
 
   thbuffer b,c;
-  unsigned long i, cnt, tcnt;
+  unsigned long cnt;
   thmapstat_personmap::iterator pi;
   thmapstat_copyrightmap::iterator ci;
   thmapstat_datamap::iterator ii;
@@ -519,8 +525,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
       ldata->explodate = discovered_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->discovered_by,"exploteam", layout->max_explos, (layout->explo_lens == TT_LAYOUT_LENSTAT_OFF) ,ldata->exploteam);
-    
+    thmapstat_print_team(f, this->discovered_by, "exploteam", layout->max_explos, (layout->explo_lens == TT_LAYOUT_LENSTAT_OFF) , ldata->exploteam, show_lengths, show_count, layout, c);
   }
   
 
@@ -548,8 +553,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
       ldata->topodate = surveyed_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->surveyed_by,"topoteam", layout->max_topos, (layout->topo_lens == TT_LAYOUT_LENSTAT_OFF), ldata->topoteam);
-    
+    thmapstat_print_team(f, this->surveyed_by, "topoteam", layout->max_topos, (layout->topo_lens == TT_LAYOUT_LENSTAT_OFF), ldata->topoteam, show_lengths, show_count, layout, c);
   }
 
   ldata->cartodate = "";
@@ -577,30 +581,15 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
       ldata->cartodate = drawn_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
-    thmapstat_print_team(this->drawn_by,"cartoteam", layout->max_cartos, (layout->carto_lens == TT_LAYOUT_LENSTAT_OFF), ldata->cartoteam);
-    
+    thmapstat_print_team(f, this->drawn_by,"cartoteam", layout->max_cartos, (layout->carto_lens == TT_LAYOUT_LENSTAT_OFF), ldata->cartoteam, show_lengths, show_count, layout, c);
   }
 
   ldata->copyrights = "";
   show_lengths = (layout->copy_lens == TT_LAYOUT_LENSTAT_ON);;
   if ((this->copyright.size() > 0) && (layout->max_copys != 0)) {
     cnt = this->copyright.size();
-    //fprintf(f,"\\copyrights={%s",utf2tex("(c) "));
     ldata->copyrights = "(c) ";
-    thmapstat_print_copy(this->copyright, "copyrights", layout->max_copys, (layout->copy_lens == TT_LAYOUT_LENSTAT_OFF), ldata->copyrights);
-//    i = 0;
-//    for (ci = this->copyright.begin();
-//          (ci != this->copyright.end()) && ((layout->max_copys < 0) || (i < ((unsigned long)layout->max_copys))); ci++) {
-//      i++;
-//      b = ci->first.str;
-//      b += " ";
-//      b += ci->second.date.get_str(TT_DATE_FMT_UTF8_Y);
-//      if (i < cnt)
-//        b += ", ";
-//      ldata->copyrights += thutf82xhtml(b.get_buffer());
-//      fprintf(f,"%s%s",utf2tex(b.get_buffer()),(i < cnt ? "\n" : ""));
-//    }
-//    fprintf(f,"}\n");
+    thmapstat_print_copy(f, this->copyright, "copyrights", layout->max_copys, (layout->copy_lens == TT_LAYOUT_LENSTAT_OFF), ldata->copyrights, show_lengths, layout, c);
   }
   
 }
