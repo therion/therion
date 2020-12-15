@@ -12,6 +12,7 @@ therion:
    - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
    - fixed numerical instability in l_overhang_SKBB
    - other minor fixes
+ * updated shapelib
 
 infrastructure:
  * support for CMake builds (thanks to Matěj Plch)
