@@ -48,6 +48,7 @@ jobs:
           brew update
           brew tap homebrew/core
           brew unlink python@3.8
+          rm /usr/local/bin/2to3
           brew install wxmac vtk proj xquartz ninja
       - name: Configure CMake
         run: |
