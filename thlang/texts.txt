@@ -578,7 +578,7 @@ el: χαλίκια
 en: pebbles
 es: pared de cantos rodados
 fr: cailloux
-it: ciotoli
+it: ciottoli
 mi: nga kōhatu iti
 pl: ściana utworzona przez okręglaki
 pt: parede de seixos
@@ -1629,7 +1629,7 @@ el: χαλίκια
 en: pebbles
 es: cantos rodados
 fr: galets
-it: ciotoli
+it: ciottoli
 mi: nga kōhatu iti
 pl: okręglaki
 pt: seixos
@@ -1905,7 +1905,7 @@ el: χαλίκια
 en: pebbles
 es: cantos rodados
 fr: galets/pierres
-it: ciotoli
+it: ciottoli
 mi: nga kōhatu iti
 pl: okręglaki
 pt: seixos
@@ -3727,7 +3727,7 @@ de: Skizzen
 en: Scraps
 es: Trozos/cachos
 fr: Scraps
-it: Schizzi
+it: Scrap
 pt: Croquis
 rs: Deo nacrta
 sl: Izrez
