@@ -454,7 +454,7 @@ void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & 
 	  dst_x = tx;
 	  dst_y = ty;
 
-	  if (adj_bbox && (thcfg.outcs != TTCS_LOCAL)) {
+	  if (adj_bbox && (this->cs != TTCS_LOCAL)) {
 		double dumx, dumy, dumz;
 		thcs2cs(thcs_get_params(this->cs), thcs_get_params(TTCS_LAT_LONG), tx, ty, tz, dumx, dumy, dumz);
 	    if (!thcfg.ibbx_def) {
