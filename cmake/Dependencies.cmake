@@ -4,11 +4,18 @@ pkg_check_modules(PROJ REQUIRED IMPORTED_TARGET proj)
 string(FIND ${PROJ_VERSION} "." MVER_SEP)
 string(SUBSTRING ${PROJ_VERSION} 0 ${MVER_SEP} PROJ_MVER)
 
-option(BUILD_SHAPELIB "Build internal version of shapelib." ON)
-if (BUILD_SHAPELIB)
+option(USE_BUNDLED_SHAPELIB "Build bundled version of shapelib." ON)
+if (USE_BUNDLED_SHAPELIB)
     add_subdirectory(extern/shapelib)
 else()
     pkg_check_modules(SHAPELIB REQUIRED IMPORTED_TARGET shapelib)
+endif()
+
+option(USE_BUNDLED_CATCH2 "Use bundled version of Catch2." ON)
+if (USE_BUNDLED_CATCH2)
+    add_subdirectory(extern/Catch2)
+else()
+    find_package(Catch2 REQUIRED)
 endif()
 
 # loch dependencies
