@@ -1049,7 +1049,7 @@ $(OUTDIR)/thwarppme.o: thwarppme.cxx thinfnan.h thwarppme.h thwarppdef.h therion
  thtrans.h
 $(OUTDIR)/thwarppt.o: thwarppt.cxx thwarppt.h thtrans.h thinfnan.h thwarppme.h \
  thwarppdef.h therion.h
-utest-main.o: utest-main.cxx extern/catch2/catch.hpp thinit.h thbuffer.h \
+utest-main.o: utest-main.cxx extern/Catch2/single_include/catch2/catch.hpp thinit.h thbuffer.h \
  thmbuffer.h thinput.h thparse.h
-utest-proj.o: utest-proj.cxx extern/catch2/catch.hpp thproj.h thcsdata.h \
+utest-proj.o: utest-proj.cxx extern/Catch2/single_include/catch2/catch.hpp thproj.h thcsdata.h \
  thparse.h thbuffer.h thmbuffer.h thcs.h
