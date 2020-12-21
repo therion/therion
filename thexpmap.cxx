@@ -2456,7 +2456,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           }
           break;
         case TT_LINE_CMD:
-          if ((((thline*)obj)->outline == TT_LINE_OUTLINE_NONE)) { 
+          if (((thline*)obj)->outline == TT_LINE_OUTLINE_NONE) { 
             switch (((thline*)obj)->type) {
               case TT_LINE_TYPE_SECTION:
               case TT_LINE_TYPE_ARROW:

@@ -285,7 +285,7 @@ void thinit::check_font_path(const char * fname, int index) {
 #ifdef THWIN32
       ((l > 1) && (buff[1] == ':')) ||
 #endif
-      (buff[0] == '/')) {
+      buff[0] == '/') {
     pfull.strcpy(buff);
   } else {
     if (strlen(this->ini_file.get_cif_path()) > 0) {
