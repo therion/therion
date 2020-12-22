@@ -1,5 +1,7 @@
 Therion 5.5.5 (in progress):
 
+therion:
+ * fixed bug with statistic explo/topo/carto/copyright <number>
 
 --------------------------------------------------------------------------------
 
