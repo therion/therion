@@ -1,7 +1,10 @@
-Therion 5.5.5 (in progress):
+Therion 5.5.5 (2020-12-22):
 
 therion:
+ * updated Italian translation [#308]
  * fixed bug with statistic explo/topo/carto/copyright <number>
+ * fixed bugs related to an undefined Area of Use, which should be used
+   in Proj transformations
 
 --------------------------------------------------------------------------------
 
