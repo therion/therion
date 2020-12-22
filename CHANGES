@@ -19,6 +19,16 @@ infrastructure:
 
 --------------------------------------------------------------------------------
 
+Therion 5.5.5 (2020-12-22):
+
+therion:
+ * updated Italian translation [#308]
+ * fixed bug with statistic explo/topo/carto/copyright <number>
+ * fixed bugs related to an undefined Area of Use, which should be used
+   in Proj transformations
+
+--------------------------------------------------------------------------------
+
 Therion 5.5.4 (2020-12-15):
 
 therion:

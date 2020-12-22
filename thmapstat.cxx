@@ -289,10 +289,10 @@ void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char *
     }
     if ((pd.size() > 0) && (max_items != 0)) {
     	std::sort(pd.begin(), pd.end());
-    	unsigned long maxcnt;
+    	unsigned long maxcnt(0);
     	if (max_items > 0)
     		maxcnt = (unsigned long) max_items;
-    	else
+    	if (maxcnt > pd.size())
     		maxcnt = pd.size();
     	std::string b;
     	size_t i;
@@ -338,10 +338,10 @@ void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const cha
     if ((pd.size() > 0) && (max_items != 0)) {
         fprintf(f, "%s", utf2tex(teamstr).c_str());
     	std::sort(pd.begin(), pd.end());
-    	unsigned long maxcnt;
+    	unsigned long maxcnt(0);
     	if (max_items > 0)
     		maxcnt = (unsigned long) max_items;
-    	else
+    	if (maxcnt > pd.size())
     		maxcnt = pd.size();
     	std::string b;
     	size_t i;

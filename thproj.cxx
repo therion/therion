@@ -198,7 +198,8 @@ string proj_cache::log() {
     ostringstream s;
     s << setprecision(3) << std::fixed;
     s << endl << "############# CRS transformations chosen by PROJ ###############" << endl;
-    s << "  Area of Use (AoU): (" << thcs_cfg.bbox[0] << ", " << thcs_cfg.bbox[1] << ") (" <<
+    if (thcs_cfg.bbox.size() == 4)
+      s << "  Area of Use (AoU): (" << thcs_cfg.bbox[0] << ", " << thcs_cfg.bbox[1] << ") (" <<
                                      thcs_cfg.bbox[2] << ", " << thcs_cfg.bbox[3] << ")" << endl;
     for (const auto & i : transf_cache) {
       PJ_PROJ_INFO pinfo = proj_pj_info(i.second);
