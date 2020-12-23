@@ -37,7 +37,7 @@ class thwarp {
 
   protected:
 
-  class thsketch * m_sketch;
+  struct thsketch * m_sketch;
 
   public:
 
