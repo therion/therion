@@ -17,6 +17,7 @@ SYMBOLS.txt
 innosetup.ini
 xtherion/therion.tcl
 .*
+!.clang-tidy
 !.gitignore
 !.github/
 !.gitattributes

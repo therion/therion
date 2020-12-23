@@ -128,7 +128,7 @@ class DnDFile : public wxFileDropTarget {
 	
     DnDFile(lxFrame *parent) : m_Parent(parent) { }
 	
-    virtual bool OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames);
+    bool OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames) override;
 
 };
 

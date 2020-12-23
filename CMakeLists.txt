@@ -12,6 +12,14 @@ set(ECM_ENABLE_SANITIZERS "" CACHE STRING
     "Enable runtime sanitizers, available options: address,memory,thread,leak,undefined." )
 set(ENABLE_THDEBUG OFF CACHE BOOL "Print debug information.")
 
+option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy." OFF)
+if (ENABLE_CLANG_TIDY)
+    find_program(CLANG_TIDY_EXECUTABLE clang-tidy)
+    if (CLANG_TIDY_EXECUTABLE)
+        set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE};--quiet")
+    endif()
+endif()
+
 # determine platform
 if(UNIX AND NOT APPLE)
     set(THPLATFORM LINUX)
@@ -41,7 +49,7 @@ set_source_files_properties(
 )
 
 # copy files needed by some build steps
-file(COPY thcsdata.tcl thsymbolsetfont.txt DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY thcsdata.tcl thsymbolsetfont.txt .clang-tidy DESTINATION ${CMAKE_BINARY_DIR})
 
 # generate thcsdata sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thcsdata.h
