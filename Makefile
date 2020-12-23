@@ -493,7 +493,6 @@ $(OUTDIR)/thdb1d.o: thdb1d.cxx thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
  extern/quickhull/Structs/Plane.hpp extern/quickhull/Structs/Vector3.hpp \
  extern/quickhull/Structs/Pool.hpp extern/quickhull/Structs/Mesh.hpp \
  extern/quickhull/Structs/Plane.hpp extern/quickhull/Structs/Pool.hpp \
- extern/quickhull/Structs/../Types.hpp \
  extern/quickhull/Structs/VertexDataSource.hpp \
  extern/quickhull/ConvexHull.hpp \
  extern/quickhull/Structs/VertexDataSource.hpp \
