@@ -98,7 +98,7 @@ add_dependencies(therion-common
     generate_thchencdata
     generate_thcsdata
 )
-if (BUILD_SHAPELIB)
+if (USE_BUNDLED_SHAPELIB)
     target_include_directories(therion-common PUBLIC extern/shapelib)
     target_link_libraries(therion-common PUBLIC shp)
 else()
@@ -113,7 +113,7 @@ install(TARGETS therion RUNTIME DESTINATION bin)
 
 # unit tests
 add_executable(utest utest-proj.cxx utest-main.cxx)
-target_link_libraries(utest PUBLIC therion-common)
+target_link_libraries(utest PUBLIC therion-common Catch2::Catch2)
 enable_testing()
 if (NOT WIN32)
     add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
