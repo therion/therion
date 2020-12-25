@@ -22,7 +22,7 @@ jobs:
                 -DCMAKE_BUILD_TYPE=${{ matrix.type }} \
                 -DCMAKE_C_COMPILER=${{ matrix.cc }} \
                 -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
-                -DBUILD_SHAPELIB=OFF \
+                -DUSE_BUNDLED_SHAPELIB=OFF \
                 ${{ matrix.args }} ..
       - run: cmake --build build
       - run: cmake --build build -t test
@@ -64,7 +64,7 @@ jobs:
           msystem: ${{ matrix.config.msystem }}
           update: true
           install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget
-      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DBUILD_SHAPELIB=OFF ..
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DUSE_BUNDLED_SHAPELIB=OFF ..
       - run: cmake --build build -t therion loch utest -- -j 4
 
   MXE:
