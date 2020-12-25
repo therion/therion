@@ -130,11 +130,8 @@ PROJ_VER = $(shell $(CROSS)pkg-config proj --modversion)
 ifneq ($(filter $(PROJ_VER),$(PROJ_UNSUPPORTED)),)
     $(error unsupported Proj version: $(PROJ_VER))
 endif
-PROJ_LIBS ?= $(shell $(CROSS)pkg-config proj --libs)
+PROJ_LIBS ?= $(shell $(CROSS)pkg-config proj --libs --static)
 PROJ_MVER ?= $(shell echo $(PROJ_VER) | sed 's/\..*//')
-ifeq ($(shell [ "$(PROJ_MVER)" -gt 5 ] && [ "$(THPLATFORM)" = "WIN32" ] && [ -z "$(CROSS)" ]; echo $$?),0)
-  PROJ_LIBS += -lsqlite3
-endif
 CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable=includedir)
 
 
