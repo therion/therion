@@ -61,6 +61,5 @@ xtherion/msgxth.tcl
 /loch/loch
 /loch/loch.res
 /therion
-/thbook/
 /utest
 CMakeLists.txt.user
