@@ -3,6 +3,10 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(PROJ REQUIRED IMPORTED_TARGET proj)
 string(FIND ${PROJ_VERSION} "." MVER_SEP)
 string(SUBSTRING ${PROJ_VERSION} 0 ${MVER_SEP} PROJ_MVER)
+set(PROJ_UNSUPPORTED 5.0.0 5.0.1 6.0.0 6.1.0 6.1.1 6.2.0)
+if (PROJ_VERSION IN_LIST PROJ_UNSUPPORTED) # check if proj version is unsupported
+    message(FATAL_ERROR "Unsupported proj version: ${PROJ_VERSION}")
+endif()
 
 option(USE_BUNDLED_CATCH2 "Use bundled version of Catch2." ON)
 if (USE_BUNDLED_CATCH2)
