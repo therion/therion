@@ -196,17 +196,8 @@ init:
 install: all
 	tclsh makeinstall.tcl $(THPLATFORM) $(DESTDIR)$(PREFIX) $(DESTDIR)$(SYSCONFDIR)
 
-minor-release:
-	perl makerelease.pl
-
-archive: config-debian unixify
-	perl makearchive2.pl
-
-release: clean
-	perl makearchive.pl
-
-binary: all doc
-	perl makebinary.pl $(THPLATFORM)
+release:
+	python3 make_release.py
 
 depend:
 	perl makedepend.pl > Makefile.dep
