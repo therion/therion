@@ -1,5 +1,7 @@
-Therion 5.5.6 (in progress):
+Therion 5.5.6 (2020-12-27):
 
+therion:
+ * fixed map statistics bug introduced in 5.5.5
 
 --------------------------------------------------------------------------------
 
