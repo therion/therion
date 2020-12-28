@@ -78,6 +78,10 @@ add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbols
 execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+# generate InnoSetup config file
+if (WIN32)
+    configure_file(innosetup.ini.in innosetup.ini)
+endif()
 
 # updates thlibrarydata.cxx
 add_custom_target(library 
