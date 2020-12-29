@@ -46,6 +46,10 @@ proc scan_files {dir} {
 }
 
 set thcmd [file normalize [file join [pwd] "$outdd/therion --reproducible-output"]]
+if {[llength $argv] > 2} {
+  set emulator [lindex $argv 2]
+  set thcmd "$emulator $thcmd"
+}
 set processlist {}
 
 proc scan_lists {} {
