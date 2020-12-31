@@ -46,9 +46,10 @@ proc scan_files {dir} {
 }
 
 set thcmd [file normalize [file join [pwd] "$outdd/therion --reproducible-output"]]
-if {[llength $argv] > 2} {
-  set emulator [lindex $argv 2]
-  set thcmd "$emulator $thcmd"
+foreach av [lrange $argv 1 end] {
+  if {[regexp {^--emulator=(.*)$} $av dum emulator]} {
+    set thcmd "$emulator $thcmd"
+  }
 }
 set processlist {}
 
@@ -533,7 +534,9 @@ if {([llength $argv] > 1) && [regexp -nocase {^clean$} [lindex $argv 1]]} {
     scan_files ""
   } else {
     foreach d [lrange $argv 1 end] {
-      scan_files $d
+      if {![regexp {^--.*} $d]} {
+      	scan_files $d
+      }
     }
   }
   scan_lists
