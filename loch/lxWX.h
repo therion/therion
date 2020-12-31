@@ -115,15 +115,15 @@ public:
 
 	~lxDoubleValidator();
 
-  virtual wxObject *Clone() const { return new lxDoubleValidator(*this); }
+  wxObject *Clone() const override { return new lxDoubleValidator(*this); }
 
   bool Copy(const lxDoubleValidator& val);
     
-	virtual bool Validate(wxWindow *parent);
+	bool Validate(wxWindow *parent) override;
 
-  virtual bool TransferToWindow();
+  bool TransferToWindow() override;
 
-  virtual bool TransferFromWindow();
+  bool TransferFromWindow() override;
 
 protected:
 
@@ -157,15 +157,15 @@ public:
 
 	~lxRadioBtnValidator();
 
-  virtual wxObject *Clone() const { return new lxRadioBtnValidator(*this); }
+  wxObject *Clone() const override { return new lxRadioBtnValidator(*this); }
 
   bool Copy(const lxRadioBtnValidator& val);
     
-	virtual bool Validate(wxWindow *parent);
+	bool Validate(wxWindow *parent) override;
 
-  virtual bool TransferToWindow();
+  bool TransferToWindow() override;
 
-  virtual bool TransferFromWindow();
+  bool TransferFromWindow() override;
 
 protected:
 

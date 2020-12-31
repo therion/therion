@@ -1,7 +1,7 @@
 ---
 Checks: '-*,clang-analyzer-cplusplus.InnerPointer,modernize-use-override'
 WarningsAsErrors: '*'
-HeaderFilterRegex: ''
+HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
 FormatStyle: none
 CheckOptions:

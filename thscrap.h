@@ -161,49 +161,49 @@ class thscrap : public thdataobject {
    * Return class identifier.
    */
   
-  virtual int get_class_id();
+  int get_class_id() override;
   
   
   /**
    * Return class name.
    */
    
-  virtual const char * get_class_name() {return "thscrap";};
+  const char * get_class_name() override {return "thscrap";};
   
   
   /**
    * Return true, if son of given class.
    */
   
-  virtual bool is(int class_id);
+  bool is(int class_id) override;
   
   
   /**
    * Return number of command arguments.
    */
    
-  virtual int get_cmd_nargs();
+  int get_cmd_nargs() override;
   
   
   /**
    * Return command name.
    */
    
-  virtual const char * get_cmd_name();
+  const char * get_cmd_name() override;
   
   
   /**
    * Return command end option.
    */
    
-  virtual const char * get_cmd_end();
+  const char * get_cmd_end() override;
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
+  thcmd_option_desc get_cmd_option_desc(const char * opts) override;
   
   
   /**
@@ -214,7 +214,7 @@ class thscrap : public thdataobject {
    * @param argenc Arguments encoding.
    */
    
-  virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
+  void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline) override;
 
 
   /**
@@ -235,7 +235,7 @@ class thscrap : public thdataobject {
    * Print object properties.
    */
    
-  virtual void self_print_properties(FILE * outf); 
+  void self_print_properties(FILE * outf) override; 
   
   
   /**
@@ -300,13 +300,13 @@ class thscrap : public thdataobject {
  
  void update_limits(double x, double y);
 
- virtual void start_insert();
+ void start_insert() override;
 
  /**
   * Convert all points in object.
   */
 
- virtual void convert_all_cs();
+ void convert_all_cs() override;
 
 
 
