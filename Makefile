@@ -174,7 +174,9 @@ outdirs:
 
 version:
 	python3 set_version.py
-	echo "[PROJ]" > innosetup.ini && echo "version=$(PROJ_MVER)" >> innosetup.ini
+ifeq ($(THPLATFORM),WIN32)
+	echo "[PROJ]" > $(OUTDIR)/innosetup.ini && echo "version=$(PROJ_MVER)" >> $(OUTDIR)/innosetup.ini
+endif
 
 thversion.h: version
 
