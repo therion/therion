@@ -269,7 +269,7 @@ class lxApp: public wxGLApp
     wxLocale m_locale;
     wxFileName m_path;
   
-    bool OnInit();
+    bool OnInit() override;
     
 #ifdef LXMACOSX
     virtual void MacOpenFile(const wxString &fileName);

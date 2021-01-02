@@ -171,21 +171,21 @@ class th2ddataobject : public thdataobject {
    * Return class identifier.
    */
   
-  virtual int get_class_id();
+  int get_class_id() override;
   
   
   /**
    * Return class name.
    */
    
-  virtual const char * get_class_name() {return "th2ddataobject";};
+  const char * get_class_name() override {return "th2ddataobject";};
   
   
   /**
    * Return true, if son of given class.
    */
   
-  virtual bool is(int class_id);
+  bool is(int class_id) override;
   
   
 
@@ -193,7 +193,7 @@ class th2ddataobject : public thdataobject {
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
+  thcmd_option_desc get_cmd_option_desc(const char * opts) override;
   
   
   /**
@@ -204,21 +204,21 @@ class th2ddataobject : public thdataobject {
    * @param argenc Arguments encoding.
    */
    
-  virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
+  void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline) override;
 
 
   /**
    * Print object properties.
    */
    
-  virtual void self_print_properties(FILE * outf); 
+  void self_print_properties(FILE * outf) override; 
   
 
   /**
    * Get context for object.
    */
    
-  virtual int get_context();
+  int get_context() override;
   
   
   /**

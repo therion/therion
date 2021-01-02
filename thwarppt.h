@@ -138,7 +138,7 @@ namespace therion
          * @param u3    new point U (survey frame)
          */
         line * add_extra_line( point_pair * p1, size_t index, 
-                                       thvec2 & x3, thvec2 & u3 );
+                                       thvec2 & x3, thvec2 & u3 ) override;
     
     
         /** insert a point
