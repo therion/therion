@@ -46,7 +46,6 @@
 #define getcwd _getcwd
 #define chdir _chdir
 #define putenv _putenv
-#define hypot _hypot
 #define S_ISDIR(v) (((v) | _S_IFDIR) != 0)
 #endif
 #include "thchenc.h"
@@ -370,7 +369,7 @@ void insert_line_segment(thline * ln, bool reverse, std::list<thexpshpf_data> & 
 					  nz = t_ * cpt->point->zt + t * prevpt->point->zt;
 					  na = t_ * cpt->point->at + t * prevpt->point->at;
             // resolution 0.1 m
-					  if (hypot(nx - px, ny - py) > 0.1) {
+					  if (std::hypot(nx - px, ny - py) > 0.1) {
 			        lst.push_back(thexpshpf_data(nx + ln->fscrapptr->proj->rshift_x, ny + ln->fscrapptr->proj->rshift_y, nz + ln->fscrapptr->proj->rshift_z, na));
 						  px = nx;
 						  py = ny;

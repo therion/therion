@@ -50,7 +50,6 @@
 #define getcwd _getcwd
 #define chdir _chdir
 #define putenv _putenv
-#define hypot _hypot
 #endif
 #include "thchenc.h"
 #include "thdb1d.h"
@@ -730,7 +729,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   fprintf(pltf,"}\n");
  
   // calculate grid
-  double goverlap = 0.1 * hypot(xmax - xmin, ymax - ymin);
+  double goverlap = 0.1 * std::hypot(xmax - xmin, ymax - ymin);
   thset_grid(gxo, gxs, xmin - goverlap, xmax + goverlap, gxoo, gxn);
   thset_grid(gyo, gxs, ymin - goverlap, ymax + goverlap, gyoo, gyn);
   fprintf(pltf,"set XVIgrid  {%g %g %g 0.0 0.0 %g %ld %ld}\n", gxoo, gyoo, gxs, gxs, gxn+1, gyn+1);
@@ -2366,7 +2365,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   thscraplp * slp;
   thdb2dlp * lp;
   thexception dbg_stnms;
-  bool map_shift = (hypot(out->m_shift_x, out->m_shift_y) > 1e-2);
+  bool map_shift = (std::hypot(out->m_shift_x, out->m_shift_y) > 1e-2);
 	
 	// check scrap limits
   bool warncheckchange = false;
@@ -3334,7 +3333,7 @@ void thexpmap_line_svx3d(img * pimg, thline * pln)
 							 3.0 * tt * t_ * lp->cp2->yt + 
 							 ttt * lp->point->yt;
 					nz = t_ * plp->point->zt + t * lp->point->zt;
-					if (hypot(nx - px, ny - py) > 0.5) {
+					if (std::hypot(nx - px, ny - py) > 0.5) {
 			      img_write_item(pimg, img_LINE, 0, NULL, nx, ny, nz);
 						px = nx;
 						py = ny;
