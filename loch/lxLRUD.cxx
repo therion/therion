@@ -213,7 +213,8 @@ void lxLRUD::Calculate()
     return;
   }
 
-  xcNode * nodes = new xcNode [nnod], * cnode;
+  std::vector<xcNode> nodes(nnod);
+  xcNode * cnode;
   for(stMapIter = stMap.begin(); stMapIter != stMap.end(); stMapIter++) {
     nodes[stMapIter->second].id = stMapIter->second;
     nodes[stMapIter->second].p = stMapIter->first;
@@ -820,7 +821,6 @@ void lxLRUD::Calculate()
   this->o.Append(&so);
 
   delete [] edges;
-  delete [] nodes;
 
   //size_t nT = this->o.GetNTriangles();
   //size_t nP = this->o.GetNPoints();

@@ -1373,9 +1373,7 @@ void thbezier_curve::copy_polyline(struct thbezier_polyline * line, double err)
   if (max < 3)
     return;
 
-  NR_Point * poly, * bezier;
-  poly = new NR_Point[max];
-  bezier = new NR_Point[4 * max];
+  std::vector<NR_Point> poly(max), bezier(4 * max);
   thbezier_point * p;
   for(i = 0, p = line->get_first_point(); p != NULL; p = line->get_next_point(), i++) {
     poly[i][0] = p->m_x;
@@ -1392,7 +1390,7 @@ void thbezier_curve::copy_polyline(struct thbezier_polyline * line, double err)
     else stan.normalize();
   }
   //nbp = (long) sp_bezier_fit_cubic_r(bezier, poly, (long) max, err, (unsigned int)max);
-  nbp = (long) sp_bezier_fit_cubic_full(bezier, NULL, poly, (long) max, stan, -stan, err, (unsigned int)max);
+  nbp = (long) sp_bezier_fit_cubic_full(bezier.data(), NULL, poly.data(), (long) max, stan, -stan, err, (unsigned int)max);
   thbezier_segment * s;
   s = this->insert_segment();
   s->m_p = thbezier_point(bezier[0][0], bezier[0][1]);
