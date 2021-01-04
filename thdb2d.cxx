@@ -3461,7 +3461,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   tharea * carea(NULL);
   thdb2dab * bln;
   area_proc itm;
-  thline * cln;
+  thline * line;
   thdb2dlp * clp;
   for (cscrap = prj->first_scrap; cscrap != NULL; cscrap = cscrap->proj_next_scrap) {
     for (obj = cscrap->fs2doptr; obj != NULL; obj = obj->nscrapoptr) {
@@ -3469,8 +3469,8 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
         carea = (tharea*) obj;
         cnt = 0;
         for (bln = carea->first_line; bln != NULL; bln = bln->next_line) {
-          cln = bln->line;
-          for (clp = cln->first_point; clp != NULL; clp = clp->nextlp) {
+          line = bln->line;
+          for (clp = line->first_point; clp != NULL; clp = clp->nextlp) {
             if (clp->cp1 != NULL) ulim(clp->cp1->xt, clp->cp1->yt, clp->cp1->at);
             if (clp->cp2 != NULL) ulim(clp->cp2->xt, clp->cp2->yt, clp->cp2->at);
             ulim(clp->point->xt, clp->point->yt, clp->point->at);
@@ -3544,12 +3544,12 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
     fprintf(mpf,"\ndraw (buildcycle(");
     for (cnt = 0, bln = carea->first_line; bln != NULL; bln = bln->next_line, cnt++) {
-      cln = bln->line;      
+      line = bln->line;      
       if (cnt > 0)
         fprintf(mpf,",(");
       else
         fprintf(mpf,"(");
-      for (clp = cln->first_point, cnt2 = 0; clp != NULL; clp = clp->nextlp, cnt2++) {
+      for (clp = line->first_point, cnt2 = 0; clp != NULL; clp = clp->nextlp, cnt2++) {
         if (cnt2 > 0) {
           if ((clp->cp1 != NULL) && (clp->cp2 != NULL)) {
             fprintf(mpf," .. controls ");
@@ -3642,7 +3642,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   af = fopen("data.1","r");
   double n[6];
   com.guarantee(256);
-  cln = NULL;
+  std::unique_ptr<thline> cln;
   char * buff = com.get_buffer();
   ti = todo.begin();
   while ((fscanf(af,"%32s",buff) > 0) && (ti != todo.end())) {
@@ -3661,7 +3661,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
       cnt = 0;
     }
     if (strcmp(buff,"newpath") == 0) { 
-      cln = new thline;
+      cln = std::make_unique<thline>();
       cln->db = this->db;
       cnt = 0;
     }
@@ -3695,17 +3695,14 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
       cln->fscrapptr = carea->fscrapptr;
       cln->fsptr = carea->fsptr;
       cln->type = TT_LINE_TYPE_BORDER;
-      ti->area->m_outline_line = cln;
+      ti->area->m_outline_line = std::move(cln);
       //cln->preprocess();
-      cln = NULL;
 
       // increase area counter
       ti++;
 
     }
   }
-
-  delete cln;
 
   thassert(chdir(wdir.get_buffer()) == 0);
 

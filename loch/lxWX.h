@@ -129,7 +129,7 @@ protected:
 
 	double * m_variable;
 	double m_vMin, m_vMax;
-  const wxChar * m_fmt;
+    wxString m_fmt;
 
 	bool CheckValidator()	const
 	{

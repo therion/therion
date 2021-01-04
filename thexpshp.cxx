@@ -600,7 +600,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
           break;
         this->m_fareas.object_clear();
         this->m_fareas.polygon_start_ring(true);
-        this->m_fareas.polygon_insert_line(parea->m_outline_line, false);
+        this->m_fareas.polygon_insert_line(parea->m_outline_line.get(), false);
         this->m_fareas.polygon_close_ring();
         this->m_fareas.object_insert();
         if (this->m_fareas.m_object_id > -1) {

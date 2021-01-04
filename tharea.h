@@ -125,7 +125,7 @@ class tharea : public th2ddataobject {
   thdb2dab * first_line,  ///< First border line.
     * last_line;  ///< Last border line.
 
-  class thline * m_outline_line;
+  std::unique_ptr<class thline> m_outline_line;
 
   void insert_border_line(int npars, char ** pars);  ///< Insert border line.
 
@@ -136,14 +136,6 @@ class tharea : public th2ddataobject {
    */
 
   tharea();
-
-
-  /**
-   * Standard destructor.
-   */
-
-  ~tharea();
-
 
   /**
    * Return class identifier.
