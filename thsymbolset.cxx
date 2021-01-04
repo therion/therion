@@ -50,7 +50,6 @@
 #define getcwd _getcwd
 #define chdir _chdir
 #define putenv _putenv
-#define hypot _hypot
 #define mkdir _mkdir
 #endif
 

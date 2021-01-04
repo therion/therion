@@ -51,9 +51,6 @@
 #include "thgeomag.h"
 #include "thgeomagdata.h"
 #include "extern/quickhull/QuickHull.hpp"
-#ifdef THMSVC
-#define hypot _hypot
-#endif
 
 //#define THUSESVX
 //#define THDEBUG
@@ -2346,13 +2343,13 @@ void thdb1d::close_loops()
       cleg->leg->total_dy = tos->y - froms->y;
       cleg->leg->total_dz = tos->z - froms->z;
       // najprv horizontalnu dlzku
-      cleg->leg->total_length = hypot(cleg->leg->total_dx, cleg->leg->total_dy);
+      cleg->leg->total_length = std::hypot(cleg->leg->total_dx, cleg->leg->total_dy);
       cleg->leg->total_bearing = atan2(cleg->leg->total_dx, cleg->leg->total_dy) / THPI * 180.0;
       if (cleg->leg->total_bearing < 0.0)
         cleg->leg->total_bearing += 360.0;
       cleg->leg->total_gradient = atan2(cleg->leg->total_dz, cleg->leg->total_length) / THPI * 180.0;
       // potom celkovu dlzku
-      cleg->leg->total_length = hypot(cleg->leg->total_length, cleg->leg->total_dz);
+      cleg->leg->total_length = std::hypot(cleg->leg->total_length, cleg->leg->total_dz);
       continue;
     }
     
@@ -2387,7 +2384,7 @@ void thdb1d::close_loops()
       err_dx = (tos->x - froms->x) - (cleg->reverse ? -1.0 : 1.0) * cleg->leg->adj_dx;
       err_dy = (tos->y - froms->y) - (cleg->reverse ? -1.0 : 1.0) * cleg->leg->adj_dy;
       err_dz = (tos->z - froms->z) - (cleg->reverse ? -1.0 : 1.0) * cleg->leg->adj_dz;
-			double err = hypot(hypot(err_dx, err_dy), err_dz);
+			double err = std::hypot(std::hypot(err_dx, err_dy), err_dz);
       
 			if ((err >= 1e-4) && (i > unrecover)) {			
 #ifdef THDEBUG
@@ -3408,7 +3405,7 @@ void thdb1d::process_xelev()
       if ((current_node->last_arrow->leg->leg->flags & TT_LEGFLAG_SPLAY) > 0) {
     	  cxx += 0;
       } else {
-    	  cxx += double(go_left) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy) * current_node->last_arrow->leg->leg->extend_ratio;
+    	  cxx += double(go_left) * std::hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy) * current_node->last_arrow->leg->leg->extend_ratio;
       }
       
       // set end x
@@ -3493,7 +3490,7 @@ void thdb1d::process_xelev()
 	    if (thisnan(minshot_dir)) minshot_dir = 0.0;
       if (current_node->first_arrow->is_reversed) {
         current_node->first_arrow->leg->leg->fxx = minshot_x;
-        current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
+        current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * std::hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
       } else
         ththrow(("Code should not go here!"))
 	  }

@@ -320,16 +320,16 @@ void lxTBoxPos::Save()
   this->m_winTool->GetPosition(& tx, & ty);
 
   nc = 0;
-  cdist = hypot(fx - tx, fy - ty);
+  cdist = std::hypot(fx - tx, fy - ty);
   mdist = cdist;
 
-  cdist = hypot(fx + fw - tx - tw, fy - ty);
+  cdist = std::hypot(fx + fw - tx - tw, fy - ty);
   if (cdist < mdist) {mdist = cdist; nc = 1;}
 
-  cdist = hypot(fx + fw - tx - tw, fy + fh - ty - th);
+  cdist = std::hypot(fx + fw - tx - tw, fy + fh - ty - th);
   if (cdist < mdist) {mdist = cdist; nc = 2;}
 
-  cdist = hypot(fx - tx, fy + fh - ty - th);
+  cdist = std::hypot(fx - tx, fy + fh - ty - th);
   if (cdist < mdist) {mdist = cdist; nc = 3;}
 
   this->m_corner = nc;

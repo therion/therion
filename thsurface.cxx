@@ -32,10 +32,7 @@
 #include "thtflength.h"
 #include "thdatabase.h"
 #include "thcsdata.h"
-#include <math.h>
-#ifdef THMSVC
-#define hypot _hypot
-#endif
+#include <cmath>
 #include "thdatareader.h"
 #include "thparse.h"
 #include "thdb1d.h"
@@ -318,9 +315,9 @@ void thsurface::parse_picture(char ** args)
 void thsurface::calibrate() {
   // spocita origin, scale (pri 300 dpi) a rotaciu
   double olen, nlen, scale, ang, tang;
-  olen = hypot(this->pict_X2 - this->pict_X1, 
+  olen = std::hypot(this->pict_X2 - this->pict_X1, 
                 this->pict_Y2 - this->pict_Y1);
-  nlen = hypot(this->pict_x2 - this->pict_x1, 
+  nlen = std::hypot(this->pict_x2 - this->pict_x1, 
                 this->pict_y2 - this->pict_y1);
   ang = atan2(this->pict_Y2 - this->pict_Y1, this->pict_X2 - this->pict_X1);
   tang = atan2(this->pict_y2 - this->pict_y1, this->pict_x2 - this->pict_x1);
@@ -505,7 +502,7 @@ thdb3ddata * thsurface::get_3d() {
         nx = pvx->x - cvx->x;
         ny = pvx->y - cvx->y;
         nz = pvx->z - cvx->z;
-        nl = hypot(nz, hypot(nx, ny));
+        nl = std::hypot(nz, std::hypot(nx, ny));
         nx /= nl; ny /= nl; nz /= nl;
         nt = nx; nx = nz; nz = -nt;
         cvx->insert_normal(nx, ny, nz);
@@ -516,7 +513,7 @@ thdb3ddata * thsurface::get_3d() {
         nx = - pvx->x + cvx->x;
         ny = - pvx->y + cvx->y;
         nz = - pvx->z + cvx->z;
-        nl = hypot(nz, hypot(nx, ny));
+        nl = std::hypot(nz, std::hypot(nx, ny));
         nx /= nl; ny /= nl; nz /= nl;
         nt = nx; nx = nz; nz = -nt;
         cvx->insert_normal(nx, ny, nz);
@@ -527,7 +524,7 @@ thdb3ddata * thsurface::get_3d() {
         nx = pvx->x - cvx->x;
         ny = pvx->y - cvx->y;
         nz = pvx->z - cvx->z;
-        nl = hypot(nz, hypot(nx, ny));
+        nl = std::hypot(nz, std::hypot(nx, ny));
         nx /= nl; ny /= nl; nz /= nl;
         nt = ny; ny = nz; nz = -nt;
         cvx->insert_normal(nx, ny, nz);
@@ -538,7 +535,7 @@ thdb3ddata * thsurface::get_3d() {
         nx = - pvx->x + cvx->x;
         ny = - pvx->y + cvx->y;
         nz = - pvx->z + cvx->z;
-        nl = hypot(nz, hypot(nx, ny));
+        nl = std::hypot(nz, std::hypot(nx, ny));
         nx /= nl; ny /= nl; nz /= nl;
         nt = ny; ny = nz; nz = -nt;
         cvx->insert_normal(nx, ny, nz);

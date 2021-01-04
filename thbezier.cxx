@@ -71,12 +71,7 @@
 //#include <libnr/nr-forward.h>
 //#include <libnr/nr-point-fns.h>
 
-#include <math.h>
-#ifdef THMSVC
-#include <float.h>
-#define hypot _hypot
-#endif
-
+#include <cmath>
 #define g_return_val_if_fail(C,V) if (!(C)) return (V);
 #define g_return_if_fail(C) if (!(C)) return;
 #define g_new(T,L) new T [L];
@@ -243,7 +238,7 @@ inline double dot(NR_Point const &a, NR_Point const &b)
 
 
 void NR_Point::normalize() {
-	double len = hypot(_pt[0], _pt[1]);
+	double len = std::hypot(_pt[0], _pt[1]);
 	g_return_if_fail(len != 0);
 	g_return_if_fail(!isNaN(len));
 	static double const inf = 1e300;
@@ -268,7 +263,7 @@ void NR_Point::normalize() {
 		case 0:
 			/* Can happen if both coords are near +/-DBL_MAX. */
 			*this /= 4.0;
-			len = hypot(_pt[0], _pt[1]);
+			len = std::hypot(_pt[0], _pt[1]);
 			g_assert(len != inf);
 			*this /= len;
 			break;
@@ -340,7 +335,7 @@ inline bool operator!=(NR_Point const &a, NR_Point const &b)
 }
 
 inline double L2(NR_Point const &p) {
-	return hypot(p[0], p[1]);
+	return std::hypot(p[0], p[1]);
 }
 
 bool is_zero(NR_Point const &p)

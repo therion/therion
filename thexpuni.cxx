@@ -41,7 +41,6 @@
 #include "thdb3d.h"
 
 #ifdef THMSVC
-#define hypot _hypot
 #define snprintf _snprintf
 #define strcasecmp _stricmp
 #endif
@@ -302,7 +301,7 @@ void insert_line_segment(double resolution, thline * ln, bool reverse, std::list
 					  nz = t_ * cpt->point->zt + t * prevpt->point->zt;
 					  na = t_ * cpt->point->at + t * prevpt->point->at;
             // resolution 0.1 m
-					  if (hypot(nx - px, ny - py) > resolution) {
+					  if (std::hypot(nx - px, ny - py) > resolution) {
 			        lst.push_back(thexpuni_data(nx + ln->fscrapptr->proj->rshift_x, ny + ln->fscrapptr->proj->rshift_y, nz + ln->fscrapptr->proj->rshift_z, na));
 						  px = nx;
 						  py = ny;
