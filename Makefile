@@ -172,7 +172,7 @@ outdirs:
 	mkdir -p $(OUTDIR)/xtherion
 	mkdir -p $(OUTDIR)/thbook
 
-version:
+version: outdirs
 	python3 set_version.py
 ifeq ($(THPLATFORM),WIN32)
 	echo "[PROJ]" > $(OUTDIR)/innosetup.ini && echo "version=$(PROJ_MVER)" >> $(OUTDIR)/innosetup.ini
