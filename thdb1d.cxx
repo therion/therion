@@ -3495,7 +3495,8 @@ void thdb1d::process_xelev()
         current_node->first_arrow->leg->leg->fxx = minshot_x;
         current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
       } else
-        ththrow(("Code should not go here!"))
+        current_node->first_arrow->leg->leg->txx = minshot_x;
+        current_node->first_arrow->leg->leg->fxx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
 	  }
   }
 
