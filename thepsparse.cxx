@@ -149,10 +149,6 @@ string color::to_pdfliteral(fillstroke fs) {
 }
 
 CGS::CGS () {
-  color[0] = -1;
-  color[1] = -1;
-  color[2] = -1;
-  color[3] = -1;
 
   linejoin = linecap = 1;
 //  clippathID = random();
@@ -162,14 +158,8 @@ CGS::CGS () {
 int CGS::clippathID = 0;
 
 string CGS::svg_color() {
-  if (color[0] == -1) return "inherit";
-  
-//  char ch[8];
-//  sprintf(ch,"#%02x%02x%02x",int(255*color[0]) % 256,
-//                             int(255*color[1]) % 256,
-//                             int(255*color[2]) % 256);
-//  return (string) ch;
-  return rgb2svg(color[0],color[1],color[2]);
+  if (!col.is_defined()) return "inherit";
+  return col.to_svg();
 }
 
 MP_data::MP_data () {
@@ -419,15 +409,15 @@ void MP_data::clear() {
 void MP_setting::print_svg (ofstream & F, CGS & gstate) {
   switch (command) {
     case MP_rgb:
-      for (int i=0; i<3; i++) gstate.color[i] = data[i];
+      gstate.col.set(data[0], data[1], data[2]);
       gstate.pattern = "";
       break;
     case MP_gray:
-      for (int i=0; i<3; i++) gstate.color[i] = data[0];
+      gstate.col.set(data[0]);
       gstate.pattern = "";
       break;
-    case MP_cmyk:  // cmyk to rgb conversion necessary in SVG
-      for (int i=0; i<3; i++) gstate.color[i] = 1.0 - min(1.0, data[i] + data[3]);
+    case MP_cmyk:
+      gstate.col.set(data[0], data[1], data[2], data[3]);
       gstate.pattern = "";
       break;
     case MP_pattern:

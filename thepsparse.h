@@ -36,6 +36,11 @@ struct color{
   double a = -1, b = -1, c = -1, d = -1;
   colormodel model = colormodel::no;
 
+  color() {
+    model = colormodel::no;
+    a = b = c = d = -1;
+  }
+
   void reset();
   void set(double);
   void set(double,double,double);
@@ -47,7 +52,7 @@ struct color{
 };
 
 struct CGS {  // current graphics state
-  float color[4];
+  color col;
   int linejoin, linecap;
   float miterlimit, linewidth;
   list<float> dasharray;
