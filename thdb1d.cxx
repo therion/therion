@@ -3491,12 +3491,13 @@ void thdb1d::process_xelev()
 	      carrow = carrow->next_arrow;
 	    }
 	    if (thisnan(minshot_dir)) minshot_dir = 0.0;
-      if (current_node->first_arrow->is_reversed) {
-        current_node->first_arrow->leg->leg->fxx = minshot_x;
-        current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
-      } else
-        current_node->first_arrow->leg->leg->txx = minshot_x;
-        current_node->first_arrow->leg->leg->fxx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
+        if (current_node->first_arrow->is_reversed) {
+          current_node->first_arrow->leg->leg->fxx = minshot_x;
+          current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
+        } else {
+          current_node->first_arrow->leg->leg->txx = minshot_x;
+          current_node->first_arrow->leg->leg->fxx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
+        }
 	  }
   }
 
