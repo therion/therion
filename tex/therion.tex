@@ -325,7 +325,31 @@
   \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
 }
 
-\def\color[#1 #2 #3]{%
+\def\cmykcolor[#1 #2 #3 #4]{%
+  \tmpdimen=#1pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#2pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#3pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#4pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \pdfliteral{k}
+}
+
+\def\rgbcolor[#1 #2 #3]{%
   \tmpdimen=#1pt%
   \divide\tmpdimen100
   \edef\tmpdef{\the\tmpdimen}%
@@ -343,6 +367,24 @@
   \pdfliteral{\tmpdef}%
   \pdfliteral{rg}
 }
+\let\color\rgbcolor
+
+\def\graycolor[#1]{%
+  \tmpdimen=#1pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \pdfliteral{g}
+}
+
+\def\modelcmyk{cmyk}
+\def\modelrgb{rgb}
+\def\modelgray{grayscale}
+\def\black{\ifx\OutputColormodel\modelcmyk\cmykcolor[0 0 0 1]\else
+           \ifx\OutputColormodel\modelrgb\rgbcolor[0 0 0]\else
+           \graycolor[0]\fi\fi}
+
 
 % actual placing of the page elements
 
@@ -423,7 +465,7 @@
 \newtoks\magdecl
 \newtoks\gridconv
 \newtoks\currentdate
-\newtoks\legendtextcolor\legendtextcolor={\color[0 0 0]}
+\newtoks\legendtextcolor\legendtextcolor={\black}
 \newtoks\legendtextsize\legendtextsize={\size[12]}
 \newtoks\legendtextheadersize\legendtextheadersize={\size[26]}
 \newtoks\legendtextsectionsize\legendtextsectionsize={\size[14]}
@@ -435,7 +477,7 @@
 
 \legendcontent={%
   \hsize=\legendwidth
-  \color[0 0 0]\the\legendtextcolor 
+  \black\the\legendtextcolor 
   \ifnortharrow\vbox to 0pt{\line{\hfil\northarrow}\vss}\fi
   \edef\tmp{\the\cavename} \ifx\tmp\empty \else
      {\the\legendtextheadersize\the\cavename}\vskip1cm
@@ -466,7 +508,7 @@
     \fi
   }
   \formattedlegend
-  \color[0 0 0]
+  \black
 }
 
 \def\maplayout{
@@ -613,7 +655,7 @@
 \def\loadpicture#1{\pdfximage{#1}\pdfrefximage\pdflastximage}
 
 \def\insertmaps{%
-  \color[0 0 0]
+  \black
   \input th_formdef
   \input th_pagedef
   \input th_pages

@@ -1231,6 +1231,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 //  fclose(tf);
 
   tf = fopen(thtmp.get_file_name("data.tex"),"w");
+  fprintf(tf,"\\def\\OutputColormodel{%s}\n", thmatch_string(this->layout->color_model, thtt_layoutclr_model));
   if (thcmdln.extern_libs)
     fprintf(tf,"\\input therion.tex\n");
   else

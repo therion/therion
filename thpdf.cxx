@@ -109,6 +109,16 @@ double MINX, MINY, MAXX, MAXY;
 double HS,VS;
 //////////
 
+string black2pdf(double shade, fillstroke fs) {    // shade: 0 = white, 1 = black
+  if (shade < 0 || shade > 1) therror(("shade out of range"));
+  color c;
+  if (LAYOUT.output_colormodel == colormodel::grey) c.set(1-shade);
+  else if (LAYOUT.output_colormodel == colormodel::rgb) c.set(1-shade, 1-shade, 1-shade);
+  else if (LAYOUT.output_colormodel == colormodel::cmyk) c.set(0, 0, 0, shade);
+  else therror (("invalid color model"));
+  return c.to_pdfliteral(fs);
+}
+
 string tex_Sname(string s) {return("THS"+s);}
 string tex_Nname(string s) {return("THN"+s);}
 string tex_BMPname(string s) {return("THBMP"+s);} // bitmap
@@ -823,7 +833,7 @@ void print_page_bg_scraps(int layer, ofstream& PAGEDEF,
       LEVEL = ((*(LAYERHASH.find(layer))).second).scraps;
     }
 
-    PAGEDEF << "\\PL{q 1 g}%" << endl;      // white background of the scrap
+    PAGEDEF << "\\PL{q " << black2pdf(0, fillstroke::fill) << "}%" << endl;      // white background of the scrap
     for (map < int,set<string> >::iterator I = LEVEL.begin();
                                        I != LEVEL.end(); I++) {
       used_scraps = (*I).second;
@@ -1237,7 +1247,7 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
 
   NAV_SCRAPS.clear();
   if (!lay_it->second.D.empty()) {
-    P << "\\PL{.8 g}%\n";
+    P << "\\PL{" << black2pdf(0.2, fillstroke::fill) << "}%\n";
     used_layers = lay_it->second.D;
     for (set<int>::iterator I=used_layers.begin(); I != used_layers.end(); I++) {
       for (int i = sheet_it->namex-LAYOUT.nav_right; 
@@ -1269,7 +1279,7 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
     }
   }
   NAV_SCRAPS.clear();
-  P << "\\PL{0 g}%\n";
+  P << "\\PL{" << black2pdf(1, fillstroke::fill) << "}%\n";
   for (int i = sheet_it->namex-LAYOUT.nav_right; 
            i <= sheet_it->namex+LAYOUT.nav_right; i++) {
     for (int j = sheet_it->namey-LAYOUT.nav_up; 
@@ -1670,7 +1680,7 @@ void build_pages() {
                             " re f Q}%" << endl;
     }
     PAGEDEF << "\\ifdim\\framethickness>0mm\\dimtobp{\\framethickness}\\edef\\Framethickness{\\tmpdef}" <<
-               "\\PL{q 0 0 0 RG 1 J 1 j \\Framethickness\\space w " << 
+               "\\PL{q " << black2pdf(1, fillstroke::stroke) << " 1 J 1 j \\Framethickness\\space w " << 
                "-\\Framex\\space\\Framey\\space\\Framew\\space-\\Frameh\\space" << 
                " re s Q}\\fi" << endl;
 
@@ -1720,7 +1730,7 @@ void build_pages() {
     if (LAYOUT.grid == 2) print_grid_pdf(PAGEDEF,MINX,MINY,origMINX,origMINY,origMAXX,origMAXY);
 
     if (LAYOUT.map_grid) {
-      PAGEDEF << "\\PL{q .4 w 0.6 g 0.6 G }%" << endl;
+      PAGEDEF << "\\PL{q .4 w " << black2pdf(0.4, fillstroke::fillstroke) << " }%" << endl;
       PAGEDEF << "\\PL{0 0 " << HS << " " << VS << " re S}%" << endl;
       for (double i=0; i <= HS; i += LAYOUT.hsize) {
         PAGEDEF << "\\PL{" << i << " 0 m " << i << " " << VS << " l S}%" << endl;
