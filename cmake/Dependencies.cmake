@@ -17,6 +17,13 @@ else()
     find_package(Catch2 REQUIRED)
 endif()
 
+option(USE_BUNDLED_FMT "Use bundled version of {fmt}." ON)
+if (USE_BUNDLED_FMT)
+    add_subdirectory(extern/fmt)
+else()
+    find_package(fmt REQUIRED)
+endif()
+
 option(USE_BUNDLED_SHAPELIB "Use bundled version of shapelib." ON)
 if (USE_BUNDLED_SHAPELIB)
     add_subdirectory(extern/shapelib)
