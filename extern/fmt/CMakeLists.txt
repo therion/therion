@@ -8,7 +8,6 @@ set(FMT_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/locale.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/os.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/ostream.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/posix.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/printf.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/ranges.h)
 
