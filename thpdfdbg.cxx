@@ -38,10 +38,7 @@
 
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
-
-#ifndef NOTHERION
 #include "thexception.h"
-#endif
 
 using namespace std;
 

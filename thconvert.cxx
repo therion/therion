@@ -831,11 +831,7 @@ void convert_scraps() {
 
 int thconvert() { 
 
-#ifdef NOTHERION
-  cout << "converting scraps ... " << flush;
-#else
   thprintf("converting scraps ... ");
-#endif
 
   ALL_FONTS.clear();
   ALL_PATTERNS.clear();
@@ -843,26 +839,12 @@ int thconvert() {
   font_id = 1;
   patt_id = 1;
 
-#ifdef NOTHERION
-  read_hash();
-#endif
   convert_scraps();
 
   thpdfdbg();  // in the debugging mode only
-  
-#ifdef NOTHERION
-  cout << "done" << endl;
-#else
+
   thprintf("done\n");
-#endif
+
   return(0);
 }
-
-#ifdef NOTHERION
-int main() {
-  thconvert();
-  return(0);
-}
-#endif
-
 

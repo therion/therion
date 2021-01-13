@@ -41,10 +41,6 @@
 #include <cfloat>
 #include <cmath>
 
-// #ifdef NOTHERION  
-// #include <unistd.h>  // I don't know why
-// #endif
-
 #include "thpdfdbg.h"
 #include "thconfig.h"
 #include "thpdfdata.h"
@@ -56,10 +52,8 @@
 #define round(x) floor((x) + 0.5)
 #endif
 
-#ifndef NOTHERION
 #include "thchenc.h"
 #include "thbuffer.h"
-#endif
 
 using namespace std;
 
@@ -1788,21 +1782,11 @@ void build_pages() {
 int thpdf(int m) {
   mode = m;
 
-#ifdef NOTHERION
-  init_encodings();
-  print_fonts_setup();
-  cout << "making " << ((mode == ATLAS) ? "atlas" : "map") << " ... " << flush;
-#else
   thprintf("making %s ... ", (mode == ATLAS) ? "atlas" : "map");
-#endif
 
   SHEET.clear();
   SHEET_JMP.clear();
   MINX=DBL_MAX, MINY=DBL_MAX, MAXX=-DBL_MAX, MAXY=-DBL_MAX;
-  
-#ifdef NOTHERION
-  read_settings();   // change to the quick mode only
-#endif    
 
   make_sheets();
   if (mode == ATLAS) {
@@ -1811,18 +1795,8 @@ int thpdf(int m) {
   }
   build_pages();
 
-#ifdef NOTHERION
-  cout << "done" << endl;
-#else
   thprintf("done\n");
-#endif
+
   return(0);
 }
-
-#ifdef NOTHERION
-int main() {
-  thpdf(0);
-}
-#endif
-
 

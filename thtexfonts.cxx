@@ -42,11 +42,9 @@
 #include "thpdfdbg.h"
 #include "thinit.h"
 #include "thpdfdata.h"
-
-#ifndef NOTHERION
 #include "thbuffer.h"
+
 thbuffer thtexfontsbuff;
-#endif
 
 using namespace std;
 
@@ -594,19 +592,11 @@ int tex2uni(string font, int ch) {
   }
 }
 
-
-//const char * utf2tex (char * s) {
-//  string t = utf2tex(string(s));
-//  return t.c_str();
-//}
-
-#ifndef NOTHERION
 const char * utf2tex (const char * s, bool b) {
   string t = utf2tex(string(s),b);
   thtexfontsbuff.strcpy(t.c_str());
   return thtexfontsbuff.get_buffer();
 }
-#endif
 
 // For simplicity we suppose that all characters which are set by TeX macros
 // are included in the first encoding specified. This concerns especially 
@@ -692,31 +682,4 @@ if (ENC_NEW.NFSS==0) {
   
   P.close();
 }
-
-
-#ifdef NOTHERION
-#ifndef NOMAIN
-int main () {
-//cout << "xl2 " << get_enc_index("xl2") << endl;
-  return(0);
-}
-#endif
-#endif
-
-// obsolete:
-
-//    else if (wc == 60) {                // special <.> string formatting
-//      tmp = "";
-//      I++;
-//      while (I != s.end() && (wc = *I) != 62 && wc < 128) {
-//        tmp += char(wc);
-//        I++;
-//      }
-//      if (tmp == "br") T << "\\cr ";
-//      else if (tmp == "center" || tmp == "left" || tmp == "right") ;
-//      else if (tmp == "thsp") T << "\\thinspace ";
-//      else T << "?";
-//      if (I == s.end()) break;   // incorrect input (no closing `>')
-//      continue;
-//    }
 
