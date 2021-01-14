@@ -1,5 +1,5 @@
 name: Installer
-on: [push, pull_request]
+on: push
 jobs:
   Win32_installer:
     runs-on: ubuntu-18.04
