@@ -69,6 +69,7 @@ THXTHMKCMD = ./therion
 ##export THPLATFORM = WIN32
 ##export OUTDIR ?= ../therion.bin
 ##THXTHMKCMD = $(OUTDIR)/therion
+##CMAKE_GEN = -G "MSYS Makefiles" -D CMAKE_MAKE_PROGRAM:PATH=mingw32-make
 
 # PLATFORM WIN32CROSS
 ##CROSS ?= i686-w64-mingw32.static-
@@ -171,7 +172,7 @@ outdirs:
 	mkdir -p $(OUTDIR)/xtherion
 	mkdir -p $(OUTDIR)/thbook
 
-version:
+version: outdirs
 	python3 set_version.py .
 ifeq ($(THPLATFORM),WIN32)
 	echo "[PROJ]" > $(OUTDIR)/innosetup.ini && echo "version=$(PROJ_MVER)" >> $(OUTDIR)/innosetup.ini
@@ -356,7 +357,7 @@ extern/poly2tri/sweep/cdt.o: extern/poly2tri/sweep/cdt.cc
 extern/poly2tri/sweep/sweep_context.o: extern/poly2tri/sweep/sweep_context.cc
 
 $(OUTDIR)/extern/fmt/libfmt.a: extern/fmt/include/fmt/core.h
-	$(CROSS)cmake -S extern/fmt -B $(OUTDIR)/extern/fmt -Wno-dev
+	$(CROSS)cmake -S extern/fmt -B $(OUTDIR)/extern/fmt -Wno-dev $(CMAKE_GEN)
 	cd $(OUTDIR)/extern/fmt; $(MAKE)
 
 # DEPENDENCIES
