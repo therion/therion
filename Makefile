@@ -356,7 +356,7 @@ extern/poly2tri/sweep/cdt.o: extern/poly2tri/sweep/cdt.cc
 extern/poly2tri/sweep/sweep_context.o: extern/poly2tri/sweep/sweep_context.cc
 
 $(OUTDIR)/extern/fmt/libfmt.a: extern/fmt/include/fmt/core.h
-	cmake -S extern/fmt -B $(OUTDIR)/extern/fmt -Wno-dev
+	$(CROSS)cmake -S extern/fmt -B $(OUTDIR)/extern/fmt -Wno-dev
 	cd $(OUTDIR)/extern/fmt; $(MAKE)
 
 # DEPENDENCIES
