@@ -40,7 +40,7 @@ SYSCONFDIR ?= $(PREFIX)/etc
 ##CCPFLAGS = -DTHLINUX
 ##LDPFLAGS = -s
 ##export THPLATFORM = LINUX
-##export OUTDIR = $(abspath $(PWD)/../therion.bin)
+##export OUTDIR = ../therion.bin
 ##THXTHMKCMD = $(OUTDIR)/therion
 
 
@@ -67,7 +67,7 @@ THXTHMKCMD = ./therion
 ##CCPFLAGS = -DTHWIN32
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
-##export OUTDIR ?= $(abspath $(PWD)/../therion.bin)
+##export OUTDIR ?= ../therion.bin
 ##THXTHMKCMD = $(OUTDIR)/therion
 
 # PLATFORM WIN32CROSS
@@ -83,7 +83,7 @@ THXTHMKCMD = ./therion
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
 ##THXTHMKCMD = therion
-##export OUTDIR ?= $(abspath $(PWD)/../therion.bin)
+##export OUTDIR ?= ../therion.bin
 
 # PLATFORM MACOSX
 ##CXX = c++

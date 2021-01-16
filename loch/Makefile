@@ -1,7 +1,7 @@
 OUTDIR ?= .
 THPLATFORM ?= LINUX
 ifneq ($(OUTDIR),.)
-LOUTDIR = $(OUTDIR)/loch
+LOUTDIR = ../$(OUTDIR)/loch
 else
 LOUTDIR = .
 endif
