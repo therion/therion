@@ -387,9 +387,7 @@ void thlookup::color_scrap(thscrap * s) {
       }
   }
   if (clr.is_defined()) {
-    s->R = clr.R;
-    s->G = clr.G;
-    s->B = clr.B;
+	s->clr = clr;
   }
 }
 
@@ -644,9 +642,9 @@ void thlookup::postprocess() {
           else
         	  cp = 0;
           for(nvalid = this->m_table.begin(); nvalid != this->m_table.end(); nvalid++) {
-            thset_color(0, cp, totalp, nvalid->m_color.R, nvalid->m_color.G, nvalid->m_color.B);
+            thset_color(0, cp, totalp, nvalid->m_color);
             nvalid->m_color.defined = 1;
-            alpha_correction(tmp_alpha, nvalid->m_color.R, nvalid->m_color.G, nvalid->m_color.B)
+            nvalid->m_color.alpha_correct(tmp_alpha);
             if (this->m_ascending)
             	cp -= 1.0;
             else

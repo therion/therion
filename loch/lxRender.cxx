@@ -37,6 +37,7 @@
 #include "lxTR.h"
 #include "lxGLC.h"
 #include "lxGUI.h"
+#include "lxFile.h"
 
 #define lxRENDERBORDER this->m_glc->TRCGet(TR_TILE_BORDER)
 
@@ -927,7 +928,7 @@ void lxRenderFile::RenderPDFFooter()
   png_len = 0;
   bool contpng = true;
   do {
-    fread(lenbuff, 1, 8, this->m_fileTMP);
+    lxassert(fread(lenbuff, 1, 8, this->m_fileTMP) == 8);
     png_add = (size_t) lenbuff[3] + 256 * (size_t) lenbuff[2] + 256 * 256 * (size_t) lenbuff[1] + 256 * 256 * 256 * (size_t) lenbuff[0];
     png_hdr = (size_t) lenbuff[7] + 256 * (size_t) lenbuff[6] + 256 * 256 * (size_t) lenbuff[5] + 256 * 256 * 256 * (size_t) lenbuff[4];
     if (png_hdr == 0x49444154) {
@@ -950,7 +951,7 @@ void lxRenderFile::RenderPDFFooter()
   do {
     fseek(this->m_fileTMP, src_pos, SEEK_SET);
     src_pos += 8;
-    fread(lenbuff, 1, 8, this->m_fileTMP);
+    lxassert(fread(lenbuff, 1, 8, this->m_fileTMP) == 8);
     png_add = (size_t) lenbuff[3] + 256 * (size_t) lenbuff[2] + 256 * 256 * (size_t) lenbuff[1] + 256 * 256 * 256 * (size_t) lenbuff[0];
     png_hdr = (size_t) lenbuff[7] + 256 * (size_t) lenbuff[6] + 256 * 256 * (size_t) lenbuff[5] + 256 * 256 * 256 * (size_t) lenbuff[4];
     if (png_hdr == 0x49444154) {

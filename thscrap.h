@@ -93,10 +93,11 @@ class thscrap : public thdataobject {
   class th2ddataobject * fs2doptr,  ///< First scrap 2D object.
     * ls2doptr;  ///< Last scrap 2D object.
     
-  double lxmin, lxmax, lymin, lymax, ///< Coordinate limits.
-    R, G, B; ///< Scrap color.
+  double lxmin, lxmax, lymin, lymax; ///< Coordinate limits.
 
   unsigned long RGBsrc;
+
+  thlayout_color clr; ///< Scrap color;
     
   thdb2dcp * fcpp, * lcpp; ///< Scrap control points.
   unsigned int ncp; ///< Number of control points.

@@ -21,8 +21,6 @@
 #endif
 
 
-#define lxassert(expr) if (!(expr)) std::exit(1);
-
 lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(uint32_t));

@@ -349,10 +349,10 @@ void thparse_image(const char * fname, double & width, double & height, double &
 
 
 /**
- * Set color according to color map (TODO).
+ * Set color according to color map.
  */
  
-void thset_color(int color_map, double index, double total, double & R, double & G, double & B);
+void thset_color(int color_map, double index, double total, class thlayout_color & clr);
 
 
 /**

@@ -57,9 +57,6 @@ thscrap::thscrap()
   this->proj_prev_scrap = NULL;
   this->xscrap = NULL;
   
-  this->R = 1.0;
-  this->G = 1.0;
-  this->B = 1.0;
   this->RGBsrc = 0;
   
   this->z = thnan;

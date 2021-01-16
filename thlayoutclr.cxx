@@ -38,45 +38,46 @@ bool thlayout_color::is_defined() {
 
 
 void thlayout_color::set_color(int output_model, color & clr) {
-	if ((this->model & output_model) > 0) {
-		switch(output_model) {
-		case TT_LAYOUTCLRMODEL_GRAY:
-			clr.set(this->W);
-			break;
-		case TT_LAYOUTCLRMODEL_RGB:
-			clr.set(this->R, this->G, this->B);
-			break;
-		default:
-			clr.set(this->C, this->M, this->Y, this->K);
-		}
-	}
-	else if ((this->model & TT_LAYOUTCLRMODEL_CMYK) > 0)
+	this->fill_missing_color_models();
+	if ((output_model & TT_LAYOUTCLRMODEL_CMYK) > 0)
 		clr.set(this->C, this->M, this->Y, this->K);
-	else if ((this->model & TT_LAYOUTCLRMODEL_RGB) > 0)
-		clr.set(this->R, this->G, this->B);
-	else
+	else if ((output_model & TT_LAYOUTCLRMODEL_GRAY) > 0)
 		clr.set(this->W);
+	else
+		clr.set(this->R, this->G, this->B);
 }
 
-void thlayout_color::print_to_file(int output_model, FILE * f) {
-	if ((this->model & output_model) > 0) {
-		switch(output_model) {
-		case TT_LAYOUTCLRMODEL_GRAY:
-			fprintf(f, "(%.5f)", this->W);
-			break;
-		case TT_LAYOUTCLRMODEL_RGB:
-			fprintf(f, "(%.5f,%.5f,%.5f)", this->R, this->G, this->B);
-			break;
-		default:
-			fprintf(f, "(%.5f,%.5f,%.5f,%.5f)", this->C, this->M, this->Y, this->K);
-		}
+
+void thlayout_color::fill_missing_color_models() {
+	if ((this->model & TT_LAYOUTCLRMODEL_RGB) > 0) {
+		if ((this->model & TT_LAYOUTCLRMODEL_CMYK) == 0)
+			this->RGBtoCMYK();
+		if ((this->model & TT_LAYOUTCLRMODEL_GRAY) == 0)
+			this->RGBtoGRAYSCALE();
 	}
-	else if ((this->model & TT_LAYOUTCLRMODEL_CMYK) > 0)
+	if ((this->model & TT_LAYOUTCLRMODEL_CMYK) > 0) {
+		if ((this->model & TT_LAYOUTCLRMODEL_RGB) == 0)
+			this->CMYKtoRGB();
+		if ((this->model & TT_LAYOUTCLRMODEL_GRAY) == 0)
+			this->RGBtoGRAYSCALE();
+	}
+	if ((this->model & TT_LAYOUTCLRMODEL_GRAY) > 0) {
+		if ((this->model & TT_LAYOUTCLRMODEL_RGB) == 0)
+			this->GRAYSCALEtoRGB();
+		if ((this->model & TT_LAYOUTCLRMODEL_CMYK) == 0)
+			this->RGBtoCMYK();
+	}
+}
+
+
+void thlayout_color::print_to_file(int output_model, FILE * f) {
+	this->fill_missing_color_models();
+	if ((output_model & TT_LAYOUTCLRMODEL_CMYK) > 0)
 		fprintf(f, "(%.5f,%.5f,%.5f,%.5f)", this->C, this->M, this->Y, this->K);
-	else if ((this->model & TT_LAYOUTCLRMODEL_RGB) > 0)
-		fprintf(f, "(%.5f,%.5f,%.5f)", this->R, this->G, this->B);
-	else
+	else if ((output_model & TT_LAYOUTCLRMODEL_GRAY) > 0)
 		fprintf(f, "(%.5f)", this->W);
+	else
+		fprintf(f, "(%.5f,%.5f,%.5f)", this->R, this->G, this->B);
 }
 
 
@@ -87,6 +88,35 @@ void thlayout_color::RGBtoGRAYSCALE() {
 	} else {
 		this->W = 1.055 * pow(this->W, 1/2.4) - 0.055;
 	}
+}
+
+void thlayout_color::GRAYSCALEtoRGB() {
+	this->R = this->G = this->B = this->W;
+}
+
+
+void thlayout_color::RGBtoCMYK() {
+    this->C = 1.0 - this->R;
+    this->M = 1.0 - this->G;
+    this->Y = 1.0 - this->B;
+    this->K = this->C;
+    if (this->K > this->M) this->K = this->M;
+    if (this->K > this->Y) this->K = this->Y;
+    if (this->K == 1.0) {
+    	this->C = 0.0;
+    	this->M = 0.0;
+    	this->Y = 0.0;
+    } else {
+    	this->C = (1.0 - this->R - this->K) / (1.0 - this->K);
+    	this->M = (1.0 - this->G - this->K) / (1.0 - this->K);
+    	this->Y = (1.0 - this->B - this->K) / (1.0 - this->K);
+    }
+}
+
+void thlayout_color::CMYKtoRGB() {
+  	this->R = (1.0 - this->C) * (1.0 - this->K);
+  	this->G = (1.0 - this->M) * (1.0 - this->K);
+  	this->B = (1.0 - this->Y) * (1.0 - this->K);
 }
 
 void thlayout_color::parse(char * str, bool aalpha) {
@@ -151,21 +181,7 @@ void thlayout_color::parse(char * str, bool aalpha) {
         this->model = TT_LAYOUTCLRMODEL_GRAY;
       }
       if (nargs == 3) {
-        this->C = 1.0 - this->R;
-        this->M = 1.0 - this->G;
-        this->Y = 1.0 - this->B;
-        this->K = this->C;
-        if (this->K > this->M) this->K = this->M;
-        if (this->K > this->Y) this->K = this->Y;
-        if (this->K == 1.0) {
-        	this->C = 0.0;
-        	this->M = 0.0;
-        	this->Y = 0.0;
-        } else {
-        	this->C = (1.0 - this->R - this->K) / (1.0 - this->K);
-        	this->M = (1.0 - this->G - this->K) / (1.0 - this->K);
-        	this->Y = (1.0 - this->B - this->K) / (1.0 - this->K);
-        }
+        this->RGBtoCMYK();
         this->RGBtoGRAYSCALE();
         this->model = TT_LAYOUTCLRMODEL_RGB;
       }
@@ -174,9 +190,7 @@ void thlayout_color::parse(char * str, bool aalpha) {
       	this->M = this->G;
       	this->Y = this->B;
       	this->K = this->W;
-      	this->R = (1.0 - this->C) * (1.0 - this->K);
-      	this->G = (1.0 - this->M) * (1.0 - this->K);
-      	this->B = (1.0 - this->Y) * (1.0 - this->K);
+      	this->CMYKtoRGB();
       	this->RGBtoGRAYSCALE();
         this->model = TT_LAYOUTCLRMODEL_CMYK;
       }
@@ -196,3 +210,15 @@ void thlayout_color::parse(char * str, bool aalpha) {
       invalid_color_spec;
   }
 }
+
+void thlayout_color::alpha_correct(double alpha) {
+	this->R = alpha * this->R + (1 - alpha) * 1.0;
+	this->G = alpha * this->G + (1 - alpha) * 1.0;
+	this->B = alpha * this->B + (1 - alpha) * 1.0;
+	this->W = alpha * this->W + (1 - alpha) * 1.0;
+	this->C = alpha * this->C + (1 - alpha) * 0.0;
+	this->M = alpha * this->M + (1 - alpha) * 0.0;
+	this->Y = alpha * this->Y + (1 - alpha) * 0.0;
+	this->K = alpha * this->K + (1 - alpha) * 0.0;
+}
+

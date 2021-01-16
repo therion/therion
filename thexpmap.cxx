@@ -1285,7 +1285,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 		this->layout->base_scale = this->layout->scale;
   fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n"); // TODO: colormodel support
   fprintf(mpf,"background:=");
-  this->layout->color_map_fg.print_to_file(this->layout->color_model, mpf);
+  this->layout->color_map_fg.print_to_file(TT_LAYOUTCLRMODEL_RGB, mpf);
   fprintf(mpf,";\n");
   fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
 //  fprintf(mpf,"def user_initialize = enddef;\n");
@@ -1294,6 +1294,10 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(mpf,"input therion;\n");
   else
     fprintf(mpf,"%s\n",thmpost_library);
+
+  fprintf(mpf,"background:=");
+  this->layout->color_map_fg.print_to_file(this->layout->color_model, mpf);
+  fprintf(mpf,";\n");
 
   // insert font setup
   if (this->layout->def_font_setup > 0) {
@@ -1377,8 +1381,6 @@ else
   
   //this->export_pdf_set_colors(maps, prj);
   this->export_pdf_set_colors_new(maps, prj);
-  double ascR = 1.0, ascG = 1.0, ascB = 1.0,
-    pscR = -1.0, pscG = -1.0, pscB = -1.0;
   lxVecLimits lim;
 
   SURFPICTLIST.clear();
@@ -1446,18 +1448,9 @@ else
                   shy *= out.ms;
 
                 } else {
-  
-                  ascR = cs->R;
-                  ascG = cs->G;
-                  ascB = cs->B;
-                  if ((ascR != pscR) || (ascG != pscG) || (ascB != pscB)) {
-                    fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n", ascR, ascG, ascB);
-//                    fprintf(mpf,"def_transparent_rgb(tr_bg, %.5f, %.5f, %.5f);\n", ascR, ascG, ascB);
-                    pscR = ascR;
-                    pscG = ascG;
-                    pscB = ascB;
-                  }
-                  
+                  fprintf(mpf,"background:=");
+                  cs->clr.print_to_file(this->layout->color_model, mpf);
+                  fprintf(mpf,";\n");
                   if (thisnan(cs->lxmin)) {
                     out.mx = 0.0;
                     out.my = 0.0;
@@ -1600,11 +1593,7 @@ else
 
                   SCRAPITEM->sect = 0;
                   SCRAPITEM->name = thexpmap_u2string(sscrap);
-
-//                  SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
-//                  SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
-//                  SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
-                  SCRAPITEM->col_scrap.set(ascR, ascG, ascB);
+                  cs->clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
                   
                   if (export_sections) {
                     fprintf(plf,"\t\t Z => 1,\n");    
@@ -1681,10 +1670,7 @@ else
                     SCRAPITEM->sect = 0;
                     SCRAPITEM->name = thexpmap_u2string(sscrap + 1);
       
-//                    SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
-//                    SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
-//                    SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
-                    SCRAPITEM->col_scrap.set(ascR, ascG, ascB);
+                    cs->clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
       
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     sprintf(texb.get_buffer(),"data.%ld",exps.B);
@@ -3030,20 +3016,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   return result;
 }
 
-
-
-#define alpha_correction(AA,RR,GG,BB) { \
-  RR = AA * RR + (1 - AA) * 1.0; \
-  GG = AA * GG + (1 - AA) * 1.0; \
-  BB = AA * BB + (1 - AA) * 1.0; \
-}
-
-#define opacity_correction(RR,GG,BB) { \
-  if (this->layout->transparency) alpha_correction(this->layout->opacity, RR, GG, BB); \
-}
-
 #define tmp_alpha 0.75
-#define tmp_set_color(r,g,b) cR = r; cG = g; cB = b
 
 void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj)
 {
@@ -3063,7 +3036,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
   long cmn = 0, nmap = 0;
   double curz;
   bool firstmapscrap;
-  double cR, cG, cB;
+  thlayout_color clr;
   
   // najprv to nascanuje  
   cmap = maps;
@@ -3099,13 +3072,9 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
             }
           }
           if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
-            cs->R = cs->fsptr->selected_color.R;
-            cs->G = cs->fsptr->selected_color.G;
-            cs->B = cs->fsptr->selected_color.B;
+        	cs->clr = cs->fsptr->selected_color;
           } else {
-            cs->R = this->layout->color_map_fg.R;
-            cs->G = this->layout->color_map_fg.G;
-            cs->B = this->layout->color_map_fg.B;
+        	cs->clr = this->layout->color_map_fg;
           }
         }
         cmi = cmi->prev_item;  
@@ -3128,9 +3097,9 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
   if (addleg && (maxz > minz) && (this->layout->color_crit == TT_LAYOUT_CCRIT_ALTITUDE)) {
     for (xalt = 5; xalt >= 0; xalt--) {
       curz = double(xalt) / 5.0 * (maxz - minz) + minz;
-      thset_color(0, double(5 - xalt), 5.0, cR, cG, cB);
-      alpha_correction(tmp_alpha, cR, cG, cB);
-      clrec.col_legend.set(cR, cG, cB);
+      thset_color(0, double(5 - xalt), 5.0, clr);
+      clr.alpha_correct(tmp_alpha);
+      clr.set_color(this->layout->color_model, clrec.col_legend);
 //      opacity_correction(clrec.R, clrec.G, clrec.B);
       //sprintf(tmpb.get_buffer(), "%.0f", curz - this->layout->goz);
       clrec.texname = utf2tex(this->layout->units.format_length(curz - this->layout->goz));
@@ -3165,11 +3134,9 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
               // vsetkym scrapom v kazdej priradi farbu
               if (firstmapscrap) {
                 if (cmap->selection_color.defined) {
-                  cR = cmap->selection_color.R;
-                  cG = cmap->selection_color.G;
-                  cB = cmap->selection_color.B;
+                  clr = cmap->selection_color;
                 } else {
-                  thset_color(0, (double) (nmap - cmn), (double) nmap, cR, cG, cB);
+                  thset_color(0, (double) (nmap - cmn), (double) nmap, clr);
                 }
                 std::string maptitle("");
                 if (strlen(cmap->map->title) > 0) {
@@ -3177,59 +3144,47 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
                 }
                 clrec.texname = ths2tex(maptitle.length() > 0 ? cmap->map->title : cmap->map->name, this->layout->lang);
                 clrec.name = (maptitle.length() > 0 ? maptitle : std::string(cmap->map->name));
-                alpha_correction(tmp_alpha, cR, cG, cB);
-                clrec.col_legend.set(cR, cG, cB);
+                clr.alpha_correct(tmp_alpha);
+                clr.set_color(this->layout->color_model, clrec.col_legend);
 //                opacity_correction(clrec.R, clrec.G, clrec.B);
                 COLORLEGENDLIST.insert(COLORLEGENDLIST.begin(), clrec);
                 firstmapscrap = false;
                 cmn++;
               }
-              cs->R = cR;
-              cs->G = cG;
-              cs->B = cB;
+              cs->clr = clr;
 //              thprintf("%s@%s->%.2f,%.2f,%.2f\n",cs->name,cs->fsptr->full_name,cs->R,cs->G,cs->B);
             break;
             case TT_LAYOUT_CCRIT_SCRAP:
               // vsetkym scrapom v kazdej priradi farbu
 							switch (cmn % 6) {
-								case 0:  tmp_set_color(1.0, 0.5, 0.5); break;
-								case 1:  tmp_set_color(0.5, 1.0, 0.5); break;
-								case 2:  tmp_set_color(0.5, 0.5, 1.0); break;
-								case 3:  tmp_set_color(1.0, 1.0, 0.0); break;
-								case 4:  tmp_set_color(0.0, 1.0, 1.0); break;
-								default: tmp_set_color(1.0, 0.0, 1.0); break;
+								case 0:  clr = thlayout_color(1.0, 0.5, 0.5); break;
+								case 1:  clr = thlayout_color(0.5, 1.0, 0.5); break;
+								case 2:  clr = thlayout_color(0.5, 0.5, 1.0); break;
+								case 3:  clr = thlayout_color(1.0, 1.0, 0.0); break;
+								case 4:  clr = thlayout_color(0.0, 1.0, 1.0); break;
+								default: clr = thlayout_color(1.0, 0.0, 1.0); break;
 							}
-              alpha_correction(tmp_alpha, cR, cG, cB);
-              cs->R = cR;
-              cs->G = cG;
-              cs->B = cB;
+              clr.alpha_correct(tmp_alpha);
+              cs->clr = clr;
               cmn++;
             break;
             case TT_LAYOUT_CCRIT_ALTITUDE:
               // priradi farbu podla (z - min) z (max - min)
               if (!thisnan(curz)) {
-                thset_color(0, (maxz - curz), (maxz - minz), cs->R, cs->G, cs->B);
-                alpha_correction(tmp_alpha, cs->R, cs->G, cs->B);
+                thset_color(0, (maxz - curz), (maxz - minz), cs->clr);
+                cs->clr.alpha_correct(tmp_alpha);
               } else {
-                cs->R = this->layout->color_map_fg.R;
-                cs->G = this->layout->color_map_fg.G;
-                cs->B = this->layout->color_map_fg.B;
+            	cs->clr = this->layout->color_map_fg;
               }
             break;
             default:
               if (cmap->selection_color.defined) {
-            	cs->R = cmap->selection_color.R;
-            	cs->G = cmap->selection_color.G;
-            	cs->B = cmap->selection_color.B;
+            	cs->clr = cmap->selection_color;
               }
               else if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
-                cs->R = cs->fsptr->selected_color.R;
-                cs->G = cs->fsptr->selected_color.G;
-                cs->B = cs->fsptr->selected_color.B;
+            	cs->clr = cs->fsptr->selected_color;
               } else {
-                cs->R = this->layout->color_map_fg.R;
-                cs->G = this->layout->color_map_fg.G;
-                cs->B = this->layout->color_map_fg.B;
+              	cs->clr = this->layout->color_map_fg;
               }
           }
         }
@@ -3551,20 +3506,14 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
 
           // set default color
           if (cmap->selection_color.defined) {
-        	cs->R = cmap->selection_color.R;
-        	cs->G = cmap->selection_color.G;
-        	cs->B = cmap->selection_color.B;
+        	cs->clr = cmap->selection_color;
         	cs->RGBsrc = 2;
           }
           else if (((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) && (cs->RGBsrc < 2)) {
-            cs->R = cs->fsptr->selected_color.R;
-            cs->G = cs->fsptr->selected_color.G;
-            cs->B = cs->fsptr->selected_color.B;
+        	cs->clr = cs->fsptr->selected_color;
         	cs->RGBsrc = 1;
           } else if (cs->RGBsrc < 1) {
-            cs->R = this->layout->color_map_fg.R;
-            cs->G = this->layout->color_map_fg.G;
-            cs->B = this->layout->color_map_fg.B;
+            cs->clr = this->layout->color_map_fg;
           }
         }
         cmi = cmi->prev_item;
