@@ -381,7 +381,7 @@
 \def\modelcmyk{cmyk}
 \def\modelrgb{rgb}
 \def\modelgray{grayscale}
-\def\black{\ifx\OutputColormodel\modelcmyk\cmykcolor[0 0 0 1]\else
+\def\black{\ifx\OutputColormodel\modelcmyk\cmykcolor[0 0 0 100]\else
            \ifx\OutputColormodel\modelrgb\rgbcolor[0 0 0]\else
            \graycolor[0]\fi\fi}
 

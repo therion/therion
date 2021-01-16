@@ -1283,7 +1283,6 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / this->layout->base_scale);
   else
 		this->layout->base_scale = this->layout->scale;
-  fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n"); // TODO: colormodel support
   fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
 //  fprintf(mpf,"def user_initialize = enddef;\n");
 //this->layout->export_mpost(mpf);
