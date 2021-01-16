@@ -63,3 +63,7 @@ xtherion/msgxth.tcl
 /therion
 /utest
 CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+extern/fmt/Makefile
+extern/fmt/cmake_install.cmake

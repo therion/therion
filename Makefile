@@ -136,14 +136,14 @@ CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variabl
 
 
 # compiler settings
-CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -std=c++14
+CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -Iextern/fmt/include -std=c++14
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
 TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
 
 
 # linker settings
-LIBS = $(PROJ_LIBS)
+LIBS = $(PROJ_LIBS) $(OUTDIR)/extern/fmt/libfmt.a
 LDFLAGS = $(LDBFLAGS)
 
 
@@ -166,6 +166,7 @@ outdirs:
 	mkdir -p $(OUTDIR)/extern/poly2tri/common/
 	mkdir -p $(OUTDIR)/extern/quickhull
 	mkdir -p $(OUTDIR)/extern/shapelib
+	mkdir -p $(OUTDIR)/extern/fmt
 	mkdir -p $(OUTDIR)/loch
 	mkdir -p $(OUTDIR)/xtherion
 	mkdir -p $(OUTDIR)/thbook
@@ -178,7 +179,7 @@ endif
 
 thversion.h: version
 
-$(OUTDIR)/therion: $(OBJECTS)
+$(OUTDIR)/therion: $(OBJECTS) $(OUTDIR)/extern/fmt/libfmt.a
 	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
 
 $(OUTDIR)/utest$(EXT): $(OBJECTS) $(TESTOBJECTS_P) 
@@ -264,9 +265,11 @@ cleanrest:
 	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
 	perl makefile.pl rm -q cave.3d cave.lox cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
 	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
+	perl makefile.pl rm -q extern/fmt/CMakeCache.txt extern/fmt/Makefile extern/fmt/libfmt.a extern/fmt/cmake_install.cmake
 	perl makefile.pl rmdir -q doc thTMPDIR samples.doc symbols cave.shp tests/.doc
 	perl makefile.pl rmdir -q doc symbols cave.shp tests/.doc
 	perl makefile.pl rmdir -q thTMPDIR samples/*/thTMPDIR samples/*/*/thTMPDIR
+	perl makefile.pl rmdir -q extern/fmt/CMakeFiles
 
 thmpost.h: mpost/*.mp
 	$(MAKE) -C ./mpost
@@ -351,6 +354,10 @@ extern/poly2tri/sweep/advancing_front.o: extern/poly2tri/sweep/advancing_front.c
 extern/poly2tri/sweep/sweep.o: extern/poly2tri/sweep/sweep.cc
 extern/poly2tri/sweep/cdt.o: extern/poly2tri/sweep/cdt.cc
 extern/poly2tri/sweep/sweep_context.o: extern/poly2tri/sweep/sweep_context.cc
+
+$(OUTDIR)/extern/fmt/libfmt.a: extern/fmt/include/fmt/core.h
+	cmake -S extern/fmt -B $(OUTDIR)/extern/fmt -Wno-dev
+	cd $(OUTDIR)/extern/fmt; $(MAKE)
 
 # DEPENDENCIES
 $(OUTDIR)/th2ddataobject.o: th2ddataobject.cxx th2ddataobject.h thdataobject.h \
