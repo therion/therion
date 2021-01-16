@@ -40,6 +40,7 @@
 #include <cstdio>
 #include <cfloat>
 #include <cmath>
+#include <fmt/core.h>
 
 #include "thpdfdbg.h"
 #include "thconfig.h"
@@ -104,7 +105,7 @@ double HS,VS;
 //////////
 
 string black2pdf(double shade, fillstroke fs) {    // shade: 0 = white, 1 = black
-  if (shade < 0 || shade > 1) therror(("shade out of range"));
+  if (shade < 0 || shade > 1) therror((fmt::format("shade {} out of range <0,1>",shade).c_str()));
   color c;
   if (LAYOUT.output_colormodel == colormodel::grey) c.set(1-shade);
   else if (LAYOUT.output_colormodel == colormodel::rgb) c.set(1-shade, 1-shade, 1-shade);
