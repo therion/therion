@@ -1,3 +1,9 @@
+# link libraries statically when crosscompiling
+if (CMAKE_CROSSCOMPILING)
+    set(BUILD_SHARED_LIBS OFF)
+    set(CMAKE_EXE_LINKER_FLAGS "-static")
+endif()
+
 # therion dependencies
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PROJ REQUIRED IMPORTED_TARGET proj)

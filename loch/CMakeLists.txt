@@ -8,17 +8,13 @@ lxData.cxx      lxGLC.cxx   lxImgIO.cxx  lxOptDlg.cxx  lxRender.cxx  lxSScene.cx
 )
 
 set(LOCH_DEFINITIONS _GNU_SOURCE LOCH "LX${THPLATFORM}")
-set(IS_WINDOWS FALSE)
-if (${THPLATFORM} STREQUAL WIN32)
-    set(IS_WINDOWS TRUE)
-endif()
 
 # library common with therion
 add_library(loch-common STATIC lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c)
 target_compile_definitions(loch-common PRIVATE ${LOCH_DEFINITIONS})
 
 # loch resource file
-if (${IS_WINDOWS})
+if (WIN32)
     add_custom_command(COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc "-I$<JOIN:${wxWidgets_INCLUDE_DIRS},;-I>" -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/loch.res -O coff
                         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/loch.res
                         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/loch.rc ${CMAKE_CURRENT_SOURCE_DIR}/loch.ico
@@ -28,7 +24,7 @@ if (${IS_WINDOWS})
 endif()
 
 # loch executable
-add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES} $<$<BOOL:${IS_WINDOWS}>:lxR2D.c> $<$<STREQUAL:${THPLATFORM},LINUX>:lxR2P.c>)
+add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES} $<$<BOOL:${WIN32}>:lxR2D.c> $<$<STREQUAL:${THPLATFORM},LINUX>:lxR2P.c>)
 # we need to filter out include directories from wxWidgets cxx flags list, because we have to set them only as system headers to ignore warnings
 set(CXX_FLAGS_WITHOUT_INCLUDE_DIRS ${wxWidgets_CXX_FLAGS_LIST})
 list(FILTER CXX_FLAGS_WITHOUT_INCLUDE_DIRS EXCLUDE REGEX "-I/")
@@ -44,9 +40,9 @@ target_link_libraries(loch PRIVATE
     OpenGL::GL
     OpenGL::GLU
     ${X11_LIBRARIES}
-    $<$<BOOL:${IS_WINDOWS}>:${CMAKE_CURRENT_BINARY_DIR}/loch.res>
+    $<$<BOOL:${WIN32}>:${CMAKE_CURRENT_BINARY_DIR}/loch.res>
 )
-if (${IS_WINDOWS})
+if (WIN32)
     add_dependencies(loch generate_resource)
 endif()
 
