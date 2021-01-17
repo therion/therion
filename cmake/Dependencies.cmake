@@ -35,6 +35,7 @@ if (USE_BUNDLED_SHAPELIB)
     add_subdirectory(extern/shapelib)
 else()
     pkg_check_modules(SHAPELIB REQUIRED IMPORTED_TARGET shapelib)
+    add_library(shp ALIAS PkgConfig::SHAPELIB)
 endif()
 
 # loch dependencies
