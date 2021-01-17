@@ -96,7 +96,7 @@ add_custom_target(library
 # therion lib
 add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
 target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern")
-target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt PRIVATE loch-common)
+target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt shp PRIVATE loch-common)
 target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
 add_dependencies(therion-common 
     generate_thsymbolsetlist
@@ -106,12 +106,6 @@ add_dependencies(therion-common
     generate_thchencdata
     generate_thcsdata
 )
-if (USE_BUNDLED_SHAPELIB)
-    target_include_directories(therion-common PUBLIC extern/shapelib)
-    target_link_libraries(therion-common PUBLIC shp)
-else()
-    target_link_libraries(therion-common PUBLIC PkgConfig::SHAPELIB)
-endif()
 
 # therion executable
 add_executable(therion therion-main.cxx)
