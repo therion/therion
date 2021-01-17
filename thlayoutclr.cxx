@@ -222,3 +222,17 @@ void thlayout_color::alpha_correct(double alpha) {
 	this->K = alpha * this->K + (1 - alpha) * 0.0;
 }
 
+/**
+ * Mix color with ratio * other_clr.
+ */
+
+void thlayout_color::mix_with_color(double ratio, thlayout_color other_clr) {
+	this->R = (1 - ratio) * this->R + ratio * other_clr.R;
+	this->G = (1 - ratio) * this->G + ratio * other_clr.G;
+	this->B = (1 - ratio) * this->B + ratio * other_clr.B;
+	this->W = (1 - ratio) * this->W + ratio * other_clr.W;
+	this->C = (1 - ratio) * this->C + ratio * other_clr.C;
+	this->M = (1 - ratio) * this->M + ratio * other_clr.M;
+	this->Y = (1 - ratio) * this->Y + ratio * other_clr.Y;
+	this->K = (1 - ratio) * this->K + ratio * other_clr.K;
+}

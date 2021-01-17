@@ -1089,37 +1089,27 @@ void thHSV2RGB(double H, double S, double V, double & R, double & G, double & B)
 }
 
 
-//void thset_color(int color_map, double index, double total, double & R, double & G, double & B) {
-//  switch (color_map) {
-//    default:
-//      if (total > 0)
-//        thHSV2RGB(index / total * 0.833333, 1.0, 1.0, R, G, B);
-//      else {
-//        R = 1.0;
-//        G = 1.0;
-//        B = 1.0;
-//      }
-//  }
-//  R = double(int(100 * R)) / 100.0;
-//  G = double(int(100 * G)) / 100.0;
-//  B = double(int(100 * B)) / 100.0;
-//}
-
 void thset_color(int color_map, double index, double total, thlayout_color & clr) {
+  if (index < 0.0) index = 0.0;
+  if (index > total) index = total;
   switch (color_map) {
     default:
-      if (total > 0)
+      if (total > 0) {
         thHSV2RGB(index / total * 0.833333, 1.0, 1.0, clr.R, clr.G, clr.B);
-      else {
+        clr.W = 0.95 - 0.9 * (index / total);
+      } else {
         clr.R = 1.0;
         clr.G = 1.0;
         clr.B = 1.0;
+        clr.W = 1.0;
       }
   }
   clr.R = double(int(100 * clr.R)) / 100.0;
   clr.G = double(int(100 * clr.G)) / 100.0;
   clr.B = double(int(100 * clr.B)) / 100.0;
-  clr.model = TT_LAYOUTCLRMODEL_RGB;
+  clr.W = double(int(100 * clr.W)) / 100.0;
+  clr.model = TT_LAYOUTCLRMODEL_RGB | TT_LAYOUTCLRMODEL_GRAY;
+  clr.fill_missing_color_models();
 }
 
 

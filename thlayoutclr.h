@@ -70,6 +70,7 @@ struct thlayout_color {
   void RGBtoCMYK();
   void CMYKtoRGB();
   void alpha_correct(double alpha);
+  void mix_with_color(double ratio, thlayout_color other_clr);
   void fill_missing_color_models();
 };
 
