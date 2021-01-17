@@ -96,7 +96,7 @@ add_custom_target(library
 # therion lib
 add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
 target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern")
-target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt shp PRIVATE loch-common)
+target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt shp poly2tri PRIVATE loch-common)
 target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
 add_dependencies(therion-common 
     generate_thsymbolsetlist
@@ -122,6 +122,7 @@ if (NOT WIN32)
 endif()
 
 # add subdirectories to the build
+add_subdirectory(extern/poly2tri)
 add_subdirectory(mpost)
 add_subdirectory(thchencdata)
 add_subdirectory(tex)

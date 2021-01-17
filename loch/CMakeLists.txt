@@ -7,7 +7,7 @@ lxAboutDlg.cxx  lxGUI.cxx    lxLRUD.cxx  lxOGLFT.cxx   lxPres.cxx    lxSetup.cxx
 lxData.cxx      lxGLC.cxx   lxImgIO.cxx  lxOptDlg.cxx  lxRender.cxx  lxSScene.cxx  lxSView.cxx  lxTR.c
 )
 
-set(LOCH_DEFINITIONS _GNU_SOURCE LOCH "LX${THPLATFORM}")
+set(LOCH_DEFINITIONS _GNU_SOURCE LOCH "LX${THPLATFORM}" GL_SILENCE_DEPRECATION TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
 
 # library common with therion
 add_library(loch-common STATIC lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c)
