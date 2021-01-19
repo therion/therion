@@ -1,5 +1,5 @@
 ---
-Checks: '-*,clang-analyzer-cplusplus.InnerPointer,modernize-use-override,clang-analyzer-cplusplus*'
+Checks: '-*,modernize-use-override,clang-analyzer-cplusplus*,clang-analyzer-unix*,misc-definitions-in-headers'
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false

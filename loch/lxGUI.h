@@ -272,7 +272,7 @@ class lxApp: public wxGLApp
     bool OnInit() override;
     
 #ifdef LXMACOSX
-    virtual void MacOpenFile(const wxString &fileName);
+    void MacOpenFile(const wxString &fileName) override;
 #endif    
     
 }; // lxApp

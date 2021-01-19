@@ -117,7 +117,6 @@ set_source_files_properties(
     ${CMAKE_SOURCE_DIR}/thlibrarydata.cxx
     PROPERTIES HEADER_FILE_ONLY TRUE)
 
-file(GLOB_RECURSE POLY2TRI_SRCS ${CMAKE_SOURCE_DIR}/extern/poly2tri/*.cc)
 set(THERION_SOURCES
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
@@ -226,5 +225,4 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thwarppt.cxx
     ${CMAKE_SOURCE_DIR}/extern/quickhull/QuickHull.cpp
     ${CMAKE_SOURCE_DIR}/extern/img.c
-    ${POLY2TRI_SRCS}
 )
