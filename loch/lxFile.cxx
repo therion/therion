@@ -16,8 +16,8 @@
 #include "lxMath.h"
 #include "img.h"
 
-#if defined LXWIN32 || defined THWIN32
-#define strcasecmp stricmp
+#ifdef THMSVC
+#define strcasecmp _stricmp
 #endif
 
 
