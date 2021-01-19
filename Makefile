@@ -19,7 +19,7 @@ CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern
   extern/lxMath.o extern/lxFile.o thdb3d.o thsurface.o thimport.o thsvg.o thepsparse.o \
   thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
   extern/poly2tri/common/shapes.o extern/poly2tri/sweep/advancing_front.o extern/poly2tri/sweep/sweep.o extern/poly2tri/sweep/cdt.o extern/poly2tri/sweep/sweep_context.o \
-  therion.o extern/quickhull/QuickHull.o
+  extern/fmt/src/format.o extern/fmt/src/os.o extern/quickhull/QuickHull.o therion.o
 TESTOBJECTS = utest-main.o utest-proj.o
 
 EXT =
@@ -144,7 +144,7 @@ TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
 
 
 # linker settings
-LIBS = $(PROJ_LIBS) $(OUTDIR)/extern/fmt/libfmt.a
+LIBS = $(PROJ_LIBS)
 LDFLAGS = $(LDBFLAGS)
 
 
@@ -167,7 +167,7 @@ outdirs:
 	mkdir -p $(OUTDIR)/extern/poly2tri/common/
 	mkdir -p $(OUTDIR)/extern/quickhull
 	mkdir -p $(OUTDIR)/extern/shapelib
-	mkdir -p $(OUTDIR)/extern/fmt
+	mkdir -p $(OUTDIR)/extern/fmt/src
 	mkdir -p $(OUTDIR)/loch
 	mkdir -p $(OUTDIR)/xtherion
 	mkdir -p $(OUTDIR)/thbook
@@ -180,7 +180,7 @@ endif
 
 thversion.h: version
 
-$(OUTDIR)/therion: $(OBJECTS) $(OUTDIR)/extern/fmt/libfmt.a
+$(OUTDIR)/therion: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
 
 $(OUTDIR)/utest$(EXT): $(OBJECTS) $(TESTOBJECTS_P) 
@@ -266,7 +266,7 @@ cleanrest:
 	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
 	perl makefile.pl rm -q cave.3d cave.lox cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
 	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
-	perl makefile.pl rm -q extern/fmt/CMakeCache.txt extern/fmt/Makefile extern/fmt/libfmt.a extern/fmt/cmake_install.cmake
+	perl makefile.pl rm -q extern/fmt/CMakeCache.txt extern/fmt/Makefile extern/fmt/libfmt.a extern/fmt/cmake_install.cmake extern/fmt/src/*.o
 	perl makefile.pl rmdir -q doc thTMPDIR samples.doc symbols cave.shp tests/.doc
 	perl makefile.pl rmdir -q doc symbols cave.shp tests/.doc
 	perl makefile.pl rmdir -q thTMPDIR samples/*/thTMPDIR samples/*/*/thTMPDIR
@@ -355,10 +355,9 @@ extern/poly2tri/sweep/advancing_front.o: extern/poly2tri/sweep/advancing_front.c
 extern/poly2tri/sweep/sweep.o: extern/poly2tri/sweep/sweep.cc
 extern/poly2tri/sweep/cdt.o: extern/poly2tri/sweep/cdt.cc
 extern/poly2tri/sweep/sweep_context.o: extern/poly2tri/sweep/sweep_context.cc
+extern/fmt/src/format.o: extern/fmt/include/fmt/format.cc extern/fmt/include/fmt/format-inl.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
+extern/fmt/src/os.o: extern/fmt/include/fmt/os.cc extern/fmt/include/fmt/include/fmt/os.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
 
-$(OUTDIR)/extern/fmt/libfmt.a: extern/fmt/include/fmt/core.h
-	$(CROSS)cmake -S extern/fmt -B $(OUTDIR)/extern/fmt -Wno-dev $(CMAKE_GEN)
-	cd $(OUTDIR)/extern/fmt; $(MAKE)
 
 # DEPENDENCIES
 $(OUTDIR)/th2ddataobject.o: th2ddataobject.cxx th2ddataobject.h thdataobject.h \

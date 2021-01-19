@@ -1,4 +1,3 @@
-set(CMAKE_CXX_STANDARD 14)
 set(FMT_HEADERS 
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/color.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/compile.h
