@@ -1788,7 +1788,10 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
     for (size_t ii = 0; ii < nstat; ii++) {
       if (stnum_orig[ii] > 0) {
         pst = &(dbp->db1d.station_vec[ii]);
-        d3d = pst->get_3d_outline();
+        if (pst->survey->is_selected())
+        	d3d = pst->get_3d_outline();
+        else
+        	d3d = NULL;
         if ((d3d != NULL) && (d3d->nfaces > 0)) {
           expf_scrap.m_id = survnum;
           expf_scrap.m_surveyId = pst->survey->num1;
