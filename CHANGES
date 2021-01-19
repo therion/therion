@@ -1,5 +1,9 @@
 Therion 5.5.7 (in progress):
 
+therion:
+  * bugs fixed:
+    - survey selection ignored when exporting 3d model from splay shots
+    - svg/xhtml map export without filename creates cave.pdf file
 
 --------------------------------------------------------------------------------
 
