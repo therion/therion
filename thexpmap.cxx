@@ -1129,7 +1129,18 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   list<scraprecord>::iterator SCRAPITEM;
   scraprecord dummsr;
   
-  const char * fnm = this->get_output("cave.pdf");  
+  const char * fnm;
+  switch (this->format) {
+    case TT_EXPMAP_FMT_SVG:
+    	fnm = this->get_output("cave.svg");
+    	break;
+    case TT_EXPMAP_FMT_XHTML:
+    	fnm = this->get_output("cave.xhtml");
+    	break;
+    default:
+    	fnm = this->get_output("cave.pdf");
+    	break;
+  }
 
   layerrecord L;
   map<int, layerrecord>::iterator LAYER_ITER;

@@ -13,6 +13,9 @@ therion:
    - fixed numerical instability in l_overhang_SKBB
    - other minor fixes
  * updated shapelib
+ * bugs fixed:
+    - survey selection ignored when exporting 3d model from splay shots
+    - svg/xhtml map export without filename creates cave.pdf file
 
 infrastructure:
  * support for CMake builds (thanks to Matěj Plch)
