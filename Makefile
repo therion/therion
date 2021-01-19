@@ -355,8 +355,8 @@ extern/poly2tri/sweep/advancing_front.o: extern/poly2tri/sweep/advancing_front.c
 extern/poly2tri/sweep/sweep.o: extern/poly2tri/sweep/sweep.cc
 extern/poly2tri/sweep/cdt.o: extern/poly2tri/sweep/cdt.cc
 extern/poly2tri/sweep/sweep_context.o: extern/poly2tri/sweep/sweep_context.cc
-extern/fmt/src/format.o: extern/fmt/include/fmt/format.cc extern/fmt/include/fmt/format-inl.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
-extern/fmt/src/os.o: extern/fmt/include/fmt/os.cc extern/fmt/include/fmt/include/fmt/os.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
+extern/fmt/src/format.o: extern/fmt/src/format.cc extern/fmt/include/fmt/format-inl.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
+extern/fmt/src/os.o: extern/fmt/src/os.cc extern/fmt/include/fmt/os.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
 
 
 # DEPENDENCIES
