@@ -117,21 +117,21 @@ print O <<ENDO;
 enum {
 $TK};
 
-typedef const char * thsymbolset__char_ptr;
+typedef const char * thsymbolset_char_ptr;
 
-static const thsymbolset__char_ptr thsymbolset__mp [] = {
+static const thsymbolset_char_ptr thsymbolset_mp [] = {
 $MP};
 
-static const bool thsymbolset__assign [] = {
+static const bool thsymbolset_assign [] = {
 $EX};
 
-static const bool thsymbolset__hidden [] = {
+static const bool thsymbolset_hidden [] = {
 $HN};
 
-static const thsymbolset__char_ptr thsymbolset__src [] = {
+static const thsymbolset_char_ptr thsymbolset_src [] = {
 $TS};
 
-static const char thsymbolset__fontchar [] = {
+static const char thsymbolset_fontchar [] = {
 $FC};
 
 #endif

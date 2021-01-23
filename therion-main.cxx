@@ -38,7 +38,7 @@
 #include "thlogfile.h"
 #include "thproj.h"
 
-extern const thstok thtt__texts [];
+extern const thstok thtt_texts [];
 
 const char * thhelp_text =
       "\ntherion [-q] [-L] [-l log-file]\n"

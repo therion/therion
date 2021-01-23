@@ -189,7 +189,7 @@ bool thdata::get_cmd_ends_state() {
 }
 
 
-static const thstok thdata__end_cmds[] = {
+static const thstok thdata_end_cmds[] = {
   {"endcenterline", TT_DATA_CMD},
   {"endcentreline", TT_DATA_CMD},
 	{NULL, TT_UNKNOWN_CMD},
@@ -197,7 +197,7 @@ static const thstok thdata__end_cmds[] = {
 
 
 bool thdata::get_cmd_ends_match(char * cmd) {
-  return (thmatch_token(cmd,thdata__end_cmds) == TT_DATA_CMD);
+  return (thmatch_token(cmd,thdata_end_cmds) == TT_DATA_CMD);
 }
 
 

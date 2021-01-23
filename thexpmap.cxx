@@ -2801,7 +2801,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
           out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
           dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);\n",
-            (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
+            (const char *) utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
             thxmmxst(out, slp->stx, slp->sty));
         }
       }
@@ -2880,7 +2880,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 if (out->layout->is_debug_stationnames() && (tmps != NULL)) {
                       out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
                       dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);\n",
-                      (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
+                      (const char *) utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
                       thxmmxst(out, ptp->point->xt, ptp->point->yt));
                 }
               }
@@ -3003,7 +3003,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     thdb2dpt tmppt;
     tmppt.xt = (scrap->lxmin + scrap->lxmax) / 2.0;
     tmppt.yt = (scrap->lymin + scrap->lymax) / 2.0;
-    thdb.buff_tmp = utf2tex(thobjectname__print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
+    thdb.buff_tmp = utf2tex(thobjectname_print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
     fprintf(out->file,"p_label(btex \\thlargesize %s etex,",thdb.buff_tmp.get_buffer());
     tmppt.export_mp(out);
     fprintf(out->file,",0.0,p_label_mode_debugscrap);\n");

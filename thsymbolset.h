@@ -123,13 +123,13 @@ struct thsymbolset {
 /**
  * Vrati ID z popisu classu a symbolu.
  */
-int thsymbolset__get_id(const char * symclass, const char * symbol);
+int thsymbolset_get_id(const char * symclass, const char * symbol);
 
 
 /**
  * Vrati ID itemu z groupy.
  */
-int thsymbolset__get_group(int group_id, int cid);
+int thsymbolset_get_group(int group_id, int cid);
 
 
 /**

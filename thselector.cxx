@@ -224,7 +224,7 @@ void thselector_select_item::parse (thdataobject * op)
 
 typedef std::vector <thselector_select_item> thselector_siv;
 
-void thselector__export_survey_tree_node (FILE * cf, unsigned long level, thdataobject * optr) {
+void thselector_export_survey_tree_node (FILE * cf, unsigned long level, thdataobject * optr) {
   thsurvey * ss;
   while (optr != NULL) {
     if (optr->get_class_id() == TT_SURVEY_CMD) {
@@ -277,13 +277,13 @@ void thselector__export_survey_tree_node (FILE * cf, unsigned long level, thdata
         fprintf(cf,"\"\n");
       }
       if (ss->foptr != NULL)
-        thselector__export_survey_tree_node(cf,level+1,ss->foptr);
+        thselector_export_survey_tree_node(cf,level+1,ss->foptr);
     }
     optr = optr->nsptr;
   }
 }
 
-void thselector__prepare_map_tree_export (thdatabase * db) {
+void thselector_prepare_map_tree_export (thdatabase * db) {
 
   // prejde vsetky mapy a surveye a nastavi tmp_bool na true a tmp_ulong na 0
   thdb_object_list_type::iterator obi = db->object_list.begin();
@@ -311,7 +311,7 @@ void thselector__prepare_map_tree_export (thdatabase * db) {
   
 }
 
-void thselector__export_map_tree_node (FILE * cf, unsigned long level, unsigned long pass, thdataobject * optr, thmap * fmap) {
+void thselector_export_map_tree_node (FILE * cf, unsigned long level, unsigned long pass, thdataobject * optr, thmap * fmap) {
   if (optr->tmp_ulong == pass)
     return;
   if (optr->fsptr == NULL)
@@ -359,7 +359,7 @@ void thselector__export_map_tree_node (FILE * cf, unsigned long level, unsigned 
     mi = mptr->first_item;
     while (mi != NULL) {
       if (mi->type == TT_MAPITEM_NORMAL) {
-        thselector__export_map_tree_node(cf, level+1, pass, mi->object, mptr);
+        thselector_export_map_tree_node(cf, level+1, pass, mi->object, mptr);
       }
       mi = mi->next_item;
     }
@@ -372,7 +372,7 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
   // exportuje strom surveyov
   fprintf(cf,"set xth(ctrl,cp,datlist) {}\n");
   if (db->fsurveyptr != NULL) 
-    thselector__export_survey_tree_node(cf,0,db->fsurveyptr);
+    thselector_export_survey_tree_node(cf,0,db->fsurveyptr);
   fprintf(cf,"xth_cp_data_tree_create\n");
   
   // exportuje strom map po vsetkych projekciach
@@ -395,7 +395,7 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
     prjli++;
   }
   // exportuje vsetky mapy a scrapy
-  thselector__prepare_map_tree_export(db);
+  thselector_prepare_map_tree_export(db);
   thdb_object_list_type::iterator obi = db->object_list.begin();
   while (obi != db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_MAP_CMD)
@@ -406,7 +406,7 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
   obi = db->object_list.begin();
   while (obi != db->object_list.end()) {
     if (((*obi)->fsptr != NULL) && ((*obi)->get_class_id() == TT_MAP_CMD) && (((thmap*)(*obi).get())->tmp_bool))
-      thselector__export_map_tree_node(cf,1,(*obi)->id,obi->get(),NULL);
+      thselector_export_map_tree_node(cf,1,(*obi)->id,obi->get(),NULL);
     obi++;
   }
   

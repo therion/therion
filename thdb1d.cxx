@@ -1096,7 +1096,7 @@ void thdb1d::process_tree()
 
 
 
-void thdb1d__scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_under) {
+void thdb1d_scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_under) {
   if (st->is_temporary()) return;
   if (ss->stat.station_state == 0) {
     if (is_under)
@@ -1135,7 +1135,7 @@ void thdb1d__scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_und
 }
 
 
-void thdb1d__scan_data_station_limits(thdata * ss, thdb1ds * st, bool is_under) {
+void thdb1d_scan_data_station_limits(thdata * ss, thdb1ds * st, bool is_under) {
   if (ss->stat_st_state == 0) {
     if (is_under)
       ss->stat_st_state = 2;
@@ -1211,11 +1211,11 @@ void thdb1d::process_survey_stat() {
     // stations
     if ((lit->leg->flags & TT_LEGFLAG_SPLAY) == 0) {
       if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
-        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), false);
-        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), false);
+        thdb1d_scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), false);
+        thdb1d_scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), false);
       } else {
-        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), true);
-        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), true);
+        thdb1d_scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), true);
+        thdb1d_scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), true);
       }
     }
 
@@ -1238,11 +1238,11 @@ void thdb1d::process_survey_stat() {
       }
       if ((lit->leg->flags & TT_LEGFLAG_SPLAY) == 0) {
         if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
-          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), false);
-          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), false);
+          thdb1d_scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), false);
+          thdb1d_scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), false);
         } else {
-          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), true);
-          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), true);
+          thdb1d_scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), true);
+          thdb1d_scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), true);
         }
       }
       ss->stat.num_shots++;

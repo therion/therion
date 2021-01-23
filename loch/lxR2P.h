@@ -2,7 +2,7 @@
 extern "C" {
 #endif
 
-typedef struct _R2PCTX R2PContext;
+typedef struct R2PCTX R2PContext;
 
 extern R2PContext *R2PCreate(int width, int height);
 

@@ -392,7 +392,7 @@ enum {
   TTL_MAPITEM_UNKNOWN,
 };
 
-static const thstok thlayout__mapitems[] = {
+static const thstok thlayout_mapitems[] = {
   {"carto", TTL_MAPITEM_CARTO},
   {"carto-count", TTL_MAPITEM_CARTO_LENS},
   {"copyright", TTL_MAPITEM_COPYRIGHT},
@@ -460,10 +460,10 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
           break;
         case TT_LAYOUT_SYMBOL_ASSIGN:
-          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
-          if (!thsymbolset__assign[this->last_line->smid])
+          if (!thsymbolset_assign[this->last_line->smid])
             ththrow(("symbol can not be assigned -- %s %s", args[0], args[1]))
           if (!th_is_keyword(args[2]))
             ththrow(("invalid keyword -- %s", args[2]))
@@ -482,19 +482,19 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 //          this->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;
 //          break;
         case TT_LAYOUT_SYMBOL_HIDE:
-          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
           break;
         case TT_LAYOUT_SYMBOL_SHOW:
-          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
           break;
         case TT_LAYOUT_SYMBOL_COLOR:
-          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
           this->last_line->sclr.parse(args[2]);
@@ -525,7 +525,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       break;
 
     case TT_LAYOUT_MAP_ITEM:
-      sv2 = thmatch_token(args[0],thlayout__mapitems);
+      sv2 = thmatch_token(args[0],thlayout_mapitems);
       switch (sv2) {
         case TTL_MAPITEM_EXPLO_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
@@ -1388,23 +1388,23 @@ void thlayout::self_print_library() {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_SHOW:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_MAP_ITEM:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_COLOR:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               thprintf("\tplayout->last_line->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
               break;
           }

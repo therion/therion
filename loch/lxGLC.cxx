@@ -1992,7 +1992,7 @@ void lxGLCanvas::OSCDestroy()
 }
 
 
-struct _TRctx * lxGLCanvas::TRCGetContext()
+struct TRctx * lxGLCanvas::TRCGetContext()
 {
   if (this->m_TRC != NULL)
     return this->m_TRC->m_ctx;
