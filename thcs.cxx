@@ -84,11 +84,11 @@ const char * thcs_get_name(int cs)
   ii = -1;
   static char buff[20];
 	if (cs > TTCS_ESRI) {
-	  snprintf(buff, sizeof(buff), "ESRI:%d", cs - TTCS_ESRI);
+	  std::snprintf(buff, sizeof(buff), "ESRI:%d", cs - TTCS_ESRI);
 	  return buff;
 	}
 	if (cs > TTCS_EPSG) {
-	  snprintf(buff, sizeof(buff), "EPSG:%d", cs - TTCS_EPSG);
+	  std::snprintf(buff, sizeof(buff), "EPSG:%d", cs - TTCS_EPSG);
 	  return buff;
 	}
   while (i < (long)tab_size) {
@@ -124,7 +124,7 @@ const thcsdata * thcs_get_data(int cs) {
 	rv.prjspec = "";
 	rv.swap = false;
 	if (cs > TTCS_ESRI) {
-	  snprintf(params, sizeof(params), "+init=esri:%d", cs - TTCS_ESRI);
+	  std::snprintf(params, sizeof(params), "+init=esri:%d", cs - TTCS_ESRI);
       if (esri_labels.find(cs - TTCS_ESRI) != esri_labels.end()) {
         rv.prjname = esri_labels[cs - TTCS_ESRI];
       } else {
@@ -133,7 +133,7 @@ const thcsdata * thcs_get_data(int cs) {
 		return &rv;
 	}
 	if (cs > TTCS_EPSG) {
-	  snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
+	  std::snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
       if (epsg_labels.find(cs - TTCS_EPSG) != epsg_labels.end()) {
         rv.prjname = epsg_labels[cs - TTCS_EPSG];
       } else {

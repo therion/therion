@@ -27,20 +27,15 @@
  */
  
 #include "thexception.h"
-#include <stdio.h>
+#include <cstdio>
 #include <stdarg.h>
-
-#ifdef THWIN32
-#define vsnprintf _vsnprintf
-#endif
-
 
 void thexception::appspf(const char * format, ...)
 {
   char * desc = new char [8192];
   va_list args;
   va_start(args, format);
-  vsnprintf(desc, 8192, format, args);
+  std::vsnprintf(desc, 8192, format, args);
   this->strcat(desc);
   va_end(args);
   delete [] desc;
@@ -54,7 +49,7 @@ void thexception::insspf(const char * format, ...)
   ::strcpy(orig, this->buff);
   va_list args;
   va_start(args, format);
-  vsnprintf(desc, 8192, format, args);
+  std::vsnprintf(desc, 8192, format, args);
   this->strcpy(desc);
   this->strcat(orig);
   va_end(args);

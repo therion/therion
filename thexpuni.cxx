@@ -41,7 +41,6 @@
 #include "thdb3d.h"
 
 #ifdef THMSVC
-#define snprintf _snprintf
 #define strcasecmp _stricmp
 #endif
 
