@@ -37,10 +37,6 @@
 #endif
 #include <errno.h>
 
-#ifdef THWIN32
-#define snprintf _snprintf
-#endif
-
 void thdate::reset()
 {
   this->syear = -1;
@@ -627,12 +623,12 @@ void thdate::print_str(int fmt) {
       sep = " \xe2\x80\x93 ";
     case TT_DATE_FMT_Y:
       if (this->syear >= 0)
-        snprintf(dst,tl,"%d",
+        std::snprintf(dst,tl,"%d",
         this->syear);
       tl -= strlen(dst);
       dst += strlen(dst);
       if ((this->eyear >= 0) && (this->syear != this->eyear))
-        snprintf(dst,tl,"%s%d", sep,
+        std::snprintf(dst,tl,"%s%d", sep,
           this->eyear);          
       break;
       
@@ -648,13 +644,13 @@ void thdate::print_str(int fmt) {
         dd = this->sday;
       }
       if (dd > 0 && ((yyyy >= 1000) && (yyyy <= 9999))) {
-        snprintf(dst,tl,"'%04ld-%02ld-%02ld'",yyyy,mm,dd);
+        std::snprintf(dst,tl,"'%04ld-%02ld-%02ld'",yyyy,mm,dd);
       } else if ((mm > 0) && ((yyyy >= 1000) && (yyyy <= 9999))) {
-        snprintf(dst,tl,"'%04ld-%02ld-01'",yyyy,mm);
+        std::snprintf(dst,tl,"'%04ld-%02ld-01'",yyyy,mm);
       } else if ((yyyy >= 1000) && (yyyy <= 9999)) {
-        snprintf(dst,tl,"'%04ld-01-01'",yyyy);
+        std::snprintf(dst,tl,"'%04ld-01-01'",yyyy);
       } else {
-        snprintf(dst,tl,"NULL");
+        std::snprintf(dst,tl,"NULL");
       }
       break;
 
@@ -684,50 +680,50 @@ void thdate::print_str(int fmt) {
       sep = " \xe2\x80\x93 ";
     default:
       if (this->ssec >= 0.0)
-        snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d:%05.2f",
+        std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d:%05.2f",
           this->syear, this->smonth, this->sday, 
           this->shour, this->smin, this->ssec);
       else if (this->smin >= 0)
-        snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
+        std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
           this->syear, this->smonth, this->sday, 
           this->shour, this->smin);
       else if (this->shour >= 0)
-        snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
+        std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d",
           this->syear, this->smonth, this->sday, 
           this->shour, 0);
       else if (this->sday > 0)
-        snprintf(dst,tl,"%04d-%02d-%02d",
+        std::snprintf(dst,tl,"%04d-%02d-%02d",
           this->syear, this->smonth, this->sday);
       else if (this->smonth > 0)
-        snprintf(dst,tl,"%04d-%02d",
+        std::snprintf(dst,tl,"%04d-%02d",
           this->syear, this->smonth);
       else if (this->syear >= 0)
-        snprintf(dst,tl,"%04d",
+        std::snprintf(dst,tl,"%04d",
           this->syear);
           
       tl -= strlen(dst);
       dst += strlen(dst);
       
       if (this->esec >= 0.0)
-        snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d:%05.2f", sep,
+        std::snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d:%05.2f", sep,
           this->eyear, this->emonth, this->eday, 
           this->ehour, this->emin, this->esec);
       else if (this->emin >= 0)
-        snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
+        std::snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
           this->eyear, this->emonth, this->eday, 
           this->ehour, this->emin);
       else if (this->ehour >= 0)
-        snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
+        std::snprintf(dst,tl,"%s%04d-%02d-%02dT%02d:%02d", sep,
           this->eyear, this->emonth, this->eday, 
           this->ehour, 0);
       else if (this->eday > 0)
-        snprintf(dst,tl,"%s%04d-%02d-%02d", sep,
+        std::snprintf(dst,tl,"%s%04d-%02d-%02d", sep,
           this->eyear, this->emonth, this->eday);
       else if (this->emonth > 0)
-        snprintf(dst,tl,"%s%04d-%02d", sep,
+        std::snprintf(dst,tl,"%s%04d-%02d", sep,
           this->eyear, this->emonth);
       else if (this->eyear >= 0)
-        snprintf(dst,tl,"%s%04d", sep,
+        std::snprintf(dst,tl,"%s%04d", sep,
           this->eyear);
       break;
   }    

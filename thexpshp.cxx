@@ -70,7 +70,6 @@
 #include "thcs.h"
 
 #ifdef THMSVC
-#define snprintf _snprintf
 #define strcasecmp _stricmp
 #endif
 

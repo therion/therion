@@ -38,22 +38,10 @@
 #include "thtexfonts.h"
 #include <errno.h>
 #include <stdlib.h>
-#include <math.h>
+#include <cmath>
 #ifdef THMSVC
 #define strcasecmp _stricmp
 #endif
-
-#ifdef HAVE_ROUND
-extern double round(double); /* prototype is often missing... */
-# define thround round
-#else
-static double
-thround(double x) {
-   if (x >= 0.0) return floor(x + 0.5);
-   return ceil(x - 0.5);
-}
-#endif
-
 
 thmbuffer thparse_mbuff;
 
@@ -980,12 +968,12 @@ void thparse_image(const char * fname, double & width, double & height, double &
       ydpi = 300.0;
       switch (picth[13]) {
         case 1:
-          xdpi = thround(double(picth[14] * 256.0 + picth[15]));
-          ydpi = thround(double(picth[16] * 256.0 + picth[17]));
+          xdpi = std::round(double(picth[14] * 256.0 + picth[15]));
+          ydpi = std::round(double(picth[16] * 256.0 + picth[17]));
           break;
         case 2:
-          xdpi = thround(double(picth[14] * 256 + picth[15]) * 2.54);
-          ydpi = thround(double(picth[16] * 256 + picth[17]) * 2.54);
+          xdpi = std::round(double(picth[14] * 256 + picth[15]) * 2.54);
+          ydpi = std::round(double(picth[16] * 256 + picth[17]) * 2.54);
           break;
       }
       if (xdpi != ydpi) {
@@ -1013,8 +1001,8 @@ void thparse_image(const char * fname, double & width, double & height, double &
         len = 256 * (size_t) getc(pictf) + (size_t) getc(pictf);
         if ((marker == 0xC0) || (marker == 0xC1)) {
           getc(pictf);
-          height = thround(double(getc(pictf)) * 256.0 + double(getc(pictf)));
-          width = thround(double(getc(pictf)) * 256.0 + double(getc(pictf)));
+          height = std::round(double(getc(pictf)) * 256.0 + double(getc(pictf)));
+          width = std::round(double(getc(pictf)) * 256.0 + double(getc(pictf)));
           break;
         } 
         fseek(pictf, len - 2, SEEK_CUR);
@@ -1039,7 +1027,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
           }
           switch (scan[12]) {
             case 1:
-              xdpi = thround(xdpi * 0.0254);
+              xdpi = std::round(xdpi * 0.0254);
               break;
             default:
               xdpi = 300.0;
@@ -1049,8 +1037,8 @@ void thparse_image(const char * fname, double & width, double & height, double &
           break;
         }
       }      
-      width = thround(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
-      height = thround(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
+      width = std::round(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
+      height = std::round(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
     } else {
       ththrow(("file format not supported -- %s", fname))
     }

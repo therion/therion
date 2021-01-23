@@ -35,7 +35,6 @@
 #include <set>
 
 #ifdef THMSVC
-#define snprintf _snprintf
 #define strcasecmp _stricmp
 #endif
 
@@ -753,7 +752,7 @@ void thattr::export_html(const char * fname, const char * title, int encoding)
       } else {
         ca = &(ai->second);
         if (ca->m_type == THATTR_DOUBLE) {
-          snprintf(valb.get_buffer(), 127, cf->m_double_format.c_str(), ca->m_val_double);
+          std::snprintf(valb.get_buffer(), 127, cf->m_double_format.c_str(), ca->m_val_double);
           value = valb.get_buffer();
         } else
           value = ca->m_val_string.c_str();

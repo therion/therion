@@ -78,7 +78,6 @@
 #include "thcs.h"
 
 #ifdef THMSVC
-#define snprintf _snprintf
 #define strcasecmp _stricmp
 #endif
 
@@ -873,7 +872,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               size_t cpch, retcode;
               thbuffer com;
               char prevbf[11];
-              snprintf(&(prevbf[0]),11,"%03d",sknum);
+              std::snprintf(&(prevbf[0]),11,"%03d",sknum);
               // Let's copy results and log-file to working directory
 #ifdef THWIN32
               com = "copy \"";
@@ -1731,7 +1730,7 @@ else
 
   sprintf(texb.get_buffer(),"data.%d",sfig);
   LAYOUT.scalebar = texb.get_buffer();
-  //snprintf(prevbf,127,"%g",sblen);
+  //std::snprintf(prevbf,127,"%g",sblen);
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
     sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()));
 
@@ -2037,22 +2036,22 @@ else
             case TT_MAPITEM_BELOW:
               MAP_PREVIEW_DOWN.insert(cbm->m_target->preview_output_number);
               if (!anyprevbelow) {
-                snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
+                std::snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
                 belowprev += prevbf;
                 anyprevbelow = true;
               } else {
-                snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
+                std::snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
                 belowprev += prevbf;
               }
               break;
             case TT_MAPITEM_ABOVE:
               MAP_PREVIEW_UP.insert(cbm->m_target->preview_output_number);
               if (!anyprevabove) {
-                snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
+                std::snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
                 aboveprev += prevbf;
                 anyprevabove = true;
               } else {
-                snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
+                std::snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
                 aboveprev += prevbf;
               }
               break;
