@@ -275,7 +275,7 @@ puts $fid {
  */
 }   
 puts $fid "const thstok thtt_cs\[[expr [llength $proj_parse] + 1]\] = \{";
-foreach e [lsort -ascii $proj_parse] {
+foreach e [lsort -ascii -nocase $proj_parse] {
   puts $fid "  \{\"[lindex $e 0]\", [lindex $e 1]\},"
 } 
 puts $fid "  \{NULL, TTCS_UNKNOWN\}\n\};"
