@@ -1173,6 +1173,7 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
   thlog.printf("\n\n############### export maps & scraps selection #################\n");
   while (cmap != NULL) {
     cm = (thmap *) cmap->map;
+    cm->calc_z();
     z = cm->z;
     if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
     if (strlen(cm->name) > 0) {
@@ -1189,6 +1190,7 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
 		continue;
 	  }
       bm = cbm->bm;
+      bm->calc_z();
       z = bm->z;
       if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
       cmi = cbm->bm->first_item;
@@ -1204,7 +1206,7 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
           if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
 		  thlog.printf("S ");
 		  thlog.printf_double("%8.2f", "    -.--", z);
-          thlog.printf("  %s@%s (%s)\n", cs->name, cs->fsptr ? cs->fsptr->full_name : "", cs->title ? cs->title : "");
+          thlog.printf(" %s@%s (%s)\n", cs->name, cs->fsptr ? cs->fsptr->full_name : "", cs->title ? cs->title : "");
         }
         cmi = cmi->next_item;
       }
