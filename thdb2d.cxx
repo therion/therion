@@ -1170,8 +1170,13 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
     cm = (thmap *) cmap->map;
     z = cm->z;
     if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
-    if (strlen(cm->name) > 0)
-    	thlog.printf("M %8.2f %s@%s (%s)\n", z, cm->name, cm->fsptr ? cm->fsptr->full_name : "",  cm->title ? cm->title : "");
+    if (strlen(cm->name) > 0) {
+    	thlog.printf("M ");
+    	thlog.printf_double("%8.2f", "    -.--", z);
+    	thlog.printf(" %s@%s (%s)\n", cm->name, cm->fsptr ? cm->fsptr->full_name : "",  cm->title ? cm->title : "");
+    }
+
+
     cbm = cmap->first_bm;
     while (cbm != NULL) {
    	  if (cbm->mode != TT_MAPITEM_NORMAL) {
@@ -1182,14 +1187,19 @@ void thdb2d::log_selection(thdb2dxm * maps, thdb2dprj * prj) {
       z = bm->z;
       if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
       cmi = cbm->bm->first_item;
-      if ((cm->id != bm->id) && (strlen(bm->name) > 0))
-    	  thlog.printf("M %8.2f %s@%s (%s)\n", z, bm->name, bm->fsptr ? bm->fsptr->full_name : "",  bm->title ? bm->title : "");
+      if ((cm->id != bm->id) && (strlen(bm->name) > 0)) {
+		  thlog.printf("M ");
+		  thlog.printf_double("%8.2f", "    -.--", z);
+    	  thlog.printf(" %s@%s (%s)\n", bm->name, bm->fsptr ? bm->fsptr->full_name : "",  bm->title ? bm->title : "");
+      }
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
           cs = (thscrap *) cmi->object;
           z = cs->z;
           if (prj->type == TT_2DPROJ_PLAN) z += prj->shift_z;
-          thlog.printf("S %8.2f  %s@%s (%s)\n",z, cs->name, cs->fsptr ? cs->fsptr->full_name : "", cs->title ? cs->title : "");
+		  thlog.printf("S ");
+		  thlog.printf_double("%8.2f", "    -.--", z);
+          thlog.printf("  %s@%s (%s)\n", cs->name, cs->fsptr ? cs->fsptr->full_name : "", cs->title ? cs->title : "");
         }
         cmi = cmi->next_item;
       }
