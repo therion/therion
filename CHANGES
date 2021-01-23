@@ -15,6 +15,7 @@ therion:
  * updated shapelib
  * bugs fixed:
     - survey selection ignored when exporting 3d model from splay shots
+    - "cs local" bugfix
     - svg/xhtml map export without filename creates cave.pdf file
 
 infrastructure:
