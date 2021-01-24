@@ -1282,10 +1282,7 @@ void thpoint::check_extra()
     while (cp != NULL) {
       if (cp->st != NULL) {
         cd = thvec2(this->point->x - cp->pt->x, this->point->y - cp->pt->y).length();
-        if (mind < 0.0) {
-          this->from_name.id = cp->st->uid;
-          mind = cd;
-        } else if (cd < mind) {
+        if ((mind < 0.0) || (cd < mind)) {
           this->from_name.id = cp->st->uid;
           mind = cd;
         }
