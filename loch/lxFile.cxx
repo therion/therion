@@ -13,12 +13,9 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
+#include "icase_equals.h"
 #include "lxMath.h"
 #include "img.h"
-
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
 
 
 lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
@@ -734,7 +731,7 @@ void lxFile::ImportPLT(const char * fn)
       break;
     }
   }
-  for (x = xx; (x < int(strlen(fn))) && (strcasecmp(&(fn[x]),".PLT") != 0); x++) {
+  for (x = xx; (x < int(strlen(fn))) && !icase_equals(&(fn[x]),".PLT"); x++) {
     sname[x - xx] = fn[x];
     sname[x - xx + 1] = 0;
   }
@@ -865,7 +862,7 @@ void lxFile::Import3D(const char * fn)
       break;
     }
   }
-  for (x = xx; (x < int(strlen(fn))) && (strcasecmp(&(fn[x]),".PLT") != 0); x++) {
+  for (x = xx; (x < int(strlen(fn))) && !icase_equals(&(fn[x]),".PLT"); x++) {
     sname[x - xx] = fn[x];
     sname[x - xx + 1] = 0;
   }

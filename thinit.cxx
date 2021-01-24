@@ -42,10 +42,6 @@
 #include <windows.h>
 #endif
 
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
-
 const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# encoding-default  ASCII\n"
 "# encoding-sql  ASCII\n\n"
@@ -297,7 +293,7 @@ void thinit::check_font_path(const char * fname, int index) {
   }
 
   // checkne ci TTF
-  if ((l > 3) && (strcasecmp(&(buff[l-4]), ".ttf")) == 0) ENC_NEW.t1_convert = 0;
+  if ((l > 3) && icase_equals(&(buff[l-4]), ".ttf")) ENC_NEW.t1_convert = 0;
 
   font_src[index] = pfull.get_buffer();
   font_dst[index] = pshort.get_buffer();
