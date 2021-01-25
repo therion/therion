@@ -51,8 +51,6 @@
 #include <cstdio>
 #include <cmath>
 
-#define __SP_BEZIER_UTILS_C__
-
 #define SP_HUGE 1e5
 #define noBEZIER_DEBUG
 

@@ -38,9 +38,9 @@
 #define getcwd _getcwd
 #endif
 
-long thpic__convert_number(1);
+long thpic_convert_number(1);
 
-const char * thpic__tmp(NULL);
+const char * thpic_tmp(NULL);
 
 thpic::thpic() {
   this->fname = NULL;
@@ -54,9 +54,9 @@ thpic::thpic() {
   this->y = 0.0;
   this->scale = 1.0;
 
-  if (thpic__tmp == NULL) {
+  if (thpic_tmp == NULL) {
     thdb.buff_tmp = thtmp.get_file_name("pic0000.txt");
-    thpic__tmp = thdb.strstore(thdb.buff_tmp);
+    thpic_tmp = thdb.strstore(thdb.buff_tmp);
   }
 }
 
@@ -121,9 +121,9 @@ void thpic::init(const char * pfname, const char * incfnm)
 
   // write into
   ccom += " > ";
-  isspc = (strcspn(thpic__tmp," \t") < strlen(thpic__tmp));
+  isspc = (strcspn(thpic_tmp," \t") < strlen(thpic_tmp));
   if (isspc) ccom += "\"";
-  ccom += thpic__tmp;
+  ccom += thpic_tmp;
   if (isspc) ccom += "\"";
   
 #ifdef THDEBUG
@@ -133,7 +133,7 @@ void thpic::init(const char * pfname, const char * incfnm)
   retcode = system(ccom.get_buffer());
   if (retcode == EXIT_SUCCESS) {
     FILE * tmp;
-    tmp = fopen(thpic__tmp,"r");
+    tmp = fopen(thpic_tmp,"r");
     if (tmp == NULL)
       retcode = EXIT_FAILURE;
     else {
@@ -169,7 +169,7 @@ const char * thpic::convert(const char * type, const char * ext, const char * op
   va_start(args, optfmt);
   vsprintf(options, optfmt, args);
   va_end(args);
-  sprintf(tmpfn, "pic%04ld.%s", thpic__convert_number++, ext);
+  sprintf(tmpfn, "pic%04ld.%s", thpic_convert_number++, ext);
   isspc = (strcspn(thini.get_path_convert()," \t") < strlen(thini.get_path_convert()));
   ccom = "";
   if (isspc) ccom += "\"";
@@ -266,7 +266,7 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
   tmp.width = this->width;
   tmp.height = this->height;
   char tmpfn[255];
-  sprintf(tmpfn, "pic%04ld.rgba", thpic__convert_number++);
+  sprintf(tmpfn, "pic%04ld.rgba", thpic_convert_number++);
   tmp.fname = thdb.strstore(thtmp.get_file_name(tmpfn));
   this->rgbafn = tmp.fname;
   FILE * f;
@@ -277,7 +277,7 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
     this->fname = tmp.convert(type, ext, "-depth 8 -size %dx%d -density 300 +dither -colors %d", this->width, this->height, colors);
   else
     this->fname = tmp.convert(type, ext, "-depth 8 -size %dx%d -density 300", this->width, this->height);
-  sprintf(tmpfn, "pic%04ld.%s", thpic__convert_number - 1, ext);
+  sprintf(tmpfn, "pic%04ld.%s", thpic_convert_number - 1, ext);
   this->texfname = thdb.strstore(tmpfn);
 }
 

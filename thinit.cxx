@@ -159,7 +159,7 @@ static const thstok thtt_initcmd[] = {
   {NULL, TTIC_UNKNOWN},
 };
 
-void thinit__print_open(char * s) {
+void thinit_print_open(char * s) {
 #ifdef THDEBUG
     thprintf("\ninitialization file: %s\nreading\n", s);
 #else
@@ -423,7 +423,7 @@ void thinit::load()
   this->ini_file.set_file_name("therion.ini");
   this->ini_file.sp_scan_on();
   this->ini_file.cmd_sensitivity_off();
-  this->ini_file.print_if_opened(thinit__print_open, &started);
+  this->ini_file.print_if_opened(thinit_print_open, &started);
   this->ini_file.reset();
   try {
     while((cmdln = this->ini_file.read_line()) != NULL) {

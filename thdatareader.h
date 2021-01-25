@@ -83,7 +83,7 @@ extern thdatareader thdbreader;
  * Return option position.
  */
    
-unsigned long thdatareader__get_opos(bool inlineid, bool cfgid);
+unsigned long thdatareader_get_opos(bool inlineid, bool cfgid);
 
 
 #endif

@@ -613,7 +613,7 @@ void date2tm(int y, int m, int d, int hh, int mm, double ss, tm * info)
 }
 
 void thdate::print_str(int fmt) {
-  unsigned int tl = thdate__bufflen - 1;
+  unsigned int tl = thdate_bufflen - 1;
   long yyyy, mm, dd;
   char * dst = &(this->dstr[0]);
   const char * sep = " - ";

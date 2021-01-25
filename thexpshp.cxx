@@ -533,12 +533,12 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
 			tststr += ":";
 			tststr += ststr;
 		}
-		symid = thsymbolset__get_id("point", tststr.c_str());
+		symid = thsymbolset_get_id("point", tststr.c_str());
 		if (symid < 0)
-			symid = thsymbolset__get_id("point", tstr.c_str());
+			symid = thsymbolset_get_id("point", tstr.c_str());
 		if (symid < 0)
 			symid = 0;
-		typefc[0] = thsymbolset__fontchar[symid];
+		typefc[0] = thsymbolset_fontchar[symid];
 		this->m_fpoints.m_attributes.insert_attribute("_TYPEFC",(const char *)typefc);
 		this->m_fpoints.m_attributes.insert_attribute("_TYPEFCR", thisnan(ppt->orient) ? 0.0 : 360.0 - ppt->orient);
         this->m_fpoints.m_attributes.insert_attribute("_SUBTYPE", ppt->type != TT_POINT_TYPE_U ?

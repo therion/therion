@@ -51,7 +51,7 @@
 #endif
 #define assert(x)
 
-struct _TRctx {
+struct TRctx {
    /* Final image parameters */
    GLint ImageWidth, ImageHeight;
    GLenum ImageFormat, ImageType;

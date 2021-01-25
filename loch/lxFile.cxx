@@ -611,7 +611,7 @@ lxFileSizeT lxFileSplitTokens(std::string& str, char ** tokens, lxFileSizeT max_
   return nt;
 }
 
-bool lxFile__CheckLRUD(double & du, double & dd, double & dl, double & dr, double mv, double mh) {
+bool lxFileCheckLRUD(double & du, double & dd, double & dl, double & dr, double mv, double mh) {
   if ((du <= 0.0) && (dd <= 0.0) && (dl <= 0.0) && (dr <= 0.0)) {
     return false;
   } else {
@@ -757,7 +757,7 @@ void lxFile::ImportPLT(const char * fn)
         tok2num(lrud[1],9);PltLrudNaN(lrud[1]);
         tok2num(lrud[2],7);PltLrudNaN(lrud[2]);
         tok2num(lrud[3],8);PltLrudNaN(lrud[3]);
-        lrudOK = lxFile__CheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
+        lrudOK = lxFileCheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
         if (lrudOK) {
           lrud[0] *= 0.3048;
           lrud[1] *= 0.3048;
@@ -959,7 +959,7 @@ void lxFile::Import3D(const char * fn)
           lrud[1] = pimg->r;
           lrud[2] = pimg->u;
           lrud[3] = pimg->d;
-          lrudOK = lxFile__CheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
+          lrudOK = lxFileCheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
           if (lrudOK) {
             stPtr->SetFlag(LXFILE_STATION_FLAG_HAS_WALLS, true);
           }
