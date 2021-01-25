@@ -20,7 +20,7 @@ CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern
   thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
   extern/poly2tri/common/shapes.o extern/poly2tri/sweep/advancing_front.o extern/poly2tri/sweep/sweep.o extern/poly2tri/sweep/cdt.o extern/poly2tri/sweep/sweep_context.o \
   extern/fmt/src/format.o extern/fmt/src/os.o extern/quickhull/QuickHull.o therion.o
-TESTOBJECTS = utest-main.o utest-proj.o
+TESTOBJECTS = utest-main.o utest-proj.o utest-icase_equals.o
 
 EXT =
 

@@ -12,7 +12,6 @@ set(LOCH_DEFINITIONS _GNU_SOURCE LOCH "LX${THPLATFORM}" GL_SILENCE_DEPRECATION T
 # library common with therion
 add_library(loch-common STATIC icase_equals.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c)
 target_compile_definitions(loch-common PRIVATE ${LOCH_DEFINITIONS})
-target_link_libraries(loch-common PUBLIC fmt::fmt)
 
 # loch resource file
 if (WIN32)
