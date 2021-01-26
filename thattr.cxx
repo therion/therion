@@ -34,11 +34,6 @@
 #include <cmath>
 #include <set>
 
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
-
-
 thattr::thattr()
 {
   this->m_num_fields = 0;

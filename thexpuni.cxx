@@ -39,11 +39,6 @@
 #include "thtmpdir.h"
 #include "thcsdata.h"
 #include "thdb3d.h"
-
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
-
 #include "thchenc.h"
 #include "thdb1d.h"
 #include "thinit.h"

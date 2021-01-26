@@ -77,10 +77,6 @@
 #include "extern/img.h"
 #include "thcs.h"
 
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
-
 thexpmap::thexpmap() {
   this->format = TT_EXPMAP_FMT_UNKNOWN;
   this->items = TT_EXPMAP_ITEM_ALL;

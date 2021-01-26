@@ -69,10 +69,6 @@
 #include <errno.h>
 #include "thcs.h"
 
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
-
 #include "thexpshp.h"
 
 thexpshpf::thexpshpf()
