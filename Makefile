@@ -69,7 +69,6 @@ THXTHMKCMD = ./therion
 ##export THPLATFORM = WIN32
 ##export OUTDIR ?= ../therion.bin
 ##THXTHMKCMD = $(OUTDIR)/therion
-##CMAKE_GEN = -G "MSYS Makefiles" -D CMAKE_MAKE_PROGRAM:PATH=mingw32-make
 
 # PLATFORM WIN32CROSS
 ##CROSS ?= i686-w64-mingw32.static-
