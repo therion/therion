@@ -123,7 +123,7 @@ endif
 ##CXX = $(CROSS)c++
 ##CC = $(CROSS)gcc
 ##POBJECTS = loch.res lxR2D.o
-##CXXPFLAGS = -W -Wall -std=gnu++11 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
+##CXXPFLAGS = -W -Wall -std=c++14 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(CROSS)wx-config --static --cflags)
 ##LXLIBDIR =
 ##PLIBS = $(shell $(CROSS)pkg-config freetype2 --libs) $(shell $(CROSS)wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
