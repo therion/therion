@@ -36,6 +36,7 @@
 
 #include <cstring>
 #include <cstdio>
+#include <fmt/core.h>
 
 #include "thtexfonts.h"
 #include "thtexenc.h"
@@ -94,9 +95,8 @@ void encodings_new::write_enc_files() {
   if (NFSS==0) return;
 
   thprintf("generating TeX metrics ... ");
-  char fc[12];
   string style[5] = {"rm", "it", "bf", "ss", "si"};
-  string s;
+  string s, fc;
 
   ofstream H ("thfonts.map"); // delete previous file, we will append to it below
   if (!H) therror(("could not write font mapping data for pdfTeX\n"));
@@ -104,7 +104,7 @@ void encodings_new::write_enc_files() {
 
   int fcount = get_enc_count();
   for (int j = 0; j < fcount; j++) {
-    sprintf(fc,"%02d", j);
+    fc = fmt::format("{:02d}", j);
     string fname_enc = string("th_enc")+fc+".enc";
     
     ofstream F(fname_enc.c_str());
@@ -252,16 +252,13 @@ unistr utf2uni(string s) {
 string utf2texoctal(string str) {
   unistr s = utf2uni(str);
   string t;
-  char ch[10];
 //  t = "\\ne\\376\\ne\\377";
   unsigned char c;
   for (unistr::iterator I = s.begin(); I != s.end(); I++) {
     c = (*I) / 256;
-    sprintf(ch,"%o",c);
-    t = t + "\\ne\\" + (string) ch;
+    t = t + "\\ne\\" + fmt::format("{:o}",c);
     c = (*I) % 256;
-    sprintf(ch,"%o",c);
-    t = t + "\\ne\\" + (string) ch;
+    t = t + "\\ne\\" + fmt::format("{:o}",c);
   }
   return t;
 }
@@ -271,15 +268,12 @@ string utf2texoctal(string str) {
 string utf2texhex(string str) {
   unistr s = utf2uni(str);
   string t;
-  char ch[10];
   unsigned char c;
   for (unistr::iterator I = s.begin(); I != s.end(); I++) {
     c = (*I) / 256;
-    sprintf(ch,"%02x",c);
-    t += (string) ch;
+    t += fmt::format("{:02x}",c);
     c = (*I) % 256;
-    sprintf(ch,"%02x",c);
-    t += (string) ch;
+    t += fmt::format("{:02x}",c);
   }
   return t;
 }

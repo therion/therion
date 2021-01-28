@@ -35,6 +35,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <fmt/core.h>
 
 #include <cstring>
 #include <cstdio>
@@ -215,15 +216,13 @@ string process_pdf_string(string s, string font) {
       r += c;
     }
   }
-  char ch[10];
   t = "";
   for (unsigned i=0; i<r.size(); i++) {
     c = r[i];
     if (((*I).second).find(c) == ((*I).second).end()) {
       ((*I).second).insert(c);
     }
-    sprintf(ch,"%02x",c);
-    t += ch;
+    t += fmt::format("{:02x}",c);
   }
   return "<" + t + ">";
 }
@@ -247,7 +246,6 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
        already_transp = false, transp_used = false, before_group_transp = false, cancel_transp = true;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
   double dx, dy;
-  char x[20],y[20];
   deque<string> thstack;
   set<string> FORM_FONTS, FORM_PATTERNS;
   list<scraprecord>::iterator J;
@@ -555,9 +553,10 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
           print_str(fntmatr+" Tm",TEX);
         }
         else {
-          sprintf(x, "%.1f", atof(lastmovex.c_str())-llx);  // modify this part
-          sprintf(y, "%.1f", atof(lastmovey.c_str())-lly);
-          print_str("1 0 0 1 "+string(x)+" "+string(y)+" Tm",TEX);
+          // modify this part
+          print_str("1 0 0 1 " +
+                    fmt::format("{:.1f}", atof(lastmovex.c_str())-llx) + " " +
+                    fmt::format("{:.1f}", atof(lastmovey.c_str())-lly) + " Tm", TEX);
         }
 	print_str(text_attr.str(),TEX);
         TEX << "\\PL{" << buffer << " Tj}%" << endl;
@@ -572,10 +571,11 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
         else {
           thstack.pop_front();
         }
-        sprintf(x, "%.1f", atof(thstack[4].c_str())-llx);  // modify this part
-        sprintf(y, "%.1f", atof(thstack[5].c_str())-lly);
-        fntmatr = thstack[0] + " " + thstack[1] + " " + thstack[2] + 
-                  " " + thstack[3] + " " + x + " " + y;
+        // modify this part
+        fntmatr = thstack[0] + " " + thstack[1] + " " + thstack[2] +
+                  " " + thstack[3] + " " +
+                  fmt::format("{:.1f}", atof(thstack[4].c_str())-llx) + " " +
+                  fmt::format("{:.1f}", atof(thstack[5].c_str())-lly);
         concat = true;
         thstack.clear();
       }

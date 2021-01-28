@@ -32,7 +32,7 @@
 #include <set>
 #include <string>
 #include <iomanip>
-
+#include <fmt/core.h>
 
 #include <iostream>
 
@@ -59,11 +59,9 @@ string u2str(unsigned u) {
 }
 
 string rgb2svg(double r, double g, double b) {
-  char ch[8];
-  sprintf(ch,"#%02x%02x%02x",int(255*r) % 256,
-                             int(255*g) % 256,
-                             int(255*b) % 256);
-  return (string) ch;
+  return fmt::format("#{:02x}{:02x}{:02x}",int(255*r) % 256,
+                                           int(255*g) % 256,
+                                           int(255*b) % 256);
 }
 
 void print_hash(){

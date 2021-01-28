@@ -39,6 +39,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cmath>
+#include <fmt/core.h>
 
 #include "thepsparse.h"
 #include "thpdfdbg.h"
@@ -112,11 +113,9 @@ string color::to_svg() {
     b = 1.0 - min(1.0, this->c + this->d);
   }
   else therror(("undefined color used"));
-  char ch[8];
-  sprintf(ch,"#%02x%02x%02x",int(255*r) % 256,
-                             int(255*g) % 256,
-                             int(255*b) % 256);
-  return (string) ch;
+  return fmt::format("#{:02x}{:02x}{:02x}",int(255*r) % 256,
+                                           int(255*g) % 256,
+                                           int(255*b) % 256);
 }
 
 string color::to_pdfliteral(fillstroke fs) {

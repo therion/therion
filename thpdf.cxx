@@ -246,9 +246,7 @@ void read_settings() {
 }
 
 string xyz2str(int x, int y, int z) {
-  char buf[50];
-  sprintf(buf,"%d.%d.%d",x,y,z);
-  return (string) buf;
+  return fmt::format("{}.{}.{}",x,y,z);
 }
 
 list<sheetrecord>::iterator find_sheet(int x, int y, int z) {
@@ -491,17 +489,13 @@ string grid_name(string s, int offset) {
     }
   }
   if (is_num) {
-    char buf[10];
-    sprintf(buf,"%d",atoi(s.c_str())+offset);
-    return (string) buf;
+    return fmt::format("{:d}", atoi(s.c_str())+offset);
   }
   else if (s.size()==1) {
     c=s[0];
     if ((c >= 65 && c <= 90 && (c+offset) >= 65 && (c+offset) <= 90) ||
         (c >= 97 && c <=122 && (c+offset) >= 97 && (c+offset) <=122)) {
-      char buf[10];
-      sprintf(buf,"%c",c+offset);
-      return (string) buf;
+      return fmt::format("{:c}", c+offset);
     }
     else return "?";
   }
