@@ -114,7 +114,7 @@ target_link_libraries(therion PUBLIC therion-common)
 install(TARGETS therion RUNTIME DESTINATION bin)
 
 # unit tests
-add_executable(utest utest-proj.cxx utest-icase_equals.cxx utest-main.cxx)
+add_executable(utest utest-proj.cxx utest-icase.cxx utest-main.cxx)
 target_link_libraries(utest PUBLIC therion-common Catch2::Catch2)
 enable_testing()
 if (NOT WIN32)

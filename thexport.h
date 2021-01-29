@@ -33,7 +33,7 @@
 #include "thparse.h"
 #include "thobjectsrc.h"
 #include "thlayout.h"
-#include "loch/icase_equals.h"
+#include "loch/icase.h"
 
 /**
  * General export options.

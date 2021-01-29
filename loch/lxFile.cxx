@@ -13,7 +13,7 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
-#include "icase_equals.h"
+#include "icase.h"
 #include "lxMath.h"
 #include "img.h"
 

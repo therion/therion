@@ -66,20 +66,26 @@ typedef struct {
  * @sa thmatch_token
  */
  
-int thmatch_stok(const char *buffer, const thstok *tab, int tab_size);
+int thmatch_stok(const std::string& token, const thstok *tab, std::size_t tab_size);
  
-int thcasematch_stok(const char *buffer, const thstok *tab, int tab_size);
+int thcasematch_stok(const std::string& token, const thstok *tab, std::size_t tab_size);
 
 
 /**
- * Match string token macro.
+ * Helper functions to determine array size.
  */
 
-#define thmatch_token(buffer, table) thmatch_stok(buffer, table,\
-  ((sizeof(table)/sizeof(thstok)) - 1))
+template <std::size_t N>
+inline int thmatch_token(const std::string& token, const thstok (&table)[N])
+{
+  return thmatch_stok(token, table, N);
+}
 
-#define thcasematch_token(buffer, table) thcasematch_stok(buffer, table,\
-  ((sizeof(table)/sizeof(thstok)) - 1))
+template <std::size_t N>
+inline int thcasematch_token(const std::string& token, const thstok (&table)[N])
+{
+  return thcasematch_stok(token, table, N);
+}
 
 
 /**
