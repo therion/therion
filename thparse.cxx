@@ -39,41 +39,33 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <cmath>
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
+#include "loch/icase.h"
 
 thmbuffer thparse_mbuff;
 
-int thmatch_stok(const char *buffer, const thstok *tab, int tab_size)
+template <typename Equality, typename Ordering>
+int binary_search_token(const std::string& token, const thstok *tab, const std::size_t tab_size, Equality equality, Ordering ordering)
 {
-  int a = 0, b = tab_size - 1, c, r;
-  while (a <= b) {
-    c = unsigned((a + b) / 2);
-    r = strcmp(tab[c].s, buffer);
-    if (r == 0) return tab[c].tok;
-    if (r < 0)
-      a = c + 1;
-    else
-      b = c - 1;
-   }
-   return tab[tab_size].tok; /* no match */
+  // comparator between thstok and string
+  auto compare_thstok = [&ordering](const thstok& a, const std::string& b){ return ordering(a.s, b); };
+  // binary search, we leave out the last item
+  auto it = std::lower_bound(tab, tab + tab_size - 1, token, compare_thstok);
+  // if bound was found we also need to compare for equality
+  if (it != tab + tab_size - 1 && equality(token, it->s))
+    return it->tok;
+  // last item contains default value
+  return tab[tab_size - 1].tok;
+}
+
+int thmatch_stok(const std::string& token, const thstok *tab, const std::size_t tab_size)
+{
+  return binary_search_token(token, tab, tab_size, std::equal_to<std::string>(), std::less<std::string>());
 }
 
 
-int thcasematch_stok(const char *buffer, const thstok *tab, int tab_size)
+int thcasematch_stok(const std::string& token, const thstok *tab, const std::size_t tab_size)
 {
-  int a = 0, b = tab_size - 1, c, r;
-  while (a <= b) {
-    c = unsigned((a + b) / 2);
-    r = strcasecmp(tab[c].s, buffer);
-    if (r == 0) return tab[c].tok;
-    if (r < 0)
-      a = c + 1;
-    else
-      b = c - 1;
-   }
-   return tab[tab_size].tok; /* no match */
+  return binary_search_token(token, tab, tab_size, icase_equals, icase_less_than);
 }
 
 

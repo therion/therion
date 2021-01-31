@@ -10,7 +10,7 @@ lxData.cxx      lxGLC.cxx   lxImgIO.cxx  lxOptDlg.cxx  lxRender.cxx  lxSScene.cx
 set(LOCH_DEFINITIONS _GNU_SOURCE LOCH "LX${THPLATFORM}" GL_SILENCE_DEPRECATION TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
 
 # library common with therion
-add_library(loch-common STATIC icase_equals.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c)
+add_library(loch-common STATIC icase.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c)
 target_compile_definitions(loch-common PRIVATE ${LOCH_DEFINITIONS})
 
 # loch resource file

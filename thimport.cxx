@@ -25,7 +25,7 @@
  * --------------------------------------------------------------------
  */
  
-#include "loch/icase_equals.h"
+#include "loch/icase.h"
 #include "thimport.h"
 #include "thexception.h"
 #include "thchenc.h"
