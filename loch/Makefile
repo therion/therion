@@ -23,6 +23,8 @@ WX_CONFIG ?= $(notdir $(shell which \
   wx-config-gtk3 \
   wx-config-3.1 \
   wx-config \
+  i686-w64-mingw32.static-wx-config \
+  x86_64-w64-mingw32.static-wx-config \
   2> /dev/null | head -n1))
 ifeq ($(WX_CONFIG),)
 $(error wx-config not found)
