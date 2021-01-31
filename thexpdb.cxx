@@ -139,7 +139,8 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
     thwarning(("can't open %s for output",fnm))
     return;
   }
-
+  this->register_output(fnm);
+  
   thdb_object_list_type::iterator oi;
   thdataleg_list::iterator lei;
   thdata_team_set_type::iterator ti;
@@ -437,6 +438,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
     thwarning(("can't open %s for output", fnm))
     return;
   }
+  this->register_output(fnm);
 
   thdb_object_list_type::iterator oi;
   thdataleg_list::iterator lei;

@@ -7,6 +7,8 @@ therion:
  * support for double number system in MetaPost (this eliminates the current
    MetaPost limits; see the chapter Limitations in the Appendix of the Thbook)
  * support for LuaTeX as an alternative to pdfTeX
+ * added --generate-output-crc, --verify-output-crc options
+ * error raised when unknown command line option used
  * bugs fixed:
    - ISO8859-2 literals in the source code caused clang warnings
    - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile

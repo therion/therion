@@ -32,6 +32,13 @@
 #include "thexporter.h"
 #include "thcs.h"
 #include <stdio.h>
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <numeric>
+#include <fstream>
+#include <streambuf>
+#include <iomanip>
 
 
 
@@ -150,4 +157,99 @@ const char * thexport::get_output(const char * defname)
   return outptfname.get_buffer();
 }
 
+// Generates a lookup table for the checksums of all 8-bit values.
+std::array<std::uint_fast32_t, 256> generate_crc_lookup_table() noexcept
+{
+  auto const reversed_polynomial = std::uint_fast32_t{0xEDB88320uL};
+
+  // This is a function object that calculates the checksum for a value,
+  // then increments the value, starting from zero.
+  struct byte_checksum
+  {
+    std::uint_fast32_t operator()() noexcept
+    {
+      auto checksum = static_cast<std::uint_fast32_t>(n++);
+
+      for (auto i = 0; i < 8; ++i)
+        checksum = (checksum >> 1) ^ ((checksum & 0x1u) ? reversed_polynomial : 0);
+
+      return checksum;
+    }
+
+    unsigned n = 0;
+  };
+
+  auto table = std::array<std::uint_fast32_t, 256>{};
+  std::generate(table.begin(), table.end(), byte_checksum{});
+
+  return table;
+}
+
+
+// Calculates the CRC for any sequence of values. (You could use type traits and a
+// static assert to ensure the values can be converted to 8 bits.)
+template <typename InputIterator>
+std::uint_fast32_t crc(InputIterator first, InputIterator last)
+{
+  // Generate lookup table only on first use then cache it - this is thread-safe.
+  static auto const table = generate_crc_lookup_table();
+
+  // Calculate the checksum - make sure to clip to 32 bits, for systems that don't
+  // have a true (fast) 32-bit type.
+  return std::uint_fast32_t{0xFFFFFFFFuL} &
+    ~std::accumulate(first, last,
+      ~std::uint_fast32_t{0} & std::uint_fast32_t{0xFFFFFFFFuL},
+        [](std::uint_fast32_t checksum, std::uint_fast8_t value)
+          { return table[(checksum ^ value) & 0xFFu] ^ (checksum >> 8); });
+}
+
+
+bool thexport::check_crc() {
+
+	bool ok(true);
+	for(auto fi = this->output_files.begin(); fi != this->output_files.end(); fi++) {
+
+		std::ifstream of;
+		std::uint_fast32_t actual_crc(0);
+		bool cok(true);
+		try {
+			of = std::ifstream(fi->fnm, ios_base::binary);
+			actual_crc = crc((std::istreambuf_iterator<char>(of)), std::istreambuf_iterator<char>());
+			of.close();
+		} catch(...) {
+			fi->res = "output file does not exist";
+			cok = false;
+		}
+
+		if (thcfg.crc_generate) {
+			std::ofstream crcof(std::string(fi->fnm) + std::string(".crc"));
+			crcof << std::hex << std::setw(8) << std::setfill('0') << actual_crc << "\n";
+			crcof.close();
+			fi->res = "OK";
+		} else if (thcfg.crc_verify) {
+			std::ifstream crcif;
+			std::uint_fast32_t readed_crc(0);
+			try {
+				crcif = std::ifstream(std::string(fi->fnm) + std::string(".crc"));
+				crcif >> std::hex >> readed_crc;
+			} catch(...) {
+				fi->res = ".crc file not found -- use --genereate-ouput-crc before";
+				cok = false;
+			}
+			if (cok && (actual_crc == readed_crc)) {
+				fi->res = "OK";
+			} else {
+				fi->res = "CRC32 error";
+				cok = false;
+			}
+		}
+		ok = ok && cok;
+	}
+	return ok;
+}
+
+
+void thexport::register_output(std::string fnm) {
+	this->output_files.push_back(thexport_output_crc(fnm));
+}
 

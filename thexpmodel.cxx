@@ -236,6 +236,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
   unsigned long last_st = nstat, cur_st, cnlegs = 0;
   bool check_traverses = (dbp->db1d.traverse_list.size() > 0);
@@ -405,6 +406,7 @@ void thexpmodel::export_plt_file(class thdatabase * dbp)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
   unsigned long last_st = nstat, cur_st;
   double xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0, 
@@ -686,6 +688,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
   thdb_object_list_type::iterator obi;
   thdb3ddata * pgn = dbp->db1d.get_3d(), 
@@ -939,6 +942,7 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
   double avx, avy, avz;
   thdb_object_list_type::iterator obi;
@@ -1142,9 +1146,7 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
     thwarning(("can't open %s for output",fnm))
     return;
   }
-
-
-
+  this->register_output(fnm);
 
   double avx, avy, avz;
   thdb_object_list_type::iterator obi;
@@ -1861,6 +1863,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
     thwarning(("error writing %s",fnm))
     return;
   }
+  this->register_output(fnm);
 
   
 #ifdef THDEBUG
@@ -1885,6 +1888,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);

@@ -45,6 +45,8 @@ enum {
   THPS_TEX_ENCODINGS = 1007,  ///< Print tex encodings
   THPS_SYMBOLS = 1008,  ///< Print symbols
   THPS_REPRODUCIBLE = 1009,  ///< Produce reproducible output
+  THPS_CRC_GENERATE = 1010,  ///< Generate CRC files.
+  THPS_CRC_VERIFY = 1011,  ///< Verify CRC files.
 };
 
 

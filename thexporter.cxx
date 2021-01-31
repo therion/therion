@@ -165,6 +165,28 @@ void thexporter::export_db(class thdatabase * dp)
         break;
     }
   }  
+
+  // check crc if approrpiate
+  if (thcfg.crc_generate || thcfg.crc_verify) {
+	  bool ok(true), cok(true);
+	  if (thcfg.crc_generate)
+		  thprintf("generating");
+	  else
+		  thprintf("checking");
+	  thprintf(" CRC32 of all output files ... \n");
+	  for(ii = this->xlist.begin(); ii != this->xlist.end(); ii++) {
+		  cok = (*ii)->check_crc();
+		  ok = ok && cok;
+		  for(auto fi = (*ii)->output_files.begin(); fi != (*ii)->output_files.end(); fi++) {
+			  thprintf("%s ... %s\n", fi->fnm.c_str(), fi->res.c_str());
+		  }
+
+	  }
+	  thprintf("done.\n");
+	  if (!ok) therror(("CRC32 checks not passed.\n"));
+  }
+
+  
 }
 
 bool thexporter_quick_map_export;

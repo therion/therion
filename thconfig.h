@@ -88,6 +88,8 @@ class thconfig {
     use_maps,  ///< Whether to use map structure for output
     use_maps_offset,  ///< Whether to use map's offset
     reproducible_output, ///< Generate reproducible output files.
+	crc_generate, ///< Generate CRC files for output files.
+	crc_verify, ///< Verify CRC files for output files.
     log_extend; ///< Log extended elevation construction.
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.

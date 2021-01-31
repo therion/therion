@@ -18,11 +18,16 @@ CMNOBJECTS = \
 
 EXT =
 
-WX_CONFIG_DEF=$(shell command -v wx-config-3.1 2> /dev/null)
-ifneq ($(WX_CONFIG_DEF),)
-WX_CONFIG = wx-config-3.1
-else
-WX_CONFIG ?= wx-config
+# notdir required in msys/mingw as it doesn't interpret leading slash correctly
+WX_CONFIG ?= $(notdir $(shell which \
+  wx-config-gtk3 \
+  wx-config-3.1 \
+  wx-config \
+  i686-w64-mingw32.static-wx-config \
+  x86_64-w64-mingw32.static-wx-config \
+  2> /dev/null | head -n1))
+ifeq ($(WX_CONFIG),)
+$(error wx-config not found)
 endif
 
 VTKSUFFIX = $(shell tclsh ./getvtkver.tcl suffix)
@@ -112,6 +117,7 @@ endif
 ##CROSS ?= i686-w64-mingw32.static-
 ##CROSS2 = $(shell echo $(CROSS) | sed 's/-$$//')
 ##EXT = .exe
+##WX_CONFIG = wx-config
 ##VTKVERSION = 8.2
 ##VTKPATH = /usr/lib/mxe/usr/$(CROSS2)/include/vtk-$(VTKVERSION)
 ##VTKLIBPATH = /usr/lib/mxe/usr/$(CROSS2)/lib
