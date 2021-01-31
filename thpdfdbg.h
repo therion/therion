@@ -33,7 +33,6 @@
 
 using namespace std;
 
-void thpdfdbg();  // volat len v debugovacom mode
 string u2str(unsigned u);
 string tex_Xname(string s);
 string tex_Wname(string s);

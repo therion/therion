@@ -60,92 +60,6 @@ int convert_mode;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void read_hash() {
-  ifstream F("data.pl");
-  if(!F) therror((IOerr("data.pl")));
-  string line, tmp = "";
-  char buf[100];
-  scraprecord S;
-  list<scraprecord>::iterator I;
-  while(F.getline(buf,100,'\n')) {
-    line = buf;
-    if (line.find(';') != string::npos) break;
-    if (line.find(" => {") != string::npos) {
-      tmp = line.substr(line.find_first_not_of('\t'),7);
-      S.name = tmp;
-      SCRAPLIST.push_front(S);
-      I = SCRAPLIST.begin();
-    }
-    else if (line.find("F => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      I->F = tmp;
-    }
-    else if (line.find("B => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      I->B = tmp;
-    }
-    else if (line.find("I => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      I->I = tmp;
-    }
-    else if (line.find("E => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      I->E = tmp;
-    }
-    else if (line.find("X => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      I->X = tmp;
-    }
-    else if (line.find("G => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      I->G = tmp;
-    }
-    else if (line.find("C => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      I->C = tmp;
-    }
-    else if (line.find("P => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      I->P = tmp;
-    }
-    else if (line.find("S => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      tmp = tmp.substr(0,tmp.find_first_of(' '));
-      I->S1 = atof(tmp.c_str());
-      tmp = line.substr(line.find_first_of('"')+1,
-                          line.find_last_of('"')-line.find_first_of('"')-1);
-      tmp = tmp.substr(tmp.find_first_of(' ')+1,
-                              tmp.size()-tmp.find_first_of(' ')-1);
-      I->S2 = atof(tmp.c_str());
-    }
-    else if (line.find("Y => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('>')+2,
-                          line.find_last_of(',')-line.find_first_of('>')-2);
-      I->layer = atol(tmp.c_str());
-    }
-    else if (line.find("V => ") != string::npos) {
-      tmp = line.substr(line.find_first_of('>')+2,
-                          line.find_last_of(',')-line.find_first_of('>')-2);
-      I->level = atol(tmp.c_str());
-    }
-    else if (line.find("Z => ") != string::npos) {
-      I->sect = 1;
-    }
-  }
-  F.close();
-  SCRAPLIST.reverse();
-}
-
-
 string tex_Fname(string s) {return("THF"+s);}
 string tex_Pname(string s) {return("THP"+s);}
 string tex_Lname(string s) {return("THL"+s);}
@@ -839,8 +753,6 @@ int thconvert() {
   patt_id = 1;
 
   convert_scraps();
-
-  thpdfdbg();  // in the debugging mode only
 
   thprintf("done\n");
 
