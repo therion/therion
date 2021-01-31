@@ -18,11 +18,13 @@ CMNOBJECTS = \
 
 EXT =
 
-WX_CONFIG_DEF=$(shell command -v wx-config-3.1 2> /dev/null)
-ifneq ($(WX_CONFIG_DEF),)
-WX_CONFIG = wx-config-3.1
-else
-WX_CONFIG ?= wx-config
+WX_CONFIG ?= $(shell which \
+	wx-config-gtk3 \
+	wx-config-3.1 \
+	wx-config \
+	2> /dev/null | head -n1)
+ifeq ($(WX_CONFIG),)
+$(error wx-config not found)
 endif
 
 VTKSUFFIX = $(shell tclsh ./getvtkver.tcl suffix)
