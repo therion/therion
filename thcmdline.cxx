@@ -190,6 +190,10 @@ void thcmdline::process(int argc, char * argv[])
         this->extern_libs = true;
         break;
         
+      default:
+    	therror(("unknown command line option"));
+		break;
+        
     }
       
   }

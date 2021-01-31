@@ -1,6 +1,7 @@
 Therion 5.5.7 (in progress):
 
 therion:
+ * error raised when unknown command line option used
  * bugs fixed:
    - survey selection ignored when exporting 3d model from splay shots
    - "cs local" bugfix
