@@ -266,6 +266,7 @@ void thexptable::process_db(class thdatabase * dbp)
     default:
       fname = this->get_output("table.txt");
   }
+  this->register_output(fname);
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fname);

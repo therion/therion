@@ -427,6 +427,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
   isexp = new bool [nst];
   size_t nstvec, nstvecsize;
@@ -783,6 +784,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
   double xmin = thnan, xmax = thnan, ymin = thnan, ymax = thnan, cx, cy, sf;
   double shx, shy;
@@ -1142,6 +1144,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     	fnm = this->get_output("cave.pdf");
     	break;
   }
+  this->register_output(fnm);
 
   layerrecord L;
   map<int, layerrecord>::iterator LAYER_ITER;
@@ -3272,6 +3275,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);

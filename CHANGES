@@ -1,6 +1,7 @@
 Therion 5.5.7 (in progress):
 
 therion:
+ * added --generate-output-crc, --verify-output-crc options
  * error raised when unknown command line option used
  * bugs fixed:
    - survey selection ignored when exporting 3d model from splay shots

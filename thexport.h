@@ -60,6 +60,14 @@ static const thstok thtt_exp_opt[] = {
 };
 
 
+class thexport_output_crc {
+  public:
+	std::string fnm;
+	std::string res;
+	thexport_output_crc(std::string fn) : fnm(fn), res("not checked") {}
+};
+
+
 /**
  * Main export class.
  */
@@ -79,6 +87,8 @@ class thexport {
   thbuffer cfgpath;  ///< Config path.
   bool outpt_def;  ///< Whether output file defined.  
   int cs; ///< Output coordinate system.
+  
+  std::list<thexport_output_crc> output_files; ///< List of output files.
 
   public:
   
@@ -140,6 +150,18 @@ class thexport {
    */
 
   virtual const char * get_output(const char * defname);
+
+  /**
+   * Register output file.
+   */
+
+  virtual void register_output(std::string fnm);
+
+  /**
+   * Generate output CRC file.
+   */
+
+  virtual bool check_crc();
   
 };
 

@@ -138,6 +138,8 @@ thconfig::thconfig()
   this->use_maps_offset = true;
 
   this->reproducible_output = false;
+  this->crc_generate = false;
+  this->crc_verify = false;
 
   this->log_extend = false;
 

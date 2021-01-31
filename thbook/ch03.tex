@@ -762,7 +762,9 @@ or
         [--print-symbols]
         [--print-tex-encodings]
         [--print-xtherion-src]
-        [--reproducible-output]|
+        [--reproducible-output]
+        [--generate-output-crc]
+        [--verify-output-crc]|
 
 \penalty-200
 \arguments
@@ -830,6 +832,15 @@ or
         Produce reproducible output PDF and SVG files.
         No volatile information is included (e.g. creation date or software
         version).
+        
+* |--generate-output-crc| =
+        Generate `.crc` file with CRC32 checksum for each output file.
+        With reproducible output, calculate and save checksum file.
+
+* |--verify-output-crc| =
+        Verify if output file was not changed.
+        Generate reproducible output, calculate CRC32 checksum and check
+        it against one saved in `.crc` file.
 
 * |-s <source-file>| =
         Set the name of the source file.

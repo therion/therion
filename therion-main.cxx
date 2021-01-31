@@ -54,7 +54,9 @@ const char * thhelp_text =
       "        [--print-symbols]\n"
       "        [--print-tex-encodings]\n"
       "        [--print-xtherion-src]\n"
-      "        [--reproducible-output]\n\n";
+      "        [--reproducible-output]\n"
+	  "        [--generate-output-crc]\n"
+	  "        [--verify-output-crc]\n\n";
 
 const char * thversion_text = THVERSION;
 const char * thversion_format = "therion %s";

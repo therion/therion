@@ -454,6 +454,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -640,6 +641,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -732,6 +734,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
