@@ -640,8 +640,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
       TEX << "} ";
     }
     
-    TEX << "\\xxx\n\\newcount\\" << form_id <<
-           "\\" << form_id << "=\\pdflastxform" << endl;
+    TEX << "\\xxx\n" << tex_set_ref(form_id,"\\pdflastxform") << endl;
   }
 }
 
@@ -769,7 +768,7 @@ void convert_scraps() {
   if(!LEG) therror(("Can't write a file!"));
 /*  for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
                                    I != LEGENDLIST.end(); I++) {
-    LEG << "\\legendsymbolbox{\\" << tex_Lname(I->name) << "}{" <<
+    LEG << "\\legendsymbolbox{" << tex_get_ref(tex_Lname(I->name)) << "}{" <<
                                utf2tex(I->descr) << "}" << endl;
   } */
   int legendbox_num = LEGENDLIST.size();
@@ -784,7 +783,7 @@ void convert_scraps() {
     for (int j = 0; j < columns; j++) {
       pos = i + j * rows;
       if (pos < legendbox_num) 
-        LEG << "  \\legendsymbolbox{\\" << tex_Lname(legend_arr_n[pos]) << 
+        LEG << "  \\legendsymbolbox{" << tex_get_ref(tex_Lname(legend_arr_n[pos])) <<
                "}{" << utf2tex(legend_arr_d[pos]) << "}\\hskip10pt" << endl;
     }
     LEG << "\\hss}" << endl;

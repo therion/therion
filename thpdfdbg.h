@@ -37,7 +37,11 @@ void thpdfdbg();  // volat len v debugovacom mode
 string u2str(unsigned u);
 string tex_Xname(string s);
 string tex_Wname(string s);
+string tex_set_ref(string s, string t);
+string tex_get_ref(string s);
 string pdf_info(void);
 string rgb2svg(double r, double g, double b);
+
+extern bool tex_refs_registers;
 
 #endif

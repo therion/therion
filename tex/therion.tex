@@ -228,6 +228,15 @@
 
 \def\PB#1#2#3{\rlap{\kern#1bp\raise#2bp\hbox{\pdfrefxform#3}}} %placebox
 
+\def\setref#1#2{\expandafter\edef\csname thREFS:#1\endcsname{#2}}
+\def\getref#1{%
+  \ifcsname thREFS:#1\endcsname
+    \csname thREFS:#1\endcsname
+  \else
+    \csname #1\endcsname   % fallback for northarrow/scalebar when using registers
+  \fi
+}
+
 \def\gridcoord#1#2{\hbox to0pt{%
   \ifnum#1=1\hss\fi
   \ifnum#1=4\hss\fi
@@ -470,8 +479,8 @@
 \newtoks\legendtextheadersize\legendtextheadersize={\size[26]}
 \newtoks\legendtextsectionsize\legendtextsectionsize={\size[14]}
 
-\def\scalebar{\pdfrefxform\THWscalebar}
-\def\northarrow{\pdfrefxform\THWnortharrow}
+\def\scalebar{\pdfrefxform\getref{THWscalebar}}
+\def\northarrow{\pdfrefxform\getref{THWnortharrow}}
 \newdimen\legendwidth %\legendwidth=14cm
 \newcount\legendcolumns \legendcolumns=2
 

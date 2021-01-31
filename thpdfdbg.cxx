@@ -46,6 +46,22 @@ using namespace std;
 string tex_Xname(string s) {return("THX"+s);}
 string tex_Wname(string s) {return("THW"+s);}   // special = northarrow &c.
 
+bool tex_refs_registers = true;
+
+string tex_set_ref(string s, string t) {
+  if (tex_refs_registers)
+    return("\\newcount\\" + s + "\\" + s + "=" + t);   // use registers, legacy mode
+  else
+    return("\\setref{" + s + "}{\\the" + t + "}");     // use macros to store references
+}
+
+string tex_get_ref(string s) {
+  if (tex_refs_registers)
+    return("\\" + s);
+  else
+    return("\\getref{" + s + "}");
+}
+
 string u2str(unsigned u) {
   unsigned i=u;
   char c;

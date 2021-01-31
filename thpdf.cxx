@@ -634,8 +634,8 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
               xc = K->B1; yc = K->B2;
               xc -= HSHIFT; yc -= VSHIFT;
               PAGEDEF << (mode == MAP && LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
-                      xc << "}{" << yc << "}{\\" << 
-                      tex_Xname("B"+(K->name)) << "}%" << endl;
+                      xc << "}{" << yc << "}{" <<
+                      tex_get_ref(tex_Xname("B"+(K->name))) << "}%" << endl;
             }
           }
           else {
@@ -643,8 +643,8 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
               xc = K->I1; yc = K->I2;
               xc -= HSHIFT; yc -= VSHIFT;
               PAGEDEF << (mode == MAP && LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
-                      xc << "}{" << yc << "}{\\" << 
-                      tex_Xname("I"+(K->name)) << "}%" << endl;
+                      xc << "}{" << yc << "}{" <<
+                      tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
             }
           }
         }
@@ -831,8 +831,8 @@ void print_page_bg_scraps(int layer, ofstream& PAGEDEF,
         if (used_scraps.count(K->name) > 0 && K->I != "") {
           xc = K->I1; yc = K->I2;
           xc -= HSHIFT; yc -= VSHIFT;
-          PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                  tex_Xname("I"+(K->name)) << "}%" << endl;
+          PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                  tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
         }
       }
     }
@@ -979,7 +979,7 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         out.y -= LLY;
         PAGEDEF << "\\PL{q}";
 	PAGEDEF << "\\PL{" << cosr << " " << sinr << " " << -sinr << " " << cosr << " " << out.x << " " << out.y << " cm}";
-	PAGEDEF << "\\PB{0}{0}{\\" << tex_Wname("grid") << u2str(elem+1) << "}";
+	PAGEDEF << "\\PB{0}{0}{" << tex_get_ref(tex_Wname("grid") + u2str(elem+1)) << "}";
         PAGEDEF << "\\PL{Q}%" << endl;
 
         if (LAYOUT.grid_coord_freq==2 || (LAYOUT.grid_coord_freq==1 && elem!=4)) {
@@ -1011,8 +1011,8 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
 	elem = col + 3*row;
 	PAGEDEF << "\\PB{" << i-LLX+LAYOUT.gridcell[elem].x << "}{" << 
-	                      j-LLY+LAYOUT.gridcell[elem].y << "}{\\" << 
-			      tex_Wname("grid") << u2str(elem+1) << "}%" << endl;
+			      j-LLY+LAYOUT.gridcell[elem].y << "}{" <<
+			      tex_get_ref(tex_Wname("grid") + u2str(elem+1)) << "}%" << endl;
 
         if (col == 0 && LAYOUT.grid_coord_freq > 0) {
           PAGEDEF << "\\PL{q}";
@@ -1101,8 +1101,8 @@ void print_map(int layer, ofstream& PAGEDEF,
         }
         xc = K->I1; yc = K->I2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname("I"+(K->name)) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
 
         PAGEDEF << "\\PL{Q}%" << endl;            // end of white color for filled bg
       }
@@ -1129,8 +1129,8 @@ void print_map(int layer, ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->G != "") {
         xc = K->G1; yc = K->G2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname("G"+(K->name)) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname("G"+(K->name))) << "}%" << endl;
       };
     }
 
@@ -1173,8 +1173,8 @@ void print_map(int layer, ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->F != "") {
         xc = K->F1; yc = K->F2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname(K->name) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname(K->name)) << "}%" << endl;
       };
     }
    
@@ -1182,8 +1182,8 @@ void print_map(int layer, ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->E != "") {
         xc = K->E1; yc = K->E2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname("E"+(K->name)) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname("E"+(K->name))) << "}%" << endl;
       };
     }
    
@@ -1193,8 +1193,8 @@ void print_map(int layer, ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->X != "") {
         xc = K->X1; yc = K->X2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname("X"+(K->name)) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname("X"+(K->name))) << "}%" << endl;
       };
     }
     if (LAYOUT.transparency) {
@@ -1257,8 +1257,8 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
                       LAYOUT.hoffset; 
                 yc -= LAYOUT.vsize * (sheet_it->namey - LAYOUT.nav_up) + 
                       LAYOUT.voffset; 
-                P << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                        tex_Xname("I"+(K->name)) << "}%" << endl;
+                P << "\\PB{" << xc << "}{" << yc << "}{" <<
+                        tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
                 NAV_SCRAPS.insert(K->name);
               }
             }
@@ -1287,8 +1287,8 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
                   LAYOUT.hoffset; 
             yc -= LAYOUT.vsize * (sheet_it->namey - LAYOUT.nav_up) + 
                   LAYOUT.voffset; 
-            P << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                    tex_Xname("I"+(K->name)) << "}%" << endl;
+            P << "\\PB{" << xc << "}{" << yc << "}{" <<
+                    tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
             NAV_SCRAPS.insert(K->name);
           }
         }
@@ -1318,8 +1318,8 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
                       LAYOUT.hoffset; 
                 yc -= LAYOUT.vsize * (sheet_it->namey - LAYOUT.nav_up) + 
                       LAYOUT.voffset; 
-                P << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                        tex_Xname("B"+(K->name)) << "}%" << endl;
+                P << "\\PB{" << xc << "}{" << yc << "}{" <<
+                        tex_get_ref(tex_Xname("B"+(K->name))) << "}%" << endl;
                 NAV_SCRAPS.insert(K->name);
               }
             }

@@ -482,6 +482,12 @@ supported initialization commands follow.
   disable the default behaviour completely by setting |tex-fonts| in the
   INI file.
 
+* |tex-refs-registers <on/off>|
+
+  Switch between using count registers and macros to store references to
+  graphical objects in \TeX. Each approach has some advantages, see
+  the section {\it Limitations}.
+
 \endlist
 
 
@@ -498,27 +504,37 @@ XTherion starts. The file is commented; see the comments for details.
 \subchapter Limitations.
 
 \list
-*  scrap size = $\approx 2.8 \times 2.8$ m in the output scale (\MP\ limit in the default
-   `scaled' mode; there is practically no limit\[It's high enough to be reached.] 
-   in the `double' mode\[To run \MP\ in the `double' mode, set
+*  scrap size = 
+
+   \MP\ in the default (`scaled') mode: $\approx 2.8 \times 2.8$ m in the output scale
+
+   \MP\ in the `double' mode:\[To run \MP\ in the `double' mode, set
    |mpost-options  "-numbersystem\eq double"| in the initialization file. It's not recommended
    to use arbitrary-precision modes `decimal' and `binary', as there are still bugs in their
-   implementation and they are much slower than the `double' mode.])
+   implementation and they are much slower than the `double' mode. You need to use \MP\ newer
+   than 2.00 to use this mode without issues.]
+   practically no limit\[It's high enough to be reached.]
 *  page size =
 
    PDF map or atlas: $\approx 5 \times 5$ m (pdf\TeX\ limit)
 
    SVG map: limits depend on the viewing application
-*  scraps count = approx. 1000--10\,000, depending on frequency of cross-sections
+*  scraps count =
 
-   \MP\ limit: $4 (scraps + sections) < 4000$ (in the `scaled' mode;
-   there is practically no limit in the `double' mode)
+   \MP\ in the scaled mode: $4 (scraps + sections) < 4000$
 
-   pdf\TeX\ limit: $2\times pages + images + patterns +
-                            6 (scraps + sections) < 32\,500$
+   \MP\ in the `double' mode: practically no limit
+
+   \TeX\ limit in registers mode:\[This is the default approach, in which the count registers
+   are used to store referenced to the graphic objects.]
+            $2\times pages + images + patterns + 6 (scraps + sections) < 32\,500$ when using pdf\TeX\
             (or approximately $65\,000$ when using Lua\TeX\[To use Lua\TeX,
-            set |pdftex-path  "luatex"| in the initialization file.] 
-            instead of pdf\TeX)
+            set |pdftex-path  "luatex"| in the initialization file.])
+
+   \TeX\ limit in macro mode:\[Instead of using count registers, each reference is stored in
+   a separate macro. This mode is activated by setting |tex-refs-registers off| in
+   the initialization file.] limited only by memory available to \TeX\[Note, that you need to
+   modify |texmf.cnf| configuration file in your \TeX\ distribution to change the limits.]
 \endlist
 
 
