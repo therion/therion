@@ -54,7 +54,7 @@ int thcs_parse(const char * name)
   		if ((esri || epsg) && (name[4] == ':')) {
   			int num;
   			try {
-  				num = atoi(&(name[5]));
+  				num = std::stoi(&(name[5]));
   			} catch (...) {
   				return TTCS_UNKNOWN;
   			}
