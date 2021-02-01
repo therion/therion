@@ -52,8 +52,23 @@ set_source_files_properties(
     PROPERTIES GENERATED TRUE 
 )
 
+# copy given files to the build dir
+function(therion_copy_files)
+    foreach(FILE_NAME ${ARGV})
+        configure_file(${FILE_NAME} ${FILE_NAME} COPYONLY)
+    endforeach()
+endfunction()
+
+# make lists of names with source and binary dir prefixes
+macro(therion_make_files_lists LIST_NAME)
+    foreach(FILE_NAME ${ARGN})
+        list(APPEND ${LIST_NAME}_SRC ${CMAKE_CURRENT_SOURCE_DIR}/${FILE_NAME})
+        list(APPEND ${LIST_NAME}_BIN ${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME})
+    endforeach()
+endmacro()
+
 # copy files needed by some build steps
-file(COPY thcsdata.tcl thsymbolsetfont.txt .clang-tidy DESTINATION ${CMAKE_BINARY_DIR})
+therion_copy_files(thcsdata.tcl thsymbolsetfont.txt .clang-tidy)
 
 # generate thcsdata sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thcsdata.h
