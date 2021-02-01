@@ -27,7 +27,6 @@ set(TCL_SOURCES
     me.tcl
     mkall.tcl
     msgusr.tcl
-    msgxth.tcl
     sbar.tcl
     scroll.tcl
     source.tcl
@@ -37,10 +36,8 @@ set(TCL_SOURCES
     te_sdata.tcl
     te_sdata2.tcl
     te.tcl
-    therion.tcl
     tools_imgs.tcl
-    tools.tcl
-    ver.tcl)
+    tools.tcl)
 
 therion_copy_files(${TCL_SOURCES} lang/process.pl lang/xtexts.txt)
 therion_make_files_lists(TCL ${TCL_SOURCES})
