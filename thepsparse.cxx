@@ -35,6 +35,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 #include <cstring>
 #include <cstdio>
@@ -120,6 +121,7 @@ string color::to_svg() {
 
 string color::to_pdfliteral(fillstroke fs) {
   ostringstream s;
+  s << setprecision(3);
   if (model == colormodel::grey) {
     if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
       s << this->a << " g";
