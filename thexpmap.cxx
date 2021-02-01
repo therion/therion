@@ -1386,6 +1386,7 @@ else
   
   //this->export_pdf_set_colors(maps, prj);
   this->export_pdf_set_colors_new(maps, prj);
+  thlayout_color active_clr;
   lxVecLimits lim;
 
   SURFPICTLIST.clear();
@@ -1453,6 +1454,7 @@ else
                   shy *= out.ms;
 
                 } else {
+                  active_clr = cs->clr;
                   fprintf(mpf,"background:=");
                   cs->clr.print_to_file(this->layout->color_model, mpf);
                   fprintf(mpf,";\n");
@@ -1598,7 +1600,7 @@ else
 
                   SCRAPITEM->sect = 0;
                   SCRAPITEM->name = thexpmap_u2string(sscrap);
-                  cs->clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
+                  active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
                   
                   if (export_sections) {
                     fprintf(plf,"\t\t Z => 1,\n");    
@@ -1674,8 +1676,8 @@ else
                     SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
                     SCRAPITEM->sect = 0;
                     SCRAPITEM->name = thexpmap_u2string(sscrap + 1);
-      
-                    cs->clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
+
+                    active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
       
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     sprintf(texb.get_buffer(),"data.%ld",exps.B);
