@@ -1090,6 +1090,8 @@ void thset_color(int color_map, double index, double total, thlayout_color & clr
   clr.W = double(int(100 * clr.W)) / 100.0;
   clr.model = TT_LAYOUTCLRMODEL_RGB | TT_LAYOUTCLRMODEL_GRAY;
   clr.fill_missing_color_models();
+  clr.K = 0.0;
+  clr.model |= TT_LAYOUTCLRMODEL_CMYK;
 }
 
 
