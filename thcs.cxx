@@ -39,6 +39,7 @@ std::map<std::string, int> thcs_custom_name2int;
 std::map<int, std::string> thcs_custom_int2name;
 std::map<int, thcsdata*> thcs_custom_int2data;
 std::list<thcsdata> thcs_custom_data;
+std::map<int, thcsdata*> thcs_cache_int2data;
 int thcs_custom_id = TTCS_UNKNOWN;
 
 
@@ -112,10 +113,23 @@ std::string thcs_get_params(int cs) {
 	return std::string(thcs_get_data(cs)->params);
 }
 
+
+const thcsdata * thcs_cache_data(int cs, const thcsdata * data) {
+    thcsdata * pd = &(*thcs_custom_data.insert(thcs_custom_data.end(), thcsdata(*data)));
+	pd->params = thdb.strstore(data->params);
+	pd->prjname = thdb.strstore(data->prjname);
+	pd->prjspec = thdb.strstore(data->prjspec);
+    thcs_custom_int2data[cs] = pd;
+    return pd;
+}
+
+
 const thcsdata * thcs_get_data(int cs) {
 	static thcsdata rv;
 	static char params[200];
 	static char prjname[20];
+	auto it = thcs_cache_int2data.find(cs);
+    if (it != thcs_cache_int2data.end()) return it->second;
 	rv.dms = false;
 	rv.output = true;
 	rv.params = params;
@@ -130,7 +144,7 @@ const thcsdata * thcs_get_data(int cs) {
       } else {
         thcs_get_label(params).copy(prjname, 20, 0);
       }
-		return &rv;
+	  return thcs_cache_data(cs, &rv);
 	}
 	if (cs > TTCS_EPSG) {
 	  snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
@@ -139,7 +153,7 @@ const thcsdata * thcs_get_data(int cs) {
       } else {
         thcs_get_label(params).copy(prjname, 20, 0);
       }
-		return &rv;
+	  return thcs_cache_data(cs, &rv);
 	}
   if (cs >= 0) return &(thcsdata_table[cs]);
   if (cs < TTCS_UNKNOWN) return thcs_custom_int2data[cs];
