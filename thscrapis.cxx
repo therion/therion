@@ -1482,7 +1482,7 @@ void thscrapis::end_bp_direction()
 void thscrapis::bp_interpolate(double x, double y, double & iz, double & id, double & idx, double & idy)
 {
   // prejde vsetky body a spocita interpolovane z a direction
-  double sumw = 0.0, sumdw = 0.0, cw, dx, dy, dd;
+  double sumw = 0.0, sumdw = 0.0, cw, dx, dy; //, dd;
   bool anyd = false;
   iz = 0.0;
   id = 0.0;
@@ -1500,8 +1500,8 @@ void thscrapis::bp_interpolate(double x, double y, double & iz, double & id, dou
       return;
     }
     //cw = pow(cw,-2.0) * exp(-2.0 * pow(dx * cbp->dx + dy * cbp->dy, 2.0));
-    dd = dx * cbp->dx + dy * cbp->dy;
-    cw = 1 / (cw * cw) * exp(-2.0 * dd * dd);
+    //dd = dx * cbp->dx + dy * cbp->dy;
+    cw = 1 / (cw * cw); // * exp(-2.0 * dd * dd);
     if (cbp->dd) {
       id += cw * cbp->sumd;
       sumdw += cw;
