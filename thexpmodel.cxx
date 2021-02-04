@@ -46,6 +46,7 @@
 #include "thcs.h"
 #include "thtexfonts.h"
 #include "thlang.h"
+#include <libgen.h>
 
 
 thexpmodel::thexpmodel() {
