@@ -140,14 +140,19 @@ string thcs_get_proj_version_headers() {
   #include <sstream>
   #include <iomanip>
 
+#if PROJ_VER > 5
+  regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
+  regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
+  regex reg_type(R"(\+type\s*=\s*crs\b)");
+  regex reg_space(R"(\s+)");
+  regex reg_czech(R"(\s+\+czech\b)");
+#endif
+
   string sanitize_crs(string s) {
 #if PROJ_VER > 5
-    regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
-    regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
-    regex reg_type(R"(\+type\s*=\s*crs\b)");
-    s = regex_replace(s, regex(R"(\s+)"), " ");
+    s = regex_replace(s, reg_space, " ");
     if (thcs_get_proj_version() == "7.1.0") {  // fix a bug in axes order in 7.1.0 also for user-defined CSs
-      s = regex_replace(s, regex(R"(\s+\+czech\b)"), " +axis=wsu");
+      s = regex_replace(s, reg_czech, " +axis=wsu");
     }
     if (regex_match(s,reg_epsg_ok)) return s;
     else if (regex_match(s,reg_init)) return regex_replace(s, reg_init, "$1:$2");   // get epsg:nnnn format
