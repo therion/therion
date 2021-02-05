@@ -710,7 +710,7 @@ void thinit::load()
       com += this->get_path_pdftex();
       com += "\"";
     //  com += " --interaction nonstopmode data.tex";
-      com += " fonttest.tex";
+      com += " --no-mktex=tfm fonttest.tex";
       retcode = system(com.get_buffer());
       thprintf("checking optional fonts %s %s %s %s %s ...", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
       if (retcode != EXIT_SUCCESS) {
