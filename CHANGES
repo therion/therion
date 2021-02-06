@@ -12,22 +12,37 @@ therion:
  * tex-refs-registers <on/off> initialization file option added (see the
    chapters Initialization files and Limitations in the Appendix of the Thbook)
  * support for LuaTeX as an alternative to pdfTeX
- * added --generate-output-crc, --verify-output-crc options
- * error raised when unknown command line option used
  * bugs fixed:
    - ISO8859-2 literals in the source code caused clang warnings
    - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
    - fixed numerical instability in l_overhang_SKBB
-   - survey selection ignored when exporting 3d model from splay shots
-   - "cs local" bugfix
-   - scrap 3d reconstruction spike artifact fix
-   - selection logging bugfix
-   - svg/xhtml map export without filename creates cave.pdf file
    - other minor fixes
  * updated shapelib
 
 infrastructure:
  * support for CMake builds (thanks to Matěj Plch)
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.7 (2021-02-06):
+
+therion:
+ * added --generate-output-crc, --verify-output-crc options
+ * error raised when unknown command line option used
+ * version number ends with '-dev' if there are uncommitted local changes
+ * optimizations:
+   - much faster processing of fixed stations with associated CRS data
+   - faster check for optional fonts
+ * bugs fixed:
+   - survey selection ignored when exporting 3d model from splay shots
+   - "cs local" bugfix
+   - scrap 3d reconstruction spike artifact fix
+   - selection logging bugfix
+   - svg/xhtml map export without filename creates cave.pdf file
+
+make:
+ * better detection of wx-config variants
+ * innosetup.ini is generated in the build directory
 
 --------------------------------------------------------------------------------
 
