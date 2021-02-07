@@ -449,6 +449,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           thencode(&(this->db->buff_enc), *args, argenc);
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           this->last_line->code = this->ccode;
+          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_path(), true);
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {
@@ -1638,6 +1639,7 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
 
   bool anyline = false;
   bool anylegend = false;
+  const char * last_path = "";
   if (this->first_line != NULL) {
     thlayoutln * ln = this->first_line;
     while(ln != NULL) {
@@ -1648,7 +1650,10 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
             anyline = true;
         if ((!anylegend) && (strstr(ln->line, "\\formattedlegend") != NULL))
             anylegend = true;
-        
+        if (strcmp(ln->path, last_path) != 0) {
+        	last_path = ln->path;
+        	fprintf(o, "\\includeprefix={%s}\n", last_path);
+        }
         thdecode_utf2tex(&(this->db->buff_enc), ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
       }

@@ -32,6 +32,7 @@ thlayoutln::thlayoutln() {
   this->next_line = NULL;
   this->line = NULL;
   this->smid = 0;
+  this->path = "";
   this->code = TT_LAYOUT_CODE_TEX_ATLAS;
 }
   

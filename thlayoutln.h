@@ -49,7 +49,9 @@ class thlayoutln {
   thlayout_color sclr; ///< Symbol color.
   
   int smid;  ///< Symbol macro ID
-
+  
+  const char * path;  ///< Source file.
+  
   thlayoutln(); ///< Default constructor
 };
 
