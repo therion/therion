@@ -8,7 +8,7 @@
 import subprocess, datetime, re, sys, pathlib
 
 def run(s):
-  return subprocess.check_output(s, shell=True).strip().decode('ascii')
+  return subprocess.check_output(s, shell=True, stderr=subprocess.DEVNULL).strip().decode('ascii')
 
 if len(sys.argv) > 1:
   output_folder = pathlib.Path(sys.argv[1])
@@ -17,7 +17,7 @@ else:
 
 try:
   release = run('git tag --points-at HEAD') # check for a TAG in the current commit
-  if subprocess.check_output('git status -s', shell=True): # check for uncommitted changes
+  if run('git status -s'): # check for uncommitted changes
     uncommitted = '+dev'
     date = datetime.date.today().isoformat()
   else:
