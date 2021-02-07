@@ -1583,6 +1583,14 @@ void thlayout_print_header_align(FILE * o, int a) {
     }
 }
 
+std::string fix_path_slashes(const char * src) {
+	if (src == NULL)
+		return src;
+	auto s = std::string(src);
+	std::replace( s.begin(), s.end(), '\\', '/');
+	return s;
+}
+
   
 void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
 
@@ -1652,7 +1660,7 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
             anylegend = true;
         if (strcmp(ln->path, last_path) != 0) {
         	last_path = ln->path;
-        	fprintf(o, "\\includeprefix={%s}\n", last_path);
+        	fprintf(o, "\\includeprefix={%s}\n", fix_path_slashes(last_path).c_str());
         }
         thdecode_utf2tex(&(this->db->buff_enc), ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
