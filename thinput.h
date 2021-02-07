@@ -86,7 +86,7 @@ class thinput {
     ifile * prev_ptr;  /// Pointer to the upper file.
     std::unique_ptr<ifile> next_ptr;  /// Pointer to the lower file.
 #ifdef THMSVC
-    struct _stat st;
+    struct _stat st;const char * thinput::get_cif_abspath()
 #else
     struct stat st;
 #endif
@@ -296,6 +296,12 @@ struct stat
    */  
    
   char * get_cif_path();
+  
+  /**
+   * Return current absolute input file path.
+   */  
+   
+  const char * get_cif_abspath();
   
   /**
    * Return current input line number.

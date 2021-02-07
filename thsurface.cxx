@@ -213,13 +213,15 @@ void thsurface::parse_picture(char ** args)
 
   thbuffer pict_path;
   pict_path.guarantee(1024);
-  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
-  
+  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);  
   long i;
   if (strlen(args[0]) == 0)
     ththrow(("picture name not specified"))
-  pict_path += "/";
-  pict_path += thdb.csrc.name;
+  pict_path += "/";  
+  if (thpath_is_absolute(thdb.csrc.name))
+	  pict_path = thdb.csrc.name;
+  else
+	  pict_path += thdb.csrc.name;
   char * pp = pict_path.get_buffer();
   for(i = (long)strlen(pp); i >= 0; i--) {
     if ((pp[i] == '/') || (pp[i] == '\\')) {

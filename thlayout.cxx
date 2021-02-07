@@ -449,7 +449,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           thencode(&(this->db->buff_enc), *args, argenc);
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           this->last_line->code = this->ccode;
-          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_path(), true);
+          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(), true);
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {

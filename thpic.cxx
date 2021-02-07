@@ -78,8 +78,12 @@ void thpic::init(const char * pfname, const char * incfnm)
     ththrow(("picture file name not specified"));
 
   pict_path += "/";
-  if (incfnm != NULL)
-    pict_path += incfnm;
+  if (incfnm != NULL) {
+    if (thpath_is_absolute(incfnm))
+    	pict_path = incfnm;
+    else 
+    	pict_path += incfnm;
+  }
   char * pp = pict_path.get_buffer();
   for(i = (long)strlen(pp); i >= 0; i--) {
     if ((pp[i] == '/') || (pp[i] == '\\')) {
