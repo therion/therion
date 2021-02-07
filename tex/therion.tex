@@ -661,7 +661,19 @@
   \ignorespaces
 }
 
-\def\loadpicture#1{\pdfximage{#1}\pdfrefximage\pdflastximage}
+\newtoks\includeprefix\includeprefix={.}
+\newif\ifabspath
+\def\checkcolon #1:#2\endparam{\def\tmp{#2}\ifx\tmp\empty\else\abspathtrue\fi}
+\def\checkstartslash #1#2\endparam{\ifx#1/\abspathtrue\fi}
+
+\def\loadpicture#1{%
+  \abspathfalse
+  \checkcolon #1:\endparam
+  \checkstartslash #1\endparam
+  \pdfximage{\ifabspath\else\the\includeprefix/\fi#1}\pdfrefximage\pdflastximage
+}
+
+
 
 \def\insertmaps{%
   \black
