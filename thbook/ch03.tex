@@ -380,6 +380,29 @@ endlayout|
     |6 7 8 10 14| for scales upto 1:500 and
     |5 6 7 8 10| for scales smaller than 1:500.
 
+
+\iffulloutput
+\midinsert
+%  \ifx\pdfoutput\undefined\else
+%    \pdfximage {pic/page.pdf}%
+%  \fi
+%  \vbox to 482bp{\centerline{\hbox to 400bp{%
+%    \ifx\pdfoutput\undefined
+%      \epsfbox{mp/page.1}%
+%    \else
+%      \rlap{\pdfrefximage\pdflastximage}%
+%      \convertMPtoPDF{mp/page.1}{1}{1}
+%    \fi
+%    \hss}}\vss
+%  }
+  \vbox to 482bp{\centerline{\hbox to 400bp{%
+      \rlap{\pic{page.pdf}}%
+      \MPpic{page.1}
+    \hss}}\vss
+  }
+\endinsert
+\fi
+
   {\it page layout related:}\Nobreak
 
   * |size <width> <height> <units>| = set map size in the atlas mode. If
@@ -540,6 +563,7 @@ endlayout|
   * |endcode| = should end the TeX\ and \MP\ sections
 \endcomopt
 
+
 \subsubchapter `lookup'.
 
 \description
@@ -590,28 +614,6 @@ text is omitted, then the default will display the range, ie 1600 m - 1500 m
       [1800 1900] [] "cave floor 2"
     endlookup|
 \endexample
-
-\iffulloutput
-\midinsert
-%  \ifx\pdfoutput\undefined\else
-%    \pdfximage {pic/page.pdf}%
-%  \fi
-%  \vbox to 482bp{\centerline{\hbox to 400bp{%
-%    \ifx\pdfoutput\undefined
-%      \epsfbox{mp/page.1}%
-%    \else
-%      \rlap{\pdfrefximage\pdflastximage}%
-%      \convertMPtoPDF{mp/page.1}{1}{1}
-%    \fi
-%    \hss}}\vss
-%  }
-  \vbox to 482bp{\centerline{\hbox to 400bp{%
-      \rlap{\pic{page.pdf}}%
-      \MPpic{page.1}
-    \hss}}\vss
-  }
-\endinsert
-\fi
 
 \subsubchapter `setup3d'.
 
