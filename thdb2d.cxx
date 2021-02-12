@@ -277,7 +277,7 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
   double par = tp.pp1;
   int npar = this->mbf.get_size(), prj_type;
   if (npar < 1)
-    ththrow(("missing projection type"));
+    ththrow("missing projection type");
   thsplit_strings(& this->mbf2, pars[0], ':');
   switch (this->mbf2.get_size()) {
     case 1:
@@ -288,17 +288,17 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
       type_str = pars2[0];
       index_str_str += pars2[1];
       if (!th_is_keyword(pars2[1]))
-        ththrow(("projection index not a keyword -- %s", pars2[1]))
+        ththrow("projection index not a keyword -- {}", pars2[1]);
       break;
     default:
-      ththrow(("only one projection index allowed -- %s", pars[0]))
+      ththrow("only one projection index allowed -- {}", pars[0]);
   } 
   prj_type = thmatch_token(type_str,thtt_2dproj);
   if (prj_type == TT_2DPROJ_UNKNOWN)
-    ththrow(("unknown projection type -- %s", pars[0]));
+    ththrow("unknown projection type -- {}", pars[0]);
   
   if ((prj_type == TT_2DPROJ_NONE) && (index_str_str.length() > 1))
-    ththrow(("no projection index allowed -- %s",prjstr))
+    ththrow("no projection index allowed -- {}",prjstr);
   
   //parse rest arguments
   thtfangle angtf;
@@ -307,26 +307,26 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
     case TT_2DPROJ_ELEV:
       // parse units if necessary
       if (npar > 3)
-        ththrow(("too many projection arguments"))
+        ththrow("too many projection arguments");
       if (npar > 1) {
         thparse_double(asv,par,pars[1]);
         index_str_str += ":";
         index_str_str += pars[1];
         if (asv != TT_SV_NUMBER)
-          ththrow(("invalid projection parameter -- %s",pars[1]))
+          ththrow("invalid projection parameter -- {}",pars[1]);
         if (npar > 2) {
           angtf.parse_units(pars[2]);
           par = angtf.transform(par);
         }
         if ((par < 0.0) || (par >= 360.0))
-          ththrow(("elevation orientation out of range -- %s", pars[1]))
+          ththrow("elevation orientation out of range -- {}", pars[1]);
       } else {
         par = 0.0;
       }
       break;
     default:
       if (npar > 1)
-        ththrow(("too many projection arguments"))
+        ththrow("too many projection arguments");
       break;
   }
   
@@ -518,32 +518,32 @@ void thdb2d::process_area_references(tharea * aptr)
 
     if (optr == NULL) {
       if (cbl->name.survey != NULL)
-        ththrow(("%s [%d] -- object does not exist -- %s@%s",
+        ththrow("{} [{}] -- object does not exist -- {}@{}",
           cbl->source.name, cbl->source.line,
-          cbl->name.name,cbl->name.survey))
+          cbl->name.name,cbl->name.survey);
       else
-        ththrow(("%s [%d] -- object does not exist -- %s",
+        ththrow("{} [{}] -- object does not exist -- {}",
           cbl->source.name, cbl->source.line,
-          cbl->name.name))
+          cbl->name.name);
     }
 
     if (optr->get_class_id() != TT_LINE_CMD) {
       if (cbl->name.survey != NULL)
-        ththrow(("%s [%d] -- object is not a line -- %s@%s",
-          cbl->source.name, cbl->source.line, cbl->name.name,cbl->name.survey))
+        ththrow("{} [{}] -- object is not a line -- {}@{}",
+          cbl->source.name, cbl->source.line, cbl->name.name,cbl->name.survey);
       else
-        ththrow(("%s [%d] -- object is not a line -- %s",
-          cbl->source.name, cbl->source.line, cbl->name.name))
+        ththrow("{} [{}] -- object is not a line -- {}",
+          cbl->source.name, cbl->source.line, cbl->name.name);
     }
 
     cbl->line = (thline *) optr;
     if (cbl->line->fscrapptr->id != aptr->fscrapptr->id) {
       if (cbl->name.survey != NULL)
-        ththrow(("%s [%d] -- line outside of current scrap -- %s@%s",
-          cbl->source.name, cbl->source.line, cbl->name.name,cbl->name.survey))
+        ththrow("{} [{}] -- line outside of current scrap -- {}@{}",
+          cbl->source.name, cbl->source.line, cbl->name.name,cbl->name.survey);
       else
-        ththrow(("%s [%d] -- line outside of current scrap -- %s",
-          cbl->source.name, cbl->source.line, cbl->name.name))
+        ththrow("{} [{}] -- line outside of current scrap -- {}",
+          cbl->source.name, cbl->source.line, cbl->name.name);
     }
     cbl = cbl->next_line;
   }
@@ -556,11 +556,11 @@ void thdb2d::process_map_references(thmap * mptr)
 		thdataobject * obj = this->db->get_object(mptr->asoc_survey, mptr->asoc_survey.psurvey);
 		if ((obj == NULL) || (obj->get_class_id() != TT_SURVEY_CMD)) {
 			if (mptr->asoc_survey.survey != NULL) 
-        ththrow(("%s [%d] -- invalid survey reference -- %s@%s",
-          mptr->source.name, mptr->source.line, mptr->asoc_survey.name, mptr->asoc_survey.survey))
+        ththrow("{} [{}] -- invalid survey reference -- {}@{}",
+          mptr->source.name, mptr->source.line, mptr->asoc_survey.name, mptr->asoc_survey.survey);
 			else
-        ththrow(("%s [%d] -- invalid survey reference -- %s",
-          mptr->source.name, mptr->source.line, mptr->asoc_survey.name))
+        ththrow("{} [{}] -- invalid survey reference -- {}",
+          mptr->source.name, mptr->source.line, mptr->asoc_survey.name);
 		}
 		mptr->asoc_survey.psurvey = (thsurvey *) obj;
 	}
@@ -568,11 +568,10 @@ void thdb2d::process_map_references(thmap * mptr)
   if (mptr->projection_id > 0)
     return;
   if (mptr->first_item == NULL) {
-    mptr->throw_source();
-    threthrow2(("empty map not allowed"))
+    ththrow("{} -- empty map not allowed", mptr->throw_source());
   }
   if (mptr->projection_id == -1)
-    ththrow(("recursive map reference"))
+    ththrow("recursive map reference");
   // let's lock the current map
   mptr->projection_id = -1;
   thdb2dmi * citem = mptr->first_item, * xcitem;
@@ -586,13 +585,13 @@ void thdb2d::process_map_references(thmap * mptr)
     optr = this->db->get_object(citem->name, citem->psurvey);
     if (optr == NULL) {
       if (citem->name.survey != NULL)
-        ththrow(("%s [%d] -- object does not exist -- %s@%s",
+        ththrow("{} [{}] -- object does not exist -- {}@{}",
           citem->source.name, citem->source.line, 
-          citem->name.name,citem->name.survey))
+          citem->name.name,citem->name.survey);
       else
-        ththrow(("%s [%d] -- object does not exist -- %s",
+        ththrow("{} [{}] -- object does not exist -- {}",
           citem->source.name, citem->source.line, 
-          citem->name.name))
+          citem->name.name);
     }
     
     thmap * mapp;
@@ -605,19 +604,19 @@ void thdb2d::process_map_references(thmap * mptr)
 
         if (proj_id == -1) {
           if (mptr->expl_projection == NULL)
-            ththrow(("%s [%d] -- no projection for survey", citem->source.name, citem->source.line))
+            ththrow("{} [{}] -- no projection for survey", citem->source.name, citem->source.line);
           proj_id = mptr->expl_projection->id;
           mptr->is_basic = false;
         } else {
           if (mptr->is_basic) {
             if (citem->name.survey != NULL)
-              ththrow(("%s [%d] -- not a scrap reference -- %s@%s",
+              ththrow("{} [{}] -- not a scrap reference -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey))
+                citem->name.name,citem->name.survey);
             else
-              ththrow(("%s [%d] -- not a scrap reference -- %s",
+              ththrow("{} [{}] -- not a scrap reference -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name))
+                citem->name.name);
           }
         }
 
@@ -628,7 +627,7 @@ void thdb2d::process_map_references(thmap * mptr)
           case TT_2DPROJ_ELEV:
             break;          
           default:
-            ththrow(("%s [%d] -- unsupported projection for survey", citem->source.name, citem->source.line))
+            ththrow("{} [{}] -- unsupported projection for survey", citem->source.name, citem->source.line);
             break;
         }
         survp = (thsurvey*) optr;
@@ -680,13 +679,13 @@ void thdb2d::process_map_references(thmap * mptr)
           }
           catch (...) {
             if (citem->name.survey != NULL)
-              threthrow(("%s [%d] -- error processing map reference -- %s@%s",
+              threthrow("{} [{}] -- error processing map reference -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey))
+                citem->name.name,citem->name.survey);
             else
-              threthrow(("%s [%d] -- error processing map reference -- %s",
+              threthrow("{} [{}] -- error processing map reference -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name))
+                citem->name.name);
           }
         }
         if (proj_id == -1) {
@@ -696,35 +695,35 @@ void thdb2d::process_map_references(thmap * mptr)
           // check projection
           if (mapp->projection_id != proj_id) {
             if (citem->name.survey != NULL)
-              ththrow(("%s [%d] -- incompatible map projection -- %s@%s",
+              ththrow("{} [{}] -- incompatible map projection -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey))
+                citem->name.name,citem->name.survey);
             else
-              ththrow(("%s [%d] -- incompatible map projection -- %s",
+              ththrow("{} [{}] -- incompatible map projection -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name))
+                citem->name.name);
           }
           // check basic
           if (mptr->is_basic) {
             if (citem->name.survey != NULL)
-              ththrow(("%s [%d] -- not a scrap reference -- %s@%s",
+              ththrow("{} [{}] -- not a scrap reference -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey))
+                citem->name.name,citem->name.survey);
             else
-              ththrow(("%s [%d] -- not a scrap reference -- %s",
+              ththrow("{} [{}] -- not a scrap reference -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name))
+                citem->name.name);
           }
         }
         if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
           if (citem->name.survey != NULL)
-            ththrow(("%s [%d] -- incompatible map projection -- %s@%s",
+            ththrow("{} [{}] -- incompatible map projection -- {}@{}",
               citem->source.name, citem->source.line, 
-              citem->name.name,citem->name.survey))
+              citem->name.name,citem->name.survey);
           else
-            ththrow(("%s [%d] -- incompatible map projection -- %s",
+            ththrow("{} [{}] -- incompatible map projection -- {}",
               citem->source.name, citem->source.line, 
-              citem->name.name))
+              citem->name.name);
         }
         citem->object = mapp;
         break;
@@ -740,45 +739,45 @@ void thdb2d::process_map_references(thmap * mptr)
           // check projection
           if (scrapp->proj->id != proj_id) {
             if (citem->name.survey != NULL)
-              ththrow(("%s [%d] -- incompatible scrap projection -- %s@%s",
+              ththrow("{} [{}] -- incompatible scrap projection -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey))
+                citem->name.name,citem->name.survey);
             else
-              ththrow(("%s [%d] -- incompatible scrap projection -- %s",
+              ththrow("{} [{}] -- incompatible scrap projection -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name))
+                citem->name.name);
           }
           // check basic
           if (!mptr->is_basic) {
             if (citem->name.survey != NULL)
-              ththrow(("%s [%d] -- not a map reference -- %s@%s",
+              ththrow("{} [{}] -- not a map reference -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey))
+                citem->name.name,citem->name.survey);
             else
-              ththrow(("%s [%d] -- not a map reference -- %s",
+              ththrow("{} [{}] -- not a map reference -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name))
+                citem->name.name);
           }
           if (citem->m_shift.is_active()) {
             if (citem->name.survey != NULL)
-              ththrow(("%s [%d] -- shift is not allowed for scrap -- %s@%s",
+              ththrow("{} [{}] -- shift is not allowed for scrap -- {}@{}",
                 citem->source.name, citem->source.line, 
-                citem->name.name,citem->name.survey))
+                citem->name.name,citem->name.survey);
             else
-              ththrow(("%s [%d] -- shift is not allowed for scrap -- %s",
+              ththrow("{} [{}] -- shift is not allowed for scrap -- {}",
                 citem->source.name, citem->source.line, 
-                citem->name.name))
+                citem->name.name);
           }
         }
         if ((mptr->expl_projection != NULL) && (mptr->expl_projection->id != proj_id)) {
           if (citem->name.survey != NULL)
-            ththrow(("%s [%d] -- incompatible scrap projection -- %s@%s",
+            ththrow("{} [{}] -- incompatible scrap projection -- {}@{}",
               citem->source.name, citem->source.line, 
-              citem->name.name,citem->name.survey))
+              citem->name.name,citem->name.survey);
           else
-            ththrow(("%s [%d] -- incompatible scrap projection -- %s",
+            ththrow("{} [{}] -- incompatible scrap projection -- {}",
               citem->source.name, citem->source.line, 
-              citem->name.name))
+              citem->name.name);
         }
         citem->object = scrapp;
         break;
@@ -788,13 +787,13 @@ void thdb2d::process_map_references(thmap * mptr)
       default:
         mptr->throw_source();
         if (citem->name.survey != NULL)
-          ththrow(("%s [%d] -- invalid map object -- %s@%s",
+          ththrow("{} [{}] -- invalid map object -- {}@{}",
             citem->source.name, citem->source.line, 
-            citem->name.name,citem->name.survey))
+            citem->name.name,citem->name.survey);
         else
-          ththrow(("%s [%d] -- invalid map object -- %s",
+          ththrow("{} [{}] -- invalid map object -- {}",
             citem->source.name, citem->source.line, 
-            citem->name.name))
+            citem->name.name);
     }
     citem = citem->next_item;
   }
@@ -817,13 +816,13 @@ void thdb2d::postprocess_map_references(thmap * mptr)
     optr = this->db->get_object(citem->name, citem->psurvey);
     if (optr == NULL) {
       if (citem->name.survey != NULL)
-        ththrow(("%s [%d] -- object does not exist -- %s@%s",
+        ththrow("{} [{}] -- object does not exist -- {}@{}",
           citem->source.name, citem->source.line, 
-          citem->name.name,citem->name.survey))
+          citem->name.name,citem->name.survey);
       else
-        ththrow(("%s [%d] -- object does not exist -- %s",
+        ththrow("{} [{}] -- object does not exist -- {}",
           citem->source.name, citem->source.line, 
-          citem->name.name))
+          citem->name.name);
     }
     
     thmap * mapp;
@@ -832,26 +831,26 @@ void thdb2d::postprocess_map_references(thmap * mptr)
         mapp = (thmap *) optr;
         if (mapp->projection_id != mptr->projection_id) {
           if (citem->name.survey != NULL)
-            ththrow(("%s [%d] -- incompatible map projection -- %s@%s",
+            ththrow("{} [{}] -- incompatible map projection -- {}@{}",
               citem->source.name, citem->source.line, 
-              citem->name.name,citem->name.survey))
+              citem->name.name,citem->name.survey);
           else
-            ththrow(("%s [%d] -- incompatible map projection -- %s",
+            ththrow("{} [{}] -- incompatible map projection -- {}",
               citem->source.name, citem->source.line, 
-              citem->name.name))
+              citem->name.name);
         }
         citem->object = optr;
         break;
 
       case TT_SCRAP_CMD:
         if (citem->name.survey != NULL)
-          ththrow(("%s [%d] -- not a map reference -- %s@%s",
+          ththrow("{} [{}] -- not a map reference -- {}@{}",
             citem->source.name, citem->source.line, 
-            citem->name.name,citem->name.survey))
+            citem->name.name,citem->name.survey);
         else
-          ththrow(("%s [%d] -- not a map reference -- %s",
+          ththrow("{} [{}] -- not a map reference -- {}",
             citem->source.name, citem->source.line, 
-            citem->name.name))
+            citem->name.name);
         break;
 
 
@@ -859,13 +858,13 @@ void thdb2d::postprocess_map_references(thmap * mptr)
       default:
         mptr->throw_source();
         if (citem->name.survey != NULL)
-          ththrow(("%s [%d] -- invalid map object -- %s@%s",
+          ththrow("{} [{}] -- invalid map object -- {}@{}",
             citem->source.name, citem->source.line, 
-            citem->name.name,citem->name.survey))
+            citem->name.name,citem->name.survey);
         else
-          ththrow(("%s [%d] -- invalid map object -- %s",
+          ththrow("{} [{}] -- invalid map object -- {}",
             citem->source.name, citem->source.line, 
-            citem->name.name))
+            citem->name.name);
     }
     citem = citem->next_item;
   }
@@ -883,13 +882,12 @@ void thdb2d::process_join_references(thjoin * jptr)
   while (citem != NULL) {
     optr = this->db->get_object(citem->name, jptr->fsptr);
     if (optr == NULL) {
-      jptr->throw_source();
       if (citem->name.survey != NULL)
-        threthrow2(("object does not exist -- %s@%s",
-          citem->name.name,citem->name.survey))
+        ththrow("{} -- object does not exist -- {}@{}", jptr->throw_source(),
+          citem->name.name,citem->name.survey);
       else
-        threthrow2(("object does not exist -- %s",
-          citem->name.name))
+        ththrow("{} -- object does not exist -- {}", jptr->throw_source(),
+          citem->name.name);
     }
     otype = optr->get_class_id();
 
@@ -900,13 +898,12 @@ void thdb2d::process_join_references(thjoin * jptr)
         else
           cprj = ((th2ddataobject *)optr)->fscrapptr->proj;
         if (cprj->id != jptr->proj->id) {        
-          jptr->throw_source();
           if (citem->name.survey != NULL)
-            threthrow2(("projection mishmash -- %s@%s",
-              citem->name.name,citem->name.survey))
+            ththrow("{} -- projection mishmash -- {}@{}", jptr->throw_source(),
+              citem->name.name,citem->name.survey);
           else
-            threthrow2(("projection mishmash -- %s",
-              citem->name.name))
+            ththrow("{} -- projection mishmash -- {}", jptr->throw_source(),
+              citem->name.name);
         }
       } else {
         if (optr->is(TT_SCRAP_CMD))
@@ -921,23 +918,21 @@ void thdb2d::process_join_references(thjoin * jptr)
         prev_item = citem->prev_item;
         if (prev_item != NULL) {
           if (!(prev_item->object->is(TT_SCRAP_CMD))) {
-            jptr->throw_source();
             if (citem->name.survey != NULL)
-              threthrow2(("scrap can not follow not scrap -- %s@%s:%s",
-                citem->name.name,citem->name.survey,citem->mark))
+              ththrow("{} -- scrap can not follow not scrap -- {}@{}:{}", jptr->throw_source(),
+                citem->name.name,citem->name.survey,citem->mark);
             else
-              threthrow2(("scrap can not follow not scrap  -- %s:%s",
-                citem->name.name,citem->mark))
+              ththrow("{} -- scrap can not follow not scrap  -- {}:{}", jptr->throw_source(),
+                citem->name.name,citem->mark);
           }
           prev_item = prev_item->prev_item;
           if (prev_item != NULL) {
-            jptr->throw_source();
             if (citem->name.survey != NULL)
-              threthrow2(("join of more than 2 scraps not supported -- %s@%s:%s",
-                citem->name.name,citem->name.survey,citem->mark))
+              ththrow("{} -- join of more than 2 scraps not supported -- {}@{}:{}", jptr->throw_source(),
+                citem->name.name,citem->name.survey,citem->mark);
             else
-              threthrow2(("join of more than 2 scraps not supported -- %s:%s",
-                citem->name.name,citem->mark))
+              ththrow("{} -- join of more than 2 scraps not supported -- {}:{}", jptr->throw_source(),
+                citem->name.name,citem->mark);
           }
         }
         citem->object = optr;    
@@ -945,13 +940,12 @@ void thdb2d::process_join_references(thjoin * jptr)
       case TT_POINT_CMD:
         pointp = (thpoint*) optr;
         if (citem->mark != NULL) {
-          jptr->throw_source();
           if (citem->name.survey != NULL)
-            threthrow2(("mark reference with point -- %s@%s:%s",
-              citem->name.name,citem->name.survey,citem->mark))
+            ththrow("{} -- mark reference with point -- {}@{}:{}", jptr->throw_source(),
+              citem->name.name,citem->name.survey,citem->mark);
           else
-            threthrow2(("mark reference with point -- %s:%s",
-              citem->name.name,citem->mark))
+            ththrow("{} -- mark reference with point -- {}:{}", jptr->throw_source(),
+              citem->name.name,citem->mark);
         }
         citem->point = pointp->point;
         citem->line_point = NULL;
@@ -962,26 +956,24 @@ void thdb2d::process_join_references(thjoin * jptr)
         if (citem->mark != NULL) {
           citem->line_point = linep->get_marked_station(citem->mark);
           if (citem->line_point == NULL) {
-            jptr->throw_source();
             if (citem->name.survey != NULL)
-              threthrow2(("marked station not found -- %s@%s:%s",
-                citem->name.name,citem->name.survey,citem->mark))
+              ththrow("{} -- marked station not found -- {}@{}:{}", jptr->throw_source(),
+                citem->name.name,citem->name.survey,citem->mark);
             else
-              threthrow2(("marked station not found -- %s:%s",
-                citem->name.name,citem->mark))
+              ththrow("{} -- marked station not found -- {}:{}", jptr->throw_source(),
+                citem->name.name,citem->mark);
           }
           citem->point = citem->line_point->point;
         }
         citem->object = optr;    
         break;
       default:
-        jptr->throw_source();
         if (citem->name.survey != NULL)
-          threthrow2(("invalid join object -- %s@%s",
-            citem->name.name,citem->name.survey))
+          ththrow("{} -- invalid join object -- {}@{}", jptr->throw_source(),
+            citem->name.name,citem->name.survey);
         else
-          threthrow2(("invalid join object -- %s",
-            citem->name.name))
+          ththrow("{} -- invalid join object -- {}", jptr->throw_source(),
+            citem->name.name);
     }
     citem = citem->next_item;
   }  
@@ -1003,13 +995,12 @@ void thdb2d::process_point_references(thpoint * pp)
           pp->station_name.id = 0;
         }  
         if (pp->station_name.id == 0) {
-          pp->throw_source();
           if (pp->station_name.survey != NULL)
-            threthrow2(("station does not exist -- %s@%s",
-              pp->station_name.name,pp->station_name.survey))
+            ththrow("{} -- station does not exist -- {}@{}", pp->throw_source(),
+              pp->station_name.name,pp->station_name.survey);
           else
-            threthrow2(("station does not exist -- %s",
-              pp->station_name.name))
+            ththrow("{} -- station does not exist -- {}", pp->throw_source(),
+              pp->station_name.name);
         }
         if (pp->type == TT_POINT_TYPE_STATION)
           pp->fscrapptr->insert_adata(&(this->db->db1d.station_vec[pp->station_name.id - 1]));
@@ -1024,13 +1015,12 @@ void thdb2d::process_point_references(thpoint * pp)
           pp->from_name.id = 0;
         }  
         if (pp->from_name.id == 0) {
-          pp->throw_source();
           if (pp->station_name.survey != NULL)
-            threthrow2(("station does not exist -- %s@%s",
-              pp->from_name.name,pp->from_name.survey))
+            ththrow("{} -- station does not exist -- {}@{}", pp->throw_source(),
+              pp->from_name.name,pp->from_name.survey);
           else
-            threthrow2(("station does not exist -- %s",
-              pp->from_name.name))
+            ththrow("{} -- station does not exist -- {}", pp->throw_source(),
+              pp->from_name.name);
         }
       }  
       break;
@@ -1058,13 +1048,12 @@ void thdb2d::process_point_references(thpoint * pp)
           extend_error = true;
         }
         if (extend_error) {
-          pp->throw_source();
           if (pp->station_name.survey != NULL)
-            threthrow2(("%s -- %s@%s",err_code,
-              pp->station_name.name,pp->station_name.survey))
+            ththrow("{} -- {} -- {}@{}", pp->throw_source(), err_code,
+              pp->station_name.name,pp->station_name.survey);
           else
-            threthrow2(("%s -- %s",err_code,
-              pp->station_name.name))
+            ththrow("{} -- {} -- {}", pp->throw_source(), err_code,
+              pp->station_name.name);
         }
       }  
       break;       
@@ -1085,13 +1074,12 @@ void thdb2d::process_scrap_references(thscrap * sptr)
         lp->station_name.id = 0;
       }  
       if (lp->station_name.id == 0) {
-        sptr->throw_source();
         if (lp->station_name.survey != NULL)
-          threthrow2(("invalid station reference -- %s@%s",
-            lp->station_name.name,lp->station_name.survey))
+          ththrow("{} -- invalid station reference -- {}@{}", sptr->throw_source(),
+            lp->station_name.name,lp->station_name.survey);
         else
-          threthrow2(("invalid station reference -- %s",
-            lp->station_name.name))
+          ththrow("{} -- invalid station reference -- {}", sptr->throw_source(),
+            lp->station_name.name);
       }
       
       lp->station = &(this->db->db1d.station_vec[lp->station_name.id - 1]);
@@ -1698,9 +1686,9 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
 //        nxscrap++;
 //      }
 //      if (strlen(prj->index) == 0)
-//        ththrow(("can not connect all scraps in exteded projection"))
+//        ththrow("can not connect all scraps in exteded projection");
 //      else
-//        ththrow(("can not connect all scraps in exteded:%s projection", prj->index))      
+//        ththrow("can not connect all scraps in exteded:{} projection", prj->index);      
 //    }
 //    
 //    delete [] xscraps;
@@ -2166,8 +2154,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
               if (ppoint->text == NULL) {
                 neas = pscrap->get_nearest_station(ppoint->point);
                 if (neas == NULL) {
-                  ppoint->throw_source();
-                  threthrow2(("unable to determine station name"))
+                  ththrow("{} -- unable to determine station name", ppoint->throw_source());
                 } else {
                   ppoint->station_name.name = neas->name;
                   ppoint->station_name.psurvey = neas->survey;
@@ -2179,8 +2166,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
               if (ppoint->ysize > 0.0) {
                 neas = pscrap->get_nearest_station(ppoint->point);
                 if (neas == NULL) {
-                  ppoint->throw_source();
-                  threthrow2(("unable to determine altitude"))
+                  ththrow("{} -- unable to determine altitude", ppoint->throw_source());
                 } else {
                   ppoint->xsize += neas->z;
                   ppoint->ysize = 0.0;
@@ -2216,8 +2202,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
                   (plp->lsize > 0.0)) {
                   neas = pscrap->get_nearest_station(plp->point);
                   if (neas == NULL) {
-                    pline->throw_source();
-                    threthrow2(("unable to determine altitude"))
+                    ththrow("{} -- unable to determine altitude", pline->throw_source());
                   } else {
                     plp->rsize += neas->z;
                     plp->lsize = 0.0;
@@ -2617,8 +2602,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
               mindst = std::hypot(fse1->cxt - fse2->cxt, fse1->cyt - fse2->cyt);
             else {
               // nenasli sme uz dva konce, skipujeme az na koniec
-              jptr->throw_source();
-              threwarning2(("unable to join scraps (count %d)", ccount + 1));
+              thwarning(("%s -- unable to join scraps (count %d)", jptr->throw_source().c_str(), ccount + 1));
               ccount = jptr->count;
               goto UNABLE_TO_JOIN;
             }
@@ -2744,8 +2728,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
         }
         
         if (l2 == NULL) {
-          jptr->throw_source();
-          ththrow(("can not determine any join point"))
+          ththrow("{} -- can not determine any join point", jptr->throw_source());
         }
         
         // teraz najde spolocny bod kriviek l1 a l2
@@ -3641,7 +3624,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   "#################### end of metapost log file ####################\n",true);
   if (retcode != EXIT_SUCCESS) {
     thassert(chdir(wdir.get_buffer()) == 0);
-    ththrow(("metapost exit code -- %d", retcode))
+    ththrow("metapost exit code -- {}", retcode);
   }
 
   // load data back to therion

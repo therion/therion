@@ -27,42 +27,7 @@
  */
  
 #include "thexception.h"
-#include <cstdio>
-#include <stdarg.h>
 
-void thexception::appspf(const char * format, ...)
-{
-  char * desc = new char [8192];
-  va_list args;
-  va_start(args, format);
-  std::vsnprintf(desc, 8192, format, args);
-  this->strcat(desc);
-  va_end(args);
-  delete [] desc;
-}
-
-
-void thexception::insspf(const char * format, ...)
-{
-  char * desc = new char [8192];
-  char * orig = new char [this->size];
-  ::strcpy(orig, this->buff);
-  va_list args;
-  va_start(args, format);
-  std::vsnprintf(desc, 8192, format, args);
-  this->strcpy(desc);
-  this->strcat(orig);
-  va_end(args);
-  delete [] orig;
-  delete [] desc;
-}
-
-
-char * thexception::get_desc() {
-  return this->get_buffer();
-}
-
-
-thexception thexc;
-
-
+thexception::thexception(const std::string& msg)
+  : std::runtime_error(msg)
+{}
