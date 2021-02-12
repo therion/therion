@@ -1583,10 +1583,7 @@ void thlayout_print_header_align(FILE * o, int a) {
     }
 }
 
-std::string fix_path_slashes(const char * src) {
-	if (src == NULL)
-		return src;
-	auto s = std::string(src);
+std::string fix_path_slashes(std::string s) {
 	std::replace( s.begin(), s.end(), '\\', '/');
 	return s;
 }
