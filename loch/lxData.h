@@ -40,6 +40,7 @@
 #include <vtkStripper.h>
 #include <wx/string.h>
 #include <vector>
+#include <set>
 #endif  
 //LXDEPCHECK - standard libraries
 
@@ -57,6 +58,8 @@ struct lxDataSurvey {
   const char * m_name, * m_title;
 
   std::string m_full_name;
+  
+  bool m_selected;
 
 };
 
@@ -69,11 +72,11 @@ struct lxDataStation {
 
   const char * m_name, * m_comment;
 
-  bool m_temporary, m_entrance, m_fix;
+  bool m_temporary, m_entrance, m_fix, m_selected;
 
   double m_screen_x, m_screen_y, m_screen_z, m_surface;
 
-  lxDataStation() : m_name(NULL), m_temporary(false), m_entrance(false), m_fix(false), m_surface(false) {}
+  lxDataStation() : m_name(NULL), m_temporary(false), m_entrance(false), m_fix(false), m_selected(true), m_surface(false) {}
   
 };
 
@@ -97,7 +100,9 @@ struct lxDataShot {
 
   unsigned long from, to;
 
-  bool surface, invisible, splay, duplicate;
+  size_t m_survey_idx;
+  
+  bool surface, invisible, splay, duplicate, m_selected;
   
 };
 
@@ -114,6 +119,8 @@ struct lxData {
   lxDataShotVec shots;
 
   lxDataSurveyVec surveys;
+  
+  std::set<size_t> m_selected_surveys;
 
   wxString title;
   
@@ -135,6 +142,9 @@ struct lxData {
   void Rebuild();
   void InitTextures();
   void ExportVTK(wxString fileName);
+  
+  void ClearSurveySelection();
+  void AddSelectedSurvey(size_t id);
   
 };
 

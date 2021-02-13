@@ -23,6 +23,12 @@ therion:
    - swapped anastomosis & karren symbols
    - other minor fixes
  * updated shapelib
+ 
+loch:
+ * Tools->Selection - only displays selected surveys
+ * bugs fixed:
+   - missing title
+   - autorotation issues
 
 infrastructure:
  * support for CMake builds (thanks to Matěj Plch)

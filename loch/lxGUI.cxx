@@ -1260,8 +1260,6 @@ void lxFrame::ExportRotationPictures() {
   delete tmpRD;
 }
 
-
-    
 #ifdef LXMACOSX
 void lxApp::MacOpenFile(const wxString &fileName)
 {
