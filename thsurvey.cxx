@@ -151,7 +151,7 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           break;
 
         default:
-          ththrow(("invalid -namespace switch -- %s", *args))
+          ththrow("invalid -namespace switch -- {}", *args);
 
       }
       break;
@@ -176,7 +176,7 @@ void thsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       if (th_is_keyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        ththrow(("invalid keyword -- %s", *args));
+        ththrow("invalid keyword -- {}", *args);
       break;
       
     default:
@@ -236,7 +236,7 @@ void thsurvey::parse_declination(char * str)
 
   // ak 1 4 6 ... error
   if ((nargs == 1) || (((nargs % 2) == 0) && (nargs > 3)))
-    ththrow(("invalid declination specification -- \"%s\"",str))
+    ththrow("invalid declination specification -- \"{}\"",str);
 
   // ak 0 tak resetuje a nastavi na 0
   if (nargs == 0) {
@@ -252,7 +252,7 @@ void thsurvey::parse_declination(char * str)
   if (nargs == 1) {
     thparse_double(nid, decl, args[0]);
     if (nid != TT_SV_NUMBER)
-      ththrow(("invalid declination -- %s", args[0]))
+      ththrow("invalid declination -- {}", args[0]);
     decl = du.transform(decl);
     data2[0] = 0.0;
     data2[1] = decl;
@@ -273,7 +273,7 @@ void thsurvey::parse_declination(char * str)
       thparse_double(nid, decl, args[2 * idx + 1]);
       if (nid != TT_SV_NUMBER) {
         delete [] all_data;
-        ththrow(("invalid declination -- %s", args[2 * idx + 1]))
+        ththrow("invalid declination -- {}", args[2 * idx + 1]);
       }
       this->decuds = decl;
     }
@@ -291,7 +291,7 @@ void thsurvey::parse_declination(char * str)
       thparse_double(nid, decl, args[2 * idx + 1]);
       if (nid != TT_SV_NUMBER) {
         delete [] all_data;
-        ththrow(("invalid declination -- %s", args[2 * idx + 1]))
+        ththrow("invalid declination -- {}", args[2 * idx + 1]);
       }
       all_data[2 * dateidx + 1] = du.transform(decl);
       dateidx++;

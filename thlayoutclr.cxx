@@ -127,7 +127,7 @@ void thlayout_color::parse(char * str, bool aalpha) {
   thsplit_words(&(thdb.mbuff_tmp), str);
   int nargs = thdb.mbuff_tmp.get_size(), sv;
   char ** args = thdb.mbuff_tmp.get_buffer();
-#define invalid_color_spec ththrow(("invalid color specification -- %s", str))
+#define invalid_color_spec ththrow("invalid color specification -- {}", str);
   switch (nargs) {
     case 8:
 			thparse_double(sv,this->C,args[4]);

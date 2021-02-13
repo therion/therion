@@ -1691,7 +1691,7 @@ void export_all_symbols()
   "#################### end of metapost log file ####################\n",true);
   if (retcode != EXIT_SUCCESS) {
     thassert(chdir(wdir.get_buffer()) == 0);
-    ththrow(("metapost exit code -- %d", retcode))
+    ththrow("metapost exit code -- {}", retcode);
   }
 
   thconvert_new();

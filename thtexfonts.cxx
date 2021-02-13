@@ -44,6 +44,7 @@
 #include "thinit.h"
 #include "thpdfdata.h"
 #include "thbuffer.h"
+#include "therion.h"
 
 thbuffer thtexfontsbuff;
 

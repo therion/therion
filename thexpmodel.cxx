@@ -70,20 +70,20 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing format -- \"%s\"",args[optx]))
+        ththrow("missing format -- \"{}\"",args[optx]);
       this->format = thmatch_token(args[argx], thtt_expmodel_fmt);
       if (this->format == TT_EXPMODEL_FMT_UNKNOWN)
-        ththrow(("unknown format -- \"%s\"", args[argx]))
+        ththrow("unknown format -- \"{}\"", args[argx]);
       argx++;
       break;
 
     case TT_EXPMODEL_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing encoding -- \"%s\"",args[optx]))
+        ththrow("missing encoding -- \"{}\"",args[optx]);
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow(("unknown encoding -- \"%s\"", args[argx]))
+        ththrow("unknown encoding -- \"{}\"", args[argx]);
       argx++;
       break;
 
@@ -91,10 +91,10 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_DISABLE:
       argx++;
       if (argx >= nargs)
-        ththrow(("missing model entity -- \"%s\"",args[optx]))
+        ththrow("missing model entity -- \"{}\"",args[optx]);
       utmp = thmatch_token(args[argx], thtt_expmodel_items);
       if (utmp == TT_EXPMODEL_ITEM_UNKNOWN)
-        ththrow(("unknown model entity -- \"%s\"", args[argx]))
+        ththrow("unknown model entity -- \"{}\"", args[argx]);
       if (optid == TT_EXPMODEL_OPT_ENABLE) {
         this->items |= utmp;
       } else {
@@ -106,10 +106,10 @@ void thexpmodel::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMODEL_OPT_WALLSRC:
       argx++;
       if (argx >= nargs)
-        ththrow(("missing wall source -- \"%s\"",args[optx]))
+        ththrow("missing wall source -- \"{}\"",args[optx]);
       utmp = thmatch_token(args[argx], thtt_expmodel_wallsrc);
       if (utmp == TT_WSRC_UNKNOWN)
-        ththrow(("unknown wall source -- \"%s\"", args[argx]))
+        ththrow("unknown wall source -- \"{}\"", args[argx]);
       this->wallsrc = utmp;
       argx++;
       break;

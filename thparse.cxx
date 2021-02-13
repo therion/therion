@@ -917,13 +917,13 @@ void thparse_altitude(const char * src, double & altv, double & fixv)
       ux = 1;
       break;
     default:
-      ththrow(("invalid altitude specification -- %s",src))
+      ththrow("invalid altitude specification -- {}",src);
   }
 
   if (parsev) {
     thparse_double(sv,altv,pars[0]);
     if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-      ththrow(("invalid altitude value -- %s", pars[0]));
+      ththrow("invalid altitude value -- {}", pars[0]);
     if (sv == TT_SV_NAN)
       altv = 0.0;
   }
@@ -969,7 +969,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
           break;
       }
       if (xdpi != ydpi) {
-        ththrow(("X and Y image resolution not equal -- %s", fname));
+        ththrow("X and Y image resolution not equal -- {}", fname);
       }
       dpi = xdpi;
       if (dpi < 1.0) {
@@ -1001,7 +1001,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
       }
       fclose(pictf);
       if ((height < 0.0) || (width < 0.0))
-        ththrow(("unable to determine image size -- %s", fname));
+        ththrow("unable to determine image size -- {}", fname);
     } else if (
       (picth[0] == 0x89) && (picth[1] == 0x50) &&
       (picth[2] == 0x4E) && (picth[3] == 0x47) &&
@@ -1015,7 +1015,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
           xdpi = double(scan[4] * 0x1000000 + scan[5] * 0x10000 + scan[6] * 0x100 + scan[7]);
           ydpi = double(scan[8] * 0x1000000 + scan[9] * 0x10000 + scan[10] * 0x100 + scan[11]);
           if (xdpi != ydpi) {
-            ththrow(("X and Y image resolution not equal -- %s", fname));
+            ththrow("X and Y image resolution not equal -- {}", fname);
           }
           switch (scan[12]) {
             case 1:
@@ -1032,10 +1032,10 @@ void thparse_image(const char * fname, double & width, double & height, double &
       width = std::round(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
       height = std::round(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
     } else {
-      ththrow(("file format not supported -- %s", fname))
+      ththrow("file format not supported -- {}", fname);
     }
   } else {
-    ththrow(("file not found -- %s", fname))
+    ththrow("file not found -- {}", fname);
   }
 
 #ifdef THDEBUG

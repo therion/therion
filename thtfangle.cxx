@@ -25,6 +25,7 @@
  * --------------------------------------------------------------------
  */
  
+#include "therion.h"
 #include "thparse.h"
 #include "thtfangle.h"
 #include "thexception.h"
@@ -67,7 +68,7 @@ void thtfangle::parse_units(char * ustr)
 				break;
 			}
     case TT_TFU_UNKNOWN_ANGLE:
-      ththrow(("unknown angle unit -- %s", ustr))
+      ththrow("unknown angle unit -- {}", ustr);
       break;
   }
   

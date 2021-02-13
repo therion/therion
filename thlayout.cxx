@@ -346,18 +346,18 @@ void thlayout_parse_scale(double * scale,char ** args) {
   int sv;
   thparse_double(sv,dv,args[0]);
   if (sv != TT_SV_NUMBER)
-    ththrow(("invalid number -- %s",args[0]))
+    ththrow("invalid number -- {}",args[0]);
   if (dv <= 0.0)
-    ththrow(("positive number expected -- %s",args[0]))
+    ththrow("positive number expected -- {}",args[0]);
   *scale = dv;
   thparse_double(sv,dv,args[1]);
   if (sv != TT_SV_NUMBER)
-    ththrow(("invalid number -- %s",args[1]))
+    ththrow("invalid number -- {}",args[1]);
   if (dv <= 0.0)
-    ththrow(("positive number expected -- %s",args[1]))
+    ththrow("positive number expected -- {}",args[1]);
   *scale /= dv;  
   if ((*scale > 1.000001e-1) || (*scale < 9.99999e-6))
-    ththrow(("scale out of range -- %s %s",args[0], args[1]))
+    ththrow("scale out of range -- {} {}",args[0], args[1]);
 }
 
 void thlayout_parse_rotate(double & rotate, char * rotstr) {
@@ -371,11 +371,11 @@ void thlayout_parse_rotate(double & rotate, char * rotstr) {
     case 1:
       thparse_double(sv, rotate, args[0]);
       if (sv != TT_SV_NUMBER)
-        ththrow(("invalid rotate specification -- %s", rotstr))
+        ththrow("invalid rotate specification -- {}", rotstr);
       rotate = atf.transform(rotate);
       break;
     default:
-      ththrow(("invalid rotate specification -- %s", rotstr))
+      ththrow("invalid rotate specification -- {}", rotstr);
   }
 }
 
@@ -422,7 +422,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       defcod.nargs = 2;
     default:
       if (cod.nargs > defcod.nargs)
-        ththrow(("too many arguments -- %s", args[defcod.nargs]))
+        ththrow("too many arguments -- {}", args[defcod.nargs]);
   }
   
   switch (cod.id) {
@@ -444,7 +444,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       switch(cod.id) {
         case 0:
           if (this->ccode == TT_LAYOUT_CODE_UNKNOWN) {
-            ththrow(("unknown option -- %s", *args));
+            ththrow("unknown option -- {}", *args);
           }
           thencode(&(this->db->buff_enc), *args, argenc);
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
@@ -454,7 +454,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {
             if (!th_is_keyword(*args))
-              ththrow(("invalid keyword -- %s", args[0]))
+              ththrow("invalid keyword -- {}", args[0]);
             thencode(&(this->db->buff_enc), *args, argenc);
             this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           }
@@ -463,11 +463,11 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_LAYOUT_SYMBOL_ASSIGN:
           this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
-            ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
+            ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
           if (!thsymbolset_assign[this->last_line->smid])
-            ththrow(("symbol can not be assigned -- %s %s", args[0], args[1]))
+            ththrow("symbol can not be assigned -- {} {}", args[0], args[1]);
           if (!th_is_keyword(args[2]))
-            ththrow(("invalid keyword -- %s", args[2]))
+            ththrow("invalid keyword -- {}", args[2]);
           thencode(&(this->db->buff_enc), args[2], argenc);
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;
@@ -475,9 +475,9 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 //        case TT_LAYOUT_MAP_ITEM:
 //          this->last_line->smid = thmatch_token(args[0],thtt_layout_mapitem);
 //          if (this->last_line->smid == SYMS_ZZZ)
-//            ththrow(("unknown map-item specification -- %s", args[0]))
+//            ththrow("unknown map-item specification -- %s", args[0]);
 //          if (!th_is_keyword(args[1]))
-//            ththrow(("invalid keyword -- %s", args[1]))
+//            ththrow("invalid keyword -- %s", args[1]);
 //          thencode(&(this->db->buff_enc), args[1], argenc);
 //          this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
 //          this->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;
@@ -485,19 +485,19 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_LAYOUT_SYMBOL_HIDE:
           this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
-            ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
+            ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
           break;
         case TT_LAYOUT_SYMBOL_SHOW:
           this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
-            ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
+            ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
           break;
         case TT_LAYOUT_SYMBOL_COLOR:
           this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
-            ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
+            ththrow("unknown symbol specification -- {} {}", args[0], args[1]);
           this->last_line->sclr.parse(args[2]);
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;
           break;
@@ -510,8 +510,8 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_SV_NUMBER:
           dum_int = int(dum);
           if ((double(dum_int) != dum) || (dum_int < 0))
-            ththrow(("not an integer -- %s", args[1]))
-            break;
+            ththrow("not an integer -- {}", args[1]);
+          break;
         case TT_SV_ALL:
           dum_int = -1;
           break;
@@ -519,7 +519,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           dum_int = 0;
           break;   
         default:
-          ththrow(("invalid number or switch -- %s", args[1]))
+          ththrow("invalid number or switch -- {}", args[1]);
       }
       this->survey_level = dum_int;
       this->def_survey_level = 2;
@@ -531,28 +531,28 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TTL_MAPITEM_EXPLO_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
           if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
-            ththrow(("invalid map-item explo-length switch -- %s",args[1]))
+            ththrow("invalid map-item explo-length switch -- {}",args[1]);
           this->explo_lens = sv;
           this->def_explo_lens = 2;
           break;
         case TTL_MAPITEM_TOPO_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
           if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
-            ththrow(("invalid map-item topo-length switch -- %s",args[1]))
+            ththrow("invalid map-item topo-length switch -- {}",args[1]);
           this->topo_lens = sv;
           this->def_topo_lens = 2;
           break;
         case TTL_MAPITEM_CARTO_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
           if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
-            ththrow(("invalid map-item carto-length switch -- %s",args[1]))
+            ththrow("invalid map-item carto-length switch -- {}",args[1]);
           this->carto_lens = sv;
           this->def_carto_lens = 2;
           break;
         case TTL_MAPITEM_COPY_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
           if (sv == TT_LAYOUT_LENSTAT_UNKNOWN)
-            ththrow(("invalid map-item copyright-length switch -- %s",args[1]))
+            ththrow("invalid map-item copyright-length switch -- {}",args[1]);
           this->copy_lens = sv;
           this->def_copy_lens = 2;
           break;
@@ -565,7 +565,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
             case TT_SV_NUMBER:
               dum_int = int(dum);
               if ((double(dum_int) != dum) || (dum_int < 0))
-                ththrow(("not a non-negative integer -- %s", args[1]))
+                ththrow("not a non-negative integer -- {}", args[1]);
               break;
             case TT_SV_ALL:
               dum_int = -1;
@@ -574,7 +574,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
               dum_int = 0;
               break;   
             default:
-              ththrow(("invalid number or switch -- %s", args[1]))
+              ththrow("invalid number or switch -- {}", args[1]);
           }
           switch (sv2) {
             case TTL_MAPITEM_EXPLO:
@@ -596,7 +596,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           }
           break;
         default:
-          ththrow(("unknown statistics -- %s", args[0]))
+          ththrow("unknown statistics -- {}", args[0]);
       }
       break;
       
@@ -631,10 +631,10 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_SV_NUMBER:
           dum_int = int(dum);
           if ((double(dum_int) != dum) || (dum_int < 0))
-            ththrow(("not a non-negative integer -- %s", args[0]))
+            ththrow("not a non-negative integer -- {}", args[0]);
           break;
         default:
-          ththrow(("invalid number -- %s", args[0]))
+          ththrow("invalid number -- {}", args[0]);
       }
       this->legend_columns = (unsigned) dum_int;
       this->def_legend_columns = 2;
@@ -671,10 +671,10 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       for(sv2 = 0; sv2 < 5; sv2++) {
         thparse_double(sv,dum,args[sv2]);
         if ((sv != TT_SV_NUMBER) || (dum <= 0.0)) {
-          ththrow(("invalid font size -- %s", args[sv2]))
+          ththrow("invalid font size -- {}", args[sv2]);
         } else {
           if ((sv2 > 0) && (dum < this->font_setup[sv2-1])) {
-            ththrow(("font size should be increasing by scale -- %s", args[sv2]))
+            ththrow("font size should be increasing by scale -- {}", args[sv2]);
           }
           this->font_setup[sv2] = dum;
         }
@@ -693,7 +693,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         case TT_LAYOUT_COLOR_LABELS:
           sv2 = thmatch_token(args[1], thtt_bool);
           if (sv2 == TT_UNKNOWN_BOOL)
-            ththrow(("invalid color labels switch (on|off expected) -- %s",args[1]))
+            ththrow("invalid color labels switch (on|off expected) -- {}",args[1]);
           else {
             this->color_labels = (sv2 == TT_TRUE);
 	    this->def_color_labels = 2;
@@ -719,7 +719,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           this->color_preview_above.parse(args[1]);
           break;
         default:
-        ththrow(("unknown color -- %s",args[0]))
+        ththrow("unknown color -- {}",args[0]);
       }
       break;
     
@@ -738,7 +738,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_TRANSPARENCY:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid transparency switch -- %s",args[0]))
+        ththrow("invalid transparency switch -- {}",args[0]);
       this->transparency = (sv == TT_TRUE);
       this->def_transparency = 2;
       break;
@@ -746,7 +746,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SKETCHES:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid sketches switch -- %s",args[0]))
+        ththrow("invalid sketches switch -- {}",args[0]);
       this->sketches = (sv == TT_TRUE);
       this->def_sketches = 2;
       break;
@@ -754,7 +754,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_LEGEND:
       sv = thmatch_token(args[0],thtt_layout_legend);
       if (sv == TT_LAYOUT_LEGEND_UNKNOWN)
-        ththrow(("invalid legend switch -- %s",args[0]))
+        ththrow("invalid legend switch -- {}",args[0]);
       this->legend = sv;
       this->def_legend = 2;
       break;
@@ -762,7 +762,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_COLOR_LEGEND:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid color-legend switch -- %s",args[0]))
+        ththrow("invalid color-legend switch -- {}",args[0]);
       this->color_legend = sv;
       this->def_color_legend = 2;
       break;
@@ -770,7 +770,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_COLOR_MODEL:
       sv = thmatch_token(args[0],thtt_layoutclr_model);
       if (sv == TT_LAYOUTCLRMODEL_UNKNOWN)
-        ththrow(("invalid color-model switch -- %s",args[0]))
+        ththrow("invalid color-model switch -- {}",args[0]);
       this->color_model = sv;
       this->def_color_model = 2;
       break;
@@ -785,19 +785,19 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 
       thparse_double(sv,this->map_header_x,args[0]);
       if (sv != TT_SV_NUMBER)
-        ththrow(("invalid number -- %s",args[0]))
+        ththrow("invalid number -- {}",args[0]);
       if ((this->map_header_x < -100.0) || (this->map_header_x > 200.0))
-        ththrow(("number between 0.0 - 100.0 expected -- %s",args[0]))
+        ththrow("number between 0.0 - 100.0 expected -- {}",args[0]);
 
       thparse_double(sv,this->map_header_y,args[1]);
       if (sv != TT_SV_NUMBER)
-        ththrow(("invalid number -- %s",args[1]))
+        ththrow("invalid number -- {}",args[1]);
       if ((this->map_header_y < -100.0) || (this->map_header_y > 200.0))
-        ththrow(("number between 0.0 - 100.0 expected -- %s",args[1]))
+        ththrow("number between 0.0 - 100.0 expected -- {}",args[1]);
 
       sv = thmatch_token(args[2],thtt_layout_map_header);
       if (sv == TT_LAYOUT_MAP_HEADER_UNKNOWN)
-        ththrow(("invalid map-header switch -- %s",args[2]))
+        ththrow("invalid map-header switch -- {}",args[2]);
       this->map_header = sv;
       this->def_map_header = 2;
       break;
@@ -813,7 +813,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_DEBUG:
       sv = thmatch_token(args[0],thtt_layout_debug);
       if (sv == TT_LAYOUT_DEBUG_UNKNOWN)
-        ththrow(("invalid debug switch -- %s",args[0]))        
+        ththrow("invalid debug switch -- {}",args[0]);
       switch (sv) {
         case TT_LAYOUT_DEBUG_ALL:
           this->debug = TTLDBG_JOINS | TTLDBG_STATIONS | TTLDBG_SCRAPNAMES | TTLDBG_STATIONNAMES;
@@ -840,7 +840,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_LANG:
       sv = thlang_parse(args[0]);
       if (sv == THLANG_UNKNOWN)
-        ththrow(("language not supported -- %s",args[0]))
+        ththrow("language not supported -- {}",args[0]);
       this->lang = sv;
       this->def_lang = 2;
       break;
@@ -853,7 +853,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_LAYERS:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid layers switch -- %s",args[0]))
+        ththrow("invalid layers switch -- {}",args[0]);
       this->layers = (sv == TT_TRUE);
       this->def_layers = 2;
       break;
@@ -861,7 +861,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_MAP_HEADER_BG:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid map-header-bg switch -- %s",args[0]))
+        ththrow("invalid map-header-bg switch -- {}",args[0]);
       this->map_header_bg = (sv == TT_TRUE);
       this->def_map_header_bg = 2;
       break;
@@ -869,7 +869,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_OPACITY:
       thparse_double(sv,dum,args[0]);        
       if ((sv != TT_SV_NUMBER) || (dum < 0.0) || (dum > 100.0))
-        ththrow(("invalid opacity value -- %s", args[0]))
+        ththrow("invalid opacity value -- {}", args[0]);
       this->opacity = dum / 100.0;
       this->def_opacity = 2;
       break;
@@ -877,7 +877,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SURFACE_OPACITY:
       thparse_double(sv,dum,args[0]);        
       if ((sv != TT_SV_NUMBER) || (dum < 0.0) || (dum > 100.0))
-        ththrow(("invalid opacity value -- %s", args[0]))
+        ththrow("invalid opacity value -- {}", args[0]);
       this->surface_opacity = dum / 100.0;
       this->def_surface_opacity = 2;
       break;
@@ -885,7 +885,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_SURFACE:
       sv = thmatch_token(args[0],thtt_layout_surface);
       if (sv == TT_LAYOUT_SURFACE_UNKNOWN)
-        ththrow(("invalid surface switch -- %s",args[0]))
+        ththrow("invalid surface switch -- {}",args[0]);
       this->surface = sv;
       this->def_surface = 2;
       break;
@@ -893,7 +893,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_GRID_COORDS:
       sv = thmatch_token(args[0],thtt_layout_gridcoords);
       if (sv == TT_LAYOUT_GRIDCOORDS_UNKNOWN)
-        ththrow(("invalid grid-coords switch -- %s",args[0]))
+        ththrow("invalid grid-coords switch -- {}",args[0]);
       this->grid_coords = sv;
       this->def_grid_coords = 2;
       break;
@@ -901,7 +901,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_NORTH:
       sv = thmatch_token(args[0],thtt_layout_north);
       if (sv == TT_LAYOUT_NORTH_UNKNOWN)
-        ththrow(("invalid north switch -- %s",args[0]))
+        ththrow("invalid north switch -- {}",args[0]);
       this->north = sv;
       this->def_north = 2;
       break;
@@ -909,7 +909,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_GRID:
       sv = thmatch_token(args[0],thtt_layout_grid);
       if (sv == TT_LAYOUT_GRID_UNKNOWN)
-        ththrow(("invalid grid switch -- %s",args[0]))
+        ththrow("invalid grid switch -- {}",args[0]);
       this->grid = (char) sv;
       this->def_grid = 2;
       break;
@@ -921,14 +921,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_CODE:
       sv = thmatch_token(args[0],thtt_layout_code);
       if (sv == TT_LAYOUT_CODE_UNKNOWN)
-        ththrow(("invalid code switch -- %s",args[0]))
+        ththrow("invalid code switch -- {}",args[0]);
       this->ccode = (char) sv;
       break;
       
     case TT_LAYOUT_PAGE_GRID:
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid page-grid switch -- %s",args[0]))
+        ththrow("invalid page-grid switch -- {}",args[0]);
       this->page_grid = (sv == TT_TRUE);
       this->def_page_grid = 2;
       break;
@@ -937,13 +937,13 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 
       sv = thmatch_token(args[0],thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid pages exclusion switch -- %s",args[0]))
+        ththrow("invalid pages exclusion switch -- {}",args[0]);
       this->excl_pages = (sv == TT_TRUE);
 
       if (strlen(args[1]) > 0)
         this->excl_list = this->db->strstore(args[1]);
       else if (this->excl_pages)
-        ththrow(("invalid pages exclusion list -- %s",args[1]));
+        ththrow("invalid pages exclusion list -- {}",args[1]);
 
       this->def_excl_pages = 2;
       break;
@@ -951,7 +951,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_PAGE_NUMBERS:
       sv = thmatch_token(*args,thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid page numbers switch -- %s",*args))
+        ththrow("invalid page numbers switch -- {}",*args);
       this->pgsnum = (sv == TT_TRUE);
       this->def_page_numbers = 2;
       break;
@@ -959,7 +959,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_LAYOUT_TITLE_PAGES:
       sv = thmatch_token(*args,thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid title-pages switch -- %s",*args))
+        ththrow("invalid title-pages switch -- {}",*args);
       this->titlep = (sv == TT_TRUE);
       this->def_title_pages = 2;
       break;
@@ -1015,13 +1015,13 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         //thencode(&(this->db->buff_enc), args[0], argenc);
         this->olx = this->db->strstore(args[0]);
       } else
-        ththrow(("invalid label -- %s",args[0]));
+        ththrow("invalid label -- {}",args[0]);
 
       if (strlen(args[1]) > 0) {
         //thencode(&(this->db->buff_enc), args[1], argenc);
         this->oly = this->db->strstore(args[1]);
       } else
-        ththrow(("invalid label -- %s",args[1]));
+        ththrow("invalid label -- {}",args[1]);
 
       this->def_origin_label = 2;
       break;
@@ -1030,16 +1030,16 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     
       thparse_double(sv,dum,args[0]);        
       if ((sv != TT_SV_NUMBER) || (dum <= 0))
-        ththrow(("invalid navigator size -- %s", *args))
+        ththrow("invalid navigator size -- {}", *args);
       if (double(int(dum)) != dum)
-        ththrow(("invalid navigator size -- %s", *args))
+        ththrow("invalid navigator size -- {}", *args);
       this->navsx = unsigned(dum);
 
       thparse_double(sv,dum,args[1]);        
       if ((sv != TT_SV_NUMBER) || (dum <= 0))
-        ththrow(("invalid navigator size -- %s", *args))
+        ththrow("invalid navigator size -- {}", *args);
       if (double(int(dum)) != dum)
-        ththrow(("invalid navigator size -- %s", *args))
+        ththrow("invalid navigator size -- {}", *args);
       this->navsy = unsigned(dum);
       
       this->def_nav_size = 2;
@@ -1057,24 +1057,24 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
         }
         lcp->srcn = this->db->strstore(*args);
       } else 
-        ththrow(("invalid keyword -- %s", *args));
+        ththrow("invalid keyword -- {}", *args);
       break;
     
     case TT_LAYOUT_NAV_FACTOR:
       thparse_double(sv,this->navf,*args);
       if (sv != TT_SV_NUMBER)
-        ththrow(("invalid factor -- %s", *args))
+        ththrow("invalid factor -- {}", *args);
       if (this->navf <= 0.0)
-        ththrow(("negative factor not allowed -- %s", *args))
+        ththrow("negative factor not allowed -- {}", *args);
       this->def_nav_factor = 2;
       break;
     
     case TT_LAYOUT_OWN_PAGES:
       thparse_double(sv,dum,*args);        
       if ((sv != TT_SV_NUMBER) || (dum <= 0))
-        ththrow(("invalid number of own pages -- %s", *args))
+        ththrow("invalid number of own pages -- {}", *args);
       if (double(int(dum)) != dum)
-        ththrow(("invalid number of own pages -- %s", *args))
+        ththrow("invalid number of own pages -- {}", *args);
       this->ownp = unsigned(dum);
       this->def_own_pages = 2;
       break;
@@ -1422,12 +1422,12 @@ void thlayout::self_print_library() {
 void check_num(double num, int nonneg) {
   if (nonneg == 0) {
     if (num < 0) {
-      ththrow(("not a non-negative number -- %g", num));
+      ththrow("not a non-negative number -- {}", num);
     }
   }
   else if (nonneg > 0) {
     if (num <= 0) {
-      ththrow(("not a positive number -- %g", num));
+      ththrow("not a positive number -- {}", num);
     }
   }
 }
@@ -1441,19 +1441,19 @@ void thlayout::parse_len(double & d1, double & d2, double & d3, int nargs, char 
     case 3:
       thparse_double(sv,d3,args[2]);
       if ((sv != TT_SV_NUMBER))
-        ththrow(("invalid number -- %s", args[2]));
+        ththrow("invalid number -- {}", args[2]);
       d3 = lentf.transform(d3);
       check_num(d3,nonneg);
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
-        ththrow(("invalid number -- %s", args[1]));
+        ththrow("invalid number -- {}", args[1]);
       d2 = lentf.transform(d2);
       check_num(d2,nonneg);
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
-        ththrow(("invalid number -- %s", args[0]));
+        ththrow("invalid number -- {}", args[0]);
       d1 = lentf.transform(d1);
       check_num(d1,nonneg);
   }
@@ -1468,37 +1468,37 @@ void thlayout::parse_len6(double & d1, double & d2, double & d3, double & d4, do
     case 6:
       thparse_double(sv,d6,args[5]);
       if ((sv != TT_SV_NUMBER))
-        ththrow(("invalid number -- %s", args[5]));
+        ththrow("invalid number -- {}", args[5]);
       d6 = lentf.transform(d6);
       check_num(d6,nonneg);
     case 5:
       thparse_double(sv,d5,args[4]);
       if ((sv != TT_SV_NUMBER))
-        ththrow(("invalid number -- %s", args[4]));
+        ththrow("invalid number -- {}", args[4]);
       d5 = lentf.transform(d5);
       check_num(d5,nonneg);
     case 4:
       thparse_double(sv,d4,args[3]);
       if ((sv != TT_SV_NUMBER))
-        ththrow(("invalid number -- %s", args[3]));
+        ththrow("invalid number -- {}", args[3]);
       d4 = lentf.transform(d4);
       check_num(d4,nonneg);
     case 3:
       thparse_double(sv,d3,args[2]);
       if ((sv != TT_SV_NUMBER))
-        ththrow(("invalid number -- %s", args[2]));
+        ththrow("invalid number -- {}", args[2]);
       d3 = lentf.transform(d3);
       check_num(d3,nonneg);
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
-        ththrow(("invalid number -- %s", args[1]));
+        ththrow("invalid number -- {}", args[1]);
       d2 = lentf.transform(d2);
       check_num(d2,nonneg);
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
-        ththrow(("invalid number -- %s", args[0]));
+        ththrow("invalid number -- {}", args[0]);
       d1 = lentf.transform(d1);
       check_num(d1,nonneg);
   }
@@ -1733,8 +1733,7 @@ void thlayout::process_copy() {
   thlayout * srcl;
   // ak je locknuty -> tak warning a koniec
   if (this->lock) {
-    this->throw_source();
-    threwarning2(("recursive layout copying"))
+    thwarning(("%s -- recursive layout copying", this->throw_source().c_str()))
     return;
   }
   this->lock = true;
@@ -1744,8 +1743,7 @@ void thlayout::process_copy() {
     // najdeme si layout podla mena
     csp->srcptr = this->db->get_layout(csp->srcn);
     if (csp->srcptr == NULL) {
-      this->throw_source();
-      threwarning2(("source layout not found -- %s", csp->srcn))
+      thwarning(("%s -- source layout not found -- %s", this->throw_source().c_str(), csp->srcn))
     } else {
       srcl = csp->srcptr;
       // ak ma este nevyriesene zavislosti
@@ -2212,23 +2210,23 @@ void thlayout_map_image::parse(char ** args, const char * cpath) {
 
   thparse_double(sv,this->m_x,args[0]);
   if (sv != TT_SV_NUMBER)
-    ththrow(("invalid number -- %s",args[0]))
+    ththrow("invalid number -- {}",args[0]);
   if ((this->m_x < -100.0) || (this->m_x > 200.0))
-    ththrow(("number between -100.0 - 200.0 expected -- %s",args[0]))
+    ththrow("number between -100.0 - 200.0 expected -- {}",args[0]);
 
   thparse_double(sv,this->m_y,args[1]);
   if (sv != TT_SV_NUMBER)
-    ththrow(("invalid number -- %s",args[1]))
+    ththrow("invalid number -- {}",args[1]);
   if ((this->m_y < -100.0) || (this->m_y > 200.0))
-    ththrow(("number between -100.0 - 200.0 expected -- %s",args[1]))
+    ththrow("number between -100.0 - 200.0 expected -- {}",args[1]);
 
   sv = thmatch_token(args[2],thtt_layout_map_header);
   if (sv == TT_LAYOUT_MAP_HEADER_UNKNOWN)
-    ththrow(("invalid map-image align switch -- %s",args[2]))
+    ththrow("invalid map-image align switch -- {}",args[2]);
   this->m_align = sv;
 
   if (strlen(args[3]) == 0)
-    ththrow(("empty image file name not allowed"))
+    ththrow("empty image file name not allowed");
 
   std::string fpath;
   fpath = cpath;

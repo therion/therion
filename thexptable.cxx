@@ -68,59 +68,59 @@ void thexptable::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPTABLE_OPT_ATTRIBUTES:
       argx++;
       if (argx >= nargs)
-        ththrow(("missing attributes switch -- \"%s\"",args[optx]))
+        ththrow("missing attributes switch -- \"{}\"",args[optx]);
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid attributes switch -- \"%s\"", args[argx]))
+        ththrow("invalid attributes switch -- \"{}\"", args[argx]);
       this->expattr = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_LOCATION:
       argx++;
       if (argx >= nargs)
-        ththrow(("missing location switch -- \"%s\"",args[optx]))
+        ththrow("missing location switch -- \"{}\"",args[optx]);
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid location switch -- \"%s\"", args[argx]))
+        ththrow("invalid location switch -- \"{}\"", args[argx]);
       this->exploc = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_FILTER:
       argx++;
       if (argx >= nargs)
-        ththrow(("missing filter switch -- \"%s\"",args[optx]))
+        ththrow("missing filter switch -- \"{}\"",args[optx]);
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid filter switch -- \"%s\"", args[argx]))
+        ththrow("invalid filter switch -- \"{}\"", args[argx]);
       this->filter = (sv == TT_TRUE);
       argx++;
       break;
     case TT_EXPTABLE_OPT_SURVEYS:
       argx++;
       if (argx >= nargs)
-        ththrow(("missing surveys switch -- \"%s\"",args[optx]))
+        ththrow("missing surveys switch -- \"{}\"",args[optx]);
       sv = thmatch_token(args[argx], thtt_bool);
       if (sv == TT_UNKNOWN_BOOL)
-        ththrow(("invalid surveys switch -- \"%s\"", args[argx]))
+        ththrow("invalid surveys switch -- \"{}\"", args[argx]);
       this->surveys = (sv == TT_TRUE);
       argx++;
       break;    
     case TT_EXPTABLE_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing format -- \"%s\"",args[optx]))
+        ththrow("missing format -- \"{}\"",args[optx]);
       this->format = thmatch_token(args[argx], thtt_exptable_fmt);
       if (this->format == TT_EXPTABLE_FMT_UNKNOWN)
-        ththrow(("unknown format -- \"%s\"", args[argx]))
+        ththrow("unknown format -- \"{}\"", args[argx]);
       argx++;
       break;
     case TT_EXPTABLE_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing encoding -- \"%s\"",args[optx]))
+        ththrow("missing encoding -- \"{}\"",args[optx]);
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow(("unknown encoding -- \"%s\"", args[argx]))
+        ththrow("unknown encoding -- \"{}\"", args[argx]);
       argx++;
       break;
     default:

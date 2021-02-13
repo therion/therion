@@ -148,8 +148,8 @@ const thcsdata * thcs_get_data(int cs) {
 
 void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args)
 {
-  if (thcs_parse(id) != TTCS_UNKNOWN) ththrow(("cs already exists -- %s", id));
-  if (!th_is_extkeyword(id)) ththrow(("invalid cs identifier -- %s", id));
+  if (thcs_parse(id) != TTCS_UNKNOWN) ththrow("cs already exists -- {}", id);
+  if (!th_is_extkeyword(id)) ththrow("invalid cs identifier -- {}", id);
   thcs_check(proj4id);
   thcsdata * pd = &(*thcs_custom_data.insert(thcs_custom_data.end(), thcsdata()));
   pd->prjspec = "";

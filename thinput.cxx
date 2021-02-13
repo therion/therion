@@ -255,8 +255,7 @@ void thinput::open_file(char * fname)
   
   if (!ifptr->sh.is_open()) {
     if ((srcfile != NULL) || (this->report_missing)) {
-      ththrow(("can't open file for input -- %s", \
-        fname));
+      ththrow("can't open file for input -- {}", fname);
     }
   }
   else {
