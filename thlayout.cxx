@@ -2206,10 +2206,10 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
 	  break;
   }
   
-  // TODO: color profiles abs paths
-  // LAYOUT.color_profile_rgb = this->color_profile_rgb
-  // LAYOUT.color_profile_cmyk = this->color_profile_cmyk
-  // LAYOUT.color_profile_gray = this->color_profile_gray
+  // color profiles abs paths
+  LAYOUT.icc_profile_rgb = this->color_profile_rgb;
+  LAYOUT.icc_profile_cmyk = this->color_profile_cmyk;
+  LAYOUT.icc_profile_gray = this->color_profile_gray;
   
   this->color_map_bg.set_color(this->color_model, LAYOUT.col_background);
   this->color_map_fg.set_color(this->color_model, LAYOUT.col_foreground);
