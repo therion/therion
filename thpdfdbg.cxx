@@ -80,3 +80,16 @@ string rgb2svg(double r, double g, double b) {
                                            int(255*b) % 256);
 }
 
+string icc2pdfresources() {
+  string s;
+  if (!icc_used()) return s;
+  if (!LAYOUT.icc_profile_cmyk.empty()) s += " /DefaultCMYK \\the\\iccobjcmyk\\space 0 R ";
+  if (!LAYOUT.icc_profile_rgb.empty())  s += " /DefaultRGB \\the\\iccobjrgb\\space 0 R ";
+  if (!LAYOUT.icc_profile_gray.empty()) s += " /DefaultGray \\the\\iccobjgray\\space 0 R ";
+  return s;
+}
+
+bool icc_used() {
+  return (!LAYOUT.icc_profile_cmyk.empty() || !LAYOUT.icc_profile_rgb.empty() || !LAYOUT.icc_profile_gray.empty());
+}
+

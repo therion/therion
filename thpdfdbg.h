@@ -40,6 +40,8 @@ string tex_set_ref(string s, string t);
 string tex_get_ref(string s);
 string pdf_info(void);
 string rgb2svg(double r, double g, double b);
+string icc2pdfresources();
+bool icc_used();
 
 extern bool tex_refs_registers;
 

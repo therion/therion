@@ -182,6 +182,13 @@ thlayout::thlayout()
   this->def_color_model = 0;
   this->color_model = TT_LAYOUTCLRMODEL_CMYK;
 
+  this->def_color_profile_rgb = 0;
+  this->color_profile_rgb = "";
+  this->def_color_profile_cmyk = 0;
+  this->color_profile_cmyk = "";
+  this->def_color_profile_gray = 0;
+  this->color_profile_gray = "";
+  
   this->def_scale_bar = 0;
   this->scale_bar = -1.0;
 
@@ -311,6 +318,7 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
     case TT_LAYOUT_MAP_ITEM:
     case TT_LAYOUT_COLOR:
     case TT_LAYOUT_LEGEND_WIDTH:
+    case TT_LAYOUT_COLOR_PROFILE:
       return thcmd_option_desc(id,2);
     case TT_LAYOUT_SYMBOL_ASSIGN:
     case TT_LAYOUT_SIZE:
@@ -775,6 +783,28 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->def_color_model = 2;
       break;
 
+
+    case TT_LAYOUT_COLOR_PROFILE:
+      sv = thmatch_token(args[0],thtt_layoutclr_model);
+      tmp1 = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(args[1]), true);
+      switch (sv) {
+      case TT_LAYOUTCLRMODEL_CMYK:
+    	  this->color_profile_cmyk = tmp1;
+          this->def_color_profile_cmyk = 2;
+    	  break;
+      case TT_LAYOUTCLRMODEL_RGB:
+    	  this->color_profile_rgb = tmp1;
+          this->def_color_profile_rgb = 2;
+    	  break;
+      case TT_LAYOUTCLRMODEL_GRAY:
+    	  this->color_profile_gray = tmp1;
+          this->def_color_profile_gray = 2;
+    	  break;
+      default:
+          ththrow(("invalid color-profile model -- %s",args[0]))
+      }
+      break;
+      
     
     case TT_LAYOUT_SCALE_BAR:
       this->parse_len(this->scale_bar, dum, dum, 1, args, 1);
@@ -1952,6 +1982,18 @@ void thlayout::process_copy() {
       begcopy(def_color_model)
         this->color_model = srcl->color_model;
       endcopy
+	  
+      begcopy(def_color_profile_rgb)
+        this->color_profile_rgb = srcl->color_profile_rgb;
+      endcopy
+	  
+      begcopy(def_color_profile_cmyk)
+        this->color_profile_cmyk = srcl->color_profile_cmyk;
+      endcopy
+
+	  begcopy(def_color_profile_gray)
+        this->color_profile_gray = srcl->color_profile_gray;
+      endcopy
 
       begcopy(def_legend_width)
         this->legend_width = srcl->legend_width;
@@ -2161,6 +2203,11 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
 	  LAYOUT.output_colormodel = colormodel::cmyk;
 	  break;
   }
+  
+  // color profiles abs paths
+  LAYOUT.icc_profile_rgb = this->color_profile_rgb;
+  LAYOUT.icc_profile_cmyk = this->color_profile_cmyk;
+  LAYOUT.icc_profile_gray = this->color_profile_gray;
   
   this->color_map_bg.set_color(this->color_model, LAYOUT.col_background);
   this->color_map_fg.set_color(this->color_model, LAYOUT.col_foreground);

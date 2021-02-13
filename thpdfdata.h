@@ -90,7 +90,8 @@ paired rotatedaround(paired x,paired o, double th);
 struct layout {
   string excl_list,labelx,labely,
          doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
-         northarrow, scalebar,langstr;
+         northarrow, scalebar,langstr,
+         icc_profile_cmyk, icc_profile_rgb, icc_profile_gray;
   bool  excl_pages,title_pages,page_numbering,
         transparency,map_grid,OCG,map_header_bg,colored_text,transparent_map_bg; 
   double hsize,vsize,overlap,
