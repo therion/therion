@@ -526,7 +526,7 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
 //      TEX << "} ";
 //    }
 
-    if (transp_used || !FORM_FONTS.empty() || !FORM_PATTERNS.empty()) {
+    if (transp_used || !FORM_FONTS.empty() || !FORM_PATTERNS.empty() || icc_used()) {
       TEX << " resources { /ProcSet [/PDF /Text] ";
       if (transp_used) {
         TEX << "/ExtGState \\the\\resid\\space 0 R ";
@@ -549,11 +549,17 @@ void distill_eps(string name, string fname, string cname, int mode, ofstream& TE
                  "\\space 0 R ";
         }
         TEX << ">> ";
-        TEX << "/ColorSpace << /CS1 [/Pattern /DeviceRGB] /CS2 [/Pattern /DeviceCMYK] /CS3 [/Pattern /DeviceGray] >> ";
+      }
+      if (!FORM_PATTERNS.empty() || icc_used()) {
+        TEX << "/ColorSpace <<";
+        if (!FORM_PATTERNS.empty())
+          TEX << " /CS1 [/Pattern /DeviceRGB] /CS2 [/Pattern /DeviceCMYK] /CS3 [/Pattern /DeviceGray] ";
+        if (icc_used())
+          TEX << icc2pdfresources();
+        TEX << ">> ";
       }
       TEX << "} ";
     }
-    
     TEX << "\\xxx\n" << tex_set_ref(form_id,"\\pdflastxform") << endl;
   }
 }

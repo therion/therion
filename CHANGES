@@ -3,6 +3,7 @@ Therion 5.6.0 (in progress):
 therion:
  * support for colour models: cmyk, rgb, gray (see the color-model layout
    option in the Thbook)
+ * support for colour management (see the color-profile layout option)
  * reimplemented internal processing of patterns and transparent colors in
    MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
    macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
@@ -15,7 +16,7 @@ therion:
  * support for LuaTeX as an alternative to pdfTeX
  * support for parallel processing of data when creating the 3D model
  * support for both relative and absolute paths in the \loadpicture macro
- * updates Serbian translation
+ * updated Serbian translation
  * bugs fixed:
    - ISO8859-2 literals in the source code caused clang warnings
    - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile

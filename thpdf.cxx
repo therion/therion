@@ -1074,7 +1074,9 @@ void print_map(int layer, ofstream& PAGEDEF,
       PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
       PAGEDEF << "\\immediate\\pdfxform ";
       PAGEDEF << "attr{/Group \\the\\attrid\\space 0 R} ";
-      PAGEDEF << "resources{/ExtGState \\the\\resid\\space 0 R}";
+      PAGEDEF << "resources{/ExtGState \\the\\resid\\space 0 R";
+      if (icc_used()) PAGEDEF << " /ColorSpace <<" << icc2pdfresources() << ">> ";
+      PAGEDEF << "}";
       PAGEDEF << "\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
     }
   }
@@ -1236,7 +1238,14 @@ void print_margins(ofstream& PAGEDEF) {
   PAGEDEF << "\\PL{Q}%" << endl;
 }
 
-
+void icc_check_file(string fname, string type) {
+  ifstream iccfile(fname, ios::binary);
+  if(!iccfile) therror((IOerr(fname)));
+  char buffer[5];
+  iccfile.seekg(16);
+  iccfile.read(buffer,4);
+  if (type != string(buffer)) therror(((string("Invalid ICC profile type: expected ")+type+", got "+buffer).c_str()));
+}
 
 void build_pages() {
   
@@ -1384,6 +1393,25 @@ void build_pages() {
     PDFRES << "\\legendbgfilltrue" << endl;
   } 
   else PDFRES << "\\legendbgfillfalse" << endl;
+
+  if (LAYOUT.icc_profile_cmyk != "") {
+    icc_check_file(LAYOUT.icc_profile_cmyk, "CMYK");
+    PDFRES << "\\immediate\\pdfobj stream attr {/N 4 /Alternate /DeviceCMYK} file {" << LAYOUT.icc_profile_cmyk << "}" << endl;
+    PDFRES << "\\immediate\\pdfobj{[/ICCBased \\the\\pdflastobj\\space 0 R]}" << endl;
+    PDFRES << "\\newcount\\iccobjcmyk\\iccobjcmyk=\\the\\pdflastobj" << endl;
+  }
+  if (LAYOUT.icc_profile_rgb != "") {
+    icc_check_file(LAYOUT.icc_profile_rgb, "RGB ");
+    PDFRES << "\\immediate\\pdfobj stream attr {/N 3 /Alternate /DeviceRGB} file {" << LAYOUT.icc_profile_rgb << "}" << endl;
+    PDFRES << "\\immediate\\pdfobj{[/ICCBased \\the\\pdflastobj\\space 0 R]}" << endl;
+    PDFRES << "\\newcount\\iccobjrgb\\iccobjrgb=\\the\\pdflastobj" << endl;
+  }
+  if (LAYOUT.icc_profile_gray != "") {
+    icc_check_file(LAYOUT.icc_profile_gray, "GRAY");
+    PDFRES << "\\immediate\\pdfobj stream attr {/N 1 /Alternate /DeviceGray} file {" << LAYOUT.icc_profile_gray << "}" << endl;
+    PDFRES << "\\immediate\\pdfobj{[/ICCBased \\the\\pdflastobj\\space 0 R]}" << endl;
+    PDFRES << "\\newcount\\iccobjgray\\iccobjgray=\\the\\pdflastobj" << endl;
+  }
 
   PDFRES.close();
 
@@ -1629,15 +1657,22 @@ void build_pages() {
     PAGEDEF << "\\smash{\\rlap{\\kern-\\extraW\\raise-\\extraS" << 
                "\\hbox{\\pdfrefxform\\THmaplegend}}}" << endl;
 
-    if (LAYOUT.OCG && LAYOUT.transparency) {
-      PAGEDEF << "\\edef\\thpdfpageres { /Properties << ";
-      for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
-                                          I != LAYERHASH.end(); I++) {
-        if (I->second.Z == 0)
-          PAGEDEF << "/oc\\the\\oc" << u2str(I->first) << "\\space\\the\\oc" << 
-                     u2str(I->first) << "\\space0 R ";
+    if ((LAYOUT.OCG && LAYOUT.transparency) || icc_used()) {
+      PAGEDEF << "\\edef\\thpdfpageres {";
+      if (LAYOUT.OCG && LAYOUT.transparency) {
+        PAGEDEF << " /Properties << ";
+        for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
+                                            I != LAYERHASH.end(); I++) {
+          if (I->second.Z == 0)
+            PAGEDEF << "/oc\\the\\oc" << u2str(I->first) << "\\space\\the\\oc" <<
+                       u2str(I->first) << "\\space0 R ";
+        }
+        PAGEDEF << " >> }";
       }
-      PAGEDEF << " >> }\\pdfpageresources\\expandafter{\\thpdfpageres}" << endl;
+      if (icc_used()) {
+        PAGEDEF << " /ColorSpace <<" << icc2pdfresources() << ">> ";
+      }
+      PAGEDEF << "}" << endl << "\\pdfpageresources\\expandafter{\\thpdfpageres}" << endl;
     }
   }
 
