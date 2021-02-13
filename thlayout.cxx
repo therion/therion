@@ -801,7 +801,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           this->def_color_profile_gray = 2;
     	  break;
       default:
-          ththrow(("invalid color-profile model -- %s",args[0]))
+          ththrow("invalid color-profile model -- {}",args[0]);
       }
       break;
       
