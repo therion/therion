@@ -497,7 +497,7 @@ char * thinput::get_cif_path()
   return cifpath.get_buffer();
 }
 
-const char * thinput::get_cif_abspath()
+const char * thinput::get_cif_abspath(const char * fname)
 {
   static thbuffer pict_path;
   pict_path.guarantee(1024);
@@ -517,6 +517,12 @@ const char * thinput::get_cif_abspath()
   }
   if (strlen(pp) == 0)
 	pict_path = "/";
+  if ((fname != NULL) && (strlen(fname) > 0)) {
+	  if (thpath_is_absolute(fname))
+		  pict_path = fname;
+	  else
+		  pict_path += fname;
+  }
   pp = pict_path.get_buffer();
   for(i = (long)strlen(pp); i >= 0; i--) {
 	if (pp[i] == '\\')
