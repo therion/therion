@@ -1076,10 +1076,10 @@ void lxFrame::ImportFile(wxString fName, int fType)
 
 void lxFrame::LoadData(wxString fName, int fType) {
   {
+  wxBusyInfo info(_("Building 3D model, please wait..."));
 #if wxCHECK_VERSION(3,0,0)
   wxWindowDisabler disableAll;
 #endif
-  wxBusyInfo info(_("Building 3D model, please wait..."));
 #if wxCHECK_VERSION(3,0,0)
   wxTheApp->Yield();
 #endif

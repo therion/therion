@@ -48,10 +48,10 @@ void lxModelTreeDlg::OnCommand(wxCommandEvent& event)
       this->m_mainFrame->ToggleSelectionSetup();
       break;
     case wxID_OK: 
+    	wxBusyInfo info(_("Building 3D model, please wait..."));
 #if wxCHECK_VERSION(3,0,0)
     	wxWindowDisabler disableAll;
 #endif
-    	wxBusyInfo info(_("Building 3D model, please wait..."), this->m_mainFrame);
 #if wxCHECK_VERSION(3,0,0)
     	wxTheApp->Yield();
 #endif
@@ -115,14 +115,14 @@ lxModelTreeDlg::lxModelTreeDlg(wxWindow *parent)
   this->m_treeControl = new wxTreeCtrl(lxPanel,wxID_ANY,wxDefaultPosition,wxDefaultSize,wxTR_MULTIPLE);
 
   wxBoxSizer * lxBoxSizer = new wxBoxSizer(wxHORIZONTAL);
-  lxBoxSizer->Add(new wxButton(this, wxID_OK, _("Select")), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT | wxBOTTOM, lxBORDER);
-  lxBoxSizer->Add(new wxButton(this, wxID_CLOSE, _("Close")), 0, wxALIGN_CENTER | wxRIGHT | wxBOTTOM, lxBORDER);
+  lxBoxSizer->Add(new wxButton(lxPanel, wxID_OK, _("Select")), 0, wxALIGN_CENTER | wxRIGHT, lxBORDER);
+  lxBoxSizer->Add(new wxButton(lxPanel, wxID_CLOSE, _("Close")), 0, wxALIGN_CENTER , lxBORDER);
 
   
 	sizerTop->Add( this->m_treeControl, 
 		1, wxALL | wxEXPAND, lxBORDER);
 	sizerTop->Add(
-		lxBoxSizer, 
+		lxBoxSizer,
 		0, wxALIGN_RIGHT | lxNOTTOP, lxBORDER);
   
   lxPanel->SetSizer(sizerTop);
