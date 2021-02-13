@@ -145,12 +145,14 @@ void lxModelTreeDlg::LoadData()
   this->m_treeControl->DeleteAllItems();
   lxData * data = this->m_mainFrame->data;
   std::vector<wxTreeItemId> parents;
+  std::list<wxTreeItemId> toexpand;
   lxDataSurveyVec::iterator i;
   if (data == NULL) return;
   i = data->surveys.begin();
   if (i == data->surveys.end()) return;
   wxTreeItemId tmpId = this->m_treeControl->AddRoot(_T("Surveys"));
   parents.push_back(tmpId);
+  toexpand.push_back(tmpId);
   int add;
   add = 1;
   if (strlen(i->m_name) == 0) {
@@ -159,9 +161,14 @@ void lxModelTreeDlg::LoadData()
   }
   for(; i != data->surveys.end(); i++) {
     //printf("%s - parent %d\n",strlen(i->m_title) > 0 ? i->m_title : i->m_name,i->m_parent);
-    parents.push_back(this->m_treeControl->AppendItem(parents[(i->m_parent + add) < parents.size() ? (i->m_parent + add) : 0], wxConvUTF8.cMB2WX(strlen(i->m_title) > 0 ? i->m_title : i->m_name), -1, -1, new SurveyTreeData(i->m_id)));
+	tmpId = this->m_treeControl->AppendItem(parents[(i->m_parent + add) < parents.size() ? (i->m_parent + add) : 0], wxConvUTF8.cMB2WX(strlen(i->m_title) > 0 ? i->m_title : i->m_name), -1, -1, new SurveyTreeData(i->m_id));
+    parents.push_back(tmpId);
+    if (i->m_level < 3) toexpand.push_back(tmpId); 
   }
-  this->m_treeControl->ExpandAll();
+  for(auto ti = toexpand.begin(); ti != toexpand.end(); ti++) {
+	this->m_treeControl->Expand(*ti);
+  }
+  
 }
 
 
