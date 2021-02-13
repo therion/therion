@@ -36,7 +36,9 @@
  */
 class thexception : public std::runtime_error {
 public:
-    explicit thexception(const std::string& msg);
+    explicit thexception(const std::string& msg)
+    : std::runtime_error(msg)
+    {}
 };
 
 template <typename FormatStr, typename... Args>
