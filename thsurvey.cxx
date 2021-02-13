@@ -284,7 +284,7 @@ void thsurvey::parse_declination(char * str)
         dd.parse(args[2 * idx]);
       } catch (...) {
         delete [] all_data;
-        threthrow(("invalid declination specification"))
+        threthrow("invalid declination specification");
       }
       all_data[2 * dateidx] = dd.get_start_year();
       // parse declination

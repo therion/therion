@@ -623,8 +623,9 @@ void thinit::load()
       }
     }
   }
-  catch (...)
-    threthrow(("%s [%d]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number()))
+  catch (...) {
+    threthrow("{} [{}]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number());
+  }
   if (started) {
 #ifdef THDEBUG
     thprintf("\n");

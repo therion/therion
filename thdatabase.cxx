@@ -877,7 +877,7 @@ void thdatabase::preprocess() {
       (*obi)->throw_source();
       switch ((*obi)->get_class_id()) {
         case TT_IMPORT_CMD:
-          threthrow(("file import"));
+          threthrow("file import");
         break;
       }
     }

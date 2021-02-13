@@ -351,20 +351,18 @@ void thsurface::check_stations()
     // najde stations, error ak nie
     this->s1.id = thdb.db1d.get_station_id(this->s1, this->ssurvey);
     if (this->s1.id == 0) {
-      this->throw_source();
       if (this->s1.survey == NULL)
-        threthrow2(("station doesn't exist -- %s", this->s1.name))
+        ththrow("{} -- station doesn't exist -- {}", this->throw_source(), this->s1.name);
       else
-        threthrow2(("station doesn't exist -- %s@%s", this->s1.name, this->s1.survey))
+        ththrow("{} -- station doesn't exist -- {}@{}", this->throw_source(), this->s1.name, this->s1.survey);
     }
     
     this->s2.id = thdb.db1d.get_station_id(this->s2, this->ssurvey);
     if (this->s2.id == 0) {
-      this->throw_source();
       if (this->s2.survey == NULL)
-        threthrow2(("station doesn't exist -- %s", this->s2.name))
+        ththrow("{} -- station doesn't exist -- {}", this->throw_source(), this->s2.name);
       else
-        threthrow2(("station doesn't exist -- %s@%s", this->s2.name, this->s2.survey))
+        ththrow("{} -- station doesn't exist -- {}@{}", this->throw_source(), this->s2.name, this->s2.survey);
     }
     
     // priradi si x a y a skontroluje ci su roozne
@@ -375,8 +373,7 @@ void thsurface::check_stations()
     this->pict_x2 = ds2->x;
     this->pict_y2 = ds2->y;
     if ((this->pict_x1 == this->pict_x2) && (this->pict_y1 == this->pict_y2)) {
-      this->throw_source();
-      threthrow2(("duplicate points in picture calibration"));
+      ththrow("{} -- duplicate points in picture calibration", this->throw_source());
     }
   }
 }
