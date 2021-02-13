@@ -1667,7 +1667,7 @@ void build_pages() {
             PAGEDEF << "/oc\\the\\oc" << u2str(I->first) << "\\space\\the\\oc" <<
                        u2str(I->first) << "\\space0 R ";
         }
-        PAGEDEF << " >> }";
+        PAGEDEF << " >> ";
       }
       if (icc_used()) {
         PAGEDEF << " /ColorSpace <<" << icc2pdfresources() << ">> ";
