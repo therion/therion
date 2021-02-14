@@ -126,42 +126,6 @@ void thexpmodel::dump_header(FILE * xf)
   //fprintf(xf,"export\tmodel");
 }
 
-std::vector<thscrap * > fast_process_scraps;
-void fast_process_next_scrap(size_t sc, size_t cc, size_t ns) {
-	while (sc < ns) {
-		thscrap * cs = fast_process_scraps[sc];
-		cs->get_3d_outline();
-		sc += cc;
-	}
-}
-
-void fast_process_projection(thdatabase * dbp, const char * proj_str) {
-	//return;
-	thscrap * cs;
-	thdb2dprjpr prjid = dbp->db2d.parse_projection(proj_str,false);
-	unsigned int pcount = (unsigned int) std::thread::hardware_concurrency();
-	if (pcount < 2) pcount = 2;
-	std::vector<std::thread> pths(pcount);
-	if (!prjid.newprj) {
-	  thdb.db2d.process_projection(prjid.prj);
-	  cs = prjid.prj->first_scrap;
-	  fast_process_scraps.clear();
-	  while(cs != NULL) {
-	    if (cs->fsptr->is_selected())
-	    	fast_process_scraps.push_back(cs);
-	    cs = cs->proj_next_scrap;
-	  }
-	  if (fast_process_scraps.size() < pcount)
-	    pcount = fast_process_scraps.size();
-	  for(unsigned ct = 0; ct < pcount; ct++) {
-		  pths[ct] = std::thread(fast_process_next_scrap, ct, pcount, fast_process_scraps.size());
-	  }
-	  for(unsigned ct = 0; ct < pcount; ct++) {
-		  pths[ct].join();
-	  }
-	}
-}
-
 bool thexpmodel::is_leg_exported(thdb1dl * l)
 {
   if (!l->survey->is_selected()) return false;
@@ -873,7 +837,6 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
     
     // 3D DATA 
     if ((this->wallsrc & TT_WSRC_MAPS) != 0) {
-      fast_process_projection(dbp, "plan");
       thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
       if (!prjid.newprj) {
         thdb.db2d.process_projection(prjid.prj);
@@ -1097,7 +1060,6 @@ void thexpmodel::export_3dmf_file(class thdatabase * dbp) {
 
 
     if ((this->wallsrc & TT_WSRC_MAPS) != 0) {
-      fast_process_projection(dbp, "plan");
       thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
       if (!prjid.newprj) {
         thdb.db2d.process_projection(prjid.prj);
@@ -1428,7 +1390,6 @@ void thexpmodel::export_dxf_file(class thdatabase * dbp) {
     }
     
     if ((this->wallsrc & TT_WSRC_MAPS) != 0) {
-      fast_process_projection(dbp, "plan");
       thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
       if (!prjid.newprj) {
         thdb.db2d.process_projection(prjid.prj);
@@ -1754,7 +1715,6 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   if (((this->items & TT_EXPMODEL_ITEM_WALLS) != 0) && ((this->wallsrc & TT_WSRC_MAPS) != 0)) {
   
     // 3D DATA 
-	fast_process_projection(dbp, "plan");
     thdb2dprjpr prjid = dbp->db2d.parse_projection("plan",false);
     thscrap * cs;
     if (!prjid.newprj) {

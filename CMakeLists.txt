@@ -3,7 +3,7 @@ include(cmake/PreventInSourceBuilds.cmake)
 
 project(Therion)
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
