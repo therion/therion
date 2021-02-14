@@ -14,7 +14,6 @@ therion:
  * tex-refs-registers <on/off> initialization file option added (see the
    chapters Initialization files and Limitations in the Appendix of the Thbook)
  * support for LuaTeX as an alternative to pdfTeX
- * support for parallel processing of data when creating the 3D model
  * support for both relative and absolute paths in the \loadpicture macro
  * updated Serbian translation
  * bugs fixed:
