@@ -41,13 +41,6 @@ tharea::tharea()
   this->m_outline_line = NULL;
 }
 
-
-tharea::~tharea()
-{
-  delete this->m_outline_line;
-}
-
-
 void tharea::start_insert() {
   if (this->type == TT_AREA_TYPE_U) {
     if (this->m_subtype_str == NULL)

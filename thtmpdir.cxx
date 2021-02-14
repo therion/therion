@@ -45,7 +45,6 @@
 
 #ifdef THWIN32
 #include <process.h>
-#define snprintf _snprintf
 #define getpid _getpid
 #define THPATHSEPARATOR "\\"
 #else
@@ -113,7 +112,7 @@ void thtmpdir::create()
         //dir_path += "thTMPDIR";
       } else {
         dir_path += "th";
-        snprintf(&(dn[0]),16,"%d",getpid());
+        std::snprintf(&(dn[0]),16,"%d",getpid());
         dir_path += &(dn[0]);
       }
     }

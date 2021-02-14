@@ -46,7 +46,6 @@
 #define getcwd _getcwd
 #define chdir _chdir
 #define putenv _putenv
-#define hypot _hypot
 #define S_ISDIR(v) (((v) | _S_IFDIR) != 0)
 #endif
 #include "thchenc.h"
@@ -61,7 +60,7 @@
 #include "thsurface.h"
 #include <stdlib.h>
 #include "loch/lxMath.h"
-#include "extern/shapefil.h"
+#include "shapefil.h"
 #include "thexpmodel.h"
 #include "thcsdata.h"
 #include <fcntl.h>
@@ -69,11 +68,6 @@
 #include <time.h>
 #include <errno.h>
 #include "thcs.h"
-
-#ifdef THMSVC
-#define snprintf _snprintf
-#define strcasecmp _stricmp
-#endif
 
 #include "thexpshp.h"
 
@@ -370,7 +364,7 @@ void insert_line_segment(thline * ln, bool reverse, std::list<thexpshpf_data> & 
 					  nz = t_ * cpt->point->zt + t * prevpt->point->zt;
 					  na = t_ * cpt->point->at + t * prevpt->point->at;
             // resolution 0.1 m
-					  if (hypot(nx - px, ny - py) > 0.1) {
+					  if (std::hypot(nx - px, ny - py) > 0.1) {
 			        lst.push_back(thexpshpf_data(nx + ln->fscrapptr->proj->rshift_x, ny + ln->fscrapptr->proj->rshift_y, nz + ln->fscrapptr->proj->rshift_z, na));
 						  px = nx;
 						  py = ny;
@@ -535,12 +529,12 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
 			tststr += ":";
 			tststr += ststr;
 		}
-		symid = thsymbolset__get_id("point", tststr.c_str());
+		symid = thsymbolset_get_id("point", tststr.c_str());
 		if (symid < 0)
-			symid = thsymbolset__get_id("point", tstr.c_str());
+			symid = thsymbolset_get_id("point", tstr.c_str());
 		if (symid < 0)
 			symid = 0;
-		typefc[0] = thsymbolset__fontchar[symid];
+		typefc[0] = thsymbolset_fontchar[symid];
 		this->m_fpoints.m_attributes.insert_attribute("_TYPEFC",(const char *)typefc);
 		this->m_fpoints.m_attributes.insert_attribute("_TYPEFCR", thisnan(ppt->orient) ? 0.0 : 360.0 - ppt->orient);
         this->m_fpoints.m_attributes.insert_attribute("_SUBTYPE", ppt->type != TT_POINT_TYPE_U ?
@@ -600,7 +594,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
           break;
         this->m_fareas.object_clear();
         this->m_fareas.polygon_start_ring(true);
-        this->m_fareas.polygon_insert_line(parea->m_outline_line, false);
+        this->m_fareas.polygon_insert_line(parea->m_outline_line.get(), false);
         this->m_fareas.polygon_close_ring();
         this->m_fareas.object_insert();
         if (this->m_fareas.m_object_id > -1) {

@@ -25,6 +25,7 @@
  * --------------------------------------------------------------------
  */
  
+#include "loch/icase.h"
 #include "thimport.h"
 #include "thexception.h"
 #include "thchenc.h"
@@ -41,7 +42,6 @@
 #else
 #include <direct.h>
 #define getcwd _getcwd
-#define strcasecmp _stricmp
 #endif
 
 struct thsst {
@@ -206,7 +206,7 @@ void thimport::set_file_name(char * fnm)
     
   // let's determine input type
 #define check_ext(str) (strlen(this->fname) > strlen(str)) && \
-  (strcasecmp(&(this->fname[strlen(this->fname) - strlen(str)]), str) == 0)
+  (icase_equals(&(this->fname[strlen(this->fname) - strlen(str)]), str))
   
   if (check_ext(".3d"))
     this->format = TT_IMPORT_FMT_3D;

@@ -322,12 +322,12 @@ void thlintrans::init_points()
   a = (sumXx + sumYy) / (sumxx + sumyy);
   b = (sumYx - sumXy) / (sumxx + sumyy);
         
-  if (((sumxx + sumyy) > 0) && (hypot(a,b) > 0.0)) {
+  if (((sumxx + sumyy) > 0) && (std::hypot(a,b) > 0.0)) {
     this->m_fmat.m_xx = a;
     this->m_fmat.m_xy = -b;
     this->m_fmat.m_yx = b;
     this->m_fmat.m_yy = a;
-    this->m_scale = hypot(a,b);
+    this->m_scale = std::hypot(a,b);
     this->m_rot = - atan2(b,a) / 3.14159265359 * 180.0;
   }
 
@@ -384,7 +384,7 @@ thvec2 thlintrans::backward(thvec2 dst)
 
 
 double thvec2::length() {
-  return hypot(this->m_x, this->m_y);
+  return std::hypot(this->m_x, this->m_y);
 }
 
 

@@ -29,24 +29,20 @@
 #include <iostream>
 #include <string>
 
-#ifndef NOTHERION
 #include "thexception.h"
-#endif
 
 using namespace std;
 
-#ifdef NOTHERION
-#define therror(P) {\
-  cerr << P << endl;\
-  exit(0);\
-}
-#endif
-
-void thpdfdbg();  // volat len v debugovacom mode
 string u2str(unsigned u);
 string tex_Xname(string s);
 string tex_Wname(string s);
+string tex_set_ref(string s, string t);
+string tex_get_ref(string s);
 string pdf_info(void);
 string rgb2svg(double r, double g, double b);
+string icc2pdfresources();
+bool icc_used();
+
+extern bool tex_refs_registers;
 
 #endif

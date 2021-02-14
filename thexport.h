@@ -30,12 +30,10 @@
 #define thexport_h
 
 #include <stdio.h>
-#ifndef THMSVC
-#include <strings.h>
-#endif
 #include "thparse.h"
 #include "thobjectsrc.h"
 #include "thlayout.h"
+#include "loch/icase.h"
 
 /**
  * General export options.
@@ -166,13 +164,9 @@ class thexport {
 };
 
 
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
-
 #define thexp_set_ext_fmt(extension,cformat) { \
     if (strlen(this->outpt) > strlen(extension)) { \
-      if (strcasecmp(&(this->outpt[strlen(this->outpt) - strlen(extension)]), extension) == 0) { \
+      if (icase_equals(&(this->outpt[strlen(this->outpt) - strlen(extension)]), extension)) { \
         this->format = cformat; \
       } \
     } \

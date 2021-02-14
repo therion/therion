@@ -391,7 +391,7 @@ char * thconfig::get_initialization_path()
 }
 
 
-void thconfig__pifo(char * s) {
+void thconfig_pifo(char * s) {
 #ifdef THDEBUG
   thprintf("\nconfiguration file: %s\nreading\n",s);
 #else
@@ -424,7 +424,7 @@ void thconfig::load()
     this->cfg_file.cmd_sensitivity_on();
     this->cfg_file.sp_scan_off();
     this->cfg_file.set_file_name(this->fname);
-    this->cfg_file.print_if_opened(thconfig__pifo, &fstarted);
+    this->cfg_file.print_if_opened(thconfig_pifo, &fstarted);
     this->cfg_file.reset();
     try {
       char * cfgln = this->cfg_file.read_line();
@@ -699,7 +699,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
     for (ai = 0; ai < objptr->get_cmd_nargs(); ai++, opts++) {
       optd.id = ai + 1;
       objptr->set(optd, opts, this->cfg_file.get_cif_encoding(),
-        thdatareader__get_opos(false,false));
+        thdatareader_get_opos(false,false));
     }
 
     // set options
@@ -718,7 +718,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
       }
  
       objptr->set(optd, opts, this->cfg_file.get_cif_encoding(),
-        thdatareader__get_opos(false,false));
+        thdatareader_get_opos(false,false));
       opts += optd.nargs;
       ait += optd.nargs;
     }       
@@ -759,7 +759,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 
             this->cfg_file.get_cif_encoding(),
-            thdatareader__get_opos(inside_cmd,false));
+            thdatareader_get_opos(inside_cmd,false));
           continue;
         }
         
@@ -770,7 +770,7 @@ void thconfig::load_dbcommand(thmbuffer * valmb) {
         while(strcmp(opt,"!") < 0) opt++;
         if (*opt == '!') opt++;
         objptr->set(optd, & opt, this->cfg_file.get_cif_encoding(),
-          thdatareader__get_opos(inside_cmd,false));
+          thdatareader_get_opos(inside_cmd,false));
       }  
     }
     

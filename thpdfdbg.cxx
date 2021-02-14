@@ -32,22 +32,35 @@
 #include <set>
 #include <string>
 #include <iomanip>
-
+#include <fmt/core.h>
 
 #include <iostream>
 
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
-
-#ifndef NOTHERION
 #include "thexception.h"
-#endif
 
 using namespace std;
 
 
 string tex_Xname(string s) {return("THX"+s);}
 string tex_Wname(string s) {return("THW"+s);}   // special = northarrow &c.
+
+bool tex_refs_registers = true;
+
+string tex_set_ref(string s, string t) {
+  if (tex_refs_registers)
+    return("\\newcount\\" + s + "\\" + s + "=" + t);   // use registers, legacy mode
+  else
+    return("\\setref{" + s + "}{\\the" + t + "}");     // use macros to store references
+}
+
+string tex_get_ref(string s) {
+  if (tex_refs_registers)
+    return("\\" + s);
+  else
+    return("\\getref{" + s + "}");
+}
 
 string u2str(unsigned u) {
   unsigned i=u;
@@ -62,105 +75,20 @@ string u2str(unsigned u) {
 }
 
 string rgb2svg(double r, double g, double b) {
-  char ch[8];
-  sprintf(ch,"#%02x%02x%02x",int(255*r) % 256,
-                             int(255*g) % 256,
-                             int(255*b) % 256);
-  return (string) ch;
+  return fmt::format("#{:02x}{:02x}{:02x}",int(255*r) % 256,
+                                           int(255*g) % 256,
+                                           int(255*b) % 256);
 }
 
-void print_hash(){
-  ofstream F("scraps.dat");
-  if(!F) therror(("Can't open file `scraps.dat'"));
-  F << "[SCRAP]" << endl;
-  for (list<scraprecord>::iterator I = SCRAPLIST.begin(); 
-                                  I != SCRAPLIST.end(); I++) {
-    F << "N " << I->name << endl;
-    if (I->F != "") {
-      F << "F " << I->F1 << " " << I->F2 << " " << I->F3 << 
-                           " " << I->F4 << endl;
-    }
-    if (I->G != "") {
-      F << "G " << I->G1 << " " << I->G2 << " " << I->G3 << 
-                           " " << I->G4 << endl;
-    }
-    if (I->B != "") {
-      F << "B " << I->B1 << " " << I->B2 << " " << I->B3 << 
-                           " " << I->B4 << endl;
-    }
-    if (I->I != "") {
-      F << "I " << I->I1 << " " << I->I2 << " " << I->I3 << 
-                           " " << I->I4 << endl;
-    }
-    if (I->E != "") {
-      F << "E " << I->E1 << " " << I->E2 << " " << I->E3 << 
-                           " " << I->E4 << endl;
-    }
-    if (I->X != "") {
-      F << "X " << I->X1 << " " << I->X2 << " " << I->X3 << 
-                            " " << I->X4 << endl;
-    }
-    if (I->P != "") {
-      F << "P " << I->P << " " << I->S1 << " " << I->S2 << endl;
-    }
-    F << "Y " << I->layer << endl;
-    F << "V " << I->level << endl;
-    if (I->sect != 0) {
-      F << "Z 1" << endl;
-    }
-  }
-  F << "[LAYER]" << endl;
-  for (map<int,layerrecord>::iterator I = LAYERHASH.begin(); 
-                                  I != LAYERHASH.end(); I++) {
-    F << "R " << (*I).first << endl;
-    if (!(((*I).second).U).empty()) {
-      F << "U";
-      for (set<int>::iterator J = (((*I).second).U).begin(); J != (((*I).second).U).end(); J++) {
-        F << " " << *J;
-      }
-      F << endl;
-    }
-    if (!(((*I).second).D).empty()) {
-      F << "D";
-      for (set<int>::iterator J = (((*I).second).D).begin(); J != (((*I).second).D).end(); J++) {
-        F << " " << *J;
-      }
-      F << endl;
-    }
-    if (((*I).second).N != "") {
-      F << "N " << ((*I).second).N << endl;
-    }
-    if (((*I).second).T != "") {
-      F << "T " << ((*I).second).T << endl;
-    }
-    if (I->second.Z != 0) {
-      F << "Z 1" << endl;
-    }
-  }
-  F << "[MAP]" << endl;
-  if (!MAP_PREVIEW_UP.empty()) {
-    F << "U";
-    for (set<int>::iterator J = MAP_PREVIEW_UP.begin(); 
-                            J != MAP_PREVIEW_UP.end(); J++) {
-      F << " " << *J;
-    }
-    F << endl;
-  }
-  if (!MAP_PREVIEW_DOWN.empty()) {
-    F << "D";
-    for (set<int>::iterator J = MAP_PREVIEW_DOWN.begin(); 
-                            J != MAP_PREVIEW_DOWN.end(); J++) {
-      F << " " << *J;
-    }
-    F << endl;
-  }
-
-
-  F.close();
+string icc2pdfresources() {
+  string s;
+  if (!LAYOUT.icc_profile_cmyk.empty()) s += " /DefaultCMYK \\the\\iccobjcmyk\\space 0 R ";
+  if (!LAYOUT.icc_profile_rgb.empty())  s += " /DefaultRGB \\the\\iccobjrgb\\space 0 R ";
+  if (!LAYOUT.icc_profile_gray.empty()) s += " /DefaultGray \\the\\iccobjgray\\space 0 R ";
+  return s;
 }
 
-
-
-void thpdfdbg() {
-  print_hash();
+bool icc_used() {
+  return (!LAYOUT.icc_profile_cmyk.empty() || !LAYOUT.icc_profile_rgb.empty() || !LAYOUT.icc_profile_gray.empty());
 }
+

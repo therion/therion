@@ -38,7 +38,6 @@ struct surfpictrecord {
   double dx, dy, xx, xy, yx, yy, width, height;
 };
 
-
 struct scraprecord {
   string name,F,B,I,E,X,G,C,P;      // name + files
   converted_data Fc, Bc, Ic, Ec, Xc, Gc;
@@ -50,8 +49,8 @@ struct scraprecord {
         I1,I2,I3,I4,
         E1,E2,E3,E4,
         X1,X2,X3,X4;
-        
-  double r,g,b;
+
+  color col_scrap;
   list<surfpictrecord> SKETCHLIST;
   scraprecord();
 };
@@ -76,7 +75,7 @@ struct legendrecord {
 };
 
 struct colorlegendrecord {
-  double R, G, B;
+  color col_legend;
   string texname, name;
 };
 
@@ -91,7 +90,8 @@ paired rotatedaround(paired x,paired o, double th);
 struct layout {
   string excl_list,labelx,labely,
          doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
-         northarrow, scalebar,langstr;
+         northarrow, scalebar,langstr,
+         icc_profile_cmyk, icc_profile_rgb, icc_profile_gray;
   bool  excl_pages,title_pages,page_numbering,
         transparency,map_grid,OCG,map_header_bg,colored_text,transparent_map_bg; 
   double hsize,vsize,overlap,
@@ -100,10 +100,8 @@ struct layout {
         nav_factor, XS,YS,XO,YO;
   int nav_right,nav_up,own_pages,lang,legend_columns;
   double hoffset, voffset, opacity, legend_width;
-  double background_r, background_g, background_b;
-  double foreground_r, foreground_g, foreground_b;
-  double preview_below_r, preview_below_g, preview_below_b;
-  double preview_above_r, preview_above_g, preview_above_b;
+  color col_background, col_foreground, col_preview_below, col_preview_above;
+  colormodel output_colormodel;
   
   int surface, grid, proj, grid_coord_freq; // freq 0 no, 1 border, 2 all
   string gridAA, gridAB, gridAC, 

@@ -42,10 +42,6 @@
 #include "thsketch.h"
 #include "thcsdata.h"
 
-#ifdef THMSVC
-#define hypot _hypot
-#endif
-
 #define EXPORT3D_INVISIBLE true
 
 thscrap::thscrap()
@@ -61,9 +57,6 @@ thscrap::thscrap()
   this->proj_prev_scrap = NULL;
   this->xscrap = NULL;
   
-  this->R = 1.0;
-  this->G = 1.0;
-  this->B = 1.0;
   this->RGBsrc = 0;
   
   this->z = thnan;
@@ -298,10 +291,10 @@ void thscrap::parse_scale(char * ss)
       this->read_cs(pars[4], pars[5], this->scale_r1x, this->scale_r1y);
       this->read_cs(pars[6], pars[7], this->scale_r2x, this->scale_r2y);
     }
-    if (hypot(this->scale_r1x - this->scale_r2x,
+    if (std::hypot(this->scale_r1x - this->scale_r2x,
       this->scale_r1y - this->scale_r2y) == 0.0)
       ththrow(("zero scale real length"));
-    if (hypot(this->scale_p1x - this->scale_p2x,
+    if (std::hypot(this->scale_p1x - this->scale_p2x,
       this->scale_p1y - this->scale_p2y) == 0.0)
       ththrow(("zero scale picture length"));        
   } else {
@@ -394,7 +387,7 @@ thscraplo * thscrap::get_outline() {
         lo = co;
       } else {
 			  // vzdialenost moojho konca od zaciatku
-			  mindist = hypot(co->line->last_point->point->x - 
+			  mindist = std::hypot(co->line->last_point->point->x - 
 					co->line->first_point->point->x, 
 					co->line->last_point->point->y - 
 					co->line->first_point->point->y);
@@ -408,7 +401,7 @@ thscraplo * thscrap::get_outline() {
 					pco3 = &(this->outline_first);
 					while (co3 != NULL) {
 						if ((co3->line->outline == co->line->outline) &&
-								(hypot(co3->line->last_point->point->x - 
+								(std::hypot(co3->line->last_point->point->x - 
 										co3->line->first_point->point->x, 
 										co3->line->last_point->point->y - 
 										co3->line->first_point->point->y) < mindist)) {
@@ -500,7 +493,7 @@ thscraplo * thscrap::get_outline() {
       co3 = co;
       bool search_all;
       while (still_in_line) {
-        mindist = hypot(last_pt->x - first_pt->x, last_pt->y - first_pt->y);
+        mindist = std::hypot(last_pt->x - first_pt->x, last_pt->y - first_pt->y);
         co2 = co->next_scrap_line;
         search_all = false;
         co3last = co3;
@@ -515,7 +508,7 @@ thscraplo * thscrap::get_outline() {
                 mindist = 0.0;
             }
             if (search_all || co2->lfreelast) {
-              cdist = hypot(co2->line->last_point->point->x - last_pt->x,
+              cdist = std::hypot(co2->line->last_point->point->x - last_pt->x,
                             co2->line->last_point->point->y - last_pt->y);
               if (cdist <= mindist) {
                 co3_normal = false;
@@ -530,7 +523,7 @@ thscraplo * thscrap::get_outline() {
                 mindist = 0.0;
             }
             if (search_all || co2->lfreefirst) {
-              cdist = hypot(co2->line->first_point->point->x - last_pt->x,
+              cdist = std::hypot(co2->line->first_point->point->x - last_pt->x,
                             co2->line->first_point->point->y - last_pt->y);
               if (cdist <= mindist) {
                 co3_normal = true;
@@ -899,7 +892,7 @@ thdb1ds * thscrap::get_nearest_station(thdb2dpt * pt) {
   thdb2dcp * cp = this->fcpp;
   while(cp != NULL) {
     if (cp->st != NULL) {
-      cdist = hypot(cp->pt->xt - pt->xt,cp->pt->yt - pt->yt);
+      cdist = std::hypot(cp->pt->xt - pt->xt,cp->pt->yt - pt->yt);
       if ((cdist < mindist) || (mindist < 0.0)) {
         res = cp->st;
         mindist = cdist;
@@ -912,7 +905,7 @@ thdb1ds * thscrap::get_nearest_station(thdb2dpt * pt) {
   thscraplp * lp = this->polygon_first;
   while(lp != NULL) {
     if (lp->station != NULL) {
-      cdist = hypot(lp->stx - pt->xt,lp->sty - pt->yt);
+      cdist = std::hypot(lp->stx - pt->xt,lp->sty - pt->yt);
       if ((cdist < mindist) || (mindist < 0.0)) {
         res = lp->station;
         mindist = cdist;
@@ -1199,7 +1192,7 @@ void thscrap::process_3d() {
       if (EXPORT3D_INVISIBLE || olineln->visible) {
         normx = olineln->y - olineln->prev->y;
         normy = olineln->prev->x - olineln->x;
-        norml = hypot(normx, normy);
+        norml = std::hypot(normx, normy);
         if (!started) {
           cfc = this->d3_outline.insert_face(THDB3DFC_TRIANGLE_STRIP);
           cfx = cfc->insert_vertex(olineln->prev->vx3dup);
@@ -1238,7 +1231,7 @@ void thscrap::process_3d() {
       if (prevolineln != NULL) {
         normx = oline->y - prevolineln->y;
         normy = prevolineln->x - oline->x;
-        norml = hypot(normx, normy);
+        norml = std::hypot(normx, normy);
       } else {
         normx = 1.0;
         normy = 1.0;
@@ -1288,7 +1281,7 @@ void thscrap::process_3d() {
       nx = - (vy * wz - wy * vz);
       ny = - (wx * vz - vx * wz);
       nz = - (vx * wy - wx * vy);
-      nl = hypot(hypot(nx, ny), nz);
+      nl = std::hypot(std::hypot(nx, ny), nz);
       for(j = 2; j >= 0; j--) {
         oline = is.tri_triangles[i][j];
         cfx = cfc->insert_vertex(oline->vx3ddn);
@@ -1312,7 +1305,7 @@ void thscrap::process_3d() {
       nx = (vy * wz - wy * vz);
       ny = (wx * vz - vx * wz);
       nz = (vx * wy - wx * vy);
-      nl = hypot(hypot(nx, ny), nz);
+      nl = std::hypot(std::hypot(nx, ny), nz);
       for(j = 0; j < 3; j++) {
         oline = is.tri_triangles[i][j];
         cfx = cfc->insert_vertex(oline->vx3dup);

@@ -34,9 +34,6 @@
 #include "thtflength.h"
 #include "thtexfonts.h"
 #include "thscrap.h"
-#ifdef THMSVC
-#define hypot _hypot
-#endif
 
 thline::thline()
 {
@@ -643,8 +640,8 @@ void thline::preprocess()
       if ((c_item->nextlp != NULL) &&
           (c_item->cp2 != NULL) &&
           (c_item->nextlp->cp1 != NULL)) {
-        d1 = hypot(c_item->cp2->x - c_item->point->x, c_item->cp2->y - c_item->point->y);
-        d2 = hypot(c_item->nextlp->cp1->x - c_item->point->x, c_item->nextlp->cp1->y - c_item->point->y);
+        d1 = std::hypot(c_item->cp2->x - c_item->point->x, c_item->cp2->y - c_item->point->y);
+        d2 = std::hypot(c_item->nextlp->cp1->x - c_item->point->x, c_item->nextlp->cp1->y - c_item->point->y);
         if ((d2 > 0) && (d1 > 0)) {
           a1 = atan2(c_item->cp2->y - c_item->point->y, c_item->cp2->x - c_item->point->x) / 3.14159265358979323338 * 180.0;
           a2 = atan2(c_item->point->y - c_item->nextlp->cp1->y, c_item->point->x - c_item->nextlp->cp1->x) / 3.14159265358979323338 * 180.0;

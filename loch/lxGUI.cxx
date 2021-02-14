@@ -128,7 +128,7 @@ class DnDFile : public wxFileDropTarget {
 	
     DnDFile(lxFrame *parent) : m_Parent(parent) { }
 	
-    virtual bool OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames);
+    bool OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames) override;
 
 };
 
@@ -1076,10 +1076,10 @@ void lxFrame::ImportFile(wxString fName, int fType)
 
 void lxFrame::LoadData(wxString fName, int fType) {
   {
+  wxBusyInfo info(_("Building 3D model, please wait..."));
 #if wxCHECK_VERSION(3,0,0)
   wxWindowDisabler disableAll;
 #endif
-  wxBusyInfo info(_("Building 3D model, please wait..."));
 #if wxCHECK_VERSION(3,0,0)
   wxTheApp->Yield();
 #endif
@@ -1260,8 +1260,6 @@ void lxFrame::ExportRotationPictures() {
   delete tmpRD;
 }
 
-
-    
 #ifdef LXMACOSX
 void lxApp::MacOpenFile(const wxString &fileName)
 {

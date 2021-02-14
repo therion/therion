@@ -178,6 +178,16 @@ thlayout::thlayout()
 
   this->def_color_legend = 0;
   this->color_legend = TT_TRUE;
+
+  this->def_color_model = 0;
+  this->color_model = TT_LAYOUTCLRMODEL_CMYK;
+
+  this->def_color_profile_rgb = 0;
+  this->color_profile_rgb = "";
+  this->def_color_profile_cmyk = 0;
+  this->color_profile_cmyk = "";
+  this->def_color_profile_gray = 0;
+  this->color_profile_gray = "";
   
   this->def_scale_bar = 0;
   this->scale_bar = -1.0;
@@ -308,6 +318,7 @@ thcmd_option_desc thlayout::get_default_cod(int id) {
     case TT_LAYOUT_MAP_ITEM:
     case TT_LAYOUT_COLOR:
     case TT_LAYOUT_LEGEND_WIDTH:
+    case TT_LAYOUT_COLOR_PROFILE:
       return thcmd_option_desc(id,2);
     case TT_LAYOUT_SYMBOL_ASSIGN:
     case TT_LAYOUT_SIZE:
@@ -389,7 +400,7 @@ enum {
   TTL_MAPITEM_UNKNOWN,
 };
 
-static const thstok thlayout__mapitems[] = {
+static const thstok thlayout_mapitems[] = {
   {"carto", TTL_MAPITEM_CARTO},
   {"carto-count", TTL_MAPITEM_CARTO_LENS},
   {"copyright", TTL_MAPITEM_COPYRIGHT},
@@ -446,6 +457,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           thencode(&(this->db->buff_enc), *args, argenc);
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           this->last_line->code = this->ccode;
+          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(), true);
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {
@@ -457,10 +469,10 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_DEFAULTS;
           break;
         case TT_LAYOUT_SYMBOL_ASSIGN:
-          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
-          if (!thsymbolset__assign[this->last_line->smid])
+          if (!thsymbolset_assign[this->last_line->smid])
             ththrow(("symbol can not be assigned -- %s %s", args[0], args[1]))
           if (!th_is_keyword(args[2]))
             ththrow(("invalid keyword -- %s", args[2]))
@@ -479,19 +491,19 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 //          this->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;
 //          break;
         case TT_LAYOUT_SYMBOL_HIDE:
-          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;
           break;
         case TT_LAYOUT_SYMBOL_SHOW:
-          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
           this->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;
           break;
         case TT_LAYOUT_SYMBOL_COLOR:
-          this->last_line->smid = thsymbolset__get_id(args[0],args[1]);
+          this->last_line->smid = thsymbolset_get_id(args[0],args[1]);
           if (this->last_line->smid == -1)
             ththrow(("unknown symbol specification -- %s %s", args[0], args[1]))
           this->last_line->sclr.parse(args[2]);
@@ -522,7 +534,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       break;
 
     case TT_LAYOUT_MAP_ITEM:
-      sv2 = thmatch_token(args[0],thlayout__mapitems);
+      sv2 = thmatch_token(args[0],thlayout_mapitems);
       switch (sv2) {
         case TTL_MAPITEM_EXPLO_LENS:
           sv = thmatch_token(args[1],thtt_layout_lenstat);
@@ -762,6 +774,37 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->color_legend = sv;
       this->def_color_legend = 2;
       break;
+
+    case TT_LAYOUT_COLOR_MODEL:
+      sv = thmatch_token(args[0],thtt_layoutclr_model);
+      if (sv == TT_LAYOUTCLRMODEL_UNKNOWN)
+        ththrow(("invalid color-model switch -- %s",args[0]))
+      this->color_model = sv;
+      this->def_color_model = 2;
+      break;
+
+
+    case TT_LAYOUT_COLOR_PROFILE:
+      sv = thmatch_token(args[0],thtt_layoutclr_model);
+      tmp1 = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(args[1]), true);
+      switch (sv) {
+      case TT_LAYOUTCLRMODEL_CMYK:
+    	  this->color_profile_cmyk = tmp1;
+          this->def_color_profile_cmyk = 2;
+    	  break;
+      case TT_LAYOUTCLRMODEL_RGB:
+    	  this->color_profile_rgb = tmp1;
+          this->def_color_profile_rgb = 2;
+    	  break;
+      case TT_LAYOUTCLRMODEL_GRAY:
+    	  this->color_profile_gray = tmp1;
+          this->def_color_profile_gray = 2;
+    	  break;
+      default:
+          ththrow(("invalid color-profile model -- %s",args[0]))
+      }
+      break;
+      
     
     case TT_LAYOUT_SCALE_BAR:
       this->parse_len(this->scale_bar, dum, dum, 1, args, 1);
@@ -1167,7 +1210,11 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->survey_level = %d;\n", this->survey_level);
 
   thprintf("\tplayout->def_color_legend = %d;\n", this->def_color_legend);
-  thprintf("\tplayout->legend = %d;\n", this->color_legend);
+  thprintf("\tplayout->color_legend = %d;\n", this->color_legend);
+
+  thprintf("\tplayout->def_color_model = %d;\n", this->def_color_model);
+  thprintf("\tplayout->color_model = %d;\n", this->color_model);
+
 
   thprintf("\tplayout->def_legend_width = %d;\n", this->def_legend_width);
   thprintf("\tplayout->legend_width = %lg;\n",this->legend_width);
@@ -1372,23 +1419,23 @@ void thlayout::self_print_library() {
           switch (ln->code) {
             case TT_LAYOUT_CODE_SYMBOL_HIDE:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_HIDE;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_SHOW:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_SHOW;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_MAP_ITEM:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_MAP_ITEM;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_ASSIGN:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_ASSIGN;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               break;
             case TT_LAYOUT_CODE_SYMBOL_COLOR:
               thprintf("\tplayout->last_line->code = TT_LAYOUT_CODE_SYMBOL_COLOR;\n");
-              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset__src[ln->smid]);
+              thprintf("\tplayout->last_line->smid = %s;\n", thsymbolset_src[ln->smid]);
               thprintf("\tplayout->last_line->sclr = thlayout_color(%.6f,%.6f,%.6f);\n", ln->sclr.R, ln->sclr.G, ln->sclr.B);
               break;
           }
@@ -1566,6 +1613,11 @@ void thlayout_print_header_align(FILE * o, int a) {
     }
 }
 
+std::string fix_path_slashes(std::string s) {
+	std::replace( s.begin(), s.end(), '\\', '/');
+	return s;
+}
+
   
 void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
 
@@ -1622,6 +1674,7 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
 
   bool anyline = false;
   bool anylegend = false;
+  const char * last_path = "";
   if (this->first_line != NULL) {
     thlayoutln * ln = this->first_line;
     while(ln != NULL) {
@@ -1632,7 +1685,10 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
             anyline = true;
         if ((!anylegend) && (strstr(ln->line, "\\formattedlegend") != NULL))
             anylegend = true;
-        
+        if (strcmp(ln->path, last_path) != 0) {
+        	last_path = ln->path;
+        	fprintf(o, "\\includeprefix={%s}\n", fix_path_slashes(last_path).c_str());
+        }
         thdecode_utf2tex(&(this->db->buff_enc), ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
       }
@@ -1925,6 +1981,22 @@ void thlayout::process_copy() {
         this->color_legend = srcl->color_legend;
       endcopy
 
+      begcopy(def_color_model)
+        this->color_model = srcl->color_model;
+      endcopy
+	  
+      begcopy(def_color_profile_rgb)
+        this->color_profile_rgb = srcl->color_profile_rgb;
+      endcopy
+	  
+      begcopy(def_color_profile_cmyk)
+        this->color_profile_cmyk = srcl->color_profile_cmyk;
+      endcopy
+
+	  begcopy(def_color_profile_gray)
+        this->color_profile_gray = srcl->color_profile_gray;
+      endcopy
+
       begcopy(def_legend_width)
         this->legend_width = srcl->legend_width;
       endcopy
@@ -2122,22 +2194,35 @@ void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin
   LAYOUT.opacity = this->opacity;
   
   LAYOUT.colored_text = this->color_labels;
+  switch (this->color_model) {
+  case TT_LAYOUTCLRMODEL_GRAY:
+	  LAYOUT.output_colormodel = colormodel::grey;
+	  break;
+  case TT_LAYOUTCLRMODEL_RGB:
+	  LAYOUT.output_colormodel = colormodel::rgb;
+	  break;
+  default:
+	  LAYOUT.output_colormodel = colormodel::cmyk;
+	  break;
+  }
   
-  LAYOUT.background_r = this->color_map_bg.R;
-  LAYOUT.background_g = this->color_map_bg.G;
-  LAYOUT.background_b = this->color_map_bg.B;
+  // color profiles abs paths
+  LAYOUT.icc_profile_rgb = this->color_profile_rgb;
+  LAYOUT.icc_profile_cmyk = this->color_profile_cmyk;
+  LAYOUT.icc_profile_gray = this->color_profile_gray;
+  
+  this->color_map_bg.set_color(this->color_model, LAYOUT.col_background);
+  this->color_map_fg.set_color(this->color_model, LAYOUT.col_foreground);
+  this->color_preview_above.set_color(this->color_model, LAYOUT.col_preview_above);
+  this->color_preview_below.set_color(this->color_model, LAYOUT.col_preview_below);
 
-  LAYOUT.foreground_r = this->color_map_fg.R;
-  LAYOUT.foreground_g = this->color_map_fg.G;
-  LAYOUT.foreground_b = this->color_map_fg.B;
+  //LAYOUT.col_background.set(this->color_map_bg.R, this->color_map_bg.G, this->color_map_bg.B);
 
-  LAYOUT.preview_above_r = this->color_preview_above.R;
-  LAYOUT.preview_above_g = this->color_preview_above.G;
-  LAYOUT.preview_above_b = this->color_preview_above.B;
+  //LAYOUT.col_foreground.set(this->color_map_fg.R, this->color_map_fg.G, this->color_map_fg.B);
 
-  LAYOUT.preview_below_r = this->color_preview_below.R;
-  LAYOUT.preview_below_g = this->color_preview_below.G;
-  LAYOUT.preview_below_b = this->color_preview_below.B;
+  //LAYOUT.col_preview_above.set(this->color_preview_above.R, this->color_preview_above.G, this->color_preview_above.B);
+
+  //LAYOUT.col_preview_below.set(this->color_preview_below.R, this->color_preview_below.G, this->color_preview_below.B);
   
   LAYOUT.lang = this->lang;
   LAYOUT.langstr = thlang_getid(this->lang);

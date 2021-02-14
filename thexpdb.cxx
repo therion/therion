@@ -474,7 +474,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
         fprintf(out, "# Equated stations\n");
         for (eqi = dp->equate_list.begin(); eqi != dp->equate_list.end(); eqi++) {
           if (last_equate != eqi->eqid) {
-            snprintf(first_name, MAX_LEN, "%s@%s", eqi->station.name, eqi->station.survey);
+            std::snprintf(first_name, MAX_LEN, "%s@%s", eqi->station.name, eqi->station.survey);
             last_equate = eqi->eqid;
           } else {
             if (last_equate != 0)

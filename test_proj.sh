@@ -1,27 +1,63 @@
 #!/bin/bash
 
 # Test linking to multiple versions of the PROJ library.
-
-PREFIX=/opt
+#
+# Usage:
+#   test_proj.sh [srcpath] [proj_version]
+#
+# Arguments:
+#   srcpath – the path to therion sources (default: .)
+#   proj_version – the version of PROJ to test (default: all versions)
 
 set -e
-rm -f thproj.o utest-proj.o
 
-for ver in ${1:-4.9.3 5.1.0 5.2.0 6.2.1 6.3.2 7.0.0 7.2.1}
+SRCPATH=${1:-.}
+PROJVER=${2:-4.9.3 5.1.0 5.2.0 6.2.1 6.3.2 7.0.0 7.2.1}
+
+PREFIX=$HOME/tmp/ThProj_test
+URL=https://download.osgeo.org/proj/proj
+
+if [ "$SRCPATH" = "." ]; then
+  MODE="Make"
+  rm -f thproj.o utest-proj.o
+else
+  MODE="CMake"
+  rm -f CMakeCache.txt
+fi
+
+for ver in $PROJVER
 do
-  export PROJ_MVER=`echo $ver | sed 's/\..*//'`
-  export PROJ_LIBS="$PREFIX/proj-$ver/src/.libs/libproj.a"
-  if ((PROJ_MVER == 4)); then PROJ_LIBS+=" -pthread"; fi
-  if ((PROJ_MVER >= 6)); then PROJ_LIBS+=" -lsqlite3"; fi
-  if ((PROJ_MVER >= 7)); then PROJ_LIBS+=" -ldl -lcurl -ltiff"; fi
-  export CXXJFLAGS="-DPROJ_VER=$PROJ_MVER -I$PREFIX/proj-$ver/src"
-  if ((PROJ_MVER >= 6)); then
-    export PROJ_LIB="$PREFIX/proj-$ver/data";
-  else
-    export PROJ_LIB="$PREFIX/proj-$ver/nad";
+  # check the environment; install Proj locally if it's missing
+  if [ ! -d "$PREFIX/proj-$ver" ]; then
+    echo "$PREFIX/proj-$ver missing. Download and install it?"
+    select yn in "Yes" "No"; do
+      case $yn in
+        Yes ) break;;
+        No ) exit;;
+      esac
+    done
+    WD=$PWD
+    TMPDIR=`mktemp -d`
+    curl $URL-$ver.tar.gz | tar -xz --directory=$TMPDIR
+    cd $TMPDIR/proj-$ver
+    ./configure --prefix=$PREFIX/proj-$ver; make; make install
+    cd $WD
+    rm -r $TMPDIR
   fi
-  tclsh thcsdata.tcl $PREFIX/proj-$ver/nad
-  make therion
-  make tests
-  rm thproj.o utest-proj.o thcsdata.o thcsdata.h
+  # compile and link
+  if [ "$MODE" = "CMake" ]; then
+    export PROJ_LIB="$PREFIX/proj-$ver/share/proj";
+    cmake -DCMAKE_PREFIX_PATH="$PREFIX/proj-$ver" -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON -GNinja $SRCPATH
+    ninja utest
+    ./utest
+    rm -f CMakeCache.txt
+  else
+    export PROJ_MVER=`echo $ver | sed 's/\..*//'`
+    export PROJ_LIBS=`pkg-config --libs --static $PREFIX/proj-$ver/lib/pkgconfig/proj.pc`
+    export CXXJFLAGS="-DPROJ_VER=$PROJ_MVER -I"`pkg-config --variable=includedir $PREFIX/proj-$ver/lib/pkgconfig/proj.pc`
+    export PROJ_LIB="$PREFIX/proj-$ver/share/proj"
+    tclsh thcsdata.tcl $PROJ_LIB
+    LD_LIBRARY_PATH=$PREFIX/proj-$ver/lib make -j$(nproc) tests
+    rm thproj.o utest-proj.o thcsdata.o thcsdata.h
+  fi
 done

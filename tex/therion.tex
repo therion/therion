@@ -1,4 +1,4 @@
-%% 
+%%
 %% therion.tex
 %%
 %% Copyright (C) 2001-2004 Martin Budaj
@@ -18,6 +18,111 @@
 %% along with this program; if not, write to the Free Software
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 %% -------------------------------------------------------------------- 
+
+% LuaTex compatibility definitions taken from the LuaTeX manual:
+\ifx\directlua\undefined\else
+    \protected\def\pdfliteral             {\pdfextension literal}
+    \protected\def\pdfcolorstack          {\pdfextension colorstack}
+    \protected\def\pdfsetmatrix           {\pdfextension setmatrix}
+    \protected\def\pdfsave                {\pdfextension save\relax}
+    \protected\def\pdfrestore             {\pdfextension restore\relax}
+    \protected\def\pdfobj                 {\pdfextension obj }
+    \protected\def\pdfrefobj              {\pdfextension refobj }
+    \protected\def\pdfannot               {\pdfextension annot }
+    \protected\def\pdfstartlink           {\pdfextension startlink }
+    \protected\def\pdfendlink             {\pdfextension endlink\relax}
+    \protected\def\pdfoutline             {\pdfextension outline }
+    \protected\def\pdfdest                {\pdfextension dest }
+    \protected\def\pdfthread              {\pdfextension thread }
+    \protected\def\pdfstartthread         {\pdfextension startthread }
+    \protected\def\pdfendthread           {\pdfextension endthread\relax}
+    \protected\def\pdfinfo                {\pdfextension info }
+    \protected\def\pdfcatalog             {\pdfextension catalog }
+    \protected\def\pdfnames               {\pdfextension names }
+    \protected\def\pdfincludechars        {\pdfextension includechars }
+    \protected\def\pdffontattr            {\pdfextension fontattr }
+    \protected\def\pdfmapfile             {\pdfextension mapfile }
+    \protected\def\pdfmapline             {\pdfextension mapline }
+    \protected\def\pdftrailer             {\pdfextension trailer }
+    \protected\def\pdfglyphtounicode      {\pdfextension glyphtounicode }
+    \def\pdftexversion    {\numexpr\pdffeedback version\relax}
+    \def\pdftexrevision           {\pdffeedback revision}
+    \def\pdflastlink      {\numexpr\pdffeedback lastlink\relax}
+    \def\pdfretval        {\numexpr\pdffeedback retval\relax}
+    \def\pdflastobj       {\numexpr\pdffeedback lastobj\relax}
+    \def\pdflastannot     {\numexpr\pdffeedback lastannot\relax}
+    \def\pdfxformname     {\numexpr\pdffeedback xformname\relax}
+    \def\pdfcreationdate          {\pdffeedback creationdate}
+    \def\pdffontname      {\pdffeedback fontname}    % modified
+    \def\pdffontobjnum    {\pdffeedback fontobjnum}  % modified
+    \def\pdffontsize      {\dimexpr\pdffeedback fontsize\relax}
+    \def\pdfpageref       {\numexpr\pdffeedback pageref\relax}
+    \def\pdfcolorstackinit        {\pdffeedback colorstackinit}
+    \edef\pdfcompresslevel            {\pdfvariable compresslevel}
+    \edef\pdfobjcompresslevel         {\pdfvariable objcompresslevel}
+    \edef\pdfdecimaldigits            {\pdfvariable decimaldigits}
+    \edef\pdfgamma                    {\pdfvariable gamma}
+    \edef\pdfimageresolution          {\pdfvariable imageresolution}
+    \edef\pdfimageapplygamma          {\pdfvariable imageapplygamma}
+    \edef\pdfimagegamma               {\pdfvariable imagegamma}
+    \edef\pdfimagehicolor             {\pdfvariable imagehicolor}
+    \edef\pdfimageaddfilename         {\pdfvariable imageaddfilename}
+    \edef\pdfpkresolution             {\pdfvariable pkresolution}
+    \edef\pdfpkfixeddpi               {\pdfvariable pkfixeddpi}
+    \edef\pdfinclusioncopyfonts       {\pdfvariable inclusioncopyfonts}
+    \edef\pdfinclusionerrorlevel      {\pdfvariable inclusionerrorlevel}
+    \edef\pdfignoreunknownimages      {\pdfvariable ignoreunknownimages}
+    \edef\pdfgentounicode             {\pdfvariable gentounicode}
+    \edef\pdfomitcidset               {\pdfvariable omitcidset}
+    \edef\pdfpagebox                  {\pdfvariable pagebox}
+    \edef\pdfminorversion             {\pdfvariable minorversion}
+    \edef\pdfuniqueresname            {\pdfvariable uniqueresname}
+    \edef\pdfhorigin                  {\pdfvariable horigin}
+    \edef\pdfvorigin                  {\pdfvariable vorigin}
+    \edef\pdflinkmargin               {\pdfvariable linkmargin}
+    \edef\pdfdestmargin               {\pdfvariable destmargin}
+    \edef\pdfthreadmargin             {\pdfvariable threadmargin}
+    \edef\pdfxformmargin              {\pdfvariable xformmargin}
+    \edef\pdfpagesattr                {\pdfvariable pagesattr}
+    \edef\pdfpageattr                 {\pdfvariable pageattr}
+    \edef\pdfpageresources            {\pdfvariable pageresources}
+    \edef\pdfxformattr                {\pdfvariable xformattr}
+    \edef\pdfxformresources           {\pdfvariable xformresources}
+    \edef\pdfpkmode                   {\pdfvariable pkmode}
+    \edef\pdfsuppressoptionalinfo     {\pdfvariable suppressoptionalinfo }
+    \edef\pdftrailerid                {\pdfvariable trailerid }
+    \let\pdfpagewidth      \pagewidth
+    \let\pdfpageheight     \pageheight
+    \let\pdfadjustspacing  \adjustspacing
+    \let\pdfprotrudechars  \protrudechars
+    \let\pdfnoligatures    \ignoreligaturesinfont
+    \let\pdffontexpand     \expandglyphsinfont
+    \let\pdfcopyfont       \copyfont
+    \let\pdfxform          \saveboxresource
+    \let\pdflastxform      \lastsavedboxresourceindex
+    \let\pdfrefxform       \useboxresource
+    \let\pdfximage         \saveimageresource
+    \let\pdflastximage     \lastsavedimageresourceindex
+    \let\pdflastximagepages\lastsavedimageresourcepages
+    \let\pdfrefximage      \useimageresource
+    \let\pdfsavepos        \savepos
+    \let\pdflastxpos       \lastxpos
+    \let\pdflastypos       \lastypos
+    \let\pdfoutput         \outputmode
+    \let\pdfdraftmode      \draftmode
+    \let\pdfpxdimen        \pxdimen
+    \let\pdfinsertht       \insertht
+    \let\pdfnormaldeviate  \normaldeviate
+    \let\pdfuniformdeviate \uniformdeviate
+    \let\pdfsetrandomseed  \setrandomseed
+    \let\pdfrandomseed     \randomseed
+    \let\pdfprimitive      \primitive
+    % the next three can't be defined inside \ifx..\fi;
+    % if required, they could be loaded from external file
+    %\let\ifpdfprimitive    \ifprimitive
+    %\let\ifpdfabsnum       \ifabsnum
+    %\let\ifpdfabsdim       \ifabsdim
+\fi
 
 \ifx\pdfoutput\undefined
      \newlinechar`\^^J
@@ -109,10 +214,10 @@
        \hsize=\tmpdimen\rightskip=0pt plus \tmpdimen minus 0pt\relax\the\legendtextsize #2\vskip1dd}\hss}%
 }
 
-\def\colorlegendbox#1#2#3{%
-  \setbox\xxx=\hbox to 36bp{\PL{q #1 #2 #3 rg 0 0 36 24 re f Q}\hfil}%
+\def\colorlegendbox#1{%
+  \setbox\xxx=\hbox to 36bp{\PL{q #1 0 0 36 24 re f Q}\hfil}%
   \ht\xxx=25bp\dp\xxx=0bp
-  \immediate\pdfxform\xxx
+  \immediate\pdfxform resources{/ExtGState \the\resid\space 0 R}\xxx
 }
 
 
@@ -122,6 +227,15 @@
 \newdimen\ycorr
 
 \def\PB#1#2#3{\rlap{\kern#1bp\raise#2bp\hbox{\pdfrefxform#3}}} %placebox
+
+\def\setref#1#2{\expandafter\edef\csname thREFS:#1\endcsname{#2}}
+\def\getref#1{%
+  \ifcsname thREFS:#1\endcsname
+    \csname thREFS:#1\endcsname
+  \else
+    \csname #1\endcsname   % fallback for northarrow/scalebar when using registers
+  \fi
+}
 
 \def\gridcoord#1#2{\hbox to0pt{%
   \ifnum#1=1\hss\fi
@@ -220,7 +334,31 @@
   \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
 }
 
-\def\color[#1 #2 #3]{%
+\def\cmykcolor[#1 #2 #3 #4]{%
+  \tmpdimen=#1pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#2pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#3pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \tmpdimen=#4pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \pdfliteral{k}
+}
+
+\def\rgbcolor[#1 #2 #3]{%
   \tmpdimen=#1pt%
   \divide\tmpdimen100
   \edef\tmpdef{\the\tmpdimen}%
@@ -238,6 +376,24 @@
   \pdfliteral{\tmpdef}%
   \pdfliteral{rg}
 }
+\let\color\rgbcolor
+
+\def\graycolor[#1]{%
+  \tmpdimen=#1pt%
+  \divide\tmpdimen100
+  \edef\tmpdef{\the\tmpdimen}%
+  \edef\tmpdef{\expandafter\SKIPPT\tmpdef}%
+  \pdfliteral{\tmpdef}%
+  \pdfliteral{g}
+}
+
+\def\modelcmyk{cmyk}
+\def\modelrgb{rgb}
+\def\modelgray{grayscale}
+\def\black{\ifx\OutputColormodel\modelcmyk\cmykcolor[0 0 0 100]\else
+           \ifx\OutputColormodel\modelrgb\rgbcolor[0 0 0]\else
+           \graycolor[0]\fi\fi}
+
 
 % actual placing of the page elements
 
@@ -318,19 +474,19 @@
 \newtoks\magdecl
 \newtoks\gridconv
 \newtoks\currentdate
-\newtoks\legendtextcolor\legendtextcolor={\color[0 0 0]}
+\newtoks\legendtextcolor\legendtextcolor={\black}
 \newtoks\legendtextsize\legendtextsize={\size[12]}
 \newtoks\legendtextheadersize\legendtextheadersize={\size[26]}
 \newtoks\legendtextsectionsize\legendtextsectionsize={\size[14]}
 
-\def\scalebar{\pdfrefxform\THWscalebar}
-\def\northarrow{\pdfrefxform\THWnortharrow}
+\def\scalebar{\pdfrefxform\getref{THWscalebar}}
+\def\northarrow{\pdfrefxform\getref{THWnortharrow}}
 \newdimen\legendwidth %\legendwidth=14cm
 \newcount\legendcolumns \legendcolumns=2
 
 \legendcontent={%
   \hsize=\legendwidth
-  \color[0 0 0]\the\legendtextcolor 
+  \black\the\legendtextcolor 
   \ifnortharrow\vbox to 0pt{\line{\hfil\northarrow}\vss}\fi
   \edef\tmp{\the\cavename} \ifx\tmp\empty \else
      {\the\legendtextheadersize\the\cavename}\vskip1cm
@@ -361,7 +517,7 @@
     \fi
   }
   \formattedlegend
-  \color[0 0 0]
+  \black
 }
 
 \def\maplayout{
@@ -495,7 +651,7 @@
     \sy=\ht\tmpboxa \advance\sy by \dp\tmpboxa
       \advance\sy by 2 cm
     \dimtobp{\sy}\edef\hght{\tmpdef}%
-    \rlap{\PL{q \the\bgcolor\space rg \shiftx\space \shifty\space \wdth\space \hght\space re f Q}}%
+    \rlap{\PL{q \the\bgcolor\space \shiftx\space \shifty\space \wdth\space \hght\space re f Q}}%
    \endgroup    
   \fi
   %
@@ -505,10 +661,22 @@
   \ignorespaces
 }
 
-\def\loadpicture#1{\pdfximage{#1}\pdfrefximage\pdflastximage}
+\newtoks\includeprefix\includeprefix={.}
+\newif\ifabspath
+\def\checkcolon #1:#2\endparam{\def\tmp{#2}\ifx\tmp\empty\else\abspathtrue\fi}
+\def\checkstartslash #1#2\endparam{\ifx#1/\abspathtrue\fi}
+
+\def\loadpicture#1{%
+  \abspathfalse
+  \checkcolon #1:\endparam
+  \checkstartslash #1\endparam
+  \pdfximage{\ifabspath\else\the\includeprefix/\fi#1}\pdfrefximage\pdflastximage
+}
+
+
 
 \def\insertmaps{%
-  \color[0 0 0]
+  \black
   \input th_formdef
   \input th_pagedef
   \input th_pages
@@ -559,30 +727,30 @@
 %% Petr Olsak's multicolumn macros (slightly modified)
 
 \newdimen\colsep  \colsep=1em % horiz. mezera mezi sloupci
-\newcount\tempnum             % pracovní promìnná
+\newcount\tempnum             % pracovnÃ­ promÄ›nnÃ¡
 \splittopskip=\baselineskip
-\def\roundtolines #1{%% zaokrouhlí na celé násobky vel. øádku
+\def\roundtolines #1{%% zaokrouhlÃ­ na celÃ© nÃ¡sobky vel. Å™Ã¡dku
    \divide #1 by\baselineskip \multiply #1 by\baselineskip}
 \def\corrsize #1{%% #1 := #1 + \splittopskip - \topskip
    \advance #1 by \splittopskip \advance #1 by-\topskip}
 
 \def\begmulti#1{\par\bigskip\penalty0 \def\Ncols{#1}
    \setbox0=\vbox\bgroup\penalty0
-   %% \hsize := ¹íøka sloupce = (\hsize+\colsep) / n - \colsep
+   %% \hsize := Å¡Ã­Å™ka sloupce = (\hsize+\colsep) / n - \colsep
    \advance\hsize by\colsep
    \divide\hsize by\Ncols  \advance\hsize by-\colsep}
 \def\endmulti{\vfil\egroup \setbox1=\vsplit0 to0pt
-   %% \dimen1 := velikost zbylého místa na stránce
+   %% \dimen1 := velikost zbylÃ©ho mÃ­sta na strÃ¡nce
    \ifdim\pagegoal=\maxdimen \dimen1=\vsize \corrsize{\dimen1}
    \else \dimen1=\pagegoal \advance\dimen1 by-\pagetotal \fi
    \ifdim \dimen1<2\baselineskip
      \vfil\break \dimen1=\vsize \corrsize{\dimen1} \fi
-   %% \dimen0 := vý¹ka n sloupcové sazby po rozdìlení do sloupcù
-   %% = (\ht0 + (n-1)\baselineskip) / n, zaokruhleno na øádky
+   %% \dimen0 := vÃ½Å¡ka n sloupcovÃ© sazby po rozdÄ›lenÃ­ do sloupcÅ¯
+   %% = (\ht0 + (n-1)\baselineskip) / n, zaokruhleno na Å™Ã¡dky
    \dimen0=\Ncols\baselineskip \advance\dimen0 by-\baselineskip
    \advance\dimen0 by \ht0 \divide\dimen0 by\Ncols
    \roundtolines{\dimen0}
-   %% Rozdìlit sazbu n sloupcù do stránek nebo nerozdìlit ?
+   %% RozdÄ›lit sazbu n sloupcÅ¯ do strÃ¡nek nebo nerozdÄ›lit ?
    \ifdim \dimen0>\dimen1 \splitpart
    \else \makecolumns{\dimen0} \fi
    \ifvoid0 \else \errmessage{Lost text in multiple columns?} \fi
@@ -596,11 +764,11 @@
    \line{\unhbox1\unskip}}
 \def\splitpart{\roundtolines{\dimen1}
    \makecolumns{\dimen1} \advance\dimen0 by-\dimen1
-   %% \dimen0 := vý¹ka _zbylé_ n sloupcové sazby
-   %% \dimen1 := prázdné místo na stránce = (cca) \vsize
+   %% \dimen0 := vÃ½Å¡ka _zbylÃ©_ n sloupcovÃ© sazby
+   %% \dimen1 := prÃ¡zdnÃ© mÃ­sto na strÃ¡nce = (cca) \vsize
    \vfil\break
    \dimen1=\vsize \corrsize{\dimen1}
-   %% Rozdìlit zbylou sazbu n sloupcù do více stránek ?
+   %% RozdÄ›lit zbylou sazbu n sloupcÅ¯ do vÃ­ce strÃ¡nek ?
    \ifvoid0 \else
       \ifdim \dimen0>\dimen1 \splitpart
       \else \makecolumns{\dimen0} \fi \fi}

@@ -307,7 +307,7 @@ void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char *
     				b += "<thsp>";
     				b += layout->units.format_i18n_length_units();
     		} else {
-          	  	    snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
+          	  	    std::snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
           	  	    b += c.get_buffer();
     		}
             b += ")";
@@ -351,7 +351,7 @@ void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const cha
 			b += pd[i].data.date.get_str(TT_DATE_FMT_UTF8_Y);
 			if (show_lengths) {
 			  b += " (";
-			  snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
+			  std::snprintf(c.get_buffer(),127,"%.0f",pd[i].crit);
 			  b += c.get_buffer();
 			  b += ")";
 			}
@@ -464,7 +464,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   ldata->cavelengthtitle = "";
   if (clen > 0) {
     //b = "";  
-    //snprintf(b.get_buffer(),255,"%.0f",clen);
+    //std::snprintf(b.get_buffer(),255,"%.0f",clen);
 		b = layout->units.format_length(clen);
     b += "<thsp>";
     //b += thT("units m",layout->lang);
@@ -480,7 +480,7 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
 
   if (z_top > z_bot) {
     //b = "";  
-    //snprintf(b.get_buffer(),255,"%.0f",z_top-z_bot);
+    //std::snprintf(b.get_buffer(),255,"%.0f",z_top-z_bot);
 	b = layout->units.format_length(z_top-z_bot);
     b += "<thsp>";
     //b += thT("units m",layout->lang);

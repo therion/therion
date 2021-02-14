@@ -119,28 +119,28 @@ class thexptable : public thexport {
    * Parse model export options.
    */
    
-  virtual void parse_options(int & argx, int nargs, char ** args);
+  void parse_options(int & argx, int nargs, char ** args) override;
 
   
   /**
    * Dump object into file.
    */
    
-  virtual void dump_body(FILE * xf);
+  void dump_body(FILE * xf) override;
 
 
   /**
    * Dump object into file.
    */
    
-  virtual void dump_header(FILE * xf);
+  void dump_header(FILE * xf) override;
   
 
   /**
    * Make export.
    */
    
-  virtual void process_db(class thdatabase * dbp);
+  void process_db(class thdatabase * dbp) override;
 
   /**
    * Export entrances from survey.

@@ -1,7 +1,7 @@
 OUTDIR ?= .
 THPLATFORM ?= LINUX
 ifneq ($(OUTDIR),.)
-LOUTDIR = $(OUTDIR)/xtherion
+LOUTDIR = ../$(OUTDIR)/xtherion
 else
 LOUTDIR = .
 endif

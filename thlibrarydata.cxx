@@ -291,7 +291,9 @@ void thlibrary_init_layouts()
 	playout->def_survey_level = 0;
 	playout->survey_level = 0;
 	playout->def_color_legend = 0;
-	playout->legend = 1;
+	playout->color_legend = 1;
+	playout->def_color_model = 0;
+	playout->color_model = 4;
 	playout->def_legend_width = 0;
 	playout->legend_width = 0.14;
 	playout->def_legend_columns = 0;
@@ -450,7 +452,9 @@ void thlibrary_init_layouts()
 	playout->def_survey_level = 0;
 	playout->survey_level = 0;
 	playout->def_color_legend = 0;
-	playout->legend = 1;
+	playout->color_legend = 1;
+	playout->def_color_model = 0;
+	playout->color_model = 4;
 	playout->def_legend_width = 0;
 	playout->legend_width = 0.14;
 	playout->def_legend_columns = 0;

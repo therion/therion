@@ -54,11 +54,6 @@
 #define getcwd _getcwd
 #define chdir _chdir
 #define putenv _putenv
-#define hypot _hypot
-#endif
-
-#ifdef THMSVC
-#define hypot _hypot
 #endif
 
 class thprjx_link {
@@ -1485,9 +1480,9 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
                 if (tarrow->end_node->uid == scancp->st->uid) {
                   if (arrow == NULL) {
                     arrow = tarrow;
-                    mindxy = hypot(cp->pt->x - scancp->pt->x, cp->pt->y - scancp->pt->y);
+                    mindxy = std::hypot(cp->pt->x - scancp->pt->x, cp->pt->y - scancp->pt->y);
                   } else {
-                    dxy = hypot(cp->pt->x - scancp->pt->x, cp->pt->y - scancp->pt->y);
+                    dxy = std::hypot(cp->pt->x - scancp->pt->x, cp->pt->y - scancp->pt->y);
                     if (dxy < mindxy) {
                       mindxy = dxy;
                       arrow = tarrow;
@@ -1727,8 +1722,8 @@ void thdb2d::pp_scale_points(thdb2dprj * prj)
     ps->reset_transformation();
     if (ps->scale_p9) {
 
-        cdist = hypot(ps->scale_p2y - ps->scale_p1y,ps->scale_p2x - ps->scale_p1x);
-        maxdist = hypot(ps->scale_r2y - ps->scale_r1y,ps->scale_r2x - ps->scale_r1x);
+        cdist = std::hypot(ps->scale_p2y - ps->scale_p1y,ps->scale_p2x - ps->scale_p1x);
+        maxdist = std::hypot(ps->scale_r2y - ps->scale_r1y,ps->scale_r2x - ps->scale_r1x);
 
         ang = atan2(ps->scale_p2y - ps->scale_p1y,ps->scale_p2x - ps->scale_p1x);
         tang = atan2(ps->scale_r2y - ps->scale_r1y,ps->scale_r2x - ps->scale_r1x);
@@ -2033,12 +2028,12 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
 #ifndef THADJUSTLS
       acp1 = pscrap->fcpp;
       acp2 = pscrap->fcpp->nextcp;
-      maxdist = hypot(acp1->tx - acp2->tx, acp1->ty - acp2->ty);
+      maxdist = std::hypot(acp1->tx - acp2->tx, acp1->ty - acp2->ty);
       cp = pscrap->fcpp;
       while (cp->nextcp != NULL) {
         cp2 = cp->nextcp;
         while (cp2 != NULL) {
-          cdist = hypot(cp->tx - cp2->tx, cp->ty - cp2->ty);
+          cdist = std::hypot(cp->tx - cp2->tx, cp->ty - cp2->ty);
           if (cdist > maxdist) {
             maxdist = cdist;
             acp1 = cp;
@@ -2048,7 +2043,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
         }
         cp = cp->nextcp;
       }
-      cdist = hypot(acp1->pt->xt - acp2->pt->xt, acp1->pt->yt - acp2->pt->yt);
+      cdist = std::hypot(acp1->pt->xt - acp2->pt->xt, acp1->pt->yt - acp2->pt->yt);
       if ((maxdist > 0) && (cdist > 0)) {
       
         ang = atan2(acp2->pt->yt - acp1->pt->yt, acp2->pt->xt - acp1->pt->xt);
@@ -2105,7 +2100,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
       a = (sumXx + sumYy) / (sumxx + sumyy);
       b = (sumYx - sumXy) / (sumxx + sumyy);
         
-      if (((sumxx + sumyy) > 0) && (hypot(a,b) > 0.0)) {
+      if (((sumxx + sumyy) > 0) && (std::hypot(a,b) > 0.0)) {
         // thprintf("a = %.4f;\nb = %.4f\n",a,b);
         pscrap->mxx = a;
         pscrap->mxy = -b;
@@ -2113,7 +2108,7 @@ void thdb2d::pp_adjust_points(thdb2dprj * prj)
         pscrap->myy = a;
         pscrap->mx = movetx;
         pscrap->my = movety;
-        pscrap->ms = hypot(a,b);
+        pscrap->ms = std::hypot(a,b);
         pscrap->mr = - atan2(b,a) / 3.14159265358 * 180.0;
         
 #endif
@@ -2271,7 +2266,7 @@ void thdb2d::pp_calc_points_z(thdb2dprj * prj)
       att = 0.0;
       ztt = 0.0;
       while (cp != NULL) {
-        dist = hypot(cp->oxt - ii->xt, cp->oyt - ii->yt);
+        dist = std::hypot(cp->oxt - ii->xt, cp->oyt - ii->yt);
         if (dist > 0) {
           cpw = 1.0 / (dist * dist);
           att += cp->ta * cpw;
@@ -2325,7 +2320,7 @@ void thdb2d::pp_shift_points(thdb2dprj * prj)
       cdx = 0.0;
       cdy = 0.0;
       while (cp != NULL) {
-        dist = hypot(cp->oxt - ii->xt, cp->oyt - ii->yt);
+        dist = std::hypot(cp->oxt - ii->xt, cp->oyt - ii->yt);
         if (dist > 0) {
           cpw = 1.0 / (dist * dist);
           cdx += cp->dx * cpw;
@@ -2619,7 +2614,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             }
               
             if ((fse1 != NULL) && (fse2 != NULL))
-              mindst = hypot(fse1->cxt - fse2->cxt, fse1->cyt - fse2->cyt);
+              mindst = std::hypot(fse1->cxt - fse2->cxt, fse1->cyt - fse2->cyt);
             else {
               // nenasli sme uz dva konce, skipujeme az na koniec
               jptr->throw_source();
@@ -2632,7 +2627,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
             while (se1 != NULL) {
               se2 = sc2->get_ends();
               while (se2 != NULL) {
-                cdst = hypot(se1->cxt - se2->cxt, se1->cyt - se2->cyt);
+                cdst = std::hypot(se1->cxt - se2->cxt, se1->cyt - se2->cyt);
 //#ifdef THDEBUG
 //  thprintf("\ttrying (%.2f,%.2f) - (%.2f,%.2f) = %.2f (MIN: %.2f)\n",se1->cxt,se1->cyt,se2->cxt,se2->cyt,cdst,mindst);
 //#endif
@@ -2754,25 +2749,25 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
         }
         
         // teraz najde spolocny bod kriviek l1 a l2
-        double mindist = hypot(l1->first_point->point->xt - l2->first_point->point->xt,
+        double mindist = std::hypot(l1->first_point->point->xt - l2->first_point->point->xt,
           l1->first_point->point->yt - l2->first_point->point->yt);
         searchpt = l1->first_point->point;
         
-        double dist = hypot(l1->last_point->point->xt - l2->first_point->point->xt,
+        double dist = std::hypot(l1->last_point->point->xt - l2->first_point->point->xt,
           l1->last_point->point->yt - l2->first_point->point->yt);
         if (dist < mindist) {
           searchpt = l1->last_point->point;
           mindist = dist;
         }
           
-        dist = hypot(l1->first_point->point->xt - l2->last_point->point->xt,
+        dist = std::hypot(l1->first_point->point->xt - l2->last_point->point->xt,
           l1->first_point->point->yt - l2->last_point->point->yt);
         if (dist < mindist) {
           searchpt = l1->first_point->point;
           mindist = dist;
         }
         
-        dist = hypot(l1->last_point->point->xt - l2->last_point->point->xt,
+        dist = std::hypot(l1->last_point->point->xt - l2->last_point->point->xt,
           l1->last_point->point->yt - l2->last_point->point->yt);
         if (dist < mindist) {
           searchpt = l1->last_point->point;
@@ -2787,9 +2782,9 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
         if (ji->is_active &&
             (ji->point == NULL) &&
             (ji->object->get_class_id() == TT_LINE_CMD)) {
-          if (hypot(((thline*)ji->object)->first_point->point->xt - searchpt->xt,
+          if (std::hypot(((thline*)ji->object)->first_point->point->xt - searchpt->xt,
               ((thline*)ji->object)->first_point->point->yt - searchpt->yt) <
-              hypot(((thline*)ji->object)->last_point->point->xt - searchpt->xt,
+              std::hypot(((thline*)ji->object)->last_point->point->xt - searchpt->xt,
               ((thline*)ji->object)->last_point->point->yt - searchpt->yt)) {
             ji->point = ((thline*)ji->object)->first_point->point;
             ji->line_point = ((thline*)ji->object)->first_point;
@@ -2935,17 +2930,17 @@ void thdb2d_pp_adjust_cp(double & xp, double & yp,
 
   v1x = x - xp;
   v1y = y - yp;
-  d1 = hypot(v1x,v1y);
+  d1 = std::hypot(v1x,v1y);
   
   v2x = xn - x;
   v2y = yn - y;
-  d2 = hypot(v2x,v2y);
+  d2 = std::hypot(v2x,v2y);
   
   if ((d1 > 0.0) && (d2 > 0.0)) {
   
     vvx = v1x + v2x;
     vvy = v1y + v2y;
-    dv = hypot(vvx,vvy);
+    dv = std::hypot(vvx,vvy);
     
     if (dv > 0.0) {
       vvx /= dv;
@@ -3091,8 +3086,8 @@ void thdb2d::pp_smooth_joins(thdb2dprj * prj)
         thdb2d_pp_adjust_cp(x1,y1,0.0,0.0,x2,y2);
         
         // znormuje dlzky cp vektorov
-        d1 = hypot(x1,y1);
-        d2 = hypot(x2,y2);
+        d1 = std::hypot(x1,y1);
+        d2 = std::hypot(x2,y2);
         if (d1 > 0) {
           x1 /= d1;
           y1 /= d1;
@@ -3107,14 +3102,14 @@ void thdb2d::pp_smooth_joins(thdb2dprj * prj)
           if (ji->cp1 != NULL) {
             tmpx = ji->cp1->xt - ji->point->xt;
             tmpy = ji->cp1->yt - ji->point->yt;
-            dt = hypot(tmpx,tmpy);
+            dt = std::hypot(tmpx,tmpy);
             ji->cp1->xt = ji->point->xt + x1 * dt;
             ji->cp1->yt = ji->point->yt + y1 * dt;
           }
           if (ji->cp2 != NULL) {
             tmpx = ji->cp2->xt - ji->point->xt;
             tmpy = ji->cp2->yt - ji->point->yt;
-            dt = hypot(tmpx,tmpy);
+            dt = std::hypot(tmpx,tmpy);
             ji->cp2->xt = ji->point->xt + x2 * dt;
             ji->cp2->yt = ji->point->yt + y2 * dt;
           }
@@ -3127,9 +3122,9 @@ void thdb2d::pp_smooth_joins(thdb2dprj * prj)
 }
 
 #define calcdist(p1,p2) { \
-  tmp = hypot(p1->dbgx0 - p2->dbgx0, p1->dbgy0 - p2->dbgy0); \
+  tmp = std::hypot(p1->dbgx0 - p2->dbgx0, p1->dbgy0 - p2->dbgy0); \
   if (tmp > 0.0) { \
-    tmp = hypot(p1->xt - p2->xt, p1->yt - p2->yt) / tmp; \
+    tmp = std::hypot(p1->xt - p2->xt, p1->yt - p2->yt) / tmp; \
     tmp = 100.0 * (1 - ((tmp > 1.0) ? (1.0 / tmp) : tmp)); \
     cavdist += tmp; \
     if (cdist < tmp) { \
@@ -3473,7 +3468,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   tharea * carea(NULL);
   thdb2dab * bln;
   area_proc itm;
-  thline * cln;
+  thline * line;
   thdb2dlp * clp;
   for (cscrap = prj->first_scrap; cscrap != NULL; cscrap = cscrap->proj_next_scrap) {
     for (obj = cscrap->fs2doptr; obj != NULL; obj = obj->nscrapoptr) {
@@ -3481,8 +3476,8 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
         carea = (tharea*) obj;
         cnt = 0;
         for (bln = carea->first_line; bln != NULL; bln = bln->next_line) {
-          cln = bln->line;
-          for (clp = cln->first_point; clp != NULL; clp = clp->nextlp) {
+          line = bln->line;
+          for (clp = line->first_point; clp != NULL; clp = clp->nextlp) {
             if (clp->cp1 != NULL) ulim(clp->cp1->xt, clp->cp1->yt, clp->cp1->at);
             if (clp->cp2 != NULL) ulim(clp->cp2->xt, clp->cp2->yt, clp->cp2->at);
             ulim(clp->point->xt, clp->point->yt, clp->point->at);
@@ -3556,12 +3551,12 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
     fprintf(mpf,"\ndraw (buildcycle(");
     for (cnt = 0, bln = carea->first_line; bln != NULL; bln = bln->next_line, cnt++) {
-      cln = bln->line;      
+      line = bln->line;      
       if (cnt > 0)
         fprintf(mpf,",(");
       else
         fprintf(mpf,"(");
-      for (clp = cln->first_point, cnt2 = 0; clp != NULL; clp = clp->nextlp, cnt2++) {
+      for (clp = line->first_point, cnt2 = 0; clp != NULL; clp = clp->nextlp, cnt2++) {
         if (cnt2 > 0) {
           if ((clp->cp1 != NULL) && (clp->cp2 != NULL)) {
             fprintf(mpf," .. controls ");
@@ -3654,7 +3649,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   af = fopen("data.1","r");
   double n[6];
   com.guarantee(256);
-  cln = NULL;
+  std::unique_ptr<thline> cln;
   char * buff = com.get_buffer();
   ti = todo.begin();
   while ((fscanf(af,"%32s",buff) > 0) && (ti != todo.end())) {
@@ -3673,7 +3668,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
       cnt = 0;
     }
     if (strcmp(buff,"newpath") == 0) { 
-      cln = new thline;
+      cln = std::make_unique<thline>();
       cln->db = this->db;
       cnt = 0;
     }
@@ -3707,17 +3702,14 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
       cln->fscrapptr = carea->fscrapptr;
       cln->fsptr = carea->fsptr;
       cln->type = TT_LINE_TYPE_BORDER;
-      ti->area->m_outline_line = cln;
+      ti->area->m_outline_line = std::move(cln);
       //cln->preprocess();
-      cln = NULL;
 
       // increase area counter
       ti++;
 
     }
   }
-
-  delete cln;
 
   thassert(chdir(wdir.get_buffer()) == 0);
 

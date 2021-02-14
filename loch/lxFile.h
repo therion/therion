@@ -45,6 +45,8 @@ typedef char * lxFileBuff;
 
 #define lxFileSizeT uint32_t
 
+#define lxassert(expr) if (!(expr)) std::exit(1);
+
 
 struct lxFileSize {
   lxFileSizeT m_size;

@@ -17,6 +17,7 @@ SYMBOLS.txt
 innosetup.ini
 xtherion/therion.tcl
 .*
+!.clang-tidy
 !.gitignore
 !.github/
 !.gitattributes
@@ -60,6 +61,9 @@ xtherion/msgxth.tcl
 /loch/loch
 /loch/loch.res
 /therion
-/thbook/
 /utest
 CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+extern/fmt/Makefile
+extern/fmt/cmake_install.cmake

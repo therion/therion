@@ -29,8 +29,30 @@
 
 using namespace std;
 
+enum class fillstroke {none, fill, stroke, fillstroke, fill2, clip, mask};
+enum class colormodel {no, grey, rgb, cmyk};
+
+struct color{
+  double a = -1, b = -1, c = -1, d = -1;
+  colormodel model = colormodel::no;
+
+  color() {
+    model = colormodel::no;
+    a = b = c = d = -1;
+  }
+
+  void reset();
+  void set(double);
+  void set(double,double,double);
+  void set(double,double,double,double);
+  bool is_white();
+  bool is_defined();
+  string to_svg();
+  string to_pdfliteral(fillstroke = fillstroke::fillstroke);
+};
+
 struct CGS {  // current graphics state
-  float color[3];
+  color col;
   int linejoin, linecap;
   float miterlimit, linewidth;
   list<float> dasharray;
@@ -82,7 +104,7 @@ struct MP_index {
 struct MP_text {
   string text, font;
   double size, x, y, xx, xy, yx, yy;
-  double r, g, b;
+  color col;
   bool transformed;
   
   MP_text();
@@ -165,6 +187,6 @@ struct pattern {
 int thconvert_new();
 void parse_eps(string fname, string cname, double dx, double dy, 
                double & c1, double & c2, double & c3, double & c4, 
-               converted_data & data, double = -1, double = -1, double = -1);
+               converted_data & data, color=color());
 
 #endif

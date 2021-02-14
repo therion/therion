@@ -29,18 +29,49 @@
 #ifndef thlayoutclr_h
 #define thlayoutclr_h
 
+#include "thparse.h"
+#include "thpdfdata.h"
+#include <stdio.h>
+
+enum {
+  TT_LAYOUTCLRMODEL_UNKNOWN = 0,
+  TT_LAYOUTCLRMODEL_GRAY = 1,
+  TT_LAYOUTCLRMODEL_RGB = 2,
+  TT_LAYOUTCLRMODEL_CMYK = 4,
+};
+
+static const thstok thtt_layoutclr_model[] = {
+  {"cmyk", TT_LAYOUTCLRMODEL_CMYK},
+  {"grayscale", TT_LAYOUTCLRMODEL_GRAY},
+  {"rgb", TT_LAYOUTCLRMODEL_RGB},
+  {NULL, TT_LAYOUTCLRMODEL_UNKNOWN}
+};
+
+
+
 /**
  * layout color class.
  */
 
 struct thlayout_color {
-  double R, G, B, A;
+  double R, G, B, A, C, M, Y, K, W;
   int defined;
+  int model;
   void parse(char * str, bool aalpha = false);
-  thlayout_color() : R(1.0), G(1.0), B(1.0), A(1.0), defined(0) {}
-  thlayout_color(double v) : R(v), G(v), B(v), A(1.0), defined(0) {}
-  thlayout_color(double r, double g, double b) : R(r), G(g), B(b), A(1.0), defined(0) {}
+  thlayout_color() : R(1.0), G(1.0), B(1.0), A(1.0), C(0.0), M(0.0), Y(0.0), K(0.0), W(1.0), defined(0), model(TT_LAYOUTCLRMODEL_RGB) {}
+  thlayout_color(double v) : R(v), G(v), B(v), A(1.0), C(0.0), M(0.0), Y(0.0), K(1.0 - v), W(v), defined(0), model(TT_LAYOUTCLRMODEL_GRAY) {}
+  thlayout_color(double r, double g, double b) : R(r), G(g), B(b), A(1.0), C(0.0), M(0.0), Y(0.0), K(0.0), W(0.0), defined(0), model(TT_LAYOUTCLRMODEL_RGB) {}
+  thlayout_color(double c, double m, double y, double k) : R(0.0), G(0.0), B(0.0), A(1.0), C(c), M(m), Y(y), K(k), W(1-k), defined(0), model(TT_LAYOUTCLRMODEL_CMYK) {}
   bool is_defined();
+  void set_color(int output_model, color & clr);
+  void print_to_file(int output_model, FILE * f);
+  void RGBtoGRAYSCALE();
+  void GRAYSCALEtoRGB();
+  void RGBtoCMYK();
+  void CMYKtoRGB();
+  void alpha_correct(double alpha);
+  void mix_with_color(double ratio, thlayout_color other_clr);
+  void fill_missing_color_models();
 };
 
 #endif

@@ -37,7 +37,7 @@ class thwarp {
 
   protected:
 
-  class thsketch * m_sketch;
+  struct thsketch * m_sketch;
 
   public:
 
@@ -71,7 +71,7 @@ class thwarplin : public thwarp {
 
   thwarplin() : morphed(false), method(0) {}
    
-  virtual thpic * morph(thsketch * sketch, double scale);
+  thpic * morph(thsketch * sketch, double scale) override;
 };
 
 

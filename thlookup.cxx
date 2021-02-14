@@ -357,9 +357,8 @@ void thlookup::color_scrap(thscrap * s) {
                   if ((ptli != this->m_table.end()) && (!thisnan(ptli->m_valueDbl)) && (ptli->m_valueDbl < sval)) {
                     // interpolate value
                     ratio = (sval - ptli->m_valueDbl) / (tli->m_valueDbl - ptli->m_valueDbl);
-                    clr.R = (1.0 - ratio) * tli->m_color.R + ratio * ptli->m_color.R;
-                    clr.G = (1.0 - ratio) * tli->m_color.G + ratio * ptli->m_color.G;
-                    clr.B = (1.0 - ratio) * tli->m_color.B + ratio * ptli->m_color.B;
+                    clr = tli->m_color;
+                    clr.mix_with_color(ratio, ptli->m_color);
                   }
                   break;
                 } else {
@@ -371,9 +370,8 @@ void thlookup::color_scrap(thscrap * s) {
                   if ((ptli != this->m_table.end()) && (!thisnan(ptli->m_valueDbl)) && (ptli->m_valueDbl > sval)) {
                     // interpolate value
                     ratio = (sval - tli->m_valueDbl) / (ptli->m_valueDbl - tli->m_valueDbl);
-                    clr.R = (1.0 - ratio) * tli->m_color.R + ratio * ptli->m_color.R;
-                    clr.G = (1.0 - ratio) * tli->m_color.G + ratio * ptli->m_color.G;
-                    clr.B = (1.0 - ratio) * tli->m_color.B + ratio * ptli->m_color.B;
+                    clr = tli->m_color;
+                    clr.mix_with_color(ratio, ptli->m_color);
                   }
                   break;
                 } else {
@@ -387,9 +385,7 @@ void thlookup::color_scrap(thscrap * s) {
       }
   }
   if (clr.is_defined()) {
-    s->R = clr.R;
-    s->G = clr.G;
-    s->B = clr.B;
+	s->clr = clr;
   }
 }
 
@@ -402,9 +398,7 @@ void thlookup::export_color_legend(thlayout * layout, std::unique_ptr<thlookup> 
     colorlegendrecord clrec;
     std::string title;
     for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
-      clrec.R = tli->m_color.R;
-      clrec.G = tli->m_color.G;
-      clrec.B = tli->m_color.B;
+      tli->m_color.set_color(layout->color_model, clrec.col_legend);
       if (strlen(tli->m_label) > 0) {
         clrec.texname = ths2tex(tli->m_label, layout->lang);
         clrec.name = ths2txt(tli->m_label, layout->lang);
@@ -555,14 +549,7 @@ void thlookup::auto_generate_items() {
   }
 }
 
-#define alpha_correction(AA,RR,GG,BB) { \
-  RR = AA * RR + (1 - AA) * 1.0; \
-  GG = AA * GG + (1 - AA) * 1.0; \
-  BB = AA * BB + (1 - AA) * 1.0; \
-}
-
 #define tmp_alpha 0.75
-#define tmp_set_color(r,g,b) cR = r; cG = g; cB = b
 
 void thlookup::postprocess() {
   double prevDbl;
@@ -606,7 +593,7 @@ void thlookup::postprocess() {
 
   // doplni farby, ak ich nemame na zaklade value, poctu
   thlookup_table_list::iterator lvalid = this->m_table.end(), nvalid = this->m_table.end();
-  double lvalidp(0.0), nvalidp(0.0), cp, totalp, ratio, cR, cG, cB;
+  double lvalidp(0.0), nvalidp(0.0), cp, totalp, ratio;
   int cnt;
   cp = 0.0;
   for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
@@ -625,18 +612,16 @@ void thlookup::postprocess() {
           cnt = 0;
           for(nvalid = this->m_table.begin(); nvalid != this->m_table.end(); nvalid++) {
             switch (cnt % 6) {
-                case 0:  tmp_set_color(1.0, 0.5, 0.5); break;
-                case 1:  tmp_set_color(0.5, 1.0, 0.5); break;
-                case 2:  tmp_set_color(0.5, 0.5, 1.0); break;
-                case 3:  tmp_set_color(1.0, 1.0, 0.0); break;
-                case 4:  tmp_set_color(0.0, 1.0, 1.0); break;
-                default: tmp_set_color(1.0, 0.0, 1.0); break;
+                case 0:  nvalid->m_color = thlayout_color(1.0, 0.5, 0.5); break;
+                case 1:  nvalid->m_color = thlayout_color(0.5, 1.0, 0.5); break;
+                case 2:  nvalid->m_color = thlayout_color(0.5, 0.5, 1.0); break;
+                case 3:  nvalid->m_color = thlayout_color(1.0, 1.0, 0.0); break;
+                case 4:  nvalid->m_color = thlayout_color(0.0, 1.0, 1.0); break;
+                default: nvalid->m_color = thlayout_color(1.0, 0.0, 1.0); break;
             }
-            alpha_correction(tmp_alpha, cR, cG, cB);
-            nvalid->m_color.R = cR;
-            nvalid->m_color.G = cG;
-            nvalid->m_color.B = cB;
+            nvalid->m_color.alpha_correct(tmp_alpha);
             nvalid->m_color.defined = 1;
+
             cnt++;
           }
         } else {
@@ -646,9 +631,9 @@ void thlookup::postprocess() {
           else
         	  cp = 0;
           for(nvalid = this->m_table.begin(); nvalid != this->m_table.end(); nvalid++) {
-            thset_color(0, cp, totalp, nvalid->m_color.R, nvalid->m_color.G, nvalid->m_color.B);
+            thset_color(0, cp, totalp, nvalid->m_color);
             nvalid->m_color.defined = 1;
-            alpha_correction(tmp_alpha, nvalid->m_color.R, nvalid->m_color.G, nvalid->m_color.B)
+            nvalid->m_color.alpha_correct(tmp_alpha);
             if (this->m_ascending)
             	cp -= 1.0;
             else
@@ -662,9 +647,8 @@ void thlookup::postprocess() {
         tli->m_color = lvalid->m_color;
       } else {
         ratio = (cp - lvalidp) / (nvalidp - lvalidp);
-        tli->m_color.R = ratio * nvalid->m_color.R + (1.0 - ratio) * lvalid->m_color.R;
-        tli->m_color.G = ratio * nvalid->m_color.G + (1.0 - ratio) * lvalid->m_color.G;
-        tli->m_color.B = ratio * nvalid->m_color.B + (1.0 - ratio) * lvalid->m_color.B;
+        tli->m_color = lvalid->m_color;
+        tli->m_color.mix_with_color(ratio, nvalid->m_color);
         tli->m_color.defined = 1;
       }
     } else {

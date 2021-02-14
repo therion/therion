@@ -447,7 +447,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         out->layout->export_mptex_font_size(out->file, this, true);
         fprintf(out->file,"%s etex,",
           ((this->type == TT_POINT_TYPE_STATION_NAME) && (!this->station_name.is_empty()))
-          ? (const char *) utf2tex(thobjectname__print_full_name(this->station_name.name, this->station_name.psurvey, out->layout->survey_level))
+          ? (const char *) utf2tex(thobjectname_print_full_name(this->station_name.name, this->station_name.psurvey, out->layout->survey_level))
           : ths2tex(this->text, out->layout->lang).c_str());
         if (this->type == TT_POINT_TYPE_STATION_NAME)
           postprocess_label = "p_label_mode_station";
@@ -1282,10 +1282,7 @@ void thpoint::check_extra()
     while (cp != NULL) {
       if (cp->st != NULL) {
         cd = thvec2(this->point->x - cp->pt->x, this->point->y - cp->pt->y).length();
-        if (mind < 0.0) {
-          this->from_name.id = cp->st->uid;
-          mind = cd;
-        } else if (cd < mind) {
+        if ((mind < 0.0) || (cd < mind)) {
           this->from_name.id = cp->st->uid;
           mind = cd;
         }

@@ -29,8 +29,10 @@
 #include <map>
 #include <set>
 #include <string>
+#include <sstream>
 
 
+#include "thexception.h"
 #include "thpdfdata.h"
 #include "thlang.h"
 
@@ -54,7 +56,6 @@ scraprecord::scraprecord() {
   I1=0.0; I2=0.0; I3=0.0; I4=0.0; 
   E1=0.0; E2=0.0; E3=0.0; E4=0.0; 
   X1=0.0; X2=0.0; X3=0.0; X4=0.0; 
-  r=-1; g=-1; b=-1;
 }
 
 layerrecord::layerrecord() {
@@ -80,18 +81,10 @@ layout::layout() {
   nav_up = 2;
   nav_factor = 30;
   title_pages = false;
-  background_r = 1; 
-  background_g = 1; 
-  background_b = 1;
-  foreground_r = 1; 
-  foreground_g = 1; 
-  foreground_b = 1;
-  preview_below_r = .8; 
-  preview_below_g = .8; 
-  preview_below_b = .8;
-  preview_above_r = 0; 
-  preview_above_g = 0; 
-  preview_above_b = 0;
+  col_background.set(1,1,1);
+  col_foreground.set(1,1,1);
+  col_preview_below.set(.8,.8,.8);
+  col_preview_above.set(0,0,0);
   own_pages = 0;
   OCG = true;
   lang = THLANG_UNKNOWN;

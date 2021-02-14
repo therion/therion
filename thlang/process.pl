@@ -135,7 +135,7 @@ sub write_sources {
   my $i;
   my $lcode;
   $languages = "enum {\n  THLANG_SYSTEM = -2,\n  THLANG_UNKNOWN = -1,\n";
-  $langcxxid = "static const thlang_pchar thlang__cxxids []  = {\n";
+  $langcxxid = "static const thlang_pchar thlang_cxxids []  = {\n";
   $langparse = "static const thstok thtt_lang [] = {\n";
   for ($i = 0; $i <= $#langs; $i++) {
     $lcode = "THLANG_" . uc($langs[$i]);
@@ -148,7 +148,7 @@ sub write_sources {
   $langcxxid .= "};\n";
   $langparse .= "  {NULL, THLANG_UNKNOWN},\n};\n";
 
-  my $alternatives = "static const int thlang__alternatives [] = {\n";
+  my $alternatives = "static const int thlang_alternatives [] = {\n";
   for ($i = 0; $i <= $#langs; $i++) {
     $lkey = $langs[$i];
     if ((length($lkey) > 2) && (defined($lngs{substr($lkey,0,2)}))) {
@@ -161,8 +161,8 @@ sub write_sources {
 
   @texts = sort keys %hr;
 
-  $textparse = "static const thstok thtt__texts [" . ($#texts + 2) . "] = {\n";
-  $texttable = "static thlang_pchar thlang__translations [" . ($#texts + 1) . "][" . ($#langs + 1) . "] = {\n";
+  $textparse = "static const thstok thtt_texts [" . ($#texts + 2) . "] = {\n";
+  $texttable = "static thlang_pchar thlang_translations [" . ($#texts + 1) . "][" . ($#langs + 1) . "] = {\n";
   $i = 0;
   my $nlkey;
   foreach $key (@texts) {
@@ -199,7 +199,7 @@ sub write_sources {
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */
-
+#pragma once
 
 $languages
 
@@ -217,6 +217,9 @@ ENDOUT
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
  */
 
+#include "thlangdata.h"
+#include "thparse.h"
+#include <cstddef>
 
 typedef const char * thlang_pchar;
 

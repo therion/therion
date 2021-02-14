@@ -94,7 +94,7 @@ public:
 
   virtual ~thwarpp();
 
-  virtual thpic * morph(thsketch * sketch, double scale);
+  thpic * morph(thsketch * sketch, double scale) override;
 };
 
 

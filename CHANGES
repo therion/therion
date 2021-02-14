@@ -1,5 +1,37 @@
-Therion 5.5.8 (in progress):
+Therion 5.6.0 (in progress):
 
+therion:
+ * support for colour models: cmyk, rgb, gray (see the color-model layout
+   option in the Thbook)
+ * support for colour management (see the color-profile layout option)
+ * reimplemented internal processing of patterns and transparent colors in
+   MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
+   macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
+   tr_white, tr_black were removed; use the drawing option
+   'withcolor <color> withtransparency <number>' instead)
+ * support for double number system in MetaPost (this eliminates the current
+   MetaPost limits; see the chapter Limitations in the Appendix of the Thbook)
+ * tex-refs-registers <on/off> initialization file option added (see the
+   chapters Initialization files and Limitations in the Appendix of the Thbook)
+ * support for LuaTeX as an alternative to pdfTeX
+ * support for both relative and absolute paths in the \loadpicture macro
+ * updated Serbian translation
+ * bugs fixed:
+   - ISO8859-2 literals in the source code caused clang warnings
+   - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
+   - fixed numerical instability in l_overhang_SKBB
+   - swapped anastomosis & karren symbols
+   - other minor fixes
+ * updated shapelib
+ 
+loch:
+ * Tools->Selection - only displays selected surveys
+ * bugs fixed:
+   - missing title
+   - autorotation issues
+
+infrastructure:
+ * support for CMake builds (thanks to Matěj Plch)
 
 --------------------------------------------------------------------------------
 

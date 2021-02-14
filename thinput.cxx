@@ -496,7 +496,40 @@ char * thinput::get_cif_path()
   thsplit_fpath(&cifpath, this->last_ptr->name.get_buffer());
   return cifpath.get_buffer();
 }
-  
+
+const char * thinput::get_cif_abspath(const char * fname)
+{
+  static thbuffer pict_path;
+  pict_path.guarantee(1024);
+  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);  
+  long i;
+  pict_path += "/";  
+  if (thpath_is_absolute(this->last_ptr->name.get_buffer()))
+	  pict_path = this->last_ptr->name.get_buffer();
+  else
+	  pict_path += this->last_ptr->name.get_buffer();
+  char * pp = pict_path.get_buffer();
+  for(i = (long)strlen(pp); i >= 0; i--) {
+	if ((pp[i] == '/') || (pp[i] == '\\')) {
+	  break;
+	} else
+	  pp[i] = 0;
+  }
+  if (strlen(pp) == 0)
+	pict_path = "/";
+  if ((fname != NULL) && (strlen(fname) > 0)) {
+	  if (thpath_is_absolute(fname))
+		  pict_path = fname;
+	  else
+		  pict_path += fname;
+  }
+  pp = pict_path.get_buffer();
+  for(i = (long)strlen(pp); i >= 0; i--) {
+	if (pp[i] == '\\')
+	  pp[i] = '/';
+  }
+  return pict_path.get_buffer();
+}
 
 unsigned long thinput::get_cif_line_number()
 {

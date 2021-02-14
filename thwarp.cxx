@@ -157,7 +157,7 @@ thpic * thwarplin::morph(thsketch * sketch, double scale)
   thvec2 pmin, pmax, ptmp, mpic_origin;
   counter = 1;
 
-  if (/*(stations.size() < 3) ||*/ (this->method == 0)) {
+  if (/*(stations.size() < 3) ||*/ this->method == 0) {
 
     pmin = pmax = T2.forward(T1.forward(thvec2(0.0, 0.0)));
     ptmp = T2.forward(T1.forward(thvec2(double(sketch->m_pic.width), 0.0))); pmin.minimize(ptmp); pmax.maximize(ptmp);

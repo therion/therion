@@ -47,6 +47,7 @@
 #include "thtexfonts.h"
 #include "thlang.h"
 #include <libgen.h>
+#include <thread>
 
 
 thexpmodel::thexpmodel() {
@@ -124,7 +125,6 @@ void thexpmodel::dump_header(FILE * xf)
   thexport::dump_header(xf);
   //fprintf(xf,"export\tmodel");
 }
-
 
 bool thexpmodel::is_leg_exported(thdb1dl * l)
 {
@@ -895,10 +895,10 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
   diamx = (finlim.maxx - finlim.minx) / 2.0;
   diamy = (finlim.maxy - finlim.miny) / 2.0;
   diamz = (finlim.maxz - finlim.minz) / 2.0;
-  diamxy = hypot(diamx, diamy);
-  diamxz = hypot(diamx, diamz);
-  diamyz = hypot(diamy, diamz);
-  diam = hypot(diamxy, diamz);
+  diamxy = std::hypot(diamx, diamy);
+  diamxz = std::hypot(diamx, diamz);
+  diamyz = std::hypot(diamy, diamz);
+  diam = std::hypot(diamxy, diamz);
   fprintf(pltf,"Viewpoint {\n\tfieldOfView 0.42\n\tjump TRUE\n\tposition 0.0 0.0 %8.2f\n\tdescription \"Down\"\n}\n",
     diamxy / 0.21818181818181 + diamz);
   fprintf(pltf,"Viewpoint {\n\tfieldOfView 0.42\n\tjump TRUE\n\tposition 0.0 0.0 %8.2f\n\torientation 1 0 0 3.14159\n\tdescription \"Up\"\n}\n",

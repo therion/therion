@@ -128,7 +128,7 @@ void th2ddataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsign
       break;    
       
     case TT_2DOBJ_CONTEXT:
-      this->context = thsymbolset__get_id(args[0], args[1]);
+      this->context = thsymbolset_get_id(args[0], args[1]);
       if (this->context < 0)
         ththrow(("invalid object context -- %s %s", args[0], args[1]))
       if ((this->context > SYMP_ZZZ) 

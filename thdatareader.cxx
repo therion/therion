@@ -29,7 +29,7 @@
 #include "thexception.h"
 #include "thobjectsrc.h"
 
-unsigned long thdatareader__get_opos(bool inlineid, bool cfgid)
+unsigned long thdatareader_get_opos(bool inlineid, bool cfgid)
 {
   unsigned long opos = 0;
   
@@ -125,7 +125,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 
             this->inp.get_cif_encoding(),
-            thdatareader__get_opos(inside_cmd,configure_cmd));
+            thdatareader_get_opos(inside_cmd,configure_cmd));
           continue;
         }
         
@@ -136,7 +136,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
         while(strcmp(opt,"!") < 0) opt++;
         if (*opt == '!') opt++;
         objptr->set(optd, & opt, this->inp.get_cif_encoding(),
-          thdatareader__get_opos(inside_cmd,configure_cmd));
+          thdatareader_get_opos(inside_cmd,configure_cmd));
 
       }
       else {
@@ -190,7 +190,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           for (ai = 0; ai < objptr->get_cmd_nargs(); ai++, opts++) {
             optd.id = ai + 1;
             objptr->set(optd, opts, this->inp.get_cif_encoding(),
-              thdatareader__get_opos(inside_cmd,configure_cmd));
+              thdatareader_get_opos(inside_cmd,configure_cmd));
 
           }
         }
@@ -212,7 +212,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           }
  
           objptr->set(optd, opts, this->inp.get_cif_encoding(),
-            thdatareader__get_opos(inside_cmd,configure_cmd));
+            thdatareader_get_opos(inside_cmd,configure_cmd));
           opts += optd.nargs;
           ait += optd.nargs;
         }

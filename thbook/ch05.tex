@@ -167,7 +167,10 @@ For font management there are macros
 \list
 * |\size[#1]| for size changes,
 
-* |\color[#1 #2 #3]| for colour changes (RGB values in the range 0--100), and
+* |\cmykcolor[#1 #2 #3 #4]|, |\[rgb]color[#1 #2 #3]| and |\graycolor[#1]| for text colour changes
+  (the values should be in the range 0--100),
+
+* |\black| which selects the black color in the appropriate colour model, and
 
 * |\rm|, |\it|, |\bf|, |\ss|, |\si| for type face switching.
 \endlist
@@ -367,7 +370,7 @@ e.g. for large blue text:
 
 |code tex-map
   \legendwidth=20cm
-  \legendtextcolor={\color[0 0 100]}
+  \legendtextcolor={\cmykcolor[0 30 50 50]}
   \legendtextsize={\size[20]}
   \legendtextheadersize={\size[60]}|
 
@@ -378,7 +381,7 @@ dimen register to a positive value, e.g. |0.5mm|.
 
 \subchapter Customizing text labels.
 
-Starting with the release 5.4.1\NEW{5.4.1} you can use |fonts-setup| layout option
+Starting with the release 5.4.1\NEW{5.4.1}\ you can use |fonts-setup| layout option
 instead of the \MP\ macro |fonts_setup()|.
 
 \subchapter New map symbols.
@@ -542,7 +545,7 @@ You may fill them in three ways:
  * fill |path| with a predefined pattern using a |withpattern| keyword.
 \endlist
 
-Patterns are defined using the same user interface (without the
+Patterns are defined using the same user interface (except the
 |patterncolor| macro) as described in the article
 
 \list
@@ -553,6 +556,9 @@ Patterns are defined using the same user interface (without the
 
 You may use standard \MP\ |draw| and similar macros without setting of {\it T}
 variable in the pattern definitions.
+In PDF output, all patterns are {\it uncolored}---this means that any colour
+information specified in the pattern definition is ignored and the colour is
+assigned later, when the pattern is used (using |symbol-colour| layout option).
 
 An example of how to define and use patterns:
 

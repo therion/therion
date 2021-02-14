@@ -27,10 +27,6 @@
  
 #include "thdataleg.h"
 #include "thcs.h"
-#ifdef THMSVC
-#define hypot _hypot
-#endif
-
 
 thdataleg::thdataleg()
 {
@@ -204,7 +200,7 @@ void thdataleg::calc_total_stds()
   T = this->total_bearing / 180.0 * 3.14159265359;
   C = this->total_gradient / 180.0 * 3.14159265359;
   L = this->total_length;
-  h = hypot(this->total_dx, this->total_dy);
+  h = std::hypot(this->total_dx, this->total_dy);
 
   if (this->topofil) {
     dL = 1.41421356237 * dl;

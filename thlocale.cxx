@@ -4,9 +4,6 @@
 #include "thexception.h"
 #include "thlang.h"
 #include "thinit.h"
-#ifdef THMSVC
-#define snprintf _snprintf
-#endif
 
 #define LCBUFFNUM 10
 #define LCBUFFLEN 1024
@@ -57,12 +54,12 @@ char * thlocale::format_length(double length, int prec, int total)
 	if (total < 10) {
 			lcfmt1[1] = total + 48;
 			lcfmt1[3] = prec + 48;
-      snprintf(lcbuff, LCBUFFLEN, lcfmt1, length);
+      std::snprintf(lcbuff, LCBUFFLEN, lcfmt1, length);
 	} else {
 			lcfmt2[1] = total % 10 + 48;
 			lcfmt2[2] = total / 10 + 48;
 			lcfmt2[4] = prec + 48;
-      snprintf(lcbuff, LCBUFFLEN, lcfmt2, length);
+      std::snprintf(lcbuff, LCBUFFLEN, lcfmt2, length);
 	}
 	lcbuff[LCBUFFLEN - 1] = 0;
 	return lcbuff;

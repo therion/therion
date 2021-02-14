@@ -16,6 +16,8 @@
 
 \subchapter Compilation.
 
+\subsubchapter Installing the dependencies.
+
 If you want to compile Therion from source code and run it, you need
 (first three are required only during compilation):
 \list
@@ -42,6 +44,19 @@ If you want to compile Therion from source code and run it, you need
   PDF maps.
 \endlist
 
+%Installing Tom:
+%
+%\list
+%* if you use Windows, download a Tcl/Tk source distribution, |make| and
+%  |make install| it under MSYS
+%* |cd therion/thtom/linux| or |cd therion/thtom/win|
+%* |make|
+%* copy |Tom0.2| directory (which should contain |pkgIndex.tcl| and one of
+%  |libtom.so| or |libtom.dll|)
+%  to the |lib| subdirectory of your
+%  Tcl/Tk distribution.
+%\endlist
+
 To compile Loch, you need
 
 \list
@@ -57,38 +72,9 @@ For Windows consider using MinGW and MSYS (\www{http://www.mingw.org}).
 It's a distribution of GNU utilities with GNU make and GCC.
 (BTW, why not to use precompiled Windows version?)
 
-\subsubchapter Quick start.
-
-\list
-* unpack the source distribution |therion-5.*.tar.gz|
-* |cd therion|
-* |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows,
-  respectively
-* |make|
-* |sudo make install|
-\endlist
-
-%Installing Tom:
-%
-%\list
-%* if you use Windows, download a Tcl/Tk source distribution, |make| and
-%  |make install| it under MSYS
-%* |cd therion/thtom/linux| or |cd therion/thtom/win|
-%* |make|
-%* copy |Tom0.2| directory (which should contain |pkgIndex.tcl| and one of
-%  |libtom.so| or |libtom.dll|)
-%  to the |lib| subdirectory of your
-%  Tcl/Tk distribution.
-%\endlist
-
-\subsubchapter Hacker's guide.
-
-{\it Installing dependencies}
-
-Ubuntu 18.04 or 20.04 example command for installing dependencies to compile Therion:
-
-\list
-* |sudo apt-get -y install|
+Here is an example for installing dependencies to compile Therion
+on Ubuntu 18.04 or 20.04:
+  |sudo apt install|
   |bwidget|
   |gcc|
   |ghostscript|
@@ -104,7 +90,39 @@ Ubuntu 18.04 or 20.04 example command for installing dependencies to compile The
   |tcl-dev|
   |texlive-binaries|
   |texlive-metapost|
-  |zlib1g-dev|
+  |zlib1g-dev|.
+
+\subsubchapter Using cmake.
+
+\NEW{5.6}Unpack the source distribution |therion-5.*.tar.gz| and create a separate
+directory for the build, e.g.:
+\list
+* |cd therion && mkdir build && cd build|
+* |cmake [parameters] ..|
+* |make -j4|
+\endlist
+
+{\it CMake parameters}
+
+Here is a selection of parameters which can be used with cmake:
+\list
+* |-G <generator>| = specify the generator, e.g.
+  |-G Ninja| to use {\it Ninja} build system instead of make,
+  or |-G "MSYS Makefiles"| to build using {\it make} under MSYS2
+* {\catcode`\=12|-DUSE_BUNDLED_SHAPELIB=OFF|} = use the system Shapelib library
+* {\catcode`\=12|-DUSE_BUNDLED_CATCH2=OFF|} = use the system Catch2 library
+
+\endlist
+
+\subsubchapter Legacy approach: using make.
+
+\list
+* unpack the source distribution |therion-5.*.tar.gz|
+* |cd therion|
+* |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows,
+  respectively
+* |make|
+* |sudo make install|
 \endlist
 
 {\it Make parameters}
@@ -121,21 +139,26 @@ Therion's {\it makefile} may take some optional parameters.
 * |clean| = delete all temporary files
 \endlist
 
+\subsubchapter Hacker's guide.
+
 {\it Cross-compilation for Windows}\NEW{5.4}
 
-Therion supports compilation of Win32 executables in Linux using MXE cross
+Therion supports compilation of Win32/Win64 executables in Linux using MXE cross
 compiler (\www{http://mxe.cc}).
 
 \list
-* install the following static/win32 packages (i686-w64-mingw32.static-\char42) to
+* install the following static/win32 packages (i686-w64-mingw32.static-\char42) 
+or static/win64 packages (x86-64-w64-mingw32.static-\char42) to
 the directory |/usr/lib/mxe/|: binutils, bzip2, expat, freetype-bootstrap,
 gcc, gettext, glib, harfbuzz, jpeg, libiconv, libpng, proj, tiff, vtk, wxwidgets,
 xz, zlib.
 * modify PATH: {\catcode`\=12|export PATH=/usr/lib/mxe/usr/bin:$PATH|}
-* |cd therion|
-* |make config-win32cross|
-* |make|
+* use CMake or the legacy approach (|cd therion && make config-win32cross && make|)
+  to build Therion
 \endlist
+
+See |therion/.github/workflows/| for detailed examples of building
+Therion on multiple platforms.
 
 {\it Adding new translations}
 
@@ -459,6 +482,12 @@ supported initialization commands follow.
   disable the default behaviour completely by setting |tex-fonts| in the
   INI file.
 
+* |tex-refs-registers <on/off>|
+
+  Switch between using count registers and macros to store references to
+  graphical objects in \TeX. Each approach has some advantages, see
+  the section {\it Limitations}.
+
 \endlist
 
 
@@ -475,18 +504,37 @@ XTherion starts. The file is commented; see the comments for details.
 \subchapter Limitations.
 
 \list
-*  scrap size = $\approx 2.8 \times 2.8$ m in the output scale (\MP\ limit)
+*  scrap size = 
+
+   \MP\ in the default (`scaled') mode: $\approx 2.8 \times 2.8$ m in the output scale
+
+   \MP\ in the `double' mode:\[To run \MP\ in the `double' mode, set
+   |mpost-options  "-numbersystem\eq double"| in the initialization file. It's not recommended
+   to use arbitrary-precision modes `decimal' and `binary', as there are still bugs in their
+   implementation and they are much slower than the `double' mode. You need to use \MP\ newer
+   than 2.00 to use this mode without issues.]
+   practically no limit\[It's high enough to be reached.]
 *  page size =
 
    PDF map or atlas: $\approx 5 \times 5$ m (pdf\TeX\ limit)
 
-   SVG map: unlimited
-*  scraps count = approx. 500--6000, depending on frequency of cross-sections
+   SVG map: limits depend on the viewing application
+*  scraps count =
 
-   current \MP\ limit: $4 (scraps + sections) < 4096$ (may be arbitrarily increased)
+   \MP\ in the scaled mode: $4 (scraps + sections) < 4000$
 
-   pdf\TeX\ limit: $2\times pages + images + patterns +
-                            6 (scraps + sections) < 32500$
+   \MP\ in the `double' mode: practically no limit
+
+   \TeX\ limit in registers mode:\[This is the default approach, in which the count registers
+   are used to store referenced to the graphic objects.]
+            $2\times pages + images + patterns + 6 (scraps + sections) < 32\,500$ when using pdf\TeX\
+            (or approximately $65\,000$ when using Lua\TeX\[To use Lua\TeX,
+            set |pdftex-path  "luatex"| in the initialization file.])
+
+   \TeX\ limit in macro mode:\[Instead of using count registers, each reference is stored in
+   a separate macro. This mode is activated by setting |tex-refs-registers off| in
+   the initialization file.] limited only by memory available to \TeX\[Note, that you need to
+   modify |texmf.cnf| configuration file in your \TeX\ distribution to change the limits.]
 \endlist
 
 

@@ -35,7 +35,7 @@ es: Visual de superficie
 fr: Visée de surface
 it: Misure di superficie
 pt: Visadas na superfície
-rs: površinski vlak
+rs: Površinski vlak
 ru: Поверхностная съёмка
 sk: povrchové zámery
 sl: Površinske vizure
@@ -93,7 +93,7 @@ it: caposaldo verniciato
 mi: kaimataara tohi
 pl: punkt pomiarowy (oznaczony farbą)
 pt: base pintada
-rs: merna tačka označena bojom
+rs: obeležena merna tačka
 ru: нарисованный пикет
 sk: meračský bod (zafarbený)
 sl: merilna točka (označena)
@@ -227,7 +227,7 @@ it: disostruzione
 mi: kari
 pl: wykop
 pt: desobstrução
-rs: kopano
+rs: prokop
 ru: раскоп
 sk: sonda
 sl: izkop
@@ -277,13 +277,13 @@ therion: point flag:arch
 bg: арка
 ca: arc
 cs: skalní oblouk
-en: arch
 de: Bogen
+en: arch
 es: arco
 fr: arche
 it: arco
 pt: arco
-rs: kameni luk
+rs: prerast
 ru: арка
 sk: skalný oblúk
 sl: skalni obok
@@ -424,7 +424,7 @@ it: roccia
 mi: tarā
 pl: ściana
 pt: parede (rocha matriz)
-rs: matična stena
+rs: zid
 ru: стена (коренная)
 sk: stena
 sl: kamnita stena
@@ -523,7 +523,7 @@ it: pozzo di ingresso
 mi: rua
 pl: studnia wstępna
 pt: parede (poço)
-rs: odsek
+rs: jamski ulaz
 ru: отвес
 sk: vstupná priepasť
 sl: brezno
@@ -622,7 +622,7 @@ it: argilla
 mi: oneuku
 pl: ściana z gliny
 pt: parede de lama/argila
-rs: blato, glina
+rs: glina
 ru: глина
 sk: stena tvorená ílom
 sl: glina
@@ -660,7 +660,7 @@ it: colata
 mi: tāra a pari kōhatu
 pl: ściana z nacieków
 pt: parede de escorrimento
-rs: saliv
+rs: salivni zid
 ru: натеки
 sk: stena tvorená sintrom
 sl: siga
@@ -818,7 +818,7 @@ it: altezza sopra il livello dell'acqua
 mi: te teitei a karewa ki runga
 pl: wysokość korytarza nad powierzchnią wody
 pt: altura acima do nível da água
-rs: visina tavanice
+rs: visina iznad nivoa vode
 ru: высота над уровнем воды
 sk: výška nad hladinou
 sl: višina prehoda nad gladino
@@ -838,7 +838,7 @@ it: profondità sotto il livello dell'acqua
 mi: te hōhunu a karewa ki raro
 pl: wysokość korytarza pod powierzchnią wody
 pt: profundidade abaixo do nível da água
-rs: dubina kanala
+rs: dubina vode
 ru: глубина ниже уровня воды
 sk: hĺbka pod hladinou
 sl: globina prehoda pod gladino
@@ -858,7 +858,7 @@ it: altezza sopra e sotto il livello dell'acqua
 mi: karewa ki runga ki raro
 pl: wysokość korytarza nad powierzchnią wody i głębokość poniżej poziomu wody
 pt: altura acima mais profundidade abaixo do nível da água
-rs: ukupna visina kanala
+rs: visina i dubina od površine vode
 ru: высота над и глубина ниже уровня воды
 sk: výška nad a hĺbka pod hladinou
 sl: višina prehoda pod in nad gladino
@@ -938,7 +938,7 @@ it: data d'osservazione
 mi: rā o te titiro
 pl: data obserwacji
 pt: data do registro
-rs: datum
+rs: datum opažanja
 ru: дата наблюдения
 sk: dátum pozorovania
 sl: datum opazovanja
@@ -1136,7 +1136,7 @@ it: meandro a pavimento
 mi: kopiko
 pl: meander w dnie
 pt: meandro no piso
-rs: meandar u podu
+rs: podni meandar
 ru: меандр, канал в полу
 sk: meander v dne
 sl: dno meandra
@@ -1158,7 +1158,7 @@ it: pozzo
 mi: tupari
 pl: studnia
 pt: poço
-rs: odsek
+rs: ulaz u vertikalu
 ru: колодец
 sk: priepasť
 sl: brezno
@@ -1240,7 +1240,7 @@ it: scivolo
 mi: heke
 pl: nachylenie korytarza
 pt: declividade da galeria
-rs: nagib
+rs: nagib kanala
 ru: уклон хода
 sk: sklon chodby
 sl: strmina
@@ -1260,7 +1260,7 @@ it: pendenza
 mi: harapaki putanga
 pl: nachylenie korytarza
 pt: declividade da galeria
-rs: nagib
+rs: nagib kanala
 ru: уклон хода
 sk: sklon chodby
 sl: strmina
@@ -1281,7 +1281,7 @@ it: altezza/profondità pozzo/camino/scalino
 mi: papa tapuae/tumera/teitei rua/hōhonu
 pl: wysokość progu/komina/głębokość studni
 pt: altura do chão para degrau/chaminé/desnível
-rs: visina
+rs: visinska razlika
 ru: высота уступа/камина/колодца
 sk: hĺbka/výška priepasti/stupňa/komína
 sl: višina
@@ -1321,7 +1321,7 @@ it: altezza scalino
 mi: teitei papa tapuae
 pl: wysokość progu
 pt: altura do degrau no chão (valor absoluto)
-rs: visina
+rs: visina stepenika
 ru: высота уступа
 sk: výška stupňa
 sl: višina stopnje
@@ -1341,7 +1341,7 @@ it: altezza camino
 mi: teitei tumera
 pl: wysokość komina
 pt: altura da chaminé
-rs: visina tavanice
+rs: visina odžaka
 ru: высота трубы
 sk: výška komína
 sl: višina kamina
@@ -1362,7 +1362,7 @@ it: profondità pozzo
 mi: rua hōhonu
 pl: głębokosc studni
 pt: profundidade do poço
-rs: dubina
+rs: dubina vertikale
 ru: глубина колодца
 sk: hĺbka priepasti
 sl: globina brezna
@@ -1384,7 +1384,7 @@ pl: poziomica
 pt: contorno
 pt_BR: curva de nível
 pt_PT: contorno
-rs: izolinija
+rs: izohipsa
 ru: контур
 sk: vrstevnica
 sl: prekinjena
@@ -1546,7 +1546,7 @@ it: argilla
 mi: oneuku
 pl: glina
 pt: lama/argila
-rs: blato, glina
+rs: glina
 ru: глина
 sk: íl
 sl: glina
@@ -1558,6 +1558,7 @@ de: Trockenriss
 en: mudcrack
 it: fessura di disseccamento
 pt: lama rachada
+rs: ispucalo blato
 sk: popraskané blato
 
 therion: point water
@@ -1889,7 +1890,7 @@ it: argilla
 mi: oneuku
 pl: glina
 pt: lama/argila
-rs: blato, glina
+rs: glina
 ru: глина
 sk: íl
 sl: glina
@@ -1977,6 +1978,7 @@ de: Trockenrisse
 en: mudcrack
 it: fessura di disseccamento
 pt: lama rachada
+rs: ispucalo blato
 
 therion: area pillar
 bg: сталактон
@@ -1991,6 +1993,7 @@ it: colonna
 mi: pou
 pl: stalagnat
 pt: coluna
+rs: stub
 ru: колонна
 sk: stalagnát
 sl: steber
@@ -2002,6 +2005,7 @@ de: Säule mit Vorhängen
 en: pillar with curtains
 it: colonna con vele
 pt: coluna com cortinas
+rs: stub od draperije
 
 therion: area stalactite
 bg: сталактит
@@ -2016,6 +2020,7 @@ it: stalattite
 mi: kōhatu ki te haere ki runga
 pl: stalaktyt
 pt: estalactite
+rs: stalaktit
 ru: сталактит
 sk: stalaktit
 sl: stalaktit
@@ -2027,6 +2032,7 @@ de: Stalaktit-Stalagmit
 en: stalactite-stalagmite
 it: stalattite-stalagmite
 pt: estalactite-estalagmite
+rs: stalaktit-stalagmit
 
 therion: area stalagmite
 bg: сталагмит
@@ -2041,6 +2047,7 @@ it: stalagmite
 mi: kōhatu ki te haere ki raro
 pl: stalagmit
 pt: estalagmite
+rs: stalagmit
 ru: сталагмит
 sk: stalagmit
 sl: stalagmit
@@ -2577,7 +2584,7 @@ it: coralloide
 mi: kanga pāhuuhuu
 pl: pizolity
 pt: couve-flor
-rs: kalcitni koral
+rs: korali
 ru: коралиты
 sk: pizolity
 sl: karfiola
@@ -2651,6 +2658,7 @@ de: Heliktiten
 en: helictites
 it: eccentriche
 pt: helictites
+rs: heliktiti
 
 therion: point aragonite
 bg: арагонит
@@ -2767,7 +2775,7 @@ it: gour
 mi: kōhatu matatara
 pl: naciekowa przegroda
 pt: travertino vazio
-rs: travertinski zid
+rs: travertinska pregrada
 ru: гуры без воды
 sk: sintrová hrádza
 sl: suha ponvica
@@ -2907,7 +2915,7 @@ it: materiale archeologico
 mi: taonga o nehe
 pl: znaleziska archeologiczne
 pt: material arqueológico
-rs: arheološki materijal
+rs: arheološki nalaz
 ru: археологическая находка
 sk: archeologické nálezy
 sl: arheološke najdbe
@@ -2927,7 +2935,7 @@ it: materiale paleontologico
 mi: taiao taonga o nehe
 pl: znaleziska paleontologiczne
 pt: material paleontológico
-rs: paleontološki materijal
+rs: paleontološki nalaz
 ru: палео-находка
 sk: paleontologické nálezy
 sl: paleontološke najdbe
@@ -3049,7 +3057,7 @@ it: scala di corda
 mi: arawhata taura
 pl: drabinka linowa
 pt: escada de corda
-rs: lestvice od užeta
+rs: viseće lestvice
 ru: гибкая лестница
 sk: lanový rebrík
 sl: lestvice
@@ -3069,7 +3077,7 @@ it: scala di corda
 mi: arawhata taura
 pl: drabinka linowa
 pt: escada de corda
-rs: lestvice od užeta
+rs: viseće lestvice
 ru: гибкая лестница
 sk: lanový rebrík
 sl: lestvice
@@ -3089,7 +3097,7 @@ it: scala fissa
 mi: arawhata
 pl: sztywna drabinka
 pt: escada fixa
-rs: stalne lestvice
+rs: fiksirane lestvice
 ru: жесткая лестница
 sk: fixný rebrík
 sl: klini
@@ -3109,7 +3117,7 @@ it: scala fissa
 mi: arawhata
 pl: sztywna drabinka
 pt: escada fixa
-rs: stalne lestvice
+rs: fiksirane lestvice
 ru: жесткая лестница
 sk: fixný rebrík
 sl: klini
@@ -3141,216 +3149,252 @@ de: Altar
 en: altar
 it: altare
 pt: altar
+rs: oltar
 
 therion: point archeo-excavation
 de: Archäologische Ausgrabung
 en: archaeological excavation
 it: scavo archeologico
 pt: escavação arqueológica
+rs: arheološka iskopavanja
 
 therion: point audio
 de: Ton
 en: audio
 it: audio
 pt: áudio
+rs: razglas
 
 therion: point bat
 de: Fledermaus
 en: bat
 it: pipistrello
 pt: morcegos
+rs: slepi miš
 
 therion: point bones
 de: Knochen
 en: bones
 it: ossi
 pt: ossos
+rs: kosti
 
 therion: point curtains
 de: Vorhänge
 en: curtains
 it: vele
 pt: cortinas
+rs: draperije
 
 therion: point danger
 de: Gefahr
 en: danger
 it: pericolo
 pt: perigo
+rs: opasnost
 
 therion: point disc-pillar
 de: Scheibe auf Säule
 en: disc on pillar
 it: disco su colonna
 pt: disco em coluna
+rs: disk na stubu
 
 therion: point disc-stalactite
 de: Scheibe auf Stalaktit
 en: disc on stalactite
 it: disco su stalattite
 pt: disco em estalactite
+rs: disk na stalaktitu
 
 therion: point disc-stalagmite
 de: Scheibe auf Stalagmit
 en: disc on stalagmite
 it: disco su stalagmite
 pt: disco em estalagmite
+rs: disk na stalagmitu
 
 therion: point disc-pillars
 de: Säulen mit Scheiben
 en: discs on pillars
 it: dischi su colonne
 pt: discos em colunas
+rs: stubovi sa diskovima
 
 therion: point disc-stalactites
 de: Stalaktiten mit Scheiben
 en: discs on stalactites
 it: dischi su stalattiti
 pt: discos em estalactites
+rs: stalaktiti sa diskovima
 
 therion: point disc-stalagmites
 de: Stalagmiten mit Scheiben
 en: discs on stalagmites
 it: dischi su stalagmiti
 pt: discos em estalagmites
+rs: stalagmiti sa diskovima
 
 therion: point electric-light
 de: Elektrisches Licht
 en: electric light
 it: luce elttrica
 pt: luz elétrica
+rs: električno osvetljenje
 
 therion: point ex-voto
 de: Votiv
 en: ex-voto
 it: ex-voto
 pt: ex-voto
+rs: zaglavak
 
 therion: point gate
 de: Tor
 en: gate
 it: cancello
 pt: portão
+rs: kapija
 
 therion: point human-bones
 de: Menschliche Knochen
 en: human bones
 it: ossa umane
 pt: ossos humanos
+rs: ljudske kosti
 
 therion: point masonry
 de: Mauerwerk
 en: masonry
 it: muratura
 pt: alvenaria
+rs: veštački zid
 
 therion: point minus
 de: Minus
 en: minus
 it: meno
 pt: segue abaixo
+rs: minus
 
 therion: point mud
 de: Schlamm
 en: mud
 it: fango
 pt: lama
+rs: blato
 
 therion: point nameplate
 de: Namensschild
 en: nameplate
 it: placchetta identificativa
 pt: placa de identificação
+rs: natpis
 
 therion: point no-wheelchair
 de: Kein Rollstuhlzugang
 en: not wheelchair accessible
 it: non accessibile con sedia a rotelle
 pt: não acessível com cadeira de rodas
+rs: nepristupačno za invalide
 
 therion: point pendant
 de: Pendant
 en: pendant
 it: pendente
 pt: pendente
+rs: pendant
 
 therion: point pillar-with-curtains
 de: Säule mit Vorhängen
 en: pillar with curtains
 it: colonna con vele
 pt: coluna com cortinas
+rs: stub od draperije
 
 therion: point pillars-with-curtains
 de: Säulen mit Vorhängen
 en: pillars with curtains
 it: colonne con vele
 pt: colunas com cortinas
+rs: stubovi od draperije
 
 therion: point photo
 de: Foto
 en: photo
 it: foto
 pt: foto
+rs: foto
 
 therion: point plus
 de: Plus
 en: plus
 it: più
 pt: segue acima
+rs: plus
 
 therion: point plus-minus
 de: Plus/Minus
 en: plus/minus
 it: più/meno
 pt: segue acima e abaixo
+rs: plus-minus
 
 therion: point seed-germination
 de: Samenkeimung
 en: seed-germination
 it: germinazione di seme
 pt: germinação de semente
+rs: proklijalo seme
 
 therion: point stalactite-stalagmite
 de: Stalaktit-Stalagmit
 en: stalactite-stalagmite
 it: stalattite-stalagmite
 pt: estalactite-estalagmite
+rs: stalaktit-stalagmit
 
 therion: point stalactites-stalagmites
 de: Stalaktiten-Stalagmiten
 en: stalactites-stalagmites
 it: stalattiti-stalagmiti
 pt: estalactites-estalagmites
+rs: stalaktiti-stalagmiti
 
 therion: point tree-trunk
 de: Baumstamm
 en: tree-trunk
 it: tronco d'albero
 pt: tronco de árvore
+rs: balvan
 
 therion: point volcano
 de: Vulkan
 en: volcano
 it: vulcano
 pt: vulcão
+rs: vulkan
 
 therion: point walkway
 de: Gehweg
 en: walkway
 it: passerella
 pt: passarela
+rs: staza
 
 therion: point water-drip
 de: Wassertropfen
 en: water-drip
 it: stillicidio
 pt: gotejamento
+rs: prokapnice
 
 therion: point wheelchair
 de: Rollstuhlzugang
 en: wheelchair accessible
 it: accessibile con sedia a rotelle
 pt: acessível com cadeira de rodas
+rs: pristupačno za invalide
 
 therion: line rope
 bg: въже
@@ -3401,7 +3445,7 @@ es: via-ferrata
 fr: via-ferrata
 it: via ferrata
 pt: via ferrata
-rs: ugrađeni stepenici
+rs: via-ferata
 ru: виа-ферата
 sk: via ferrata
 sl: ferata
@@ -3415,7 +3459,7 @@ es: via-ferrata
 fr: via-ferrata
 it: via ferrata
 pt: via ferrata
-rs: ugrađeni stepenici
+rs: via-ferata
 ru: виа-ферата
 sk: via ferrata
 sl: ferata
@@ -3515,36 +3559,42 @@ de: Abgrund
 en: abyss-entrance
 it: ingresso abisso
 pt: entrada em abismo
+rs: natklonjen ulaz u vertikalu
 
 therion: line dripline
 de: Trauflinie
 en: dripline
 it: linea di gocciolamento
 pt: linha de gotejamento
+rs: linija kišenja
 
 therion: line fault
 de: Störung
 en: fault
 it: faglia
 pt: falha
+rs: rased
 
 therion: line joint
 de: Kluft
 en: joint
 it: diaclasi
 pt: fratura
+rs: pukotina
 
 therion: line low-ceiling
 de: Niedrige Decke
 en: low-ceiling
 it: soffitto basso
 pt: teto baixo
+rs: spuštanje tavanice
 
 therion: line pit-chimney
 de: Schacht-Schlot
 en: pit/chimney
 it: pozzo/camino
 pt: poço e clarabóia
+rs: jama/odžak
 
 therion: line rimstone-dam
 bg: сухо синтрово езеро
@@ -3559,6 +3609,7 @@ it: gour
 mi: kōhatu matatara
 pl: naciekowa przegroda
 pt: travertino vazio
+rs: travertinske pregrade
 ru: гуры без воды
 sk: sintrová hrádza
 sl: suha ponvica
@@ -3578,6 +3629,7 @@ it: vasca
 mi: kōhatu kopua wai
 pl: jeziorko naciekowe
 pt: travertino cheio
+rs: travertinske kade
 ru: гуры с водой
 sk: sintrové jazierko
 sl: ponvica
@@ -3589,6 +3641,7 @@ de: Gehweg
 en: walkway
 it: passerella
 pt: passarela
+rs: staza
 
 therion: point remark
 bg: забележка
@@ -3714,7 +3767,7 @@ it: Mappe
 mi: Mahere whenua
 pl: mapy
 pt: Mapas
-rs: Mapa
+rs: Nacrti
 ru: Карты
 sk: Mapy
 sl: Načrti
@@ -3729,7 +3782,7 @@ es: Trozos/cachos
 fr: Scraps
 it: Scrap
 pt: Croquis
-rs: Deo nacrta
+rs: Delovi nacrta
 sl: Izrez
 
 therion: title color-legend-survey
@@ -3740,7 +3793,7 @@ es: Topos
 fr: Topos
 it: Rilievi
 pt: Topos
-rs: Nacrt
+rs: Topografska merenja
 sl: Meritve
 
 therion: title color-legend-explodate
@@ -3775,7 +3828,7 @@ es: Leyenda de colores
 fr: Légende colorée
 it: Legenda dei colori
 pt: Cores
-rs: Legenda
+rs: Tumač boja
 sl: Legenda barv
 
 therion: units ft

@@ -33,11 +33,8 @@
 #include "thlayout.h"
 #include "thgrade.h"
 #include "thcsdata.h"
-#include <string.h>
 #include "thdatareader.h"
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
+#include "loch/icase.h"
 
 thdata::thdata()
 {
@@ -189,7 +186,7 @@ bool thdata::get_cmd_ends_state() {
 }
 
 
-static const thstok thdata__end_cmds[] = {
+static const thstok thdata_end_cmds[] = {
   {"endcenterline", TT_DATA_CMD},
   {"endcentreline", TT_DATA_CMD},
 	{NULL, TT_UNKNOWN_CMD},
@@ -197,7 +194,7 @@ static const thstok thdata__end_cmds[] = {
 
 
 bool thdata::get_cmd_ends_match(char * cmd) {
-  return (thmatch_token(cmd,thdata__end_cmds) == TT_DATA_CMD);
+  return (thmatch_token(cmd,thdata_end_cmds) == TT_DATA_CMD);
 }
 
 
@@ -1733,9 +1730,9 @@ void thdata::insert_data_leg(int nargs, char ** args)
         break;
         
       case TT_DATALEG_DIRECTION:
-        if (strcasecmp(args[carg],"b") == 0)
+        if (icase_equals(args[carg],"b"))
           this->cd_leg->direction = false;
-        else if (strcasecmp(args[carg], "f") != 0)
+        else if (!icase_equals(args[carg], "f"))
           ththrow(("invalid survey direction -- %s", args[carg]))
         break;
         

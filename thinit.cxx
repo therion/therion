@@ -37,14 +37,10 @@
 #include "thtmpdir.h"
 #include "thcs.h"
 #include "thproj.h"
+#include "thpdfdbg.h"
 
 #ifdef THWIN32
 #include <windows.h>
-#endif
-
-#ifdef THMSVC
-#define snprintf _snprintf
-#define strcasecmp _stricmp
 #endif
 
 const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
@@ -81,6 +77,8 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# proj-auto off\n\n"
 "### PROJ v6+ handling of missing transformation grids if proj-auto is on ###\n"
 "# proj-missing-grid warn\n\n"
+"### Use count registers in TeX to store references to scraps; otherwise define control sequences ###\n"
+"# tex-refs-registers on\n\n"
 "### Command to remove temporary directory ###\n"
 "# tmp-remove  \"\"\n\n";
 
@@ -122,6 +120,7 @@ enum {
   TTIC_PROJ_AUTO,
   TTIC_PROJ_MISSING_GRID,
   TTIC_OTF2PFB,
+  TTIC_TEX_REFS_REGISTERS,
   TTIC_CS_DEF,
   TTIC_UNKNOWN,
 };
@@ -153,6 +152,7 @@ static const thstok thtt_initcmd[] = {
   {"tex-env",TTIC_TEX_ENV},
   {"tex-fonts",TTIC_TEX_FONTS},
   {"tex-fonts-optional",TTIC_TEX_FONTS_OPTIONAL},
+  {"tex-refs-registers",TTIC_TEX_REFS_REGISTERS},
   {"text",TTIC_TEXT},
   {"tmp-path",TTIC_TMP_PATH},
   {"tmp-remove",TTIC_TMP_REMOVE_SCRIPT},
@@ -160,7 +160,7 @@ static const thstok thtt_initcmd[] = {
   {NULL, TTIC_UNKNOWN},
 };
 
-void thinit__print_open(char * s) {
+void thinit_print_open(char * s) {
 #ifdef THDEBUG
     thprintf("\ninitialization file: %s\nreading\n", s);
 #else
@@ -285,7 +285,7 @@ void thinit::check_font_path(const char * fname, int index) {
 #ifdef THWIN32
       ((l > 1) && (buff[1] == ':')) ||
 #endif
-      (buff[0] == '/')) {
+      buff[0] == '/') {
     pfull.strcpy(buff);
   } else {
     if (strlen(this->ini_file.get_cif_path()) > 0) {
@@ -298,7 +298,7 @@ void thinit::check_font_path(const char * fname, int index) {
   }
 
   // checkne ci TTF
-  if ((l > 3) && (strcasecmp(&(buff[l-4]), ".ttf")) == 0) ENC_NEW.t1_convert = 0;
+  if ((l > 3) && icase_equals(&(buff[l-4]), ".ttf")) ENC_NEW.t1_convert = 0;
 
   font_src[index] = pfull.get_buffer();
   font_dst[index] = pshort.get_buffer();
@@ -424,7 +424,7 @@ void thinit::load()
   this->ini_file.set_file_name("therion.ini");
   this->ini_file.sp_scan_on();
   this->ini_file.cmd_sensitivity_off();
-  this->ini_file.print_if_opened(thinit__print_open, &started);
+  this->ini_file.print_if_opened(thinit_print_open, &started);
   this->ini_file.reset();
   try {
     while((cmdln = this->ini_file.read_line()) != NULL) {
@@ -449,6 +449,7 @@ void thinit::load()
         case TTIC_PATH_PDFTEX:
         case TTIC_PATH_SOURCE:
         case TTIC_OTF2PFB:
+        case TTIC_TEX_REFS_REGISTERS:
         case TTIC_TEX_ENV:
         case TTIC_PROJ_AUTO:
         case TTIC_PROJ_MISSING_GRID:
@@ -527,6 +528,13 @@ void thinit::load()
           if (sv == TT_UNKNOWN_BOOL)
             ththrow(("invalid otf2pfb switch -- %s", args[1]))
           ENC_NEW.t1_convert = (sv == TT_TRUE);
+          break;
+
+        case TTIC_TEX_REFS_REGISTERS:
+          sv = thmatch_token(args[1], thtt_bool);
+          if (sv == TT_UNKNOWN_BOOL)
+            ththrow(("invalid tex-refs-registers switch -- %s", args[1]))
+          tex_refs_registers = (sv == TT_TRUE);
           break;
 
         case TTIC_PROJ_AUTO:

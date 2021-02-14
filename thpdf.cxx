@@ -40,10 +40,7 @@
 #include <cstdio>
 #include <cfloat>
 #include <cmath>
-
-// #ifdef NOTHERION  
-// #include <unistd.h>  // I don't know why
-// #endif
+#include <fmt/core.h>
 
 #include "thpdfdbg.h"
 #include "thconfig.h"
@@ -56,10 +53,8 @@
 #define round(x) floor((x) + 0.5)
 #endif
 
-#ifndef NOTHERION
 #include "thchenc.h"
 #include "thbuffer.h"
-#endif
 
 using namespace std;
 
@@ -109,141 +104,22 @@ double MINX, MINY, MAXX, MAXY;
 double HS,VS;
 //////////
 
+string black2pdf(double shade, fillstroke fs) {    // shade: 0 = white, 1 = black
+  if (shade < 0 || shade > 1) therror((fmt::format("shade {} out of range <0,1>",shade).c_str()));
+  color c;
+  if (LAYOUT.output_colormodel == colormodel::grey) c.set(1-shade);
+  else if (LAYOUT.output_colormodel == colormodel::rgb) c.set(1-shade, 1-shade, 1-shade);
+  else if (LAYOUT.output_colormodel == colormodel::cmyk) c.set(0, 0, 0, shade);
+  else therror (("invalid color model"));
+  return c.to_pdfliteral(fs);
+}
+
 string tex_Sname(string s) {return("THS"+s);}
 string tex_Nname(string s) {return("THN"+s);}
 string tex_BMPname(string s) {return("THBMP"+s);} // bitmap
 
-void read_settings() {
-  ifstream F("scraps.dat");
-  if(!F) therror(("Can't open file `scraps.dat'!"));
-  char buf[101],ctok[100];
-  string tok;
-  int context = 0;   // 0=scrap, 1=layer, 2=map preview, 3=legend
-  int i;
-  double llx,lly,urx,ury;
-  scraprecord SCR;
-  layerrecord LH;
-  list<scraprecord>::iterator I;
-  map<int,layerrecord>::iterator J;
-
-  while(F.getline(buf,100,'\n')) {
-//    istrstream S(buf);
-    istringstream S(buf);
-    S >> ctok;
-    tok = ctok;
-    if      (tok == "[SCRAP]")  context = 0;
-    else if (tok == "[LAYER]")  context = 1;
-    else if (tok == "[MAP]")    context = 2;
-    else if (tok == "[LEGEND]") context = 3;
-    else if (tok == "N") {
-      switch (context) {
-        case 0:
-          S >> ctok;
-          SCRAPLIST.push_front(SCR);
-          I = SCRAPLIST.begin();
-          I->name = ctok;
-          break;
-        case 1:
-          S >> ctok; ((*J).second).N = ctok;
-          while(S >> ctok) {
-            ((*J).second).N = ((*J).second).N + " " + string(ctok);
-          }
-          break;
-      }
-    }
-    else if (tok == "F") {
-      S >> llx >> lly >> urx >> ury;
-      I->F = " "; I->F1 = llx; I->F2 = lly; I->F3 = urx; I->F4 = ury;
-    }
-    else if (tok == "G") {
-      S >> llx >> lly >> urx >> ury;
-      I->G = " "; I->G1 = llx; I->G2 = lly; I->G3 = urx; I->G4 = ury;
-    }
-    else if (tok == "B") {
-      S >> llx >> lly >> urx >> ury;
-      I->B = " "; I->B1 = llx; I->B2 = lly; I->B3 = urx; I->B4 = ury;
-    }
-    else if (tok == "I") {
-      S >> llx >> lly >> urx >> ury;
-      I->I = " "; I->I1 = llx; I->I2 = lly; I->I3 = urx; I->I4 = ury;
-    }
-    else if (tok == "E") {
-      S >> llx >> lly >> urx >> ury;
-      I->E = " "; I->E1 = llx; I->E2 = lly; I->E3 = urx; I->E4 = ury;
-    }
-    else if (tok == "X") {
-      S >> llx >> lly >> urx >> ury;
-      I->X = " "; I->X1 = llx; I->X2 = lly; I->X3 = urx; I->X4 = ury;
-    }
-    else if (tok == "P") {
-      S >> ctok;  I->P = ctok;  
-      S >> llx >> lly;  I->S1 = llx; I->S2 = lly;
-    }
-    else if (tok == "Y") {
-      S >> i;  I->layer = i;
-    }
-    else if (tok == "V") {
-      S >> i;  I->level = i;
-    }
-    else if (tok == "R") {
-      S >> i;
-      LAYERHASH.insert(make_pair(i,LH));
-      J = LAYERHASH.find(i);
-      ((*J).second).Z = 0;
-    }
-    else if (tok == "U") {
-      switch (context) {
-        case 1:
-          while(S >> i) {
-            (((*J).second).U).insert(i);
-          }
-          break;
-        case 2:
-          while(S >> i) {
-            MAP_PREVIEW_UP.insert(i);
-          }
-          break;
-      }
-    }
-    else if (tok == "D") {
-      switch (context) {
-        case 1:
-          while(S >> i) {
-            (((*J).second).D).insert(i);
-          }
-          break;
-        case 2:
-          while(S >> i) {
-            MAP_PREVIEW_DOWN.insert(i);
-          }
-          break;
-      }
-    }
-    else if (tok == "T") {
-      S >> ctok; ((*J).second).T = ctok;
-      while(S >> ctok) {
-        ((*J).second).T = ((*J).second).T + " " + string(ctok);
-      }
-    }
-    else if (tok == "Z") {
-      switch (context) {
-        case 0:
-          S >> i;  I->sect = i;
-          break;
-        case 1:
-          ((*J).second).Z = 1;
-          break;
-      }
-    }
-  }
-  F.close();
-  SCRAPLIST.reverse();
-}
-
 string xyz2str(int x, int y, int z) {
-  char buf[50];
-  sprintf(buf,"%d.%d.%d",x,y,z);
-  return (string) buf;
+  return fmt::format("{}.{}.{}",x,y,z);
 }
 
 list<sheetrecord>::iterator find_sheet(int x, int y, int z) {
@@ -486,17 +362,13 @@ string grid_name(string s, int offset) {
     }
   }
   if (is_num) {
-    char buf[10];
-    sprintf(buf,"%d",atoi(s.c_str())+offset);
-    return (string) buf;
+    return fmt::format("{:d}", atoi(s.c_str())+offset);
   }
   else if (s.size()==1) {
     c=s[0];
     if ((c >= 65 && c <= 90 && (c+offset) >= 65 && (c+offset) <= 90) ||
         (c >= 97 && c <=122 && (c+offset) >= 97 && (c+offset) <=122)) {
-      char buf[10];
-      sprintf(buf,"%c",c+offset);
-      return (string) buf;
+      return fmt::format("{:c}", c+offset);
     }
     else return "?";
   }
@@ -600,16 +472,12 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
 //  PAGEDEF << (up ? "\\PL{q .1 w}%" : "\\PL{q .8 g}%") << endl;
   
   if (up) { 
-    PAGEDEF << "\\PL{q .1 w " << LAYOUT.preview_above_r << " " <<
-                                 LAYOUT.preview_above_g << " " <<
-                                 LAYOUT.preview_above_b << " " <<
-                                                           " RG}%" << endl;
+    PAGEDEF << "\\PL{q .1 w " << LAYOUT.col_preview_above.to_pdfliteral(fillstroke::stroke) <<
+               "}%" << endl;
   }
   else { 
-    PAGEDEF << "\\PL{q " << LAYOUT.preview_below_r << " " <<
-                            LAYOUT.preview_below_g << " " <<
-                            LAYOUT.preview_below_b << " " <<
-                                                      " rg}%" << endl;
+    PAGEDEF << "\\PL{q " << LAYOUT.col_preview_below.to_pdfliteral(fillstroke::fill) <<
+               "}%" << endl;
   }
 
   if (mode == ATLAS) {
@@ -639,8 +507,8 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
               xc = K->B1; yc = K->B2;
               xc -= HSHIFT; yc -= VSHIFT;
               PAGEDEF << (mode == MAP && LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
-                      xc << "}{" << yc << "}{\\" << 
-                      tex_Xname("B"+(K->name)) << "}%" << endl;
+                      xc << "}{" << yc << "}{" <<
+                      tex_get_ref(tex_Xname("B"+(K->name))) << "}%" << endl;
             }
           }
           else {
@@ -648,8 +516,8 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
               xc = K->I1; yc = K->I2;
               xc -= HSHIFT; yc -= VSHIFT;
               PAGEDEF << (mode == MAP && LAYOUT.OCG ? "\\PBcorr{" : "\\PB{") << 
-                      xc << "}{" << yc << "}{\\" << 
-                      tex_Xname("I"+(K->name)) << "}%" << endl;
+                      xc << "}{" << yc << "}{" <<
+                      tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
             }
           }
         }
@@ -791,16 +659,11 @@ void compose_page(list<sheetrecord>::iterator sheet_it, ofstream& PAGE) {
 }
 
 void print_page_bg(ofstream& PAGEDEF) {
-/*  if ((LAYOUT.background_r != 1) || 
-      (LAYOUT.background_g != 1) || 
-      (LAYOUT.background_b != 1)) { */
   if (! LAYOUT.transparent_map_bg) {
 
     // bg rectangle
-    PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
-                            LAYOUT.background_g << " " << 
-                            LAYOUT.background_b << " rg 0 0 " << 
-                            HS << " " << VS << " re f Q}%" << endl;
+    PAGEDEF << "\\PL{q " << LAYOUT.col_background.to_pdfliteral(fillstroke::fill) <<
+                     " 0 0 " << HS << " " << VS << " re f Q}%" << endl;
   }
 }
 
@@ -832,7 +695,7 @@ void print_page_bg_scraps(int layer, ofstream& PAGEDEF,
       LEVEL = ((*(LAYERHASH.find(layer))).second).scraps;
     }
 
-    PAGEDEF << "\\PL{q 1 g}%" << endl;      // white background of the scrap
+    PAGEDEF << "\\PL{q " << black2pdf(0, fillstroke::fill) << "}%" << endl;      // white background of the scrap
     for (map < int,set<string> >::iterator I = LEVEL.begin();
                                        I != LEVEL.end(); I++) {
       used_scraps = (*I).second;
@@ -841,8 +704,8 @@ void print_page_bg_scraps(int layer, ofstream& PAGEDEF,
         if (used_scraps.count(K->name) > 0 && K->I != "") {
           xc = K->I1; yc = K->I2;
           xc -= HSHIFT; yc -= VSHIFT;
-          PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                  tex_Xname("I"+(K->name)) << "}%" << endl;
+          PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                  tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
         }
       }
     }
@@ -989,7 +852,7 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         out.y -= LLY;
         PAGEDEF << "\\PL{q}";
 	PAGEDEF << "\\PL{" << cosr << " " << sinr << " " << -sinr << " " << cosr << " " << out.x << " " << out.y << " cm}";
-	PAGEDEF << "\\PB{0}{0}{\\" << tex_Wname("grid") << u2str(elem+1) << "}";
+	PAGEDEF << "\\PB{0}{0}{" << tex_get_ref(tex_Wname("grid") + u2str(elem+1)) << "}";
         PAGEDEF << "\\PL{Q}%" << endl;
 
         if (LAYOUT.grid_coord_freq==2 || (LAYOUT.grid_coord_freq==1 && elem!=4)) {
@@ -1021,8 +884,8 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
 	elem = col + 3*row;
 	PAGEDEF << "\\PB{" << i-LLX+LAYOUT.gridcell[elem].x << "}{" << 
-	                      j-LLY+LAYOUT.gridcell[elem].y << "}{\\" << 
-			      tex_Wname("grid") << u2str(elem+1) << "}%" << endl;
+			      j-LLY+LAYOUT.gridcell[elem].y << "}{" <<
+			      tex_get_ref(tex_Wname("grid") + u2str(elem+1)) << "}%" << endl;
 
         if (col == 0 && LAYOUT.grid_coord_freq > 0) {
           PAGEDEF << "\\PL{q}";
@@ -1102,20 +965,17 @@ void print_map(int layer, ofstream& PAGEDEF,
     for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
       if (used_scraps.count(K->name) > 0 && K->I != "") {
         PAGEDEF << "\\PL{q ";
-        if (K->r < 0 || K->g < 0 || K->b < 0) {
-          PAGEDEF << LAYOUT.foreground_r << " " <<   // background of the scrap
-                     LAYOUT.foreground_g << " " << 
-                     LAYOUT.foreground_b << " rg}%" << endl;
+        if (!K->col_scrap.is_defined()) {
+          PAGEDEF << LAYOUT.col_foreground.to_pdfliteral(fillstroke::fill) <<   // background of the scrap
+                     "}%" << endl;
         }
         else {
-          PAGEDEF << K->r << " " <<   // background of the scrap
-                     K->g << " " << 
-                     K->b << " rg}%" << endl;
+          PAGEDEF << K->col_scrap.to_pdfliteral(fillstroke::fill) << "}%" << endl;
         }
         xc = K->I1; yc = K->I2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname("I"+(K->name)) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
 
         PAGEDEF << "\\PL{Q}%" << endl;            // end of white color for filled bg
       }
@@ -1142,8 +1002,8 @@ void print_map(int layer, ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->G != "") {
         xc = K->G1; yc = K->G2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname("G"+(K->name)) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname("G"+(K->name))) << "}%" << endl;
       };
     }
 
@@ -1186,8 +1046,8 @@ void print_map(int layer, ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->F != "") {
         xc = K->F1; yc = K->F2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname(K->name) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname(K->name)) << "}%" << endl;
       };
     }
    
@@ -1195,8 +1055,8 @@ void print_map(int layer, ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->E != "") {
         xc = K->E1; yc = K->E2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname("E"+(K->name)) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname("E"+(K->name))) << "}%" << endl;
       };
     }
    
@@ -1206,15 +1066,17 @@ void print_map(int layer, ofstream& PAGEDEF,
       if (used_scraps.count(K->name) > 0 && K->X != "") {
         xc = K->X1; yc = K->X2;
         xc -= HSHIFT; yc -= VSHIFT;
-        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                tex_Xname("X"+(K->name)) << "}%" << endl;
+        PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
+                tex_get_ref(tex_Xname("X"+(K->name))) << "}%" << endl;
       };
     }
     if (LAYOUT.transparency) {
       PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
       PAGEDEF << "\\immediate\\pdfxform ";
       PAGEDEF << "attr{/Group \\the\\attrid\\space 0 R} ";
-      PAGEDEF << "resources{/ExtGState \\the\\resid\\space 0 R}";
+      PAGEDEF << "resources{/ExtGState \\the\\resid\\space 0 R";
+      if (icc_used()) PAGEDEF << " /ColorSpace <<" << icc2pdfresources() << ">> ";
+      PAGEDEF << "}";
       PAGEDEF << "\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
     }
   }
@@ -1249,7 +1111,7 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
 
   NAV_SCRAPS.clear();
   if (!lay_it->second.D.empty()) {
-    P << "\\PL{.8 g}%\n";
+    P << "\\PL{" << black2pdf(0.2, fillstroke::fill) << "}%\n";
     used_layers = lay_it->second.D;
     for (set<int>::iterator I=used_layers.begin(); I != used_layers.end(); I++) {
       for (int i = sheet_it->namex-LAYOUT.nav_right; 
@@ -1270,8 +1132,8 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
                       LAYOUT.hoffset; 
                 yc -= LAYOUT.vsize * (sheet_it->namey - LAYOUT.nav_up) + 
                       LAYOUT.voffset; 
-                P << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                        tex_Xname("I"+(K->name)) << "}%" << endl;
+                P << "\\PB{" << xc << "}{" << yc << "}{" <<
+                        tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
                 NAV_SCRAPS.insert(K->name);
               }
             }
@@ -1281,7 +1143,7 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
     }
   }
   NAV_SCRAPS.clear();
-  P << "\\PL{0 g}%\n";
+  P << "\\PL{" << black2pdf(1, fillstroke::fill) << "}%\n";
   for (int i = sheet_it->namex-LAYOUT.nav_right; 
            i <= sheet_it->namex+LAYOUT.nav_right; i++) {
     for (int j = sheet_it->namey-LAYOUT.nav_up; 
@@ -1300,8 +1162,8 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
                   LAYOUT.hoffset; 
             yc -= LAYOUT.vsize * (sheet_it->namey - LAYOUT.nav_up) + 
                   LAYOUT.voffset; 
-            P << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                    tex_Xname("I"+(K->name)) << "}%" << endl;
+            P << "\\PB{" << xc << "}{" << yc << "}{" <<
+                    tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << endl;
             NAV_SCRAPS.insert(K->name);
           }
         }
@@ -1331,8 +1193,8 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
                       LAYOUT.hoffset; 
                 yc -= LAYOUT.vsize * (sheet_it->namey - LAYOUT.nav_up) + 
                       LAYOUT.voffset; 
-                P << "\\PB{" << xc << "}{" << yc << "}{\\" << 
-                        tex_Xname("B"+(K->name)) << "}%" << endl;
+                P << "\\PB{" << xc << "}{" << yc << "}{" <<
+                        tex_get_ref(tex_Xname("B"+(K->name))) << "}%" << endl;
                 NAV_SCRAPS.insert(K->name);
               }
             }
@@ -1376,7 +1238,14 @@ void print_margins(ofstream& PAGEDEF) {
   PAGEDEF << "\\PL{Q}%" << endl;
 }
 
-
+void icc_check_file(string fname, string type) {
+  ifstream iccfile(fname, ios::binary);
+  if(!iccfile) therror((IOerr(fname)));
+  char buffer[5];
+  iccfile.seekg(16);
+  iccfile.read(buffer,4);
+  if (type != string(buffer)) therror(((string("Invalid ICC profile type: expected ")+type+", got "+buffer).c_str()));
+}
 
 void build_pages() {
   
@@ -1395,7 +1264,7 @@ void build_pages() {
   if (LAYOUT.transparency || LAYOUT.OCG) {
     PDFRES << "\\ifnum\\pdftexversion<110\\pdfcatalog{ /Version /" <<
       (LAYOUT.OCG ? "1.5" : "1.4") << " }" << 
-      (LAYOUT.OCG ? "\\else\\pdfoptionpdfminorversion=5" : "") << "\\fi" << endl;
+      (LAYOUT.OCG ? "\\else\\pdfminorversion=5" : "") << "\\fi" << endl;
   }
 
   if (thcfg.reproducible_output) {
@@ -1520,12 +1389,29 @@ void build_pages() {
   PDFRES << "\\legendwidth=" << LAYOUT.legend_width << "bp" << endl;
 
   if (LAYOUT.map_header_bg) {
-    PDFRES << "\\bgcolor={" << LAYOUT.background_r << " " << 
-                               LAYOUT.background_g << " " <<
-                               LAYOUT.background_b << "}" << endl;
+    PDFRES << "\\bgcolor={" << LAYOUT.col_background.to_pdfliteral(fillstroke::fill) << "}" << endl;
     PDFRES << "\\legendbgfilltrue" << endl;
   } 
   else PDFRES << "\\legendbgfillfalse" << endl;
+
+  if (LAYOUT.icc_profile_cmyk != "") {
+    icc_check_file(LAYOUT.icc_profile_cmyk, "CMYK");
+    PDFRES << "\\immediate\\pdfobj stream attr {/N 4 /Alternate /DeviceCMYK} file {" << LAYOUT.icc_profile_cmyk << "}" << endl;
+    PDFRES << "\\immediate\\pdfobj{[/ICCBased \\the\\pdflastobj\\space 0 R]}" << endl;
+    PDFRES << "\\newcount\\iccobjcmyk\\iccobjcmyk=\\the\\pdflastobj" << endl;
+  }
+  if (LAYOUT.icc_profile_rgb != "") {
+    icc_check_file(LAYOUT.icc_profile_rgb, "RGB ");
+    PDFRES << "\\immediate\\pdfobj stream attr {/N 3 /Alternate /DeviceRGB} file {" << LAYOUT.icc_profile_rgb << "}" << endl;
+    PDFRES << "\\immediate\\pdfobj{[/ICCBased \\the\\pdflastobj\\space 0 R]}" << endl;
+    PDFRES << "\\newcount\\iccobjrgb\\iccobjrgb=\\the\\pdflastobj" << endl;
+  }
+  if (LAYOUT.icc_profile_gray != "") {
+    icc_check_file(LAYOUT.icc_profile_gray, "GRAY");
+    PDFRES << "\\immediate\\pdfobj stream attr {/N 1 /Alternate /DeviceGray} file {" << LAYOUT.icc_profile_gray << "}" << endl;
+    PDFRES << "\\immediate\\pdfobj{[/ICCBased \\the\\pdflastobj\\space 0 R]}" << endl;
+    PDFRES << "\\newcount\\iccobjgray\\iccobjgray=\\the\\pdflastobj" << endl;
+  }
 
   PDFRES.close();
 
@@ -1675,13 +1561,8 @@ void build_pages() {
     PAGEDEF << "\\tmpdimen=\\extraS\\advance\\tmpdimen by \\overlap" << endl;
     PAGEDEF << "\\dimtobp{\\tmpdimen}\\edef\\adjustedY{\\tmpdef}%" << endl;
 
-/*    if ((LAYOUT.background_r != 1) || 
-      (LAYOUT.background_g != 1) || 
-      (LAYOUT.background_b != 1)) {  */
     if (! LAYOUT.transparent_map_bg) {
-        PAGEDEF << "\\PL{q " << LAYOUT.background_r << " " << 
-                            LAYOUT.background_g << " " << 
-                            LAYOUT.background_b << " rg -" << 
+        PAGEDEF << "\\PL{q " << LAYOUT.col_background.to_pdfliteral(fillstroke::fill) << " -" <<
 			    "\\wsize\\space"  << "-" << 
 			    "\\nsize\\space" << 
 			    "\\xsize\\space" << 
@@ -1689,7 +1570,7 @@ void build_pages() {
                             " re f Q}%" << endl;
     }
     PAGEDEF << "\\ifdim\\framethickness>0mm\\dimtobp{\\framethickness}\\edef\\Framethickness{\\tmpdef}" <<
-               "\\PL{q 0 0 0 RG 1 J 1 j \\Framethickness\\space w " << 
+               "\\PL{q " << black2pdf(1, fillstroke::stroke) << " 1 J 1 j \\Framethickness\\space w " << 
                "-\\Framex\\space\\Framey\\space\\Framew\\space-\\Frameh\\space" << 
                " re s Q}\\fi" << endl;
 
@@ -1739,7 +1620,7 @@ void build_pages() {
     if (LAYOUT.grid == 2) print_grid_pdf(PAGEDEF,MINX,MINY,origMINX,origMINY,origMAXX,origMAXY);
 
     if (LAYOUT.map_grid) {
-      PAGEDEF << "\\PL{q .4 w 0.6 g 0.6 G }%" << endl;
+      PAGEDEF << "\\PL{q .4 w " << black2pdf(0.4, fillstroke::fillstroke) << " }%" << endl;
       PAGEDEF << "\\PL{0 0 " << HS << " " << VS << " re S}%" << endl;
       for (double i=0; i <= HS; i += LAYOUT.hsize) {
         PAGEDEF << "\\PL{" << i << " 0 m " << i << " " << VS << " l S}%" << endl;
@@ -1776,15 +1657,22 @@ void build_pages() {
     PAGEDEF << "\\smash{\\rlap{\\kern-\\extraW\\raise-\\extraS" << 
                "\\hbox{\\pdfrefxform\\THmaplegend}}}" << endl;
 
-    if (LAYOUT.OCG && LAYOUT.transparency) {
-      PAGEDEF << "\\edef\\thpdfpageres { /Properties << ";
-      for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
-                                          I != LAYERHASH.end(); I++) {
-        if (I->second.Z == 0)
-          PAGEDEF << "/oc\\the\\oc" << u2str(I->first) << "\\space\\the\\oc" << 
-                     u2str(I->first) << "\\space0 R ";
+    if ((LAYOUT.OCG && LAYOUT.transparency) || icc_used()) {
+      PAGEDEF << "\\edef\\thpdfpageres {";
+      if (LAYOUT.OCG && LAYOUT.transparency) {
+        PAGEDEF << " /Properties << ";
+        for (map<int,layerrecord>::iterator I = LAYERHASH.begin();
+                                            I != LAYERHASH.end(); I++) {
+          if (I->second.Z == 0)
+            PAGEDEF << "/oc\\the\\oc" << u2str(I->first) << "\\space\\the\\oc" <<
+                       u2str(I->first) << "\\space0 R ";
+        }
+        PAGEDEF << " >> ";
       }
-      PAGEDEF << " >> }\\pdfpageresources\\expandafter{\\thpdfpageres}" << endl;
+      if (icc_used()) {
+        PAGEDEF << " /ColorSpace <<" << icc2pdfresources() << ">> ";
+      }
+      PAGEDEF << "}" << endl << "\\pdfpageresources\\expandafter{\\thpdfpageres}" << endl;
     }
   }
 
@@ -1797,21 +1685,11 @@ void build_pages() {
 int thpdf(int m) {
   mode = m;
 
-#ifdef NOTHERION
-  init_encodings();
-  print_fonts_setup();
-  cout << "making " << ((mode == ATLAS) ? "atlas" : "map") << " ... " << flush;
-#else
   thprintf("making %s ... ", (mode == ATLAS) ? "atlas" : "map");
-#endif
 
   SHEET.clear();
   SHEET_JMP.clear();
   MINX=DBL_MAX, MINY=DBL_MAX, MAXX=-DBL_MAX, MAXY=-DBL_MAX;
-  
-#ifdef NOTHERION
-  read_settings();   // change to the quick mode only
-#endif    
 
   make_sheets();
   if (mode == ATLAS) {
@@ -1820,18 +1698,8 @@ int thpdf(int m) {
   }
   build_pages();
 
-#ifdef NOTHERION
-  cout << "done" << endl;
-#else
   thprintf("done\n");
-#endif
+
   return(0);
 }
-
-#ifdef NOTHERION
-int main() {
-  thpdf(0);
-}
-#endif
-
 
