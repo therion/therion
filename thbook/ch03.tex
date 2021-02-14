@@ -522,6 +522,9 @@ endlayout|
     If input colours (|lookup|, |colour| in the |layout|) do not match the output
     colour model (e.g. only RGB is defined in the |lookup| and CMYK selected as the |colour-model|),
     they will be converted to the output model.
+  * |colo[u]r-profile <cmyk/rgb/grayscale> <filename>| = assign an ICC profile to colours
+    specified in the given colour model. ICC profiles are applied only to drawings,
+    not to embedded raster images like sketches and surface bitmaps. (M, A)
   * |colo[u]r <item> <colour>| = customize colour for special map
     items (map-fg, map-bg, preview-above, preview-below, label).
     Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
