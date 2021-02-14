@@ -53,6 +53,7 @@
 #define mkdir _mkdir
 #endif
 
+#include <fmt/printf.h>
 
 thsymbolset::thsymbolset()
 {
@@ -1690,7 +1691,7 @@ void export_all_symbols()
   "#################### end of metapost log file ####################\n",true);
   if (retcode != EXIT_SUCCESS) {
     thassert(chdir(wdir.get_buffer()) == 0);
-    ththrow(("metapost exit code -- %d", retcode))
+    ththrow("metapost exit code -- {}", retcode);
   }
 
   thconvert_new();
@@ -1759,12 +1760,12 @@ void thsymbolset::export_mp_symbol_options(FILE * mpf, int sym_id)
   }
 }
 
-void thsymbolset::export_mp_symbol_options(thexception * x, int sym_id)
+void thsymbolset::export_mp_symbol_options(std::vector<std::string>& x, int sym_id)
 {
   if ((sym_id >= 0) && (this->color[sym_id].defined)) {
-    x->appspf("drawoptions(withcolor (%.6f,%.6f,%.6f));\n", this->color[sym_id].R, this->color[sym_id].G, this->color[sym_id].B);
+    x.push_back(fmt::sprintf("drawoptions(withcolor (%.6f,%.6f,%.6f));", this->color[sym_id].R, this->color[sym_id].G, this->color[sym_id].B));
   } else {
-    x->appspf("drawoptions();\n");
+    x.push_back("drawoptions();");
   }
 }
 

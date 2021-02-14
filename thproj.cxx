@@ -25,6 +25,7 @@
  * --------------------------------------------------------------------
  */
 
+#include "therion.h"
 #include "thexception.h"
 #include "thproj.h"
 #include "thlogfile.h"
@@ -111,7 +112,7 @@ bool thcs_islatlong(string s) {
 bool thcs_check(string s) {
   projPJ P;
   if ((P = pj_init_plus(s.c_str()))==NULL)
-    ththrow(("invalid proj4 identifier -- %s", s.c_str()));
+    ththrow("invalid proj4 identifier -- {}", s.c_str());
   pj_free(P);
   return true;
 }

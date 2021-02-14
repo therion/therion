@@ -47,6 +47,7 @@
 #include "thpdfdata.h"
 #include "thtexfonts.h"
 #include "thconvert.h"
+#include "therion.h"
 
 using namespace std;
 

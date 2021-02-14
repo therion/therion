@@ -41,6 +41,7 @@
 #include <cstdio>
 #include <cmath>
 
+#include "therion.h"
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
 #include "thtexfonts.h"

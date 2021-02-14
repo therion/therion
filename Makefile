@@ -1,6 +1,6 @@
 # common therion objects
 CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern/shapelib/safileio.o  \
-  thexception.o thbuffer.o thmbuffer.o thlogfile.o thtmpdir.o thlocale.o \
+  thbuffer.o thmbuffer.o thlogfile.o thtmpdir.o thlocale.o \
   thparse.o thcmdline.o thconfig.o thinput.o thchenc.o thdatabase.o \
   thdataobject.o thdatareader.o thsurvey.o thendsurvey.o thdata.o \
   thperson.o thtf.o thtfangle.o thtflength.o thtfpwf.o \
@@ -593,7 +593,6 @@ $(OUTDIR)/therion.o: therion.cxx therion.h thlogfile.h thbuffer.h thtmpdir.h \
  thexception.h thlibrary.h thinit.h thgrade.h thdata.h thtfangle.h thtf.h \
  thtflength.h thtfpwf.h thpoint.h th2ddataobject.h thline.h tharea.h \
  thversion.h thtexfonts.h thlang.h thlangdata.h thbezier.h
-$(OUTDIR)/thexception.o: thexception.cxx thexception.h therion.h thbuffer.h
 $(OUTDIR)/thexpdb.o: thexpdb.cxx thexpdb.h thexport.h thparse.h thbuffer.h \
  thmbuffer.h thobjectsrc.h thlayout.h thdataobject.h thdatabase.h \
  thdb1d.h thobjectid.h thinfnan.h thdataleg.h thobjectname.h therion.h \

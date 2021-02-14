@@ -181,10 +181,10 @@ void thsurface::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lo
     
     case TT_SURFACE_GRID_FLIP:
       if (this->grid != NULL)
-        ththrow(("grid-flip specification after grid data not allowed"));
+        ththrow("grid-flip specification after grid data not allowed");
       this->grid_flip = thmatch_token(args[0], thtt_surface_gflip);
       if (this->grid_flip == TT_SURFACE_GFLIP_UNKNOWN)
-        ththrow(("unknown surface flip mode -- %s", args[0]))
+        ththrow("unknown surface flip mode -- {}", args[0]);
       break;
       
     case TT_SURFACE_PICTURE:
@@ -216,7 +216,7 @@ void thsurface::parse_picture(char ** args)
   thassert(getcwd(pict_path.get_buffer(),1024) != NULL);  
   long i;
   if (strlen(args[0]) == 0)
-    ththrow(("picture name not specified"))
+    ththrow("picture name not specified");
   pict_path += "/";  
   if (thpath_is_absolute(thdb.csrc.name))
 	  pict_path = thdb.csrc.name;
@@ -247,11 +247,11 @@ void thsurface::parse_picture(char ** args)
   // potom obrazok skontroluje, vytiahne jeho rozmery a DPI
   try {
     thparse_image(this->pict_name, this->pict_width, this->pict_height, this->pict_dpi, this->pict_type);
-  } catch (...) {
+  } catch (const std::exception& e) {
     this->pict_name = NULL;
-    threwarning(("%s [%d] -- error reading bitmap",
+    thwarning(("%s [%d] -- error reading bitmap -- %s",
       thdbreader.get_cinf()->get_cif_name(),
-      thdbreader.get_cinf()->get_cif_line_number()));
+      thdbreader.get_cinf()->get_cif_line_number(), e.what()));
   }
   
   // potom parsne kalibraciu
@@ -270,7 +270,7 @@ void thsurface::parse_picture(char ** args)
 #define surfpiccaldbl(XXX,YYY) \
       thparse_double(sv, this->XXX, cals[YYY]); \
       if (sv != TT_SV_NUMBER) \
-        ththrow(("number expected -- %s", cals[YYY]))
+        ththrow("number expected -- {}", cals[YYY]);
       
       surfpiccaldbl(pict_X1,0);
       surfpiccaldbl(pict_Y1,1);
@@ -290,7 +290,7 @@ void thsurface::parse_picture(char ** args)
       
       if (((this->pict_X1 == this->pict_X2) && (this->pict_Y1 == this->pict_Y2)) ||
           ((this->pict_x1 == this->pict_x2) && (this->pict_y1 == this->pict_y2))) {
-        ththrow(("duplicate points in picture calibration"));
+        ththrow("duplicate points in picture calibration");
       }
       break;
     
@@ -303,12 +303,12 @@ void thsurface::parse_picture(char ** args)
       thparse_objectname(this->s2, &(thdb.buff_stations), cals[5]);
       this->ssurvey = thdb.get_current_survey();
       if ((this->pict_X1 == this->pict_X2) && (this->pict_Y1 == this->pict_Y2)) {
-        ththrow(("duplicate points in picture calibration"));
+        ththrow("duplicate points in picture calibration");
       }
       break;
 
     default:
-      ththrow(("invalid number of picture calibration arguments -- %d", ncals))
+      ththrow("invalid number of picture calibration arguments -- {}", ncals);
   }
 
 }
@@ -351,20 +351,18 @@ void thsurface::check_stations()
     // najde stations, error ak nie
     this->s1.id = thdb.db1d.get_station_id(this->s1, this->ssurvey);
     if (this->s1.id == 0) {
-      this->throw_source();
       if (this->s1.survey == NULL)
-        threthrow2(("station doesn't exist -- %s", this->s1.name))
+        ththrow("{} -- station doesn't exist -- {}", this->throw_source(), this->s1.name);
       else
-        threthrow2(("station doesn't exist -- %s@%s", this->s1.name, this->s1.survey))
+        ththrow("{} -- station doesn't exist -- {}@{}", this->throw_source(), this->s1.name, this->s1.survey);
     }
     
     this->s2.id = thdb.db1d.get_station_id(this->s2, this->ssurvey);
     if (this->s2.id == 0) {
-      this->throw_source();
       if (this->s2.survey == NULL)
-        threthrow2(("station doesn't exist -- %s", this->s2.name))
+        ththrow("{} -- station doesn't exist -- {}", this->throw_source(), this->s2.name);
       else
-        threthrow2(("station doesn't exist -- %s@%s", this->s2.name, this->s2.survey))
+        ththrow("{} -- station doesn't exist -- {}@{}", this->throw_source(), this->s2.name, this->s2.survey);
     }
     
     // priradi si x a y a skontroluje ci su roozne
@@ -375,8 +373,7 @@ void thsurface::check_stations()
     this->pict_x2 = ds2->x;
     this->pict_y2 = ds2->y;
     if ((this->pict_x1 == this->pict_x2) && (this->pict_y1 == this->pict_y2)) {
-      this->throw_source();
-      threthrow2(("duplicate points in picture calibration"));
+      ththrow("{} -- duplicate points in picture calibration", this->throw_source());
     }
   }
 }
@@ -385,7 +382,7 @@ void thsurface::check_stations()
 void thsurface::parse_grid_setup(char ** args)
 {
   if (this->grid != NULL)
-    ththrow(("grid specification after grid data not allowed"));
+    ththrow("grid specification after grid data not allowed");
 
   // nacitame vsetky premenne ktore treba
   double dblv;
@@ -394,16 +391,16 @@ void thsurface::parse_grid_setup(char ** args)
 #define parsedbl(XXX,YYY) \
       thparse_double(sv, dblv, args[YYY]); \
       if (sv != TT_SV_NUMBER) \
-        ththrow(("number expected -- %s", args[YYY])) \
+        ththrow("number expected -- {}", args[YYY]); \
       XXX = this->grid_units.transform(dblv);
 #define parsenum(XXX,YYY) \
       thparse_double(sv, dblv, args[YYY]); \
       if (sv != TT_SV_NUMBER) \
-        ththrow(("number expected -- %s", args[YYY])) \
+        ththrow("number expected -- {}", args[YYY]); \
       if (dblv <= 0) \
-        ththrow(("positive number expected -- %s", args[YYY])) \
+        ththrow("positive number expected -- {}", args[YYY]); \
       if (dblv != double(long(dblv))) \
-        ththrow(("integer expected -- %s", args[YYY])) \
+        ththrow("integer expected -- {}", args[YYY]); \
       XXX = long(dblv);
   
   this->grid_cs = this->cs;
@@ -415,22 +412,22 @@ void thsurface::parse_grid_setup(char ** args)
 
   parsedbl(this->grid_dx,2);
   if (this->grid_dx == 0.0)
-    ththrow(("non-zero number expected -- %s", args[2]));
+    ththrow("non-zero number expected -- {}", args[2]);
   parsedbl(this->grid_dy,3);
   if (this->grid_dy == 0.0)
-    ththrow(("non-zero number expected -- %s", args[3]));
+    ththrow("non-zero number expected -- {}", args[3]);
   parsenum(this->grid_nx,4);
   if (this->grid_nx < 2)
-    ththrow(("number > 1 expected -- %s", args[4]));
+    ththrow("number > 1 expected -- {}", args[4]);
   parsenum(this->grid_ny,5);
   if (this->grid_ny < 2)
-    ththrow(("number > 1 expected -- %s", args[5]));
+    ththrow("number > 1 expected -- {}", args[5]);
 }
 
 void thsurface::parse_grid(char * spec)
 {
   if (this->grid_nx == 0)
-    ththrow(("grid dimensions not specified"));
+    ththrow("grid dimensions not specified");
   if (this->grid == NULL) {
     this->grid_counter = 0;
     this->grid_size = this->grid_nx * this->grid_ny;
@@ -449,9 +446,9 @@ void thsurface::parse_grid(char * spec)
   for(i = 0; i < ni; i++) {
     thparse_double(sv, alt, heights[i]);
     if (sv != TT_SV_NUMBER)
-      ththrow(("number expected -- %s", heights[i]))
+      ththrow("number expected -- {}", heights[i]);
     if (this->grid_counter == this->grid_size)
-      ththrow(("too many grid data"))
+      ththrow("too many grid data");
     x = this->grid_counter % this->grid_nx;
     y = this->grid_ny - (this->grid_counter / this->grid_nx) - 1;
     switch (this->grid_flip) {
@@ -469,7 +466,7 @@ void thsurface::parse_grid(char * spec)
 
 void thsurface::start_insert() {
   if (this->grid_counter < this->grid_size)
-    ththrow(("missing grid data"))
+    ththrow("missing grid data");
 }
 
 thdb3ddata * thsurface::get_3d() {
