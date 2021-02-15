@@ -68,7 +68,7 @@ To compile Loch, you need
 
 All programs (with the exception of BWidget and tkImg package) are usually
 included in Linux, Unix or MacOS\,X distributions.
-For Windows consider using MinGW and MSYS (\www{http://www.mingw.org}).
+For Windows consider using MinGW and MSYS2 (\www{https://www.msys2.org/}).
 It's a distribution of GNU utilities with GNU make and GCC.
 (BTW, why not to use precompiled Windows version?)
 
@@ -76,6 +76,7 @@ Here is an example for installing dependencies to compile Therion
 on Ubuntu 18.04 or 20.04:
   |sudo apt install|
   |bwidget|
+  |cmake|
   |gcc|
   |ghostscript|
   |imagemagick|
@@ -92,7 +93,7 @@ on Ubuntu 18.04 or 20.04:
   |texlive-metapost|
   |zlib1g-dev|.
 
-\subsubchapter Using cmake.
+\subsubchapter Using CMake.
 
 \NEW{5.6}Unpack the source distribution |therion-5.*.tar.gz| and create a separate
 directory for the build, e.g.:
@@ -111,7 +112,18 @@ Here is a selection of parameters which can be used with cmake:
   or |-G "MSYS Makefiles"| to build using {\it make} under MSYS2
 * {\catcode`\=12|-DUSE_BUNDLED_SHAPELIB=OFF|} = use the system Shapelib library
 * {\catcode`\=12|-DUSE_BUNDLED_CATCH2=OFF|} = use the system Catch2 library
-
+* {\catcode`\=12|-DUSE_BUNDLED_FMT=OFF|} = use the system fmt library
+* {\catcode`\=12|-DECM_ENABLE_SANITIZERS=<option>|} = use runtime sanitizers, relevant options:
+  \list 
+  * address - detects invalid memory accesses, use-after-free, double free, memory leaks, useful for debugging
+  * undefined - detects undefined behavior, for example use of uninitialized values
+  \endlist
+* {\catcode`\=12|-DCMAKE_BUILD_TYPE=<option>|} = build type, relevant options:
+  \list 
+  * Debug - compile with debug symbols and asserts
+  * Release - compile with optimizations
+  * RelWithDebInfo - compile with debug symbols and optimizations, useful for profiling and debugging
+  \endlist
 \endlist
 
 \subsubchapter Legacy approach: using make.

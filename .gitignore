@@ -67,3 +67,4 @@ CMakeCache.txt
 CMakeFiles/
 extern/fmt/Makefile
 extern/fmt/cmake_install.cmake
+build/
