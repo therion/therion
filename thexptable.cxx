@@ -313,12 +313,15 @@ void thexptable::process_db(class thdatabase * dbp)
               } else {
                 srv = pt->fsptr;
               }
-              if (strlen(srv->get_title()) > 0) {
-                survey = st->survey->get_title();
-              } else {
-                survey = st->survey->get_full_name();
-                if (strlen(survey) == 0)
-                  survey = NULL;
+              survey = NULL;
+              if (st != NULL) {
+				  if (strlen(srv->get_title()) > 0) {
+					survey = st->survey->get_title();
+				  } else {
+					survey = st->survey->get_full_name();
+					if (strlen(survey) == 0)
+					  survey = NULL;
+				  }
               }
               this->m_table.insert_attribute("Survey", ths2txt(survey, layout->lang).c_str());
               this->m_table.insert_attribute("Station", st != NULL ? st->name : NULL);

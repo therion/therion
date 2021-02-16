@@ -118,8 +118,8 @@ LDBFLAGS = $(LDPFLAGS)
 ##LDBFLAGS = $(LDPFLAGS)
 
 # BUILD DEBUG
-##CCBFLAGS = -ggdb
-##CXXBFLAGS = -ggdb -DTHDEBUG
+##CCBFLAGS = -ggdb -fsanitize=address
+##CXXBFLAGS = -ggdb -DTHDEBUG -fsanitize=address
 ##LDBFLAGS =
 
 # BUILD ENDCONFIG
