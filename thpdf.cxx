@@ -1418,7 +1418,7 @@ void build_pages() {
     PDFRES << "\\newcount\\iccobjgray\\iccobjgray=\\the\\pdflastobj" << endl;
   }
   PDFRES << "\\edef\\colorres{";
-  if (icc_used) PDFRES << "/ColorSpace <<" << icc2pdfresources() << ">>";
+  if (icc_used()) PDFRES << "/ColorSpace <<" << icc2pdfresources() << ">>";
   PDFRES << "}" << endl;
 
   // jednorazove vlozenie povrchovych obrazkov
