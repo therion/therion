@@ -532,6 +532,7 @@ void print_preview(int up,ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
       PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
     PAGEDEF << "\\immediate\\pdfxform ";
     PAGEDEF << "attr{/OC \\the\\" << (up ? "ocU" : "ocD") << "\\space 0 R} ";
+    if (icc_used())  PAGEDEF << "resources{/ColorSpace <<" << icc2pdfresources() << ">>} ";
     if (mode == MAP)
       PAGEDEF << "\\xxx\\PB{-\\adjustedX}{-\\adjustedY}{\\pdflastxform}%" << endl;
     else 
@@ -1205,17 +1206,20 @@ void print_navigator(ofstream& P, list<sheetrecord>::iterator sheet_it) {
   }
 
   // navigator grid
-  P << "\\PL{Q}" << "\\PL{0 0 " << HSN << " " << VSN << " re S 0.1 w}";
+  P << "\\PL{Q}" << "\\PL{q " << black2pdf(1, fillstroke::stroke) << " 0 0 " <<
+       HSN << " " << VSN << " re S 0.1 w}";
   for (int i = 1; i < nav_x; i++)      
     P << "\\PL{" << HSN*i/nav_x << " 0 m " << HSN*i/nav_x << " " << VSN << " l S}%\n";
   for (int i = 1; i < nav_y; i++)
     P << "\\PL{0 " << VSN*i/nav_y << " m " << HSN << " " << VSN*i/nav_y << " l S}%\n";
   P << "\\PL{0.4 w " <<
     HSN*LAYOUT.nav_right/nav_x << " " << VSN*LAYOUT.nav_up/nav_y << " " <<
-    HSN/nav_x << " " << VSN/nav_y << " " << " re S}";
+    HSN/nav_x << " " << VSN/nav_y << " " << " re S Q}";
   // XObject definition
   P << "\\hfill}\\ht\\xxx=" << VSN << "bp\\dp\\xxx=0bp\n";
-  P << "\\immediate\\pdfxform\\xxx\\newcount\\" << 
+  P << "\\immediate\\pdfxform";
+  if (icc_used())  P << " resources{/ColorSpace <<" << icc2pdfresources() << ">>} ";
+  P << "\\xxx\\newcount\\" <<
        tex_Nname(u2str(sheet_it->id)) << " \\" <<
        tex_Nname(u2str(sheet_it->id)) << "=\\pdflastxform" << endl;
 }
@@ -1227,6 +1231,7 @@ void print_margins(ofstream& PAGEDEF) {
   if (LAYOUT.overlap > 0) {
     double i = LAYOUT.hsize + LAYOUT.overlap; 
     double j = LAYOUT.vsize + LAYOUT.overlap;
+    PAGEDEF << "\\PL{" << black2pdf(1, fillstroke::stroke) << "}";
     PAGEDEF << "\\PL{0.5 w}";
     PAGEDEF << "\\PL{0 " << LAYOUT.overlap << " m " << HS << " " << 
                             LAYOUT.overlap << " l S}";
@@ -1412,8 +1417,9 @@ void build_pages() {
     PDFRES << "\\immediate\\pdfobj{[/ICCBased \\the\\pdflastobj\\space 0 R]}" << endl;
     PDFRES << "\\newcount\\iccobjgray\\iccobjgray=\\the\\pdflastobj" << endl;
   }
-
-  PDFRES.close();
+  PDFRES << "\\edef\\colorres{";
+  if (icc_used) PDFRES << "/ColorSpace <<" << icc2pdfresources() << ">>";
+  PDFRES << "}" << endl;
 
   // jednorazove vlozenie povrchovych obrazkov
   int i = 1;
@@ -1481,12 +1487,16 @@ void build_pages() {
 
       PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << endl;
       PAGEDEF << "\\immediate\\pdfxform";
+      if (icc_used())  PAGEDEF << " resources{/ColorSpace <<" << icc2pdfresources() << ">>} ";
       PAGEDEF << "\\xxx\\newcount\\" << tex_Sname(u2str(I->id)) <<
              " \\" << tex_Sname(u2str(I->id)) << "=\\pdflastxform" << endl;
 
       print_navigator(PAGEDEF,I);
       compose_page(I, PAGE);
-
+    }
+    if (icc_used()) {
+      PDFRES << "\\edef\\thpdfpageres {/ColorSpace <<" << icc2pdfresources() << ">>}";
+      PDFRES << "\\pdfpageresources\\expandafter{\\thpdfpageres}" << endl;
     }
   }
   else {
@@ -1500,7 +1510,9 @@ void build_pages() {
     PAGEDEF << "\\newbox\\xxxx\\setbox\\xxxx=\\hbox to \\x{\\kern\\extraW\\raise\\extraS\\box\\xxx\\hss}%\\dp\\xxx=0bp" << endl;
     PAGEDEF << "\\wd\\xxxx=\\x" << endl;
     PAGEDEF << "\\ht\\xxxx=\\y" << endl;
-    PAGEDEF << "\\immediate\\pdfxform\\xxxx" << endl;
+    PAGEDEF << "\\immediate\\pdfxform";
+    if (icc_used())  PAGEDEF << " resources{/ColorSpace <<" << icc2pdfresources() << ">>} ";
+    PAGEDEF << "\\xxxx" << endl;
     PAGEDEF << "\\newcount\\THmaplegend\\THmaplegend=\\pdflastxform" << endl;
 
     PAGEDEF << "\\advance\\pdfhorigin by \\extraW" << endl;
@@ -1611,6 +1623,7 @@ void build_pages() {
         if (LAYOUT.OCG) {
           PAGEDEF << "attr{/OC \\the\\oc" << u2str(I->first) << "\\space 0 R} ";
         }
+        if (icc_used())  PAGEDEF << "resources{/ColorSpace <<" << icc2pdfresources() << ">>} ";
         PAGEDEF << "\\xxx\\PB{0}{0}{\\pdflastxform}%" << endl;
       }
     }
@@ -1676,7 +1689,7 @@ void build_pages() {
     }
   }
 
-
+  PDFRES.close();
   PAGEDEF.close();
   PAGE.close();
 }

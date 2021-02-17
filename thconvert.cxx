@@ -669,7 +669,9 @@ void convert_scraps() {
       F << "/BBox " << bbox << endl;
       F << "/XStep " << xstep << endl;
       F << "/YStep " << ystep << endl;
-      F << "/Resources << /ProcSet [/PDF ] >> } {" << endl;
+      F << "/Resources << /ProcSet [/PDF ] ";
+      if (icc_used()) F << " /ColorSpace <<" << icc2pdfresources() << ">> ";
+      F << ">>} {" << endl;
       distill_eps("", pfile , "", 0, F);
       F << "} \\newcount \\" << tex_Pname((*I).second) << 
            "\\" << tex_Pname((*I).second) << "=\\pdflastobj" << endl;
