@@ -114,16 +114,18 @@ Here is a selection of parameters which can be used with cmake:
 * {\catcode`\=12|-DUSE_BUNDLED_CATCH2=OFF|} = use the system Catch2 library
 * {\catcode`\=12|-DUSE_BUNDLED_FMT=OFF|} = use the system fmt library
 * {\catcode`\=12|-DECM_ENABLE_SANITIZERS=<option>|} = use runtime sanitizers, relevant options:
-  \list 
-  * address - detects invalid memory accesses, use-after-free, double free, memory leaks, useful for debugging
-  * undefined - detects undefined behavior, for example use of uninitialized values
-  \endlist
+
+  |address| -- detects invalid memory accesses, use-after-free, double free, memory leaks, useful for debugging
+
+  |undefined| -- detects undefined behavior, for example use of uninitialized values
+
 * {\catcode`\=12|-DCMAKE_BUILD_TYPE=<option>|} = build type, relevant options:
-  \list 
-  * Debug - compile with debug symbols and asserts
-  * Release - compile with optimizations
-  * RelWithDebInfo - compile with debug symbols and optimizations, useful for profiling and debugging
-  \endlist
+
+  |Debug| -- compile with debug symbols and asserts
+
+  |Release| -- compile with optimizations
+
+  |RelWithDebInfo| -- compile with debug symbols and optimizations, useful for profiling and debugging
 \endlist
 
 \subsubchapter Legacy approach: using make.
