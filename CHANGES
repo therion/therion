@@ -23,6 +23,7 @@ therion:
    - swapped anastomosis & karren symbols
    - other minor fixes
    - no station scrap continuation list [#333]
+   - fixed arrows flipping [#245]
  * updated shapelib
  
 loch:

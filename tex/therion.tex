@@ -217,7 +217,7 @@
 \def\colorlegendbox#1{%
   \setbox\xxx=\hbox to 36bp{\PL{q #1 0 0 36 24 re f Q}\hfil}%
   \ht\xxx=25bp\dp\xxx=0bp
-  \immediate\pdfxform resources{/ExtGState \the\resid\space 0 R}\xxx
+  \immediate\pdfxform resources{/ExtGState \the\resid\space 0 R \colorres}\xxx
 }
 
 
@@ -390,10 +390,9 @@
 \def\modelcmyk{cmyk}
 \def\modelrgb{rgb}
 \def\modelgray{grayscale}
-\def\black{\ifx\OutputColormodel\modelcmyk\cmykcolor[0 0 0 100]\else
-           \ifx\OutputColormodel\modelrgb\rgbcolor[0 0 0]\else
-           \graycolor[0]\fi\fi}
-
+\def\black{\pdfliteral{\ifx\OutputColormodel\modelcmyk 0 0 0 1 k\else
+           \ifx\OutputColormodel\modelrgb 0 0 0 rg\else
+           0 g\fi\fi}}
 
 % actual placing of the page elements
 
@@ -676,7 +675,6 @@
 
 
 \def\insertmaps{%
-  \black
   \input th_formdef
   \input th_pagedef
   \input th_pages
@@ -774,6 +772,10 @@
       \else \makecolumns{\dimen0} \fi \fi}
 
 %% end of multicolumn macros
+
+\pdfcolorstack 0 set {\ifx\OutputColormodel\modelcmyk 0 0 0 1 k 0 0 0 1 K\else
+           \ifx\OutputColormodel\modelrgb 0 0 0 rg 0 0 0 RG\else
+           0 g 0 G\fi\fi}
 
 \input th_enc
 \input th_texts
