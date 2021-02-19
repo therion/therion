@@ -692,9 +692,9 @@ void thinit::load()
   }
 #endif
 
-  list<fontrecord> TMPFONTS;
+  std::list<fontrecord> TMPFONTS;
 
-  for (list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++) {
+  for (std::list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++) {
     if (J->opt) {
       FILE * ff = fopen(thtmp.get_file_name("fonttest.tex"),"w");
       fprintf(ff,"\\nopagenumbers\n\\batchmode\n\\def\\fonttest#1{\\font\\a=#1\\a}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\end", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
@@ -726,7 +726,7 @@ void thinit::load()
   }
 
   FONTS.clear();
-  for (list<fontrecord>::iterator J = TMPFONTS.begin(); J != TMPFONTS.end(); J++) {
+  for (std::list<fontrecord>::iterator J = TMPFONTS.begin(); J != TMPFONTS.end(); J++) {
     FONTS.push_back(*J);
   }
 

@@ -40,32 +40,29 @@
 #include "thpdfdata.h"
 #include "thexception.h"
 
-using namespace std;
-
-
-string tex_Xname(string s) {return("THX"+s);}
-string tex_Wname(string s) {return("THW"+s);}   // special = northarrow &c.
+std::string tex_Xname(std::string s) {return("THX"+s);}
+std::string tex_Wname(std::string s) {return("THW"+s);}   // special = northarrow &c.
 
 bool tex_refs_registers = true;
 
-string tex_set_ref(string s, string t) {
+std::string tex_set_ref(std::string s, std::string t) {
   if (tex_refs_registers)
     return("\\newcount\\" + s + "\\" + s + "=" + t);   // use registers, legacy mode
   else
     return("\\setref{" + s + "}{\\the" + t + "}");     // use macros to store references
 }
 
-string tex_get_ref(string s) {
+std::string tex_get_ref(std::string s) {
   if (tex_refs_registers)
     return("\\" + s);
   else
     return("\\getref{" + s + "}");
 }
 
-string u2str(unsigned u) {
+std::string u2str(unsigned u) {
   unsigned i=u;
   char c;
-  string s="";
+  std::string s="";
   while (i>0) {
     c = 'a' + ((i-1) % 26);
     s = c + s;
@@ -74,14 +71,14 @@ string u2str(unsigned u) {
   return (s);
 }
 
-string rgb2svg(double r, double g, double b) {
+std::string rgb2svg(double r, double g, double b) {
   return fmt::format("#{:02x}{:02x}{:02x}",int(255*r) % 256,
                                            int(255*g) % 256,
                                            int(255*b) % 256);
 }
 
-string icc2pdfresources() {
-  string s;
+std::string icc2pdfresources() {
+  std::string s;
   if (!LAYOUT.icc_profile_cmyk.empty()) s += " /DefaultCMYK \\the\\iccobjcmyk\\space 0 R ";
   if (!LAYOUT.icc_profile_rgb.empty())  s += " /DefaultRGB \\the\\iccobjrgb\\space 0 R ";
   if (!LAYOUT.icc_profile_gray.empty()) s += " /DefaultGray \\the\\iccobjgray\\space 0 R ";

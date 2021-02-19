@@ -895,7 +895,7 @@ int thsymbolset_get_group(int group_id, int cid) {
 
 void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfig) {
 
-  list<legendrecord>::iterator LEGENDITEM;
+  std::list<legendrecord>::iterator LEGENDITEM;
   legendrecord dummlr;
   LEGENDLIST.clear();
   thbuffer texb;
@@ -1582,7 +1582,7 @@ void export_all_symbols()
   unsigned figi = 1;
   thsymbolset symset;
   thsymsets_symbols_init();
-  list<legendrecord>::iterator li;
+  std::list<legendrecord>::iterator li;
   // najprv exportujeme secky defaultne
   tmplayout.legend = TT_LAYOUT_LEGEND_ALL;
   LEGENDLIST.clear();
@@ -1696,7 +1696,7 @@ void export_all_symbols()
   thconvert_new();
 
   thassert(chdir(wdir.get_buffer()) == 0);
-  ofstream hf ("symbols.xhtml");
+  std::ofstream hf ("symbols.xhtml");
   hf << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   hf << "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>Therion symbols</title>\n<body>\n";
   hf << "<table border=\"2\" bordercolor=\"#505050\" cellspacing=\"0\">\n<tr>\n<td>Symbol set</td>\n";
@@ -1744,7 +1744,7 @@ void export_all_symbols()
     }
   }
   hf << "</table>\n";
-  hf << "</body></html>" << endl;
+  hf << "</body></html>" << std::endl;
   hf.close();
 }
 
