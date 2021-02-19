@@ -92,7 +92,7 @@ void color::set(double a, double b, double c, double d) {
     this->d = d;
   } else {  // convert to gray in grayscale output (for now it works in SVG export only because of a different approach to MP data conversion)
     model = colormodel::grey;
-    this->a = 1.0 - min(1.0, 0.3*a + 0.59*b + 0.11*c + d);   // see PDF Reference, section 6.2
+    this->a = 1.0 - std::min(1.0, 0.3*a + 0.59*b + 0.11*c + d);   // see PDF Reference, section 6.2
   }
 }
 
