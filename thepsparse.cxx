@@ -72,18 +72,28 @@ void color::set(double a) {
 }
 
 void color::set(double a, double b, double c) {
-  model = colormodel::rgb;
-  this->a = a;
-  this->b = b;
-  this->c = c;
+  if (LAYOUT.output_colormodel != colormodel::grey) {
+    model = colormodel::rgb;
+    this->a = a;
+    this->b = b;
+    this->c = c;
+  } else {  // convert to gray in grayscale output (for now it works in SVG export only because of a different approach to MP data conversion)
+    model = colormodel::grey;
+    this->a = 0.3*a + 0.59*b + 0.11*c;   // see PDF Reference, section 6.2
+  }
 }
 
 void color::set(double a, double b, double c, double d) {
-  model = colormodel::cmyk;
-  this->a = a;
-  this->b = b;
-  this->c = c;
-  this->d = d;
+  if (LAYOUT.output_colormodel != colormodel::grey) {
+    model = colormodel::cmyk;
+    this->a = a;
+    this->b = b;
+    this->c = c;
+    this->d = d;
+  } else {  // convert to gray in grayscale output (for now it works in SVG export only because of a different approach to MP data conversion)
+    model = colormodel::grey;
+    this->a = 1.0 - min(1.0, 0.3*a + 0.59*b + 0.11*c + d);   // see PDF Reference, section 6.2
+  }
 }
 
 bool color::is_white() {
