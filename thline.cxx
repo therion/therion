@@ -549,8 +549,16 @@ void thline::preprocess()
   double t_rsize, t_lsize, t_orient;
 
   bool tmpreverse = this->reverse;
-  if (this->fscrapptr->flip != TT_SCRAP_FLIP_NONE)
-    tmpreverse = !tmpreverse;
+  if (this->fscrapptr->flip != TT_SCRAP_FLIP_NONE) {
+	switch (this->type) {
+	  case TT_LINE_TYPE_GRADIENT:
+	  case TT_LINE_TYPE_WATER_FLOW:
+	  case TT_LINE_TYPE_ARROW:
+		break;
+	  default:
+		tmpreverse = !tmpreverse;
+  	}
+  }
 
   if (tmpreverse && (this->first_point->nextlp != NULL)) {
 
