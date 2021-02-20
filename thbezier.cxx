@@ -51,8 +51,6 @@
 #include <cstdio>
 #include <cmath>
 
-#define __SP_BEZIER_UTILS_C__
-
 #define SP_HUGE 1e5
 #define noBEZIER_DEBUG
 
@@ -71,12 +69,7 @@
 //#include <libnr/nr-forward.h>
 //#include <libnr/nr-point-fns.h>
 
-#include <math.h>
-#ifdef THMSVC
-#include <float.h>
-#define hypot _hypot
-#endif
-
+#include <cmath>
 #define g_return_val_if_fail(C,V) if (!(C)) return (V);
 #define g_return_if_fail(C) if (!(C)) return;
 #define g_new(T,L) new T [L];
@@ -243,7 +236,7 @@ inline double dot(NR_Point const &a, NR_Point const &b)
 
 
 void NR_Point::normalize() {
-	double len = hypot(_pt[0], _pt[1]);
+	double len = std::hypot(_pt[0], _pt[1]);
 	g_return_if_fail(len != 0);
 	g_return_if_fail(!isNaN(len));
 	static double const inf = 1e300;
@@ -268,7 +261,7 @@ void NR_Point::normalize() {
 		case 0:
 			/* Can happen if both coords are near +/-DBL_MAX. */
 			*this /= 4.0;
-			len = hypot(_pt[0], _pt[1]);
+			len = std::hypot(_pt[0], _pt[1]);
 			g_assert(len != inf);
 			*this /= len;
 			break;
@@ -340,7 +333,7 @@ inline bool operator!=(NR_Point const &a, NR_Point const &b)
 }
 
 inline double L2(NR_Point const &p) {
-	return hypot(p[0], p[1]);
+	return std::hypot(p[0], p[1]);
 }
 
 bool is_zero(NR_Point const &p)
@@ -1373,9 +1366,7 @@ void thbezier_curve::copy_polyline(struct thbezier_polyline * line, double err)
   if (max < 3)
     return;
 
-  NR_Point * poly, * bezier;
-  poly = new NR_Point[max];
-  bezier = new NR_Point[4 * max];
+  std::vector<NR_Point> poly(max), bezier(4 * max);
   thbezier_point * p;
   for(i = 0, p = line->get_first_point(); p != NULL; p = line->get_next_point(), i++) {
     poly[i][0] = p->m_x;
@@ -1392,7 +1383,7 @@ void thbezier_curve::copy_polyline(struct thbezier_polyline * line, double err)
     else stan.normalize();
   }
   //nbp = (long) sp_bezier_fit_cubic_r(bezier, poly, (long) max, err, (unsigned int)max);
-  nbp = (long) sp_bezier_fit_cubic_full(bezier, NULL, poly, (long) max, stan, -stan, err, (unsigned int)max);
+  nbp = (long) sp_bezier_fit_cubic_full(bezier.data(), NULL, poly.data(), (long) max, stan, -stan, err, (unsigned int)max);
   thbezier_segment * s;
   s = this->insert_segment();
   s->m_p = thbezier_point(bezier[0][0], bezier[0][1]);

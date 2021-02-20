@@ -198,15 +198,6 @@ def p_rimstonedam_ASF (expr pos,theta,sc,al)=
 enddef;
 
 def p_anastomosis_UIS (expr pos,theta,sc,al)=
-    U:=(.4u,.3u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    p:=(-.4u,-.2u)--(-.3u,-.3u)--(0,.3u)--(.1u,.2u);
-    thdraw p;
-    thdraw p shifted (.3u,0);
-enddef;
-
-def p_karren_UIS (expr pos,theta,sc,al)=
     U:=(.5u,.4u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
@@ -214,6 +205,15 @@ def p_karren_UIS (expr pos,theta,sc,al)=
         {dir -85}(-.12u,.3u)..(-.08u,-.3u){dir-85}..{dir 85}(.08u,-.3u)..
         {dir85}(.12u,.3u)..(.28u,.3u){dir -85}..(.32u,-.3u){dir -85}..
         {dir 85}(.5u,-.3u);
+enddef;
+
+def p_karren_UIS (expr pos,theta,sc,al)=
+    U:=(.4u,.3u);
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    pickup PenC;
+    p:=(-.4u,-.2u)--(-.3u,-.3u)--(0,.3u)--(.1u,.2u);
+    thdraw p;
+    thdraw p shifted (.3u,0);
 enddef;
 
 def p_scallop_UIS (expr pos,theta,sc,al)=

@@ -51,9 +51,6 @@
 #include "thgeomag.h"
 #include "thgeomagdata.h"
 #include "extern/quickhull/QuickHull.hpp"
-#ifdef THMSVC
-#define hypot _hypot
-#endif
 
 //#define THUSESVX
 //#define THDEBUG
@@ -133,7 +130,7 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi);
+      dp = (thdata *)(*obi).get();
       if (dp->date.is_defined()) {
         double syear, eyear;
         syear = dp->date.get_start_year();
@@ -166,7 +163,7 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi);
+      dp = (thdata *)(*obi).get();
       bool dpdeclindef;
       double dpdeclin;
 
@@ -184,7 +181,7 @@ void thdb1d::scan_data()
             lei->from.id = this->insert_station(lei->from, lei->psurvey, dp, 3);
             lei->to.id = this->insert_station(lei->to, lei->psurvey, dp, 3);
             if (((strcmp(lei->from.name,".") == 0) || (strcmp(lei->from.name,"-") == 0)) && ((strcmp(lei->to.name,".") == 0) || (strcmp(lei->to.name,"-") == 0)))
-              ththrow(("shot between stations without names not allowed"))
+              ththrow("shot between stations without names not allowed");
             if ((strcmp(lei->from.name,"-") == 0) || (strcmp(lei->to.name,"-") == 0) || (strcmp(lei->from.name,".") == 0) || (strcmp(lei->to.name,".") == 0)) {
               lei->flags |= TT_LEGFLAG_SPLAY;
               lei->walls = TT_FALSE;
@@ -224,7 +221,7 @@ void thdb1d::scan_data()
                 dcc = lei->todepth - lei->fromdepth;
               lei->depthchange = dcc;  
               if (fabs(dcc) > lei->length)
-                ththrow(("length reading is less than change in depth"))
+                ththrow("length reading is less than change in depth");
             }
             
             // check backwards compass reading
@@ -271,7 +268,7 @@ void thdb1d::scan_data()
                   }
                   else {
                     if (thisinf(lei->gradient) != -thisinf(lei->backgradient))
-                      ththrow(("invalid plumbed shot"))
+                      ththrow("invalid plumbed shot");
                   }
                 }
               }
@@ -408,8 +405,9 @@ void thdb1d::scan_data()
           lei++;
         }
       }
-      catch (...)
-        threthrow(("%s [%d]", lei->srcf.name, lei->srcf.line));
+      catch (...) {
+        threthrow("{} [{}]", lei->srcf.name, lei->srcf.line);
+      }
           
       // scan data fixes
       fii = dp->fix_list.begin();
@@ -440,9 +438,9 @@ void thdb1d::scan_data()
           fii++;
         }
       }
-      catch (...)
-        threthrow(("%s [%d]", fii->srcf.name, fii->srcf.line));
-  
+      catch (...) {
+        threthrow("{} [{}]", fii->srcf.name, fii->srcf.line);
+      }
     }
   
     obi++;
@@ -452,7 +450,7 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi);
+      dp = (thdata *)(*obi).get();
       // scan data equates
       eqi = dp->equate_list.begin();
       try {
@@ -464,8 +462,9 @@ void thdb1d::scan_data()
           eqi++;
         }
       }
-      catch (...)
-        threthrow(("%s [%d]", eqi->srcf.name, eqi->srcf.line));
+      catch (...) {
+        threthrow("{} [{}]", eqi->srcf.name, eqi->srcf.line);
+      }
 		}
     obi++;
 	}
@@ -476,14 +475,14 @@ void thdb1d::scan_data()
   while (obi != this->db->object_list.end()) {
 
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      thsurvey * srv = (thsurvey *) (*obi);
+      thsurvey * srv = (thsurvey *) (*obi).get();
       if (!srv->entrance.is_empty()) {
         srv->entrance.id = this->get_station_id(srv->entrance, srv);
         if (srv->entrance.id == 0) {
           if (srv->entrance.survey == NULL)
-            ththrow(("station doesn't exist -- %s", srv->entrance.name))
+            ththrow("station doesn't exist -- {}", srv->entrance.name);
           else
-            ththrow(("station doesn't exist -- %s@%s", srv->entrance.name, srv->entrance.survey))
+            ththrow("station doesn't exist -- {}@{}", srv->entrance.name, srv->entrance.survey);
         }
         // set entrance flag & comment to given station
         this->station_vec[srv->entrance.id-1].flags |= TT_STATIONFLAG_ENTRANCE;            
@@ -497,7 +496,7 @@ void thdb1d::scan_data()
 
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
 
-      dp = (thdata *)(*obi);
+      dp = (thdata *)(*obi).get();
 
       // scan data stations
       ssi = dp->ss_list.begin();
@@ -506,9 +505,9 @@ void thdb1d::scan_data()
           ssi->station.id = this->get_station_id(ssi->station, ssi->psurvey);
           if (ssi->station.id == 0) {
             if (ssi->station.survey == NULL)
-              ththrow(("station doesn't exist -- %s", ssi->station.name))
+              ththrow("station doesn't exist -- {}", ssi->station.name);
             else
-              ththrow(("station doesn't exist -- %s@%s", ssi->station.name, ssi->station.survey))
+              ththrow("station doesn't exist -- {}@{}", ssi->station.name, ssi->station.survey);
           }
           // set station flags and comment
           else {
@@ -526,8 +525,9 @@ void thdb1d::scan_data()
           ssi++;
         }
       }
-      catch (...)
-        threthrow(("%s [%d]", ssi->srcf.name, ssi->srcf.line));
+      catch (...) {
+        threthrow("{} [{}]", ssi->srcf.name, ssi->srcf.line);
+      }
 
       // scan data marks
       mii = dp->mark_list.begin();
@@ -536,9 +536,9 @@ void thdb1d::scan_data()
           mii->station.id = this->get_station_id(mii->station, mii->psurvey);
           if (mii->station.id == 0) {
             if (mii->station.survey == NULL)
-              ththrow(("station doesn't exist -- %s", mii->station.name))
+              ththrow("station doesn't exist -- {}", mii->station.name);
             else
-              ththrow(("station doesn't exist -- %s@%s", mii->station.name, mii->station.survey))
+              ththrow("station doesn't exist -- {}@{}", mii->station.name, mii->station.survey);
           }
           // set station flags and comment
           else {
@@ -550,8 +550,9 @@ void thdb1d::scan_data()
           mii++;
         }
       }
-      catch (...)
-        threthrow(("%s [%d]", mii->srcf.name, mii->srcf.line));
+      catch (...) {
+        threthrow("{} [{}]", mii->srcf.name, mii->srcf.line);
+      }
         
       // scan extends
       xi = dp->extend_list.begin();
@@ -561,32 +562,33 @@ void thdb1d::scan_data()
             xi->before.id = this->get_station_id(xi->before, xi->psurvey);
             if (xi->before.id == 0) {
               if (xi->before.survey == NULL)
-                ththrow(("station doesn't exist -- %s", xi->before.name))
+                ththrow("station doesn't exist -- {}", xi->before.name);
               else
-                ththrow(("station doesn't exist -- %s@%s", xi->before.name, xi->before.survey))
+                ththrow("station doesn't exist -- {}@{}", xi->before.name, xi->before.survey);
             }
           }
           if (!xi->to.is_empty()) {
             xi->to.id = this->get_station_id(xi->to, xi->psurvey);
             if (xi->to.id == 0) {
               if (xi->to.survey == NULL)
-                ththrow(("station doesn't exist -- %s", xi->to.name))
+                ththrow("station doesn't exist -- {}", xi->to.name);
               else
-                ththrow(("station doesn't exist -- %s@%s", xi->to.name, xi->to.survey))
+                ththrow("station doesn't exist -- {}@{}", xi->to.name, xi->to.survey);
             }
           }
           xi->from.id = this->get_station_id(xi->from, xi->psurvey);
           if (xi->from.id == 0) {
             if (xi->from.survey == NULL)
-              ththrow(("station doesn't exist -- %s", xi->from.name))
+              ththrow("station doesn't exist -- {}", xi->from.name);
             else
-              ththrow(("station doesn't exist -- %s@%s", xi->from.name, xi->from.survey))
+              ththrow("station doesn't exist -- {}@{}", xi->from.name, xi->from.survey);
           }
           xi++;
         }
       }
-      catch (...)
-        threthrow(("%s [%d]", xi->srcf.name, xi->srcf.line));
+      catch (...) {
+        threthrow("{} [{}]", xi->srcf.name, xi->srcf.line);
+      }
 
       // scan dimensions
       di = dp->dims_list.begin();
@@ -595,15 +597,16 @@ void thdb1d::scan_data()
           di->station.id = this->get_station_id(di->station, di->psurvey);
           if (di->station.id == 0) {
             if (di->station.survey == NULL)
-              ththrow(("station doesn't exist -- %s", di->station.name))
+              ththrow("station doesn't exist -- {}", di->station.name);
             else
-              ththrow(("station doesn't exist -- %s@%s", di->station.name, di->station.survey))
+              ththrow("station doesn't exist -- {}@{}", di->station.name, di->station.survey);
           }
           di++;
         }
       }
-      catch (...)
-        threthrow(("%s [%d]", di->srcf.name, di->srcf.line));
+      catch (...) {
+        threthrow("{} [{}]", di->srcf.name, di->srcf.line);
+      }
         
       dp->complete_dimensions();
 
@@ -640,8 +643,8 @@ void thdb1d::process_data()
 	  thsvxctrl survex;
 		try {
 		  survex.process_survey_data(this->db);
-	  } catch (...) {
-			thwarning((thexc.get_desc()))
+	  } catch (const std::exception& e) {
+			thwarning((e.what()))
 		}
 	}
   this->process_survey_stat();
@@ -694,9 +697,9 @@ unsigned long thdb1d::insert_station(class thobjectname on, class thsurvey * ps,
     }
     if (!(this->db->insert_datastation(on, ps))) {
       if (on.survey != NULL)
-        ththrow(("object already exist -- %s@%s", on.name, on.survey))
+        ththrow("object already exist -- {}@{}", on.name, on.survey);
       else
-        ththrow(("object already exist -- %s", on.name))
+        ththrow("object already exist -- {}", on.name);
     }
   }  
   this->lsid++;
@@ -778,19 +781,19 @@ void thdb1d_equate_nodes(thdb1d * thisdb, thdb1d_tree_node * n1, thdb1d_tree_nod
   thdb1d_tree_node * n3;
   
   if (n1->is_fixed && n2->is_fixed) {
-    ththrow(("equate of two fixed stations -- %s@%s and %s@%s",
+    ththrow("equate of two fixed stations -- {}@{} and {}@{}",
           thisdb->station_vec[n1->id - 1].name,
           thisdb->station_vec[n1->id - 1].survey->get_full_name(),
           thisdb->station_vec[n2->id - 1].name,
-          thisdb->station_vec[n2->id - 1].survey->get_full_name()));
+          thisdb->station_vec[n2->id - 1].survey->get_full_name());
   }
     
   if (n1->id == n2->id) {
-    ththrow(("equate of two identical stations -- %s@%s and %s@%s",
+    ththrow("equate of two identical stations -- {}@{} and {}@{}",
           thisdb->station_vec[n1->id - 1].name,
           thisdb->station_vec[n1->id - 1].survey->get_full_name(),
           thisdb->station_vec[n2->id - 1].name,
-          thisdb->station_vec[n2->id - 1].survey->get_full_name()));
+          thisdb->station_vec[n2->id - 1].survey->get_full_name());
   }
     
   // vymeni ich ak uid1 nie je fixed
@@ -868,7 +871,7 @@ void thdb1d::process_tree()
   int last_eq = -1;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi);
+      dp = (thdata *)(*obi).get();
       eqi = dp->equate_list.begin();
       last_eq = -1;
       while(eqi != dp->equate_list.end()) {
@@ -918,7 +921,7 @@ void thdb1d::process_tree()
 //    if ((iil->leg->data_type == TT_DATATYPE_NOSURVEY) &&
 //      ((!a1->start_node->is_fixed) || (!a1->end_node->is_fixed))) {
 ////        thprintf("%s@%s - %s@%s\n", iil->leg->from.name, iil->leg->from.survey, iil->leg->to.name, iil->leg->to.survey);
-//        ththrow(("unsurveyed shot between unfixed stations -- %s [%d]",
+//        ththrow("unsurveyed shot between unfixed stations -- %s [%d]",
 //          iil->leg->srcf.name, iil->leg->srcf.line
 //        ));
 //    }
@@ -990,7 +993,7 @@ void thdb1d::process_tree()
       
       // something is wrong
       if (n2 == NULL) {
-        ththrow(("a software BUG is present (" __FILE__ ":%d)", __LINE__));
+        ththrow("a software BUG is present (" __FILE__ ":{})", __LINE__);
 //#ifdef THDEBUG
 //        thprintf("warning -- not all stations connected to the network\n");
 //#endif
@@ -998,9 +1001,9 @@ void thdb1d::process_tree()
       }
 
       if ((!n2->is_fixed) && (any_fixed || (component > 0))) {
-        ththrow(("can not connect %s@%s to centerline network",
+        ththrow("can not connect {}@{} to centerline network",
           this->station_vec[n3->id - 1].name,
-          this->station_vec[n3->id - 1].survey->get_full_name()));
+          this->station_vec[n3->id - 1].survey->get_full_name());
       }
       
     
@@ -1099,7 +1102,7 @@ void thdb1d::process_tree()
 
 
 
-void thdb1d__scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_under) {
+void thdb1d_scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_under) {
   if (st->is_temporary()) return;
   if (ss->stat.station_state == 0) {
     if (is_under)
@@ -1138,7 +1141,7 @@ void thdb1d__scan_survey_station_limits(thsurvey * ss, thdb1ds * st, bool is_und
 }
 
 
-void thdb1d__scan_data_station_limits(thdata * ss, thdb1ds * st, bool is_under) {
+void thdb1d_scan_data_station_limits(thdata * ss, thdb1ds * st, bool is_under) {
   if (ss->stat_st_state == 0) {
     if (is_under)
       ss->stat_st_state = 2;
@@ -1214,11 +1217,11 @@ void thdb1d::process_survey_stat() {
     // stations
     if ((lit->leg->flags & TT_LEGFLAG_SPLAY) == 0) {
       if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
-        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), false);
-        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), false);
+        thdb1d_scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), false);
+        thdb1d_scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), false);
       } else {
-        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), true);
-        thdb1d__scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), true);
+        thdb1d_scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->from.id - 1]), true);
+        thdb1d_scan_data_station_limits(lit->data, &(this->station_vec[lit->leg->to.id - 1]), true);
       }
     }
 
@@ -1241,11 +1244,11 @@ void thdb1d::process_survey_stat() {
       }
       if ((lit->leg->flags & TT_LEGFLAG_SPLAY) == 0) {
         if ((lit->leg->flags & TT_LEGFLAG_SURFACE) != 0) {
-          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), false);
-          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), false);
+          thdb1d_scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), false);
+          thdb1d_scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), false);
         } else {
-          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), true);
-          thdb1d__scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), true);
+          thdb1d_scan_survey_station_limits(ss, &(this->station_vec[lit->leg->from.id - 1]), true);
+          thdb1d_scan_survey_station_limits(ss, &(this->station_vec[lit->leg->to.id - 1]), true);
         }
       }
       ss->stat.num_shots++;
@@ -1277,7 +1280,7 @@ void thdb1d::process_survey_stat() {
   thpoint * pt;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_POINT_CMD) {
-      pt = (thpoint *)(*obi);
+      pt = (thpoint *)(*obi).get();
       ss = pt->fsptr;
       if ((pt->type == TT_POINT_TYPE_CONTINUATION) && (!thisnan(pt->xsize))) {
         while (ss != NULL) {
@@ -1658,11 +1661,11 @@ void thdb1d::find_loops()
     clcleg->from_uid = this->station_vec[clcleg->from_id - 1].uid;
     clcleg->to_uid = this->station_vec[clcleg->to_id - 1].uid;    
     if (clcleg->from_uid == clcleg->to_uid) {
-      ththrow(("shot between two equal stations -- %s@%s and %s@%s",
+      ththrow("shot between two equal stations -- {}@{} and {}@{}",
           this->station_vec[clcleg->from_id - 1].name,
           this->station_vec[clcleg->from_id - 1].survey->get_full_name(),
           this->station_vec[clcleg->to_id - 1].name,
-          this->station_vec[clcleg->to_id - 1].survey->get_full_name()));
+          this->station_vec[clcleg->to_id - 1].survey->get_full_name());
     }
     from_node = &(nodes[clcleg->from_uid - 1]);
     if ((lastlegseries != long(cleg->series_id)) ||
@@ -2122,7 +2125,7 @@ void thdb1d::close_loops()
   double avg_error = 0.0, avg_error_sum = 0.0;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi);
+      dp = (thdata *)(*obi).get();
       fii = dp->fix_list.begin();
       while(fii != dp->fix_list.end()) {
         tmps = &(this->station_vec[fii->station.id - 1]);
@@ -2346,13 +2349,13 @@ void thdb1d::close_loops()
       cleg->leg->total_dy = tos->y - froms->y;
       cleg->leg->total_dz = tos->z - froms->z;
       // najprv horizontalnu dlzku
-      cleg->leg->total_length = hypot(cleg->leg->total_dx, cleg->leg->total_dy);
+      cleg->leg->total_length = std::hypot(cleg->leg->total_dx, cleg->leg->total_dy);
       cleg->leg->total_bearing = atan2(cleg->leg->total_dx, cleg->leg->total_dy) / THPI * 180.0;
       if (cleg->leg->total_bearing < 0.0)
         cleg->leg->total_bearing += 360.0;
       cleg->leg->total_gradient = atan2(cleg->leg->total_dz, cleg->leg->total_length) / THPI * 180.0;
       // potom celkovu dlzku
-      cleg->leg->total_length = hypot(cleg->leg->total_length, cleg->leg->total_dz);
+      cleg->leg->total_length = std::hypot(cleg->leg->total_length, cleg->leg->total_dz);
       continue;
     }
     
@@ -2369,7 +2372,7 @@ void thdb1d::close_loops()
 		);
 #endif
     if (froms->placed == 0)
-      ththrow(("a software BUG is present (" __FILE__ ":%d)", __LINE__));
+      ththrow("a software BUG is present (" __FILE__ ":{})", __LINE__);
     if (tos->placed == 0) {
       tos->placed += 1;
       if (cleg->reverse) {
@@ -2387,7 +2390,7 @@ void thdb1d::close_loops()
       err_dx = (tos->x - froms->x) - (cleg->reverse ? -1.0 : 1.0) * cleg->leg->adj_dx;
       err_dy = (tos->y - froms->y) - (cleg->reverse ? -1.0 : 1.0) * cleg->leg->adj_dy;
       err_dz = (tos->z - froms->z) - (cleg->reverse ? -1.0 : 1.0) * cleg->leg->adj_dz;
-			double err = hypot(hypot(err_dx, err_dy), err_dz);
+			double err = std::hypot(std::hypot(err_dx, err_dy), err_dz);
       
 			if ((err >= 1e-4) && (i > unrecover)) {			
 #ifdef THDEBUG
@@ -2492,10 +2495,10 @@ void thdb1d::close_loops()
       ps->y = froms->y;
       ps->z = froms->z;
       if (ps->placed == 0) {
-//        ththrow(("a software BUG is present (" __FILE__ ":%d)", __LINE__));
-        ththrow(("can not connect %s@%s to centerline network",
+//        ththrow("a software BUG is present (" __FILE__ ":{})", __LINE__);
+        ththrow("can not connect {}@{} to centerline network",
           this->station_vec[i].name,
-          this->station_vec[i].survey->get_full_name()));
+          this->station_vec[i].survey->get_full_name());
       }
     }
   }
@@ -2957,7 +2960,7 @@ void thdb1d::postprocess_objects()
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
       case TT_SURFACE_CMD:
-        ((thsurface*)(*obi))->check_stations();
+        ((thsurface*)(*obi).get())->check_stations();
         break;
     }
     obi++;
@@ -3024,7 +3027,7 @@ void thdb1d::process_xelev()
     switch ((*obi)->get_class_id()) {
       case TT_DATA_CMD:
         try {
-          dp = (thdata *)(*obi);
+          dp = (thdata *)(*obi).get();
           xi = dp->extend_list.begin();
           while(xi != dp->extend_list.end()) {
             if (!xi->to.is_empty()) {
@@ -3049,7 +3052,7 @@ void thdb1d::process_xelev()
                   tmpbf += "@";
                   tmpbf += xi->to.survey;
                 }
-                ththrow(("survey shot not found -- %s", tmpbf.get_buffer()))
+                ththrow("survey shot not found -- {}", tmpbf.get_buffer());
               } else {
                 // the leg is in carrow - set its extend
                 if ((xi->extend & TT_EXTENDFLAG_DIRECTION) != 0) {
@@ -3128,8 +3131,9 @@ void thdb1d::process_xelev()
             xi++;
           }
         }
-        catch (...)
-          threthrow(("%s [%d]", xi->srcf.name, xi->srcf.line));
+        catch (...) {
+          threthrow("{} [{}]", xi->srcf.name, xi->srcf.line);
+        }
         break;
     }
     obi++;
@@ -3408,7 +3412,7 @@ void thdb1d::process_xelev()
       if ((current_node->last_arrow->leg->leg->flags & TT_LEGFLAG_SPLAY) > 0) {
     	  cxx += 0;
       } else {
-    	  cxx += double(go_left) * hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy) * current_node->last_arrow->leg->leg->extend_ratio;
+    	  cxx += double(go_left) * std::hypot(current_node->last_arrow->leg->leg->total_dx, current_node->last_arrow->leg->leg->total_dy) * current_node->last_arrow->leg->leg->extend_ratio;
       }
       
       // set end x
@@ -3491,11 +3495,13 @@ void thdb1d::process_xelev()
 	      carrow = carrow->next_arrow;
 	    }
 	    if (thisnan(minshot_dir)) minshot_dir = 0.0;
-      if (current_node->first_arrow->is_reversed) {
-        current_node->first_arrow->leg->leg->fxx = minshot_x;
-        current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
-      } else
-        ththrow(("Code should not go here!"))
+        if (current_node->first_arrow->is_reversed) {
+          current_node->first_arrow->leg->leg->fxx = minshot_x;
+          current_node->first_arrow->leg->leg->txx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * std::hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
+        } else {
+          current_node->first_arrow->leg->leg->txx = minshot_x;
+          current_node->first_arrow->leg->leg->fxx = minshot_x + minshot_dx * cos(diffdir(minshot_dir, splay_dir)) * std::hypot(current_node->first_arrow->leg->leg->total_dx, current_node->first_arrow->leg->leg->total_dy) * minshot_rx;
+        }
 	  }
   }
 

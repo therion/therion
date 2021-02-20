@@ -31,15 +31,13 @@
 #include <set>
 #include "thepsparse.h"
 
-using namespace std;
-
 struct surfpictrecord {
   const char * filename, * type;
   double dx, dy, xx, xy, yx, yy, width, height;
 };
 
 struct scraprecord {
-  string name,F,B,I,E,X,G,C,P;      // name + files
+  std::string name,F,B,I,E,X,G,C,P;      // name + files
   converted_data Fc, Bc, Ic, Ec, Xc, Gc;
   double S1,S2;                      // shift
   int layer,level,sect;             // Y, V, Z
@@ -51,32 +49,32 @@ struct scraprecord {
         X1,X2,X3,X4;
 
   color col_scrap;
-  list<surfpictrecord> SKETCHLIST;
+  std::list<surfpictrecord> SKETCHLIST;
   scraprecord();
 };
 
 struct layerrecord {
-  set<int> U,D;
-  string N,T;
+  std::set<int> U,D;
+  std::string N,T;
   int Z;
   int AltJump;
   int minx, maxx, miny, maxy;
   bool bookmark;
-  map< int,set<string> > scraps;
-  set<string> allscraps;
+  std::map< int,std::set<std::string> > scraps;
+  std::set<std::string> allscraps;
   
   layerrecord();
 };
 
 struct legendrecord {
-  string name, fname, descr;
+  std::string name, fname, descr;
   converted_data ldata;
   unsigned idsym, idfig, idnum;
 };
 
 struct colorlegendrecord {
   color col_legend;
-  string texname, name;
+  std::string texname, name;
 };
 
 struct paired {
@@ -88,9 +86,10 @@ struct paired {
 paired rotatedaround(paired x,paired o, double th);
 
 struct layout {
-  string excl_list,labelx,labely,
+  std::string excl_list,labelx,labely,
          doc_author,doc_keywords,doc_subject,doc_title,doc_comment,
-         northarrow, scalebar,langstr;
+         northarrow, scalebar,langstr,
+         icc_profile_cmyk, icc_profile_rgb, icc_profile_gray;
   bool  excl_pages,title_pages,page_numbering,
         transparency,map_grid,OCG,map_header_bg,colored_text,transparent_map_bg; 
   double hsize,vsize,overlap,
@@ -103,7 +102,7 @@ struct layout {
   colormodel output_colormodel;
   
   int surface, grid, proj, grid_coord_freq; // freq 0 no, 1 border, 2 all
-  string gridAA, gridAB, gridAC, 
+  std::string gridAA, gridAB, gridAC, 
          gridBA, gridBB, gridBC, 
          gridCA, gridCB, gridCC;
   paired gridcell[9];
@@ -114,18 +113,18 @@ struct layout {
   layout();
 };
 
-extern map<int,layerrecord> LAYERHASH;
-extern set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
-extern list<scraprecord> SCRAPLIST;
-extern list<legendrecord> LEGENDLIST;
-extern list<colorlegendrecord> COLORLEGENDLIST;
+extern std::map<int,layerrecord> LAYERHASH;
+extern std::set<int> MAP_PREVIEW_UP, MAP_PREVIEW_DOWN;
+extern std::list<scraprecord> SCRAPLIST;
+extern std::list<legendrecord> LEGENDLIST;
+extern std::list<colorlegendrecord> COLORLEGENDLIST;
 extern layout LAYOUT;
-extern list<pattern> PATTERNLIST;
-extern list<converted_data> GRIDLIST;
+extern std::list<pattern> PATTERNLIST;
+extern std::list<converted_data> GRIDLIST;
 extern converted_data NArrow, ScBar;
 
 
 
-extern list<surfpictrecord> SURFPICTLIST;
+extern std::list<surfpictrecord> SURFPICTLIST;
 
 #endif

@@ -110,12 +110,13 @@ $maxenc = keys %ENCODINGS;
 $maxbase = keys %UNI2;
 $banner = "// This file is generated automatically; don't modify it\n\n";
 
-open(OUT, ">../thtexenc.cxx") or die;
+open(OUT, ">../thtexenc.h") or die;
 print OUT $banner;
+print OUT "#pragma once\n\n";
 print OUT "static const int max_enc = $maxenc;\n";
 print OUT "static const int max_base = $maxbase;\n\n";
 
-print OUT "static const char* encodings[$maxenc] = {\n";
+print OUT "static constexpr const char* encodings[$maxenc] = {\n";
 foreach $enc (sort keys %ENCODINGS) {
   print OUT "  \"$enc\",\n";
 }

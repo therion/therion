@@ -69,9 +69,9 @@ class thtfangle : public thtf {
    
   thtfangle();
    
-  virtual void parse_units(char * ustr);
+  void parse_units(char * ustr) override;
   
-  virtual double transform(double value);
+  double transform(double value) override;
   
 };
 

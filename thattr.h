@@ -82,7 +82,7 @@ struct thattr_field {
 
   int m_type;  ///< Generic export type.
 
-  bool m_present;  ///< Whether there is any value present.
+  bool m_present = false;  ///< Whether there is any value present.
 
   long m_mini,  ///< Minimum integer value.
     m_maxi; ///< Maximum integer value.

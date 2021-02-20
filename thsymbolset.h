@@ -115,7 +115,7 @@ struct thsymbolset {
    */
 
   void export_mp_symbol_options(FILE * mpf, int sym_id);
-  void export_mp_symbol_options(class thexception * x, int sym_id);
+  void export_mp_symbol_options(std::vector<std::string>& x, int sym_id);
 
 
 };
@@ -123,13 +123,13 @@ struct thsymbolset {
 /**
  * Vrati ID z popisu classu a symbolu.
  */
-int thsymbolset__get_id(const char * symclass, const char * symbol);
+int thsymbolset_get_id(const char * symclass, const char * symbol);
 
 
 /**
  * Vrati ID itemu z groupy.
  */
-int thsymbolset__get_group(int group_id, int cid);
+int thsymbolset_get_group(int group_id, int cid);
 
 
 /**

@@ -19,7 +19,7 @@ public:
   void OnKeyPress(wxKeyEvent&);
   void OnMouseDown(wxMouseEvent&);
 
-  DECLARE_EVENT_TABLE();
+  wxDECLARE_EVENT_TABLE();
 
 };
 

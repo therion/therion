@@ -4,7 +4,7 @@
 #ifndef LXDEPCHECK
 #include <cstdlib>
 #include <cstdio>
-#include <string.h>
+#include <cstring>
 #include <locale.h>
 #include <map>
 #include <list>
@@ -13,20 +13,15 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
+#include "icase.h"
 #include "lxMath.h"
 #include "img.h"
 
-#if defined LXWIN32 || defined THWIN32
-#define strcasecmp stricmp
-#endif
-
-
-#define lxassert(expr) if (!(expr)) std::exit(1);
 
 lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(uint32_t));
-  *((uint32_t *)(ptr)) = (uint32_t) this->m_size;
+  std::memcpy(ptr, &m_size, s);
   lxFile::switchEndian(ptr, s);
   ptr += s;
   return s;
@@ -36,7 +31,7 @@ lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 lxFileSizeT lxFileSize::Load(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(lxFileSizeT));
-  this->m_size = (lxFileSizeT) *((uint32_t *)(ptr));
+  std::memcpy(&m_size, ptr, s);
   lxFile::switchEndian((char *)(&this->m_size), s);
   ptr += s;
   return s;
@@ -46,7 +41,7 @@ lxFileSizeT lxFileSize::Load(lxFileBuff & ptr)
 lxFileSizeT lxFileDbl::Save(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(this->m_num));
-  *((double *)(ptr)) = this->m_num;
+  std::memcpy(ptr, &m_num, s);
   lxFile::switchEndian(ptr, s);
   ptr += s;
   return s;
@@ -56,7 +51,7 @@ lxFileSizeT lxFileDbl::Save(lxFileBuff & ptr)
 lxFileSizeT lxFileDbl::Load(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(this->m_num));
-  this->m_num = *((double *)(ptr));
+  std::memcpy(&m_num, ptr, s);
   lxFile::switchEndian((char *)(&this->m_num), s);
   ptr += s;
   return s;
@@ -613,7 +608,7 @@ lxFileSizeT lxFileSplitTokens(std::string& str, char ** tokens, lxFileSizeT max_
   return nt;
 }
 
-bool lxFile__CheckLRUD(double & du, double & dd, double & dl, double & dr, double mv, double mh) {
+bool lxFileCheckLRUD(double & du, double & dd, double & dl, double & dr, double mv, double mh) {
   if ((du <= 0.0) && (dd <= 0.0) && (dl <= 0.0) && (dr <= 0.0)) {
     return false;
   } else {
@@ -736,7 +731,7 @@ void lxFile::ImportPLT(const char * fn)
       break;
     }
   }
-  for (x = xx; (x < int(strlen(fn))) && (strcasecmp(&(fn[x]),".PLT") != 0); x++) {
+  for (x = xx; (x < int(strlen(fn))) && !icase_equals(&(fn[x]),".PLT"); x++) {
     sname[x - xx] = fn[x];
     sname[x - xx + 1] = 0;
   }
@@ -759,7 +754,7 @@ void lxFile::ImportPLT(const char * fn)
         tok2num(lrud[1],9);PltLrudNaN(lrud[1]);
         tok2num(lrud[2],7);PltLrudNaN(lrud[2]);
         tok2num(lrud[3],8);PltLrudNaN(lrud[3]);
-        lrudOK = lxFile__CheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
+        lrudOK = lxFileCheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
         if (lrudOK) {
           lrud[0] *= 0.3048;
           lrud[1] *= 0.3048;
@@ -867,7 +862,7 @@ void lxFile::Import3D(const char * fn)
       break;
     }
   }
-  for (x = xx; (x < int(strlen(fn))) && (strcasecmp(&(fn[x]),".PLT") != 0); x++) {
+  for (x = xx; (x < int(strlen(fn))) && !icase_equals(&(fn[x]),".PLT"); x++) {
     sname[x - xx] = fn[x];
     sname[x - xx + 1] = 0;
   }
@@ -961,7 +956,7 @@ void lxFile::Import3D(const char * fn)
           lrud[1] = pimg->r;
           lrud[2] = pimg->u;
           lrud[3] = pimg->d;
-          lrudOK = lxFile__CheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
+          lrudOK = lxFileCheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
           if (lrudOK) {
             stPtr->SetFlag(LXFILE_STATION_FLAG_HAS_WALLS, true);
           }

@@ -61,7 +61,7 @@ sub process_symbols {
   print OUT "extern int thsymsets_order[thsymbolset_size];\n\n";
   print OUT "extern int thsymsets_count[thsymsets_size];\n\n";
   print OUT "extern std::map<unsigned, std::string> thsymsets_comment;\n\n";
-  print OUT "\nstatic const thsymbolset__char_ptr thsymsets [] = {\n$ssl};\n\nvoid thsymsets_symbols_init();\n\n";
+  print OUT "\nstatic const thsymbolset_char_ptr thsymsets [] = {\n$ssl};\n\nvoid thsymsets_symbols_init();\n\n";
   print OUT "#endif\n\n";
   close(OUT);
 

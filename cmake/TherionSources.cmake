@@ -2,6 +2,7 @@ set(THERION_HEADERS
     ${CMAKE_BINARY_DIR}/thcsdata.h
     ${CMAKE_BINARY_DIR}/thchencdata.h
     ${CMAKE_BINARY_DIR}/thlangdata.h
+    ${CMAKE_BINARY_DIR}/thlangdatafields.h
     ${CMAKE_BINARY_DIR}/thmpost.h
     ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
     ${CMAKE_BINARY_DIR}/thsymbolsets.h
@@ -95,6 +96,7 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thsvg.h
     ${CMAKE_SOURCE_DIR}/thsvxctrl.h
     ${CMAKE_SOURCE_DIR}/thsymbolset.h
+    ${CMAKE_SOURCE_DIR}/thtexenc.h
     ${CMAKE_SOURCE_DIR}/thtexfonts.h
     ${CMAKE_SOURCE_DIR}/thtf.h
     ${CMAKE_SOURCE_DIR}/thtfangle.h
@@ -109,11 +111,15 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thwarppt.h
 )
 
-file(GLOB_RECURSE POLY2TRI_SRCS ${CMAKE_SOURCE_DIR}/extern/poly2tri/*.cc)
+# TODO rename these files to .h
+set_source_files_properties(
+    ${CMAKE_BINARY_DIR}/thchencdata.cxx
+    ${CMAKE_SOURCE_DIR}/thlibrarydata.cxx
+    PROPERTIES HEADER_FILE_ONLY TRUE)
+
 set(THERION_SOURCES
     ${CMAKE_BINARY_DIR}/thcsdata.cxx
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
-    ${CMAKE_BINARY_DIR}/thlangdata.cxx
     ${CMAKE_BINARY_DIR}/thmpost.cxx
     ${CMAKE_BINARY_DIR}/thsymbolsets.cxx
     ${CMAKE_BINARY_DIR}/thtex.cxx
@@ -151,7 +157,6 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thendsurvey.cxx
     ${CMAKE_SOURCE_DIR}/thepsparse.cxx
     ${CMAKE_SOURCE_DIR}/therion.cxx
-    ${CMAKE_SOURCE_DIR}/thexception.cxx
     ${CMAKE_SOURCE_DIR}/thexpdb.cxx
     ${CMAKE_SOURCE_DIR}/thexpmap.cxx
     ${CMAKE_SOURCE_DIR}/thexpmodel.cxx
@@ -206,7 +211,6 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thsvg.cxx
     ${CMAKE_SOURCE_DIR}/thsvxctrl.cxx
     ${CMAKE_SOURCE_DIR}/thsymbolset.cxx
-    ${CMAKE_SOURCE_DIR}/thtexenc.cxx
     ${CMAKE_SOURCE_DIR}/thtexfonts.cxx
     ${CMAKE_SOURCE_DIR}/thtf.cxx
     ${CMAKE_SOURCE_DIR}/thtfangle.cxx
@@ -220,5 +224,4 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thwarppt.cxx
     ${CMAKE_SOURCE_DIR}/extern/quickhull/QuickHull.cpp
     ${CMAKE_SOURCE_DIR}/extern/img.c
-    ${POLY2TRI_SRCS}
 )

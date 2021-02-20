@@ -3,14 +3,27 @@ include(cmake/PreventInSourceBuilds.cmake)
 
 project(Therion)
 set(CMAKE_CXX_STANDARD 14)
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
 include(cmake/ECMEnableSanitizers.cmake)
 
+# strip binaries in release build
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+
 set(ECM_ENABLE_SANITIZERS "" CACHE STRING 
     "Enable runtime sanitizers, available options: address,memory,thread,leak,undefined." )
 set(ENABLE_THDEBUG OFF CACHE BOOL "Print debug information.")
+
+option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy." OFF)
+if (ENABLE_CLANG_TIDY)
+    find_program(CLANG_TIDY_EXECUTABLE clang-tidy)
+    if (CLANG_TIDY_EXECUTABLE)
+        set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE};--quiet")
+    endif()
+endif()
 
 # determine platform
 if(UNIX AND NOT APPLE)
@@ -26,7 +39,7 @@ set_source_files_properties(
     ${CMAKE_BINARY_DIR}/thchencdata.h
     ${CMAKE_BINARY_DIR}/thchencdata.cxx
     ${CMAKE_BINARY_DIR}/thlangdata.h
-    ${CMAKE_BINARY_DIR}/thlangdata.cxx
+    ${CMAKE_BINARY_DIR}/thlangdatafields.h
     ${CMAKE_BINARY_DIR}/thmpost.h 
     ${CMAKE_BINARY_DIR}/thmpost.cxx
     ${CMAKE_BINARY_DIR}/thsymbolsets.h
@@ -40,8 +53,23 @@ set_source_files_properties(
     PROPERTIES GENERATED TRUE 
 )
 
+# copy given files to the build dir
+function(therion_copy_files)
+    foreach(FILE_NAME ${ARGV})
+        configure_file(${FILE_NAME} ${FILE_NAME} COPYONLY)
+    endforeach()
+endfunction()
+
+# make lists of names with source and binary dir prefixes
+macro(therion_make_files_lists LIST_NAME)
+    foreach(FILE_NAME ${ARGN})
+        list(APPEND ${LIST_NAME}_SRC ${CMAKE_CURRENT_SOURCE_DIR}/${FILE_NAME})
+        list(APPEND ${LIST_NAME}_BIN ${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME})
+    endforeach()
+endmacro()
+
 # copy files needed by some build steps
-file(COPY thcsdata.tcl thsymbolsetfont.txt DESTINATION ${CMAKE_BINARY_DIR})
+therion_copy_files(thcsdata.tcl thsymbolsetfont.txt .clang-tidy)
 
 # generate thcsdata sources
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thcsdata.h
@@ -70,11 +98,21 @@ add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbols
 execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+# generate InnoSetup config file
+if (WIN32)
+    configure_file(innosetup.ini.in innosetup.ini)
+endif()
+
+# updates thlibrarydata.cxx
+add_custom_target(library 
+    ${CMAKE_COMMAND} -D THERION=$<TARGET_FILE:therion> -P cmake/Library.cmake
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
 
 # therion lib
 add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
 target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern")
-target_link_libraries(therion-common PUBLIC PkgConfig::PROJ PRIVATE loch-common)
+target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt shp poly2tri PRIVATE loch-common)
 target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
 add_dependencies(therion-common 
     generate_thsymbolsetlist
@@ -84,12 +122,6 @@ add_dependencies(therion-common
     generate_thchencdata
     generate_thcsdata
 )
-if (BUILD_SHAPELIB)
-    target_include_directories(therion-common PUBLIC extern/shapelib)
-    target_link_libraries(therion-common PUBLIC shp)
-else()
-    target_link_libraries(therion-common PUBLIC PkgConfig::SHAPELIB)
-endif()
 
 # therion executable
 add_executable(therion therion-main.cxx)
@@ -98,14 +130,15 @@ target_link_libraries(therion PUBLIC therion-common)
 install(TARGETS therion RUNTIME DESTINATION bin)
 
 # unit tests
-add_executable(utest utest-proj.cxx utest-main.cxx)
-target_link_libraries(utest PUBLIC therion-common)
+add_executable(utest utest-proj.cxx utest-icase.cxx utest-main.cxx)
+target_link_libraries(utest PUBLIC therion-common Catch2::Catch2)
 enable_testing()
 if (NOT WIN32)
     add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 endif()
 
 # add subdirectories to the build
+add_subdirectory(extern/poly2tri)
 add_subdirectory(mpost)
 add_subdirectory(thchencdata)
 add_subdirectory(tex)

@@ -88,7 +88,7 @@ void thendsurvey::set(thcmd_option_desc cod, char ** args, int argenc, unsigned 
       if (th_is_keyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        ththrow(("invalid keyword -- %s", *args));
+        ththrow("invalid keyword -- {}", *args);
       break;
       
     default:
@@ -102,12 +102,6 @@ void thendsurvey::self_print_properties(FILE * outf)
 {
   thdataobject::self_print_properties(outf);
   fprintf(outf,"\nthendsurvey:\n");
-}
-
-
-void thendsurvey::self_delete()
-{
-  delete this;
 }
 
 

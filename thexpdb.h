@@ -74,8 +74,8 @@ enum {
  */
  
 static const thstok thtt_expdb_fmt[] = {
-  {"sql", TT_EXPDB_FMT_SQL},
   {"csv", TT_EXPDB_FMT_CSV},
+  {"sql", TT_EXPDB_FMT_SQL},
   {NULL, TT_EXPDB_FMT_UNKNOWN}
 };
 
@@ -103,28 +103,28 @@ class thexpdb : public thexport {
    * Parse model export options.
    */
    
-  virtual void parse_options(int & argx, int nargs, char ** args);
+  void parse_options(int & argx, int nargs, char ** args) override;
 
   
   /**
    * Dump object into file.
    */
    
-  virtual void dump_body(FILE * xf);
+  void dump_body(FILE * xf) override;
 
 
   /**
    * Dump object into file.
    */
    
-  virtual void dump_header(FILE * xf);
+  void dump_header(FILE * xf) override;
   
 
   /**
    * Make export.
    */
    
-  virtual void process_db(class thdatabase * dbp);
+  void process_db(class thdatabase * dbp) override;
   
 };
 

@@ -457,7 +457,10 @@ void lxGLCanvas::SetColorMask()
 bool lxGLCanvas::CameraAutoRotate() {
   if (this->m_sCameraAutoRotate)	{
     this->setup->RotateCameraF(this->m_sCameraAutoRotateAngle);
+    auto start = this->m_sCameraAutoRotateSWatch.Time();
     this->ForceRefresh();
+    auto elapsed = this->m_sCameraAutoRotateSWatch.Time() - start;
+    if (elapsed < 10) wxMilliSleep(10 - elapsed);
     this->m_sCameraAutoRotateCounter++;
     if (this->m_sCameraAutoRotateSWatch.Time() > 1000) {  
       ((wxStaticText *)(this->frame->m_viewpointSetupDlg->FindWindow(LXVSTP_RENSPEED)))->SetLabel(
@@ -471,7 +474,7 @@ bool lxGLCanvas::CameraAutoRotate() {
 }
 
 
-void lxGLCanvas::OnIdle(wxIdleEvent& WXUNUSED(event))	{
+void lxGLCanvas::OnIdle(wxIdleEvent& event)	{
 
   // fix bug with opening file before everything is initialized
   if (!this->frame->m_fileToOpen.IsEmpty()) {
@@ -482,16 +485,17 @@ void lxGLCanvas::OnIdle(wxIdleEvent& WXUNUSED(event))	{
     return;
   }
 
-
   switch (this->m_sMoveLock)	{
     case LXGLCML_PANX:
     case LXGLCML_PANX2Y:
     case LXGLCML_PANY:
       break;		
     default:
-      this->CameraAutoRotate();
+      if (this->CameraAutoRotate())
+    	  event.RequestMore();
       break;
   }
+  
 }
 
 
@@ -1010,6 +1014,8 @@ void lxGLCanvas::RenderCenterline() {
     spla = 0.0;
     splm = 1.0;
     psh = &(this->data->shots[id]);
+    if (!psh->m_selected)
+    	continue;
     if (psh->invisible)
       continue;
     if (psh->splay) {
@@ -1070,6 +1076,7 @@ void lxGLCanvas::ProjectStations() {
   lxDataStation * st;
   for(id = 0; id < nid; id++) {
     st = &(this->data->stations[id]);
+    if (!st->m_selected) continue;
     this->ProjectPoint(lxShiftVecPXYZ(&(st->pos), this->shift), &(st->m_screen_x), &(st->m_screen_y), &(st->m_screen_z));
   }
 }
@@ -1992,7 +1999,7 @@ void lxGLCanvas::OSCDestroy()
 }
 
 
-struct _TRctx * lxGLCanvas::TRCGetContext()
+struct TRctx * lxGLCanvas::TRCGetContext()
 {
   if (this->m_TRC != NULL)
     return this->m_TRC->m_ctx;

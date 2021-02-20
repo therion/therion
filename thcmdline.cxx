@@ -30,13 +30,12 @@
 #include "therion.h"
 #include "thlogfile.h"
 #include "thconfig.h"
-//#include <getopt.h>
 #include "thtmpdir.h"
 
 #ifdef THMSVC
 #define __STDC__ 1
 #endif
-#include "extern/getopt.h"
+#include <getopt.h>
 
 
 thcmdline::thcmdline()
@@ -84,6 +83,8 @@ void thcmdline::process(int argc, char * argv[])
     {"print-xtherion-src",no_argument,NULL,THPS_XTHERION_SRC},
     {"use-extern-libs",no_argument,NULL,THPS_EXTERN_LIBS},
     {"reproducible-output",no_argument,NULL,THPS_REPRODUCIBLE},
+    {"generate-output-crc",no_argument,NULL,THPS_CRC_GENERATE},
+    {"verify-output-crc",no_argument,NULL,THPS_CRC_VERIFY},
     {"version",no_argument,NULL,'v'},
     {"bezier",no_argument,NULL,'b'},
     {NULL, 0, NULL, 0}
@@ -142,6 +143,16 @@ void thcmdline::process(int argc, char * argv[])
       case THPS_REPRODUCIBLE:
         thcfg.reproducible_output = true;
         break;
+        
+      case THPS_CRC_GENERATE:
+        thcfg.reproducible_output = true;
+        thcfg.crc_generate = true;
+        break;
+
+      case THPS_CRC_VERIFY:
+        thcfg.reproducible_output = true;
+        thcfg.crc_verify = true;
+        break;
 
       //case 'u':
       //  thcfg.set_file_state(THCFG_UPDATE);
@@ -190,6 +201,10 @@ void thcmdline::process(int argc, char * argv[])
       case THPS_EXTERN_LIBS:
         this->extern_libs = true;
         break;
+        
+      default:
+    	therror(("unknown command line option"));
+		break;
         
     }
       

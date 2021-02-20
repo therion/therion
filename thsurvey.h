@@ -32,7 +32,9 @@
 #include "thdataobject.h"
 #include "thtfpwf.h"
 #include "thperson.h"
+#include "thdata.h"
 #include <map>
+#include <memory>
 
 /**
  * survey command options tokens.
@@ -113,7 +115,8 @@ class thsurvey : public thdataobject {
 
   unsigned level;
     
-  class thdata * data;
+  std::unique_ptr<class thdata> tmp_data_holder;
+  thdata * data;
   
   void parse_declination(char * str);
   
@@ -155,42 +158,42 @@ class thsurvey : public thdataobject {
    * Return class identifier.
    */
   
-  virtual int get_class_id();
+  int get_class_id() override;
   
   
   /**
    * Return true, if son of given class.
    */
   
-  virtual bool is(int class_id);
+  bool is(int class_id) override;
   
   
   /**
    * Return number of command arguments.
    */
    
-  virtual int get_cmd_nargs();
+  int get_cmd_nargs() override;
   
   
   /**
    * Return command end option.
    */
    
-  virtual const char * get_cmd_end();
+  const char * get_cmd_end() override;
   
   
   /**
    * Return command name.
    */
    
-  virtual const char * get_cmd_name();
+  const char * get_cmd_name() override;
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
+  thcmd_option_desc get_cmd_option_desc(const char * opts) override;
   
   
   /**
@@ -201,30 +204,21 @@ class thsurvey : public thdataobject {
    * @param argenc Arguments encoding.
    */
    
-  virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
+  void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline) override;
 
 
-  /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
-  
-  
   /**
    * Get context for object.
    */
    
-  virtual int get_context();
+  int get_context() override;
 
   
   /**
    * Return class name.
    */
    
-  virtual const char * get_class_name() {return "thsurvey";};
+  const char * get_class_name() override {return "thsurvey";};
 
 
   /**
@@ -245,7 +239,7 @@ class thsurvey : public thdataobject {
    * Print object contents into file.
    */
    
-  virtual void self_print_properties(FILE * outf);
+  void self_print_properties(FILE * outf) override;
   
   
   /**

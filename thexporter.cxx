@@ -61,7 +61,7 @@ void thexporter::assign_config(class thconfig * cptr) {
 void thexporter::parse_system(char * system_cmd)
 {
   if (strlen(system_cmd) == 0)
-    ththrow(("empty system command not allowed"))
+    ththrow("empty system command not allowed");
   thexpsys * xp;
   xp = new thexpsys;
   xp->src.name = thdb.strstore(thcfg.get_cfg_file()->get_cif_name(),true);
@@ -78,7 +78,7 @@ void thexporter::parse_export(int nargs, char ** args) {
   int expmode; 
 
   if (nargs < 1)
-    ththrow(("not enough export arguments"))
+    ththrow("not enough export arguments");
   expmode = thmatch_token(args[0], thtt_exporter);
   switch (expmode) {
     case TT_EXP_MODEL:
@@ -101,7 +101,7 @@ void thexporter::parse_export(int nargs, char ** args) {
       xp->export_mode = expmode;
       break;
     default:
-      ththrow(("unsupported export type -- %s", args[0]))
+      ththrow("unsupported export type -- {}", args[0]);
   }
   
   xp->src.name = thdb.strstore(thcfg.get_cfg_file()->get_cif_name(),true);
@@ -165,6 +165,28 @@ void thexporter::export_db(class thdatabase * dp)
         break;
     }
   }  
+
+  // check crc if approrpiate
+  if (thcfg.crc_generate || thcfg.crc_verify) {
+	  bool ok(true), cok(true);
+	  if (thcfg.crc_generate)
+		  thprintf("generating");
+	  else
+		  thprintf("checking");
+	  thprintf(" CRC32 of all output files ... \n");
+	  for(ii = this->xlist.begin(); ii != this->xlist.end(); ii++) {
+		  cok = (*ii)->check_crc();
+		  ok = ok && cok;
+		  for(auto fi = (*ii)->output_files.begin(); fi != (*ii)->output_files.end(); fi++) {
+			  thprintf("%s ... %s\n", fi->fnm.c_str(), fi->res.c_str());
+		  }
+
+	  }
+	  thprintf("done.\n");
+	  if (!ok) therror(("CRC32 checks not passed.\n"));
+  }
+
+  
 }
 
 bool thexporter_quick_map_export;

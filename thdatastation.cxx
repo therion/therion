@@ -42,9 +42,3 @@ bool thdatastation::is(int class_id)
   else
     return thdataobject::is(class_id);
 }
-
-void thdatastation::self_delete()
-{
-  delete this;
-}
-

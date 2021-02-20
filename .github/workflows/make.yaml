@@ -19,6 +19,7 @@ jobs:
           make
           make tests
           make samples
+          sudo make install
           ./therion --print-symbols
   mac:
     runs-on: ${{ matrix.os }}
@@ -31,7 +32,9 @@ jobs:
         run: |
           brew update
           brew tap homebrew/core
-          brew unlink python@3.8
+          brew unlink gcc@8
+          brew unlink gcc@9
+          rm /usr/local/bin/2to3
           brew install wxmac vtk proj
       - name: compile therion
         run: |
@@ -47,7 +50,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
-          sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt bionic main'
+          sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt focal main'
           sudo apt -qq update
           sudo apt install -y mxe-i686-w64-mingw32.static-binutils mxe-i686-w64-mingw32.static-bzip2 mxe-i686-w64-mingw32.static-expat mxe-i686-w64-mingw32.static-freetype-bootstrap mxe-i686-w64-mingw32.static-gcc mxe-i686-w64-mingw32.static-gettext mxe-i686-w64-mingw32.static-glib mxe-i686-w64-mingw32.static-harfbuzz mxe-i686-w64-mingw32.static-jpeg mxe-i686-w64-mingw32.static-libiconv mxe-i686-w64-mingw32.static-libpng mxe-i686-w64-mingw32.static-tiff mxe-i686-w64-mingw32.static-vtk mxe-i686-w64-mingw32.static-wxwidgets mxe-i686-w64-mingw32.static-xz mxe-i686-w64-mingw32.static-zlib mxe-i686-w64-mingw32.static-proj
       - name: compile therion
@@ -64,7 +67,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
-          sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt bionic main'
+          sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt focal main'
           sudo apt -qq update
           sudo apt install -y mxe-x86-64-w64-mingw32.static-binutils mxe-x86-64-w64-mingw32.static-bzip2 mxe-x86-64-w64-mingw32.static-expat mxe-x86-64-w64-mingw32.static-freetype-bootstrap mxe-x86-64-w64-mingw32.static-gcc mxe-x86-64-w64-mingw32.static-gettext mxe-x86-64-w64-mingw32.static-glib mxe-x86-64-w64-mingw32.static-harfbuzz mxe-x86-64-w64-mingw32.static-jpeg mxe-x86-64-w64-mingw32.static-libiconv mxe-x86-64-w64-mingw32.static-libpng mxe-x86-64-w64-mingw32.static-tiff mxe-x86-64-w64-mingw32.static-vtk mxe-x86-64-w64-mingw32.static-wxwidgets mxe-x86-64-w64-mingw32.static-xz mxe-x86-64-w64-mingw32.static-zlib mxe-x86-64-w64-mingw32.static-proj
       - name: compile therion
@@ -91,7 +94,7 @@ jobs:
         with:
           msystem: ${{ matrix.msystem }}
           update: true
-          install: mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-tcl mingw-w64-${{ matrix.arch }}-jbigkit
+          install: mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-pkgconf mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-tcl mingw-w64-${{ matrix.arch }}-jbigkit
       - name: compile therion
         env:
           WD: D:/a/_temp/msys/msys64/usr/bin/

@@ -272,11 +272,13 @@ available translations, see |thlang/texts.txt| file.
     map-header-bg <on/off>
     map-image <x> <y> <n/s/e/w/ne/nw/se/sw/center> <filename>
     statistics <explo/topo/carto/copyright all/off/number>
-               <explo/topo-length on/off>
+               <explo/topo-length on/hide/off>
+               <carto/copyright-count on/hide/off>
     scale-bar <length> <units>
     survey-level <N/all>
     language <xx[_YY]>
-    colour/color <item> <colour>
+    colo[u]r-model <cmyk/rgb/grayscale>
+    colo[u]r <item> <colour>
     debug <on/all/first/second/scrap-names/station-names/off>
     doc-author <string>
     doc-keywords <string>
@@ -378,6 +380,29 @@ endlayout|
     |6 7 8 10 14| for scales upto 1:500 and
     |5 6 7 8 10| for scales smaller than 1:500.
 
+
+\iffulloutput
+\midinsert
+%  \ifx\pdfoutput\undefined\else
+%    \pdfximage {pic/page.pdf}%
+%  \fi
+%  \vbox to 482bp{\centerline{\hbox to 400bp{%
+%    \ifx\pdfoutput\undefined
+%      \epsfbox{mp/page.1}%
+%    \else
+%      \rlap{\pdfrefximage\pdflastximage}%
+%      \convertMPtoPDF{mp/page.1}{1}{1}
+%    \fi
+%    \hss}}\vss
+%  }
+  \vbox to 482bp{\centerline{\hbox to 400bp{%
+      \rlap{\pic{page.pdf}}%
+      \MPpic{page.1}
+    \hss}}\vss
+  }
+\endinsert
+\fi
+
   {\it page layout related:}\Nobreak
 
   * |size <width> <height> <units>| = set map size in the atlas mode. If
@@ -470,16 +495,44 @@ endlayout|
   * |statistics <explo/topo-length on/hide/off>| = display some basic
     statistics; if set to off, team members are sorted \NEW{5.4}alphabetically;
     otherwise according to their contribution to exploration and surveying
-    (M, A; default: |off|)
+    (M, A; default: |hide|)
+  * |statistics <carto/copyright-count on/hide/off>| = \NEW{5.6} display number of scraps
+    for given author/copyright string; if set to off, items are sorted 
+    alphabetically; otherwise by number of scraps
+    (M, A; default: |hide|)
   * |scale-bar <length> <units>| = set the length of the scale-bar (M, A)
   * |language <xx[_YY]>| = set output language.
     Available languages are listed on the copyright page.
     See the {\it Appendix} if
     you want to  add or customize translations. (M, A)
+  * |colo[u]r-model <cmyk/rgb/grayscale>| = select the output colour model (M, A;
+    default: |cmyk|).
+
+    The CMYK colour model is intended for printing. Black overprint is used
+    for the best appearance of black lines and texts. The hue of other colours may
+    vary depending on the type or settings of the RIP or printer driver.
+
+    The RGB colour model is intended for screen or multimedia projector presentation.
+    If used for printing, the result will depend on the colour management
+    settings and also on particular colour, as not all RGB colours can be represented
+    on printer.
+
+    The grayscale colour model is meant for printing on B\&W printers.
+
+    If input colours (|lookup|, |colour| in the |layout|) do not match the output
+    colour model (e.g. only RGB is defined in the |lookup| and CMYK selected as the |colour-model|),
+    they will be converted to the output model.
+  * |colo[u]r-profile <cmyk/rgb/grayscale> <filename>| = assign an ICC profile to colours
+    specified in the given colour model. ICC profiles are applied only to drawings,
+    not to embedded raster images like sketches and surface bitmaps. (M, A)
   * |colo[u]r <item> <colour>| = customize colour for special map
     items (map-fg, map-bg, preview-above, preview-below, label).
     Colour range is 0--100 for grayscale, [0--100 0--100 0--100] triplet
-    for RGB colours.
+    for RGB colours and [0--100 0--100 0--100 0--100] quadruplet
+    for CMYK colours.\[Note, that not all colour combinations are valid;
+    e.g. no printer will print CMYK [100 100 100 100\char93.
+    The maximum ink coverage ($C+M+Y+K$) may be around 240 or 300,
+    depending on the printer.]
 
     For |map-fg|, you can use |altitude|, |scrap| or |map| as colours.
     In this case the map is coloured according to altitude, scraps or maps.
@@ -516,6 +569,7 @@ endlayout|
   * |endcode| = should end the TeX\ and \MP\ sections
 \endcomopt
 
+
 \subsubchapter `lookup'.
 
 \description
@@ -526,7 +580,7 @@ endlayout|
 \syntax |lookup <type>[:<index>] [-title "custom title text"]
   <parameter(s)> [colour] ["text in legend"]
   ...
-endlayout|
+endlookup|
 \endsyntax
 
 \arguments
@@ -538,7 +592,9 @@ endlayout|
   * |<parameter>| = the thing, you want to set the color for, e.g. an altitude
         with type |altitude|. May be distinct values or (if appropriate) bands.
 
-  * |[colour]| = RGB triplet. Use empty brackets (|[]|) if you want Therion to
+  * |[colour]| = grayscale value, RGB triplet, CMYK quadruplet or a combination
+    of eight values (RGB, grayscale, CMYK).
+        Use empty brackets (|[]|) if you want Therion to
         use it’s default colour palette together with a text label.
 
   * |[text in legend]| = some optional text to show in the legend.
@@ -564,28 +620,6 @@ text is omitted, then the default will display the range, ie 1600 m - 1500 m
       [1800 1900] [] "cave floor 2"
     endlookup|
 \endexample
-
-\iffulloutput
-\midinsert
-%  \ifx\pdfoutput\undefined\else
-%    \pdfximage {pic/page.pdf}%
-%  \fi
-%  \vbox to 482bp{\centerline{\hbox to 400bp{%
-%    \ifx\pdfoutput\undefined
-%      \epsfbox{mp/page.1}%
-%    \else
-%      \rlap{\pdfrefximage\pdflastximage}%
-%      \convertMPtoPDF{mp/page.1}{1}{1}
-%    \fi
-%    \hss}}\vss
-%  }
-  \vbox to 482bp{\centerline{\hbox to 400bp{%
-      \rlap{\pic{page.pdf}}%
-      \MPpic{page.1}
-    \hss}}\vss
-  }
-\endinsert
-\fi
 
 \subsubchapter `setup3d'.
 
@@ -757,7 +791,9 @@ or
         [--print-symbols]
         [--print-tex-encodings]
         [--print-xtherion-src]
-        [--reproducible-output]|
+        [--reproducible-output]
+        [--generate-output-crc]
+        [--verify-output-crc]|
 
 \penalty-200
 \arguments
@@ -825,6 +861,15 @@ or
         Produce reproducible output PDF and SVG files.
         No volatile information is included (e.g. creation date or software
         version).
+        
+* |--generate-output-crc| =
+        Generate `.crc` file with CRC32 checksum for each output file.
+        With reproducible output, calculate and save checksum file.
+
+* |--verify-output-crc| =
+        Verify if output file was not changed.
+        Generate reproducible output, calculate CRC32 checksum and check
+        it against one saved in `.crc` file.
 
 * |-s <source-file>| =
         Set the name of the source file.

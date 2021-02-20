@@ -40,30 +40,22 @@ thsketch::thsketch()
   this->m_warp = NULL;
 }
 
-
-thsketch::~thsketch()
-{
-  if (this->m_warp != NULL)
-    this->m_warp->self_delete();
-}
-
-
 thpic * thsketch::morph(double scale)
 {
   if (this->m_warp == NULL) {
     switch (thcfg.sketch_warp) {
       case THSKETCH_WARP_LINEAR:
-        this->m_warp = new thwarplin;
+        this->m_warp = std::make_unique<thwarplin>();
         break;
       case THSKETCH_WARP_IDPOINT:
-        this->m_warp = new thwarpinvdist;
+        this->m_warp = std::make_unique<thwarpinvdist>();
         break;
       case THSKETCH_WARP_IDLINE:
         //this->m_warp = new thwarpinvdistln;
-        this->m_warp = new thwarpfastinvdistln;
+        this->m_warp = std::make_unique<thwarpfastinvdistln>();
         break;
       default:
-        this->m_warp = new thwarpp;
+        this->m_warp = std::make_unique<thwarpp>();
     }
   }
   return this->m_warp->morph(this, scale);

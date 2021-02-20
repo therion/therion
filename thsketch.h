@@ -31,8 +31,10 @@
 
 #include <list>
 #include <map>
+#include <memory>
 
 #include "thpic.h"
+#include "thwarp.h"
 
 enum {
   THSKETCH_WARP_UNKNOWN,
@@ -51,13 +53,11 @@ struct thsketch {
   thpic m_pic;  ///< Picture.
   double m_x;  //!< sketch points X offset
   double m_y;  //!< sketch points Y offset
-  class thwarp * m_warp;  ///< Warping class.
+  std::unique_ptr<thwarp> m_warp;  ///< Warping class.
   class thscrap * m_scrap;  ///< Sketch scrap.
 
   thsketch();
 
-  ~thsketch();
-   
   thpic * morph(double scale);
   
 };

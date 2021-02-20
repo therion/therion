@@ -38,54 +38,34 @@
 #include "thtexfonts.h"
 #include <errno.h>
 #include <stdlib.h>
-#include <math.h>
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
-
-#ifdef HAVE_ROUND
-extern double round(double); /* prototype is often missing... */
-# define thround round
-#else
-static double
-thround(double x) {
-   if (x >= 0.0) return floor(x + 0.5);
-   return ceil(x - 0.5);
-}
-#endif
-
+#include <cmath>
+#include "loch/icase.h"
 
 thmbuffer thparse_mbuff;
 
-int thmatch_stok(const char *buffer, const thstok *tab, int tab_size)
+template <typename Equality, typename Ordering>
+int binary_search_token(const std::string& token, const thstok *tab, const std::size_t tab_size, Equality equality, Ordering ordering)
 {
-  int a = 0, b = tab_size - 1, c, r;
-  while (a <= b) {
-    c = unsigned((a + b) / 2);
-    r = strcmp(tab[c].s, buffer);
-    if (r == 0) return tab[c].tok;
-    if (r < 0)
-      a = c + 1;
-    else
-      b = c - 1;
-   }
-   return tab[tab_size].tok; /* no match */
+  // comparator between thstok and string
+  auto compare_thstok = [&ordering](const thstok& a, const std::string& b){ return ordering(a.s, b); };
+  // binary search, we leave out the last item
+  auto it = std::lower_bound(tab, tab + tab_size - 1, token, compare_thstok);
+  // if bound was found we also need to compare for equality
+  if (it != tab + tab_size - 1 && equality(token, it->s))
+    return it->tok;
+  // last item contains default value
+  return tab[tab_size - 1].tok;
+}
+
+int thmatch_stok(const std::string& token, const thstok *tab, const std::size_t tab_size)
+{
+  return binary_search_token(token, tab, tab_size, std::equal_to<std::string>(), std::less<std::string>());
 }
 
 
-int thcasematch_stok(const char *buffer, const thstok *tab, int tab_size)
+int thcasematch_stok(const std::string& token, const thstok *tab, const std::size_t tab_size)
 {
-  int a = 0, b = tab_size - 1, c, r;
-  while (a <= b) {
-    c = unsigned((a + b) / 2);
-    r = strcasecmp(tab[c].s, buffer);
-    if (r == 0) return tab[c].tok;
-    if (r < 0)
-      a = c + 1;
-    else
-      b = c - 1;
-   }
-   return tab[tab_size].tok; /* no match */
+  return binary_search_token(token, tab, tab_size, icase_equals, icase_less_than);
 }
 
 
@@ -819,10 +799,10 @@ void thdecode_utf2tex(thbuffer * dest, const char * src)
 void thdecode_sql(thbuffer * dest, const char * src)
 {
 
-  size_t srcln = strlen(src), srcx = 0;
+  size_t srcln, srcx = 0;
   unsigned char * srcp, * dstp;
 //  unsigned num;
-  if ((src == NULL) || (srcln == 0)) {
+  if ((src == NULL) || ((srcln = strlen(src)) == 0)) {
     *dest = "NULL";
     return;
   }
@@ -937,13 +917,13 @@ void thparse_altitude(const char * src, double & altv, double & fixv)
       ux = 1;
       break;
     default:
-      ththrow(("invalid altitude specification -- %s",src))
+      ththrow("invalid altitude specification -- {}",src);
   }
 
   if (parsev) {
     thparse_double(sv,altv,pars[0]);
     if ((sv != TT_SV_NUMBER) && (sv != TT_SV_NAN))
-      ththrow(("invalid altitude value -- %s", pars[0]));
+      ththrow("invalid altitude value -- {}", pars[0]);
     if (sv == TT_SV_NAN)
       altv = 0.0;
   }
@@ -980,16 +960,16 @@ void thparse_image(const char * fname, double & width, double & height, double &
       ydpi = 300.0;
       switch (picth[13]) {
         case 1:
-          xdpi = thround(double(picth[14] * 256.0 + picth[15]));
-          ydpi = thround(double(picth[16] * 256.0 + picth[17]));
+          xdpi = std::round(double(picth[14] * 256.0 + picth[15]));
+          ydpi = std::round(double(picth[16] * 256.0 + picth[17]));
           break;
         case 2:
-          xdpi = thround(double(picth[14] * 256 + picth[15]) * 2.54);
-          ydpi = thround(double(picth[16] * 256 + picth[17]) * 2.54);
+          xdpi = std::round(double(picth[14] * 256 + picth[15]) * 2.54);
+          ydpi = std::round(double(picth[16] * 256 + picth[17]) * 2.54);
           break;
       }
       if (xdpi != ydpi) {
-        ththrow(("X and Y image resolution not equal -- %s", fname));
+        ththrow("X and Y image resolution not equal -- {}", fname);
       }
       dpi = xdpi;
       if (dpi < 1.0) {
@@ -1013,15 +993,15 @@ void thparse_image(const char * fname, double & width, double & height, double &
         len = 256 * (size_t) getc(pictf) + (size_t) getc(pictf);
         if ((marker == 0xC0) || (marker == 0xC1)) {
           getc(pictf);
-          height = thround(double(getc(pictf)) * 256.0 + double(getc(pictf)));
-          width = thround(double(getc(pictf)) * 256.0 + double(getc(pictf)));
+          height = std::round(double(getc(pictf)) * 256.0 + double(getc(pictf)));
+          width = std::round(double(getc(pictf)) * 256.0 + double(getc(pictf)));
           break;
         } 
         fseek(pictf, len - 2, SEEK_CUR);
       }
       fclose(pictf);
       if ((height < 0.0) || (width < 0.0))
-        ththrow(("unable to determine image size -- %s", fname));
+        ththrow("unable to determine image size -- {}", fname);
     } else if (
       (picth[0] == 0x89) && (picth[1] == 0x50) &&
       (picth[2] == 0x4E) && (picth[3] == 0x47) &&
@@ -1035,11 +1015,11 @@ void thparse_image(const char * fname, double & width, double & height, double &
           xdpi = double(scan[4] * 0x1000000 + scan[5] * 0x10000 + scan[6] * 0x100 + scan[7]);
           ydpi = double(scan[8] * 0x1000000 + scan[9] * 0x10000 + scan[10] * 0x100 + scan[11]);
           if (xdpi != ydpi) {
-            ththrow(("X and Y image resolution not equal -- %s", fname));
+            ththrow("X and Y image resolution not equal -- {}", fname);
           }
           switch (scan[12]) {
             case 1:
-              xdpi = thround(xdpi * 0.0254);
+              xdpi = std::round(xdpi * 0.0254);
               break;
             default:
               xdpi = 300.0;
@@ -1049,13 +1029,13 @@ void thparse_image(const char * fname, double & width, double & height, double &
           break;
         }
       }      
-      width = thround(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
-      height = thround(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
+      width = std::round(double(picth[16] * 0x1000000 + picth[17] * 0x10000 + picth[18] * 0x100 + picth[19]));
+      height = std::round(double(picth[20] * 0x1000000 + picth[21] * 0x10000 + picth[22] * 0x100 + picth[23]));
     } else {
-      ththrow(("file format not supported -- %s", fname))
+      ththrow("file format not supported -- {}", fname);
     }
   } else {
-    ththrow(("file not found -- %s", fname))
+    ththrow("file not found -- {}", fname);
   }
 
 #ifdef THDEBUG
@@ -1089,20 +1069,29 @@ void thHSV2RGB(double H, double S, double V, double & R, double & G, double & B)
 }
 
 
-void thset_color(int color_map, double index, double total, double & R, double & G, double & B) {
+void thset_color(int color_map, double index, double total, thlayout_color & clr) {
+  if (index < 0.0) index = 0.0;
+  if (index > total) index = total;
   switch (color_map) {
     default:
-      if (total > 0)
-        thHSV2RGB(index / total * 0.833333, 1.0, 1.0, R, G, B);
-      else {
-        R = 1.0;
-        G = 1.0;
-        B = 1.0;
+      if (total > 0) {
+        thHSV2RGB(index / total * 0.833333, 1.0, 1.0, clr.R, clr.G, clr.B);
+        clr.W = 0.95 - 0.9 * (index / total);
+      } else {
+        clr.R = 1.0;
+        clr.G = 1.0;
+        clr.B = 1.0;
+        clr.W = 1.0;
       }
   }
-  R = double(int(100 * R)) / 100.0;
-  G = double(int(100 * G)) / 100.0;
-  B = double(int(100 * B)) / 100.0;
+  clr.R = double(int(100 * clr.R)) / 100.0;
+  clr.G = double(int(100 * clr.G)) / 100.0;
+  clr.B = double(int(100 * clr.B)) / 100.0;
+  clr.W = double(int(100 * clr.W)) / 100.0;
+  clr.model = TT_LAYOUTCLRMODEL_RGB | TT_LAYOUTCLRMODEL_GRAY;
+  clr.fill_missing_color_models();
+  clr.K = 0.0;
+  clr.model |= TT_LAYOUTCLRMODEL_CMYK;
 }
 
 

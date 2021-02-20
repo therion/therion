@@ -125,7 +125,7 @@ class tharea : public th2ddataobject {
   thdb2dab * first_line,  ///< First border line.
     * last_line;  ///< Last border line.
 
-  class thline * m_outline_line;
+  std::unique_ptr<class thline> m_outline_line;
 
   void insert_border_line(int npars, char ** pars);  ///< Insert border line.
 
@@ -137,61 +137,53 @@ class tharea : public th2ddataobject {
 
   tharea();
 
-
-  /**
-   * Standard destructor.
-   */
-
-  ~tharea();
-
-
   /**
    * Return class identifier.
    */
 
-  virtual int get_class_id();
+  int get_class_id() override;
 
 
   /**
    * Return class name.
    */
 
-  virtual const char * get_class_name() {return "tharea";};
+  const char * get_class_name() override {return "tharea";};
 
 
   /**
    * Return true, if son of given class.
    */
 
-  virtual bool is(int class_id);
+  bool is(int class_id) override;
 
 
   /**
    * Return number of command arguments.
    */
 
-  virtual int get_cmd_nargs();
+  int get_cmd_nargs() override;
 
 
   /**
    * Return command name.
    */
 
-  virtual const char * get_cmd_name();
+  const char * get_cmd_name() override;
 
 
   /**
    * Return command end option.
    */
 
-  virtual const char * get_cmd_end();
+  const char * get_cmd_end() override;
 
 
   /**
    * Return option description.
    */
 
-  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
+  thcmd_option_desc get_cmd_option_desc(const char * opts) override;
 
 
   /**
@@ -202,37 +194,28 @@ class tharea : public th2ddataobject {
    * @param argenc Arguments encoding.
    */
 
-  virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
-
-
-  /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-
-  virtual void self_delete();
+  void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline) override;
 
 
   /**
    * Print object properties.
    */
 
-  virtual void self_print_properties(FILE * outf);
+  void self_print_properties(FILE * outf) override;
 
 
   /**
    * Export to metapost file.
    */
 
-  virtual bool export_mp(class thexpmapmpxs * out);
+  bool export_mp(class thexpmapmpxs * out) override;
 
 
   void parse_type(char * tstr);  ///< Parse area type.
 
   void parse_subtype(char * ststr);  ///< Parse area subtype.
 
-  virtual void start_insert();
+  void start_insert() override;
 
 
 };

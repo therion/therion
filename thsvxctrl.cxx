@@ -321,7 +321,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   const char * svxfn = thtmp.get_file_name("data.svx");
   this->svxf = fopen(svxfn,"w");
   if (svxf == NULL)
-    ththrow(("can't open survex file for output -- %s", svxfn))
+    ththrow("can't open survex file for output -- {}", svxfn);
 
   this->meridian_convergence = thcfg.get_outcs_convergence();
   this->lastleggridmccs = TTCS_LOCAL;
@@ -348,7 +348,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
       
-      dp = (thdata *)(*obi);
+      dp = (thdata *)(*obi).get();
       
       // scan data shots
       lei = dp->leg_list.begin();
@@ -417,7 +417,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   this->transcript_log_file(dbp, thtmp.get_file_name("data.log"));
 
   if (retcode != EXIT_SUCCESS)
-    ththrow(("cavern exit code -- %d", retcode))
+    ththrow("cavern exit code -- {}", retcode);
   else
     this->load_err_file(dbp, thtmp.get_file_name("data.err"));
 
@@ -429,7 +429,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   thdb1ds * stp;
   img* pimg = img_open(thtmp.get_file_name("data.3d"));
   if (pimg == NULL)
-    ththrow(("can't open cavern output"))    
+    ththrow("can't open cavern output");
   do {
     result = img_read_item(pimg, &imgpt);
     switch (result) {
@@ -446,7 +446,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
         break;
       case img_BAD:
         img_close(pimg);
-        ththrow(("error reading cavern output"))
+        ththrow("error reading cavern output");
         break;
     }
   } while (result != img_STOP);
@@ -466,7 +466,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //   retcode = system(svxcom.get_buffer());
 // 
 //   if (retcode != EXIT_SUCCESS)
-//     ththrow(("3dtopos exit code -- %d", retcode))
+//     ththrow("3dtopos exit code -- %d", retcode);
 // 
 // // Let's copy results and log-file to working directory
 // // #ifdef THWIN32
@@ -484,7 +484,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 // //   retcode = system(svxcom.get_buffer());
 // // 
 // //   if (retcode != EXIT_SUCCESS)
-// //     ththrow(("cp exit code -- %d", retcode))
+// //     ththrow("cp exit code -- %d", retcode);
 //   
 //   
 // #ifdef THDEBUG
@@ -502,7 +502,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //     * p[4], * cps = lnbuff;
 //   posf.open(thtmp.get_file_name("data.pos"));
 //   if (!posf.is_open())
-//     ththrow(("can't open survex output"))
+//     ththrow("can't open survex output");
 //   while (!posf.eof()) {
 //     posf.getline(lnbuff, lnsize);
 //     clns = strlen(lnbuff);
@@ -556,7 +556,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //  FILE * ptsf;
 //  ptsf = fopen("data.pts","w");  
 //  if (ptsf == NULL)
-//    ththrow(("can't open data.pts for output"))
+//    ththrow("can't open data.pts for output");
 //  unsigned int sid, lsid;
 //  lsid = dbp->db1d.station_vec.size();
 //  for (sid = 0; sid < lsid; sid++) {
@@ -580,7 +580,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   thlog.printf("\n####################### cavern log file ########################\n");
   std::ifstream clf(lfnm);
   if (!(clf.is_open()))
-    ththrow(("can't open cavern log file for input"))
+    ththrow("can't open cavern log file for input");
   // let's read line by line and print to log file
   size_t chidx, nchs;
   char * chch;
@@ -602,6 +602,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
     char * start_ch = NULL; //, * test_ch;
     int num_type;
     thsvxctrl_src_maptype::iterator srcmi;
+    const auto prev_char_is = [&lnbuff, &start_ch](const char c) { return (start_ch - 1) >= lnbuff && start_ch[-1] == c; };
 //    if (*lnbuff == 13) lnbuff++;
 //    if (strncmp(lnbuff,"There were",10) == 0)
 //      chidx = 2049;
@@ -637,7 +638,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
         else {
           num_type = THSVXLOGNUM_STATION;
           if ((chidx > 0) && (chidx <= nchs)) {
-            if ((start_ch[-1] == ':') && (*chch == ':'))
+            if (prev_char_is(':') && (*chch == ':'))
               num_type = THSVXLOGNUM_LINE;
           }
           if (num_type == THSVXLOGNUM_STATION) {
@@ -645,7 +646,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
               if ((*chch == '.') || (*chch == ',') || (*chch == ')') || (*chch == 'm')
                 || (*chch == '-') || (*chch == '/'))
                 num_type = THSVXLOGNUM_NONE;
-              if ((start_ch[-1] == '.') || (start_ch[-1] == '-'))
+              if (prev_char_is('.') || prev_char_is('-'))
                 num_type = THSVXLOGNUM_NONE;
             }
           }

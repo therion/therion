@@ -101,7 +101,7 @@ extern "C" {
 #define TR_MINOR_VERSION 1
 
 
-typedef struct _TRctx TRcontext;
+typedef struct TRctx TRcontext;
 
 
 typedef enum {

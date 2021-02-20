@@ -53,19 +53,19 @@ void thexpdb::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPDB_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing format -- \"%s\"",args[optx]))
+        ththrow("missing format -- \"{}\"",args[optx]);
       this->format = thmatch_token(args[argx], thtt_expdb_fmt);
       if (this->format == TT_EXPDB_FMT_UNKNOWN)
-        ththrow(("unknown format -- \"%s\"", args[argx]))
+        ththrow("unknown format -- \"{}\"", args[argx]);
       argx++;
       break;
     case TT_EXPDB_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing encoding -- \"%s\"",args[optx]))
+        ththrow("missing encoding -- \"{}\"",args[optx]);
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow(("unknown encoding -- \"%s\"", args[argx]))
+        ththrow("unknown encoding -- \"{}\"", args[argx]);
       argx++;
       break;
     default:
@@ -106,7 +106,7 @@ void thexpdb::process_db(class thdatabase * dbp)
       this->export_csv_file(dbp);
       break;
     default:
-      ththrow(("unknown database format (use .csv or .sql)"))
+      ththrow("unknown database format (use .csv or .sql)");
   }
 }
 
@@ -139,7 +139,8 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
     thwarning(("can't open %s for output",fnm))
     return;
   }
-
+  this->register_output(fnm);
+  
   thdb_object_list_type::iterator oi;
   thdataleg_list::iterator lei;
   thdata_team_set_type::iterator ti;
@@ -249,7 +250,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
       switch ((*oi)->get_class_id()) {
 
         case TT_SURVEY_CMD:
-          sp = (thsurvey *)(*oi);
+          sp = (thsurvey *)(*oi).get();
           ENCODESTR(sp->title);
           IF_PRINTING {
             fprintf(sqlf,"insert into SURVEY values "
@@ -265,7 +266,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
           break;  // SURVEY
 
 		case TT_SCRAP_CMD:
-			scrapp = (thscrap *)(*oi);
+			scrapp = (thscrap *)(*oi).get();
 			IF_PRINTING {
 				fprintf(sqlf,"insert into SCRAPS values "
 				  "(%ld, %ld, '%s', %d, %.5lf, %.5lf);\n ",
@@ -277,7 +278,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 			break;
 
 		case TT_MAP_CMD:
-			mapp = (thmap *)(*oi);
+			mapp = (thmap *)(*oi).get();
 			mapp->stat.scanmap(mapp);
 			ENCODESTR(mapp->title);
 			IF_PRINTING {
@@ -300,7 +301,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 			break;
           
         case TT_DATA_CMD:
-          dp = (thdata *)(*oi);
+          dp = (thdata *)(*oi).get();
           ENCODESTR(dp->title);
           IF_PRINTING {
             fprintf(sqlf,"insert into CENTRELINE values "
@@ -437,6 +438,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
     thwarning(("can't open %s for output", fnm))
     return;
   }
+  this->register_output(fnm);
 
   thdb_object_list_type::iterator oi;
   thdataleg_list::iterator lei;
@@ -449,7 +451,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
 
   while (oi != dbp->object_list.end()) {
     if ((*oi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *) (*oi);
+      dp = (thdata *) (*oi).get();
 
       for (lei = dp->leg_list.begin(); lei != dp->leg_list.end(); lei++) {
         if (lei->is_valid) {
@@ -466,13 +468,13 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
 
       // Export equate links between stations 
       int last_equate = 0;
-      long MAX_LEN = 500;
+      const long MAX_LEN = 500;
       char first_name[MAX_LEN];
       if (!dp->equate_list.empty()) {
         fprintf(out, "# Equated stations\n");
         for (eqi = dp->equate_list.begin(); eqi != dp->equate_list.end(); eqi++) {
           if (last_equate != eqi->eqid) {
-            snprintf(first_name, MAX_LEN, "%s@%s", eqi->station.name, eqi->station.survey);
+            std::snprintf(first_name, MAX_LEN, "%s@%s", eqi->station.name, eqi->station.survey);
             last_equate = eqi->eqid;
           } else {
             if (last_equate != 0)

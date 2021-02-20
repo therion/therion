@@ -25,6 +25,7 @@
  * --------------------------------------------------------------------
  */
 
+#include "therion.h"
 #include "thexception.h"
 #include "thproj.h"
 #include "thlogfile.h"
@@ -111,7 +112,7 @@ bool thcs_islatlong(string s) {
 bool thcs_check(string s) {
   projPJ P;
   if ((P = pj_init_plus(s.c_str()))==NULL)
-    ththrow(("invalid proj4 identifier -- %s", s.c_str()));
+    ththrow("invalid proj4 identifier -- {}", s.c_str());
   pj_free(P);
   return true;
 }
@@ -140,14 +141,19 @@ string thcs_get_proj_version_headers() {
   #include <sstream>
   #include <iomanip>
 
+#if PROJ_VER > 5
+  regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
+  regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
+  regex reg_type(R"(\+type\s*=\s*crs\b)");
+  regex reg_space(R"(\s+)");
+  regex reg_czech(R"(\s+\+czech\b)");
+#endif
+
   string sanitize_crs(string s) {
 #if PROJ_VER > 5
-    regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
-    regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
-    regex reg_type(R"(\+type\s*=\s*crs\b)");
-    s = regex_replace(s, regex(R"(\s+)"), " ");
+    s = regex_replace(s, reg_space, " ");
     if (thcs_get_proj_version() == "7.1.0") {  // fix a bug in axes order in 7.1.0 also for user-defined CSs
-      s = regex_replace(s, regex(R"(\s+\+czech\b)"), " +axis=wsu");
+      s = regex_replace(s, reg_czech, " +axis=wsu");
     }
     if (regex_match(s,reg_epsg_ok)) return s;
     else if (regex_match(s,reg_init)) return regex_replace(s, reg_init, "$1:$2");   // get epsg:nnnn format
@@ -198,7 +204,8 @@ string proj_cache::log() {
     ostringstream s;
     s << setprecision(3) << std::fixed;
     s << endl << "############# CRS transformations chosen by PROJ ###############" << endl;
-    s << "  Area of Use (AoU): (" << thcs_cfg.bbox[0] << ", " << thcs_cfg.bbox[1] << ") (" <<
+    if (thcs_cfg.bbox.size() == 4)
+      s << "  Area of Use (AoU): (" << thcs_cfg.bbox[0] << ", " << thcs_cfg.bbox[1] << ") (" <<
                                      thcs_cfg.bbox[2] << ", " << thcs_cfg.bbox[3] << ")" << endl;
     for (const auto & i : transf_cache) {
       PJ_PROJ_INFO pinfo = proj_pj_info(i.second);

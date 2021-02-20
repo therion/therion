@@ -1,28 +1,108 @@
 Therion 5.6.0 (in progress):
 
 therion:
- * support for colour models: cmyk, rgb, gray (see [TODO])
+ * support for colour models: cmyk, rgb, gray (see the color-model layout
+   option in the Thbook)
+ * support for colour management (see the color-profile layout option)
  * reimplemented internal processing of patterns and transparent colors in
-   MetaPost
+   MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
+   macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
+   tr_white, tr_black were removed; use the drawing option
+   'withcolor <color> withtransparency <number>' instead)
  * support for double number system in MetaPost (this eliminates the current
    MetaPost limits; see the chapter Limitations in the Appendix of the Thbook)
+ * tex-refs-registers <on/off> initialization file option added (see the
+   chapters Initialization files and Limitations in the Appendix of the Thbook)
  * support for LuaTeX as an alternative to pdfTeX
+ * support for both relative and absolute paths in the \loadpicture macro
+ * updated Serbian translation
  * bugs fixed:
    - ISO8859-2 literals in the source code caused clang warnings
    - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
    - fixed numerical instability in l_overhang_SKBB
+   - swapped anastomosis & karren symbols
    - other minor fixes
+   - no station scrap continuation list [#333]
+   - fixed arrows flipping [#245]
+ * updated shapelib
+ 
+loch:
+ * Tools->Selection - only displays selected surveys
+ * bugs fixed:
+   - missing title
+   - autorotation issues
 
 infrastructure:
  * support for CMake builds (thanks to Matěj Plch)
 
 --------------------------------------------------------------------------------
 
-Therion 5.5.4 (in progress):
+Therion 5.5.7 (2021-02-06):
+
+therion:
+ * added --generate-output-crc, --verify-output-crc options
+ * error raised when unknown command line option used
+ * version number ends with '-dev' if there are uncommitted local changes
+ * optimizations:
+   - much faster processing of fixed stations with associated CRS data
+   - faster check for optional fonts
+ * bugs fixed:
+   - survey selection ignored when exporting 3d model from splay shots
+   - "cs local" bugfix
+   - scrap 3d reconstruction spike artifact fix
+   - selection logging bugfix
+   - svg/xhtml map export without filename creates cave.pdf file
+
+make:
+ * better detection of wx-config variants
+ * innosetup.ini is generated in the build directory
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.6 (2020-12-27):
+
+therion:
+ * fixed map statistics bug introduced in 5.5.5
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.5 (2020-12-22):
+
+therion:
+ * updated Italian translation [#308]
+ * fixed bug with statistic explo/topo/carto/copyright <number>
+ * fixed bugs related to an undefined Area of Use, which should be used
+   in Proj transformations
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.4 (2020-12-15):
+
+therion:
+ * added layout-statistics carto|copyright-count
+ * use unique pointers in thdatabase [#296]
+ * added support for 270 to 360 degrees gradient readings
+ * bugs fixed
+   - scrap -walls off not working [#297]
+   - various fixes [#293,294,295,296,298,299,301,302,303,305]
 
 thbook:
  * support smaller page formats (configuration at the line 5 of the file
    thbook/thbook.tex)
+
+loch:
+  * bugs fixed:
+    - fix display of Survex 3D with LRUD [#286]
+    - read splay flag from Survex 3D files [#287]
+
+make:
+ * allow -j$N [#283]
+ * allow passing of WX_CONFIG variable [#284]
+ * remove local copies of getline and getopt [#290,306]
+ * small fixes
+
+infrastructure
+ * use Github actions instead of Travis CI
 
 --------------------------------------------------------------------------------
 

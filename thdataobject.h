@@ -397,15 +397,6 @@ class thdataobject {
   
   
   /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
-  
-  
-  /**
    * Get context for object.
    */
    
@@ -427,10 +418,10 @@ class thdataobject {
   
     
   /**
-   * Write object source to exception description.
+   * Get object source location.
    */
    
-  virtual void throw_source();
+  virtual std::string throw_source() const;
   
   
   /**

@@ -94,28 +94,35 @@ ATTR__shotflag_approx:=false;
 boolean ATTR__stationflag_splay;
 ATTR__stationflag_splay:=false;
 
-save black, white, red, green, blue;
+save black, white, red, green, blue, background, HelpSymbolColor;
 if OutputColormodel = "cmyk":
-  cmykcolor black, white, red, green, blue;
+  cmykcolor black, white, red, green, blue, background, HelpSymbolColor;
   black := (0,0,0,1);
   white := (0,0,0,0);
   red   := (0,0.9,0.9,0.2);
   green := (0.7,0,0.8,0.4);
   blue  := (0.6,0.4,0,0.1);
+  HelpSymbolColor := (0,0,0,0.2);
+  defaultcolormodel := 7;
 elseif OutputColormodel = "rgb":
-  rgbcolor black, white, red, green, blue;
+  rgbcolor black, white, red, green, blue, background, HelpSymbolColor;
   black := (0,0,0);
   white := (1,1,1);
   red   := (1,0,0);
   green := (0,1,0);
   blue  := (0,0,1);
+  HelpSymbolColor := (0.8,0.8,0.8);
+  defaultcolormodel := 5;
 else:
   black := 0;
   white := 1;
   red   := 0.3;
   green := 0.59;
   blue  := 0.11;
+  HelpSymbolColor := 0.8;
+  defaultcolormodel := 3;
 fi;
+background = white;
 
 color label_fill_color, label_fill_color_tmp;
 label_fill_color := (1.0, 1.0, 1.0);

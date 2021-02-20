@@ -1,6 +1,6 @@
 OUTDIR ?= .
 ifneq ($(OUTDIR),.)
-LOUTDIR = $(OUTDIR)/thbook
+LOUTDIR = ../$(OUTDIR)/thbook
 else
 LOUTDIR = .
 endif

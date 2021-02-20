@@ -142,7 +142,7 @@ class lxGLCanvas: public wxGLCanvas {
     bool OSCInit(GLint w, GLint h);
 
     void TRCInit(int type, GLint w, GLint h, GLint tw = 0, GLint th = 0);
-    struct _TRctx * TRCGetContext();
+    struct TRctx * TRCGetContext();
     void TRCDestroy();
     GLint TRCGet(int param);
     GLubyte * TRCGetBuffer();
@@ -180,7 +180,7 @@ class lxGLCanvas: public wxGLCanvas {
 
 
 struct TRC {
-  struct _TRctx * m_ctx;
+  struct TRctx * m_ctx;
   GLubyte * m_buff;
   TRC() {
     this->m_ctx = NULL;

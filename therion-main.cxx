@@ -38,7 +38,7 @@
 #include "thlogfile.h"
 #include "thproj.h"
 
-extern const thstok thtt__texts [];
+extern const thstok thtt_texts [];
 
 const char * thhelp_text =
       "\ntherion [-q] [-L] [-l log-file]\n"
@@ -54,7 +54,9 @@ const char * thhelp_text =
       "        [--print-symbols]\n"
       "        [--print-tex-encodings]\n"
       "        [--print-xtherion-src]\n"
-      "        [--reproducible-output]\n\n";
+      "        [--reproducible-output]\n"
+	  "        [--generate-output-crc]\n"
+	  "        [--verify-output-crc]\n\n";
 
 const char * thversion_text = THVERSION;
 const char * thversion_format = "therion %s";
@@ -250,13 +252,9 @@ int main(int argc, char * argv[]) {
 #ifndef THDEBUG
 #ifndef THMSVC
   }
-  catch(...)
+  catch(const std::exception& e)
   {
-    if (strlen(thexc.get_buffer()) == 0) {
-      therror(("unknown exception"));  
-    } else {
-      therror((thexc.get_desc()));
-    }
+      therror((e.what()));
   }
 #endif
 #endif
