@@ -213,7 +213,7 @@ bool thexport::check_crc() {
 		std::uint_fast32_t actual_crc(0);
 		bool cok(true);
 		try {
-			of = std::ifstream(fi->fnm, ios_base::binary);
+			of = std::ifstream(fi->fnm, std::ios_base::binary);
 			actual_crc = crc((std::istreambuf_iterator<char>(of)), std::istreambuf_iterator<char>());
 			of.close();
 		} catch(...) {

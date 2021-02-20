@@ -74,8 +74,8 @@ enum {
  */
  
 static const thstok thtt_expdb_fmt[] = {
-  {"sql", TT_EXPDB_FMT_SQL},
   {"csv", TT_EXPDB_FMT_CSV},
+  {"sql", TT_EXPDB_FMT_SQL},
   {NULL, TT_EXPDB_FMT_UNKNOWN}
 };
 

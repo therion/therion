@@ -1125,7 +1125,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   
   thbuffer aboveprev, belowprev;
 
-  list<scraprecord>::iterator SCRAPITEM;
+  std::list<scraprecord>::iterator SCRAPITEM;
   scraprecord dummsr;
   
   const char * fnm;
@@ -1143,7 +1143,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   this->register_output(fnm);
 
   layerrecord L;
-  map<int, layerrecord>::iterator LAYER_ITER;
+  std::map<int, layerrecord>::iterator LAYER_ITER;
 
   thdb2dxm * cmap = maps;
   thdb2dxs * cbm;
@@ -1398,7 +1398,7 @@ else
     
   if (COLORLEGENDLIST.size() > 0) {
     fprintf(plf,"# COLOR LEGEND\n");
-    for (list<colorlegendrecord>::iterator cli = COLORLEGENDLIST.begin();
+    for (std::list<colorlegendrecord>::iterator cli = COLORLEGENDLIST.begin();
       cli != COLORLEGENDLIST.end(); cli++) {
       fprintf(plf,"# %4.0f %4.0f %4.0f %4.0f %s\n", 100.0 * cli->col_legend.a, 100.0 * cli->col_legend.b, 100.0 * cli->col_legend.c, 100.0 * cli->col_legend.d, cli->texname.c_str());
     }
@@ -1966,7 +1966,7 @@ else
     
       fprintf(plf,"\t# expanded map: %s\n",cmap->map->name);
       fprintf(plf,"\t%ld => {\n",cmap->output_number);
-      LAYERHASH.insert(make_pair(cmap->output_number,L));
+      LAYERHASH.insert(std::make_pair(cmap->output_number,L));
       LAYER_ITER = LAYERHASH.find(cmap->output_number);
       LAYER_ITER->second.Z = 0;
       
@@ -2030,7 +2030,7 @@ else
       	  fprintf(plf,"\t\tA => %ld,\n",cbm->m_target->fmap->output_number);
           fprintf(plf,"\t},\n");
 
-          LAYERHASH.insert(make_pair(cbm->m_target->preview_output_number,L));
+          LAYERHASH.insert(std::make_pair(cbm->m_target->preview_output_number,L));
           LAYER_ITER = LAYERHASH.find(cbm->m_target->preview_output_number);
           LAYER_ITER->second.Z = 1;
           LAYER_ITER->second.AltJump = cbm->m_target->fmap->output_number;
