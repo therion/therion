@@ -31,16 +31,14 @@
 
 #include "thexception.h"
 
-using namespace std;
-
-string u2str(unsigned u);
-string tex_Xname(string s);
-string tex_Wname(string s);
-string tex_set_ref(string s, string t);
-string tex_get_ref(string s);
-string pdf_info(void);
-string rgb2svg(double r, double g, double b);
-string icc2pdfresources();
+std::string u2str(unsigned u);
+std::string tex_Xname(std::string s);
+std::string tex_Wname(std::string s);
+std::string tex_set_ref(std::string s, std::string t);
+std::string tex_get_ref(std::string s);
+std::string pdf_info(void);
+std::string rgb2svg(double r, double g, double b);
+std::string icc2pdfresources();
 bool icc_used();
 
 extern bool tex_refs_registers;

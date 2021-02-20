@@ -33,8 +33,6 @@
 
 #include "thlegenddata.h"
 
-using namespace std;
-
 legenddata::legenddata() {
   legendtitle = "Legenda";
   colorlegendtitle = "Legenda hlbok";

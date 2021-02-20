@@ -39,7 +39,7 @@ void thlocale::parse_units(char * cc)
 {
 	this->units = thmatch_token(cc, thtt_locale_units);
 	if (this->units == TTLC_UNKNOWN)
-		ththrow(("unknown units -- %s", cc))
+		ththrow("unknown units -- {}", cc);
 }
 	
 

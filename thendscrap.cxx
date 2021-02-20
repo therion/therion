@@ -88,7 +88,7 @@ void thendscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned l
       if (th_is_keyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        ththrow(("invalid keyword -- %s", *args));
+        ththrow("invalid keyword -- {}", *args);
       break;
       
     default:

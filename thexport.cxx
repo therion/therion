@@ -71,7 +71,7 @@ void thexport::parse(int nargs, char ** args)
     oax = ax;
     this->parse_options(ax, nargs, args);
     if (oax == ax)
-      ththrow(("unknown option -- \"%s\"", args[ax]))
+      ththrow("unknown option -- \"{}\"", args[ax]);
   }
 }
 
@@ -89,26 +89,26 @@ void thexport::parse_options(int & argx, int nargs, char ** args)
     case TT_EXP_OPT_OUTPUT:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing output file name -- \"%s\"",args[optx]))
+        ththrow("missing output file name -- \"{}\"",args[optx]);
       if (strlen(args[argx]) > 0) {
         this->outpt = this->cfgptr->get_db()->strstore(args[argx]);
         outpt_def = true;
       }
       else
-        ththrow(("empty file name not allowed -- \"%s\"",args[optx]))
+        ththrow("empty file name not allowed -- \"{}\"",args[optx]);
       argx++;
       break;
     case TT_EXP_OPT_CS:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing coordiate system -- \"%s\"",args[optx]))
+        ththrow("missing coordiate system -- \"{}\"",args[optx]);
       {
         int id = thcs_parse(args[argx]);
         if (id == TTCS_UNKNOWN) {
-          ththrow(("unknown coordinate system -- %s", args[argx]));
+          ththrow("unknown coordinate system -- {}", args[argx]);
         }
         if ((thcfg.outcs != id) && (id == TTCS_LOCAL))
-          ththrow(("mixing local and global coordinate system -- %s", args[argx]));
+          ththrow("mixing local and global coordinate system -- {}", args[argx]);
         this->cs = id;
       }
       argx++;
@@ -213,7 +213,7 @@ bool thexport::check_crc() {
 		std::uint_fast32_t actual_crc(0);
 		bool cok(true);
 		try {
-			of = std::ifstream(fi->fnm, ios_base::binary);
+			of = std::ifstream(fi->fnm, std::ios_base::binary);
 			actual_crc = crc((std::istreambuf_iterator<char>(of)), std::istreambuf_iterator<char>());
 			of.close();
 		} catch(...) {

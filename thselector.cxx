@@ -79,11 +79,11 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
   thselector_item itm;
   itm.unselect = usid;
   if (nargs < 1)
-    ththrow(("not enough command arguments"))
+    ththrow("not enough command arguments");
 
   // set object name
   if (strlen(*args) == 0)
-    ththrow(("empty object name not allowed"))
+    ththrow("empty object name not allowed");
   itm.name = this->cfgptr->get_str_buff()->append(*args);
   itm.src_name = this->cfgptr->get_db()->strstore(this->cfgptr->get_cfg_file()->get_cif_name(), true);
   itm.src_ln = this->cfgptr->get_cfg_file()->get_cif_line_number();
@@ -104,7 +104,7 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
             itm.recursive = true;
             break;
           case TT_UNKNOWN_BOOL:
-            ththrow(("logical value expected -- %s", args[aid]))
+            ththrow("logical value expected -- {}", args[aid]);
         }
         break;
 
@@ -121,9 +121,9 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
           break;
         }
         if ((sv != TT_SV_NUMBER) || (dum < 0))
-          ththrow(("invalid map level -- %s", *args))
+          ththrow("invalid map level -- {}", *args);
         if (double(int(dum)) != dum)
-          ththrow(("invalid map level -- %s", *args))
+          ththrow("invalid map level -- {}", *args);
         itm.map_level = long(dum);
         break;
 
@@ -135,14 +135,14 @@ void thselector::parse_selection (bool usid, int nargs, char ** args)
           break;
         }
         if ((sv != TT_SV_NUMBER) || (dum <= 0))
-          ththrow(("invalid chapter level -- %s", *args))
+          ththrow("invalid chapter level -- {}", *args);
         if (double(int(dum)) != dum)
-          ththrow(("invalid chapter level -- %s", *args))
+          ththrow("invalid chapter level -- {}", *args);
         itm.chapter_level = long(dum);
         break;
         
       default:
-        ththrow(("unknown option -- %s", args[aid]))
+        ththrow("unknown option -- {}", args[aid]);
     }
   }
   

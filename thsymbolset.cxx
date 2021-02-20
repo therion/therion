@@ -53,6 +53,7 @@
 #define mkdir _mkdir
 #endif
 
+#include <fmt/printf.h>
 
 thsymbolset::thsymbolset()
 {
@@ -895,7 +896,7 @@ int thsymbolset_get_group(int group_id, int cid) {
 
 void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfig) {
 
-  list<legendrecord>::iterator LEGENDITEM;
+  std::list<legendrecord>::iterator LEGENDITEM;
   legendrecord dummlr;
   LEGENDLIST.clear();
   thbuffer texb;
@@ -1582,7 +1583,7 @@ void export_all_symbols()
   unsigned figi = 1;
   thsymbolset symset;
   thsymsets_symbols_init();
-  list<legendrecord>::iterator li;
+  std::list<legendrecord>::iterator li;
   // najprv exportujeme secky defaultne
   tmplayout.legend = TT_LAYOUT_LEGEND_ALL;
   LEGENDLIST.clear();
@@ -1690,13 +1691,13 @@ void export_all_symbols()
   "#################### end of metapost log file ####################\n",true);
   if (retcode != EXIT_SUCCESS) {
     thassert(chdir(wdir.get_buffer()) == 0);
-    ththrow(("metapost exit code -- %d", retcode))
+    ththrow("metapost exit code -- {}", retcode);
   }
 
   thconvert_new();
 
   thassert(chdir(wdir.get_buffer()) == 0);
-  ofstream hf ("symbols.xhtml");
+  std::ofstream hf ("symbols.xhtml");
   hf << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   hf << "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>Therion symbols</title>\n<body>\n";
   hf << "<table border=\"2\" bordercolor=\"#505050\" cellspacing=\"0\">\n<tr>\n<td>Symbol set</td>\n";
@@ -1744,7 +1745,7 @@ void export_all_symbols()
     }
   }
   hf << "</table>\n";
-  hf << "</body></html>" << endl;
+  hf << "</body></html>" << std::endl;
   hf.close();
 }
 
@@ -1759,12 +1760,12 @@ void thsymbolset::export_mp_symbol_options(FILE * mpf, int sym_id)
   }
 }
 
-void thsymbolset::export_mp_symbol_options(thexception * x, int sym_id)
+void thsymbolset::export_mp_symbol_options(std::vector<std::string>& x, int sym_id)
 {
   if ((sym_id >= 0) && (this->color[sym_id].defined)) {
-    x->appspf("drawoptions(withcolor (%.6f,%.6f,%.6f));\n", this->color[sym_id].R, this->color[sym_id].G, this->color[sym_id].B);
+    x.push_back(fmt::sprintf("drawoptions(withcolor (%.6f,%.6f,%.6f));", this->color[sym_id].R, this->color[sym_id].G, this->color[sym_id].B));
   } else {
-    x->appspf("drawoptions();\n");
+    x.push_back("drawoptions();");
   }
 }
 

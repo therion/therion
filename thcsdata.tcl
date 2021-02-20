@@ -54,7 +54,7 @@ proc load_proj_init_file {fn shortcut} {
 
 proc load_proj_init_file_for_labels {fn shortcut} {
   global projlabels
-  set projlabels($shortcut) "map<int, const char *> $shortcut\_labels = {\n"
+  set projlabels($shortcut) "std::map<int, const char *> $shortcut\_labels = {\n"
   set active_comment {}
   set active_name {}
   set active_spec { }
@@ -143,8 +143,8 @@ set osgbspecs {{ST 1 -2} {SN 2 -3} {} {} {} {}}
 
 #load_proj_init_file extern/proj4/nad/epsg epsg
 #load_proj_init_file extern/proj4/nad/esri esri
-set projlabels(esri) "\nmap<int, const char *> esri_labels = {};\n\n"
-set projlabels(epsg) "\nmap<int, const char *> epsg_labels = {};\n\n"
+set projlabels(esri) "\nstd::map<int, const char *> esri_labels = {};\n\n"
+set projlabels(epsg) "\nstd::map<int, const char *> epsg_labels = {};\n\n"
 if {[file exists $labels_path/epsg]} {
   load_proj_init_file_for_labels $labels_path/epsg epsg
   load_proj_init_file_for_labels $labels_path/esri esri
@@ -210,7 +210,6 @@ puts $fid {/**
 #include "thparse.h"
  
 #include <map>
-using namespace std;
 
 /**
  * CS tokens.
@@ -243,8 +242,8 @@ puts $fid "extern const thstok thtt_cs\[[expr [llength $proj_parse] + 1]\];\n";
 puts $fid "extern const thcsdata thcsdata_table\[[llength $proj_specs]\];\n"
 
 puts $fid {
-extern map<int, const char *> esri_labels;
-extern map<int, const char *> epsg_labels;
+extern std::map<int, const char *> esri_labels;
+extern std::map<int, const char *> epsg_labels;
 }
 
 
