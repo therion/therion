@@ -667,12 +667,20 @@ if (ENC_NEW.NFSS==0) {
   P << "\\def\\mainfont{\\thfa}" << std::endl;
 }  
 
-  P << "\\ifx\\TeXXeTstate\\undefined" << std::endl;
-  P << "  \\let\\beginR\\relax" << std::endl;
-  P << "  \\let\\endR\\relax" << std::endl;
-  P << "  \\def\\TeXXeTstate=#1{\\def\\blbost{}}" << std::endl; // for using \global\TeXXeTstate 
-  P << "\\fi" << std::endl;
-  
+  // needs to be defined here as this file (th_enc.tex) is included by MP before processing of the labels
+  P << R"(
+\ifx\TeXXeTstate\undefined
+  \ifx\directlua\undefined
+    \let\beginR\relax
+    \let\endR\relax
+  \else
+    \def\beginR{\textdir TRT}
+    \def\endR{\textdir TLT}
+  \fi
+  \def\TeXXeTstate=#1{\def\blbost{}}  % for using \global\TeXXeTstate
+\fi
+)";
+
   P.close();
 }
 
