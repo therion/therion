@@ -55,6 +55,7 @@ thcs_config thcs_cfg;
 void thcs2cs(string s, string t,
               double a, double b, double c, double &x, double &y, double &z) {
   projPJ P1, P2;
+  double c_orig = c;
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
      therror(("Can't initialize input projection!"));
   if ((P2 = pj_init_plus(t.c_str()))==NULL) 
@@ -63,7 +64,8 @@ void thcs2cs(string s, string t,
      therror(("Can't transform projections!"));
   x = a; 
   y = b;
-  z = c;
+//  z = c;       // don't convert heights
+  z = c_orig;
   pj_free(P1);
   pj_free(P2);
 }
@@ -369,6 +371,7 @@ proj_cache cache;
     //  Proj v.6 supports them
 
     double undo_radians = 1.0, redo_radians = 1.0;
+    double c_orig = c;
     PJ* P = NULL;
 #if PROJ_VER > 5
     if (thcs_cfg.proj_auto) {  // let PROJ find the best transformation
@@ -389,7 +392,8 @@ proj_cache cache;
     res = proj_trans(P, PJ_FWD, proj_coord(a*undo_radians, b*undo_radians, c, 0));
     x = res.xyz.x*redo_radians;
     y = res.xyz.y*redo_radians;
-    z = res.xyz.z;
+//    z = res.xyz.z;         // don't convert heights
+    z = c_orig;
 #if PROJ_VER >= 6
     if (!cache.contains(P))   // cached Ps are destroyed in proj_cache's destructor
 #endif
