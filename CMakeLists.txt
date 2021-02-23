@@ -11,8 +11,7 @@ include(cmake/TherionSources.cmake)
 include(cmake/ECMEnableSanitizers.cmake)
 
 # strip binaries in release build
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
 
 set(ECM_ENABLE_SANITIZERS "" CACHE STRING 
     "Enable runtime sanitizers, available options: address,memory,thread,leak,undefined." )
