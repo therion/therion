@@ -37,6 +37,14 @@
 #include <stdio.h>
 #include "thchenc.h"
 #include <map>
+#ifndef THMSVC
+#include <dirent.h>
+#include <unistd.h>
+#else
+#include <direct.h>
+#define mkdir _mkdir
+#define S_ISDIR(v) (((v) | _S_IFDIR) != 0)
+#endif
 #include "thinfnan.h"
 
 thexpdb::thexpdb() {
@@ -95,6 +103,7 @@ void thexpdb::process_db(class thdatabase * dbp)
 {
   this->db = dbp;
   if (this->format == TT_EXPDB_FMT_UNKNOWN) {
+	this->format == TT_EXPDB_FMT_QTH;
     thexp_set_ext_fmt(".sql", TT_EXPDB_FMT_SQL)
     thexp_set_ext_fmt(".csv", TT_EXPDB_FMT_CSV)
   }
@@ -104,6 +113,9 @@ void thexpdb::process_db(class thdatabase * dbp)
       break;
     case TT_EXPDB_FMT_CSV:
       this->export_csv_file(dbp);
+      break;
+    case TT_EXPDB_FMT_QTH:
+      this->export_qth_file(dbp);
       break;
     default:
       ththrow("unknown database format (use .csv or .sql)");
@@ -488,6 +500,76 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
   }  // while
 
   fclose(out);
+
+#ifdef THDEBUG
+#else
+  thprintf("done\n");
+  thtext_inline = false;
+#endif
+}
+
+
+void thexpdb::export_qth_survey(std::string fpath, thsurvey * srv) {
+	
+	// 1. create fpath folder
+	// 2. for each object:
+	// 3. create index JSON object
+	// 4. traverse all objects
+	// 5. save C_, D_ files, recursively call subsurveys
+	// 6. save index file
+	if (strlen(srv->name) > 0) {
+		fpath += "/";
+		fpath += srv->name;
+	}
+#ifdef THWIN32
+    if (mkdir(fpath.c_str()) != 0) {
+#else
+    if (mkdir(fpath.c_str(),0046750) != 0) {
+#endif
+
+      struct 
+#ifdef THMSVC
+      _stat
+#else
+      stat 
+#endif
+      buf;
+#ifdef THMSVC
+      _stat
+#else
+      stat 
+#endif
+      (fpath.c_str(),&buf);
+      if ((errno != EEXIST) || (!S_ISDIR(buf.st_mode))) {
+        therror(("can't create output directory -- %s", fpath.c_str()));
+      }
+    }
+    
+    thdataobject * obj = srv->foptr;
+    while (obj != NULL) {
+    	switch (obj->get_class_id()) {
+    	case TT_SURVEY_CMD:
+    		this->export_qth_survey(fpath.c_str(), (thsurvey *) obj);
+    		break;
+    	}
+        obj = obj->nsptr;
+    }
+}
+
+
+void thexpdb::export_qth_file(class thdatabase * dbp) {
+
+  const char * fnm = this->get_output("cave");
+
+#ifdef THDEBUG
+  thprintf("\n\nwriting %s\n", fnm);
+#else
+  thprintf("writing %s ... ", fnm);
+  thtext_inline = true;
+#endif
+  
+  this->export_qth_survey(fnm, dbp->fsurveyptr);
+
 
 #ifdef THDEBUG
 #else

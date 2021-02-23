@@ -31,6 +31,7 @@
 
 
 #include "thexport.h"
+#include <string>
 
 
 /**
@@ -66,6 +67,7 @@ enum {
   TT_EXPDB_FMT_UNKNOWN = 0,  ///< Unknown option
   TT_EXPDB_FMT_SQL,  ///< sql
   TT_EXPDB_FMT_CSV,  ///< list of shots in CSV format
+  TT_EXPDB_FMT_QTH,  ///< qtherion JSON format
 };
 
 
@@ -75,6 +77,7 @@ enum {
  
 static const thstok thtt_expdb_fmt[] = {
   {"csv", TT_EXPDB_FMT_CSV},
+  {"qth", TT_EXPDB_FMT_QTH},
   {"sql", TT_EXPDB_FMT_SQL},
   {NULL, TT_EXPDB_FMT_UNKNOWN}
 };
@@ -95,6 +98,10 @@ class thexpdb : public thexport {
   
   void export_csv_file(class thdatabase * dbp);
 
+  void export_qth_file(class thdatabase * dbp);
+  
+  void export_qth_survey(std::string fpath, thsurvey * srv);  
+  
   public:
   
   thexpdb(); ///< Default constructor.
