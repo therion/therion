@@ -100,7 +100,9 @@ class thexpdb : public thexport {
 
   void export_qth_file(class thdatabase * dbp);
   
-  void export_qth_survey(std::string fpath, thsurvey * srv);  
+  void export_qth_survey(std::string fpath, class thsurvey * srv);
+  
+  void export_qth_scrap(std::string fpath, class thscrap * srv);  
   
   public:
   

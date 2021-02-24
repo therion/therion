@@ -31,10 +31,16 @@
 #include "thmap.h"
 #include "thdatabase.h"
 #include "thdb1d.h"
+#include "th2ddataobject.h"
 #include "thdata.h"
 #include "thinit.h"
+#include "thpoint.h"
+#include "thline.h"
+#include "extern/nlohmann/json.hpp"
 #include "thsurvey.h"
 #include <stdio.h>
+#include <fstream>
+#include <iomanip>
 #include "thchenc.h"
 #include <map>
 #ifndef THMSVC
@@ -508,6 +514,54 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
 #endif
 }
 
+void thexpdb::export_qth_scrap(std::string fpath, thscrap * scr) {
+	nlohmann::json drawing;
+	nlohmann::json scrap;
+	scrap["name"] = scr->name;
+	scrap["objects"] = {};
+	th2ddataobject * oo;
+	for(oo = scr->fs2doptr; oo != NULL; oo = oo->nscrapoptr) {
+		nlohmann::json obj;
+		nlohmann::json lpts = {};
+		thpoint * pt;
+		thline * ln;
+		thdb2dlp * lp;
+		switch(oo->get_class_id()) {
+		case TT_LINE_CMD:
+			obj["class"] = "line";
+			ln = (thline *) oo;
+			obj["type"] = thmatch_string(ln->type, thtt_line_types);
+			for(lp = ln->first_point; lp != NULL; lp = lp->nextlp) {
+				nlohmann::json lpt;
+				if (lp->cp1)
+					lpt["cp1"] = {lp->cp1->x, lp->cp1->y};
+				if (lp->cp2)
+					lpt["cp2"] = {lp->cp2->x, lp->cp2->y};
+				lpt["point"] = {lp->point->x, lp->point->y};
+				lpts.push_back(lpt);
+			}
+			obj["points"] = lpts; 
+			break;
+		case TT_POINT_CMD:
+			obj["class"] = "point";
+			pt = (thpoint *) oo;
+			obj["type"] = thmatch_string(pt->type, thtt_point_types);
+			obj["point"] = {pt->point->x, pt->point->y};
+			//obj["position"].push_back(pt->point->x);
+			//obj["position"].push_back(pt->point->y);
+			break;
+		default:
+			continue;
+		}
+		scrap["objects"].push_back(obj);
+	}
+	drawing["scraps"] = {};
+	drawing["scraps"].push_back(scrap);
+    std::ofstream o(fpath + std::string("/d_") + std::string(scr->name) + std::string(".qth"));
+    o << std::setw(4) << drawing << std::endl;
+}
+
+
 
 void thexpdb::export_qth_survey(std::string fpath, thsurvey * srv) {
 	
@@ -521,6 +575,8 @@ void thexpdb::export_qth_survey(std::string fpath, thsurvey * srv) {
 		fpath += "/";
 		fpath += srv->name;
 	}
+	nlohmann::json index;
+	index["title"] = srv->title;
 #ifdef THWIN32
     if (mkdir(fpath.c_str()) != 0) {
 #else
@@ -549,11 +605,18 @@ void thexpdb::export_qth_survey(std::string fpath, thsurvey * srv) {
     while (obj != NULL) {
     	switch (obj->get_class_id()) {
     	case TT_SURVEY_CMD:
-    		this->export_qth_survey(fpath.c_str(), (thsurvey *) obj);
+    		this->export_qth_survey(fpath, (thsurvey *) obj);
+    		break;
+    	case TT_SCRAP_CMD:
+    		this->export_qth_scrap(fpath, (thscrap *) obj);
     		break;
     	}
         obj = obj->nsptr;
     }
+    
+    std::ofstream o(fpath + std::string("/index.qth"));
+    o << std::setw(4) << index << std::endl;
+    
 }
 
 
