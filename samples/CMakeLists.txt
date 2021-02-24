@@ -11,3 +11,9 @@ add_custom_target(
   COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target thbook
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   USES_TERMINAL)
+
+ # subdirectories will add dependencies to this target
+add_custom_target(samples-cmake)
+
+add_subdirectory(areas)
+add_subdirectory(basics)
