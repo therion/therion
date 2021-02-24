@@ -25,121 +25,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --------------------------------------------------------------------
  */
- 
-#ifndef thexception_h
-#define thexception_h
 
+#pragma once
 
-#include "therion.h"
-#include "thbuffer.h"
-
-
-/**
- * Exception throwing macro.
- */
-//  thexc.strcpy("");
-
-#ifdef THDEBUG
-#define ththrow(P) {\
-  thexc.strcpy("");\
-  thexc.appspf("(" __FILE__ ":%d): ", __LINE__);\
-  thexc.appspf P;\
-  throw(0);\
-  }
-#else
-#define ththrow(P) {\
-  thexc.strcpy("");\
-  thexc.appspf P;\
-  throw(0);\
-  }
-#endif
-
-
-/**
- * Exception rethrowing macro.
- */
-
-#ifdef THDEBUG
-#define threthrow(P) {\
-  if (*(thexc.get_buffer()) == 0)\
-    thexc.strcpy("unknown exception");\
-  thexc.insspf(" -- ");\
-  thexc.insspf P;\
-  thexc.insspf("(" __FILE__ ":%d): ", __LINE__);\
-  throw(0);\
-  }
-#else
-#define threthrow(P) {\
-  if (*(thexc.get_buffer()) == 0)\
-    thexc.strcpy("unknown exception");\
-  thexc.insspf(" -- ");\
-  thexc.insspf P;\
-  throw(0);\
-  }
-#endif
-
-
-/**
- * Exception throwing macro without buffer reset.
- */
-
-#ifdef THDEBUG
-#define threthrow2(P) {\
-  if (*(thexc.get_buffer()) == 0)\
-    thexc.strcpy("unknown exception");\
-  thexc.appspf(" -- ");\
-  thexc.appspf("(" __FILE__ ":%d): ", __LINE__);\
-  thexc.appspf P;\
-  throw(0);\
-  }
-#else
-#define threthrow2(P) {\
-  if (*(thexc.get_buffer()) == 0)\
-    thexc.strcpy("unknown exception");\
-  thexc.appspf(" -- ");\
-  thexc.appspf P;\
-  throw(0);\
-  }
-#endif
-
-
-
-
+#include <stdexcept>
+#include <fmt/core.h>
 
 /**
  * Therion exception class.
  */
- 
-class thexception : public thbuffer {
-
-  public:
-  
-  /**
-   * Append sprinted string.
-   */
-   
-  void appspf(const char * format, ...);
-  
-    
-  /**
-   * Insert sprinted string.
-   */
-   
-  void insspf(const char * format, ...);
-  
-    
-  /**
-   * Return exception description.
-   */
-   
-  char * get_desc();
-  
-
+class thexception : public std::runtime_error {
+public:
+    explicit thexception(const std::string& msg)
+    : std::runtime_error(msg)
+    {}
 };
 
+template <typename FormatStr, typename... Args>
+[[noreturn]] void ththrow(const FormatStr& format, Args&& ...args)
+{
+    throw thexception(fmt::format(format, std::forward<Args>(args)...));
+}
 
-extern thexception thexc;
-
-#endif
-
-
+template <typename FormatStr, typename... Args>
+[[noreturn]] void threthrow(const FormatStr& format, Args&& ...args)
+{
+    try
+    {
+        throw;
+    }
+    catch(const std::exception& e)
+    {
+        throw thexception(fmt::format("{} -- {}", fmt::format(format, std::forward<Args>(args)...), e.what()));
+    }
+}

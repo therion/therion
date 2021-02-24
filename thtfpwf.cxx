@@ -89,16 +89,16 @@ void thtfpwf::parse(int nfact, char ** sfact)
     case 1:
       thparse_double(sv, this->b, *sfact);
       if (sv != TT_SV_NUMBER)
-        ththrow(("invalid number -- %s", *sfact))
+        ththrow("invalid number -- {}", *sfact);
       this->a = 1.0;
       break;
     case 2:
       thparse_double(sv, this->b, sfact[0]);
       if (sv != TT_SV_NUMBER)
-        ththrow(("invalid number -- %s", sfact[0]))
+        ththrow("invalid number -- {}", sfact[0]);
       thparse_double(sv, this->a, sfact[1]);
       if (sv != TT_SV_NUMBER)
-        ththrow(("invalid number -- %s", sfact[1]))
+        ththrow("invalid number -- {}", sfact[1]);
       break;
     default:
       if ((nfact > 2) && ((nfact % 2) == 0)) {
@@ -107,16 +107,16 @@ void thtfpwf::parse(int nfact, char ** sfact)
         for(cidx = 0; cidx < nfact; cidx++) {
           thparse_double(spv,coefs[cidx],sfact[cidx]);
           if (spv == TT_SV_UNKNOWN)
-            ththrow(("invalid number -- %s", sfact[cidx]))
+            ththrow("invalid number -- {}", sfact[cidx]);
         }
         this->set(nfact / 2, coefs);
         delete [] coefs;
       }
       else
-        ththrow(("invalid number of transformation constants"))
+        ththrow("invalid number of transformation constants");
   }
   if (this->a == 0.0)
-    ththrow(("invalid scale factor -- %f", this->a))
+    ththrow("invalid scale factor -- {}", this->a);
 }
   
 double thtfpwf::evaluate(double value)

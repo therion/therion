@@ -132,7 +132,7 @@ void thimport::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_IMPORT_FORMAT:
       this->format = thmatch_token(args[0], thtt_import_fmts);
       if (this->format == TT_IMPORT_FMT_UNKNOWN)
-        ththrow(("unknown import format -- %s", args[0]))
+        ththrow("unknown import format -- {}", args[0]);
       break;
 
     case TT_IMPORT_CALIB:
@@ -142,7 +142,7 @@ void thimport::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_IMPORT_SURVEYS:
       this->surveys = thmatch_token(args[0], thtt_import_surveys);
       if (this->surveys == TT_IMPORT_SURVEYS_UNKNOWN)
-        ththrow(("unknown survey structure policy -- %s", args[0]))
+        ththrow("unknown survey structure policy -- {}", args[0]);
       break;
     
     case TT_IMPORT_FILTER:
@@ -177,7 +177,7 @@ void thimport::set_file_name(char * fnm)
   
   long i;
   if (strlen(fnm) == 0)
-    ththrow(("file not specified"))
+    ththrow("file not specified");
   impf_path += "/";
   impf_path += thdb.csrc.name;
   char * pp = impf_path.get_buffer();
@@ -200,7 +200,7 @@ void thimport::set_file_name(char * fnm)
   FILE * tmp;
   tmp = fopen(this->fname,"r");
   if (tmp == NULL)
-    ththrow(("unable to open file for import -- %s", this->fname))
+    ththrow("unable to open file for import -- {}", this->fname);
   else
     fclose(tmp);
     
@@ -242,7 +242,7 @@ void thimport::import_file()
       this->import_file_img();
       break;
     default:
-      ththrow(("unknown file format -- %s", this->fname))
+      ththrow("unknown file format -- {}", this->fname);
   }
   this->db->lcsobjectptr = tmpobj;
   this->db->csurveyptr = tmpsv;
@@ -473,7 +473,7 @@ void thimport::import_file_img()
   img* pimg = img_open(this->fname);
   if (pimg == NULL) {	
     imgerr = img_error();
-    ththrow(("unable to open file %s, error code: %u", this->fname, imgerr))
+    ththrow("unable to open file {}, error code: {}", this->fname, imgerr);
   }
   do {
     result = img_read_item(pimg, &imgpt);
@@ -563,7 +563,7 @@ void thimport::import_file_img()
         break;
       case img_BAD:
         img_close(pimg);
-        ththrow(("invalid file format"))
+        ththrow("invalid file format");
         break;
     }
   } while (result != img_STOP);
@@ -696,11 +696,11 @@ void thimport::parse_calib(char * spec, int enc)
   double v[6];
   int sv, i;
   if (mb->get_size() != 6)
-    ththrow(("invalid import calibration -- \"%s\"", spec));
+    ththrow("invalid import calibration -- \"{}\"", spec);
   for(i = 0; i < 6; i++) {
     thparse_double(sv, v[i], args[i]);
     if (sv != TT_SV_NUMBER)
-      ththrow(("invalid number -- %s", args[i]))
+      ththrow("invalid number -- {}", args[i]);
   }
   this->calib_x = v[3] - v[0];
   this->calib_y = v[4] - v[1];
