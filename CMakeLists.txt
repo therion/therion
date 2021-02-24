@@ -5,13 +5,13 @@ project(Therion)
 set(CMAKE_CXX_STANDARD 14)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
+include(cmake/BuildType.cmake)
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
 include(cmake/ECMEnableSanitizers.cmake)
 
 # strip binaries in release build
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
 
 set(ECM_ENABLE_SANITIZERS "" CACHE STRING 
     "Enable runtime sanitizers, available options: address,memory,thread,leak,undefined." )
@@ -22,6 +22,16 @@ if (ENABLE_CLANG_TIDY)
     find_program(CLANG_TIDY_EXECUTABLE clang-tidy)
     if (CLANG_TIDY_EXECUTABLE)
         set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXECUTABLE};--quiet")
+    endif()
+endif()
+
+option(ENABLE_CCACHE "Enable compiler cache." OFF)
+if (ENABLE_CCACHE)
+    find_program(CCACHE_EXECUTABLE ccache)
+    mark_as_advanced(CCACHE_EXECUTABLE)
+    if(CCACHE_EXECUTABLE)
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_EXECUTABLE})
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_EXECUTABLE})
     endif()
 endif()
 
