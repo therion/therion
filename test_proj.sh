@@ -47,7 +47,7 @@ do
   # compile and link
   if [ "$MODE" = "CMake" ]; then
     export PROJ_LIB="$PREFIX/proj-$ver/share/proj";
-    cmake -DCMAKE_PREFIX_PATH="$PREFIX/proj-$ver" -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON -GNinja $SRCPATH
+    cmake -DCMAKE_PREFIX_PATH="$PREFIX/proj-$ver" -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON -DENABLE_CCACHE=ON -GNinja $SRCPATH
     ninja utest
     ./utest
     rm -f CMakeCache.txt

@@ -471,7 +471,7 @@ void print_preview(int up,std::ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
 //  PAGEDEF << (up ? "\\PL{q .1 w}%" : "\\PL{q .8 g}%") << std::endl;
   
   if (up) { 
-    PAGEDEF << "\\PL{q .1 w " << LAYOUT.col_preview_above.to_pdfliteral(fillstroke::stroke) <<
+    PAGEDEF << "\\PL{q " << LAYOUT.col_preview_above.to_pdfliteral(fillstroke::stroke) <<
                "}%" << std::endl;
   }
   else { 

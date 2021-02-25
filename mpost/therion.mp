@@ -683,7 +683,7 @@ def draw_upscrap (expr isout)(text t) =
     if (numeric i):
       if (i=1): drawnext:=true; else: drawnext:=false; fi;
     else:
-      if drawnext: draw i withpen PenD; fi;
+      if drawnext: draw i withpen PenD withoutcolor; fi;
       if not known q: q:=i; else: q:=q -- i; fi;
     fi;
   endfor;
@@ -696,7 +696,7 @@ def draw_upscrap (expr isout)(text t) =
   else:
     if turningnumber q < 0: q := reverse q; fi;
   fi;
-  addto bgfill contour q;
+  addto bgfill contour q withoutcolor;
 enddef;
 
 % following macro writes noncontinuous PostScript path directly to EPS file
