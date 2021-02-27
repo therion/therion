@@ -1715,13 +1715,13 @@ void thlayout::export_mpost(FILE * o) {
     thlayoutln * ln = this->first_line;
     while(ln != NULL) {
       if (ln->code == TT_LAYOUT_CODE_METAPOST) {
-        anyline = true;
-        thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
-        fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
         if (strcmp(ln->path, last_path) != 0) {
           last_path = ln->path;
           fprintf(o, "includeprefix := \"%s\";\n", fix_path_slashes(last_path).c_str());
         }
+        anyline = true;
+        thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
+        fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
       }
       ln = ln->next_line;
     }
