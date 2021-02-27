@@ -1710,6 +1710,7 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
 void thlayout::export_mpost(FILE * o) {
 
   bool anyline = false;
+  const char * last_path = "";
   if (this->first_line != NULL) {
     thlayoutln * ln = this->first_line;
     while(ln != NULL) {
@@ -1717,6 +1718,10 @@ void thlayout::export_mpost(FILE * o) {
         anyline = true;
         thdecode(&(this->db->buff_enc), TT_ISO8859_2, ln->line);
         fprintf(o, "%s\n", this->db->buff_enc.get_buffer());
+        if (strcmp(ln->path, last_path) != 0) {
+          last_path = ln->path;
+          fprintf(o, "includeprefix := \"%s\";\n", fix_path_slashes(last_path).c_str());
+        }
       }
       ln = ln->next_line;
     }
