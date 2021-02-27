@@ -25,6 +25,7 @@ therion:
    - other minor fixes
    - no station scrap continuation list [#333]
    - fixed arrows flipping [#245]
+   - colour preview-above doesn't work [#90]
  * updated shapelib
  
 loch:
