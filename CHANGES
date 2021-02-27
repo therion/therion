@@ -14,7 +14,8 @@ therion:
  * tex-refs-registers <on/off> initialization file option added (see the
    chapters Initialization files and Limitations in the Appendix of the Thbook)
  * support for LuaTeX as an alternative to pdfTeX
- * support for both relative and absolute paths in the \loadpicture macro
+ * support for relative paths in TeX (\inputrel, \savepath and \loadpicture) and
+   in MetaPost (inputrel)
  * updated Serbian translation
  * bugs fixed:
    - ISO8859-2 literals in the source code caused clang warnings
