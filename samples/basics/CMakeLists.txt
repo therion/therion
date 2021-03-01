@@ -1,3 +1,4 @@
+therion_copy_files(thconfig rabbit.th rabbit.th2 surface.jpg)
 therion_make_files_lists(RABBIT rabbit-plan.pdf rabbit-xelev.pdf rabbit.lox)
 
 add_custom_command(

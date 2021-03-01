@@ -1,3 +1,5 @@
+therion_copy_files(thconfig types.th2)
+
 add_custom_command(
     OUTPUT types.pdf
     COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:therion> --reproducible-output thconfig
