@@ -637,11 +637,8 @@ void convert_scraps() {
 //        if (c==37) F << "\\";    // % remains a comment
         F << c;
         if (c==92) F << " ";     // \ has to be followed by space
-      } else if (c >= 128) {
-        F << "^^" << std::hex << (int)c;
-      }
-      else {
-        F << "^^" << char(c+64);
+      } else {
+        F << "^^" << fmt::format("{:02x}", c);
       }
     }
     F << "\\endinclude";

@@ -11,9 +11,12 @@ set(THBOOK_SOURCES
     ${CMAKE_CURRENT_BINARY_DIR}/version.tex)
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/etc)
+
+set(THBOOK_FORMAT "0" CACHE STRING "thbook format selection, use values 0-3.")
+
 set(PDFTEX_COMMAND
     ${CMAKE_COMMAND} -E env FORCE_SOURCE_DATE=1 TEXINPUTS=${CMAKE_CURRENT_BINARY_DIR}:. pdftex
-    --output-dir=${CMAKE_CURRENT_BINARY_DIR} thbook.tex)
+    --output-dir=${CMAKE_CURRENT_BINARY_DIR} "\\\\def\\\\outputsize{${THBOOK_FORMAT}}\\\\input thbook.tex")
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/thbook.pdf
