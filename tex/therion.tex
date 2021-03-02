@@ -663,16 +663,24 @@
 \newtoks\includeprefix\includeprefix={.}
 \newif\ifabspath
 \def\checkcolon #1:#2\endparam{\def\tmp{#2}\ifx\tmp\empty\else\abspathtrue\fi}
-\def\checkstartslash #1#2\endparam{\ifx#1/\abspathtrue\fi}
+\def\checkstartslash #1#2\endparam{\if/#1\abspathtrue\fi}
+
+% convert a relative path to absolute and save it under the name #1
+\def\savepath#1#2{\expandafter\edef\csname thABS:#1\endcsname{\the\includeprefix #2}}
 
 \def\loadpicture#1{%
-  \abspathfalse
-  \checkcolon #1:\endparam
-  \checkstartslash #1\endparam
-  \pdfximage{\ifabspath\else\the\includeprefix/\fi#1}\pdfrefximage\pdflastximage
+  \ifcsname thABS:#1\endcsname   % use a saved absolute path if it exists
+    \pdfximage{\csname thABS:#1\endcsname}%
+  \else
+    \abspathfalse
+    \checkcolon #1:\endparam
+    \checkstartslash #1\endparam
+    \pdfximage{\ifabspath\else\the\includeprefix\fi #1}%
+  \fi
+  \pdfrefximage\pdflastximage
 }
 
-
+\def\inputrel#1{\input \the\includeprefix #1}
 
 \def\insertmaps{%
   \input th_formdef

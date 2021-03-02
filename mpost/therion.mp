@@ -124,6 +124,12 @@ else:
 fi;
 background = white;
 
+string includeprefix;
+includeprefix = ".";
+def inputrel(expr p) =
+  scantokens("input " & includeprefix & p);
+enddef;
+
 color label_fill_color, label_fill_color_tmp;
 label_fill_color := (1.0, 1.0, 1.0);
 def push_label_fill_color(expr r,g,b) =

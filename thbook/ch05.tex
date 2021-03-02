@@ -322,6 +322,10 @@ and with legend at the end:
   \insertmaps
   \formattedlegend|
 
+To use a relative path when including another \TeX\ file use the |\inputrel| macro instead
+of |\input|.
+
+
 \subchapter Page layout in the map mode.
 
 In the map mode it's possible to use a lot of predefined variables which
@@ -354,6 +358,16 @@ A simple example is
 }|
 
 which displays north arrow in the upper-left corner of the map sheet.
+The fourth parameter may also be a |\loadpicture| macro, which includes
+a picture in PDF, JPEG or PNG format. Although it accepts a relative or
+absolute path, in some cases\[If you combine multiple layouts stored in different
+directories.] you need to convert a relative path to absolute and
+save it for further use:
+
+|\savepath{mypath1}{../data/picture.png}
+\def\maplayout{
+  \legendbox{100}{80}{NW}{\loadpicture{mypath1}}
+}|
 
 For the user's convenience, there is |\legendcontent| token register. It contains
 preformatted cave name, north arrow, scale bar, explo/topo/carto teams,
@@ -458,6 +472,9 @@ For drawing and filling use |thdraw| and |thfill| commands instead of \MP's
 * numeric |MagDecl| = magnetic declination in degrees
 * numeric |GridConv| = grid meridian convergence in degrees
 \endlist
+
+If you need to include some \MP\ definitions from a file specified by
+a relative path, you need to use the macro |inputrel("relative/path.mp")|.
 
 \subsubchapter Point symbols.
 

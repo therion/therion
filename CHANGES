@@ -1,7 +1,7 @@
 Therion 5.6.0 (in progress):
 
 therion:
- * support for colour models: cmyk, rgb, gray (see the color-model layout
+ * support for colour models: cmyk, rgb, grayscale (see the color-model layout
    option in the Thbook)
  * support for colour management (see the color-profile layout option)
  * reimplemented internal processing of patterns and transparent colors in
@@ -14,18 +14,21 @@ therion:
  * tex-refs-registers <on/off> initialization file option added (see the
    chapters Initialization files and Limitations in the Appendix of the Thbook)
  * support for LuaTeX as an alternative to pdfTeX
- * support for both relative and absolute paths in the \loadpicture macro
+ * support for relative paths in TeX (\inputrel, \savepath and \loadpicture) and
+   in MetaPost (inputrel)
  * updated Serbian translation
  * bugs fixed:
    - ISO8859-2 literals in the source code caused clang warnings
    - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
    - fixed numerical instability in l_overhang_SKBB
    - swapped anastomosis & karren symbols
-   - other minor fixes
    - no station scrap continuation list [#333]
    - fixed arrows flipping [#245]
+   - colour preview-above doesn't work [#90]
+   - other minor fixes
+ * included {fmt} library
  * updated shapelib
- 
+
 loch:
  * Tools->Selection - only displays selected surveys
  * bugs fixed:
