@@ -98,9 +98,9 @@ static INT32_T
 get32(FILE *fh)
 {
    INT32_T w = GETC(fh);
-   w |= (INT32_T)GETC(fh) << 8l;
-   w |= (INT32_T)GETC(fh) << 16l;
-   w |= (INT32_T)GETC(fh) << 24l;
+   w |= (unsigned int)GETC(fh) << 8l;
+   w |= (unsigned int)GETC(fh) << 16l;
+   w |= (unsigned int)GETC(fh) << 24l;
    return w;
 }
 
