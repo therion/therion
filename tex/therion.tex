@@ -408,12 +408,13 @@
         \medskip
         \hbox{\qquad\qquad
           \vtop{%
-            \hbox to 0pt{\hss\showpointer\pointerN\hss}
-            \hbox to 0pt{\llap{\showpointer\pointerW\hskip0.7em}%
-              \raise1pt\hbox to 0pt{\hss$\updownarrow$\hss}%
-              \raise1pt\hbox to 0pt{\hss$\leftrightarrow$\hss}%
-              \rlap{\hskip0.7em\showpointer\pointerE}}
-              \hbox to 0pt{\hss\showpointer\pointerS\hss}
+            \hbox to 0pt{\hss\strut\showpointer\pointerN\hss}
+            \hbox to 0pt{\llap{\showpointer\pointerW\hskip0.8em}%
+              \raise3pt\hbox to 0pt{\hss$\uparrow$\hss}%
+              \raise-1pt\hbox to 0pt{\hss$\downarrow$\hss}%
+              \raise1pt\hbox to 0pt{\hss$\leftarrow\kern-7pt\rightarrow$\hss}%
+              \rlap{\hskip0.8em\showpointer\pointerE}}
+              \hbox to 0pt{\hss\strut\showpointer\pointerS\hss}
           }\qquad\qquad
           \vtop{
             \def\arr{$\uparrow$}

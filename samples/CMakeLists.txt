@@ -1,8 +1,4 @@
-file(
-  COPY ${CMAKE_CURRENT_SOURCE_DIR}
-  DESTINATION ${CMAKE_BINARY_DIR}
-  PATTERN "Makefile" EXCLUDE
-  PATTERN "CMakeLists.txt" EXCLUDE)
+therion_copy_files(samples.tcl)
 
 add_custom_target(
   samples
@@ -11,3 +7,18 @@ add_custom_target(
   COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target thbook
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   USES_TERMINAL)
+
+ # subdirectories will add dependencies to this target
+add_custom_target(samples-cmake)
+
+add_subdirectory(areas)
+add_subdirectory(basics)
+add_subdirectory(cave-list)
+add_subdirectory(map-offset)
+add_subdirectory(morphing/sample1)
+add_subdirectory(morphing/sample2)
+add_subdirectory(pocket-topo)
+add_subdirectory(q-marks)
+add_subdirectory(u-symbols)
+add_subdirectory(survex)
+add_subdirectory(xelevation)

@@ -6,9 +6,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-18.04, type: Release, cc: gcc,   cxx: g++,     args: ""                                }
-          - { os: ubuntu-20.04, type: Release, cc: gcc,   cxx: g++,     args: "-DECM_ENABLE_SANITIZERS=address" }
-          - { os: ubuntu-20.04, type: Debug,   cc: clang, cxx: clang++, args: "-DENABLE_CLANG_TIDY=ON"          }
+          - { os: ubuntu-18.04, type: Release,        cc: gcc,   cxx: g++,     args: ""                                            }
+          - { os: ubuntu-20.04, type: Debug,          cc: gcc,   cxx: g++,     args: "-DENABLE_CLANG_TIDY=ON"                      }
+          - { os: ubuntu-20.04, type: RelWithDebInfo, cc: clang, cxx: clang++, args: '-DECM_ENABLE_SANITIZERS="address;undefined"' }
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
@@ -27,6 +27,9 @@ jobs:
                 ${{ matrix.args }} ..
       - run: cmake --build build
       - run: cmake --build build -t test
+      - name: Run samples
+        if: matrix.type == 'RelWithDebInfo'
+        run: cmake --build build -t samples-cmake
 
   macOS:
     runs-on: ${{ matrix.os }}
