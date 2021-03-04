@@ -90,7 +90,7 @@ TEST_CASE( "projections: JTSK03 -- utm, auto=true", "[proj]" ) {
     thcs_cfg.proj_auto = false;
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_utm_h, 0.2));
+    CHECK(coord_equal(z, p1_jtsk_h, 0.001));
 }
 
 TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
@@ -98,7 +98,7 @@ TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
             p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_utm_h, 0.1));
+    CHECK(coord_equal(z, p1_jtsk_h, 0.001));
 }
 
 TEST_CASE( "projections: +krovak +czech -- utm, auto=true", "[proj]" ) {
@@ -108,7 +108,7 @@ TEST_CASE( "projections: +krovak +czech -- utm, auto=true", "[proj]" ) {
     thcs_cfg.proj_auto = false;
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_utm_h, 0.2));
+    CHECK(coord_equal(z, p1_jtsk_h, 0.001));
 }
 
 TEST_CASE( "projections: iJTSK03 -- utm, auto=true", "[proj]" ) {
@@ -118,7 +118,7 @@ TEST_CASE( "projections: iJTSK03 -- utm, auto=true", "[proj]" ) {
     thcs_cfg.proj_auto = false;
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_utm_h, 0.2));
+    CHECK(coord_equal(z, p1_jtsk_h, 0.001));
 }
 
 TEST_CASE( "projections: iJTSK03 -- utm, auto=false", "[proj]" ) {
@@ -126,7 +126,7 @@ TEST_CASE( "projections: iJTSK03 -- utm, auto=false", "[proj]" ) {
             -p1_jtsk_y, -p1_jtsk_x, p1_jtsk_h, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_utm_h, 0.2));
+    CHECK(coord_equal(z, p1_jtsk_h, 0.001));
 }
 
 TEST_CASE( "projections: latlong -- JTSK03", "[proj]" ) {
@@ -234,7 +234,7 @@ TEST_CASE( "s-merc -- EPSG_32634", "[proj]" ) {  // Pseudo Mercator -> UTM34N
         2187796.40, 6264051.68, 2025.44, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
-    CHECK(coord_equal(z, p1_utm_h, 0.01));
+    CHECK(coord_equal(z, 2025.44, 0.001));
 }
 
 /*

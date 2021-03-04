@@ -6,9 +6,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-18.04, type: Release, cc: gcc,   cxx: g++,     args: ""                                }
-          - { os: ubuntu-20.04, type: Release, cc: gcc,   cxx: g++,     args: "-DECM_ENABLE_SANITIZERS=address" }
-          - { os: ubuntu-20.04, type: Debug,   cc: clang, cxx: clang++, args: "-DENABLE_CLANG_TIDY=ON"          }
+          - { os: ubuntu-18.04, toolchain: gcc.cmake,              args: ""                                                }
+          - { os: ubuntu-20.04, toolchain: gcc.cmake,              args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug" }
+          - { os: ubuntu-20.04, toolchain: clang-sanitizers.cmake, args: ""                                                }
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
@@ -19,14 +19,15 @@ jobs:
         run: |
           mkdir build && cd build && \
           cmake -G Ninja \
-                -DCMAKE_BUILD_TYPE=${{ matrix.type }} \
-                -DCMAKE_C_COMPILER=${{ matrix.cc }} \
-                -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
+                -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/${{ matrix.toolchain }} \
                 -DCMAKE_CXX_FLAGS="-Werror" \
                 -DUSE_BUNDLED_SHAPELIB=OFF \
                 ${{ matrix.args }} ..
       - run: cmake --build build
       - run: cmake --build build -t test
+      - name: Run samples
+        if: matrix.toolchain == 'clang-sanitizers.cmake'
+        run: cmake --build build -t samples-cmake
 
   macOS:
     runs-on: ${{ matrix.os }}
