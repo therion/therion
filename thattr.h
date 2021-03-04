@@ -143,7 +143,7 @@ struct thattr {
   size_t m_num_fields,  ///< Number of fields.
     m_num_objects;  ///< Number of objects.
 
-  bool m_tree; ///< Whether table has a tree structure.
+  bool m_tree = false; ///< Whether table has a tree structure.
 
   thattr_obj_list m_obj_list;  ///< List of objects.
   thattr_id2obj_map m_obj_map;  ///< ID -> Object map.
