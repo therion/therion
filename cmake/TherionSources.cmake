@@ -51,6 +51,7 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thexpsys.h
     ${CMAKE_SOURCE_DIR}/thexptable.h
     ${CMAKE_SOURCE_DIR}/thexpuni.h
+    ${CMAKE_SOURCE_DIR}/thfilehandle.h
     ${CMAKE_SOURCE_DIR}/thgeomag.h
     ${CMAKE_SOURCE_DIR}/thgeomagdata.h
     ${CMAKE_SOURCE_DIR}/thgrade.h
