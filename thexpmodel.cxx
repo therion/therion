@@ -46,6 +46,7 @@
 #include "thcs.h"
 #include "thtexfonts.h"
 #include "thlang.h"
+#include "thfilehandle.h"
 #include <libgen.h>
 #include <thread>
 
@@ -768,23 +769,20 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
               thbuffer tifn;
               tifn.guarantee(2048);
               sprintf(tifn.get_buffer(), "%s.img%d.%s", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
-              FILE * texf, * xf;
-              texf = fopen(tifn.get_buffer(), "wb");
-              xf = fopen(srfc->pict_name, "rb");
+              auto texf = thopen_file(tifn.get_buffer(), "wb");
+              auto xf = thopen_file(srfc->pict_name, "rb");
               if (texf != NULL) {
                 if (xf != NULL) {
-                  fseek(xf, 0, SEEK_END);
-                  size_t fsz = ftell(xf);
-                  fseek(xf, 0, SEEK_SET);
+                  fseek(xf.get(), 0, SEEK_END);
+                  size_t fsz = ftell(xf.get());
+                  fseek(xf.get(), 0, SEEK_SET);
                   if (fsz > 0) {
                     char * cdata = new char [fsz];
-                    thassert(fread((void *) cdata, 1, fsz, xf) == fsz);
-                    fwrite((void *) cdata, 1, fsz, texf);
+                    thassert(fread((void *) cdata, 1, fsz, xf.get()) == fsz);
+                    fwrite((void *) cdata, 1, fsz, texf.get());
                     delete [] cdata;
                   }
-                  fclose(xf);
                 }
-                fclose(texf);
                 fprintf(pltf,
                   "\ttexture ImageTexture {\n\t\turl [\"%s\"]\n\t}\n", tifn.get_buffer());
               }

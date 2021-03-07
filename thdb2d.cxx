@@ -45,6 +45,7 @@
 #include "thtrans.h"
 #include "thtmpdir.h"
 #include "thinit.h"
+#include "thfilehandle.h"
 #include <list>
 #include <cstdio>
 #ifndef THMSVC
@@ -3628,14 +3629,15 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   }
 
   // load data back to therion
-  FILE * af;
-  af = fopen("data.1","r");
+  auto af = thopen_file("data.1","r");
+  if (!af)
+    ththrow("can't open file data.1");
   double n[6];
   com.guarantee(256);
   std::unique_ptr<thline> cln;
   char * buff = com.get_buffer();
   ti = todo.begin();
-  while ((fscanf(af,"%32s",buff) > 0) && (ti != todo.end())) {
+  while ((fscanf(af.get(),"%32s",buff) > 0) && (ti != todo.end())) {
     if (cnt < 6) {
       thparse_double(retcode, n[cnt], buff);
       if (retcode == TT_SV_NUMBER) {
