@@ -219,10 +219,22 @@ class thdatabase {
   
   
   /**
-   * Create an data object linked to the database.
+   * Create a data object linked to the database. Use this method when object
+   * type is a runtime information, for example when parsing a file.
+   * If the type is known at compile time, use create<T>(thobjectsrc).
    */
    
   std::unique_ptr<thdataobject> create(const char * oclass, thobjectsrc osrc);
+  
+  
+  /**
+   * Create a data object linked to the database.
+   * @tparam type of the object
+   * @param osrc source info
+   * @return instance of T
+   */
+  template <typename T>
+  std::unique_ptr<T> create(const thobjectsrc& osrc);
   
   
   /**
@@ -365,8 +377,43 @@ class thdatabase {
   
   void insert_equate(int nargs, char ** args);
 
+private:
+  /**
+   * @brief add thdata to the new thsurvey object
+   * @param survey new survey object
+   * @param osrc source info
+   */
+  void add_data(thsurvey& survey, const thobjectsrc& osrc);
+
+  /**
+   * @brief helper template, do nothing for other types than thsurvey
+   */
+  template <typename T>
+  void add_data(const T&, const thobjectsrc&)
+  {
+    static_assert(!std::is_same<T, thsurvey>::value, "wrong method chosen by overloading");
+    // noop for types other than thsurvey
+  }
 };
 
+// Template definition must be available in a header file.
+template <typename T>
+std::unique_ptr<T> thdatabase::create(const thobjectsrc& osrc)
+{
+  static_assert(std::is_base_of<thdataobject, T>::value, "created object must be derived from thdataobject");
+
+  auto ret = std::make_unique<T>();
+
+  ret->assigndb(this);
+  // set object id and mark revision
+  ret->id = ++this->objid;
+  this->attr.insert_object((void *) ret.get(), (long) ret->id);
+  ret->source = osrc;
+  this->revision_set.insert(threvision(ret->id, 0, osrc));
+
+  add_data(*ret, osrc);
+  return ret;
+}
 
 /**
  * Database module.
