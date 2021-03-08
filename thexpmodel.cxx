@@ -238,7 +238,7 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
     thwarning(("can't open %s for output",fnm))
     return;
   }
-  this->register_output(fnm);
+  //this->register_output(fnm);
 
   unsigned long last_st = nstat, cur_st, cnlegs = 0;
   bool check_traverses = (dbp->db1d.traverse_list.size() > 0);
