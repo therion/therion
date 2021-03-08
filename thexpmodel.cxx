@@ -2025,8 +2025,9 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
       }
 
       case TT_DATA_CMD: {
-        unsigned long last_st, cur_st, numst = 0;
+        unsigned long last_st = 0, cur_st = 0, numst = 0;
         double x, y, z;
+        bool first_station = true;
         thdataleg_list::iterator legs;
         thdata * survdata = (thdata *) obj;
 
@@ -2038,7 +2039,6 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
         fprintf(out, "<MultiGeometry>\n");
 
         // Export underground legs here. Surface ones are already exported in export_kml_file
-        last_st = db->db1d.station_vec[survdata->leg_list.back().to.id - 1].uid - 1;
         for(legs = survdata->leg_list.begin(); legs != survdata->leg_list.end(); legs++) {
           bool is_surface = (legs->flags & TT_LEGFLAG_SURFACE) != 0;
           bool is_splay = (legs->flags & TT_LEGFLAG_SPLAY) != 0;
@@ -2046,7 +2046,8 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
           if ((legs->is_valid && !is_surface) &&
               (((this->items & TT_EXPMODEL_ITEM_SPLAYSHOTS) != 0) || !is_splay)) {
             cur_st = db->db1d.station_vec[legs->from.id - 1].uid - 1;
-            if (cur_st != last_st) {
+            if (first_station || (cur_st != last_st)) {
+              first_station = false;
               if (numst > 0)
                 fprintf(out, "\n</coordinates></LineString>\n");
               fprintf(out, "<LineString><coordinates>\n");
