@@ -224,5 +224,4 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thwarppme.cxx
     ${CMAKE_SOURCE_DIR}/thwarppt.cxx
     ${CMAKE_SOURCE_DIR}/extern/quickhull/QuickHull.cpp
-    ${CMAKE_SOURCE_DIR}/extern/img.c
 )
