@@ -2249,8 +2249,12 @@ else
       switch (this->format) {
 
     case TT_EXPMAP_FMT_PDF:
-      if (!quick_map_exp)
-        thconvert();
+      if (!quick_map_exp) {
+        thconvert_eps();
+        thgraphics2pdf();
+
+        if (thtmp.debug) thconvert_old();
+      }
 
       thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
 
@@ -2305,14 +2309,14 @@ else
       // END OF PDF POSTPROCESSING
 
     case TT_EXPMAP_FMT_SVG:
-      thconvert_new();
+      thconvert_eps();
       thassert(chdir(wdir.get_buffer()) == 0);
       thsvg(fnm, 0, ldata);
       break;
       
 
     case TT_EXPMAP_FMT_XHTML:
-      thconvert_new();
+      thconvert_eps();
       thassert(chdir(wdir.get_buffer()) == 0);
       thsvg(fnm, 1, ldata);
       break;

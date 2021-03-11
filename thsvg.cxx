@@ -517,6 +517,7 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
            ")\">" << std::endl;
       F << "<g transform=\"translate(" 
                     << I->llx1-I->llx << " " << I->lly1-I->lly << ")\">" << std::endl;
+      I->data.MP.gstate.col.set(0);   // force a black color, as the patterns definitions don't include color information any more
       I->data.MP.print_svg(F,unique_prefix);
       F << "</g>" << std::endl;
       F << "</pattern>" << std::endl;
