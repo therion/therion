@@ -167,7 +167,7 @@ std::string color::to_pdfpatterncolor() {
     s = fmt::format("/CS1 cs {:.2f} {:.2f} {:.2f}", a, b, c);
   }
   else if (model == colormodel::cmyk) {
-    s = fmt::format("/CS1 cs {:.2f} {:.2f} {:.2f} {:.2f}", a, b, c, d);
+    s = fmt::format("/CS2 cs {:.2f} {:.2f} {:.2f} {:.2f}", a, b, c, d);
   }
   return s;
 }
