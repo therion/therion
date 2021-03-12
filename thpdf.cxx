@@ -1272,10 +1272,15 @@ void build_pages() {
   }
 
   if (thcfg.reproducible_output) {
-    PDFRES << "\\ifx\\pdfsuppressptexinfo\\undefined\\else%" << std::endl;
-    PDFRES << "  \\pdfsuppressptexinfo=-1\\pdftrailerid{}\\pdfinfoomitdate=1%" << std::endl;
-    PDFRES << "\\fi%" << std::endl;
-    PDFRES << "\\pdfinfo{/Producer (pdfTeX)}%" << std::endl;
+    PDFRES <<
+R"(\ifx\directlua\undefined
+  \pdfsuppressptexinfo=-1\pdftrailerid{}\pdfinfoomitdate=1%
+  \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (pdfTeX)}%
+\else
+  \pdfvariable suppressoptionalinfo\numexpr1+2+4+8+32+64+512%
+  \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (LuaTeX)}
+\fi%
+)";
   } else {
     PDFRES << "\\pdfinfo{/Creator (Therion " << THVERSION << ", MetaPost, TeX)}%" << std::endl;
   }
