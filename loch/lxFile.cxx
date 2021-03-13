@@ -254,14 +254,6 @@ lxFileShot::lxFileShot()
   this->m_flags = 0;
   this->m_threshold = 60.0;
   this->m_sectionType = LXFILE_SHOT_SECTION_NONE;
-  this->m_from = 0;
-  this->m_to = 0;
-  this->m_surveyId = 0;
-  this->m_fLRUD[0] = this->m_fLRUD[1] = this->m_fLRUD[2] = this->m_fLRUD[3] = 0.0;
-  this->m_tLRUD[0] = this->m_tLRUD[1] = this->m_tLRUD[2] = this->m_tLRUD[3] = 0.0;
-  this->m_threshold = 60.0;
-  this->m_flags=0;
-  this->m_sectionType=0;
 }
 
 lxFile::lxFile()

@@ -22,7 +22,7 @@ xtherion/therion.tcl
 !.github/
 !.gitattributes
 *~
-*.3d
+./*.3d
 *.a
 *.err
 *.exe

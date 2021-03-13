@@ -1273,12 +1273,15 @@ void build_pages() {
 
   if (thcfg.reproducible_output) {
     PDFRES <<
-R"(\ifx\directlua\undefined
+R"(\pdfcompresslevel=9%
+\pdfobjcompresslevel=2%
+\pdfdecimaldigits=3%
+\ifx\directlua\undefined
   \pdfsuppressptexinfo=-1\pdftrailerid{}\pdfinfoomitdate=1%
   \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (pdfTeX)}%
 \else
   \pdfvariable suppressoptionalinfo\numexpr1+2+4+8+32+64+512%
-  \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (LuaTeX)}
+  \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (LuaTeX)}%
 \fi%
 )";
   } else {
