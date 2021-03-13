@@ -221,7 +221,8 @@ void MP_text::print_svg(std::ofstream & F, CGS & gstate) {
   if (LAYOUT.colored_text && col.is_defined()) F << 
     "fill=\"" << col.to_svg() << "\" " <<   // col = the scrap color
     "stroke=\"black\" stroke-width=\"0.1\" ";
-  else F << "fill=\"" << gstate.col.to_svg() << "\" stroke=\"none\" ";
+  else F << "fill=\"" << (gstate.col.is_defined() ? gstate.col.to_svg() : "black") <<
+         "\" stroke=\"none\" ";
   F << "transform=\"matrix(" << xx << " " << xy << " " << -yx << " " << -yy <<
        " " << x << " " << y << ")\">";
   for (unsigned int i = 0; i < text.size(); i++)
