@@ -216,12 +216,12 @@ void MP_text::clear() {
   transformed = false;
 }
 
-void MP_text::print_svg(std::ofstream & F) {
+void MP_text::print_svg(std::ofstream & F, CGS & gstate) {
   F << "<text font-family=\"" << font << "\" font-size=\"" << size << "\" ";
   if (LAYOUT.colored_text && col.is_defined()) F << 
-    "fill=\"" << col.to_svg() << "\" " <<
+    "fill=\"" << col.to_svg() << "\" " <<   // col = the scrap color
     "stroke=\"black\" stroke-width=\"0.1\" ";
-  else F << "fill=\"black\" stroke=\"none\" ";
+  else F << "fill=\"" << gstate.col.to_svg() << "\" stroke=\"none\" ";
   F << "transform=\"matrix(" << xx << " " << xy << " " << -yx << " " << -yy <<
        " " << x << " " << y << ")\">";
   for (unsigned int i = 0; i < text.size(); i++)
@@ -233,6 +233,9 @@ void MP_text::print_pdf(std::ofstream & F) {
   F << PL("BT");
   F << PL(fmt::format("/F\\pdffontname\\{:s}\\space {:f} Tf", tex_Fname(ALL_FONTS[font]), size));
   F << PL(fmt::format("{:f} {:f} {:f} {:f} {:f} {:f} Tm", xx, xy, yx, yy, x, y));
+  if (LAYOUT.colored_text && col.is_defined()) {    // use the scrap color
+    F << PL("0.1 w " + col.to_pdfliteral(fillstroke::fill) + " 2 Tr ");
+  };
   F << PL(fmt::format("{:s} Tj", str2pdfhex(text)));
   F << PL("ET");
 }
@@ -564,7 +567,7 @@ void MP_data::print_svg (std::ofstream & F, std::string unique_prefix) {
         settings[index[i].idx].print_svg(F,gstate);
         break;
       case I_text:
-        texts[index[i].idx].print_svg(F);
+        texts[index[i].idx].print_svg(F,gstate);
         break;
       case I_gsave:
         switch (index[i].idx) {

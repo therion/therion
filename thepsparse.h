@@ -104,12 +104,12 @@ struct MP_index {
 struct MP_text {
   std::string text, font;
   double size, x, y, xx, xy, yx, yy;
-  color col;
+  color col;    // color of the associated scrap
   bool transformed;
   
   MP_text();
   void clear();
-  void print_svg(std::ofstream & F);
+  void print_svg(std::ofstream & F, CGS & gstate);
   void print_pdf(std::ofstream & F);
 };
 
