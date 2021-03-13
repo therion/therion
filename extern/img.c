@@ -1028,7 +1028,8 @@ img_write_stream(FILE *stream, int (*close_func)(FILE*),
    }
    PUTC('\n', pimg->fh);
 
-   tm = time(NULL);
+   /* Replaced tm = time(NULL); for output to be reproducible. */
+   tm = (time_t)368704800;
    if (tm == (time_t)-1) {
       fputsnl(TIMENA, pimg->fh);
    } else if (pimg->version <= 7) {
