@@ -647,6 +647,8 @@ void MP_data::print_pdf (std::ofstream & F) {
 
 }
 
+// print a single picture to SVG
+// used for embedding the legend symbols into an XHTML file
 void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) { 
   std::ostringstream s;
   static long i_patt_def(10000);
@@ -675,7 +677,10 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
                                             << J->x <<  " " << J->y  << 
             ")\">" << std::endl;
         F << "<g transform=\"translate(" 
-                      << J->llx1-J->llx << " " << J->lly1-J->lly << ")\">" << std::endl;
+                      << J->llx1-J->llx << " " << J->lly1-J->lly << ")\"" <<
+                       " fill=\"black\" stroke=\"black\">\n";
+                       // currentColor doesn't work to inherit the color of the symbol;
+                       // context-fill/stroke doesn't work in patterns
         J->data.MP.print_svg(F,unique_prefix);
         F << "</g>" << std::endl;
         F << "</pattern>" << std::endl;

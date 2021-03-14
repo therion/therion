@@ -516,8 +516,10 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
                                            << I->x <<  " " << I->y  << 
            ")\">" << std::endl;
       F << "<g transform=\"translate(" 
-                    << I->llx1-I->llx << " " << I->lly1-I->lly << ")\">" << std::endl;
-      I->data.MP.gstate.col.set(0);   // force a black color, as the patterns definitions don't include color information any more
+                    << I->llx1-I->llx << " " << I->lly1-I->lly << ")\"" <<
+                       " fill=\"black\" stroke=\"black\">\n";
+                       // currentColor doesn't work to inherit the color of the symbol;
+                       // context-fill/stroke doesn't work in patterns
       I->data.MP.print_svg(F,unique_prefix);
       F << "</g>" << std::endl;
       F << "</pattern>" << std::endl;
