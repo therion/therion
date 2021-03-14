@@ -1725,7 +1725,7 @@ void export_all_symbols()
             fx = thsymsets_figure[sx][iset];
             if (fx > 0) {
               sprintf(fname, "%s/data.%d", thtmp.get_dir_name(),fx);
-                    parse_eps(fname,"",0,0,a,b,c,d,svgpict,0);
+                    parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
               hf << "<td>\n";
          	    svgpict.print_svg(hf);
               hf << "</td>\n";
@@ -1736,7 +1736,7 @@ void export_all_symbols()
         }
       } else {
         sprintf(fname, "%s/data.%d", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
-        parse_eps(fname,"",0,0,a,b,c,d,svgpict,0);
+        parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
         hf << "<td bgcolor=\"#cccccc\" colspan=\"" << thsymsets_size << "\">";
         svgpict.print_svg(hf);
         hf << "</td>\n";
