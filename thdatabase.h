@@ -379,21 +379,11 @@ class thdatabase {
 
 private:
   /**
-   * @brief add thdata to the new thsurvey object
-   * @param survey new survey object
+   * @brief adds thdata if the object is thsurvey
+   * @param obj new object
    * @param osrc source info
    */
-  void add_data(thsurvey& survey, const thobjectsrc& osrc);
-
-  /**
-   * @brief helper template, do nothing for other types than thsurvey
-   */
-  template <typename T>
-  void add_data(const T&, const thobjectsrc&)
-  {
-    static_assert(!std::is_same<T, thsurvey>::value, "wrong method chosen by overloading");
-    // noop for types other than thsurvey
-  }
+  void add_data(thdataobject* obj, const thobjectsrc& osrc);
 };
 
 // Template definition must be available in a header file.
@@ -411,7 +401,9 @@ std::unique_ptr<T> thdatabase::create(const thobjectsrc& osrc)
   ret->source = osrc;
   this->revision_set.insert(threvision(ret->id, 0, osrc));
 
-  add_data(*ret, osrc);
+  // add thdata if the object is thsurvey
+  add_data(ret.get(), osrc);
+
   return ret;
 }
 

@@ -878,17 +878,20 @@ void thdatabase::insert_equate(int nargs, char ** args)
 }
 
 
-void thdatabase::add_data(thsurvey& survey, const thobjectsrc& osrc)
+void thdatabase::add_data(thdataobject* obj, const thobjectsrc& osrc)
 {
-  auto retdata = std::make_unique<thdata>();
-  retdata->assigndb(this);    
-  // set object id and mark revision
-  retdata->id = ++this->objid;
-  retdata->source = osrc;
-  this->revision_set.insert(threvision(retdata->id, 0, osrc));
+  if (auto* survey = dynamic_cast<thsurvey*>(obj))
+  {
+    auto retdata = std::make_unique<thdata>();
+    retdata->assigndb(this);    
+    // set object id and mark revision
+    retdata->id = ++this->objid;
+    retdata->source = osrc;
+    this->revision_set.insert(threvision(retdata->id, 0, osrc));
 
-  survey.data = retdata.get();
-  survey.tmp_data_holder = std::move(retdata);
+    survey->data = retdata.get();
+    survey->tmp_data_holder = std::move(retdata);
+  }
 }
 
 
