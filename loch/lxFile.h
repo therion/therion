@@ -54,6 +54,7 @@ struct lxFileSize {
   lxFileSizeT & operator = (const lxFileSizeT & right) {return this->m_size = right;}
   lxFileSizeT Save(lxFileBuff & ptr);
   lxFileSizeT Load(lxFileBuff & ptr);
+  lxFileSize() : m_size(0) {}
 };
 
 
@@ -63,6 +64,7 @@ struct lxFileDbl {
   double & operator = (const double & right) {return this->m_num = right;}
   lxFileSizeT Save(lxFileBuff & ptr);
   lxFileSizeT Load(lxFileBuff & ptr);
+  lxFileDbl() : m_num(0.0) {}
 };
 
 

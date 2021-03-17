@@ -172,6 +172,7 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
             case TT_EXPMAP_FMT_KML:
             case TT_EXPMAP_FMT_DXF:
             case TT_EXPMAP_FMT_SHP:
+            case TT_EXPMAP_FMT_BBOX:
               supform = true;
           }
           break;

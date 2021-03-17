@@ -26,6 +26,7 @@ therion:
    - no station scrap continuation list [#333]
    - fixed arrows flipping [#245]
    - colour preview-above doesn't work [#90]
+   - KML export fix [#84]
    - other minor fixes
  * included {fmt} library
  * updated shapelib

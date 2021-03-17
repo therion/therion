@@ -1,7 +1,7 @@
 source ../basics/rabbit.th
 
 source
-map x -title "<lang:en>Test X<lang:sk>Hovadina X"
+map x -title "<lang:en>Test X<lang:sk>Test Y"
  pdp@rabbit
 endmap
 endsource
@@ -18,4 +18,5 @@ endlayout
 
 export map -o cave.pdf -layout colors
 
+#!PROCESS
 #!CLEAN cave.pdf
