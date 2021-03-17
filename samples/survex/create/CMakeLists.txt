@@ -1,4 +1,4 @@
-therion_copy_files(thconfig create.th create.th2 create.svx)
+therion_copy_files(thconfig create.th create.th2 create.svx create.3d)
 
 add_custom_command(
     OUTPUT create.3d

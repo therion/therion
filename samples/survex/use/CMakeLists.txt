@@ -1,4 +1,4 @@
-therion_copy_files(thconfig use.th use-in.th2 use-out.th2 use.svx)
+therion_copy_files(thconfig use.th use-in.th2 use-out.th2 use.svx use.3d)
 
 add_custom_command(
     OUTPUT use.3d

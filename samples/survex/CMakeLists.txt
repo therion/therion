@@ -4,7 +4,7 @@ if (NOT SURVEX_EXECUTABLE)
     return()
 endif()
 
-therion_copy_files(thconfig.layout cave.svx)
+therion_copy_files(thconfig.layout cave.svx cave.3d)
 
 add_custom_command(
     OUTPUT cave.3d
