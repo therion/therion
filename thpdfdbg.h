@@ -34,6 +34,9 @@
 std::string u2str(unsigned u);
 std::string tex_Xname(std::string s);
 std::string tex_Wname(std::string s);
+std::string tex_Fname(std::string s);
+std::string tex_Pname(std::string s);
+std::string tex_Lname(std::string s);
 std::string tex_set_ref(std::string s, std::string t);
 std::string tex_get_ref(std::string s);
 std::string pdf_info(void);
