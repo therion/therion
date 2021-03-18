@@ -47,6 +47,7 @@
 #include "thpdfdata.h"
 #include "thtexfonts.h"
 #include "therion.h"
+#include "thdouble.h"
 
 #define IOerr(F) ((std::string)"Can't open file "+F+"!\n").c_str()
 
@@ -58,7 +59,12 @@ std::list<converted_data> GRIDLIST;
 converted_data NArrow, ScBar;
 
 extern unsigned font_id, patt_id;
-int conv_mode;
+static int conv_mode;
+
+const int prec_col = 5;
+//const int prec_matr = 6;
+const int prec_mp = 5;
+//const int prec_xy = 2;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -78,7 +84,7 @@ void color::set(double a, double b, double c) {
     this->a = a;
     this->b = b;
     this->c = c;
-  } else {  // convert to gray in grayscale output (for now it works in SVG export only because of a different approach to MP data conversion)
+  } else {  // convert to gray in grayscale output
     model = colormodel::grey;
     this->a = 0.3*a + 0.59*b + 0.11*c;   // see PDF Reference, section 6.2
   }
@@ -91,7 +97,7 @@ void color::set(double a, double b, double c, double d) {
     this->b = b;
     this->c = c;
     this->d = d;
-  } else {  // convert to gray in grayscale output (for now it works in SVG export only because of a different approach to MP data conversion)
+  } else {  // convert to gray in grayscale output
     model = colormodel::grey;
     this->a = 1.0 - std::min(1.0, 0.3*a + 0.59*b + 0.11*c + d);   // see PDF Reference, section 6.2
   }
@@ -130,30 +136,29 @@ std::string color::to_svg() {
 
 std::string color::to_pdfliteral(fillstroke fs) {
   std::ostringstream s;
-  s << std::setprecision(3);
   if (model == colormodel::grey) {
     if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
-      s << this->a << " g";
+      s << fmt::format("{}", thdouble(this->a,prec_col)) << " g";
     if (fs == fillstroke::fillstroke)
       s << " ";
     if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
-      s << this->a << " G";
+      s << fmt::format("{}", thdouble(this->a,prec_col)) << " G";
   }
   else if (model == colormodel::rgb) {
     if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
-      s << this->a << " " << this->b << " " << this->c << " rg";
+      s << fmt::format("{}", thdouble(this->a,prec_col)) << " " << fmt::format("{}", thdouble(this->b,prec_col)) << " " << fmt::format("{}", thdouble(this->c,prec_col)) << " rg";
     if (fs == fillstroke::fillstroke)
       s << " ";
     if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
-      s << this->a << " " << this->b << " " << this->c << " RG";
+      s << fmt::format("{}", thdouble(this->a,prec_col)) << " " << fmt::format("{}", thdouble(this->b,prec_col)) << " " << fmt::format("{}", thdouble(this->c,prec_col)) << " RG";
   }
   else if (model == colormodel::cmyk) {
     if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
-      s << this->a << " " << this->b << " " << this->c <<  " " << this->d << " k";
+      s << fmt::format("{}", thdouble(this->a,prec_col)) << " " << fmt::format("{}", thdouble(this->b,prec_col)) << " " << fmt::format("{}", thdouble(this->c,prec_col)) <<  " " << fmt::format("{}", thdouble(this->d,prec_col)) << " k";
     if (fs == fillstroke::fillstroke)
       s << " ";
     if (fs == fillstroke::stroke || fs == fillstroke::fillstroke)
-      s << this->a << " " << this->b << " " << this->c <<  " " << this->d << " K";
+      s << fmt::format("{}", thdouble(this->a,prec_col)) << " " << fmt::format("{}", thdouble(this->b,prec_col)) << " " << fmt::format("{}", thdouble(this->c,prec_col)) <<  " " << fmt::format("{}", thdouble(this->d,prec_col)) << " K";
   }
   return s.str();
 }
@@ -161,13 +166,13 @@ std::string color::to_pdfliteral(fillstroke fs) {
 std::string color::to_pdfpatterncolor() {
   std::string s;
   if (model == colormodel::grey) {
-    s = fmt::format("/CS3 cs {:.2f}", a);
+    s = fmt::format("/CS3 cs {}", thdouble(a,prec_col));
   }
   else if (model == colormodel::rgb) {
-    s = fmt::format("/CS1 cs {:.2f} {:.2f} {:.2f}", a, b, c);
+    s = fmt::format("/CS1 cs {} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col));
   }
   else if (model == colormodel::cmyk) {
-    s = fmt::format("/CS2 cs {:.2f} {:.2f} {:.2f} {:.2f}", a, b, c, d);
+    s = fmt::format("/CS2 cs {} {} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col), thdouble(d,prec_col));
   }
   return s;
 }
@@ -189,7 +194,7 @@ std::string CGS::svg_color() {
 
 std::string str2pdfhex(std::string s) {
   std::string t;
-  for (unsigned c: s) {
+  for (unsigned char c: s) {
     t += fmt::format("{:02x}", c);
   }
   return "<" + t + ">";
@@ -232,8 +237,8 @@ void MP_text::print_svg(std::ofstream & F, CGS & gstate) {
 
 void MP_text::print_pdf(std::ofstream & F) {
   F << PL("BT");
-  F << PL(fmt::format("/F\\pdffontname\\{:s}\\space {:f} Tf", tex_Fname(ALL_FONTS[font]), size));
-  F << PL(fmt::format("{:f} {:f} {:f} {:f} {:f} {:f} Tm", xx, xy, yx, yy, x, y));
+  F << PL(fmt::format("/F\\pdffontname\\{:s}\\space {} Tf", tex_Fname(ALL_FONTS[font]), thdouble(size,prec_mp)));
+  F << PL(fmt::format("{} {} {} {} {:.1f} {:.1f} Tm", thdouble(xx,prec_mp), thdouble(xy,prec_mp), thdouble(yx,prec_mp), thdouble(yy,prec_mp), x, y));
   if (LAYOUT.colored_text && col.is_defined()) {    // use the scrap color
     F << PL("0.1 w " + col.to_pdfliteral(fillstroke::fill) + " 2 Tr ");
   };
@@ -539,16 +544,16 @@ void MP_setting::print_pdf (std::ofstream & F) {
       F << PL(fmt::format("{:.0f} J", data));
       break;
     case MP_miterlimit:
-      F << PL(fmt::format("{:.2f} M", data));
+      F << PL(fmt::format("{} M", thdouble(data,prec_mp)));
       break;
     case MP_linewidth:
-      F << PL(fmt::format("{:.2f} w", data));
+      F << PL(fmt::format("{} w", thdouble(data,prec_mp)));
       break;
     case MP_dash:
       std::string t;
       t = "[";
-      for (double d: dasharray) t += fmt::format("{:.2f} ", d);
-      t+= fmt::format("] {:.2f} d", dashoffset);
+      for (double d: dasharray) t += fmt::format("{} ", thdouble(d,prec_mp));
+      t+= fmt::format("] {} d", thdouble(dashoffset,prec_mp));
       F << PL(t);
       break;
   }
@@ -1106,8 +1111,8 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
       // ->
       // BT /Fiii E Tf A1 A2 A3 A4 A5 A6 Tm (C) Tj ET
       // 
-      // currently we leave moveto, gsave, grestore unchanged;
-      // path started with moveto is terminated with the `n' operator
+      // currently we leave gsave, grestore unchanged;
+      // path started with moveto is omitted
       
       else if (tok == "fshow") {            // font changes should be optimized
         text.clear();
@@ -1342,22 +1347,26 @@ void thgraphics2pdf() {
     << "\\catcode`\\^^L=12\\catcode`\\^^A=12\\catcode`\\^^K=12\\catcode`\\^^I=12" << std::endl
     << "\\catcode`\\^^M=12" << std::endl;   // na tomto riadku ma tex este stare catcode konca riadku,
                                        // vsetko nasledovne musi byt v jednom riadku
+  std::set<std::string> fontset;
+  std::string s;
   for (std::map<std::string,FONTCHARS>::iterator I = USED_CHARS.begin();
                                        I != USED_CHARS.end(); I++) {
-    F << "\\includechars\\" << tex_Fname(ALL_FONTS[(*I).first]) << ":";
+    s = "\\includechars\\" + tex_Fname(ALL_FONTS[(*I).first]) + ":";
     for (FONTCHARS::iterator J = ((*I).second).begin();
                              J != ((*I).second).end(); J++) {
       c = *J;
       if (c > 31 && c < 128) {
 //        if (c==37) F << "\\";    // % remains a comment
-        F << c;
-        if (c==92) F << " ";     // \ has to be followed by space
+        s += c;
+        if (c==92) s += " ";     // \ has to be followed by space
       } else {
-        F << "^^" << fmt::format("{:02x}", c);
+        s += "^^" + fmt::format("{:02x}", c);
       }
     }
-    F << "\\endinclude";
+    s += "\\endinclude";
+    fontset.insert(s);
   }
+  for (auto & i: fontset) F << i;   // print the fonts sorted
   F << "\\endgroup" << std::endl;
   F << "% PATTERNS:" << std::endl;
 
@@ -1367,10 +1376,10 @@ void thgraphics2pdf() {
 
       F << "\\immediate\\pdfobj stream attr {/Type /Pattern\n";
       F << "/PaintType 2 /PatternType 1 /TilingType 1\n";
-      F << fmt::format("/Matrix [{:f} {:f} {:f} {:f} {:.2f} {:.2f}]\n", patt.xx, patt.xy, patt.yx, patt.yy, patt.x, patt.y);
-      F << fmt::format("/BBox [{:f} {:f} {:f} {:f}]\n", patt.llx, patt.lly, patt.urx, patt.ury);
-      F << fmt::format("/XStep {:f}\n", patt.xstep);
-      F << fmt::format("/YStep {:f}\n", patt.ystep);
+      F << fmt::format("/Matrix [{} {} {} {} {} {}]\n", thdouble(patt.xx,prec_mp), thdouble(patt.xy,prec_mp), thdouble(patt.yx,prec_mp), thdouble(patt.yy,prec_mp), thdouble(patt.x,prec_mp), thdouble(patt.y,prec_mp));
+      F << fmt::format("/BBox [{} {} {} {}]\n", thdouble(patt.llx,prec_mp), thdouble(patt.lly,prec_mp), thdouble(patt.urx,prec_mp), thdouble(patt.ury,prec_mp));
+      F << fmt::format("/XStep {}\n", thdouble(patt.xstep,prec_mp));
+      F << fmt::format("/YStep {}\n", thdouble(patt.ystep,prec_mp));
       F << "/Resources << /ProcSet [/PDF ] ";
       if (icc_used()) F << " /ColorSpace <<" << icc2pdfresources() << ">> ";
       F << ">>} {\n";
