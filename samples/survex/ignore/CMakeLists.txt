@@ -1,4 +1,4 @@
-therion_copy_files(thconfig ignore.th ignore.th2 ignore.svx)
+therion_copy_files(thconfig ignore.th ignore.th2 ignore.svx ignore.3d)
 
 add_custom_command(
     OUTPUT ignore.3d

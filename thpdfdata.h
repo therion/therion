@@ -38,9 +38,17 @@ struct surfpictrecord {
 
 struct scraprecord {
   std::string name,F,B,I,E,X,G,C,P;      // name + files
+    // E: scrap content that is not clipped  (walls, surveys, clip off)
+    // F: scrap content that will be clipped (most of map features)
+    // B: scrap outline, stroked             (produced by MP draw_upscrap macro)
+    // I: scrap outline, filled              (produced by MP draw_downscrap macro)     extension: bg
+    // C: clipping path                      (produced by MP draw_downscrap macro)     extension: clip
+    // X: labels
+    // P: text bboxes used for clipping      (produced by MP process_[*]label macros)   extension: bbox
+    // [G: scrap background, UNUSED]
   converted_data Fc, Bc, Ic, Ec, Xc, Gc;
   double S1,S2;                      // shift
-  int layer,level,sect;             // Y, V, Z
+  int layer,level,sect;              // layer; level; sect: 1 for cross-sections, 0 otherwise
   double F1,F2,F3,F4,                // bounding boxes
         G1,G2,G3,G4,
         B1,B2,B3,B4,
@@ -54,10 +62,10 @@ struct scraprecord {
 };
 
 struct layerrecord {
-  std::set<int> U,D;
-  std::string N,T;
-  int Z;
-  int AltJump;
+  std::set<int> U,D;  // U: preview above references, D: preview below references
+  std::string N,T;    // N: layer name, T: title (creates a title page in the atlas)
+  int Z;         // 0 for maps of maps (expanded), 1 for maps of scraps (basic)
+  int AltJump;   // reference to the expanded layer with U/D previews in basic layers
   int minx, maxx, miny, maxy;
   bool bookmark;
   std::map< int,std::set<std::string> > scraps;
