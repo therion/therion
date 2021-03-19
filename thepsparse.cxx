@@ -1447,7 +1447,7 @@ void thgraphics2pdf() {
         LEGCOLOR << "  \\colorlegendbox{";
         if (LAYOUT.transparency) LEGCOLOR << "/GS1 gs ";   // colorlegendbox argument is enclosed in q ... Q
         LEGCOLOR << legend_color[pos].col_legend.to_pdfliteral(fillstroke::fill) << "}%" << std::endl;
-        LEGCOLOR << "  \\legendsymbolbox{\\pdflastxform}{" <<
+        LEGCOLOR << "  \\colorlegendsymbolbox{\\pdflastxform}{" <<
         legend_color[pos].texname << "}\\hskip10pt" << std::endl;
       }
     }
