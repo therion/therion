@@ -10,6 +10,7 @@ add_custom_target(
   USES_TERMINAL)
 
  # subdirectories will add dependencies to these targets
+add_custom_target(samples-cmake)
 add_custom_target(samples-verify-crc)
 add_custom_target(samples-generate-crc)
 
@@ -28,6 +29,13 @@ function(therion_add_sample SAMPLE_NAME THCONFIG)
     therion_copy_files(${THCONFIG} ${SAMPLE_DEPENDS_SRC}) # copy dependency files to the build dir
     therion_make_files_lists(OUTPUTS ${SAMPLE_OUTPUT}) # make helper lists of files in src and build dirs
 
+    # Build samples with therion.
+    add_custom_target(samples-cmake-${SAMPLE_NAME}
+                      COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:therion> --reproducible-output ${THCONFIG}
+                      DEPENDS ${SAMPLE_DEPENDS_OTHER}
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                      COMMAND_EXPAND_LISTS)
+
     # CRC verification: Copy .crc files from source dir and then build the sample with verification.
     add_custom_target(samples-verify-crc-${SAMPLE_NAME}
                       ${CMAKE_COMMAND} -E copy "$<JOIN:${OUTPUTS_SRC},.crc;>.crc" ${CMAKE_CURRENT_BINARY_DIR}
@@ -45,6 +53,7 @@ function(therion_add_sample SAMPLE_NAME THCONFIG)
                       COMMAND_EXPAND_LISTS)
 
     # Make targets with all the samples together.
+    add_dependencies(samples-cmake samples-cmake-${SAMPLE_NAME})
     add_dependencies(samples-verify-crc samples-verify-crc-${SAMPLE_NAME})
     add_dependencies(samples-generate-crc samples-generate-crc-${SAMPLE_NAME})
 endfunction()
