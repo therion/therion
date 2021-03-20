@@ -1265,17 +1265,22 @@ void build_pages() {
 
   std::ofstream PDFRES("th_resources.tex");
   if(!PDFRES) therror(("Can't write file th_resources.tex"));
-  if (LAYOUT.transparency || LAYOUT.OCG) {
-    PDFRES << "\\ifnum\\pdftexversion<110\\pdfcatalog{ /Version /" <<
-      (LAYOUT.OCG ? "1.5" : "1.4") << " }" << 
-      (LAYOUT.OCG ? "\\else\\pdfminorversion=5" : "") << "\\fi" << std::endl;
-  }
+
+  PDFRES << "\\pdfminorversion=5%\n";
 
   if (thcfg.reproducible_output) {
-    PDFRES << "\\ifx\\pdfsuppressptexinfo\\undefined\\else%" << std::endl;
-    PDFRES << "  \\pdfsuppressptexinfo=-1\\pdftrailerid{}\\pdfinfoomitdate=1%" << std::endl;
-    PDFRES << "\\fi%" << std::endl;
-    PDFRES << "\\pdfinfo{/Producer (pdfTeX)}%" << std::endl;
+    PDFRES <<
+R"(\pdfcompresslevel=9%
+\pdfobjcompresslevel=2%
+\pdfdecimaldigits=3%
+\ifx\directlua\undefined
+  \pdfsuppressptexinfo=-1\pdftrailerid{}\pdfinfoomitdate=1%
+  \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (pdfTeX)}%
+\else
+  \pdfvariable suppressoptionalinfo\numexpr1+2+4+8+32+64+512%
+  \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (LuaTeX)}%
+\fi%
+)";
   } else {
     PDFRES << "\\pdfinfo{/Creator (Therion " << THVERSION << ", MetaPost, TeX)}%" << std::endl;
   }

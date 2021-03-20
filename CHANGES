@@ -9,6 +9,7 @@ therion:
    macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
    tr_white, tr_black were removed; use the drawing option
    'withcolor <color> withtransparency <number>' instead)
+ * reimplemented conversion of MetaPost output to PDF
  * support for double number system in MetaPost (this eliminates the current
    MetaPost limits; see the chapter Limitations in the Appendix of the Thbook)
  * tex-refs-registers <on/off> initialization file option added (see the
@@ -25,6 +26,7 @@ therion:
    - no station scrap continuation list [#333]
    - fixed arrows flipping [#245]
    - colour preview-above doesn't work [#90]
+   - KML export fix [#84]
    - other minor fixes
  * included {fmt} library
  * updated shapelib

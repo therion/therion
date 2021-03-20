@@ -730,6 +730,9 @@ void thinit::load()
   for (std::list<fontrecord>::iterator J = TMPFONTS.begin(); J != TMPFONTS.end(); J++) {
     FONTS.push_back(*J);
   }
+  
+  if (thcfg.reproducible_output)
+      this->loopc = THINIT_LOOPC_THERION;
 
 }
 

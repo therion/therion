@@ -59,10 +59,6 @@ int convert_mode;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-std::string tex_Fname(std::string s) {return("THF"+s);}
-std::string tex_Pname(std::string s) {return("THP"+s);}
-std::string tex_Lname(std::string s) {return("THL"+s);}
-
 std::list<scraprecord>::iterator find_scrap(std::string name) {
     std::list<scraprecord>::iterator I;
     for (I = SCRAPLIST.begin(); I != SCRAPLIST.end(); I++) {
@@ -83,14 +79,14 @@ void print_queue(std::deque<std::string>& thstack, double llx, double lly,
   }
   TEX << command;
   if (convert_mode>0) {TEX << "}%";}
-  TEX << std::endl;
+  TEX << "\n";
 }
 
 void print_str(std::string str, std::ofstream& TEX) {
   if (convert_mode>0) {TEX << "\\PL{";}
   TEX << str;
   if (convert_mode>0) {TEX << "}%";}
-  TEX << std::endl;
+  TEX << "\n";
 }
 
 
@@ -242,7 +238,7 @@ void distill_eps(std::string name, std::string fname, std::string cname, int mod
 	VS = ury - lly;
         TEX << "%\n\\setbox\\xxx=\\hbox{\\vbox to" << VS << "bp{\\vfill" << std::endl;
 	if ((mode <= 11) && (cname != "")) { // beginning of boundary cl.path definition
-          TEX << "\\PL{q}";          // for F and G scraps
+	  TEX << "\\PL{q}%\n";          // for F and G scraps
           std::ifstream G(cname.c_str());
           if(!G) therror((IOerr(cname)));
           while(G >> buffer) {
@@ -256,7 +252,7 @@ void distill_eps(std::string name, std::string fname, std::string cname, int mod
           }
           G.close();
           thstack.clear();
-          TEX << "\\PL{W* n}";  // end of boundary clipping path definition
+          TEX << "\\PL{W* n}%\n";  // end of boundary clipping path definition
 	}
       }
       else if (tok == "%%Page:") {
@@ -567,8 +563,8 @@ void distill_eps(std::string name, std::string fname, std::string cname, int mod
 void convert_scraps() {
   unsigned char c;
  
-  std::ofstream TEX("th_formdef.tex");
-  if(!TEX) therror((IOerr("th_formdef.tex")));
+  std::ofstream TEX("th_formdef_.tex");
+  if(!TEX) therror((IOerr("th_formdef_.tex")));
   TEX.setf(std::ios::fixed, std::ios::floatfield);
   TEX.precision(2);
   
@@ -609,8 +605,8 @@ void convert_scraps() {
 
   TEX.close();
 
-  std::ofstream F("th_fontdef.tex");
-  if(!F) therror((IOerr("th_fontdef.tex")));
+  std::ofstream F("th_fontdef_.tex");
+  if(!F) therror((IOerr("th_fontdef_.tex")));
   F << "% FONTS:" << std::endl;
   F.setf(std::ios::fixed, std::ios::floatfield);
   F.precision(2);
@@ -682,7 +678,7 @@ void convert_scraps() {
     legend_arr_n.push_back(I->name);
     legend_arr_d.push_back(I->descr);
   }
-  std::ofstream LEG("th_legend.tex");
+  std::ofstream LEG("th_legend_.tex");
   if(!LEG) therror(("Can't write a file!"));
 /*  for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
                                    I != LEGENDLIST.end(); I++) {
@@ -717,13 +713,13 @@ void convert_scraps() {
     lcr.texname = I->texname;
     legend_color.push_back(lcr);
   }
-  std::ofstream LEGCOLOR("th_legendcolor.tex");
+  std::ofstream LEGCOLOR("th_legendcolor_.tex");
   if(!LEGCOLOR) therror(("Can't write a file!"));
 
   legendbox_num = COLORLEGENDLIST.size();
   columns = 1;
   rows = (int) ceil(double(legendbox_num) / columns);
-  pos = 0;
+//  pos = 0;
   
   LEGCOLOR << "\\legendcolumns" << columns << std::endl;
 
@@ -746,9 +742,9 @@ void convert_scraps() {
 
 }
 
-int thconvert() { 
+int thconvert_old() {
 
-  thprintf("converting scraps ... ");
+  thprintf("converting scraps* ... ");
 
   ALL_FONTS.clear();
   ALL_PATTERNS.clear();

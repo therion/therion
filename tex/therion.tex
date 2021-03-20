@@ -89,7 +89,7 @@
     \edef\pdfxformattr                {\pdfvariable xformattr}
     \edef\pdfxformresources           {\pdfvariable xformresources}
     \edef\pdfpkmode                   {\pdfvariable pkmode}
-    \edef\pdfsuppressoptionalinfo     {\pdfvariable suppressoptionalinfo }
+    \edef\pdfsuppressptexinfo         {\pdfvariable suppressoptionalinfo }
     \edef\pdftrailerid                {\pdfvariable trailerid }
     \let\pdfpagewidth      \pagewidth
     \let\pdfpageheight     \pageheight
@@ -213,6 +213,8 @@
        \advance\tmpdimen by -10pt
        \hsize=\tmpdimen\rightskip=0pt plus \tmpdimen minus 0pt\relax\the\legendtextsize #2\vskip1dd}\hss}%
 }
+
+\let\colorlegendsymbolbox=\legendsymbolbox
 
 \def\colorlegendbox#1{%
   \setbox\xxx=\hbox to 36bp{\PL{q #1 0 0 36 24 re f Q}\hfil}%

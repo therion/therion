@@ -42,6 +42,9 @@
 
 std::string tex_Xname(std::string s) {return("THX"+s);}
 std::string tex_Wname(std::string s) {return("THW"+s);}   // special = northarrow &c.
+std::string tex_Fname(std::string s) {return("THF"+s);}
+std::string tex_Pname(std::string s) {return("THP"+s);}
+std::string tex_Lname(std::string s) {return("THL"+s);}
 
 bool tex_refs_registers = true;
 

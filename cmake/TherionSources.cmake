@@ -37,6 +37,7 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thdb2dxm.h
     ${CMAKE_SOURCE_DIR}/thdb2dxs.h
     ${CMAKE_SOURCE_DIR}/thdb3d.h
+    ${CMAKE_SOURCE_DIR}/thdouble.h
     ${CMAKE_SOURCE_DIR}/thendscrap.h
     ${CMAKE_SOURCE_DIR}/thendsurvey.h
     ${CMAKE_SOURCE_DIR}/thepsparse.h
@@ -224,5 +225,4 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thwarppme.cxx
     ${CMAKE_SOURCE_DIR}/thwarppt.cxx
     ${CMAKE_SOURCE_DIR}/extern/quickhull/QuickHull.cpp
-    ${CMAKE_SOURCE_DIR}/extern/img.c
 )
