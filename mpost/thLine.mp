@@ -1107,7 +1107,7 @@ def l_steps_SKBB (expr P) =
      endfor;
      l_border_visible(p);
      l_border_visible(q);
-     drawoptions(withcolor 0.3*white);
+     drawoptions(withcolor 0.3[black,white]);
      %p_label(decimal c, point 0.5 of P, 0, 6);
      drawoptions();
    fi;
