@@ -71,16 +71,14 @@ const char * thlibrarydata_init_text =
 const char * thlibrarydata_grades_text =
   "void thlibrary_init_grades()\n"
   "{\n"
-  "\tstd::unique_ptr<thdataobject> unique_grade;\n"
-  "\tthgrade * pgrade;\n"
+  "\tstd::unique_ptr<thgrade> pgrade;\n"
   "\tthbuffer oname;\n";
 
 
 const char * thlibrarydata_layouts_text =
   "void thlibrary_init_layouts()\n"
   "{\n"
-  "\tstd::unique_ptr<thdataobject> unique_layout;\n"
-  "\tthlayout * playout;\n"
+  "\tstd::unique_ptr<thlayout> playout;\n"
   "\tthbuffer oname;\n";
 
 
@@ -147,8 +145,8 @@ void thdatabase::clear()
   this->reset_context();
 
   // create top level survey
-  auto top = this->create("survey",thobjectsrc("error",0));
-  dynamic_cast<thsurvey*>(top.get())->name = "";
+  auto top = this->create<thsurvey>(thobjectsrc("error",0));
+  top->name = "";
   this->insert(std::move(top));
 
 }
@@ -467,103 +465,58 @@ bool thdatabase::insert_datastation(thobjectname on, thsurvey * ps)
 std::unique_ptr<thdataobject> thdatabase::create(const char * oclass, 
   thobjectsrc osrc)
 {
-  int tclass = thmatch_token(oclass, thtt_commands);
-  std::unique_ptr<thdataobject> ret;
-  std::unique_ptr<thdata> retdata;
-  switch (tclass) {
-  
+  switch (thmatch_token(oclass, thtt_commands)) {
     case TT_SURVEY_CMD:
-      ret = std::make_unique<thsurvey>();
-      retdata = std::make_unique<thdata>();
-      break;
-      
+      return create<thsurvey>(osrc);
+
     case TT_ENDSURVEY_CMD:
-      ret = std::make_unique<thendsurvey>();
-      break;
-      
+      return create<thendsurvey>(osrc);
+
     case TT_SCRAP_CMD:
-      ret = std::make_unique<thscrap>();
-      break;
-      
+      return create<thscrap>(osrc);
+
     case TT_ENDSCRAP_CMD:
-      ret = std::make_unique<thendscrap>();
-      break;
+      return create<thendscrap>(osrc);
       
     case TT_DATA_CMD:
-      ret = std::make_unique<thdata>();
-      break;
+      return create<thdata>(osrc);
       
     case TT_COMMENT_CMD:
-      ret = std::make_unique<thcomment>();
-      break;
+      return create<thcomment>(osrc);
       
     case TT_GRADE_CMD:
-      ret = std::make_unique<thgrade>();
-      break;
+      return create<thgrade>(osrc);
       
     case TT_LAYOUT_CMD:
-      ret = std::make_unique<thlayout>();
-      break;
+      return create<thlayout>(osrc);
       
     case TT_LOOKUP_CMD:
-      ret = std::make_unique<thlookup>();
-      break;
+      return create<thlookup>(osrc);
 
     case TT_POINT_CMD:
-      ret = std::make_unique<thpoint>();
-      break;
+      return create<thpoint>(osrc);
       
     case TT_LINE_CMD:
-      ret = std::make_unique<thline>();
-      break;
+      return create<thline>(osrc);
       
     case TT_AREA_CMD:
-      ret = std::make_unique<tharea>();
-      break;
+      return create<tharea>(osrc);
       
     case TT_JOIN_CMD:
-      ret = std::make_unique<thjoin>();
-      break;
+      return create<thjoin>(osrc);
       
     case TT_MAP_CMD:
-      ret = std::make_unique<thmap>();
-      break;
+      return create<thmap>(osrc);
       
     case TT_IMPORT_CMD:
-      ret = std::make_unique<thimport>();
-      break;
+      return create<thimport>(osrc);
       
     case TT_SURFACE_CMD:
-      ret = std::make_unique<thsurface>();
-      break;
-  }
-  
-  if (ret != NULL) {
-    ret->assigndb(this);
-    // set object id and mark revision
-    ret->id = ++this->objid;
-    this->attr.insert_object((void *) ret.get(), (long) ret->id);
-		ret->source = osrc;
-    this->revision_set.insert(threvision(ret->id, 0, osrc));
-  }
-  
-  if (retdata != NULL) {
-    retdata->assigndb(this);    
-    // set object id and mark revision
-    retdata->id = ++this->objid;
-		retdata->source = osrc;
-    this->revision_set.insert(threvision(retdata->id, 0, osrc));
-  }
+      return create<thsurface>(osrc);
 
-  switch (tclass) {
-    case TT_SURVEY_CMD:
-      auto* survey = dynamic_cast<thsurvey*>(ret.get());
-      survey->data = retdata.get();
-      survey->tmp_data_holder = std::move(retdata);
-      break;
+    default:
+      return nullptr;
   }
-  
-  return ret;
 }
 
 
@@ -763,11 +716,10 @@ void thdatabase::self_print_library()
   thprintf(thlibrarydata_grades_text);
   thdb_grade_map_type::iterator gi = this->grade_map.begin();
   while (gi != this->grade_map.end()) {
-    thprintf("\n\tunique_grade = thdb.create(\"grade\", thobjectsrc(\"therion\",0));\n");
-    thprintf("\tpgrade = dynamic_cast<thgrade*>(unique_grade.get());\n");
+    thprintf("\n\tpgrade = thdb.create<thgrade>(thobjectsrc(\"therion\",0));\n");
     ((thgrade *)(gi->second))->self_print_library();
     gi++;
-    thprintf("\tthdb.insert(std::move(unique_grade));\n");
+    thprintf("\tthdb.insert(std::move(pgrade));\n");
   }
   thprintf("}\n\n");
 
@@ -775,11 +727,10 @@ void thdatabase::self_print_library()
   thprintf(thlibrarydata_layouts_text);
   thdb_layout_map_type::iterator li = this->layout_map.begin();
   while (li != this->layout_map.end()) {
-    thprintf("\n\tunique_layout = thdb.create(\"layout\", thobjectsrc(\"therion\",0));\n");
-    thprintf("\tplayout = dynamic_cast<thlayout*>(unique_layout.get());\n");
+    thprintf("\n\tplayout = thdb.create<thlayout>(thobjectsrc(\"therion\",0));\n");
     ((thlayout *)(li->second))->self_print_library();
     li++;
-    thprintf("\tthdb.insert(std::move(unique_layout));\n");
+    thprintf("\tthdb.insert(std::move(playout));\n");
   }
   thprintf("}\n\n");
   
@@ -926,6 +877,22 @@ void thdatabase::insert_equate(int nargs, char ** args)
   this->csurveyptr->data->set_data_equate(nargs, args);
 }
 
+
+void thdatabase::add_data(thdataobject* obj, const thobjectsrc& osrc)
+{
+  if (auto* survey = dynamic_cast<thsurvey*>(obj))
+  {
+    auto retdata = std::make_unique<thdata>();
+    retdata->assigndb(this);    
+    // set object id and mark revision
+    retdata->id = ++this->objid;
+    retdata->source = osrc;
+    this->revision_set.insert(threvision(retdata->id, 0, osrc));
+
+    survey->data = retdata.get();
+    survey->tmp_data_holder = std::move(retdata);
+  }
+}
 
 
 

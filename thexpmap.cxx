@@ -3431,7 +3431,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
 {
 
   // parsneme lookup a najdeme ho
-  std::unique_ptr<thdataobject> unique_lkp;
+  std::unique_ptr<thlookup> unique_lkp;
   thlookup * lkp = NULL;
   if (this->layout->color_crit_fname != NULL) {
     int cc;
@@ -3443,8 +3443,8 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       if (strlen(ccidx) > 0) {
         thwarning(("missing lookup -- %s", this->layout->color_crit_fname));
       }
-      unique_lkp = this->db->create("lookup", this->src);
-      lkp = dynamic_cast<thlookup*>(unique_lkp.get());
+      unique_lkp = this->db->create<thlookup>(this->src);
+      lkp = unique_lkp.get();
       lkp->m_type = this->layout->color_crit;
     }
   }
@@ -3563,7 +3563,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
     cmap = cmap->next_item;
   }
 
-  lkp->export_color_legend(this->layout, std::unique_ptr<thlookup>(dynamic_cast<thlookup*>(unique_lkp.release())));
+  lkp->export_color_legend(this->layout, std::move(unique_lkp));
 
 }
 
