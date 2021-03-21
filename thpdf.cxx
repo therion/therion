@@ -1265,11 +1265,8 @@ void build_pages() {
 
   std::ofstream PDFRES("th_resources.tex");
   if(!PDFRES) therror(("Can't write file th_resources.tex"));
-  if (LAYOUT.transparency || LAYOUT.OCG) {
-    PDFRES << "\\ifnum\\pdftexversion<110\\pdfcatalog{ /Version /" <<
-      (LAYOUT.OCG ? "1.5" : "1.4") << " }" << 
-      (LAYOUT.OCG ? "\\else\\pdfminorversion=5" : "") << "\\fi" << std::endl;
-  }
+
+  PDFRES << "\\pdfminorversion=5%\n";
 
   if (thcfg.reproducible_output) {
     PDFRES <<
