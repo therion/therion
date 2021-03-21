@@ -20,3 +20,6 @@ endif
     
 clean:
 	tclsh samples.tcl . clean
+
+quick:
+	tclsh samples.tcl $(LOUTDIR) --generate-tex-only $(LOUTDIR)/samples

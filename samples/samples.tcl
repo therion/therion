@@ -25,6 +25,11 @@ if {[regexp {\-\-generate-output-crc} $argv]} {
   set outputopt --generate-output-crc
 }
 
+set donotruntherion 0
+if {[regexp {\-\-generate-tex-only} $argv]} {
+  set donotruntherion 1
+}
+
 set dirnum 0
 set dirlist {}
 set filelist {}
@@ -179,7 +184,8 @@ proc clean_files {} {
 
 
 proc process_files {} {
-  global processlist
+  global processlist donotruntherion
+  if {$donotruntherion} return
   set cdir [pwd]
   log_msg "\nProcessing files:\n"
   foreach ps $processlist {
@@ -232,7 +238,7 @@ proc get_html_body_for_tex {fn} {
 
 
 proc create_docs {} {
-  global filelist tcl_platform outd outdd
+  global filelist tcl_platform outd outdd donotruntherion
   set cdir {}
   set chid 0
   set imid 0
@@ -378,14 +384,16 @@ proc create_docs {} {
     set iisrc [lindex $img 1]
     log_msg "$iisrc\n"
     set dpi 300
-    while {[catch {
-      eval "exec \"$convpath\" -colorspace RGB -density $dpi $iisrc $outd/tmp.png"
-    }] && ($dpi > 10)} {
-      log_msg "error at $dpi dpi processing $iisrc\n"
-      set dpi [expr int(double($dpi) * 0.9)]
+    if {!$donotruntherion} {
+      while {[catch {
+        eval "exec \"$convpath\" -colorspace RGB -density $dpi $iisrc $outd/tmp.png"
+      }] && ($dpi > 10)} {
+        log_msg "error at $dpi dpi processing $iisrc\n"
+        set dpi [expr int(double($dpi) * 0.9)]
+      }
+      eval "exec \"$convpath\" -colorspace RGB -resize 419x419 $outd/tmp.png $outd/$iiimg"
+      file delete -force $outd/tmp.png
     }
-    eval "exec \"$convpath\" -colorspace RGB -resize 419x419 $outd/tmp.png $outd/$iiimg"
-    file delete -force $outd/tmp.png
     file copy -force -- $iisrc "$outd/$iifnm"
   }
 
