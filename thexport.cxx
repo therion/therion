@@ -39,6 +39,7 @@
 #include <fstream>
 #include <streambuf>
 #include <iomanip>
+#include <fmt/ostream.h>
 
 
 
@@ -205,45 +206,40 @@ std::uint_fast32_t crc(InputIterator first, InputIterator last)
 
 
 bool thexport::check_crc() {
-
-	bool ok(true);
-	for(auto fi = this->output_files.begin(); fi != this->output_files.end(); fi++) {
-
-		std::ifstream of;
-		std::uint_fast32_t actual_crc(0);
-		bool cok(true);
-		try {
-			of = std::ifstream(fi->fnm, std::ios_base::binary);
-			actual_crc = crc((std::istreambuf_iterator<char>(of)), std::istreambuf_iterator<char>());
-			of.close();
-		} catch(...) {
-			fi->res = "output file does not exist";
-			cok = false;
+	bool ok = true;
+	for(auto& file : output_files) {
+		std::ifstream of(file.fnm, std::ios_base::binary);
+    if (!of.is_open()) {
+			file.res = "output file does not exist";
+			ok = false;
+      continue;
 		}
+		const auto actual_crc = crc(std::istreambuf_iterator<char>(of), {});
 
 		if (thcfg.crc_generate) {
-			std::ofstream crcof(std::string(fi->fnm) + std::string(".crc"));
-			crcof << std::hex << std::setw(8) << std::setfill('0') << actual_crc << "\n";
-			crcof.close();
-			fi->res = "OK";
-		} else if (thcfg.crc_verify) {
-			std::ifstream crcif;
-			std::uint_fast32_t readed_crc(0);
-			try {
-				crcif = std::ifstream(std::string(fi->fnm) + std::string(".crc"));
-				crcif >> std::hex >> readed_crc;
-			} catch(...) {
-				fi->res = ".crc file not found -- use --genereate-ouput-crc before";
-				cok = false;
-			}
-			if (cok && (actual_crc == readed_crc)) {
-				fi->res = "OK";
+			std::ofstream crcof(fmt::format("{}.crc", file.fnm));
+      fmt::print(crcof, "{:08x}\n", actual_crc);
+			file.res = "OK";
+      continue;
+    }
+
+		if (thcfg.crc_verify) {
+			std::uint_fast32_t read_crc = 0;
+      std::ifstream crcif(fmt::format("{}.crc", file.fnm));
+      if (!crcif.is_open()) {
+        file.res = ".crc file not found -- use --genereate-ouput-crc before";
+        ok = false;
+        continue;
+      }
+
+      crcif >> std::hex >> read_crc;
+			if (actual_crc == read_crc) {
+				file.res = "OK";
 			} else {
-				fi->res = "CRC32 error";
-				cok = false;
+				file.res = fmt::format("CRC32 error: was {:08x}, expected {:08x}", actual_crc, read_crc);
+				ok = false;
 			}
 		}
-		ok = ok && cok;
 	}
 	return ok;
 }
