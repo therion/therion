@@ -939,6 +939,20 @@ picture pattpict;
 string patterncolor_;
 patterncolor_ := "0 0 0 1";
 
+vardef colortostr(expr c, s) =
+  hide(pattpict := image(draw (0,0)--(10,10) withcolor c);
+    for i within pattpict:
+      if colormodel i = 1:
+        patterncolor_ := decimal greypart i;
+      elseif colormodel i = 5:
+        patterncolor_ := decimal redpart i & s & decimal greenpart i & s & decimal bluepart i;
+      elseif colormodel i = 7:
+        patterncolor_ := decimal cyanpart i & s & decimal magentapart i & s & decimal yellowpart i & s & decimal blackpart i;
+      fi
+    endfor;)
+  patterncolor_
+enddef;
+
 primarydef p withpattern s=
   if known s:
     p
@@ -1002,7 +1016,7 @@ primarydef p withtransparency t =     % TODO: t currently ignored
 enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% some useful macros from H. Hagen's MetaFun package
+% some useful macros from H. Hagen's MetaFun package (adapted)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 vardef paired (expr d) =
@@ -1072,6 +1086,45 @@ vardef punked primary p =
   (point 0 of p for i=1 upto length(p)-1 : -- point i of p endfor
    if cycle p : -- cycle else : -- point length(p) of p fi)
 enddef ;
+
+def linear_shading (expr p, n, ca, cb) =
+    begingroup ;
+        save a, b ; pair a, b ;
+        set_linear_vector(a,b)(p,n) ;
+        fill p -- cycle withlinearshading(a,b,ca,cb) withoutcolor;
+    endgroup ;
+enddef ;
+
+def withlinearshading (expr a, b, ca, cb) =
+    withprescript decimal xpart a & " " & decimal ypart a & " " &
+                  decimal xpart b & " " & decimal ypart b & " " &
+                  colortostr(ca, " ") & " " &
+                  colortostr(cb, " ") & " " &
+                  "THlineargradient"
+enddef ;
+
+def set_linear_vector (suffix a,b)(expr p,n) =
+  if     (n=1) : a := llcorner p ;
+                 b := urcorner p ;
+  elseif (n=2) : a := lrcorner p ;
+                 b := ulcorner p ;
+  elseif (n=3) : a := urcorner p ;
+                 b := llcorner p ;
+  elseif (n=4) : a := ulcorner p ;
+                 b := lrcorner p ;
+  elseif (n=5) : a := .5[ulcorner p,llcorner p] ;
+                 b := .5[urcorner p,lrcorner p] ;
+  elseif (n=6) : a := .5[llcorner p,lrcorner p] ;
+                 b := .5[ulcorner p,urcorner p] ;
+  elseif (n=7) : a := .5[lrcorner p,urcorner p] ;
+                 b := .5[llcorner p,ulcorner p] ;
+  elseif (n=8) : a := .5[urcorner p,ulcorner p] ;
+                 b := .5[lrcorner p,llcorner p] ;
+  else         : a := .5[ulcorner p,llcorner p] ;
+                 b := .5[urcorner p,lrcorner p] ;
+  fi ;
+enddef ;
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % end of MetaFun macros

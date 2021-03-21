@@ -130,6 +130,7 @@ extern layout LAYOUT;
 extern std::list<pattern> PATTERNLIST;
 extern std::list<converted_data> GRIDLIST;
 extern converted_data NArrow, ScBar;
+extern std::map<std::string,gradient> GRADIENTS;
 
 
 

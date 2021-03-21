@@ -41,6 +41,7 @@
 #include <cstdio>
 #include <cmath>
 #include <fmt/core.h>
+#include <fmt/ostream.h>
 
 #include "thepsparse.h"
 #include "thpdfdbg.h"
@@ -55,6 +56,7 @@ extern std::map<std::string,std::string> ALL_FONTS, ALL_PATTERNS;
 typedef std::set<unsigned char> FONTCHARS;
 extern std::map<std::string,FONTCHARS> USED_CHARS;
 std::list<pattern> PATTERNLIST;
+std::map<std::string,gradient> GRADIENTS;
 std::list<converted_data> GRIDLIST;
 converted_data NArrow, ScBar;
 
@@ -64,7 +66,7 @@ static int conv_mode;
 const int prec_col = 5;
 //const int prec_matr = 6;
 const int prec_mp = 5;
-//const int prec_xy = 2;
+const int prec_xy = 2;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -163,18 +165,34 @@ std::string color::to_pdfliteral(fillstroke fs) {
   return s.str();
 }
 
+
+std::string color::to_elements() {
+  std::string s;
+  if (model == colormodel::grey) {
+    s = fmt::format("{}", thdouble(a,prec_col));
+  }
+  else if (model == colormodel::rgb) {
+    s = fmt::format("{} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col));
+  }
+  else if (model == colormodel::cmyk) {
+    s = fmt::format("{} {} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col), thdouble(d,prec_col));
+  }
+  return s;
+}
+
+
 std::string color::to_pdfpatterncolor() {
   std::string s;
   if (model == colormodel::grey) {
-    s = fmt::format("/CS3 cs {}", thdouble(a,prec_col));
+    s = "/CS3 cs";
   }
   else if (model == colormodel::rgb) {
-    s = fmt::format("/CS1 cs {} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col));
+    s = "/CS1 cs";
   }
   else if (model == colormodel::cmyk) {
-    s = fmt::format("/CS2 cs {} {} {} {}", thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col), thdouble(d,prec_col));
+    s = "/CS2 cs";
   }
-  return s;
+  return s + " " + to_elements();
 }
 
 
@@ -324,7 +342,7 @@ void MP_path::print_svg(std::ofstream & F, CGS & gstate, std::string unique_pref
   F << "<path ";
   if (fillstroke != MP_clip) {
     F << "fill=\"" << (fillstroke==MP_fill || fillstroke==MP_fillstroke ? 
-           (gstate.pattern == ""? gstate.svg_color() : 
+           (gstate.pattern == "" ? (gstate.gradient=="" ? gstate.svg_color() : "url(#grad_" + gstate.gradient + "_" + unique_prefix + ")") :
               "url(#patt_" + gstate.pattern + "_" + unique_prefix + ")") : "none") <<  
          "\" stroke=\"" << (fillstroke==MP_stroke || fillstroke==MP_fillstroke ? 
            gstate.svg_color() : "none") <<  "\" ";
@@ -456,8 +474,11 @@ void MP_data::add(int i, std::string s, color col) {
     sett.pattern = s;
     sett.col = col;
   }
+  else if (i == MP_gradient) {
+    sett.pattern = s;
+  }
   else {
-    sett.data = std::stof(s);
+    sett.data = std::stod(s);
   }
   sett.command = i;
   settings.push_back(sett);
@@ -504,9 +525,15 @@ void MP_setting::print_svg (std::ofstream & F, CGS & gstate) {
     case MP_cmyk:
       gstate.col = col;
       gstate.pattern = "";
+      gstate.gradient = "";
       break;
     case MP_pattern:
       gstate.pattern = pattern;
+      gstate.gradient = "";
+      break;
+    case MP_gradient:
+      gstate.gradient = pattern;
+      gstate.pattern = "";
       break;
     case MP_linejoin:
       gstate.linejoin = int(data);
@@ -536,6 +563,9 @@ void MP_setting::print_pdf (std::ofstream & F) {
       break;
     case MP_pattern:
       F << PL(fmt::format("{:s} /{:s} scn", col.to_pdfpatterncolor(), pattern));
+      break;
+    case MP_gradient:
+      F << PL(fmt::format("/Pattern cs /{:s} scn", tex_Pname(pattern)));
       break;
     case MP_linejoin:
       F << PL(fmt::format("{:.0f} j", data));
@@ -692,6 +722,17 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
       }
     }
   }
+  // gradients
+  for (auto &g: GRADIENTS) {
+    if (gradients.count(g.first) == 0) continue;
+    if (g.second.type == gradient_lin) {
+      fmt::print(F, "<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
+                 g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
+      F << "<stop offset=\"0%\" stop-color=\"" << g.second.c0.to_svg() << "\"/>\n";
+      F << "<stop offset=\"100%\" stop-color=\"" << g.second.c1.to_svg() << "\"/>\n";
+      F << "</linearGradient>\n";
+    }
+  }
   // clip to initial viewBox
   F << "<clipPath id=\"clip_viewBox_" << unique_prefix << "\">" << std::endl;
   F << "<path d=\"M" << llx << " " << lly << 
@@ -724,7 +765,7 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) {
   if (mode > 0) {
     F << "}}\\wd\\xxx=" << fmt::format("{:.2f}",HS) << "bp" << std::endl;
     F << "\\immediate\\pdfxform";
-    if (transparency || !fonts.empty() || !patterns.empty() || icc_used()) {
+    if (transparency || !fonts.empty() || !patterns.empty() || !gradients.empty() || icc_used()) {
       F << " resources { /ProcSet [/PDF /Text] ";
       if (transparency) {
         F << "/ExtGState \\the\\resid\\space 0 R ";
@@ -739,11 +780,15 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) {
         }
         F << ">> ";
       }
-      if (!patterns.empty()) {
+      if (!patterns.empty() || !gradients.empty()) {
         F << "/Pattern << ";
         for(std::set<std::string>::iterator I = patterns.begin();
                                     I != patterns.end(); I++) {
           F << "/" << *I << " \\the\\" << tex_Pname(ALL_PATTERNS[*I]) <<
+                 "\\space 0 R ";
+        }
+        for(auto & g: gradients) {
+          F << "/" << tex_Pname(g) << " \\the\\" << tex_Pname(g) <<
                  "\\space 0 R ";
         }
         F << ">> ";
@@ -831,11 +876,12 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
   std::string tok, buffer;
   std::string font, patt;
   color pattcolor;
+  gradient grad;
   bool comment = true, concat = false, 
        already_transp = false, transp_used = false, before_group_transp = false, cancel_transp = true;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
   std::deque<std::string> thbuffer;
-  std::set<std::string> FORM_FONTS, FORM_PATTERNS;
+  std::set<std::string> FORM_FONTS, FORM_PATTERNS, FORM_GRADIENTS;
   bool inpath = false, gsaveinpath = false;
   
   MP_path mp_path;
@@ -914,8 +960,8 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
           fntmatr.transf[1] = 0;        
           fntmatr.transf[2] = 0;          
           fntmatr.transf[3] = 1;          
-          fntmatr.transf[4] = std::stof(thbuffer[0])-llx;
-          fntmatr.transf[5] = std::stof(thbuffer[1])-lly;
+          fntmatr.transf[4] = std::stod(thbuffer[0])-llx;
+          fntmatr.transf[5] = std::stod(thbuffer[1])-lly;
         }
         thbuffer.clear();
       }
@@ -1031,6 +1077,40 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
           patt_id++;
         }
         data.MP.add(MP_pattern, patt, pattcolor);
+        thbuffer.clear();
+      }
+      else if (tok == "THlineargradient") {
+        if (already_transp && cancel_transp) {  // transp off
+          data.MP.add(MP_transp_off);
+          already_transp = false;
+        }
+        cancel_transp = true;
+        grad.type = gradient_lin;
+        if (10 <= mode && mode <= 20) grad.used_in_map = true; else grad.used_in_map = false;  // map conversion modes
+        try {
+          grad.x0 = std::stod(thbuffer[0])-llx;
+          grad.y0 = std::stod(thbuffer[1])-lly;
+          grad.x1 = std::stod(thbuffer[2])-llx;
+          grad.y1 = std::stod(thbuffer[3])-lly;
+          if (thbuffer.size() == 6) {
+            grad.c0.set(std::stod(thbuffer[4]));
+            grad.c1.set(std::stod(thbuffer[5]));
+          } else if (thbuffer.size() == 10) {
+            grad.c0.set(std::stod(thbuffer[4]),std::stod(thbuffer[5]),std::stod(thbuffer[6]));
+            grad.c1.set(std::stod(thbuffer[7]),std::stod(thbuffer[8]),std::stod(thbuffer[9]));
+          } else if (thbuffer.size() == 12) {
+            grad.c0.set(std::stod(thbuffer[4]),std::stod(thbuffer[5]),std::stod(thbuffer[6]),std::stod(thbuffer[7]));
+            grad.c1.set(std::stod(thbuffer[8]),std::stod(thbuffer[9]),std::stod(thbuffer[10]),std::stod(thbuffer[11]));
+          } else ththrow("invalid buffer size");
+        } catch (const std::exception& e) {
+          therror((e.what()));
+        }
+        if (FORM_GRADIENTS.find(u2str(patt_id)) == FORM_GRADIENTS.end()) {
+          FORM_GRADIENTS.insert(u2str(patt_id));
+        }
+        GRADIENTS.insert(make_pair(u2str(patt_id),grad));
+        data.MP.add(MP_gradient, u2str(patt_id));
+        patt_id++;
         thbuffer.clear();
       }
       else if (tok == "THsettransparency") {
@@ -1150,11 +1230,11 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
       }
       else if (tok == "THsetpatterncolor") {  // currently unused in SVG as it is not completely trivial to implement uncolored patterns in SVG
         if (thbuffer.size() == 1)
-          pattcolor.set(stof(thbuffer[0]));
+          pattcolor.set(std::stod(thbuffer[0]));
         else if (thbuffer.size() == 3)
-          pattcolor.set(stof(thbuffer[0]), stof(thbuffer[1]), stof(thbuffer[2]));
+          pattcolor.set(std::stod(thbuffer[0]), std::stod(thbuffer[1]), std::stod(thbuffer[2]));
         else if (thbuffer.size() == 4)
-          pattcolor.set(stof(thbuffer[0]), stof(thbuffer[1]), stof(thbuffer[2]), stof(thbuffer[3]));
+          pattcolor.set(std::stod(thbuffer[0]), std::stod(thbuffer[1]), std::stod(thbuffer[2]), std::stod(thbuffer[3]));
         thbuffer.clear();
       }
       else {
@@ -1169,6 +1249,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
     }
     data.fonts = FORM_FONTS;
     data.patterns = FORM_PATTERNS;
+    data.gradients = FORM_GRADIENTS;
     if (transp_used) data.transparency = true;
     else data.transparency = false;
   }
@@ -1368,8 +1449,8 @@ void thgraphics2pdf() {
   }
   for (auto & i: fontset) F << i;   // print the fonts sorted
   F << "\\endgroup" << std::endl;
-  F << "% PATTERNS:" << std::endl;
 
+  F << "% PATTERNS:" << std::endl;
   for (auto &patt: PATTERNLIST) {
       auto I = ALL_PATTERNS.find(patt.name);
       if (I == ALL_PATTERNS.end()) continue;
@@ -1386,7 +1467,19 @@ void thgraphics2pdf() {
       patt.data.print_pdf(F,patt.name);
       F << "} \\newcount \\" << tex_Pname(ALL_PATTERNS[patt.name]) <<
            "\\" << tex_Pname(ALL_PATTERNS[patt.name]) << "=\\pdflastobj\n";
+  }
+  if (GRADIENTS.size() > 0) F << "% GRADIENTS:" << std::endl;
+  for (auto &g: GRADIENTS) {
+    if (g.second.type == gradient_lin) {
+      F << "\\immediate\\pdfobj {<< /Type /Pattern /PatternType 2 /Shading <<\n";
+      F << fmt::format("/ShadingType 2 /ColorSpace /Device{:s}\n", g.second.c0.model == colormodel::grey ? "Gray" : (g.second.c0.model == colormodel::cmyk ? "CMYK" : "RGB"));
+      F << fmt::format("/Coords [{} {} {} {}] ", thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
+      F << "/Extend [true true]\n";
+      F << fmt::format("/Function << /FunctionType 2 /Domain [0 1] /C0 [{}] /C1 [{}] /N 1 >>\n", g.second.c0.to_elements(), g.second.c1.to_elements());
+      F << ">> >>}\\newcount \\" << tex_Pname(g.first) <<
+           "\\" << tex_Pname(g.first) << "=\\pdflastobj\n";
     }
+  }
   F.close();
 
   std::vector<std::string> legend_arr_n, legend_arr_d;

@@ -39,6 +39,8 @@
 #include <cstdio>
 #include <cfloat>
 #include <cmath>
+#include <fmt/core.h>
+#include <fmt/ostream.h>
 
 #include "thepsparse.h"
 #include "thpdfdbg.h"
@@ -49,6 +51,9 @@
 #include "thconfig.h"
 #include "thlegenddata.h"
 #include "thtexfonts.h"
+#include "thdouble.h"
+
+const int prec_xy = 2;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -523,6 +528,17 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
       I->data.MP.print_svg(F,unique_prefix);
       F << "</g>" << std::endl;
       F << "</pattern>" << std::endl;
+    }
+  }
+  // gradients
+  for (auto &g: GRADIENTS) {
+    if (!g.second.used_in_map) continue;
+    if (g.second.type == gradient_lin) {
+      fmt::print(F, "<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
+                 g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
+      F << "<stop offset=\"0%\" stop-color=\"" << g.second.c0.to_svg() << "\"/>\n";
+      F << "<stop offset=\"100%\" stop-color=\"" << g.second.c1.to_svg() << "\"/>\n";
+      F << "</linearGradient>\n";
     }
   }
   // scraps:
