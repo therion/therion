@@ -258,6 +258,10 @@ struct thmorph2trans {
 
   thmorph2trans();
   ~thmorph2trans();
+  thmorph2trans(const thmorph2trans&) = delete;
+  thmorph2trans(thmorph2trans&&) = delete;
+  thmorph2trans& operator=(const thmorph2trans&) = delete; 
+  thmorph2trans& operator=(thmorph2trans&&) = delete; 
   void reset();
   void insert_point(thvec2 src, thvec2 dst, long id);
   void insert_line(long from, long to);
