@@ -218,7 +218,7 @@ void thpic::rgba_load()
     return;
 
   if (this->rgbafn == NULL) {
-    this->rgbafn = this->convert("RGBA","rgba","-depth 8");
+    this->rgbafn = this->convert("RGBA","rgba","-define jpeg:dct-method=islow -set colorspace RGB -depth 8");
   }
 
   if (this->rgbafn == NULL)
@@ -278,9 +278,9 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
   fwrite(this->rgba,1,4 * this->width * this->height,f);
   fclose(f);
   if (colors > 1) 
-    this->fname = tmp.convert(type, ext, "-depth 8 -size %dx%d -density 300 +dither -colors %d", this->width, this->height, colors);
+    this->fname = tmp.convert(type, ext, "-define png:exclude-chunks=date,time -depth 8 -size %dx%d -density 300 +dither -colors %d", this->width, this->height, colors);
   else
-    this->fname = tmp.convert(type, ext, "-depth 8 -size %dx%d -density 300", this->width, this->height);
+    this->fname = tmp.convert(type, ext, "-define png:exclude-chunks=date,time -depth 8 -size %dx%d -density 300", this->width, this->height);
   sprintf(tmpfn, "pic%04ld.%s", thpic_convert_number - 1, ext);
   this->texfname = thdb.strstore(tmpfn);
 }
