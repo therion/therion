@@ -324,8 +324,8 @@ const char * thimport::station_name(const char * sn, const char separator, struc
               this->db->ccontext = THCTX_SURVEY;
 
               {
-                auto unique_nsurvey = this->db->create("survey", this->mysrc);
-                nsurvey = dynamic_cast<thsurvey*>(unique_nsurvey.get());
+                auto unique_nsurvey = this->db->create<thsurvey>(this->mysrc);
+                nsurvey = unique_nsurvey.get();
                 // TODO - nastavit mu meno cez set
                 nsurvey->name = this->db->strstore(cbf[active_survey]);
                 this->db->insert(std::move(unique_nsurvey));

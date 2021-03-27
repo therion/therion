@@ -858,18 +858,26 @@ or
         |symbols.xhtml| file.
 
 * |--reproducible-output| =
-        Produce reproducible output PDF and SVG files.
+        Create reproducible PDF and SVG files.
         No volatile information is included (e.g. creation date or software
-        version).
-        
+        version is omitted from the metadata). \TeX\ variables |\thversion|
+        and |\currentdate| are set to predefined constatnts.
+        This option enforces the use of Therion loop closure.
+
+        To get the same output files on different platforms, it's
+        necessary to install the same set of basic fonts used by
+        Therion\[CM, CS and/or CMCYR font families; the `.pfb' font files have to be exactly
+        the same on all platforms as they are embedded into PDF files.]
+        and use reasonably recent \TeX\ distribution on all platforms.
+
 * |--generate-output-crc| =
-        Generate `.crc` file with CRC32 checksum for each output file.
-        With reproducible output, calculate and save checksum file.
+        Generate a `.crc' file with CRC32 checksum for each output file.
+        Implies |--reproducible-output|.
 
 * |--verify-output-crc| =
-        Verify if output file was not changed.
+        Verify that the output file has not been changed.
         Generate reproducible output, calculate CRC32 checksum and check
-        it against one saved in `.crc` file.
+        it against one saved in `.crc' file.
 
 * |-s <source-file>| =
         Set the name of the source file.

@@ -1,5 +1,5 @@
 ---
-Checks: '-*,modernize-use-override,clang-analyzer-cplusplus*,clang-analyzer-unix*,misc-definitions-in-headers,bugprone-reserved-identifier'
+Checks: '-*,modernize-use-override,clang-analyzer-cplusplus*,clang-analyzer-unix*,misc-definitions-in-headers,bugprone-reserved-identifier,bugprone-use-after-move'
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
