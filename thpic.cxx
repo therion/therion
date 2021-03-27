@@ -32,6 +32,7 @@
 #include "thinit.h"
 #include "thtmpdir.h"
 #include "thexception.h"
+#include "thconfig.h"
 #include <stdarg.h>
 #ifdef THMSVC
 #include <direct.h>
@@ -277,7 +278,7 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
   f = fopen(tmp.fname,"wb");
   fwrite(this->rgba,1,4 * this->width * this->height,f);
   fclose(f);
-  if (colors > 1) 
+  if ((colors > 1) && (!thcfg.reproducible_output))
     this->fname = tmp.convert(type, ext, "-define png:exclude-chunks=date,time -depth 8 -size %dx%d -density 300 +dither -colors %d", this->width, this->height, colors);
   else
     this->fname = tmp.convert(type, ext, "-define png:exclude-chunks=date,time -depth 8 -size %dx%d -density 300", this->width, this->height);
