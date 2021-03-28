@@ -60,6 +60,10 @@ class thbuffer {
   
   thbuffer();
   
+  // Only copy assignment is implemented.
+  thbuffer(const thbuffer&) = delete;
+  thbuffer(thbuffer&&) = delete;
+  thbuffer& operator=(thbuffer&&) = delete;
   
   /**
    * Destructor.

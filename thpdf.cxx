@@ -1281,6 +1281,19 @@ R"(\pdfcompresslevel=9%
   \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (LuaTeX)}%
 \fi%
 )";
+//    // this is one way to fix the font IDs for CM fonts to values matching their order when they are preloaded by plain TeX
+//    // samples should then use just CM fonts (no diacritics)
+//    // [another option is to install exactly the same set of CM/CS/CMCYR fonts on all platforms]
+//    // sadly, this fails in pre-2018 pdftex, see also https://mailman.ntg.nl/pipermail/ntg-pdftex/2018-January/004209.html
+//    // pdftex: ../../../texk/web2c/pdftexdir/writefont.c:607: create_fontdictionary: Assertion `fo->last_char >= fo->first_char' failed.
+//    // Aborted (core dumped)
+//
+//    PDFRES << "% the following hack initializes all fonts at the base size to avoid getting a different \\pdffontname\n";
+//    for (auto & s: {"rm","it","bf","ss","si"}) {
+//      PDFRES << "  \\" << s;
+//      for (auto & f: FONTS) PDFRES << "\\edef\\tmp{\\pdffontname\\thf" << u2str(f.id+1) << "}";
+//      PDFRES << "%\n";
+//    }
   } else {
     PDFRES << "\\pdfinfo{/Creator (Therion " << THVERSION << ", MetaPost, TeX)}%" << std::endl;
   }

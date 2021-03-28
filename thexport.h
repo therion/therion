@@ -93,6 +93,12 @@ class thexport {
   thexport();  ///< Default constructor.
   virtual ~thexport();
   
+  // These operations are not implemented.
+  thexport(const thexport&) = delete;
+  thexport(thexport&&) = delete;
+  thexport& operator=(const thexport&) = delete; 
+  thexport& operator=(thexport&&) = delete; 
+  
   void assign_config(class thconfig * cptr); ///< ???
   
   /**

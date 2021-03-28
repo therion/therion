@@ -234,6 +234,11 @@ thbook: version $(OUTDIR)/thbook/thbook.pdf
 
 samples: $(OUTDIR)/samples.doc/index.tex
 
+samples-quick:
+	$(MAKE) -C samples quick
+	touch thbook/version.tex
+	$(MAKE) -C thbook
+
 $(OUTDIR)/samples.doc/index.tex:
 	$(MAKE) -C samples
 	touch thbook/version.tex
