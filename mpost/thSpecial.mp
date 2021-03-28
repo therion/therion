@@ -101,3 +101,6 @@ def s_vgrid_SM (expr xpos, ypos, xsize, ysize) =
   ) dashed evenly;
 enddef;
 
+def s_altitudebar_SKBB (expr min, max)(text t) =
+
+enddef;

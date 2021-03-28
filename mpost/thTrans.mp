@@ -204,3 +204,4 @@ let s_northarrow = s_northarrow_SKBB;
 let s_scalebar = s_scalebar_SKBB;
 let s_hgrid = s_hgrid_SM;
 let s_vgrid = s_vgrid_SM;
+let s_altitudebar = s_altitudebar_SKBB;
