@@ -390,8 +390,8 @@ void thlookup::color_scrap(thscrap * s) {
 }
 
 
-void thlookup::export_color_legend(thlayout * layout, std::unique_ptr<thlookup> lookup_holder) {
-  layout->m_lookup = std::move(lookup_holder);
+void thlookup::export_color_legend(thlayout * layout) {
+  layout->m_lookup = this;
   if (layout->color_legend == TT_TRUE) {
     COLORLEGENDLIST.clear();
     thlookup_table_list::iterator tli;
