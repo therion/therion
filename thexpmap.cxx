@@ -3473,6 +3473,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       }
       unique_lkp = this->db->create<thlookup>(this->src);
       lkp = unique_lkp.get();
+      this->db->object_list.push_back(std::move(unique_lkp));
       lkp->m_type = this->layout->color_crit;
     }
   }
