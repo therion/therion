@@ -992,6 +992,11 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
       }
       else if (tok == "fill") {
         if (!gsaveinpath) {
+          if (already_transp && cancel_transp) {  // transp off
+            data.MP.add(MP_transp_off);
+            already_transp = false;
+          }
+          cancel_transp = true;
           mp_path.fillstroke = MP_fill;
           data.MP.add(mp_path);
           inpath=false;
@@ -1004,6 +1009,11 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
           mp_path.fillstroke = MP_fillstroke;
           gsaveinpath = false;
         }
+        if (already_transp && cancel_transp) {  // transp off
+          data.MP.add(MP_transp_off);
+          already_transp = false;
+        }
+        cancel_transp = true;
         data.MP.add(mp_path);
         inpath=false;
         thbuffer.clear();
@@ -1031,11 +1041,6 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
           thbuffer.clear();
           continue;
         }
-        if (already_transp && cancel_transp) {  // transp off
-          data.MP.add(MP_transp_off);
-          already_transp = false;
-        }
-        cancel_transp = true;
         data.MP.add(MP_gray, thbuffer[0]);
         thbuffer.clear();
       }
@@ -1044,11 +1049,6 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
           thbuffer.clear();
           continue;
         }
-        if (already_transp && cancel_transp) {  // transp off
-          data.MP.add(MP_transp_off);
-          already_transp = false;
-        };
-        cancel_transp = true;
         data.MP.add(MP_rgb, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]);
         thbuffer.clear();
       }
@@ -1057,20 +1057,10 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
           thbuffer.clear();
           continue;
         }
-        if (already_transp && cancel_transp) {  // transp off
-          data.MP.add(MP_transp_off);
-          already_transp = false;
-        }
-        cancel_transp = true;
         data.MP.add(MP_cmyk, thbuffer[0]+" "+thbuffer[1]+" "+thbuffer[2]+" "+thbuffer[3]);
         thbuffer.clear();
       }
       else if (tok == "THsetpattern") {
-        if (already_transp && cancel_transp) {  // transp off
-          data.MP.add(MP_transp_off);
-          already_transp = false;
-        }
-        cancel_transp = true;
         patt = thbuffer[0];
         if (FORM_PATTERNS.find(patt) == FORM_PATTERNS.end()) {
           FORM_PATTERNS.insert(patt);
@@ -1083,11 +1073,6 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
         thbuffer.clear();
       }
       else if (tok == "THlineargradient") {
-        if (already_transp && cancel_transp) {  // transp off
-          data.MP.add(MP_transp_off);
-          already_transp = false;
-        }
-        cancel_transp = true;
         grad.type = gradient_lin;
         if (10 <= mode && mode <= 20) grad.used_in_map = true; else grad.used_in_map = false;  // map conversion modes
         try {
@@ -1121,8 +1106,8 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
         if (!already_transp) {
           data.MP.add(MP_transp_on);
           already_transp = true;
-          cancel_transp = false;
         }
+        cancel_transp = false;
         thbuffer.clear();
       }
       else if (tok == "setdash") {
@@ -1198,6 +1183,11 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
       // path started with moveto is omitted
       
       else if (tok == "fshow") {            // font changes should be optimized
+        if (already_transp && cancel_transp) {  // transp off
+          data.MP.add(MP_transp_off);
+          already_transp = false;
+        }
+        cancel_transp = true;
         text.clear();
         unsigned i = thbuffer.size();
         font = thbuffer[i-2];
@@ -1539,7 +1529,7 @@ void thgraphics2pdf() {
     columns = 1;
     rows = (int) ceil(double(legendbox_num) / columns);
 
-    LEGCOLOR << "\\legendcolumns\n" << columns;
+    LEGCOLOR << "\\legendcolumns" << columns << "\n";
 
     for (int i = 0; i < rows; i++) {
       LEGCOLOR << "\\line{%\n";
