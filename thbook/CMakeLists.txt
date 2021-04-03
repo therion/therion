@@ -1,3 +1,7 @@
+if (NOT BUILD_THBOOK)
+    return()
+endif()
+
 set(THBOOK_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/thbook.tex
     ${CMAKE_CURRENT_SOURCE_DIR}/ch00.tex
@@ -14,8 +18,13 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/etc)
 
 set(THBOOK_FORMAT "0" CACHE STRING "thbook format selection, use values 0-3.")
 
+find_program(PDFTEX pdftex)
+if (NOT PDFTEX)
+    message(FATAL_ERROR "pdftex command not found")
+endif()
+
 set(PDFTEX_COMMAND
-    ${CMAKE_COMMAND} -E env FORCE_SOURCE_DATE=1 TEXINPUTS=${CMAKE_CURRENT_BINARY_DIR}:. pdftex
+    ${CMAKE_COMMAND} -E env FORCE_SOURCE_DATE=1 TEXINPUTS=${CMAKE_CURRENT_BINARY_DIR}:. ${PDFTEX}
     --output-dir=${CMAKE_CURRENT_BINARY_DIR} "\\\\def\\\\outputsize{${THBOOK_FORMAT}}\\\\input thbook.tex")
 
 add_custom_command(
