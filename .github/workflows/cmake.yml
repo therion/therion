@@ -49,7 +49,7 @@ jobs:
           brew install wxmac vtk proj xquartz ninja
       - name: Configure CMake
         run: |
-          mkdir build && cd build && cmake -G Ninja -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib ..
+          mkdir build && cd build && cmake -G Ninja -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
       - run: cmake --build build -t therion loch utest
       - run: cmake --build build -t test
 
@@ -70,7 +70,7 @@ jobs:
           msystem: ${{ matrix.config.msystem }}
           update: true
           install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
-      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=OFF -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF ..
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=OFF -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF -DBUILD_THBOOK=OFF ..
       - run: cmake --build build -t therion loch utest -- -j 4
 
   MXE:
