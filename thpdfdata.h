@@ -129,7 +129,7 @@ extern std::list<colorlegendrecord> COLORLEGENDLIST;
 extern layout LAYOUT;
 extern std::list<pattern> PATTERNLIST;
 extern std::list<converted_data> GRIDLIST;
-extern converted_data NArrow, ScBar;
+extern converted_data NArrow, ScBar, AltBar;
 extern std::map<std::string,gradient> GRADIENTS;
 
 

@@ -1752,8 +1752,10 @@ else
     	  for(auto ti : this->layout->m_lookup->m_table) {
     		  sv_max = ti.m_valueDbl;
     	  }
-    	  fprintf(mpf,"beginfig(%d);\ns_altitudebar(%g, %g)(",
-    	    sfig++, sv_min, sv_max);
+          fprintf(mpf,"beginfig(%d);\ns_altitudebar(%g, %g, \"%s\")(",
+            sfig++, this->layout->units.convert_length(sv_max),
+                    this->layout->units.convert_length(sv_min),
+                    this->layout->units.format_i18n_length_units());
     	  for(auto ti : this->layout->m_lookup->m_table) {
     		  if (sv_next) fprintf(mpf, ",");
     		  sv_next = true;

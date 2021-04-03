@@ -58,7 +58,7 @@ extern std::map<std::string,FONTCHARS> USED_CHARS;
 std::list<pattern> PATTERNLIST;
 std::map<std::string,gradient> GRADIENTS;
 std::list<converted_data> GRIDLIST;
-converted_data NArrow, ScBar;
+converted_data NArrow, ScBar, AltBar;
 
 extern unsigned font_id, patt_id;
 static int conv_mode;
@@ -765,6 +765,9 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) {
   if (mode > 0) {
     F << "}}\\wd\\xxx=" << fmt::format("{:.2f}",HS) << "bp" << std::endl;
     F << "\\immediate\\pdfxform";
+    if (mode == 32 && LAYOUT.transparency) {  // transparency group for the altitude bar
+      F << " attr{/Group \\the\\attrid\\space 0 R}";
+    }
     if (transparency || !fonts.empty() || !patterns.empty() || !gradients.empty() || icc_used()) {
       F << " resources { /ProcSet [/PDF /Text] ";
       if (transparency) {
@@ -806,7 +809,7 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) {
     std::string outname;
     if (mode < 30) outname = tex_Xname(name);
     else if (mode == 30) outname = tex_Lname(name);
-    else if (mode == 31) outname = tex_Wname(name);
+    else if (31 <= mode && mode <= 32) outname = tex_Wname(name);
     else if (mode > 100 && mode < 110) outname = tex_Wname(name);
     else therror(("invalid conversion mode"));
     F << "\\xxx\n" << tex_set_ref(outname,"\\pdflastxform") << std::endl;
@@ -1281,6 +1284,10 @@ void convert_scraps_new() {
     double a, b, c, d;
     parse_eps(LAYOUT.scalebar, "",0,0,a,b,c,d,ScBar, 31);
   }
+  if (LAYOUT.altitudebar != "") {
+    double a, b, c, d;
+    parse_eps(LAYOUT.altitudebar, "",0,0,a,b,c,d,AltBar, 32);
+  }
 
   GRIDLIST.clear();
   if (LAYOUT.grid > 0) {
@@ -1400,6 +1407,7 @@ void thgraphics2pdf() {
 
   NArrow.print_pdf(TEX, "northarrow");
   ScBar.print_pdf(TEX, "scalebar");
+  AltBar.print_pdf(TEX, "altitudebar");
 
   unsigned char c = 'a';
   for(auto &I: GRIDLIST) {
@@ -1526,25 +1534,29 @@ void thgraphics2pdf() {
   std::ofstream LEGCOLOR("th_legendcolor.tex");
   if(!LEGCOLOR) therror((IOerr("th_legendcolor.tex")));
 
-  legendbox_num = COLORLEGENDLIST.size();
-  columns = 1;
-  rows = (int) ceil(double(legendbox_num) / columns);
+  if (LAYOUT.altitudebar == "") {
+    legendbox_num = COLORLEGENDLIST.size();
+    columns = 1;
+    rows = (int) ceil(double(legendbox_num) / columns);
 
-  LEGCOLOR << "\\legendcolumns" << columns << std::endl;
+    LEGCOLOR << "\\legendcolumns\n" << columns;
 
-  for (int i = 0; i < rows; i++) {
-    LEGCOLOR << "\\line{%" << std::endl;
-    for (int j = 0; j < columns; j++) {
-      pos = i + j * rows;
-      if (pos < legendbox_num) {
-        LEGCOLOR << "  \\colorlegendbox{";
-        if (LAYOUT.transparency) LEGCOLOR << "/GS1 gs ";   // colorlegendbox argument is enclosed in q ... Q
-        LEGCOLOR << legend_color[pos].col_legend.to_pdfliteral(fillstroke::fill) << "}%" << std::endl;
-        LEGCOLOR << "  \\colorlegendsymbolbox{\\pdflastxform}{" <<
-        legend_color[pos].texname << "}\\hskip10pt" << std::endl;
+    for (int i = 0; i < rows; i++) {
+      LEGCOLOR << "\\line{%\n";
+      for (int j = 0; j < columns; j++) {
+        pos = i + j * rows;
+        if (pos < legendbox_num) {
+          LEGCOLOR << "  \\colorlegendbox{";
+          if (LAYOUT.transparency) LEGCOLOR << "/GS1 gs ";   // colorlegendbox argument is enclosed in q ... Q
+          LEGCOLOR << legend_color[pos].col_legend.to_pdfliteral(fillstroke::fill) << "}%\n";
+          LEGCOLOR << "  \\colorlegendsymbolbox{\\pdflastxform}{" <<
+          legend_color[pos].texname << "}\\hskip10pt\n";
+        }
       }
+      LEGCOLOR << "\\hss}\n";
     }
-    LEGCOLOR << "\\hss}" << std::endl;
+  } else {
+    LEGCOLOR << "\\ifaltitudebar\\vskip2mm\\altitudebar\\fi\n";
   }
 
   LEGCOLOR.close();

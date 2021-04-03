@@ -184,6 +184,7 @@ struct converted_data {
                 //   20 X
                 //   30 legend
                 //   31 north arrow, scale bar
+                //   32 altitude bar (using a transparency group)
                 //   101-109 grid
   void clear();
   converted_data();

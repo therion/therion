@@ -1407,7 +1407,10 @@ R"(\pdfcompresslevel=9%
   else {
     PDFRES << "\\colorlegendfalse" << std::endl;
   }
-  
+
+  if (LAYOUT.altitudebar != "") PDFRES << "\\altitudebartrue\n";
+  else PDFRES << "\\altitudebarfalse\n";
+
   PDFRES << "\\legendwidth=" << LAYOUT.legend_width << "bp" << std::endl;
 
   if (LAYOUT.map_header_bg) {

@@ -710,7 +710,7 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
           " <i>" << ldata.cartodate << "</i></p>" << std::endl;
 
     // color legend
-    if (!COLORLEGENDLIST.empty()) {
+    if (LAYOUT.altitudebar.empty() && !COLORLEGENDLIST.empty()) {
       F << "<h3>" << escape_html(ldata.colorlegendtitle) << "</h3>" << std::endl;
       F << "<table cellspacing=\"5\">" << std::endl;
       for(std::list<colorlegendrecord>::iterator I = COLORLEGENDLIST.begin(); I != COLORLEGENDLIST.end(); I++) {
@@ -721,6 +721,10 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
         F << "</tr>" << std::endl;
       }
       F << "</table>" << std::endl;
+    } else if (!LAYOUT.altitudebar.empty()) {
+      F << "<p>" << std::endl;
+      AltBar.print_svg(F,unique_prefix);
+      F << "</p>" << std::endl;
     }
 
     // map symbols

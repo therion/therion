@@ -94,9 +94,9 @@ ATTR__shotflag_approx:=false;
 boolean ATTR__stationflag_splay;
 ATTR__stationflag_splay:=false;
 
-save black, white, red, green, blue, background, HelpSymbolColor;
+save black, white, red, green, blue, background, HelpSymbolColor, tmpcol;
 if OutputColormodel = "cmyk":
-  cmykcolor black, white, red, green, blue, background, HelpSymbolColor;
+  cmykcolor black, white, red, green, blue, background, HelpSymbolColor, tmpcol;
   black := (0,0,0,1);
   white := (0,0,0,0);
   red   := (0,0.9,0.9,0.2);
@@ -105,7 +105,7 @@ if OutputColormodel = "cmyk":
   HelpSymbolColor := (0,0,0,0.2);
   defaultcolormodel := 7;
 elseif OutputColormodel = "rgb":
-  rgbcolor black, white, red, green, blue, background, HelpSymbolColor;
+  rgbcolor black, white, red, green, blue, background, HelpSymbolColor, tmpcol;
   black := (0,0,0);
   white := (1,1,1);
   red   := (1,0,0);
@@ -848,6 +848,14 @@ def endfig =
 %  endgroup
 enddef;
 
+vardef tightbbox primary p =
+  llcorner p -- lrcorner p -- urcorner p -- ulcorner p -- cycle
+enddef;
+
+% https://tug.org/pipermail/metapost/2008-February/001218.html
+vardef log primary x =
+     (if x=0: 0 else: mlog(x)/mlog(10) fi)
+enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % P. Bolek's MPATTERN package adapted and simplified for Therion
@@ -1012,7 +1020,17 @@ enddef;
 % transparent colors
 
 primarydef p withtransparency t =     % TODO: t currently ignored
-   p withprescript(" THsettransparency");
+   p withprescript(" THsettransparency")
+enddef;
+
+def withlinearshading (expr p, n, ca, cb) =
+    withprescript(decimal xpart point n of tightbbox p & " " &
+                  decimal ypart  point n of tightbbox  p & " " &
+                  decimal xpart point ((n+2) mod 4) of tightbbox  p & " " &
+                  decimal ypart point ((n+2) mod 4) of tightbbox  p & " " &
+                  colortostr(ca, " ") & " " &
+                  colortostr(cb, " ") & " " &
+                  "THlineargradient") withoutcolor
 enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1086,45 +1104,6 @@ vardef punked primary p =
   (point 0 of p for i=1 upto length(p)-1 : -- point i of p endfor
    if cycle p : -- cycle else : -- point length(p) of p fi)
 enddef ;
-
-def linear_shading (expr p, n, ca, cb) =
-    begingroup ;
-        save a, b ; pair a, b ;
-        set_linear_vector(a,b)(p,n) ;
-        fill p -- cycle withlinearshading(a,b,ca,cb) withoutcolor;
-    endgroup ;
-enddef ;
-
-def withlinearshading (expr a, b, ca, cb) =
-    withprescript decimal xpart a & " " & decimal ypart a & " " &
-                  decimal xpart b & " " & decimal ypart b & " " &
-                  colortostr(ca, " ") & " " &
-                  colortostr(cb, " ") & " " &
-                  "THlineargradient"
-enddef ;
-
-def set_linear_vector (suffix a,b)(expr p,n) =
-  if     (n=1) : a := llcorner p ;
-                 b := urcorner p ;
-  elseif (n=2) : a := lrcorner p ;
-                 b := ulcorner p ;
-  elseif (n=3) : a := urcorner p ;
-                 b := llcorner p ;
-  elseif (n=4) : a := ulcorner p ;
-                 b := lrcorner p ;
-  elseif (n=5) : a := .5[ulcorner p,llcorner p] ;
-                 b := .5[urcorner p,lrcorner p] ;
-  elseif (n=6) : a := .5[llcorner p,lrcorner p] ;
-                 b := .5[ulcorner p,urcorner p] ;
-  elseif (n=7) : a := .5[lrcorner p,urcorner p] ;
-                 b := .5[llcorner p,ulcorner p] ;
-  elseif (n=8) : a := .5[urcorner p,ulcorner p] ;
-                 b := .5[lrcorner p,llcorner p] ;
-  else         : a := .5[ulcorner p,llcorner p] ;
-                 b := .5[urcorner p,lrcorner p] ;
-  fi ;
-enddef ;
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % end of MetaFun macros
