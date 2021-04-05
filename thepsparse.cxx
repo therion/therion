@@ -787,11 +787,11 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) {
         F << "/Pattern << ";
         for(std::set<std::string>::iterator I = patterns.begin();
                                     I != patterns.end(); I++) {
-          F << "/" << *I << " \\the\\" << tex_Pname(ALL_PATTERNS[*I]) <<
+          F << "/" << *I << " " << tex_get_ref(tex_Pname(ALL_PATTERNS[*I])) <<
                  "\\space 0 R ";
         }
         for(auto & g: gradients) {
-          F << "/" << tex_Pname(g) << " \\the\\" << tex_Pname(g) <<
+          F << "/" << tex_Pname(g) << " " << tex_get_ref(tex_Pname(g)) <<
                  "\\space 0 R ";
         }
         F << ">> ";
@@ -1463,8 +1463,7 @@ void thgraphics2pdf() {
       if (icc_used()) F << " /ColorSpace <<" << icc2pdfresources() << ">> ";
       F << ">>} {\n";
       patt.data.print_pdf(F,patt.name);
-      F << "} \\newcount \\" << tex_Pname(ALL_PATTERNS[patt.name]) <<
-           "\\" << tex_Pname(ALL_PATTERNS[patt.name]) << "=\\pdflastobj\n";
+      F << "}" << tex_set_ref(tex_Pname(ALL_PATTERNS[patt.name]), "\\pdflastobj") << "\n";
   }
   if (GRADIENTS.size() > 0) F << "% GRADIENTS:" << std::endl;
   for (auto &g: GRADIENTS) {
@@ -1474,8 +1473,7 @@ void thgraphics2pdf() {
       F << fmt::format("/Coords [{} {} {} {}] ", thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
       F << "/Extend [true true]\n";
       F << fmt::format("/Function << /FunctionType 2 /Domain [0 1] /C0 [{}] /C1 [{}] /N 1 >>\n", g.second.c0.to_elements(), g.second.c1.to_elements());
-      F << ">> >>}\\newcount \\" << tex_Pname(g.first) <<
-           "\\" << tex_Pname(g.first) << "=\\pdflastobj\n";
+      F << ">> >>}" << tex_set_ref(tex_Pname(g.first), "\\pdflastobj") << "\n";
     }
   }
   F.close();

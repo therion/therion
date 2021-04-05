@@ -57,7 +57,7 @@ std::string tex_set_ref(std::string s, std::string t) {
 
 std::string tex_get_ref(std::string s) {
   if (tex_refs_registers)
-    return("\\" + s);
+    return("\\the\\" + s);
   else
     return("\\getref{" + s + "}");
 }
