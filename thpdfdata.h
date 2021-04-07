@@ -57,6 +57,12 @@ struct scraprecord {
         X1,X2,X3,X4;
 
   color col_scrap;
+
+  // Gouraud shading data (BitsPerCoordinate = 8, BitsPerComponent = 8)
+  int gour_n;
+  double gour_xmin, gour_xmax, gour_ymin, gour_ymax;
+  std::string gour_stream;
+
   std::list<surfpictrecord> SKETCHLIST;
   scraprecord();
 };
