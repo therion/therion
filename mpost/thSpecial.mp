@@ -101,7 +101,7 @@ def s_vgrid_SM (expr xpos, ypos, xsize, ysize) =
   ) dashed evenly;
 enddef;
 
-def s_altitudebar_SKBB (expr min, max, units)(text t) =
+def s_altitudebar_SKBB (expr zmin, zmax, units)(text t) =
   begingroup;
     j := 0;
     string s;
@@ -121,8 +121,8 @@ def s_altitudebar_SKBB (expr min, max, units)(text t) =
       fi;
       j := j+1;
     endfor;
-    % labeling; breakpoints for the (max-min) difference: 1*10^n, 2*10^n, 5*10^n
-    d := max - min;
+    % labeling; breakpoints for the (zmax-zmin) difference: 1*10^n, 2*10^n, 5*10^n
+    d := zmax - zmin;
     dlog := log(d);
     if dlog mod 1 < 0.301: dv := 2;
     elseif dlog mod 1 < 0.7: dv := 5;
@@ -131,19 +131,27 @@ def s_altitudebar_SKBB (expr min, max, units)(text t) =
     dv := floor(dv*(10**(floor(dlog-1))));
     interim labeloffset := 15 bp;
     interim linecap := butt;
-    if dv > 0:
-      i := dv * floor(min/dv);
-      if i < min: i := i + dv; fi;
+    if (dv > 0) or (floor zmax - floor zmin >= 2):
+      if dv > 0:    % zmax-zmin >= 10
+        i := dv * floor(zmin/dv);
+        if i < zmin: i := i + dv; fi;
+      else:         % at least two whole numbers between zmin and zmax
+        i := floor(zmin);
+        if i < zmin: i := i + 1; fi;
+        dv := 1;
+      fi;
       forever:
-        exitif i > max;
-        j := (i-min)/d*vs;
+        exitif i > zmax;
+        j := (i-zmin)/d*vs;
         draw (hs, j) -- (hs+5bp, j) withpen PenD;
         label.rt(thTEX(decimal round i & "\thinspace " & units), (hs, j));
         i := i + dv;
       endfor;
     else:
-      label.rt(thTEX(decimal round min & "\thinspace " & units),(hs,0));
-      label.rt(thTEX(decimal round max & "\thinspace " & units),(hs,vs));
+      draw (0, 0) -- (hs+5bp, 0) withpen PenD;
+      draw (0, vs) -- (hs+5bp, vs) withpen PenD;
+      label.rt(thTEX(decimal(round(10*zmin)/10) & "\thinspace " & units),(hs,0));
+      label.rt(thTEX(decimal(round(10*zmax)/10) & "\thinspace " & units),(hs,vs));
     fi;
   endgroup;
 enddef;
