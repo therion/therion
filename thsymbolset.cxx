@@ -565,7 +565,7 @@ void thsymbolset::export_symbol_color(FILE * mpf, int sym_id, thlayout_color * c
     export_symbol_color_group(mpf, sym_id, clr);
   else {
     this->color[sym_id] = *clr;
-    this->color[sym_id].defined = true;
+    this->color[sym_id].defined = 1;
   }
 }
 
