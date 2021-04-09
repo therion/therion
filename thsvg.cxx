@@ -536,9 +536,17 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
     if (g.second.type == gradient_lin) {
       fmt::print(F, "<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
                  g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
-      F << "<stop offset=\"0%\" stop-color=\"" << g.second.c0.to_svg() << "\"/>\n";
-      F << "<stop offset=\"100%\" stop-color=\"" << g.second.c1.to_svg() << "\"/>\n";
+    } else {
+      fmt::print(F, "<radialGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" fx=\"{}\" fy=\"{}\" fr=\"{}\" cx=\"{}\" cy=\"{}\" r=\"{}\">\n",
+                 g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.r0,prec_xy),
+                                         thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy), thdouble(g.second.r1,prec_xy));
+    }
+    F << "<stop offset=\"0%\" stop-color=\"" << g.second.c0.to_svg() << "\"/>\n";
+    F << "<stop offset=\"100%\" stop-color=\"" << g.second.c1.to_svg() << "\"/>\n";
+    if (g.second.type == gradient_lin) {
       F << "</linearGradient>\n";
+    } else {
+      F << "</radialGradient>\n";
     }
   }
   // scraps:

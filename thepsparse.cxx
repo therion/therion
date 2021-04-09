@@ -728,9 +728,17 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
     if (g.second.type == gradient_lin) {
       fmt::print(F, "<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
                  g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
-      F << "<stop offset=\"0%\" stop-color=\"" << g.second.c0.to_svg() << "\"/>\n";
-      F << "<stop offset=\"100%\" stop-color=\"" << g.second.c1.to_svg() << "\"/>\n";
+    } else {
+      fmt::print(F, "<radialGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" fx=\"{}\" fy=\"{}\" fr=\"{}\" cx=\"{}\" cy=\"{}\" r=\"{}\">\n",
+                 g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.r0,prec_xy),
+                                         thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy), thdouble(g.second.r1,prec_xy));
+    }
+    F << "<stop offset=\"0%\" stop-color=\"" << g.second.c0.to_svg() << "\"/>\n";
+    F << "<stop offset=\"100%\" stop-color=\"" << g.second.c1.to_svg() << "\"/>\n";
+    if (g.second.type == gradient_lin) {
       F << "</linearGradient>\n";
+    } else {
+      F << "</radialGradient>\n";
     }
   }
   // clip to initial viewBox
@@ -1072,23 +1080,42 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
         data.MP.add(MP_pattern, patt, pattcolor);
         thbuffer.clear();
       }
-      else if (tok == "THlineargradient") {
-        grad.type = gradient_lin;
-        if (10 <= mode && mode <= 20) grad.used_in_map = true; else grad.used_in_map = false;  // map conversion modes
+      else if (tok == "THgradient") {
+        int addon;
+        if (thbuffer[0] == "L") {
+          grad.type = gradient_lin;
+          addon = 0;
+        } else {
+          grad.type = gradient_rad;
+          addon = 2;
+        }
+        if (10 <= mode && mode <= 20) grad.used_in_map = true; else grad.used_in_map = false;  // used in xhtml to check whether the gradient was used in the main map or the legend symbol
         try {
-          grad.x0 = std::stod(thbuffer[0])-llx;
-          grad.y0 = std::stod(thbuffer[1])-lly;
-          grad.x1 = std::stod(thbuffer[2])-llx;
-          grad.y1 = std::stod(thbuffer[3])-lly;
-          if (thbuffer.size() == 6) {
-            grad.c0.set(std::stod(thbuffer[4]));
-            grad.c1.set(std::stod(thbuffer[5]));
-          } else if (thbuffer.size() == 10) {
-            grad.c0.set(std::stod(thbuffer[4]),std::stod(thbuffer[5]),std::stod(thbuffer[6]));
-            grad.c1.set(std::stod(thbuffer[7]),std::stod(thbuffer[8]),std::stod(thbuffer[9]));
-          } else if (thbuffer.size() == 12) {
-            grad.c0.set(std::stod(thbuffer[4]),std::stod(thbuffer[5]),std::stod(thbuffer[6]),std::stod(thbuffer[7]));
-            grad.c1.set(std::stod(thbuffer[8]),std::stod(thbuffer[9]),std::stod(thbuffer[10]),std::stod(thbuffer[11]));
+          grad.x0 = std::stod(thbuffer[1])-llx;
+          grad.y0 = std::stod(thbuffer[2])-lly;
+          grad.x1 = std::stod(thbuffer[3])-llx;
+          grad.y1 = std::stod(thbuffer[4])-lly;
+          if (thbuffer.size() == 7+addon) {
+            grad.c0.set(std::stod(thbuffer[5]));
+            grad.c1.set(std::stod(thbuffer[6]));
+            if (grad.type == gradient_rad) {
+              grad.r0 = std::stod(thbuffer[7]);
+              grad.r1 = std::stod(thbuffer[8]);
+            }
+          } else if (thbuffer.size() == 11+addon) {
+            grad.c0.set(std::stod(thbuffer[5]),std::stod(thbuffer[6]),std::stod(thbuffer[7]));
+            grad.c1.set(std::stod(thbuffer[8]),std::stod(thbuffer[9]),std::stod(thbuffer[10]));
+            if (grad.type == gradient_rad) {
+              grad.r0 = std::stod(thbuffer[11]);
+              grad.r1 = std::stod(thbuffer[12]);
+            }
+          } else if (thbuffer.size() == 13+addon) {
+            grad.c0.set(std::stod(thbuffer[5]),std::stod(thbuffer[6]),std::stod(thbuffer[7]),std::stod(thbuffer[8]));
+            grad.c1.set(std::stod(thbuffer[9]),std::stod(thbuffer[10]),std::stod(thbuffer[11]),std::stod(thbuffer[12]));
+            if (grad.type == gradient_rad) {
+              grad.r0 = std::stod(thbuffer[13]);
+              grad.r1 = std::stod(thbuffer[14]);
+            }
           } else ththrow("invalid buffer size");
         } catch (const std::exception& e) {
           therror((e.what()));
@@ -1096,7 +1123,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
         if (FORM_GRADIENTS.find(u2str(patt_id)) == FORM_GRADIENTS.end()) {
           FORM_GRADIENTS.insert(u2str(patt_id));
         }
-        GRADIENTS.insert(make_pair(u2str(patt_id),grad));
+        GRADIENTS.insert({u2str(patt_id),grad});
         data.MP.add(MP_gradient, u2str(patt_id));
         patt_id++;
         thbuffer.clear();
@@ -1467,14 +1494,17 @@ void thgraphics2pdf() {
   }
   if (GRADIENTS.size() > 0) F << "% GRADIENTS:" << std::endl;
   for (auto &g: GRADIENTS) {
-    if (g.second.type == gradient_lin) {
       F << "\\immediate\\pdfobj {<< /Type /Pattern /PatternType 2 /Shading <<\n";
-      F << fmt::format("/ShadingType 2 /ColorSpace /Device{:s}\n", g.second.c0.model == colormodel::grey ? "Gray" : (g.second.c0.model == colormodel::cmyk ? "CMYK" : "RGB"));
-      F << fmt::format("/Coords [{} {} {} {}] ", thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
+      F << fmt::format("/ShadingType {:d} /ColorSpace /Device{:s}\n", g.second.type == gradient_lin ? 2 : 3, g.second.c0.model == colormodel::grey ? "Gray" : (g.second.c0.model == colormodel::cmyk ? "CMYK" : "RGB"));
+      if (g.second.type == gradient_lin) {
+        F << fmt::format("/Coords [{} {} {} {}] ", thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
+      } else {
+        F << fmt::format("/Coords [{} {} {} {} {} {}] ", thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.r0,prec_xy),
+                                                         thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy), thdouble(g.second.r1,prec_xy));
+      }
       F << "/Extend [true true]\n";
       F << fmt::format("/Function << /FunctionType 2 /Domain [0 1] /C0 [{}] /C1 [{}] /N 1 >>\n", g.second.c0.to_elements(), g.second.c1.to_elements());
       F << ">> >>}" << tex_set_ref(tex_Pname(g.first), "\\pdflastobj") << "\n";
-    }
   }
   F.close();
 

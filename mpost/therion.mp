@@ -1024,13 +1024,27 @@ primarydef p withtransparency t =     % TODO: t currently ignored
 enddef;
 
 def withlinearshading (expr p, n, ca, cb) =
-    withprescript(decimal xpart point n of tightbbox p & " " &
-                  decimal ypart  point n of tightbbox  p & " " &
+    withprescript("L " &
+                  decimal xpart point n of tightbbox p & " " &
+                  decimal ypart point n of tightbbox p & " " &
                   decimal xpart point ((n+2) mod 4) of tightbbox  p & " " &
                   decimal ypart point ((n+2) mod 4) of tightbbox  p & " " &
                   colortostr(ca, " ") & " " &
                   colortostr(cb, " ") & " " &
-                  "THlineargradient") withoutcolor
+                  "THgradient") withoutcolor
+enddef;
+
+def withradialshading (expr p, ca, cb) =
+    withprescript("R " &
+                  decimal xpart center p & " " &
+                  decimal ypart center p & " " &
+                  decimal xpart center p & " " &
+                  decimal ypart center p & " " &
+                  colortostr(ca, " ") & " " &
+                  colortostr(cb, " ") & " " &
+                  "0 " &
+                  decimal (((xpart lrcorner p - xpart llcorner p) ++ (ypart urcorner p - ypart lrcorner p)) / 2) & " " &
+                  "THgradient") withoutcolor
 enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

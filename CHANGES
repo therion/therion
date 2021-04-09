@@ -4,6 +4,8 @@ therion:
  * support for colour models: cmyk, rgb, grayscale (see the color-model layout
    option in the Thbook)
  * support for colour management (see the color-profile layout option)
+ * support for linear and radial shading (colour gradients) in MetaPost
+   (withlinearshading and withradialshading options)
  * reimplemented internal processing of patterns and transparent colors in
    MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
    macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
