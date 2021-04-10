@@ -35,6 +35,7 @@ function(therion_add_sample SAMPLE_NAME THCONFIG)
                       DEPENDS ${SAMPLE_DEPENDS_OTHER}
                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                       COMMAND_EXPAND_LISTS)
+    add_dependencies(_samples-${SAMPLE_NAME} therion)
 
     # CRC verification: Copy .crc files from source dir and then build the sample with verification.
     add_custom_target(_samples-verify-crc-${SAMPLE_NAME}
@@ -43,6 +44,7 @@ function(therion_add_sample SAMPLE_NAME THCONFIG)
                       DEPENDS ${SAMPLE_DEPENDS_OTHER}
                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                       COMMAND_EXPAND_LISTS)
+    add_dependencies(_samples-verify-crc-${SAMPLE_NAME} therion)
 
     # CRC generation: Build sample with checksum generation and copy resulting .crc files to the source dir.
     add_custom_target(_samples-generate-crc-${SAMPLE_NAME}
@@ -51,6 +53,7 @@ function(therion_add_sample SAMPLE_NAME THCONFIG)
                       DEPENDS ${SAMPLE_DEPENDS_OTHER}
                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                       COMMAND_EXPAND_LISTS)
+    add_dependencies(_samples-generate-crc-${SAMPLE_NAME} therion)
 
     # Make targets with all the samples together.
     add_dependencies(samples-build _samples-${SAMPLE_NAME})

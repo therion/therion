@@ -40,3 +40,4 @@ add_custom_command(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_custom_target(thbook ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/thbook.pdf)
+add_dependencies(thbook version)
