@@ -212,7 +212,7 @@ class thlookup : public thdataobject {
    * Export color legend, if applicable.
    */
 
-  virtual void export_color_legend(thlayout * layout, std::unique_ptr<thlookup> lookup_holder);
+  virtual void export_color_legend(thlayout * layout);
 
 };
 

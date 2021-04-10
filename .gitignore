@@ -22,7 +22,7 @@ xtherion/therion.tcl
 !.github/
 !.gitattributes
 *~
-*.3d
+./*.3d
 *.a
 *.err
 *.exe
@@ -39,6 +39,8 @@ xtherion/therion.tcl
 *.xhtml
 *.xvi
 *.zip
+samples/pocket-topo/cave.3d
+samples/pocket-topo/cave.plt
 core
 thconfig
 geomag/test/geomag.i

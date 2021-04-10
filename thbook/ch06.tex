@@ -126,6 +126,18 @@ Here is a selection of parameters which can be used with cmake:
   |Release| -- compile with optimizations
 
   |RelWithDebInfo| -- compile with debug symbols and optimizations, useful for profiling and debugging
+
+* {\catcode`\=12|-DTHBOOK_FORMAT=<option>|} = set the output size of the Therion book (most of the images are
+  omitted in smaller sizes); relevant options:
+
+  |0| -- A4 portrait
+
+  |1| -- small screen portrait (some lines and images don't fit)
+
+  |2| -- small screen landscape
+
+  |3| -- ebook reader optimized
+
 \endlist
 
 \subsubchapter Legacy approach: using make.

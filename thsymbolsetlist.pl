@@ -89,6 +89,8 @@ $SYMHASH{x_point_height} = "hidden";
 $SYMHASH{x_point_passageheight} = "hidden";
 $SYMHASH{x_point_airdraught} = "hidden";
 
+$SYMHASH{x_zzz} = "noassign hidden";
+
 
 $i = 0;
 foreach $k (sort keys(%SYMHASH)) {

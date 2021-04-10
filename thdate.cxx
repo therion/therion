@@ -28,6 +28,7 @@
 #include "thdate.h"
 #include "thparse.h"
 #include "thexception.h"
+#include "therion.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <time.h>

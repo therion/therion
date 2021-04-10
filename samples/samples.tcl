@@ -1,8 +1,8 @@
 #! /usr/bin/tclsh
 # Test all therion features and generate features HTML pages.
 #
-# Usage: samples.tcl
-#        samples.tcl clean
+# Usage: samples.tcl <output-dir> <options>
+#        samples.tcl <output-dir> clean
 
 set outdd ".."
 if {[llength $argv] > 0} {
@@ -16,6 +16,18 @@ proc log_msg {msg} {
   global flog
   puts -nonewline $msg
   puts -nonewline $flog $msg
+}
+
+# TODO: add verify crc when finished 
+set outputopt --verify-output-crc
+# set outputopt --reproducible-output
+if {[regexp {\-\-generate-output-crc} $argv]} {
+  set outputopt --generate-output-crc
+}
+
+set donotruntherion 0
+if {[regexp {\-\-generate-tex-only} $argv]} {
+  set donotruntherion 1
 }
 
 set dirnum 0
@@ -45,7 +57,7 @@ proc scan_files {dir} {
   }
 }
 
-set thcmd [file normalize [file join [pwd] "$outdd/therion --reproducible-output"]]
+set thcmd [file normalize [file join [pwd] "$outdd/therion $outputopt"]]
 foreach av [lrange $argv 1 end] {
   if {[regexp {^--emulator=(.*)$} $av dum emulator]} {
     set thcmd "$emulator $thcmd"
@@ -56,9 +68,11 @@ set processlist {}
 proc scan_lists {} {
   global dirnum farray dirlist
   global filelist farray cleanlist processlist thcmd
+  set dindex 0
   foreach fr $filelist {
     set fnum [lindex $fr 2]
-    set farray($fnum,FILE) 0
+    set farray($fnum,FILE) $dindex
+    incr dindex -1
     set farray($fnum,CLEAN) {}
     set farray($fnum,PROCESS) {}
     set fid [open [file join [lindex $fr 1] [lindex $fr 0]] r]
@@ -170,7 +184,8 @@ proc clean_files {} {
 
 
 proc process_files {} {
-  global processlist
+  global processlist donotruntherion
+  if {$donotruntherion} return
   set cdir [pwd]
   log_msg "\nProcessing files:\n"
   foreach ps $processlist {
@@ -223,7 +238,7 @@ proc get_html_body_for_tex {fn} {
 
 
 proc create_docs {} {
-  global filelist tcl_platform outd outdd
+  global filelist tcl_platform outd outdd donotruntherion
   set cdir {}
   set chid 0
   set imid 0
@@ -369,14 +384,16 @@ proc create_docs {} {
     set iisrc [lindex $img 1]
     log_msg "$iisrc\n"
     set dpi 300
-    while {[catch {
-      eval "exec \"$convpath\" -colorspace RGB -density $dpi $iisrc $outd/tmp.png"
-    }] && ($dpi > 10)} {
-      log_msg "error at $dpi dpi processing $iisrc\n"
-      set dpi [expr int(double($dpi) * 0.9)]
+    if {!$donotruntherion} {
+      while {[catch {
+        eval "exec \"$convpath\" -colorspace RGB -density $dpi $iisrc $outd/tmp.png"
+      }] && ($dpi > 10)} {
+        log_msg "error at $dpi dpi processing $iisrc\n"
+        set dpi [expr int(double($dpi) * 0.9)]
+      }
+      eval "exec \"$convpath\" -colorspace RGB -resize 419x419 $outd/tmp.png $outd/$iiimg"
+      file delete -force $outd/tmp.png
     }
-    eval "exec \"$convpath\" -colorspace RGB -resize 419x419 $outd/tmp.png $outd/$iiimg"
-    file delete -force $outd/tmp.png
     file copy -force -- $iisrc "$outd/$iifnm"
   }
 
@@ -530,14 +547,19 @@ if {([llength $argv] > 1) && [regexp -nocase {^clean$} [lindex $argv 1]]} {
   scan_lists
   clean_files
 } else {
+  set anyscan 0
   if {[llength $argv] == 1} {
     scan_files ""
   } else {
     foreach d [lrange $argv 1 end] {
       if {![regexp {^--.*} $d]} {
-      	scan_files $d
+        scan_files $d
+        incr anyscan
       }
     }
+  }
+  if {!$anyscan} {
+    scan_files ""
   }
   scan_lists
   process_files

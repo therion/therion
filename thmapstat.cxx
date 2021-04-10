@@ -431,12 +431,18 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   c.guarantee(256);
   b.guarantee(256);
 
-  fprintf(f,"\\thversion={%s}\n",THVERSION);
+  if (!thcfg.reproducible_output)
+    fprintf(f,"\\thversion={%s}\n",utf2tex(THVERSION));
+  else
+    fprintf(f,"\\thversion={%s}\n",utf2tex("..."));
   thdate dt;
   dt.reset_current();
   double cy = dt.get_start_year();
   dt.shour = -1;
-  fprintf(f,"\\currentdate={%s}\n",utf2tex(dt.get_str(TT_DATE_FMT_LOCALE)));
+  if (!thcfg.reproducible_output)
+    fprintf(f,"\\currentdate={%s}\n",utf2tex(dt.get_str(TT_DATE_FMT_LOCALE)));
+  else
+    fprintf(f,"\\currentdate={%s}\n",utf2tex("1981-09-27"));
   fprintf(f,"\\northdir={%s}\n",layout->north == TT_LAYOUT_NORTH_GRID ? "grid" : "true");
 
 

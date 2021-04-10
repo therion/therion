@@ -2,12 +2,14 @@
 % Copyright (C) 2003, 2004 Martin Budaj, Stacho Mudrak
 % Thanks to Wookey for corrections
 
-\newcount\outputsize \outputsize=0
+\ifx\outputsize\undefined
+  \def\outputsize{0}  % can't be defined using \newcount inside \ifx
   % 0 - A4 portrait
   % most images are omitted in smaller sizes:
   % 1 - small screen portrait (some lines and images don't fit)
   % 2 - small screen landscape
   % 3 - ebook reader
+\fi
 
 \ifx\pdfoutput\undefined
   \input epsf

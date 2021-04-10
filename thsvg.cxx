@@ -39,6 +39,8 @@
 #include <cstdio>
 #include <cfloat>
 #include <cmath>
+#include <fmt/core.h>
+#include <fmt/ostream.h>
 
 #include "thepsparse.h"
 #include "thpdfdbg.h"
@@ -49,6 +51,9 @@
 #include "thconfig.h"
 #include "thlegenddata.h"
 #include "thtexfonts.h"
+#include "thdouble.h"
+
+const int prec_xy = 2;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -516,10 +521,32 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
                                            << I->x <<  " " << I->y  << 
            ")\">" << std::endl;
       F << "<g transform=\"translate(" 
-                    << I->llx1-I->llx << " " << I->lly1-I->lly << ")\">" << std::endl;
+                    << I->llx1-I->llx << " " << I->lly1-I->lly << ")\"" <<
+                       " fill=\"black\" stroke=\"black\">\n";
+                       // currentColor doesn't work to inherit the color of the symbol;
+                       // context-fill/stroke doesn't work in patterns
       I->data.MP.print_svg(F,unique_prefix);
       F << "</g>" << std::endl;
       F << "</pattern>" << std::endl;
+    }
+  }
+  // gradients
+  for (auto &g: GRADIENTS) {
+    if (!g.second.used_in_map) continue;
+    if (g.second.type == gradient_lin) {
+      fmt::print(F, "<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
+                 g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
+    } else {
+      fmt::print(F, "<radialGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" fx=\"{}\" fy=\"{}\" fr=\"{}\" cx=\"{}\" cy=\"{}\" r=\"{}\">\n",
+                 g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.r0,prec_xy),
+                                         thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy), thdouble(g.second.r1,prec_xy));
+    }
+    F << "<stop offset=\"0%\" stop-color=\"" << g.second.c0.to_svg() << "\"/>\n";
+    F << "<stop offset=\"100%\" stop-color=\"" << g.second.c1.to_svg() << "\"/>\n";
+    if (g.second.type == gradient_lin) {
+      F << "</linearGradient>\n";
+    } else {
+      F << "</radialGradient>\n";
     }
   }
   // scraps:
@@ -691,7 +718,7 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
           " <i>" << ldata.cartodate << "</i></p>" << std::endl;
 
     // color legend
-    if (!COLORLEGENDLIST.empty()) {
+    if (LAYOUT.altitudebar.empty() && !COLORLEGENDLIST.empty()) {
       F << "<h3>" << escape_html(ldata.colorlegendtitle) << "</h3>" << std::endl;
       F << "<table cellspacing=\"5\">" << std::endl;
       for(std::list<colorlegendrecord>::iterator I = COLORLEGENDLIST.begin(); I != COLORLEGENDLIST.end(); I++) {
@@ -702,6 +729,10 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
         F << "</tr>" << std::endl;
       }
       F << "</table>" << std::endl;
+    } else if (!LAYOUT.altitudebar.empty()) {
+      F << "<p>" << std::endl;
+      AltBar.print_svg(F,unique_prefix);
+      F << "</p>" << std::endl;
     }
 
     // map symbols

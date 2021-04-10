@@ -47,6 +47,8 @@ struct color{
   bool is_defined();
   std::string to_svg();
   std::string to_pdfliteral(fillstroke = fillstroke::fillstroke);
+  std::string to_pdfpatterncolor();
+  std::string to_elements();
 };
 
 struct CGS {  // current graphics state
@@ -55,7 +57,7 @@ struct CGS {  // current graphics state
   float miterlimit, linewidth;
   std::list<float> dasharray;
   float dashoffset;
-  std::string pattern;
+  std::string pattern, gradient;
   
   std::map<int,int> clippathdepth;
   static int clippathID;
@@ -93,6 +95,7 @@ struct MP_path {
   void add(int, std::string, std::string, double, double);
 
   void print_svg(std::ofstream & F, CGS & gstate, std::string prefix);
+  void print_pdf(std::ofstream & F);
 };
 
 struct MP_index {
@@ -102,30 +105,32 @@ struct MP_index {
 struct MP_text {
   std::string text, font;
   double size, x, y, xx, xy, yx, yy;
-  color col;
+  color col;    // color of the associated scrap
   bool transformed;
   
   MP_text();
   void clear();
   void print_svg(std::ofstream & F, CGS & gstate);
+  void print_pdf(std::ofstream & F);
 };
 
 struct MP_setting {
   int command;
-  double data[4];
-//  string str;
+  double data;
+  color col;
   std::list<float> dasharray;
   float dashoffset;
   std::string pattern;
   
   void print_svg(std::ofstream & F, CGS & gstate);
+  void print_pdf(std::ofstream & F);
 };
 
 enum {MP_lineto, MP_moveto, MP_curveto, MP_rlineto};
 enum {MP_fill, MP_stroke, MP_fillstroke, MP_clip};
 
 enum {MP_linejoin, MP_linecap, MP_miterlimit, MP_gray, MP_rgb, MP_cmyk,
-      MP_pattern, MP_transp, MP_dash, MP_linewidth};
+      MP_pattern, MP_transp, MP_dash, MP_linewidth, MP_gradient};
 
 enum {MP_notransf, MP_scale, MP_translate, MP_concat};
 enum {MP_gsave, MP_grestore, MP_transp_on, MP_transp_off};
@@ -133,6 +138,7 @@ enum {I_path, I_text, I_setting, I_gsave, I_transform};
 
 enum {MP_mitered = 0, MP_rounded, MP_beveled};
 enum {MP_butt=0, MP_squared=2};
+enum {gradient_lin, gradient_rad};
 
 struct MP_data {
   std::vector<MP_index> index;
@@ -151,7 +157,7 @@ struct MP_data {
   void add(MP_text);
   void add(MP_transform);
   void add(int);
-  void add(int,std::string);
+  void add(int,std::string,color=color());
   void get();
   void pop();
   
@@ -159,18 +165,31 @@ struct MP_data {
   void clear();
   
   void print_svg(std::ofstream & F, std::string prefix);
+  void print_pdf(std::ofstream & F);
 };
 
 struct converted_data {
   MP_data MP;
-  std::set<std::string> fonts, patterns;
+  std::set<std::string> fonts, patterns, gradients;
   bool transparency = false;
 //  double hsize, vsize;
   double llx, lly, urx, ury;
-  
+  int mode;     // conversion mode
+                //    0 patterns
+                //   10 F (see thpdfdata.h, scraprecord)
+                //   11 G
+                //   12 B
+                //   13 I
+                //   14 E
+                //   20 X
+                //   30 legend
+                //   31 north arrow, scale bar
+                //   32 altitude bar (using a transparency group)
+                //   101-109 grid
   void clear();
   converted_data();
   void print_svg(std::ofstream & F, std::string prefix="");
+  void print_pdf(std::ofstream & F, std::string);
 };
 
 struct pattern {
@@ -182,9 +201,17 @@ struct pattern {
   bool used;
 };
 
-int thconvert_new();
+struct gradient {
+  int type;
+  double x0, y0, r0, x1, y1, r1;
+  color c0, c1;
+  bool used_in_map;
+};
+
+int thconvert_eps();
 void parse_eps(std::string fname, std::string cname, double dx, double dy, 
                double & c1, double & c2, double & c3, double & c4, 
-               converted_data & data, color=color());
+               converted_data & data, int mode, color=color());
+void thgraphics2pdf();
 
 #endif

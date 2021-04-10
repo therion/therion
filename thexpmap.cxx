@@ -172,6 +172,7 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
             case TT_EXPMAP_FMT_KML:
             case TT_EXPMAP_FMT_DXF:
             case TT_EXPMAP_FMT_SHP:
+            case TT_EXPMAP_FMT_BBOX:
               supform = true;
           }
           break;
@@ -1737,6 +1738,36 @@ else
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
     sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()));
 
+
+  // print altitudebar
+  if ((this->layout->color_legend == TT_TRUE) && (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->m_lookup->m_table.size() > 1)) {
+	double sv_min(0.0), sv_max(0.0);
+	bool sv_next = false;
+    switch (this->layout->color_crit) {
+      case TT_LAYOUT_CCRIT_ALTITUDE:
+      case TT_LAYOUT_CCRIT_DEPTH:
+    	  sprintf(texb.get_buffer(),"data.%d",sfig);
+    	  LAYOUT.altitudebar = texb.get_buffer();
+    	  sv_min = this->layout->m_lookup->m_table.begin()->m_valueDbl;
+    	  for(auto ti : this->layout->m_lookup->m_table) {
+    		  sv_max = ti.m_valueDbl;
+    	  }
+          fprintf(mpf,"beginfig(%d);\ns_altitudebar(%g, %g, \"%s\")(",
+            sfig++, this->layout->units.convert_length(sv_max),
+                    this->layout->units.convert_length(sv_min),
+                    this->layout->units.format_i18n_length_units());
+    	  for(auto ti : this->layout->m_lookup->m_table) {
+    		  if (sv_next) fprintf(mpf, ",");
+    		  sv_next = true;
+    		  fprintf(mpf,"%g,",(ti.m_valueDbl - sv_min)/(sv_max - sv_min));
+    		  ti.m_color.print_to_file(this->layout->color_model, mpf);
+    	  }
+    	  fprintf(mpf,");\nendfig;\n");
+    	  break;
+    }
+  }
+  
+  
   // sem pride zapisanie legendy do MP suboru
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"Scale:=%.2f;\ninitialize(Scale);\n",0.01 / this->layout->base_scale);
@@ -2249,8 +2280,12 @@ else
       switch (this->format) {
 
     case TT_EXPMAP_FMT_PDF:
-      if (!quick_map_exp)
-        thconvert();
+      if (!quick_map_exp) {
+        thconvert_eps();
+        thgraphics2pdf();
+
+        if (thtmp.debug) thconvert_old();
+      }
 
       thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
 
@@ -2305,14 +2340,14 @@ else
       // END OF PDF POSTPROCESSING
 
     case TT_EXPMAP_FMT_SVG:
-      thconvert_new();
+      thconvert_eps();
       thassert(chdir(wdir.get_buffer()) == 0);
       thsvg(fnm, 0, ldata);
       break;
       
 
     case TT_EXPMAP_FMT_XHTML:
-      thconvert_new();
+      thconvert_eps();
       thassert(chdir(wdir.get_buffer()) == 0);
       thsvg(fnm, 1, ldata);
       break;
@@ -3426,7 +3461,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
 {
 
   // parsneme lookup a najdeme ho
-  std::unique_ptr<thdataobject> unique_lkp;
+  std::unique_ptr<thlookup> unique_lkp;
   thlookup * lkp = NULL;
   if (this->layout->color_crit_fname != NULL) {
     int cc;
@@ -3438,8 +3473,9 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       if (strlen(ccidx) > 0) {
         thwarning(("missing lookup -- %s", this->layout->color_crit_fname));
       }
-      unique_lkp = this->db->create("lookup", this->src);
-      lkp = dynamic_cast<thlookup*>(unique_lkp.get());
+      unique_lkp = this->db->create<thlookup>(this->src);
+      lkp = unique_lkp.get();
+      this->db->object_list.push_back(std::move(unique_lkp));
       lkp->m_type = this->layout->color_crit;
     }
   }
@@ -3558,7 +3594,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
     cmap = cmap->next_item;
   }
 
-  lkp->export_color_legend(this->layout, std::unique_ptr<thlookup>(dynamic_cast<thlookup*>(unique_lkp.release())));
+  lkp->export_color_legend(this->layout);
 
 }
 

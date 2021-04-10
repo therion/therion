@@ -471,7 +471,7 @@ void print_preview(int up,std::ofstream& PAGEDEF,double HSHIFT,double VSHIFT,
 //  PAGEDEF << (up ? "\\PL{q .1 w}%" : "\\PL{q .8 g}%") << std::endl;
   
   if (up) { 
-    PAGEDEF << "\\PL{q .1 w " << LAYOUT.col_preview_above.to_pdfliteral(fillstroke::stroke) <<
+    PAGEDEF << "\\PL{q " << LAYOUT.col_preview_above.to_pdfliteral(fillstroke::stroke) <<
                "}%" << std::endl;
   }
   else { 
@@ -1265,17 +1265,35 @@ void build_pages() {
 
   std::ofstream PDFRES("th_resources.tex");
   if(!PDFRES) therror(("Can't write file th_resources.tex"));
-  if (LAYOUT.transparency || LAYOUT.OCG) {
-    PDFRES << "\\ifnum\\pdftexversion<110\\pdfcatalog{ /Version /" <<
-      (LAYOUT.OCG ? "1.5" : "1.4") << " }" << 
-      (LAYOUT.OCG ? "\\else\\pdfminorversion=5" : "") << "\\fi" << std::endl;
-  }
+
+  PDFRES << "\\pdfminorversion=5%\n";
 
   if (thcfg.reproducible_output) {
-    PDFRES << "\\ifx\\pdfsuppressptexinfo\\undefined\\else%" << std::endl;
-    PDFRES << "  \\pdfsuppressptexinfo=-1\\pdftrailerid{}\\pdfinfoomitdate=1%" << std::endl;
-    PDFRES << "\\fi%" << std::endl;
-    PDFRES << "\\pdfinfo{/Producer (pdfTeX)}%" << std::endl;
+    PDFRES <<
+R"(\pdfcompresslevel=9%
+\pdfobjcompresslevel=2%
+\pdfdecimaldigits=3%
+\ifx\directlua\undefined
+  \pdfsuppressptexinfo=-1\pdftrailerid{}\pdfinfoomitdate=1%
+  \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (pdfTeX)}%
+\else
+  \pdfvariable suppressoptionalinfo\numexpr1+2+4+8+32+64+512%
+  \pdfinfo{/Creator (Therion, MetaPost, TeX) /Producer (LuaTeX)}%
+\fi%
+)";
+//    // this is one way to fix the font IDs for CM fonts to values matching their order when they are preloaded by plain TeX
+//    // samples should then use just CM fonts (no diacritics)
+//    // [another option is to install exactly the same set of CM/CS/CMCYR fonts on all platforms]
+//    // sadly, this fails in pre-2018 pdftex, see also https://mailman.ntg.nl/pipermail/ntg-pdftex/2018-January/004209.html
+//    // pdftex: ../../../texk/web2c/pdftexdir/writefont.c:607: create_fontdictionary: Assertion `fo->last_char >= fo->first_char' failed.
+//    // Aborted (core dumped)
+//
+//    PDFRES << "% the following hack initializes all fonts at the base size to avoid getting a different \\pdffontname\n";
+//    for (auto & s: {"rm","it","bf","ss","si"}) {
+//      PDFRES << "  \\" << s;
+//      for (auto & f: FONTS) PDFRES << "\\edef\\tmp{\\pdffontname\\thf" << u2str(f.id+1) << "}";
+//      PDFRES << "%\n";
+//    }
   } else {
     PDFRES << "\\pdfinfo{/Creator (Therion " << THVERSION << ", MetaPost, TeX)}%" << std::endl;
   }
@@ -1389,7 +1407,10 @@ void build_pages() {
   else {
     PDFRES << "\\colorlegendfalse" << std::endl;
   }
-  
+
+  if (LAYOUT.altitudebar != "") PDFRES << "\\altitudebartrue\n";
+  else PDFRES << "\\altitudebarfalse\n";
+
   PDFRES << "\\legendwidth=" << LAYOUT.legend_width << "bp" << std::endl;
 
   if (LAYOUT.map_header_bg) {

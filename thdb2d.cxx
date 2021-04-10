@@ -45,6 +45,7 @@
 #include "thtrans.h"
 #include "thtmpdir.h"
 #include "thinit.h"
+#include "thfilehandle.h"
 #include <list>
 #include <cstdio>
 #ifndef THMSVC
@@ -2481,8 +2482,8 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
           (jci->pt->y == njci->pt->y)) {
          // add automatic join here
         {
-          auto unique_tjptr = thdb.create("join",thobjectsrc());
-          tjptr = dynamic_cast<thjoin*>(unique_tjptr.get());
+          auto unique_tjptr = thdb.create<thjoin>(thobjectsrc());
+          tjptr = unique_tjptr.get();
           thdb.insert(std::move(unique_tjptr));
         }
         tjptr->proj = jci->obj->fscrapptr->proj;
@@ -2653,16 +2654,16 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
                 fse2->l2->id, fse2->lp2->point->xt, fse2->lp2->point->yt);
 #endif
             {
-              auto unique_tjptr = thdb.create("join",thobjectsrc());
-              tjptr = dynamic_cast<thjoin*>(unique_tjptr.get());
+              auto unique_tjptr = thdb.create<thjoin>(thobjectsrc());
+              tjptr = unique_tjptr.get();
               thdb.insert(std::move(unique_tjptr));
             }
             tjptr->proj = jptr->proj;
             tjptr->smooth = jptr->smooth;
             tjptr->proj_prev_join = jptr;
             {
-              auto unique_join = thdb.create("join",thobjectsrc());
-              tjptr->proj_next_join = dynamic_cast<thjoin*>(unique_join.get());
+              auto unique_join = thdb.create<thjoin>(thobjectsrc());
+              tjptr->proj_next_join = unique_join.get();
               thdb.insert(std::move(unique_join));
             }
             tjptr->proj_next_join->proj_prev_join = tjptr;
@@ -3628,14 +3629,15 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   }
 
   // load data back to therion
-  FILE * af;
-  af = fopen("data.1","r");
+  auto af = thopen_file("data.1","r");
+  if (!af)
+    ththrow("can't open file data.1");
   double n[6];
   com.guarantee(256);
   std::unique_ptr<thline> cln;
   char * buff = com.get_buffer();
   ti = todo.begin();
-  while ((fscanf(af,"%32s",buff) > 0) && (ti != todo.end())) {
+  while ((fscanf(af.get(),"%32s",buff) > 0) && (ti != todo.end())) {
     if (cnt < 6) {
       thparse_double(retcode, n[cnt], buff);
       if (retcode == TT_SV_NUMBER) {
@@ -3686,6 +3688,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
       cln->fsptr = carea->fsptr;
       cln->type = TT_LINE_TYPE_BORDER;
       ti->area->m_outline_line = std::move(cln);
+      cln = nullptr; // silence static analysis about reused moved-from variable
       //cln->preprocess();
 
       // increase area counter
@@ -3708,6 +3711,8 @@ void thdb2d::register_u_symbol(int cmd, const char * type)
     thdb2d_udef_prop * p;
     p = &(*this->m_udef_list.insert(this->m_udef_list.end(), thdb2d_udef_prop()));
     this->m_udef_map[x] = p;
+    p->m_symid = SYMX_ZZZ + this->m_udef_map.size() + 1;
+    this->m_simid2udef_map[p->m_symid] = p;
   }
 }
 
