@@ -110,8 +110,11 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
 add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
 
 # generate version files
-execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
-                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+add_custom_target(version python3 set_version.py ${CMAKE_BINARY_DIR}
+                  COMMENT "Updating version"
+                  BYPRODUCTS ${CMAKE_BINARY_DIR}/thversion.h
+                             ${CMAKE_BINARY_DIR}/thbook/version.tex
+                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 # generate InnoSetup config file
 if (WIN32)
@@ -125,6 +128,7 @@ if (BUILD_THERION)
     target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt shp poly2tri common-utils)
     target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
     add_dependencies(therion-common 
+        version
         generate_thsymbolsetlist
         generate_thlang
         generate_tex

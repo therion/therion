@@ -42,6 +42,7 @@ target_link_libraries(loch PRIVATE
     ${X11_LIBRARIES}
     $<$<BOOL:${WIN32}>:${CMAKE_CURRENT_BINARY_DIR}/loch.res>
 )
+add_dependencies(loch version)
 if (WIN32)
     add_dependencies(loch generate_resource)
 endif()
