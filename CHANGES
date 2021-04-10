@@ -41,6 +41,7 @@ loch:
 
 infrastructure:
  * support for CMake builds (thanks to Matěj Plch)
+ * C++14 required
 
 --------------------------------------------------------------------------------
 
