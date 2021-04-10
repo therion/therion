@@ -1,3 +1,11 @@
+if (NOT BUILD_XTHERION)
+    return()
+endif()
+
+if (NOT BUILD_THERION)
+    message(FATAL_ERROR "xtherion depends on therion")
+endif()
+
 if(WIN32)
   set(XTHERION_EXECUTABLE "xtherion.tcl")
 else()

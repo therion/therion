@@ -19,8 +19,8 @@ proc log_msg {msg} {
 }
 
 # TODO: add verify crc when finished 
-# set outputopt --verify-output-crc
-set outputopt --reproducible-output
+set outputopt --verify-output-crc
+# set outputopt --reproducible-output
 if {[regexp {\-\-generate-output-crc} $argv]} {
   set outputopt --generate-output-crc
 }

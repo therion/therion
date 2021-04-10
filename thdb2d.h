@@ -92,6 +92,10 @@ struct thdb2d_udef_prop {
   bool m_used, m_assigned;
 
   thdb2d_udef_prop() : m_used(false), m_assigned(true) {}
+  
+  thlayout_color m_color;
+  
+  unsigned m_symid;
 
   void reset();
 
@@ -101,6 +105,8 @@ struct thdb2d_udef_prop {
 typedef std::list<thdb2d_udef_prop> thdb2d_udef_prop_list;
 
 typedef std::map<thdb2d_udef, thdb2d_udef_prop *> thdb2d_udef_map;
+
+typedef std::map<unsigned, thdb2d_udef_prop *> thdb2d_symid2udef_map;
 
 bool operator < (const struct thdb2d_udef &, const struct thdb2d_udef &);
 
@@ -137,6 +143,7 @@ class thdb2d {
 
   thdb2d_udef_prop_list m_udef_list;  ///< List of user defined symbol properties.
   thdb2d_udef_map m_udef_map;  ///< User defined symbol map.
+  thdb2d_symid2udef_map m_simid2udef_map;  ///< User defined symbol map.
   
   void process_area_references(class tharea * aptr);  ///< ???
   void process_point_references(class thpoint * pp);  ///< ???
