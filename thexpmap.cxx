@@ -2250,7 +2250,6 @@ else
     com += thini.get_path_mpost();
     com += "\" ";
     com += thini.get_opt_mpost();
-    com += " -numbersystem=double";
 //    com += " --interaction nonstopmode data.mp";
     com += " data.mp";
 #ifdef THDEBUG
