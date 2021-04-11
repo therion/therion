@@ -65,6 +65,7 @@ struct thlayout_color {
   bool is_defined();
   void set_color(int output_model, color & clr);
   void print_to_file(int output_model, FILE * f);
+  void encode_to_str(int output_model, std::string & str);  
   void RGBtoGRAYSCALE();
   void GRAYSCALEtoRGB();
   void RGBtoCMYK();

@@ -310,7 +310,6 @@ class thscrap : public thdataobject {
  void convert_all_cs() override;
 
 
-
 };
 
 

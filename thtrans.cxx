@@ -442,8 +442,10 @@ struct thm2t_point {
   thvec2 m_src, m_dst;
   bool m_used;
   long m_id;
-  thm2t_point() : m_used(false), m_id(-1) {}
-  thm2t_point(thvec2 src, thvec2 dst, long id) : m_src(src), m_dst(dst), m_used(false), m_id(id) {}
+  double m_value;
+  thm2t_point() : m_used(false), m_id(-1), m_value(thnan) {}
+  thm2t_point(thvec2 src, thvec2 dst, long id) : m_src(src), m_dst(dst), m_used(false), m_id(id), m_value(thnan) {}
+  thm2t_point(thvec2 src, thvec2 dst, long id, double value) : m_src(src), m_dst(dst), m_used(false), m_id(id), m_value(value) {}
 };
 
 typedef thm2t_point * thm2t_point_ptr;
@@ -498,6 +500,7 @@ struct thm2t_feature {
   thlintrans m_lintrans;
   thlinzoomtrans m_zoomtrans;
   double calc_dist(thvec2 src);
+  double calc_dist_interpolate(thvec2 src, double & value);
 };
 
 
@@ -517,6 +520,34 @@ double thm2t_feature::calc_dist(thvec2 src)
       return fabs(this->m_ln.eval(src));
   }
 }
+
+
+double thm2t_feature::calc_dist_interpolate(thvec2 src, double & value)
+{
+  double lnfd, lntd;
+  if (this->m_single) {
+    value = this->m_fp->m_value;
+    return (src - this->m_fp->m_src).length();
+  } else {
+    lnfd = this->m_lnf.eval(src);
+    lntd = this->m_lnt.eval(src);
+    if (lnfd < 0) {
+      value = this->m_fp->m_value;
+      return (src - this->m_fp->m_src).length();      
+    } else if (lntd < 0) {
+      value = this->m_tp->m_value;
+      return (src - this->m_tp->m_src).length();
+    } else {
+      if ((lnfd + lntd) > 0)
+    	  value = (lntd * this->m_fp->m_value + lnfd * this->m_tp->m_value) / (lnfd + lntd);
+      else
+    	  value = this->m_fp->m_value;
+      return fabs(this->m_ln.eval(src));
+    }
+  }
+}
+
+
 
 typedef std::list<thm2t_feature> thm2t_feature_list;
 
@@ -564,10 +595,10 @@ void thmorph2trans::reset()
 }
 
 
-void thmorph2trans::insert_point(thvec2 src, thvec2 dst, long id)
+void thmorph2trans::insert_point(thvec2 src, thvec2 dst, long id, double value)
 {
   thm2t_point_list::iterator i;
-  i = this->m->m_points.insert(this->m->m_points.end(), thm2t_point(src, dst, id));
+  i = this->m->m_points.insert(this->m->m_points.end(), thm2t_point(src, dst, id, value));
   this->m->m_point_map[id] = &(*i);
 }
 
@@ -727,6 +758,27 @@ thvec2 thmorph2trans::backward(thvec2 dst, thvec2 ini)
   } while (counter++ < 10);
   return x;
 }
+
+
+double thmorph2trans::interpolate(thvec2 src)
+{
+  thm2t_feature_list::iterator i;
+  double sumv(0.0), sumw(0.0), d, v, w;
+  for(i = this->m->m_features.begin(); i != this->m->m_features.end(); i++) {
+    d = i->calc_dist_interpolate(src, v);
+    if (d > 0.0) {
+      w = 1.0 / (d * d);
+      sumw += w;
+      sumv += w * v;
+    } else {
+      return v;
+    }
+  }
+  if (sumw > 0.0) sumv /= sumw;
+  return sumv;
+}
+
+
 
 
 
@@ -915,7 +967,20 @@ thvec2 thlinzoomtrans::forward(thvec2 src) {
 }
 
 
+void thbbox2::update(thvec2 pt) {
+	if (!this->m_valid) {
+		this->m_min = pt;
+		this->m_max = pt;
+		this->m_valid = true;
+	}
+	if (this->m_min.m_x > pt.m_x) this->m_min.m_x = pt.m_x;  
+	if (this->m_min.m_y > pt.m_y) this->m_min.m_y = pt.m_y;  
+	if (this->m_max.m_x < pt.m_x) this->m_max.m_x = pt.m_x;  
+	if (this->m_max.m_y < pt.m_y) this->m_max.m_y = pt.m_y;  
+}
 
-
+bool thbbox2::is_valid() {
+	return (this->m_min.m_x < this->m_max.m_x) && (this->m_min.m_y < this->m_max.m_y);
+}
 
 

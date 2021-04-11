@@ -43,6 +43,7 @@
 #include "thlookup.h"
 #include <stdio.h>
 #include "thtmpdir.h"
+#include "thtrans.h"
 #ifndef THMSVC
 #include <unistd.h>
 #else
@@ -1670,6 +1671,8 @@ else
                   SCRAPITEM->S1 = shx;
                   SCRAPITEM->S2 = shy;
                   
+                  this->export_scrap_backgroud_mesh(cs, &out, &(*SCRAPITEM));                  
+                  
                   if ((!export_outlines_only) && (!export_sections) &&
                       (cbm->m_target->fmap->output_number != cbm->m_target->preview_output_number)
       	              && (!cbm->m_target->previewed)		      
@@ -2247,6 +2250,7 @@ else
     com += thini.get_path_mpost();
     com += "\" ";
     com += thini.get_opt_mpost();
+    com += " -numbersystem=double";
 //    com += " --interaction nonstopmode data.mp";
     com += " data.mp";
 #ifdef THDEBUG
@@ -3599,7 +3603,76 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
 }
 
 
-
+void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scraprecord * r) {
+	
+	switch(this->layout->color_crit) {
+      case TT_LAYOUT_CCRIT_ALTITUDE:
+      case TT_LAYOUT_CCRIT_DEPTH:
+    	  break;
+      default:
+    	  return;
+	}
+	
+	if (cs->proj->type == TT_2DPROJ_NONE)
+		return;
+	
+	thmorph2trans mi;
+	thlayout_color clr;
+	
+	// initialize interpolation
+	thdb2dcp * cp;
+    cp = cs->fcpp;
+    while (cp != NULL) {
+      if (cp->st != NULL)
+    	  mi.insert_point(thvec2(cp->pt->xt, cp->pt->yt), thvec2(cp->tx, cp->ty), cp->st->uid, cp->ta);
+      cp = cp->nextcp;
+    }
+    mi.insert_lines_from_db();
+    mi.init();
+    
+	// initialize grid
+    double cxmin, cxmax, cymin, cymax, xstep, ystep, alt;
+    int ix, nx;
+    int iy, ny;
+    if ((cs->lxmin == cs->lxmax) || (cs->lymin == cs->lymax)) return;
+    
+    // initialize transformation
+    thlintrans outlt;
+    thbbox2 bb;
+    outlt.init(thvec2(cs->lxmin, cs->lymin), thvec2(cs->lxmax, cs->lymax), thvec2(thxmmxst(out, cs->lxmin, cs->lymin)), thvec2(thxmmxst(out, cs->lxmax, cs->lymax)));
+    bb.update(outlt.forward(thvec2(cs->lxmin, cs->lymin)));
+    bb.update(outlt.forward(thvec2(cs->lxmin, cs->lymax)));
+    bb.update(outlt.forward(thvec2(cs->lxmax, cs->lymin)));
+    bb.update(outlt.forward(thvec2(cs->lxmax, cs->lymax)));
+    if (!bb.is_valid()) return;
+    
+    cxmin = bb.m_min.m_x;
+    cymin = bb.m_min.m_y;
+    cxmax = bb.m_max.m_x;
+    cymax = bb.m_max.m_y;
+    nx = 32;
+    ny = 32;
+    xstep = (cxmax - cxmin) / double(nx-1);
+    ystep = (cymax - cymin) / double(ny-1);
+    
+    // export grid
+    r->gour_n = nx;
+    r->gour_xmin = cxmin;
+    r->gour_xmax = cxmin + 255.0 * xstep;
+    r->gour_ymin = cymin;
+    r->gour_ymax = cymin + 255.0 * ystep;
+	r->gour_stream.clear();
+    for(ix = 0; ix < nx; ix++) {
+    	for(iy = 0; iy < ny; iy++) {
+    		r->gour_stream += static_cast<char>(ix);
+    		r->gour_stream += static_cast<char>(iy);
+    		alt = mi.interpolate(outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)));
+    		clr = this->layout->m_lookup->value2clr(alt);
+    		clr.encode_to_str(this->layout->color_model, r->gour_stream);
+    	}
+    }
+    
+}
 
 
 double thexpmap_quick_map_export_scale;
