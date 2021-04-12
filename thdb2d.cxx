@@ -3712,7 +3712,7 @@ void thdb2d::register_u_symbol(int cmd, const char * type)
     p = &(*this->m_udef_list.insert(this->m_udef_list.end(), thdb2d_udef_prop()));
     this->m_udef_map[x] = p;
     p->m_symid = SYMX_ZZZ + this->m_udef_map.size() + 1;
-    this->m_simid2udef_map[p->m_symid] = p;
+    this->m_symid2udef_map[p->m_symid] = p;
   }
 }
 

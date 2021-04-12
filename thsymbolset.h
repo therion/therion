@@ -34,6 +34,13 @@
 #include <stdio.h>
 
 
+struct thsymbolset_usym {
+	bool m_assigned, m_used;
+	thlayout_color m_color;
+	thsymbolset_usym() : m_assigned(true), m_used(false) {}
+};
+
+
 /**
  * Symbol set class.
  */
@@ -43,6 +50,8 @@ struct thsymbolset {
   bool assigned[thsymbolset_size],        ///< definovane symboly
     used[thsymbolset_size];               ///< pouzite symboly
   thlayout_color color[thsymbolset_size];    ///< Symbol colors.
+  
+  std::map<unsigned, thsymbolset_usym> usymbols; ///< user defined symbols
     
   bool group_symbols; ///< Ci zgrupuje podobne symboly alebo nie.
   
