@@ -3631,8 +3631,7 @@ void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scr
     
 	// initialize grid
     double cxmin, cxmax, cymin, cymax, xstep, ystep, alt;
-    int ix, nx;
-    int iy, ny;
+    int ix, nx, iy, ny, ixstep, iystep;
     if ((cs->lxmin == cs->lxmax) || (cs->lymin == cs->lymax)) return;
     
     // initialize transformation
@@ -3649,26 +3648,37 @@ void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scr
     cymin = bb.m_min.m_y;
     cxmax = bb.m_max.m_x;
     cymax = bb.m_max.m_y;
-    nx = 32;
-    ny = 32;
+    nx = 4;
+    ny = 4;
+    ixstep = 255 / (nx - 1);
+    iystep = 255 / (ny - 1);
     xstep = (cxmax - cxmin) / double(nx-1);
     ystep = (cymax - cymin) / double(ny-1);
     
     // export grid
     r->gour_n = nx;
     r->gour_xmin = cxmin;
-    r->gour_xmax = cxmin + 255.0 * xstep;
+    r->gour_xmax = cxmin + xstep / double(ixstep) * 255.0;
     r->gour_ymin = cymin;
-    r->gour_ymax = cymin + 255.0 * ystep;
+    r->gour_ymax = cymin + ystep / double(iystep) * 255.0;
 	r->gour_stream.clear();
-    for(ix = 0; ix < nx; ix++) {
-    	for(iy = 0; iy < ny; iy++) {
-    		r->gour_stream += static_cast<char>(ix);
-    		r->gour_stream += static_cast<char>(iy);
+	//printf("\nSCRAP MESH: %s@%s\n", cs->name, cs->fsptr->get_full_name());
+	//printf("%.2f,%.2f - %.2f,%.2f - %dx%d - %dx%d\n", r->gour_xmin, r->gour_xmax, r->gour_ymin, r->gour_ymax, nx, ny, ixstep, iystep);
+    for(iy = 0; iy < ny; iy++) {
+    	for(ix = 0; ix < nx; ix++) {
+    		r->gour_stream += static_cast<char>(ix * ixstep);
+    		r->gour_stream += static_cast<char>(iy * iystep);
     		alt = mi.interpolate(outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)));
     		clr = this->layout->m_lookup->value2clr(alt);
+    		clr = thlayout_color((255.0 - double(ix * ixstep)) / 255.0, double(ix * ixstep) / 255.0, double(iy * iystep) / 255.0);  
     		clr.encode_to_str(this->layout->color_model, r->gour_stream);
+    		//printf(" ");
+    		//auto si = r->gour_stream.rbegin();
+    		//for(int i = 0; i < 6; si++, i++) {
+    		//	printf(":%03u",(unsigned char)(*si));
+    		//}
     	}
+		//printf("\n");
     }
     
 }
