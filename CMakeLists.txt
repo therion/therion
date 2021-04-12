@@ -168,3 +168,8 @@ endif()
 add_subdirectory(loch)
 add_subdirectory(thbook)
 add_subdirectory(xtherion)
+
+option(BUILD_QTHERION "Build QTherion." ON)
+if (BUILD_QTHERION)
+    add_subdirectory(qtherion)
+endif()
