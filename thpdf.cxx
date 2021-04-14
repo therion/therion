@@ -961,26 +961,15 @@ void print_map(int layer, std::ofstream& PAGEDEF,
       PAGEDEF << "\\PL{/GS1 gs}%" << std::endl;     // beginning of transparency
     }
 
-//    PAGEDEF << "\\PL{q 1 g}%" << std::endl;         // white background of the scrap
     for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
       if (used_scraps.count(K->name) > 0 && K->I != "") {
-        PAGEDEF << "\\PL{q ";
-        if (!K->col_scrap.is_defined()) {
-          PAGEDEF << LAYOUT.col_foreground.to_pdfliteral(fillstroke::fill) <<   // background of the scrap
-                     "}%" << std::endl;
-        }
-        else {
-          PAGEDEF << K->col_scrap.to_pdfliteral(fillstroke::fill) << "}%" << std::endl;
-        }
         xc = K->I1; yc = K->I2;
         xc -= HSHIFT; yc -= VSHIFT;
         PAGEDEF << "\\PB{" << xc << "}{" << yc << "}{" <<
-                tex_get_ref(tex_Xname("I"+(K->name))) << "}%" << std::endl;
-
-        PAGEDEF << "\\PL{Q}%" << std::endl;            // end of white color for filled bg
+                tex_get_ref(tex_Xname("I"+(K->name)+"COLORED")) << "}%" << std::endl;
       }
-    }
-    
+    }   // end of the colored background
+
     // sketches
     PAGEDEF.precision(6);
     for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {

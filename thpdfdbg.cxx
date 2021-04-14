@@ -45,6 +45,7 @@ std::string tex_Wname(std::string s) {return("THW"+s);}   // special = northarro
 std::string tex_Fname(std::string s) {return("THF"+s);}
 std::string tex_Pname(std::string s) {return("THP"+s);}
 std::string tex_Lname(std::string s) {return("THL"+s);}
+std::string tex_Gname(std::string s) {return("THG"+s);}   // gouraud shadings
 
 bool tex_refs_registers = true;
 

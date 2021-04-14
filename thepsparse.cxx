@@ -64,7 +64,7 @@ extern unsigned font_id, patt_id;
 static int conv_mode;
 
 const int prec_col = 5;
-//const int prec_matr = 6;
+const int prec_matr = 6;
 const int prec_mp = 5;
 const int prec_xy = 2;
 
@@ -1416,6 +1416,41 @@ void thgraphics2pdf() {
     I.Ic.print_pdf(TEX, "I"+I.name);
     I.Ec.print_pdf(TEX, "E"+I.name);
     I.Xc.print_pdf(TEX, "X"+I.name);
+
+    // make a special XObject form containing the colored background;
+    // this is necessary for gouraud shading definitions which need
+    // to be in the same coordinate system as the background outline of the scrap;
+    // the following doesn't work (with the exception of Okular):
+    //   q
+    //   1 0 0 1 <dx> <dy> cm
+    //   /Pattern cs /P1 scn
+    //   /Fm1 Do
+    //   Q
+    if (I.I != "") {
+      std::string s, res;
+      if (!I.col_scrap.is_defined()) {
+        s = LAYOUT.col_foreground.to_pdfliteral(fillstroke::fill);
+      } else {
+        if (I.gour_stream == "") {
+          s = I.col_scrap.to_pdfliteral(fillstroke::fill);
+        } else {
+          s = "/Pattern cs /" + tex_Gname(I.name) + " scn";
+          res = " /Pattern << /" + tex_Gname(I.name) + " " + tex_get_ref(tex_Gname(I.name)) + "\\space 0 R >> ";
+        }
+      }
+      TEX << "\\setbox\\xxx=\\hbox to" << fmt::format("{:.2f}",I.Ic.urx-I.Ic.llx) << "bp{%\n";
+      TEX << "\\PL{" << s <<  "}%\n";
+      TEX << "\\pdfrefxform" << tex_get_ref(tex_Xname("I" + I.name)) + "%\n";
+      TEX << "}\\ht\\xxx="  << fmt::format("{:.2f}",I.Ic.ury-I.Ic.lly) << "bp\\dp\\xxx=0bp%\n";
+      TEX << "\\immediate\\pdfxform";
+      TEX << " resources { " + res;
+      if (icc_used()) {
+        TEX << "/ColorSpace <<";
+        TEX << icc2pdfresources();
+        TEX << ">> ";
+      }
+      TEX << "}\\xxx" + tex_set_ref(tex_Xname("I" + I.name + "COLORED"), "\\pdflastxform") + "%\n";
+    }
   }
 
   for(auto &I: LEGENDLIST) {
@@ -1505,6 +1540,23 @@ void thgraphics2pdf() {
       F << "/Extend [true true]\n";
       F << fmt::format("/Function << /FunctionType 2 /Domain [0 1] /C0 [{}] /C1 [{}] /N 1 >>\n", g.second.c0.to_elements(), g.second.c1.to_elements());
       F << ">> >>}" << tex_set_ref(tex_Pname(g.first), "\\pdflastobj") << "\n";
+  }
+  // gouraud shadings
+  for (auto &i: SCRAPLIST) {
+      if (i.gour_stream == "") continue;
+      std::ofstream F_g("th_gour_"+i.name+".dat", std::ios::out | std::ios::binary);
+      if(!F_g) therror((IOerr("th_gour_"+i.name)));
+      F_g << i.gour_stream;
+      F_g.close();
+      F << "\\immediate\\pdfobj stream attr {";
+      F << fmt::format("/ShadingType 5 /ColorSpace /Device{:s}\n", LAYOUT.output_colormodel == colormodel::grey ? "Gray" : (LAYOUT.output_colormodel == colormodel::cmyk ? "CMYK" : "RGB"));
+      F << fmt::format("/BitsPerCoordinate 8 /BitsPerComponent 8 /VerticesPerRow {:d} ", i.gour_n);
+      F << fmt::format("/Decode [{} {} {} {} {:s}]", thdouble(i.gour_xmin-i.I1+i.S1,prec_matr), thdouble(i.gour_xmax-i.I1+i.S1,prec_matr),
+                                                     thdouble(i.gour_ymin-i.I2+i.S2,prec_matr), thdouble(i.gour_ymax-i.I2+i.S2,prec_matr),
+                                                     LAYOUT.output_colormodel == colormodel::grey ? "0 1" : (LAYOUT.output_colormodel == colormodel::cmyk ? "0 1 0 1 0 1 0 1" : "0 1 0 1 0 1"));
+      F << "} file {th_gour_" << i.name << ".dat}\n";
+      F << "\\immediate\\pdfobj {<< /Type /Pattern /PatternType 2 /Shading \\the\\pdflastobj\\space 0 R >>}\n";
+      F << tex_set_ref(tex_Gname(i.name), "\\pdflastobj") << "\n";
   }
   F.close();
 

@@ -6,6 +6,8 @@ therion:
  * support for colour management (see the color-profile layout option)
  * support for linear and radial shading (colour gradients) in MetaPost
    (withlinearshading and withradialshading options)
+ * support for smooth colour transitions of scrap backgrounds in PDF maps
+   if the map-fg is coloured by altitude
  * reimplemented internal processing of patterns and transparent colors in
    MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
    macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
