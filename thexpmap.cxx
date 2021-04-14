@@ -3638,6 +3638,7 @@ void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scr
     thlintrans outlt;
     thbbox2 bb;
     outlt.init(thvec2(cs->lxmin, cs->lymin), thvec2(cs->lxmax, cs->lymax), thvec2(thxmmxst(out, cs->lxmin, cs->lymin)), thvec2(thxmmxst(out, cs->lxmax, cs->lymax)));
+    outlt.init_backward();
     bb.update(outlt.forward(thvec2(cs->lxmin, cs->lymin)));
     bb.update(outlt.forward(thvec2(cs->lxmin, cs->lymax)));
     bb.update(outlt.forward(thvec2(cs->lxmax, cs->lymin)));
@@ -3648,8 +3649,8 @@ void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scr
     cymin = bb.m_min.m_y;
     cxmax = bb.m_max.m_x;
     cymax = bb.m_max.m_y;
-    nx = 4;
-    ny = 4;
+    nx = 16;
+    ny = 16;
     ixstep = 255 / (nx - 1);
     iystep = 255 / (ny - 1);
     xstep = (cxmax - cxmin) / double(nx-1);
@@ -3670,9 +3671,9 @@ void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scr
     		r->gour_stream += static_cast<char>(iy * iystep);
     		alt = mi.interpolate(outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)));
     		clr = this->layout->m_lookup->value2clr(alt);
-    		clr = thlayout_color((255.0 - double(ix * ixstep)) / 255.0, double(ix * ixstep) / 255.0, double(iy * iystep) / 255.0);  
+    		//clr = thlayout_color((255.0 - double(ix * ixstep)) / 255.0, double(ix * ixstep) / 255.0, double(iy * iystep) / 255.0);  
     		clr.encode_to_str(this->layout->color_model, r->gour_stream);
-    		//printf(" ");
+    		//printf(" %04.0lf:",alt);
     		//auto si = r->gour_stream.rbegin();
     		//for(int i = 0; i < 6; si++, i++) {
     		//	printf(":%03u",(unsigned char)(*si));
