@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 
 project(qtherion LANGUAGES CXX)
 
@@ -24,8 +24,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Quick Widgets REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -36,23 +35,9 @@ set(PROJECT_SOURCES
         qml.qrc
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(qtherion
-        ${PROJECT_SOURCES}
-    )
-else()
-    if(ANDROID)
-        add_library(qtherion SHARED
-            ${PROJECT_SOURCES}
-        )
-    else()
-        add_executable(qtherion
-          ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+qt_add_executable(qtherion ${PROJECT_SOURCES})
 
 target_compile_definitions(qtherion
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(qtherion
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Widgets)
+  PRIVATE Qt::Core Qt::Quick Qt::Widgets)
