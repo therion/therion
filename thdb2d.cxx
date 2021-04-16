@@ -3703,9 +3703,9 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
 
 
-void thdb2d::register_u_symbol(int cmd, const char * type)
+int thdb2d::register_u_symbol(int cmd, const char * type)
 {
-  thdb2d_udef x(cmd, type);
+  thdb2d_udef x(cmd, this->db->strstore(type, true));
   thdb2d_udef_map::iterator it = this->m_udef_map.find(x);
   if (it == this->m_udef_map.end()) {
     thdb2d_udef_prop * p;
@@ -3713,6 +3713,9 @@ void thdb2d::register_u_symbol(int cmd, const char * type)
     this->m_udef_map[x] = p;
     p->m_symid = SYMX_ZZZ + this->m_udef_map.size() + 1;
     this->m_symid2udef_map[p->m_symid] = p;
+    return p->m_symid;
+  } else {
+	return it->second->m_symid;  
   }
 }
 

@@ -189,6 +189,9 @@ bool tharea::export_mp(class thexpmapmpxs * out)
   macroid = mid; \
   break;
   switch (this->type) {
+    case TT_AREA_TYPE_U:
+    	macroid = this->db->db2d.register_u_symbol(TT_AREA_CMD, this->m_subtype_str);
+    	break;
     tharea_type_export_mp(TT_AREA_TYPE_SAND, SYMA_SAND)
     tharea_type_export_mp(TT_AREA_TYPE_DEBRIS, SYMA_DEBRIS)
     tharea_type_export_mp(TT_AREA_TYPE_SUMP, SYMA_SUMP)
@@ -201,7 +204,6 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_BEDROCK, SYMA_BEDROCK)
     tharea_type_export_mp(TT_AREA_TYPE_FLOWSTONE, SYMA_FLOWSTONE)
     tharea_type_export_mp(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK)
-    tharea_type_export_mp(TT_AREA_TYPE_U, SYMA_U)
     tharea_type_export_mp(TT_AREA_TYPE_MUDCRACK, SYMA_MUDCRACK)
     tharea_type_export_mp(TT_AREA_TYPE_PILLAR, SYMA_PILLAR)
     tharea_type_export_mp(TT_AREA_TYPE_PILLARWITHCURTAINS, SYMA_PILLARWITHCURTAINS)
@@ -234,8 +236,9 @@ bool tharea::export_mp(class thexpmapmpxs * out)
   }
 
   if (this->type == TT_AREA_TYPE_U) {
-    out->symset->export_mp_symbol_options(out->file, -1);
+    out->symset->export_mp_symbol_options(out->file, omacroid);
     fprintf(out->file,"a_u_%s(buildcycle(",this->m_subtype_str);
+    out->symset->usymbols[omacroid].m_used = true;
     this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
   } else {
     out->symset->export_mp_symbol_options(out->file, omacroid);

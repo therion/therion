@@ -19,6 +19,7 @@ therion:
    in MetaPost (inputrel)
  * updated Serbian translation
  * bugs fixed:
+   - symbol-hide,show,color not working for user defined symbols
    - ISO8859-2 literals in the source code caused clang warnings
    - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
    - fixed numerical instability in l_overhang_SKBB
@@ -30,7 +31,7 @@ therion:
    - other minor fixes
  * included {fmt} library
  * updated shapelib
-
+ 
 loch:
  * Tools->Selection - only displays selected surveys
  * bugs fixed:

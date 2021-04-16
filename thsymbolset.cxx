@@ -241,6 +241,10 @@ int thsymbolset_get_id(const char * symclass, const char * symbol)
       break;
     case TT_SYMBOL_AREA:
       type = thmatch_token(types,thtt_area_types);
+      if ((type == TT_AREA_TYPE_U) && (strlen(subtypes) > 0)) {
+		rv = thdb.db2d.register_u_symbol(TT_AREA_CMD, subtypes);
+		break;
+      }
       if (strlen(subtypes) > 0)
         break;
       switch (type) {
@@ -262,10 +266,15 @@ int thsymbolset_get_id(const char * symclass, const char * symbol)
         c2(TT_AREA_TYPE_STALACTITE, SYMA_STALACTITE);
         c2(TT_AREA_TYPE_STALACTITESTALAGMITE, SYMA_STALACTITESTALAGMITE);
         c2(TT_AREA_TYPE_STALAGMITE, SYMA_STALAGMITE);
+        c2(TT_AREA_TYPE_U, SYMA_U);
       }
       break;
     case TT_SYMBOL_LINE:
       type = thmatch_token(types,thtt_line_types);
+      if ((type == TT_LINE_TYPE_U) && (strlen(subtypes) > 0)) {
+		rv = thdb.db2d.register_u_symbol(TT_LINE_CMD, subtypes);
+		break;
+      }
       subtype = thmatch_token(subtypes,thtt_line_subtypes);
       switch (type) {
         case TT_LINE_TYPE_WALL:
@@ -286,7 +295,6 @@ int thsymbolset_get_id(const char * symclass, const char * symbol)
             c2(TT_LINE_SUBTYPE_MOONMILK,SYML_WALL_MOONMILK)
             c2(TT_LINE_SUBTYPE_PIT,SYML_WALL_PIT)
             c2(TT_LINE_SUBTYPE_OVERLYING,SYML_WALL_OVERLYING)
-
           }
           break;
         case TT_LINE_TYPE_BORDER:
@@ -345,10 +353,15 @@ int thsymbolset_get_id(const char * symclass, const char * symbol)
         cl3(TT_LINE_TYPE_RIMSTONEDAM,SYML_RIMSTONEDAM);
         cl3(TT_LINE_TYPE_RIMSTONEPOOL,SYML_RIMSTONEPOOL);
         cl3(TT_LINE_TYPE_WALKWAY,SYML_WALKWAY);
+        cl3(TT_LINE_TYPE_U,SYML_U);
       }
       break;
     case TT_SYMBOL_POINT:
       type = thmatch_token(types,thtt_point_types);
+      if ((type == TT_POINT_TYPE_U) && (strlen(subtypes) > 0)) {
+		rv = thdb.db2d.register_u_symbol(TT_POINT_CMD, subtypes);
+		break;
+      }
       subtype = thmatch_token(subtypes,thtt_point_subtypes);
       if ((type == TT_POINT_TYPE_UNKNOWN) && (strlen(subtypes) == 0)) {
         type = thmatch_token(types,thtt_symbol_point_spec);
@@ -515,6 +528,7 @@ int thsymbolset_get_id(const char * symclass, const char * symbol)
         cp3(TT_POINT_TYPE_STALACTITES,SYMP_STALACTITES);
         cp3(TT_POINT_TYPE_STALAGMITES,SYMP_STALAGMITES);
         cp3(TT_POINT_TYPE_PILLARS,SYMP_PILLARS);
+        cp3(TT_POINT_TYPE_U,SYMP_U);
       }
       break;
   }
@@ -534,6 +548,8 @@ void thsymbolset::export_symbol_defaults(FILE * mpf, const char * symset)
 
 void thsymbolset::export_symbol_assign(FILE * mpf, int sym_id, const char * symset)
 {
+  if (sym_id > SYMX_ZZZ)
+	  return;
   if (sym_id > SYMX_)
     export_symbol_assign_group(mpf, sym_id, symset);
   else if (thsymbolset_assign[sym_id]) {
@@ -543,29 +559,91 @@ void thsymbolset::export_symbol_assign(FILE * mpf, int sym_id, const char * syms
 
 void thsymbolset::export_symbol_hide(FILE * mpf, int sym_id)
 {
-  if (sym_id > SYMX_)
+  if (sym_id > SYMX_ZZZ)
+	this->usymbols[sym_id].m_assigned = false;
+  else if (sym_id > SYMX_)
     export_symbol_hide_group(mpf, sym_id);
   else
     this->assigned[sym_id] = false;
+  // U defined groups
+  switch (sym_id) {
+  case SYMP_U:
+	  for(auto it : thdb.db2d.m_udef_map)
+		  if (it.first.m_command == TT_POINT_CMD)
+			  this->export_symbol_hide(mpf, it.second->m_symid);
+	  break;
+  case SYML_U:
+	  for(auto it : thdb.db2d.m_udef_map)
+		  if (it.first.m_command == TT_LINE_CMD)
+			  this->export_symbol_hide(mpf, it.second->m_symid);
+	  break;
+  case SYMA_U:
+	  for(auto it : thdb.db2d.m_udef_map)
+		  if (it.first.m_command == TT_AREA_CMD)
+			  this->export_symbol_hide(mpf, it.second->m_symid);
+	  break;
+  }
 }
 
 
 void thsymbolset::export_symbol_show(FILE * mpf, int sym_id)
 {
-  if (sym_id > SYMX_)
+  if (sym_id > SYMX_ZZZ)
+	this->usymbols[sym_id].m_assigned = true;
+  else if (sym_id > SYMX_)
     export_symbol_show_group(mpf, sym_id);
   else
     this->assigned[sym_id] = true;
+  // U defined groups
+  switch (sym_id) {
+  case SYMP_U:
+	  for(auto it : thdb.db2d.m_udef_map)
+		  if (it.first.m_command == TT_POINT_CMD)
+			  this->export_symbol_show(mpf, it.second->m_symid);
+	  break;
+  case SYML_U:
+	  for(auto it : thdb.db2d.m_udef_map)
+		  if (it.first.m_command == TT_LINE_CMD)
+			  this->export_symbol_show(mpf, it.second->m_symid);
+	  break;
+  case SYMA_U:
+	  for(auto it : thdb.db2d.m_udef_map)
+		  if (it.first.m_command == TT_AREA_CMD)
+			  this->export_symbol_show(mpf, it.second->m_symid);
+	  break;
+  }  
 }
 
 
 void thsymbolset::export_symbol_color(FILE * mpf, int sym_id, thlayout_color * clr)
 {
-  if (sym_id > SYMX_)
+  if (sym_id > SYMX_ZZZ) {
+	  this->usymbols[sym_id].m_color = *clr;
+	  this->usymbols[sym_id].m_color.defined = 1;
+  }
+  else if (sym_id > SYMX_)
     export_symbol_color_group(mpf, sym_id, clr);
   else {
     this->color[sym_id] = *clr;
     this->color[sym_id].defined = 1;
+  }
+  // U defined groups
+  switch (sym_id) {
+  case SYMP_U:
+	  for(auto it : thdb.db2d.m_udef_map)
+		  if (it.first.m_command == TT_POINT_CMD)
+			  this->export_symbol_color(mpf, it.second->m_symid, clr);
+	  break;
+  case SYML_U:
+	  for(auto it : thdb.db2d.m_udef_map)
+		  if (it.first.m_command == TT_LINE_CMD)
+			  this->export_symbol_color(mpf, it.second->m_symid, clr);
+	  break;
+  case SYMA_U:
+	  for(auto it : thdb.db2d.m_udef_map)
+		  if (it.first.m_command == TT_AREA_CMD)
+			  this->export_symbol_color(mpf, it.second->m_symid, clr);
+	  break;
   }
 }
 
@@ -576,6 +654,11 @@ void thsymbolset::export_symbol_color_group(FILE * mpf, int sym_id, thlayout_col
   while (cid >= 0) {
     this->export_symbol_color(mpf, cid, clr);
     cid = thsymbolset_get_group(sym_id,id++);
+  }
+  // U defined symbols
+  if (sym_id == SYMX_ALL) {
+	  for(auto it : thdb.db2d.m_symid2udef_map)
+		  this->export_symbol_color(mpf, it.first, clr);
   }
 }
 
@@ -598,6 +681,11 @@ void thsymbolset::export_symbol_hide_group(FILE * mpf, int sym_id)
     this->export_symbol_hide(mpf, cid);
     cid = thsymbolset_get_group(sym_id,id++);
   }
+  // U defined symbols
+  if (sym_id == SYMX_ALL) {
+	  for(auto it : thdb.db2d.m_symid2udef_map)
+		  this->export_symbol_hide(mpf, it.first);
+  }
 }
 
 
@@ -608,6 +696,11 @@ void thsymbolset::export_symbol_show_group(FILE * mpf, int sym_id)
   while (cid >= 0) {
     this->export_symbol_show(mpf, cid);
     cid = thsymbolset_get_group(sym_id,id++);
+  }
+  // U defined symbols
+  if (sym_id == SYMX_ALL) {
+	  for(auto it : thdb.db2d.m_symid2udef_map)
+		  this->export_symbol_show(mpf, it.first);
   }
 }
 
@@ -1505,7 +1598,8 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   int mid = SYMX_;
   if (layout->db != NULL) {
     for(it = layout->db->db2d.m_udef_map.begin(); it != layout->db->db2d.m_udef_map.end(); it++) {
-      if (it->second->m_assigned && (it->second->m_used || (layout->legend == TT_LAYOUT_LEGEND_ALL))) {
+      //if (it->second->m_assigned && (it->second->m_used || (layout->legend == TT_LAYOUT_LEGEND_ALL))) {
+      if (this->usymbols[it->second->m_symid].m_assigned && (this->usymbols[it->second->m_symid].m_used || (layout->legend == TT_LAYOUT_LEGEND_ALL))) {
         switch (it->first.m_command) {
           case TT_POINT_CMD:
             udef_desc = "point";
@@ -1521,6 +1615,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
         udef_desc += it->first.m_type;
         if (strlen(thT(udef_desc.c_str(), layout->lang)) > 0) {
           insfig(0,thsymbolset_mp[0]);
+          this->export_mp_symbol_options(mpf, thdb.db2d.register_u_symbol(it->first.m_command, it->first.m_type));          
           switch (it->first.m_command) {
             case TT_POINT_CMD:
               fprintf(mpf,"p_u_%s_legend;\n",it->first.m_type);
@@ -1753,8 +1848,10 @@ void export_all_symbols()
 
 void thsymbolset::export_mp_symbol_options(FILE * mpf, int sym_id)
 {
-  if ((sym_id >= 0) && (this->color[sym_id].defined)) {
-    fprintf(mpf,"drawoptions(withcolor (%.6f,%.6f,%.6f));\n", this->color[sym_id].R, this->color[sym_id].G, this->color[sym_id].B);
+  // TODO: color model support
+  if ((sym_id >= 0) && (this->get_color(sym_id).defined)) {
+	this->get_color(sym_id).fill_missing_color_models();
+    fprintf(mpf,"drawoptions(withcolor (%.6f,%.6f,%.6f));\n", this->get_color(sym_id).R, this->get_color(sym_id).G, this->get_color(sym_id).B);
   } else {
     fprintf(mpf,"drawoptions();\n");
   }
@@ -1762,8 +1859,10 @@ void thsymbolset::export_mp_symbol_options(FILE * mpf, int sym_id)
 
 void thsymbolset::export_mp_symbol_options(std::vector<std::string>& x, int sym_id)
 {
-  if ((sym_id >= 0) && (this->color[sym_id].defined)) {
-    x.push_back(fmt::sprintf("drawoptions(withcolor (%.6f,%.6f,%.6f));", this->color[sym_id].R, this->color[sym_id].G, this->color[sym_id].B));
+  // TODO: color model support
+  if ((sym_id >= 0) && (this->get_color(sym_id).defined)) {
+	this->get_color(sym_id).fill_missing_color_models();
+    x.push_back(fmt::sprintf("drawoptions(withcolor (%.6f,%.6f,%.6f));", this->get_color(sym_id).R, this->get_color(sym_id).G, this->get_color(sym_id).B));
   } else {
     x.push_back("drawoptions();");
   }
@@ -1774,6 +1873,8 @@ bool thsymbolset::is_assigned(int symbol)
 {
   if (symbol < SYMX_)
     return this->assigned[symbol];
+  if (symbol > SYMX_ZZZ)
+	return this->usymbols[symbol].m_assigned;
   if (symbol > SYMX_) {
     int id = 0;
     int cid = thsymbolset_get_group(symbol,id++);
@@ -1784,3 +1885,15 @@ bool thsymbolset::is_assigned(int symbol)
   }
   return false;
 }
+
+
+
+thlayout_color thsymbolset::get_color(int symbol)
+{
+  if (symbol < SYMX_)
+	return this->color[symbol];
+  if (symbol > SYMX_ZZZ)
+	return this->usymbols[symbol].m_color;
+  return thlayout_color();	
+}
+

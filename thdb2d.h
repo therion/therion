@@ -95,7 +95,7 @@ struct thdb2d_udef_prop {
   
   thlayout_color m_color;
   
-  unsigned m_symid;
+  int m_symid;
 
   void reset();
 
@@ -106,7 +106,7 @@ typedef std::list<thdb2d_udef_prop> thdb2d_udef_prop_list;
 
 typedef std::map<thdb2d_udef, thdb2d_udef_prop *> thdb2d_udef_map;
 
-typedef std::map<unsigned, thdb2d_udef_prop *> thdb2d_symid2udef_map;
+typedef std::map<int, thdb2d_udef_prop *> thdb2d_symid2udef_map;
 
 bool operator < (const struct thdb2d_udef &, const struct thdb2d_udef &);
 
@@ -340,7 +340,7 @@ class thdb2d {
    * Register user defined symbol.
    */
 
-  void register_u_symbol(int cmd, const char * type);
+  int register_u_symbol(int cmd, const char * type);
 
 
   /**
