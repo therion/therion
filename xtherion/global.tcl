@@ -260,9 +260,9 @@ case $tcl_platform(platform) {
         set xth(gui,platform) macintosh
         set xth(gui,cursor) arrow
         set xth(gui,bindinsdel) 0
-        set xth(gui,ctrlBtnFg) black
+        set xth(gui,ctrlBtnFg) darkBlue
         set xth(gui,ctrlBtnBg) white
-        set xth(gui,ctrlBtnActiveFg) black
+        set xth(gui,ctrlBtnActiveFg) darkBlue
         set xth(gui,ctrlBtnActiveBg) lightGray
     }
   }
