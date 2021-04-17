@@ -3669,7 +3669,10 @@ void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scr
     	for(ix = 0; ix < nx; ix++) {
     		r->gour_stream += static_cast<char>(ix * ixstep);
     		r->gour_stream += static_cast<char>(iy * iystep);
-    		alt = mi.interpolate(outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)));
+    		if (cs->proj->type == TT_2DPROJ_PLAN)
+    			alt = mi.interpolate(outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)));
+    		else
+    			alt = outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)).m_y + cs->proj->shift_z;
     		clr = this->layout->m_lookup->value2clr(alt);
     		//clr = thlayout_color((255.0 - double(ix * ixstep)) / 255.0, double(ix * ixstep) / 255.0, double(iy * iystep) / 255.0);  
     		clr.encode_to_str(this->layout->color_model, r->gour_stream);

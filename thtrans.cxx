@@ -767,7 +767,7 @@ double thmorph2trans::interpolate(thvec2 src)
   for(i = this->m->m_features.begin(); i != this->m->m_features.end(); i++) {
     d = i->calc_dist_interpolate(src, v);
     if (d > 0.0) {
-      w = 1.0 / (d * d);
+      w = 1.0 / (d * d * d * d);
       sumw += w;
       sumv += w * v;
     } else {
@@ -795,7 +795,7 @@ void thmorph2trans::insert_lines_from_db()
   thdataleg * lg;
   long fid, tid;
   for(ipt = this->m->m_points.begin(); ipt != this->m->m_points.end(); ipt++) {
-    if ((ipt->m_id > 0) && (ipt->m_id < nst)) {
+    if ((ipt->m_id > 0) && (ipt->m_id <= nst)) {
       cnode = &(nodes[ipt->m_id - 1]);
       carrow = cnode->first_arrow;
       while (carrow != NULL) {
