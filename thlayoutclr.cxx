@@ -30,6 +30,7 @@
 #include "thdatabase.h"
 #include "thexception.h"
 #include <cmath>
+#include <fmt/printf.h>
 
 
 bool thlayout_color::is_defined() {
@@ -80,6 +81,16 @@ void thlayout_color::print_to_file(int output_model, FILE * f) {
 		fprintf(f, "(%.5f,%.5f,%.5f)", this->R, this->G, this->B);
 }
 
+
+std::string thlayout_color::print_to_str(int output_model) {
+	this->fill_missing_color_models();
+	if ((output_model & TT_LAYOUTCLRMODEL_CMYK) > 0)
+		return fmt::sprintf("(%.5f,%.5f,%.5f,%.5f)", this->C, this->M, this->Y, this->K);
+	else if ((output_model & TT_LAYOUTCLRMODEL_GRAY) > 0)
+		return fmt::sprintf("(%.5f)", this->W);
+	else
+		return fmt::sprintf("(%.5f,%.5f,%.5f)", this->R, this->G, this->B);
+}
 
 void thlayout_color::RGBtoGRAYSCALE() {
 	this->W = 0.2126 * this->R + 0.7152 * this->G + 0.0722 * this->B;

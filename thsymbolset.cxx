@@ -62,6 +62,7 @@ thsymbolset::thsymbolset()
     this->used[i] = false;
   }
   this->group_symbols = true;
+  this->color_model = TT_LAYOUTCLRMODEL_RGB;
 }
 
 
@@ -1848,10 +1849,10 @@ void export_all_symbols()
 
 void thsymbolset::export_mp_symbol_options(FILE * mpf, int sym_id)
 {
-  // TODO: color model support
   if ((sym_id >= 0) && (this->get_color(sym_id).defined)) {
-	this->get_color(sym_id).fill_missing_color_models();
-    fprintf(mpf,"drawoptions(withcolor (%.6f,%.6f,%.6f));\n", this->get_color(sym_id).R, this->get_color(sym_id).G, this->get_color(sym_id).B);
+    fprintf(mpf, "drawoptions(withcolor ");
+    this->get_color(sym_id).print_to_file(this->color_model, mpf);
+    fprintf(mpf, ");\n");
   } else {
     fprintf(mpf,"drawoptions();\n");
   }
@@ -1859,10 +1860,8 @@ void thsymbolset::export_mp_symbol_options(FILE * mpf, int sym_id)
 
 void thsymbolset::export_mp_symbol_options(std::vector<std::string>& x, int sym_id)
 {
-  // TODO: color model support
   if ((sym_id >= 0) && (this->get_color(sym_id).defined)) {
-	this->get_color(sym_id).fill_missing_color_models();
-    x.push_back(fmt::sprintf("drawoptions(withcolor (%.6f,%.6f,%.6f));", this->get_color(sym_id).R, this->get_color(sym_id).G, this->get_color(sym_id).B));
+    x.push_back(std::string("drawoptions(withcolor ") + this->get_color(sym_id).print_to_str(this->color_model) + std::string(");"));
   } else {
     x.push_back("drawoptions();");
   }
