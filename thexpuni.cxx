@@ -575,6 +575,12 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
                     ip->m_x, ip->m_y, scrap->z, x, y, z);
                   fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, 0.0);
                 }
+                if (it->m_point_list.size() > 0) {
+                	ip = it->m_point_list.begin();
+                    thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
+                      ip->m_x, ip->m_y, scrap->z, x, y, z);
+                    fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, 0.0);
+                }
                 fprintf(out,"</coordinates>\n</LinearRing>\n");
 
                 if (it->m_outer)
