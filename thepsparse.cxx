@@ -594,10 +594,14 @@ void MP_setting::print_pdf (std::ofstream & F) {
       }
       break;
     case MP_transp_on:
-      if (alpha < 0)
-        F << PL("/GS1 gs");
-      else
+      if (alpha < 0) {
+        if (LAYOUT.smooth_shading == shading_mode::quick)
+          F << PL("/GSa0 gs");
+        else
+          F << PL("/GS1 gs");
+      } else {
         F << PL(fmt::format("/GSa{:.0f} gs", LAYOUT.alpha_step*round(100*alpha/LAYOUT.alpha_step)));
+      }
       break;
   }
 }

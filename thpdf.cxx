@@ -999,6 +999,9 @@ void print_map(int layer, std::ofstream& PAGEDEF,
 
     if (LAYOUT.transparency) {
       PAGEDEF << "\\PL{/GS0 gs}%" << std::endl;      // end of default transparency
+      if (LAYOUT.smooth_shading == shading_mode::quick) {
+        PAGEDEF << "\\setbox\\xxx=\\hbox to " << HS << "bp{%\n";  // add another knockout group
+      }
     }
 
     PAGEDEF << "\\PL{q 0 0 m " << HS << " 0 l " << HS << " " << 
@@ -1061,9 +1064,19 @@ void print_map(int layer, std::ofstream& PAGEDEF,
       };
     }
     if (LAYOUT.transparency) {
+      if (LAYOUT.smooth_shading == shading_mode::quick) {
+        PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << std::endl;
+        PAGEDEF << "\\immediate\\pdfxform ";
+        PAGEDEF << "attr{/Group \\the\\attrid\\space 0 R} ";
+        PAGEDEF << "resources{/ExtGState \\the\\resid\\space 0 R";
+        if (icc_used()) PAGEDEF << " /ColorSpace <<" << icc2pdfresources() << ">> ";
+        PAGEDEF << "}";
+        PAGEDEF << "\\xxx\\PB{0}{0}{\\pdflastxform}%" << std::endl;
+      }
       PAGEDEF << "\\hfill}\\ht\\xxx=" << VS << "bp\\dp\\xxx=0bp" << std::endl;
       PAGEDEF << "\\immediate\\pdfxform ";
-      PAGEDEF << "attr{/Group \\the\\attrid\\space 0 R} ";
+      // the external group can't be a knockout group in the quick mode
+      if (LAYOUT.smooth_shading != shading_mode::quick) PAGEDEF << "attr{/Group \\the\\attrid\\space 0 R} ";
       PAGEDEF << "resources{/ExtGState \\the\\resid\\space 0 R";
       if (icc_used()) PAGEDEF << " /ColorSpace <<" << icc2pdfresources() << ">> ";
       PAGEDEF << "}";

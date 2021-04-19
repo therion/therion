@@ -31,6 +31,8 @@
 #include <set>
 #include "thepsparse.h"
 
+enum class shading_mode {off, quick};  // add precise
+
 struct surfpictrecord {
   const char * filename, * type;
   double dx, dy, xx, xy, yx, yy, width, height;
@@ -112,6 +114,7 @@ struct layout {
         nav_factor, XS,YS,XO,YO;
   int nav_right,nav_up,own_pages,lang,legend_columns;
   int alpha_step;   // alpha increment in percent
+  shading_mode smooth_shading;
   double hoffset, voffset, opacity, legend_width;
   color col_background, col_foreground, col_preview_below, col_preview_above;
   colormodel output_colormodel;
