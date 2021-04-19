@@ -12,7 +12,7 @@ therion:
    MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
    macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
    tr_white, tr_black were removed; use the drawing option
-   'withcolor <color> withtransparency <number>' instead)
+   'withcolor <color> withalpha <number>' instead)
  * reimplemented conversion of MetaPost output to PDF
  * support for double number system in MetaPost (this eliminates the current
    MetaPost limits; see the chapter Limitations in the Appendix of the Thbook)

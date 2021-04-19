@@ -111,6 +111,7 @@ struct layout {
         hgridorigin, vgridorigin, gridrot,
         nav_factor, XS,YS,XO,YO;
   int nav_right,nav_up,own_pages,lang,legend_columns;
+  int alpha_step;   // alpha increment in percent
   double hoffset, voffset, opacity, legend_width;
   color col_background, col_foreground, col_preview_below, col_preview_above;
   colormodel output_colormodel;

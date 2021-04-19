@@ -633,7 +633,7 @@ enddef;
 
 def thclean expr c =
   if transparency:
-    thfill c withcolor background withtransparency 0.5
+    thfill c withcolor background withalpha -1
   else:
     thunfill c
   fi;
@@ -1015,8 +1015,8 @@ enddef;
 
 % transparent colors
 
-primarydef p withtransparency t =     % TODO: t currently ignored
-   p withprescript(" THsettransparency")
+primarydef p withalpha t =
+    p withprescript(decimal t & " THsetalpha")
 enddef;
 
 def withlinearshading (expr p, n, ca, cb) =

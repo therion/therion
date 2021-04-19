@@ -98,6 +98,8 @@ layout::layout() {
 
   colored_text = true;
   grid_coord_freq = 2;
+
+  alpha_step = 5;
 }
 
 paired::paired() {

@@ -116,7 +116,7 @@ struct MP_text {
 
 struct MP_setting {
   int command;
-  double data;
+  double data, alpha;
   color col;
   std::list<float> dasharray;
   float dashoffset;
@@ -130,10 +130,10 @@ enum {MP_lineto, MP_moveto, MP_curveto, MP_rlineto};
 enum {MP_fill, MP_stroke, MP_fillstroke, MP_clip};
 
 enum {MP_linejoin, MP_linecap, MP_miterlimit, MP_gray, MP_rgb, MP_cmyk,
-      MP_pattern, MP_transp, MP_dash, MP_linewidth, MP_gradient};
+      MP_pattern, MP_transp, MP_dash, MP_linewidth, MP_gradient, MP_transp_on};
 
 enum {MP_notransf, MP_scale, MP_translate, MP_concat};
-enum {MP_gsave, MP_grestore, MP_transp_on, MP_transp_off};
+enum {MP_gsave, MP_grestore, MP_transp_off};
 enum {I_path, I_text, I_setting, I_gsave, I_transform};
 
 enum {MP_mitered = 0, MP_rounded, MP_beveled};

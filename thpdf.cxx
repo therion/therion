@@ -48,6 +48,7 @@
 #include "thtexfonts.h"
 #include "thlang.h"
 #include "thversion.h"
+#include "thdouble.h"
 
 #ifdef THMSVC
 #define round(x) floor((x) + 0.5)
@@ -1299,19 +1300,25 @@ R"(\pdfcompresslevel=9%
   if (LAYOUT.transparency) {
     PDFRES << "\\opacity{" << LAYOUT.opacity << "}%" << std::endl;
     PDFRES << "\\surfaceopacity{" << LAYOUT.surface_opacity << "}%" << std::endl;
-    PDFRES << "\\immediate\\pdfobj{ << /GS0 " <<
-                 "<< /Type /ExtGState /ca 1 /BM /Normal >> " <<
-           " /GS1 << /Type /ExtGState /ca \\the\\opacity\\space /BM /Normal >> " <<
-           " /GS2 << /Type /ExtGState /ca \\the\\surfaceopacity\\space /BM /Normal >> >> }" << std::endl;
+    PDFRES << "\\immediate\\pdfobj{ <<\n" <<
+           " /GS0 << /Type /ExtGState /ca 1 /BM /Normal >>\n" <<
+           " /GS1 << /Type /ExtGState /ca \\the\\opacity\\space /BM /Normal >>\n" <<
+           " /GS2 << /Type /ExtGState /ca \\the\\surfaceopacity\\space /BM /Normal >>\n";
+    for (int i = 0; i <= 100; i+=LAYOUT.alpha_step)
+      PDFRES << fmt::format(" /GSa{:d} << /Type /ExtGState /ca {} /BM /Normal >>\n", i, thdouble(i/100.0, 2));
+    PDFRES << ">> }" << std::endl;
     PDFRES << "\\newcount\\resid\\resid=\\pdflastobj" << std::endl;
     PDFRES << "\\immediate\\pdfobj{ << /S /Transparency /K true >> }" << std::endl;
     PDFRES << "\\newcount\\attrid\\attrid=\\pdflastobj" << std::endl;
   }
   else {
-    PDFRES << "\\immediate\\pdfobj{ << /GS0 " <<
-                 "<< /Type /ExtGState >> " <<
-           " /GS1 << /Type /ExtGState >> " <<
-           " /GS2 << /Type /ExtGState >> >> }" << std::endl;
+    PDFRES << "\\immediate\\pdfobj{ <<\n" <<
+           " /GS0 << /Type /ExtGState >>\n" <<
+           " /GS1 << /Type /ExtGState >>\n" <<
+           " /GS2 << /Type /ExtGState >>\n";
+    for (int i = 0; i <= 100; i+=LAYOUT.alpha_step)
+      PDFRES << fmt::format(" /GSa{:d} << /Type /ExtGState >>\n", i);
+    PDFRES << ">> }" << std::endl;
     PDFRES << "\\newcount\\resid\\resid=\\pdflastobj" << std::endl;
   }
 

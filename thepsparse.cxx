@@ -477,6 +477,9 @@ void MP_data::add(int i, std::string s, color col) {
   else if (i == MP_gradient) {
     sett.pattern = s;
   }
+  else if (i == MP_transp_on) {
+    sett.alpha = std::min(std::stod(s),1.0);  // alpha clipped to 1.0 max; negative values have a special meaning (bg transparency)
+  }
   else {
     sett.data = std::stod(s);
   }
@@ -551,6 +554,8 @@ void MP_setting::print_svg (std::ofstream & F, CGS & gstate) {
       gstate.dasharray = dasharray;
       gstate.dashoffset = dashoffset;
       break;
+    case MP_transp_on:
+      break;
   }
 }
 
@@ -580,11 +585,19 @@ void MP_setting::print_pdf (std::ofstream & F) {
       F << PL(fmt::format("{} w", thdouble(data,prec_mp)));
       break;
     case MP_dash:
+      {
       std::string t;
       t = "[";
       for (double d: dasharray) t += fmt::format("{} ", thdouble(d,prec_mp));
       t+= fmt::format("] {} d", thdouble(dashoffset,prec_mp));
       F << PL(t);
+      }
+      break;
+    case MP_transp_on:
+      if (alpha < 0)
+        F << PL("/GS1 gs");
+      else
+        F << PL(fmt::format("/GSa{:.0f} gs", LAYOUT.alpha_step*round(100*alpha/LAYOUT.alpha_step)));
       break;
   }
 }
@@ -634,9 +647,9 @@ void MP_data::print_svg (std::ofstream & F, std::string unique_prefix) {
             GSTATE_stack.pop_back();
             F << "</g>" << std::endl;
             break;
-          case MP_transp_on:
-            
-            break;
+//          case MP_transp_on:
+//            
+//            break;
           case MP_transp_off:
             
             break;
@@ -669,9 +682,9 @@ void MP_data::print_pdf (std::ofstream & F) {
           case MP_grestore:
             F << PL("Q");
             break;
-          case MP_transp_on:
-            F << PL("/GS1 gs");
-            break;
+//          case MP_transp_on:
+//            F << PL("/GS1 gs");
+//            break;
           case MP_transp_off:
             F << PL("/GS0 gs");
             break;
@@ -891,6 +904,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
   bool comment = true, concat = false, 
        already_transp = false, transp_used = false, before_group_transp = false, cancel_transp = true;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
+  std::string prev_alpha;
   std::deque<std::string> thbuffer;
   std::set<std::string> FORM_FONTS, FORM_PATTERNS, FORM_GRADIENTS;
   bool inpath = false, gsaveinpath = false;
@@ -1128,11 +1142,12 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
         patt_id++;
         thbuffer.clear();
       }
-      else if (tok == "THsettransparency") {
+      else if (tok == "THsetalpha") {
         transp_used = true;
-        if (!already_transp) {
-          data.MP.add(MP_transp_on);
+        if (!already_transp || prev_alpha != thbuffer[0]) {
+          data.MP.add(MP_transp_on, thbuffer[0]);
           already_transp = true;
+          prev_alpha = thbuffer[0];
         }
         cancel_transp = false;
         thbuffer.clear();
