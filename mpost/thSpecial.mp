@@ -114,7 +114,7 @@ def s_altitudebar_SKBB (expr zmin, zmax, units)(text t) =
       else:
         if prevpos >= 0:
           p := (0,prevpos)--(hs,prevpos)--(hs,k)--(0,k)--cycle;
-          fill p withalpha -1 withlinearshading(p, 2.5, tmpcol, i);
+          fill p withalpha -2 withlinearshading(p, 2.5, tmpcol, i);
         fi;
         tmpcol := i;
         prevpos := k;

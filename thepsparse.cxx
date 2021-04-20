@@ -595,10 +595,11 @@ void MP_setting::print_pdf (std::ofstream & F) {
       break;
     case MP_transp_on:
       if (alpha < 0) {
-        if (LAYOUT.smooth_shading == shading_mode::quick)
-          F << PL("/GSa0 gs");
-        else
-          F << PL("/GS1 gs");
+        if (LAYOUT.smooth_shading == shading_mode::quick) {
+          if (alpha < -1.5) F << PL("/GS1 gs"); // -2: use the opacity from the layout, intended for s_altitudebar
+          else F << PL("/GSa0 gs");             // -1: use zero alpha to "cut" the transparent areas from the scrap to show the shaded background
+        } else
+          F << PL("/GS1 gs");                   // use the opacity from the layout inside the knockout group
       } else {
         F << PL(fmt::format("/GSa{:.0f} gs", LAYOUT.alpha_step*round(100*alpha/LAYOUT.alpha_step)));
       }
