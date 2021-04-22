@@ -1196,6 +1196,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
   out.symset = &(this->symset);
   out.layout = this->layout;
+  out.symset->color_model = this->layout->color_model;
   out.ms = this->layout->scale * 2834.64566929;
   // korekcia shiftu na layout origin
   if (!thisnan(this->layout->ox)) {

@@ -895,7 +895,6 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_BORDER, SYML_ROCKBORDER)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_EDGE, SYML_ROCKEDGE)
     thline_type_export_mp(TT_LINE_TYPE_GRADIENT, SYML_GRADIENT)
-    thline_type_export_mp(TT_LINE_TYPE_U, SYML_U)
     thline_type_export_mp(TT_LINE_TYPE_HANDRAIL, SYML_HANDRAIL)
     thline_type_export_mp(TT_LINE_TYPE_ROPE_LADDER, SYML_ROPELADDER)
     thline_type_export_mp(TT_LINE_TYPE_FIXED_LADDER, SYML_FIXEDLADDER)
@@ -911,6 +910,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_RIMSTONEPOOL, SYML_RIMSTONEPOOL)
     thline_type_export_mp(TT_LINE_TYPE_WALKWAY, SYML_WALKWAY)
 
+    case TT_LINE_TYPE_U:
+      macroid = this->db->db2d.register_u_symbol(TT_LINE_CMD, this->m_subtype_str);
+      break;
+	
     case TT_LINE_TYPE_ROPE:
       macroid = SYML_ROPE;
       if (this->context >= 0)
@@ -1122,8 +1125,9 @@ bool thline::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
         if (this->type == TT_LINE_TYPE_U) {
-          out->symset->export_mp_symbol_options(out->file, -1);
+          out->symset->export_mp_symbol_options(out->file, omacroid);
           fprintf(out->file,"l_u_%s(", this->m_subtype_str);
+          out->symset->usymbols[omacroid].m_used = true;
           this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
         } else {
           out->symset->export_mp_symbol_options(out->file, omacroid);

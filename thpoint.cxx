@@ -877,7 +877,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_VEGETABLE_DEBRIS,SYMP_VEGETABLEDEBRIS)
     thpoint_type_export_mp(TT_POINT_TYPE_ROOT,SYMP_ROOT)
 
-    thpoint_type_export_mp(TT_POINT_TYPE_U,SYMP_U)
+    case TT_POINT_TYPE_U:
+    	macroid = this->db->db2d.register_u_symbol(TT_POINT_CMD, this->m_subtype_str);
+    	break;
 
     default:
       macroid = SYMP_UNDEFINED;
@@ -901,8 +903,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         fprintf(out->file, "picture ATTR__text;\nATTR__text := %s;\n", attr_text.c_str());
       }
       if (this->type == TT_POINT_TYPE_U) {
-         out->symset->export_mp_symbol_options(out->file, -1);
+         out->symset->export_mp_symbol_options(out->file, omacroid);
          fprintf(out->file,"p_u_%s(",this->m_subtype_str);
+         out->symset->usymbols[omacroid].m_used = true;
          this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
       } else {
          out->symset->export_mp_symbol_options(out->file, omacroid);
