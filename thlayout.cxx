@@ -162,6 +162,9 @@ thlayout::thlayout()
 
   this->def_north = 0;
   this->north = TT_LAYOUT_NORTH_TRUE;
+  
+  this->def_smooth_shading = 0;
+  this->smooth_shading = TT_LAYOUT_SMOOTHSHADING_QUICK;
 
   this->def_transparency = 0;
   this->transparency = true;
@@ -935,6 +938,14 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       this->north = sv;
       this->def_north = 2;
       break;
+
+    case TT_LAYOUT_SMOOTH_SHADING:
+      sv = thmatch_token(args[0],thtt_layout_smoothshading);
+      if (sv == TT_LAYOUT_SMOOTHSHADING_UNKNOWN)
+        ththrow("invalid smooth-shading switch -- {}",args[0]);
+      this->smooth_shading = sv;
+      this->def_smooth_shading = 2;
+      break;
       
     case TT_LAYOUT_GRID:
       sv = thmatch_token(args[0],thtt_layout_grid);
@@ -1277,6 +1288,9 @@ void thlayout::self_print_library() {
 
   thprintf("\tplayout->def_north= %d;\n", this->def_north);
   thprintf("\tplayout->north = %d;\n", this->north);
+
+  thprintf("\tplayout->def_smoooth_shading= %d;\n", this->def_smooth_shading);
+  thprintf("\tplayout->smoooth_shading = %d;\n", this->smooth_shading);
 
   thprintf("\tplayout->def_grid = %d;\n", this->def_grid);
   thprintf("\tplayout->grid = %d;\n",this->grid);
@@ -1958,6 +1972,10 @@ void thlayout::process_copy() {
 
       begcopy(def_north)
         this->north = srcl->north;
+      endcopy
+	  
+      begcopy(def_smooth_shading)
+        this->smooth_shading = srcl->smooth_shading;
       endcopy
 
       begcopy(def_surface_opacity)

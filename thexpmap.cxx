@@ -1730,6 +1730,17 @@ else
     }
     cmap = cmap->next_item;
   }
+  
+  LAYOUT.smooth_shading=shading_mode::off;
+  switch(this->layout->color_crit) {
+    case TT_LAYOUT_CCRIT_ALTITUDE:
+    case TT_LAYOUT_CCRIT_DEPTH:
+      if (prj->type != TT_2DPROJ_NONE) {
+    	  if (this->layout->smooth_shading == TT_LAYOUT_SMOOTHSHADING_QUICK)
+    		  LAYOUT.smooth_shading=shading_mode::quick;
+      }
+  	  break;
+  }
 
   sprintf(texb.get_buffer(),"data.%d",sfig);
   LAYOUT.northarrow = texb.get_buffer();
@@ -3613,6 +3624,9 @@ void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scr
 	}
 	
 	if (cs->proj->type == TT_2DPROJ_NONE)
+		return;
+	
+	if (this->layout->smooth_shading == TT_LAYOUT_SMOOTHSHADING_OFF)
 		return;
 	
 	thmorph2trans mi;

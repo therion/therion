@@ -100,6 +100,7 @@ enum {
   TT_LAYOUT_MIN_SYMBOL_SCALE = 2055,
   TT_LAYOUT_COLOR_MODEL = 2056,
   TT_LAYOUT_COLOR_PROFILE = 2057,
+  TT_LAYOUT_SMOOTH_SHADING = 2058,
 };
 
 
@@ -239,6 +240,27 @@ static const thstok thtt_layout_surface[] = {
   {NULL, TT_LAYOUT_SURFACE_UNKNOWN},
 };
 
+
+/**
+ * Layout smooth shading tokens.
+ */
+
+enum {
+  TT_LAYOUT_SMOOTHSHADING_OFF,
+  TT_LAYOUT_SMOOTHSHADING_QUICK,
+  TT_LAYOUT_SMOOTHSHADING_UNKNOWN,
+};
+
+
+/**
+ * Layout smooth shading token table.
+ */
+ 
+static const thstok thtt_layout_smoothshading[] = {
+  {"off", TT_LAYOUT_SMOOTHSHADING_OFF},
+  {"quick", TT_LAYOUT_SMOOTHSHADING_QUICK},
+  {NULL, TT_LAYOUT_SMOOTHSHADING_UNKNOWN},
+};
 
 
 
@@ -486,6 +508,7 @@ static const thstok thtt_layout_opt[] = {
   {"scale-bar", TT_LAYOUT_SCALE_BAR},
   {"size", TT_LAYOUT_SIZE},
   {"sketches", TT_LAYOUT_SKETCHES},
+  {"smooth-shading",TT_LAYOUT_SMOOTH_SHADING},
   {"statistics",TT_LAYOUT_MAP_ITEM},
   {"surface",TT_LAYOUT_SURFACE},
   {"surface-opacity",TT_LAYOUT_SURFACE_OPACITY},
@@ -541,7 +564,7 @@ class thlayout : public thdataobject {
   char grid, ccode;
   
   int legend, color_legend, map_header, lang, north, max_explos, max_topos, max_cartos, max_copys,
-    debug, survey_level, surface, grid_coords, color_model;
+    debug, survey_level, surface, grid_coords, color_model, smooth_shading;
 
   const char * color_profile_rgb, * color_profile_cmyk, * color_profile_gray;
   
@@ -576,7 +599,7 @@ class thlayout : public thdataobject {
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_survey_level, def_surface,
     def_surface_opacity, def_units, def_grid_coords, def_color_labels,
     def_font_setup, def_min_symbol_scale, def_color_model, def_carto_lens, def_copy_lens,
-	def_color_profile_rgb, def_color_profile_cmyk, def_color_profile_gray;
+	def_color_profile_rgb, def_color_profile_cmyk, def_color_profile_gray, def_smooth_shading;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;
