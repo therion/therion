@@ -1451,7 +1451,7 @@ void thgraphics2pdf() {
       if (!I.col_scrap.is_defined()) {
         s = LAYOUT.col_foreground.to_pdfliteral(fillstroke::fill);
       } else {
-        if (I.gour_stream == "") {
+        if (LAYOUT.smooth_shading == shading_mode::off || I.gour_stream == "") {
           s = I.col_scrap.to_pdfliteral(fillstroke::fill);
         } else {
           s = "/Pattern cs /" + tex_Gname(I.name) + " scn";
@@ -1563,7 +1563,7 @@ void thgraphics2pdf() {
   }
   // gouraud shadings
   for (auto &i: SCRAPLIST) {
-      if (i.gour_stream == "") continue;
+      if (LAYOUT.smooth_shading == shading_mode::off || i.gour_stream == "") continue;
       std::ofstream F_g("th_gour_"+i.name+".dat", std::ios::out | std::ios::binary);
       if(!F_g) therror((IOerr("th_gour_"+i.name)));
       F_g << i.gour_stream;
