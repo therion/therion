@@ -409,7 +409,9 @@ void MP_path::print_pdf(std::ofstream & F) {
 
   if (fillstroke == MP_fill) F << PL("f*");
   else if (fillstroke == MP_stroke) F << PL("S");
-  else if (fillstroke == MP_clip) F << PL("W* n");;
+  else if (fillstroke == MP_fillstroke) F << PL("B*");
+  else if (fillstroke == MP_clip) F << PL("W* n");
+  else therror(("invalid path drawing operation"));
 }
 
 void MP_data::add(int i) {
