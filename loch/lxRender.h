@@ -22,7 +22,7 @@ enum {
 struct lxRenderData {
 
 	long m_scaleMode;
-  bool m_printRenderer, 
+  bool m_printRenderer = false, 
 		m_imgWhiteBg,
     m_askFName;
 
@@ -33,8 +33,8 @@ struct lxRenderData {
 		m_imgResolution,
     m_imgWidth, 
 		m_imgHeight,
-		m_imgPixW,
-		m_imgPixH;
+		m_imgPixW = 0.0,
+		m_imgPixH = 0.0;
 
   lxRenderData();
 

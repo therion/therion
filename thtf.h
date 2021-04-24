@@ -40,8 +40,8 @@ class thtf {
 
   public:
 
-  double ufactor,  ///< Units factor.
-    sfactor;  ///< Scale factor.
+  double ufactor = 1.0,  ///< Units factor.
+    sfactor = 1.0;  ///< Scale factor.
  
   int units;
 
@@ -51,8 +51,8 @@ class thtf {
    * Standard constructor.
    */
   
-  thtf() : ufactor(1.0), sfactor(1.0) {}
-  virtual ~thtf();
+  thtf(int units) : units(units) {}
+  virtual ~thtf() = default;
   
   
   /**

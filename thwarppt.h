@@ -73,10 +73,10 @@ namespace therion
       public:
         thvec2 mX0;    //!< X-Y center
         thvec2 mU0;    //!< U-V center
-        double mXUnit; //!< X-Y unit
-        double mUUnit; //!< U-V unit
+        double mXUnit = 0.0; //!< X-Y unit
+        double mUUnit = 0.0; //!< U-V unit
         thvec2 mUC;    //!< U-V center in the warped image
-        double mUCUnit; //!< U-V unit in the warped image
+        double mUCUnit = 0.0; //!< U-V unit in the warped image
         
       public:
         /** default cstr

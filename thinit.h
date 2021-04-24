@@ -53,7 +53,7 @@ class thinit {
 
   public:  
 
-  int encoding_default, encoding_sql;  ///< Default encoding.
+  int encoding_default = 0, encoding_sql = 0;  ///< Default encoding.
     
   thbuffer path_cavern, ///< Survex executable full path.
     path_pdftex, path_mpost,  ///< PDF tex and metapost path

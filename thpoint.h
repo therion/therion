@@ -491,8 +491,6 @@ class thpoint : public th2ddataobject {
   thobjectname station_name,  ///< Station name.
     from_name;  ///< Extend name.
 
-  char extend_opts;  ///< Extend options.
-
   void start_insert() override;
 
   void parse_type(char * tstr);  ///< Parse point type.

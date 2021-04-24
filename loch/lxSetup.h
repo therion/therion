@@ -39,8 +39,8 @@ struct lxSetup {
   lxVec cam_center, cam_pos,
     cam_orig_center, cam_orig_pos;
   int cam_anaglyph_glasses, m_colormd;
-  double cam_dist, cam_dir, cam_tilt, cam_width,
-    cam_orig_dist, cam_orig_dir, cam_orig_tilt, cam_lens, cam_lens_vfov, cam_lens_vfovr, cam_anaglyph_eyesep,
+  double cam_dist = 0.0, cam_dir, cam_tilt, cam_width = 0.0,
+    cam_orig_dist = 0.0, cam_orig_dir = 0.0, cam_orig_tilt = 0.0, cam_lens, cam_lens_vfov, cam_lens_vfovr, cam_anaglyph_eyesep,
     data_limits_diam;
   bool cam_persp, cam_anaglyph, cam_anaglyph_bw, cam_anaglyph_left;
 

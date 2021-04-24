@@ -147,7 +147,7 @@ namespace therion
     struct point_pair
     {
       morph_type m_type;  //!< point pair type
-      bool m_used;        //!< whether this pair has been used in making the plaquettes
+      bool m_used = false;//!< whether this pair has been used in making the plaquettes
       std::string m_name; //!< station (or whatever) name
       thvec2 x;           //!< sketch coords
       thvec2 u;           //!< survey coords
@@ -263,19 +263,19 @@ namespace therion
       morph_type m_type;     //!< morph type of the line
       point_pair * m_p1;     //!< first point pair
       point_pair * m_p2;     //!< second point pair
-      double dz;             //!< distance P1-P2 (Z coords)
-      double dw;             //!< distance P1-P2 (W coords)
+      double dz = 0.0;       //!< distance P1-P2 (Z coords)
+      double dw = 0.0;       //!< distance P1-P2 (W coords)
     
       thline2 z;             //!< line (first image - Z coords)
       thline2 w;             //!< line (second image - W coords)
-      double zab;            //!< z-line sqrt(a*a + b*b)
-      double wab;            //!< w-line sqrt(a*a + b*b)
+      double zab = 0.0;      //!< z-line sqrt(a*a + b*b)
+      double wab = 0.0;      //!< w-line sqrt(a*a + b*b)
       
       thvec2 vz; //!< unit vector in Z (P1->P2)
       thvec2 vw; //!< unit vector in W 
       
-      double z_w; // dz / dw
-      double w_z; // dw / dz
+      double z_w = 0.0; // dz / dw
+      double w_z = 0.0; // dw / dz
       
       // thmat2 R;                //!< rotation matrix R(from->to)
       // thmat2 S;                //!< rotation matrix R(to->from)

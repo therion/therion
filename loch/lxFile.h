@@ -49,22 +49,22 @@ typedef char * lxFileBuff;
 
 
 struct lxFileSize {
-  lxFileSizeT m_size;
+  lxFileSizeT m_size = 0;
   operator lxFileSizeT & () {return this->m_size;}
   lxFileSizeT & operator = (const lxFileSizeT & right) {return this->m_size = right;}
   lxFileSizeT Save(lxFileBuff & ptr);
   lxFileSizeT Load(lxFileBuff & ptr);
-  lxFileSize() : m_size(0) {}
+  lxFileSize() = default;
 };
 
 
 struct lxFileDbl {
-  double m_num;
+  double m_num = 0.0;
   operator double & () {return this->m_num;}
   double & operator = (const double & right) {return this->m_num = right;}
   lxFileSizeT Save(lxFileBuff & ptr);
   lxFileSizeT Load(lxFileBuff & ptr);
-  lxFileDbl() : m_num(0.0) {}
+  lxFileDbl() = default;
 };
 
 
