@@ -707,7 +707,7 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
 }
 
 void converted_data::print_pdf(std::ofstream & F, std::string name) {
-  if (MP.index.empty()) return;
+//  if (MP.index.empty()) return;  // can't skip the empty XObject definition, as it might be referenced somewhere
   conv_mode = mode;
 
   double HS = urx - llx;
