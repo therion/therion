@@ -208,10 +208,6 @@ std::string PL(std::string s) {
   return  t + "\n";
 }
 
-MP_data::MP_data () {
-  idx = 0;
-}
-
 void MP_text::clear() {
   x = y = 0;
   xx = yy = 1;
@@ -773,10 +769,6 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) {
 void converted_data::clear() {
   MP.clear();
   fonts.clear();
-}
-
-converted_data::converted_data() {
-  clear();
 }
 
 

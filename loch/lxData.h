@@ -82,7 +82,7 @@ struct lxDataStation {
 
 struct lxDataTexture {
   double dx, dy, xx, xy, yx, yy, iw, ih;
-  unsigned texSizeS, texSizeO;
+  unsigned texSizeS = 0, texSizeO = 0;
   lxImageRGB image;
   unsigned char * texS, * texSbw, * texO, * texObw;
   lxDataTexture() : dx(0.0), dy(0.0), xx(1.0), xy(0.0), yx(0.0), yy(1.0), iw(1.0), ih(1.0), 

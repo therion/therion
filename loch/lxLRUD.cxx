@@ -150,9 +150,9 @@ enum {
 struct xcSeriesArrow {
   xcNodeArrow arrow;
   xcSeriesArrow * next, * prev;
-  int fType, tType, fXMin, tXMin;
+  int fType = 0, tType = 0, fXMin = 0, tXMin = 0;
   lxVec f, t, ft, sDir, uDir, rDir, fDir, nfDir, tDir, ntDir;
-  double fDist, tDist;
+  double fDist = 0.0, tDist = 0.0;
   lxTriGeomPoint fp[9], tp[9], nfp[9], ntp[9];
   lxPlane fPlane, tPlane, nfPlane, ntPlane;
   xcSeriesArrow() : next(NULL), prev(NULL) {}

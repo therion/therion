@@ -61,7 +61,7 @@ class thtfangle : public thtf {
 
   public:
 	
-	bool allow_percentage;
+	bool allow_percentage = false;
   
   /**
    * Parse units factor.

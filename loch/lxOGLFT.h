@@ -1563,7 +1563,7 @@ namespace OGLFT {
   protected:
     //! Raster glyph can be rotated in the Z plane (in addition to the string
     //! rotation).
-    GLfloat character_rotation_z_;
+    GLfloat character_rotation_z_ = 0.0;
   public:
     /*!
      * \param filename the filename which contains the font face.
@@ -1803,11 +1803,11 @@ namespace OGLFT {
   protected:
     //! Angle of rotation of characters relative to text orientation.
     struct {
-      bool active_; //!< Is character rotation non-zero? (faster than checking all
+      bool active_ = false; //!< Is character rotation non-zero? (faster than checking all
 		    //!< the other values.)
-      GLfloat x_,   //!< Angle of rotation in the X direction.
-	y_,	    //!< Angle of rotation in the Y direction.
-	z_;	    //!< Angle of rotation in the Z direction.
+      GLfloat x_ = 0.0,   //!< Angle of rotation in the X direction.
+	            y_ = 0.0,   //!< Angle of rotation in the Y direction.
+	            z_ = 0.0;   //!< Angle of rotation in the Z direction.
     } character_rotation_;
 
     /*!

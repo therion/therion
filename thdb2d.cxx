@@ -85,7 +85,7 @@ class thprjx_scrap {
   
   thprjx_link * via_link;
   
-  double viacpx, viacpy, viacpz;
+  double viacpx = 0.0, viacpy = 0.0, viacpz = 0.0;
   
   thprjx_link * first_link, * last_link;
   
