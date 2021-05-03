@@ -2832,6 +2832,12 @@ $xth(me,ctxmenu).outline add radiobutton -label [mc "out"] -variable xth(me,ctrl
 $xth(me,ctxmenu).outline add radiobutton -label [mc "in"] -variable xth(me,ctrl,ctx,outline) -value "in" -command {xth_me_set_option_value outline}
 $xth(me,ctxmenu).outline add radiobutton -label [mc "none"] -variable xth(me,ctrl,ctx,outline) -value "none" -command {xth_me_set_option_value outline}
 
+catch {menu $xth(me,ctxmenu).border -tearoff 0}
+$xth(me,ctxmenu).border delete 0 end
+$xth(me,ctxmenu).border add radiobutton -label [mc "on"] -variable xth(me,ctrl,ctx,border) -value "on" -command {xth_me_set_option_value border}
+$xth(me,ctxmenu).border add radiobutton -label [mc "off"] -variable xth(me,ctrl,ctx,border) -value "off" -command {xth_me_set_option_value border}
+
+
 catch {menu $xth(me,ctxmenu).cps -tearoff 0}
 $xth(me,ctxmenu).cps delete 0 end
 $xth(me,ctxmenu).cps add checkbutton -label [mc "<<"] -variable xth(ctrl,me,linept,idp) -command xth_me_cmds_toggle_linept
@@ -3358,6 +3364,29 @@ proc xth_me_show_context_menu {id x y} {
     #DON'T REMOVE - for translation. [mc "outline"]
     $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel outline] -menu $xth(me,ctxmenu).outline
       
+     # border
+    if {[string equal $xth(me,cmds,$id,type) "slope"]} {
+	    set optborder [xth_me_get_option_value "border" $opts]
+	    # set variable
+	    switch -nocase [lindex $optborder 0] {
+		on {
+		    set xth(me,ctrl,ctx,border) "on"
+		}
+		off {
+		    set xth(me,ctrl,ctx,border) "off"
+		}
+		default {
+		    set xth(me,ctrl,ctx,border) "auto"
+		}
+	    }
+	    # set options
+	    set xth(me,ctrl,ctxopt,border) [lindex $optborder 1] 
+	    #DON'T REMOVE - for translation. [mc "border"]
+	    $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel border] -menu $xth(me,ctxmenu).border
+    }
+
+  
+	
     # text for label
     if {[lsearch -exact {label} $xth(me,cmds,$id,type)] > -1} {
       set opttext [xth_me_get_option_value "text" $opts]

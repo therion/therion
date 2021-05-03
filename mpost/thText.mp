@@ -128,7 +128,10 @@ numeric smart_count, smart_D;
 boolean smart_quit, smart_inner_quit;
 
 def p_smartlabel (expr txt, pos) =
- if txt <> "":   % -numbersystem=double gets bbox wrong for empty labels; unnecessary to do anything in this case, anyway
+ % -numbersystem=double gets bbox wrong for labels generated from empty strings; unnecessary to do anything in this case, anyway
+ boolean exitdef; exitdef = false;
+ if string txt: if txt = "": exitdef := true; fi; fi;
+ if not exitdef:
   begingroup;
   interim bboxmargin:=0.2pt;
   lab:=thelabel.rt(txt,pos+(0.4u,0));
