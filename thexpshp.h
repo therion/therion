@@ -56,7 +56,7 @@ struct thexpshpf {
   bool m_is_open;
   int m_type;
   size_t m_num_objects;
-  SHPHandle m_hndl;
+  SHPHandle m_hndl = nullptr;
 
   thattr m_attributes;
 
@@ -71,7 +71,7 @@ struct thexpshpf {
   void object_clear();
   void object_insert();
 
-  bool m_ring_outer;
+  bool m_ring_outer = false;
   std::list<thexpshpf_data> m_ring_list;
 
   void point_insert(double x, double y, double z, double m = 0.0);

@@ -249,7 +249,7 @@ struct lxFile {
   lxFileData m_surfaceBitmapsData;
 
   std::string m_error;
-  FILE * m_file;
+  FILE * m_file = nullptr;
 
   static void switchEndian(char * data, lxFileSizeT size);
   
