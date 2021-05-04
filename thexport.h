@@ -76,10 +76,10 @@ class thexport {
 
   class thlayout * layout;  ///< Layout pointer.
   friend class thexporter;
-  class thconfig * cfgptr;  ///< Current config pointer.
+  class thconfig * cfgptr = nullptr;  ///< Current config pointer.
   int export_mode;  ///< Export mode.
   thobjectsrc src; ///< Export source.
-  class thdatabase * db; ///< Exported database.
+  class thdatabase * db = nullptr; ///< Exported database.
   
   const char * outpt;  ///< Output file name.
   thbuffer cfgpath;  ///< Config path.

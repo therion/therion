@@ -68,13 +68,13 @@ struct lxDataStation {
 
   lxVec pos;
 
-  size_t m_survey_idx;
+  size_t m_survey_idx = 0;
 
-  const char * m_name, * m_comment;
+  const char * m_name, * m_comment = nullptr;
 
   bool m_temporary, m_entrance, m_fix, m_selected;
 
-  double m_screen_x, m_screen_y, m_screen_z, m_surface;
+  double m_screen_x = 0.0, m_screen_y = 0.0, m_screen_z = 0.0, m_surface;
 
   lxDataStation() : m_name(NULL), m_temporary(false), m_entrance(false), m_fix(false), m_selected(true), m_surface(false) {}
   

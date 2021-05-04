@@ -52,7 +52,7 @@ class thsvxctrl {
   unsigned long svxf_ln;
   thsvxctrl_src_maptype src_map;
   
-  FILE * svxf;
+  FILE * svxf = nullptr;
   
   void write_survey_leg(thdataleg * legp);
   

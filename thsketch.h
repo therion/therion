@@ -54,7 +54,7 @@ struct thsketch {
   double m_x;  //!< sketch points X offset
   double m_y;  //!< sketch points Y offset
   std::unique_ptr<thwarp> m_warp;  ///< Warping class.
-  class thscrap * m_scrap;  ///< Sketch scrap.
+  class thscrap * m_scrap = nullptr;  ///< Sketch scrap.
 
   thsketch();
 
