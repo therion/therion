@@ -44,7 +44,7 @@ struct lxSetup {
     data_limits_diam;
   bool cam_persp, cam_anaglyph, cam_anaglyph_bw, cam_anaglyph_left;
 
-  bool m_vis_centerline, m_vis_walls, m_vis_surface, 
+  bool m_vis_centerline = false, m_vis_walls, m_vis_surface, 
        m_vis_labels, m_vis_bbox, m_vis_grid, m_vis_indicators,
        m_vis_centerline_cave, m_vis_centerline_surface, m_vis_centerline_splay,
        m_vis_centerline_station, m_vis_centerline_entrance, m_vis_centerline_fix, m_vis_centerline_duplicate,

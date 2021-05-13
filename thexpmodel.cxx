@@ -1512,6 +1512,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
     stnum_orig = new long[nstat];
     for (i = 0; i < nstat; i++)
       stnum[i] = (dbp->db1d.station_vec[i].survey->is_selected() ? 1 : -1); //;-1
+      stnum_orig[i] = 0;
   }
 
   // prejde vsetky zamery, ktore ideme 
