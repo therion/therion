@@ -3641,6 +3641,9 @@ void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scr
     	  mi.insert_point(thvec2(cp->pt->xt, cp->pt->yt), thvec2(cp->tx, cp->ty), cp->st->uid, cp->ta);
       cp = cp->nextcp;
     }
+    for(auto xcp : cs->joined_scrap_stations) {
+    	mi.insert_extra_point(thvec2(xcp->pt->xt, xcp->pt->yt), thvec2(xcp->tx, xcp->ty), xcp->st->uid, xcp->ta);
+    }
     mi.insert_lines_from_db();
     mi.init();
     

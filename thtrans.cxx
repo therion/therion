@@ -553,10 +553,13 @@ typedef std::list<thm2t_feature> thm2t_feature_list;
 
 struct thmorph2trans_members {
   thm2t_point_list m_points;
+  thm2t_point_list m_extra_points;
   thm2t_point_ptr_map m_point_map;
+  thm2t_point_ptr_map m_extra_point_map;
   thm2t_line_list m_lines;
   thm2t_line_map m_line_map;
   thm2t_point_ptr get_point(long id);
+  thm2t_point_ptr get_extra_point(long id);
   thm2t_zoom_point_list m_zoom_points;
   thm2t_feature_list m_features;
 };
@@ -566,6 +569,18 @@ thm2t_point_ptr thmorph2trans_members::get_point(long id)
   thm2t_point_ptr_map::iterator ii;
   ii = this->m_point_map.find(id);
   if (ii == this->m_point_map.end())
+    return NULL;
+  else
+    return ii->second;
+}
+
+
+
+thm2t_point_ptr thmorph2trans_members::get_extra_point(long id)
+{
+  thm2t_point_ptr_map::iterator ii;
+  ii = this->m_extra_point_map.find(id);
+  if (ii == this->m_extra_point_map.end())
     return NULL;
   else
     return ii->second;
@@ -603,6 +618,14 @@ void thmorph2trans::insert_point(thvec2 src, thvec2 dst, long id, double value)
 }
 
 
+void thmorph2trans::insert_extra_point(thvec2 src, thvec2 dst, long id, double value)
+{
+  thm2t_point_list::iterator i;
+  i = this->m->m_extra_points.insert(this->m->m_extra_points.end(), thm2t_point(src, dst, id, value));
+  this->m->m_extra_point_map[id] = &(*i);
+}
+
+
 void thmorph2trans::insert_zoom_point(thvec2 src, double dst, long id)
 {
   this->m->m_zoom_points.push_back(thm2t_zoom_point(src, dst, id));
@@ -614,8 +637,14 @@ void thmorph2trans::insert_line(long from, long to)
   thm2t_line_map::iterator mi;
   if (from == to)
     return;
-  if ((this->m->get_point(from) == NULL) || (this->m->get_point(to) == NULL))
-    return;
+  if ((this->m->get_point(from) == NULL) || (this->m->get_point(to) == NULL)) {
+	if ((this->m->get_point(from) != NULL) && (this->m->get_extra_point(to) != NULL))
+		this->m->get_extra_point(to)->m_used = true;
+	else if ((this->m->get_extra_point(from) != NULL) && (this->m->get_point(to) != NULL))
+		this->m->get_extra_point(from)->m_used = true;
+	else
+	  return;
+  }
   mi = this->m->m_line_map.find(tmp);
   if (mi == this->m->m_line_map.end()) {
     thm2t_line_ptr lp = &(*this->m->m_lines.insert(this->m->m_lines.end(), thm2t_line(from, to)));
@@ -628,6 +657,12 @@ void thmorph2trans::init(double eps)
 {
   this->m->m_features.clear();
   this->m_eps = eps;
+  
+  for(auto xpi = this->m->m_extra_points.begin(); xpi != this->m->m_extra_points.end(); xpi++) {
+	  if (xpi->m_used) {
+		  this->insert_point(xpi->m_src, xpi->m_dst, xpi->m_id, xpi->m_value);
+	  }
+  }
 
   // initialize features
   thm2t_line_list::iterator iln;

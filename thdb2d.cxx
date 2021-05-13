@@ -47,6 +47,8 @@
 #include "thinit.h"
 #include "thfilehandle.h"
 #include <list>
+#include <set>
+#include <iterator>
 #include <cstdio>
 #ifndef THMSVC
 #include <unistd.h>
@@ -2890,6 +2892,7 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
     // now let's add control points
     ji = jlist;
     thdb2dcp * cp;
+    std::set<thscrap *> join_scraps;
     while (ji != NULL) {
       if ((ji->object->get_class_id() != TT_POINT_CMD) ||
           (((thpoint*)ji->object)->cpoint == NULL)) {
@@ -2897,8 +2900,17 @@ void thdb2d::pp_process_joins(thdb2dprj * prj)
         cp->pt = ji->point;
         cp->tx = tx;
         cp->ty = ty;
+        join_scraps.insert(ji->point->pscrap);
       }
       ji = ji->next_list_item;
+    }
+    
+    // add extra control stations from scraps
+    for(auto fjscrap = join_scraps.begin(); fjscrap != join_scraps.end(); fjscrap++) {
+    	for(auto njscrap = std::next(fjscrap); njscrap != join_scraps.end(); njscrap++) {
+    		(*fjscrap)->add_joined_scrap_stations(*njscrap);
+    		(*njscrap)->add_joined_scrap_stations(*fjscrap);
+    	}
     }
     jlist = jlist->next_list;
   }

@@ -277,6 +277,7 @@ struct thmorph2trans {
   thmorph2trans& operator=(thmorph2trans&&) = delete; 
   void reset();
   void insert_point(thvec2 src, thvec2 dst, long id, double value = thnan);
+  void insert_extra_point(thvec2 src, thvec2 dst, long id, double value = thnan);
   void insert_line(long from, long to);
   void insert_lines_from_db();
   void insert_zoom_point(thvec2 src, double dst, long id);
