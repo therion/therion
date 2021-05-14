@@ -449,6 +449,7 @@
 \newtoks\colorlegendtitle
 \newif\ifnortharrow
 \newif\ifscalebar
+\newif\ifaltitudebar
 \newtoks\explotitle
 \newtoks\explodate
 \newtoks\exploteam
@@ -482,6 +483,7 @@
 \newtoks\legendtextsectionsize\legendtextsectionsize={\size[14]}
 
 \def\scalebar{\pdfrefxform\getref{THWscalebar}}
+\def\altitudebar{\pdfrefxform\getref{THWaltitudebar}}
 \def\northarrow{\pdfrefxform\getref{THWnortharrow}}
 \newdimen\legendwidth %\legendwidth=14cm
 \newcount\legendcolumns \legendcolumns=2

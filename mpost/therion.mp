@@ -94,9 +94,9 @@ ATTR__shotflag_approx:=false;
 boolean ATTR__stationflag_splay;
 ATTR__stationflag_splay:=false;
 
-save black, white, red, green, blue, background, HelpSymbolColor;
+save black, white, red, green, blue, background, HelpSymbolColor, tmpcol;
 if OutputColormodel = "cmyk":
-  cmykcolor black, white, red, green, blue, background, HelpSymbolColor;
+  cmykcolor black, white, red, green, blue, background, HelpSymbolColor, tmpcol;
   black := (0,0,0,1);
   white := (0,0,0,0);
   red   := (0,0.9,0.9,0.2);
@@ -105,7 +105,7 @@ if OutputColormodel = "cmyk":
   HelpSymbolColor := (0,0,0,0.2);
   defaultcolormodel := 7;
 elseif OutputColormodel = "rgb":
-  rgbcolor black, white, red, green, blue, background, HelpSymbolColor;
+  rgbcolor black, white, red, green, blue, background, HelpSymbolColor, tmpcol;
   black := (0,0,0);
   white := (1,1,1);
   red   := (1,0,0);
@@ -633,7 +633,7 @@ enddef;
 
 def thclean expr c =
   if transparency:
-    thfill c withcolor background withtransparency 0.5
+    thfill c withcolor background withalpha -1
   else:
     thunfill c
   fi;
@@ -848,6 +848,14 @@ def endfig =
 %  endgroup
 enddef;
 
+vardef tightbbox primary p =
+  llcorner p -- lrcorner p -- urcorner p -- ulcorner p -- cycle
+enddef;
+
+% https://tug.org/pipermail/metapost/2008-February/001218.html
+vardef log primary x =
+     (if x=0: 0 else: mlog(x)/mlog(10) fi)
+enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % P. Bolek's MPATTERN package adapted and simplified for Therion
@@ -858,13 +866,7 @@ string Pname_, PXYsteps_;
 string Pmatrix_;
 
 numeric Pnum_; Pnum_=0;
-numeric pattern_file_offset;
-pattern_file_offset = 4000;
-if known numbersystem:                  % known since v1.770
-  if numbersystem <> "scaled":
-    pattern_file_offset := scantokens("1000000");
-  fi
-fi
+string Psuffix_; Psuffix_="-patt";
 
 def PmakeBB_=
    PBBox_ := "[" & decimal Plft_ & " " & decimal Plow_ & " "
@@ -888,7 +890,7 @@ enddef;
 
 def PmakePattern_(expr name)=
   write Pname_ & ":"
-    & jobname & "." & decimal charcode & ":"
+    & jobname & Psuffix_ & "." & decimal charcode & ":"
     & PBBox_ & ":"
     & PXYsteps_ & ":"
     & Pmatrix_
@@ -922,7 +924,8 @@ def beginpattern(suffix name)=
   Pmatrix_:="[1 0 0 1 0 0]";
   Pname_:=str name;
   Pnum_:=Pnum_+1;
-  beginfig(Pnum_+pattern_file_offset);
+  outputtemplate := "%j"&Psuffix_&".%c";
+  beginfig(Pnum_);
 enddef;
 
 def endpattern=
@@ -933,11 +936,26 @@ def endpattern=
   Psteps_;
   PmakePattern_(Pname_);
   scantokens("string " & Pname_ & "; "&Pname_&"="&ditto&Pname_&ditto&";");
+  outputtemplate := "%j.%c";
 enddef;
 
 picture pattpict;
 string patterncolor_;
 patterncolor_ := "0 0 0 1";
+
+vardef colortostr(expr c, s) =
+  hide(pattpict := image(draw (0,0)--(10,10) withcolor c);
+    for i within pattpict:
+      if colormodel i = 1:
+        patterncolor_ := decimal greypart i;
+      elseif colormodel i = 5:
+        patterncolor_ := decimal redpart i & s & decimal greenpart i & s & decimal bluepart i;
+      elseif colormodel i = 7:
+        patterncolor_ := decimal cyanpart i & s & decimal magentapart i & s & decimal yellowpart i & s & decimal blackpart i;
+      fi
+    endfor;)
+  patterncolor_
+enddef;
 
 primarydef p withpattern s=
   if known s:
@@ -997,12 +1015,36 @@ enddef;
 
 % transparent colors
 
-primarydef p withtransparency t =     % TODO: t currently ignored
-   p withprescript(" THsettransparency");
+primarydef p withalpha t =
+    p withprescript(decimal t & " THsetalpha")
+enddef;
+
+def withlinearshading (expr p, n, ca, cb) =
+    withprescript("L " &
+                  decimal xpart point n of tightbbox p & " " &
+                  decimal ypart point n of tightbbox p & " " &
+                  decimal xpart point ((n+2) mod 4) of tightbbox  p & " " &
+                  decimal ypart point ((n+2) mod 4) of tightbbox  p & " " &
+                  colortostr(ca, " ") & " " &
+                  colortostr(cb, " ") & " " &
+                  "THgradient") withoutcolor
+enddef;
+
+def withradialshading (expr p, ca, cb) =
+    withprescript("R " &
+                  decimal xpart center p & " " &
+                  decimal ypart center p & " " &
+                  decimal xpart center p & " " &
+                  decimal ypart center p & " " &
+                  colortostr(ca, " ") & " " &
+                  colortostr(cb, " ") & " " &
+                  "0 " &
+                  decimal (((xpart lrcorner p - xpart llcorner p) ++ (ypart urcorner p - ypart lrcorner p)) / 2) & " " &
+                  "THgradient") withoutcolor
 enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% some useful macros from H. Hagen's MetaFun package
+% some useful macros from H. Hagen's MetaFun package (adapted)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 vardef paired (expr d) =

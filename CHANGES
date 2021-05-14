@@ -4,11 +4,16 @@ therion:
  * support for colour models: cmyk, rgb, grayscale (see the color-model layout
    option in the Thbook)
  * support for colour management (see the color-profile layout option)
+ * support for linear and radial shading (colour gradients) in MetaPost
+   (withlinearshading and withradialshading options)
+ * support for smooth colour transitions of scrap backgrounds in PDF maps
+   if the map-fg is coloured by altitude
+ * added smooth-shading <off/quick> layout switch - quick is default
  * reimplemented internal processing of patterns and transparent colors in
    MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
    macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
    tr_white, tr_black were removed; use the drawing option
-   'withcolor <color> withtransparency <number>' instead)
+   'withcolor <color> withalpha <number>' instead)
  * reimplemented conversion of MetaPost output to PDF
  * support for double number system in MetaPost (this eliminates the current
    MetaPost limits; see the chapter Limitations in the Appendix of the Thbook)
@@ -41,6 +46,7 @@ loch:
 
 infrastructure:
  * support for CMake builds (thanks to Matěj Plch)
+ * C++14 required
 
 --------------------------------------------------------------------------------
 

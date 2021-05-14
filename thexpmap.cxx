@@ -43,6 +43,7 @@
 #include "thlookup.h"
 #include <stdio.h>
 #include "thtmpdir.h"
+#include "thtrans.h"
 #ifndef THMSVC
 #include <unistd.h>
 #else
@@ -1671,6 +1672,8 @@ else
                   SCRAPITEM->S1 = shx;
                   SCRAPITEM->S2 = shy;
                   
+                  this->export_scrap_backgroud_mesh(cs, &out, &(*SCRAPITEM));                  
+                  
                   if ((!export_outlines_only) && (!export_sections) &&
                       (cbm->m_target->fmap->output_number != cbm->m_target->preview_output_number)
       	              && (!cbm->m_target->previewed)		      
@@ -1728,6 +1731,17 @@ else
     }
     cmap = cmap->next_item;
   }
+  
+  LAYOUT.smooth_shading=shading_mode::off;
+  switch(this->layout->color_crit) {
+    case TT_LAYOUT_CCRIT_ALTITUDE:
+    case TT_LAYOUT_CCRIT_DEPTH:
+      if (prj->type != TT_2DPROJ_NONE) {
+    	  if (this->layout->smooth_shading == TT_LAYOUT_SMOOTHSHADING_QUICK)
+    		  LAYOUT.smooth_shading=shading_mode::quick;
+      }
+  	  break;
+  }
 
   sprintf(texb.get_buffer(),"data.%d",sfig);
   LAYOUT.northarrow = texb.get_buffer();
@@ -1739,6 +1753,36 @@ else
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
     sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()));
 
+
+  // print altitudebar
+  if ((this->layout->color_legend == TT_TRUE) && (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->m_lookup->m_table.size() > 1)) {
+	double sv_min(0.0), sv_max(0.0);
+	bool sv_next = false;
+    switch (this->layout->color_crit) {
+      case TT_LAYOUT_CCRIT_ALTITUDE:
+      case TT_LAYOUT_CCRIT_DEPTH:
+    	  sprintf(texb.get_buffer(),"data.%d",sfig);
+    	  LAYOUT.altitudebar = texb.get_buffer();
+    	  sv_min = this->layout->m_lookup->m_table.begin()->m_valueDbl;
+    	  for(auto ti : this->layout->m_lookup->m_table) {
+    		  sv_max = ti.m_valueDbl;
+    	  }
+          fprintf(mpf,"beginfig(%d);\ns_altitudebar(%g, %g, \"%s\")(",
+            sfig++, this->layout->units.convert_length(sv_max),
+                    this->layout->units.convert_length(sv_min),
+                    this->layout->units.format_i18n_length_units());
+    	  for(auto ti : this->layout->m_lookup->m_table) {
+    		  if (sv_next) fprintf(mpf, ",");
+    		  sv_next = true;
+    		  fprintf(mpf,"%g,",(ti.m_valueDbl - sv_min)/(sv_max - sv_min));
+    		  ti.m_color.print_to_file(this->layout->color_model, mpf);
+    	  }
+    	  fprintf(mpf,");\nendfig;\n");
+    	  break;
+    }
+  }
+  
+  
   // sem pride zapisanie legendy do MP suboru
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"Scale:=%.2f;\ninitialize(Scale);\n",0.01 / this->layout->base_scale);
@@ -3446,6 +3490,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       }
       unique_lkp = this->db->create<thlookup>(this->src);
       lkp = unique_lkp.get();
+      this->db->object_list.push_back(std::move(unique_lkp));
       lkp->m_type = this->layout->color_crit;
     }
   }
@@ -3564,12 +3609,101 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
     cmap = cmap->next_item;
   }
 
-  lkp->export_color_legend(this->layout, std::move(unique_lkp));
+  lkp->export_color_legend(this->layout);
 
 }
 
 
-
+void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scraprecord * r) {
+	
+	switch(this->layout->color_crit) {
+      case TT_LAYOUT_CCRIT_ALTITUDE:
+      case TT_LAYOUT_CCRIT_DEPTH:
+    	  break;
+      default:
+    	  return;
+	}
+	
+	if (cs->proj->type == TT_2DPROJ_NONE)
+		return;
+	
+	if (this->layout->smooth_shading == TT_LAYOUT_SMOOTHSHADING_OFF)
+		return;
+	
+	thmorph2trans mi;
+	thlayout_color clr;
+	
+	// initialize interpolation
+	thdb2dcp * cp;
+    cp = cs->fcpp;
+    while (cp != NULL) {
+      if (cp->st != NULL)
+    	  mi.insert_point(thvec2(cp->pt->xt, cp->pt->yt), thvec2(cp->tx, cp->ty), cp->st->uid, cp->ta);
+      cp = cp->nextcp;
+    }
+    for(auto xcp : cs->joined_scrap_stations) {
+    	mi.insert_extra_point(thvec2(xcp->pt->xt, xcp->pt->yt), thvec2(xcp->tx, xcp->ty), xcp->st->uid, xcp->ta);
+    }
+    mi.insert_lines_from_db();
+    mi.init();
+    
+	// initialize grid
+    double cxmin, cxmax, cymin, cymax, xstep, ystep, alt;
+    int ix, nx, iy, ny, ixstep, iystep;
+    if ((cs->lxmin == cs->lxmax) || (cs->lymin == cs->lymax)) return;
+    
+    // initialize transformation
+    thlintrans outlt;
+    thbbox2 bb;
+    outlt.init(thvec2(cs->lxmin, cs->lymin), thvec2(cs->lxmax, cs->lymax), thvec2(thxmmxst(out, cs->lxmin, cs->lymin)), thvec2(thxmmxst(out, cs->lxmax, cs->lymax)));
+    outlt.init_backward();
+    bb.update(outlt.forward(thvec2(cs->lxmin, cs->lymin)));
+    bb.update(outlt.forward(thvec2(cs->lxmin, cs->lymax)));
+    bb.update(outlt.forward(thvec2(cs->lxmax, cs->lymin)));
+    bb.update(outlt.forward(thvec2(cs->lxmax, cs->lymax)));
+    if (!bb.is_valid()) return;
+    
+    cxmin = bb.m_min.m_x;
+    cymin = bb.m_min.m_y;
+    cxmax = bb.m_max.m_x;
+    cymax = bb.m_max.m_y;
+    nx = 16;
+    ny = 16;
+    ixstep = 255 / (nx - 1);
+    iystep = 255 / (ny - 1);
+    xstep = (cxmax - cxmin) / double(nx-1);
+    ystep = (cymax - cymin) / double(ny-1);
+    
+    // export grid
+    r->gour_n = nx;
+    r->gour_xmin = cxmin;
+    r->gour_xmax = cxmin + xstep / double(ixstep) * 255.0;
+    r->gour_ymin = cymin;
+    r->gour_ymax = cymin + ystep / double(iystep) * 255.0;
+	r->gour_stream.clear();
+	//printf("\nSCRAP MESH: %s@%s\n", cs->name, cs->fsptr->get_full_name());
+	//printf("%.2f,%.2f - %.2f,%.2f - %dx%d - %dx%d\n", r->gour_xmin, r->gour_xmax, r->gour_ymin, r->gour_ymax, nx, ny, ixstep, iystep);
+    for(iy = 0; iy < ny; iy++) {
+    	for(ix = 0; ix < nx; ix++) {
+    		r->gour_stream += static_cast<char>(ix * ixstep);
+    		r->gour_stream += static_cast<char>(iy * iystep);
+    		if (cs->proj->type == TT_2DPROJ_PLAN)
+    			alt = mi.interpolate(outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)));
+    		else
+    			alt = outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)).m_y + cs->proj->rshift_z;
+    		clr = this->layout->m_lookup->value2clr(alt);
+    		//clr = thlayout_color((255.0 - double(ix * ixstep)) / 255.0, double(ix * ixstep) / 255.0, double(iy * iystep) / 255.0);  
+    		clr.encode_to_str(this->layout->color_model, r->gour_stream);
+    		//printf(" %04.0lf:",alt);
+    		//auto si = r->gour_stream.rbegin();
+    		//for(int i = 0; i < 6; si++, i++) {
+    		//	printf(":%03u",(unsigned char)(*si));
+    		//}
+    	}
+		//printf("\n");
+    }
+    
+}
 
 
 double thexpmap_quick_map_export_scale;

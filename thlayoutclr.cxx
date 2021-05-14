@@ -82,6 +82,30 @@ void thlayout_color::print_to_file(int output_model, FILE * f) {
 }
 
 
+char dbl1_to_char(double dbl) {
+	int x = int(255.0 * dbl);
+	if (x > 255) x = 255;
+	if (x < 0) x = 0;
+	return char(x);
+}
+
+void thlayout_color::encode_to_str(int output_model, std::string & str) {
+	this->fill_missing_color_models();
+	if ((output_model & TT_LAYOUTCLRMODEL_CMYK) > 0) {
+		str += dbl1_to_char(this->C);
+		str += dbl1_to_char(this->M);
+		str += dbl1_to_char(this->Y);
+		str += dbl1_to_char(this->K);
+	} else if ((output_model & TT_LAYOUTCLRMODEL_GRAY) > 0) {
+		str += dbl1_to_char(this->W);
+	} else {
+		str += dbl1_to_char(this->R);
+		str += dbl1_to_char(this->G);
+		str += dbl1_to_char(this->B);
+	}
+}
+
+
 std::string thlayout_color::print_to_str(int output_model) {
 	this->fill_missing_color_models();
 	if ((output_model & TT_LAYOUTCLRMODEL_CMYK) > 0)
