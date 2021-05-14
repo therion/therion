@@ -419,7 +419,7 @@ void MP_data::add(int i) {
 
 void MP_data::add(int i, std::string s, color col) {
   MP_index ind;
-  MP_setting sett;
+  MP_setting sett{};
   ind.vector = I_setting;
   ind.idx = settings.size();
   float fl;

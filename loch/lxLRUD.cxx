@@ -166,7 +166,7 @@ void lxLRUD::Calculate()
   std::list<lxLRUDShot>::iterator shi;
   lxVec shotDir, uDir, rDir;
 
-  double pX[8], pY[8];
+  double pX[8] = {}, pY[8] = {};
   int prevProfile, i;
   prevProfile = -1;
   double ca, ci;

@@ -3632,7 +3632,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   auto af = thopen_file("data.1","r");
   if (!af)
     ththrow("can't open file data.1");
-  double n[6];
+  double n[6] = {};
   com.guarantee(256);
   std::unique_ptr<thline> cln;
   char * buff = com.get_buffer();
