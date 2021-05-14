@@ -50,7 +50,7 @@ class thscraplp {
   
   thscraplp(); ///< Default constructor
   
-  double stx, sty, stz, lnx1, lnx2, lny1, lny2, lnz1, lnz2;
+  double stx = 0.0, sty = 0.0, stz = 0.0, lnx1 = 0.0, lnx2 = 0.0, lny1 = 0.0, lny2 = 0.0, lnz1 = 0.0, lnz2 = 0.0;
   bool lnio;
   int type;
 

@@ -33,6 +33,7 @@ therion:
    - fixed arrows flipping [#245]
    - colour preview-above doesn't work [#90]
    - KML export fix [#84]
+   - p_smartlabel fails with a picture argument
    - other minor fixes
  * included {fmt} library
  * updated shapelib

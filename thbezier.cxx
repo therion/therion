@@ -561,8 +561,8 @@ sp_bezier_fit_cubic_full(NR_Point bezier[], int split_points[],
     }
 
     /*  Parameterize points, and attempt to fit curve */
-    unsigned splitPoint;   /* Point to split point set at. */
-    bool is_corner;
+    unsigned splitPoint = 0;   /* Point to split point set at. */
+    bool is_corner = false;
     {
         double *u = g_new(double, len);
         chord_length_parameterize(data, u, len);

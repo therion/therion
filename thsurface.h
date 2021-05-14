@@ -72,12 +72,12 @@ class thsurface : public thdataobject {
   const char * pict_name;
   bool pict_stations;
   thobjectname s1, s2;
-  class thsurvey * ssurvey;
+  class thsurvey * ssurvey = nullptr;
   double pict_X1, pict_Y1, pict_X2, pict_Y2,
     pict_x1, pict_y1, pict_x2, pict_y2,
     grid_ox, grid_oy, grid_dx, grid_dy,
     calib_x, calib_y, calib_s, calib_r, calib_xx, calib_yy, calib_xy, calib_yx,
-    pict_dpi, pict_height, pict_width;
+    pict_dpi = 0.0, pict_height = 0.0, pict_width = 0.0;
   long grid_nx, grid_ny, grid_counter, grid_size;
   int grid_flip, pict_type;
   thtflength grid_units;

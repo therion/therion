@@ -141,8 +141,8 @@ class thexpmapmpxs {
   class thdb2dprj * proj;
   double ms, mx, my, sr, cr, rr; ///< Scale and centering.
 
-  thsymbolset * symset;
-  thlayout * layout;
+  thsymbolset * symset = nullptr;
+  thlayout * layout = nullptr;
   const char * attr_last_id, * attr_last_survey, * attr_last_scrap;
   bool attr_last_scrap_centerline;
 

@@ -22,7 +22,7 @@ class lxOptionsDlg : public wxDialog {
 
 public:
 
-  long tmp;
+  long tmp = 0;
   lxFrame * m_lxframe;
 
   lxOptionsDlg(wxWindow * parent);

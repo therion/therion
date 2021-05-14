@@ -54,9 +54,9 @@ struct color{
 struct CGS {  // current graphics state
   color col;
   int linejoin, linecap;
-  float miterlimit, linewidth;
+  float miterlimit = 0.0, linewidth = 0.0;
   std::list<float> dasharray;
-  float dashoffset;
+  float dashoffset = 0.0;
   std::string pattern, gradient;
   
   std::map<int,int> clippathdepth;
@@ -147,7 +147,7 @@ struct MP_data {
   std::vector<MP_setting> settings;
   std::vector<MP_transform> transforms;
   
-  int idx;
+  int idx = 0;
   
   CGS gstate;
   
@@ -161,7 +161,7 @@ struct MP_data {
   void get();
   void pop();
   
-  MP_data();
+  MP_data() = default;
   void clear();
   
   void print_svg(std::ofstream & F, std::string prefix);
@@ -173,8 +173,8 @@ struct converted_data {
   std::set<std::string> fonts, patterns, gradients;
   bool transparency = false;
 //  double hsize, vsize;
-  double llx, lly, urx, ury;
-  int mode;     // conversion mode
+  double llx = 0.0, lly = 0.0, urx = 0.0, ury = 0.0;
+  int mode = 0; // conversion mode
                 //    0 patterns
                 //   10 F (see thpdfdata.h, scraprecord)
                 //   11 G
@@ -187,7 +187,7 @@ struct converted_data {
                 //   32 altitude bar (using a transparency group)
                 //   101-109 grid
   void clear();
-  converted_data();
+  converted_data() = default;
   void print_svg(std::ofstream & F, std::string prefix="");
   void print_pdf(std::ofstream & F, std::string);
 };

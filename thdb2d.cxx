@@ -87,7 +87,7 @@ class thprjx_scrap {
   
   thprjx_link * via_link;
   
-  double viacpx, viacpy, viacpz;
+  double viacpx = 0.0, viacpy = 0.0, viacpz = 0.0;
   
   thprjx_link * first_link, * last_link;
   
@@ -3644,7 +3644,7 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   auto af = thopen_file("data.1","r");
   if (!af)
     ththrow("can't open file data.1");
-  double n[6];
+  double n[6] = {};
   com.guarantee(256);
   std::unique_ptr<thline> cln;
   char * buff = com.get_buffer();

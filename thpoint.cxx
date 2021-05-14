@@ -515,6 +515,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         }
         if (out->symset->is_assigned(macroid))
           out->symset->export_mp_symbol_options(out->file, omacroid);
+        else
+          out->symset->export_mp_symbol_options(out->file, -1);
         fprintf(out->file,"p_station(");
         this->point->export_mp(out);
         fprintf(out->file,",%d,%s,\"\"",

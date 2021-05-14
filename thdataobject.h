@@ -254,12 +254,12 @@ class thdataobject {
   unsigned long id;  ///< Object identifier.
   
   bool selected,  ///< Whether object is selected.
-    tmp_bool;  ///< Temporary variable for some algorithms
+    tmp_bool = false;  ///< Temporary variable for some algorithms
 
   thlayout_color selected_color; ///< Selection color.
     
   unsigned long selected_number,  ///< Number of selection.
-    tmp_ulong;  ///< Temporary variable for some algorithms
+    tmp_ulong = 0;  ///< Temporary variable for some algorithms
   
   thdataobject * nsptr,  ///< Next object in survey.
     * psptr;  ///< Previous object in survey.

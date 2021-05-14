@@ -226,10 +226,6 @@ std::string PL(std::string s) {
   return  t + "\n";
 }
 
-MP_data::MP_data () {
-  idx = 0;
-}
-
 void MP_text::clear() {
   x = y = 0;
   xx = yy = 1;
@@ -441,7 +437,7 @@ void MP_data::add(int i) {
 
 void MP_data::add(int i, std::string s, color col) {
   MP_index ind;
-  MP_setting sett;
+  MP_setting sett{};
   ind.vector = I_setting;
   ind.idx = settings.size();
   float fl;
@@ -778,7 +774,7 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
 }
 
 void converted_data::print_pdf(std::ofstream & F, std::string name) {
-  if (MP.index.empty()) return;
+//  if (MP.index.empty()) return;  // can't skip the empty XObject definition, as it might be referenced somewhere
   conv_mode = mode;
 
   double HS = urx - llx;
@@ -847,10 +843,6 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) {
 void converted_data::clear() {
   MP.clear();
   fonts.clear();
-}
-
-converted_data::converted_data() {
-  clear();
 }
 
 

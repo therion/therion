@@ -231,7 +231,7 @@ struct thlinzoomtrans {
   int m_flc, m_frc, m_tlc, m_trc;
 
   thline2 m_line_from, m_line_to, m_line;
-  double m_orient_from, m_orient_to, m_line_l;
+  double m_orient_from = 0.0, m_orient_to = 0.0, m_line_l = 0.0;
 
   thlinzoomtrans();
 

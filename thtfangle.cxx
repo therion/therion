@@ -32,12 +32,7 @@
 #include "thinfnan.h"
 #include <math.h>
 
-thtfangle::thtfangle() {
-
-  this->units = TT_TFU_DEG;
-  this->allow_percentage = false;
-
-}
+thtfangle::thtfangle() : thtf(TT_TFU_DEG) {}
 
 bool mils_warning(true);
 

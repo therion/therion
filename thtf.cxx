@@ -31,8 +31,6 @@
 #include <stdio.h>
 
 
-thtf::~thtf() {}
-
 void thtf::parse_scale(char * sstr)
 {
   int sv;

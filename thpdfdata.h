@@ -109,24 +109,24 @@ struct layout {
   bool  excl_pages,title_pages,page_numbering,
         transparency,map_grid,OCG,map_header_bg,colored_text,transparent_map_bg; 
   double hsize,vsize,overlap,
-        hgridsize, vgridsize,
-        hgridorigin, vgridorigin, gridrot,
-        nav_factor, XS,YS,XO,YO;
+        hgridsize = 0.0, vgridsize = 0.0,
+        hgridorigin, vgridorigin, gridrot = 0.0,
+        nav_factor, XS = 0.0, YS = 0.0, XO = 0.0, YO = 0.0;
   int nav_right,nav_up,own_pages,lang,legend_columns;
   int alpha_step;   // alpha increment in percent
   shading_mode smooth_shading;
-  double hoffset, voffset, opacity, legend_width;
+  double hoffset, voffset, opacity = 0.0, legend_width;
   color col_background, col_foreground, col_preview_below, col_preview_above;
-  colormodel output_colormodel;
+  colormodel output_colormodel = {};
   
-  int surface, grid, proj, grid_coord_freq; // freq 0 no, 1 border, 2 all
+  int surface, grid = 0, proj = 0, grid_coord_freq; // freq 0 no, 1 border, 2 all
   std::string gridAA, gridAB, gridAC, 
          gridBA, gridBB, gridBC, 
          gridCA, gridCB, gridCC;
   paired gridcell[9];
   double surface_opacity;
   paired calibration_local[9], calibration_latlong[9];
-  double calibration_hdist;
+  double calibration_hdist = 0.0;
   
   layout();
 };

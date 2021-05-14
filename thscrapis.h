@@ -159,7 +159,7 @@ struct thscrapis {
 
   class thscrap * m_scrap;
 
-  thscrapisolpt * firstolseg, * lastolseg, * lastolcseg;
+  thscrapisolpt * firstolseg, * lastolseg, * lastolcseg = nullptr;
   
   std::list <thscrapisolpt> ol_list;  
   
