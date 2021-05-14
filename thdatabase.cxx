@@ -126,11 +126,6 @@ thdatabase::thdatabase()
   this->db2d.assigndb(this);
 }
 
-thdatabase::~thdatabase()
-{
-  this->clear(); 
-}
-
 void thdatabase::clear()
 {
 

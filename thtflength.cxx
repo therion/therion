@@ -29,9 +29,7 @@
 #include "thtflength.h"
 #include "thexception.h"
 
-thtflength::thtflength() {
-  this->units = TT_TFU_M;
-}
+thtflength::thtflength() : thtf(TT_TFU_M) {}
 
 
 void thtflength::parse_units(char * ustr) {

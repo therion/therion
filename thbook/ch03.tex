@@ -279,6 +279,7 @@ available translations, see |thlang/texts.txt| file.
     language <xx[_YY]>
     colo[u]r-model <cmyk/rgb/grayscale>
     colo[u]r <item> <colour>
+    smooth-shading <off/quick>
     debug <on/all/first/second/scrap-names/station-names/off>
     doc-author <string>
     doc-keywords <string>
@@ -543,6 +544,11 @@ endlayout|
     For |labels|, you can switch colour |on/off|. If |on|, labels are coloured
     using the colour of associated scrap.
 
+  * \NEW{5.6}|smooth-shading <off/quick>| =
+    set the mode of smooth scrap backgroud shading. By default, altidute and depth
+    colour is interpolated across the scrap the |quick| way. Some issues are present if
+    transparent symbol colours are used. More precise modes should be added in the future.
+    If |off|, scrap is filled with single colour.    
   * |debug <on/all/first/second/scrap-names/station-names/off>| =
     draw scrap in different stages
     of transformation in different colours to see how Therion distorts

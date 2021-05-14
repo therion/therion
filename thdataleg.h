@@ -543,7 +543,7 @@ class thdatamark {
 	
 	thobjectname station;
 
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = nullptr;  ///< parent survey
 
   thobjectsrc srcf;  ///< Source file.
 	
@@ -560,11 +560,11 @@ class thdataextend {
 	
 	thobjectname to, from, before;
 
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = nullptr;  ///< parent survey
 
   thobjectsrc srcf;  ///< Source file.
 	
-	int extend;
+	int extend = 0;
 	
 	double extend_ratio;
 
@@ -580,7 +580,7 @@ class thstdims {
   
 	thobjectname station;
 
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = nullptr;  ///< parent survey
 
   thobjectsrc srcf;  ///< Source file.
   

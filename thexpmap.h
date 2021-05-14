@@ -141,8 +141,8 @@ class thexpmapmpxs {
   class thdb2dprj * proj;
   double ms, mx, my, sr, cr, rr; ///< Scale and centering.
 
-  thsymbolset * symset;
-  thlayout * layout;
+  thsymbolset * symset = nullptr;
+  thlayout * layout = nullptr;
   const char * attr_last_id, * attr_last_survey, * attr_last_scrap;
   bool attr_last_scrap_centerline;
 
@@ -212,6 +212,7 @@ class thexpmap : public thexport {
 
   void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj * prj);
+  void export_scrap_backgroud_mesh(class thscrap * cs, class thexpmapmpxs * out, struct scraprecord * r);
 
   void export_uni(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_uni_scrap(FILE * out, class thscrap * scrap);  

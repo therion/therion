@@ -39,12 +39,12 @@ struct lxSetup {
   lxVec cam_center, cam_pos,
     cam_orig_center, cam_orig_pos;
   int cam_anaglyph_glasses, m_colormd;
-  double cam_dist, cam_dir, cam_tilt, cam_width,
-    cam_orig_dist, cam_orig_dir, cam_orig_tilt, cam_lens, cam_lens_vfov, cam_lens_vfovr, cam_anaglyph_eyesep,
+  double cam_dist = 0.0, cam_dir, cam_tilt, cam_width = 0.0,
+    cam_orig_dist = 0.0, cam_orig_dir = 0.0, cam_orig_tilt = 0.0, cam_lens, cam_lens_vfov, cam_lens_vfovr, cam_anaglyph_eyesep,
     data_limits_diam;
   bool cam_persp, cam_anaglyph, cam_anaglyph_bw, cam_anaglyph_left;
 
-  bool m_vis_centerline, m_vis_walls, m_vis_surface, 
+  bool m_vis_centerline = false, m_vis_walls, m_vis_surface, 
        m_vis_labels, m_vis_bbox, m_vis_grid, m_vis_indicators,
        m_vis_centerline_cave, m_vis_centerline_surface, m_vis_centerline_splay,
        m_vis_centerline_station, m_vis_centerline_entrance, m_vis_centerline_fix, m_vis_centerline_duplicate,

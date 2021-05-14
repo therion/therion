@@ -453,7 +453,9 @@ There are four predefined pens {\it PenA} (thickest) \dots\ {\it PenD}
 For drawing and filling use |thdraw| and |thfill| commands instead of \MP's
 |draw| and |fill|.
 
-\NEW{5.4}The following variables are also available:
+\NEW{5.4}The following variables are also available:\[If names clash with Therion
+commands (like |color|), you can add an exclamation mark `|!|' to prevent Therion parsing
+the line: |! color myNewColorDef;|]
 
 \list
 * boolean |ATTR__shotflag_splay|, |ATTR__shotflag_duplicate|,\hfil\break

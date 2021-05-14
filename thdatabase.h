@@ -205,13 +205,6 @@ class thdatabase {
   
   
   /**
-   * Standard destructor.
-   */
-   
-  ~thdatabase();
-  
-  
-  /**
    * Clear the contents of the database.
    */
    

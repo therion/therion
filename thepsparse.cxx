@@ -64,7 +64,7 @@ extern unsigned font_id, patt_id;
 static int conv_mode;
 
 const int prec_col = 5;
-//const int prec_matr = 6;
+const int prec_matr = 6;
 const int prec_mp = 5;
 const int prec_xy = 2;
 
@@ -224,10 +224,6 @@ std::string PL(std::string s) {
   t += s;
   if (conv_mode > 0) t += "}%";
   return  t + "\n";
-}
-
-MP_data::MP_data () {
-  idx = 0;
 }
 
 void MP_text::clear() {
@@ -427,7 +423,9 @@ void MP_path::print_pdf(std::ofstream & F) {
 
   if (fillstroke == MP_fill) F << PL("f*");
   else if (fillstroke == MP_stroke) F << PL("S");
-  else if (fillstroke == MP_clip) F << PL("W* n");;
+  else if (fillstroke == MP_fillstroke) F << PL("B*");
+  else if (fillstroke == MP_clip) F << PL("W* n");
+  else therror(("invalid path drawing operation"));
 }
 
 void MP_data::add(int i) {
@@ -439,7 +437,7 @@ void MP_data::add(int i) {
 
 void MP_data::add(int i, std::string s, color col) {
   MP_index ind;
-  MP_setting sett;
+  MP_setting sett{};
   ind.vector = I_setting;
   ind.idx = settings.size();
   float fl;
@@ -476,6 +474,9 @@ void MP_data::add(int i, std::string s, color col) {
   }
   else if (i == MP_gradient) {
     sett.pattern = s;
+  }
+  else if (i == MP_transp_on) {
+    sett.alpha = std::min(std::stod(s),1.0);  // alpha clipped to 1.0 max; negative values have a special meaning (bg transparency)
   }
   else {
     sett.data = std::stod(s);
@@ -551,6 +552,8 @@ void MP_setting::print_svg (std::ofstream & F, CGS & gstate) {
       gstate.dasharray = dasharray;
       gstate.dashoffset = dashoffset;
       break;
+    case MP_transp_on:
+      break;
   }
 }
 
@@ -580,11 +583,24 @@ void MP_setting::print_pdf (std::ofstream & F) {
       F << PL(fmt::format("{} w", thdouble(data,prec_mp)));
       break;
     case MP_dash:
+      {
       std::string t;
       t = "[";
       for (double d: dasharray) t += fmt::format("{} ", thdouble(d,prec_mp));
       t+= fmt::format("] {} d", thdouble(dashoffset,prec_mp));
       F << PL(t);
+      }
+      break;
+    case MP_transp_on:
+      if (alpha < 0) {
+        if (LAYOUT.smooth_shading == shading_mode::quick) {
+          if (alpha < -1.5) F << PL("/GS1 gs"); // -2: use the opacity from the layout, intended for s_altitudebar
+          else F << PL("/GSa0 gs");             // -1: use zero alpha to "cut" the transparent areas from the scrap to show the shaded background
+        } else
+          F << PL("/GS1 gs");                   // use the opacity from the layout inside the knockout group
+      } else {
+        F << PL(fmt::format("/GSa{:.0f} gs", LAYOUT.alpha_step*round(100*alpha/LAYOUT.alpha_step)));
+      }
       break;
   }
 }
@@ -634,9 +650,9 @@ void MP_data::print_svg (std::ofstream & F, std::string unique_prefix) {
             GSTATE_stack.pop_back();
             F << "</g>" << std::endl;
             break;
-          case MP_transp_on:
-            
-            break;
+//          case MP_transp_on:
+//            
+//            break;
           case MP_transp_off:
             
             break;
@@ -669,9 +685,9 @@ void MP_data::print_pdf (std::ofstream & F) {
           case MP_grestore:
             F << PL("Q");
             break;
-          case MP_transp_on:
-            F << PL("/GS1 gs");
-            break;
+//          case MP_transp_on:
+//            F << PL("/GS1 gs");
+//            break;
           case MP_transp_off:
             F << PL("/GS0 gs");
             break;
@@ -758,7 +774,7 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
 }
 
 void converted_data::print_pdf(std::ofstream & F, std::string name) {
-  if (MP.index.empty()) return;
+//  if (MP.index.empty()) return;  // can't skip the empty XObject definition, as it might be referenced somewhere
   conv_mode = mode;
 
   double HS = urx - llx;
@@ -829,10 +845,6 @@ void converted_data::clear() {
   fonts.clear();
 }
 
-converted_data::converted_data() {
-  clear();
-}
-
 
 std::string process_eps_string(std::string s, std::string font) {
   std::string r,t;
@@ -891,6 +903,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
   bool comment = true, concat = false, 
        already_transp = false, transp_used = false, before_group_transp = false, cancel_transp = true;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;
+  std::string prev_alpha;
   std::deque<std::string> thbuffer;
   std::set<std::string> FORM_FONTS, FORM_PATTERNS, FORM_GRADIENTS;
   bool inpath = false, gsaveinpath = false;
@@ -1128,11 +1141,12 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
         patt_id++;
         thbuffer.clear();
       }
-      else if (tok == "THsettransparency") {
+      else if (tok == "THsetalpha") {
         transp_used = true;
-        if (!already_transp) {
-          data.MP.add(MP_transp_on);
+        if (!already_transp || prev_alpha != thbuffer[0]) {
+          data.MP.add(MP_transp_on, thbuffer[0]);
           already_transp = true;
+          prev_alpha = thbuffer[0];
         }
         cancel_transp = false;
         thbuffer.clear();
@@ -1416,6 +1430,41 @@ void thgraphics2pdf() {
     I.Ic.print_pdf(TEX, "I"+I.name);
     I.Ec.print_pdf(TEX, "E"+I.name);
     I.Xc.print_pdf(TEX, "X"+I.name);
+
+    // make a special XObject form containing the colored background;
+    // this is necessary for gouraud shading definitions which need
+    // to be in the same coordinate system as the background outline of the scrap;
+    // the following doesn't work (with the exception of Okular):
+    //   q
+    //   1 0 0 1 <dx> <dy> cm
+    //   /Pattern cs /P1 scn
+    //   /Fm1 Do
+    //   Q
+    if (I.I != "") {
+      std::string s, res;
+      if (!I.col_scrap.is_defined()) {
+        s = LAYOUT.col_foreground.to_pdfliteral(fillstroke::fill);
+      } else {
+        if (LAYOUT.smooth_shading == shading_mode::off || I.gour_stream == "") {
+          s = I.col_scrap.to_pdfliteral(fillstroke::fill);
+        } else {
+          s = "/Pattern cs /" + tex_Gname(I.name) + " scn";
+          res = " /Pattern << /" + tex_Gname(I.name) + " " + tex_get_ref(tex_Gname(I.name)) + "\\space 0 R >> ";
+        }
+      }
+      TEX << "\\setbox\\xxx=\\hbox to" << fmt::format("{:.2f}",I.Ic.urx-I.Ic.llx) << "bp{%\n";
+      TEX << "\\PL{" << s <<  "}%\n";
+      TEX << "\\pdfrefxform" << tex_get_ref(tex_Xname("I" + I.name)) + "%\n";
+      TEX << "}\\ht\\xxx="  << fmt::format("{:.2f}",I.Ic.ury-I.Ic.lly) << "bp\\dp\\xxx=0bp%\n";
+      TEX << "\\immediate\\pdfxform";
+      TEX << " resources { " + res;
+      if (icc_used()) {
+        TEX << "/ColorSpace <<";
+        TEX << icc2pdfresources();
+        TEX << ">> ";
+      }
+      TEX << "}\\xxx" + tex_set_ref(tex_Xname("I" + I.name + "COLORED"), "\\pdflastxform") + "%\n";
+    }
   }
 
   for(auto &I: LEGENDLIST) {
@@ -1505,6 +1554,23 @@ void thgraphics2pdf() {
       F << "/Extend [true true]\n";
       F << fmt::format("/Function << /FunctionType 2 /Domain [0 1] /C0 [{}] /C1 [{}] /N 1 >>\n", g.second.c0.to_elements(), g.second.c1.to_elements());
       F << ">> >>}" << tex_set_ref(tex_Pname(g.first), "\\pdflastobj") << "\n";
+  }
+  // gouraud shadings
+  for (auto &i: SCRAPLIST) {
+      if (LAYOUT.smooth_shading == shading_mode::off || i.gour_stream == "") continue;
+      std::ofstream F_g("th_gour_"+i.name+".dat", std::ios::out | std::ios::binary);
+      if(!F_g) therror((IOerr("th_gour_"+i.name)));
+      F_g << i.gour_stream;
+      F_g.close();
+      F << "\\immediate\\pdfobj stream attr {";
+      F << fmt::format("/ShadingType 5 /ColorSpace /Device{:s}\n", LAYOUT.output_colormodel == colormodel::grey ? "Gray" : (LAYOUT.output_colormodel == colormodel::cmyk ? "CMYK" : "RGB"));
+      F << fmt::format("/BitsPerCoordinate 8 /BitsPerComponent 8 /VerticesPerRow {:d} ", i.gour_n);
+      F << fmt::format("/Decode [{} {} {} {} {:s}]", thdouble(i.gour_xmin-i.I1+i.S1,prec_matr), thdouble(i.gour_xmax-i.I1+i.S1,prec_matr),
+                                                     thdouble(i.gour_ymin-i.I2+i.S2,prec_matr), thdouble(i.gour_ymax-i.I2+i.S2,prec_matr),
+                                                     LAYOUT.output_colormodel == colormodel::grey ? "0 1" : (LAYOUT.output_colormodel == colormodel::cmyk ? "0 1 0 1 0 1 0 1" : "0 1 0 1 0 1"));
+      F << "} file {th_gour_" << i.name << ".dat}\n";
+      F << "\\immediate\\pdfobj {<< /Type /Pattern /PatternType 2 /Shading \\the\\pdflastobj\\space 0 R >>}\n";
+      F << tex_set_ref(tex_Gname(i.name), "\\pdflastobj") << "\n";
   }
   F.close();
 

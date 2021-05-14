@@ -374,7 +374,7 @@ void distill_eps(std::string name, std::string fname, std::string cname, int mod
         print_str(pattcolor+" /"+patt+" scn",TEX);
         thstack.clear();
       }
-      else if (tok == "THsettransparency") {
+      else if (tok == "THsetalpha") {
         transp_used = true;
         if (!already_transp) {
           print_str("/GS1 gs",TEX);

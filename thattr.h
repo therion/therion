@@ -56,15 +56,15 @@ enum {
  
 struct thattr_attr {
   std::string m_val_string;  ///< String value.
-  unsigned long m_flags; ///< Value flags.
-  double m_val_double;  ///< Double value.
-  long m_val_long;  ///< Integer value.
-  int m_type;  ///< Attribute type.
-  thattr_attr() : m_flags(THATTRFLAG_NONE) {}
+  unsigned long m_flags = THATTRFLAG_NONE; ///< Value flags.
+  double m_val_double = 0.0;  ///< Double value.
+  long m_val_long = 0;  ///< Integer value.
+  int m_type = 0;  ///< Attribute type.
+  thattr_attr() = default;
   bool has_flag(unsigned long flag);
   void set_flag(unsigned long flag, bool value);
-  struct thattr_field * m_field;  ///< Attribute's field.
-  struct thattr_obj * m_obj;  ///< Attribute's object.
+  struct thattr_field * m_field = nullptr;  ///< Attribute's field.
+  struct thattr_obj * m_obj = nullptr;  ///< Attribute's object.
 };
 
 typedef std::map<size_t, thattr_attr> thattr_id2attr_map;
@@ -114,14 +114,14 @@ typedef std::list<thattr_field> thattr_field_list;
  
 struct thattr_obj {
   long m_user_id;  ///< User defined ID.
-  size_t m_id,  ///< Internal ID.
+  size_t m_id = 0,  ///< Internal ID.
     m_tree_level;  ///< Tree level of object, if table has tree structure.
   const char * m_tree_node_id;  ///< Tree node id.
   void * m_data;  ///< User defined data.
   thattr_id2attr_map m_attributes;  ///< Map of attributes.
   thattr_attr * m_last_attribute; ///< Last attribute set for given object.
 
-  struct thattr * m_parent;  ///< Parent attribute class.
+  struct thattr * m_parent = nullptr;  ///< Parent attribute class.
 
   thattr_obj() : m_user_id(-1), m_tree_level(0), m_tree_node_id(""), m_data(NULL), m_last_attribute(NULL) {}
 

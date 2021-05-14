@@ -171,6 +171,12 @@ class thlookup : public thdataobject {
    */
    
   int get_context() override;
+  
+  
+  /**
+   * Calculate interpolated value.
+   */
+  thlayout_color value2clr(double sval);
 
   /**
    * Set scrap color.

@@ -326,7 +326,11 @@ void thexptable::process_db(class thdatabase * dbp)
               this->m_table.insert_attribute("Survey", ths2txt(survey, layout->lang).c_str());
               this->m_table.insert_attribute("Station", st != NULL ? st->name : NULL);
               if (this->format == TT_EXPTABLE_FMT_KML) { 
-                this->add_coordinates(pt->point->xt + pt->fscrapptr->proj->rshift_x, pt->point->yt + pt->fscrapptr->proj->rshift_y, pt->point->at);
+            	  if (pt->fscrapptr->proj->type == TT_2DPROJ_PLAN)
+            		  this->add_coordinates(pt->point->xt + pt->fscrapptr->proj->rshift_x, pt->point->yt + pt->fscrapptr->proj->rshift_y, pt->point->at);
+            	  else 
+            		  if (st != NULL) 
+            			  this->add_coordinates(st->x, st->y, st->z);
               }
               if (this->expattr) this->m_table.copy_attributes(this->db->attr.get_object(pt->id));
             }

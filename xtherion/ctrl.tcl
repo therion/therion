@@ -72,7 +72,7 @@ proc xth_ctrl_add {aname cname title} {
   menu .xth_popup$xth(ctrl,all,number) -tearoff 0
   button $ccf.rb -text "$title" -command "xth_ctrl_minmax $aname $cname" \
     -font $xth(gui,lfont) -bg #aaaaaa \
-    -fg white -bg darkBlue -activebackground lightBlue \
+    -fg $xth(gui,ctrlBtnFg) -bg $xth(gui,ctrlBtnBg) -activebackground $xth(gui,ctrlBtnActiveBg) -activeforeground $xth(gui,ctrlBtnActiveFg) \
     -anchor w -relief flat \
     -takefocus 0
   bind $ccf.rb <Button-$xth(gui,rmb)> "tk_popup .xth_popup$xth(ctrl,all,number) %X %Y"
