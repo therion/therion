@@ -98,6 +98,9 @@ layout::layout() {
 
   colored_text = true;
   grid_coord_freq = 2;
+
+  alpha_step = 5;
+  smooth_shading = shading_mode::quick;
 }
 
 paired::paired() {

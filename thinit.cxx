@@ -87,7 +87,8 @@ thinit::thinit()
   this->fonts_ok = false;
   this->tex_env = false;
   this->lang = THLANG_UNKNOWN;
-	this->loopc = THINIT_LOOPC_UNKNOWN;
+  this->loopc = THINIT_LOOPC_UNKNOWN;
+  //this->opt_mpost = "-numbersystem=double";
 }
 
 

@@ -657,7 +657,7 @@ void thdate::print_str(int fmt) {
 
     case TT_DATE_FMT_LOCALE:
       {
-        struct tm s, e;
+        tm s{}, e{};
         date2tm(this->syear, this->smonth, this->sday, this->shour, this->smin, this->ssec, &s);
         date2tm(this->eyear, this->emonth, this->eday, this->ehour, this->emin, this->esec, &e);
         setlocale (LC_TIME,"");
@@ -756,13 +756,13 @@ void thdate::set_file_date(char * fname) {
 }
 
 time_t thdate::get_start_t_time() {
-  struct tm temp;
+  tm temp{};
   date2tm(this->syear, this->smonth, this->sday, this->shour, this->smin, this->ssec, &temp);
   return mktime(&temp);
 }
 
 time_t thdate::get_end_t_time() {
-  struct tm temp;
+  tm temp{};
   date2tm(this->eyear, this->emonth, this->eday, this->ehour, this->emin, this->esec, &temp);
   return mktime(&temp);
 }

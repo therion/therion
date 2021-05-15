@@ -1044,7 +1044,7 @@ void lxFile::InterpolateMissingLRUD()
   std::list<lxFileShot>::iterator shi;
   std::map<lxVec, lxFileSizeT>::iterator stmi;
   lxFileStation * st;
-  missingStation tst;
+  missingStation tst{};
   missingShot ts;
   lxVec fp, tp;
   for (shi = this->m_shots.begin(); shi != this->m_shots.end(); shi++) {

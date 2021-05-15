@@ -633,7 +633,7 @@ enddef;
 
 def thclean expr c =
   if transparency:
-    thfill c withcolor background withtransparency 0.5
+    thfill c withcolor background withalpha -1
   else:
     thunfill c
   fi;
@@ -866,13 +866,7 @@ string Pname_, PXYsteps_;
 string Pmatrix_;
 
 numeric Pnum_; Pnum_=0;
-numeric pattern_file_offset;
-pattern_file_offset = 4000;
-if known numbersystem:                  % known since v1.770
-  if numbersystem <> "scaled":
-    pattern_file_offset := scantokens("1000000");
-  fi
-fi
+string Psuffix_; Psuffix_="-patt";
 
 def PmakeBB_=
    PBBox_ := "[" & decimal Plft_ & " " & decimal Plow_ & " "
@@ -896,7 +890,7 @@ enddef;
 
 def PmakePattern_(expr name)=
   write Pname_ & ":"
-    & jobname & "." & decimal charcode & ":"
+    & jobname & Psuffix_ & "." & decimal charcode & ":"
     & PBBox_ & ":"
     & PXYsteps_ & ":"
     & Pmatrix_
@@ -930,7 +924,8 @@ def beginpattern(suffix name)=
   Pmatrix_:="[1 0 0 1 0 0]";
   Pname_:=str name;
   Pnum_:=Pnum_+1;
-  beginfig(Pnum_+pattern_file_offset);
+  outputtemplate := "%j"&Psuffix_&".%c";
+  beginfig(Pnum_);
 enddef;
 
 def endpattern=
@@ -941,6 +936,7 @@ def endpattern=
   Psteps_;
   PmakePattern_(Pname_);
   scantokens("string " & Pname_ & "; "&Pname_&"="&ditto&Pname_&ditto&";");
+  outputtemplate := "%j.%c";
 enddef;
 
 picture pattpict;
@@ -1019,8 +1015,8 @@ enddef;
 
 % transparent colors
 
-primarydef p withtransparency t =     % TODO: t currently ignored
-   p withprescript(" THsettransparency")
+primarydef p withalpha t =
+    p withprescript(decimal t & " THsetalpha")
 enddef;
 
 def withlinearshading (expr p, n, ca, cb) =

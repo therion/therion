@@ -346,15 +346,15 @@ public:
   bool m_started, m_continue, m_progress;
   lxGLCanvas * m_glc;
   lxRenderData * m_pData;
-  FILE * m_file, * m_fileTMP;
-  GLint m_imgWidth, m_imgHeight, m_tWidth, m_tHeight;
+  FILE * m_file, * m_fileTMP = nullptr;
+  GLint m_imgWidth = 0, m_imgHeight = 0, m_tWidth = 0, m_tHeight = 0;
   GLubyte * m_imgBuffRow;
   GLubyte * m_imgBuffLine;
-  int m_imgBuffLineSize;
-  int m_cTile;
+  int m_imgBuffLineSize = 0;
+  int m_cTile = 0;
   wxWindow * m_parent;
-  png_structp png_ptr;
-  png_infop png_info_ptr;
+  png_structp png_ptr = nullptr;
+  png_infop png_info_ptr = nullptr;
 
 
   void Render();

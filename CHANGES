@@ -6,11 +6,14 @@ therion:
  * support for colour management (see the color-profile layout option)
  * support for linear and radial shading (colour gradients) in MetaPost
    (withlinearshading and withradialshading options)
+ * support for smooth colour transitions of scrap backgrounds in PDF maps
+   if the map-fg is coloured by altitude
+ * added smooth-shading <off/quick> layout switch - quick is default
  * reimplemented internal processing of patterns and transparent colors in
    MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
    macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
    tr_white, tr_black were removed; use the drawing option
-   'withcolor <color> withtransparency <number>' instead)
+   'withcolor <color> withalpha <number>' instead)
  * reimplemented conversion of MetaPost output to PDF
  * support for double number system in MetaPost (this eliminates the current
    MetaPost limits; see the chapter Limitations in the Appendix of the Thbook)
@@ -21,6 +24,7 @@ therion:
    in MetaPost (inputrel)
  * updated Serbian translation
  * bugs fixed:
+   - symbol-hide,show,color not working for user defined symbols
    - ISO8859-2 literals in the source code caused clang warnings
    - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
    - fixed numerical instability in l_overhang_SKBB
@@ -29,10 +33,11 @@ therion:
    - fixed arrows flipping [#245]
    - colour preview-above doesn't work [#90]
    - KML export fix [#84]
+   - p_smartlabel fails with a picture argument
    - other minor fixes
  * included {fmt} library
  * updated shapelib
-
+ 
 loch:
  * Tools->Selection - only displays selected surveys
  * bugs fixed:

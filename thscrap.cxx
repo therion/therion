@@ -1499,6 +1499,15 @@ void thscrap::convert_all_cs() {
 }
 
 
+void thscrap::add_joined_scrap_stations(thscrap * js) {
+  thdb2dcp * cp = js->fcpp;
+  while(cp != NULL) {
+	if (cp->st != NULL)
+	  this->joined_scrap_stations.insert(cp);
+	cp = cp->nextcp;
+  }	
+}
+
 
 
 

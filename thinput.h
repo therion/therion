@@ -88,7 +88,7 @@ class thinput {
 #ifdef THMSVC
     struct _stat st;const char * thinput::get_cif_abspath()
 #else
-    struct stat st;
+    struct stat st{};
 #endif
       
     

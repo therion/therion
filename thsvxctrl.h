@@ -46,13 +46,13 @@ class thsvxctrl {
 
   thdataleg pdl;
 
-  double meridian_convergence, lastleggridmc;
-  int lastleggridmccs;
+  double meridian_convergence = 0.0, lastleggridmc = 0.0;
+  int lastleggridmccs = 0;
   
   unsigned long svxf_ln;
   thsvxctrl_src_maptype src_map;
   
-  FILE * svxf;
+  FILE * svxf = nullptr;
   
   void write_survey_leg(thdataleg * legp);
   

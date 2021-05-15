@@ -34,6 +34,13 @@
 #include <stdio.h>
 
 
+struct thsymbolset_usym {
+	bool m_assigned, m_used;
+	thlayout_color m_color;
+	thsymbolset_usym() : m_assigned(true), m_used(false) {}
+};
+
+
 /**
  * Symbol set class.
  */
@@ -43,6 +50,9 @@ struct thsymbolset {
   bool assigned[thsymbolset_size],        ///< definovane symboly
     used[thsymbolset_size];               ///< pouzite symboly
   thlayout_color color[thsymbolset_size];    ///< Symbol colors.
+  int color_model; ///< Output color model.
+  
+  std::map<int, thsymbolset_usym> usymbols; ///< user defined symbols
     
   bool group_symbols; ///< Ci zgrupuje podobne symboly alebo nie.
   
@@ -57,6 +67,11 @@ struct thsymbolset {
    * Return whether symbol is assigned.
    */
   bool is_assigned(int symbol);
+  
+  /**
+   * Return symbol color.
+   */
+  thlayout_color get_color(int symbol);
 
   /**
    * Do MP suboru zapise mapsymbol() makro.

@@ -126,6 +126,19 @@ thmat2 operator * (const thmat2 & m, const double & c);    // M * c
 thmat2 operator / (const thmat2 & m, const double & c);    // M / c
 
 
+/**
+ * 2D bouding box.
+ */
+
+struct thbbox2 {
+	bool m_valid;
+	thvec2 m_min, m_max;
+	thbbox2() : m_valid(false) {}
+	bool is_valid();
+	void update(thvec2 pt);
+};
+
+
 /** 
  * 3x3 matrix
  */
@@ -218,7 +231,7 @@ struct thlinzoomtrans {
   int m_flc, m_frc, m_tlc, m_trc;
 
   thline2 m_line_from, m_line_to, m_line;
-  double m_orient_from, m_orient_to, m_line_l;
+  double m_orient_from = 0.0, m_orient_to = 0.0, m_line_l = 0.0;
 
   thlinzoomtrans();
 
@@ -263,13 +276,15 @@ struct thmorph2trans {
   thmorph2trans& operator=(const thmorph2trans&) = delete; 
   thmorph2trans& operator=(thmorph2trans&&) = delete; 
   void reset();
-  void insert_point(thvec2 src, thvec2 dst, long id);
+  void insert_point(thvec2 src, thvec2 dst, long id, double value = thnan);
+  void insert_extra_point(thvec2 src, thvec2 dst, long id, double value = thnan);
   void insert_line(long from, long to);
   void insert_lines_from_db();
   void insert_zoom_point(thvec2 src, double dst, long id);
   void init(double eps = 0.01);
   thvec2 forward(thvec2 src);
   thvec2 backward(thvec2 dst, thvec2 ini = thvec2(0,0));
+  double interpolate(thvec2 src);
 
 };
 
