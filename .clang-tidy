@@ -9,4 +9,6 @@ CheckOptions:
     value:           '1'
   - key:             modernize-use-nullptr.NullMacros
     value:           'NULL'
+  - key:             misc-definitions-in-headers.HeaderFileExtensions
+    value:           "h"
 ...

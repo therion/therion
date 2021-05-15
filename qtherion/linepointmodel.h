@@ -36,8 +36,8 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex &index, const QVariant &value, int role);
-    QHash<int, QByteArray> roleNames() const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    QHash<int, QByteArray> roleNames() const override;
     void fromJson(QJsonArray array);
 
     QString svgPath() const;
