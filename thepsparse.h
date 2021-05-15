@@ -43,12 +43,12 @@ struct color{
   void set(double);
   void set(double,double,double);
   void set(double,double,double,double);
-  bool is_white();
-  bool is_defined();
-  std::string to_svg();
-  std::string to_pdfliteral(fillstroke = fillstroke::fillstroke);
-  std::string to_pdfpatterncolor();
-  std::string to_elements();
+  bool is_white() const;
+  bool is_defined() const;
+  std::string to_svg() const;
+  std::string to_pdfliteral(fillstroke = fillstroke::fillstroke) const;
+  std::string to_pdfpatterncolor() const;
+  std::string to_elements() const;
 };
 
 struct CGS {  // current graphics state
@@ -95,7 +95,7 @@ struct MP_path {
   void add(int, std::string, std::string, double, double);
 
   void print_svg(std::ofstream & F, CGS & gstate, std::string prefix);
-  void print_pdf(std::ofstream & F);
+  void print_pdf(std::ofstream & F) const;
 };
 
 struct MP_index {
@@ -111,7 +111,7 @@ struct MP_text {
   MP_text();
   void clear();
   void print_svg(std::ofstream & F, CGS & gstate);
-  void print_pdf(std::ofstream & F);
+  void print_pdf(std::ofstream & F) const;
 };
 
 struct MP_setting {
@@ -123,7 +123,7 @@ struct MP_setting {
   std::string pattern;
   
   void print_svg(std::ofstream & F, CGS & gstate);
-  void print_pdf(std::ofstream & F);
+  void print_pdf(std::ofstream & F) const;
 };
 
 enum {MP_lineto, MP_moveto, MP_curveto, MP_rlineto};
@@ -153,9 +153,9 @@ struct MP_data {
   
   std::list<CGS> GSTATE_stack;
   
-  void add(MP_path);
-  void add(MP_text);
-  void add(MP_transform);
+  void add(const MP_path&);
+  void add(const MP_text&);
+  void add(const MP_transform&);
   void add(int);
   void add(int,std::string,color=color());
   void get();
@@ -165,7 +165,7 @@ struct MP_data {
   void clear();
   
   void print_svg(std::ofstream & F, std::string prefix);
-  void print_pdf(std::ofstream & F);
+  void print_pdf(std::ofstream & F) const;
 };
 
 struct converted_data {
@@ -189,7 +189,7 @@ struct converted_data {
   void clear();
   converted_data() = default;
   void print_svg(std::ofstream & F, std::string prefix="");
-  void print_pdf(std::ofstream & F, std::string);
+  void print_pdf(std::ofstream & F, std::string) const;
 };
 
 struct pattern {
