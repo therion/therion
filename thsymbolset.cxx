@@ -569,17 +569,17 @@ void thsymbolset::export_symbol_hide(FILE * mpf, int sym_id)
   // U defined groups
   switch (sym_id) {
   case SYMP_U:
-	  for(auto it : thdb.db2d.m_udef_map)
+	  for(const auto& it : thdb.db2d.m_udef_map)
 		  if (it.first.m_command == TT_POINT_CMD)
 			  this->export_symbol_hide(mpf, it.second->m_symid);
 	  break;
   case SYML_U:
-	  for(auto it : thdb.db2d.m_udef_map)
+	  for(const auto& it : thdb.db2d.m_udef_map)
 		  if (it.first.m_command == TT_LINE_CMD)
 			  this->export_symbol_hide(mpf, it.second->m_symid);
 	  break;
   case SYMA_U:
-	  for(auto it : thdb.db2d.m_udef_map)
+	  for(const auto& it : thdb.db2d.m_udef_map)
 		  if (it.first.m_command == TT_AREA_CMD)
 			  this->export_symbol_hide(mpf, it.second->m_symid);
 	  break;
@@ -598,17 +598,17 @@ void thsymbolset::export_symbol_show(FILE * mpf, int sym_id)
   // U defined groups
   switch (sym_id) {
   case SYMP_U:
-	  for(auto it : thdb.db2d.m_udef_map)
+	  for(const auto& it : thdb.db2d.m_udef_map)
 		  if (it.first.m_command == TT_POINT_CMD)
 			  this->export_symbol_show(mpf, it.second->m_symid);
 	  break;
   case SYML_U:
-	  for(auto it : thdb.db2d.m_udef_map)
+	  for(const auto& it : thdb.db2d.m_udef_map)
 		  if (it.first.m_command == TT_LINE_CMD)
 			  this->export_symbol_show(mpf, it.second->m_symid);
 	  break;
   case SYMA_U:
-	  for(auto it : thdb.db2d.m_udef_map)
+	  for(const auto& it : thdb.db2d.m_udef_map)
 		  if (it.first.m_command == TT_AREA_CMD)
 			  this->export_symbol_show(mpf, it.second->m_symid);
 	  break;
@@ -631,17 +631,17 @@ void thsymbolset::export_symbol_color(FILE * mpf, int sym_id, thlayout_color * c
   // U defined groups
   switch (sym_id) {
   case SYMP_U:
-	  for(auto it : thdb.db2d.m_udef_map)
+	  for(const auto& it : thdb.db2d.m_udef_map)
 		  if (it.first.m_command == TT_POINT_CMD)
 			  this->export_symbol_color(mpf, it.second->m_symid, clr);
 	  break;
   case SYML_U:
-	  for(auto it : thdb.db2d.m_udef_map)
+	  for(const auto& it : thdb.db2d.m_udef_map)
 		  if (it.first.m_command == TT_LINE_CMD)
 			  this->export_symbol_color(mpf, it.second->m_symid, clr);
 	  break;
   case SYMA_U:
-	  for(auto it : thdb.db2d.m_udef_map)
+	  for(const auto& it : thdb.db2d.m_udef_map)
 		  if (it.first.m_command == TT_AREA_CMD)
 			  this->export_symbol_color(mpf, it.second->m_symid, clr);
 	  break;
@@ -658,7 +658,7 @@ void thsymbolset::export_symbol_color_group(FILE * mpf, int sym_id, thlayout_col
   }
   // U defined symbols
   if (sym_id == SYMX_ALL) {
-	  for(auto it : thdb.db2d.m_symid2udef_map)
+	  for(const auto& it : thdb.db2d.m_symid2udef_map)
 		  this->export_symbol_color(mpf, it.first, clr);
   }
 }
@@ -684,7 +684,7 @@ void thsymbolset::export_symbol_hide_group(FILE * mpf, int sym_id)
   }
   // U defined symbols
   if (sym_id == SYMX_ALL) {
-	  for(auto it : thdb.db2d.m_symid2udef_map)
+	  for(const auto& it : thdb.db2d.m_symid2udef_map)
 		  this->export_symbol_hide(mpf, it.first);
   }
 }
@@ -700,7 +700,7 @@ void thsymbolset::export_symbol_show_group(FILE * mpf, int sym_id)
   }
   // U defined symbols
   if (sym_id == SYMX_ALL) {
-	  for(auto it : thdb.db2d.m_symid2udef_map)
+	  for(const auto& it : thdb.db2d.m_symid2udef_map)
 		  this->export_symbol_show(mpf, it.first);
   }
 }

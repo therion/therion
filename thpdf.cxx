@@ -85,11 +85,11 @@ std::map<std::string,std::set<std::string> > preview;
 std::map<std::string,std::list<sheetrecord>::iterator> SHEET_JMP;
 
 
-bool operator < (sheetrecord a, sheetrecord b) {
+bool operator < (const sheetrecord& a, const sheetrecord& b) {
   return a.id < b.id;
 }
 
-bool operator == (sheetrecord a, sheetrecord b) {
+bool operator == (const sheetrecord& a, const sheetrecord& b) {
   return a.id == b.id;
 }
 
