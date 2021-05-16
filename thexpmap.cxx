@@ -1777,6 +1777,17 @@ else
     		  fprintf(mpf,"%g,",(ti.m_valueDbl - sv_min)/(sv_max - sv_min));
     		  ti.m_color.print_to_file(this->layout->color_model, mpf);
     	  }
+    	  sv_next = false;
+		  fprintf(mpf,")(");
+    	  if (!this->layout->m_lookup->m_autoIntervals) {
+        	  for(auto& ti : this->layout->m_lookup->m_table) {
+        		  if (sv_next) fprintf(mpf, ",");
+        		  sv_next = true;
+        		  fprintf(mpf,"%g,\"%s\"",(ti.m_valueDbl - sv_min)/(sv_max - sv_min), ti.m_labelTeX.c_str());        		  
+        	  }
+    	  } else {
+    		  fprintf(mpf,"\"\"");
+    	  }
     	  fprintf(mpf,");\nendfig;\n");
     	  break;
     }

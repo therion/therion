@@ -101,7 +101,7 @@ def s_vgrid_SM (expr xpos, ypos, xsize, ysize) =
   ) dashed evenly;
 enddef;
 
-def s_altitudebar_SKBB (expr zmin, zmax, units)(text t) =
+def s_altitudebar_SKBB (expr zmin, zmax, units)(text t)(text labels) =
   begingroup;
     j := 0;
     string s;
