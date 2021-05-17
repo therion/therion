@@ -121,37 +121,54 @@ def s_altitudebar_SKBB (expr zmin, zmax, units)(text t)(text labels) =
       fi;
       j := j+1;
     endfor;
-    % labeling; breakpoints for the (zmax-zmin) difference: 1*10^n, 2*10^n, 5*10^n
-    d := zmax - zmin;
-    dlog := log(d);
-    if dlog mod 1 < 0.301: dv := 2;
-    elseif dlog mod 1 < 0.7: dv := 5;
-    else: dv := 10;
-    fi;
-    dv := floor(dv*(10**(floor(dlog-1))));
+    % check if the labels parameter contains anything useful
+    ii := 0;
+    for i=labels:
+      ii := ii+1;
+    endfor;
     interim labeloffset := 15 bp;
     interim linecap := butt;
-    if (dv > 0) or (floor zmax - floor zmin >= 2):
-      if dv > 0:    % zmax-zmin >= 10
-        i := dv * floor(zmin/dv);
-        if i < zmin: i := i + dv; fi;
-      else:         % at least two whole numbers between zmin and zmax
-        i := floor(zmin);
-        if i < zmin: i := i + 1; fi;
-        dv := 1;
-      fi;
-      forever:
-        exitif i > zmax;
-        j := (i-zmin)/d*vs;
-        draw (hs, j) -- (hs+5bp, j) withpen PenD;
-        label.rt(thTEX(decimal round i & "\thinspace " & units), (hs, j));
-        i := i + dv;
+    if ii>1: % custom labeling
+      j := 0;
+      for i=labels:
+        if not odd j:
+          k := (1-i)*vs;
+        else:
+          draw (hs, k) -- (hs+5bp, k) withpen PenD;
+          label.rt(thTEX(i), (hs, k));
+        fi;
+        j := j+1;
       endfor;
-    else:
-      draw (0, 0) -- (hs+5bp, 0) withpen PenD;
-      draw (0, vs) -- (hs+5bp, vs) withpen PenD;
-      label.rt(thTEX(decimal(round(10*zmin)/10) & "\thinspace " & units),(hs,0));
-      label.rt(thTEX(decimal(round(10*zmax)/10) & "\thinspace " & units),(hs,vs));
+    else:   % calculated labeling; breakpoints for the (zmax-zmin) difference: 1*10^n, 2*10^n, 5*10^n
+      d := zmax - zmin;
+      dlog := log(d);
+      if dlog mod 1 < 0.301: dv := 2;
+      elseif dlog mod 1 < 0.7: dv := 5;
+      else: dv := 10;
+      fi;
+      dv := floor(dv*(10**(floor(dlog-1))));
+      if (dv > 0) or (floor zmax - floor zmin >= 2):
+        if dv > 0:    % zmax-zmin >= 10
+          i := dv * floor(zmin/dv);
+          if i < zmin: i := i + dv; fi;
+        else:         % at least two whole numbers between zmin and zmax
+          i := floor(zmin);
+          if i < zmin: i := i + 1; fi;
+          dv := 1;
+        fi;
+        forever:
+          exitif i > zmax;
+          j := (i-zmin)/d*vs;
+          draw (hs, j) -- (hs+5bp, j) withpen PenD;
+          label.rt(thTEX(decimal round i & "\thinspace " & units), (hs, j));
+          i := i + dv;
+        endfor;
+      else:
+        draw (0, 0) -- (hs+5bp, 0) withpen PenD;
+        draw (0, vs) -- (hs+5bp, vs) withpen PenD;
+        label.rt(thTEX(decimal(round(10*zmin)/10) & "\thinspace " & units),(hs,0));
+        label.rt(thTEX(decimal(round(10*zmax)/10) & "\thinspace " & units),(hs,vs));
+      fi;
     fi;
   endgroup;
 enddef;
