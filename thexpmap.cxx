@@ -1755,7 +1755,7 @@ else
 
 
   // print altitudebar
-  if ((this->layout->color_legend == TT_TRUE) && (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->m_lookup->m_table.size() > 1)) {
+  if ((this->layout->color_legend == TT_TRUE) && (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->m_lookup->m_table.size() > 1) && (!this->layout->m_lookup->m_intervals)) {
 	double sv_min(0.0), sv_max(0.0);
 	bool sv_next = false;
     switch (this->layout->color_crit) {
