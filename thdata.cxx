@@ -1642,6 +1642,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->cd_leg->psurvey = this->db->get_current_survey();
     
     this->cd_leg->walls = this->d_walls;
+    this->cd_leg->splay_walls = (this->d_walls != TT_FALSE);
     this->cd_leg->vtresh = this->d_vtresh;
     this->cd_leg->shape = this->d_shape;
     

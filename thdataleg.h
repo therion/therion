@@ -410,6 +410,8 @@ class thdataleg {
 
   int walls, shape, gridcs;
   
+  bool splay_walls;
+
   struct thdb1d_loop * loop; ///< Worst loop leg is a part of.
   struct thdb1d_traverse * traverse; ///< Centreline traverse, leg is a part of.
 
