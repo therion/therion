@@ -37,7 +37,6 @@ jobs:
         run: |
           brew update
           brew tap homebrew/core
-          brew unlink gcc@8
           brew unlink gcc@9
           rm /usr/local/bin/2to3
           brew install wxmac vtk proj
