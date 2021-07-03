@@ -12,7 +12,7 @@
 set -e
 
 SRCPATH=${1:-.}
-PROJVER=${2:-4.9.3 5.1.0 5.2.0 6.2.1 6.3.2 7.0.0 7.2.1 8.0.0 8.0.1}
+PROJVER=${2:-4.9.3 5.1.0 5.2.0 6.2.1 6.3.2 7.0.0 7.2.1 8.0.0 8.1.0}
 
 PREFIX=$HOME/tmp/ThProj_test
 URL=https://download.osgeo.org/proj/proj
