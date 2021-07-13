@@ -1,4 +1,4 @@
-Therion 5.6.0 (in progress):
+Therion 6.0.0 (2021-07-13):
 
 therion:
  * support for colour models: cmyk, rgb, grayscale (see the color-model layout
@@ -8,7 +8,7 @@ therion:
    (withlinearshading and withradialshading options)
  * support for smooth colour transitions of scrap backgrounds in PDF maps
    if the map-fg is coloured by altitude
- * added smooth-shading <off/quick> layout switch - quick is default
+ * added smooth-shading <off/quick> layout switch – quick is the default
  * reimplemented internal processing of patterns and transparent colors in
    MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
    macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
@@ -39,7 +39,7 @@ therion:
  * updated shapelib
  
 loch:
- * Tools->Selection - only displays selected surveys
+ * Tools→Selection – only displays selected surveys
  * bugs fixed:
    - missing title
    - autorotation issues
@@ -47,6 +47,7 @@ loch:
 infrastructure:
  * support for CMake builds (thanks to Matěj Plch)
  * C++14 required
+ * use Github Actions to create Github releases
 
 --------------------------------------------------------------------------------
 
