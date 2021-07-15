@@ -103,10 +103,15 @@ enddef;
 
 def s_altitudebar_SKBB (expr zmin, zmax, units)(text t)(text labels) =
   begingroup;
+    ncol := 0;  % number of colors
+    for i=t:
+      ncol := ncol+1;
+    endfor;
+    ncol := ncol / 2;  % t contains pairs
     j := 0;
     string s;
     hs := 36 bp;
-    vs := 252 bp;
+    vs := ncol*25*bp + (ncol-1)*pt - 1bp;   % simulate the height of the discrete legend
     prevpos := -1;
     for i = t:
       if not odd j:
