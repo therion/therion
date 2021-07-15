@@ -3533,19 +3533,20 @@ thdb3ddata * thdb1ds::get_3d_outline() {
 	// traverse all splay shots from given station, calculate normalized position and add
   size_t splaycnt = 0, undercnt = 0;
   for(a = n->first_arrow; a != NULL; a = a->next_arrow) {
-		if ((a->leg->leg->flags & TT_LEGFLAG_SURFACE) == 0) {
-			tt = &(thdb.db1d.station_vec[a->end_node->uid - 1]);
-			tv = Vector3<double>(tt->x, tt->y, tt->z);
-			txv = tv - fv;
-			try {
-				txv.normalize();
-				pointCloud.push_back(txv);
-				originalPointCloud.push_back(tv);
-				originalPointCloudUse.push_back(NULL);
-				if ((a->leg->leg->flags & TT_LEGFLAG_SPLAY) != 0) splaycnt++;
-				else undercnt++;
-			} catch (...) {}
-  	}
+	if ((a->leg->leg->flags & TT_LEGFLAG_SURFACE) != 0) continue;
+	if (!(a->leg->leg->splay_walls)) continue;
+	tt = &(thdb.db1d.station_vec[a->end_node->uid - 1]);
+	//if (tt->temps == TT_TEMPSTATION_FEATURE) continue;
+	tv = Vector3<double>(tt->x, tt->y, tt->z);
+	txv = tv - fv;
+	try {
+		txv.normalize();
+		pointCloud.push_back(txv);
+		originalPointCloud.push_back(tv);
+		originalPointCloudUse.push_back(NULL);
+		if ((a->leg->leg->flags & TT_LEGFLAG_SPLAY) != 0) splaycnt++;
+		else undercnt++;
+	} catch (...) {}
   }
   // if there are more then 1 underground shots from this station, add it
   if (undercnt > 0) {

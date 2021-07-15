@@ -105,18 +105,18 @@ void color::set(double a, double b, double c, double d) {
   }
 }
 
-bool color::is_white() {
+bool color::is_white() const {
   if ((model == colormodel::grey && a == 1.0) ||
       (model == colormodel::rgb && (a == 1.0 && b == 1.0 && c == 1.0)) ||
       (model == colormodel::cmyk && (a == 0 && b == 0 && c == 0 && d == 0))) return true;
   else return false;
 }
 
-bool color::is_defined() {
+bool color::is_defined() const {
   return model != colormodel::no;
 }
 
-std::string color::to_svg() {
+std::string color::to_svg() const {
   double r = 0, g = 0, b = 0;
   if (model == colormodel::grey)
     r = g = b = this->a;
@@ -136,7 +136,7 @@ std::string color::to_svg() {
                                            int(255*b) % 256);
 }
 
-std::string color::to_pdfliteral(fillstroke fs) {
+std::string color::to_pdfliteral(fillstroke fs) const {
   std::ostringstream s;
   if (model == colormodel::grey) {
     if (fs == fillstroke::fill || fs == fillstroke::fillstroke)
@@ -166,7 +166,7 @@ std::string color::to_pdfliteral(fillstroke fs) {
 }
 
 
-std::string color::to_elements() {
+std::string color::to_elements() const {
   std::string s;
   if (model == colormodel::grey) {
     s = fmt::format("{}", thdouble(a,prec_col));
@@ -181,7 +181,7 @@ std::string color::to_elements() {
 }
 
 
-std::string color::to_pdfpatterncolor() {
+std::string color::to_pdfpatterncolor() const {
   std::string s;
   if (model == colormodel::grey) {
     s = "/CS3 cs";
@@ -249,7 +249,7 @@ void MP_text::print_svg(std::ofstream & F, CGS & gstate) {
   F << "</text>" << std::endl;
 }
 
-void MP_text::print_pdf(std::ofstream & F) {
+void MP_text::print_pdf(std::ofstream & F) const {
   F << PL("BT");
   F << PL(fmt::format("/F\\pdffontname\\{:s}\\space {} Tf", tex_Fname(ALL_FONTS[font]), thdouble(size,prec_mp)));
   F << PL(fmt::format("{} {} {} {} {:.1f} {:.1f} Tm", thdouble(xx,prec_mp), thdouble(xy,prec_mp), thdouble(yx,prec_mp), thdouble(yy,prec_mp), x, y));
@@ -396,7 +396,7 @@ void MP_path::print_svg(std::ofstream & F, CGS & gstate, std::string unique_pref
      "<g clip-path=\"url(#clip_" << CGS::clippathID << "_" << unique_prefix << ")\">" << std::endl;
 }
 
-void MP_path::print_pdf(std::ofstream & F) {
+void MP_path::print_pdf(std::ofstream & F) const {
   double last_x = 0, last_y = 0;
   for (unsigned i=0; i < segments.size(); i++) {
     switch (segments[i].command) {
@@ -486,7 +486,7 @@ void MP_data::add(int i, std::string s, color col) {
   index.push_back(ind);
 }
 
-void MP_data::add(MP_path P) {
+void MP_data::add(const MP_path& P) {
   MP_index ind;
   ind.vector = I_path;
   ind.idx = paths.size();
@@ -494,7 +494,7 @@ void MP_data::add(MP_path P) {
   index.push_back(ind);
 }
 
-void MP_data::add(MP_transform T) {
+void MP_data::add(const MP_transform& T) {
   MP_index ind;
   ind.vector = I_transform;
   ind.idx = transforms.size();
@@ -502,7 +502,7 @@ void MP_data::add(MP_transform T) {
   index.push_back(ind);
 }
 
-void MP_data::add(MP_text T) {
+void MP_data::add(const MP_text& T) {
   MP_index ind;
   ind.vector = I_text;
   ind.idx = texts.size();
@@ -557,7 +557,7 @@ void MP_setting::print_svg (std::ofstream & F, CGS & gstate) {
   }
 }
 
-void MP_setting::print_pdf (std::ofstream & F) {
+void MP_setting::print_pdf (std::ofstream & F) const {
   switch (command) {
     case MP_rgb:
     case MP_gray:
@@ -665,7 +665,7 @@ void MP_data::print_svg (std::ofstream & F, std::string unique_prefix) {
   thassert(gstate.clippathdepth.empty());
 }
 
-void MP_data::print_pdf (std::ofstream & F) {
+void MP_data::print_pdf (std::ofstream & F) const {
   for (unsigned int i=0; i<index.size(); i++) {
     switch (index[i].vector) {
       case I_path:
@@ -773,7 +773,7 @@ void converted_data::print_svg (std::ofstream & F, std::string unique_prefix) {
   F << "</svg>" << std::endl;
 }
 
-void converted_data::print_pdf(std::ofstream & F, std::string name) {
+void converted_data::print_pdf(std::ofstream & F, std::string name) const {
 //  if (MP.index.empty()) return;  // can't skip the empty XObject definition, as it might be referenced somewhere
   conv_mode = mode;
 
@@ -814,7 +814,7 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) {
           F << "/" << *I << " " << tex_get_ref(tex_Pname(ALL_PATTERNS[*I])) <<
                  "\\space 0 R ";
         }
-        for(auto & g: gradients) {
+        for(const auto & g: gradients) {
           F << "/" << tex_Pname(g) << " " << tex_get_ref(tex_Pname(g)) <<
                  "\\space 0 R ";
         }
@@ -1423,7 +1423,7 @@ void thgraphics2pdf() {
   std::ofstream TEX("th_formdef.tex");
   if(!TEX) therror((IOerr("th_formdef.tex")));
 
-  for(auto &I: SCRAPLIST) {
+  for(const auto &I: SCRAPLIST) {
     I.Fc.print_pdf(TEX, I.name);
     I.Gc.print_pdf(TEX, "G"+I.name);
     I.Bc.print_pdf(TEX, "B"+I.name);
@@ -1467,7 +1467,7 @@ void thgraphics2pdf() {
     }
   }
 
-  for(auto &I: LEGENDLIST) {
+  for(const auto &I: LEGENDLIST) {
     I.ldata.print_pdf(TEX, I.name);
   }
 
@@ -1476,7 +1476,7 @@ void thgraphics2pdf() {
   AltBar.print_pdf(TEX, "altitudebar");
 
   unsigned char c = 'a';
-  for(auto &I: GRIDLIST) {
+  for(const auto &I: GRIDLIST) {
     I.print_pdf(TEX, fmt::format("grid{:c}",c));
     c++;
   }

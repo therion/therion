@@ -6,6 +6,7 @@ jobs:
     outputs:
       THID: ${{ steps.build.outputs.THID_out }}
       git_branch: ${{ steps.build.outputs.git_branch }}
+      rel_notes: ${{ steps.build.outputs.rel_notes }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -32,6 +33,12 @@ jobs:
           BRANCH_FULL=$(git branch -r --contains ${{ github.ref }})
           BRANCH=${BRANCH_FULL##*/}
           echo "::set-output name=git_branch::$BRANCH"
+          ./rel_notes.py
+          REL_NOTES="$(<rel_notes.md)"
+          REL_NOTES="${REL_NOTES//'%'/%25}"
+          REL_NOTES="${REL_NOTES//$'\n'/%0A}"
+          REL_NOTES="${REL_NOTES//$'\r'/%0D}"
+          echo "::set-output name=rel_notes::$REL_NOTES"
           mkdir ../therion.bin
           cd ../therion.bin
           i686-w64-mingw32.static-cmake -G Ninja \
@@ -64,6 +71,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ needs.Win32_installer.outputs.THID }}
+          body: ${{ needs.Win32_installer.outputs.rel_notes }}
           draft: false
           prerelease: false
       - name: Download binaries

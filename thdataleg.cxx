@@ -108,6 +108,7 @@ void thdataleg::clear()
   this->to_right = thnan;
   
   this->walls = TT_AUTO;
+  this->splay_walls = true;
   this->shape = TT_DATALEG_SHAPE_UNKNOWN;
   this->vtresh = thnan;
   this->extend_ratio = thnan;

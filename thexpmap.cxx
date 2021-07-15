@@ -1755,7 +1755,7 @@ else
 
 
   // print altitudebar
-  if ((this->layout->color_legend == TT_TRUE) && (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->m_lookup->m_table.size() > 1)) {
+  if ((this->layout->color_legend == TT_TRUE) && (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->m_lookup->m_table.size() > 1) && (!this->layout->m_lookup->m_intervals)) {
 	double sv_min(0.0), sv_max(0.0);
 	bool sv_next = false;
     switch (this->layout->color_crit) {
@@ -1764,18 +1764,29 @@ else
     	  sprintf(texb.get_buffer(),"data.%d",sfig);
     	  LAYOUT.altitudebar = texb.get_buffer();
     	  sv_min = this->layout->m_lookup->m_table.begin()->m_valueDbl;
-    	  for(auto ti : this->layout->m_lookup->m_table) {
+    	  for(const auto& ti : this->layout->m_lookup->m_table) {
     		  sv_max = ti.m_valueDbl;
     	  }
           fprintf(mpf,"beginfig(%d);\ns_altitudebar(%g, %g, \"%s\")(",
             sfig++, this->layout->units.convert_length(sv_max),
                     this->layout->units.convert_length(sv_min),
                     this->layout->units.format_i18n_length_units());
-    	  for(auto ti : this->layout->m_lookup->m_table) {
+    	  for(auto& ti : this->layout->m_lookup->m_table) {
     		  if (sv_next) fprintf(mpf, ",");
     		  sv_next = true;
     		  fprintf(mpf,"%g,",(ti.m_valueDbl - sv_min)/(sv_max - sv_min));
     		  ti.m_color.print_to_file(this->layout->color_model, mpf);
+    	  }
+    	  sv_next = false;
+		  fprintf(mpf,")(");
+    	  if (!this->layout->m_lookup->m_autoIntervals) {
+        	  for(auto& ti : this->layout->m_lookup->m_table) {
+        		  if (sv_next) fprintf(mpf, ",");
+        		  sv_next = true;
+        		  fprintf(mpf,"%g,\"%s\"",(ti.m_valueDbl - sv_min)/(sv_max - sv_min), ti.m_labelTeX.c_str());        		  
+        	  }
+    	  } else {
+    		  fprintf(mpf,"\"\"");
     	  }
     	  fprintf(mpf,");\nendfig;\n");
     	  break;
@@ -3641,7 +3652,7 @@ void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scr
     	  mi.insert_point(thvec2(cp->pt->xt, cp->pt->yt), thvec2(cp->tx, cp->ty), cp->st->uid, cp->ta);
       cp = cp->nextcp;
     }
-    for(auto xcp : cs->joined_scrap_stations) {
+    for(const auto& xcp : cs->joined_scrap_stations) {
     	mi.insert_extra_point(thvec2(xcp->pt->xt, xcp->pt->yt), thvec2(xcp->tx, xcp->ty), xcp->st->uid, xcp->ta);
     }
     mi.insert_lines_from_db();

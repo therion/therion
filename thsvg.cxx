@@ -421,7 +421,7 @@ void print_surface_bitmaps (std::ofstream &F) {
 
 
 
-void thsvg(const char * fname, int fmt, legenddata ldata) {
+void thsvg(const char * fname, int fmt, const legenddata& ldata) {
   if (fmt == 0)
     thprintf("making svg map ... ");
   else

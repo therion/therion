@@ -23,7 +23,7 @@
 
 #include "thlegenddata.h"
 
-void thsvg(const char * fname, int, legenddata ldata);
+void thsvg(const char * fname, int, const legenddata& ldata);
 
 std::string escape_html(std::string);
 

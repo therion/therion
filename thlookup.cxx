@@ -53,6 +53,7 @@ thlookup::thlookup()
   this->m_type = TT_LAYOUT_CCRIT_UNKNOWN;
   this->m_ascending = true;
   this->m_intervals = false;
+  this->m_autoIntervals = false;
   this->m_title = "";
 }
 
@@ -476,8 +477,9 @@ void thlookup::export_color_legend(thlayout * layout) {
             break;
         }
       }
+      tli->m_labelTeX = clrec.texname;
+      tli->m_labelStr = clrec.name;
       COLORLEGENDLIST.insert(COLORLEGENDLIST.end(), clrec);
-
     }
   }
 }
@@ -526,6 +528,7 @@ void thlookup::auto_generate_items() {
   if (this->m_table.size() > 0) return;
   thdate interval;
   thlookup_table_row tr;
+  this->m_autoIntervals = true;
   double from, to;
   int z;
   switch (this->m_type) {
