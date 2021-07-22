@@ -1410,6 +1410,7 @@ int thconvert_eps() {
   USED_CHARS.clear();
   PATTERNLIST.clear();
   GRIDLIST.clear();
+  GRADIENTS.clear();
   font_id = 1;
   patt_id = 1;
 
