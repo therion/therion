@@ -187,6 +187,32 @@ static const thstok thtt_layout_legend[] = {
 
 
 /**
+ * Layout color legend tokens.
+ */
+
+enum {
+  TT_LAYOUT_COLORLEGEND_UNKNOWN = 0,
+  TT_LAYOUT_COLORLEGEND_OFF,
+  TT_LAYOUT_COLORLEGEND_DISCRETE,
+  TT_LAYOUT_COLORLEGEND_SMOOTH,
+};
+
+
+/**
+ * Layout color legend token table.
+ */
+
+static const thstok thtt_layout_colorlegend[] = {
+  {"discrete", TT_LAYOUT_COLORLEGEND_DISCRETE},
+  {"off", TT_LAYOUT_COLORLEGEND_OFF},
+  {"on", TT_LAYOUT_COLORLEGEND_SMOOTH}, // legacy option
+  {"smooth", TT_LAYOUT_COLORLEGEND_SMOOTH},
+  {NULL, TT_LAYOUT_LEGEND_UNKNOWN},
+};
+
+
+
+/**
  * Layout debug tokens.
  */
 

@@ -401,7 +401,7 @@ void thlookup::color_scrap(thscrap * s) {
 
 void thlookup::export_color_legend(thlayout * layout) {
   layout->m_lookup = this;
-  if (layout->color_legend == TT_TRUE) {
+  if (layout->color_legend != TT_LAYOUT_COLORLEGEND_OFF) {
     COLORLEGENDLIST.clear();
     thlookup_table_list::iterator tli;
     colorlegendrecord clrec;

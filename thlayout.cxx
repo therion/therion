@@ -180,7 +180,7 @@ thlayout::thlayout()
   this->legend_columns = 2;
 
   this->def_color_legend = 0;
-  this->color_legend = TT_TRUE;
+  this->color_legend = TT_LAYOUT_COLORLEGEND_SMOOTH;
 
   this->def_color_model = 0;
   this->color_model = TT_LAYOUTCLRMODEL_CMYK;
@@ -771,8 +771,8 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       break;
     
     case TT_LAYOUT_COLOR_LEGEND:
-      sv = thmatch_token(args[0],thtt_bool);
-      if (sv == TT_UNKNOWN_BOOL)
+      sv = thmatch_token(args[0],thtt_layout_colorlegend);
+      if (sv == TT_LAYOUT_COLORLEGEND_UNKNOWN)
         ththrow("invalid color-legend switch -- {}",args[0]);
       this->color_legend = sv;
       this->def_color_legend = 2;
@@ -1289,8 +1289,8 @@ void thlayout::self_print_library() {
   thprintf("\tplayout->def_north= %d;\n", this->def_north);
   thprintf("\tplayout->north = %d;\n", this->north);
 
-  thprintf("\tplayout->def_smoooth_shading= %d;\n", this->def_smooth_shading);
-  thprintf("\tplayout->smoooth_shading = %d;\n", this->smooth_shading);
+  thprintf("\tplayout->def_smooth_shading= %d;\n", this->def_smooth_shading);
+  thprintf("\tplayout->smooth_shading = %d;\n", this->smooth_shading);
 
   thprintf("\tplayout->def_grid = %d;\n", this->def_grid);
   thprintf("\tplayout->grid = %d;\n",this->grid);

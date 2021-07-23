@@ -1755,7 +1755,7 @@ else
 
 
   // print altitudebar
-  if ((this->layout->color_legend == TT_TRUE) && (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->m_lookup->m_table.size() > 1) && (!this->layout->m_lookup->m_intervals)) {
+  if ((this->layout->color_legend == TT_LAYOUT_COLORLEGEND_SMOOTH) && (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->m_lookup->m_table.size() > 1) && (!this->layout->m_lookup->m_intervals)) {
 	double sv_min(0.0), sv_max(0.0);
 	bool sv_next = false;
     switch (this->layout->color_crit) {
@@ -3158,7 +3158,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
   if (this->layout->color_crit == TT_LAYOUT_CCRIT_UNKNOWN)
     return;
 
-  bool addleg = (this->layout->color_legend == TT_TRUE);
+  bool addleg = (this->layout->color_legend != TT_LAYOUT_COLORLEGEND_OFF);
   colorlegendrecord clrec;
   
   // urobi altitude legendu

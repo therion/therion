@@ -277,7 +277,7 @@ void thlibrary_init_layouts()
 	playout->def_survey_level = 0;
 	playout->survey_level = 0;
 	playout->def_color_legend = 0;
-	playout->color_legend = 1;
+	playout->color_legend = 3;
 	playout->def_color_model = 0;
 	playout->color_model = 4;
 	playout->def_legend_width = 0;
@@ -326,6 +326,8 @@ void thlibrary_init_layouts()
 	playout->grid_coords = 1;
 	playout->def_north= 0;
 	playout->north = 1;
+	playout->def_smooth_shading= 0;
+	playout->smooth_shading = 1;
 	playout->def_grid = 0;
 	playout->grid = 1;
 	playout->def_page_grid = 0;
@@ -441,7 +443,7 @@ void thlibrary_init_layouts()
 	playout->def_survey_level = 0;
 	playout->survey_level = 0;
 	playout->def_color_legend = 0;
-	playout->color_legend = 1;
+	playout->color_legend = 3;
 	playout->def_color_model = 0;
 	playout->color_model = 4;
 	playout->def_legend_width = 0;
@@ -490,6 +492,8 @@ void thlibrary_init_layouts()
 	playout->grid_coords = 1;
 	playout->def_north= 0;
 	playout->north = 1;
+	playout->def_smooth_shading= 0;
+	playout->smooth_shading = 1;
 	playout->def_grid = 0;
 	playout->grid = 1;
 	playout->def_page_grid = 0;
