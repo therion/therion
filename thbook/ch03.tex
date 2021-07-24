@@ -267,7 +267,7 @@ available translations, see |thlang/texts.txt| file.
     legend <on/off/all>
     legend-columns <number>
     legend-width <n> <units>
-    colour-legend <smooth/discrete/off>
+    colour-legend <smooth/discrete/off/on>
     map-comment <string>
     map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>
     map-header-bg <on/off>
@@ -488,8 +488,9 @@ endlayout|
   * |legend <on/off/all>| = display list of used map symbols in the map header.
     If set to |all|, all symbols from the current symbol set are displayed.
     (M, A; default: |off|)
-  * |colo[u]r-legend <smooth/discrete/off>| = set type of map-fg colours legend
-    when map-fg is set to altitude, scrap or map. (M, A; default: |smooth| if applicable)
+  * |colo[u]r-legend <smooth/discrete/off/on>| = set type of map-fg colours legend
+    when map-fg is set to altitude, scrap or map. For compatibility reasons,
+    |on| is equivalent to |smooth|. (M, A; default: |smooth| if applicable)
   * |legend-columns <number>| = adjusts the number of legend columns
     (M, A; default: |2|)
   * |map-comment <string>| = optional comment displayed at the map header (M)

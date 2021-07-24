@@ -1,6 +1,6 @@
 Therion 6.0.1 (in progress):
  * flexible altitude bar height based on the number of colours in use
- * changed layout colour-legend option to <smooth/discrete/off>
+ * changed layout colour-legend option to <smooth/discrete/off/on>
  * bugs fixed:
    - wrong shading patterns references when exporting multiple maps
    - projection name truncated to 20 characters in Proj ver. > 5

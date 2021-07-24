@@ -1474,7 +1474,7 @@ void thgraphics2pdf() {
 
   NArrow.print_pdf(TEX, "northarrow");
   ScBar.print_pdf(TEX, "scalebar");
-  AltBar.print_pdf(TEX, "altitudebar");
+  if (LAYOUT.altitudebar != "") AltBar.print_pdf(TEX, "altitudebar");
 
   unsigned char c = 'a';
   for(const auto &I: GRIDLIST) {
