@@ -3,6 +3,7 @@ Therion 6.0.1 (in progress):
  * changed layout colour-legend option to <smooth/discrete/off>
  * bugs fixed:
    - wrong shading patterns references when exporting multiple maps
+   - projection name truncated to 20 characters in Proj ver. > 5
 
 --------------------------------------------------------------------------------
 
