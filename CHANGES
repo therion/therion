@@ -1,4 +1,6 @@
-Therion 6.0.1 (in progress):
+Therion 6.0.1 (2021-07-25):
+
+therion:
  * flexible altitude bar height based on the number of colours in use
  * changed layout colour-legend option to <smooth/discrete/off/on>
  * bugs fixed:

@@ -286,7 +286,7 @@
 \def\versiontonum#1{\ifnum\pdfmatch{[0-9]+[.][0-9]+[.][0-9]+}{#1}=1
        \threetonum#1 \else \twotonum#1 \fi}
 
-\def\NEW#1{\iffulloutput\ifnum\versiontonum{#1}<\versiontonum{5.3}% don't display too old news
+\def\NEW#1{\iffulloutput\ifnum\versiontonum{#1}<\versiontonum{5.5}% don't display too old news
        \else
        \leavevmode\vadjust{%
           \vbox to 0pt{%
