@@ -1748,10 +1748,19 @@ xth_status_bar me $xth(ctrl,me,images).ic.posx [mc "New X coordinate of image."]
 Entry $xth(ctrl,me,images).ic.posy -font $xth(gui,lfont) -state disabled -width 4 \
   -textvariable xth(ctrl,me,images,posy)
 xth_status_bar me $xth(ctrl,me,images).ic.posy [mc "New Y coordinate of image."]
-Button $xth(ctrl,me,images).ic.mvf -text [mc "Move front"] -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
+
+Label $xth(ctrl,me,images).ic.mvvl -text [mc "move image vertically"] -anchor w -font $xth(gui,lfont) -state disabled
+xth_status_bar me $xth(ctrl,me,images).ic.mvvl [mc "Change image position in the queue."]
+Button $xth(ctrl,me,images).ic.mvf -text [mc "Top"] -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
   -command xth_me_image_move_front
 xth_status_bar me $xth(ctrl,me,images).ic.mvf [mc "Move image in front of all images."]
-Button $xth(ctrl,me,images).ic.mvb -text [mc "Move back"] -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
+Button $xth(ctrl,me,images).ic.mvfo -text [mc "Up"] -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
+  -command xth_me_image_move_front_one
+xth_status_bar me $xth(ctrl,me,images).ic.mvfo [mc "Move image up."]
+Button $xth(ctrl,me,images).ic.mvbo -text [mc "Down"] -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
+  -command xth_me_image_move_back_one
+xth_status_bar me $xth(ctrl,me,images).ic.mvbo [mc "Move image down."]
+Button $xth(ctrl,me,images).ic.mvb -text [mc "Bottom"] -anchor center -font $xth(gui,lfont) -state disabled -width 10 \
   -command xth_me_image_move_back
 xth_status_bar me $xth(ctrl,me,images).ic.mvb [mc "Move image behind all images."]
 
@@ -1770,12 +1779,15 @@ grid $xth(ctrl,me,images).ic.posln -column 2 -row 2 -sticky news -columnspan 2 -
 grid $xth(ctrl,me,images).ic.posch -column 0 -row 3 -sticky news -columnspan 2
 grid $xth(ctrl,me,images).ic.posx -column 2 -row 3 -sticky ew -padx 1
 grid $xth(ctrl,me,images).ic.posy -column 3 -row 3 -sticky ew -padx 1
-grid $xth(ctrl,me,images).ic.mvf -column 0 -row 4 -sticky news -columnspan 2
-grid $xth(ctrl,me,images).ic.mvb -column 2 -row 4 -sticky news -columnspan 2
-grid $xth(ctrl,me,images).ic.gl -column 0 -row 5 -sticky news -columnspan 2
-grid $xth(ctrl,me,images).ic.gr -column 2 -row 5 -sticky news -columnspan 2
-grid $xth(ctrl,me,images).ic.gs -column 0 -row 6 -sticky news -columnspan 4
-grid $xth(ctrl,me,images).ic.viscb -column 0 -row 7 -sticky news -columnspan 4
+grid $xth(ctrl,me,images).ic.mvvl -column 0 -row 4 -sticky news -columnspan 4
+grid $xth(ctrl,me,images).ic.mvf -column 0 -row 5 -sticky news
+grid $xth(ctrl,me,images).ic.mvfo -column 1 -row 5 -sticky news
+grid $xth(ctrl,me,images).ic.mvbo -column 2 -row 5 -sticky news
+grid $xth(ctrl,me,images).ic.mvb -column 3 -row 5 -sticky news
+grid $xth(ctrl,me,images).ic.gl -column 0 -row 6 -sticky news -columnspan 2
+grid $xth(ctrl,me,images).ic.gr -column 2 -row 6 -sticky news -columnspan 2
+grid $xth(ctrl,me,images).ic.gs -column 0 -row 7 -sticky news -columnspan 4
+grid $xth(ctrl,me,images).ic.viscb -column 0 -row 8 -sticky news -columnspan 4
 # xth_status_bar me $xth(ctrl,me,images). "To set file encoding, type encoding name and press <Change> button."
 
 

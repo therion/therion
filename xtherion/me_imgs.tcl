@@ -54,6 +54,7 @@ proc xth_me_image_update_list {} {
       set imgsize "(unknown)"
     }
     lappend xth(me,imgs,list) "$xth(me,imgs,$imgx,name) $imgsize"
+    $xth(me,can) lower $xth(me,imgs,$imgx,image) bgimg
   }
 }
 
@@ -961,32 +962,14 @@ proc xth_me_image_remove {iidx} {
 
 proc xth_me_image_move_special {iidx newiidx} {
 
-  global xth  
-
-  if {$iidx == [expr $xth(me,nimgs) - 1]} {
-    set iidx $xth(me,nimgs)
-  }
-  if {$iidx < $xth(me,nimgs)} {
-    set iiidx $iidx
-    set xiidx $iidx
-  } else {
-    set iiidx end
-    set xiidx [expr $xth(me,nimgs) - 1]
-  }
-  set imgx [lindex $xth(me,imgs,xlist) $iiidx]
-
-  if {$newiidx < $xth(me,nimgs)} {
-    $xth(me,can) raise $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) $newiidx],image)
-    set xth(me,imgs,xlist) [linsert [lreplace $xth(me,imgs,xlist) $iiidx $iiidx] $newiidx $imgx]
-  } else {
-    $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) end],image)
-    set xth(me,imgs,xlist) [linsert [lreplace $xth(me,imgs,xlist) $iiidx $iiidx] end $imgx]
-  }  
+  global xth
+  set imgx [lindex $xth(me,imgs,xlist) $iidx]
+  set xth(me,imgs,xlist) [linsert [lreplace $xth(me,imgs,xlist) $iidx $iidx] $newiidx $imgx]
 
   xth_me_unredo_action [mc "moving image"] \
     "xth_me_image_move_special $newiidx $iidx" "xth_me_image_move_special $iidx $newiidx"
   xth_me_image_update_list
-  xth_me_image_select $xiidx
+  xth_me_image_select $iidx
   
 }
 
@@ -1030,6 +1013,46 @@ proc xth_me_image_move_back {} {
 }
 
 
+proc xth_me_image_move_front_one {} {
+  global xth
+  xth_me_cmds_update {}
+  if {$xth(me,nimgs) < 1} {
+    return
+  }
+  set isel [$xth(ctrl,me,images).il.ilbox curselection]
+  if {[llength $isel] < 1} {
+    return;
+  }
+  set iidx [lindex $isel 0]
+  if {$iidx == 0} {
+    return
+  }
+  
+  xth_me_image_move_special $iidx [expr $iidx - 1]
+  xth_me_image_select [expr $iidx - 1]
+}
+
+
+proc xth_me_image_move_back_one {} {
+  global xth
+  xth_me_cmds_update {}
+  if {$xth(me,nimgs) < 1} {
+    return
+  }
+  set isel [$xth(ctrl,me,images).il.ilbox curselection]
+  if {[llength $isel] < 1} {
+    return;
+  }
+  set iidx [lindex $isel 0]
+  if {$iidx == ($xth(me,nimgs) - 1)} {
+    return
+  }
+
+  xth_me_image_move_special $iidx [expr $iidx + 1]
+  xth_me_image_select [expr $iidx + 1]
+}
+
+
 proc xth_me_image_select {iidx} {
   
   global xth
@@ -1050,6 +1073,9 @@ proc xth_me_image_select {iidx} {
     $xth(ctrl,me,images).ic.posx configure -state normal
     $xth(ctrl,me,images).ic.posy configure -state normal
     $xth(ctrl,me,images).ic.mvf configure -state normal
+    $xth(ctrl,me,images).ic.mvvl configure -state normal
+    $xth(ctrl,me,images).ic.mvfo configure -state normal
+    $xth(ctrl,me,images).ic.mvbo configure -state normal
     $xth(ctrl,me,images).ic.mvb configure -state normal
 #    $xth(ctrl,me,images).il.ilbox configure -state normal
     $xth(ctrl,me,images).il.ilbox selection clear 0 end
@@ -1085,6 +1111,9 @@ proc xth_me_image_select {iidx} {
     $xth(ctrl,me,images).ic.posy configure -state disabled
     $xth(ctrl,me,images).ic.mvf configure -state disabled
     $xth(ctrl,me,images).ic.mvb configure -state disabled
+    $xth(ctrl,me,images).ic.mvvl configure -state disabled
+    $xth(ctrl,me,images).ic.mvfo configure -state disabled
+    $xth(ctrl,me,images).ic.mvbo configure -state disabled
     $xth(ctrl,me,images).ic.gs configure -state disabled
     $xth(ctrl,me,images).ic.gr configure -state disabled
     $xth(ctrl,me,images).ic.gl configure -state disabled -text "gamma 1.00"
