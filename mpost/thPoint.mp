@@ -706,7 +706,7 @@ enddef;
 
 def p_dig_UIS (expr pos,r,s,al) =
     U:=(.4u, .5u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thfill ((-.075u,-.5u){down} .. {up}(0.075u, -.5u) -- (0.075u, .15u) -- (0.3u, 0.15u) -- (0.3u, 0.5u) --
     (-.3u, .5u) -- (-.3u, .15u) -- (-.075u, .15u) -- cycle) rotated 45;
 enddef;
