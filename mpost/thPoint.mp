@@ -621,7 +621,7 @@ enddef;
 
 def p_fixedladder_SKBB (expr pos,r,s,al) =
     U:=(.4u, .4u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
     pickup PenC;
     thdraw (-.15u,-.4u)--(-.15u,.4u);
@@ -633,7 +633,7 @@ enddef;
 
 def p_ropeladder_SKBB (expr pos,r,s,al) =
     U:=(.4u, .4u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
     pickup PenC;
     thdraw (.1u,-.4u)..(.2u,-.2u)..(.1u,.2u)..(.2u,.4u);
@@ -645,7 +645,7 @@ enddef;
 
 def p_bridge_SKBB (expr pos,r,s,al) =
     U:=(.4u, .4u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
     pickup PenC;
     thdraw (-.3u,.2u)--(-.2u,.1u)--(.2u,.1u)--(.3u,.2u);
@@ -654,7 +654,7 @@ enddef;
 
 def p_noequipment_SKBB (expr pos,r,s,al) =
     U:=(.4u, .4u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
     thfill (0,-.1u)--(-.05u,.3u)--(.05u,.3u)--cycle;
     thdraw (0,-.2u) withpen PenX;
@@ -662,7 +662,7 @@ enddef;
 
 def p_anchor_SKBB (expr pos,r,s,al) =
     U:=(.4u, .4u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
     thdraw fullcircle scaled .2u shifted (0.2u,0) withpen PenC;
     begingroup;
@@ -674,7 +674,7 @@ enddef;
 
 def p_traverse_SKBB (expr pos,r,s,al) =
     U:=(.4u, .4u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
     pickup PenC;
     thdraw (-.25u,.05u)..(0,-.08u)..(.25u,.05u);
@@ -685,7 +685,7 @@ enddef;
 
 def p_rope_SKBB (expr pos,r,s,al) =
     U:=(.4u, .4u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
     pickup PenC;
     thdraw (-.2u,.2u)..origin..(.1u,.1u)--(.1u,-.4u);
@@ -696,7 +696,7 @@ enddef;
 
 def p_camp_SKBB (expr pos,r,s,al) =
     U:=(.4u, .5u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     pickup PenC;
     thdraw (-.4u,-.4u)--(0,.5u)--(.4u,-.4u)--cycle;
     pickup PenD;
@@ -809,7 +809,7 @@ enddef;
 
 def p_viaferrata_SKBB(expr pos,r,s,al) =
     U:=(.4u, .4u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
     pickup PenC;
     thdraw (-.15u,.15u)--(-.15u,.1u)--(.15u,.1u)--(.15u,.15u);
