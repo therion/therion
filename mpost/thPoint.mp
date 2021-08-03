@@ -612,7 +612,7 @@ let p_station_temporary_SKBB = p_station_painted_SKBB;
 
 def p_steps_SKBB (expr pos,r,s,al) =
     U:=(.4u, .4u);
-    T:=identity aligned al shifted pos;
+    T:=identity aligned al scaled s shifted pos;
     thdraw unitsquare scaled .8u shifted (-0.4u,-.4u) withpen PenD;
     pickup PenC;
     thdraw (-.3u,.3u)--(-.3u,.1u)--(-.1u,.1u)--(-.1u,-.1u)--
