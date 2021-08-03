@@ -54,7 +54,7 @@ proc xth_me_image_update_list {} {
       set imgsize "(unknown)"
     }
     lappend xth(me,imgs,list) "$xth(me,imgs,$imgx,name) $imgsize"
-    $xth(me,can) lower $xth(me,imgs,$imgx,image) bgimg
+    catch {$xth(me,can) lower $xth(me,imgs,$imgx,image) bgimg}
   }
 }
 
