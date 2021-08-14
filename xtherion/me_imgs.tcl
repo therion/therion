@@ -468,7 +468,7 @@ proc xth_me_imgs_xvi_create {imgx} {
   set shts $xth(me,imgs,$imgx,XVIshots)
   for {set i 0} {$i < [llength $shts]} {incr i} {
     if {[llength [lindex $shts $i]] >= 12} {
-      set cid [$xth(me,can) create polygon 0 0 1 0 1 1 -stipple $xth(gui,xvi_walls_fptn) -fill $xth(gui,xvi_walls_fclr) -width 1 -state hidden -tags [list $id [format "%sWLF%d" $id $i]]]
+      set cid [$xth(me,can) create polygon 0 0 1 0 1 1 -stipple $xth(gui,xvi_walls_fptn) -fill $xth(gui,xvi_walls_fclr) -width 1 -state hidden -tags [list $id bgimg [format "%sWLF%d" $id $i]]]
       xth_me_bind_area_drag $cid $imgx
       xth_me_bind_image_drag $cid $imgx
       lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
@@ -477,13 +477,13 @@ proc xth_me_imgs_xvi_create {imgx} {
 
   # grid
   set grid_info_str [format [mc "grid - spacing %s"] $xth(me,imgs,$imgx,XVIgrids)]
-  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id [format "%sGH" $id]]]
+  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id bgimg [format "%sGH" $id]]]
   xth_me_bind_area_drag $cid $imgx
   xth_me_bind_image_drag $cid $imgx
   $xth(me,can) bind $cid <Enter> "xth_status_bar_push me; xth_status_bar_status me [list $grid_info_str]"
   $xth(me,can) bind $cid <Leave> "xth_status_bar_pop me"
   lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
-  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id [format "%sGV" $id]]]
+  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id bgimg [format "%sGV" $id]]]
   xth_me_bind_area_drag $cid $imgx
   xth_me_bind_image_drag $cid $imgx
   $xth(me,can) bind $cid <Enter> "xth_status_bar_push me; xth_status_bar_status me [list $grid_info_str]"
@@ -494,7 +494,7 @@ proc xth_me_imgs_xvi_create {imgx} {
   set shts $xth(me,imgs,$imgx,XVIshots)
   for {set i 0} {$i < [llength $shts]} {incr i} {
     if {[llength [lindex $shts $i]] >= 12} {
-      set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_walls_oclr) -width 1 -state hidden -tags [list $id [format "%sWLO%d" $id $i]]]
+      set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_walls_oclr) -width 1 -state hidden -tags [list $id bgimg [format "%sWLO%d" $id $i]]]
       xth_me_bind_area_drag $cid $imgx
       xth_me_bind_image_drag $cid $imgx
       lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
@@ -503,7 +503,7 @@ proc xth_me_imgs_xvi_create {imgx} {
 
   # shots
   for {set i 0} {$i < [llength $shts]} {incr i} {
-    set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_shot_clr) -width 3 -state hidden -tags [list $id [format "%sSH%d" $id $i]]]
+    set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_shot_clr) -width 3 -state hidden -tags [list $id bgimg [format "%sSH%d" $id $i]]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
@@ -519,7 +519,7 @@ proc xth_me_imgs_xvi_create {imgx} {
       set cclr gray
       set cdash .
     }
-    set cid [$xth(me,can) create line 0 0 1 1 -fill $cclr -dash $cdash -width $xth(gui,xvi_sketch_line_width) -state hidden -tags [list $id [format "%sSKLN%d" $id $i]]]
+    set cid [$xth(me,can) create line 0 0 1 1 -fill $cclr -dash $cdash -width $xth(gui,xvi_sketch_line_width) -state hidden -tags bgimg [list $id [format "%sSKLN%d" $id $i]]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
@@ -528,7 +528,7 @@ proc xth_me_imgs_xvi_create {imgx} {
   # stations
   set stns $xth(me,imgs,$imgx,XVIstations)
   for {set i 0} {$i < [llength $stns]} {incr i} {
-    set cid [$xth(me,can) create oval 0 0 1 1 -fill $xth(gui,xvi_station_fclr) -outline $xth(gui,xvi_station_oclr) -width 1 -state hidden -tags [list $id [format "%sST%d" $id $i] "$stpref$i"]]
+    set cid [$xth(me,can) create oval 0 0 1 1 -fill $xth(gui,xvi_station_fclr) -outline $xth(gui,xvi_station_oclr) -width 1 -state hidden -tags [list $id bgimg [format "%sST%d" $id $i] "$stpref$i"]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     set stinfo [format [mc "station - %s"] [lindex [lindex $stns $i] 2]]
