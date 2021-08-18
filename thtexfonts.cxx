@@ -373,7 +373,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
   //// endlinks
 
   if (is_multiline) {
-    T << "\\vbox{\\halign{";
+    T << "\\vtop{\\halign{";
     if (align > 0) T << "\\hfil";
     T << "#";
     if (align < 2) T << "\\hfil";
