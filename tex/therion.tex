@@ -493,7 +493,10 @@
   \black\the\legendtextcolor 
   \ifnortharrow\vbox to 0pt{\line{\hfil\northarrow}\vss}\fi
   \edef\tmp{\the\cavename} \ifx\tmp\empty \else
-     {\the\legendtextheadersize\the\cavename}\vskip1cm
+     \nointerlineskip
+     \vskip\lineskip % this emulates the old behavior, where \lineskip was added
+                     % because only a small (default) \baselineskip value was applied to \the\cavename
+     {\the\legendtextheadersize\the\cavename\par}\vskip1cm
   \fi
   \ifscalebar\scalebar\vskip1cm\fi
   {\rightskip=0pt plus 3em\parskip=3bp

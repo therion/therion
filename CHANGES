@@ -1,5 +1,10 @@
 Therion 6.0.2 (in progress):
 
+therion:
+ * bugs fixed:
+  - wrong vertical alignment of legend entries using <br> to split lines
+  - \baselineskip not applied to \the\cavename in the map legend
+
 xtherion:
  * improved control over vertical positioning of backgroud images
 
