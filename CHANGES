@@ -4,6 +4,7 @@ therion:
  * bugs fixed:
   - wrong vertical alignment of legend entries using <br> to split lines
   - \baselineskip not applied to \the\cavename in the map legend
+  - fixed the \the\cavename collision with the north arrow
 
 xtherion:
  * improved control over vertical positioning of backgroud images
