@@ -61,7 +61,7 @@ proc xth_cp_new_file {} {
 }
 
 proc xth_cp_open_file {fpath} {
-  global xth
+  global xth tcl_platform
   xth_status_bar_status cp ""
   
   if {$xth(cp,fopen)} {
@@ -69,8 +69,13 @@ proc xth_cp_open_file {fpath} {
   }
 
   if {[string length $fpath] == 0} {
-    set fpath [tk_getOpenFile -filetypes $xth(app,cp,filetypes) \
-      -parent $xth(gui,main) -initialdir $xth(gui,initdir)]
+    if {[string equal $tcl_platform(platform) unix]} {
+        set fpath [tk_getOpenFile -filetypes $xth(app,cp,filetypes) -defaultextension /\
+          -parent $xth(gui,main) -initialdir $xth(gui,initdir)]
+    } else {
+        set fpath [tk_getOpenFile -filetypes $xth(app,cp,filetypes) \
+          -parent $xth(gui,main) -initialdir $xth(gui,initdir)]
+    }
   }
   
   if {[string length $fpath] == 0} {
