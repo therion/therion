@@ -1043,6 +1043,18 @@ def withradialshading (expr p, ca, cb) =
                   "THgradient") withoutcolor
 enddef;
 
+% compatibility macros for old-style transparency definitions:
+
+def def_transparent_rgb (suffix name)(expr r, g, b) =
+  message("[Warning: obsolete transparent colour definition '" & str name & "']");
+  scantokens("rgbcolor " & str name & "; " & str name & ":=(" & decimal r & "," & decimal g & "," & decimal b & ");");
+enddef;
+
+primarydef p withtransparentcolor s =
+  hide(message("[Warning: obsolete 'withtransparentcolor' option; use 'withcolor <color> withalpha <number>' instead]"))
+  p withcolor s withalpha 0.75
+enddef;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % some useful macros from H. Hagen's MetaFun package (adapted)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
