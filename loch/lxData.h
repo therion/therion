@@ -31,6 +31,7 @@
 
 // Standard libraries
 #ifndef LXDEPCHECK
+#include <limits>   // required to compile with vtk 9.0.1 and gcc 11
 #include <vtkPolyData.h>
 #include <vtkLookupTable.h>
 #include <vtkAppendPolyData.h>
