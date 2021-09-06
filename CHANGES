@@ -2,6 +2,7 @@ Therion 6.0.2 (in progress):
 
 therion:
  * add compatibility macros for pre-6.0.0 transparency style in MetaPost
+ * include Proj 8.1.1 to the Proj testing suite
  * bugs fixed:
   - wrong vertical alignment of legend entries using <br> to split lines
   - \baselineskip not applied to \the\cavename in the map legend
