@@ -111,7 +111,7 @@ endif
 ##LXLIBDIR = mingw
 ##PLIBS = $(shell pkg-config freetype2 --libs) -lharfbuzz -lbrotlidec-static -lbrotlicommon-static -lgraphite2 -lusp10 -lbz2 -lz $(shell $(WX_CONFIG) --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##LXPLATFORM = WIN32
-##STRIPFLAG = -static-libgcc -static -s
+##STRIPFLAG = -static-libgcc -s
 
 # PLATFORM WIN32CROSS
 ##CROSS ?= i686-w64-mingw32.static-
