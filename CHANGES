@@ -1,7 +1,9 @@
-Therion 6.0.2 (in progress):
+Therion 6.0.2 (2021-09-13):
 
 therion:
  * add compatibility macros for pre-6.0.0 transparency style in MetaPost
+ * allow scaling of some point symbols (anchor, bridge, camp, dig, fixedladder,
+   noequipment, rope, ropeladder, steps, traverse, viaferrata) [PR#382,384]
  * include Proj 8.1.1 to the Proj testing suite
  * bugs fixed:
   - wrong vertical alignment of legend entries using <br> to split lines
@@ -14,6 +16,10 @@ loch:
 
 xtherion:
  * improved control over vertical positioning of backgroud images
+
+infrastructure:
+ * fix possible mixing of make and cmake generated files [PR#381]
+ * fix static linking issues under recent MinGW
 
 --------------------------------------------------------------------------------
 
