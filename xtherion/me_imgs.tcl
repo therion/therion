@@ -519,7 +519,7 @@ proc xth_me_imgs_xvi_create {imgx} {
       set cclr gray
       set cdash .
     }
-    set cid [$xth(me,can) create line 0 0 1 1 -fill $cclr -dash $cdash -width $xth(gui,xvi_sketch_line_width) -state hidden -tags bgimg [list $id [format "%sSKLN%d" $id $i]]]
+    set cid [$xth(me,can) create line 0 0 1 1 -fill $cclr -dash $cdash -width $xth(gui,xvi_sketch_line_width) -state hidden -tags [list $id bgimg [format "%sSKLN%d" $id $i]]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
