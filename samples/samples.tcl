@@ -30,6 +30,12 @@ if {[regexp {\-\-generate-tex-only} $argv]} {
   set donotruntherion 1
 }
 
+set generate_html_images 0
+if {[regexp {\-\-generate-html-images} $argv]} {
+  set generate_html_images 1
+}
+
+
 set dirnum 0
 set dirlist {}
 set filelist {}
@@ -238,7 +244,7 @@ proc get_html_body_for_tex {fn} {
 
 
 proc create_docs {} {
-  global filelist tcl_platform outd outdd donotruntherion
+  global filelist tcl_platform outd outdd donotruntherion generate_html_images
   set cdir {}
   set chid 0
   set imid 0
@@ -384,7 +390,7 @@ proc create_docs {} {
     set iisrc [lindex $img 1]
     log_msg "$iisrc\n"
     set dpi 300
-    if {!$donotruntherion} {
+    if {$generate_html_images && !$donotruntherion} {
       while {[catch {
         eval "exec \"$convpath\" -colorspace RGB -density $dpi $iisrc $outd/tmp.png"
       }] && ($dpi > 10)} {

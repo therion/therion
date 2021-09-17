@@ -23,3 +23,6 @@ clean:
 
 quick:
 	tclsh samples.tcl $(LOUTDIR) --generate-tex-only $(LOUTDIR)/samples
+
+html:
+	tclsh samples.tcl $(LOUTDIR) --generate-html-images $(LOUTDIR)/samples

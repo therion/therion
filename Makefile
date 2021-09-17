@@ -239,6 +239,9 @@ samples-quick:
 	touch thbook/version.tex
 	$(MAKE) -C thbook
 
+samples-html:
+	$(MAKE) -C samples html
+
 $(OUTDIR)/samples.doc/index.tex:
 	$(MAKE) -C samples
 	touch thbook/version.tex

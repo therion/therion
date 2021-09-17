@@ -20,6 +20,7 @@
 #include <wx/filename.h>
 #include <wx/busyinfo.h>
 #include <wx/help.h>
+#include <wx/html/helpctrl.h>
 #include <wx/fs_zip.h>
 #include <wx/dnd.h>
 #include <wx/display.h>
@@ -169,13 +170,9 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
 
     this->m_pres = new wxXmlDocument();
 
-    this->m_helpController = new wxHelpController;
+    this->m_helpController = new wxHtmlHelpController;
     wxString hlpFName = _T("loch"), tmpHlpFName;
-#ifdef LXWIN32
-    hlpFName += _T(".chm");
-#else
     hlpFName += _T(".htb");
-#endif
     wxFileName hlpFN;
     hlpFN = wxFileName(this->m_app->m_path);
     hlpFN.AppendDir(this->m_app->m_locale.GetCanonicalName());
@@ -192,6 +189,13 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
         hlpFName = _T("en/loch");
       }
     }
+#ifdef LXLINUX:
+    hlpFName = _T("/usr/local/share/doc/therion-viewer/help/en/loch.htb");
+    hlpFN = wxFileName(hlpFName);
+    if (!hlpFN.FileExists()) {
+        hlpFName = _T("/usr/share/doc/therion-viewer/help/en/loch.htb");
+    }
+#endif
     this->m_helpController->Initialize(hlpFName);
 
     

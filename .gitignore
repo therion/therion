@@ -34,6 +34,7 @@ xtherion/therion.tcl
 *.rej
 *.shp
 *.so
+*.htb
 *.stackdump
 *.tar.gz
 *.xhtml

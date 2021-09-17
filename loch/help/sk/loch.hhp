@@ -1,15 +1,8 @@
 [OPTIONS]
-Auto Index=Yes
-Compatibility=1.1 or later
-Compiled file=loch.chm
 Contents file=loch.hhc
-Default topic=loch.htm
-Display compile progress=Yes
-Full-text search=Yes
 Index file=loch.hhk
-Language=0x409 English (United States)
 Title=Loch Help
-
+Default topic=loch.htm
 
 [FILES]
 loch.htm
