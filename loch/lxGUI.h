@@ -187,7 +187,7 @@ class lxFrame: public wxFrame
 
     class lxApp * m_app;
 
-    class wxHelpController * m_helpController;
+    class wxHtmlHelpController * m_helpController;
 
     lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
       const wxSize& size, long style = wxDEFAULT_FRAME_STYLE);

@@ -189,7 +189,7 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
         hlpFName = _T("en/loch");
       }
     }
-#ifdef LXLINUX:
+#ifdef LXLINUX
     hlpFName = _T("/usr/local/share/doc/therion-viewer/help/en/loch.htb");
     hlpFN = wxFileName(hlpFName);
     if (!hlpFN.FileExists()) {
