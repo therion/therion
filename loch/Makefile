@@ -197,7 +197,8 @@ $(LOUTDIR)/%.o : %.c
 	$(CC) -c $(CCFLAGS) -o $@ $<
 
 
-all: $(LOUTDIR)/loch hlp
+all: $(LOUTDIR)/loch
+	$(MAKE) -C ./help
 
 hlp:
 	$(MAKE) -C ./help
@@ -268,7 +269,7 @@ clean:
 	perl makefile.pl rm -q *.zip
 	perl makefile.pl rm -q *.pdf
 	perl makefile.pl rm -q *.png
-#	$(MAKE) -C help clean
+	$(MAKE) -C help clean
 
 
 

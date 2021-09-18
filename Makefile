@@ -54,7 +54,7 @@ CCPFLAGS = -DTHLINUX
 LDPFLAGS = -s
 export THPLATFORM = LINUX
 export OUTDIR = .
-THXTHMKCMD = ./therion
+THXTHMKCMD = $(OUTDIR)/therion
 
 
 # PLATFORM WIN32
@@ -168,6 +168,9 @@ outdirs:
 	mkdir -p $(OUTDIR)/extern/shapelib
 	mkdir -p $(OUTDIR)/extern/fmt/src
 	mkdir -p $(OUTDIR)/loch
+	mkdir -p $(OUTDIR)/loch/help
+	mkdir -p $(OUTDIR)/loch/help/en
+	mkdir -p $(OUTDIR)/loch/help/sk
 	mkdir -p $(OUTDIR)/xtherion
 	mkdir -p $(OUTDIR)/thbook
 
@@ -254,6 +257,7 @@ clean:
 	perl makefile.pl rm -q ./xtherion/therion.tcl
 	perl makefile.pl rmdir -q samples.doc
 	$(MAKE) -C ./samples clean
+	$(MAKE) -C ./loch clean
 	$(MAKE) cleanrest
 
 cleanrest:
