@@ -20,7 +20,6 @@ jobs:
           sudo apt install -y wine32
           sudo apt install -y ninja-build
           sudo apt install -y mxe-i686-w64-mingw32.static-binutils mxe-i686-w64-mingw32.static-bzip2 mxe-i686-w64-mingw32.static-expat mxe-i686-w64-mingw32.static-freetype-bootstrap mxe-i686-w64-mingw32.static-gcc mxe-i686-w64-mingw32.static-gettext mxe-i686-w64-mingw32.static-glib mxe-i686-w64-mingw32.static-harfbuzz mxe-i686-w64-mingw32.static-jpeg mxe-i686-w64-mingw32.static-libiconv mxe-i686-w64-mingw32.static-libpng mxe-i686-w64-mingw32.static-tiff mxe-i686-w64-mingw32.static-vtk mxe-i686-w64-mingw32.static-wxwidgets mxe-i686-w64-mingw32.static-xz mxe-i686-w64-mingw32.static-zlib mxe-i686-w64-mingw32.static-proj
-          sudo sed -i '/pattern="PDF"/d' /etc/ImageMagick-6/policy.xml  # turn off policy preventing PDF conversion
       - name: build and create the installation package
         id: build
         run: |
