@@ -675,6 +675,9 @@ void thimport::import_file_img()
     if ((sli->flags & img_FLAG_DUPLICATE) != 0) {
       tmpdata->d_flags |= TT_LEGFLAG_DUPLICATE;
     }
+    if ((sli->flags & img_FLAG_SPLAY) != 0) {
+      tmpdata->d_flags |= TT_LEGFLAG_SPLAY;
+    }
     tmpdata->insert_data_leg(2, args);      
     this->db->csurveyptr = tmpsurvey;
   }
