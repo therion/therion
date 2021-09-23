@@ -18,6 +18,7 @@ function(add_help DIR)
 
   add_custom_target(hlp_${DIR} ALL DEPENDS ${FULL_PATH}/loch.htb)
 
+  install(FILES ${FULL_PATH}/loch.htb DESTINATION share/doc/therion-viewer/help/${DIR} COMPONENT loch-docs)
 endfunction()
 
 add_help("en")

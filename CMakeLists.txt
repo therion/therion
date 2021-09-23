@@ -149,7 +149,7 @@ if (BUILD_THERION)
     add_executable(therion therion-main.cxx)
     target_link_libraries(therion PUBLIC therion-common)
 
-    install(TARGETS therion RUNTIME DESTINATION bin)
+    install(TARGETS therion RUNTIME DESTINATION bin COMPONENT th-runtime)
 
     # unit tests
     add_executable(utest utest-proj.cxx utest-icase.cxx utest-thdouble.cxx utest-main.cxx)

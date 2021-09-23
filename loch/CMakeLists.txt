@@ -47,6 +47,7 @@ if (WIN32)
     add_dependencies(loch generate_resource)
 endif()
 
-install(TARGETS loch RUNTIME DESTINATION bin)
+install(TARGETS loch RUNTIME DESTINATION bin COMPONENT loch-runtime)
 
 add_subdirectory(help)
+add_subdirectory(locale)
