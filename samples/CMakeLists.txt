@@ -1,13 +1,27 @@
+# get the relative path to generated samples to ensure reproducible builds,
+# as the path is written to index.tex and also in the metadata (PTEX.FileName)
+# of PDF images included into thbook.pdf
+file(RELATIVE_PATH SAMPLES_REL_DIR ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR})
+string(REGEX REPLACE "/$" "" SAMPLES_REL_DIR ${SAMPLES_REL_DIR})
+
 # Build samples and add them to the thbook.
 therion_copy_files(samples.tcl)
 add_custom_target(
   samples
-  COMMAND tclsh samples.tcl ${CMAKE_BINARY_DIR} --generate-tex-only
+  COMMAND tclsh samples.tcl ${SAMPLES_REL_DIR} --generate-tex-only
   COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_BINARY_DIR}/thbook/version.tex
   COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target thbook
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/samples.tcl
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_dependencies(samples samples-build)
+
+# build samples in html format, including the conversion of PDF to PNG images
+add_custom_target(
+  samples-html
+  COMMAND tclsh samples.tcl ${SAMPLES_REL_DIR} --generate-html-images
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/samples.tcl
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_dependencies(samples-html therion)
 
  # subdirectories will add dependencies to these targets
 add_custom_target(samples-build)
