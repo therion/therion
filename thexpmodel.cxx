@@ -50,7 +50,6 @@
 #include <libgen.h>
 #include <thread>
 
-
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
   this->items = TT_EXPMODEL_ITEM_ALL;
@@ -1733,9 +1732,9 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             std::list<lxFile3Angle> tlist;
             lxFile3Angle t3;
             for(i = 0, vxp = d3d->firstvx; vxp != NULL; vxp = vxp->next, i++) {
-              pdata[i].m_c[0] = vxp->x;
-              pdata[i].m_c[1] = vxp->y;
-              pdata[i].m_c[2] = vxp->z;
+              pdata[i].m_c[0] = lxFilePrepDbl(vxp->x);
+              pdata[i].m_c[1] = lxFilePrepDbl(vxp->y);
+              pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
             }
             expf_scrap.m_numPoints = d3d->nvertices;
             expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
@@ -1804,9 +1803,9 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
           std::list<lxFile3Angle> tlist;
           lxFile3Angle t3;
           for(i = 0, vxp = d3d->firstvx; vxp != NULL; vxp = vxp->next, i++) {
-            pdata[i].m_c[0] = vxp->x;
-            pdata[i].m_c[1] = vxp->y;
-            pdata[i].m_c[2] = vxp->z;
+            pdata[i].m_c[0] = lxFilePrepDbl(vxp->x);
+            pdata[i].m_c[1] = lxFilePrepDbl(vxp->y);
+            pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
           }
           expf_scrap.m_numPoints = d3d->nvertices;
           expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));

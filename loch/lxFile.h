@@ -47,6 +47,7 @@ typedef char * lxFileBuff;
 
 #define lxassert(expr) if (!(expr)) std::exit(1);
 
+double lxFilePrepDbl(double val);
 
 struct lxFileSize {
   lxFileSizeT m_size = 0;
