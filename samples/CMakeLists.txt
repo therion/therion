@@ -19,6 +19,7 @@ add_dependencies(samples samples-build)
 add_custom_target(
   samples-html
   COMMAND tclsh samples.tcl ${SAMPLES_REL_DIR} --generate-html-images
+  USES_TERMINAL
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/samples.tcl
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_dependencies(samples-html therion)
