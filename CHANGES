@@ -1,7 +1,25 @@
 Therion 6.0.3 (in progress):
 
+therion:
+ * add support for splay shots in .3d import
+ * survex code updated to 1.2.44
+ * a new patch to get reproducible .3d files applied
+ * bugs fixed:
+   - fixed typos in an error message
+   - sample files modified not to start with #! characters which confused lintian
+
+loch:
+ * use help files in .htb format on all platforms
+ * fixed cross-platform differences of generated .lox files
+
 xtherion:
  * fixed bug with PocketTopo XVI rendering introduced in 6.0.2
+
+infrastructure:
+ * cmake: added compilation of .mo translation file
+ * cmake: improved installation using components
+ * cmake: reproducibility fixes
+ * cmake: added support for generation of the documentation in HTML format
 
 --------------------------------------------------------------------------------
 
@@ -13,9 +31,9 @@ therion:
    noequipment, rope, ropeladder, steps, traverse, viaferrata) [PR#382,384]
  * include Proj 8.1.1 to the Proj testing suite
  * bugs fixed:
-  - wrong vertical alignment of legend entries using <br> to split lines
-  - \baselineskip not applied to \the\cavename in the map legend
-  - fixed the collision of \the\cavename with the north arrow
+   - wrong vertical alignment of legend entries using <br> to split lines
+   - \baselineskip not applied to \the\cavename in the map legend
+   - fixed the collision of \the\cavename with the north arrow
 
 loch:
  * fix a missing include when compiling with vtk 9.0.1 and gcc 11
