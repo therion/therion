@@ -117,7 +117,15 @@ BEGIN_EVENT_TABLE(lxFrame, wxFrame)
 END_EVENT_TABLE()
 
 
-
+void try_help_fn(lxApp * app, wxString path, wxString & fileName) {
+	wxString fv;
+	fv = wxString::Format(path, _T("en"));
+	if (wxFileName(fv).FileExists()) fileName = fv;
+	fv = wxString::Format(path, app->m_locale.GetCanonicalName().Left(2));
+	if (wxFileName(fv).FileExists()) fileName = fv;
+	fv = wxString::Format(path, app->m_locale.GetCanonicalName());
+	if (wxFileName(fv).FileExists()) fileName = fv;
+}
 
 
 #if wxUSE_DRAG_AND_DROP
@@ -171,31 +179,17 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->m_pres = new wxXmlDocument();
 
     this->m_helpController = new wxHtmlHelpController;
-    wxString hlpFName = _T("loch"), tmpHlpFName;
-    hlpFName += _T(".htb");
-    wxFileName hlpFN;
-    hlpFN = wxFileName(this->m_app->m_path);
-    hlpFN.AppendDir(this->m_app->m_locale.GetCanonicalName());
-    hlpFN.SetFullName(hlpFName);
-    if (hlpFN.FileExists()) {
-      hlpFName = hlpFN.GetFullPath();
-    } else {
-      hlpFN = wxFileName(this->m_app->m_path);
-      hlpFN.AppendDir(this->m_app->m_locale.GetCanonicalName().Left(2));
-      hlpFN.SetFullName(hlpFName);
-      if (hlpFN.FileExists()) {
-        hlpFName = hlpFN.GetFullPath();
-      } else {
-        hlpFName = _T("en/loch");
-      }
-    }
+
+
+    wxString hlpFName = _T("");
+
+    try_help_fn(this->m_app, this->m_app->m_path.GetPath() + _T("/help/%s/loch.htb"), hlpFName);
+    try_help_fn(this->m_app, this->m_app->m_path.GetPath() + _T("/doc/help/%s/loch.htb"), hlpFName);
 #ifdef LXLINUX
-    hlpFName = _T("/usr/local/share/doc/therion-viewer/help/en/loch.htb");
-    hlpFN = wxFileName(hlpFName);
-    if (!hlpFN.FileExists()) {
-        hlpFName = _T("/usr/share/doc/therion-viewer/help/en/loch.htb");
-    }
+    try_help_fn(this->m_app, _T("/usr/local/share/doc/therion-viewer/help/%s/loch.htb"), hlpFName);
+    try_help_fn(this->m_app, _T("/usr/share/doc/therion-viewer/help/%s/loch.htb"), hlpFName);
 #endif
+    if (hlpFName.Length() == 0) hlpFName=_T("help/en/loch");
     this->m_helpController->Initialize(hlpFName);
 
     
@@ -1160,6 +1154,9 @@ bool lxApp::OnInit()
     m_locale.Init(wxLANGUAGE_DEFAULT, wxLOCALE_LOAD_DEFAULT | wxLOCALE_CONV_ENCODING);
 #endif
     
+#ifdef LXWIN32
+    m_locale.AddCatalogLookupPathPrefix("locale");
+#endif
     m_locale.AddCatalog(wxT("loch"));
     m_path = wxFileName(this->argv[0]);
 
