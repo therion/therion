@@ -284,6 +284,13 @@ class thsurvey : public thdataobject {
   thsurvey * get_nss();
 
   
+  /**
+   * Get entrance station.
+   */
+
+  thobjectname get_entrance();
+
+
 };
 
 

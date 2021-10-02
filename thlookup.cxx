@@ -55,6 +55,7 @@ thlookup::thlookup()
   this->m_intervals = false;
   this->m_autoIntervals = false;
   this->m_title = "";
+  this->m_depth_altitude = 0;
 }
 
 
@@ -283,6 +284,7 @@ thlayout_color thlookup::value2clr(double sval) {
     double ratio;
     thlookup_table_list::iterator tli, ptli, ntli;
     thlayout_color clr;
+    if ((this->m_type) == TT_LAYOUT_CCRIT_DEPTH) sval -= this->m_depth_altitude;
 	if (this->m_intervals) {
 	  for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
 		if (thisnan(tli->m_valueDblFrom) && thisnan(tli->m_valueDbl)) {
@@ -382,6 +384,7 @@ void thlookup::color_scrap(thscrap * s) {
         thmapstat ms;
         ms.adddata(&(s->adata));
         sval = s->a;
+        if ((this->m_type) == TT_LAYOUT_CCRIT_DEPTH) sval -= this->m_depth_altitude;
         if (this->m_type == TT_LAYOUT_CCRIT_EXPLODATE) {
           sval = ms.discovered_date.get_start_year();
           if (sval < 0) sval = thnan;
@@ -551,10 +554,8 @@ void thlookup::auto_generate_items() {
       this->m_autoStat.get_min_max_alt(from, to);
       for(z = 0; z < 7; z++) {
         tr.m_valueDbl = from + double(z) * ((to - from) / 6);
-        if (this->m_type == TT_LAYOUT_CCRIT_ALTITUDE)
-            this->m_table.push_front(tr);
-        else
-        	this->m_table.push_back(tr);
+        if (this->m_type == TT_LAYOUT_CCRIT_DEPTH) tr.m_valueDbl -= this->m_depth_altitude;
+		this->m_table.push_front(tr);
       }
       break;
   }

@@ -3600,6 +3600,9 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
   if (lkp == NULL)
     return;
 
+  if (this->layout->color_crit == TT_LAYOUT_CCRIT_DEPTH) {
+	  lkp->m_depth_altitude = thdb.db2d.get_projection_entrance_altitude(prj);
+  }
   lkp->auto_generate_items();
   lkp->postprocess();
 

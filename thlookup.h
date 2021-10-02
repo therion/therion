@@ -93,6 +93,7 @@ class thlookup : public thdataobject {
   thlookup_table_list m_table;
   const char * m_title;
   thmapstat m_autoStat;
+  double m_depth_altitude;
 
   /**
    * Standard constructor.

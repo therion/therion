@@ -383,6 +383,8 @@ class thdb2d {
    
   const char * get_projection_title(thdb2dprj * prj);
   
+  double get_projection_entrance_altitude(thdb2dprj * prj);
+
   void log_distortions();
   
   void log_selection(thdb2dxm * selection, thdb2dprj * prj);
