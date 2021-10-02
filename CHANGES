@@ -7,6 +7,7 @@ therion:
  * bugs fixed:
    - fixed typos in an error message
    - sample files modified not to start with #! characters which confused lintian
+   - color map-fg depth does not generate metapost error
 
 loch:
  * use help files in .htb format on all platforms
