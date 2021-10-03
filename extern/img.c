@@ -1,6 +1,6 @@
 /* img.c
  * Routines for reading and writing Survex ".3d" image files
- * Copyright (C) 1993-2004,2005,2006,2010,2011,2013,2014,2017,2018 Olly Betts
+ * Copyright (C) 1993-2021 Olly Betts
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 #define TIMENA "?"
 #ifdef IMG_HOSTED
 # define INT32_T int32_t
+# define UINT32_T uint32_t
 # include "debug.h"
 # include "filelist.h"
 # include "filename.h"
@@ -45,12 +46,15 @@
 # ifdef HAVE_STDINT_H
 #  include <stdint.h>
 #  define INT32_T int32_t
+#  define UINT32_T uint32_t
 # else
 #  include <limits.h>
 #  if INT_MAX >= 2147483647
 #   define INT32_T int
+#   define UINT32_T unsigned
 #  else
 #   define INT32_T long
+#   define UINT32_T unsigned long
 #  endif
 # endif
 # define TIMEFMT "%a,%Y.%m.%d %H:%M:%S %Z"
@@ -97,15 +101,15 @@ using std::min;
 static INT32_T
 get32(FILE *fh)
 {
-   INT32_T w = GETC(fh);
-   w |= (INT32_T)GETC(fh) << 8l;
-   w |= (INT32_T)GETC(fh) << 16l;
-   w |= (INT32_T)GETC(fh) << 24l;
-   return w;
+   UINT32_T w = GETC(fh);
+   w |= (UINT32_T)GETC(fh) << 8l;
+   w |= (UINT32_T)GETC(fh) << 16l;
+   w |= (UINT32_T)GETC(fh) << 24l;
+   return (INT32_T)w;
 }
 
 static void
-put32(long w, FILE *fh)
+put32(UINT32_T w, FILE *fh)
 {
    PUTC((char)(w), fh);
    PUTC((char)(w >> 8l), fh);
@@ -116,14 +120,15 @@ put32(long w, FILE *fh)
 static short
 get16(FILE *fh)
 {
-   short w = GETC(fh);
-   w |= (short)GETC(fh) << 8l;
-   return w;
+   UINT32_T w = GETC(fh);
+   w |= (UINT32_T)GETC(fh) << 8l;
+   return (short)w;
 }
 
 static void
-put16(short w, FILE *fh)
+put16(short word, FILE *fh)
 {
+   unsigned short w = (unsigned short)word;
    PUTC((char)(w), fh);
    PUTC((char)(w >> 8l), fh);
 }

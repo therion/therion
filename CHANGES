@@ -2,12 +2,12 @@ Therion 6.0.3 (in progress):
 
 therion:
  * add support for splay shots in .3d import
- * survex code updated to 1.2.44
+ * survex code updated to 1.2.45
  * a new patch to get reproducible .3d files applied
  * bugs fixed:
    - fixed typos in an error message
    - sample files modified not to start with #! characters which confused lintian
-   - color map-fg depth does not generate metapost error
+   - color map-fg depth: fix the colouring issues and the related metapost error
 
 loch:
  * use help files in .htb format on all platforms
