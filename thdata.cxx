@@ -1884,7 +1884,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
         thparse_double(val_id, val, args[carg]);
         switch (val_id) {
           case TT_SV_NUMBER:
-            val = this->dlc_counter.evaluate(val) - this->dlc_counter.evaluate(0.0);
+            val = this->dlc_counter.evaluate(val);
             val = this->dlu_counter.transform(val);
             this->cd_leg->fromcounter = val;
             break;
@@ -1932,7 +1932,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
         thparse_double(val_id, val, args[carg]);
         switch (val_id) {
           case TT_SV_NUMBER:
-            val = this->dlc_depth.evaluate(val) - this->dlc_depth.evaluate(0.0);
+            val = this->dlc_depth.evaluate(val);
             val = this->dlu_depth.transform(val);
             this->cd_leg->fromdepth = val;
             break;
