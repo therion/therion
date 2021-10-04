@@ -3,6 +3,7 @@ Therion 6.0.4 (in progress):
 therion:
  * bugs fixed:
    - fixed bug with counter and depth instrument calibration
+   - fixed error message for map containing only previews
 
 --------------------------------------------------------------------------------
 

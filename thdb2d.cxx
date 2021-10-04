@@ -580,6 +580,7 @@ void thdb2d::process_map_references(thmap * mptr)
   thdb2dmi * citem = mptr->first_item, * xcitem;
   thdataobject * optr;
   int proj_id = -1;
+
   while (citem != NULL) {
     if (citem->type != TT_MAPITEM_NORMAL) {
       citem = citem->next_item;
@@ -811,6 +812,11 @@ void thdb2d::postprocess_map_references(thmap * mptr)
 {
   thdb2dmi * citem = mptr->first_item;
   thdataobject * optr;
+  if (mptr->projection_id == -1) {
+	ththrow("{} [{}] -- map cannot contain only previews",
+	  citem->source.name, citem->source.line);
+  }
+
   while (citem != NULL) {
     if (citem->type == TT_MAPITEM_NORMAL) {
       citem = citem->next_item;
