@@ -12,6 +12,7 @@ function(process_locale DIR)
       DEPENDS ${FULL_PATH}/loch.po
   )
   add_custom_target(locale_${DIR} ALL DEPENDS ${FULL_PATH}/loch.mo)
+  add_dependencies(loch locale_${DIR})
   install(FILES ${FULL_PATH}/loch.mo DESTINATION share/locale/${DIR}/LC_MESSAGES COMPONENT loch-runtime)
 endfunction()
 
