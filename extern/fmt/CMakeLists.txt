@@ -1,4 +1,5 @@
 set(FMT_HEADERS 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/args.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/color.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/compile.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/core.h
@@ -9,7 +10,8 @@ set(FMT_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/os.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/ostream.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/printf.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/ranges.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/ranges.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/fmt/xchar.h)
 
 set(FMT_SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/format.cc
