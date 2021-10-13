@@ -109,7 +109,7 @@ endif
 ##CXXPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cflags)
 ##LXLIBDIR = mingw
-##PLIBS = $(shell pkg-config freetype2 --libs) -lharfbuzz -lbrotlidec-static -lbrotlicommon-static -lgraphite2 -lusp10 -lbz2 -lz $(shell $(WX_CONFIG) --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
+##PLIBS = $(shell pkg-config freetype2 --libs) -lharfbuzz -lbrotlidec -lbrotlicommon -lgraphite2 -lusp10 -lbz2 -lz $(shell $(WX_CONFIG) --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##LXPLATFORM = WIN32
 ##STRIPFLAG = -static-libgcc -s
 
