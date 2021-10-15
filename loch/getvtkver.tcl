@@ -65,7 +65,7 @@ switch [lindex $argv 0] {
 	puts $suffix
     }
     libsuffix {
-        if {[string length $mingwpath]} {
+        if {[regexp {.*/mingw\d+} $mingwpath]} {
 	  puts $suffix.dll
         } else {
 	  puts $suffix
