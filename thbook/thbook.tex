@@ -17,7 +17,8 @@
   \def\pdfstartlink#1 #2 #3 #4 #5 #6 #7\pdfendlink{#7}
   \let\red\relax \let\blue\relax \let\grey\relax 
   \let\black\relax \let\green\relax \let\POPcolor\relax
-\else 
+\else
+  \pdfsuppressptexinfo=-1\pdftrailerid{}\pdfinfoomitdate=1% reproducibility settings
   \ifnum\pdftexversion<110
     \message{Warning: PdfTeX too ancient to process samples}
   \else\ifnum\pdftexversion<130
