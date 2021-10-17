@@ -26,9 +26,9 @@
   \let\pdfpageheight\tmpdimen
 \else
   \ifx\directlua\undefined
-    \pdfsuppressptexinfo=-1\pdftrailerid{}\pdfinfoomitdate=1% reproducibility settings
+    \pdfsuppressptexinfo=-1\pdftrailerid{}% reproducibility settings, note that SOURCE_DATE_EPOCH should also be set
   \else
-    \pdfvariable suppressoptionalinfo\numexpr1+2+4+8+32+64+512% reproducibility settings
+    \pdfvariable suppressoptionalinfo\numexpr1+2+4+8+512% reproducibility settings
     \let\pdflastximage     \lastsavedimageresourceindex
     \let\pdfpageheight     \pageheight
     \let\pdfpagewidth      \pagewidth
