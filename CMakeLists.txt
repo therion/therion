@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 include(cmake/PreventInSourceBuilds.cmake)
 
-project(Therion)
+project(therion)
 set(CMAKE_CXX_STANDARD 14)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
@@ -10,6 +10,7 @@ option(BUILD_LOCH "Build loch executable." ON)
 option(BUILD_THBOOK "Build thbook.pdf." ON)
 option(BUILD_XTHERION "Build xtherion." ON)
 
+include(GNUInstallDirs)
 include(cmake/BuildType.cmake)
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
@@ -149,7 +150,13 @@ if (BUILD_THERION)
     add_executable(therion therion-main.cxx)
     target_link_libraries(therion PUBLIC therion-common)
 
-    install(TARGETS therion RUNTIME DESTINATION bin COMPONENT th-runtime)
+    install(TARGETS therion RUNTIME COMPONENT th-runtime)
+    install(FILES therion.ini TYPE SYSCONF RENAME therion.ini.new COMPONENT th-runtime)
+    install(CODE
+        "if (NOT EXISTS ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SYSCONFDIR}/therion.ini)
+            file(INSTALL ${CMAKE_CURRENT_SOURCE_DIR}/therion.ini DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SYSCONFDIR})
+        endif()"
+        COMPONENT th-runtime)
 
     # unit tests
     add_executable(utest utest-proj.cxx utest-icase.cxx utest-thdouble.cxx utest-main.cxx)

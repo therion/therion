@@ -47,7 +47,15 @@ if (WIN32)
     add_dependencies(loch generate_resource)
 endif()
 
-install(TARGETS loch RUNTIME DESTINATION bin COMPONENT loch-runtime)
+if (APPLE)
+    set(MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/loch.app/Contents/Info.plist")
+    set_target_properties(loch PROPERTIES
+        MACOSX_BUNDLE TRUE
+        RESOURCE "loch.app/Contents/Resources/loch.icns"
+    )
+endif()
+
+install(TARGETS loch RUNTIME COMPONENT loch-runtime)
 
 add_subdirectory(help)
 add_subdirectory(locale)

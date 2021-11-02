@@ -42,4 +42,4 @@ add_custom_command(
 add_custom_target(thbook ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/thbook.pdf)
 add_dependencies(thbook version)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/thbook.pdf DESTINATION share/doc/therion COMPONENT th-docs)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/thbook.pdf TYPE DOC COMPONENT th-docs)

@@ -31,6 +31,8 @@ jobs:
       - name: Run samples
         if: matrix.toolchain == 'clang-sanitizers.cmake'
         run: cmake --build build -t samples-verify-crc
+      - name: Install
+        run: cmake --build build -t install
 
   macOS:
     runs-on: ${{ matrix.os }}
@@ -51,6 +53,8 @@ jobs:
           mkdir build && cd build && cmake -G Ninja -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
       - run: cmake --build build -t therion loch utest
       - run: cmake --build build -t test
+      - name: Install
+        run: cmake --build build -t install
 
   Windows:
     runs-on: windows-latest
