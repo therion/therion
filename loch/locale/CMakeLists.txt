@@ -13,7 +13,7 @@ function(process_locale DIR)
   )
   add_custom_target(locale_${DIR} ALL DEPENDS ${FULL_PATH}/loch.mo)
   add_dependencies(loch locale_${DIR})
-  install(FILES ${FULL_PATH}/loch.mo DESTINATION share/locale/${DIR}/LC_MESSAGES COMPONENT loch-runtime)
+  install(FILES ${FULL_PATH}/loch.mo DESTINATION ${CMAKE_INSTALL_LOCALEDIR}/${DIR}/LC_MESSAGES COMPONENT loch-runtime)
 endfunction()
 
 process_locale("bg")
