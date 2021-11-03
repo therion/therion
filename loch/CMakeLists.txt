@@ -48,14 +48,22 @@ if (WIN32)
 endif()
 
 if (APPLE)
-    set(MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/loch.app/Contents/Info.plist")
+    set(ICONS "loch.app/Contents/Resources/loch.icns")
+    target_sources(loch PRIVATE ${ICONS})
     set_target_properties(loch PROPERTIES
         MACOSX_BUNDLE TRUE
-        RESOURCE "loch.app/Contents/Resources/loch.icns"
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/loch.app/Contents/Info.plist"
     )
+    set_source_files_properties(${ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 endif()
 
-install(TARGETS loch RUNTIME COMPONENT loch-runtime)
+install(TARGETS loch 
+    RUNTIME 
+        COMPONENT loch-runtime
+    BUNDLE
+        DESTINATION "/Applications"
+        COMPONENT loch-runtime
+)
 
 add_subdirectory(help)
 add_subdirectory(locale)

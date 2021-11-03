@@ -32,7 +32,7 @@ jobs:
         if: matrix.toolchain == 'clang-sanitizers.cmake'
         run: cmake --build build -t samples-verify-crc
       - name: Install
-        run: cmake --build build -t install
+        run: sudo cmake --build build -t install
 
   macOS:
     runs-on: ${{ matrix.os }}
