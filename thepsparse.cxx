@@ -180,6 +180,19 @@ std::string color::to_elements() const {
   return s;
 }
 
+std::string color::to_mpost(std::string varname) const {
+  std::string s;
+  if (model == colormodel::grey) {
+    s = fmt::format("{} := {};", varname, thdouble(a,prec_col));
+  }
+  else if (model == colormodel::rgb) {
+    s = fmt::format("rgbcolor {0}; {0} := ({1}, {2}, {3});", varname, thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col));
+  }
+  else if (model == colormodel::cmyk) {
+    s = fmt::format("cmykcolor {0}; {0} := ({1}, {2}, {3}, {4});", varname, thdouble(a,prec_col), thdouble(b,prec_col), thdouble(c,prec_col), thdouble(d,prec_col));
+  }
+  return s;
+}
 
 std::string color::to_pdfpatterncolor() const {
   std::string s;

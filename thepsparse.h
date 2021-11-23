@@ -49,6 +49,7 @@ struct color{
   std::string to_pdfliteral(fillstroke = fillstroke::fillstroke) const;
   std::string to_pdfpatterncolor() const;
   std::string to_elements() const;
+  std::string to_mpost(std::string) const;
 };
 
 struct CGS {  // current graphics state

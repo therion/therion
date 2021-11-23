@@ -1309,6 +1309,8 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   this->layout->color_map_fg.print_to_file(this->layout->color_model, mpf);
   fprintf(mpf,";\n");
 
+  fprintf(mpf, "%s\n", LAYOUT.col_background.to_mpost("MapBackground").c_str());
+
   // insert font setup
   if (this->layout->def_font_setup > 0) {
     fprintf(mpf,"fonts_setup(%.1f,%.1f,%.1f,%.1f,%.1f);\n", this->layout->font_setup[0], this->layout->font_setup[1], this->layout->font_setup[2], this->layout->font_setup[3], this->layout->font_setup[4]);
