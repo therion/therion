@@ -62,6 +62,7 @@ struct thlayout_color {
   thlayout_color(double v) : R(v), G(v), B(v), A(1.0), C(0.0), M(0.0), Y(0.0), K(1.0 - v), W(v), defined(0), model(TT_LAYOUTCLRMODEL_GRAY) {}
   thlayout_color(double r, double g, double b) : R(r), G(g), B(b), A(1.0), C(0.0), M(0.0), Y(0.0), K(0.0), W(0.0), defined(0), model(TT_LAYOUTCLRMODEL_RGB) {}
   thlayout_color(double c, double m, double y, double k) : R(0.0), G(0.0), B(0.0), A(1.0), C(c), M(m), Y(y), K(k), W(1-k), defined(0), model(TT_LAYOUTCLRMODEL_CMYK) {}
+  thlayout_color& operator=(const thlayout_color& src);
   bool is_defined();
   void set_color(int output_model, color & clr);
   void print_to_file(int output_model, FILE * f);

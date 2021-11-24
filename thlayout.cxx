@@ -1860,31 +1860,19 @@ void thlayout::process_copy() {
       begcopy(color_map_fg.defined)
         this->color_crit = srcl->color_crit;
         this->color_crit_fname = srcl->color_crit_fname;
-        this->color_map_fg.R = srcl->color_map_fg.R;
-        this->color_map_fg.G = srcl->color_map_fg.G;
-        this->color_map_fg.B = srcl->color_map_fg.B;
-        this->color_map_fg.A = srcl->color_map_fg.A;
+        this->color_map_fg = srcl->color_map_fg;
       endcopy
 
       begcopy(color_preview_below.defined)
-        this->color_preview_below.R = srcl->color_preview_below.R;
-        this->color_preview_below.G = srcl->color_preview_below.G;
-        this->color_preview_below.B = srcl->color_preview_below.B;
-        this->color_preview_below.A = srcl->color_preview_below.A;
+        this->color_preview_below = srcl->color_preview_below;
       endcopy
 
       begcopy(color_preview_above.defined)
-        this->color_preview_above.R = srcl->color_preview_above.R;
-        this->color_preview_above.G = srcl->color_preview_above.G;
-        this->color_preview_above.B = srcl->color_preview_above.B;
-        this->color_preview_above.A = srcl->color_preview_above.A;
+        this->color_preview_above = srcl->color_preview_above;
       endcopy
 
       begcopy(color_map_bg.defined)
-        this->color_map_bg.R = srcl->color_map_bg.R;
-        this->color_map_bg.G = srcl->color_map_bg.G;
-        this->color_map_bg.B = srcl->color_map_bg.B;
-        this->color_map_bg.A = srcl->color_map_bg.A;
+        this->color_map_bg = srcl->color_map_bg;
       endcopy
 
       begcopy(def_doc_title)
