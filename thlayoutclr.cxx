@@ -272,9 +272,9 @@ void thlayout_color::mix_with_color(double ratio, thlayout_color other_clr) {
 	this->K = (1 - ratio) * this->K + ratio * other_clr.K;
 }
 
-thlayout_color& thlayout_color::operator=(const thlayout_color& src) {
+void thlayout_color::copy_color(const thlayout_color& src) {
     if (this == &src)
-        return *this;
+        return;
     this->R = src.R;
     this->G = src.G;
     this->B = src.B;
@@ -285,6 +285,5 @@ thlayout_color& thlayout_color::operator=(const thlayout_color& src) {
     this->K = src.K;
     this->A = src.A;
     this->model = src.model;
-    return *this;
 }
 

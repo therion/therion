@@ -1860,19 +1860,19 @@ void thlayout::process_copy() {
       begcopy(color_map_fg.defined)
         this->color_crit = srcl->color_crit;
         this->color_crit_fname = srcl->color_crit_fname;
-        this->color_map_fg = srcl->color_map_fg;
+        this->color_map_fg.copy_color(srcl->color_map_fg);
       endcopy
 
       begcopy(color_preview_below.defined)
-        this->color_preview_below = srcl->color_preview_below;
+        this->color_preview_below.copy_color(srcl->color_preview_below);
       endcopy
 
       begcopy(color_preview_above.defined)
-        this->color_preview_above = srcl->color_preview_above;
+        this->color_preview_above.copy_color(srcl->color_preview_above);
       endcopy
 
       begcopy(color_map_bg.defined)
-        this->color_map_bg = srcl->color_map_bg;
+        this->color_map_bg.copy_color(srcl->color_map_bg);
       endcopy
 
       begcopy(def_doc_title)
