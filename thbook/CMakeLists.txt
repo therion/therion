@@ -25,11 +25,16 @@ if (NOT PDFTEX)
     message(FATAL_ERROR "pdftex command not found")
 endif()
 
+if(DEFINED ENV{SOURCE_DATE_EPOCH})
+  set(THBOOK_REPR "\\\\def\\\\reproducible{}")
+else()
+  set(THBOOK_REPR "")
+endif()
 
 set(PDFTEX_COMMAND
     ${CMAKE_COMMAND} -E env FORCE_SOURCE_DATE=1 TEXINPUTS="${CMAKE_CURRENT_BINARY_DIR}$<SEMICOLON>."
     ${CMAKE_CROSSCOMPILING_EMULATOR} ${PDFTEX}
-    --output-dir=${CMAKE_CURRENT_BINARY_DIR} "\\\\def\\\\outputsize{${THBOOK_FORMAT}}\\\\input thbook.tex")
+    --output-dir=${CMAKE_CURRENT_BINARY_DIR} "\\\\def\\\\outputsize{${THBOOK_FORMAT}}${THBOOK_REPR}\\\\input thbook.tex")
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/thbook.pdf

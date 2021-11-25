@@ -11,6 +11,14 @@
   % 3 - ebook reader
 \fi
 
+% define \reproducible{} to omit ID from the trailer
+\newif\ifomittrailerID
+\ifx\reproducible\undefined
+  \omittrailerIDfalse
+\else
+  \omittrailerIDtrue
+\fi
+
 \ifx\directlua\undefined\else
   \let\pdfoutput\outputmode
 \fi
@@ -26,9 +34,9 @@
   \let\pdfpageheight\tmpdimen
 \else
   \ifx\directlua\undefined
-    \pdfsuppressptexinfo=-1\pdftrailerid{}% reproducibility settings, note that SOURCE_DATE_EPOCH should also be set
+    \pdfsuppressptexinfo=-1\ifomittrailerID\pdftrailerid{}\fi% reproducibility settings, note that SOURCE_DATE_EPOCH and \reproducible{} should also be set
   \else
-    \pdfvariable suppressoptionalinfo\numexpr1+2+4+8+512% reproducibility settings
+    \pdfvariable suppressoptionalinfo\numexpr1+2+4+8\ifomittrailerID+512\fi% reproducibility settings
     \let\pdflastximage     \lastsavedimageresourceindex
     \let\pdfpageheight     \pageheight
     \let\pdfpagewidth      \pagewidth
