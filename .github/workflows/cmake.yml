@@ -93,8 +93,7 @@ jobs:
           sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
           sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt ${{ matrix.osname }} main'
           sudo apt -qq update
-          sudo apt upgrade -y
-          sudo apt install -y --allow-downgrades --allow-change-held-packages libpcre2-8-0=10.34-7
+          sudo apt install -y --allow-downgrades libpcre2-8-0=10.34-7
           sudo apt install -y ${{ matrix.wine-pkg }}
           sudo apt install -y ninja-build
           sudo apt install -y mxe-${{ matrix.pkg }}-w64-mingw32.static-binutils mxe-${{ matrix.pkg }}-w64-mingw32.static-bzip2 mxe-${{ matrix.pkg }}-w64-mingw32.static-expat mxe-${{ matrix.pkg }}-w64-mingw32.static-freetype-bootstrap mxe-${{ matrix.pkg }}-w64-mingw32.static-gcc mxe-${{ matrix.pkg }}-w64-mingw32.static-gettext mxe-${{ matrix.pkg }}-w64-mingw32.static-glib mxe-${{ matrix.pkg }}-w64-mingw32.static-harfbuzz mxe-${{ matrix.pkg }}-w64-mingw32.static-jpeg mxe-${{ matrix.pkg }}-w64-mingw32.static-libiconv mxe-${{ matrix.pkg }}-w64-mingw32.static-libpng mxe-${{ matrix.pkg }}-w64-mingw32.static-tiff mxe-${{ matrix.pkg }}-w64-mingw32.static-vtk mxe-${{ matrix.pkg }}-w64-mingw32.static-wxwidgets mxe-${{ matrix.pkg }}-w64-mingw32.static-xz mxe-${{ matrix.pkg }}-w64-mingw32.static-zlib mxe-${{ matrix.pkg }}-w64-mingw32.static-proj
