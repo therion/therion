@@ -1,9 +1,35 @@
 Therion 6.0.4 (in progress):
 
 therion:
+ * MapBackground colour variable available in MetaPost
+   (corresponding to 'color map-bg' set in the layout)
  * bugs fixed:
    - fixed bug with counter and depth instrument calibration
    - fixed error message for map containing only previews
+   - depth is incorrectly taken from surface legs [#165]
+   - cmyk/grayscale color export fix
+   - fix shapefile generation issues under Windows (only when using
+     the embedded shp library)
+
+loch:
+ * bugs fixed:
+   - fixed grayscale surface image rendering
+
+xtherion:
+ * bugs fixed:
+   - sketch import file browser case-sensitive to filename extensions [#390]
+   - fix lintian warnings by using a different shebang line
+
+infrastructure:
+ * cmake: generate help and locale files for target loch
+ * cmake improvements by Matěj Plch [#391]
+ * updated Makefile and getvtkver.tcl for loch
+ * fix thbook reproducible build (cmake only; SOURCE_DATE_EPOCH should be set)
+ * support thbook compilation with luatex
+ * use only current OS versions for make-based builds on GHA
+ * fix/workaround for wine32 installation on Ubuntu 20.04 on GHA
+ * updated libfmt [#388]
+ * updated proj testing script
 
 --------------------------------------------------------------------------------
 
