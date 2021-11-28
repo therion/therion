@@ -130,6 +130,13 @@ if (WIN32)
     configure_file(innosetup.ini.in innosetup.ini)
 endif()
 
+# set an installation path for ini files
+if (IS_ABSOLUTE ${CMAKE_INSTALL_SYSCONFDIR})
+  set(TH_PATH_INI "${CMAKE_INSTALL_SYSCONFDIR}")
+else()
+  set(TH_PATH_INI "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SYSCONFDIR}")
+endif()
+
 if (BUILD_THERION)
     # therion lib
     add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
@@ -153,8 +160,8 @@ if (BUILD_THERION)
     install(TARGETS therion RUNTIME COMPONENT th-runtime)
     install(FILES therion.ini TYPE SYSCONF RENAME therion.ini.new COMPONENT th-runtime)
     install(CODE
-        "if (NOT EXISTS ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SYSCONFDIR}/therion.ini)
-            file(INSTALL ${CMAKE_CURRENT_SOURCE_DIR}/therion.ini DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SYSCONFDIR})
+        "if (NOT EXISTS ${TH_PATH_INI}/therion.ini)
+            file(INSTALL ${CMAKE_CURRENT_SOURCE_DIR}/therion.ini DESTINATION ${TH_PATH_INI})
         endif()"
         COMPONENT th-runtime)
 
