@@ -5895,7 +5895,7 @@ bg: Въвеждане на името на репераната точка
 cs: Zadávat názvy bodů
 de: Messpunktnamen eingeben
 el: Εισαγωγή ονομάτων σημείων χαρτογράφησης
-en: Demander le nom des stations
+en: Enter station names
 es: Nombrar estaciones
 fr: Entrer les noms des stations topos
 it: Inserisci i nomi dei capisaldi
