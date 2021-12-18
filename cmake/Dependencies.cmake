@@ -49,6 +49,7 @@ if (BUILD_LOCH)
         vtkCommonExecutionModel
         vtkCommonDataModel
         vtkCommonCore
+        vtkIOPLY
         vtkFiltersCore
         vtkFiltersHybrid
         vtkIOLegacy
