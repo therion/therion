@@ -143,7 +143,7 @@ struct lxData {
   void Rebuild();
   void InitTextures();
   void ExportVTK(wxString fileName);
-  
+  void ExportPLY(wxString fileName);
   void ClearSurveySelection();
   void AddSelectedSurvey(size_t id);
   

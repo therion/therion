@@ -43,6 +43,8 @@
 #include <vtkCellData.h>
 #include <vtkPointData.h>
 #include <vtkPolyDataWriter.h>
+#include <vtkPLYWriter.h>
+//#include <vtkMassProperties.h>
 #include <locale.h>
 #ifdef LXMACOSX
 #include <OpenGL/glu.h>
@@ -429,7 +431,6 @@ void lxData::Rebuild()
   this->scrapWalls->SetPoints(sWpoints);
   this->scrapWalls->SetPolys(sWpolys);
 
-
   // single surface
   surfaceNpt = 0;
   lxFileSurface_list::iterator sf_it = this->m_input.m_surfaces.begin();
@@ -565,6 +566,10 @@ void lxData::Rebuild()
 #if VTK_MAJOR_VERSION > 5
   this->allWalls->RemoveAllInputs();
   this->allWalls->AddInputData(this->scrapWallsNormals->GetOutput());
+  //vtkMassProperties * mp = vtkMassProperties::New();
+  //mp->SetInputConnection(this->scrapWallsNormals->GetOutputPort());
+  //mp->Update();
+  //printf("Volume: %.1f\n", mp->GetVolumeProjected());
   this->allWalls->AddInputData(this->lrudWalls);
 #else
   this->allWalls->RemoveAllInputs();
@@ -626,6 +631,21 @@ void lxData::ExportVTK(wxString fileName)
   w->SetInputConnection(this->allWallsStripped->GetOutputPort());
 #else
   w->SetInput(this->allWallsStripped->GetOutput());
+#endif
+  w->Write();
+  w->Delete();
+}
+
+
+void lxData::ExportPLY(wxString fileName)
+{
+  vtkPLYWriter * w = vtkPLYWriter::New();
+  w->SetFileName(fileName.mbc_str());
+  w->SetFileTypeToBinary();
+#if VTK_MAJOR_VERSION > 5
+  w->SetInputConnection(this->allWalls->GetOutputPort());
+#else
+  w->SetInput(this->allWalls->GetOutput());
 #endif
   w->Write();
   w->Delete();

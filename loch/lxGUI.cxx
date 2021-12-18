@@ -629,7 +629,7 @@ void lxFrame::OnAll(wxCommandEvent& event)
                     _("Export"),
                     wxEmptyString,
                     wxEmptyString,
-                    _("VTK file (*.vtk)|*.vtk|Loch file (*.lox)|*.lox"),
+                    _("VTK file (*.vtk)|*.vtk|Loch file (*.lox)|*.lox|PLY file (*.ply)|*.ply"),
                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT
                   );
 
@@ -643,6 +643,9 @@ void lxFrame::OnAll(wxCommandEvent& event)
               break;
             case 1:
               this->data->m_input.ExportLOX(dialog.GetPath().mbc_str());
+              break;
+            case 2:
+              this->data->ExportPLY(dialog.GetPath());
               break;
           }
           this->canvas->ForceRefresh();

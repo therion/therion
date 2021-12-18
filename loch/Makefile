@@ -43,6 +43,7 @@ VTKLIBS = \
     -lvtkCommonExecutionModel$(VTKLIBSUFFIX) \
     -lvtkCommonDataModel$(VTKLIBSUFFIX) \
     -lvtkCommonCore$(VTKLIBSUFFIX) \
+    -lvtkIOPLY$(VTKLIBSUFFIX) \
     -lvtkFiltersCore$(VTKLIBSUFFIX) \
     -lvtkFiltersHybrid$(VTKLIBSUFFIX) \
     -lvtkIOLegacy$(VTKLIBSUFFIX) \
@@ -67,7 +68,7 @@ STRIPFLAG = -s
 ##CC = gcc
 ##POBJECTS = lxR2P.o
 ##ifeq ($(VTKV6),1)
-##VTKLIBS = -lvtkCommonExecutionModel -lvtkCommonDataModel -lvtkCommonCore -lvtkFiltersCore -lvtkFiltersHybrid -lvtkIOLegacy -lfreetype -lpng -ljpeg
+##VTKLIBS = -lvtkCommonExecutionModel -lvtkCommonDataModel -lvtkCommonCore -lvtkIOPLY -lvtkFiltersCore -lvtkFiltersHybrid -lvtkIOLegacy -lfreetype -lpng -ljpeg
 ##else
 ##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 ##endif
@@ -121,7 +122,7 @@ endif
 ##VTKVERSION = 8.2
 ##VTKPATH = /usr/lib/mxe/usr/$(CROSS2)/include/vtk-$(VTKVERSION)
 ##VTKLIBPATH = /usr/lib/mxe/usr/$(CROSS2)/lib
-##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) \
+##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkIOPLY-$(VTKVERSION)\
 ##  -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) \
 ##  -lvtkIOLegacy-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkIOCore-$(VTKVERSION) \
 ##  -lvtkCommonTransforms-$(VTKVERSION) -lvtkCommonMisc-$(VTKVERSION) -lvtkCommonMath-$(VTKVERSION) -lvtkCommonSystem-$(VTKVERSION) \
