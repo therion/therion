@@ -1,5 +1,9 @@
 Therion 6.0.5 (in progress):
 
+therion:
+ * bugs fixed:
+   - lox file generation segfault (solved by poly2tri library update)
+
 loch:
  * added PLY walls export
 
