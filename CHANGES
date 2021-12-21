@@ -3,6 +3,7 @@ Therion 6.0.5 (in progress):
 therion:
  * bugs fixed:
    - lox file generation segfault (solved by poly2tri library update)
+   - segfault caused by mixing local and global coordinate system
 
 loch:
  * added PLY walls export

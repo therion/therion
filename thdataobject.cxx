@@ -410,7 +410,7 @@ void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & 
 	  if (thcfg.outcs_def.is_valid()) {
 	    if (((this->cs == TTCS_LOCAL) && (thcfg.outcs != TTCS_LOCAL)) ||
 	      ((this->cs != TTCS_LOCAL) && (thcfg.outcs == TTCS_LOCAL)))
-	      ththrow("mixing local and global coordinate systems not allowed -- conflict with cs specification at {} [{}]", thcfg.outcs_def.name, thcfg.outcs_def.line);
+	        ththrow("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line);
 	  };
 
 	  // 1. Conversion to numbers.
@@ -504,6 +504,8 @@ void thdataobject::convert_cs(int src_cs, double src_x, double src_y, double & d
     dst_y = ty;
     dst_z = tz;
   } else {
+	if (thcfg.outcs == TTCS_LOCAL)
+      ththrow("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line);
     thcs2cs(thcs_get_params(src_cs), thcs_get_params(thcfg.outcs), tx, ty, tz, dst_x, dst_y, dst_z);
   }
 
