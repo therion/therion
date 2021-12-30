@@ -239,6 +239,20 @@ void thdb1d::scan_data()
                   lei->backbearing -= 180.0;
                   if (lei->backbearing < 0)
                     lei->backbearing += 360.0;
+                  double bearing_diff;
+                  if (lei->bearing > lei->backbearing)
+                	  bearing_diff = lei->bearing - lei->backbearing;
+                  else
+                	  bearing_diff = lei->backbearing - lei->bearing;
+                  if (bearing_diff > 180.0)
+                	  bearing_diff -= 360.0;
+                  double bearing_sd;
+                  if (thisnan(lei->bearing_sd))
+                	  bearing_sd = 1.25;
+                  else
+                	  bearing_sd = lei->bearing_sd;
+                  if (abs(bearing_diff) > 2.0 * bearing_sd)
+                  	thwarning(("%s [%d] -- forwards and backwards bearing readings do not match -- %.2f > %.2f", lei->srcf.name, lei->srcf.line, bearing_diff, 2.0 * bearing_sd));
 									// calculate average of two angles
                   //lei->bearing += lei->backbearing;
                   //lei->bearing = lei->bearing / 2.0;
@@ -263,6 +277,13 @@ void thdb1d::scan_data()
                   if ((thisinf(lei->gradient) == 0) && 
                       (thisinf(lei->backgradient) == 0)) {
                     lei->backgradient = - lei->backgradient;
+                    double gradient_sd;
+                    if (thisnan(lei->gradient_sd))
+                  	  gradient_sd = 1.25;
+                    else
+                  	  gradient_sd = lei->gradient_sd;
+                    if (abs(lei->backgradient - lei->gradient) > (2.0 * gradient_sd))
+                    	thwarning(("%s [%d] -- forwards and backwards gradient readings do not match", lei->srcf.name, lei->srcf.line));
                     lei->gradient += lei->backgradient;
                     lei->gradient = lei->gradient / 2.0;
                   }
@@ -273,6 +294,28 @@ void thdb1d::scan_data()
                 }
               }
             }
+
+            // check backwards length reading
+            if ((lei->data_type == TT_DATATYPE_NORMAL) ||
+                (lei->data_type == TT_DATATYPE_DIVING) ||
+                (lei->data_type == TT_DATATYPE_CYLPOLAR)) {
+              if (!thisnan(lei->backlength)) {
+                if (thisnan(lei->length)) {
+                  lei->length = lei->backlength;
+                } else {
+                  double length_sd;
+                  if (thisnan(lei->length_sd))
+                	  length_sd = 0.25;
+                  else
+                	  length_sd = lei->length_sd;
+				  if (abs(lei->backlength - lei->length) > (2.0 * length_sd))
+					thwarning(("%s [%d] -- forwards and backwards length readings do not match", lei->srcf.name, lei->srcf.line));
+                  lei->length += lei->backlength;
+                  lei->length /= 2.0;
+                }
+              }
+            }
+
             
             // calculate leg total length and std
             switch (lei->data_type) {

@@ -1,6 +1,8 @@
 Therion 6.0.5 (in progress):
 
 therion:
+ * added support for backtape/backlength readings
+ * warning if forwards and backwards readings do not match
  * bugs fixed:
    - lox file generation segfault (solved by poly2tri library update)
    - segfault caused by mixing local and global coordinate system

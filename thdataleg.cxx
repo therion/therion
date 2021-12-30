@@ -52,6 +52,7 @@ void thdataleg::clear()
   this->from.clear();
   this->to.clear();
   this->length = thnan;
+  this->backlength = thnan;
   this->counter = thnan;
   this->fromcounter = thnan;
   this->tocounter = thnan;

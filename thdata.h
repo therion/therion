@@ -156,7 +156,7 @@ class thdata : public thdataobject {
   
   // what is inserted
   bool di_station, di_from, di_to, di_length, di_bearing, di_gradient,
-    di_backbearing, di_backgradient,
+    di_backlength, di_backbearing, di_backgradient,
     di_depth, di_fromdepth, di_todepth, di_depthchange, di_count, di_fromcount,
     di_tocount, di_dx, di_dy, di_dz, di_direction, di_newline, di_interleaved,
     di_up, di_down, di_left, di_right;
