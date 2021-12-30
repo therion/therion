@@ -251,7 +251,7 @@ void thdb1d::scan_data()
                 	  bearing_sd = 1.25;
                   else
                 	  bearing_sd = lei->bearing_sd;
-                  if (abs(bearing_diff) > 2.0 * bearing_sd)
+                  if (abs(bearing_diff) > 3.0 * bearing_sd)
                   	thwarning(("%s [%d] -- forwards and backwards bearing readings do not match -- %.2f > %.2f", lei->srcf.name, lei->srcf.line, bearing_diff, 2.0 * bearing_sd));
 									// calculate average of two angles
                   //lei->bearing += lei->backbearing;
@@ -282,7 +282,7 @@ void thdb1d::scan_data()
                   	  gradient_sd = 1.25;
                     else
                   	  gradient_sd = lei->gradient_sd;
-                    if (abs(lei->backgradient - lei->gradient) > (2.0 * gradient_sd))
+                    if (abs(lei->backgradient - lei->gradient) > (3.0 * gradient_sd))
                     	thwarning(("%s [%d] -- forwards and backwards gradient readings do not match", lei->srcf.name, lei->srcf.line));
                     lei->gradient += lei->backgradient;
                     lei->gradient = lei->gradient / 2.0;
@@ -308,7 +308,7 @@ void thdb1d::scan_data()
                 	  length_sd = 0.25;
                   else
                 	  length_sd = lei->length_sd;
-				  if (abs(lei->backlength - lei->length) > (2.0 * length_sd))
+				  if (abs(lei->backlength - lei->length) > (3.0 * length_sd))
 					thwarning(("%s [%d] -- forwards and backwards length readings do not match", lei->srcf.name, lei->srcf.line));
                   lei->length += lei->backlength;
                   lei->length /= 2.0;
