@@ -741,19 +741,19 @@ if !$utldbg {
 	      set curdat {}
 	      #puts $pdatal
 	      foreach lni $pdatal {
-		if {[regexp -nocase {^\s*(M|L)\s+([e\+\-\d\.]+),([e\+\-\d\.]+)\s*$} $lni dum dum1 x y]} {
+		if {[regexp -nocase {^\s*(M|L)\s+([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+)\s*$} $lni dum dum1 x y]} {
 		  xth_me_impsvg_trans x y distance outline $cmatrix
 		  lappend curdat [list $x $y]
-		} elseif {[regexp -nocase {^\s*C\s+([e\+\-\d\.]+),([e\+\-\d\.]+)\s+([e\+\-\d\.]+),([e\+\-\d\.]+)\s+([e\+\-\d\.]+),([e\+\-\d\.]+)\s*$} $lni dum c1x c1y c2x c2y x y]} {
+		} elseif {[regexp -nocase {^\s*C\s+([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+)\s+([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+)\s+([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+)\s*$} $lni dum c1x c1y c2x c2y x y]} {
 		  xth_me_impsvg_trans c1x c1y distance outline $cmatrix
 		  xth_me_impsvg_trans c2x c2y distance outline $cmatrix
 		  xth_me_impsvg_trans x y distance outline $cmatrix
 		  lappend curdat [list $c1x $c1y $c2x $c2y $x $y]
-		} elseif {[regexp -nocase {^\s*C((\s+([e\+\-\d\.]+),([e\+\-\d\.]+)\s+([e\+\-\d\.]+),([e\+\-\d\.]+)\s+([e\+\-\d\.]+),([e\+\-\d\.]+))+)\s*$} $lni dum morepts]} {
+		} elseif {[regexp -nocase {^\s*C((\s+([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+)\s+([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+)\s+([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+))+)\s*$} $lni dum morepts]} {
 		  #puts $morepts
 		  while {[llength $morepts] > 2} {
 	            #puts [lrange $morepts 0 2]
-	            regexp -nocase {^\s*([e\+\-\d\.]+),([e\+\-\d\.]+)\s+([e\+\-\d\.]+),([e\+\-\d\.]+)\s+([e\+\-\d\.]+),([e\+\-\d\.]+)\s*$} [lrange $morepts 0 2] dum c1x c1y c2x c2y x y			  
+	            regexp -nocase {^\s*([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+)\s+([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+)\s+([e\+\-\d\.]+)[,\s]([e\+\-\d\.]+)\s*$} [lrange $morepts 0 2] dum c1x c1y c2x c2y x y			  
     		    xth_me_impsvg_trans c1x c1y distance outline $cmatrix
     		    xth_me_impsvg_trans c2x c2y distance outline $cmatrix
     		    xth_me_impsvg_trans x y distance outline $cmatrix
@@ -796,6 +796,9 @@ if $utldbg {
   set rv(odata,$outcmdn,data) {}
   
   set rv(dist) $distance
+  if {[llength $outline] == 0} {
+    set outline {0 1000 0 1000}
+  }
   set rv(bbox) $outline
   return [array get rv]
 }
