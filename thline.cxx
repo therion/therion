@@ -675,6 +675,9 @@ bool thline::export_mp(class thexpmapmpxs * out)
 
   if (this->first_point == NULL)
     return(false);
+  // actually not a line
+  if (this->first_point == this->last_point)
+	return(false);
   bool postprocess = true, todraw, fsize, frot, anypt;  //, first
   int from, to, cs, macroid = -1, omacroid = -1;
   double s1, r1;
