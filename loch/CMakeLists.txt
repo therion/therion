@@ -67,8 +67,3 @@ install(TARGETS loch
 
 add_subdirectory(help)
 add_subdirectory(locale)
-
-include(GetPrerequisites)
-# get_prerequisites(therion DEPLOY)
-# message("Loch dependencies:")
-# LIST_PREREQUISITES(${CMAKE_CURRENT_BINARY_DIR}/loch.exe 1 1)
