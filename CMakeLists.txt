@@ -190,3 +190,15 @@ endif()
 add_subdirectory(loch)
 add_subdirectory(thbook)
 add_subdirectory(xtherion)
+
+# deployment of DLL dependencies on Windows
+if (BUILD_THERION AND BUILD_LOCH AND WIN32)
+    set(DLLS_DIR ${CMAKE_BINARY_DIR}/dependencies)
+    add_custom_target(deploy 
+        ${CMAKE_COMMAND} -D THERION=$<TARGET_FILE:therion>
+                         -D LOCH=$<TARGET_FILE:loch>
+                         -D DLLS_DIR=${DLLS_DIR}
+                         -P cmake/Deploy.cmake
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    set_target_properties(deploy PROPERTIES ADDITIONAL_CLEAN_FILES ${DLLS_DIR})
+endif()
