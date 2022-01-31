@@ -19,6 +19,7 @@ set(LOCH_HEADERS
     lxR2D.h
     lxSetup.h
     lxSTree.h
+    lxSStats.h
     lxTR.h
 )
 
@@ -38,5 +39,6 @@ set(LOCH_SOURCES
     lxRender.cxx
     lxSScene.cxx
     lxSView.cxx
+    lxSStats.cxx
     lxTR.c
 )

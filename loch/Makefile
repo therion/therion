@@ -13,7 +13,7 @@ CMNOBJECTS = \
   lxTR.o lxOGLFT.o lxSetup.o lxRender.o lxWX.o \
   lxImgIO.o lxLRUD.o lxFile.o lxSTree.o \
   lxData.o lxMath.o lxSView.o lxSScene.o \
-  lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o \
+  lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o lxSStats.o \
   img.o
 
 EXT =

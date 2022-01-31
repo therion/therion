@@ -39,6 +39,7 @@
 #include "lxSView.h"
 #include "lxSScene.h"
 #include "lxSTree.h"
+#include "lxSStats.h"
 #include "lxPres.h"
 
 #include "icons/open.xpm"
@@ -153,7 +154,7 @@ DnDFile::OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames)
 lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     const wxSize& size, long style)
     : wxFrame(NULL, wxID_ANY, title, pos, size, style),
-    m_modelSetupDlg(NULL), m_modelSetupDlgOn(false), m_selectionSetupDlg(NULL), m_selectionSetupDlgOn(false),  m_presentationDlg(NULL),  m_presentationDlgOn(false),
+    m_modelSetupDlg(NULL), m_statisticsDlg(NULL), m_modelSetupDlgOn(false), m_statisticsDlgOn(false), m_selectionSetupDlg(NULL), m_selectionSetupDlgOn(false),  m_presentationDlg(NULL),  m_presentationDlgOn(false),
     m_viewpointSetupDlg(NULL), m_viewpointSetupDlgOn(false)
 {
 
@@ -314,6 +315,7 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     winMenu->AppendCheckItem(LXMENU_VIEW_VIEWPOINTSTP, _("&Camera"));
     winMenu->AppendCheckItem(LXMENU_VIEW_MODELSTP, _("&Scene"));
     winMenu->AppendCheckItem(LXMENU_VIEW_SELECTIONSTP, _("&Selection"));
+    winMenu->AppendCheckItem(LXMENU_VIEW_SURVEYSTATS, _("&Survey statistics"));
     winMenu->AppendCheckItem(LXMENU_VIEW_PRESENTDLG, _("&Presentation"));
     winMenu->Append(LXMENU_EXPROT, _("&Animation"));
     winMenu->AppendSeparator();
@@ -351,7 +353,9 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->SetSize(size);
 
     this->m_modelSetupDlg = new lxModelSetupDlg(this);
+    this->m_statisticsDlg = new lxSurveyStatsDlg(this);
     this->m_modelSetupDlgOn = false;
+    this->m_statisticsDlgOn = false;
 
     this->m_selectionSetupDlg = new lxModelTreeDlg(this);
     this->m_presentationDlg = new lxPresentDlg(this);
@@ -720,6 +724,10 @@ void lxFrame::OnAll(wxCommandEvent& event)
       this->ToggleModelSetup();
       break;
 
+    case LXMENU_VIEW_SURVEYSTATS:
+      this->ToggleSurveyStats();
+      break;
+
     case LXMENU_VIEW_SELECTIONSTP:
       this->ToggleSelectionSetup();
       break;
@@ -813,6 +821,9 @@ void lxFrame::OnSize(wxSizeEvent& event)
   if (this->m_modelSetupDlg != NULL) {
     this->m_modelSetupDlg->m_toolBoxPosition.Restore();
   }
+  if (this->m_statisticsDlg != NULL) {
+    this->m_statisticsDlg->m_toolBoxPosition.Restore();
+  }
   if (this->m_selectionSetupDlg != NULL) {
     this->m_selectionSetupDlg->m_toolBoxPosition.Restore();
   }
@@ -831,6 +842,9 @@ void lxFrame::OnMove(wxMoveEvent& event)
     if (this->m_modelSetupDlg != NULL) {
       this->m_modelSetupDlg->m_toolBoxPosition.Restore();
     }
+    if (this->m_statisticsDlg != NULL) {
+      this->m_statisticsDlg->m_toolBoxPosition.Restore();
+    }
     if (this->m_selectionSetupDlg != NULL) {
       this->m_selectionSetupDlg->m_toolBoxPosition.Restore();
     }
@@ -848,6 +862,7 @@ void lxFrame::UpdateM2TB() {
 	this->m_menuBar->Check(LXMENU_VIEW_MODELSTP, this->m_modelSetupDlgOn);    
 	this->m_menuBar->Check(LXMENU_VIEW_VIEWPOINTSTP, this->m_viewpointSetupDlgOn);    
 	this->m_menuBar->Check(LXMENU_VIEW_SELECTIONSTP, this->m_selectionSetupDlgOn);    
+	this->m_menuBar->Check(LXMENU_VIEW_SURVEYSTATS, this->m_statisticsDlgOn);
 	this->m_menuBar->Check(LXMENU_VIEW_PRESENTDLG, this->m_presentationDlgOn);    
 	this->m_toolBar->ToggleTool(LXTB_PERSP, !this->setup->cam_persp); 
 
@@ -1011,6 +1026,20 @@ void lxFrame::ToggleModelSetup()
 }
 
 
+void lxFrame::ToggleSurveyStats()
+{
+  if (this->m_statisticsDlgOn) {
+    this->m_statisticsDlg->m_toolBoxPosition.Save();
+    this->m_statisticsDlg->Show(false);
+  } else {
+    this->m_statisticsDlg->m_toolBoxPosition.Restore();
+    this->m_statisticsDlg->Show(true);
+  }
+  this->m_statisticsDlgOn = !this->m_statisticsDlgOn;
+  this->UpdateM2TB();
+}
+
+
 void lxFrame::ToggleSelectionSetup()
 {
   if (this->m_selectionSetupDlgOn) {
@@ -1137,6 +1166,7 @@ void lxFrame::ReloadData()
   this->LoadData(this->m_fileName, this->m_fileType);
   this->m_modelSetupDlg->InitSetup();
   this->m_selectionSetupDlg->LoadData();
+  this->m_statisticsDlg->LoadData();
 }
 
 
