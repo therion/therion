@@ -1,12 +1,14 @@
 name: Installer
 on: push
 jobs:
-  Win32_installer:
+  Win32_installer_MXE:
     runs-on: ubuntu-20.04
     outputs:
       THID: ${{ steps.build.outputs.THID_out }}
       git_branch: ${{ steps.build.outputs.git_branch }}
       rel_notes: ${{ steps.build.outputs.rel_notes }}
+    env:
+      THDIR: /home/runner/work/therion
     steps:
       - uses: actions/checkout@v2
         with:
@@ -26,7 +28,7 @@ jobs:
         run: |
           export PATH=/usr/lib/mxe/usr/bin:$PATH
           mkdir -p $HOME/.wine/drive_c/windows
-          echo -e "mpost-path /home/runner/work/therion/therion-batteries/bin/win32/mpost.exe\npdftex-path /home/runner/work/therion/therion-batteries/bin/win32/pdftex.exe\nidentify-path /home/runner/work/therion/therion-batteries/bin/identify.exe\nconvert-path /home/runner/work/therion/therion-batteries/bin/convert.exe\n" > $HOME/.wine/drive_c/windows/therion.ini
+          echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.wine/drive_c/windows/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xz && mv therion-batteries-master ../therion-batteries
           if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
           echo "::set-output name=THID_out::$THID"
@@ -54,10 +56,70 @@ jobs:
           mv thbook/thbook.pdf thbook-$THID.pdf
       - uses: 'actions/upload-artifact@v2'
         with:
-          name: therion-setup-${{ steps.build.outputs.THID_out }}
+          name: therion-setup-mxe-${{ steps.build.outputs.THID_out }}
           path: |
-            /home/runner/work/therion/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
-            /home/runner/work/therion/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
+            ${{ env.THDIR }}/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
+            ${{ env.THDIR }}/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
+  Win32_installer:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        config:
+          - { msystem: MINGW32, arch: i686 }
+    defaults:
+      run:
+        shell: msys2 {0}
+    outputs:
+      THID: ${{ steps.build.outputs.THID_out }}
+      git_branch: ${{ steps.build.outputs.git_branch }}
+      rel_notes: ${{ steps.build.outputs.rel_notes }}
+    env:
+      THDIR: d:/a/therion
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.config.msystem }}
+          update: true
+          install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
+      - name: prevent git EOL conversion
+        run: git config --global core.autocrlf input
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: build and create the installation package
+        id: build
+        run: |
+          reg add HKCU\\Software\\Therion //v InstallDir //t REG_SZ //d "${THDIR}/therion-batteries"
+          mkdir -p $HOME/.therion
+          echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
+          wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
+          if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
+          echo "::set-output name=THID_out::$THID"
+          BRANCH_FULL=$(git branch -r --contains ${{ github.ref }})
+          BRANCH=${BRANCH_FULL##*/}
+          echo "::set-output name=git_branch::$BRANCH"
+          ./rel_notes.py
+          REL_NOTES="$(<rel_notes.md)"
+          REL_NOTES="${REL_NOTES//'%'/%25}"
+          REL_NOTES="${REL_NOTES//$'\n'/%0A}"
+          REL_NOTES="${REL_NOTES//$'\r'/%0D}"
+          echo "::set-output name=rel_notes::$REL_NOTES"
+          mkdir ../therion.bin
+          cd ../therion.bin
+          cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=ON -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF ../therion
+          cmake --build . -j 4
+          cmake --build . -t samples deploy -- -j 4
+          cd ../therion-batteries
+          InnoSetup/ISCC.exe therion.iss
+          cd ../therion.bin
+          mv therion-setup.exe therion-setup-$THID.exe
+          mv thbook/thbook.pdf thbook-$THID.pdf
+      - uses: 'actions/upload-artifact@v2'
+        with:
+          name: therion-setup-mingw-${{ steps.build.outputs.THID_out }}
+          path: |
+            ${{ env.THDIR }}/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
+            ${{ env.THDIR }}/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
   Release:
     runs-on: ubuntu-20.04
     needs: Win32_installer
@@ -77,7 +139,7 @@ jobs:
       - name: Download binaries
         uses: actions/download-artifact@v2
         with:
-          name: therion-setup-${{ needs.Win32_installer.outputs.THID }}
+          name: therion-setup-mingw-${{ needs.Win32_installer.outputs.THID }}
       - name: Upload installer
         uses: actions/upload-release-asset@v1
         env:
