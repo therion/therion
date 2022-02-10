@@ -2837,6 +2837,13 @@ $xth(me,ctxmenu).border delete 0 end
 $xth(me,ctxmenu).border add radiobutton -label [mc "on"] -variable xth(me,ctrl,ctx,border) -value "on" -command {xth_me_set_option_value border}
 $xth(me,ctxmenu).border add radiobutton -label [mc "off"] -variable xth(me,ctrl,ctx,border) -value "off" -command {xth_me_set_option_value border}
 
+catch {menu $xth(me,ctxmenu).direction -tearoff 0}
+$xth(me,ctxmenu).direction delete 0 end
+$xth(me,ctxmenu).direction add radiobutton -label [mc "begin"] -variable xth(me,ctrl,ctx,direction) -value "begin" -command {xth_me_set_option_value direction}
+$xth(me,ctxmenu).direction add radiobutton -label [mc "both"] -variable xth(me,ctrl,ctx,direction) -value "both" -command {xth_me_set_option_value direction}
+$xth(me,ctxmenu).direction add radiobutton -label [mc "end"] -variable xth(me,ctrl,ctx,direction) -value "end" -command {xth_me_set_option_value direction}
+
+
 
 catch {menu $xth(me,ctxmenu).cps -tearoff 0}
 $xth(me,ctxmenu).cps delete 0 end
@@ -2957,7 +2964,7 @@ proc xth_me_optlabel {opt args} {
       }
     }
     default {
-      if {![string equal $val "auto"]} {
+      if {!([string equal $val "auto"] || [string equal $val ""])} {
         set lval " ([mc $val])"
       }
     }
@@ -3382,11 +3389,10 @@ proc xth_me_show_context_menu {id x y} {
 	    # set options
 	    set xth(me,ctrl,ctxopt,border) [lindex $optborder 1] 
 	    #DON'T REMOVE - for translation. [mc "border"]
-	    $xth(me,ctxmenu).others add cascade -label [xth_me_optlabel border] -menu $xth(me,ctxmenu).border
+	    $xth(me,ctxmenu) add cascade -label [xth_me_optlabel border] -menu $xth(me,ctxmenu).border
     }
 
-  
-	
+  	
     # text for label
     if {[lsearch -exact {label} $xth(me,cmds,$id,type)] > -1} {
       set opttext [xth_me_get_option_value "text" $opts]
@@ -3395,6 +3401,29 @@ proc xth_me_show_context_menu {id x y} {
       #DON'T REMOVE - for translation. [mc "text"]
       $xth(me,ctxmenu) add command -label [xth_me_optlabel text] -command {xth_me_ctx_change_text text}
     }
+	  
+    # direction for section
+    if {[lsearch -exact {section} $xth(me,cmds,$id,type)] > -1} {
+      set optdir [xth_me_get_option_value "direction" $opts]
+      switch -nocase [lindex $optdir 0] {
+	begin {
+	    set xth(me,ctrl,ctx,direction) "begin"
+	}
+	both {
+	    set xth(me,ctrl,ctx,direction) "both"
+	}
+	end {
+	    set xth(me,ctrl,ctx,direction) "end"
+	}
+	default {
+	    set xth(me,ctrl,ctx,direction) ""
+	}
+      }	    
+      set xth(me,ctrl,ctxopt,direction) [lindex $optdir 1]
+      #DON'T REMOVE - for translation. [mc "direction"]
+      $xth(me,ctxmenu) add cascade -label [xth_me_optlabel direction] -menu $xth(me,ctxmenu).direction
+    }
+      	  
   }
   
   # common options 

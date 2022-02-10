@@ -7,6 +7,9 @@ therion:
    - lox file generation segfault (solved by poly2tri library update)
    - segfault caused by mixing local and global coordinate system
 
+xtherion:
+ * added line section -direction to context menu
+
 loch:
  * added PLY walls export
 
