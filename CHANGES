@@ -9,6 +9,8 @@ therion:
 
 xtherion:
  * added line section -direction to context menu
+ * bugs fixed:
+   - wrong handling of filename open as argument
 
 loch:
  * added PLY walls export

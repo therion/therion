@@ -62,7 +62,11 @@ set xth(gui,initdir) [file normalize $xth(gui,initdir)]
 set th2open 1
 set cfgopen 1
 
-foreach fname $argv {
+foreach fnm $argv {
+  set fname $fnm
+  catch {
+    set fname [file normalize $fnm]
+  }
   if {$cfgopen && [regexp -nocase {thconfig|thcfg} $fname]} {
     set cfgopen 0
     xth_app_show cp
