@@ -116,7 +116,7 @@ jobs:
           mv thbook/thbook.pdf thbook-$THID.pdf
       - uses: 'actions/upload-artifact@v2'
         with:
-          name: therion-setup-mingw-${{ steps.build.outputs.THID_out }}
+          name: therion-setup-msys2-${{ steps.build.outputs.THID_out }}
           path: |
             ${{ env.THDIR }}/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
             ${{ env.THDIR }}/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
@@ -139,7 +139,7 @@ jobs:
       - name: Download binaries
         uses: actions/download-artifact@v2
         with:
-          name: therion-setup-mingw-${{ needs.Win32_installer.outputs.THID }}
+          name: therion-setup-msys2-${{ needs.Win32_installer.outputs.THID }}
       - name: Upload installer
         uses: actions/upload-release-asset@v1
         env:
