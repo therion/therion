@@ -3,17 +3,43 @@ Therion 6.0.5 (in progress):
 therion:
  * added support for backtape/backlength readings
  * warning if forwards and backwards readings do not match
+   (the difference threshold changed from 2 SD to 3 SD)
+ * some missing point and line types added to thbook [#401,402]
+ * Catch2 library updated to 2.3.18
  * bugs fixed:
    - lox file generation segfault (solved by poly2tri library update)
    - segfault caused by mixing local and global coordinate system
+   - unable to determine direction on zero-length path in scrap [#395]
 
 xtherion:
  * added line section -direction to context menu
  * bugs fixed:
+   - fixed a wrong translation
    - wrong handling of filename open as argument
+   - SVG import fixed
 
 loch:
- * added PLY walls export
+ * added PLY walls export (File → Export)
+ * added support for cave volume calculation (Tools → Survey statistics)
+
+windows installer:
+ * updated 3rd party programs:
+   - Tcl/Tk 8.6.12, tkImg 1.4.13, BWidget 1.9.15
+   - ImageMagick 7.1.0-24
+   - W32TeX 2021/06/24
+   - InnoSetup 6.2.0
+ * support for multiple languages during the installation
+ * two variants available now:
+   - built on Windows using MSYS2 environment; contains up-to-date libraries;
+     dynamically linked (a lot of DLLs are included)
+     [this is now the default for releases]
+   - built on Linux using MXE cross-compiler; some of the libraries are
+     quite outdated; statically linked; smaller instaler size
+     [the only option used between 5.4.0 and 6.0.4 to build the installer]
+
+cmake:
+ * support for collecting the required DLLs for deployment [#397]
+   (thanks to Matěj Plch)
 
 --------------------------------------------------------------------------------
 
