@@ -1,5 +1,8 @@
 Therion 6.0.6 (in progress):
 
+xtherion:
+ * bugs fixed:
+   - control panel sizing on certain OS and hidpi displays
 
 --------------------------------------------------------------------------------
 
