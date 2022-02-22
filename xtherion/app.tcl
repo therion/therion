@@ -152,7 +152,7 @@ proc xth_app_place {aname} {
   set fr [expr 1.0 - $fr / double([winfo width $xth(gui,main)])]
   set bw [xth_mm2px 2]
   set bwr [expr double($bw) / double([winfo width $xth(gui,main)])]
-  puts [expr $fr + $bwr]
+  #puts [expr $fr + $bwr]
 
   if {$xth(app,$aname,wpsw) == 1} {
     place configure $aw.af.apps -relx 0 -relwidth $fr
