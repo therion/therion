@@ -25,6 +25,17 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ## -------------------------------------------------------------------- 
 
+proc xth_mm2px {mm} {
+  global xth
+  set mmw [winfo screenmmwidth $xth(gui,main)]		
+  set w [winfo screenwidth $xth(gui,main)]
+  if {$mmw != 0} {
+    return [expr int(double($mm) * double($w) / double($mmw))]
+  } else {
+    return [expr int(4 * $mm)]
+  }
+}
+
 
 proc xth_app_move_panel {aname xx} {
   global xth
@@ -85,24 +96,32 @@ proc xth_app_create {aname title} {
   pack $aw.af -expand yes -fill both
   pack $aw.sf -side bottom -fill x
 
+  set ww [winfo width $xth(gui,main)]
+  if {$ww == 1} {
+    set ww 1024
+  }
+	
   set fr $xth(app,$aname,relw)
   set minfr $xth(app,$aname,wmwd)
   if {$fr < $minfr} {
     set fr $minfr
-  } elseif {$fr > ([winfo width $xth(gui,main)] - $xth(app,$aname,wmwd))} {
-    set fr [expr {([winfo width $xth(gui,main)] - $xth(app,$aname,wmwd))}]
+  } elseif {$fr > ($ww - $xth(app,$aname,wmwd))} {
+    set fr [expr {($ww - $xth(app,$aname,wmwd))}]
   }
   set xth(app,$aname,relw) $fr
-  set fr [expr 1.0 - $fr / double([winfo width $xth(gui,main)])]
+  set fr [expr 1.0 - $fr / double($ww)]
+  set bw [xth_mm2px 1.5]
+  set bwr [expr double($bw) / double($ww)]
+      	
   
   if {$xth(app,$aname,wpsw) == 1} {
     place $aw.af.apps -relx 0 -rely 0 -relheight 1 -relwidth $fr
-    place $aw.af.ctrl -relx $fr -rely 0 -relheight 1 -relwidth [expr 1.0 - $fr]
-    place $aw.af.lrhn -relx $fr -rely 0.99 -width 8 -height 8 -anchor s
+    place $aw.af.ctrl -relx $fr -rely 0 -relheight 1 -relwidth [expr 1.0 - $fr - $bwr]
+    place $aw.af.lrhn -relx $fr -rely 0 -relheight 1 -width $bw -anchor n
   } else {
     place $aw.af.ctrl -relx 0 -rely 0 -relheight 1 -relwidth $fr
-    place $aw.af.apps -relx $fr -rely 0 -relheight 1 -relwidth [expr 1.0 - $fr]
-    place $aw.af.lrhn -relx $fr -rely 0.99 -width 8 -height 8 -anchor s
+    place $aw.af.apps -relx $fr -rely 0 -relheight 1 -relwidth [expr 1.0 - $fr - $bwr]
+    place $aw.af.lrhn -relx $fr -rely 0 -relheight 1 -width $bw -anchor n
   }
   
   xth_ctrl_create $aname
@@ -131,15 +150,18 @@ proc xth_app_place {aname} {
   }
   set xth(app,$aname,relw) $fr
   set fr [expr 1.0 - $fr / double([winfo width $xth(gui,main)])]
+  set bw [xth_mm2px 2]
+  set bwr [expr double($bw) / double([winfo width $xth(gui,main)])]
+  puts [expr $fr + $bwr]
 
   if {$xth(app,$aname,wpsw) == 1} {
     place configure $aw.af.apps -relx 0 -relwidth $fr
-    place configure $aw.af.ctrl -relx $fr -relwidth [expr 1.0 - $fr]
+    place configure $aw.af.ctrl -relx [expr $fr + $bwr] -relwidth [expr 1.0 - $fr - $bwr]
     place configure $aw.af.lrhn -relx $fr
   } else {
     place configure $aw.af.apps -relx [expr 1.0 - $fr] -relwidth $fr
-    place configure $aw.af.ctrl -relwidth [expr 1.0 - $fr]
-    place configure $aw.af.lrhn -relx [expr 1.0 - $fr]
+    place configure $aw.af.ctrl -relwidth [expr 1.0 - $fr - $bwr]
+    place configure $aw.af.lrhn -relx [expr 1.0 - $fr - $bwr]
   }
 
   xth_ctrl_reshape $aname   
