@@ -155,7 +155,18 @@ if (BUILD_THERION)
 
     # therion executable
     add_executable(therion therion-main.cxx)
-    target_link_libraries(therion PUBLIC therion-common)
+    target_link_libraries(therion therion-common)
+
+    # therion resource file
+    if (WIN32)
+        add_custom_command(COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/therion.res -O coff
+                            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/therion.res
+                            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc ${CMAKE_CURRENT_SOURCE_DIR}/therion.ico
+                            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+        add_custom_target(generate_resource_therion DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/therion.res)
+        add_dependencies(therion generate_resource_therion)
+        target_link_libraries(therion ${CMAKE_CURRENT_BINARY_DIR}/therion.res)
+    endif()
 
     install(TARGETS therion RUNTIME COMPONENT th-runtime)
     install(FILES therion.ini TYPE SYSCONF RENAME therion.ini.new COMPONENT th-runtime)
