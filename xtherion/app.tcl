@@ -160,7 +160,7 @@ proc xth_app_place {aname} {
     place configure $aw.af.lrhn -relx $fr
   } else {
     place configure $aw.af.apps -relx [expr 1.0 - $fr] -relwidth $fr
-    place configure $aw.af.ctrl -relwidth [expr 1.0 - $fr - $bwr]
+    place configure $aw.af.ctrl -relx 0 -relwidth [expr 1.0 - $fr - $bwr]
     place configure $aw.af.lrhn -relx [expr 1.0 - $fr - $bwr]
   }
 
