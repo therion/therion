@@ -150,18 +150,18 @@ proc xth_app_place {aname} {
   }
   set xth(app,$aname,relw) $fr
   set fr [expr 1.0 - $fr / double([winfo width $xth(gui,main)])]
-  set bw [xth_mm2px 2]
+  set bw [xth_mm2px 1.72]
   set bwr [expr double($bw) / double([winfo width $xth(gui,main)])]
   #puts [expr $fr + $bwr]
 
   if {$xth(app,$aname,wpsw) == 1} {
     place configure $aw.af.apps -relx 0 -relwidth $fr
     place configure $aw.af.ctrl -relx [expr $fr + $bwr] -relwidth [expr 1.0 - $fr - $bwr]
-    place configure $aw.af.lrhn -relx $fr
+    place configure $aw.af.lrhn -relx [expr $fr + 0.5 * $bwr]
   } else {
     place configure $aw.af.apps -relx [expr 1.0 - $fr] -relwidth $fr
     place configure $aw.af.ctrl -relx 0 -relwidth [expr 1.0 - $fr - $bwr]
-    place configure $aw.af.lrhn -relx [expr 1.0 - $fr - $bwr]
+    place configure $aw.af.lrhn -relx [expr 1.0 - $fr - 0.5 * $bwr]
   }
 
   xth_ctrl_reshape $aname   
