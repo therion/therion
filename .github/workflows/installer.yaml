@@ -6,7 +6,6 @@ jobs:
     outputs:
       THID: ${{ steps.build.outputs.THID_out }}
       git_branch: ${{ steps.build.outputs.git_branch }}
-      rel_notes: ${{ steps.build.outputs.rel_notes }}
     env:
       THDIR: /home/runner/work/therion
     steps:
@@ -35,12 +34,6 @@ jobs:
           BRANCH_FULL=$(git branch -r --contains ${{ github.ref }})
           BRANCH=${BRANCH_FULL##*/}
           echo "::set-output name=git_branch::$BRANCH"
-          ./rel_notes.py
-          REL_NOTES="$(<rel_notes.md)"
-          REL_NOTES="${REL_NOTES//'%'/%25}"
-          REL_NOTES="${REL_NOTES//$'\n'/%0A}"
-          REL_NOTES="${REL_NOTES//$'\r'/%0D}"
-          echo "::set-output name=rel_notes::$REL_NOTES"
           mkdir ../therion.bin
           cd ../therion.bin
           i686-w64-mingw32.static-cmake -G Ninja \
@@ -72,7 +65,6 @@ jobs:
     outputs:
       THID: ${{ steps.build.outputs.THID_out }}
       git_branch: ${{ steps.build.outputs.git_branch }}
-      rel_notes: ${{ steps.build.outputs.rel_notes }}
     env:
       THDIR: d:/a/therion
     steps:
@@ -98,12 +90,6 @@ jobs:
           BRANCH_FULL=$(git branch -r --contains ${{ github.ref }})
           BRANCH=${BRANCH_FULL##*/}
           echo "::set-output name=git_branch::$BRANCH"
-          ./rel_notes.py
-          REL_NOTES="$(<rel_notes.md)"
-          REL_NOTES="${REL_NOTES//'%'/%25}"
-          REL_NOTES="${REL_NOTES//$'\n'/%0A}"
-          REL_NOTES="${REL_NOTES//$'\r'/%0D}"
-          echo "::set-output name=rel_notes::$REL_NOTES"
           mkdir ../therion.bin
           cd ../therion.bin
           cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=ON -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF ../therion
@@ -125,17 +111,11 @@ jobs:
     needs: Win32_installer
     if: startsWith(github.ref, 'refs/tags/v') && needs.Win32_installer.outputs.git_branch == 'master' && github.event_name == 'push'
     steps:
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ needs.Win32_installer.outputs.THID }}
-          body: ${{ needs.Win32_installer.outputs.rel_notes }}
-          draft: false
-          prerelease: false
+      - name: get the upload url
+        run: |
+          URL=$(curl -s 'https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ needs.Win32_installer.outputs.THID }}' | python3 -c "import sys, json; print(json.load(sys.stdin)['id'])")
+          URL="https://uploads.github.com/repos/${{ github.repository }}/releases/${URL}/assets{?name,label}"
+          echo "URL=$URL" >> $GITHUB_ENV
       - name: Download binaries
         uses: actions/download-artifact@v2
         with:
@@ -145,7 +125,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ env.URL }}
           asset_path: therion-setup-${{ needs.Win32_installer.outputs.THID }}.exe
           asset_name: therion-setup-${{ needs.Win32_installer.outputs.THID }}.exe
           asset_content_type: application/exe
@@ -154,7 +134,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ env.URL }}
           asset_path: thbook-${{ needs.Win32_installer.outputs.THID }}.pdf
           asset_name: thbook-${{ needs.Win32_installer.outputs.THID }}.pdf
           asset_content_type: application/pdf

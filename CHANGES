@@ -4,6 +4,12 @@ xtherion:
  * bugs fixed:
    - control panel sizing on certain OS and hidpi displays
 
+infrastructure:
+ * support for signed releases: sign the tag + upload a detached signature
+   for .tar.gz sources to a Github release (the release is now created by
+   the local script make_release.py instead of Github Actions;
+   this allows for integration of the rel_notes.py script into make_release.py)
+
 --------------------------------------------------------------------------------
 
 Therion 6.0.5 (2022-02-20):
