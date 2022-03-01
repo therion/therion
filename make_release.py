@@ -83,7 +83,7 @@ if raw_input(banner) == 'yes':
   if 'id' not in res:
     err('unexpected response while creating a release:\n\n%s\n' % res.text)
   headers = {'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'text/plain'}
-  res = requests.post('https://uploads.github.com/repos/%s/releases/%s/assets?name=%s' % (repo, res['id'], 'v%s.tar.gz.asc' % ver),
+  res = requests.post('https://uploads.github.com/repos/%s/releases/%s/assets?name=%s' % (repo, res['id'], 'therion-%s.tar.gz.asc' % ver),
                 headers=headers, data=signature).json()
   if 'id' not in res:
     err('unexpected response while uploading the signature:\n\n%s\n' % res.text)
