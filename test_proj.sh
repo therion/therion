@@ -12,7 +12,7 @@
 set -e
 
 SRCPATH=${1:-.}
-PROJVER=${2:-4.9.3 5.1.0 5.2.0 6.2.1 6.3.2 7.0.0 7.2.1 8.0.0 8.2.1}
+PROJVER=${2:-4.9.3 5.1.0 5.2.0 6.2.1 6.3.2 7.0.0 7.2.1 8.0.0 8.2.1 9.0.0}
 
 PREFIX=$HOME/tmp/ThProj_test
 URL=https://download.osgeo.org/proj/proj
@@ -40,7 +40,12 @@ do
     TMPDIR=`mktemp -d`
     curl $URL-$ver.tar.gz | tar -xz --directory=$TMPDIR
     cd $TMPDIR/proj-$ver
-    ./configure --prefix=$PREFIX/proj-$ver; make -j$(nproc); make install
+    if (( `echo $ver | sed 's/\..*//'` < 8 )); then # pkgconfig supported with cmake since 8.0.0
+      ./configure --prefix=$PREFIX/proj-$ver; make -j$(nproc); make install
+    else
+      mkdir build; cd build
+      cmake -DCMAKE_INSTALL_PREFIX=$PREFIX/proj-$ver ..; make -j$(nproc); make install
+    fi
     cd $WD
     rm -r $TMPDIR
   fi
