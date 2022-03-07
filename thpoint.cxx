@@ -153,11 +153,8 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
         this->parse_subtype(subtype);
       break;
 
-    case TT_POINT_VALUE:
-      this->parse_value(*args);
-      break;
-
     case TT_POINT_DIST:
+    case TT_POINT_VALUE:
       this->parse_value(*args);
       break;
 
