@@ -1,7 +1,7 @@
 Therion 6.0.6 (in progress):
 
 therion:
- * -value can not be used as -dist for extra point. Removed
+ * using -value with point extra triggers deprecation warning. It is
    undocumented feature/bug.
 
 xtherion:

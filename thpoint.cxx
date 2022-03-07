@@ -1078,6 +1078,10 @@ void thpoint::parse_value(char * ss, bool is_dist) {
   switch (this->type) {
     case TT_POINT_TYPE_EXTRA:
       opt_ok = is_dist;
+      if (!opt_ok) {
+          thwarning(("%s [%d] -- using -value with point extra is deprecated, please use -dist instead", this->source.name, this->source.line));
+    	  opt_ok = true;
+      }
       break;
     case TT_POINT_TYPE_ALTITUDE:
     case TT_POINT_TYPE_HEIGHT:
@@ -1088,7 +1092,7 @@ void thpoint::parse_value(char * ss, bool is_dist) {
 	  break;
   }
   if (!opt_ok)
-	  ththrow("-value not valid with type {}", thmatch_string(this->type,thtt_point_types));
+	  ththrow("{} not valid with type {}", (is_dist ? "-dist" : "-value"),  thmatch_string(this->type,thtt_point_types));
 
   thsplit_words(& this->db->db2d.mbf,ss);
   int npar = this->db->db2d.mbf.get_size();
