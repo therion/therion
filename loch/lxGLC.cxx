@@ -251,6 +251,8 @@ void lxGLCanvas::OnSize(wxSizeEvent& event)
   int w, h;
   this->GetClientSize(&w, &h);
   this->setup->cam_width = double((GLfloat) w / (GLfloat) h);
+  w = int(this->GetContentScaleFactor() * w);
+  h = int(this->GetContentScaleFactor() * h);
   this->ww = w;
   this->wh = h;
 #ifdef __WXMSW__
@@ -1404,7 +1406,7 @@ void lxGLCanvas::SetIndicatorsTransform()
       this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     }
   } else {
-    this->m_indRes = 3.7795276; // pixels per mm
+    this->m_indRes = 3.7795276 * this->GetContentScaleFactor(); // pixels per mm
     this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     glLineWidth(1.0);
   }
@@ -1939,6 +1941,8 @@ bool lxGLCanvas::OSCMakeCurrent()
 	if (!this->m_OSC->m_OK) {
 	  int w, h;
 		this->GetClientSize(&w, &h);
+		w = int(this->GetContentScaleFactor() * w);
+		h = int(this->GetContentScaleFactor() * h);
 		this->m_OSC->m_Width = w;
 		this->m_OSC->m_Height = h;
 		return true;

@@ -8,6 +8,10 @@ xtherion:
  * bugs fixed:
    - control panel sizing on certain OS and hidpi displays
 
+loch:
+ * bugs fixed:
+   - mac retina display size fix
+
 infrastructure:
  * support for signed releases: sign the tag + upload a detached signature
    for .tar.gz sources to a Github release (the release is now created by
