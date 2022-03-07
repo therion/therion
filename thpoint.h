@@ -505,7 +505,7 @@ class thpoint : public th2ddataobject {
 
   void parse_explored(char * ss);  ///< Parse explored length.
 
-  void parse_value(char * ss);  ///< Parse point value.
+  void parse_value(char * ss, bool is_dist=false);  ///< Parse point value.
 
   void check_extra();
 

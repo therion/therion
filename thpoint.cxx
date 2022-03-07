@@ -154,6 +154,9 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
       break;
 
     case TT_POINT_DIST:
+	  this->parse_value(*args, true);
+	  break;
+
     case TT_POINT_VALUE:
       this->parse_value(*args);
       break;
@@ -1070,20 +1073,22 @@ void thpoint_parse_value(int & sv, double & dv, bool & qw, int & sign, char * st
 }
 
 
-void thpoint::parse_value(char * ss) {
-
+void thpoint::parse_value(char * ss, bool is_dist) {
+  bool opt_ok = false;
   switch (this->type) {
+    case TT_POINT_TYPE_EXTRA:
+      opt_ok = is_dist;
+      break;
     case TT_POINT_TYPE_ALTITUDE:
     case TT_POINT_TYPE_HEIGHT:
     case TT_POINT_TYPE_PASSAGE_HEIGHT:
     case TT_POINT_TYPE_DIMENSIONS:
     case TT_POINT_TYPE_DATE:
-    case TT_POINT_TYPE_EXTRA:
-      break;
-    default:
-      ththrow("-value not valid with type {}", thmatch_string(this->type,thtt_point_types));
-      break;
+      opt_ok = !is_dist;
+	  break;
   }
+  if (!opt_ok)
+	  ththrow("-value not valid with type {}", thmatch_string(this->type,thtt_point_types));
 
   thsplit_words(& this->db->db2d.mbf,ss);
   int npar = this->db->db2d.mbf.get_size();

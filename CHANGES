@@ -1,5 +1,9 @@
 Therion 6.0.6 (in progress):
 
+therion:
+ * -value can not be used as -dist for extra point. Removed
+   undocumented feature/bug.
+
 xtherion:
  * bugs fixed:
    - control panel sizing on certain OS and hidpi displays
