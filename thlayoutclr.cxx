@@ -154,6 +154,26 @@ void thlayout_color::CMYKtoRGB() {
   	this->B = (1.0 - this->Y) * (1.0 - this->K);
 }
 
+#define invalid_color_spec ththrow("invalid color specification -- {}", str);
+
+double clrhex2num(char * str, char p) {
+	char src[3];
+	char *endptr = NULL;
+	int iv;
+	src[1] = 0;
+	src[2] = 0;
+	if (strlen(str) == 7) {
+		src[0] = str[1 + 2*p];
+		src[1] = str[2 + 2*p];
+	} else {
+		src[0] = src[1] = str[1 + p];
+	}
+	errno = 0;
+	iv = (int) strtol(src, &endptr, 16);
+	if (errno != 0) invalid_color_spec;
+	return (double(iv) / 256.0);
+}
+
 void thlayout_color::parse(char * str, bool aalpha) {
 	// 1 arg = W (grayscale)
 	// 3 arg = RGB
@@ -162,7 +182,6 @@ void thlayout_color::parse(char * str, bool aalpha) {
   thsplit_words(&(thdb.mbuff_tmp), str);
   int nargs = thdb.mbuff_tmp.get_size(), sv;
   char ** args = thdb.mbuff_tmp.get_buffer();
-#define invalid_color_spec ththrow("invalid color specification -- {}", str);
   switch (nargs) {
     case 8:
 			thparse_double(sv,this->C,args[4]);
@@ -201,7 +220,15 @@ void thlayout_color::parse(char * str, bool aalpha) {
         this->defined = 2;
         break;
       }
-      thparse_double(sv,this->R,args[0]);        
+      thparse_double(sv,this->R,args[0]);
+      if ((sv != TT_SV_NUMBER) && ((strlen(args[0]) == 4) || (strlen(args[0]) == 7)) && (args[0][0] == '#')) {
+    	  // CSS color specification starting with #
+    	  this->R = clrhex2num(args[0], 0) * 100.0;
+    	  this->G = clrhex2num(args[0], 1);
+    	  this->B = clrhex2num(args[0], 2);
+    	  sv = TT_SV_NUMBER;
+    	  nargs = 3;
+      }
       if ((sv != TT_SV_NUMBER) || (this->R < 0.0) || (this->R > 100.0))
         invalid_color_spec;
       this->R /= 100.0;
