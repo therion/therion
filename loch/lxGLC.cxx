@@ -1438,7 +1438,7 @@ void lxGLCanvas::RenderInds()
       this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     }
   } else {
-    this->m_indRes = 3.7795276; // pixels per mm
+    this->m_indRes = 3.7795276 * this->GetContentScaleFactor(); // pixels per mm
     this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     glLineWidth(1.0);
   }
