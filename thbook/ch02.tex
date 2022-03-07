@@ -794,6 +794,7 @@ Point is a command for drawing a point map symbol.
     |camp|,
     |fixed-ladder|,
     |gate|,
+    |handrail|,
     |masonry|,
     |nameplate|,
     |no-equipment|,
@@ -802,6 +803,7 @@ Point is a command for drawing a point map symbol.
     |rope|,
     |steps|,
     |traverse|,
+    |via-ferrata|,
     |walkway|,
     |wheelchair|;
 
@@ -1003,8 +1005,13 @@ respectively.
        length and orientation is an average of specified |l-size|s and
        |orientation|s in the nearest points. If there is no orientation
        specification, gradient marks are perpendicular to the slope line.],
-     |floor-step|, |pit|,
-     |ceiling-step|, |chimney|, |overhang|, |ceiling-meander|,
+     |floor-step|, 
+     |pit|,
+     |pitch| (synonym of pit),
+     |ceiling-step|, 
+     |chimney|, 
+     |overhang|, 
+     |ceiling-meander|,
      |floor-meander|,
      |low-ceiling|,
      |pit-chimney|;
@@ -1017,14 +1024,23 @@ respectively.
      |abyss-entrance|,
      |dripline|,
      |fault|,
+     |gradient|,
      |joint|,
      |rimstone-dam|,
-     |rimstone-pool|,
-     |walkway|;
+     |rimstone-pool|;
+
+    {\it equipment:}
+    |fixed-ladder|,
+    |handrail|,
+    |rope|,
+    |rope-ladder|,
+    |steps|,
+    |via-ferrata|,
+    |walkway|;
 
      {\it labels:} |label|;
 
-     {\it special:} |border|, |arrow|, |rope|,
+     {\it special:} |border|, |arrow|,
      |section|\[Line showing cross-section position.\NEW{5.3}\
        If both control points (red dots) of a B\'ezier curve (grey line) are given
        then the section line (blue) is drawn up to the perpendicular projection (dotted) of
@@ -1108,6 +1124,8 @@ respectively.
          consideration; the absolute given value is used instead.
          Units can follow the value. Examples: |+4|, |[+4 m]|,
          |[fix 1510 m]|.
+       * |anchors <on/off>| = this option can be specified only with
+         the `rope' line type.
        * |border <on/off>| = this option can be specified only with
          the `slope' symbol type. It switches on/off the border line of
          the slope.
@@ -1120,6 +1138,8 @@ respectively.
          dependent (e.g. no tick in UIS, tick in the middle in SKBB).
        * |head <begin/end/both/none>| = can be used only with the arrow
          type and indicates where to put an arrow head. End is default.
+       * |rebelays <on/off>| = this option can be specified only with
+         the `rope' line type.
        * |text <string>| = valid only for label lines.
        * \NEW{5.4}|height <value>| = height of pit or wall:pit; available in
          \MP\ as a numeric variable |ATTR__height|.
@@ -1165,6 +1185,8 @@ You may use invisible border to achieve this inside of the passage.
     |mudcrack|,
     |pillar|,
     |pillar-with-curtains|,
+    |pillars|,
+    |pillars-with-curtains|,
     |stalactite|,
     |stalactite-stalagmite|,
     |stalagmite|.
