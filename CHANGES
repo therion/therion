@@ -1,9 +1,11 @@
-Therion 6.0.6 (in progress):
+Therion 6.0.6 (2022-03-12):
 
 therion:
  * added support for hex rgb color specification (e.g. color map-fg ffeeaa)
  * using -value with point extra triggers deprecation warning. It is
    undocumented feature/bug.
+ * thbook improvements [#403,404,406,407] (thanks to Rodrigo Severo)
+ * support Proj 9.0.0 in test_proj.py
 
 xtherion:
  * bugs fixed:
@@ -14,6 +16,8 @@ loch:
    - mac retina display size fix
 
 infrastructure:
+ * cmake: fix a missing icon in therion.exe [#405] (thanks to Matěj Plch)
+ * split too long lines in .github/workflows/*.yml
  * support for signed releases: sign the tag + upload a detached signature
    for .tar.gz sources to a Github release (the release is now created by
    the local script make_release.py instead of Github Actions;
