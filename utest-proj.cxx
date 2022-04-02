@@ -94,7 +94,7 @@ TEST_CASE( "projections: JTSK03 -- utm, auto=true", "[proj]" ) {
 }
 
 TEST_CASE( "projections: JTSK03 -- utm, auto=false", "[proj]" ) {
-    thcs2cs(thcs_get_params(TTCS_JTSK03), thcs_get_params(TTCS_UTM34N),
+    thcs2cs(thcs_get_params(TTCS_JTSK03), thcs_get_params(TTCS_ETRS34),
             p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
     CHECK(coord_equal(x, p1_utm_e, 0.01));
     CHECK(coord_equal(y, p1_utm_n, 0.01));
