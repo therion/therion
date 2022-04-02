@@ -29,6 +29,7 @@
 #include "thexception.h"
 #include "thproj.h"
 #include "thlogfile.h"
+#include "thcs.h"
 #include <string>
 #include <cmath>
 #include <map>
@@ -45,6 +46,11 @@ thcs_config::thcs_config() {
 }
 
 thcs_config thcs_cfg;
+
+void thcs2cs(int s, int t,
+              double a, double b, double c, double &x, double &y, double &z) {
+     thcs2cs(thcs_get_params(s), thcs_get_params(t), a, b, c, x, y, z);
+}
 
 #if PROJ_VER < 5
 

@@ -85,7 +85,7 @@ TEST_CASE( "projections: EPSG label", "[proj]" ) {
 
 TEST_CASE( "projections: JTSK03 -- utm, auto=true", "[proj]" ) {
     thcs_cfg.proj_auto = true;
-    thcs2cs(thcs_get_params(TTCS_JTSK03), thcs_get_params(TTCS_UTM34N),
+    thcs2cs(TTCS_JTSK03, TTCS_UTM34N,
             p1_jtsk_y, p1_jtsk_x, p1_jtsk_h, x, y, z);
     thcs_cfg.proj_auto = false;
     CHECK(coord_equal(x, p1_utm_e, 0.01));
