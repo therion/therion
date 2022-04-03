@@ -166,7 +166,7 @@ void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args)
   thcs_custom_int2data[thcs_custom_id] = pd;
 }
 
-bool operator < (const struct thcstrans & t1, const class thcstrans &t2) {
+bool operator < (const thcstrans & t1, const thcstrans &t2) {
   if (t1.from_id < t2.from_id)
 	return true;
   else if ((t1.from_id == t2.from_id) && (t1.to_id < t2.to_id))
