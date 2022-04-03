@@ -139,20 +139,22 @@ Following coordinate systems are supported:
 
 \list
 * |UTM1| -- |UTM60| = Universal Transverse Mercator in northern hemisphere
-  and given zone, WGS84 datum.
+  and given zone, WGS84 datum. Equivalent to EPSG:32601--EPSG:32660.
 * |UTM1N| -- |UTM60N| = same as |UTM1| -- |UTM60|
-* |UTM1S| -- |UTM60S| = UTM in southern hemisphere, WGS84 datum.
+* |UTM1S| -- |UTM60S| = UTM in southern hemisphere, WGS84 datum.\hfil\break
+  Equivalent to EPSG:32701--EPSG:32760.
 * |lat-long|, |long-lat| = latitude (N positive, S negative) and
   longitude (E positive, W negative) in given order in degrees
-  ($deg[{:}min[{:}sec]]$ allowed), WGS84 datum. By default, not
-  supported on output.
+  ($deg[{:}min[{:}sec]]$ allowed), WGS84 datum. Not
+  supported on output. Equivalent to EPSG:4326.
 * |EPSG:<number>| = Most of EPSG coordinate systems. Almost every
   coordinate system used worldwide has its own EPSG number. To find
   the number of your system, see \www{https://epsg.org}.
 * |ESRI:<number>| = Similar to EPSG, but ESRI standard.
 * |ETRS| = European Terrestrial Reference System 1989 (ETRS89); lat-long order,
-  not supported on output.
+  not supported on output. Equivalent to EPSG:4258.
 * |ETRS28| -- |ETRS37| = ETRS89 zones in UTM projection; east-north order.
+  Equivalent to EPSG:25828--EPSG:25837.
 %* |EUR79Z30| = UTM zone 30, EUR79 datum.  % ad-hoc addition not worth mentioning??
 * |JTSK|, |iJTSK| = Czechoslovak S-JTSK system used since 1920s with south and west
   axis (JTSK) and its modified version with axis
@@ -162,6 +164,7 @@ Following coordinate systems are supported:
 * |OSGB:<H, N, O, S or T><A-Z except I>| = British Ordnance Survey National
   Grid.\NEW{5.4}
 * |S-MERC| = the spherical Mercator projection, as used by various online mapping sites.
+  Equivalent to EPSG:3857.
 \endlist
 
 \subchapter Magnetic declination.
