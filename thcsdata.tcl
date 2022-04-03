@@ -98,6 +98,12 @@ set proj_specs {
   {{eur79z30} {output} "+proj=utm +zone=30 +ellps=intl +towgs84=-86,-98,-119,0,0,0,0 +no_defs" {BOUNDCRS[SOURCECRS[PROJCRS["unknown",BASEGEOGCRS["unknown",DATUM["Unknown based on International 1909 (Hayford) ellipsoid",ELLIPSOID["International 1909 (Hayford)",6378388,297,LENGTHUNIT["metre",1,ID["EPSG",9001]]]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8901]]],CONVERSION["UTM zone 30N",METHOD["Transverse Mercator",ID["EPSG",9807]],PARAMETER["Latitude of natural origin",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",-3,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["Scale factor at natural origin",0.9996,SCALEUNIT["unity",1],ID["EPSG",8805]],PARAMETER["False easting",500000,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]],ID["EPSG",16030]],CS[Cartesian,2],AXIS["(E)",east,ORDER[1],LENGTHUNIT["metre",1,ID["EPSG",9001]]],AXIS["(N)",north,ORDER[2],LENGTHUNIT["metre",1,ID["EPSG",9001]]]]],TARGETCRS[GEOGCRS["WGS 84",DATUM["World Geodetic System 1984",ELLIPSOID["WGS 84",6378137,298.257223563,LENGTHUNIT["metre",1]]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433]],CS[ellipsoidal,2],AXIS["latitude",north,ORDER[1],ANGLEUNIT["degree",0.0174532925199433]],AXIS["longitude",east,ORDER[2],ANGLEUNIT["degree",0.0174532925199433]],ID["EPSG",4326]]],ABRIDGEDTRANSFORMATION["Transformation from unknown to WGS84",METHOD["Position Vector transformation (geog2D domain)",ID["EPSG",9606]],PARAMETER["X-axis translation",-86,ID["EPSG",8605]],PARAMETER["Y-axis translation",-98,ID["EPSG",8606]],PARAMETER["Z-axis translation",-119,ID["EPSG",8607]],PARAMETER["X-axis rotation",0,ID["EPSG",8608]],PARAMETER["Y-axis rotation",0,ID["EPSG",8609]],PARAMETER["Z-axis rotation",0,ID["EPSG",8610]],PARAMETER["Scale difference",1,ID["EPSG",8611]]]]} {}}
 }
 
+# <from-ids> <to-ids> <transformation>
+set proj_transformations {
+  {{jtsk} {ijtsk} {-1 "test"}}
+  {{ijtsk ijtsk03} {jtsk jtsk03} {-1 "test"}}
+}
+
 #  {{OSGB:ST} {output} {+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=100000 +y_0=-200000 +ellps=airy +datum=OSGB36 +units=m +no_defs} {} {}}
 #  {{OSGB:SN} {output} {+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=200000 +y_0=-300000 +ellps=airy +datum=OSGB36 +units=m +no_defs} {} {}}
 
@@ -198,6 +204,10 @@ foreach prj $proj_specs {
   }
 }
 
+	
+proc escape {str} {
+  return [regsub -all {"} $str {\"}]
+}
 
 # write header file and parsing table
 set fid [open "thcsdata.h" w]
@@ -215,6 +225,11 @@ puts $fid {/**
  
 #include <map>
 
+/**
+* Add default CS transformations.
+*/
+void thcs_add_default_transformations();
+	
 /**
  * CS tokens.
  */
@@ -267,6 +282,7 @@ puts $fid {/**
  */
        
 #include "thcsdata.h"
+#include "thcs.h"
 
 }
 
@@ -318,6 +334,12 @@ puts $fid "\};"
 puts $fid $projlabels(esri)
 puts $fid $projlabels(epsg)
 
+puts $fid "\nvoid thcs_add_default_transformations() {"
+foreach p $proj_transformations {
+  puts $fid "thcs_add_cs_trans(\"[escape [lindex $p 0]]\", \"[escape [lindex $p 1]]\", \"[escape [lindex $p 2]]\");"
+}
+puts $fid "}\n\n\n"
+		
 
 close $fid
 

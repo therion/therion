@@ -36,6 +36,7 @@
 #include "thlocale.h"
 #include "thtmpdir.h"
 #include "thcs.h"
+#include "thcsdata.h"
 #include "thproj.h"
 #include "thpdfdbg.h"
 
@@ -415,6 +416,7 @@ void thinit::load()
 #endif  
 
   set_proj_lib_path();
+  thcs_add_default_transformations();
 
   this->tmp_path = "";
   this->tmp_remove_script = "";
