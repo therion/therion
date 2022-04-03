@@ -454,7 +454,7 @@ void thdataobject::read_cs(char * src_x, char * src_y, double & dst_x, double & 
 
 	  if (adj_bbox && (this->cs != TTCS_LOCAL)) {
 		double dumx, dumy, dumz;
-		thcs2cs(thcs_get_params(this->cs), thcs_get_params(TTCS_LAT_LONG), tx, ty, tz, dumx, dumy, dumz);
+		thcs2cs(this->cs, TTCS_LAT_LONG, tx, ty, tz, dumx, dumy, dumz);
 	    if (!thcfg.ibbx_def) {
 	      thcfg.ibbx[0] = dumx;
 	      thcfg.ibbx[1] = dumx;
@@ -485,7 +485,7 @@ void thdataobject::convert_cs(int src_cs, double src_x, double src_y, double & d
       // TODO: get NS
       double dumx, dumy, dumz;
       int south = 0;
-      thcs2cs(thcs_get_params(src_cs), thcs_get_params(TTCS_LAT_LONG), tx, ty, tz, dumx, dumy, dumz);
+      thcs2cs(src_cs, TTCS_LAT_LONG, tx, ty, tz, dumx, dumy, dumz);
       if (dumy < 0.0)
         south = 1;
       thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(thcs_get_params(src_cs), tx, ty, tz) - 1) + south;
@@ -506,7 +506,7 @@ void thdataobject::convert_cs(int src_cs, double src_x, double src_y, double & d
   } else {
 	if (thcfg.outcs == TTCS_LOCAL)
       ththrow("mixing local and global coordinate systems not allowed -- {} [{}] conflict with cs specification at {} [{}]", this->source.name, this->source.line, thcfg.outcs_def.name, thcfg.outcs_def.line);
-    thcs2cs(thcs_get_params(src_cs), thcs_get_params(thcfg.outcs), tx, ty, tz, dst_x, dst_y, dst_z);
+    thcs2cs(src_cs, thcfg.outcs, tx, ty, tz, dst_x, dst_y, dst_z);
   }
 
   if (thcfg.outcs != TTCS_LOCAL) {

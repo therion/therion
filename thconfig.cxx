@@ -936,7 +936,7 @@ double thconfig::get_cs_convergence(int cs)
 {
   double x, y, z, lx, ly, lz;
   if (this->get_outcs_center(x, y, z)) {
-    thcs2cs(thcs_get_params(this->outcs), thcs_get_params(cs), x, y, z, lx, ly, lz);
+    thcs2cs(this->outcs, cs, x, y, z, lx, ly, lz);
     return thcsconverg(thcs_get_params(cs), lx, ly);
   } else {
     return 0.0;
@@ -955,7 +955,7 @@ bool thconfig::get_outcs_mag_decl(double year, double & decl)
     ththrow("automatic declination calculation after {} not supported, please specify declination explicitly", thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 3));
   if ((year < double(thgeomag_minyear)) || (year > double(thgeomag_minyear + thgeomag_step * (thgeomag_maxmindex + 1))))
     this->m_decl_out_of_geomag_range = true;
-  thcs2cs(thcs_get_params(this->outcs), "+proj=latlong +datum=WGS84", x, y, z, lon, lat, alt);
+  thcs2cs(this->outcs, TTCS_LONG_LAT, x, y, z, lon, lat, alt);
   decl = thgeomag(lat, lon, alt, year);
   return true;
 }

@@ -1890,7 +1890,7 @@ else
   // LAYOUT.calibration_local[0].x = ccx * crot + ccy * srot + origin_shx;
   //LAYOUT.calibration_local[0].y = - ccx * srot + ccy * crot + origin_shy;
   // if (prj->type == TT_2DPROJ_PLAN) {
-  //   thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
+  //   thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
   //                 lim.min.x + prj->rshift_x, lim.min.y + prj->rshift_y, lim.min.z + prj->rshift_z, ccx, ccy, ccz);
   // } else {
   //   ccx = 0.0;
@@ -1905,7 +1905,7 @@ else
   LAYOUT.calibration_local[n].x = ccx * crot + ccy * srot + origin_shx; \
 	LAYOUT.calibration_local[n].y = - ccx * srot + ccy * crot + origin_shy; \
   if ((prj->type == TT_2DPROJ_PLAN) && (thcfg.outcs != TTCS_LOCAL)) { \
-    thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT), \
+    thcs2cs(thcfg.outcs, TTCS_LONG_LAT, \
                   (xxx) + prj->rshift_x, (yyy) + prj->rshift_y, lim.min.z + prj->rshift_z, ccx, ccy, ccz); \
   } else { \
     ccx = 0.0; \

@@ -73,6 +73,8 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# tmp-path  \"\"\n\n"
 "### User defined coordinate system ###\n"
 "# cs-def <id> <proj4id> [other options]\n\n"
+"### User defined coordinate systems transformations ###\n"
+"# cs-def <from-cs-id> <to-cs-id> <proj-cs-transformation-string>\n\n"
 "### Let PROJ v6+ find the optimal transformation ###\n"
 "# proj-auto off\n\n"
 "### PROJ v6+ handling of missing transformation grids if proj-auto is on ###\n"
@@ -123,6 +125,7 @@ enum {
   TTIC_OTF2PFB,
   TTIC_TEX_REFS_REGISTERS,
   TTIC_CS_DEF,
+  TTIC_CS_TRANS,
   TTIC_UNKNOWN,
 };
 
@@ -135,6 +138,7 @@ static const thstok thtt_initcmd[] = {
   {"cavern-path", TTIC_PATH_CAVERN},
   {"convert-path", TTIC_PATH_CONVERT},
   {"cs-def", TTIC_CS_DEF},
+  {"cs-trans", TTIC_CS_TRANS},
   {"encoding-default", TTIC_ENCODING_DEFAULT},
   {"encoding-sql", TTIC_ENCODING_SQL},
 //  {"encoding_default", TTIC_ENCODING_DEFAULT},
@@ -474,6 +478,10 @@ void thinit::load()
           if (nargs < 2)
             ththrow("invalid cs-def syntax -- should be: cs-def <id> <proj4id> [other options]");
           break;
+        case TTIC_CS_TRANS:
+          if (nargs != 4)
+            ththrow("invalid cs-trans syntax -- should be: cs-trans <from-cs-id[s]> <to-cs-id[s]> <transformation>");
+          break;
         default:
           ththrow("invalid initialization command -- {}", args[0]);
       }
@@ -482,6 +490,10 @@ void thinit::load()
 
         case TTIC_CS_DEF:
           thcs_add_cs(args[1], args[2], nargs - 2, &(args[3]));
+          break;
+
+        case TTIC_CS_TRANS:
+          thcs_add_cs_trans(args[1], args[2], args[3]);
           break;
         
         case TTIC_ENCODING_DEFAULT:

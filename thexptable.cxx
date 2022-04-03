@@ -452,7 +452,7 @@ void thexptable::add_coordinates(double x, double y, double z, const char * xlab
       ty = y;
       tz = z;
     } else {
-      thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(this->cs),
+      thcs2cs(thcfg.outcs, this->cs,
         x, y, z, tx, ty, tz);
       if (thcs_get_data(this->cs)->dms) {
         tx = tx / THPI * 180.0;
