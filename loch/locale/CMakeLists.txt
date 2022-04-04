@@ -17,7 +17,9 @@ function(process_locale DIR)
   # on macOS install locale files as part of an application bundle
   if (APPLE)
     target_sources(loch PRIVATE ${FULL_PATH}/loch.mo)
-    set_source_files_properties(${FULL_PATH}/loch.mo PROPERTIES MACOSX_PACKAGE_LOCATION Resources/${DIR}.lproj/LC_MESSAGES)
+    set_source_files_properties(${FULL_PATH}/loch.mo PROPERTIES 
+      MACOSX_PACKAGE_LOCATION Resources/${DIR}.lproj/LC_MESSAGES
+      GENERATED TRUE)
   else()
     install(FILES ${FULL_PATH}/loch.mo DESTINATION ${CMAKE_INSTALL_LOCALEDIR}/${DIR}/LC_MESSAGES COMPONENT loch-runtime)
   endif()
