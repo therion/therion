@@ -926,7 +926,7 @@ double thconfig::get_outcs_convergence()
 {
   double x, y, z;
   if (this->get_outcs_center(x, y, z)) {
-    return thcsconverg(thcs_get_params(this->outcs), x, y);
+    return thcsconverg(this->outcs, x, y);
   } else {
     return 0.0;
   }
@@ -937,7 +937,7 @@ double thconfig::get_cs_convergence(int cs)
   double x, y, z, lx, ly, lz;
   if (this->get_outcs_center(x, y, z)) {
     thcs2cs(this->outcs, cs, x, y, z, lx, ly, lz);
-    return thcsconverg(thcs_get_params(cs), lx, ly);
+    return thcsconverg(cs, lx, ly);
   } else {
     return 0.0;
   }

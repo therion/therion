@@ -47,17 +47,14 @@ thcs_config::thcs_config() {
 
 thcs_config thcs_cfg;
 
-void thcs2cs(int s, int t,
-              double a, double b, double c, double &x, double &y, double &z) {
-     thcs2cs(thcs_get_params(s), thcs_get_params(t), a, b, c, x, y, z);
-}
-
 #if PROJ_VER < 5
 
 #include <proj_api.h>
 
-void thcs2cs(std::string s, std::string t,
+void thcs2cs(int si, int ti,
               double a, double b, double c, double &x, double &y, double &z) {
+  std::string s = thcs_get_params(si);
+  std::string t = thcs_get_params(ti);
   projPJ P1, P2;
   double c_orig = c;
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
@@ -74,7 +71,8 @@ void thcs2cs(std::string s, std::string t,
   pj_free(P2);
 }
 
-signed int thcs2zone(std::string s, double a, double b, double c) {
+signed int thcs2zone(int si, double a, double b, double c) {
+  std::string s = thcs_get_params(si);
   projPJ P1, P2;
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
      therror(("Can't initialize input projection!"));
@@ -87,7 +85,8 @@ signed int thcs2zone(std::string s, double a, double b, double c) {
   return (int) (a*180/M_PI+180)/6 + 1; 
 }
 
-double thcsconverg(std::string s, double a, double b) {
+double thcsconverg(int si, double a, double b) {
+  std::string s = thcs_get_params(si);
   projPJ P1, P2;
   double c = 0;
   double x = a, y = b;
@@ -233,6 +232,9 @@ proj_cache::~proj_cache() {
 proj_cache cache;
 #endif
 
+  std::map<std::pair<int,int>, std::string> precise_transf;
+
+
   void th_init_proj(PJ * &P, std::string s) {
 #if PROJ_VER > 5
     proj_context_use_proj4_init_rules(PJ_DEFAULT_CTX, true);
@@ -362,7 +364,7 @@ proj_cache cache;
   }
 #endif
 
-  void thcs2cs(std::string s, std::string t,
+  void thcs2cs(int si, int ti,
               double a, double b, double c, double &x, double &y, double &z) {
 
     // TODO: support user-defined pipelines for a combination of CRSs
@@ -374,9 +376,18 @@ proj_cache cache;
 
     //  Proj v.6 supports them
 
+    std::string s = thcs_get_params(si);
+    std::string t = thcs_get_params(ti);
+
     double undo_radians = 1.0, redo_radians = 1.0;
     double c_orig = c;
     PJ* P = NULL;
+
+    std::string transf;
+    if ((transf = thcs_get_trans(si, ti)) != "") {  // use the preconfigured precise transformation
+      th_init_proj(P, transf.c_str());
+      precise_transf[{si,ti}] = transf;
+    } else
 #if PROJ_VER > 5
     if (thcs_cfg.proj_auto) {  // let PROJ find the best transformation
       th_init_proj_auto(P, s, t);
@@ -404,19 +415,19 @@ proj_cache cache;
       proj_destroy(P);
   }
 
-  signed int thcs2zone(std::string s, double a, double b, double c) {
+  signed int thcs2zone(int s, double a, double b, double c) {
     double x, y, z;
-    thcs2cs(s,"+proj=latlong +datum=WGS84",a,b,c,x,y,z);
+    thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
     return (int) (x*180/M_PI+180)/6 + 1;
   }
 
-  double thcsconverg(std::string s, double a, double b) {
+  double thcsconverg(int s, double a, double b) {
     double c = 0, x, y, z, x2, y2, z2;
-    if (thcs_islatlong(s))
+    if (thcs_islatlong(thcs_get_params(s)))
       therror(("can't determine meridian convergence for lat-long systems"));
-    thcs2cs(s,"+proj=latlong +datum=WGS84",a,b,c,x,y,z);
+    thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
     y += 1e-6;
-    thcs2cs("+proj=latlong +datum=WGS84",s,x,y,z,x2,y2,z2);
+    thcs2cs(TTCS_EPSG + 4326,s,x,y,z,x2,y2,z2);
     return atan2(x2-a,y2-b)/M_PI*180;
   }
 
@@ -472,6 +483,13 @@ int thcs_parse_gridhandling(const char * s) {
 }
 
 void thcs_log_transf_used() {
+#if PROJ_VER >= 5
+  thlog.printf("\n################ precise transformations used ##################\n");
+  for (auto &j: precise_transf) {
+    thlog.printf("  from: [%s] to: [%s] definition: [%s]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second.c_str());
+  }
+  thlog.printf("############ end of precise transformations used ###############\n");
+#endif
 #if PROJ_VER >= 6
   thlog.printf(cache.log().c_str());
 #endif

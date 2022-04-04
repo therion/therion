@@ -488,7 +488,7 @@ void thdataobject::convert_cs(int src_cs, double src_x, double src_y, double & d
       thcs2cs(src_cs, TTCS_LAT_LONG, tx, ty, tz, dumx, dumy, dumz);
       if (dumy < 0.0)
         south = 1;
-      thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(thcs_get_params(src_cs), tx, ty, tz) - 1) + south;
+      thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(src_cs, tx, ty, tz) - 1) + south;
     } else {
       thcfg.outcs = src_cs;
     }
