@@ -13,7 +13,14 @@ function(process_locale DIR)
   )
   add_custom_target(locale_${DIR} ALL DEPENDS ${FULL_PATH}/loch.mo)
   add_dependencies(loch locale_${DIR})
-  install(FILES ${FULL_PATH}/loch.mo DESTINATION ${CMAKE_INSTALL_LOCALEDIR}/${DIR}/LC_MESSAGES COMPONENT loch-runtime)
+
+  # on macOS install locale files as part of an application bundle
+  if (APPLE)
+    target_sources(loch PRIVATE ${FULL_PATH}/loch.mo)
+    set_source_files_properties(${FULL_PATH}/loch.mo PROPERTIES MACOSX_PACKAGE_LOCATION Resources/${DIR}.lproj/LC_MESSAGES)
+  else()
+    install(FILES ${FULL_PATH}/loch.mo DESTINATION ${CMAKE_INSTALL_LOCALEDIR}/${DIR}/LC_MESSAGES COMPONENT loch-runtime)
+  endif()
 endfunction()
 
 process_locale("bg")
