@@ -171,26 +171,26 @@ std::string thcs_get_proj_version_headers() {
 
 #if PROJ_VER >= 6
 class proj_cache {
-    std::map<std::tuple<std::string,std::string,std::vector<double> >, PJ*> transf_cache;
+    std::map<std::tuple<int,int,std::vector<double> >, PJ*> transf_cache;
     std::set<PJ*> PJ_cache;
   public:
     bool contains(PJ*);
-    PJ* get(std::string,std::string,std::vector<double>);
-    bool add(std::string,std::string,std::vector<double>, PJ*);
+    PJ* get(int,int,std::vector<double>);
+    bool add(int,int,std::vector<double>, PJ*);
     std::string log();
     ~proj_cache();
 };
 
-PJ* proj_cache::get(std::string s, std::string t, std::vector<double> bbox) {
-  std::tuple<std::string,std::string,std::vector<double> > tr_c {sanitize_crs(s), sanitize_crs(t), bbox};
+PJ* proj_cache::get(int s, int t, std::vector<double> bbox) {
+  std::tuple<int,int,std::vector<double> > tr_c {s, t, bbox};
   if (transf_cache.count(tr_c) == 1)
     return transf_cache[tr_c];
   else
     return nullptr;
 }
 
-bool proj_cache::add(std::string s, std::string t, std::vector<double> bbox, PJ* P) {
-  std::tuple<std::string,std::string,std::vector<double> > tr_c {sanitize_crs(s), sanitize_crs(t), bbox};
+bool proj_cache::add(int s, int t, std::vector<double> bbox, PJ* P) {
+  std::tuple<int,int,std::vector<double> > tr_c {s, t, bbox};
   if (transf_cache.count(tr_c) == 1) {
     return false;
   } else {
@@ -214,8 +214,8 @@ std::string proj_cache::log() {
                                      thcs_cfg.bbox[2] << ", " << thcs_cfg.bbox[3] << ")" << std::endl;
     for (const auto & i : transf_cache) {
       PJ_PROJ_INFO pinfo = proj_pj_info(i.second);
-      s << "  from: [" << std::get<0>(i.first).c_str() <<
-              "] to: [" << std::get<1>(i.first).c_str() <<
+      s << "  [" << thcs_get_name(std::get<0>(i.first)) <<
+              " → " << thcs_get_name(std::get<1>(i.first)) <<
               "] AoU: [" << (std::get<2>(i.first).size()>0 ? "yes" : "no") <<
               "] transformation: [" << pinfo.description <<
               "] definition: [" << pinfo.definition <<
@@ -249,10 +249,13 @@ proj_cache cache;
   }
 
 #if PROJ_VER >= 6
-  void th_init_proj_auto(PJ * &P, std::string s, std::string t) {
+  void th_init_proj_auto(PJ * &P, int si, int ti) {
 
     // check the cache first
-    if ((P = cache.get(s,t,thcs_cfg.bbox)) != nullptr) return;
+    if ((P = cache.get(si,ti,thcs_cfg.bbox)) != nullptr) return;
+
+    std::string s = thcs_get_params(si);
+    std::string t = thcs_get_params(ti);
 
     if
 #if PROJ_VER >= 7
@@ -359,7 +362,7 @@ proj_cache cache;
     proj_destroy(P);
     P = P_for_GIS;
 
-    if (!cache.add(s,t,thcs_cfg.bbox,P))
+    if (!cache.add(si,ti,thcs_cfg.bbox,P))
       therror(("could not add projection to the cache, it's already there -- should not happen"));
   }
 #endif
@@ -390,7 +393,7 @@ proj_cache cache;
     } else
 #if PROJ_VER > 5
     if (thcs_cfg.proj_auto) {  // let PROJ find the best transformation
-      th_init_proj_auto(P, s, t);
+      th_init_proj_auto(P, si, ti);
       if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
         undo_radians = 180.0 / M_PI;
       }
@@ -486,7 +489,7 @@ void thcs_log_transf_used() {
 #if PROJ_VER >= 5
   thlog.printf("\n################ precise transformations used ##################\n");
   for (auto &j: precise_transf) {
-    thlog.printf("  from: [%s] to: [%s] definition: [%s]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second.c_str());
+    thlog.printf("  [%s → %s] definition: [%s]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second.c_str());
   }
   thlog.printf("############ end of precise transformations used ###############\n");
 #endif
