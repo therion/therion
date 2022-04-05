@@ -13,10 +13,7 @@ function(process_locale DIR)
   add_dependencies(loch locale_${DIR})
 
   # on macOS install locale files as part of an application bundle
-  if (APPLE)
-    target_sources(loch ${FULL_PATH})
-    set_source_files_properties(${FULL_PATH} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  else()
+  if (NOT APPLE)
     install(FILES ${FULL_PATH}/loch.mo DESTINATION ${CMAKE_INSTALL_LOCALEDIR}/${DIR}/LC_MESSAGES COMPONENT loch-runtime)
   endif()
 endfunction()

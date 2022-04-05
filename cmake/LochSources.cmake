@@ -41,4 +41,5 @@ set(LOCH_SOURCES
     lxSView.cxx
     lxSStats.cxx
     lxTR.c
+    ${CMAKE_BINARY_DIR}/loch/locale
 )
