@@ -41,5 +41,16 @@ set(LOCH_SOURCES
     lxSView.cxx
     lxSStats.cxx
     lxTR.c
-    ${CMAKE_BINARY_DIR}/loch/locale
 )
+
+set(LOCH_LOCALES bg cs de en_GB es fr it ru sk sl)
+# we need to set the files as sources only on macOS
+if (APPLE)
+    foreach(LOCALE ${LOCH_LOCALES})
+        set(LOCALE_FILE "${CMAKE_BINARY_DIR}/loch/locale/${LOCALE}/loch.mo")
+        list(APPEND LOCH_SOURCES ${LOCALE_FILE})
+        set_source_files_properties(${LOCALE_FILE} PROPERTIES
+            MACOSX_PACKAGE_LOCATION Resources/${LOCALE}.lproj
+            GENERATED TRUE)
+    endforeach()
+endif()

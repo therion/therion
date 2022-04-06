@@ -54,7 +54,7 @@ if (APPLE)
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/loch.app/Contents/Info.plist"
     )
-    set_source_files_properties(${ICONS} ${CMAKE_CURRENT_BINARY_DIR}/locale PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set_source_files_properties(${ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 endif()
 
 install(TARGETS loch 
