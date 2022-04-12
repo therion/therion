@@ -279,7 +279,7 @@ proj_cache cache;
                 proj_destroy(P);
                 therror(("couldn't disable network access for Proj"));
               }
-              thprintf("done\n", url);
+              thprintf("done\n");
             }
           }
       }
@@ -374,7 +374,7 @@ proj_cache cache;
                   proj_list_destroy(ops);
                   therror(("couldn't disable network access for Proj"));
                 }
-                thprintf("done\n", url);
+                thprintf("done\n");
                 break;
 #endif
             }
