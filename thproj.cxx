@@ -234,12 +234,59 @@ proj_cache cache;
 
   std::map<std::pair<int,int>, std::string> precise_transf;
 
+  std::regex reg_gridlist(R"(\+(nad|geoid|xy_|z_|)grids\s*=\s*(\S+)\b)");
+  std::regex reg_gridfile(R"(@?([^,]+))");
+  std::regex reg_gridtif(R"(\.tiff?$)");
 
   void th_init_proj(PJ * &P, std::string s) {
 #if PROJ_VER > 5
     proj_context_use_proj4_init_rules(PJ_DEFAULT_CTX, true);
 #endif
     P = proj_create(PJ_DEFAULT_CTX, s.c_str());
+#if PROJ_VER >= 7
+    // try to download the missing grids if proj_create() fails
+    if (P==0 && thcs_cfg.proj_auto_grid == GRID_DOWNLOAD && proj_errno(P) ==
+#if PROJ_VER >= 8
+      PROJ_ERR_INVALID_OP_FILE_NOT_FOUND_OR_INVALID
+#else
+      PJD_ERR_FAILED_TO_LOAD_GRID
+#endif
+       ) {
+        std::smatch m1, m2;
+        // find all grid lists
+        for (auto i1 = std::sregex_iterator(s.begin(), s.end(), reg_gridlist);
+             i1 != std::sregex_iterator(); i1++) {
+          m1 = *i1;
+          std::string s2 = m1.str(2);
+          // split comma separated list of grids
+          for (auto i2 = std::sregex_iterator(s2.begin(), s2.end(), reg_gridfile);
+               i2 != std::sregex_iterator(); i2++) {
+            m2 = *i2;
+            if (std::regex_search(m2.str(1),reg_gridtif)) {
+              // download all tif grids from the Proj CDN
+              std::string url = (std::string) "https://cdn.proj.org/" + m2.str(1);
+
+              if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
+                proj_destroy(P);
+                therror(("couldn't enable network access for Proj"));
+              }
+              thprintf("downloading the grid %s... ", url.c_str());
+              if (!proj_download_file(PJ_DEFAULT_CTX, url.c_str(), 0, NULL, NULL)) {
+                proj_destroy(P);
+                therror(("couldn't download the grid"));
+              }
+              if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
+                proj_destroy(P);
+                therror(("couldn't disable network access for Proj"));
+              }
+              thprintf("done\n", url);
+            }
+          }
+      }
+      // try once again after downloading the grids
+      P = proj_create(PJ_DEFAULT_CTX, s.c_str());
+    }
+#endif  // PROJ_VER >= 7
     if (P==0) {
       std::ostringstream u;
       u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << "): " << s;
@@ -370,9 +417,6 @@ proj_cache cache;
   void thcs2cs(int si, int ti,
               double a, double b, double c, double &x, double &y, double &z) {
 
-    // TODO: support user-defined pipelines for a combination of CRSs
-    // for high-precision transformations
-
     //  Proj (at least 5.2.0) doesn't accept custom proj strings in
     //  proj_create_crs_to_crs(); just +init=epsg:NNN and similar init strings
     //  PJ* P = proj_create_crs_to_crs(PJ_DEFAULT_CTX, s.c_str(), t.c_str(), NULL);
@@ -386,11 +430,13 @@ proj_cache cache;
     double c_orig = c;
     PJ* P = NULL;
 
+#if PROJ_VER >= 7         // grids in .tif format supported since v7
     std::string transf;
     if ((transf = thcs_get_trans(si, ti)) != "") {  // use the preconfigured precise transformation
       th_init_proj(P, transf.c_str());
       precise_transf[{si,ti}] = transf;
     } else
+#endif
 #if PROJ_VER > 5
     if (thcs_cfg.proj_auto) {  // let PROJ find the best transformation
       th_init_proj_auto(P, si, ti);
@@ -487,11 +533,11 @@ int thcs_parse_gridhandling(const char * s) {
 
 void thcs_log_transf_used() {
 #if PROJ_VER >= 5
-  thlog.printf("\n################ precise transformations used ##################\n");
+  thlog.printf("\n################# custom transformations used ##################\n");
   for (auto &j: precise_transf) {
     thlog.printf("  [%s → %s] definition: [%s]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second.c_str());
   }
-  thlog.printf("############ end of precise transformations used ###############\n");
+  thlog.printf("############ end of custom transformations used ################\n");
 #endif
 #if PROJ_VER >= 6
   thlog.printf(cache.log().c_str());
