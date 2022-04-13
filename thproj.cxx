@@ -249,10 +249,11 @@ proj_cache cache;
 #if PROJ_VER >= 8
       PROJ_ERR_INVALID_OP_FILE_NOT_FOUND_OR_INVALID
 #else
-      PJD_ERR_FAILED_TO_LOAD_GRID
+      -38 // PJD_ERR_FAILED_TO_LOAD_GRID is not exposed
 #endif
        ) {
         std::smatch m1, m2;
+        std::set<std::string> grids;
         // find all grid lists
         for (auto i1 = std::sregex_iterator(s.begin(), s.end(), reg_gridlist);
              i1 != std::sregex_iterator(); i1++) {
@@ -262,27 +263,29 @@ proj_cache cache;
           for (auto i2 = std::sregex_iterator(s2.begin(), s2.end(), reg_gridfile);
                i2 != std::sregex_iterator(); i2++) {
             m2 = *i2;
-            if (std::regex_search(m2.str(1),reg_gridtif)) {
-              // download all tif grids from the Proj CDN
-              std::string url = (std::string) "https://cdn.proj.org/" + m2.str(1);
-
-              if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
-                proj_destroy(P);
-                therror(("couldn't enable network access for Proj"));
-              }
-              thprintf("downloading the grid %s... ", url.c_str());
-              if (!proj_download_file(PJ_DEFAULT_CTX, url.c_str(), 0, NULL, NULL)) {
-                proj_destroy(P);
-                therror(("couldn't download the grid"));
-              }
-              if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
-                proj_destroy(P);
-                therror(("couldn't disable network access for Proj"));
-              }
-              thprintf("done\n");
-            }
+            if (std::regex_search(m2.str(1),reg_gridtif)) grids.insert(m2.str(1));
           }
       }
+
+      // download all tif grids from the Proj CDN
+      if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
+        proj_destroy(P);
+        therror(("couldn't enable network access for Proj"));
+      }
+      for (auto & f: grids) {
+        std::string url = (std::string) "https://cdn.proj.org/" + f;
+        thprintf("downloading the grid %s...\n", url.c_str());
+        if (!proj_download_file(PJ_DEFAULT_CTX, url.c_str(), 0, NULL, NULL)) {
+          proj_destroy(P);
+          therror(("couldn't download the grid"));
+        }
+      }
+      if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
+        proj_destroy(P);
+        therror(("couldn't disable network access for Proj"));
+      }
+      thprintf("done\n");
+
       // try once again after downloading the grids
       P = proj_create(PJ_DEFAULT_CTX, s.c_str());
     }
