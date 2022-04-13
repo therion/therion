@@ -186,7 +186,7 @@ void thcs_add_cs_trans_single(const char * from_cs, const char * to_cs, const ch
 	if (fcs == TTCS_UNKNOWN) ththrow("uknown coordinate system -- {}", from_cs);
 	int tcs = thcs_parse(to_cs);
 	if (tcs == TTCS_UNKNOWN) ththrow("uknown coordinate system -- {}", to_cs);
-	if (strlen(trans) == 0) ththrow("empty transformation specification");
+//	if (strlen(trans) == 0) ththrow("empty transformation specification");
 	thcs_transformations[thcstrans(fcs, tcs)] = thdb.strstore(trans, true);
 }
 
