@@ -1,5 +1,10 @@
 Therion 6.0.7 (in progress):
 
+therion:
+ * added a new ini file option ‘cs-trans’ for user-defined PROJ transformation
+   pipelines between two coordinate systems
+ * added support for automatic downloading of PROJ transformation grids used
+   in cs-trans pipelines from cdn.proj.org
 
 --------------------------------------------------------------------------------
 
