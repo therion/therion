@@ -151,11 +151,13 @@ std::string thcs_get_proj_version_headers() {
   std::regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
   std::regex reg_type(R"(\+type\s*=\s*crs\b)");
   std::regex reg_space(R"(\s+)");
+  std::regex reg_trim(R"(^\s*(.*\S)\s*$)");
   std::regex reg_czech(R"(\s+\+czech\b)");
 #endif
 
   std::string sanitize_crs(std::string s) {
 #if PROJ_VER > 5
+    s = std::regex_replace(s, reg_trim, "$1");
     s = std::regex_replace(s, reg_space, " ");
     if (thcs_get_proj_version() == "7.1.0") {  // fix a bug in axes order in 7.1.0 also for user-defined CSs
       s = std::regex_replace(s, reg_czech, " +axis=wsu");
