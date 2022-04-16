@@ -254,6 +254,7 @@ proj_cache cache;
       -38 // PJD_ERR_FAILED_TO_LOAD_GRID is not exposed
 #endif
        ) {
+        thprintf("trying to recover from the error listed above...\n");
         std::smatch m1, m2;
         std::set<std::string> grids;
         // find all grid lists
