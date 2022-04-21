@@ -538,12 +538,14 @@ int thcs_parse_gridhandling(const char * s) {
 }
 
 void thcs_log_transf_used() {
-#if PROJ_VER >= 5
-  thlog.printf("\n################# custom transformations used ##################\n");
-  for (auto &j: precise_transf) {
-    thlog.printf("  [%s → %s] definition: [%s]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second.c_str());
+#if PROJ_VER >= 7
+  if (precise_transf.size() > 0) {
+    thlog.printf("\n################# custom transformations used ##################\n");
+    for (auto &j: precise_transf) {
+      thlog.printf("  [%s → %s] definition: [%s]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second.c_str());
+    }
+    thlog.printf("############ end of custom transformations used ################\n");
   }
-  thlog.printf("############ end of custom transformations used ################\n");
 #endif
 #if PROJ_VER >= 6
   thlog.printf(cache.log().c_str());
