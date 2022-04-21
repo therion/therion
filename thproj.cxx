@@ -41,8 +41,8 @@
 #endif
 
 thcs_config::thcs_config() {
-  proj_auto = false;
-  proj_auto_grid = GRID_WARN;
+  proj_auto = true;
+  proj_auto_grid = GRID_DOWNLOAD;
 }
 
 thcs_config thcs_cfg;
