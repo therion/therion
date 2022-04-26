@@ -145,6 +145,9 @@ std::string thcs_get_proj_version_headers() {
   #include <math.h>
   #include <sstream>
   #include <iomanip>
+#ifdef THWIN32
+  #include "thconfig.h"
+#endif
 
 #if PROJ_VER > 5
   std::regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
@@ -434,6 +437,14 @@ proj_cache cache;
     double undo_radians = 1.0, redo_radians = 1.0;
     double c_orig = c;
     PJ* P = NULL;
+
+// set CA bundle path; supported since proj 7.2.0
+#ifdef THWIN32
+#if PROJ_VER >= 8
+    std::string ca_path = (std::string) thcfg.install_path.get_buffer() + "\\lib\\cacert.pem";
+    proj_context_set_ca_bundle_path(PJ_DEFAULT_CTX, ca_path.c_str());
+#endif
+#endif
 
 #if PROJ_VER >= 7         // grids in .tif format supported since v7
     std::string transf;
