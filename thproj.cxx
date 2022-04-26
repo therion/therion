@@ -276,9 +276,8 @@ proj_cache cache;
         therror(("couldn't enable network access for Proj"));
       }
       for (auto & f: grids) {
-        std::string url = (std::string) "https://cdn.proj.org/" + f;
-        thprintf("downloading the grid %s...\n", url.c_str());
-        if (!proj_download_file(PJ_DEFAULT_CTX, url.c_str(), 0, NULL, NULL)) {
+        thprintf("downloading the grid %s...\n", f.c_str());
+        if (!proj_download_file(PJ_DEFAULT_CTX, f.c_str(), 0, NULL, NULL)) {
           proj_destroy(P);
           therror(("couldn't download the grid"));
         }
