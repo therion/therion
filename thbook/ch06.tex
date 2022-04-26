@@ -416,7 +416,7 @@ supported initialization commands follow.
   first transformed to |wgs-84|, then from |wgs-84| to the target coordinate
   system. This might result in a suboptimal precision.
 
-  The default setting is |off|. This option is ignored for those pairs of coordinate
+  The default setting is |on|.\NEW{6.0.7} This option is ignored for those pairs of coordinate
   systems which have a transformation pipeline defined (see |cs-trans|).
 
 * |proj-missing-grid <ignore/warn/fail/cache/download>|\NEW{5.5.1}
@@ -457,7 +457,7 @@ supported initialization commands follow.
   lets Proj to download the missing grids from the
   Internet. The grids are used in {\it subsequent} runs (in any mode).
 
-  The default setting is |warn|. The option |proj-missing-grid| is ignored if
+  The default setting is |download|.\NEW{6.0.7} The option |proj-missing-grid| is ignored if
   |proj-auto| is |off| or Proj v5 or older is used.
   If Proj v6 is used by Therion, the settings
   |cache| and |download| are equivalent to |fail|, as the network
