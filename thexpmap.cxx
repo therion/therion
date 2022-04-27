@@ -3072,6 +3072,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     tmppt.xt = (scrap->lxmin + scrap->lxmax) / 2.0;
     tmppt.yt = (scrap->lymin + scrap->lymax) / 2.0;
     thdb.buff_tmp = utf2tex(thobjectname_print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
+    fprintf(out->file,"drawoptions();\n");
     fprintf(out->file,"p_label(btex \\thlargesize %s etex,",thdb.buff_tmp.get_buffer());
     tmppt.export_mp(out);
     fprintf(out->file,",0.0,p_label_mode_debugscrap);\n");
