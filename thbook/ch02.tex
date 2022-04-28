@@ -1099,6 +1099,12 @@ respectively.
        * |l-size <number>| = same to the left. Required for |slope| type.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
          Auto is default.
+  * |scale| = scale for labels, can be:
+    tiny (xs), small (s), normal (m), large (l), huge (xl) or a
+    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+    $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
+    $xl \equiv 2.0$. Absolute font sizes (in points) can be assigned to named sizes
+    using |fonts-setup| in the |layout| configuration section.
   * |adjust <horizontal/vertical>| = shifts the line point to be aligned
     horizontally/ver\-ti\-cally with the previous point (or next point if there is
     no previous point). The result is horizontal/vertical line segment).
