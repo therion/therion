@@ -19,16 +19,15 @@ jobs:
       - name: make samples
         run: make samples
   mac:
-    runs-on: macos-11.0
+    runs-on: macos-11
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
         run: |
           brew update
           brew tap homebrew/core
-          brew unlink gcc@9
           rm /usr/local/bin/2to3
-          brew install wxmac vtk proj
+          brew install wxwidgets vtk proj
       - name: compile therion
         run: |
           make config-macosx

@@ -38,16 +38,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-10.15, macos-11.0]
+        os: [macos-10.15, macos-11, macos-12]
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
         run: |
           brew update
           brew tap homebrew/core
-          brew unlink gcc@9
           rm /usr/local/bin/2to3
-          brew install wxmac vtk proj xquartz ninja
+          brew install wxwidgets vtk proj xquartz ninja
       - name: Configure CMake
         run: |
           mkdir build && cd build && cmake -G Ninja -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
