@@ -937,6 +937,8 @@ Point is a command for drawing a point map symbol.
 \NEW{5.3}|<lang:XX>| = creates multilingual label (see |string| type for
    detailed description)
 
+    \NEW{6.1.0}|<size:N>| = specify the font size in points; |N| should be between 1 and 127.
+
   * |value| = value of height, passage-height, altitude, dimensions or date
 
       {\it height:} according to the sign of the value (positive, negative or
@@ -952,8 +954,8 @@ Point is a command for drawing a point map symbol.
       distance to floor).
 
       {\it altitude:} the value specified is the altitude difference from
-      the nearest station. The value will be set to 0 if defined as "-", ".", 
-      "nan", "NAN" or "NaN". If the altitude value is prefixed by ``|fix|''
+      the nearest station. The value will be set to 0 if defined as `|-|', `|.|',
+      `|nan|', `|NAN|' or `|NaN|'. If the altitude value is prefixed by `|fix|'
       (e.g. |-value [fix 1300]|), this value is used as an absolute altitude.
       The value can optionally be followed by length units.
 

@@ -5,6 +5,10 @@ therion:
    pipelines between two coordinate systems
  * added support for automatic downloading of PROJ transformation grids used
    in cs-trans pipelines from cdn.proj.org
+ * changed the default settings for 'proj-auto' (on) and 'proj-missing-grid'
+   (download) to allow Proj choosing the best transformation and automatically
+   download any missing transformation grids
+ * support custom font size in map labels using <size:N> in the label text
 
 --------------------------------------------------------------------------------
 
