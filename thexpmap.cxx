@@ -3206,7 +3206,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
 //            curz += prj->shift_z;
           switch (this->layout->color_crit) {
             case TT_LAYOUT_CCRIT_MAP:
-              // vsetkym scrapom v kazdej priradi farbu
+              // assigns color to each scrap in each
               if (firstmapscrap) {
                 if (cmap->selection_color.defined) {
                   clr = cmap->selection_color;
@@ -3230,14 +3230,24 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
 //              thprintf("%s@%s->%.2f,%.2f,%.2f\n",cs->name,cs->fsptr->full_name,cs->R,cs->G,cs->B);
             break;
             case TT_LAYOUT_CCRIT_SCRAP:
-              // vsetkym scrapom v kazdej priradi farbu
-							switch (cmn % 6) {
+              // set a different random color for earch scrap
+							switch (cmn % 16) {
 								case 0:  clr = thlayout_color(1.0, 0.5, 0.5); break;
 								case 1:  clr = thlayout_color(0.5, 1.0, 0.5); break;
 								case 2:  clr = thlayout_color(0.5, 0.5, 1.0); break;
 								case 3:  clr = thlayout_color(1.0, 1.0, 0.0); break;
 								case 4:  clr = thlayout_color(0.0, 1.0, 1.0); break;
-								default: clr = thlayout_color(1.0, 0.0, 1.0); break;
+								case 5:  clr = thlayout_color(1.0, 0.0, 1.0); break;
+								case 6:  clr = thlayout_color(0.75, 1.0, 1.0); break;
+								case 7:  clr = thlayout_color(1.0, 0.75, 1.0); break;
+								case 8:  clr = thlayout_color(1.0, 1.0, 0.75); break;
+								case 9:  clr = thlayout_color(0.25, 0.75, 1.0); break;
+								case 10: clr = thlayout_color(0.25, 1.0, 0.75); break;
+								case 11: clr = thlayout_color(1.0, 0.75, 0.25); break;
+								case 12: clr = thlayout_color(0.75, 1.0, 0.25); break;
+                case 13: clr = thlayout_color(0.75, 0.25, 1.0); break;
+                case 14: clr = thlayout_color(1.0, 0.25, 0.75); break;
+                default: clr = thlayout_color(0.5, 0.25, 0.75); break;
 							}
               clr.alpha_correct(tmp_alpha);
               cs->clr = clr;
