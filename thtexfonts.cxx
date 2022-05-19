@@ -33,6 +33,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <regex>
 
 #include <cstring>
 #include <cstdio>
@@ -319,10 +320,11 @@ std::string select_lang(std::string s, std::string lang) {
 
 // main task is done here
 
+std::regex reg_fontsize(R"(<size:\s*(\d{1,3})>)");
+
 #define SELFONT if (ENC_NEW.NFSS == 0 && lastenc!=-1) T << "\\thf" << u2str(lastenc+1)
 
 std::string utf2tex(std::string str, bool remove_kerning) {
-
   if (str.empty()) return str;
 
   std::ostringstream T;
@@ -330,6 +332,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
   int wc;  //wide char
   int lastenc = -1;
   int laststyle = -1;
+  int lastsize = -1;
   int align = 0;
   bool rtl = false;
   // bool link_active = false;
@@ -372,6 +375,15 @@ std::string utf2tex(std::string str, bool remove_kerning) {
 //  str = replace_all(str,"</link>","\x1B\x0C");
   //// endlinks
 
+  // font size; see https://stackoverflow.com/a/48371552
+  std::string out;
+  std::string::const_iterator it = str.cbegin(), end = str.cend();
+  for (std::smatch match; std::regex_search(it, end, match, reg_fontsize); it = match[0].second) {
+    out += (std::string) match.prefix() + "\x1B\xD" + (char) (std::min(std::max(std::stoi(match.str(1)),1),127));  // font size limited to <1,127>
+  }
+  out.append(it, end);
+  str = out;
+
   if (is_multiline) {
     T << "\\vtop{\\halign{";
     if (align > 0) T << "\\hfil";
@@ -402,6 +414,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
             case 4: T << "\\ss"; break;
             case 5: T << "\\si"; break;
           }
+          if (lastsize > 0) T << "\\size[" << lastsize << "]";
           SELFONT; T << " ";
           break;
         case 0x2: T << "\\thinspace "; break;
@@ -424,6 +437,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
 //                 }
 //                 break;
         //// endlinks
+        case 0xD: lastsize = (int) *(++I); T << "\\size[" << lastsize << "]"; SELFONT; break;
       }
       continue;
     }

@@ -937,6 +937,8 @@ Point is a command for drawing a point map symbol.
 \NEW{5.3}|<lang:XX>| = creates multilingual label (see |string| type for
    detailed description)
 
+    \NEW{6.1.0}|<size:N>| = specify the font size in points; |N| should be between 1 and 127.
+
   * |value| = value of height, passage-height, altitude, dimensions or date
 
       {\it height:} according to the sign of the value (positive, negative or
@@ -952,8 +954,8 @@ Point is a command for drawing a point map symbol.
       distance to floor).
 
       {\it altitude:} the value specified is the altitude difference from
-      the nearest station. The value will be set to 0 if defined as "-", ".", 
-      "nan", "NAN" or "NaN". If the altitude value is prefixed by ``|fix|''
+      the nearest station. The value will be set to 0 if defined as `|-|', `|.|',
+      `|nan|', `|NAN|' or `|NaN|'. If the altitude value is prefixed by `|fix|'
       (e.g. |-value [fix 1300]|), this value is used as an absolute altitude.
       The value can optionally be followed by length units.
 
@@ -1099,6 +1101,12 @@ respectively.
        * |l-size <number>| = same to the left. Required for |slope| type.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
          Auto is default.
+  * |scale| = scale for labels, can be:
+    tiny (xs), small (s), normal (m), large (l), huge (xl) or a
+    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+    $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
+    $xl \equiv 2.0$. Absolute font sizes (in points) can be assigned to named sizes
+    using |fonts-setup| in the |layout| configuration section.
   * |adjust <horizontal/vertical>| = shifts the line point to be aligned
     horizontally/ver\-ti\-cally with the previous point (or next point if there is
     no previous point). The result is horizontal/vertical line segment).
