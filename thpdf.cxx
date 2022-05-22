@@ -40,6 +40,7 @@
 #include <cstdio>
 #include <cfloat>
 #include <cmath>
+#include <regex>
 #include <fmt/core.h>
 
 #include "thpdfdbg.h"
@@ -347,31 +348,37 @@ void find_jumps() {
   }
 }
 
+int grid_str2int(std::string s, char init = 'A') {
+  int res = 0;
+  for (int i = 0; i < s.length(); i++) res = 26*res + s[i] - init + 1;
+  return res;
+}
 
+std::string grid_int2str(int i, char init = 'A') {
+  if (i <= 0) return "?";
+  std::string s;
+  int rem;
+  while (i > 0) {
+    rem = i % 26;
+    if (rem == 0) {     // Z or z
+      s = (char) (init + 26 - 1) + s;
+      i = i/26 - 1;
+    } else {
+      s = (char) (init + rem - 1) + s;
+      i = i/26;
+    }
+  }
+  return s;
+}
 
+std::regex reg_num(R"(^\d+$)");
+std::regex reg_s_lower(R"(^[a-z]+$)");
+std::regex reg_s_upper(R"(^[A-Z]+$)");
 
 std::string grid_name(std::string s, int offset) {
-  unsigned char c;
-  bool is_num = true;
-
-  for (unsigned i=0; i<s.size(); i++) {
-    c=s[i];
-    if (!isdigit(c)) {
-      is_num = false;
-      break;
-    }
-  }
-  if (is_num) {
-    return fmt::format("{:d}", atoi(s.c_str())+offset);
-  }
-  else if (s.size()==1) {
-    c=s[0];
-    if ((c >= 65 && c <= 90 && (c+offset) >= 65 && (c+offset) <= 90) ||
-        (c >= 97 && c <=122 && (c+offset) >= 97 && (c+offset) <=122)) {
-      return fmt::format("{:c}", c+offset);
-    }
-    else return "?";
-  }
+  if (std::regex_match(s,reg_num)) return fmt::format("{:d}", atoi(s.c_str())+offset);
+  else if (std::regex_match(s,reg_s_lower)) return grid_int2str(grid_str2int(s,'a')+offset,'a');
+  else if (std::regex_match(s,reg_s_upper)) return grid_int2str(grid_str2int(s,'A')+offset,'A');
   else return "?";
 }
 

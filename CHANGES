@@ -9,6 +9,7 @@ therion:
    (download) to allow Proj choosing the best transformation and automatically
    download any missing transformation grids
  * support custom font size in map labels using <size:N> in the label text
+ * support atlas page labeling A, B, …, Z, AA, AB, … instead of only A, B, …, Z
 
 --------------------------------------------------------------------------------
 
