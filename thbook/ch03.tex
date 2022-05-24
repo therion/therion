@@ -110,11 +110,14 @@ Works like |input| command in data files---includes other files.
   are selected. If there is no map selected, all scraps belonging to
   selected surveys are selected by default for map export.
 
-  If there are no scraps or maps in the data, centreline from all surveys is
+  If there are no scraps or maps in the data, centerline from all surveys is
   exported in the map.
 
   When exporting maps in different projections, you need to select
   them for each projection separately.
+
+  |select| does not only affect subsequent |<export>| commands but instead 
+  also |<export>| commands preceding the |select| command in the configuration file.
 \enddescription
 
 \syntax
