@@ -12,6 +12,7 @@ therion:
    download any missing transformation grids
  * support custom font size in map labels using <size:N> in the label text
  * support atlas page labeling A, B, …, Z, AA, AB, … instead of only A, B, …, Z
+ * updated bundled libraries: survex/img 1.4.3, Catch2 2.13.9, fmt 8.1.1
 
 --------------------------------------------------------------------------------
 
