@@ -377,7 +377,7 @@ supported initialization commands follow.
 
   Define a new coordinate system |<id>| using Proj4 syntax.
 
-* |cs-trans <cs1> <cs2> <proj-pipeline>|\NEW{6.0.7}
+* |cs-trans <cs1> <cs2> <proj-pipeline>|\NEW{6.1.0}
 
   Define a transforamation pipeline between two coordinate systems.
   \[See \www{https://proj.org/usage/transformation.html} for details of pipelines
@@ -416,7 +416,7 @@ supported initialization commands follow.
   first transformed to |wgs-84|, then from |wgs-84| to the target coordinate
   system. This might result in a suboptimal precision.
 
-  The default setting is |on|.\NEW{6.0.7} This option is ignored for those pairs of coordinate
+  The default setting is |on|.\NEW{6.1.0} This option is ignored for those pairs of coordinate
   systems which have a transformation pipeline defined (see |cs-trans|).
 
 * |proj-missing-grid <ignore/warn/fail/cache/download>|\NEW{5.5.1}
@@ -457,7 +457,7 @@ supported initialization commands follow.
   lets Proj to download the missing grids from the
   Internet. The grids are used in {\it subsequent} runs (in any mode).
 
-  The default setting is |download|.\NEW{6.0.7} The option |proj-missing-grid| is ignored if
+  The default setting is |download|.\NEW{6.1.0} The option |proj-missing-grid| is ignored if
   |proj-auto| is |off| or Proj v5 or older is used.
   If Proj v6 is used by Therion, the settings
   |cache| and |download| are equivalent to |fail|, as the network

@@ -1,18 +1,20 @@
-Therion 6.0.7 (in progress):
+Therion 6.1.0 (2022-05-27):
 
 therion:
+ * CHANGED the default settings for 'proj-auto' (on) and 'proj-missing-grid'
+   (download) to allow Proj choosing the best transformation and automatically
+   download any missing transformation grids
  * added a new ini file option ‘cs-trans’ for user-defined PROJ transformation
    pipelines between two coordinate systems
  * added support for automatic downloading of PROJ transformation grids used
    in cs-trans pipelines from cdn.proj.org
  * layout: color map-fg scrap now uses more different colors to avoid that
-   connected scraps are colored the same. Needed in labyrinth-like caves.
- * changed the default settings for 'proj-auto' (on) and 'proj-missing-grid'
-   (download) to allow Proj choosing the best transformation and automatically
-   download any missing transformation grids
+   connected scraps are colored the same. Needed in labyrinth-like caves. [#416]
  * support custom font size in map labels using <size:N> in the label text
  * support atlas page labeling A, B, …, Z, AA, AB, … instead of only A, B, …, Z
  * updated bundled libraries: survex/img 1.4.3, Catch2 2.13.9, fmt 8.1.1
+ * documentation fixes [#410,#415,#417]
+ * updated github workflows [#411]
 
 --------------------------------------------------------------------------------
 
