@@ -254,11 +254,12 @@ def fonts_setup (expr t,s,m,l,h) =
         "\def\thframed{\thsmallsize}" &
         "\def\thwallaltitude{\thtinysize}"
   to "mptexpre.tex";
-  write "\def\thtinysize{\size[" & decimal max(optical_zoom*t,0) & "]}" &
-        "\def\thsmallsize{\size[" & decimal max(optical_zoom*s,0) & "]}" &
-        "\def\thnormalsize{\size[" & decimal max(optical_zoom*m,0) & "]}" &
-        "\def\thlargesize{\size[" & decimal max(optical_zoom*l,0) & "]}" &
-        "\def\thhugesize{\size[" & decimal max(optical_zoom*h,0) & "]}"
+  write "\newcount\basefontsize" &
+        "\def\thtinysize{\size[" & decimal max(optical_zoom*t,0) & "]\basefontsize=" & decimal max(optical_zoom*t,0) & "}" &
+        "\def\thsmallsize{\size[" & decimal max(optical_zoom*s,0) & "]\basefontsize=" & decimal max(optical_zoom*s,0) & "}" &
+        "\def\thnormalsize{\size[" & decimal max(optical_zoom*m,0) & "]\basefontsize=" & decimal max(optical_zoom*m,0) & "}" &
+        "\def\thlargesize{\size[" & decimal max(optical_zoom*l,0) & "]\basefontsize=" & decimal max(optical_zoom*l,0) & "}" &
+        "\def\thhugesize{\size[" & decimal max(optical_zoom*h,0) & "]\basefontsize=" & decimal max(optical_zoom*h,0) & "}"
   to "mptexpre.tex";
   write EOF to "mptexpre.tex";
 enddef;

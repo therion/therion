@@ -1,5 +1,7 @@
 Therion 6.1.1 (in progress):
 
+therion:
+ * support custom font size in map labels using <size:N%> in the label text
 
 --------------------------------------------------------------------------------
 

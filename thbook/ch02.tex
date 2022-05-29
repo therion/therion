@@ -939,6 +939,11 @@ Point is a command for drawing a point map symbol.
 
     \NEW{6.1.0}|<size:N>| = specify the font size in points; |N| should be between 1 and 127.
 
+    \NEW{6.1.1}|<size:N%>| = specify the font size as a percentage of the native
+    font size of the given label; |N| should be between 1 and 999.\[For practical
+    reasons, the values are currently used in the increments of 10, so both 46 and 53
+    are interpreted as 50~\% size.]
+
   * |value| = value of height, passage-height, altitude, dimensions or date
 
       {\it height:} according to the sign of the value (positive, negative or

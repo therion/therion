@@ -2314,16 +2314,18 @@ void thlayout::export_mptex_font_size(FILE * o, th2ddataobject * obj, bool print
     case TT_2DOBJ_SCALE_NUMERIC:
     	{
     		double optical_zoom = this->scale / this->base_scale;
+    		double font_size = 0;
     		if (obj->scale_numeric <= 0.5)
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 0.5 * this->font_setup[0]);
-				else if (obj->scale_numeric <= 0.707)
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 0.707 * this->font_setup[1]);
-				else if (obj->scale_numeric >= 2.0)
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 2.0 * this->font_setup[4]);
-				else if (obj->scale_numeric >= 1.414)
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 1.414 * this->font_setup[3]);
-				else
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric * this->font_setup[2]);
+    			font_size = optical_zoom * obj->scale_numeric / 0.5 * this->font_setup[0];
+                else if (obj->scale_numeric <= 0.707)
+    			font_size = optical_zoom * obj->scale_numeric / 0.707 * this->font_setup[1];
+                else if (obj->scale_numeric >= 2.0)
+    			font_size = optical_zoom * obj->scale_numeric / 2.0 * this->font_setup[4];
+                else if (obj->scale_numeric >= 1.414)
+    			font_size = optical_zoom * obj->scale_numeric / 1.414 * this->font_setup[3];
+                else
+    			font_size = optical_zoom * obj->scale_numeric * this->font_setup[2];
+    		fprintf(o,"\\size[%.1f]\\basefontsize=%.0f\\relax ", font_size, font_size);
     	}
     	break;
     default:

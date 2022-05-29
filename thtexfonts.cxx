@@ -37,6 +37,7 @@
 
 #include <cstring>
 #include <cstdio>
+#include <cmath>
 #include <fmt/core.h>
 
 #include "thtexfonts.h"
@@ -320,7 +321,7 @@ std::string select_lang(std::string s, std::string lang) {
 
 // main task is done here
 
-std::regex reg_fontsize(R"(<size:\s*(\d{1,3})>)");
+std::regex reg_fontsize(R"(<size:\s*(\d{1,3})\s*(\%)?>)");
 
 #define SELFONT if (ENC_NEW.NFSS == 0 && lastenc!=-1) T << "\\thf" << u2str(lastenc+1)
 
@@ -332,7 +333,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
   int wc;  //wide char
   int lastenc = -1;
   int laststyle = -1;
-  int lastsize = -1;
+  std::string setsize;
   int align = 0;
   bool rtl = false;
   // bool link_active = false;
@@ -379,7 +380,10 @@ std::string utf2tex(std::string str, bool remove_kerning) {
   std::string out;
   std::string::const_iterator it = str.cbegin(), end = str.cend();
   for (std::smatch match; std::regex_search(it, end, match, reg_fontsize); it = match[0].second) {
-    out += (std::string) match.prefix() + "\x1B\xD" + (char) (std::min(std::max(std::stoi(match.str(1)),1),127));  // font size limited to <1,127>
+    if (match.str(2) == "%") {
+      out += (std::string) match.prefix() + "\x1B\xE" + (char) (std::max((int) std::round(std::stod(match.str(1)) / 10), 1));  // 10 % increments to fit the values into a char
+    } else
+      out += (std::string) match.prefix() + "\x1B\xD" + (char) (std::min(std::max(std::stoi(match.str(1)),1),127));  // font size limited to <1,127>
   }
   out.append(it, end);
   str = out;
@@ -414,7 +418,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
             case 4: T << "\\ss"; break;
             case 5: T << "\\si"; break;
           }
-          if (lastsize > 0) T << "\\size[" << lastsize << "]";
+          if (setsize != "") T << setsize;
           SELFONT; T << " ";
           break;
         case 0x2: T << "\\thinspace "; break;
@@ -437,7 +441,8 @@ std::string utf2tex(std::string str, bool remove_kerning) {
 //                 }
 //                 break;
         //// endlinks
-        case 0xD: lastsize = (int) *(++I); T << "\\size[" << lastsize << "]"; SELFONT; break;
+        case 0xD: setsize = fmt::format("\\size[{}]", (int) *(++I)); T << setsize; SELFONT; break;
+        case 0xE: setsize = fmt::format("\\size[\\numexpr {}*\\basefontsize/10\\relax]", (int) *(++I)); T << setsize; SELFONT; break;
       }
       continue;
     }
