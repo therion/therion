@@ -1,4 +1,5 @@
 \eject
+\iffulloutput
 \vbox{\hsize=93.2mm\baselineskip=12pt\leftskip3.5mm\parskip0pt
 \eightit
 \leavevmode\llap{1. }When a distinguished but elderly scientist states that something is possible, he is almost certainly right. When he states that something is impossible, he is very probably wrong.
@@ -9,60 +10,38 @@
 \vskip 6pt
 \rightline{\eightrm ---Arthur C. Clarke, {\eightmit 1973}}
 }
+\fi
 
 \chapter Appendix.
 
 \subchapter Compilation.
 
-If you want to compile Therion from source code and run it, you need 
+\subsubchapter Installing the dependencies.
+
+If you want to compile Therion from source code and run it, you need
 (first three are required only during compilation):
 \list
 * GNU C/C++ compiler
 * GNU make
 * Perl
-* Python 2.7 or 3
-* PROJ library (\www{https://proj4.org/})
+* Python 3
+* PROJ library (\www{https://proj.org/}). Supported versions are:
+  v4: 4.9.3; v5: 5.1.0 and newer; v6: 6.2.1 and newer; v7: 7.0.0 and newer.
 * Tcl/Tk 8.4.3 and newer (\www{https://www.tcl.tk}) with
   {\it BWidget} widget set  \hfil\break
   (\www{https://sourceforge.net/projects/tcllib/})
-  and optionally {\it tkImg} extension \hfil\break
+  and optionally {\it tkImg} extension  \hfil\break
   (\www{https://sourceforge.net/projects/tkimg/}).
-%  {\it Tom} OpenGL extension (improved version is included in Therion source 
+%  {\it Tom} OpenGL extension (improved version is included in Therion source
 %  distribution)
-%  and 
-* \TeX\ distribution with at least \TeX\ with Plain format, 
+%  and
+* \TeX\ distribution with at least \TeX\ with Plain format,
   recent pdf\TeX, and \MP\ (\www{https://www.tug.org}).
 * LCDF Typetools package (\www{https://www.lcdf.org/type/})
-* ImageMagick distribution with {\it convert} and {\it identify} utilities, 
+* ImageMagick distribution with {\it convert} and {\it identify} utilities,
   if you want to use warping of survey sketches.
 * {\it ghostscript} if you want to create calibrated images from georeferenced
   PDF maps.
-\endlist
-
-To compile Loch, you need
-
-\list
-* freetype 2 and newer; 'pkg-config freetype2' must work
-* wxWidgets 2.6 and newer; 'wx-config' must work
-* VTK 5.0 and newer
-* libjpeg, libpng, zlib
-\endlist
-
-All programs (with the exception of BWidget and tkImg package) are usually 
-included in Linux, Unix or MacOS\,X distributions.
-For Windows consider using MinGW and MSYS (\www{http://www.mingw.org}).
-It's a distribution of GNU utilities with GNU make and GCC.
-(BTW, why not to use precompiled Windows version?)
-
-\subsubchapter Quick start.
-
-\list
-* unpack the source distribution |therion-5.*.tar.gz|
-* |cd therion|
-* |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows, 
-  respectively
-* |make|
-* |sudo make install|
 \endlist
 
 %Installing Tom:
@@ -72,21 +51,32 @@ It's a distribution of GNU utilities with GNU make and GCC.
 %  |make install| it under MSYS
 %* |cd therion/thtom/linux| or |cd therion/thtom/win|
 %* |make|
-%* copy |Tom0.2| directory (which should contain |pkgIndex.tcl| and one of 
-%  |libtom.so| or |libtom.dll|) 
-%  to the |lib| subdirectory of your 
+%* copy |Tom0.2| directory (which should contain |pkgIndex.tcl| and one of
+%  |libtom.so| or |libtom.dll|)
+%  to the |lib| subdirectory of your
 %  Tcl/Tk distribution.
 %\endlist
 
-\subsubchapter Hacker's guide.
-
-{\it Installing dependencies}
-
-Ubuntu 18.04 example command for installing dependencies to compile Therion:
+To compile Loch, you need
 
 \list
-* |sudo apt-get -y install|
+* freetype 2 and newer; |pkg-config freetype2| must work
+* wxWidgets 2.6 and newer; |wx-config| must work
+* VTK 5.0 and newer
+* libjpeg, libpng, zlib
+\endlist
+
+All programs (with the exception of BWidget and tkImg package) are usually
+included in Linux, Unix or MacOS\,X distributions.
+For Windows consider using MinGW and MSYS2 (\www{https://www.msys2.org/}).
+It's a distribution of GNU utilities with GNU make and GCC.
+(BTW, why not to use precompiled Windows version?)
+
+Here is an example for installing dependencies to compile Therion
+on Ubuntu 18.04 or 20.04:
+  |sudo apt install|
   |bwidget|
+  |cmake|
   |gcc|
   |ghostscript|
   |imagemagick|
@@ -96,14 +86,72 @@ Ubuntu 18.04 example command for installing dependencies to compile Therion:
   |libpng-dev|
   |libproj-dev|
   |libtk-img-dev|
-  |libtk-img|
-  |libvtk6-dev|
-  |libvtk6.3|
-  |libwxgtk3.0-dev|
+  |libvtk7-dev|
+  |libwxgtk3.0-gtk3-dev|
   |tcl-dev|
-  |texlive-latex-base|
-  |zlib1g-dev|
-  |zlib1g|
+  |texlive-binaries|
+  |texlive-metapost|
+  |zlib1g-dev|.
+
+\subsubchapter Using CMake.
+
+\NEW{6.0}Unpack the source distribution |therion-6.*.tar.gz| and create a separate
+directory for the build, e.g.:
+\list
+* |cd therion && mkdir build && cd build|
+* |cmake [parameters] ..|
+* |make -j4|
+\endlist
+
+{\it CMake parameters}
+
+Here is a selection of parameters which can be used with cmake:
+\list
+* |-G <generator>| = specify the generator, e.g.
+  |-G Ninja| to use {\it Ninja} build system instead of make,
+  or |-G "MSYS Makefiles"| to build using {\it make} under MSYS2
+* {\catcode`\=12|-DUSE_BUNDLED_SHAPELIB=OFF|} = use the system Shapelib library
+* {\catcode`\=12|-DUSE_BUNDLED_CATCH2=OFF|} = use the system Catch2 library
+* {\catcode`\=12|-DUSE_BUNDLED_FMT=OFF|} = use the system fmt library
+* {\catcode`\=12|-DECM_ENABLE_SANITIZERS=<option>|} = use runtime sanitizers, relevant options:
+
+  |address| -- detects invalid memory accesses, use-after-free, double free, memory leaks, useful for debugging
+
+  |undefined| -- detects undefined behavior, for example use of uninitialized values
+
+* {\catcode`\=12|-DCMAKE_BUILD_TYPE=<option>|} = build type, relevant options:
+
+  |Debug| -- compile with debug symbols and asserts
+
+  |Release| -- compile with optimizations
+
+  |RelWithDebInfo| -- compile with debug symbols and optimizations, useful for profiling and debugging
+
+* {\catcode`\=12|-DTHBOOK_FORMAT=<option>|} = set the output size of the Therion book (most of the images are
+  omitted in smaller sizes); relevant options:
+
+  |0| -- A4 portrait
+
+  |1| -- small screen portrait (some lines and images don't fit)
+
+  |2| -- small screen landscape
+
+  |3| -- ebook reader optimized
+
+\endlist
+
+The following cmake components can be used to selectively install a part of the package: th-runtime, loch-runtime,
+th-docs, loch-docs.
+
+\subsubchapter Legacy approach: using make.
+
+\list
+* unpack the source distribution |therion-6.*.tar.gz|
+* |cd therion|
+* |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows,
+  respectively
+* |make|
+* |sudo make install|
 \endlist
 
 {\it Make parameters}
@@ -111,38 +159,43 @@ Ubuntu 18.04 example command for installing dependencies to compile Therion:
 Therion's {\it makefile} may take some optional parameters.
 
 \list
-* |config-linux|, |config-macosx|, |config-win32| = configure Therion for a 
+* |config-linux|, |config-macosx|, |config-win32| = configure Therion for a
   specific platform. Linux is a default.
-* |config-release|, |config-oxygen|, |config-ozone| = set optimization level 
-  for C++ compiler (none, |-O2| and |-O3|)  
-* |config-debug| = useful before debugging the program  
+* |config-release|, |config-oxygen|, |config-ozone| = set optimization level
+  for C++ compiler (none, |-O2| and |-O3|)
+* |config-debug| = useful before debugging the program
 * |install| = install Therion
 * |clean| = delete all temporary files
 \endlist
 
+\subsubchapter Hacker's guide.
+
 {\it Cross-compilation for Windows}\NEW{5.4}
 
-Therion supports compilation of Win32 executables in Linux using MXE cross
-compiler (\www{http://mxe.cc}). 
+Therion supports compilation of Win32/Win64 executables in Linux using MXE cross
+compiler (\www{http://mxe.cc}).
 
 \list
-* install the following static/win32 packages (i686-w64-mingw32.static-\char42) to
+* install the following static/win32 packages (i686-w64-mingw32.static-\char42) 
+or static/win64 packages (x86-64-w64-mingw32.static-\char42) to
 the directory |/usr/lib/mxe/|: binutils, bzip2, expat, freetype-bootstrap,
 gcc, gettext, glib, harfbuzz, jpeg, libiconv, libpng, proj, tiff, vtk, wxwidgets,
 xz, zlib.
 * modify PATH: {\catcode`\=12|export PATH=/usr/lib/mxe/usr/bin:$PATH|}
-* |cd therion|
-* |make config-win32cross|
-* |make|
+* use CMake or the legacy approach (|cd therion && make config-win32cross && make|)
+  to build Therion
 \endlist
+
+See |therion/.github/workflows/| for detailed examples of building
+Therion on multiple platforms.
 
 {\it Adding new translations}
 
-Therion supports translation of map labels. 
-Suppose you want to add a new language |xx|. 
+Therion supports translation of map labels.
+Suppose you want to add a new language |xx|.
 
 \list
-* run `|perl process.pl export xx|' in the `thlang' Therion source subdirectory. 
+* run `|perl process.pl export xx|' in the `thlang' Therion source subdirectory.
   This creates a file |texts_xx.txt|. This file is UTF-8 encoded.
 * edit the |texts_xx.txt| file. Add your translations at lines beginning with
   `|xx:|'.
@@ -153,44 +206,59 @@ Suppose you want to add a new language |xx|.
 
 {\it Adding new encodings}
 
-Although UTF-8 Unicode encoding covers all characters which Therion is able to 
-process, it may be inconvenient to use it. In that case it's possible to add 
-support for any 8-bit encoding for text input files. Copy a translation file to 
-the |thchencdata| directory; add its name to `ifiles' hash in the beginning of 
+Although UTF-8 Unicode encoding covers all characters which Therion is able to
+process, it may be inconvenient to use it. In that case it's possible to add
+support for any 8-bit encoding for text input files. Copy a translation file to
+the |thchencdata| directory; add its name to `ifiles' hash in the beginning of
 the Perl script |generate.pl|; run it and recompile Therion.
 
-The translation file should contain two hexadecimal values of a character 
-(first one in the 8-bit encoding, second one in Unicode) in each line. Possible 
-comments follow the `|#|' character. 
+The translation file should contain two hexadecimal values of a character
+(first one in the 8-bit encoding, second one in Unicode) in each line. Possible
+comments follow the `|#|' character.
 
 {\it Adding new \TeX\ encodings}
 
 It's easy to add new encodings for 2D map output.%
 \[\NEW{5.3}This section applies to old-style font selection using |tex-fonts|
-command in the initialization file and is obsolete when using |pdf-fonts| 
+command in the initialization file and is obsolete when using |pdf-fonts|
 command.]
-Copy an appropriate encoding 
-mapping file with an |*.enc| extension to the |texenc/encodings|, run the Perl 
+Copy an appropriate encoding
+mapping file with an |*.enc| extension to the |texenc/encodings|, run the Perl
 script |mktexenc.pl| located in the |texenc| directory and compile Therion.
 
-Therion uses the same encoding files as |afm2tfm| program from the \TeX\ 
-distribution, which has the same format as an encoding vector in a PostScript 
-font. You may find more details in the chapter {\it 6.3.1.5 Encoding file 
+Therion uses the same encoding files as |afm2tfm| program from the \TeX\
+distribution, which has the same format as an encoding vector in a PostScript
+font. You may find more details in the chapter {\it 6.3.1.5 Encoding file
 format} in the documentation to Dvips program.
 
 
 {\it Generating new \TeX\ and \MP\ headers}
 
-Therion uses \TeX\ and \MP\ for 2D map visualization and typesetting. 
-Predefined macros are compiled into the Therion executable and are copied to 
-the working directory just before running \MP\ and \TeX\ (unless the 
-|--use-extern-libs| option is used). Layout command makes it possible to modify 
-some macros in the configuration file at the run-time. 
+Therion uses \TeX\ and \MP\ for 2D map visualization and typesetting.
+Predefined macros are compiled into the Therion executable and are copied to
+the working directory just before running \MP\ and \TeX\ (unless the
+|--use-extern-libs| option is used). Layout command makes it possible to modify
+some macros in the configuration file at the run-time.
 
-However, it's possible to make permanent changes to the macro files. After 
-modifying the files in the |mpost| and |tex| directories it's necessary to run 
-Perl scripts |genmpost.pl| and |gentex.pl|, which generate C++ header files, 
+However, it's possible to make permanent changes to the macro files. After
+modifying the files in the |mpost| and |tex| directories it's necessary to run
+Perl scripts |genmpost.pl| and |gentex.pl|, which generate C++ header files,
 and compile Therion executable again.
+
+{\it Updating the geomagnetic model}
+
+Therion uses the IGRF model to calculate the magnetic declination. Download the
+model in a txt format from \www{https://www.ngdc.noaa.gov/IAGA/vmod/igrf.html}
+and save it in the |geomag/| directory (e.g. |igrfXYcoeffs.txt|).
+Run |./igrf2c.py igrfXYcoeffs.txt| which creates |thgeomagdata.h| in the
+Therion source directory and recompile Therion.
+
+To test the model, extract the file |sample_out_IGRFXY.txt|, which is included
+in the Geomag distribution available on the same web page. Put it into the
+|geomag/test/| directory, run |./build.sh sample_out_IGRFXY.txt| and check the
+lines with an exclamation mark in the output.
+
+
 
 \subchapter Environment variables.
 
@@ -198,10 +266,10 @@ Therion reads following environment variables:
 
 \list
 * |THERION| = [not required] search path for (x)therion.ini file(s)
-* |HOME| (|HOMEDRIVE| + |HOMEPATH| on WinXP) = 
-  [not required, but usually present on your system] search path 
+* |HOME| (|HOMEDRIVE| + |HOMEPATH| on WinXP) =
+  [not required, but usually present on your system] search path
   for (x)therion.ini file(s)
-* |TEMP|, |TMP| = system temporary directory, where Therion stores temporary 
+* |TEMP|, |TMP| = system temporary directory, where Therion stores temporary
   files (in a directory named |th$PID$|, where |$PID$| is a process ID),
   unless |tmp-path| is specified in the initialization file.
 \endlist
@@ -210,24 +278,24 @@ Consult the documentation of your OS how to set them.
 
 \subchapter Initialization files.
 
-Therion's and XTherion's system dependent settings are specified in the 
+Therion's and XTherion's system dependent settings are specified in the
 file therion.ini or xtherion.ini, respectively.
 They are searched for in the following directories:
 
 \list
-* on UNIX: 
+* on UNIX:
   |.|, |$THERION|, |$HOME/.therion|, |/etc|, |/usr/etc|, |/usr/local/etc|
 * on Windows:
-  |.|, |$THERION|, |$HOME\.therion|, |<Therion-installation-directory>|, 
+  |.|, |$THERION|, |$HOME\.therion|, |<Therion-installation-directory>|,
   |C:\WINDOWS|, |C:\WINNT|, |C:\Program Files\Therion|
 \endlist
- 
+
 \subsubchapter Therion.
 
 If no file is found Therion uses its default settings. If you want to list
-them, use |--print-init-file| option. The initialization file is read 
-like any other therion file. (Empty lines or lines starting with `|#|' are 
-ignored; lines ending with a backslash continue on next line.) Currently 
+them, use |--print-init-file| option. The initialization file is read
+like any other therion file. (Empty lines or lines starting with `|#|' are
+ignored; lines ending with a backslash continue on next line.) Currently
 supported initialization commands follow.
 
 \list
@@ -242,19 +310,19 @@ supported initialization commands follow.
 * |encoding-sql <encoding-name>|
 
   Set the default output encoding for SQL export.
-        
-* |language <xx[_YY]>|  
+
+* |language <xx[_YY]>|
 
   Default output language. See the copyright page for
   the list of available languages.
 
-* |units <metric/imperial>| 
+* |units <metric/imperial>|
 
   Set default units.
 
 * |mpost-path <file-path>|
 
-  Set the full path to a \MP\ executable if Therion can't find it 
+  Set the full path to a \MP\ executable if Therion can't find it
   (``|mpost|'' is the default).
 
 * |mpost-options <string>|
@@ -263,41 +331,41 @@ supported initialization commands follow.
 
 * |pdftex-path <file-path>|
 
-  Set the full path to a pdf\TeX\ executable if Therion can't find it 
-  (``|pdfetex|'' is the default).
+  Set the full path to a pdf\TeX\ executable if Therion can't find it
+  (``|pdftex|'' is the default).
 
 * |identify-path <file-path>|
 
   Set the full path to ImageMagick's identify executable if Therion
   can't find it (``|identify|'' is the default).
-  
+
 * |convert-path <file-path>|
 
   Set the full path to ImageMagick's convert executable if Therion
   can't find it (``|convert|'' is the default).
 
-* |source-path <directory>| 
+* |source-path <directory>|
 
-  Path to data and configuration files. Used mostly for system-wide grades and 
+  Path to data and configuration files. Used mostly for system-wide grades and
   layout definitions.
 
-* |tmp-path <directory>| 
+* |tmp-path <directory>|
 
   Path where temporary directory should be created.
-  
-* |tmp-remove <OS command>| 
+
+* |tmp-remove <OS command>|
 
   System command to delete files from the temporary directory.
 
-* |tex-env <on/off>| 
+* |tex-env <on/off>|
 
   [Works on Windows only.]
-  When set to |off| (default), Therion temporarily clears all environment 
+  When set to |off| (default), Therion temporarily clears all environment
   variables related to \TeX. Useful if there is other \TeX distribution
   installed on your system which had set-up any environment variables,
   which could confuse \TeX\ and \MP\ programs supplied in Therion for Windows
-  distribution. 
-  
+  distribution.
+
   Set to |on| if you use other \TeX\ distribution for maps processing.
 
 * |text <language ID> <therion text> <my text>|
@@ -309,16 +377,102 @@ supported initialization commands follow.
 
   Define a new coordinate system |<id>| using Proj4 syntax.
 
+* |cs-trans <cs1> <cs2> <proj-pipeline>|\NEW{6.1.0}
+
+  Define a transforamation pipeline between two coordinate systems.
+  \[See \www{https://proj.org/usage/transformation.html} for details of pipelines
+  definition.] Both |cs1| and |cs2| can be lists of aliases
+  enclosed in brackets.
+
+  Therion contains a built-in database of transformation pipelines.\[Mostly for
+  JTSK to ETRS89 transformations. The definitions are in the
+  |thcsdata.tcl| file in the source code, |proj\_transformations| variable.]
+  You can override any built-in definition either by redefining the pipeline
+  using |cs-trans| or make it ignored by using an empty string in the |cs-trans| definition.
+
+  If the pipeline references transformations grids which are not installed
+  locally, Therion attempts to download them from \www{cdn.proj.org} if
+  |proj-missing-grid| option is set to |download| (otherwise it prints an error message
+  and stops).
+
+  This option is ignored if Therion is using PROJ v6 or older.
+
+  Example: {\rightskip 0pt plus 3cm\catcode`\=12
+  |cs-trans [jtsk epsg:5513] [etrs34 epsg:25834] "+proj=pipeline +step +inv +proj=krovak +axis=wsu +lat_0=49.5 +lon_0=24.8333333333333 +alpha=30.2881397527778 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +step +inv +proj=hgridshift +grids=sk_gku_JTSK03_to_JTSK.tif +step +proj=push +v_3 +step +proj=cart +ellps=bessel +step +proj=helmert +x=485.021 +y=169.465 +z=483.839 +rx=-7.786342 +ry=-4.397554 +rz=-4.102655 +s=0 +convention=coordinate_frame +step +inv +proj=cart +ellps=GRS80 +step +proj=pop +v_3 +step +proj=utm +zone=34 +ellps=GRS80"|
+  \par}
+
+
+* |proj-auto <on/off>|\NEW{5.5}
+
+  \penalty50
+  If set |on|, let PROJ v6+ decide which transformation between coordinate systems
+  is optimal.\[In this case
+  the function |proj\_create\_crs\_to\_crs()| is used. Otherwise Therion calls
+  |proj\_create()| function in the PROJ library.] The selected transformations
+  are listed in the |log| file. It is recommended to specify coordinate systems
+  using the EPSG codes directly (e.g.~EPSG:4258).
+
+  If set |off| or if Therion uses PROJ older than v6, the source coordinates are
+  first transformed to |wgs-84|, then from |wgs-84| to the target coordinate
+  system. This might result in a suboptimal precision.
+
+  The default setting is |on|.\NEW{6.1.0} This option is ignored for those pairs of coordinate
+  systems which have a transformation pipeline defined (see |cs-trans|).
+
+* |proj-missing-grid <ignore/warn/fail/cache/download>|\NEW{5.5.1}
+
+  Set missing transformation grids handling if |proj-auto| is |on|
+  or a custom transformation pipeline in |cs-trans| references such grids. The grids
+  are used to achieve a better transformation precision between some
+  coordinate systems.
+
+  For |cs-trans| pipelines, only |download| tries to download the grid; all other options
+  are equivalent to |fail|. If |proj-auto| is used to find the best transformation,
+  the following applies:
+
+  |ignore| silently lets Proj to choose other transformation which doesn't use the missing
+  grid(s); this usually leads to decreased transformation accuracy
+  (say metres instead of centimetres). See the |log| file for a list of
+  the used transformations and their precisions.
+
+  |warn| behaves like |ignore|, but prints warnings about missing grids (the
+  download links are usually displayed as well).\[See
+  \www{https://proj.org/resource\_files.html} for the instructions
+  where to put the downloaded grids.]
+
+  |fail| stops after the first missing grid is detected and displays
+  the download link.
+
+  |cache| enables the network connectivity and
+  lets Proj to download the missing parts of grids from the
+  Internet. The information is stored in a local
+  cache.\[See \www{https://proj.org/usage/network.html}]
+  As only parts of grids covering the current area are downloaded,
+  it's potentially faster and less space consuming then |download|. The
+  downside is that the local cache is not used by Proj if the network
+  is disabled (in Therion you have to use the |cache| mode to
+  use the local cache).
+
+  |download| temporarily enables the network connectivity and
+  lets Proj to download the missing grids from the
+  Internet. The grids are used in {\it subsequent} runs (in any mode).
+
+  The default setting is |download|.\NEW{6.1.0} The option |proj-missing-grid| is ignored if
+  |proj-auto| is |off| or Proj v5 or older is used.
+  If Proj v6 is used by Therion, the settings
+  |cache| and |download| are equivalent to |fail|, as the network
+  connectivity is a feature of Proj v7 and later.
+
 * |pdf-fonts <rm> <it> <bf> <ss> <si>|\NEW{5.3}
 
-  Set-up fonts to be used in PDF maps. 
+  Set-up fonts to be used in PDF maps.
   The command has to be followed by paths specifying where regular, italic,
   bold, sans-serif and sans-serif oblique fonts are located in your system.
-  TrueType and OpenType fonts are supported. 
-  
+  TrueType and OpenType fonts are supported.
+
   Therion requires LCDF Typetools to be installed on your system to use this
   command. Example:
-  
+
   |pdf-fonts  "/usr/share/fonts/Serif.ttf" \
            "/usr/share/fonts/Serif-Italic.ttf" \
            "/usr/share/fonts/Serif-Bold.ttf" \
@@ -329,71 +483,77 @@ supported initialization commands follow.
 
   When set to |on| (default), OpenType fonts used in |pdf-fonts| are
   converted to PFB fonts, if they are PostScript-based. Some information
-  is lost in the PFB format, but there is advantage that pdf\TeX\ can embed 
-  subset of PFB fonts (in contrast with OpenType fonts which must be fully 
+  is lost in the PFB format, but there is advantage that pdf\TeX\ can embed
+  subset of PFB fonts (in contrast with OpenType fonts which must be fully
   embedded).
 
 * |tex-fonts <encoding> <rm> <it> <bf> <ss> <si>|
-        
+
   Original and more complicated way to set-up fonts for PDF maps. You need
   to explicitly specify encoding (maximum 256 characters from the font
-  that will be used). The list of currently supported 
-  encodings gives the |--print-tex-encodings| command line option.   
-  The same encoding must be used while generating \TeX\ metrics (|*.tfm| files) 
+  that will be used). The list of currently supported
+  encodings gives the |--print-tex-encodings| command line option.
+  The same encoding must be used while generating \TeX\ metrics (|*.tfm| files)
   for those fonts (e.g.~with the afm2tfm program) and this encoding must be
-  explicitly given also in the pdf\TeX's map file. The only exception is the 
+  explicitly given also in the pdf\TeX's map file. The only exception is the
   base set of Computer Modern fonts, which use `raw' encoding. This encoding
   doesn't need to be specified in the pdf\TeX's map file.
-  
+
   Encoding has to be followed by five font specifications for regular, italic,
   bold, sans-serif and sans-serif oblique styles.
   Default setting is |tex-fonts raw cmr10 cmti10 cmbx10 cmss10 cmssi10|
-  
-  Example how to use other fonts (e.g.~TrueType Palatino in xl2 (an encoding 
+
+  Example how to use other fonts (e.g.~TrueType Palatino in xl2 (an encoding
   derived from ISO8859-2) encoding). Run:
-  
+
   |ttf2afm -e xl2.enc -o palatino.afm palatino.ttf|
-  
+
   |afm2tfm palatino.afm -u -v vpalatino -T xl2.enc|
 
   |vptovf vpalatino.vpl vpalatino.vf vpalatino.tfm|
-  
-  You get files |vpalatino.vf|, |vpalatino.tfm| and |palatino.tfm|. Add the line 
-  
+
+  You get files |vpalatino.vf|, |vpalatino.tfm| and |palatino.tfm|. Add the line
+
   |palatino <xl2.enc <palatino.ttf|
-  
+
   to the pdf\TeX's map file. The same should be done for the italic and bold
   faces and corresponding sans-serif and sans-serif-oblique fonts. If you're lazy
-  try 
-  
+  try
+
   |tex-fonts xl2 palatino palatino palatino palatino palatino|
-  
+
   (We should use actually virtual font |vpalatino| instead of |palatino|,
   which contains no kerning or ligatures, but
   pdf\TeX\ doesn't support |\pdfincludechars| command on virtual fonts.
   To be improved.)
-    
-  If you want to add some unsupported encodings, 
-  read the chapter {\it Compilation / Hacker's guide}. 
+
+  If you want to add some unsupported encodings,
+  read the chapter {\it Compilation / Hacker's guide}.
 
 * |tex-fonts-optional <encoding> <rm> <it> <bf> <ss> <si>|
 
   Similar to |tex-fonts|, but tests if the \TeX\ fonts are installed in the
   system. It does nothing if any of the specified fonts is not present.
-  
+
   This setting is used by default for Czech/Slovak and cyrillic fonts
   to avoid \MP\ errors on systems without these fonts present.
-  
+
   As the test takes some time (pdfTeX instance is run), you might
   disable the default behaviour completely by setting |tex-fonts| in the
   INI file.
+
+* |tex-refs-registers <on/off>|
+
+  Switch between using count registers and macros to store references to
+  graphical objects in \TeX. Each approach has some advantages, see
+  the section {\it Limitations}.
 
 \endlist
 
 
 \subsubchapter XTherion.
 
-Initialization file for XTherion is actually a Tcl script evaluated when 
+Initialization file for XTherion is actually a Tcl script evaluated when
 XTherion starts. The file is commented; see the comments for details.
 
 
@@ -404,18 +564,37 @@ XTherion starts. The file is commented; see the comments for details.
 \subchapter Limitations.
 
 \list
-*  scrap size = $\approx 2.8 \times 2.8$ m in the output scale (\MP\ limit)
-*  page size = 
+*  scrap size = 
+
+   \MP\ in the default (`scaled') mode: $\approx 2.8 \times 2.8$ m in the output scale
+
+   \MP\ in the `double' mode:\[To run \MP\ in the `double' mode, set
+   |mpost-options  "-numbersystem\eq double"| in the initialization file. It's not recommended
+   to use arbitrary-precision modes `decimal' and `binary', as there are still bugs in their
+   implementation and they are much slower than the `double' mode. You need to use \MP\ newer
+   than 2.00 to use this mode without issues.]
+   practically no limit\[It's high enough to be reached.]
+*  page size =
 
    PDF map or atlas: $\approx 5 \times 5$ m (pdf\TeX\ limit)
-   
-   SVG map: unlimited 
-*  scraps count = approx. 500--6000, depending on frequency of cross-sections
-   
-   current \MP\ limit: $4 (scraps + sections) < 4096$ (may be arbitrarily increased)
 
-   pdf\TeX\ limit: $2\times pages + images + patterns +
-                            6 (scraps + sections) < 32500$
+   SVG map: limits depend on the viewing application
+*  scraps count =
+
+   \MP\ in the scaled mode: $4 (scraps + sections) < 4000$
+
+   \MP\ in the `double' mode: practically no limit
+
+   \TeX\ limit in registers mode:\[This is the default approach, in which the count registers
+   are used to store referenced to the graphic objects.]
+            $2\times pages + images + patterns + 6 (scraps + sections) < 32\,500$ when using pdf\TeX\
+            (or approximately $65\,000$ when using Lua\TeX\[To use Lua\TeX,
+            set |pdftex-path  "luatex"| in the initialization file.])
+
+   \TeX\ limit in macro mode:\[Instead of using count registers, each reference is stored in
+   a separate macro. This mode is activated by setting |tex-refs-registers off| in
+   the initialization file.] limited only by memory available to \TeX\[Note, that you need to
+   modify |texmf.cnf| configuration file in your \TeX\ distribution to change the limits.]
 \endlist
 
 
@@ -426,7 +605,7 @@ Following simple example illustrates basic usage of Therion commands:
 |encoding  utf-8
 
 survey main -title "Test cave"
-  
+
   survey first
     centreline
       units compass grad
@@ -442,11 +621,11 @@ survey main -title "Test cave"
                   1    2  0       10     +10
     endcentreline
   endsurvey
- 
+
   centreline
     equate 2@first 1@second
   endcentreline
- 
+
   # scraps are usually in separate *.th2 files
   scrap s1 -author 2004 "Therion team"
 
@@ -467,7 +646,7 @@ survey main -title "Test cave"
   map m1 -title "Test map"
     s1
   endmap
- 
+
 endsurvey|
 
 Corresponding configuration file could be:
@@ -485,7 +664,7 @@ select m1@main
 export model -fmt survex
 export map -layout l1|
 
-If you save data file as `test.th' and configuration file as `thconfig' you may 
+If you save data file as `test.th' and configuration file as `thconfig' you may
 process them with Therion.
 
 
@@ -503,19 +682,19 @@ process them with Therion.
 
   Nov: start of programming (Perl scripts and \MP\ macros)
 
-  Dec 27: Therion compiles simple map in PostScript format 
+  Dec 27: Therion compiles simple map in PostScript format
        for the first time (32 kB of Perl and 7 kB of \MP\ and \TeX\ source code).
        The map warping model was substantially different
-       from the current one (positions of features were relative to 
+       from the current one (positions of features were relative to
        a particular survey shot, not to positions of all stations in a scrap).
        This version already included some interesting features
        such as {\it transformation functions} which allowed user specification
        of the input format for survey data, or splitting large maps to
        multiple sheets.
-				
+
   Dec 30: the first web page (with data examples but without source
        code)
-  
+
 * {\bf 2000}\nobreak\par\nobreak
   Jan: xthedit (Tcl/Tk), a graphical front-end for Therion
 
@@ -527,10 +706,10 @@ process them with Therion.
 
 * {\bf 2001}
 
-  Nov: start of reimplementation from scratch: 
-       Therion (C++ with some Perl scripts inherited from the previous version); 
+  Nov: start of reimplementation from scratch:
+       Therion (C++ with some Perl scripts inherited from the previous version);
        notion of a scrap;
-       interactive 2D map editor ThEdit as a replacement of xthedit (Delphi) 
+       interactive 2D map editor ThEdit as a replacement of xthedit (Delphi)
 
   Dec: ThEdit exports simple map for the first time
 
@@ -559,7 +738,7 @@ process them with Therion.
 
   Jun: all Perl scripts rewritten in C++, Therion is one executable program
        now (although using Survex and \TeX)
-       
+
 %  Nov 10: first idea of the Labyrinth project
 
 * {\bf 2004}\Nobreak
@@ -583,7 +762,7 @@ process them with Therion.
 
 \subchapter Future.
 
-Although Therion is already used for map production, there are a lot of 
+Although Therion is already used for map production, there are a lot of
 new features to be implemented:
 
 \subsubchapter General.

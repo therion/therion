@@ -46,7 +46,7 @@ class thexpsys : public thexport {
    * Make export.
    */
    
-  virtual void process_db(class thdatabase * dbp);
+  void process_db(class thdatabase * dbp) override;
   
 };
 

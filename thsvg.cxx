@@ -38,8 +38,9 @@
 #include <cstring>
 #include <cstdio>
 #include <cfloat>
-#include <cassert>
 #include <cmath>
+#include <fmt/core.h>
+#include <fmt/ostream.h>
 
 #include "thepsparse.h"
 #include "thpdfdbg.h"
@@ -47,14 +48,16 @@
 //#include "thtexfonts.h"
 #include "therion.h"
 #include "thversion.h"
+#include "thconfig.h"
 #include "thlegenddata.h"
 #include "thtexfonts.h"
+#include "thdouble.h"
 
-using namespace std;
+const int prec_xy = 2;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-string escape_html(string s) {
+std::string escape_html(std::string s) {
   s = replace_all(s,"<center>","");  // could be implemented using left-aligned table
   s = replace_all(s,"<centre>","");
   s = replace_all(s,"<left>","");
@@ -75,12 +78,12 @@ string escape_html(string s) {
   s = replace_all(s,"'","&apos;");
   s = replace_all(s,"\"","&quot;");
 
-  string t = "";
-  string close_font = "";
+  std::string t = "";
+  std::string close_font = "";
   size_t i,j;
   for (i=0; i<s.length(); i++) {
     if ((char) s[i] == 27) {
-      assert(i<s.length()-1);
+      thassert(i<s.length()-1);
       j = (char) s[++i];
       switch (j) {
         case 0x1:
@@ -120,13 +123,13 @@ string escape_html(string s) {
 
 static const char base64_tab[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-void base64_encode(const char * fname, ofstream & fout) {
+void base64_encode(const char * fname, std::ofstream & fout) {
   int llength = 0;
   char in_buffer[3];
   unsigned char out_buffer[4];
 
-  ifstream fin(fname, ios::binary);
-  if (!fin) therror((((string)"Can't read file "+fname+"!\n").c_str()));
+  std::ifstream fin(fname, std::ios::binary);
+  if (!fin) therror((((std::string)"Can't read file "+fname+"!\n").c_str()));
 
   do {
       for (int i = 0; i < 3; i++) in_buffer[i] = '\x0';
@@ -144,7 +147,7 @@ void base64_encode(const char * fname, ofstream & fout) {
       if (fin.gcount() > 2) out_buffer[3] = base64_tab[(value >> 0) & 0x3F];
 
       if (llength >= 76) {
-        fout << endl;
+        fout << std::endl;
         llength = 0;
       }
       fout << out_buffer[0] << out_buffer[1] << out_buffer[2] << out_buffer[3];
@@ -158,7 +161,7 @@ void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
   double llx = 0, lly = 0, urx = 0, ury = 0;
   double a,b,w,h;
   MINX=DBL_MAX, MINY=DBL_MAX, MAXX=-DBL_MAX, MAXY=-DBL_MAX;
-  for (list<scraprecord>::iterator I = SCRAPLIST.begin(); 
+  for (std::list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
     llx = DBL_MAX; lly = DBL_MAX; urx = -DBL_MAX; ury = -DBL_MAX;
     if (I->F != "" && I->E == "" && I->G == "" && 
@@ -198,7 +201,7 @@ void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
       if (I->X3 > urx) urx = I->X3;
       if (I->X4 > ury) ury = I->X4;
     }
-    for (list<surfpictrecord>::iterator I_sk = I->SKETCHLIST.begin();
+    for (std::list<surfpictrecord>::iterator I_sk = I->SKETCHLIST.begin();
                                           I_sk != I->SKETCHLIST.end(); I_sk++) {
       for (int i = 0; i<=1; i++) {
         for (int j = 0; j<=1; j++) {
@@ -218,12 +221,12 @@ void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
     if (llx == DBL_MAX || lly == DBL_MAX || urx == -DBL_MAX || ury == -DBL_MAX) 
       therror(("This can't happen -- no data for a scrap!"));
     
-    map<int,layerrecord>::iterator J = LAYERHASH.find(I->layer);
-    assert(J != LAYERHASH.end());
+    std::map<int,layerrecord>::iterator J = LAYERHASH.find(I->layer);
+    thassert(J != LAYERHASH.end());
 
-    map<int,set<string> >::iterator K = (((*J).second).scraps).find(I->level);
+    std::map<int,std::set<std::string> >::iterator K = (((*J).second).scraps).find(I->level);
     if (K == (((*J).second).scraps).end()) {
-      set<string> SCRP;
+      std::set<std::string> SCRP;
       (((*J).second).scraps).insert(make_pair(I->level,SCRP));
       K = (((*J).second).scraps).find(I->level);
     }
@@ -241,51 +244,47 @@ void find_dimensions(double & MINX,double & MINY,double & MAXX,double & MAXY) {
 }
 
 
-void print_preview(int up,ofstream& F, string unique_prefix) {
-  set<int> used_layers;
-  set<string> used_scraps;
+void print_preview(int up,std::ofstream& F, std::string unique_prefix) {
+  std::set<int> used_layers;
+  std::set<std::string> used_scraps;
   
   if (up) { 
-    F << "<g fill=\"none\" stroke=\"" << 
-       rgb2svg(LAYOUT.preview_above_r,
-               LAYOUT.preview_above_g,
-               LAYOUT.preview_above_b) << "\" stroke-width=\"0.1\">" << endl;
+    F << "<g fill=\"none\" stroke=\"" <<
+       LAYOUT.col_preview_above.to_svg() << "\" stroke-width=\"0.1\">" << std::endl;
   }
   else { 
-    F << "<g stroke=\"none\" fill=\"" << 
-       rgb2svg(LAYOUT.preview_below_r,
-               LAYOUT.preview_below_g,
-               LAYOUT.preview_below_b) << "\">" << endl;
+    F << "<g stroke=\"none\" fill=\"" <<
+       LAYOUT.col_preview_below.to_svg() << "\">" << std::endl;
   }
   used_layers = (up ? MAP_PREVIEW_UP : MAP_PREVIEW_DOWN);
-  for (set<int>::iterator I=used_layers.begin(); I != used_layers.end(); I++) {
-    map<int,layerrecord>::iterator J = LAYERHASH.find(*I);
-    assert (J != LAYERHASH.end());
+  for (std::set<int>::iterator I=used_layers.begin(); I != used_layers.end(); I++) {
+    std::map<int,layerrecord>::iterator J = LAYERHASH.find(*I);
+    thassert (J != LAYERHASH.end());
     used_scraps = J->second.allscraps;
     if (!used_scraps.empty()) {
-      for (list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
+      for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); K != SCRAPLIST.end(); K++) {
         if (used_scraps.count(K->name) > 0) {
           if (up) {
             if (K->B != "" && K->sect == 0) {
-              F << "<use x=\"" << K->B1 << "\" y=\"" << K->B2 << "\" xlink:href=\"#B_" << K->name << "_" << unique_prefix << "\" />" << endl;
+              F << "<use x=\"" << K->B1 << "\" y=\"" << K->B2 << "\" xlink:href=\"#B_" << K->name << "_" << unique_prefix << "\" />" << std::endl;
             }
           }
           else {
             if (K->I != "" && K->sect == 0) {
-              F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />" << endl;
+              F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />" << std::endl;
             }
           }
         }
       }
     }
   }
-  F << "</g>" << endl;
+  F << "</g>" << std::endl;
 }
 
 
-void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY, string unique_prefix) {
+void print_grid(std::ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY, std::string unique_prefix) {
   if (LAYOUT.grid == 0) return;
-  PAGEDEF << "<g>" << endl;
+  PAGEDEF << "<g>" << std::endl;
   
   paired ll, ur, lr, ul, llrot, urrot, ulrot, lrrot, llnew, urnew, origin;
   ll.x = LLX;
@@ -298,16 +297,16 @@ void print_grid(ofstream& PAGEDEF, double LLX,double LLY,double URX,double URY, 
   ul.y = ur.y;
   origin.x = LAYOUT.hgridorigin;
   origin.y = LAYOUT.vgridorigin;
-//cout << endl << origin.x << " " << origin.y << endl;
+//cout << std::endl << origin.x << " " << origin.y << std::endl;
   llrot = rotatedaround(ll,origin,-LAYOUT.gridrot);
   urrot = rotatedaround(ur,origin,-LAYOUT.gridrot);
   lrrot = rotatedaround(lr,origin,-LAYOUT.gridrot);
   ulrot = rotatedaround(ul,origin,-LAYOUT.gridrot);
   
-  llnew.x = min(min(llrot.x, urrot.x), min(lrrot.x, ulrot.x));
-  llnew.y = min(min(llrot.y, urrot.y), min(lrrot.y, ulrot.y));
-  urnew.x = max(max(llrot.x, urrot.x), max(lrrot.x, ulrot.x));
-  urnew.y = max(max(llrot.y, urrot.y), max(lrrot.y, ulrot.y));
+  llnew.x = std::min(std::min(llrot.x, urrot.x), std::min(lrrot.x, ulrot.x));
+  llnew.y = std::min(std::min(llrot.y, urrot.y), std::min(lrrot.y, ulrot.y));
+  urnew.x = std::max(std::max(llrot.x, urrot.x), std::max(lrrot.x, ulrot.x));
+  urnew.y = std::max(std::max(llrot.y, urrot.y), std::max(lrrot.y, ulrot.y));
   
   double grid_init_x = LAYOUT.hgridsize * floor ((llnew.x-origin.x)/LAYOUT.hgridsize) + origin.x;
   double grid_init_y = LAYOUT.vgridsize * floor ((llnew.y-origin.y)/LAYOUT.vgridsize) + origin.y;
@@ -338,7 +337,7 @@ double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.
                    cosr << " " << sinr << " " << -sinr << " " << cosr << " " << 
                    out.x << " " << out.y << ")\">";
 	PAGEDEF << "<use xlink:href=\"#grid_" << u2str(elem+1) << "_" << unique_prefix << "\" />";
-        PAGEDEF << "</g>" << endl;
+        PAGEDEF << "</g>" << std::endl;
 
         if (LAYOUT.grid_coord_freq==2 || (LAYOUT.grid_coord_freq==1 && elem!=4)) {
           tmp.x = i+ (col==2 ? -2 : 2);
@@ -349,8 +348,8 @@ double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.
                   "transform=\"matrix(" << 
                    cosr << " " << sinr << " " << sinr << " " << -cosr << " " << 
                    out.x << " " << out.y << ")\">(" << 
-	      setprecision(0) << G_real_init_x+ii*LAYOUT.XS << "," << 
-              G_real_init_y+jj*LAYOUT.YS << setprecision(3) << ")</text>" << endl;
+	      std::setprecision(0) << G_real_init_x+ii*LAYOUT.XS << "," << 
+              G_real_init_y+jj*LAYOUT.YS << std::setprecision(3) << ")</text>" << std::endl;
         }
   
 /*  PAGEDEF << "<text font-family=\"arial\" font-size=\"10\" " <<
@@ -358,7 +357,7 @@ double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.
                    1 << " " << 0 << " " << 0 << " " << -1 << " " << 
                    out.x << " " << out.y << ")\">";
   PAGEDEF << i/72*2.54/100*200 << " " << j/72*2.54/100*200;
-  PAGEDEF << "</text>" << endl;*/
+  PAGEDEF << "</text>" << std::endl;*/
 	
       }
     }
@@ -374,64 +373,64 @@ double G_real_init_y = LAYOUT.YO + LAYOUT.YS * floor ((llnew.y-origin.y)/LAYOUT.
 	elem = col + 3*row;
 	PAGEDEF << "<use x=\"" << i/*-LLX*/+LAYOUT.gridcell[elem].x << "\" y=\"" << 
 	                      j/*-LLY*/+LAYOUT.gridcell[elem].y << "\" xlink:href=\"#grid_" << "_" << unique_prefix << 
-			      u2str(elem+1) << "\" />" << endl;
+			      u2str(elem+1) << "\" />" << std::endl;
         if (col == 0 && LAYOUT.grid_coord_freq > 0) {
           PAGEDEF << "<text fill=\"black\" stroke=\"none\" font-size=\"8\" " << 
 	      "transform=\"matrix(1,0,0,-1," << i << "," << 
 	      j+1 /* podvihnutie o 1 bp */ << ")\">" << 
-	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS << "</text>" << endl;
+	      std::setprecision(0) << G_real_init_y+jj*LAYOUT.YS << "</text>" << std::endl;
 	}
         if (col == 2 && LAYOUT.grid_coord_freq == 2) {
           PAGEDEF << "<text fill=\"black\" stroke=\"none\" font-size=\"8\" " << 
 	      "transform=\"matrix(1,0,0,-1," << i << "," << 
 	      j+1 /* podvihnutie o 1 bp */ << ")\" text-anchor=\"end\">" << 
-	      setprecision(0) << G_real_init_y+jj*LAYOUT.YS << "</text>" << endl;
+	      std::setprecision(0) << G_real_init_y+jj*LAYOUT.YS << "</text>" << std::endl;
         }
       }
     }
   } 
 
-  PAGEDEF << "</g>" << endl;
+  PAGEDEF << "</g>" << std::endl;
 }
 
-void print_surface_bitmaps (ofstream &F) {
+void print_surface_bitmaps (std::ofstream &F) {
   if (LAYOUT.transparency) 
-    F << "<g opacity=\"" << LAYOUT.surface_opacity << "\">" << endl;
+    F << "<g opacity=\"" << LAYOUT.surface_opacity << "\">" << std::endl;
   F.precision(8);
-  for (list<surfpictrecord>::iterator I = SURFPICTLIST.begin();
+  for (std::list<surfpictrecord>::iterator I = SURFPICTLIST.begin();
                                       I != SURFPICTLIST.end(); I++) {
     F << "<g transform=\"matrix(";
     F << I->xx << " " << I->yx << " " << -I->xy << " " << -I->yy << " " << 
          I->dx << " " << I->dy << ")\">";
     F << "<image x=\"0\" y=\"" << -I->height << "\" width=\"" << I->width << 
          "\" height=\"" << I->height << "\" xlink:href=\"data:image/" << 
-         I->type << ";base64," << endl;
+         I->type << ";base64," << std::endl;
     base64_encode(I->filename, F);
     F << "\" />";
-    F << "</g>" << endl;
+    F << "</g>" << std::endl;
   };
   F.precision(3);
   if (LAYOUT.transparency) 
-    F << "</g>" << endl;
+    F << "</g>" << std::endl;
 }
 
 
 
-#define ginit(ID) F << "<g id=\"" << ID << "_" << unique_prefix << "\">" << endl;
-#define gend  F << "</g>" << endl;
+#define ginit(ID) F << "<g id=\"" << ID << "_" << unique_prefix << "\">" << std::endl;
+#define gend  F << "</g>" << std::endl;
 
 
 
-void thsvg(const char * fname, int fmt, legenddata ldata) {
+void thsvg(const char * fname, int fmt, const legenddata& ldata) {
   if (fmt == 0)
     thprintf("making svg map ... ");
   else
     thprintf("making svg (xhtml) map ... ");
-  string bgcol;
-  string unique_prefix = fname;
+  std::string bgcol;
+  std::string unique_prefix = fname;
 
-  ofstream F(fname);
-  F.setf(ios::fixed, ios::floatfield);  // dolezite pre velke suradnice
+  std::ofstream F(fname);
+  F.setf(std::ios::fixed, std::ios::floatfield);  // dolezite pre velke suradnice
   F.precision(3);
   
   double llx=0, lly=0, urx=0, ury=0;
@@ -455,41 +454,45 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
   lly -= LAYOUT.overlap;
   ury += LAYOUT.overlap;
 
-  F << "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>" << endl;
-  
-  F << "<!-- Generated by Therion " << THVERSION << " -->" << endl;
+  F << "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>" << std::endl;
+
+  F << "<!-- Generated by Therion";
+  if (!thcfg.reproducible_output) {
+    F << " " << THVERSION;
+  }
+  F << " -->" << std::endl;
   if (LAYOUT.doc_author != "") 
-    F << "<!-- Author: " << LAYOUT.doc_author << " -->" << endl;
+    F << "<!-- Author: " << LAYOUT.doc_author << " -->" << std::endl;
   if (LAYOUT.doc_title != "") 
-    F << "<!-- Title: " << LAYOUT.doc_title << " -->" << endl;
+    F << "<!-- Title: " << LAYOUT.doc_title << " -->" << std::endl;
   if (LAYOUT.doc_subject != "") 
-    F << "<!-- Subject: " << LAYOUT.doc_subject << " -->" << endl;
+    F << "<!-- Subject: " << LAYOUT.doc_subject << " -->" << std::endl;
   if (LAYOUT.doc_keywords != "") 
-    F << "<!-- Keywords: " << LAYOUT.doc_keywords << " -->" << endl;
+    F << "<!-- Keywords: " << LAYOUT.doc_keywords << " -->" << std::endl;
 
   if (fmt == 0)
-    F << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">" << endl;
+    F << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">" << std::endl;
   else {
-    F << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" << endl;
-    F << "<html xmlns=\"http://www.w3.org/1999/xhtml\">" << endl;
-    F << "<body>" << endl;
+    F << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" << std::endl;
+    F << "<html xmlns=\"http://www.w3.org/1999/xhtml\">" << std::endl;
+    F << "<body>" << std::endl;
     // title
-    if (!ldata.cavename.empty()) F << "<h2>" << escape_html(ldata.cavename) << "</h2>" << endl;
-    if (!ldata.comment.empty()) F << "<p>" << escape_html(ldata.comment) << "</p>" << endl;
+    if (!ldata.cavename.empty()) F << "<h2>" << escape_html(ldata.cavename) << "</h2>" << std::endl;
+    if (!ldata.comment.empty()) F << "<p>" << escape_html(ldata.comment) << "</p>" << std::endl;
     // north, scale
     // ...
-    if (!ldata.cavelength.empty()) F << "<p><i>" << escape_html(ldata.cavelengthtitle) << ":</i> " << ldata.cavelength << "</p>" << endl;
-    if (!ldata.cavedepth.empty()) F << "<p><i>" << escape_html(ldata.cavedepthtitle) << ":</i> " << ldata.cavedepth << "</p>" << endl;
-    if (!ldata.copyrights.empty()) F << "<p>" << escape_html(ldata.copyrights) << "</p>" << endl;
+    if (!ldata.cavelength.empty()) F << "<p><i>" << escape_html(ldata.cavelengthtitle) << ":</i> " << ldata.cavelength << "</p>" << std::endl;
+    if (!ldata.cavedepth.empty()) F << "<p><i>" << escape_html(ldata.cavedepthtitle) << ":</i> " << ldata.cavedepth << "</p>" << std::endl;
+    if (!ldata.copyrights.empty()) F << "<p>" << escape_html(ldata.copyrights) << "</p>" << std::endl;
     if (LAYOUT.scalebar != "") {
-      F << "<p>" << endl;
+      F << "<p>" << std::endl;
       ScBar.print_svg(F,unique_prefix);
-      F << "</p>" << endl;
+      F << "</p>" << std::endl;
     }
     if (LAYOUT.northarrow != "") {
-      F << "<p>" << endl;
+      F << "<p>" << std::endl;
       NArrow.print_svg(F,unique_prefix);
-      F << "</p>" << endl;
+      F << "</p>" << std::endl;
     }
   }
 
@@ -498,15 +501,15 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
         "cm\" viewBox=\"" << llx << " " << -ury << 
         " " << urx-llx << " " << ury-lly << 
         "\" xmlns=\"http://www.w3.org/2000/svg\" " << // pridane pre xhtml
-        "xmlns:xlink=\"http://www.w3.org/1999/xlink\">" << endl;
+        "xmlns:xlink=\"http://www.w3.org/1999/xlink\">" << std::endl;
 
-  F << "<defs>" << endl;
+  F << "<defs>" << std::endl;
   // patterns:
   // pattern is clipped according to width and height attributes;
   // it's not possible to specify clipping area independently
   // like using BBox in PDF -- may produce some strange results
   // if the pattern definition exceeds the BBox in MetaPost
-  for (list<pattern>::iterator I = PATTERNLIST.begin();
+  for (std::list<pattern>::iterator I = PATTERNLIST.begin();
                                I != PATTERNLIST.end(); I++) {
     if (I->used) {
       F << "<pattern id=\"patt_" << I->name << "_" << unique_prefix <<
@@ -516,16 +519,38 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
            "\" patternTransform=\"matrix(" << I->xx << " " << I->xy << " " 
                                            << I->yx << " " << I->yy << " " 
                                            << I->x <<  " " << I->y  << 
-           ")\">" << endl;
+           ")\">" << std::endl;
       F << "<g transform=\"translate(" 
-                    << I->llx1-I->llx << " " << I->lly1-I->lly << ")\">" << endl;
+                    << I->llx1-I->llx << " " << I->lly1-I->lly << ")\"" <<
+                       " fill=\"black\" stroke=\"black\">\n";
+                       // currentColor doesn't work to inherit the color of the symbol;
+                       // context-fill/stroke doesn't work in patterns
       I->data.MP.print_svg(F,unique_prefix);
-      F << "</g>" << endl;
-      F << "</pattern>" << endl;
+      F << "</g>" << std::endl;
+      F << "</pattern>" << std::endl;
+    }
+  }
+  // gradients
+  for (auto &g: GRADIENTS) {
+    if (!g.second.used_in_map) continue;
+    if (g.second.type == gradient_lin) {
+      fmt::print(F, "<linearGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\">\n",
+                 g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy));
+    } else {
+      fmt::print(F, "<radialGradient id=\"grad_{:s}_{:s}\" gradientUnits=\"userSpaceOnUse\" fx=\"{}\" fy=\"{}\" fr=\"{}\" cx=\"{}\" cy=\"{}\" r=\"{}\">\n",
+                 g.first, unique_prefix, thdouble(g.second.x0,prec_xy), thdouble(g.second.y0,prec_xy), thdouble(g.second.r0,prec_xy),
+                                         thdouble(g.second.x1,prec_xy), thdouble(g.second.y1,prec_xy), thdouble(g.second.r1,prec_xy));
+    }
+    F << "<stop offset=\"0%\" stop-color=\"" << g.second.c0.to_svg() << "\"/>\n";
+    F << "<stop offset=\"100%\" stop-color=\"" << g.second.c1.to_svg() << "\"/>\n";
+    if (g.second.type == gradient_lin) {
+      F << "</linearGradient>\n";
+    } else {
+      F << "</radialGradient>\n";
     }
   }
   // scraps:
-  for(list<scraprecord>::iterator I = SCRAPLIST.begin(); 
+  for(std::list<scraprecord>::iterator I = SCRAPLIST.begin(); 
                                   I != SCRAPLIST.end(); I++) {
     ginit("F_" + I->name); I->Fc.MP.print_svg(F,unique_prefix); gend;
     ginit("G_" + I->name); I->Gc.MP.print_svg(F,unique_prefix); gend;
@@ -536,31 +561,28 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
   }
   // grid:
   int i=0;
-  for (list<converted_data>::iterator I = GRIDLIST.begin();
+  for (std::list<converted_data>::iterator I = GRIDLIST.begin();
                                       I != GRIDLIST.end(); I++) {
     ginit("grid_" + u2str(++i)); I->MP.print_svg(F,unique_prefix); gend;
   }
   // clip to initial viewBox
   // (browsers mostly ignore clip="auto" overflow="hidden" root svg attributes)
-  F << "<clipPath id=\"clip_viewBox\">" << endl;
+  F << "<clipPath id=\"clip_viewBox\">" << std::endl;
     F << "<path d=\"M" << llx << " " << lly << 
          "L" << urx << " " << lly << 
          "L" << urx << " " << ury << 
-         "L" << llx << " " << ury << "z\" />" << endl;
-  F << "</clipPath>" << endl;
+         "L" << llx << " " << ury << "z\" />" << std::endl;
+  F << "</clipPath>" << std::endl;
   
-  F << "</defs>" << endl;
+  F << "</defs>" << std::endl;
   // --- end of definitions ---
 
-  F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox)\">" << endl;
+  F << "<g transform=\"scale(1,-1)\" fill=\"#000000\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"10\" fill-rule=\"evenodd\" clip-rule=\"evenodd\" clip-path=\"url(#clip_viewBox)\">" << std::endl;
   // page background:
-  if ((LAYOUT.background_r != 1) || 
-      (LAYOUT.background_g != 1) || 
-      (LAYOUT.background_b != 1)) {
-    bgcol=rgb2svg(LAYOUT.background_r, LAYOUT.background_g, LAYOUT.background_b);
+  if (!LAYOUT.col_background.is_white()) {
     F << "<rect x=\"" << llx << "\" y=\"" << lly << 
          "\" width=\"" << urx-llx << "\" height=\"" << ury-lly << 
-         "\" stroke=\"none\" fill=\"" << bgcol << "\" />" << endl;
+         "\" stroke=\"none\" fill=\"" << LAYOUT.col_background.to_svg() << "\" />" << std::endl;
   }
     
   // surface:
@@ -574,58 +596,58 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
   if (!MAP_PREVIEW_DOWN.empty()) print_preview(0,F,unique_prefix);
   
   // map export:
-  for (map<int,layerrecord>::iterator J = LAYERHASH.begin();
+  for (std::map<int,layerrecord>::iterator J = LAYERHASH.begin();
                                       J != LAYERHASH.end(); J++) {
     if (J->second.Z == 0) {
-      map < int,set<string> > LEVEL;
-      set <string> page_text_scraps,used_scraps;
+      std::map < int,std::set<std::string> > LEVEL;
+      std::set <std::string> page_text_scraps,used_scraps;
       LEVEL = J->second.scraps;
       /*for (map < int,set<string> >::iterator I_l = LEVEL.begin();
                                              I_l != LEVEL.end(); I_l++) {
         used_scraps = I_l->second;
-        for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
+        for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
            if (used_scraps.count(K->name) > 0 && K->P != "") 
               page_text_scraps.insert(K->name);
         }
       }*/
-      for (map < int,set<string> >::iterator I = LEVEL.begin();
+      for (std::map < int,std::set<std::string> >::iterator I = LEVEL.begin();
                                              I != LEVEL.end(); I++) {
         used_scraps = I->second;
         
         // background
-        for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
+        for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
-          if (K->r < 0 || K->g < 0 || K->b < 0) {
-            bgcol=rgb2svg(LAYOUT.foreground_r, LAYOUT.foreground_g, LAYOUT.foreground_b);
+          if (!K->col_scrap.is_defined()) {
+            bgcol=LAYOUT.col_foreground.to_svg();
           }
           else {
-            bgcol=rgb2svg(K->r, K->g, K->b);
+            bgcol=K->col_scrap.to_svg();
           }
           if (used_scraps.count(K->name) > 0 && K->I != "") {
-            F << "<g fill=\"" << bgcol << "\">" << endl;
-            F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />" << endl;
-            F << "</g>" << endl;
+            F << "<g fill=\"" << bgcol << "\">" << std::endl;
+            F << "<use x=\"" << K->I1 << "\" y=\"" << K->I2 << "\" xlink:href=\"#I_" << K->name << "_" << unique_prefix << "\" />" << std::endl;
+            F << "</g>" << std::endl;
           }
         }
 
-//    F << "<use x=\"" << I->G1 << "\" y=\"" << -I->G2 << "\" xlink:href=\"#G_" << I->name << "_" << unique_prefix << "\" />" << endl;
+//    F << "<use x=\"" << I->G1 << "\" y=\"" << -I->G2 << "\" xlink:href=\"#G_" << I->name << "_" << unique_prefix << "\" />" << std::endl;
 
         // sketches
         F.precision(8);
-        for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
+        for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
-          for (list<surfpictrecord>::iterator I_sk = K->SKETCHLIST.begin();
+          for (std::list<surfpictrecord>::iterator I_sk = K->SKETCHLIST.begin();
                                               I_sk != K->SKETCHLIST.end(); I_sk++) {
             F << "<g transform=\"matrix(";
             F << I_sk->xx << " " << I_sk->yx << " " << -I_sk->xy << " " << -I_sk->yy << " " << 
                  I_sk->dx << " " << I_sk->dy << ")\">";
             F << "<image x=\"0\" y=\"" << -I_sk->height << "\" width=\"" << I_sk->width << 
                  "\" height=\"" << I_sk->height << "\" xlink:href=\"data:image/" << 
-                 I_sk->type << ";base64," << endl;
+                 I_sk->type << ";base64," << std::endl;
             base64_encode(I_sk->filename, F);
             F << "\" />";
-            F << "</g>" << endl;
+            F << "</g>" << std::endl;
           };
         }
         F.precision(3);
@@ -633,24 +655,24 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
         // end of sketches
 
 
-        for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
+        for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->F != "") {
-            F << "<use x=\"" << K->F1 << "\" y=\"" << K->F2 << "\" xlink:href=\"#F_" << K->name << "_" << unique_prefix << "\" />" << endl;
+            F << "<use x=\"" << K->F1 << "\" y=\"" << K->F2 << "\" xlink:href=\"#F_" << K->name << "_" << unique_prefix << "\" />" << std::endl;
           }
         }
 
-        for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
+        for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->E != "") {
-            F << "<use x=\"" << K->E1 << "\" y=\"" << K->E2 << "\" xlink:href=\"#E_" << K->name << "_" << unique_prefix << "\" />" << endl;
+            F << "<use x=\"" << K->E1 << "\" y=\"" << K->E2 << "\" xlink:href=\"#E_" << K->name << "_" << unique_prefix << "\" />" << std::endl;
           }
         }
 
-        for (list<scraprecord>::iterator K = SCRAPLIST.begin(); 
+        for (std::list<scraprecord>::iterator K = SCRAPLIST.begin(); 
                                          K != SCRAPLIST.end(); K++) {
           if (used_scraps.count(K->name) > 0 && K->X != "") {
-            F << "<use x=\"" << K->X1 << "\" y=\"" << K->X2 << "\" xlink:href=\"#X_" << K->name << "_" << unique_prefix << "\" />" << endl;
+            F << "<use x=\"" << K->X1 << "\" y=\"" << K->X2 << "\" xlink:href=\"#X_" << K->name << "_" << unique_prefix << "\" />" << std::endl;
           }
         }
 
@@ -669,52 +691,56 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
 
   // map grid:
   if (LAYOUT.map_grid) {
-    F << "<g stroke=\"#000000\" fill=\"none\" stroke-width=\"0.4\">" << endl;
+    F << "<g stroke=\"#000000\" fill=\"none\" stroke-width=\"0.4\">" << std::endl;
     F << "<rect x=\"" << llxo << "\" y=\"" << llyo << 
          "\" width=\"" << urxo-llxo << "\" height=\"" << uryo-llyo << 
-         "\" />" << endl;
+         "\" />" << std::endl;
     for (double i=llxo; i <= urxo; i += LAYOUT.hsize) {
-      F << "<line x1=\"" << i << "\" y1=\"" << llyo << "\" x2=\"" << i << "\" y2=\"" << uryo << "\" />" << endl;
+      F << "<line x1=\"" << i << "\" y1=\"" << llyo << "\" x2=\"" << i << "\" y2=\"" << uryo << "\" />" << std::endl;
     }
     for (double i=llyo; i <= uryo; i += LAYOUT.vsize) {
-      F << "<line x1=\"" << llxo << "\" y1=\"" << i << "\" x2=\"" << urxo << "\" y2=\"" << i << "\" />" << endl;
+      F << "<line x1=\"" << llxo << "\" y1=\"" << i << "\" x2=\"" << urxo << "\" y2=\"" << i << "\" />" << std::endl;
     }
-    F << "</g>" << endl;
+    F << "</g>" << std::endl;
   }
 
-  F << "</g>" << endl;
-  F << "</svg>" << endl;
+  F << "</g>" << std::endl;
+  F << "</svg>" << std::endl;
   // end of main SVG data block
 
   if (fmt > 0) {  // legend in xhtml
     // title
     if (!ldata.exploteam.empty()) F << "<p><i>" << escape_html(ldata.explotitle) << ":</i> " << escape_html(ldata.exploteam) << 
-          " <i>" << ldata.explodate << "</i></p>" << endl;
+          " <i>" << ldata.explodate << "</i></p>" << std::endl;
     if (!ldata.topoteam.empty()) F << "<p><i>" << escape_html(ldata.topotitle) << ":</i> " << escape_html(ldata.topoteam) << 
-          " <i>" << ldata.topodate << "</i></p>" << endl;
+          " <i>" << ldata.topodate << "</i></p>" << std::endl;
     if (!ldata.cartoteam.empty()) F << "<p><i>" << escape_html(ldata.cartotitle) << ":</i> " << escape_html(ldata.cartoteam) << 
-          " <i>" << ldata.cartodate << "</i></p>" << endl;
+          " <i>" << ldata.cartodate << "</i></p>" << std::endl;
 
     // color legend
-    if (!COLORLEGENDLIST.empty()) {
-      F << "<h3>" << escape_html(ldata.colorlegendtitle) << "</h3>" << endl;
-      F << "<table cellspacing=\"5\">" << endl;
-      for(list<colorlegendrecord>::iterator I = COLORLEGENDLIST.begin(); I != COLORLEGENDLIST.end(); I++) {
-        F << "<tr>" << endl;
-        F << "<td style=\"background-color: " << rgb2svg(I->R,I->G,I->B) <<
-             "; height: 24px; width: 36px;\">" << endl;
-        F << "</td><td>" << I->name << "</td>" << endl;
-        F << "</tr>" << endl;
+    if (LAYOUT.altitudebar.empty() && !COLORLEGENDLIST.empty()) {
+      F << "<h3>" << escape_html(ldata.colorlegendtitle) << "</h3>" << std::endl;
+      F << "<table cellspacing=\"5\">" << std::endl;
+      for(std::list<colorlegendrecord>::iterator I = COLORLEGENDLIST.begin(); I != COLORLEGENDLIST.end(); I++) {
+        F << "<tr>" << std::endl;
+        F << "<td style=\"background-color: " << I->col_legend.to_svg() <<
+             "; height: 24px; width: 36px;\">" << std::endl;
+        F << "</td><td>" << I->name << "</td>" << std::endl;
+        F << "</tr>" << std::endl;
       }
-      F << "</table>" << endl;
+      F << "</table>" << std::endl;
+    } else if (!LAYOUT.altitudebar.empty()) {
+      F << "<p>" << std::endl;
+      AltBar.print_svg(F,unique_prefix);
+      F << "</p>" << std::endl;
     }
 
     // map symbols
     if (!LEGENDLIST.empty()) {
-      F << "<h3>" << escape_html(ldata.legendtitle) << "</h3>" << endl;
+      F << "<h3>" << escape_html(ldata.legendtitle) << "</h3>" << std::endl;
 
-      vector<legendrecord> L;
-      for(list<legendrecord>::iterator I = LEGENDLIST.begin(); 
+      std::vector<legendrecord> L;
+      for(std::list<legendrecord>::iterator I = LEGENDLIST.begin(); 
           I != LEGENDLIST.end(); I++) {
             L.push_back(*I);
       }
@@ -723,25 +749,25 @@ void thsvg(const char * fname, int fmt, legenddata ldata) {
       int rows = (int) ceil(double(legendbox_num) / columns);
       int pos = 0;
 
-      F << "<table cellspacing=\"5\">" << endl;
+      F << "<table cellspacing=\"5\">" << std::endl;
       for (int i = 0; i < rows; i++) {
-        F << "<tr>" << endl;
+        F << "<tr>" << std::endl;
         for (int j = 0; j < columns; j++) {
-          F << "<td>" << endl;
+          F << "<td>" << std::endl;
           pos = i + j * rows;
           if (pos < legendbox_num) {
             L[pos].ldata.print_svg(F,unique_prefix);
             F << L[pos].descr;
-            // F << "</p>" << endl;
+            // F << "</p>" << std::endl;
           }
-          F << "</td>" << endl;
+          F << "</td>" << std::endl;
         }
-        F << "</tr>" << endl;
+        F << "</tr>" << std::endl;
       }
-      F << "</table>" << endl;
+      F << "</table>" << std::endl;
     }
 
-    F << "</body>" << endl << "</html>" << endl;
+    F << "</body>" << std::endl << "</html>" << std::endl;
   }
 
   F.close();

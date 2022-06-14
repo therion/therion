@@ -36,14 +36,12 @@
 #include "thlocale.h"
 #include "thtmpdir.h"
 #include "thcs.h"
+#include "thcsdata.h"
+#include "thproj.h"
+#include "thpdfdbg.h"
 
 #ifdef THWIN32
 #include <windows.h>
-#endif
-
-#ifdef THMSVC
-#define snprintf _snprintf
-#define strcasecmp _stricmp
 #endif
 
 const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
@@ -57,7 +55,7 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "### Paths to called executable files ###\n"
 "# mpost-path  \"mpost\"\n"
 "# mpost-options  \"-tex=etex\"\n"
-"# pdftex-path  \"pdfetex\"\n"
+"# pdftex-path  \"pdftex\"\n"
 "# cavern-path  \"cavern\"\n"
 "# convert-path  \"convert\"\n"
 "# identify-path  \"identify\"\n\n"
@@ -76,6 +74,14 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# tmp-path  \"\"\n\n"
 "### User defined coordinate system ###\n"
 "# cs-def <id> <proj4id> [other options]\n\n"
+"### User defined coordinate systems transformations ###\n"
+"# cs-trans <from-cs-id> <to-cs-id> <proj-cs-transformation-string>\n\n"
+"### Let PROJ v6+ find the optimal transformation ###\n"
+"# proj-auto off\n\n"
+"### PROJ v6+ handling of missing transformation grids if proj-auto is on ###\n"
+"# proj-missing-grid warn\n\n"
+"### Use count registers in TeX to store references to scraps; otherwise define control sequences ###\n"
+"# tex-refs-registers on\n\n"
 "### Command to remove temporary directory ###\n"
 "# tmp-remove  \"\"\n\n";
 
@@ -84,7 +90,8 @@ thinit::thinit()
   this->fonts_ok = false;
   this->tex_env = false;
   this->lang = THLANG_UNKNOWN;
-	this->loopc = THINIT_LOOPC_UNKNOWN;
+  this->loopc = THINIT_LOOPC_UNKNOWN;
+  //this->opt_mpost = "-numbersystem=double";
 }
 
 
@@ -114,8 +121,12 @@ enum {
   TTIC_LOOPC,
   TTIC_TEXT,	
   TTIC_PDF_FONTS,
+  TTIC_PROJ_AUTO,
+  TTIC_PROJ_MISSING_GRID,
   TTIC_OTF2PFB,
+  TTIC_TEX_REFS_REGISTERS,
   TTIC_CS_DEF,
+  TTIC_CS_TRANS,
   TTIC_UNKNOWN,
 };
 
@@ -128,6 +139,7 @@ static const thstok thtt_initcmd[] = {
   {"cavern-path", TTIC_PATH_CAVERN},
   {"convert-path", TTIC_PATH_CONVERT},
   {"cs-def", TTIC_CS_DEF},
+  {"cs-trans", TTIC_CS_TRANS},
   {"encoding-default", TTIC_ENCODING_DEFAULT},
   {"encoding-sql", TTIC_ENCODING_SQL},
 //  {"encoding_default", TTIC_ENCODING_DEFAULT},
@@ -140,10 +152,13 @@ static const thstok thtt_initcmd[] = {
   {"otf2pfb", TTIC_OTF2PFB},
   {"pdf-fonts", TTIC_PDF_FONTS},
   {"pdftex-path", TTIC_PATH_PDFTEX},
+  {"proj-auto", TTIC_PROJ_AUTO},
+  {"proj-missing-grid", TTIC_PROJ_MISSING_GRID},
   {"source-path", TTIC_PATH_SOURCE},
   {"tex-env",TTIC_TEX_ENV},
   {"tex-fonts",TTIC_TEX_FONTS},
   {"tex-fonts-optional",TTIC_TEX_FONTS_OPTIONAL},
+  {"tex-refs-registers",TTIC_TEX_REFS_REGISTERS},
   {"text",TTIC_TEXT},
   {"tmp-path",TTIC_TMP_PATH},
   {"tmp-remove",TTIC_TMP_REMOVE_SCRIPT},
@@ -151,7 +166,7 @@ static const thstok thtt_initcmd[] = {
   {NULL, TTIC_UNKNOWN},
 };
 
-void thinit__print_open(char * s) {
+void thinit_print_open(char * s) {
 #ifdef THDEBUG
     thprintf("\ninitialization file: %s\nreading\n", s);
 #else
@@ -226,7 +241,7 @@ void thinit::copy_fonts() {
 #endif
     retcode = system(tmpb.get_buffer());
     if (retcode != EXIT_SUCCESS)
-      ththrow(("unable to copy font file -- %s", font_src[index].c_str()))
+      ththrow("unable to copy font file -- {}", font_src[index].c_str());
   }
 
 #ifdef THWIN32
@@ -259,7 +274,7 @@ void thinit::check_font_path(const char * fname, int index) {
   char * buff = tmpb.get_buffer();
   l = (long) strlen(buff);
   bool search_sn = true;
-  if (l == 0) ththrow(("missing font file name"));
+  if (l == 0) ththrow("missing font file name");
   for(i = (l-1); i >= 0; i--) {
     if ((buff[i] == '/') || (buff[i] == '\\')) {
       if (search_sn) {
@@ -270,13 +285,13 @@ void thinit::check_font_path(const char * fname, int index) {
     }
   }
   
-  if (strlen(pshort.get_buffer()) == 0) ththrow(("invalid font name -- %s", fname))
+  if (strlen(pshort.get_buffer()) == 0) ththrow("invalid font name -- {}", fname);
 
   if ( 
 #ifdef THWIN32
       ((l > 1) && (buff[1] == ':')) ||
 #endif
-      (buff[0] == '/')) {
+      buff[0] == '/') {
     pfull.strcpy(buff);
   } else {
     if (strlen(this->ini_file.get_cif_path()) > 0) {
@@ -289,7 +304,7 @@ void thinit::check_font_path(const char * fname, int index) {
   }
 
   // checkne ci TTF
-  if ((l > 3) && (strcasecmp(&(buff[l-4]), ".ttf")) == 0) ENC_NEW.t1_convert = 0;
+  if ((l > 3) && icase_equals(&(buff[l-4]), ".ttf")) ENC_NEW.t1_convert = 0;
 
   font_src[index] = pfull.get_buffer();
   font_dst[index] = pshort.get_buffer();
@@ -375,12 +390,12 @@ void thinit::load()
     this->path_pdftex = thcfg.install_path.get_buffer();
     this->path_otftotfm = thcfg.install_path.get_buffer();
     this->path_mpost += "\\bin\\win32\\mpost.exe";
-    this->path_pdftex += "\\bin\\win32\\pdfetex.exe";
+    this->path_pdftex += "\\bin\\win32\\pdftex.exe";
     this->path_otftotfm += "\\bin\\win32\\otftotfm.exe";
   } else {
 #endif  
     this->path_mpost = "mpost";
-    this->path_pdftex = "pdfetex";
+    this->path_pdftex = "pdftex";
     this->path_otftotfm = "otftotfm";
 #ifdef THWIN32
   }
@@ -400,6 +415,9 @@ void thinit::load()
   }
 #endif  
 
+  set_proj_lib_path();
+  thcs_add_default_transformations();
+
   this->tmp_path = "";
   this->tmp_remove_script = "";
   this->lang = THLANG_UNKNOWN;
@@ -413,7 +431,7 @@ void thinit::load()
   this->ini_file.set_file_name("therion.ini");
   this->ini_file.sp_scan_on();
   this->ini_file.cmd_sensitivity_off();
-  this->ini_file.print_if_opened(thinit__print_open, &started);
+  this->ini_file.print_if_opened(thinit_print_open, &started);
   this->ini_file.reset();
   try {
     while((cmdln = this->ini_file.read_line()) != NULL) {
@@ -438,35 +456,46 @@ void thinit::load()
         case TTIC_PATH_PDFTEX:
         case TTIC_PATH_SOURCE:
         case TTIC_OTF2PFB:
+        case TTIC_TEX_REFS_REGISTERS:
         case TTIC_TEX_ENV:
+        case TTIC_PROJ_AUTO:
+        case TTIC_PROJ_MISSING_GRID:
           if (nargs != 2)
-            ththrow(("invalid number of command arguments"));
+            ththrow("invalid number of command arguments");
           break;
         case TTIC_TEXT:
           if (nargs != 4)
-            ththrow(("invalid text syntax -- should be: text <language> <text> <translation>"))
+            ththrow("invalid text syntax -- should be: text <language> <text> <translation>");
           break;
         case TTIC_PDF_FONTS:
           if (nargs != 6)
-            ththrow(("invalid number of command arguments"));
+            ththrow("invalid number of command arguments");
           break;
         case TTIC_TEX_FONTS:
         case TTIC_TEX_FONTS_OPTIONAL:
           if (nargs != 7)
-            ththrow(("invalid number of command arguments"));
+            ththrow("invalid number of command arguments");
           break;
         case TTIC_CS_DEF:
           if (nargs < 2)
-            ththrow(("invalid cs-def syntax -- should be: cs-def <id> <proj4id> [other options]"))
+            ththrow("invalid cs-def syntax -- should be: cs-def <id> <proj4id> [other options]");
+          break;
+        case TTIC_CS_TRANS:
+          if (nargs != 4)
+            ththrow("invalid cs-trans syntax -- should be: cs-trans <from-cs-id[s]> <to-cs-id[s]> <transformation>");
           break;
         default:
-          ththrow(("invalid initialization command -- %s", args[0]))
+          ththrow("invalid initialization command -- {}", args[0]);
       }
         
       switch(argid) {
 
         case TTIC_CS_DEF:
           thcs_add_cs(args[1], args[2], nargs - 2, &(args[3]));
+          break;
+
+        case TTIC_CS_TRANS:
+          thcs_add_cs_trans(args[1], args[2], args[3]);
           break;
         
         case TTIC_ENCODING_DEFAULT:
@@ -479,19 +508,19 @@ void thinit::load()
           
         case TTIC_PATH_CAVERN:
           if (strlen(args[1]) < 1)
-            ththrow(("invalid path"))
+            ththrow("invalid path");
           this->path_cavern.strcpy(args[1]);
           break;
           
         case TTIC_PATH_CONVERT:
           if (strlen(args[1]) < 1)
-            ththrow(("invalid path"))
+            ththrow("invalid path");
           this->path_convert.strcpy(args[1]);
           break;
           
         case TTIC_PATH_IDENTIFY:
           if (strlen(args[1]) < 1)
-            ththrow(("invalid path"))
+            ththrow("invalid path");
           this->path_identify.strcpy(args[1]);
           break;
 
@@ -502,7 +531,7 @@ void thinit::load()
         case TTIC_LANG:
           this->lang = thlang_parse(args[1]);
           if (this->lang == THLANG_UNKNOWN)
-            ththrow(("language not supported -- %s",args[1]))
+            ththrow("language not supported -- {}",args[1]);
           break;
 
         case TTIC_UNITS:
@@ -512,8 +541,29 @@ void thinit::load()
         case TTIC_OTF2PFB:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            ththrow(("invalid otf2pfb switch -- %s", args[1]))
+            ththrow("invalid otf2pfb switch -- {}", args[1]);
           ENC_NEW.t1_convert = (sv == TT_TRUE);
+          break;
+
+        case TTIC_TEX_REFS_REGISTERS:
+          sv = thmatch_token(args[1], thtt_bool);
+          if (sv == TT_UNKNOWN_BOOL)
+            ththrow("invalid tex-refs-registers switch -- {}", args[1]);
+          tex_refs_registers = (sv == TT_TRUE);
+          break;
+
+        case TTIC_PROJ_AUTO:
+          sv = thmatch_token(args[1], thtt_bool);
+          if (sv == TT_UNKNOWN_BOOL)
+            ththrow("invalid proj-auto switch -- {}", args[1]);
+          thcs_cfg.proj_auto = (sv == TT_TRUE);
+          break;
+
+        case TTIC_PROJ_MISSING_GRID:
+          sv = thcs_parse_gridhandling(args[1]);
+          if (sv == GRID_INVALID)
+            ththrow("invalid proj-missing-grid switch -- {}", args[1]);
+          thcs_cfg.proj_auto_grid = sv;
           break;
 
         case TTIC_TEXT:
@@ -526,7 +576,7 @@ void thinit::load()
 
         case TTIC_PATH_MPOST:
           if (strlen(args[1]) < 1)
-            ththrow(("invalid path"))
+            ththrow("invalid path");
           this->path_mpost.strcpy(args[1]);
           break;
 
@@ -536,7 +586,7 @@ void thinit::load()
 
         case TTIC_PATH_PDFTEX:
           if (strlen(args[1]) < 1)
-            ththrow(("invalid path"))
+            ththrow("invalid path");
           this->path_pdftex.strcpy(args[1]);
           break;
           
@@ -548,7 +598,7 @@ void thinit::load()
         case TTIC_TEX_FONTS:
           frec.id = get_enc_id(args[1]);
           if (frec.id < 0)
-            ththrow(("tex encoding not supported -- %s", args[1]))
+            ththrow("tex encoding not supported -- {}", args[1]);
           frec.rm = args[2];
           frec.it = args[3];
           frec.bf = args[4];
@@ -572,24 +622,25 @@ void thinit::load()
         case TTIC_TEX_ENV:
           sv = thmatch_token(args[1], thtt_bool);
           if (sv == TT_UNKNOWN_BOOL)
-            ththrow(("invalid tex-env switch -- %s", args[1]))
+            ththrow("invalid tex-env switch -- {}", args[1]);
           this->tex_env = (sv == TT_TRUE);
           break;
           
         case TTIC_LOOPC:
           sv = thmatch_token(args[1], thtt_loopc);
           if (sv == THINIT_LOOPC_UNKNOWN)
-            ththrow(("invalid loop-closure switch -- %s", args[1]))
+            ththrow("invalid loop-closure switch -- {}", args[1]);
           this->loopc = sv;
           break;
           
         default:
-          ththrow(("invalid initialization command -- %s", args[0]))
+          ththrow("invalid initialization command -- {}", args[0]);
       }
     }
   }
-  catch (...)
-    threthrow(("%s [%d]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number()))
+  catch (...) {
+    threthrow("{} [{}]", this->ini_file.get_cif_name(), this->ini_file.get_cif_line_number());
+  }
   if (started) {
 #ifdef THDEBUG
     thprintf("\n");
@@ -607,11 +658,6 @@ void thinit::load()
   thinit__make_short_path(&this->path_identify);
   thinit__make_short_path(&this->path_mpost);
   thinit__make_short_path(&this->path_pdftex);
-#endif
-
-  // set PROJ library resources path
-#ifdef THWIN32
-  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj").c_str());
 #endif
 
   // check if optional fonts are in the system, remove them if not
@@ -662,9 +708,9 @@ void thinit::load()
   }
 #endif
 
-  list<fontrecord> TMPFONTS;
+  std::list<fontrecord> TMPFONTS;
 
-  for (list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++) {
+  for (std::list<fontrecord>::iterator J = FONTS.begin(); J != FONTS.end(); J++) {
     if (J->opt) {
       FILE * ff = fopen(thtmp.get_file_name("fonttest.tex"),"w");
       fprintf(ff,"\\nopagenumbers\n\\batchmode\n\\def\\fonttest#1{\\font\\a=#1\\a}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\end", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
@@ -672,15 +718,15 @@ void thinit::load()
 
       thbuffer com, wdir;
       wdir.guarantee(1024);
-      getcwd(wdir.get_buffer(),1024);
-      chdir(thtmp.get_dir_name());
+      thassert(getcwd(wdir.get_buffer(),1024) != NULL);
+      thassert(chdir(thtmp.get_dir_name()) == 0);
       int retcode;
 
       com = "\"";
       com += this->get_path_pdftex();
       com += "\"";
     //  com += " --interaction nonstopmode data.tex";
-      com += " fonttest.tex";
+      com += " --no-mktex=tfm fonttest.tex";
       retcode = system(com.get_buffer());
       thprintf("checking optional fonts %s %s %s %s %s ...", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
       if (retcode != EXIT_SUCCESS) {
@@ -689,16 +735,19 @@ void thinit::load()
         TMPFONTS.push_back(*J);
         thprintf(" OK\n");
       }
-      chdir(wdir.get_buffer());
+      thassert(chdir(wdir.get_buffer()) == 0);
     } else {
       TMPFONTS.push_back(*J);
     }
   }
 
   FONTS.clear();
-  for (list<fontrecord>::iterator J = TMPFONTS.begin(); J != TMPFONTS.end(); J++) {
+  for (std::list<fontrecord>::iterator J = TMPFONTS.begin(); J != TMPFONTS.end(); J++) {
     FONTS.push_back(*J);
   }
+  
+  if (thcfg.reproducible_output)
+      this->loopc = THINIT_LOOPC_THERION;
 
 }
 
@@ -743,6 +792,13 @@ char * thinit::get_path_pdftex()
 char * thinit::get_path_otftotfm()
 {
   return this->path_otftotfm.get_buffer();
+}
+
+
+void thinit::set_proj_lib_path() {  // set PROJ library resources path
+#ifdef THWIN32
+  putenv((std::string("PROJ_LIB=")+thcfg.install_path.get_buffer()+"\\lib\\proj-" + std::to_string(PROJ_VER)).c_str());
+#endif
 }
 
 

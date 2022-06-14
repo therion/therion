@@ -26,6 +26,7 @@
 #define thcs_h
 
 #include "thcsdata.h"
+#include <map>
 
 const int TTCS_EPSG = 1000000;
 const int TTCS_ESRI = 2000000;
@@ -38,6 +39,18 @@ const thcsdata * thcs_get_data(int cs);
 
 std::string thcs_get_params(int cs);
 
+class thcstrans {
+  public:
+	int from_id, to_id;
+	thcstrans() : from_id(TTCS_UNKNOWN), to_id(TTCS_UNKNOWN) {}
+	thcstrans(int from, int to) : from_id(from), to_id(to) {}
+    friend bool operator < (const thcstrans & t1, const thcstrans &t2);
+};
+
 void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args);
+
+void thcs_add_cs_trans(const char * from_css, const char * to_css, const char * trans);
+
+std::string thcs_get_trans(int from_cs, int to_cs);
 
 #endif

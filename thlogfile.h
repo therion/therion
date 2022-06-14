@@ -90,6 +90,12 @@ class thlogfile {
    
   void printf(const char * format, ...);
   
+  /**
+   * Print double into log file - take concern of nan.
+   */
+
+  void printf_double(const char * format, const char * nanstr, double dbl);
+
   
   /**
    * Set log file name.

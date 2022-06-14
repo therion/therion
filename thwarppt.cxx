@@ -664,7 +664,7 @@ therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned in
   warpp_t * pi = (warpp_t *)malloc( wd * hd * sizeof(warpp_t) );
   if ( pi != NULL ) {
     memset( pi, 0xff, wd*hd*sizeof(warpp_t) );
-    double * pf = (double *)malloc( wd * hd * sizeof(double) );
+    double * pf = (double *)calloc( wd * hd, sizeof(double) );
     if ( pf == NULL ) 
       thprintf("warning: failed to allocate temporary distance image\n");
 

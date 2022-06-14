@@ -32,6 +32,14 @@
 #include "thexporter.h"
 #include "thcs.h"
 #include <stdio.h>
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <numeric>
+#include <fstream>
+#include <streambuf>
+#include <iomanip>
+#include <fmt/ostream.h>
 
 
 
@@ -64,7 +72,7 @@ void thexport::parse(int nargs, char ** args)
     oax = ax;
     this->parse_options(ax, nargs, args);
     if (oax == ax)
-      ththrow(("unknown option -- \"%s\"", args[ax]))
+      ththrow("unknown option -- \"{}\"", args[ax]);
   }
 }
 
@@ -82,26 +90,26 @@ void thexport::parse_options(int & argx, int nargs, char ** args)
     case TT_EXP_OPT_OUTPUT:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing output file name -- \"%s\"",args[optx]))
+        ththrow("missing output file name -- \"{}\"",args[optx]);
       if (strlen(args[argx]) > 0) {
         this->outpt = this->cfgptr->get_db()->strstore(args[argx]);
         outpt_def = true;
       }
       else
-        ththrow(("empty file name not allowed -- \"%s\"",args[optx]))
+        ththrow("empty file name not allowed -- \"{}\"",args[optx]);
       argx++;
       break;
     case TT_EXP_OPT_CS:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing coordiate system -- \"%s\"",args[optx]))
+        ththrow("missing coordiate system -- \"{}\"",args[optx]);
       {
         int id = thcs_parse(args[argx]);
         if (id == TTCS_UNKNOWN) {
-          ththrow(("unknown coordinate system -- %s", args[argx]));
+          ththrow("unknown coordinate system -- {}", args[argx]);
         }
         if ((thcfg.outcs != id) && (id == TTCS_LOCAL))
-          ththrow(("mixing local and global coordinate system -- %s", args[argx]));
+          ththrow("mixing local and global coordinate system -- {}", args[argx]);
         this->cs = id;
       }
       argx++;
@@ -150,4 +158,94 @@ const char * thexport::get_output(const char * defname)
   return outptfname.get_buffer();
 }
 
+// Generates a lookup table for the checksums of all 8-bit values.
+std::array<std::uint_fast32_t, 256> generate_crc_lookup_table() noexcept
+{
+  auto const reversed_polynomial = std::uint_fast32_t{0xEDB88320uL};
+
+  // This is a function object that calculates the checksum for a value,
+  // then increments the value, starting from zero.
+  struct byte_checksum
+  {
+    std::uint_fast32_t operator()() noexcept
+    {
+      auto checksum = static_cast<std::uint_fast32_t>(n++);
+
+      for (auto i = 0; i < 8; ++i)
+        checksum = (checksum >> 1) ^ ((checksum & 0x1u) ? reversed_polynomial : 0);
+
+      return checksum;
+    }
+
+    unsigned n = 0;
+  };
+
+  auto table = std::array<std::uint_fast32_t, 256>{};
+  std::generate(table.begin(), table.end(), byte_checksum{});
+
+  return table;
+}
+
+
+// Calculates the CRC for any sequence of values. (You could use type traits and a
+// static assert to ensure the values can be converted to 8 bits.)
+template <typename InputIterator>
+std::uint_fast32_t crc(InputIterator first, InputIterator last)
+{
+  // Generate lookup table only on first use then cache it - this is thread-safe.
+  static auto const table = generate_crc_lookup_table();
+
+  // Calculate the checksum - make sure to clip to 32 bits, for systems that don't
+  // have a true (fast) 32-bit type.
+  return std::uint_fast32_t{0xFFFFFFFFuL} &
+    ~std::accumulate(first, last,
+      ~std::uint_fast32_t{0} & std::uint_fast32_t{0xFFFFFFFFuL},
+        [](std::uint_fast32_t checksum, std::uint_fast8_t value)
+          { return table[(checksum ^ value) & 0xFFu] ^ (checksum >> 8); });
+}
+
+
+bool thexport::check_crc() {
+	bool ok = true;
+	for(auto& file : output_files) {
+		std::ifstream of(file.fnm, std::ios_base::binary);
+    if (!of.is_open()) {
+			file.res = "output file does not exist";
+			ok = false;
+      continue;
+		}
+		const auto actual_crc = crc(std::istreambuf_iterator<char>(of), {});
+
+		if (thcfg.crc_generate) {
+			std::ofstream crcof(fmt::format("{}.crc", file.fnm));
+      fmt::print(crcof, "{:08x}\n", actual_crc);
+			file.res = "OK";
+      continue;
+    }
+
+		if (thcfg.crc_verify) {
+			std::uint_fast32_t read_crc = 0;
+      std::ifstream crcif(fmt::format("{}.crc", file.fnm));
+      if (!crcif.is_open()) {
+        file.res = ".crc file not found -- use --generate-output-crc before";
+        ok = false;
+        continue;
+      }
+
+      crcif >> std::hex >> read_crc;
+			if (actual_crc == read_crc) {
+				file.res = "OK";
+			} else {
+				file.res = fmt::format("CRC32 error: was {:08x}, expected {:08x}", actual_crc, read_crc);
+				ok = false;
+			}
+		}
+	}
+	return ok;
+}
+
+
+void thexport::register_output(std::string fnm) {
+	this->output_files.push_back(thexport_output_crc(fnm));
+}
 

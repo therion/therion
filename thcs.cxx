@@ -39,6 +39,8 @@ std::map<std::string, int> thcs_custom_name2int;
 std::map<int, std::string> thcs_custom_int2name;
 std::map<int, thcsdata*> thcs_custom_int2data;
 std::list<thcsdata> thcs_custom_data;
+std::map<thcstrans, const char *> thcs_transformations;
+
 int thcs_custom_id = TTCS_UNKNOWN;
 
 
@@ -54,7 +56,7 @@ int thcs_parse(const char * name)
   		if ((esri || epsg) && (name[4] == ':')) {
   			int num;
   			try {
-  				num = atoi(&(name[5]));
+  				num = std::stoi(&(name[5]));
   			} catch (...) {
   				return TTCS_UNKNOWN;
   			}
@@ -84,11 +86,11 @@ const char * thcs_get_name(int cs)
   ii = -1;
   static char buff[20];
 	if (cs > TTCS_ESRI) {
-	  snprintf(buff, sizeof(buff), "ESRI:%d", cs - TTCS_ESRI);
+	  std::snprintf(buff, sizeof(buff), "ESRI:%d", cs - TTCS_ESRI);
 	  return buff;
 	}
 	if (cs > TTCS_EPSG) {
-	  snprintf(buff, sizeof(buff), "EPSG:%d", cs - TTCS_EPSG);
+	  std::snprintf(buff, sizeof(buff), "EPSG:%d", cs - TTCS_EPSG);
 	  return buff;
 	}
   while (i < (long)tab_size) {
@@ -115,7 +117,7 @@ std::string thcs_get_params(int cs) {
 const thcsdata * thcs_get_data(int cs) {
 	static thcsdata rv;
 	static char params[200];
-	static char prjname[20];
+	static char prjname[200];
 	rv.dms = false;
 	rv.output = true;
 	rv.params = params;
@@ -124,17 +126,21 @@ const thcsdata * thcs_get_data(int cs) {
 	rv.prjspec = "";
 	rv.swap = false;
 	if (cs > TTCS_ESRI) {
+	  std::snprintf(params, sizeof(params), "+init=esri:%d", cs - TTCS_ESRI);
       if (esri_labels.find(cs - TTCS_ESRI) != esri_labels.end()) {
         rv.prjname = esri_labels[cs - TTCS_ESRI];
+      } else {
+        thcs_get_label(params).copy(prjname, 200, 0);
       }
-	  snprintf(params, sizeof(params), "+init=esri:%d", cs - TTCS_ESRI);
 		return &rv;
 	}
 	if (cs > TTCS_EPSG) {
+	  std::snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
       if (epsg_labels.find(cs - TTCS_EPSG) != epsg_labels.end()) {
         rv.prjname = epsg_labels[cs - TTCS_EPSG];
+      } else {
+        thcs_get_label(params).copy(prjname, 200, 0);
       }
-	  snprintf(params, sizeof(params), "+init=epsg:%d", cs - TTCS_EPSG);
 		return &rv;
 	}
   if (cs >= 0) return &(thcsdata_table[cs]);
@@ -144,8 +150,8 @@ const thcsdata * thcs_get_data(int cs) {
 
 void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args)
 {
-  if (thcs_parse(id) != TTCS_UNKNOWN) ththrow(("cs already exists -- %s", id));
-  if (!th_is_extkeyword(id)) ththrow(("invalid cs identifier -- %s", id));
+  if (thcs_parse(id) != TTCS_UNKNOWN) ththrow("cs already exists -- {}", id);
+  if (!th_is_extkeyword(id)) ththrow("invalid cs identifier -- {}", id);
   thcs_check(proj4id);
   thcsdata * pd = &(*thcs_custom_data.insert(thcs_custom_data.end(), thcsdata()));
   pd->prjspec = "";
@@ -159,3 +165,46 @@ void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args)
   thcs_custom_int2name[thcs_custom_id] = std::string(id);
   thcs_custom_int2data[thcs_custom_id] = pd;
 }
+
+bool operator < (const thcstrans & t1, const thcstrans &t2) {
+  if (t1.from_id < t2.from_id)
+	return true;
+  else if ((t1.from_id == t2.from_id) && (t1.to_id < t2.to_id))
+	return true;
+  else
+	return false;
+}
+
+std::string thcs_get_trans(int from_cs, int to_cs) {
+  auto it = thcs_transformations.find(thcstrans(from_cs, to_cs));
+  if (it == thcs_transformations.end()) return std::string();
+  return std::string(it->second);
+}
+
+void thcs_add_cs_trans_single(const char * from_cs, const char * to_cs, const char * trans) {
+	int fcs = thcs_parse(from_cs);
+	if (fcs == TTCS_UNKNOWN) ththrow("unknown coordinate system -- {}", from_cs);
+	int tcs = thcs_parse(to_cs);
+	if (tcs == TTCS_UNKNOWN) ththrow("unknown coordinate system -- {}", to_cs);
+//	if (strlen(trans) == 0) ththrow("empty transformation specification");
+	thcs_transformations[thcstrans(fcs, tcs)] = thdb.strstore(trans, true);
+}
+
+
+void thcs_add_cs_trans(const char * from_css, const char * to_css, const char * trans) {
+	thmbuffer fcss, tcss;
+	thsplit_words(&fcss, from_css);
+	thsplit_words(&tcss, to_css);
+	for(int i = 0; i < fcss.get_size(); i++) {
+		for(int j = 0; j < tcss.get_size(); j++) {
+			thcs_add_cs_trans_single(fcss.get_buffer()[i], tcss.get_buffer()[j], trans);
+		}
+	}
+	//printf("\n\n");
+	//for(auto it = thcs_transformations.begin(); it != thcs_transformations.end(); it++) {
+	//	printf("%s -> %s: %s\n", thcs_get_name(it->first.from_id), thcs_get_name(it->first.to_id), thcs_get_trans(it->first.from_id, it->first.to_id).c_str());
+	//}
+}
+
+
+

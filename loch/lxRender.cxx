@@ -33,10 +33,11 @@
 
 #include "lxRender.h"
 #include "lxWX.h"
-#include "lxGLC.h"
-#include "lxGUI.h"
 #include "lxSetup.h"
 #include "lxTR.h"
+#include "lxGLC.h"
+#include "lxGUI.h"
+#include "lxFile.h"
 
 #define lxRENDERBORDER this->m_glc->TRCGet(TR_TILE_BORDER)
 
@@ -345,15 +346,15 @@ public:
   bool m_started, m_continue, m_progress;
   lxGLCanvas * m_glc;
   lxRenderData * m_pData;
-  FILE * m_file, * m_fileTMP;
-  GLint m_imgWidth, m_imgHeight, m_tWidth, m_tHeight;
+  FILE * m_file, * m_fileTMP = nullptr;
+  GLint m_imgWidth = 0, m_imgHeight = 0, m_tWidth = 0, m_tHeight = 0;
   GLubyte * m_imgBuffRow;
   GLubyte * m_imgBuffLine;
-  int m_imgBuffLineSize;
-  int m_cTile;
+  int m_imgBuffLineSize = 0;
+  int m_cTile = 0;
   wxWindow * m_parent;
-  png_structp png_ptr;
-  png_infop png_info_ptr;
+  png_structp png_ptr = nullptr;
+  png_infop png_info_ptr = nullptr;
 
 
   void Render();
@@ -927,7 +928,7 @@ void lxRenderFile::RenderPDFFooter()
   png_len = 0;
   bool contpng = true;
   do {
-    fread(lenbuff, 1, 8, this->m_fileTMP);
+    lxassert(fread(lenbuff, 1, 8, this->m_fileTMP) == 8);
     png_add = (size_t) lenbuff[3] + 256 * (size_t) lenbuff[2] + 256 * 256 * (size_t) lenbuff[1] + 256 * 256 * 256 * (size_t) lenbuff[0];
     png_hdr = (size_t) lenbuff[7] + 256 * (size_t) lenbuff[6] + 256 * 256 * (size_t) lenbuff[5] + 256 * 256 * 256 * (size_t) lenbuff[4];
     if (png_hdr == 0x49444154) {
@@ -950,7 +951,7 @@ void lxRenderFile::RenderPDFFooter()
   do {
     fseek(this->m_fileTMP, src_pos, SEEK_SET);
     src_pos += 8;
-    fread(lenbuff, 1, 8, this->m_fileTMP);
+    lxassert(fread(lenbuff, 1, 8, this->m_fileTMP) == 8);
     png_add = (size_t) lenbuff[3] + 256 * (size_t) lenbuff[2] + 256 * 256 * (size_t) lenbuff[1] + 256 * 256 * 256 * (size_t) lenbuff[0];
     png_hdr = (size_t) lenbuff[7] + 256 * (size_t) lenbuff[6] + 256 * 256 * (size_t) lenbuff[5] + 256 * 256 * 256 * (size_t) lenbuff[4];
     if (png_hdr == 0x49444154) {

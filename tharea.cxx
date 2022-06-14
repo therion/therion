@@ -1,14 +1,14 @@
 /*
  * @file tharea.cxx
  */
-  
+
 /* Copyright (C) 2000 Stacho Mudrak
- * 
+ *
  * $Date: $
  * $RCSfile: $
  * $Revision: $
  *
- * -------------------------------------------------------------------- 
+ * --------------------------------------------------------------------
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --------------------------------------------------------------------
  */
- 
+
 #include "tharea.h"
 #include "thexception.h"
 #include "thobjectname.h"
@@ -41,24 +41,17 @@ tharea::tharea()
   this->m_outline_line = NULL;
 }
 
-
-tharea::~tharea()
-{
-  delete this->m_outline_line;
-}
-
-
 void tharea::start_insert() {
   if (this->type == TT_AREA_TYPE_U) {
     if (this->m_subtype_str == NULL)
-      ththrow(("missing subtype specification for area of user defined type"))
+      ththrow("missing subtype specification for area of user defined type");
     this->db->db2d.register_u_symbol(this->get_class_id(), this->m_subtype_str);
   }
 }
 
 
 
-int tharea::get_class_id() 
+int tharea::get_class_id()
 {
   return TT_AREA_CMD;
 }
@@ -72,7 +65,7 @@ bool tharea::is(int class_id)
     return th2ddataobject::is(class_id);
 }
 
-int tharea::get_cmd_nargs() 
+int tharea::get_cmd_nargs()
 {
   return 1;
 }
@@ -102,28 +95,28 @@ thcmd_option_desc tharea::get_cmd_option_desc(const char * opts)
 
 void tharea::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
 {
-  char * type, * subtype;  
+  char * type, * subtype;
   if (cod.id == 1)
     cod.id = TT_AREA_TYPE;
-    
+
   switch (cod.id) {
-  
+
     case 0:
       thsplit_args(& this->db->db2d.mbf, *args);
-      this->insert_border_line(this->db->db2d.mbf.get_size(), 
+      this->insert_border_line(this->db->db2d.mbf.get_size(),
         this->db->db2d.mbf.get_buffer());
       break;
-  
+
     case TT_AREA_TYPE:
       th2dsplitTT(*args, &type, &subtype);
       this->parse_type(type);
       if (strlen(subtype) > 0)
         this->parse_subtype(subtype);
       break;
-    
+
     default:
       th2ddataobject::set(cod, args, argenc, indataline);
-      
+
   }
 }
 
@@ -132,9 +125,9 @@ void tharea::parse_type(char * tstr)
 {
   this->type = thmatch_token(tstr, thtt_area_types);
   if (this->type == TT_AREA_TYPE_UNKNOWN)
-    ththrow(("unknown area type -- %s", tstr))
+    ththrow("unknown area type -- {}", tstr);
   if (this->type == TT_AREA_TYPE_DIMENSIONS)
-    ththrow(("area dimensions is not supported as ordinary type"))
+    ththrow("area dimensions is not supported as ordinary type");
 }
 
 
@@ -142,18 +135,12 @@ void tharea::parse_type(char * tstr)
 void tharea::parse_subtype(char * ststr)
 {
   if (this->type == TT_AREA_TYPE_UNKNOWN)
-    ththrow(("area type must be specified before subtype"))
+    ththrow("area type must be specified before subtype");
   if (this->type == TT_AREA_TYPE_U) {
     this->parse_u_subtype(ststr);
     return;
   } else
-    ththrow(("invalid type - subtype combination"))
-}
-
-
-void tharea::self_delete()
-{
-  delete this;
+    ththrow("invalid type - subtype combination");
 }
 
 void tharea::self_print_properties(FILE * outf)
@@ -178,7 +165,7 @@ void tharea::insert_border_line(int npars, char ** pars)
 {
   thdb2dab * bl;
   if (npars != 1)
-    ththrow(("one line name per line allowed"))
+    ththrow("one line name per line allowed");
   bl = this->db->db2d.insert_border_line();
   bl->source = this->db->csrc;
   thparse_objectname(bl->name,& this->db->buff_stations,*pars);
@@ -202,6 +189,9 @@ bool tharea::export_mp(class thexpmapmpxs * out)
   macroid = mid; \
   break;
   switch (this->type) {
+    case TT_AREA_TYPE_U:
+    	macroid = this->db->db2d.register_u_symbol(TT_AREA_CMD, this->m_subtype_str);
+    	break;
     tharea_type_export_mp(TT_AREA_TYPE_SAND, SYMA_SAND)
     tharea_type_export_mp(TT_AREA_TYPE_DEBRIS, SYMA_DEBRIS)
     tharea_type_export_mp(TT_AREA_TYPE_SUMP, SYMA_SUMP)
@@ -214,10 +204,15 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     tharea_type_export_mp(TT_AREA_TYPE_BEDROCK, SYMA_BEDROCK)
     tharea_type_export_mp(TT_AREA_TYPE_FLOWSTONE, SYMA_FLOWSTONE)
     tharea_type_export_mp(TT_AREA_TYPE_MOONMILK, SYMA_MOONMILK)
-    tharea_type_export_mp(TT_AREA_TYPE_U, SYMA_U)
+    tharea_type_export_mp(TT_AREA_TYPE_MUDCRACK, SYMA_MUDCRACK)
+    tharea_type_export_mp(TT_AREA_TYPE_PILLAR, SYMA_PILLAR)
+    tharea_type_export_mp(TT_AREA_TYPE_PILLARWITHCURTAINS, SYMA_PILLARWITHCURTAINS)
+    tharea_type_export_mp(TT_AREA_TYPE_STALACTITE, SYMA_STALACTITE)
+    tharea_type_export_mp(TT_AREA_TYPE_STALACTITESTALAGMITE, SYMA_STALACTITESTALAGMITE)
+    tharea_type_export_mp(TT_AREA_TYPE_STALAGMITE, SYMA_STALAGMITE)
   }
   omacroid = macroid;
-  if (this->context >= 0) 
+  if (this->context >= 0)
     macroid = this->context;
   if (!out->symset->is_assigned(macroid))
     return(false);
@@ -226,11 +221,11 @@ bool tharea::export_mp(class thexpmapmpxs * out)
 
   if (out->file == NULL)
     return(true);
-    
+
   th2ddataobject::export_mp(out);
-  thdb_revision_set_type::iterator ri = 
+  thdb_revision_set_type::iterator ri =
       this->db->revision_set.find(threvision(this->id, 0));
-  fprintf(out->file,"current_src := \"%s [%ld]\";\n", ri->srcf.name, ri->srcf.line);  
+  fprintf(out->file,"current_src := \"%s [%ld]\";\n", ri->srcf.name, ri->srcf.line);
   fprintf(out->file,"string area_border[];\n");
   thdb2dab * bl = this->first_line;
   int blnum = 1;
@@ -241,8 +236,9 @@ bool tharea::export_mp(class thexpmapmpxs * out)
   }
 
   if (this->type == TT_AREA_TYPE_U) {
-    out->symset->export_mp_symbol_options(out->file, -1);
+    out->symset->export_mp_symbol_options(out->file, omacroid);
     fprintf(out->file,"a_u_%s(buildcycle(",this->m_subtype_str);
+    out->symset->usymbols[omacroid].m_used = true;
     this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
   } else {
     out->symset->export_mp_symbol_options(out->file, omacroid);
@@ -256,12 +252,12 @@ bool tharea::export_mp(class thexpmapmpxs * out)
     bl->line->export_path_mp(out);
     bl = bl->next_line;
   }
-  
+
   fprintf(out->file,"));\n");
-  
+
   th2ddataobject::export_mp_end(out);
-  return(false);  
-  
+  return(false);
+
 }
 
 

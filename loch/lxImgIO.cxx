@@ -408,6 +408,19 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
    * warnings occurred (test whether jerr.pub.num_warnings is nonzero).
    */
 
+  if (cinfo.output_components == 1) {
+	  unsigned char * new_data = (unsigned char*)malloc(3 * img.width * img.height);
+	  for(int r = 0; r < img.height; r++) {
+		  for(int c = 0; c < img.width; c++) {
+			  new_data[r * 3 * img.width + 3 * c] = img.data[r * img.width + c];
+			  new_data[r * 3 * img.width + 3 * c + 1] = img.data[r * img.width + c];
+			  new_data[r * 3 * img.width + 3 * c + 2] = img.data[r * img.width + c];
+		  }
+	  }
+	  free(img.data);
+	  img.data = new_data;
+  }
+
   /* And we're done! */
   return img;
 }

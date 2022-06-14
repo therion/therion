@@ -337,17 +337,17 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
     while (obi != this->db->object_list.end()) {
       if (((*obi)->get_class_id() == TT_MAP_CMD) &&
 		  thcfg.use_maps &&
-          (((thmap*)(*obi))->projection_id == prj->id) &&
-          (((thmap*)(*obi))->is_basic) &&
-          (((thmap*)(*obi))->fsptr != NULL) &&
-          (((thmap*)(*obi))->fsptr->is_selected())) {
-        prj->stat.scanmap((thmap*)(*obi));  
-        prj->stat.addstat(&(((thmap*)(*obi))->stat));
+          (((thmap*)(*obi).get())->projection_id == prj->id) &&
+          (((thmap*)(*obi).get())->is_basic) &&
+          (((thmap*)(*obi).get())->fsptr != NULL) &&
+          (((thmap*)(*obi).get())->fsptr->is_selected())) {
+        prj->stat.scanmap((thmap*)(*obi).get());  
+        prj->stat.addstat(&(((thmap*)(*obi).get())->stat));
         cxm = this->insert_xm();
-        cxm->selection_color = ((thmap*)(*obi))->fsptr->selected_color;
+        cxm->selection_color = ((thmap*)(*obi).get())->fsptr->selected_color;
         cxm->title = false;
         cxm->expand = true;
-        cxm->map = (thmap*)(*obi);
+        cxm->map = (thmap*)(*obi).get();
         cxm->map->calc_z();
         nmaps++;
         if (selection == NULL) {
@@ -418,30 +418,36 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       obi = this->db->object_list.begin();
       while (obi != this->db->object_list.end()) {
         if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
-            (((thscrap*)(*obi))->proj->id == prj->id) &&
-            (((thscrap*)(*obi))->fsptr != NULL) &&
-            (((thscrap*)(*obi))->fsptr->is_selected())) {
+            (((thscrap*)(*obi).get())->proj->id == prj->id) &&
+            (((thscrap*)(*obi).get())->fsptr != NULL) &&
+            (((thscrap*)(*obi).get())->fsptr->is_selected())) {
           nscraps++;
         }
         obi++;
       }  
 
-      mapp = new thmap;
-      mapp->id = ++this->db->objid;
-      mapp->projection_id = prj->id;
-      mapp->db = &(thdb);
-      mapp->fsptr = NULL;
-      thdb.object_list.push_back(mapp);
+      {
+        auto unique_mapp = std::make_unique<thmap>();
+        mapp = unique_mapp.get();
+        mapp->id = ++this->db->objid;
+        mapp->projection_id = prj->id;
+        mapp->db = &(thdb);
+        mapp->fsptr = NULL;
+        thdb.object_list.push_back(std::move(unique_mapp));
+      }
 
       // ak nemame ani jeden scrap, vytvorime mapu z centerlajnu
       if (nscraps == 0) {
 
-        scrapp = new thscrap;
-        scrapp->centerline_io = true;
-        scrapp->fsptr = NULL;
-        scrapp->db = &(thdb);
-        scrapp->proj = prj;
-        thdb.object_list.push_back(scrapp);
+        {
+          auto unique_scrapp = std::make_unique<thscrap>();
+          scrapp = unique_scrapp.get();
+          scrapp->centerline_io = true;
+          scrapp->fsptr = NULL;
+          scrapp->db = &(thdb);
+          scrapp->proj = prj;
+          thdb.object_list.push_back(std::move(unique_scrapp));
+        }
 
         xcitem = thdb.db2d.insert_map_item();
         xcitem->itm_level = mapp->last_level;
@@ -462,9 +468,9 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       obi = this->db->object_list.begin();
       while (obi != this->db->object_list.end()) {
         if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
-            (((thscrap*)(*obi))->proj->id == prj->id) &&
-            (((thscrap*)(*obi))->fsptr != NULL) &&
-            (((thscrap*)(*obi))->fsptr->is_selected())) {
+            (((thscrap*)(*obi).get())->proj->id == prj->id) &&
+            (((thscrap*)(*obi).get())->fsptr != NULL) &&
+            (((thscrap*)(*obi).get())->fsptr->is_selected())) {
           xcitem = thdb.db2d.insert_map_item();          
           if (mapp->first_item == NULL) {
             mapp->first_item = xcitem;
@@ -478,7 +484,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
           xcitem->source = thdb.csrc;
           xcitem->psurvey = NULL;
           xcitem->type = TT_MAPITEM_NORMAL;
-          xcitem->object = (thscrap*)(*obi);
+          xcitem->object = (thscrap*)(*obi).get();
           nscraps++;
         }
         obi++;
@@ -602,7 +608,7 @@ void thdb2d::reset_selection() {
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
       case TT_MAP_CMD:
-        ((thmap *)(*obi))->selection_mode = TT_MAPITEM_UNKNOWN;
+        ((thmap *)(*obi).get())->selection_mode = TT_MAPITEM_UNKNOWN;
         break;
 //      case TT_SCRAP_CMD:
 //        ((thscrap *)(*obi))->selection_mode = TT_MAPITEM_UNKNOWN;
@@ -665,6 +671,51 @@ const char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
   return newname;
 }
 
+
+double thdb2d::get_projection_entrance_altitude(thdb2dprj * prj) {
+	  thobjectname entrance;
+	  thselector_list::iterator ii = thcfg.selector.data.begin();
+	  while (ii != thcfg.selector.data.end()) {
+	    if ((!ii->unselect) && (ii->optr != NULL) &&
+	        (ii->optr->get_class_id() == TT_MAP_CMD) &&
+	        (((thmap*)(ii->optr))->projection_id == prj->id)) {
+	      if (entrance.is_empty()) {
+	    	  entrance = ((thmap*)(ii->optr))->fsptr->get_entrance();
+	      }
+	    }
+	    ii++;
+	  }
+	  thsurvey * cs;
+	  if (entrance.is_empty()) {
+		  auto obi = this->db->object_list.begin();
+		  while (obi != this->db->object_list.end()) {
+			  if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+			        cs = (thsurvey *)(*obi).get();
+			        if (entrance.is_empty()) {
+				        if (cs->is_selected()) entrance = cs->get_entrance();
+			        }
+			  }
+			  obi++;
+		  }
+	  }
+	  if (entrance.is_empty()) {
+		  auto obi = this->db->object_list.begin();
+		  while (obi != this->db->object_list.end()) {
+			  if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+			        cs = (thsurvey *)(*obi).get();
+			        if (entrance.is_empty()) {
+				        entrance = cs->get_entrance();
+			        }
+			  }
+			  obi++;
+		  }
+	  }
+	  if (entrance.is_empty()) return 0;
+	  return this->db->db1d.station_vec[entrance.id-1].z;
+
+}
+
+
 const char * thdb2d::get_projection_title(thdb2dprj * prj) {
 
   // krok cislo jedna - prejde celu selection - ak najde jednu oznacenu
@@ -701,7 +752,7 @@ const char * thdb2d::get_projection_title(thdb2dprj * prj) {
   thdb_object_list_type::iterator obi = this->db->object_list.begin(), obi2;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      ((thsurvey*)(*obi))->num1 = 0;
+      ((thsurvey*)(*obi).get())->num1 = 0;
     }
     obi++;
   }
@@ -709,18 +760,18 @@ const char * thdb2d::get_projection_title(thdb2dprj * prj) {
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if (((*obi)->get_class_id() == TT_SCRAP_CMD) &&
-        (((thscrap*)(*obi))->proj->id == prj->id) && 
-        (((thscrap*)(*obi))->exported)) {
-      if (((thscrap*)(*obi))->fsptr != NULL) {
-        ((thscrap*)(*obi))->fsptr->num1++;
-      } else if (((thscrap*)(*obi))->centerline_survey != NULL) {
-        ((thscrap*)(*obi))->centerline_survey->num1++;
+        (((thscrap*)(*obi).get())->proj->id == prj->id) && 
+        (((thscrap*)(*obi).get())->exported)) {
+      if (((thscrap*)(*obi).get())->fsptr != NULL) {
+        ((thscrap*)(*obi).get())->fsptr->num1++;
+      } else if (((thscrap*)(*obi).get())->centerline_survey != NULL) {
+        ((thscrap*)(*obi).get())->centerline_survey->num1++;
       } else {
         // prejde vsetky oznacene a da im num1 = 1
         obi2 = this->db->object_list.begin();
         while (obi2 != this->db->object_list.end()) {
           if (((*obi2)->get_class_id() == TT_SURVEY_CMD) && ((*obi2)->selected)) {
-            ((thsurvey*)(*obi2))->num1 = 1;
+            ((thsurvey*)(*obi2).get())->num1 = 1;
           }
           obi2++;
         }

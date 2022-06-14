@@ -18,11 +18,11 @@ enum {
 
 struct lxLRUDShot {
   lxVec from, to;
-  long xfrom, xto;
-  int profile;
-  double fl, fr, fu, fd, tl, tr, tu, td, vthresh;
-  void * usr_data;
-  lxLRUDShot() : profile(LXLRUD_OCTAGON), vthresh(60.0) {}
+  long xfrom = 0, xto = 0;
+  int profile = LXLRUD_OCTAGON;
+  double fl = 0.0, fr = 0.0, fu = 0.0, fd = 0.0, tl = 0.0, tr = 0.0, tu = 0.0, td = 0.0, vthresh = 60.0;
+  void * usr_data = nullptr;
+  lxLRUDShot() = default;
 };
 
 

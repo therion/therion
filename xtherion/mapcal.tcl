@@ -30,7 +30,7 @@ proc xth_calibrate_bitmap {} {
 
 
   # load bitmap and its size using identify
-  set fname [tk_getOpenFile -filetypes {{{Images} {.png .jpg .jpeg .gif .pdf}} {{All files} {*}}} \
+  set fname [tk_getOpenFile -filetypes {{{Images} {.png .jpg .jpeg .gif .pdf .PNG .JPG .JPEG .GIF .PDF}} {{All files} {*}}} \
       -parent $xth(gui,main) \
       -initialdir $xth(calib_dir)]
   if {[string length $fname] == 0} return
@@ -90,6 +90,11 @@ proc xth_calibrate_bitmap {} {
     }
   }
   close $fid
+
+  set fid [open $pdfname r]
+  set cln [read $fid]
+  close $fid
+
   xth_calibrate_prog_hide
 
   # find calibration points

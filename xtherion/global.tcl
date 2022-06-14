@@ -47,6 +47,11 @@ set xth(gui,balloons) 0
 set xth(gui,toolbar) 1
 set xth(te,template) {}
 
+set xth(gui,ctrlBtnFg) white
+set xth(gui,ctrlBtnBg) darkBlue
+set xth(gui,ctrlBtnActiveFg) black
+set xth(gui,ctrlBtnActiveBg) lightBlue
+
 set xth(kb_control) Control
 set xth(kb_meta) Meta
 set xth(gui,compshow) 0
@@ -255,6 +260,10 @@ case $tcl_platform(platform) {
         set xth(gui,platform) macintosh
         set xth(gui,cursor) arrow
         set xth(gui,bindinsdel) 0
+        set xth(gui,ctrlBtnFg) darkBlue
+        set xth(gui,ctrlBtnBg) white
+        set xth(gui,ctrlBtnActiveFg) darkBlue
+        set xth(gui,ctrlBtnActiveBg) lightGray
     }
   }
   windows {

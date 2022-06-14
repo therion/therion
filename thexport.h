@@ -30,12 +30,10 @@
 #define thexport_h
 
 #include <stdio.h>
-#ifndef THMSVC
-#include <strings.h>
-#endif
 #include "thparse.h"
 #include "thobjectsrc.h"
 #include "thlayout.h"
+#include "loch/icase.h"
 
 /**
  * General export options.
@@ -60,6 +58,14 @@ static const thstok thtt_exp_opt[] = {
 };
 
 
+class thexport_output_crc {
+  public:
+	std::string fnm;
+	std::string res;
+	thexport_output_crc(std::string fn) : fnm(fn), res("not checked") {}
+};
+
+
 /**
  * Main export class.
  */
@@ -70,20 +76,28 @@ class thexport {
 
   class thlayout * layout;  ///< Layout pointer.
   friend class thexporter;
-  class thconfig * cfgptr;  ///< Current config pointer.
+  class thconfig * cfgptr = nullptr;  ///< Current config pointer.
   int export_mode;  ///< Export mode.
   thobjectsrc src; ///< Export source.
-  class thdatabase * db; ///< Exported database.
+  class thdatabase * db = nullptr; ///< Exported database.
   
   const char * outpt;  ///< Output file name.
   thbuffer cfgpath;  ///< Config path.
   bool outpt_def;  ///< Whether output file defined.  
   int cs; ///< Output coordinate system.
+  
+  std::list<thexport_output_crc> output_files; ///< List of output files.
 
   public:
   
   thexport();  ///< Default constructor.
   virtual ~thexport();
+  
+  // These operations are not implemented.
+  thexport(const thexport&) = delete;
+  thexport(thexport&&) = delete;
+  thexport& operator=(const thexport&) = delete; 
+  thexport& operator=(thexport&&) = delete; 
   
   void assign_config(class thconfig * cptr); ///< ???
   
@@ -140,17 +154,25 @@ class thexport {
    */
 
   virtual const char * get_output(const char * defname);
+
+  /**
+   * Register output file.
+   */
+
+  virtual void register_output(std::string fnm);
+
+  /**
+   * Generate output CRC file.
+   */
+
+  virtual bool check_crc();
   
 };
 
 
-#ifdef THMSVC
-#define strcasecmp _stricmp
-#endif
-
 #define thexp_set_ext_fmt(extension,cformat) { \
     if (strlen(this->outpt) > strlen(extension)) { \
-      if (strcasecmp(&(this->outpt[strlen(this->outpt) - strlen(extension)]), extension) == 0) { \
+      if (icase_equals(&(this->outpt[strlen(this->outpt) - strlen(extension)]), extension)) { \
         this->format = cformat; \
       } \
     } \

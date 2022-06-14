@@ -29,9 +29,7 @@
 #include "thtflength.h"
 #include "thexception.h"
 
-thtflength::thtflength() {
-  this->units = TT_TFU_M;
-}
+thtflength::thtflength() : thtf(TT_TFU_M) {}
 
 
 void thtflength::parse_units(char * ustr) {
@@ -58,7 +56,7 @@ void thtflength::parse_units(char * ustr) {
       this->ufactor = 0.9144;
       break;
     case TT_TFU_UNKNOWN_LENGTH:
-      ththrow(("unknown length unit -- %s", ustr))
+      ththrow("unknown length unit -- {}", ustr);
       break;
   }
   

@@ -1,7 +1,7 @@
 OUTDIR ?= .
 THPLATFORM ?= LINUX
 ifneq ($(OUTDIR),.)
-LOUTDIR = $(OUTDIR)/xtherion
+LOUTDIR = ../$(OUTDIR)/xtherion
 else
 LOUTDIR = .
 endif
@@ -15,7 +15,7 @@ endif
 
 all: $(LOUTDIR)/$(TARGET)
 
-$(LOUTDIR)/$(TARGET): *.tcl msgxth.tcl
+$(LOUTDIR)/$(TARGET): *.tcl msgxth.tcl ../thversion.h
 	tclsh mkall.tcl $(THPLATFORM)
 ifneq ($(OUTDIR),.)
 	perl ../makefile.pl mv ./$(TARGET) $(LOUTDIR)

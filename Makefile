@@ -1,7 +1,6 @@
 # common therion objects
-export OUTDIR = .
-CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
-  thexception.o thbuffer.o thmbuffer.o thlogfile.o thtmpdir.o thlocale.o \
+CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern/shapelib/safileio.o  \
+  thbuffer.o thmbuffer.o thlogfile.o thtmpdir.o thlocale.o \
   thparse.o thcmdline.o thconfig.o thinput.o thchenc.o thdatabase.o \
   thdataobject.o thdatareader.o thsurvey.o thendsurvey.o thdata.o \
   thperson.o thtf.o thtfangle.o thtflength.o thtfpwf.o \
@@ -20,15 +19,15 @@ CMNOBJECTS = thdate.o extern/shpopen.o extern/dbfopen.o \
   extern/lxMath.o extern/lxFile.o thdb3d.o thsurface.o thimport.o thsvg.o thepsparse.o \
   thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
   extern/poly2tri/common/shapes.o extern/poly2tri/sweep/advancing_front.o extern/poly2tri/sweep/sweep.o extern/poly2tri/sweep/cdt.o extern/poly2tri/sweep/sweep_context.o \
-  therion.o extern/quickhull/QuickHull.o
+  extern/fmt/src/format.o extern/fmt/src/os.o extern/quickhull/QuickHull.o therion.o
+TESTOBJECTS = utest-main.o utest-proj.o utest-icase.o
 
-CROSS =
 EXT =
 
 # Prefix to install to (override like so: make PREFIX=/usr)
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 # Directory to install config files in (override like so: make SYSCONFDIR=/etc)
-SYSCONFDIR = $(PREFIX)/etc
+SYSCONFDIR ?= $(PREFIX)/etc
 
 # PLATFORM CONFIG
 
@@ -41,58 +40,61 @@ SYSCONFDIR = $(PREFIX)/etc
 ##CCPFLAGS = -DTHLINUX
 ##LDPFLAGS = -s
 ##export THPLATFORM = LINUX
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##export OUTDIR = ../therion.bin
 ##THXTHMKCMD = $(OUTDIR)/therion
 
 
 # PLATFORM DEBIAN
-CXX = c++
-CC = gcc
+CXX ?= c++
+CC ?= gcc
 POBJECTS =
 LOCHEXE = loch/loch
 CXXPFLAGS = -DTHLINUX
 CCPFLAGS = -DTHLINUX
 LDPFLAGS = -s
 export THPLATFORM = LINUX
-THXTHMKCMD = ./therion
+export OUTDIR = .
+THXTHMKCMD = $(OUTDIR)/therion
 
 
 # PLATFORM WIN32
-##CXX = c++
-##CC = gcc
-##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o
+##EXT = .exe
+##CXX ?= c++
+##CC ?= gcc
+##POBJECTS = therion.res
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
-##LDPFLAGS = -static-libgcc -static -s
+##LDPFLAGS = -static-libgcc -s
 ##export THPLATFORM = WIN32
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##export OUTDIR ?= ../therion.bin
 ##THXTHMKCMD = $(OUTDIR)/therion
 
 # PLATFORM WIN32CROSS
-##CROSS = i686-w64-mingw32.static-
+##CROSS ?= i686-w64-mingw32.static-
 ##EXT = .exe
 ##CXX = $(CROSS)c++
 ##export CC = $(CROSS)gcc
 ##export AR = $(CROSS)ar
-##POBJECTS = extern/getopt.o extern/getopt1.o therion.res extern/getline.o
+##POBJECTS = therion.res
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
 ##LDPFLAGS = -static-libgcc -static -s
 ##export THPLATFORM = WIN32
 ##THXTHMKCMD = therion
-##OUTDIR = $(abspath $(PWD)/../therion.bin)
+##export OUTDIR ?= ../therion.bin
 
 # PLATFORM MACOSX
 ##CXX = c++
 ##CC = cc
 ##LOCHEXE = loch/loch
-##POBJECTS = extern/getopt.o extern/getopt1.o extern/getline.o
+##POBJECTS =
 ##CXXPFLAGS = -DTHMACOSX
 ##CCPFLAGS = -DTHMACOSX
 ##LDPFLAGS =
 ##export THPLATFORM = MACOSX
+##export OUTDIR = .
 ##THXTHMKCMD = ./therion
 
 # PLATFORM ENDCONFIG
@@ -116,22 +118,28 @@ LDBFLAGS = $(LDPFLAGS)
 ##LDBFLAGS = $(LDPFLAGS)
 
 # BUILD DEBUG
-##CCBFLAGS = -ggdb
-##CXXBFLAGS = -ggdb -DTHDEBUG
+##CCBFLAGS = -ggdb -fsanitize=address
+##CXXBFLAGS = -ggdb -DTHDEBUG -fsanitize=address
 ##LDBFLAGS =
 
 # BUILD ENDCONFIG
 
 # proj4 settings
-PROJ_LIBS = $(shell $(CROSS)pkg-config proj --libs)
-PROJ_MVER = $(shell $(CROSS)pkg-config proj --modversion | sed 's/\..*//')
-CXXJFLAGS = -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable=includedir)
+PROJ_UNSUPPORTED = 5.0.0 5.0.1 6.0.0 6.1.0 6.1.1 6.2.0
+PROJ_VER = $(shell $(CROSS)pkg-config proj --modversion)
+ifneq ($(filter $(PROJ_VER),$(PROJ_UNSUPPORTED)),)
+    $(error unsupported Proj version: $(PROJ_VER))
+endif
+PROJ_LIBS ?= $(shell $(CROSS)pkg-config proj --libs --static)
+PROJ_MVER ?= $(shell echo $(PROJ_VER) | sed 's/\..*//')
+CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variable=includedir)
 
 
 # compiler settings
-CXXFLAGS = -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -std=c++11
+CXXFLAGS = -DIMG_API_VERSION=1 -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -Iextern/fmt/include -std=c++14
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
+TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
 
 
 # linker settings
@@ -151,28 +159,39 @@ $(OUTDIR)/%.o : %.cc
 $(OUTDIR)/%.o : %.c
 	$(CC) -c $(CCFLAGS) -o $@ $<
 
-all: version outdirs $(OUTDIR)/therion doc xtherion/xtherion $(LOCHEXE)
+all: version outdirs $(OUTDIR)/therion tests doc xtherion/xtherion $(LOCHEXE)
 
 outdirs:
 	mkdir -p $(OUTDIR)/extern/poly2tri/sweep/
 	mkdir -p $(OUTDIR)/extern/poly2tri/common/
 	mkdir -p $(OUTDIR)/extern/quickhull
+	mkdir -p $(OUTDIR)/extern/shapelib
+	mkdir -p $(OUTDIR)/extern/fmt/src
 	mkdir -p $(OUTDIR)/loch
+	mkdir -p $(OUTDIR)/loch/help
+	mkdir -p $(OUTDIR)/loch/help/en
+	mkdir -p $(OUTDIR)/loch/help/sk
 	mkdir -p $(OUTDIR)/xtherion
 	mkdir -p $(OUTDIR)/thbook
 
-version:
-	python set_version.py
-
-
-$(OUTDIR)/therion: version $(OBJECTS)
-	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
-ifneq ($(THPLATFORM),WIN32)
-	$(MAKE) library
-	$(MAKE) $(OUTDIR)/thlibrary.o
-	$(CXX) -Wall -o $(OUTDIR)/therion$(EXT) $(OBJECTS) $(LDFLAGS) $(LIBS)
+version: outdirs
+	python3 set_version.py .
+ifeq ($(THPLATFORM),WIN32)
+	echo "[PROJ]" > $(OUTDIR)/innosetup.ini && echo "version=$(PROJ_MVER)" >> $(OUTDIR)/innosetup.ini
 endif
 
+thversion.h: version
+
+$(OUTDIR)/therion: $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/therion$(EXT) therion-main.cxx $(OBJECTS) $(LDFLAGS) $(LIBS)
+
+$(OUTDIR)/utest$(EXT): $(OBJECTS) $(TESTOBJECTS_P) 
+	$(CXX) $(CXXFLAGS) -o $(OUTDIR)/utest$(EXT) $(OBJECTS) $(TESTOBJECTS_P) $(LDFLAGS) $(LIBS)
+
+tests: $(OUTDIR)/utest$(EXT)
+ifneq ($(THPLATFORM),WIN32)
+	$(OUTDIR)/utest$(EXT)
+endif
 
 $(OUTDIR)/therion.res: therion.rc
 	$(CROSS)windres -i therion.rc -J rc -o $(OUTDIR)/therion.res -O coff
@@ -181,19 +200,10 @@ init:
 	./therion --print-init-file > therion.ini
 
 install: all
-	tclsh makeinstall.tcl $(THPLATFORM) $(PREFIX) $(SYSCONFDIR)
+	tclsh makeinstall.tcl $(THPLATFORM) $(DESTDIR)$(PREFIX) $(DESTDIR)$(SYSCONFDIR)
 
-minor-release:
-	perl makerelease.pl
-
-archive: config-debian unixify
-	perl makearchive2.pl
-
-release: clean
-	perl makearchive.pl
-
-binary: all doc
-	perl makebinary.pl $(THPLATFORM)
+release:
+	python3 make_release.py
 
 depend:
 	perl makedepend.pl > Makefile.dep
@@ -202,14 +212,20 @@ depend:
 	$(CXX) -MM $(CXXFLAGS) *.cxx >> Makefile
 	perl makedepend2.pl
 
-library:
+library: thversion.h
 	$(THXTHMKCMD) --print-library-src thlibrarydata.thcfg > thlibrarydata.log
-	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
 	perl makelibrary.pl thlibrarydata.log > thlibrarydata.tmp
 	perl maketest.pl thlibrarydata.tmp
 	perl makefile.pl mv thlibrarydata.tmp thlibrarydata.cxx
 
-xtherion/xtherion: version xtherion/*.tcl
+ifeq ($(THXTHMKCMD),$(OUTDIR)/therion)
+  THERION_TCL_DEPS += $(OUTDIR)/therion
+endif
+
+xtherion/therion.tcl: $(THERION_TCL_DEPS)
+	$(THXTHMKCMD) --print-xtherion-src > xtherion/therion.tcl
+
+xtherion/xtherion: version xtherion/therion.tcl xtherion/*.tcl
 	$(MAKE) -C ./xtherion
 
 loch/loch: version loch/*.h loch/*.cxx loch/*.c
@@ -221,29 +237,39 @@ thbook: version $(OUTDIR)/thbook/thbook.pdf
 
 samples: $(OUTDIR)/samples.doc/index.tex
 
+samples-quick:
+	$(MAKE) -C samples quick
+	touch thbook/version.tex
+	$(MAKE) -C thbook
+
+samples-html:
+	$(MAKE) -C samples html
+
 $(OUTDIR)/samples.doc/index.tex:
 	$(MAKE) -C samples
 	touch thbook/version.tex
 	$(MAKE) -C thbook
 
-$(OUTDIR)/thbook/thbook.pdf: thbook/*.tex
+$(OUTDIR)/thbook/thbook.pdf: thbook/*.tex thversion.h
 	$(MAKE) -C thbook
 
 clean:
-	perl makefile.pl rm -q thlibrarydata.cxx ./xtherion/therion.tcl
+	perl makefile.pl rm -q ./xtherion/therion.tcl
 	perl makefile.pl rmdir -q samples.doc
 	$(MAKE) -C ./samples clean
+	$(MAKE) -C ./loch clean
 	$(MAKE) cleanrest
 
 cleanrest:
 	$(MAKE) -C ./xtherion clean
 	$(MAKE) -C ./loch clean
-	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thsymbolsets.cxx thsymbolsets.h thlangdata.cxx thchencdata.h
+	perl makefile.pl rm -q thmpost.cxx thtex.h thlangdata.h thchencdata.cxx thcsdata.h thmpost.h thcsdata.cxx thtex.cxx thsymbolsetlist.h thsymbolsets.cxx thsymbolsets.h thlangdatafields.h thchencdata.h SYMBOLS.txt
 	perl makefile.pl rm -q therion ./xtherion/xtherion ./xtherion/xtherion.tcl therion.exe *~ *.log *.o thchencdata/*~ .xtherion.dat ./xtherion/ver.tcl thversion.h thbook/version.tex
 	perl makefile.pl rm -q xtherion/*~ .xth_thconfig_xth xtherion/screendump thlang/*~
-	perl makefile.pl rm -q extern/*.o extern/*~ extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
-	perl makefile.pl rm -q symbols.html therion.res
+	perl makefile.pl rm -q extern/*.o extern/*~ extern/quickhull/*.o extern/shapelib/*.o extern/poly2tri/common/*.o extern/poly2tri/sweep/*.o samples/*~ samples/*.log
+	perl makefile.pl rm -q symbols.html therion.res innosetup.ini
 	perl makefile.pl rm -q tri/*.o tri/*~
+	perl makefile.pl rm -q utest
 	perl makefile.pl rm -q tex/*~
 	perl makefile.pl rm -q us.stackdump loch/us.stackdump samples/us.stackdump xtherion/us.stackdump
 	perl makefile.pl rm -q mpost/*~ examples/*~ examples/therion.log
@@ -251,18 +277,18 @@ cleanrest:
 	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
 	perl makefile.pl rm -q cave.3d cave.lox cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
 	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
+	perl makefile.pl rm -q extern/fmt/CMakeCache.txt extern/fmt/Makefile extern/fmt/libfmt.a extern/fmt/cmake_install.cmake extern/fmt/src/*.o
 	perl makefile.pl rmdir -q doc thTMPDIR samples.doc symbols cave.shp tests/.doc
 	perl makefile.pl rmdir -q doc symbols cave.shp tests/.doc
 	perl makefile.pl rmdir -q thTMPDIR samples/*/thTMPDIR samples/*/*/thTMPDIR
+	perl makefile.pl rmdir -q extern/fmt/CMakeFiles
 
 thmpost.h: mpost/*.mp
 	$(MAKE) -C ./mpost
 
-thmpost.cxx: mpost/*.mp
-	$(MAKE) -C ./mpost
-
-thlibrarydata.cxx:
-	perl makefile.pl cp thlibrarydata.src thlibrarydata.cxx
+thmpost.cxx: thmpost.h
+thsymbolsets.h: thmpost.h thsymbolsetlist.h
+thsymbolsets.cxx: thsymbolsets.h
 
 thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 	perl thsymbolsetlist.pl
@@ -270,14 +296,14 @@ thsymbolsetlist.h: thsymbolsetlist.pl mpost/thTrans.mp
 thtex.h: tex/*.tex
 	$(MAKE) -C ./tex
 
-thtex.cxx: tex/*.tex
-	$(MAKE) -C ./tex
+thtex.cxx: thtex.h
 
+thchencdata.cxx: thchencdata.h
 thchencdata.h: thchencdata/*.TXT
 	$(MAKE) -C ./thchencdata
 
 thcsdata.h: thcsdata.tcl
-	tclsh thcsdata.tcl
+	tclsh thcsdata.tcl $(shell $(CROSS)pkg-config proj --variable=prefix)/share/proj
 
 update:
 	$(MAKE) -C ./thlang update
@@ -288,41 +314,44 @@ unixify: clean
 thlangdata.h: thlang/texts.txt
 	$(MAKE) -C ./thlang
 
+thlangdatafields.h: thlangdata.h
+	$(MAKE) -C ./thlang
+
 config-debug:
 	perl makeconfig.pl BUILD DEBUG
-	$(MAKE) -C ./loch config-debug
+	cd loch; perl makeconfig.pl BUILD DEBUG
 
 config-release:
 	perl makeconfig.pl BUILD RELEASE
-	$(MAKE) -C ./loch config-release
+	cd loch; perl makeconfig.pl BUILD RELEASE
 
 config-oxygen:
 	perl makeconfig.pl BUILD OXYGEN
-	$(MAKE) -C ./loch config-oxygen
+	cd loch; perl makeconfig.pl BUILD OXYGEN
 
 config-ozone:
 	perl makeconfig.pl BUILD OZONE
-	$(MAKE) -C ./loch config-ozone
+	cd loch; perl makeconfig.pl BUILD OZONE
 
 config-debian:
 	perl makeconfig.pl PLATFORM DEBIAN
-	$(MAKE) -C ./loch config-debian
+	cd loch; perl makeconfig.pl PLATFORM DEBIAN
 
 config-linux:
 	perl makeconfig.pl PLATFORM LINUX
-	$(MAKE) -C ./loch config-linux
+	cd loch; perl makeconfig.pl PLATFORM LINUX
 
 config-win32:
 	perl makeconfig.pl PLATFORM WIN32
-	$(MAKE) -C ./loch config-win32
+	cd loch; perl makeconfig.pl PLATFORM WIN32
 
 config-win32cross:
 	perl makeconfig.pl PLATFORM WIN32CROSS
-	$(MAKE) -C ./loch config-win32cross
+	cd loch; perl makeconfig.pl PLATFORM WIN32CROSS
 
 config-macosx:
 	perl makeconfig.pl PLATFORM MACOSX
-	$(MAKE) -C ./loch config-macosx
+	cd loch; perl makeconfig.pl PLATFORM MACOSX
 
 # external sources
 $(OUTDIR)/extern/lxMath.o: loch/lxMath.h loch/lxMath.cxx
@@ -331,14 +360,15 @@ $(OUTDIR)/extern/lxMath.o: loch/lxMath.h loch/lxMath.cxx
 $(OUTDIR)/extern/lxFile.o: loch/lxFile.h loch/lxFile.cxx
 	$(CXX) -c $(CXXFLAGS) -o $(OUTDIR)/extern/lxFile.o loch/lxFile.cxx
 
-extern/getopt.o: extern/getopt.c extern/getopt.h
-extern/getopt1.o: extern/getopt1.c
 extern/img.o: extern/img.c extern/img.h
 extern/poly2tri/common/shapes.o: extern/poly2tri/common/shapes.cc extern/poly2tri/common/shapes.h
 extern/poly2tri/sweep/advancing_front.o: extern/poly2tri/sweep/advancing_front.cc
 extern/poly2tri/sweep/sweep.o: extern/poly2tri/sweep/sweep.cc
 extern/poly2tri/sweep/cdt.o: extern/poly2tri/sweep/cdt.cc
 extern/poly2tri/sweep/sweep_context.o: extern/poly2tri/sweep/sweep_context.cc
+extern/fmt/src/format.o: extern/fmt/src/format.cc extern/fmt/include/fmt/format-inl.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
+extern/fmt/src/os.o: extern/fmt/src/os.cc extern/fmt/include/fmt/os.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
+
 
 # DEPENDENCIES
 $(OUTDIR)/th2ddataobject.o: th2ddataobject.cxx th2ddataobject.h thdataobject.h \
@@ -359,7 +389,7 @@ $(OUTDIR)/tharea.o: tharea.cxx tharea.h th2ddataobject.h thdataobject.h \
  thexception.h thexpmap.h thexport.h thlayout.h thsymbolset.h \
  thsymbolsetlist.h thlocale.h thlang.h thlangdata.h thline.h
 $(OUTDIR)/thattr.o: thattr.cxx thattr.h thmbuffer.h thchenc.h thchencdata.h \
- thparse.h thbuffer.h extern/shapefil.h thexception.h therion.h
+ thparse.h thbuffer.h extern/shapelib/shapefil.h thexception.h therion.h
 $(OUTDIR)/thbezier.o: thbezier.cxx thbezier.h
 $(OUTDIR)/thbuffer.o: thbuffer.cxx thbuffer.h
 $(OUTDIR)/thchenc.o: thchenc.cxx thchenc.h thchencdata.h thparse.h thbuffer.h \
@@ -373,8 +403,7 @@ $(OUTDIR)/thcmdline.o: thcmdline.cxx thcmdline.h therion.h thlogfile.h thbuffer.
  thmapstat.h thdate.h thperson.h thlegenddata.h thdb2dpt.h thdb2dlp.h \
  thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
  thlayoutclr.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
- thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h thtmpdir.h \
- extern/getopt.h
+ thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h thtmpdir.h
 $(OUTDIR)/thcomment.o: thcomment.cxx thcomment.h thdataobject.h thdatabase.h \
  thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
  thparse.h thobjectname.h therion.h thobjectsrc.h thdb3d.h loch/lxMath.h \
@@ -426,7 +455,8 @@ $(OUTDIR)/thdatabase.o: thdatabase.cxx thdatabase.h thdataobject.h thperson.h \
  thdatastation.h thlookup.h thlocale.h thgrade.h thcomment.h thlayout.h \
  thsymbolset.h thsymbolsetlist.h thscrap.h thsketch.h thpic.h thtrans.h \
  th2ddataobject.h thpoint.h thline.h tharea.h thjoin.h thmap.h thimport.h \
- thsurface.h thendscrap.h
+ thsurface.h thendscrap.h thconfig.h thinput.h thexporter.h thexport.h \
+ thselector.h thproj.h
 $(OUTDIR)/thdataleg.o: thdataleg.cxx thdataleg.h thparse.h thbuffer.h thmbuffer.h \
  thobjectname.h therion.h thobjectsrc.h thinfnan.h thcs.h thcsdata.h
 $(OUTDIR)/thdataobject.o: thdataobject.cxx thdataobject.h thdatabase.h thmbuffer.h \
@@ -467,11 +497,11 @@ $(OUTDIR)/thdb1d.o: thdb1d.cxx thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
  thdata.h thtfangle.h thtf.h thtflength.h thpoint.h th2ddataobject.h \
  thlogfile.h thsurface.h thlocale.h thinit.h thinput.h thconfig.h \
  thexporter.h thexport.h thlayout.h thsymbolset.h thsymbolsetlist.h \
- thselector.h thtrans.h thcs.h thcsdata.h extern/quickhull/QuickHull.hpp \
- extern/quickhull/Structs/Vector3.hpp extern/quickhull/Structs/Plane.hpp \
- extern/quickhull/Structs/Vector3.hpp extern/quickhull/Structs/Pool.hpp \
- extern/quickhull/Structs/Mesh.hpp extern/quickhull/Structs/Plane.hpp \
- extern/quickhull/Structs/Pool.hpp extern/quickhull/Structs/../Types.hpp \
+ thselector.h thtrans.h thcs.h thcsdata.h thgeomag.h thgeomagdata.h \
+ extern/quickhull/QuickHull.hpp extern/quickhull/Structs/Vector3.hpp \
+ extern/quickhull/Structs/Plane.hpp extern/quickhull/Structs/Vector3.hpp \
+ extern/quickhull/Structs/Pool.hpp extern/quickhull/Structs/Mesh.hpp \
+ extern/quickhull/Structs/Plane.hpp extern/quickhull/Structs/Pool.hpp \
  extern/quickhull/Structs/VertexDataSource.hpp \
  extern/quickhull/ConvexHull.hpp \
  extern/quickhull/Structs/VertexDataSource.hpp \
@@ -552,6 +582,17 @@ $(OUTDIR)/thendsurvey.o: thendsurvey.cxx thendsurvey.h thdataobject.h thdatabase
  thscraplo.h thlayoutln.h thscrapen.h thscraplp.h thexception.h
 $(OUTDIR)/thepsparse.o: thepsparse.cxx thepsparse.h thpdfdbg.h thexception.h \
  therion.h thbuffer.h thpdfdata.h thtexfonts.h thconvert.h
+therion-main.o: therion-main.cxx therion.h thcmdline.h thconfig.h \
+ thbuffer.h thmbuffer.h thinput.h thparse.h thexporter.h thexport.h \
+ thobjectsrc.h thlayout.h thdataobject.h thdatabase.h thdb1d.h \
+ thobjectid.h thinfnan.h thdataleg.h thobjectname.h thdb3d.h \
+ loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h thdb2dprj.h \
+ thmapstat.h thdate.h thperson.h thlegenddata.h thdb2dpt.h thdb2dlp.h \
+ thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
+ thlayoutclr.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
+ thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h thdatareader.h \
+ thexception.h thlibrary.h thinit.h thversion.h thtexfonts.h thbezier.h \
+ thlogfile.h thproj.h
 $(OUTDIR)/therion.o: therion.cxx therion.h thlogfile.h thbuffer.h thtmpdir.h \
  thcmdline.h thconfig.h thmbuffer.h thinput.h thparse.h thexporter.h \
  thexport.h thobjectsrc.h thlayout.h thdataobject.h thdatabase.h thdb1d.h \
@@ -564,7 +605,6 @@ $(OUTDIR)/therion.o: therion.cxx therion.h thlogfile.h thbuffer.h thtmpdir.h \
  thexception.h thlibrary.h thinit.h thgrade.h thdata.h thtfangle.h thtf.h \
  thtflength.h thtfpwf.h thpoint.h th2ddataobject.h thline.h tharea.h \
  thversion.h thtexfonts.h thlang.h thlangdata.h thbezier.h
-$(OUTDIR)/thexception.o: thexception.cxx thexception.h therion.h thbuffer.h
 $(OUTDIR)/thexpdb.o: thexpdb.cxx thexpdb.h thexport.h thparse.h thbuffer.h \
  thmbuffer.h thobjectsrc.h thlayout.h thdataobject.h thdatabase.h \
  thdb1d.h thobjectid.h thinfnan.h thdataleg.h thobjectname.h therion.h \
@@ -631,7 +671,7 @@ $(OUTDIR)/thexpshp.o: thexpshp.cxx thexpmap.h thexport.h thparse.h thbuffer.h \
  thlangdata.h thexporter.h thexception.h thmap.h thsketch.h thpic.h \
  thconfig.h thinput.h thselector.h thtmpdir.h thinit.h thlogfile.h \
  thcmdline.h thsurvey.h thtfpwf.h thsurface.h thtflength.h thtf.h \
- extern/shapefil.h thexpmodel.h thcsdata.h thcs.h thexpshp.h thscrap.h \
+ extern/shapelib/shapefil.h thexpmodel.h thcsdata.h thcs.h thexpshp.h thscrap.h \
  thtrans.h thpoint.h th2ddataobject.h thline.h tharea.h
 $(OUTDIR)/thexpsys.o: thexpsys.cxx thexpsys.h thexport.h thparse.h thbuffer.h \
  thmbuffer.h thobjectsrc.h thlayout.h thdataobject.h thdatabase.h \
@@ -664,7 +704,7 @@ $(OUTDIR)/thexpuni.o: thexpuni.cxx thexpmap.h thexport.h thparse.h thbuffer.h \
  thlangdata.h thexporter.h thexception.h thmap.h thsketch.h thpic.h \
  thconfig.h thinput.h thselector.h thtmpdir.h thcsdata.h thinit.h \
  thlogfile.h thcmdline.h thsurvey.h thtfpwf.h thsurface.h thtflength.h \
- thtf.h extern/shapefil.h thexpmodel.h thexpuni.h thscrap.h thtrans.h \
+ thtf.h extern/shapelib/shapefil.h thexpmodel.h thexpuni.h thscrap.h thtrans.h \
  thpoint.h th2ddataobject.h thline.h tharea.h thproj.h thcs.h \
  thtexfonts.h
 $(OUTDIR)/thgeomag.o: thgeomag.cxx thgeomagdata.h
@@ -695,7 +735,7 @@ $(OUTDIR)/thinit.o: thinit.cxx thinit.h thbuffer.h thmbuffer.h thinput.h thparse
  thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thlayoutclr.h thscraplo.h \
  thlayoutln.h thscrapen.h thscraplp.h thsymbolset.h thsymbolsetlist.h \
  thlocale.h thselector.h thexception.h thtexfonts.h thlang.h thlangdata.h \
- thtmpdir.h thcs.h thcsdata.h
+ thtmpdir.h thcs.h thcsdata.h thproj.h
 $(OUTDIR)/thinput.o: thinput.cxx thinput.h thbuffer.h thmbuffer.h thparse.h \
  thchenc.h thchencdata.h therion.h thexception.h
 $(OUTDIR)/thjoin.o: thjoin.cxx thjoin.h thdataobject.h thdatabase.h thmbuffer.h \
@@ -706,7 +746,7 @@ $(OUTDIR)/thjoin.o: thjoin.cxx thjoin.h thdataobject.h thdatabase.h thmbuffer.h 
  thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h thlayoutclr.h thscraplo.h \
  thlayoutln.h thscrapen.h thscraplp.h thexception.h
 $(OUTDIR)/thlang.o: thlang.cxx thlang.h thlangdata.h thparse.h thbuffer.h \
- thmbuffer.h thlangdata.cxx thinit.h thinput.h thconfig.h thexporter.h \
+ thmbuffer.h thlangdatafields.h thinit.h thinput.h thconfig.h thexporter.h \
  thexport.h thobjectsrc.h thlayout.h thdataobject.h thdatabase.h thdb1d.h \
  thobjectid.h thinfnan.h thdataleg.h thobjectname.h therion.h thdb3d.h \
  loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h thdb2dprj.h \
@@ -714,7 +754,6 @@ $(OUTDIR)/thlang.o: thlang.cxx thlang.h thlangdata.h thparse.h thbuffer.h \
  thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
  thlayoutclr.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
  thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h thexception.h
-$(OUTDIR)/thlangdata.o: thlangdata.cxx
 $(OUTDIR)/thlayout.o: thlayout.cxx thlayout.h thdataobject.h thdatabase.h \
  thmbuffer.h thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
  thparse.h thobjectname.h therion.h thobjectsrc.h thdb3d.h loch/lxMath.h \
@@ -828,8 +867,15 @@ $(OUTDIR)/thparse.o: thparse.cxx thparse.h thbuffer.h thmbuffer.h therion.h \
  thdb2dcp.h thdb2dxs.h thdb2dxm.h thscraplo.h thlayoutln.h thscrapen.h \
  thscraplp.h thtflength.h thtf.h thexception.h
 $(OUTDIR)/thpdf.o: thpdf.cxx thpdfdbg.h thexception.h therion.h thbuffer.h \
- thpdfdata.h thepsparse.h thtexfonts.h thlang.h thlangdata.h thparse.h \
- thmbuffer.h thversion.h thchenc.h thchencdata.h
+ thconfig.h thmbuffer.h thinput.h thparse.h thexporter.h thexport.h \
+ thobjectsrc.h thlayout.h thdataobject.h thdatabase.h thdb1d.h \
+ thobjectid.h thinfnan.h thdataleg.h thobjectname.h thdb3d.h \
+ loch/lxMath.h thattr.h thchenc.h thchencdata.h thdb2d.h thdb2dprj.h \
+ thmapstat.h thdate.h thperson.h thlegenddata.h thdb2dpt.h thdb2dlp.h \
+ thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h thdb2dxs.h thdb2dxm.h \
+ thlayoutclr.h thscraplo.h thlayoutln.h thscrapen.h thscraplp.h \
+ thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h thpdfdata.h \
+ thepsparse.h thtexfonts.h thlang.h thlangdata.h thversion.h
 $(OUTDIR)/thpdfdata.o: thpdfdata.cxx thpdfdata.h thepsparse.h thlang.h thlangdata.h \
  thparse.h thbuffer.h thmbuffer.h
 $(OUTDIR)/thpdfdbg.o: thpdfdbg.cxx thpdfdbg.h thexception.h therion.h thbuffer.h \
@@ -859,7 +905,8 @@ $(OUTDIR)/thpoint.o: thpoint.cxx thpoint.h th2ddataobject.h thdataobject.h \
  thexception.h thexpmap.h thexport.h thlayout.h thsymbolset.h \
  thsymbolsetlist.h thlocale.h thlang.h thlangdata.h thtflength.h thtf.h \
  thtexfonts.h thscrap.h thsketch.h thpic.h thtrans.h
-$(OUTDIR)/thproj.o: thproj.cxx thexception.h therion.h thbuffer.h thproj.h
+$(OUTDIR)/thproj.o: thproj.cxx thexception.h therion.h thbuffer.h thproj.h \
+ thlogfile.h
 $(OUTDIR)/thscrap.o: thscrap.cxx thscrap.h thdataobject.h thdatabase.h thmbuffer.h \
  thbuffer.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h thparse.h \
  thobjectname.h therion.h thobjectsrc.h thdb3d.h loch/lxMath.h thattr.h \
@@ -933,7 +980,15 @@ $(OUTDIR)/thsurvey.o: thsurvey.cxx thsurvey.h thdataobject.h thdatabase.h \
  thscraplo.h thlayoutln.h thscrapen.h thscraplp.h thtfpwf.h thexception.h \
  thtfangle.h thtf.h thdata.h thtflength.h
 $(OUTDIR)/thsvg.o: thsvg.cxx thepsparse.h thpdfdbg.h thexception.h therion.h \
- thbuffer.h thpdfdata.h thversion.h thlegenddata.h thtexfonts.h
+ thbuffer.h thpdfdata.h thversion.h thconfig.h thmbuffer.h thinput.h \
+ thparse.h thexporter.h thexport.h thobjectsrc.h thlayout.h \
+ thdataobject.h thdatabase.h thdb1d.h thobjectid.h thinfnan.h thdataleg.h \
+ thobjectname.h thdb3d.h loch/lxMath.h thattr.h thchenc.h thchencdata.h \
+ thdb2d.h thdb2dprj.h thmapstat.h thdate.h thperson.h thlegenddata.h \
+ thdb2dpt.h thdb2dlp.h thdb2dab.h thdb2dji.h thdb2dmi.h thdb2dcp.h \
+ thdb2dxs.h thdb2dxm.h thlayoutclr.h thscraplo.h thlayoutln.h thscrapen.h \
+ thscraplp.h thsymbolset.h thsymbolsetlist.h thlocale.h thselector.h \
+ thtexfonts.h
 $(OUTDIR)/thsvxctrl.o: thsvxctrl.cxx thsvxctrl.h thdataleg.h thparse.h thbuffer.h \
  thmbuffer.h thobjectname.h therion.h thobjectsrc.h thinfnan.h \
  thdatabase.h thdataobject.h thperson.h thdate.h thlayoutclr.h thdb1d.h \
@@ -958,8 +1013,7 @@ $(OUTDIR)/thsymbolset.o: thsymbolset.cxx thsymbolset.h thsymbolsetlist.h \
  thinit.h thinput.h thsymbolsets.h thlogfile.h
 $(OUTDIR)/thsymbolsets.o: thsymbolsets.cxx thsymbolsets.h thsymbolsetlist.h
 $(OUTDIR)/thtex.o: thtex.cxx thtex.h
-$(OUTDIR)/thtexenc.o: thtexenc.cxx
-$(OUTDIR)/thtexfonts.o: thtexfonts.cxx thtexfonts.h thtexenc.cxx thpdfdbg.h \
+$(OUTDIR)/thtexfonts.o: thtexfonts.cxx thtexfonts.h thtexenc.h thpdfdbg.h \
  thexception.h therion.h thbuffer.h thinit.h thmbuffer.h thinput.h \
  thparse.h thpdfdata.h thepsparse.h
 $(OUTDIR)/thtf.o: thtf.cxx thtf.h thexception.h therion.h thbuffer.h thparse.h \
@@ -1002,5 +1056,7 @@ $(OUTDIR)/thwarppme.o: thwarppme.cxx thinfnan.h thwarppme.h thwarppdef.h therion
  thtrans.h
 $(OUTDIR)/thwarppt.o: thwarppt.cxx thwarppt.h thtrans.h thinfnan.h thwarppme.h \
  thwarppdef.h therion.h
-
-
+utest-main.o: utest-main.cxx extern/catch2/catch.hpp thinit.h thbuffer.h \
+ thmbuffer.h thinput.h thparse.h
+utest-proj.o: utest-proj.cxx extern/catch2/catch.hpp thproj.h thcsdata.h \
+ thparse.h thbuffer.h thmbuffer.h thcs.h

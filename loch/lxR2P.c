@@ -15,7 +15,7 @@
 
 #include "lxR2P.h"
 
-struct _R2PCTX {
+struct R2PCTX {
   GLXContext ctx;
   Pixmap pm;
   XVisualInfo *visinfo;

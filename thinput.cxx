@@ -51,16 +51,7 @@ thinput::ifile::ifile(ifile * fp)
   this->lnumber = 0;
   this->encoding = TT_UTF_8;
   this->prev_ptr = fp;
-  this->next_ptr = NULL;
 }
-
-
-thinput::ifile::~ifile()
-{
-  this->close();
-  delete this->next_ptr;
-}
-
 
 void thinput::ifile::close()
 {
@@ -92,22 +83,14 @@ thinput::thinput()
   this->cmd_sensitivity = true;
   this->input_sensitivity = true;
   this->scan_search_path = false;
-  this->first_ptr = new ifile(NULL);
-  this->last_ptr = this->first_ptr;
-  this->lnbuffer = new char [thinput::max_line_size];
+  this->first_ptr = std::unique_ptr<ifile>(new ifile(nullptr));
+  this->last_ptr = this->first_ptr.get();
+  this->lnbuffer = std::unique_ptr<char[]>(new char [thinput::max_line_size]);
   this->pifo = false;
   this->pifoid = NULL;
   this->pifoproc = NULL;
   this->report_missing = false;
 }
-
-
-thinput::~thinput()
-{
-  delete this->first_ptr;
-  delete this->lnbuffer;
-}
-
 
 void thinput::set_cmd_sensitivity(bool cs)
 {
@@ -202,10 +185,10 @@ void thinput::open_file(char * fname)
   ifile * ifptr;
   ifptr = this->last_ptr;
   while (ifptr->sh.is_open() && (ifptr->next_ptr != NULL))
-    ifptr = ifptr->next_ptr;
+    ifptr = ifptr->next_ptr.get();
   if (ifptr->sh.is_open() && (ifptr->next_ptr == NULL)) {
-    ifptr->next_ptr = new ifile(ifptr);
-    ifptr = ifptr->next_ptr;
+    ifptr->next_ptr = std::unique_ptr<ifile>(new ifile(ifptr));
+    ifptr = ifptr->next_ptr.get();
   }
   
   // now, let's open the file
@@ -272,8 +255,7 @@ void thinput::open_file(char * fname)
   
   if (!ifptr->sh.is_open()) {
     if ((srcfile != NULL) || (this->report_missing)) {
-      ththrow(("can't open file for input -- %s", \
-        fname));
+      ththrow("can't open file for input -- {}", fname);
     }
   }
   else {
@@ -342,14 +324,14 @@ void thinput::close_file()
 void thinput::reset()
 {
   // first, let's close all open files
-  ifile * iptr = this->first_ptr;
+  ifile * iptr = this->first_ptr.get();
   while(iptr != NULL) {
     iptr->close();
-    iptr = iptr->next_ptr;
+    iptr = iptr->next_ptr.get();
   }
   
   // set pointer to the first ifile
-  this->last_ptr = this->first_ptr;
+  this->last_ptr = this->first_ptr.get();
   this->open_file(this->file_name);  
 }
 
@@ -376,7 +358,7 @@ char * thinput::read_line()
     }
 
     // OK, we can read the line
-    this->last_ptr->sh.getline(this->lnbuffer, thinput::max_line_size);
+    this->last_ptr->sh.getline(this->lnbuffer.get(), thinput::max_line_size);
     this->last_ptr->lnumber++;
 
     // Check, if reading was OK.
@@ -387,8 +369,8 @@ char * thinput::read_line()
     }
     
     // now let's find last non white character
-    lnlen = (long)strlen(this->lnbuffer);
-    idxptr = this->lnbuffer + lnlen - 1;
+    lnlen = (long)strlen(this->lnbuffer.get());
+    idxptr = this->lnbuffer.get() + lnlen - 1;
     while ((lnlen > 0) && (*idxptr < 33)) {
       idxptr--;
       lnlen--;
@@ -401,19 +383,19 @@ char * thinput::read_line()
     // join backslash ended lines together
     if (*idxptr == '\\') {
       if (mline) {
-        this->linebf.strncat(this->lnbuffer, lnlen - 1);
+        this->linebf.strncat(this->lnbuffer.get(), lnlen - 1);
       }
       else {
-        this->linebf.strncpy(this->lnbuffer, lnlen - 1);
+        this->linebf.strncpy(this->lnbuffer.get(), lnlen - 1);
         mline = true;
       }
       continue;
     }
     else {
       if (mline)
-        this->linebf.strncat(this->lnbuffer, lnlen);
+        this->linebf.strncat(this->lnbuffer.get(), lnlen);
       else
-        this->linebf.strncpy(this->lnbuffer, lnlen);
+        this->linebf.strncpy(this->lnbuffer.get(), lnlen);
     }
     
     mline = false;
@@ -513,7 +495,40 @@ char * thinput::get_cif_path()
   thsplit_fpath(&cifpath, this->last_ptr->name.get_buffer());
   return cifpath.get_buffer();
 }
-  
+
+const char * thinput::get_cif_abspath(const char * fname)
+{
+  static thbuffer pict_path;
+  pict_path.guarantee(1024);
+  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);  
+  long i;
+  pict_path += "/";  
+  if (thpath_is_absolute(this->last_ptr->name.get_buffer()))
+	  pict_path = this->last_ptr->name.get_buffer();
+  else
+	  pict_path += this->last_ptr->name.get_buffer();
+  char * pp = pict_path.get_buffer();
+  for(i = (long)strlen(pp); i >= 0; i--) {
+	if ((pp[i] == '/') || (pp[i] == '\\')) {
+	  break;
+	} else
+	  pp[i] = 0;
+  }
+  if (strlen(pp) == 0)
+	pict_path = "/";
+  if ((fname != NULL) && (strlen(fname) > 0)) {
+	  if (thpath_is_absolute(fname))
+		  pict_path = fname;
+	  else
+		  pict_path += fname;
+  }
+  pp = pict_path.get_buffer();
+  for(i = (long)strlen(pp); i >= 0; i--) {
+	if (pp[i] == '\\')
+	  pp[i] = '/';
+  }
+  return pict_path.get_buffer();
+}
 
 unsigned long thinput::get_cif_line_number()
 {

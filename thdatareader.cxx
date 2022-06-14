@@ -29,7 +29,7 @@
 #include "thexception.h"
 #include "thobjectsrc.h"
 
-unsigned long thdatareader__get_opos(bool inlineid, bool cfgid)
+unsigned long thdatareader_get_opos(bool inlineid, bool cfgid)
 {
   unsigned long opos = 0;
   
@@ -49,7 +49,7 @@ unsigned long thdatareader__get_opos(bool inlineid, bool cfgid)
 
 void thdatareader::read(const char * ifname, long lnstart, long lnend, const char * spath, thdatabase * dbptr)
 {
-
+  std::unique_ptr<thdataobject> unique_objptr;
   thdataobject * objptr = NULL;  // pointer to the newly created object
   thcmd_option_desc optd;  // option descriptor
   bool inside_cmd = false;
@@ -107,7 +107,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           inside_cmd = false;
           //this->inp.cmd_sensitivity_on();
           if (!configure_cmd)
-            dbptr->insert(objptr);
+            dbptr->insert(std::move(unique_objptr));
           else {
             objptr->start_insert();
             configure_cmd = false;
@@ -120,12 +120,12 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
         if (optd.id != TT_DATAOBJECT_UNKNOWN) {
           thsplit_args(&this->mbf1, this->bf2.get_buffer());
           if (this->mbf1.get_size() < optd.nargs)
-            ththrow(("not enough option arguments -- %s -- must be %d",
-              this->bf1.get_buffer(), optd.nargs));
+            ththrow("not enough option arguments -- {} -- must be {}",
+              this->bf1.get_buffer(), optd.nargs);
           optd.nargs = this->mbf1.get_size();
           objptr->set(optd, this->mbf1.get_buffer(), 
             this->inp.get_cif_encoding(),
-            thdatareader__get_opos(inside_cmd,configure_cmd));
+            thdatareader_get_opos(inside_cmd,configure_cmd));
           continue;
         }
         
@@ -136,7 +136,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
         while(strcmp(opt,"!") < 0) opt++;
         if (*opt == '!') opt++;
         objptr->set(optd, & opt, this->inp.get_cif_encoding(),
-          thdatareader__get_opos(inside_cmd,configure_cmd));
+          thdatareader_get_opos(inside_cmd,configure_cmd));
 
       }
       else {
@@ -156,15 +156,16 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           continue;
         } 
         else {
-          objptr = dbptr->create(this->inp.get_cmd(), osrc);
+          unique_objptr = dbptr->create(this->inp.get_cmd(), osrc);
+          objptr = unique_objptr.get();
           if (objptr == NULL)
-            ththrow(("unknown command -- %s", this->inp.get_cmd()))
+            ththrow("unknown command -- {}", this->inp.get_cmd());
           else
             dbptr->check_context(objptr);
             
 	        switch(objptr->get_class_id()) {
             case TT_LAYOUT_CMD:
-              ththrow(("layout definition not allowed in input files"))
+              ththrow("layout definition not allowed in input files");
               break;
           }
         }
@@ -175,21 +176,21 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
           // let's find an object
           objptr = dbptr->revise(*opts, dbptr->get_current_survey(), osrc);
           if (objptr == NULL)
-            ththrow(("object does not exist -- %s", *opts))
+            ththrow("object does not exist -- {}", *opts);
           ai = 1;
           opts++;
         }
         else {
           if (ant < objptr->get_cmd_nargs())
-            ththrow(("not enough command arguments -- must be %d",
-              objptr->get_cmd_nargs()));
+            ththrow("not enough command arguments -- must be {}",
+              objptr->get_cmd_nargs());
           optd.nargs = 1;
 
           // set obligatory arguments
           for (ai = 0; ai < objptr->get_cmd_nargs(); ai++, opts++) {
             optd.id = ai + 1;
             objptr->set(optd, opts, this->inp.get_cif_encoding(),
-              thdatareader__get_opos(inside_cmd,configure_cmd));
+              thdatareader_get_opos(inside_cmd,configure_cmd));
 
           }
         }
@@ -198,20 +199,20 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
         while (ait < ant) {
           optd = objptr->get_cmd_option_desc(*opts + 1);
           if (configure_cmd && (optd.id == TT_DATAOBJECT_NAME))
-            ththrow(("object name configuration not allowed"))
+            ththrow("object name configuration not allowed");
           if (optd.id == TT_DATAOBJECT_UNKNOWN) {
             optd.id = ++ai;
             optd.nargs = 1;
           }
           else {
             if ((ait + optd.nargs) >= ant)
-              ththrow(("not enough option arguments -- %s -- must be %d", *opts, optd.nargs));
+              ththrow("not enough option arguments -- {} -- must be {}", *opts, optd.nargs);
             opts++;
             ait++;
           }
  
           objptr->set(optd, opts, this->inp.get_cif_encoding(),
-            thdatareader__get_opos(inside_cmd,configure_cmd));
+            thdatareader_get_opos(inside_cmd,configure_cmd));
           opts += optd.nargs;
           ait += optd.nargs;
         }
@@ -221,7 +222,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
         // else insert object into database
         if ((endlnopt = objptr->get_cmd_end()) == NULL)
           if (!configure_cmd)
-            dbptr->insert(objptr);
+            dbptr->insert(std::move(unique_objptr));
           else {
             objptr->start_insert();
             configure_cmd = false;
@@ -239,8 +240,9 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
 #ifndef THMSVC
   }
 // put everything into try block and throw exception, if error
-  catch (...)
-    threthrow(("%s [%d]", this->inp.get_cif_name(), this->inp.get_cif_line_number()))
+  catch (...) {
+    threthrow("{} [{}]", this->inp.get_cif_name(), this->inp.get_cif_line_number());
+  }
 #endif
 
   dbptr->end_insert();  

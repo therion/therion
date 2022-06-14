@@ -26,12 +26,28 @@
 #define thproj_h
 
 #include <string>
+#include <vector>
 
-void thcs2utm(std::string, signed int, double, double, double, double &, double &, double &);
-void thcs2cs(std::string, std::string, double, double, double, double &, double &, double &);
-signed int thcs2zone(std::string, double, double, double);
-double thcsconverg(std::string, double, double);
+enum {GRID_INVALID, GRID_IGNORE, GRID_WARN, GRID_FAIL, GRID_CACHE, GRID_DOWNLOAD};
+
+void thcs2cs(int, int, double, double, double, double &, double &, double &);
+signed int thcs2zone(int, double, double, double);
+double thcsconverg(int, double, double);
 bool thcs_islatlong(std::string);
 bool thcs_check(std::string);
+void thcs_log_transf_used();
+int thcs_parse_gridhandling(const char *);
+std::string thcs_get_proj_version();
+std::string thcs_get_proj_version_headers();
+std::string thcs_get_label(std::string s);
+
+struct thcs_config {
+  thcs_config();
+  std::vector<double> bbox;
+  bool proj_auto;
+  int proj_auto_grid;
+};
+
+extern thcs_config thcs_cfg;
 
 #endif

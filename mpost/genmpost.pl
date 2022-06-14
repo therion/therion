@@ -28,9 +28,9 @@ sub process_symbols {
   open(OUT, ">../SYMBOLS.txt");
   $thmpost_library .= "\n";
   foreach $s1 (reverse sort keys %SYMBOLS) {
-    print OUT "\n\n[", 
-          ($s1 eq "p") ? "Point" : (($s1 eq "l") ? "Line" : 
-	  (($s1 eq "s") ? "Special" : "Area")), 
+    print OUT "\n\n[",
+          ($s1 eq "p") ? "Point" : (($s1 eq "l") ? "Line" :
+	  (($s1 eq "s") ? "Special" : "Area")),
               " symbols]\n";
     foreach $s2 (sort keys %{$SYMBOLS{$s1}}) {
       print OUT "\n$s2: ";
@@ -61,7 +61,7 @@ sub process_symbols {
   print OUT "extern int thsymsets_order[thsymbolset_size];\n\n";
   print OUT "extern int thsymsets_count[thsymsets_size];\n\n";
   print OUT "extern std::map<unsigned, std::string> thsymsets_comment;\n\n";
-  print OUT "\nstatic const thsymbolset__char_ptr thsymsets [] = {\n$ssl};\n\nvoid thsymsets_symbols_init();\n\n";
+  print OUT "\nstatic const thsymbolset_char_ptr thsymsets [] = {\n$ssl};\n\nvoid thsymsets_symbols_init();\n\n";
   print OUT "#endif\n\n";
   close(OUT);
 
@@ -73,7 +73,7 @@ sub process_symbols {
   print OUT "int thsymsets_count[thsymsets_size];\n\n";
   print OUT "std::map<unsigned, std::string> thsymsets_comment;\n\n";
   print OUT "\n\n\nvoid thsymsets_symbols_init() {\n";
-  print OUT "\tsize_t i, j;\n\tfor(i = 0; i <= thsymbolset_size; i++)\n";
+  print OUT "\tsize_t i, j;\n\tfor(i = 0; i < thsymbolset_size; i++)\n";
   print OUT "\t\tfor(j = 0; j < thsymsets_size; j++) \n\t\t\tthsymsets_symbols[i][j] = 0;\n\t\t\n\t\n";
   foreach $s1 (reverse sort keys %SYMBOLS) {
     if (($s1 eq "p") || ($s1 eq "a") || ($s1 eq "l")) {
@@ -84,7 +84,7 @@ sub process_symbols {
       }
     }
   }
-  print OUT "}\n";  
+  print OUT "}\n";
   close(OUT);
 }
 
@@ -124,17 +124,17 @@ print OUTPT <<ENDOUTPT;
  * \@file thmpost.h
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
- */  
- 
+ */
+
 #ifndef thmpost_h
 #define thmpost_h
 
 /**
  * Metapost source file.
  */
- 
+
 extern const char * thmpost_library;
- 
+
 
 #endif
 ENDOUTPT
@@ -146,8 +146,8 @@ print OUTPT <<ENDOUTPT;
  * \@file thmpost.cxx
  *
  * THIS FILE IS GENERATED AUTOMATICALLY, DO NOT MODIFY IT !!!
- */  
- 
+ */
+
 #include "thmpost.h"
 
 #ifndef THMSVC

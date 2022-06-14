@@ -20,6 +20,7 @@
 #include <wx/filename.h>
 #include <wx/busyinfo.h>
 #include <wx/help.h>
+#include <wx/html/helpctrl.h>
 #include <wx/fs_zip.h>
 #include <wx/dnd.h>
 #include <wx/display.h>
@@ -29,8 +30,8 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
-#include "lxGUI.h"
 #include "lxData.h"
+#include "lxGUI.h"
 #include "lxSetup.h"
 #include "lxRender.h"
 #include "lxOptDlg.h"
@@ -38,6 +39,7 @@
 #include "lxSView.h"
 #include "lxSScene.h"
 #include "lxSTree.h"
+#include "lxSStats.h"
 #include "lxPres.h"
 
 #include "icons/open.xpm"
@@ -116,7 +118,15 @@ BEGIN_EVENT_TABLE(lxFrame, wxFrame)
 END_EVENT_TABLE()
 
 
-
+void try_help_fn(lxApp * app, wxString path, wxString & fileName) {
+	wxString fv;
+	fv = wxString::Format(path, _T("en"));
+	if (wxFileName(fv).FileExists()) fileName = fv;
+	fv = wxString::Format(path, app->m_locale.GetCanonicalName().Left(2));
+	if (wxFileName(fv).FileExists()) fileName = fv;
+	fv = wxString::Format(path, app->m_locale.GetCanonicalName());
+	if (wxFileName(fv).FileExists()) fileName = fv;
+}
 
 
 #if wxUSE_DRAG_AND_DROP
@@ -128,7 +138,7 @@ class DnDFile : public wxFileDropTarget {
 	
     DnDFile(lxFrame *parent) : m_Parent(parent) { }
 	
-    virtual bool OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames);
+    bool OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames) override;
 
 };
 
@@ -144,7 +154,7 @@ DnDFile::OnDropFiles(wxCoord, wxCoord, const wxArrayString &filenames)
 lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     const wxSize& size, long style)
     : wxFrame(NULL, wxID_ANY, title, pos, size, style),
-    m_modelSetupDlg(NULL), m_modelSetupDlgOn(false), m_selectionSetupDlg(NULL), m_selectionSetupDlgOn(false),  m_presentationDlg(NULL),  m_presentationDlgOn(false),
+    m_modelSetupDlg(NULL), m_statisticsDlg(NULL), m_modelSetupDlgOn(false), m_statisticsDlgOn(false), m_selectionSetupDlg(NULL), m_selectionSetupDlgOn(false),  m_presentationDlg(NULL),  m_presentationDlgOn(false),
     m_viewpointSetupDlg(NULL), m_viewpointSetupDlgOn(false)
 {
 
@@ -169,29 +179,18 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
 
     this->m_pres = new wxXmlDocument();
 
-    this->m_helpController = new wxHelpController;
-    wxString hlpFName = _T("loch"), tmpHlpFName;
-#ifdef LXWIN32
-    hlpFName += _T(".chm");
-#else
-    hlpFName += _T(".htb");
+    this->m_helpController = new wxHtmlHelpController;
+
+
+    wxString hlpFName = _T("");
+
+    try_help_fn(this->m_app, this->m_app->m_path.GetPath() + _T("/help/%s/loch.htb"), hlpFName);
+    try_help_fn(this->m_app, this->m_app->m_path.GetPath() + _T("/doc/help/%s/loch.htb"), hlpFName);
+#ifdef LXLINUX
+    try_help_fn(this->m_app, _T("/usr/local/share/doc/therion-viewer/help/%s/loch.htb"), hlpFName);
+    try_help_fn(this->m_app, _T("/usr/share/doc/therion-viewer/help/%s/loch.htb"), hlpFName);
 #endif
-    wxFileName hlpFN;
-    hlpFN = wxFileName(this->m_app->m_path);
-    hlpFN.AppendDir(this->m_app->m_locale.GetCanonicalName());
-    hlpFN.SetFullName(hlpFName);
-    if (hlpFN.FileExists()) {
-      hlpFName = hlpFN.GetFullPath();
-    } else {
-      hlpFN = wxFileName(this->m_app->m_path);
-      hlpFN.AppendDir(this->m_app->m_locale.GetCanonicalName().Left(2));
-      hlpFN.SetFullName(hlpFName);
-      if (hlpFN.FileExists()) {
-        hlpFName = hlpFN.GetFullPath();
-      } else {
-        hlpFName = _T("en/loch");
-      }
-    }
+    if (hlpFName.Length() == 0) hlpFName=_T("help/en/loch");
     this->m_helpController->Initialize(hlpFName);
 
     
@@ -316,6 +315,7 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     winMenu->AppendCheckItem(LXMENU_VIEW_VIEWPOINTSTP, _("&Camera"));
     winMenu->AppendCheckItem(LXMENU_VIEW_MODELSTP, _("&Scene"));
     winMenu->AppendCheckItem(LXMENU_VIEW_SELECTIONSTP, _("&Selection"));
+    winMenu->AppendCheckItem(LXMENU_VIEW_SURVEYSTATS, _("&Survey statistics"));
     winMenu->AppendCheckItem(LXMENU_VIEW_PRESENTDLG, _("&Presentation"));
     winMenu->Append(LXMENU_EXPROT, _("&Animation"));
     winMenu->AppendSeparator();
@@ -353,7 +353,9 @@ lxFrame::lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
     this->SetSize(size);
 
     this->m_modelSetupDlg = new lxModelSetupDlg(this);
+    this->m_statisticsDlg = new lxSurveyStatsDlg(this);
     this->m_modelSetupDlgOn = false;
+    this->m_statisticsDlgOn = false;
 
     this->m_selectionSetupDlg = new lxModelTreeDlg(this);
     this->m_presentationDlg = new lxPresentDlg(this);
@@ -514,7 +516,7 @@ void lxFrame::ToggleFullScreen() {
 
 
 int lxFrame::GetFileType(wxString fName) {
-#define matchtype(w,t) if (fName.EndsWith((const wxChar *)wxString(_T(w)))) return t;
+#define matchtype(w,t) if (fName.EndsWith(wxString(_T(w)))) return t;
   matchtype(".lox",1);
   matchtype(".LOX",1);
   matchtype(".plt",2);
@@ -631,7 +633,7 @@ void lxFrame::OnAll(wxCommandEvent& event)
                     _("Export"),
                     wxEmptyString,
                     wxEmptyString,
-                    _("VTK file (*.vtk)|*.vtk|Loch file (*.lox)|*.lox"),
+                    _("VTK file (*.vtk)|*.vtk|Loch file (*.lox)|*.lox|PLY file (*.ply)|*.ply"),
                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT
                   );
 
@@ -645,6 +647,9 @@ void lxFrame::OnAll(wxCommandEvent& event)
               break;
             case 1:
               this->data->m_input.ExportLOX(dialog.GetPath().mbc_str());
+              break;
+            case 2:
+              this->data->ExportPLY(dialog.GetPath());
               break;
           }
           this->canvas->ForceRefresh();
@@ -717,6 +722,10 @@ void lxFrame::OnAll(wxCommandEvent& event)
 
     case LXMENU_VIEW_MODELSTP:
       this->ToggleModelSetup();
+      break;
+
+    case LXMENU_VIEW_SURVEYSTATS:
+      this->ToggleSurveyStats();
       break;
 
     case LXMENU_VIEW_SELECTIONSTP:
@@ -812,6 +821,9 @@ void lxFrame::OnSize(wxSizeEvent& event)
   if (this->m_modelSetupDlg != NULL) {
     this->m_modelSetupDlg->m_toolBoxPosition.Restore();
   }
+  if (this->m_statisticsDlg != NULL) {
+    this->m_statisticsDlg->m_toolBoxPosition.Restore();
+  }
   if (this->m_selectionSetupDlg != NULL) {
     this->m_selectionSetupDlg->m_toolBoxPosition.Restore();
   }
@@ -830,6 +842,9 @@ void lxFrame::OnMove(wxMoveEvent& event)
     if (this->m_modelSetupDlg != NULL) {
       this->m_modelSetupDlg->m_toolBoxPosition.Restore();
     }
+    if (this->m_statisticsDlg != NULL) {
+      this->m_statisticsDlg->m_toolBoxPosition.Restore();
+    }
     if (this->m_selectionSetupDlg != NULL) {
       this->m_selectionSetupDlg->m_toolBoxPosition.Restore();
     }
@@ -847,6 +862,7 @@ void lxFrame::UpdateM2TB() {
 	this->m_menuBar->Check(LXMENU_VIEW_MODELSTP, this->m_modelSetupDlgOn);    
 	this->m_menuBar->Check(LXMENU_VIEW_VIEWPOINTSTP, this->m_viewpointSetupDlgOn);    
 	this->m_menuBar->Check(LXMENU_VIEW_SELECTIONSTP, this->m_selectionSetupDlgOn);    
+	this->m_menuBar->Check(LXMENU_VIEW_SURVEYSTATS, this->m_statisticsDlgOn);
 	this->m_menuBar->Check(LXMENU_VIEW_PRESENTDLG, this->m_presentationDlgOn);    
 	this->m_toolBar->ToggleTool(LXTB_PERSP, !this->setup->cam_persp); 
 
@@ -1010,6 +1026,20 @@ void lxFrame::ToggleModelSetup()
 }
 
 
+void lxFrame::ToggleSurveyStats()
+{
+  if (this->m_statisticsDlgOn) {
+    this->m_statisticsDlg->m_toolBoxPosition.Save();
+    this->m_statisticsDlg->Show(false);
+  } else {
+    this->m_statisticsDlg->m_toolBoxPosition.Restore();
+    this->m_statisticsDlg->Show(true);
+  }
+  this->m_statisticsDlgOn = !this->m_statisticsDlgOn;
+  this->UpdateM2TB();
+}
+
+
 void lxFrame::ToggleSelectionSetup()
 {
   if (this->m_selectionSetupDlgOn) {
@@ -1076,10 +1106,10 @@ void lxFrame::ImportFile(wxString fName, int fType)
 
 void lxFrame::LoadData(wxString fName, int fType) {
   {
+  wxBusyInfo info(_("Building 3D model, please wait..."));
 #if wxCHECK_VERSION(3,0,0)
   wxWindowDisabler disableAll;
 #endif
-  wxBusyInfo info(_("Building 3D model, please wait..."));
 #if wxCHECK_VERSION(3,0,0)
   wxTheApp->Yield();
 #endif
@@ -1136,6 +1166,7 @@ void lxFrame::ReloadData()
   this->LoadData(this->m_fileName, this->m_fileType);
   this->m_modelSetupDlg->InitSetup();
   this->m_selectionSetupDlg->LoadData();
+  this->m_statisticsDlg->LoadData();
 }
 
 
@@ -1156,6 +1187,9 @@ bool lxApp::OnInit()
     m_locale.Init(wxLANGUAGE_DEFAULT, wxLOCALE_LOAD_DEFAULT | wxLOCALE_CONV_ENCODING);
 #endif
     
+#ifdef LXWIN32
+    m_locale.AddCatalogLookupPathPrefix("locale");
+#endif
     m_locale.AddCatalog(wxT("loch"));
     m_path = wxFileName(this->argv[0]);
 
@@ -1163,7 +1197,7 @@ bool lxApp::OnInit()
 
 #if wxUSE_DISPLAY
     //multi screen support
-    wxDisplay display(0); //Get the settings for screen 0
+    wxDisplay display((unsigned int)0); //Get the settings for screen 0
     wxRect displayRect = display.GetGeometry();
 #else
     wxSize scr = wxGetDisplaySize();
@@ -1260,8 +1294,6 @@ void lxFrame::ExportRotationPictures() {
   delete tmpRD;
 }
 
-
-    
 #ifdef LXMACOSX
 void lxApp::MacOpenFile(const wxString &fileName)
 {

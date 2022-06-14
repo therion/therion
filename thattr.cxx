@@ -27,18 +27,12 @@
 
  
 #include "thattr.h"
-#include "extern/shapefil.h"
-#include "thexception.h"
+#include "shapefil.h"
+#include "therion.h"
 #include "thchenc.h"
 #include <cctype>
 #include <cmath>
 #include <set>
-
-#ifdef THMSVC
-#define snprintf _snprintf
-#define strcasecmp _stricmp
-#endif
-
 
 thattr::thattr()
 {
@@ -631,10 +625,11 @@ void thattr::export_kml(const char * fname, const char * name_field, const char 
       dlon = ai->second.m_val_double;
       ai = oi->m_attributes.find(alt->m_id);
       dalt = ai->second.m_val_double;
-			if (namef != NULL) 
-				ai = oi->m_attributes.find(namef->m_id);
+      ai = oi->m_attributes.end();
+      if (namef != NULL)
+        ai = oi->m_attributes.find(namef->m_id);
       fprintf(f,"<Placemark>\n<name><![CDATA[%s]]></name>\n<Point>\n<coordinates>%.14f,%.14f,%.14f</coordinates>\n</Point>\n</Placemark>\n",
-				(namef != NULL) ? ai->second.m_val_string.c_str() : "", dlon, dlat, dalt);
+				((namef != NULL) && (ai != oi->m_attributes.end())) ? ai->second.m_val_string.c_str() : "", dlon, dlat, dalt);
     }
 
     //for(fli = this->m_field_list.begin(); fli != this->m_field_list.end(); ++fli) {
@@ -753,7 +748,7 @@ void thattr::export_html(const char * fname, const char * title, int encoding)
       } else {
         ca = &(ai->second);
         if (ca->m_type == THATTR_DOUBLE) {
-          snprintf(valb.get_buffer(), 127, cf->m_double_format.c_str(), ca->m_val_double);
+          std::snprintf(valb.get_buffer(), 127, cf->m_double_format.c_str(), ca->m_val_double);
           value = valb.get_buffer();
         } else
           value = ca->m_val_string.c_str();

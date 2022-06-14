@@ -254,12 +254,12 @@ class thdataobject {
   unsigned long id;  ///< Object identifier.
   
   bool selected,  ///< Whether object is selected.
-    tmp_bool;  ///< Temporary variable for some algorithms
+    tmp_bool = false;  ///< Temporary variable for some algorithms
 
   thlayout_color selected_color; ///< Selection color.
     
   unsigned long selected_number,  ///< Number of selection.
-    tmp_ulong;  ///< Temporary variable for some algorithms
+    tmp_ulong = 0;  ///< Temporary variable for some algorithms
   
   thdataobject * nsptr,  ///< Next object in survey.
     * psptr;  ///< Previous object in survey.
@@ -397,15 +397,6 @@ class thdataobject {
   
   
   /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
-  
-  
-  /**
    * Get context for object.
    */
    
@@ -427,10 +418,10 @@ class thdataobject {
   
     
   /**
-   * Write object source to exception description.
+   * Get object source location.
    */
    
-  virtual void throw_source();
+  virtual std::string throw_source() const;
   
   
   /**
@@ -462,11 +453,25 @@ class thdataobject {
  
   bool is_in_survey(thsurvey * psearch);
 
+
+  /**
+   * Read coordinates and estimate approximate location for PROJ conversions.
+   */
+
+  void read_cs(char * src_x, char * src_y, double & dst_x, double & dst_y, bool adj_bbox = true);
+
+
   /**
    * Convert coordinates according to current CS specification.
    */
 
-  void convert_cs(char * src_x, char * src_y, double & dst_x, double & dst_y);
+  void convert_cs(int src_cs, double src_x, double src_y, double & dst_x, double & dst_y);
+
+  /**
+   * Convert all points in object.
+   */
+
+  virtual void convert_all_cs();
 
   /**
    * Parse object attributes.

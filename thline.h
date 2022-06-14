@@ -2,14 +2,14 @@
  * @file thline.h
  * line module.
  */
-  
+
 /* Copyright (C) 2000 Stacho Mudrak
- * 
+ *
  * $Date: $
  * $RCSfile: $
  * $Revision: $
  *
- * -------------------------------------------------------------------- 
+ * --------------------------------------------------------------------
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,13 +19,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --------------------------------------------------------------------
  */
- 
+
 #ifndef thline_h
 #define thline_h
 
@@ -35,7 +35,7 @@
 /**
  * line command options tokens.
  */
- 
+
 enum {
   TT_LINE_UNKNOWN = 3000,
   TT_LINE_TYPE = 3001,
@@ -116,7 +116,7 @@ static const thstok thtt_line_opt[] = {
 /**
  * Line outlines.
  */
- 
+
 enum {
   TT_LINE_OUTLINE_UNKNOWN,
   TT_LINE_OUTLINE_IN,
@@ -127,7 +127,7 @@ enum {
 /**
  * line outlines parsing table.
  */
- 
+
 static const thstok thtt_line_outlines[] = {
   {"in", TT_LINE_OUTLINE_IN},
   {"none", TT_LINE_OUTLINE_NONE},
@@ -139,7 +139,7 @@ static const thstok thtt_line_outlines[] = {
 /**
  * Line point adjustments.
  */
- 
+
 enum {
   TT_LINE_ADJUST_UNKNOWN,
   TT_LINE_ADJUST_HORIZONTAL,
@@ -150,7 +150,7 @@ enum {
 /**
  * line adjusts parsing table.
  */
- 
+
 static const thstok thtt_line_adjusts[] = {
   {"horizontal", TT_LINE_ADJUST_HORIZONTAL},
   {"none", TT_LINE_ADJUST_NONE},
@@ -162,7 +162,7 @@ static const thstok thtt_line_adjusts[] = {
 /**
  * Line types.
  */
- 
+
 enum {
   TT_LINE_TYPE_UNKNOWN,
   TT_LINE_TYPE_U,
@@ -194,31 +194,48 @@ enum {
 	TT_LINE_TYPE_VIA_FERRATA,
 	TT_LINE_TYPE_ROPE,
 	TT_LINE_TYPE_STEPS,
+  TT_LINE_TYPE_ABYSSENTRANCE,
+  TT_LINE_TYPE_DRIPLINE,
+  TT_LINE_TYPE_FAULT,
+  TT_LINE_TYPE_JOINT,
+  TT_LINE_TYPE_LOWCEILING,
+  TT_LINE_TYPE_PITCHIMNEY,
+  TT_LINE_TYPE_RIMSTONEDAM,
+  TT_LINE_TYPE_RIMSTONEPOOL,
+  TT_LINE_TYPE_WALKWAY,
 };
 
 /**
  * Line types parsing table.
  */
- 
+
 static const thstok thtt_line_types[] = {
+  {"abyss-entrance", TT_LINE_TYPE_ABYSSENTRANCE},
   {"arrow", TT_LINE_TYPE_ARROW},
   {"border", TT_LINE_TYPE_BORDER},
   {"ceiling-meander", TT_LINE_TYPE_CEILING_MEANDER},
   {"ceiling-step", TT_LINE_TYPE_CEILING_STEP},
   {"chimney", TT_LINE_TYPE_CHIMNEY},
   {"contour", TT_LINE_TYPE_CONTOUR},
+  {"dripline", TT_LINE_TYPE_DRIPLINE},
+  {"fault", TT_LINE_TYPE_FAULT},
   {"fixed-ladder", TT_LINE_TYPE_FIXED_LADDER},
   {"floor-meander", TT_LINE_TYPE_FLOOR_MEANDER},
   {"floor-step", TT_LINE_TYPE_FLOOR_STEP},
   {"flowstone", TT_LINE_TYPE_FLOWSTONE},
   {"gradient", TT_LINE_TYPE_GRADIENT},
   {"handrail", TT_LINE_TYPE_HANDRAIL},
+  {"joint", TT_LINE_TYPE_JOINT},
   {"label", TT_LINE_TYPE_LABEL},
+  {"low-ceiling", TT_LINE_TYPE_LOWCEILING},
   {"map-connection", TT_LINE_TYPE_MAP_CONNECTION},
   {"moonmilk", TT_LINE_TYPE_MOONMILK},
   {"overhang", TT_LINE_TYPE_OVERHANG},
   {"pit", TT_LINE_TYPE_PIT},
+  {"pit-chimney", TT_LINE_TYPE_PITCHIMNEY},
   {"pitch", TT_LINE_TYPE_PIT},
+  {"rimstone-dam", TT_LINE_TYPE_RIMSTONEDAM},
+  {"rimstone-pool", TT_LINE_TYPE_RIMSTONEPOOL},
   {"rock-border", TT_LINE_TYPE_ROCK_BORDER},
   {"rock-edge", TT_LINE_TYPE_ROCK_EDGE},
   {"rope", TT_LINE_TYPE_ROPE},
@@ -229,6 +246,7 @@ static const thstok thtt_line_types[] = {
   {"survey", TT_LINE_TYPE_SURVEY},
   {"u",TT_LINE_TYPE_U},
   {"via-ferrata",TT_LINE_TYPE_VIA_FERRATA},
+  {"walkway", TT_LINE_TYPE_WALKWAY},
   {"wall", TT_LINE_TYPE_WALL},
   {"water-flow", TT_LINE_TYPE_WATER_FLOW},
   {NULL, TT_LINE_TYPE_UNKNOWN},
@@ -238,7 +256,7 @@ static const thstok thtt_line_types[] = {
 /**
  * Line subtypes.
  */
- 
+
 enum {
   TT_LINE_SUBTYPE_UNKNOWN,
   TT_LINE_SUBTYPE_TEMPORARY,
@@ -268,7 +286,7 @@ enum {
 /**
  * Line subtypes parsing table.
  */
- 
+
 static const thstok thtt_line_subtypes[] = {
   {"bedrock", TT_LINE_SUBTYPE_BEDROCK},
   {"blocks",TT_LINE_SUBTYPE_BLOCKS},
@@ -304,24 +322,24 @@ static const thstok thtt_line_subtypes[] = {
 class thline : public th2ddataobject {
 
   public:
-  
+
   friend class thdb2d;
 
   int type,  ///< Line type.
     outline,  ///< Line outline.
     closed,  ///< How line is closed.
     csubtype;  ///< Current subtype.
-    
+
   const char * text;  ///< Label text.
-  
+
   bool reverse;  ///< Whether line should be reversed.
   bool is_closed;  ///< Whether line is closed.
 
   double m_height; ///< Height of a pit.
-  
+
   class thdb2dlp * first_point,  ///< First line point.
     * last_point;  ///< Last line point.
-    
+
   void parse_type(char * ss);  ///< Parse line type.
   void parse_subtype(char * ss);  ///< Parse line subtype.
   void parse_border(char * ss);  ///< Parse line type.
@@ -335,72 +353,72 @@ class thline : public th2ddataobject {
   void parse_text(char * ss);  ///< Parse line text.
   void insert_line_point(int nargs, char ** args, double * nums = NULL);  ///< Insert line point.
   void insert_point_mark(char * ss);  ///< Insert line point mark.
-  
+
   void preprocess();  ///< Reverse if necessary and close.
 
   /**
    * Standard constructor.
    */
-  
+
   thline();
-  
-  
+
+
   /**
    * Standard destructor.
    */
-   
+
   ~thline();
-  
-  
+
+
   /**
    * Return class identifier.
    */
-  
-  virtual int get_class_id();
-  
-  
+
+  int get_class_id() override;
+
+
   /**
    * Return class name.
    */
-   
-  virtual const char * get_class_name() {return "thline";};
-  
-  
+
+  const char * get_class_name() override {return "thline";};
+
+
   /**
    * Return true, if son of given class.
    */
-  
-  virtual bool is(int class_id);
-  
-  
+
+  bool is(int class_id) override;
+
+
   /**
    * Return number of command arguments.
    */
-   
-  virtual int get_cmd_nargs();
-  
-  
+
+  int get_cmd_nargs() override;
+
+
   /**
    * Return command name.
    */
-   
-  virtual const char * get_cmd_name();
-  
-  
+
+  const char * get_cmd_name() override;
+
+
   /**
    * Return command end option.
    */
-   
-  virtual const char * get_cmd_end();
-  
-  
+
+  const char * get_cmd_end() override;
+
+
   /**
    * Return option description.
    */
-   
-  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
-  
-  
+
+  thcmd_option_desc get_cmd_option_desc(const char * opts) override;
+
+
   /**
    * Set command option.
    *
@@ -408,49 +426,40 @@ class thline : public th2ddataobject {
    * @param args Option arguments array.
    * @param argenc Arguments encoding.
    */
-   
-  virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
 
-
-  /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
+  void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline) override;
 
 
   /**
    * Print object properties.
    */
-   
-  virtual void self_print_properties(FILE * outf); 
-  
-  
+
+  void self_print_properties(FILE * outf) override;
+
+
   /**
    * Return marked line station.
    */
-   
+
   class thdb2dlp * get_marked_station(const char * mark);
 
 
   /**
    * Export to metapost file.
    */
-   
-  virtual bool export_mp(class thexpmapmpxs * out);
+
+  bool export_mp(class thexpmapmpxs * out) override;
 
 
   /**
    * Export only path to metapost file.
    */
-   
+
   virtual unsigned export_path_mp(class thexpmapmpxs * out,
       int from = 0, int to = -1, int dbglevel = -1);
 
-  virtual void start_insert();
-  
+  void start_insert() override;
+
 };
 
 

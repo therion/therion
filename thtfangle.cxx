@@ -25,19 +25,16 @@
  * --------------------------------------------------------------------
  */
  
+#include "therion.h"
 #include "thparse.h"
 #include "thtfangle.h"
 #include "thexception.h"
 #include "thinfnan.h"
 #include <math.h>
 
-thtfangle::thtfangle() {
+thtfangle::thtfangle() : thtf(TT_TFU_DEG) {}
 
-  this->units = TT_TFU_DEG;
-  this->allow_percentage = false;
-
-}
-
+bool mils_warning(true);
 
 void thtfangle::parse_units(char * ustr)
 {
@@ -52,6 +49,11 @@ void thtfangle::parse_units(char * ustr)
     case TT_TFU_MIN:
       this->ufactor = 0.0166666666666666666666666666666666666666666;
       break;
+    case TT_TFU_MILS:
+      if (mils_warning) {
+        thwarning(("using mil/mils as angle unit is deprecated"));
+        mils_warning = false;
+      }
     case TT_TFU_GRAD:
       this->ufactor = 0.9;
       break;
@@ -61,7 +63,7 @@ void thtfangle::parse_units(char * ustr)
 				break;
 			}
     case TT_TFU_UNKNOWN_ANGLE:
-      ththrow(("unknown angle unit -- %s", ustr))
+      ththrow("unknown angle unit -- {}", ustr);
       break;
   }
   

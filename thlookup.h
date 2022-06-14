@@ -34,6 +34,7 @@
 #include "thlocale.h"
 #include "thmapstat.h"
 #include <list>
+#include <string>
 
 /**
  * lookup command options tokens.
@@ -64,6 +65,7 @@ struct thlookup_table_row {
   const char * m_valueString;
   class thdataobject * m_ref;
   const char * m_label;
+  std::string m_labelTeX, m_labelStr;
   thlayout_color m_color;
   thlookup_table_row() : m_valueDbl(thnan), m_valueDblFrom(thnan), m_valueString(""), m_ref(NULL), m_label("") {}
   void parse(class thlookup * lkp, char * args);
@@ -87,10 +89,11 @@ class thlookup : public thdataobject {
   public:
 
   int m_type;
-  bool m_intervals, m_ascending;
+  bool m_intervals, m_ascending, m_autoIntervals;
   thlookup_table_list m_table;
   const char * m_title;
   thmapstat m_autoStat;
+  double m_depth_altitude;
 
   /**
    * Standard constructor.
@@ -110,49 +113,49 @@ class thlookup : public thdataobject {
    * Return class identifier.
    */
   
-  virtual int get_class_id();
+  int get_class_id() override;
   
   
   /**
    * Return class name.
    */
    
-  virtual const char * get_class_name() {return "thlookup";};
+  const char * get_class_name() override {return "thlookup";};
   
   
   /**
    * Return true, if son of given class.
    */
   
-  virtual bool is(int class_id);
+  bool is(int class_id) override;
   
   
   /**
    * Return number of command arguments.
    */
    
-  virtual int get_cmd_nargs();
+  int get_cmd_nargs() override;
   
   
   /**
    * Return command name.
    */
    
-  virtual const char * get_cmd_name();
+  const char * get_cmd_name() override;
   
   
   /**
    * Return command end option.
    */
    
-  virtual const char * get_cmd_end();
+  const char * get_cmd_end() override;
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
+  thcmd_option_desc get_cmd_option_desc(const char * opts) override;
   thcmd_option_desc get_default_cod(int id);
   
   /**
@@ -163,23 +166,20 @@ class thlookup : public thdataobject {
    * @param argenc Arguments encoding.
    */
    
-  virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
-
-
-  /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
+  void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline) override;
 
 
   /**
    * Get context for object.
    */
    
-  virtual int get_context();
+  int get_context() override;
+  
+  
+  /**
+   * Calculate interpolated value.
+   */
+  thlayout_color value2clr(double sval);
 
   /**
    * Set scrap color.

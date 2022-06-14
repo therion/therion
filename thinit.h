@@ -53,7 +53,7 @@ class thinit {
 
   public:  
 
-  int encoding_default, encoding_sql;  ///< Default encoding.
+  int encoding_default = 0, encoding_sql = 0;  ///< Default encoding.
     
   thbuffer path_cavern, ///< Survex executable full path.
     path_pdftex, path_mpost,  ///< PDF tex and metapost path
@@ -139,8 +139,9 @@ class thinit {
   void check_font_path(const char * fname, int index);
   
   int get_encoding(int type = THINIT_ENCODING_DEFAULT);
-  
-  
+
+  void set_proj_lib_path();
+
 };
 
 

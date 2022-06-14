@@ -83,10 +83,10 @@ class thdb2dprj {
   class thjoin * first_join,  ///< Joins in given projection.
     * last_join;  ///< Joins in given projection.
     
-  class thdb2dji * first_join_list, ///< 1. Join list.
-    * last_join_list;  ///< Last join list.
+  class thdb2dji * first_join_list = nullptr, ///< 1. Join list.
+    * last_join_list = nullptr;  ///< Last join list.
 
-  double shift_x, shift_y, shift_z, rshift_x, rshift_y, rshift_z; ///< Shift + reverse shift.
+  double shift_x, shift_y, shift_z, rshift_x = 0.0, rshift_y = 0.0, rshift_z = 0.0; ///< Shift + reverse shift.
 
   thmapstat stat;
 

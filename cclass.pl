@@ -28,7 +28,7 @@ while (<TST>) {
     $level = $1;
   }
 }
-die "$myname: uknown level\n" if ($level == 0);
+die "$myname: unknown level\n" if ($level == 0);
 close(TST);
 $level += 1000;
 $levelp = $level + 1;
@@ -179,15 +179,6 @@ class $thclass : public $thfather {
 
 
   /**
-   * Delete this object.
-   *
-   * \@warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
-
-
-  /**
    * Print object properties.
    */
    
@@ -310,11 +301,6 @@ void $thclass\::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lo
   }
 }
 
-
-void $thclass\::self_delete()
-{
-  delete this;
-}
 
 void $thclass\::self_print_properties(FILE * outf)
 {

@@ -1,13 +1,19 @@
+\iffulloutput
 \vbox to 0pt{\kern-1in\kern-10pt\hbox to 0pt{\kern-1in
   \pic{thbook.jpg}\hss}\vss}
+\fi
 
 {\footline={}
 \hbox{}
 \vskip0pt
-\font\tit=cmssdc10 at 36pt
+\font\tit=cmssdc10 at\ifnum\outputsize=1 32pt\else36pt\fi
 \font\subtit=cmssdc10 at 24pt
 \rightline{\tit The Therion Book\hskip0pt}
-\vskip365pt
+\iffulloutput
+  \vskip365pt
+\else
+  \vskip20pt
+\fi
 \rightline{\subtit Stacho Mudr\'ak\hskip0pt}
 \vskip20pt
 \rightline{\subtit Martin Budaj\hskip0pt}
@@ -17,50 +23,54 @@
 Therion is copyrighted software. Distributed under the GNU General Public
 License.
 
-Copyright \copyright\ 1999--2017 Stacho Mudr\'ak, Martin Budaj
+Copyright \copyright\ 1999--2021 Stacho Mudr\'ak, Martin Budaj
 
 This book describes Therion \input version \unskip.
 %Generated on \the\year--\twodigits{\the\month}--\twodigits{\the\day} .
 
 \vskip1.2cm
 
-Code contributions by {\it Olly Betts}, {\it Marco Corvi}, {\it Vladimir Georgiev}, {\it Georg Pacher} and {\it Dimitrios Zachariadis}.
+Code contributions by {\it Mat\v ej Plch}, {\it Olly Betts}, {\it Marco Corvi}, {\it Vladimir Georgiev},
+{\it Georg Pacher} and {\it Dimitrios Zachariadis}.
 \bigskip
-\leftline{We owe thanks to}
+We owe thanks to
 %\leftline{{\it Martin Sluka\/}} % for his support concerning not only Therion,}
 %\leftline{{\it Martin Heller\/}} % for criticism on first implementation of scrap distortion,}
 %\leftline{{\it Olly Betts\/}} % for idea of importing processed centreline instead of raw survey data,}
 %\leftline{{\it Wookey\/}} % for improving the documentation.}
-\leftline{{\it Martin Sluka}, {\it Ladislav Bla\v zek}, {\it Martin Heller}, {\it Wookey}, {\it Olly Betts}}
-\leftline{and all users for their feedback, support and suggestions.}
+{\it Martin Sluka}, {\it Ladislav Bla\v zek}, {\it Martin Heller}, {\it Wookey}, {\it Olly Betts}
+and all users for their feedback, support and suggestions.
+
+\iffulloutput
 \vskip1.2cm
 \leftline{Translations (\%):}
 \medskip
 \leavevmode\kern1em\vbox{\font\rm=cmr10\rm\font\it=cmti10\rm\halign{#\hfil\quad&\hfil#\hfil\quad&\hfil#\hfil\quad&\hfil#\hfil\quad&#\hfil\cr
 {\it Language}&{\it XTherion}&{\it Map header}&{\it Loch}&{\it Translated by}\cr\noalign{\smallskip\hrule\smallskip}
-bg                 & 81 & 80 & 100 & Alexander Yanev, Ivo Tachev, Vladimir Georgiev\cr
-ca                 & -- & 83 & -- & Evaristo Quiroga\cr
-cz                 & 83 & 77 & -- & Ladislav Bla\v zek\cr
-de                 & 97 & 77 & -- & Roger Schuster, Georg Pacher, Benedikt Hallinger\cr
-el                 & 80 & 71 & -- & Stelios Zacharias\cr
+bg                 & 81 & 77 & 100 & Alexander Yanev, Ivo Tachev, Vladimir Georgiev\cr
+ca                 & -- & 80 & -- & Evaristo Quiroga\cr
+cs                 & 83 & 75 & -- & Ladislav Bla\v zek\cr
+de                 & 97 & 74 & -- & Roger Schuster, Georg Pacher, Benedikt Hallinger\cr
+el                 & 80 & 69 & -- & Stelios Zacharias\cr
 en[\_GB$\mid$\_US] & 72 & 100 &100 & Stacho Mudr\'ak, Olly Betts, Rodrigo Severo\cr
-es                 & 100 & 82 & -- & Roman Mu\~noz, Evaristo Quiroga\cr
-fr                 & 99 & 82 & -- & Eric Madelaine, Gilbert Fernandes\cr
-it                 & 81 & 75 & -- & Marco Corvi\cr
-mi                 & -- & 74 & -- & Kyle Davis, Bruce Mutton\cr
-pl                 & -- & 73 & -- & Krzysztof Dudzi\'nski\cr
+es                 & 100 & 79 & -- & Roman Mu\~noz, Evaristo Quiroga\cr
+fr                 & 99 	& 79 & -- & Eric Madelaine, Gilbert Fernandes\cr
+it                 & 100 & 99 & 100 & Marco Corvi, Francesco Bellamoli\cr
+mi                 & -- & 71 & -- & Kyle Davis, Bruce Mutton\cr
+pl                 & -- & 71 & -- & Krzysztof Dudzi\'nski\cr
 pt[\_BR$\mid$\_PT] & 100 & 100 & -- & Rodrigo Severo, Toni Cavalheiro\cr
-ru                 & 97 & 80 & -- & Vasily V. Suhachev, Andrey Kozhenkov\cr
-sk                 & 96 & 81 & 96 & Stacho Mudr\'ak\cr
-sl                 & 100 & 83 & 96 & Marko Zakrajsek\cr
-sq                 & 80 & 71 & -- & Fatos Katallozi\cr
-zh                 & 81 & 74 & -- & Zhang Yuan Hai, Duncan Collis\cr
+rs                 & -- & 78 & -- & Ivana Miskovic\cr
+ru                 & 97 & 77 & -- & Vasily V. Suhachev, Andrey Kozhenkov\cr
+sk                 & 96 & 78 & 96 & Stacho Mudr\'ak\cr
+sl                 & 100 & 80 & 96 & Marko Zakrajsek\cr
+sq                 & 80 & 69 & -- & Fatos Katallozi\cr
+zh                 & 81 & 71 & -- & Zhang Yuan Hai, Duncan Collis\cr
 }}
-
 
 \vfill
 The cover picture shows survey sketch of {\it Hrozn\'y kame\v nolom} Chamber
 in the Cave of Dead Bats in Slovakia and the map of it produced by Therion.
+\fi
 \eject
 
 \def\write#1#2{}
