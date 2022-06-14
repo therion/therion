@@ -4107,7 +4107,7 @@ en: [Preview above]
 es: [Vista previa superior]
 fr: [Prévisualisation au-dessus]
 it: [Anteprima sopra]
-mi: Tuhi a ana ki runga
+mi: [Tuhi a ana ki runga]
 pl: widok z góry
 pt: [Visualização acima]
 rs: Pogled odozgo
@@ -4127,7 +4127,7 @@ en: [Preview below]
 es: [Vista previa inferior]
 fr: [Prévisualisation au-dessous]
 it: [Anteprima sotto]
-mi: Tuhi a ana ki raro
+mi: [Tuhi a ana ki raro]
 pl: widok z dołu
 pt: [Visualização abaixo]
 rs: Pogled odozdo
@@ -4145,9 +4145,9 @@ de: Erdoberfläche
 el: [χάρτης επιφάνειας]
 en: [Surface Image]
 es: [Mapa de superficie]
-fr: [Image de surface]
-it: [Mappa di superficie]
-mi: Konohi o te whenua
+fr: [Carte extérieure]
+it: Mappa superficie
+mi: [Konohi o te whenua]
 pl: mapa powierzchni
 pt: [Imagem da superfície]
 rs: Površinska karta
