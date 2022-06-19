@@ -1024,22 +1024,30 @@ def l_rope_SKBB (expr P, show_anchors, show_rebelays) =
       x2 := xpart point i+1 of P;
       y2 := ypart point i+1 of P;
 
-      dx1:=x1; dy1:=y1; x1:=0; y1:=0; x2:=x2-dx1; y2:=y2-dy1;
-      if y2 > y1:
-        y3 := y1 - d;
-        x3 := x1 + (x2-x1)*sqrt(d)/(sqrt(d)+sqrt(y2-y1+d));
+      if x1 = x2:
+        if y2 > y1:
+          draw (x1,y1-d) -- (x2,y2);
+        else:
+          draw (x1,y1) -- (x2,y2-d);
+        fi;
       else:
-        y3 := y2 - d;
-        x3 := x1 + (x2-x1)*sqrt(y1-y2+d)/(sqrt(d)+sqrt(y1-y2+d));
+        dx1:=x1; dy1:=y1; x1:=0; y1:=0; x2:=x2-dx1; y2:=y2-dy1;
+        if y2 > y1:
+          y3 := y1 - d;
+          x3 := x1 + (x2-x1)*sqrt(d)/(sqrt(d)+sqrt(y2-y1+d));
+        else:
+          y3 := y2 - d;
+          x3 := x1 + (x2-x1)*sqrt(y1-y2+d)/(sqrt(d)+sqrt(y1-y2+d));
+        fi;
+        numeric a,b,c;
+        a*x1/10*x1 + b/10*x1 + c/10 = y1/10;
+        a*x2/10*x2 + b/10*x2 + c/10 = y2/10;
+        a*x3/10*x3 + b/10*x3 + c/10 = y3/10;
+        draw (x1+dx1,y1+dy1)
+        for t = x1 step (x2-x1)/20 until x2+10*epsilon:
+          -- (t+dx1,a*t*t+b*t+c+dy1)
+        endfor;
       fi;
-      numeric a,b,c;
-      a*x1/10*x1 + b/10*x1 + c/10 = y1/10;
-      a*x2/10*x2 + b/10*x2 + c/10 = y2/10;
-      a*x3/10*x3 + b/10*x3 + c/10 = y3/10;
-      draw (x1+dx1,y1+dy1)
-      for t = x1 step (x2-x1)/20 until x2+10*epsilon:
-        -- (t+dx1,a*t*t+b*t+c+dy1)
-      endfor;
     endfor;
     pair x;
     x = point (length P)-1 of P + whatever * down;
