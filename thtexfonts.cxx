@@ -321,7 +321,7 @@ std::string select_lang(std::string s, std::string lang) {
 
 // main task is done here
 
-std::regex reg_fontsize(R"(<size:\s*(\d{1,3})\s*(\%)?>)");
+std::regex reg_fontsize(R"(<size:((\d{1,3})(\%)?|x?s|x?l|m)>)");
 
 #define SELFONT if (ENC_NEW.NFSS == 0 && lastenc!=-1) T << "\\thf" << u2str(lastenc+1)
 
@@ -335,6 +335,7 @@ std::string utf2tex(std::string str, bool remove_kerning) {
   int laststyle = -1;
   std::string setsize;
   int align = 0;
+  int tmpint;
   bool rtl = false;
   // bool link_active = false;
   bool is_multiline = false;
@@ -380,10 +381,21 @@ std::string utf2tex(std::string str, bool remove_kerning) {
   std::string out;
   std::string::const_iterator it = str.cbegin(), end = str.cend();
   for (std::smatch match; std::regex_search(it, end, match, reg_fontsize); it = match[0].second) {
-    if (match.str(2) == "%") {
-      out += (std::string) match.prefix() + "\x1B\xE" + (char) (std::max((int) std::round(std::stod(match.str(1)) / 10), 1));  // 10 % increments to fit the values into a char
-    } else
-      out += (std::string) match.prefix() + "\x1B\xD" + (char) (std::min(std::max(std::stoi(match.str(1)),1),127));  // font size limited to <1,127>
+    if (match.str(1) == "xs")
+      out += (std::string) match.prefix() + "\x1B\xE" + (char) 101;
+    else if (match.str(1) == "s")
+      out += (std::string) match.prefix() + "\x1B\xE" + (char) 102;
+    else if (match.str(1) == "m")
+      out += (std::string) match.prefix() + "\x1B\xE" + (char) 103;
+    else if (match.str(1) == "l")
+      out += (std::string) match.prefix() + "\x1B\xE" + (char) 104;
+    else if (match.str(1) == "xl")
+      out += (std::string) match.prefix() + "\x1B\xE" + (char) 105;
+    else if (match.str(3) == "%")  // font size in percents; 10 % increments to fit the values into <1,100> range
+      out += (std::string) match.prefix() + "\x1B\xE" + (char) (std::max((int) std::round(std::stod(match.str(2)) / 10), 1));
+    else if (match.str(1) == match.str(2))   // font size in points; limited to <1,127>
+      out += (std::string) match.prefix() + "\x1B\xD" + (char) (std::min(std::max(std::stoi(match.str(2)),1),127));
+    else therror(("invalid font size specification"));
   }
   out.append(it, end);
   str = out;
@@ -442,7 +454,20 @@ std::string utf2tex(std::string str, bool remove_kerning) {
 //                 break;
         //// endlinks
         case 0xD: setsize = fmt::format("\\size[{}]", (int) *(++I)); T << setsize; SELFONT; break;
-        case 0xE: setsize = fmt::format("\\size[\\numexpr {}*\\basefontsize/10\\relax]", (int) *(++I)); T << setsize; SELFONT; break;
+        case 0xE:
+          tmpint = (int) *(++I);
+          switch (tmpint) {
+            case 101: setsize = "\\thtinysize "; break;
+            case 102: setsize = "\\thsmallsize "; break;
+            case 103: setsize = "\\thnormalsize "; break;
+            case 104: setsize = "\\thlargesize "; break;
+            case 105: setsize = "\\thhugesize "; break;
+            // 1-100: size in percents
+            default: setsize = fmt::format("\\size[\\numexpr {}*\\basefontsize/10\\relax]", tmpint); break;
+          }
+          T << setsize;
+          SELFONT;
+          break;
       }
       continue;
     }
