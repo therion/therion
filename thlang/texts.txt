@@ -117,7 +117,7 @@ mi: kaimataara a papa
 pl: punkt pomiarowy naturalny
 pt: base natural
 rs: prirodna merna tačka
-ru: естественная точка привязки
+ru: реперная точка (естественая)
 sk: meračský bod (prírodný)
 sl: merilna točka (naravna)
 sq: stacion mates natyral
@@ -137,7 +137,7 @@ mi: kaimataara whakakōhatu
 pl: punkt pomiarowy (zastabilizowany)
 pt: base fixa
 rs: stalna merna tačka
-ru: репер
+ru: реперная точка (фиксированная)
 sk: meračský bod (stabilizovaný)
 sl: merilna točka (stacionarna)
 sq: stacion mates I palevizshem
@@ -1433,7 +1433,7 @@ mi: rohe kōhatu
 pl: obrys kamienia
 pt: contorno da rocha
 rs: obris kamena
-ru: внешняя кромка глыбы
+ru: внешний контур глыбы
 sk: obrys kameňa
 sl: skalna meja
 sq: kufij shkembinjsh
@@ -1453,7 +1453,7 @@ mi: mata kohatu
 pl: krawędzie kamienia
 pt: bordas da rocha
 rs: ivice kamena
-ru: внутренняя кромка глыбы
+ru: кромка глыбы
 sk: hrany kameňa
 sl: skalni rob
 sq: skaji I shkembit
@@ -1566,6 +1566,7 @@ fr: fente de dessiccation
 it: fessura di disseccamento
 pt: lama rachada
 rs: ispucalo blato
+ru: растрескавшаяся глина
 sk: popraskané blato
 
 therion: point water
@@ -1987,6 +1988,7 @@ fr: fentes de dessiccation
 it: fessura di disseccamento
 pt: lama rachada
 rs: ispucalo blato
+ru: растрескавшаяся глина
 
 therion: area pillar
 bg: сталактон
@@ -2015,6 +2017,7 @@ fr: pillier avec draperies
 it: colonna con vele
 pt: coluna com cortinas
 rs: stub od draperije
+ru: колонна с занавеями
 
 therion: area stalactite
 bg: сталактит
@@ -2043,6 +2046,7 @@ fr: stalactite-stalagmite
 it: stalattite-stalagmite
 pt: estalactite-estalagmite
 rs: stalaktit-stalagmit
+ru: сталактит-сталагмит
 
 therion: area stalagmite
 bg: сталагмит
@@ -2576,7 +2580,7 @@ pl: nacieki
 pt: canudo
 pt_PT: tubulares
 rs: cevčice
-ru: сталактиты-соломины
+ru: сталактиты-макароны
 sk: brčká
 sl: cevke
 sq: shkopinje sode
@@ -2658,7 +2662,7 @@ pl: heliktyt
 pt_BR: helictite
 pt_PT: excêntrica
 rs: heliktit
-ru: геликтиты
+ru: геликтит
 sk: heliktit
 sl: helektit
 sq: heliktite
@@ -2671,6 +2675,7 @@ fr: excentriques
 it: eccentriche
 pt: helictites
 rs: heliktiti
+ru: геликтиты
 
 therion: point aragonite
 bg: арагонит
@@ -2828,7 +2833,7 @@ mi: peka hono
 pl: anastomoza
 pt: anastomose
 rs: anastomoze
-ru: анастомозис
+ru: анастомоз
 sk: anastomóza
 sl: anastomoza
 sq: anastomosa(kuartz)
@@ -3110,7 +3115,7 @@ mi: arawhata
 pl: sztywna drabinka
 pt: escada fixa
 rs: fiksirane lestvice
-ru: жесткая лестница
+ru: фиксированная лестница
 sk: fixný rebrík
 sl: klini
 sq: shkalle fikse
@@ -3130,7 +3135,7 @@ mi: arawhata
 pl: sztywna drabinka
 pt: escada fixa
 rs: fiksirane lestvice
-ru: жесткая лестница
+ru: фиксированная лестница
 sk: fixný rebrík
 sl: klini
 sq: shkalle fikse
@@ -3163,6 +3168,7 @@ fr: autel
 it: altare
 pt: altar
 rs: oltar
+ru: алтарь
 
 therion: point archeo-excavation
 de: Archäologische Ausgrabung
@@ -3171,6 +3177,7 @@ fr: fouille archéologique
 it: scavo archeologico
 pt: escavação arqueológica
 rs: arheološka iskopavanja
+ru: археологические раскопки
 
 therion: point audio
 de: Ton
@@ -3179,6 +3186,7 @@ fr: audio
 it: audio
 pt: áudio
 rs: razglas
+ru: аудио
 
 therion: point bat
 de: Fledermaus
@@ -3187,6 +3195,7 @@ fr: chiroptère
 it: pipistrello
 pt: morcegos
 rs: slepi miš
+ru: летучая мышь
 
 therion: point bones
 de: Knochen
@@ -3195,6 +3204,7 @@ fr: ossement
 it: ossi
 pt: ossos
 rs: kosti
+ru: кости
 
 therion: point curtains
 de: Vorhänge
@@ -3203,6 +3213,7 @@ fr: draperies
 it: vele
 pt: cortinas
 rs: draperije
+ru: занавеси
 
 therion: point danger
 de: Gefahr
@@ -3211,6 +3222,7 @@ fr: danger
 it: pericolo
 pt: perigo
 rs: opasnost
+ru: опасность
 
 therion: point disc-pillar
 de: Scheibe auf Säule
@@ -3219,6 +3231,7 @@ fr: disque sur colonne
 it: disco su colonna
 pt: disco em coluna
 rs: disk na stubu
+ru: колонна с диском
 
 therion: point disc-stalactite
 de: Scheibe auf Stalaktit
@@ -3227,6 +3240,7 @@ fr: disque sur stalactite
 it: disco su stalattite
 pt: disco em estalactite
 rs: disk na stalaktitu
+ru: сталактит с диском
 
 therion: point disc-stalagmite
 de: Scheibe auf Stalagmit
@@ -3235,6 +3249,7 @@ fr: disque sur stalagmite
 it: disco su stalagmite
 pt: disco em estalagmite
 rs: disk na stalagmitu
+ru: сталагмит с диском
 
 therion: point disc-pillars
 de: Säulen mit Scheiben
@@ -3243,6 +3258,7 @@ fr: disques sur colonnes
 it: dischi su colonne
 pt: discos em colunas
 rs: stubovi sa diskovima
+ru: колонны с дисками
 
 therion: point disc-stalactites
 de: Stalaktiten mit Scheiben
@@ -3251,6 +3267,7 @@ fr: disques sur stalactites
 it: dischi su stalattiti
 pt: discos em estalactites
 rs: stalaktiti sa diskovima
+ru: сталактиты с дисками
 
 therion: point disc-stalagmites
 de: Stalagmiten mit Scheiben
@@ -3259,6 +3276,7 @@ fr: disques sur stalagmites
 it: dischi su stalagmiti
 pt: discos em estalagmites
 rs: stalagmiti sa diskovima
+ru: сталагмиты с дисками
 
 therion: point electric-light
 de: Elektrisches Licht
@@ -3267,6 +3285,7 @@ fr: éclairage électrique
 it: luce elttrica
 pt: luz elétrica
 rs: električno osvetljenje
+ru: элетрическое освещение
 
 therion: point ex-voto
 de: Votiv
@@ -3275,6 +3294,7 @@ fr: ex-voto
 it: ex-voto
 pt: ex-voto
 rs: zaglavak
+ru: вотивный дар
 
 therion: point gate
 de: Tor
@@ -3283,6 +3303,7 @@ fr: porte
 it: cancello
 pt: portão
 rs: kapija
+ru: ворота
 
 therion: point human-bones
 de: Menschliche Knochen
@@ -3292,6 +3313,7 @@ it: ossa umane
 mi: kōiwi
 pt: ossos humanos
 rs: ljudske kosti
+ru: человеческие кости
 
 therion: point masonry
 de: Mauerwerk
@@ -3300,6 +3322,7 @@ fr: maçonnerie
 it: muratura
 pt: alvenaria
 rs: veštački zid
+ru: каменная кладка
 
 therion: point minus
 de: Minus
@@ -3309,6 +3332,7 @@ it: meno
 mi: 
 pt: segue abaixo
 rs: minus
+ru: минус
 
 therion: point mud
 de: Schlamm
@@ -3318,6 +3342,7 @@ it: fango
 mi: 
 pt: lama
 rs: blato
+ru: грязь
 
 therion: point nameplate
 de: Namensschild
@@ -3327,6 +3352,7 @@ it: placchetta identificativa
 mi: 
 pt: placa de identificação
 rs: natpis
+ru: табличка с именем
 
 therion: point no-wheelchair
 de: Kein Rollstuhlzugang
@@ -3336,6 +3362,7 @@ it: non accessibile con sedia a rotelle
 mi: 
 pt: não acessível com cadeira de rodas
 rs: nepristupačno za invalide
+ru: не доступно для инвалидной коляски
 
 therion: point pendant
 de: Pendant
@@ -3345,6 +3372,7 @@ it: pendente
 mi: 
 pt: pendente
 rs: pendant
+ru: подвеска
 
 therion: point pillar-with-curtains
 de: Säule mit Vorhängen
@@ -3354,6 +3382,7 @@ it: colonna con vele
 mi: 
 pt: coluna com cortinas
 rs: stub od draperije
+ru: колонна с занавесью
 
 therion: point pillars-with-curtains
 de: Säulen mit Vorhängen
@@ -3362,6 +3391,7 @@ fr: colonnes avec draperies
 it: colonne con vele
 pt: colunas com cortinas
 rs: stubovi od draperije
+ru: колонны с занавесями
 
 therion: point photo
 de: Foto
@@ -3371,6 +3401,7 @@ it: foto
 mi: 
 pt: foto
 rs: foto
+ru: фото
 
 therion: point plus
 de: Plus
@@ -3380,6 +3411,7 @@ it: più
 mi: 
 pt: segue acima
 rs: plus
+ru: плюс
 
 therion: point plus-minus
 de: Plus/Minus
@@ -3388,6 +3420,7 @@ fr: plus/moins
 it: più/meno
 pt: segue acima e abaixo
 rs: plus-minus
+ru: плюс-минус
 
 therion: point seed-germination
 de: Samenkeimung
@@ -3397,6 +3430,7 @@ it: germinazione di seme
 mi: 
 pt: germinação de semente
 rs: proklijalo seme
+ru: прорастание семян
 
 therion: point stalactite-stalagmite
 de: Stalaktit-Stalagmit
@@ -3406,6 +3440,7 @@ it: stalattite-stalagmite
 mi: 
 pt: estalactite-estalagmite
 rs: stalaktit-stalagmit
+ru: сталактит-сталагмит
 
 therion: point stalactites-stalagmites
 de: Stalaktiten-Stalagmiten
@@ -3415,6 +3450,7 @@ it: stalattiti-stalagmiti
 mi: 
 pt: estalactites-estalagmites
 rs: stalaktiti-stalagmiti
+ru: сталактититы-сталагмиты
 
 therion: point tree-trunk
 de: Baumstamm
@@ -3424,6 +3460,7 @@ it: tronco d'albero
 mi: 
 pt: tronco de árvore
 rs: balvan
+ru: ствол дерева
 
 therion: point volcano
 de: Vulkan
@@ -3433,6 +3470,7 @@ it: vulcano
 mi: 
 pt: vulcão
 rs: vulkan
+ru: вулкан
 
 therion: point walkway
 de: Gehweg
@@ -3442,6 +3480,7 @@ it: passerella
 mi: 
 pt: passarela
 rs: staza
+ru: дорожка
 
 therion: point water-drip
 de: Wassertropfen
@@ -3451,6 +3490,7 @@ it: stillicidio
 mi: 
 pt: gotejamento
 rs: prokapnice
+ru: капель
 
 therion: point wheelchair
 de: Rollstuhlzugang
@@ -3460,6 +3500,7 @@ it: accessibile con sedia a rotelle
 mi: 
 pt: acessível com cadeira de rodas
 rs: pristupačno za invalide
+ru: доступно для инвалидной коляски
 
 therion: line rope
 bg: въже
@@ -3631,6 +3672,7 @@ it: ingresso abisso
 mi: 
 pt: entrada em abismo
 rs: natklonjen ulaz u vertikalu
+ru: вход в бездну
 
 therion: line dripline
 de: Trauflinie
@@ -3640,6 +3682,7 @@ it: linea di gocciolamento
 mi: 
 pt: linha de gotejamento
 rs: linija kišenja
+ru: линия капежа
 
 therion: line fault
 de: Störung
@@ -3649,6 +3692,7 @@ it: faglia
 mi: 
 pt: falha
 rs: rased
+ru: разлом
 
 therion: line joint
 de: Kluft
@@ -3658,6 +3702,7 @@ it: diaclasi
 mi: 
 pt: fratura
 rs: pukotina
+ru: сочленение
 
 therion: line low-ceiling
 de: Niedrige Decke
@@ -3667,6 +3712,7 @@ it: soffitto basso
 mi: 
 pt: teto baixo
 rs: spuštanje tavanice
+ru: низкий потолок
 
 therion: line pit-chimney
 de: Schacht-Schlot
@@ -3676,6 +3722,7 @@ it: pozzo/camino
 mi: 
 pt: poço e clarabóia
 rs: jama/odžak
+ru: колодец с камином
 
 therion: line rimstone-dam
 bg: сухо синтрово езеро
@@ -3724,6 +3771,7 @@ fr: cheminement
 it: passerella
 pt: passarela
 rs: staza
+ru: дорожка
 
 therion: point remark
 bg: забележка
@@ -3739,7 +3787,7 @@ mi: korero
 pl: uwaga
 pt: observação
 rs: napomena
-ru: заметка
+ru: примечание
 sk: poznámka
 sl: opomba
 sq: shenim
@@ -3836,6 +3884,7 @@ mi:
 pt: Profundidade
 rs: Dubina
 sl: Globina
+ru: Шкала глубин
 
 therion: title color-legend-map
 bg: Карти
@@ -3868,6 +3917,7 @@ mi:
 pt: Croquis
 rs: Delovi nacrta
 sl: Izrez
+ru: Скрапы
 
 therion: title color-legend-survey
 ca: Topos
@@ -3880,6 +3930,7 @@ mi:
 pt: Topos
 rs: Topografska merenja
 sl: Meritve
+ru: Съёмки
 
 therion: title color-legend-explodate
 ca: Data d'exploració
@@ -3892,6 +3943,7 @@ mi:
 pt: Data da exploração
 rs: Datum istraživanja
 sl: Datum raziskovanja
+ru: Дата первопрохождения
 
 therion: title color-legend-topodate
 ca: Data de topografia
@@ -3904,6 +3956,7 @@ mi:
 pt: Data da topo
 rs: Datum merenja
 sl: Datum merjenja
+ru: Дата топосъёмки
 
 therion: title color-legend-default
 ca: Llegenda de colors
@@ -3918,6 +3971,7 @@ mi:
 pt: Cores
 rs: Tumač boja
 sl: Legenda barv
+ru: Цветовая шкала
 
 therion: units ft
 bg: футове
@@ -3933,7 +3987,7 @@ mi: whīti
 pl: ft (stopy)
 pt: pés
 rs: ft (stope)
-ru: футов
+ru: футы
 sk: ft
 sl: ft
 sq: njesia matese-kembe
@@ -4013,7 +4067,7 @@ mi: Kaipokai whenua
 pl: odkryli
 pt: Explorada por
 rs: Istražili
-ru: Исследование
+ru: Исследователи
 sk: Objavili
 sl: Raziskovali
 sq: hulumtuar nga
@@ -4033,7 +4087,7 @@ mi: Kaipokai whenua
 pl: odkrył
 pt: Explorada por
 rs: Istražio/la
-ru: Исследование
+ru: Исследователь
 sk: Objavil
 sl: Raziskoval
 sq: hulumtuar nga
