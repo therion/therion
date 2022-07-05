@@ -117,7 +117,7 @@ mi: kaimataara a papa
 pl: punkt pomiarowy naturalny
 pt: base natural
 rs: prirodna merna tačka
-ru: реперная точка (естественая)
+ru: реперная точка (естественная)
 sk: meračský bod (prírodný)
 sl: merilna točka (naravna)
 sq: stacion mates natyral
@@ -2017,7 +2017,7 @@ fr: pillier avec draperies
 it: colonna con vele
 pt: coluna com cortinas
 rs: stub od draperije
-ru: колонна с занавеями
+ru: колонна с занавесями
 
 therion: area stalactite
 bg: сталактит
@@ -3362,7 +3362,7 @@ it: non accessibile con sedia a rotelle
 mi: 
 pt: não acessível com cadeira de rodas
 rs: nepristupačno za invalide
-ru: не доступно для инвалидной коляски
+ru: недоступно для инвалидов колясочников
 
 therion: point pendant
 de: Pendant
@@ -3500,7 +3500,7 @@ it: accessibile con sedia a rotelle
 mi: 
 pt: acessível com cadeira de rodas
 rs: pristupačno za invalide
-ru: доступно для инвалидной коляски
+ru: доступно для инвалидов колясочников
 
 therion: line rope
 bg: въже
