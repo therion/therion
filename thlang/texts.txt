@@ -6,7 +6,6 @@ en: Model
 es: Modelo
 fr: Modèle
 it: Modello
-mi: 
 pt: Modelo
 rs: Model
 ru: Модель
@@ -21,7 +20,6 @@ en: Map
 es: Mapa
 fr: Carte
 it: Mappa
-mi: 
 pt: Mapa
 rs: Nacrt
 ru: Карта
@@ -36,7 +34,6 @@ en: Surface legs
 es: Visual de superficie
 fr: Visées de surface
 it: Misure di superficie
-mi: 
 pt: Visadas na superfície
 rs: Površinski vlak
 ru: Поверхностная съёмка
@@ -211,7 +208,6 @@ de: Doline
 en: doline
 es: dolina
 fr: doline
-mi: 
 pt: dolina
 rs: dolina
 ru: воронка
@@ -286,7 +282,6 @@ en: arch
 es: arco
 fr: arche
 it: arco
-mi: 
 pt: arco
 rs: prerast
 ru: арка
@@ -2484,7 +2479,6 @@ en: pillars
 es: columnas
 fr: colonnes
 it: colonne
-mi:
 pt: colunas
 rs: stubovi
 ru: колонны
@@ -3329,7 +3323,6 @@ de: Minus
 en: minus
 fr: moins
 it: meno
-mi: 
 pt: segue abaixo
 rs: minus
 ru: минус
@@ -3339,7 +3332,6 @@ de: Schlamm
 en: mud
 fr: boue
 it: fango
-mi: 
 pt: lama
 rs: blato
 ru: грязь
@@ -3349,7 +3341,6 @@ de: Namensschild
 en: nameplate
 fr: plaque signalétique
 it: placchetta identificativa
-mi: 
 pt: placa de identificação
 rs: natpis
 ru: табличка с именем
@@ -3359,7 +3350,6 @@ de: Kein Rollstuhlzugang
 en: not wheelchair accessible
 fr: non accessible aux personnes à mobilité réduite
 it: non accessibile con sedia a rotelle
-mi: 
 pt: não acessível com cadeira de rodas
 rs: nepristupačno za invalide
 ru: недоступно для инвалидов колясочников
@@ -3369,7 +3359,6 @@ de: Pendant
 en: pendant
 fr: pendeloque
 it: pendente
-mi: 
 pt: pendente
 rs: pendant
 ru: подвеска
@@ -3379,7 +3368,6 @@ de: Säule mit Vorhängen
 en: pillar with curtains
 fr: colonne avec draperies
 it: colonna con vele
-mi: 
 pt: coluna com cortinas
 rs: stub od draperije
 ru: колонна с занавесью
@@ -3398,7 +3386,6 @@ de: Foto
 en: photo
 fr: cliché
 it: foto
-mi: 
 pt: foto
 rs: foto
 ru: фото
@@ -3408,7 +3395,6 @@ de: Plus
 en: plus
 fr: plus
 it: più
-mi: 
 pt: segue acima
 rs: plus
 ru: плюс
@@ -3427,7 +3413,6 @@ de: Samenkeimung
 en: seed-germination
 fr: graine germée
 it: germinazione di seme
-mi: 
 pt: germinação de semente
 rs: proklijalo seme
 ru: прорастание семян
@@ -3437,7 +3422,6 @@ de: Stalaktit-Stalagmit
 en: stalactite-stalagmite
 fr: stalactite-stalagmite
 it: stalattite-stalagmite
-mi: 
 pt: estalactite-estalagmite
 rs: stalaktit-stalagmit
 ru: сталактит-сталагмит
@@ -3447,7 +3431,6 @@ de: Stalaktiten-Stalagmiten
 en: stalactites-stalagmites
 fr: stalactites-stalagmites
 it: stalattiti-stalagmiti
-mi: 
 pt: estalactites-estalagmites
 rs: stalaktiti-stalagmiti
 ru: сталактититы-сталагмиты
@@ -3457,7 +3440,6 @@ de: Baumstamm
 en: tree-trunk
 fr: tronc d'arbre
 it: tronco d'albero
-mi: 
 pt: tronco de árvore
 rs: balvan
 ru: ствол дерева
@@ -3467,7 +3449,6 @@ de: Vulkan
 en: volcano
 fr: volcan
 it: vulcano
-mi: 
 pt: vulcão
 rs: vulkan
 ru: вулкан
@@ -3477,7 +3458,6 @@ de: Gehweg
 en: walkway
 fr: cheminement
 it: passerella
-mi: 
 pt: passarela
 rs: staza
 ru: дорожка
@@ -3487,7 +3467,6 @@ de: Wassertropfen
 en: water-drip
 fr: goutte d'eau
 it: stillicidio
-mi: 
 pt: gotejamento
 rs: prokapnice
 ru: капель
@@ -3497,7 +3476,6 @@ de: Rollstuhlzugang
 en: wheelchair accessible
 fr: accessible aux personnes à mobilité réduite
 it: accessibile con sedia a rotelle
-mi: 
 pt: acessível com cadeira de rodas
 rs: pristupačno za invalide
 ru: доступно для инвалидов колясочников
@@ -3550,7 +3528,6 @@ en: via-ferrata
 es: via-ferrata
 fr: via-ferrata
 it: via ferrata
-mi: 
 pt: via ferrata
 rs: via-ferata
 ru: виа-ферата
@@ -3565,7 +3542,6 @@ en: via-ferrata
 es: via-ferrata
 fr: via-ferrata
 it: via ferrata
-mi: 
 pt: via ferrata
 rs: via-ferata
 ru: виа-ферата
@@ -3621,7 +3597,6 @@ en: handrail
 es: barandilla
 fr: main-courante
 it: corrimano
-mi: 
 pt: corrimão
 rs: sajla
 ru: перила
@@ -3637,7 +3612,6 @@ en: handrail
 es: barrandilla
 fr: main-courante
 it: corrimano
-mi: 
 pt: corrimão
 rs: sajla
 ru: перила
@@ -3669,7 +3643,6 @@ de: Abgrund
 en: abyss-entrance
 fr: abîme
 it: ingresso abisso
-mi: 
 pt: entrada em abismo
 rs: natklonjen ulaz u vertikalu
 ru: вход в бездну
@@ -3679,7 +3652,6 @@ de: Trauflinie
 en: dripline
 fr: porche d'entrée
 it: linea di gocciolamento
-mi: 
 pt: linha de gotejamento
 rs: linija kišenja
 ru: линия капежа
@@ -3689,7 +3661,6 @@ de: Störung
 en: fault
 fr: faille
 it: faglia
-mi: 
 pt: falha
 rs: rased
 ru: разлом
@@ -3699,7 +3670,6 @@ de: Kluft
 en: joint
 fr: joint
 it: diaclasi
-mi: 
 pt: fratura
 rs: pukotina
 ru: сочленение
@@ -3709,7 +3679,6 @@ de: Niedrige Decke
 en: low-ceiling
 fr: plafond bas
 it: soffitto basso
-mi: 
 pt: teto baixo
 rs: spuštanje tavanice
 ru: низкий потолок
@@ -3719,7 +3688,6 @@ de: Schacht-Schlot
 en: pit/chimney
 fr: puits-cheminée
 it: pozzo/camino
-mi: 
 pt: poço e clarabóia
 rs: jama/odžak
 ru: колодец с камином
@@ -3880,7 +3848,6 @@ en: Depth
 es: Desnivel
 fr: Profondeur
 it: Profondità
-mi: 
 pt: Profundidade
 rs: Dubina
 sl: Globina
@@ -3913,7 +3880,6 @@ en: Scraps
 es: Trozos/cachos
 fr: Scraps
 it: Scrap
-mi:
 pt: Croquis
 rs: Delovi nacrta
 sl: Izrez
@@ -3926,7 +3892,6 @@ en: Surveys
 es: Topos
 fr: Relevés
 it: Rilievi
-mi: 
 pt: Topos
 rs: Topografska merenja
 sl: Meritve
@@ -3939,7 +3904,6 @@ en: Exploration date
 es: Fecha de exploración
 fr: Date d'exploration
 it: Date di esplorazione
-mi: 
 pt: Data da exploração
 rs: Datum istraživanja
 sl: Datum raziskovanja
@@ -3952,7 +3916,6 @@ en: Surveying date
 es: Fecha de topografia
 fr: Date de relevé
 it: Date di rilievo
-mi:
 pt: Data da topo
 rs: Datum merenja
 sl: Datum merjenja
@@ -3967,7 +3930,6 @@ en_US: Color legend
 es: Leyenda de colores
 fr: Légende colorée
 it: Legenda dei colori
-mi:
 pt: Cores
 rs: Tumač boja
 sl: Legenda barv
