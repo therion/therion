@@ -1,5 +1,11 @@
-Therion 6.1.2 (in progress):
+Therion 6.1.2 (2022-07-11):
 
+therion:
+ * updated fmtlib to 9.0.0
+ * updated Russian translation [#427]
+ * bugs fixed
+   - FTBFS with fmtlib 9.0.0 [Debian #1014679]
+   - empty Maori translations removed
 
 --------------------------------------------------------------------------------
 
