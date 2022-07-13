@@ -88,7 +88,7 @@ void thdate::parse(const char * src)
 
   this->reset();
   
-  unsigned const char * osrc = (unsigned const char *)src;
+  const char * osrc = src;
   unsigned const char * ssrc = (unsigned const char *)src;
   
   int ppos = 0;

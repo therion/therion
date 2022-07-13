@@ -1,10 +1,33 @@
-Therion 6.1.1 (in progress):
+Therion 6.1.3 (in progress):
+
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.2 (2022-07-11):
+
+therion:
+ * updated fmtlib to 9.0.0
+ * updated Russian translation [#427]
+ * bugs fixed
+   - FTBFS with fmtlib 9.0.0 [Debian #1014679]
+   - empty Maori translations removed
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.1 (2022-06-23):
 
 therion:
  * support custom font size in map labels using <size:N%> and <size:xs|s|m|l|xl>
    in the label text
+ * updated Maori translation [#424]
  * bugs fixed:
    - line rope having two points with the same x-coordinate [#423]
+   - spelling errors in the source code
+
+loch:
+ * bugs fixed:
+  -  ABI mismatch preventing loch from starting in msys2 build;
+     fixed by linking to wxWidgets 3.1 [#426]
 
 --------------------------------------------------------------------------------
 
