@@ -71,16 +71,9 @@
 
 #include "thexpshp.h"
 
-thexpshpf::thexpshpf()
-{
-  this->m_fnm = "default";
-  this->m_fpath = NULL;
-  this->m_is_open = false;
-  this->m_xshp = NULL;
-  this->m_type = SHPT_NULL;
-  this->m_object_id = -1;
-  this->m_num_objects = 0;
-}
+thexpshpf::thexpshpf(struct thexpshp * xshp, const char * fnm, int type):
+  m_xshp(xshp), m_fnm(fnm), m_type(type)
+{}
 
 
 bool thexpshpf::open()
@@ -131,33 +124,16 @@ void thexpshpf::close()
 }
 
 
-void thexpshpf::init(thexpshp * xshp, const char * fnm, int type)
-{
-  this->m_fnm = fnm;
-  this->m_fpath = NULL;
-  this->m_xshp = xshp;
-  this->m_type = type;
-}
 
-
-
-
-thexpshp::thexpshp()
-{
-  this->m_dirname = NULL;
-  this->m_xproj = NULL;
-  this->m_expmap = NULL;
-  this->m_expmodel = NULL;
-  
-  this->m_fscrap.init(this, "outline2d", SHPT_POLYGONZ);
-  this->m_fpoints.init(this, "points2d", SHPT_POINTZ);
-  this->m_flines.init(this, "lines2d", SHPT_ARCZ);
-  this->m_fareas.init(this, "areas2d", SHPT_POLYGONZ);
-
-  this->m_fstations3D.init(this, "stations3d", SHPT_POINTZ);
-  this->m_fshots3D.init(this, "shots3d", SHPT_ARCZ);
-  this->m_fwalls3D.init(this, "walls3d", SHPT_MULTIPATCH);
-}
+thexpshp::thexpshp():
+  m_fscrap(this, "outline2d", SHPT_POLYGONZ),
+  m_fpoints(this, "points2d", SHPT_POINTZ),
+  m_flines(this, "lines2d", SHPT_ARCZ),
+  m_fareas(this, "areas2d", SHPT_POLYGONZ),
+  m_fstations3D(this, "stations3d", SHPT_POINTZ),
+  m_fshots3D(this, "shots3d", SHPT_ARCZ),
+  m_fwalls3D(this, "walls3d", SHPT_MULTIPATCH)
+{}
 
 
 
