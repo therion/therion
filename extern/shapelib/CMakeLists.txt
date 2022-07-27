@@ -1,5 +1,5 @@
 add_library(shp dbfopen.c safileio.c sbnsearch.c shpopen.c shptree.c shapefil.h)
-target_include_directories(shp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(shp SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(shp PRIVATE disable-warnings)
 
 if(UNIX)

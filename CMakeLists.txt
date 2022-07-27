@@ -138,9 +138,6 @@ else()
   set(TH_PATH_INI "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SYSCONFDIR}")
 endif()
 
-# ignore warnings from extern library headers
-include_directories(AFTER SYSTEM ${CMAKE_SOURCE_DIR}/extern)
-
 if (BUILD_THERION)
     add_subdirectory(extern/quickhull)
 
