@@ -24,6 +24,7 @@ jobs:
           mkdir build && cd build && \
           cmake -G Ninja \
                 -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/${{ matrix.toolchain }} \
+                -DCMAKE_C_FLAGS="-Werror" \
                 -DCMAKE_CXX_FLAGS="-Werror" \
                 -DUSE_BUNDLED_SHAPELIB=OFF \
                 ${{ matrix.args }} ..
@@ -50,7 +51,7 @@ jobs:
           brew install wxwidgets vtk proj xquartz ninja
       - name: Configure CMake
         run: |
-          mkdir build && cd build && cmake -G Ninja -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
+          mkdir build && cd build && cmake -G Ninja -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
       - run: cmake --build build -t therion loch utest
       - run: cmake --build build -t test
       - name: Install
@@ -73,7 +74,7 @@ jobs:
           msystem: ${{ matrix.config.msystem }}
           update: true
           install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
-      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=OFF -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF -DBUILD_THBOOK=OFF ..
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=OFF -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF -DBUILD_THBOOK=OFF ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - run: cmake --build build -t deploy -- -j 4
 
@@ -106,6 +107,7 @@ jobs:
           ${{ matrix.cmd }}-w64-mingw32.static-cmake -G Ninja \
               -DMXE_USE_CCACHE=OFF \
               -DCMAKE_CROSSCOMPILING_EMULATOR=${{ matrix.wine }} \
+              -DCMAKE_C_FLAGS="-Werror" \
               -DCMAKE_CXX_FLAGS="-Werror" \
               -DBUILD_SHARED_LIBS=OFF \
               -DBUILD_THBOOK=OFF ..

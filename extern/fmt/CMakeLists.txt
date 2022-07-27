@@ -19,5 +19,5 @@ set(FMT_SOURCES
 
 add_library(fmt ${FMT_HEADERS} ${FMT_SOURCES})
 add_library(fmt::fmt ALIAS fmt)
-target_include_directories(fmt SYSTEM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(fmt PRIVATE disable-warnings)
 set_target_properties(fmt PROPERTIES CXX_CLANG_TIDY "")

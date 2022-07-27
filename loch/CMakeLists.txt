@@ -4,9 +4,15 @@ endif()
 
 set(LOCH_DEFINITIONS _GNU_SOURCE LOCH "LX${THPLATFORM}" GL_SILENCE_DEPRECATION TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
 
+# extern library img
+add_library(img img.h img.c)
+target_compile_definitions(img PUBLIC IMG_API_VERSION=1)
+target_link_libraries(img PRIVATE disable-warnings)
+
 # library common with therion
-add_library(common-utils STATIC icase.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c)
-target_compile_definitions(common-utils PUBLIC IMG_API_VERSION=1 PRIVATE ${LOCH_DEFINITIONS})
+add_library(common-utils STATIC icase.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx)
+target_compile_definitions(common-utils PRIVATE ${LOCH_DEFINITIONS})
+target_link_libraries(common-utils PUBLIC img enable-warnings)
 
 if (NOT BUILD_LOCH)
     return()
