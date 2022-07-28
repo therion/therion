@@ -1107,7 +1107,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
         thbuffer.clear();
       }
       else if (tok == "THgradient") {
-        int addon;
+        unsigned int addon;
         if (thbuffer[0] == "L") {
           grad.type = gradient_lin;
           addon = 0;

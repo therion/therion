@@ -350,7 +350,7 @@ void find_jumps() {
 
 int grid_str2int(std::string s, char init = 'A') {
   int res = 0;
-  for (int i = 0; i < s.length(); i++) res = 26*res + s[i] - init + 1;
+  for (size_t i = 0; i < s.length(); i++) res = 26*res + s[i] - init + 1;
   return res;
 }
 

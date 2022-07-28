@@ -3459,9 +3459,12 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 #define ulim(x,y,a) \
   { if (cnt == 0) {xx = x; xy = y; xa = a; nx = x; ny = y; na = a;} \
   else { \
-    if (x > xx) xx = x; if (x < nx) nx = x; \
-    if (y > xy) xy = y; if (y < ny) ny = y; \
-    if (a > xa) xa = a; if (a < na) na = a; \
+    if (x > xx) xx = x; \
+    if (x < nx) nx = x; \
+    if (y > xy) xy = y; \
+    if (y < ny) ny = y; \
+    if (a > xa) xa = a; \
+    if (a < na) na = a; \
   } \
   cnt++; }
 
