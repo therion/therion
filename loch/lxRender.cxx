@@ -918,7 +918,7 @@ void lxRenderFile::RenderPDFFooter()
 {
 
 
-  size_t src_pos, dst_pos, png_len, png_pos, png_hdr, png_add, buff_read, buff_rest;
+  size_t src_pos, /*dst_pos,*/ png_len, png_pos, png_hdr, png_add, buff_read, buff_rest;
   unsigned char lenbuff[8]; 
 
   png_write_end(png_ptr, NULL);
@@ -946,7 +946,7 @@ void lxRenderFile::RenderPDFFooter()
 #define buffsize 256000
   unsigned char * buff = new unsigned char [buffsize]; 
   contpng = true;
-  dst_pos = ftell(this->m_file);
+  // dst_pos = ftell(this->m_file);
   src_pos = pdf_png_start;
   do {
     fseek(this->m_fileTMP, src_pos, SEEK_SET);
@@ -965,7 +965,7 @@ void lxRenderFile::RenderPDFFooter()
         //fseek(this->m_file, dst_pos, SEEK_SET);
         fwrite(buff, 1, buff_read, this->m_file);
         src_pos += buff_read;
-        dst_pos += buff_read;
+        // dst_pos += buff_read;
       }
       src_pos += 4;
     } else {
