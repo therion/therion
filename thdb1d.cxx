@@ -1631,7 +1631,7 @@ void thdb1d::find_loops()
   
   thlc_cross * lccrosses = NULL, * clccross;
   thlc_cross_arrow * lccrossarrows = NULL, * cca;
-  thlc_series tmpseries, * curseries, * prevseries;
+  thlc_series tmpseries = {}, * curseries, * prevseries;
   std::vector<thlc_series> lcseries;
 
   thdb1d_loop tdbloop;
