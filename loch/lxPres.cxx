@@ -155,7 +155,7 @@ void lxPresentDlg::UpdateControls() {
 void lxPresentDlg::OnCommand(wxCommandEvent& event)
 {
   wxXmlNode * n, * r, * p;
-  long c, sel;
+  size_t c, sel;
   r = this->m_mainFrame->m_pres->GetRoot();
   if (r == NULL) {
     this->ResetPresentation();
