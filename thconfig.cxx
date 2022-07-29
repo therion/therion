@@ -52,6 +52,8 @@
 #include <windows.h>
 #endif
 
+#include <fmt/core.h>
+
 
 enum {
   TT_UNKNOWN_CFG, 
@@ -904,7 +906,7 @@ void thconfig::xth_save()
     }
     
     fprintf(cf,"set xth(th_exit_state) %d\n", therion_exit_state);
-    fprintf(cf,"set xth(th_exit_number) %lld\n\n", time(NULL));
+    fmt::print(cf,"set xth(th_exit_number) {}\n\n", time(NULL));
 
     // close config file
     fclose(cf);
