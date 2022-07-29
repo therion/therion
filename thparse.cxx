@@ -259,7 +259,7 @@ void thsplit_args_postp_quotes(char * buf)
 
 void thsplit_args(thmbuffer * dest, const char * src)
 {
-  long srcl = strlen(src),
+  size_t srcl = strlen(src),
     idx = 0,
     idx0 = 0;
   dest->clear();
