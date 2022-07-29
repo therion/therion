@@ -40,7 +40,6 @@
 
 typedef unsigned int warpp_t;
 const warpp_t ngbh_mask = ((warpp_t)(0x7))<<(8*sizeof(warpp_t)-3);
-// const warpp_t indx_mask = ~ngbh_mask;
 
 
 therion::warp::plaquette_algo::plaquette_algo( )
@@ -669,7 +668,7 @@ therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned in
       thprintf("warning: failed to allocate temporary distance image\n");
 
     for (size_t k=0; k<mPlaquettes.size(); ++k ) {
-      assert( ( ( (warpp_t)k) & indx_mask) == (warpp_t)k );
+      assert( ( ( (warpp_t)k) & (~ngbh_mask)) == (warpp_t)k );
       // int cnt = 0;
       // thprintf("mapping plaquette %d\n", k );
       thvec2 t1, t2;

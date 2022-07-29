@@ -904,7 +904,7 @@ void thconfig::xth_save()
     }
     
     fprintf(cf,"set xth(th_exit_state) %d\n", therion_exit_state);
-    fprintf(cf,"set xth(th_exit_number) %ld\n\n", time(NULL));
+    fprintf(cf,"set xth(th_exit_number) %lld\n\n", time(NULL));
 
     // close config file
     fclose(cf);

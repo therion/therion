@@ -77,7 +77,7 @@ char * thmbuffer::appendn(const char * src, size_t n)
     this->free_size = this->last_ptr->size;
     this->free_ptr = this->last_ptr->data;
   }
-  dest = strncpy(this->free_ptr, src, n);
+  dest = memcpy(this->free_ptr, src, n);
   dest[n] = 0;
   this->free_ptr += n + 1;
   this->free_size -= n + 1;
