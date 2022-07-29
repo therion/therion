@@ -2997,7 +2997,7 @@ void thdb2d::pp_smooth_lines(thdb2dprj * prj)
 
 void thdb2d::pp_smooth_joins(thdb2dprj * prj) 
 {
-  double x1,x2,y1,y2,d1,d2,tmpx,tmpy,testx = 0.0,testy = 0.0,dt;
+  double x1,x2 = 0.0,y1,y2 = 0.0,d1,d2,tmpx,tmpy,testx = 0.0,testy = 0.0,dt;
   bool has_test;
   unsigned long ncp, ncp1, ncp2;
   thdb2dji * jlist = prj->first_join_list, * ji;

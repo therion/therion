@@ -318,9 +318,9 @@ std::string thdataobject::throw_source() const
 void thdataobject::self_print(FILE * outf)
 {
   if (strlen(this->name) > 0)
-    fprintf(outf,"%s (%ld:0x%lx) -- %s\n", this->get_class_name(), this->id, (intptr_t) this, this->name);
+    fprintf(outf,"%s (%ld:0x%x) -- %s\n", this->get_class_name(), this->id, (intptr_t) this, this->name);
   else
-    fprintf(outf,"%s (%ld:0x%lx)\n", this->get_class_name(), this->id, (intptr_t) this);  
+    fprintf(outf,"%s (%ld:0x%x)\n", this->get_class_name(), this->id, (intptr_t) this);  
 
   this->self_print_properties(outf);
 

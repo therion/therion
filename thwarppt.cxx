@@ -40,7 +40,7 @@
 
 typedef unsigned int warpp_t;
 const warpp_t ngbh_mask = ((warpp_t)(0x7))<<(8*sizeof(warpp_t)-3);
-const warpp_t indx_mask = ~ngbh_mask;
+// const warpp_t indx_mask = ~ngbh_mask;
 
 
 therion::warp::plaquette_algo::plaquette_algo( )
