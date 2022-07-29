@@ -447,9 +447,9 @@ void sort_sheets() {
             pageid++;
           }
           else {
-            SHEET.erase(sheet_it);
             SHEET_JMP.erase(xyz2str(sheet_it->layer,
                                     sheet_it->namex,sheet_it->namey));
+            SHEET.erase(sheet_it);
 //cout << "Should erase sheet " << tmppagenum << std::endl;
           }
           tmppagenum++;
