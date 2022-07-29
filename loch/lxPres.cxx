@@ -155,7 +155,7 @@ void lxPresentDlg::UpdateControls() {
 void lxPresentDlg::OnCommand(wxCommandEvent& event)
 {
   wxXmlNode * n, * r, * p;
-  size_t c, sel;
+  long c, sel;
   r = this->m_mainFrame->m_pres->GetRoot();
   if (r == NULL) {
     this->ResetPresentation();
@@ -228,7 +228,7 @@ void lxPresentDlg::OnCommand(wxCommandEvent& event)
                 delete n;
                 this->UpdateList();
                 if (this->m_posLBox->GetCount() > 0)
-                  this->m_posLBox->Select(this->m_posLBox->GetCount() > c ? c : c-1);
+                  this->m_posLBox->Select(static_cast<intmax_t>(this->m_posLBox->GetCount()) > c ? c : c-1);
                 break;
               case LXMENU_PRESMOVEUP:
                 if (c > 0) {
@@ -239,7 +239,7 @@ void lxPresentDlg::OnCommand(wxCommandEvent& event)
                 }
                 break;
               case LXMENU_PRESMOVEDOWN:
-                if ((c+1) < this->m_posLBox->GetCount()) {
+                if ((c+1) < static_cast<intmax_t>(this->m_posLBox->GetCount())) {
                   p = n->GetNext();
                   r->RemoveChild(n);
                   r->InsertChildAfter(n, p);
