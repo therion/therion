@@ -20,6 +20,7 @@ endif()
 
 # Tiled Rendering library
 add_library(tr lxTR.h lxTR.c)
+target_compile_definitions(tr PUBLIC ${LOCH_DEFINITIONS})
 target_link_libraries(tr PUBLIC OpenGL::GL OpenGL::GLU 
                          PRIVATE disable-warnings)
 
@@ -27,11 +28,11 @@ target_link_libraries(tr PUBLIC OpenGL::GL OpenGL::GLU
 if (WIN32)
     add_library(R2 lxR2D.h lxR2D.c)
     target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
-    target_compile_definitions(R2 PRIVATE ${LOCH_DEFINITIONS})
+    target_compile_definitions(R2 PUBLIC ${LOCH_DEFINITIONS})
 elseif(${THPLATFORM} STREQUAL LINUX)
     add_library(R2 lxR2P.h lxR2P.c)
     target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
-    target_compile_definitions(R2 PRIVATE ${LOCH_DEFINITIONS})
+    target_compile_definitions(R2 PUBLIC ${LOCH_DEFINITIONS})
 else()
     add_library(R2 INTERFACE) # nothing to link on macOS
 endif()    
