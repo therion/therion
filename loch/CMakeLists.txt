@@ -20,16 +20,17 @@ endif()
 
 # Tiled Rendering library
 add_library(tr lxTR.h lxTR.c)
-target_link_libraries(tr PRIVATE disable-warnings)
+target_link_libraries(tr PUBLIC OpenGL::GL OpenGL::GLU 
+                         PRIVATE disable-warnings)
 
 # multiplatform rendering library
 if (WIN32)
     add_library(R2 lxR2D.h lxR2D.c)
-    target_link_libraries(R2 PRIVATE enable-warnings)
+    target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
     target_compile_definitions(R2 PRIVATE ${LOCH_DEFINITIONS})
 elseif(${THPLATFORM} STREQUAL LINUX)
     add_library(R2 lxR2P.h lxR2P.c)
-    target_link_libraries(R2 PRIVATE enable-warnings)
+    target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
     target_compile_definitions(R2 PRIVATE ${LOCH_DEFINITIONS})
 else()
     add_library(R2 INTERFACE) # nothing to link on macOS
@@ -62,8 +63,6 @@ target_link_libraries(loch PRIVATE
     ${wxWidgets_LIBRARIES}
     ${VTK_LIBRARIES} 
     ${FREETYPE_LIBRARIES}
-    OpenGL::GL
-    OpenGL::GLU
     ${X11_LIBRARIES}
     $<$<BOOL:${WIN32}>:${CMAKE_CURRENT_BINARY_DIR}/loch.res>
 )
