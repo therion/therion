@@ -22,7 +22,7 @@ endif()
 add_library(tr lxTR.h lxTR.c)
 target_compile_definitions(tr PUBLIC ${LOCH_DEFINITIONS})
 target_link_libraries(tr PUBLIC OpenGL::GL OpenGL::GLU 
-                         PRIVATE disable-warnings)
+                         PRIVATE enable-warnings)
 
 # multiplatform rendering library
 if (WIN32)
