@@ -15,6 +15,7 @@ include(cmake/BuildType.cmake)
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
 include(cmake/ECMEnableSanitizers.cmake)
+include(cmake/Warnings.cmake)
 
 # strip binaries in release build
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")

@@ -329,8 +329,7 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
   for ( size_t i=0; i<sz; ++i) {
     therion::warp::line * l2 = mLines[i];
     if ( l2->m_type != THMORPH_STATION ) {
-      point_pair * p2 = l2->other_end( this );
-      assert( p2->mLines.size() == 1 );
+      assert( l2->other_end(this)->mLines.size() == 1 );
     }
   }
 }

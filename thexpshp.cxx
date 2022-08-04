@@ -72,7 +72,7 @@
 #include "thexpshp.h"
 
 thexpshpf::thexpshpf(struct thexpshp * xshp, const char * fnm, int type):
-  m_xshp(xshp), m_fnm(fnm), m_type(type)
+  m_fnm(fnm), m_xshp(xshp), m_type(type)
 {}
 
 

@@ -2997,7 +2997,7 @@ void thdb2d::pp_smooth_lines(thdb2dprj * prj)
 
 void thdb2d::pp_smooth_joins(thdb2dprj * prj) 
 {
-  double x1,x2,y1,y2,d1,d2,tmpx,tmpy,testx = 0.0,testy = 0.0,dt;
+  double x1,x2 = 0.0,y1,y2 = 0.0,d1,d2,tmpx,tmpy,testx = 0.0,testy = 0.0,dt;
   bool has_test;
   unsigned long ncp, ncp1, ncp2;
   thdb2dji * jlist = prj->first_join_list, * ji;
@@ -3459,9 +3459,12 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 #define ulim(x,y,a) \
   { if (cnt == 0) {xx = x; xy = y; xa = a; nx = x; ny = y; na = a;} \
   else { \
-    if (x > xx) xx = x; if (x < nx) nx = x; \
-    if (y > xy) xy = y; if (y < ny) ny = y; \
-    if (a > xa) xa = a; if (a < na) na = a; \
+    if (x > xx) xx = x; \
+    if (x < nx) nx = x; \
+    if (y > xy) xy = y; \
+    if (y < ny) ny = y; \
+    if (a > xa) xa = a; \
+    if (a < na) na = a; \
   } \
   cnt++; }
 

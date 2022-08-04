@@ -76,12 +76,12 @@ EVT_MOUSE_CAPTURE_LOST(lxGLCanvas::OnMouseCaptureLost)
 END_EVENT_TABLE()
 
 
-static const GLubyte srf16tex[48] = {
-  0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
-    0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0
-};
+// static const GLubyte srf16tex[48] = {
+//   0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 
+//     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
+//     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
+//     0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0
+// };
 
 int wx_gl_window_attribs[] = {
 	WX_GL_RGBA,
@@ -796,9 +796,9 @@ void lxGLCanvas::SetCamera() {
 }
 
 static const GLfloat mat0[] = { 0.0, 0.0, 0.0, 1.0};
-static const GLfloat mat1[] = { 1.0, 1.0, 1.0, 1.0};
+// static const GLfloat mat1[] = { 1.0, 1.0, 1.0, 1.0};
 static const GLfloat mat2[] = { 0.5};
-static const GLfloat mat3[] = { 1.0, 1.0, 1.0, 0.5};
+// static const GLfloat mat3[] = { 1.0, 1.0, 1.0, 0.5};
 
 void lxGLCanvas::RenderScrapWalls() {
 

@@ -1371,11 +1371,11 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 //  fprintf(mpf,"etex;\n");
 
 //  fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
-if (ENC_NEW.NFSS==0)
+if (ENC_NEW.NFSS==0) {
   fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
-else
+} else {
   fprintf(mpf,"defaultfont:=\"thss00\";\n");
-  
+}
 //fprintf(mpf,"defaultscale:=0.8;\n\n");
 
   fprintf(mpf,"NorthDir:=\"%s\";\n", this->layout->north == TT_LAYOUT_NORTH_GRID ? "grid" : "true");

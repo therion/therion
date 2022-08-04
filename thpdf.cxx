@@ -350,7 +350,7 @@ void find_jumps() {
 
 int grid_str2int(std::string s, char init = 'A') {
   int res = 0;
-  for (int i = 0; i < s.length(); i++) res = 26*res + s[i] - init + 1;
+  for (size_t i = 0; i < s.length(); i++) res = 26*res + s[i] - init + 1;
   return res;
 }
 
@@ -447,9 +447,9 @@ void sort_sheets() {
             pageid++;
           }
           else {
-            SHEET.erase(sheet_it);
             SHEET_JMP.erase(xyz2str(sheet_it->layer,
                                     sheet_it->namex,sheet_it->namey));
+            SHEET.erase(sheet_it);
 //cout << "Should erase sheet " << tmppagenum << std::endl;
           }
           tmppagenum++;

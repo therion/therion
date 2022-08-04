@@ -399,18 +399,6 @@ foreach e [lsort -ascii -nocase $proj_parse] {
 } 
 puts $fid "  \{NULL, TTCS_UNKNOWN\}\n\};"
 
-puts $fid {
-
-/**
- * CS names.
- */
-}   
-puts $fid "const thstok thtt_csnames\[[expr [llength $proj_parse] + 1]\] = \{";
-foreach e [lsort -ascii $proj_parse] {
-  puts $fid "  \{\"[lindex $e 0]\", [lindex $e 1]\},"
-} 
-puts $fid "  \{NULL, TTCS_UNKNOWN\}\n\};"
-
 
 puts $fid {
 
