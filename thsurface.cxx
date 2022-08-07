@@ -265,6 +265,7 @@ void thsurface::parse_picture(char ** args)
     case 9:
       ltr.parse_units(cals[8]);
       ncals--;
+      /* FALLTHRU */
     case 8:
       // parsne jednotlive cisla
 #define surfpiccaldbl(XXX,YYY) \

@@ -464,6 +464,7 @@ void thdata::self_print_properties(FILE * outf)
           break;
         case TT_DATATYPE_CYLPOLAR:
           fprintf(outf," (cylpolar)\n");
+          /* FALLTHRU */
         case TT_DATATYPE_DIVING:
           if (li->data_type == TT_DATATYPE_DIVING) 
             fprintf(outf," (diving)\n");
@@ -2075,6 +2076,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
       case TT_DATALEG_IGNOREALL:
         carg = nargs;
         to_clear = true;
+        /* FALLTHRU */
       case TT_DATALEG_NEWLINE:
         this->d_current++;
         exit_new_line = true;
@@ -2600,9 +2602,11 @@ void thdata::set_data_extend(int nargs, char ** args)
 	    thparse_objectname(dumm.before, & this->db->buff_stations, args[1], this);
 	    to_index = 3;
 	    from_index = 2;
+      /* FALLTHRU */
     case 3:
       // parsnut mena to bodu
 	    thparse_objectname(dumm.to, & this->db->buff_stations, args[to_index], this);
+      /* FALLTHRU */
     case 2:
       // parsnut meno from bodu a prida
 	    thparse_objectname(dumm.from, & this->db->buff_stations, args[from_index], this);

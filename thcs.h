@@ -47,7 +47,7 @@ class thcstrans {
     friend bool operator < (const thcstrans & t1, const thcstrans &t2);
 };
 
-void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args);
+void thcs_add_cs(char * id, char * proj4id);
 
 void thcs_add_cs_trans(const char * from_css, const char * to_css, const char * trans);
 

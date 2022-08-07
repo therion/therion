@@ -77,7 +77,7 @@ void thexport::parse(int nargs, char ** args)
 }
 
 
-void thexport::parse_arguments(int & argx, int nargs, char ** args)
+void thexport::parse_arguments(int & /*argx*/, int /*nargs*/, char ** /*args*/)
 {
 }
 

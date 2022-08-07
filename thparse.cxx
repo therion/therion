@@ -1261,7 +1261,7 @@ std::string ths2txt(const char * original, int lang, int encoding)
 }
 
 
-std::string ths2txt(std::string original, int lang, int encoding)
+std::string ths2txt(std::string original, int lang, int /*encoding*/)
 {
   // TODO: encoding conversion & al.
   return select_lang(original, thlang_getid(lang));

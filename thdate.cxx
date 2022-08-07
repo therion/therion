@@ -622,6 +622,7 @@ void thdate::print_str(int fmt) {
   switch (fmt) {
     case TT_DATE_FMT_UTF8_Y:
       sep = " \xe2\x80\x93 ";
+      /* FALLTHRU */
     case TT_DATE_FMT_Y:
       if (this->syear >= 0)
         std::snprintf(dst,tl,"%d",
@@ -679,6 +680,7 @@ void thdate::print_str(int fmt) {
       
     case TT_DATE_FMT_UTF8_ISO:
       sep = " \xe2\x80\x93 ";
+      /* FALLTHRU */
     default:
       if (this->ssec >= 0.0)
         std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d:%05.2f",

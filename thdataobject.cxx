@@ -122,7 +122,7 @@ bool thdataobject::get_cmd_ends_state() {
 }
 
 
-bool thdataobject::get_cmd_ends_match(char * cmd) {
+bool thdataobject::get_cmd_ends_match(char * /*cmd*/) {
   return false;
 }
 
@@ -148,7 +148,7 @@ thcmd_option_desc thdataobject::get_cmd_option_desc(const char * opts)
 }
 
 
-void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
+void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long /*indataline*/) // TODO unused parameter indataline
 {  
   switch (cod.id) {
 

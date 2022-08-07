@@ -532,7 +532,7 @@ void MP_data::clear() {
   idx = 0;
 }
 
-void MP_setting::print_svg (std::ofstream & F, CGS & gstate) {
+void MP_setting::print_svg (std::ofstream & /*F*/, CGS & gstate) { // TODO unused parameter F
   switch (command) {
     case MP_rgb:
     case MP_gray:

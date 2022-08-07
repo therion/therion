@@ -1433,7 +1433,7 @@ thbezier_point * thbezier_polyline::get_next_point()
 }
 
 
-void thbezier_polyline::copy_curve(struct thbezier_curve * curve, double err)
+void thbezier_polyline::copy_curve(struct thbezier_curve * /*curve*/, double /*err*/)
 {
   this->clear();
 

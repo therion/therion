@@ -322,7 +322,7 @@ void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char *
 }
 
 
-void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, thlayout * layout, thbuffer & c){
+void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, thlayout * /*layout*/, thbuffer & c){ // TODO unused parameter layout
     fprintf(f, "\\%s={", team_name);
     std::vector<thmapstat_copyright_data> pd;
     for (auto pi = copy_map.begin(); pi != copy_map.end(); pi++) {

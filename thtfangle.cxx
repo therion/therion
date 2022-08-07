@@ -54,6 +54,7 @@ void thtfangle::parse_units(char * ustr)
         thwarning(("using mil/mils as angle unit is deprecated"));
         mils_warning = false;
       }
+      /* FALLTHRU */
     case TT_TFU_GRAD:
       this->ufactor = 0.9;
       break;
@@ -62,6 +63,7 @@ void thtfangle::parse_units(char * ustr)
 	      this->ufactor = 1.0;
 				break;
 			}
+      /* FALLTHRU */
     case TT_TFU_UNKNOWN_ANGLE:
       ththrow("unknown angle unit -- {}", ustr);
       break;

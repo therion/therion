@@ -148,7 +148,7 @@ const thcsdata * thcs_get_data(int cs) {
   return NULL;
 }
 
-void thcs_add_cs(char * id, char * proj4id, size_t nargs, char ** args)
+void thcs_add_cs(char * id, char * proj4id)
 {
   if (thcs_parse(id) != TTCS_UNKNOWN) ththrow("cs already exists -- {}", id);
   if (!th_is_extkeyword(id)) ththrow("invalid cs identifier -- {}", id);

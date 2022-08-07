@@ -1176,6 +1176,7 @@ void thpoint::parse_value(char * ss, bool is_dist) {
         case 3:
           // parse units
           lentf.parse_units(pars[2]);
+      		/* FALLTHRU */
         case 2:
           thparse_double(sv,dv,pars[0]);
           if (sv != TT_SV_NUMBER) {

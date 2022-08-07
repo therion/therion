@@ -252,6 +252,7 @@ void thscrap::parse_scale(char * ss)
       break;
     case 9:
       ux = 8;
+      /* FALLTHRU */
     case 8:
       p9 = true;
       break;
@@ -1463,7 +1464,7 @@ void thscrap::update_limits(double x, double y)
 
 
 
-void thscrap::parse_sketch(char ** args, int argenc)
+void thscrap::parse_sketch(char ** args, int /*argenc*/) // TODO unused parameter argenc
 {
   int sv;
   thsketch sk;
