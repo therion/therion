@@ -788,7 +788,7 @@ void lxRenderData::Render(wxWindow * parent, lxGLCanvas * glc)
 void lxRenderFile::RenderPNGHeader()
 {
 
-  double imgRes;
+  volatile double imgRes; // volatile local variables don't interfere with setjmp()
   if (this->m_pData->m_scaleMode == LXRENDER_FIT_SCREEN)
     imgRes = 96.0;
   else

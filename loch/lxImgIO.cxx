@@ -310,16 +310,25 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
   cinfo.err = jpeg_std_error(&jerr.pub);
   jerr.pub.error_exit = my_error_exit;
 
-  /* Establish the setjmp return context for my_error_exit to use. */
-  if (setjmp(jerr.setjmp_buffer)) {
-    /* If we get here, the JPEG code has signaled an error.
-     * We need to clean up the JPEG object, close the input file, and return.
-     */
-    jpeg_destroy_decompress(&cinfo);
-    fclose(infile);
-    lxImgIOError = "error reading JPEG file";
+  /* Wrap call to setjmp() so its call frame does not contain local variables,
+     which may cause warnings with flag -Wclobbered/-Wextra. */
+  auto setjmp_wrapper = [&jerr, &cinfo, &infile]{
+    /* Establish the setjmp return context for my_error_exit to use. */
+    if (setjmp(jerr.setjmp_buffer)) {
+      /* If we get here, the JPEG code has signaled an error.
+      * We need to clean up the JPEG object, close the input file, and return.
+      */
+      jpeg_destroy_decompress(&cinfo);
+      fclose(infile);
+      lxImgIOError = "error reading JPEG file";
+      return false;
+    }
+    return true;
+  };
+
+  if (!setjmp_wrapper())
     return lxImageRGB();
-  }
+
   /* Now we can initialize the JPEG decompression object. */
   jpeg_create_decompress(&cinfo);
 

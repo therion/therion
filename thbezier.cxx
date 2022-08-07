@@ -1040,6 +1040,7 @@ bezier_pt(unsigned const degree, NR_Point const V[], double const t)
 NR_Point
 sp_darray_left_tangent(NR_Point const d[], unsigned const len)
 {
+    static_cast<void>(len); // silence warning about unused "len" in release build
     g_assert( len >= 2 );
     g_assert( d[0] != d[1] );
     return unit_vector( d[1] - d[0] );
@@ -1143,6 +1144,7 @@ sp_darray_center_tangent(NR_Point const d[],
                          unsigned const center,
                          unsigned const len)
 {
+    static_cast<void>(len); // silence warning about unused "len" in release build
     g_assert( center != 0 );
     g_assert( center < len - 1 );
 
