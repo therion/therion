@@ -573,6 +573,7 @@ void thcs_log_transf_used() {
 }
 
 std::string thcs_get_label(std::string s) {
+  static_cast<void>(s); // would be unused with older proj
 #if PROJ_VER >= 6
     PJ* P;
     std::string res;
