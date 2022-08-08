@@ -68,7 +68,14 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
       }
 
       // three byte UTF-8 character
+#ifdef THWIN32
+      // value of type wchar_t will always be smaller than 0x10000 (65536)
+      else {
+        static_assert(sizeof(wchar_t) == 2, "wchar_t is not 2 bytes large");
+#else
       else if (dch < 0X10000) {
+        static_assert(sizeof(wchar_t) > 2, "wchar_t is not larger than 2 bytes");
+#endif
         *dstp = 224 + (dch / 4096);
         dstp++;
         *dstp = 128 + ((dch % 4096) / 64);
