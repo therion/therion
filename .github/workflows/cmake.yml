@@ -6,7 +6,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - { os: ubuntu-18.04, toolchain: gcc.cmake,              args: ""                                                }
           - { os: ubuntu-20.04, toolchain: gcc.cmake,              args: ""                                                }
           - { os: ubuntu-22.04, toolchain: clang-sanitizers.cmake, args: ""                                                }
           - { os: ubuntu-22.04, toolchain: gcc.cmake,              args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug" }
@@ -40,7 +39,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-10.15, macos-11, macos-12]
+        os: [macos-11, macos-12]
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
@@ -83,8 +82,6 @@ jobs:
     strategy:
       matrix:
         include:
-#          - { os: ubuntu-18.04, osname: bionic, pkg: i686,   cmd: i686,   wine-pkg: wine32, wine: wine }
-#          - { os: ubuntu-18.04, osname: bionic, pkg: x86-64, cmd: x86_64, wine-pkg: wine64, wine: wine64-stable }
           - { os: ubuntu-20.04, osname: focal, pkg: i686,   cmd: i686,   wine-pkg: wine32, wine: wine }
           - { os: ubuntu-20.04, osname: focal, pkg: x86-64, cmd: x86_64, wine-pkg: wine64, wine: wine64-stable }
     steps:
