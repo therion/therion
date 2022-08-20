@@ -45,7 +45,7 @@ endif()
 # loch dependencies
 if (BUILD_LOCH)
     find_package(wxWidgets REQUIRED COMPONENTS core base gl xml html)
-    find_package(VTK 7 REQUIRED COMPONENTS 
+    find_package(VTK 7.1 REQUIRED COMPONENTS 
         vtkCommonExecutionModel
         vtkCommonDataModel
         vtkCommonCore
