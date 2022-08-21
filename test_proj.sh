@@ -7,29 +7,29 @@
 #
 # Options:
 #  -b          use batch mode
+#  -i <path>   the installation path of PROJ  (default: $HOME/tmp/ThProj_test)
 #  -m          use make instead of cmake
 #  -p <string> the version(s) of PROJ to test (default: all versions listed in this script)
-#  -s <path>   the path to therion sources (default: .)
 
 set -e
 
 BATCHMODE=0
 MODE="CMake"
+PREFIX=$HOME/tmp/ThProj_test
 
-while getopts "bmp:s:" opt; do
+while getopts "bi:mp:" opt; do
   case $opt in
     b) BATCHMODE=1      ;;
+    i) PREFIX="$OPTARG" ;;
     m) MODE="Make"      ;;
     p) PROJVER="$OPTARG";;
-    s) SRCPATH="$OPTARG";;
     \?) exit 1          ;;
   esac
 done
 
-SRCPATH=${SRCPATH:-.}
+SRCPATH=$(dirname $BASH_SOURCE)
 PROJVER=${PROJVER:-4.9.3 5.1.0 5.2.0 6.2.1 6.3.2 7.0.1 7.2.1 8.0.0 8.2.1 9.0.0 9.0.1}
 
-PREFIX=$HOME/tmp/ThProj_test
 URL=https://download.osgeo.org/proj/proj
 
 if [ "$MODE" = "Make" ]; then
