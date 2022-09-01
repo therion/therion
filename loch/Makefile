@@ -34,24 +34,9 @@ VTKSUFFIX = $(shell tclsh ./getvtkver.tcl suffix)
 VTKVERSION = $(shell tclsh ./getvtkver.tcl version)
 VTKPATH = $(shell tclsh ./getvtkver.tcl incpath)
 VTKLIBPATH = $(shell tclsh ./getvtkver.tcl libpath)
-VTKV6 = $(shell tclsh ./getvtkver.tcl version6)
 VTKV9 = $(shell tclsh ./getvtkver.tcl version9)
-VTKLIBS = $(shell tclsh ./getvtkver.tcl libs)
 VTKLIBSUFFIX=$(shell tclsh ./getvtkver.tcl libsuffix)
-ifeq ($(VTKV6),1)
-VTKLIBS = \
-    -lvtkCommonExecutionModel$(VTKLIBSUFFIX) \
-    -lvtkCommonDataModel$(VTKLIBSUFFIX) \
-    -lvtkCommonCore$(VTKLIBSUFFIX) \
-    -lvtkIOPLY$(VTKLIBSUFFIX) \
-    -lvtkFiltersCore$(VTKLIBSUFFIX) \
-    -lvtkFiltersHybrid$(VTKLIBSUFFIX) \
-    -lvtkIOLegacy$(VTKLIBSUFFIX) \
-    $(shell pkg-config --libs freetype2)
-else
-VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
-endif
-VTKLIBS+= -lpng -ljpeg
+VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype -lpng -ljpeg
 
 
 
@@ -67,11 +52,7 @@ STRIPFLAG = -s
 ##CXX = c++
 ##CC = gcc
 ##POBJECTS = lxR2P.o
-##ifeq ($(VTKV6),1)
-##VTKLIBS = -lvtkCommonExecutionModel -lvtkCommonDataModel -lvtkCommonCore -lvtkIOPLY -lvtkFiltersCore -lvtkFiltersHybrid -lvtkIOLegacy -lfreetype -lpng -ljpeg
-##else
 ##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
-##endif
 ##CXXPFLAGS = -DLXLINUX -std=c++14 $(shell wx-config --cxxflags) -Wno-deprecated $(shell pkg-config freetype2 --cflags) -I$(VTKPATH)
 ##CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 ##LXLIBDIR = linux
@@ -81,10 +62,7 @@ STRIPFLAG = -s
 # PLATFORM DEBIAN
 CXX ?= c++
 CC ?= gcc
-ifeq ($(VTKV6),1)
-else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
-endif
 CXXPFLAGS = \
     -std=c++14 \
     -Wno-deprecated \
