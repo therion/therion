@@ -88,7 +88,7 @@ jobs:
         with:
           msystem: ${{ matrix.msystem }}
           update: true
-          install: mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-pkgconf mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-tcl mingw-w64-${{ matrix.arch }}-jbigkit
+          install: python mingw-w64-${{ matrix.arch }}-freetype mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-pkgconf mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-tcl mingw-w64-${{ matrix.arch }}-jbigkit
       - name: compile therion
         run: |
           mingw32-make config-win32
