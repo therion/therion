@@ -56,6 +56,13 @@ if (BUILD_LOCH)
         vtkjpeg
         vtkpng
     )
+
+    # We must check VTK version manually, doing so in find_package()
+    # won't work for all the versions we support.
+    if (VTK_MAJOR_VERSION LESS 7)
+        message(FATAL_ERROR "At least VTK 7 required, version found: ${VTK_VERSION}")
+    endif()
+
     find_package(Freetype REQUIRED)
     find_package(PNG REQUIRED)
     find_package(JPEG REQUIRED)
