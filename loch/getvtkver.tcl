@@ -55,6 +55,9 @@ switch [lindex $argv 0] {
     libpath {
 	puts $libpath
     }
+    version6 {
+        puts [expr $vv1 >= 6]
+    }
     version9 {
         puts [expr $vv1 >= 9]
     }
