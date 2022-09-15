@@ -296,7 +296,7 @@ lxRenderDataConfig::lxRenderDataConfig(wxWindow * parent, lxRenderData * data, c
   lxBoxSizer = new wxBoxSizer(wxHORIZONTAL);
   lxBoxSizer->Add(
     new wxStaticText(this, LXRDC_RESOL_LBL, _("Rendering resolution (dpi)")),
-    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | wxALL | wxALIGN_RIGHT, lxBORDER);
+    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | wxALL, lxBORDER);
   lxBoxSizer->Add(
     new wxTextCtrl(this, LXRDC_RESOL, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_RIGHT, lxDoubleValidator(&this->m_data->m_imgResolution,96,2400)),
     0, wxALIGN_CENTER | lxNOTLEFT, lxBORDER);
@@ -306,7 +306,7 @@ lxRenderDataConfig::lxRenderDataConfig(wxWindow * parent, lxRenderData * data, c
   lxBoxSizer = new wxBoxSizer(wxHORIZONTAL);
   lxBoxSizer->Add(
     new wxStaticText(this, LXRDC_IMGSIZE_LBL, _("Image size:")),
-    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | lxNOTTOP | wxALIGN_RIGHT, lxBORDER);
+    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | lxNOTTOP, lxBORDER);
   lxBoxSizer->Add(
     new wxStaticText(this, LXRDC_IMGSIZE, _("00 x 00 (00.0 MB)")),
     0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | wxBOTTOM | wxRIGHT | wxALIGN_LEFT, lxBORDER);
@@ -314,7 +314,7 @@ lxRenderDataConfig::lxRenderDataConfig(wxWindow * parent, lxRenderData * data, c
 
   lxStaticBoxSizer->Add(
     new wxCheckBox(this, LXRDC_WHITEBG, _("White background"), wxDefaultPosition, wxDefaultSize, 0, wxGenericValidator(&this->m_data->m_imgWhiteBg)), 
-    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | lxNOTTOP | wxALIGN_LEFT, lxBORDER);
+    0, wxALIGN_LEFT | lxNOTTOP | wxALIGN_LEFT, lxBORDER);
 
   sizerAll->Add(lxStaticBoxSizer, 0, wxEXPAND | lxNOTTOP, lxBORDER);
 

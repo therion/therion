@@ -36,7 +36,8 @@ struct formatter<thdouble>: formatter<std::string> {
     template <typename FormatContext>
     auto format(const thdouble& p, FormatContext& ctx) {
         // fixed formatting with given precision
-        auto num = fmt::format("{:.{}f}", p.value, p.precision);
+        // and (perhaps more) stable cross-platform rounding in the border cases using two-passes
+        auto num = fmt::format("{:.{}f}", std::stod(fmt::format("{:.{}f}", p.value, p.precision+1)), p.precision);
         // remove redundant zeros
         const auto dot = num.find('.');
         auto result_len = num.length();

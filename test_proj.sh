@@ -3,25 +3,38 @@
 # Test linking to multiple versions of the PROJ library.
 #
 # Usage:
-#   test_proj.sh [srcpath] [proj_version]
+#   test_proj.sh [options]
 #
-# Arguments:
-#   srcpath – the path to therion sources (default: .)
-#   proj_version – the version of PROJ to test (default: all versions)
+# Options:
+#  -b          use batch mode
+#  -i <path>   the installation path of PROJ  (default: $HOME/tmp/ThProj_test)
+#  -m          use make instead of cmake
+#  -p <string> the version(s) of PROJ to test (default: all versions listed in this script)
 
 set -e
 
-SRCPATH=${1:-.}
-PROJVER=${2:-4.9.3 5.1.0 5.2.0 6.2.1 6.3.2 7.0.0 7.2.1 8.0.0 8.2.1 9.0.0 9.0.1}
-
+BATCHMODE=0
+MODE="CMake"
 PREFIX=$HOME/tmp/ThProj_test
+
+while getopts "bi:mp:" opt; do
+  case $opt in
+    b) BATCHMODE=1      ;;
+    i) PREFIX="$OPTARG" ;;
+    m) MODE="Make"      ;;
+    p) PROJVER="$OPTARG";;
+    \?) exit 1          ;;
+  esac
+done
+
+SRCPATH=$(dirname $BASH_SOURCE)
+PROJVER=${PROJVER:-4.9.3 5.1.0 5.2.0 6.2.1 6.3.2 7.0.1 7.2.1 8.0.0 8.2.1 9.0.0 9.1.0}
+
 URL=https://download.osgeo.org/proj/proj
 
-if [ "$SRCPATH" = "." ]; then
-  MODE="Make"
+if [ "$MODE" = "Make" ]; then
   rm -f thproj.o utest-proj.o
 else
-  MODE="CMake"
   rm -f CMakeCache.txt
 fi
 
@@ -29,13 +42,15 @@ for ver in $PROJVER
 do
   # check the environment; install Proj locally if it's missing
   if [ ! -d "$PREFIX/proj-$ver" ]; then
-    echo "$PREFIX/proj-$ver missing. Download and install it?"
-    select yn in "Yes" "No"; do
-      case $yn in
-        Yes ) break;;
-        No ) exit;;
-      esac
-    done
+    if (( ! $BATCHMODE  )); then
+      echo "$PREFIX/proj-$ver missing. Download and install it?"
+      select yn in "Yes" "No"; do
+        case $yn in
+          Yes ) break;;
+          No ) exit;;
+        esac
+      done
+    fi
     WD=$PWD
     TMPDIR=`mktemp -d`
     curl $URL-$ver.tar.gz | tar -xz --directory=$TMPDIR
@@ -44,7 +59,7 @@ do
       ./configure --prefix=$PREFIX/proj-$ver; make -j$(nproc); make install
     else
       mkdir build; cd build
-      cmake -DCMAKE_INSTALL_PREFIX=$PREFIX/proj-$ver ..; make -j$(nproc); make install
+      cmake -DCMAKE_INSTALL_PREFIX=$PREFIX/proj-$ver -DBUILD_APPS=OFF -DBUILD_TESTING=OFF ..; make -j$(nproc); make install
     fi
     cd $WD
     rm -r $TMPDIR

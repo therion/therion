@@ -1,61 +1,61 @@
 name: Installer
 on: push
 jobs:
-  Win32_installer_MXE:
-    runs-on: ubuntu-20.04
-    outputs:
-      THID: ${{ steps.build.outputs.THID_out }}
-      git_branch: ${{ steps.build.outputs.git_branch }}
-    env:
-      THDIR: /home/runner/work/therion
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: install dependencies
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
-          sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt focal main'
-          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
-          sudo apt -qq update
-          sudo apt install -yqq --allow-downgrades libgd3/focal libpcre2-8-0/focal libpcre2-16-0/focal libpcre2-32-0/focal libpcre2-posix2/focal
-          sudo apt purge -yqq libmono* moby* mono* php* libgdiplus libpcre2-posix3 libzip4
-          sudo apt install -y wine32
-          sudo apt install -y ninja-build
-          sudo apt install -y mxe-i686-w64-mingw32.static-binutils mxe-i686-w64-mingw32.static-bzip2 mxe-i686-w64-mingw32.static-expat mxe-i686-w64-mingw32.static-freetype-bootstrap mxe-i686-w64-mingw32.static-gcc mxe-i686-w64-mingw32.static-gettext mxe-i686-w64-mingw32.static-glib mxe-i686-w64-mingw32.static-harfbuzz mxe-i686-w64-mingw32.static-jpeg \
-                              mxe-i686-w64-mingw32.static-libiconv mxe-i686-w64-mingw32.static-libpng mxe-i686-w64-mingw32.static-tiff mxe-i686-w64-mingw32.static-vtk mxe-i686-w64-mingw32.static-wxwidgets mxe-i686-w64-mingw32.static-xz mxe-i686-w64-mingw32.static-zlib mxe-i686-w64-mingw32.static-proj
-      - name: build and create the installation package
-        id: build
-        run: |
-          export PATH=/usr/lib/mxe/usr/bin:$PATH
-          mkdir -p $HOME/.wine/drive_c/windows
-          echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.wine/drive_c/windows/therion.ini
-          wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xz && mv therion-batteries-master ../therion-batteries
-          if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
-          echo "::set-output name=THID_out::$THID"
-          BRANCH_FULL=$(git branch -r --contains ${{ github.ref }})
-          BRANCH=${BRANCH_FULL##*/}
-          echo "::set-output name=git_branch::$BRANCH"
-          mkdir ../therion.bin
-          cd ../therion.bin
-          i686-w64-mingw32.static-cmake -G Ninja \
-              -DMXE_USE_CCACHE=OFF \
-              -DCMAKE_CROSSCOMPILING_EMULATOR=wine \
-              -DBUILD_SHARED_LIBS=OFF ../therion
-          ninja
-          ninja samples
-          cd ../therion-batteries
-          wine InnoSetup/ISCC.exe therion.iss
-          cd ../therion.bin
-          mv therion-setup.exe therion-setup-$THID.exe
-          mv thbook/thbook.pdf thbook-$THID.pdf
-      - uses: 'actions/upload-artifact@v2'
-        with:
-          name: therion-setup-mxe-${{ steps.build.outputs.THID_out }}
-          path: |
-            ${{ env.THDIR }}/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
-            ${{ env.THDIR }}/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
+  # Win32_installer_MXE:
+  #   runs-on: ubuntu-20.04
+  #   outputs:
+  #     THID: ${{ steps.build.outputs.THID_out }}
+  #     git_branch: ${{ steps.build.outputs.git_branch }}
+  #   env:
+  #     THDIR: /home/runner/work/therion
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+  #     - name: install dependencies
+  #       run: |
+  #         sudo dpkg --add-architecture i386
+  #         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
+  #         sudo add-apt-repository 'deb [arch=amd64] https://mirror.mxe.cc/repos/apt focal main'
+  #         sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
+  #         sudo apt -qq update
+  #         sudo apt install -yqq --allow-downgrades libgd3/focal libpcre2-8-0/focal libpcre2-16-0/focal libpcre2-32-0/focal libpcre2-posix2/focal
+  #         sudo apt purge -yqq libmono* moby* mono* php* libgdiplus libpcre2-posix3 libzip4
+  #         sudo apt install -y wine32
+  #         sudo apt install -y ninja-build
+  #         sudo apt install -y mxe-i686-w64-mingw32.static-binutils mxe-i686-w64-mingw32.static-bzip2 mxe-i686-w64-mingw32.static-expat mxe-i686-w64-mingw32.static-freetype-bootstrap mxe-i686-w64-mingw32.static-gcc mxe-i686-w64-mingw32.static-gettext mxe-i686-w64-mingw32.static-glib mxe-i686-w64-mingw32.static-harfbuzz mxe-i686-w64-mingw32.static-jpeg \
+  #                             mxe-i686-w64-mingw32.static-libiconv mxe-i686-w64-mingw32.static-libpng mxe-i686-w64-mingw32.static-tiff mxe-i686-w64-mingw32.static-vtk mxe-i686-w64-mingw32.static-wxwidgets mxe-i686-w64-mingw32.static-xz mxe-i686-w64-mingw32.static-zlib mxe-i686-w64-mingw32.static-proj
+  #     - name: build and create the installation package
+  #       id: build
+  #       run: |
+  #         export PATH=/usr/lib/mxe/usr/bin:$PATH
+  #         mkdir -p $HOME/.wine/drive_c/windows
+  #         echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.wine/drive_c/windows/therion.ini
+  #         wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xz && mv therion-batteries-master ../therion-batteries
+  #         if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
+  #         echo "::set-output name=THID_out::$THID"
+  #         BRANCH_FULL=$(git branch -r --contains ${{ github.ref }})
+  #         BRANCH=${BRANCH_FULL##*/}
+  #         echo "::set-output name=git_branch::$BRANCH"
+  #         mkdir ../therion.bin
+  #         cd ../therion.bin
+  #         i686-w64-mingw32.static-cmake -G Ninja \
+  #             -DMXE_USE_CCACHE=OFF \
+  #             -DCMAKE_CROSSCOMPILING_EMULATOR=wine \
+  #             -DBUILD_SHARED_LIBS=OFF ../therion
+  #         ninja
+  #         ninja samples
+  #         cd ../therion-batteries
+  #         wine InnoSetup/ISCC.exe therion.iss
+  #         cd ../therion.bin
+  #         mv therion-setup.exe therion-setup-$THID.exe
+  #         mv thbook/thbook.pdf thbook-$THID.pdf
+  #     - uses: 'actions/upload-artifact@v2'
+  #       with:
+  #         name: therion-setup-mxe-${{ steps.build.outputs.THID_out }}
+  #         path: |
+  #           ${{ env.THDIR }}/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
+  #           ${{ env.THDIR }}/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
   Win32_installer:
     runs-on: windows-latest
     strategy:
@@ -75,7 +75,7 @@ jobs:
         with:
           msystem: ${{ matrix.config.msystem }}
           update: true
-          install: make git mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets3.1 mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
+          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets3.1 mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
       - name: prevent git EOL conversion
         run: git config --global core.autocrlf input
       - uses: actions/checkout@v2

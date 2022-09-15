@@ -292,7 +292,7 @@ lxViewpointSetupDlg::lxViewpointSetupDlg(wxWindow *parent)
 #define ADDCB(id, ss) \
 	lxBoxSizer->Add( \
 			new wxCheckBox(lxPanel, id, ss), \
-	    0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT  | wxBOTTOM | wxEXPAND, lxBORDER);
+	    0, wxALIGN_LEFT  | wxBOTTOM | wxEXPAND, lxBORDER);
 #define ADDRB(id, ss) \
 	lxBoxSizer->Add( \
 			new wxRadioButton(lxPanel, id, ss), \

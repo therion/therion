@@ -265,7 +265,7 @@ void MP_text::print_svg(std::ofstream & F, CGS & gstate) {
 void MP_text::print_pdf(std::ofstream & F) const {
   F << PL("BT");
   F << PL(fmt::format("/F\\pdffontname\\{:s}\\space {} Tf", tex_Fname(ALL_FONTS[font]), thdouble(size,prec_mp)));
-  F << PL(fmt::format("{} {} {} {} {:.1f} {:.1f} Tm", thdouble(xx,prec_mp), thdouble(xy,prec_mp), thdouble(yx,prec_mp), thdouble(yy,prec_mp), x, y));
+  F << PL(fmt::format("{} {} {} {} {} {} Tm", thdouble(xx,prec_mp), thdouble(xy,prec_mp), thdouble(yx,prec_mp), thdouble(yy,prec_mp), thdouble(x,prec_xy), thdouble(y,prec_xy)));
   if (LAYOUT.colored_text && col.is_defined()) {    // use the scrap color
     F << PL("0.1 w " + col.to_pdfliteral(fillstroke::fill) + " 2 Tr ");
   };
@@ -414,21 +414,21 @@ void MP_path::print_pdf(std::ofstream & F) const {
   for (unsigned i=0; i < segments.size(); i++) {
     switch (segments[i].command) {
       case MP_moveto:
-        F << PL(fmt::format("{:.2f} {:.2f} m", segments[i].coord[0], segments[i].coord[1]));
+        F << PL(fmt::format("{} {} m", thdouble(segments[i].coord[0],prec_xy), thdouble(segments[i].coord[1],prec_xy)));
         last_x = segments[i].coord[0];
         last_y = segments[i].coord[1];
         break;
       case MP_lineto:
-        F << PL(fmt::format("{:.2f} {:.2f} l", segments[i].coord[0], segments[i].coord[1]));
+        F << PL(fmt::format("{} {} l", thdouble(segments[i].coord[0],prec_xy), thdouble(segments[i].coord[1],prec_xy)));
         break;
       case MP_rlineto:
-        F << PL(fmt::format("{:.2f} {:.2f} l", segments[i].coord[0]+last_x, segments[i].coord[1]+last_y));
+        F << PL(fmt::format("{} {} l", thdouble(segments[i].coord[0]+last_x,prec_xy), thdouble(segments[i].coord[1]+last_y,prec_xy)));
         break;
       case MP_curveto:
-        F << PL(fmt::format("{:.2f} {:.2f} {:.2f} {:.2f} {:.2f} {:.2f} c",
-                  segments[i].coord[0], segments[i].coord[1],
-                  segments[i].coord[2], segments[i].coord[3],
-                  segments[i].coord[4], segments[i].coord[5]));
+        F << PL(fmt::format("{} {} {} {} {} {} c",
+                  thdouble(segments[i].coord[0],prec_xy), thdouble(segments[i].coord[1],prec_xy),
+                  thdouble(segments[i].coord[2],prec_xy), thdouble(segments[i].coord[3],prec_xy),
+                  thdouble(segments[i].coord[4],prec_xy), thdouble(segments[i].coord[5],prec_xy)));
         break;
     }
   }
@@ -795,12 +795,12 @@ void converted_data::print_pdf(std::ofstream & F, std::string name) const {
   std::string font;
 
   if (mode > 0)
-    F << "%\n\\setbox\\xxx=\\hbox{\\vbox to" << fmt::format("{:.2f}",VS) << "bp{\\vfill\n";
+    F << "%\n\\setbox\\xxx=\\hbox{\\vbox to" << fmt::format("{}",thdouble(VS,prec_xy)) << "bp{\\vfill\n";
 
   MP.print_pdf(F);
 
   if (mode > 0) {
-    F << "}}\\wd\\xxx=" << fmt::format("{:.2f}",HS) << "bp" << std::endl;
+    F << "}}\\wd\\xxx=" << fmt::format("{}",thdouble(HS,prec_xy)) << "bp" << std::endl;
     F << "\\immediate\\pdfxform";
     if (mode == 32 && LAYOUT.transparency) {  // transparency group for the altitude bar
       F << " attr{/Group \\the\\attrid\\space 0 R}";
@@ -1466,10 +1466,10 @@ void thgraphics2pdf() {
           res = " /Pattern << /" + tex_Gname(I.name) + " " + tex_get_ref(tex_Gname(I.name)) + "\\space 0 R >> ";
         }
       }
-      TEX << "\\setbox\\xxx=\\hbox to" << fmt::format("{:.2f}",I.Ic.urx-I.Ic.llx) << "bp{%\n";
+      TEX << "\\setbox\\xxx=\\hbox to" << fmt::format("{}",thdouble(I.Ic.urx-I.Ic.llx,prec_xy)) << "bp{%\n";
       TEX << "\\PL{" << s <<  "}%\n";
       TEX << "\\pdfrefxform" << tex_get_ref(tex_Xname("I" + I.name)) + "%\n";
-      TEX << "}\\ht\\xxx="  << fmt::format("{:.2f}",I.Ic.ury-I.Ic.lly) << "bp\\dp\\xxx=0bp%\n";
+      TEX << "}\\ht\\xxx="  << fmt::format("{}",thdouble(I.Ic.ury-I.Ic.lly,prec_xy)) << "bp\\dp\\xxx=0bp%\n";
       TEX << "\\immediate\\pdfxform";
       TEX << " resources { " + res;
       if (icc_used()) {

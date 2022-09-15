@@ -553,17 +553,12 @@ void lxData::Rebuild()
     this->m_textureSurface.Clear();
   }
 
-#if VTK_MAJOR_VERSION > 5
   this->scrapWallsNormals->SetInputData(this->scrapWalls);
-#else
-  this->scrapWallsNormals->SetInput(this->scrapWalls);
-#endif
   this->scrapWallsNormals->SetFeatureAngle(120.0);
   this->scrapWallsNormals->SetAutoOrientNormals(false);
   this->scrapWallsNormals->Update();
 
   // COUNTER needed
-#if VTK_MAJOR_VERSION > 5
   this->allWalls->RemoveAllInputs();
   this->allWalls->AddInputData(this->scrapWallsNormals->GetOutput());
   //vtkMassProperties * mp = vtkMassProperties::New();
@@ -571,41 +566,18 @@ void lxData::Rebuild()
   //mp->Update();
   //printf("Volume: %.1f\n", mp->GetVolumeProjected());
   this->allWalls->AddInputData(this->lrudWalls);
-#else
-  this->allWalls->RemoveAllInputs();
-  this->allWalls->AddInput(this->scrapWallsNormals->GetOutput());
-  this->allWalls->AddInput(this->lrudWalls);
-#endif
   this->allWalls->Update();
-#if VTK_MAJOR_VERSION > 5
   this->allWallsTriangle->SetInputConnection(this->allWalls->GetOutputPort());
   this->allWallsSorted->SetInputConnection(this->allWallsTriangle->GetOutputPort());
-#else
-  this->allWallsTriangle->SetInput(this->allWalls->GetOutput());
-  this->allWallsSorted->SetInput(this->allWallsTriangle->GetOutput());
-#endif
   this->allWallsSorted->Update();
-#if VTK_MAJOR_VERSION > 5
   this->allWallsStripped->SetInputConnection(this->allWallsTriangle->GetOutputPort());
-#else
-  this->allWallsStripped->SetInput(this->allWallsTriangle->GetOutput());
-#endif
   this->allWallsStripped->Update();
 
-#if VTK_MAJOR_VERSION > 5
   this->surfaceNormals->SetInputData(this->surface);
-#else
-  this->surfaceNormals->SetInput(this->surface);
-#endif
   this->surfaceNormals->SetFeatureAngle(360);
   this->surfaceNormals->Update();
-#if VTK_MAJOR_VERSION > 5
   this->surfaceTriangle->SetInputConnection(this->surfaceNormals->GetOutputPort());
   this->surfaceSorted->SetInputConnection(this->surfaceTriangle->GetOutputPort());
-#else
-  this->surfaceTriangle->SetInput(this->surfaceNormals->GetOutput());
-  this->surfaceSorted->SetInput(this->surfaceTriangle->GetOutput());
-#endif
   this->surfaceSorted->Update();
 
   sWpoints->Delete();
@@ -627,11 +599,7 @@ void lxData::ExportVTK(wxString fileName)
   vtkPolyDataWriter * w = vtkPolyDataWriter::New();
   w->SetFileName(fileName.mbc_str());
   w->SetFileTypeToBinary();
-#if VTK_MAJOR_VERSION > 5
   w->SetInputConnection(this->allWallsStripped->GetOutputPort());
-#else
-  w->SetInput(this->allWallsStripped->GetOutput());
-#endif
   w->Write();
   w->Delete();
 }
@@ -642,11 +610,7 @@ void lxData::ExportPLY(wxString fileName)
   vtkPLYWriter * w = vtkPLYWriter::New();
   w->SetFileName(fileName.mbc_str());
   w->SetFileTypeToBinary();
-#if VTK_MAJOR_VERSION > 5
   w->SetInputConnection(this->allWalls->GetOutputPort());
-#else
-  w->SetInput(this->allWalls->GetOutput());
-#endif
   w->Write();
   w->Delete();
 }
