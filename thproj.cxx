@@ -572,8 +572,7 @@ void thcs_log_transf_used() {
 #endif
 }
 
-std::string thcs_get_label(std::string s) {
-  static_cast<void>(s); // would be unused with older proj
+std::string thcs_get_label([[maybe_unused]] std::string s) {
 #if PROJ_VER >= 6
     PJ* P;
     std::string res;
