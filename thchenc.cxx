@@ -57,7 +57,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
     // we have to encode
     else {
 
-      wchar_t dch = thencode_tbl[*srcp - thchenc_facc][srcenc];
+      const auto dch = thencode_tbl[*srcp - thchenc_facc][srcenc];
 
       // two byte UTF-8 character
       if (dch < 0X800) {
@@ -68,14 +68,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
       }
 
       // three byte UTF-8 character
-#ifdef THWIN32
-      // value of type wchar_t will always be smaller than 0x10000 (65536)
-      else {
-        static_assert(sizeof(wchar_t) == 2, "wchar_t is not 2 bytes large");
-#else
       else if (dch < 0X10000) {
-        static_assert(sizeof(wchar_t) > 2, "wchar_t is not larger than 2 bytes");
-#endif
         *dstp = 224 + (dch / 4096);
         dstp++;
         *dstp = 128 + ((dch % 4096) / 64);
@@ -112,7 +105,7 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
   dest->guarantee(srcln);  // check buffer size
   dstp = (unsigned char*) dest->get_buffer();
   srcp = (unsigned char*) src;
-  wchar_t sch = 0;    
+  char32_t sch = 0;    
   
   while (srcx < srcln) {
   
@@ -123,7 +116,7 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
     else {
       // one byte character
       if (*srcp < 0X7F)
-        sch = (wchar_t) *srcp;
+        sch = static_cast<char32_t>(*srcp);
       // two byte character
       else if ((*srcp / 32) == 6) {
         sch = 64 * (*srcp % 32);
