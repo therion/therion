@@ -1686,7 +1686,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
               switch (csrf->pict_type) {
                 case TT_IMG_TYPE_PNG:
                   expf_sfcBmp.m_type = LXFILE_BITMAP_PNG;
-                  /* FALLTHRU */
+                  [[fallthrough]];
                 default:
                   expf_sfcBmp.m_type = LXFILE_BITMAP_JPEG;
               }
@@ -1750,7 +1750,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
                       case 0:
                         t3.m_v[1] = fxp->next->vertex->id;
                         t3.m_v[2] = fxp->next->next->vertex->id;
-                        /* FALLTHRU */
+                        [[fallthrough]];
                       default:
                         t3.m_v[2] = fxp->next->vertex->id;
                         t3.m_v[1] = fxp->next->next->vertex->id;
@@ -1822,7 +1822,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
                     case 0:
                       t3.m_v[1] = fxp->next->vertex->id;
                       t3.m_v[2] = fxp->next->next->vertex->id;
-                      /* FALLTHRU */
+                      [[fallthrough]];
                     default:
                       t3.m_v[2] = fxp->next->vertex->id;
                       t3.m_v[1] = fxp->next->next->vertex->id;

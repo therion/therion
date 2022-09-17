@@ -1444,7 +1444,7 @@ void thline::parse_height(char * ss) {
 	case TT_LINE_TYPE_WALL:
 	  if (this->csubtype == TT_LINE_SUBTYPE_PIT)
 		  break;
-    /* FALLTHRU */
+    [[fallthrough]];
     default:
       ththrow("-height not valid with type {}", thmatch_string(this->type,thtt_line_types));
       break;

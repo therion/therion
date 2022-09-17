@@ -126,7 +126,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_DATAOBJECT_AUTHOR:
     case TT_DATAOBJECT_COPYRIGHT:
       defcod.nargs = 2;
-      /* FALLTHRU */
+      [[fallthrough]];
     default:
       if (cod.nargs > defcod.nargs)
         ththrow("too many arguments -- {}", args[defcod.nargs]);
@@ -156,7 +156,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       tmpb = lkpnname;
       tmpa[0] = tmpb.get_buffer();
       args = tmpa;
-      /* FALLTHRU */
+      [[fallthrough]];
     default:
       thdataobject::set(cod, args, argenc, indataline);
       break;

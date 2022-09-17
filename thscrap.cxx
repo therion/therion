@@ -252,7 +252,7 @@ void thscrap::parse_scale(char * ss)
       break;
     case 9:
       ux = 8;
-      /* FALLTHRU */
+      [[fallthrough]];
     case 8:
       p9 = true;
       break;

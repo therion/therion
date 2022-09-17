@@ -99,7 +99,7 @@ void thgrade::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
     
     case 1:
       cod.id = TT_DATAOBJECT_NAME;
-      /* FALLTHRU */
+      [[fallthrough]];
     default:
       thdataobject::set(cod, args, argenc, indataline);
   }

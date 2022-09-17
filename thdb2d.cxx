@@ -1016,7 +1016,7 @@ void thdb2d::process_point_references(thpoint * pp)
       }      
       if (pp->type == TT_POINT_TYPE_CONTINUATION)
         break;
-      /* FALLTHRU */
+      [[fallthrough]];
     case TT_POINT_TYPE_EXTRA:
       if (! pp->from_name.is_empty()) {
         try {
