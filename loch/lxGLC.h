@@ -107,11 +107,7 @@ class lxGLCanvas: public wxGLCanvas {
     void OnSize(wxSizeEvent& event);
     void OnEraseBackground(wxEraseEvent& event);
     void OnEnterWindow(wxMouseEvent& event);
-    
-#if wxCHECK_VERSION(2,9,0)
     void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-#endif
-
     void OnMouseDouble(wxMouseEvent& event);
     void OnMouseDown(wxMouseEvent& event);
     void OnMouseUp(wxMouseEvent& event);
