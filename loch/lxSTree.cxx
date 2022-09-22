@@ -49,12 +49,8 @@ void lxModelTreeDlg::OnCommand(wxCommandEvent& event)
       break;
     case wxID_OK: 
     	wxBusyInfo info(_("Building 3D model, please wait..."));
-#if wxCHECK_VERSION(3,0,0)
     	wxWindowDisabler disableAll;
-#endif
-#if wxCHECK_VERSION(3,0,0)
     	wxTheApp->Yield();
-#endif
 		this->m_mainFrame->data->ClearSurveySelection();
 		wxArrayTreeItemIds csel;
 		size_t selcnt = this->m_treeControl->GetSelections(csel);
@@ -67,15 +63,11 @@ void lxModelTreeDlg::OnCommand(wxCommandEvent& event)
     		}
     	}
 		this->m_mainFrame->data->Rebuild();
-#if wxCHECK_VERSION(3,0,0)
     	wxTheApp->Yield();
-#endif
 		this->m_mainFrame->canvas->UpdateContents();
 		this->m_mainFrame->setup->ResetCamera();
 		this->m_mainFrame->canvas->ForceRefresh();
-#if wxCHECK_VERSION(3,0,0)
     	wxTheApp->Yield();
-#endif
     	break;
   }
 }

@@ -1107,12 +1107,8 @@ void lxFrame::ImportFile(wxString fName, int fType)
 void lxFrame::LoadData(wxString fName, int fType) {
   {
   wxBusyInfo info(_("Building 3D model, please wait..."));
-#if wxCHECK_VERSION(3,0,0)
   wxWindowDisabler disableAll;
-#endif
-#if wxCHECK_VERSION(3,0,0)
   wxTheApp->Yield();
-#endif
   switch (fType) {
     case 1:
       this->data->m_input.ImportLOX(fName.mbc_str());
@@ -1127,9 +1123,7 @@ void lxFrame::LoadData(wxString fName, int fType) {
       this->data->m_input.m_error = "unable to detect file format";
       break;
   }
-#if wxCHECK_VERSION(3,0,0)
   wxTheApp->Yield();
-#endif
   switch (this->m_iniWallsInterpolate) {
     case LXWALLS_INTERP_ALL_ONLY:
       if (!this->data->m_input.HasAnyWalls())
@@ -1140,13 +1134,9 @@ void lxFrame::LoadData(wxString fName, int fType) {
       break;
   }
   this->data->Rebuild();
-#if wxCHECK_VERSION(3,0,0)
   wxTheApp->Yield();
-#endif  
   this->canvas->UpdateRenderContents();
-#if wxCHECK_VERSION(3,0,0)
   wxTheApp->Yield();
-#endif
   this->canvas->UpdateRenderList();
   }
   // We need to have disengaged the wxWindowDisabler here or else we get an
@@ -1180,12 +1170,7 @@ IMPLEMENT_APP(lxApp)
 
 bool lxApp::OnInit()
 {
-
-#if wxCHECK_VERSION(3,0,0)
     m_locale.Init(wxLANGUAGE_DEFAULT, wxLOCALE_LOAD_DEFAULT);
-#else
-    m_locale.Init(wxLANGUAGE_DEFAULT, wxLOCALE_LOAD_DEFAULT | wxLOCALE_CONV_ENCODING);
-#endif
     
 #ifdef LXWIN32
     m_locale.AddCatalogLookupPathPrefix("locale");
