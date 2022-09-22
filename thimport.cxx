@@ -689,7 +689,7 @@ void thimport::import_file_img()
 }
 
 
-void thimport::parse_calib(char * spec, int enc)
+void thimport::parse_calib(char * spec, int /*enc*/) // TODO unused parameter enc
 {
   thmbuffer * mb;
   char ** args;

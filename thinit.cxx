@@ -491,7 +491,7 @@ void thinit::load()
       switch(argid) {
 
         case TTIC_CS_DEF:
-          thcs_add_cs(args[1], args[2], nargs - 2, &(args[3]));
+          thcs_add_cs(args[1], args[2]);
           break;
 
         case TTIC_CS_TRANS:

@@ -414,7 +414,7 @@ void thexpshpf::polygon_close_ring()
 
 
 
-void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
+void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/) // TODO unused parameter xbasic
 {
 	
 	thbuffer stnbuff;

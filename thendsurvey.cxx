@@ -71,7 +71,7 @@ const char * thendsurvey::get_cmd_name()
 }
 
 
-thcmd_option_desc thendsurvey::get_cmd_option_desc(const char * opts)
+thcmd_option_desc thendsurvey::get_cmd_option_desc(const char * /*opts*/)
 {
   return TT_DATAOBJECT_UNKNOWN;
 }

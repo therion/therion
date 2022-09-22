@@ -367,7 +367,7 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
 }
 
 
-void thdb2d::self_print(FILE * outf)
+void thdb2d::self_print(FILE * /*outf*/)
 {
 }
 
@@ -1016,6 +1016,7 @@ void thdb2d::process_point_references(thpoint * pp)
       }      
       if (pp->type == TT_POINT_TYPE_CONTINUATION)
         break;
+      [[fallthrough]];
     case TT_POINT_TYPE_EXTRA:
       if (! pp->from_name.is_empty()) {
         try {

@@ -167,6 +167,7 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
         break;
       case TT_DATATYPE_DIVING:
         fprintf(this->svxf,"*data\tdiving");
+      	[[fallthrough]];
       case TT_DATATYPE_CYLPOLAR:
         if (legp->data_type != TT_DATATYPE_DIVING)
           fprintf(this->svxf,"*data\tcylpolar");

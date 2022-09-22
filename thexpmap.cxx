@@ -3093,7 +3093,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 
 #define tmp_alpha 0.75
 
-void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj)
+void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // TODO unused parameter prj
 {
 
   // prejde vsetky scrapy a nastavi im farbu na color_map_fg
@@ -3283,7 +3283,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
 }
 
 
-void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * prj)
+void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // TODO unused parameter prj
 {
 
   if (maps == NULL) {

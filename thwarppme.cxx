@@ -853,7 +853,7 @@ namespace therion
     int item_pair<triangle>::ngbh_nr() const { return 2; }
 
     template< >
-    void item_pair<triangle>::set_projection( warp_proj proj )
+    void item_pair<triangle>::set_projection( warp_proj /*proj*/ )
     {
       // thprintf("item_pair<triangle>::set_projection(%d)\n", proj );
       // TODO
@@ -951,7 +951,7 @@ namespace therion
 
     // TODO FIXME 
     template< >
-    void item_pair<plaquette>::set_projection( warp_proj proj )
+    void item_pair<plaquette>::set_projection( warp_proj /*proj*/ )
     {
       // thprintf("item_pair<plaquette>::set_projection(%d)\n", proj );
       #ifdef MORPH_EXPERIMENTAL

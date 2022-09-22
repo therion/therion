@@ -471,11 +471,11 @@ namespace OGLFT {
 
     if ( s.length() > 0 ) {
 
-      bbox = measure( (const wxChar) s.GetChar( 0 ) );
+      bbox = measure( (wxChar) s.GetChar( 0 ) );
 
       for ( unsigned int i = 1; i < s.length(); i++ ) {
 
-	BBox char_bbox = measure( (const wxChar) s.GetChar( i ) );
+	BBox char_bbox = measure( (wxChar) s.GetChar( i ) );
 
 	bbox += char_bbox;
       }
@@ -654,7 +654,7 @@ namespace OGLFT {
     // First, make sure all the characters in the string are themselves
     // in display lists
     for ( unsigned int i = 0; i < s.length(); i++ ) {
-      compile( (const wxChar) s.GetChar( i ) );
+      compile( (wxChar) s.GetChar( i ) );
     }
     
     GLuint dlist = glGenLists( 1 );
@@ -777,7 +777,7 @@ namespace OGLFT {
 	character_display_list++;
       }
 
-      draw( (const wxChar) s.GetChar( i ) );
+      draw( (wxChar) s.GetChar( i ) );
     }
   }
 #endif /* OGLFT_NO_WX */

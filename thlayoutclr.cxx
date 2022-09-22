@@ -195,11 +195,13 @@ void thlayout_color::parse(char * str, bool aalpha) {
 			this->M /= 100.0;
 			this->Y /= 100.0;
 			this->K /= 100.0;
+      		[[fallthrough]];
   	case 4:
 			thparse_double(sv,this->W,args[3]);
 			if ((sv != TT_SV_NUMBER) || (this->W < 0.0) || (this->W > 100.0))
 				invalid_color_spec;
 			this->W /= 100.0;
+      		[[fallthrough]];
     case 3:
       thparse_double(sv,this->B,args[2]);        
       if ((sv != TT_SV_NUMBER) || (this->B < 0.0) || (this->B > 100.0))
@@ -209,6 +211,7 @@ void thlayout_color::parse(char * str, bool aalpha) {
       if ((sv != TT_SV_NUMBER) || (this->G < 0.0) || (this->G > 100.0))
         invalid_color_spec;
       this->G /= 100.0;
+      [[fallthrough]];
     case 1:
       if (aalpha && (strcmp(args[0],"transparent") == 0)) {
         this->A = 0.0;

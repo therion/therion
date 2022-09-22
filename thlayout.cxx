@@ -379,6 +379,7 @@ void thlayout_parse_rotate(double & rotate, char * rotstr) {
   switch (nargs) {
     case 2:
       atf.parse_units(args[1]);
+      [[fallthrough]];
     case 1:
       thparse_double(sv, rotate, args[0]);
       if (sv != TT_SV_NUMBER)
@@ -431,6 +432,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_DATAOBJECT_AUTHOR:
     case TT_DATAOBJECT_COPYRIGHT:
       defcod.nargs = 2;
+      [[fallthrough]];
     default:
       if (cod.nargs > defcod.nargs)
         ththrow("too many arguments -- {}", args[defcod.nargs]);
@@ -1122,6 +1124,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     
     case 1:
       cod.id = TT_DATAOBJECT_NAME;
+      [[fallthrough]];
     default:
       thdataobject::set(cod, args, argenc, indataline);
       break;
@@ -1488,12 +1491,14 @@ void thlayout::parse_len(double & d1, double & d2, double & d3, int nargs, char 
         ththrow("invalid number -- {}", args[2]);
       d3 = lentf.transform(d3);
       check_num(d3,nonneg);
+      [[fallthrough]];
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[1]);
       d2 = lentf.transform(d2);
       check_num(d2,nonneg);
+      [[fallthrough]];
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
@@ -1515,30 +1520,35 @@ void thlayout::parse_len6(double & d1, double & d2, double & d3, double & d4, do
         ththrow("invalid number -- {}", args[5]);
       d6 = lentf.transform(d6);
       check_num(d6,nonneg);
+      [[fallthrough]];
     case 5:
       thparse_double(sv,d5,args[4]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[4]);
       d5 = lentf.transform(d5);
       check_num(d5,nonneg);
+      [[fallthrough]];
     case 4:
       thparse_double(sv,d4,args[3]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[3]);
       d4 = lentf.transform(d4);
       check_num(d4,nonneg);
+      [[fallthrough]];
     case 3:
       thparse_double(sv,d3,args[2]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[2]);
       d3 = lentf.transform(d3);
       check_num(d3,nonneg);
+      [[fallthrough]];
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[1]);
       d2 = lentf.transform(d2);
       check_num(d2,nonneg);
+      [[fallthrough]];
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
@@ -1633,7 +1643,7 @@ std::string fix_path_slashes(std::string s) {
 }
 
   
-void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
+void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO unused parameter prj
 
   fprintf(o,"\\opacity{%.2f}\n",this->opacity);
   fprintf(o,"\\def\\scale{%lu}\n",(unsigned long)(1.0 / this->scale + 0.5));
@@ -2127,7 +2137,7 @@ void thlayout::process_copy() {
 }
 
 
-void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin_shx, double x_origin_shy) {
+void thlayout::set_thpdf_layout(thdb2dprj * /*prj*/, double /*x_scale*/, double /*x_origin_shx*/, double /*x_origin_shy*/) { // TODO unused parameters
 
   //string excl_list,labelx,labely;
   //bool  excl_pages,background,title_pages,page_numbering,

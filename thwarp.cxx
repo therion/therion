@@ -36,7 +36,7 @@
 
 thwarp::~thwarp() {}
    
-thpic * thwarp::morph(thsketch * sketch, double scale) {
+thpic * thwarp::morph(thsketch * sketch, double /*scale*/) { // TODO unused parameter scale
   this->m_sketch = sketch;
   return NULL;
 }
@@ -55,7 +55,7 @@ struct thwarplinst {
 typedef std::list<thwarplinst> thwarplinst_list;
 
 
-thpic * thwarplin::morph(thsketch * sketch, double scale)
+thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused parameter scale
 {
   if (this->morphed && this->mpic.exists())
     return &(this->mpic);
