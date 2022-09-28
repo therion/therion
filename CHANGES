@@ -1,5 +1,8 @@
 Therion 6.1.3 (in progress):
-
+therion:
+ * bugs fixed
+   - at non-int mapping of scale to base-scale, text labels get debugging text
+     added before them [#428]
 
 --------------------------------------------------------------------------------
 
