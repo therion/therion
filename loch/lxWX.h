@@ -105,14 +105,8 @@ public:
 
 	lxDoubleValidator(double * val, const double vmin, const double vmax, const wxChar * fmt = _T("%.0f"));
 
-	lxDoubleValidator(const lxDoubleValidator & val);
-
-	~lxDoubleValidator();
-
   wxObject *Clone() const override { return new lxDoubleValidator(*this); }
 
-  bool Copy(const lxDoubleValidator& val);
-    
 	bool Validate(wxWindow *parent) override;
 
   bool TransferToWindow() override;
@@ -147,14 +141,8 @@ public:
 
 	lxRadioBtnValidator(long * val, const long optval);
 
-	lxRadioBtnValidator(const lxRadioBtnValidator & val);
-
-	~lxRadioBtnValidator();
-
   wxObject *Clone() const override { return new lxRadioBtnValidator(*this); }
 
-  bool Copy(const lxRadioBtnValidator& val);
-    
 	bool Validate(wxWindow *parent) override;
 
   bool TransferToWindow() override;

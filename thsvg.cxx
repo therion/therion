@@ -80,12 +80,11 @@ std::string escape_html(std::string s) {
 
   std::string t = "";
   std::string close_font = "";
-  size_t i,j;
+  size_t i;
   for (i=0; i<s.length(); i++) {
     if ((char) s[i] == 27) {
       thassert(i<s.length()-1);
-      j = (char) s[++i];
-      switch (j) {
+      switch (s[++i]) {
         case 0x1:
           t += "<br/>"; 
           break;
