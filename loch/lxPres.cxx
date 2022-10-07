@@ -145,7 +145,7 @@ void lxPresentDlg::UpdateControls() {
   size_t count = this->m_posLBox->GetCount();
   wxWindow::FindWindowById(LXMENU_PRESUPDATE, this)->Enable(count > 0);
   wxWindow::FindWindowById(LXMENU_PRESDELETE, this)->Enable(count > 0);
-  wxWindow::FindWindowById(LXMENU_PRESMOVEDOWN, this)->Enable((count > 0) && (sel != wxNOT_FOUND) && (size_t(sel + 1) < count));
+  wxWindow::FindWindowById(LXMENU_PRESMOVEDOWN, this)->Enable((count > 0) && (sel != wxNOT_FOUND) && ((size_t(sel) + 1) < count));
   wxWindow::FindWindowById(LXMENU_PRESMOVEUP, this)->Enable((count > 0) && (sel != wxNOT_FOUND) && (sel > 0));
 }
 

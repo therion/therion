@@ -179,7 +179,8 @@ void thsplit_strings(thmbuffer * dest, const char * src, const char separator)
     idx0 = 0;
   dest->clear();
   short state = 0; // 0 before, 1 in
-  unsigned char * s1 = NULL, * s2 = (unsigned char *) src;
+  const char * s1 = nullptr;
+  const char * s2 = src;
   while (idx < srcl) {
     switch (state) {
       case 0:
@@ -211,7 +212,8 @@ void thsplit_paths(thmbuffer * dest, const char * src, char separator)
     idx0 = 0;
   dest->clear();
   short state = 0; // 0 before, 1 in
-  unsigned char * s1 = NULL, * s2 = (unsigned char *) src;
+  const char * s1 = nullptr;
+  const char * s2 = src;
   while (idx < srcl) {
     switch (state) {
       case 0:
@@ -426,7 +428,7 @@ bool th_is_index(const char * str)
 bool th_is_keyword_list(const char * str, char sep)
 {
   size_t sl = strlen(str), i;
-  unsigned char * s = (unsigned char *) str;
+  const char * s = str;
   if (sl == 0)
     return false;
   else 
