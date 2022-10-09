@@ -47,6 +47,7 @@ VTKLIBS = \
     -lvtkFiltersCore$(VTKLIBSUFFIX) \
     -lvtkFiltersHybrid$(VTKLIBSUFFIX) \
     -lvtkIOLegacy$(VTKLIBSUFFIX) \
+    -lvtksys$(VTKLIBSUFFIX) \
     $(shell pkg-config --libs freetype2)
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
