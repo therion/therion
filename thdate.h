@@ -199,8 +199,6 @@ class thdate {
    
   void set_years(double sy, double ey);
 
-  void set_file_date(char * fname);
-  
   /**
    * Get the start or end date as time_t format
    */

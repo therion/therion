@@ -30,7 +30,6 @@
 #include "thexception.h"
 #include "therion.h"
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <time.h>
 #include <locale.h>
 #ifndef THMSVC
@@ -733,30 +732,6 @@ void thdate::print_str(int fmt) {
 
 }
 
-#ifdef THMSVC
-#define stat _stat
-#endif
-
-
-void thdate::set_file_date(char * fname) {
-  struct stat buf;
-  struct tm * tim;
-  if ((fname == NULL) || (strlen(fname) == 0))
-    return;
-  if (stat(fname, &buf) != 0)
-    return;
-  tim = localtime(&(buf.st_mtime));
-  this->syear = 1900 + tim->tm_year;
-  this->smonth = tim->tm_mon + 1;
-  this->sday = tim->tm_mday;
-  this->shour = tim->tm_hour;
-  this->smin = tim->tm_min;
-  this->ssec = double(tim->tm_sec > 59 ? 59 : tim->tm_sec);
-#ifdef THDEBUG
-  thprintf("FILEDATE: %s => %s\n", fname, this->get_str());
-#endif   
-}
-
 time_t thdate::get_start_t_time() {
   tm temp{};
   date2tm(this->syear, this->smonth, this->sday, this->shour, this->smin, this->ssec, &temp);
@@ -786,8 +761,3 @@ int thdate::get_end_days1900() {
   int thdays = rdn(this->eyear, this->emonth, this->eday);
   return thdays - basedays;
 }
-
-#ifdef THMSVC
-#undef stat
-#endif
-
