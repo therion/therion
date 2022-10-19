@@ -32,6 +32,7 @@
 #include <fmt/core.h>
 
 #include <cstdlib>
+#include <filesystem>
 
 #ifdef THWIN32
 #include <process.h>
@@ -85,7 +86,7 @@ void thtmpdir::create() try
   }
 
   this->exist = true;
-  this->name = dir_path;
+  this->name = dir_path.string();
 }
 catch (const std::exception& e)
 {
@@ -99,7 +100,7 @@ void thtmpdir::remove() try
     return;
 
   if (strlen(thini.tmp_remove_script.get_buffer()) > 0) {
-    const auto tmpfname = fmt::format("{} {}", thini.tmp_remove_script.get_buffer(), this->name.string());
+    const auto tmpfname = fmt::format("{} {}", thini.tmp_remove_script.get_buffer(), this->name);
     if (system(tmpfname.c_str()) != 0) {
       thwarning(("delete temporary directory error -- %s not successful", tmpfname.c_str()))
     }
@@ -132,7 +133,7 @@ const char* thtmpdir::get_dir_name()
 const char* thtmpdir::get_file_name(const char *fname)
 {
   if (!this->exist) this->create();
-  this->file_name = this->name / fname;
+  this->file_name = (fs::path(this->name) / fname).string();
   return this->file_name.c_str();
 }
 

@@ -29,7 +29,7 @@
 #ifndef thtmpdir_h
 #define thtmpdir_h
 
-#include <filesystem>
+#include <string>
 
 /**
  * Temporary directory module.
@@ -45,8 +45,8 @@ class thtmpdir {
   bool tried;  ///< ID, if we've tried to create temp directory.  
   bool delete_all;  ///< ID whether to delete temporary directory.
   bool debug;  ///< ID, whether debugging mode is on.  
-  std::filesystem::path name = "."; ///< Name of temp dir.
-  std::filesystem::path file_name; ///< Name of temporary file.
+  std::string name = "."; ///< Name of temp dir.
+  std::string file_name; ///< Name of temporary file.
 
   /**
    * Creates temporary directory.
