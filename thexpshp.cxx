@@ -37,17 +37,6 @@
 #include "thconfig.h"
 #include <stdio.h>
 #include "thtmpdir.h"
-#ifndef THMSVC
-#include <dirent.h>
-#include <unistd.h>
-#else
-#include <direct.h>
-#define mkdir _mkdir
-#define getcwd _getcwd
-#define chdir _chdir
-#define putenv _putenv
-#define S_ISDIR(v) (((v) | _S_IFDIR) != 0)
-#endif
 #include "thchenc.h"
 #include "thdb1d.h"
 #include "thinit.h"
@@ -68,6 +57,7 @@
 #include <time.h>
 #include <errno.h>
 #include "thcs.h"
+#include <filesystem>
 
 #include "thexpshp.h"
 
@@ -139,37 +129,13 @@ thexpshp::thexpshp():
 
 bool thexpshp::open(const char * dirname)
 {
-  // create directory
-#ifdef THWIN32
-  if (mkdir(dirname) != 0) {
-#else
-  if (mkdir(dirname,0046750) != 0) {
-#endif
-
-    struct 
-#ifdef THMSVC
-    _stat
-#else
-    stat 
-#endif
-    buf;
-#ifdef THMSVC
-    _stat
-#else
-    stat 
-#endif
-    (dirname,&buf);
-    if ((errno == EEXIST) && (S_ISDIR(buf.st_mode))) {
-      // directory already exists
-    }
-    else {
-      return false;
-    }
+  try {
+    std::filesystem::create_directory(dirname);
+    this->m_dirname = dirname;
+    return true;
+  } catch (const std::exception&) {
+    return false;
   }
-
-  // save dir name
-  this->m_dirname = dirname;
-  return true;
 }
 
 
