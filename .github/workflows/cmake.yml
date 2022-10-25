@@ -61,7 +61,6 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW64, arch: x86_64,     args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"                                             }
           - { msystem: MINGW32, arch: i686,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"                                             }
           - { msystem: CLANG32, arch: clang-i686, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo" }
     defaults:
@@ -73,7 +72,7 @@ jobs:
         with:
           msystem: ${{ matrix.config.msystem }}
           update: true
-          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch mingw-w64-${{ matrix.config.arch }}-texlive-bin mingw-w64-${{ matrix.config.arch }}-texlive-metapost mingw-w64-${{ matrix.config.arch }}-texlive-lang-czechslovak mingw-w64-${{ matrix.config.arch }}-texlive-lang-cyrillic
+          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch mingw-w64-${{ matrix.config.arch }}-texlive-full
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DUSE_BUNDLED_SHAPELIB=OFF -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Build samples
