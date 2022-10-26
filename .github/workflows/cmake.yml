@@ -66,18 +66,24 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
+    env:
+      THDIR: d:/a/therion
     steps:
       - uses: actions/checkout@v2
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.config.msystem }}
           update: true
-          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch mingw-w64-${{ matrix.config.arch }}-texlive-full
+          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DUSE_BUNDLED_SHAPELIB=OFF -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Build samples
         if: matrix.config.msystem == 'CLANG32'
-        run: cmake --build build -t samples-build -- -j 4
+        run: |
+          mkdir -p $HOME/.therion
+          echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
+          wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
+          cmake --build build -t samples-build -- -j 4
       - run: cmake --build build -t deploy -- -j 4
 
   # MXE:
