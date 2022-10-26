@@ -62,19 +62,12 @@ void thinput::ifile::close()
   }
 }
 
-bool thinput::ifile::is_equal(
-#ifdef THMSVC
-struct _stat
-#else
-struct stat
-#endif
-* buf)
+bool thinput::ifile::is_equal(const std::filesystem::path& other)
 {
-  if ((this->st.st_ino == buf->st_ino) && \
-      (this->st.st_dev == buf->st_dev))
-    return true;
+  if (canonical_path.is_absolute())
+    return canonical_path == other;
   else
-    return false;
+    return false; // no paths for reliable comparison
 }
 
 
@@ -259,19 +252,18 @@ void thinput::open_file(char * fname)
     }
   }
   else {
-#ifdef THMSVC
-    _stat
-#else
-    stat
-#endif
-    (ifptr->name.get_buffer(), &ifptr->st);
+    std::error_code ec;
+    ifptr->canonical_path = std::filesystem::canonical(ifptr->path.get_buffer(), ec);
+    if (ec) {
+      thwarning(("unable to find canonical file path -- %s", ec.message().c_str()))
+    }
     tmptr = ifptr->prev_ptr;
 #ifdef THWIN32
     while ((tmptr != NULL) && (n_rec < THMAXFREC)) {
 #else
     while ((tmptr != NULL) && !is_rec) {
 #endif
-      is_rec = is_rec || tmptr->is_equal(&ifptr->st);
+      is_rec = is_rec || tmptr->is_equal(ifptr->canonical_path);
       tmptr = tmptr->prev_ptr;
       n_rec++;
     }

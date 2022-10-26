@@ -37,6 +37,7 @@
 #include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thparse.h"
+#include <filesystem>
 #include <fstream>
 #include <memory>
 
@@ -85,11 +86,7 @@ class thinput {
     int encoding;  /// Current file encoding.
     ifile * prev_ptr;  /// Pointer to the upper file.
     std::unique_ptr<ifile> next_ptr;  /// Pointer to the lower file.
-#ifdef THMSVC
-    struct _stat st;const char * thinput::get_cif_abspath()
-#else
-    struct stat st{};
-#endif
+    std::filesystem::path canonical_path; ///< To detect recursion.
       
     
     /**
@@ -109,13 +106,7 @@ class thinput {
      * Check if file statistics are equal.
      */
      
-    bool is_equal(
-#ifdef THMSVC
-struct _stat
-#else
-struct stat
-#endif
-         * buf);
+    bool is_equal(const std::filesystem::path& other);
     
   };
   
