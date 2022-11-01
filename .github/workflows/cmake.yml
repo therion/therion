@@ -47,12 +47,13 @@ jobs:
           brew update
           brew tap homebrew/core
           rm /usr/local/bin/2to3
-          brew install wxwidgets vtk proj xquartz ninja
+          brew install wxwidgets vtk proj xquartz ninja basictex
       - name: Configure CMake
         run: |
           mkdir build && cd build && cmake -G Ninja -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
       - run: cmake --build build -t therion loch utest
       - run: cmake --build build -t test
+      - run: cmake --build build -t samples-build
       - name: Install
         run: cmake --build build -t install
 
