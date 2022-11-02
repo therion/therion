@@ -47,6 +47,7 @@ class thtmpdir {
   bool debug;  ///< ID, whether debugging mode is on.  
   std::string name = "."; ///< Name of temp dir.
   std::string file_name; ///< Name of temporary file.
+  std::string tmp_remove_script; ///< Script for tmp directory deletion.
 
   /**
    * Creates temporary directory.

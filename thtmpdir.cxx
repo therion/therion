@@ -66,6 +66,7 @@ void thtmpdir::create() try
     return;
 
   fs::path dir_path;
+  this->tmp_remove_script = thini.tmp_remove_script.get_buffer();
 
 #ifdef THDEBUG
   // the debugging temp directory
@@ -99,8 +100,8 @@ void thtmpdir::remove() try
   if (!this->exist || !this->delete_all)
     return;
 
-  if (strlen(thini.tmp_remove_script.get_buffer()) > 0) {
-    const auto tmpfname = fmt::format("{} {}", thini.tmp_remove_script.get_buffer(), this->name);
+  if (!this->tmp_remove_script.empty()) {
+    const auto tmpfname = fmt::format("{} {}", this->tmp_remove_script, this->name);
     if (system(tmpfname.c_str()) != 0) {
       thwarning(("delete temporary directory error -- %s not successful", tmpfname.c_str()))
     }
