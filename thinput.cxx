@@ -31,6 +31,8 @@
 #include "therion.h"
 #include "thexception.h"
 
+#include <filesystem>
+
 #define THMAXFREC 64
 
 const long thinput::max_line_size = 65535;
@@ -62,12 +64,14 @@ void thinput::ifile::close()
   }
 }
 
-bool thinput::ifile::is_equal(const std::filesystem::path& other)
+bool thinput::ifile::is_equal(ifile* f)
 {
-  if (canonical_path.is_absolute())
-    return canonical_path == other;
-  else
-    return false; // no paths for reliable comparison
+  try {
+    return std::filesystem::equivalent(name.get_buffer(), f->name.get_buffer());
+  } catch(const std::exception& e) {
+    thwarning(("unable to compare files -- %s", e.what()))
+    return false;
+  }
 }
 
 
@@ -252,18 +256,13 @@ void thinput::open_file(char * fname)
     }
   }
   else {
-    std::error_code ec;
-    ifptr->canonical_path = std::filesystem::canonical(ifptr->path.get_buffer(), ec);
-    if (ec) {
-      thwarning(("unable to find canonical file path -- %s", ec.message().c_str()))
-    }
     tmptr = ifptr->prev_ptr;
 #ifdef THWIN32
     while ((tmptr != NULL) && (n_rec < THMAXFREC)) {
 #else
     while ((tmptr != NULL) && !is_rec) {
 #endif
-      is_rec = is_rec || tmptr->is_equal(ifptr->canonical_path);
+      is_rec = is_rec || tmptr->is_equal(ifptr);
       tmptr = tmptr->prev_ptr;
       n_rec++;
     }

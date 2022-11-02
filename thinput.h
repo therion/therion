@@ -33,11 +33,9 @@
 #include <unistd.h>
 #endif
 
-#include <sys/stat.h>
 #include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thparse.h"
-#include <filesystem>
 #include <fstream>
 #include <memory>
 
@@ -86,7 +84,6 @@ class thinput {
     int encoding;  /// Current file encoding.
     ifile * prev_ptr;  /// Pointer to the upper file.
     std::unique_ptr<ifile> next_ptr;  /// Pointer to the lower file.
-    std::filesystem::path canonical_path; ///< To detect recursion.
       
     
     /**
@@ -106,7 +103,7 @@ class thinput {
      * Check if file statistics are equal.
      */
      
-    bool is_equal(const std::filesystem::path& other);
+    bool is_equal(ifile* f);
     
   };
   
