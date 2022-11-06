@@ -1,6 +1,10 @@
 /*Standard libraries*/
 #ifndef LXDEPCHECK
+#ifdef LXMACOSX
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 #define GLX_GLXEXT_PROTOTYPES
 #include <GL/glx.h>
 #include <stdio.h>
@@ -11,7 +15,7 @@
 
 #include "lxR2P.h"
 
-struct _R2PCTX {
+struct R2PCTX {
   GLXContext ctx;
   Pixmap pm;
   XVisualInfo *visinfo;

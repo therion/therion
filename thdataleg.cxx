@@ -27,10 +27,6 @@
  
 #include "thdataleg.h"
 #include "thcs.h"
-#ifdef THMSVC
-#define hypot _hypot
-#endif
-
 
 thdataleg::thdataleg()
 {
@@ -56,6 +52,7 @@ void thdataleg::clear()
   this->from.clear();
   this->to.clear();
   this->length = thnan;
+  this->backlength = thnan;
   this->counter = thnan;
   this->fromcounter = thnan;
   this->tocounter = thnan;
@@ -112,8 +109,10 @@ void thdataleg::clear()
   this->to_right = thnan;
   
   this->walls = TT_AUTO;
+  this->splay_walls = true;
   this->shape = TT_DATALEG_SHAPE_UNKNOWN;
   this->vtresh = thnan;
+  this->extend_ratio = thnan;
     
   this->infer_plumbs = false;
   this->infer_equates = false;
@@ -141,6 +140,7 @@ thdatafix::thdatafix()
   this->cxy = thnan;
   this->cyz = thnan;
   this->cxz = thnan;
+  this->cs = TTCS_LOCAL;
 }
 
 
@@ -202,7 +202,7 @@ void thdataleg::calc_total_stds()
   T = this->total_bearing / 180.0 * 3.14159265359;
   C = this->total_gradient / 180.0 * 3.14159265359;
   L = this->total_length;
-  h = hypot(this->total_dx, this->total_dy);
+  h = std::hypot(this->total_dx, this->total_dy);
 
   if (this->topofil) {
     dL = 1.41421356237 * dl;

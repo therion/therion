@@ -54,6 +54,7 @@ proc xth_me_image_update_list {} {
       set imgsize "(unknown)"
     }
     lappend xth(me,imgs,list) "$xth(me,imgs,$imgx,name) $imgsize"
+    catch {$xth(me,can) lower $xth(me,imgs,$imgx,image) bgimg}
   }
 }
 
@@ -467,7 +468,7 @@ proc xth_me_imgs_xvi_create {imgx} {
   set shts $xth(me,imgs,$imgx,XVIshots)
   for {set i 0} {$i < [llength $shts]} {incr i} {
     if {[llength [lindex $shts $i]] >= 12} {
-      set cid [$xth(me,can) create polygon 0 0 1 0 1 1 -stipple $xth(gui,xvi_walls_fptn) -fill $xth(gui,xvi_walls_fclr) -width 1 -state hidden -tags [list $id [format "%sWLF%d" $id $i]]]
+      set cid [$xth(me,can) create polygon 0 0 1 0 1 1 -stipple $xth(gui,xvi_walls_fptn) -fill $xth(gui,xvi_walls_fclr) -width 1 -state hidden -tags [list $id bgimg [format "%sWLF%d" $id $i]]]
       xth_me_bind_area_drag $cid $imgx
       xth_me_bind_image_drag $cid $imgx
       lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
@@ -476,13 +477,13 @@ proc xth_me_imgs_xvi_create {imgx} {
 
   # grid
   set grid_info_str [format [mc "grid - spacing %s"] $xth(me,imgs,$imgx,XVIgrids)]
-  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id [format "%sGH" $id]]]
+  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id bgimg [format "%sGH" $id]]]
   xth_me_bind_area_drag $cid $imgx
   xth_me_bind_image_drag $cid $imgx
   $xth(me,can) bind $cid <Enter> "xth_status_bar_push me; xth_status_bar_status me [list $grid_info_str]"
   $xth(me,can) bind $cid <Leave> "xth_status_bar_pop me"
   lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
-  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id [format "%sGV" $id]]]
+  set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_grid_clr) -width 1 -state hidden -tags [list $id bgimg [format "%sGV" $id]]]
   xth_me_bind_area_drag $cid $imgx
   xth_me_bind_image_drag $cid $imgx
   $xth(me,can) bind $cid <Enter> "xth_status_bar_push me; xth_status_bar_status me [list $grid_info_str]"
@@ -493,7 +494,7 @@ proc xth_me_imgs_xvi_create {imgx} {
   set shts $xth(me,imgs,$imgx,XVIshots)
   for {set i 0} {$i < [llength $shts]} {incr i} {
     if {[llength [lindex $shts $i]] >= 12} {
-      set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_walls_oclr) -width 1 -state hidden -tags [list $id [format "%sWLO%d" $id $i]]]
+      set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_walls_oclr) -width 1 -state hidden -tags [list $id bgimg [format "%sWLO%d" $id $i]]]
       xth_me_bind_area_drag $cid $imgx
       xth_me_bind_image_drag $cid $imgx
       lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
@@ -502,7 +503,7 @@ proc xth_me_imgs_xvi_create {imgx} {
 
   # shots
   for {set i 0} {$i < [llength $shts]} {incr i} {
-    set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_shot_clr) -width 3 -state hidden -tags [list $id [format "%sSH%d" $id $i]]]
+    set cid [$xth(me,can) create line 0 0 1 1 -fill $xth(gui,xvi_shot_clr) -width 3 -state hidden -tags [list $id bgimg [format "%sSH%d" $id $i]]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
@@ -518,7 +519,7 @@ proc xth_me_imgs_xvi_create {imgx} {
       set cclr gray
       set cdash .
     }
-    set cid [$xth(me,can) create line 0 0 1 1 -fill $cclr -dash $cdash -width $xth(gui,xvi_sketch_line_width) -state hidden -tags [list $id [format "%sSKLN%d" $id $i]]]
+    set cid [$xth(me,can) create line 0 0 1 1 -fill $cclr -dash $cdash -width $xth(gui,xvi_sketch_line_width) -state hidden -tags [list $id bgimg [format "%sSKLN%d" $id $i]]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     lappend xth(me,imgs,$imgx,subimgs) [list {} $cid]
@@ -527,7 +528,7 @@ proc xth_me_imgs_xvi_create {imgx} {
   # stations
   set stns $xth(me,imgs,$imgx,XVIstations)
   for {set i 0} {$i < [llength $stns]} {incr i} {
-    set cid [$xth(me,can) create oval 0 0 1 1 -fill $xth(gui,xvi_station_fclr) -outline $xth(gui,xvi_station_oclr) -width 1 -state hidden -tags [list $id [format "%sST%d" $id $i] "$stpref$i"]]
+    set cid [$xth(me,can) create oval 0 0 1 1 -fill $xth(gui,xvi_station_fclr) -outline $xth(gui,xvi_station_oclr) -width 1 -state hidden -tags [list $id bgimg [format "%sST%d" $id $i] "$stpref$i"]]
     xth_me_bind_area_drag $cid $imgx
     xth_me_bind_image_drag $cid $imgx
     set stinfo [format [mc "station - %s"] [lindex [lindex $stns $i] 2]]
@@ -961,32 +962,14 @@ proc xth_me_image_remove {iidx} {
 
 proc xth_me_image_move_special {iidx newiidx} {
 
-  global xth  
-
-  if {$iidx == [expr $xth(me,nimgs) - 1]} {
-    set iidx $xth(me,nimgs)
-  }
-  if {$iidx < $xth(me,nimgs)} {
-    set iiidx $iidx
-    set xiidx $iidx
-  } else {
-    set iiidx end
-    set xiidx [expr $xth(me,nimgs) - 1]
-  }
-  set imgx [lindex $xth(me,imgs,xlist) $iiidx]
-
-  if {$newiidx < $xth(me,nimgs)} {
-    $xth(me,can) raise $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) $newiidx],image)
-    set xth(me,imgs,xlist) [linsert [lreplace $xth(me,imgs,xlist) $iiidx $iiidx] $newiidx $imgx]
-  } else {
-    $xth(me,can) lower $xth(me,imgs,$imgx,image) $xth(me,imgs,[lindex $xth(me,imgs,xlist) end],image)
-    set xth(me,imgs,xlist) [linsert [lreplace $xth(me,imgs,xlist) $iiidx $iiidx] end $imgx]
-  }  
+  global xth
+  set imgx [lindex $xth(me,imgs,xlist) $iidx]
+  set xth(me,imgs,xlist) [linsert [lreplace $xth(me,imgs,xlist) $iidx $iidx] $newiidx $imgx]
 
   xth_me_unredo_action [mc "moving image"] \
     "xth_me_image_move_special $newiidx $iidx" "xth_me_image_move_special $iidx $newiidx"
   xth_me_image_update_list
-  xth_me_image_select $xiidx
+  xth_me_image_select $iidx
   
 }
 
@@ -1030,6 +1013,46 @@ proc xth_me_image_move_back {} {
 }
 
 
+proc xth_me_image_move_front_one {} {
+  global xth
+  xth_me_cmds_update {}
+  if {$xth(me,nimgs) < 1} {
+    return
+  }
+  set isel [$xth(ctrl,me,images).il.ilbox curselection]
+  if {[llength $isel] < 1} {
+    return;
+  }
+  set iidx [lindex $isel 0]
+  if {$iidx == 0} {
+    return
+  }
+  
+  xth_me_image_move_special $iidx [expr $iidx - 1]
+  xth_me_image_select [expr $iidx - 1]
+}
+
+
+proc xth_me_image_move_back_one {} {
+  global xth
+  xth_me_cmds_update {}
+  if {$xth(me,nimgs) < 1} {
+    return
+  }
+  set isel [$xth(ctrl,me,images).il.ilbox curselection]
+  if {[llength $isel] < 1} {
+    return;
+  }
+  set iidx [lindex $isel 0]
+  if {$iidx == ($xth(me,nimgs) - 1)} {
+    return
+  }
+
+  xth_me_image_move_special $iidx [expr $iidx + 1]
+  xth_me_image_select [expr $iidx + 1]
+}
+
+
 proc xth_me_image_select {iidx} {
   
   global xth
@@ -1050,6 +1073,9 @@ proc xth_me_image_select {iidx} {
     $xth(ctrl,me,images).ic.posx configure -state normal
     $xth(ctrl,me,images).ic.posy configure -state normal
     $xth(ctrl,me,images).ic.mvf configure -state normal
+    $xth(ctrl,me,images).ic.mvvl configure -state normal
+    $xth(ctrl,me,images).ic.mvfo configure -state normal
+    $xth(ctrl,me,images).ic.mvbo configure -state normal
     $xth(ctrl,me,images).ic.mvb configure -state normal
 #    $xth(ctrl,me,images).il.ilbox configure -state normal
     $xth(ctrl,me,images).il.ilbox selection clear 0 end
@@ -1085,6 +1111,9 @@ proc xth_me_image_select {iidx} {
     $xth(ctrl,me,images).ic.posy configure -state disabled
     $xth(ctrl,me,images).ic.mvf configure -state disabled
     $xth(ctrl,me,images).ic.mvb configure -state disabled
+    $xth(ctrl,me,images).ic.mvvl configure -state disabled
+    $xth(ctrl,me,images).ic.mvfo configure -state disabled
+    $xth(ctrl,me,images).ic.mvbo configure -state disabled
     $xth(ctrl,me,images).ic.gs configure -state disabled
     $xth(ctrl,me,images).ic.gr configure -state disabled
     $xth(ctrl,me,images).ic.gl configure -state disabled -text "gamma 1.00"

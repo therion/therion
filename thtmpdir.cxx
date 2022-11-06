@@ -45,7 +45,6 @@
 
 #ifdef THWIN32
 #include <process.h>
-#define snprintf _snprintf
 #define getpid _getpid
 #define THPATHSEPARATOR "\\"
 #else
@@ -107,13 +106,13 @@ void thtmpdir::create()
       if (this->debug) {
         thbuffer wdir;
         wdir.guarantee(1024);
-        getcwd(wdir.get_buffer(),1024);
+        thassert(getcwd(wdir.get_buffer(),1024) != NULL);
         wdir += "/thTMPDIR";
         dir_path = wdir;
         //dir_path += "thTMPDIR";
       } else {
         dir_path += "th";
-        snprintf(&(dn[0]),16,"%d",getpid());
+        std::snprintf(&(dn[0]),16,"%d",getpid());
         dir_path += &(dn[0]);
       }
     }
@@ -174,7 +173,8 @@ void thtmpdir::remove()
       tmpfname = this->tmp_remove_script.get_buffer();
       tmpfname += " ";
       tmpfname += this->name;
-      system(tmpfname.get_buffer());
+      if (system(tmpfname.get_buffer()) != 0)
+        thwarning(("delete temporary directory error -- %s not successful",tmpfname.get_buffer()))
 #ifndef THMSVC
       DIR *tmpdir = opendir(this->name);
       if (tmpdir != NULL) {

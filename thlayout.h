@@ -98,6 +98,9 @@ enum {
   TT_LAYOUT_SYMBOL_COLOR = 2053,
   TT_LAYOUT_FONT_SETUP = 2054,
   TT_LAYOUT_MIN_SYMBOL_SCALE = 2055,
+  TT_LAYOUT_COLOR_MODEL = 2056,
+  TT_LAYOUT_COLOR_PROFILE = 2057,
+  TT_LAYOUT_SMOOTH_SHADING = 2058,
 };
 
 
@@ -184,6 +187,32 @@ static const thstok thtt_layout_legend[] = {
 
 
 /**
+ * Layout color legend tokens.
+ */
+
+enum {
+  TT_LAYOUT_COLORLEGEND_UNKNOWN = 0,
+  TT_LAYOUT_COLORLEGEND_OFF,
+  TT_LAYOUT_COLORLEGEND_DISCRETE,
+  TT_LAYOUT_COLORLEGEND_SMOOTH,
+};
+
+
+/**
+ * Layout color legend token table.
+ */
+
+static const thstok thtt_layout_colorlegend[] = {
+  {"discrete", TT_LAYOUT_COLORLEGEND_DISCRETE},
+  {"off", TT_LAYOUT_COLORLEGEND_OFF},
+  {"on", TT_LAYOUT_COLORLEGEND_SMOOTH}, // legacy option
+  {"smooth", TT_LAYOUT_COLORLEGEND_SMOOTH},
+  {NULL, TT_LAYOUT_LEGEND_UNKNOWN},
+};
+
+
+
+/**
  * Layout debug tokens.
  */
 
@@ -237,6 +266,27 @@ static const thstok thtt_layout_surface[] = {
   {NULL, TT_LAYOUT_SURFACE_UNKNOWN},
 };
 
+
+/**
+ * Layout smooth shading tokens.
+ */
+
+enum {
+  TT_LAYOUT_SMOOTHSHADING_OFF,
+  TT_LAYOUT_SMOOTHSHADING_QUICK,
+  TT_LAYOUT_SMOOTHSHADING_UNKNOWN,
+};
+
+
+/**
+ * Layout smooth shading token table.
+ */
+ 
+static const thstok thtt_layout_smoothshading[] = {
+  {"off", TT_LAYOUT_SMOOTHSHADING_OFF},
+  {"quick", TT_LAYOUT_SMOOTHSHADING_QUICK},
+  {NULL, TT_LAYOUT_SMOOTHSHADING_UNKNOWN},
+};
 
 
 
@@ -439,8 +489,12 @@ static const thstok thtt_layout_opt[] = {
   {"code",TT_LAYOUT_CODE},
   {"color",TT_LAYOUT_COLOR},
   {"color-legend",TT_LAYOUT_COLOR_LEGEND},
+  {"color-model", TT_LAYOUT_COLOR_MODEL},
+  {"color-profile", TT_LAYOUT_COLOR_PROFILE},
   {"colour",TT_LAYOUT_COLOR},
   {"colour-legend",TT_LAYOUT_COLOR_LEGEND},
+  {"colour-model", TT_LAYOUT_COLOR_MODEL},
+  {"colour-profile", TT_LAYOUT_COLOR_PROFILE},
   {"copy",TT_LAYOUT_COPY},
   {"debug",TT_LAYOUT_DEBUG},
   {"doc-author",TT_LAYOUT_DOC_AUTHOR},
@@ -480,6 +534,7 @@ static const thstok thtt_layout_opt[] = {
   {"scale-bar", TT_LAYOUT_SCALE_BAR},
   {"size", TT_LAYOUT_SIZE},
   {"sketches", TT_LAYOUT_SKETCHES},
+  {"smooth-shading",TT_LAYOUT_SMOOTH_SHADING},
   {"statistics",TT_LAYOUT_MAP_ITEM},
   {"surface",TT_LAYOUT_SURFACE},
   {"surface-opacity",TT_LAYOUT_SURFACE_OPACITY},
@@ -525,6 +580,8 @@ class thlayout : public thdataobject {
   double scale, scale_bar, base_scale, ox, oy, oz, hsize, vsize, paphs, papvs, paghs, pagvs, marls, marts, gxs, gys, gzs, gox, goy, goz, navf, overlap, opacity,
     map_header_x, map_header_y, legend_width, surface_opacity, rotate;
   
+  int o_cs, go_cs;
+
   const char * olx, * oly, 
     * doc_title, * doc_comment, * doc_author, * doc_subject, * doc_keywords, * excl_list;
   
@@ -533,7 +590,9 @@ class thlayout : public thdataobject {
   char grid, ccode;
   
   int legend, color_legend, map_header, lang, north, max_explos, max_topos, max_cartos, max_copys,
-    debug, survey_level, surface, grid_coords;
+    debug, survey_level, surface, grid_coords, color_model, smooth_shading;
+
+  const char * color_profile_rgb, * color_profile_cmyk, * color_profile_gray;
   
   thlayout_color color_map_bg, color_map_fg, color_preview_below, color_preview_above;
   int color_crit; // none, altitude, ...
@@ -547,7 +606,7 @@ class thlayout : public thdataobject {
   bool titlep, transparency, layers, pgsnum, lock, excl_pages, page_grid, 
     map_header_bg, sketches, color_labels;
 
-  int explo_lens, topo_lens;
+  int explo_lens, topo_lens, carto_lens, copy_lens;
 		
 	thlocale units;
 
@@ -565,7 +624,8 @@ class thlayout : public thdataobject {
     def_max_explos, def_max_topos, def_max_cartos,
     def_max_copys, def_explo_lens, def_topo_lens, def_debug, def_survey_level, def_surface,
     def_surface_opacity, def_units, def_grid_coords, def_color_labels,
-    def_font_setup, def_min_symbol_scale;
+    def_font_setup, def_min_symbol_scale, def_color_model, def_carto_lens, def_copy_lens,
+	def_color_profile_rgb, def_color_profile_cmyk, def_color_profile_gray, def_smooth_shading;
     
   
   thlayout_copy_src * first_copy_src, * last_copy_src;
@@ -588,49 +648,49 @@ class thlayout : public thdataobject {
    * Return class identifier.
    */
   
-  virtual int get_class_id();
+  int get_class_id() override;
   
   
   /**
    * Return class name.
    */
    
-  virtual const char * get_class_name() {return "thlayout";};
+  const char * get_class_name() override {return "thlayout";};
   
   
   /**
    * Return true, if son of given class.
    */
   
-  virtual bool is(int class_id);
+  bool is(int class_id) override;
   
   
   /**
    * Return number of command arguments.
    */
    
-  virtual int get_cmd_nargs();
+  int get_cmd_nargs() override;
   
   
   /**
    * Return command name.
    */
    
-  virtual const char * get_cmd_name();
+  const char * get_cmd_name() override;
   
   
   /**
    * Return command end option.
    */
    
-  virtual const char * get_cmd_end();
+  const char * get_cmd_end() override;
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
+  thcmd_option_desc get_cmd_option_desc(const char * opts) override;
   thcmd_option_desc get_default_cod(int id);
   
   /**
@@ -641,23 +701,14 @@ class thlayout : public thdataobject {
    * @param argenc Arguments encoding.
    */
    
-  virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
-
-
-  /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
+  void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline) override;
 
 
   /**
    * Print object properties.
    */
    
-  virtual void self_print_properties(FILE * outf); 
+  void self_print_properties(FILE * outf) override; 
   
 
   /**
@@ -671,7 +722,7 @@ class thlayout : public thdataobject {
    * Get context for object.
    */
    
-  virtual int get_context();
+  int get_context() override;
   
   /**
    * Parse option with 3 or 2 or 1 numbers and units.
@@ -719,6 +770,12 @@ class thlayout : public thdataobject {
    */
    
   void set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin_shx, double x_origin_shy);
+
+  /**
+   * Convert all points in object.
+   */
+
+  void convert_all_cs() override;
    
 
 };

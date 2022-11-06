@@ -71,7 +71,7 @@ const char * thendscrap::get_cmd_name()
 }
 
 
-thcmd_option_desc thendscrap::get_cmd_option_desc(const char * opts)
+thcmd_option_desc thendscrap::get_cmd_option_desc(const char * /*opts*/)
 {
   return TT_DATAOBJECT_UNKNOWN;
 }
@@ -88,7 +88,7 @@ void thendscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned l
       if (th_is_keyword(*args))
         this->name = this->db->strstore(*args);
       else 
-        ththrow(("invalid keyword -- %s", *args));
+        ththrow("invalid keyword -- {}", *args);
       break;
       
     default:
@@ -97,11 +97,6 @@ void thendscrap::set(thcmd_option_desc cod, char ** args, int argenc, unsigned l
   }
 }
 
-
-void thendscrap::self_delete()
-{
-  delete this;
-}
 
 void thendscrap::self_print_properties(FILE * outf)
 {

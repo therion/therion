@@ -48,6 +48,7 @@ enum {
   TT_DATALEG_TO,
   TT_DATALEG_DIRECTION,
   TT_DATALEG_LENGTH,
+  TT_DATALEG_BACKLENGTH,
   TT_DATALEG_BEARING,
   TT_DATALEG_BACKBEARING,
   TT_DATALEG_GRADIENT,
@@ -93,6 +94,8 @@ static const thstok thtt_dataleg_comp[] = {
   {"backclino", TT_DATALEG_BACKGRADIENT},
   {"backcompass", TT_DATALEG_BACKBEARING},
   {"backgradient", TT_DATALEG_BACKGRADIENT},
+  {"backlength", TT_DATALEG_BACKLENGTH},
+  {"backtape", TT_DATALEG_BACKLENGTH},
   {"bearing", TT_DATALEG_BEARING},
   {"ceiling", TT_DATALEG_UP},
   {"clino", TT_DATALEG_GRADIENT},
@@ -273,6 +276,7 @@ enum {
   TT_EXTENDFLAG_START = 64,
   TT_EXTENDFLAG_IGNORE = 128,
   TT_EXTENDFLAG_HIDE = 256,
+  TT_EXTENDFLAG_CNDIGNORE = 512,
 };
 
 
@@ -409,18 +413,20 @@ class thdataleg {
 
   int walls, shape, gridcs;
   
-  class thdb1d_loop * loop; ///< Worst loop leg is a part of.
-  class thdb1d_traverse * traverse; ///< Centreline traverse, leg is a part of.
+  bool splay_walls;
+
+  struct thdb1d_loop * loop; ///< Worst loop leg is a part of.
+  struct thdb1d_traverse * traverse; ///< Centreline traverse, leg is a part of.
 
   thobjectname station, from, to;
   class thsurvey * psurvey;  ///< parent survey
   
   double length, counter, fromcounter, tocounter, depth, fromdepth,
     todepth, depthchange, bearing, gradient, dx, dy, dz,
-    backbearing, backgradient, total_length, total_bearing, total_gradient,
+    backbearing, backgradient, backlength, total_length, total_bearing, total_gradient,
     total_dx, total_dy, total_dz, adj_dx, adj_dy, adj_dz,
     from_up, from_down, from_left, from_right,
-    to_up, to_down, to_left, to_right, vtresh;
+    to_up, to_down, to_left, to_right, vtresh, extend_ratio;
     
   double length_sd, counter_sd, depth_sd, bearing_sd, gradient_sd,
     dx_sd, dy_sd, dz_sd, x_sd, y_sd, z_sd, declination, implicit_declination, 
@@ -469,6 +475,8 @@ class thdataleg {
 class thdatafix {
   
   public:
+
+  int cs; ///< Fix CS.
   
   thobjectname station;  ///< Station name.
 
@@ -540,7 +548,7 @@ class thdatamark {
 	
 	thobjectname station;
 
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = nullptr;  ///< parent survey
 
   thobjectsrc srcf;  ///< Source file.
 	
@@ -555,15 +563,17 @@ class thdataextend {
 	
 	public:
 	
-	thobjectname to, from;
+	thobjectname to, from, before;
 
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = nullptr;  ///< parent survey
 
   thobjectsrc srcf;  ///< Source file.
 	
-	int extend;
+	int extend = 0;
 	
-	thdataextend() {}
+	double extend_ratio;
+
+	thdataextend() : extend_ratio(1.0) {}
 	
 };
 
@@ -575,7 +585,7 @@ class thstdims {
   
 	thobjectname station;
 
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = nullptr;  ///< parent survey
 
   thobjectsrc srcf;  ///< Source file.
   

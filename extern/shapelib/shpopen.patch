@@ -1,0 +1,22 @@
+--- shpopen.c.orig	2021-11-24 19:42:28.702794300 +0100
++++ shpopen.c	2021-11-24 19:45:24.974972238 +0100
+@@ -1687,7 +1687,9 @@
+ /*      Guard FSeek with check for whether we're already at position;   */
+ /*      no-op FSeeks defeat network filesystems' write buffering.       */
+ /* -------------------------------------------------------------------- */
+-    if ( psSHP->sHooks.FTell( psSHP->fpSHP ) != nRecordOffset ) {
++
++// ----- see https://trac.osgeo.org/postgis/ticket/4603, we have the same issue under mxe
++//    if ( psSHP->sHooks.FTell( psSHP->fpSHP ) != nRecordOffset ) {
+         if( psSHP->sHooks.FSeek( psSHP->fpSHP, nRecordOffset, 0 ) != 0 )
+         {
+             char szErrorMsg[200];
+@@ -1701,7 +1703,7 @@
+             free( pabyRec );
+             return -1;
+         }
+-    }
++//    }
+     if( psSHP->sHooks.FWrite( pabyRec, nRecordSize, 1, psSHP->fpSHP ) < 1 )
+     {
+         char szErrorMsg[200];

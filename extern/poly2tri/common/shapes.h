@@ -1,6 +1,6 @@
 /*
- * Poly2Tri Copyright (c) 2009-2010, Poly2Tri Contributors
- * http://code.google.com/p/poly2tri/
+ * Poly2Tri Copyright (c) 2009-2018, Poly2Tri Contributors
+ * https://github.com/jhasse/poly2tri
  *
  * All rights reserved.
  *
@@ -33,10 +33,10 @@
 #ifndef SHAPES_H
 #define SHAPES_H
 
-#include <vector>
-#include <cstddef>
-#include <assert.h>
 #include <cmath>
+#include <cstddef>
+#include <stdexcept>
+#include <vector>
 
 namespace p2t {
 
@@ -57,7 +57,7 @@ struct Point {
   std::vector<Edge*> edge_list;
 
   /// Construct using coordinates.
-  Point(double x, double y) : x(x), y(y) {}
+  Point(double x, double y);
 
   /// Set this point to all zeros.
   void set_zero()
@@ -119,6 +119,8 @@ struct Point {
 
 };
 
+std::ostream& operator<<(std::ostream&, const Point&);
+
 // Represents a simple polygon's edge
 struct Edge {
 
@@ -136,8 +138,7 @@ struct Edge {
         p = &p2;
       } else if (p1.x == p2.x) {
         // Repeat points
-        //assert(false);
-        throw(0);
+        throw std::runtime_error("Edge::Edge: p1 == p2");
       }
     }
 
@@ -175,6 +176,7 @@ void MarkConstrainedEdge(Point* p, Point* q);
 int Index(const Point* p);
 int EdgeIndex(const Point* p1, const Point* p2);
 
+Triangle* NeighborAcross(const Point& point);
 Triangle* NeighborCW(const Point& point);
 Triangle* NeighborCCW(const Point& point);
 bool GetConstrainedEdgeCCW(const Point& p);
@@ -202,11 +204,13 @@ void ClearDelunayEdges();
 inline bool IsInterior();
 inline void IsInterior(bool b);
 
-Triangle& NeighborAcross(const Point& opoint);
-
 void DebugPrint();
 
+bool CircumcicleContains(const Point&) const;
+
 private:
+
+bool IsCounterClockwise() const;
 
 /// Triangle points
 Point* points_[3];
@@ -255,7 +259,7 @@ inline bool operator ==(const Point& a, const Point& b)
 
 inline bool operator !=(const Point& a, const Point& b)
 {
-  return !(a.x == b.x) && !(a.y == b.y);
+  return !(a.x == b.x) || !(a.y == b.y);
 }
 
 /// Peform the dot product on two vectors.
@@ -318,6 +322,9 @@ inline void Triangle::IsInterior(bool b)
 {
   interior_ = b;
 }
+
+/// Is this set a valid delaunay triangulation?
+bool IsDelaunay(const std::vector<p2t::Triangle*>&);
 
 }
 

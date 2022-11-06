@@ -1,6 +1,6 @@
 /* img.c
  * Routines for reading and writing Survex ".3d" image files
- * Copyright (C) 1993-2004,2005,2006,2010,2011,2013,2014 Olly Betts
+ * Copyright (C) 1993-2022 Olly Betts
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 #define TIMENA "?"
 #ifdef IMG_HOSTED
 # define INT32_T int32_t
+# define UINT32_T uint32_t
 # include "debug.h"
 # include "filelist.h"
 # include "filename.h"
@@ -45,12 +46,15 @@
 # ifdef HAVE_STDINT_H
 #  include <stdint.h>
 #  define INT32_T int32_t
+#  define UINT32_T uint32_t
 # else
 #  include <limits.h>
 #  if INT_MAX >= 2147483647
 #   define INT32_T int
+#   define UINT32_T unsigned
 #  else
 #   define INT32_T long
+#   define UINT32_T unsigned long
 #  endif
 # endif
 # define TIMEFMT "%a,%Y.%m.%d %H:%M:%S %Z"
@@ -97,15 +101,15 @@ using std::min;
 static INT32_T
 get32(FILE *fh)
 {
-   INT32_T w = GETC(fh);
-   w |= (INT32_T)GETC(fh) << 8l;
-   w |= (INT32_T)GETC(fh) << 16l;
-   w |= (INT32_T)GETC(fh) << 24l;
-   return w;
+   UINT32_T w = GETC(fh);
+   w |= (UINT32_T)GETC(fh) << 8l;
+   w |= (UINT32_T)GETC(fh) << 16l;
+   w |= (UINT32_T)GETC(fh) << 24l;
+   return (INT32_T)w;
 }
 
 static void
-put32(long w, FILE *fh)
+put32(UINT32_T w, FILE *fh)
 {
    PUTC((char)(w), fh);
    PUTC((char)(w >> 8l), fh);
@@ -116,14 +120,15 @@ put32(long w, FILE *fh)
 static short
 get16(FILE *fh)
 {
-   short w = GETC(fh);
-   w |= (short)GETC(fh) << 8l;
-   return w;
+   UINT32_T w = GETC(fh);
+   w |= (UINT32_T)GETC(fh) << 8l;
+   return (short)w;
 }
 
 static void
-put16(short w, FILE *fh)
+put16(short word, FILE *fh)
 {
+   unsigned short w = (unsigned short)word;
    PUTC((char)(w), fh);
    PUTC((char)(w >> 8l), fh);
 }
@@ -363,6 +368,47 @@ check_label_space(img *pimg, size_t len)
    return 1;
 }
 
+/* Check if a station name should be included. */
+static int
+stn_included(img *pimg)
+{
+    if (!pimg->survey_len) return 1;
+    size_t l = pimg->survey_len;
+    const char *s = pimg->label_buf;
+    if (strncmp(pimg->survey, s, l + 1) != 0) {
+	return 0;
+    }
+    pimg->label += l + 1;
+    return 1;
+}
+
+/* Check if a survey name should be included. */
+static int
+survey_included(img *pimg)
+{
+    if (!pimg->survey_len) return 1;
+    size_t l = pimg->survey_len;
+    const char *s = pimg->label_buf;
+    if (strncmp(pimg->survey, s, l) != 0 ||
+	!(s[l] == '.' || s[l] == '\0')) {
+       return 0;
+    }
+    pimg->label += l;
+    /* skip the dot if there */
+    if (*pimg->label) pimg->label++;
+    return 1;
+}
+
+/* Check if a survey name in a buffer should be included.
+ *
+ * For "foreign" formats which just have one level of surveys.
+ */
+static int
+buf_included(img *pimg, const char *buf, size_t len)
+{
+    return pimg->survey_len == len && strncmp(buf, pimg->survey, len) == 0;
+}
+
 #define has_ext(F,L,E) ((L) > LITLEN(E) + 1 &&\
 			(F)[(L) - LITLEN(E) - 1] == FNM_SEP_EXT &&\
 			my_strcasecmp((F) + (L) - LITLEN(E), E) == 0)
@@ -371,34 +417,57 @@ img *
 img_open_survey(const char *fnm, const char *survey)
 {
    img *pimg;
-   size_t len;
-   char buf[LITLEN(FILEID) + 9];
-   int ch;
+   FILE *fh;
+   char* filename_opened = NULL;
 
    if (fDirectory(fnm)) {
       img_errno = IMG_DIRECTORY;
       return NULL;
    }
 
+   fh = fopenWithPthAndExt("", fnm, EXT_SVX_3D, "rb", &filename_opened);
+   pimg = img_read_stream_survey(fh, fclose,
+				 filename_opened ? filename_opened : fnm,
+				 survey);
+   if (pimg) {
+       pimg->filename_opened = filename_opened;
+   } else {
+       osfree(filename_opened);
+   }
+   return pimg;
+}
+
+img *
+img_read_stream_survey(FILE *stream, int (*close_func)(FILE*),
+		       const char *fnm,
+		       const char *survey)
+{
+   img *pimg;
+   size_t len;
+   char buf[LITLEN(FILEID) + 9];
+   int ch;
+
+   if (stream == NULL) {
+      img_errno = IMG_FILENOTFOUND;
+      return NULL;
+   }
+
    pimg = osnew(img);
    if (pimg == NULL) {
       img_errno = IMG_OUTOFMEMORY;
+      if (close_func) close_func(stream);
       return NULL;
    }
+
+   pimg->fh = stream;
+   pimg->close_func = close_func;
 
    pimg->buf_len = 257;
    pimg->label_buf = (char *)xosmalloc(pimg->buf_len);
    if (!pimg->label_buf) {
+      if (pimg->close_func) pimg->close_func(pimg->fh);
       osfree(pimg);
       img_errno = IMG_OUTOFMEMORY;
-      return NULL;
-   }
-
-   pimg->fh = fopenWithPthAndExt("", fnm, EXT_SVX_3D, "rb", &(pimg->filename_opened));
-   if (pimg->fh == NULL) {
-      osfree(pimg->label_buf);
-      osfree(pimg);
-      img_errno = IMG_FILENOTFOUND;
       return NULL;
    }
 
@@ -406,6 +475,7 @@ img_open_survey(const char *fnm, const char *survey)
    img_errno = IMG_NONE;
 
    pimg->flags = 0;
+   pimg->filename_opened = NULL;
 
    /* for version >= 3 we use label_buf to store the prefix for reuse */
    /* for VERSION_COMPASS_PLT, 0 value indicates we haven't
@@ -446,7 +516,7 @@ img_open_survey(const char *fnm, const char *survey)
 	    memcpy(pimg->survey, survey, len);
 	    /* Set title to leaf survey name */
 	    pimg->survey[len] = '\0';
-	    p = strchr(pimg->survey, '.');
+	    p = strrchr(pimg->survey, '.');
 	    if (p) p++; else p = pimg->survey;
 	    pimg->title = my_strdup(p);
 	    if (!pimg->title) {
@@ -523,8 +593,7 @@ plt_file:
 	    }
 	    len = 0;
 	    while (line[len] > 32) ++len;
-	    if (pimg->survey_len != len ||
-		memcmp(line, pimg->survey, len) != 0) {
+	    if (!buf_included(pimg, line, len)) {
 	       osfree(line);
 	       continue;
 	    }
@@ -764,7 +833,80 @@ v03d:
 	    */
 	   size_t real_len = strlen(title);
 	   if (real_len != title_len) {
-	       pimg->cs = my_strdup(title + real_len + 1);
+	       char * cs = title + real_len + 1;
+	       if (memcmp(cs, "+init=", 6) == 0) {
+		   /* PROJ 5 and later don't handle +init=esri:<number> but
+		    * that's what cavern used to put in .3d files for
+		    * coordinate systems specified using ESRI codes.  We parse
+		    * and convert the strings cavern used to generate and
+		    * convert to the form ESRI:<number> which is still
+		    * understood.
+		    *
+		    * PROJ 6 and later don't recognise +init=epsg:<number>
+		    * by default and don't apply datum shift terms in some
+		    * cases, so we also convert these to the form
+		    * EPSG:<number>.
+		    */
+		   char * p = cs + 6;
+		   if (p[4] == ':' && isdigit((unsigned char)p[5]) &&
+		       ((memcmp(p, "epsg", 4) == 0 || memcmp(p, "esri", 4) == 0))) {
+		       p = p + 6;
+		       while (isdigit((unsigned char)*p)) {
+			   ++p;
+		       }
+		       /* Allow +no_defs to be omitted as it seems to not
+			* actually do anything with recent PROJ - cavern always
+			* included it, but other software generating 3d files
+			* may not.
+			*/
+		       if (*p == '\0' || strcmp(p, " +no_defs") == 0) {
+			   int i;
+			   cs = cs + 6;
+			   for (i = 0; i < 4; ++i) {
+			       cs[i] = toupper(cs[i]);
+			   }
+			   *p = '\0';
+		       }
+		   }
+	       } else if (memcmp(cs, "+proj=", 6) == 0) {
+		   /* Convert S_MERC and UTM proj strings which cavern used
+		    * to generate to their corresponding EPSG:<number> codes.
+		    */
+		   char * p = cs + 6;
+		   if (memcmp(p, "utm +ellps=WGS84 +datum=WGS84 +units=m +zone=", 45) == 0) {
+		       int n = 0;
+		       p += 45;
+		       while (isdigit((unsigned char)*p)) {
+			   n = n * 10 + (*p - '0');
+			   ++p;
+		       }
+		       if (memcmp(p, " +south", 7) == 0) {
+			   p += 7;
+			   n += 32700;
+		       } else {
+			   n += 32600;
+		       }
+		       /* Allow +no_defs to be omitted as it seems to not
+			* actually do anything with recent PROJ - cavern always
+			* included it, but other software generating 3d files
+			* may not have.
+			*/
+		       if (*p == '\0' || strcmp(p, " +no_defs") == 0) {
+			   sprintf(cs, "EPSG:%d", n);
+		       }
+		   } else if (memcmp(p, "merc +lat_ts=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +units=m +nadgrids=@null", 89) == 0) {
+		       p = p + 89;
+		       /* Allow +no_defs to be omitted as it seems to not
+			* actually do anything with recent PROJ - cavern always
+			* included it, but other software generating 3d files
+			* may not have.
+			*/
+		       if (*p == '\0' || strcmp(p, " +no_defs") == 0) {
+			   strcpy(cs, "EPSG:3857");
+		       }
+		   }
+	       }
+	       pimg->cs = my_strdup(cs);
 	   }
        }
        if (!pimg->title) {
@@ -781,7 +923,7 @@ v03d:
       osfree(pimg->cs);
       osfree(pimg->datestamp);
       osfree(pimg->filename_opened);
-      fclose(pimg->fh);
+      if (pimg->close_func) pimg->close_func(pimg->fh);
       osfree(pimg);
       return NULL;
    }
@@ -805,7 +947,7 @@ v03d:
       if (errno == 0 && *p == '\0')
 	 pimg->datestamp_numeric = v;
       /* FIXME: We're assuming here that the C time_t epoch is 1970, which is
-       * true for Unix-like systems, Mac OS X and Windows, but isn't guaranteed
+       * true for Unix-like systems, macOS and Windows, but isn't guaranteed
        * by ISO C.
        */
    } else {
@@ -888,35 +1030,43 @@ img_rewind(img *pimg)
 }
 
 img *
-img_open_write_cs(const char *fnm, const char *title, const char * cs, int flags)
+img_open_write_cs(const char *fnm, const char *title, const char *cs, int flags)
+{
+   if (fDirectory(fnm)) {
+      img_errno = IMG_DIRECTORY;
+      return NULL;
+   }
+
+   return img_write_stream(fopen(fnm, "wb"), fclose, title, cs, flags);
+}
+
+img *
+img_write_stream(FILE *stream, int (*close_func)(FILE*),
+		 const char *title, const char *cs, int flags)
 {
    time_t tm;
    img *pimg;
 
-   if (fDirectory(fnm)) {
-      img_errno = IMG_DIRECTORY;
+   if (stream == NULL) {
+      img_errno = IMG_FILENOTFOUND;
       return NULL;
    }
 
    pimg = osnew(img);
    if (pimg == NULL) {
       img_errno = IMG_OUTOFMEMORY;
+      if (close_func) close_func(stream);
       return NULL;
    }
 
+   pimg->fh = stream;
+   pimg->close_func = close_func;
    pimg->buf_len = 257;
    pimg->label_buf = (char *)xosmalloc(pimg->buf_len);
    if (!pimg->label_buf) {
+      if (pimg->close_func) pimg->close_func(pimg->fh);
       osfree(pimg);
       img_errno = IMG_OUTOFMEMORY;
-      return NULL;
-   }
-
-   pimg->fh = fopen(fnm, "wb");
-   if (!pimg->fh) {
-      osfree(pimg->label_buf);
-      osfree(pimg);
-      img_errno = IMG_CANTOPENOUT;
       return NULL;
    }
 
@@ -951,7 +1101,20 @@ img_open_write_cs(const char *fnm, const char *title, const char * cs, int flags
    }
    PUTC('\n', pimg->fh);
 
-   tm = time(NULL);
+   if (getenv("SOURCE_DATE_EPOCH")) {
+      /* Support reproducible builds which create .3d files by not embedding a
+       * timestamp if SOURCE_DATE_EPOCH is set.  We don't bother trying to
+       * parse the timestamp as it is simpler and seems cleaner to just not
+       * embed a timestamp at all given the 3d file format already provides
+       * a way not to.
+       *
+       * See https://reproducible-builds.org/docs/source-date-epoch/
+       */
+      tm = (time_t)-1;
+   } else {
+      tm = time(NULL);
+   }
+
    if (tm == (time_t)-1) {
       fputsnl(TIMENA, pimg->fh);
    } else if (pimg->version <= 7) {
@@ -1298,15 +1461,8 @@ img_read_item_new(img *pimg, img_point *p)
 		      pimg->u = get32(pimg->fh) / 100.0;
 		      pimg->d = get32(pimg->fh) / 100.0;
 		  }
-		  if (pimg->survey_len) {
-		      size_t l = pimg->survey_len;
-		      const char *s = pimg->label_buf;
-		      if (strncmp(pimg->survey, s, l + 1) != 0) {
-			  return img_XSECT_END;
-		      }
-		      pimg->label += l;
-		      /* skip the dot if there */
-		      if (*pimg->label) pimg->label++;
+		  if (!stn_included(pimg)) {
+		      return img_XSECT_END;
 		  }
 		  /* If this is the last cross-section in this passage, set
 		   * pending so we return img_XSECT_END next time. */
@@ -1332,17 +1488,10 @@ img_read_item_new(img *pimg, img_point *p)
 
       result = img_LABEL;
 
-      if (pimg->survey_len) {
-	 size_t l = pimg->survey_len;
-	 const char *s = pimg->label_buf;
-	 if (strncmp(pimg->survey, s, l + 1) != 0) {
-	    if (!skip_coord(pimg->fh)) return img_BAD;
-	    pimg->pending = 0;
-	    goto again3;
-	 }
-	 pimg->label += l;
-	 /* skip the dot if there */
-	 if (*pimg->label) pimg->label++;
+      if (!stn_included(pimg)) {
+	 if (!skip_coord(pimg->fh)) return img_BAD;
+	 pimg->pending = 0;
+	 goto again3;
       }
 
       pimg->flags = (int)opt & 0x7f;
@@ -1351,18 +1500,10 @@ img_read_item_new(img *pimg, img_point *p)
 
       result = img_LINE;
 
-      if (pimg->survey_len) {
-	 size_t l = pimg->survey_len;
-	 const char *s = pimg->label_buf;
-	 if (strncmp(pimg->survey, s, l) != 0 ||
-	     !(s[l] == '.' || s[l] == '\0')) {
-	    if (!read_coord(pimg->fh, &(pimg->mv))) return img_BAD;
-	    pimg->pending = 15;
-	    goto again3;
-	 }
-	 pimg->label += l;
-	 /* skip the dot if there */
-	 if (*pimg->label) pimg->label++;
+      if (!survey_included(pimg)) {
+	 if (!read_coord(pimg->fh, &(pimg->mv))) return img_BAD;
+	 pimg->pending = 15;
+	 goto again3;
       }
 
       if (pimg->pending) {
@@ -1552,15 +1693,8 @@ img_read_item_v3to7(img *pimg, img_point *p)
 		      img_errno = IMG_READERROR;
 		      return img_BAD;
 		  }
-		  if (pimg->survey_len) {
-		      size_t l = pimg->survey_len;
-		      const char *s = pimg->label_buf;
-		      if (strncmp(pimg->survey, s, l + 1) != 0) {
-			  return img_XSECT_END;
-		      }
-		      pimg->label += l;
-		      /* skip the dot if there */
-		      if (*pimg->label) pimg->label++;
+		  if (!stn_included(pimg)) {
+		      return img_XSECT_END;
 		  }
 		  /* If this is the last cross-section in this passage, set
 		   * pending so we return img_XSECT_END next time. */
@@ -1596,17 +1730,10 @@ img_read_item_v3to7(img *pimg, img_point *p)
 
       result = img_LABEL;
 
-      if (pimg->survey_len) {
-	 size_t l = pimg->survey_len;
-	 const char *s = pimg->label_buf;
-	 if (strncmp(pimg->survey, s, l + 1) != 0) {
-	    if (!skip_coord(pimg->fh)) return img_BAD;
-	    pimg->pending = 0;
-	    goto again3;
-	 }
-	 pimg->label += l;
-	 /* skip the dot if there */
-	 if (*pimg->label) pimg->label++;
+      if (!stn_included(pimg)) {
+	  if (!skip_coord(pimg->fh)) return img_BAD;
+	  pimg->pending = 0;
+	  goto again3;
       }
 
       pimg->flags = (int)opt & 0x3f;
@@ -1616,18 +1743,10 @@ img_read_item_v3to7(img *pimg, img_point *p)
 
       result = img_LINE;
 
-      if (pimg->survey_len) {
-	 size_t l = pimg->survey_len;
-	 const char *s = pimg->label_buf;
-	 if (strncmp(pimg->survey, s, l) != 0 ||
-	     !(s[l] == '.' || s[l] == '\0')) {
-	    if (!read_coord(pimg->fh, &(pimg->mv))) return img_BAD;
-	    pimg->pending = 15;
-	    goto again3;
-	 }
-	 pimg->label += l;
-	 /* skip the dot if there */
-	 if (*pimg->label) pimg->label++;
+      if (!survey_included(pimg)) {
+	  if (!read_coord(pimg->fh, &(pimg->mv))) return img_BAD;
+	  pimg->pending = 15;
+	  goto again3;
       }
 
       if (pimg->pending) {
@@ -1781,10 +1900,8 @@ img_read_item_ancient(img *pimg, img_point *p)
 
    if (!read_coord(pimg->fh, &pt)) return img_BAD;
 
-   if (result == img_LABEL && pimg->survey_len) {
-      if (strncmp(pimg->label, pimg->survey, pimg->survey_len + 1) != 0)
-	 goto again;
-      pimg->label += pimg->survey_len + 1;
+   if (result == img_LABEL && !stn_included(pimg)) {
+       goto again;
    }
 
    done:
@@ -1891,10 +2008,8 @@ img_read_item_ascii(img *pimg, img_point *p)
 	 return img_BAD;
       }
 
-      if (result == img_LABEL && pimg->survey_len) {
-	 if (strncmp(pimg->label, pimg->survey, pimg->survey_len + 1) != 0)
-	    goto ascii_again;
-	 pimg->label += pimg->survey_len + 1;
+      if (result == img_LABEL && !stn_included(pimg)) {
+	  goto ascii_again;
       }
 
       return result;
@@ -1953,11 +2068,7 @@ img_read_item_ascii(img *pimg, img_point *p)
 
       if (pimg->label[0] == '\\') pimg->label++;
 
-      if (pimg->survey_len) {
-	 size_t l = pimg->survey_len + 1;
-	 if (strncmp(pimg->survey, pimg->label, l) != 0) goto againpos;
-	 pimg->label += l;
-      }
+      if (!stn_included(pimg)) goto againpos;
 
       return img_LABEL;
    } else if (pimg->version == VERSION_COMPASS_PLT) {
@@ -2741,7 +2852,8 @@ img_close(img *pimg)
 	    }
 	 }
 	 if (ferror(pimg->fh)) result = 0;
-	 if (fclose(pimg->fh)) result = 0;
+	 if (pimg->close_func && pimg->close_func(pimg->fh))
+	     result = 0;
 	 if (!result) img_errno = pimg->fRead ? IMG_READERROR : IMG_WRITEERROR;
       }
       osfree(pimg->label_buf);

@@ -141,8 +141,8 @@ class thexpmapmpxs {
   class thdb2dprj * proj;
   double ms, mx, my, sr, cr, rr; ///< Scale and centering.
 
-  thsymbolset * symset;
-  thlayout * layout;
+  thsymbolset * symset = nullptr;
+  thlayout * layout = nullptr;
   const char * attr_last_id, * attr_last_survey, * attr_last_scrap;
   bool attr_last_scrap_centerline;
 
@@ -212,6 +212,7 @@ class thexpmap : public thexport {
 
   void export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj * prj);
+  void export_scrap_backgroud_mesh(class thscrap * cs, class thexpmapmpxs * out, struct scraprecord * r);
 
   void export_uni(class thdb2dxm * maps, class thdb2dprj * prj);
   void export_uni_scrap(FILE * out, class thscrap * scrap);  
@@ -231,7 +232,7 @@ class thexpmap : public thexport {
    * Parse map export options.
    */
    
-  virtual void parse_options(int & argx, int nargs, char ** args);
+  void parse_options(int & argx, int nargs, char ** args) override;
 
   /**
    * Parse layout options.
@@ -244,21 +245,21 @@ class thexpmap : public thexport {
    * Dump object into file.
    */
    
-  virtual void dump_body(FILE * xf);
+  void dump_body(FILE * xf) override;
 
 
   /**
    * Dump object into file.
    */
    
-  virtual void dump_header(FILE * xf);
+  void dump_header(FILE * xf) override;
   
 
   /**
    * Make export.
    */
    
-  virtual void process_db(class thdatabase * dbp);
+  void process_db(class thdatabase * dbp) override;
 
 
   /**

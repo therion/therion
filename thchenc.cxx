@@ -57,7 +57,7 @@ void thencode(thbuffer * dest, const char * src, int srcenc)
     // we have to encode
     else {
 
-      wchar_t dch = thencode_tbl[*srcp - thchenc_facc][srcenc];
+      const auto dch = thencode_tbl[*srcp - thchenc_facc][srcenc];
 
       // two byte UTF-8 character
       if (dch < 0X800) {
@@ -105,7 +105,7 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
   dest->guarantee(srcln);  // check buffer size
   dstp = (unsigned char*) dest->get_buffer();
   srcp = (unsigned char*) src;
-  wchar_t sch = 0;    
+  char32_t sch = 0;    
   
   while (srcx < srcln) {
   
@@ -116,7 +116,7 @@ void thdecode(thbuffer * dest, int destenc, const char * src)
     else {
       // one byte character
       if (*srcp < 0X7F)
-        sch = (wchar_t) *srcp;
+        sch = static_cast<char32_t>(*srcp);
       // two byte character
       else if ((*srcp / 32) == 6) {
         sch = 64 * (*srcp % 32);
@@ -195,6 +195,6 @@ int thparse_encoding(char * encstr)
 {
   int eid = thmatch_token(encstr, thtt_encoding);
   if (eid == TT_UNKNOWN_ENCODING)
-    ththrow(("invalid encoding -- %s", encstr))
+    ththrow("invalid encoding -- {}", encstr);
   return eid;
 }

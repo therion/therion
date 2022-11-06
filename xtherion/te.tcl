@@ -407,7 +407,7 @@ proc xth_te_set_encoding {} {
     } else {
       MessageDlg $xth(gui,message) -parent $xth(gui,main) \
         -icon error -type ok \
-        -message "uknown encoding -- $xth(te,open_file_encoding)" \
+        -message "unknown encoding -- $xth(te,open_file_encoding)" \
         -font $xth(gui,lfont)
     }
   }

@@ -31,6 +31,7 @@
 
 // Standard libraries
 #ifndef LXDEPCHECK
+#include <limits>   // required to compile with vtk 9.0.1 and gcc 11
 #include <vtkPolyData.h>
 #include <vtkLookupTable.h>
 #include <vtkAppendPolyData.h>
@@ -40,6 +41,7 @@
 #include <vtkStripper.h>
 #include <wx/string.h>
 #include <vector>
+#include <set>
 #endif  
 //LXDEPCHECK - standard libraries
 
@@ -57,6 +59,8 @@ struct lxDataSurvey {
   const char * m_name, * m_title;
 
   std::string m_full_name;
+  
+  bool m_selected;
 
 };
 
@@ -65,21 +69,21 @@ struct lxDataStation {
 
   lxVec pos;
 
-  size_t m_survey_idx;
+  size_t m_survey_idx = 0;
 
-  const char * m_name, * m_comment;
+  const char * m_name, * m_comment = nullptr;
 
-  bool m_temporary, m_entrance, m_fix;
+  bool m_temporary, m_entrance, m_fix, m_selected;
 
-  double m_screen_x, m_screen_y, m_screen_z, m_surface;
+  double m_screen_x = 0.0, m_screen_y = 0.0, m_screen_z = 0.0, m_surface;
 
-  lxDataStation() : m_name(NULL), m_temporary(false), m_entrance(false), m_fix(false), m_surface(false) {}
+  lxDataStation() : m_name(NULL), m_temporary(false), m_entrance(false), m_fix(false), m_selected(true), m_surface(false) {}
   
 };
 
 struct lxDataTexture {
   double dx, dy, xx, xy, yx, yy, iw, ih;
-  unsigned texSizeS, texSizeO;
+  unsigned texSizeS = 0, texSizeO = 0;
   lxImageRGB image;
   unsigned char * texS, * texSbw, * texO, * texObw;
   lxDataTexture() : dx(0.0), dy(0.0), xx(1.0), xy(0.0), yx(0.0), yy(1.0), iw(1.0), ih(1.0), 
@@ -97,7 +101,9 @@ struct lxDataShot {
 
   unsigned long from, to;
 
-  bool surface, invisible, splay, duplicate;
+  size_t m_survey_idx;
+  
+  bool surface, invisible, splay, duplicate, m_selected;
   
 };
 
@@ -114,6 +120,8 @@ struct lxData {
   lxDataShotVec shots;
 
   lxDataSurveyVec surveys;
+  
+  std::set<size_t> m_selected_surveys;
 
   wxString title;
   
@@ -135,6 +143,9 @@ struct lxData {
   void Rebuild();
   void InitTextures();
   void ExportVTK(wxString fileName);
+  void ExportPLY(wxString fileName);
+  void ClearSurveySelection();
+  void AddSelectedSurvey(size_t id);
   
 };
 

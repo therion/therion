@@ -36,12 +36,6 @@
 thwarpp::~thwarpp() {}
 
 
-void thwarpp::self_delete()
-{
-  delete this;
-}
-
-
 thscrap * thwarpp::get_scrap()
 {
   if (this->m_sketch != NULL)

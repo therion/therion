@@ -2,33 +2,71 @@
 % Copyright (C) 2003, 2004 Martin Budaj, Stacho Mudrak
 % Thanks to Wookey for corrections
 
+\ifx\outputsize\undefined
+  \def\outputsize{0}  % can't be defined using \newcount inside \ifx
+  % 0 - A4 portrait
+  % most images are omitted in smaller sizes:
+  % 1 - small screen portrait (some lines and images don't fit)
+  % 2 - small screen landscape
+  % 3 - ebook reader
+\fi
+
+% define \reproducible{} to omit ID from the trailer
+\newif\ifomittrailerID
+\ifx\reproducible\undefined
+  \omittrailerIDfalse
+\else
+  \omittrailerIDtrue
+\fi
+
+\ifx\directlua\undefined\else
+  \let\pdfoutput\outputmode
+\fi
+
+\newdimen\tmpdimen
 \ifx\pdfoutput\undefined
   \input epsf
   \gdef\outline#1{}
   \def\pdfstartlink#1 #2 #3 #4 #5 #6 #7\pdfendlink{#7}
   \let\red\relax \let\blue\relax \let\grey\relax 
   \let\black\relax \let\green\relax \let\POPcolor\relax
-\else 
-  \ifnum\pdftexversion<110
-    \message{Warning: PdfTeX too ancient to process samples}
-  \else\ifnum\pdftexversion<130
-    \pdfoptionpdfminorversion 5
+  \let\pdfpagewidth\tmpdimen
+  \let\pdfpageheight\tmpdimen
+\else
+  \ifx\directlua\undefined
+    \pdfsuppressptexinfo=-1\ifomittrailerID\pdftrailerid{}\fi% reproducibility settings, note that SOURCE_DATE_EPOCH and \reproducible{} should also be set
   \else
-    \pdfminorversion 5
-  \fi\fi
-  \ifnum\pdftexversion>139
-    \openin0=glyphtounicode.tex
-    \ifeof0\message{No glyph to unicode mapping found!}\else\closein0\input glyphtounicode.tex\pdfgentounicode=1\fi
+    \pdfvariable suppressoptionalinfo\numexpr1+2+4+8\ifomittrailerID+512\fi% reproducibility settings
+    \let\pdflastximage     \lastsavedimageresourceindex
+    \let\pdfpageheight     \pageheight
+    \let\pdfpagewidth      \pagewidth
+    \let\pdfrefximage      \useimageresource
+    \let\pdfximage         \saveimageresource
+    \def\pdfcolorstackinit        {\pdffeedback colorstackinit}
+    \def\pdftexversion    {\numexpr\pdffeedback version\relax}
+    \edef\pdfgentounicode             {\pdfvariable gentounicode}
+    \edef\pdfminorversion             {\pdfvariable minorversion}
+    \protected\def\pdfannot               {\pdfextension annot }
+    \protected\def\pdfcatalog             {\pdfextension catalog }
+    \protected\def\pdfcolorstack          {\pdfextension colorstack}
+    \protected\def\pdfendlink             {\pdfextension endlink\relax}
+    \protected\def\pdfglyphtounicode      {\pdfextension glyphtounicode }
+    \protected\def\pdfinfo                {\pdfextension info }
+    \protected\def\pdfoutline             {\pdfextension outline }
+    \protected\def\pdfstartlink           {\pdfextension startlink }
   \fi
-  \input etc/supp-mis 
-  \input etc/supp-pdf 
-  
+  \pdfminorversion 5
+  \openin0=glyphtounicode.tex
+  \ifeof0\message{No glyph to unicode mapping found!}\else\closein0\input glyphtounicode.tex\pdfgentounicode=1\fi
+  \input etc/supp-mis
+  \input etc/supp-pdf
+
   \openin0=version.tex
   \read 0 to \thversion
   \closein0
-  
+
   \pdfinfo{/Title (The Therion Book \thversion)
-           /Author (Martin Budaj, Stacho Mudrák)
+           /Author (Martin Budaj, Stacho Mudr\string\341k)
 	   /Subject (Therion documentation)
 	   /Keywords (caves, surveying, cartography, computers)
 	   /Creator (TeX)
@@ -50,6 +88,51 @@
   \fi
 
 \fi
+
+\newskip\footrightskip \footrightskip=0pt plus0pt minus0pt
+\newif\iffulloutput \fulloutputtrue
+\ifnum\outputsize=1
+  \hsize=84mm
+  \vsize=154mm
+  \pdfpagewidth=90mm
+  \pdfpageheight=160mm
+  \hoffset=-22.4mm
+  \voffset=-22.4mm
+  \rightskip=0pt plus 60 mm
+  \footrightskip=0pt plus 60 mm
+  \fulloutputfalse
+  \overfullrule=0pt
+  \mag700
+\else\ifnum\outputsize=2
+  \hsize=154mm
+  \vsize=84mm
+  \pdfpagewidth=160mm
+  \pdfpageheight=90mm
+  \hoffset=-22.4mm
+  \voffset=-22.4mm
+  \rightskip=0pt plus 30 mm
+  \footrightskip=0pt plus 30 mm
+  \fulloutputfalse
+  \overfullrule=0pt
+  \mag700
+\else\ifnum\outputsize=3
+  \hsize=124mm
+  \vsize=169mm
+  \pdfpagewidth=130mm
+  \pdfpageheight=175mm
+  \hoffset=-22.4mm
+  \voffset=-22.4mm
+  \rightskip=0pt plus 60 mm
+  \footrightskip=0pt plus 60 mm
+  \fulloutputfalse
+  \overfullrule=0pt
+  \mag700
+\else
+  \hsize=159.2mm
+  \vsize=239.2mm
+  \pdfpagewidth=210mm
+  \pdfpageheight=297mm
+\fi\fi\fi
 
 \catcode`@=11
 \input etc/optarg
@@ -227,12 +310,34 @@
     \pdfendlink
   \fi}
 
-\def\twotonum#1.#2 {\numexpr(#1*1000000+#2*1000)}
-\def\threetonum#1.#2.#3 {\numexpr(#1*1000000+#2*1000+#3)}
-\def\versiontonum#1{\ifnum\pdfmatch{[0-9]+[.][0-9]+[.][0-9]+}{#1}=1
-       \threetonum#1 \else \twotonum#1 \fi}
+% \versiontonum#1 converts a version number like 5.3 or 5.3.1 to a numeric value for comparison
+\ifx\pdfmatch\undefined
+  \ifx\directlua\undefined
+    \def\versiontonum#1{0}   % just return a constant if \pdfmatch or \directlua are unavailable
+  \else
+    \begingroup
+    \catcode`\%=12
+    \gdef\versiontonum#1{
+      \directlua{
+        local s = 0
+        local k = 1000000
+        for num in string.gmatch('#1', '%d+') do
+          s = s + k*num
+          k = k / 1000
+        end
+        tex.sprint(string.format('%d', s))
+      }
+    }
+    \endgroup
+  \fi
+\else
+  \def\twotonum#1.#2 {\numexpr(#1*1000000+#2*1000)}
+  \def\threetonum#1.#2.#3 {\numexpr(#1*1000000+#2*1000+#3)}
+  \def\versiontonum#1{\ifnum\pdfmatch{[0-9]+[.][0-9]+[.][0-9]+}{#1}=1
+         \threetonum#1 \else \twotonum#1 \fi}
+\fi
 
-\def\NEW#1{\ifnum\versiontonum{#1}<\versiontonum{5.3}% don't display too old news
+\def\NEW#1{\iffulloutput\ifnum\versiontonum{#1}<\versiontonum{5.5}% don't display too old news
        \else
        \leavevmode\vadjust{%
           \vbox to 0pt{%
@@ -244,7 +349,7 @@
 	      \ifodd\pageno\else\hfil\fi
 	    }%
 	  }%
-	}\fi\ignorespaces
+	}\fi\fi\ignorespaces
       }%
 
 
@@ -286,7 +391,7 @@
   \interlinepenalty\interfootnotelinepenalty
   \splittopskip\ht\strutbox % top baseline for broken footnotes
   \splitmaxdepth\dp\strutbox \floatingpenalty\@MM
-  \leftskip=18pt \rightskip\z@skip \spaceskip\z@skip \xspaceskip\z@skip
+  \leftskip=18pt \rightskip\footrightskip \spaceskip\z@skip \xspaceskip\z@skip
   \indent\black\llap{#1\thinspace}\ignorespaces
   \footstrut\futurelet\next\fo@t}
 \count\footins=1000 % footnote magnification factor (1 to 1)
@@ -302,10 +407,6 @@
 \raggedbottom
 \widowpenalty10000
 \clubpenalty10000
-\hsize=159.2mm
-\vsize=239.2mm
-\pdfpagewidth=210mm
-\pdfpageheight=297mm
 
 \language0
 \rm

@@ -4,30 +4,30 @@
 #ifndef LXDEPCHECK
 #include <cstdlib>
 #include <cstdio>
-#include <string.h>
+#include <cstring>
 #include <locale.h>
 #include <map>
 #include <list>
-
-#if defined LXWIN32 || defined THWIN32
-#include "getline.h"
-#endif
+#include <fstream>
 
 #endif  
 //LXDEPCHECK - standard libraries
 
+#include "icase.h"
 #include "lxMath.h"
 #include "img.h"
 
-#if defined LXWIN32 || defined THWIN32
-#define strcasecmp stricmp
-#endif
+double lxFilePrepDbl(double val) {
+  char tb[32];
+  snprintf(tb, 31, "%.12e", val);
+  return atof(tb);
+}
 
 
 lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(uint32_t));
-  *((uint32_t *)(ptr)) = (uint32_t) this->m_size;
+  std::memcpy(ptr, &m_size, s);
   lxFile::switchEndian(ptr, s);
   ptr += s;
   return s;
@@ -37,7 +37,7 @@ lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 lxFileSizeT lxFileSize::Load(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(lxFileSizeT));
-  this->m_size = (lxFileSizeT) *((uint32_t *)(ptr));
+  std::memcpy(&m_size, ptr, s);
   lxFile::switchEndian((char *)(&this->m_size), s);
   ptr += s;
   return s;
@@ -47,17 +47,17 @@ lxFileSizeT lxFileSize::Load(lxFileBuff & ptr)
 lxFileSizeT lxFileDbl::Save(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(this->m_num));
-  *((double *)(ptr)) = this->m_num;
+  this->m_num = lxFilePrepDbl(this->m_num);
+  std::memcpy(ptr, &m_num, s);
   lxFile::switchEndian(ptr, s);
   ptr += s;
   return s;
 }
 
-
 lxFileSizeT lxFileDbl::Load(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(this->m_num));
-  this->m_num = *((double *)(ptr));
+  std::memcpy(&m_num, ptr, s);
   lxFile::switchEndian((char *)(&this->m_num), s);
   ptr += s;
   return s;
@@ -197,7 +197,7 @@ lxFileDataPtr lxFileData::AppendFile(const char * fnm)
     fseek(xf, 0, SEEK_SET);
     if (fsz > 0) {
       char * cdata = new char [fsz];
-      fread((void *) cdata, 1, fsz, xf);
+      lxassert(fread((void *) cdata, 1, fsz, xf) == fsz);
       res = this->AppendData(cdata, fsz);
       delete [] cdata;
     }
@@ -347,6 +347,25 @@ lxFileSizeT lxFile3Point::Save(lxFileBuff & ptr)
   s += this->m_c[0].Save(ptr);
   s += this->m_c[1].Save(ptr);
   s += this->m_c[2].Save(ptr);
+  return s;
+}
+
+lxFileSizeT lxFile3Point::Load(lxFileBuff & ptr)
+{
+  lxFileSizeT s(0);
+  s += this->m_c[0].Load(ptr);
+  s += this->m_c[1].Load(ptr);
+  s += this->m_c[2].Load(ptr);
+  return s;
+}
+
+
+lxFileSizeT lxFile3Angle::Save(lxFileBuff & ptr)
+{
+  lxFileSizeT s(0);
+  s += this->m_v[0].Save(ptr);
+  s += this->m_v[1].Save(ptr);
+  s += this->m_v[2].Save(ptr);
   return s;
 }
 
@@ -594,29 +613,27 @@ void lxFile::ImportLOX(const char * fn)
 }
 
 
-lxFileSizeT lxFile__SplitTokens(unsigned char * str, unsigned char ** tokens, lxFileSizeT max_tokens)
+lxFileSizeT lxFileSplitTokens(std::string& str, char ** tokens, lxFileSizeT max_tokens)
 {
-  lxFileSizeT nt = 0, sl, sp;
-  unsigned char * cc;
+  lxFileSizeT nt = 0, sp = 0;
   bool inside = false;
-  if ((str == NULL) || (max_tokens == 0))
+  if (max_tokens == 0)
     return 0;
-  sl = strlen((char *)str);
   max_tokens--;
-  for (sp = 0, cc = str; (sp < sl) && (nt < max_tokens); sp++, cc++) {
+  for (auto cc = str.begin(); (sp < str.size()) && (nt < max_tokens); sp++, cc++) {
     if (inside && (*cc < 33)) {
       *cc = 0;
       inside = false;
       nt++;
     } else if ((!inside) && (*cc > 32)) {
       inside = true;
-      tokens[nt] = cc;
+      tokens[nt] = &*cc;
     }
   }
   return nt;
 }
 
-bool lxFile__CheckLRUD(double & du, double & dd, double & dl, double & dr, double mv, double mh) {
+bool lxFileCheckLRUD(double & du, double & dd, double & dl, double & dr, double mv, double mh) {
   if ((du <= 0.0) && (dd <= 0.0) && (dl <= 0.0) && (dr <= 0.0)) {
     return false;
   } else {
@@ -706,22 +723,18 @@ lxFileShot * lxFile::NewShot()
 void lxFile::ImportPLT(const char * fn)
 {
   this->m_error.clear();
-  char * prevlocale = setlocale(LC_NUMERIC,NULL);
+  char* prevlocale_ptr = setlocale(LC_NUMERIC,NULL);
+  const std::string prevlocale = prevlocale_ptr ? prevlocale_ptr : "";
   setlocale(LC_NUMERIC,"C");
 
-  size_t lns;
-  char * lnp;
-  char ln[1024];
-  lns = 1024;
-  lnp = &(ln[0]);
   bool lrudOK, lrudOKPrev = false;
-  unsigned char * tok[16];
+  char * tok[16];
   lxFileDbl lrud[4], lrudPrev[4];
   lrudPrev[0] = lrudPrev[1] = lrudPrev[2] = lrudPrev[3] = -1.0;
   lxFileSizeT nt;
 
-  this->m_file = fopen(fn,"r");
-  if (this->m_file == NULL) {
+  std::ifstream input(fn);
+  if (!input.is_open()) {
     this->m_error = "unable to open file for input";
     return;
   }
@@ -743,7 +756,7 @@ void lxFile::ImportPLT(const char * fn)
       break;
     }
   }
-  for (x = xx; (x < int(strlen(fn))) && (strcasecmp(&(fn[x]),".PLT") != 0); x++) {
+  for (x = xx; (x < int(strlen(fn))) && !icase_equals(&(fn[x]),".PLT"); x++) {
     sname[x - xx] = fn[x];
     sname[x - xx + 1] = 0;
   }
@@ -751,9 +764,10 @@ void lxFile::ImportPLT(const char * fn)
   tmpSurvey->m_namePtr = this->m_surveysData.AppendStr(sname);
   delete [] sname;
 
-  while (!feof(this->m_file)) {
-    getline(&lnp, &lns, this->m_file);
-    nt = lxFile__SplitTokens((unsigned char *) lnp, &(tok[0]), 16);
+  std::string line;
+  while (!input.eof()) {
+    lxassert(std::getline(input, line));
+    nt = lxFileSplitTokens(line, &(tok[0]), 16);
     (void)nt;
     switch (*(tok[0])) {
       case 'M':
@@ -765,7 +779,7 @@ void lxFile::ImportPLT(const char * fn)
         tok2num(lrud[1],9);PltLrudNaN(lrud[1]);
         tok2num(lrud[2],7);PltLrudNaN(lrud[2]);
         tok2num(lrud[3],8);PltLrudNaN(lrud[3]);
-        lrudOK = lxFile__CheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
+        lrudOK = lxFileCheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
         if (lrudOK) {
           lrud[0] *= 0.3048;
           lrud[1] *= 0.3048;
@@ -813,8 +827,7 @@ void lxFile::ImportPLT(const char * fn)
     }
   }
 
-  fclose(this->m_file);
-  setlocale(LC_NUMERIC,prevlocale);
+  setlocale(LC_NUMERIC,prevlocale.c_str());
 }
 
 struct imp3Dpos {
@@ -874,7 +887,7 @@ void lxFile::Import3D(const char * fn)
       break;
     }
   }
-  for (x = xx; (x < int(strlen(fn))) && (strcasecmp(&(fn[x]),".PLT") != 0); x++) {
+  for (x = xx; (x < int(strlen(fn))) && !icase_equals(&(fn[x]),".PLT"); x++) {
     sname[x - xx] = fn[x];
     sname[x - xx + 1] = 0;
   }
@@ -950,6 +963,9 @@ void lxFile::Import3D(const char * fn)
           if ((pimg->flags & img_FLAG_DUPLICATE) != 0)  {
             shPtr->SetFlag(LXFILE_SHOT_FLAG_DUPLICATE, true);
           }
+          if ((pimg->flags & img_FLAG_SPLAY) != 0)  {
+            shPtr->SetFlag(LXFILE_SHOT_FLAG_SPLAY, true);
+          }
           if (stPtr->GetFlag(LXFILE_STATION_FLAG_HAS_WALLS) || stPtrPrev->GetFlag(LXFILE_STATION_FLAG_HAS_WALLS)) {
             shPtr->SetFlag(LXFILE_SHOT_FLAG_NOT_LRUD, true);
           }
@@ -965,7 +981,7 @@ void lxFile::Import3D(const char * fn)
           lrud[1] = pimg->r;
           lrud[2] = pimg->u;
           lrud[3] = pimg->d;
-          lrudOK = lxFile__CheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
+          lrudOK = lxFileCheckLRUD(lrud[0], lrud[1], lrud[2], lrud[3], 2.0, 5.0);
           if (lrudOK) {
             stPtr->SetFlag(LXFILE_STATION_FLAG_HAS_WALLS, true);
           }
@@ -1053,7 +1069,7 @@ void lxFile::InterpolateMissingLRUD()
   std::list<lxFileShot>::iterator shi;
   std::map<lxVec, lxFileSizeT>::iterator stmi;
   lxFileStation * st;
-  missingStation tst;
+  missingStation tst{};
   missingShot ts;
   lxVec fp, tp;
   for (shi = this->m_shots.begin(); shi != this->m_shots.end(); shi++) {

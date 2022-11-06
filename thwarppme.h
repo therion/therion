@@ -147,7 +147,7 @@ namespace therion
     struct point_pair
     {
       morph_type m_type;  //!< point pair type
-      bool m_used;        //!< whether this pair has been used in making the plaquettes
+      bool m_used = false;//!< whether this pair has been used in making the plaquettes
       std::string m_name; //!< station (or whatever) name
       thvec2 x;           //!< sketch coords
       thvec2 u;           //!< survey coords
@@ -263,19 +263,19 @@ namespace therion
       morph_type m_type;     //!< morph type of the line
       point_pair * m_p1;     //!< first point pair
       point_pair * m_p2;     //!< second point pair
-      double dz;             //!< distance P1-P2 (Z coords)
-      double dw;             //!< distance P1-P2 (W coords)
+      double dz = 0.0;       //!< distance P1-P2 (Z coords)
+      double dw = 0.0;       //!< distance P1-P2 (W coords)
     
       thline2 z;             //!< line (first image - Z coords)
       thline2 w;             //!< line (second image - W coords)
-      double zab;            //!< z-line sqrt(a*a + b*b)
-      double wab;            //!< w-line sqrt(a*a + b*b)
+      double zab = 0.0;      //!< z-line sqrt(a*a + b*b)
+      double wab = 0.0;      //!< w-line sqrt(a*a + b*b)
       
       thvec2 vz; //!< unit vector in Z (P1->P2)
       thvec2 vw; //!< unit vector in W 
       
-      double z_w; // dz / dw
-      double w_z; // dw / dz
+      double z_w = 0.0; // dz / dw
+      double w_z = 0.0; // dw / dz
       
       // thmat2 R;                //!< rotation matrix R(from->to)
       // thmat2 S;                //!< rotation matrix R(to->from)
@@ -626,28 +626,28 @@ namespace therion
       /** override basic_pair::pfrom()
        * @return pointer to the "from" item
        */
-      const item * pfrom() const  
+      const item * pfrom() const override  
       { return dynamic_cast<const item *>(&from); }
-      item * pfrom() 
+      item * pfrom() override 
       { return dynamic_cast<item *>(&from); }
 
       /** override basic_pair::pto()
        * @return pointer to the "to" item
        */
-      const item * pto() const  
+      const item * pto() const override  
       { return dynamic_cast<const item *>(&to); }
-      item * pto() 
+      item * pto() override 
       { return dynamic_cast<item *>(&to); }
 
       /** override basic_pair::type()
        * @return the warp type of this basic_pair
        */
-      warp_type type() const;
+      warp_type type() const override;
 
       /** override basic_pair::ngbh_nr()
        * @return the number of neighbors of this basic_pair
        */
-      int ngbh_nr() const;
+      int ngbh_nr() const override;
 
       #ifdef DEBUG
       /** override basic_pair::print()
@@ -671,7 +671,7 @@ namespace therion
        * now it is an iterative process
        * for plaquette: an iterative process (same as now)
        */
-      void forward( const thvec2 & p, thvec2 & ret ) const;
+      void forward( const thvec2 & p, thvec2 & ret ) const override;
 
       /** compute the backward map of a point
        * @param p  2D point in the "to" image
@@ -685,7 +685,7 @@ namespace therion
        * for plaquette:
        *   backward_normal_bd() with MORPH_BD == 0.5
        */
-      void backward( const thvec2 & p, thvec2 & ret ) const
+      void backward( const thvec2 & p, thvec2 & ret ) const override
       {
 	backward_normal_bd( p, ret );
       }
@@ -698,28 +698,28 @@ namespace therion
        * @param p   2D point in the "from" image
        * @return true if the point is in this basic_pair
        */
-      bool is_inside_from( const thvec2 & p ) const 
+      bool is_inside_from( const thvec2 & p ) const override 
       { return from.is_inside( p, m_bound ); }
 
       /** check if a point is inside this basic_pair in the "to" image
        * @param p   2D point in the "to" image
        * @return true if the point is in this basic_pair
        */
-      bool is_inside_to( const thvec2 & p ) const
+      bool is_inside_to( const thvec2 & p ) const override
       { return to.is_inside( p, m_bound ); }
 
       /** get the distance of a point in the "from" domain
        * @param p 2d point
        * @return distance of the point in the "from" domain
        */
-      double distance_from( const thvec2 & p ) const
+      double distance_from( const thvec2 & p ) const override
       { return from.distance( p ); }
 
       /** get the distance of a point in the "to" domain
        * @param p 2d point
        * @return distance of the point in the "to" domain
        */
-      double distance_to( const thvec2 & p ) const
+      double distance_to( const thvec2 & p ) const override
       { return to.distance( p ); }
 
       /**
@@ -734,14 +734,14 @@ namespace therion
        * @param p input 2D point
        * @return squared distance
        */
-      double distance2_to( const thvec2 & p ) const
+      double distance2_to( const thvec2 & p ) const override
       { return to.distance2( p ); }
 
       /** compute the bounding box in the "to" image
        * @param t1  upper left corner (output)
        * @param t2  lower right corner (output)
        */
-      void bounding_box_to( thvec2 & t1, thvec2 & t2 ) const
+      void bounding_box_to( thvec2 & t1, thvec2 & t2 ) const override
       {
         to.bounding_box( t1, t2, m_bound );
       }
@@ -751,7 +751,7 @@ namespace therion
        * @param ret return vector
        * @param x   rotation angle
        */
-      void left_rotate_to( const thvec2 & p, thvec2 & ret, double x ) const
+      void left_rotate_to( const thvec2 & p, thvec2 & ret, double x ) const override
       {
 	  thvec2 pa;
 	  double t = m_kl * x;
@@ -764,7 +764,7 @@ namespace therion
        * @param ret return vector
        * @param x   rotation angle
        */
-      void right_rotate_to( const thvec2 & p, thvec2 & ret, double x ) const
+      void right_rotate_to( const thvec2 & p, thvec2 & ret, double x ) const override
       {
 	  thvec2 pa;
 	  double t = m_kr * x;
@@ -903,7 +903,7 @@ namespace therion
 	 *
 	 * @note in VERSION 0.5.1: not MORPH_USE_IS_INSIDE and MORPH_USE_TRI_F
          */
-        bool is_inside( const thvec2 & p, double bound ) const 
+        bool is_inside( const thvec2 & p, double bound ) const override 
         { 
           #ifdef MORPH_USE_IS_INSIDE
             thvec2 ap( p.m_x - m_A.m_x, p.m_y - m_A.m_y );
@@ -937,7 +937,7 @@ namespace therion
          * @param p 2D point
          * @return the distance
          */
-        double distance( const thvec2 & p ) const
+        double distance( const thvec2 & p ) const override
         {
           thvec2 p1 = p - m_A;
           return p1.length();
@@ -961,7 +961,7 @@ namespace therion
 	 *
 	 * @note in VERSION 0.5.1: MORPH_USE_TRI_F
 	 */
-        double distance2( const thvec2 & p ) const
+        double distance2( const thvec2 & p ) const override
         {
           thvec2 p1;
 	  to_polar( p, p1 );
@@ -975,7 +975,7 @@ namespace therion
 	 * @param t2 upper-right corner of the bounding box
 	 * @param bound  "vertical" size of the bounding box
 	 */
-        void bounding_box( thvec2 & t1, thvec2 & t2, double bound ) const
+        void bounding_box( thvec2 & t1, thvec2 & t2, double bound ) const override
 	{
           #if 1
             thvec2 b = m_B - bound * (m_A - m_B);
@@ -995,7 +995,7 @@ namespace therion
 	 * @param p   input 2D point
 	 * @return S value in st_map
 	 */
-	double s_map( const thvec2 & p ) const
+	double s_map( const thvec2 & p ) const override
         {
           double xp = p.m_x - m_A.m_x;
           double yp = p.m_y - m_A.m_y;
@@ -1008,36 +1008,36 @@ namespace therion
 	 * @param p input 2D point
 	 * @param ret return s-t coordinates (polar coordinates)
 	 */
-        void st_map( const thvec2 & p, thvec2 & ret ) const
+        void st_map( const thvec2 & p, thvec2 & ret ) const override
 	{ to_polar(p, ret); }
 
         /** inverse s-t map for the triangle
 	 * @param p input s-t (= polar) coordinates
 	 * @param ret return 2D point
 	 */
-        void inv_st_map( const thvec2 & p, thvec2 & ret ) const
+        void inv_st_map( const thvec2 & p, thvec2 & ret ) const override
 	{ from_polar(p, ret); }
 
         /** (0.5.2)
 	 */
-        double sm_map( const thvec2 & p, thvec2 & ret ) const;
+        double sm_map( const thvec2 & p, thvec2 & ret ) const override;
 
         /** (0.5.2)
 	 */
-        void inv_sm_map( const thvec2 & p, thvec2 & ret, double d4 ) const;
+        void inv_sm_map( const thvec2 & p, thvec2 & ret, double d4 ) const override;
 
         /** Beier-Neely map for the triangle
 	 * @param p input 2D point
 	 * @param ret return B-N coordinates (polar coordinates)
 	 */
-        void bn_map( const thvec2 & p, thvec2 & ret ) const
+        void bn_map( const thvec2 & p, thvec2 & ret ) const override
 	{ to_polar(p, ret); }
 
         /** inverse Beier-Neely map for the triangle
 	 * @param p input B-N (= polar) coordinates
 	 * @param ret return 2D point
 	 */
-        void inv_bn_map( const thvec2 & p, thvec2 & ret ) const
+        void inv_bn_map( const thvec2 & p, thvec2 & ret ) const override
 	{ from_polar(p, ret); }
 
         /** rotate a point about the "left" corner 
@@ -1048,7 +1048,7 @@ namespace therion
 	 *
 	 * @note in VERSION 0.5.1: ret was return instead of param
 	 */
-	void left_rotate( const thvec2 & p, thvec2 & ret, double /* c */, double /* s */) const
+	void left_rotate( const thvec2 & p, thvec2 & ret, double /* c */, double /* s */) const override
 	{
 	  ret = p;
 	}
@@ -1061,7 +1061,7 @@ namespace therion
 	 *
 	 * @note in VERSION 0.5.1: ret was return instead of param
 	 */
-	void right_rotate( const thvec2 & p, thvec2 & ret, double /* c */, double /* s */) const
+	void right_rotate( const thvec2 & p, thvec2 & ret, double /* c */, double /* s */) const override
 	{
 	  ret = p;
 	}
@@ -1152,7 +1152,7 @@ namespace therion
          * @pre the point should lie inside the plaquette
 	 * @note in VERSION 0.5.1: s_map == s_map_straight
 	 */
-	double s_map( const thvec2 & p ) const
+	double s_map( const thvec2 & p ) const override
 	{
 	  return (this ->* s_map_impl)(p);
 	}
@@ -1179,7 +1179,7 @@ namespace therion
          * @pre the point should lie inside the plaquette
 	 * @note in VERSION 0.5.1: unchanged
          */
-        void st_map( const thvec2 & p, thvec2 & ret ) const;
+        void st_map( const thvec2 & p, thvec2 & ret ) const override;
 
         /** inverse map plaquette (s,t) coordinates to point
          * @param p plaquette (s,t) coordinates of the point
@@ -1187,13 +1187,13 @@ namespace therion
 	 *
 	 * @note in VERSION 0.5.1: unchanged
          */
-        void inv_st_map( const thvec2 & p, thvec2 & ret ) const;
+        void inv_st_map( const thvec2 & p, thvec2 & ret ) const override;
 
         /** sm-maps (0.5.2)
          * @return fourth power of the distance
          */
-        double sm_map( const thvec2 & p, thvec2 & ret ) const;
-        void inv_sm_map( const thvec2 & p, thvec2 & ret, double d4 ) const;
+        double sm_map( const thvec2 & p, thvec2 & ret ) const override;
+        void inv_sm_map( const thvec2 & p, thvec2 & ret, double d4 ) const override;
 
         /** h-v map
          * @param  p 2D point
@@ -1222,7 +1222,7 @@ namespace therion
 	 *
 	 * @note in VERSION 0.5.1: bn_map == bn_map_straight
 	 */
-        void bn_map( const thvec2 & p, thvec2 & ret ) const
+        void bn_map( const thvec2 & p, thvec2 & ret ) const override
 	{
 	  (this->*bn_map_impl)( p, ret );
 	}
@@ -1233,7 +1233,7 @@ namespace therion
 	 *
 	 * @note in VERSION 0.5.1: inv_bn_map == inv_bn_map_straight
 	 */
-        void inv_bn_map( const thvec2 & p, thvec2 & ret ) const
+        void inv_bn_map( const thvec2 & p, thvec2 & ret ) const override
 	{
 	  (this->*inv_bn_map_impl)( p, ret );
 	}
@@ -1252,7 +1252,7 @@ namespace therion
 	 * @param c cosine of the rotation angle
 	 * @param s sine of the rotation angle
 	 */
-	void left_rotate( const thvec2 & p, thvec2 & ret, double c, double s ) const
+	void left_rotate( const thvec2 & p, thvec2 & ret, double c, double s ) const override
 	{
 	  double x = p.m_x - m_A.m_x;
 	  double y = p.m_y - m_A.m_y;
@@ -1266,7 +1266,7 @@ namespace therion
 	 * @param c cosine of the rotation angle
 	 * @param s sine of the rotation angle
 	 */
-	void right_rotate( const thvec2 & p, thvec2 & ret, double c, double s ) const
+	void right_rotate( const thvec2 & p, thvec2 & ret, double c, double s ) const override
 	{
 	  double x = p.m_x - m_B.m_x;
 	  double y = p.m_y - m_B.m_y;
@@ -1281,7 +1281,7 @@ namespace therion
 	 *
 	 * @note in VERSION 0.5.1: st_map (ie not MORPH_USE_IS_INSIDE)
          */
-        bool is_inside( const thvec2 & p, double bound ) const 
+        bool is_inside( const thvec2 & p, double bound ) const override 
         {
           // thvec2 v;
 	  // st_map( p, v );
@@ -1346,7 +1346,7 @@ namespace therion
 	 * @pre p is inside the plaquette
 	 * this could be any reasonable distance function
          */
-        double distance( const thvec2 & p ) const
+        double distance( const thvec2 & p ) const override
         {
           return t_map( p );
         }
@@ -1372,7 +1372,7 @@ namespace therion
 	}
 	 */
     
-        double distance2( const thvec2 & p ) const
+        double distance2( const thvec2 & p ) const override
         {
           thvec2 v;
 	  st_map( p, v );
@@ -1386,7 +1386,7 @@ namespace therion
 	 * @param t2 upper-right corner of the bounding box
 	 * @param bound  "vertical" size of the bounding box
 	 */
-        void bounding_box( thvec2 & t1, thvec2 & t2, double bound ) const
+        void bounding_box( thvec2 & t1, thvec2 & t2, double bound ) const override
 	{
           thvec2 c = m_B + bound * m_BC;
           thvec2 d = m_A + bound * m_AD;

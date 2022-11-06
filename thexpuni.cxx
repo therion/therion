@@ -39,13 +39,6 @@
 #include "thtmpdir.h"
 #include "thcsdata.h"
 #include "thdb3d.h"
-
-#ifdef THMSVC
-#define hypot _hypot
-#define snprintf _snprintf
-#define strcasecmp _stricmp
-#endif
-
 #include "thchenc.h"
 #include "thdb1d.h"
 #include "thinit.h"
@@ -58,7 +51,7 @@
 #include "thsurface.h"
 #include <stdlib.h>
 #include "loch/lxMath.h"
-#include "extern/shapefil.h"
+#include "shapefil.h"
 #include "thexpmodel.h"
 #include <fcntl.h>
 #include <stdlib.h>
@@ -302,7 +295,7 @@ void insert_line_segment(double resolution, thline * ln, bool reverse, std::list
 					  nz = t_ * cpt->point->zt + t * prevpt->point->zt;
 					  na = t_ * cpt->point->at + t * prevpt->point->at;
             // resolution 0.1 m
-					  if (hypot(nx - px, ny - py) > resolution) {
+					  if (std::hypot(nx - px, ny - py) > resolution) {
 			        lst.push_back(thexpuni_data(nx + ln->fscrapptr->proj->rshift_x, ny + ln->fscrapptr->proj->rshift_y, nz + ln->fscrapptr->proj->rshift_z, na));
 						  px = nx;
 						  py = ny;
@@ -454,6 +447,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -509,7 +503,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
     for(i = 0; i < nstat; i++) {
       station = &(db->db1d.station_vec[i]);
       if ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
-        thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+        thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
           station->x, station->y, station->z, x, y, z);
         fprintf(out, "<Placemark>\n");
         fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
@@ -577,9 +571,15 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
                   fprintf(out,"<innerBoundaryIs>\n");
                 fprintf(out,"<LinearRing>\n<coordinates>\n");
                 for(ip = it->m_point_list.begin(); ip != it->m_point_list.end(); ip++) {
-                  thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+                  thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
                     ip->m_x, ip->m_y, scrap->z, x, y, z);
                   fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, 0.0);
+                }
+                if (it->m_point_list.size() > 0) {
+                	ip = it->m_point_list.begin();
+                    thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
+                      ip->m_x, ip->m_y, scrap->z, x, y, z);
+                    fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, 0.0);
                 }
                 fprintf(out,"</coordinates>\n</LinearRing>\n");
 
@@ -640,6 +640,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -669,19 +670,19 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
             scrap = (thscrap*) cmi->object;
             if (!thisnan(scrap->lxmin)) {
 	    
-              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+              thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
                 scrap->lxmin + prj->rshift_x, scrap->lymin + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
               lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
 
-              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params,  
+              thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
                 scrap->lxmin + prj->rshift_x, scrap->lymax + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
               lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
 
-              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+              thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
                 scrap->lxmax + prj->rshift_x, scrap->lymin + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
               lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
 
-              thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+              thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
                 scrap->lxmax + prj->rshift_x, scrap->lymax + prj->rshift_y, scrap->z + prj->rshift_z, cx, cy, cz);
               lim.Add(cx / THPI * 180.0, cy / THPI * 180.0, cz);
 	      
@@ -716,7 +717,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
 
 
 
-void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * prj)
+void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // TODO unused parameter prj
 {
 
   if (maps == NULL) {
@@ -732,6 +733,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);

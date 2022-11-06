@@ -1,7 +1,7 @@
 \ifx\pdfoutput\undefined
 \else
 \ifnum\pdftexversion<110
-  \message{Warning: skipping the case studies -- PDF version} 
+  \message{Warning: skipping the case studies -- PDF version}
 \expandafter\endinput\expandafter\fi
 \fi
 
@@ -13,17 +13,19 @@
 \else \samplepath{../samples.doc/index.tex} \closein0 \fi
 
 \eject
+\iffulloutput
 \vbox{\hsize=93.2mm\baselineskip=12pt
 \rightline{\eightit There is no royal road to geometry.}
 \pic{euclid.pdf}
 \vskip1pt
-\eightrm 
+\eightrm
 \rightline{---Euclid, {\eightmit 3}rd century BC}
 \vskip10pt
 \rightline{\eightit There is no royal road, but there is a road.}
 \vskip3pt
 \rightline{---Frederick P. Brooks, {\eightmit 1987}}
 }
+\fi
 
 \chapter Case studies.
 

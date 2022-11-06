@@ -4,7 +4,7 @@ encoding  utf-8
 #!IMAGE ignore.pdf
 #! Note that no surveys are created in this case. Station names
 #! are taken from .3d files without change.
-#!PROCESS cavern ignore.svx
+### #!PROCESS cavern ignore.svx
 #!PROCESS
 #!CLEAN ignore.err ignore.pdf
 

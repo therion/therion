@@ -1,6 +1,6 @@
 /*
- * Poly2Tri Copyright (c) 2009-2010, Poly2Tri Contributors
- * http://code.google.com/p/poly2tri/
+ * Poly2Tri Copyright (c) 2009-2018, Poly2Tri Contributors
+ * https://github.com/jhasse/poly2tri
  *
  * All rights reserved.
  *
@@ -29,14 +29,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "shapes.h"
+
+#include <cassert>
 #include <iostream>
 
 namespace p2t {
 
+Point::Point(double x, double y) : x(x), y(y)
+{
+}
+
+std::ostream& operator<<(std::ostream& out, const Point& point) {
+  return out << point.x << "," << point.y;
+}
+
 Triangle::Triangle(Point& a, Point& b, Point& c)
 {
   points_[0] = &a; points_[1] = &b; points_[2] = &c;
-  neighbors_[0] = NULL; neighbors_[1] = NULL; neighbors_[2] = NULL;
+  neighbors_[0] = nullptr; neighbors_[1] = nullptr; neighbors_[2] = nullptr;
   constrained_edge[0] = constrained_edge[1] = constrained_edge[2] = false;
   delaunay_edge[0] = delaunay_edge[1] = delaunay_edge[2] = false;
   interior_ = false;
@@ -52,8 +62,7 @@ void Triangle::MarkNeighbor(Point* p1, Point* p2, Triangle* t)
   else if ((p1 == points_[0] && p2 == points_[1]) || (p1 == points_[1] && p2 == points_[0]))
     neighbors_[2] = t;
   else
-    throw(0);
-    //assert(0);
+    assert(0);
 }
 
 // Exhaustive search to update neighbor pointers
@@ -80,36 +89,36 @@ void Triangle::Clear()
     for( int i=0; i<3; i++ )
     {
         t = neighbors_[i];
-        if( t != NULL )
+        if( t != nullptr )
         {
             t->ClearNeighbor( this );
         }
     }
     ClearNeighbors();
-    points_[0]=points_[1]=points_[2] = NULL;
+    points_[0]=points_[1]=points_[2] = nullptr;
 }
 
 void Triangle::ClearNeighbor(const Triangle *triangle )
 {
     if( neighbors_[0] == triangle )
     {
-        neighbors_[0] = NULL;
+        neighbors_[0] = nullptr;
     }
     else if( neighbors_[1] == triangle )
     {
-        neighbors_[1] = NULL;
+        neighbors_[1] = nullptr;
     }
     else
     {
-        neighbors_[2] = NULL;
+        neighbors_[2] = nullptr;
     }
 }
 
 void Triangle::ClearNeighbors()
 {
-  neighbors_[0] = NULL;
-  neighbors_[1] = NULL;
-  neighbors_[2] = NULL;
+  neighbors_[0] = nullptr;
+  neighbors_[1] = nullptr;
+  neighbors_[2] = nullptr;
 }
 
 void Triangle::ClearDelunayEdges()
@@ -147,8 +156,7 @@ void Triangle::Legalize(Point& opoint, Point& npoint)
     points_[2] = points_[1];
     points_[1] = &npoint;
   } else {
-	throw(0);
-	//assert(0);
+    assert(0);
   }
 }
 
@@ -161,8 +169,7 @@ int Triangle::Index(const Point* p)
   } else if (p == points_[2]) {
     return 2;
   }
-  throw(0);
-  //assert(0);
+  assert(0);
   return -1;
 }
 
@@ -222,9 +229,8 @@ Point* Triangle::PointCW(const Point& point)
   } else if (&point == points_[2]) {
     return points_[1];
   }
-  throw(0);
-  //assert(0);
-  return NULL;
+  assert(0);
+  return nullptr;
 }
 
 // The point counter-clockwise to given point
@@ -237,9 +243,19 @@ Point* Triangle::PointCCW(const Point& point)
   } else if (&point == points_[2]) {
     return points_[0];
   }
-  throw(0);
-  //assert(0);
-  return NULL;
+  assert(0);
+  return nullptr;
+}
+
+// The neighbor across to given point
+Triangle* Triangle::NeighborAcross(const Point& point)
+{
+  if (&point == points_[0]) {
+    return neighbors_[0];
+  } else if (&point == points_[1]) {
+    return neighbors_[1];
+  }
+  return neighbors_[2];
 }
 
 // The neighbor clockwise to given point
@@ -348,23 +364,50 @@ void Triangle::SetDelunayEdgeCW(const Point& p, bool e)
   }
 }
 
-// The neighbor across to given point
-Triangle& Triangle::NeighborAcross(const Point& opoint)
-{
-  if (&opoint == points_[0]) {
-    return *neighbors_[0];
-  } else if (&opoint == points_[1]) {
-    return *neighbors_[1];
-  }
-  return *neighbors_[2];
-}
-
 void Triangle::DebugPrint()
 {
-  using namespace std;
-  cout << points_[0]->x << "," << points_[0]->y << " ";
-  cout << points_[1]->x << "," << points_[1]->y << " ";
-  cout << points_[2]->x << "," << points_[2]->y << endl;
+  std::cout << *points_[0] << " " << *points_[1] << " " << *points_[2] << std::endl;
+}
+
+bool Triangle::CircumcicleContains(const Point& point) const
+{
+  assert(IsCounterClockwise());
+  const double dx = points_[0]->x - point.x;
+  const double dy = points_[0]->y - point.y;
+  const double ex = points_[1]->x - point.x;
+  const double ey = points_[1]->y - point.y;
+  const double fx = points_[2]->x - point.x;
+  const double fy = points_[2]->y - point.y;
+
+  const double ap = dx * dx + dy * dy;
+  const double bp = ex * ex + ey * ey;
+  const double cp = fx * fx + fy * fy;
+
+  return (dx * (fy * bp - cp * ey) - dy * (fx * bp - cp * ex) + ap * (fx * ey - fy * ex)) < 0;
+}
+
+bool Triangle::IsCounterClockwise() const
+{
+  return (points_[1]->x - points_[0]->x) * (points_[2]->y - points_[0]->y) -
+             (points_[2]->x - points_[0]->x) * (points_[1]->y - points_[0]->y) >
+         0;
+}
+
+bool IsDelaunay(const std::vector<p2t::Triangle*>& triangles)
+{
+  for (const auto triangle : triangles) {
+    for (const auto other : triangles) {
+      if (triangle == other) {
+        continue;
+      }
+      for (int i = 0; i < 3; ++i) {
+        if (triangle->CircumcicleContains(*other->GetPoint(i))) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
 }
 
 }

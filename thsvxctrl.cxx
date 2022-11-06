@@ -167,6 +167,7 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
         break;
       case TT_DATATYPE_DIVING:
         fprintf(this->svxf,"*data\tdiving");
+      	[[fallthrough]];
       case TT_DATATYPE_CYLPOLAR:
         if (legp->data_type != TT_DATATYPE_DIVING)
           fprintf(this->svxf,"*data\tcylpolar");
@@ -224,6 +225,18 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
         legp_dy = (cosdecl * legp->dy) - (sindecl * legp->dx);
         break;
     }
+  }
+  
+  if (legp->flags != this->pdl.flags) {
+    fprintf(this->svxf,"*flags");
+    if ((legp->flags & TT_LEGFLAG_DUPLICATE) == TT_LEGFLAG_NONE) fprintf(this->svxf," not");
+    fprintf(this->svxf," duplicate");
+    if ((legp->flags & TT_LEGFLAG_SURFACE) == TT_LEGFLAG_NONE) fprintf(this->svxf," not");
+    fprintf(this->svxf," surface");
+    if ((legp->flags & TT_LEGFLAG_SPLAY) == TT_LEGFLAG_NONE) fprintf(this->svxf," not");
+    fprintf(this->svxf," splay");
+    fprintf(this->svxf,"\n");
+    this->svxf_ln++;
   }
 
   // now print the data
@@ -309,7 +322,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   const char * svxfn = thtmp.get_file_name("data.svx");
   this->svxf = fopen(svxfn,"w");
   if (svxf == NULL)
-    ththrow(("can't open survex file for output -- %s", svxfn))
+    ththrow("can't open survex file for output -- {}", svxfn);
 
   this->meridian_convergence = thcfg.get_outcs_convergence();
   this->lastleggridmccs = TTCS_LOCAL;
@@ -329,14 +342,14 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   //thdatass_list::iterator ssi;
   thdataequate_list::iterator eqi;
   thdata * dp;
-  thdataobject * cx1, * cx2;
-  thdb1ds * tmps;
+  //thdataobject * cx1, * cx2;
+  //thdb1ds * tmps;
   
   while (obi != dbp->object_list.end()) {
   
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
       
-      dp = (thdata *)(*obi);
+      dp = (thdata *)(*obi).get();
       
       // scan data shots
       lei = dp->leg_list.begin();
@@ -349,12 +362,12 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
       // scan data fixes
       fii = dp->fix_list.begin();
       while(fii != dp->fix_list.end()) {
-        tmps = &(dbp->db1d.station_vec[fii->station.id - 1]);
-        cx1 = tmps->fixcontext;
-        cx2 = fii->srcf.context;
-        if (((cx1 == NULL) && (cx2 == NULL)) || ((cx1 != NULL) && (cx2 != NULL) && (cx1->id == cx2->id))) {
+        //tmps = &(dbp->db1d.station_vec[fii->station.id - 1]);
+        //cx1 = tmps->fixcontext;
+        //cx2 = fii->srcf.context;
+        //if (((cx1 == NULL) && (cx2 == NULL)) || ((cx1 != NULL) && (cx2 != NULL) && (cx1->id == cx2->id))) {
           this->write_survey_fix(&(*fii));
-        }
+        //}
         fii++;
       }
   
@@ -386,7 +399,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   // run survex
   thbuffer svxcom, wdir;
   wdir.guarantee(1024);
-  getcwd(wdir.get_buffer(),1024);
+  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
   int retcode;
   svxcom = "\"";
   svxcom += thini.get_path_cavern();
@@ -405,7 +418,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   this->transcript_log_file(dbp, thtmp.get_file_name("data.log"));
 
   if (retcode != EXIT_SUCCESS)
-    ththrow(("cavern exit code -- %d", retcode))
+    ththrow("cavern exit code -- {}", retcode);
   else
     this->load_err_file(dbp, thtmp.get_file_name("data.err"));
 
@@ -417,7 +430,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   thdb1ds * stp;
   img* pimg = img_open(thtmp.get_file_name("data.3d"));
   if (pimg == NULL)
-    ththrow(("can't open cavern output"))    
+    ththrow("can't open cavern output");
   do {
     result = img_read_item(pimg, &imgpt);
     switch (result) {
@@ -434,7 +447,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
         break;
       case img_BAD:
         img_close(pimg);
-        ththrow(("error reading cavern output"))
+        ththrow("error reading cavern output");
         break;
     }
   } while (result != img_STOP);
@@ -454,7 +467,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //   retcode = system(svxcom.get_buffer());
 // 
 //   if (retcode != EXIT_SUCCESS)
-//     ththrow(("3dtopos exit code -- %d", retcode))
+//     ththrow("3dtopos exit code -- %d", retcode);
 // 
 // // Let's copy results and log-file to working directory
 // // #ifdef THWIN32
@@ -472,7 +485,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 // //   retcode = system(svxcom.get_buffer());
 // // 
 // //   if (retcode != EXIT_SUCCESS)
-// //     ththrow(("cp exit code -- %d", retcode))
+// //     ththrow("cp exit code -- %d", retcode);
 //   
 //   
 // #ifdef THDEBUG
@@ -490,7 +503,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //     * p[4], * cps = lnbuff;
 //   posf.open(thtmp.get_file_name("data.pos"));
 //   if (!posf.is_open())
-//     ththrow(("can't open survex output"))
+//     ththrow("can't open survex output");
 //   while (!posf.eof()) {
 //     posf.getline(lnbuff, lnsize);
 //     clns = strlen(lnbuff);
@@ -544,7 +557,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
 //  FILE * ptsf;
 //  ptsf = fopen("data.pts","w");  
 //  if (ptsf == NULL)
-//    ththrow(("can't open data.pts for output"))
+//    ththrow("can't open data.pts for output");
 //  unsigned int sid, lsid;
 //  lsid = dbp->db1d.station_vec.size();
 //  for (sid = 0; sid < lsid; sid++) {
@@ -568,7 +581,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   thlog.printf("\n####################### cavern log file ########################\n");
   std::ifstream clf(lfnm);
   if (!(clf.is_open()))
-    ththrow(("can't open cavern log file for input"))
+    ththrow("can't open cavern log file for input");
   // let's read line by line and print to log file
   size_t chidx, nchs;
   char * chch;
@@ -590,6 +603,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
     char * start_ch = NULL; //, * test_ch;
     int num_type;
     thsvxctrl_src_maptype::iterator srcmi;
+    const auto prev_char_is = [&lnbuff, &start_ch](const char c) { return (start_ch - 1) >= lnbuff && start_ch[-1] == c; };
 //    if (*lnbuff == 13) lnbuff++;
 //    if (strncmp(lnbuff,"There were",10) == 0)
 //      chidx = 2049;
@@ -625,7 +639,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
         else {
           num_type = THSVXLOGNUM_STATION;
           if ((chidx > 0) && (chidx <= nchs)) {
-            if ((start_ch[-1] == ':') && (*chch == ':'))
+            if (prev_char_is(':') && (*chch == ':'))
               num_type = THSVXLOGNUM_LINE;
           }
           if (num_type == THSVXLOGNUM_STATION) {
@@ -633,7 +647,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
               if ((*chch == '.') || (*chch == ',') || (*chch == ')') || (*chch == 'm')
                 || (*chch == '-') || (*chch == '/'))
                 num_type = THSVXLOGNUM_NONE;
-              if ((start_ch[-1] == '.') || (start_ch[-1] == '-'))
+              if (prev_char_is('.') || prev_char_is('-'))
                 num_type = THSVXLOGNUM_NONE;
             }
           }
@@ -719,7 +733,9 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 			i = 0;
 			while (i < b.get_size()) {
 //				thprintf("%s\n", b.get_buffer()[i]);
-				if (sscanf(b.get_buffer()[i], "%lu", &st)) {
+			  st = 0;
+			  sscanf(b.get_buffer()[i], "%lu", &st);
+				if (st > 0) {
 					nst++;
 					if (nst == 1) {
 						sf = st;

@@ -41,6 +41,8 @@
 #include "thsketch.h"
 #include "thtrans.h"
 
+#include <set>
+
 /**
  * scrap command options tokens.
  */
@@ -93,13 +95,15 @@ class thscrap : public thdataobject {
   class th2ddataobject * fs2doptr,  ///< First scrap 2D object.
     * ls2doptr;  ///< Last scrap 2D object.
     
-  double lxmin, lxmax, lymin, lymax, ///< Coordinate limits.
-    R, G, B; ///< Scrap color.
+  double lxmin, lxmax, lymin, lymax; ///< Coordinate limits.
 
   unsigned long RGBsrc;
+
+  thlayout_color clr; ///< Scrap color;
     
   thdb2dcp * fcpp, * lcpp; ///< Scrap control points.
   unsigned int ncp; ///< Number of control points.
+  std::set<thdb2dcp *> joined_scrap_stations; ///< Stations of joined scraps.
 
   class thsurvey * centerline_survey;
   bool centerline_io;
@@ -111,6 +115,7 @@ class thscrap : public thdataobject {
   
   double scale, scale_r1x, scale_r1y, scale_p1x, scale_p1y,
     scale_r2x, scale_r2y, scale_p2x, scale_p2y;  ///< Scrap scale.
+  int scale_cs;
   bool scale_p9; ///< 9 parameters scaling
   
   double mx, my, mxx, mxy, myx, myy, mr, ms;  ///< Calibration coefficients.
@@ -160,49 +165,49 @@ class thscrap : public thdataobject {
    * Return class identifier.
    */
   
-  virtual int get_class_id();
+  int get_class_id() override;
   
   
   /**
    * Return class name.
    */
    
-  virtual const char * get_class_name() {return "thscrap";};
+  const char * get_class_name() override {return "thscrap";};
   
   
   /**
    * Return true, if son of given class.
    */
   
-  virtual bool is(int class_id);
+  bool is(int class_id) override;
   
   
   /**
    * Return number of command arguments.
    */
    
-  virtual int get_cmd_nargs();
+  int get_cmd_nargs() override;
   
   
   /**
    * Return command name.
    */
    
-  virtual const char * get_cmd_name();
+  const char * get_cmd_name() override;
   
   
   /**
    * Return command end option.
    */
    
-  virtual const char * get_cmd_end();
+  const char * get_cmd_end() override;
   
   
   /**
    * Return option description.
    */
    
-  virtual thcmd_option_desc get_cmd_option_desc(const char * opts);
+  thcmd_option_desc get_cmd_option_desc(const char * opts) override;
   
   
   /**
@@ -213,7 +218,7 @@ class thscrap : public thdataobject {
    * @param argenc Arguments encoding.
    */
    
-  virtual void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline);
+  void set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline) override;
 
 
   /**
@@ -221,15 +226,6 @@ class thscrap : public thdataobject {
    */
 
   void parse_sketch(char ** args, int argenc);
-
-
-  /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
 
 
   /**
@@ -243,7 +239,7 @@ class thscrap : public thdataobject {
    * Print object properties.
    */
    
-  virtual void self_print_properties(FILE * outf); 
+  void self_print_properties(FILE * outf) override; 
   
   
   /**
@@ -308,7 +304,19 @@ class thscrap : public thdataobject {
  
  void update_limits(double x, double y);
 
- virtual void start_insert();
+ void start_insert() override;
+
+ /**
+  * Convert all points in object.
+  */
+
+ void convert_all_cs() override;
+ 
+ 
+ /**
+  * Add stations from joined scrap.
+  */
+ void add_joined_scrap_stations(thscrap * js);
 
 
 };

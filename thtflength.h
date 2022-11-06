@@ -79,7 +79,7 @@ class thtflength : public thtf {
    * Parse units factor.
    */
    
-  virtual void parse_units(char * ustr);
+  void parse_units(char * ustr) override;
   
 };
 

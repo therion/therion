@@ -38,6 +38,7 @@
 #include "thmbuffer.h"
 #include "thparse.h"
 #include <fstream>
+#include <memory>
 
 
 /**
@@ -67,7 +68,7 @@ class thinput {
     valuebf;  ///< Value buffer.
     
   static const long max_line_size;
-  char * lnbuffer;
+  std::unique_ptr<char[]> lnbuffer;
   
 
   /**
@@ -82,12 +83,12 @@ class thinput {
       path;  ///< Input file path buffer.
     unsigned long lnumber;  /// Position at the file.
     int encoding;  /// Current file encoding.
-    ifile * prev_ptr,  /// Pointer to the upper file.
-      * next_ptr;  /// Pointer to the lower file.
+    ifile * prev_ptr;  /// Pointer to the upper file.
+    std::unique_ptr<ifile> next_ptr;  /// Pointer to the lower file.
 #ifdef THMSVC
-    struct _stat st;
+    struct _stat st;const char * thinput::get_cif_abspath()
 #else
-    struct stat st;
+    struct stat st{};
 #endif
       
     
@@ -96,16 +97,6 @@ class thinput {
      */
     
     ifile(ifile * fp);
-    
-    
-    /**
-     * Standard destructor.
-     *
-     * Also release next files.
-     */
-    
-    ~ifile();
-    
     
     /**
      * Close file if it's open.
@@ -129,8 +120,8 @@ struct stat
   };
   
   
-  ifile * first_ptr,  ///< Pointer to the first file.
-    * last_ptr;  ///< Pointer to the last file.
+  std::unique_ptr<ifile> first_ptr;  ///< Pointer to the first file.
+  ifile * last_ptr;  ///< Pointer to the last file.
 
 
   bool is_first_file();
@@ -157,15 +148,7 @@ struct stat
    */
   
   thinput();
-  
-  
-  /**
-   * Destructor.
-   */
-  
-  ~thinput();
-  
-  
+
   /**
    * Set command sensitivity state.
    */
@@ -313,6 +296,12 @@ struct stat
    */  
    
   char * get_cif_path();
+  
+  /**
+   * Return current absolute input file path.
+   */  
+   
+  const char * get_cif_abspath(const char * fname = "");
   
   /**
    * Return current input line number.

@@ -46,32 +46,21 @@ class thdatastation : public thdataobject {
    * Return class identifier.
    */
   
-  virtual int get_class_id();
+  int get_class_id() override;
   
   
   /**
    * Return class name.
    */
    
-  virtual const char * get_class_name() {return "thdatastation";};
+  const char * get_class_name() override {return "thdatastation";};
   
   
   /**
    * Return true, if son of given class.
    */
   
-  virtual bool is(int class_id);
-  
-  
-  /**
-   * Delete this object.
-   *
-   * @warn Always use this method instead of delete function.
-   */
-   
-  virtual void self_delete();
-
-
+  bool is(int class_id) override;
 };
 
 

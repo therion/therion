@@ -31,16 +31,14 @@
 #include <stdio.h>
 
 
-thtf::~thtf() {}
-
 void thtf::parse_scale(char * sstr)
 {
   int sv;
   thparse_double(sv,this->sfactor,sstr);
   if (sv != TT_SV_NUMBER)
-    ththrow(("invalid scale factor -- %s", sstr))
+    ththrow("invalid scale factor -- {}", sstr);
   if (this->sfactor == 0.0)
-    ththrow(("invalid scale factor -- 0.0"))
+    ththrow("invalid scale factor -- 0.0");
 }
   
 double thtf::transform(double value)

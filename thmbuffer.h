@@ -72,6 +72,12 @@ class thmbuffer {
      */
      
     ~mblock();
+
+    // These operations are not implemented.
+    mblock(const mblock&) = delete;
+    mblock(mblock&&) = delete;
+    mblock& operator=(const mblock&) = delete; 
+    mblock& operator=(mblock&&) = delete; 
   };
 
   mblock * first_ptr,  ///< Pointer to the first memory block.
@@ -86,6 +92,11 @@ class thmbuffer {
   
   thmbuffer();
   
+  // These operations are not implemented.
+  thmbuffer(const thmbuffer&) = delete;
+  thmbuffer(thmbuffer&&) = delete;
+  thmbuffer& operator=(const thmbuffer&) = delete; 
+  thmbuffer& operator=(thmbuffer&&) = delete; 
   
   /**
    * Destructor.
@@ -133,7 +144,7 @@ class thmbuffer {
    
   char ** get_buffer();
   
-  
+
 };
 
 #endif

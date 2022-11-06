@@ -8,7 +8,7 @@
 %%
 %% Copyright (C) 2000-2004 Martin Budaj
 %%
-%% -------------------------------------------------------------------- 
+%% --------------------------------------------------------------------
 %% This program is free software; you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
 %% the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 %% GNU General Public License for more details.
-%% 
+%%
 %% You should have received a copy of the GNU General Public License
 %% along with this program; if not, write to the Free Software
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -45,7 +45,7 @@ beginpattern(pattern_sand_UIS);
     draw (0.2u,.3u);
     draw (0.35u,.7u);
     draw (0.6u,.5u);
-    draw (0.8u,.1u);    
+    draw (0.8u,.1u);
 endpattern;
 
 beginpattern(pattern_debris_SKBB);
@@ -119,12 +119,12 @@ def a_sand_UIS (expr p) =
 %  thclean p;
   pickup PenC;
   path q; q = bbox p;
-  picture tmp_pic; 
+  picture tmp_pic;
   tmp_pic := image(
     for i = xpart llcorner q step 1u until xpart urcorner q:
       for j = ypart llcorner q step 1u until ypart urcorner q:
         draw origin shifted ((i,j) randomized 0.7u) withpen PenC;
-      endfor;  
+      endfor;
     endfor;
   );
   clip tmp_pic to p;
@@ -158,14 +158,14 @@ def a_debris_SKBB (expr p) =
 %  thclean p;
   pickup PenC;
   path q; q = bbox p;
-  picture tmp_pic; 
+  picture tmp_pic;
   tmp_pic := image(
     for i = xpart llcorner q step 1u until xpart urcorner q:
       for j = ypart llcorner q step 1u until ypart urcorner q:
-        draw ((-.2u,0)--(.2u,0)) 
-             rotated uniformdeviate(360) 
+        draw ((-.2u,0)--(.2u,0))
+             rotated uniformdeviate(360)
              shifted ((i,j) randomized 0.6u) withpen PenC;
-      endfor;  
+      endfor;
     endfor;
   );
   clip tmp_pic to p;
@@ -177,7 +177,7 @@ def a_clay_SKBB (expr p) =
   T:=identity;
   pickup PenC;
   path q, qq; q = bbox p;
-  picture tmp_pic; 
+  picture tmp_pic;
   tmp_pic := image(
     for i = xpart llcorner q step 1.5u until xpart urcorner q:
       for j = ypart llcorner q step 1.5u until ypart urcorner q:
@@ -186,7 +186,7 @@ def a_clay_SKBB (expr p) =
 	if xpart (p intersectiontimes qq) < 0:
 	  thdraw qq;
 	fi;
-      endfor;  
+      endfor;
     endfor;
   );
   clip tmp_pic to p;
@@ -198,7 +198,7 @@ def a_ice_SKBB (expr p) =
   T:=identity;
   pickup PenC;
   path q; q = bbox p;
-  picture tmp_pic, tmp_ice; 
+  picture tmp_pic, tmp_ice;
   pair z;
   tmp_ice := image (
     draw (-.2u,0)--(.2u,0);
@@ -211,7 +211,7 @@ def a_ice_SKBB (expr p) =
 	if xpart (p intersectiontimes ((bbox tmp_ice) shifted z)) < 0:
 	  draw tmp_ice shifted z;
 	fi;
-      endfor;  
+      endfor;
     endfor;
   );
   clip tmp_pic to p;
@@ -224,7 +224,7 @@ def a_snow_SKBB (expr P) =
   T:=identity;
   pickup PenC;
   path q; q = bbox P;
-  picture tmp_pic, tmp_sn; 
+  picture tmp_pic, tmp_sn;
   pair z;
   tmp_sn := image(
     pickup PenC;
@@ -243,7 +243,7 @@ def a_snow_SKBB (expr P) =
 	if xpart (P intersectiontimes ((bbox tmp_sn) shifted z)) < 0:
           draw tmp_sn shifted z;
 	fi;
-      endfor;  
+      endfor;
     endfor;
   );
   clip tmp_pic to P;
@@ -255,20 +255,20 @@ def a_blocks_SKBB (expr p) =
   T:=identity;
   pickup PenC;
   path q, qq; q = bbox p;
-  picture tmp_pic; 
+  picture tmp_pic;
   uu := max(u, (xpart urcorner q - xpart llcorner q)/100, (ypart urcorner q - ypart llcorner q)/100);
   tmp_pic := image(
     for i = xpart llcorner q step 2uu until xpart urcorner q:
       for j = ypart llcorner q step 2uu until ypart urcorner q:
-        qq := punked (((-.5uu,-.5uu)--(.5uu,-.5uu)--(.5uu,.5uu)--(-.5uu,.5uu)--cycle) 
+        qq := punked (((-.5uu,-.5uu)--(.5uu,-.5uu)--(.5uu,.5uu)--(-.5uu,.5uu)--cycle)
 	     randomized (uu/2))
-             rotated uniformdeviate(360) 
+             rotated uniformdeviate(360)
              shifted ((i,j) randomized 1.6uu);
 	if xpart (p intersectiontimes qq) < 0:
 	  thclean qq;
 	  thdraw qq;
 	fi;
-      endfor;  
+      endfor;
     endfor;
   );
   clip tmp_pic to p;
@@ -292,16 +292,16 @@ def a_blocks_SKBB_ (expr p,o,s_beg,s_end,d_beg,d_end) =
   draw zz1 withpen pencircle scaled 2mm;
   draw zz2 withpen pencircle scaled 2mm;
   draw zz3 withpen pencircle scaled 2mm;
-  picture tmp_pic; 
+  picture tmp_pic;
   tmp_pic := image(
     j := 0;
     forever:
       i := 0;
       forever:
-        qq := punked (((-.5,-.5)--(.5,-.5)--(.5,.5)--(-.5,.5)--cycle) 
+        qq := punked (((-.5,-.5)--(.5,-.5)--(.5,.5)--(-.5,.5)--cycle)
              scaled (0.7(5u-(j/(2*radius))[u*s_beg,u*s_end]))
 	     randomized (u/2))
-             rotated uniformdeviate(360) 
+             rotated uniformdeviate(360)
              shifted (((zz3 + (i,j)) rotatedaround (zz3,-o)) randomized 1.6u);
         draw ((zz3 + (i,j)) rotatedaround (zz3,-o)) withpen pencircle scaled 1mm withcolor red;
 	if xpart (p intersectiontimes qq) < 0:
@@ -310,7 +310,7 @@ def a_blocks_SKBB_ (expr p,o,s_beg,s_end,d_beg,d_end) =
 	fi;
         i := i + (j/(2*radius))[u*d_beg,u*d_end];
         exitif i > 2*radius;
-      endfor;  
+      endfor;
       j := j + (j/(2*radius))[u*d_beg,u*d_end];
       exitif j > 2*radius;
     endfor;
@@ -325,18 +325,18 @@ def a_pebbles_SKBB (expr p) =
   T:=identity;
   pickup PenC;
   path q, qq; q = bbox p;
-  picture tmp_pic; 
+  picture tmp_pic;
   tmp_pic := image(
     for i = xpart llcorner q step 1.5u until xpart urcorner q:
       for j = ypart llcorner q step 1.5u until ypart urcorner q:
         qq := (superellipse((.2u,0),(0,.1u),(-.2u,0),(0,.-.1u),.75))
 %             randomized (u/25)
-             rotated uniformdeviate(360) 
+             rotated uniformdeviate(360)
              shifted ((i,j) randomized 0.8u);
 	if xpart (p intersectiontimes qq) < 0:
 	  thdraw qq;
 	fi;
-      endfor;  
+      endfor;
     endfor;
   );
   clip tmp_pic to p;

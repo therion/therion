@@ -34,7 +34,7 @@ thexpsys::thexpsys() {
 }
 
 
-void thexpsys::process_db(class thdatabase * dbp) 
+void thexpsys::process_db(class thdatabase * /*dbp*/) 
 {
   thprintf("system: %s\n", this->cmd);
   int retcode = system(this->cmd);

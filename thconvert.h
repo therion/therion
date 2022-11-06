@@ -26,7 +26,7 @@
 #ifndef thconvert_h
 #define thconvert_h
 
-int thconvert();
+int thconvert_old();
 void read_rgb();
 
 #endif

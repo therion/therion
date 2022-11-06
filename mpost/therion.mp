@@ -15,7 +15,7 @@
 %%
 %% Some macros are used from MetaFun package of H. Hagen
 %%
-%% -------------------------------------------------------------------- 
+%% --------------------------------------------------------------------
 %% This program is free software; you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
 %% the Free Software Foundation; either version 2 of the License, or
@@ -25,7 +25,7 @@
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 %% GNU General Public License for more details.
-%% 
+%%
 %% You should have received a copy of the GNU General Public License
 %% along with this program; if not, write to the Free Software
 %% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -33,10 +33,14 @@
 
 %    This file defines low level macros used for map signatures in Therion.
 %    Before loading this file set `Scale' variable to numeric value
-%    representing denominator of the scale ratio. Internal variable 
-%    `prologues' is set to 1 by this file. This module loads also 
+%    representing denominator of the scale ratio. Internal variable
+%    `prologues' is set to 1 by this file. This module loads also
 %    symbol libraries.
 
+if unknown mpversion: string mpversion; mpversion := "0.0"; fi
+if scantokens(mpversion) < 1.0:
+  errmessage "MetaPost 1.0 or later required";
+fi
 
 tracingstats:=1;
 prologues:=0;
@@ -62,9 +66,9 @@ if known Background: background:=Background fi;
 % fill_only --
 %
 % <I>boolean</I>, used in <A HREF="#thdraw">thdraw</A> and
-% <A HREF="#thpattfill">thpattfill</A> commands. When set to false, it has 
+% <A HREF="#thpattfill">thpattfill</A> commands. When set to false, it has
 % no effect, when it is true, it suppresses all drawing
-% commands with exception of <I>thpermanentfill</I>, so that only filled 
+% commands with exception of <I>thpermanentfill</I>, so that only filled
 % areas are drawn
 
 boolean fill_only, horiz_labels, transparency;
@@ -90,6 +94,41 @@ ATTR__shotflag_approx:=false;
 boolean ATTR__stationflag_splay;
 ATTR__stationflag_splay:=false;
 
+save black, white, red, green, blue, background, HelpSymbolColor, tmpcol;
+if OutputColormodel = "cmyk":
+  cmykcolor black, white, red, green, blue, background, HelpSymbolColor, tmpcol;
+  black := (0,0,0,1);
+  white := (0,0,0,0);
+  red   := (0,0.9,0.9,0.2);
+  green := (0.7,0,0.8,0.4);
+  blue  := (0.6,0.4,0,0.1);
+  HelpSymbolColor := (0,0,0,0.2);
+  defaultcolormodel := 7;
+elseif OutputColormodel = "rgb":
+  rgbcolor black, white, red, green, blue, background, HelpSymbolColor, tmpcol;
+  black := (0,0,0);
+  white := (1,1,1);
+  red   := (1,0,0);
+  green := (0,1,0);
+  blue  := (0,0,1);
+  HelpSymbolColor := (0.8,0.8,0.8);
+  defaultcolormodel := 5;
+else:
+  black := 0;
+  white := 1;
+  red   := 0.3;
+  green := 0.59;
+  blue  := 0.11;
+  HelpSymbolColor := 0.8;
+  defaultcolormodel := 3;
+fi;
+background = white;
+
+string includeprefix;
+includeprefix = ".";
+def inputrel(expr p) =
+  scantokens("input " & includeprefix & p);
+enddef;
 
 color label_fill_color, label_fill_color_tmp;
 label_fill_color := (1.0, 1.0, 1.0);
@@ -120,21 +159,12 @@ area_border_errors = 0;
 % @VARIABLE
 % last_write --
 %
-% <I>numeric</I>; charcode of last figure which contained 
+% <I>numeric</I>; charcode of last figure which contained
 % <A HREF="#write_bbox">write_bbox</A> macro; this value is used by
 % <A HREF="#close_file">close_file</A> macro. Initially set to -1.
 
 numeric last_write;
 last_write = -1;
-
-% @VARIABLE
-% strut_string --
-%
-% <I>string</I> containing combination of the "highest" and "lowest" character
-% in used font; it's used by <A HREF="">free_text</A> macro.
-
-%string strut_string;
-%strut_string = "(È";
 
 % @VARIABLE
 % file_name --
@@ -179,7 +209,7 @@ picture lab, Lab;
 % @VARIABLE
 % T --
 %
-% <I>transformation</I>, defines transformation function for transforming 
+% <I>transformation</I>, defines transformation function for transforming
 % every argument of <A HREF="#thdraw>thdraw</A> and <A HREF="#thfill>thfill</A>
 % macros
 
@@ -195,7 +225,7 @@ path p,q;
 % @MACRO
 % initialize --
 %
-% initializes basic length units <A HREF="#u">(u,v,w)</A> and pens used 
+% initializes basic length units <A HREF="#u">(u,v,w)</A> and pens used
 % in map symbols according to scale. Five circular pens are defined:
 % <UL><LI>PenA -- thick; for outlines
 %    <LI>PenB, PenC -- thinner; for pits, symbols etc.
@@ -224,11 +254,12 @@ def fonts_setup (expr t,s,m,l,h) =
         "\def\thframed{\thsmallsize}" &
         "\def\thwallaltitude{\thtinysize}"
   to "mptexpre.tex";
-  write "\def\thtinysize{\size[" & decimal max(optical_zoom*t,0) & "]}" & 
-        "\def\thsmallsize{\size[" & decimal max(optical_zoom*s,0) & "]}" & 
-        "\def\thnormalsize{\size[" & decimal max(optical_zoom*m,0) & "]}" & 
-        "\def\thlargesize{\size[" & decimal max(optical_zoom*l,0) & "]}" & 
-        "\def\thhugesize{\size[" & decimal max(optical_zoom*h,0) & "]}" 
+  write "\newcount\basefontsize" &
+        "\def\thtinysize{\size[" & decimal max(optical_zoom*t,0) & "]\basefontsize=" & decimal round max(optical_zoom*t,0) & "}" &
+        "\def\thsmallsize{\size[" & decimal max(optical_zoom*s,0) & "]\basefontsize=" & decimal round max(optical_zoom*s,0) & "}" &
+        "\def\thnormalsize{\size[" & decimal max(optical_zoom*m,0) & "]\basefontsize=" & decimal round max(optical_zoom*m,0) & "}" &
+        "\def\thlargesize{\size[" & decimal max(optical_zoom*l,0) & "]\basefontsize=" & decimal round max(optical_zoom*l,0) & "}" &
+        "\def\thhugesize{\size[" & decimal max(optical_zoom*h,0) & "]\basefontsize=" & decimal round max(optical_zoom*h,0) & "}"
   to "mptexpre.tex";
   write EOF to "mptexpre.tex";
 enddef;
@@ -251,7 +282,7 @@ def initialize (expr sc) =
         u:=7bp; v:=14bp; w:=10bp;
         fonts_setup(5,6,7,8,10);
     fi;
-    
+
     u := optical_zoom * u;
     v := optical_zoom * v;
     w := optical_zoom * w;
@@ -263,7 +294,7 @@ def initialize (expr sc) =
     def PenC = pencircle scaled (0.5*u/10) enddef;
     def PenD = pencircle scaled (0.35*u/10) enddef;
     def PenX = pencircle scaled (1.2*u/10) enddef;
-    
+
     legend_scale := 3.14*u;
 enddef;
 
@@ -285,14 +316,14 @@ enddef;
 % zooms objects to scale specified in legend_scale variable (used in legend
 % typesetting)
 
-def inscale = 
+def inscale =
     xscaled legend_scale yscaled (0.618*legend_scale)
 enddef;
 
 % @MACRO
 % draw_legend_box --
 %
-% draws a legend bounding box and resets drawoptions() options 
+% draws a legend bounding box and resets drawoptions() options
 
 def draw_legend_box =
     clip currentpicture to unitsquare inscale;
@@ -315,7 +346,7 @@ def legend_point (expr name) =
 enddef;
 
 def legend_line (expr name) =
-  scantokens(name)((((-0.3,.5)..(.3,.7)..(.5,.3)..{dir 80}(1.3,.9)) inscale) 
+  scantokens(name)((((-0.3,.5)..(.3,.7)..(.5,.3)..{dir 80}(1.3,.9)) inscale)
                 randomized 3mm);
   draw_legend_box;
 enddef;
@@ -337,7 +368,7 @@ enddef;
 % @MACRO
 % process_label --
 %
-% draws a label saved in <I>lab</I> picture variable and calls 
+% draws a label saved in <I>lab</I> picture variable and calls
 % <A HREF="#write_bbox">write_bbox</A> macro.
 
 
@@ -383,7 +414,7 @@ def process_downlabel =
     q:=bbox lab;
   endgroup;
     alef:=1-(.8-.02*(xpart lrcorner q - xpart llcorner q));
-    q:=alef[llcorner q,ulcorner q]{down} .. 
+    q:=alef[llcorner q,ulcorner q]{down} ..
         {up}alef[lrcorner q, urcorner q] --
         urcorner q -- ulcorner q -- cycle;
     draw lab;
@@ -394,7 +425,7 @@ enddef;
 % @MACRO
 % process_updownlabel --
 %
-% draws a label split into down and up oriented semicircular boxes and 
+% draws a label split into down and up oriented semicircular boxes and
 % writes clipping path to a file
 
 def process_updownlabel =
@@ -404,17 +435,17 @@ def process_updownlabel =
   endgroup;
     leftside:=xpart llcorner p;
     rightside:=xpart lrcorner p;
-    draw (xpart llcorner p,.5[ypart llcorner p,ypart ulcorner p]) -- 
+    draw (xpart llcorner p,.5[ypart llcorner p,ypart ulcorner p]) --
          (xpart lrcorner p,.5[ypart llcorner p,ypart ulcorner p]);
     alef:=1.05-.02*(xpart lrcorner p - xpart llcorner p);
 %    alef:=.8-.02*(rightside-leftside);
-    p:=alef[(leftside, ypart llcorner p),(leftside, ypart ulcorner p)]{up} .. 
+    p:=alef[(leftside, ypart llcorner p),(leftside, ypart ulcorner p)]{up} ..
        {down}alef[(rightside, ypart lrcorner p), (rightside, ypart urcorner p)]
         -- alef[(rightside, ypart urcorner p), (rightside, ypart lrcorner p)]{down}
         .. {up}alef[(leftside, ypart ulcorner p),(leftside, ypart llcorner p)]
         -- cycle;
 %    p:=alef[llcorner p,ulcorner p]{up} .. {down}alef[lrcorner p, urcorner p] --
-%        aleff[llcorner p,ulcorner p]{down} .. 
+%        aleff[llcorner p,ulcorner p]{down} ..
 %        {up}aleff[lrcorner p, urcorner p] -- cycle;
     draw lab;
     draw p;
@@ -427,10 +458,10 @@ def process_updownlabel_OLD =
     q:=bbox Lab;
     leftside:=min(xpart llcorner p, xpart ulcorner q);
     rightside:=max(xpart lrcorner p, xpart urcorner q);
-    draw .5[(leftside, ypart llcorner p),(leftside, ypart ulcorner q)] -- 
+    draw .5[(leftside, ypart llcorner p),(leftside, ypart ulcorner q)] --
          .5[(rightside,ypart lrcorner p),(rightside,ypart urcorner q)];
     alef:=.8-.02*(rightside-leftside);
-    q:=alef[(leftside, ypart llcorner p),(leftside, ypart ulcorner p)]{up} .. 
+    q:=alef[(leftside, ypart llcorner p),(leftside, ypart ulcorner p)]{up} ..
        {down}alef[(rightside, ypart lrcorner p), (rightside, ypart urcorner p)]
         -- alef[(rightside, ypart urcorner q), (rightside, ypart lrcorner q)]{down}
         .. {up}alef[(leftside, ypart ulcorner q),(leftside, ypart llcorner q)]
@@ -485,14 +516,14 @@ enddef;
 %   composed from linear segments;
 %   see general <A HREF="#write_circ_bbox">write_circ_bbox</A> macro
 % Results:
-%   one file per figure which uses labels with a clipping path in pseudo-pdf 
+%   one file per figure which uses labels with a clipping path in pseudo-pdf
 %   format
 
 def write_bbox (expr q) =
     file_name := jobname & "." & decimal(charcode) & "bbox";
     for i:=4 downto 0:
-        s  :=  decimal(roundone(xpart point i of q)) & " " 
-             & decimal(roundone(ypart point i of q)) 
+        s  :=  decimal(roundone(xpart point i of q)) & " "
+             & decimal(roundone(ypart point i of q))
              & if i=4: " m " else: " l" fi;
         write s to file_name;
     endfor;
@@ -506,21 +537,21 @@ enddef;
 %   <I>path</I> variable, only assumption is that <I>path</I> is cyclic
 %   and counterclockwise oriented.
 % Results:
-%   one file per figure which uses labels with a clipping path in pseudo-pdf 
+%   one file per figure which uses labels with a clipping path in pseudo-pdf
 %   format
 
 def write_circ_bbox expr q =
     file_name := jobname & "." & decimal(charcode) & "bbox";
     tmp:=length q;
-    s :=  decimal(roundone(xpart point tmp of q)) & " " 
+    s :=  decimal(roundone(xpart point tmp of q)) & " "
              & decimal(roundone(ypart point tmp of q)) & " m";
     write s to file_name;
     for i:=tmp downto 1:
-        s :=  decimal(roundone(xpart precontrol i of q)) & " " 
+        s :=  decimal(roundone(xpart precontrol i of q)) & " "
              & decimal(roundone(ypart precontrol i of q)) & " "
-             & decimal(roundone(xpart postcontrol i-1 of q)) & " " 
+             & decimal(roundone(xpart postcontrol i-1 of q)) & " "
              & decimal(roundone(ypart postcontrol i-1 of q)) & " "
-             & decimal(roundone(xpart point i-1 of q)) & " " 
+             & decimal(roundone(xpart point i-1 of q)) & " "
              & decimal(roundone(ypart point i-1 of q)) & " c";
         write s to file_name;
     endfor;
@@ -554,14 +585,14 @@ def thdrawoptions(text t) =
 enddef;
 thdrawoptions();
 
-def thdraw expr p = 
+def thdraw expr p =
   if not fill_only:
-    addto currentpicture 
-    if picture p: 
+    addto currentpicture
+    if picture p:
       also (p transformed T)
     else:
-      doublepath (p transformed T) withpen currentpen 
-    fi  
+      doublepath (p transformed T) withpen currentpen
+    fi
     _thop_  _op_
   else:
     addto currentpicture also nullpicture
@@ -573,37 +604,37 @@ enddef;
 %
 % fills a <I>path</I> transformed
 % (rotated, scaled, shifted) to scrap's coordinates according T variable.
-% Filled areas are clipped (like most 
+% Filled areas are clipped (like most
 % other lines and points) with a clipping path around text labels.
 
 
-def thfill expr c = 
-    addto currentpicture contour (c transformed T) _thop_ _op_ 
+def thfill expr c =
+    addto currentpicture contour (c transformed T) _thop_ _op_
 enddef;
 
 def thfilldraw expr c =
   if not fill_only:
-    addto currentpicture contour (c transformed T) withpen currentpen _thop_ _op_ 
+    addto currentpicture contour (c transformed T) withpen currentpen _thop_ _op_
   else:
-    addto currentpicture contour (c transformed T) _thop_ _op_ 
+    addto currentpicture contour (c transformed T) _thop_ _op_
   fi
 enddef;
 
-def thunfill expr c = 
-    thfill c withcolor background 
+def thunfill expr c =
+    thfill c withcolor background
 enddef;
 
-def thundraw expr p = 
-    thdraw p withcolor background 
+def thundraw expr p =
+    thdraw p withcolor background
 enddef;
 
-def thunfilldraw expr c = 
-    thfilldraw c withcolor background 
+def thunfilldraw expr c =
+    thfilldraw c withcolor background
 enddef;
 
 def thclean expr c =
   if transparency:
-    thfill c withtransparentcolor tr_bg
+    thfill c withcolor background withalpha -1
   else:
     thunfill c
   fi;
@@ -630,10 +661,10 @@ enddef;
 % @MACRO
 % thpermanentfill --
 %
-% Fills specified area with a solid color; this area is not affected by 
+% Fills specified area with a solid color; this area is not affected by
 % text clipping path
 
-%def thpermanentfill expr c = 
+%def thpermanentfill expr c =
 %    addto currentpicture contour (c transformed T) _thop_ _op_
 %enddef;
 
@@ -644,10 +675,10 @@ primarydef p aligned al=
   p shifted (xpart al * xpart U, ypart al * ypart U)
 enddef;
 
-% macros for drawing scraps in upper and lower levels; filled lower scraps 
+% macros for drawing scraps in upper and lower levels; filled lower scraps
 % require special treatment (MetaPost doesn't support non-continuous paths).
 % We can't use one file for both, while PDF XObject has to be explicitly
-% filled or stroked. Second macro writes also pseudo-pdf code of a clipping 
+% filled or stroked. Second macro writes also pseudo-pdf code of a clipping
 % path for given scrap
 
 boolean drawnext;
@@ -659,20 +690,20 @@ def draw_upscrap (expr isout)(text t) =
     if (numeric i):
       if (i=1): drawnext:=true; else: drawnext:=false; fi;
     else:
-      if drawnext: draw i withpen PenD; fi;
+      if drawnext: draw i withpen PenD withoutcolor; fi;
       if not known q: q:=i; else: q:=q -- i; fi;
     fi;
   endfor;
   if not cycle q: q:=q -- cycle; fi;
-  if turningnumber q = 0: 
-      thwarning("scrap outline intersects itself"); 
+  if turningnumber q = 0:
+      thwarning("scrap outline intersects itself");
   fi;
   if isout=1:
     if turningnumber q > 0: q := reverse q; fi;
   else:
     if turningnumber q < 0: q := reverse q; fi;
   fi;
-  addto bgfill contour q;
+  addto bgfill contour q withoutcolor;
 enddef;
 
 % following macro writes noncontinuous PostScript path directly to EPS file
@@ -685,27 +716,27 @@ def draw_downscrap =
   bg_name := jobname & "." & decimal(charcode) & "bg";
   clip_name := jobname & "." & decimal(charcode) & "clip";
   write "%!PS" to bg_name;
-  write "%%BoundingBox: " & 
+  write "%%BoundingBox: " &
      decimal floor xpart llcorner bgfill & " " &
      decimal floor ypart llcorner bgfill & " " &
      decimal ceiling xpart urcorner bgfill & " " &
-     decimal ceiling ypart urcorner bgfill 
+     decimal ceiling ypart urcorner bgfill
      to bg_name;
   write "%%Page: 1 1" to bg_name;
   write "newpath" to bg_name;
   for qq within bgfill:
     q := pathpart qq;
     tmp:=length q;
-    s := decimal(roundone(xpart point tmp of q)) & " " 
+    s := decimal(roundone(xpart point tmp of q)) & " "
              & decimal(roundone(ypart point tmp of q)) & " m";
     write s & "oveto" to bg_name;
     write s to clip_name;
     for i:=tmp downto 1:
-        s :=  decimal(roundone(xpart precontrol i of q)) & " " 
+        s :=  decimal(roundone(xpart precontrol i of q)) & " "
              & decimal(roundone(ypart precontrol i of q)) & " "
-             & decimal(roundone(xpart postcontrol i-1 of q)) & " " 
+             & decimal(roundone(xpart postcontrol i-1 of q)) & " "
              & decimal(roundone(ypart postcontrol i-1 of q)) & " "
-             & decimal(roundone(xpart point i-1 of q)) & " " 
+             & decimal(roundone(xpart point i-1 of q)) & " "
              & decimal(roundone(ypart point i-1 of q)) & " c";
         write s & "urveto" to bg_name;
         write s to clip_name;
@@ -730,7 +761,7 @@ vardef buildcycle(text ll) =
     (ta_[i], length pp_[i_]-tb_[i_]) =
       pp_[i] intersectiontimes reverse pp_[i_];
     if ta_[i]<0:
-      message("[Error: area borders "& area_border[i] &" and "& 
+      message("[Error: area borders "& area_border[i] &" and "&
          area_border[i_] &" don't intersect in scrap " & current_scrap &
          " (file " & current_src & ")]");
       area_border_errors := area_border_errors + 1;
@@ -741,27 +772,27 @@ vardef buildcycle(text ll) =
     cycle
 enddef;
 
-vardef unitvector primary z = 
+vardef unitvector primary z =
   if (z<>(0,0)):
-    z/abs z 
+    z/abs z
   else:
     hide(thwarning("strange path"))
     (0,epsilon)
   fi
 enddef;
 
-def thwarning (expr m) = 
+def thwarning (expr m) =
   message("[Warning: " & m & " in scrap " & current_scrap & "]");
 enddef;
 
-def check_area_borders = 
+def check_area_borders =
   if area_border_errors > 0:
   fi;
 enddef;
 
 %%%%%%%%%%%% Map symbols management %%%%%%%%%%%%%%%%%%%
 
-def mapsymbol (expr name, set, warning) = 
+def mapsymbol (expr name, set, warning) =
   string s, stype, lname, ID;
   stype = substring (0,1) of name;
   lname = name & "_" & set;
@@ -773,7 +804,7 @@ def mapsymbol (expr name, set, warning) =
       s = "let " & name & " = " & lname & ";";
     fi;
     scantokens s;
-  elseif warning:  
+  elseif warning:
     message("[Warning: undefined symbol `" & lname & "']");
   fi;
 enddef;
@@ -806,9 +837,9 @@ def beginfig(expr c) =
   pickup defaultpen;
   drawoptions();
   scantokens extra_beginfig;
-  
-  save smartll, smartur; 
-  pair smartll[], smartur[]; 
+
+  save smartll, smartur;
+  pair smartll[], smartur[];
   smart_count := 0;
 enddef;
 
@@ -818,6 +849,14 @@ def endfig =
 %  endgroup
 enddef;
 
+vardef tightbbox primary p =
+  llcorner p -- lrcorner p -- urcorner p -- ulcorner p -- cycle
+enddef;
+
+% https://tug.org/pipermail/metapost/2008-February/001218.html
+vardef log primary x =
+     (if x=0: 0 else: mlog(x)/mlog(10) fi)
+enddef;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % P. Bolek's MPATTERN package adapted and simplified for Therion
@@ -828,6 +867,7 @@ string Pname_, PXYsteps_;
 string Pmatrix_;
 
 numeric Pnum_; Pnum_=0;
+string Psuffix_; Psuffix_="-patt";
 
 def PmakeBB_=
    PBBox_ := "[" & decimal Plft_ & " " & decimal Plow_ & " "
@@ -836,11 +876,11 @@ enddef;
 
 def Psteps_=
    PXYsteps_ := decimal
-     if unknown PXStep_: (Prt_-Plft_) else: PXStep_ fi 
+     if unknown PXStep_: (Prt_-Plft_) else: PXStep_ fi
    & ":" & decimal
      if unknown PYStep_: (Pup_-Plow_) else: PYStep_ fi;
 enddef;
-   
+
 vardef Pfindbounds_=
    Plow_ = ypart (llcorner currentpicture);
    Plft_ = xpart (llcorner currentpicture);
@@ -850,11 +890,11 @@ vardef Pfindbounds_=
 enddef;
 
 def PmakePattern_(expr name)=
-  write decimal (Pnum_*epsilon) & ":"
-    & jobname & "." & decimal charcode & ":"
+  write Pname_ & ":"
+    & jobname & Psuffix_ & "." & decimal charcode & ":"
     & PBBox_ & ":"
     & PXYsteps_ & ":"
-    & Pmatrix_ 
+    & Pmatrix_
   to "patterns.dat"
 enddef;
 
@@ -885,7 +925,8 @@ def beginpattern(suffix name)=
   Pmatrix_:="[1 0 0 1 0 0]";
   Pname_:=str name;
   Pnum_:=Pnum_+1;
-  beginfig(Pnum_+4000);
+  outputtemplate := "%j"&Psuffix_&".%c";
+  beginfig(Pnum_);
 enddef;
 
 def endpattern=
@@ -895,35 +936,50 @@ def endpattern=
   endfig;
   Psteps_;
   PmakePattern_(Pname_);
-  scantokens(Pname_ & "=Pnum_;");
+  scantokens("string " & Pname_ & "; "&Pname_&"="&ditto&Pname_&ditto&";");
+  outputtemplate := "%j.%c";
 enddef;
 
 picture pattpict;
-color patterncolor_;
-patterncolor_ := black;
+string patterncolor_;
+patterncolor_ := "0 0 0 1";
+
+vardef colortostr(expr c, s) =
+  hide(pattpict := image(draw (0,0)--(10,10) withcolor c);
+    for i within pattpict:
+      if colormodel i = 1:
+        patterncolor_ := decimal greypart i;
+      elseif colormodel i = 5:
+        patterncolor_ := decimal redpart i & s & decimal greenpart i & s & decimal bluepart i;
+      elseif colormodel i = 7:
+        patterncolor_ := decimal cyanpart i & s & decimal magentapart i & s & decimal yellowpart i & s & decimal blackpart i;
+      fi
+    endfor;)
+  patterncolor_
+enddef;
 
 primarydef p withpattern s=
   if known s:
-
+    p
     hide(pattpict := image(draw (0,0)--(10,10));
       for i within pattpict:
-        patterncolor_ := (redpart i, greenpart i, bluepart i);
+        if colormodel i = 1:
+          patterncolor_ := decimal greypart i;
+        elseif colormodel i = 5:
+          patterncolor_ := decimal redpart i & " " & decimal greenpart i & " " & decimal bluepart i;
+        elseif colormodel i = 7:
+          patterncolor_ := decimal cyanpart i & " " & decimal magentapart i & " " & decimal yellowpart i & " " & decimal blackpart i;
+        fi
       endfor;)
-
-    p withcolor (epsilon, 10*epsilon, s*epsilon)
-    if known mpversion:
-      if scantokens(mpversion)>=1.000: 
-        withprescript(decimal redpart   patterncolor_ & " " &
-                      decimal greenpart patterncolor_ & " " &
-                      decimal bluepart  patterncolor_ & " THsetpatterncolor")
-      fi;
-    fi;
+    withprescript(" " & s & " THsetpattern")
+    withprescript(" " & patterncolor_ & " THsetpatterncolor")
+    withoutcolor
   else:
-    p withcolor (1,0,0);
+    p withcolor red;
     message("Warning: undefined pattern ignored");
-  fi;  
+  fi;
 enddef;
-   
+
 def patterntransform expr t=
    Pmatrix_ := "[" & decimal xxpart t
               & " " & decimal yxpart t
@@ -958,75 +1014,91 @@ enddef;
 % end of pattern macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% transparent rgb colors
+% transparent colors
 
-numeric RGBnum; RGBnum=0;
-string RGBname;
+primarydef p withalpha t =
+    p withprescript(decimal t & " THsetalpha")
+enddef;
+
+def withlinearshading (expr p, n, ca, cb) =
+    withprescript("L " &
+                  decimal xpart point n of tightbbox p & " " &
+                  decimal ypart point n of tightbbox p & " " &
+                  decimal xpart point ((n+2) mod 4) of tightbbox  p & " " &
+                  decimal ypart point ((n+2) mod 4) of tightbbox  p & " " &
+                  colortostr(ca, " ") & " " &
+                  colortostr(cb, " ") & " " &
+                  "THgradient") withoutcolor
+enddef;
+
+def withradialshading (expr p, ca, cb) =
+    withprescript("R " &
+                  decimal xpart center p & " " &
+                  decimal ypart center p & " " &
+                  decimal xpart center p & " " &
+                  decimal ypart center p & " " &
+                  colortostr(ca, " ") & " " &
+                  colortostr(cb, " ") & " " &
+                  "0 " &
+                  decimal (((xpart lrcorner p - xpart llcorner p) ++ (ypart urcorner p - ypart lrcorner p)) / 2) & " " &
+                  "THgradient") withoutcolor
+enddef;
+
+% compatibility macros for old-style transparency definitions:
 
 def def_transparent_rgb (suffix name)(expr r, g, b) =
-  RGBnum := RGBnum+1;
-  RGBname := str name;
-  write decimal (RGBnum*epsilon) & ":"
-    & decimal r & " "
-    & decimal g & " "
-    & decimal b 
-  to "rgbcolors.dat";
-  scantokens(RGBname & ":=RGBnum;");
+  message("[Warning: obsolete transparent colour definition '" & str name & "']");
+  scantokens("rgbcolor " & str name & "; " & str name & ":=(" & decimal r & "," & decimal g & "," & decimal b & ");");
 enddef;
 
-primarydef p withtransparentcolor s=
-   p withcolor (epsilon, 12*epsilon, s*epsilon);
+primarydef p withtransparentcolor s =
+  hide(message("[Warning: obsolete 'withtransparentcolor' option; use 'withcolor <color> withalpha <number>' instead]"))
+  p withcolor s withalpha 0.75
 enddef;
-
-def_transparent_rgb(tr_white, 1, 1, 1);
-def_transparent_rgb(tr_blue, 0, 0, 1);
-def_transparent_rgb(tr_black, 0, 0, 0);
-def_transparent_rgb(tr_bg, 
-               redpart background, greenpart background, bluepart background);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% some useful macros from H. Hagen's MetaFun package
+% some useful macros from H. Hagen's MetaFun package (adapted)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 vardef paired (expr d) =
   if pair d : d else : (d,d) fi
 enddef ;
 
-primarydef p randomshifted s = 
-  begingroup ; save ss ; pair ss ; ss := paired(s) ; 
+primarydef p randomshifted s =
+  begingroup ; save ss ; pair ss ; ss := paired(s) ;
   p shifted (-.5xpart ss + uniformdeviate xpart ss,
-             -.5ypart ss + uniformdeviate ypart ss) 
-  endgroup 
-enddef ; 
+             -.5ypart ss + uniformdeviate ypart ss)
+  endgroup
+enddef ;
 
 primarydef p randomized s =
-  (if path p : 
+  (if path p :
     for i=0 upto length(p)-1 :
-      ((point       i    of p) randomshifted s) .. controls 
-      ((postcontrol i    of p) randomshifted s) and 
-      ((precontrol (i+1) of p) randomshifted s) .. 
-    endfor 
-    if cycle p : 
-      cycle 
+      ((point       i    of p) randomshifted s) .. controls
+      ((postcontrol i    of p) randomshifted s) and
+      ((precontrol (i+1) of p) randomshifted s) ..
+    endfor
+    if cycle p :
+      cycle
     else :
-      ((point length(p) of p) randomshifted s) 
+      ((point length(p) of p) randomshifted s)
     fi
   elseif pair p :
-    p randomshifted s  
+    p randomshifted s
   elseif color p :
-    if color s : 
+    if color s :
       (uniformdeviate redpart   s * redpart   p,
        uniformdeviate greenpart s * greenpart p,
-       uniformdeviate bluepart  s * bluepart  p)  
-    elseif pair s : 
-      ((xpart s + uniformdeviate (ypart s - xpart s)) * p)  
-    else :  
-      (uniformdeviate s * p)  
-    fi 
+       uniformdeviate bluepart  s * bluepart  p)
+    elseif pair s :
+      ((xpart s + uniformdeviate (ypart s - xpart s)) * p)
+    else :
+      (uniformdeviate s * p)
+    fi
   else :
-    p + uniformdeviate s  
-  fi)  
-enddef ; 
+    p + uniformdeviate s
+  fi)
+enddef ;
 
 primarydef p llmoved d =
   ((llcorner p) shifted (-xpart paired(d),-ypart paired(d)))
@@ -1045,16 +1117,16 @@ primarydef p ulmoved d =
 enddef ;
 
 primarydef p smoothed d =
-  (p llmoved (-xpart paired(d),0) -- p lrmoved (-xpart paired(d),0) {right} .. 
-   p lrmoved (0,-ypart paired(d)) -- p urmoved (0,-ypart paired(d)) {up}    .. 
+  (p llmoved (-xpart paired(d),0) -- p lrmoved (-xpart paired(d),0) {right} ..
+   p lrmoved (0,-ypart paired(d)) -- p urmoved (0,-ypart paired(d)) {up}    ..
    p urmoved (-xpart paired(d),0) -- p ulmoved (-xpart paired(d),0) {left}  ..
-   p ulmoved (0,-ypart paired(d)) -- p llmoved (0,-ypart paired(d)) {down}  .. cycle) 
+   p ulmoved (0,-ypart paired(d)) -- p llmoved (0,-ypart paired(d)) {down}  .. cycle)
 enddef ;
 
-vardef punked primary p = 
-  (point 0 of p for i=1 upto length(p)-1 : -- point i of p endfor 
-   if cycle p : -- cycle else : -- point length(p) of p fi)  
-enddef ;  
+vardef punked primary p =
+  (point 0 of p for i=1 upto length(p)-1 : -- point i of p endfor
+   if cycle p : -- cycle else : -- point length(p) of p fi)
+enddef ;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % end of MetaFun macros
@@ -1068,6 +1140,7 @@ input thArea;
 input thText;
 input thSpecial;
 input uAUT;
+input uSBE;
 
 input thTrans;
 

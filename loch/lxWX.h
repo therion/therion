@@ -7,12 +7,6 @@
 #include <wx/spinctrl.h>
 #include <wx/slider.h>
 #include <wx/gbsizer.h>
-
-#if !wxCHECK_VERSION(2,7,0)
-#define wxFD_OVERWRITE_PROMPT wxOVERWRITE_PROMPT
-#define wxFD_SAVE wxSAVE
-#endif
-
 #endif  
 //LXDEPCHECK - standard libraries
 
@@ -111,25 +105,19 @@ public:
 
 	lxDoubleValidator(double * val, const double vmin, const double vmax, const wxChar * fmt = _T("%.0f"));
 
-	lxDoubleValidator(const lxDoubleValidator & val);
+  wxObject *Clone() const override { return new lxDoubleValidator(*this); }
 
-	~lxDoubleValidator();
+	bool Validate(wxWindow *parent) override;
 
-  virtual wxObject *Clone() const { return new lxDoubleValidator(*this); }
+  bool TransferToWindow() override;
 
-  bool Copy(const lxDoubleValidator& val);
-    
-	virtual bool Validate(wxWindow *parent);
-
-  virtual bool TransferToWindow();
-
-  virtual bool TransferFromWindow();
+  bool TransferFromWindow() override;
 
 protected:
 
 	double * m_variable;
 	double m_vMin, m_vMax;
-  const wxChar * m_fmt;
+    wxString m_fmt;
 
 	bool CheckValidator()	const
 	{
@@ -153,19 +141,13 @@ public:
 
 	lxRadioBtnValidator(long * val, const long optval);
 
-	lxRadioBtnValidator(const lxRadioBtnValidator & val);
+  wxObject *Clone() const override { return new lxRadioBtnValidator(*this); }
 
-	~lxRadioBtnValidator();
+	bool Validate(wxWindow *parent) override;
 
-  virtual wxObject *Clone() const { return new lxRadioBtnValidator(*this); }
+  bool TransferToWindow() override;
 
-  bool Copy(const lxRadioBtnValidator& val);
-    
-	virtual bool Validate(wxWindow *parent);
-
-  virtual bool TransferToWindow();
-
-  virtual bool TransferFromWindow();
+  bool TransferFromWindow() override;
 
 protected:
 

@@ -7,9 +7,9 @@
 
 
 #include "lxSView.h"
+#include "lxSetup.h"
 #include "lxGUI.h"
 #include "lxGLC.h"
-#include "lxSetup.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"
@@ -150,36 +150,20 @@ void lxViewpointSetupDlg::OnSlider(wxScrollEvent& event)
   switch (event.GetId()) {
     case LXVSTP_FACINGSLIDE:
 #ifndef LXDEPCHECK
-#if wxCHECK_VERSION(2,7,1)
       lxFTextCtrl(LXVSTP_FACING)->ChangeValue(wxString::Format(_T("%d"), event.GetInt()));
       tmpEvent.SetId(LXVSTP_FACING);
-#else
-      lxFTextCtrl(LXVSTP_FACING)->SetValue(wxString::Format(_T("%d"), event.GetInt()));
-#endif      
       break;
     case LXVSTP_TILTSLIDE:
-#if wxCHECK_VERSION(2,7,1)
       lxFTextCtrl(LXVSTP_TILT)->ChangeValue(wxString::Format(_T("%d"), event.GetInt()));
       tmpEvent.SetId(LXVSTP_TILT);
-#else
-      lxFTextCtrl(LXVSTP_TILT)->SetValue(wxString::Format(_T("%d"), event.GetInt()));
-#endif      
       break;
     case LXVSTP_ZOOMSLIDE:
-#if wxCHECK_VERSION(2,7,1)
       lxFTextCtrl(LXVSTP_ZOOM)->ChangeValue(wxString::Format(_T("%d"), int(20.0 * pow(100.0, (double(event.GetInt()) / 1000.0)))));
       tmpEvent.SetId(LXVSTP_ZOOM);
-#else
-      lxFTextCtrl(LXVSTP_ZOOM)->SetValue(wxString::Format(_T("%d"), int(20.0 * pow(100.0, (double(event.GetInt()) / 1000.0)))));
-#endif      
       break;
     case LXVSTP_DISTSLIDE:
-#if wxCHECK_VERSION(2,7,1)
       lxFTextCtrl(LXVSTP_DIST)->ChangeValue(wxString::Format(_T("%d"), int(pow(200.0 * this->m_mainFrame->setup->data_limits_diam, (double(event.GetInt()) / 1000.0)))));
       tmpEvent.SetId(LXVSTP_DIST);
-#else
-      lxFTextCtrl(LXVSTP_DIST)->SetValue(wxString::Format(_T("%d"), int(pow(200.0 * this->m_mainFrame->setup->data_limits_diam, (double(event.GetInt()) / 1000.0)))));
-#endif      
 #endif      
       break;
     case LXVSTP_ROTSPEED:
@@ -292,7 +276,7 @@ lxViewpointSetupDlg::lxViewpointSetupDlg(wxWindow *parent)
 #define ADDCB(id, ss) \
 	lxBoxSizer->Add( \
 			new wxCheckBox(lxPanel, id, ss), \
-	    0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT  | wxBOTTOM | wxEXPAND, lxBORDER);
+	    0, wxALIGN_LEFT  | wxBOTTOM | wxEXPAND, lxBORDER);
 #define ADDRB(id, ss) \
 	lxBoxSizer->Add( \
 			new wxRadioButton(lxPanel, id, ss), \
@@ -432,11 +416,7 @@ lxViewpointSetupDlg::lxViewpointSetupDlg(wxWindow *parent)
   ADDST(wxID_ANY, _("Rotation speed"))
 
   wxSlider * rspeed = new wxSlider(lxPanel, LXVSTP_ROTSPEED, 0, -1000, 1000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_AUTOTICKS);
-#if wxCHECK_VERSION(3,0,0)
   rspeed->SetTickFreq(1000);
-#else
-  rspeed->SetTickFreq(1000,0);
-#endif
 
   lxBoxSizer->Add(
 		rspeed,

@@ -1,5 +1,493 @@
-Therion 5.4.3 (in progress):
+Therion 6.1.3 (in progress):
+therion:
+ * bugs fixed
+   - at non-int mapping of scale to base-scale, text labels get debugging text
+     added before them [#428]
 
+--------------------------------------------------------------------------------
+
+Therion 6.1.2 (2022-07-11):
+
+therion:
+ * updated fmtlib to 9.0.0
+ * updated Russian translation [#427]
+ * bugs fixed
+   - FTBFS with fmtlib 9.0.0 [Debian #1014679]
+   - empty Maori translations removed
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.1 (2022-06-23):
+
+therion:
+ * support custom font size in map labels using <size:N%> and <size:xs|s|m|l|xl>
+   in the label text
+ * updated Maori translation [#424]
+ * bugs fixed:
+   - line rope having two points with the same x-coordinate [#423]
+   - spelling errors in the source code
+
+loch:
+ * bugs fixed:
+  -  ABI mismatch preventing loch from starting in msys2 build;
+     fixed by linking to wxWidgets 3.1 [#426]
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.0 (2022-05-27):
+
+therion:
+ * CHANGED the default settings for 'proj-auto' (on) and 'proj-missing-grid'
+   (download) to allow Proj choosing the best transformation and automatically
+   download any missing transformation grids
+ * added a new ini file option ‘cs-trans’ for user-defined PROJ transformation
+   pipelines between two coordinate systems
+ * added support for automatic downloading of PROJ transformation grids used
+   in cs-trans pipelines from cdn.proj.org
+ * layout: color map-fg scrap now uses more different colors to avoid that
+   connected scraps are colored the same. Needed in labyrinth-like caves. [#416]
+ * support custom font size in map labels using <size:N> in the label text
+ * support atlas page labeling A, B, …, Z, AA, AB, … instead of only A, B, …, Z
+ * updated bundled libraries: survex/img 1.4.3, Catch2 2.13.9, fmt 8.1.1
+ * documentation fixes [#410,#415,#417]
+ * updated github workflows [#411]
+
+--------------------------------------------------------------------------------
+
+Therion 6.0.6 (2022-03-12):
+
+therion:
+ * added support for hex rgb color specification (e.g. color map-fg ffeeaa)
+ * using -value with point extra triggers deprecation warning. It is
+   undocumented feature/bug.
+ * thbook improvements [#403,404,406,407] (thanks to Rodrigo Severo)
+ * support Proj 9.0.0 in test_proj.py
+
+xtherion:
+ * bugs fixed:
+   - control panel sizing on certain OS and hidpi displays
+
+loch:
+ * bugs fixed:
+   - mac retina display size fix
+
+infrastructure:
+ * cmake: fix a missing icon in therion.exe [#405] (thanks to Matěj Plch)
+ * split too long lines in .github/workflows/*.yml
+ * support for signed releases: sign the tag + upload a detached signature
+   for .tar.gz sources to a Github release (the release is now created by
+   the local script make_release.py instead of Github Actions;
+   this allows for integration of the rel_notes.py script into make_release.py)
+
+--------------------------------------------------------------------------------
+
+Therion 6.0.5 (2022-02-20):
+
+therion:
+ * added support for backtape/backlength readings
+ * warning if forwards and backwards readings do not match
+   (the difference threshold changed from 2 SD to 3 SD)
+ * some missing point and line types added to thbook [#401,402]
+ * Catch2 library updated to 2.3.18
+ * bugs fixed:
+   - lox file generation segfault (solved by poly2tri library update)
+   - segfault caused by mixing local and global coordinate system
+   - unable to determine direction on zero-length path in scrap [#395]
+
+xtherion:
+ * added line section -direction to context menu
+ * bugs fixed:
+   - fixed a wrong translation
+   - wrong handling of filename open as argument
+   - SVG import fixed
+
+loch:
+ * added PLY walls export (File → Export)
+ * added support for cave volume calculation (Tools → Survey statistics)
+
+windows installer:
+ * updated 3rd party programs:
+   - Tcl/Tk 8.6.12, tkImg 1.4.13, BWidget 1.9.15
+   - ImageMagick 7.1.0-24
+   - W32TeX 2021/06/24
+   - InnoSetup 6.2.0
+ * support for multiple languages during the installation
+ * two variants available now:
+   - built on Windows using MSYS2 environment; contains up-to-date libraries;
+     dynamically linked (a lot of DLLs are included)
+     [this is now the default for releases]
+   - built on Linux using MXE cross-compiler; some of the libraries are
+     quite outdated; statically linked; smaller instaler size
+     [the only option used between 5.4.0 and 6.0.4 to build the installer]
+
+cmake:
+ * support for collecting the required DLLs for deployment [#397]
+   (thanks to Matěj Plch)
+
+--------------------------------------------------------------------------------
+
+Therion 6.0.4 (2021-11-28):
+
+therion:
+ * MapBackground colour variable available in MetaPost
+   (corresponding to 'color map-bg' set in the layout)
+ * bugs fixed:
+   - fixed bug with counter and depth instrument calibration
+   - fixed error message for map containing only previews
+   - depth is incorrectly taken from surface legs [#165]
+   - cmyk/grayscale color export fix
+   - fix shapefile generation issues under Windows (only when using
+     the embedded shp library)
+
+loch:
+ * bugs fixed:
+   - fixed grayscale surface image rendering
+
+xtherion:
+ * bugs fixed:
+   - sketch import file browser case-sensitive to filename extensions [#390]
+   - fix lintian warnings by using a different shebang line
+
+infrastructure:
+ * cmake: generate help and locale files for target loch
+ * cmake improvements by Matěj Plch [#391]
+ * updated Makefile and getvtkver.tcl for loch
+ * fix thbook reproducible build (cmake only; SOURCE_DATE_EPOCH should be set)
+ * support thbook compilation with luatex
+ * use only current OS versions for make-based builds on GHA
+ * fix/workaround for wine32 installation on Ubuntu 20.04 on GHA
+ * updated libfmt [#388]
+ * updated proj testing script
+
+--------------------------------------------------------------------------------
+
+Therion 6.0.3 (2021-10-03):
+
+therion:
+ * add support for splay shots in .3d import
+ * survex code updated to 1.2.45
+ * a new patch to get reproducible .3d files applied
+ * bugs fixed:
+   - fixed typos in an error message
+   - sample files modified not to start with #! characters which confused lintian
+   - color map-fg depth: fix the colouring issues and the related metapost error
+
+loch:
+ * use help files in .htb format on all platforms
+ * fixed cross-platform differences of generated .lox files
+
+xtherion:
+ * fixed bug with PocketTopo XVI rendering introduced in 6.0.2
+
+infrastructure:
+ * cmake: added compilation of .mo translation file
+ * cmake: improved installation using components
+ * cmake: reproducibility fixes
+ * cmake: added support for generation of the documentation in HTML format
+
+--------------------------------------------------------------------------------
+
+Therion 6.0.2 (2021-09-13):
+
+therion:
+ * add compatibility macros for pre-6.0.0 transparency style in MetaPost
+ * allow scaling of some point symbols (anchor, bridge, camp, dig, fixedladder,
+   noequipment, rope, ropeladder, steps, traverse, viaferrata) [PR#382,384]
+ * include Proj 8.1.1 to the Proj testing suite
+ * bugs fixed:
+   - wrong vertical alignment of legend entries using <br> to split lines
+   - \baselineskip not applied to \the\cavename in the map legend
+   - fixed the collision of \the\cavename with the north arrow
+
+loch:
+ * fix a missing include when compiling with vtk 9.0.1 and gcc 11
+   [Debian #984363]
+
+xtherion:
+ * improved control over vertical positioning of backgroud images
+
+infrastructure:
+ * fix possible mixing of make and cmake generated files [PR#381]
+ * fix static linking issues under recent MinGW
+
+--------------------------------------------------------------------------------
+
+Therion 6.0.1 (2021-07-25):
+
+therion:
+ * flexible altitude bar height based on the number of colours in use
+ * changed layout colour-legend option to <smooth/discrete/off/on>
+ * bugs fixed:
+   - wrong shading patterns references when exporting multiple maps
+   - projection name truncated to 20 characters in Proj ver. > 5
+
+--------------------------------------------------------------------------------
+
+Therion 6.0.0 (2021-07-13):
+
+therion:
+ * support for colour models: cmyk, rgb, grayscale (see the color-model layout
+   option in the Thbook)
+ * support for colour management (see the color-profile layout option)
+ * support for linear and radial shading (colour gradients) in MetaPost
+   (withlinearshading and withradialshading options)
+ * support for smooth colour transitions of scrap backgrounds in PDF maps
+   if the map-fg is coloured by altitude
+ * added smooth-shading <off/quick> layout switch – quick is the default
+ * reimplemented internal processing of patterns and transparent colors in
+   MetaPost (incompatible changes: the drawing option 'withtransparentcolor',
+   macro 'def_transparent_rgb' and predefined transparent colors tr_bg,
+   tr_white, tr_black were removed; use the drawing option
+   'withcolor <color> withalpha <number>' instead)
+ * reimplemented conversion of MetaPost output to PDF
+ * support for double number system in MetaPost (this eliminates the current
+   MetaPost limits; see the chapter Limitations in the Appendix of the Thbook)
+ * tex-refs-registers <on/off> initialization file option added (see the
+   chapters Initialization files and Limitations in the Appendix of the Thbook)
+ * support for LuaTeX as an alternative to pdfTeX
+ * support for relative paths in TeX (\inputrel, \savepath and \loadpicture) and
+   in MetaPost (inputrel)
+ * updated Serbian translation
+ * bugs fixed:
+   - symbol-hide,show,color not working for user defined symbols
+   - ISO8859-2 literals in the source code caused clang warnings
+   - removed unnecessary SOURCE_DATE_EPOCH in the thbook Makefile
+   - fixed numerical instability in l_overhang_SKBB
+   - swapped anastomosis & karren symbols
+   - no station scrap continuation list [#333]
+   - fixed arrows flipping [#245]
+   - colour preview-above doesn't work [#90]
+   - KML export fix [#84]
+   - p_smartlabel fails with a picture argument
+   - other minor fixes
+ * included {fmt} library
+ * updated shapelib
+ 
+loch:
+ * Tools→Selection – only displays selected surveys
+ * bugs fixed:
+   - missing title
+   - autorotation issues
+
+infrastructure:
+ * support for CMake builds (thanks to Matěj Plch)
+ * C++14 required
+ * use Github Actions to create Github releases
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.7 (2021-02-06):
+
+therion:
+ * added --generate-output-crc, --verify-output-crc options
+ * error raised when unknown command line option used
+ * version number ends with '-dev' if there are uncommitted local changes
+ * optimizations:
+   - much faster processing of fixed stations with associated CRS data
+   - faster check for optional fonts
+ * bugs fixed:
+   - survey selection ignored when exporting 3d model from splay shots
+   - "cs local" bugfix
+   - scrap 3d reconstruction spike artifact fix
+   - selection logging bugfix
+   - svg/xhtml map export without filename creates cave.pdf file
+
+make:
+ * better detection of wx-config variants
+ * innosetup.ini is generated in the build directory
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.6 (2020-12-27):
+
+therion:
+ * fixed map statistics bug introduced in 5.5.5
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.5 (2020-12-22):
+
+therion:
+ * updated Italian translation [#308]
+ * fixed bug with statistic explo/topo/carto/copyright <number>
+ * fixed bugs related to an undefined Area of Use, which should be used
+   in Proj transformations
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.4 (2020-12-15):
+
+therion:
+ * added layout-statistics carto|copyright-count
+ * use unique pointers in thdatabase [#296]
+ * added support for 270 to 360 degrees gradient readings
+ * bugs fixed
+   - scrap -walls off not working [#297]
+   - various fixes [#293,294,295,296,298,299,301,302,303,305]
+
+thbook:
+ * support smaller page formats (configuration at the line 5 of the file
+   thbook/thbook.tex)
+
+loch:
+  * bugs fixed:
+    - fix display of Survex 3D with LRUD [#286]
+    - read splay flag from Survex 3D files [#287]
+
+make:
+ * allow -j$N [#283]
+ * allow passing of WX_CONFIG variable [#284]
+ * remove local copies of getline and getopt [#290,306]
+ * small fixes
+
+infrastructure
+ * use Github actions instead of Travis CI
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.3 (2020-10-17):
+
+therion:
+ * mil/mils angle unit deprecation warning [#129]
+ * sql export shot length precision increase [#147]
+ * bugs fixed
+   - incorect calculation of station position when fixed multiple times
+     [#269,270]
+   - memory leaks causing some random behaviour [#278]
+   - scale value should default to 1 when omitted from "calibrate" [#263]
+
+loch:
+ * splay shots are rendered with darker colour
+ * duplicate shots displayed by default
+ * small bug fixes
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.2 (2020-10-09):
+
+therion:
+ * added extend ignore path -- extend ignore <station1> <station2> <station3>
+ * added ratio of extended elevation -- extend <0..100>
+ * support CMYK colors in MetaPost symbols (this is not yet a complete
+   CMYK support)
+ * updated WKT definitions for some built-in projections
+ * the names of projections defined by EPSG/ESRI are loaded dynamically
+   from the Proj database if Proj version >= 6
+ * undated surveys are listed in the Therion messages
+ * documentation updates
+ * updated German translation [#258]
+ * bugs fixed
+   - use proper ISO code for Czech language ('cs' instead of 'cz') [#251];
+     'cz' is still allowed in the map layout for backwards compatibility
+   - pdftex included in the windows installer failed to find images with
+     '/./' or '/../' in the file path
+   - splay shots extended elevation processing
+   - another fix for Proj 7.1.0 axes swap in Krovak's projection
+   - refuse to compile with unsupported Proj versions
+   - depth is incorrectly taken from surface legs
+   - Survex err reading bugfix
+   - VTK9 compatibility fixes
+   - Xtherion map georeferencing bugfix
+   - mingw-w64 compatibility fixes
+   - wxWidgets compilation issues
+   - declination set to 0 outside of the geomag model range
+     (now the declination is extrapolated 15 years after the model date;
+     error is produced after that and before 1900)
+   - other minor fixes
+
+infrastructure:
+ * add more Travis CI targets, update the libraries used
+ * removed Therion library rebuilding
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.1 (2020-07-03):
+
+therion:
+ * duplicate shot length removed from expored individual team member statistics
+ * improved Proj support in auto mode (automatic specification of the area of use;
+   caching and logging of the used transformations)
+ * added support for handling of missing coordinate transformation grids
+   (see the proj-missing-grid init file option)
+ * support for linking with multiple Proj versions to improve testing
+   (see test_proj.sh)
+ * improved mingw-w64 compatibility
+ * bugs fixed
+   - various memory-related fixes by Matěj Plch [#242,243,244,248]
+   - broken debug build [#246]
+   - workaround for Proj 7.1.0 axes swap in Krovak's projection
+   - various items missing from the clean targets [#252]
+
+windows installer:
+ * updated InnoSetup
+ * updated TeX and MetaPost distribution
+ * installer now includes the right version of Proj support files automatically
+
+--------------------------------------------------------------------------------
+
+Therion 5.5.0 (2020-05-01):
+
+therion:
+ * maps-offset <on|off> feature in thconfig file to disable maps drawn
+   in offset [#159]
+ * maps <on|off> feature in thconfig file to produce map just from scraps,
+   ignoring the maps definition
+ * log extend feature in thconfig to log extended elevation construction
+ * added point mudcrack (thanks to Rodrigo Severo)
+ * added an extensive SBE symbol set (thanks to Rodrigo Severo)
+ * geomag data updated up to 2025
+ * added support for reproducible generation of PDF and SVG output
+   (command-line option --reproducible-output)
+ * make thbook.pdf build reproducible (derive the created/modified dates
+   of the PDF file from the commit date)
+ * improved support for Proj 6.0 and 7.0 (see proj-auto init file option)
+ * Catch2 unit testing library and Proj test cases added
+ * all python scripts use Python 3 now
+ * added Serbian (thanks to Ivana Miskovic) and Slovenian [PR#142] translations
+ * updated Portuguese translation [PR#170,220]
+ * thbook improvements by Benedikt Hallinger [PR#161,162]
+ * bugs fixed
+   - spelling in some thbook chapters
+   - html and kml output [PR#145,150]
+   - extend ingore <station> fixed
+   - Survex 3D output is missing the nodes on the end of anonymous
+     splay legs [#157]
+   - a_blocks_AUT missing semi-colon [#126]
+
+xtherion:
+ * add thconfig* to selectable config file list [PR#168]
+ * bugs fixed:
+   - Windows xtherion window geometry bugfix
+
+loch:
+ * bugs fixed:
+   - MacOS X compilation [PR#144]
+   - multiple minor fixes
+   - Linux off-screen rendering bugfix
+
+--------------------------------------------------------------------------------
+
+Therion 5.4.4 (2019-05-01):
+
+therion:
+ * support for Proj 5.0 and newer API (proj.h)
+ * bugs fixed:
+   - segfault while generating SVG when compiled by newer g++
+   - incorrect EPSG projections handling if more than one EPSG codes are used
+   - custom projection name missing
+   - missing Proj4 human readable projection names
+
+--------------------------------------------------------------------------------
+
+Therion 5.4.3 (2019-02-01):
+
+therion:
+ * input line length increased to allow reading larger elevation datasets
+ * built-in Proj.4 removed; internal mapping of EPSG and ESRI codes replaced
+   by +init=epsg|esri:... libproj initialization string
+ * bugs fixed:
+   - add and use PROJ grid files in the windows distribution
+   - fix comment and code typos [PR#127]
 
 --------------------------------------------------------------------------------
 

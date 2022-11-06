@@ -29,14 +29,14 @@ package require BWidget
 
 if {[catch {set imgver [package require Img]}]} {
   set xth(gui,imgfiletypes) {
-	   { {Pictures} {.gif .pnm .ppm .xvi} }
-	   { {PocketTopo therion export} {.txt} }
+	   { {Pictures} {.gif .pnm .ppm .xvi .GIF .PNM .PPM .XVI} }
+	   { {PocketTopo therion export} {.txt .TXT} }
 	   { {All Files}               * }
 	 } 
 } else {
   set xth(gui,imgfiletypes) {
-	   { {Pictures} {.png .jpeg .jpg .gif .pnm .ppm .xvi} }
-	   { {PocketTopo therion export} {.txt} }
+	   { {Pictures} {.png .jpeg .jpg .gif .pnm .ppm .xvi .PNG .JPEG .JPG .GIF .PNM .PPM .XVI} }
+	   { {PocketTopo therion export} {.txt .TXT} }
 	   { {All Files}                                               * }
 	 } 
 }

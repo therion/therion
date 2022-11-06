@@ -31,7 +31,7 @@
 #ifndef thdate_h
 #define thdate_h
 
-#define thdate__bufflen 255
+#define thdate_bufflen 255
 
 /**
  * Convert date into decimal year.
@@ -83,7 +83,7 @@ class thdate {
   double ssec, ///< Start date seconds
     esec;  ///< End date seconds
     
-  char dstr[thdate__bufflen]; ///< String for given date.
+  char dstr[thdate_bufflen]; ///< String for given date.
 
   friend bool operator < (const thdate &, const thdate &);  ///< Less operator.
   friend bool operator <= (const thdate &, const thdate &);  ///< Less operator.

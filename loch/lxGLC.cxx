@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <wx/wx.h>
 #include <stdio.h>
+#include <vtkVersionMacros.h>
 #include <vtkCellArray.h>
 #include <vtkPointData.h>
 #include <vtkDataArray.h>
@@ -69,18 +70,16 @@ EVT_ERASE_BACKGROUND(lxGLCanvas::OnEraseBackground)
 EVT_ENTER_WINDOW(lxGLCanvas::OnEnterWindow )
 EVT_CHAR(lxGLCanvas::OnKeyPress)
 EVT_IDLE(lxGLCanvas::OnIdle)
-#if wxCHECK_VERSION(2,9,0)
 EVT_MOUSE_CAPTURE_LOST(lxGLCanvas::OnMouseCaptureLost)
-#endif
 END_EVENT_TABLE()
 
 
-static const GLubyte srf16tex[48] = {
-  0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
-    0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0
-};
+// static const GLubyte srf16tex[48] = {
+//   0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 
+//     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
+//     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
+//     0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0
+// };
 
 int wx_gl_window_attribs[] = {
 	WX_GL_RGBA,
@@ -214,9 +213,7 @@ void lxGLCanvas::RenderScreen()
 
 }
 
-#if wxCHECK_VERSION(2,9,0)
 void lxGLCanvas::OnMouseCaptureLost(wxMouseCaptureLostEvent& WXUNUSED(event)) {}
-#endif
 
 
 
@@ -250,6 +247,8 @@ void lxGLCanvas::OnSize(wxSizeEvent& event)
   int w, h;
   this->GetClientSize(&w, &h);
   this->setup->cam_width = double((GLfloat) w / (GLfloat) h);
+  w = int(this->GetContentScaleFactor() * w);
+  h = int(this->GetContentScaleFactor() * h);
   this->ww = w;
   this->wh = h;
 #ifdef __WXMSW__
@@ -456,7 +455,10 @@ void lxGLCanvas::SetColorMask()
 bool lxGLCanvas::CameraAutoRotate() {
   if (this->m_sCameraAutoRotate)	{
     this->setup->RotateCameraF(this->m_sCameraAutoRotateAngle);
+    auto start = this->m_sCameraAutoRotateSWatch.Time();
     this->ForceRefresh();
+    auto elapsed = this->m_sCameraAutoRotateSWatch.Time() - start;
+    if (elapsed < 10) wxMilliSleep(10 - elapsed);
     this->m_sCameraAutoRotateCounter++;
     if (this->m_sCameraAutoRotateSWatch.Time() > 1000) {  
       ((wxStaticText *)(this->frame->m_viewpointSetupDlg->FindWindow(LXVSTP_RENSPEED)))->SetLabel(
@@ -470,7 +472,7 @@ bool lxGLCanvas::CameraAutoRotate() {
 }
 
 
-void lxGLCanvas::OnIdle(wxIdleEvent& WXUNUSED(event))	{
+void lxGLCanvas::OnIdle(wxIdleEvent& event)	{
 
   // fix bug with opening file before everything is initialized
   if (!this->frame->m_fileToOpen.IsEmpty()) {
@@ -481,16 +483,17 @@ void lxGLCanvas::OnIdle(wxIdleEvent& WXUNUSED(event))	{
     return;
   }
 
-
   switch (this->m_sMoveLock)	{
     case LXGLCML_PANX:
     case LXGLCML_PANX2Y:
     case LXGLCML_PANY:
       break;		
     default:
-      this->CameraAutoRotate();
+      if (this->CameraAutoRotate())
+    	  event.RequestMore();
       break;
   }
+  
 }
 
 
@@ -789,9 +792,9 @@ void lxGLCanvas::SetCamera() {
 }
 
 static const GLfloat mat0[] = { 0.0, 0.0, 0.0, 1.0};
-static const GLfloat mat1[] = { 1.0, 1.0, 1.0, 1.0};
+// static const GLfloat mat1[] = { 1.0, 1.0, 1.0, 1.0};
 static const GLfloat mat2[] = { 0.5};
-static const GLfloat mat3[] = { 1.0, 1.0, 1.0, 0.5};
+// static const GLfloat mat3[] = { 1.0, 1.0, 1.0, 0.5};
 
 void lxGLCanvas::RenderScrapWalls() {
 
@@ -828,7 +831,12 @@ void lxGLCanvas::RenderScrapWalls() {
   glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
   glColor4fv(clr);
 
-  vtkIdType * cPts, nPts, xP;
+#if VTK_MAJOR_VERSION >= 9
+  const vtkIdType * cPts;
+#else
+  vtkIdType * cPts;
+#endif
+  vtkIdType nPts, xP;
   double * nmv, * ptc, nmvv[3];
 
   this->data->scrapWallsNormals->Update();
@@ -925,7 +933,12 @@ void lxGLCanvas::RenderSurface() {
   else 
     glDisable(GL_LIGHTING);
 
-  vtkIdType * cPts, nPts;
+#if VTK_MAJOR_VERSION >= 9
+  const vtkIdType * cPts;
+#else
+  vtkIdType * cPts;
+#endif
+  vtkIdType nPts;
   double * nmv, * ptc;
 
   this->data->surfaceSorted->Update();
@@ -986,40 +999,54 @@ void lxGLCanvas::RenderCenterline() {
 
   clrs[0] = 0.5; clrs[1] = 0.5; clrs[2] = 0.5; 
 
-  bool prevsurface = false;
+  bool prevsurface = false, prevsplay = false;
   lxDataShot * psh;
   lxVec * stv;
-  double clr[3];
+  double clr[3], spla, splm;
   unsigned long id, nid;
   nid = this->data->shots.size();
   glColor3f(clrc[0],clrc[1],clrc[2]);
   glBegin(GL_LINES);
   for(id = 0; id < nid; id++) {
 
+    spla = 0.0;
+    splm = 1.0;
     psh = &(this->data->shots[id]);
+    if (!psh->m_selected)
+    	continue;
     if (psh->invisible)
       continue;
-    if (psh->splay && (!this->setup->m_vis_centerline_splay))
-      continue;
+    if (psh->splay) {
+      if (!this->setup->m_vis_centerline_splay)
+        continue;
+      if ((this->m_renderData != NULL) && (this->m_renderData->m_imgWhiteBg)) {
+        spla = 0.5;
+        splm = 0.5;
+      } else {
+        spla = 0.0;
+        splm = 0.5;
+      }
+    }
+
     if (psh->duplicate && (!this->setup->m_vis_centerline_duplicate))
       continue;
 
-
+#define splc(n) (spla + splm * (n))
 #define drawLvert(N) \
   stv = &(this->data->stations[N].pos); \
   if ((!psh->surface) && (!this->setup->cam_anaglyph) && (this->setup->m_colormd != lxSETUP_COLORMD_DEFAULT) && (this->setup->m_colormd_app_centerline)) { \
   this->data->luTable->GetColor(stv->z, clr); \
-  glColor3f(clr[0],clr[1],clr[2]); \
+  glColor3f(splc(clr[0]),splc(clr[1]),splc(clr[2])); \
   } \
   glVertex3f(lxShiftVecPXYZ(stv, this->shift));
 
     if ((psh->surface && this->setup->m_vis_centerline_surface) 
       || ((!psh->surface) && this->setup->m_vis_centerline_cave)) {
-        if (prevsurface != psh->surface) {
+        if ((prevsurface != psh->surface) || (prevsplay != psh->splay)) {
           if (psh->surface) {
-            glColor3f(clrs[0],clrs[1],clrs[2]);
+            glColor3f(splc(clrs[0]),splc(clrs[1]),splc(clrs[2]));
           } else {
-            glColor3f(clrc[0],clrc[1],clrc[2]);
+            glColor3f(splc(clrc[0]),splc(clrc[1]),splc(clrc[2]));
           }
         }
         drawLvert(psh->from);
@@ -1027,6 +1054,7 @@ void lxGLCanvas::RenderCenterline() {
       }
 
       prevsurface = psh->surface;
+      prevsplay = psh->splay;
   } 
   glEnd();
 
@@ -1046,6 +1074,7 @@ void lxGLCanvas::ProjectStations() {
   lxDataStation * st;
   for(id = 0; id < nid; id++) {
     st = &(this->data->stations[id]);
+    if (!st->m_selected) continue;
     this->ProjectPoint(lxShiftVecPXYZ(&(st->pos), this->shift), &(st->m_screen_x), &(st->m_screen_y), &(st->m_screen_z));
   }
 }
@@ -1373,7 +1402,7 @@ void lxGLCanvas::SetIndicatorsTransform()
       this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     }
   } else {
-    this->m_indRes = 3.7795276; // pixels per mm
+    this->m_indRes = 3.7795276 * this->GetContentScaleFactor(); // pixels per mm
     this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     glLineWidth(1.0);
   }
@@ -1405,7 +1434,7 @@ void lxGLCanvas::RenderInds()
       this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     }
   } else {
-    this->m_indRes = 3.7795276; // pixels per mm
+    this->m_indRes = 3.7795276 * this->GetContentScaleFactor(); // pixels per mm
     this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     glLineWidth(1.0);
   }
@@ -1549,11 +1578,7 @@ void lxGLCanvas::RenderICompass(double size) {
 
   glPopMatrix();
 
-#if wxCHECK_VERSION(3,0,0)
-  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\xc2\xb0"), int(this->setup->cam_dir)));
-#else
-  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\260"), int(this->setup->cam_dir)));
-#endif  
+  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(wxString::FromUTF8(_("%03d\xc2\xb0")), int(this->setup->cam_dir)));
 
 }
 
@@ -1640,11 +1665,7 @@ void lxGLCanvas::RenderIClino(double size)
   glPopMatrix();
   glPopMatrix();
 
-#if wxCHECK_VERSION(3,0,0)
-  this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(_("%+03d\xc2\xb0"), int(this->setup->cam_tilt)));
-#else
-  this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(_("%+03d\260"), int(this->setup->cam_tilt)));
-#endif  
+  this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(wxString::FromUTF8(_("%03d\xc2\xb0")), int(this->setup->cam_tilt)));
 }
 
 
@@ -1905,6 +1926,16 @@ struct OSC {
 bool lxGLCanvas::OSCMakeCurrent()
 {
 
+	if (!this->m_OSC->m_OK) {
+	  int w, h;
+		this->GetClientSize(&w, &h);
+		w = int(this->GetContentScaleFactor() * w);
+		h = int(this->GetContentScaleFactor() * h);
+		this->m_OSC->m_Width = w;
+		this->m_OSC->m_Height = h;
+		return true;
+	}
+
   // urobime context current
 #ifdef LXWIN32  
   if (this->m_OSC->m_r2d) {
@@ -1929,13 +1960,15 @@ bool lxGLCanvas::OSCInit(GLint w, GLint h)
   this->m_OSC = new OSC();
   this->m_OSC->m_Width = w;
   this->m_OSC->m_Height = h;
-  this->m_OSC->m_OK = true;
+  this->m_OSC->m_OK = false;
 
 #ifdef LXWIN32
   this->m_OSC->m_r2d = R2DCreate(w, h);
+  if (this->m_OSC->m_r2d) this->m_OSC->m_OK = true;
 #endif
 #ifdef LXLINUX
-  this->m_OSC->m_r2p = R2PCreate(w, h);
+  //this->m_OSC->m_r2p = R2PCreate(w, h);
+  if (this->m_OSC->m_r2p) this->m_OSC->m_OK = true;
 #endif
   return this->m_OSC->m_OK;
 }
@@ -1958,7 +1991,7 @@ void lxGLCanvas::OSCDestroy()
 }
 
 
-struct _TRctx * lxGLCanvas::TRCGetContext()
+struct TRctx * lxGLCanvas::TRCGetContext()
 {
   if (this->m_TRC != NULL)
     return this->m_TRC->m_ctx;

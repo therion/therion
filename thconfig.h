@@ -84,7 +84,13 @@ class thconfig {
     install_tcltk, ///< Whether tcltk is installed with therion.
     install_tex, ///< Whether TeX is installed with therion.
     install_im, ///< Whether ImageMagick is installed with therion.
-    auto_join;  ///< Whether scraps in one file should be automatically joined
+    auto_join,  ///< Whether scraps in one file should be automatically joined
+    use_maps,  ///< Whether to use map structure for output
+    use_maps_offset,  ///< Whether to use map's offset
+    reproducible_output, ///< Generate reproducible output files.
+	crc_generate, ///< Generate CRC files for output files.
+	crc_verify, ///< Verify CRC files for output files.
+    log_extend; ///< Log extended elevation construction.
   thcfg_fstate fstate;  ///< What to do with cfg file.
   thinput cfg_file;  ///< Configuration file input.
   int cfg_fenc;  ///< Configuration file encoding.
@@ -93,16 +99,21 @@ class thconfig {
   int lang; ///< Output language.
   int sketch_warp;  ///< Sketch warping method.
   thobjectsrc outcs_def;  ///< Where output coordinate system is defined.
-  double outcs_sumx, outcs_sumy, outcs_sumz, outcs_sumn;
+  double outcs_sumx, outcs_sumy, outcs_sumz = 0.0, outcs_sumn;
   
   thconfig_src_list src;
 
   double tmp3dSMP, tmp3dWALLSMP, tmp3dMAXDIMD;
   int sketch_colors;
 
-  class thdatabase * dbptr;  ///< Associated db.
+  class thdatabase * dbptr = nullptr;  ///< Associated db.
   thexporter exporter;  ///< Data exporter.
   thselector selector;  ///< Database selector.
+
+  double ibbx[4]; ///< Input bounding box.
+  bool ibbx_def; ///< Input bounding box defined.
+
+  bool m_decl_out_of_geomag_range; ///< Whether declination out of geomag model range.
 
   /**
    * Standard constructor.

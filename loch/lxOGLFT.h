@@ -232,7 +232,7 @@ namespace OGLFT {
     //! a GLdouble[3].
     //! \return GLfloat[4] (RGBA) color specification.
     virtual GLfloat* color ( GLdouble* p ) = 0;
-    virtual ~ColorTess();
+    virtual ~ColorTess() = default;
   };
 
   //! During tesselation of a polygonal Face (outline, filled or solid),
@@ -246,7 +246,7 @@ namespace OGLFT {
     //! a GLdouble[3].
     //! \return GLfloat[2] (s,t) texture coordinates.
     virtual GLfloat* texCoord ( GLdouble* p ) = 0;
-    virtual ~TextureTess();
+    virtual ~TextureTess() = default;
   };
 
   //! The argument to setCharacterDisplayLists is an STL vector of
@@ -320,7 +320,7 @@ namespace OGLFT {
     bool valid_;
 
     //! Glyph display list creation mode.
-    enum GlyphCompileMode compile_mode_;
+    enum GlyphCompileMode compile_mode_ = {};
 
     //! Nominal point size.
     float point_size_;
@@ -329,7 +329,7 @@ namespace OGLFT {
     FT_UInt resolution_;
 
     //! Does rendering text affect the MODELVIEW matrix?
-    bool advance_;
+    bool advance_ = false;
 
     //! Foreground color (I really wanted to avoid this, but not really
     //! possible without state queries, which you can't put into
@@ -342,24 +342,24 @@ namespace OGLFT {
     GLfloat background_color_[4];
 
     //! PHIGS-like horizontal positioning of text.
-    enum HorizontalJustification horizontal_justification_;
+    enum HorizontalJustification horizontal_justification_ = {};
     
     //! PHIGS-like vertical positioning of text.
-    enum VerticalJustification vertical_justification_;
+    enum VerticalJustification vertical_justification_ = {};
 
     //! Rotate an entire string in the Z plane
-    GLfloat string_rotation_;
+    GLfloat string_rotation_ = 0.0;
 
     //! Let the user decide which character to use as the rotation reference.
     //! Use "o" by default, I suppose.
-    FT_UInt rotation_reference_glyph_;
+    FT_UInt rotation_reference_glyph_ = 0;
 
     //! The rotation reference character could be in any face.
-    FT_Face rotation_reference_face_;
+    FT_Face rotation_reference_face_ = nullptr;
 
     //! These are the translation offsets provided by the rotation reference
     //! character; for whom, we've discovered, only the Y position is relevant.
-    GLfloat rotation_offset_y_;
+    GLfloat rotation_offset_y_ = 0.0;
 
     //! Type of the cache of defined glyph to display list mapping.
     typedef std::map< FT_UInt, GLuint > GlyphDLists;
@@ -994,29 +994,29 @@ namespace OGLFT {
   protected:
     //! Angle of rotation of characters relative to text orientation.
     struct {
-      bool active_;
-      GLfloat x_, y_, z_;
+      bool active_ = false;
+      GLfloat x_ = 0.0, y_ = 0.0, z_ = 0.0;
     } character_rotation_;
 
     //! The tessellation of curves is pretty crude; regardless of length,
     //! use the same number of increments (and as near as I can tell, this
     //! is more than sufficient unless the glyph takes up the whole screen).
-    unsigned int tessellation_steps_;
+    unsigned int tessellation_steps_ = 0;
 
     //! When curves are tessellated, we use the forward difference algorithm
     //! from Foley and van Dam for parametric curves (pg. 511 of 2nd Ed. in C).
     //! So, the step size, delta, is in the parametric variable which is always
     //! on the interval [0,1]. Therefore, delta = 1/tessellation_steps
-    double delta_, delta2_, delta3_;
+    double delta_ = 0.0, delta2_ = 0.0, delta3_ = 0.0;
 
     //! For vector rendition modes, FreeType is allowed to generate the
     //! lines and arcs at the original face definition resolution. To
     //! get to the proper glyph size, the vertices are scaled before
     //! they're passed to the GLU tessellation routines.
-    double vector_scale_;
+    double vector_scale_ = 0.0;
 
     //! Callbacks for FreeType glyph decomposition into outlines
-    FT_Outline_Funcs interface_;
+    FT_Outline_Funcs interface_ = {};
 
     //! Default number of steps to break TrueType and Type1 arcs into.
     //! (Note: this looks good to me, anyway)
@@ -1139,15 +1139,15 @@ namespace OGLFT {
 
     //! As GLU tessellation proceeds, new contours open with every call
     //! to moveTo.
-    bool contour_open_;
+    bool contour_open_ = false;
 
     //! The user can provide a ColorTess object which computes a color
     //! for each tesselated vertex.
-    ColorTess* color_tess_;
+    ColorTess* color_tess_ = nullptr;
 
     //! The user can provide a TextureTess object which computes texture
     //! coordinates for each tesselated vertex.
-    TextureTess* texture_tess_;
+    TextureTess* texture_tess_ = nullptr;
 
   public:
     /*!
@@ -1210,7 +1210,7 @@ namespace OGLFT {
      * Set the individual character rotation in the Z direction.
      * \param character_rotation_z angle in degrees of the Z rotation.
      */
-    void setCharacterRotationZ ( GLfloat character_rotation_z );
+    void setCharacterRotationZ ( GLfloat character_rotation_z ) override;
 
     /*!
      * \return the character rotation in the X direction.
@@ -1225,7 +1225,7 @@ namespace OGLFT {
     /*!
      * \return the character rotation in the Z direction.
      */
-    GLfloat characterRotationZ ( void ) const { return character_rotation_.z_; }
+    GLfloat characterRotationZ ( void ) const override { return character_rotation_.z_; }
 
     /*!
      * Set an optional color tesselation object. Each tesselated vertex
@@ -1253,14 +1253,14 @@ namespace OGLFT {
     /*!
      * \return the height (i.e., line spacing) at the current character size.
      */
-    double height ( void ) const;
+    double height ( void ) const override;
 
     /*!
      * Implement measuring a character in a polygonal face.
      * \param c the (latin1) character to measure
      * \return the bounding box of c.
      */
-    BBox measure ( unsigned char c );
+    BBox measure ( unsigned char c ) override;
 #ifdef _UNICODE
 #ifndef OGLFT_NO_WX
     /*!
@@ -1268,7 +1268,7 @@ namespace OGLFT {
      * \param c the (UNICODE) character to measure
      * \return the bounding box of c.
      */
-    BBox measure ( const wxChar c );
+    BBox measure ( const wxChar c ) override;
 #endif /* OGLFT_NO_WX */
 #endif /* _UNICODE */
 
@@ -1278,7 +1278,7 @@ namespace OGLFT {
      * \param s string of (latin1) characters to measure
      * \return the bounding box of s.
      */
-    BBox measure ( const char* s ) { return Face::measure( s ); }
+    BBox measure ( const char* s ) override { return Face::measure( s ); }
 #ifndef OGLFT_NO_WX
     /*!
      * Implement measuring a formatted number
@@ -1286,17 +1286,17 @@ namespace OGLFT {
      * \param number to value to format
      * \return the bounding box of the formatted number
      */
-    BBox measure ( const wxString& format, double number )
+    BBox measure ( const wxString& format, double number ) override
     { return Face::measure( format, number ); }
 #endif /* OGLFT_NO_WX */
 
   private:
     void init ( void );
-    void setCharSize ( void );
-    void setRotationOffset ( void );
-    GLuint compileGlyph ( FT_Face face, FT_UInt glyph_index );
+    void setCharSize ( void ) override;
+    void setRotationOffset ( void ) override;
+    GLuint compileGlyph ( FT_Face face, FT_UInt glyph_index ) override;
   protected:
-    void clearCaches ( void );
+    void clearCaches ( void ) override;
   };
 
   //! Render text as a polygon outline.
@@ -1343,7 +1343,7 @@ namespace OGLFT {
     ~Outline ( void );
   private:
     void init ( void );
-    void renderGlyph ( FT_Face face, FT_UInt glyph_index );
+    void renderGlyph ( FT_Face face, FT_UInt glyph_index ) override;
     static int moveToCallback ( FT_Vector* to, Outline* outline );
     static int lineToCallback ( FT_Vector* to, Outline* outline );
     static int conicToCallback ( FT_Vector* control, FT_Vector* to, Outline* outline );
@@ -1378,7 +1378,7 @@ namespace OGLFT {
   class Filled : public Polygonal {
     //! 3D tessellation of glyphs is accomplished through the standard GLU
     //! routines
-    GLUtesselator* tess_obj_;
+    GLUtesselator* tess_obj_ = nullptr;
 
     //! A place to store any extra vertices generated by the Combine callback
     VertexInfoList extra_vertices_;
@@ -1388,7 +1388,7 @@ namespace OGLFT {
     //! Until I can figure out how to shift the glyph outside the context
     //! of this class, I guess this has got to stay (but it is redundant
     //! to extrusion_.depth_)
-    GLfloat depth_offset_;
+    GLfloat depth_offset_ = 0.0;
 
   public:
     /*!
@@ -1421,7 +1421,7 @@ namespace OGLFT {
     VertexInfoList& extraVertices ( void ) { return extra_vertices_; }
 
   protected:
-    void renderGlyph ( FT_Face face, FT_UInt glyph_index );
+    void renderGlyph ( FT_Face face, FT_UInt glyph_index ) override;
   private:
     void init ( void );
     static int moveToCallback ( FT_Vector* to, Filled* filled );
@@ -1563,7 +1563,7 @@ namespace OGLFT {
   protected:
     //! Raster glyph can be rotated in the Z plane (in addition to the string
     //! rotation).
-    GLfloat character_rotation_z_;
+    GLfloat character_rotation_z_ = 0.0;
   public:
     /*!
      * \param filename the filename which contains the font face.
@@ -1589,23 +1589,23 @@ namespace OGLFT {
      * Set the individual character rotation in the Z direction.
      * \param character_rotation_z angle in degrees of Z rotation.
      */
-    void setCharacterRotationZ ( GLfloat character_rotation_z );
+    void setCharacterRotationZ ( GLfloat character_rotation_z ) override;
     /*!
      * \return the character rotation in the Z direction.
      */
-    GLfloat characterRotationZ ( void ) const { return character_rotation_z_; }
+    GLfloat characterRotationZ ( void ) const override { return character_rotation_z_; }
 
     /*!
      * \return the height (i.e., line spacing) at the current character size.
      */
-    double height ( void ) const;
+    double height ( void ) const override;
 
     /*!
      * Implement measuring a character in a raster face.
      * \param c the (latin1) character to measure
      * \return the bounding box of c.
      */
-    BBox measure ( unsigned char c );
+    BBox measure ( unsigned char c ) override;
 
 #ifdef _UNICODE
 #ifndef OGLFT_NO_WX
@@ -1614,7 +1614,7 @@ namespace OGLFT {
      * \param c the (UNICODE) character to measure
      * \return the bounding box of c.
      */
-    BBox measure ( const wxChar c );
+    BBox measure ( const wxChar c ) override;
 #endif /* OGLFT_NO_WX */
 #endif /* _UNICODE */
 
@@ -1624,7 +1624,7 @@ namespace OGLFT {
      * \param s string of (latin1) characters to measure
      * \return the bounding box of s.
      */
-    BBox measure ( const char* s ) { return Face::measure( s ); }
+    BBox measure ( const char* s ) override { return Face::measure( s ); }
 #ifndef OGLFT_NO_WX
     /*!
      * Implement measuring a formatted number
@@ -1632,16 +1632,16 @@ namespace OGLFT {
      * \param number to value to format
      * \return the bounding box of the formatted number
      */
-    BBox measure ( const wxString& format, double number )
+    BBox measure ( const wxString& format, double number ) override
     { return Face::measure( format, number ); }
 #endif /* OGLFT_NO_WX */
 
   private:
     void init ( void );
-    GLuint compileGlyph ( FT_Face face, FT_UInt glyph_index );
-    void setCharSize ( void );
-    void setRotationOffset ( void );
-    void clearCaches ( void );
+    GLuint compileGlyph ( FT_Face face, FT_UInt glyph_index ) override;
+    void setCharSize ( void ) override;
+    void setRotationOffset ( void ) override;
+    void clearCaches ( void ) override;
   };
 
   //! Render text as a monochrome raster image.
@@ -1689,7 +1689,7 @@ namespace OGLFT {
     ~Monochrome ( void );
   private:
     GLubyte* invertBitmap ( const FT_Bitmap& bitmap );
-    void renderGlyph ( FT_Face face, FT_UInt glyph_index );
+    void renderGlyph ( FT_Face face, FT_UInt glyph_index ) override;
   };
 
   //! Render text as a grayscale raster image.
@@ -1738,7 +1738,7 @@ namespace OGLFT {
     ~Grayscale ( void );
   private:
     GLubyte* invertPixmap ( const FT_Bitmap& bitmap );
-    void renderGlyph ( FT_Face face, FT_UInt glyph_index );
+    void renderGlyph ( FT_Face face, FT_UInt glyph_index ) override;
   };
 
   //! Render text as a translucent raster image.
@@ -1795,7 +1795,7 @@ namespace OGLFT {
 
   private:
     GLubyte* invertPixmapWithAlpha ( const FT_Bitmap& bitmap );
-    void renderGlyph ( FT_Face face, FT_UInt glyph_index );
+    void renderGlyph ( FT_Face face, FT_UInt glyph_index ) override;
   };
 
   //! This is the base class of the texture style.
@@ -1803,11 +1803,11 @@ namespace OGLFT {
   protected:
     //! Angle of rotation of characters relative to text orientation.
     struct {
-      bool active_; //!< Is character rotation non-zero? (faster than checking all
+      bool active_ = false; //!< Is character rotation non-zero? (faster than checking all
 		    //!< the other values.)
-      GLfloat x_,   //!< Angle of rotation in the X direction.
-	y_,	    //!< Angle of rotation in the Y direction.
-	z_;	    //!< Angle of rotation in the Z direction.
+      GLfloat x_ = 0.0,   //!< Angle of rotation in the X direction.
+	            y_ = 0.0,   //!< Angle of rotation in the Y direction.
+	            z_ = 0.0;   //!< Angle of rotation in the Z direction.
     } character_rotation_;
 
     /*!
@@ -1883,7 +1883,7 @@ namespace OGLFT {
      * Set the individual character rotation in the Z direction.
      * \param character_rotation_z angle in degrees of Z rotation.
      */
-    void setCharacterRotationZ ( GLfloat character_rotation_z );
+    void setCharacterRotationZ ( GLfloat character_rotation_z ) override;
 
     /*!
      * \return the character rotation in the X direction.
@@ -1898,19 +1898,19 @@ namespace OGLFT {
     /*!
      * \return the character rotation in the Z direction.
      */
-    GLfloat characterRotationZ ( void ) const { return character_rotation_.z_; }
+    GLfloat characterRotationZ ( void ) const override { return character_rotation_.z_; }
 
     /*!
      * \return the height (i.e., line spacing) at the current character size.
      */
-    double height ( void ) const;
+    double height ( void ) const override;
 
     /*!
      * Implement measuring a character in a texture face.
      * \param c the (latin1) character to measure
      * \return the bounding box of c.
      */
-    BBox measure ( unsigned char c );
+    BBox measure ( unsigned char c ) override;
 
 #ifdef _UNICODE
 #ifndef OGLFT_NO_WX
@@ -1919,7 +1919,7 @@ namespace OGLFT {
      * \param c the (UNICODE) character to measure
      * \return the bounding box of c.
      */
-    BBox measure ( const wxChar c );
+    BBox measure ( const wxChar c ) override;
 #endif /* OGLFT_NO_WX */
 #endif /* _UNICODE */
 
@@ -1929,7 +1929,7 @@ namespace OGLFT {
      * \param s string of (latin1) characters to measure
      * \return the bounding box of s.
      */
-    BBox measure ( const char* s ) { return Face::measure( s ); }
+    BBox measure ( const char* s ) override { return Face::measure( s ); }
 #ifndef OGLFT_NO_WX
     /*!
      * Implement measuring a formatted number
@@ -1937,7 +1937,7 @@ namespace OGLFT {
      * \param number to value to format
      * \return the bounding box of the formatted number
      */
-    BBox measure ( const wxString& format, double number )
+    BBox measure ( const wxString& format, double number ) override
     { return Face::measure( format, number ); }
 #endif /* OGLFT_NO_WX */
 
@@ -1962,11 +1962,11 @@ namespace OGLFT {
 
   private:
     void init ( void );
-    void setCharSize ( void );
-    void setRotationOffset ( void );
-    GLuint compileGlyph ( FT_Face face, FT_UInt glyph_index );
-    void renderGlyph ( FT_Face face, FT_UInt glyph_index );
-    void clearCaches ( void );
+    void setCharSize ( void ) override;
+    void setRotationOffset ( void ) override;
+    GLuint compileGlyph ( FT_Face face, FT_UInt glyph_index ) override;
+    void renderGlyph ( FT_Face face, FT_UInt glyph_index ) override;
+    void clearCaches ( void ) override;
   };
 
   //! Render text as texture mapped monochrome quads.
@@ -2022,7 +2022,7 @@ namespace OGLFT {
     ~MonochromeTexture ( void );
   private:
     GLubyte* invertBitmap ( const FT_Bitmap& bitmap, int* width, int* height );
-    void bindTexture ( FT_Face face, FT_UInt glyph_index );
+    void bindTexture ( FT_Face face, FT_UInt glyph_index ) override;
   };
 
   //! Render text as texture mapped grayscale quads.
@@ -2078,7 +2078,7 @@ namespace OGLFT {
     ~GrayscaleTexture ( void );
   private:
     GLubyte* invertPixmap ( const FT_Bitmap& bitmap, int* width, int* height );
-    void bindTexture ( FT_Face face, FT_UInt glyph_index );
+    void bindTexture ( FT_Face face, FT_UInt glyph_index ) override;
   };
 
   //! Render text as texture mapped translucent quads.
@@ -2140,7 +2140,7 @@ namespace OGLFT {
     ~TranslucentTexture ( void );
   private:
     GLubyte* invertPixmap ( const FT_Bitmap& bitmap, int* width, int* height );
-    void bindTexture ( FT_Face face, FT_UInt glyph_index );
+    void bindTexture ( FT_Face face, FT_UInt glyph_index ) override;
   };
 } // Close OGLFT namespace
 #endif /* OGLFT_H */

@@ -150,9 +150,9 @@ enum {
 struct xcSeriesArrow {
   xcNodeArrow arrow;
   xcSeriesArrow * next, * prev;
-  int fType, tType, fXMin, tXMin;
+  int fType = 0, tType = 0, fXMin = 0, tXMin = 0;
   lxVec f, t, ft, sDir, uDir, rDir, fDir, nfDir, tDir, ntDir;
-  double fDist, tDist;
+  double fDist = 0.0, tDist = 0.0;
   lxTriGeomPoint fp[9], tp[9], nfp[9], ntp[9];
   lxPlane fPlane, tPlane, nfPlane, ntPlane;
   xcSeriesArrow() : next(NULL), prev(NULL) {}
@@ -166,7 +166,7 @@ void lxLRUD::Calculate()
   std::list<lxLRUDShot>::iterator shi;
   lxVec shotDir, uDir, rDir;
 
-  double pX[8], pY[8];
+  double pX[8] = {}, pY[8] = {};
   int prevProfile, i;
   prevProfile = -1;
   double ca, ci;
@@ -213,7 +213,8 @@ void lxLRUD::Calculate()
     return;
   }
 
-  xcNode * nodes = new xcNode [nnod], * cnode;
+  std::vector<xcNode> nodes(nnod);
+  xcNode * cnode;
   for(stMapIter = stMap.begin(); stMapIter != stMap.end(); stMapIter++) {
     nodes[stMapIter->second].id = stMapIter->second;
     nodes[stMapIter->second].p = stMapIter->first;
@@ -820,7 +821,6 @@ void lxLRUD::Calculate()
   this->o.Append(&so);
 
   delete [] edges;
-  delete [] nodes;
 
   //size_t nT = this->o.GetNTriangles();
   //size_t nP = this->o.GetNPoints();

@@ -32,6 +32,7 @@
 #include <map>
 #include <list>
 #include <set>
+#include <memory>
 
 #include "thdataobject.h"
 #include "thmbuffer.h"
@@ -145,7 +146,7 @@ typedef std::map < thobjectid, class thdataobject * > thdb_object_map_type;  ///
 typedef std::map < thsurveyname, class thsurvey * > thdb_survey_map_type;   ///< Survey map  
 typedef std::map < thsurveyname, class thdataobject * > thdb_grade_map_type;   ///< Grade map  
 typedef thdb_grade_map_type thdb_layout_map_type;   ///< Layout map  
-typedef std::list < class thdataobject * > thdb_object_list_type;   ///< Object list
+typedef std::list < std::unique_ptr<thdataobject> > thdb_object_list_type;   ///< Object list
 
   
 /**
@@ -204,13 +205,6 @@ class thdatabase {
   
   
   /**
-   * Standard destructor.
-   */
-   
-  ~thdatabase();
-  
-  
-  /**
    * Clear the contents of the database.
    */
    
@@ -218,10 +212,22 @@ class thdatabase {
   
   
   /**
-   * Create an data object linked to the database.
+   * Create a data object linked to the database. Use this method when object
+   * type is a runtime information, for example when parsing a file.
+   * If the type is known at compile time, use create<T>(thobjectsrc).
    */
    
-  class thdataobject * create(const char * oclass, thobjectsrc osrc);
+  std::unique_ptr<thdataobject> create(const char * oclass, thobjectsrc osrc);
+  
+  
+  /**
+   * Create a data object linked to the database.
+   * @tparam type of the object
+   * @param osrc source info
+   * @return instance of T
+   */
+  template <typename T>
+  std::unique_ptr<T> create(const thobjectsrc& osrc);
   
   
   /**
@@ -256,27 +262,27 @@ class thdatabase {
    * Insert data object into database.
    */
    
-  void insert(class thdataobject * optr);
+  void insert(std::unique_ptr<thdataobject> unique_optr);
   
   
   /**
    * Insert survey grade object into database.
    */
    
-  void insert_grade(class thgrade * optr);
+  void insert_grade(std::unique_ptr<thdataobject> optr);
 
 
   /**
    * Insert map layout object into database.
    */
    
-  void insert_layout(class thlayout * optr);
+  void insert_layout(std::unique_ptr<thdataobject> optr);
 
   /**
    * Insert lookup object into database.
    */
    
-  void insert_lookup(class thlookup * optr);
+  void insert_lookup(std::unique_ptr<thdataobject> optr);
   
   
   /**
@@ -364,8 +370,35 @@ class thdatabase {
   
   void insert_equate(int nargs, char ** args);
 
+private:
+  /**
+   * @brief adds thdata if the object is thsurvey
+   * @param obj new object
+   * @param osrc source info
+   */
+  void add_data(thdataobject* obj, const thobjectsrc& osrc);
 };
 
+// Template definition must be available in a header file.
+template <typename T>
+std::unique_ptr<T> thdatabase::create(const thobjectsrc& osrc)
+{
+  static_assert(std::is_base_of<thdataobject, T>::value, "created object must be derived from thdataobject");
+
+  auto ret = std::make_unique<T>();
+
+  ret->assigndb(this);
+  // set object id and mark revision
+  ret->id = ++this->objid;
+  this->attr.insert_object((void *) ret.get(), (long) ret->id);
+  ret->source = osrc;
+  this->revision_set.insert(threvision(ret->id, 0, osrc));
+
+  // add thdata if the object is thsurvey
+  add_data(ret.get(), osrc);
+
+  return ret;
+}
 
 /**
  * Database module.

@@ -62,7 +62,7 @@ lxSetup::lxSetup(lxData * dat)
   this->m_vis_centerline_cave = true;
   this->m_vis_centerline_surface = true;
   this->m_vis_centerline_splay = false;
-  this->m_vis_centerline_duplicate = false;
+  this->m_vis_centerline_duplicate = true;
   this->m_vis_centerline_entrance = false;
   this->m_vis_centerline_fix = false;
   this->m_vis_centerline_station = false;
@@ -113,6 +113,7 @@ void lxSetup::UpdateData()
   lxDataShot * shp;
   for(id = 0; id < nid; id++) {
     shp = &(this->data->shots[id]);
+    if (!shp->m_selected) continue;    
     if (this->m_vis_centerline && 
       (((!shp->surface) && this->m_vis_centerline_cave) ||
       (shp->surface && this->m_vis_centerline_surface)))  {
@@ -127,6 +128,7 @@ void lxSetup::UpdateData()
 
   nid = this->data->stations.size();
   for(id = 0; id < nid; id++) {
+    if (!this->data->stations[id].m_selected) continue;    
     tmp.Add(this->data->stations[id].pos);
   }
 

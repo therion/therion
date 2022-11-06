@@ -5,9 +5,9 @@
 //LXDEPCHECK - standard libraries
 
 #include "lxSScene.h"
+#include "lxSetup.h"
 #include "lxGUI.h"
 #include "lxGLC.h"
-#include "lxSetup.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"
@@ -295,11 +295,11 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 #define ADDCB(id, ss) \
 	lxBoxSizer->Add( \
 			new wxCheckBox(lxPanel, id, ss), \
-	    0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT  | wxBOTTOM, lxBORDER);
+	    0, wxALIGN_LEFT  | wxBOTTOM, lxBORDER);
 #define ADDRB(id, ss) \
 	lxBoxSizer->Add( \
 			new wxRadioButton(lxPanel, id, ss), \
-	    0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT  | wxBOTTOM, lxBORDER);
+	    0, wxALIGN_LEFT  | wxBOTTOM, lxBORDER);
 #define ADDST(id, ss) \
   lxBoxSizer->Add( \
 			new wxStaticText(lxPanel, id, ss), \
@@ -331,7 +331,7 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
 	ADDST(wxID_ANY, _("Color mode"))
 	lxBoxSizer->Add(
 			new wxRadioButton(lxPanel, lxSS_COLORMD_ALTITUDE, _("Altitude"), wxDefaultPosition, wxDefaultSize, wxRB_GROUP),
-	    0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT  | wxBOTTOM, lxBORDER);
+	    0, wxALIGN_LEFT  | wxBOTTOM, lxBORDER);
 
 
 	//ADDRB(lxSS_COLORMD_ALTITUDE, _("Altitude"))
@@ -372,7 +372,7 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
   ADDCB(lxSS_WALLS_TRANSPARENCY, _("Transparency"))
   lxBoxSizer->Add(
 		new wxSlider(lxPanel, lxSS_WALLS_OPACITY, 50, 0, 100, wxDefaultPosition, wxDefaultSize),
-    0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxBOTTOM, lxBORDER);
+    0, wxEXPAND | wxBOTTOM, lxBORDER);
   
   this->m_controlSizer->Add(lxBoxSizer, 1, wxEXPAND);
   updateCtrlMinSize;
@@ -385,7 +385,7 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
   ADDCB(lxSS_SRF_TRANSPARENCY, _("Transparency"))
   lxBoxSizer->Add(
 		new wxSlider(lxPanel, lxSS_SRF_OPACITY, 50, 0, 100, wxDefaultPosition, wxDefaultSize),
-    0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxBOTTOM, lxBORDER);
+    0, wxEXPAND | wxBOTTOM, lxBORDER);
   ADDCB(lxSS_SRF_TEXTURE, _("Texture"))
   ADDCB(lxSS_SRF_LIGHTING, _("Lighting"))
   // ADDCB(wxID_ANY, _("Fit to underground"))
@@ -456,7 +456,7 @@ lxModelSetupDlg::lxModelSetupDlg(wxWindow *parent)
   ADDST(wxID_ANY, _("Project title"))
 	lxBoxSizer->Add(
 		new wxTextCtrl(lxPanel, lxSS_IND_PNAME),
-    0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxBOTTOM, lxBORDER);
+    0, wxEXPAND | wxBOTTOM, lxBORDER);
   
   this->m_controlSizer->Add(lxBoxSizer, 1, wxEXPAND);
   updateCtrlMinSize;

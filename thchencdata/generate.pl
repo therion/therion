@@ -104,8 +104,8 @@ $thtt_encoding = "static const thstok thtt_encoding[] = {\n" .
   
 # now let's generate encoding tables
 print "processing conversion tables: E$maxid, A$maxascii, U$maxunicode ... ";
-$thencode_tbl_def = "static const wchar_t thencode_tbl[][];\n";
-$thencode_tbl = "static const wchar_t thencode_tbl[$maxascii][$maxid] = {\n";
+$thencode_tbl_def = "static const char32_t thencode_tbl[][];\n";
+$thencode_tbl = "static const char32_t thencode_tbl[$maxascii][$maxid] = {\n";
 foreach $av (@ka2u) {
   @current = @{$a2u{$av}};
   for($i = 0; $i < $maxid; $i++) {
@@ -120,9 +120,9 @@ $thencode_tbl .= "};\n";
 
 # and now let's generate decoding tables
 $thdecode_tbl_def = "static const unsigned char thdecode_tbl[][];\n";
-$thdecode_tbl_idx_def = "static const wchar_t thdecode_tbl_idx[];\n";
+$thdecode_tbl_idx_def = "static const char32_t thdecode_tbl_idx[];\n";
 $thdecode_tbl = "static const unsigned char thdecode_tbl[$maxunicode][$maxid] = {\n";
-$thdecode_tbl_idx = "static const wchar_t thdecode_tbl_idx[$maxunicode] = {\n";
+$thdecode_tbl_idx = "static const char32_t thdecode_tbl_idx[$maxunicode] = {\n";
 foreach $uv (@ku2a) {
   @current = @{$u2a{$uv}};
   for($i = 0; $i < $maxid; $i++) {
@@ -175,7 +175,7 @@ static const unsigned char thchenc_facc = $thchenc_facc;
  * First unicode en-de-coded character.
  */
  
-static const wchar_t thchenc_fucc = $thchenc_fucc;
+static const char32_t thchenc_fucc = $thchenc_fucc;
  
 
 /**

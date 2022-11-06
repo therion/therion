@@ -33,7 +33,7 @@
 #include "thparse.h"
 
 
-enum {TT_TFU_DEG, TT_TFU_DMS, TT_TFU_GRAD, TT_TFU_MIN, TT_TFU_PERC, TT_TFU_UNKNOWN_ANGLE};
+enum {TT_TFU_DEG, TT_TFU_DMS, TT_TFU_GRAD, TT_TFU_MIN, TT_TFU_PERC, TT_TFU_UNKNOWN_ANGLE, TT_TFU_MILS};
 
 static const thstok thtt_tfunits_angle[] = {
   {"deg", TT_TFU_DEG},
@@ -41,8 +41,8 @@ static const thstok thtt_tfunits_angle[] = {
   {"degrees", TT_TFU_DEG},
   {"grad", TT_TFU_GRAD},
   {"grads", TT_TFU_GRAD},
-  {"mil",TT_TFU_GRAD},
-  {"mils", TT_TFU_GRAD},
+  {"mil",TT_TFU_MILS},
+  {"mils", TT_TFU_MILS},
   {"min", TT_TFU_MIN},
   {"minute", TT_TFU_MIN},
   {"minutes", TT_TFU_MIN},
@@ -61,7 +61,7 @@ class thtfangle : public thtf {
 
   public:
 	
-	bool allow_percentage;
+	bool allow_percentage = false;
   
   /**
    * Parse units factor.
@@ -69,9 +69,9 @@ class thtfangle : public thtf {
    
   thtfangle();
    
-  virtual void parse_units(char * ustr);
+  void parse_units(char * ustr) override;
   
-  virtual double transform(double value);
+  double transform(double value) override;
   
 };
 

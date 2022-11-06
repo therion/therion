@@ -11,7 +11,7 @@ col_water_bg :=(226/255,244/255,253/255);
 
 %% areas
 
-% returns true if pair point lies within path q. 
+% returns true if pair point lies within path q.
 % outside_point is any pair outside of path q (needed for reference).
 vardef pointinside(expr pt,q,outside_point)=
   T:=identity;
@@ -32,10 +32,10 @@ vardef pointinside(expr pt,q,outside_point)=
 enddef;
 
 % get number of intersection between paths p (length 1!) and q
-% recnum is needed for limitation of recursions. 
+% recnum is needed for limitation of recursions.
 % If the number of allowed recursions is reached, a negative number of intersections is returned
 vardef recgetnumintersections(expr p,q,recnum)=
-  
+
   pair inter;
   save preinter;
   save postinter;
@@ -45,15 +45,15 @@ vardef recgetnumintersections(expr p,q,recnum)=
   %show recnum;
   if recnum >25:
     numintersections:=-100;
-  else:  
+  else:
     if xpart(inter)>0 :
      %show (xpart inter);
     % split p into two paths and call yourself again
-    
+
     preinter:=subpath (0,xpart(inter)-2eps) of p;
-    
+
     postinter:=subpath (xpart(inter)+2eps,1) of p;
-    
+
     numintersections:= recgetnumintersections(preinter,q,recnum+1)
                      + recgetnumintersections(postinter,q,recnum+1)
                      + 1;
@@ -62,7 +62,7 @@ vardef recgetnumintersections(expr p,q,recnum)=
     fi;
   fi;
   numintersections
-  
+
 enddef;
 
 beginpattern(pattern_water_AUT);
@@ -81,7 +81,7 @@ beginpattern(pattern_sand_AUT);
     p:= origin -- (0.01u,0.01u);
     for i=0.0u step 0.2u until 2.4u:
         for j=0.0u step 0.2u until 2.4u:
-          draw p rotated uniformdeviate(360) 
+          draw p rotated uniformdeviate(360)
            shifted ((i,j) randomized 0.09u);
         endfor;
     endfor;
@@ -90,7 +90,7 @@ beginpattern(pattern_sand_AUT);
     else:
       my_step:=2.6u;
     fi;
-    patternstep(my_step,my_step);       
+    patternstep(my_step,my_step);
 endpattern;
 
 beginpattern(pattern_pebbles_AUT);
@@ -101,7 +101,7 @@ beginpattern(pattern_pebbles_AUT);
           qq := (superellipse((.1u,0),(0,.05u),(-.1u,0),(0,.-.05u),.75))
              randomized (u/45)
              scaled (uniformdeviate(0.4)+.55)
-             rotated uniformdeviate(360) 
+             rotated uniformdeviate(360)
              shifted ((i,j) randomized 0.15u);
            draw qq;
         endfor;
@@ -151,7 +151,11 @@ def a_sand_AUT (expr Path) =
   thfill Path withpattern pattern_sand_AUT ;
 enddef;
 
-let a_clay_AUT = a_sand_AUT;
+def a_clay_AUT (expr Path) =
+  T:=identity;
+%  thclean Path;
+  thfill Path withpattern pattern_sand_AUT;
+enddef;
 
 
 def a_pebbles_AUT (expr p) =
@@ -163,22 +167,22 @@ enddef;
 
 def a_debris_AUT (expr p) =
   T:=identity;
-  
+
   symbol_distance:=1.0;
   scale_factor:= 0.3;
   pickup PenC;
   path q, qq; q = bbox p;
   pair outside;
   outside:= ulcorner q + up;
-  picture tmp_pic; 
+  picture tmp_pic;
   uu := max(u, (xpart urcorner q - xpart llcorner q)/100, (ypart urcorner q - ypart     llcorner q)/100);
   tmp_pic := image(
      for i = xpart llcorner q step symbol_distance*uu until xpart urcorner q:
         for j = ypart llcorner q step symbol_distance*uu until ypart urcorner q:
-           qq := punked (((-.5uu,-.5uu)--(.5uu,-.5uu)--(1.05uu,0.01uu)--(.5uu,.5uu)--(-.5uu,.5uu)--cycle) 
+           qq := punked (((-.5uu,-.5uu)--(.5uu,-.5uu)--(1.05uu,0.01uu)--(.5uu,.5uu)--(-.5uu,.5uu)--cycle)
            randomized (uu/2))
            scaled (uniformdeviate(0.4)+scale_factor )
-           rotated uniformdeviate(360) 
+           rotated uniformdeviate(360)
            shifted ((i,j) randomized 0.5uu);
            if xpart (p intersectiontimes qq) < 0:
              if pointinside((i,j),p,outside):
@@ -194,13 +198,13 @@ def a_debris_AUT (expr p) =
                fi;
              fi;
            fi;
-        endfor;  
+        endfor;
      endfor;
   );
   clip tmp_pic to p;
   drawoptions();
   draw tmp_pic;
-enddef;  
+enddef;
 
 def a_ice_AUT (expr p) =
   T:=identity;
@@ -214,7 +218,7 @@ def a_snow_AUT (expr P) =
   T:=identity;
   pickup PenC;
   path q; q = bbox P;
-  picture tmp_pic, tmp_sn; 
+  picture tmp_pic, tmp_sn;
   pair z;
   tmp_sn := image(
     pickup PenC;
@@ -233,7 +237,7 @@ def a_snow_AUT (expr P) =
 	if xpart (P intersectiontimes ((bbox tmp_sn) shifted z)) < 0:
           draw tmp_sn shifted z;
 	fi;
-      endfor;  
+      endfor;
     endfor;
   );
   clip tmp_pic to P;
@@ -249,15 +253,15 @@ def a_blocks_AUT (expr p) =
   path q, qq; q = bbox p;
   pair outside;
   outside:= ulcorner q + up;
-  picture tmp_pic; 
+  picture tmp_pic;
   uu := max(u, (xpart urcorner q - xpart llcorner q)/100, (ypart urcorner q - ypart     llcorner q)/100);
   tmp_pic := image(
      for i = xpart llcorner q step symbol_distance*uu until xpart urcorner q:
         for j = ypart llcorner q step symbol_distance*uu until ypart urcorner q:
-           qq := punked (((-.5uu,-.5uu)--(.5uu,-.5uu)--(1.05uu,0.01uu)--(.5uu,.5uu)--(-.5uu,.5uu)--cycle) 
+           qq := punked (((-.5uu,-.5uu)--(.5uu,-.5uu)--(1.05uu,0.01uu)--(.5uu,.5uu)--(-.5uu,.5uu)--cycle)
            randomized (uu/2))
            scaled (uniformdeviate(0.7)+scale_factor )
-           rotated uniformdeviate(360) 
+           rotated uniformdeviate(360)
            shifted ((i,j) randomized 0.75uu);
            if xpart (p intersectiontimes qq) < 0:
              if pointinside((i,j),p,outside):
@@ -265,7 +269,7 @@ def a_blocks_AUT (expr p) =
                thdraw qq;
              fi;
            else:
-             qq:= qq scaled (uniformdeviate(.2)+.5 )
+             qq:= qq scaled (uniformdeviate(.2)+.5 );
              if xpart (p intersectiontimes qq) < 0:
                if pointinside((i,j),p,outside):
                  thclean qq;
@@ -273,13 +277,13 @@ def a_blocks_AUT (expr p) =
                fi;
              fi;
            fi;
-        endfor;  
+        endfor;
      endfor;
   );
   clip tmp_pic to p;
   drawoptions();
   draw tmp_pic;
-enddef;  
+enddef;
 
 
 def a_flowstone_AUT (expr Path) =
@@ -292,7 +296,7 @@ enddef;
 
 %% lines
 
-def l_wall_pit_AUT (expr P) = 
+def l_wall_pit_AUT (expr P) =
     T:=identity;
     % draw outer path
     pickup PenA;
@@ -302,11 +306,11 @@ def l_wall_pit_AUT (expr P) =
 
     pair inner[],innerdir[], inter;
     pair test;
-    
+
     samplingdistance:=max(0.15u,laenge/1500);
- 
+
     path testcircle;
-    % testcircle, used to test, whether the path makes a 'v'-like bend, 
+    % testcircle, used to test, whether the path makes a 'v'-like bend,
     % where normal sampling and offsetting gives poor results for the parallel line
     % size of testcircle= size PenA/2 + 2* (distance between outer and inner line)
     % + PenC (inner line)
@@ -316,7 +320,7 @@ def l_wall_pit_AUT (expr P) =
     forever:
       t:= arctime cur of P;
       inter:=P intersectiontimes (testcircle rotated (angle thdir(P,t)) shifted (point t of P));
-      
+
       %thdraw testcircle rotated (angle thdir(P,t)) shifted (point t of P) withpen (pencircle scaled 0.01u) ;
       if (xpart inter) >=0:
         % we are at a 'sharp bend', so set next point to intersectionpoint
@@ -328,7 +332,7 @@ def l_wall_pit_AUT (expr P) =
           inter:=P intersectiontimes (testcircle rotated (angle thdir(P,t)) shifted (point t of P));
           exitif (xpart inter <0);
           cur := cur + samplingdistance;
-          exitif (cur >=laenge); 
+          exitif (cur >=laenge);
         endfor;
         if (cur <laenge):
           inner[count]:=(point t of P + .125u*unitvector(thdir(P,t) rotated 90) );
@@ -356,21 +360,21 @@ def l_wall_pit_AUT (expr P) =
       else:  inner[count-1];
       fi;
       thdraw innerpath;
-        
+
     % draw the triangles
 
     path draw_triangle;
     pair l_triangle;
-       
+
     laenge:= arclength innerpath;
     symsize:= adjust_step(laenge,0.5u);
     triangle_width:=symsize/2;
     cur:=(symsize/2);
     t := arctime (cur) of innerpath;
     t1:= arctime (cur-triangle_width/2) of innerpath;
-    t2:= arctime (cur+triangle_width/2) of innerpath;         
+    t2:= arctime (cur+triangle_width/2) of innerpath;
     l_triangle := (point t of innerpath);
-    if ATTR__height >= 10: thfill else: thdraw fi (subpath (t1,t2) of innerpath) -- 
+    if ATTR__height >= 10: thfill else: thdraw fi (subpath (t1,t2) of innerpath) --
            ((point t of innerpath) + symsize/2 * unitvector(thdir(innerpath,t) rotated 90))
            --  cycle;
 
@@ -380,12 +384,12 @@ def l_wall_pit_AUT (expr P) =
       my_dist := length(test-l_triangle);
       if (abs(my_dist-symsize) < 0.05u) or (my_dist>symsize):
          t1:= arctime (cur-triangle_width/2) of innerpath;
-         t2:= arctime (cur+triangle_width/2) of innerpath;         
-	 draw_triangle:=(subpath (t1,t2) of innerpath) -- 
+         t2:= arctime (cur+triangle_width/2) of innerpath;
+	 draw_triangle:=(subpath (t1,t2) of innerpath) --
                         ((point t of innerpath) + symsize/2 * unitvector(thdir(innerpath,t) rotated 90))
                          --  cycle;
 	 if xpart (draw_triangle intersectiontimes P) < 0:
-	    if ATTR__height >= 10: 
+	    if ATTR__height >= 10:
 	      thfill draw_triangle;
 	    else:
 	      thclean draw_triangle;
@@ -395,30 +399,30 @@ def l_wall_pit_AUT (expr P) =
 	 fi;
       fi;
     endfor;
-    
+
     fi;
 enddef;
 
 
-def l_wall_sand_AUT (expr P) = 
+def l_wall_sand_AUT (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
   mojkrok:=adjust_step(dlzka, 0.1u);
-  pickup PenC;  
+  pickup PenC;
   forever:
     t := arctime cas of P;
-    thdraw (((0.01u,0.01u)--origin) rotated uniformdeviate(360) shifted ((point t of P) + (uniformdeviate 1) * .4u 
+    thdraw (((0.01u,0.01u)--origin) rotated uniformdeviate(360) shifted ((point t of P) + (uniformdeviate 1) * .4u
             * unitvector(thdir(P,t) rotated -90)));
     cas := cas + mojkrok;
     exitif cas > dlzka + (mojkrok / 3); % for rounding errors
   endfor;
-  pickup PenC;  
+  pickup PenC;
   thdraw P;
 
 enddef;
 
-def l_wall_pebbles_AUT (expr P) = 
+def l_wall_pebbles_AUT (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -437,13 +441,13 @@ enddef;
 let l_wall_clay_AUT = l_wall_sand_AUT;
 
 
-def l_wall_debris_AUT (expr P) = 
+def l_wall_debris_AUT (expr P) =
   T:=identity;
   pickup PenC;
   laenge := arclength P;
   path block;
   path old_block;
-  
+
   cur := 0;
   t:= arctime cur of P;
   % draw first block
@@ -452,13 +456,13 @@ def l_wall_debris_AUT (expr P) =
   old_block:=old_block rotated angle(thdir(P,0)) shifted point t of P;
   thclean old_block;
   thdraw old_block;
-   
+
   cur := cur + 0.9*block_width;
   t:= arctime cur of P;
 	% proceed with path
     forever:
 	  % generate random block
-        block := punked (((-.25u,-.25u)--(0.25.u,-.25u)--(0.50u,0.01u)--(0.25u,.25u)--(-.25u,.25u)--cycle) 
+        block := punked (((-.25u,-.25u)--(0.25.u,-.25u)--(0.50u,0.01u)--(0.25u,.25u)--(-.25u,.25u)--cycle)
           randomized (u/4))
           scaled (uniformdeviate(0.3)+.4)
           rotated uniformdeviate(360);
@@ -466,7 +470,7 @@ def l_wall_debris_AUT (expr P) =
         block_width := (xpart urcorner block - xpart ulcorner block);
         exitif cur > (laenge- 2.5*block_width/2);
         % find next position where the block fits in without intersecting the previous one
-	  forever:           
+	  forever:
 	    exitif xpart ( (block rotated angle(-direction t of P) shifted point t of P) intersectiontimes old_block) < 0;
             cur:=cur+0.01u;
             t:= arctime cur of P;
@@ -485,7 +489,7 @@ def l_wall_debris_AUT (expr P) =
 	% generate last block
       block := (((-.0u,-.0u)--(.25u,-.15u)--(.45u,0.01u)--(.2u,.25u)--(.1u,.15u)--cycle));
      block_width := (xpart urcorner block - xpart ulcorner block);
-     
+
 	% scale last block to fit in the remaining gap
      scale_factor:=1.5*(laenge-cur)/block_width;
      forever:
@@ -500,7 +504,7 @@ def l_wall_debris_AUT (expr P) =
 enddef;
 
 
-def l_wall_blocks_AUT (expr P) = 
+def l_wall_blocks_AUT (expr P) =
 
   T:=identity;
   pickup PenC;
@@ -508,18 +512,18 @@ def l_wall_blocks_AUT (expr P) =
 
   path block;
   path old_block;
-  
+
   cur := 0;
   t:= arctime cur of P;
-  
+
   % draw first block
   old_block := ( (.7u,-.35u)--(.85u,0.01u)--(.4u,.5u)--(.1u,.3u)--(-.0u,-.0u) );
   block_width := (xpart urcorner old_block - xpart ulcorner old_block);
   old_block:=old_block rotated angle( thdir(P,0) ) shifted point t of P;
   thclean (old_block--cycle);
   thdraw old_block;
-  
-  
+
+
   cur := cur + block_width/2;
   t:= arctime cur of P;
   forever:
@@ -530,26 +534,26 @@ def l_wall_blocks_AUT (expr P) =
           rotated (uniformdeviate(45)-15);
     % check width of block
     block_width := (xpart urcorner block - xpart ulcorner block);
-    
+
     exitif cur > (laenge- 3.5*block_width/2);
     % find next position where the block fits in without intersecting the previous one
-    forever:    
+    forever:
       exitif xpart ( ((block--cycle) rotated angle(direction t of P) shifted point t of P) intersectiontimes old_block) < 0;
       cur:=cur+0.01u;
       t:= arctime cur of P;
       exitif cur > (laenge- 3.5*block_width/2);
     endfor;
     exitif cur > (laenge- 3.5*block_width/2);
-    
+
     old_block:= block rotated angle(direction t of P) shifted point t of P;
     thclean (old_block--cycle);
     thdraw old_block;
-    
-    
+
+
     cur := cur + block_width/2;
     t:= arctime cur of P;
   endfor;
-  
+
     % generate last block
     t:= arctime laenge-eps of P;
     block := (( (-.15u,-.35u)--(.0u,.0u)--(-.45u,.5u)--(-.75u,.3u)--(-.85u,-.0u)) );
@@ -569,7 +573,7 @@ enddef;
 
 
 
-def l_wall_ice_AUT (expr P) = 
+def l_wall_ice_AUT (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
@@ -607,7 +611,7 @@ def l_wall_ice_AUT (expr P) =
 enddef;
 
 
-def l_wall_underlying_AUT (expr P) = 
+def l_wall_underlying_AUT (expr P) =
   T:=identity;
   pickup PenA;
   laenge:= arclength P;
@@ -617,7 +621,7 @@ def l_wall_underlying_AUT (expr P) =
 enddef;
 
 
-def l_wall_overlying_AUT (expr P) = 
+def l_wall_overlying_AUT (expr P) =
   T:=identity;
   laenge:= arclength P;
   t1 := arctime (0.25u) of P;
@@ -626,12 +630,12 @@ def l_wall_overlying_AUT (expr P) =
   pickup pensquare scaled (3.5*u/10);
   thdraw (subpath (t1,t2) of P) withcolor background;
     pickup PenA;
-  thdraw subpath(0,t1) of P; 
+  thdraw subpath(0,t1) of P;
   thdraw subpath(t2,t3) of P;
   thdraw (subpath (t1,t2) of P) dashed dashpattern(on 2bp off 2bp on .5bp off 2bp on 2bp) scaled optical_zoom;
 enddef;
 
-def l_wall_moonmilk_AUT (expr P) = 
+def l_wall_moonmilk_AUT (expr P) =
   T:=identity;
   laenge:= arclength P;
   symsize:=adjust_step(laenge,0.8u);
@@ -650,7 +654,7 @@ def l_wall_moonmilk_AUT (expr P) =
   thdraw P;
 enddef;
 
-def l_wall_flowstone_AUT (expr P) = 
+def l_wall_flowstone_AUT (expr P) =
   T:=identity;
   laenge:= arclength P;
   symsize:=adjust_step(laenge,0.8u);
@@ -684,14 +688,14 @@ def l_pit_AUT (expr P) =
     t  := arctime (cur + triangle_width/2) of P;
     t2 := arctime (cur + triangle_width) of P;
     if ATTR__height >= 10:
-      thfill (subpath (t1,t2) of P) -- 
-        ((point t of P) + symsize/2 * unitvector(thdir(P,t) rotated 90)) -- 
+      thfill (subpath (t1,t2) of P) --
+        ((point t of P) + symsize/2 * unitvector(thdir(P,t) rotated 90)) --
         cycle;
     else:
-      thclean (subpath (t1,t2) of P) -- 
-        ((point t of P) + symsize/2 * unitvector(thdir(P,t) rotated 90)) -- 
+      thclean (subpath (t1,t2) of P) --
+        ((point t of P) + symsize/2 * unitvector(thdir(P,t) rotated 90)) --
         cycle;
-      thdraw (point t2 of P) --((point t of P) + symsize/2 * unitvector(thdir(P,t) rotated 90)) -- 
+      thdraw (point t2 of P) --((point t of P) + symsize/2 * unitvector(thdir(P,t) rotated 90)) --
         (point t1 of P);
     fi;
     cur := cur + symsize;
@@ -712,7 +716,7 @@ let l_ceilingstep_AUT = l_ceilingstep_UIS;
 
 let l_ceilingmeander_AUT = l_ceilingmeander_UIS;
 
-def l_flowstone_AUT (expr P) = 
+def l_flowstone_AUT (expr P) =
   T:=identity;
   pickup PenC;
   thdraw P dashed evenly scaled optical_zoom;
@@ -782,14 +786,14 @@ let p_icepillar_AUT = p_pillar_AUT;
 def p_crystal_AUT (expr pos,theta,sc,al)=
     U:=(.35u,.35u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
-   
+
     pickup PenC;
     p := ((-.35*u,0)--(.35*u,0));
     thdraw p;
     thdraw p rotated (45);
     thdraw p rotated (90);
     thdraw p rotated (135);
-    
+
     thdrawoptions();
 
 enddef;
@@ -825,7 +829,7 @@ def p_sand_AUT (expr pos,theta,sc,al)=
     p:= origin -- (0.01u,0.01u);
     for i=-0.1u step 0.2u until .15u:
         for j=-0.1u step 0.2u until .15u:
-          thdraw p rotated uniformdeviate(360) 
+          thdraw p rotated uniformdeviate(360)
            shifted ((i,j) randomized 0.09u);
         endfor;
     endfor;
@@ -844,7 +848,7 @@ def p_pebbles_AUT (expr pos,theta,sc,al)=
           qq := (superellipse((.1u,0),(0,.05u),(-.1u,0),(0,.-.05u),.75))
              randomized (u/45)
              scaled (uniformdeviate(0.4)+.55)
-             rotated uniformdeviate(360) 
+             rotated uniformdeviate(360)
              shifted ((i,j) randomized 0.15u);
            thdraw qq;
         endfor;
@@ -857,16 +861,16 @@ def p_debris_AUT (expr pos,theta,sc,al)=
     pickup PenC;
     path block,q;
     block :=  ((-.15u,-.15u)--(.15u,-.15u)--(.3u,0.01u)--(.15u,.15u)--(-.15u,.15u)--cycle) ;
-    
+
     q:= (punked (block randomized (0.15u))) rotated uniformdeviate(360) scaled (uniformdeviate(0.3)+0.3) shifted (0.0u,0.15u);
     thclean q; thdraw q;
-    
+
     q:= (punked (block randomized (0.15u))) rotated uniformdeviate(360) scaled (uniformdeviate(0.5)+0.7) shifted (-0.15u,-0.15u);
     thclean q; thdraw q;
 
     q:=  (punked (block randomized (0.15u))) rotated uniformdeviate(360) shifted (0.15u,-0.15u);
     thclean q; thdraw q;
-    
+
 enddef;
 
 def p_blocks_AUT (expr pos,theta,sc,al)=
@@ -876,16 +880,16 @@ def p_blocks_AUT (expr pos,theta,sc,al)=
 
     path block,q;
     block :=  ((-.25u,-.25u)--(.25u,-.25u)--(.5u,0.01u)--(.25u,.25u)--(-.25u,.25u)--cycle) ;
-    
+
     q:= (punked (block randomized (0.3u))) rotated uniformdeviate(360) scaled (uniformdeviate(0.3)+0.3) shifted (0.0u,0.25u);
     thclean q; thdraw q;
-    
+
     q:= (punked (block randomized (0.3u))) rotated uniformdeviate(360) scaled (uniformdeviate(0.5)+0.7) shifted (-0.25u,-0.25u);
     thclean q; thdraw q;
 
     q:=  (punked (block randomized (0.3u))) rotated uniformdeviate(360) shifted (0.25u,-0.25u);
     thclean q; thdraw q;
-    
+
 enddef;
 
 def p_water_AUT (expr pos,theta,sc,al)=
@@ -906,7 +910,7 @@ def p_ice_AUT (expr pos,theta,sc,al)=
     thdraw p rotated 90;
     thdraw p shifted (0.45u,.0u);
     thdraw p shifted (-0.45u,.0u);
-    
+
     thdraw p rotated 90 shifted (-0.45u,0.25u);
     thdraw p shifted (0u,0.25u);
     thdraw p rotated 90 shifted (0.45u,.25u);
@@ -922,7 +926,7 @@ def p_entrance_AUT (expr pos,theta,sc,al)=
     endfor;
     thdraw ((-.3u,-0.75u)--(0,.75u)--(.3u,-0.75u)--cycle);
 enddef;
-    
+
 def p_gradient_AUT (expr pos,theta,sc,al)=
     U:=(.15u,u);
     T:=identity aligned al rotated theta scaled sc shifted pos;

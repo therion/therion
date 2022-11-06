@@ -34,6 +34,7 @@
 #include <wx/strconv.h>
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
+#include <vtkVersionMacros.h>
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
 #include <vtkPoints.h>
@@ -42,6 +43,8 @@
 #include <vtkCellData.h>
 #include <vtkPointData.h>
 #include <vtkPolyDataWriter.h>
+#include <vtkPLYWriter.h>
+//#include <vtkMassProperties.h>
 #include <locale.h>
 #ifdef LXMACOSX
 #include <OpenGL/glu.h>
@@ -301,10 +304,13 @@ void lxData::Rebuild()
   lxFileStation_list::iterator st_it;
   lxFileShot_list::iterator sh_it;
   lxFileSurvey_list::iterator su_it = this->m_input.m_surveys.begin();
-  if (su_it != this->m_input.m_surveys.end()) {
+  while (su_it != this->m_input.m_surveys.end()) {
     this->title = wxConvUTF8.cMB2WX(this->m_input.m_surveysData.GetString(su_it->m_titlePtr));
     if (this->title.Length() == 0)
       this->title = wxConvUTF8.cMB2WX(this->m_input.m_surveysData.GetString(su_it->m_namePtr));
+    if (this->title.Length() != 0)
+    	break;
+    su_it++;
   }
 
 
@@ -315,6 +321,10 @@ void lxData::Rebuild()
     sv.m_parent = sv_it->m_parent;
     sv.m_level = 0;
     sv.m_full_name = sv.m_name;
+    if (this->m_selected_surveys.size() == 0)
+    	sv.m_selected = true;
+    else
+    	sv.m_selected = (this->m_selected_surveys.find(sv.m_id) != this->m_selected_surveys.end());
     this->surveys.push_back(sv);
     surveyMap[sv_it->m_id] = st_num;
   }
@@ -322,7 +332,7 @@ void lxData::Rebuild()
   for(st_num = 0; st_num < this->surveys.size(); st_num++) {
     csv = &(this->surveys[st_num]);
     if (surveyMap.find(csv->m_parent) == surveyMap.end())
-      csv->m_level = 0;
+      csv->m_level = 0;    
     else if (csv->m_parent == csv->m_id) 
       csv->m_level = 0;
     else {
@@ -330,6 +340,7 @@ void lxData::Rebuild()
       if (psv->m_full_name.size() > 0) csv->m_full_name += ".";
       csv->m_full_name += psv->m_full_name;
       csv->m_level = psv->m_level + 1;
+      csv->m_selected = (csv->m_selected || psv->m_selected); 
     }
   }
 
@@ -344,11 +355,12 @@ void lxData::Rebuild()
     st.m_entrance = st_it->GetFlag(LXFILE_STATION_FLAG_ENTRANCE);
     st.m_surface = st_it->GetFlag(LXFILE_STATION_FLAG_SURFACE);
     st.m_survey_idx = surveyMap[st_it->m_surveyId];
+    st.m_selected = this->surveys[st.m_survey_idx].m_selected;
     stR.m_pos = st_num;
     stR.m_pst = &(*st_it);
     stationMap[st_it->m_id] = stR;
     this->stations.push_back(st);
-    cl_points->InsertNextPoint(st_it->m_c[0], st_it->m_c[1], st_it->m_c[2]);
+    if (st.m_selected) cl_points->InsertNextPoint(st_it->m_c[0], st_it->m_c[1], st_it->m_c[2]);
   }
 
   lxFileDbl * tmpDbl;
@@ -360,23 +372,28 @@ void lxData::Rebuild()
     sh.invisible = sh_it->GetFlag(LXFILE_SHOT_FLAG_NOT_VISIBLE);
     sh.splay = sh_it->GetFlag(LXFILE_SHOT_FLAG_SPLAY);
     sh.duplicate = sh_it->GetFlag(LXFILE_SHOT_FLAG_DUPLICATE);
+    sh.m_survey_idx = surveyMap[sh_it->m_surveyId];
+    sh.m_selected = this->surveys[sh.m_survey_idx].m_selected;
+    
     this->shots.push_back(sh);
-    cldata_array->InsertNextValue(sh.from);
-    //cldata_array->InsertNextVoidPointer(&(*sh_it));
-    cl_cells->InsertNextCell(2);
-    cl_cells->InsertCellPoint(sh.from);
-    cl_cells->InsertCellPoint(sh.to);
-    if ((sh_it->m_sectionType != LXFILE_SHOT_SECTION_NONE) && (!(sh.surface || sh.splay))) {
-      tmpDbl = stationMap[sh_it->m_from].m_pst->m_c;
-      fc[0] = tmpDbl[0]; fc[1] = tmpDbl[1]; fc[2] = tmpDbl[2];
-      tmpDbl = stationMap[sh_it->m_to].m_pst->m_c;
-      tc[0] = tmpDbl[0]; tc[1] = tmpDbl[1]; tc[2] = tmpDbl[2];
-      tmpDbl = sh_it->m_fLRUD;
-      fd[0] = tmpDbl[0]; fd[1] = tmpDbl[1]; fd[2] = tmpDbl[2]; fd[3] = tmpDbl[3];
-      tmpDbl = sh_it->m_tLRUD;
-      td[0] = tmpDbl[0]; td[1] = tmpDbl[1]; td[2] = tmpDbl[2]; td[3] = tmpDbl[3];
-      lrud.SetVThreshold(sh_it->m_threshold);
-      lrud.InsertShot(fc, tc, fd, td, NULL);
+    if (sh.m_selected) {
+		cldata_array->InsertNextValue(sh.from);
+		//cldata_array->InsertNextVoidPointer(&(*sh_it));
+		cl_cells->InsertNextCell(2);
+		cl_cells->InsertCellPoint(sh.from);
+		cl_cells->InsertCellPoint(sh.to);
+		if ((sh_it->m_sectionType != LXFILE_SHOT_SECTION_NONE) && (!(sh.surface || sh.splay))) {
+		  tmpDbl = stationMap[sh_it->m_from].m_pst->m_c;
+		  fc[0] = tmpDbl[0]; fc[1] = tmpDbl[1]; fc[2] = tmpDbl[2];
+		  tmpDbl = stationMap[sh_it->m_to].m_pst->m_c;
+		  tc[0] = tmpDbl[0]; tc[1] = tmpDbl[1]; tc[2] = tmpDbl[2];
+		  tmpDbl = sh_it->m_fLRUD;
+		  fd[0] = tmpDbl[0]; fd[1] = tmpDbl[1]; fd[2] = tmpDbl[2]; fd[3] = tmpDbl[3];
+		  tmpDbl = sh_it->m_tLRUD;
+		  td[0] = tmpDbl[0]; td[1] = tmpDbl[1]; td[2] = tmpDbl[2]; td[3] = tmpDbl[3];
+		  lrud.SetVThreshold(sh_it->m_threshold);
+		  lrud.InsertShot(fc, tc, fd, td, NULL);
+		}
     }
   }
   this->m_centerline->SetPoints(cl_points);
@@ -395,23 +412,24 @@ void lxData::Rebuild()
   lxFile3Point * sw_pts;
   lxFile3Angle * sw_tri;
   for(sw_it = this->m_input.m_scraps.begin(); sw_it != this->m_input.m_scraps.end(); sw_it++) {
-    sw_pts = (lxFile3Point *) this->m_input.m_scrapsData.GetData(sw_it->m_pointsPtr);
-    currentXpt = scrapWallsNpt;
-    for(id1 = 0; id1 < sw_it->m_numPoints; id1++) {
-      sWpoints->InsertPoint(scrapWallsNpt, sw_pts[id1].m_c[0],  sw_pts[id1].m_c[1],  sw_pts[id1].m_c[2]);
-      scrapWallsNpt++;
-    }
-    sw_tri = (lxFile3Angle *) this->m_input.m_scrapsData.GetData(sw_it->m_3AnglesPtr);
-    for(id1 = 0; id1 < sw_it->m_num3Angles; id1++) {
-      sWpolys->InsertNextCell(3);
-      sWpolys->InsertCellPoint(currentXpt + sw_tri[id1].m_v[0]);
-      sWpolys->InsertCellPoint(currentXpt + sw_tri[id1].m_v[2]);
-      sWpolys->InsertCellPoint(currentXpt + sw_tri[id1].m_v[1]);
-    }
+	  if (this->surveys[surveyMap[sw_it->m_surveyId]].m_selected) {
+		sw_pts = (lxFile3Point *) this->m_input.m_scrapsData.GetData(sw_it->m_pointsPtr);
+		currentXpt = scrapWallsNpt;
+		for(id1 = 0; id1 < sw_it->m_numPoints; id1++) {
+		  sWpoints->InsertPoint(scrapWallsNpt, sw_pts[id1].m_c[0],  sw_pts[id1].m_c[1],  sw_pts[id1].m_c[2]);
+		  scrapWallsNpt++;
+		}
+		sw_tri = (lxFile3Angle *) this->m_input.m_scrapsData.GetData(sw_it->m_3AnglesPtr);
+		for(id1 = 0; id1 < sw_it->m_num3Angles; id1++) {
+		  sWpolys->InsertNextCell(3);
+		  sWpolys->InsertCellPoint(currentXpt + sw_tri[id1].m_v[0]);
+		  sWpolys->InsertCellPoint(currentXpt + sw_tri[id1].m_v[2]);
+		  sWpolys->InsertCellPoint(currentXpt + sw_tri[id1].m_v[1]);
+		}
+	  }
   }
   this->scrapWalls->SetPoints(sWpoints);
   this->scrapWalls->SetPolys(sWpolys);
-
 
   // single surface
   surfaceNpt = 0;
@@ -535,55 +553,31 @@ void lxData::Rebuild()
     this->m_textureSurface.Clear();
   }
 
-#if VTK_MAJOR_VERSION > 5
   this->scrapWallsNormals->SetInputData(this->scrapWalls);
-#else
-  this->scrapWallsNormals->SetInput(this->scrapWalls);
-#endif
   this->scrapWallsNormals->SetFeatureAngle(120.0);
   this->scrapWallsNormals->SetAutoOrientNormals(false);
   this->scrapWallsNormals->Update();
 
   // COUNTER needed
-#if VTK_MAJOR_VERSION > 5
   this->allWalls->RemoveAllInputs();
   this->allWalls->AddInputData(this->scrapWallsNormals->GetOutput());
+  //vtkMassProperties * mp = vtkMassProperties::New();
+  //mp->SetInputConnection(this->scrapWallsNormals->GetOutputPort());
+  //mp->Update();
+  //printf("Volume: %.1f\n", mp->GetVolumeProjected());
   this->allWalls->AddInputData(this->lrudWalls);
-#else
-  this->allWalls->RemoveAllInputs();
-  this->allWalls->AddInput(this->scrapWallsNormals->GetOutput());
-  this->allWalls->AddInput(this->lrudWalls);
-#endif
   this->allWalls->Update();
-#if VTK_MAJOR_VERSION > 5
   this->allWallsTriangle->SetInputConnection(this->allWalls->GetOutputPort());
   this->allWallsSorted->SetInputConnection(this->allWallsTriangle->GetOutputPort());
-#else
-  this->allWallsTriangle->SetInput(this->allWalls->GetOutput());
-  this->allWallsSorted->SetInput(this->allWallsTriangle->GetOutput());
-#endif
   this->allWallsSorted->Update();
-#if VTK_MAJOR_VERSION > 5
   this->allWallsStripped->SetInputConnection(this->allWallsTriangle->GetOutputPort());
-#else
-  this->allWallsStripped->SetInput(this->allWallsTriangle->GetOutput());
-#endif
   this->allWallsStripped->Update();
 
-#if VTK_MAJOR_VERSION > 5
   this->surfaceNormals->SetInputData(this->surface);
-#else
-  this->surfaceNormals->SetInput(this->surface);
-#endif
   this->surfaceNormals->SetFeatureAngle(360);
   this->surfaceNormals->Update();
-#if VTK_MAJOR_VERSION > 5
   this->surfaceTriangle->SetInputConnection(this->surfaceNormals->GetOutputPort());
   this->surfaceSorted->SetInputConnection(this->surfaceTriangle->GetOutputPort());
-#else
-  this->surfaceTriangle->SetInput(this->surfaceNormals->GetOutput());
-  this->surfaceSorted->SetInput(this->surfaceTriangle->GetOutput());
-#endif
   this->surfaceSorted->Update();
 
   sWpoints->Delete();
@@ -605,11 +599,30 @@ void lxData::ExportVTK(wxString fileName)
   vtkPolyDataWriter * w = vtkPolyDataWriter::New();
   w->SetFileName(fileName.mbc_str());
   w->SetFileTypeToBinary();
-#if VTK_MAJOR_VERSION > 5
   w->SetInputConnection(this->allWallsStripped->GetOutputPort());
-#else
-  w->SetInput(this->allWallsStripped->GetOutput());
-#endif
   w->Write();
   w->Delete();
 }
+
+
+void lxData::ExportPLY(wxString fileName)
+{
+  vtkPLYWriter * w = vtkPLYWriter::New();
+  w->SetFileName(fileName.mbc_str());
+  w->SetFileTypeToBinary();
+  w->SetInputConnection(this->allWalls->GetOutputPort());
+  w->Write();
+  w->Delete();
+}
+
+
+void lxData::ClearSurveySelection()
+{
+	this->m_selected_surveys.clear();
+}
+
+void lxData::AddSelectedSurvey(size_t id)
+{
+	this->m_selected_surveys.insert(id);
+}
+

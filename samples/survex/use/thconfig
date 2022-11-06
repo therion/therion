@@ -5,7 +5,7 @@ encoding  utf-8
 #!IMAGE use.pdf
 #! Station names are before '@' symbol, survey names follow this symbol.
 
-#!PROCESS cavern use.svx
+### #!PROCESS cavern use.svx
 #!PROCESS
 #!CLEAN use.err use.pdf
 

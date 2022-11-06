@@ -43,6 +43,7 @@
 #include "thlookup.h"
 #include <stdio.h>
 #include "thtmpdir.h"
+#include "thtrans.h"
 #ifndef THMSVC
 #include <unistd.h>
 #else
@@ -50,7 +51,6 @@
 #define getcwd _getcwd
 #define chdir _chdir
 #define putenv _putenv
-#define hypot _hypot
 #endif
 #include "thchenc.h"
 #include "thdb1d.h"
@@ -78,10 +78,7 @@
 #include "extern/img.h"
 #include "thcs.h"
 
-#ifdef THMSVC
-#define snprintf _snprintf
-#define strcasecmp _stricmp
-#endif
+#include <fmt/printf.h>
 
 thexpmap::thexpmap() {
   this->format = TT_EXPMAP_FMT_UNKNOWN;
@@ -157,11 +154,11 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMAP_OPT_FORMAT:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing format -- \"%s\"",args[optx]))
+        ththrow("missing format -- \"{}\"",args[optx]);
       this->format = thmatch_token(args[argx], thtt_expmap_fmt);
       fmt = args[argx];
       if (this->format == TT_EXPMAP_FMT_UNKNOWN)
-        ththrow(("unknown format -- \"%s\"", args[argx]))
+        ththrow("unknown format -- \"{}\"", args[argx]);
       argx++;
       supform = false;
       switch (this->export_mode) {
@@ -176,6 +173,7 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
             case TT_EXPMAP_FMT_KML:
             case TT_EXPMAP_FMT_DXF:
             case TT_EXPMAP_FMT_SHP:
+            case TT_EXPMAP_FMT_BBOX:
               supform = true;
           }
           break;
@@ -187,28 +185,28 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
           break;
       }
       if (!supform)
-        ththrow(("format not supported -- %s",fmt))
+        ththrow("format not supported -- {}",fmt);
       break;
     case TT_EXPMAP_OPT_ENCODING:  
       argx++;
       if (argx >= nargs)
-        ththrow(("missing encoding -- \"%s\"",args[optx]))
+        ththrow("missing encoding -- \"{}\"",args[optx]);
       this->encoding = thmatch_token(args[argx], thtt_encoding);
       if (this->encoding == TT_UNKNOWN_ENCODING)
-        ththrow(("unknown encoding -- \"%s\"", args[argx]))
+        ththrow("unknown encoding -- \"{}\"", args[argx]);
       argx++;
       break;
     case TT_EXPMAP_OPT_PROJECTION:
       argx++;
       if (argx >= nargs)
-        ththrow(("missing projection specification -- \"%s\"",args[optx]))
+        ththrow("missing projection specification -- \"{}\"",args[optx]);
       this->projstr = thdb.strstore(args[argx],true);
       argx++;
       break;
     case TT_EXPMAP_OPT_LAYOUT:
       argx++;
       if (argx >= nargs)
-        ththrow(("missing layout -- \"%s\"",args[optx]))
+        ththrow("missing layout -- \"{}\"",args[optx]);
       this->layout->set(thcmd_option_desc(TT_LAYOUT_COPY), &(args[argx]), this->cfgptr->cfg_file.get_cif_encoding(), 0); // = thdb.strstore(args[argx],true);
       this->layoutopts += " -layout ";
       thencode(&(this->cfgptr->bf1), args[argx], this->cfgptr->cfg_file.get_cif_encoding());
@@ -221,10 +219,10 @@ void thexpmap::parse_options(int & argx, int nargs, char ** args)
     case TT_EXPMAP_OPT_DISABLE:
       argx++;
       if (argx >= nargs)
-        ththrow(("missing map entity -- \"%s\"",args[optx]))
+        ththrow("missing map entity -- \"{}\"",args[optx]);
       utmp = thmatch_token(args[argx], thtt_expmap_items);
       if (utmp == TT_EXPMAP_ITEM_UNKNOWN)
-        ththrow(("unknown map entity -- \"%s\"", args[argx]))
+        ththrow("unknown map entity -- \"{}\"", args[argx]);
       if (optid == TT_EXPMAP_OPT_ENABLE) {
         this->items |= utmp;
       } else {
@@ -254,10 +252,10 @@ void thexpmap::parse_layout_option(int & argx, int nargs, char ** args) {
   thcmd_option_desc o = this->layout->get_cmd_option_desc(opts);
   
   if (o.id == TT_DATAOBJECT_UNKNOWN)
-    ththrow(("unknown layout option -- -%s", opts));
+    ththrow("unknown layout option -- -{}", opts);
     
   if (argx + o.nargs >= nargs)
-    ththrow(("not enough layout option arguments -- -%s", opts));
+    ththrow("not enough layout option arguments -- -{}", opts);
   
   argx++;  
   
@@ -364,10 +362,6 @@ void thexpmap::process_db(class thdatabase * dbp)
       this->export_th2(this->projptr);
       break;
   }
-  
-  //if (tmp != NULL) {
-  //  tmp->self_delete();
-  //}
 }
 
 
@@ -431,6 +425,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
   isexp = new bool [nst];
   size_t nstvec, nstvecsize;
@@ -603,8 +598,8 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
     thpic * skpic;
     thscrap * scrap;
     for (obi = thdb.object_list.begin(); obi != thdb.object_list.end(); obi++) {
-      if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi))->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi))->proj->id == prj->id)) {
-        scrap = (thscrap *)(*obi);
+      if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi).get())->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi).get())->proj->id == prj->id)) {
+        scrap = (thscrap *)(*obi).get();
         skit = scrap->sketch_list.begin();
         while (skit != scrap->sketch_list.end()) {
           skpic = skit->morph(sf);
@@ -734,7 +729,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
   fprintf(pltf,"}\n");
  
   // calculate grid
-  double goverlap = 0.1 * hypot(xmax - xmin, ymax - ymin);
+  double goverlap = 0.1 * std::hypot(xmax - xmin, ymax - ymin);
   thset_grid(gxo, gxs, xmin - goverlap, xmax + goverlap, gxoo, gxn);
   thset_grid(gyo, gxs, ymin - goverlap, ymax + goverlap, gyoo, gyn);
   fprintf(pltf,"set XVIgrid  {%g %g %g 0.0 0.0 %g %ld %ld}\n", gxoo, gyoo, gxs, gxs, gxn+1, gyn+1);
@@ -787,6 +782,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
 
   double xmin = thnan, xmax = thnan, ymin = thnan, ymax = thnan, cx, cy, sf;
   double shx, shy;
@@ -837,8 +833,8 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 
   // export scraps & scrap objects
   for (obi = thdb.object_list.begin(); obi != thdb.object_list.end(); obi++) {
-    if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi))->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi))->proj->id == prj->id)) {
-      scrap = (thscrap *)(*obi);
+    if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi).get())->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi).get())->proj->id == prj->id)) {
+      scrap = (thscrap *)(*obi).get();
 
 
       // export sketches
@@ -877,8 +873,8 @@ void thexpmap::export_th2(class thdb2dprj * prj)
             if (srcgif != NULL) {              
               size_t cpch, retcode;
               thbuffer com;
-              char prevbf[10];
-              snprintf(&(prevbf[0]),10,"%03d",sknum);
+              char prevbf[11];
+              std::snprintf(&(prevbf[0]),11,"%03d",sknum);
               // Let's copy results and log-file to working directory
 #ifdef THWIN32
               com = "copy \"";
@@ -907,7 +903,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 #endif
               retcode = system(com.get_buffer());
               if (retcode != EXIT_SUCCESS)
-                ththrow(("cp exit code -- %d", retcode))
+                ththrow("cp exit code -- {}", retcode);
               for(cpch = strlen(fnm); cpch > 0; cpch--) {
                 if ((fnm[cpch] == '/') || (fnm[cpch] == '\\')) {
                   cpch++;
@@ -1103,7 +1099,9 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
       this->src.name, this->src.line, this->projstr))
     return;
   }
-    
+
+  this->db->db2d.log_selection(maps, prj);
+
 
   double meridian_conv = thcfg.get_outcs_convergence();
   double rotate_plus = 0.0;
@@ -1129,13 +1127,25 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   
   thbuffer aboveprev, belowprev;
 
-  list<scraprecord>::iterator SCRAPITEM;
+  std::list<scraprecord>::iterator SCRAPITEM;
   scraprecord dummsr;
   
-  const char * fnm = this->get_output("cave.pdf");  
+  const char * fnm;
+  switch (this->format) {
+    case TT_EXPMAP_FMT_SVG:
+    	fnm = this->get_output("cave.svg");
+    	break;
+    case TT_EXPMAP_FMT_XHTML:
+    	fnm = this->get_output("cave.xhtml");
+    	break;
+    default:
+    	fnm = this->get_output("cave.pdf");
+    	break;
+  }
+  this->register_output(fnm);
 
   layerrecord L;
-  map<int, layerrecord>::iterator LAYER_ITER;
+  std::map<int, layerrecord>::iterator LAYER_ITER;
 
   thdb2dxm * cmap = maps;
   thdb2dxs * cbm;
@@ -1186,6 +1196,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 
   out.symset = &(this->symset);
   out.layout = this->layout;
+  out.symset->color_model = this->layout->color_model;
   out.ms = this->layout->scale * 2834.64566929;
   // korekcia shiftu na layout origin
   if (!thisnan(this->layout->ox)) {
@@ -1234,6 +1245,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 //  fclose(tf);
 
   tf = fopen(thtmp.get_file_name("data.tex"),"w");
+  fprintf(tf,"\\def\\OutputColormodel{%s}\n", thmatch_string(this->layout->color_model, thtt_layoutclr_model));
   if (thcmdln.extern_libs)
     fprintf(tf,"\\input therion.tex\n");
   else
@@ -1278,16 +1290,13 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   fprintf(mpf,"Scale:=%.2f;\n",0.01 / this->layout->scale);
   fprintf(mpf,"MagDecl:=%.2f;\n", magdec);
   fprintf(mpf,"GridConv:=%.2f;\n", gridconv);
+  fprintf(mpf,"string OutputColormodel;\n");
+  fprintf(mpf,"OutputColormodel:=\"%s\";\n", thmatch_string(this->layout->color_model, thtt_layoutclr_model));
 
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"BaseScale:=%.2f;\n",0.01 / this->layout->base_scale);
   else
 		this->layout->base_scale = this->layout->scale;
-  fprintf(mpf,"color HelpSymbolColor;\nHelpSymbolColor := (0.8, 0.8, 0.8);\n");
-  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
-    this->layout->color_map_fg.R,
-    this->layout->color_map_fg.G,
-    this->layout->color_map_fg.B);
   fprintf(mpf,"verbatimtex \\input th_enc.tex etex;\n");
 //  fprintf(mpf,"def user_initialize = enddef;\n");
 //this->layout->export_mpost(mpf);
@@ -1295,6 +1304,12 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
     fprintf(mpf,"input therion;\n");
   else
     fprintf(mpf,"%s\n",thmpost_library);
+
+  fprintf(mpf,"background:=");
+  this->layout->color_map_fg.print_to_file(this->layout->color_model, mpf);
+  fprintf(mpf,";\n");
+
+  fprintf(mpf, "%s\n", LAYOUT.col_background.to_mpost("MapBackground").c_str());
 
   // insert font setup
   if (this->layout->def_font_setup > 0) {
@@ -1356,11 +1371,11 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 //  fprintf(mpf,"etex;\n");
 
 //  fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
-if (ENC_NEW.NFSS==0)
+if (ENC_NEW.NFSS==0) {
   fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
-else
+} else {
   fprintf(mpf,"defaultfont:=\"thss00\";\n");
-  
+}
 //fprintf(mpf,"defaultscale:=0.8;\n\n");
 
   fprintf(mpf,"NorthDir:=\"%s\";\n", this->layout->north == TT_LAYOUT_NORTH_GRID ? "grid" : "true");
@@ -1378,8 +1393,7 @@ else
   
   //this->export_pdf_set_colors(maps, prj);
   this->export_pdf_set_colors_new(maps, prj);
-  double ascR = 1.0, ascG = 1.0, ascB = 1.0,
-    pscR = -1.0, pscG = -1.0, pscB = -1.0;
+  thlayout_color active_clr;
   lxVecLimits lim;
 
   SURFPICTLIST.clear();
@@ -1389,9 +1403,9 @@ else
     
   if (COLORLEGENDLIST.size() > 0) {
     fprintf(plf,"# COLOR LEGEND\n");
-    for (list<colorlegendrecord>::iterator cli = COLORLEGENDLIST.begin();
+    for (std::list<colorlegendrecord>::iterator cli = COLORLEGENDLIST.begin();
       cli != COLORLEGENDLIST.end(); cli++) {
-      fprintf(plf,"# %4.0f %4.0f %4.0f %s\n", 100.0 * cli->R, 100.0 * cli->G, 100.0 * cli->B, cli->texname.c_str());
+      fprintf(plf,"# %4.0f %4.0f %4.0f %4.0f %s\n", 100.0 * cli->col_legend.a, 100.0 * cli->col_legend.b, 100.0 * cli->col_legend.c, 100.0 * cli->col_legend.d, cli->texname.c_str());
     }
     fprintf(plf,"\n\n\n");
   }
@@ -1447,18 +1461,10 @@ else
                   shy *= out.ms;
 
                 } else {
-  
-                  ascR = cs->R;
-                  ascG = cs->G;
-                  ascB = cs->B;
-                  if ((ascR != pscR) || (ascG != pscG) || (ascB != pscB)) {
-                    fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n", ascR, ascG, ascB);
-                    fprintf(mpf,"def_transparent_rgb(tr_bg, %.5f, %.5f, %.5f);\n", ascR, ascG, ascB);
-                    pscR = ascR;
-                    pscG = ascG;
-                    pscB = ascB;
-                  }
-                  
+                  active_clr = cs->clr;
+                  fprintf(mpf,"background:=");
+                  cs->clr.print_to_file(this->layout->color_model, mpf);
+                  fprintf(mpf,";\n");
                   if (thisnan(cs->lxmin)) {
                     out.mx = 0.0;
                     out.my = 0.0;
@@ -1601,10 +1607,7 @@ else
 
                   SCRAPITEM->sect = 0;
                   SCRAPITEM->name = thexpmap_u2string(sscrap);
-
-                  SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
-                  SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
-                  SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+                  active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
                   
                   if (export_sections) {
                     fprintf(plf,"\t\t Z => 1,\n");    
@@ -1671,6 +1674,8 @@ else
                   SCRAPITEM->S1 = shx;
                   SCRAPITEM->S2 = shy;
                   
+                  this->export_scrap_backgroud_mesh(cs, &out, &(*SCRAPITEM));                  
+                  
                   if ((!export_outlines_only) && (!export_sections) &&
                       (cbm->m_target->fmap->output_number != cbm->m_target->preview_output_number)
       	              && (!cbm->m_target->previewed)		      
@@ -1680,10 +1685,8 @@ else
                     SCRAPITEM = SCRAPLIST.insert(SCRAPLIST.end(),dummsr);
                     SCRAPITEM->sect = 0;
                     SCRAPITEM->name = thexpmap_u2string(sscrap + 1);
-      
-                    SCRAPITEM->r = ascR; //this->layout->color_map_fg.R;
-                    SCRAPITEM->g = ascG; //this->layout->color_map_fg.G;
-                    SCRAPITEM->b = ascB; //this->layout->color_map_fg.B;
+
+                    active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
       
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     sprintf(texb.get_buffer(),"data.%ld",exps.B);
@@ -1730,6 +1733,17 @@ else
     }
     cmap = cmap->next_item;
   }
+  
+  LAYOUT.smooth_shading=shading_mode::off;
+  switch(this->layout->color_crit) {
+    case TT_LAYOUT_CCRIT_ALTITUDE:
+    case TT_LAYOUT_CCRIT_DEPTH:
+      if (prj->type != TT_2DPROJ_NONE) {
+    	  if (this->layout->smooth_shading == TT_LAYOUT_SMOOTHSHADING_QUICK)
+    		  LAYOUT.smooth_shading=shading_mode::quick;
+      }
+  	  break;
+  }
 
   sprintf(texb.get_buffer(),"data.%d",sfig);
   LAYOUT.northarrow = texb.get_buffer();
@@ -1737,17 +1751,62 @@ else
 
   sprintf(texb.get_buffer(),"data.%d",sfig);
   LAYOUT.scalebar = texb.get_buffer();
-  //snprintf(prevbf,127,"%g",sblen);
+  //std::snprintf(prevbf,127,"%g",sblen);
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
     sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()));
 
+
+  // print altitudebar
+  LAYOUT.altitudebar="";
+  if ((this->layout->color_legend == TT_LAYOUT_COLORLEGEND_SMOOTH) && (this->layout->color_crit != TT_LAYOUT_CCRIT_UNKNOWN) && (this->layout->m_lookup->m_table.size() > 1) && (!this->layout->m_lookup->m_intervals)) {
+	double sv_min(0.0), sv_max(0.0);
+	bool sv_next = false;
+    switch (this->layout->color_crit) {
+      case TT_LAYOUT_CCRIT_ALTITUDE:
+      case TT_LAYOUT_CCRIT_DEPTH:
+    	  sprintf(texb.get_buffer(),"data.%d",sfig);
+    	  LAYOUT.altitudebar = texb.get_buffer();
+    	  sv_min = this->layout->m_lookup->m_table.begin()->m_valueDbl;
+    	  for(const auto& ti : this->layout->m_lookup->m_table) {
+    		  sv_max = ti.m_valueDbl;
+    	  }
+          fprintf(mpf,"beginfig(%d);\ns_altitudebar(%g, %g, \"%s\")(",
+            sfig++, this->layout->units.convert_length(sv_max),
+                    this->layout->units.convert_length(sv_min),
+                    this->layout->units.format_i18n_length_units());
+    	  for(auto& ti : this->layout->m_lookup->m_table) {
+    		  if (sv_next) fprintf(mpf, ",");
+    		  sv_next = true;
+    		  fprintf(mpf,"%g,",(ti.m_valueDbl - sv_min)/(sv_max - sv_min));
+    		  ti.m_color.print_to_file(this->layout->color_model, mpf);
+    	  }
+    	  sv_next = false;
+		  fprintf(mpf,")(");
+    	  if (!this->layout->m_lookup->m_autoIntervals) {
+        	  for(auto& ti : this->layout->m_lookup->m_table) {
+        		  if (sv_next) fprintf(mpf, ",");
+        		  sv_next = true;
+        		  fprintf(mpf,"%g,\"%s\"",(ti.m_valueDbl - sv_min)/(sv_max - sv_min), ti.m_labelTeX.c_str());        		  
+        	  }
+    	  } else {
+    		  fprintf(mpf,"\"\"");
+    	  }
+    	  fprintf(mpf,");\nendfig;\n");
+    	  break;
+    }
+  }
+  
+  
   // sem pride zapisanie legendy do MP suboru
   if (this->layout->def_base_scale > 0)
     fprintf(mpf,"Scale:=%.2f;\ninitialize(Scale);\n",0.01 / this->layout->base_scale);
-  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
-    this->layout->color_map_fg.R,
-    this->layout->color_map_fg.G,
-    this->layout->color_map_fg.B);
+  fprintf(mpf,"background:=");
+  this->layout->color_map_fg.print_to_file(this->layout->color_model, mpf);
+  fprintf(mpf,";\n");
+//  fprintf(mpf,"background:=(%.5f,%.5f,%.5f);\n",
+//    this->layout->color_map_fg.R,
+//    this->layout->color_map_fg.G,
+//    this->layout->color_map_fg.B);
   //fprintf(mpf,"background:=white;\n");
   fprintf(mpf,"transparency:=false;\n");
   
@@ -1779,7 +1838,7 @@ else
     obi = thdb.object_list.begin();
     while (obi != thdb.object_list.end()) {
       if ((*obi)->get_class_id() == TT_SURFACE_CMD) {
-        surf = (thsurface *)(*obi);
+        surf = (thsurface *)(*obi).get();
         if (surf->pict_name != NULL) {
           surf->calibrate();
           srfpr.filename = surf->pict_name;
@@ -1831,7 +1890,7 @@ else
   // LAYOUT.calibration_local[0].x = ccx * crot + ccy * srot + origin_shx;
   //LAYOUT.calibration_local[0].y = - ccx * srot + ccy * crot + origin_shy;
   // if (prj->type == TT_2DPROJ_PLAN) {
-  //   thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, 
+  //   thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
   //                 lim.min.x + prj->rshift_x, lim.min.y + prj->rshift_y, lim.min.z + prj->rshift_z, ccx, ccy, ccz);
   // } else {
   //   ccx = 0.0;
@@ -1846,7 +1905,7 @@ else
   LAYOUT.calibration_local[n].x = ccx * crot + ccy * srot + origin_shx; \
 	LAYOUT.calibration_local[n].y = - ccx * srot + ccy * crot + origin_shy; \
   if ((prj->type == TT_2DPROJ_PLAN) && (thcfg.outcs != TTCS_LOCAL)) { \
-    thcs2cs(thcs_get_data(thcfg.outcs)->params, thcs_get_data(TTCS_LONG_LAT)->params, \
+    thcs2cs(thcfg.outcs, TTCS_LONG_LAT, \
                   (xxx) + prj->rshift_x, (yyy) + prj->rshift_y, lim.min.z + prj->rshift_z, ccx, ccy, ccz); \
   } else { \
     ccx = 0.0; \
@@ -1967,7 +2026,7 @@ else
     
       fprintf(plf,"\t# expanded map: %s\n",cmap->map->name);
       fprintf(plf,"\t%ld => {\n",cmap->output_number);
-      LAYERHASH.insert(make_pair(cmap->output_number,L));
+      LAYERHASH.insert(std::make_pair(cmap->output_number,L));
       LAYER_ITER = LAYERHASH.find(cmap->output_number);
       LAYER_ITER->second.Z = 0;
       
@@ -2031,7 +2090,7 @@ else
       	  fprintf(plf,"\t\tA => %ld,\n",cbm->m_target->fmap->output_number);
           fprintf(plf,"\t},\n");
 
-          LAYERHASH.insert(make_pair(cbm->m_target->preview_output_number,L));
+          LAYERHASH.insert(std::make_pair(cbm->m_target->preview_output_number,L));
           LAYER_ITER = LAYERHASH.find(cbm->m_target->preview_output_number);
           LAYER_ITER->second.Z = 1;
           LAYER_ITER->second.AltJump = cbm->m_target->fmap->output_number;
@@ -2040,22 +2099,22 @@ else
             case TT_MAPITEM_BELOW:
               MAP_PREVIEW_DOWN.insert(cbm->m_target->preview_output_number);
               if (!anyprevbelow) {
-                snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
+                std::snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
                 belowprev += prevbf;
                 anyprevbelow = true;
               } else {
-                snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
+                std::snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
                 belowprev += prevbf;
               }
               break;
             case TT_MAPITEM_ABOVE:
               MAP_PREVIEW_UP.insert(cbm->m_target->preview_output_number);
               if (!anyprevabove) {
-                snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
+                std::snprintf(prevbf,127,"%ld",cbm->m_target->preview_output_number);
                 aboveprev += prevbf;
                 anyprevabove = true;
               } else {
-                snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
+                std::snprintf(prevbf,127," %ld",cbm->m_target->preview_output_number);
                 aboveprev += prevbf;
               }
               break;
@@ -2156,8 +2215,8 @@ else
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
   thbuffer com, wdir;
   wdir.guarantee(1024);
-  getcwd(wdir.get_buffer(),1024);
-  chdir(thtmp.get_dir_name());
+  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
+  thassert(chdir(thtmp.get_dir_name()) == 0);
   
   // vypise kodovania
   print_fonts_setup();
@@ -2227,8 +2286,8 @@ else
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);
     if (retcode != EXIT_SUCCESS) {
-      chdir(wdir.get_buffer());
-      ththrow(("metapost exit code -- %d", retcode))
+      thassert(chdir(wdir.get_buffer()) == 0);
+      ththrow("metapost exit code -- {}", retcode);
     }
   }
 
@@ -2250,8 +2309,12 @@ else
       switch (this->format) {
 
     case TT_EXPMAP_FMT_PDF:
-      if (!quick_map_exp)
-        thconvert();
+      if (!quick_map_exp) {
+        thconvert_eps();
+        thgraphics2pdf();
+
+        if (thtmp.debug) thconvert_old();
+      }
 
       thpdf((this->export_mode == TT_EXP_MAP ? 1 : 0));
 
@@ -2271,12 +2334,12 @@ else
       "######################## pdftex log file #########################\n",
       "##################### end of pdftex log file #####################\n",false);
       if (retcode != EXIT_SUCCESS) {
-        chdir(wdir.get_buffer());
-        ththrow(("pdftex exit code -- %d", retcode))
+        thassert(chdir(wdir.get_buffer()) == 0);
+        ththrow("pdftex exit code -- {}", retcode);
       }
 
       // Let's copy results and log-file to working directory
-      chdir(wdir.get_buffer());
+      thassert(chdir(wdir.get_buffer()) == 0);
 #ifdef THWIN32
       com = "copy \"";
 #else
@@ -2301,20 +2364,20 @@ else
 #endif
       retcode = system(com.get_buffer());
       if (retcode != EXIT_SUCCESS)
-        ththrow(("cp exit code -- %d", retcode))
+        ththrow("cp exit code -- {}", retcode);
       break;
       // END OF PDF POSTPROCESSING
 
     case TT_EXPMAP_FMT_SVG:
-      thconvert_new();
-      chdir(wdir.get_buffer());
+      thconvert_eps();
+      thassert(chdir(wdir.get_buffer()) == 0);
       thsvg(fnm, 0, ldata);
       break;
       
 
     case TT_EXPMAP_FMT_XHTML:
-      thconvert_new();
-      chdir(wdir.get_buffer());
+      thconvert_eps();
+      thassert(chdir(wdir.get_buffer()) == 0);
       thsvg(fnm, 1, ldata);
       break;
 
@@ -2361,8 +2424,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   bool somex, first, vis;
   thscraplp * slp;
   thdb2dlp * lp;
-  thexception dbg_stnms;
-  bool map_shift = (hypot(out->m_shift_x, out->m_shift_y) > 1e-2);
+  std::vector<std::string> dbg_stnms;
+  bool map_shift = (std::hypot(out->m_shift_x, out->m_shift_y) > 1e-2);
 	
 	// check scrap limits
   bool warncheckchange = false;
@@ -2385,15 +2448,15 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 			  fprintf(out->file, "warningcheck := 0;\n");
 				if (max > 32767.0) {
 				  minscale = (1.0 / out->layout->scale) * (max / 32767.0);
-					ththrow(("scale too large -- maximal scale for this configuration is 1 : %.0f", minscale + 1));
+					ththrow("scale too large -- maximal scale for this configuration is 1 : {:.0f}", minscale + 1);
 				}
 			} else {
-				ththrow(("scrap %s@%s defined at %s [%d] is too large to process in metapost in this scale -- maximal scale for this scrap is 1 : %.0f", 
+				ththrow("scrap {}@{} defined at {} [{}] is too large to process in metapost in this scale -- maximal scale for this scrap is 1 : {:.0f}", 
 					scrap->name, 
 					scrap->fsptr->full_name, 
 					scrap->source.name, 
 					scrap->source.line,
-					minscale + 1));
+					minscale + 1);
 			}
 		}
 	}
@@ -2446,12 +2509,13 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             case TT_POINT_TYPE_WATER:
             case TT_POINT_TYPE_ICE:
             case TT_POINT_TYPE_GUANO:
+            case TT_POINT_TYPE_MUDCRACK:
               obj->tags |= TT_2DOBJ_TAG_CLIP_ON;
               break;
           }
           break;
         case TT_LINE_CMD:
-          if ((((thline*)obj)->outline == TT_LINE_OUTLINE_NONE)) { 
+          if (((thline*)obj)->outline == TT_LINE_OUTLINE_NONE) { 
             switch (((thline*)obj)->type) {
               case TT_LINE_TYPE_SECTION:
               case TT_LINE_TYPE_ARROW:
@@ -2802,10 +2866,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         this->db->db1d.m_station_attr.export_mp_object_end(out->file, slp->station_name.id);
         if (out->layout->is_debug_stationnames() && (slp->station_name.id != 0)) {
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
-          out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
-          dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);\n",
-            (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
-            thxmmxst(out, slp->stx, slp->sty));
+          out->symset->export_mp_symbol_options(dbg_stnms, SYMP_STATIONNAME);
+          dbg_stnms.push_back(fmt::sprintf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);",
+            (const char *) utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
+            thxmmxst(out, slp->stx, slp->sty)));
         }
       }
       //// export continuation station
@@ -2881,10 +2945,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                   this->db->db1d.m_station_attr.export_mp_object_end(out->file, ptp->station_name.id);
                 }
                 if (out->layout->is_debug_stationnames() && (tmps != NULL)) {
-                      out->symset->export_mp_symbol_options(&dbg_stnms, SYMP_STATIONNAME);
-                      dbg_stnms.appspf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);\n",
-                      (const char *) utf2tex(thobjectname__print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
-                      thxmmxst(out, ptp->point->xt, ptp->point->yt));
+                      out->symset->export_mp_symbol_options(dbg_stnms, SYMP_STATIONNAME);
+                      dbg_stnms.push_back(fmt::sprintf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);",
+                      (const char *) utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
+                      thxmmxst(out, ptp->point->xt, ptp->point->yt)));
                 }
               }
             }
@@ -2995,9 +3059,10 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     obj = obj->pscrapoptr;
   }
 
-  if (out->layout->is_debug_stationnames() && (strlen(dbg_stnms.get_buffer()) > 0)) {
+  if (out->layout->is_debug_stationnames() && (!dbg_stnms.empty())) {
     thexpmap_export_mp_bgif;
-    fprintf(out->file, "%s", dbg_stnms.get_buffer());
+    for (const auto& str : dbg_stnms)
+      fmt::print(out->file, "{}\n", str);
   }
   
   // nakoniec scrap name, ak mame zapnuty dany debug mod
@@ -3006,7 +3071,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     thdb2dpt tmppt;
     tmppt.xt = (scrap->lxmin + scrap->lxmax) / 2.0;
     tmppt.yt = (scrap->lymin + scrap->lymax) / 2.0;
-    thdb.buff_tmp = utf2tex(thobjectname__print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
+    thdb.buff_tmp = utf2tex(thobjectname_print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
+    fprintf(out->file,"drawoptions();\n");
     fprintf(out->file,"p_label(btex \\thlargesize %s etex,",thdb.buff_tmp.get_buffer());
     tmppt.export_mp(out);
     fprintf(out->file,",0.0,p_label_mode_debugscrap);\n");
@@ -3025,22 +3091,9 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
   return result;
 }
 
-
-
-#define alpha_correction(AA,RR,GG,BB) { \
-  RR = AA * RR + (1 - AA) * 1.0; \
-  GG = AA * GG + (1 - AA) * 1.0; \
-  BB = AA * BB + (1 - AA) * 1.0; \
-}
-
-#define opacity_correction(RR,GG,BB) { \
-  if (this->layout->transparency) alpha_correction(this->layout->opacity, RR, GG, BB); \
-}
-
 #define tmp_alpha 0.75
-#define tmp_set_color(r,g,b) cR = r; cG = g; cB = b
 
-void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj)
+void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // TODO unused parameter prj
 {
 
   // prejde vsetky scrapy a nastavi im farbu na color_map_fg
@@ -3058,7 +3111,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
   long cmn = 0, nmap = 0;
   double curz;
   bool firstmapscrap;
-  double cR, cG, cB;
+  thlayout_color clr;
   
   // najprv to nascanuje  
   cmap = maps;
@@ -3094,13 +3147,9 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
             }
           }
           if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
-            cs->R = cs->fsptr->selected_color.R;
-            cs->G = cs->fsptr->selected_color.G;
-            cs->B = cs->fsptr->selected_color.B;
+        	cs->clr = cs->fsptr->selected_color;
           } else {
-            cs->R = this->layout->color_map_fg.R;
-            cs->G = this->layout->color_map_fg.G;
-            cs->B = this->layout->color_map_fg.B;
+        	cs->clr = this->layout->color_map_fg;
           }
         }
         cmi = cmi->prev_item;  
@@ -3113,7 +3162,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
   if (this->layout->color_crit == TT_LAYOUT_CCRIT_UNKNOWN)
     return;
 
-  bool addleg = (this->layout->color_legend == TT_TRUE);
+  bool addleg = (this->layout->color_legend != TT_LAYOUT_COLORLEGEND_OFF);
   colorlegendrecord clrec;
   
   // urobi altitude legendu
@@ -3123,12 +3172,10 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
   if (addleg && (maxz > minz) && (this->layout->color_crit == TT_LAYOUT_CCRIT_ALTITUDE)) {
     for (xalt = 5; xalt >= 0; xalt--) {
       curz = double(xalt) / 5.0 * (maxz - minz) + minz;
-      thset_color(0, double(5 - xalt), 5.0, cR, cG, cB);
-      alpha_correction(tmp_alpha, cR, cG, cB);
-      clrec.R = cR;
-      clrec.G = cG; 
-      clrec.B = cB;
-      opacity_correction(clrec.R, clrec.G, clrec.B);
+      thset_color(0, double(5 - xalt), 5.0, clr);
+      clr.alpha_correct(tmp_alpha);
+      clr.set_color(this->layout->color_model, clrec.col_legend);
+//      opacity_correction(clrec.R, clrec.G, clrec.B);
       //sprintf(tmpb.get_buffer(), "%.0f", curz - this->layout->goz);
       clrec.texname = utf2tex(this->layout->units.format_length(curz - this->layout->goz));
       clrec.texname += "\\thinspace ";			
@@ -3159,14 +3206,12 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
 //            curz += prj->shift_z;
           switch (this->layout->color_crit) {
             case TT_LAYOUT_CCRIT_MAP:
-              // vsetkym scrapom v kazdej priradi farbu
+              // assigns color to each scrap in each
               if (firstmapscrap) {
                 if (cmap->selection_color.defined) {
-                  cR = cmap->selection_color.R;
-                  cG = cmap->selection_color.G;
-                  cB = cmap->selection_color.B;
+                  clr = cmap->selection_color;
                 } else {
-                  thset_color(0, (double) (nmap - cmn), (double) nmap, cR, cG, cB);
+                  thset_color(0, (double) (nmap - cmn), (double) nmap, clr);
                 }
                 std::string maptitle("");
                 if (strlen(cmap->map->title) > 0) {
@@ -3174,61 +3219,57 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
                 }
                 clrec.texname = ths2tex(maptitle.length() > 0 ? cmap->map->title : cmap->map->name, this->layout->lang);
                 clrec.name = (maptitle.length() > 0 ? maptitle : std::string(cmap->map->name));
-                alpha_correction(tmp_alpha, cR, cG, cB);
-                clrec.R = cR;
-                clrec.G = cG; 
-                clrec.B = cB;
-                opacity_correction(clrec.R, clrec.G, clrec.B);
+                clr.alpha_correct(tmp_alpha);
+                clr.set_color(this->layout->color_model, clrec.col_legend);
+//                opacity_correction(clrec.R, clrec.G, clrec.B);
                 COLORLEGENDLIST.insert(COLORLEGENDLIST.begin(), clrec);
                 firstmapscrap = false;
                 cmn++;
               }
-              cs->R = cR;
-              cs->G = cG;
-              cs->B = cB;
+              cs->clr = clr;
 //              thprintf("%s@%s->%.2f,%.2f,%.2f\n",cs->name,cs->fsptr->full_name,cs->R,cs->G,cs->B);
             break;
             case TT_LAYOUT_CCRIT_SCRAP:
-              // vsetkym scrapom v kazdej priradi farbu
-							switch (cmn % 6) {
-								case 0:  tmp_set_color(1.0, 0.5, 0.5); break;
-								case 1:  tmp_set_color(0.5, 1.0, 0.5); break;
-								case 2:  tmp_set_color(0.5, 0.5, 1.0); break;
-								case 3:  tmp_set_color(1.0, 1.0, 0.0); break;
-								case 4:  tmp_set_color(0.0, 1.0, 1.0); break;
-								default: tmp_set_color(1.0, 0.0, 1.0); break;
+              // set a different random color for earch scrap
+							switch (cmn % 16) {
+								case 0:  clr = thlayout_color(1.0, 0.5, 0.5); break;
+								case 1:  clr = thlayout_color(0.5, 1.0, 0.5); break;
+								case 2:  clr = thlayout_color(0.5, 0.5, 1.0); break;
+								case 3:  clr = thlayout_color(1.0, 1.0, 0.0); break;
+								case 4:  clr = thlayout_color(0.0, 1.0, 1.0); break;
+								case 5:  clr = thlayout_color(1.0, 0.0, 1.0); break;
+								case 6:  clr = thlayout_color(0.75, 1.0, 1.0); break;
+								case 7:  clr = thlayout_color(1.0, 0.75, 1.0); break;
+								case 8:  clr = thlayout_color(1.0, 1.0, 0.75); break;
+								case 9:  clr = thlayout_color(0.25, 0.75, 1.0); break;
+								case 10: clr = thlayout_color(0.25, 1.0, 0.75); break;
+								case 11: clr = thlayout_color(1.0, 0.75, 0.25); break;
+								case 12: clr = thlayout_color(0.75, 1.0, 0.25); break;
+                case 13: clr = thlayout_color(0.75, 0.25, 1.0); break;
+                case 14: clr = thlayout_color(1.0, 0.25, 0.75); break;
+                default: clr = thlayout_color(0.5, 0.25, 0.75); break;
 							}
-              alpha_correction(tmp_alpha, cR, cG, cB);
-              cs->R = cR;
-              cs->G = cG;
-              cs->B = cB;
+              clr.alpha_correct(tmp_alpha);
+              cs->clr = clr;
               cmn++;
             break;
             case TT_LAYOUT_CCRIT_ALTITUDE:
               // priradi farbu podla (z - min) z (max - min)
               if (!thisnan(curz)) {
-                thset_color(0, (maxz - curz), (maxz - minz), cs->R, cs->G, cs->B);
-                alpha_correction(tmp_alpha, cs->R, cs->G, cs->B);
+                thset_color(0, (maxz - curz), (maxz - minz), cs->clr);
+                cs->clr.alpha_correct(tmp_alpha);
               } else {
-                cs->R = this->layout->color_map_fg.R;
-                cs->G = this->layout->color_map_fg.G;
-                cs->B = this->layout->color_map_fg.B;
+            	cs->clr = this->layout->color_map_fg;
               }
             break;
             default:
               if (cmap->selection_color.defined) {
-            	cs->R = cmap->selection_color.R;
-            	cs->G = cmap->selection_color.G;
-            	cs->B = cmap->selection_color.B;
+            	cs->clr = cmap->selection_color;
               }
               else if ((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) {
-                cs->R = cs->fsptr->selected_color.R;
-                cs->G = cs->fsptr->selected_color.G;
-                cs->B = cs->fsptr->selected_color.B;
+            	cs->clr = cs->fsptr->selected_color;
               } else {
-                cs->R = this->layout->color_map_fg.R;
-                cs->G = this->layout->color_map_fg.G;
-                cs->B = this->layout->color_map_fg.B;
+              	cs->clr = this->layout->color_map_fg;
               }
           }
         }
@@ -3242,7 +3283,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
 }
 
 
-void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * prj)
+void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // TODO unused parameter prj
 {
 
   if (maps == NULL) {
@@ -3262,6 +3303,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * prj)
     thwarning(("can't open %s for output",fnm))
     return;
   }
+  this->register_output(fnm);
   
 #ifdef THDEBUG
   thprintf("\n\nwriting %s\n", fnm);
@@ -3333,7 +3375,7 @@ void thexpmap_line_svx3d(img * pimg, thline * pln)
 							 3.0 * tt * t_ * lp->cp2->yt + 
 							 ttt * lp->point->yt;
 					nz = t_ * plp->point->zt + t * lp->point->zt;
-					if (hypot(nx - px, ny - py) > 0.5) {
+					if (std::hypot(nx - px, ny - py) > 0.5) {
 			      img_write_item(pimg, img_LINE, 0, NULL, nx, ny, nz);
 						px = nx;
 						py = ny;
@@ -3459,6 +3501,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
 {
 
   // parsneme lookup a najdeme ho
+  std::unique_ptr<thlookup> unique_lkp;
   thlookup * lkp = NULL;
   if (this->layout->color_crit_fname != NULL) {
     int cc;
@@ -3470,7 +3513,9 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       if (strlen(ccidx) > 0) {
         thwarning(("missing lookup -- %s", this->layout->color_crit_fname));
       }
-      lkp = (thlookup *) this->db->create("lookup", this->src);
+      unique_lkp = this->db->create<thlookup>(this->src);
+      lkp = unique_lkp.get();
+      this->db->object_list.push_back(std::move(unique_lkp));
       lkp->m_type = this->layout->color_crit;
     }
   }
@@ -3548,20 +3593,14 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
 
           // set default color
           if (cmap->selection_color.defined) {
-        	cs->R = cmap->selection_color.R;
-        	cs->G = cmap->selection_color.G;
-        	cs->B = cmap->selection_color.B;
+        	cs->clr = cmap->selection_color;
         	cs->RGBsrc = 2;
           }
           else if (((cs->fsptr != NULL) && (cs->fsptr->selected_color.defined)) && (cs->RGBsrc < 2)) {
-            cs->R = cs->fsptr->selected_color.R;
-            cs->G = cs->fsptr->selected_color.G;
-            cs->B = cs->fsptr->selected_color.B;
+        	cs->clr = cs->fsptr->selected_color;
         	cs->RGBsrc = 1;
           } else if (cs->RGBsrc < 1) {
-            cs->R = this->layout->color_map_fg.R;
-            cs->G = this->layout->color_map_fg.G;
-            cs->B = this->layout->color_map_fg.B;
+            cs->clr = this->layout->color_map_fg;
           }
         }
         cmi = cmi->prev_item;
@@ -3574,6 +3613,9 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
   if (lkp == NULL)
     return;
 
+  if (this->layout->color_crit == TT_LAYOUT_CCRIT_DEPTH) {
+	  lkp->m_depth_altitude = thdb.db2d.get_projection_entrance_altitude(prj);
+  }
   lkp->auto_generate_items();
   lkp->postprocess();
 
@@ -3600,7 +3642,96 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
 }
 
 
-
+void thexpmap::export_scrap_backgroud_mesh(thscrap * cs, thexpmapmpxs * out, scraprecord * r) {
+	
+	switch(this->layout->color_crit) {
+      case TT_LAYOUT_CCRIT_ALTITUDE:
+      case TT_LAYOUT_CCRIT_DEPTH:
+    	  break;
+      default:
+    	  return;
+	}
+	
+	if (cs->proj->type == TT_2DPROJ_NONE)
+		return;
+	
+	if (this->layout->smooth_shading == TT_LAYOUT_SMOOTHSHADING_OFF)
+		return;
+	
+	thmorph2trans mi;
+	thlayout_color clr;
+	
+	// initialize interpolation
+	thdb2dcp * cp;
+    cp = cs->fcpp;
+    while (cp != NULL) {
+      if (cp->st != NULL)
+    	  mi.insert_point(thvec2(cp->pt->xt, cp->pt->yt), thvec2(cp->tx, cp->ty), cp->st->uid, cp->ta);
+      cp = cp->nextcp;
+    }
+    for(const auto& xcp : cs->joined_scrap_stations) {
+    	mi.insert_extra_point(thvec2(xcp->pt->xt, xcp->pt->yt), thvec2(xcp->tx, xcp->ty), xcp->st->uid, xcp->ta);
+    }
+    mi.insert_lines_from_db();
+    mi.init();
+    
+	// initialize grid
+    double cxmin, cxmax, cymin, cymax, xstep, ystep, alt;
+    int ix, nx, iy, ny, ixstep, iystep;
+    if ((cs->lxmin == cs->lxmax) || (cs->lymin == cs->lymax)) return;
+    
+    // initialize transformation
+    thlintrans outlt;
+    thbbox2 bb;
+    outlt.init(thvec2(cs->lxmin, cs->lymin), thvec2(cs->lxmax, cs->lymax), thvec2(thxmmxst(out, cs->lxmin, cs->lymin)), thvec2(thxmmxst(out, cs->lxmax, cs->lymax)));
+    outlt.init_backward();
+    bb.update(outlt.forward(thvec2(cs->lxmin, cs->lymin)));
+    bb.update(outlt.forward(thvec2(cs->lxmin, cs->lymax)));
+    bb.update(outlt.forward(thvec2(cs->lxmax, cs->lymin)));
+    bb.update(outlt.forward(thvec2(cs->lxmax, cs->lymax)));
+    if (!bb.is_valid()) return;
+    
+    cxmin = bb.m_min.m_x;
+    cymin = bb.m_min.m_y;
+    cxmax = bb.m_max.m_x;
+    cymax = bb.m_max.m_y;
+    nx = 16;
+    ny = 16;
+    ixstep = 255 / (nx - 1);
+    iystep = 255 / (ny - 1);
+    xstep = (cxmax - cxmin) / double(nx-1);
+    ystep = (cymax - cymin) / double(ny-1);
+    
+    // export grid
+    r->gour_n = nx;
+    r->gour_xmin = cxmin;
+    r->gour_xmax = cxmin + xstep / double(ixstep) * 255.0;
+    r->gour_ymin = cymin;
+    r->gour_ymax = cymin + ystep / double(iystep) * 255.0;
+	r->gour_stream.clear();
+	//printf("\nSCRAP MESH: %s@%s\n", cs->name, cs->fsptr->get_full_name());
+	//printf("%.2f,%.2f - %.2f,%.2f - %dx%d - %dx%d\n", r->gour_xmin, r->gour_xmax, r->gour_ymin, r->gour_ymax, nx, ny, ixstep, iystep);
+    for(iy = 0; iy < ny; iy++) {
+    	for(ix = 0; ix < nx; ix++) {
+    		r->gour_stream += static_cast<char>(ix * ixstep);
+    		r->gour_stream += static_cast<char>(iy * iystep);
+    		if (cs->proj->type == TT_2DPROJ_PLAN)
+    			alt = mi.interpolate(outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)));
+    		else
+    			alt = outlt.backward(thvec2(cxmin + double(ix) * xstep, cymin + double(iy) * ystep)).m_y + cs->proj->rshift_z;
+    		clr = this->layout->m_lookup->value2clr(alt);
+    		//clr = thlayout_color((255.0 - double(ix * ixstep)) / 255.0, double(ix * ixstep) / 255.0, double(iy * iystep) / 255.0);  
+    		clr.encode_to_str(this->layout->color_model, r->gour_stream);
+    		//printf(" %04.0lf:",alt);
+    		//auto si = r->gour_stream.rbegin();
+    		//for(int i = 0; i < 6; si++, i++) {
+    		//	printf(":%03u",(unsigned char)(*si));
+    		//}
+    	}
+		//printf("\n");
+    }
+    
+}
 
 
 double thexpmap_quick_map_export_scale;

@@ -80,63 +80,6 @@
 }
 
 
-
-/**
- * Rewarning macro
- */
-
-#ifdef THDEBUG
-#define threwarning(P) {\
-  if (*(thexc.get_buffer()) == 0)\
-    thexc.strcpy("unknown exception");\
-  thexc.insspf(" -- ");\
-  thexc.insspf P;\
-  thexc.insspf("(" __FILE__ ":%d): ", __LINE__);\
-  thwarning((thexc.get_desc()));\
-  thexc.strcpy("");\
-  }
-#else
-#define threwarning(P) {\
-  if (*(thexc.get_buffer()) == 0)\
-    thexc.strcpy("unknown exception");\
-  thexc.insspf(" -- ");\
-  thexc.insspf P;\
-  thwarning((thexc.get_desc()));\
-  thexc.strcpy("");\
-  }
-#endif
-
-
-
-
-/**
- * Rewarning macro 2.
- */
-
-#ifdef THDEBUG
-#define threwarning2(P) {\
-  if (*(thexc.get_buffer()) == 0)\
-    thexc.strcpy("unknown exception");\
-  thexc.appspf(" -- ");\
-  thexc.appspf("(" __FILE__ ":%d): ", __LINE__);\
-  thexc.appspf P;\
-  thwarning((thexc.get_desc()));\
-  thexc.strcpy("");\
-  }
-#else
-#define threwarning2(P) {\
-  if (*(thexc.get_buffer()) == 0)\
-    thexc.strcpy("unknown exception");\
-  thexc.appspf(" -- ");\
-  thexc.appspf P;\
-  thwarning((thexc.get_desc()));\
-  thexc.strcpy("");\
-  }
-#endif
-
-
-
-
 /**
  * Verbose mode id.
  */
@@ -176,11 +119,16 @@ void thpause_exit();
  * @param exit_code Exit code of the program
  */
 
-void thexit(int exit_code);
+[[noreturn]] void thexit(int exit_code);
 
 extern bool thtext_inline;
 
 extern int therion_exit_state;
+
+void thprint_environment();
+void thprint_xtherion();
+
+#define thassert(expr) {if (!(expr)) thprintf2err("%s%s (" __FILE__ ":%d): assertion failed ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__);}
 
 #endif
 

@@ -71,12 +71,10 @@ void thdb2dji::parse_item(char * istr)
   thsplit_strings(& thdb.db2d.mbf, istr, ':');
   int npar = thdb.db2d.mbf.get_size();
   char ** pars = thdb.db2d.mbf.get_buffer();
-  if ((npar < 1) && (npar > 2))
-    ththrow(("invalid join item -- %s",istr))
   if (npar == 2) {
     this->mark = thdb.strstore(pars[1]);
     if (!th_is_keyword(this->mark))
-      ththrow(("line mark not a keyword -- %s",istr))
+      ththrow("line mark not a keyword -- {}",istr);
   }
   /*
   thdb.buff_enc.strcpy(pars[0]);

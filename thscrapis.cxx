@@ -39,11 +39,7 @@
 #include "extern/poly2tri/poly2tri.h"
 #include "thscrap.h"
 #include "thsurvey.h"
-#include <math.h>
-#ifdef THMSVC
-#define hypot _hypot
-#endif
-
+#include <cmath>
 
 struct pt2d {
   double x, y;
@@ -998,7 +994,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     olineln = oline->next;
     prevolln = NULL;
     while (olineln != NULL) {
-      if (hypot(olineln->x - olineln->prev->x, 
+      if (std::hypot(olineln->x - olineln->prev->x, 
         olineln->y - olineln->prev->y) < THSCRAPISRES) {
           olineln->prev->next = olineln->next;
           if (olineln->next != NULL) {
@@ -1011,7 +1007,7 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     }
 
     // odstrani duplikat z konca  
-    if ((prevolln != NULL) && (hypot(oline->x - prevolln->x, 
+    if ((prevolln != NULL) && (std::hypot(oline->x - prevolln->x, 
       oline->y - prevolln->y) < THSCRAPISRES)) {
         if (prevolln->prev != NULL) {
           prevolln->prev->next = NULL;
@@ -1151,7 +1147,8 @@ void thscrapis::outline_scan(class thscraplo * outln) {
 
   // TRIANGULACIA PO NOVOM
   if (numpts > 2) {
-    p2t::CDT * cdt = NULL;
+    std::vector<std::unique_ptr<p2t::Point>> points_holder;
+    std::unique_ptr<p2t::CDT> cdt;
     std::vector<p2t::Point *> polyline;
     pt2d2olptmap ptmap;
     bool mult_outer = false;
@@ -1171,12 +1168,14 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     			}
     			ptmap[pt2d(xx, yy)] = olineln;
     			//fprintf(f,"%.6f\t%.6f\n", xx, yy);
-    			polyline.push_back(new p2t::Point(xx, yy));
+          auto new_point = std::make_unique<p2t::Point>(xx, yy);
+    			polyline.push_back(new_point.get());
+          points_holder.push_back(std::move(new_point)); // owner of all the allocated points
     			olineln = olineln->next;
     			numpts++;
     		}
-    		if (cdt == NULL) {
-    			cdt = new p2t::CDT(polyline);
+    		if (!cdt) {
+    			cdt = std::make_unique<p2t::CDT>(polyline);
     			polyline.clear();
     		} else {
     			if (oline->outer) {
@@ -1256,8 +1255,6 @@ void thscrapis::outline_scan(class thscraplo * outln) {
     } else {
       this->tri_triangles = NULL;
     }
-
-    delete cdt;
   }
 
 #ifdef THSCRAPIS_NEW3D
@@ -1395,8 +1392,8 @@ void thscrapis::insert_bp_direction(double x, double y, double z, double tx, dou
   double dx = tx - x, 
     dy = ty - y,
     dz = tz - z,
-    dl = hypot(dx, dy), d, tmpup, tmpdown;
-  it->second.suml += hypot(dl,dz);
+    dl = std::hypot(dx, dy), d, tmpup, tmpdown;
+  it->second.suml += std::hypot(dl,dz);
   it->second.sumsl += 1.0;
   if (dl < THSCRAPISRES) {
     if ((dz > 1.618) && (dz > it->second.up))
@@ -1481,7 +1478,7 @@ void thscrapis::end_bp_direction()
 void thscrapis::bp_interpolate(double x, double y, double & iz, double & id, double & idx, double & idy)
 {
   // prejde vsetky body a spocita interpolovane z a direction
-  double sumw = 0.0, sumdw = 0.0, cw, dx, dy, dd;
+  double sumw = 0.0, sumdw = 0.0, cw, dx, dy; //, dd;
   bool anyd = false;
   iz = 0.0;
   id = 0.0;
@@ -1490,7 +1487,7 @@ void thscrapis::bp_interpolate(double x, double y, double & iz, double & id, dou
   while (cbp != NULL) {
     dx = x - cbp->x;
     dy = y - cbp->y;
-    cw = hypot(dx, dy);
+    cw = std::hypot(dx, dy);
     if (cw < THSCRAPISRES) {
       iz = cbp->z;
       id = cbp->sumd;
@@ -1499,8 +1496,8 @@ void thscrapis::bp_interpolate(double x, double y, double & iz, double & id, dou
       return;
     }
     //cw = pow(cw,-2.0) * exp(-2.0 * pow(dx * cbp->dx + dy * cbp->dy, 2.0));
-    dd = dx * cbp->dx + dy * cbp->dy;
-    cw = 1 / (cw * cw) * exp(-2.0 * dd * dd);
+    //dd = dx * cbp->dx + dy * cbp->dy;
+    cw = 1 / (cw * cw); // * exp(-2.0 * dd * dd);
     if (cbp->dd) {
       id += cw * cbp->sumd;
       sumdw += cw;
@@ -1533,7 +1530,7 @@ void thscrapis::insert_bp_shot(double fx, double fy, double fz, double tx, doubl
   double dx = tx - fx,
     dy = ty - fy,
     dz = tz - fz,
-    dl = hypot(dx, ty), ddx, ddy, 
+    dl = std::hypot(dx, ty), ddx, ddy, 
     dirf, dirt, smp, frc, cx, cy;
   long i, n;
   if (dl < THSCRAPISRES)
@@ -1617,11 +1614,11 @@ void thscrapis::insert_bp_dim() {
     cd = this->firstdim;
     toinsert = true;
     if (cd != NULL) {
-      mindist = hypot(cd->x - bp->x, cd->y - bp->y);
+      mindist = std::hypot(cd->x - bp->x, cd->y - bp->y);
       toinsert = false;
       cd = cd->next;
       while (cd != NULL) {
-        cdist = hypot(cd->x - bp->x, cd->y - bp->y);
+        cdist = std::hypot(cd->x - bp->x, cd->y - bp->y);
         if (cdist < mindist)
           mindist = cdist;
         cd = cd->next;
@@ -1689,7 +1686,7 @@ void thscrapis::dim_interpolate(double x, double y, double z, double & zu, doubl
   while (cd != NULL) {
     dx = x - cd->x;
     dy = y - cd->y;
-    cw = hypot(dx, dy);
+    cw = std::hypot(dx, dy);
     if (cw < THSCRAPISRES) {
       zup = cd->zup;
       zdown = cd->zdown;

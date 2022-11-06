@@ -19,7 +19,7 @@ public:
   void OnKeyPress(wxKeyEvent&);
   void OnMouseDown(wxMouseEvent&);
 
-  DECLARE_EVENT_TABLE();
+  wxDECLARE_EVENT_TABLE();
 
 };
 
@@ -94,7 +94,6 @@ lxAboutDlg::lxAboutDlg(wxWindow * parent)
   pbmp->SetSize(tmpsize.x - bmp.GetWidth(), tmpsize.y - bmp.GetHeight(), -1, -1);
   this->CentreOnParent();
 
-#if wxCHECK_VERSION(3,0,0)
   FindWindow(lxABDG_TEXT1)->Bind(wxEVT_KEY_DOWN, &lxAboutDlg::OnKeyPress, this);
   FindWindow(lxABDG_TEXT2)->Bind(wxEVT_KEY_DOWN, &lxAboutDlg::OnKeyPress, this);
   FindWindow(lxABDG_TEXT3)->Bind(wxEVT_KEY_DOWN, &lxAboutDlg::OnKeyPress, this);
@@ -103,12 +102,6 @@ lxAboutDlg::lxAboutDlg(wxWindow * parent)
   FindWindow(lxABDG_TEXT2)->Bind(wxEVT_LEFT_DOWN, &lxAboutDlg::OnMouseDown, this);
   FindWindow(lxABDG_TEXT3)->Bind(wxEVT_LEFT_DOWN, &lxAboutDlg::OnMouseDown, this);
   FindWindow(lxABDG_BMP)->Bind(wxEVT_LEFT_DOWN, &lxAboutDlg::OnMouseDown, this);
-#else
-  FindWindow(lxABDG_TEXT1)->SetEventHandler(this->GetEventHandler());
-  FindWindow(lxABDG_TEXT2)->SetEventHandler(this->GetEventHandler());
-  FindWindow(lxABDG_TEXT3)->SetEventHandler(this->GetEventHandler());
-  FindWindow(lxABDG_BMP)->SetEventHandler(this->GetEventHandler());
-#endif
   delete sizerBmp;
 
 }

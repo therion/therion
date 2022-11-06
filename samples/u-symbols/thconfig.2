@@ -59,7 +59,7 @@ code metapost
 #!CODE
 def p_u_bat(expr pos, theta, sc, al) = 
   T := identity shifted pos;
-  thfill (bat_path scaled 2.0) withcolor black;
+  thfill (bat_path scaled 2.0);
 enddef;
 #!ENDCODE
 
@@ -73,7 +73,7 @@ def l_u_bat(expr P) =
   pickup PenD;
   forever:
     t := arctime cas of P;
-    thfill bat_path scaled 0.5 shifted (point t of P) withcolor black;
+    thfill bat_path scaled 0.5 shifted (point t of P);
     cas := cas + mojkrok;
     exitif cas > dlzka + (mojkrok / 3); % for rounding errors
   endfor;
@@ -84,7 +84,7 @@ enddef;
 #!CODE
 % bat pattern
 beginpattern(pattern_bat);
-    fill bat_path withcolor black;
+    fill bat_path;
 endpattern;
 
 % bat area symbol
@@ -135,3 +135,27 @@ export map -o map2.pdf -layout m -layout-map-header 0 0 nw -layout-legend on
 
 #!IMAGE map2.pdf
 #!CLEAN map2.pdf
+
+layout m2
+  copy m
+  symbol-hide point u:bat
+  symbol-hide line u:bat
+  symbol-hide area u:bat
+endlayout
+export map -o map3.pdf -layout m2 -layout-map-header 0 0 nw -layout-legend on
+
+layout m3
+  copy m2
+  # reshowing symbols & coloring symbols
+  symbol-show point u:bat
+  symbol-show line u:bat
+  symbol-show area u:bat
+  symbol-color point u [100 0 0]
+  symbol-color line u [0 100 0]
+  symbol-color area u [0 0 100]
+endlayout
+export map -o map4.pdf -layout m3 -layout-map-header 0 0 nw -layout-legend on
+
+
+#!CLEAN map3.pdf
+#!CLEAN map4.pdf
