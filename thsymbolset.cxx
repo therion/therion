@@ -43,16 +43,6 @@
 #include "thsymbolsets.h"
 #include "thlogfile.h"
 #include "thepsparse.h"
-#ifndef THMSVC
-#include <unistd.h>
-#else
-#include <direct.h>
-#define getcwd _getcwd
-#define chdir _chdir
-#define putenv _putenv
-#define mkdir _mkdir
-#endif
-
 #include <fmt/printf.h>
 
 thsymbolset::thsymbolset()
@@ -1718,81 +1708,79 @@ void export_all_symbols()
   fprintf(mpf,"end;\n");
   fclose(mpf);
 
-  // run MP
-  thbuffer com, wdir;
-  wdir.guarantee(1024);
-  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
-  thassert(chdir(thtmp.get_dir_name()) == 0);
+  {
+    const auto tmp_handle = thtmp.switch_to_tmpdir();
 
-  // vypise kodovania
-  print_fonts_setup();
+    // run MP
+    thbuffer com;
 
-  int retcode;
+    // vypise kodovania
+    print_fonts_setup();
+
+    int retcode;
 
 #ifdef THWIN32
-  if (!thini.tex_env) {
-    putenv("TEXMFCNF=");
-    putenv("DVIPSHEADERS=");
-    putenv("GFFONTS=");
-    putenv("GLYPHFONTS=");
-    putenv("MFBASES=");
-    putenv("MFINPUTS=");
-    putenv("MFPOOL=");
+    if (!thini.tex_env) {
+      putenv("TEXMFCNF=");
+      putenv("DVIPSHEADERS=");
+      putenv("GFFONTS=");
+      putenv("GLYPHFONTS=");
+      putenv("MFBASES=");
+      putenv("MFINPUTS=");
+      putenv("MFPOOL=");
 #ifdef THMSVC
-    putenv("MPINPUTS=../mpost;.");
+      putenv("MPINPUTS=../mpost;.");
 #else
-    putenv("MPINPUTS=");
+      putenv("MPINPUTS=");
 #endif
-    putenv("MPMEMS=");
-    putenv("MPPOOL=");
-    putenv("MPSUPPORT=");
-    putenv("PKFONTS=");
-    putenv("PSHEADERS=");
-    putenv("T1FONTS=");
-    putenv("T1INPUTS=");
-    putenv("T42FONTS=");
-    putenv("TEXCONFIG=");
-    putenv("TEXDOCS=");
-    putenv("TEXFONTMAPS=");
-    putenv("TEXFONTS=");
-    putenv("TEXFORMATS=");
-    putenv("TEXINPUTS=");
-    putenv("TEXMFDBS=");
-    putenv("TEXMFINI=");
-    putenv("TEXPICTS=");
-    putenv("TEXPKS=");
-    putenv("TEXPOOL=");
-    putenv("TEXPSHEADERS=");
-    putenv("TEXSOURCES=");
-    putenv("TFMFONTS=");
-    putenv("TTFONTS=");
-    putenv("VFFONTS=");
-    putenv("WEB2C=");
-  }
+      putenv("MPMEMS=");
+      putenv("MPPOOL=");
+      putenv("MPSUPPORT=");
+      putenv("PKFONTS=");
+      putenv("PSHEADERS=");
+      putenv("T1FONTS=");
+      putenv("T1INPUTS=");
+      putenv("T42FONTS=");
+      putenv("TEXCONFIG=");
+      putenv("TEXDOCS=");
+      putenv("TEXFONTMAPS=");
+      putenv("TEXFONTS=");
+      putenv("TEXFORMATS=");
+      putenv("TEXINPUTS=");
+      putenv("TEXMFDBS=");
+      putenv("TEXMFINI=");
+      putenv("TEXPICTS=");
+      putenv("TEXPKS=");
+      putenv("TEXPOOL=");
+      putenv("TEXPSHEADERS=");
+      putenv("TEXSOURCES=");
+      putenv("TFMFONTS=");
+      putenv("TTFONTS=");
+      putenv("VFFONTS=");
+      putenv("WEB2C=");
+    }
 #endif
 
-  // exportuje
-  com = "\"";
-  com += thini.get_path_mpost();
-  com += "\" ";
-  com += thini.get_opt_mpost();
-//    com += " --interaction nonstopmode data.mp";
-  com += " data.mp";
+    // exportuje
+    com = "\"";
+    com += thini.get_path_mpost();
+    com += "\" ";
+    com += thini.get_opt_mpost();
+  //    com += " --interaction nonstopmode data.mp";
+    com += " data.mp";
 #ifdef THDEBUG
-  thprintf("running metapost\n");
+    thprintf("running metapost\n");
 #endif
-  retcode = system(com.get_buffer());
-  thsymbolset_log_log_file("data.log",
-  "####################### metapost log file ########################\n",
-  "#################### end of metapost log file ####################\n",true);
-  if (retcode != EXIT_SUCCESS) {
-    thassert(chdir(wdir.get_buffer()) == 0);
-    ththrow("metapost exit code -- {}", retcode);
+    retcode = system(com.get_buffer());
+    thsymbolset_log_log_file("data.log",
+    "####################### metapost log file ########################\n",
+    "#################### end of metapost log file ####################\n",true);
+    if (retcode != EXIT_SUCCESS) {
+      ththrow("metapost exit code -- {}", retcode);
+    }
+
+    thconvert_eps();
   }
-
-  thconvert_eps();
-
-  thassert(chdir(wdir.get_buffer()) == 0);
   std::ofstream hf ("symbols.xhtml");
   hf << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   hf << "<html xmlns=\"http://www.w3.org/1999/xhtml\"  xmlns:xlink=\"http://www.w3.org/1999/xlink\"><title>Therion symbols</title>\n<body>\n";

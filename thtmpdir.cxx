@@ -41,6 +41,25 @@
 
 namespace fs = std::filesystem;
 
+thtmpdir::tmpdir_handle::tmpdir_handle(const std::string& tmp_dir)
+{
+  try {
+    prev_dir = fs::current_path().string();
+    fs::current_path(tmp_dir);
+  } catch(const std::exception& e) {
+    thwarning(("error switching to temporary directory -- %s", e.what()));
+  }
+}
+
+thtmpdir::tmpdir_handle::~tmpdir_handle()
+{
+  try {
+    fs::current_path(prev_dir);
+  } catch(const std::exception& e) {
+    thwarning(("error switching from temporary directory -- %s", e.what()));
+  }
+}
+
 thtmpdir::thtmpdir()
 {
   this->exist = false;
@@ -160,6 +179,12 @@ void thtmpdir::delete_on()
 void thtmpdir::delete_off()
 {
   this->delete_all = false;
+}
+
+
+thtmpdir::tmpdir_handle thtmpdir::switch_to_tmpdir()
+{
+  return tmpdir_handle(get_dir_name());
 }
 
 thtmpdir thtmp;

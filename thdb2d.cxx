@@ -50,14 +50,6 @@
 #include <set>
 #include <iterator>
 #include <cstdio>
-#ifndef THMSVC
-#include <unistd.h>
-#else
-#include <direct.h>
-#define getcwd _getcwd
-#define chdir _chdir
-#define putenv _putenv
-#endif
 
 class thprjx_link {
 
@@ -3627,10 +3619,9 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   }
 #endif  
 
-  thbuffer com, wdir;
-  wdir.guarantee(1024);
-  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
-  thassert(chdir(thtmp.get_dir_name()) == 0);
+  thbuffer com;
+  // working directory will be the tmpdir until this scope ends
+  const auto tmp_handle = thtmp.switch_to_tmpdir();
   int retcode;
 
   com = "\"";
@@ -3646,7 +3637,6 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   "####################### metapost log file ########################\n",
   "#################### end of metapost log file ####################\n",true);
   if (retcode != EXIT_SUCCESS) {
-    thassert(chdir(wdir.get_buffer()) == 0);
     ththrow("metapost exit code -- {}", retcode);
   }
 
@@ -3718,9 +3708,6 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
     }
   }
-
-  thassert(chdir(wdir.get_buffer()) == 0);
-
 }
 
 

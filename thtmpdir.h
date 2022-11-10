@@ -38,6 +38,21 @@
  */
  
 class thtmpdir {
+  private:
+    /**
+     * @brief Helper class to switch between cwd and tmpdir.
+     * Constructor will set current working directory to the temporary directory,
+     * destructor vice versa.
+     */
+    class [[nodiscard]] tmpdir_handle
+    {
+      public:
+        explicit tmpdir_handle(const std::string& tmp_dir);
+        ~tmpdir_handle();
+
+      private:
+        std::string prev_dir;
+    };
 
   public:
 
@@ -116,7 +131,13 @@ class thtmpdir {
    */
   
   void delete_off();
-  
+
+  /**
+   * @brief Switch working directory to the temporary directory.
+   * @return Handle object which will switch back to the previous
+   * working directory in its destructor.
+   */
+  tmpdir_handle switch_to_tmpdir();
 };
 
 extern thtmpdir thtmp;
