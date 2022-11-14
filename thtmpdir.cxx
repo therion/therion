@@ -53,11 +53,21 @@ thtmpdir::tmpdir_handle::tmpdir_handle(const std::string& tmp_dir)
 
 thtmpdir::tmpdir_handle::~tmpdir_handle()
 {
+  switch_from_tmpdir();
+}
+
+void thtmpdir::tmpdir_handle::switch_from_tmpdir() noexcept
+{
+  if (prev_dir.empty())
+    return;
+
   try {
     fs::current_path(prev_dir);
   } catch(const std::exception& e) {
     thwarning(("error switching from temporary directory -- %s", e.what()));
   }
+
+  prev_dir.clear();
 }
 
 thtmpdir::thtmpdir()

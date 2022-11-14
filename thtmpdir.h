@@ -50,6 +50,17 @@ class thtmpdir {
         explicit tmpdir_handle(const std::string& tmp_dir);
         ~tmpdir_handle();
 
+        /**
+         * @brief Explicitly switch to the previous working directory.
+         */
+        void switch_from_tmpdir() noexcept;
+
+        // copy and move disabled, we don't need them
+        tmpdir_handle(const tmpdir_handle&) = delete;
+        tmpdir_handle(tmpdir_handle&& other) = delete;
+        tmpdir_handle& operator=(const tmpdir_handle&) = delete;
+        tmpdir_handle& operator=(tmpdir_handle&& other) = delete;
+
       private:
         std::string prev_dir;
     };

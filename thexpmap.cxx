@@ -69,7 +69,6 @@
 #include "thsvg.h"
 #include "extern/img.h"
 #include "thcs.h"
-#include <optional>
 
 #include <fmt/printf.h>
 
@@ -2206,7 +2205,7 @@ if (ENC_NEW.NFSS==0) {
   fclose(tf);
 
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
-  auto tmp_handle = std::optional(thtmp.switch_to_tmpdir());
+  auto tmp_handle = thtmp.switch_to_tmpdir();
   thbuffer com;
   
   // vypise kodovania
@@ -2328,7 +2327,7 @@ if (ENC_NEW.NFSS==0) {
       }
 
       // Let's copy results and log-file to working directory
-      tmp_handle = std::nullopt;
+      tmp_handle.switch_from_tmpdir();
 #ifdef THWIN32
       com = "copy \"";
 #else
@@ -2359,14 +2358,14 @@ if (ENC_NEW.NFSS==0) {
 
     case TT_EXPMAP_FMT_SVG:
       thconvert_eps();
-      tmp_handle = std::nullopt;
+      tmp_handle.switch_from_tmpdir();
       thsvg(fnm, 0, ldata);
       break;
       
 
     case TT_EXPMAP_FMT_XHTML:
       thconvert_eps();
-      tmp_handle = std::nullopt;
+      tmp_handle.switch_from_tmpdir();
       thsvg(fnm, 1, ldata);
       break;
 
