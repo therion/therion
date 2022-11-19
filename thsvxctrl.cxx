@@ -45,11 +45,6 @@
 #include <string>
 #include <fstream>
 
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
-
 #define THPI 3.1415926535898
 
 thsvxctrl::thsvxctrl()
@@ -397,9 +392,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   fclose(svxf);
   
   // run survex
-  thbuffer svxcom, wdir;
-  wdir.guarantee(1024);
-  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
+  thbuffer svxcom;
   int retcode;
   svxcom = "\"";
   svxcom += thini.get_path_cavern();
