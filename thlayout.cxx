@@ -40,11 +40,9 @@
 #include "thconfig.h"
 #include "th2ddataobject.h"
 #include <string.h>
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
+#include <filesystem>
 
+namespace fs = std::filesystem;
 
 enum {
   TTLDBG_JOINS = 1,
@@ -1659,17 +1657,9 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
       nami++;
   }
 
-  thbuffer pict_path, pn;
-  size_t pl;
-  char * pp;
-  long i;
-  pict_path.guarantee(1024);
-  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
-  pp = pict_path.get_buffer();
-  pl = strlen(pp);
-  if ((pl > 0) && ((pp[pl-1] == '/') || (pp[pl-1] == '\\'))) {
-    pp[pl-1] = 0;
-  }
+  std::error_code ec;
+  const auto cwd = fs::current_path(ec);
+  thassert(!ec);
 
   if (this->map_header != TT_LAYOUT_MAP_HEADER_OFF) {
     fprintf(o,"\\legendbox{%.0f}{%.0f}{", this->map_header_x, this->map_header_y);
@@ -1680,17 +1670,10 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
   if (nami > 0) {
     for(mit = this->map_image_list.begin(); mit != this->map_image_list.end(); mit++) {
       if (mit->defined() && (mit->m_align != TT_LAYOUT_MAP_HEADER_OFF)) {
-        pn = pict_path;
-        pn += "/";
-        pn += mit->m_fn;
-        pp = pn.get_buffer();
-        for(i = (long)strlen(pp); i >= 0; i--) {
-          if (pp[i] == '\\')
-            pp[i] = '/';
-        }
+        const auto pict_path = cwd / mit->m_fn;
         fprintf(o,"\\legendbox{%.0f}{%.0f}{", mit->m_x, mit->m_y);
         thlayout_print_header_align(o, mit->m_align);
-        fprintf(o,"}{\\loadpicture{%s}}",pp);
+        fprintf(o,"}{\\loadpicture{%s}}", pict_path.string().c_str());
       }
     }
   }
