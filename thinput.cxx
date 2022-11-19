@@ -33,6 +33,8 @@
 
 #include <filesystem>
 
+namespace fs = std::filesystem;
+
 #define THMAXFREC 64
 
 const long thinput::max_line_size = 65535;
@@ -67,7 +69,7 @@ void thinput::ifile::close()
 bool thinput::ifile::is_equal(ifile* f)
 {
   try {
-    return std::filesystem::equivalent(name.get_buffer(), f->name.get_buffer());
+    return fs::equivalent(name.get_buffer(), f->name.get_buffer());
   } catch(const std::exception& e) {
     thwarning(("unable to compare files -- %s", e.what()))
     return false;
@@ -487,38 +489,28 @@ char * thinput::get_cif_path()
   return cifpath.get_buffer();
 }
 
-const char * thinput::get_cif_abspath(const char * fname)
+std::string thinput::get_cif_abspath(const char * fname)
 {
-  static thbuffer pict_path;
-  pict_path.guarantee(1024);
-  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);  
-  long i;
-  pict_path += "/";  
-  if (thpath_is_absolute(this->last_ptr->name.get_buffer()))
-	  pict_path = this->last_ptr->name.get_buffer();
-  else
-	  pict_path += this->last_ptr->name.get_buffer();
-  char * pp = pict_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-	if ((pp[i] == '/') || (pp[i] == '\\')) {
-	  break;
-	} else
-	  pp[i] = 0;
+  std::error_code ec;
+  auto pict_path = std::filesystem::current_path(ec);
+  thassert(!ec);
+
+  const auto& last_name = this->last_ptr->name.get_buffer();
+  if (fs::path(last_name).is_absolute())
+    pict_path = last_name;
+  else 
+    pict_path /= last_name;
+  
+  pict_path = pict_path.parent_path();
+
+  if (fname != NULL && strlen(fname) > 0) {
+    if (fs::path(fname).is_absolute())
+      pict_path = fname;
+    else
+      pict_path /= fname;
   }
-  if (strlen(pp) == 0)
-	pict_path = "/";
-  if ((fname != NULL) && (strlen(fname) > 0)) {
-	  if (thpath_is_absolute(fname))
-		  pict_path = fname;
-	  else
-		  pict_path += fname;
-  }
-  pp = pict_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-	if (pp[i] == '\\')
-	  pp[i] = '/';
-  }
-  return pict_path.get_buffer();
+
+  return pict_path.string();
 }
 
 unsigned long thinput::get_cif_line_number()

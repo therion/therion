@@ -462,7 +462,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           thencode(&(this->db->buff_enc), *args, argenc);
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           this->last_line->code = this->ccode;
-          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(), true);
+          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {
@@ -791,7 +791,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 
     case TT_LAYOUT_COLOR_PROFILE:
       sv = thmatch_token(args[0],thtt_layoutclr_model);
-      tmp1 = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(args[1]), true);
+      tmp1 = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(args[1]).c_str(), true);
       switch (sv) {
       case TT_LAYOUTCLRMODEL_CMYK:
     	  this->color_profile_cmyk = tmp1;

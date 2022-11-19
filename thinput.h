@@ -289,7 +289,7 @@ class thinput {
    * Return current absolute input file path.
    */  
    
-  const char * get_cif_abspath(const char * fname = "");
+  std::string get_cif_abspath(const char * fname = "");
   
   /**
    * Return current input line number.
