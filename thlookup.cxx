@@ -42,10 +42,6 @@
 #include "thpdf.h"
 #include "thtexfonts.h"
 #include <string.h>
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
 
 
 thlookup::thlookup()

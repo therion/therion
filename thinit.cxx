@@ -716,10 +716,8 @@ void thinit::load()
       fprintf(ff,"\\nopagenumbers\n\\batchmode\n\\def\\fonttest#1{\\font\\a=#1\\a}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\end", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
       fclose(ff);
 
-      thbuffer com, wdir;
-      wdir.guarantee(1024);
-      thassert(getcwd(wdir.get_buffer(),1024) != NULL);
-      thassert(chdir(thtmp.get_dir_name()) == 0);
+      thbuffer com;
+      const auto tmp_handle = thtmp.switch_to_tmpdir();
       int retcode;
 
       com = "\"";
@@ -735,7 +733,6 @@ void thinit::load()
         TMPFONTS.push_back(*J);
         thprintf(" OK\n");
       }
-      thassert(chdir(wdir.get_buffer()) == 0);
     } else {
       TMPFONTS.push_back(*J);
     }
