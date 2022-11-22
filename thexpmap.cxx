@@ -44,14 +44,6 @@
 #include <stdio.h>
 #include "thtmpdir.h"
 #include "thtrans.h"
-#ifndef THMSVC
-#include <unistd.h>
-#else
-#include <direct.h>
-#define getcwd _getcwd
-#define chdir _chdir
-#define putenv _putenv
-#endif
 #include "thchenc.h"
 #include "thdb1d.h"
 #include "thinit.h"
@@ -2213,10 +2205,8 @@ if (ENC_NEW.NFSS==0) {
   fclose(tf);
 
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
-  thbuffer com, wdir;
-  wdir.guarantee(1024);
-  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
-  thassert(chdir(thtmp.get_dir_name()) == 0);
+  auto tmp_handle = thtmp.switch_to_tmpdir();
+  thbuffer com;
   
   // vypise kodovania
   print_fonts_setup();
@@ -2286,7 +2276,6 @@ if (ENC_NEW.NFSS==0) {
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);
     if (retcode != EXIT_SUCCESS) {
-      thassert(chdir(wdir.get_buffer()) == 0);
       ththrow("metapost exit code -- {}", retcode);
     }
   }
@@ -2334,12 +2323,11 @@ if (ENC_NEW.NFSS==0) {
       "######################## pdftex log file #########################\n",
       "##################### end of pdftex log file #####################\n",false);
       if (retcode != EXIT_SUCCESS) {
-        thassert(chdir(wdir.get_buffer()) == 0);
         ththrow("pdftex exit code -- {}", retcode);
       }
 
       // Let's copy results and log-file to working directory
-      thassert(chdir(wdir.get_buffer()) == 0);
+      tmp_handle.switch_from_tmpdir();
 #ifdef THWIN32
       com = "copy \"";
 #else
@@ -2370,14 +2358,14 @@ if (ENC_NEW.NFSS==0) {
 
     case TT_EXPMAP_FMT_SVG:
       thconvert_eps();
-      thassert(chdir(wdir.get_buffer()) == 0);
+      tmp_handle.switch_from_tmpdir();
       thsvg(fnm, 0, ldata);
       break;
       
 
     case TT_EXPMAP_FMT_XHTML:
       thconvert_eps();
-      thassert(chdir(wdir.get_buffer()) == 0);
+      tmp_handle.switch_from_tmpdir();
       thsvg(fnm, 1, ldata);
       break;
 
