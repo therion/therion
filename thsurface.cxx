@@ -37,6 +37,7 @@
 #include "thparse.h"
 #include "thdb1d.h"
 #include "thinfnan.h"
+#include <algorithm>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -221,9 +222,10 @@ void thsurface::parse_picture(char ** args)
   else
 	  pict_path /= thdb.csrc.name;
 
-  pict_path = pict_path.parent_path() / args[0];
+  auto pict_path_str = (pict_path.parent_path() / args[0]).string();
+  std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
 
-  this->pict_name = thdb.strstore(pict_path.string().c_str());
+  this->pict_name = thdb.strstore(pict_path_str.c_str());
   // thprintf("\npict name: %s\n", this->pict_name);  
   
   this->pict_dpi = 300.0;

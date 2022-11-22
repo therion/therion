@@ -1670,10 +1670,11 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
   if (nami > 0) {
     for(mit = this->map_image_list.begin(); mit != this->map_image_list.end(); mit++) {
       if (mit->defined() && (mit->m_align != TT_LAYOUT_MAP_HEADER_OFF)) {
-        const auto pict_path = cwd / mit->m_fn;
+        auto pict_path = (cwd / mit->m_fn).string();
+        std::replace(pict_path.begin(), pict_path.end(), '\\', '/');
         fprintf(o,"\\legendbox{%.0f}{%.0f}{", mit->m_x, mit->m_y);
         thlayout_print_header_align(o, mit->m_align);
-        fprintf(o,"}{\\loadpicture{%s}}", pict_path.string().c_str());
+        fprintf(o,"}{\\loadpicture{%s}}", pict_path.c_str());
       }
     }
   }

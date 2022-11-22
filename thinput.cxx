@@ -31,6 +31,7 @@
 #include "therion.h"
 #include "thexception.h"
 
+#include <algorithm>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -510,7 +511,9 @@ std::string thinput::get_cif_abspath(const char * fname)
       pict_path /= fname;
   }
 
-  return pict_path.string();
+  auto pict_path_str = pict_path.string();
+  std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
+  return pict_path_str;
 }
 
 unsigned long thinput::get_cif_line_number()
