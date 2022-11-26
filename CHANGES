@@ -1,8 +1,36 @@
-Therion 6.1.3 (in progress):
+Therion 6.1.3 (2022-11-26):
+
 therion:
+ * Slovenian translation updated [#462, Marko Zakrajsek]
+ * improve output reproducibility across platforms (two-pass rounding,
+   improved angles calculation in the warping algorithm)
  * bugs fixed
    - at non-int mapping of scale to base-scale, text labels get debugging text
      added before them [#428]
+
+infrastructure:
+ * C++17 standard required [#449, Matěj Plch]
+ * C++17 related code refactoring and modernisation (attributes,
+   std::filesystem, std::string_view)
+ * fixed compiler warnings [#437, Matěj Plch]
+ * fixed wxWidgets asserts [#439, Matěj Plch]
+ * CMake: compile QuickHull as a library [#436, Matěj Plch]
+ * CMake: reworked include paths [Matěj Plch]
+ * CMake: compile C sources as a separate C libraries [Matěj Plch]
+ * CMake: further improvements [Matěj Plch]
+ * CMake: add the missing sample [#440, Matěj Plch]
+ * Makefile fixed
+ * CI: fixed wine32 installation issues
+ * CI: removed builds on deprecated ubuntu-18.04 and macos-10.15
+   [#442, Matěj Plch]
+ * CI: suspended builds on MXE [#448, Matěj Plch]
+ * CI: add missing msys2/mingw packages
+ * CI: enable sanitizers and build samples on Windows and MacOS
+   [#457, #458, Matěj Plch]
+ * clang-tidy improvements [#452, Matěj Plch]
+ * require at least VTK 7 [#444, Matěj Plch]
+ * require at leastwxWidgets 3.0.0 [#451, Matěj Plch]
+ * linking to Proj 9.1.0 added to test_proj.sh
 
 --------------------------------------------------------------------------------
 
