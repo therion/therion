@@ -40,11 +40,9 @@
 #include "thconfig.h"
 #include "th2ddataobject.h"
 #include <string.h>
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
+#include <filesystem>
 
+namespace fs = std::filesystem;
 
 enum {
   TTLDBG_JOINS = 1,
@@ -462,7 +460,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           thencode(&(this->db->buff_enc), *args, argenc);
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           this->last_line->code = this->ccode;
-          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(), true);
+          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {
@@ -791,7 +789,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 
     case TT_LAYOUT_COLOR_PROFILE:
       sv = thmatch_token(args[0],thtt_layoutclr_model);
-      tmp1 = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(args[1]), true);
+      tmp1 = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(args[1]).c_str(), true);
       switch (sv) {
       case TT_LAYOUTCLRMODEL_CMYK:
     	  this->color_profile_cmyk = tmp1;
@@ -1659,17 +1657,9 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
       nami++;
   }
 
-  thbuffer pict_path, pn;
-  size_t pl;
-  char * pp;
-  long i;
-  pict_path.guarantee(1024);
-  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
-  pp = pict_path.get_buffer();
-  pl = strlen(pp);
-  if ((pl > 0) && ((pp[pl-1] == '/') || (pp[pl-1] == '\\'))) {
-    pp[pl-1] = 0;
-  }
+  std::error_code ec;
+  const auto cwd = fs::current_path(ec);
+  thassert(!ec);
 
   if (this->map_header != TT_LAYOUT_MAP_HEADER_OFF) {
     fprintf(o,"\\legendbox{%.0f}{%.0f}{", this->map_header_x, this->map_header_y);
@@ -1680,17 +1670,11 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO
   if (nami > 0) {
     for(mit = this->map_image_list.begin(); mit != this->map_image_list.end(); mit++) {
       if (mit->defined() && (mit->m_align != TT_LAYOUT_MAP_HEADER_OFF)) {
-        pn = pict_path;
-        pn += "/";
-        pn += mit->m_fn;
-        pp = pn.get_buffer();
-        for(i = (long)strlen(pp); i >= 0; i--) {
-          if (pp[i] == '\\')
-            pp[i] = '/';
-        }
+        auto pict_path = (cwd / mit->m_fn).string();
+        std::replace(pict_path.begin(), pict_path.end(), '\\', '/');
         fprintf(o,"\\legendbox{%.0f}{%.0f}{", mit->m_x, mit->m_y);
         thlayout_print_header_align(o, mit->m_align);
-        fprintf(o,"}{\\loadpicture{%s}}",pp);
+        fprintf(o,"}{\\loadpicture{%s}}", pict_path.c_str());
       }
     }
   }

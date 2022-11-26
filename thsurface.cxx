@@ -37,10 +37,10 @@
 #include "thparse.h"
 #include "thdb1d.h"
 #include "thinfnan.h"
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
+#include <algorithm>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 enum {
   TT_SURFACE_GFLIP_UNKNOWN,
@@ -210,34 +210,22 @@ void thsurface::self_print_properties(FILE * outf)
 
 void thsurface::parse_picture(char ** args)
 {
-
-  thbuffer pict_path;
-  pict_path.guarantee(1024);
-  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);  
-  long i;
   if (strlen(args[0]) == 0)
     ththrow("picture name not specified");
-  pict_path += "/";  
-  if (thpath_is_absolute(thdb.csrc.name))
+
+  std::error_code ec;
+  auto pict_path = fs::current_path(ec);
+  thassert(!ec)
+
+  if (fs::path(thdb.csrc.name).is_absolute())
 	  pict_path = thdb.csrc.name;
   else
-	  pict_path += thdb.csrc.name;
-  char * pp = pict_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-    if ((pp[i] == '/') || (pp[i] == '\\')) {
-      break;
-    } else
-      pp[i] = 0;
-  }
-  if (strlen(pp) == 0)
-    pict_path = "/";
-  pict_path += args[0];
-  pp = pict_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-    if (pp[i] == '\\')
-      pp[i] = '/';
-  }
-  this->pict_name = thdb.strstore(pp);
+	  pict_path /= thdb.csrc.name;
+
+  auto pict_path_str = (pict_path.parent_path() / args[0]).string();
+  std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
+
+  this->pict_name = thdb.strstore(pict_path_str.c_str());
   // thprintf("\npict name: %s\n", this->pict_name);  
   
   this->pict_dpi = 300.0;

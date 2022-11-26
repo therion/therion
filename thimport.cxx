@@ -37,12 +37,7 @@
 #include <string>
 #include <map>
 #include <list>
-#ifndef THMSVC
-#include <unistd.h>
-#else
-#include <direct.h>
-#define getcwd _getcwd
-#endif
+#include <filesystem>
 
 struct thsst {
   std::string name, fullname;
@@ -168,53 +163,28 @@ void thimport::self_print_properties(FILE * outf)
 
 void thimport::set_file_name(char * fnm)
 {
-  
-  thbuffer impf_path;
-  impf_path.guarantee(1024);
-  thassert(getcwd(impf_path.get_buffer(),1024) != NULL);
-  
-  this->mysrc = this->db->csrc;
-  
-  long i;
   if (strlen(fnm) == 0)
     ththrow("file not specified");
-  impf_path += "/";
-  impf_path += thdb.csrc.name;
-  char * pp = impf_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-    if ((pp[i] == '/') || (pp[i] == '\\')) {
-      break;
-    } else
-      pp[i] = 0;
-  }
-  if (strlen(pp) == 0)
-    impf_path = "/";
-  impf_path += fnm;
-  pp = impf_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-    if (pp[i] == '\\')
-      pp[i] = '/';
-  }
-  this->fname = this->db->strstore(pp);
 
-  FILE * tmp;
-  tmp = fopen(this->fname,"r");
-  if (tmp == NULL)
-    ththrow("unable to open file for import -- {}", this->fname);
-  else
-    fclose(tmp);
-    
-  // let's determine input type
-#define check_ext(str) (strlen(this->fname) > strlen(str)) && \
-  (icase_equals(&(this->fname[strlen(this->fname) - strlen(str)]), str))
-  
-  if (check_ext(".3d"))
-    this->format = TT_IMPORT_FMT_3D;
-  else if (check_ext(".plt"))
-    this->format = TT_IMPORT_FMT_PLT;
-  else if (check_ext(".xyz"))
-    this->format = TT_IMPORT_FMT_XYZ;
+  std::error_code ec;
+  const auto impf_path = (std::filesystem::current_path(ec) / thdb.csrc.name).parent_path() / fnm;
+  thassert(!ec);
 
+  auto impf_path_str = impf_path.string();
+  std::replace(impf_path_str.begin(), impf_path_str.end(), '\\', '/');
+
+  this->mysrc = this->db->csrc;
+  this->fname = this->db->strstore(impf_path_str.c_str());
+
+  const auto ext = impf_path.extension().string();
+  for (const auto& [str, type] : {std::tuple{".3d", TT_IMPORT_FMT_3D}, 
+                                  std::tuple{".plt", TT_IMPORT_FMT_PLT}, 
+                                  std::tuple{".xyz", TT_IMPORT_FMT_XYZ}}) {
+    if (icase_equals(ext, str)) {
+      this->format = type;
+      return;
+    }
+  }
 }
 
 

@@ -34,10 +34,9 @@
 #include "thexception.h"
 #include "thconfig.h"
 #include <stdarg.h>
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 long thpic_convert_number(1);
 
@@ -69,39 +68,24 @@ bool thpic::exists() {
 
 void thpic::init(const char * pfname, const char * incfnm)
 {
-
-  long i;
-  thbuffer pict_path;
-  pict_path.guarantee(1024);
-  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
-
   if (strlen(pfname) == 0)
     ththrow("picture file name not specified");
 
-  pict_path += "/";
+  std::error_code ec;
+  auto pict_path = fs::current_path(ec);
+  thassert(!ec)
+
   if (incfnm != NULL) {
-    if (thpath_is_absolute(incfnm))
+    if (fs::path(incfnm).is_absolute())
     	pict_path = incfnm;
     else 
-    	pict_path += incfnm;
+    	pict_path /= incfnm;
   }
-  char * pp = pict_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-    if ((pp[i] == '/') || (pp[i] == '\\')) {
-      break;
-    } else
-      pp[i] = 0;
-  }
-  if (strlen(pp) == 0)
-    pict_path = "/";
-  pict_path += pfname;
-  pp = pict_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-    if (pp[i] == '\\')
-      pp[i] = '/';
-  }
+  pict_path = pict_path.parent_path() / pfname;
 
-  this->fname = thdb.strstore(pp);
+  auto pict_path_str = pict_path.string();
+  std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
+  this->fname = thdb.strstore(pict_path_str.c_str());
   // thprintf("\npict name: %s\n", this->fname);  
 
   thbuffer ccom;
