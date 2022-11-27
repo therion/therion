@@ -32,6 +32,11 @@ jobs:
       - name: Run samples
         if: matrix.toolchain == 'clang-sanitizers.cmake'
         run: cmake --build build -t samples-verify-crc
+      - uses: actions/upload-artifact@v3
+        if: matrix.toolchain == 'clang-sanitizers.cmake' && always()
+        with:
+          name: samples
+          path: build/samples/
       - name: Install
         run: sudo cmake --build build -t install
 
@@ -56,7 +61,12 @@ jobs:
       - name: Run samples
         run: |
           eval "$(/usr/libexec/path_helper)"
-          cmake --build build -t samples-build
+          cmake --build build -t samples-verify-crc
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: samples
+          path: build/samples/
       - name: Install
         run: cmake --build build -t install
 
@@ -82,12 +92,16 @@ jobs:
       - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DUSE_BUNDLED_SHAPELIB=OFF -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Build samples
-        if: matrix.config.msystem == 'CLANG32'
         run: |
           mkdir -p $HOME/.therion
           echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
-          cmake --build build -t samples-build -- -j 4
+          cmake --build build -t samples-verify-crc -- -j 4
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: samples
+          path: build/samples/
       - run: cmake --build build -t deploy -- -j 4
 
   # MXE:
