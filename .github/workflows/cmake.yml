@@ -61,7 +61,7 @@ jobs:
       - name: Run samples
         run: |
           eval "$(/usr/libexec/path_helper)"
-          cmake --build build -t samples-verify-crc
+          cmake --build build -t samples-build
       - uses: actions/upload-artifact@v3
         if: always()
         with:
@@ -96,7 +96,7 @@ jobs:
           mkdir -p $HOME/.therion
           echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
-          cmake --build build -t samples-verify-crc -- -j 4
+          cmake --build build -t samples-build -- -j 4
       - uses: actions/upload-artifact@v3
         if: always()
         with:
