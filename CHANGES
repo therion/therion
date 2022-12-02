@@ -1,5 +1,7 @@
 Therion 6.1.4 (in progress):
 
+xtherion:
+ * Added support for converting all eligible poly lines to curves in one operation [Mark Dickey]
 
 --------------------------------------------------------------------------------
 
