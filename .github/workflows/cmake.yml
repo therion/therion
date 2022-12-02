@@ -61,8 +61,8 @@ jobs:
       - name: Run samples
         run: |
           eval "$(/usr/libexec/path_helper)"
-          tlmgr install collection-langcyrillic
-          tlmgr install collection-langczechslovak
+          sudo tlmgr install collection-langcyrillic
+          sudo tlmgr install collection-langczechslovak
           cmake --build build -t samples-verify-crc
       - uses: actions/upload-artifact@v3
         if: always()
