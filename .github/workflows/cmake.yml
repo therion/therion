@@ -10,7 +10,7 @@ jobs:
           - { os: ubuntu-22.04, toolchain: clang-sanitizers.cmake, args: ""                                                }
           - { os: ubuntu-22.04, toolchain: gcc.cmake,              args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug" }
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: install dependencies
         run: |
           sudo apt -qq update
@@ -46,7 +46,7 @@ jobs:
       matrix:
         os: [macos-11, macos-12]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: install dependencies
         run: |
           brew update
@@ -83,7 +83,7 @@ jobs:
     env:
       THDIR: d:/a/therion
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.config.msystem }}
@@ -112,7 +112,7 @@ jobs:
   #         - { os: ubuntu-20.04, osname: focal, pkg: i686,   cmd: i686,   wine-pkg: wine32, wine: wine }
   #         - { os: ubuntu-20.04, osname: focal, pkg: x86-64, cmd: x86_64, wine-pkg: wine64, wine: wine64-stable }
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v3
   #     - name: install dependencies
   #       run: |
   #         sudo dpkg --add-architecture i386
