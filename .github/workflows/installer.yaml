@@ -9,7 +9,7 @@ jobs:
   #   env:
   #     THDIR: /home/runner/work/therion
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v3
   #       with:
   #         fetch-depth: 0
   #     - name: install dependencies
@@ -50,7 +50,7 @@ jobs:
   #         cd ../therion.bin
   #         mv therion-setup.exe therion-setup-$THID.exe
   #         mv thbook/thbook.pdf thbook-$THID.pdf
-  #     - uses: 'actions/upload-artifact@v2'
+  #     - uses: 'actions/upload-artifact@v3'
   #       with:
   #         name: therion-setup-mxe-${{ steps.build.outputs.THID_out }}
   #         path: |
@@ -78,7 +78,7 @@ jobs:
           install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets3.1 mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
       - name: prevent git EOL conversion
         run: git config --global core.autocrlf input
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: build and create the installation package
@@ -103,7 +103,7 @@ jobs:
           cd ../therion.bin
           mv therion-setup.exe therion-setup-$THID.exe
           mv thbook/thbook.pdf thbook-$THID.pdf
-      - uses: 'actions/upload-artifact@v2'
+      - uses: 'actions/upload-artifact@v3'
         with:
           name: therion-setup-msys2-${{ steps.build.outputs.THID_out }}
           path: |
