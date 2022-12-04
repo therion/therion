@@ -2257,14 +2257,6 @@ if (ENC_NEW.NFSS==0) {
     com = "thpdf";
 */
 
-
-#ifdef THWIN32
-      unsigned long cpch;
-      char * cpcmd;
-#endif
-
-
-
       switch (this->format) {
 
     case TT_EXPMAP_FMT_PDF:
