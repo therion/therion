@@ -46,7 +46,7 @@
 #include "thcs.h"
 #include "thtexfonts.h"
 #include "thlang.h"
-#include <libgen.h>
+#include <filesystem>
 
 
 thexptable::thexptable() {
@@ -401,31 +401,25 @@ void thexptable::process_db(class thdatabase * dbp)
       break;
   }
 
-
-#ifdef THWIN32
-  char title[_MAX_FNAME];
-  _splitpath(this->outpt, NULL, NULL, title, NULL);
-#elif THLINUX
-  thbuffer bnb;
-  bnb.strcpy(this->outpt);
-  const char * title = basename(bnb.get_buffer());
-#else
-  const char * title = "cave";
-#endif
-
+  std::string title = "cave";
+  try {
+    title = std::filesystem::path(this->outpt).filename().string();
+  } catch(const std::exception& e) {
+    thwarning(("unable to obtain output file name -- %s", e.what()))
+  }
 
   switch (this->format) {
     case TT_EXPTABLE_FMT_TXT:
       this->m_table.export_txt(fname, this->encoding);
       break;
     case TT_EXPTABLE_FMT_HTML:
-      this->m_table.export_html(fname, title, this->encoding);
+      this->m_table.export_html(fname, title.c_str(), this->encoding);
       break;
     case TT_EXPTABLE_FMT_DBF:
       this->m_table.export_dbf(fname, this->encoding);
       break;
     case TT_EXPTABLE_FMT_KML:
-      this->m_table.export_kml(fname, (this->export_mode == TT_EXP_CONTLIST) ? "Comment" : "Title", title);
+      this->m_table.export_kml(fname, (this->export_mode == TT_EXP_CONTLIST) ? "Comment" : "Title", title.c_str());
       break;
   }
 

@@ -4,7 +4,7 @@ jobs:
   ubuntu:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: install dependencies
         run: |
           sudo apt -qq update
@@ -21,7 +21,7 @@ jobs:
   mac:
     runs-on: macos-11
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: install dependencies
         run: |
           brew update
@@ -38,7 +38,7 @@ jobs:
   # mxe-i686:
   #   runs-on: ubuntu-20.04
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v3
   #     - name: install dependencies
   #       run: |
   #         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
@@ -56,7 +56,7 @@ jobs:
   # mxe-x86_64:
   #   runs-on: ubuntu-20.04
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v3
   #     - name: install dependencies
   #       run: |
   #         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 86B72ED9
@@ -83,7 +83,7 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.msystem }}
