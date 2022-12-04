@@ -7075,3 +7075,66 @@ ru: стрелка
 sk: šípka
 sl: puščica krivulje
 
+therion: Convert eligible lines to curves
+bg: Convert eligible lines to curves
+cs: Convert eligible lines to curves
+de: Convert eligible lines to curves
+el: Convert eligible lines to curves
+en: Convert eligible lines to curves
+es: Convert eligible lines to curves
+fr: Convert eligible lines to curves
+it: Convert eligible lines to curves
+pt: Convert eligible lines to curves
+ru: Convert eligible lines to curves
+sk: Convert eligible lines to curves
+sl: Convert eligible lines to curves
+sq: Convert eligible lines to curves
+zh_CN: Convert eligible lines to curves
+
+therion: No
+bg: No
+cs: No
+de: No
+el: No
+en: No
+es: No
+fr: No
+it: No
+pt: No
+ru: No
+sk: No
+sl: No
+sq: No
+zh_CN: No
+
+therion: Yes
+bg: Yes
+cs: Yes
+de: Yes
+el: Yes
+en: Yes
+es: Yes
+fr: Yes
+it: Yes
+pt: Yes
+ru: Yes
+sk: Yes
+sl: Yes
+sq: Yes
+zh_CN: Yes
+
+therion: Converting
+bg: Converting
+cs: Converting
+de: Converting
+el: Converting
+en: Converting
+es: Converting
+fr: Converting
+it: Converting
+pt: Converting
+ru: Converting
+sk: Converting
+sl: Converting
+sq: Converting
+zh_CN: Converting
