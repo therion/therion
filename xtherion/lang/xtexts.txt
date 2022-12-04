@@ -7075,3 +7075,23 @@ ru: стрелка
 sk: šípka
 sl: puščica krivulje
 
+therion: Convert eligible lines to curves
+en: Convert eligible lines to curves
+sk: Konvertovať vhodné čiary na krivky
+
+therion: No
+cs: Ne
+de: Nein
+en: No
+sk: Nie
+
+therion: Yes
+cs: Ano
+de: Ja
+en: Yes
+sk: Áno
+
+therion: Converting
+cs: Konvertuji
+en: Converting
+sk: Konvertujem
