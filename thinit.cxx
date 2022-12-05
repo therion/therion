@@ -39,6 +39,7 @@
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thpdfdbg.h"
+#include <filesystem>
 
 #ifdef THWIN32
 #include <windows.h>
@@ -205,43 +206,16 @@ void thinit::copy_fonts() {
 
   if (ENC_NEW.NFSS == 0) return;
 
-  static thbuffer tmpb;
-  int retcode;
-
   if (fonts_ok) return;
 
   thprintf("copying_fonts ...\n");
 
   for(int index = 0; index < 5; index++) {
     thprintf("%s\n", font_dst[index].c_str());
-  // skopiruje font subor
-#ifdef THWIN32
-    tmpb = "copy \"";
-#else
-    tmpb = "cp \"";
-#endif
-    tmpb += font_src[index].c_str();
-    tmpb += "\" \"";
-    tmpb += thtmp.get_file_name(font_dst[index].c_str());
-    tmpb += "\"";
-
-#ifdef THWIN32
-    char * cpcmd;
-    size_t  cpch;
-    cpcmd = tmpb.get_buffer();
-    for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
-      if (cpcmd[cpch] == '/') {
-        cpcmd[cpch] = '\\';
-      }
-    }
-#endif
-
 #ifdef THDEBUG
     thprintf("copying font\n");
 #endif
-    retcode = system(tmpb.get_buffer());
-    if (retcode != EXIT_SUCCESS)
-      ththrow("unable to copy font file -- {}", font_src[index].c_str());
+    std::filesystem::copy(font_src[index], thtmp.get_file_name(font_dst[index].c_str()));
   }
 
 #ifdef THWIN32
