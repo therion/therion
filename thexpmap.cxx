@@ -69,8 +69,11 @@
 #include "thsvg.h"
 #include "extern/img.h"
 #include "thcs.h"
+#include <filesystem>
 
 #include <fmt/printf.h>
+
+namespace fs = std::filesystem;
 
 thexpmap::thexpmap() {
   this->format = TT_EXPMAP_FMT_UNKNOWN;
@@ -861,46 +864,13 @@ void thexpmap::export_th2(class thdb2dprj * prj)
             }
             
             if (srcgif != NULL) {              
-              size_t cpch, retcode;
-              thbuffer com;
-              char prevbf[11];
-              std::snprintf(&(prevbf[0]),11,"%03d",sknum);
               // Let's copy results and log-file to working directory
-#ifdef THWIN32
-              com = "copy \"";
-#else
-              com = "cp \"";
-#endif
-              com += srcgif;
-              com += "\" \"";
-              com += fnm;
-              com += ".";
-              com += &(prevbf[0]);
-              com += ".gif\"";
-
-#ifdef THWIN32
-              char * cpcmd;
-              cpcmd = com.get_buffer();
-              for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
-                if (cpcmd[cpch] == '/') {
-                  cpcmd[cpch] = '\\';
-                }
-              }
-#endif
-
 #ifdef THDEBUG
               thprintf("copying results\n");
 #endif
-              retcode = system(com.get_buffer());
-              if (retcode != EXIT_SUCCESS)
-                ththrow("cp exit code -- {}", retcode);
-              for(cpch = strlen(fnm); cpch > 0; cpch--) {
-                if ((fnm[cpch] == '/') || (fnm[cpch] == '\\')) {
-                  cpch++;
-                  break;
-                }
-              }
-              fprintf(pltf,"##XTHERION## xth_me_image_insert {%.2f 1 1.0} {%.2f {}} %s.%03d.gif 0 {}\n", nx, ny, &(fnm[cpch]), sknum++);
+              const fs::path new_file = fmt::format("{}.{:03}.gif", fnm, sknum++);
+              fs::copy(srcgif, new_file);
+              fprintf(pltf,"##XTHERION## xth_me_image_insert {%.2f 1 1.0} {%.2f {}} %s 0 {}\n", nx, ny, new_file.filename().string().c_str());
             }
 
             thprintf(" done\n");
@@ -2285,14 +2255,6 @@ if (ENC_NEW.NFSS==0) {
     com = "thpdf";
 */
 
-
-#ifdef THWIN32
-      unsigned long cpch;
-      char * cpcmd;
-#endif
-
-
-
       switch (this->format) {
 
     case TT_EXPMAP_FMT_PDF:
@@ -2326,31 +2288,10 @@ if (ENC_NEW.NFSS==0) {
 
       // Let's copy results and log-file to working directory
       tmp_handle.switch_from_tmpdir();
-#ifdef THWIN32
-      com = "copy \"";
-#else
-      com = "cp \"";
-#endif
-      com += thtmp.get_file_name("data.pdf");
-      com += "\" \"";
-      com += fnm;
-      com += "\"";
-
-#ifdef THWIN32
-      cpcmd = com.get_buffer();
-      for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
-       if (cpcmd[cpch] == '/') {
-         cpcmd[cpch] = '\\';
-       }
-     }
-#endif
-
 #ifdef THDEBUG
       thprintf("copying results\n");
 #endif
-      retcode = system(com.get_buffer());
-      if (retcode != EXIT_SUCCESS)
-        ththrow("cp exit code -- {}", retcode);
+      fs::copy(thtmp.get_file_name("data.pdf"), fnm);
       break;
       // END OF PDF POSTPROCESSING
 
