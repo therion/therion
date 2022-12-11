@@ -660,10 +660,10 @@ therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned in
   // thprintf("U origin %6.2f %6.2f units %6.2f\n", mU0.m_x, mU0.m_y, mUUnit);
   // thprintf("UC origin %6.2f %6.2f units %6.2f\n", mUC.m_x, mUC.m_y, mUCUnit);
   // new way
-  warpp_t * pi = (warpp_t *)malloc( wd * hd * sizeof(warpp_t) );
+  warpp_t * pi = (warpp_t *)malloc( sizeof(warpp_t) * wd * hd );
   if ( pi != NULL ) {
-    memset( pi, 0xff, wd*hd*sizeof(warpp_t) );
-    double * pf = (double *)calloc( wd * hd, sizeof(double) );
+    memset( pi, 0xff, sizeof(warpp_t)*wd*hd );
+    double * pf = (double *)calloc( static_cast<size_t>(wd) * hd, sizeof(double) );
     if ( pf == NULL ) 
       thprintf("warning: failed to allocate temporary distance image\n");
 

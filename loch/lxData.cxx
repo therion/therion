@@ -225,7 +225,7 @@ void lxDataTexture::CreateTexImages(int sizeS, int sizeO)
   this->image.width, this->image.height, GL_UNSIGNED_BYTE, this->image.data,  
   sizeS, sizeS, GL_UNSIGNED_BYTE, this->texS);
 
-  pidn = 3 * sizeS * sizeS;
+  pidn = 3L * sizeS * sizeS;
   for(pidx = 0, psrc = this->texS, pdst = this->texSbw; pidx < pidn; pidx += 3, psrc += 3, pdst += 3) {
     pdst[2] = pdst[1] = pdst[0] = (unsigned char) (0.2989*double(psrc[0]) + 0.5870*double(psrc[1]) + 0.1140*double(psrc[2]));
   }
@@ -239,7 +239,7 @@ void lxDataTexture::CreateTexImages(int sizeS, int sizeO)
   this->image.width, this->image.height, GL_UNSIGNED_BYTE, this->image.data,  
   sizeO, sizeO, GL_UNSIGNED_BYTE, this->texO);
 
-  pidn = 3 * sizeO * sizeO;
+  pidn = 3L * sizeO * sizeO;
   for(pidx = 0, psrc = this->texO, pdst = this->texObw; pidx < pidn; pidx += 3, psrc += 3, pdst += 3) {
     pdst[2] = pdst[1] = pdst[0] = (unsigned char) (0.2989*double(psrc[0]) + 0.5870*double(psrc[1]) + 0.1140*double(psrc[2]));
   }
@@ -528,7 +528,7 @@ void lxData::Rebuild()
     nsy = iy2 - iy1;
     if ((((ix2 - ix1) < this->m_textureSurface.image.width) || ((iy2 - iy1) < this->m_textureSurface.image.height)) && (nsx > 0) && (nsy > 0)) {
       // skopirujeme data
-      unsigned char * nd = (unsigned char *)malloc(3 * nsx * nsy);
+      unsigned char * nd = (unsigned char *)malloc(3UL * nsx * nsy);
       int rr, rs, ors, dcs;
       rs = 3 * nsx;
       dcs = 3 * ix1;

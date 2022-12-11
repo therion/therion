@@ -488,7 +488,7 @@ void lxRenderFile::Render() {
   m_glc->setup->cam_width = double(m_imgWidth) / double(m_imgHeight);
 
   m_cTile = 0;
-  long max =
+  const auto max =
     ((this->m_imgWidth + this->m_tWidth - 2 * lxRENDERBORDER - 1) / (this->m_tWidth - 2 * lxRENDERBORDER)) *
     ((this->m_imgHeight + this->m_tHeight - 2 * lxRENDERBORDER - 1) / (this->m_tHeight - 2 * lxRENDERBORDER));
   m_continue = true;
