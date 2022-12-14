@@ -622,8 +622,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
             if (fabs(ns - 1.0) < 1e-8) {
               srcgif = skpic->convert("GIF", "gif", "");            
             } else {
-              srcgif = skpic->convert("GIF", "gif", "-resize %d", 
-                long(ns * double(skpic->width) + 0.5));            
+              srcgif = skpic->convert("GIF", "gif", fmt::format("-resize {}", long(ns * double(skpic->width) + 0.5)));
             }
             
             thprintf(" done\n");
@@ -861,8 +860,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
             if (fabs(ns - 1.0) < 1e-8) {
               srcgif = skpic->convert("GIF", "gif", "");            
             } else {
-              srcgif = skpic->convert("GIF", "gif", "-resize %d", 
-                long(ns * double(skpic->width) + 0.5));            
+              srcgif = skpic->convert("GIF", "gif", fmt::format("-resize {}", long(ns * double(skpic->width) + 0.5)));
             }
             
             if (srcgif != NULL) {              
