@@ -1060,3 +1060,5 @@ utest-main.o: utest-main.cxx extern/catch2/catch.hpp thinit.h thbuffer.h \
  thmbuffer.h thinput.h thparse.h
 utest-proj.o: utest-proj.cxx extern/catch2/catch.hpp thproj.h thcsdata.h \
  thparse.h thbuffer.h thmbuffer.h thcs.h
+utest-icase.o: utest-icase.cxx extern/catch2/catch.hpp \
+ thparse.h thbuffer.h thmbuffer.h
