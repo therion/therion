@@ -871,7 +871,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               thprintf("copying results\n");
 #endif
               const fs::path new_file = fmt::format("{}.{:03}.gif", fnm, sknum++);
-              fs::copy(srcgif, new_file);
+              fs::copy(srcgif, new_file, fs::copy_options::overwrite_existing);
               fprintf(pltf,"##XTHERION## xth_me_image_insert {%.2f 1 1.0} {%.2f {}} %s 0 {}\n", nx, ny, new_file.filename().string().c_str());
             }
 
@@ -2293,7 +2293,7 @@ if (ENC_NEW.NFSS==0) {
 #ifdef THDEBUG
       thprintf("copying results\n");
 #endif
-      fs::copy(thtmp.get_file_name("data.pdf"), fnm);
+      fs::copy(thtmp.get_file_name("data.pdf"), fnm, fs::copy_options::overwrite_existing);
       break;
       // END OF PDF POSTPROCESSING
 
