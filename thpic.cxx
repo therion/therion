@@ -33,7 +33,6 @@
 #include "thtmpdir.h"
 #include "thexception.h"
 #include "thconfig.h"
-#include <stdarg.h>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -143,7 +142,7 @@ void thpic::init(const char * pfname, const char * incfnm)
 }
 
 
-const char * thpic::convert(const char * type, const char * ext, const char * optfmt, ...)
+const char * thpic::convert(const char * type, const char * ext, const std::string& options)
 {
   if (!this->exists())
     return NULL;
@@ -153,11 +152,6 @@ const char * thpic::convert(const char * type, const char * ext, const char * op
   bool isspc;
   char tmpfn[255];
   const char * tmpf;
-  char options[1024];
-  va_list args;
-  va_start(args, optfmt);
-  vsprintf(options, optfmt, args);
-  va_end(args);
   sprintf(tmpfn, "pic%04ld.%s", thpic_convert_number++, ext);
   isspc = (strcspn(thini.get_path_convert()," \t") < strlen(thini.get_path_convert()));
   ccom = "";
@@ -165,7 +159,7 @@ const char * thpic::convert(const char * type, const char * ext, const char * op
   ccom += thini.get_path_convert();
   if (isspc) ccom += "\"";
   ccom += " ";
-  ccom += options;
+  ccom += options.c_str();
   ccom += " ";
 
   isspc = (strcspn(this->fname," \t") < strlen(this->fname));
@@ -263,9 +257,9 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
   fwrite(this->rgba,1,4 * this->width * this->height,f);
   fclose(f);
   if ((colors > 1) && (!thcfg.reproducible_output))
-    this->fname = tmp.convert(type, ext, "-define png:exclude-chunks=date,time -depth 8 -size %dx%d -density 300 +dither -colors %d", this->width, this->height, colors);
+    this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300 +dither -colors {}", this->width, this->height, colors));
   else
-    this->fname = tmp.convert(type, ext, "-define png:exclude-chunks=date,time -depth 8 -size %dx%d -density 300", this->width, this->height);
+    this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300", this->width, this->height));
   sprintf(tmpfn, "pic%04ld.%s", thpic_convert_number - 1, ext);
   this->texfname = thdb.strstore(tmpfn);
 }

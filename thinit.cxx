@@ -215,7 +215,7 @@ void thinit::copy_fonts() {
 #ifdef THDEBUG
     thprintf("copying font\n");
 #endif
-    std::filesystem::copy(font_src[index], thtmp.get_file_name(font_dst[index].c_str()));
+    std::filesystem::copy(font_src[index], thtmp.get_file_name(font_dst[index].c_str()), std::filesystem::copy_options::overwrite_existing);
   }
 
 #ifdef THWIN32
