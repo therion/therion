@@ -35,7 +35,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
+#include <fmt/printf.h>
 
 #ifdef THDEBUG
 #define thprint_error_src() thprintf2err("%s%s (" __FILE__ ":%d): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__)
@@ -94,17 +94,33 @@ extern bool thverbose_mode;
 extern char * thexecute_cmd;
 
 /**
+ * @brief Helper function for universal logging.
+ * 
+ * @param f output
+ * @param format format string
+ * @param args arguments to print
+ * @param verbose print also to stdout
+ */
+void thvfprintf(FILE* f, std::string_view format, fmt::printf_args args, bool verbose);
+
+/**
  * Print formatted to stdout.
  */
- 
-void thprintf(const char *format, ...);
+template <typename... Args>
+void thprintf(std::string_view format, Args&& ...args)
+{
+  thvfprintf(stdout, format, fmt::make_printf_args(args...), thverbose_mode);
+}
 
 
 /**
  * Print formatted to stderr.
  */
- 
-void thprintf2err(const char *format, ...);
+template <typename... Args>
+void thprintf2err(std::string_view format, Args&& ...args)
+{
+    thvfprintf(stderr, format, fmt::make_printf_args(args...), true);
+} 
 
 
 /**
