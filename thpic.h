@@ -29,6 +29,8 @@
 #ifndef thpic_h
 #define thpic_h
 
+#include <string>
+
 struct thpic {
 
   const char * fname, * texfname, * rgbafn;
@@ -46,7 +48,7 @@ struct thpic {
 
   void init(const char * fname, const char * incfnm);
 
-  const char * convert(const char * type, const char * ext, const char * optfmt, ...);
+  const char * convert(const char * type, const char * ext, const std::string& options);
 
   void rgba_load();
 
