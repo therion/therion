@@ -46,7 +46,7 @@
 #include "thcs.h"
 #include "thtexfonts.h"
 #include "thlang.h"
-#include <libgen.h>
+#include <filesystem>
 
 
 thexptable::thexptable() {
@@ -326,7 +326,11 @@ void thexptable::process_db(class thdatabase * dbp)
               this->m_table.insert_attribute("Survey", ths2txt(survey, layout->lang).c_str());
               this->m_table.insert_attribute("Station", st != NULL ? st->name : NULL);
               if (this->format == TT_EXPTABLE_FMT_KML) { 
-                this->add_coordinates(pt->point->xt + pt->fscrapptr->proj->rshift_x, pt->point->yt + pt->fscrapptr->proj->rshift_y, pt->point->at);
+            	  if (pt->fscrapptr->proj->type == TT_2DPROJ_PLAN)
+            		  this->add_coordinates(pt->point->xt + pt->fscrapptr->proj->rshift_x, pt->point->yt + pt->fscrapptr->proj->rshift_y, pt->point->at);
+            	  else 
+            		  if (st != NULL) 
+            			  this->add_coordinates(st->x, st->y, st->z);
               }
               if (this->expattr) this->m_table.copy_attributes(this->db->attr.get_object(pt->id));
             }
@@ -397,31 +401,25 @@ void thexptable::process_db(class thdatabase * dbp)
       break;
   }
 
-
-#ifdef THWIN32
-  char title[_MAX_FNAME];
-  _splitpath(this->outpt, NULL, NULL, title, NULL);
-#elif THLINUX
-  thbuffer bnb;
-  bnb.strcpy(this->outpt);
-  const char * title = basename(bnb.get_buffer());
-#else
-  const char * title = "cave";
-#endif
-
+  std::string title = "cave";
+  try {
+    title = std::filesystem::path(this->outpt).filename().string();
+  } catch(const std::exception& e) {
+    thwarning(("unable to obtain output file name -- %s", e.what()))
+  }
 
   switch (this->format) {
     case TT_EXPTABLE_FMT_TXT:
       this->m_table.export_txt(fname, this->encoding);
       break;
     case TT_EXPTABLE_FMT_HTML:
-      this->m_table.export_html(fname, title, this->encoding);
+      this->m_table.export_html(fname, title.c_str(), this->encoding);
       break;
     case TT_EXPTABLE_FMT_DBF:
       this->m_table.export_dbf(fname, this->encoding);
       break;
     case TT_EXPTABLE_FMT_KML:
-      this->m_table.export_kml(fname, (this->export_mode == TT_EXP_CONTLIST) ? "Comment" : "Title", title);
+      this->m_table.export_kml(fname, (this->export_mode == TT_EXP_CONTLIST) ? "Comment" : "Title", title.c_str());
       break;
   }
 
@@ -448,7 +446,7 @@ void thexptable::add_coordinates(double x, double y, double z, const char * xlab
       ty = y;
       tz = z;
     } else {
-      thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(this->cs),
+      thcs2cs(thcfg.outcs, this->cs,
         x, y, z, tx, ty, tz);
       if (thcs_get_data(this->cs)->dms) {
         tx = tx / THPI * 180.0;

@@ -1,19 +1,22 @@
 cmake_minimum_required(VERSION 3.10)
 include(cmake/PreventInSourceBuilds.cmake)
 
-project(Therion)
-set(CMAKE_CXX_STANDARD 14)
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+project(therion)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(BUILD_THERION "Build therion executable." ON)
 option(BUILD_LOCH "Build loch executable." ON)
 option(BUILD_THBOOK "Build thbook.pdf." ON)
 option(BUILD_XTHERION "Build xtherion." ON)
 
+include(GNUInstallDirs)
 include(cmake/BuildType.cmake)
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
 include(cmake/ECMEnableSanitizers.cmake)
+include(cmake/Warnings.cmake)
 
 # strip binaries in release build
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
@@ -109,22 +112,43 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/thsymbolsetlist.h
 )
 add_custom_target(generate_thsymbolsetlist DEPENDS ${CMAKE_BINARY_DIR}/thsymbolsetlist.h)
 
+# check if there are artifacts from the legacy Makefile in the source dir,
+# which could interfere with the CMake build
+add_custom_target(legacy-make 
+    ${CMAKE_COMMAND} -P cmake/DetectLegacyBuild.cmake
+    COMMENT "Checking for legacy build"
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 # generate version files
-execute_process(COMMAND python3 set_version.py ${CMAKE_BINARY_DIR}
-                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+add_custom_target(version python3 set_version.py ${CMAKE_BINARY_DIR}
+                  COMMENT "Updating version"
+                  BYPRODUCTS ${CMAKE_BINARY_DIR}/thversion.h
+                             ${CMAKE_BINARY_DIR}/thbook/version.tex
+                  DEPENDS legacy-make
+                  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 # generate InnoSetup config file
 if (WIN32)
     configure_file(innosetup.ini.in innosetup.ini)
 endif()
 
+# set an installation path for ini files
+if (IS_ABSOLUTE ${CMAKE_INSTALL_SYSCONFDIR})
+  set(TH_PATH_INI "${CMAKE_INSTALL_SYSCONFDIR}")
+else()
+  set(TH_PATH_INI "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SYSCONFDIR}")
+endif()
+
 if (BUILD_THERION)
+    add_subdirectory(extern/quickhull)
+
     # therion lib
     add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
     target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern")
-    target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt shp poly2tri common-utils)
+    target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt shp poly2tri common-utils QuickHull)
     target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
     add_dependencies(therion-common 
+        version
         generate_thsymbolsetlist
         generate_thlang
         generate_tex
@@ -135,9 +159,26 @@ if (BUILD_THERION)
 
     # therion executable
     add_executable(therion therion-main.cxx)
-    target_link_libraries(therion PUBLIC therion-common)
+    target_link_libraries(therion therion-common)
 
-    install(TARGETS therion RUNTIME DESTINATION bin)
+    # therion resource file
+    if (WIN32)
+        add_custom_command(COMMAND ${CMAKE_RC_COMPILER} -i ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc -J rc -o ${CMAKE_CURRENT_BINARY_DIR}/therion.res -O coff
+                            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/therion.res
+                            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/therion.rc ${CMAKE_CURRENT_SOURCE_DIR}/therion.ico
+                            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+        add_custom_target(generate_resource_therion DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/therion.res)
+        add_dependencies(therion generate_resource_therion)
+        target_link_libraries(therion ${CMAKE_CURRENT_BINARY_DIR}/therion.res)
+    endif()
+
+    install(TARGETS therion RUNTIME COMPONENT th-runtime)
+    install(FILES therion.ini TYPE SYSCONF RENAME therion.ini.new COMPONENT th-runtime)
+    install(CODE
+        "if (NOT EXISTS ${TH_PATH_INI}/therion.ini)
+            file(INSTALL ${CMAKE_CURRENT_SOURCE_DIR}/therion.ini DESTINATION ${TH_PATH_INI})
+        endif()"
+        COMPONENT th-runtime)
 
     # unit tests
     add_executable(utest utest-proj.cxx utest-icase.cxx utest-thdouble.cxx utest-main.cxx)
@@ -164,3 +205,15 @@ endif()
 add_subdirectory(loch)
 add_subdirectory(thbook)
 add_subdirectory(xtherion)
+
+# deployment of DLL dependencies on Windows
+if (BUILD_THERION AND BUILD_LOCH AND WIN32)
+    set(DLLS_DIR ${CMAKE_BINARY_DIR}/dependencies)
+    add_custom_target(deploy 
+        ${CMAKE_COMMAND} -D THERION=$<TARGET_FILE:therion>
+                         -D LOCH=$<TARGET_FILE:loch>
+                         -D DLLS_DIR=${DLLS_DIR}
+                         -P cmake/Deploy.cmake
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    set_target_properties(deploy PROPERTIES ADDITIONAL_CLEAN_FILES ${DLLS_DIR})
+endif()

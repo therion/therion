@@ -1687,7 +1687,9 @@ SHPWriteObject(SHPHandle psSHP, int nShapeId, SHPObject * psObject )
 /*      Guard FSeek with check for whether we're already at position;   */
 /*      no-op FSeeks defeat network filesystems' write buffering.       */
 /* -------------------------------------------------------------------- */
-    if ( psSHP->sHooks.FTell( psSHP->fpSHP ) != nRecordOffset ) {
+
+// ----- see https://trac.osgeo.org/postgis/ticket/4603, we have the same issue under mxe
+//    if ( psSHP->sHooks.FTell( psSHP->fpSHP ) != nRecordOffset ) {
         if( psSHP->sHooks.FSeek( psSHP->fpSHP, nRecordOffset, 0 ) != 0 )
         {
             char szErrorMsg[200];
@@ -1701,7 +1703,7 @@ SHPWriteObject(SHPHandle psSHP, int nShapeId, SHPObject * psObject )
             free( pabyRec );
             return -1;
         }
-    }
+//    }
     if( psSHP->sHooks.FWrite( pabyRec, nRecordSize, 1, psSHP->fpSHP ) < 1 )
     {
         char szErrorMsg[200];

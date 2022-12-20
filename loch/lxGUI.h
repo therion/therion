@@ -70,6 +70,7 @@ enum {
 	LXMENU_VIEW,
   LXMENU_VIEW_FULLSCREEN,
   LXMENU_VIEW_MODELSTP,
+  LXMENU_VIEW_SURVEYSTATS,
   LXMENU_VIEW_SELECTIONSTP,
   LXMENU_VIEW_VIEWPOINTSTP,
   LXMENU_VIEW_PRESENTDLG,
@@ -161,7 +162,8 @@ class lxFrame: public wxFrame
 
 
     class lxModelSetupDlg * m_modelSetupDlg;
-    bool m_modelSetupDlgOn;
+    class lxSurveyStatsDlg * m_statisticsDlg;
+    bool m_modelSetupDlgOn, m_statisticsDlgOn;
 
     class lxModelTreeDlg * m_selectionSetupDlg;
     bool m_selectionSetupDlgOn;
@@ -187,7 +189,7 @@ class lxFrame: public wxFrame
 
     class lxApp * m_app;
 
-    class wxHelpController * m_helpController;
+    class wxHtmlHelpController * m_helpController;
 
     lxFrame(class lxApp * app, const wxString& title, const wxPoint& pos,
       const wxSize& size, long style = wxDEFAULT_FRAME_STYLE);
@@ -208,6 +210,7 @@ class lxFrame: public wxFrame
 		void ToggleRotLock();
     void ToggleFullScreen();
     void ToggleModelSetup();
+    void ToggleSurveyStats();
     void ToggleSelectionSetup();
     void TogglePresentationDlg();
     void ToggleViewpointSetup();

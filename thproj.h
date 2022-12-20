@@ -30,9 +30,9 @@
 
 enum {GRID_INVALID, GRID_IGNORE, GRID_WARN, GRID_FAIL, GRID_CACHE, GRID_DOWNLOAD};
 
-void thcs2cs(std::string, std::string, double, double, double, double &, double &, double &);
-signed int thcs2zone(std::string, double, double, double);
-double thcsconverg(std::string, double, double);
+void thcs2cs(int, int, double, double, double, double &, double &, double &);
+signed int thcs2zone(int, double, double, double);
+double thcsconverg(int, double, double);
 bool thcs_islatlong(std::string);
 bool thcs_check(std::string);
 void thcs_log_transf_used();

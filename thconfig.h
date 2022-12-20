@@ -99,14 +99,14 @@ class thconfig {
   int lang; ///< Output language.
   int sketch_warp;  ///< Sketch warping method.
   thobjectsrc outcs_def;  ///< Where output coordinate system is defined.
-  double outcs_sumx, outcs_sumy, outcs_sumz, outcs_sumn;
+  double outcs_sumx, outcs_sumy, outcs_sumz = 0.0, outcs_sumn;
   
   thconfig_src_list src;
 
   double tmp3dSMP, tmp3dWALLSMP, tmp3dMAXDIMD;
   int sketch_colors;
 
-  class thdatabase * dbptr;  ///< Associated db.
+  class thdatabase * dbptr = nullptr;  ///< Associated db.
   thexporter exporter;  ///< Data exporter.
   thselector selector;  ///< Database selector.
 

@@ -41,6 +41,8 @@
 #include "thsketch.h"
 #include "thtrans.h"
 
+#include <set>
+
 /**
  * scrap command options tokens.
  */
@@ -101,6 +103,7 @@ class thscrap : public thdataobject {
     
   thdb2dcp * fcpp, * lcpp; ///< Scrap control points.
   unsigned int ncp; ///< Number of control points.
+  std::set<thdb2dcp *> joined_scrap_stations; ///< Stations of joined scraps.
 
   class thsurvey * centerline_survey;
   bool centerline_io;
@@ -308,7 +311,12 @@ class thscrap : public thdataobject {
   */
 
  void convert_all_cs() override;
-
+ 
+ 
+ /**
+  * Add stations from joined scrap.
+  */
+ void add_joined_scrap_stations(thscrap * js);
 
 
 };

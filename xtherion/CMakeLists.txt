@@ -84,4 +84,10 @@ add_custom_target(
 add_custom_target(xtherion-tcl ALL
                   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${XTHERION_EXECUTABLE})
 
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${XTHERION_EXECUTABLE} DESTINATION bin)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${XTHERION_EXECUTABLE} TYPE BIN COMPONENT th-runtime)
+install(FILES xtherion.ini TYPE SYSCONF RENAME xtherion.ini.new COMPONENT th-runtime)
+install(CODE
+        "if (NOT EXISTS ${TH_PATH_INI}/xtherion.ini)
+            file(INSTALL ${CMAKE_CURRENT_SOURCE_DIR}/xtherion.ini DESTINATION ${TH_PATH_INI})
+        endif()"
+        COMPONENT th-runtime)

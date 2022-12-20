@@ -47,9 +47,8 @@
 #include "thtexfonts.h"
 #include "thlang.h"
 #include "thfilehandle.h"
-#include <libgen.h>
+#include <filesystem>
 #include <thread>
-
 
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
@@ -217,22 +216,17 @@ void thexpmodel::export_3d_file(class thdatabase * dbp)
   unsigned long i;
   img * pimg;
   img_output_version = 8;
-  thbuffer fnmb;
-  #ifdef THWIN32
-    char title[_MAX_FNAME];
-    _splitpath(this->outpt, NULL, NULL, title, NULL);
-  #elif THLINUX
-    thbuffer bnb;
-    bnb.strcpy(this->outpt);
-    const char * title = basename(bnb.get_buffer());
-  #else
-    const char * title = "cave";
-  #endif
-  fnmb.strcpy(title);  // VG 290316: Set the filename as a cave name instead of "cave". The top-level survey name will be even better
+  std::string fnmb = "cave";
+  // VG 290316: Set the filename as a cave name instead of "cave". The top-level survey name will be even better
+  try {
+    fnmb = std::filesystem::path(this->outpt).filename().string();
+  } catch(const std::exception& e) {
+    thwarning(("unable to obtain output file name -- %s", e.what()))
+  }
   if ((thcfg.outcs >= 0) || (thcfg.outcs < TTCS_UNKNOWN))  // Export the coordinate system data if one is set
-    pimg = img_open_write_cs(fnm, fnmb.get_buffer(), thcs_get_params(thcfg.outcs).c_str(), 1);
+    pimg = img_open_write_cs(fnm, fnmb.c_str(), thcs_get_params(thcfg.outcs).c_str(), 1);
   else
-    pimg = img_open_write(fnm, fnmb.get_buffer(), 1);
+    pimg = img_open_write(fnm, fnmb.c_str(), 1);
      
   if (!pimg) {
     thwarning(("can't open %s for output",fnm))
@@ -1510,8 +1504,10 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
   if (nstat > 0) {
     stnum = new long[nstat];
     stnum_orig = new long[nstat];
-    for (i = 0; i < nstat; i++)
+    for (i = 0; i < nstat; i++) {
       stnum[i] = (dbp->db1d.station_vec[i].survey->is_selected() ? 1 : -1); //;-1
+      stnum_orig[i] = 0;
+    }
   }
 
   // prejde vsetky zamery, ktore ideme 
@@ -1685,6 +1681,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
               switch (csrf->pict_type) {
                 case TT_IMG_TYPE_PNG:
                   expf_sfcBmp.m_type = LXFILE_BITMAP_PNG;
+                  [[fallthrough]];
                 default:
                   expf_sfcBmp.m_type = LXFILE_BITMAP_JPEG;
               }
@@ -1731,9 +1728,9 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             std::list<lxFile3Angle> tlist;
             lxFile3Angle t3;
             for(i = 0, vxp = d3d->firstvx; vxp != NULL; vxp = vxp->next, i++) {
-              pdata[i].m_c[0] = vxp->x;
-              pdata[i].m_c[1] = vxp->y;
-              pdata[i].m_c[2] = vxp->z;
+              pdata[i].m_c[0] = lxFilePrepDbl(vxp->x);
+              pdata[i].m_c[1] = lxFilePrepDbl(vxp->y);
+              pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
             }
             expf_scrap.m_numPoints = d3d->nvertices;
             expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
@@ -1748,6 +1745,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
                       case 0:
                         t3.m_v[1] = fxp->next->vertex->id;
                         t3.m_v[2] = fxp->next->next->vertex->id;
+                        [[fallthrough]];
                       default:
                         t3.m_v[2] = fxp->next->vertex->id;
                         t3.m_v[1] = fxp->next->next->vertex->id;
@@ -1802,9 +1800,9 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
           std::list<lxFile3Angle> tlist;
           lxFile3Angle t3;
           for(i = 0, vxp = d3d->firstvx; vxp != NULL; vxp = vxp->next, i++) {
-            pdata[i].m_c[0] = vxp->x;
-            pdata[i].m_c[1] = vxp->y;
-            pdata[i].m_c[2] = vxp->z;
+            pdata[i].m_c[0] = lxFilePrepDbl(vxp->x);
+            pdata[i].m_c[1] = lxFilePrepDbl(vxp->y);
+            pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
           }
           expf_scrap.m_numPoints = d3d->nvertices;
           expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
@@ -1819,6 +1817,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
                     case 0:
                       t3.m_v[1] = fxp->next->vertex->id;
                       t3.m_v[2] = fxp->next->next->vertex->id;
+                      [[fallthrough]];
                     default:
                       t3.m_v[2] = fxp->next->vertex->id;
                       t3.m_v[1] = fxp->next->next->vertex->id;
@@ -1937,7 +1936,7 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
     for(i = 0; i < nstat; i++) {
       station = &(db->db1d.station_vec[i]);
       if ((station->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
-        thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
+        thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
           station->x, station->y, station->z, x, y, z);
         fprintf(out, "<Placemark>\n");
         fprintf(out, "<styleUrl>#ThEntranceIcon</styleUrl>");
@@ -1969,14 +1968,14 @@ void thexpmodel::export_kml_file(class thdatabase * dbp)
           if (numst > 0)
             fprintf(out,"</coordinates></LineString>\n");
           fprintf(out,"<LineString><coordinates>\n");
-          thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
+          thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
             dbp->db1d.station_vec[cur_st].x, dbp->db1d.station_vec[cur_st].y, dbp->db1d.station_vec[cur_st].z,
             x, y, z);
           fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
           numst = 1;
         }
         last_st = dbp->db1d.station_vec[((*tlegs)->reverse ? (*tlegs)->leg->from.id : (*tlegs)->leg->to.id) - 1].uid - 1;
-        thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
+        thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
           dbp->db1d.station_vec[last_st].x, dbp->db1d.station_vec[last_st].y, dbp->db1d.station_vec[last_st].z,
           x, y, z);
         fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
@@ -2051,7 +2050,7 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
               if (numst > 0)
                 fprintf(out, "\n</coordinates></LineString>\n");
               fprintf(out, "<LineString><coordinates>\n");
-              thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
+              thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
                 db->db1d.station_vec[cur_st].x, db->db1d.station_vec[cur_st].y, db->db1d.station_vec[cur_st].z,
                 x, y, z);
               fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);
@@ -2060,7 +2059,7 @@ void thexpmodel::export_kml_survey_file(FILE * out, thsurvey * surv)
             if (numst == 0)
               fprintf(out,"<LineString><coordinates>\n");
             last_st = db->db1d.station_vec[legs->to.id - 1].uid - 1;
-            thcs2cs(thcs_get_params(thcfg.outcs), thcs_get_params(TTCS_LONG_LAT),
+            thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
               db->db1d.station_vec[last_st].x, db->db1d.station_vec[last_st].y, db->db1d.station_vec[last_st].z,
               x, y, z);
             fprintf(out, "\t%.14f,%.14f,%.14f ", x / THPI * 180.0, y / THPI * 180.0, z);

@@ -54,7 +54,7 @@ CCPFLAGS = -DTHLINUX
 LDPFLAGS = -s
 export THPLATFORM = LINUX
 export OUTDIR = .
-THXTHMKCMD = ./therion
+THXTHMKCMD = $(OUTDIR)/therion
 
 
 # PLATFORM WIN32
@@ -65,7 +65,7 @@ THXTHMKCMD = ./therion
 ##LOCHEXE = loch/loch
 ##CXXPFLAGS = -DTHWIN32
 ##CCPFLAGS = -DTHWIN32
-##LDPFLAGS = -static-libgcc -static -s
+##LDPFLAGS = -static-libgcc -s
 ##export THPLATFORM = WIN32
 ##export OUTDIR ?= ../therion.bin
 ##THXTHMKCMD = $(OUTDIR)/therion
@@ -136,7 +136,7 @@ CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variabl
 
 
 # compiler settings
-CXXFLAGS = -DIMG_API_VERSION=1 -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -Iextern/fmt/include -std=c++14
+CXXFLAGS = -DIMG_API_VERSION=1 -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -Iextern/fmt/include -std=c++17
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
 TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
@@ -168,6 +168,9 @@ outdirs:
 	mkdir -p $(OUTDIR)/extern/shapelib
 	mkdir -p $(OUTDIR)/extern/fmt/src
 	mkdir -p $(OUTDIR)/loch
+	mkdir -p $(OUTDIR)/loch/help
+	mkdir -p $(OUTDIR)/loch/help/en
+	mkdir -p $(OUTDIR)/loch/help/sk
 	mkdir -p $(OUTDIR)/xtherion
 	mkdir -p $(OUTDIR)/thbook
 
@@ -239,6 +242,9 @@ samples-quick:
 	touch thbook/version.tex
 	$(MAKE) -C thbook
 
+samples-html:
+	$(MAKE) -C samples html
+
 $(OUTDIR)/samples.doc/index.tex:
 	$(MAKE) -C samples
 	touch thbook/version.tex
@@ -251,6 +257,7 @@ clean:
 	perl makefile.pl rm -q ./xtherion/therion.tcl
 	perl makefile.pl rmdir -q samples.doc
 	$(MAKE) -C ./samples clean
+	$(MAKE) -C ./loch clean
 	$(MAKE) cleanrest
 
 cleanrest:
@@ -1053,3 +1060,5 @@ utest-main.o: utest-main.cxx extern/catch2/catch.hpp thinit.h thbuffer.h \
  thmbuffer.h thinput.h thparse.h
 utest-proj.o: utest-proj.cxx extern/catch2/catch.hpp thproj.h thcsdata.h \
  thparse.h thbuffer.h thmbuffer.h thcs.h
+utest-icase.o: utest-icase.cxx extern/catch2/catch.hpp \
+ thparse.h thbuffer.h thmbuffer.h

@@ -329,8 +329,7 @@ therion::warp::point_pair::order_lines( inserter * warper, double x_u, warp_proj
   for ( size_t i=0; i<sz; ++i) {
     therion::warp::line * l2 = mLines[i];
     if ( l2->m_type != THMORPH_STATION ) {
-      point_pair * p2 = l2->other_end( this );
-      assert( p2->mLines.size() == 1 );
+      assert( l2->other_end(this)->mLines.size() == 1 );
     }
   }
 }
@@ -854,7 +853,7 @@ namespace therion
     int item_pair<triangle>::ngbh_nr() const { return 2; }
 
     template< >
-    void item_pair<triangle>::set_projection( warp_proj proj )
+    void item_pair<triangle>::set_projection( warp_proj /*proj*/ )
     {
       // thprintf("item_pair<triangle>::set_projection(%d)\n", proj );
       // TODO
@@ -952,7 +951,7 @@ namespace therion
 
     // TODO FIXME 
     template< >
-    void item_pair<plaquette>::set_projection( warp_proj proj )
+    void item_pair<plaquette>::set_projection( warp_proj /*proj*/ )
     {
       // thprintf("item_pair<plaquette>::set_projection(%d)\n", proj );
       #ifdef MORPH_EXPERIMENTAL

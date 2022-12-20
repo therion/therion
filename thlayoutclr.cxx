@@ -30,6 +30,7 @@
 #include "thdatabase.h"
 #include "thexception.h"
 #include <cmath>
+#include <fmt/printf.h>
 
 
 bool thlayout_color::is_defined() {
@@ -81,6 +82,40 @@ void thlayout_color::print_to_file(int output_model, FILE * f) {
 }
 
 
+char dbl1_to_char(double dbl) {
+	int x = int(255.0 * dbl);
+	if (x > 255) x = 255;
+	if (x < 0) x = 0;
+	return char(x);
+}
+
+void thlayout_color::encode_to_str(int output_model, std::string & str) {
+	this->fill_missing_color_models();
+	if ((output_model & TT_LAYOUTCLRMODEL_CMYK) > 0) {
+		str += dbl1_to_char(this->C);
+		str += dbl1_to_char(this->M);
+		str += dbl1_to_char(this->Y);
+		str += dbl1_to_char(this->K);
+	} else if ((output_model & TT_LAYOUTCLRMODEL_GRAY) > 0) {
+		str += dbl1_to_char(this->W);
+	} else {
+		str += dbl1_to_char(this->R);
+		str += dbl1_to_char(this->G);
+		str += dbl1_to_char(this->B);
+	}
+}
+
+
+std::string thlayout_color::print_to_str(int output_model) {
+	this->fill_missing_color_models();
+	if ((output_model & TT_LAYOUTCLRMODEL_CMYK) > 0)
+		return fmt::sprintf("(%.5f,%.5f,%.5f,%.5f)", this->C, this->M, this->Y, this->K);
+	else if ((output_model & TT_LAYOUTCLRMODEL_GRAY) > 0)
+		return fmt::sprintf("(%.5f)", this->W);
+	else
+		return fmt::sprintf("(%.5f,%.5f,%.5f)", this->R, this->G, this->B);
+}
+
 void thlayout_color::RGBtoGRAYSCALE() {
 	this->W = 0.2126 * this->R + 0.7152 * this->G + 0.0722 * this->B;
 	if (this->W <= 0.0031308) {
@@ -119,6 +154,21 @@ void thlayout_color::CMYKtoRGB() {
   	this->B = (1.0 - this->Y) * (1.0 - this->K);
 }
 
+#define invalid_color_spec ththrow("invalid color specification -- {}", str);
+
+double clrhex2num(char * str, char p) {
+	char src[3];
+	char *endptr = NULL;
+	int iv;
+	src[0] = str[2*p];
+	src[1] = str[1 + 2*p];
+	src[2] = 0;
+	errno = 0;
+	iv = (int) strtol(src, &endptr, 16);
+	if ((errno != 0) || (*endptr != 0)) invalid_color_spec;
+	return (double(iv) / 256.0);
+}
+
 void thlayout_color::parse(char * str, bool aalpha) {
 	// 1 arg = W (grayscale)
 	// 3 arg = RGB
@@ -127,7 +177,6 @@ void thlayout_color::parse(char * str, bool aalpha) {
   thsplit_words(&(thdb.mbuff_tmp), str);
   int nargs = thdb.mbuff_tmp.get_size(), sv;
   char ** args = thdb.mbuff_tmp.get_buffer();
-#define invalid_color_spec ththrow("invalid color specification -- {}", str);
   switch (nargs) {
     case 8:
 			thparse_double(sv,this->C,args[4]);
@@ -146,11 +195,13 @@ void thlayout_color::parse(char * str, bool aalpha) {
 			this->M /= 100.0;
 			this->Y /= 100.0;
 			this->K /= 100.0;
+      		[[fallthrough]];
   	case 4:
 			thparse_double(sv,this->W,args[3]);
 			if ((sv != TT_SV_NUMBER) || (this->W < 0.0) || (this->W > 100.0))
 				invalid_color_spec;
 			this->W /= 100.0;
+      		[[fallthrough]];
     case 3:
       thparse_double(sv,this->B,args[2]);        
       if ((sv != TT_SV_NUMBER) || (this->B < 0.0) || (this->B > 100.0))
@@ -160,13 +211,22 @@ void thlayout_color::parse(char * str, bool aalpha) {
       if ((sv != TT_SV_NUMBER) || (this->G < 0.0) || (this->G > 100.0))
         invalid_color_spec;
       this->G /= 100.0;
+      [[fallthrough]];
     case 1:
       if (aalpha && (strcmp(args[0],"transparent") == 0)) {
         this->A = 0.0;
         this->defined = 2;
         break;
       }
-      thparse_double(sv,this->R,args[0]);        
+      thparse_double(sv,this->R,args[0]);
+      if ((nargs == 1) && (sv != TT_SV_NUMBER) && (strlen(args[0]) == 6)) {
+    	  // CSS color specification starting with #
+    	  this->R = clrhex2num(args[0], 0) * 100.0;
+    	  this->G = clrhex2num(args[0], 1);
+    	  this->B = clrhex2num(args[0], 2);
+    	  sv = TT_SV_NUMBER;
+    	  nargs = 3;
+      }
       if ((sv != TT_SV_NUMBER) || (this->R < 0.0) || (this->R > 100.0))
         invalid_color_spec;
       this->R /= 100.0;
@@ -236,3 +296,19 @@ void thlayout_color::mix_with_color(double ratio, thlayout_color other_clr) {
 	this->Y = (1 - ratio) * this->Y + ratio * other_clr.Y;
 	this->K = (1 - ratio) * this->K + ratio * other_clr.K;
 }
+
+void thlayout_color::copy_color(const thlayout_color& src) {
+    if (this == &src)
+        return;
+    this->R = src.R;
+    this->G = src.G;
+    this->B = src.B;
+    this->W = src.W;
+    this->C = src.C;
+    this->M = src.M;
+    this->Y = src.Y;
+    this->K = src.K;
+    this->A = src.A;
+    this->model = src.model;
+}
+

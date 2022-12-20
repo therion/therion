@@ -8,11 +8,11 @@ set vv2 0
 set searchdirs {/usr /usr/local}
 set gccstr ""
 catch {
-    set gccstr [exec sh -c "command -v gcc"]
+    set gccstr [exec sh -c "pkg-config --cflags freetype2"]
 }
 set mingwpath ""
-if {[regexp {^(.*/mingw\d+).*} $gccstr dum mingwpath]} {
-  lappend searchdirs "$env(WD)/../..$mingwpath"
+if {[regexp {^.*-I(.*)/include/freetype2} $gccstr dum mingwpath]} {
+  lappend searchdirs "$mingwpath"
 }
 
 foreach d $searchdirs {
@@ -65,7 +65,7 @@ switch [lindex $argv 0] {
 	puts $suffix
     }
     libsuffix {
-        if {[string length $mingwpath]} {
+        if {[regexp {.*/mingw\d+} $mingwpath]} {
 	  puts $suffix.dll
         } else {
 	  puts $suffix

@@ -110,11 +110,14 @@ Works like |input| command in data files---includes other files.
   are selected. If there is no map selected, all scraps belonging to
   selected surveys are selected by default for map export.
 
-  If there are no scraps or maps in the data, centreline from all surveys is
+  If there are no scraps or maps in the data, centerline from all surveys is
   exported in the map.
 
   When exporting maps in different projections, you need to select
   them for each projection separately.
+
+  |select| does not only affect subsequent |<export>| commands but instead 
+  also |<export>| commands preceding the |select| command in the configuration file.
 \enddescription
 
 \syntax
@@ -267,6 +270,7 @@ available translations, see |thlang/texts.txt| file.
     legend <on/off/all>
     legend-columns <number>
     legend-width <n> <units>
+    colour-legend <smooth/discrete/off/on>
     map-comment <string>
     map-header <x> <y> <off/n/s/e/w/ne/nw/se/sw/center>
     map-header-bg <on/off>
@@ -279,6 +283,7 @@ available translations, see |thlang/texts.txt| file.
     language <xx[_YY]>
     colo[u]r-model <cmyk/rgb/grayscale>
     colo[u]r <item> <colour>
+    smooth-shading <off/quick>
     debug <on/all/first/second/scrap-names/station-names/off>
     doc-author <string>
     doc-keywords <string>
@@ -372,7 +377,7 @@ endlayout|
     specify size of the text in points.
     |<normalsize>| applies to point label, |<smallsize>| applies to
     remark and all other point labels. Each of them may apply to line label
-    according to its |-size| option.
+    according to its |-scale| option.
 
     The defaults are
     |8 10 12 16 24| for scales upto 1:100;
@@ -455,7 +460,9 @@ endlayout|
   * |origin <x> <y> <z> <units>| = set origin of atlas pages (M, A)
   * |origin-label <x-label> <y-label>| = set label for atlas page
     which has the lower left corner at the given origin coordinates.
-    May be either a number or a character. (M, A; default: |0 0|)
+    \NEW{6.1.0}May be either a number or a string.\[String labels form the following
+    sequence, either in lower or upper case: A, B, ..., Z, AA, AB, ...]
+    (M, A; default: |0 0|)
   * |own-pages <number>| = set number of own pages added before
     the first page of automatically generated pages in atlas mode
     (currently required for correct page numbering) (A; default: |0|)
@@ -486,8 +493,9 @@ endlayout|
   * |legend <on/off/all>| = display list of used map symbols in the map header.
     If set to |all|, all symbols from the current symbol set are displayed.
     (M, A; default: |off|)
-  * |colo[u]r-legend <on/off>| = turn on/off legend of map-fg colours
-    when map-fg is set to altitude, scrap or map (M, A)
+  * |colo[u]r-legend <smooth/discrete/off/on>| = set type of map-fg colours legend
+    when map-fg is set to altitude, scrap or map. For compatibility reasons,
+    |on| is equivalent to |smooth|. (M, A; default: |smooth| if applicable)
   * |legend-columns <number>| = adjusts the number of legend columns
     (M, A; default: |2|)
   * |map-comment <string>| = optional comment displayed at the map header (M)
@@ -496,7 +504,7 @@ endlayout|
     statistics; if set to off, team members are sorted \NEW{5.4}alphabetically;
     otherwise according to their contribution to exploration and surveying
     (M, A; default: |hide|)
-  * |statistics <carto/copyright-count on/hide/off>| = \NEW{5.6} display number of scraps
+  * |statistics <carto/copyright-count on/hide/off>| = \NEW{5.5.4} display number of scraps
     for given author/copyright string; if set to off, items are sorted 
     alphabetically; otherwise by number of scraps
     (M, A; default: |hide|)
@@ -533,6 +541,7 @@ endlayout|
     e.g. no printer will print CMYK [100 100 100 100\char93.
     The maximum ink coverage or limit ($C+M+Y+K$) may be around 240 or 300,
     depending on the printer.]
+    RGB colours can be specified in hexadecimal format (e.g. ffeeaa).
 
     For |map-fg|, you can use |altitude|, |scrap| or |map| as colours.
     In this case the map is coloured according to altitude, scraps or maps.
@@ -543,6 +552,13 @@ endlayout|
     For |labels|, you can switch colour |on/off|. If |on|, labels are coloured
     using the colour of associated scrap.
 
+  * \NEW{6.0}|smooth-shading <off/quick>| =
+    set the mode of smooth scrap backgroud shading. By default, altidute and depth
+    colour is interpolated across the scrap the |quick| way. Some issues are present if
+    transparent symbol colours are used.\[Coloured scrap background is visible underneath
+    the semitransparent areas, although only lower-scrap-drawings should be visible.]
+     More precise modes should be added in the future.
+    If |off|, scrap is filled with single colour.
   * |debug <on/all/first/second/scrap-names/station-names/off>| =
     draw scrap in different stages
     of transformation in different colours to see how Therion distorts

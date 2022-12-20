@@ -31,6 +31,16 @@ proc copyfile {force src dst} {
   }
 }
 
+proc copylocale {dir fname dstdir} {
+  set ldirs [glob -types d -path $dir -tails *]
+  foreach d $ldirs {
+    set dst [format $dstdir $d]
+    puts "$dir$d/$fname -> $dst/$fname"
+    file mkdir $dst
+    file copy -force -- $dir$d/$fname $dst/$fname
+  }
+}
+
 if {[string equal $platform WIN32]} {
   copyfile 1 ../therion.bin/therion.exe "c:/Program files/Therion/therion.exe"
   copyfile 1 ../therion.bin/xtherion/xtherion.tcl "c:/Program files/Therion/xtherion.tcl"
@@ -66,4 +76,6 @@ if {[string equal $platform WIN32]} {
   copyfile 1 xtherion/xtherion.ini $sysconfdir/xtherion.ini.new
   copyfile 0 therion.ini $sysconfdir/therion.ini
   copyfile 0 xtherion/xtherion.ini $sysconfdir/xtherion.ini
+  copylocale loch/locale/ loch.mo $instdir/share/locale/%s/LC_MESSAGES
+  copylocale loch/help/ loch.htb $instdir/share/doc/therion-viewer/help/%s
 }

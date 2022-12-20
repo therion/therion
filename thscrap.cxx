@@ -252,6 +252,7 @@ void thscrap::parse_scale(char * ss)
       break;
     case 9:
       ux = 8;
+      [[fallthrough]];
     case 8:
       p9 = true;
       break;
@@ -1463,7 +1464,7 @@ void thscrap::update_limits(double x, double y)
 
 
 
-void thscrap::parse_sketch(char ** args, int argenc)
+void thscrap::parse_sketch(char ** args, int /*argenc*/) // TODO unused parameter argenc
 {
   int sv;
   thsketch sk;
@@ -1498,6 +1499,15 @@ void thscrap::convert_all_cs() {
 	}
 }
 
+
+void thscrap::add_joined_scrap_stations(thscrap * js) {
+  thdb2dcp * cp = js->fcpp;
+  while(cp != NULL) {
+	if (cp->st != NULL)
+	  this->joined_scrap_stations.insert(cp);
+	cp = cp->nextcp;
+  }	
+}
 
 
 

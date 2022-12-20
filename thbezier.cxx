@@ -561,8 +561,8 @@ sp_bezier_fit_cubic_full(NR_Point bezier[], int split_points[],
     }
 
     /*  Parameterize points, and attempt to fit curve */
-    unsigned splitPoint;   /* Point to split point set at. */
-    bool is_corner;
+    unsigned splitPoint = 0;   /* Point to split point set at. */
+    bool is_corner = false;
     {
         double *u = g_new(double, len);
         chord_length_parameterize(data, u, len);
@@ -1038,7 +1038,7 @@ bezier_pt(unsigned const degree, NR_Point const V[], double const t)
  * \pre (2 \<= len) and (d[0] != d[1]).
  **/
 NR_Point
-sp_darray_left_tangent(NR_Point const d[], unsigned const len)
+sp_darray_left_tangent(NR_Point const d[], [[maybe_unused]] unsigned const len)
 {
     g_assert( len >= 2 );
     g_assert( d[0] != d[1] );
@@ -1141,7 +1141,7 @@ sp_darray_right_tangent(NR_Point const d[], unsigned const len, double const tol
 static NR_Point
 sp_darray_center_tangent(NR_Point const d[],
                          unsigned const center,
-                         unsigned const len)
+                         [[maybe_unused]] unsigned const len)
 {
     g_assert( center != 0 );
     g_assert( center < len - 1 );
@@ -1433,7 +1433,7 @@ thbezier_point * thbezier_polyline::get_next_point()
 }
 
 
-void thbezier_polyline::copy_curve(struct thbezier_curve * curve, double err)
+void thbezier_polyline::copy_curve(struct thbezier_curve * /*curve*/, double /*err*/)
 {
   this->clear();
 

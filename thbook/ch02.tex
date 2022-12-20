@@ -93,8 +93,8 @@ Therion uses following data types:
              (not starting with `|-|').
 * {\it ext\_keyword} = keyword that can also contain |+*.,'| characters,
             but not on the first position.
-* {\it date} = a date (or a time interval) specification in a format\hfil\break
-          |YYYY.MM.DD@HH:MM:SS.SS - YYYY.MM.DD@HH:MM:SS.SS| or `|-|'
+* {\it date} = a date (or a time interval) specification in the format\hfil\break
+          |YYYY[.MM.[DD[@HH[:MM[:SS[.SS]]]]]] [- YYYY[.MM[.DD[@HH[:MM[:SS[.SS]]]]]]]| or `|-|'
           to leave a date unspecified.
 * {\it person} = a person's first name and surname separated by whitespace characters.
             Use `|/|' to separate first name and surname if there are
@@ -139,18 +139,22 @@ Following coordinate systems are supported:
 
 \list
 * |UTM1| -- |UTM60| = Universal Transverse Mercator in northern hemisphere
-  and given zone, WGS84 datum.
+  and given zone, WGS84 datum. Equivalent to EPSG:32601--EPSG:32660.
 * |UTM1N| -- |UTM60N| = same as |UTM1| -- |UTM60|
-* |UTM1S| -- |UTM60S| = UTM in southern hemisphere, WGS84 datum.
+* |UTM1S| -- |UTM60S| = UTM in southern hemisphere, WGS84 datum.\hfil\break
+  Equivalent to EPSG:32701--EPSG:32760.
 * |lat-long|, |long-lat| = latitude (N positive, S negative) and
   longitude (E positive, W negative) in given order in degrees
-  ($deg[{:}min[{:}sec]]$ allowed), WGS84 datum. By default, not
-  supported on output.
+  ($deg[{:}min[{:}sec]]$ allowed), WGS84 datum. Not
+  supported on output. Equivalent to EPSG:4326.
 * |EPSG:<number>| = Most of EPSG coordinate systems. Almost every
   coordinate system used worldwide has its own EPSG number. To find
-  the number of your system, see |extern/proj4/nad/epsg| file in the
-  therion source distribution.
+  the number of your system, see \www{https://epsg.org}.
 * |ESRI:<number>| = Similar to EPSG, but ESRI standard.
+* |ETRS| = European Terrestrial Reference System 1989 (ETRS89); long-lat order,
+  not supported on output. Equivalent to EPSG:4258.
+* |ETRS28| -- |ETRS37| = ETRS89 zones in UTM projection; east-north order.
+  Equivalent to EPSG:25828--EPSG:25837.
 %* |EUR79Z30| = UTM zone 30, EUR79 datum.  % ad-hoc addition not worth mentioning??
 * |JTSK|, |iJTSK| = Czechoslovak S-JTSK system used since 1920s with south and west
   axis (JTSK) and its modified version with axis
@@ -160,6 +164,7 @@ Following coordinate systems are supported:
 * |OSGB:<H, N, O, S or T><A-Z except I>| = British Ordnance Survey National
   Grid.\NEW{5.4}
 * |S-MERC| = the spherical Mercator projection, as used by various online mapping sites.
+  Equivalent to EPSG:3857.
 \endlist
 
 \subchapter Magnetic declination.
@@ -394,7 +399,7 @@ the command may be used anywhere.
   * |team <person> [<roles>]| = a survey team member. The first argument
     is his/her name, the others describe the roles of the person in
     the team (optional---currently not used). The following role keywords are
-    supported: station, length, tape, [back]compass, [back]bearing, [back]clino,
+    supported: station, [back]length, [back]tape, [back]compass, [back]bearing, [back]clino,
     [back]gradient, counter, depth, station, position, notes, pictures, pics,
     instruments (insts), assistant (dog).
   * |explo-team <person>| = a discovery team member.
@@ -480,7 +485,7 @@ the command may be used anywhere.
   * |equate <station list>| = set points that are equivalent
   * |data <style> <readings order>| = set data style (normal, topofil,
     diving, cartesian, cylpolar, dimensions, nosurvey) and readings order. Reading
-    is one of the following keywords: station, from, to, tape/length,
+    is one of the following keywords: station, from, to, [back]tape/[back]length,
     [back]compass/[back]bearing, [back]clino/\penalty0[back]gradient,
     depth, fromdepth, todepth, depthchange, counter,
     fromcount, tocount, northing, easting, altitude,
@@ -720,7 +725,7 @@ Point is a command for drawing a point map symbol.
    (which is 0 by default).
     To display altitude on the passage
     wall, use |altitude| option for any line point of the passage wall],
-    |date|,
+    |date|\[Set date's value with the |-value| option],
     |height|\[Height of formations inside of the passage (like pit etc.);
     see below for details.],
     |label|,
@@ -782,7 +787,9 @@ Point is a command for drawing a point map symbol.
     |stalactite-stalagmite|,
     |stalactites-stalagmites|,
     |stalactite|,
+    |stalactites|,
     |stalagmite|,
+    |stalagmites|,
     |volcano|,
     |wall-calcite|;
 
@@ -792,6 +799,7 @@ Point is a command for drawing a point map symbol.
     |camp|,
     |fixed-ladder|,
     |gate|,
+    |handrail|,
     |masonry|,
     |nameplate|,
     |no-equipment|,
@@ -800,6 +808,7 @@ Point is a command for drawing a point map symbol.
     |rope|,
     |steps|,
     |traverse|,
+    |via-ferrata|,
     |walkway|,
     |wheelchair|;
 
@@ -824,7 +833,7 @@ Point is a command for drawing a point map symbol.
     |dig|,
     |electric-light|,
     |ex-voto|,
-    |extra|\[Additional morphing point.],
+    |extra|\[Additional morphing point. See |-dist| and |-value| options. ],
     |gradient|,
     |human-bones|,
     |ice-pillar|,
@@ -928,8 +937,18 @@ Point is a command for drawing a point map symbol.
 \NEW{5.3}|<lang:XX>| = creates multilingual label (see |string| type for
    detailed description)
 
-  * |value| = value of height, passage-height or altitude label or point
-     dimensions
+    \NEW{6.1.0}|<size:N>| = specify the font size in points; |N| should be
+    an integer between 1 and 127.
+
+    \NEW{6.1.1}|<size:N%>| = specify the font size as a percentage of the native
+    font size of the given label; |N| should be between 1 and 999.\[For practical
+    reasons, the values are currently used in the increments of 10, so both 46 and 53
+    are interpreted as 50~\% size.]
+
+    \NEW{6.1.1}|<size:S>| = specify the font size using predefined scales;
+    |S| can be one of |xs|, |s|, |m|, |l|, |xl|.
+
+  * |value| = value of height, passage-height, altitude, dimensions or date
 
       {\it height:} according to the sign of the value (positive, negative or
       unsigned), this type of symbol represents chimney height, pit depth
@@ -944,7 +963,8 @@ Point is a command for drawing a point map symbol.
       distance to floor).
 
       {\it altitude:} the value specified is the altitude difference from
-      the nearest station. If the altitude value is prefixed by ``|fix|''
+      the nearest station. The value will be set to 0 if defined as `|-|', `|.|',
+      `|nan|', `|NAN|' or `|NaN|'. If the altitude value is prefixed by `|fix|'
       (e.g. |-value [fix 1300]|), this value is used as an absolute altitude.
       The value can optionally be followed by length units.
 
@@ -952,6 +972,11 @@ Point is a command for drawing a point map symbol.
       |-value [<above> <below> [<units>]]|
       specifies passage dimensions a\-bo\-ve/below centerline
       plane used in 3D model.
+
+      {\it date:}
+      |-value <date>|
+      sets the date for the date point.
+
 \endoptions
 
 
@@ -993,8 +1018,13 @@ respectively.
        length and orientation is an average of specified |l-size|s and
        |orientation|s in the nearest points. If there is no orientation
        specification, gradient marks are perpendicular to the slope line.],
-     |floor-step|, |pit|,
-     |ceiling-step|, |chimney|, |overhang|, |ceiling-meander|,
+     |floor-step|, 
+     |pit|,
+     |pitch| (synonym of pit),
+     |ceiling-step|, 
+     |chimney|, 
+     |overhang|, 
+     |ceiling-meander|,
      |floor-meander|,
      |low-ceiling|,
      |pit-chimney|;
@@ -1007,10 +1037,19 @@ respectively.
      |abyss-entrance|,
      |dripline|,
      |fault|,
+     |gradient|,
      |joint|,
      |rimstone-dam|,
-     |rimstone-pool|,
-     |walkway|;
+     |rimstone-pool|;
+
+    {\it equipment:}
+    |fixed-ladder|,
+    |handrail|,
+    |rope|,
+    |rope-ladder|,
+    |steps|,
+    |via-ferrata|,
+    |walkway|;
 
      {\it labels:} |label|;
 
@@ -1071,6 +1110,12 @@ respectively.
        * |l-size <number>| = same to the left. Required for |slope| type.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
          Auto is default.
+  * |scale| = scale for labels, can be:
+    tiny (xs), small (s), normal (m), large (l), huge (xl) or a
+    numeric value. Normal is default. Named sizes scale by $\sqrt 2$, so that
+    $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
+    $xl \equiv 2.0$. Absolute font sizes (in points) can be assigned to named sizes
+    using |fonts-setup| in the |layout| configuration section.
   * |adjust <horizontal/vertical>| = shifts the line point to be aligned
     horizontally/ver\-ti\-cally with the previous point (or next point if there is
     no previous point). The result is horizontal/vertical line segment).
@@ -1092,11 +1137,14 @@ respectively.
    (which is 0 by default).
          If the value is specified, it
          gives the altitude difference of the point on the wall
-         relative to the nearest station. The value can be prefixed
+         relative to the nearest station. The value will be set to 0 if defined 
+         as "-", ".", "nan", "NAN" or "NaN". The value can be prefixed
          by a keyword ``|fix|'', then no nearest station is taken into
          consideration; the absolute given value is used instead.
          Units can follow the value. Examples: |+4|, |[+4 m]|,
          |[fix 1510 m]|.
+       * |anchors <on/off>| = this option can be specified only with
+         the `rope' line type.
        * |border <on/off>| = this option can be specified only with
          the `slope' symbol type. It switches on/off the border line of
          the slope.
@@ -1109,6 +1157,8 @@ respectively.
          dependent (e.g. no tick in UIS, tick in the middle in SKBB).
        * |head <begin/end/both/none>| = can be used only with the arrow
          type and indicates where to put an arrow head. End is default.
+       * |rebelays <on/off>| = this option can be specified only with
+         the `rope' line type.
        * |text <string>| = valid only for label lines.
        * \NEW{5.4}|height <value>| = height of pit or wall:pit; available in
          \MP\ as a numeric variable |ATTR__height|.
@@ -1154,6 +1204,8 @@ You may use invisible border to achieve this inside of the passage.
     |mudcrack|,
     |pillar|,
     |pillar-with-curtains|,
+    |pillars|,
+    |pillars-with-curtains|,
     |stalactite|,
     |stalactite-stalagmite|,
     |stalagmite|.

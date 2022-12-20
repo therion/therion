@@ -1,6 +1,6 @@
 /* img.c
  * Routines for reading and writing Survex ".3d" image files
- * Copyright (C) 1993-2021 Olly Betts
+ * Copyright (C) 1993-2022 Olly Betts
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -833,7 +833,80 @@ v03d:
 	    */
 	   size_t real_len = strlen(title);
 	   if (real_len != title_len) {
-	       pimg->cs = my_strdup(title + real_len + 1);
+	       char * cs = title + real_len + 1;
+	       if (memcmp(cs, "+init=", 6) == 0) {
+		   /* PROJ 5 and later don't handle +init=esri:<number> but
+		    * that's what cavern used to put in .3d files for
+		    * coordinate systems specified using ESRI codes.  We parse
+		    * and convert the strings cavern used to generate and
+		    * convert to the form ESRI:<number> which is still
+		    * understood.
+		    *
+		    * PROJ 6 and later don't recognise +init=epsg:<number>
+		    * by default and don't apply datum shift terms in some
+		    * cases, so we also convert these to the form
+		    * EPSG:<number>.
+		    */
+		   char * p = cs + 6;
+		   if (p[4] == ':' && isdigit((unsigned char)p[5]) &&
+		       ((memcmp(p, "epsg", 4) == 0 || memcmp(p, "esri", 4) == 0))) {
+		       p = p + 6;
+		       while (isdigit((unsigned char)*p)) {
+			   ++p;
+		       }
+		       /* Allow +no_defs to be omitted as it seems to not
+			* actually do anything with recent PROJ - cavern always
+			* included it, but other software generating 3d files
+			* may not.
+			*/
+		       if (*p == '\0' || strcmp(p, " +no_defs") == 0) {
+			   int i;
+			   cs = cs + 6;
+			   for (i = 0; i < 4; ++i) {
+			       cs[i] = toupper(cs[i]);
+			   }
+			   *p = '\0';
+		       }
+		   }
+	       } else if (memcmp(cs, "+proj=", 6) == 0) {
+		   /* Convert S_MERC and UTM proj strings which cavern used
+		    * to generate to their corresponding EPSG:<number> codes.
+		    */
+		   char * p = cs + 6;
+		   if (memcmp(p, "utm +ellps=WGS84 +datum=WGS84 +units=m +zone=", 45) == 0) {
+		       int n = 0;
+		       p += 45;
+		       while (isdigit((unsigned char)*p)) {
+			   n = n * 10 + (*p - '0');
+			   ++p;
+		       }
+		       if (memcmp(p, " +south", 7) == 0) {
+			   p += 7;
+			   n += 32700;
+		       } else {
+			   n += 32600;
+		       }
+		       /* Allow +no_defs to be omitted as it seems to not
+			* actually do anything with recent PROJ - cavern always
+			* included it, but other software generating 3d files
+			* may not have.
+			*/
+		       if (*p == '\0' || strcmp(p, " +no_defs") == 0) {
+			   sprintf(cs, "EPSG:%d", n);
+		       }
+		   } else if (memcmp(p, "merc +lat_ts=0 +lon_0=0 +k=1 +x_0=0 +y_0=0 +a=6378137 +b=6378137 +units=m +nadgrids=@null", 89) == 0) {
+		       p = p + 89;
+		       /* Allow +no_defs to be omitted as it seems to not
+			* actually do anything with recent PROJ - cavern always
+			* included it, but other software generating 3d files
+			* may not have.
+			*/
+		       if (*p == '\0' || strcmp(p, " +no_defs") == 0) {
+			   strcpy(cs, "EPSG:3857");
+		       }
+		   }
+	       }
+	       pimg->cs = my_strdup(cs);
 	   }
        }
        if (!pimg->title) {
@@ -1028,8 +1101,20 @@ img_write_stream(FILE *stream, int (*close_func)(FILE*),
    }
    PUTC('\n', pimg->fh);
 
-   /* Replaced tm = time(NULL); for output to be reproducible. */
-   tm = (time_t)368704800;
+   if (getenv("SOURCE_DATE_EPOCH")) {
+      /* Support reproducible builds which create .3d files by not embedding a
+       * timestamp if SOURCE_DATE_EPOCH is set.  We don't bother trying to
+       * parse the timestamp as it is simpler and seems cleaner to just not
+       * embed a timestamp at all given the 3d file format already provides
+       * a way not to.
+       *
+       * See https://reproducible-builds.org/docs/source-date-epoch/
+       */
+      tm = (time_t)-1;
+   } else {
+      tm = time(NULL);
+   }
+
    if (tm == (time_t)-1) {
       fputsnl(TIMENA, pimg->fh);
    } else if (pimg->version <= 7) {

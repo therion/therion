@@ -336,7 +336,28 @@ void thsurvey::full_name_reverse()
   }
 }
 
+thsurvey * thsurvey_get_entrance_fs(thsurvey * s) {
+	thdataobject * o;
+	o = s->foptr;
+	while (o != NULL) {
+		if (o->get_class_id() == TT_SURVEY_CMD) {
+			s = (thsurvey *)o;
+			if (!s->entrance.is_empty()) return s;
+			s = thsurvey_get_entrance_fs(s);
+			if (s != NULL) return s;
+		}
+		o = o->nsptr;
+	}
+	return NULL;
+}
 
+thobjectname thsurvey::get_entrance() {
+	thsurvey * s(this);
+	while ((s != NULL) and s->entrance.is_empty()) s = s->fsptr;
+	if (s == NULL) s = thsurvey_get_entrance_fs(this);
+	if (s == NULL) return thobjectname();
+	return s->entrance;
+}
 
 
 

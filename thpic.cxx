@@ -33,11 +33,9 @@
 #include "thtmpdir.h"
 #include "thexception.h"
 #include "thconfig.h"
-#include <stdarg.h>
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 long thpic_convert_number(1);
 
@@ -69,39 +67,24 @@ bool thpic::exists() {
 
 void thpic::init(const char * pfname, const char * incfnm)
 {
-
-  long i;
-  thbuffer pict_path;
-  pict_path.guarantee(1024);
-  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
-
   if (strlen(pfname) == 0)
     ththrow("picture file name not specified");
 
-  pict_path += "/";
+  std::error_code ec;
+  auto pict_path = fs::current_path(ec);
+  thassert(!ec)
+
   if (incfnm != NULL) {
-    if (thpath_is_absolute(incfnm))
+    if (fs::path(incfnm).is_absolute())
     	pict_path = incfnm;
     else 
-    	pict_path += incfnm;
+    	pict_path /= incfnm;
   }
-  char * pp = pict_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-    if ((pp[i] == '/') || (pp[i] == '\\')) {
-      break;
-    } else
-      pp[i] = 0;
-  }
-  if (strlen(pp) == 0)
-    pict_path = "/";
-  pict_path += pfname;
-  pp = pict_path.get_buffer();
-  for(i = (long)strlen(pp); i >= 0; i--) {
-    if (pp[i] == '\\')
-      pp[i] = '/';
-  }
+  pict_path = pict_path.parent_path() / pfname;
 
-  this->fname = thdb.strstore(pp);
+  auto pict_path_str = pict_path.string();
+  std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
+  this->fname = thdb.strstore(pict_path_str.c_str());
   // thprintf("\npict name: %s\n", this->fname);  
 
   thbuffer ccom;
@@ -159,7 +142,7 @@ void thpic::init(const char * pfname, const char * incfnm)
 }
 
 
-const char * thpic::convert(const char * type, const char * ext, const char * optfmt, ...)
+const char * thpic::convert(const char * type, const char * ext, const std::string& options)
 {
   if (!this->exists())
     return NULL;
@@ -169,11 +152,6 @@ const char * thpic::convert(const char * type, const char * ext, const char * op
   bool isspc;
   char tmpfn[255];
   const char * tmpf;
-  char options[1024];
-  va_list args;
-  va_start(args, optfmt);
-  vsprintf(options, optfmt, args);
-  va_end(args);
   sprintf(tmpfn, "pic%04ld.%s", thpic_convert_number++, ext);
   isspc = (strcspn(thini.get_path_convert()," \t") < strlen(thini.get_path_convert()));
   ccom = "";
@@ -181,7 +159,7 @@ const char * thpic::convert(const char * type, const char * ext, const char * op
   ccom += thini.get_path_convert();
   if (isspc) ccom += "\"";
   ccom += " ";
-  ccom += options;
+  ccom += options.c_str();
   ccom += " ";
 
   isspc = (strcspn(this->fname," \t") < strlen(this->fname));
@@ -279,9 +257,9 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
   fwrite(this->rgba,1,4 * this->width * this->height,f);
   fclose(f);
   if ((colors > 1) && (!thcfg.reproducible_output))
-    this->fname = tmp.convert(type, ext, "-define png:exclude-chunks=date,time -depth 8 -size %dx%d -density 300 +dither -colors %d", this->width, this->height, colors);
+    this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300 +dither -colors {}", this->width, this->height, colors));
   else
-    this->fname = tmp.convert(type, ext, "-define png:exclude-chunks=date,time -depth 8 -size %dx%d -density 300", this->width, this->height);
+    this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300", this->width, this->height));
   sprintf(tmpfn, "pic%04ld.%s", thpic_convert_number - 1, ext);
   this->texfname = thdb.strstore(tmpfn);
 }

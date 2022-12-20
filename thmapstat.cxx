@@ -322,7 +322,7 @@ void thmapstat_print_team(FILE * f, thmapstat_personmap & team_map, const char *
 }
 
 
-void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, thlayout * layout, thbuffer & c){
+void thmapstat_print_copy(FILE * f, thmapstat_copyrightmap & copy_map, const char * team_name, int max_items, bool alphasort, std::string & teamstr, bool show_lengths, thlayout * /*layout*/, thbuffer & c){ // TODO unused parameter layout
     fprintf(f, "\\%s={", team_name);
     std::vector<thmapstat_copyright_data> pd;
     for (auto pi = copy_map.begin(); pi != copy_map.end(); pi++) {
@@ -390,14 +390,10 @@ double thmapstat::get_length() {
   }
 
 double thmapstat::get_depth() {
-	double z_top = 0.0, z_bot = 0.0;  
-	bool z_any = false;
-	thmapstat_datamap::iterator ii;
-	for(ii = this->data.begin(); ii != this->data.end(); ii++) {
-		check_z(ii->first.ptr->stat_st_top);
-		check_z(ii->first.ptr->stat_st_bottom);
-	}
-	return (z_top - z_bot);
+	double z_top = 0.0, z_bot = 0.0;
+	this->get_min_max_alt(z_bot, z_top);
+	if (thisnan(z_top)) return thnan;
+	return (z_bot - z_top);
 }
 
 
@@ -406,11 +402,18 @@ void thmapstat::get_min_max_alt(double & min, double & max) {
     bool z_any = false;
     thmapstat_datamap::iterator ii;
     for(ii = this->data.begin(); ii != this->data.end(); ii++) {
-        check_z(ii->first.ptr->stat_st_top);
-        check_z(ii->first.ptr->stat_st_bottom);
+    	if (ii->first.ptr->stat_st_state == 2) {
+			check_z(ii->first.ptr->stat_st_top);
+			check_z(ii->first.ptr->stat_st_bottom);
+    	}
     }
-    min = z_bot;
-    max = z_top;
+    if (z_any) {
+		min = z_bot;
+		max = z_top;
+    } else {
+    	min = thnan;
+    	max = thnan;
+    }
 }
 
 
@@ -424,10 +427,10 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   thmapstat_datamap::iterator ii;
   std::unique_ptr<thmapstat_person_data[]> pd;
   std::unique_ptr<thmapstat_copyright_data[]> pdc;
-  bool show_lengths, z_any = false;
+  bool show_lengths;
   bool show_count;
   show_count = false;
-  double clen = 0.0, z_top = 0.0, z_bot = 0.0;
+  double clen, z_top, z_bot;
   c.guarantee(256);
   b.guarantee(256);
 
@@ -460,11 +463,9 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
 	  fprintf(f,"\\gridconv={%.2f}\n", thcfg.get_outcs_convergence());
   }
   
-  for(ii = this->data.begin(); ii != this->data.end(); ii++) {
-    check_z(ii->first.ptr->stat_st_top);
-    check_z(ii->first.ptr->stat_st_bottom);
-    clen += ii->first.ptr->stat_length;
-  }
+
+  clen = this->get_length();
+  this->get_min_max_alt(z_bot, z_top);
 
   ldata->cavelength = "";
   ldata->cavelengthtitle = "";
@@ -484,10 +485,10 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   ldata->cavedepth = "";
   ldata->cavedepthtitle = "";
 
-  if (z_top > z_bot) {
+  if (!thisnan(z_top)) {
     //b = "";  
     //std::snprintf(b.get_buffer(),255,"%.0f",z_top-z_bot);
-	b = layout->units.format_length(z_top-z_bot);
+	b = layout->units.format_length(z_top - z_bot);
     b += "<thsp>";
     //b += thT("units m",layout->lang);
     b += layout->units.format_i18n_length_units();

@@ -4,20 +4,10 @@ file(
   PATTERN "Makefile" EXCLUDE
   PATTERN "CMakeLists.txt" EXCLUDE)
 
-find_program(HHC_COMMAND hhc)
-
 function(add_help DIR)
   set(FULL_PATH ${CMAKE_CURRENT_BINARY_DIR}/${DIR})
   set(INPUT_FILES ${FULL_PATH}/loch.hhp ${FULL_PATH}/loch.hhc
                   ${FULL_PATH}/loch.hhk ${FULL_PATH}/loch.htm)
-
-  if(HHC_COMMAND)
-    add_custom_command(
-      OUTPUT ${FULL_PATH}/loch.chm
-      COMMAND ${HHC_COMMAND} loch.hhp
-      DEPENDS ${INPUT_FILES}
-      WORKING_DIRECTORY ${FULL_PATH})
-  endif()
 
   add_custom_command(
     OUTPUT ${FULL_PATH}/loch.htb
@@ -26,8 +16,10 @@ function(add_help DIR)
     DEPENDS ${INPUT_FILES}
     WORKING_DIRECTORY ${FULL_PATH})
 
-  add_custom_target(hlp_${DIR} ALL DEPENDS ${FULL_PATH}/loch.chm
-                                           ${FULL_PATH}/loch.htb)
+  add_custom_target(hlp_${DIR} ALL DEPENDS ${FULL_PATH}/loch.htb)
+  add_dependencies(loch hlp_${DIR})
+
+  install(FILES ${FULL_PATH}/loch.htb DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/therion-viewer/help/${DIR} COMPONENT loch-docs)
 endfunction()
 
 add_help("en")

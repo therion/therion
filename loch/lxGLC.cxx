@@ -70,18 +70,16 @@ EVT_ERASE_BACKGROUND(lxGLCanvas::OnEraseBackground)
 EVT_ENTER_WINDOW(lxGLCanvas::OnEnterWindow )
 EVT_CHAR(lxGLCanvas::OnKeyPress)
 EVT_IDLE(lxGLCanvas::OnIdle)
-#if wxCHECK_VERSION(2,9,0)
 EVT_MOUSE_CAPTURE_LOST(lxGLCanvas::OnMouseCaptureLost)
-#endif
 END_EVENT_TABLE()
 
 
-static const GLubyte srf16tex[48] = {
-  0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
-    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
-    0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0
-};
+// static const GLubyte srf16tex[48] = {
+//   0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0, 
+//     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
+//     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
+//     0, 0, 0, 255, 255, 255, 255, 255, 255, 0, 0, 0
+// };
 
 int wx_gl_window_attribs[] = {
 	WX_GL_RGBA,
@@ -215,9 +213,7 @@ void lxGLCanvas::RenderScreen()
 
 }
 
-#if wxCHECK_VERSION(2,9,0)
 void lxGLCanvas::OnMouseCaptureLost(wxMouseCaptureLostEvent& WXUNUSED(event)) {}
-#endif
 
 
 
@@ -251,6 +247,8 @@ void lxGLCanvas::OnSize(wxSizeEvent& event)
   int w, h;
   this->GetClientSize(&w, &h);
   this->setup->cam_width = double((GLfloat) w / (GLfloat) h);
+  w = int(this->GetContentScaleFactor() * w);
+  h = int(this->GetContentScaleFactor() * h);
   this->ww = w;
   this->wh = h;
 #ifdef __WXMSW__
@@ -794,9 +792,9 @@ void lxGLCanvas::SetCamera() {
 }
 
 static const GLfloat mat0[] = { 0.0, 0.0, 0.0, 1.0};
-static const GLfloat mat1[] = { 1.0, 1.0, 1.0, 1.0};
+// static const GLfloat mat1[] = { 1.0, 1.0, 1.0, 1.0};
 static const GLfloat mat2[] = { 0.5};
-static const GLfloat mat3[] = { 1.0, 1.0, 1.0, 0.5};
+// static const GLfloat mat3[] = { 1.0, 1.0, 1.0, 0.5};
 
 void lxGLCanvas::RenderScrapWalls() {
 
@@ -1404,7 +1402,7 @@ void lxGLCanvas::SetIndicatorsTransform()
       this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     }
   } else {
-    this->m_indRes = 3.7795276; // pixels per mm
+    this->m_indRes = 3.7795276 * this->GetContentScaleFactor(); // pixels per mm
     this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     glLineWidth(1.0);
   }
@@ -1436,7 +1434,7 @@ void lxGLCanvas::RenderInds()
       this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     }
   } else {
-    this->m_indRes = 3.7795276; // pixels per mm
+    this->m_indRes = 3.7795276 * this->GetContentScaleFactor(); // pixels per mm
     this->m_indLWidth = 1.0 / this->m_indRes;    // line width mm
     glLineWidth(1.0);
   }
@@ -1580,11 +1578,7 @@ void lxGLCanvas::RenderICompass(double size) {
 
   glPopMatrix();
 
-#if wxCHECK_VERSION(3,0,0)
   this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(wxString::FromUTF8(_("%03d\xc2\xb0")), int(this->setup->cam_dir)));
-#else
-  this->GetFontNumeric()->draw((-2.0) * lxFNTSW, this->m_indRes * (-size - 1.0) - lxFNTSH, wxString::Format(_("%03d\260)", int(this->setup->cam_dir)));
-#endif  
 
 }
 
@@ -1671,11 +1665,7 @@ void lxGLCanvas::RenderIClino(double size)
   glPopMatrix();
   glPopMatrix();
 
-#if wxCHECK_VERSION(3,0,0)
   this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(wxString::FromUTF8(_("%03d\xc2\xb0")), int(this->setup->cam_tilt)));
-#else
-  this->GetFontNumeric()->draw(this->m_indRes * (-size) / 2.0 - 1.5 * lxFNTSW, this->m_indRes * (-1.0) - lxFNTSH, wxString::Format(_("%+03d\260"), int(this->setup->cam_tilt)));
-#endif  
 }
 
 
@@ -1939,6 +1929,8 @@ bool lxGLCanvas::OSCMakeCurrent()
 	if (!this->m_OSC->m_OK) {
 	  int w, h;
 		this->GetClientSize(&w, &h);
+		w = int(this->GetContentScaleFactor() * w);
+		h = int(this->GetContentScaleFactor() * h);
 		this->m_OSC->m_Width = w;
 		this->m_OSC->m_Height = h;
 		return true;

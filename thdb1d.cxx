@@ -50,7 +50,7 @@
 #include "thcs.h"
 #include "thgeomag.h"
 #include "thgeomagdata.h"
-#include "extern/quickhull/QuickHull.hpp"
+#include "quickhull/QuickHull.hpp"
 
 //#define THUSESVX
 //#define THDEBUG
@@ -239,6 +239,20 @@ void thdb1d::scan_data()
                   lei->backbearing -= 180.0;
                   if (lei->backbearing < 0)
                     lei->backbearing += 360.0;
+                  double bearing_diff;
+                  if (lei->bearing > lei->backbearing)
+                	  bearing_diff = lei->bearing - lei->backbearing;
+                  else
+                	  bearing_diff = lei->backbearing - lei->bearing;
+                  if (bearing_diff > 180.0)
+                	  bearing_diff -= 360.0;
+                  double bearing_sd;
+                  if (thisnan(lei->bearing_sd))
+                	  bearing_sd = 1.25;
+                  else
+                	  bearing_sd = lei->bearing_sd;
+                  if (abs(bearing_diff) > 3.0 * bearing_sd)
+                  	thwarning(("%s [%d] -- forwards and backwards bearing readings do not match -- %.2f > %.2f", lei->srcf.name, lei->srcf.line, bearing_diff, 2.0 * bearing_sd));
 									// calculate average of two angles
                   //lei->bearing += lei->backbearing;
                   //lei->bearing = lei->bearing / 2.0;
@@ -263,6 +277,13 @@ void thdb1d::scan_data()
                   if ((thisinf(lei->gradient) == 0) && 
                       (thisinf(lei->backgradient) == 0)) {
                     lei->backgradient = - lei->backgradient;
+                    double gradient_sd;
+                    if (thisnan(lei->gradient_sd))
+                  	  gradient_sd = 1.25;
+                    else
+                  	  gradient_sd = lei->gradient_sd;
+                    if (abs(lei->backgradient - lei->gradient) > (3.0 * gradient_sd))
+                    	thwarning(("%s [%d] -- forwards and backwards gradient readings do not match", lei->srcf.name, lei->srcf.line));
                     lei->gradient += lei->backgradient;
                     lei->gradient = lei->gradient / 2.0;
                   }
@@ -273,6 +294,28 @@ void thdb1d::scan_data()
                 }
               }
             }
+
+            // check backwards length reading
+            if ((lei->data_type == TT_DATATYPE_NORMAL) ||
+                (lei->data_type == TT_DATATYPE_DIVING) ||
+                (lei->data_type == TT_DATATYPE_CYLPOLAR)) {
+              if (!thisnan(lei->backlength)) {
+                if (thisnan(lei->length)) {
+                  lei->length = lei->backlength;
+                } else {
+                  double length_sd;
+                  if (thisnan(lei->length_sd))
+                	  length_sd = 0.25;
+                  else
+                	  length_sd = lei->length_sd;
+				  if (abs(lei->backlength - lei->length) > (3.0 * length_sd))
+					thwarning(("%s [%d] -- forwards and backwards length readings do not match", lei->srcf.name, lei->srcf.line));
+                  lei->length += lei->backlength;
+                  lei->length /= 2.0;
+                }
+              }
+            }
+
             
             // calculate leg total length and std
             switch (lei->data_type) {
@@ -1588,7 +1631,7 @@ void thdb1d::find_loops()
   
   thlc_cross * lccrosses = NULL, * clccross;
   thlc_cross_arrow * lccrossarrows = NULL, * cca;
-  thlc_series tmpseries, * curseries, * prevseries;
+  thlc_series tmpseries = {}, * curseries, * prevseries;
   std::vector<thlc_series> lcseries;
 
   thdb1d_loop tdbloop;
@@ -3533,19 +3576,20 @@ thdb3ddata * thdb1ds::get_3d_outline() {
 	// traverse all splay shots from given station, calculate normalized position and add
   size_t splaycnt = 0, undercnt = 0;
   for(a = n->first_arrow; a != NULL; a = a->next_arrow) {
-		if ((a->leg->leg->flags & TT_LEGFLAG_SURFACE) == 0) {
-			tt = &(thdb.db1d.station_vec[a->end_node->uid - 1]);
-			tv = Vector3<double>(tt->x, tt->y, tt->z);
-			txv = tv - fv;
-			try {
-				txv.normalize();
-				pointCloud.push_back(txv);
-				originalPointCloud.push_back(tv);
-				originalPointCloudUse.push_back(NULL);
-				if ((a->leg->leg->flags & TT_LEGFLAG_SPLAY) != 0) splaycnt++;
-				else undercnt++;
-			} catch (...) {}
-  	}
+	if ((a->leg->leg->flags & TT_LEGFLAG_SURFACE) != 0) continue;
+	if (!(a->leg->leg->splay_walls)) continue;
+	tt = &(thdb.db1d.station_vec[a->end_node->uid - 1]);
+	//if (tt->temps == TT_TEMPSTATION_FEATURE) continue;
+	tv = Vector3<double>(tt->x, tt->y, tt->z);
+	txv = tv - fv;
+	try {
+		txv.normalize();
+		pointCloud.push_back(txv);
+		originalPointCloud.push_back(tv);
+		originalPointCloudUse.push_back(NULL);
+		if ((a->leg->leg->flags & TT_LEGFLAG_SPLAY) != 0) splaycnt++;
+		else undercnt++;
+	} catch (...) {}
   }
   // if there are more then 1 underground shots from this station, add it
   if (undercnt > 0) {

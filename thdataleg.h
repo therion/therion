@@ -48,6 +48,7 @@ enum {
   TT_DATALEG_TO,
   TT_DATALEG_DIRECTION,
   TT_DATALEG_LENGTH,
+  TT_DATALEG_BACKLENGTH,
   TT_DATALEG_BEARING,
   TT_DATALEG_BACKBEARING,
   TT_DATALEG_GRADIENT,
@@ -93,6 +94,8 @@ static const thstok thtt_dataleg_comp[] = {
   {"backclino", TT_DATALEG_BACKGRADIENT},
   {"backcompass", TT_DATALEG_BACKBEARING},
   {"backgradient", TT_DATALEG_BACKGRADIENT},
+  {"backlength", TT_DATALEG_BACKLENGTH},
+  {"backtape", TT_DATALEG_BACKLENGTH},
   {"bearing", TT_DATALEG_BEARING},
   {"ceiling", TT_DATALEG_UP},
   {"clino", TT_DATALEG_GRADIENT},
@@ -410,6 +413,8 @@ class thdataleg {
 
   int walls, shape, gridcs;
   
+  bool splay_walls;
+
   struct thdb1d_loop * loop; ///< Worst loop leg is a part of.
   struct thdb1d_traverse * traverse; ///< Centreline traverse, leg is a part of.
 
@@ -418,7 +423,7 @@ class thdataleg {
   
   double length, counter, fromcounter, tocounter, depth, fromdepth,
     todepth, depthchange, bearing, gradient, dx, dy, dz,
-    backbearing, backgradient, total_length, total_bearing, total_gradient,
+    backbearing, backgradient, backlength, total_length, total_bearing, total_gradient,
     total_dx, total_dy, total_dz, adj_dx, adj_dy, adj_dz,
     from_up, from_down, from_left, from_right,
     to_up, to_down, to_left, to_right, vtresh, extend_ratio;
@@ -543,7 +548,7 @@ class thdatamark {
 	
 	thobjectname station;
 
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = nullptr;  ///< parent survey
 
   thobjectsrc srcf;  ///< Source file.
 	
@@ -560,11 +565,11 @@ class thdataextend {
 	
 	thobjectname to, from, before;
 
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = nullptr;  ///< parent survey
 
   thobjectsrc srcf;  ///< Source file.
 	
-	int extend;
+	int extend = 0;
 	
 	double extend_ratio;
 
@@ -580,7 +585,7 @@ class thstdims {
   
 	thobjectname station;
 
-  class thsurvey * psurvey;  ///< parent survey
+  class thsurvey * psurvey = nullptr;  ///< parent survey
 
   thobjectsrc srcf;  ///< Source file.
   

@@ -34,6 +34,7 @@
 #include "thlocale.h"
 #include "thmapstat.h"
 #include <list>
+#include <string>
 
 /**
  * lookup command options tokens.
@@ -64,6 +65,7 @@ struct thlookup_table_row {
   const char * m_valueString;
   class thdataobject * m_ref;
   const char * m_label;
+  std::string m_labelTeX, m_labelStr;
   thlayout_color m_color;
   thlookup_table_row() : m_valueDbl(thnan), m_valueDblFrom(thnan), m_valueString(""), m_ref(NULL), m_label("") {}
   void parse(class thlookup * lkp, char * args);
@@ -87,10 +89,11 @@ class thlookup : public thdataobject {
   public:
 
   int m_type;
-  bool m_intervals, m_ascending;
+  bool m_intervals, m_ascending, m_autoIntervals;
   thlookup_table_list m_table;
   const char * m_title;
   thmapstat m_autoStat;
+  double m_depth_altitude;
 
   /**
    * Standard constructor.
@@ -171,6 +174,12 @@ class thlookup : public thdataobject {
    */
    
   int get_context() override;
+  
+  
+  /**
+   * Calculate interpolated value.
+   */
+  thlayout_color value2clr(double sval);
 
   /**
    * Set scrap color.
@@ -212,7 +221,7 @@ class thlookup : public thdataobject {
    * Export color legend, if applicable.
    */
 
-  virtual void export_color_legend(thlayout * layout, std::unique_ptr<thlookup> lookup_holder);
+  virtual void export_color_legend(thlayout * layout);
 
 };
 

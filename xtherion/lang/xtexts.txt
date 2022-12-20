@@ -1,3 +1,35 @@
+therion: Move front
+bg: Премести отпред
+cs: Dopředu
+de: Nach vorne verschieben
+el: Μετακίνηση προς τα μπρος
+en: Move front
+es: Delante
+fr: Déplacer en avant
+it: Sposta avanti
+pt: Frente
+ru: Поверх всех
+sk: Navrch
+sl: Prestavi naprej
+sq: levize perpara
+zh_CN: 向前移动
+
+therion: Move back
+bg: Премести назад
+cs: Dozadu
+de: Nach hinten verschieben
+el: Μετακίνηση προς τα πίσω
+en: Move back
+es: Detrás
+fr: Déplacer en arrière
+it: Sposta dietro
+pt: Fundo
+ru: Под всеми
+sk: Naspodok
+sl: Prestavi nazaj
+sq: levize prapa
+zh_CN: 向后移动
+
 therion: Drag to resize control panel.
 bg: Плъзнете, за да промените размера на контролния панел
 cs: Změnit šířku panelu.
@@ -2185,21 +2217,11 @@ sl: Nova Y koordinata slike.
 sq: koordinata Y e re e imazhit.
 zh_CN: 图像的新Y坐标
 
-therion: Move front
-bg: Премести отпред
-cs: Dopředu
-de: Nach vorne verschieben
-el: Μετακίνηση προς τα μπρος
-en: Move front
-es: Delante
-fr: Déplacer en avant
-it: Sposta avanti
-pt: Frente
-ru: Поверх всех
-sk: Navrch
-sl: Prestavi naprej
-sq: levize perpara
-zh_CN: 向前移动
+therion: move image vertically
+
+therion: Change image position in the queue.
+
+therion: Top
 
 therion: Move image in front of all images.
 bg: Премести изображението пред всички останали.
@@ -2217,21 +2239,15 @@ sl: Prestavi sliko pred vse slike.
 sq: levize imazhin para te gjitha imazheve.
 zh_CN: 移动图像至顶层
 
-therion: Move back
-bg: Премести назад
-cs: Dozadu
-de: Nach hinten verschieben
-el: Μετακίνηση προς τα πίσω
-en: Move back
-es: Detrás
-fr: Déplacer en arrière
-it: Sposta dietro
-pt: Fundo
-ru: Под всеми
-sk: Naspodok
-sl: Prestavi nazaj
-sq: levize prapa
-zh_CN: 向后移动
+therion: Up
+
+therion: Move image up.
+
+therion: Down
+
+therion: Move image down.
+
+therion: Bottom
 
 therion: Move image behind all images.
 bg: Премести изображението отзад останалите
@@ -4388,26 +4404,6 @@ sl: brišem skico reza
 sq: duke fshire skicen e deponise
 zh_CN: 删除草图素描
 
-therion: on
-de: an
-es: on
-fr: on
-it: on
-pt: sim
-ru: вкл
-sk: on
-sl: vklopljeno
-
-therion: off
-de: aus
-es: off
-fr: off
-it: off
-pt: não
-ru: выкл
-sk: off
-sl: izklopljeno
-
 therion: tiny (xs)
 de: winzig (xs)
 es: diminuto (xs)
@@ -4487,6 +4483,32 @@ pt: nenhum
 ru: нет
 sk: žiadny
 sl: nič
+
+therion: on
+de: an
+es: on
+fr: on
+it: on
+pt: sim
+ru: вкл
+sk: on
+sl: vklopljeno
+
+therion: off
+de: aus
+es: off
+fr: off
+it: off
+pt: não
+ru: выкл
+sk: off
+sl: izklopljeno
+
+therion: begin
+
+therion: both
+
+therion: end
 
 therion: <<
 de: <<
@@ -5186,6 +5208,8 @@ ru: контур
 sk: obrys
 sl: obris
 
+therion: border
+
 therion: text
 bg: текст
 cs: text
@@ -5201,6 +5225,8 @@ sk: text
 sl: besedilo
 sq: teksti
 zh_CN: 文本
+
+therion: direction
 
 therion: clip
 de: Beschneiden
@@ -5707,6 +5733,31 @@ ru: Продолжить трассировку
 sk: Pokračovať digitalizácii
 sl: Nadaljuj digitalizacijo
 
+therion: Convert eligible lines to curves
+en: Convert eligible lines to curves
+pt: Converter linhas elegíveis para curvas
+sk: Konvertovať vhodné čiary na krivky
+
+therion: Yes
+cs: Ano
+de: Ja
+en: Yes
+pt: Sim
+sk: Áno
+
+therion: No
+cs: Ne
+de: Nein
+en: No
+pt: Não
+sk: Nie
+
+therion: Converting
+cs: Konvertuji
+en: Converting
+pt: Convertendo
+sk: Konvertujem
+
 therion: shift object
 es: desplazar objeto
 fr: translater un objet
@@ -5895,7 +5946,7 @@ bg: Въвеждане на името на репераната точка
 cs: Zadávat názvy bodů
 de: Messpunktnamen eingeben
 el: Εισαγωγή ονομάτων σημείων χαρτογράφησης
-en: Demander le nom des stations
+en: Enter station names
 es: Nombrar estaciones
 fr: Entrer les noms des stations topos
 it: Inserisci i nomi dei capisaldi

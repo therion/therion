@@ -44,7 +44,7 @@ class thselector_item {
 
   const char * name, *src_name;
   unsigned long src_ln;
-  unsigned long number;
+  unsigned long number = 0;
   bool unselect, recursive;  
   long map_level, chapter_level;
   thlayout_color m_color;

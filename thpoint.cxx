@@ -153,11 +153,11 @@ void thpoint::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long
         this->parse_subtype(subtype);
       break;
 
-    case TT_POINT_VALUE:
-      this->parse_value(*args);
-      break;
-
     case TT_POINT_DIST:
+	  this->parse_value(*args, true);
+	  break;
+
+    case TT_POINT_VALUE:
       this->parse_value(*args);
       break;
 
@@ -515,6 +515,8 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         }
         if (out->symset->is_assigned(macroid))
           out->symset->export_mp_symbol_options(out->file, omacroid);
+        else
+          out->symset->export_mp_symbol_options(out->file, -1);
         fprintf(out->file,"p_station(");
         this->point->export_mp(out);
         fprintf(out->file,",%d,%s,\"\"",
@@ -877,7 +879,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
     thpoint_type_export_mp(TT_POINT_TYPE_VEGETABLE_DEBRIS,SYMP_VEGETABLEDEBRIS)
     thpoint_type_export_mp(TT_POINT_TYPE_ROOT,SYMP_ROOT)
 
-    thpoint_type_export_mp(TT_POINT_TYPE_U,SYMP_U)
+    case TT_POINT_TYPE_U:
+    	macroid = this->db->db2d.register_u_symbol(TT_POINT_CMD, this->m_subtype_str);
+    	break;
 
     default:
       macroid = SYMP_UNDEFINED;
@@ -901,8 +905,9 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         fprintf(out->file, "picture ATTR__text;\nATTR__text := %s;\n", attr_text.c_str());
       }
       if (this->type == TT_POINT_TYPE_U) {
-         out->symset->export_mp_symbol_options(out->file, -1);
+         out->symset->export_mp_symbol_options(out->file, omacroid);
          fprintf(out->file,"p_u_%s(",this->m_subtype_str);
+         out->symset->usymbols[omacroid].m_used = true;
          this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
       } else {
          out->symset->export_mp_symbol_options(out->file, omacroid);
@@ -1068,20 +1073,26 @@ void thpoint_parse_value(int & sv, double & dv, bool & qw, int & sign, char * st
 }
 
 
-void thpoint::parse_value(char * ss) {
-
+void thpoint::parse_value(char * ss, bool is_dist) {
+  bool opt_ok = false;
   switch (this->type) {
+    case TT_POINT_TYPE_EXTRA:
+      opt_ok = is_dist;
+      if (!opt_ok) {
+          thwarning(("%s [%d] -- using -value with point extra is deprecated, please use -dist instead", this->source.name, this->source.line));
+    	  opt_ok = true;
+      }
+      break;
     case TT_POINT_TYPE_ALTITUDE:
     case TT_POINT_TYPE_HEIGHT:
     case TT_POINT_TYPE_PASSAGE_HEIGHT:
     case TT_POINT_TYPE_DIMENSIONS:
     case TT_POINT_TYPE_DATE:
-    case TT_POINT_TYPE_EXTRA:
-      break;
-    default:
-      ththrow("-value not valid with type {}", thmatch_string(this->type,thtt_point_types));
-      break;
+      opt_ok = !is_dist;
+	  break;
   }
+  if (!opt_ok)
+	  ththrow("{} not valid with type {}", (is_dist ? "-dist" : "-value"),  thmatch_string(this->type,thtt_point_types));
 
   thsplit_words(& this->db->db2d.mbf,ss);
   int npar = this->db->db2d.mbf.get_size();
@@ -1165,6 +1176,7 @@ void thpoint::parse_value(char * ss) {
         case 3:
           // parse units
           lentf.parse_units(pars[2]);
+      		[[fallthrough]];
         case 2:
           thparse_double(sv,dv,pars[0]);
           if (sv != TT_SV_NUMBER) {

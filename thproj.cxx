@@ -29,6 +29,7 @@
 #include "thexception.h"
 #include "thproj.h"
 #include "thlogfile.h"
+#include "thcs.h"
 #include <string>
 #include <cmath>
 #include <map>
@@ -40,8 +41,8 @@
 #endif
 
 thcs_config::thcs_config() {
-  proj_auto = false;
-  proj_auto_grid = GRID_WARN;
+  proj_auto = true;
+  proj_auto_grid = GRID_DOWNLOAD;
 }
 
 thcs_config thcs_cfg;
@@ -50,8 +51,10 @@ thcs_config thcs_cfg;
 
 #include <proj_api.h>
 
-void thcs2cs(std::string s, std::string t,
+void thcs2cs(int si, int ti,
               double a, double b, double c, double &x, double &y, double &z) {
+  std::string s = thcs_get_params(si);
+  std::string t = thcs_get_params(ti);
   projPJ P1, P2;
   double c_orig = c;
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
@@ -68,7 +71,8 @@ void thcs2cs(std::string s, std::string t,
   pj_free(P2);
 }
 
-signed int thcs2zone(std::string s, double a, double b, double c) {
+signed int thcs2zone(int si, double a, double b, double c) {
+  std::string s = thcs_get_params(si);
   projPJ P1, P2;
   if ((P1 = pj_init_plus(s.c_str()))==NULL) 
      therror(("Can't initialize input projection!"));
@@ -81,7 +85,8 @@ signed int thcs2zone(std::string s, double a, double b, double c) {
   return (int) (a*180/M_PI+180)/6 + 1; 
 }
 
-double thcsconverg(std::string s, double a, double b) {
+double thcsconverg(int si, double a, double b) {
+  std::string s = thcs_get_params(si);
   projPJ P1, P2;
   double c = 0;
   double x = a, y = b;
@@ -140,17 +145,22 @@ std::string thcs_get_proj_version_headers() {
   #include <math.h>
   #include <sstream>
   #include <iomanip>
+#ifdef THWIN32
+  #include "thconfig.h"
+#endif
 
 #if PROJ_VER > 5
   std::regex reg_init(R"(^\+init=(epsg|esri):(\d+)$)");
   std::regex reg_epsg_ok(R"(^(epsg|esri):\d+$)");
   std::regex reg_type(R"(\+type\s*=\s*crs\b)");
   std::regex reg_space(R"(\s+)");
+  std::regex reg_trim(R"(^\s*(.*\S)\s*$)");
   std::regex reg_czech(R"(\s+\+czech\b)");
 #endif
 
   std::string sanitize_crs(std::string s) {
 #if PROJ_VER > 5
+    s = std::regex_replace(s, reg_trim, "$1");
     s = std::regex_replace(s, reg_space, " ");
     if (thcs_get_proj_version() == "7.1.0") {  // fix a bug in axes order in 7.1.0 also for user-defined CSs
       s = std::regex_replace(s, reg_czech, " +axis=wsu");
@@ -166,26 +176,26 @@ std::string thcs_get_proj_version_headers() {
 
 #if PROJ_VER >= 6
 class proj_cache {
-    std::map<std::tuple<std::string,std::string,std::vector<double> >, PJ*> transf_cache;
+    std::map<std::tuple<int,int,std::vector<double> >, PJ*> transf_cache;
     std::set<PJ*> PJ_cache;
   public:
     bool contains(PJ*);
-    PJ* get(std::string,std::string,std::vector<double>);
-    bool add(std::string,std::string,std::vector<double>, PJ*);
+    PJ* get(int,int,std::vector<double>);
+    bool add(int,int,std::vector<double>, PJ*);
     std::string log();
     ~proj_cache();
 };
 
-PJ* proj_cache::get(std::string s, std::string t, std::vector<double> bbox) {
-  std::tuple<std::string,std::string,std::vector<double> > tr_c {sanitize_crs(s), sanitize_crs(t), bbox};
+PJ* proj_cache::get(int s, int t, std::vector<double> bbox) {
+  std::tuple<int,int,std::vector<double> > tr_c {s, t, bbox};
   if (transf_cache.count(tr_c) == 1)
     return transf_cache[tr_c];
   else
     return nullptr;
 }
 
-bool proj_cache::add(std::string s, std::string t, std::vector<double> bbox, PJ* P) {
-  std::tuple<std::string,std::string,std::vector<double> > tr_c {sanitize_crs(s), sanitize_crs(t), bbox};
+bool proj_cache::add(int s, int t, std::vector<double> bbox, PJ* P) {
+  std::tuple<int,int,std::vector<double> > tr_c {s, t, bbox};
   if (transf_cache.count(tr_c) == 1) {
     return false;
   } else {
@@ -209,8 +219,8 @@ std::string proj_cache::log() {
                                      thcs_cfg.bbox[2] << ", " << thcs_cfg.bbox[3] << ")" << std::endl;
     for (const auto & i : transf_cache) {
       PJ_PROJ_INFO pinfo = proj_pj_info(i.second);
-      s << "  from: [" << std::get<0>(i.first).c_str() <<
-              "] to: [" << std::get<1>(i.first).c_str() <<
+      s << "  [" << thcs_get_name(std::get<0>(i.first)) <<
+              " → " << thcs_get_name(std::get<1>(i.first)) <<
               "] AoU: [" << (std::get<2>(i.first).size()>0 ? "yes" : "no") <<
               "] transformation: [" << pinfo.description <<
               "] definition: [" << pinfo.definition <<
@@ -227,11 +237,69 @@ proj_cache::~proj_cache() {
 proj_cache cache;
 #endif
 
+  std::map<std::pair<int,int>, std::string> precise_transf;
+
+  std::regex reg_gridlist(R"(\+(nad|geoid|xy_|z_|)grids\s*=\s*(\S+)\b)");
+  std::regex reg_gridfile(R"(@?([^,]+))");
+  std::regex reg_gridtif(R"(\.tiff?$)");
+
   void th_init_proj(PJ * &P, std::string s) {
 #if PROJ_VER > 5
     proj_context_use_proj4_init_rules(PJ_DEFAULT_CTX, true);
 #endif
     P = proj_create(PJ_DEFAULT_CTX, s.c_str());
+#if PROJ_VER >= 7
+    // try to download the missing grids if proj_create() fails
+    if (P==0 && thcs_cfg.proj_auto_grid == GRID_DOWNLOAD && proj_errno(P) ==
+#if PROJ_VER >= 8
+      PROJ_ERR_INVALID_OP_FILE_NOT_FOUND_OR_INVALID
+#else
+      -38 // PJD_ERR_FAILED_TO_LOAD_GRID is not exposed
+#endif
+       ) {
+        thprintf("trying to recover from the error listed above...\n");
+        std::smatch m1, m2;
+        std::set<std::string> grids;
+        // find all grid lists
+        for (auto i1 = std::sregex_iterator(s.begin(), s.end(), reg_gridlist);
+             i1 != std::sregex_iterator(); i1++) {
+          m1 = *i1;
+          std::string s2 = m1.str(2);
+          // split comma separated list of grids
+          for (auto i2 = std::sregex_iterator(s2.begin(), s2.end(), reg_gridfile);
+               i2 != std::sregex_iterator(); i2++) {
+            m2 = *i2;
+            if (std::regex_search(m2.str(1),reg_gridtif)) grids.insert(m2.str(1));
+          }
+      }
+
+      // download all tif grids from the Proj CDN
+      if (!proj_context_set_enable_network(PJ_DEFAULT_CTX, 1)) {
+        proj_destroy(P);
+        therror(("couldn't enable network access for Proj"));
+      }
+      for (auto & f: grids) {
+#if PROJ_VER >= 8  // supported since 7.1.0
+        thprintf("downloading the grid %s from %s into %s...\n", f.c_str(), proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
+                                                                 proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0));
+#else
+        thprintf("downloading the grid %s...\n", f.c_str());
+#endif
+        if (!proj_download_file(PJ_DEFAULT_CTX, f.c_str(), 0, NULL, NULL)) {
+          proj_destroy(P);
+          therror(("couldn't download the grid"));
+        }
+      }
+      if (proj_context_set_enable_network(PJ_DEFAULT_CTX, 0)) { // disable the network to prevent Proj from automatic caching
+        proj_destroy(P);
+        therror(("couldn't disable network access for Proj"));
+      }
+      thprintf("done\n");
+
+      // try once again after downloading the grids
+      P = proj_create(PJ_DEFAULT_CTX, s.c_str());
+    }
+#endif  // PROJ_VER >= 7
     if (P==0) {
       std::ostringstream u;
       u << "PROJ library: " << proj_errno(P) << " (" << proj_errno_string(proj_errno(P)) << "): " << s;
@@ -241,10 +309,13 @@ proj_cache cache;
   }
 
 #if PROJ_VER >= 6
-  void th_init_proj_auto(PJ * &P, std::string s, std::string t) {
+  void th_init_proj_auto(PJ * &P, int si, int ti) {
 
     // check the cache first
-    if ((P = cache.get(s,t,thcs_cfg.bbox)) != nullptr) return;
+    if ((P = cache.get(si,ti,thcs_cfg.bbox)) != nullptr) return;
+
+    std::string s = thcs_get_params(si);
+    std::string t = thcs_get_params(ti);
 
     if
 #if PROJ_VER >= 7
@@ -305,7 +376,12 @@ proj_cache cache;
                   proj_list_destroy(ops);
                   therror(("couldn't enable network access for Proj"));
                 }
+#if PROJ_VER >= 8  // supported since 7.1.0
+                thprintf("downloading the grid %s from %s into %s...\n", url, proj_context_get_url_endpoint(PJ_DEFAULT_CTX),
+                                                                         proj_context_get_user_writable_directory(PJ_DEFAULT_CTX, 0));
+#else
                 thprintf("downloading the grid %s... ", url);
+#endif
                 if (!proj_download_file(PJ_DEFAULT_CTX, url, 0, NULL, NULL)) {
                   proj_destroy(P_tmp);
                   proj_list_destroy(ops);
@@ -316,7 +392,7 @@ proj_cache cache;
                   proj_list_destroy(ops);
                   therror(("couldn't disable network access for Proj"));
                 }
-                thprintf("done\n", url);
+                thprintf("done\n");
                 break;
 #endif
             }
@@ -351,16 +427,13 @@ proj_cache cache;
     proj_destroy(P);
     P = P_for_GIS;
 
-    if (!cache.add(s,t,thcs_cfg.bbox,P))
+    if (!cache.add(si,ti,thcs_cfg.bbox,P))
       therror(("could not add projection to the cache, it's already there -- should not happen"));
   }
 #endif
 
-  void thcs2cs(std::string s, std::string t,
+  void thcs2cs(int si, int ti,
               double a, double b, double c, double &x, double &y, double &z) {
-
-    // TODO: support user-defined pipelines for a combination of CRSs
-    // for high-precision transformations
 
     //  Proj (at least 5.2.0) doesn't accept custom proj strings in
     //  proj_create_crs_to_crs(); just +init=epsg:NNN and similar init strings
@@ -368,12 +441,31 @@ proj_cache cache;
 
     //  Proj v.6 supports them
 
+    std::string s = thcs_get_params(si);
+    std::string t = thcs_get_params(ti);
+
     double undo_radians = 1.0, redo_radians = 1.0;
     double c_orig = c;
     PJ* P = NULL;
+
+// set CA bundle path; supported since proj 7.2.0
+#ifdef THWIN32
+#if PROJ_VER >= 8
+    std::string ca_path = (std::string) thcfg.install_path.get_buffer() + "\\lib\\cacert.pem";
+    proj_context_set_ca_bundle_path(PJ_DEFAULT_CTX, ca_path.c_str());
+#endif
+#endif
+
+#if PROJ_VER >= 7         // grids in .tif format supported since v7
+    std::string transf;
+    if ((transf = thcs_get_trans(si, ti)) != "") {  // use the preconfigured precise transformation
+      th_init_proj(P, transf.c_str());
+      precise_transf[{si,ti}] = transf;
+    } else
+#endif
 #if PROJ_VER > 5
     if (thcs_cfg.proj_auto) {  // let PROJ find the best transformation
-      th_init_proj_auto(P, s, t);
+      th_init_proj_auto(P, si, ti);
       if (thcs_islatlong(s) && !proj_angular_input(P, PJ_FWD)) {
         undo_radians = 180.0 / M_PI;
       }
@@ -398,19 +490,19 @@ proj_cache cache;
       proj_destroy(P);
   }
 
-  signed int thcs2zone(std::string s, double a, double b, double c) {
+  signed int thcs2zone(int s, double a, double b, double c) {
     double x, y, z;
-    thcs2cs(s,"+proj=latlong +datum=WGS84",a,b,c,x,y,z);
+    thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
     return (int) (x*180/M_PI+180)/6 + 1;
   }
 
-  double thcsconverg(std::string s, double a, double b) {
+  double thcsconverg(int s, double a, double b) {
     double c = 0, x, y, z, x2, y2, z2;
-    if (thcs_islatlong(s))
+    if (thcs_islatlong(thcs_get_params(s)))
       therror(("can't determine meridian convergence for lat-long systems"));
-    thcs2cs(s,"+proj=latlong +datum=WGS84",a,b,c,x,y,z);
+    thcs2cs(s,TTCS_EPSG + 4326,a,b,c,x,y,z);
     y += 1e-6;
-    thcs2cs("+proj=latlong +datum=WGS84",s,x,y,z,x2,y2,z2);
+    thcs2cs(TTCS_EPSG + 4326,s,x,y,z,x2,y2,z2);
     return atan2(x2-a,y2-b)/M_PI*180;
   }
 
@@ -466,12 +558,21 @@ int thcs_parse_gridhandling(const char * s) {
 }
 
 void thcs_log_transf_used() {
+#if PROJ_VER >= 7
+  if (precise_transf.size() > 0) {
+    thlog.printf("\n################# custom transformations used ##################\n");
+    for (auto &j: precise_transf) {
+      thlog.printf("  [%s → %s] definition: [%s]\n", thcs_get_name(j.first.first), thcs_get_name(j.first.second), j.second.c_str());
+    }
+    thlog.printf("############ end of custom transformations used ################\n");
+  }
+#endif
 #if PROJ_VER >= 6
   thlog.printf(cache.log().c_str());
 #endif
 }
 
-std::string thcs_get_label(std::string s) {
+std::string thcs_get_label([[maybe_unused]] std::string s) {
 #if PROJ_VER >= 6
     PJ* P;
     std::string res;

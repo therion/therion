@@ -296,7 +296,7 @@ lxRenderDataConfig::lxRenderDataConfig(wxWindow * parent, lxRenderData * data, c
   lxBoxSizer = new wxBoxSizer(wxHORIZONTAL);
   lxBoxSizer->Add(
     new wxStaticText(this, LXRDC_RESOL_LBL, _("Rendering resolution (dpi)")),
-    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | wxALL | wxALIGN_RIGHT, lxBORDER);
+    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | wxALL, lxBORDER);
   lxBoxSizer->Add(
     new wxTextCtrl(this, LXRDC_RESOL, _T(""), wxDefaultPosition, wxDefaultSize, wxTE_RIGHT, lxDoubleValidator(&this->m_data->m_imgResolution,96,2400)),
     0, wxALIGN_CENTER | lxNOTLEFT, lxBORDER);
@@ -306,7 +306,7 @@ lxRenderDataConfig::lxRenderDataConfig(wxWindow * parent, lxRenderData * data, c
   lxBoxSizer = new wxBoxSizer(wxHORIZONTAL);
   lxBoxSizer->Add(
     new wxStaticText(this, LXRDC_IMGSIZE_LBL, _("Image size:")),
-    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | lxNOTTOP | wxALIGN_RIGHT, lxBORDER);
+    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | lxNOTTOP, lxBORDER);
   lxBoxSizer->Add(
     new wxStaticText(this, LXRDC_IMGSIZE, _("00 x 00 (00.0 MB)")),
     0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | wxBOTTOM | wxRIGHT | wxALIGN_LEFT, lxBORDER);
@@ -314,7 +314,7 @@ lxRenderDataConfig::lxRenderDataConfig(wxWindow * parent, lxRenderData * data, c
 
   lxStaticBoxSizer->Add(
     new wxCheckBox(this, LXRDC_WHITEBG, _("White background"), wxDefaultPosition, wxDefaultSize, 0, wxGenericValidator(&this->m_data->m_imgWhiteBg)), 
-    0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL  | lxNOTTOP | wxALIGN_LEFT, lxBORDER);
+    0, wxALIGN_LEFT | lxNOTTOP | wxALIGN_LEFT, lxBORDER);
 
   sizerAll->Add(lxStaticBoxSizer, 0, wxEXPAND | lxNOTTOP, lxBORDER);
 
@@ -346,15 +346,15 @@ public:
   bool m_started, m_continue, m_progress;
   lxGLCanvas * m_glc;
   lxRenderData * m_pData;
-  FILE * m_file, * m_fileTMP;
-  GLint m_imgWidth, m_imgHeight, m_tWidth, m_tHeight;
+  FILE * m_file, * m_fileTMP = nullptr;
+  GLint m_imgWidth = 0, m_imgHeight = 0, m_tWidth = 0, m_tHeight = 0;
   GLubyte * m_imgBuffRow;
   GLubyte * m_imgBuffLine;
-  int m_imgBuffLineSize;
-  int m_cTile;
+  int m_imgBuffLineSize = 0;
+  int m_cTile = 0;
   wxWindow * m_parent;
-  png_structp png_ptr;
-  png_infop png_info_ptr;
+  png_structp png_ptr = nullptr;
+  png_infop png_info_ptr = nullptr;
 
 
   void Render();
@@ -788,7 +788,7 @@ void lxRenderData::Render(wxWindow * parent, lxGLCanvas * glc)
 void lxRenderFile::RenderPNGHeader()
 {
 
-  double imgRes;
+  volatile double imgRes; // volatile local variables don't interfere with setjmp()
   if (this->m_pData->m_scaleMode == LXRENDER_FIT_SCREEN)
     imgRes = 96.0;
   else
@@ -918,7 +918,7 @@ void lxRenderFile::RenderPDFFooter()
 {
 
 
-  size_t src_pos, dst_pos, png_len, png_pos, png_hdr, png_add, buff_read, buff_rest;
+  size_t src_pos, /*dst_pos,*/ png_len, png_pos, png_hdr, png_add, buff_read, buff_rest;
   unsigned char lenbuff[8]; 
 
   png_write_end(png_ptr, NULL);
@@ -946,7 +946,7 @@ void lxRenderFile::RenderPDFFooter()
 #define buffsize 256000
   unsigned char * buff = new unsigned char [buffsize]; 
   contpng = true;
-  dst_pos = ftell(this->m_file);
+  // dst_pos = ftell(this->m_file);
   src_pos = pdf_png_start;
   do {
     fseek(this->m_fileTMP, src_pos, SEEK_SET);
@@ -965,7 +965,7 @@ void lxRenderFile::RenderPDFFooter()
         //fseek(this->m_file, dst_pos, SEEK_SET);
         fwrite(buff, 1, buff_read, this->m_file);
         src_pos += buff_read;
-        dst_pos += buff_read;
+        // dst_pos += buff_read;
       }
       src_pos += 4;
     } else {

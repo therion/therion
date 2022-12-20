@@ -1,10 +1,15 @@
-all: loch.htb loch.chm
+OUTDIR ?= .
+ifneq ($(OUTDIR),.)
+HOUTDIR = ../../../$(OUTDIR)/loch/help/sk
+else
+HOUTDIR = .
+endif
 
-loch.chm: loch.hhp loch.hhc loch.hhk loch.htm
-	hhc loch.hhp
+
+all: loch.htb
 
 loch.htb: loch.hhp loch.hhc loch.hhk loch.htm
-	zip loch.htb loch.hhp loch.hhc loch.hhk loch.htm
+	zip $(HOUTDIR)/loch.htb loch.hhp loch.hhc loch.hhk loch.htm
 
 clean:
-	perl ../../../makefile.pl rm -q loch.chm loch.htb
+	perl ../../../makefile.pl rm -q loch.htb

@@ -42,10 +42,6 @@
 #include "thpdf.h"
 #include "thtexfonts.h"
 #include <string.h>
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
 
 
 thlookup::thlookup()
@@ -53,7 +49,9 @@ thlookup::thlookup()
   this->m_type = TT_LAYOUT_CCRIT_UNKNOWN;
   this->m_ascending = true;
   this->m_intervals = false;
+  this->m_autoIntervals = false;
   this->m_title = "";
+  this->m_depth_altitude = 0;
 }
 
 
@@ -124,6 +122,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_DATAOBJECT_AUTHOR:
     case TT_DATAOBJECT_COPYRIGHT:
       defcod.nargs = 2;
+      [[fallthrough]];
     default:
       if (cod.nargs > defcod.nargs)
         ththrow("too many arguments -- {}", args[defcod.nargs]);
@@ -153,6 +152,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       tmpb = lkpnname;
       tmpa[0] = tmpb.get_buffer();
       args = tmpa;
+      [[fallthrough]];
     default:
       thdataobject::set(cod, args, argenc, indataline);
       break;
@@ -278,10 +278,77 @@ bool scrap_in_map(thscrap * s, thmap * m) {
 }
 
 
+thlayout_color thlookup::value2clr(double sval) {
+    double ratio;
+    thlookup_table_list::iterator tli, ptli, ntli;
+    thlayout_color clr;
+    if ((this->m_type) == TT_LAYOUT_CCRIT_DEPTH) sval -= this->m_depth_altitude;
+	if (this->m_intervals) {
+	  for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
+		if (thisnan(tli->m_valueDblFrom) && thisnan(tli->m_valueDbl)) {
+		  clr = tli->m_color;
+		}
+		else if (!thisnan(sval)) {
+		  if (this->m_ascending) {
+			if ((thisnan(tli->m_valueDblFrom) || (tli->m_valueDblFrom < sval)) && (thisnan(tli->m_valueDbl) || (tli->m_valueDbl >= sval))) {
+			  clr = tli->m_color;
+			  break;
+			}
+		  } else {
+			if ((thisnan(tli->m_valueDblFrom) || (tli->m_valueDblFrom > sval)) && (thisnan(tli->m_valueDbl) || (tli->m_valueDbl <= sval))) {
+			  clr = tli->m_color;
+			  break;
+			}
+		  }
+		}
+	  }
+	} else {
+	  ptli = this->m_table.end();
+	  for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
+		if (thisnan(tli->m_valueDbl) && thisnan(sval)) {
+		  clr = tli->m_color;
+		  break;
+		} else if ((!thisnan(sval)) && (!thisnan(tli->m_valueDbl)))  {
+		  ntli = tli;
+		  ntli++;
+		  if (this->m_ascending) {
+			if (sval <= tli->m_valueDbl) {
+			  clr = tli->m_color;
+			  if ((ptli != this->m_table.end()) && (!thisnan(ptli->m_valueDbl)) && (ptli->m_valueDbl < sval)) {
+				// interpolate value
+				ratio = (sval - ptli->m_valueDbl) / (tli->m_valueDbl - ptli->m_valueDbl);
+				clr = tli->m_color;
+				clr.mix_with_color(ratio, ptli->m_color);
+			  }
+			  break;
+			} else {
+			  clr = tli->m_color;
+			}
+		  } else {
+			if (sval >= tli->m_valueDbl) {
+			  clr = tli->m_color;
+			  if ((ptli != this->m_table.end()) && (!thisnan(ptli->m_valueDbl)) && (ptli->m_valueDbl > sval)) {
+				// interpolate value
+				ratio = (sval - tli->m_valueDbl) / (ptli->m_valueDbl - tli->m_valueDbl);
+				clr = tli->m_color;
+				clr.mix_with_color(ratio, ptli->m_color);
+			  }
+			  break;
+			} else {
+			  clr = tli->m_color;
+			}
+		  }
+		}
+		ptli = tli;
+	  }
+	}	
+	return clr;
+}
+
+
 void thlookup::color_scrap(thscrap * s) {
   // set color of the scrap
   double sval;
-  double ratio;
   thlookup_table_list::iterator tli, ptli, ntli;
   thlayout_color clr;
   switch (this->m_type) {
@@ -315,6 +382,7 @@ void thlookup::color_scrap(thscrap * s) {
         thmapstat ms;
         ms.adddata(&(s->adata));
         sval = s->a;
+        if ((this->m_type) == TT_LAYOUT_CCRIT_DEPTH) sval -= this->m_depth_altitude;
         if (this->m_type == TT_LAYOUT_CCRIT_EXPLODATE) {
           sval = ms.discovered_date.get_start_year();
           if (sval < 0) sval = thnan;
@@ -323,65 +391,7 @@ void thlookup::color_scrap(thscrap * s) {
           sval = ms.surveyed_date.get_start_year();
           if (sval < 0) sval = thnan;
         }
-        if (this->m_intervals) {
-          for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
-            if (thisnan(tli->m_valueDblFrom) && thisnan(tli->m_valueDbl)) {
-              clr = tli->m_color;
-            }
-            else if (!thisnan(sval)) {
-              if (this->m_ascending) {
-                if ((thisnan(tli->m_valueDblFrom) || (tli->m_valueDblFrom < sval)) && (thisnan(tli->m_valueDbl) || (tli->m_valueDbl >= sval))) {
-                  clr = tli->m_color;
-                  break;
-                }
-              } else {
-                if ((thisnan(tli->m_valueDblFrom) || (tli->m_valueDblFrom > sval)) && (thisnan(tli->m_valueDbl) || (tli->m_valueDbl <= sval))) {
-                  clr = tli->m_color;
-                  break;
-                }
-              }
-            }
-          }
-        } else {
-          ptli = this->m_table.end();
-          for(tli = this->m_table.begin(); tli != this->m_table.end(); tli++) {
-            if (thisnan(tli->m_valueDbl) && thisnan(sval)) {
-              clr = tli->m_color;
-              break;
-            } else if ((!thisnan(sval)) && (!thisnan(tli->m_valueDbl)))  {
-              ntli = tli;
-              ntli++;
-              if (this->m_ascending) {
-                if (sval <= tli->m_valueDbl) {
-                  clr = tli->m_color;
-                  if ((ptli != this->m_table.end()) && (!thisnan(ptli->m_valueDbl)) && (ptli->m_valueDbl < sval)) {
-                    // interpolate value
-                    ratio = (sval - ptli->m_valueDbl) / (tli->m_valueDbl - ptli->m_valueDbl);
-                    clr = tli->m_color;
-                    clr.mix_with_color(ratio, ptli->m_color);
-                  }
-                  break;
-                } else {
-                  clr = tli->m_color;
-                }
-              } else {
-                if (sval >= tli->m_valueDbl) {
-                  clr = tli->m_color;
-                  if ((ptli != this->m_table.end()) && (!thisnan(ptli->m_valueDbl)) && (ptli->m_valueDbl > sval)) {
-                    // interpolate value
-                    ratio = (sval - tli->m_valueDbl) / (ptli->m_valueDbl - tli->m_valueDbl);
-                    clr = tli->m_color;
-                    clr.mix_with_color(ratio, ptli->m_color);
-                  }
-                  break;
-                } else {
-                  clr = tli->m_color;
-                }
-              }
-            }
-            ptli = tli;
-          }
-        }
+        clr = this->value2clr(sval);
       }
   }
   if (clr.is_defined()) {
@@ -390,9 +400,9 @@ void thlookup::color_scrap(thscrap * s) {
 }
 
 
-void thlookup::export_color_legend(thlayout * layout, std::unique_ptr<thlookup> lookup_holder) {
-  layout->m_lookup = std::move(lookup_holder);
-  if (layout->color_legend == TT_TRUE) {
+void thlookup::export_color_legend(thlayout * layout) {
+  layout->m_lookup = this;
+  if (layout->color_legend != TT_LAYOUT_COLORLEGEND_OFF) {
     COLORLEGENDLIST.clear();
     thlookup_table_list::iterator tli;
     colorlegendrecord clrec;
@@ -468,8 +478,9 @@ void thlookup::export_color_legend(thlayout * layout, std::unique_ptr<thlookup> 
             break;
         }
       }
+      tli->m_labelTeX = clrec.texname;
+      tli->m_labelStr = clrec.name;
       COLORLEGENDLIST.insert(COLORLEGENDLIST.end(), clrec);
-
     }
   }
 }
@@ -518,6 +529,7 @@ void thlookup::auto_generate_items() {
   if (this->m_table.size() > 0) return;
   thdate interval;
   thlookup_table_row tr;
+  this->m_autoIntervals = true;
   double from, to;
   int z;
   switch (this->m_type) {
@@ -540,10 +552,8 @@ void thlookup::auto_generate_items() {
       this->m_autoStat.get_min_max_alt(from, to);
       for(z = 0; z < 7; z++) {
         tr.m_valueDbl = from + double(z) * ((to - from) / 6);
-        if (this->m_type == TT_LAYOUT_CCRIT_ALTITUDE)
-            this->m_table.push_front(tr);
-        else
-        	this->m_table.push_back(tr);
+        if (this->m_type == TT_LAYOUT_CCRIT_DEPTH) tr.m_valueDbl -= this->m_depth_altitude;
+		this->m_table.push_front(tr);
       }
       break;
   }
@@ -611,14 +621,24 @@ void thlookup::postprocess() {
         if ((this->m_type == TT_LAYOUT_CCRIT_SCRAP) || (this->m_type == TT_LAYOUT_CCRIT_MAP)) {
           cnt = 0;
           for(nvalid = this->m_table.begin(); nvalid != this->m_table.end(); nvalid++) {
-            switch (cnt % 6) {
-                case 0:  nvalid->m_color = thlayout_color(1.0, 0.5, 0.5); break;
-                case 1:  nvalid->m_color = thlayout_color(0.5, 1.0, 0.5); break;
-                case 2:  nvalid->m_color = thlayout_color(0.5, 0.5, 1.0); break;
-                case 3:  nvalid->m_color = thlayout_color(1.0, 1.0, 0.0); break;
-                case 4:  nvalid->m_color = thlayout_color(0.0, 1.0, 1.0); break;
-                default: nvalid->m_color = thlayout_color(1.0, 0.0, 1.0); break;
-            }
+							switch (cnt % 16) {
+								case 0:  nvalid->m_color = thlayout_color(1.0, 0.5, 0.5); break;
+								case 1:  nvalid->m_color = thlayout_color(0.5, 1.0, 0.5); break;
+								case 2:  nvalid->m_color = thlayout_color(0.5, 0.5, 1.0); break;
+								case 3:  nvalid->m_color = thlayout_color(1.0, 1.0, 0.0); break;
+								case 4:  nvalid->m_color = thlayout_color(0.0, 1.0, 1.0); break;
+								case 5:  nvalid->m_color = thlayout_color(1.0, 0.0, 1.0); break;
+								case 6:  nvalid->m_color = thlayout_color(0.75, 1.0, 1.0); break;
+								case 7:  nvalid->m_color = thlayout_color(1.0, 0.75, 1.0); break;
+								case 8:  nvalid->m_color = thlayout_color(1.0, 1.0, 0.75); break;
+								case 9:  nvalid->m_color = thlayout_color(0.25, 0.75, 1.0); break;
+								case 10: nvalid->m_color = thlayout_color(0.25, 1.0, 0.75); break;
+								case 11: nvalid->m_color = thlayout_color(1.0, 0.75, 0.25); break;
+								case 12: nvalid->m_color = thlayout_color(0.75, 1.0, 0.25); break;
+                case 13: nvalid->m_color = thlayout_color(0.75, 0.25, 1.0); break;
+                case 14: nvalid->m_color = thlayout_color(1.0, 0.25, 0.75); break;
+                default: nvalid->m_color = thlayout_color(0.5, 0.25, 0.75); break;
+							}
             nvalid->m_color.alpha_correct(tmp_alpha);
             nvalid->m_color.defined = 1;
 

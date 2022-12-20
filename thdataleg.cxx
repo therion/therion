@@ -52,6 +52,7 @@ void thdataleg::clear()
   this->from.clear();
   this->to.clear();
   this->length = thnan;
+  this->backlength = thnan;
   this->counter = thnan;
   this->fromcounter = thnan;
   this->tocounter = thnan;
@@ -108,6 +109,7 @@ void thdataleg::clear()
   this->to_right = thnan;
   
   this->walls = TT_AUTO;
+  this->splay_walls = true;
   this->shape = TT_DATALEG_SHAPE_UNKNOWN;
   this->vtresh = thnan;
   this->extend_ratio = thnan;

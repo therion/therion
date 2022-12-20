@@ -95,7 +95,7 @@ on Ubuntu 18.04 or 20.04:
 
 \subsubchapter Using CMake.
 
-\NEW{5.6}Unpack the source distribution |therion-5.*.tar.gz| and create a separate
+\NEW{6.0}Unpack the source distribution |therion-6.*.tar.gz| and create a separate
 directory for the build, e.g.:
 \list
 * |cd therion && mkdir build && cd build|
@@ -140,10 +140,13 @@ Here is a selection of parameters which can be used with cmake:
 
 \endlist
 
+The following cmake components can be used to selectively install a part of the package: th-runtime, loch-runtime,
+th-docs, loch-docs.
+
 \subsubchapter Legacy approach: using make.
 
 \list
-* unpack the source distribution |therion-5.*.tar.gz|
+* unpack the source distribution |therion-6.*.tar.gz|
 * |cd therion|
 * |make config-macosx| or |make config-win32|, if you use MacOS~X or Windows,
   respectively
@@ -374,6 +377,31 @@ supported initialization commands follow.
 
   Define a new coordinate system |<id>| using Proj4 syntax.
 
+* |cs-trans <cs1> <cs2> <proj-pipeline>|\NEW{6.1.0}
+
+  Define a transforamation pipeline between two coordinate systems.
+  \[See \www{https://proj.org/usage/transformation.html} for details of pipelines
+  definition.] Both |cs1| and |cs2| can be lists of aliases
+  enclosed in brackets.
+
+  Therion contains a built-in database of transformation pipelines.\[Mostly for
+  JTSK to ETRS89 transformations. The definitions are in the
+  |thcsdata.tcl| file in the source code, |proj\_transformations| variable.]
+  You can override any built-in definition either by redefining the pipeline
+  using |cs-trans| or make it ignored by using an empty string in the |cs-trans| definition.
+
+  If the pipeline references transformations grids which are not installed
+  locally, Therion attempts to download them from \www{cdn.proj.org} if
+  |proj-missing-grid| option is set to |download| (otherwise it prints an error message
+  and stops).
+
+  This option is ignored if Therion is using PROJ v6 or older.
+
+  Example: {\rightskip 0pt plus 3cm\catcode`\=12
+  |cs-trans [jtsk epsg:5513] [etrs34 epsg:25834] "+proj=pipeline +step +inv +proj=krovak +axis=wsu +lat_0=49.5 +lon_0=24.8333333333333 +alpha=30.2881397527778 +k=0.9999 +x_0=0 +y_0=0 +ellps=bessel +step +inv +proj=hgridshift +grids=sk_gku_JTSK03_to_JTSK.tif +step +proj=push +v_3 +step +proj=cart +ellps=bessel +step +proj=helmert +x=485.021 +y=169.465 +z=483.839 +rx=-7.786342 +ry=-4.397554 +rz=-4.102655 +s=0 +convention=coordinate_frame +step +inv +proj=cart +ellps=GRS80 +step +proj=pop +v_3 +step +proj=utm +zone=34 +ellps=GRS80"|
+  \par}
+
+
 * |proj-auto <on/off>|\NEW{5.5}
 
   \penalty50
@@ -388,13 +416,19 @@ supported initialization commands follow.
   first transformed to |wgs-84|, then from |wgs-84| to the target coordinate
   system. This might result in a suboptimal precision.
 
-  The default setting is |off|.
+  The default setting is |on|.\NEW{6.1.0} This option is ignored for those pairs of coordinate
+  systems which have a transformation pipeline defined (see |cs-trans|).
 
 * |proj-missing-grid <ignore/warn/fail/cache/download>|\NEW{5.5.1}
 
-  Set missing transformation grids handling if |proj-auto| is |on|. The grids
+  Set missing transformation grids handling if |proj-auto| is |on|
+  or a custom transformation pipeline in |cs-trans| references such grids. The grids
   are used to achieve a better transformation precision between some
   coordinate systems.
+
+  For |cs-trans| pipelines, only |download| tries to download the grid; all other options
+  are equivalent to |fail|. If |proj-auto| is used to find the best transformation,
+  the following applies:
 
   |ignore| silently lets Proj to choose other transformation which doesn't use the missing
   grid(s); this usually leads to decreased transformation accuracy
@@ -423,7 +457,7 @@ supported initialization commands follow.
   lets Proj to download the missing grids from the
   Internet. The grids are used in {\it subsequent} runs (in any mode).
 
-  The default setting is |warn|. The option |proj-missing-grid| is ignored if
+  The default setting is |download|.\NEW{6.1.0} The option |proj-missing-grid| is ignored if
   |proj-auto| is |off| or Proj v5 or older is used.
   If Proj v6 is used by Therion, the settings
   |cache| and |download| are equivalent to |fail|, as the network

@@ -32,12 +32,7 @@
 #include "thinfnan.h"
 #include <math.h>
 
-thtfangle::thtfangle() {
-
-  this->units = TT_TFU_DEG;
-  this->allow_percentage = false;
-
-}
+thtfangle::thtfangle() : thtf(TT_TFU_DEG) {}
 
 bool mils_warning(true);
 
@@ -59,6 +54,7 @@ void thtfangle::parse_units(char * ustr)
         thwarning(("using mil/mils as angle unit is deprecated"));
         mils_warning = false;
       }
+      [[fallthrough]];
     case TT_TFU_GRAD:
       this->ufactor = 0.9;
       break;
@@ -67,6 +63,7 @@ void thtfangle::parse_units(char * ustr)
 	      this->ufactor = 1.0;
 				break;
 			}
+      [[fallthrough]];
     case TT_TFU_UNKNOWN_ANGLE:
       ththrow("unknown angle unit -- {}", ustr);
       break;

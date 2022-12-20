@@ -3777,9 +3777,58 @@ proc xth_me_cmds_line_simplify {} {
   return
 }
 
-proc xth_me_cmds_line_poly2bezier {} {
+proc xth_me_cmds_line_allpoly2bezier {} {
   global xth
-  set id $xth(me,cmds,selid)
+  lappend process
+
+  foreach id $xth(me,cmds,xlist) {
+    if {$xth(me,cmds,$id,ct) != 3} {continue}
+    if {[llength $xth(me,cmds,$id,xplist)] < 4} {continue}
+
+    set skip 0
+    foreach x $xth(me,cmds,$id,xplist) {
+      if {($x != 0) && ($xth(me,cmds,$id,$x,idn) || $xth(me,cmds,$id,$x,idp))} {
+	set skip 1
+      }
+    }
+    if {$skip == 1} {continue}
+
+    lappend process $id
+  }
+  set count 1
+  set total [llength $process]
+  set response [tk_dialog .myDialog "[mc "Convert eligible lines to curves"]" "[mc "Convert eligible lines to curves"]: $total" questhead 0 "[mc "Yes"]" "[mc "No"]"]
+
+  if {$response == 1} {
+    return
+  }
+
+  global progressbartext "[mc "Converting"]: $count / $total"
+  toplevel .progressbar
+  label .progressbar.converting -textvariable progressbartext
+  ttk::progressbar .progressbar.percent -orient horizontal -mode determinate -maximum $total -length 300
+  grid .progressbar.converting
+  grid .progressbar.percent
+  update idletasks
+
+  foreach id $process {
+    xth_me_cmds_line_poly2bezier $id
+    incr count
+    .progressbar.percent step
+    set progressbartext "[mc "Converting"]: $count / $total"
+    update
+  }
+  destroy .progressbar
+  return
+}
+
+proc xth_me_cmds_line_poly2bezier {id} {
+  global xth
+
+  if {[llength $id] < 1 } {
+    set id $xth(me,cmds,selid)
+  }
+
   if {$xth(me,cmds,$id,ct) != 3} {return}
   set npx [llength $xth(me,cmds,$id,xplist)]
   if {$npx < 4} {return}

@@ -77,15 +77,15 @@ class lxGLCanvas: public wxGLCanvas {
 
     ~lxGLCanvas();
 
-    GLuint m_idTexSurface, m_idTexStation, m_initTextures;
+    GLuint m_idTexSurface = 0, m_idTexStation = 0, m_initTextures;
 
     // screen funkcie a premenne
     GLuint m_sList, m_oList, m_sFixList, m_sEntList, m_sStList,
       m_oFixList, m_oEntList, m_oStList;
     int m_sMoveLock;
-    double m_indRes, m_indLWidth;
+    double m_indRes = 0.0, m_indLWidth = 0.0;
     bool m_sInit, m_sInitReset;
-    bool m_sMoveSingle, m_isO;
+    bool m_sMoveSingle = false, m_isO;
 
     // fonty
     FT_Face m_ftFace1, m_ftFace2, m_ftFace3;
@@ -101,17 +101,13 @@ class lxGLCanvas: public wxGLCanvas {
 		bool m_sCameraAutoRotate, m_sCameraLockRotation;
     wxStopWatch m_sCameraAutoRotateSWatch;
     long m_sCameraAutoRotateCounter;
-    double m_sCameraAutoRotateAngle, m_sCameraStartAutoRotateAngle;
+    double m_sCameraAutoRotateAngle, m_sCameraStartAutoRotateAngle = 0.0;
 
     void OnPaint(wxPaintEvent& event);
     void OnSize(wxSizeEvent& event);
     void OnEraseBackground(wxEraseEvent& event);
     void OnEnterWindow(wxMouseEvent& event);
-    
-#if wxCHECK_VERSION(2,9,0)
     void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-#endif
-
     void OnMouseDouble(wxMouseEvent& event);
     void OnMouseDown(wxMouseEvent& event);
     void OnMouseUp(wxMouseEvent& event);

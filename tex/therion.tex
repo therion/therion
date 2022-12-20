@@ -449,6 +449,7 @@
 \newtoks\colorlegendtitle
 \newif\ifnortharrow
 \newif\ifscalebar
+\newif\ifaltitudebar
 \newtoks\explotitle
 \newtoks\explodate
 \newtoks\exploteam
@@ -482,6 +483,7 @@
 \newtoks\legendtextsectionsize\legendtextsectionsize={\size[14]}
 
 \def\scalebar{\pdfrefxform\getref{THWscalebar}}
+\def\altitudebar{\pdfrefxform\getref{THWaltitudebar}}
 \def\northarrow{\pdfrefxform\getref{THWnortharrow}}
 \newdimen\legendwidth %\legendwidth=14cm
 \newcount\legendcolumns \legendcolumns=2
@@ -489,14 +491,21 @@
 \legendcontent={%
   \hsize=\legendwidth
   \black\the\legendtextcolor 
-  \ifnortharrow\vbox to 0pt{\line{\hfil\northarrow}\vss}\fi
+  \ifnortharrow
+    \setbox\tmpboxa=\hbox{\northarrow}%
+    \tmpdimen=\dimexpr(\wd\tmpboxa+10pt)%
+    \vbox to 0pt{\line{\hfil\box\tmpboxa}\vss}%
+  \fi
   \edef\tmp{\the\cavename} \ifx\tmp\empty \else
-     {\the\legendtextheadersize\the\cavename}\vskip1cm
+     \nointerlineskip
+     \vskip\lineskip % this emulates the old behavior, where \lineskip was added
+                     % because only a small (default) \baselineskip value was applied to \the\cavename
+     {\rightskip=\tmpdimen plus 10em\the\legendtextheadersize\the\cavename\par}\vskip1cm
   \fi
   \ifscalebar\scalebar\vskip1cm\fi
   {\rightskip=0pt plus 3em\parskip=3bp
     \edef\tmp{\the\comment} \ifx\tmp\empty \else
-      {\the\legendtextsize\the\comment} \par\medskip
+      {\the\legendtextsize\the\comment\par}\medskip
     \fi
     \everypar{\hangindent=2em\hangafter=1}
     \edef\tmp{\the\cavelength} \ifx\tmp\empty \else
@@ -546,7 +555,7 @@
   \fi
   {\rightskip=0pt plus 3em\parskip=3bp
     \edef\tmp{\the\comment} \ifx\tmp\empty \else
-      {\size[12]\the\comment} \par\medskip
+      {\size[12]\the\comment\par}\medskip
     \fi
     \everypar{\hangindent=2em\hangafter=1}
     \edef\tmp{\the\exploteam} \ifx\tmp\empty \else

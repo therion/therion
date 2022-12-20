@@ -66,9 +66,9 @@ typedef struct {
  * @sa thmatch_token
  */
  
-int thmatch_stok(const std::string& token, const thstok *tab, std::size_t tab_size);
+int thmatch_stok(std::string_view token, const thstok *tab, std::size_t tab_size);
  
-int thcasematch_stok(const std::string& token, const thstok *tab, std::size_t tab_size);
+int thcasematch_stok(std::string_view token, const thstok *tab, std::size_t tab_size);
 
 
 /**
@@ -76,13 +76,13 @@ int thcasematch_stok(const std::string& token, const thstok *tab, std::size_t ta
  */
 
 template <std::size_t N>
-inline int thmatch_token(const std::string& token, const thstok (&table)[N])
+inline int thmatch_token(std::string_view token, const thstok (&table)[N])
 {
   return thmatch_stok(token, table, N);
 }
 
 template <std::size_t N>
-inline int thcasematch_token(const std::string& token, const thstok (&table)[N])
+inline int thcasematch_token(std::string_view token, const thstok (&table)[N])
 {
   return thcasematch_stok(token, table, N);
 }
@@ -358,7 +358,7 @@ void thparse_image(const char * fname, double & width, double & height, double &
  * Set color according to color map.
  */
  
-void thset_color(int color_map, double index, double total, class thlayout_color & clr);
+void thset_color(int color_map, double index, double total, struct thlayout_color & clr);
 
 
 /**

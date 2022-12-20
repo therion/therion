@@ -17,6 +17,12 @@
 #include "lxMath.h"
 #include "img.h"
 
+double lxFilePrepDbl(double val) {
+  char tb[32];
+  snprintf(tb, 31, "%.12e", val);
+  return atof(tb);
+}
+
 
 lxFileSizeT lxFileSize::Save(lxFileBuff & ptr)
 {
@@ -41,12 +47,12 @@ lxFileSizeT lxFileSize::Load(lxFileBuff & ptr)
 lxFileSizeT lxFileDbl::Save(lxFileBuff & ptr)
 {
   lxFileSizeT s(sizeof(this->m_num));
+  this->m_num = lxFilePrepDbl(this->m_num);
   std::memcpy(ptr, &m_num, s);
   lxFile::switchEndian(ptr, s);
   ptr += s;
   return s;
 }
-
 
 lxFileSizeT lxFileDbl::Load(lxFileBuff & ptr)
 {
@@ -341,6 +347,25 @@ lxFileSizeT lxFile3Point::Save(lxFileBuff & ptr)
   s += this->m_c[0].Save(ptr);
   s += this->m_c[1].Save(ptr);
   s += this->m_c[2].Save(ptr);
+  return s;
+}
+
+lxFileSizeT lxFile3Point::Load(lxFileBuff & ptr)
+{
+  lxFileSizeT s(0);
+  s += this->m_c[0].Load(ptr);
+  s += this->m_c[1].Load(ptr);
+  s += this->m_c[2].Load(ptr);
+  return s;
+}
+
+
+lxFileSizeT lxFile3Angle::Save(lxFileBuff & ptr)
+{
+  lxFileSizeT s(0);
+  s += this->m_v[0].Save(ptr);
+  s += this->m_v[1].Save(ptr);
+  s += this->m_v[2].Save(ptr);
   return s;
 }
 
@@ -1044,7 +1069,7 @@ void lxFile::InterpolateMissingLRUD()
   std::list<lxFileShot>::iterator shi;
   std::map<lxVec, lxFileSizeT>::iterator stmi;
   lxFileStation * st;
-  missingStation tst;
+  missingStation tst{};
   missingShot ts;
   lxVec fp, tp;
   for (shi = this->m_shots.begin(); shi != this->m_shots.end(); shi++) {

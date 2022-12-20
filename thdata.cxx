@@ -114,6 +114,7 @@ void thdata::reset_data()
   this->di_length = false;
   this->di_bearing = false;
   this->di_gradient = false;
+  this->di_backlength = false;
   this->di_backbearing = false;
   this->di_backgradient = false;
   this->di_depth = false;
@@ -379,6 +380,7 @@ void thdata::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long 
             case TT_DATALEG_LENGTH:
             case TT_DATALEG_BEARING:
             case TT_DATALEG_GRADIENT:
+            case TT_DATALEG_BACKLENGTH:
             case TT_DATALEG_BACKBEARING:
             case TT_DATALEG_BACKGRADIENT:
             case TT_DATALEG_NOTES:
@@ -462,6 +464,7 @@ void thdata::self_print_properties(FILE * outf)
           break;
         case TT_DATATYPE_CYLPOLAR:
           fprintf(outf," (cylpolar)\n");
+          [[fallthrough]];
         case TT_DATATYPE_DIVING:
           if (li->data_type == TT_DATATYPE_DIVING) 
             fprintf(outf," (diving)\n");
@@ -573,6 +576,7 @@ void thdata::set_data_calibration(int nargs, char ** args)
     to_set = true;
     switch (itid) {
       case TT_DATALEG_LENGTH:
+      case TT_DATALEG_BACKLENGTH:
       case TT_DATALEG_COUNT:
       case TT_DATALEG_DEPTH:
       case TT_DATALEG_X:
@@ -881,6 +885,7 @@ void thdata::set_data_instrument(int nargs, char ** args)
       case TT_DATALEG_LENGTH:
       case TT_DATALEG_BEARING:
       case TT_DATALEG_GRADIENT:
+      case TT_DATALEG_BACKLENGTH:
       case TT_DATALEG_BACKBEARING:
       case TT_DATALEG_BACKGRADIENT:
       case TT_DATALEG_DEPTH:
@@ -1117,7 +1122,30 @@ void thdata::set_data_data(int nargs, char ** args)
           break;
         this->di_length = true;
         break;
+
+        case TT_DATALEG_BACKLENGTH:
+          if (this->di_backlength || this->di_fromcount || this->di_tocount) {
+            err_duplicate = true;
+            break;
+          }
+          if (this->di_count) {
+            err_inimm = true;
+            break;
+          }
+          switch (this->d_type) {
+            case TT_DATATYPE_NORMAL:
+            case TT_DATATYPE_DIVING:
+            case TT_DATATYPE_CYLPOLAR:
+              break;
+            default:
+              err_itype = true;
+          }
+          if (err_itype)
+            break;
+          this->di_backlength = true;
+          break;
         
+
       case TT_DATALEG_BEARING:
         if (this->di_bearing) {
           err_duplicate = true;
@@ -1490,7 +1518,7 @@ void thdata::set_data_data(int nargs, char ** args)
     case TT_DATATYPE_NORMAL:
       all_data = (this->di_count ||
         (this->di_fromcount && this->di_tocount) ||
-        this->di_length) && 
+        this->di_length || this->di_backlength) &&
         (this->di_bearing || this->di_backbearing) && 
         (this->di_gradient || this->di_backgradient);
       break;
@@ -1498,7 +1526,7 @@ void thdata::set_data_data(int nargs, char ** args)
     case TT_DATATYPE_DIVING:
       all_data = (this->di_count ||
         (this->di_fromcount && this->di_tocount) ||
-        this->di_length) && (this->di_bearing || this->di_backbearing) 
+        this->di_length || this->di_backlength) && (this->di_bearing || this->di_backbearing)
         && (this->di_depth ||
         (this->di_fromdepth && this->di_todepth) || this->di_depthchange);
       break;
@@ -1524,6 +1552,7 @@ void thdata::set_data_data(int nargs, char ** args)
         case TT_DATALEG_TO:
         case TT_DATALEG_DIRECTION:
         case TT_DATALEG_LENGTH:
+        case TT_DATALEG_BACKLENGTH:
         case TT_DATALEG_BEARING:
         case TT_DATALEG_BACKBEARING:
         case TT_DATALEG_GRADIENT:
@@ -1642,6 +1671,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
     this->cd_leg->psurvey = this->db->get_current_survey();
     
     this->cd_leg->walls = this->d_walls;
+    this->cd_leg->splay_walls = (this->d_walls != TT_FALSE);
     this->cd_leg->vtresh = this->d_vtresh;
     this->cd_leg->shape = this->d_shape;
     
@@ -1754,6 +1784,26 @@ void thdata::insert_data_leg(int nargs, char ** args)
             ththrow("invalid length reading -- {}", args[carg]);
         }
         break;
+
+        case TT_DATALEG_BACKLENGTH:
+          thparse_double(val_id, val, args[carg]);
+          switch (val_id) {
+            case TT_SV_NUMBER:
+              val = this->dlc_length.evaluate(val);
+              val = this->dlu_length.transform(val);
+              if (val < 0.0)
+                ththrow("negative length reading -- {}", args[carg]);
+              else
+                this->cd_leg->backlength = val;
+              break;
+  //          case TT_SV_NAN:
+  //            this->cd_leg->length = val;
+  //            break;
+            default:
+              ththrow("invalid backwards length reading -- {}", args[carg]);
+          }
+          break;
+
         
       case TT_DATALEG_BEARING:
         if (this->dlu_bearing.get_units() == TT_TFU_DEG)
@@ -1883,7 +1933,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
         thparse_double(val_id, val, args[carg]);
         switch (val_id) {
           case TT_SV_NUMBER:
-            val = this->dlc_counter.evaluate(val) - this->dlc_counter.evaluate(0.0);
+            val = this->dlc_counter.evaluate(val);
             val = this->dlu_counter.transform(val);
             this->cd_leg->fromcounter = val;
             break;
@@ -1931,7 +1981,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
         thparse_double(val_id, val, args[carg]);
         switch (val_id) {
           case TT_SV_NUMBER:
-            val = this->dlc_depth.evaluate(val) - this->dlc_depth.evaluate(0.0);
+            val = this->dlc_depth.evaluate(val);
             val = this->dlu_depth.transform(val);
             this->cd_leg->fromdepth = val;
             break;
@@ -2026,6 +2076,7 @@ void thdata::insert_data_leg(int nargs, char ** args)
       case TT_DATALEG_IGNOREALL:
         carg = nargs;
         to_clear = true;
+        [[fallthrough]];
       case TT_DATALEG_NEWLINE:
         this->d_current++;
         exit_new_line = true;
@@ -2551,9 +2602,11 @@ void thdata::set_data_extend(int nargs, char ** args)
 	    thparse_objectname(dumm.before, & this->db->buff_stations, args[1], this);
 	    to_index = 3;
 	    from_index = 2;
+      [[fallthrough]];
     case 3:
       // parsnut mena to bodu
 	    thparse_objectname(dumm.to, & this->db->buff_stations, args[to_index], this);
+      [[fallthrough]];
     case 2:
       // parsnut meno from bodu a prida
 	    thparse_objectname(dumm.from, & this->db->buff_stations, args[from_index], this);
@@ -2756,6 +2809,7 @@ void thdata::start_group() {
   tmp->di_length = this->cgroup->di_length; 
   tmp->di_bearing = this->cgroup->di_bearing; 
   tmp->di_gradient = this->cgroup->di_gradient;
+  tmp->di_backlength = this->cgroup->di_backlength;
   tmp->di_backbearing = this->cgroup->di_backbearing; 
   tmp->di_backgradient = this->cgroup->di_backgradient;
   tmp->di_depth = this->cgroup->di_depth; 

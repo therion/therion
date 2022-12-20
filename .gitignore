@@ -34,6 +34,7 @@ xtherion/therion.tcl
 *.rej
 *.shp
 *.so
+*.htb
 *.stackdump
 *.tar.gz
 *.xhtml
@@ -70,3 +71,4 @@ CMakeFiles/
 extern/fmt/Makefile
 extern/fmt/cmake_install.cmake
 build/
+rel_notes.md

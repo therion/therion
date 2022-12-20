@@ -671,6 +671,51 @@ const char * thdb2dscan_survey_title(thsurvey * fptr, long & min) {
   return newname;
 }
 
+
+double thdb2d::get_projection_entrance_altitude(thdb2dprj * prj) {
+	  thobjectname entrance;
+	  thselector_list::iterator ii = thcfg.selector.data.begin();
+	  while (ii != thcfg.selector.data.end()) {
+	    if ((!ii->unselect) && (ii->optr != NULL) &&
+	        (ii->optr->get_class_id() == TT_MAP_CMD) &&
+	        (((thmap*)(ii->optr))->projection_id == prj->id)) {
+	      if (entrance.is_empty()) {
+	    	  entrance = ((thmap*)(ii->optr))->fsptr->get_entrance();
+	      }
+	    }
+	    ii++;
+	  }
+	  thsurvey * cs;
+	  if (entrance.is_empty()) {
+		  auto obi = this->db->object_list.begin();
+		  while (obi != this->db->object_list.end()) {
+			  if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+			        cs = (thsurvey *)(*obi).get();
+			        if (entrance.is_empty()) {
+				        if (cs->is_selected()) entrance = cs->get_entrance();
+			        }
+			  }
+			  obi++;
+		  }
+	  }
+	  if (entrance.is_empty()) {
+		  auto obi = this->db->object_list.begin();
+		  while (obi != this->db->object_list.end()) {
+			  if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
+			        cs = (thsurvey *)(*obi).get();
+			        if (entrance.is_empty()) {
+				        entrance = cs->get_entrance();
+			        }
+			  }
+			  obi++;
+		  }
+	  }
+	  if (entrance.is_empty()) return 0;
+	  return this->db->db1d.station_vec[entrance.id-1].z;
+
+}
+
+
 const char * thdb2d::get_projection_title(thdb2dprj * prj) {
 
   // krok cislo jedna - prejde celu selection - ak najde jednu oznacenu

@@ -675,6 +675,9 @@ bool thline::export_mp(class thexpmapmpxs * out)
 
   if (this->first_point == NULL)
     return(false);
+  // actually not a line
+  if (this->first_point == this->last_point)
+	return(false);
   bool postprocess = true, todraw, fsize, frot, anypt;  //, first
   int from, to, cs, macroid = -1, omacroid = -1;
   double s1, r1;
@@ -895,7 +898,6 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_BORDER, SYML_ROCKBORDER)
     thline_type_export_mp(TT_LINE_TYPE_ROCK_EDGE, SYML_ROCKEDGE)
     thline_type_export_mp(TT_LINE_TYPE_GRADIENT, SYML_GRADIENT)
-    thline_type_export_mp(TT_LINE_TYPE_U, SYML_U)
     thline_type_export_mp(TT_LINE_TYPE_HANDRAIL, SYML_HANDRAIL)
     thline_type_export_mp(TT_LINE_TYPE_ROPE_LADDER, SYML_ROPELADDER)
     thline_type_export_mp(TT_LINE_TYPE_FIXED_LADDER, SYML_FIXEDLADDER)
@@ -911,6 +913,10 @@ bool thline::export_mp(class thexpmapmpxs * out)
     thline_type_export_mp(TT_LINE_TYPE_RIMSTONEPOOL, SYML_RIMSTONEPOOL)
     thline_type_export_mp(TT_LINE_TYPE_WALKWAY, SYML_WALKWAY)
 
+    case TT_LINE_TYPE_U:
+      macroid = this->db->db2d.register_u_symbol(TT_LINE_CMD, this->m_subtype_str);
+      break;
+	
     case TT_LINE_TYPE_ROPE:
       macroid = SYML_ROPE;
       if (this->context >= 0)
@@ -1122,8 +1128,9 @@ bool thline::export_mp(class thexpmapmpxs * out)
         if (out->file == NULL)
           return(true);
         if (this->type == TT_LINE_TYPE_U) {
-          out->symset->export_mp_symbol_options(out->file, -1);
+          out->symset->export_mp_symbol_options(out->file, omacroid);
           fprintf(out->file,"l_u_%s(", this->m_subtype_str);
+          out->symset->usymbols[omacroid].m_used = true;
           this->db->db2d.use_u_symbol(this->get_class_id(), this->m_subtype_str);
         } else {
           out->symset->export_mp_symbol_options(out->file, omacroid);
@@ -1437,6 +1444,7 @@ void thline::parse_height(char * ss) {
 	case TT_LINE_TYPE_WALL:
 	  if (this->csubtype == TT_LINE_SUBTYPE_PIT)
 		  break;
+    [[fallthrough]];
     default:
       ththrow("-height not valid with type {}", thmatch_string(this->type,thtt_line_types));
       break;

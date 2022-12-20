@@ -13,7 +13,7 @@ CMNOBJECTS = \
   lxTR.o lxOGLFT.o lxSetup.o lxRender.o lxWX.o \
   lxImgIO.o lxLRUD.o lxFile.o lxSTree.o \
   lxData.o lxMath.o lxSView.o lxSScene.o \
-  lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o \
+  lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o lxSStats.o \
   img.o
 
 EXT =
@@ -43,9 +43,11 @@ VTKLIBS = \
     -lvtkCommonExecutionModel$(VTKLIBSUFFIX) \
     -lvtkCommonDataModel$(VTKLIBSUFFIX) \
     -lvtkCommonCore$(VTKLIBSUFFIX) \
+    -lvtkIOPLY$(VTKLIBSUFFIX) \
     -lvtkFiltersCore$(VTKLIBSUFFIX) \
     -lvtkFiltersHybrid$(VTKLIBSUFFIX) \
     -lvtkIOLegacy$(VTKLIBSUFFIX) \
+    -lvtksys$(VTKLIBSUFFIX) \
     $(shell pkg-config --libs freetype2)
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
@@ -67,11 +69,11 @@ STRIPFLAG = -s
 ##CC = gcc
 ##POBJECTS = lxR2P.o
 ##ifeq ($(VTKV6),1)
-##VTKLIBS = -lvtkCommonExecutionModel -lvtkCommonDataModel -lvtkCommonCore -lvtkFiltersCore -lvtkFiltersHybrid -lvtkIOLegacy -lfreetype -lpng -ljpeg
+##VTKLIBS = -lvtkCommonExecutionModel -lvtkCommonDataModel -lvtkCommonCore -lvtkIOPLY -lvtkFiltersCore -lvtkFiltersHybrid -lvtkIOLegacy -lfreetype -lpng -ljpeg
 ##else
 ##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 ##endif
-##CXXPFLAGS = -DLXLINUX -std=c++14 $(shell wx-config --cxxflags) -Wno-deprecated $(shell pkg-config freetype2 --cflags) -I$(VTKPATH)
+##CXXPFLAGS = -DLXLINUX -std=c++17 $(shell wx-config --cxxflags) -Wno-deprecated $(shell pkg-config freetype2 --cflags) -I$(VTKPATH)
 ##CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 ##LXLIBDIR = linux
 ##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
@@ -85,7 +87,7 @@ else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 endif
 CXXPFLAGS = \
-    -std=c++14 \
+    -std=c++17 \
     -Wno-deprecated \
     $(shell $(WX_CONFIG) --cxxflags) \
     $(shell pkg-config freetype2 --cflags) \
@@ -109,9 +111,9 @@ endif
 ##CXXPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(WX_CONFIG) --static --cflags)
 ##LXLIBDIR = mingw
-##PLIBS = $(shell pkg-config freetype2 --libs) -lharfbuzz -lbrotlidec-static -lbrotlicommon-static -lgraphite2 -lusp10 -lbz2 -lz $(shell $(WX_CONFIG) --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
+##PLIBS = $(shell pkg-config freetype2 --libs) -lharfbuzz -lbrotlidec -lbrotlicommon -lgraphite2 -lusp10 -lbz2 -lz $(shell $(WX_CONFIG) --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
 ##LXPLATFORM = WIN32
-##STRIPFLAG = -static-libgcc -static -s
+##STRIPFLAG = -static-libgcc -s
 
 # PLATFORM WIN32CROSS
 ##CROSS ?= i686-w64-mingw32.static-
@@ -121,7 +123,7 @@ endif
 ##VTKVERSION = 8.2
 ##VTKPATH = /usr/lib/mxe/usr/$(CROSS2)/include/vtk-$(VTKVERSION)
 ##VTKLIBPATH = /usr/lib/mxe/usr/$(CROSS2)/lib
-##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) \
+##VTKLIBS = -lvtkCommonExecutionModel-$(VTKVERSION) -lvtkCommonDataModel-$(VTKVERSION) -lvtkIOPLY-$(VTKVERSION)\
 ##  -lvtkFiltersCore-$(VTKVERSION) -lvtkFiltersHybrid-$(VTKVERSION) \
 ##  -lvtkIOLegacy-$(VTKVERSION) -lvtkCommonCore-$(VTKVERSION) -lvtkIOCore-$(VTKVERSION) \
 ##  -lvtkCommonTransforms-$(VTKVERSION) -lvtkCommonMisc-$(VTKVERSION) -lvtkCommonMath-$(VTKVERSION) -lvtkCommonSystem-$(VTKVERSION) \
@@ -129,7 +131,7 @@ endif
 ##CXX = $(CROSS)c++
 ##CC = $(CROSS)gcc
 ##POBJECTS = loch.res lxR2D.o
-##CXXPFLAGS = -W -Wall -std=c++14 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
+##CXXPFLAGS = -W -Wall -std=c++17 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(CROSS)wx-config --static --cflags)
 ##LXLIBDIR =
 ##PLIBS = $(shell $(CROSS)pkg-config freetype2 --libs) $(shell $(CROSS)wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
@@ -140,7 +142,7 @@ endif
 ##CXX = c++
 ##CC = cc
 ##POBJECTS =
-##CXXPFLAGS = -W -Wall -std=c++14 -DLXMACOSX $(shell wx-config --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
+##CXXPFLAGS = -W -Wall -std=c++17 -DLXMACOSX $(shell wx-config --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
 ##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --cflags) -I/usr/X11R6/include
 ##LXLIBDIR =
 ##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
@@ -197,7 +199,8 @@ $(LOUTDIR)/%.o : %.c
 	$(CC) -c $(CCFLAGS) -o $@ $<
 
 
-all: $(LOUTDIR)/loch hlp
+all: $(LOUTDIR)/loch
+	$(MAKE) -C ./help
 
 hlp:
 	$(MAKE) -C ./help
@@ -268,7 +271,7 @@ clean:
 	perl makefile.pl rm -q *.zip
 	perl makefile.pl rm -q *.pdf
 	perl makefile.pl rm -q *.png
-#	$(MAKE) -C help clean
+	$(MAKE) -C help clean
 
 
 

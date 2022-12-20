@@ -36,8 +36,10 @@
 #include "thlocale.h"
 #include "thtmpdir.h"
 #include "thcs.h"
+#include "thcsdata.h"
 #include "thproj.h"
 #include "thpdfdbg.h"
+#include <filesystem>
 
 #ifdef THWIN32
 #include <windows.h>
@@ -73,6 +75,8 @@ const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# tmp-path  \"\"\n\n"
 "### User defined coordinate system ###\n"
 "# cs-def <id> <proj4id> [other options]\n\n"
+"### User defined coordinate systems transformations ###\n"
+"# cs-trans <from-cs-id> <to-cs-id> <proj-cs-transformation-string>\n\n"
 "### Let PROJ v6+ find the optimal transformation ###\n"
 "# proj-auto off\n\n"
 "### PROJ v6+ handling of missing transformation grids if proj-auto is on ###\n"
@@ -87,7 +91,8 @@ thinit::thinit()
   this->fonts_ok = false;
   this->tex_env = false;
   this->lang = THLANG_UNKNOWN;
-	this->loopc = THINIT_LOOPC_UNKNOWN;
+  this->loopc = THINIT_LOOPC_UNKNOWN;
+  //this->opt_mpost = "-numbersystem=double";
 }
 
 
@@ -122,6 +127,7 @@ enum {
   TTIC_OTF2PFB,
   TTIC_TEX_REFS_REGISTERS,
   TTIC_CS_DEF,
+  TTIC_CS_TRANS,
   TTIC_UNKNOWN,
 };
 
@@ -134,6 +140,7 @@ static const thstok thtt_initcmd[] = {
   {"cavern-path", TTIC_PATH_CAVERN},
   {"convert-path", TTIC_PATH_CONVERT},
   {"cs-def", TTIC_CS_DEF},
+  {"cs-trans", TTIC_CS_TRANS},
   {"encoding-default", TTIC_ENCODING_DEFAULT},
   {"encoding-sql", TTIC_ENCODING_SQL},
 //  {"encoding_default", TTIC_ENCODING_DEFAULT},
@@ -199,43 +206,16 @@ void thinit::copy_fonts() {
 
   if (ENC_NEW.NFSS == 0) return;
 
-  static thbuffer tmpb;
-  int retcode;
-
   if (fonts_ok) return;
 
   thprintf("copying_fonts ...\n");
 
   for(int index = 0; index < 5; index++) {
     thprintf("%s\n", font_dst[index].c_str());
-  // skopiruje font subor
-#ifdef THWIN32
-    tmpb = "copy \"";
-#else
-    tmpb = "cp \"";
-#endif
-    tmpb += font_src[index].c_str();
-    tmpb += "\" \"";
-    tmpb += thtmp.get_file_name(font_dst[index].c_str());
-    tmpb += "\"";
-
-#ifdef THWIN32
-    char * cpcmd;
-    size_t  cpch;
-    cpcmd = tmpb.get_buffer();
-    for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
-      if (cpcmd[cpch] == '/') {
-        cpcmd[cpch] = '\\';
-      }
-    }
-#endif
-
 #ifdef THDEBUG
     thprintf("copying font\n");
 #endif
-    retcode = system(tmpb.get_buffer());
-    if (retcode != EXIT_SUCCESS)
-      ththrow("unable to copy font file -- {}", font_src[index].c_str());
+    std::filesystem::copy(font_src[index], thtmp.get_file_name(font_dst[index].c_str()), std::filesystem::copy_options::overwrite_existing);
   }
 
 #ifdef THWIN32
@@ -410,6 +390,7 @@ void thinit::load()
 #endif  
 
   set_proj_lib_path();
+  thcs_add_default_transformations();
 
   this->tmp_path = "";
   this->tmp_remove_script = "";
@@ -473,6 +454,10 @@ void thinit::load()
           if (nargs < 2)
             ththrow("invalid cs-def syntax -- should be: cs-def <id> <proj4id> [other options]");
           break;
+        case TTIC_CS_TRANS:
+          if (nargs != 4)
+            ththrow("invalid cs-trans syntax -- should be: cs-trans <from-cs-id[s]> <to-cs-id[s]> <transformation>");
+          break;
         default:
           ththrow("invalid initialization command -- {}", args[0]);
       }
@@ -480,7 +465,11 @@ void thinit::load()
       switch(argid) {
 
         case TTIC_CS_DEF:
-          thcs_add_cs(args[1], args[2], nargs - 2, &(args[3]));
+          thcs_add_cs(args[1], args[2]);
+          break;
+
+        case TTIC_CS_TRANS:
+          thcs_add_cs_trans(args[1], args[2], args[3]);
           break;
         
         case TTIC_ENCODING_DEFAULT:
@@ -701,10 +690,8 @@ void thinit::load()
       fprintf(ff,"\\nopagenumbers\n\\batchmode\n\\def\\fonttest#1{\\font\\a=#1\\a}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\fonttest{%s}\n\\end", J->rm.c_str(), J->it.c_str(), J->bf.c_str(), J->ss.c_str(), J->si.c_str());
       fclose(ff);
 
-      thbuffer com, wdir;
-      wdir.guarantee(1024);
-      thassert(getcwd(wdir.get_buffer(),1024) != NULL);
-      thassert(chdir(thtmp.get_dir_name()) == 0);
+      thbuffer com;
+      const auto tmp_handle = thtmp.switch_to_tmpdir();
       int retcode;
 
       com = "\"";
@@ -720,7 +707,6 @@ void thinit::load()
         TMPFONTS.push_back(*J);
         thprintf(" OK\n");
       }
-      thassert(chdir(wdir.get_buffer()) == 0);
     } else {
       TMPFONTS.push_back(*J);
     }

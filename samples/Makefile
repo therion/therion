@@ -12,7 +12,7 @@ ifneq ($(LOUTDIR),..)
 	rm -rf $(LOUTDIR)/samples.doc
 	cp -rf ../samples $(LOUTDIR)
 endif
-	tclsh samples.tcl $(LOUTDIR) $(LOUTDIR)/samples
+	tclsh samples.tcl $(LOUTDIR) --verify-output-crc $(LOUTDIR)/samples
 ifneq ($(LOUTDIR),..)
 	perl ../makefile.pl mv samples.log $(LOUTDIR)/samples
 	rm -f samples.log
@@ -23,3 +23,6 @@ clean:
 
 quick:
 	tclsh samples.tcl $(LOUTDIR) --generate-tex-only $(LOUTDIR)/samples
+
+html:
+	tclsh samples.tcl $(LOUTDIR) --generate-html-images $(LOUTDIR)/samples

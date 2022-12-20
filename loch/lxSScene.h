@@ -43,9 +43,9 @@ public:
 		* m_controlSizer_Walls,
 		* m_controlSizer_Surface,
 		* m_controlSizer_Labels,
-		* m_controlSizer_BBox2Grid,
+		* m_controlSizer_BBox2Grid = nullptr,
 		* m_controlSizer_Indicators,
-		* m_controlSizer_ColorSetup;
+		* m_controlSizer_ColorSetup = nullptr;
 
 	lxModelSetupDlg(wxWindow *parent);
 

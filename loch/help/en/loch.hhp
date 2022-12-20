@@ -1,7 +1,7 @@
 [OPTIONS]
 Auto Index=Yes
 Compatibility=1.1 or later
-Compiled file=loch.chm
+Compiled file=loch.htb
 Contents file=loch.hhc
 Default topic=loch.htm
 Display compile progress=Yes

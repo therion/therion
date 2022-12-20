@@ -77,7 +77,7 @@ void thexport::parse(int nargs, char ** args)
 }
 
 
-void thexport::parse_arguments(int & argx, int nargs, char ** args)
+void thexport::parse_arguments(int & /*argx*/, int /*nargs*/, char ** /*args*/)
 {
 }
 
@@ -227,7 +227,7 @@ bool thexport::check_crc() {
 			std::uint_fast32_t read_crc = 0;
       std::ifstream crcif(fmt::format("{}.crc", file.fnm));
       if (!crcif.is_open()) {
-        file.res = ".crc file not found -- use --genereate-ouput-crc before";
+        file.res = ".crc file not found -- use --generate-output-crc before";
         ok = false;
         continue;
       }

@@ -28,7 +28,7 @@ while (<TST>) {
     $level = $1;
   }
 }
-die "$myname: uknown level\n" if ($level == 0);
+die "$myname: unknown level\n" if ($level == 0);
 close(TST);
 $level += 1000;
 $levelp = $level + 1;
