@@ -100,7 +100,7 @@ class lxGLCanvas: public wxGLCanvas {
 
 		bool m_sCameraAutoRotate, m_sCameraLockRotation;
     wxStopWatch m_sCameraAutoRotateSWatch;
-    long m_sCameraAutoRotateCounter;
+    long m_sCameraAutoRotateCounter = 0;
     double m_sCameraAutoRotateAngle, m_sCameraStartAutoRotateAngle = 0.0;
 
     void OnPaint(wxPaintEvent& event);
