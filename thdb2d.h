@@ -95,7 +95,7 @@ struct thdb2d_udef_prop {
   
   thlayout_color m_color;
   
-  int m_symid;
+  int m_symid = 0;
 
   void reset();
 

@@ -129,7 +129,7 @@ struct lxTriGeom {
 
 struct lxPlane {
   lxVec m_point, m_normal;
-  double m_delta;
+  double m_delta = {};
   void Init(lxVec pt, lxVec norm);
   double CalcPosition(lxVec pt);
   bool CalcIntersection(lxVec fp, lxVec tp, lxVec & tgt);
