@@ -371,6 +371,7 @@ void thlookup::color_scrap(thscrap * s) {
         if (strlen(tli->m_valueString) == 0) {
           clr = tli->m_color;
         }
+        if (tli->m_ref == NULL) continue;
         if (tli->m_ref->id == s->id) {
           clr = tli->m_color;
           break;
