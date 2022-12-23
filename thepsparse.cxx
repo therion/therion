@@ -912,7 +912,7 @@ void parse_eps(std::string fname, std::string cname, double dx, double dy,
   std::string tok, buffer;
   std::string font, patt;
   color pattcolor;
-  gradient grad;
+  gradient grad = {};
   bool comment = true, concat = false, 
        already_transp = false, transp_used = false, before_group_transp = false, cancel_transp = true;
   double llx = 0, lly = 0, urx = 0, ury = 0, HS = 0.0, VS = 0.0;

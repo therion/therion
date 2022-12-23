@@ -457,7 +457,7 @@ void thdate::join(thdate & dt)
 
 char * thdate::get_str(int fmt) {
   this->print_str(fmt);
-  return &(this->dstr[0]);
+  return this->dstr.begin();
 }
 
 
@@ -615,7 +615,7 @@ void date2tm(int y, int m, int d, int hh, int mm, double ss, tm * info)
 void thdate::print_str(int fmt) {
   unsigned int tl = thdate_bufflen - 1;
   long yyyy, mm, dd;
-  char * dst = &(this->dstr[0]);
+  char * dst = this->dstr.begin();
   const char * sep = " - ";
 
   switch (fmt) {

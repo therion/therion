@@ -41,11 +41,9 @@
 lxSetup::lxSetup(lxData * dat) 
 {
   this->data = dat;
-  this->UpdateData();
   this->cam_dir = 0;
   this->cam_tilt = 90;
   this->cam_persp = true;
-  this->SetLens(50.0);
   this->cam_anaglyph = false;
   this->cam_anaglyph_bw = true;
   this->cam_anaglyph_left = false;
@@ -84,6 +82,8 @@ lxSetup::lxSetup(lxData * dat)
   this->m_walls_transparency = false;
   this->m_walls_opacity = 0.5;
 
+  this->UpdateData();
+  this->SetLens(50.0);
 }
 
 

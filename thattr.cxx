@@ -64,7 +64,7 @@ void thattr_obj::set_tree_level(size_t level) {
 
 thattr_field * thattr::insert_field(const char * name)
 {
-  thattr_field tmp, * r;
+  thattr_field tmp = {}, * r;
   tmp.m_id = this->m_num_fields++;
   tmp.m_name = name;
   tmp.m_parent = this;

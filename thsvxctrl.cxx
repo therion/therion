@@ -710,7 +710,7 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 
 //		thprintf("SCANNING: %s\n", line.c_str());
 		thsplit_args(&b, line.c_str());
-		thdb1d_traverse t, * ct;
+		thdb1d_traverse t = {}, * ct;
 		thdb1d_loop_leg l;
 		thdb1d_loop_leg * cl;
 		thdb1d_tree_node * cn;

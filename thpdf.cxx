@@ -140,7 +140,7 @@ std::list<sheetrecord>::iterator find_sheet(int x, int y, int z) {
 void make_sheets() {
   double llx = 0, lly = 0, urx = 0, ury = 0;
   double a,b,w,h;
-  sheetrecord SHREC;
+  sheetrecord SHREC = {};
 
   if (mode == ATLAS) {
     for (std::map<int,layerrecord>::iterator I = LAYERHASH.begin(); 
