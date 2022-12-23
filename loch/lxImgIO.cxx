@@ -378,7 +378,7 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
 	img.height = cinfo.output_height;
 
 
-	img.data = (unsigned char*)malloc(cinfo.output_components * img.width * img.height);
+	img.data = (unsigned char*)malloc(static_cast<size_t>(cinfo.output_components) * img.width * img.height);
 	unsigned char* ptr = img.data;
 
   /* Here we use the library's state variable cinfo.output_scanline as the
@@ -418,7 +418,7 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
    */
 
   if (cinfo.output_components == 1) {
-	  unsigned char * new_data = (unsigned char*)malloc(3 * img.width * img.height);
+	  unsigned char * new_data = (unsigned char*)malloc(3UL * img.width * img.height);
 	  for(int r = 0; r < img.height; r++) {
 		  for(int c = 0; c < img.width; c++) {
 			  new_data[r * 3 * img.width + 3 * c] = img.data[r * img.width + c];

@@ -585,7 +585,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   while (!(clf.eof())) {
     lnum++;
     clf.getline(lnbuff,2048);
-    thlog.printf("%2d> %s\n",lnum,lnbuff);
+    thlog.printf("%2lu> %s\n",lnum,lnbuff);
     // let's scan the line
     chch = lnbuff;
     nchs = strlen(chch);
