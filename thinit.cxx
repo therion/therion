@@ -45,6 +45,8 @@
 #include <windows.h>
 #endif
 
+namespace fs = std::filesystem;
+
 const char * THCCC_INIT_FILE = "### Output character encodings ###\n"
 "# encoding-default  ASCII\n"
 "# encoding-sql  ASCII\n\n"
@@ -215,7 +217,9 @@ void thinit::copy_fonts() {
 #ifdef THDEBUG
     thprintf("copying font\n");
 #endif
-    std::filesystem::copy(font_src[index], thtmp.get_file_name(font_dst[index].c_str()), std::filesystem::copy_options::overwrite_existing);
+    const auto dst = thtmp.get_file_name(font_dst[index].c_str());
+    fs::remove(dst); // workaround for MinGW bug, can't overwrite files
+    fs::copy(font_src[index], dst, fs::copy_options::overwrite_existing);
   }
 
 #ifdef THWIN32
