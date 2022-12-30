@@ -1,5 +1,12 @@
-Therion 6.1.5 (in progress):
+Therion 6.1.5 (2022-12-30):
 
+therion:
+ * bugs fixed
+   - v6.1.4 won't overwrite output files on Windows [#480, #481]
+
+infrastructure:
+ * updated GitHub Actions
+ * updated make_relase.py
 
 --------------------------------------------------------------------------------
 
