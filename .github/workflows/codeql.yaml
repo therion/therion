@@ -1,13 +1,11 @@
 name: CodeQL
-on:
-  push:
-    branches:
-      - master
-  pull_request:
+on: [push, pull_request]
 jobs:
   CodeQL:
     runs-on: ubuntu-latest
     steps:
+    - name: Enable parallel compilation
+      run:  echo "MAKEFLAGS=-j$(nproc)" >> $GITHUB_ENV
     - name: Checkout Repository
       uses: actions/checkout@v3
     - name: Install Dependencies
