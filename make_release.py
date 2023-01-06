@@ -75,7 +75,7 @@ if input(banner) == 'yes':
   rel_data = {'tag_name': 'v%s' % ver,
               'name': 'Release v%s' % ver,
               'body': rel_notes()}
-  signature = subprocess.check_output('git archive --format=tar.gz --prefix=therion-%s/ v%s | gpg --armor --detach-sign --default-key B4FFC641 --default-key 6F0F704B -o -' % (ver, ver), shell=True)
+  signature = subprocess.check_output('git archive --prefix=therion-%s/ v%s | gzip --no-name | gpg --armor --detach-sign --default-key B4FFC641 --default-key 6F0F704B -o -' % (ver, ver), shell=True)
   headers = {'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json'}
   res = requests.post('https://api.github.com/repos/%s/releases' % repo, headers=headers, data=json.dumps(rel_data)).json()
   if 'id' not in res:
