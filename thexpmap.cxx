@@ -1056,7 +1056,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   // spusti mp - thpdf - pdftex
 
   if (maps == NULL) {
-    thwarning(("%s [%d] -- no selected projection data -- %s",
+    thwarning(("%s [%lu] -- no selected projection data -- %s",
       this->src.name, this->src.line, this->projstr))
     return;
   }
@@ -3216,7 +3216,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
 {
 
   if (maps == NULL) {
-    thwarning(("%s [%d] -- no selected projection data -- %s",
+    thwarning(("%s [%lu] -- no selected projection data -- %s",
       this->src.name, this->src.line, this->projstr))
     return;
   }

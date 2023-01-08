@@ -540,7 +540,7 @@ void thimport::import_file_img()
   img_close(pimg);
 
   if (notimpst > 0) {
-    thwarning(("unable to import %d stations outside survey", notimpst));
+    thwarning(("unable to import %lu stations outside survey", notimpst));
   }
 
   thsurvey * s1survey, * s2survey;
@@ -653,7 +653,7 @@ void thimport::import_file_img()
   }
 
   if (notimpsh > 0) {
-    thwarning(("unable to import %d shots outside survey", notimpsh));
+    thwarning(("unable to import %lu shots outside survey", notimpsh));
   }
 
 }

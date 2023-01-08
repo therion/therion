@@ -510,7 +510,7 @@ void thselector::select_db(class thdatabase * db)
         objptr = NULL;
       }
       if (objptr == NULL) {
-        thwarning(("%s [%d] -- object not found -- \"%s\"", 
+        thwarning(("%s [%lu] -- object not found -- \"%s\"", 
           ii->src_name, ii->src_ln, nobj))
         to_cont = false;
       }
