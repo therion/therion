@@ -110,11 +110,14 @@ Works like |input| command in data files---includes other files.
   are selected. If there is no map selected, all scraps belonging to
   selected surveys are selected by default for map export.
 
-  If there are no scraps or maps in the data, centreline from all surveys is
+  If there are no scraps or maps in the data, centerline from all surveys is
   exported in the map.
 
   When exporting maps in different projections, you need to select
   them for each projection separately.
+
+  |select| does not only affect subsequent |<export>| commands but instead 
+  also |<export>| commands preceding the |select| command in the configuration file.
 \enddescription
 
 \syntax
@@ -374,7 +377,7 @@ endlayout|
     specify size of the text in points.
     |<normalsize>| applies to point label, |<smallsize>| applies to
     remark and all other point labels. Each of them may apply to line label
-    according to its |-size| option.
+    according to its |-scale| option.
 
     The defaults are
     |8 10 12 16 24| for scales upto 1:100;
@@ -457,7 +460,9 @@ endlayout|
   * |origin <x> <y> <z> <units>| = set origin of atlas pages (M, A)
   * |origin-label <x-label> <y-label>| = set label for atlas page
     which has the lower left corner at the given origin coordinates.
-    May be either a number or a character. (M, A; default: |0 0|)
+    \NEW{6.1.0}May be either a number or a string.\[String labels form the following
+    sequence, either in lower or upper case: A, B, ..., Z, AA, AB, ...]
+    (M, A; default: |0 0|)
   * |own-pages <number>| = set number of own pages added before
     the first page of automatically generated pages in atlas mode
     (currently required for correct page numbering) (A; default: |0|)

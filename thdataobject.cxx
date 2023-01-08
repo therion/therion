@@ -122,7 +122,7 @@ bool thdataobject::get_cmd_ends_state() {
 }
 
 
-bool thdataobject::get_cmd_ends_match(char * cmd) {
+bool thdataobject::get_cmd_ends_match(char * /*cmd*/) {
   return false;
 }
 
@@ -148,7 +148,7 @@ thcmd_option_desc thdataobject::get_cmd_option_desc(const char * opts)
 }
 
 
-void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long indataline)
+void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned long /*indataline*/) // TODO unused parameter indataline
 {  
   switch (cod.id) {
 
@@ -318,9 +318,9 @@ std::string thdataobject::throw_source() const
 void thdataobject::self_print(FILE * outf)
 {
   if (strlen(this->name) > 0)
-    fprintf(outf,"%s (%ld:0x%lx) -- %s\n", this->get_class_name(), this->id, (intptr_t) this, this->name);
+    fprintf(outf,"%s (%ld:%p) -- %s\n", this->get_class_name(), this->id, this, this->name);
   else
-    fprintf(outf,"%s (%ld:0x%lx)\n", this->get_class_name(), this->id, (intptr_t) this);  
+    fprintf(outf,"%s (%ld:%p)\n", this->get_class_name(), this->id, this);  
 
   this->self_print_properties(outf);
 
@@ -488,7 +488,7 @@ void thdataobject::convert_cs(int src_cs, double src_x, double src_y, double & d
       thcs2cs(src_cs, TTCS_LAT_LONG, tx, ty, tz, dumx, dumy, dumz);
       if (dumy < 0.0)
         south = 1;
-      thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(thcs_get_params(src_cs), tx, ty, tz) - 1) + south;
+      thcfg.outcs = TTCS_UTM1N + 2 * (thcs2zone(src_cs, tx, ty, tz) - 1) + south;
     } else {
       thcfg.outcs = src_cs;
     }

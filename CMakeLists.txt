@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 include(cmake/PreventInSourceBuilds.cmake)
 
 project(therion)
-set(CMAKE_CXX_STANDARD 14)
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(BUILD_THERION "Build therion executable." ON)
 option(BUILD_LOCH "Build loch executable." ON)
@@ -15,6 +16,7 @@ include(cmake/BuildType.cmake)
 include(cmake/Dependencies.cmake)
 include(cmake/TherionSources.cmake)
 include(cmake/ECMEnableSanitizers.cmake)
+include(cmake/Warnings.cmake)
 
 # strip binaries in release build
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
@@ -138,10 +140,12 @@ else()
 endif()
 
 if (BUILD_THERION)
+    add_subdirectory(extern/quickhull)
+
     # therion lib
     add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
     target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/extern")
-    target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt shp poly2tri common-utils)
+    target_link_libraries(therion-common PUBLIC PkgConfig::PROJ fmt::fmt shp poly2tri common-utils QuickHull)
     target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
     add_dependencies(therion-common 
         version

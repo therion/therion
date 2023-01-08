@@ -30,7 +30,6 @@
 #include "thexception.h"
 #include "therion.h"
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <time.h>
 #include <locale.h>
 #ifndef THMSVC
@@ -88,7 +87,7 @@ void thdate::parse(const char * src)
 
   this->reset();
   
-  unsigned const char * osrc = (unsigned const char *)src;
+  const char * osrc = src;
   unsigned const char * ssrc = (unsigned const char *)src;
   
   int ppos = 0;
@@ -458,7 +457,7 @@ void thdate::join(thdate & dt)
 
 char * thdate::get_str(int fmt) {
   this->print_str(fmt);
-  return &(this->dstr[0]);
+  return this->dstr.begin();
 }
 
 
@@ -616,12 +615,13 @@ void date2tm(int y, int m, int d, int hh, int mm, double ss, tm * info)
 void thdate::print_str(int fmt) {
   unsigned int tl = thdate_bufflen - 1;
   long yyyy, mm, dd;
-  char * dst = &(this->dstr[0]);
+  char * dst = this->dstr.begin();
   const char * sep = " - ";
 
   switch (fmt) {
     case TT_DATE_FMT_UTF8_Y:
       sep = " \xe2\x80\x93 ";
+      [[fallthrough]];
     case TT_DATE_FMT_Y:
       if (this->syear >= 0)
         std::snprintf(dst,tl,"%d",
@@ -679,6 +679,7 @@ void thdate::print_str(int fmt) {
       
     case TT_DATE_FMT_UTF8_ISO:
       sep = " \xe2\x80\x93 ";
+      [[fallthrough]];
     default:
       if (this->ssec >= 0.0)
         std::snprintf(dst,tl,"%04d-%02d-%02dT%02d:%02d:%05.2f",
@@ -731,30 +732,6 @@ void thdate::print_str(int fmt) {
 
 }
 
-#ifdef THMSVC
-#define stat _stat
-#endif
-
-
-void thdate::set_file_date(char * fname) {
-  struct stat buf;
-  struct tm * tim;
-  if ((fname == NULL) || (strlen(fname) == 0))
-    return;
-  if (stat(fname, &buf) != 0)
-    return;
-  tim = localtime(&(buf.st_mtime));
-  this->syear = 1900 + tim->tm_year;
-  this->smonth = tim->tm_mon + 1;
-  this->sday = tim->tm_mday;
-  this->shour = tim->tm_hour;
-  this->smin = tim->tm_min;
-  this->ssec = double(tim->tm_sec > 59 ? 59 : tim->tm_sec);
-#ifdef THDEBUG
-  thprintf("FILEDATE: %s => %s\n", fname, this->get_str());
-#endif   
-}
-
 time_t thdate::get_start_t_time() {
   tm temp{};
   date2tm(this->syear, this->smonth, this->sday, this->shour, this->smin, this->ssec, &temp);
@@ -784,8 +761,3 @@ int thdate::get_end_days1900() {
   int thdays = rdn(this->eyear, this->emonth, this->eday);
   return thdays - basedays;
 }
-
-#ifdef THMSVC
-#undef stat
-#endif
-

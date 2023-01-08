@@ -52,6 +52,8 @@
 #include <windows.h>
 #endif
 
+#include <fmt/core.h>
+
 
 enum {
   TT_UNKNOWN_CFG, 
@@ -904,7 +906,7 @@ void thconfig::xth_save()
     }
     
     fprintf(cf,"set xth(th_exit_state) %d\n", therion_exit_state);
-    fprintf(cf,"set xth(th_exit_number) %ld\n\n", time(NULL));
+    fmt::print(cf,"set xth(th_exit_number) {}\n\n", time(NULL));
 
     // close config file
     fclose(cf);
@@ -926,7 +928,7 @@ double thconfig::get_outcs_convergence()
 {
   double x, y, z;
   if (this->get_outcs_center(x, y, z)) {
-    return thcsconverg(thcs_get_params(this->outcs), x, y);
+    return thcsconverg(this->outcs, x, y);
   } else {
     return 0.0;
   }
@@ -937,7 +939,7 @@ double thconfig::get_cs_convergence(int cs)
   double x, y, z, lx, ly, lz;
   if (this->get_outcs_center(x, y, z)) {
     thcs2cs(this->outcs, cs, x, y, z, lx, ly, lz);
-    return thcsconverg(thcs_get_params(cs), lx, ly);
+    return thcsconverg(cs, lx, ly);
   } else {
     return 0.0;
   }
@@ -989,7 +991,7 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
           firstdec = false;
         }
         if (this->get_outcs_mag_decl(double(yyy), dec)) {
-          thlog.printf("  %4d.1.1  %.4f\n", yyy, dec);
+          thlog.printf("  %4ld.1.1  %.4f\n", yyy, dec);
         }
       }
     }

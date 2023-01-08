@@ -717,7 +717,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
 
 
 
-void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * prj)
+void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // TODO unused parameter prj
 {
 
   if (maps == NULL) {

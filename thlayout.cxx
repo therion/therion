@@ -40,11 +40,9 @@
 #include "thconfig.h"
 #include "th2ddataobject.h"
 #include <string.h>
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
+#include <filesystem>
 
+namespace fs = std::filesystem;
 
 enum {
   TTLDBG_JOINS = 1,
@@ -379,6 +377,7 @@ void thlayout_parse_rotate(double & rotate, char * rotstr) {
   switch (nargs) {
     case 2:
       atf.parse_units(args[1]);
+      [[fallthrough]];
     case 1:
       thparse_double(sv, rotate, args[0]);
       if (sv != TT_SV_NUMBER)
@@ -431,6 +430,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_DATAOBJECT_AUTHOR:
     case TT_DATAOBJECT_COPYRIGHT:
       defcod.nargs = 2;
+      [[fallthrough]];
     default:
       if (cod.nargs > defcod.nargs)
         ththrow("too many arguments -- {}", args[defcod.nargs]);
@@ -460,7 +460,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
           thencode(&(this->db->buff_enc), *args, argenc);
           this->last_line->line = this->db->strstore(this->db->buff_enc.get_buffer());
           this->last_line->code = this->ccode;
-          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(), true);
+          this->last_line->path = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath().c_str(), true);
           break;
         case TT_LAYOUT_SYMBOL_DEFAULTS:
           if (args != NULL) {
@@ -789,7 +789,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
 
     case TT_LAYOUT_COLOR_PROFILE:
       sv = thmatch_token(args[0],thtt_layoutclr_model);
-      tmp1 = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(args[1]), true);
+      tmp1 = this->db->strstore((this->m_pconfig == NULL) ? "" : this->m_pconfig->cfg_file.get_cif_abspath(args[1]).c_str(), true);
       switch (sv) {
       case TT_LAYOUTCLRMODEL_CMYK:
     	  this->color_profile_cmyk = tmp1;
@@ -1122,6 +1122,7 @@ void thlayout::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     
     case 1:
       cod.id = TT_DATAOBJECT_NAME;
+      [[fallthrough]];
     default:
       thdataobject::set(cod, args, argenc, indataline);
       break;
@@ -1488,12 +1489,14 @@ void thlayout::parse_len(double & d1, double & d2, double & d3, int nargs, char 
         ththrow("invalid number -- {}", args[2]);
       d3 = lentf.transform(d3);
       check_num(d3,nonneg);
+      [[fallthrough]];
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[1]);
       d2 = lentf.transform(d2);
       check_num(d2,nonneg);
+      [[fallthrough]];
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
@@ -1515,30 +1518,35 @@ void thlayout::parse_len6(double & d1, double & d2, double & d3, double & d4, do
         ththrow("invalid number -- {}", args[5]);
       d6 = lentf.transform(d6);
       check_num(d6,nonneg);
+      [[fallthrough]];
     case 5:
       thparse_double(sv,d5,args[4]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[4]);
       d5 = lentf.transform(d5);
       check_num(d5,nonneg);
+      [[fallthrough]];
     case 4:
       thparse_double(sv,d4,args[3]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[3]);
       d4 = lentf.transform(d4);
       check_num(d4,nonneg);
+      [[fallthrough]];
     case 3:
       thparse_double(sv,d3,args[2]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[2]);
       d3 = lentf.transform(d3);
       check_num(d3,nonneg);
+      [[fallthrough]];
     case 2:
       thparse_double(sv,d2,args[1]);
       if ((sv != TT_SV_NUMBER))
         ththrow("invalid number -- {}", args[1]);
       d2 = lentf.transform(d2);
       check_num(d2,nonneg);
+      [[fallthrough]];
     case 1:
       thparse_double(sv,d1,args[0]);
       if ((sv != TT_SV_NUMBER))
@@ -1633,7 +1641,7 @@ std::string fix_path_slashes(std::string s) {
 }
 
   
-void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
+void thlayout::export_pdftex(FILE * o, thdb2dprj * /*prj*/, char mode) { // TODO unused parameter prj
 
   fprintf(o,"\\opacity{%.2f}\n",this->opacity);
   fprintf(o,"\\def\\scale{%lu}\n",(unsigned long)(1.0 / this->scale + 0.5));
@@ -1649,17 +1657,9 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
       nami++;
   }
 
-  thbuffer pict_path, pn;
-  size_t pl;
-  char * pp;
-  long i;
-  pict_path.guarantee(1024);
-  thassert(getcwd(pict_path.get_buffer(),1024) != NULL);
-  pp = pict_path.get_buffer();
-  pl = strlen(pp);
-  if ((pl > 0) && ((pp[pl-1] == '/') || (pp[pl-1] == '\\'))) {
-    pp[pl-1] = 0;
-  }
+  std::error_code ec;
+  const auto cwd = fs::current_path(ec);
+  thassert(!ec);
 
   if (this->map_header != TT_LAYOUT_MAP_HEADER_OFF) {
     fprintf(o,"\\legendbox{%.0f}{%.0f}{", this->map_header_x, this->map_header_y);
@@ -1670,17 +1670,11 @@ void thlayout::export_pdftex(FILE * o, thdb2dprj * prj, char mode) {
   if (nami > 0) {
     for(mit = this->map_image_list.begin(); mit != this->map_image_list.end(); mit++) {
       if (mit->defined() && (mit->m_align != TT_LAYOUT_MAP_HEADER_OFF)) {
-        pn = pict_path;
-        pn += "/";
-        pn += mit->m_fn;
-        pp = pn.get_buffer();
-        for(i = (long)strlen(pp); i >= 0; i--) {
-          if (pp[i] == '\\')
-            pp[i] = '/';
-        }
+        auto pict_path = (cwd / mit->m_fn).string();
+        std::replace(pict_path.begin(), pict_path.end(), '\\', '/');
         fprintf(o,"\\legendbox{%.0f}{%.0f}{", mit->m_x, mit->m_y);
         thlayout_print_header_align(o, mit->m_align);
-        fprintf(o,"}{\\loadpicture{%s}}",pp);
+        fprintf(o,"}{\\loadpicture{%s}}", pict_path.c_str());
       }
     }
   }
@@ -2127,7 +2121,7 @@ void thlayout::process_copy() {
 }
 
 
-void thlayout::set_thpdf_layout(thdb2dprj * prj, double x_scale, double x_origin_shx, double x_origin_shy) {
+void thlayout::set_thpdf_layout(thdb2dprj * /*prj*/, double /*x_scale*/, double /*x_origin_shx*/, double /*x_origin_shy*/) { // TODO unused parameters
 
   //string excl_list,labelx,labely;
   //bool  excl_pages,background,title_pages,page_numbering,
@@ -2314,16 +2308,18 @@ void thlayout::export_mptex_font_size(FILE * o, th2ddataobject * obj, bool print
     case TT_2DOBJ_SCALE_NUMERIC:
     	{
     		double optical_zoom = this->scale / this->base_scale;
+    		double font_size = 0;
     		if (obj->scale_numeric <= 0.5)
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 0.5 * this->font_setup[0]);
-				else if (obj->scale_numeric <= 0.707)
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 0.707 * this->font_setup[1]);
-				else if (obj->scale_numeric >= 2.0)
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 2.0 * this->font_setup[4]);
-				else if (obj->scale_numeric >= 1.414)
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric / 1.414 * this->font_setup[3]);
-				else
-    			fprintf(o,"\\size[%.1f] ", optical_zoom * obj->scale_numeric * this->font_setup[2]);
+    			font_size = optical_zoom * obj->scale_numeric / 0.5 * this->font_setup[0];
+                else if (obj->scale_numeric <= 0.707)
+    			font_size = optical_zoom * obj->scale_numeric / 0.707 * this->font_setup[1];
+                else if (obj->scale_numeric >= 2.0)
+    			font_size = optical_zoom * obj->scale_numeric / 2.0 * this->font_setup[4];
+                else if (obj->scale_numeric >= 1.414)
+    			font_size = optical_zoom * obj->scale_numeric / 1.414 * this->font_setup[3];
+                else
+    			font_size = optical_zoom * obj->scale_numeric * this->font_setup[2];
+    		fprintf(o,"\\size[%.1f]\\basefontsize=%.0f\\relax ", font_size, font_size);
     	}
     	break;
     default:

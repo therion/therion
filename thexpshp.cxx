@@ -37,17 +37,6 @@
 #include "thconfig.h"
 #include <stdio.h>
 #include "thtmpdir.h"
-#ifndef THMSVC
-#include <dirent.h>
-#include <unistd.h>
-#else
-#include <direct.h>
-#define mkdir _mkdir
-#define getcwd _getcwd
-#define chdir _chdir
-#define putenv _putenv
-#define S_ISDIR(v) (((v) | _S_IFDIR) != 0)
-#endif
 #include "thchenc.h"
 #include "thdb1d.h"
 #include "thinit.h"
@@ -68,19 +57,13 @@
 #include <time.h>
 #include <errno.h>
 #include "thcs.h"
+#include <filesystem>
 
 #include "thexpshp.h"
 
-thexpshpf::thexpshpf()
-{
-  this->m_fnm = "default";
-  this->m_fpath = NULL;
-  this->m_is_open = false;
-  this->m_xshp = NULL;
-  this->m_type = SHPT_NULL;
-  this->m_object_id = -1;
-  this->m_num_objects = 0;
-}
+thexpshpf::thexpshpf(struct thexpshp * xshp, const char * fnm, int type):
+  m_fnm(fnm), m_xshp(xshp), m_type(type)
+{}
 
 
 bool thexpshpf::open()
@@ -131,69 +114,28 @@ void thexpshpf::close()
 }
 
 
-void thexpshpf::init(thexpshp * xshp, const char * fnm, int type)
-{
-  this->m_fnm = fnm;
-  this->m_fpath = NULL;
-  this->m_xshp = xshp;
-  this->m_type = type;
-}
 
-
-
-
-thexpshp::thexpshp()
-{
-  this->m_dirname = NULL;
-  this->m_xproj = NULL;
-  this->m_expmap = NULL;
-  this->m_expmodel = NULL;
-  
-  this->m_fscrap.init(this, "outline2d", SHPT_POLYGONZ);
-  this->m_fpoints.init(this, "points2d", SHPT_POINTZ);
-  this->m_flines.init(this, "lines2d", SHPT_ARCZ);
-  this->m_fareas.init(this, "areas2d", SHPT_POLYGONZ);
-
-  this->m_fstations3D.init(this, "stations3d", SHPT_POINTZ);
-  this->m_fshots3D.init(this, "shots3d", SHPT_ARCZ);
-  this->m_fwalls3D.init(this, "walls3d", SHPT_MULTIPATCH);
-}
+thexpshp::thexpshp():
+  m_fscrap(this, "outline2d", SHPT_POLYGONZ),
+  m_fpoints(this, "points2d", SHPT_POINTZ),
+  m_flines(this, "lines2d", SHPT_ARCZ),
+  m_fareas(this, "areas2d", SHPT_POLYGONZ),
+  m_fstations3D(this, "stations3d", SHPT_POINTZ),
+  m_fshots3D(this, "shots3d", SHPT_ARCZ),
+  m_fwalls3D(this, "walls3d", SHPT_MULTIPATCH)
+{}
 
 
 
 bool thexpshp::open(const char * dirname)
 {
-  // create directory
-#ifdef THWIN32
-  if (mkdir(dirname) != 0) {
-#else
-  if (mkdir(dirname,0046750) != 0) {
-#endif
-
-    struct 
-#ifdef THMSVC
-    _stat
-#else
-    stat 
-#endif
-    buf;
-#ifdef THMSVC
-    _stat
-#else
-    stat 
-#endif
-    (dirname,&buf);
-    if ((errno == EEXIST) && (S_ISDIR(buf.st_mode))) {
-      // directory already exists
-    }
-    else {
-      return false;
-    }
+  try {
+    std::filesystem::create_directory(dirname);
+    this->m_dirname = dirname;
+    return true;
+  } catch (const std::exception&) {
+    return false;
   }
-
-  // save dir name
-  this->m_dirname = dirname;
-  return true;
 }
 
 
@@ -438,7 +380,7 @@ void thexpshpf::polygon_close_ring()
 
 
 
-void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * xbasic)
+void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/) // TODO unused parameter xbasic
 {
 	
 	thbuffer stnbuff;

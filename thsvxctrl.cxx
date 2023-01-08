@@ -45,11 +45,6 @@
 #include <string>
 #include <fstream>
 
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
-
 #define THPI 3.1415926535898
 
 thsvxctrl::thsvxctrl()
@@ -167,6 +162,7 @@ void thsvxctrl::write_survey_leg(thdataleg * legp)
         break;
       case TT_DATATYPE_DIVING:
         fprintf(this->svxf,"*data\tdiving");
+      	[[fallthrough]];
       case TT_DATATYPE_CYLPOLAR:
         if (legp->data_type != TT_DATATYPE_DIVING)
           fprintf(this->svxf,"*data\tcylpolar");
@@ -396,9 +392,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   fclose(svxf);
   
   // run survex
-  thbuffer svxcom, wdir;
-  wdir.guarantee(1024);
-  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
+  thbuffer svxcom;
   int retcode;
   svxcom = "\"";
   svxcom += thini.get_path_cavern();
@@ -591,7 +585,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   while (!(clf.eof())) {
     lnum++;
     clf.getline(lnbuff,2048);
-    thlog.printf("%2d> %s\n",lnum,lnbuff);
+    thlog.printf("%2lu> %s\n",lnum,lnbuff);
     // let's scan the line
     chch = lnbuff;
     nchs = strlen(chch);
@@ -716,7 +710,7 @@ void thsvxctrl::load_err_file(class thdatabase * dbp, const char * lfnm) {
 
 //		thprintf("SCANNING: %s\n", line.c_str());
 		thsplit_args(&b, line.c_str());
-		thdb1d_traverse t, * ct;
+		thdb1d_traverse t = {}, * ct;
 		thdb1d_loop_leg l;
 		thdb1d_loop_leg * cl;
 		thdb1d_tree_node * cn;

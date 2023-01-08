@@ -16,6 +16,8 @@ select pdp@rabbit
 
 export map -projection plan -output rabbit-plan.pdf \
   -layout-map-header 0 0 s
+export map -projection plan -output rabbit-plan.pdf \
+  -layout-map-header 0 0 s
 
 #!IMAGE rabbit-plan.pdf
 

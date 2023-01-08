@@ -136,7 +136,7 @@ CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variabl
 
 
 # compiler settings
-CXXFLAGS = -DIMG_API_VERSION=1 -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -Iextern/fmt/include -std=c++14
+CXXFLAGS = -DIMG_API_VERSION=1 -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -Iextern/fmt/include -std=c++17
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
 TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
@@ -1060,3 +1060,5 @@ utest-main.o: utest-main.cxx extern/catch2/catch.hpp thinit.h thbuffer.h \
  thmbuffer.h thinput.h thparse.h
 utest-proj.o: utest-proj.cxx extern/catch2/catch.hpp thproj.h thcsdata.h \
  thparse.h thbuffer.h thmbuffer.h thcs.h
+utest-icase.o: utest-icase.cxx extern/catch2/catch.hpp \
+ thparse.h thbuffer.h thmbuffer.h

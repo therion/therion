@@ -50,14 +50,6 @@
 #include <set>
 #include <iterator>
 #include <cstdio>
-#ifndef THMSVC
-#include <unistd.h>
-#else
-#include <direct.h>
-#define getcwd _getcwd
-#define chdir _chdir
-#define putenv _putenv
-#endif
 
 class thprjx_link {
 
@@ -367,7 +359,7 @@ thdb2dprjpr thdb2d::parse_projection(const char * prjstr,bool insnew)
 }
 
 
-void thdb2d::self_print(FILE * outf)
+void thdb2d::self_print(FILE * /*outf*/)
 {
 }
 
@@ -1016,6 +1008,7 @@ void thdb2d::process_point_references(thpoint * pp)
       }      
       if (pp->type == TT_POINT_TYPE_CONTINUATION)
         break;
+      [[fallthrough]];
     case TT_POINT_TYPE_EXTRA:
       if (! pp->from_name.is_empty()) {
         try {
@@ -2997,7 +2990,7 @@ void thdb2d::pp_smooth_lines(thdb2dprj * prj)
 
 void thdb2d::pp_smooth_joins(thdb2dprj * prj) 
 {
-  double x1,x2,y1,y2,d1,d2,tmpx,tmpy,testx = 0.0,testy = 0.0,dt;
+  double x1,x2 = 0.0,y1,y2 = 0.0,d1,d2,tmpx,tmpy,testx = 0.0,testy = 0.0,dt;
   bool has_test;
   unsigned long ncp, ncp1, ncp2;
   thdb2dji * jlist = prj->first_join_list, * ji;
@@ -3459,9 +3452,12 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 #define ulim(x,y,a) \
   { if (cnt == 0) {xx = x; xy = y; xa = a; nx = x; ny = y; na = a;} \
   else { \
-    if (x > xx) xx = x; if (x < nx) nx = x; \
-    if (y > xy) xy = y; if (y < ny) ny = y; \
-    if (a > xa) xa = a; if (a < na) na = a; \
+    if (x > xx) xx = x; \
+    if (x < nx) nx = x; \
+    if (y > xy) xy = y; \
+    if (y < ny) ny = y; \
+    if (a > xa) xa = a; \
+    if (a < na) na = a; \
   } \
   cnt++; }
 
@@ -3623,10 +3619,9 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   }
 #endif  
 
-  thbuffer com, wdir;
-  wdir.guarantee(1024);
-  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
-  thassert(chdir(thtmp.get_dir_name()) == 0);
+  thbuffer com;
+  // working directory will be the tmpdir until this scope ends
+  const auto tmp_handle = thtmp.switch_to_tmpdir();
   int retcode;
 
   com = "\"";
@@ -3642,7 +3637,6 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
   "####################### metapost log file ########################\n",
   "#################### end of metapost log file ####################\n",true);
   if (retcode != EXIT_SUCCESS) {
-    thassert(chdir(wdir.get_buffer()) == 0);
     ththrow("metapost exit code -- {}", retcode);
   }
 
@@ -3714,9 +3708,6 @@ void thdb2d::process_areas_in_projection(thdb2dprj * prj)
 
     }
   }
-
-  thassert(chdir(wdir.get_buffer()) == 0);
-
 }
 
 

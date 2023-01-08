@@ -1,5 +1,122 @@
-Therion 6.0.7 (in progress):
+Therion 6.1.6 (in progress):
 
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.5 (2022-12-30):
+
+therion:
+ * bugs fixed
+   - v6.1.4 won't overwrite output files on Windows [#480, #481]
+
+infrastructure:
+ * updated GitHub Actions
+ * updated make_relase.py
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.4 (2022-12-23):
+
+therion:
+ * platform-independent titles in 3d, html and kml outputs [#469, Matěj Plch]
+ * bugs fixed:
+   - scrap lookup colouring fix
+
+xtherion:
+ * added support for converting all eligible poly lines to curves in one
+   operation [Mark Dickey]
+ * udated Portuguese translation [#473, Rodrigo Severo]
+
+infrastructure, code refactoring:
+ * GitHub Actions: upload samples artefacts; fix deprecated actions;
+   build samples on Mac OS; enable static code analysis by CodeQL [Matěj Plch]
+ * code modernisation (std::filesystem, fmt::format);
+   fixed compiler warnings [Matěj Plch]
+ * Makefile fixed
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.3 (2022-11-26):
+
+therion:
+ * Slovenian translation updated [#462, Marko Zakrajsek]
+ * improve output reproducibility across platforms (two-pass rounding,
+   improved angles calculation in the warping algorithm)
+ * bugs fixed
+   - at non-int mapping of scale to base-scale, text labels get debugging text
+     added before them [#428]
+
+infrastructure:
+ * C++17 standard required [#449, Matěj Plch]
+ * C++17 related code refactoring and modernisation (attributes,
+   std::filesystem, std::string_view) [Matěj Plch]
+ * fixed compiler warnings [#437, Matěj Plch]
+ * fixed wxWidgets asserts [#439, Matěj Plch]
+ * CMake: compile QuickHull as a library [#436, Matěj Plch]
+ * CMake: reworked include paths [Matěj Plch]
+ * CMake: compile C sources as a separate C libraries [Matěj Plch]
+ * CMake: further improvements [Matěj Plch]
+ * CMake: add the missing sample [#440, Matěj Plch]
+ * Makefile fixed
+ * CI: fixed wine32 installation issues
+ * CI: removed builds on deprecated ubuntu-18.04 and macos-10.15
+   [#442, Matěj Plch]
+ * CI: suspended builds on MXE [#448, Matěj Plch]
+ * CI: add missing msys2/mingw packages
+ * CI: enable sanitizers and build samples on Windows and MacOS
+   [#457, #458, Matěj Plch]
+ * clang-tidy improvements [#452, Matěj Plch]
+ * require at least VTK 7 [#444, Matěj Plch]
+ * require at leastwxWidgets 3.0.0 [#451, Matěj Plch]
+ * linking to Proj 9.1.0 added to test_proj.sh
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.2 (2022-07-11):
+
+therion:
+ * updated fmtlib to 9.0.0
+ * updated Russian translation [#427]
+ * bugs fixed
+   - FTBFS with fmtlib 9.0.0 [Debian #1014679]
+   - empty Maori translations removed
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.1 (2022-06-23):
+
+therion:
+ * support custom font size in map labels using <size:N%> and <size:xs|s|m|l|xl>
+   in the label text
+ * updated Maori translation [#424]
+ * bugs fixed:
+   - line rope having two points with the same x-coordinate [#423]
+   - spelling errors in the source code
+
+loch:
+ * bugs fixed:
+  -  ABI mismatch preventing loch from starting in msys2 build;
+     fixed by linking to wxWidgets 3.1 [#426]
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.0 (2022-05-27):
+
+therion:
+ * CHANGED the default settings for 'proj-auto' (on) and 'proj-missing-grid'
+   (download) to allow Proj choosing the best transformation and automatically
+   download any missing transformation grids
+ * added a new ini file option ‘cs-trans’ for user-defined PROJ transformation
+   pipelines between two coordinate systems
+ * added support for automatic downloading of PROJ transformation grids used
+   in cs-trans pipelines from cdn.proj.org
+ * layout: color map-fg scrap now uses more different colors to avoid that
+   connected scraps are colored the same. Needed in labyrinth-like caves. [#416]
+ * support custom font size in map labels using <size:N> in the label text
+ * support atlas page labeling A, B, …, Z, AA, AB, … instead of only A, B, …, Z
+ * updated bundled libraries: survex/img 1.4.3, Catch2 2.13.9, fmt 8.1.1
+ * documentation fixes [#410,#415,#417]
+ * updated github workflows [#411]
 
 --------------------------------------------------------------------------------
 

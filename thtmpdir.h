@@ -29,8 +29,7 @@
 #ifndef thtmpdir_h
 #define thtmpdir_h
 
-#include "thbuffer.h"
-
+#include <string>
 
 /**
  * Temporary directory module.
@@ -39,6 +38,32 @@
  */
  
 class thtmpdir {
+  private:
+    /**
+     * @brief Helper class to switch between cwd and tmpdir.
+     * Constructor will set current working directory to the temporary directory,
+     * destructor vice versa.
+     */
+    class [[nodiscard]] tmpdir_handle
+    {
+      public:
+        explicit tmpdir_handle(const std::string& tmp_dir);
+        ~tmpdir_handle();
+
+        /**
+         * @brief Explicitly switch to the previous working directory.
+         */
+        void switch_from_tmpdir() noexcept;
+
+        // copy and move disabled, we don't need them
+        tmpdir_handle(const tmpdir_handle&) = delete;
+        tmpdir_handle(tmpdir_handle&& other) = delete;
+        tmpdir_handle& operator=(const tmpdir_handle&) = delete;
+        tmpdir_handle& operator=(tmpdir_handle&& other) = delete;
+
+      private:
+        std::string prev_dir;
+    };
 
   public:
 
@@ -46,9 +71,9 @@ class thtmpdir {
   bool tried;  ///< ID, if we've tried to create temp directory.  
   bool delete_all;  ///< ID whether to delete temporary directory.
   bool debug;  ///< ID, whether debugging mode is on.  
-  thbuffer name,  ///< Name of temp dir.  
-    file_name,  ///< Name of temporary file.
-    tmp_remove_script;
+  std::string name = "."; ///< Name of temp dir.
+  std::string file_name; ///< Name of temporary file.
+  std::string tmp_remove_script; ///< Script for tmp directory deletion.
 
   /**
    * Creates temporary directory.
@@ -117,7 +142,13 @@ class thtmpdir {
    */
   
   void delete_off();
-  
+
+  /**
+   * @brief Switch working directory to the temporary directory.
+   * @return Handle object which will switch back to the previous
+   * working directory in its destructor.
+   */
+  tmpdir_handle switch_to_tmpdir();
 };
 
 extern thtmpdir thtmp;

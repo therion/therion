@@ -100,18 +100,14 @@ class lxGLCanvas: public wxGLCanvas {
 
 		bool m_sCameraAutoRotate, m_sCameraLockRotation;
     wxStopWatch m_sCameraAutoRotateSWatch;
-    long m_sCameraAutoRotateCounter;
+    long m_sCameraAutoRotateCounter = 0;
     double m_sCameraAutoRotateAngle, m_sCameraStartAutoRotateAngle = 0.0;
 
     void OnPaint(wxPaintEvent& event);
     void OnSize(wxSizeEvent& event);
     void OnEraseBackground(wxEraseEvent& event);
     void OnEnterWindow(wxMouseEvent& event);
-    
-#if wxCHECK_VERSION(2,9,0)
     void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-#endif
-
     void OnMouseDouble(wxMouseEvent& event);
     void OnMouseDown(wxMouseEvent& event);
     void OnMouseUp(wxMouseEvent& event);

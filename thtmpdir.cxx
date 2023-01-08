@@ -28,34 +28,52 @@
 #include "thtmpdir.h"
 #include "therion.h"
 #include "thinit.h"
-#include <sys/stat.h>
-#include <sys/types.h>
-#ifndef THMSVC
-#include <dirent.h>
-#include <unistd.h>
-#else
-#include <direct.h>
-#define mkdir _mkdir
-#define S_ISDIR(v) (((v) | _S_IFDIR) != 0)
-#endif
-#include <fcntl.h>
-#include <stdlib.h>
-#include <time.h>
-#include <errno.h>
+
+#include <fmt/core.h>
+
+#include <cstdlib>
+#include <filesystem>
 
 #ifdef THWIN32
 #include <process.h>
 #define getpid _getpid
-#define THPATHSEPARATOR "\\"
-#else
-#define THPATHSEPARATOR "/"
 #endif
+
+namespace fs = std::filesystem;
+
+thtmpdir::tmpdir_handle::tmpdir_handle(const std::string& tmp_dir)
+{
+  try {
+    prev_dir = fs::current_path().string();
+    fs::current_path(tmp_dir);
+  } catch(const std::exception& e) {
+    thwarning(("error switching to temporary directory -- %s", e.what()));
+  }
+}
+
+thtmpdir::tmpdir_handle::~tmpdir_handle()
+{
+  switch_from_tmpdir();
+}
+
+void thtmpdir::tmpdir_handle::switch_from_tmpdir() noexcept
+{
+  if (prev_dir.empty())
+    return;
+
+  try {
+    fs::current_path(prev_dir);
+  } catch(const std::exception& e) {
+    thwarning(("error switching from temporary directory -- %s", e.what()));
+  }
+
+  prev_dir.clear();
+}
 
 thtmpdir::thtmpdir()
 {
   this->exist = false;
   this->tried = false;
-  this->name.strcpy(".");
 #ifdef THDEBUG
   this->delete_all = false;
   this->debug = true;
@@ -71,180 +89,82 @@ thtmpdir::~thtmpdir()
 }
 
 
-void thtmpdir::create()
+void thtmpdir::create() try
 {
-  if ((!this->exist) && (!this->tried)) {
-    thbuffer dir_path;
-    this->tmp_remove_script = thini.tmp_remove_script.get_buffer();
-#ifndef THMSVC
+  if (this->exist || this->tried)
+    return;
+
+  fs::path dir_path;
+  this->tmp_remove_script = thini.tmp_remove_script.get_buffer();
+
 #ifdef THDEBUG
-    // the debugging temp directory
+  // the debugging temp directory
+  dir_path = "thTMPDIR";
+#else
+  if (strlen(thini.tmp_path.get_buffer()) > 0) {
+    dir_path = thini.tmp_path.get_buffer();
+  } else if (this->debug) {
     dir_path = "thTMPDIR";
-#else
-    if (strlen(thini.tmp_path.get_buffer()) > 0) {
-      dir_path.strcpy(thini.tmp_path.get_buffer());
-    } else {
-      char dn[16];
-      char *envtmp;
-      // release temp directory
-      envtmp = getenv("TEMP");
-      if (envtmp != NULL) {
-        dir_path = envtmp;
-      } else {
-        envtmp = getenv("TMP");
-        if (envtmp != NULL) {
-          dir_path = envtmp;
-        } else {
-#ifdef THWIN32
-          dir_path = ".";
-#else
-          dir_path = "/tmp";
-#endif
-        }
-      }
-      dir_path += THPATHSEPARATOR;
-      if (this->debug) {
-        thbuffer wdir;
-        wdir.guarantee(1024);
-        thassert(getcwd(wdir.get_buffer(),1024) != NULL);
-        wdir += "/thTMPDIR";
-        dir_path = wdir;
-        //dir_path += "thTMPDIR";
-      } else {
-        dir_path += "th";
-        std::snprintf(&(dn[0]),16,"%d",getpid());
-        dir_path += &(dn[0]);
-      }
-    }
-#endif
-#else
-   thbuffer wdir;
-   wdir.guarantee(1024);
-   getcwd(wdir.get_buffer(),1024);
-   wdir += "\\thTMPDIR";
-   dir_path = wdir;
-#endif
-
-    this->tried = true;
-#ifdef THWIN32
-    if (mkdir(dir_path) != 0) {
-#else
-    if (mkdir(dir_path,0046750) != 0) {
-#endif
-
-      struct 
-#ifdef THMSVC
-      _stat
-#else
-      stat 
-#endif
-      buf;
-#ifdef THMSVC
-      _stat
-#else
-      stat 
-#endif
-      (dir_path,&buf);
-      if ((errno == EEXIST) && (S_ISDIR(buf.st_mode))) {
-          if (!this->debug) {
-            thwarning(("temporary directory already exists"));
-          }
-          this->exist = true;
-          this->name = dir_path;
-      }
-      else {
-        therror(("can't create temporary directory -- %s", dir_path.get_buffer()));
-      }
-    }
-    else {
-      this->exist = true;
-      this->name = dir_path;
-    }
+  } else {
+    dir_path = fs::temp_directory_path() / fmt::format("th{}", getpid());
   }
+#endif
+
+  this->tried = true;
+  if (!fs::create_directory(dir_path) && !this->debug) {
+    thwarning(("temporary directory already exists"));
+  }
+
+  this->exist = true;
+  this->name = dir_path.string();
+}
+catch (const std::exception& e)
+{
+  therror(("can't create temporary directory -- %s", e.what()));
 }
 
 
-void thtmpdir::remove()
+void thtmpdir::remove() try
 {
-  if (this->exist && this->delete_all) {
-    // remove directory contents
-    if (strlen(this->tmp_remove_script.get_buffer()) > 0) {
-      thbuffer tmpfname;
-      tmpfname = this->tmp_remove_script.get_buffer();
-      tmpfname += " ";
-      tmpfname += this->name;
-      if (system(tmpfname.get_buffer()) != 0)
-        thwarning(("delete temporary directory error -- %s not successful",tmpfname.get_buffer()))
-#ifndef THMSVC
-      DIR *tmpdir = opendir(this->name);
-      if (tmpdir != NULL) {
-        thwarning(("error deleting temporary directory -- %s",this->name.get_buffer()))      
-        closedir(tmpdir);
-      } else {
-        this->name = ".";
-        this->tried = false;
-        this->exist = false;
-      }
-    } else {
-#ifdef THMACOSX
-      thbuffer tmpfname;
-      tmpfname = "rm -f -R ";
-      tmpfname += this->name;
-      system(tmpfname.get_buffer());
-      DIR *tmpdir = opendir(this->name);
-      if (tmpdir != NULL) {
-        thwarning(("error deleting temporary directory -- %s",this->name.get_buffer()))      
-        closedir(tmpdir);
-      } else {
-        this->name = ".";
-        this->tried = false;
-        this->exist = false;
-      }
-#else
-      DIR *tmpdir = opendir(this->name);
-      struct dirent *tmpf;
-      thbuffer tmpfname;
-      if (tmpdir != NULL) {
-        tmpf = readdir(tmpdir);
-        while (tmpf != NULL) {
-          tmpfname = this->name;
-          tmpfname += THPATHSEPARATOR;
-          tmpfname += tmpf->d_name;
-          unlink(tmpfname);
-          tmpf = readdir(tmpdir);
-        }
-        closedir(tmpdir);
-      }
-  
-      // remove directory
-      if (rmdir(this->name) != 0)
-        thwarning(("error deleting temporary directory -- %s",this->name.get_buffer()))
-      else {
-        this->name = ".";
-        this->tried = false;
-        this->exist = false;
-      }
-#endif
-#endif
+  if (!this->exist || !this->delete_all)
+    return;
+
+  if (!this->tmp_remove_script.empty()) {
+    const auto tmpfname = fmt::format("{} {}", this->tmp_remove_script, this->name);
+    if (system(tmpfname.c_str()) != 0) {
+      thwarning(("delete temporary directory error -- %s not successful", tmpfname.c_str()))
     }
+    if (fs::is_directory(this->name)) {
+      thwarning(("error deleting temporary directory -- %s", this->name.c_str()))    
+    } else {
+      this->name = ".";
+      this->tried = false;
+      this->exist = false;
+    }
+    return;
   }
+
+  fs::remove_all(this->name);
+  this->name = ".";
+  this->tried = false;
+  this->exist = false;
+} catch (const std::exception& e) {
+  thwarning(("error deleting temporary directory -- %s", e.what()))
 }
 
 
 const char* thtmpdir::get_dir_name()
 {
   if (!this->exist) this->create();
-  return(this->name);
+  return this->name.c_str();
 }
   
 
 const char* thtmpdir::get_file_name(const char *fname)
 {
   if (!this->exist) this->create();
-  this->file_name = this->name;
-  this->file_name += THPATHSEPARATOR;
-  this->file_name += fname;
-  return(this->file_name);
+  this->file_name = (fs::path(this->name) / fname).string();
+  return this->file_name.c_str();
 }
 
 
@@ -269,6 +189,12 @@ void thtmpdir::delete_on()
 void thtmpdir::delete_off()
 {
   this->delete_all = false;
+}
+
+
+thtmpdir::tmpdir_handle thtmpdir::switch_to_tmpdir()
+{
+  return tmpdir_handle(get_dir_name());
 }
 
 thtmpdir thtmp;

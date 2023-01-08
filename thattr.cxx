@@ -64,7 +64,7 @@ void thattr_obj::set_tree_level(size_t level) {
 
 thattr_field * thattr::insert_field(const char * name)
 {
-  thattr_field tmp, * r;
+  thattr_field tmp = {}, * r;
   tmp.m_id = this->m_num_fields++;
   tmp.m_name = name;
   tmp.m_parent = this;
@@ -456,7 +456,7 @@ EXPORT_DBF_EXIT:
 }
 
 
-void thattr::export_mp_header(FILE * f)
+void thattr::export_mp_header(FILE * /*f*/) // TODO unused parameter f
 {
   if (this->m_num_fields == 0)
     return;
@@ -520,7 +520,7 @@ void thattr::export_mp_object_end(FILE * f, long user_id)
 
 
 
-void thattr::export_txt(const char * fname, int encoding)
+void thattr::export_txt(const char * fname, int /*encoding*/) // TODO unused parameter encoding
 {
   // Create file.
   FILE * f;
@@ -659,7 +659,7 @@ void thattr::export_kml(const char * fname, const char * name_field, const char 
 
 
 
-void thattr::export_html(const char * fname, const char * title, int encoding)
+void thattr::export_html(const char * fname, const char * title, int /*encoding*/) // TODO unused parameter encoding
 {
   // Create file.
   FILE * f;

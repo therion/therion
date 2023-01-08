@@ -51,23 +51,22 @@ struct thexpshpf_part {
 // Shapefile module
 struct thexpshpf {
 
-  const char * m_fnm, * m_fpath;
+  const char * m_fnm, * m_fpath = nullptr;
   struct thexpshp * m_xshp;
-  bool m_is_open;
+  bool m_is_open = false;
   int m_type;
-  size_t m_num_objects;
+  size_t m_num_objects = 0;
   SHPHandle m_hndl = nullptr;
 
   thattr m_attributes;
 
-  thexpshpf();
-  void init(struct thexpshp * xshp, const char * fnm, int type);
+  thexpshpf(struct thexpshp * xshp, const char * fnm, int type);
   bool open();
   void close();
 
   std::list<thexpshpf_data> m_point_list;
   std::list<thexpshpf_part> m_part_list;
-  int m_object_id;
+  int m_object_id = -1;
   void object_clear();
   void object_insert();
 
@@ -88,12 +87,12 @@ struct thexpshpf {
 // Shapefile export structure.
 struct thexpshp {
 
-  const char * m_dirname;
-  thdb2dprj * m_xproj;
+  const char * m_dirname = nullptr;
+  thdb2dprj * m_xproj = nullptr;
   thexpshpf m_fscrap, m_fpoints, m_flines, m_fareas;
   thexpshpf m_fstations3D, m_fshots3D, m_fwalls3D;
-  class thexpmap * m_expmap;
-  class thexpmodel * m_expmodel;
+  class thexpmap * m_expmap = nullptr;
+  class thexpmodel * m_expmodel = nullptr;
 
   thexpshp();
   bool open(const char * dirname);

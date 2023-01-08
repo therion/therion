@@ -42,10 +42,6 @@
 #include "thpdf.h"
 #include "thtexfonts.h"
 #include <string.h>
-#ifdef THMSVC
-#include <direct.h>
-#define getcwd _getcwd
-#endif
 
 
 thlookup::thlookup()
@@ -126,6 +122,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
     case TT_DATAOBJECT_AUTHOR:
     case TT_DATAOBJECT_COPYRIGHT:
       defcod.nargs = 2;
+      [[fallthrough]];
     default:
       if (cod.nargs > defcod.nargs)
         ththrow("too many arguments -- {}", args[defcod.nargs]);
@@ -155,6 +152,7 @@ void thlookup::set(thcmd_option_desc cod, char ** args, int argenc, unsigned lon
       tmpb = lkpnname;
       tmpa[0] = tmpb.get_buffer();
       args = tmpa;
+      [[fallthrough]];
     default:
       thdataobject::set(cod, args, argenc, indataline);
       break;
@@ -373,6 +371,7 @@ void thlookup::color_scrap(thscrap * s) {
         if (strlen(tli->m_valueString) == 0) {
           clr = tli->m_color;
         }
+        if (tli->m_ref == NULL) continue;
         if (tli->m_ref->id == s->id) {
           clr = tli->m_color;
           break;
@@ -623,14 +622,24 @@ void thlookup::postprocess() {
         if ((this->m_type == TT_LAYOUT_CCRIT_SCRAP) || (this->m_type == TT_LAYOUT_CCRIT_MAP)) {
           cnt = 0;
           for(nvalid = this->m_table.begin(); nvalid != this->m_table.end(); nvalid++) {
-            switch (cnt % 6) {
-                case 0:  nvalid->m_color = thlayout_color(1.0, 0.5, 0.5); break;
-                case 1:  nvalid->m_color = thlayout_color(0.5, 1.0, 0.5); break;
-                case 2:  nvalid->m_color = thlayout_color(0.5, 0.5, 1.0); break;
-                case 3:  nvalid->m_color = thlayout_color(1.0, 1.0, 0.0); break;
-                case 4:  nvalid->m_color = thlayout_color(0.0, 1.0, 1.0); break;
-                default: nvalid->m_color = thlayout_color(1.0, 0.0, 1.0); break;
-            }
+							switch (cnt % 16) {
+								case 0:  nvalid->m_color = thlayout_color(1.0, 0.5, 0.5); break;
+								case 1:  nvalid->m_color = thlayout_color(0.5, 1.0, 0.5); break;
+								case 2:  nvalid->m_color = thlayout_color(0.5, 0.5, 1.0); break;
+								case 3:  nvalid->m_color = thlayout_color(1.0, 1.0, 0.0); break;
+								case 4:  nvalid->m_color = thlayout_color(0.0, 1.0, 1.0); break;
+								case 5:  nvalid->m_color = thlayout_color(1.0, 0.0, 1.0); break;
+								case 6:  nvalid->m_color = thlayout_color(0.75, 1.0, 1.0); break;
+								case 7:  nvalid->m_color = thlayout_color(1.0, 0.75, 1.0); break;
+								case 8:  nvalid->m_color = thlayout_color(1.0, 1.0, 0.75); break;
+								case 9:  nvalid->m_color = thlayout_color(0.25, 0.75, 1.0); break;
+								case 10: nvalid->m_color = thlayout_color(0.25, 1.0, 0.75); break;
+								case 11: nvalid->m_color = thlayout_color(1.0, 0.75, 0.25); break;
+								case 12: nvalid->m_color = thlayout_color(0.75, 1.0, 0.25); break;
+                case 13: nvalid->m_color = thlayout_color(0.75, 0.25, 1.0); break;
+                case 14: nvalid->m_color = thlayout_color(1.0, 0.25, 0.75); break;
+                default: nvalid->m_color = thlayout_color(0.5, 0.25, 0.75); break;
+							}
             nvalid->m_color.alpha_correct(tmp_alpha);
             nvalid->m_color.defined = 1;
 

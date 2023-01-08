@@ -47,6 +47,7 @@ VTKLIBS = \
     -lvtkFiltersCore$(VTKLIBSUFFIX) \
     -lvtkFiltersHybrid$(VTKLIBSUFFIX) \
     -lvtkIOLegacy$(VTKLIBSUFFIX) \
+    -lvtksys$(VTKLIBSUFFIX) \
     $(shell pkg-config --libs freetype2)
 else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lvtkjpeg -lvtkpng -lvtkzlib -lvtksys -lfreetype
@@ -72,7 +73,7 @@ STRIPFLAG = -s
 ##else
 ##VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 ##endif
-##CXXPFLAGS = -DLXLINUX -std=c++14 $(shell wx-config --cxxflags) -Wno-deprecated $(shell pkg-config freetype2 --cflags) -I$(VTKPATH)
+##CXXPFLAGS = -DLXLINUX -std=c++17 $(shell wx-config --cxxflags) -Wno-deprecated $(shell pkg-config freetype2 --cflags) -I$(VTKPATH)
 ##CCPFLAGS = -DLXLINUX  $(shell wx-config --cflags)
 ##LXLIBDIR = linux
 ##PLIBS = $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz
@@ -86,7 +87,7 @@ else
 VTKLIBS = -lvtkHybrid -lvtkImaging -lvtkIO -lvtkGraphics -lvtkFiltering -lvtkCommon -lfreetype
 endif
 CXXPFLAGS = \
-    -std=c++14 \
+    -std=c++17 \
     -Wno-deprecated \
     $(shell $(WX_CONFIG) --cxxflags) \
     $(shell pkg-config freetype2 --cflags) \
@@ -130,7 +131,7 @@ endif
 ##CXX = $(CROSS)c++
 ##CC = $(CROSS)gcc
 ##POBJECTS = loch.res lxR2D.o
-##CXXPFLAGS = -W -Wall -std=c++14 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
+##CXXPFLAGS = -W -Wall -std=c++17 -DLXWIN32 $(shell $(CROSS)wx-config --static --cxxflags) $(shell $(CROSS)pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated
 ##CCPFLAGS = -W -Wall -DLXWIN32 $(shell $(CROSS)wx-config --static --cflags)
 ##LXLIBDIR =
 ##PLIBS = $(shell $(CROSS)pkg-config freetype2 --libs) $(shell $(CROSS)wx-config --static --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)
@@ -141,7 +142,7 @@ endif
 ##CXX = c++
 ##CC = cc
 ##POBJECTS =
-##CXXPFLAGS = -W -Wall -std=c++14 -DLXMACOSX $(shell wx-config --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
+##CXXPFLAGS = -W -Wall -std=c++17 -DLXMACOSX $(shell wx-config --cxxflags) $(shell pkg-config freetype2 --cflags) -I$(VTKPATH) -Wno-deprecated -I/usr/X11R6/include -I/usr/X11R6/include/freetype2
 ##CCPFLAGS = -W -Wall -DLXMACOSX $(shell wx-config --cflags) -I/usr/X11R6/include
 ##LXLIBDIR =
 ##PLIBS = -lz -L/usr/X11R6/lib $(shell wx-config --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS)

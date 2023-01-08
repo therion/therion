@@ -104,8 +104,11 @@ typedef struct {
    char *label;
    int flags;
    char *title;
-   /* If the coordinate system was specified, this contains a PROJ4 string
-    * describing it.  If not, this member will be NULL.
+   /* This contains a string describing the coordinate system which the data is
+    * in, suitable for passing to PROJ.  For a coordinate system with an EPSG
+    * code this will typically be "EPSG:" followed by the code number.
+    *
+    * If no coordinate system was specified then this member will be NULL.
     */
    char *cs;
    /* Older .3d format versions stored a human readable datestamp string.
@@ -290,8 +293,10 @@ img *img_read_stream_survey(FILE *stream, int (*close_func)(FILE*),
  *
  * title is the title
  *
- * cs is a PROJ4 string describing the coordinate system (or NULL to not
- * specify a coordinate system).
+ * cs is a string describing the coordinate system, suitable for passing to
+ * PROJ (or NULL to not specify a coordinate system).  For a coordinate system
+ * with an assigned EPSG code number, "EPSG:" followed by the code number is
+ * the recommended way to specify this.
  *
  * flags contains a bitwise-or of any file-wide flags - currently only one
  * is available: img_FFLAG_EXTENDED.
@@ -314,8 +319,10 @@ img *img_open_write_cs(const char *fnm, const char *title, const char * cs,
  *
  * title is the title
  *
- * cs is a PROJ4 string describing the coordinate system (or NULL to not
- * specify a coordinate system).
+ * cs is a string describing the coordinate system, suitable for passing to
+ * PROJ (or NULL to not specify a coordinate system).  For a coordinate system
+ * with an EPSG, "EPSG:" followed by the code number is the recommended way
+ * to specify this.
  *
  * flags contains a bitwise-or of any file-wide flags - currently only one
  * is available: img_FFLAG_EXTENDED.

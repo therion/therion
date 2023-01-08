@@ -4,13 +4,38 @@ endif()
 
 set(LOCH_DEFINITIONS _GNU_SOURCE LOCH "LX${THPLATFORM}" GL_SILENCE_DEPRECATION TBB_SUPPRESS_DEPRECATED_MESSAGES=1)
 
+# extern library img
+add_library(img img.h img.c)
+target_compile_definitions(img PUBLIC IMG_API_VERSION=1)
+target_link_libraries(img PRIVATE disable-warnings)
+
 # library common with therion
-add_library(common-utils STATIC icase.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx img.h img.c)
-target_compile_definitions(common-utils PUBLIC IMG_API_VERSION=1 PRIVATE ${LOCH_DEFINITIONS})
+add_library(common-utils STATIC icase.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx)
+target_compile_definitions(common-utils PRIVATE ${LOCH_DEFINITIONS})
+target_link_libraries(common-utils PUBLIC img enable-warnings)
 
 if (NOT BUILD_LOCH)
     return()
 endif()
+
+# Tiled Rendering library
+add_library(tr lxTR.h lxTR.c)
+target_compile_definitions(tr PUBLIC ${LOCH_DEFINITIONS})
+target_link_libraries(tr PUBLIC OpenGL::GL OpenGL::GLU 
+                         PRIVATE enable-warnings)
+
+# multiplatform rendering library
+if (WIN32)
+    add_library(R2 lxR2D.h lxR2D.c)
+    target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
+    target_compile_definitions(R2 PUBLIC ${LOCH_DEFINITIONS})
+elseif(${THPLATFORM} STREQUAL LINUX)
+    add_library(R2 lxR2P.h lxR2P.c)
+    target_link_libraries(R2 PUBLIC OpenGL::GL PRIVATE enable-warnings)
+    target_compile_definitions(R2 PUBLIC ${LOCH_DEFINITIONS})
+else()
+    add_library(R2 INTERFACE) # nothing to link on macOS
+endif()    
 
 # loch resource file
 if (WIN32)
@@ -24,7 +49,7 @@ endif()
 
 include(${CMAKE_SOURCE_DIR}/cmake/LochSources.cmake)
 # loch executable
-add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES} $<$<BOOL:${WIN32}>:lxR2D.c> $<$<STREQUAL:${THPLATFORM},LINUX>:lxR2P.c>)
+add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES})
 # we need to filter out include directories from wxWidgets cxx flags list, because we have to set them only as system headers to ignore warnings
 set(CXX_FLAGS_WITHOUT_INCLUDE_DIRS ${wxWidgets_CXX_FLAGS_LIST})
 list(FILTER CXX_FLAGS_WITHOUT_INCLUDE_DIRS EXCLUDE REGEX "-I/")
@@ -34,11 +59,11 @@ target_include_directories(loch PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(loch SYSTEM PRIVATE ${FREETYPE_INCLUDE_DIRS} ${wxWidgets_INCLUDE_DIRS} ${VTK_INCLUDE_DIRS} ${X11_INCLUDE_DIR})
 target_link_libraries(loch PRIVATE
     common-utils
+    tr
+    R2
     ${wxWidgets_LIBRARIES}
     ${VTK_LIBRARIES} 
     ${FREETYPE_LIBRARIES}
-    OpenGL::GL
-    OpenGL::GLU
     ${X11_LIBRARIES}
     $<$<BOOL:${WIN32}>:${CMAKE_CURRENT_BINARY_DIR}/loch.res>
 )

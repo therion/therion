@@ -2577,6 +2577,9 @@ $xth(me,menu,edit) add command -label [mc "Insert image"] \
 $xth(me,menu,edit) add separator
 $xth(me,menu,edit) add checkbutton -label [mc "Hide inactive scraps"] -variable xth(me,hinactives) -command xth_me_cmds_toggleishiding
 
+$xth(me,menu,edit) add separator
+$xth(me,menu,edit) add command -label [mc "Convert eligible lines to curves"] -command xth_me_cmds_line_allpoly2bezier
+
 set xth(me,menu,edit,undo) [$xth(me,menu,edit) index [mc "Undo"]]
 set xth(me,menu,edit,redo) [$xth(me,menu,edit) index [mc "Redo"]]
 set xth(me,menu,edit,zoom) [$xth(me,menu,edit) index [mc "Zoom 100 %"]]

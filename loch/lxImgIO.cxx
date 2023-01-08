@@ -310,16 +310,25 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
   cinfo.err = jpeg_std_error(&jerr.pub);
   jerr.pub.error_exit = my_error_exit;
 
-  /* Establish the setjmp return context for my_error_exit to use. */
-  if (setjmp(jerr.setjmp_buffer)) {
-    /* If we get here, the JPEG code has signaled an error.
-     * We need to clean up the JPEG object, close the input file, and return.
-     */
-    jpeg_destroy_decompress(&cinfo);
-    fclose(infile);
-    lxImgIOError = "error reading JPEG file";
+  /* Wrap call to setjmp() so its call frame does not contain local variables,
+     which may cause warnings with flag -Wclobbered/-Wextra. */
+  auto setjmp_wrapper = [&jerr, &cinfo, &infile]{
+    /* Establish the setjmp return context for my_error_exit to use. */
+    if (setjmp(jerr.setjmp_buffer)) {
+      /* If we get here, the JPEG code has signaled an error.
+      * We need to clean up the JPEG object, close the input file, and return.
+      */
+      jpeg_destroy_decompress(&cinfo);
+      fclose(infile);
+      lxImgIOError = "error reading JPEG file";
+      return false;
+    }
+    return true;
+  };
+
+  if (!setjmp_wrapper())
     return lxImageRGB();
-  }
+
   /* Now we can initialize the JPEG decompression object. */
   jpeg_create_decompress(&cinfo);
 
@@ -369,7 +378,7 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
 	img.height = cinfo.output_height;
 
 
-	img.data = (unsigned char*)malloc(cinfo.output_components * img.width * img.height);
+	img.data = (unsigned char*)malloc(static_cast<size_t>(cinfo.output_components) * img.width * img.height);
 	unsigned char* ptr = img.data;
 
   /* Here we use the library's state variable cinfo.output_scanline as the
@@ -409,7 +418,7 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
    */
 
   if (cinfo.output_components == 1) {
-	  unsigned char * new_data = (unsigned char*)malloc(3 * img.width * img.height);
+	  unsigned char * new_data = (unsigned char*)malloc(3UL * img.width * img.height);
 	  for(int r = 0; r < img.height; r++) {
 		  for(int c = 0; c < img.width; c++) {
 			  new_data[r * 3 * img.width + 3 * c] = img.data[r * img.width + c];

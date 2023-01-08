@@ -40,7 +40,6 @@
 
 typedef unsigned int warpp_t;
 const warpp_t ngbh_mask = ((warpp_t)(0x7))<<(8*sizeof(warpp_t)-3);
-const warpp_t indx_mask = ~ngbh_mask;
 
 
 therion::warp::plaquette_algo::plaquette_algo( )
@@ -661,15 +660,15 @@ therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned in
   // thprintf("U origin %6.2f %6.2f units %6.2f\n", mU0.m_x, mU0.m_y, mUUnit);
   // thprintf("UC origin %6.2f %6.2f units %6.2f\n", mUC.m_x, mUC.m_y, mUCUnit);
   // new way
-  warpp_t * pi = (warpp_t *)malloc( wd * hd * sizeof(warpp_t) );
+  warpp_t * pi = (warpp_t *)malloc( sizeof(warpp_t) * wd * hd );
   if ( pi != NULL ) {
-    memset( pi, 0xff, wd*hd*sizeof(warpp_t) );
-    double * pf = (double *)calloc( wd * hd, sizeof(double) );
+    memset( pi, 0xff, sizeof(warpp_t)*wd*hd );
+    double * pf = (double *)calloc( static_cast<size_t>(wd) * hd, sizeof(double) );
     if ( pf == NULL ) 
       thprintf("warning: failed to allocate temporary distance image\n");
 
     for (size_t k=0; k<mPlaquettes.size(); ++k ) {
-      assert( ( ( (warpp_t)k) & indx_mask) == (warpp_t)k );
+      assert( ( ( (warpp_t)k) & (~ngbh_mask)) == (warpp_t)k );
       // int cnt = 0;
       // thprintf("mapping plaquette %d\n", k );
       thvec2 t1, t2;

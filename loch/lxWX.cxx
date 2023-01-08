@@ -21,36 +21,12 @@ wxSize lxSize;
 wxPoint lxPoint;
 
 
-lxDoubleValidator::lxDoubleValidator(double * val, const double vmin, const double vmax, const wxChar * fmt) :
-	wxValidator() 
+lxDoubleValidator::lxDoubleValidator(double * val, const double vmin, const double vmax, const wxChar * fmt)
 {
 	this->m_variable = val;
 	this->m_vMin = vmin;
 	this->m_vMax = vmax;
   this->m_fmt = fmt;
-}
-
-
-lxDoubleValidator::lxDoubleValidator(const lxDoubleValidator & val) : 
-	wxValidator() 
-
-{
-	Copy(val);
-}
-
-bool lxDoubleValidator::Copy(const lxDoubleValidator& val)
-{
-	this->m_variable = val.m_variable;
-	this->m_vMin = val.m_vMin;
-	this->m_vMax = val.m_vMax;
-  this->m_fmt = val.m_fmt;
-  wxValidator::Copy(val);
-	return TRUE;
-	
-}
-
-lxDoubleValidator::~lxDoubleValidator()
-{
 }
 
     
@@ -100,32 +76,10 @@ bool lxDoubleValidator::TransferFromWindow()
 
 
 
-lxRadioBtnValidator::lxRadioBtnValidator(long * val, const long optval) :
-	wxValidator() 
+lxRadioBtnValidator::lxRadioBtnValidator(long * val, const long optval)
 {
 	this->m_variable = val;
 	this->m_variableValue = optval;
-}
-
-
-lxRadioBtnValidator::lxRadioBtnValidator(const lxRadioBtnValidator & val) : 
-	wxValidator() 
-
-{
-	Copy(val);
-}
-
-bool lxRadioBtnValidator::Copy(const lxRadioBtnValidator& val)
-{
-	this->m_variable = val.m_variable;
-	this->m_variableValue = val.m_variableValue;
-  wxValidator::Copy(val);
-	return TRUE;
-	
-}
-
-lxRadioBtnValidator::~lxRadioBtnValidator()
-{
 }
 
     

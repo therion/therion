@@ -44,10 +44,10 @@
 thmbuffer thparse_mbuff;
 
 template <typename Equality, typename Ordering>
-int binary_search_token(const std::string& token, const thstok *tab, const std::size_t tab_size, Equality equality, Ordering ordering)
+int binary_search_token(std::string_view token, const thstok *tab, const std::size_t tab_size, Equality equality, Ordering ordering)
 {
-  // comparator between thstok and string
-  auto compare_thstok = [&ordering](const thstok& a, const std::string& b){ return ordering(a.s, b); };
+  // comparator between thstok and string_view
+  auto compare_thstok = [&ordering](const thstok& a, std::string_view b){ return ordering(a.s, b); };
   // binary search, we leave out the last item
   auto it = std::lower_bound(tab, tab + tab_size - 1, token, compare_thstok);
   // if bound was found we also need to compare for equality
@@ -57,13 +57,13 @@ int binary_search_token(const std::string& token, const thstok *tab, const std::
   return tab[tab_size - 1].tok;
 }
 
-int thmatch_stok(const std::string& token, const thstok *tab, const std::size_t tab_size)
+int thmatch_stok(std::string_view token, const thstok *tab, const std::size_t tab_size)
 {
-  return binary_search_token(token, tab, tab_size, std::equal_to<std::string>(), std::less<std::string>());
+  return binary_search_token(token, tab, tab_size, std::equal_to<std::string_view>(), std::less<std::string_view>());
 }
 
 
-int thcasematch_stok(const std::string& token, const thstok *tab, const std::size_t tab_size)
+int thcasematch_stok(std::string_view token, const thstok *tab, const std::size_t tab_size)
 {
   return binary_search_token(token, tab, tab_size, icase_equals, icase_less_than);
 }
@@ -179,7 +179,8 @@ void thsplit_strings(thmbuffer * dest, const char * src, const char separator)
     idx0 = 0;
   dest->clear();
   short state = 0; // 0 before, 1 in
-  unsigned char * s1 = NULL, * s2 = (unsigned char *) src;
+  const char * s1 = nullptr;
+  const char * s2 = src;
   while (idx < srcl) {
     switch (state) {
       case 0:
@@ -211,7 +212,8 @@ void thsplit_paths(thmbuffer * dest, const char * src, char separator)
     idx0 = 0;
   dest->clear();
   short state = 0; // 0 before, 1 in
-  unsigned char * s1 = NULL, * s2 = (unsigned char *) src;
+  const char * s1 = nullptr;
+  const char * s2 = src;
   while (idx < srcl) {
     switch (state) {
       case 0:
@@ -259,7 +261,7 @@ void thsplit_args_postp_quotes(char * buf)
 
 void thsplit_args(thmbuffer * dest, const char * src)
 {
-  long srcl = strlen(src),
+  size_t srcl = strlen(src),
     idx = 0,
     idx0 = 0;
   dest->clear();
@@ -426,7 +428,7 @@ bool th_is_index(const char * str)
 bool th_is_keyword_list(const char * str, char sep)
 {
   size_t sl = strlen(str), i;
-  unsigned char * s = (unsigned char *) str;
+  const char * s = str;
   if (sl == 0)
     return false;
   else 
@@ -1261,7 +1263,7 @@ std::string ths2txt(const char * original, int lang, int encoding)
 }
 
 
-std::string ths2txt(std::string original, int lang, int encoding)
+std::string ths2txt(std::string original, int lang, int /*encoding*/)
 {
   // TODO: encoding conversion & al.
   return select_lang(original, thlang_getid(lang));

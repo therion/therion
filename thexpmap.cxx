@@ -44,14 +44,6 @@
 #include <stdio.h>
 #include "thtmpdir.h"
 #include "thtrans.h"
-#ifndef THMSVC
-#include <unistd.h>
-#else
-#include <direct.h>
-#define getcwd _getcwd
-#define chdir _chdir
-#define putenv _putenv
-#endif
 #include "thchenc.h"
 #include "thdb1d.h"
 #include "thinit.h"
@@ -77,8 +69,11 @@
 #include "thsvg.h"
 #include "extern/img.h"
 #include "thcs.h"
+#include <filesystem>
 
 #include <fmt/printf.h>
+
+namespace fs = std::filesystem;
 
 thexpmap::thexpmap() {
   this->format = TT_EXPMAP_FMT_UNKNOWN;
@@ -627,8 +622,7 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
             if (fabs(ns - 1.0) < 1e-8) {
               srcgif = skpic->convert("GIF", "gif", "");            
             } else {
-              srcgif = skpic->convert("GIF", "gif", "-resize %d", 
-                long(ns * double(skpic->width) + 0.5));            
+              srcgif = skpic->convert("GIF", "gif", fmt::format("-resize {}", long(ns * double(skpic->width) + 0.5)));
             }
             
             thprintf(" done\n");
@@ -866,51 +860,18 @@ void thexpmap::export_th2(class thdb2dprj * prj)
             if (fabs(ns - 1.0) < 1e-8) {
               srcgif = skpic->convert("GIF", "gif", "");            
             } else {
-              srcgif = skpic->convert("GIF", "gif", "-resize %d", 
-                long(ns * double(skpic->width) + 0.5));            
+              srcgif = skpic->convert("GIF", "gif", fmt::format("-resize {}", long(ns * double(skpic->width) + 0.5)));
             }
             
             if (srcgif != NULL) {              
-              size_t cpch, retcode;
-              thbuffer com;
-              char prevbf[11];
-              std::snprintf(&(prevbf[0]),11,"%03d",sknum);
               // Let's copy results and log-file to working directory
-#ifdef THWIN32
-              com = "copy \"";
-#else
-              com = "cp \"";
-#endif
-              com += srcgif;
-              com += "\" \"";
-              com += fnm;
-              com += ".";
-              com += &(prevbf[0]);
-              com += ".gif\"";
-
-#ifdef THWIN32
-              char * cpcmd;
-              cpcmd = com.get_buffer();
-              for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
-                if (cpcmd[cpch] == '/') {
-                  cpcmd[cpch] = '\\';
-                }
-              }
-#endif
-
 #ifdef THDEBUG
               thprintf("copying results\n");
 #endif
-              retcode = system(com.get_buffer());
-              if (retcode != EXIT_SUCCESS)
-                ththrow("cp exit code -- {}", retcode);
-              for(cpch = strlen(fnm); cpch > 0; cpch--) {
-                if ((fnm[cpch] == '/') || (fnm[cpch] == '\\')) {
-                  cpch++;
-                  break;
-                }
-              }
-              fprintf(pltf,"##XTHERION## xth_me_image_insert {%.2f 1 1.0} {%.2f {}} %s.%03d.gif 0 {}\n", nx, ny, &(fnm[cpch]), sknum++);
+              const fs::path new_file = fmt::format("{}.{:03}.gif", fnm, sknum++);
+              fs::remove(new_file); // workaround for MinGW bug, can't overwrite files
+              fs::copy(srcgif, new_file, fs::copy_options::overwrite_existing);
+              fprintf(pltf,"##XTHERION## xth_me_image_insert {%.2f 1 1.0} {%.2f {}} %s 0 {}\n", nx, ny, new_file.filename().string().c_str());
             }
 
             thprintf(" done\n");
@@ -1371,11 +1332,11 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
 //  fprintf(mpf,"etex;\n");
 
 //  fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
-if (ENC_NEW.NFSS==0)
+if (ENC_NEW.NFSS==0) {
   fprintf(mpf,"defaultfont:=\"%s\";\n",FONTS.begin()->ss.c_str());
-else
+} else {
   fprintf(mpf,"defaultfont:=\"thss00\";\n");
-  
+}
 //fprintf(mpf,"defaultscale:=0.8;\n\n");
 
   fprintf(mpf,"NorthDir:=\"%s\";\n", this->layout->north == TT_LAYOUT_NORTH_GRID ? "grid" : "true");
@@ -2213,10 +2174,8 @@ else
   fclose(tf);
 
   // teraz sa hodi do temp adresara - spusti metapost, thpdf, a pdftex a skopiruje vysledok
-  thbuffer com, wdir;
-  wdir.guarantee(1024);
-  thassert(getcwd(wdir.get_buffer(),1024) != NULL);
-  thassert(chdir(thtmp.get_dir_name()) == 0);
+  auto tmp_handle = thtmp.switch_to_tmpdir();
+  thbuffer com;
   
   // vypise kodovania
   print_fonts_setup();
@@ -2286,7 +2245,6 @@ else
     "####################### metapost log file ########################\n",
     "#################### end of metapost log file ####################\n",true);
     if (retcode != EXIT_SUCCESS) {
-      thassert(chdir(wdir.get_buffer()) == 0);
       ththrow("metapost exit code -- {}", retcode);
     }
   }
@@ -2297,14 +2255,6 @@ else
   else
     com = "thpdf";
 */
-
-
-#ifdef THWIN32
-      unsigned long cpch;
-      char * cpcmd;
-#endif
-
-
 
       switch (this->format) {
 
@@ -2334,50 +2284,29 @@ else
       "######################## pdftex log file #########################\n",
       "##################### end of pdftex log file #####################\n",false);
       if (retcode != EXIT_SUCCESS) {
-        thassert(chdir(wdir.get_buffer()) == 0);
         ththrow("pdftex exit code -- {}", retcode);
       }
 
       // Let's copy results and log-file to working directory
-      thassert(chdir(wdir.get_buffer()) == 0);
-#ifdef THWIN32
-      com = "copy \"";
-#else
-      com = "cp \"";
-#endif
-      com += thtmp.get_file_name("data.pdf");
-      com += "\" \"";
-      com += fnm;
-      com += "\"";
-
-#ifdef THWIN32
-      cpcmd = com.get_buffer();
-      for(cpch = 0; cpch < strlen(cpcmd); cpch++) {
-       if (cpcmd[cpch] == '/') {
-         cpcmd[cpch] = '\\';
-       }
-     }
-#endif
-
+      tmp_handle.switch_from_tmpdir();
 #ifdef THDEBUG
       thprintf("copying results\n");
 #endif
-      retcode = system(com.get_buffer());
-      if (retcode != EXIT_SUCCESS)
-        ththrow("cp exit code -- {}", retcode);
+      fs::remove(fnm); // workaround for MinGW bug, can't overwrite files
+      fs::copy(thtmp.get_file_name("data.pdf"), fnm, fs::copy_options::overwrite_existing);
       break;
       // END OF PDF POSTPROCESSING
 
     case TT_EXPMAP_FMT_SVG:
       thconvert_eps();
-      thassert(chdir(wdir.get_buffer()) == 0);
+      tmp_handle.switch_from_tmpdir();
       thsvg(fnm, 0, ldata);
       break;
       
 
     case TT_EXPMAP_FMT_XHTML:
       thconvert_eps();
-      thassert(chdir(wdir.get_buffer()) == 0);
+      tmp_handle.switch_from_tmpdir();
       thsvg(fnm, 1, ldata);
       break;
 
@@ -3072,6 +3001,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     tmppt.xt = (scrap->lxmin + scrap->lxmax) / 2.0;
     tmppt.yt = (scrap->lymin + scrap->lymax) / 2.0;
     thdb.buff_tmp = utf2tex(thobjectname_print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
+    fprintf(out->file,"drawoptions();\n");
     fprintf(out->file,"p_label(btex \\thlargesize %s etex,",thdb.buff_tmp.get_buffer());
     tmppt.export_mp(out);
     fprintf(out->file,",0.0,p_label_mode_debugscrap);\n");
@@ -3092,7 +3022,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
 
 #define tmp_alpha 0.75
 
-void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * prj)
+void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // TODO unused parameter prj
 {
 
   // prejde vsetky scrapy a nastavi im farbu na color_map_fg
@@ -3205,7 +3135,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
 //            curz += prj->shift_z;
           switch (this->layout->color_crit) {
             case TT_LAYOUT_CCRIT_MAP:
-              // vsetkym scrapom v kazdej priradi farbu
+              // assigns color to each scrap in each
               if (firstmapscrap) {
                 if (cmap->selection_color.defined) {
                   clr = cmap->selection_color;
@@ -3229,14 +3159,24 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
 //              thprintf("%s@%s->%.2f,%.2f,%.2f\n",cs->name,cs->fsptr->full_name,cs->R,cs->G,cs->B);
             break;
             case TT_LAYOUT_CCRIT_SCRAP:
-              // vsetkym scrapom v kazdej priradi farbu
-							switch (cmn % 6) {
+              // set a different random color for earch scrap
+							switch (cmn % 16) {
 								case 0:  clr = thlayout_color(1.0, 0.5, 0.5); break;
 								case 1:  clr = thlayout_color(0.5, 1.0, 0.5); break;
 								case 2:  clr = thlayout_color(0.5, 0.5, 1.0); break;
 								case 3:  clr = thlayout_color(1.0, 1.0, 0.0); break;
 								case 4:  clr = thlayout_color(0.0, 1.0, 1.0); break;
-								default: clr = thlayout_color(1.0, 0.0, 1.0); break;
+								case 5:  clr = thlayout_color(1.0, 0.0, 1.0); break;
+								case 6:  clr = thlayout_color(0.75, 1.0, 1.0); break;
+								case 7:  clr = thlayout_color(1.0, 0.75, 1.0); break;
+								case 8:  clr = thlayout_color(1.0, 1.0, 0.75); break;
+								case 9:  clr = thlayout_color(0.25, 0.75, 1.0); break;
+								case 10: clr = thlayout_color(0.25, 1.0, 0.75); break;
+								case 11: clr = thlayout_color(1.0, 0.75, 0.25); break;
+								case 12: clr = thlayout_color(0.75, 1.0, 0.25); break;
+                case 13: clr = thlayout_color(0.75, 0.25, 1.0); break;
+                case 14: clr = thlayout_color(1.0, 0.25, 0.75); break;
+                default: clr = thlayout_color(0.5, 0.25, 0.75); break;
 							}
               clr.alpha_correct(tmp_alpha);
               cs->clr = clr;
@@ -3272,7 +3212,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * pr
 }
 
 
-void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * prj)
+void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // TODO unused parameter prj
 {
 
   if (maps == NULL) {

@@ -20,7 +20,6 @@ set(LOCH_HEADERS
     lxSetup.h
     lxSTree.h
     lxSStats.h
-    lxTR.h
 )
 
 set(LOCH_SOURCES
@@ -40,7 +39,6 @@ set(LOCH_SOURCES
     lxSScene.cxx
     lxSView.cxx
     lxSStats.cxx
-    lxTR.c
 )
 
 set(LOCH_LOCALES bg cs de en_GB es fr it ru sk sl)
