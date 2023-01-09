@@ -1,5 +1,8 @@
 Therion 6.1.6 (in progress):
 
+therion:
+ * bugs fixed:
+   -  Incorrect output coordinates system [#482]
 
 --------------------------------------------------------------------------------
 
