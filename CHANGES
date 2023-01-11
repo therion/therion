@@ -1,8 +1,12 @@
-Therion 6.1.6 (in progress):
+Therion 6.1.6 (2023-01-11):
 
 therion:
  * bugs fixed:
    -  Incorrect output coordinates system [#482]
+   -  documentation fixes
+
+infrastructure:
+ * updated release script
 
 --------------------------------------------------------------------------------
 
