@@ -21,12 +21,12 @@
 If you want to compile Therion from source code and run it, you need
 (first three are required only during compilation):
 \list
-* GNU C/C++ compiler
-* GNU make
+* GNU C/C++ compiler or Clang
+* GNU make or CMake
 * Perl
 * Python 3
 * PROJ library (\www{https://proj.org/}). Supported versions are:
-  v4: 4.9.3; v5: 5.1.0 and newer; v6: 6.2.1 and newer; v7: 7.0.0 and newer.
+  v4: 4.9.3; v5: 5.1.0 and newer; v6: 6.2.1 and newer; 7.0.1 and newer.
 * Tcl/Tk 8.4.3 and newer (\www{https://www.tcl.tk}) with
   {\it BWidget} widget set  \hfil\break
   (\www{https://sourceforge.net/projects/tcllib/})
@@ -61,8 +61,8 @@ To compile Loch, you need
 
 \list
 * freetype 2 and newer; |pkg-config freetype2| must work
-* wxWidgets 2.6 and newer; |wx-config| must work
-* VTK 5.0 and newer
+* wxWidgets 3 and newer; |wx-config| must work
+* VTK 7.0 and newer
 * libjpeg, libpng, zlib
 \endlist
 
@@ -72,9 +72,9 @@ For Windows consider using MinGW and MSYS2 (\www{https://www.msys2.org/}).
 It's a distribution of GNU utilities with GNU make and GCC.
 (BTW, why not to use precompiled Windows version?)
 
-{\it Ubuntu}
+Installing dependencies to compile Therion on Ubuntu 20.04 or 22.04:
 
-Installing dependencies to compile Therion on Ubuntu 18.04 or 20.04:
+{\rightskip 0pt plus 3cm
   |sudo apt install|
   |bwidget|
   |cmake|
@@ -93,11 +93,11 @@ Installing dependencies to compile Therion on Ubuntu 18.04 or 20.04:
   |texlive-binaries|
   |texlive-metapost|
   |zlib1g-dev|.
+\par}
 
-{\it Fedora}
+Installing dependencies in Fedora 37:
 
-Installing dependencies in Fedora (tested on Fedora 37):
-
+{\rightskip 0pt plus 3cm
   |sudo dnf install|
   |brotli-devel|
   |bwidget|
@@ -119,11 +119,10 @@ Installing dependencies in Fedora (tested on Fedora 37):
   |tkimg|
   |vtk-devel|
   |wxGTK-devel|
+\par}
 
-Other necessary pre-compile configuration:
-\list
-* {\catcode`\=12|export CMAKE_C_COMPILER=gcc|}
-\endlist
+Check also |therion/.github/workflows/| for complete configurations
+for Ubuntu, Mac OS X and Windows.
 
 \subsubchapter Using CMake.
 
@@ -618,7 +617,7 @@ XTherion starts. The file is commented; see the comments for details.
    \MP\ in the `double' mode: practically no limit
 
    \TeX\ limit in registers mode:\[This is the default approach, in which the count registers
-   are used to store referenced to the graphic objects.]
+   are used to store references to the graphic objects.]
             $2\times pages + images + patterns + 6 (scraps + sections) < 32\,500$ when using pdf\TeX\
             (or approximately $65\,000$ when using Lua\TeX\[To use Lua\TeX,
             set |pdftex-path  "luatex"| in the initialization file.])
@@ -789,6 +788,10 @@ process them with Therion.
 * {\bf 2016}\Nobreak
 
   Dec: GitHub repository.
+
+* {\bf 2021}\Nobreak
+
+  Jul: Therion 6.0.0 --- Improved graphics (smooth colour transitions, coulour management).
 \endlist
 
 
