@@ -72,8 +72,9 @@ For Windows consider using MinGW and MSYS2 (\www{https://www.msys2.org/}).
 It's a distribution of GNU utilities with GNU make and GCC.
 (BTW, why not to use precompiled Windows version?)
 
-Here is an example for installing dependencies to compile Therion
-on Ubuntu 18.04 or 20.04:
+{\it Ubuntu}
+
+Installing dependencies to compile Therion on Ubuntu 18.04 or 20.04:
   |sudo apt install|
   |bwidget|
   |cmake|
@@ -92,6 +93,37 @@ on Ubuntu 18.04 or 20.04:
   |texlive-binaries|
   |texlive-metapost|
   |zlib1g-dev|.
+
+{\it Fedora}
+
+Installing dependencies in Fedora (tested on Fedora 37):
+
+  |sudo dnf install|
+  |brotli-devel|
+  |bwidget|
+  |cmake|
+  |g++|
+  |jbigkit-devel|
+  |krb5-devel|
+  |libidn2-devel|
+  |libjpeg-turbo-devel|
+  |libnghttp2|
+  |libnghttp2-devel|
+  |libpsl-devel|
+  |libssh-devel|
+  |libwebp-devel|
+  |openldap-devel|
+  |proj-devel|
+  |texlive-metapost|
+  |texlive-scheme-basic|
+  |tkimg|
+  |vtk-devel|
+  |wxGTK-devel|
+
+Other necessary pre-compile configuration:
+\list
+* {\catcode`\=12|export CMAKE_C_COMPILER=gcc|}
+\endlist
 
 \subsubchapter Using CMake.
 
