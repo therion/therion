@@ -537,7 +537,7 @@ void thdatabase::end_insert()
   if (this->csurveyptr->id != this->fsurveyptr->id) {
     thdb_revision_set_type::iterator ii = 
         this->revision_set.find(threvision(this->csurveyptr->id, 0));
-    therror(("%s [%d] -- incomplete survey - endsurvey pair -- %s",
+    therror(("%s [%lu] -- incomplete survey - endsurvey pair -- %s",
       ii->srcf.name, ii->srcf.line, this->csurveyptr->full_name))
   }
 }

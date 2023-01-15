@@ -1079,7 +1079,7 @@ void thpoint::parse_value(char * ss, bool is_dist) {
     case TT_POINT_TYPE_EXTRA:
       opt_ok = is_dist;
       if (!opt_ok) {
-          thwarning(("%s [%d] -- using -value with point extra is deprecated, please use -dist instead", this->source.name, this->source.line));
+          thwarning(("%s [%lu] -- using -value with point extra is deprecated, please use -dist instead", this->source.name, this->source.line));
     	  opt_ok = true;
       }
       break;

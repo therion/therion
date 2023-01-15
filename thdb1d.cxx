@@ -252,7 +252,7 @@ void thdb1d::scan_data()
                   else
                 	  bearing_sd = lei->bearing_sd;
                   if (abs(bearing_diff) > 3.0 * bearing_sd)
-                  	thwarning(("%s [%d] -- forwards and backwards bearing readings do not match -- %.2f > %.2f", lei->srcf.name, lei->srcf.line, bearing_diff, 2.0 * bearing_sd));
+                  	thwarning(("%s [%lu] -- forwards and backwards bearing readings do not match -- %.2f > %.2f", lei->srcf.name, lei->srcf.line, bearing_diff, 2.0 * bearing_sd));
 									// calculate average of two angles
                   //lei->bearing += lei->backbearing;
                   //lei->bearing = lei->bearing / 2.0;
