@@ -296,14 +296,16 @@ For legend displaying there are
   columns if |legend| option is set |on|
 \endlist
 
-North arrow and scale bar may be displayed using
+North arrow, altitude bar and scale bar may be displayed using
 
 \list
 * |\ifnortharrow| = conditional; true if map projection is plan and
   symbol north-arrow is not hidden in |layout|
-* |\ifscalebar| = conditional; true if the scalebar is not hidden
-* |\northarrow| = PDF form with the north arrow
-* |\scalebar| = PDF form with the scale bar
+* |\ifscalebar| = conditional; true if the scale bar is not hidden
+* |\ifaltitudebar| = conditional; true if the altitude bar is not hidden
+* |\northarrow| = macro containing PDF form with the north arrow
+* |\scalebar| = macro containing PDF form with the scale bar
+* |\altitudebar| = macro containing PDF form with the altitude bar
 \endlist
 
 There is a general-purpose macro for typesetting in multiple columns\[Not to be
@@ -350,14 +352,19 @@ It should contain one or more |\legendbox| invocations.
 The |\legendbox| macro has four parameters:
 coordinates ranging 0--100, alignment specification
 (N, E, S, W, NE, SE, SW, NW or C) and the content to be displayed.
+To show the content of variables marked as {\it count registers}
+or {\it token registers} in the previous chapter, you need to prefix them with |\the|.
 
 A simple example is
 
 |\def\maplayout{
   \legendbox{0}{100}{NW}{\northarrow}
+  \legendbox{100}{100}{W}{\the\thversion}
 }|
 
-which displays north arrow in the upper-left corner of the map sheet.
+which displays north arrow in the upper-left corner of the map sheet
+and the version of Therion in the upper-right corner.
+
 The fourth parameter may also be a |\loadpicture| macro, which includes
 a picture in PDF, JPEG or PNG format. Although it accepts a relative or
 absolute path, in some cases\[If you combine multiple layouts stored in different

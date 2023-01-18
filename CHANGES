@@ -1,5 +1,8 @@
 Therion 6.1.7 (in progress):
 
+therion:
+ * bugs fixed:
+   - thbook: document the usage of TeX registers [#485]
 
 --------------------------------------------------------------------------------
 
