@@ -983,8 +983,6 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   std::list<legendrecord>::iterator LEGENDITEM;
   legendrecord dummlr;
   LEGENDLIST.clear();
-  thbuffer texb;
-  texb.guarantee(128);
   unsigned symn = 0;
 
   for(int i = 0; i < thsymbolset_size; i++)
@@ -1012,11 +1010,10 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     LEGENDITEM = LEGENDLIST.insert(LEGENDLIST.end(),dummlr); \
     fprintf(mpf,"beginfig(%d);\n",sfig); \
     fprintf(mpf,"clean_legend_box;\n"); \
-    sprintf(texb.get_buffer(),"data.%d",sfig); \
     LEGENDITEM->idfig = (unsigned) sfig; \
     LEGENDITEM->idsym = (unsigned) mid; \
     LEGENDITEM->idnum = (unsigned) symn; \
-    LEGENDITEM->fname = texb.get_buffer(); \
+    LEGENDITEM->fname = fmt::sprintf("data.%d",sfig); \
     LEGENDITEM->name = thlegend_u2string(unsigned(symn++)); \
     LEGENDITEM->descr = txt; \
     sfig++;
@@ -1792,7 +1789,7 @@ void export_all_symbols()
   }
   hf << "</tr>\n";
   unsigned sx, fx;
-  char fname[100];
+  std::string fname;
   converted_data svgpict;
   double a,b,c,d;
   for(isym = 0; isym < thsymbolset_size; isym++) {
@@ -1808,8 +1805,8 @@ void export_all_symbols()
           if (thsymsets_count[iset] > 0) {
             fx = thsymsets_figure[sx][iset];
             if (fx > 0) {
-              sprintf(fname, "%s/data.%d", thtmp.get_dir_name(),fx);
-                    parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
+              fname = fmt::sprintf("%s/data.%d", thtmp.get_dir_name(),fx);
+              parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
               hf << "<td>\n";
          	    svgpict.print_svg(hf);
               hf << "</td>\n";
@@ -1819,7 +1816,7 @@ void export_all_symbols()
           }
         }
       } else {
-        sprintf(fname, "%s/data.%d", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
+        fname = fmt::sprintf("%s/data.%d", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
         parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
         hf << "<td bgcolor=\"#cccccc\" colspan=\"" << thsymsets_size << "\">";
         svgpict.print_svg(hf);

@@ -12,7 +12,7 @@ target_link_libraries(img PRIVATE disable-warnings)
 # library common with therion
 add_library(common-utils STATIC icase.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx)
 target_compile_definitions(common-utils PRIVATE ${LOCH_DEFINITIONS})
-target_link_libraries(common-utils PUBLIC img enable-warnings)
+target_link_libraries(common-utils PUBLIC img enable-warnings fmt::fmt)
 
 if (NOT BUILD_LOCH)
     return()

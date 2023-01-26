@@ -39,6 +39,8 @@
 #include <list>
 #include <filesystem>
 
+#include <fmt/printf.h>
+
 struct thsst {
   std::string name, fullname;
   thsurvey * survey;  
@@ -435,10 +437,7 @@ void thimport::import_file_img()
   if (this->filter != NULL)
     filterl = strlen(this->filter);
   thbuffer n1, n2;
-  thbuffer xb, yb, zb;
-    xb.guarantee(128);
-    yb.guarantee(128);
-    zb.guarantee(128);
+  std::string xb, yb, zb;
   std::string orig_name, new_name;  
   img* pimg = img_open(this->fname);
   if (pimg == NULL) {	
@@ -479,9 +478,9 @@ void thimport::import_file_img()
         if (strlen(stnm) < 1)
           break;
         if (svxs2ths.find(orig_name) == svxs2ths.end()) {
-          sprintf(xb.get_buffer(), "%.16g", imgpt.x + this->calib_x);
-          sprintf(yb.get_buffer(), "%.16g", imgpt.y + this->calib_y);
-          sprintf(zb.get_buffer(), "%.16g", imgpt.z + this->calib_z);
+          xb = fmt::sprintf("%.16g", imgpt.x + this->calib_x);
+          yb = fmt::sprintf("%.16g", imgpt.y + this->calib_y);
+          zb = fmt::sprintf("%.16g", imgpt.z + this->calib_z);
           tmpsurvey = this->db->csurveyptr;
           new_name = this->station_name(stnm, pimg->separator, &tmpsst);
           // thprintf("%s -> %s\n", pimg->label, new_name.c_str());
@@ -508,9 +507,9 @@ void thimport::import_file_img()
           tmpsst.fullname = new_name;
           svxpos2ths[tmppos] = tmpsst;
           svxs2ths[orig_name] = new_name;
-          args[1] = xb.get_buffer();
-          args[2] = yb.get_buffer();
-          args[3] = zb.get_buffer();
+          args[1] = xb.data();
+          args[2] = yb.data();
+          args[3] = zb.data();
           args[0] = n1.get_buffer();
           tmpdata->cs = this->cs;
           tmpdata->set_data_fix(4, args);
