@@ -867,7 +867,7 @@ void lxRenderFile::RenderPDFHeader()
 
   pdf_obj[4] = ftell(this->m_file);
   const auto tmp_buff = fmt::sprintf("q\n%.4f 0 0 %.4f 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
-  fprintf(this->m_file,"4 0 obj <<\n/Length %lu\n>>\nstream\n%sendstream\nendobj\n", tmp_buff.size(), tmp_buff.c_str());
+  fprintf(this->m_file,"4 0 obj <<\n/Length %u\n>>\nstream\n%sendstream\nendobj\n", static_cast<unsigned>(tmp_buff.size()), tmp_buff.c_str());
 
   pdf_obj[3] = ftell(this->m_file);
   fprintf(this->m_file,"3 0 obj <<\n/Type /Page\n/Contents 4 0 R\n/Resources 2 0 R\n/MediaBox [0 0 %.4f %.4f]\n/Parent 5 0 R\n>> endobj\n", imw, imh);
