@@ -10,6 +10,7 @@
 #include <list>
 #include <fstream>
 #include <filesystem>
+#include <fmt/printf.h>
 
 #endif  
 //LXDEPCHECK - standard libraries
@@ -21,9 +22,8 @@
 namespace fs = std::filesystem;
 
 double lxFilePrepDbl(double val) {
-  char tb[32];
-  snprintf(tb, 31, "%.12e", val);
-  return atof(tb);
+  std::string tb;
+  return atof(fmt::sprintf("%.12e", val).c_str());
 }
 
 

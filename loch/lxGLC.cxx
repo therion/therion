@@ -1276,9 +1276,9 @@ void lxGLCanvas::RenderOffList()
       // altitude
       if (this->setup->m_stlabel_altitude) {
         if (this->frame->m_iniUnits == 1) {
-          sprintf(&(strCBar[0]), "%.0f ft", st->pos.z / 0.3048);
+          snprintf(&(strCBar[0]), sizeof strCBar, "%.0f ft", st->pos.z / 0.3048);
         } else {
-          sprintf(&(strCBar[0]), "%.0f m", st->pos.z);
+          snprintf(&(strCBar[0]), sizeof strCBar, "%.0f m", st->pos.z);
         }
         if (cmnt.length() > 0) cmnt += ":";
         cmnt += strCBar;
@@ -1701,9 +1701,9 @@ void lxGLCanvas::RenderIDepthbar(double size)
     clrOutCntr();
     this->RenderILine(dbw, double(t) * size / 10.0, dbw + dbtw, double(t) * size / 10.0);
     if (this->frame->m_iniUnits == 1) {
-      sprintf(&(strCBar[0]), "%.0f ft", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])) / 0.3048);
+      snprintf(&(strCBar[0]), sizeof strCBar, "%.0f ft", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])) / 0.3048);
     } else {
-      sprintf(&(strCBar[0]), "%.0f m", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])));
+      snprintf(&(strCBar[0]), sizeof strCBar, "%.0f m", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])));
     }
     this->GetFontNumeric()->draw(this->m_indRes * dbw + lxFNTSW, this->m_indRes * (double(t) * size / 10.0) - 0.333 * lxFNTSH, strCBar);
   }
@@ -1761,11 +1761,11 @@ void lxGLCanvas::RenderIScalebar(double size)
 
 
     if (miles)
-      sprintf(&(strLen[0]),"%.0f mi", sblen);
+      snprintf(&(strLen[0]), sizeof strLen, "%.0f mi", sblen);
     else if (sblen > 4.0)
-      sprintf(&(strLen[0]),"%.0f ft", sblen);
+      snprintf(&(strLen[0]), sizeof strLen, "%.0f ft", sblen);
     else
-      sprintf(&(strLen[0]),"%g in", 12.0 * sblen);
+      snprintf(&(strLen[0]), sizeof strLen, "%g in", 12.0 * sblen);
 
   } else {
 
@@ -1779,13 +1779,13 @@ void lxGLCanvas::RenderIScalebar(double size)
     size = sblen / scale / this->m_indRes;
 
     if (sblen >= 10000.0)
-      sprintf(&(strLen[0]),"%.0f km", sblen / 1000.0);
+      snprintf(&(strLen[0]), sizeof strLen,"%.0f km", sblen / 1000.0);
     else if (sblen >= 4.0)
-      sprintf(&(strLen[0]),"%.0f m", sblen);
+      snprintf(&(strLen[0]), sizeof strLen,"%.0f m", sblen);
     else if (sblen >= 0.01)
-      sprintf(&(strLen[0]),"%.0f mm", sblen * 1000.0);
+      snprintf(&(strLen[0]), sizeof strLen,"%.0f mm", sblen * 1000.0);
     else
-      sprintf(&(strLen[0]),"%g mm", sblen * 1000.0);
+      snprintf(&(strLen[0]), sizeof strLen,"%g mm", sblen * 1000.0);
   }
 
 

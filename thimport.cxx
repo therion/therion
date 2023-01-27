@@ -479,9 +479,9 @@ void thimport::import_file_img()
         if (strlen(stnm) < 1)
           break;
         if (svxs2ths.find(orig_name) == svxs2ths.end()) {
-          sprintf(xb.get_buffer(), "%.16g", imgpt.x + this->calib_x);
-          sprintf(yb.get_buffer(), "%.16g", imgpt.y + this->calib_y);
-          sprintf(zb.get_buffer(), "%.16g", imgpt.z + this->calib_z);
+          snprintf(xb.get_buffer(), xb.size, "%.16g", imgpt.x + this->calib_x);
+          snprintf(yb.get_buffer(), yb.size, "%.16g", imgpt.y + this->calib_y);
+          snprintf(zb.get_buffer(), zb.size, "%.16g", imgpt.z + this->calib_z);
           tmpsurvey = this->db->csurveyptr;
           new_name = this->station_name(stnm, pimg->separator, &tmpsst);
           // thprintf("%s -> %s\n", pimg->label, new_name.c_str());

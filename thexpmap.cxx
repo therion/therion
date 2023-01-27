@@ -1577,7 +1577,7 @@ if (ENC_NEW.NFSS==0) {
                   // pred orezanim
                   if (exps.F > 0) {
                     fprintf(plf,"\t\t F => \"data.%ld\",\n",exps.F);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.F);
+                    snprintf(texb.get_buffer(), texb.size,"data.%ld",exps.F);
                     SCRAPITEM->F = texb.get_buffer();
                   }
 //                  else
@@ -1586,13 +1586,13 @@ if (ENC_NEW.NFSS==0) {
                   // orezavacia cesta a outlines
                   if (exps.B > 0) {
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.B);
+                    snprintf(texb.get_buffer(), texb.size,"data.%ld",exps.B);
                     SCRAPITEM->B = texb.get_buffer();
                     fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ldbg",exps.B);
+                    snprintf(texb.get_buffer(), texb.size,"data.%ldbg",exps.B);
                     SCRAPITEM->I = texb.get_buffer();
                     fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ldclip",exps.B);
+                    snprintf(texb.get_buffer(), texb.size,"data.%ldclip",exps.B);
                     SCRAPITEM->C = texb.get_buffer();
                   }
 //                  else {
@@ -1604,7 +1604,7 @@ if (ENC_NEW.NFSS==0) {
                   // po orezani
                   if (exps.E > 0) {
                     fprintf(plf,"\t\t E => \"data.%ld\",\n",exps.E);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.E);
+                    snprintf(texb.get_buffer(), texb.size, "data.%ld",exps.E);
                     SCRAPITEM->E = texb.get_buffer();
                   }
 //                  else
@@ -1612,10 +1612,10 @@ if (ENC_NEW.NFSS==0) {
     
                   if (exps.X > 0) {
                     fprintf(plf,"\t\t X => \"data.%ld\",\n",exps.X);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.X);
+                    snprintf(texb.get_buffer(), texb.size,"data.%ld",exps.X);
                     SCRAPITEM->X = texb.get_buffer();
                     fprintf(plf,"\t\t P => \"data.%ldbbox\",\n",exps.X);
-                    sprintf(texb.get_buffer(),"data.%ldbbox",exps.X);
+                    snprintf(texb.get_buffer(), texb.size,"data.%ldbbox",exps.X);
                     SCRAPITEM->P = texb.get_buffer();
                   }
 
@@ -1650,13 +1650,13 @@ if (ENC_NEW.NFSS==0) {
                     active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
       
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.B);
+                    snprintf(texb.get_buffer(), texb.size,"data.%ld",exps.B);
                     SCRAPITEM->B = texb.get_buffer();
                     fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ldbg",exps.B);
+                    snprintf(texb.get_buffer(), texb.size,"data.%ldbg",exps.B);
                     SCRAPITEM->I = texb.get_buffer();
                     fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ldclip",exps.B);
+                    snprintf(texb.get_buffer(), texb.size,"data.%ldclip",exps.B);
                     SCRAPITEM->C = texb.get_buffer();
                     //fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     //fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
@@ -1706,11 +1706,11 @@ if (ENC_NEW.NFSS==0) {
   	  break;
   }
 
-  sprintf(texb.get_buffer(),"data.%d",sfig);
+  snprintf(texb.get_buffer(), texb.size,"data.%d",sfig);
   LAYOUT.northarrow = texb.get_buffer();
   fprintf(mpf,"beginfig(%d);\ns_northarrow(%g);\nendfig;\n",sfig++,this->layout->rotate + rotate_plus);
 
-  sprintf(texb.get_buffer(),"data.%d",sfig);
+  snprintf(texb.get_buffer(), texb.size,"data.%d",sfig);
   LAYOUT.scalebar = texb.get_buffer();
   //std::snprintf(prevbf,127,"%g",sblen);
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
@@ -1725,7 +1725,7 @@ if (ENC_NEW.NFSS==0) {
     switch (this->layout->color_crit) {
       case TT_LAYOUT_CCRIT_ALTITUDE:
       case TT_LAYOUT_CCRIT_DEPTH:
-    	  sprintf(texb.get_buffer(),"data.%d",sfig);
+    	  snprintf(texb.get_buffer(), texb.size,"data.%d",sfig);
     	  LAYOUT.altitudebar = texb.get_buffer();
     	  sv_min = this->layout->m_lookup->m_table.begin()->m_valueDbl;
     	  for(const auto& ti : this->layout->m_lookup->m_table) {
@@ -1939,7 +1939,7 @@ if (ENC_NEW.NFSS==0) {
   if (this->layout->grid != TT_LAYOUT_GRID_OFF) {
 
 #define expgridscrap(varname,Xpos,Ypos) \
-    sprintf(texb.get_buffer(),"data.%d",sfig); \
+    snprintf(texb.get_buffer(), texb.size,"data.%d",sfig); \
     LAYOUT.varname = texb.get_buffer(); \
     fprintf(mpf,"beginfig(%d);\n%s(%d, %d, %.5f, %.5f);\nendfig;\n", \
     sfig++, grid_macro, Xpos, Ypos, ghs, gvs);

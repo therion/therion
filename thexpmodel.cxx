@@ -762,7 +762,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
             if (has_texture) {
               thbuffer tifn;
               tifn.guarantee(2048);
-              sprintf(tifn.get_buffer(), "%s.img%d.%s", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
+              snprintf(tifn.get_buffer(), tifn.size, "%s.img%d.%s", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
               auto texf = thopen_file(tifn.get_buffer(), "wb");
               auto xf = thopen_file(srfc->pict_name, "rb");
               if (texf != NULL) {

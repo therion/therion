@@ -384,7 +384,7 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
   while (prjli != db->db2d.prj_list.end()) {
 		projdir.strcpy("");
 		if ((prjli->type == TT_2DPROJ_ELEV) && (prjli->pp1 != 0.0)) {
-			sprintf(projdir.get_buffer(), "\\[%.1f\\]", prjli->pp1);
+			snprintf(projdir.get_buffer(), projdir.size, "\\[%.1f\\]", prjli->pp1);
 		}
     fprintf(cf,"xth_cp_map_tree_insert projection 0 p%d {} 0",prjli->id); 
     if (strlen(prjli->index) > 0)

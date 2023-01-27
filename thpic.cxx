@@ -152,7 +152,7 @@ const char * thpic::convert(const char * type, const char * ext, const std::stri
   bool isspc;
   char tmpfn[255];
   const char * tmpf;
-  sprintf(tmpfn, "pic%04ld.%s", thpic_convert_number++, ext);
+  snprintf(tmpfn, sizeof tmpfn, "pic%04ld.%s", thpic_convert_number++, ext);
   isspc = (strcspn(thini.get_path_convert()," \t") < strlen(thini.get_path_convert()));
   ccom = "";
   if (isspc) ccom += "\"";
@@ -249,7 +249,7 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
   tmp.width = this->width;
   tmp.height = this->height;
   char tmpfn[255];
-  sprintf(tmpfn, "pic%04ld.rgba", thpic_convert_number++);
+  snprintf(tmpfn, sizeof tmpfn, "pic%04ld.rgba", thpic_convert_number++);
   tmp.fname = thdb.strstore(thtmp.get_file_name(tmpfn));
   this->rgbafn = tmp.fname;
   FILE * f;
@@ -260,7 +260,7 @@ void thpic::rgba_save(const char * type, const char * ext, int colors)
     this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300 +dither -colors {}", this->width, this->height, colors));
   else
     this->fname = tmp.convert(type, ext, fmt::format("-define png:exclude-chunks=date,time -depth 8 -size {}x{} -density 300", this->width, this->height));
-  sprintf(tmpfn, "pic%04ld.%s", thpic_convert_number - 1, ext);
+  snprintf(tmpfn, sizeof tmpfn, "pic%04ld.%s", thpic_convert_number - 1, ext);
   this->texfname = thdb.strstore(tmpfn);
 }
 

@@ -866,7 +866,7 @@ void lxRenderFile::RenderPDFHeader()
   fprintf(this->m_file,"%%PDF-1.4\n");
 
   pdf_obj[4] = ftell(this->m_file);
-  sprintf(tmp_buff, "q\n%.4f 0 0 %.4f 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
+  snprintf(tmp_buff, sizeof tmp_buff, "q\n%.4f 0 0 %.4f 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
   fprintf(this->m_file,"4 0 obj <<\n/Length %u\n>>\nstream\n%sendstream\nendobj\n", (unsigned)strlen(tmp_buff), tmp_buff);
 
   pdf_obj[3] = ftell(this->m_file);

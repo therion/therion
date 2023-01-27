@@ -106,11 +106,11 @@ char * thobjectname::print_name()
   rv = pname.get_buffer();
   rv[0] = 0;
   if ((plen > 0) && (slen > 0)) {
-    sprintf(rv, "%s@%s", this->name, this->survey);
+    snprintf(rv, pname.size, "%s@%s", this->name, this->survey);
   } else if (plen > 0) {
-    sprintf(rv, "%s", this->name);
+    snprintf(rv, pname.size, "%s", this->name);
   } else if (slen > 0) {
-    sprintf(rv, "%s", this->survey);
+    snprintf(rv, pname.size, "%s", this->survey);
   }
   return rv;
 }
@@ -132,11 +132,11 @@ char * thobjectname_print_full_name(const char * oname, thsurvey * psrv, int sle
   rv = pname.get_buffer();
   rv[0] = 0;
   if ((plen > 0) && (slen > 0) && (slevel != 0)) {
-    sprintf(rv, "%s@%s", oname, sname);
+    snprintf(rv, pname.size, "%s@%s", oname, sname);
   } else if (plen > 0) {
-    sprintf(rv, "%s", oname);
+    snprintf(rv, pname.size, "%s", oname);
   } else if ((slen > 0) && (slevel != 0)) {
-    sprintf(rv, "%s", sname);
+    snprintf(rv, pname.size, "%s", sname);
   }
   if ((slen > 0) && (slevel > 0)) {
     start = (plen > 0 ? plen + 1 : 0);
