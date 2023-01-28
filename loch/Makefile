@@ -185,7 +185,7 @@ OBJECTS = $(addprefix $(LOUTDIR)/,$(POBJECTS)) $(addprefix $(LOUTDIR)/,$(CMNOBJE
 
 
 # linker settings
-LIBS = $(PLIBS)
+LIBS = $(PLIBS) -lfmt
 LDFLAGS = $(LDBFLAGS)
 
 
