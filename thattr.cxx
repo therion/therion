@@ -251,14 +251,14 @@ void thattr::copy_attributes(thattr_obj * object, long user_id)
 
 std::string expdbf_field_name(std::string name, std::set<std::string> & fset)
 {
-  std::string nn;
+  std::string nn, x;
   nn = name;
   int i;
   if (nn.length() > 11) {
+    i = 0;
     do {
-      i = 0;
-      const auto x = std::to_string(i);
-      nn = name.substr(0, 10 - x.size());
+      x = std::to_string(i);
+      nn = name.substr(0, 10 - x.length());
       nn += "_";
       nn += x;
       i++;
