@@ -14,7 +14,6 @@ CMNOBJECTS = \
   lxImgIO.o lxLRUD.o lxFile.o lxSTree.o \
   lxData.o lxMath.o lxSView.o lxSScene.o \
   lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o lxSStats.o \
-  ../extern/fmt/src/format.o ../extern/fmt/src/os.o \
   img.o
 
 EXT =
@@ -92,7 +91,7 @@ CXXPFLAGS = \
     -Wno-deprecated \
     $(shell $(WX_CONFIG) --cxxflags) \
     $(shell pkg-config freetype2 --cflags) \
-    -I$(VTKPATH) -I../extern/fmt/include
+    -I$(VTKPATH)
 CCPFLAGS = $(shell $(WX_CONFIG) --cflags)
 LXLIBDIR = linux
 PLIBS = $(shell $(WX_CONFIG) --libs --gl-libs) -L$(VTKLIBPATH) $(VTKLIBS) -lGLU -lGL -lpthread -lX11 -lz

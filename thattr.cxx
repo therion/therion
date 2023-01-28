@@ -251,14 +251,15 @@ void thattr::copy_attributes(thattr_obj * object, long user_id)
 
 std::string expdbf_field_name(std::string name, std::set<std::string> & fset)
 {
-  std::string nn, x;
+  std::string nn;
   nn = name;
   int i;
+  char x[20];
   if (nn.length() > 11) {
-    i = 0;
     do {
-      x = std::to_string(i);
-      nn = name.substr(0, 10 - x.length());
+      i = 0;
+      sprintf(x, "%d", i);
+      nn = name.substr(0, 10 - strlen(x));
       nn += "_";
       nn += x;
       i++;
@@ -314,13 +315,13 @@ void thattr::analyze_fields()
         case THATTR_INTEGER:
           cvall = ca->m_val_long;
           ca->m_val_double = double(cvall);
-          snprintf(b, sizeof b, "%ld", cvall);
+          sprintf(b,"%ld", cvall);
           ca->m_val_string = b;
           break;
         case THATTR_DOUBLE:
           cvald = ai->second.m_val_double;
           ca->m_val_long = long(cvald);
-          snprintf(b, sizeof b, "%f", cvald);
+          sprintf(b,"%f", cvald);
           ca->m_val_string = b;
           if (cf->m_type == THATTR_INTEGER)
             cf->m_type = THATTR_DOUBLE;

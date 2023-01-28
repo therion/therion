@@ -570,7 +570,6 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   thdb1ds * stp;
   char * lnbuff = new char [4097];
   char * numbuff = &(lnbuff[2049]);
-  size_t numbuff_size = 2042;
   unsigned long lnum = 0;
   thlog.printf("\n####################### cavern log file ########################\n");
   std::ifstream clf(lfnm);
@@ -654,7 +653,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
                   fonline = true;
                   tsbuff.strcat("\n");
                 }
-                snprintf(numbuff, numbuff_size, "%2ld> input:%ld -- %s [%ld]\n",lnum,csn,srcmi->second->name,srcmi->second->line);
+                sprintf(numbuff,"%2ld> input:%ld -- %s [%ld]\n",lnum,csn,srcmi->second->name,srcmi->second->line);
                 tsbuff.strcat(numbuff);
               }
               break;
@@ -662,14 +661,14 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
               csn--;
               if ((csn >= 0) && (csn < long(lsid))) {
                 if (fonline) {
-                  snprintf(numbuff, numbuff_size, "%2ld> ",lnum);
+                  sprintf(numbuff,"%2ld> ",lnum);
                   tsbuff.strcat(numbuff);
                   fonline = false;
                 }
                 else {
                   tsbuff.strcat(" -- ");
                 }
-                snprintf(numbuff, numbuff_size, "%ld : ",(csn+1));
+                sprintf(numbuff,"%ld : ",(csn+1));
                 stp = & (dbp->db1d.station_vec[(unsigned int)csn]);
                 tsbuff.strcat(numbuff);
                 tsbuff.strcat(stp->name);

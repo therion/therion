@@ -108,7 +108,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
   ccp = scrap->fcpp;
   while (ccp != NULL) {
     if ((ccp->point != NULL) && (ccp->st != NULL)) {
-      snprintf(n2sb.get_buffer(), n2sb.size,"%ld",ccp->st->uid);
+      sprintf(n2sb.get_buffer(),"%ld",ccp->st->uid);
       s = n2sb.get_buffer();
       TW.insert_point( THMORPH_STATION,	s,	
         thvec2(ccp->pt->x - sketch->m_x, sketch->m_y + double(sketch->m_pic.height) - ccp->pt->y),
@@ -125,8 +125,8 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
     thdataleg	*	dlg	=	lg->leg;
     fuid = thdb.db1d.station_vec[dlg->from.id - 1].uid;
     tuid = thdb.db1d.station_vec[dlg->to.id - 1].uid;
-    snprintf(n2sb.get_buffer(), n2sb.size,"%ld",fuid);
-    snprintf(n2sb2.get_buffer(), n2sb2.size,"%ld",tuid);
+    sprintf(n2sb.get_buffer(),"%ld",fuid);
+    sprintf(n2sb2.get_buffer(),"%ld",tuid);
     s = n2sb.get_buffer();
     s2 = n2sb2.get_buffer();
     if ((ssm.find(fuid) != ssm.end()) && (ssm.find(tuid) != ssm.end())) {
@@ -149,8 +149,8 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
 	    thprintf("warning: extra point from %s but no station\n",
 	      pointp->from_name.name );
 	  } else {
-            snprintf(n2sb2.get_buffer(), n2sb2.size,"%ld",fuid);
-            snprintf(n2sb.get_buffer(), n2sb.size,"%ld_E_%d",fuid, ++n_extra);
+            sprintf(n2sb2.get_buffer(),"%ld",fuid);
+            sprintf(n2sb.get_buffer(),"%ld_E_%d",fuid, ++n_extra);
             s  = n2sb.get_buffer(); 
             s2 = n2sb2.get_buffer();
 	    thdb2dpt * pt = pointp->point;

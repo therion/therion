@@ -1012,7 +1012,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
     LEGENDITEM = LEGENDLIST.insert(LEGENDLIST.end(),dummlr); \
     fprintf(mpf,"beginfig(%d);\n",sfig); \
     fprintf(mpf,"clean_legend_box;\n"); \
-    snprintf(texb.get_buffer(), texb.size, "data.%d",sfig); \
+    sprintf(texb.get_buffer(),"data.%d",sfig); \
     LEGENDITEM->idfig = (unsigned) sfig; \
     LEGENDITEM->idsym = (unsigned) mid; \
     LEGENDITEM->idnum = (unsigned) symn; \
@@ -1808,7 +1808,7 @@ void export_all_symbols()
           if (thsymsets_count[iset] > 0) {
             fx = thsymsets_figure[sx][iset];
             if (fx > 0) {
-              snprintf(fname, sizeof fname, "%s/data.%d", thtmp.get_dir_name(),fx);
+              sprintf(fname, "%s/data.%d", thtmp.get_dir_name(),fx);
                     parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
               hf << "<td>\n";
          	    svgpict.print_svg(hf);
@@ -1819,7 +1819,7 @@ void export_all_symbols()
           }
         }
       } else {
-        snprintf(fname, sizeof fname, "%s/data.%d", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
+        sprintf(fname, "%s/data.%d", thtmp.get_dir_name(),thsymsets_figure[sx][thsymsets_size]);
         parse_eps(fname,"",0,0,a,b,c,d,svgpict,30);
         hf << "<td bgcolor=\"#cccccc\" colspan=\"" << thsymsets_size << "\">";
         svgpict.print_svg(hf);
