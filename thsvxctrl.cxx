@@ -45,6 +45,8 @@
 #include <string>
 #include <fstream>
 
+#include <fmt/printf.h>
+
 #define THPI 3.1415926535898
 
 thsvxctrl::thsvxctrl()
@@ -569,7 +571,7 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
   thbuffer tsbuff;
   thdb1ds * stp;
   char * lnbuff = new char [4097];
-  char * numbuff = &(lnbuff[2049]);
+  std::string numbuff;
   unsigned long lnum = 0;
   thlog.printf("\n####################### cavern log file ########################\n");
   std::ifstream clf(lfnm);
@@ -653,24 +655,24 @@ void thsvxctrl::transcript_log_file(class thdatabase * dbp, const char * lfnm)
                   fonline = true;
                   tsbuff.strcat("\n");
                 }
-                sprintf(numbuff,"%2ld> input:%ld -- %s [%ld]\n",lnum,csn,srcmi->second->name,srcmi->second->line);
-                tsbuff.strcat(numbuff);
+                numbuff = fmt::sprintf("%2ld> input:%ld -- %s [%ld]\n",lnum,csn,srcmi->second->name,srcmi->second->line);
+                tsbuff.strcat(numbuff.c_str());
               }
               break;
             case THSVXLOGNUM_STATION:
               csn--;
               if ((csn >= 0) && (csn < long(lsid))) {
                 if (fonline) {
-                  sprintf(numbuff,"%2ld> ",lnum);
-                  tsbuff.strcat(numbuff);
+                  numbuff = fmt::sprintf("%2ld> ",lnum);
+                  tsbuff.strcat(numbuff.c_str());
                   fonline = false;
                 }
                 else {
                   tsbuff.strcat(" -- ");
                 }
-                sprintf(numbuff,"%ld : ",(csn+1));
+                numbuff = fmt::sprintf("%ld : ",(csn+1));
                 stp = & (dbp->db1d.station_vec[(unsigned int)csn]);
-                tsbuff.strcat(numbuff);
+                tsbuff.strcat(numbuff.c_str());
                 tsbuff.strcat(stp->name);
                 tsbuff.strcat("@");
                 tsbuff.strcat(stp->survey->get_full_name());

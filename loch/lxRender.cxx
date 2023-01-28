@@ -39,6 +39,8 @@
 #include "lxGUI.h"
 #include "lxFile.h"
 
+#include <fmt/printf.h>
+
 #define lxRENDERBORDER this->m_glc->TRCGet(TR_TILE_BORDER)
 
 //#ifdef LXLINUX
@@ -860,14 +862,12 @@ void lxRenderFile::RenderPDFHeader()
   double imw, imh;
   imw = 72.0 * this->m_imgWidth / imgRes;
   imh = 72.0 * this->m_imgHeight / imgRes;
-  char tmp_buff[256];
-
 
   fprintf(this->m_file,"%%PDF-1.4\n");
 
   pdf_obj[4] = ftell(this->m_file);
-  sprintf(tmp_buff, "q\n%.4f 0 0 %.4f 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
-  fprintf(this->m_file,"4 0 obj <<\n/Length %u\n>>\nstream\n%sendstream\nendobj\n", (unsigned)strlen(tmp_buff), tmp_buff);
+  const auto tmp_buff = fmt::sprintf("q\n%.4f 0 0 %.4f 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
+  fprintf(this->m_file,"4 0 obj <<\n/Length %u\n>>\nstream\n%sendstream\nendobj\n", static_cast<unsigned>(tmp_buff.size()), tmp_buff.c_str());
 
   pdf_obj[3] = ftell(this->m_file);
   fprintf(this->m_file,"3 0 obj <<\n/Type /Page\n/Contents 4 0 R\n/Resources 2 0 R\n/MediaBox [0 0 %.4f %.4f]\n/Parent 5 0 R\n>> endobj\n", imw, imh);

@@ -32,6 +32,8 @@
 #include "thdataobject.h"
 #include "thsurvey.h"
 
+#include <fmt/printf.h>
+
 thobjectname::thobjectname()
 {
   this->clear();
@@ -95,58 +97,53 @@ void fprintf(FILE * fh, thobjectname & ds)
 }
 
 
-char * thobjectname::print_name()
+std::string thobjectname::print_name()
 {
-  static thbuffer pname;
-  size_t plen, slen;
-  char * rv;
-  plen = (this->name != NULL ? strlen(this->name) : 0);
-  slen = (this->survey != NULL ? strlen(this->survey) : 0);
-  pname.guarantee(plen + slen + 1);
-  rv = pname.get_buffer();
-  rv[0] = 0;
-  if ((plen > 0) && (slen > 0)) {
-    sprintf(rv, "%s@%s", this->name, this->survey);
-  } else if (plen > 0) {
-    sprintf(rv, "%s", this->name);
-  } else if (slen > 0) {
-    sprintf(rv, "%s", this->survey);
+  std::string name_str, survey_str;
+  if (this->name) {
+    name_str = this->name;
   }
-  return rv;
+  if (this->survey) {
+    survey_str = this->survey;
+  }
+  if (!name_str.empty() && !survey_str.empty()) {
+    return fmt::sprintf("%s@%s", name_str, survey_str);
+  }
+  if (!name_str.empty()) {
+    return name_str;
+  }
+  return survey_str;
 }
   
 
-char * thobjectname_print_full_name(const char * oname, thsurvey * psrv, int slevel)
+std::string thobjectname_print_full_name(const char * oname_ptr, thsurvey * psrv, int slevel)
 {
-  static thbuffer pname;
-  size_t plen, slen, start, cx, tx;
-  int clevel;
-  char * rv;
-  const char * sname;
-  sname = NULL;
-  if (psrv != NULL) 
+  std::string_view sname;
+  std::string_view oname;
+  if (psrv && psrv->get_full_name()) {
     sname = psrv->get_full_name();
-  plen = (oname != NULL ? strlen(oname) : 0);
-  slen = (sname != NULL ? strlen(sname) : 0);
-  pname.guarantee(plen + slen + 1);
-  rv = pname.get_buffer();
-  rv[0] = 0;
-  if ((plen > 0) && (slen > 0) && (slevel != 0)) {
-    sprintf(rv, "%s@%s", oname, sname);
-  } else if (plen > 0) {
-    sprintf(rv, "%s", oname);
-  } else if ((slen > 0) && (slevel != 0)) {
-    sprintf(rv, "%s", sname);
   }
-  if ((slen > 0) && (slevel > 0)) {
-    start = (plen > 0 ? plen + 1 : 0);
-    clevel = 0;
-    tx = strlen(rv);
-    for(cx = start; cx < tx; cx++) {
+  if (oname_ptr) {
+    oname = oname_ptr;
+  }
+
+  std::string rv;
+  size_t start = 0;
+  if (!oname.empty() && !sname.empty() && (slevel != 0)) {
+    rv = fmt::sprintf("%s@%s", oname, sname);
+    start = oname.size() + 1;
+  } else if (!oname.empty()) {
+    rv = oname;
+  } else if (!sname.empty() && (slevel != 0)) {
+    rv = sname;
+  }
+  if (!sname.empty() && (slevel > 0)) {
+    int clevel = 0;
+    for(size_t cx = start; cx < rv.size(); cx++) {
       if (rv[cx] == '.') {
         clevel++;
         if (clevel == slevel)  {
-          rv[cx] = 0;
+          rv = rv.substr(0, cx);
           break;
         }
       }
@@ -155,7 +152,7 @@ char * thobjectname_print_full_name(const char * oname, thsurvey * psrv, int sle
   return rv;
 }
 
-char * thobjectname::print_full_name(int slevel)
+std::string thobjectname::print_full_name(int slevel)
 {
   return thobjectname_print_full_name(this->name, this->psurvey, slevel);
 }

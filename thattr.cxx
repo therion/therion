@@ -301,7 +301,6 @@ void thattr::analyze_fields()
   double cvald;
   size_t cslen;
   int ctype;
-  char b[64];
   thattr_attr * ca;
   thattr_obj_list::iterator oi;
   thattr_id2attr_map::iterator ai;
@@ -314,14 +313,12 @@ void thattr::analyze_fields()
         case THATTR_INTEGER:
           cvall = ca->m_val_long;
           ca->m_val_double = double(cvall);
-          sprintf(b,"%ld", cvall);
-          ca->m_val_string = b;
+          ca->m_val_string = std::to_string(cvall);
           break;
         case THATTR_DOUBLE:
           cvald = ai->second.m_val_double;
           ca->m_val_long = long(cvald);
-          sprintf(b,"%f", cvald);
-          ca->m_val_string = b;
+          ca->m_val_string = std::to_string(cvald);
           if (cf->m_type == THATTR_INTEGER)
             cf->m_type = THATTR_DOUBLE;
           break;
