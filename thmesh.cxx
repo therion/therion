@@ -180,7 +180,7 @@ void thmesh::check_stations()
 		ds1 = &(thdb.db1d.station_vec[it->name.id - 1]);
 		ds2 = &(thdb.db1d.station_vec[it2->name.id - 1]);
 		if ((ds1->x == ds2->x) && (ds1->y == ds2->y) && (ds1->z == ds2->z)) {
-			ththrow("{} -- {} -- duplicate points in picture calibration", it->src.throw_source(), it2->src.throw_source());
+			ththrow("{} -- {} -- duplicate points in picture calibration", it->src.to_string(), it2->src.to_string());
 		}
 	  }
   }
