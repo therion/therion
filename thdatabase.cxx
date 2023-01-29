@@ -47,6 +47,7 @@
 #include "tharea.h"
 #include "thjoin.h"
 #include "thmap.h"
+#include "thmesh.h"
 #include "thimport.h"
 #include "thsurface.h"
 #include "thendscrap.h"
@@ -503,6 +504,9 @@ std::unique_ptr<thdataobject> thdatabase::create(const char * oclass,
     case TT_MAP_CMD:
       return create<thmap>(osrc);
       
+    case TT_MESH_CMD:
+        return create<thmesh>(osrc);
+
     case TT_IMPORT_CMD:
       return create<thimport>(osrc);
       

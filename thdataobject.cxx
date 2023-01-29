@@ -214,6 +214,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
         case TT_DATA_CMD:
         case TT_SURVEY_CMD:
         case TT_MAP_CMD:
+        case TT_MESH_CMD:
         case TT_SCRAP_CMD:
         case TT_GRADE_CMD:
         case TT_LAYOUT_CMD:
@@ -231,6 +232,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
     case TT_DATAOBJECT_AUTHOR:
       switch (this->get_class_id()) {
         case TT_DATA_CMD:
+        case TT_MESH_CMD:
         case TT_SCRAP_CMD:
           if (cod.nargs > 2)
             ththrow("too many option arguments -- author");
@@ -250,6 +252,7 @@ void thdataobject::set(thcmd_option_desc cod, char ** args, int argenc, unsigned
     case TT_DATAOBJECT_COPYRIGHT:
       switch (this->get_class_id()) {
         case TT_DATA_CMD:
+        case TT_MESH_CMD:
         case TT_SCRAP_CMD:
           if (cod.nargs > 2)
             ththrow("too many option arguments -- copyright");
@@ -312,7 +315,7 @@ const char * thdataobject::get_title()
 
 std::string thdataobject::throw_source() const
 {
-  return fmt::format("{} [{}]", source.name, source.line);
+  return this->source.to_string();
 }
 
 void thdataobject::self_print(FILE * outf)

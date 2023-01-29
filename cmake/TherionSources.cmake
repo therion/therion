@@ -75,6 +75,7 @@ set(THERION_HEADERS
     ${CMAKE_SOURCE_DIR}/thmap.h
     ${CMAKE_SOURCE_DIR}/thmapstat.h
     ${CMAKE_SOURCE_DIR}/thmbuffer.h
+    ${CMAKE_SOURCE_DIR}/thmesh.h
     ${CMAKE_SOURCE_DIR}/thobjectid.h
     ${CMAKE_SOURCE_DIR}/thobjectname.h
     ${CMAKE_SOURCE_DIR}/thobjectsrc.h
@@ -190,6 +191,7 @@ set(THERION_SOURCES
     ${CMAKE_SOURCE_DIR}/thmap.cxx
     ${CMAKE_SOURCE_DIR}/thmapstat.cxx
     ${CMAKE_SOURCE_DIR}/thmbuffer.cxx
+    ${CMAKE_SOURCE_DIR}/thmesh.cxx
     ${CMAKE_SOURCE_DIR}/thobjectid.cxx
     ${CMAKE_SOURCE_DIR}/thobjectname.cxx
     ${CMAKE_SOURCE_DIR}/thobjectsrc.cxx

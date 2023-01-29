@@ -30,6 +30,7 @@
 #define thobjectsrc_h
 
 #include <cstdlib>
+#include <string>
 
 
 /**
@@ -57,6 +58,13 @@ class thobjectsrc {
    */
   
   thobjectsrc(const char * n, unsigned long ln) : name(n), line(ln), context(NULL) {}
+
+
+  /**
+   * Get object source location.
+   */
+
+  std::string to_string() const;
 
 
   bool is_valid();

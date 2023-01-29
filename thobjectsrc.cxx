@@ -26,11 +26,17 @@
  */
  
 #include <cstring>
+#include <fmt/core.h>
 #include "thobjectsrc.h"
 
 
 bool thobjectsrc::is_valid() {
   return (strlen(this->name) > 0);
+}
+
+std::string thobjectsrc::to_string()
+{
+	return fmt::format("{} [{}]", this->name, this->line);
 }
 
 
