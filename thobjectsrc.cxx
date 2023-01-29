@@ -34,7 +34,7 @@ bool thobjectsrc::is_valid() {
   return (strlen(this->name) > 0);
 }
 
-std::string thobjectsrc::to_string()
+std::string thobjectsrc::to_string() const
 {
 	return fmt::format("{} [{}]", this->name, this->line);
 }
