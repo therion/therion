@@ -73,6 +73,4 @@ struct encodings_new {
 
 extern encodings_new ENC_NEW;
 
-const char * utf2tex (const char * s, bool b = false);
-
 #endif
