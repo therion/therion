@@ -562,7 +562,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
 					thpoint_export_mp_align2mp(thdb2d_rotate_align(this->align, xrr)));
         out->layout->export_mptex_font_size(out->file, this, false);
         fprintf(out->file,"%s etex,",
-					utf2tex(out->layout->units.format_length(this->xsize - out->layout->goz)));
+					utf2tex(out->layout->units.format_length(this->xsize - out->layout->goz)).c_str());
         postprocess_label = "p_label_mode_altitude";
       }
       postprocess = false;
@@ -611,11 +611,11 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           //  sprintf(buff,"%.1f",this->xsize);
           //else
           //  sprintf(buff,"%.0f",this->xsize);
-          fprintf(out->file,"%s",utf2tex(out->layout->units.format_human_length(this->xsize)));
+          fprintf(out->file,"%s",utf2tex(out->layout->units.format_human_length(this->xsize)).c_str());
         }
         this->db->buff_enc.strcpy((this->tags & (TT_POINT_TAG_HEIGHT_PQ |
             TT_POINT_TAG_HEIGHT_NQ | TT_POINT_TAG_HEIGHT_UQ)) != 0 ? "?" : "" );
-        fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc.get_buffer()));
+        fprintf(out->file,"%s etex,",utf2tex(this->db->buff_enc.get_buffer()).c_str());
         postprocess_label = "p_label_mode_height";
       }
       postprocess = false;
@@ -641,7 +641,7 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
         out->layout->export_mptex_font_size(out->file, this, false);
 
         fprintf(out->file,"%s etex,",
-            utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_LOCALE)));
+            utf2tex(((thdate *)this->text)->get_str(TT_DATE_FMT_LOCALE)).c_str());
         postprocess_label = "p_label_mode_date";
       }
       postprocess = false;
@@ -703,14 +703,14 @@ bool thpoint::export_mp(class thexpmapmpxs * out)
           fprintf(out->file,"{");
           out->layout->export_mptex_font_size(out->file, this, false);
 
-          fprintf(out->file,"%s}", utf2tex(out->layout->units.format_human_length(this->xsize)));
+          fprintf(out->file,"%s}", utf2tex(out->layout->units.format_human_length(this->xsize)).c_str());
         }
 
         if (!thisnan(this->ysize)) {
           fprintf(out->file,"{");
           out->layout->export_mptex_font_size(out->file, this, false);
 
-          fprintf(out->file,"%s}", utf2tex(out->layout->units.format_human_length(this->ysize)));
+          fprintf(out->file,"%s}", utf2tex(out->layout->units.format_human_length(this->ysize)).c_str());
         }
 
         fprintf(out->file," etex,");

@@ -1701,7 +1701,7 @@ if (ENC_NEW.NFSS==0) {
   LAYOUT.scalebar = fmt::sprintf("data.%d",sfig);
   //std::snprintf(prevbf,127,"%g",sblen);
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
-    sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()));
+    sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()).c_str());
 
 
   // print altitudebar
@@ -2096,7 +2096,7 @@ if (ENC_NEW.NFSS==0) {
   //  tit.strcpy(LAYOUT.doc_title.c_str());
     
   tf = fopen(thtmp.get_file_name("th_texts.tex"),"w");
-  fprintf(tf,"\\legendtitle={%s}\n",utf2tex(thT("title legend",this->layout->lang)));
+  fprintf(tf,"\\legendtitle={%s}\n",utf2tex(thT("title legend",this->layout->lang)).c_str());
   ldata.legendtitle = thT("title legend",this->layout->lang);
 
   ldata.colorlegendtitle = "";
@@ -2129,7 +2129,7 @@ if (ENC_NEW.NFSS==0) {
     if ((this->layout->m_lookup != NULL) && (strlen(this->layout->m_lookup->m_title) > 0)) {
       ldata.colorlegendtitle = this->layout->m_lookup->m_title;
     }
-    fprintf(tf,"\\colorlegendtitle={%s}\n", utf2tex(ldata.colorlegendtitle.c_str()));
+    fprintf(tf,"\\colorlegendtitle={%s}\n", utf2tex(ldata.colorlegendtitle.c_str()).c_str());
   }
 
   // ak neni atlas, tak nastavi legendcavename
@@ -2939,7 +2939,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 lp->export_nextcp_mp(out);
                 thdb.buff_enc.guarantee(4096);
                 //sprintf(thdb.buff_enc.get_buffer(),"%.0f",lp->rsize - out->layout->goz);
-                fprintf(out->file,",btex \\thwallaltitude %s etex);\n",utf2tex(out->layout->units.format_length(lp->rsize - out->layout->goz)));
+                fprintf(out->file,",btex \\thwallaltitude %s etex);\n",utf2tex(out->layout->units.format_length(lp->rsize - out->layout->goz)).c_str());
 //                fprintf(out->file,",\"%.0f\");\n",lp->rsize);
               }
               lp = lp->nextlp;
