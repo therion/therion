@@ -858,4 +858,12 @@ def p_pillars_UIS(expr pos,theta,sc,al) =
     endfor;
 enddef;
 
+def p_mud_NSS(expr pos,theta,sc,al) =
+    U:=(.2u, .7u);
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    pickup PenC;
+    thdraw (-.7u, .2u) -- (-.2u, .2u);
+    thdraw (-.3u, -.2u) -- (.3u, -.2u);
+    thdraw (.2u, .2u) -- (.7u, .2u);
+enddef;
 

@@ -1195,3 +1195,40 @@ def l_viaferrata_SKBB (expr P) =
   draw P withcolor red;
 enddef;
 
+let l_chimney_NSS = l_ceilingstep_UIS;
+
+def l_wall_pit_NSS (expr P) =
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 0.25u);
+  pickup PenC;
+  forever:
+    t := arctime cas of P;
+    mark_ (P,t,0.2u);
+    cas := cas + mojkrok;
+    exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+  endfor;
+  pickup PenA;
+  thdraw P;
+enddef;
+
+
+def l_pitchimney_NSS (expr P) =
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 0.5u);
+  pickup PenD;
+  forever:
+    t := arctime cas of P;
+    mark_ (P,t,0.2u);
+    mark_ (P,t,-0.2u);
+    cas := cas + mojkrok;
+    exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+  endfor;
+  pickup PenC;
+  thdraw P;
+enddef;
+
+
