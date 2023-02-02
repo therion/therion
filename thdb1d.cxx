@@ -50,7 +50,7 @@
 #include "thcs.h"
 #include "thgeomag.h"
 #include "thgeomagdata.h"
-#include "quickhull/QuickHull.hpp"
+#include "QuickHull.hpp"
 
 //#define THUSESVX
 //#define THDEBUG
