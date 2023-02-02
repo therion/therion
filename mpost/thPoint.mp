@@ -270,7 +270,7 @@ def p_narrowend_UIS (expr pos,theta,sc,al)=
 enddef;
 
 def p_narrowend_NSS (expr pos,theta,sc,al)=
-	p_smartlabel ("TT", pos);
+	p_label ("TT", pos, theta, 0);
 enddef;
 % common passage ends in NSS:
 % TT too tight
@@ -280,7 +280,7 @@ enddef;
 % MF "mud flow" (clay choke)
 
 def p_claychoke_NSS (expr pos,theta,sc,al)=
-	p_smartlabel ("MF", pos);
+	p_label ("MF", pos, theta, 0);
 enddef;
 
 def p_lowend_UIS (expr pos,theta,sc,al)=
