@@ -1566,15 +1566,15 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_point(SYMP_HANDRAIL,thT("point handrail",layout->lang));
   legend_eqline(SYML_HANDRAIL,thT("line handrail",layout->lang));
   legend_point(SYMP_CAMP,thT("point camp",layout->lang));
-  legend_eqline(SYML_ABYSSENTRANCE,thT("line abyss-entrance",layout->lang));
-  legend_eqline(SYML_DRIPLINE,thT("line dripline",layout->lang));
-  legend_eqline(SYML_FAULT,thT("line fault",layout->lang));
+  legend_step(SYML_ABYSSENTRANCE,thT("line abyss-entrance",layout->lang));
+  legend_step(SYML_DRIPLINE,thT("line dripline",layout->lang));
+  legend_step(SYML_FAULT,thT("line fault",layout->lang));
   legend_eqline(SYML_JOINT,thT("line joint",layout->lang));
-  legend_eqline(SYML_LOWCEILING,thT("line low-ceiling",layout->lang));
-  legend_eqline(SYML_PITCHIMNEY,thT("line pit-chimney",layout->lang));
-  legend_eqline(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
-  legend_eqline(SYML_RIMSTONEPOOL,thT("line rimstone-pool",layout->lang));
-  legend_eqline(SYML_WALKWAY,thT("line walkway",layout->lang));
+  legend_step(SYML_LOWCEILING,thT("line low-ceiling",layout->lang));
+  legend_cycle(SYML_PITCHIMNEY,thT("line pit-chimney",layout->lang));
+  legend_step(SYML_RIMSTONEDAM,thT("line rimstone-dam",layout->lang));
+  legend_step(SYML_RIMSTONEPOOL,thT("line rimstone-pool",layout->lang));
+  legend_wall(SYML_WALKWAY,thT("line walkway",layout->lang));
 
   // thT("point remark")
   // thT("point label")
