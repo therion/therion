@@ -1214,21 +1214,124 @@ def l_wall_pit_NSS (expr P) =
 enddef;
 
 
-def l_pitchimney_NSS (expr P) =
+def l_pitchimney_NSS (expr P) = % this is the nss ceiling step with a second tick)
   T:=identity;
-  cas := 0;
+  cas := 0;                            % cursor to step along path
   dlzka := arclength P;
-  mojkrok:=adjust_step(dlzka, 0.5u);
+  mojkrok:=adjust_step(dlzka, 0.8u);   % symbol length nudged to be multiple of path length
+  pickup PenC;
+  forever:
+    t1 := arctime (cas + mojkrok*1/5) of P;
+    t  := arctime (cas + mojkrok/2) of P;
+    t2 := arctime (cas + mojkrok*4/5) of P;
+    thdraw (subpath (t1,t2) of P);
+    mark_ (P,t,-0.2u);                  % change sign to -0.2u
+    mark_ (P,t,0.2u);
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+  endfor;
+enddef;
+
+% this is slightly modified pit_UIS
+% should never have tick at end.
+def l_floormeander_NSS (expr P) = 
+  T:=identity;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 0.25u);
+  cas := mojkrok; %start 1 step along
   pickup PenD;
   forever:
     t := arctime cas of P;
-    mark_ (P,t,0.2u);
-    mark_ (P,t,-0.2u);
+    mark_ (P,t,0.1u);
+    mark_ (P,t,-0.1u);
     cas := cas + mojkrok;
-    exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+    exitif cas > dlzka - (mojkrok/3); % for rounding errors
   endfor;
   pickup PenC;
   thdraw P;
 enddef;
 
+% this should be redone at a higher density, but for now this will do.
+let l_ceilingmeander_NSS = l_pitchimney_NSS;
+
+def l_wall_flowstone_NSS (expr P) =
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, .7u);
+  if (cycle P) and (dlzka < 3.5u):   % make at least 5 curls on a cyclic path
+    mojkrok := dlzka/5;
+  fi;
+  pickup PenC;
+  t1:=0;
+  % copied from uAUT wall_pit
+  samplingdistance:=max(0.15u,dlzka/1500);
+
+    path testcircle;
+    % testcircle, used to test, whether the path makes a 'v'-like bend,
+    % where normal sampling and offsetting gives poor results for the parallel line
+    % size of testcircle= size PenA/2 + 2* (distance between outer and inner line)
+    % + PenC (inner line)
+    testcircle := halfcircle scaled (.5*u/10+2*.125u+.5*u/10) shifted (0,.5*u/10);
+    cur:=samplingdistance/2;
+    count:=0;
+    forever:
+      t:= arctime cur of P;
+      inter:=P intersectiontimes (testcircle rotated (angle thdir(P,t)) shifted (point t of P));
+      if (xpart inter) >=0:
+        % we are at a 'sharp bend', so set next point to intersectionpoint
+        cur:=cur+samplingdistance;
+        t := max( xpart inter, arctime cur of P);
+        %thdraw point t of P withcolor 0.7*green;
+        forever:
+          t:= arctime cur of P;
+          inter:=P intersectiontimes (testcircle rotated (angle thdir(P,t)) shifted (point t of P));
+          exitif (xpart inter <0);
+          cur := cur + samplingdistance;
+          exitif (cur >=dlzka);
+        endfor;
+        if (cur <dlzka):
+          inner[count]:=(point t of P + .125u*unitvector(thdir(P,t) rotated 90) );
+          innerdir[count]:=unitvector(thdir(P,t));
+          count := count+1;
+        fi;
+      else:
+        inner[count]:= (point t of P + .125u*unitvector(thdir(P,t) rotated 90) );
+        innerdir[count]:=unitvector(thdir(P,t));
+        %thdraw inner[count] withpen PenD withcolor 0.5*red;
+        count:=count +1;
+        cur:= cur+ samplingdistance;
+      fi;
+      exitif (cur >=dlzka);
+    endfor;
+    if count>2:
+      % draw inner path
+      pickup PenC;
+      path innerpath;
+      innerpath =
+      for i=0 upto count-2:
+        inner[i]{(innerdir[i])} ..
+      endfor
+      if cycle P: cycle;
+      else:  inner[count-1];
+      fi;
+  forever:
+    t2 := arctime (cas + mojkrok) of innerpath;
+    thdraw (point t1 of innerpath){dir (angle(thdir(innerpath,t1)) + 60)} ..
+           {dir (angle(thdir(innerpath,t2)) - 60)}(point t2 of innerpath);
+    cas := cas + mojkrok;
+    exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+    t1:=t2;
+  endfor;
+  pickup PenA;
+  thdraw P;
+enddef;
+
+let l_wall_unsurveyed_NSS = l_wall_presumed_UIS;
+
+def l_wall_underlying_NSS (expr P) =
+  thdrawoptions(dashed withdots withpen PenA);
+  thdraw P;
+  thdrawoptions();
+enddef;
 

@@ -356,3 +356,16 @@ def a_u (expr p) =
     thfill p withcolor red;
 enddef;
 
+beginpattern(pattern_mud_NSS);
+    pickup PenC;
+    draw (-.7u, .2u) -- (-.2u, .2u);
+    draw (-.3u, -.2u) -- (.3u, -.2u);
+    draw (.2u, .2u) -- (.7u, .2u);
+    patternbbox(-1u,-1u, 1u, 1u);
+endpattern;
+
+def a_clay_NSS (expr P) = 
+	T:=identity;
+	thclean P;
+	thfill P withpattern pattern_mud_NSS;
+enddef;

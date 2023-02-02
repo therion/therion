@@ -269,6 +269,20 @@ def p_narrowend_UIS (expr pos,theta,sc,al)=
     thdraw (.1u,-.4u)--(.1u,.4u);
 enddef;
 
+def p_narrowend_NSS (expr pos,theta,sc,al)=
+	p_smartlabel ("TT", pos);
+enddef;
+% common passage ends in NSS:
+% TT too tight
+% TL too low
+% FS flowstone (choke)
+% BD breakdown choke
+% MF "mud flow" (clay choke)
+
+def p_claychoke_NSS (expr pos,theta,sc,al)=
+	p_smartlabel ("MF", pos);
+enddef;
+
 def p_lowend_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.1u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
@@ -490,15 +504,13 @@ enddef;
 
 % by Philip Schuchardt
 def p_gradient_NSS (expr pos,theta,sc,al) =
-  U:=(.7u, .6u);
+  U:=(.4u, .6u);
   T:=identity aligned al rotated theta scaled sc shifted pos;
   pickup PenC;
 
-  thdraw (-.3u, -.5u) -- (-.7u, -.2u);
-  thdraw (-.2u, -.4u) -- (-.4u, .3u);
+  thdraw (-.2u, -.4u) -- (-.4u, .2u);
   thdraw (0u, -.3u) -- (0u, .6u);
-  thdraw (.3u, -.5u) -- (.7u, -.2u);
-  thdraw (.2u, -.4u) -- (.4u, .3u);
+  thdraw (.2u, -.4u) -- (.4u, .2u);
 enddef;
 
 def p_waterflow_permanent_UIS (expr pos,theta,sc,al)=
