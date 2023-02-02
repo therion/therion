@@ -4,6 +4,10 @@ therion:
  * bugs fixed:
    - thbook: document the usage of TeX registers [#485]
 
+infrastructure:
+ * therion no longer includes an internal copy of fmtlib
+ * system fmtlib is a mandatory dependency now
+
 --------------------------------------------------------------------------------
 
 Therion 6.1.6 (2023-01-11):

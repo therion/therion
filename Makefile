@@ -19,7 +19,7 @@ CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern
   extern/lxMath.o extern/lxFile.o thdb3d.o thsurface.o thimport.o thsvg.o thepsparse.o \
   thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
   extern/poly2tri/common/shapes.o extern/poly2tri/sweep/advancing_front.o extern/poly2tri/sweep/sweep.o extern/poly2tri/sweep/cdt.o extern/poly2tri/sweep/sweep_context.o \
-  extern/fmt/src/format.o extern/fmt/src/os.o extern/quickhull/QuickHull.o therion.o
+  extern/quickhull/QuickHull.o therion.o
 TESTOBJECTS = utest-main.o utest-proj.o utest-icase.o
 
 EXT =
@@ -136,14 +136,14 @@ CXXJFLAGS ?= -DPROJ_VER=$(PROJ_MVER) -I$(shell $(CROSS)pkg-config proj --variabl
 
 
 # compiler settings
-CXXFLAGS = -DIMG_API_VERSION=1 -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -Iextern/fmt/include -std=c++17
+CXXFLAGS = -DIMG_API_VERSION=1 -Wall $(CXXPFLAGS) $(CXXBFLAGS) $(CXXJFLAGS) -Iextern -Iextern/shapelib -std=c++17
 CCFLAGS = -DIMG_API_VERSION=1 -Wall $(CCPFLAGS) $(CCBFLAGS)
 OBJECTS = $(addprefix $(OUTDIR)/,$(POBJECTS)) $(addprefix $(OUTDIR)/,$(CMNOBJECTS))
 TESTOBJECTS_P = $(addprefix $(OUTDIR)/,$(TESTOBJECTS))
 
 
 # linker settings
-LIBS = $(PROJ_LIBS)
+LIBS = $(PROJ_LIBS) -lfmt
 LDFLAGS = $(LDBFLAGS)
 
 
@@ -166,7 +166,6 @@ outdirs:
 	mkdir -p $(OUTDIR)/extern/poly2tri/common/
 	mkdir -p $(OUTDIR)/extern/quickhull
 	mkdir -p $(OUTDIR)/extern/shapelib
-	mkdir -p $(OUTDIR)/extern/fmt/src
 	mkdir -p $(OUTDIR)/loch
 	mkdir -p $(OUTDIR)/loch/help
 	mkdir -p $(OUTDIR)/loch/help/en
@@ -277,11 +276,9 @@ cleanrest:
 	perl makefile.pl rm -q data.3d data.svx data.pos data.pts data.err data.plt
 	perl makefile.pl rm -q cave.3d cave.lox cave.thm cave.pdf cave.sql cave.xhtml therion.tcl cave_a.pdf cave_m.pdf cave.vrml cave.wrl cave.3dmf cave.svg cave.tlx
 	perl makefile.pl rm -q ./thbook/*~ ./thbook/thbook.log ./thbook/thbook.pdf ./lib/*~ ./mpost/*~ ./tex/*~
-	perl makefile.pl rm -q extern/fmt/CMakeCache.txt extern/fmt/Makefile extern/fmt/libfmt.a extern/fmt/cmake_install.cmake extern/fmt/src/*.o
 	perl makefile.pl rmdir -q doc thTMPDIR samples.doc symbols cave.shp tests/.doc
 	perl makefile.pl rmdir -q doc symbols cave.shp tests/.doc
 	perl makefile.pl rmdir -q thTMPDIR samples/*/thTMPDIR samples/*/*/thTMPDIR
-	perl makefile.pl rmdir -q extern/fmt/CMakeFiles
 
 thmpost.h: mpost/*.mp
 	$(MAKE) -C ./mpost
@@ -366,8 +363,6 @@ extern/poly2tri/sweep/advancing_front.o: extern/poly2tri/sweep/advancing_front.c
 extern/poly2tri/sweep/sweep.o: extern/poly2tri/sweep/sweep.cc
 extern/poly2tri/sweep/cdt.o: extern/poly2tri/sweep/cdt.cc
 extern/poly2tri/sweep/sweep_context.o: extern/poly2tri/sweep/sweep_context.cc
-extern/fmt/src/format.o: extern/fmt/src/format.cc extern/fmt/include/fmt/format-inl.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
-extern/fmt/src/os.o: extern/fmt/src/os.cc extern/fmt/include/fmt/os.h extern/fmt/include/fmt/format.h extern/fmt/include/fmt/core.h
 
 
 # DEPENDENCIES

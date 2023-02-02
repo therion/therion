@@ -27,6 +27,7 @@ If you want to compile Therion from source code and run it, you need
 * Python 3
 * PROJ library (\www{https://proj.org/}). Supported versions are:
   v4: 4.9.3; v5: 5.1.0 and newer; v6: 6.2.1 and newer; 7.0.1 and newer.
+* fmt (\www{https://github.com/fmtlib/fmt}).
 * Tcl/Tk 8.4.3 and newer (\www{https://www.tcl.tk}) with
   {\it BWidget} widget set  \hfil\break
   (\www{https://sourceforge.net/projects/tcllib/})
@@ -82,6 +83,7 @@ Installing dependencies to compile Therion on Ubuntu 20.04 or 22.04:
   |ghostscript|
   |imagemagick|
   |lcdf-typetools|
+  |libfmt-dev|
   |libfreetype6-dev|
   |libjpeg-dev|
   |libpng-dev|
@@ -102,6 +104,7 @@ Installing dependencies in Fedora 37:
   |brotli-devel|
   |bwidget|
   |cmake|
+  |fmt-devel|
   |g++|
   |jbigkit-devel|
   |krb5-devel|
@@ -143,7 +146,6 @@ Here is a selection of parameters which can be used with cmake:
   or |-G "MSYS Makefiles"| to build using {\it make} under MSYS2
 * {\catcode`\=12|-DUSE_BUNDLED_SHAPELIB=OFF|} = use the system Shapelib library
 * {\catcode`\=12|-DUSE_BUNDLED_CATCH2=OFF|} = use the system Catch2 library
-* {\catcode`\=12|-DUSE_BUNDLED_FMT=OFF|} = use the system fmt library
 * {\catcode`\=12|-DECM_ENABLE_SANITIZERS=<option>|} = use runtime sanitizers, relevant options:
 
   |address| -- detects invalid memory accesses, use-after-free, double free, memory leaks, useful for debugging

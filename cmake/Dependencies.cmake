@@ -5,12 +5,7 @@ if (CMAKE_CROSSCOMPILING)
 endif()
 
 if (BUILD_THERION OR BUILD_LOCH)
-    option(USE_BUNDLED_FMT "Use bundled version of {fmt}." ON)
-    if (USE_BUNDLED_FMT)
-        add_subdirectory(extern/fmt)
-    else()
-        find_package(fmt REQUIRED)
-    endif()
+    find_package(fmt REQUIRED)
 endif()
 
 # therion dependencies
