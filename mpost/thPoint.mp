@@ -583,6 +583,20 @@ def p_airdraught_summer_UIS (expr pos,theta,sc,al)=
   thdraw fullcircle scaled 0.2u shifted (0,0.05u);
 enddef;
 
+%bristol's symbol. Based on gypsum flower code.
+def p_airdraught_NSS (expr pos,theta,sc,al)=
+    U:=(.25u,u);
+    T:=identity aligned al rotated theta scaled sc shifted pos;
+    pickup PenC;
+    thdraw (.18u,0){left}..(0,.15u)..(.2u,.3u)..(.4u,0)..
+        (.15u,-.28u)..(-.25u,0)..{dir 100}(0,.8u)..(0,u);
+
+    p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
+    thdraw p;
+    thdraw p reflectedabout (origin,(0,u));
+enddef;
+
+
 
 def p_station_fixed_ASF (expr pos)=
     T:=identity shifted pos;

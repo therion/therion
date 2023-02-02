@@ -1335,3 +1335,147 @@ def l_wall_underlying_NSS (expr P) =
   thdrawoptions();
 enddef;
 
+def l_slope_NSS (expr P,S)(text Q) =
+%show Q;
+  T:=identity;
+  numeric dirs[];
+  numeric lengths[];
+  for i=Q:
+    dirs[redpart i]:=greenpart i;
+    lengths[redpart i]:=bluepart i;
+  endfor;
+
+
+  li:=length(P); % last
+
+  alw_perpendicular:=true;
+
+  for i=0 upto li:
+    if unknown dirs[i]: dirs[i]:=-1;
+    else:
+      if dirs[i]>-1:
+        dirs[i]:=((90-dirs[i]) - angle(thdir(P,i))) mod 360;
+        alw_perpendicular:=false;
+      fi;
+    fi;
+    if unknown lengths[i]: lengths[i]:=-1; fi;
+  endfor;
+
+%for i=0 upto li: show dirs[i]; endfor;
+
+  ni:=0; % next
+  pi:=0; % previous
+
+  for i=0 upto li:
+    d:=dirs[i];
+    if d=-1:
+      if (i=0) or (i=li):
+        dirs[i] := angle(thdir(P,i) rotated 90) mod 360;
+	pi:=i;
+      else:
+        if ni<=i:
+	  for j=i upto li:
+            ni:=j;
+	    exitif dirs[j]>-1;
+	  endfor;
+	fi;
+	w:=arclength(subpath(pi,i) of P) /
+	   arclength(subpath(pi,ni) of P);
+	dirs[i]:=w[dirs[pi],dirs[ni]];
+%        if (dirs[i]-angle(thdir(P,i))) mod 360>180:
+%          dirs[i]:=w[dirs[ni],dirs[pi]];
+%	  message("*******");
+%        fi;
+     fi;
+    else:
+      pi:=i;
+    fi;
+  endfor;
+
+%for i=0 upto li: show dirs[i]; endfor;
+
+  ni:=0; % next
+  pi:=0; % previous
+
+  for i=0 upto li:
+    l:=lengths[i];
+    if l=-1:
+      if (i=0) or (i=li):
+        lengths[i] := 1cm; % should never happen!
+	thwarning("slope width at the end point not specified");
+	pi:=i;
+      else:
+        if ni<=i:
+	  for j=i+1 upto li:
+            ni:=j;
+	    exitif lengths[j]>-1;
+	  endfor;
+	fi;
+	w:=arclength(subpath(pi,i) of P) /
+	   arclength(subpath(pi,ni) of P);
+	lengths[i]:=w[lengths[pi],lengths[ni]];
+	pi:=i;
+      fi;
+    else:
+      pi:=i;
+    fi;
+  endfor;
+
+% for i=0 upto li: show lengths[i]; endfor;
+
+  T:=identity;
+  boolean par;
+  offset:=0;
+  dlzka := (arclength P);
+  if dlzka>3u:
+    offset := 0.3u;
+  elseif dlzka>u:
+    offset := 0.1u;
+  fi;
+  dlzka:=dlzka-2offset;
+  cas := offset;
+  mojkrok:=adjust_step(dlzka,1.4u) / 2;
+  pickup PenC;
+  par := false;
+  forever:
+    t := arctime cas of P;
+    if t mod 1>0:  % not a key point
+      w := (arclength(subpath(floor t,t) of P) /
+            arclength(subpath(floor t,ceiling t) of P));
+      if alw_perpendicular:
+        a := 90;
+      else:
+        a := w[dirs[floor t],dirs[ceiling t]];
+      fi;
+      l := w[lengths[floor t],lengths[ceiling t]];
+    else:
+      if alw_perpendicular:
+        a := 90;
+      else:
+        a:= dirs[t];
+      fi;
+      l:=lengths[t];
+    fi;
+
+    a := a + angle(thdir(P,t));
+
+    if par:
+      thdraw (point t of P) + mojkrok/3 * unitvector(dir(a-90))--
+        ((point t of P) + l * .8 * unitvector(dir(a-30)));
+
+      thdraw
+        (point t of P) + mojkrok/3 * unitvector(dir(a+90)) --
+        ((point t of P) + l *.8 * unitvector(dir(a+30)));
+
+      thdraw (point t of P) + .1 * l * unitvector(dir(a)) -- ((point t of P) + 
+        l * unitvector(dir(a)));
+    fi;
+
+    cas := cas + mojkrok;
+    par := not par;
+    exitif cas > dlzka + offset + 0.1mm;  % for rounding errors
+  endfor;
+%pickup pencircle scaled 3pt;
+%for i=0 upto li: draw point i of P; endfor;
+enddef;
+
