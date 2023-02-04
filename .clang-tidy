@@ -1,5 +1,5 @@
 ---
-Checks: '-*,modernize-use-override,clang-analyzer-cplusplus*,clang-analyzer-unix*,misc-definitions-in-headers,bugprone*,-bugprone-easily-swappable-parameters,-bugprone-macro-parentheses,-bugprone-narrowing-conversions,-bugprone-suspicious-enum-usage,-bugprone-integer-division,-bugprone-implicit-widening-of-multiplication-result,-bugprone-incorrect-roundings,-bugprone-suspicious-include,-bugprone-unhandled-self-assignment,-bugprone-branch-clone,-bugprone-sizeof-expression,performance-for-range-copy'
+Checks: '-*,modernize-use-override,clang-analyzer-cplusplus*,clang-analyzer-unix*,misc-definitions-in-headers,bugprone*,-bugprone-easily-swappable-parameters,-bugprone-macro-parentheses,-bugprone-narrowing-conversions,-bugprone-suspicious-enum-usage,-bugprone-integer-division,-bugprone-implicit-widening-of-multiplication-result,-bugprone-incorrect-roundings,-bugprone-suspicious-include,-bugprone-unhandled-self-assignment,-bugprone-branch-clone,-bugprone-sizeof-expression,performance-for-range-copy,cppcoreguidelines-no-malloc'
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 AnalyzeTemporaryDtors: false
