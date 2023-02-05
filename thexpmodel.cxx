@@ -50,6 +50,8 @@
 #include <filesystem>
 #include <thread>
 
+#include <fmt/printf.h>
+
 thexpmodel::thexpmodel() {
   this->format = TT_EXPMODEL_FMT_UNKNOWN;
   this->items = TT_EXPMODEL_ITEM_ALL;
@@ -760,10 +762,8 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
               "Shape {\nappearance Appearance {\n" \
               "\tmaterial Material {\n\t\tdiffuseColor 0.3 1.0 0.1\n\t\ttransparency 0.5\n\t}\n");
             if (has_texture) {
-              thbuffer tifn;
-              tifn.guarantee(2048);
-              sprintf(tifn.get_buffer(), "%s.img%d.%s", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
-              auto texf = thopen_file(tifn.get_buffer(), "wb");
+              const auto tifn = fmt::sprintf("%s.img%d.%s", fnm, imgn++, srfc->pict_type == TT_IMG_TYPE_JPEG ? "jpg" : "png");
+              auto texf = thopen_file(tifn, "wb");
               auto xf = thopen_file(srfc->pict_name, "rb");
               if (texf != NULL) {
                 if (xf != NULL) {
@@ -778,7 +778,7 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
                   }
                 }
                 fprintf(pltf,
-                  "\ttexture ImageTexture {\n\t\turl [\"%s\"]\n\t}\n", tifn.get_buffer());
+                  "\ttexture ImageTexture {\n\t\turl [\"%s\"]\n\t}\n", tifn.c_str());
               }
             }
             fprintf(pltf,

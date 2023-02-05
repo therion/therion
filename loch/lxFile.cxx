@@ -9,6 +9,7 @@
 #include <map>
 #include <list>
 #include <fstream>
+#include <filesystem>
 
 #endif  
 //LXDEPCHECK - standard libraries
@@ -16,6 +17,8 @@
 #include "icase.h"
 #include "lxMath.h"
 #include "img.h"
+
+namespace fs = std::filesystem;
 
 double lxFilePrepDbl(double val) {
   char tb[32];
@@ -188,22 +191,24 @@ lxFileDataPtr lxFileData::AppendStr(const char * str)
 
 lxFileDataPtr lxFileData::AppendFile(const char * fnm)
 {
-  lxFileDataPtr res;
-  FILE * xf;
-  xf = fopen(fnm, "rb");
-  if (xf != NULL) {
-    fseek(xf, 0, SEEK_END);
-    lxFileSizeT fsz = ftell(xf);
-    fseek(xf, 0, SEEK_SET);
-    if (fsz > 0) {
-      char * cdata = new char [fsz];
-      lxassert(fread((void *) cdata, 1, fsz, xf) == fsz);
-      res = this->AppendData(cdata, fsz);
-      delete [] cdata;
-    }
-    fclose(xf);
-  }
-  return res;
+  // get size of the file
+  std::error_code ec;
+  const auto file_size = fs::file_size(fnm, ec);
+  if (ec || file_size == 0)
+    return {};
+
+  std::ifstream file(fnm, std::ios::in | std::ios::binary);
+  if (!file.is_open())
+    return {};
+
+  std::vector<char> data;
+  data.reserve(file_size);
+
+  // read bytes from file to vector
+  data.insert(data.begin(), std::istreambuf_iterator<char>(file), {});
+  lxassert(data.size() == file_size);
+
+  return this->AppendData(data.data(), data.size());
 }
 
 

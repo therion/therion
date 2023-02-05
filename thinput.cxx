@@ -271,12 +271,12 @@ void thinput::open_file(char * fname)
     }
 #ifdef THWIN32
     if (n_rec == THMAXFREC) {
-      therror(("%s [%d] -- too many file inclusions -- probably input recursion -- %s", \
+      therror(("%s [%lu] -- too many file inclusions -- probably input recursion -- %s", \
       this->get_cif_name(), this->get_cif_line_number(), fname));
     }
 #else
     if (is_rec) {
-      therror(("%s [%d] -- recursive file inclusion -- %s", \
+      therror(("%s [%lu] -- recursive file inclusion -- %s", \
       this->get_cif_name(), this->get_cif_line_number(), fname));
     }
 #endif
@@ -358,7 +358,7 @@ char * thinput::read_line()
     // Check, if reading was OK.
     
     if (this->last_ptr->sh.fail() && (!(this->last_ptr->sh.eof()))) {
-      therror(("%s [%d] -- line too long", \
+      therror(("%s [%lu] -- line too long", \
         this->get_cif_name(), this->get_cif_line_number()));
     }
     

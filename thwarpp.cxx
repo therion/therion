@@ -32,6 +32,7 @@
 #include "thpoint.h"
 #include "thconfig.h"
 
+#include <fmt/printf.h>
 
 thwarpp::~thwarpp() {}
 
@@ -99,17 +100,13 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
 
   thscrap	*	scrap	=	this->get_scrap();
   thdb2dcp *ccp;
-  thbuffer n2sb, n2sb2;
-  n2sb.guarantee(128);
-  n2sb2.guarantee(128);
   std::string s, s2;
   std::map <unsigned long, thdb1ds*> ssm;
   //std::map <unsigned long, thdb1ds*>::iterator ssmi;
   ccp = scrap->fcpp;
   while (ccp != NULL) {
     if ((ccp->point != NULL) && (ccp->st != NULL)) {
-      sprintf(n2sb.get_buffer(),"%ld",ccp->st->uid);
-      s = n2sb.get_buffer();
+      s = std::to_string(ccp->st->uid);
       TW.insert_point( THMORPH_STATION,	s,	
         thvec2(ccp->pt->x - sketch->m_x, sketch->m_y + double(sketch->m_pic.height) - ccp->pt->y),
         thvec2(ccp->tx + sketch->m_scrap->proj->rshift_x,- (ccp->ty + sketch->m_scrap->proj->rshift_y)));
@@ -125,10 +122,8 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
     thdataleg	*	dlg	=	lg->leg;
     fuid = thdb.db1d.station_vec[dlg->from.id - 1].uid;
     tuid = thdb.db1d.station_vec[dlg->to.id - 1].uid;
-    sprintf(n2sb.get_buffer(),"%ld",fuid);
-    sprintf(n2sb2.get_buffer(),"%ld",tuid);
-    s = n2sb.get_buffer();
-    s2 = n2sb2.get_buffer();
+    s = std::to_string(fuid);
+    s2 = std::to_string(tuid);
     if ((ssm.find(fuid) != ssm.end()) && (ssm.find(tuid) != ssm.end())) {
       // thprintf("insert	leg	%s %s\n",	dlg->from.name,	dlg->to.name );
       TW.insert_line(	THMORPH_STATION, s, s2);
@@ -149,10 +144,8 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
 	    thprintf("warning: extra point from %s but no station\n",
 	      pointp->from_name.name );
 	  } else {
-            sprintf(n2sb2.get_buffer(),"%ld",fuid);
-            sprintf(n2sb.get_buffer(),"%ld_E_%d",fuid, ++n_extra);
-            s  = n2sb.get_buffer(); 
-            s2 = n2sb2.get_buffer();
+            s  = fmt::sprintf("%ld_E_%d",fuid, ++n_extra);
+            s2 = std::to_string(fuid);
 	    thdb2dpt * pt = pointp->point;
 	    // assert( pt != NULL );
 	    double x = pt->x - sketch->m_x;

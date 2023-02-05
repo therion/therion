@@ -2,13 +2,13 @@ name: make
 on: [push, pull_request]
 jobs:
   ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: install dependencies
         run: |
           sudo apt -qq update
-          sudo apt install -y texlive-binaries texlive-metapost texlive-lang-czechslovak texlive-lang-cyrillic libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript
+          sudo apt install -y texlive-binaries texlive-metapost texlive-lang-czechslovak texlive-lang-cyrillic libproj-dev libwxgtk3.0-gtk3-dev libvtk7-dev survex imagemagick ghostscript libfmt-dev
       - name: compile therion
         run: |
           make config-debian
@@ -19,7 +19,7 @@ jobs:
       - name: make samples
         run: make samples
   mac:
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - name: install dependencies
@@ -27,7 +27,7 @@ jobs:
           # brew update  # commented out because of conflicting python versions
           brew tap homebrew/core
           rm /usr/local/bin/2to3
-          brew install wxwidgets vtk proj
+          brew install wxwidgets vtk proj fmt
       - name: compile therion
         run: |
           make config-macosx
@@ -88,7 +88,7 @@ jobs:
         with:
           msystem: ${{ matrix.msystem }}
           update: true
-          install: python mingw-w64-${{ matrix.arch }}-freetype mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-pkgconf mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-tcl mingw-w64-${{ matrix.arch }}-jbigkit
+          install: python mingw-w64-${{ matrix.arch }}-freetype mingw-w64-${{ matrix.arch }}-cmake mingw-w64-${{ matrix.arch }}-pkgconf mingw-w64-${{ matrix.arch }}-proj mingw-w64-${{ matrix.arch }}-vtk mingw-w64-${{ matrix.arch }}-wxWidgets mingw-w64-${{ matrix.arch }}-gcc mingw-w64-${{ matrix.arch }}-make mingw-w64-${{ matrix.arch }}-tcl mingw-w64-${{ matrix.arch }}-jbigkit mingw-w64-${{ matrix.arch }}-fmt
       - name: compile therion
         run: |
           mingw32-make config-win32

@@ -435,17 +435,17 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
   b.guarantee(256);
 
   if (!thcfg.reproducible_output)
-    fprintf(f,"\\thversion={%s}\n",utf2tex(THVERSION));
+    fprintf(f,"\\thversion={%s}\n",utf2tex(THVERSION).c_str());
   else
-    fprintf(f,"\\thversion={%s}\n",utf2tex("..."));
+    fprintf(f,"\\thversion={%s}\n",utf2tex("...").c_str());
   thdate dt;
   dt.reset_current();
   double cy = dt.get_start_year();
   dt.shour = -1;
   if (!thcfg.reproducible_output)
-    fprintf(f,"\\currentdate={%s}\n",utf2tex(dt.get_str(TT_DATE_FMT_LOCALE)));
+    fprintf(f,"\\currentdate={%s}\n",utf2tex(dt.get_str(TT_DATE_FMT_LOCALE)).c_str());
   else
-    fprintf(f,"\\currentdate={%s}\n",utf2tex("1981-09-27"));
+    fprintf(f,"\\currentdate={%s}\n",utf2tex("1981-09-27").c_str());
   fprintf(f,"\\northdir={%s}\n",layout->north == TT_LAYOUT_NORTH_GRID ? "grid" : "true");
 
 
@@ -455,8 +455,8 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
 	  fprintf(f,"\\magdecl={N/A}\n");
 	  fprintf(f,"\\gridconv={N/A}\n");
   } else {
-	  fprintf(f,"\\outcscode={%s}\n",utf2tex(thcs_get_name(thcfg.outcs)));
-	  fprintf(f,"\\outcsname={%s}\n",utf2tex(thcs_get_data(thcfg.outcs)->prjname));
+	  fprintf(f,"\\outcscode={%s}\n",utf2tex(thcs_get_name(thcfg.outcs)).c_str());
+	  fprintf(f,"\\outcsname={%s}\n",utf2tex(thcs_get_data(thcfg.outcs)->prjname).c_str());
 	  double md;
 	  thcfg.get_outcs_mag_decl(cy, md);
 	  fprintf(f,"\\magdecl={%.2f}\n", md);
@@ -476,8 +476,8 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
     b += "<thsp>";
     //b += thT("units m",layout->lang);
     b += layout->units.format_i18n_length_units();
-    fprintf(f,"\\cavelengthtitle={%s}\n",utf2tex(thT("title cave length",layout->lang)));
-    fprintf(f,"\\cavelength={%s}\n",utf2tex(b.get_buffer()));
+    fprintf(f,"\\cavelengthtitle={%s}\n",utf2tex(thT("title cave length",layout->lang)).c_str());
+    fprintf(f,"\\cavelength={%s}\n",utf2tex(b.get_buffer()).c_str());
     ldata->cavelength = thutf82xhtml(b.get_buffer());
     ldata->cavelengthtitle = thT("title cave length",layout->lang);
   }
@@ -492,18 +492,18 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
     b += "<thsp>";
     //b += thT("units m",layout->lang);
     b += layout->units.format_i18n_length_units();
-    fprintf(f,"\\cavedepthtitle={%s}\n",utf2tex(thT("title cave depth",layout->lang)));
-    fprintf(f,"\\cavedepth={%s}\n",utf2tex(b.get_buffer()));
+    fprintf(f,"\\cavedepthtitle={%s}\n",utf2tex(thT("title cave depth",layout->lang)).c_str());
+    fprintf(f,"\\cavedepth={%s}\n",utf2tex(b.get_buffer()).c_str());
     ldata->cavedepth = thutf82xhtml(b.get_buffer());
     ldata->cavedepthtitle = thT("title cave depth",layout->lang);
 	b = layout->units.format_length(z_top);
     //b += "<thsp>";
     //b += layout->units.format_i18n_length_units();
-    fprintf(f,"\\cavemaxz={%s}\n",utf2tex(b.get_buffer()));
+    fprintf(f,"\\cavemaxz={%s}\n",utf2tex(b.get_buffer()).c_str());
 	b = layout->units.format_length(z_bot);
     //b += "<thsp>";
     //b += layout->units.format_i18n_length_units();
-    fprintf(f,"\\caveminz={%s}\n",utf2tex(b.get_buffer()));
+    fprintf(f,"\\caveminz={%s}\n",utf2tex(b.get_buffer()).c_str());
 
   }
   
@@ -518,17 +518,17 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
 
     if (cnt > 1) {
       fprintf(f,"\\explotitle={%s}\n",
-        utf2tex(thT("title explo (plural)",layout->lang)));
+        utf2tex(thT("title explo (plural)",layout->lang)).c_str());
       ldata->explotitle = thT("title explo (plural)",layout->lang);
     } else {
       fprintf(f,"\\explotitle={%s}\n",
-        utf2tex(thT("title explo",layout->lang)));
+        utf2tex(thT("title explo",layout->lang)).c_str());
       ldata->explotitle = thT("title explo",layout->lang);
     }
 
     if (discovered_date.is_defined()) {
       fprintf(f,"\\explodate={%s}\n",
-        utf2tex(discovered_date.get_str(TT_DATE_FMT_UTF8_Y)));
+        utf2tex(discovered_date.get_str(TT_DATE_FMT_UTF8_Y)).c_str());
       ldata->explodate = discovered_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
@@ -546,17 +546,17 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
 
     if (cnt > 1) {
       fprintf(f,"\\topotitle={%s}\n",
-        utf2tex(thT("title topo (plural)",layout->lang)));
+        utf2tex(thT("title topo (plural)",layout->lang)).c_str());
       ldata->topotitle = thT("title topo (plural)",layout->lang);
     } else {
       fprintf(f,"\\topotitle={%s}\n",
-        utf2tex(thT("title topo",layout->lang)));
+        utf2tex(thT("title topo",layout->lang)).c_str());
       ldata->topotitle = thT("title topo",layout->lang);
     }
   
     if (surveyed_date.is_defined()) {
       fprintf(f,"\\topodate={%s}\n",
-        utf2tex(surveyed_date.get_str(TT_DATE_FMT_UTF8_Y)));
+        utf2tex(surveyed_date.get_str(TT_DATE_FMT_UTF8_Y)).c_str());
       ldata->topodate = surveyed_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   
@@ -574,17 +574,17 @@ void thmapstat::export_pdftex(FILE * f, class thlayout * layout, legenddata * ld
 
     if (cnt > 1) {
       fprintf(f,"\\cartotitle={%s}\n",
-        utf2tex(thT("title carto (plural)",layout->lang)));
+        utf2tex(thT("title carto (plural)",layout->lang)).c_str());
       ldata->cartotitle = thT("title carto (plural)",layout->lang);
     } else {
       fprintf(f,"\\cartotitle={%s}\n",
-        utf2tex(thT("title carto",layout->lang)));
+        utf2tex(thT("title carto",layout->lang)).c_str());
       ldata->cartotitle = thT("title carto",layout->lang);
     }
 
     if (drawn_date.is_defined()) {
       fprintf(f,"\\cartodate={%s}\n",
-        utf2tex(drawn_date.get_str(TT_DATE_FMT_UTF8_Y)));
+        utf2tex(drawn_date.get_str(TT_DATE_FMT_UTF8_Y)).c_str());
       ldata->cartodate = drawn_date.get_str(TT_DATE_FMT_UTF8_Y);
     }
   

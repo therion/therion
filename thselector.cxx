@@ -41,6 +41,7 @@
 #include <algorithm>
 #include "thmap.h"
 
+#include <fmt/printf.h>
 
 thselector::thselector() {
   this->number = 0;
@@ -379,18 +380,16 @@ void thselector::dump_selection_db (FILE * cf, thdatabase * db)
   fprintf(cf,"set xth(ctrl,cp,maplist) {}\n");
   // exportuje vsetky projekcie
   thdb2dprj_list::iterator prjli = db->db2d.prj_list.begin();
-	thbuffer projdir;
-	projdir.guarantee(32);
   while (prjli != db->db2d.prj_list.end()) {
-		projdir.strcpy("");
+	  std::string projdir;
 		if ((prjli->type == TT_2DPROJ_ELEV) && (prjli->pp1 != 0.0)) {
-			sprintf(projdir.get_buffer(), "\\[%.1f\\]", prjli->pp1);
+			projdir = fmt::sprintf("\\[%.1f\\]", prjli->pp1);
 		}
     fprintf(cf,"xth_cp_map_tree_insert projection 0 p%d {} 0",prjli->id); 
     if (strlen(prjli->index) > 0)
-      fprintf(cf," %s%s:%s",thmatch_string(prjli->type,thtt_2dproj), projdir.get_buffer(), prjli->index);
+      fprintf(cf," %s%s:%s",thmatch_string(prjli->type,thtt_2dproj), projdir.c_str(), prjli->index);
     else
-      fprintf(cf," %s%s",thmatch_string(prjli->type,thtt_2dproj), projdir.get_buffer());
+      fprintf(cf," %s%s",thmatch_string(prjli->type,thtt_2dproj), projdir.c_str());
     fprintf(cf," {} {} {}\n");
     prjli++;
   }
@@ -510,7 +509,7 @@ void thselector::select_db(class thdatabase * db)
         objptr = NULL;
       }
       if (objptr == NULL) {
-        thwarning(("%s [%d] -- object not found -- \"%s\"", 
+        thwarning(("%s [%lu] -- object not found -- \"%s\"", 
           ii->src_name, ii->src_ln, nobj))
         to_cont = false;
       }

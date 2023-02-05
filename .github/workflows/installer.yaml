@@ -95,7 +95,7 @@ jobs:
           echo "git_branch=$BRANCH" >> $GITHUB_OUTPUT
           mkdir ../therion.bin
           cd ../therion.bin
-          cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=ON -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF ../therion
+          cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=ON ../therion
           cmake --build . -j 4
           cmake --build . -t samples deploy -- -j 4
           cd ../therion-batteries
