@@ -300,7 +300,7 @@ void lxGLCanvas::UpdateRenderList()
 void lxGLCanvas::UpdateRenderContents()
 {
   this->setup->UpdateData();
-  if (this->data->m_textureSurface.image.data != NULL) {
+  if (!this->data->m_textureSurface.image.data.empty()) {
     GLint newTSizeO, newTSizeS;
     newTSizeO = this->m_maxTSizeO;
     newTSizeS = this->m_maxTSizeS;
@@ -897,7 +897,7 @@ void lxGLCanvas::RenderSurface() {
   clr[2] = 1.0;
   clr[3] = this->setup->m_srf_opacity;
 
-  bool srf_tex = (this->data->m_textureSurface.image.data != NULL) && (this->setup->m_srf_texture);
+  bool srf_tex = (!this->data->m_textureSurface.image.data.empty()) && (this->setup->m_srf_texture);
   glShadeModel(GL_SMOOTH);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glColor4f(1.0,1.0,1.0,this->setup->m_srf_opacity);

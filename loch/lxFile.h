@@ -6,6 +6,7 @@
 #include <list>
 #include <string>
 #include <cstdio>
+#include <vector>
 #endif  
 //LXDEPCHECK - standard libraries
 
@@ -80,13 +81,11 @@ struct lxFileDataPtr {
 
 struct lxFileData {
   
-  void * m_data;
-  lxFileSizeT m_size, m_buffSize;
+  std::vector<uint8_t> m_data;
 
-  lxFileData();
+  lxFileData() = default;
   void Clear();
   void Copy(lxFileSizeT size, const void * src);
-  void BuffResize(lxFileSizeT size);
   const void * GetData(lxFileDataPtr ptr);
   const char * GetString(lxFileDataPtr ptr);
   FILE * GetTmpFile(lxFileDataPtr ptr);
