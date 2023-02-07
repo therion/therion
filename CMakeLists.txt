@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 include(cmake/PreventInSourceBuilds.cmake)
 
 project(therion)
