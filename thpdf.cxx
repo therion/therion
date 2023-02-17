@@ -1272,6 +1272,7 @@ void icc_check_file(std::string fname, std::string type) {
   char buffer[5];
   iccfile.seekg(16);
   iccfile.read(buffer,4);
+  buffer[4] = '\0';
   if (type != std::string(buffer)) therror(((std::string("Invalid ICC profile type: expected ")+type+", got "+buffer).c_str()));
 }
 
