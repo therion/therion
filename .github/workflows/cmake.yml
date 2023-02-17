@@ -52,7 +52,7 @@ jobs:
           # brew update  # commented out because of conflicting python versions
           brew tap homebrew/core
           rm /usr/local/bin/2to3
-          brew install wxwidgets vtk proj xquartz ninja basictex fmt
+          brew install wxwidgets vtk proj xquartz ninja basictex fmt pkgconfig
       - name: Configure CMake
         run: |
           mkdir build && cd build && cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DCMAKE_C_FLAGS="-Werror" -DCMAKE_CXX_FLAGS="-Werror" -DOPENGL_gl_LIBRARY:FILEPATH=/opt/X11/lib/libGL.dylib -DOPENGL_glu_LIBRARY:FILEPATH=/opt/X11/lib/libGLU.dylib -DBUILD_THBOOK=OFF ..
