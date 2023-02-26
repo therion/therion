@@ -64,9 +64,7 @@ const char * thversion_format = "therion %s";
 int main(int argc, char * argv[]) {
 
 #ifndef THDEBUG
-#ifndef THMSVC
   try {
-#endif
 #endif  
 
     time_t tmUserStart = time(NULL);
@@ -250,13 +248,11 @@ int main(int argc, char * argv[]) {
     return(EXIT_SUCCESS);
     
 #ifndef THDEBUG
-#ifndef THMSVC
   }
   catch(const std::exception& e)
   {
       therror((e.what()));
   }
-#endif
 #endif
 
 }

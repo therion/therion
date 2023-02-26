@@ -29,10 +29,6 @@
 #ifndef thinput_h
 #define thinput_h
 
-#ifndef THMSVC
-#include <unistd.h>
-#endif
-
 #include "thbuffer.h"
 #include "thmbuffer.h"
 #include "thparse.h"

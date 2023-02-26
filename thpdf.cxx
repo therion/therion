@@ -51,10 +51,6 @@
 #include "thversion.h"
 #include "thdouble.h"
 
-#ifdef THMSVC
-#define round(x) floor((x) + 0.5)
-#endif
-
 #include "thchenc.h"
 #include "thbuffer.h"
 

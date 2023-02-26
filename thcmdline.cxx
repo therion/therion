@@ -32,9 +32,6 @@
 #include "thconfig.h"
 #include "thtmpdir.h"
 
-#ifdef THMSVC
-#define __STDC__ 1
-#endif
 #include <getopt.h>
 
 
