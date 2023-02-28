@@ -144,6 +144,7 @@ let l_wall_pit = l_wall_pit_AUT;
 let l_wall_overlying = l_wall_overlying_AUT;
 let l_wall_flowstone = l_wall_flowstone_AUT;
 let l_wall_moonmilk = l_wall_moonmilk_AUT;
+let l_wall_chimney = l_wall_bedrock_UIS;
 
 let l_waterflow_permanent = l_waterflow_permanent_UIS;
 let l_waterflow_intermittent = l_waterflow_intermittent_SKBB;

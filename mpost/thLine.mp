@@ -1213,6 +1213,23 @@ def l_wall_pit_NSS (expr P) =
   thdraw P;
 enddef;
 
+def l_wall_chimney_NSS (expr P) =
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, 0.5u);
+  pickup PenC;
+  forever:
+    t := arctime cas of P;
+    mark_ (P,t,-0.2u);
+    cas := cas + mojkrok;
+    exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+  endfor;
+  pickup PenA;
+  thdraw P;
+enddef;
+
+
 
 def l_pitchimney_NSS (expr P) = % this is the nss ceiling step with a second tick)
   T:=identity;
@@ -1478,4 +1495,3 @@ def l_slope_NSS (expr P,S)(text Q) =
 %pickup pencircle scaled 3pt;
 %for i=0 upto li: draw point i of P; endfor;
 enddef;
-
