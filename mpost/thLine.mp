@@ -1478,11 +1478,11 @@ def l_slope_NSS (expr P,S)(text Q) =
 
     if par:
       thdraw (point t of P) + mojkrok/3 * unitvector(dir(a-90))--
-        ((point t of P) + l * .8 * unitvector(dir(a-30)));
+        ((point t of P) + l * .8 * unitvector(dir(a-50)));
 
       thdraw
         (point t of P) + mojkrok/3 * unitvector(dir(a+90)) --
-        ((point t of P) + l *.8 * unitvector(dir(a+30)));
+        ((point t of P) + l *.8 * unitvector(dir(a+50)));
 
       thdraw (point t of P) + .1 * l * unitvector(dir(a)) -- ((point t of P) + 
         l * unitvector(dir(a)));
