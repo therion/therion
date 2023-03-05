@@ -141,26 +141,6 @@ def p_disk_UIS (expr pos,theta,sc,al)=
     thdraw p;
 enddef;
 
-def p_gypsum_NSS (expr pos,theta,sc,al)=
-    U:=(.25u,.25u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (-.25u,0)--(.25u,0);
-    thdraw (0,-.25u)--(0,.25u);
-enddef;
-
-def p_aragonite_NSS (expr pos,theta,sc,al)=
-    U:=(.3u,.4u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (0,-.4u)--(0,.3u);
-    thdraw (0,-.1u){dir 40}..{dir 5}(.3u,.08u);
-    thdraw (0,-.1u){dir 140}..{dir 175}(-.3u,.08u);
-    thdraw (0,.2u){dir 30}..{dir 5}(.25u,.3u);
-    thdraw (0,.2u){dir 150}..{dir 175}(-.25u,.3u);
-enddef;
-
-
 def p_cavepearl_SKBB (expr pos,theta,sc,al)=
     U:=(.25u,.25u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
@@ -169,16 +149,6 @@ def p_cavepearl_SKBB (expr pos,theta,sc,al)=
     thdraw p;
     thdraw p rotated 120;
     thdraw p rotated 240;
-enddef;
-
-def p_gypsumflower_NSS (expr pos,theta,sc,al)=
-    U:=(.4u,.3u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-%    thdraw (.2u,0){left}..(0,.2u)..(.25u,.35u)..(.5u,0)..
-%        (.1u,-.3u)..{dir 125}(-.5u,.2u);
-    thdraw (.18u,0){left}..(0,.15u)..(.2u,.3u)..(.4u,0)..
-        (.15u,-.28u)..{dir 120}(-.4u,.15u);
 enddef;
 
 def p_rimstonepool_ASF (expr pos,theta,sc,al)=
@@ -232,21 +202,6 @@ def p_flute_UIS (expr pos,theta,sc,al)=
     thdraw (-.3u,.2u){dir -70}..{dir 70}(.3u,.2u);
 enddef;
 
-def p_raft_NSS (expr pos,theta,sc,al)=
-    U:=(.5u,.2u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (-.5u,.2u){dir -80}..(-.3u,-.2u)..origin..(.3u,.2u)..
-        {dir -80}(.5u,-.2u);
-enddef;
-
-def p_raftcone_NSS (expr pos,theta,sc,al)=
-    U:=(.3u,.4u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (-.3u,-.4u)--(0,.4u)--(.3u,-.4u);
-enddef;
-
 def p_spring_SKBB (expr pos,theta,sc,al)=
   U:=(.3u,.2u);
   T:=identity aligned al rotated theta scaled sc shifted pos;
@@ -269,53 +224,12 @@ def p_narrowend_UIS (expr pos,theta,sc,al)=
     thdraw (.1u,-.4u)--(.1u,.4u);
 enddef;
 
-def p_narrowend_NSS (expr pos,theta,sc,al)=
-	p_label ("TT", pos, theta, 0);
-enddef;
-% common passage ends in NSS:
-% TT too tight
-% TL too low
-% FS flowstone (choke)
-% BD breakdown choke
-% MF "mud flow" (clay choke)
-
-def p_claychoke_NSS (expr pos,theta,sc,al)=
-	p_label ("MF", pos, theta, 0);
-enddef;
-
 def p_lowend_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.1u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
     pickup PenC;
     thdraw (-.4u,-.1u)--(.4u,-.1u);
     thdraw (-.4u,.1u)--(.4u,.1u);
-enddef;
-
-def p_lowend_NSS (expr pos,theta,sc,al)=
-    U:=(.4u,0);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (-.4u,0)--(.4u,0);
-enddef;
-
-def p_flowstonechoke_NSS (expr pos,theta,sc,al)=
-    U:=(.4u,.3u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    p:=(-.4u,-.4u){right}..{dir120}(-.2u,-.2u){dir -20}..{up}(0,0);
-    thdraw p;
-    thdraw p shifted (0,.2u);
-    thdraw p reflectedabout (origin,down);
-    thdraw p reflectedabout (origin,down) shifted (0,.2u);
-enddef;
-
-def p_breakdownchoke_NSS (expr pos,theta,sc,al)=
-    U:=(.5u,.2u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (-.5u,-.1u)--(-.15u,.05u)--(-.48u,.2u)--cycle;
-    thdraw (-.2u,-.2u)--(.15u,-.18u)--(-.08u,.14u)--cycle;
-    thdraw (.1u,0)--(.4u,-.1u)--(.5u,.2u)--(.1u,.2u)--cycle;
 enddef;
 
 def p_bedrock_ASF (expr pos,theta,sc,al)=
@@ -502,17 +416,6 @@ def p_gradient_BCRA (expr pos,theta,sc,al)=
     thfill (-.25u,-0.7u)--(0,.7u)--(.25u,-.7u)--cycle;
 enddef;
 
-% by Philip Schuchardt
-def p_gradient_NSS (expr pos,theta,sc,al) =
-  U:=(.4u, .6u);
-  T:=identity aligned al rotated theta scaled sc shifted pos;
-  pickup PenC;
-
-  thdraw (-.2u, -.4u) -- (-.4u, .2u);
-  thdraw (0u, -.3u) -- (0u, .6u);
-  thdraw (.2u, -.4u) -- (.4u, .2u);
-enddef;
-
 def p_waterflow_permanent_UIS (expr pos,theta,sc,al)=
     U:=(.15u,.5u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
@@ -582,21 +485,6 @@ def p_airdraught_summer_UIS (expr pos,theta,sc,al)=
   thclean fullcircle scaled 0.3u shifted (0,0.05u);
   thdraw fullcircle scaled 0.2u shifted (0,0.05u);
 enddef;
-
-%bristol's symbol. Based on gypsum flower code.
-def p_airdraught_NSS (expr pos,theta,sc,al)=
-    U:=(.25u,u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (.18u,0){left}..(0,.15u)..(.2u,.3u)..(.4u,0)..
-        (.15u,-.28u)..(-.25u,0)..{dir 100}(0,.8u)..(0,u);
-
-    p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
-    thdraw p;
-    thdraw p reflectedabout (origin,(0,u));
-enddef;
-
-
 
 def p_station_fixed_ASF (expr pos)=
     T:=identity shifted pos;
@@ -883,13 +771,3 @@ def p_pillars_UIS(expr pos,theta,sc,al) =
         thdraw (-.15u,.4u)--(0,.15u)--(.15u,.4u);
     endfor;
 enddef;
-
-def p_mud_NSS(expr pos,theta,sc,al) =
-    U:=(.2u, .7u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (-.7u, .2u) -- (-.2u, .2u);
-    thdraw (-.3u, -.2u) -- (.3u, -.2u);
-    thdraw (.2u, .2u) -- (.7u, .2u);
-enddef;
-
