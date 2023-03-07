@@ -68,6 +68,27 @@ def l_wall_pit_NSS (expr P) =
   thdraw P;
 enddef;
 
+def l_wall_clay_NSS (expr P) =
+  T:=identity;
+  cas := 0;
+  dlzka := arclength P;
+  mojkrok:=adjust_step(dlzka, .5u);
+  pickup PenC;
+  mud_NSS := image(
+	   draw (-.5u, .2u) -- (-.1u, .2u);
+    draw (-.15u, -.2u) -- (.15u, -.2u);
+    %draw (.1u, .2u) -- (.5u, .2u);
+    );
+  forever:
+    t := arctime (cas + mojkrok/2) of P;
+    thdraw mud_NSS scaled .5 shifted (point t of P + .5u * unitvector(thdir(P,t) rotated -90 randomized .2u));
+    cas := cas + mojkrok;
+    exitif cas > dlzka - (2*mojkrok/3); % for rounding errors
+  endfor;
+  pickup PenA;
+  thdraw P;
+enddef;
+
 def l_wall_chimney_NSS (expr P) =
   T:=identity;
   cas := 0;
