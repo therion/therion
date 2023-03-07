@@ -355,3 +355,30 @@ def a_u (expr p) =
     T:=identity;
     thfill p withcolor red;
 enddef;
+
+def a_clay_NSS (expr P) = 
+  % copied out of ice_SKBB, modified to suit nss mud symbol
+  T:=identity;
+  pickup PenC
+  path q; q = bbox p;
+  picture tmp_pic, mud_NSS;
+  pair z;
+  mud_NSS := image(
+    draw (-.7u, .2u) -- (-.2u, .2u);
+    draw (-.3u, -.2u) -- (.3u, -.2u);
+    draw (.2u, .2u) -- (.7u, .2u);
+  );
+  tmp_pic := image(
+    for i = xpart llcorner q step 2u until xpart urcorner q:
+      for j = ypart llcorner q step 2.2u until ypart urcorner q:
+        z := ((i,j) randomized 1.8u);
+        if xpart (p intersectiontimes ((bbox mud_NSS) shifted z)) < 0:
+          draw mud_NSS shifted z;
+        fi;
+      endfor;
+    endfor;
+  );
+  clip tmp_pic to p;
+  drawoptions();
+  draw tmp_pic;
+enddef;
