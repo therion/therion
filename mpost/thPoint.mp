@@ -269,20 +269,6 @@ def p_narrowend_UIS (expr pos,theta,sc,al)=
     thdraw (.1u,-.4u)--(.1u,.4u);
 enddef;
 
-def p_narrowend_NSS (expr pos,theta,sc,al)=
-	p_label ("TT", pos, theta, 0);
-enddef;
-% common passage ends in NSS:
-% TT too tight
-% TL too low
-% FS flowstone (choke)
-% BD breakdown choke
-% MF "mud flow" (clay choke)
-
-def p_claychoke_NSS (expr pos,theta,sc,al)=
-	p_label ("MF", pos, theta, 0);
-enddef;
-
 def p_lowend_UIS (expr pos,theta,sc,al)=
     U:=(.4u,.1u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
@@ -502,17 +488,6 @@ def p_gradient_BCRA (expr pos,theta,sc,al)=
     thfill (-.25u,-0.7u)--(0,.7u)--(.25u,-.7u)--cycle;
 enddef;
 
-% by Philip Schuchardt
-def p_gradient_NSS (expr pos,theta,sc,al) =
-  U:=(.4u, .6u);
-  T:=identity aligned al rotated theta scaled sc shifted pos;
-  pickup PenC;
-
-  thdraw (-.2u, -.4u) -- (-.4u, .2u);
-  thdraw (0u, -.3u) -- (0u, .6u);
-  thdraw (.2u, -.4u) -- (.4u, .2u);
-enddef;
-
 def p_waterflow_permanent_UIS (expr pos,theta,sc,al)=
     U:=(.15u,.5u);
     T:=identity aligned al rotated theta scaled sc shifted pos;
@@ -582,20 +557,6 @@ def p_airdraught_summer_UIS (expr pos,theta,sc,al)=
   thclean fullcircle scaled 0.3u shifted (0,0.05u);
   thdraw fullcircle scaled 0.2u shifted (0,0.05u);
 enddef;
-
-%bristol's symbol. Based on gypsum flower code.
-def p_airdraught_NSS (expr pos,theta,sc,al)=
-    U:=(.25u,u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (.18u,0){left}..(0,.15u)..(.2u,.3u)..(.4u,0)..
-        (.15u,-.28u)..(-.25u,0)..{dir 100}(0,.8u)..(0,u);
-
-    p:=(-.2u,.65u){dir 20}..{dir 90}(0,u);
-    thdraw p;
-    thdraw p reflectedabout (origin,(0,u));
-enddef;
-
 
 
 def p_station_fixed_ASF (expr pos)=
@@ -883,13 +844,3 @@ def p_pillars_UIS(expr pos,theta,sc,al) =
         thdraw (-.15u,.4u)--(0,.15u)--(.15u,.4u);
     endfor;
 enddef;
-
-def p_mud_NSS(expr pos,theta,sc,al) =
-    U:=(.2u, .7u);
-    T:=identity aligned al rotated theta scaled sc shifted pos;
-    pickup PenC;
-    thdraw (-.7u, .2u) -- (-.2u, .2u);
-    thdraw (-.3u, -.2u) -- (.3u, -.2u);
-    thdraw (.2u, .2u) -- (.7u, .2u);
-enddef;
-
