@@ -49,6 +49,9 @@ enddef;
 
 let l_chimney_NSS = l_ceilingstep_UIS;
 
+% bristol's sheet indicates this equivalence
+let l_dripline_NSS = l_lowceiling_SBE;
+
 def l_wall_pit_NSS (expr P) =
   T:=identity;
   cas := 0;
