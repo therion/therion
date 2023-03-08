@@ -93,13 +93,14 @@ def l_wall_chimney_NSS (expr P) =
   T:=identity;
   cas := 0;
   dlzka := arclength P;
-  mojkrok:=adjust_step(dlzka, 0.5u);
+  mojkrok:=adjust_step(dlzka, 0.75u);
   pickup PenC;
   forever:
-    t := arctime cas of P;
-    mark_ (P,t,-0.2u);
+    % we don't want to draw marks on either end, since usually that'll be at a wall or ceilingstep
     cas := cas + mojkrok;
     exitif cas > dlzka + (mojkrok / 3); % for rounding errors
+    t := arctime cas of P;
+    mark_ (P,t,-0.2u);
   endfor;
   pickup PenA;
   thdraw P;
