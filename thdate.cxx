@@ -32,9 +32,6 @@
 #include <sys/types.h>
 #include <time.h>
 #include <locale.h>
-#ifndef THMSVC
-#include <unistd.h>
-#endif
 #include <errno.h>
 
 void thdate::reset()
