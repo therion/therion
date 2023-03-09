@@ -2564,15 +2564,6 @@ struct thdb1d_lpr {
   double err;
 };
 
-int comp_lpr(const void * l1, const void * l2) {
-  if (((thdb1d_lpr*)l1)->err > ((thdb1d_lpr*)l2)->err)
-    return -1;
-  else if (((thdb1d_lpr*)l1)->err < ((thdb1d_lpr*)l2)->err)
-    return 1;
-  else return 0;
-}
-
-
 
 void thdb1d::print_loops() {
   thdb1d_loop_list_type::iterator lii = this->loop_list.begin();
@@ -2581,7 +2572,7 @@ void thdb1d::print_loops() {
   unsigned long i, nloops;
   thdb1d_loop * li;
   nloops = this->loop_list.size();
-  thdb1d_lpr * lpr = new thdb1d_lpr [nloops];
+  std::vector<thdb1d_lpr> lpr(nloops);
   i = 0; 
   while (lii != this->loop_list.end()) {
     lpr[i].li = &(*lii);
@@ -2593,7 +2584,7 @@ void thdb1d::print_loops() {
     lii++;
   }  
   
-  qsort(lpr,nloops,sizeof(thdb1d_lpr),comp_lpr);
+  std::sort(lpr.begin(), lpr.end(), [](const auto& a, const auto& b){ return a.err >= b.err; });
   
   thdb1d_loop_leg * ll;
   thsurvey * ss;   
@@ -2672,7 +2663,6 @@ void thdb1d::print_loops() {
     thlog.printf("]\n");
   }
   thlog.printf("##################### end of loop errors #######################\n");
-  delete [] lpr;
 }
 
 thdb3ddata * thdb1d::get_3d_surface() {

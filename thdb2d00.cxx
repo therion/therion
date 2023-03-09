@@ -135,37 +135,23 @@ void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level
 }
 
 
-int thdb2d_compxm(const void * ee1, const void * ee2)
+bool thdb2d_compxm(const thdb2dxm * e1, const thdb2dxm * e2)
 {
-  thdb2dxm ** e1 = (thdb2dxm **) ee1, ** e2 = (thdb2dxm **) ee2;
-  if (thisnan((*e1)->map->z))
-    return -1;
-  if (thisnan((*e2)->map->z))
-    return 1;
-  if ((*e1)->map->z < (*e2)->map->z) {
-    return -1;
-  } else if ((*e1)->map->z == (*e2)->map->z)
-    return 0;
-  else
-    return 1;
+  if (thisnan(e1->map->z))
+    return true;
+  if (thisnan(e2->map->z))
+    return false;
+  return e1->map->z < e2->map->z;
 }
 
 
-int thdb2d_compscrap(const void * ee1, const void * ee2)
+bool thdb2d_compscrap(const thscrap * e1, const thscrap * e2)
 {
-  thscrap * e1, * e2;
-  e1 = *((thscrap **) ee1);
-  e2 = *((thscrap **) ee2);
   if (thisnan(e1->z))
-    return 1;
+    return false;
   if (thisnan(e2->z))
-    return -1;
-  if (e1->z > e2->z) {
-    return -1;
-  } else if (e1->z == e2->z)
-    return 0;
-  else
-    return 1;
+    return true;
+  return e1->z >= e2->z;
 }
 
 
@@ -294,7 +280,7 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
 {
 
   // najde vsetky mapy ktore mame oznacene, resp. vyberie vsetky zakladne  
-  thdb2dxm * selection = NULL, * cxm, * lxm = NULL, * * new_selection, **nsi;
+  thdb2dxm * selection = NULL, * cxm, * lxm = NULL, **nsi;
   thdb2dxs * pcxs;
   unsigned long nmaps = 0, imap, nscraps = 0, iscr;
 //  bool chapters = false, onemap = false;
@@ -493,19 +479,18 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
       if (nscraps > 1) {
 
         // zoradime scrapy podla z-ka
-        thscrap ** sss = new thscrap* [nscraps];
+        std::vector<thscrap*> sss(nscraps);
         xcitem = mapp->first_item; //->next_item;
         for(iscr = 0; iscr < nscraps; iscr++) {
           sss[iscr] = (thscrap *) xcitem->object;
           xcitem = xcitem->next_item;
         }
-        qsort(sss, nscraps, sizeof(thscrap*), thdb2d_compscrap);
+        std::sort(sss.begin(), sss.end(), thdb2d_compscrap);
         xcitem = mapp->first_item; //->next_item;
         for(iscr = 0; iscr < nscraps; iscr++) {
           xcitem->object = sss[iscr];
           xcitem = xcitem->next_item;
         }
-        delete [] sss;
         
         // vyhodime z mapy prvy scrap
         // mapp->first_item = mapp->first_item->next_item;
@@ -524,12 +509,12 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
     
     if (nmaps > 1) {
       // zoradi mapy
-      new_selection = new thdb2dxm* [nmaps];
-      for (imap = 0, cxm = selection, nsi = new_selection; imap < nmaps; imap++, cxm = cxm->next_item, nsi++) {
+      std::vector<thdb2dxm*> new_selection(nmaps);
+      for (imap = 0, cxm = selection, nsi = new_selection.data(); imap < nmaps; imap++, cxm = cxm->next_item, nsi++) {
         *nsi = cxm;
       }
-      qsort(new_selection,nmaps,sizeof(thdb2dxm*),thdb2d_compxm);
-      for (imap = 0, nsi = new_selection; imap < nmaps; imap++, nsi++) {
+      std::sort(new_selection.begin(), new_selection.end(), thdb2d_compxm);
+      for (imap = 0, nsi = new_selection.data(); imap < nmaps; imap++, nsi++) {
 
         if (imap == 0) {
           selection = *nsi;
@@ -544,8 +529,6 @@ thdb2dxm * thdb2d::select_projection(thdb2dprj * prj)
         lxm = *nsi;
         
       }
-      
-      delete [] new_selection;
     }
   }
   
