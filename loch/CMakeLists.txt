@@ -47,7 +47,7 @@ if (WIN32)
     add_custom_target(generate_resource DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/loch.res)
 endif()
 
-include(${CMAKE_SOURCE_DIR}/cmake/LochSources.cmake)
+include(LochSources)
 # loch executable
 add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES})
 # we need to filter out include directories from wxWidgets cxx flags list, because we have to set them only as system headers to ignore warnings

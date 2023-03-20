@@ -7,7 +7,7 @@ jobs:
       matrix:
         include:
           - { os: ubuntu-20.04, toolchain: gcc.cmake,              args: ""                                                }
-          - { os: ubuntu-22.04, toolchain: clang-sanitizers.cmake, args: ""                                                }
+          - { os: ubuntu-22.04, toolchain: clang-sanitizers.cmake, args: "-DENABLE_PROJ_CMAKE=ON"                          }
           - { os: ubuntu-22.04, toolchain: gcc.cmake,              args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug" }
     steps:
       - uses: actions/checkout@v3
