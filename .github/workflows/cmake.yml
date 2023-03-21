@@ -7,7 +7,7 @@ jobs:
       matrix:
         include:
           - { os: ubuntu-20.04, toolchain: gcc.cmake,              args: ""                                                }
-          - { os: ubuntu-22.04, toolchain: clang-sanitizers.cmake, args: "-DENABLE_PROJ_CMAKE=ON"                          }
+          - { os: ubuntu-22.04, toolchain: clang-sanitizers.cmake, args: ""                                                }
           - { os: ubuntu-22.04, toolchain: gcc.cmake,              args: "-DENABLE_CLANG_TIDY=ON -DCMAKE_BUILD_TYPE=Debug" }
     steps:
       - uses: actions/checkout@v3
@@ -78,8 +78,8 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW32, arch: i686,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"           }
-          - { msystem: CLANG32, arch: clang-i686, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake" }
+          - { msystem: MINGW32, arch: i686,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"                                  }
+          - { msystem: CLANG32, arch: clang-i686, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON" }
     defaults:
       run:
         shell: msys2 {0}
@@ -92,7 +92,7 @@ jobs:
           msystem: ${{ matrix.config.msystem }}
           update: true
           install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
-      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DUSE_BUNDLED_SHAPELIB=OFF -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Build samples
         run: |
