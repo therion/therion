@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: install dependencies
         run: |
-          # brew update  # commented out because of conflicting python versions
+          brew update  # try to comment out in case of package problems
           brew tap homebrew/core
           rm /usr/local/bin/2to3
           brew install wxwidgets vtk proj xquartz ninja basictex fmt pkgconfig
@@ -78,8 +78,8 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW32, arch: i686,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"           }
-          - { msystem: CLANG32, arch: clang-i686, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake" }
+          - { msystem: MINGW32, arch: i686,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"                                  }
+          - { msystem: CLANG32, arch: clang-i686, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON" }
     defaults:
       run:
         shell: msys2 {0}
@@ -92,7 +92,7 @@ jobs:
           msystem: ${{ matrix.config.msystem }}
           update: true
           install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
-      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DUSE_BUNDLED_SHAPELIB=OFF -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
+      - run: mkdir build && cd build && cmake -G "MSYS Makefiles" -DBUILD_THBOOK=OFF ${{ matrix.config.args }} ..
       - run: cmake --build build -t therion loch utest -- -j 4
       - name: Build samples
         run: |

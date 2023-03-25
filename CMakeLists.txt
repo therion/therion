@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
-include(cmake/PreventInSourceBuilds.cmake)
+
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+include(PreventInSourceBuilds)
 
 project(therion)
 set(CMAKE_CXX_STANDARD 17)
@@ -12,11 +14,11 @@ option(BUILD_THBOOK "Build thbook.pdf." ON)
 option(BUILD_XTHERION "Build xtherion." ON)
 
 include(GNUInstallDirs)
-include(cmake/BuildType.cmake)
-include(cmake/Dependencies.cmake)
-include(cmake/TherionSources.cmake)
-include(cmake/ECMEnableSanitizers.cmake)
-include(cmake/Warnings.cmake)
+include(BuildType)
+include(Dependencies)
+include(TherionSources)
+include(ECMEnableSanitizers)
+include(Warnings)
 
 # strip binaries in release build
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -s")
@@ -145,8 +147,8 @@ if (BUILD_THERION)
     # therion lib
     add_library(therion-common STATIC ${THERION_HEADERS} ${THERION_SOURCES})
     target_include_directories(therion-common BEFORE PUBLIC "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}")
-    target_link_libraries(therion-common PUBLIC PkgConfig::PROJ shp poly2tri common-utils QuickHull)
-    target_compile_definitions(therion-common PUBLIC PROJ_VER=${PROJ_MVER} "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
+    target_link_libraries(therion-common PUBLIC proj-interface shp-interface poly2tri common-utils QuickHull)
+    target_compile_definitions(therion-common PUBLIC "TH${THPLATFORM}" $<$<BOOL:${ENABLE_THDEBUG}>:THDEBUG>)
     add_dependencies(therion-common 
         version
         generate_thsymbolsetlist
@@ -182,7 +184,7 @@ if (BUILD_THERION)
 
     # unit tests
     add_executable(utest utest-proj.cxx utest-icase.cxx utest-thdouble.cxx utest-main.cxx)
-    target_link_libraries(utest PUBLIC therion-common Catch2::Catch2)
+    target_link_libraries(utest PUBLIC therion-common catch2-interface)
     enable_testing()
     if (NOT WIN32)
         add_test(NAME utest COMMAND $<TARGET_FILE:utest> WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
