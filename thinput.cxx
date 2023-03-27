@@ -513,6 +513,9 @@ std::string thinput::get_cif_abspath(const char * fname)
 
   auto pict_path_str = pict_path.string();
   std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
+  if ((strlen(fname) == 0) && ((pict_path_str.length() == 0) || (pict_path_str.back() != '/'))) {
+	  pict_path_str += "/";
+  }
   return pict_path_str;
 }
 
