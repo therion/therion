@@ -1,0 +1,15 @@
+layout test2
+
+code mpost
+  inputrel("res/thtest.mp");
+  inputrel("../incl/res/thtest.mp");
+
+code tex-map
+  \inputrel res/thtest.tex
+
+  \savepath{p1}{../incl/ageom.pdf}
+  \def\maplayout{
+    \legendbox{100}{100}{NW}{\loadpicture{p1}}
+  }
+
+endlayout
