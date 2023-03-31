@@ -1,0 +1,26 @@
+encoding  utf-8
+
+source
+  centreline
+    data normal from to compass clino tape
+    0 1 0 0 1
+  endcentreline
+endsource
+
+input incl/layout
+
+layout test
+
+  code mpost
+    inputrel("incl/res/thtest.mp");
+
+  code tex-map
+    \inputrel{incl/res/thtest.tex}
+
+  endcode
+
+  copy test2
+
+endlayout
+
+export map -layout test
