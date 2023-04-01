@@ -24,3 +24,6 @@ layout test
 endlayout
 
 export map -layout test
+
+#!PROCESS
+#!CLEAN cave.pdf
