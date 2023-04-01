@@ -1,7 +1,7 @@
 Therion 6.1.7 (in progress):
 
 therion:
- * allow custom fonts for map grid coordinates (see the \coordfont TeX macro)
+ * allow custom fonts for map grid coordinates (see the \gridfont TeX macro)
  * display negative coordinates in s_altitudebar_SKBB using an en-dash
    (-- ligature) instead of a hyphen as an approximation of the minus character
  * bugs fixed:

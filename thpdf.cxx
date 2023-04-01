@@ -878,7 +878,7 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
           tmpnumx = G_real_init_x+ii*LAYOUT.XS;
           tmpnumy = G_real_init_y+jj*LAYOUT.YS;
 	  PAGEDEF << "\\gridcoord{" << (row == 2 ? (col == 2 ? 1 : 3) : (col == 2 ? 7 : 9)) << 
-	      "}{\\coordfont (" << std::setprecision(0) << 
+	      "}{\\gridfont (" << std::setprecision(0) <<
               (tmpnumx < 0 ? utf2tex("−"): "") /* unicode minus */ <<
 	      fmt::format("{}",thdouble(std::abs(tmpnumx),0)) << "," <<
               (tmpnumy < 0 ? utf2tex("−"): "") /* unicode minus */ <<
@@ -907,7 +907,7 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         if (col == 0 && LAYOUT.grid_coord_freq > 0) {
           PAGEDEF << "\\PL{q}";
           PAGEDEF << "\\PL{1 0 0 1 " << fmt::format("{}",thdouble(i-LLX,prec_xy)) << " " << fmt::format("{}",thdouble(j-LLY,prec_xy)) << " cm}";
-          PAGEDEF << "\\gridcoord{" << (row==2?3:9) << "}{\\coordfont " <<
+          PAGEDEF << "\\gridcoord{" << (row==2?3:9) << "}{\\gridfont " <<
               (tmpnum < 0 ? utf2tex("−"): "") /* unicode minus */ <<
 	      std::setprecision(0) << fmt::format("{}",thdouble(std::abs(tmpnum),0)) <<
 	      std::setprecision(2)<< "}";
@@ -916,7 +916,7 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         if (col == 2 && LAYOUT.grid_coord_freq == 2) {
           PAGEDEF << "\\PL{q}";
           PAGEDEF << "\\PL{1 0 0 1 " << fmt::format("{}",thdouble(i-LLX,prec_xy)) << " " << fmt::format("{}",thdouble(j-LLY,prec_xy)) << " cm}";
-          PAGEDEF << "\\gridcoord{" << (row==2?1:7) << "}{\\coordfont " << 
+          PAGEDEF << "\\gridcoord{" << (row==2?1:7) << "}{\\gridfont " <<
               (tmpnum < 0 ? utf2tex("−"): "") /* unicode minus */ <<
 	      std::setprecision(0) << fmt::format("{}",thdouble(std::abs(tmpnum),0)) <<
 	      std::setprecision(2)<< "}";
