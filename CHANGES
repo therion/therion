@@ -1,10 +1,17 @@
-Therion 6.1.7 (in progress):
+Therion 6.1.7 (2023-04-23):
 
 therion:
  * allow custom fonts for map grid coordinates (see the \gridfont TeX macro)
  * display negative coordinates in s_altitudebar_SKBB using an en-dash
    (-- ligature) instead of a hyphen as an approximation of the minus character
+ * various thbook updates
+ * C++ code modernization and fixes, including [#483, #484, #486, #487, #488,
+   #491, #492, #493] by Matěj Plch
+ * samples reorganization: a common directory for tests; new test: inputrel
  * bugs fixed:
+   - wrong check for ICC profile type
+   - hyphen used instead of minus in s_altitudebar
+   - path not ending with slash in \includeprefix (TeX) and includeprefix (mpost)
    - thbook: document the usage of TeX registers [#485]
 
 xtherion:
@@ -14,6 +21,11 @@ xtherion:
 infrastructure:
  * therion no longer includes an internal copy of fmtlib
  * system fmtlib is a mandatory dependency now
+ * updated GitHub Actions configuration
+ * CMake 3.16 required
+ * CMake: dependencies refactoring and other improvements [#498]
+ * bundled Catch2 updated to 2.13.10
+ * added extern/readme.txt
 
 --------------------------------------------------------------------------------
 
