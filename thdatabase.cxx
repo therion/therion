@@ -837,6 +837,10 @@ void thdatabase::preprocess() {
 	  thcs_cfg.bbox.push_back(thcfg.ibbx[2] / THPI * 180.0);
 	  thcs_cfg.bbox.push_back(thcfg.ibbx[1] / THPI * 180.0);
 	  thcs_cfg.bbox.push_back(thcfg.ibbx[3] / THPI * 180.0);
+
+    // PROJ9.2 has some issues with a degenerated bbox
+    if (thcs_cfg.bbox[0] == thcs_cfg.bbox[2]) thcs_cfg.bbox[2] += 1e-8;
+    if (thcs_cfg.bbox[1] == thcs_cfg.bbox[3]) thcs_cfg.bbox[3] += 1e-8;
   }
   obi = this->object_list.begin();
   while (obi != this->object_list.end()) {
