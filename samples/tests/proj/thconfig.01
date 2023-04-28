@@ -1,0 +1,15 @@
+# conversion of just one point
+
+encoding  utf-8
+
+source
+survey onepoint
+  centreline
+    cs jtsk03
+    fix stiavnica 379033.238  1208895.277 2025.31
+  endcentreline
+endsurvey
+endsource
+
+cs ijtsk03
+export database -format sql -o cave-01.sql
