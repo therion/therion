@@ -101,6 +101,16 @@ def s_vgrid_SM (expr xpos, ypos, xsize, ysize) =
   ) dashed evenly;
 enddef;
 
+def s_vgrid_SKBB (expr xpos, ypos, xsize, ysize) =
+  pickup PenD;
+  mystep := adjust_step(xsize/2, 5mm);
+  draw (
+    if xpos < 0: 0 else: -xsize/2 fi, 0
+  ) -- (
+    if xpos > 0: 0 else: xsize/2 fi, 0
+  ) dashed dashpattern (on mystep/4 off mystep/2 on mystep/4);
+enddef;
+
 def s_altitudebar_SKBB (expr zmin, zmax, units)(text t)(text labels) =
   begingroup;
     ncol := 0;  % number of colors
