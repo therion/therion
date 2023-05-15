@@ -490,8 +490,12 @@ char * thinput::get_cif_path()
   return cifpath.get_buffer();
 }
 
-std::string thinput::get_cif_abspath(const char * fname)
+std::string thinput::get_cif_abspath(const char * fname_ptr)
 {
+  std::string_view fname;
+  if (fname_ptr)
+    fname = fname_ptr;
+
   std::error_code ec;
   auto pict_path = std::filesystem::current_path(ec);
   thassert(!ec);
@@ -504,7 +508,7 @@ std::string thinput::get_cif_abspath(const char * fname)
   
   pict_path = pict_path.parent_path();
 
-  if (fname != NULL && strlen(fname) > 0) {
+  if (!fname.empty()) {
     if (fs::path(fname).is_absolute())
       pict_path = fname;
     else
@@ -513,7 +517,7 @@ std::string thinput::get_cif_abspath(const char * fname)
 
   auto pict_path_str = pict_path.string();
   std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
-  if ((strlen(fname) == 0) && ((pict_path_str.length() == 0) || (pict_path_str.back() != '/'))) {
+  if (fname.empty() && (pict_path_str.empty() || (pict_path_str.back() != '/'))) {
 	  pict_path_str += "/";
   }
   return pict_path_str;
