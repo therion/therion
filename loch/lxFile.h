@@ -6,6 +6,7 @@
 #include <list>
 #include <string>
 #include <cstdio>
+#include <cstdint>
 #include <vector>
 #endif  
 //LXDEPCHECK - standard libraries
