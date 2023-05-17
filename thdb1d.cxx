@@ -309,7 +309,7 @@ void thdb1d::scan_data()
                   else
                 	  length_sd = lei->length_sd;
 				  if (abs(lei->backlength - lei->length) > (3.0 * length_sd))
-					thwarning(("%s [%d] -- forwards and backwards length readings do not match", lei->srcf.name, lei->srcf.line));
+					thwarning(("%s [%lu] -- forwards and backwards length readings do not match", lei->srcf.name, lei->srcf.line));
                   lei->length += lei->backlength;
                   lei->length /= 2.0;
                 }

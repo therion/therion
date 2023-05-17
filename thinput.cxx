@@ -410,7 +410,7 @@ char * thinput::read_line()
         case TT_INPUT:
           if (this->input_sensitivity) {
             if (this->tmpmb.get_size() != 1)
-              therror(("%s [%d] -- one input file name expected -- %s", \
+              therror(("%s [%lu] -- one input file name expected -- %s", \
                 this->get_cif_name(), this->get_cif_line_number(), \
                 this->valuebf.get_buffer()))
             else
