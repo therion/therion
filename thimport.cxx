@@ -442,7 +442,7 @@ void thimport::import_file_img()
   img* pimg = img_open(this->fname);
   if (pimg == NULL) {	
     imgerr = img_error();
-    ththrow("unable to open file {}, error code: {}", this->fname, imgerr);
+    ththrow("unable to open file {}, error code: {}", this->fname, static_cast<int>(imgerr));
   }
   do {
     result = img_read_item(pimg, &imgpt);
