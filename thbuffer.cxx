@@ -28,6 +28,8 @@
  
 #include "thbuffer.h"
 
+#include <cstring>
+
 thbuffer::thbuffer()
 {
   this->size = 16;

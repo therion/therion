@@ -32,6 +32,7 @@
 #include "thchenc.h"
 #include <cctype>
 #include <cmath>
+#include <cstring>
 #include <set>
 
 thattr::thattr()

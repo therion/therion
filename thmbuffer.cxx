@@ -27,6 +27,7 @@
  
 #include "thmbuffer.h"
 
+#include <cstring>
 
 thmbuffer::mblock::mblock(size_t min_size, size_t last_size)
 {
