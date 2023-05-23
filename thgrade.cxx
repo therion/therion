@@ -30,6 +30,7 @@
 #include "thchenc.h"
 #include "thdata.h"
 #include "thparse.h"
+#include "thdatabase.h"
 
 thgrade::thgrade()
 {

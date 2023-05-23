@@ -28,6 +28,8 @@
 #include "thdatareader.h"
 #include "thexception.h"
 #include "thobjectsrc.h"
+#include "thdataobject.h"
+#include "thdatabase.h"
 
 unsigned long thdatareader_get_opos(bool inlineid, bool cfgid)
 {

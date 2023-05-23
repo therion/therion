@@ -31,7 +31,6 @@
 #include "thtmpdir.h"
 #include "thdata.h"
 #include "thexception.h"
-#include "thdatabase.h"
 #include "thinfnan.h"
 #include "thinit.h"
 #include "thconfig.h"

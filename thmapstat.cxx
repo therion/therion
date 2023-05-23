@@ -38,6 +38,8 @@
 #include "thdb1d.h"
 #include "thconfig.h"
 #include "thcs.h"
+#include "thdb2dmi.h"
+#include "thdatabase.h"
 #include <vector>
 #include <algorithm>
 #include <string.h>

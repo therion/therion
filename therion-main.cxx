@@ -37,6 +37,7 @@
 #include "thbezier.h"
 #include "thlogfile.h"
 #include "thproj.h"
+#include "thdatabase.h"
 
 extern const thstok thtt_texts [];
 

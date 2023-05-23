@@ -33,6 +33,7 @@
 #include "th2ddataobject.h"
 #include "thpoint.h"
 #include "thconfig.h"
+#include "thdatabase.h"
 
 thwarp::~thwarp() {}
    

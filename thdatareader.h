@@ -30,9 +30,9 @@
 #define thdatareader_h
 
 
-#include "thdatabase.h"
 #include "thinput.h"
 
+class thdatabase;
 
 /**
  * Main data reader class.

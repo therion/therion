@@ -43,6 +43,7 @@
 #include "thsymbolsets.h"
 #include "thlogfile.h"
 #include "thepsparse.h"
+#include "thdatabase.h"
 #include <fmt/printf.h>
 
 thsymbolset::thsymbolset()

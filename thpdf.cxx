@@ -50,6 +50,7 @@
 #include "thlang.h"
 #include "thversion.h"
 #include "thdouble.h"
+#include "therion.h"
 
 #include "thchenc.h"
 #include "thbuffer.h"
