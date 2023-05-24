@@ -1,6 +1,9 @@
 // Standard libraries
 #ifndef LXDEPCHECK
 #include <wx/statline.h>
+#include <wx/listbox.h>
+#include <wx/stattext.h>
+#include <wx/button.h>
 #endif  
 //LXDEPCHECK - standard libraries
 
@@ -8,6 +11,7 @@
 #include "lxSetup.h"
 #include "lxGUI.h"
 #include "lxGLC.h"
+#include "lxData.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"

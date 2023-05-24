@@ -20,9 +20,10 @@
 //LXDEPCHECK - standard libraries
 
 
-#include "lxData.h"
 #include "lxMath.h"
 #include <set>
+
+struct lxData;
 
 enum {
   lxSETUP_COLORMD_DEFAULT,

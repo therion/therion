@@ -5,6 +5,9 @@
 // Standard libraries
 #ifndef LXDEPCHECK
 #include <wx/panel.h>
+#include <wx/dialog.h>
+#include <wx/statbmp.h>
+#include <wx/stattext.h>
 #endif  
 //LXDEPCHECK - standard libraries
 

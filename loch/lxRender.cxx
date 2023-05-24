@@ -17,6 +17,9 @@
 #include <wx/intl.h>
 #include <wx/progdlg.h>
 #include <wx/valgen.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/button.h>
 
 #ifdef __cplusplus
  extern "C" {  // stupid JPEG library

@@ -3,10 +3,13 @@
 
 // Standard libraries
 #ifndef LXDEPCHECK
-#include <wx/wx.h>
 #include <wx/spinctrl.h>
 #include <wx/slider.h>
 #include <wx/gbsizer.h>
+#include <wx/radiobut.h>
+#include <wx/checkbox.h>
+#include <wx/panel.h>
+#include <wx/textctrl.h>
 #endif  
 //LXDEPCHECK - standard libraries
 
