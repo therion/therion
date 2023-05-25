@@ -4,6 +4,8 @@ extern "C" {
 
 /*Standard libraries*/
 #ifndef LXDEPCHECK
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <windows.h>
 #endif  
 /*LXDEPCHECK - standard libraries*/
