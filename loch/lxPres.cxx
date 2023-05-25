@@ -6,6 +6,7 @@
 #include <wx/msgdlg.h>
 #include <wx/listbox.h>
 #include <wx/button.h>
+#include <cstdint>
 #endif
 //LXDEPCHECK - standard libraries
 
