@@ -34,6 +34,7 @@
 #include "thdb2dmi.h"
 #include "thtflength.h"
 #include "thconfig.h"
+#include "thdatabase.h"
 
 
 thmap::thmap()

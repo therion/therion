@@ -14,7 +14,8 @@
 #ifndef LXDEPCHECK
 #include <math.h>
 #include <stdlib.h>
-#include <wx/wx.h>
+#include <wx/dcclient.h>
+#include <wx/stattext.h>
 #include <stdio.h>
 #include <vtkVersionMacros.h>
 #include <vtkCellArray.h>
@@ -39,9 +40,7 @@
 #include "lxFNT6x13_bdf.h"
 #include "lxFNT10x20_bdf.h"
 #include "lxFNTFreeSans_ttf.h"
-#include "lxSetup.h"
 #include "lxRender.h"
-#include "lxGUI.h"
 #include "lxTR.h"
 
 #ifdef LXWIN32

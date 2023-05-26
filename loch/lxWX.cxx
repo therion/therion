@@ -5,6 +5,7 @@
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
 #include <wx/textctrl.h>
+#include <wx/frame.h>
 #endif
 
 

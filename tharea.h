@@ -33,6 +33,8 @@
 #include "th2ddataobject.h"
 #include "thdb2dab.h"
 
+#include <memory>
+
 /**
  * Area command options tokens.
  */

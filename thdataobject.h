@@ -30,13 +30,12 @@
 #define thdataobject_h
 
 
-#include "thdatabase.h"
 #include "thperson.h"
 #include "thparse.h"
 #include "thdate.h"
-#include "thdataleg.h"
 #include "thlayoutclr.h"
-#include <stdio.h>
+#include "thobjectsrc.h"
+#include <cstdio>
 #include <map>
 
 /**

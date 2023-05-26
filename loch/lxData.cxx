@@ -29,7 +29,6 @@
 // Standard libraries
 #ifndef LXDEPCHECK
 #include <stdlib.h>
-#include <wx/wx.h>
 #include <wx/txtstrm.h>
 #include <wx/strconv.h>
 #include <wx/wfstream.h>

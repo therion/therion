@@ -33,6 +33,7 @@
 #include "th2ddataobject.h"
 #include "thparse.h"
 #include "thdb2dpt.h"
+#include "thobjectname.h"
 
 /**
  * point command options tokens.
