@@ -11,7 +11,7 @@ endif
 # common therion objects
 CMNOBJECTS = \
   lxTR.o lxOGLFT.o lxSetup.o lxRender.o lxWX.o \
-  lxImgIO.o lxLRUD.o lxFile.o lxSTree.o \
+  lxImgIO.o lxLRUD.o lxFile.o icase.o lxSTree.o \
   lxData.o lxMath.o lxSView.o lxSScene.o \
   lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o lxSStats.o \
   img.o
@@ -279,6 +279,7 @@ clean:
 $(LOUTDIR)/lxAboutDlg.o: lxAboutDlg.cxx lxWX.h icons/about.xpm ../thversion.h
 $(LOUTDIR)/lxData.o: lxData.cxx lxData.h lxMath.h lxImgIO.h lxFile.h lxLRUD.h
 $(LOUTDIR)/lxFile.o: lxFile.cxx lxFile.h lxMath.h img.h ../extern/img.h
+$(LOUTDIR)/icase.o: icase.h
 $(LOUTDIR)/lxGLC.o: lxGLC.cxx lxGLC.h lxMath.h lxGUI.h lxData.h lxImgIO.h lxFile.h \
  lxSetup.h lxSView.h lxWX.h lxFNT6x13_bdf.h lxFNT10x20_bdf.h \
  lxFNTFreeSans_ttf.h lxRender.h lxTR.h
