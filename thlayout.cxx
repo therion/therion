@@ -42,6 +42,7 @@
 #include "thdatabase.h"
 #include <string.h>
 #include <filesystem>
+#include <algorithm>
 
 namespace fs = std::filesystem;
 

@@ -357,6 +357,9 @@ $(OUTDIR)/extern/lxMath.o: loch/lxMath.h loch/lxMath.cxx
 $(OUTDIR)/extern/lxFile.o: loch/lxFile.h loch/lxFile.cxx
 	$(CXX) -c $(CXXFLAGS) -o $(OUTDIR)/extern/lxFile.o loch/lxFile.cxx
 
+$(OUTDIR)/extern/icase.o: loch/icase.h loch/icase.cxx
+	$(CXX) -c $(CXXFLAGS) -o $(OUTDIR)/extern/icase.o loch/icase.cxx
+
 extern/img.o: extern/img.c extern/img.h
 extern/poly2tri/common/shapes.o: extern/poly2tri/common/shapes.cc extern/poly2tri/common/shapes.h
 extern/poly2tri/sweep/advancing_front.o: extern/poly2tri/sweep/advancing_front.cc
