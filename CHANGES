@@ -1,4 +1,4 @@
-Therion 6.1.8 (in progress):
+Therion 6.1.8 (2023-06-14):
 
 therion:
  * added coordinate transformation sample
@@ -9,7 +9,9 @@ therion:
    - bug with area bedrock
    - various code fixes (NAN on windows, GCC 13 compatibility, includes 
      reorganization, missing includes, incorect printf arguments)
-   - CI fixes
+
+infrastructure:
+ * CI fixes
 
 --------------------------------------------------------------------------------
 
