@@ -38,7 +38,6 @@
 #include "thscrap.h"
 #include <vector>
 #include "thchenc.h"
-#include <algorithm>
 #include "thmap.h"
 
 #include <fmt/printf.h>

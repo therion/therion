@@ -50,6 +50,7 @@
 #include <set>
 #include <iterator>
 #include <cstdio>
+#include <algorithm>
 
 class thprjx_link {
 

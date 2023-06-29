@@ -42,6 +42,7 @@
 #include "thlayout.h"
 #include "thconfig.h"
 #include <list>
+#include <algorithm>
 #include "thmapstat.h"
 
 void thdb2d::insert_basic_maps(thdb2dxm * fmap, thmap * map, int mode, int level, thdb2dmi_shift shift) {

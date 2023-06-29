@@ -10,7 +10,7 @@ target_compile_definitions(img PUBLIC IMG_API_VERSION=1)
 target_link_libraries(img PRIVATE disable-warnings)
 
 # library common with therion
-add_library(common-utils STATIC icase.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx)
+add_library(common-utils STATIC icase.h icase.cxx lxFile.h lxFile.cxx lxMath.h lxMath.cxx)
 target_compile_definitions(common-utils PUBLIC $<$<BOOL:${WIN32}>:WIN32_LEAN_AND_MEAN> PRIVATE ${LOCH_DEFINITIONS})
 target_link_libraries(common-utils PUBLIC img enable-warnings fmt::fmt)
 
