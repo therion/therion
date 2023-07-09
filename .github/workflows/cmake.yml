@@ -44,12 +44,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11, macos-12]
+        os: [macos-11, macos-12, macos-13]
     steps:
       - uses: actions/checkout@v3
       - name: install dependencies
         run: |
-          brew update  # try to comment out in case of package problems
+          # brew update  # try to comment out in case of package problems
           brew tap homebrew/core
           rm /usr/local/bin/2to3
           brew install wxwidgets vtk proj xquartz ninja basictex fmt pkgconfig
