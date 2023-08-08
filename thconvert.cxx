@@ -95,10 +95,8 @@ std::string process_pdf_string(std::string s, std::string font) {
   unsigned char c;
   char *err;
   unsigned j;
-  std::map<std::string,FONTCHARS>::iterator I; 
 
-  I = USED_CHARS.find(font);
-  if (I == USED_CHARS.end()) std::cerr << "This can't happen!";
+  auto& I = USED_CHARS.at(font); // must be there
   s = s.substr(1,s.length()-3);  // delete surrounding parentheses and final space
   for (unsigned i=0; i<s.size(); i++) {
     c = s[i];
@@ -128,8 +126,8 @@ std::string process_pdf_string(std::string s, std::string font) {
   t = "";
   for (unsigned i=0; i<r.size(); i++) {
     c = r[i];
-    if (((*I).second).find(c) == ((*I).second).end()) {
-      ((*I).second).insert(c);
+    if (I.find(c) == I.end()) {
+      I.insert(c);
     }
     t += fmt::format("{:02x}",c);
   }
