@@ -126,9 +126,7 @@ std::string process_pdf_string(std::string s, std::string font) {
   t = "";
   for (unsigned i=0; i<r.size(); i++) {
     c = r[i];
-    if (I.find(c) == I.end()) {
-      I.insert(c);
-    }
+    I.insert(c);
     t += fmt::format("{:02x}",c);
   }
   return "<" + t + ">";
