@@ -25,7 +25,6 @@
 #ifndef LXDEPCHECK
 
 #ifndef OGLFT_NO_WX
-#include <wx/wx.h>
 #include <wx/colour.h>
 #else
 #include <windows.h>

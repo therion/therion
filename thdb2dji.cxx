@@ -30,7 +30,6 @@
 #include "thexception.h"
 #include "thdb2dpt.h"
 #include "thdb2dlp.h"
-#include "thdataobject.h"
 
 thdb2dji::thdb2dji()
 {

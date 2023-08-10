@@ -39,8 +39,10 @@
 #include "thcsdata.h"
 #include "thconfig.h"
 #include "th2ddataobject.h"
+#include "thdatabase.h"
 #include <string.h>
 #include <filesystem>
+#include <algorithm>
 
 namespace fs = std::filesystem;
 

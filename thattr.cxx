@@ -32,6 +32,7 @@
 #include "thchenc.h"
 #include <cctype>
 #include <cmath>
+#include <cstring>
 #include <set>
 
 thattr::thattr()
@@ -64,7 +65,7 @@ void thattr_obj::set_tree_level(size_t level) {
 
 thattr_field * thattr::insert_field(const char * name)
 {
-  thattr_field tmp, * r;
+  thattr_field tmp = {}, * r;
   tmp.m_id = this->m_num_fields++;
   tmp.m_name = name;
   tmp.m_parent = this;
@@ -251,15 +252,14 @@ void thattr::copy_attributes(thattr_obj * object, long user_id)
 
 std::string expdbf_field_name(std::string name, std::set<std::string> & fset)
 {
-  std::string nn;
+  std::string nn, x;
   nn = name;
   int i;
-  char x[20];
   if (nn.length() > 11) {
+    i = 0;
     do {
-      i = 0;
-      sprintf(x, "%d", i);
-      nn = name.substr(0, 10 - strlen(x));
+      x = std::to_string(i);
+      nn = name.substr(0, 10 - x.length());
       nn += "_";
       nn += x;
       i++;
@@ -302,7 +302,6 @@ void thattr::analyze_fields()
   double cvald;
   size_t cslen;
   int ctype;
-  char b[64];
   thattr_attr * ca;
   thattr_obj_list::iterator oi;
   thattr_id2attr_map::iterator ai;
@@ -315,14 +314,12 @@ void thattr::analyze_fields()
         case THATTR_INTEGER:
           cvall = ca->m_val_long;
           ca->m_val_double = double(cvall);
-          sprintf(b,"%ld", cvall);
-          ca->m_val_string = b;
+          ca->m_val_string = std::to_string(cvall);
           break;
         case THATTR_DOUBLE:
           cvald = ai->second.m_val_double;
           ca->m_val_long = long(cvald);
-          sprintf(b,"%f", cvald);
-          ca->m_val_string = b;
+          ca->m_val_string = std::to_string(cvald);
           if (cf->m_type == THATTR_INTEGER)
             cf->m_type = THATTR_DOUBLE;
           break;

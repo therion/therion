@@ -39,6 +39,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <cmath>
+#include <algorithm>
 #include "loch/icase.h"
 
 thmbuffer thparse_mbuff;
@@ -784,7 +785,7 @@ void thdecode_utf2tex(thbuffer * dest, const char * src)
         isutf8 = isutf8 || (*tmpp > 127);
       }
       if (isutf8) {
-        dest->strcat(utf2tex((char*) wsrcp));
+        dest->strcat(utf2tex((char*) wsrcp).c_str());
       } else {
         dest->strcat((char*) wsrcp);
       }

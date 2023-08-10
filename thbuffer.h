@@ -29,7 +29,7 @@
 #ifndef thbuffer_h
 #define thbuffer_h
 
-#include <string.h>
+#include <cstddef>
 
 /**
  * String buffer class.

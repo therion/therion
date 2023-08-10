@@ -2,14 +2,13 @@
 
 import re, datetime, sys, subprocess, os, requests, json
 
-if sys.version_info.major > 2:
-  raw_input = input
+repo = re.search(r'\:(\w+/\w+)\.', subprocess.check_output('git config --get remote.origin.url', shell=True).decode('ascii')).group(1)
 
-banner = '''
+banner = f'''
 
   Warning!
 
-  This script makes a new release and pushes it to github. 
+  This script makes a new release and pushes it to github [{repo}].
 
   All changes should already be committed.
 
@@ -39,7 +38,7 @@ token = os.getenv('GH_TOKEN')
 if not token or not token.startswith('gh'):
   err("couldn't initialize the github token")
 
-if raw_input(banner) == 'yes':
+if input(banner) == 'yes':
   # check CHANGES to assure that the release is ready and to get the tag message
   isfirst = True
   msg = ''
@@ -76,8 +75,7 @@ if raw_input(banner) == 'yes':
   rel_data = {'tag_name': 'v%s' % ver,
               'name': 'Release v%s' % ver,
               'body': rel_notes()}
-  repo = re.search(r'\:(\w+/\w+)\.', subprocess.check_output('git config --get remote.origin.url', shell=True).decode('ascii')).group(1)
-  signature = subprocess.check_output('git archive --format=tar.gz --prefix=therion-%s/ v%s | gpg --armor --detach-sign --default-key B4FFC641 --default-key 6F0F704B -o -' % (ver, ver), shell=True)
+  signature = subprocess.check_output('git archive --prefix=therion-%s/ v%s | gzip --no-name | gpg --armor --detach-sign --default-key B4FFC641 --default-key 6F0F704B -o -' % (ver, ver), shell=True)
   headers = {'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json'}
   res = requests.post('https://api.github.com/repos/%s/releases' % repo, headers=headers, data=json.dumps(rel_data)).json()
   if 'id' not in res:

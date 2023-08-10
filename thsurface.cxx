@@ -237,7 +237,7 @@ void thsurface::parse_picture(char ** args)
     thparse_image(this->pict_name, this->pict_width, this->pict_height, this->pict_dpi, this->pict_type);
   } catch (const std::exception& e) {
     this->pict_name = NULL;
-    thwarning(("%s [%d] -- error reading bitmap -- %s",
+    thwarning(("%s [%lu] -- error reading bitmap -- %s",
       thdbreader.get_cinf()->get_cif_name(),
       thdbreader.get_cinf()->get_cif_line_number(), e.what()));
   }

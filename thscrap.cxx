@@ -41,6 +41,7 @@
 #include "thsymbolset.h"
 #include "thsketch.h"
 #include "thcsdata.h"
+#include "thdatabase.h"
 
 #define EXPORT3D_INVISIBLE true
 

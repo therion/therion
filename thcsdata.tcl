@@ -105,9 +105,11 @@ set proj_specs {
 for {set zone 1} {$zone <= 60} {incr zone} {
   lappend proj_specs [list [format "utm%dn utm%d" $zone $zone $zone $zone $zone] {output} [format "+init=epsg:%d" [expr $zone+32600]] [format {PROJCS["WGS_1984_UTM_Zone_%dN",GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",%.1f],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]} $zone [expr double($zone * 6 - 183)]] [format "WGS84 / UTM zone %dN" $zone]]
   lappend proj_specs [list [format "utm%ds" $zone $zone $zone] {output} [format "+init=epsg:%d" [expr $zone+32700]] [format {PROJCS["WGS_1984_UTM_Zone_%dS",GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",10000000.0],PARAMETER["Central_Meridian",%.1f],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]} $zone [expr double($zone * 6 - 183)]] [format "WGS84 / UTM zone %dS" $zone]]
-  if {28 <= $zone && $zone <= 37} {
-    lappend proj_specs [list [format "etrs%d" $zone $zone $zone $zone $zone] {output} [format "+init=epsg:%d" [expr $zone+25800]] [format {PROJCS["ETRS89_UTM_zone_%dN",GEOGCS["GCS_ETRS_1989",DATUM["D_ETRS_1989",SPHEROID["GRS_1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",%.1f],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["Meter",1]]} $zone [expr double($zone * 6 - 183)]] [format "ETRS89 / UTM zone %dN" $zone]]
-  }
+}
+
+# ETRS zones can't be mixed with UTM zones as therion (thdataobject.cxx) uses offsets between UTM zone positions in the list
+for {set zone 28} {$zone <= 37} {incr zone} {
+  lappend proj_specs [list [format "etrs%d" $zone $zone $zone $zone $zone] {output} [format "+init=epsg:%d" [expr $zone+25800]] [format {PROJCS["ETRS89_UTM_zone_%dN",GEOGCS["GCS_ETRS_1989",DATUM["D_ETRS_1989",SPHEROID["GRS_1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",%.1f],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["Meter",1]]} $zone [expr double($zone * 6 - 183)]] [format "ETRS89 / UTM zone %dN" $zone]]
 }
 
 # <from-ids> <to-ids> <transformation>

@@ -660,12 +660,10 @@ therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned in
   // thprintf("U origin %6.2f %6.2f units %6.2f\n", mU0.m_x, mU0.m_y, mUUnit);
   // thprintf("UC origin %6.2f %6.2f units %6.2f\n", mUC.m_x, mUC.m_y, mUCUnit);
   // new way
-  warpp_t * pi = (warpp_t *)malloc( wd * hd * sizeof(warpp_t) );
-  if ( pi != NULL ) {
-    memset( pi, 0xff, wd*hd*sizeof(warpp_t) );
-    double * pf = (double *)calloc( wd * hd, sizeof(double) );
-    if ( pf == NULL ) 
-      thprintf("warning: failed to allocate temporary distance image\n");
+  std::vector<warpp_t> pi_storage(static_cast<size_t>(wd) * hd, 0xff);
+  std::vector<double> pf_storage(static_cast<size_t>(wd) * hd, 0.0);
+  warpp_t * pi = pi_storage.data();
+  double * pf = pf_storage.data();
 
     for (size_t k=0; k<mPlaquettes.size(); ++k ) {
       assert( ( ( (warpp_t)k) & (~ngbh_mask)) == (warpp_t)k );
@@ -768,50 +766,6 @@ therion::warp::plaquette_algo::map_image( const unsigned char * src, unsigned in
 	dst1 += depth;
       }
     }
-    if ( pf ) free( pf );
-    free( pi );
-  } else { // old way (used if pi malloc failed ...
-    thprintf("warning: failed to allocate temporary index image\n");
-    for (size_t k=0; k<mPlaquettes.size(); ++k ) {
-      // thprintf("mapping plaquette %d\n", k );
-      thvec2 t1, t2;
-      mPlaquettes[k]->bounding_box_to( t1, t2 );
-      t1 = mUC + mUCUnit * t1;
-      t2 = mUC + mUCUnit * t2;
-      t1.maximize( thvec2(0,0) );
-      t2.minimize( thvec2(wd, hd) );
-      int i2 = (int)t2.m_x;
-      int j2 = (int)t2.m_y;
-      for (int j=(int)t1.m_y; j<j2; ++j) {
-        for (int i=(int)t1.m_x; i<i2; ++i) {
-          thvec2 u( i, j );
-          thvec2 z;
-          thvec2 w = (u - mUC) / mUCUnit;
-          if ( map_backward_plaquette( k, w, z ) ) {
-            thvec2 x = mX0 + z * mXUnit;
-            int ix1 = (int)x.m_x;
-            int ix2 = ix1 + 1;
-            int iy1 = (int)x.m_y;
-            int iy2 = iy1 + 1;
-            if ( ix1 >= 0 && ix2 < (int)ws && iy1 >= 0 && iy2 < (int)hs ) {
-              double dx = x.m_x - ix1;  // bilinear interpolation
-              double dy = x.m_y - iy1;
-              unsigned char * dst1 = dst + depth * (j * wd + i);
-              const unsigned char * src00 = src + depth * ( iy1*ws + ix1 );
-              const unsigned char * src01 = src00 + depth * ws;
-              const unsigned char * src10 = src00 + depth;
-              const unsigned char * src11 = src01 + depth;
-              for (int k=0; k<depth; ++k) {
-                double res = ( src00[k] * (1-dx) +  src10[k] * dx ) * (1-dy)
-                           + ( src01[k] * (1-dx) +  src11[k] * dx ) * dy;
-                dst1[k] = (unsigned char)(( res >= 255 ) ? 255 : res);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 
   return true;
 }

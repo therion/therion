@@ -33,8 +33,11 @@
 #include "thdataobject.h"
 #include "thlocale.h"
 #include "thmapstat.h"
+#include "thinfnan.h"
 #include <list>
 #include <string>
+
+class thscrap;
 
 /**
  * lookup command options tokens.

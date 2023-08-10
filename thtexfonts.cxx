@@ -48,8 +48,6 @@
 #include "thbuffer.h"
 #include "therion.h"
 
-thbuffer thtexfontsbuff;
-
 std::list<fontrecord> FONTS;
 typedef std::list<int> unistr;
 
@@ -576,8 +574,11 @@ if (ENC_NEW.NFSS==0) {
       // it would be possible to add here various characters mapped
       // by plain TeX macros to mathematical fonts (backslash &c.)
       // This would require to make math fonts scalable with the \size[.] macro
-    
-      T << ".";
+
+      switch (wc) {
+        case 8722: T << "--";  break;  // unicode minus
+        default:   T << ".";   break;
+      }
 
 } else { // NFSS == 1
       int k = ENC_NEW.get_enc_pos(wc);
@@ -627,12 +628,6 @@ int tex2uni(std::string font, int ch) {
     if (ch < 0) ch += 256;  // if string is based on signed char
     return ENC_NEW.get_uni(atoi(f_ind.c_str()),ch);
   }
-}
-
-const char * utf2tex (const char * s, bool b) {
-  std::string t = utf2tex(std::string(s),b);
-  thtexfontsbuff.strcpy(t.c_str());
-  return thtexfontsbuff.get_buffer();
 }
 
 // For simplicity we suppose that all characters which are set by TeX macros

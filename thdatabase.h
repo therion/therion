@@ -34,7 +34,6 @@
 #include <set>
 #include <memory>
 
-#include "thdataobject.h"
 #include "thmbuffer.h"
 #include "thbuffer.h"
 #include "thdb1d.h"
@@ -42,7 +41,7 @@
 #include "thobjectname.h"
 #include "thobjectsrc.h"
 #include "thattr.h"
-#include <stdio.h>
+#include <cstdio>
 
 /**
  * Input contexts.

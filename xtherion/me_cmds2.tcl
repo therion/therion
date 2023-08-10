@@ -3822,7 +3822,7 @@ proc xth_me_cmds_line_allpoly2bezier {} {
   return
 }
 
-proc xth_me_cmds_line_poly2bezier {id} {
+proc xth_me_cmds_line_poly2bezier {{id ""}} {
   global xth
 
   if {[llength $id] < 1 } {

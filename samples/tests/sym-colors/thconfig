@@ -1,4 +1,4 @@
-source ../basics/rabbit.th
+source ../../basics/rabbit.th
 
 source
 map x -title "<lang:en>Test X<lang:sk>Test Y"

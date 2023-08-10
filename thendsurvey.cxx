@@ -28,6 +28,7 @@
 #include "thendsurvey.h"
 #include "thexception.h"
 #include "thchenc.h"
+#include "thdatabase.h"
 
 thendsurvey::thendsurvey()
 {

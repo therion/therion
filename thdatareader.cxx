@@ -28,6 +28,8 @@
 #include "thdatareader.h"
 #include "thexception.h"
 #include "thobjectsrc.h"
+#include "thdataobject.h"
+#include "thdatabase.h"
 
 unsigned long thdatareader_get_opos(bool inlineid, bool cfgid)
 {
@@ -75,9 +77,7 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
   
   thobjectsrc osrc;
 
-#ifndef THMSVC
   try {
-#endif
     while ((ln = this->inp.read_line()) != NULL) {
 
       lnn = this->inp.get_cif_line_number();
@@ -237,13 +237,11 @@ void thdatareader::read(const char * ifname, long lnstart, long lnend, const cha
       }    
     }
 
-#ifndef THMSVC
   }
 // put everything into try block and throw exception, if error
   catch (...) {
     threthrow("{} [{}]", this->inp.get_cif_name(), this->inp.get_cif_line_number());
   }
-#endif
 
   dbptr->end_insert();  
 
