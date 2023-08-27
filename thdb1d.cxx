@@ -283,7 +283,7 @@ void thdb1d::scan_data()
                     else
                   	  gradient_sd = lei->gradient_sd;
                     if (abs(lei->backgradient - lei->gradient) > (3.0 * gradient_sd))
-                    	thwarning(("%s [%d] -- forwards and backwards gradient readings do not match", lei->srcf.name, lei->srcf.line));
+                    	thwarning(("%s [%lu] -- forwards and backwards gradient readings do not match", lei->srcf.name, lei->srcf.line));
                     lei->gradient += lei->backgradient;
                     lei->gradient = lei->gradient / 2.0;
                   }

@@ -420,13 +420,13 @@ char * thinput::read_line()
           
         case TT_ENCODING:
           if (this->tmpmb.get_size() != 1)
-            therror(("%s [%d] -- encoding name expected -- %s", \
+            therror(("%s [%lu] -- encoding name expected -- %s", \
               this->get_cif_name(), this->get_cif_line_number(), \
               this->valuebf.get_buffer()));
           this->last_ptr->encoding = \
             thmatch_token(*(this->tmpmb.get_buffer()), thtt_encoding);
           if (this->last_ptr->encoding == TT_UNKNOWN_ENCODING) {
-            therror(("%s [%d] -- unknown encoding -- %s", \
+            therror(("%s [%lu] -- unknown encoding -- %s", \
               this->get_cif_name(), this->get_cif_line_number(), \
               this->valuebf.get_buffer()));
             this->last_ptr->encoding = TT_UTF_8;

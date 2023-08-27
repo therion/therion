@@ -1567,7 +1567,7 @@ namespace OGLFT {
       rotation_offset.x /= 1024;
       rotation_offset.y /= 1024;
 
-      error = FT_Glyph_Transform( glyph, &rotation_matrix, &rotation_offset );
+      FT_Glyph_Transform( glyph, &rotation_matrix, &rotation_offset );
     }
 
     error = FT_Glyph_To_Bitmap( &glyph, FT_RENDER_MODE_MONO, 0, 1 );
@@ -1674,7 +1674,7 @@ namespace OGLFT {
       rotation_offset.x /= 1024;
       rotation_offset.y /= 1024;
 
-      error = FT_Glyph_Transform( glyph, &rotation_matrix, &rotation_offset );
+      FT_Glyph_Transform( glyph, &rotation_matrix, &rotation_offset );
     }
 
     error = FT_Glyph_To_Bitmap( &glyph, FT_RENDER_MODE_NORMAL, 0, 1 );
@@ -1814,7 +1814,7 @@ namespace OGLFT {
       rotation_offset.x /= 1024;
       rotation_offset.y /= 1024;
 
-      error = FT_Glyph_Transform( glyph, &rotation_matrix, &rotation_offset );
+      FT_Glyph_Transform( glyph, &rotation_matrix, &rotation_offset );
     }
 
     error = FT_Glyph_To_Bitmap( &glyph, FT_RENDER_MODE_NORMAL, 0, 1 );
