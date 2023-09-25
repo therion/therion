@@ -13,7 +13,6 @@
 // Standard libraries
 #ifndef LXDEPCHECK
 
-#include <wx/wx.h>
 #include <wx/utils.h>
 #include <wx/filedlg.h>
 #include <wx/toolbar.h>
@@ -24,6 +23,8 @@
 #include <wx/fs_zip.h>
 #include <wx/dnd.h>
 #include <wx/display.h>
+#include <wx/menu.h>
+#include <wx/msgdlg.h>
 
 #include <vtkObject.h>
 

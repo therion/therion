@@ -16,7 +16,7 @@
 
 // Standard libraries
 #ifndef LXDEPCHECK
-#include <wx/wx.h>
+#include <wx/window.h>
 #endif  
 //LXDEPCHECK - standard libraries
 

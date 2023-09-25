@@ -34,6 +34,7 @@
 #include "thtflength.h"
 #include "thtexfonts.h"
 #include "thscrap.h"
+#include "thdatabase.h"
 
 thline::thline()
 {

@@ -16,7 +16,7 @@ CMNOBJECTS = thdate.o extern/shapelib/shpopen.o extern/shapelib/dbfopen.o extern
   thjoin.o thmap.o thexpmap.o thlayoutln.o thlayoutclr.o thexpsys.o thexpuni.o \
   thconvert.o thpdf.o thpdfdbg.o thpdfdata.o thtexfonts.o \
   thsymbolset.o thlang.o thmapstat.o thexpdb.o thpic.o thsketch.o thproj.o \
-  extern/lxMath.o extern/lxFile.o thdb3d.o thsurface.o thimport.o thsvg.o thepsparse.o \
+  extern/lxMath.o extern/lxFile.o extern/icase.o thdb3d.o thsurface.o thimport.o thsvg.o thepsparse.o \
   thtrans.o thwarpp.o thwarppt.o thwarppme.o thwarp.o thexpshp.o thattr.o thtex.o \
   extern/poly2tri/common/shapes.o extern/poly2tri/sweep/advancing_front.o extern/poly2tri/sweep/sweep.o extern/poly2tri/sweep/cdt.o extern/poly2tri/sweep/sweep_context.o \
   extern/quickhull/QuickHull.o therion.o
@@ -356,6 +356,9 @@ $(OUTDIR)/extern/lxMath.o: loch/lxMath.h loch/lxMath.cxx
 
 $(OUTDIR)/extern/lxFile.o: loch/lxFile.h loch/lxFile.cxx
 	$(CXX) -c $(CXXFLAGS) -o $(OUTDIR)/extern/lxFile.o loch/lxFile.cxx
+
+$(OUTDIR)/extern/icase.o: loch/icase.h loch/icase.cxx
+	$(CXX) -c $(CXXFLAGS) -o $(OUTDIR)/extern/icase.o loch/icase.cxx
 
 extern/img.o: extern/img.c extern/img.h
 extern/poly2tri/common/shapes.o: extern/poly2tri/common/shapes.cc extern/poly2tri/common/shapes.h

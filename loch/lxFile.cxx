@@ -97,31 +97,15 @@ lxFileSizeT lxFileDataPtr::Load(lxFileBuff & ptr)
   return s;
 }
 
-
-lxFileData::lxFileData()
-{
-  this->m_data = NULL;
-  this->m_size = 0;
-  this->m_buffSize = 0;
-}
-
-
 void lxFileData::Clear()
 {
-  if (this->m_data != NULL)
-    free(this->m_data);
-  this->m_data = NULL;
-  this->m_size = 0;
-  this->m_buffSize = 0;
+  this->m_data.clear();
 }
 
 void lxFileData::Copy(lxFileSizeT size, const void * src)
 {
-  this->Clear();
-  this->m_data = malloc(size);
-  this->m_size = size;
-  this->m_buffSize = size;
-  memcpy(this->m_data, src, size);
+  auto data = static_cast<const uint8_t*>(src);
+  this->m_data.assign(data, data + size);
 }
 
 
@@ -130,7 +114,7 @@ const void * lxFileData::GetData(lxFileDataPtr ptr)
   if (ptr.m_size <= 1)
     return NULL;
   else
-    return (void *)(&(((char *)this->m_data)[ptr.m_position]));
+    return this->m_data.data() + ptr.m_position;
 }
 
 FILE * lxFileData::GetTmpFile(lxFileDataPtr ptr)
@@ -141,7 +125,7 @@ FILE * lxFileData::GetTmpFile(lxFileDataPtr ptr)
   rf = tmpfile();
   //rf = fopen("TMPFILE.JPG","wb");
   if (rf != NULL) {
-    fwrite(&(((char *)this->m_data)[ptr.m_position]), 1, ptr.m_size, rf);
+    fwrite(this->m_data.data() + ptr.m_position, 1, ptr.m_size, rf);
     fseek(rf, 0, SEEK_SET);
     //fclose(rf);
     //rf = fopen("TMPFILE.JPG","rb");
@@ -154,25 +138,7 @@ const char * lxFileData::GetString(lxFileDataPtr ptr)
   if (ptr.m_size <= 1)
     return "";
   else
-    return &(((char *)this->m_data)[ptr.m_position]);
-}
-
-void lxFileData::BuffResize(lxFileSizeT size)
-{
-  lxFileSizeT nsize;
-  void * ndata;
-
-  if (this->m_buffSize > 0)
-    nsize = this->m_buffSize;
-  else
-    nsize = 1024;
-  while (size >= nsize) nsize *= 2;
-  this->m_buffSize = nsize;
-  ndata = malloc(nsize);
-  if (this->m_size > 0)
-    memcpy(ndata, this->m_data, this->m_size);
-  free(this->m_data);
-  this->m_data = ndata;
+    return reinterpret_cast<const char*>(this->m_data.data()) + ptr.m_position;
 }
 
 
@@ -216,14 +182,12 @@ lxFileDataPtr lxFileData::AppendFile(const char * fnm)
 lxFileDataPtr lxFileData::AppendData(const void * data, lxFileSizeT size)
 {
   lxFileDataPtr res;
-  if ((data == NULL) || (size == 0))
-    return res;
-  if (this->m_buffSize < this->m_size + size)
-    this->BuffResize(this->m_size + size);
-  res.m_position = this->m_size;
+  res.m_position = this->m_data.size();
   res.m_size = size;
-  memcpy(&(((char *)this->m_data)[this->m_size]), data, size);
-  this->m_size += size;
+
+  auto src = static_cast<const uint8_t *>(data);
+  this->m_data.insert(this->m_data.end(), src, src + size);
+
   return res;
 }
 
@@ -418,7 +382,7 @@ void lxFile::ExportLOX(const char * fn)
     chunkHdr.m_type = expID; \
     chunkHdr.m_recSize = tmpSize; \
     chunkHdr.m_recCount = size; \
-    chunkHdr.m_dataSize = this->expData.m_size; \
+    chunkHdr.m_dataSize = this->expData.m_data.size(); \
     chunkHdrPtr = chunkHdrBuffer; \
     chunkHdrSize = chunkHdr.Save(chunkHdrPtr); \
     if (fwrite(&chunkHdrBuffer, chunkHdrSize, 1, this->m_file) != 1) \
@@ -426,7 +390,7 @@ void lxFile::ExportLOX(const char * fn)
     if (fwrite(tmpData, tmpSize, 1, this->m_file) != 1) \
       writeErr = true; \
     if (chunkHdr.m_dataSize > 0) \
-      if (fwrite(this->expData.m_data, chunkHdr.m_dataSize, 1, this->m_file) != 1) \
+      if (fwrite(this->expData.m_data.data(), chunkHdr.m_dataSize, 1, this->m_file) != 1) \
         writeErr = true; \
     delete [] tmpData; \
   }
@@ -543,18 +507,17 @@ void lxFile::ImportLOX(const char * fn)
 #define lxFileStartImportItem(impID, impClass, impData) \
       case impID: \
         if (chunkHdr.m_recCount > 0) { \
-          orig_size = this->impData.m_size; \
+          orig_size = this->impData.m_data.size(); \
           tmpRecsData = new char [chunkHdr.m_recSize]; \
           impClass tmpRec; \
           if (fread(tmpRecsData, chunkHdr.m_recSize, 1, this->m_file) != 1) \
             readErr = true; \
           if ((!readErr) && (chunkHdr.m_dataSize > 0)) { \
-            void * tmpData = malloc(chunkHdr.m_dataSize); \
-            if (fread(tmpData, chunkHdr.m_dataSize, 1, this->m_file) != 1) \
+            std::vector<uint8_t> tmpData(chunkHdr.m_dataSize); \
+            if (fread(tmpData.data(), chunkHdr.m_dataSize, 1, this->m_file) != 1) \
               readErr = true; \
             else \
-              this->impData.AppendData(tmpData, chunkHdr.m_dataSize); \
-            free(tmpData); \
+              this->impData.AppendData(tmpData.data(), chunkHdr.m_dataSize); \
           } \
           if (!readErr) { \
             tmpPtr = tmpRecsData; \

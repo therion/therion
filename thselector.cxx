@@ -38,7 +38,6 @@
 #include "thscrap.h"
 #include <vector>
 #include "thchenc.h"
-#include <algorithm>
 #include "thmap.h"
 
 #include <fmt/printf.h>
@@ -487,7 +486,7 @@ void thselector::select_db(class thdatabase * db)
         nsrv = nms[1];
         break;
       default:
-        thwarning(("%s [%d] -- invalid object specification", 
+        thwarning(("%s [%lu] -- invalid object specification", 
           ii->src_name, ii->src_ln))
         to_cont = false;
     }

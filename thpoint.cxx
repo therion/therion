@@ -35,7 +35,9 @@
 #include "thtexfonts.h"
 #include "thdate.h"
 #include "thscrap.h"
+#include "thobjectname.h"
 #include <string>
+#include <cstdio>
 
 
 thpoint::thpoint()

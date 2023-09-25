@@ -2,6 +2,7 @@
 #ifndef LXDEPCHECK
 #include <wx/statline.h>
 #include <wx/busyinfo.h>
+#include <wx/button.h>
 #include <vtkMassProperties.h>
 #endif  
 //LXDEPCHECK - standard libraries
@@ -10,6 +11,7 @@
 #include "lxSetup.h"
 #include "lxGUI.h"
 #include "lxGLC.h"
+#include "lxData.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"

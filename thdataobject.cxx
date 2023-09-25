@@ -35,6 +35,7 @@
 #include "thdata.h"
 #include "thproj.h"
 #include "thcs.h"
+#include "thdatabase.h"
 
 thdataobject::thdataobject()
 {

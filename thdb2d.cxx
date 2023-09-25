@@ -50,6 +50,7 @@
 #include <set>
 #include <iterator>
 #include <cstdio>
+#include <algorithm>
 
 class thprjx_link {
 
@@ -1096,19 +1097,10 @@ void thdb2d::process_scrap_references(thscrap * sptr)
   }
 }
 
-int comp_dist(const void * s1, const void * s2) {
-  if ((*((thscrap**)s1))->maxdist > (*((thscrap**)s2))->maxdist)
-    return -1;
-  else if ((*((thscrap**)s1))->maxdist < (*((thscrap**)s2))->maxdist)
-    return 1;
-  else return 0;
-}
-
 void thdb2d::log_distortions() {
   thdb2dprj * prj;
   thdb2dprj_list::iterator prjli;
   prjli = this->prj_list.begin();
-  thscrap ** ss;
   thscrap * ps;
   unsigned long ns = 0, i;
   
@@ -1121,7 +1113,7 @@ void thdb2d::log_distortions() {
       ns++;
     }
     if ((ns > 0) && (prj->processed) && (prj->type != TT_2DPROJ_NONE)) {
-      ss = new thscrap* [ns];
+      std::vector<thscrap*> ss(ns);
       ps = prj->first_scrap;
       i = 0;
       while(ps != NULL) {
@@ -1130,7 +1122,7 @@ void thdb2d::log_distortions() {
         i++;
       }
       
-      qsort(ss,ns,sizeof(thscrap*),comp_dist);
+      std::sort(ss.begin(), ss.end(), [](const auto* s1, const auto* s2){ return s1->maxdist >= s2->maxdist; });
       thlog.printf("\n\n###################### scrap distortions #######################\n");
       thlog.printf(" PROJECTION: %s%s%s\n", 
         thmatch_string(prj->type,thtt_2dproj), 
@@ -1140,7 +1132,6 @@ void thdb2d::log_distortions() {
       for(i = 0; i < ns; i++)
         thlog.printf(" %6.2f%%  %6.2f%%  %s@%s\n",ss[i]->avdist, ss[i]->maxdist, ss[i]->name, ss[i]->fsptr->full_name);
       thlog.printf("################### end of scrap distortions ###################\n");
-      delete [] ss;
     }
     prjli++;
   }

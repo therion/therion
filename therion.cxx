@@ -32,7 +32,6 @@
 #include "thconfig.h"
 #include "thinput.h"
 #include "thchenc.h"
-#include "thdatabase.h"
 #include "thdatareader.h"
 #include "thexception.h"
 #include "thlibrary.h"

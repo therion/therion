@@ -50,10 +50,7 @@
 #include "thlang.h"
 #include "thversion.h"
 #include "thdouble.h"
-
-#ifdef THMSVC
-#define round(x) floor((x) + 0.5)
-#endif
+#include "therion.h"
 
 #include "thchenc.h"
 #include "thbuffer.h"
@@ -844,7 +841,7 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
   if (LAYOUT.proj == 0) {
     paired out,tmp;
     int ii,jj;
-    double i, j;
+    double i, j, tmpnumx, tmpnumy;
     for (i = grid_init_x, ii=0; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize, ii++) {
       for (j = grid_init_y, jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize, jj++) {
         col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
@@ -879,10 +876,14 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
           PAGEDEF << "\\PL{" << fmt::format("{}",thdouble(cosr,prec_matrix)) << " " << fmt::format("{}",thdouble(sinr,prec_matrix)) << " "
                              << fmt::format("{}",thdouble(-sinr,prec_matrix)) << " " << fmt::format("{}",thdouble(cosr,prec_matrix)) << " "
                              << fmt::format("{}",thdouble(out.x,prec_matrix)) << " " << fmt::format("{}",thdouble(out.y,prec_matrix)) << " cm}";
+          tmpnumx = G_real_init_x+ii*LAYOUT.XS;
+          tmpnumy = G_real_init_y+jj*LAYOUT.YS;
 	  PAGEDEF << "\\gridcoord{" << (row == 2 ? (col == 2 ? 1 : 3) : (col == 2 ? 7 : 9)) << 
-	      "}{$(" << std::setprecision(0) << 
-	      fmt::format("{}",thdouble(G_real_init_x+ii*LAYOUT.XS,0)) << "," <<
-              fmt::format("{}",thdouble(G_real_init_y+jj*LAYOUT.YS,0)) << std::setprecision(2) << ")$}%" << std::endl;
+	      "}{\\gridfont (" << std::setprecision(0) <<
+              (tmpnumx < 0 ? utf2tex("−"): "") /* unicode minus */ <<
+	      fmt::format("{}",thdouble(std::abs(tmpnumx),0)) << "," <<
+              (tmpnumy < 0 ? utf2tex("−"): "") /* unicode minus */ <<
+              fmt::format("{}",thdouble(std::abs(tmpnumy),0)) << std::setprecision(2) << ")}%" << std::endl;
           PAGEDEF << "\\PL{Q}";
         }
 
@@ -892,13 +893,14 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
   else {
     grid_init_x = LLX;
     int jj;
-    double j;
+    double j, tmpnum;
     for (j = grid_init_y,jj=0; j < urnew.y + LAYOUT.vgridsize - 0.05; j += LAYOUT.vgridsize,jj++) {
 //      PAGEDEF << "\\PL{q 3 w 0 0 1 RG 0 " << j-LLY << "  m " << HS << " " << j-LLY << " l S Q}";
       for (double i = grid_init_x; i < urnew.x + LAYOUT.hgridsize - 0.05; i += LAYOUT.hgridsize) {
         col = (i == grid_init_x ? 0 : (i >= urnew.x ? 2 : 1));
         row = (j == grid_init_y ? 0 : (j >= urnew.y ? 2 : 1));
 	elem = col + 3*row;
+        tmpnum = G_real_init_y+jj*LAYOUT.YS;
 	PAGEDEF << "\\PB{" << fmt::format("{}",thdouble(i-LLX+LAYOUT.gridcell[elem].x,prec_xy)) << "}{" <<
 			      fmt::format("{}",thdouble(j-LLY+LAYOUT.gridcell[elem].y,prec_xy)) << "}{" <<
 			      tex_get_ref(tex_Wname("grid") + u2str(elem+1)) << "}%" << std::endl;
@@ -906,17 +908,19 @@ PAGEDEF << "\\PL{ " << rotatedaround(urnew,origin,LAYOUT.gridrot).x-LLX << " " <
         if (col == 0 && LAYOUT.grid_coord_freq > 0) {
           PAGEDEF << "\\PL{q}";
           PAGEDEF << "\\PL{1 0 0 1 " << fmt::format("{}",thdouble(i-LLX,prec_xy)) << " " << fmt::format("{}",thdouble(j-LLY,prec_xy)) << " cm}";
-          PAGEDEF << "\\gridcoord{" << (row==2?3:9) << "}{$" << 
-	      std::setprecision(0) << fmt::format("{}",thdouble(G_real_init_y+jj*LAYOUT.YS,0)) <<
-	      std::setprecision(2)<< "$}";
+          PAGEDEF << "\\gridcoord{" << (row==2?3:9) << "}{\\gridfont " <<
+              (tmpnum < 0 ? utf2tex("−"): "") /* unicode minus */ <<
+	      std::setprecision(0) << fmt::format("{}",thdouble(std::abs(tmpnum),0)) <<
+	      std::setprecision(2)<< "}";
           PAGEDEF << "\\PL{Q}%" << std::endl;
 	}
         if (col == 2 && LAYOUT.grid_coord_freq == 2) {
           PAGEDEF << "\\PL{q}";
           PAGEDEF << "\\PL{1 0 0 1 " << fmt::format("{}",thdouble(i-LLX,prec_xy)) << " " << fmt::format("{}",thdouble(j-LLY,prec_xy)) << " cm}";
-          PAGEDEF << "\\gridcoord{" << (row==2?1:7) << "}{$" << 
-	      std::setprecision(0) << fmt::format("{}",thdouble(G_real_init_y+jj*LAYOUT.YS,0)) <<
-	      std::setprecision(2)<< "$}";
+          PAGEDEF << "\\gridcoord{" << (row==2?1:7) << "}{\\gridfont " <<
+              (tmpnum < 0 ? utf2tex("−"): "") /* unicode minus */ <<
+	      std::setprecision(0) << fmt::format("{}",thdouble(std::abs(tmpnum),0)) <<
+	      std::setprecision(2)<< "}";
           PAGEDEF << "\\PL{Q}%" << std::endl;
         }
 
@@ -1272,6 +1276,7 @@ void icc_check_file(std::string fname, std::string type) {
   char buffer[5];
   iccfile.seekg(16);
   iccfile.read(buffer,4);
+  buffer[4] = '\0';
   if (type != std::string(buffer)) therror(((std::string("Invalid ICC profile type: expected ")+type+", got "+buffer).c_str()));
 }
 

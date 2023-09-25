@@ -41,6 +41,7 @@
 #include "thmap.h"
 #include "thpdf.h"
 #include "thtexfonts.h"
+#include "thdatabase.h"
 #include <string.h>
 
 

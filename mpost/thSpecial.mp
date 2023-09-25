@@ -101,6 +101,16 @@ def s_vgrid_SM (expr xpos, ypos, xsize, ysize) =
   ) dashed evenly;
 enddef;
 
+def s_vgrid_SKBB (expr xpos, ypos, xsize, ysize) =
+  pickup PenD;
+  mystep := adjust_step(xsize/2, 5mm);
+  draw (
+    if xpos < 0: 0 else: -xsize/2 fi, 0
+  ) -- (
+    if xpos > 0: 0 else: xsize/2 fi, 0
+  ) dashed dashpattern (on mystep/4 off mystep/2 on mystep/4);
+enddef;
+
 def s_altitudebar_SKBB (expr zmin, zmax, units)(text t)(text labels) =
   begingroup;
     ncol := 0;  % number of colors
@@ -140,7 +150,7 @@ def s_altitudebar_SKBB (expr zmin, zmax, units)(text t)(text labels) =
           k := (1-i)*vs;
         else:
           draw (hs, k) -- (hs+5bp, k) withpen PenD;
-          label.rt(thTEX(i), (hs, k));
+          label.rt(thTEX(fixminus(i)), (hs, k));
         fi;
         j := j+1;
       endfor;
@@ -165,14 +175,14 @@ def s_altitudebar_SKBB (expr zmin, zmax, units)(text t)(text labels) =
           exitif i > zmax;
           j := (i-zmin)/d*vs;
           draw (hs, j) -- (hs+5bp, j) withpen PenD;
-          label.rt(thTEX(decimal round i & "\thinspace " & units), (hs, j));
+          label.rt(thTEX(fixminus(decimal round i) & "\thinspace " & units), (hs, j));
           i := i + dv;
         endfor;
       else:
         draw (0, 0) -- (hs+5bp, 0) withpen PenD;
         draw (0, vs) -- (hs+5bp, vs) withpen PenD;
-        label.rt(thTEX(decimal(round(10*zmin)/10) & "\thinspace " & units),(hs,0));
-        label.rt(thTEX(decimal(round(10*zmax)/10) & "\thinspace " & units),(hs,vs));
+        label.rt(thTEX(fixminus(decimal(round(10*zmin)/10)) & "\thinspace " & units),(hs,0));
+        label.rt(thTEX(fixminus(decimal(round(10*zmax)/10)) & "\thinspace " & units),(hs,vs));
       fi;
     fi;
   endgroup;

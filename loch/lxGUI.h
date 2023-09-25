@@ -31,7 +31,6 @@
 
 // Standard libraries
 #ifndef LXDEPCHECK
-#include <wx/wx.h>
 #include <wx/fileconf.h>
 #include <wx/filename.h>
 #include <wx/docview.h>

@@ -37,7 +37,6 @@
 #include "thexception.h"
 #include "thdatabase.h"
 #include "thdatareader.h"
-#include "thdataobject.h"
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thlogfile.h"

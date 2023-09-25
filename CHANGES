@@ -1,12 +1,53 @@
-Therion 6.1.7 (in progress):
+Therion 6.1.9 (in progress):
+
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.8 (2023-06-14):
 
 therion:
+ * added coordinate transformation sample
  * bugs fixed:
+   - "no usable coordinate transformation found" issue when there is just one
+     fixed station
+   - fix irregularities in vertical grid markers
+   - bug with area bedrock
+   - various code fixes (NAN on windows, GCC 13 compatibility, includes 
+     reorganization, missing includes, incorect printf arguments)
+
+infrastructure:
+ * CI fixes
+
+--------------------------------------------------------------------------------
+
+Therion 6.1.7 (2023-04-23):
+
+therion:
+ * allow custom fonts for map grid coordinates (see the \gridfont TeX macro)
+ * display negative coordinates in s_altitudebar_SKBB using an en-dash
+   (-- ligature) instead of a hyphen as an approximation of the minus character
+ * various thbook updates
+ * C++ code modernization and fixes, including [#483, #484, #486, #487, #488,
+   #491, #492, #493] by Matěj Plch
+ * samples reorganization: a common directory for tests; new test: inputrel
+ * bugs fixed:
+   - wrong check for ICC profile type
+   - hyphen used instead of minus in s_altitudebar
+   - path not ending with slash in \includeprefix (TeX) and includeprefix (mpost)
    - thbook: document the usage of TeX registers [#485]
+
+xtherion:
+ * bugs fixed:
+   - fixed polyline to bezier conversion bug introduced in 6.1.4
 
 infrastructure:
  * therion no longer includes an internal copy of fmtlib
  * system fmtlib is a mandatory dependency now
+ * updated GitHub Actions configuration
+ * CMake 3.16 required
+ * CMake: dependencies refactoring and other improvements [#498]
+ * bundled Catch2 updated to 2.13.10
+ * added extern/readme.txt
 
 --------------------------------------------------------------------------------
 

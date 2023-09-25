@@ -55,21 +55,10 @@ thperson::thperson()
 }
 
 
-#ifdef THWIN32
-char * index(char * str, char znk)
-{
-	size_t sln = strlen(str), idx;
-  for(idx = 0; idx < sln; idx++, str++) 
-  	if(*str == znk) return str;
-  return NULL;
-}
-#endif
-
-
 void thperson::parse(thdatabase * dbp, char * src)
 {
   this->reset();
-  bool has_sep = (index(src,'/') != NULL);
+  bool has_sep = (strchr(src,'/') != NULL);
   thsplit_strings(&(dbp->mbuff_tmp), src, '/');
   if (has_sep) {
     if (dbp->mbuff_tmp.get_size() == 1) {

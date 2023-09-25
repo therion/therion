@@ -40,6 +40,7 @@
 #include "thscrap.h"
 #include "thsurvey.h"
 #include <cmath>
+#include <cstring>
 
 struct pt2d {
   double x, y;

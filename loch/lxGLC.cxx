@@ -14,7 +14,8 @@
 #ifndef LXDEPCHECK
 #include <math.h>
 #include <stdlib.h>
-#include <wx/wx.h>
+#include <wx/dcclient.h>
+#include <wx/stattext.h>
 #include <stdio.h>
 #include <vtkVersionMacros.h>
 #include <vtkCellArray.h>
@@ -39,9 +40,7 @@
 #include "lxFNT6x13_bdf.h"
 #include "lxFNT10x20_bdf.h"
 #include "lxFNTFreeSans_ttf.h"
-#include "lxSetup.h"
 #include "lxRender.h"
-#include "lxGUI.h"
 #include "lxTR.h"
 
 #ifdef LXWIN32
@@ -300,7 +299,7 @@ void lxGLCanvas::UpdateRenderList()
 void lxGLCanvas::UpdateRenderContents()
 {
   this->setup->UpdateData();
-  if (this->data->m_textureSurface.image.data != NULL) {
+  if (!this->data->m_textureSurface.image.data.empty()) {
     GLint newTSizeO, newTSizeS;
     newTSizeO = this->m_maxTSizeO;
     newTSizeS = this->m_maxTSizeS;
@@ -897,7 +896,7 @@ void lxGLCanvas::RenderSurface() {
   clr[2] = 1.0;
   clr[3] = this->setup->m_srf_opacity;
 
-  bool srf_tex = (this->data->m_textureSurface.image.data != NULL) && (this->setup->m_srf_texture);
+  bool srf_tex = (!this->data->m_textureSurface.image.data.empty()) && (this->setup->m_srf_texture);
   glShadeModel(GL_SMOOTH);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glColor4f(1.0,1.0,1.0,this->setup->m_srf_opacity);

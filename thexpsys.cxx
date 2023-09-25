@@ -26,8 +26,7 @@
  */
  
 #include "thexpsys.h"
-#include "thexception.h"
-#include "thdatabase.h"
+#include "therion.h"
 
 thexpsys::thexpsys() {
   this->cmd = "";

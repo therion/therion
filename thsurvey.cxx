@@ -32,6 +32,7 @@
 #include "thtfangle.h"
 #include "thinfnan.h"
 #include "thdata.h"
+#include "thdatabase.h"
 
 thsurvey::thsurvey()
 {

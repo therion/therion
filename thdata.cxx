@@ -34,6 +34,7 @@
 #include "thgrade.h"
 #include "thcsdata.h"
 #include "thdatareader.h"
+#include "thdatabase.h"
 #include "loch/icase.h"
 
 thdata::thdata()

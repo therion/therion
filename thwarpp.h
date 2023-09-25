@@ -33,7 +33,10 @@
 #include "thwarp.h"
 #include "thwarppme.h"
 #include "thwarppt.h"
-#include "thdataobject.h"
+#include "thobjectsrc.h"
+#include "thobjectname.h"
+
+class thscrap;
 
 /**
  * Sketch station structure.

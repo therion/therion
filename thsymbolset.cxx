@@ -43,6 +43,7 @@
 #include "thsymbolsets.h"
 #include "thlogfile.h"
 #include "thepsparse.h"
+#include "thdatabase.h"
 #include <fmt/printf.h>
 
 thsymbolset::thsymbolset()
@@ -239,6 +240,7 @@ int thsymbolset_get_id(const char * symclass, const char * symbol)
       if (strlen(subtypes) > 0)
         break;
       switch (type) {
+        c2(TT_AREA_TYPE_BEDROCK, SYMA_BEDROCK);
         c2(TT_AREA_TYPE_DEBRIS, SYMA_DEBRIS);
         c2(TT_AREA_TYPE_SAND, SYMA_SAND);
         c2(TT_AREA_TYPE_SUMP, SYMA_SUMP);
