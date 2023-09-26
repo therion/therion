@@ -1,5 +1,5 @@
 function(process_locale DIR)
-  set(FULL_PATH ${CMAKE_CURRENT_BINARY_DIR}/${DIR})
+  set(FULL_PATH ${CMAKE_CURRENT_BINARY_DIR}/${DIR}/LC_MESSAGES)
   file(MAKE_DIRECTORY ${FULL_PATH})
   add_custom_command(
       OUTPUT  ${FULL_PATH}/loch.mo

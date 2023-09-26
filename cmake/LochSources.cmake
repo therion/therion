@@ -45,7 +45,7 @@ set(LOCH_LOCALES bg cs de en_GB es fr it ru sk sl)
 # we need to set the files as sources only on macOS
 if (APPLE)
     foreach(LOCALE ${LOCH_LOCALES})
-        set(LOCALE_FILE "${CMAKE_BINARY_DIR}/loch/locale/${LOCALE}/loch.mo")
+        set(LOCALE_FILE "${CMAKE_BINARY_DIR}/loch/locale/${LOCALE}/LC_MESSAGES/loch.mo")
         list(APPEND LOCH_SOURCES ${LOCALE_FILE})
         set_source_files_properties(${LOCALE_FILE} PROPERTIES
             MACOSX_PACKAGE_LOCATION Resources/${LOCALE}.lproj
