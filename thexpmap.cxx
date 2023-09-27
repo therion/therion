@@ -3448,7 +3448,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
   thdb2dmi * cmi;
   thscrap * cs;
 
-  long nmap = 0;
+  // long nmap = 0;
   bool firstmapscrap, nolkpitems;
   thlayout_color csc;
 
@@ -3487,7 +3487,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
           if (firstmapscrap) {
-            nmap++;
+            // nmap++;
             firstmapscrap = false;
             // add map, if according to maps
             if (lkp != NULL) {

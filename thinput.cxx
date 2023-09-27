@@ -251,7 +251,7 @@ void thinput::open_file(char * fname)
   // if file was open, now let's try if not recursive inclusion
   ifile * tmptr;
   bool is_rec = false;
-  unsigned int n_rec = 0;
+  [[maybe_unused]] unsigned int n_rec = 0;
   
   if (!ifptr->sh.is_open()) {
     if ((srcfile != NULL) || (this->report_missing)) {
