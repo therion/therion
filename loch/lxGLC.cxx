@@ -14,7 +14,8 @@
 #ifndef LXDEPCHECK
 #include <math.h>
 #include <stdlib.h>
-#include <wx/wx.h>
+#include <wx/dcclient.h>
+#include <wx/stattext.h>
 #include <stdio.h>
 #include <vtkVersionMacros.h>
 #include <vtkCellArray.h>
@@ -39,9 +40,7 @@
 #include "lxFNT6x13_bdf.h"
 #include "lxFNT10x20_bdf.h"
 #include "lxFNTFreeSans_ttf.h"
-#include "lxSetup.h"
 #include "lxRender.h"
-#include "lxGUI.h"
 #include "lxTR.h"
 
 #ifdef LXWIN32
@@ -50,6 +49,8 @@
 #ifdef LXLINUX
 #include "lxR2P.h"
 #endif
+
+#include <fmt/printf.h>
 
 #define LXTRCBORDER (this->m_renderData->m_scaleMode == LXRENDER_FIT_SCREEN ? 0 : 16)
 
@@ -298,7 +299,7 @@ void lxGLCanvas::UpdateRenderList()
 void lxGLCanvas::UpdateRenderContents()
 {
   this->setup->UpdateData();
-  if (this->data->m_textureSurface.image.data != NULL) {
+  if (!this->data->m_textureSurface.image.data.empty()) {
     GLint newTSizeO, newTSizeS;
     newTSizeO = this->m_maxTSizeO;
     newTSizeS = this->m_maxTSizeS;
@@ -895,7 +896,7 @@ void lxGLCanvas::RenderSurface() {
   clr[2] = 1.0;
   clr[3] = this->setup->m_srf_opacity;
 
-  bool srf_tex = (this->data->m_textureSurface.image.data != NULL) && (this->setup->m_srf_texture);
+  bool srf_tex = (!this->data->m_textureSurface.image.data.empty()) && (this->setup->m_srf_texture);
   glShadeModel(GL_SMOOTH);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glColor4f(1.0,1.0,1.0,this->setup->m_srf_opacity);
@@ -1244,7 +1245,7 @@ void lxGLCanvas::RenderOffList()
   glLoadIdentity();
   std::string cmnt;
   const char * csurvey;
-  char strCBar[10];
+  std::string strCBar;
   bool show_label;
   this->GetFontNumeric()->setForegroundColor(1.0, 1.0, 0.5, 1.0);
   if (this->setup->m_stlabel_name || this->setup->m_stlabel_comment || this->setup->m_stlabel_altitude || this->setup->m_stlabel_survey) {
@@ -1276,9 +1277,9 @@ void lxGLCanvas::RenderOffList()
       // altitude
       if (this->setup->m_stlabel_altitude) {
         if (this->frame->m_iniUnits == 1) {
-          sprintf(&(strCBar[0]), "%.0f ft", st->pos.z / 0.3048);
+          strCBar = fmt::sprintf("%.0f ft", st->pos.z / 0.3048);
         } else {
-          sprintf(&(strCBar[0]), "%.0f m", st->pos.z);
+          strCBar = fmt::sprintf("%.0f m", st->pos.z);
         }
         if (cmnt.length() > 0) cmnt += ":";
         cmnt += strCBar;
@@ -1696,14 +1697,14 @@ void lxGLCanvas::RenderIDepthbar(double size)
   clrOutCntr();
   this->RenderILine(dbw, 0.0, dbw, size);
 
-  char strCBar[10];
+  std::string strCBar;
   for(t = 0; t <= 10; t++) {
     clrOutCntr();
     this->RenderILine(dbw, double(t) * size / 10.0, dbw + dbtw, double(t) * size / 10.0);
     if (this->frame->m_iniUnits == 1) {
-      sprintf(&(strCBar[0]), "%.0f ft", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])) / 0.3048);
+      strCBar = fmt::sprintf("%.0f ft", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])) / 0.3048);
     } else {
-      sprintf(&(strCBar[0]), "%.0f m", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])));
+      strCBar = fmt::sprintf("%.0f m", (clr[0] + double(t) / 10.0 * (clr[1] - clr[0])));
     }
     this->GetFontNumeric()->draw(this->m_indRes * dbw + lxFNTSW, this->m_indRes * (double(t) * size / 10.0) - 0.333 * lxFNTSH, strCBar);
   }
@@ -1723,7 +1724,7 @@ void lxGLCanvas::RenderIScalebar(double size)
   // nasobku standardnej velkosti
 
   // pixel -> 1 meter???
-  char strLen[32];
+  std::string strLen;
   double sblen, scale;
   int sbtest;
   // scale = m / pixel
@@ -1761,11 +1762,11 @@ void lxGLCanvas::RenderIScalebar(double size)
 
 
     if (miles)
-      sprintf(&(strLen[0]),"%.0f mi", sblen);
+      strLen = fmt::sprintf("%.0f mi", sblen);
     else if (sblen > 4.0)
-      sprintf(&(strLen[0]),"%.0f ft", sblen);
+      strLen = fmt::sprintf("%.0f ft", sblen);
     else
-      sprintf(&(strLen[0]),"%g in", 12.0 * sblen);
+      strLen = fmt::sprintf("%g in", 12.0 * sblen);
 
   } else {
 
@@ -1779,13 +1780,13 @@ void lxGLCanvas::RenderIScalebar(double size)
     size = sblen / scale / this->m_indRes;
 
     if (sblen >= 10000.0)
-      sprintf(&(strLen[0]),"%.0f km", sblen / 1000.0);
+      strLen = fmt::sprintf("%.0f km", sblen / 1000.0);
     else if (sblen >= 4.0)
-      sprintf(&(strLen[0]),"%.0f m", sblen);
+      strLen = fmt::sprintf("%.0f m", sblen);
     else if (sblen >= 0.01)
-      sprintf(&(strLen[0]),"%.0f mm", sblen * 1000.0);
+      strLen = fmt::sprintf("%.0f mm", sblen * 1000.0);
     else
-      sprintf(&(strLen[0]),"%g mm", sblen * 1000.0);
+      strLen = fmt::sprintf("%g mm", sblen * 1000.0);
   }
 
 
@@ -1821,7 +1822,7 @@ void lxGLCanvas::RenderIScalebar(double size)
   this->RenderILine(0.9 * size, sbh, 0.9 * size, sbh + sbt/3.0);
   this->RenderILine(      size, 0.0,       size, sbh + sbt);
 
-  this->GetFontNumeric()->draw(0.5 * size * this->m_indRes - 0.5 * double(strlen(strLen)) * lxFNTSW, (sbh + sbt + 1.0) * this->m_indRes, strLen);
+  this->GetFontNumeric()->draw(0.5 * size * this->m_indRes - 0.5 * double(strLen.size()) * lxFNTSW, (sbh + sbt + 1.0) * this->m_indRes, strLen);
 
 }
 

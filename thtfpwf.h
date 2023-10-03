@@ -28,8 +28,8 @@
  
 #ifndef thtfpwf_h
 #define thtfpwf_h
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstddef>
+#include <vector>
 
 
 /**
@@ -53,10 +53,7 @@ class thtfpwf {
   double a,  ///< Multiplier.
     b;  ///< Addition.
     
-  size_t valn;
-  thtfpwfxy * valp;
-  
-  void clear(); ///< Clear the value array.
+  std::vector<thtfpwfxy> values;
 
   public:
   
@@ -64,14 +61,14 @@ class thtfpwf {
    * Standard constructor.
    */
   
-  thtfpwf() : a(1.0), b(0.0), valn(0), valp(NULL) {}
+  thtfpwf() : a(1.0), b(0.0) {}
   
   
   /**
    * Standard destructor.
    */
    
-  virtual ~thtfpwf();
+  virtual ~thtfpwf() = default;
   
   
   /**

@@ -6,42 +6,13 @@
 #include <list>
 #include <string>
 #include <cstdio>
+#include <cstdint>
+#include <vector>
 #endif  
 //LXDEPCHECK - standard libraries
 
 
 typedef char * lxFileBuff;
-
-#ifdef THMSVC
-#ifndef UINT32_MAX
-# define UINT32_MAX (0xffffffffUL)
-#endif
-#ifndef uint32_t
-#if (ULONG_MAX == UINT32_MAX) || defined (S_SPLINT_S)
-  typedef unsigned long uint32_t;
-# define UINT32_C(v) v ## UL
-# ifndef PRINTF_INT32_MODIFIER
-#  define PRINTF_INT32_MODIFIER "l"
-# endif
-#elif (UINT_MAX == UINT32_MAX)
-  typedef unsigned int uint32_t;
-# ifndef PRINTF_INT32_MODIFIER
-#  define PRINTF_INT32_MODIFIER ""
-# endif
-# define UINT32_C(v) v ## U
-#elif (USHRT_MAX == UINT32_MAX)
-  typedef unsigned short uint32_t;
-# define UINT32_C(v) ((unsigned short) (v))
-# ifndef PRINTF_INT32_MODIFIER
-#  define PRINTF_INT32_MODIFIER ""
-# endif
-#else
-#error "Platform not supported"
-#endif
-#endif
-#else
-#include <stdint.h>
-#endif
 
 #define lxFileSizeT uint32_t
 
@@ -80,13 +51,11 @@ struct lxFileDataPtr {
 
 struct lxFileData {
   
-  void * m_data;
-  lxFileSizeT m_size, m_buffSize;
+  std::vector<uint8_t> m_data;
 
-  lxFileData();
+  lxFileData() = default;
   void Clear();
   void Copy(lxFileSizeT size, const void * src);
-  void BuffResize(lxFileSizeT size);
   const void * GetData(lxFileDataPtr ptr);
   const char * GetString(lxFileDataPtr ptr);
   FILE * GetTmpFile(lxFileDataPtr ptr);

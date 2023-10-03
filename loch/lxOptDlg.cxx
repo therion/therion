@@ -5,6 +5,11 @@
 #ifndef LXDEPCHECK
 #include <wx/dirdlg.h>
 #include <wx/valgen.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/valtext.h>
 #endif  
 //LXDEPCHECK - standard libraries
 

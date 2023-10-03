@@ -34,6 +34,7 @@
 #include "thgrade.h"
 #include "thcsdata.h"
 #include "thdatareader.h"
+#include "thdatabase.h"
 #include "loch/icase.h"
 
 thdata::thdata()
@@ -2729,7 +2730,7 @@ void thdata::set_survey_declination()
       }
       this->dl_survey_declination = csptr->get_declin()->evaluate(ad);
       if (!addef)
-      thwarning(("%s [%d] -- no declination specified for undated survey data -- using average (%.2f degrees)",
+      thwarning(("%s [%lu] -- no declination specified for undated survey data -- using average (%.2f degrees)",
         thdbreader.get_cinf()->get_cif_name(),
         thdbreader.get_cinf()->get_cif_line_number(),
         this->dl_survey_declination));

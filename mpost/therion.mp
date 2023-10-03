@@ -130,6 +130,12 @@ def inputrel(expr p) =
   scantokens("input " & includeprefix & p);
 enddef;
 
+vardef fixminus (expr s) =   % used for numbers formatted as strings to use "--" as a minus symbol
+  if substring (0,1) of s = "-": "-" & s
+  else: s
+  fi
+enddef;
+
 color label_fill_color, label_fill_color_tmp;
 label_fill_color := (1.0, 1.0, 1.0);
 def push_label_fill_color(expr r,g,b) =

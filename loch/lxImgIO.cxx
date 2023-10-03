@@ -59,7 +59,7 @@ lxWrite_JPEG_file (const char * filename, int quality, lxImageRGB img) {
 
 	int image_width      = img.width;
 	int image_height     = img.height;
-	unsigned char* image = img.data;
+	unsigned char* image = img.data.data();
 
 	JSAMPLE * image_buffer = (JSAMPLE *) image;
   /* This struct contains the JPEG compression parameters and pointers to
@@ -378,8 +378,8 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
 	img.height = cinfo.output_height;
 
 
-	img.data = (unsigned char*)malloc(cinfo.output_components * img.width * img.height);
-	unsigned char* ptr = img.data;
+	img.data.resize(static_cast<size_t>(cinfo.output_components) * img.width * img.height);
+	unsigned char* ptr = img.data.data();
 
   /* Here we use the library's state variable cinfo.output_scanline as the
    * loop counter, so that we don't have to keep track ourselves.
@@ -418,7 +418,7 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
    */
 
   if (cinfo.output_components == 1) {
-	  unsigned char * new_data = (unsigned char*)malloc(3 * img.width * img.height);
+	  std::vector<unsigned char> new_data(3UL * img.width * img.height);
 	  for(int r = 0; r < img.height; r++) {
 		  for(int c = 0; c < img.width; c++) {
 			  new_data[r * 3 * img.width + 3 * c] = img.data[r * img.width + c];
@@ -426,8 +426,7 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
 			  new_data[r * 3 * img.width + 3 * c + 2] = img.data[r * img.width + c];
 		  }
 	  }
-	  free(img.data);
-	  img.data = new_data;
+	  img.data = std::move(new_data);
   }
 
   /* And we're done! */
@@ -459,13 +458,6 @@ lxRead_JPEG_file (const char * filename, FILE * infile)
  * On some systems you may need to set up a signal handler to ensure that
  * temporary files are deleted if the program is interrupted.  See libjpeg.doc.
  */
-
-void lxImageRGBFree(lxImageRGB & img)
-{
-  if (img.data != NULL)
-    free(img.data);
-  img.data = NULL;
-}
 
 
 const char * lxImgIOError = "unknown";

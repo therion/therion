@@ -3,6 +3,10 @@
 #include <wx/statline.h>
 #include <wx/xml/xml.h>
 #include <wx/filedlg.h>
+#include <wx/msgdlg.h>
+#include <wx/listbox.h>
+#include <wx/button.h>
+#include <cstdint>
 #endif
 //LXDEPCHECK - standard libraries
 

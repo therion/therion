@@ -43,6 +43,8 @@
 
 #include <set>
 
+class thdb2dprj;
+
 /**
  * scrap command options tokens.
  */

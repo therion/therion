@@ -35,8 +35,11 @@
 #include <filesystem>
 
 #ifdef THWIN32
-#include <process.h>
-#define getpid _getpid
+#include <processthreadsapi.h>
+auto thgetpid() { return GetCurrentProcessId(); }
+#else
+#include <unistd.h>
+auto thgetpid() { return getpid(); }
 #endif
 
 namespace fs = std::filesystem;
@@ -106,7 +109,7 @@ void thtmpdir::create() try
   } else if (this->debug) {
     dir_path = "thTMPDIR";
   } else {
-    dir_path = fs::temp_directory_path() / fmt::format("th{}", getpid());
+    dir_path = fs::temp_directory_path() / fmt::format("th{}", thgetpid());
   }
 #endif
 

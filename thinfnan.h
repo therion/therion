@@ -35,13 +35,8 @@
 // nan handling
 #ifdef NAN
 
-#ifdef THLINUX
 #define thnan NAN
 #define thisnan std::isnan
-#else
-#define thnan -9e99
-#define thisnan(number) (number == thnan)
-#endif
 
 #else
 

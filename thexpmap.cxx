@@ -869,6 +869,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               thprintf("copying results\n");
 #endif
               const fs::path new_file = fmt::format("{}.{:03}.gif", fnm, sknum++);
+              fs::remove(new_file); // workaround for MinGW bug, can't overwrite files
               fs::copy(srcgif, new_file, fs::copy_options::overwrite_existing);
               fprintf(pltf,"##XTHERION## xth_me_image_insert {%.2f 1 1.0} {%.2f {}} %s 0 {}\n", nx, ny, new_file.filename().string().c_str());
             }
@@ -905,7 +906,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
               }
               if (pt->type == TT_POINT_TYPE_STATION) {
                 if (pt->station_name.id != 0) {
-                  fprintf(pltf," -name %s", pt->station_name.print_name());
+                  fprintf(pltf," -name %s", pt->station_name.print_name().c_str());
                 }
               }
               if (strlen(pt->name) > 0) {
@@ -1055,7 +1056,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   // spusti mp - thpdf - pdftex
 
   if (maps == NULL) {
-    thwarning(("%s [%d] -- no selected projection data -- %s",
+    thwarning(("%s [%lu] -- no selected projection data -- %s",
       this->src.name, this->src.line, this->projstr))
     return;
   }
@@ -1110,8 +1111,7 @@ void thexpmap::export_pdf(thdb2dxm * maps, thdb2dprj * prj) {
   thdb2dxm * cmap = maps;
   thdb2dxs * cbm;
   thdb2dmi * cmi;
-  thbuffer encb, texb;
-  texb.guarantee(128);
+  thbuffer encb;
   thscrap * cs;
 
   thini.copy_fonts();
@@ -1576,8 +1576,7 @@ if (ENC_NEW.NFSS==0) {
                   // pred orezanim
                   if (exps.F > 0) {
                     fprintf(plf,"\t\t F => \"data.%ld\",\n",exps.F);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.F);
-                    SCRAPITEM->F = texb.get_buffer();
+                    SCRAPITEM->F = fmt::sprintf("data.%ld",exps.F);
                   }
 //                  else
 //                    fprintf(plf,"\t\t F => \"data.0\",\n");
@@ -1585,14 +1584,11 @@ if (ENC_NEW.NFSS==0) {
                   // orezavacia cesta a outlines
                   if (exps.B > 0) {
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.B);
-                    SCRAPITEM->B = texb.get_buffer();
+                    SCRAPITEM->B = fmt::sprintf("data.%ld",exps.B);
                     fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ldbg",exps.B);
-                    SCRAPITEM->I = texb.get_buffer();
+                    SCRAPITEM->I = fmt::sprintf("data.%ldbg",exps.B);
                     fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ldclip",exps.B);
-                    SCRAPITEM->C = texb.get_buffer();
+                    SCRAPITEM->C = fmt::sprintf("data.%ldclip",exps.B);
                   }
 //                  else {
 //                    fprintf(plf,"\t\t B => \"data.0\",\n");
@@ -1603,19 +1599,16 @@ if (ENC_NEW.NFSS==0) {
                   // po orezani
                   if (exps.E > 0) {
                     fprintf(plf,"\t\t E => \"data.%ld\",\n",exps.E);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.E);
-                    SCRAPITEM->E = texb.get_buffer();
+                    SCRAPITEM->E = fmt::sprintf("data.%ld",exps.E);
                   }
 //                  else
 //                    fprintf(plf,"\t\t E => \"data.0\",\n");
     
                   if (exps.X > 0) {
                     fprintf(plf,"\t\t X => \"data.%ld\",\n",exps.X);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.X);
-                    SCRAPITEM->X = texb.get_buffer();
+                    SCRAPITEM->X = fmt::sprintf("data.%ld",exps.X);
                     fprintf(plf,"\t\t P => \"data.%ldbbox\",\n",exps.X);
-                    sprintf(texb.get_buffer(),"data.%ldbbox",exps.X);
-                    SCRAPITEM->P = texb.get_buffer();
+                    SCRAPITEM->P = fmt::sprintf("data.%ldbbox",exps.X);
                   }
 
                   if (export_outlines_only) {
@@ -1649,14 +1642,11 @@ if (ENC_NEW.NFSS==0) {
                     active_clr.set_color(this->layout->color_model, SCRAPITEM->col_scrap);
       
                     fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ld",exps.B);
-                    SCRAPITEM->B = texb.get_buffer();
+                    SCRAPITEM->B = fmt::sprintf("data.%ld",exps.B);
                     fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ldbg",exps.B);
-                    SCRAPITEM->I = texb.get_buffer();
+                    SCRAPITEM->I = fmt::sprintf("data.%ldbg",exps.B);
                     fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
-                    sprintf(texb.get_buffer(),"data.%ldclip",exps.B);
-                    SCRAPITEM->C = texb.get_buffer();
+                    SCRAPITEM->C = fmt::sprintf("data.%ldclip",exps.B);
                     //fprintf(plf,"\t\t B => \"data.%ld\",\n",exps.B);
                     //fprintf(plf,"\t\t I => \"data.%ldbg\",\n",exps.B);
                     //fprintf(plf,"\t\t C => \"data.%ldclip\",\n",exps.B);
@@ -1705,15 +1695,13 @@ if (ENC_NEW.NFSS==0) {
   	  break;
   }
 
-  sprintf(texb.get_buffer(),"data.%d",sfig);
-  LAYOUT.northarrow = texb.get_buffer();
+  LAYOUT.northarrow = fmt::sprintf("data.%d",sfig);
   fprintf(mpf,"beginfig(%d);\ns_northarrow(%g);\nendfig;\n",sfig++,this->layout->rotate + rotate_plus);
 
-  sprintf(texb.get_buffer(),"data.%d",sfig);
-  LAYOUT.scalebar = texb.get_buffer();
+  LAYOUT.scalebar = fmt::sprintf("data.%d",sfig);
   //std::snprintf(prevbf,127,"%g",sblen);
   fprintf(mpf,"beginfig(%d);\ns_scalebar(%g, %g, \"%s\");\nendfig;\n",
-    sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()));
+    sfig++, sblen, 1.0 / this->layout->units.convert_length(1.0), utf2tex(this->layout->units.format_i18n_length_units()).c_str());
 
 
   // print altitudebar
@@ -1724,8 +1712,7 @@ if (ENC_NEW.NFSS==0) {
     switch (this->layout->color_crit) {
       case TT_LAYOUT_CCRIT_ALTITUDE:
       case TT_LAYOUT_CCRIT_DEPTH:
-    	  sprintf(texb.get_buffer(),"data.%d",sfig);
-    	  LAYOUT.altitudebar = texb.get_buffer();
+    	  LAYOUT.altitudebar = fmt::sprintf("data.%d",sfig);
     	  sv_min = this->layout->m_lookup->m_table.begin()->m_valueDbl;
     	  for(const auto& ti : this->layout->m_lookup->m_table) {
     		  sv_max = ti.m_valueDbl;
@@ -1938,8 +1925,7 @@ if (ENC_NEW.NFSS==0) {
   if (this->layout->grid != TT_LAYOUT_GRID_OFF) {
 
 #define expgridscrap(varname,Xpos,Ypos) \
-    sprintf(texb.get_buffer(),"data.%d",sfig); \
-    LAYOUT.varname = texb.get_buffer(); \
+    LAYOUT.varname = fmt::sprintf("data.%d",sfig); \
     fprintf(mpf,"beginfig(%d);\n%s(%d, %d, %.5f, %.5f);\nendfig;\n", \
     sfig++, grid_macro, Xpos, Ypos, ghs, gvs);
     
@@ -2006,7 +1992,8 @@ if (ENC_NEW.NFSS==0) {
       if (anyprev)
             fprintf(plf,"\",\n");      
       
-
+      thbuffer texb;
+      texb.guarantee(128);
       thdecode(& texb,TT_ISO8859_2,(strlen(cmap->map->title) > 0 ? cmap->map->title : cmap->map->name));      
       thdecode_tex(& encb, texb.get_buffer());
       fprintf(plf,"\t\tN => '%s',\n",encb.get_buffer());
@@ -2109,7 +2096,7 @@ if (ENC_NEW.NFSS==0) {
   //  tit.strcpy(LAYOUT.doc_title.c_str());
     
   tf = fopen(thtmp.get_file_name("th_texts.tex"),"w");
-  fprintf(tf,"\\legendtitle={%s}\n",utf2tex(thT("title legend",this->layout->lang)));
+  fprintf(tf,"\\legendtitle={%s}\n",utf2tex(thT("title legend",this->layout->lang)).c_str());
   ldata.legendtitle = thT("title legend",this->layout->lang);
 
   ldata.colorlegendtitle = "";
@@ -2142,7 +2129,7 @@ if (ENC_NEW.NFSS==0) {
     if ((this->layout->m_lookup != NULL) && (strlen(this->layout->m_lookup->m_title) > 0)) {
       ldata.colorlegendtitle = this->layout->m_lookup->m_title;
     }
-    fprintf(tf,"\\colorlegendtitle={%s}\n", utf2tex(ldata.colorlegendtitle.c_str()));
+    fprintf(tf,"\\colorlegendtitle={%s}\n", utf2tex(ldata.colorlegendtitle.c_str()).c_str());
   }
 
   // ak neni atlas, tak nastavi legendcavename
@@ -2291,6 +2278,7 @@ if (ENC_NEW.NFSS==0) {
 #ifdef THDEBUG
       thprintf("copying results\n");
 #endif
+      fs::remove(fnm); // workaround for MinGW bug, can't overwrite files
       fs::copy(thtmp.get_file_name("data.pdf"), fnm, fs::copy_options::overwrite_existing);
       break;
       // END OF PDF POSTPROCESSING
@@ -2795,7 +2783,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           tmps = &(thdb.db1d.station_vec[slp->station_name.id - 1]);
           out->symset->export_mp_symbol_options(dbg_stnms, SYMP_STATIONNAME);
           dbg_stnms.push_back(fmt::sprintf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);",
-            (const char *) utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
+            utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
             thxmmxst(out, slp->stx, slp->sty)));
         }
       }
@@ -2874,7 +2862,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 if (out->layout->is_debug_stationnames() && (tmps != NULL)) {
                       out->symset->export_mp_symbol_options(dbg_stnms, SYMP_STATIONNAME);
                       dbg_stnms.push_back(fmt::sprintf("p_label.urt(btex \\thstationname %s etex, (%.2f, %.2f), 0.0, p_label_mode_debugstation);",
-                      (const char *) utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
+                      utf2tex(thobjectname_print_full_name(tmps->name, tmps->survey, layout->survey_level)), 
                       thxmmxst(out, ptp->point->xt, ptp->point->yt)));
                 }
               }
@@ -2951,7 +2939,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
                 lp->export_nextcp_mp(out);
                 thdb.buff_enc.guarantee(4096);
                 //sprintf(thdb.buff_enc.get_buffer(),"%.0f",lp->rsize - out->layout->goz);
-                fprintf(out->file,",btex \\thwallaltitude %s etex);\n",utf2tex(out->layout->units.format_length(lp->rsize - out->layout->goz)));
+                fprintf(out->file,",btex \\thwallaltitude %s etex);\n",utf2tex(out->layout->units.format_length(lp->rsize - out->layout->goz)).c_str());
 //                fprintf(out->file,",\"%.0f\");\n",lp->rsize);
               }
               lp = lp->nextlp;
@@ -2998,9 +2986,9 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     thdb2dpt tmppt;
     tmppt.xt = (scrap->lxmin + scrap->lxmax) / 2.0;
     tmppt.yt = (scrap->lymin + scrap->lymax) / 2.0;
-    thdb.buff_tmp = utf2tex(thobjectname_print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
+    const auto name = utf2tex(thobjectname_print_full_name(scrap->name, scrap->fsptr, layout->survey_level));
     fprintf(out->file,"drawoptions();\n");
-    fprintf(out->file,"p_label(btex \\thlargesize %s etex,",thdb.buff_tmp.get_buffer());
+    fprintf(out->file,"p_label(btex \\thlargesize %s etex,", name.c_str());
     tmppt.export_mp(out);
     fprintf(out->file,",0.0,p_label_mode_debugscrap);\n");
   }
@@ -3214,7 +3202,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
 {
 
   if (maps == NULL) {
-    thwarning(("%s [%d] -- no selected projection data -- %s",
+    thwarning(("%s [%lu] -- no selected projection data -- %s",
       this->src.name, this->src.line, this->projstr))
     return;
   }
@@ -3460,7 +3448,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
   thdb2dmi * cmi;
   thscrap * cs;
 
-  long nmap = 0;
+  // long nmap = 0;
   bool firstmapscrap, nolkpitems;
   thlayout_color csc;
 
@@ -3499,7 +3487,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
           if (firstmapscrap) {
-            nmap++;
+            // nmap++;
             firstmapscrap = false;
             // add map, if according to maps
             if (lkp != NULL) {

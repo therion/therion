@@ -17,6 +17,9 @@
 #include <wx/intl.h>
 #include <wx/progdlg.h>
 #include <wx/valgen.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/button.h>
 
 #ifdef __cplusplus
  extern "C" {  // stupid JPEG library
@@ -38,6 +41,8 @@
 #include "lxGLC.h"
 #include "lxGUI.h"
 #include "lxFile.h"
+
+#include <fmt/printf.h>
 
 #define lxRENDERBORDER this->m_glc->TRCGet(TR_TILE_BORDER)
 
@@ -488,7 +493,7 @@ void lxRenderFile::Render() {
   m_glc->setup->cam_width = double(m_imgWidth) / double(m_imgHeight);
 
   m_cTile = 0;
-  long max =
+  const auto max =
     ((this->m_imgWidth + this->m_tWidth - 2 * lxRENDERBORDER - 1) / (this->m_tWidth - 2 * lxRENDERBORDER)) *
     ((this->m_imgHeight + this->m_tHeight - 2 * lxRENDERBORDER - 1) / (this->m_tHeight - 2 * lxRENDERBORDER));
   m_continue = true;
@@ -860,14 +865,12 @@ void lxRenderFile::RenderPDFHeader()
   double imw, imh;
   imw = 72.0 * this->m_imgWidth / imgRes;
   imh = 72.0 * this->m_imgHeight / imgRes;
-  char tmp_buff[256];
-
 
   fprintf(this->m_file,"%%PDF-1.4\n");
 
   pdf_obj[4] = ftell(this->m_file);
-  sprintf(tmp_buff, "q\n%.4f 0 0 %.4f 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
-  fprintf(this->m_file,"4 0 obj <<\n/Length %u\n>>\nstream\n%sendstream\nendobj\n", (unsigned)strlen(tmp_buff), tmp_buff);
+  const auto tmp_buff = fmt::sprintf("q\n%.4f 0 0 %.4f 0 0 cm\n/Im1 Do\nQ\n", imw, imh);
+  fprintf(this->m_file,"4 0 obj <<\n/Length %u\n>>\nstream\n%sendstream\nendobj\n", static_cast<unsigned>(tmp_buff.size()), tmp_buff.c_str());
 
   pdf_obj[3] = ftell(this->m_file);
   fprintf(this->m_file,"3 0 obj <<\n/Type /Page\n/Contents 4 0 R\n/Resources 2 0 R\n/MediaBox [0 0 %.4f %.4f]\n/Parent 5 0 R\n>> endobj\n", imw, imh);

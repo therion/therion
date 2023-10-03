@@ -8,6 +8,7 @@ jobs:
   #     git_branch: ${{ steps.build.outputs.git_branch }}
   #   env:
   #     THDIR: /home/runner/work/therion
+  #     PROJ_LIB: /home/runner/work/therion/proj-lib
   #   steps:
   #     - uses: actions/checkout@v3
   #       with:
@@ -33,10 +34,10 @@ jobs:
   #         echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.wine/drive_c/windows/therion.ini
   #         wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xz && mv therion-batteries-master ../therion-batteries
   #         if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
-  #         echo "::set-output name=THID_out::$THID"
+  #         echo "THID_out=$THID" >> $GITHUB_OUTPUT
   #         BRANCH_FULL=$(git branch -r --contains ${{ github.ref }})
   #         BRANCH=${BRANCH_FULL##*/}
-  #         echo "::set-output name=git_branch::$BRANCH"
+  #         echo "git_branch=$BRANCH" >> $GITHUB_OUTPUT
   #         mkdir ../therion.bin
   #         cd ../therion.bin
   #         i686-w64-mingw32.static-cmake -G Ninja \
@@ -44,6 +45,7 @@ jobs:
   #             -DCMAKE_CROSSCOMPILING_EMULATOR=wine \
   #             -DBUILD_SHARED_LIBS=OFF ../therion
   #         ninja
+  #         mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/. ../proj-lib
   #         ninja samples
   #         cd ../therion-batteries
   #         wine InnoSetup/ISCC.exe therion.iss
@@ -70,12 +72,13 @@ jobs:
       git_branch: ${{ steps.build.outputs.git_branch }}
     env:
       THDIR: d:/a/therion
+      PROJ_LIB: d:/a/therion/proj-lib
     steps:
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.config.msystem }}
           update: true
-          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets3.1 mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
+          install: make git python mingw-w64-${{ matrix.config.arch }}-freetype mingw-w64-${{ matrix.config.arch }}-cmake mingw-w64-${{ matrix.config.arch }}-proj mingw-w64-${{ matrix.config.arch }}-shapelib mingw-w64-${{ matrix.config.arch }}-vtk mingw-w64-${{ matrix.config.arch }}-wxWidgets3.2 mingw-w64-${{ matrix.config.arch }}-gcc mingw-w64-${{ matrix.config.arch }}-make mingw-w64-${{ matrix.config.arch }}-bwidget mingw-w64-${{ matrix.config.arch }}-fmt mingw-w64-${{ matrix.config.arch }}-catch
       - name: prevent git EOL conversion
         run: git config --global core.autocrlf input
       - uses: actions/checkout@v3
@@ -89,14 +92,15 @@ jobs:
           echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
           if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
-          echo "::set-output name=THID_out::$THID"
+          echo "THID_out=$THID" >> $GITHUB_OUTPUT
           BRANCH_FULL=$(git branch -r --contains ${{ github.ref }})
           BRANCH=${BRANCH_FULL##*/}
-          echo "::set-output name=git_branch::$BRANCH"
+          echo "git_branch=$BRANCH" >> $GITHUB_OUTPUT
           mkdir ../therion.bin
           cd ../therion.bin
-          cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=ON -DUSE_BUNDLED_CATCH2=OFF -DUSE_BUNDLED_FMT=OFF ../therion
+          cmake -G "MSYS Makefiles" -DCMAKE_CXX_FLAGS="-Werror" -DUSE_BUNDLED_SHAPELIB=ON ../therion
           cmake --build . -j 4
+          mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' innosetup.ini),proj-datumgrid}/. ../proj-lib
           cmake --build . -t samples deploy -- -j 4
           cd ../therion-batteries
           InnoSetup/ISCC.exe therion.iss
@@ -110,7 +114,7 @@ jobs:
             ${{ env.THDIR }}/therion.bin/therion-setup-${{ steps.build.outputs.THID_out }}.exe
             ${{ env.THDIR }}/therion.bin/thbook-${{ steps.build.outputs.THID_out }}.pdf
   Release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: Win32_installer
     if: startsWith(github.ref, 'refs/tags/v') && needs.Win32_installer.outputs.git_branch == 'master' && github.event_name == 'push'
     steps:
@@ -120,7 +124,7 @@ jobs:
           URL="https://uploads.github.com/repos/${{ github.repository }}/releases/${URL}/assets{?name,label}"
           echo "URL=$URL" >> $GITHUB_ENV
       - name: Download binaries
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: therion-setup-msys2-${{ needs.Win32_installer.outputs.THID }}
       - name: Upload installer

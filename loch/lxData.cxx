@@ -29,7 +29,6 @@
 // Standard libraries
 #ifndef LXDEPCHECK
 #include <stdlib.h>
-#include <wx/wx.h>
 #include <wx/txtstrm.h>
 #include <wx/strconv.h>
 #include <wx/wfstream.h>
@@ -122,7 +121,7 @@ void lxData::Clear()
 
 void lxDataTexture::Clear()
 {
-  lxImageRGBFree(this->image);
+  this->image = {};
   this->ClearTexImages();
 }
 
@@ -194,17 +193,14 @@ void lxDataTexture::ClearTexImages()
 bool lxDataTexture::SetImage(lxImageRGB img)
 {
   this->Clear();
-  this->image = img;
-  if (this->image.data == NULL)
-    return false;
-  else
-    return true;
+  this->image = std::move(img);
+  return !this->image.data.empty();
 }
 
 void lxDataTexture::CreateTexImages(int sizeS, int sizeO)
 {
   this->ClearTexImages();
-  if (this->image.data == NULL)
+  if (this->image.data.empty())
     return;
 
   unsigned char * psrc, * pdst;
@@ -222,10 +218,10 @@ void lxDataTexture::CreateTexImages(int sizeS, int sizeO)
   this->texS = new unsigned char [3 * sizeS * sizeS];
   this->texSbw = new unsigned char [3 * sizeS * sizeS];
   gluScaleImage(GL_RGB, 
-  this->image.width, this->image.height, GL_UNSIGNED_BYTE, this->image.data,  
+  this->image.width, this->image.height, GL_UNSIGNED_BYTE, this->image.data.data(),  
   sizeS, sizeS, GL_UNSIGNED_BYTE, this->texS);
 
-  pidn = 3 * sizeS * sizeS;
+  pidn = 3L * sizeS * sizeS;
   for(pidx = 0, psrc = this->texS, pdst = this->texSbw; pidx < pidn; pidx += 3, psrc += 3, pdst += 3) {
     pdst[2] = pdst[1] = pdst[0] = (unsigned char) (0.2989*double(psrc[0]) + 0.5870*double(psrc[1]) + 0.1140*double(psrc[2]));
   }
@@ -236,10 +232,10 @@ void lxDataTexture::CreateTexImages(int sizeS, int sizeO)
   this->texO = new unsigned char [3 * sizeO * sizeO];
   this->texObw = new unsigned char [3 * sizeO * sizeO];
   gluScaleImage(GL_RGB, 
-  this->image.width, this->image.height, GL_UNSIGNED_BYTE, this->image.data,  
+  this->image.width, this->image.height, GL_UNSIGNED_BYTE, this->image.data.data(),  
   sizeO, sizeO, GL_UNSIGNED_BYTE, this->texO);
 
-  pidn = 3 * sizeO * sizeO;
+  pidn = 3L * sizeO * sizeO;
   for(pidx = 0, psrc = this->texO, pdst = this->texObw; pidx < pidn; pidx += 3, psrc += 3, pdst += 3) {
     pdst[2] = pdst[1] = pdst[0] = (unsigned char) (0.2989*double(psrc[0]) + 0.5870*double(psrc[1]) + 0.1140*double(psrc[2]));
   }
@@ -500,7 +496,7 @@ void lxData::Rebuild()
   // rescale image if too large
   double * bnds, x1, y1, x2, y2, x3, x4, y3, y4, tmp1, tmp2;
   int ix1, iy1, ix2, iy2, nsx, nsy;
-  if ((this->surface != NULL) && (this->surface->GetNumberOfPoints() > 0) && (this->m_textureSurface.image.data != NULL)) {
+  if ((this->surface != NULL) && (this->surface->GetNumberOfPoints() > 0) && (!this->m_textureSurface.image.data.empty())) {
     bnds = this->surface->GetBounds();
     x1 = this->m_textureSurface.xx * bnds[0] + this->m_textureSurface.xy * bnds[2] + this->m_textureSurface.dx;
     x2 = this->m_textureSurface.xx * bnds[1] + this->m_textureSurface.xy * bnds[2] + this->m_textureSurface.dx;
@@ -528,21 +524,18 @@ void lxData::Rebuild()
     nsy = iy2 - iy1;
     if ((((ix2 - ix1) < this->m_textureSurface.image.width) || ((iy2 - iy1) < this->m_textureSurface.image.height)) && (nsx > 0) && (nsy > 0)) {
       // skopirujeme data
-      unsigned char * nd = (unsigned char *)malloc(3 * nsx * nsy);
+      lxImageRGB new_image(nsx, nsy);
       int rr, rs, ors, dcs;
       rs = 3 * nsx;
       dcs = 3 * ix1;
       ors = 3 * this->m_textureSurface.image.width;
       for(rr = 0; rr < nsy; rr++) {
         memcpy(
-          nd + ((nsy-rr-1) * rs),
-          this->m_textureSurface.image.data + ((this->m_textureSurface.image.height - 1 - iy1 - rr) * ors + dcs),
+          new_image.data.data() + ((nsy-rr-1) * rs),
+          this->m_textureSurface.image.data.data() + ((this->m_textureSurface.image.height - 1 - iy1 - rr) * ors + dcs),
           rs);
       }
-      lxImageRGBFree(this->m_textureSurface.image);
-      this->m_textureSurface.image.data = nd;
-      this->m_textureSurface.image.width = nsx;
-      this->m_textureSurface.image.height = nsy;
+      this->m_textureSurface.image = std::move(new_image);
       this->m_textureSurface.iw = (double) nsx;
       this->m_textureSurface.ih = (double) nsy;
       this->m_textureSurface.dx -= (double) ix1;

@@ -537,7 +537,7 @@ void thdatabase::end_insert()
   if (this->csurveyptr->id != this->fsurveyptr->id) {
     thdb_revision_set_type::iterator ii = 
         this->revision_set.find(threvision(this->csurveyptr->id, 0));
-    therror(("%s [%d] -- incomplete survey - endsurvey pair -- %s",
+    therror(("%s [%lu] -- incomplete survey - endsurvey pair -- %s",
       ii->srcf.name, ii->srcf.line, this->csurveyptr->full_name))
   }
 }
@@ -837,6 +837,10 @@ void thdatabase::preprocess() {
 	  thcs_cfg.bbox.push_back(thcfg.ibbx[2] / THPI * 180.0);
 	  thcs_cfg.bbox.push_back(thcfg.ibbx[1] / THPI * 180.0);
 	  thcs_cfg.bbox.push_back(thcfg.ibbx[3] / THPI * 180.0);
+
+    // PROJ9.2 has some issues with a degenerated bbox
+    if (thcs_cfg.bbox[0] == thcs_cfg.bbox[2]) thcs_cfg.bbox[2] += 1e-8;
+    if (thcs_cfg.bbox[1] == thcs_cfg.bbox[3]) thcs_cfg.bbox[3] += 1e-8;
   }
   obi = this->object_list.begin();
   while (obi != this->object_list.end()) {

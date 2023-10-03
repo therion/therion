@@ -29,51 +29,23 @@
 #include "thexception.h"
 #include "thinfnan.h"
 #include "thparse.h"
-
-void thtfpwf::clear()
-{
-  if (this->valn > 0) {
-    delete [] this->valp;
-    this->valn = 0;
-    this->valp = NULL;
-  }
-}
-
-
-thtfpwf::~thtfpwf()
-{
-  this->clear();
-}
-
-
-int thtfpwfxy_comp(const void * x1, const void * x2)
-{
-  thtfpwfxy * p1 = (thtfpwfxy *) x1;
-  thtfpwfxy * p2 = (thtfpwfxy *) x2;
-  if (p1->x < p2->x)
-    return -1;
-  if (p1->x == p2->x)
-    return 0;
-  else
-    return 1;
-}
+#include <algorithm>
 
 
 void thtfpwf::set(size_t nv, double * pv)
 {
   size_t idx;
-  this->clear();
+  this->values.clear();
   if (nv > 0) {
-    this->valp = new thtfpwfxy [nv];
-    this->valn = nv;
+    this->values.resize(nv);
     for(idx = 0; idx < nv; idx++) {
-      this->valp[idx].x = *pv;
+      this->values[idx].x = *pv;
       pv++;
-      this->valp[idx].y = *pv;
+      this->values[idx].y = *pv;
       pv++;
     }
     // now let's sort them
-    qsort(this->valp,this->valn,sizeof(thtfpwfxy),thtfpwfxy_comp);
+    std::sort(this->values.begin(), this->values.end(), [](const auto& a, const auto& b){ return a.x < b.x; });
 //    for(idx = 0; idx < nv; idx++) {
 //      printf("PWF SETTING: %f -> %f\n", this->valp[idx].x, this->valp[idx].y);
 //    }
@@ -121,23 +93,23 @@ void thtfpwf::parse(int nfact, char ** sfact)
   
 double thtfpwf::evaluate(double value)
 {
-  switch (valn) {
+  switch (this->values.size()) {
     case 0:
       return (value - b) * a;
     case 1:
-      return this->valp->y;
+      return this->values.front().y;
     default:
       // let's do a binary search
-      int a = 0, b = (int) this->valn - 1, c, r, ret = -1;
+      int a = 0, b = (int) this->values.size() - 1, c, r, ret = -1;
       while (a <= b) {
         c = unsigned((a + b) / 2);
-        if (this->valp[c].x < value)
+        if (this->values[c].x < value)
           r = -1;
         else {
           if (c == 0)
             r = 0;
           else {
-            if (this->valp[c - 1].x <= value)
+            if (this->values[c - 1].x <= value)
               r = 0;
             else
               r = 1;
@@ -154,14 +126,14 @@ double thtfpwf::evaluate(double value)
       }
       switch (ret) {
         case -1:
-          return this->valp[this->valn - 1].y;
+          return this->values.back().y;
         case 0:
-          return this->valp->y;
+          return this->values.front().y;
         default:
-          double x1 = this->valp[ret - 1].x;
-          double y1 = this->valp[ret - 1].y;
-          double x2 = this->valp[ret].x;
-          double y2 = this->valp[ret].y;
+          double x1 = this->values[ret - 1].x;
+          double y1 = this->values[ret - 1].y;
+          double x2 = this->values[ret].x;
+          double y2 = this->values[ret].y;
           if (thisnan(y1) || thisnan(y2))
             return thnan;
           if ((thisinf(y1) != 0) || (thisinf(y2) != 0)) {
@@ -181,11 +153,11 @@ double thtfpwf::evaluate(double value)
 
 thtfpwfxy * thtfpwf::get_values()
 {
-  return this->valp;
+  return this->values.data();
 }
   
   
 size_t thtfpwf::get_size()
 {
-  return this->valn;
+  return this->values.size();
 }

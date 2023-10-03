@@ -33,6 +33,7 @@
 #include "thdataobject.h"
 #include "thlayoutclr.h"
 #include "thmapstat.h"
+#include "thobjectname.h"
 
 /**
  * map command options tokens.

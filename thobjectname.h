@@ -32,6 +32,8 @@
 #include "thmbuffer.h"
 #include "therion.h"
 
+#include <string>
+
 /**
  * Survey station class.
  */
@@ -78,20 +80,20 @@ class thobjectname {
    * Print object name with survey into str.
    */
 
-  char * print_name();
+  std::string print_name();
   
 
   /**
    * Print object name with survey up to given level into str.
    */
 
-  char * print_full_name(int slevel = -1);
+  std::string print_full_name(int slevel = -1);
     
 };
 
 void thparse_objectname(thobjectname & ds, thmbuffer * sstore, char * src, class thdataobject * psobj = NULL);
 
-char * thobjectname_print_full_name(const char * oname, class thsurvey * psrv, int slevel = -1);
+std::string thobjectname_print_full_name(const char * oname_ptr, class thsurvey * psrv, int slevel = -1);
 
 void fprintf(FILE * fh, thobjectname & ds);
 

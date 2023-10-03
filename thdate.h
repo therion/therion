@@ -27,6 +27,7 @@
  */
  
 #include <time.h>
+#include <array>
 
 #ifndef thdate_h
 #define thdate_h
@@ -83,7 +84,7 @@ class thdate {
   double ssec, ///< Start date seconds
     esec;  ///< End date seconds
     
-  char dstr[thdate_bufflen]; ///< String for given date.
+  std::array<char, thdate_bufflen> dstr = {}; ///< String for given date.
 
   friend bool operator < (const thdate &, const thdate &);  ///< Less operator.
   friend bool operator <= (const thdate &, const thdate &);  ///< Less operator.

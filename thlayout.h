@@ -37,6 +37,8 @@
 #include "thlayoutclr.h"
 #include <list>
 
+class thdb2dprj;
+
 /**
  * layout command options tokens.
  */

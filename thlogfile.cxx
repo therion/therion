@@ -145,9 +145,8 @@ FILE * thlogfile::get_fileh()
 
 void thlogfile::log_error() {
 	this->close_file();
-	this->open_file();
 	this->logging_off();
-	fprintf(this->fileh,"error -- unable to write to log file (disk full?, insufficient permissions?)");
+	fprintf(stderr,"error -- unable to write to log file (disk full?, insufficient permissions?)\n");
 }
 
 thlogfile thlog;

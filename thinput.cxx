@@ -251,7 +251,7 @@ void thinput::open_file(char * fname)
   // if file was open, now let's try if not recursive inclusion
   ifile * tmptr;
   bool is_rec = false;
-  unsigned int n_rec = 0;
+  [[maybe_unused]] unsigned int n_rec = 0;
   
   if (!ifptr->sh.is_open()) {
     if ((srcfile != NULL) || (this->report_missing)) {
@@ -271,12 +271,12 @@ void thinput::open_file(char * fname)
     }
 #ifdef THWIN32
     if (n_rec == THMAXFREC) {
-      therror(("%s [%d] -- too many file inclusions -- probably input recursion -- %s", \
+      therror(("%s [%lu] -- too many file inclusions -- probably input recursion -- %s", \
       this->get_cif_name(), this->get_cif_line_number(), fname));
     }
 #else
     if (is_rec) {
-      therror(("%s [%d] -- recursive file inclusion -- %s", \
+      therror(("%s [%lu] -- recursive file inclusion -- %s", \
       this->get_cif_name(), this->get_cif_line_number(), fname));
     }
 #endif
@@ -358,7 +358,7 @@ char * thinput::read_line()
     // Check, if reading was OK.
     
     if (this->last_ptr->sh.fail() && (!(this->last_ptr->sh.eof()))) {
-      therror(("%s [%d] -- line too long", \
+      therror(("%s [%lu] -- line too long", \
         this->get_cif_name(), this->get_cif_line_number()));
     }
     
@@ -410,7 +410,7 @@ char * thinput::read_line()
         case TT_INPUT:
           if (this->input_sensitivity) {
             if (this->tmpmb.get_size() != 1)
-              therror(("%s [%d] -- one input file name expected -- %s", \
+              therror(("%s [%lu] -- one input file name expected -- %s", \
                 this->get_cif_name(), this->get_cif_line_number(), \
                 this->valuebf.get_buffer()))
             else
@@ -420,13 +420,13 @@ char * thinput::read_line()
           
         case TT_ENCODING:
           if (this->tmpmb.get_size() != 1)
-            therror(("%s [%d] -- encoding name expected -- %s", \
+            therror(("%s [%lu] -- encoding name expected -- %s", \
               this->get_cif_name(), this->get_cif_line_number(), \
               this->valuebf.get_buffer()));
           this->last_ptr->encoding = \
             thmatch_token(*(this->tmpmb.get_buffer()), thtt_encoding);
           if (this->last_ptr->encoding == TT_UNKNOWN_ENCODING) {
-            therror(("%s [%d] -- unknown encoding -- %s", \
+            therror(("%s [%lu] -- unknown encoding -- %s", \
               this->get_cif_name(), this->get_cif_line_number(), \
               this->valuebf.get_buffer()));
             this->last_ptr->encoding = TT_UTF_8;
@@ -490,8 +490,12 @@ char * thinput::get_cif_path()
   return cifpath.get_buffer();
 }
 
-std::string thinput::get_cif_abspath(const char * fname)
+std::string thinput::get_cif_abspath(const char * fname_ptr)
 {
+  std::string_view fname;
+  if (fname_ptr)
+    fname = fname_ptr;
+
   std::error_code ec;
   auto pict_path = std::filesystem::current_path(ec);
   thassert(!ec);
@@ -504,7 +508,7 @@ std::string thinput::get_cif_abspath(const char * fname)
   
   pict_path = pict_path.parent_path();
 
-  if (fname != NULL && strlen(fname) > 0) {
+  if (!fname.empty()) {
     if (fs::path(fname).is_absolute())
       pict_path = fname;
     else
@@ -513,6 +517,9 @@ std::string thinput::get_cif_abspath(const char * fname)
 
   auto pict_path_str = pict_path.string();
   std::replace(pict_path_str.begin(), pict_path_str.end(), '\\', '/');
+  if (fname.empty() && (pict_path_str.empty() || (pict_path_str.back() != '/'))) {
+	  pict_path_str += "/";
+  }
   return pict_path_str;
 }
 

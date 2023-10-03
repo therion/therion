@@ -1,7 +1,10 @@
 // Standard libraries
 #ifndef LXDEPCHECK
 #include <wx/choice.h>
-#include <math.h>
+#include <wx/listbox.h>
+#include <wx/stattext.h>
+#include <wx/button.h>
+#include <cmath>
 #endif  
 //LXDEPCHECK - standard libraries
 

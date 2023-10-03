@@ -105,8 +105,6 @@
 # define isFinite(_a) (isfinite(_a))
 #elif defined(__osf__)
 # define isFinite(_a) (finite(_a) && !isNaN(_a))
-#elif defined(THMSVC)
-# define isFinite(_a) (_finite(_a) && !isNaN(_a))
 #else
 # define isFinite(_a) (std::isfinite(_a))
 #endif

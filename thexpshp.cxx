@@ -560,7 +560,7 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
 {
 
   if (maps == NULL) {
-    thwarning(("%s [%d] -- no selected projection data -- %s",
+    thwarning(("%s [%lu] -- no selected projection data -- %s",
       this->src.name, this->src.line, this->projstr))
     return;
   }

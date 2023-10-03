@@ -10,9 +10,9 @@ target_compile_definitions(img PUBLIC IMG_API_VERSION=1)
 target_link_libraries(img PRIVATE disable-warnings)
 
 # library common with therion
-add_library(common-utils STATIC icase.h lxFile.h lxFile.cxx lxMath.h lxMath.cxx)
-target_compile_definitions(common-utils PRIVATE ${LOCH_DEFINITIONS})
-target_link_libraries(common-utils PUBLIC img enable-warnings)
+add_library(common-utils STATIC icase.h icase.cxx lxFile.h lxFile.cxx lxMath.h lxMath.cxx)
+target_compile_definitions(common-utils PUBLIC $<$<BOOL:${WIN32}>:WIN32_LEAN_AND_MEAN> PRIVATE ${LOCH_DEFINITIONS})
+target_link_libraries(common-utils PUBLIC img enable-warnings fmt::fmt)
 
 if (NOT BUILD_LOCH)
     return()
@@ -47,7 +47,7 @@ if (WIN32)
     add_custom_target(generate_resource DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/loch.res)
 endif()
 
-include(${CMAKE_SOURCE_DIR}/cmake/LochSources.cmake)
+include(LochSources)
 # loch executable
 add_executable(loch WIN32 ${LOCH_HEADERS} ${LOCH_SOURCES})
 # we need to filter out include directories from wxWidgets cxx flags list, because we have to set them only as system headers to ignore warnings

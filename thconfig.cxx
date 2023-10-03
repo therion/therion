@@ -37,7 +37,6 @@
 #include "thexception.h"
 #include "thdatabase.h"
 #include "thdatareader.h"
-#include "thdataobject.h"
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thlogfile.h"
@@ -991,7 +990,7 @@ void thconfig::log_outcs(double decsyear, double deceyear) {
           firstdec = false;
         }
         if (this->get_outcs_mag_decl(double(yyy), dec)) {
-          thlog.printf("  %4d.1.1  %.4f\n", yyy, dec);
+          thlog.printf("  %4ld.1.1  %.4f\n", yyy, dec);
         }
       }
     }

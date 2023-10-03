@@ -31,6 +31,7 @@
 #include "thchenc.h"
 #include "thexpmap.h"
 #include "thline.h"
+#include "thdatabase.h"
 
 tharea::tharea()
 {
