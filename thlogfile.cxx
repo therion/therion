@@ -81,20 +81,6 @@ void thlogfile::close_file()
   }
 }
   
-
-
-void thlogfile::vprintf(std::string_view format, fmt::printf_args args)
-{
-  if (this->is_logging) {
-    if (!this->is_open)
-      this->open_file();
-    if (this->is_open) {
-      if (fmt::vfprintf(this->fileh, format, args) < 0)
-				this->log_error();
-		}
-  }
-}
-
 void thlogfile::set_file_name(char *fname)
 {
   size_t fnl = strlen(fname);

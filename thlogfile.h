@@ -75,22 +75,22 @@ class thlogfile {
    */
    
   ~thlogfile();
-  
+
   
   /**
    * Print formatted into log file.
    */
-   
-  void vprintf(std::string_view format, fmt::printf_args args);
-
-
-  /**
-   * Print formatted into log file.
-   */
-  template <typename... Args>
-  void printf(std::string_view format, Args&& ...args)
+  template <typename FormatStr, typename... Args>
+  void printf(const FormatStr& format, const Args&... args)
   {
-    this->vprintf(format, fmt::make_printf_args(args...));
+    if (this->is_logging) {
+      if (!this->is_open)
+        this->open_file();
+      if (this->is_open) {
+        if (fmt::fprintf(this->fileh, format, args...) < 0)
+          this->log_error();
+      }
+    }
   }
   
   /**

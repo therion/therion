@@ -33,6 +33,7 @@
 #ifndef therion_h
 #define therion_h
 
+#include "thlogfile.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <fmt/printf.h>
@@ -96,30 +97,37 @@ extern char * thexecute_cmd;
 /**
  * @brief Helper function for universal logging.
  * 
+ * @param verbose print also to stdout
  * @param f output
  * @param format format string
  * @param args arguments to print
- * @param verbose print also to stdout
  */
-void thvfprintf(FILE* f, std::string_view format, fmt::printf_args args, bool verbose);
+template<typename FormatStr, typename... Args>
+void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&... args)
+{
+  thlog.printf(format, args...);
+  if (verbose) {
+    fmt::fprintf(f, format, args...);
+  }
+}
 
 /**
  * Print formatted to stdout.
  */
-template <typename... Args>
-void thprintf(std::string_view format, Args&& ...args)
+template <typename FormatStr, typename... Args>
+void thprintf(const FormatStr& format, Args&&... args)
 {
-  thvfprintf(stdout, format, fmt::make_printf_args(args...), thverbose_mode);
+  thfprintf(thverbose_mode, stdout, format, args...);
 }
 
 
 /**
  * Print formatted to stderr.
  */
-template <typename... Args>
-void thprintf2err(std::string_view format, Args&& ...args)
+template <typename FormatStr, typename... Args>
+void thprintf2err(const FormatStr& format, const Args&... args)
 {
-    thvfprintf(stderr, format, fmt::make_printf_args(args...), true);
+    thfprintf(true, stderr, format, args...);
 } 
 
 

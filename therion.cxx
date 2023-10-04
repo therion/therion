@@ -61,14 +61,6 @@ bool thtext_inline = false;
 
 char * thexecute_cmd = NULL;
 
-void thvfprintf(FILE* f, std::string_view format, fmt::printf_args args, bool verbose)
-{
-  thlog.vprintf(format, args);
-  if (verbose) {
-    fmt::vfprintf(f, format, args);
-  }
-}
-
 void thprint_environment() {
   thprintf("\n\nINIT=%s\n",thcfg.get_initialization_path());
   thprintf("SOURCE=%s\n\n",thcfg.get_search_path());
