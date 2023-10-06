@@ -103,11 +103,18 @@ extern char * thexecute_cmd;
  * @param args arguments to print
  */
 template<typename FormatStr, typename... Args>
-void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&... args)
+void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&... args) noexcept
 {
-  thlog.printf(format, args...);
-  if (verbose) {
-    fmt::fprintf(f, format, args...);
+  try
+  {
+    thlog.printf(format, args...);
+    if (verbose) {
+      fmt::fprintf(f, format, args...);
+    }
+  }
+  catch(const std::exception& e)
+  {
+    std::fprintf(stderr, "string formatting error: %s\n", e.what());
   }
 }
 
