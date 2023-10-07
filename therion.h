@@ -122,7 +122,7 @@ void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&
  * Print formatted to stdout.
  */
 template <typename FormatStr, typename... Args>
-void thprintf(const FormatStr& format, Args&&... args)
+void thprintf(const FormatStr& format, Args&&... args) noexcept
 {
   thfprintf(thverbose_mode, stdout, format, args...);
 }
@@ -132,9 +132,9 @@ void thprintf(const FormatStr& format, Args&&... args)
  * Print formatted to stderr.
  */
 template <typename FormatStr, typename... Args>
-void thprintf2err(const FormatStr& format, const Args&... args)
+void thprintf2err(const FormatStr& format, const Args&... args) noexcept
 {
-    thfprintf(true, stderr, format, args...);
+  thfprintf(true, stderr, format, args...);
 } 
 
 
