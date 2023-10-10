@@ -103,38 +103,51 @@ extern char * thexecute_cmd;
  * @param args arguments to print
  */
 template<typename FormatStr, typename... Args>
-void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&... args) noexcept
+void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&... args)
 {
-  try
-  {
-    thlog.printf(format, args...);
-    if (verbose) {
-      fmt::fprintf(f, format, args...);
-    }
-  }
-  catch(const std::exception& e)
-  {
-    std::fprintf(stderr, "string formatting error: %s\n", e.what());
+  thlog.printf(format, args...);
+  if (verbose) {
+    fmt::fprintf(f, format, args...);
   }
 }
 
 /**
- * Print formatted to stdout.
+ * @brief Print formatted to stdout.
+ * 
+ * @param format format string
+ * @param args arguments to print
  */
 template <typename FormatStr, typename... Args>
-void thprintf(const FormatStr& format, Args&&... args) noexcept
+void thprintf(const FormatStr& format, Args&&... args)
 {
   thfprintf(thverbose_mode, stdout, format, args...);
 }
 
 
 /**
- * Print formatted to stderr.
+ * @brief Print formatted to stderr.
+ * 
+ * This function is used for error reporting, so it catches any additional
+ * exceptions in order to not interfere with error handling.
+ * 
+ * @param format format string
+ * @param args arguments to print
  */
 template <typename FormatStr, typename... Args>
 void thprintf2err(const FormatStr& format, const Args&... args) noexcept
 {
-  thfprintf(true, stderr, format, args...);
+  try
+  {
+    thfprintf(true, stderr, format, args...);
+  }
+  catch(const std::exception& e)
+  {
+    std::fprintf(stderr, "error occured while reporting another error: %s\n", e.what());
+  }
+  catch (...)
+  {
+    std::fprintf(stderr, "unknown error occured while reporting another error\n");
+  }
 } 
 
 
