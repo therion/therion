@@ -76,7 +76,6 @@ class thlogfile {
    
   ~thlogfile();
 
-  
   /**
    * Print formatted into log file.
    */

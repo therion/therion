@@ -118,7 +118,7 @@ void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&
  * @param args arguments to print
  */
 template <typename FormatStr, typename... Args>
-void thprintf(const FormatStr& format, Args&&... args)
+void thprintf(const FormatStr& format, const Args&... args)
 {
   thfprintf(thverbose_mode, stdout, format, args...);
 }
@@ -142,11 +142,11 @@ void thprintf2err(const FormatStr& format, const Args&... args) noexcept
   }
   catch(const std::exception& e)
   {
-    std::fprintf(stderr, "error occured while reporting another error: %s\n", e.what());
+    std::fprintf(stderr, "error occurred while reporting another error: %s\n", e.what());
   }
   catch (...)
   {
-    std::fprintf(stderr, "unknown error occured while reporting another error\n");
+    std::fprintf(stderr, "unknown error occurred while reporting another error\n");
   }
 } 
 
