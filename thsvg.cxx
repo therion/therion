@@ -128,7 +128,7 @@ void base64_encode(const char * fname, std::ofstream & fout) {
   unsigned char out_buffer[4];
 
   std::ifstream fin(fname, std::ios::binary);
-  if (!fin) therror((((std::string)"Can't read file "+fname+"!\n").c_str()));
+  if (!fin) therror((fmt::format("Can't read file {}!\n", fname).c_str()));
 
   do {
       for (int i = 0; i < 3; i++) in_buffer[i] = '\x0';

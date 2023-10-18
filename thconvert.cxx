@@ -48,7 +48,7 @@
 
 // extern list<scraprecord> SCRAPLIST;
 
-#define IOerr(F) ((std::string)"Can't open file "+F+"!\n").c_str()
+#define IOerr(F) fmt::format("Can't open file {}!\n", (F)).c_str()
 
 std::map<std::string,std::string> ALL_FONTS, ALL_PATTERNS;
 typedef std::set<unsigned char> FONTCHARS;

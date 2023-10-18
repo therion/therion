@@ -358,8 +358,7 @@ proj_cache cache;
           for (int j = 0; j < proj_coordoperation_get_grid_used_count(PJ_DEFAULT_CTX, P_tmp); j++) {
             proj_coordoperation_get_grid_used(PJ_DEFAULT_CTX, P_tmp, j,
                 &short_name, nullptr, nullptr, &url, nullptr, nullptr, nullptr);
-            std::string s_tmp = (std::string) "missing PROJ transformation grid '" + short_name + "'; you can download it from " +
-                          url + " and install it to a location where PROJ finds it";
+            std::string s_tmp = fmt::format("missing PROJ transformation grid '{}'; you can download it from {} and install it to a location where PROJ finds it", short_name, url);
             switch (thcs_cfg.proj_auto_grid) {
               case GRID_WARN:
                 thwarning((s_tmp.c_str()));
@@ -451,7 +450,7 @@ proj_cache cache;
 // set CA bundle path; supported since proj 7.2.0
 #ifdef THWIN32
 #if PROJ_VER >= 8
-    std::string ca_path = (std::string) thcfg.install_path.get_buffer() + "\\lib\\cacert.pem";
+    std::string ca_path = fmt::format("{}\\lib\\cacert.pem", thcfg.install_path.get_buffer());
     proj_context_set_ca_bundle_path(PJ_DEFAULT_CTX, ca_path.c_str());
 #endif
 #endif
@@ -575,10 +574,9 @@ void thcs_log_transf_used() {
 std::string thcs_get_label([[maybe_unused]] std::string s) {
 #if PROJ_VER >= 6
     PJ* P;
-    std::string res;
     th_init_proj(P, sanitize_crs(s));
     PJ_PROJ_INFO pinfo = proj_pj_info(P);
-    res = (std::string) pinfo.description;
+    const std::string res(pinfo.description);
     proj_destroy(P);
     return res;
 #else
