@@ -380,19 +380,19 @@ std::string utf2tex(std::string str, bool remove_kerning) {
   std::string::const_iterator it = str.cbegin(), end = str.cend();
   for (std::smatch match; std::regex_search(it, end, match, reg_fontsize); it = match[0].second) {
     if (match.str(1) == "xs")
-      out += (std::string) match.prefix() + "\x1B\xE" + (char) 101;
+      out += match.prefix().str() + "\x1B\xE" + (char) 101;
     else if (match.str(1) == "s")
-      out += (std::string) match.prefix() + "\x1B\xE" + (char) 102;
+      out += match.prefix().str() + "\x1B\xE" + (char) 102;
     else if (match.str(1) == "m")
-      out += (std::string) match.prefix() + "\x1B\xE" + (char) 103;
+      out += match.prefix().str() + "\x1B\xE" + (char) 103;
     else if (match.str(1) == "l")
-      out += (std::string) match.prefix() + "\x1B\xE" + (char) 104;
+      out += match.prefix().str() + "\x1B\xE" + (char) 104;
     else if (match.str(1) == "xl")
-      out += (std::string) match.prefix() + "\x1B\xE" + (char) 105;
+      out += match.prefix().str() + "\x1B\xE" + (char) 105;
     else if (match.str(3) == "%")  // font size in percents; 10 % increments to fit the values into <1,100> range
-      out += (std::string) match.prefix() + "\x1B\xE" + (char) (std::max((int) std::round(std::stod(match.str(2)) / 10), 1));
+      out += match.prefix().str() + "\x1B\xE" + (char) (std::max((int) std::round(std::stod(match.str(2)) / 10), 1));
     else if (match.str(1) == match.str(2))   // font size in points; limited to <1,127>
-      out += (std::string) match.prefix() + "\x1B\xD" + (char) (std::min(std::max(std::stoi(match.str(2)),1),127));
+      out += match.prefix().str() + "\x1B\xD" + (char) (std::min(std::max(std::stoi(match.str(2)),1),127));
     else therror(("invalid font size specification"));
   }
   out.append(it, end);
