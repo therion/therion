@@ -892,10 +892,6 @@ Point is a command for drawing a point map symbol.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
     You cannot specify this option for the following symbols: station,
     station-name, label, remark, date, altitude, height, passage-height.
-  * |dist <distance>| =  valid for extra points, specifies the distance to the nearest
-    station (or station specified using |-from| option. If not specified,
-    appropriate value from LRUD data is used.
-  * |from <station>| =  valid for extra points, specifies reference station.
   * |visibility <on/off>| = displays/hides the symbol.
   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
     and |symbol-show| layout options) symbol will be hidden/shown according
@@ -907,6 +903,10 @@ Point is a command for drawing a point map symbol.
 
     {\it Type-specific options:}\Nobreak
 
+  * |dist <distance>| =  if the point type is extra, specifies the distance to the nearest
+    station (or station specified using |-from| option. If not specified,
+    appropriate value from LRUD data is used.
+  * |from <station>| =  if the point type is extra, specifies reference station.
   * |name <reference>| = if the point type is station, this
     option gives the reference to the real survey station.
   * |extend [prev[ious] <station>]| = if the point type is station and scrap
