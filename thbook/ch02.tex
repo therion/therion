@@ -1115,12 +1115,10 @@ respectively.
     $xs \equiv 0.5$, $s \equiv 0.707$, $m \equiv 1.0$, $l \equiv 1.414$ and
     $xl \equiv 2.0$. Absolute font sizes (in points) can be assigned to named sizes
     using |fonts-setup| in the |layout| configuration section.
-  * |adjust <horizontal/vertical>| = shifts the line point to be aligned
-    horizontally/ver\-ti\-cally with the previous point (or next point if there is
-    no previous point). The result is horizontal/vertical line segment).
-    If all line points have this option, they are aligned to the
-    average $y$ or $x$ coordinate, respectively. This option is not allowed
-    in the |plan| projection.
+    * |adjust <horizontal/vertical>| = shifts the line point to be aligned
+    horizontally/ver\-ti\-cally with the previous point. It can't be set on the 
+    first point. The result is a horizontal/vertical line segment.
+    This option is not allowed in the |plan| projection.
   * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
   * |visibility <on/off>| = displays/hides the symbol.
