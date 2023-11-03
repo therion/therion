@@ -1104,9 +1104,6 @@ respectively.
          walls, `|none|' for all other lines. Use |-outline in| for
          large pillars etc.
        * |reverse <on/off>| = whether points are given in reverse order.
-       * |size <number>| = synonym of l-size
-       * |l-size <number>| = Size of the line (to the left). Only valid on and 
-         required for |slope| type.
        * |smooth <on/off/auto>| = whether the line is smooth at the given point.
          Auto is default.
   * |scale| = scale for labels, can be:
@@ -1154,8 +1151,11 @@ respectively.
          dependent (e.g. no tick in UIS, tick in the middle in SKBB).
        * |head <begin/end/both/none>| = can be used only with the arrow
          type and indicates where to put an arrow head. End is default.
+       * |l-size <number>| = Size of the line (to the left). Only valid on and 
+         required for |slope| type.
        * |rebelays <on/off>| = this option can be specified only with
          the `rope' line type.
+       * |size <number>| = synonym of l-size
        * |text <string>| = valid only for label lines.
        * \NEW{5.4}|height <value>| = height of pit or wall:pit; available in
          \MP\ as a numeric variable |ATTR__height|.
