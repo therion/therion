@@ -893,18 +893,17 @@ Point is a command for drawing a point map symbol.
     You cannot specify this option for the following symbols: station,
     station-name, label, remark, date, altitude, height, passage-height.
   * |visibility <on/off>| = displays/hides the symbol.
+  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
+    and |symbol-show| layout options) symbol will be hidden/shown according
+    to rules for specified |<symbol-type>|.\[Example: if you specify
+    |-context point air-draught| to a label which displays the observation
+    date, the |symbol-hide point air-draught| command would hide both
+    air-draught arrow and the corresponding label.]
   * |id <ext_keyword>| = ID of the symbol.
 
     {\it Type-specific options:}\Nobreak
 
-   * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
-    and |symbol-show| layout options) symbol will be hidden/shown according
-    to rules for specified |<symbol-type>|. \[Example: if you specify 
-    |-context point air-draught| to a label which displays the 
-    observation date, the |symbol-hide point air-draught| command would hide 
-    both air-draught arrow and the corresponding label.] Only supported on point 
-    types air-draught, height, passage-height, station and water-flow.
-   * |dist <distance>| =  if the point type is extra, specifies the distance to the nearest
+  * |dist <distance>| =  if the point type is extra, specifies the distance to the nearest
     station (or station specified using |-from| option. If not specified,
     appropriate value from LRUD data is used.
   * |from <station>| =  if the point type is extra, specifies reference station.
@@ -1117,6 +1116,9 @@ respectively.
   * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
   * |visibility <on/off>| = displays/hides the symbol.
+  * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
+    and |symbol-show| layout options) symbol will be hidden/shown according
+    to rules for specified |<symbol-type>|.
 
     {\it Type-specific options:}\Nobreak
 
@@ -1137,10 +1139,6 @@ respectively.
        * |border <on/off>| = this option can be specified only with
          the `slope' symbol type. It switches on/off the border line of
          the slope.
-       * |context <point/line/area> <symbol-type>| = (to be used with |symbol-hide|
-         and |symbol-show| layout options) symbol will be hidden/shown according
-         to rules for specified |<symbol-type>|. Only supported on line types 
-         border, survey, wall and water-flow.
        * |direction <begin/end/both/none/point>| = can be used only
          with the section type. It indicates where to put
          a direction arrow on the section line. None is default.
