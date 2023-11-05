@@ -1066,6 +1066,15 @@ respectively.
 
 
 \comopt
+    Most of these options are accepted both as a |line| command option and as a
+    |[LINE DATA]| option despite representing a 'whole line' option. The last 
+    one appearing prevails. The exceptions are |adjust|, |altitude|, |l-size|,
+    |mark|, |orientation|, |size| and |smooth| that are only accepted as a 
+    |[LINE DATA]| option.
+
+    The |direction| and |gradient| options are only accepted as a |[LINE DATA]| 
+    command option when set to |point|. Otherwise they are accepted as a |line| 
+    command option.
        * |subtype <keyword>| = determines line subtype. The following
          subtypes are supported for given types:
 
@@ -1141,11 +1150,15 @@ respectively.
          the slope.
        * |direction <begin/end/both/none/point>| = can be used only
          with the section type. It indicates where to put
-         a direction arrow on the section line. None is default.
+         a direction arrow on the section line. None is default. The |point| 
+         option must be used inside |[LINE DATA]|. The others can (and should)
+         be used as a line option.
        * |gradient <none/center/point>| = can be used only with the contour
          type and indicates where to put a gradient mark on the contour line.
          If there is no gradient specification, behaviour is symbol-set
-         dependent (e.g. no tick in UIS, tick in the middle in SKBB).
+         dependent (e.g. no tick in UIS, tick in the middle in SKBB). The |point| 
+         option must be used inside |[LINE DATA]|. The others can (and should)
+         be used as a line option.
        * |head <begin/end/both/none>| = can be used only with the arrow
          type and indicates where to put an arrow head. End is default.
        * |l-size <number>| = Size of the line (to the left). Only valid on and 
