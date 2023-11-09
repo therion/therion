@@ -7,11 +7,11 @@
 #endif  
 //LXDEPCHECK - standard libraries
 
+#include "lxData.h"
 #include "lxSScene.h"
 #include "lxSetup.h"
 #include "lxGUI.h"
 #include "lxGLC.h"
-#include "lxData.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"
