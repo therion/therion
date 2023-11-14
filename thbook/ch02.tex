@@ -1186,10 +1186,10 @@ Area is specified by surrounding border lines. They may be of any type, but
 must be listed in order and each pair of consecutive lines must intersect.
 In order to be sure that lines intersect even after scrap transformation
 you may e.g.~continue a lake border 1\,cm behind a passage wall---these
-overlaps will be automatically clipped by scrap border.
+overlaps will be automatically clipped by scrap border. When defined by more
+than one line, the actual area will be the intersection of the areas defined 
+by each separate line.
 You may use invisible border to achieve this inside of the passage.
-
-
 \enddescription
 
 \syntax
@@ -1222,6 +1222,8 @@ You may use invisible border to achieve this inside of the passage.
 \endarguments
 
 \comopt
+All options can appear as command-like options or as |area| options, i.e., on
+the same line as the |area| command. The last one appearing prevails.
   * the data lines consist of border line references (IDs)
   * |place <bottom/default/top>| = changes displaying order in the map.
   * |clip <on/off>| = specify whether a symbol is clipped by the scrap border.
