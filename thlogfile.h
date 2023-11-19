@@ -31,7 +31,7 @@
 
 #include "thbuffer.h"
 #include <stdio.h>
-#include <stdarg.h>
+#include <fmt/printf.h>
 
 /**
  * Log file module.
@@ -75,20 +75,22 @@ class thlogfile {
    */
    
   ~thlogfile();
-  
-  
-  /**
-   * Print formatted into log file.
-   */
-   
-  void vprintf(const char *format, va_list *args);
-
 
   /**
    * Print formatted into log file.
    */
-   
-  void printf(const char * format, ...);
+  template <typename FormatStr, typename... Args>
+  void printf(const FormatStr& format, const Args&... args)
+  {
+    if (this->is_logging) {
+      if (!this->is_open)
+        this->open_file();
+      if (this->is_open) {
+        if (fmt::fprintf(this->fileh, format, args...) < 0)
+          this->log_error();
+      }
+    }
+  }
   
   /**
    * Print double into log file - take concern of nan.

@@ -395,7 +395,7 @@ therion::warp::plaquette_algo::find_neighbors( therion::warp::basic_pair * me )
       break;
     default:
       thprintf("plaquette_algo::make_neighbors() wrong pair warp-type %d\n",
-        me->type() );
+        static_cast<int>(me->type()) );
   }
 }
 
