@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW32, arch: i686 }
+          - { msystem: MINGW64, arch: x86_64 }
     defaults:
       run:
         shell: msys2 {0}

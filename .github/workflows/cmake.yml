@@ -78,8 +78,8 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW32, arch: i686,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"                                  }
-          - { msystem: CLANG32, arch: clang-i686, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON" }
+          - { msystem: MINGW64, arch: x86_64,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"                                  }
+          - { msystem: CLANG64, arch: clang-x86_64, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON" }
     defaults:
       run:
         shell: msys2 {0}
