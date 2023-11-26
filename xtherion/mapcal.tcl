@@ -17,13 +17,13 @@ proc xth_calibrate_bitmap {} {
     package require registry
     set win32registry {HKEY_LOCAL_MACHINE\SOFTWARE\Therion}
     if {[catch {
-      set ipath "[file join [registry get $win32registry InstallDir] bin identify.exe]"
-      set cpath "[file join [registry get $win32registry InstallDir] bin convert.exe]"
+      set ipath "[file join [registry -64bit get $win32registry InstallDir] bin identify.exe]"
+      set cpath "[file join [registry -64bit get $win32registry InstallDir] bin convert.exe]"
     }]} {
       set win32registry {HKEY_CURRENT_USER\SOFTWARE\Therion}
       catch {
-	set ipath "[file join [registry get $win32registry InstallDir] bin identify.exe]"
-	set cpath "[file join [registry get $win32registry InstallDir] bin convert.exe]"
+	set ipath "[file join [registry -64bit get $win32registry InstallDir] bin identify.exe]"
+	set cpath "[file join [registry -64bit get $win32registry InstallDir] bin convert.exe]"
       }
     }
   }
