@@ -19,10 +19,10 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/etc)
 set(THBOOK_FORMAT "0" CACHE STRING "thbook format selection, use values 0-3.")
 
 find_program(PDFTEX NAMES pdftex.exe pdftex
-    PATHS /home/runner/work/therion/therion-batteries/bin/win32/
-          /home/runner/work/therion-batteries/therion-batteries/bin/win32/
-          d:/a/therion/therion-batteries/bin/win32/
-          d:/a/therion-batteries/therion-batteries/bin/win32/)
+    PATHS /home/runner/work/therion/therion-batteries/bin/windows/
+          /home/runner/work/therion-batteries/therion-batteries/bin/windows/
+          d:/a/therion/therion-batteries/bin/windows/
+          d:/a/therion-batteries/therion-batteries/bin/windows/)
 if (NOT PDFTEX)
     message(FATAL_ERROR "pdftex command not found")
 endif()

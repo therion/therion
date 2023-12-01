@@ -98,7 +98,7 @@ jobs:
       - name: Build samples
         run: |
           mkdir -p $HOME/.therion
-          echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
+          echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
           mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' build/innosetup.ini),proj-datumgrid}/. ../proj-lib
           cmake --build build -t samples-build -- -j 4
