@@ -260,6 +260,7 @@ int thsymbolset_get_id(const char * symclass, const char * symbol)
         c2(TT_AREA_TYPE_STALACTITESTALAGMITE, SYMA_STALACTITESTALAGMITE);
         c2(TT_AREA_TYPE_STALAGMITE, SYMA_STALAGMITE);
         c2(TT_AREA_TYPE_U, SYMA_U);
+        c2(TT_AREA_TYPE_UNDERWATERCEILING, SYMA_UNDERWATERCEILING);
       }
       break;
     case TT_SYMBOL_LINE:
@@ -1382,6 +1383,7 @@ void thsymbolset::export_pdf(class thlayout * layout, FILE * mpf, unsigned & sfi
   legend_area(SYMA_STALACTITE,thT("area stalactite",layout->lang));
   legend_area(SYMA_STALACTITESTALAGMITE,thT("area stalactite-stalagmite",layout->lang));
   legend_area(SYMA_STALAGMITE,thT("area stalagmite",layout->lang));
+  legend_area(SYMA_UNDERWATERCEILING,thT("area underwater-ceiling",layout->lang));
   legend_nocliparea(SYMA_BLOCKS,thT("area blocks",layout->lang));
   legend_nocliparea(SYMA_BEDROCK,thT("area bedrock",layout->lang));
 

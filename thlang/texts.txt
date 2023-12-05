@@ -2067,6 +2067,9 @@ sl: stalagmit
 sq: stalagmit
 zh_CN: 石笋
 
+therion: area underwater-ceiling
+pt: área submersa
+
 therion: area blocks
 bg: блокаж
 ca: blocs
@@ -3341,7 +3344,6 @@ rs: veštački zid
 ru: каменная кладка
 sl: zidarstvo
 
-
 therion: point minus
 de: Minus
 en: minus
@@ -3899,8 +3901,8 @@ fr: Profondeur
 it: Profondità
 pt: Profundidade
 rs: Dubina
-sl: Globina
 ru: Шкала глубин
+sl: Globina
 
 therion: title color-legend-map
 bg: Карти
@@ -3931,8 +3933,8 @@ fr: Scraps
 it: Scrap
 pt: Croquis
 rs: Delovi nacrta
-sl: Izrez
 ru: Скрапы
+sl: Izrez
 
 therion: title color-legend-survey
 ca: Topos
@@ -3943,8 +3945,8 @@ fr: Relevés
 it: Rilievi
 pt: Topos
 rs: Topografska merenja
-sl: Meritve
 ru: Съёмки
+sl: Meritve
 
 therion: title color-legend-explodate
 ca: Data d'exploració
@@ -3955,8 +3957,8 @@ fr: Date d'exploration
 it: Date di esplorazione
 pt: Data da exploração
 rs: Datum istraživanja
-sl: Datum raziskovanja
 ru: Дата первопрохождения
+sl: Datum raziskovanja
 
 therion: title color-legend-topodate
 ca: Data de topografia
@@ -3967,8 +3969,8 @@ fr: Date de relevé
 it: Date di rilievo
 pt: Data da topo
 rs: Datum merenja
-sl: Datum merjenja
 ru: Дата топосъёмки
+sl: Datum merjenja
 
 therion: title color-legend-default
 ca: Llegenda de colors
@@ -3981,8 +3983,8 @@ fr: Légende colorée
 it: Legenda dei colori
 pt: Cores
 rs: Tumač boja
-sl: Legenda barv
 ru: Цветовая шкала
+sl: Legenda barv
 
 therion: units ft
 bg: футове
@@ -4012,7 +4014,7 @@ de: Gesamtlänge
 el: Μήκος
 en: Length
 es: Desarrollo
-fr: Longueur 
+fr: Longueur
 it: Sviluppo
 mi: Roa a ana
 pl: długość
@@ -4052,7 +4054,7 @@ de: Niveaudifferenz
 el: Βάθος
 en: Depth
 es: Desnivel
-fr: Dénivellation 
+fr: Dénivellation
 it: Profondità
 mi: Hōhonu a ana, Rētōtanga
 pl: przewyższenie
@@ -4072,7 +4074,7 @@ de: Entdeckung
 el: Εξερευνητές
 en: Explored by
 es: Exploración
-fr: Explorateurs 
+fr: Explorateurs
 it: Esplorazione
 mi: Kaipokai whenua
 pl: odkryli
@@ -4092,7 +4094,7 @@ de: Entdeckung
 el: Εξερευνητής
 en: Explored by
 es: Exploración
-fr: Explorateur 
+fr: Explorateur
 it: Esplorazione
 mi: Kaipokai whenua
 pl: odkrył
@@ -4112,7 +4114,7 @@ de: Vermessung
 el: Χαρτογραφήθηκε από τους
 en: Surveyed by
 es: Topografiado por
-fr: Topographes 
+fr: Topographes
 it: Topografia
 mi: Kairūri
 pl: pomierzyli
@@ -4132,7 +4134,7 @@ de: Vermessung
 el: Χαρτογραφήθηκε από τον
 en: Surveyed by
 es: Topografiado por
-fr: Topographe 
+fr: Topographe
 it: Topografia
 mi: Kairūri
 pl: mierzył
@@ -4152,7 +4154,7 @@ de: Zeichnung
 el: Σκαρίφημα
 en: Drawn by
 es: Dibujado por
-fr: Dessinateurs 
+fr: Dessinateurs
 it: Cartografia
 mi: Kaituhi
 pl: rysowali
@@ -4172,7 +4174,7 @@ de: Zeichnung
 el: Σκαρίφημα
 en: Drawn by
 es: Dibujado por
-fr: Dessinateur 
+fr: Dessinateur
 it: Cartografia
 mi: Kaituhi
 pl: rysował
@@ -4243,3 +4245,4 @@ sk: [Povrchová mapa]
 sl: Slika površja
 sq: harta e siperfaqes
 zh_CN: 外观图
+
