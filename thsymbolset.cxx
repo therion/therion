@@ -744,6 +744,7 @@ int thsymbolset_get_group(int group_id, int cid) {
     group(4,SYMA_SUMP)
     group(5,SYMP_SPRING)
     group(6,SYMP_SINK)
+    group(7,SYMA_UNDERWATERCEILING)
     egroup
 
     bgroup(SYMX_EQUIPMENT)

@@ -80,6 +80,7 @@ enum {
   TT_AREA_TYPE_STALACTITE,
   TT_AREA_TYPE_STALACTITESTALAGMITE,
   TT_AREA_TYPE_STALAGMITE,
+  TT_AREA_TYPE_UNDERWATERCEILING,
 };
 
 
@@ -107,6 +108,7 @@ static const thstok thtt_area_types[] = {
   {"stalagmite", TT_AREA_TYPE_STALAGMITE},
   {"sump", TT_AREA_TYPE_SUMP},
   {"u",TT_AREA_TYPE_U},
+  {"underwater-ceiling", TT_AREA_TYPE_UNDERWATERCEILING},
   {"water", TT_AREA_TYPE_WATER},
   {NULL, TT_AREA_TYPE_UNKNOWN},
 };

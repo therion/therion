@@ -199,6 +199,7 @@ let a_pillarwithcurtains = a_pillarwithcurtains_SBE;
 let a_stalactite = a_stalactite_SBE;
 let a_stalactitestalagmite = a_stalactitestalagmite_SBE;
 let a_stalagmite = a_stalagmite_SBE;
+let a_underwaterceiling = a_underwaterceiling_SBE;
 
 let s_northarrow = s_northarrow_SKBB;
 let s_scalebar = s_scalebar_SKBB;

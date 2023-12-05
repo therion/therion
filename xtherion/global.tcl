@@ -354,6 +354,7 @@ set xth(me,themes) {
     {area water}
     {area sump}
     {area bedrock}
+    {area underwater-ceiling}
   {theme passage-fills}
     {point blocks}
     {point archeo-material}
