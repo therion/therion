@@ -29,9 +29,13 @@ if unknown a_water_UIS: else: endinput fi;
 % patterns
 
 beginpattern(pattern_water_UIS);
-    draw origin--10up withpen pensquare scaled (0.02u);
-    patternxstep(.18u);
-    patterntransform(identity rotated 45);
+	dim := 0.16u;
+	z1 = origin;
+	z2 = dim*up + 3dim*right;
+	z3 = 8dim*right;
+	draw z1{right}..z2..{right}z3 withcolor black withpen PenA scaled (0.018u);
+	patternbbox(0.1dim * down, 8dim * right + 1.1dim*up);
+	patterntransform(identity rotated -45);
 endpattern;
 
 beginpattern(pattern_sump_UIS);

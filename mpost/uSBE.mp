@@ -1308,13 +1308,9 @@ def a_stalagmite_SBE(expr P) =
 enddef;
 
 beginpattern(pattern_underwaterceiling_SBE);
-	dim := 0.16u;
-	z1 = origin;
-	z2 = dim*up + 3dim*right;
-	z3 = 8dim*right;
-	draw z1{right}..z2..{right}z3 withcolor black withpen PenA scaled (0.018u);
-	patternbbox(0.1dim * down, 8dim * right + 1.1dim*up);
-	patterntransform(identity rotated -45);
+    draw origin--10up withpen pensquare scaled (0.02u);
+    patternxstep(.18u);
+    patterntransform(identity rotated 45);
 endpattern;
 
 def a_underwaterceiling_SBE (expr Path) =
