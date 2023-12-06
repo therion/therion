@@ -54,7 +54,7 @@ if {[catch {set idir $env(THERION)}]} {
   }
   if {[string equal $xth(gui,platform) windows]} {
     if {[catch {
-	append idir [registry get $xth(win32registry) InstallDir]
+	append idir [registry -64bit get $xth(win32registry) InstallDir]
 	}]} {
       append idir "C:/WINDOWS;C:/WINNT;C:/Program files/Therion"
     }
@@ -137,7 +137,7 @@ bind Text <Return> "#"
 
 if {[string length $xth(gui,initdir)] == 0} {
   if {[catch {
-    set xth(gui,initdir) [registry get $xth(win32registry) XTherionDir]
+    set xth(gui,initdir) [registry -64bit get $xth(win32registry) XTherionDir]
   }]} {
     set xth(gui,initdir) [pwd]
   }

@@ -44,7 +44,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11, macos-12, macos-13]
+        os: [macos-12, macos-13]
     steps:
       - uses: actions/checkout@v3
       - name: install dependencies
@@ -78,8 +78,8 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW32, arch: i686,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"                                  }
-          - { msystem: CLANG32, arch: clang-i686, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON" }
+          - { msystem: MINGW64, arch: x86_64,       args: "-DCMAKE_C_FLAGS=-Werror -DCMAKE_CXX_FLAGS=-Werror"                                  }
+          - { msystem: CLANG64, arch: clang-x86_64, args: "-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/sanitizers.cmake -DENABLE_PROJ_CMAKE=ON" }
     defaults:
       run:
         shell: msys2 {0}
@@ -98,7 +98,7 @@ jobs:
       - name: Build samples
         run: |
           mkdir -p $HOME/.therion
-          echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
+          echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
           mkdir -p ../proj-lib && cp -r ../therion-batteries/_proj/{proj-$(awk -F "=" '/version/{print $2}' build/innosetup.ini),proj-datumgrid}/. ../proj-lib
           cmake --build build -t samples-build -- -j 4

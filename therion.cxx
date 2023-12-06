@@ -61,32 +61,6 @@ bool thtext_inline = false;
 
 char * thexecute_cmd = NULL;
 
-void thprintf(const char *format, ...)
-{
-  va_list args;
-  va_start(args, format);
-  thlog.vprintf(format, &args);
-  va_end(args);
-  if (thverbose_mode) {
-    va_start(args, format);
-    vfprintf(stdout, format, args);
-    va_end(args);
-  }
-}
-  
-
-void thprintf2err(const char *format, ...)
-{
-  va_list args;
-  va_start(args, format);
-  thlog.vprintf(format, &args);
-  va_end(args);
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
-}
-
-
 void thprint_environment() {
   thprintf("\n\nINIT=%s\n",thcfg.get_initialization_path());
   thprintf("SOURCE=%s\n\n",thcfg.get_search_path());

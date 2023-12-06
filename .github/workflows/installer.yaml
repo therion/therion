@@ -31,7 +31,7 @@ jobs:
   #       run: |
   #         export PATH=/usr/lib/mxe/usr/bin:$PATH
   #         mkdir -p $HOME/.wine/drive_c/windows
-  #         echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.wine/drive_c/windows/therion.ini
+  #         echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.wine/drive_c/windows/therion.ini
   #         wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xz && mv therion-batteries-master ../therion-batteries
   #         if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
   #         echo "THID_out=$THID" >> $GITHUB_OUTPUT
@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix:
         config:
-          - { msystem: MINGW32, arch: i686 }
+          - { msystem: MINGW64, arch: x86_64 }
     defaults:
       run:
         shell: msys2 {0}
@@ -89,7 +89,7 @@ jobs:
         run: |
           reg add HKCU\\Software\\Therion //v InstallDir //t REG_SZ //d "${THDIR}/therion-batteries"
           mkdir -p $HOME/.therion
-          echo -e "mpost-path ${THDIR}/therion-batteries/bin/win32/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/win32/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
+          echo -e "mpost-path ${THDIR}/therion-batteries/bin/windows/mpost.exe\npdftex-path ${THDIR}/therion-batteries/bin/windows/pdftex.exe\nidentify-path ${THDIR}/therion-batteries/bin/identify.exe\nconvert-path ${THDIR}/therion-batteries/bin/convert.exe\n" > $HOME/.therion/therion.ini
           wget -qO - https://github.com/therion/therion-batteries/archive/master.tar.gz | tar -xzf - && mv therion-batteries-master ../therion-batteries
           if ${{startsWith(github.ref, 'refs/tags/v')}}; then THID=${GITHUB_REF##*/}; else THID=$(git rev-parse --short HEAD); fi
           echo "THID_out=$THID" >> $GITHUB_OUTPUT

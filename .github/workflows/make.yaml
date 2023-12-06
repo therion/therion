@@ -76,8 +76,7 @@ jobs:
     strategy:
       matrix:
         include: [
-          { msystem: MINGW64, arch: x86_64 },
-          { msystem: MINGW32, arch: i686   }
+          { msystem: MINGW64, arch: x86_64 }
         ]
     defaults:
       run:

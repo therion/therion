@@ -33,9 +33,10 @@
 #ifndef therion_h
 #define therion_h
 
+#include "thlogfile.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
+#include <fmt/printf.h>
 
 #ifdef THDEBUG
 #define thprint_error_src() thprintf2err("%s%s (" __FILE__ ":%d): error -- ", (thtext_inline ? "\n" : ""), thexecute_cmd, __LINE__)
@@ -94,17 +95,60 @@ extern bool thverbose_mode;
 extern char * thexecute_cmd;
 
 /**
- * Print formatted to stdout.
+ * @brief Helper function for universal logging.
+ * 
+ * @param verbose print also to stdout
+ * @param f output
+ * @param format format string
+ * @param args arguments to print
  */
- 
-void thprintf(const char *format, ...);
+template<typename FormatStr, typename... Args>
+void thfprintf(const bool verbose, FILE* f, const FormatStr& format, const Args&... args)
+{
+  thlog.printf(format, args...);
+  if (verbose) {
+    fmt::fprintf(f, format, args...);
+  }
+}
+
+/**
+ * @brief Print formatted to stdout.
+ * 
+ * @param format format string
+ * @param args arguments to print
+ */
+template <typename FormatStr, typename... Args>
+void thprintf(const FormatStr& format, const Args&... args)
+{
+  thfprintf(thverbose_mode, stdout, format, args...);
+}
 
 
 /**
- * Print formatted to stderr.
+ * @brief Print formatted to stderr.
+ * 
+ * This function is used for error reporting, so it catches any additional
+ * exceptions in order to not interfere with error handling.
+ * 
+ * @param format format string
+ * @param args arguments to print
  */
- 
-void thprintf2err(const char *format, ...);
+template <typename FormatStr, typename... Args>
+void thprintf2err(const FormatStr& format, const Args&... args) noexcept
+{
+  try
+  {
+    thfprintf(true, stderr, format, args...);
+  }
+  catch(const std::exception& e)
+  {
+    std::fprintf(stderr, "error occurred while reporting another error: %s\n", e.what());
+  }
+  catch (...)
+  {
+    std::fprintf(stderr, "unknown error occurred while reporting another error\n");
+  }
+} 
 
 
 /**
