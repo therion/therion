@@ -1,12 +1,15 @@
 FROM mcr.microsoft.com/devcontainers/base:jammy
 
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y \
     bash-completion \
     bwidget \
     clang \
+    clang-tidy \
     cmake \
     g++ \
     ghostscript \
+    git \
     imagemagick \
     lcdf-typetools \
     libfmt-dev \
@@ -18,6 +21,7 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y \
     libvtk9-dev \
     libwxgtk3.0-gtk3-dev \
     ninja-build \
+    python3 \
     survex \
     tcl-dev \
     texlive-binaries \
