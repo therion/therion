@@ -27,7 +27,7 @@
  
 #include "thinput.h"
 #include "thparse.h"
-#include "thchenc.h"
+#include "thchencdata.h"
 #include "therion.h"
 #include "thexception.h"
 

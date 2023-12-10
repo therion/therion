@@ -47,8 +47,7 @@
 #include "thconfig.h"
 #include "thtrans.h"
 #include "loch/lxMath.h"
-#include "thcs.h"
-#include "thgeomag.h"
+#include "thcsdata.h"
 #include "thgeomagdata.h"
 #include "QuickHull.hpp"
 

@@ -68,7 +68,6 @@
 #include "loch/lxMath.h"
 #include "thsvg.h"
 #include "extern/img.h"
-#include "thcs.h"
 #include <filesystem>
 
 #include <fmt/printf.h>

@@ -32,7 +32,6 @@
 #include "thobjectid.h"
 #include "thexception.h"
 #include "thdata.h"
-#include "thcmdline.h"
 #include "thparse.h"
 #include "thdatastation.h"
 #include "thlookup.h"

@@ -29,12 +29,9 @@
 #include <map>
 #include <set>
 #include <string>
-#include <sstream>
 
-
-#include "thexception.h"
 #include "thpdfdata.h"
-#include "thlang.h"
+#include "thlangdata.h"
 
 std::list<scraprecord> SCRAPLIST;
 std::list<legendrecord> LEGENDLIST;

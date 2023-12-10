@@ -26,9 +26,6 @@
  */
  
 #include "thcomment.h"
-#include "thchenc.h"
-#include "thdata.h"
-#include "thparse.h"
 #include "thdatabase.h"
 
 thcomment::thcomment()

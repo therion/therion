@@ -26,40 +26,24 @@
  */
  
 #include "thexpmap.h"
-#include "thexporter.h"
-#include "thexception.h"
 #include "thdatabase.h"
-#include "thdb2d.h"
 #include "thdb2dmi.h"
 #include "thlayout.h"
 #include "thmap.h"
-#include "thsketch.h"
 #include "thconfig.h"
 #include <stdio.h>
-#include "thtmpdir.h"
 #include "thcsdata.h"
 #include "thdb3d.h"
-#include "thchenc.h"
 #include "thdb1d.h"
-#include "thinit.h"
-#include "thlogfile.h"
-#include "thcmdline.h"
 #include "thsurvey.h"
-#include "thchenc.h"
-#include <fstream>
 #include "thmapstat.h"
-#include "thsurface.h"
 #include <stdlib.h>
 #include "loch/lxMath.h"
-#include "shapefil.h"
 #include "thexpmodel.h"
-#include <fcntl.h>
 #include <stdlib.h>
 #include <time.h>
-#include <errno.h>
 #include "thexpuni.h"
 #include "thproj.h"
-#include "thcs.h"
 #include "thtexfonts.h"
 #include "thlang.h"
 

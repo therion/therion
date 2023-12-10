@@ -52,9 +52,6 @@
 #include "thdouble.h"
 #include "therion.h"
 
-#include "thchenc.h"
-#include "thbuffer.h"
-
 #define IOerr(F) fmt::format("Can't open file {}!\n", (F)).c_str()
 
 

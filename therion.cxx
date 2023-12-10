@@ -26,27 +26,13 @@
  */
  
 #include "therion.h"
-#include "thlogfile.h"
-#include "thtmpdir.h"
-#include "thcmdline.h"
 #include "thconfig.h"
-#include "thinput.h"
-#include "thchenc.h"
-#include "thdatareader.h"
-#include "thexception.h"
-#include "thlibrary.h"
 #include "thinit.h"
-#include "thgrade.h"
 #include "thlayout.h"
-#include "thobjectsrc.h"
 #include "thpoint.h"
 #include "thline.h"
 #include "tharea.h"
-#include "thversion.h"
-#include "thtexfonts.h"
 #include "thlang.h"
-#include "thbezier.h"
-#include "thsymbolset.h"
 
 #include <stdlib.h>
 #include <stdio.h>

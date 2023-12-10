@@ -30,7 +30,6 @@
 #include "thchenc.h"
 #include "thinfnan.h"
 #include "thsurvey.h"
-#include "thlayout.h"
 #include "thgrade.h"
 #include "thcsdata.h"
 #include "thdatareader.h"

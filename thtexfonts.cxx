@@ -44,8 +44,6 @@
 #include "thtexenc.h"
 #include "thpdfdbg.h"
 #include "thinit.h"
-#include "thpdfdata.h"
-#include "thbuffer.h"
 #include "therion.h"
 
 std::list<fontrecord> FONTS;

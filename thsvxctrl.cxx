@@ -34,10 +34,9 @@
 #include "thinfnan.h"
 #include "thinit.h"
 #include "thconfig.h"
-#include <iostream>
 #include <fstream>
 #include "thsurvey.h"
-#include "thcs.h"
+#include "thcsdata.h"
 #include "thlogfile.h"
 #include "extern/img.h"
 #include <math.h>

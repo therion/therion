@@ -29,7 +29,6 @@
 #include "thcmdline.h"
 #include "thconfig.h"
 #include "thdatareader.h"
-#include "thexception.h"
 #include "thlibrary.h"
 #include "thinit.h"
 #include "thversion.h"

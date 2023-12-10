@@ -32,7 +32,6 @@
 #include "thdb2dlp.h"
 #include "thexpmap.h"
 #include "thtflength.h"
-#include "thtexfonts.h"
 #include "thscrap.h"
 #include "thdatabase.h"
 

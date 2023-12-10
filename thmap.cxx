@@ -28,7 +28,6 @@
 #include "thmap.h"
 #include "thexception.h"
 #include "thdb2dmi.h"
-#include "thchenc.h"
 #include "thscrap.h"
 #include "thobjectname.h"
 #include "thdb2dmi.h"

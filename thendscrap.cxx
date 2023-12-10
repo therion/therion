@@ -27,7 +27,6 @@
  
 #include "thendscrap.h"
 #include "thexception.h"
-#include "thchenc.h"
 #include "thdatabase.h"
 
 thendscrap::thendscrap()

@@ -44,7 +44,6 @@
 #include "thgeomag.h"
 #include "thgeomagdata.h"
 #include "thlayout.h"
-#include "thcomment.h"
 #include "thsketch.h"
 #include "thcs.h"
 #ifdef THWIN32

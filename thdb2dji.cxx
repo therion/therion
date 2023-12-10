@@ -28,8 +28,6 @@
 #include "thdb2dji.h"
 #include "thdatabase.h"
 #include "thexception.h"
-#include "thdb2dpt.h"
-#include "thdb2dlp.h"
 
 thdb2dji::thdb2dji()
 {

@@ -4,7 +4,7 @@
 #ifndef LXDEPCHECK
 #include <stdio.h>
 #include <stdlib.h>
-#include <memory.h>
+#include <string.h>
 #include <setjmp.h>
 
 #ifdef __cplusplus
