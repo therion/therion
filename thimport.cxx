@@ -28,10 +28,8 @@
 #include "loch/icase.h"
 #include "thimport.h"
 #include "thexception.h"
-#include "thchenc.h"
 #include "thdata.h"
 #include "thsurvey.h"
-#include "thendsurvey.h"
 #include "thdatabase.h"
 #include "extern/img.h"
 #include <string.h>

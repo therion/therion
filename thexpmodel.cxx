@@ -33,13 +33,10 @@
 #include "thsurvey.h"
 #include <stdio.h>
 #include "extern/img.h"
-#include "thchenc.h"
 #include "thscrap.h"
-#include <map>
 #include "thsurface.h"
 #include "loch/lxFile.h"
 #include "thsurface.h"
-#include "thchenc.h"
 #include "thconfig.h"
 #include "thcsdata.h"
 #include "thproj.h"
@@ -48,7 +45,6 @@
 #include "thlang.h"
 #include "thfilehandle.h"
 #include <filesystem>
-#include <thread>
 
 #include <fmt/printf.h>
 

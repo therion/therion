@@ -25,10 +25,7 @@
 * --------------------------------------------------------------------
 */
 
-#include "therion.h"
-
 #include "thsketch.h"
-#include "thscrap.h"
 #include "thwarpp.h"
 #include "thconfig.h"
 

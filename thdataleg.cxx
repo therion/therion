@@ -26,7 +26,7 @@
  */
  
 #include "thdataleg.h"
-#include "thcs.h"
+#include "thcsdata.h"
 
 thdataleg::thdataleg()
 {

@@ -26,10 +26,7 @@
 #ifndef thpdfdbg_h
 #define thpdfdbg_h
 
-#include <iostream>
 #include <string>
-
-#include "thexception.h"
 
 std::string u2str(unsigned u);
 std::string tex_Xname(std::string s);

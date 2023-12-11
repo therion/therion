@@ -27,7 +27,6 @@
 
 #include "thscrapis.h"
 #include "thscrap.h"
-#include "thpoint.h"
 #include "therion.h"
 #include "thdb2dlp.h"
 #include "thdb1d.h"

@@ -29,23 +29,17 @@
 #include "thexception.h"
 #include "thdatabase.h"
 #include "thdb1d.h"
-#include "thdata.h"
 #include "thexporter.h"
-#include "thinit.h"
 #include "thsurvey.h"
 #include "thscrap.h"
 #include "thdb1d.h"
 #include "thpoint.h"
 #include <stdio.h>
-#include "thchenc.h"
-#include <map>
 #include "thinfnan.h"
 #include "thcsdata.h"
 #include "thproj.h"
 #include "thconfig.h"
 #include "thcs.h"
-#include "thtexfonts.h"
-#include "thlang.h"
 #include <filesystem>
 
 

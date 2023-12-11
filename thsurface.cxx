@@ -27,7 +27,6 @@
  
 #include "thsurface.h"
 #include "thexception.h"
-#include "thchenc.h"
 #include "thmbuffer.h"
 #include "thtflength.h"
 #include "thdatabase.h"

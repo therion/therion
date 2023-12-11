@@ -33,12 +33,10 @@
 #include <wx/strconv.h>
 #include <wx/wfstream.h>
 #include <wx/msgdlg.h>
-#include <vtkVersionMacros.h>
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
 #include <vtkPoints.h>
 #include <vtkDataArray.h>
-#include <vtkVoidArray.h>
 #include <vtkCellData.h>
 #include <vtkPointData.h>
 #include <vtkPolyDataWriter.h>

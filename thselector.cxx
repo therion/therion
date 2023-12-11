@@ -34,7 +34,6 @@
 #include "thdatabase.h"
 #include "thdataobject.h"
 #include "thsurvey.h"
-#include "th2ddataobject.h"
 #include "thscrap.h"
 #include <vector>
 #include "thchenc.h"

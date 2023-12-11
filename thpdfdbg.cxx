@@ -25,20 +25,11 @@
  * --------------------------------------------------------------------
  */
  
-#include <fstream>
-#include <sstream>
-#include <list>
-#include <map>
-#include <set>
 #include <string>
-#include <iomanip>
 #include <fmt/core.h>
-
-#include <iostream>
 
 #include "thpdfdbg.h"
 #include "thpdfdata.h"
-#include "thexception.h"
 
 std::string tex_Xname(std::string s) {return("THX"+s);}
 std::string tex_Wname(std::string s) {return("THW"+s);}   // special = northarrow &c.

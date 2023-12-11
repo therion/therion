@@ -26,7 +26,6 @@
  */
  
 #include "thdb2dxm.h"
-#include "thdb2dmi.h"
 
 thdb2dxm::thdb2dxm()
 {

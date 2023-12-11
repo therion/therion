@@ -34,7 +34,6 @@
 #include "thlang.h"
 #include "thversion.h"
 #include "thtexfonts.h"
-#include "thsurvey.h"
 #include "thdb1d.h"
 #include "thconfig.h"
 #include "thcs.h"

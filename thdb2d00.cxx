@@ -26,19 +26,11 @@
  */
  
 #include "thdb2d.h"
-#include "thexception.h"
 #include "thdatabase.h"
 #include "thparse.h"
-#include "thtfangle.h"
-#include "tharea.h"
 #include "thmap.h"
-#include "thjoin.h"
-#include "thpoint.h"
-#include "thline.h"
 #include "thscrap.h"
 #include "thsurvey.h"
-#include "thlogfile.h"
-#include <math.h>
 #include "thlayout.h"
 #include "thconfig.h"
 #include <list>

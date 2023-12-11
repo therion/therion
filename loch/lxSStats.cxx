@@ -10,14 +10,11 @@
 #include "lxSStats.h"
 #include "lxSetup.h"
 #include "lxGUI.h"
-#include "lxGLC.h"
 #include "lxData.h"
 
 #ifndef LXGNUMSW
 #include "loch.xpm"
 #endif
-
-#include <cstdio>
 
 enum {
   lxSS_SURVEY_STATS = 4000,

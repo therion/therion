@@ -1,6 +1,5 @@
 #include "thlocale.h"
 #include "thparse.h"
-#include "thbuffer.h"
 #include "thexception.h"
 #include "thlang.h"
 #include "thinit.h"

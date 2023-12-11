@@ -41,7 +41,6 @@
 #include <math.h>
 #include "thlayout.h"
 #include "thexpmap.h"
-#include "thconfig.h"
 #include "thtrans.h"
 #include "thtmpdir.h"
 #include "thinit.h"

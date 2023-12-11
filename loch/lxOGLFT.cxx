@@ -20,7 +20,6 @@
  */
 
 #include <iostream>
-#include <iomanip>
 
 #define OGLFT_NO_SOLID
 

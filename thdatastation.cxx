@@ -26,8 +26,6 @@
  */
  
 #include "thdatastation.h"
-#include "thexception.h"
-#include "thchenc.h"
 
 int thdatastation::get_class_id() 
 {
