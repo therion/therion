@@ -52,10 +52,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: install dependencies
         run: |
-          # brew update  # try to comment out in case of package problems
+          brew update  # try to comment out in case of package problems
           brew tap homebrew/core
           rm /usr/local/bin/2to3
-          rm /usr/local/bin/2to3-3.12
           brew install wxwidgets vtk proj xquartz ninja basictex fmt pkgconfig catch2
       - name: Configure CMake
         run: |
