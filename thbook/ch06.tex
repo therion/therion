@@ -73,11 +73,12 @@ For Windows consider using MinGW and MSYS2 (\www{https://www.msys2.org/}).
 It's a distribution of GNU utilities with GNU make and GCC.
 (BTW, why not to use precompiled Windows version?)
 
-Installing dependencies to compile Therion on Ubuntu 20.04 or 22.04:
+Installing dependencies to compile Therion on Ubuntu 22.04:
 
 {\rightskip 0pt plus 3cm
   |sudo apt install|
   |bwidget|
+  |catch2|
   |cmake|
   |gcc|
   |ghostscript|
@@ -103,6 +104,7 @@ Installing dependencies in Fedora 37:
   |sudo dnf install|
   |brotli-devel|
   |bwidget|
+  |catch2-devel|
   |cmake|
   |fmt-devel|
   |g++|
@@ -146,7 +148,7 @@ Here is a selection of parameters which can be used with cmake:
   |-G Ninja| to use {\it Ninja} build system instead of make,
   or |-G "MSYS Makefiles"| to build using {\it make} under MSYS2
 * {\catcode`\=12|-DUSE_BUNDLED_SHAPELIB=OFF|} = use the system Shapelib library
-* {\catcode`\=12|-DUSE_BUNDLED_CATCH2=OFF|} = use the system Catch2 library
+* {\catcode`\=12|-DUSE_BUNDLED_CATCH2=ON|} = use the bundled version of Catch2 library
 * {\catcode`\=12|-DECM_ENABLE_SANITIZERS=<option>|} = use runtime sanitizers, relevant options:
 
   |address| -- detects invalid memory accesses, use-after-free, double free, memory leaks, useful for debugging
