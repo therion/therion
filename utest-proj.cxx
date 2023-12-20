@@ -1,4 +1,8 @@
+#ifdef CATCH2_V3
+#include <catch2/catch_test_macros.hpp>
+#else
 #include <catch2/catch.hpp>
+#endif
 #include <cmath>
 
 #include "thproj.h"
@@ -8,7 +12,6 @@
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
 #endif
-
 
 // tests for coordinate systems transformations using Proj library
 

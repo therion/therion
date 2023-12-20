@@ -1,6 +1,10 @@
 #include "thdouble.h"
 
+#ifdef CATCH2_V3
+#include <catch2/catch_test_macros.hpp>
+#else
 #include <catch2/catch.hpp>
+#endif
 
 TEST_CASE("thdouble")
 {
