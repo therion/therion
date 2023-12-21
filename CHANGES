@@ -1,5 +1,19 @@
-Therion 6.1.9 (in progress):
+Therion 6.2.0 (2023-12-21):
 
+therion:
+ * Windows version: only 64-bit Windows are supported now [#530]
+ * code fixes and improvements by Matěj Plch [#518, #522, #523, #524, #533]
+ * thbook fixes, mostly by Rodrigo Severo [#520, #525, #526]
+ * updated QuickHull library [#521]
+ * added support for Catch2 version 3 [#534]
+ * Proj 9.3.1 included to the test suite
+
+loch:
+ * fixed compilation issues on Debian
+
+infrastructure:
+ * installer: updated TeX and ImageMagick to use current, 64-bit binaries
+ * macOS 13 added to and macOS 11 removed from CI environments [#516, #529]
 
 --------------------------------------------------------------------------------
 
