@@ -1002,7 +1002,7 @@ void lxFrame::ToggleRotation() {
     this->canvas->m_sCameraAutoRotateSWatch.Start();
     this->setup->StartCameraMovement();
   } else {
-    ((wxStaticText *)(this->m_viewpointSetupDlg->FindWindow(LXVSTP_RENSPEED)))->SetLabel(_T(""));
+    dynamic_cast<wxStaticText*>(this->m_viewpointSetupDlg->FindWindow(LXVSTP_RENSPEED))->SetLabel(_T(""));
   }
 	this->UpdateM2TB();
 }
