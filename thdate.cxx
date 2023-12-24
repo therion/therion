@@ -64,12 +64,6 @@ void thdate::reset_current()
 }
 
 
-thdate::thdate()
-{
-  this->reset();
-}
-
-
 thdate::~thdate()
 {
 }

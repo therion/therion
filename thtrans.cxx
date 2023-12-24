@@ -493,8 +493,8 @@ typedef std::list<thm2t_zoom_point> thm2t_zoom_point_list;
 
 
 struct thm2t_feature {
-  bool m_single;
-  thm2t_point_ptr m_fp, m_tp;
+  bool m_single = {};
+  thm2t_point_ptr m_fp = {}, m_tp = {};
   thline2 m_ln, m_lnf, m_lnt;
   thlintrans m_lintrans;
   thlinzoomtrans m_zoomtrans;

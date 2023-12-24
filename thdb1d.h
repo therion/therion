@@ -46,18 +46,18 @@ enum {
 };
 
 struct thdb1d_loop_leg {
-  thdb1d_loop_leg * next_leg, * prev_leg;
-  thdataleg * leg;
-  bool reverse;
+  thdb1d_loop_leg * next_leg = {}, * prev_leg = {};
+  thdataleg * leg = {};
+  bool reverse = {};
 };
 
 struct thdb1d_loop {
-  thdb1d_loop_leg * first_leg, * last_leg;
-  class thdb1ds * from, * to;
-  unsigned long nlegs;
-  unsigned long id;
-  bool open;
-  double err_dx, err_dy, err_dz, err_length, src_length, err;
+  thdb1d_loop_leg * first_leg = {}, * last_leg = {};
+  class thdb1ds * from = {}, * to = {};
+  unsigned long nlegs = {};
+  unsigned long id = {};
+  bool open = {};
+  double err_dx = {}, err_dy = {}, err_dz = {}, err_length = {}, src_length = {}, err = {};
 };
 
 struct thdb1d_traverse {

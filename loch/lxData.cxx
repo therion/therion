@@ -244,8 +244,8 @@ void lxDataTexture::CreateTexImages(int sizeS, int sizeO)
 
 
 struct lxDataRebuildStationStruct {
-  lxFileStation * m_pst;
-  size_t m_pos;
+  lxFileStation * m_pst = {};
+  size_t m_pos = {};
 };
 
 

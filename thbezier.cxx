@@ -120,7 +120,7 @@
 class NR_Point {
 
 private:
-    double _pt[2];
+    double _pt[2] = {};
 
 public:
 

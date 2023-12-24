@@ -97,7 +97,7 @@ class thscrap : public thdataobject {
   class th2ddataobject * fs2doptr,  ///< First scrap 2D object.
     * ls2doptr;  ///< Last scrap 2D object.
     
-  double lxmin, lxmax, lymin, lymax; ///< Coordinate limits.
+  double lxmin = {}, lxmax = {}, lymin = {}, lymax = {}; ///< Coordinate limits.
 
   unsigned long RGBsrc;
 
@@ -120,7 +120,7 @@ class thscrap : public thdataobject {
   int scale_cs;
   bool scale_p9; ///< 9 parameters scaling
   
-  double mx, my, mxx, mxy, myx, myy, mr, ms;  ///< Calibration coefficients.
+  double mx = {}, my = {}, mxx = {}, mxy = {}, myx = {}, myy = {}, mr = {}, ms = {};  ///< Calibration coefficients.
   
   double maxdist, avdist;
   thdb2dpt * maxdistp1, * maxdistp2;

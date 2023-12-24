@@ -34,8 +34,8 @@
 enum class shading_mode {off, quick};  // add precise
 
 struct surfpictrecord {
-  const char * filename, * type;
-  double dx, dy, xx, xy, yx, yy, width, height;
+  const char * filename = {}, * type = {};
+  double dx = {}, dy = {}, xx = {}, xy = {}, yx = {}, yy = {}, width = {}, height = {};
 };
 
 struct scraprecord {
@@ -85,7 +85,7 @@ struct layerrecord {
 struct legendrecord {
   std::string name, fname, descr;
   converted_data ldata;
-  unsigned idsym, idfig, idnum;
+  unsigned idsym = {}, idfig = {}, idnum = {};
 };
 
 struct colorlegendrecord {

@@ -162,18 +162,18 @@ class thdatabase {
   thmbuffer buff_strings;   ///< String storage buffer.
   
   
-  int ccontext;  ///< Current context.
-  class thsurvey * csurveyptr,  ///< Pointer to the current survey.
-    * fsurveyptr;  ///< Pointer to the first survey.
-  unsigned csurveylevel; ///< Current survey level.
-  class thscrap * cscrapptr; ///< Current scrap.
-  class th2ddataobject * lcscrapoptr; ///< Last object in given current scrap.
-  class thdataobject * lcsobjectptr;  ///< Last object in given current survey.
+  int ccontext = {};  ///< Current context.
+  class thsurvey * csurveyptr = {},  ///< Pointer to the current survey.
+    * fsurveyptr = {};  ///< Pointer to the first survey.
+  unsigned csurveylevel = {}; ///< Current survey level.
+  class thscrap * cscrapptr = {}; ///< Current scrap.
+  class th2ddataobject * lcscrapoptr = {}; ///< Last object in given current scrap.
+  class thdataobject * lcsobjectptr = {};  ///< Last object in given current survey.
 
   thdb_dictionary_type dictionary;  ///< Database dictionary.
   
-  unsigned long objid,  ///< Object identifier
-    nscraps;  ///< Total number of scraps.
+  unsigned long objid = {},  ///< Object identifier
+    nscraps = {};  ///< Total number of scraps.
   
   void reset_context();  ///< Reset database context.
 

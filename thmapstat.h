@@ -60,7 +60,7 @@ class thmapstat_copyright {
   friend bool operator < (const thmapstat_copyright & c1, 
       const thmapstat_copyright & c2);
   
-  const char * str;  
+  const char * str = {};  
   
 };
 

@@ -44,7 +44,7 @@ struct thexpshpf_data {
 };
 
 struct thexpshpf_part {
-  int m_type, m_start;
+  int m_type = {}, m_start = {};
 };
 
 

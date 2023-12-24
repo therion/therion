@@ -152,7 +152,7 @@ class lxFrame: public wxFrame
 
     lxGLCanvas * canvas;
     wxString m_fileDir, m_fileToOpen, m_fileName;
-    int m_fileType;
+    int m_fileType = {};
     
     struct lxData * data;
     struct lxSetup * setup;
@@ -181,10 +181,10 @@ class lxFrame: public wxFrame
     wxFileHistory * m_fileHistory;
     wxString m_iniDirectory;
 
-    long m_iniUnits;
-    int m_iniStereoGlasses;
-    int m_iniStereoGlassesLast;
-    long m_iniWallsInterpolate;
+    long m_iniUnits = {};
+    int m_iniStereoGlasses = {};
+    int m_iniStereoGlassesLast = {};
+    long m_iniWallsInterpolate = {};
 
     class lxApp * m_app;
 
@@ -266,7 +266,7 @@ class lxApp: public wxGLApp
 
   public:
   
-    class lxFrame * frame;
+    class lxFrame * frame = {};
 
     wxLocale m_locale;
     wxFileName m_path;
