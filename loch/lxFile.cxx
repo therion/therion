@@ -1000,8 +1000,8 @@ void lxFile::Import3D(const char * fn)
 
 
 struct missingShot {
-  lxFileSizeT f, t;
-  double length;
+  lxFileSizeT f = {}, t = {};
+  double length = {};
 };
 
 

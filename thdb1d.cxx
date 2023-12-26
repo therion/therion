@@ -1373,21 +1373,21 @@ struct thlc_series
 
 struct thlc_cross_arrow
 {
-  thlc_cross * target;
-  thlc_cross_arrow * prev_arrow, * next_arrow;
-  thlc_series * series;
-  bool reverse;
+  thlc_cross * target = {};
+  thlc_cross_arrow * prev_arrow = {}, * next_arrow = {};
+  thlc_series * series = {};
+  bool reverse = {};
 };
 
 
 struct thlc_loop
 {
-  thlc_cross * from_cross, * to_cross;
-  thlc_cross_arrow * first_arrow, * last_arrow;
-  unsigned long minid, size, id;
+  thlc_cross * from_cross = {}, * to_cross = {};
+  thlc_cross_arrow * first_arrow = {}, * last_arrow = {};
+  unsigned long minid = {}, size = {}, id = {};
 #ifdef THDEBUG
-  bool is_new;
-  long old_id;
+  bool is_new = {};
+  long old_id = {};
 #endif  
 };
 
@@ -3559,7 +3559,7 @@ thdb3ddata * thdb1ds::get_3d_outline() {
   thdb1d_tree_arrow * a;
   thdb1ds * tt;
   n = &(thdb.db1d.tree_nodes[this->uid - 1]);
-  Vector3<double> fv(this->x, this->y, this->z), tv, txv;
+  Vector3<double> fv(this->x, this->y, this->z), tv = {}, txv = {};
 
   // TODO: Add points to point cloud
 	// traverse all splay shots from given station, calculate normalized position and add

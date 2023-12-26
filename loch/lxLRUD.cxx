@@ -126,13 +126,13 @@ xcNAGet(FR,fr,tl)
 
 
 struct xcNode {
-  size_t id;
+  size_t id = {};
   lxVec p;
   std::list<xcNodeArrow> arrows;
 };
 
 struct xcSeriesStart {
-  double prob;
+  double prob = {};
   xcNodeArrow arrow;
 };
 

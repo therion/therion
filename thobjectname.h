@@ -42,12 +42,12 @@ class thobjectname {
 
   public:
   
-  const char * name,  ///< Object name.
-      * survey;  ///< Survey name.
+  const char * name = {},  ///< Object name.
+      * survey = {};  ///< Survey name.
        
   class thsurvey * psurvey = nullptr; ///< Parent survey.
        
-  unsigned long id;  ///< Object identifier.
+  unsigned long id = {};  ///< Object identifier.
 
   /**
    * Standard constructor.

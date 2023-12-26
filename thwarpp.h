@@ -43,8 +43,8 @@ class thscrap;
  */
 
 struct thsketchst {
-  thmorph_type code;     //!< station code
-  double x, y;           //!< station image coords
+  thmorph_type code = {};     //!< station code
+  double x = {}, y = {};           //!< station image coords
   thobjectname station;  //!< station survey name
   thobjectsrc source;
 };
@@ -54,7 +54,7 @@ struct thsketchst {
  */
 
 struct thsketchlg {
-  thmorph_type code;    //!< leg code
+  thmorph_type code = {};    //!< leg code
   thobjectname from;    //!< station survey name
   thobjectname to;      //!< station survey name
   thobjectsrc source;

@@ -66,8 +66,8 @@ extern wxPoint lxPoint;
 
 class lxTBoxPos {
 
-  int m_xOffset, m_yOffset, m_corner;
-  wxWindow * m_winTool, * m_winFrame;
+  int m_xOffset = {}, m_yOffset = {}, m_corner = {};
+  wxWindow * m_winTool = {}, * m_winFrame = {};
 
 public:
 

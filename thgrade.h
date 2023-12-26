@@ -68,8 +68,8 @@ class thgrade : public thdataobject {
   
   public:
 
-  double dls_length, dls_gradient, dls_bearing, dls_counter, dls_depth,
-    dls_dx, dls_dy, dls_dz, dls_x, dls_y, dls_z;
+  double dls_length = {}, dls_gradient = {}, dls_bearing = {}, dls_counter = {}, dls_depth = {},
+    dls_dx = {}, dls_dy = {}, dls_dz = {}, dls_x = {}, dls_y = {}, dls_z = {};
   
   /**
    * Standard constructor.
