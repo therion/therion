@@ -48,7 +48,7 @@ lxOptionsDlg::lxOptionsDlg(wxWindow * parent)
 : wxDialog(parent, wxID_ANY, wxString(_("Options")))
 {
 
-  this->m_lxframe = (lxFrame *) parent;
+  this->m_lxframe = dynamic_cast<lxFrame*>(parent);
 
   wxBoxSizer * sizerAll = new wxBoxSizer(wxVERTICAL);
   lxStaticBoxSizer = new wxStaticBoxSizer(

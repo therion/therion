@@ -38,15 +38,15 @@ bool lxDoubleValidator::Validate(wxWindow * WXUNUSED(parent))
 	if( !CheckValidator() )
     return FALSE;
 
-	if (!((wxTextCtrl *)m_validatorWindow)->GetValue().ToDouble(&tmp)) {
+	if (!dynamic_cast<wxTextCtrl*>(m_validatorWindow)->GetValue().ToDouble(&tmp)) {
 		// TODO: MSGBox saying something about the range
-		((wxTextCtrl *)this->m_validatorWindow)->SetSelection(-1, -1);
+		dynamic_cast<wxTextCtrl*>(this->m_validatorWindow)->SetSelection(-1, -1);
 		this->m_validatorWindow->SetFocus();
 		return FALSE;
 	}
 
 	if ((tmp < this->m_vMin) || (tmp > this->m_vMax)) {
-		((wxTextCtrl *)this->m_validatorWindow)->SetSelection(-1, -1);
+		dynamic_cast<wxTextCtrl*>(this->m_validatorWindow)->SetSelection(-1, -1);
 		this->m_validatorWindow->SetFocus();
 		return FALSE;
 	}
@@ -59,14 +59,14 @@ bool lxDoubleValidator::TransferToWindow()
 {
   if (!CheckValidator())
     return FALSE;
-	((wxTextCtrl *) m_validatorWindow)->SetValue(wxString::Format(this->m_fmt, *this->m_variable));
+	dynamic_cast<wxTextCtrl*>(m_validatorWindow)->SetValue(wxString::Format(this->m_fmt, *this->m_variable));
 	return TRUE;
 }
 
 
 bool lxDoubleValidator::TransferFromWindow()
 {
-  if (((wxTextCtrl *)m_validatorWindow)->GetValue().ToDouble(this->m_variable)) {
+  if (dynamic_cast<wxTextCtrl*>(m_validatorWindow)->GetValue().ToDouble(this->m_variable)) {
 		if (*this->m_variable < this->m_vMin)
 			*this->m_variable = this->m_vMin;
 		if (*this->m_variable > this->m_vMax)
@@ -99,14 +99,14 @@ bool lxRadioBtnValidator::TransferToWindow()
 {
   if (!CheckValidator())
     return FALSE;
-	((wxRadioButton *) m_validatorWindow)->SetValue((*this->m_variable) == this->m_variableValue);
+	dynamic_cast<wxRadioButton*>(m_validatorWindow)->SetValue((*this->m_variable) == this->m_variableValue);
 	return TRUE;
 }
 
 
 bool lxRadioBtnValidator::TransferFromWindow()
 {
-	if (((wxRadioButton *) m_validatorWindow)->GetValue())
+	if (dynamic_cast<wxRadioButton*>(m_validatorWindow)->GetValue())
 		*this->m_variable = this->m_variableValue;
 	return TRUE;
 }
@@ -289,7 +289,7 @@ void lxTBoxPos::Save()
 
   this->m_corner = nc;
 
-  if (((wxFrame*)this->m_winFrame)->IsFullScreen() && ((nc == 1) || (nc == 4))) {
+  if (dynamic_cast<wxFrame*>(this->m_winFrame)->IsFullScreen() && ((nc == 1) || (nc == 4))) {
     ty += this->m_fsOffset;
   }
 
@@ -326,7 +326,7 @@ void lxTBoxPos::Restore()
   this->m_winTool->GetSize(& tw, & th);
   this->m_winTool->GetPosition(& tx, & ty);
 
-  if (((wxFrame*)this->m_winFrame)->IsFullScreen() && ((this->m_corner == 1) || (this->m_corner == 4))) {
+  if (dynamic_cast<wxFrame*>(this->m_winFrame)->IsFullScreen() && ((this->m_corner == 1) || (this->m_corner == 4))) {
     fy -= this->m_fsOffset;
   }
   switch (this->m_corner) {

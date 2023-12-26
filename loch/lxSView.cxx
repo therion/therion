@@ -247,7 +247,7 @@ lxViewpointSetupDlg::lxViewpointSetupDlg(wxWindow *parent)
 		this->SetIcon(wxIcon(loch_xpm));
 #endif
 
-  this->m_mainFrame = (lxFrame *) parent;
+  this->m_mainFrame = dynamic_cast<lxFrame*>(parent);
 
   this->m_uicFacing = false;
   this->m_uicTilt = false;
