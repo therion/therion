@@ -136,7 +136,7 @@ thpic * thwarpp::morph(thsketch * sketch, double scale) {
   int n_extra = 0;
   while (pobj != NULL) {
     if (pobj->get_class_id() == TT_POINT_CMD) {
-      thpoint * pointp = (thpoint *) pobj;
+      thpoint * pointp = dynamic_cast<thpoint*>(pobj);
       if (pointp->type == TT_POINT_TYPE_EXTRA) {
         pointp->check_extra();
 	if ((pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {

@@ -129,7 +129,7 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       if (dp->date.is_defined()) {
         double syear, eyear;
         syear = dp->date.get_start_year();
@@ -162,7 +162,7 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       bool dpdeclindef;
       double dpdeclin;
 
@@ -492,7 +492,7 @@ void thdb1d::scan_data()
   obi = this->db->object_list.begin();
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       // scan data equates
       eqi = dp->equate_list.begin();
       try {
@@ -517,7 +517,7 @@ void thdb1d::scan_data()
   while (obi != this->db->object_list.end()) {
 
     if ((*obi)->get_class_id() == TT_SURVEY_CMD) {
-      thsurvey * srv = (thsurvey *) (*obi).get();
+      thsurvey * srv = dynamic_cast<thsurvey*>(obi->get());
       if (!srv->entrance.is_empty()) {
         srv->entrance.id = this->get_station_id(srv->entrance, srv);
         if (srv->entrance.id == 0) {
@@ -538,7 +538,7 @@ void thdb1d::scan_data()
 
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
 
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
 
       // scan data stations
       ssi = dp->ss_list.begin();
@@ -913,7 +913,7 @@ void thdb1d::process_tree()
   int last_eq = -1;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       eqi = dp->equate_list.begin();
       last_eq = -1;
       while(eqi != dp->equate_list.end()) {
@@ -1322,7 +1322,7 @@ void thdb1d::process_survey_stat() {
   thpoint * pt;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_POINT_CMD) {
-      pt = (thpoint *)(*obi).get();
+      pt = dynamic_cast<thpoint*>(obi->get());
       ss = pt->fsptr;
       if ((pt->type == TT_POINT_TYPE_CONTINUATION) && (!thisnan(pt->xsize))) {
         while (ss != NULL) {
@@ -2167,7 +2167,7 @@ void thdb1d::close_loops()
   double avg_error = 0.0, avg_error_sum = 0.0;
   while (obi != this->db->object_list.end()) {
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       fii = dp->fix_list.begin();
       while(fii != dp->fix_list.end()) {
         tmps = &(this->station_vec[fii->station.id - 1]);
@@ -2992,7 +2992,7 @@ void thdb1d::postprocess_objects()
   while (obi != this->db->object_list.end()) {
     switch ((*obi)->get_class_id()) {
       case TT_SURFACE_CMD:
-        ((thsurface*)(*obi).get())->check_stations();
+        dynamic_cast<thsurface*>(obi->get())->check_stations();
         break;
     }
     obi++;
@@ -3059,7 +3059,7 @@ void thdb1d::process_xelev()
     switch ((*obi)->get_class_id()) {
       case TT_DATA_CMD:
         try {
-          dp = (thdata *)(*obi).get();
+          dp = dynamic_cast<thdata*>(obi->get());
           xi = dp->extend_list.begin();
           while(xi != dp->extend_list.end()) {
             if (!xi->to.is_empty()) {

@@ -592,8 +592,8 @@ void thexpmap::export_xvi(class thdb2dprj * prj)
     thpic * skpic;
     thscrap * scrap;
     for (obi = thdb.object_list.begin(); obi != thdb.object_list.end(); obi++) {
-      if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi).get())->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi).get())->proj->id == prj->id)) {
-        scrap = (thscrap *)(*obi).get();
+      if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!dynamic_cast<thscrap*>(obi->get())->centerline_io) && (*obi)->fsptr->is_selected() && (dynamic_cast<thscrap*>(obi->get())->proj->id == prj->id)) {
+        scrap = dynamic_cast<thscrap*>(obi->get());
         skit = scrap->sketch_list.begin();
         while (skit != scrap->sketch_list.end()) {
           skpic = skit->morph(sf);
@@ -826,8 +826,8 @@ void thexpmap::export_th2(class thdb2dprj * prj)
 
   // export scraps & scrap objects
   for (obi = thdb.object_list.begin(); obi != thdb.object_list.end(); obi++) {
-    if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!((thscrap *)(*obi).get())->centerline_io) && (*obi)->fsptr->is_selected() && (((thscrap *)(*obi).get())->proj->id == prj->id)) {
-      scrap = (thscrap *)(*obi).get();
+    if (((*obi)->get_class_id() == TT_SCRAP_CMD) && (!dynamic_cast<thscrap*>(obi->get())->centerline_io) && (*obi)->fsptr->is_selected() && (dynamic_cast<thscrap*>(obi->get())->proj->id == prj->id)) {
+      scrap = dynamic_cast<thscrap*>(obi->get());
 
 
       // export sketches
@@ -891,7 +891,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
         switch (so->get_class_id()) {
           case TT_POINT_CMD:
             {
-              thpoint * pt = (thpoint *) so;
+              thpoint * pt = dynamic_cast<thpoint*>(so);
               const char * typestr = thmatch_string(pt->type,thtt_point_types);
               fprintf(pltf,"  point %.2f %.2f %s", tf(pt->point->xt, pt->point->yt), typestr);
               if (pt->subtype != TT_POINT_SUBTYPE_UNKNOWN) {
@@ -916,7 +916,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
             break;
           case TT_LINE_CMD:
             {
-              thline * ln = (thline *) so;
+              thline * ln = dynamic_cast<thline*>(so);
               const char * typestr = thmatch_string(ln->type,thtt_line_types);
               fprintf(pltf,"  line %s", typestr);
               int lsubtype = TT_LINE_SUBTYPE_UNKNOWN;
@@ -1008,7 +1008,7 @@ void thexpmap::export_th2(class thdb2dprj * prj)
             break;
           case TT_AREA_CMD:
             {
-              tharea * ar = (tharea *) so;
+              tharea * ar = dynamic_cast<tharea*>(so);
               const char * typestr = thmatch_string(ar->type,thtt_area_types);
               fprintf(pltf,"  area %s", typestr);
               if (ar->type == TT_AREA_TYPE_U) fprintf(pltf, ":%s", ar->m_subtype_str);
@@ -1386,16 +1386,16 @@ if (ENC_NEW.NFSS==0) {
         }
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL) {
-            cs = (thscrap *) cmi->object;
+            cs = dynamic_cast<thscrap*>(cmi->object);
             export_sections = false;
             op2 = NULL;
             while ((!export_sections) || (op2 != NULL)) {
               if (export_sections) {
                 if ((op2->get_class_id() == TT_POINT_CMD) &&
-                  (((thpoint *)op2)->type == TT_POINT_TYPE_SECTION) &&
-                  (((((thpoint *)op2)->context < 0) && this->symset.is_assigned(SYMP_SECTION)) || ((((thpoint *)op2)->context > -1) && this->symset.assigned[((thpoint *)op2)->context])) &&
-                  (((thpoint *)op2)->text != NULL)) {
-                    cs = (thscrap *)((thpoint *)op2)->text;
+                  (dynamic_cast<thpoint*>(op2)->type == TT_POINT_TYPE_SECTION) &&
+                  (((dynamic_cast<thpoint*>(op2)->context < 0) && this->symset.is_assigned(SYMP_SECTION)) || ((dynamic_cast<thpoint*>(op2)->context > -1) && this->symset.assigned[dynamic_cast<thpoint*>(op2)->context])) &&
+                  (dynamic_cast<thpoint*>(op2)->text != NULL)) {
+                    cs = (thscrap *) dynamic_cast<thpoint*>(op2)->text;
                     thdb.db2d.process_projection(cs->proj);
                 }
                 else
@@ -1414,8 +1414,8 @@ if (ENC_NEW.NFSS==0) {
                   out.sr = 0.0;
                   out.cr = 1.0;
                   out.rr = 0.0;
-                  shx = ((thpoint *)op2)->point->xt;
-                  shy = ((thpoint *)op2)->point->yt;
+                  shx = dynamic_cast<thpoint*>(op2)->point->xt;
+                  shy = dynamic_cast<thpoint*>(op2)->point->yt;
                   shx *= out.ms;
                   shy *= out.ms;
 
@@ -1474,7 +1474,7 @@ if (ENC_NEW.NFSS==0) {
                 shy += origin_shy;
       
                 if (export_sections) {
-                  switch (thdb2d_rotate_align(((thpoint *)op2)->align, rrot)) {
+                  switch (thdb2d_rotate_align(dynamic_cast<thpoint*>(op2)->align, rrot)) {
                     case TT_POINT_ALIGN_B:
                       shy -= (cs->lymax - cs->lymin) / 2.0 * out.ms;
                       break;
@@ -1784,7 +1784,7 @@ if (ENC_NEW.NFSS==0) {
     obi = thdb.object_list.begin();
     while (obi != thdb.object_list.end()) {
       if ((*obi)->get_class_id() == TT_SURFACE_CMD) {
-        surf = (thsurface *)(*obi).get();
+        surf = dynamic_cast<thsurface*>(obi->get());
         if (surf->pict_name != NULL) {
           surf->calibrate();
           srfpr.filename = surf->pict_name;
@@ -2402,7 +2402,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
         obj->tags &= ~(TT_2DOBJ_TAG_CLIP_AUTO | TT_2DOBJ_TAG_CLIP_ON);
       switch (obj->get_class_id()) {
         case TT_POINT_CMD:
-          switch (((thpoint*)obj)->type) {
+          switch (dynamic_cast<thpoint*>(obj)->type) {
             case TT_POINT_TYPE_DIMENSIONS:
               obj->tags &= ~TT_2DOBJ_TAG_VISIBILITY_ON;
               break;
@@ -2429,8 +2429,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           }
           break;
         case TT_LINE_CMD:
-          if (((thline*)obj)->outline == TT_LINE_OUTLINE_NONE) { 
-            switch (((thline*)obj)->type) {
+          if (dynamic_cast<thline*>(obj)->outline == TT_LINE_OUTLINE_NONE) { 
+            switch (dynamic_cast<thline*>(obj)->type) {
               case TT_LINE_TYPE_SECTION:
               case TT_LINE_TYPE_ARROW:
               case TT_LINE_TYPE_LABEL:
@@ -2635,7 +2635,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
       if (thxmempiov && ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) == 0) && (obj->place == placeid)) {
         switch (obj->get_class_id()) {
           case TT_LINE_CMD:
-            switch (((thline*)obj)->type) {
+            switch (dynamic_cast<thline*>(obj)->type) {
               case TT_LINE_TYPE_LABEL:
                 break;
               default:
@@ -2647,7 +2647,7 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             }
             break;
           case TT_POINT_CMD:
-            ptp = ((thpoint*)obj);
+            ptp = dynamic_cast<thpoint*>(obj);
             switch (ptp->type) {
               case TT_POINT_TYPE_STATION:
               case TT_POINT_TYPE_STATION_NAME:
@@ -2833,8 +2833,8 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     if (thxmempiov && ((obj->tags & TT_2DOBJ_TAG_CLIP_ON) == 0)) {
       switch (obj->get_class_id()) {
         case TT_POINT_CMD:
-          if (((thpoint*)obj)->type == TT_POINT_TYPE_STATION) {
-            ptp = (thpoint *) obj;
+          if (dynamic_cast<thpoint*>(obj)->type == TT_POINT_TYPE_STATION) {
+            ptp = dynamic_cast<thpoint*>(obj);
             expstation = true;
             station = NULL;
             if (ptp->station_name.id != 0) {
@@ -2919,12 +2919,12 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
     
       // altitude labels zo steny
       case TT_LINE_CMD:
-        switch (((thline*)obj)->type) {
+        switch (dynamic_cast<thline*>(obj)->type) {
           case TT_LINE_TYPE_WALL:
             if (!out->symset->is_assigned(SYMP_WALLALTITUDE))
               break;
             // prescanuje stenu
-            lp = ((thline*)obj)->first_point;
+            lp = dynamic_cast<thline*>(obj)->first_point;
             while(lp != NULL) {
               if (((lp->tags & TT_LINEPT_TAG_ALTITUDE) > 0) &&
                   (!thisnan(lp->rsize))) {
@@ -2945,15 +2945,15 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
             }
             break;
           case TT_LINE_TYPE_LABEL:
-            if (((thline*)obj)->export_mp(noout)) {
+            if (dynamic_cast<thline*>(obj)->export_mp(noout)) {
               thexpmap_export_mp_bgif;
-              ((thline*)obj)->export_mp(out);
+              dynamic_cast<thline*>(obj)->export_mp(out);
             }
             break;
         }
         break;
       case TT_POINT_CMD:
-        switch (((thpoint*)obj)->type) {
+        switch (dynamic_cast<thpoint*>(obj)->type) {
           case TT_POINT_TYPE_LABEL:
           case TT_POINT_TYPE_REMARK:
           case TT_POINT_TYPE_STATION_NAME:
@@ -2961,9 +2961,9 @@ thexpmap_xmps thexpmap::export_mp(thexpmapmpxs * out, class thscrap * scrap,
           case TT_POINT_TYPE_ALTITUDE:
           case TT_POINT_TYPE_HEIGHT:
           case TT_POINT_TYPE_PASSAGE_HEIGHT:
-            if (((thpoint*)obj)->export_mp(noout)) {
+            if (dynamic_cast<thpoint*>(obj)->export_mp(noout)) {
               thexpmap_export_mp_bgif;
-              ((thpoint*)obj)->export_mp(out);
+              dynamic_cast<thpoint*>(obj)->export_mp(out);
             }
             break;
         }
@@ -3041,7 +3041,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*
             nmap++;
             firstmapscrap = false;
           }
-          cs = (thscrap *) cmi->object;
+          cs = dynamic_cast<thscrap*>(cmi->object);
           curz = cs->a;
 //          if ((!thisnan(curz)) && (cs->fsptr != NULL))
 //            curz += prj->shift_z;
@@ -3114,7 +3114,7 @@ void thexpmap::export_pdf_set_colors(class thdb2dxm * maps, class thdb2dprj * /*
 //      if ((cbm->mode == TT_MAPITEM_NORMAL) && (strlen(cbm->bm->name) > 0)) while (cmi != NULL) {
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
-          cs = (thscrap *) cmi->object;
+          cs = dynamic_cast<thscrap*>(cmi->object);
           curz = cs->a;
 //          if ((!thisnan(curz)) && (cs->fsptr != NULL))
 //            curz += prj->shift_z;
@@ -3237,7 +3237,7 @@ void thexpmap::export_uni(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
       if (cbm->mode == TT_MAPITEM_NORMAL) {
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL)
-						this->export_uni_scrap((FILE *) pimg, (thscrap *) cmi->object);
+						this->export_uni_scrap((FILE *) pimg, dynamic_cast<thscrap*>(cmi->object));
           cmi = cmi->prev_item;  
         }
       }
@@ -3342,7 +3342,7 @@ void thexpmap::export_uni_scrap(FILE * out, class thscrap * scrap)
   while (obj != NULL) {
 		switch (obj->get_class_id()) {
 			case TT_POINT_CMD:
-				ppt = ((thpoint*)obj);
+				ppt = dynamic_cast<thpoint*>(obj);
 	      switch (ppt->type) {
 	        case TT_POINT_TYPE_STATION:
 						if ((ppt->cpoint != NULL) && (ppt->cpoint->st != NULL)) {
@@ -3356,7 +3356,7 @@ void thexpmap::export_uni_scrap(FILE * out, class thscrap * scrap)
 				}
 				break;
 		  case TT_LINE_CMD:
-				pln = ((thline*)obj);
+				pln = dynamic_cast<thline*>(obj);
 	      switch (pln->type) {
 					case TT_LINE_TYPE_WALL:
 						thexpmap_line_svx3d(pimg, pln);
@@ -3460,7 +3460,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       cmi = cbm->bm->last_item;
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
-          cs = (thscrap *) cmi->object;
+          cs = dynamic_cast<thscrap*>(cmi->object);
           cs->RGBsrc = 0;
         }
         cmi = cmi->prev_item;
@@ -3495,7 +3495,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
               lkp->scan_map(cmap->map);
             }
           }
-          cs = (thscrap *) cmi->object;
+          cs = dynamic_cast<thscrap*>(cmi->object);
           // add scrap if according to scraps
           if ((nolkpitems) && (lkp->m_type == TT_LAYOUT_CCRIT_SCRAP)) {
             csc.defined = 0;
@@ -3541,7 +3541,7 @@ void thexpmap::export_pdf_set_colors_new(class thdb2dxm * maps, class thdb2dprj 
       cmi = cbm->bm->last_item;
       if (cbm->mode == TT_MAPITEM_NORMAL) while (cmi != NULL) {
         if (cmi->type == TT_MAPITEM_NORMAL) {
-          cs = (thscrap *) cmi->object;
+          cs = dynamic_cast<thscrap*>(cmi->object);
           lkp->color_scrap(cs);
         }
         cmi = cmi->prev_item;
