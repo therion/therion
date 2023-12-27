@@ -245,7 +245,7 @@ void thmapstat::scanmap(class thmap * map) {
 
 struct thmapstat_person_data {
   thperson person;
-  double crit;
+  double crit = {};
   bool operator < (const thmapstat_person_data& x) const
   {
 	  if (crit > x.crit)
@@ -262,7 +262,7 @@ struct thmapstat_person_data {
 struct thmapstat_copyright_data {
   thmapstat_copyright copy;
   thmapstat_data data;
-  double crit;
+  double crit = {};
   bool operator < (const thmapstat_copyright_data& x) const
   {
 	  if (crit > x.crit)

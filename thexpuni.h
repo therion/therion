@@ -61,7 +61,7 @@ struct thexpuni {
   thexpuni();
   void clear();
 
-  thexpuni_part * m_cpart;
+  thexpuni_part * m_cpart = {};
   std::list<thexpuni_data> m_ring_list;
   void polygon_start_ring(bool outer);
   void polygon_insert_line(thline * ln, bool reverse);

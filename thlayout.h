@@ -600,7 +600,7 @@ class thlayout : public thdataobject {
   int color_crit; // none, altitude, ...
   const char * color_crit_fname;
 
-  double min_symbol_scale, font_setup[5];
+  double min_symbol_scale, font_setup[5] = {};
 
   
   thlayoutln * first_line, * last_line;

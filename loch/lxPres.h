@@ -34,7 +34,7 @@ public:
 
   lxTBoxPos m_toolBoxPosition;
   wxString m_fileName, m_fileDir;
-  bool m_changed;
+  bool m_changed = {};
   class lxFrame * m_mainFrame;
   class wxListBox * m_posLBox;
 

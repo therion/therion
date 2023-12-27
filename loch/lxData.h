@@ -54,13 +54,13 @@
 
 struct lxDataSurvey {
 
-  size_t m_id, m_parent, m_level;
+  size_t m_id = {}, m_parent = {}, m_level = {};
 
-  const char * m_name, * m_title;
+  const char * m_name = {}, * m_title = {};
 
   std::string m_full_name;
   
-  bool m_selected;
+  bool m_selected = {};
 
 };
 
@@ -99,11 +99,11 @@ struct lxDataTexture {
 
 struct lxDataShot {
 
-  unsigned long from, to;
+  unsigned long from = {}, to = {};
 
-  size_t m_survey_idx;
+  size_t m_survey_idx = {};
   
-  bool surface, invisible, splay, duplicate, m_selected;
+  bool surface = {}, invisible = {}, splay = {}, duplicate = {}, m_selected = {};
   
 };
 

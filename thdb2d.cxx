@@ -2378,10 +2378,10 @@ void thdb2d::pp_morph_points(thdb2dprj * prj)
 
 
 struct joincand {
-	th2ddataobject * obj;
-	thdb2dlp * lp;
-	thdb2dpt * pt;
-	long fileid;
+	th2ddataobject * obj = {};
+	thdb2dlp * lp = {};
+	thdb2dpt * pt = {};
+	long fileid = {};
 };
 
 
@@ -3421,8 +3421,8 @@ thdb2dprj * thdb2d::get_projection(int id) {
 
 
 struct area_proc {
-  tharea * area;
-  double x, y, a, s;
+  tharea * area = {};
+  double x = {}, y = {}, a = {}, s = {};
 };
 
 void thdb2d::process_areas_in_projection(thdb2dprj * prj)

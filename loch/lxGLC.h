@@ -88,15 +88,15 @@ class lxGLCanvas: public wxGLCanvas {
     bool m_sMoveSingle = false, m_isO;
 
     // fonty
-    FT_Face m_ftFace1, m_ftFace2, m_ftFace3;
+    FT_Face m_ftFace1 = {}, m_ftFace2 = {}, m_ftFace3 = {};
     OGLFT::Monochrome * m_fntNumericS,
       * m_fntTitleS;
     OGLFT::Filled * m_fntNumericO,
       * m_fntTitleO;
 
-    GLdouble m_camera_modelview[16];
-    GLdouble m_camera_projection[16];
-    GLint m_camera_viewport[4];
+    GLdouble m_camera_modelview[16] = {};
+    GLdouble m_camera_projection[16] = {};
+    GLint m_camera_viewport[4] = {};
 
 		bool m_sCameraAutoRotate, m_sCameraLockRotation;
     wxStopWatch m_sCameraAutoRotateSWatch;
