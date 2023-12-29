@@ -459,7 +459,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
   thdataobject * obj;
   for(obj = mainsrv->foptr; obj != NULL; obj = obj->nsptr) 
     if (obj->get_class_id() == TT_SURVEY_CMD) {
-      mainsrv = (thsurvey *) obj;
+      mainsrv = dynamic_cast<thsurvey*>(obj);
       break;
     }
 
@@ -536,7 +536,7 @@ void thexpmap::export_kml(class thdb2dxm * maps, class thdb2dprj * prj)
 
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL) {
-            scrap = (thscrap*) cmi->object;
+            scrap = dynamic_cast<thscrap*>(cmi->object);
             xu.parse_scrap(scrap);
             if (xu.m_part_list.size() > 0) {
               fprintf(out,"<Polygon>\n");
@@ -651,7 +651,7 @@ void thexpmap::export_bbox(class thdb2dxm * maps, class thdb2dprj * prj)
       if (cbm->mode == TT_MAPITEM_NORMAL) {
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL) {
-            scrap = (thscrap*) cmi->object;
+            scrap = dynamic_cast<thscrap*>(cmi->object);
             if (!thisnan(scrap->lxmin)) {
 	    
               thcs2cs(thcfg.outcs, TTCS_LONG_LAT,
@@ -743,7 +743,7 @@ void thexpmap::export_dxf(class thdb2dxm * maps, class thdb2dprj * /*prj*/) // T
       if (cbm->mode == TT_MAPITEM_NORMAL) {
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL) {
-            scrap = (thscrap*) cmi->object;
+            scrap = dynamic_cast<thscrap*>(cmi->object);
             xu.parse_scrap(scrap);
             if (xu.m_part_list.size() > 0) {
               double x(0.0), y(0.0), z(0.0), px(0.0), py(0.0);

@@ -250,7 +250,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
       switch ((*oi)->get_class_id()) {
 
         case TT_SURVEY_CMD:
-          sp = (thsurvey *)(*oi).get();
+          sp = dynamic_cast<thsurvey*>(oi->get());
           ENCODESTR(sp->title);
           IF_PRINTING {
             fprintf(sqlf,"insert into SURVEY values "
@@ -266,7 +266,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
           break;  // SURVEY
 
 		case TT_SCRAP_CMD:
-			scrapp = (thscrap *)(*oi).get();
+			scrapp = dynamic_cast<thscrap*>(oi->get());
 			IF_PRINTING {
 				fprintf(sqlf,"insert into SCRAPS values "
 				  "(%ld, %ld, '%s', %d, %.5lf, %.5lf);\n ",
@@ -278,7 +278,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 			break;
 
 		case TT_MAP_CMD:
-			mapp = (thmap *)(*oi).get();
+			mapp = dynamic_cast<thmap*>(oi->get());
 			mapp->stat.scanmap(mapp);
 			ENCODESTR(mapp->title);
 			IF_PRINTING {
@@ -301,7 +301,7 @@ void thexpdb::export_sql_file(class thdatabase * dbp)
 			break;
           
         case TT_DATA_CMD:
-          dp = (thdata *)(*oi).get();
+          dp = dynamic_cast<thdata*>(oi->get());
           ENCODESTR(dp->title);
           IF_PRINTING {
             fprintf(sqlf,"insert into CENTRELINE values "
@@ -451,7 +451,7 @@ void thexpdb::export_csv_file(class thdatabase * dbp) {
 
   while (oi != dbp->object_list.end()) {
     if ((*oi)->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata *) (*oi).get();
+      dp = dynamic_cast<thdata*>(oi->get());
 
       for (lei = dp->leg_list.begin(); lei != dp->leg_list.end(); lei++) {
         if (lei->is_valid) {

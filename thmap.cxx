@@ -256,19 +256,23 @@ void thmap::calc_z() {
   while (mi != NULL) {
     if (mi->type == TT_MAPITEM_NORMAL) {
       switch (mi->object->get_class_id()) {
-        case TT_MAP_CMD:
-          ((thmap*)mi->object)->calc_z();
-          if (((thmap*)mi->object)->nz > 0) {
-            this->z += ((thmap*)mi->object)->z;
+        case TT_MAP_CMD: {
+          auto* obj_map = dynamic_cast<thmap*>(mi->object);
+          obj_map->calc_z();
+          if (obj_map->nz > 0) {
+            this->z += obj_map->z;
             this->nz++;
           }
           break;
-        case TT_SCRAP_CMD:
-          if (!thisnan(((thscrap*)mi->object)->z)) {
-            this->z += ((thscrap*)mi->object)->z;
+        }
+        case TT_SCRAP_CMD: {
+          auto* obj_scrap = dynamic_cast<thscrap*>(mi->object);
+          if (!thisnan(obj_scrap->z)) {
+            this->z += obj_scrap->z;
             this->nz++;
           }
           break;
+        }
       }
     }
     mi = mi->next_item;

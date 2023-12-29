@@ -374,14 +374,14 @@ thscraplo * thscrap::get_outline() {
       thprintf("%d [%s]\n", obj->id, obj->name);
 #endif     
     if ((obj->get_class_id() == TT_LINE_CMD) &&
-        (((thline *)obj)->first_point != NULL) &&
-        ((((thline *)obj)->outline == TT_LINE_OUTLINE_IN) ||
-        (((thline *)obj)->outline == TT_LINE_OUTLINE_OUT))) {
+        (dynamic_cast<thline*>(obj)->first_point != NULL) &&
+        ((dynamic_cast<thline*>(obj)->outline == TT_LINE_OUTLINE_IN) ||
+        (dynamic_cast<thline*>(obj)->outline == TT_LINE_OUTLINE_OUT))) {
 #ifdef THDEBUG
       thprintf("inserting line - %d [%s]\n", obj->id, obj->name);
 #endif     
       co = this->db->db2d.insert_scraplo();
-      co->line = (thline *) obj;
+      co->line = dynamic_cast<thline*>(obj);
       if (this->outline_first == NULL) {
         this->outline_first = co;
         lo = co;
@@ -392,7 +392,7 @@ thscraplo * thscrap::get_outline() {
 					co->line->last_point->point->y - 
 					co->line->first_point->point->y);
         if ((this->outline_first->line->outline == TT_LINE_OUTLINE_IN) &&
-            (((thline *)obj)->outline == TT_LINE_OUTLINE_OUT)) {
+            (dynamic_cast<thline*>(obj)->outline == TT_LINE_OUTLINE_OUT)) {
           co->next_scrap_line = this->outline_first;
           this->outline_first = co;
         } else {
@@ -1099,7 +1099,7 @@ void thscrap::process_3d() {
   o2 = this->fs2doptr;
   while (o2 != NULL) {
     if (o2->get_class_id() == TT_POINT_CMD) {
-      pp = (thpoint *) o2;
+      pp = dynamic_cast<thpoint*>(o2);
       if (pp->station_name.id != 0) {
         is.insert_bp(pp->point->xt, pp->point->yt, pp->point->zt);
       }
@@ -1142,7 +1142,7 @@ void thscrap::process_3d() {
   double cup, cdown;
   while (o2 != NULL) {
     if (o2->get_class_id() == TT_POINT_CMD) {
-      pp = (thpoint *) o2;
+      pp = dynamic_cast<thpoint*>(o2);
       if ((pp->type == TT_POINT_TYPE_PASSAGE_HEIGHT) &&
           ((pp->tags & TT_POINT_TAG_HEIGHT_U) != 0) &&
           (!thisnan(pp->xsize))) {

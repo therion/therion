@@ -276,7 +276,7 @@ thpic * thwarplin::morph(thsketch * sketch, double /*scale*/) // TODO unused par
     pobj = sketch->m_scrap->fs2doptr;
     while (pobj != NULL) {
       if (pobj->get_class_id() == TT_POINT_CMD) {
-        pointp = (thpoint *) pobj;
+        pointp = dynamic_cast<thpoint*>(pobj);
         if (pointp->type == TT_POINT_TYPE_EXTRA) {
           if ((T3.m_scale > 0.0) && (pointp->from_name.id > 0) && (!thisnan(pointp->xsize))) {
             TM.insert_zoom_point(

@@ -282,7 +282,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
       
       // let's take care of 2d object
       if(optr->is(TT_2DDATAOBJECT_CMD)) {
-        th2ddo_optr = (th2ddataobject *) optr;
+        th2ddo_optr = dynamic_cast<th2ddataobject*>(optr);
         
         if (this->lcscrapoptr != NULL)
           this->lcscrapoptr->nscrapoptr = th2ddo_optr;
@@ -301,7 +301,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
       switch (optr_class_id) {
       
         case TT_SURVEY_CMD:
-          survey_optr = (thsurvey *) optr;
+          survey_optr = dynamic_cast<thsurvey*>(optr);
           survey_optr->level = ++this->csurveylevel;
           
           if (this->fsurveyptr == NULL) {
@@ -330,7 +330,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
           break;
           
         case TT_SCRAP_CMD:
-          scrap_optr = (thscrap *) optr;
+          scrap_optr = dynamic_cast<thscrap*>(optr);
           this->ccontext = THCTX_SCRAP;
           this->cscrapptr = scrap_optr;
           this->nscraps++;
@@ -343,7 +343,7 @@ void thdatabase::insert(std::unique_ptr<thdataobject> unique_optr)
   // insert sub-objects
   switch(optr_class_id) {
     case TT_SURVEY_CMD:
-      this->insert(std::move(((thsurvey*)(optr))->tmp_data_holder));
+      this->insert(std::move(dynamic_cast<thsurvey*>(optr)->tmp_data_holder));
       break;
   }
   
@@ -676,7 +676,7 @@ class thgrade * thdatabase::get_grade(char * gname)
   if (gi == this->grade_map.end())
     return NULL;
   else
-    return (thgrade *)(gi->second);
+    return dynamic_cast<thgrade*>(gi->second);
 }
 
 
@@ -687,7 +687,7 @@ class thlayout * thdatabase::get_layout(const char * gname)
   if (gi == this->layout_map.end())
     return NULL;
   else
-    return (thlayout *)(gi->second);
+    return dynamic_cast<thlayout*>(gi->second);
 }
 
 
@@ -698,7 +698,7 @@ class thlookup * thdatabase::get_lookup(const char * gname)
   if (gi == this->lookup_map.end())
     return NULL;
   else
-    return (thlookup *)(gi->second);
+    return dynamic_cast<thlookup*>(gi->second);
 }
 
 
@@ -711,7 +711,7 @@ void thdatabase::self_print_library()
   thdb_grade_map_type::iterator gi = this->grade_map.begin();
   while (gi != this->grade_map.end()) {
     thprintf("\n\tpgrade = thdb.create<thgrade>(thobjectsrc(\"therion\",0));\n");
-    ((thgrade *)(gi->second))->self_print_library();
+    dynamic_cast<thgrade*>(gi->second)->self_print_library();
     gi++;
     thprintf("\tthdb.insert(std::move(pgrade));\n");
   }
@@ -722,7 +722,7 @@ void thdatabase::self_print_library()
   thdb_layout_map_type::iterator li = this->layout_map.begin();
   while (li != this->layout_map.end()) {
     thprintf("\n\tplayout = thdb.create<thlayout>(thobjectsrc(\"therion\",0));\n");
-    ((thlayout *)(li->second))->self_print_library();
+    dynamic_cast<thlayout*>(li->second)->self_print_library();
     li++;
     thprintf("\tthdb.insert(std::move(playout));\n");
   }
@@ -752,7 +752,7 @@ void thdb_object_rename_persons(thdataobject * op, thsurveyp2pmap * rmap) {
       op->author_map[tmpa].join(tmpdt);
     }
     if (op->get_class_id() == TT_DATA_CMD) {
-      dp = (thdata*) op;
+      dp = dynamic_cast<thdata*>(op);
       if (dp->team_set.erase(mi->first) > 0) {
         dp->team_set.insert(mi->second);
       }
@@ -792,7 +792,7 @@ void thdb_survey_rename_persons(thsurvey * cs, thsurveyp2pmap * rmap) {
   op = cs->foptr;
   while (op != NULL) {
     if (op->get_class_id() == TT_SURVEY_CMD) {
-      thdb_survey_rename_persons((thsurvey*)op, &cmap);
+      thdb_survey_rename_persons(dynamic_cast<thsurvey*>(op), &cmap);
     } else {
       thdb_object_rename_persons(op, &cmap);
     }
@@ -815,7 +815,7 @@ void thdatabase::preprocess() {
     try {
       switch ((*obi)->get_class_id()) {
         case TT_IMPORT_CMD:
-          ((thimport*)(*obi).get())->import_file();
+          dynamic_cast<thimport*>(obi->get())->import_file();
           break;
       }
     } catch (...) {
@@ -852,7 +852,7 @@ void thdatabase::preprocess() {
   thsurvey * cs = this->fsurveyptr;
   while (cs != NULL) {
     thdb_survey_rename_persons(cs, NULL);
-    cs = (thsurvey*)(cs->nsptr);
+    cs = dynamic_cast<thsurvey*>(cs->nsptr);
   }
 
   

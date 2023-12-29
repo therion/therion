@@ -344,7 +344,7 @@ void thsvxctrl::process_survey_data(class thdatabase * dbp)
   
     if ((*obi)->get_class_id() == TT_DATA_CMD) {
       
-      dp = (thdata *)(*obi).get();
+      dp = dynamic_cast<thdata*>(obi->get());
       
       // scan data shots
       lei = dp->leg_list.begin();
