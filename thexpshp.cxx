@@ -443,7 +443,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
   while (obj != NULL) {
 		switch (obj->get_class_id()) {
 			case TT_POINT_CMD:
-				ppt = ((thpoint*)obj);
+				ppt = dynamic_cast<thpoint*>(obj);
         this->m_fpoints.point_insert(ppt->point->xt + scrap->proj->rshift_x,  ppt->point->yt + scrap->proj->rshift_y, ppt->point->zt + scrap->proj->rshift_z, ppt->point->at);
         this->m_fpoints.object_insert();
 		this->m_fpoints.m_attributes.insert_attribute("_SCRAP_ID",(long) ppt->fscrapptr->id);
@@ -484,7 +484,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
         }
 				break;
 		  case TT_LINE_CMD:
-				pln = ((thline*)obj);
+				pln = dynamic_cast<thline*>(obj);
         sp = 0;
         cp = 1;
   			lp = pln->first_point;
@@ -517,7 +517,7 @@ void thexpshp::xscrap2d(thscrap * scrap, thdb2dxm * xmap, thdb2dxs * /*xbasic*/)
   			}
 				break;
 		  case TT_AREA_CMD:
-				parea = ((tharea*)obj);
+				parea = dynamic_cast<tharea*>(obj);
         if (parea->m_outline_line == NULL)
           break;
         this->m_fareas.object_clear();
@@ -580,7 +580,7 @@ void thexpmap::export_shp(class thdb2dxm * maps, class thdb2dprj * prj)
       if (cbm->mode == TT_MAPITEM_NORMAL) {
         while (cmi != NULL) {
           if (cmi->type == TT_MAPITEM_NORMAL)
-            xs.xscrap2d((thscrap *) cmi->object, cmap, cbm);
+            xs.xscrap2d(dynamic_cast<thscrap*>(cmi->object), cmap, cbm);
           cmi = cmi->prev_item;  
         }
       }
