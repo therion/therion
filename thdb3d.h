@@ -71,11 +71,10 @@ struct thdb3dnm {
 struct thdb3dvx {
   unsigned long id;
   double x, y, z;
-  void * data;
   thdb3dnm * normal;
   thdb3dvx * next;
   thdb3dvx() : id(0), x(0.0), y(0.0), z(0.0), 
-    data(NULL), normal(NULL), next(NULL) {}
+    normal(NULL), next(NULL) {}
   lxVec get_vector() {return lxVec(this->x, this->y, this->z);}  
   thdb3dnm * insert_normal(double nx, double ny, double nz);
   thdb3dnm * insert_normal(lxVec n) {return this->insert_normal(n.x, n.y, n.z);};
@@ -84,11 +83,10 @@ struct thdb3dvx {
 
 
 struct thdb3dfx {
-  void * data;
   thdb3dnm * normal;
   thdb3dvx * vertex;
   thdb3dfx * next;
-  thdb3dfx() : data(NULL), normal(NULL), vertex(NULL), next(NULL) {}
+  thdb3dfx() : normal(NULL), vertex(NULL), next(NULL) {}
   
   thdb3dnm * insert_normal(double nx, double ny, double nz);
   thdb3dnm * insert_normal(lxVec n) {return this->insert_normal(n.x, n.y, n.z);};
@@ -105,7 +103,7 @@ struct thdb3dfc {
   thdb3dfc() : type(THDB3DFC_TRIANGLES), nvx(0), firstfx(NULL), lastfx(NULL),
     next(NULL) {}
   
-  thdb3dfx * insert_vertex(thdb3dvx * vx = NULL, void * dt = NULL);
+  thdb3dfx * insert_vertex(thdb3dvx * vx = nullptr);
   
 };
 
@@ -130,8 +128,8 @@ struct thdb3ddata {
     
   thdb3dfc * insert_face(int type);
   
-  thdb3dvx * insert_vertex(double vxx, double vxy, double vxz, void * dt = NULL);
-  thdb3dvx * insert_vertex(lxVec v, void * dt = NULL);
+  thdb3dvx * insert_vertex(double vxx, double vxy, double vxz);
+  thdb3dvx * insert_vertex(lxVec v);
   
   void export_thm(FILE * out);
   void export_vrml(FILE * out);
