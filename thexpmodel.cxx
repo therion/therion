@@ -768,8 +768,8 @@ void thexpmodel::export_vrml_file(class thdatabase * dbp) {
                   fseek(xf.get(), 0, SEEK_SET);
                   if (fsz > 0) {
                     char * cdata = new char [fsz];
-                    thassert(fread((void *) cdata, 1, fsz, xf.get()) == fsz);
-                    fwrite((void *) cdata, 1, fsz, texf.get());
+                    thassert(fread(cdata, 1, fsz, xf.get()) == fsz);
+                    fwrite(cdata, 1, fsz, texf.get());
                     delete [] cdata;
                   }
                 }
@@ -1667,7 +1667,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             for(i = 0; i < (unsigned long) csrf->grid_size; i++) {
               cdata[i] = csrf->grid[i];
             }
-            expf_sfc.m_dataPtr = expf.m_surfacesData.AppendData((void *) cdata, csrf->grid_size * sizeof(lxFileDbl));
+            expf_sfc.m_dataPtr = expf.m_surfacesData.AppendData(reinterpret_cast<const uint8_t*>(cdata), csrf->grid_size * sizeof(lxFileDbl));
             expf.m_surfaces.push_back(expf_sfc);
             delete [] cdata;
             
@@ -1729,7 +1729,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
               pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
             }
             expf_scrap.m_numPoints = d3d->nvertices;
-            expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
+            expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(pdata), i * sizeof(lxFile3Point));
             thdb3dfc * fcp;
             thdb3dfx * fxp;
             for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
@@ -1765,7 +1765,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
               tdata[i] = *tli;
             }
             expf_scrap.m_num3Angles = tlist.size();
-            expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(tdata, i * sizeof(lxFile3Angle));
+            expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(tdata), i * sizeof(lxFile3Angle));
             delete [] pdata;
             delete [] tdata;
             expf.m_scraps.push_back(expf_scrap);
@@ -1801,7 +1801,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             pdata[i].m_c[2] = lxFilePrepDbl(vxp->z);
           }
           expf_scrap.m_numPoints = d3d->nvertices;
-          expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(pdata, i * sizeof(lxFile3Point));
+          expf_scrap.m_pointsPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(pdata), i * sizeof(lxFile3Point));
           thdb3dfc * fcp;
           thdb3dfx * fxp;
           for(i = 0, fcp = d3d->firstfc; fcp != NULL; fcp = fcp->next, i++) {
@@ -1837,7 +1837,7 @@ void thexpmodel::export_lox_file(class thdatabase * dbp) {
             tdata[i] = *tli;
           }
           expf_scrap.m_num3Angles = tlist.size();
-          expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(tdata, i * sizeof(lxFile3Angle));
+          expf_scrap.m_3AnglesPtr = expf.m_scrapsData.AppendData(reinterpret_cast<const uint8_t*>(tdata), i * sizeof(lxFile3Angle));
           delete [] pdata;
           delete [] tdata;
           expf.m_scraps.push_back(expf_scrap);
