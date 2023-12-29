@@ -157,7 +157,7 @@ void thexptable::export_survey_entrances(thsurvey * survey)
   if (survey->stat.num_entrances == 0) return;
   // insert survey attributes
   if ((survey->level > 1) && (this->surveys || is_cave))  {
-    this->m_table.insert_object(NULL);          
+    this->m_table.insert_object();          
     this->m_table.get_object()->m_tree_level = (this->surveys ? (size_t)(survey->level - 2) : 0);
     this->m_table.get_object()->m_tree_node_id = (this->surveys ? survey->get_reverse_full_name() : "");
     this->m_table.insert_attribute("Title", ths2txt((strlen(survey->title) > 0) ? survey->title : survey->name, layout->lang).c_str());
@@ -201,7 +201,7 @@ void thexptable::export_survey_entrances(thsurvey * survey)
       if ((st->flags & TT_STATIONFLAG_ENTRANCE) != 0) {
         if (((exploc) && (survey->entrance.id > 0) && (survey->stat.num_entrances > 1) && (st->survey->is_in_survey(survey))) ||
           ((survey->entrance.id == 0) && (st->survey->id == survey->id))) {
-            this->m_table.insert_object(NULL);          
+            this->m_table.insert_object();          
             this->m_table.get_object()->m_tree_level = (this->surveys ? (size_t)(survey->level - 1) : 0);
             std::string * tmps = get_tmp_string();
             *tmps = survey->get_reverse_full_name();
@@ -291,7 +291,7 @@ void thexptable::process_db(class thdatabase * dbp)
             pt = (thpoint*)(*oi).get();
             if ((pt->type == TT_POINT_TYPE_CONTINUATION) && ((pt->text != NULL) || (!this->filter)) && (pt->fsptr->is_selected())) {
               this->db->db2d.process_projection(pt->fscrapptr->proj);
-              this->m_table.insert_object(NULL);
+              this->m_table.insert_object();
               this->m_table.insert_attribute("Comment",ths2txt(pt->text, layout->lang).c_str());
 	            if (!thisnan(pt->xsize))
                       this->m_table.insert_attribute("Explored",pt->xsize);
@@ -333,7 +333,7 @@ void thexptable::process_db(class thdatabase * dbp)
         for(i = 0; i < nstat; i++) {
           st = &(dbp->db1d.station_vec[i]);
           if (((st->flags & TT_STATIONFLAG_CONT) != 0) && ((st->comment != NULL) || (!this->filter)) && (st->survey->is_selected())) {
-            this->m_table.insert_object(NULL);
+            this->m_table.insert_object();
             this->m_table.insert_attribute("Comment",ths2txt(st->comment, layout->lang).c_str());
 	          if (!thisnan(st->explored))
                     this->m_table.insert_attribute("Explored",st->explored);
@@ -368,7 +368,7 @@ void thexptable::process_db(class thdatabase * dbp)
         if (((*oi)->get_class_id() == TT_SURVEY_CMD) && (strlen((*oi)->name) > 0)) {
           srv = (thsurvey*)(*oi).get();
           if (srv->is_selected()) {
-            this->m_table.insert_object(NULL);          
+            this->m_table.insert_object();          
             this->m_table.get_object()->m_tree_level = (size_t)(srv->level - 2);
             this->m_table.get_object()->m_tree_node_id = srv->get_reverse_full_name();
             this->m_table.insert_attribute("Title", ths2txt((strlen(srv->title) > 0) ? srv->title : srv->name, layout->lang).c_str());

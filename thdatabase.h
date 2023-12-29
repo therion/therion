@@ -389,7 +389,7 @@ std::unique_ptr<T> thdatabase::create(const thobjectsrc& osrc)
   ret->assigndb(this);
   // set object id and mark revision
   ret->id = ++this->objid;
-  this->attr.insert_object(ret.get(), (long) ret->id);
+  this->attr.insert_object((long) ret->id);
   ret->source = osrc;
   this->revision_set.insert(threvision(ret->id, 0, osrc));
 

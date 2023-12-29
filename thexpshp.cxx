@@ -196,7 +196,7 @@ void thexpshpf::object_insert()
     aptype, (int) l, ax, ay, az, am);
   this->m_object_id = SHPWriteObject(this->m_hndl, -1, obj);
   if (this->m_object_id > -1)
-    this->m_attributes.insert_object(NULL, this->m_object_id);
+    this->m_attributes.insert_object(this->m_object_id);
   SHPDestroyObject(obj);
 
   if (lp > 0) {
