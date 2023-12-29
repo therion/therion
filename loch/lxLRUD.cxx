@@ -43,7 +43,7 @@ void lxLRUD::SetProfile(int sec_type)
 }
 
 
-void lxLRUD::InsertShot(double * from, double * to, double * fromLRUD, double * toLRUD, void * usrData)
+void lxLRUD::InsertShot(double * from, double * to, double * fromLRUD, double * toLRUD)
 {
 
   lxLRUDShot shot;
@@ -65,8 +65,6 @@ void lxLRUD::InsertShot(double * from, double * to, double * fromLRUD, double * 
   shot.to   = lxVec(to[0], to[1], to[2]);
   shot.xfrom = this->i.GetStationID(shot.from, true);
   shot.xto = this->i.GetStationID(shot.to, true);
-  
-  shot.usr_data = usrData;
 
   this->i.shots.insert(this->i.shots.end(), shot);
 

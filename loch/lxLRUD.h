@@ -21,7 +21,6 @@ struct lxLRUDShot {
   long xfrom = 0, xto = 0;
   int profile = LXLRUD_OCTAGON;
   double fl = 0.0, fr = 0.0, fu = 0.0, fd = 0.0, tl = 0.0, tr = 0.0, tu = 0.0, td = 0.0, vthresh = 60.0;
-  void * usr_data = nullptr;
   lxLRUDShot() = default;
 };
 
@@ -43,7 +42,7 @@ struct lxLRUD {
   lxTriGeom o;
   void SetVThreshold(double vt);
   void SetProfile(int sec_type);
-  void InsertShot(double * from, double * to, double * fromLRUD, double * toLRUD, void * usrData);
+  void InsertShot(double * from, double * to, double * fromLRUD, double * toLRUD);
   void Calculate();
   long GetPointsN();
   void GetPoint(long idx, double * coord, double * norm);
