@@ -1286,8 +1286,8 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
   thdb2dcp * cp, * scancp; //, * rootcp;
 	int max_mark;
 //  bool has_root = false, some_attached;
-  unsigned long // nattached, 
-    numcps = 0, numscraps = 0;
+//  unsigned long // nattached, 
+//    numcps = 0, numscraps = 0;
   thdb_object_list_type::iterator obi = this->db->object_list.begin();
 //  unsigned long searchid;
   while (obi != this->db->object_list.end()) {
@@ -1301,7 +1301,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
         cp->pt = ppp->point;
         thdb1ds * st = & (this->db->db1d.station_vec[ppp->station_name.id - 1]);
         thdb1ds * uidst = & (this->db->db1d.station_vec[st->uid - 1]);
-        numcps++;
+        // numcps++;
         cp->st = st;
         // let's update station type
         switch (ppp->subtype) {
@@ -1488,7 +1488,7 @@ void thdb2d::pp_calc_stations(thdb2dprj * prj)
     } // END of projection switch
 
     pps = pps->proj_next_scrap;
-    numscraps++;
+    // numscraps++;
   }
 
   // shift all points in scraps without control points
