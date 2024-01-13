@@ -31,7 +31,7 @@
 #include "thdata.h"
 #include "thsurvey.h"
 #include "thdatabase.h"
-#include "img/img.h"
+#include "img.h"
 #include <string.h>
 #include <string>
 #include <map>

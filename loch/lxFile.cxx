@@ -16,7 +16,7 @@
 
 #include "icase.h"
 #include "lxMath.h"
-#include "img/img.h"
+#include "img.h"
 
 namespace fs = std::filesystem;
 
