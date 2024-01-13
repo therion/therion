@@ -32,7 +32,7 @@
 #include "thdata.h"
 #include "thsurvey.h"
 #include <stdio.h>
-#include "extern/img.h"
+#include "img/img.h"
 #include "thscrap.h"
 #include "thsurface.h"
 #include "loch/lxFile.h"
