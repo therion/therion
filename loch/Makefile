@@ -14,7 +14,7 @@ CMNOBJECTS = \
   lxImgIO.o lxLRUD.o lxFile.o icase.o lxSTree.o \
   lxData.o lxMath.o lxSView.o lxSScene.o \
   lxGUI.o lxGLC.o lxOptDlg.o lxAboutDlg.o lxPres.o lxSStats.o \
-  img.o
+  extern/img.o
 
 EXT =
 
@@ -179,7 +179,7 @@ LDBFLAGS = $(STRIPFLAG)
 
 
 # compiler settings
-CXXFLAGS := -Wall -D_GNU_SOURCE -DLOCH $(CXXPFLAGS) $(CXXBFLAGS) -DIMG_API_VERSION=1
+CXXFLAGS := -Wall -D_GNU_SOURCE -DLOCH $(CXXPFLAGS) $(CXXBFLAGS) -DIMG_API_VERSION=1 -I../extern/img
 CCFLAGS := -Wall -D_GNU_SOURCE -DLOCH $(CCPFLAGS) $(CCBFLAGS) -DIMG_API_VERSION=1
 OBJECTS = $(addprefix $(LOUTDIR)/,$(POBJECTS)) $(addprefix $(LOUTDIR)/,$(CMNOBJECTS))
 
@@ -204,6 +204,10 @@ all: $(LOUTDIR)/loch
 
 hlp:
 	$(MAKE) -C ./help
+
+$(LOUTDIR)/extern/img.o: ../extern/img/img.c
+	mkdir -p $(LOUTDIR)/extern
+	$(CC) -c $(CCFLAGS) -o $@ $<
 
 $(LOUTDIR)/loch: $(OBJECTS)
 	$(CXX) -o $(LOUTDIR)/loch$(EXT) -Wall $(OBJECTS) $(LIBS) $(LDFLAGS)
@@ -278,7 +282,7 @@ clean:
 # DEPENDENCIES
 $(LOUTDIR)/lxAboutDlg.o: lxAboutDlg.cxx lxWX.h icons/about.xpm ../thversion.h
 $(LOUTDIR)/lxData.o: lxData.cxx lxData.h lxMath.h lxImgIO.h lxFile.h lxLRUD.h
-$(LOUTDIR)/lxFile.o: lxFile.cxx lxFile.h lxMath.h img.h ../extern/img.h
+$(LOUTDIR)/lxFile.o: lxFile.cxx lxFile.h lxMath.h ../extern/img/img.h
 $(LOUTDIR)/icase.o: icase.h
 $(LOUTDIR)/lxGLC.o: lxGLC.cxx lxGLC.h lxMath.h lxGUI.h lxData.h lxImgIO.h lxFile.h \
  lxSetup.h lxSView.h lxWX.h lxFNT6x13_bdf.h lxFNT10x20_bdf.h \
@@ -309,7 +313,7 @@ $(LOUTDIR)/lxSView.o: lxSView.cxx lxSView.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
  lxSetup.h lxData.h lxImgIO.h lxFile.h loch.xpm
 $(LOUTDIR)/lxSetup.o: lxSetup.cxx lxSetup.h lxData.h lxMath.h lxImgIO.h lxFile.h
 $(LOUTDIR)/lxWX.o: lxWX.cxx lxWX.h
-$(LOUTDIR)/img.o: img.c ../extern/img.c ../extern/img.h
+$(LOUTDIR)/extern/img.o: ../extern/img/img.c ../extern/img/img.h
 $(LOUTDIR)/lxR2D.o: lxR2D.c lxR2D.h
 $(LOUTDIR)/lxR2P.o: lxR2P.c lxR2P.h
 $(LOUTDIR)/lxTR.o: lxTR.c lxTR.h
