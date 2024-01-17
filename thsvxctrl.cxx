@@ -38,7 +38,7 @@
 #include "thsurvey.h"
 #include "thcsdata.h"
 #include "thlogfile.h"
-#include "extern/img.h"
+#include "img.h"
 #include <math.h>
 #include <string>
 #include <fstream>

@@ -86,7 +86,8 @@ class thlogfile {
       if (!this->is_open)
         this->open_file();
       if (this->is_open) {
-        if (fmt::fprintf(this->fileh, format, args...) < 0)
+        fmt::fprintf(this->fileh, format, args...);
+        if (std::fflush(this->fileh) != 0)
           this->log_error();
       }
     }
