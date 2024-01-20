@@ -4,6 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -y \
     bash-completion \
     bwidget \
+    catch2 \
     clang \
     clang-tidy \
     cmake \
