@@ -74,7 +74,7 @@ jobs:
           name: samples-${{ matrix.os }}
           path: build/samples/
       - name: Install
-        run: cmake --build build -t install
+        run: sudo cmake --build build -t install
 
   Windows:
     runs-on: windows-latest
