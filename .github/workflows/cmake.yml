@@ -54,7 +54,7 @@ jobs:
         run: |
           brew update  # try to comment out in case of package problems
           brew tap homebrew/core
-          rm /usr/local/bin/2to3
+          # rm /usr/local/bin/2to3
           brew install wxwidgets vtk proj xquartz ninja basictex fmt pkgconfig catch2
       - name: Configure CMake
         run: |
