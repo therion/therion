@@ -47,14 +47,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12, macos-13]
+        os: [macos-12, macos-13, macos-14]
     steps:
       - uses: actions/checkout@v3
       - name: install dependencies
         run: |
-          # brew update  # try to comment out in case of package problems
-          brew tap homebrew/core
-          rm /usr/local/bin/2to3
+          find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete -print
+          brew unlink python && brew link --overwrite python
+          brew update  # try to comment out in case of package problems
           brew install wxwidgets vtk proj xquartz ninja basictex fmt pkgconfig catch2
       - name: Configure CMake
         run: |
@@ -74,7 +74,7 @@ jobs:
           name: samples-${{ matrix.os }}
           path: build/samples/
       - name: Install
-        run: cmake --build build -t install
+        run: sudo cmake --build build -t install
 
   Windows:
     runs-on: windows-latest
