@@ -195,9 +195,6 @@ $(LOUTDIR)/%.o : %.cxx
 $(LOUTDIR)/%.o : %.cc
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-$(LOUTDIR)/%.o : %.c
-	$(CC) -c $(CCFLAGS) -o $@ $<
-
 
 all: $(LOUTDIR)/loch
 	$(MAKE) -C ./help
