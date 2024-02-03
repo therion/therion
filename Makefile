@@ -228,7 +228,7 @@ xtherion/therion.tcl: $(THERION_TCL_DEPS)
 xtherion/xtherion: version xtherion/therion.tcl xtherion/*.tcl
 	$(MAKE) -C ./xtherion
 
-loch/loch: version loch/*.h loch/*.cxx loch/*.c
+loch/loch: version loch/*.h loch/*.cxx
 	$(MAKE) -C ./loch
 
 doc: $(OUTDIR)/thbook/thbook.pdf
