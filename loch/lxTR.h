@@ -90,12 +90,6 @@
 #endif  
 /* LXDEPCHECK - standard libraries */
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 #define TR_VERSION "1.1"
 #define TR_MAJOR_VERSION 1
 #define TR_MINOR_VERSION 1
@@ -167,12 +161,5 @@ extern int trEndTile(TRcontext *tr);
 
 
 extern void trRasterPos3f(TRcontext *tr, GLfloat x, GLfloat y, GLfloat z);
-
-
-
-#ifdef __cplusplus
-}
-#endif
-
 
 #endif
