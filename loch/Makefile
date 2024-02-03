@@ -314,6 +314,6 @@ $(LOUTDIR)/lxSView.o: lxSView.cxx lxSView.h lxWX.h lxGUI.h lxGLC.h lxMath.h \
 $(LOUTDIR)/lxSetup.o: lxSetup.cxx lxSetup.h lxData.h lxMath.h lxImgIO.h lxFile.h
 $(LOUTDIR)/lxWX.o: lxWX.cxx lxWX.h
 $(LOUTDIR)/extern/img.o: ../extern/img/img.c ../extern/img/img.h
-$(LOUTDIR)/lxR2D.o: lxR2D.c lxR2D.h
-$(LOUTDIR)/lxR2P.o: lxR2P.c lxR2P.h
-$(LOUTDIR)/lxTR.o: lxTR.c lxTR.h
+$(LOUTDIR)/lxR2D.o: lxR2D.cxx lxR2D.h
+$(LOUTDIR)/lxR2P.o: lxR2P.cxx lxR2P.h
+$(LOUTDIR)/lxTR.o: lxTR.cxx lxTR.h
