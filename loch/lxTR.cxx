@@ -53,34 +53,34 @@
 
 struct TRctx {
    /* Final image parameters */
-   GLint ImageWidth, ImageHeight;
-   GLenum ImageFormat, ImageType;
-   GLvoid *ImageBuffer;
+   GLint ImageWidth  = {}, ImageHeight = {};
+   GLenum ImageFormat = {}, ImageType = {};
+   GLvoid *ImageBuffer = {};
 
    /* Tile parameters */
-   GLint TileWidth, TileHeight;
-   GLint TileWidthNB, TileHeightNB;
-   GLint TileBorder;
-   GLenum TileFormat, TileType;
-   GLvoid *TileBuffer;
+   GLint TileWidth = {}, TileHeight = {};
+   GLint TileWidthNB = {}, TileHeightNB = {};
+   GLint TileBorder = {};
+   GLenum TileFormat = {}, TileType = {};
+   GLvoid *TileBuffer = {};
 
    /* Projection parameters */
-   GLboolean Perspective;
-   GLdouble Left;
-   GLdouble Right;
-   GLdouble Bottom;
-   GLdouble Top;
-   GLdouble Near;
-   GLdouble Far;
+   GLboolean Perspective = {};
+   GLdouble Left = {};
+   GLdouble Right = {};
+   GLdouble Bottom = {};
+   GLdouble Top = {};
+   GLdouble Near = {};
+   GLdouble Far = {};
 
    /* Misc */
-   TRenum RowOrder;
-   GLint Rows, Columns;
-   GLint CurrentTile;
-   GLint CurrentTileWidth, CurrentTileHeight;
-   GLint CurrentRow, CurrentColumn;
+   TRenum RowOrder = {};
+   GLint Rows = {}, Columns = {};
+   GLint CurrentTile = {};
+   GLint CurrentTileWidth = {}, CurrentTileHeight = {};
+   GLint CurrentRow = {}, CurrentColumn = {};
 
-   GLint ViewportSave[4];
+   GLint ViewportSave[4] = {};
 };
 
 
@@ -105,7 +105,7 @@ static void Setup(TRcontext *tr)
 
 TRcontext *trNew(void)
 {
-   TRcontext *tr = (TRcontext *) calloc(1, sizeof(TRcontext));
+   TRcontext *tr = new TRcontext;
    if (tr) {
       tr->TileWidth = DEFAULT_TILE_WIDTH;
       tr->TileHeight = DEFAULT_TILE_HEIGHT;
@@ -120,7 +120,7 @@ TRcontext *trNew(void)
 void trDelete(TRcontext *tr)
 {
    if (tr)
-      free(tr);
+      delete tr;
 }
 
 

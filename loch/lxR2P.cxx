@@ -16,11 +16,11 @@
 #include "lxR2P.h"
 
 struct R2PCTX {
-  GLXContext ctx;
-  Pixmap pm;
-  XVisualInfo *visinfo;
-  GLXPixmap glxpm;
-  Display *dpy;
+  GLXContext ctx = {};
+  Pixmap pm = {};
+  XVisualInfo *visinfo = {};
+  GLXPixmap glxpm = {};
+  Display *dpy = {};
 };
  
 void R2Pmake_context(R2PContext * r2pc)
@@ -74,7 +74,7 @@ void R2Pmake_pixmap(R2PContext * r2pc, unsigned int width, unsigned int height)
 
 R2PContext *R2PCreate(int width, int height)
 {
-  R2PContext * c = (R2PContext *) calloc(1, sizeof(R2PContext));
+  R2PContext * c = new R2PContext;
   if (c) {
     c->dpy = XOpenDisplay(NULL);
     R2Pmake_context(c);
@@ -99,7 +99,7 @@ void R2PDestroy(R2PContext * c)
     XFreePixmap(c->dpy, c->pm);
     glXDestroyContext(c->dpy, c->ctx);
     XCloseDisplay(c->dpy);
-    free(c);
+    delete c;
   }
 }
 
