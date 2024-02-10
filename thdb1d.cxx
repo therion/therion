@@ -219,7 +219,7 @@ void thdb1d::scan_data()
               else
                 dcc = lei->todepth - lei->fromdepth;
               lei->depthchange = dcc;  
-              if (fabs(dcc) > lei->length)
+              if (fabs(dcc) >= lei->length)
                 ththrow("length reading is less than change in depth");
             }
             
