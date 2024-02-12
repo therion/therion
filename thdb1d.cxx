@@ -219,8 +219,8 @@ void thdb1d::scan_data()
               else
                 dcc = lei->todepth - lei->fromdepth;
               lei->depthchange = dcc;  
-              if (fabs(dcc) >= lei->length)
-                ththrow("length reading is less than change in depth");
+              if (thdefinitely_greater_than(fabs(dcc),lei->length,1e-6))
+                ththrow("length reading is less than change in depth -- {}", fabs(dcc)-lei->length);
             }
             
             // check backwards compass reading
